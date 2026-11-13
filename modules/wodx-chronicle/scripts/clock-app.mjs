@@ -141,7 +141,7 @@ export class ClockApp extends ApplicationV2 {
           <button type="button" data-action="houseRules"><i class="fa-solid fa-scale-balanced"></i> House rules</button>
           <button type="button" data-action="manageLinesVeils"><i class="fa-solid fa-eraser"></i> Remove a line or veil</button>
           <button type="button" data-action="eraTest"><i class="fa-solid fa-flask"></i> Era test</button>
-          <button type="button" data-action="placeHere" title="Latitude and hour for a scene far from home"><i class="fa-solid fa-earth-europe"></i> The sun on this scene</button>
+          <button type="button" data-action="placeHere" title="Region, latitude and hour for a scene far from home"><i class="fa-solid fa-globe"></i> Where this scene stands</button>
           <button type="button" data-action="hold" title="Move the clock without the world reacting: no routines, faction turns, dated events or expiring effects"><i class="fa-solid fa-${held ? "play" : "pause"}"></i> ${held ? "Release the world" : "Hold the world"}</button>`
           : `<button type="button" data-action="ask"><i class="fa-solid fa-hand"></i> Ask the Storyteller</button>`}
         </div>

@@ -9,7 +9,7 @@ kind:   F (future-darkness only) the branch's own mundane history, a house readi
         M (prologues only) myth: a legend of one or more lines, its year an approximate house reading the characters cannot check.
 year:   BCE years are negative with no year 0 (-753 is 753 BCE), as in the Encyclopaedia; a month follows a second dash (-44-3).
 lines:  comma list of all mor vam wer mag wra cha hun mum kue dem
-region: MO Moravia, EU Europe, ME Middle East, AS Asia, AF Africa, AM Americas
+region: MO Moravia, EU Europe, ME Middle East, AS Asia, AF Africa, AM Americas, OC Oceania (the Pacific, Australia, Antarctica)
 place:  the city, land or sea it happens in (used for the Encyclopaedia links and by place-aware systems)
 tags:   comma list from TAGS below
 Lines starting with # are comments. Writes events-2026-11-12r3.json (all events, with canon links)."""
@@ -19,12 +19,12 @@ ERAS = [('living-gods', -10000, -801), ('classical', -800, 1196), ('dark-ages', 
         ('victorian', 1837, 1913), ('great-war', 1914, 1918), ('mid-century', 1919, 1989), ('modern', 1990, 2009), ('future-darkness', 1990, 2099)]
 LINES = {'all': 'All lines', 'mor': 'Mortals', 'vam': 'Vampire', 'wer': 'Werewolf', 'mag': 'Mage', 'wra': 'Wraith', 'cha': 'Changeling',
          'hun': 'Hunter', 'mum': 'Mummy', 'kue': 'Kindred of the East', 'dem': 'Demon'}
-REGIONS = {'MO': 'Moravia', 'EU': 'Europe', 'ME': 'Middle East', 'AS': 'Asia', 'AF': 'Africa', 'AM': 'Americas'}
+REGIONS = {'MO': 'Moravia', 'EU': 'Europe', 'ME': 'Middle East', 'AS': 'Asia', 'AF': 'Africa', 'AM': 'Americas', 'OC': 'Oceania'}
 KINDS = {'H': 'history', 'W': 'tied', 'N': 'named', 'F': 'branch', 'M': 'myth'}
 PROLOGUES = {'living-gods', 'classical'}
 # The seven prologue eras (Ben picked seven real eras, 2026-11-12); ids match wodx-chronicle data/eras.json, names follow the naming desk.
-PERIODS = [('mythic-age', 'Before the Flood', -10000, -3101), ('bronze-kings', 'The Age of Living Gods', -3100, -1178), ('iron-dawn', 'The Age of Cold Iron', -1177, -801),
-           ('greece-republic', 'The Classical Age', -800, -28), ('roman-empire', 'The Age of Silk and Eagles', -27, 476),
+PERIODS = [('mythic-age', 'Before the Flood', -10000, -3101), ('bronze-kings', 'The Age of Living Gods', -3100, -1178), ('iron-dawn', 'The Age of Burning Palaces', -1177, -801),
+           ('greece-republic', 'The Age of Oracles', -800, -28), ('roman-empire', 'The Age of Silk and Eagles', -27, 476),
            ('migration-age', 'The Age of Fallen Thrones', 477, 907), ('premyslid-duchy', 'The Age of Gathering Darkness', 908, 1196)]
 def period_of(y): return next((p for p, _, lo, hi in PERIODS if lo <= y <= hi), None)
 YEAR = re.compile(r'^(-?\d+)(?:-(\d{1,2}))?$')

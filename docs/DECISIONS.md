@@ -103,8 +103,9 @@ Next free block: B2560
 | B2480-B2489 | Ships at sea: ships by the year, the chase, the turn for position, shooting, ramming, flooding, repair, boarding | Storyteller |
 | B2490-B2499 | The layout pass: type names, the sheet title bar, panels and shades on WoDX sheet parts, item sheet fields, picks in WoDX windows, the wider UI fit check | System fork, Sheets, Chronicle |
 | B2500-B2509 | The residents of a generated town: households made into people with routines, names and a household | NPC |
-| B2510-B2519 | Seven prologue eras, World of Darkness era names and a world-wide prologue | Chronicle, Library, Storyteller, Actions, Interactables, Atmosphere |
+| B2510-B2519 | Seven prologue eras, World of Darkness era names, a world-wide prologue and 300 events each | Chronicle, Library, Storyteller, Actions, Interactables, Atmosphere |
 | B2520-B2529 | The settlement generator: building types for the later ages, households by year, ties, hidden folk, and settlements entered as journals | NPC, Interactables, tools/mapgen |
+| B2530-B2539 | A global World of Darkness: the world's regions, the Homeland, peoples and names, money, climates, tongues and households of the whole world | Chronicle, Creation, Storyteller, Atmosphere, NPC, Voices |
 | B2540-B2549 | The world map: the whole Earth as a coarse grid, journeys by year, the closer view, the otherworlds as mirrors and a chart | Storyteller, Otherworlds, tools/mapgen |
 | B2550-B2559 | The known world: what each part of the world knows of the others by year, charted waters, and the chronicle's own discoveries | Storyteller |
 <!-- decision-index:end -->
@@ -3050,7 +3051,7 @@ WoDX Storyteller 0.52.2. The party is every present character on the asker's sce
 Reverse: change partyAt in spend-rules.mjs, or have table() in pass-time.mjs ignore the scene.
 
 ## B2510. The two prologues become seven eras (2026-11-12, Ben picked seven real eras)
-WoDX Chronicle 0.47.0. Before the Flood (10,000 to 3101 BCE), The Age of Living Gods (3100 to 1178 BCE), The Age of Cold Iron (1177 to 801 BCE), The Classical Age (800 to 28 BCE), The Age of Silk and Eagles (27 BCE to 476 CE), The Age of Fallen Thrones (477 to 907) and The Age of Gathering Darkness (908 to 1196). Each keeps the prologue rule: chosen only with the era lock, never by date. Each carries the old group (living-gods or classical), the old group's upstream ability set and its music kit.
+WoDX Chronicle 0.47.0. Before the Flood (10,000 to 3101 BCE), The Age of Living Gods (3100 to 1178 BCE), The Age of Burning Palaces (1177 to 801 BCE), The Age of Oracles (800 to 28 BCE), The Age of Silk and Eagles (27 BCE to 476 CE), The Age of Fallen Thrones (477 to 907) and The Age of Gathering Darkness (908 to 1196). Each keeps the prologue rule: chosen only with the era lock, never by date. Each carries the old group (living-gods or classical), the old group's upstream ability set and its music kit.
 
 Reverse: put the two old profiles back in data/eras.json and drop the seven.
 
@@ -3060,7 +3061,7 @@ WoDX Chronicle 0.47.0. eras.json "legacy" maps living-gods to The Age of Living 
 Reverse: remove "legacy" and the fallback in getProfile.
 
 ## B2512. Every era takes a World of Darkness name (2026-11-12, Ben asked; naming desk https://claude.ai/artifact/XZE9pqoyZxuy7n54ky8beV)
-WoDX Chronicle 0.47.0, Atmosphere 0.13.1. The era ids stay; only the names change, to Ben's picks on the desk (2026-11-12 23:26Z; The Age of Cold Iron, The Age of Silk and Eagles and The Wyld West are new proposals waiting on Ben): The Dark Medieval, The Long Night, The Burning Times, The Age of Revolutions, The Age of Steam and Shadow, The Wyld West, The Iron Harvest, The Age of Ashes, The Final Nights, The Time of Judgment, The Age of Future Darkness, Time of Future Judgement, and the seven prologue names above. The timeline desk's tabs read the same names.
+WoDX Chronicle 0.47.0, Atmosphere 0.13.1. The era ids stay; only the names change, to Ben's picks on the desk (final 2026-11-12 23:38Z): The Dark Medieval, The Long Night, The Burning Times, The Age of Revolutions, The Age of Steam and Shadow, The Wyld West, The Iron Harvest, The Age of Ashes, The Final Nights, The Time of Judgment, The Age of Future Darkness, Time of Future Judgement, and the seven prologue names above. The timeline desk's tabs read the same names.
 
 Reverse: put the old names back in data/eras.json and the kits.
 
@@ -3068,6 +3069,16 @@ Reverse: put the old names back in data/eras.json and the kits.
 WoDX Storyteller 0.53.0. The prologue primers name the Americas, Africa and Asia as well as Europe, and Moravia only as one place among many. The prologue timeline adds 70 events outside Europe and the Middle East (China, Japan, India, south-east Asia, the Pacific, Africa and the Americas).
 
 Reverse: restore the old primer lines in setup-rules.mjs.
+
+## B2514. Lifting the lock from a prologue era goes straight back (2026-11-13, testbed finding)
+WoDX Chronicle 0.47.1. No date reaches a prologue, so when the Storyteller clears the era lock while a prologue is in force, the chronicle moves to the date's era at once, even with era proposals on. Before, it waited in the approval queue.
+
+Reverse: drop the prologue test in checkEra (eras.mjs).
+
+## B2515. Every prologue era holds at least 300 events (2026-11-13, Ben)
+The timeline's 300-event floor applies to each of the seven prologue eras: Before the Flood 303, The Age of Living Gods 302, The Age of Burning Palaces 302, The Age of Oracles 312, The Age of Silk and Eagles 312, The Age of Fallen Thrones 300, The Age of Gathering Darkness 303. The new events are mostly real history from every region, with house readings for the lines where they fit.
+
+Reverse: remove the blocks marked "to 300 events" in r3/living-gods.txt and r3/classical.txt.
 ## B2520. Building types for the later ages (2026-11-12, Master Plan leftover of maps and a town generator)
 tools/mapgen/latertypes.py adds sixteen building types so that every age from 1650 to World of Future Darkness has a house, a shop and an inn of its own being built, with the public buildings a town of the age needs: the passage house, the tolerance prayer house, the workers' colony house, the shop house, the pub with its hall, the bus station, the co-operative store, the family house built to one plan, the corner shop, the distribution shed, and for the future the vending hall, counter bar, street clinic, security post, pod station and data hall. Each is modelled on a kind of building that stood in Moravia in its years, drawn from general knowledge of the type, not from any one plan. The era layers place the public ones from their first year.
 
@@ -3116,6 +3127,31 @@ Reverse: remove the settlement under Settlements.
 ## B2529. Left open (2026-11-12)
 The generator's building types, ages, trades and offices are those of Moravia and the Bohemian crown lands; the record says so (region) and the review tells the Storyteller. WoDX covers the whole world (Ben, 2026-11-12), so other regions are open work: each needs its own building types, ages and trade tables in tools/mapgen, chosen with --region. Also not built: the generator's markets and factions for a new settlement (WoDX Storyteller's markets read hand-set scenes), sheets for the hidden folk themselves, and ties inside one block of flats beyond those the record gives. The population the generator reaches still falls short of the figure it aims at for small places; that is the older layout's behaviour and is left as it is.
 
+
+## B2530. A global World of Darkness: the world's regions (2026-11-12, Ben's rule)
+Ben: the whole world is within WoDX's scope, and no work may look only at Moravia, Germany or Europe. WoDX Chronicle 0.48.0 adds world-rules.mjs: 44 regions on every inhabited continent, each with a typical city (latitude and longitude), a climate, a money region and the peoples who live there by age. A Homeland setting picks the chronicle's region and sets the latitude, the part of the world and the people's culture; money is left alone because purses hold sums in the old money. A scene's place flag may name a region; the scene then takes its latitude, and the people generator and the weather follow it there. The rule, the audit and what is still open are in docs/GLOBAL.md.
+
+Reverse: set the Homeland back to Moravia and clear the regions on scenes; the older settings (latitude, chronicle region, where the people come from) still work by themselves.
+
+## B2531. Peoples and names of the world (2026-11-12, house reading)
+WoDX Creation 0.16.0, data/people-world.mjs: 39 peoples with given and family names in WoDX's own lists, from history and common use, no book text. Name tables carry no culture, so any region whose mix names a people draws them; a region may also borrow a neighbour's tables (the German lands draw Bohemia's medieval German names). The family name comes first for Chinese, Japanese, Korean, Vietnamese and Hungarian names. Arabic, Malay and Swahili names may be "son of" or "daughter of" a father's name, an Amharic second name is the father's given name, and Turkish names are "-oğlu" until the modern age. Peoples who used no family name have the given name alone. Who lives in each region in each age is a rounded house mix. Regions settled or recorded late (Australia from 1788, Brazil from 1500, the Caribbean from 1492, the American West from 1598, eastern North America from 1607) say from which year WoDX has names; before it the generator borrows the later names and the Homeland notice tells the Storyteller to name people by hand.
+
+Reverse: remove WORLD_PEOPLE_TABLES from PEOPLE_TABLES; edit any list in the WoDX tables folder in the world.
+
+## B2532. Money of the world (2026-11-12, house figures)
+WoDX Storyteller 0.54.0: 20 more money regions (France, Italy, Spain and Portugal, the Low Countries, Scandinavia, Poland, Russia, the Ottoman lands, Egypt with the Levant and Arabia, Persia, India, China, Japan, West, East and Southern Africa, Spanish America, Brazil, Australia, the Pacific). Units and their worth follow the coins of each land; wages are rounded house figures on the same footing as the older four (a one-dot worker's month). Lands without coin reckon in goods (cacao beans and cotton cloaks in Mexico, cattle, hoes and beads in southern Africa, plain trade goods elsewhere). North America has no coin before 1607. The books give none of this.
+
+Reverse: change MONIES and COINS in money-rules.mjs.
+
+## B2533. Climates of the world (2026-11-12, house figures)
+WoDX Atmosphere 0.14.0: 22 more climates, with southern ones whose summer falls at the turn of the year. With the climate set to follow the region, the weather is the homeland's, or that of the region the viewed scene stands in. The Little Ice Age and the cold summer of 1816 still apply everywhere as Europe felt them.
+
+Reverse: pick a climate by hand in the settings.
+
+## B2534. Tongues and households of the world (2026-11-12)
+The list of tongues to learn grows from 30 to 71, speech a character cannot follow has 21 sound sets, and spoken lines look for 37 browser languages (Voices 0.3.2). NPC 0.48.1: a household's women take the listed feminine family name of their people, and kin of a household named "son of" are named for its master in that people's words.
+
+Reverse: trim LANGUAGES and SOUNDS in languages-rules.mjs; drop the FEMININE lookup in kinFamily.
 ## B2540. The whole Earth as one coarse grid (2026-11-12, Ben asked for a rough map of the Earth made the way Daggerfall makes its land)
 WoDX Storyteller 0.55.0 carries the world as 360 by 180 squares, one for each degree (about 100 km at the equator): each square's ground (sea, lake, ice, mountains, plateau, desert, tundra, plain, wetland, other land), the great rivers, and the named ranges, deserts and seas. tools/mapgen/world/build_world.py makes it from Natural Earth, which is in the public domain; nothing comes from a game. It is the far view only. WoDX is global (Ben, 2026-11-12), so this is the base every region's maps and trips can stand on.
 

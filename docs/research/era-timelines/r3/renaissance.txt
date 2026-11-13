@@ -325,3 +325,69 @@
 1595|W|hun|EU|Lorraine|persecution,occult|Nicholas Remy's book|A witch judge of Lorraine publishes his book on demons, boasting of hundreds burned.
 1597|W|hun|EU|Edinburgh|persecution,occult|King James's Daemonologie|James VI of Scotland writes against witches.
 1599|H|mor|EU|Prague|science|Tycho in Prague|Tycho Brahe becomes imperial mathematician to Rudolf.
+# The Americas, Africa and Oceania (the global rule, 2026-11-12)
+1450|H|mor|AM|Onondaga|law,treaty,founding|The Great Law of Peace|By one tradition five nations of the Haudenosaunee bury their weapons under a white pine about this time and form a league.
+1450|H|mor|AM|Machu Picchu|building,crown|Machu Picchu|Pachacuti has a royal estate built on a ridge above the Urubamba.
+1454|H|mor|AM|Tenochtitlan|famine,faith|The famine of One Rabbit|Frost and drought starve the Valley of Mexico for years; families sell themselves for maize.
+1470|H|mor|AM|Chan Chan|war,empire|The Inca take Chimor|Tupac Inca Yupanqui conquers the Chimu kingdom and carries its king to Cuzco.
+1487|H|mor|AM|Tenochtitlan|faith,massacre,building|The Great Temple rededicated|Ahuitzotl rededicates the Great Temple with the sacrifice of thousands of captives over four days.
+1493|H|mor|AM|Hispaniola|founding,empire,plague|The second voyage|Seventeen ships bring settlers, horses, pigs and sickness to Hispaniola.
+1496|H|mor|AM|Santo Domingo|founding|Santo Domingo|Bartholomew Columbus founds Santo Domingo, the oldest European city in the Americas still lived in.
+1502|H|mor|AM|Tenochtitlan|crown|Moctezuma the younger|Moctezuma Xocoyotzin becomes ruler of the Mexica at the height of their power.
+1502|H|mor|AM|Hispaniola|trade,persecution|The first enslaved Africans in the Americas|The new governor of Hispaniola brings enslaved Africans from Spain to the island.
+1511|H|mor|AM|Santo Domingo|faith,law|Montesinos preaches|A Dominican friar tells the settlers of Hispaniola from the pulpit that they are in mortal sin for their cruelty to the Taino.
+1513|H|mor|AM|Darien|exploration,sea|Balboa sees the Pacific|Balboa crosses the isthmus of Panama and wades into the South Sea to claim it for Castile.
+1519|H|mor|AM|Veracruz|war,exploration,empire|Cortes lands|Hernan Cortes lands on the Gulf coast with some five hundred soldiers, marches inland and enters Tenochtitlan as a guest.
+1520|H|mor|AM|Tenochtitlan|plague,death,uprising|Smallpox and the Night of Sorrows|The Mexica drive the Spaniards out with great loss, and smallpox then kills a large part of the city.
+1521|H|mor|AM|Tenochtitlan|siege,war,empire|Tenochtitlan falls|After a siege of three months Cortes and his Tlaxcalan allies take the ruined city.
+1521|W|wra|AM|Tenochtitlan|plague,occult|The dead of the conquest|The house reading has the plagues and the siege fill the lands of the dead beyond anything their keepers can bear; the wraiths' books tell of a Dark Kingdom of the Americas broken in these years.
+1527|H|mor|AM|Quito|plague,death,crown|Huayna Capac dies|The Inca emperor dies of a sickness that runs ahead of the Spaniards, and two sons fight over the empire.
+1531|H|mor|AM|Tepeyac|faith|Our Lady of Guadalupe|By the church's account a Nahua convert sees the Virgin on the hill of Tepeyac outside Mexico City.
+1532|H|mor|AM|Cajamarca|war,massacre,crown|Cajamarca|Pizarro seizes the Inca Atahualpa in the square of Cajamarca and kills thousands of the escort.
+1533|H|mor|AM|Cuzco|death,empire,money|Atahualpa killed|Atahualpa fills a room with gold for a ransom and is strangled anyway; the Spaniards take Cuzco.
+1535|H|mor|AM|Lima|founding|Lima founded|Pizarro founds the City of the Kings near the coast.
+1535|H|mor|AM|Hochelaga|exploration|Cartier on the Saint Lawrence|Jacques Cartier sails up the river to the Iroquoian town of Hochelaga, where Montreal will stand.
+1540|H|mor|AM|Hawikuh|exploration,war|Coronado in the north|Coronado marches from Mexico to the Zuni towns and the plains in search of golden cities and finds none.
+1542|H|mor|AM|Mexico City|law|The New Laws|Charles V forbids the enslaving of the native peoples of the Indies; the settlers resist.
+1545|H|mor|AM|Mexico City|plague,death|The great cocoliztli|A bleeding fever kills perhaps most of the native people of highland Mexico in three years.
+1545|H|mor|AM|Potosi|industry,money|The silver mountain|Silver is found at Potosi, and within a generation a city larger than Paris stands at four thousand metres.
+1549|H|mor|AM|Salvador|founding,empire|Salvador da Bahia|The Portuguese crown founds Salvador as the capital of Brazil.
+1562|H|mor|AM|Mani|faith,persecution,learning|The burning at Mani|Friar Diego de Landa burns the Maya books and images of Yucatan.
+1565|H|mor|AM|Saint Augustine|founding,massacre|Saint Augustine|The Spanish found Saint Augustine in Florida and kill the French Protestants settled nearby.
+1565|H|mor|AM|Acapulco|trade,sea|The Manila galleon|A ship finds the way back east across the Pacific, and for two and a half centuries a galleon carries silver to Manila and silk to Acapulco.
+1570|H|mor|AM|Lima|faith,persecution,law|The Inquisition in the Indies|Tribunals of the Holy Office are set up in Lima and then in Mexico City.
+1572|H|mor|AM|Vilcabamba|war,death,crown|The last Inca|The Spaniards take the mountain refuge of Vilcabamba and behead Tupac Amaru in the square of Cuzco.
+1576|H|mor|AM|Mexico City|plague|The second cocoliztli|The bleeding fever returns to New Spain and kills about two million.
+1585|H|mor|AM|Roanoke|founding,exploration|Roanoke|English settlers land on Roanoke Island off the Carolina coast.
+1590|H|mor|AM|Roanoke|migration,death|The lost colony|A relief ship finds the settlement of Roanoke empty and the word CROATOAN cut into a post.
+1590|W|wer|AM|Roanoke|occult,death|The Croatan|The house reading follows the Garou's own story: in these years the Croatan tribe gives itself whole to bind a great Wyrm spirit, and the Pure Ones are two tribes where there were three.
+1600|H|mor|AM|Huaynaputina|disaster,weather|Huaynaputina|A volcano in southern Peru explodes; the ash darkens the sky, and the next years bring cold summers and famine as far as Russia.
+1456|H|mor|AF|Cape Verde|exploration,sea|The Cape Verde islands|Ships in Portuguese service find the empty islands of Cape Verde.
+1464|H|mor|AF|Gao|crown,empire|Sunni Ali|Sunni Ali takes the throne of Songhai and builds a fleet of war canoes on the Niger.
+1468|H|mor|AF|Timbuktu|war,massacre,learning|Sunni Ali takes Timbuktu|Songhai takes Timbuktu from the Tuareg, and many of its scholars are killed or flee.
+1482|H|mor|AF|Elmina|building,trade,empire|The castle of Elmina|The Portuguese build a stone fort on the Gold Coast to trade for gold, and later for people.
+1483|H|mor|AF|Mbanza Kongo|exploration,travel|The Portuguese reach Kongo|Diogo Cao anchors in the mouth of the Congo and sends envoys to the king.
+1488|H|mor|AF|Cape of Good Hope|exploration,sea|The Cape rounded|Bartolomeu Dias rounds the southern tip of Africa in a storm.
+1491|H|mor|AF|Mbanza Kongo|faith,crown|The king of Kongo baptised|Nzinga a Nkuwu is baptised as Joao the First of Kongo.
+1493|H|mor|AF|Gao|crown,empire,faith|Askia Muhammad|A general overthrows Sunni Ali's son and rules Songhai as Askia Muhammad, patron of the scholars of Timbuktu.
+1498|H|mor|AF|Malindi|exploration,sea,trade|Vasco da Gama on the Swahili coast|The Portuguese fleet calls at Mozambique, Mombasa and Malindi, where it finds a pilot for India.
+1505|H|mor|AF|Kilwa|war,massacre,empire|Kilwa and Mombasa sacked|A Portuguese fleet takes Kilwa and burns Mombasa.
+1509|H|mor|AF|Mbanza Kongo|crown,faith|Afonso of Kongo|Afonso the First wins the throne of Kongo and makes it a Christian kingdom with its own bishop and schools.
+1510|H|mor|AF|Timbuktu|travel,learning|Leo Africanus in Timbuktu|A young envoy from Fez visits Timbuktu about this year and later writes that books sell there for more than any other goods.
+1526|H|mor|AF|Mbanza Kongo|trade,persecution,law|Afonso's letter|The king of Kongo writes to the king of Portugal that slave traders are carrying off even nobles and asks that the trade be stopped.
+1529|H|mor|AF|Shimbra Kure|battle,war,faith|Ahmad Gran|The imam Ahmad of Adal breaks the Ethiopian army with Ottoman firearms and overruns the highlands.
+1543|H|mor|AF|Wayna Daga|battle,death|Wayna Daga|Ethiopian and Portuguese musketeers kill Ahmad Gran, and the invasion collapses.
+1562|H|mor|AF|Sierra Leone|trade,sea,persecution|Hawkins's voyage|John Hawkins carries captives from the Guinea coast to Hispaniola, the first English slaving voyage.
+1568|H|mor|AF|Mbanza Kongo|war|The Jaga in Kongo|Invaders from the east sack the capital of Kongo, and the king regains it only with Portuguese guns.
+1571|H|mor|AF|Ngazargamu|crown,empire|Idris Alooma|Idris Alooma becomes ruler of Bornu about this year and arms his horsemen with Turkish muskets.
+1575|H|mor|AF|Luanda|founding,empire,trade|Luanda founded|Paulo Dias de Novais founds Luanda, which will send more captives across the Atlantic than any other port.
+1591|H|mor|AF|Tondibi|battle,empire|Tondibi|A Moroccan army with firearms crosses the Sahara and destroys Songhai at Tondibi.
+1593|H|mor|AF|Mombasa|building,empire|Fort Jesus|The Portuguese build Fort Jesus to hold Mombasa.
+1594|H|mor|AF|Timbuktu|persecution,learning|Ahmad Baba in chains|The Moroccans carry the scholar Ahmad Baba and his library from Timbuktu to Marrakesh.
+1470|H|mor|OC|Tongatapu|crown,law|A second line in Tonga|The Tu'i Tonga keeps the sacred office and hands the daily rule to a brother, the first Tu'i Ha'atakalaua.
+1500|H|mor|OC|Hawaii|crown,war|Umi of Hawaii|By tradition the chief Umi-a-Liloa unites the island of Hawaii about this time.
+1500|H|mor|OC|Aotearoa|war,building|The age of the pa|As land grows scarce the tribes of Aotearoa build terraced hill forts.
+1521|H|mor|OC|Guam|exploration,sea|Magellan at Guam|After ninety-nine days on the Pacific the fleet reaches Guam; a quarrel over a boat ends with houses burned.
+1526|H|mor|OC|New Guinea|exploration,sea|The Portuguese sight New Guinea|Jorge de Meneses winters on the north-west coast of New Guinea.
+1568|H|mor|OC|Solomon Islands|exploration,sea|Mendana in the Solomons|A Spanish fleet from Peru finds the Solomon Islands and names them for the gold it hopes is there.
+1595|H|mor|OC|Marquesas|exploration,massacre,sea|Mendana's second voyage|The Spaniards reach the Marquesas, kill about two hundred islanders and fail to found a colony at Santa Cruz.

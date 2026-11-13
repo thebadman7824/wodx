@@ -76,6 +76,15 @@ export async function runSetup(opts = {}) {
   const plan = S.plan(have());
   if ( opts.dry ) return {plan, profile, done: []};
   const done = [];
+  // The homeland (Chronicle 0.48.0) sets the part of the world, the people's names and, unless one was typed, the latitude
+  const world = game.modules.get("wodx-chronicle")?.api?.world;
+  const land = world?.regionOf?.(opts.homeland);
+  if ( land && world.setHomeland && land.id !== world.homeland() ) {
+    const typed = Number.isFinite(Number(opts.latitude)) && opts.latitude !== "" && Number(opts.latitude) !== getC("latitude");
+    await world.setHomeland(land.id, {latitude: typed ? Number(opts.latitude) : land.lat});
+    opts = {...opts, region: land.part, latitude: typed ? opts.latitude : land.lat};
+    done.push("homeland");
+  }
   if ( opts.region && getC("region") !== opts.region ) { await game.settings.set("wodx-chronicle", "region", opts.region); done.push("region"); }
   if ( Number.isFinite(Number(opts.latitude)) && Number(opts.latitude) !== getC("latitude") ) { await game.settings.set("wodx-chronicle", "latitude", Number(opts.latitude)); done.push("latitude"); }
   if ( opts.climate && game.modules.get("wodx-atmosphere")?.active ) {
@@ -97,7 +106,7 @@ export async function runSetup(opts = {}) {
   }
   try { dateLabel = cal0()?.describeTime?.(game.time.worldTime, Number(getC("latitude")) || 50.1)?.dateLabel ?? ""; } catch (e) { dateLabel = ""; }
   const active = C?.eras?.activeEra?.()?.profile ?? profile;
-  const regionLabel = {europe: "Europe", americas: "The Americas", other: "Elsewhere"}[getC("region")] ?? "";
+  const regionLabel = game.modules.get("wodx-chronicle")?.api?.world?.here?.(null)?.label ?? {europe: "Europe", americas: "The Americas", other: "Elsewhere"}[getC("region")] ?? "";
   let climateLabel = "";
   try { const A = game.modules.get("wodx-atmosphere")?.api; climateLabel = A ? A.rules.W.CLIMATES[A.weather.climate()]?.label ?? "" : ""; } catch (e) { climateLabel = ""; }
 
@@ -137,6 +146,9 @@ export async function openSetup() {
   const months = (calMod?.MONTHS ?? Array.from({length: 12}, (_, i) => String(i + 1))).map((m, i) => `<option value="${i + 1}"${i + 1 === (now?.month ?? 1) ? " selected" : ""}>${esc(m)}</option>`).join("");
   const A = game.modules.get("wodx-atmosphere");
   const climates = A?.active ? Object.entries(A.api?.rules?.W?.CLIMATES ?? {}) : [];
+  const worldApi = game.modules.get("wodx-chronicle")?.api?.world;
+  const homelands = Object.entries(worldApi?.regions ?? {});
+  const curHomeland = worldApi?.homeland?.() ?? "moravia";
   const curClimate = (() => { try { return game.settings.get("wodx-atmosphere", "climate"); } catch (e) { return "auto"; } })();
   const off = S.WODX_MODULES.filter(id => game.modules.get(id) && !game.modules.get(id).active);
   const lineBoxes = Object.entries(S.LINES).map(([k, v]) => `<label class="wstory-check"><input type="checkbox" name="line-${k}"${(prev.lines ?? []).includes(k) ? " checked" : ""}> ${esc(v.label)}</label>`).join("");
@@ -155,7 +167,10 @@ export async function openSetup() {
       <details><summary>Which year is which era</summary><ul>${eraList}</ul></details>
     </fieldset>
     <fieldset><legend>Where</legend>
-      <div class="form-group"><label>Region</label><select name="region" data-fixed>${[["europe", "Europe"], ["americas", "The Americas"], ["other", "Elsewhere"]].map(([k, l]) => `<option value="${k}"${getC("region") === k ? " selected" : ""}>${l}</option>`).join("")}</select></div>
+      ${homelands.length
+    ? `<div class="form-group"><label>Homeland</label><select name="homeland" data-fixed>${homelands.map(([k, r]) => `<option value="${k}"${curHomeland === k ? " selected" : ""}>${esc(r.label)}</option>`).join("")}</select></div>
+      <p class="wodx-quiet">Anywhere in the world. The people's names and the weather follow the homeland, and so does the latitude unless you change it below.</p>`
+    : `<div class="form-group"><label>Region</label><select name="region" data-fixed>${[["europe", "Europe"], ["americas", "The Americas"], ["other", "Elsewhere"]].map(([k, l]) => `<option value="${k}"${getC("region") === k ? " selected" : ""}>${l}</option>`).join("")}</select></div>`}
       <div class="form-group"><label>Latitude (degrees north)</label><input type="number" name="latitude" value="${getC("latitude") ?? 50.1}" step="0.1"></div>
       ${climates.length ? `<div class="form-group"><label>Climate</label><select name="climate" data-fixed><option value="auto"${curClimate === "auto" ? " selected" : ""}>Follow the region</option>${climates.map(([k, c]) => `<option value="${k}"${curClimate === k ? " selected" : ""}>${esc(c.label)}</option>`).join("")}</select></div>` : ""}
     </fieldset>
@@ -164,7 +179,7 @@ export async function openSetup() {
     <p class="wodx-quiet">House rules are in the Chronicle Clock's House rules window; the Chronicle Rules journal lists them for everyone.</p>`;
   const read = form => {
     const f = new foundry.applications.ux.FormDataExtended(form).object;
-    return {name: f.name, year: f.year, month: f.month, day: f.day, hour: f.hour, setDate: !!f.setDate, region: f.region, latitude: f.latitude, climate: f.climate,
+    return {name: f.name, year: f.year, month: f.month, day: f.day, hour: f.hour, setDate: !!f.setDate, region: f.region, homeland: f.homeland, latitude: f.latitude, climate: f.climate,
       lines: Object.keys(S.LINES).filter(k => f[`line-${k}`])};
   };
   const result = await foundry.applications.api.DialogV2.wait({

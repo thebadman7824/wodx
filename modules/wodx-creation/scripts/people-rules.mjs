@@ -4,6 +4,7 @@
  */
 import {draw, between, pick, shuffled} from "../../wodx-chronicle/scripts/gen-core.mjs";
 import {TRADE_SHEETS} from "../data/people.mjs";
+import {FAMILY_FIRST} from "../data/people-world.mjs";
 
 export const ATTRS = {physical: ["strength", "dexterity", "stamina"], social: ["charisma", "manipulation", "appearance"], mental: ["perception", "intelligence", "wits"]};
 const GROUP = {p: "physical", s: "social", m: "mental"};
@@ -28,7 +29,8 @@ export function nameOf({rand, tables, origin, sex}) {
   const vars = {child: sex === "female" ? "bat" : "ben"};
   const given = text(tables, `names.${sex}.${origin}`, rand, vars);
   const family = text(tables, `names.family.${sex}.${origin}`, rand, vars) ?? text(tables, `names.byname.${sex}.${origin}`, rand, vars);
-  return {given, family, name: [given, family].filter(Boolean).join(" ")};
+  // Chinese, Japanese, Korean, Vietnamese and Hungarian names put the family first
+  return {given, family, name: (FAMILY_FIRST.has(origin) ? [family, given] : [given, family]).filter(Boolean).join(" ")};
 }
 
 /** The sheet's dots for a trade: Attributes by its priority, its Abilities, and a few everyday ones. */

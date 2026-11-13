@@ -323,3 +323,80 @@
 1913|H|mor|ME|Istanbul|terror,revolution|The raid on the Sublime Porte|Enver Pasha storms the government offices, the war minister is shot, and the Committee of Union and Progress takes power.
 1913|H|mor|MO|Vitkovice|industry|The Vitkovice works|The ironworks at Vitkovice by Ostrava become one of the great steel and coal works of the empire.
 1913|W|wer|EU|Ruhr|industry,occult|Pentex's forerunners|The house reading has Glass Walkers watching a German chemical firm whose board answers to something in the Wyrm's service.
+# The Americas, Africa and Oceania (the global rule, 2026-11-12)
+1838|H|mor|AM|Oklahoma|migration,persecution,death|The Trail of Tears|Soldiers march the Cherokee west at bayonet point; about a quarter die on the way.
+1846|H|mor|AM|Rio Grande|war,empire|The war with Mexico|The United States goes to war with Mexico over Texas and takes half its territory in two years.
+1848|H|mor|AM|Sutter's Mill|money,migration,industry|Gold in California|Gold is found on the American River days before California passes to the United States; the world rushes in.
+1850|H|mor|AM|Washington|law,persecution|The Fugitive Slave Act|Northern officials and bystanders are bound by law to help return people who have escaped from slavery.
+1859|H|mor|AM|Harpers Ferry|uprising,terror,death|John Brown's raid|An abolitionist seizes a federal armoury to arm the enslaved and is hanged for it.
+1861|H|mor|AM|Charleston|war,battle|Fort Sumter|Southern batteries fire on a federal fort, and four years of civil war begin.
+1862|H|mor|AM|Minnesota|war,famine,massacre|The Dakota war|Starving Dakota rise along the Minnesota River; thirty-eight are hanged in one day, the largest execution in American history.
+1862|H|mor|AM|Puebla|battle,empire|The fifth of May|A Mexican army beats a French one at Puebla; the French take Mexico City the next year and crown an Austrian archduke.
+1863|H|mor|AM|Gettysburg|battle,war,law|Emancipation and Gettysburg|Lincoln declares the enslaved of the rebel states free on New Year's Day, and in July the rebel invasion of the north is broken.
+1864|H|mor|AM|Sand Creek|massacre,war|Sand Creek|Colorado volunteers kill some hundred and fifty Cheyenne and Arapaho, mostly women and children, camped under a flag of truce.
+1864|H|mor|AM|Paraguay|war,death,famine|The war of the Triple Alliance|Paraguay goes to war with Brazil, Argentina and Uruguay and in six years loses most of its men.
+1865|H|mor|AM|Washington|death,war,law|Appomattox and Ford's Theatre|The main rebel army surrenders, the president is shot five days later, and slavery is ended by amendment at the end of the year.
+1865|H|mor|AM|Morant Bay|uprising,massacre,law|Morant Bay|A protest by black Jamaicans is put down with hundreds of hangings, and Britain argues for years over the governor's guilt.
+1867|H|mor|AM|Ottawa|founding,law|Canada|Four British colonies join as the Dominion of Canada.
+1867|H|mor|AM|Queretaro|death,crown,revolution|Maximilian shot|The republic of Benito Juarez shoots the emperor the French left behind.
+1869|H|mor|AM|Promontory|building,travel,industry|The golden spike|Rails laid largely by Chinese and Irish workers join the two coasts of the United States.
+1871|H|mor|AM|Chicago|fire,disaster|The Chicago fire|A fire burns for two days and leaves a third of Chicago homeless.
+1876|H|mor|AM|Little Bighorn|battle,war|The Greasy Grass|Lakota, Cheyenne and Arapaho warriors destroy Custer's command on the Little Bighorn.
+1879|H|mor|AM|Atacama|war,industry,sea|The War of the Pacific|Chile fights Peru and Bolivia for the nitrate desert, and Bolivia loses its coast.
+1885|H|mor|AM|Batoche|uprising,war,death|The North-West rising|The Metis and their Cree allies rise on the Saskatchewan; Louis Riel is hanged for treason.
+1886|H|mor|AM|Skeleton Canyon|war,migration|Geronimo surrenders|The last Apache band at war gives itself up and is sent to prison in Florida.
+1888|H|mor|AM|Rio de Janeiro|law|The Golden Law|Brazil, the last country in the Americas to keep slavery, abolishes it; the empire falls the next year.
+1890|H|mor|AM|Wounded Knee|massacre,faith|Wounded Knee|Soldiers kill some three hundred Lakota, many of them Ghost Dancers, on Wounded Knee Creek.
+1890|W|wer,wra|AM|Wounded Knee|occult,faith|The Ghost Dance|The house reading has the Pure Ones' Garou among the dancers, and the dead of the plains answer the dance in the Shadowlands though the living cannot see them.
+1896|H|mor|AM|Dawson City|money,migration|The Klondike|Gold is found on a creek in the Yukon, and a hundred thousand people set out for it.
+1897|H|mor|AM|Canudos|war,faith,massacre|Canudos|The Brazilian army destroys a holy man's settlement in the backlands and kills nearly all its people.
+1898|H|mor|AM|Havana|war,empire,sea|The war with Spain|An American battleship blows up in Havana harbour; within the year Spain loses Cuba, Puerto Rico and the Philippines.
+1900|H|mor|AM|Galveston|storm,disaster,flood|The Galveston hurricane|A hurricane drowns at least six thousand people on the Texas coast.
+1902|H|mor|AM|Saint-Pierre|disaster,death|Mont Pelee|A cloud of burning gas from the volcano kills nearly thirty thousand people in Saint-Pierre, Martinique, in minutes.
+1903|H|mor|AM|Panama|founding,empire,building|Panama|Panama breaks from Colombia with American warships offshore and grants the canal zone within weeks.
+1906|H|mor|AM|San Francisco|quake,fire,disaster|The San Francisco earthquake|An earthquake and three days of fire destroy most of San Francisco.
+1910|H|mor|AM|Mexico|revolution,war|The Mexican Revolution|A call to arms against the old dictator Diaz begins ten years of civil war.
+1840|H|mor|AF|Zanzibar|crown,trade|Zanzibar the capital|The sultan of Oman makes Zanzibar the seat of the realm.
+1838|H|mor|AF|Ncome River|battle,war|Blood River|A Boer wagon fort beats off Dingane's regiments on the Ncome.
+1847|H|mor|AF|Monrovia|founding,law|The republic of Liberia|The settlers of Liberia declare a republic.
+1855|H|mor|AF|Ethiopia|crown,war|Tewodros|A former bandit is crowned Tewodros the Second and sets out to reunite Ethiopia.
+1855|H|mor|AF|Zambezi|exploration,travel|The smoke that thunders|David Livingstone is shown the great falls of the Zambezi and names them for the queen.
+1856|H|mor|AF|Xhosaland|faith,famine,death|The cattle killing|A young prophetess tells the Xhosa to kill their cattle so that the ancestors will rise; tens of thousands starve.
+1867|H|mor|AF|Kimberley|industry,money,migration|Diamonds|A child finds a diamond near the Orange River, and the rush that follows remakes southern Africa.
+1868|H|mor|AF|Magdala|war,death,crown|Magdala|A British expedition storms Tewodros's mountain fortress to free hostages, and the emperor shoots himself.
+1871|H|mor|AF|Ujiji|travel,media|Stanley finds Livingstone|A newspaper's correspondent finds the missing missionary on Lake Tanganyika.
+1873|H|mor|AF|Zanzibar|law,trade|The slave market closed|Under the guns of the British navy the sultan closes the slave market of Zanzibar; a cathedral is built on the site.
+1874|H|mor|AF|Kumasi|war,fire|Kumasi burned|A British expedition burns the Asante capital.
+1879|H|mor|AF|Isandlwana|battle,war,empire|Isandlwana|The Zulu army destroys a British column at Isandlwana; the kingdom is broken by the end of the year.
+1881|H|mor|AF|Sudan|faith,uprising,war|The Mahdi|A Sudanese holy man proclaims himself the Mahdi and raises the country against Egyptian rule.
+1885|H|mor|AF|Congo|empire,founding,persecution|The Congo Free State|The powers recognise the king of the Belgians as the private owner of the Congo; millions die in the rubber terror that follows.
+1885|W|wer,vam|AF|Congo|occult,empire|The scramble|The house reading has every hidden power of Europe follow the flags into Africa and find the continent already held: by its own shapeshifters, its own undead and its own dead.
+1886|H|mor|AF|Johannesburg|industry,money,founding|Gold on the Rand|The richest goldfield in the world is found on the Witwatersrand.
+1893|H|mor|AF|Bulawayo|war,empire,industry|The Matabele war|A chartered company's column with machine guns takes the Ndebele capital.
+1896|H|mor|AF|Adwa|battle,war,empire|Adwa|The army of Menelik the Second destroys an Italian army at Adwa, and Ethiopia stays free.
+1896|H|mor|AF|Zanzibar|war,crown|The shortest war|British ships shell the sultan's palace at Zanzibar; the war lasts under an hour.
+1897|H|mor|AF|Benin City|war,fire,art|Benin sacked|A British expedition burns Benin City and carries off thousands of its brasses and ivories.
+1899|H|mor|AF|Transvaal|war,empire|The South African War|The Boer republics go to war with Britain; farms are burned and families held in camps, where tens of thousands die.
+1900|H|mor|AF|Kumasi|uprising,war,crown|The war of the Golden Stool|A British governor demands to sit on the Golden Stool, and the queen mother Yaa Asantewaa leads the Asante to war.
+1904|H|mor|AF|Waterberg|massacre,war,persecution|The Herero and Nama|German troops drive the Herero into the desert and issue an order to destroy them; most of the Herero and half the Nama die.
+1905|H|mor|AF|Tanganyika|uprising,faith,famine|Maji Maji|The peoples of southern German East Africa rise, trusting in a water that turns bullets aside; the famine made in reprisal kills far more than the fighting.
+1908|H|mor|AF|Congo|law,empire|The Congo taken from the king|After an outcry over the rubber terror Belgium takes the Congo from Leopold.
+1910|H|mor|AF|Pretoria|founding,law|The Union of South Africa|The four colonies join in a union ruled by its white minority.
+1912|H|mor|AF|Bloemfontein|founding,law|A native national congress|Black leaders found the body that becomes the African National Congress.
+1840|H|mor|OC|Waitangi|treaty,empire,law|The Treaty of Waitangi|Maori chiefs and the British crown sign a treaty whose two texts say different things.
+1851|H|mor|OC|Ballarat|money,migration,industry|Gold in Victoria|Gold is found in New South Wales and Victoria, and the population of the colonies trebles in ten years.
+1854|H|mor|OC|Ballarat|uprising,battle,law|The Eureka stockade|Soldiers storm a stockade of gold diggers who had sworn by a flag of the Southern Cross.
+1860|H|mor|OC|Taranaki|war,empire|War in Taranaki|A disputed land sale begins twelve years of war between the crown and Maori.
+1861|H|mor|OC|Cooper Creek|exploration,death|Burke and Wills|Two explorers cross Australia from south to north and starve on the way back beside a river where the Yandruwandha live well.
+1863|H|mor|OC|Queensland|trade,persecution,crime|Blackbirding|Ships begin bringing Pacific islanders to Queensland's cane fields, many by trickery or force.
+1863|H|mor|OC|Waikato|war,empire|The Waikato invaded|An imperial army crosses into the lands of the Maori king, and millions of acres are confiscated.
+1874|H|mor|OC|Fiji|empire,treaty,plague|Fiji ceded|Cakobau cedes Fiji to Britain; measles brought home from a state visit to Sydney kills about a third of the Fijians the next year.
+1876|H|mor|OC|Hobart|death,persecution|Truganini dies|The woman the colonists call the last Tasmanian dies in Hobart; her people's descendants live on.
+1880|H|mor|OC|Melbourne|crime,death,law|Ned Kelly hanged|The bushranger who fought the police in home-made armour is hanged in Melbourne.
+1884|H|mor|OC|New Guinea|empire|New Guinea divided|Germany takes the north-east of New Guinea and Britain the south-east.
+1893|H|mor|OC|Wellington|law|Votes for women|New Zealand is the first self-governing country where women vote for parliament.
+1893|H|mor|OC|Honolulu|uprising,crown,empire|The Hawaiian kingdom overthrown|Planters backed by American marines depose Queen Liliuokalani; the islands are annexed five years later.
+1899|H|mor|OC|Samoa|treaty,empire|Samoa divided|Germany and the United States divide Samoa between them.
+1901|H|mor|OC|Melbourne|founding,law|The Commonwealth of Australia|Six colonies federate; among the first laws is one to keep the country white.
+1911|H|mor|OC|South Pole|exploration,travel|The South Pole|Roald Amundsen's party reaches the South Pole with dogs and skis.
+1912|H|mor|OC|Ross Ice Shelf|exploration,death,weather|Scott's last march|Robert Scott's party reaches the pole a month after Amundsen and dies on the way back.

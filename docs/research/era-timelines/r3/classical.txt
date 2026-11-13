@@ -427,3 +427,810 @@
 1185|H|mor|AS|Dan-no-ura|battle,sea|Dan-no-ura|The Minamoto destroy the Taira at sea.
 1192|H|mor|AS|Tarain|battle|The second battle of Tarain|Muhammad of Ghor defeats Prithviraj Chauhan and opens north India.
 1192|H|mor|AS|Kamakura|crown|The first shogun|Minamoto Yoritomo is named shogun and rules Japan from Kamakura.
+# The Age of Oracles, to 300 events
+-800|H|mor|EU|Greece|founding|The Greek colonies begin|Greek towns send out their first colonies by sea.
+-800|H|mor|AS|India|learning|The early Upanishads|Teachers of the Ganges ask what the self is, and whether it is the world.
+-800|H|mor|AF|Nubia|crown|Kashta|Kashta of Kush takes Upper Egypt's southern towns.
+-800|H|mor|AM|Peru|founding|Paracas|The Paracas people of the south coast weave fine cloth and bind skulls.
+-800|H|mor|AS|China|science|Iron in China|Smiths in China begin to cast iron.
+-800|W|mag|EU|Greece|occult,faith|The oracles speak|Hermetic and Verbena scholars both trace their oldest Greek rites to the oracles of this age.
+-790|H|mor|EU|Greece|faith|The Heraion of Samos|Samos builds one of the first great temples of Greece, to Hera.
+-780|H|mor|AS|China|disaster|The earthquake of Zhou|A great earthquake strikes the Zhou heartland.
+-775|H|mor|EU|Italy|founding|Pithekoussai|Greeks found a trading post on the island of Ischia.
+-771|H|mor|AS|China|war|The fall of Haojing|Nomads and rebels sack the western Zhou capital; the Zhou move east.
+-770|H|mor|AS|China|crown|The Spring and Autumn period|The Zhou kings rule in name only as lords fight for power.
+-770|M|kue|AS|China|war,occult|The courts divide|Kuei-jin say the fall of western Zhou split the courts of the dead along the lords' borders.
+-760|H|mor|ME|Assyria|plague|Plague in Assyria|Plague and revolt shake Assyria.
+-763|H|mor|ME|Assyria|weather|The eclipse of Bur-Sagale|Assyrian scribes record a solar eclipse that fixes the dates of the age.
+-727|H|mor|AF|Egypt|war|Piye marches north|Piye of Kush conquers Egypt; his line rules it as the twenty-fifth dynasty.
+-750|H|mor|ME|Israel|faith|Amos and Hosea|The first prophets whose words are written down preach in Israel.
+-750|H|mor|EU|Greece|learning|Hesiod|Hesiod writes of the gods' births and the farmer's year.
+-750|W|vam|EU|Italy|founding,crown|The she-wolf and the Ventrue|Ventrue legend says the founders of Rome were watched by a Cainite and a Lupine at once.
+-745|H|mor|ME|Assyria|empire|Assyria deports peoples|Assyria moves whole peoples across its empire to break revolts.
+-740|H|mor|ME|Urartu|crown|Sarduri II|Urartu reaches its greatest size.
+-734|H|mor|EU|Sicily|founding|Syracuse founded|Corinthians found Syracuse on Sicily.
+-730|H|mor|ME|Phrygia|crown|Midas of Phrygia|Midas rules Phrygia from Gordion, remembered for his gold.
+-720|H|mor|EU|Greece|war|The Lelantine War|Chalcis and Eretria fight over the plain between them.
+-716|H|mor|AF|Egypt|crown|Shabaka|Shabaka of Kush rules Egypt and restores its temples.
+-714|H|mor|ME|Urartu|war|Sargon II sacks Musasir|Sargon II of Assyria loots the holy city of Urartu.
+-710|H|mor|EU|Italy|founding|Tarentum founded|Spartans found Taras in southern Italy.
+-705|H|mor|ME|Assyria|crown|Sargon II dies in battle|Sargon II falls in battle and his body is never found.
+-700|H|mor|AS|India|founding|The Mahajanapadas|Sixteen great states rise across north India.
+-700|H|mor|EU|Ireland|founding|Navan Fort begins|A great ring of timber rises at Emain Macha.
+-700|H|mor|ME|Assyria|building|Sennacherib's aqueduct|Sennacherib brings water to Nineveh by canal and aqueduct.
+-700|H|mor|AM|Ohio|death|The Adena mounds grow|Adena mounds rise over log tombs in the Ohio valley.
+-700|H|mor|AS|Steppe|migration|The Scythians|Scythian horsemen drive the Cimmerians south.
+-700|W|wer|AS|Steppe|war,occult|The Scythian wolves|Garou of the steppe ride with the Scythians and take their gold as offerings.
+-690|H|mor|AF|Egypt|crown|Taharqa|Taharqa of Kush builds across Egypt and Nubia.
+-685|H|mor|EU|Greece|war|The Messenian revolt|The Messenians rise against Sparta.
+-680|H|mor|ME|Lydia|crown|Gyges of Lydia|Gyges takes the throne of Lydia.
+-675|H|mor|EU|Italy|founding|Etruscan cities|The Etruscan towns grow rich and build great tombs.
+-670|H|mor|AS|China|crown|Duke Huan of Qi|Duke Huan of Qi becomes the first hegemon of the lords.
+-664|H|mor|AF|Egypt|crown|Psamtik I|Psamtik I drives out the Assyrians and unites Egypt.
+-663|H|mor|AF|Egypt|war|Assyria sacks Thebes|Ashurbanipal's army sacks Thebes.
+-660|H|mor|EU|Greece|founding|Byzantium founded|Megarians found Byzantion on the Bosporus.
+-650|H|mor|EU|Greece|war|The hoplite phalanx|Greek armies fight in close ranks of armoured spearmen.
+-650|H|mor|AS|China|science|The crossbow|The crossbow comes into use in China.
+-650|H|mor|AM|Mexico|art|Olmec decline|La Venta's power fades.
+-650|W|mum|AF|Egypt|crown,occult|The Saite revival|The Reborn say the Saite kings brought back the old rites of the pyramid age.
+-640|H|mor|ME|Elam|war|Susa sacked|Ashurbanipal destroys Susa and salts the land.
+-630|H|mor|ME|Judah|faith|Josiah's reform|King Josiah of Judah closes the shrines and keeps one temple.
+-630|H|mor|EU|Greece|art|Sappho|Sappho writes love poems on Lesbos.
+-626|H|mor|ME|Babylon|crown|Nabopolassar|Nabopolassar frees Babylon from Assyria.
+-620|H|mor|AF|Libya|founding|Cyrenaica|Greeks of Thera spread across the green coast of Libya.
+-616|H|mor|EU|Italy|crown|The Etruscan kings of Rome|Tarquin the Elder becomes king of Rome.
+-610|H|mor|AF|Egypt|science|Necho's canal|Necho II begins a canal from the Nile to the Red Sea.
+-600|H|mor|AF|Africa|sea,exploration|Phoenicians sail round Africa|Herodotus says Phoenician sailors sent by Necho sailed round Africa in three years.
+-600|H|mor|EU|Greece|learning|Thales|Thales of Miletus asks what the world is made of.
+-600|H|mor|AS|India|faith|Mahavira|Mahavira teaches the Jain way of harmlessness.
+-600|H|mor|AM|Mexico|learning|Zapotec glyphs|The Zapotecs carve the first writing of the Americas.
+-600|H|mor|EU|Germany|founding|The Heuneburg's wall|A Celtic chief at the Heuneburg builds a Greek-style wall of mud brick.
+-600|W|cha|EU|Ireland|war,faith|The Fianna's tales|Kithain bards set the Fenian stories in this age.
+-597|H|mor|ME|Jerusalem|war|The first exile|Nebuchadnezzar takes Jerusalem and carries its king to Babylon.
+-590|H|mor|ME|Babylon|building|The Ishtar Gate|Babylon builds the blue Ishtar Gate and the processional way.
+-586|H|mor|ME|Babylon|migration|The Babylonian exile|The people of Judah are carried to Babylon.
+-575|H|mor|ME|Babylon|building|The Hanging Gardens|Later Greeks tell of terraced gardens in Babylon.
+-570|H|mor|AF|Egypt|crown|Amasis|Amasis takes Egypt's throne and favours the Greeks.
+-565|H|mor|EU|Greece|crown|Peisistratos|Peisistratos rules Athens as tyrant.
+-560|H|mor|ME|Lydia|money|The first gold and silver coins|Croesus strikes coins of pure gold and pure silver.
+-550|H|mor|AS|China|learning|Laozi|Tradition places Laozi, keeper of the Zhou archives, in this age.
+-550|H|mor|EU|Greece|faith|The Eleusinian Mysteries|The rites of Demeter at Eleusis draw initiates from all Greece.
+-550|H|mor|AF|Carthage|empire|Mago's Carthage|Mago builds Carthage's army and fleet.
+-550|W|mag|EU|Greece|occult,faith|The Mysteries of Eleusis|Verbena and Hermetic tales both claim the Eleusinian rite as one of theirs.
+-546|H|mor|ME|Lydia|war|Cyrus takes Sardis|Cyrus beats Croesus and takes Lydia.
+-540|H|mor|EU|Corsica|sea,war|The battle of Alalia|Carthage and the Etruscans drive the Greeks from Corsica.
+-535|H|mor|AS|India|faith|Siddhartha leaves home|Siddhartha leaves his palace to seek an end to suffering.
+-530|H|mor|ME|Persia|crown|Cyrus dies|Cyrus dies fighting the Massagetae of the steppe.
+-528|H|mor|AS|India|faith|The Buddha's awakening|Siddhartha becomes the Buddha under a tree at Bodh Gaya.
+-525|H|mor|EU|Greece|learning|Pythagoras in Croton|Pythagoras founds his brotherhood in southern Italy.
+-520|H|mor|ME|Persia|building|Persepolis begun|Darius begins the palace city of Persepolis.
+-518|H|mor|ME|Persia|science|The Royal Road|Darius builds a road from Sardis to Susa with posts and riders.
+-516|H|mor|ME|Jerusalem|building|The Second Temple|The returned exiles finish a new temple in Jerusalem.
+-515|H|mor|AS|India|empire|Persia reaches the Indus|Darius takes Gandhara and the Indus valley.
+-510|H|mor|EU|Greece|uprising|The tyrants expelled|Athens drives out Peisistratos' sons.
+-500|H|mor|AS|China|learning|Sun Tzu|Tradition places Sun Tzu's Art of War in this age.
+-500|H|mor|AM|Mexico|founding|The Maya of the Peten|Maya villages grow into towns across the lowlands.
+-500|H|mor|AF|Sudan|founding|Meroe|Kush moves its centre south to Meroe.
+-500|H|mor|EU|Iberia|founding|The Iberian towns|Iberian towns in Spain write in their own scripts.
+-500|H|mor|AS|Korea|science|Iron in Korea|Iron tools reach Korea from China.
+-500|W|kue|AS|China|learning,faith|The Hundred Schools|Kuei-jin tales say each school of thought had its own court of the dead listening.
+-500|W|wra|EU|Greece|death,faith|Hades and the Shadowlands|Wraith lore says Greek ideas of Hades shaped the first Stygian necropoli of the west.
+-494|H|mor|EU|Italy|uprising|The plebs walk out|The common people of Rome leave the city until they get their own tribunes.
+-490|H|mor|EU|Greece|sport|The runner from Marathon|A later tale says a runner carried word of Marathon to Athens and died.
+-486|H|mor|AS|India|faith|The first Buddhist council|Monks recite the Buddha's sayings after his death.
+-485|H|mor|AS|China|building|The Grand Canal begins|The state of Wu digs a canal from the Yangtze.
+-480|H|mor|EU|Sicily|war|Gelon of Syracuse|Syracuse beats Carthage at Himera on the same day as Salamis.
+-479|H|mor|AS|China|death|Confucius dies|Confucius dies in Lu, his work unfinished.
+-478|H|mor|EU|Greece|empire|The Delian League|Athens leads a league of island cities against Persia.
+-470|H|mor|EU|Greece|learning|Socrates born|Socrates is born in Athens.
+-465|H|mor|ME|Persia|crown|Xerxes murdered|Xerxes is killed in his palace.
+-460|H|mor|EU|Greece|science|Hippocrates|Hippocrates of Kos teaches medicine without the gods.
+-460|H|mor|AS|China|founding|The Warring States begin|The great houses of Jin and Qi break apart into rival kingdoms.
+-450|H|mor|EU|Greece|learning|Herodotus|Herodotus writes the first history of the Greeks and Persians.
+-450|H|mor|AF|Carthage|exploration|Hanno's voyage|Hanno of Carthage sails down the west coast of Africa.
+-450|H|mor|AM|Peru|art|Paracas mantles|The Paracas wrap their dead in great embroidered cloths.
+-450|W|vam|EU|Greece|learning,crown|The Brujah's Athens|Brujah tradition says their elders debated beside the philosophers.
+-440|H|mor|EU|Greece|learning|Sophocles' plays|Sophocles stages Antigone in Athens.
+-430|H|mor|AS|India|faith|Buddhism spreads|Monks carry the Buddha's teaching along the Ganges.
+-425|H|mor|EU|Greece|art|Aristophanes|Aristophanes mocks Athens' leaders on stage.
+-415|H|mor|EU|Sicily|war|The Sicilian expedition|Athens sends a great fleet against Syracuse and loses it.
+-410|H|mor|ME|Persia|crown|Darius II|Persia pays Sparta to fight Athens.
+-405|H|mor|AS|China|war|The iron sword|The kingdoms of China arm their peasant armies with iron.
+-401|H|mor|ME|Persia|war|The Ten Thousand|Greek mercenaries march home from Babylon to the Black Sea.
+-400|H|mor|AM|Mexico|founding|Cuicuilco|A round temple town rises in the Valley of Mexico.
+-400|H|mor|EU|Italy|migration|The Gauls cross the Alps|Celtic tribes settle the Po valley.
+-400|H|mor|AF|Nigeria|science|Nok iron|The Nok smelt iron on the Jos plateau.
+-400|H|mor|AS|Japan|science|The Yayoi|Rice farmers from Korea spread through Japan with bronze and iron.
+-395|H|mor|EU|Greece|war|The Corinthian War|Athens, Thebes, Corinth and Argos fight Sparta.
+-386|H|mor|ME|Persia|treaty|The King's Peace|Persia dictates terms to the Greek cities.
+-380|H|mor|AS|China|learning|Mozi|Mozi preaches universal love and defensive war.
+-375|H|mor|EU|Greece|learning|Plato's Republic|Plato writes of a city ruled by philosophers.
+-367|H|mor|EU|Italy|law|The Licinian laws|Plebeians win the right to hold the consulship.
+-360|H|mor|AS|China|law|Shang Yang's reforms|Shang Yang remakes Qin with harsh laws and rewards for soldiers.
+-350|H|mor|ME|Halicarnassus|building|The Mausoleum|Artemisia builds a great tomb for her husband Mausolus.
+-350|H|mor|AF|Egypt|crown|The last native pharaoh|Nectanebo II is the last Egyptian-born king of Egypt.
+-350|W|mum|AF|Egypt|crown,occult|Nectanebo's magic|The Reborn say the last native pharaoh was a sorcerer who fled south.
+-343|H|mor|EU|Greece|learning|Aristotle teaches Alexander|Aristotle becomes tutor to the young prince of Macedon.
+-340|H|mor|EU|Italy|war|The Latin War|Rome defeats its Latin allies.
+-335|H|mor|EU|Greece|learning|The Lyceum|Aristotle opens his school in Athens.
+-325|H|mor|EU|Britain|exploration|Pytheas sails north|Pytheas of Massalia sails round Britain and hears of Thule.
+-322|H|mor|EU|Greece|death|Aristotle and Demosthenes die|Aristotle and Demosthenes die within a year of each other.
+-321|H|mor|EU|Italy|war|The Caudine Forks|The Samnites trap a Roman army and send it under the yoke.
+-312|H|mor|EU|Italy|building|The Appian Way|Rome builds its first great road, to Capua.
+-312|H|mor|ME|Seleucia|crown|Seleucus|Seleucus takes Babylon and founds a dynasty that rules Asia.
+-305|H|mor|AS|India|treaty|Seleucus and Chandragupta|Seleucus gives up the Indus for five hundred elephants.
+-300|H|mor|AS|India|learning|The Arthashastra|Kautilya's manual of statecraft is written for the Mauryas.
+-300|H|mor|AM|Mexico|founding|The Maya of El Mirador|El Mirador grows into the greatest Maya city.
+-300|H|mor|AS|Korea|founding|Gojoseon|The kingdom of Gojoseon rules northern Korea.
+-290|H|mor|EU|Greece|learning|The Stoics|Zeno teaches in the painted porch at Athens.
+-285|H|mor|AF|Egypt|building|The Pharos|The lighthouse of Alexandria is built.
+-280|H|mor|EU|Italy|war|Pyrrhus|Pyrrhus of Epirus beats Rome at great cost.
+-279|H|mor|EU|Greece|war|The Gauls at Delphi|Celtic raiders attack Delphi and are driven off.
+-270|H|mor|EU|Greece|science|Aristarchus|Aristarchus of Samos says the earth goes round the sun.
+-250|H|mor|ME|Parthia|crown|The Parthians|The Parni horsemen found the Parthian kingdom.
+-250|H|mor|AF|Egypt|learning|The Septuagint|Jewish scholars in Alexandria translate their scriptures into Greek.
+-250|W|vam|AF|Carthage|crown,war|The Brujah and the Ventrue|The Brujah of Carthage and the Ventrue of Rome start their long war.
+-240|H|mor|AF|Egypt|science|Eratosthenes|Eratosthenes measures the size of the earth.
+-230|H|mor|EU|Greece|science|Archimedes|Archimedes works out the lever and the screw in Syracuse.
+-225|H|mor|EU|Italy|war|Telamon|Rome beats the Gauls at Telamon.
+-212|H|mor|EU|Sicily|war|Syracuse falls|Rome takes Syracuse and Archimedes is killed.
+-210|H|mor|AS|China|death|The First Emperor dies|Qin Shi Huang dies seeking an elixir of life.
+-209|H|mor|AS|Mongolia|empire|Modu and the Xiongnu|Modu Chanyu unites the Xiongnu of the steppe.
+-200|H|mor|AS|China|war|Baideng|The Xiongnu surround the first Han emperor.
+-200|H|mor|AM|Ohio|founding|The Hopewell|Hopewell peoples build earthworks and trade from the Rockies to the Gulf.
+-200|H|mor|AS|India|art|Sanchi|The great stupa of Sanchi is built.
+-200|W|wer|AS|Mongolia|war,occult|The Xiongnu and the Garou|Garou of the steppe ride with the Xiongnu into China.
+-190|H|mor|ME|Magnesia|war|Magnesia|Rome beats the Seleucids at Magnesia.
+-180|H|mor|AS|India|empire|The Indo-Greeks|Greek kings rule in Bactria and the Punjab.
+-170|H|mor|EU|Italy|learning|Roman comedy|Plautus and Terence fill Rome's stages.
+-165|H|mor|ME|Jerusalem|faith|Hanukkah|The Maccabees rededicate the temple in Jerusalem.
+-150|H|mor|EU|Iberia|war|The Lusitanian war|Viriathus leads the Lusitanians against Rome.
+-141|H|mor|AS|China|crown|Emperor Wu|Han Emperor Wu takes the throne and wars on the Xiongnu.
+-139|H|mor|AS|China|travel|Zhang Qian goes west|Zhang Qian sets out to find allies against the Xiongnu.
+-133|H|mor|EU|Iberia|war|Numantia|Rome starves Numantia into surrender.
+-130|H|mor|ME|Parthia|war|Parthia takes Mesopotamia|The Parthians drive the Seleucids from Babylonia.
+-121|H|mor|EU|Italy|uprising|Gaius Gracchus|Gaius Gracchus and his followers are killed in Rome.
+-112|H|mor|AF|Numidia|war|The Jugurthine War|Rome fights Jugurtha of Numidia.
+-108|H|mor|AS|Korea|empire|Han takes Gojoseon|The Han conquer northern Korea.
+-104|H|mor|AS|China|science|The Taichu calendar|The Han reform the calendar.
+-100|H|mor|AS|China|learning|Sima Qian|Sima Qian writes the Records of the Grand Historian.
+-100|H|mor|AM|Mexico|founding|Teotihuacan begins|Farmers gather in the valley of Teotihuacan.
+-100|H|mor|AF|Ethiopia|founding|Aksum's first kings|A kingdom grows at Aksum in the highlands.
+-100|H|mor|EU|Moravia|trade|Glass of the Boii|Celtic glassmakers in Moravia make blue bracelets.
+-91|H|mor|EU|Italy|war|The Social War|Rome's Italian allies fight for citizenship.
+-88|H|mor|ME|Pontus|massacre|The Asian Vespers|Mithridates of Pontus has thousands of Romans in Asia killed in a day.
+-82|H|mor|EU|Italy|crown|Sulla|Sulla takes Rome and rules as dictator.
+-70|H|mor|EU|Italy|learning|Cicero|Cicero prosecutes the governor of Sicily.
+-69|H|mor|AF|Egypt|crown|Cleopatra born|Cleopatra VII is born in Alexandria.
+-60|H|mor|EU|Italy|crown|The First Triumvirate|Caesar, Pompey and Crassus share power.
+-53|H|mor|ME|Carrhae|battle|Carrhae|The Parthians destroy Crassus' army.
+-50|H|mor|EU|Gaul|founding|Bibracte|The Aedui hold the great hill town of Bibracte.
+-46|H|mor|EU|Italy|science|The Julian calendar|Caesar sets the calendar of 365 days and a leap year.
+-42|H|mor|EU|Greece|battle|Philippi|Antony and Octavian beat Caesar's killers at Philippi.
+-37|H|mor|ME|Jerusalem|crown|Herod the Great|Herod takes Jerusalem and rules Judea for Rome.
+-31|W|vam|AF|Egypt|crown,occult|The Setites and Cleopatra|Setite lore says Cleopatra's court was full of their servants.
+-30|H|mor|AF|Egypt|death|Cleopatra dies|Cleopatra dies by her own hand as Octavian takes Alexandria.
+-29|H|mor|EU|Italy|learning|Virgil's Aeneid|Virgil begins the Aeneid.
+-50|W|wra|EU|Italy|death,faith|The dead of the civil wars|Wraiths say the Roman civil wars filled the Stygian legions.
+# The Age of Silk and Eagles, to 300 events
+-25|H|mor|AF|Meroe|crown|Meroe's kandakes|The queens of Meroe rule Kush and fight Rome on the Nile.
+-24|H|mor|AF|Nubia|war|Rome and Kush make peace|Rome and Meroe settle their border at the first cataract.
+-20|H|mor|ME|Parthia|treaty|The standards returned|Parthia gives back the eagles lost at Carrhae.
+-19|H|mor|EU|Iberia|war|The Cantabrian wars end|Rome finishes the conquest of Spain.
+-17|H|mor|EU|Italy|faith|The Secular Games|Augustus holds the Secular Games to mark a new age.
+-12|H|mor|EU|Germany|war|Drusus on the Rhine|Drusus leads Roman armies to the Elbe.
+-9|H|mor|AS|China|crown|Wang Mang rises|Wang Mang becomes regent of the Han.
+-4|H|mor|ME|Judea|crown|Herod dies|Herod the Great dies and his kingdom is split among his sons.
+-4|W|vam|ME|Judea|faith,occult|Whispers in Jerusalem|Noddists claim the Cainites of Judea took note of a child born in Bethlehem.
+1|H|mor|AS|India|trade|The Muziris trade|Roman ships sail with the monsoon to the pepper ports of south India.
+1|H|mor|AM|Peru|art|The Nazca pots|Nazca potters paint bright pots with killer whales and demons.
+2|H|mor|AS|China|science|The first census|The Han count 57 million people.
+5|H|mor|EU|Germany|founding|Waldgirmes|Rome builds a town with a forum east of the Rhine.
+6|H|mor|ME|Judea|uprising|Judas the Galilean|Judas of Galilee leads a revolt against Roman tax.
+11|H|mor|AS|China|flood|The Yellow River moves|The Yellow River changes its course and floods the north China plain.
+14|H|mor|EU|Italy|crown|Tiberius|Tiberius becomes emperor.
+17|H|mor|AS|China|uprising|The Red Eyebrows|Peasants who paint their brows red rise against Wang Mang.
+23|H|mor|AS|China|death|Wang Mang falls|Rebels take Chang'an and kill Wang Mang.
+26|H|mor|ME|Judea|crown|Pontius Pilate|Pilate becomes governor of Judea.
+28|H|mor|ME|Judea|faith|John the Baptist|John baptises in the Jordan.
+40|H|mor|AS|Vietnam|uprising|The Trung sisters|The Trung sisters lead the Vietnamese against Han rule.
+41|H|mor|EU|Italy|crown|Claudius|The guard makes Claudius emperor after Caligula's murder.
+43|H|mor|AS|Vietnam|war|Ma Yuan in Vietnam|The Han general Ma Yuan crushes the Trung sisters' revolt.
+45|H|mor|ME|Anatolia|faith|Paul's journeys|Paul of Tarsus carries the new faith to the Greek cities.
+47|H|mor|EU|Britain|war|Caratacus|Caratacus fights Rome in Wales.
+50|H|mor|AF|Egypt|trade|The Periplus|A Greek merchant writes a guide to the ports of the Red Sea and India.
+54|H|mor|EU|Italy|crown|Nero|Nero becomes emperor.
+58|H|mor|AS|India|faith|The Kushans favour the Buddha|Kushan kings spread Buddhism into Central Asia.
+61|H|mor|EU|Britain|massacre|Mona|Roman troops kill the druids on Anglesey.
+61|W|wer|EU|Britain|massacre,occult|The groves of Mona|Fianna mourn the druids of Mona, who kept caerns with them.
+62|H|mor|EU|Italy|quake|The Pompeii earthquake|An earthquake shakes Pompeii seventeen years before the eruption.
+65|H|mor|AS|China|faith|Buddhism reaches China|Buddhist monks come to the Han court.
+68|H|mor|EU|Italy|crown|Nero dies|Nero kills himself as the provinces rise.
+69|H|mor|EU|Italy|crown|The year of four emperors|Galba, Otho, Vitellius and Vespasian rule in one year.
+69|W|vam|EU|Italy|crown,war|Cainites in the civil war|Ventrue tales say the year of four emperors was a war of elders.
+70|H|mor|EU|Gaul|uprising|The Batavian revolt|The Batavians rise against Rome on the Rhine.
+77|H|mor|EU|Italy|learning|Pliny's Natural History|Pliny the Elder writes his encyclopaedia of the world.
+78|H|mor|AS|India|crown|The Saka era|The Saka calendar of India starts with this year.
+85|H|mor|EU|Dacia|war|Decebalus|The Dacians under Decebalus raid across the Danube.
+89|H|mor|AS|Mongolia|war|The Han defeat the Xiongnu|The Han drive the northern Xiongnu from Mongolia.
+91|H|mor|AS|Central Asia|war|Ban Chao in the west|Han general Ban Chao rules the Tarim oases.
+97|H|mor|AS|Central Asia|travel|Gan Ying|A Han envoy reaches the Persian Gulf on his way to Rome.
+100|H|mor|AM|Mexico|building|The Avenue of the Dead|Teotihuacan lays out its great avenue.
+100|H|mor|AF|Kenya|trade|Rhapta|Arab and Greek ships trade at Rhapta on the east African coast.
+100|H|mor|AS|Vietnam|founding|Funan|The kingdom of Funan rises on the Mekong delta.
+100|W|kue|AS|China|faith,occult|The Buddha reaches the courts|Kuei-jin say Buddhism shook the courts of the dead and split their teachers.
+105|H|mor|AS|China|crown|Empress Deng|Empress Deng rules the Han as regent for sixteen years.
+113|H|mor|EU|Italy|building|Trajan's Column|Trajan's Column shows the Dacian wars in a long spiral.
+115|H|mor|ME|Mesopotamia|war|Trajan reaches the Gulf|Trajan takes Ctesiphon and reaches the Persian Gulf.
+117|H|mor|EU|Italy|crown|Hadrian|Hadrian becomes emperor and gives up Trajan's eastern gains.
+120|H|mor|AS|China|science|Zhang Heng's globe|Zhang Heng builds a water-driven armillary sphere.
+125|H|mor|EU|Italy|building|The Pantheon|Hadrian rebuilds the Pantheon with its great concrete dome.
+132|H|mor|AS|China|science|The seismoscope|Zhang Heng builds a vessel that shows the direction of an earthquake.
+135|H|mor|ME|Judea|massacre|Aelia Capitolina|Rome crushes Bar Kokhba and renames Jerusalem.
+140|H|mor|EU|Britain|building|The Antonine Wall|Rome builds a turf wall across Scotland.
+150|H|mor|AS|India|crown|Rudradaman|The Saka king Rudradaman leaves the first long Sanskrit inscription.
+150|H|mor|AF|Aksum|trade|Adulis|The port of Adulis ships ivory and gold to Rome and India.
+150|H|mor|AM|Peru|founding|The Moche pyramids|The Moche build the Huaca del Sol of millions of mud bricks.
+160|H|mor|AS|Japan|war|The Wa wars|Japan is torn by wars between rival kingdoms.
+170|H|mor|EU|Italy|science|Galen|Galen becomes physician to Marcus Aurelius.
+180|H|mor|AS|Japan|crown|Himiko|Queen Himiko rules Yamatai, by Chinese account.
+180|W|kue|AS|Japan|crown,occult|The shaman queen|Kuei-jin say Himiko spoke with the dead of Japan.
+189|H|mor|AS|China|war|Dong Zhuo|The warlord Dong Zhuo burns Luoyang.
+200|H|mor|AS|India|learning|The Laws of Manu|The Laws of Manu are written in their present form.
+200|H|mor|AS|India|learning|Nagarjuna|The Buddhist teacher Nagarjuna writes on emptiness.
+200|H|mor|EU|Moravia|migration|The Quadi hold Moravia|The Quadi farm Moravia beyond the Roman frontier.
+208|H|mor|AS|China|war|Red Cliffs|Sun Quan and Liu Bei burn Cao Cao's fleet at the Red Cliffs.
+216|H|mor|ME|Persia|faith|Mani born|Mani, founder of Manichaeism, is born in Babylonia.
+220|H|mor|AS|China|crown|The Three Kingdoms|Wei, Shu and Wu split China.
+226|H|mor|ME|Ctesiphon|crown|Ardashir crowned|Ardashir is crowned King of Kings at Ctesiphon.
+230|H|mor|AS|India|crown|The Kushans fade|Kushan power breaks under Sasanian attack.
+235|W|vam|EU|Italy|crown,war|The barracks emperors|Ventrue tales blame the crisis of the third century on a broken council of Roman elders.
+238|H|mor|EU|Italy|crown|The year of six emperors|Six men are named emperor in a single year.
+240|H|mor|ME|Persia|crown|Shapur I|Shapur I takes the Persian throne.
+248|H|mor|EU|Italy|crown|Rome's thousand years|Rome celebrates its thousandth year.
+249|H|mor|EU|Italy|persecution|Decius' sacrifices|Decius orders all to sacrifice to the gods; Christians who refuse are killed.
+250|H|mor|AF|Carthage|plague|The plague of Cyprian|A plague sweeps the Roman world for twenty years.
+256|H|mor|ME|Dura-Europos|siege|Dura-Europos|The Persians take Dura; its synagogue and church are buried in the walls.
+260|H|mor|EU|Gaul|uprising|The Gallic empire|Postumus rules Gaul, Spain and Britain as a separate empire.
+265|H|mor|AS|China|crown|The Jin|The Sima family takes the throne of Wei as the Jin.
+267|H|mor|EU|Greece|war|The Heruli sack Athens|Gothic and Heruli raiders sack Athens.
+268|H|mor|ME|Palmyra|crown|Zenobia rules Palmyra|Zenobia takes Egypt and much of the east.
+270|H|mor|AF|Egypt|faith|Antony in the desert|Antony goes into the Egyptian desert, the first famous monk.
+276|H|mor|ME|Persia|death|Mani dies|The prophet Mani dies in a Persian prison.
+280|H|mor|AS|China|crown|Jin unites China|The Jin reunite China.
+290|H|mor|AM|Mexico|building|The Temple of the Feathered Serpent|Teotihuacan dedicates its temple to the feathered serpent with sacrificed warriors.
+293|H|mor|EU|Italy|crown|The Tetrarchy|Diocletian shares the empire among four rulers.
+270|H|mor|AS|Japan|death|Hashihaka|A great keyhole tomb is built, perhaps for Himiko.
+300|H|mor|AF|Ghana|trade|Gold across the Sahara|Camel caravans begin to cross the Sahara for West African gold.
+300|H|mor|AM|Mexico|founding|Monte Alban's height|Monte Alban rules the Oaxaca valley.
+301|H|mor|ME|Armenia|faith|Armenia turns Christian|Armenia becomes the first Christian kingdom.
+304|H|mor|AS|China|war|The Five Barbarians|Northern peoples rise and break Jin China.
+311|H|mor|AS|China|war|Luoyang sacked|The Xiongnu sack Luoyang.
+317|H|mor|AS|China|crown|The Eastern Jin|The Jin court flees south to Jiankang.
+324|H|mor|EU|Byzantium|war|Constantine reunites the empire|Constantine beats Licinius and rules alone.
+340|H|mor|AF|Aksum|faith|Frumentius|A Syrian captive, Frumentius, becomes the first bishop of Aksum.
+350|H|mor|AS|India|crown|Samudragupta|Samudragupta extends the Gupta empire.
+350|H|mor|AF|Sudan|war|Aksum ends Meroe|Aksum conquers the old kingdom of Meroe.
+350|H|mor|AM|Mexico|founding|Tikal grows|Tikal rises as a great Maya city.
+353|H|mor|AS|China|art|Wang Xizhi|Wang Xizhi writes the Preface to the Orchid Pavilion, the model of Chinese calligraphy.
+357|H|mor|EU|Gaul|war|Argentoratum|Julian beats the Alamanni at Strasbourg.
+360|H|mor|EU|Gaul|crown|Julian the Apostate|Julian becomes emperor and tries to restore the old gods.
+363|H|mor|ME|Persia|war|Julian dies in Persia|Julian is killed on campaign in Mesopotamia.
+365|H|mor|AF|Egypt|disaster|The Crete tsunami|A great earthquake and sea wave strike Alexandria.
+372|H|mor|AS|Korea|faith|Buddhism in Goguryeo|Buddhism reaches Korea.
+376|H|mor|EU|Balkans|migration|The Goths cross the Danube|The Goths cross into Roman land fleeing the Huns.
+383|H|mor|AS|China|battle|The Fei River|The Eastern Jin turn back a great northern army.
+386|H|mor|AS|China|crown|The Northern Wei|The Tuoba found the Northern Wei.
+390|H|mor|EU|Greece|massacre|Thessalonica|Theodosius' troops kill thousands in the circus of Thessalonica.
+393|H|mor|EU|Greece|sport|The last Olympics|The ancient Olympic Games are held for the last time.
+399|H|mor|AS|China|travel|Faxian goes to India|The monk Faxian walks from China to India for Buddhist books.
+400|H|mor|AS|India|science|Gupta mathematics|Indian mathematicians write numbers with nine signs and place.
+400|H|mor|AM|Peru|founding|The Nazca at their height|Nazca villages spread along the river oases.
+405|H|mor|EU|Italy|learning|The Vulgate|Jerome finishes his Latin Bible.
+407|H|mor|EU|Britain|war|Constantine III|A soldier in Britain takes the legions to Gaul.
+410|H|mor|EU|Britain|crown|Rome leaves Britain|Britain is told to look to its own defence.
+413|H|mor|EU|Byzantium|building|The Theodosian Walls|Constantinople builds its great land walls.
+418|H|mor|EU|Gaul|crown|The Visigoths in Aquitaine|The Visigoths settle in south-west Gaul.
+420|H|mor|AS|China|crown|The Liu Song|The Liu Song take the southern throne.
+425|H|mor|AS|Korea|crown|Goguryeo's height|King Jangsu rules Goguryeo.
+429|H|mor|AF|Africa|migration|The Vandals cross to Africa|The Vandals cross from Spain to Africa.
+431|H|mor|ME|Ephesus|faith|The Council of Ephesus|The church condemns Nestorius.
+434|H|mor|AS|China|science|Zu Chongzhi born|The mathematician who finds pi to seven places is born.
+440|H|mor|AS|India|learning|Nalanda|The great monastery of Nalanda grows in Bihar.
+450|H|mor|EU|Britain|migration|The Saxons come|Angles and Saxons settle in eastern Britain.
+450|H|mor|AS|Japan|death|Daisen Kofun|The greatest keyhole tomb of Japan is raised near Osaka.
+450|W|wra|EU|Gaul|death,war|The dead of the Huns|Wraiths say the Hunnic wars sent a flood of the dead toward the Maelstrom.
+451|H|mor|ME|Chalcedon|faith|The Council of Chalcedon|The church splits over the nature of Christ.
+452|H|mor|EU|Italy|founding|Venice's lagoon|Refugees from Attila flee to the islands of the lagoon.
+460|H|mor|AS|India|war|The Huna invade|The White Huns attack the Gupta empire.
+466|H|mor|EU|Gaul|crown|Euric|Euric makes the Visigoths independent of Rome.
+470|H|mor|AM|Tikal|crown|Tikal's Teotihuacan kings|Tikal's kings rule with Teotihuacan's backing.
+475|H|mor|EU|Italy|crown|Romulus Augustulus|The boy Romulus Augustulus is made the last western emperor.
+-26|W|mag|EU|Italy|occult,crown|The Order before the Order|Hermetic chronicles say the Roman cults of the Julii kept magi at court.
+50|W|cha|EU|Ireland|war,faith|The Red Branch|Kithain bards set the tales of Cu Chulainn about now.
+120|W|wer|AS|India|occult|The Kushan stupas|Stargazer lore says the Kushan stupas were raised on caerns.
+200|W|wra|AF|Egypt|death,faith|The Jade Kingdom's envoys|Wraith lore says envoys of Stygia travelled through the Tempest toward the east.
+300|W|mum|AF|Egypt|faith,persecution|The temples close|The Reborn say the closing of the temples cost them their last open shrines.
+350|W|vam|EU|Byzantium|crown|The Dream takes shape|Michael's Dream of Constantinople draws Cainites from every clan.
+400|W|kue|AS|China|war,occult|The courts fight in the north|Kuei-jin say the wars of the Sixteen Kingdoms were fought in the Yomi as well.
+-15|H|mor|EU|Austria|empire|Noricum annexed|Rome takes the Alpine kingdom of Noricum and its iron.
+-8|H|mor|AS|China|learning|The imperial library|Liu Xiang and his son catalogue the Han library.
+3|H|mor|AS|Korea|crown|Goguryeo moves its capital|Goguryeo moves to the Yalu river.
+18|H|mor|AS|Korea|founding|Baekje|Tradition places the founding of Baekje in southern Korea.
+30|H|mor|AF|Egypt|trade|The Red Sea fleets|Over a hundred ships a year sail from Egypt to India.
+33|H|mor|ME|Judea|faith|Stephen stoned|Stephen is stoned, the first Christian martyr.
+42|H|mor|AF|Mauretania|empire|Mauretania annexed|Rome makes Mauretania two provinces.
+48|H|mor|AS|Mongolia|war|The Xiongnu split|The Xiongnu break into northern and southern hordes.
+53|H|mor|AS|India|faith|Thomas in India|Tradition says the apostle Thomas came to Kerala.
+57|H|mor|EU|Greece|faith|Paul's letters|Paul writes to the Romans and the Corinthians.
+64|H|mor|EU|Italy|persecution|Christians burned|Nero blames the Christians for the fire and has them killed.
+75|H|mor|EU|Rome|learning|Josephus|Josephus writes the Jewish War.
+79|H|mor|EU|Italy|death|Pliny dies at Vesuvius|Pliny the Elder dies sailing to help at the eruption.
+92|H|mor|AS|China|learning|Ban Zhao|Ban Zhao finishes her brother's history of the Han.
+96|H|mor|EU|Italy|crown|Nerva|Domitian is murdered and the senate makes Nerva emperor.
+105|H|mor|ME|Nabataea|empire|Arabia annexed|Rome takes the Nabataean kingdom and Petra.
+106|H|mor|ME|Petra|trade|Petra's tombs|Petra's rock-cut tombs stand at the crossroads of the incense trade.
+110|H|mor|AS|Cambodia|trade|Oc Eo|Oc Eo in Funan trades Roman coins and Indian beads.
+121|H|mor|AS|China|learning|Xu Shen's dictionary|Xu Shen finishes the first Chinese dictionary of characters.
+130|H|mor|AF|Egypt|crown|Antinous|Hadrian's companion drowns in the Nile and is made a god.
+138|H|mor|EU|Italy|crown|Antoninus Pius|Antoninus Pius rules in a long peace.
+143|H|mor|AS|India|trade|Barygaza|Roman goods pour into the port of Barygaza.
+146|H|mor|AS|China|crown|The eunuchs rule|The eunuchs of the Han court begin to dominate the throne.
+160|H|mor|ME|Syria|faith|The Diatessaron|Tatian weaves the four gospels into one.
+168|H|mor|AS|China|crime|The Great Proscription|The Han court bans the scholars who oppose the eunuchs.
+178|H|mor|EU|Gaul|persecution|The martyrs of Lyon|Christians are killed in the arena at Lyon.
+197|H|mor|EU|Gaul|battle|Lugdunum|Septimius Severus beats his rival at Lyon.
+200|H|mor|AF|Nigeria|founding|Jenne-jeno|A town grows on the inland delta of the Niger.
+203|H|mor|AF|Carthage|persecution|Perpetua and Felicity|Two young women are killed in the arena of Carthage.
+211|H|mor|EU|Britain|death|Severus dies at York|Septimius Severus dies on campaign in Britain.
+222|H|mor|EU|Italy|crown|Elagabalus killed|The priest-emperor Elagabalus is murdered by the guard.
+230|H|mor|AS|China|science|Ma Jun|Ma Jun builds a south-pointing chariot.
+244|H|mor|ME|Persia|war|Gordian III dies|Gordian III dies fighting Shapur.
+253|H|mor|EU|Gaul|war|The Franks|The Franks raid across the Rhine.
+262|H|mor|AS|China|learning|The Seven Sages|The Seven Sages of the Bamboo Grove scorn office and drink.
+271|H|mor|EU|Dacia|empire|Dacia given up|Aurelian pulls Rome out of Dacia.
+274|H|mor|EU|Italy|faith|Sol Invictus|Aurelian makes the Unconquered Sun the god of the empire.
+286|H|mor|EU|Britain|uprising|Carausius|Carausius rules Britain as its own emperor.
+297|H|mor|ME|Persia|war|Galerius beats Persia|Galerius beats the Persians and takes the king's harem.
+306|H|mor|EU|Britain|crown|Constantine at York|The troops at York hail Constantine as emperor.
+318|H|mor|AF|Egypt|heresy|Arius|The priest Arius says the Son was made by the Father.
+320|H|mor|AF|Egypt|faith|Pachomius|Pachomius founds the first monasteries in Upper Egypt.
+335|H|mor|AS|India|crown|Chandragupta I's coins|The Guptas strike gold coins of king and queen.
+346|H|mor|AS|Korea|crown|Baekje's king Geunchogo|Baekje reaches its height.
+369|H|mor|AS|Korea|art|The Seven-Branched Sword|Baekje sends a sword with seven branches to Japan.
+375|H|mor|EU|Ukraine|war|The Huns beat the Goths|The Huns break the Gothic kingdom of Ermanaric.
+387|H|mor|EU|Italy|faith|Augustine baptised|Augustine is baptised in Milan.
+402|H|mor|EU|Italy|crown|Ravenna made capital|The western court moves to Ravenna.
+404|H|mor|EU|Italy|sport|The last gladiators|Gladiator fights end in Rome.
+411|H|mor|AS|Java|faith|Hinduism in Java|Indian traders and priests bring their gods to Java.
+425|H|mor|EU|Byzantium|learning|The university of Constantinople|Theodosius II founds a school of law and letters.
+437|H|mor|EU|Germany|massacre|The Burgundians destroyed|The Huns destroy the Burgundian kingdom on the Rhine.
+443|H|mor|EU|Gaul|founding|Burgundy|Rome settles the surviving Burgundians in Savoy.
+449|H|mor|EU|Britain|migration|Hengist and Horsa|Tradition says two Saxon brothers came to Kent.
+456|H|mor|AS|India|crown|Skandagupta|Skandagupta drives back the Huns for a time.
+461|H|mor|EU|Ireland|faith|Patrick dies|Patrick, who brought Christianity to Ireland, dies.
+468|H|mor|AF|Carthage|war|Cape Bon|The Vandals burn a great Roman fleet sent against them.
+# The Age of Fallen Thrones, to 300 events
+477|H|mor|AF|Carthage|death|Gaiseric dies|The Vandal king Gaiseric dies, master of the western sea.
+480|H|mor|EU|Italy|learning|Boethius born|Boethius, who will write the Consolation of Philosophy, is born in Rome.
+481|H|mor|EU|Gaul|crown|Clovis king of the Franks|Clovis becomes king of the Salian Franks.
+484|H|mor|AS|India|war|The Huns kill Peroz|The White Huns kill the Persian king Peroz in battle.
+486|H|mor|EU|Gaul|battle|Soissons|Clovis beats the last Roman ruler in Gaul.
+491|H|mor|EU|Byzantium|crown|Anastasius|Anastasius becomes emperor in Constantinople.
+494|H|mor|AS|China|crown|The Wei move to Luoyang|The Northern Wei move their capital and take up Chinese ways.
+495|H|mor|AS|China|faith|The Shaolin temple|A monastery is built on Mount Song for an Indian monk.
+499|H|mor|AS|India|science|Aryabhata|Aryabhata writes that the earth turns on its axis.
+500|H|mor|AM|Mexico|founding|Teotihuacan at its height|Teotihuacan holds perhaps a hundred thousand people.
+500|H|mor|AF|Ghana|founding|Ghana's kings|The Soninke kingdom of Ghana grows on the gold trade.
+500|H|mor|AS|Sri Lanka|building|Sigiriya|King Kashyapa builds a palace on top of the Sigiriya rock.
+500|H|mor|AM|Hawaii|sea|The Polynesians spread|Polynesian voyagers begin to reach the far islands of the Pacific.
+500|W|wer|AS|India|war,occult|The Huna and the Garou|Stargazer tales say the White Huns rode with Wyrm-servants into India.
+502|H|mor|ME|Persia|war|The Anastasian war|Persia and Rome go to war again.
+507|H|mor|EU|Gaul|battle|Vouille|Clovis beats the Visigoths and takes Aquitaine.
+511|H|mor|EU|Gaul|law|The Salic law|Clovis' law code is written down.
+516|H|mor|AS|China|building|Yongning pagoda|Luoyang raises a wooden pagoda over a hundred metres tall.
+520|H|mor|AF|Aksum|war|Aksum invades Himyar|Kaleb of Aksum crosses to Yemen to avenge Christians killed there.
+524|H|mor|EU|Italy|death|Boethius executed|Theodoric has Boethius killed.
+526|H|mor|ME|Antioch|quake|The Antioch earthquake|An earthquake kills many thousands in Antioch.
+529|H|mor|EU|Greece|learning|The Academy closed|Justinian closes the schools of philosophy in Athens.
+531|H|mor|ME|Persia|crown|Khosrow I|Khosrow I becomes King of Kings and reforms Persia.
+533|H|mor|AF|Carthage|war|Belisarius takes Africa|Belisarius destroys the Vandal kingdom.
+534|H|mor|EU|Byzantium|law|Justinian's code|Justinian's lawyers finish the Corpus of civil law.
+535|H|mor|EU|Italy|war|The Gothic war|Belisarius invades Italy.
+536|H|mor|EU|Europe|weather|The year without summer|A dust veil darkens the sun for a year and harvests fail.
+536|W|wra|EU|Europe|storm,death|The dark sun|Wraiths say the dimming of 536 was the Tempest stirring before the Second Maelstrom.
+538|H|mor|AS|Japan|faith|Buddhism reaches Japan|Baekje sends Buddhist images to the Yamato court.
+540|H|mor|ME|Antioch|war|Khosrow sacks Antioch|Persia sacks Antioch.
+550|H|mor|AS|India|crown|The Guptas fall|The Gupta empire breaks apart.
+550|H|mor|AM|Peru|founding|Moche at its height|The Moche build painted temples in the northern valleys.
+550|H|mor|AS|Cambodia|crown|Chenla|Chenla replaces Funan on the Mekong.
+552|H|mor|AS|Mongolia|empire|The Turkic khaganate|The Gokturks rise against the Rouran and rule the steppe.
+552|H|mor|EU|Italy|battle|Taginae|Narses beats the Goths.
+553|H|mor|EU|Byzantium|science|Silkworms smuggled|Monks smuggle silkworm eggs to Constantinople in hollow canes.
+560|H|mor|AS|Mongolia|war|The Turks and the Hephthalites|The Turks and Persians destroy the White Huns.
+563|H|mor|EU|Scotland|faith|Columba on Iona|Columba founds a monastery on Iona.
+575|H|mor|ME|Yemen|war|Persia takes Yemen|Persia drives the Aksumites from Yemen.
+577|H|mor|AS|China|crown|The Northern Zhou|The Northern Zhou unite the north.
+581|H|mor|AS|China|crown|Yang Jian|Yang Jian founds the Sui.
+590|H|mor|ME|Persia|uprising|Bahram Chobin|The general Bahram Chobin takes the Persian throne for a year.
+593|H|mor|AS|Japan|crown|Prince Shotoku|Prince Shotoku rules for Empress Suiko and favours Buddhism.
+600|H|mor|AS|Tibet|crown|The Yarlung kings|The kings of Yarlung unite Tibet.
+600|H|mor|AM|Mexico|founding|Cholula|The great pyramid of Cholula grows.
+600|H|mor|AF|Nigeria|founding|Ife|Ife grows as a holy city of the Yoruba.
+602|H|mor|ME|Persia|war|The last great war|Persia and Rome begin their last and greatest war.
+604|H|mor|AS|Japan|law|The Seventeen Articles|Prince Shotoku sets out the rules of government.
+605|H|mor|AS|China|building|The Grand Canal|The Sui join the Yellow River and the Yangtze by canal.
+607|H|mor|AS|Japan|building|Horyu-ji|The temple of Horyu-ji is built, now the oldest wooden building on earth.
+610|H|mor|ME|Mecca|faith|The first revelation|Muhammad hears the first verses of the Quran on Mount Hira.
+612|H|mor|AS|Korea|war|Salsu|Goguryeo destroys a Sui army at the Salsu river.
+614|H|mor|ME|Jerusalem|war|Persia takes Jerusalem|The Persians take Jerusalem and carry off the True Cross.
+619|H|mor|AF|Egypt|war|Khosrow II takes Egypt|Persia conquers Egypt.
+626|H|mor|EU|Byzantium|siege|The siege of 626|Avars and Persians besiege Constantinople and fail.
+626|H|mor|AS|China|crown|Taizong|Li Shimin takes the Tang throne as Taizong.
+627|H|mor|ME|Nineveh|battle|Nineveh|Heraclius beats the Persians near Nineveh.
+630|H|mor|ME|Mecca|faith|Mecca taken|Muhammad enters Mecca and clears the Kaaba of idols.
+630|H|mor|AS|Tibet|crown|Songtsen Gampo|Songtsen Gampo builds the Tibetan empire.
+634|H|mor|ME|Arabia|crown|Umar|Umar becomes caliph.
+636|H|mor|ME|Qadisiyyah|battle|Qadisiyyah|The Arabs beat the Persians at Qadisiyyah.
+638|H|mor|AS|China|faith|Nestorians in Chang'an|Christian monks from Persia build a church in Chang'an.
+641|H|mor|AF|Alexandria|war|Alexandria surrenders|The Arabs take Alexandria.
+642|H|mor|ME|Nahavand|battle|Nahavand|The last Persian army is beaten.
+644|H|mor|ME|Medina|crown|Uthman|Uthman becomes caliph and orders one text of the Quran.
+650|H|mor|AM|Mexico|founding|Xochicalco|Xochicalco rises in Morelos as Teotihuacan fades.
+656|H|mor|ME|Medina|crown|Ali|Uthman is murdered and Ali becomes caliph.
+660|H|mor|AS|Korea|war|Baekje falls|Silla and the Tang destroy Baekje.
+663|H|mor|AS|Korea|battle|Baekgang|The Tang and Silla beat a Japanese fleet.
+668|H|mor|AS|Korea|crown|Silla unites Korea|Silla destroys Goguryeo and unites Korea.
+670|H|mor|AF|Tunisia|founding|Kairouan|The Arabs found Kairouan.
+672|H|mor|AS|Japan|war|The Jinshin war|Prince Oama wins the throne of Japan.
+673|H|mor|AM|Palenque|crown|The temple of the inscriptions|Pakal's tomb temple is built at Palenque.
+683|H|mor|AM|Palenque|death|Pakal dies|Pakal is buried under the temple with a jade mask.
+685|H|mor|ME|Damascus|crown|Abd al-Malik|Abd al-Malik makes Arabic the language of the caliphate.
+690|H|mor|AS|China|crown|Wu Zetian|Wu Zetian becomes the only woman to rule China as emperor.
+691|H|mor|ME|Jerusalem|building|The Dome of the Rock|The Dome of the Rock is finished.
+697|H|mor|AF|Carthage|war|Carthage falls|The Arabs take Carthage.
+700|H|mor|AS|Indonesia|empire|Srivijaya|Srivijaya rules the straits from Palembang.
+700|H|mor|AM|Peru|founding|Pachacamac|The shrine of Pachacamac draws pilgrims on the coast.
+700|W|kue|AS|China|crown,occult|Wu Zetian's courts|Kuei-jin say the woman emperor took counsel from the courts of the dead.
+705|H|mor|ME|Damascus|building|The Great Mosque of Damascus|The Umayyads build the great mosque of Damascus.
+712|H|mor|AS|India|war|Sind conquered|Muhammad bin Qasim takes Sind.
+712|H|mor|AS|Japan|learning|The Kojiki|The court finishes the Kojiki, Japan's oldest chronicle.
+713|H|mor|AS|China|crown|Xuanzong|Xuanzong begins the brightest reign of the Tang.
+720|H|mor|AS|Japan|learning|The Nihon Shoki|The Chronicles of Japan are finished.
+722|H|mor|EU|Iberia|battle|Covadonga|Christians in the Asturian hills beat a Muslim force.
+730|H|mor|AM|Copan|crown|Eighteen Rabbit|Waxaklajuun Ubaah K'awiil rules Copan.
+735|H|mor|AS|Japan|plague|Smallpox in Japan|Smallpox kills about a third of Japan's people.
+738|H|mor|AM|Quirigua|war|Copan's king beheaded|Quirigua captures and kills the king of Copan.
+740|H|mor|AF|Morocco|uprising|The Berber revolt|The Berbers rise against the Umayyads.
+742|H|mor|ME|Arabia|faith|Shia and Sunni harden|The followers of Ali grow apart from the rest.
+745|H|mor|AS|Mongolia|empire|The Uyghur khaganate|The Uyghurs take the steppe from the Turks.
+752|H|mor|AS|Japan|art|The Great Buddha of Nara|A bronze Buddha fifteen metres tall is dedicated at Todai-ji.
+756|H|mor|EU|Iberia|crown|Abd al-Rahman in Cordoba|The last Umayyad founds an emirate in Spain.
+762|H|mor|ME|Baghdad|founding|Baghdad founded|The Abbasids build the round city of Baghdad.
+770|H|mor|AS|Japan|science|The million pagodas|The Japanese court prints a million Buddhist charms.
+774|H|mor|EU|Italy|crown|Charlemagne takes Lombardy|Charlemagne becomes king of the Lombards.
+778|H|mor|EU|Iberia|battle|Roncevaux|Basques destroy Charlemagne's rearguard.
+782|H|mor|EU|Germany|massacre|Verden|Charlemagne has thousands of Saxons killed.
+787|H|mor|ME|Nicaea|faith|The second Nicaea|A council restores the holy images.
+790|H|mor|AS|Tibet|war|Tibet takes Dunhuang|Tibet holds the Silk Road towns.
+795|H|mor|EU|Ireland|war|Vikings in Ireland|Viking raiders strike Ireland.
+800|H|mor|AM|Mexico|art|Bonampak|The murals of Bonampak show a Maya court at war.
+800|H|mor|AS|India|faith|Shankara|Adi Shankara teaches that the self and the world are one.
+800|H|mor|AF|Mali|founding|Gao|Gao on the Niger trades gold and salt.
+800|W|wer|EU|Scandinavia|war,occult|The Fenrir go raiding|Get of Fenris sagas say their kin sailed with the first Viking raids.
+800|W|cha|EU|Europe|occult,faith|Christ's Dreaming|Kithain say the new faith gave the Dreaming new figures as it drove out the old.
+813|H|mor|ME|Baghdad|crown|Al-Mamun|Al-Mamun becomes caliph after a civil war.
+820|H|mor|ME|Baghdad|science|Al-Khwarizmi|Al-Khwarizmi writes the book that gives algebra its name.
+830|H|mor|ME|Baghdad|learning|The House of Wisdom|Scholars in Baghdad translate Greek books into Arabic.
+840|H|mor|AS|Mongolia|war|The Uyghurs fall|The Kyrgyz destroy the Uyghur khaganate.
+841|H|mor|EU|Ireland|founding|Dublin|Vikings found Dublin.
+843|H|mor|EU|France|treaty|Verdun|Charlemagne's grandsons split his empire.
+845|H|mor|AS|China|persecution|The great Buddhist persecution|The Tang close thousands of monasteries.
+845|H|mor|EU|France|war|Vikings sack Paris|Ragnar's Vikings sack Paris.
+850|H|mor|AM|Chichen Itza|founding|Chichen Itza grows|Chichen Itza rises in the north of Yucatan.
+858|H|mor|AS|Japan|crown|The Fujiwara regents|The Fujiwara begin to rule Japan as regents.
+859|H|mor|AF|Morocco|learning|Al-Qarawiyyin|Fatima al-Fihri founds a mosque and school in Fez.
+860|H|mor|EU|Byzantium|war|The Rus attack Constantinople|Rus ships raid the suburbs of Constantinople.
+862|H|mor|EU|Russia|crown|Rurik|Rurik comes to rule Novgorod.
+866|H|mor|EU|Britain|war|The Great Heathen Army|A great Viking army lands in England.
+868|H|mor|AS|China|science|The Diamond Sutra|The oldest dated printed book is made in China.
+870|H|mor|EU|Iceland|exploration|Iceland settled|Norse settlers reach Iceland.
+874|H|mor|AS|China|uprising|Huang Chao|Huang Chao leads a great rebellion against the Tang.
+878|H|mor|EU|Britain|battle|Edington|Alfred beats the Danes.
+880|H|mor|AS|China|war|Chang'an falls|Huang Chao takes Chang'an.
+882|H|mor|EU|Russia|crown|Kiev taken|Oleg makes Kiev the capital of the Rus.
+885|H|mor|EU|France|siege|The Vikings besiege Paris|The Vikings besiege Paris for a year.
+889|H|mor|AS|Cambodia|founding|Yasodharapura|The Khmer build their capital at Angkor.
+890|H|mor|AF|Egypt|crown|The Tulunids|Egypt is ruled by its own governors.
+893|H|mor|EU|Bulgaria|crown|Simeon of Bulgaria|Simeon the Great makes Bulgaria a rival of Constantinople.
+900|H|mor|AM|Mexico|disaster|The Maya collapse|The southern Maya cities empty.
+900|H|mor|AS|Pacific|sea|Polynesians in Rapa Nui|Voyagers press east toward Easter Island.
+900|W|wra|AM|Peten|death,occult|The silent cities|Wraiths say the dead of the Maya cities stayed in their empty plazas.
+907|H|mor|AS|China|crown|The Tang end|The last Tang emperor is deposed.
+480|W|vam|EU|Italy|crown|The Ventrue after Rome|Ventrue tales say their Roman elders went to Ravenna and Constantinople.
+520|W|mum|AF|Aksum|faith|The Reborn in Aksum|Some of the Reborn say they found rest in the highlands of Aksum.
+560|W|mag|ME|Persia|learning|The Ahl-i-Batin in Persia|The Ahl-i-Batin tell of a teacher at Khosrow's court.
+600|W|wer|AF|Nigeria|occult,faith|The Mokole of the Niger|Mokole lore says the lizard-folk kept memory along the Niger.
+640|W|vam|ME|Arabia|faith,war|The Assamites and the Prophet|Assamite tales say their elders watched the rise of Islam with care.
+690|W|dem|AS|China|occult|The empress and the demons|The Fallen claim an Earthbound was worshipped in a Tang temple.
+750|W|vam|ME|Baghdad|crown|The Cainites of Baghdad|Noddists say Baghdad's founding drew the eastern clans to a new court.
+800|W|kue|AS|Japan|occult,crown|The courts of Heian|Kuei-jin say the Heian court had its own court of the dead.
+850|W|wer|AM|Chichen Itza|occult|The cenote|Balam tales say the sacred well was a door into the Umbra.
+478|H|mor|AS|Japan|crown|King Bu of Wa|A king of Wa writes to the Chinese court asking for a title.
+482|H|mor|AS|China|faith|The Yungang caves|The Northern Wei carve great Buddhas into the cliffs of Yungang.
+488|H|mor|ME|Persia|uprising|Mazdak|The preacher Mazdak calls for shared wealth in Persia.
+493|H|mor|AS|China|art|The Longmen caves|Carving begins at the Longmen grottoes.
+498|H|mor|AF|Sudan|faith|Christian Nubia begins|Christian missionaries reach the Nubian kingdoms.
+505|H|mor|AS|Korea|crown|Silla takes its name|The kingdom of Silla takes its name and Chinese-style titles.
+515|H|mor|EU|Italy|faith|The monks of Monte Cassino|Monks gather under Benedict's rule.
+518|H|mor|EU|Byzantium|crown|Justin I|A peasant soldier, Justin, becomes emperor.
+523|H|mor|ME|Yemen|massacre|Najran|The king of Himyar kills the Christians of Najran.
+527|H|mor|AS|China|faith|Bodhidharma|Tradition says Bodhidharma came to China and taught Chan.
+539|H|mor|AF|Nubia|faith|Nobatia turns Christian|The northern Nubian kingdom takes up Christianity.
+545|H|mor|AS|Korea|learning|Silla's history|Silla's court writes a national history.
+557|H|mor|AS|China|crown|The Chen|The Chen take the southern throne.
+561|H|mor|EU|France|crown|The Frankish kingdom splits|Clothar's sons divide the Franks.
+570|H|mor|ME|Mecca|war|The Year of the Elephant|An Aksumite army with an elephant marches on Mecca and turns back.
+579|H|mor|AS|India|crown|The Chalukyas|The Chalukyas rule the Deccan.
+583|H|mor|AS|China|founding|Daxing built|The Sui build a new capital beside the old Chang'an.
+598|H|mor|AS|Korea|war|Sui against Goguryeo|The Sui begin their failed wars on Goguryeo.
+601|H|mor|EU|Britain|faith|Canterbury|Augustine becomes the first archbishop of Canterbury.
+608|H|mor|AS|Japan|travel|Envoys to the Sui|Japan sends envoys and students to the Sui court.
+624|H|mor|ME|Badr|battle|Badr|Muhammad's followers beat the Meccans at Badr.
+627|H|mor|ME|Medina|siege|The Trench|The Meccans fail to take Medina.
+633|H|mor|ME|Arabia|war|The Ridda wars|The caliph Abu Bakr brings the Arab tribes back under Medina.
+647|H|mor|AF|Tunisia|war|Sufetula|The Arabs beat the Byzantine governor of Africa.
+649|H|mor|AS|China|crown|Gaozong|Gaozong becomes Tang emperor.
+657|H|mor|ME|Siffin|battle|Siffin|Ali and Muawiya fight to a stand.
+664|H|mor|EU|Britain|faith|The Synod of Whitby|The English church follows Rome's date for Easter.
+670|H|mor|EU|Britain|learning|Caedmon|The cowherd Caedmon sings the first English hymn.
+679|H|mor|EU|Bulgaria|crown|The Bulgars cross the Danube|Asparukh leads the Bulgars across the Danube.
+686|H|mor|AS|Indonesia|crown|Srivijaya's oaths|Srivijaya carves curses on those who betray it.
+698|H|mor|AS|Korea|crown|Balhae|Balhae is founded in Manchuria.
+701|H|mor|AS|Japan|law|The Taiho code|Japan's first full law code is issued.
+715|H|mor|EU|Britain|art|The Lindisfarne Gospels|Monks finish the Lindisfarne Gospels.
+731|H|mor|EU|Britain|learning|Bede's History|Bede finishes his history of the English church.
+734|H|mor|AM|Tikal|building|Temple I of Tikal|Tikal raises its great funeral temple.
+747|H|mor|AS|Central Asia|war|Gao Xianzhi crosses the Pamirs|A Tang army crosses the Pamirs.
+749|H|mor|ME|Syria|quake|The Galilee earthquake|An earthquake destroys towns across the Levant.
+757|H|mor|EU|Britain|crown|Offa of Mercia|Offa becomes king of Mercia and builds his dyke.
+763|H|mor|AS|China|war|Tibet sacks Chang'an|Tibet holds Chang'an for two weeks.
+771|H|mor|EU|France|crown|Charlemagne alone|Charlemagne becomes sole king of the Franks.
+780|H|mor|AS|China|law|The two-tax system|The Tang tax land and households twice a year.
+781|H|mor|AS|China|faith|The Nestorian stele|A stone in Chang'an records the Church of the East in China.
+788|H|mor|EU|Germany|crown|Bavaria taken|Charlemagne takes Bavaria from Tassilo.
+790|H|mor|AM|Copan|art|The hieroglyphic stair|Copan finishes the longest Maya inscription.
+797|H|mor|EU|Byzantium|crown|Irene rules alone|Empress Irene rules Byzantium in her own name.
+808|H|mor|AF|Morocco|founding|Fez|Idris II makes Fez his capital.
+809|H|mor|ME|Baghdad|crown|Harun dies|Harun al-Rashid dies on campaign.
+811|H|mor|EU|Bulgaria|battle|Pliska|Krum of Bulgaria kills the emperor Nikephoros.
+826|H|mor|EU|Crete|war|The Arabs take Crete|Arabs from Spain take Crete.
+827|H|mor|EU|Sicily|war|The Aghlabids in Sicily|The Aghlabids begin the conquest of Sicily.
+846|H|mor|EU|Italy|war|Saracens raid Rome|Arab raiders loot St Peter's.
+888|H|mor|EU|France|crown|Odo of Paris|The defender of Paris is made king of the West Franks.
+# The Age of Gathering Darkness, to 300 events
+909|H|mor|AF|Tunisia|crown|The Fatimids|The Fatimids take power in Ifriqiya.
+911|H|mor|EU|France|crown|Normandy|Charles the Simple gives Rollo the land that becomes Normandy.
+912|H|mor|AS|Korea|crown|Later Three Kingdoms|Korea splits again into three.
+915|H|mor|AS|India|crown|The Rashtrakutas take Kannauj|The Rashtrakuta kings raid the north.
+918|H|mor|AS|Korea|crown|Goryeo|Wang Geon founds Goryeo, which gives Korea its name.
+919|H|mor|EU|Germany|crown|Henry the Fowler|Henry of Saxony becomes king of the East Franks.
+920|H|mor|AS|Mongolia|empire|The Khitan Liao|The Khitans found the Liao empire in the north.
+922|H|mor|EU|Russia|travel|Ibn Fadlan|Ibn Fadlan writes of the Volga Bulgars and a Rus ship burial.
+929|H|mor|EU|Iberia|crown|The caliphate of Cordoba|Abd al-Rahman III takes the title of caliph.
+930|H|mor|EU|Iceland|law|The Althing|The Icelanders hold their first assembly at Thingvellir.
+932|H|mor|ME|Persia|crown|The Buyids|The Buyids take Persia and later Baghdad.
+935|H|mor|AS|Korea|crown|Silla ends|The last king of Silla gives his throne to Goryeo.
+936|H|mor|AS|China|crown|The Sixteen Prefectures|The Liao take the land around later Beijing.
+937|H|mor|EU|Britain|battle|Brunanburh|Athelstan beats the Scots, Welsh and Norse.
+939|H|mor|AS|Vietnam|crown|Ngo Quyen|Vietnam wins its freedom from China at the Bach Dang river.
+940|H|mor|AS|Japan|uprising|Taira no Masakado|Masakado rises in the east and calls himself the new emperor.
+945|H|mor|ME|Baghdad|crown|The Buyids take Baghdad|The caliph becomes a puppet of the Buyids.
+950|H|mor|AF|Ethiopia|war|Gudit|Legend says the queen Gudit destroyed Aksum.
+950|H|mor|AM|Peru|founding|Chan Chan|The Chimu build their capital Chan Chan of adobe.
+950|W|kue|AS|Japan|crown,occult|Masakado's ghost|Kuei-jin say the rebel Masakado's head flew back to the east and haunted it.
+958|H|mor|AS|China|crown|Chai Rong|Chai Rong of the Later Zhou nearly reunites the north.
+960|H|mor|EU|Poland|crown|The Piasts|Mieszko I rules the Polans.
+965|H|mor|EU|Russia|war|Sviatoslav and the Khazars|Sviatoslav of Kiev destroys the Khazar khaganate.
+969|H|mor|AF|Egypt|founding|Cairo|The Fatimids take Egypt and found Cairo.
+970|H|mor|AF|Egypt|learning|Al-Azhar|The Fatimids found al-Azhar.
+976|H|mor|EU|Byzantium|crown|Basil II|Basil II takes the throne of Byzantium.
+978|H|mor|EU|Britain|crown|Aethelred|Aethelred the Unready becomes king of England.
+980|H|mor|ME|Persia|science|Ibn Sina born|Ibn Sina, the great physician, is born near Bukhara.
+982|H|mor|AM|Greenland|exploration|Erik the Red|Erik the Red sails to Greenland.
+985|H|mor|AS|India|crown|Rajaraja Chola|Rajaraja I builds the Chola empire.
+987|H|mor|EU|France|crown|Hugh Capet|Hugh Capet becomes king of France.
+990|H|mor|AF|Ghana|trade|Ghana's gold|Ghana's king is said to own a nugget the size of a stone.
+991|H|mor|EU|Britain|battle|Maldon|The Danes beat the men of Essex at Maldon.
+992|H|mor|AS|China|learning|The Song exams|The Song pick their officials by written exam.
+997|H|mor|EU|Hungary|crown|Stephen's crown|Stephen becomes prince of Hungary.
+999|H|mor|AF|Mali|founding|Kanem's trade|Kanem's caravans reach Libya.
+1000|H|mor|AM|Peru|founding|The Sican|The Sican of the Lambayeque valley work gold.
+1000|H|mor|AS|Pacific|sea|Polynesians reach Hawaii and Rapa Nui|Polynesian voyagers settle the far corners of the Pacific.
+1000|H|mor|AF|Zimbabwe|founding|Great Zimbabwe begins|Shona farmers begin building at Great Zimbabwe.
+1000|W|wer|AM|Pacific|sea,occult|The Nagah and the islanders|Nagah tales say the sea-serpents guarded the Polynesian voyagers.
+1002|H|mor|EU|Britain|massacre|St Brice's Day|Aethelred orders the killing of the Danes in England.
+1009|H|mor|AS|Vietnam|crown|The Ly dynasty|The Ly found a lasting Vietnamese state.
+1010|H|mor|AS|India|building|The Brihadeeswarar temple|Rajaraja Chola finishes the great temple of Thanjavur.
+1013|H|mor|EU|Britain|crown|Sweyn Forkbeard|Sweyn of Denmark takes England.
+1014|H|mor|EU|Ireland|battle|Clontarf|Brian Boru beats the Norse and dies at Clontarf.
+1014|H|mor|EU|Bulgaria|massacre|Kleidion|Basil II blinds fifteen thousand Bulgarian prisoners.
+1016|H|mor|EU|Britain|crown|Cnut|Cnut becomes king of England.
+1018|H|mor|EU|Bulgaria|empire|Bulgaria taken|Basil II ends the Bulgarian state.
+1020|H|mor|ME|Persia|learning|The Shahnameh|Ferdowsi finishes the Book of Kings.
+1025|H|mor|AS|India|war|Somnath sacked|Mahmud of Ghazni loots the temple of Somnath.
+1025|H|mor|ME|Persia|science|The Canon of Medicine|Ibn Sina finishes his Canon of Medicine.
+1031|H|mor|EU|Iberia|crown|The taifas|The caliphate of Cordoba breaks into small kingdoms.
+1037|H|mor|ME|Persia|empire|The Seljuks|The Seljuk Turks take Khorasan.
+1040|H|mor|EU|Scotland|crown|Macbeth|Macbeth kills Duncan and takes Scotland.
+1041|H|mor|AS|China|science|Movable type|Bi Sheng prints with movable clay type.
+1045|H|mor|EU|Byzantium|learning|Psellos|Michael Psellos teaches philosophy at Constantinople.
+1050|H|mor|AF|Morocco|faith|The Almoravids|Berber reformers of the Sahara form the Almoravid movement.
+1050|W|vam|EU|Iberia|crown,war|The Lasombra of Spain|Lasombra lore says the taifa wars were their own feuds.
+1055|H|mor|ME|Baghdad|crown|Tughril takes Baghdad|The Seljuks take Baghdad and are named sultans.
+1057|H|mor|AS|Burma|crown|Anawrahta of Pagan|Anawrahta makes Pagan a great Buddhist kingdom.
+1060|H|mor|EU|Sicily|war|The Normans in Sicily|Roger the Norman begins to take Sicily.
+1068|H|mor|AS|China|law|Wang Anshi's reforms|Wang Anshi reforms the Song state.
+1070|H|mor|EU|Britain|massacre|The Harrying of the North|William burns the north of England.
+1074|H|mor|ME|Persia|science|Omar Khayyam's calendar|Omar Khayyam works on the Jalali calendar.
+1080|H|mor|EU|Armenia|crown|Cilician Armenia|Armenians found a kingdom in Cilicia.
+1086|H|mor|EU|Britain|law|The Domesday Book|William has every holding in England counted.
+1086|H|mor|EU|Iberia|battle|Sagrajas|The Almoravids beat Alfonso VI.
+1088|H|mor|EU|Italy|learning|Bologna's university|Students and teachers of law gather at Bologna.
+1088|H|mor|AS|China|science|Shen Kuo|Shen Kuo writes of the magnetic compass.
+1090|H|mor|ME|Persia|crime|Alamut|Hasan-i Sabbah takes the castle of Alamut.
+1092|H|mor|ME|Persia|crime|Nizam al-Mulk murdered|The Seljuk vizier is killed by an Assassin.
+1094|H|mor|EU|Iberia|war|El Cid takes Valencia|Rodrigo Diaz takes Valencia.
+1096|H|mor|EU|Germany|massacre|The Rhineland massacres|Crusaders kill the Jews of Mainz, Worms and Speyer.
+1098|H|mor|ME|Antioch|siege|Antioch|The crusaders take Antioch.
+1100|H|mor|AM|Peru|founding|Chimor grows|The Chimu kingdom spreads along the north coast.
+1100|H|mor|AS|India|founding|The Hoysalas|The Hoysalas rule from Belur.
+1100|H|mor|AF|Nigeria|art|The Ife heads|Smiths of Ife cast lifelike heads of bronze.
+1100|W|mag|ME|Alamut|occult,crime|The Ahl-i-Batin and Alamut|Ahl-i-Batin lore says the Assassins of Alamut were a shadow of their own teaching.
+1104|H|mor|ME|Acre|war|The crusaders take Acre|The kingdom of Jerusalem takes Acre.
+1109|H|mor|ME|Tripoli|crown|The county of Tripoli|The crusaders found the county of Tripoli.
+1115|H|mor|AS|Manchuria|empire|The Jin|The Jurchen found the Jin.
+1118|H|mor|ME|Jerusalem|faith|The Templars|Knights in Jerusalem found the Order of the Temple.
+1119|H|mor|ME|Syria|battle|The Field of Blood|The army of Antioch is destroyed.
+1120|H|mor|EU|Britain|disaster|The White Ship|The heir of England drowns when the White Ship sinks.
+1121|H|mor|AF|Morocco|faith|The Almohads|Ibn Tumart preaches the Almohad faith in the Atlas.
+1125|H|mor|AS|China|war|The Liao fall|The Jin and Song destroy the Liao.
+1127|H|mor|AS|China|crown|The Southern Song|The Song rule from the south.
+1132|H|mor|AS|Central Asia|empire|The Kara Khitai|Liao refugees found an empire in Central Asia.
+1135|H|mor|EU|Britain|war|The Anarchy|England falls into civil war between Stephen and Matilda.
+1140|H|mor|AS|China|war|Yue Fei|The general Yue Fei wins victories against the Jin.
+1142|H|mor|AS|China|death|Yue Fei executed|The Song court has Yue Fei put to death.
+1143|H|mor|EU|Portugal|crown|Portugal|Afonso Henriques becomes king of Portugal.
+1147|H|mor|EU|Portugal|siege|Lisbon taken|Crusaders help take Lisbon.
+1150|H|mor|AM|Cahokia|building|Monks Mound|Cahokia's great mound reaches its full height.
+1150|H|mor|AS|Cambodia|death|Suryavarman II dies|The builder of Angkor Wat dies.
+1150|H|mor|AF|Ethiopia|building|Lalibela's churches|Churches are carved down into the rock at Lalibela.
+1150|W|wra|AM|Cahokia|death,occult|The mound city's dead|Wraiths say Cahokia's dead kept a city of their own on its mounds.
+1154|H|mor|EU|Britain|crown|Henry II|Henry II begins the Angevin empire.
+1156|H|mor|AS|Japan|war|The Hogen rebellion|Rival lines of the court fight with samurai.
+1160|H|mor|AS|Japan|war|The Heiji rebellion|The Taira crush the Minamoto.
+1161|H|mor|AS|China|war|Caishi|The Song use gunpowder bombs to beat the Jin on the Yangtze.
+1163|H|mor|EU|France|building|Notre-Dame|Work begins on Notre-Dame of Paris.
+1167|H|mor|EU|Italy|founding|The Lombard League|The cities of Lombardy unite against Barbarossa.
+1170|H|mor|EU|Britain|crime|Becket murdered|Knights kill Thomas Becket in Canterbury cathedral.
+1171|H|mor|AF|Egypt|crown|Saladin ends the Fatimids|Saladin ends the Fatimid caliphate.
+1173|H|mor|AS|India|crown|Muhammad of Ghor|Muhammad of Ghor rules Ghazni.
+1175|H|mor|AS|Japan|faith|Honen|Honen preaches the Pure Land.
+1180|H|mor|AS|Japan|war|The Genpei war|The Minamoto rise against the Taira.
+1180|H|mor|AS|Cambodia|crown|Jayavarman VII|Jayavarman VII drives out the Cham.
+1181|H|mor|AS|Cambodia|building|Angkor Thom|Jayavarman VII begins Angkor Thom.
+1183|H|mor|EU|Italy|treaty|The Peace of Constance|Barbarossa makes peace with the Lombard cities.
+1185|H|mor|EU|Bulgaria|uprising|The Asen brothers|The Bulgarians rise again.
+1190|H|mor|ME|Acre|faith|The Teutonic Knights|German crusaders found a hospital at Acre.
+1191|H|mor|ME|Acre|siege|Acre taken|Richard the Lionheart and Philip take Acre.
+1192|H|mor|ME|Jaffa|treaty|The Treaty of Jaffa|Richard and Saladin agree a truce.
+1193|H|mor|AS|India|war|Nalanda burned|Raiders burn the monastery of Nalanda.
+1194|H|mor|EU|Sicily|crown|Henry VI takes Sicily|The emperor takes the kingdom of Sicily.
+1195|H|mor|EU|Iberia|battle|Alarcos|The Almohads beat Castile.
+1196|H|mor|AF|Morocco|building|The Koutoubia|Marrakesh finishes the minaret of the Koutoubia.
+920|W|vam|EU|Germany|crown|The Ventrue of the Saxon kings|Ventrue tales say their German elders chose Henry the Fowler.
+970|W|vam|AF|Egypt|crown|The Cainites of Cairo|Noddists say Cairo was founded under the eyes of the Setites.
+1000|W|mag|EU|Europe|occult,faith|The millennium|The Order of Hermes and the Messianic Voices both brace for the end that does not come.
+1050|W|wer|AS|China|occult|The Song and the spirits|Stargazer tales say the Song bureaucracy bound the spirits as the Weaver's clerks.
+1100|W|cha|EU|France|art|The troubadours|Kithain say the troubadours woke a new Dreaming in the south of France.
+1150|W|dem|ME|Syria|occult|An Earthbound in the war|The Fallen claim an Earthbound fed on the crusades.
+1180|W|kue|AS|Japan|war,occult|The Genpei dead|Kuei-jin say the Taira drowned at Dan-no-ura still haunt the strait as crabs.
+908|H|mor|AS|China|crown|The Five Dynasties|Short-lived dynasties rule north China one after another.
+913|H|mor|EU|Bulgaria|war|Simeon at Constantinople|Simeon of Bulgaria marches on Constantinople.
+914|H|mor|AS|India|crown|The Pratiharas|The Pratiharas hold Kannauj.
+916|H|mor|AS|China|learning|The Khitan script|The Liao make a script for the Khitan tongue.
+924|H|mor|EU|Britain|crown|Athelstan|Athelstan becomes king of all England.
+926|H|mor|AS|Manchuria|war|Balhae falls|The Khitans destroy Balhae.
+927|H|mor|EU|Bulgaria|crown|Peter of Bulgaria|Bulgaria makes peace with Byzantium.
+933|H|mor|EU|Germany|battle|Riade|Henry the Fowler beats the Magyars.
+936|H|mor|EU|Germany|crown|Otto I crowned|Otto I is crowned king at Aachen.
+941|H|mor|EU|Byzantium|war|Greek fire against the Rus|The Byzantines burn Igor's fleet.
+944|H|mor|AS|Vietnam|crown|The Ngo|Ngo Quyen's line rules Vietnam.
+947|H|mor|AS|China|war|The Liao take Kaifeng|The Liao take Kaifeng for a time.
+948|H|mor|AF|Egypt|crown|Kafur|The black eunuch Kafur rules Egypt.
+951|H|mor|AS|China|crown|The Later Zhou|The Later Zhou take the throne.
+957|H|mor|EU|Russia|faith|Olga baptised|Olga of Kiev is baptised in Constantinople.
+961|H|mor|EU|Crete|war|Crete retaken|Nikephoros Phokas takes Crete from the Arabs.
+963|H|mor|EU|Byzantium|faith|Mount Athos|The Great Lavra is founded on Mount Athos.
+966|H|mor|EU|Poland|faith|Poland baptised|Mieszko I is baptised.
+967|H|mor|AS|Cambodia|building|Banteay Srei|The pink temple of Banteay Srei is carved.
+968|H|mor|AS|Vietnam|crown|Dai Co Viet|Dinh Bo Linh names the kingdom Dai Co Viet.
+971|H|mor|EU|Bulgaria|war|Dorostolon|Byzantium beats Sviatoslav on the Danube.
+975|H|mor|AS|China|war|The Southern Tang falls|The Song take the Southern Tang.
+977|H|mor|AS|Afghanistan|crown|The Ghaznavids|Sebuktigin founds the Ghaznavid line.
+979|H|mor|AS|China|war|The Northern Han falls|The Song finish uniting China.
+983|H|mor|EU|Germany|uprising|The Slav rising|The Slavs east of the Elbe rise against the Saxons.
+986|H|mor|AM|Greenland|founding|The Greenland colony|Norse settlers sail with Erik to Greenland.
+989|H|mor|EU|France|faith|The Peace of God|Bishops in France forbid attacks on churches and the poor.
+993|H|mor|AS|Korea|war|The Khitan wars|The Liao invade Goryeo.
+996|H|mor|AF|Egypt|crown|Al-Hakim|The Fatimid caliph al-Hakim takes the throne.
+998|H|mor|AS|India|crown|Mahmud of Ghazni crowned|Mahmud becomes sultan.
+1005|H|mor|AF|Egypt|learning|The House of Knowledge|Al-Hakim opens a library in Cairo.
+1009|H|mor|ME|Jerusalem|persecution|The Holy Sepulchre destroyed|Al-Hakim orders the church of the Holy Sepulchre destroyed.
+1011|H|mor|AS|Korea|science|The Tripitaka Koreana|Goryeo begins carving the Buddhist canon on wood blocks.
+1015|H|mor|EU|Russia|crown|Boris and Gleb|The sons of Vladimir are murdered by their brother.
+1017|H|mor|AS|India|learning|Al-Biruni in India|Al-Biruni studies the learning of India.
+1019|H|mor|AS|Japan|war|The Toi invasion|Jurchen pirates raid Kyushu.
+1021|H|mor|AF|Egypt|crime|Al-Hakim vanishes|The caliph al-Hakim goes into the desert and is never seen again.
+1027|H|mor|EU|Germany|crown|Conrad II crowned|Conrad II is crowned emperor.
+1028|H|mor|EU|Byzantium|crown|Zoe|Empress Zoe rules through her husbands.
+1033|H|mor|EU|Europe|faith|The thousand years of the Passion|Pilgrims crowd to Jerusalem for the thousandth year of the cross.
+1035|H|mor|EU|France|crown|William of Normandy|William becomes duke of Normandy as a boy.
+1038|H|mor|AS|China|crown|The Western Xia|The Tanguts found the Western Xia.
+1040|H|mor|AS|Afghanistan|battle|Dandanaqan|The Seljuks beat the Ghaznavids.
+1043|H|mor|EU|Russia|war|The last Rus raid|Kiev's last attack on Constantinople fails.
+1048|H|mor|AS|China|flood|The Yellow River breaks|The Yellow River bursts its banks and moves north.
+1051|H|mor|EU|Russia|faith|The Caves monastery|Monks found the Caves monastery at Kiev.
+1052|H|mor|AS|Japan|faith|The age of the end of the law|Japanese Buddhists believe the last age of the Dharma begins.
+1053|H|mor|AS|Japan|building|The Phoenix Hall|The Byodo-in is built at Uji.
+1054|H|mor|AS|China|science|The supernova|Chinese astronomers record a guest star visible by day.
+1058|H|mor|EU|Scotland|crown|Malcolm III|Malcolm III takes the Scottish throne.
+1064|H|mor|ME|Armenia|war|Ani sacked|The Seljuks take Ani.
+1066|H|mor|EU|Britain|battle|Stamford Bridge|Harold beats Harald Hardrada.
+1067|H|mor|ME|Baghdad|learning|The Nizamiyya|The vizier Nizam al-Mulk founds a great school in Baghdad.
+1071|H|mor|EU|Italy|war|Bari falls|The Normans take Bari, the last Byzantine town in Italy.
+1073|H|mor|EU|Italy|crown|Gregory VII|Gregory VII becomes pope and fights the emperor.
+1079|H|mor|AS|China|learning|Su Shi in exile|The poet Su Shi is sent into exile.
+1081|H|mor|EU|Byzantium|crown|Alexios Komnenos|Alexios I takes the throne.
+1084|H|mor|EU|Italy|war|The Normans sack Rome|Robert Guiscard's troops sack Rome.
+1084|H|mor|AS|China|learning|The Comprehensive Mirror|Sima Guang finishes his history of China.
+1086|H|mor|AS|Japan|crown|The cloistered emperors|Emperor Shirakawa rules from retirement.
+1091|H|mor|EU|Byzantium|battle|Levounion|Byzantium destroys the Pechenegs.
+1094|H|mor|AS|China|science|Su Song's clock|Su Song builds a great water-driven astronomical clock.
+1099|H|mor|EU|Iberia|death|El Cid dies|El Cid dies in Valencia.
+1100|H|mor|AM|Arizona|founding|The cliff villages|Ancestral Puebloans build villages in the cliffs.
+1100|H|mor|AS|Pacific|sea|The Maori arrive|Polynesian voyagers reach New Zealand.
+1105|H|mor|AS|Cambodia|founding|The Khmer roads|Khmer roads run from Angkor to Phimai.
+1108|H|mor|EU|France|crown|Louis VI|Louis VI rules France.
+1111|H|mor|ME|Baghdad|death|Al-Ghazali dies|The theologian al-Ghazali dies.
+1115|H|mor|EU|France|faith|Clairvaux|Bernard founds the abbey of Clairvaux.
+1122|H|mor|EU|Germany|treaty|The Concordat of Worms|The pope and emperor settle who appoints bishops.
+1131|H|mor|ME|Persia|death|Omar Khayyam dies|The poet and mathematician Omar Khayyam dies.
+1136|H|mor|EU|Britain|learning|Geoffrey's History|Geoffrey of Monmouth writes of King Arthur.
+1138|H|mor|EU|Cordoba|learning|Maimonides born|Maimonides is born in Cordoba.
+1141|H|mor|AS|Central Asia|battle|Qatwan|The Kara Khitai beat the Seljuks.
+1146|H|mor|ME|Syria|crown|Nur ad-Din|Nur ad-Din rules Aleppo.
+1147|H|mor|ME|Damascus|siege|The Second Crusade fails|The crusaders fail before Damascus.
+1150|H|mor|AS|India|crown|The Ghurids rise|The Ghurids burn Ghazni.
+1153|H|mor|ME|Ascalon|siege|Ascalon taken|The kingdom of Jerusalem takes Ascalon.
+1155|H|mor|EU|Italy|crown|Barbarossa crowned|Frederick Barbarossa is crowned emperor.
+1157|H|mor|ME|Persia|crown|The Seljuks break|The last great Seljuk sultan dies.
+1162|H|mor|EU|Italy|war|Milan destroyed|Barbarossa razes Milan.
+1165|H|mor|EU|Germany|faith|Charlemagne made a saint|Barbarossa has Charlemagne made a saint.
+1168|H|mor|AM|Mexico|disaster|Tula falls|Tula is burned and the Toltec age ends.
+1170|H|mor|EU|Ireland|war|Strongbow in Ireland|Norman knights take Waterford and Dublin.
+1171|H|mor|AS|Vietnam|war|The Cham wars|Champa and Dai Viet fight.
+1177|H|mor|AS|Cambodia|war|The Cham sack Angkor|Champa sacks Angkor.
+1177|H|mor|ME|Montgisard|battle|Montgisard|Baldwin IV beats Saladin.
+1179|H|mor|EU|Germany|learning|Hildegard dies|Hildegard of Bingen dies.
+1180|H|mor|EU|France|crown|Philip Augustus|Philip II becomes king of France.
+1187|H|mor|ME|Jerusalem|war|Saladin takes Jerusalem|Saladin takes Jerusalem.
+1191|H|mor|AS|Japan|faith|Eisai brings Zen|Eisai brings Rinzai Zen to Japan.
+1193|H|mor|EU|Austria|crime|Richard held for ransom|Richard the Lionheart is held prisoner in Austria.
+1193|H|mor|ME|Damascus|death|Saladin dies|Saladin dies in Damascus.
+1196|H|mor|AS|Mongolia|war|Temujin and the Tatars|Temujin helps the Jin beat the Tatars.
+1112|H|mor|AS|China|art|Emperor Huizong's paintings|The Song emperor Huizong paints birds and flowers while his state weakens.
+1126|H|mor|AS|China|siege|The siege of Kaifeng|The Jin besiege Kaifeng and the Song pay a vast ransom.
+1158|H|mor|AF|Morocco|science|The Almohad map|Al-Idrisi's world map is copied in north Africa.
+1178|H|mor|EU|Britain|science|The monks see the moon split|Monks at Canterbury see a flash on the moon.
+1189|H|mor|AS|Japan|death|Yoshitsune dies|Minamoto no Yoshitsune dies hunted by his brother.
