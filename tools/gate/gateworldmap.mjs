@@ -1,7 +1,7 @@
 /**
  * The world map (WoDX Storyteller 0.55.0, WoDX Otherworlds 0.20.0, B2540 to B2549), in Foundry, in rothenstein-wodx
  * only, as Gamemaster Test:
- *   await (await import(`/wodx-gate/gateworld.mjs?${Date.now()}`)).run()
+ *   await (await import(`/wodx-gate/gateworldmap.mjs?${Date.now()}`)).run()
  * It reads and draws only: nothing is made, changed or deleted, and the clock is not touched.
  *   1. the modules: Storyteller 0.55.0 or later with api.worldMap, Otherworlds 0.20.0 or later with api.worldsChart
  *   2. the grid: Brno in Moravia, Cairo desert on the Nile in Egypt, Kyoto in Japan, Lima in the Andes; every region
@@ -12,7 +12,7 @@
  *   5. the pictures: the living world, the three mirrors and the chart of the worlds each draw as an SVG
  *   6. "The world map" is in the Storyteller's hand
  *   7. the window opens with its picture, From, To and Year, shows a journey after Show, and closes
- * Result: Data/wodx-gate/gateworld-result.json.
+ * Result: Data/wodx-gate/gateworldmap-result.json.
  */
 const N = 7;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -21,7 +21,7 @@ const within = (p, ms, what) => Promise.race([p, new Promise((_, rej) => setTime
 async function save(R) {
   R.finished = new Date().toISOString();
   R.summary = `${R.steps.filter(s => s.pass).length}/${N} passed${R.errors.length ? `, ${R.errors.length} error(s)` : ""}`;
-  const file = new File([JSON.stringify(R, null, 1)], "gateworld-result.json", {type: "application/json"});
+  const file = new File([JSON.stringify(R, null, 1)], "gateworldmap-result.json", {type: "application/json"});
   await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, {notify: false});
   return R.summary;
 }
