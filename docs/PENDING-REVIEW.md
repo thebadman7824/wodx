@@ -1140,6 +1140,18 @@ Ben's picks on the Town Households desk (https://claude.ai/artifact/54eUEywJWgZ9
 | 2026-11-13 | Households before 1781 (B3297) | A: the same renames from 1197 | Return early in repeople again for medieval towns |
 | 2026-11-13 | Buildings of other lands (B3298) | B: local names on the same footprints; the furnishing stays the Bohemian one for now | Drop relabel from ddtown.py |
 
+## Approved by Ben, 13 November 2026, 21:12 UTC (places of power desk)
+
+Ben accepted every recommendation on the places of power desk (https://claude.ai/artifact/Rpg8GLzTRNYYuTf2HFHJ5F).
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-13 | How much a Node gives each week (B3451) | 4 Quintessence a dot to 1449, 3 to 1699, 2 to 2022 (the M20 suggestion), 1 in the World of Future Darkness; half free, half Tass; each Node can take its own rate | Change NODE_RATES in modules/wodx-storyteller/scripts/power-rules.mjs |
+| 2026-11-13 | How much a Node holds before it stops filling (B3452) | Four weeks of output | Change NODE_CAP_WEEKS |
+| 2026-11-13 | Chantry names by era (B3453) | Covenant before 1466, chantry after; Craftmasons' lodge before 1325, Order of Reason house to 1898, Construct from 1899 | Change chantryName |
+| 2026-11-13 | Do untended freeholds fade? (B3454) | Yes: 30 days without the keeper dreaming there, in a place at Banality 9 before 1230, 6 from 1230 to 1968, 7 after, costs a rank each season | Change FAE_AGES fade values, or set them to 11 to turn it off |
+| 2026-11-13 | When is a balefire harvested daily? (B3455) | After 20 nights running, so its lost ranks come back by the season, not the month | Change harvestedDaily |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |

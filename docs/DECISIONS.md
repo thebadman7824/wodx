@@ -171,6 +171,7 @@ Next free block: B3470
 | B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3343) | Storyteller |
 | B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
 | B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3438) | Storyteller, Actions |
+| B3450-B3459 | Places of power: Mage Nodes and Tass, chantries, Changeling freeholds and balefires (used B3450-B3456) | Storyteller |
 | B3460-B3469 | Town generator buildings by region (used B3460-B3461) | tools |
 <!-- decision-index:end -->
 
@@ -5159,6 +5160,41 @@ Reverse: pass no sickFor from towns.mjs.
 ## B3438. The Hunt in a sick town, and carriers who name their sickness (2026-11-13)
 WoDX Actions, the Hunt and feeding (main.js). When upkeep.huntHere(scene).outbreak carries a diff (WoDX Storyteller's contagion: -1 while the town's sickness spreads or stands at its height, B3432), the Hunt shows "The sick are everywhere" with that number, added to the difficulty after the Fame and Domain floor, and named in the roll's parts. A vampire who becomes a carrier on a diseased vessel (V20 p. 303) gets flags.wodx-actions.carrier.disease and .what from the scene's outbreak when that sickness rides in the blood, so WoDX Storyteller's weekly run can offer it to a clean town the carrier stands in (B3433); otherwise the flag stays "a blood-borne disease" with no disease.
 Reverse: remove the sickDiff field and the named carrier in main.js.
+
+## B3450. Places of power live in one register in WoDX Storyteller (2026-11-13)
+WoDX Storyteller. Nodes, chantries and freeholds are kept in a hidden world setting (powerState), each tied to a scene and to the characters who keep it, and run on the clock once a game hour and after a skip (power.mjs, power-rules.mjs). The window opens from Upkeep, Places of power. Setting placesOfPower switches the clock off.
+
+Reverse: switch placesOfPower off, or drop Power from main.mjs.
+
+## B3451. How much a Node gives each week, by year (2026-11-13)
+WoDX Storyteller. M20 p. 320 leaves the weekly rate to the Storyteller (2 a dot for an industrial-era game, 5 to 10 for high fantasy, 1 or 2 where magic is dying). WoDX reads it by year: 4 a dot to 1449, 3 to 1699, 2 to 2022, 1 in the World of Future Darkness; half free Quintessence and half Tass, the odd point free. Each Node can take its own rate.
+
+Reverse: change NODE_RATES in power-rules.mjs.
+
+## B3452. A Node holds four weeks of output (2026-11-13)
+WoDX Storyteller. The book says a Node's supply is finite and must refill once drained but gives no rate; WoDX lets untapped energy build up to four weeks' worth and then stop.
+
+Reverse: change NODE_CAP_WEEKS.
+
+## B3453. Chantry tiers and names by era (2026-11-13)
+WoDX Storyteller. M20 p. 309 gives pools of 21 to 30 and 30 to 70; a pool of 30 is read as a small sanctuary. Mystic strongholds are covenants before 1466 and chantries after; Technocratic ones are Craftmasons' lodges before 1325, Order of Reason houses to 1898 and Constructs from 1899.
+
+Reverse: change CHANTRY_TIERS or chantryName.
+
+## B3454. Untended freeholds fade in a dull place (2026-11-13)
+WoDX Storyteller. C20 says Banality drowned freeholds over the centuries but gives no rule for one place. WoDX: a freehold whose keeper has not dreamed there for 30 days, in a place whose Banality (with the scene's drift) is at the age's bar or above, loses a rank of its rating each season. The bar is 9 before the Shattering (to 1229), 6 in the Shattering and the Interregnum (1230 to 1968), 7 after the Resurgence.
+
+Reverse: change FAE_AGES fade values or FREEHOLD_TEND_DAYS.
+
+## B3455. A balefire harvested daily (2026-11-13)
+WoDX Storyteller. C20 p. 312 lets lost ranks come back one a month if the balefire rests and one a season if it is harvested daily. WoDX counts it as daily after 20 nights running with no more than a night between.
+
+Reverse: change harvestedDaily.
+
+## B3456. Node, Chantry and Holdings are ties that need tending (2026-11-13)
+WoDX Storyteller. The three backgrounds join the ties list (every 30 days), and a keeper who draws on the place has the tie marked tended.
+
+Reverse: drop node, chantry and freehold from TIE_KINDS and BACKGROUND_TIES in upkeep-rules.mjs.
 
 ## B3460. The older public buildings by where they belong (2026-11-13)
 tools/mapgen regiontrades.first_group_ok, from the Japan 1830 hand check. Outside Christendom a generated town gets no charnel house, cemetery chapel, monastery library or Protestant prayer house. A Jewish quarter and its synagogue appear only in Christendom and the lands of Islam. The hospital, museum, savings bank, gendarmerie, public library, grand hotel, waterworks, dance hall, goods shed and counting house come only once the region's trades have left the old ones (its industrial, colonial or later age: Japan from 1868, India from 1857). Moravia and the rest of Christendom are unchanged. Samurai retainers and sake brewers now also live in ordinary homes in Japan, not only in rich ones.
