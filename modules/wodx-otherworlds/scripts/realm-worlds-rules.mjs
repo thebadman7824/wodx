@@ -513,3 +513,25 @@ export function closerSvg(map, view, {cell = 22} = {}) {
   for ( let j = 0; j < view.size; j++ ) for ( let i = 0; i < view.size; i++ ) out.push(`<rect x="${i * cell}" y="${j * cell}" width="${cell}" height="${cell}" fill="${map.pal[view.cells[j][i]]}"/>`);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${s} ${s}" width="${s}" height="${s}"><rect width="${s}" height="${s}" fill="#000"/>${out.join("")}<rect x="${s / 3}" y="${s / 3}" width="${s / 3}" height="${s / 3}" fill="none" stroke="${INK}" stroke-width="1" stroke-dasharray="4 4" opacity="0.6"/></svg>`;
 }
+
+/* ------------------------------------------------------------------ */
+/*  Go (Otherworlds 0.25.0, B2915)                                     */
+/* ------------------------------------------------------------------ */
+
+/** Most meetings one realm journey brings, and the chance of one on each day: a base and a step for each of the realm's dangers. */
+export const GO = {max: 3, base: 10, perDanger: 5, top: 50};
+
+/**
+ * The trip for a realm journey {days, squares}. hazards: the realm's dangers (words); rand: () => 0..1.
+ * Returns null when the journey cannot be made, else {seconds, days, chance, meetings: [{day, what}]}.
+ * A journey shorter than a day still gets one check.
+ */
+export function goPlan(j, {hazards = [], rand = Math.random} = {}) {
+  if ( !j || j.hidden || j.noWay || !j.squares ) return null;
+  const days = Math.max(0, Number(j.days) || 0), checks = Math.max(1, Math.ceil(days));
+  const list = (Array.isArray(hazards) ? hazards : []).filter(Boolean);
+  const chance = Math.min(GO.top, GO.base + GO.perDanger * list.length) / 100;
+  const meetings = [];
+  for ( let d = 0; d < checks && meetings.length < GO.max; d++ ) if ( rand() < chance ) meetings.push({day: d + 1, what: list.length ? list[Math.floor(rand() * list.length) % list.length] : "something of the realm"});
+  return {seconds: Math.round(Math.max(days, 1 / 24) * 86400), days, chance: Math.round(chance * 100), meetings};
+}

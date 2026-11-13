@@ -132,7 +132,7 @@ Next free block: B2960
 | B2790-B2799 | Talking faces: an NPC's 64 pixel face beside each line it speaks, blinking, speaking and reacting to the character | Paperdoll |
 | B2800-B2809 | Face features: 110 marks by line, clan, kith and house on the talking faces (used B2800-B2804) | Paperdoll |
 | B2840-B2879 | Relationships (parts 2 to 6, used B2840-B2876): bonds from the books, trust and betrayal, courtship and marriage, standing and gossip, teachers, past lives and the Storyteller tools | NPC, Storyteller, Sheets, Actions, Chronicle |
-| B2900-B2949 | Deeper hooks for systems that only displayed something (the Display-Only Systems Desk): aura after the reading, overwhelmed senses, crippled limbs on the roll, wounds that add up, living tiles that switch walls, doors and lights (used B2900-B2904) | Senses, Otherworlds, Combat, Interactables |
+| B2900-B2949 | Deeper hooks for systems that only displayed something (the Display-Only Systems Desk): aura after the reading, overwhelmed senses, crippled limbs on the roll, wounds that add up, living tiles that switch walls, doors and lights, the world map and realm Go, tied dreams and Nightmares, the crossing reading marks and mood rules, dress for a part of the world (used B2900-B2904, B2910-B2915; B2905-B2909 kept for the maps thread) | Senses, Otherworlds, Combat, Interactables, Storyteller, Atmosphere, NPC |
 | B2950-B2959 | Notices for a public repository: the unofficial fan work notice and third-party credits (used B2950) | System fork |
 <!-- decision-index:end -->
 
@@ -4053,6 +4053,36 @@ Reverse: Return null from addedUpOffer in body-rules.js; delete the healCrippled
 Desk item t4. A living tile's rule has "While it holds, also": walls inside its square block movement and sight, doors inside it are locked, or lights inside it are on. When the rule stops holding they open, unlock or go out; a door that WoDX did not lock is left alone.
 
 Reverse: Set "While it holds, also" to "Nothing else" on the tile.
+
+## B2910. The world map's Go makes a journey a trip (2026-11-13)
+Desk item t1. Go on the world map, in the chronicle's own year, asks who goes and by which way. The clock moves on by the days of the journey, each day may bring a meeting on the road (the Storyteller's encounter chance, a quarter of it by air, three at most), the party gets the hardship check for food, water and sleep, and the scene in view can take the far end's part of the world, so its money, names and weather follow. House figures; no book sets them.
+
+Reverse: Close the world map with Close instead of Go; untick the arrival box to leave the scene as it is.
+
+## B2911. Dreams tied to powers, Merits and Flaws; the Nightmares Flaw works by itself (2026-11-13)
+Desk item t6. A dream can be tied to Auspex, Oneiromancy, a dream-reading Gift or Arcanos, Oracular Ability or Nightmares. Tied with no date, it comes at the dreamer's next day's sleep (hour 8), and only while the dreamer still has the power or trait. A player character with the Nightmares Flaw (V20 p. 485) rolls Willpower at difficulty 7 after each day's sleep; a failure gives a "Nightmares" effect that takes one die until the next sleep. WoDX Combat reads it on attacks; the other rolls read it once WoDX Actions does (batch B). The difficulty waits on a PC book check.
+
+Reverse: Set "Tied to" to "Nothing" on a dream; take the Nightmares Flaw off the sheet.
+
+## B2912. The crossing reads the reflection marks (2026-11-13)
+Desk item t3. Stepping sideways and the Shroud read the reflection regions under the token: a looming place or a relic puts the Gauntlet one lower, a Blight one higher, thin Shroud or a Nihil puts the Shroud one lower. Each kind counts once and the total moves at most two steps. The note on the crossing says why.
+
+Reverse: Remove the scene's reflection (Undo in the reflection window).
+
+## B2913. Mood regions carry a rule (2026-11-13)
+Desk item m1. A "WoDX: Mood" region has Gauntlet, Shroud and Banality steps (-3 to +3) that the crossing and the place ratings read, inside the same two-step cap as B2912, and a fear-of-fire step (0 to 3) kept for Rotschreck and frenzy rolls through api.mood.ruleAt. A region's "Only when" list limits the rule too.
+
+Reverse: Set the steps to 0 on the region's behaviour.
+
+## B2914. Dress for a part of the world (2026-11-13)
+Desk item f6. A character dresses for one part of the world (token tools, "Dress for a part of the world"; the homeland by default). Standing in another part dressed so, they are a stranger: blending into a crowd is one harder (api.wanted.dress.blendDiff, read by the Stealth and Subterfuge rolls once WoDX Actions does), and a description of them fades half as slowly again and is not broken by a change of clothes while they still dress as strangers. Dressing as the place does ends it. House figures.
+
+Reverse: Dress the character for the part of the world they stand in.
+
+## B2915. Go on the realm world maps (2026-11-13)
+Desk item t2. Go between two found places of a realm moves the clock by the journey's time and checks each day for one of the realm's dangers from its catalogue entry: 10 in 100, plus 5 for each danger the realm lists, 50 at most, three meetings at most. The party must be across first (stepping sideways or crossing the Shroud, with its roll); the window says who is not. Moon Path travel times wait on a book check.
+
+Reverse: Use Close instead of Go.
 
 ## B2950. An unofficial fan work notice before the repository goes public (2026-11-13)
 Ben asked whether a disclaimer would help before the repository is made public. The Dark Pack Agreement asks for its legal notice, its logo and a statement that the work is not official World of Darkness material. README.md and a new NOTICE.md carry all three plus the third-party credits; the system fork's settings sidebar adds the unofficial line beside the notice upstream already shows (7.3.2-wodx.10). A notice does not make copying lawful, so book text and art are checked separately on the public repository review desk.

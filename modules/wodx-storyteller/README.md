@@ -36,7 +36,7 @@ This page is a map of where each part lives. Most parts come as a pair: a `*-rul
 
 ## Travel and the maps
 
-- Files: `road-rules.mjs` (travel by era and by region), `country-rules.mjs` and `data/country.mjs` (the country map behind a trip), `world-map.mjs`, `world-map-rules.mjs`, `discovery-rules.mjs` and `data/world.mjs` (the world map and the known world), `hardship.mjs` and `hardship-rules.mjs` (hardship on the road).
+- Files: `road-rules.mjs` (travel by era and by region), `country-rules.mjs` and `data/country.mjs` (the country map behind a trip), `world-map.mjs`, `world-map-rules.mjs`, `go-rules.mjs` (Go on the world map: the days, the meetings on the way), `discovery-rules.mjs` and `data/world.mjs` (the world map and the known world), `hardship.mjs` and `hardship-rules.mjs` (hardship on the road).
 - Settings: `hardship`, `discovered`.
 - API: `roads`, `country`, `worldMap`.
 - The world map's rules and its grid (about 200 KB) load the first time the window opens, not at start-up. A script that needs them calls `await api.worldMap.load()`; until then `api.worldMap.rules` is null.

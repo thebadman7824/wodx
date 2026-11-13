@@ -67,6 +67,40 @@ export function build(ctx) {
    * Active Storyteller: write (or freshen) a description of culprit, seen by witnesses (actors), at scene.
    * Returns the description, or null when there is nothing to write.
    */
+  /* NPC 0.61.0 (B2914): dress of a part of the world */
+  const W_ = () => chron()?.world ?? null;
+  /** The region an actor dresses for: their own choice, else the chronicle's homeland. */
+  const dressOf = actor => { const own = actor?.flags?.[MOD]?.dressedAs; if ( own ) return own; try { return W_()?.homeland?.() ?? null; } catch (e) { return null; } };
+  const partOf = id => { try { return id ? (W_()?.regionOf?.(id)?.part ?? null) : null; } catch (e) { return null; } };
+  /** Is the actor dressed as a stranger on this scene? */
+  function foreignAt(actor, scene = canvas?.scene) {
+    if ( !actor || !scene ) return false;
+    let here = null;
+    try { here = W_()?.here?.(scene)?.part ?? null; } catch (e) { here = null; }
+    return W.isForeign(partOf(dressOf(actor)), here);
+  }
+  /** Difficulty added to blending into a crowd here (Stealth or Subterfuge). */
+  const blendDiff = (actor, scene = canvas?.scene) => (foreignAt(actor, scene) ? W.FOREIGN_BLEND_DIFF : 0);
+  async function setDress(actor, regionId) {
+    if ( !actor?.isOwner ) return null;
+    return regionId ? actor.setFlag(MOD, "dressedAs", String(regionId)) : actor.unsetFlag(MOD, "dressedAs");
+  }
+  /** GM or owner: dress the selected characters for a part of the world (the scene's own by default). */
+  async function dressDialog() {
+    const actors = (canvas?.tokens?.controlled ?? []).map(t => t.actor).filter(a => a?.isOwner);
+    if ( !actors.length ) return ui.notifications.info("Select the characters to dress first.");
+    const regions = W_()?.regions ?? {}, here = (() => { try { return W_()?.here?.(canvas.scene)?.id ?? ""; } catch (e) { return ""; } })();
+    const opts = Object.entries(regions).sort((x, y) => String(x[1].label).localeCompare(String(y[1].label)))
+      .map(([id, r]) => `<option value="${esc(id)}"${id === here ? " selected" : ""}>${esc(r.label)}</option>`).join("");
+    const pick = await foundry.applications.api.DialogV2.prompt({window: {title: "Dress for a part of the world"}, classes: ["wodx-dialog"], rejectClose: false,
+      content: `<p>${esc(actors.map(a => a.name).join(", "))}. Someone dressed as a stranger to the part of the world they stand in is noticed: blending into a crowd is one harder, and witnesses remember them longer.</p>
+        <div class="form-group"><label>Dressed as someone from</label><select name="region">${opts}</select></div>`,
+      ok: {label: "Dress", callback: (ev, b) => b.form.elements.region.value}});
+    if ( !pick ) return null;
+    for ( const a of actors ) await setDress(a, pick);
+    return pick;
+  }
+
   async function write(culpritLike, witnessesLike = [], {scene = canvas?.scene, cause = "crime", what = "", token = null} = {}) {
     if ( !isActiveGM() || !on() ) return null;
     const culprit = worldActor(culpritLike?.actor ?? culpritLike);
@@ -77,7 +111,7 @@ export function build(ctx) {
     const seen = L?.describe?.(tok?.actor ?? culprit, {token: tok}) ?? null;
     const at = now();
     let desc = W.writeDesc({id: foundry.utils.randomID(), of: culprit.id, ofName: culprit.name, named: namedBy(witnesses, culprit), cause, what,
-      marks: seen?.marks ?? {}, text: seen?.text || "someone they could not describe well", at, scene: scene.uuid, sceneName: scene.name, year: yearNow(),
+      marks: {...(seen?.marks ?? {}), foreign: foreignAt(culprit, scene)}, text: seen?.text || "someone they could not describe well", at, scene: scene.uuid, sceneName: scene.name, year: yearNow(),
       witnesses: witnesses.map(w => w.name)});
     desc = W.carried(desc, arrivalsFrom(scene, at));
     const all = list(), old = W.sameAs(all, {of: culprit.id, scene: scene.uuid, at});
@@ -186,7 +220,7 @@ export function build(ctx) {
       if ( !force && (lastTest.get(k) ?? 0) > Date.now() - TEST_EVERY ) { out.push({npc: t.id, skip: "tested in the last minute"}); continue; }
       lastTest.set(k, Date.now());
       const held = !!culprit.flags?.["wodx-actions"]?.disguise?.[worldActor(a)?.id]?.held;
-      const nowMarks = L?.describe?.(doc.actor, {token: doc})?.marks ?? {};
+      const nowMarks = {...(L?.describe?.(doc.actor, {token: doc})?.marks ?? {}), foreign: foreignAt(doc.actor, scene)};
       const best = mine.map(d => ({d, m: W.matchOf(d, nowMarks, {held}), s: W.strength(d, t0)})).filter(x => x.m.level !== "none")
         .sort((x, y) => (x.m.level === y.m.level ? y.s - x.s : x.m.level === "strong" ? -1 : 1))[0];
       if ( !best ) { out.push({npc: t.id, skip: "no match: they look different now"}); continue; }
@@ -266,5 +300,6 @@ export function build(ctx) {
     });
   }
 
-  return {registerSettings, hooks, write, drop, spreadNow, list, openList, test, onBreach, onMapEvent, onCombatEnd, ofActor: (id, t = now()) => W.of(list(), id, t), rules: W};
+  return {registerSettings, hooks, write, drop, spreadNow, list, openList, test, onBreach, onMapEvent, onCombatEnd, ofActor: (id, t = now()) => W.of(list(), id, t), rules: W,
+    dress: {of: dressOf, set: setDress, foreignAt, blendDiff, dialog: dressDialog}};
 }
