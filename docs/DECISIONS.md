@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Take the next free block for new work and add its row here in the same change; the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B2990
+Next free block: B3000
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -137,6 +137,7 @@ Next free block: B2990
 | B2960-B2969 | Courts beyond Europe: the Laibon, the Ashirra and the Kuei-jin by region (B2960-B2962); the Ravnos, Beast Courts, Bastet lands, Wu Lung, Akashic Brotherhood and Ahl-i-Batin (B2963-B2968) (used B2960-B2968) | NPC |
 | B2970-B2979 | Courts before the settlers in the Americas, the Pacific and the far north; the Nunnehi, the Mokolé and the Nagah (used B2970-B2974) | NPC |
 | B2980-B2989 | Daily worship of the faiths other than Islam in NPC routines (used B2980-B2982) | NPC |
+| B2990-B2999 | Pixel faces for good: the drawn portrait faces retired, the pixel face as portrait, Net persona faces in place of the ASCII portraits (used B2990-B2993) | Paperdoll |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4164,6 +4165,25 @@ Reverse: delete "nunnehi-council" from POLITIES and the Nunnehi line in DEFAULTS
 
 ## B2980. Daily worship of the other faiths (2026-11-13)
 WoDX NPC 0.65.0: a ready routine whose people keep a faith other than Islam with a daily rite gets it laid over the hours, first so it wins, as the five prayers are: for the Jewish year the morning service at the synagogue from ten to fifty minutes after sunrise on every day but the Sabbath, and the afternoon and evening services together around sunset on the days before Friday's eve; for the faiths of India worship at the household shrine at sunrise and the evening lamp at sunset; for the Buddhist south food given to the monks on their morning round, in the street; for Tibet the walk round the temple at dawn; for China incense at the household altar. The Western and Eastern churches get nothing new. A routine with hours of its own gets them only when Daily prayers and worship is set to Kept. House reading of the hours, rounded for play.
+## B2990. The drawn portrait faces are retired (2026-11-13)
+WoDX Paperdoll 0.18.0. Ben (13 November 2026): "Close the paperdoll faces for good. We are moving permanently to the pixel art faces instead," and "Close the older drawn paperdoll portrait faces." The Paperdoll window, its sheet button and Actors menu entry, and the baking of drawn pictures onto tokens and portraits are off (DRAWN_FACES_RETIRED in main.mjs). Nothing is deleted: the code, the looks kept on actors and every picture already baked stay where they are, and a token or portrait that shows a baked picture keeps it until changed. The Figure builder for sprite tokens stays on, under the world setting now named Figure builder; the setting Faces show the health track is hidden, since the pixel faces follow the health track themselves. The gate gatepaperdoll tests the retired faces and is no longer run.
+
+Reverse: Set DRAWN_FACES_RETIRED to false.
+
+## B2991. The pixel face as portrait (2026-11-13)
+The Storyteller makes an actor's pixel face its portrait from the Actors menu (Talking face: use as the portrait): the face at rest, healthy, drawn four times its size with hard edges, saved under the world's paperdoll/faces folder and set as the actor's picture. It is done by hand, never by itself, so no portrait a person chose is overwritten unasked.
+
+Reverse: Set the actor's picture back by hand.
+
+## B2992. Faces in the Net (2026-11-13)
+Ben (13 November 2026): keep the ASCII portraits, merged into the new work, redrawn in the pixel style, as the display faces in the Net. A character jacked into the Net (WoDX Otherworlds' status) shows its own pixel face as a persona on a screen: every tone mapped to five tones of one phosphor colour (green, amber, cyan, violet, ice white or red), scanlines on every other row, a faint rain of data behind, one row slipped a pixel sideways. Its features, wounds and moods still show, and it still blinks and speaks. The colour is the persona's: rolled by seed, or chosen by the Storyteller in the Talking face: features window. It shows on talk cards and on any plain line of speech from that character's token while jacked in.
+
+Reverse: Remove net from onRender in face64.mjs.
+
+## B2993. What became of the ASCII portraits (2026-11-13)
+The ASCII renderer (project files ascii/asciiport.py) drew from the Character Creator art, which the pixel faces have replaced, so it is not brought into the game; it and its samples stay in the project files. Its look (a face made of a screen's own marks, one colour on black) is what the Net faces carry over.
+
+Reverse: None needed.
 
 Reverse: empty DAILY_WORSHIP in modules/wodx-npc/scripts/routine-rules.mjs.
 

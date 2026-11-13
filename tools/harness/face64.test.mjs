@@ -178,3 +178,20 @@ test("rolled features: the same seed gives the same, the sheet's group brings it
   assert.equal(F.groupMatches("Followers of Set", "Vampire Followers of Set"), true);
   assert.equal(F.groupMatches("Sidhe", "Boggan"), false);
 });
+
+test("the Net: a persona face in one phosphor colour, still blinking and speaking only at the eyes and mouth", () => {
+  for ( const line of LINES ) {
+    const S = P.roll("net1", line), f = P.drawFace(S, {net: true}).rgba;
+    const ramp = P.NET_PALETTES[P.netPaletteOf(S)].ramp;
+    const lum = c => c[0] + c[1] + c[2];
+    let bright = 0;
+    for ( let i = 0; i < 64 * 64; i++ ) { const c = [f[i * 4], f[i * 4 + 1], f[i * 4 + 2]]; if ( lum(c) > lum(ramp[1]) ) bright++; }
+    assert.ok(bright > 300, `${line}: the face shows bright in the Net`);
+    assert.notEqual(diff(f, P.drawFace(S).rgba).length, 0, `${line}: the Net face differs from the plain one`);
+    const out = diff(f, P.drawFace(S, {net: true, eyes: "shut", mouth: "talk2"}).rgba).filter(([x, y]) => !(x >= 14 && x <= 50 && y >= 18 && y <= 52));
+    assert.equal(out.length, 0, `${line}: only eyes and mouth move in the Net`);
+  }
+  assert.equal(P.netPaletteOf(P.roll("x", "mortal")), P.netPaletteOf(P.roll("x", "mortal")));
+  assert.equal(P.netPaletteOf({...P.roll("x", "mortal"), net: "amber"}), "amber");
+  assert.ok(new Set(Array.from({length: 30}, (_, i) => P.netPaletteOf(P.roll(`c${i}`, "mortal")))).size >= 4, "personas differ in colour");
+});

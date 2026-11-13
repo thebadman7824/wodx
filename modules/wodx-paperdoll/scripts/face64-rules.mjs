@@ -533,7 +533,44 @@ function wounds(c, level) {
  */
 export const FEATURES = {};
 
-export function drawFace(S, {expr = "neutral", eyes = "open", mouth = null, level = 0, sees = {fae: true, sigil: true}, state = {}} = {}) {
+/**
+ * The Net (B2992): a character jacked in shows its own face redrawn as a persona on a screen, the heir of the ASCII
+ * portraits in the pixel style: the same features in a few tones of one phosphor colour, scanlines, a faint rain of data
+ * behind, one row slipped sideways. The colour is the persona's, rolled by seed unless set by hand.
+ */
+export const NET_PALETTES = {
+  green: {name: "Green phosphor", ramp: [[4, 20, 10], [18, 70, 34], [40, 140, 70], [90, 210, 120], [190, 255, 200]]},
+  amber: {name: "Amber phosphor", ramp: [[22, 12, 2], [80, 44, 8], [160, 96, 20], [230, 160, 50], [255, 226, 160]]},
+  cyan: {name: "Cyan", ramp: [[2, 16, 24], [10, 60, 90], [24, 130, 170], [80, 210, 240], [200, 250, 255]]},
+  violet: {name: "Violet", ramp: [[16, 4, 24], [60, 20, 90], [120, 50, 170], [190, 110, 240], [240, 210, 255]]},
+  white: {name: "Ice white", ramp: [[10, 12, 18], [50, 56, 70], [110, 118, 140], [180, 190, 210], [245, 248, 255]]},
+  red: {name: "Red", ramp: [[24, 4, 6], [90, 14, 20], [170, 30, 40], [240, 80, 80], [255, 200, 190]]}
+};
+export function netPaletteOf(S) {
+  if ( S.net && NET_PALETTES[S.net] ) return S.net;
+  return rng(seedOf(`${S.seed}|net`)).pick(["green", "green", "amber", "cyan", "violet", "white", "red"]);
+}
+function netRgba(F, S) {
+  const ramp = NET_PALETTES[netPaletteOf(S)].ramp, r = rng(seedOf(`${S.seed}|net-rows`));
+  const slip = 16 + Math.floor(r.next() * 36), rain = Array.from({length: N}, () => r.next() < 0.22 ? Math.floor(r.next() * N) : -1);
+  const out = new Uint8ClampedArray(N * N * 4);
+  for ( let y = 0; y < N; y++ ) for ( let x = 0; x < N; x++ ) {
+    const sx = y === slip ? Math.min(N - 1, x + 1) : x, c = F.px[y * N + sx];
+    let col;
+    if ( c ) {
+      const lum = (0.3 * c[0] + 0.59 * c[1] + 0.11 * c[2]) / 255;
+      col = ramp[Math.max(1, Math.min(4, Math.round(Math.pow(lum, 0.8) * 4.4)))];
+    } else {
+      const k = rain[x];
+      col = k >= 0 && (y - k + N) % N < 7 && y % 2 === 0 ? mix(ramp[0], ramp[1], 0.9 - ((y - k + N) % N) / 9) : (x % 4 === 0 && y % 4 === 0 ? mix(ramp[0], ramp[1], 0.35) : ramp[0]);
+    }
+    if ( y % 2 ) col = mix(col, [0, 0, 0], 0.28);
+    const i = (y * N + x) * 4; out[i] = col[0]; out[i + 1] = col[1]; out[i + 2] = col[2]; out[i + 3] = 255;
+  }
+  return out;
+}
+
+export function drawFace(S, {expr = "neutral", eyes = "open", mouth = null, level = 0, sees = {fae: true, sigil: true}, state = {}, net = false} = {}) {
   level = Math.max(0, Math.min(7, Math.round(Number(level) || 0)));
   const on = {...state, tears: expr === "sorrow" || expr === "fear"};
   const feats = (S.features ?? []).map(id => FEATURES[id]).filter(f => f && (!f.state || on[f.state]));
@@ -579,7 +616,7 @@ export function drawFace(S, {expr = "neutral", eyes = "open", mouth = null, leve
   for ( let x = CX - 13; x <= CX + 13; x++ ) for ( let y = 12; y < 29; y++ ) if ( F.kindAt(x, y) === "skin" && F.kindAt(x, y - 1) === "hair" ) F.put(x, y, R.s1);   // shade under the fringe
   POST[S.line]?.(ctx); stage("top", ctx);
   if ( level ) wounds(ctx, level);
-  return {rgba: F.rgba(), expr, eyes, mouth: TALK_MOUTHS.includes(mouth) ? mouth : null, shut: level >= 7};
+  return {rgba: net ? netRgba(F, S) : F.rgba(), expr, eyes, mouth: TALK_MOUTHS.includes(mouth) ? mouth : null, shut: level >= 7};
 }
 
 /* ---------------- speaking and reacting ---------------- */
