@@ -78,7 +78,13 @@ export const SHAPES = {
 };
 
 /** Lupus and Hispo for the Changing Breeds whose animal is not four-legged. */
-export const FERA_ANIMAL = {Corax: "bird", Camazotz: "bat", Nagah: "serpent", Rokea: "fish", Ananasi: "spider", Mokole: "beast"};
+export const FERA_ANIMAL = {Corax: "bird", Camazotz: "bat", Nagah: "serpent", Rokea: "fish", Ananasi: "spider"};
+
+/**
+ * Combat 3.22.0: which animal a four-legged shape is, for the damage doll's head and tail. Mokole keep the four-legged
+ * plan (3.21.0 asked for a shape "beast" that does not exist, so a Mokole in Suchid or Archid had no body at all).
+ */
+export const FERA_BEAST = {Garou: "wolf", Kitsune: "fox", Nuwisha: "wolf", Ajaba: "hyena", Bastet: "cat", Gurahl: "bear", Ratkin: "rat", Mokole: "croc", Apis: "bull", Grondr: "boar"};
 
 /** Effect names that put a body in a shape (Protean, Vicissitude, Mage Life, Moliate and others). Checked in order. */
 export const SHAPE_PATTERNS = [
@@ -223,6 +229,7 @@ export function bodyOf(view = {}) {
   const mobility = !fullLegs ? 1 : (legs === fullLegs ? 1 : legs === 0 ? 0 : 0.5);
   return {
     shape: sh.key, form: sh.form ?? null, label: S.label, why: sh.why, ref: S.ref ?? "",
+    animal: S.plan === "beast" ? (sh.key === "rat" ? "rat" : sh.key === "wolf" ? "wolf" : (FERA_BEAST[view.feraKey] ?? "wolf")) : null,
     intangible: !!S.intangible, hidden: !!S.hidden, tree, parts, lost: lost.filter(Boolean),
     hands, holds: hands > 0 && !S.intangible, armor: !!S.armor && !!tree, carries: !!S.carries,
     speaks: S.speaks === undefined ? has("mouth") : (S.speaks && has("mouth")), speakHard: S.speaks === "hard",
@@ -348,3 +355,65 @@ export function movesOf(body) {
   const m = body?.moves ?? {};
   return {fly: !!m.fly, swimfast: !!m.swimfast, waterbreath: !!m.waterbreath, wallwalk: !!m.wallwalk, meld: !!m.meld};
 }
+
+/* -------------------------------------------------------------- */
+/*  Where wounds are (damage doll, house rule B2690)               */
+/* -------------------------------------------------------------- */
+
+/**
+ * A record of where each health level landed: [{part, type, msg, at}], one entry per level, oldest first. The health
+ * track stays the only measure of harm; these records only say where it shows. Kept on the actor as wodx-combat.wounds.
+ */
+export const WOUND_KINDS = ["bashing", "lethal", "aggravated"];
+
+/** Add levels landed on a part. */
+export function addWounds(list = [], {part, type, levels = 1, msg = null, at = 0} = {}) {
+  if ( !part || !WOUND_KINDS.includes(type) || !(levels > 0) ) return [...list];
+  return [...list, ...Array.from({length: levels}, () => ({part, type, msg, at}))];
+}
+
+/** Drop records the health track no longer holds: the oldest of each kind goes first as it heals. */
+export function trimWounds(list = [], damage = {}) {
+  const out = [...list];
+  for ( const k of WOUND_KINDS ) {
+    let extra = out.filter(w => w.type === k).length - Math.max(0, Number(damage[k]) || 0);
+    while ( extra-- > 0 ) out.splice(out.findIndex(w => w.type === k), 1);
+  }
+  return out;
+}
+
+/** An undone attack takes its own records back. */
+export const undoWounds = (list = [], msg) => list.filter(w => !msg || w.msg !== msg);
+
+/** A part's counterpart in another plan (a hand wound shows on the fore leg in Lupus, and back again). */
+const TWIN = {"hand-r": "leg-rf", "arm-r": "leg-rf", "hand-l": "leg-lf", "arm-l": "leg-lf", "leg-r": "leg-rh", "leg-l": "leg-lh",
+  "leg-rf": "arm-r", "leg-lf": "arm-l", "leg-rh": "leg-r", "leg-lh": "leg-l", "hand-r2": "arm-r", "arm-r2": "arm-r", "hand-l2": "arm-l", "arm-l2": "arm-l"};
+
+/**
+ * Wounds per part for the doll: {partId: {b, l, a}}. Records on a part the body no longer has go to its counterpart
+ * or the torso; health levels with no record (hit locations off, harm from outside a fight) show on the torso.
+ */
+export function woundsByPart(list = [], damage = {}, body = null) {
+  const have = new Set((body?.parts ?? []).map(p => p.id));
+  const home = have.has("body") ? "body" : null;
+  const out = {}, key = {bashing: "b", lethal: "l", aggravated: "a"};
+  const put = (part, type) => { if ( !part ) return; (out[part] ??= {})[key[type]] = (out[part][key[type]] ?? 0) + 1; };
+  const kept = trimWounds(list, damage);
+  for ( const w of kept ) put(have.has(w.part) ? w.part : (have.has(TWIN[w.part]) ? TWIN[w.part] : home), w.type);
+  for ( const k of WOUND_KINDS ) {
+    const loose = Math.max(0, (Number(damage[k]) || 0) - kept.filter(w => w.type === k).length);
+    for ( let i = 0; i < loose; i++ ) put(home, k);
+  }
+  return out;
+}
+
+/**
+ * The Storyteller moves a level of harm onto a part (one with no record yet, of that kind) or clears a part's records.
+ * Returns the new list, or null when there is no unplaced level of that kind to move.
+ */
+export function placeWound(list = [], damage = {}, part, type, at = 0) {
+  const kept = trimWounds(list, damage);
+  if ( kept.filter(w => w.type === type).length >= (Number(damage[type]) || 0) ) return null;
+  return addWounds(kept, {part, type, levels: 1, at});
+}
+export const clearWounds = (list = [], part) => list.filter(w => w.part !== part);
