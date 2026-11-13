@@ -44,7 +44,7 @@ export const KINDS = {
     ref: "Built in stages, each an extended action; workers each add a die and each stage is paid for as it starts (house rule)."},
   // B3340: downtime projects. week: the nights a week the kind needs for its full pace (B3341, house figures).
   business: {label: "Build a business", attr: "manipulation", ability: "finance", diff: 7, interval: "week", goal: 10, delicate: false, house: true, week: 4,
-    ref: "Resources rise by a story award, not by themselves (V20 pdf 123; house rule B850); this is the work that earns it."},
+    ref: "Resources rise by a story award, not by themselves (V20 pdf 123); this is the work that earns it."},
   court: {label: "Court someone slowly", attr: "charisma", ability: "empathy", diff: 6, interval: "week", goal: 8, delicate: false, house: true, week: 2, target: true,
     ref: "Each roll that succeeds is time well spent; a botch is a slight (WoDX NPC hearts). Never with anyone under 18."},
   language: {label: "Learn a language", attr: "intelligence", ability: "linguistics", diff: 6, interval: "week", goal: 12, delicate: false, house: true, week: 3,
@@ -52,7 +52,7 @@ export const KINDS = {
   track: {label: "Track someone down", attr: "perception", ability: "investigation", diff: 7, interval: "day", goal: 6, delicate: false, house: true, week: 3, target: true,
     ref: "Perception + Investigation (V20 pdf 272)."},
   herd: {label: "Gather a herd or a flock", attr: "charisma", ability: "streetwise", diff: 7, interval: "week", goal: 10, delicate: false, house: true, week: 3,
-    ref: "Herd rises by a story award (V20 pdf 122; house rule B850); this is the work that earns it."},
+    ref: "Herd rises by a story award (V20 pdf 122); this is the work that earns it."},
   other: {label: "Something else", attr: "intelligence", ability: "", diff: 6, interval: "day", goal: 5, delicate: false, house: true, week: 3,
     ref: "The Storyteller sets the pool, the interval, the difficulty and the goal (V20 p. 251; V20 Dark Ages p. 324)."}
 };
