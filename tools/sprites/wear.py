@@ -213,6 +213,38 @@ def carry(d,view,hand,dyb):
     if view=='s':
         return {'up':((hx,hy),(.42,-.91)),'pole':((hx+.5,hy),(.06,-1)),'low':((hx,hy),(.82,.57)),'fist':((hx,hy),(.75,.66)),'hang':((hx,hy),(.9,-.44)),'bow':((hx+3,hy),(0,-1))}[c]
     return {'up':((hx,hy),(sg*.36,-.93)),'pole':((hx+sg*.6,hy),(0,-1)),'low':((hx,hy),(sg*.5,.87)),'fist':((hx,hy+1),(0,1)),'hang':((hx,hy),(sg*.5,-.87)),'bow':((hx+sg*2,hy-2),(0,-sg))}[c]
+HEADUP={'axe','hatchet','mace','club','warhammer','morningstar','smithhammer','pick','cleaver','sickle','crowbar','tool','sap','candlestick','flail','spikedflail','battleaxe'}
+def wlen(name):
+    sp=W[name][1]; hi=0; lo=0
+    for p in sp:
+        if p[0]=='c': hi=max(hi,p[1],p[2]); lo=min(lo,p[1],p[2])
+        elif p[0] in('x','b','s'): hi=max(hi,p[1]); lo=min(lo,p[1])
+        elif p[0]=='arc': hi=max(hi,p[1]); lo=min(lo,-p[1])
+    return lo,hi
+def stowplace(name):
+    """where a weapon rides when it is not in the hand: back (slung), hip (scabbard or holster), belt (coiled or tucked)"""
+    c=W[name][0]; lo,hi=wlen(name); L=hi-lo
+    if c=='hang' or L<6: return 'belt'
+    if c in('pole','bow') or L>(24 if c=='up' else 19) or (c=='low' and L>11): return 'back'
+    return 'hip'
+def stowed(cv,d,view,dy,when):
+    """draws the stowed weapon. when: 'pre' (behind the body) or 'post' (over it)"""
+    n=d.get('stow')
+    if not n or n not in W: return
+    sp=W[n][1]; pl=stowplace(n); lo,hi=wlen(n); mid=(lo+hi)/2; cx=48; sw=d['sw']
+    if pl=='back':
+        if view=='f' and when=='pre': u=(.42,-.91); held(cv,(cx-u[0]*mid,47+dy-u[1]*mid),u,sp,'S')
+        elif view=='b' and when=='post': u=(-.42,-.91); held(cv,(cx-u[0]*mid,47+dy-u[1]*mid),u,sp,'S')
+        elif view=='s' and when=='pre': u=(-.10,-.995); held(cv,(42.6-u[0]*mid,47+dy-u[1]*mid),u,sp,'S')
+    elif pl=='hip':
+        sg=1 if view=='f' else -1
+        up=n in HEADUP; k=-1 if up else 1; off=hi-1 if up else 0
+        if view in('f','b') and when=='post': u=(sg*.22*k,.975*k); held(cv,(cx+sg*(sw+.8)-u[0]*off,55+dy-u[1]*off),u,sp,'S')
+        elif view=='s' and when=='post': u=(-.42*k,.91*k) if not up else (.1,-.995); held(cv,(46.5-u[0]*off,55+dy-u[1]*off),u,sp,'S')
+    else:
+        sg=1 if view=='f' else -1
+        if when=='post' and view!='s': held(cv,(cx+sg*(sw-2.5),55+dy),(sg*.1,.99),sp,'S')
+        elif when=='post': held(cv,(47.5,55+dy),(-.1,.99),sp,'S')
 def shield(cv,d,x,y,view):
     k,c=d['off']; rp=rc(c)
     if view=='s':
@@ -282,6 +314,7 @@ def front(d,f,back=False):
     cv=K.Cv(); ph=f/8*2*math.pi; cx=48; t=d['thin']; sw=d['sw']; kind=d['top'][1]; lk=d['legs'][1]; tr=ramp(d['skin']) if kind in('bare','band','wrap') else rc(d['top'][0]); sk=ramp(d['skin'])
     hr=ramp(H((d['hairover'] or d['hair'])[0])); st=(d['hairover'] or d['hair'])[1]; view='b' if back else 'f'
     dy=round(abs(math.sin(ph))*-0.8); ov=d['over']
+    stowed(cv,d,view,dy,'pre')
     if ov and ov[0]=='cloak' and not back: hem(cv,cx,42+dy,ov[2] if len(ov)>2 else 76,sw+1.6,sw+3.0,rc(ov[1]),'cloakb',1)
     if d['off'] and back: shield(cv,d,cx-sw-2.5,53+dy,'b')
     hood=d['hat'] and d['hat'][0] in('hood','scarf','veilall')
@@ -371,6 +404,7 @@ def front(d,f,back=False):
     if st=='bun' and not hood: cv.capsule((cx,cy-(5.5 if not back else 2)),(cx,cy-(5.5 if not back else 2)),2.3,2.3,ramp=hr)
     if st=='long' and back and not hood: cv.capsule((cx,cy+2),(cx,42+dy),4.6,4.2,ramp=hr)
     hoodpost(cv,d,cx,cy,view,pid); hat(cv,d,cx,cy,view,pid); face(cv,d,cx,cy,view)
+    stowed(cv,d,view,dy,'post')
     if d['off'] and not back: shield(cv,d,cx+sw+2.5,53+dy,'f')
     if d['held']:
         hs=hands[-1 if not back else 1]; a,u=carry(d,view,hs,dy); held(cv,a,u,W[d['held']][1],'W')
@@ -409,8 +443,10 @@ def side(d,f):
     if d['belt'] or kind in('tunic','kimono','mail'):
         br=rc(d['belt'] or 'leather')
         for x in range(-3,5): px(47+x,53+dy,br[2])
+    stowed(cv,d,'s',dy,'pre')
     if ov and ov[0]=='cloak': hem(cv,45,42+dy,(ov[2] if len(ov)>2 else 76),4.2,5.0,rc(ov[1]),'cloak',0,-1.5)
     if ov and ov[0]=='apron': cv.capsule((50.6,46+dy),(51,(ov[2] if len(ov)>2 else 68)),1.5,1.5,ramp=rc(ov[1]),g='apron')
+    stowed(cv,d,'s',dy,'post')
     if d.get('scab'): cv.capsule((46,54+dy),(40,67+dy),1.0,.8,ramp=rc(d['scab']),g='scab')
     cy=31.5+dy; cx=48
     if hood: hoodpre(cv,d,cx,cy,dy,'s')

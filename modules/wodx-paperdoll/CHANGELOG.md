@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.7.1 (sprite tokens: a figure that stops while facing left or right stands with its feet together, not in mid-stride; the Lupus is a darker grey-brown so it reads as a wolf at night; not deployed)
 - 0.7.0 (sprite tokens, a prototype for the testbed: a token given a sprite shows a whole drawn figure that turns the way it moves and walks as it goes; six figures to try, the Kindred elder, the Garou in Homid, Crinos and Lupus, a townsman and a lady of 1888; drawn by our own code, sharp at any zoom; the bust stays on sheets; given and taken off by the Storyteller through the module api for now; not deployed)
 - 0.6.4 (dead code removed)
 - 0.6.3 (thinner lips in a colour drawn toward the skin; faces at rest are neutral, smiles and frowns only by choice or mood; "Face drawn as" woman, man, nonbinary or not stated: women's lips a little fuller, men's thinner, nonbinary either way by seed, no facial hair rolled for women; WoDX Creation keeps the sex it rolled on the actor; not deployed)
