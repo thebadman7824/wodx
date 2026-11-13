@@ -1,0 +1,4 @@
+---
+bump: minor
+---
+Influence over institutions (B3355-B3360): each town (a market) gets the mortal institutions its year, faith and size allow (a house of worship named by faith, a guild until 1859, the council, the watch and from 1850 the police, a press from 1488, a university, a bank, a company from 1860), each with five ranks and 16 seats. Climbing is a new downtime project kind (Climb an institution); finished, it asks the Storyteller for the next seat, bumping the newest holder when full. A pawn named as the target climbs for its master no higher than the master's Influence. Each rank opens levers, asked of the Storyteller: the press prints a tale and the pulpit denounces one, the rest are told to play; wodxLever fires. A monthly turn fills empty seats with the town's NPCs and brings contests and scandals; trouble on a player character's seat waits in the approval queue. A new Institutions window shows every seat. api.institutions.
