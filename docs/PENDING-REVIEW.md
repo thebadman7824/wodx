@@ -1152,7 +1152,9 @@ Ben accepted every recommendation on the places of power desk (https://claude.ai
 | 2026-11-13 | Do untended freeholds fade? (B3454) | Yes: 30 days without the keeper dreaming there, in a place at Banality 9 before 1230, 6 from 1230 to 1968, 7 after, costs a rank each season | Change FAE_AGES fade values, or set them to 11 to turn it off |
 | 2026-11-13 | When is a balefire harvested daily? (B3455) | After 20 nights running, so its lost ranks come back by the season, not the month | Change harvestedDaily |
 
-## Waiting for review
+## Approved by Ben, 13 November 2026, 22:51 UTC (all pending items)
+
+Ben approved everything that was waiting for review ("I approve everything pending review").
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
@@ -1161,7 +1163,6 @@ Ben accepted every recommendation on the places of power desk (https://claude.ai
 | 2026-11-13 | How often do raids come, and who settles them (B3473)? | Monthly Wyrm/Weaver odds by era (3%/1% before 1500 up to 10%/9% after 2022), doubled for a lapsed caern (Wyrm) or an urban one (Weaver); the sept rolls for itself after 7 days | Change RAID_ODDS or RAID_GRACE_DAYS, or untick raids |
 | 2026-11-13 | What does a caern war do (B3474)? | Storyteller starts it; half Garou plus best rank at 6, ties to the defenders; a taken caern changes sept, offices empty, a level lost | Change caernWar |
 | 2026-11-13 | How is a lost caern taken back (B3475)? | Three successes at 7; back at level 1, lapsed, needing a moot | Change reclaim |
-
 | 2026-11-13 | Which court does a Kindred faction outside Europe keep by default? (B2960) | Laibon in Africa south of the Sahara, Ashirra in the Maghreb, Egypt, Arabia, the Levant, Persia and Anatolia, Kuei-jin in East and Southeast Asia; India, Central Asia, Tibet and the pre-colonial Americas keep the European default | Empty REGION_COURTS in modules/wodx-npc/scripts/politics-rules.mjs |
 | 2026-11-13 | What are the seats and law of a Laibon council and an Ashirra court? (B2961, B2962) | WoDX's own words (Elder of the land, Speaker of the old law, Voice of a legacy; Amir, Qadi, Wazir, Muhtasib of the night), pending the PC book check | Edit "laibon-council" and "ashirra" in POLITIES |
 | 2026-11-13 | Which courts do India, Central Asia and Tibet keep, and what does a Ravnos court look like? (B2963, B2964) | India: a court of the Ravnos until 1999, then the court of its age; Central Asia: the Ashirra; Tibet: the Kuei-jin. Seats in WoDX's own words (Eldest of the land, Keeper of the duties), pending the book check | Take the rows out of REGION_COURTS, or edit "ravnos-court", in modules/wodx-npc/scripts/politics-rules.mjs |
@@ -1253,3 +1254,8 @@ Ben accepted every recommendation on the places of power desk (https://claude.ai
 | 2026-11-13 | Arab world names raised to 300 (B3312) | Older and newer given names; nisbas of city, tribe and trade before the industrial age, family names after; ibn and bint as often as before in every age | Edit "arabic" in data/people-world.mjs |
 | 2026-11-13 | Peoples without names, second desk: the Algonquian coast (desk https://claude.ai/artifact/MiX1eYZE8JxsSjGqiiWswt, picks in its `verdicts` collection) | Ben picked all recommended (22:20 UTC), built as the next row; recommended: three peoples (Lenape, New England Algonquian, Powhatan) from recorded names, the Lenape clan from the mother, names staged as for the Haudenosaunee, shared with the Haudenosaunee before contact and a share after, women as for the Haudenosaunee | Pick on the desk |
 | 2026-11-13 | Algonquian coast names as built from Ben's desk picks (all recommended, 22:20 UTC; B3510 to B3512) | Lenape 91 men's names with clans from the mother; New England 114 men's and 17 women's; Powhatan 54 and 6; fewer than 300 each since the records reached hold no more; women without a recorded name as "A woman of the Turtle clan" or "A woman of Pokanoket"; later family names from the reserve rolls (house reading); eastern North America before contact Haudenosaunee 40, Lenape 25, New England 25, Powhatan 10 | Edit data/people-algonquian.mjs or the mixes in world-rules.mjs |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
