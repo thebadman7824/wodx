@@ -166,3 +166,14 @@ test("reactions, deaths and ways of going (B2588)", async () => {
   assert.equal(SR.actOf(SR.ownName("a1"), "nothing"), "claw");
   SR.learn("x", null);
 });
+
+test("the roster lists only real things: no merits, no teeth or claws, and it carries the year and a beard", () => {
+  const r = SR.rosterOf({id: "a1", name: "Guard", type: "Mortal", skin: "#c99a6e", hair: "#3b2a20", beard: true, year: 1230, items: [
+    {name: "Mail Haubergeon", type: "Armor", worn: true}, {name: "Iron Will", type: "Feature", worn: true},
+    {name: "Arming Sword", type: "Melee Weapon", worn: true}, {name: "Fangs", type: "Melee Weapon", worn: true},
+    {name: "Claws (Crinos)", type: "Melee Weapon", worn: true}, {name: "Gore", type: "Melee Weapon", worn: true, natural: true},
+    {name: "Travelling Cloak", type: "Item", worn: true, gear: true}]});
+  assert.deepEqual(r.worn, ["Mail Haubergeon", "Travelling Cloak"]);
+  assert.deepEqual(r.held, ["Arming Sword"]);
+  assert.equal(r.year, 1230); assert.equal(r.look.beard, true);
+});
