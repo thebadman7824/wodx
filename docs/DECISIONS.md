@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3070
+Next free block: B3090
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -144,6 +144,7 @@ Next free block: B3070
 | B3030-B3039 | Outside contributions: pull requests and issues from other accounts are closed automatically (used B3030-B3031) | Tools only (.github/workflows) |
 | B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3050) | Paperdoll |
 | B3060-B3069 | Faster GitHub check: the harness split into parallel shards by past run time, cached packages, a lighter run for docs-only changes (used B3060) | Tools only (.github/workflows, tools/harness) |
+| B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3085) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4370,3 +4371,33 @@ Reverse: the old values in TORMENT_BY_HOUSE; empty DARK_AGES_TRIBE_WILLPOWER.
 Read from the sheet's seeming: a childling starts with 1 more Glamour, a grump with 1 more Willpower. A wilder adds 1 to either, the player's pick, so the wizard leaves both at 4 and says so. Banality is not changed. With no seeming written, the wizard says what each one adds.
 
 Reverse: empty SEEMING_BONUS in derived-rules.mjs.
+
+## B3080. Module versions, changelog lines and table rows are stamped at merge time (2026-11-13)
+Ben (13 November 2026) approved the speed-up list. A branch no longer bumps module.json, the api VERSION, the changelog or docs/MODULES.md by hand. It adds a release note under changes/<module-id>/, and tools/release/merge-stamp.mjs, run just before the merge on a branch that holds the newest main, turns every note into those edits. Two branches then never edit the same lines or take the same version, which had cost a merge-main-and-rerun cycle each time. Branches made before this keep their hand-made bumps; the check only asks that such a version is above main's.
+
+Reverse: Bump by hand again and delete tools/release/merge-stamp.mjs, changes/ and changes-fragments.test.mjs.
+
+## B3081. Decisions are written as fragments and put in docs/DECISIONS.md at merge time (2026-11-13)
+A branch writes its decisions in changes/decisions/<B-start>.md with the block, feature and modules in front matter. The stamp adds the index row (with the numbers used), puts the sections in number order and moves the next free block up. Branches no longer append to the same end of the file.
+
+Reverse: Write decisions straight into docs/DECISIONS.md again.
+
+## B3082. Each thread claims its own block of decision numbers when it starts (2026-11-13)
+tools/decisions/claim.mjs claims the next block of ten (or more) in a shared registry, /mnt/project-files/registry/decision-blocks.json, under a lock. The registry sits in the project files folder rather than in docs, because every thread sees a write there at once, while a file in the repo only reaches other threads after a merge. A claim starts above the registry, main's DECISIONS.md and every B number written on any origin branch. The coordinator claims a block for each new thread and names it in the thread's first message.
+
+Reverse: Take the next free block from docs/DECISIONS.md by hand again.
+
+## B3083. The lane runner runs only the gates a change touches (2026-11-13)
+tools/lanes/gate-map.mjs maps each gate to the modules it names (module ids, "WoDX <name>" in its header, game.wodx calls, module paths), with gate-map-extra.json for corrections. A change touches the modules whose files it changes, the modules whose files load a changed script, and the modules that require a module whose own files changed. run-gate.mjs --touched runs only those gates, after the same drift check. A Paperdoll change runs 4 gates instead of 161; a Chronicle or system change still runs nearly all of them.
+
+Reverse: Run gates by name only; delete gate-map.mjs and the --touched option.
+
+## B3084. A full gate run every night on lanes 2 and 3 (2026-11-13)
+After the 04:40 lane reset, lane-reset.cmd starts tools/lanes/nightly.mjs: it pulls the clone's main, deploys it to lanes 2 and 3 only where their code differs, and runs every gate in the map, half on each lane, at below-normal priority, through run-gate.mjs so the drift check still guards each run. Each gate's line goes to nightly-gates.log in the Foundry user-data folder. The full run catches what --touched leaves out.
+
+Reverse: Remove the last line of lane-reset.cmd, or put a file named nightly-off in tools/lanes.
+
+## B3085. Book checks from the OCR text in cloud threads (2026-11-13)
+tools/books/books.mjs reads the book texts from /mnt/project-files/book-text (copied from the PC's tools-env\text by a PC job, never put in the repository): a page by pdf or printed number, a search for words in order, and the 8-word overlap check of rule 5 over any WoDX files, squashing words the way the Encyclopaedia check does. A cloud thread can then check its own pages and wording without a PC job.
+
+Reverse: Send book checks to the PC helper again; delete tools/books.
