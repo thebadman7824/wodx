@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3210
+Next free block: B3320
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -150,12 +150,16 @@ Next free block: B3210
 | B3090-B3099 | Courts beyond Europe after the book check: the books' own seats for the Laibon, Ashirra, Ravnos, Beast Courts, Bastet, Nunnehi and Nagah (used B3090-B3091) | NPC |
 | B3100-B3109 | Crafting and cookery by region (used B3100-B3102) | Library, Storyteller |
 | B3110-B3119 | Putting money into a venture: a caravan, a workshop or a trading house on a market, paid or hurt by the weekly market turn, by way of life and age (used B3110-B3113) | Storyteller |
+| B3120-B3129 | Haudenosaunee names, clans and region mixes (peoples without names, first desk) (used B3120-B3122) | Creation, Chronicle, NPC |
 | B3130-B3149 | Display-only desk batch B, the rolls: Nightmares, a stranger in a crowd, fire in a mood region, codex research (used B3130-B3133) | Actions |
 | B3150-B3159 | Old imported goods dated 1197 that belong to later centuries (used B3150-B3151) | Library |
 | B3160-B3169 | Display-only desk batch B, Chronicle: Legends suggest Renown and Status, fights as deeds, the language allowance, the gist of a kindred tongue (used B3160-B3163) | Chronicle |
 | B3170-B3179 | Display-only desk batch B: the after-action card feeds the Legends book and the experience draft (used B3170-B3171) | Combat, Storyteller |
 | B3190-B3199 | Money of their own for the Philippines, Indochina and the Balkans (used B3190-B3191) | Storyteller, Chronicle |
 | B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
+| B3210-B3219 | The age floor of 18 for anything romantic or sexual, and adoption of children and adults by law (used B3210-B3215) | Chronicle, NPC, Actions |
+| B3290-B3299 | Town generator households by region (used B3290-B3293) | NPC, tools |
+| B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3311) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4642,6 +4646,21 @@ Reverse: change mostAtOnce, mostVentures or shield in venture-rules.mjs.
 A stake worth 60 months of a plain wage or more is large. The Markets window lists the stakes in each market beside the faction moves. A faction at home in that market with a trade hold of 2 or more, awake and not the holder's own, takes note of a large stake as a rival, once, told on the week's card. After 8 weeks a large stake whose holder has Influence earns the offer of a seat (a seat on the guild council, a voice among the merchants of the suq, a seat on the board), which waits in the approval queue; given, the share pays a tenth more and losses hurt a tenth less. Refused, it can come again 8 weeks later. Factions are read and never changed.
 Reverse: raise LARGE_WAGES or SEAT_WEEKS, or refuse the seat in the queue.
 
+## B3120. The Haudenosaunee in eastern North America and Canada (2026-11-13)
+WoDX Creation, WoDX Chronicle. Ben's desk picks (hn-names recorded, hn-where both): recorded names only, the famous included; the people alone in both regions before the colonies, then about a quarter of people to 1799, a twentieth in the industrial age and a fiftieth in the modern. Eastern North America lost its `from` year and the old American origin tables in people.mjs, and has mixes of its own: early modern English 60, Haudenosaunee 25, Dutch 10, French 5. Its tables are marked lend: false so the West, which borrows American tables, does not draw them. Canada's mix covers Québec and the Great Lakes; its north and prairies were not Haudenosaunee land and still use the same mix (house reading).
+
+Reverse: put back `from: 1607` and `from: 1608` and the two origin tables in people.mjs, and drop the haudenosaunee entries from the mixes.
+
+## B3121. Clans from the mother; women named by clan where no name was recorded (2026-11-13)
+WoDX Creation, WoDX NPC. hn-clan mother: before the 19th century the family slot holds the clan ("of the Wolf clan"). In a household the master and the partner keep their own clans and the children take the woman's. The records keep about 230 men's names but only seven women's, so a woman is "A woman of the Wolf clan" three times in four in the medieval age, until more names are found (the decision card on women's names, recommended option). The Storyteller can type any name.
+
+Reverse: in people-haudenosaunee.mjs drop the "A woman" entries; in resident-rules.mjs drop the CLAN lines in kinFamily and nameHousehold.
+
+## B3122. Names staged by era group, not by year (2026-11-13)
+WoDX Creation. hn-later staged asks for own names only before 1700, half with a church name to 1799, and a church name with a family name from 1800. The People generator works by era group, so the early modern group (1500 to 1799) gives about a third of men a church name before the own name and women a church name nearly half the time, and the industrial and modern groups give a church given name and a family name. The own name and clan kept as a byname after 1800 are not shown in the name line.
+
+Reverse: change the weights in haudenosauneeTables().
+
 ## B3130. Nightmares takes a die from every roll (2026-11-13)
 WoDX Actions. A "Nightmares" effect made by WoDX Storyteller after a failed Willpower roll on waking (B2911) carries flags.wodx-storyteller.diceLess. Every roll from the Actions windows loses that many dice and says so, as attacks already do in WoDX Combat. The largest of several such effects counts, not their sum.
 
@@ -4721,3 +4740,63 @@ Reverse: drop worshipFor from plan in adopt-rules.mjs.
 Tools. ddtown.py takes --faith (western, orthodox, islamic, jewish, hindu, theravada, tibetan, chinese, own) and writes it on the chapel's place in each sidecar. The map's own faith beats the scene's on adoption. Left out, the scene decides.
 
 Reverse: remove the --faith argument.
+
+## B3210. An age floor of 18 for anything romantic or sexual, in every era (2026-11-13)
+WoDX Chronicle (age-rules.mjs, age.mjs). Ben asked whether under-age characters are kept out of romantic and sexual situations; they were not. Now nothing romantic or sexual may involve anyone under 18: courting and warmth, a lover, spouse or troth tie, marriage, having a child, seduction, and the feeding that follows a seduction. The floor is the same in every era and region. The coming-of-age ages of older centuries stay in the lifepath only and never lower it, and the marriage law tables never model child marriage. This is a project rule, not a house rule of the books, and no setting turns it off.
+
+Reverse: none. This stays.
+
+## B3211. Who counts as under 18 (2026-11-13)
+A character counts as a minor when any sign says so: a birth year that makes them under 18 in the year shown; for Kindred, being under 18 at the Embrace, and for the walking dead, being under 18 at death, because the body stopped there; a child role from the town's residents, the child behaviour or routine, or a child made by WoDX NPC that has no birth year; or the Storyteller's own mark (flags.wodx-chronicle.minor = true). A character with no sign counts as an adult, because most townsfolk carry no birth year. The Storyteller's mark can only make someone a minor. WoDX NPC refuses courting, marriage and having a child, and WoDX Actions 3.63.0 refuses Seduction (and so the Siren's feeding after it) when either side is a minor, with a short note to whoever tried. Without the Chronicle check, these refuse rather than allow.
+
+Reverse: none for the floor; a wrong reading of age is fixed by giving the sheet its birth year.
+
+## B3212. Romantic ties to a minor are never kept (2026-11-13)
+WoDX Chronicle guards every write of a sheet's ties (flags.wodx-sheets.ties), whatever makes it: the Relationships tab, WoDX NPC, a macro. A lover, spouse or troth tie is taken off when either end is under 18, and the one who tried is told why.
+
+Reverse: none.
+
+## B3213. Adoption of children and adults by the law of the place and year (2026-11-13, Ben approved)
+WoDX NPC (hearts-rules.mjs SPHERE_ADOPTION, REGION_ADOPTION, adoptionLaw, canAdopt; hearts.mjs adopt). Each way of life has its own way of taking in a child: full adoption, fostering or wardship, or kafala, the Islamic guardianship in which the child keeps their own name. Adult adoption is allowed where the law allows it, as with the grown heir of a Japanese house or a French adult adoption after 1804. Dated changes by region follow the civil codes: Moravia 1811, France 1804 and 1923, England 1926, Soviet Russia's ban from 1918 to 1926, and others. From 2100 every way of life allows full adoption. These are readings of history in WoDX's own words, and the Storyteller may move a date.
+
+Reverse: edit SPHERE_ADOPTION or REGION_ADOPTION.
+
+## B3214. Who may adopt, and what the ties mean (2026-11-13)
+The one adopting must be an adult (the age floor of B3210) and, where both birth years are known, older than the one adopted. Full adoption and adult adoption make Parent and Child ties, so wills count the adopted one as a child and heir. Fostering, wardship and kafala make the new Guardian and Ward ties, which are family but not heirs by law; a will can still leave a ward a share. Each adoption is kept on both sheets (flags.wodx-npc.adoptions), a card goes to the owners, and the hook wodxAdopted is called.
+
+Reverse: remove the ties by hand on the Relationships tab.
+
+## B3215. Guardian and Ward tie kinds (2026-11-13)
+WoDX NPC adds Guardian and Ward to the family group. They can be set by hand on the Relationships tab, and the regard rules read them as warm ties like Parent and Child.
+
+Reverse: none needed.
+
+## B3290. The town generator takes a region (2026-11-13)
+tools/mapgen. ddtown.py and ddsettle.py take --region, any WoDX Chronicle region id. The buildings and the age bands (which also pick the furnishings' look) stay those of the Bohemian crown lands; from 1781 the households take the region's trades. settle.py keeps a copy of Chronicle's ways of life by region, and a harness test keeps the two the same. --at reads only the Moravian country map, so it needs Moravia.
+
+Reverse: drop --region; every town is peopled from the Bohemian tables again.
+
+## B3291. Whose trades from 1919 follow who ruled (2026-11-13)
+tools/mapgen settle.py TRADE_PLAN, a house reading for review. Moravia keeps its tables. Poland and the Baltic, the Carpathians and Balkans and China take the socialist trades from 1948 to 1989; Russia, Central Asia and Siberia take them from 1919 to 1989 with no first republic. Every other region takes new post-war trades from 1948 to 1989: mayor, police officer, notary, factory owner, motor mechanic, television repairer and the like, with no national committee, Party secretary or co-operative farm. The age boundaries by region wait on the review desk.
+
+Reverse: every region takes the Bohemian years and trades.
+
+## B3292. Trades renamed by way of life (2026-11-13)
+tools/mapgen settle.py LOCAL, OUTSIDE and SOVIET. Only names that need no study: farmers grow rice in China, Korea, Japan, mainland Southeast Asia and the Malay world and barley in Tibet; in the lands of Islam there are no brewers, publicans or bars (cafés, tea houses and caravanserais instead); outside the Bohemian lands the reeve is a headman and the national committee a council; under the Soviets the farm is collective and the village has a soviet. Full trade lists for each way of life wait on the review desk.
+
+Reverse: drop the renames; every region uses the Bohemian names.
+
+## B3293. The Settlements review says whose trades a record follows (2026-11-13)
+WoDX NPC. The record keeps tradeAge (the trade tables used). The review says the trades and offices are those of the region in the record's year and the buildings those of the Bohemian crown lands; an older record from another region still asks for the trades to be changed by hand.
+
+Reverse: show the old sentence for every record.
+
+## B3310. Chinese names raised to 300 (2026-11-13)
+WoDX Creation. Ben's card (20:00 UTC): every people already in grows to at least 300 names, one at a time, biggest homelands first. China first: given names split into older (medieval and early modern, with famous courtesy names such as Kongming and Mengde) and newer (industrial and modern, with the names of the People's Republic years), and a hundred surnames for every age. Written in pinyin for every age (house reading); He is left out of the surnames because the guard test reads it as a pronoun.
+
+Reverse: put back the old 22-name lists in data/people-world.mjs.
+
+## B3311. North Indian names raised to 300 (2026-11-13)
+WoDX Creation. The second people raised (Ben's card, 20:00 UTC). Older given names draw on the epics, kings, saints and poets of north India; newer ones run from the 20th century to the names of children born after 2000. Family names are used in every age as before (house reading: many older families used caste or clan names rather than fixed surnames), widened to 70 across the main communities of the Hindi belt, Rajasthan and Gujarat. South India keeps the Tamil list, to be raised in its turn.
+
+Reverse: put back the old lists in data/people-world.mjs.

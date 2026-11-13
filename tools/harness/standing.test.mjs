@@ -92,3 +92,9 @@ test("wiring: rumours read ties, rivalry reads feuds, Actions reads rank, and th
   assert.match(main, /STANDING\.registerSettings\(\);/); assert.match(main, /standing: \{deed: STANDING\.deed/);
   assert.match(src("modules/wodx-storyteller/scripts/main.mjs"), /doubt: Rumours\.doubtRumour/);
 });
+
+test("a feud with capitals in its id still matches its rivalry row", () => {
+  const f = {id: "ttWkOCxfKpCCApNn", a: {kind: "family", key: "Gatefeud", name: "Gatefeud"}, b: {kind: "family", key: "Gaterival", name: "Gaterival"}, heat: 2};
+  const rows = S.feudRows([f]);
+  assert.equal(RV.rowsBetween(["feud:ttWkOCxfKpCCApNna"], ["feud:ttWkOCxfKpCCApNnb"], 1300, rows).length, 1);
+});

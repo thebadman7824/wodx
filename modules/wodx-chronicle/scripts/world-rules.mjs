@@ -90,8 +90,12 @@ export const WORLD_REGIONS = {
     industrial: "swahili 55, french 30, portuguese 15", modern: "swahili 60, french 40"}, {from: 1880}),
   // The Americas
   "canada": R("Canada (Québec, the Great Lakes, the prairies, the north)", "americas", 45.5, -73.6, "boreal", "canadian", {
-    "early-modern": "french 100", industrial: "english 55, french 35, irish 10", modern: "english 60, french 28, chinese 6, hindi 6"}, {from: 1608}),
-  "north-america-east": R("Eastern North America (New England, New York, the Ohio valley)", "americas", 40.7, -74.0, "american-east", "american", null, {culture: "american", from: 1607}),
+    medieval: "haudenosaunee 100", "early-modern": "french 75, haudenosaunee 25", industrial: "english 52, french 34, irish 9, haudenosaunee 5",
+    modern: "english 59, french 27, chinese 6, hindi 6, haudenosaunee 2"}),
+  // The Haudenosaunee before the colonies, then a share (Ben's desk, B3120); the West borrows none of it (lend: false)
+  "north-america-east": R("Eastern North America (New England, New York, the Ohio valley)", "americas", 40.7, -74.0, "american-east", "american", {
+    medieval: "haudenosaunee 100", "early-modern": "english 60, haudenosaunee 25, dutch 10, french 5", industrial: "anglo 76, hispanic 19, haudenosaunee 5",
+    modern: "anglo 76, hispanic 22, haudenosaunee 2"}, {culture: "american", lend: false}),
   "north-america-west": R("The American West (the Plains, the Rockies, the Southwest)", "americas", 39.0, -105.0, "great-plains", "american", {
     "early-modern": "spanish 100", industrial: "anglo 68, hispanic 22, chinese 5, irish 5", modern: "anglo 70, hispanic 30"}, {...AM, from: 1598}),
   "mexico": R("Mexico and Central America (Tenochtitlan, New Spain)", "americas", 19.4, -99.1, "highland-tropics", "mexican", {
