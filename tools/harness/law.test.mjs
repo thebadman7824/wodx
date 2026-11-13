@@ -57,10 +57,11 @@ test("Moravia across the eras", () => {
 });
 
 test("a land whose family is not written yet stands in with the custom of the land, marked a guess", () => {
-  const r = L.lawOf("china", 1400);
+  const r = L.lawOf("nowhere", 1400);
   assert.equal(r.family, "custom");
   assert.equal(r.guess, true);
-  assert.equal(r.planned, "chinese");
+  const waiting = Object.entries(L.REGION_FAMILY).find(([, f]) => !L.FAMILIES[f]);
+  if ( waiting ) { const w = L.lawOf(waiting[0], 1400); assert.equal(w.guess, true); assert.equal(w.planned, waiting[1]); }
   assert.equal(L.lawOf("france", 1400).guess, false);
 });
 
@@ -100,6 +101,28 @@ test("the lands of Islam (B3493)", () => {
   assert.ok(at("maghreb", 1900).warn.some(w => /Settlers/.test(w)));
   assert.ok(!at("maghreb", 1970).warn.some(w => /Settlers/.test(w)));
   for ( const r of ["anatolia", "levant", "egypt", "arabia", "maghreb", "persia", "nusantara"] ) for ( const y of [1197, 1500, 1800, 1950, 2022] ) {
+    const x = at(r, y);
+    assert.ok(x.rule.ruler && x.order.length && x.courts.length, `${r} ${y}`);
+  }
+});
+
+test("Chinese imperial law and its neighbours (B3494)", () => {
+  const at = (r, y) => L.lawOf(r, y);
+  assert.equal(at("china", 1400).family, "chinese");
+  assert.ok(at("china", 1400).proof.includes("confession"));
+  assert.ok(at("china", 1300).warn.some(w => /Mongols first/.test(w)));
+  assert.ok(!at("china", 1400).warn.some(w => /Mongols first/.test(w)));
+  assert.ok(at("china", 1700).warn.some(w => /queue/.test(w)));
+  assert.ok(!at("china", 1920).warn.some(w => /queue/.test(w)));
+  assert.ok(at("china", 1900).courts.some(c => /consular/.test(c)));
+  assert.ok(!at("china", 1950).courts.some(c => /consular/.test(c)));
+  assert.ok(at("china", 1970).warn.some(w => /Red Guards/.test(w)));
+  assert.ok(!at("china", 1980).warn.some(w => /Red Guards/.test(w)));
+  assert.ok(at("china", 1960).proof.includes("party"));
+  assert.match(at("korea", 1500).rule.ruler, /Joseon/);
+  assert.match(at("korea", 1930).rule.form, /colony of Japan/);
+  assert.ok(at("southeast-asia", 1600).courts.some(c => /Lê Code/.test(c)));
+  for ( const r of ["china", "korea", "southeast-asia"] ) for ( const y of [1197, 1500, 1800, 1950, 2022] ) {
     const x = at(r, y);
     assert.ok(x.rule.ruler && x.order.length && x.courts.length, `${r} ${y}`);
   }

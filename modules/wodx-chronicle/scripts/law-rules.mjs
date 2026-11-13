@@ -20,7 +20,8 @@ export const CRIMES = {
   "arms-night": "Bearing arms in town after dark", "wrong-faith": "Worship outside the established church",
   "pretend-powers": "Claiming magical powers (as fraud)", duelling: "Duelling", sedition: "Sedition against the state",
   "drug-trade": "Dealing in forbidden drugs", "computer-crime": "Breaking into computers", terrorism: "Terrorism",
-  "anti-state": "Speaking or acting against the Party", apostasy: "Leaving the faith", wine: "Drinking or selling wine"
+  "anti-state": "Speaking or acting against the Party", apostasy: "Leaving the faith", wine: "Drinking or selling wine",
+  unfilial: "Failing in duty to parents and elders"
 };
 export const EVERGREEN_CRIMES = ["murder", "theft", "arson", "treason", "violence", "forgery"];
 
@@ -34,7 +35,8 @@ export const PROOF = {
   jury: "A jury of townsfolk",
   evidence: "Evidence weighed by a trained judge, in public",
   forensic: "Forensic evidence: fingerprints, then blood, then DNA",
-  party: "A court that follows the Party's line, with confessions for show"
+  party: "A court that follows the Party's line, with confessions for show",
+  confession: "A confession, needed before sentence; beating to get one is allowed within limits"
 };
 
 /** Punishments. */
@@ -43,7 +45,7 @@ export const PUNISH = {
   maiming: "Branding or maiming", banishment: "Banishment from the town or the land", outlawry: "Outlawry: the law no longer protects them",
   hanging: "Death by hanging, the sword or the wheel", burning: "Burning, for heresy and sorcery", galleys: "Rowing in the galleys",
   prison: "Prison", "hard-labour": "Hard labour", camp: "A labour camp", "death-state": "Death by the state's own method",
-  confiscation: "Loss of land and goods", flogging: "Flogging"
+  confiscation: "Loss of land and goods", flogging: "Flogging", bamboo: "Beating with the light or the heavy bamboo"
 };
 
 /** Keepers of order. */
@@ -53,7 +55,8 @@ export const ORDER = {
   gendarmerie: "The gendarmerie on the roads and in the villages", police: "A state police force in uniform",
   detectives: "Detectives in plain clothes", "secret-police": "A secret police with informers everywhere",
   cameras: "Cameras on the streets and in shops", army: "Soldiers in the streets",
-  muhtasib: "The muhtasib, inspector of markets and public conduct", shurta: "The shurta, the ruler's police", "religious-police": "Religious police who enforce dress, prayer and fasting"
+  muhtasib: "The muhtasib, inspector of markets and public conduct", shurta: "The shurta, the ruler's police", "religious-police": "Religious police who enforce dress, prayer and fasting",
+  "yamen-runners": "The magistrate's runners and constables", baojia: "Neighbour groups that answer for one another"
 };
 
 /** A record with nothing in it. Lists hold ids; rule is words. */
@@ -131,6 +134,23 @@ export const FAMILIES = {
       add: {order: ["detectives", "secret-police"]}, drop: {order: ["muhtasib", "town-watch"]}},
     {from: 1990, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime"]}, set: {catch: 0.5}},
     {from: 2001, note: "Terrorism laws", add: {crimes: ["terrorism"]}}
+  ]},
+
+  // Chinese imperial law and the lands that borrowed it: the written code, the magistrate, confession (B3494)
+  chinese: {label: "Chinese imperial law and its neighbours", rows: [
+    {from: 0, note: "The emperor's written code, judged by the county magistrate", set: {
+      rule: {form: "An empire under a Son of Heaven, ruled through officials chosen by examination", ruler: "The Emperor", council: "The Grand Secretariat and the Six Ministries"},
+      courts: ["The county magistrate's yamen: judge, tax collector and keeper of the peace in one", "Appeal up through prefecture and province; every death sentence goes to the throne",
+        "Clan elders, guilds and village heads, who settle quarrels before they reach the yamen"],
+      proof: ["confession", "witnesses"], punish: ["fine", "bamboo", "hard-labour", "banishment", "hanging"],
+      order: ["yamen-runners", "baojia", "town-watch"], taxes: ["Land tax in grain, later in silver", "Labour service on roads, walls and canals", "The salt monopoly"],
+      bribe: 3, catch: 0.35},
+      add: {crimes: ["sorcery", "rebellion", "unfilial", "wrong-faith"],
+        warn: ["Striking or cursing a parent or elder is among the gravest crimes", "A family answers for its members, and neighbours are grouped to watch one another",
+          "Secret societies and forbidden sects are treated as rebellion"]}},
+    {from: 1900, note: "Police, prisons and fingerprints on foreign models", add: {order: ["police"], punish: ["prison"], proof: ["evidence", "forensic"], crimes: ["drug-trade", "sedition"]}},
+    {from: 1950, note: "Modern states: written codes on European or Soviet lines", drop: {order: ["yamen-runners", "town-watch"], punish: ["bamboo"]}, add: {order: ["detectives"]}, set: {catch: 0.45}},
+    {from: 1990, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime"]}, set: {catch: 0.55}}
   ]}
 };
 
@@ -149,6 +169,46 @@ export const REGION_FAMILY = {
 
 /** A region's own rows, laid after its family's for the same year. Moravia and Bohemia first (B3491). */
 export const REGION_ROWS = {
+  china: [
+    {from: 0, note: "The Southern Song in the south; the Jurchen Jin hold the north", set: {rule: {ruler: "The Song Emperor in Hangzhou, and the Jin Emperor in the north"}}},
+    {from: 1279, note: "The Mongol Yuan: the conquerors above the conquered; the examinations stop until 1315", set: {rule: {ruler: "The Great Khan, Emperor of the Yuan", council: "The Central Secretariat, led by Mongols"}},
+      add: {warn: ["The law ranks people by origin: Mongols first, southern Chinese last"]}},
+    {from: 1368, note: "The Ming: the Great Ming Code (1397)", set: {rule: {ruler: "The Ming Emperor"}}, drop: {warn: ["The law ranks people by origin: Mongols first, southern Chinese last"]}},
+    {from: 1644, note: "The Qing conquest: the Manchu queue is ordered for every man", set: {rule: {ruler: "The Qing Emperor", council: "The Grand Secretariat, later the Grand Council"}},
+      add: {warn: ["Every man must shave the forehead and wear the queue, on pain of death"]}},
+    {from: 1842, note: "The treaty ports: foreigners are tried by their own consuls", add: {courts: ["Foreign consular courts in the treaty ports"], warn: ["A foreigner in a treaty port answers only to a consul"]}},
+    {from: 1905, note: "The examinations are abolished", set: {rule: {form: "An empire in its last years, with new ministries"}}},
+    {from: 1912, note: "The Republic of China", set: {rule: {form: "A republic, soon split among warlords", ruler: "The President, or the warlord who holds the province", council: "Parliament, when it sits"}},
+      drop: {warn: ["Every man must shave the forehead and wear the queue, on pain of death"], crimes: ["unfilial"]}},
+    {from: 1928, note: "The Nationalist government in Nanjing", set: {rule: {form: "A one-party Nationalist state", ruler: "The Nationalist leader", council: "The Nationalist Party"}}, add: {order: ["secret-police"]}},
+    {from: 1943, note: "The foreign concessions end", drop: {courts: ["Foreign consular courts in the treaty ports"], warn: ["A foreigner in a treaty port answers only to a consul"]}},
+    {from: 1949, note: "The People's Republic: the Party rules; public security and labour reform camps",
+      set: {rule: {form: "A one-party state", ruler: "The Chairman of the Party", council: "The Politburo of the Communist Party"}, catch: 0.55},
+      add: {proof: ["party"], crimes: ["anti-state"], punish: ["camp"], order: ["secret-police"]}},
+    {from: 1966, to: 1976, note: "The Cultural Revolution", add: {warn: ["Red Guards hold struggle sessions; any old book, temple or title can be a crime"]}},
+    {from: 1979, note: "The first criminal law of the People's Republic", set: {rule: {ruler: "The General Secretary of the Party, and the President"}}},
+    {from: 2014, note: "Social credit records and face matching on the streets", set: {catch: 0.7}}
+  ],
+  korea: [
+    {from: 0, note: "Goryeo under its military rulers", set: {rule: {form: "A kingdom ruled in fact by military strongmen", ruler: "The King of Goryeo, and the military dictator", council: "The military council"}}},
+    {from: 1259, note: "Mongol overlordship", set: {rule: {council: "The court under Mongol overseers"}}},
+    {from: 1392, note: "Joseon: Neo-Confucian rule; the great code of 1485", set: {rule: {form: "A Neo-Confucian kingdom", ruler: "The King of Joseon", council: "The State Council and the six boards"}}},
+    {from: 1910, note: "Japanese rule", set: {rule: {form: "A colony of Japan", ruler: "The Governor-General", council: "None for Koreans"}, catch: 0.6}, add: {order: ["police", "secret-police"]}},
+    {from: 1945, note: "Liberation and division: the south a republic (1948), the north a one-party state", set: {rule: {form: "A divided land: a republic in the south, a one-party state in the north", ruler: "The President in Seoul; the Leader in Pyongyang", council: "The National Assembly in the south"}},
+      add: {warn: ["North of the line, a word against the Leader sends whole families to the camps"]}},
+    {from: 1988, note: "Democracy in the south", set: {catch: 0.55}}
+  ],
+  "southeast-asia": [
+    {from: 0, note: "Buddhist and Hindu kings in Angkor and Pagan; the Đại Việt emperor on the Chinese model", set: {rule: {form: "Kingdoms of god-kings and Buddhist kings, and an empire on the Chinese model in Đại Việt",
+      ruler: "The King of Angkor, of Pagan, or the Emperor of Đại Việt", council: "The court and the monks or the mandarins"}},
+      add: {courts: ["Royal courts following the dharma law books, in the Buddhist kingdoms"]}},
+    {from: 1483, note: "The Lê Code in Đại Việt", add: {courts: ["Đại Việt's courts under the Lê Code"]}},
+    {from: 1887, note: "French Indochina; British Burma (1885); Siam stays its own", set: {rule: {form: "Colonies of France and Britain; the Kingdom of Siam", ruler: "The Governor-General, or the King of Siam"}},
+      add: {courts: ["Colonial courts for Europeans"], warn: ["Europeans and natives do not stand under the same law"]}},
+    {from: 1954, note: "Independence; Vietnam divided until 1975", set: {rule: {form: "Independent kingdoms, republics and one-party states", ruler: "Each state's head"}},
+      drop: {courts: ["Colonial courts for Europeans"], warn: ["Europeans and natives do not stand under the same law"]}},
+    {from: 1975, to: 1979, note: "The Khmer Rouge in Cambodia", add: {warn: ["In Cambodia, money, books, glasses or a soft hand can mark someone for death"]}}
+  ],
   anatolia: [
     {from: 0, note: "The Seljuk sultanate of Rum", set: {rule: {ruler: "The Seljuk Sultan of Rum"}}},
     {from: 1300, note: "The Ottoman house rises", set: {rule: {ruler: "The Ottoman Sultan"}}},
