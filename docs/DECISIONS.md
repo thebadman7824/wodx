@@ -179,7 +179,7 @@ Next free block: B3630
 | B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3499) | Chronicle |
 | B3500-B3509 | One shared gender; a player's gender has no bearing on play (used B3500-B3503) | Chronicle, Sheets, Creation, NPC, Storyteller, Actions, Paperdoll |
 | B3510-B3519 | Algonquian coast names (Lenape, New England, Powhatan) (used B3510-B3512) | Creation, Chronicle |
-| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3602) | Chronicle |
+| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3603) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5584,5 +5584,10 @@ Reverse: remove the family and its region rows; the regions fall back to the cus
 
 ## B3602. Pacific and Australia law family (2026-11-13)
 Australia, Aotearoa and the Pacific islands use the Pacific family: chiefs and sacred restrictions, the first peoples' own law, then colonial and national courts; each region's death penalty ends on its real date.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3603. Far north law family (2026-11-13)
+The Arctic uses the far north family: the community's own judgment, then the crowns' courts in the trading posts and the state's police. With this, all regions but Antarctica have their own law family.
 
 Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
