@@ -74,6 +74,20 @@ test("LevelDB LOCK and LOG files never count as drift", () => {
   assert.deepEqual(check(repo, lane), []);
 });
 
+test("compendium LevelDB files are left out; other pack files still count", () => {
+  const repo = fakeRepo(), lane = laneFrom(repo);
+  for ( const f of ["CURRENT", "MANIFEST-000012", "000013.log", "000011.ldb"] ) put(lane, `Data/systems/worldofdarkness/packs/powers/${f}`, "compacted");
+  assert.deepEqual(check(repo, lane), []);
+  put(lane, "Data/systems/worldofdarkness/packs/readme.txt", "new");
+  assert.deepEqual(check(repo, lane).map(x => x.where), ["system:worldofdarkness/packs/readme.txt"]);
+  assert.equal(L.isPackDb("scripts/000001.log"), false, "a .log file outside packs still counts");
+});
+
+test("lanes.json ignores the settings that change on their own", () => {
+  const cfg = L.loadConfig(path.join(root, "tools/lanes/lanes.json"));
+  for ( const k of ["oh-you-dead.writerLease", "wodx-actions.sky", "wodx-atmosphere.applied", "wodx-actions.healClock", "wodx-actions.lastGmReady"] ) assert.ok(cfg.ignoreSettings.includes(k), k);
+});
+
 test("the hash cache gives the same answer and sees edits", () => {
   const d = tmp(), cache = path.join(tmp(), "c.json");
   put(d, "f.txt", "one");

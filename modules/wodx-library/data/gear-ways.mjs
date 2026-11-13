@@ -1,5 +1,5 @@
 /**
- * WoDX Library 0.21.0: gear by region (the global rule, Ben 2026-11-12; B3030 to B3033).
+ * WoDX Library 0.21.0: gear by region (the global rule, Ben 2026-11-12; B3070 to B3073).
  *
  * Gear by era came from the books of Europe and North America, so a Dark Ages draw in Tenochtitlan could turn up a
  * crossbow and plate, and one in Kyoto never a katana. Here each piece of gear can say where it is at home, in the
@@ -14,7 +14,7 @@
  * Gear with no rule is found everywhere in its era. Gear with a rule but no "*" key is found only where it names.
  *
  * LOCAL_GEAR adds the weapons of other lands under their own names. None of the books WoDX reads gives them figures,
- * so each one fights as a book weapon of its kind and keeps that weapon's page (a house rule, B3031).
+ * so each one fights as a book weapon of its kind and keeps that weapon's page (a house rule, B3071).
  *
  * A house reading of history, rounded for play; the books give no such lists.
  */

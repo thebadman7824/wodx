@@ -244,7 +244,7 @@ test("nothing starts in a container (Ben, 2026-11-12)", async () => {
   assert.equal(G.GOODS.find(g => g.name === "an arrow")?.id, "a-quiver-of-arrows", "old ids kept");
 });
 
-// WoDX Interactables 0.40.0 (B3032): gear drawn for a container follows the scene's land.
+// WoDX Interactables 0.40.0 (B3072): gear drawn for a container follows the scene's land.
 test("gear: a draw in Tenochtitlan before the Spanish turns up no crossbow, a draw in Kyoto a katana", () => {
   const mex = F.candidates(gear, {era: "dark-ages", place: "home", container: "chest", year: 1400, way: "mesoamerican", region: "mexico"}).map(c => c.item.name);
   assert.ok(mex.length && !mex.some(n => /crossbow|broadsword|longbow|class four/i.test(n)), mex.join(", "));
