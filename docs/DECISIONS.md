@@ -157,7 +157,7 @@ Next free block: B3320
 | B3170-B3179 | Display-only desk batch B: the after-action card feeds the Legends book and the experience draft (used B3170-B3171) | Combat, Storyteller |
 | B3190-B3199 | Money of their own for the Philippines, Indochina and the Balkans (used B3190-B3191) | Storyteller, Chronicle |
 | B3200-B3209 | Houses of worship in the town generator by the faith of the place (used B3200-B3201) | Interactables |
-| B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3312) | Creation |
+| B3310-B3319 | Raise the existing peoples to 300 names each, one at a time (used B3310-B3312) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
