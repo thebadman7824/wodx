@@ -176,8 +176,8 @@ function scriptsOf(mod) {
   return out;
 }
 
-function mainVersion(mod) {
-  const s = tryGit("show", `origin/main:modules/${mod}/module.json`);
+function versionAt(ref, mod) {
+  const s = ref && tryGit("show", `${ref}:modules/${mod}/module.json`);
   try { return s ? JSON.parse(s).version : null; } catch { return null; }
 }
 
@@ -200,11 +200,12 @@ function main() {
   for ( const x of df ) for ( const p of checkDecisionFragment(x.frag) ) problems.push(`${x.file}: ${p}`);
 
   // Hand-made bumps (branches from before merge-time stamping) must still land above main.
+  const base = tryGit("merge-base", "origin/main", "HEAD");
   const mods = fs.readdirSync(path.join(ROOT, "modules")).filter(d => fs.existsSync(path.join(ROOT, "modules", d, "module.json")));
   const byMod = Object.groupBy ? Object.groupBy(mf, x => x.module) : mf.reduce((o, x) => ((o[x.module] ??= []).push(x), o), {});
   for ( const mod of mods ) {
-    const here = JSON.parse(read(`modules/${mod}/module.json`)).version, there = mainVersion(mod);
-    if ( !there || here === there ) continue;
+    const here = JSON.parse(read(`modules/${mod}/module.json`)).version, there = versionAt("origin/main", mod);
+    if ( !there || here === there || here === versionAt(base, mod) ) continue; // only versions this branch changed
     if ( byMod[mod] ) problems.push(`${mod}: the branch bumps by hand (${there} to ${here}) and has a fragment; keep one (prefer the fragment: put module.json, the api VERSION and the changelog back to ${there})`);
     else if ( !newer(here, there) ) problems.push(`${mod}: the branch says ${here}, main already has ${there}; bump above it or use a fragment`);
   }
