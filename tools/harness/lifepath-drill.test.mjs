@@ -263,6 +263,36 @@ test("every world region has its own ages, origins, teenage path and calling in 
   }
 });
 
+test("dated content: Moravia's origins by year of birth and marks by the years they happened", () => {
+  assert.ok(D.datedOrigins("moravia", 1940).some(o => /occupation/.test(o[0])));
+  assert.equal(D.datedOrigins("moravia", 1300).length, 0);
+  assert.equal(D.datedOrigins("france", 1940).length, 0);
+  assert.ok(D.originsFor("moravia", 1940).filter(o => o.local).length >= 4, "dated origins beside the age's own");
+  assert.ok(D.datedMarks("moravia", 1425, 1430).some(m => /Hussite/.test(m[0])));
+  assert.ok(D.datedMarks("moravia", 1410, 1420).some(m => /Hussite/.test(m[0])), "a stage that only touches the years still counts");
+  assert.equal(D.datedMarks("moravia", 1437, 1500).filter(m => /Hussite/.test(m[0])).length, 0);
+  assert.equal(D.datedMarks("moravia", 1425, 1430, "wild").length, 0);
+  let d = start("moravia", 1600, 45, {homeland: "moravia"});
+  const seen = [];
+  for ( let i = 0; i < 40 && D.current(d); i++ ) {
+    const st = D.current(d);
+    if ( /^a\d-mark$/.test(st.id) ) {
+      assert.equal(st.options.length, 5);
+      assert.equal(st.options.map(o => o.tone).sort().join(""), "++--0");
+      const own = st.options.filter(o => o.local);
+      assert.ok(own.length >= 1 && own.length <= 3, `${st.id}: one of each tone at most comes first, got ${own.length}`);
+      d = D.pick(d, st.id, own[0].id);
+      assert.ok(!seen.includes(own[0].id), "a dated mark is not offered again once picked");
+      seen.push(own[0].id);
+    } else d = D.pick(d, st.id, st.options[0].id);
+  }
+  assert.ok(D.done(d) && seen.length >= 2);
+  assert.ok(D.story(d).some(x => /White Mountain|long war/.test(x.choice)));
+  const words = /\b(he|she|him|her|his|hers|son|daughter|mother|father|wife|husband|boy|girl|man|woman|men|women)\b/i;
+  for ( const m of D.datedMarks("moravia", 1100, 2300) ) assert.ok(!words.test(`${m[0]} ${m[4] ?? ""}`), m[0]);
+  for ( const o of D.datedOrigins("moravia", 1940).concat(D.datedOrigins("moravia", 1630)) ) assert.ok(!words.test(o[0]), o[0]);
+});
+
 test("no gendered words and no option id twice in a step", () => {
   const words = /\b(he|she|him|her|his|hers|himself|herself|son|daughter|mother|father|wife|husband|boy|girl|man|woman)\b/i;
   for ( const rid of ["france", "japan", "west-africa", "andes", "levant", "north-america-west", "moravia", "india"] ) for ( const y of YEARS ) for ( const line of ["mortal", "werewolf", "mage"] ) {
