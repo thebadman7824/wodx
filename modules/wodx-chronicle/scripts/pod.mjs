@@ -241,7 +241,9 @@ export async function dealChains() {
       const c = P.chainOf(run, yr);
       if ( run.saga ) await sagaStep(s, run, c, n);
       else await card(`${c.label}, ${n.index + 1} of ${c.steps.length}: ${n.title}`, `<p>${esc(run.where)}. ${esc(n.text)}</p>${n.last ? `<p class="vta-note">The last step. ${esc(c.page)}.</p>` : ""}`);
-      run.at = n.index + 1; run.last = t; changed = true;
+      // A saga keeps its calendar: the next gap counts from when this step fell due, so a long skip deals every
+      // step it passes over in order (B3672). Other chains count from when the step was dealt, as before.
+      run.at = n.index + 1; run.last = run.saga ? n.due : t; changed = true;
       n = P.nextStep(run, yr);
     }
     if ( run.saga && !n ) { (s.saga ??= {}).books ??= {}; s.saga.books[run.saga.book] = "done"; changed = true; }

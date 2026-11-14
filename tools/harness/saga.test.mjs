@@ -130,3 +130,12 @@ test("saga steps that change the town name a change the towns know (B3670)", asy
   assert.equal(r.events.length, 1);
   assert.ok(r.state.towns.m1.scars.some(s => s.kind === "flood"));
 });
+
+test("a long skip deals every saga step it passes, on the book's own calendar (B3672)", () => {
+  const run = {key: S.chainKey("red-stone"), at: 0, last: 0, saga: {book: "red-stone", endings: {}}};
+  const t = 6 * 365 * S.DAY, dealt = [];
+  let n = P.nextStep(run, 1200);
+  while ( n && n.due <= t ) { dealt.push(n.key); run.at = n.index + 1; run.last = n.due; n = P.nextStep(run, 1200); }
+  assert.equal(dealt.length, S.bookByKey("red-stone").steps.length);
+  assert.equal(dealt.at(-1), "e1");
+});
