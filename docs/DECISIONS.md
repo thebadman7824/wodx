@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4790
+Next free block: B4820
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -228,6 +228,7 @@ Next free block: B4790
 | B4760-B4769 | Rothenstein Rebuilt: book one opens in autumn 1200, chapters wait to be played, a fourth ending (used B4760-B4762) | Chronicle, Storyteller |
 | B4770-B4779 | Fighting from the saddle after the books: the mount's Attributes and dodge, keeping the saddle, the lance, the bow from a moving horse (used B4770-B4776) | Combat |
 | B4780-B4789 | Rothenstein Rebuilt: Ways, the open world's doorways (used B4780-B4783) | Storyteller |
+| B4810-B4819 | Rothenstein Rebuilt: Ways laid by the builder, old exits and doors to the places inside (used B4810-B4813) | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7311,3 +7312,23 @@ Reverse: companions() returns the walker alone.
 WoDX Storyteller. A Way can be shut from dusk to dawn (a town gate, by the walker's own time), locked until the Storyteller unticks Locked, shut for now, or ask first; a Way outside its from and until years is not there. Each refusal tells the player why and what can be done. The Ways window names every place with no way in, no way out, a way to a missing scene, or no route from the first place (desk ow6).
 
 Reverse: wayBlocked() returns null.
+
+## B4810. The old exits become Ways in place (2026-11-14)
+WoDX Storyteller. The testbed's walkable maps (the Lower Town, Kranzfels, the roads, woods, river and mine) already link to each other with Teleport Token regions paired with arrival regions. The builder's Ways step adds a WoDX Way to each such region, pointing at the same arrival, and switches the teleport off, so walking through runs the trip rules (personal time, the company, encounters) instead of a bare jump. The kind of Way comes from the two names: a stair for floors and cellars, a gate into or within Kranzfels and at the West Gate, a ferry to the ferry or the ford, a street inside the Lower Town, else a road. Penumbra and Shadowlands twin regions are left to wodx-otherworlds, and a crossing inside one map (the ferry over the river) stays a teleport.
+
+Reverse: take the step back; the Ways come off and the teleports come on again.
+
+## B4811. Doors to the places inside come from the recipe (2026-11-14)
+WoDX Storyteller. The private quarters, workplaces and indoor places have no exits of their own. The recipe lists, by scene name, which street map each one opens from (36 doors), with a stair for the rooms above the inn, locked doors for the schemers' private places (Kasimir, Konrad, Voss, Graff) and an ask-first door to Bogdan's chambers. The street end sits on the south edge, three squares apart, until the Storyteller moves it to the house on the map. Where the houses stand on each street was a best guess from the names and the anchors' homes.
+
+Reverse: edit or remove the doors list in data/recipe-rothenstein.mjs and run the step again.
+
+## B4812. The network check runs at the end of the step (2026-11-14)
+WoDX Storyteller. The step's note in the builder window says how many exits and doors were laid and lists any place with no way in or out, or that cannot be reached from the first. On the exported testbed world every walkable map and every place inside can be reached and left; the gridless trial copy of Dolany and the battlemap copies are left out.
+
+Reverse: none needed; the check only reads.
+
+## B4813. A gate can lay and take back Ways in its own scenes (2026-11-14)
+WoDX Storyteller. builder.layWays(recipe, made, {only}) and builder.takeBackWays(made) are on the api, so a gate tests the step in scenes of its own in any testbed world without running the earlier steps or touching the lane's maps.
+
+Reverse: drop the two api entries; the step keeps working.
