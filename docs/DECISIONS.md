@@ -200,7 +200,7 @@ Next free block: B4120
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Washing, grooming and cosmetics (used B3900-B3909) | Library |
+| B3900-B3929 | Games and gambling (used B3900-B3910) | Library |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
@@ -6739,6 +6739,11 @@ Reverse: drop the Math.max in prayResult.
 WoDX Library. The no-effect audit found washing and grooming goods that only posted a line (desk i3, the smaller build Ben approved). The look already turned a mortal colder at blood on someone and anyone of standing colder at filth, but nothing ever marked either, so Filthy and Bloody are now token statuses, and a new lethal or aggravated wound marks Bloody on its own. Soap, a towel, a sponge, a scrub brush, a pumice stone or a bath takes both off. Any wash, comb, razor, scent or cosmetic leaves them well groomed for the night: someone of standing meets them a step warmer (house rule), unless filth or blood still shows. A plunger, a toilet brush, a mop, a bathroom scale, pads and tampons do neither and lose their Use. Passing as living with cosmetics was left out, since no part of WoDX yet reads a Kindred's pallor.
 
 Reverse: set wash and disguise back to effect "note" in use-rules.mjs, and drop hygiene-rules.mjs, hygiene-use.mjs and the groomed lines in look.mjs and look-rules.mjs.
+
+## B3910. Gambling for a stake (2026-11-14)
+WoDX Library. The no-effect audit found dice, cards and gaming boards that only posted a line (desk i4, the smaller build Ben approved). Gamble rolls Wits + Streetwise (or a Gambling ability, if better) at difficulty 6. Against a targeted character both roll and the higher takes the stake; a tie moves nothing. Against the house, two successes win the stake, one breaks even, none loses it, and a botch loses twice the stake. The stake is a share of what the gambler carries (a twentieth, a fifth or a half), so it fits any era's coin without asking for a number. Money moves through WoDX Storyteller's purse; the Storyteller's client moves it when a player does not own both purses. House rules. Toys with no stakes (a doll, a ball) and record players are left to the gadgets pass or stay narration; instruments already roll Performance.
+
+Reverse: set gamble back to effect "note" in use-rules.mjs and drop gamble-rules.mjs and gamble-use.mjs.
 
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
