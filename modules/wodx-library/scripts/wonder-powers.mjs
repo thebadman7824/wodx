@@ -18,7 +18,11 @@
  *   roll?: {attr, ability, diff} | {dice, diff} | {path: "actor:<dot path>", diff, label},
  *   spend?: {pool: "item" | "actor:<dot path>", amount},
  *   drawback?: {path, amount, label, max}        added to the user's actor (Paradox, Torment), capped (20 default)
- *   transfer?: {from, to, amount, need?: {path, min}}  from/to: "item" or "actor:<dot path>"
+ *   onBotch?: {path, amount, label}              taken from the user's actor when the roll botches (B3713)
+ *   requires?: id | [ids]                        runs only once one of those powers has been used (attuned first, B3713)
+ *   transfer?: {from, to, amount, need?: {path, min}, cap?}  from/to: "item" or "actor:<dot path>"; amount "successes"
+ *                                      moves one a success of the power's roll; cap: an actor dot path whose number the
+ *                                      receiving actor trait may not pass (a Sekhem rating, B3709)
  *   uses?: n (this power's own limit), gm?: true (only the Storyteller runs it), consume?: true (spends the item)}
  * A transfer power gets a reverse button of its own (`<id>~back`) when `back` is set: {label}.
  */
@@ -62,8 +66,9 @@ export function pathsOf(power = {}) {
   const out = new Set();
   const add = ref => { const r = refOf(ref); if ( r.on === "actor" ) out.add(r.path); };
   if ( power.spend ) add(power.spend.pool);
-  if ( power.transfer ) { add(power.transfer.from); add(power.transfer.to); if ( power.transfer.need ) out.add(power.transfer.need.path); }
+  if ( power.transfer ) { add(power.transfer.from); add(power.transfer.to); if ( power.transfer.need ) out.add(power.transfer.need.path); if ( power.transfer.cap ) out.add(power.transfer.cap); }
   if ( power.drawback ) out.add(power.drawback.path);
+  if ( power.onBotch ) out.add(power.onBotch.path);
   if ( power.roll?.path ) add(power.roll.path);
   return [...out];
 }
@@ -80,6 +85,8 @@ export function blockersOf(power, {flag = {}, values = {}, isGM = false} = {}) {
   if ( !power ) return ["no such power"];
   if ( flag?.spent ) out.push("it has nothing left in it");
   if ( power.gm && !isGM ) out.push("only the Storyteller sets this off");
+  const req = [power.requires ?? []].flat();
+  if ( req.length && !req.some(id => n(flag?.used?.[id])) ) out.push(`first: ${powerOf(flag, req[0])?.label ?? req[0]}`);
   const pool = poolOf(flag);
   if ( power.spend ) {
     const have = read(values, power.spend.pool);
@@ -131,8 +138,10 @@ export function plan(power, {flag = {}, values = {}, roll = null, max = {}} = {}
   if ( power.transfer && !failed ) {
     const t = power.transfer, have = read(values, t.from);
     const toR = refOf(t.to), pool = poolOf(flag);
-    const room = toR.on === "item" && pool ? Math.max(0, pool.max - read(values, t.to)) : (n(max[toR.path]) ? Math.max(0, n(max[toR.path]) - read(values, t.to)) : Infinity);
-    const amt = Math.max(0, Math.min(have, n(t.amount) || have, room));
+    const capOf = t.cap ? read(values, `actor:${t.cap}`) : n(max[toR.path]);
+    const room = toR.on === "item" && pool ? Math.max(0, pool.max - read(values, t.to)) : (capOf ? Math.max(0, capOf - read(values, t.to)) : Infinity);
+    const want = t.amount === "successes" ? n(roll?.successes) : n(t.amount) || have;
+    const amt = Math.max(0, Math.min(have, want, room));
     if ( amt > 0 ) {
       set(t.from, have - amt);
       set(t.to, read(values, t.to) + amt);
@@ -144,6 +153,11 @@ export function plan(power, {flag = {}, values = {}, roll = null, max = {}} = {}
     const from = read(values, `actor:${d.path}`);
     set(`actor:${d.path}`, Math.min(cap, from + n(d.amount)));
     lines.push(d.label ?? `${n(d.amount)} added to ${d.path}.`);
+  }
+  if ( power.onBotch && roll?.botch && n(power.onBotch.amount) ) {
+    const b = power.onBotch, from = read(values, `actor:${b.path}`);
+    set(`actor:${b.path}`, Math.max(0, from - n(b.amount)));
+    lines.push(b.label ?? `${n(b.amount)} lost to the botch.`);
   }
   if ( power.uses ) {
     const used = n(flag?.used?.[power.id]);
