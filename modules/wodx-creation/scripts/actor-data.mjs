@@ -153,7 +153,7 @@ export function purchaseOptions(actor) {
   const {available} = xpTotals(payerOf(actor));
   const out = [];
   const add = (kind, key, label, current, extra = {}) => {
-    const max = traitMax({line, kind, generation: gen, domitorGeneration: domitorGen});
+    const max = traitMax({line, kind, generation: gen, domitorGeneration: domitorGen, golconda: !!actor?.flags?.["wodx-actions"]?.golconda});
     const cost = xpCost({line, kind, current, discipline: extra.discipline});
     let reason = "";
     if ( cost === null ) reason = "Not available to this character";

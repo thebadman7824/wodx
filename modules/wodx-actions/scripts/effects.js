@@ -6,6 +6,7 @@
  * World setting "Magic that applies itself": Automatic (on, except in the Live world), On, Off. Rules: effects-rules.js.
  */
 import * as E from "./effects-rules.js";
+import * as KRG from "./kindred-rules.js";
 import * as DAE from "./mage-da-effects.js";
 import * as PE from "./path-effects.js";
 import * as PW from "./power-effects.js";
@@ -287,6 +288,11 @@ export function planOf(actor, results, successes, power = null) {
     const self = r.who === "self" || t.self;
     for ( const d of docs ) {
       const a = d?.actor ?? d;
+      // B5093: the powers that name Golconda cannot reach a vampire in it (V20 pp. 158, 161, 177; V20 Dark Ages p. 220)
+      if ( power?.name && a?.flags?.[MOD]?.golconda && KRG.beyondGolconda(power.name) ) {
+        items.push({key: r.key, out: {...r.out, label: r.out.label, text: `${a.name ?? "The target"} is in Golconda, beyond this power's reach, and never knows it was tried`}, target: d?.uuid ?? null, name: d?.name ?? a?.name ?? "", route: "off", golconda: true});
+        continue;
+      }
       let route = !isOn() ? "off" : r.st ? "st" : E.route(r.key, {self, playerCharacter: !!a?.hasPlayerOwner, count: docs.length, need: 0}, r.out);
       if ( r.ask && route === "auto" ) route = "queue";
       if ( route === "auto" && r.out.kind === "move" ) route = "pick";
@@ -296,7 +302,7 @@ export function planOf(actor, results, successes, power = null) {
   const word = {auto: "applies", queue: "waits in the approval queue", st: "is the Storyteller's call", off: "is for the Storyteller to apply", pick: "goes where the Storyteller clicks",
     area: "waits for the Storyteller to place it"};
   const html = `<div class="vta-res wodx-effects"><b>What it does</b><ul>${items.map(i =>
-    `<li><b>${esc(i.out.label)}</b> on ${esc(i.name)}: ${esc(String(i.out.text).slice(0, 220))}. <span class="wodx-quiet">It ${word[i.route]}.</span></li>`).join("")}</ul></div>`;
+    `<li><b>${esc(i.out.label)}</b> on ${esc(i.name)}: ${esc(String(i.out.text).slice(0, 220))}. <span class="wodx-quiet">${i.golconda ? "It does not take hold." : `It ${word[i.route]}.`}</span></li>`).join("")}</ul></div>`;
   return {items, html};
 }
 

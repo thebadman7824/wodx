@@ -238,3 +238,13 @@ test("the Sunlight region behavior registers as a Foundry sub-type", () => {
   assert.ok("shade" in schema.light.o.choices && "direct" in schema.light.o.choices);
   assert.equal(CONFIG.RegionBehavior.typeLabels["wodx-actions.sunlight"], "WoDX: Sunlight");
 });
+
+test("B5096: Golconda's grace: the sun falls one step weaker on the ladder", async () => {
+  posts.length = 0; applied.length = 0;
+  const v = vampire("Saint", {fort: 2});
+  await v.setFlag("wodx-actions", "golconda", true);
+  rolls.push(0);
+  await E.applySun(v, {light: "direct", exposure: 1, turns: 1, noRotschreck: true});
+  assert.match(posts.at(-1).body, /Golconda's grace/);
+  assert.match(posts.at(-1).body, /Fortitude soak.*\(2 at 9\)/s, "direct sun soaks as a cloudy day");
+});

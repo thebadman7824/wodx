@@ -87,12 +87,24 @@ export function drawSight() {
       layer.clear();
       for ( const c of [...layer.children] ) c.destroy();
       if ( sight && O.OTHER[sight] ) { const lines = OW.drawOther(layer, sight, a); OW.sayLines(sight, a, lines).catch(e => console.warn(`${MOD} | sight lines`, e)); return; }
-      if ( !sight || !S.SIGHTS[sight].rings ) return;
+      // B5094: the Storyteller always sees a Golconda halo; a player only with a sight that draws rings
+      const halo = t => {
+        const rad = Math.max(t.w, t.h) * 0.72, h = S.GOLCONDA_HALO;
+        layer.lineStyle(Math.max(6, t.w / 8), h.colour, h.alpha * 0.5); layer.drawCircle(t.center.x, t.center.y, rad);
+        layer.lineStyle(2, h.colour, h.alpha); layer.drawCircle(t.center.x, t.center.y, rad + 4);
+      };
+      if ( !sight || !S.SIGHTS[sight].rings ) {
+        if ( game.user?.isGM ) for ( const t of canvas.tokens?.placeables ?? [] ) if ( t.actor && S.isGolconda(t.actor) ) halo(t);
+        layer.lineStyle(0);
+        return;
+      }
       const safe = !!setting("colourSafe"), words = setting("ringWords") !== false;
       const needsRead = sight === "aura" && setting("auraNeedsRead") !== false, reads = a?.flags?.[MOD]?.auraReads ?? {};
       for ( const t of canvas.tokens?.placeables ?? [] ) {
         if ( !t.actor || !t.isVisible || t.actor === a ) continue;
-        const ring = S.ringFor(sight, profileOf(t.actor), {safe, needsRead, read: needsRead ? S.readFor(reads, t.document?.id, game.time.worldTime) : null});
+        const gol = S.isGolconda(t.actor);
+        if ( gol ) halo(t);
+        const ring = S.ringFor(sight, profileOf(t.actor), {safe, needsRead, golconda: gol, read: needsRead ? S.readFor(reads, t.document?.id, game.time.worldTime) : null});
         if ( !ring ) continue;
         const rad = Math.max(t.w, t.h) * 0.58;
         layer.lineStyle(Math.max(safe ? 4 : 3, t.w / (safe ? 10 : 14)), ring.colour, ring.alpha);
@@ -152,7 +164,7 @@ export function setupSight(helpers) {
     overload((canvas.tokens?.placeables ?? []).filter(t => t !== src && near(t, src, S.OVERLOAD.near)), `${attacker?.name ?? "Someone"} fires ${ev.weapon || "a gun"}.`);
   });
   for ( const h of ["controlToken", "canvasReady", "updateToken", "createToken", "deleteToken", "sightRefresh"] ) Hooks.on(h, () => drawSight());
-  Hooks.on("updateActor", (a, ch) => { if ( ch?.flags?.[MOD] !== undefined || a === myCharacter() ) drawSight(); });
+  Hooks.on("updateActor", (a, ch) => { if ( ch?.flags?.[MOD] !== undefined || ch?.flags?.["wodx-actions"]?.golconda !== undefined || ch?.flags?.["wodx-actions"]?.["-=golconda"] !== undefined || a === myCharacter() ) drawSight(); });
   Hooks.on("getSceneControlButtons", controls => {
     const tokens = controls.tokens ?? controls.find?.(c => c.name === "token");
     if ( !tokens?.tools ) return;

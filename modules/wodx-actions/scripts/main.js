@@ -3157,10 +3157,48 @@ Hooks.once("ready", async () => {
     await KX.loadData();
     await WX.loadData();
     garouHooks();
+    golcondaHooks();
     kindredHooks();
     autoDayOnce().catch(e => console.warn("WoDX | day and night by themselves", e));
     await createMacros();
 });
+
+/**
+ * Golconda (Ben's Golconda Desk, B5090-B5092): while it is held, Traits may reach 10 whatever the Generation; it ends
+ * by itself when the Road falls below 7 or Conscience below 4 (V20 Dark Ages p. 359), with a card and a word over the
+ * token, and the Generation's limits come back.
+ */
+async function golcondaCaps(actor, on) {
+    if (!isVampire(actor)) return;
+    const max = KR.golcondaTraitMax(on, R.generation(generationOf(actor)).maxTrait);
+    const upd = {};
+    if (num(actor.system?.abilities?.defaultmaxvalue) !== max) upd["system.abilities.defaultmaxvalue"] = max;
+    if (num(actor.system?.powers?.defaultmaxvalue) !== max) upd["system.powers.defaultmaxvalue"] = max;
+    if (Object.keys(upd).length) await actor.update(upd, { wodxGolconda: true });
+}
+export async function golcondaCheck(actor) {
+    if (!actor || !flag(actor, "golconda")) return null;
+    const rd = road(actor), v = virtues(actor);
+    if (KR.golcondaHolds({ road: rd.value, conscience: v.conscience.value })) return null;
+    await actor.unsetFlag(MOD, "golconda");
+    await actor.setFlag(MOD, "golcondaLost", { at: game.time?.worldTime ?? 0, road: rd.value, conscience: v.conscience.value });
+    await golcondaCaps(actor, false);
+    DSL.floatOver(actor, "Golconda lost", "#b8b8c8");
+    const ids = [...new Set([...game.users.filter(u => u.isGM).map(u => u.id), ...game.users.filter(u => !u.isGM && actor.testUserPermission?.(u, "OWNER")).map(u => u.id)])];
+    await ChatMessage.create({ content: `<div class="vta-card"><h3>${esc(actor.name)} falls from Golconda</h3><p>${esc(rd.name)} ${rd.value}, ${esc(v.conscience.label)} ${v.conscience.value}: below the purity Golconda asks (7 and 4). The Beast stirs again: frenzy and Rötschreck return, blood is lost each night, and the Generation's limits on Traits return. The road may be walked again.</p><p class="wodx-quiet">V20 Dark Ages p. 359</p></div>`,
+        whisper: ids, speaker: { alias: "WoDX" } });
+    return true;
+}
+function golcondaHooks() {
+    Hooks.on("updateActor", (actor, changes, options) => {
+        if (!isResponsibleGM() || options?.wodxGolconda || setting("golcondaRules") === false) return;
+        const f = changes?.flags?.[MOD] ?? {};
+        if (f.golconda === true) golcondaCaps(actor, true).catch(e => console.warn("WoDX | Golconda", e));
+        else if ("-=golconda" in f || f.golconda === false || f.golconda === null) golcondaCaps(actor, false).catch(e => console.warn("WoDX | Golconda", e));
+        if (flag(actor, "golconda") && (foundry.utils.hasProperty(changes, "system.advantages.path") || foundry.utils.hasProperty(changes, "system.advantages.virtues")))
+            golcondaCheck(actor).catch(e => console.warn("WoDX | Golconda", e));
+    });
+}
 
 /** Werewolf and Fera hooks: moon Rage at nightfall (B40), regeneration each round, Embrace Pain (Dark Ages). */
 function garouHooks() {

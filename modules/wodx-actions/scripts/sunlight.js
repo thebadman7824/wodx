@@ -15,6 +15,7 @@
  */
 
 import * as S from "./sunlight-rules.js";
+import * as KRG from "./kindred-rules.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { floatLocal } from "./daysleep.js";
@@ -173,10 +174,17 @@ export function build(ctx) {
             await showBurn(actor, true, r?.rot ? `Rots: ${r.rot}` : "Endures the sun");
             return r;
         }
+        // B5096: Golconda's grace, one step weaker on the ladder (Ben's pick, a house rule)
+        let graced = false;
+        if (actor?.getFlag?.(MOD, "golconda") && (() => { try { return setting("golcondaRules") !== false; } catch (e) { return true; } })()) {
+            const weaker = KRG.golcondaSun(light);
+            graced = weaker !== light; light = weaker;
+        }
         const fort = ctx.discipline(actor, "Fortitude");
         const diff = S.SOAK_DIFF[light] ?? 10;
         const rolls = [];
         let html = `<div class="vta-sub">${esc(S.LIGHTS[light] ?? light)}${why ? ` (${esc(why)})` : ""}: ${exposure} level${exposure === 1 ? "" : "s"} a turn${turns > 1 ? `, ${turns} turns` : ""} (VtDA20 p. 359).</div>`;
+        if (graced) html += `<div class="vta-note">Golconda's grace: the sun falls on ${esc(actor.name)} one step weaker.</div>`;
         let levels = 0;
         const soakDice = lethal ? fort + ctx.attr(actor, "stamina") : fort;
         for (let t = 1; t <= Math.max(1, turns); t++) {
