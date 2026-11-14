@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3690
+Next free block: B3730
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -190,6 +190,7 @@ Next free block: B3690
 | B3660-B3669 | The Rothenstein saga: the running step for other systems (used B3660-B3669) | Chronicle |
 | B3670-B3679 | The Rothenstein saga keeps its calendar on long skips (used B3670-B3672) | Chronicle |
 | B3680-B3689 | Mage Wonders, charms, periapts, trinkets and mage fetishes (used B3680-B3688) | Library, Storyteller |
+| B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6133,3 +6134,23 @@ Reverse: itemsFor() in wonders-mage.mjs.
 WoDX Library. A mage binds a spirit into any Garou fetish (not the Bane fetishes or a breed's own) with Spirit 4 to force an unwilling spirit, which makes an unreliable fetish, or Prime 4 and a bargain with a willing one (M20 pdf 509; Book of Secrets pdf 161). The work is extended Arete at difficulty 8, three successes a level. A forced spirit's court remembers, as for a Garou. Using it is Willpower at difficulty 7, with the fetish's Gnosis as the pool (M20 pdf 653).
 
 Reverse: drop FETISH_ROWS from ROWS in wonders-mage.mjs.
+
+## B3720. Soulforged Artifacts and relics are a line on the crafting table (2026-11-14)
+WoDX Library. Ben's pick on the Item Crafting Desk: soulforged relics and Artifacts stay with the soulforging build but are made through the shared crafting engine. The wonders registry (B3683) gains a Wraith kit, scripts/wonders-wraith.mjs (world setting craftWraith, on by default like the other kits), with two rows, a soulforged Artifact and a reworked relic (Wraith 20th book p. 44, pdf 109). Arms, armour and oboli stay in the WoDX Actions forge window, since they are gear and money, not Artifacts.
+
+Reverse: drop wonders-wraith.mjs from wonder-lines.mjs; the forge window makes Artifacts itself again.
+
+## B3721. One set of soulforge numbers, paid when the work ends (2026-11-14)
+WoDX Library. The kit reads the goal, difficulty and Pathos from WoDX Actions soulforge-rules.js (B3553), so the two never disagree. As with the Gnosis for a fetish, the soulfire's Pathos and an Artificer's pledged Corpus level are paid when the long task ends, not at the start, so a player's request the Storyteller turns down costs nothing: the kit's costs() take Pathos from system.advantages.pathos.temporary and, for an Artificer's own plasm, a level of Corpus max (Corpus now held under it). The Guild box in either window wins over the sheet and is shown on the approval card, with a note when the work is illicit under Stygia's law.
+
+Reverse: pay at the start as the forge window does for arms and armour.
+
+## B3722. The finished Artifact is the forge's item, marked as a wonder (2026-11-14)
+WoDX Library. The kit's itemsFor makes the WoDX Actions soulforge item and adds the wodx-library wonder flag and the page, so either system can tell what made it. A botch ruins the work and its Corpus; no spirit court is involved.
+
+Reverse: make a plain Item from the row.
+
+## B3723. Each window hands on to the other (2026-11-14)
+WoDX Actions, WoDX Storyteller. Picking an Artifact or a relic in the forge window starts the table's task; a new long task of the soulforge kind opens the forge window.
+
+Reverse: remove the hand-offs; each window makes only its own things.
