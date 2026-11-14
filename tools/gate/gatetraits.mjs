@@ -21,6 +21,8 @@
  *  17. a first meeting: the Kindred's Eerie Presence chills a mortal NPC one step, not a Kindred one; WoDX NPC's seed takes it
  *  18. Lucky counts three rerolls a story on the actor; Efficient Digestion, Thin Blood and Deep Sleeper read from the sheet
  *  15. signs others sense: the Kindred gives off Eerie Presence and Cast No Reflection, the mortal nothing; a Veil keeps its difficulty for Senses
+ *  24. the no-effect audit (B3780-B3782): Introspection offers its own tick box and adds 2 dice only on a ticked Perception
+ *      roll, Combat Novice is a card when a fight starts, and a mage's "Unbondable" is the Book of Secrets merit
  * Result: Data/wodx-gate/gatetraits-result.json.
  */
 async function save(R, name) {
@@ -220,6 +222,16 @@ export async function run() {
       const merits = T().table.merits;
       const w20 = merits.filter(e => e.book === "W20").length, m20 = merits.filter(e => e.book === "M20 Book of Secrets").length;
       ok("23 other lines in the table", merits.length >= 450 && w20 > 50 && m20 > 50 && T().rules.problems().length === 0, {total: merits.length, w20, m20});
+    });
+    await step("24 no-effect audit", async () => {
+      const seer = await mk("Trait seer", "Mortal", [feat("Introspection", "merit", 1), feat("Combat Novice", "flaw", 2)]);
+      const adept = await mk("Trait adept", "Mage", [feat("Unbondable", "merit", 3)]);
+      const box = /tag-same-nature/.test(TH.ticksHtml(seer));
+      const ticked = TH.traitMods(seer, ["perception", "same-nature"]), plain = TH.traitMods(seer, ["perception"]), other = TH.traitMods(seer, ["social", "same-nature"]);
+      const cards = T().rules.promptsOn(T().view(seer), "fight").map(c => c.key);
+      const unb = T().of(adept).matched.map(m => m.key);
+      ok("24 no-effect audit", box && ticked.dice === 2 && plain.dice === 0 && other.dice === 0 && cards.includes("combat-novice") && unb.includes("onbondable"),
+        {box, ticked, plain, other, cards, unb});
     });
   } catch (e) {
     R.errors.push(e.message);

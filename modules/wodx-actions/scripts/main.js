@@ -880,7 +880,7 @@ function opponentPool(target, spec, fd, actor = null) {
 function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability), { teamDice = 0, overflow = 0 } = {}) {
     const rd = road(actor);
     // Merits and flaws: tags from the pool and preset, plus any the player ticked (voice, risky, first meeting, a sense)
-    const ticked = TH.TICKS.filter(t => fd[`tag-${t.key}`]).map(t => t.key);
+    const ticked = TH.ticksFor(actor).filter(t => fd[`tag-${t.key}`]).map(t => t.key);
     let tm = TH.traitMods(actor, [...TH.tagsFor(fd.attr, pool.abilityKey, fd.preset), ...ticked], { target });
     // How the character moves (WoDX Combat 3.12.0): prone helps Stealth, flying helps sight, water spoils footing
     try {
