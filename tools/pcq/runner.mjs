@@ -5,7 +5,7 @@
  * priority order, with no thread or coordinator passing them along. Results go back to the issue as a comment and the
  * issue is closed with pc-done or pc-failed.
  *
- *   node tools/pcq/runner.mjs [--once] [--dry]          (started by run-runner.ps1, which restarts it after updates)
+ *   node tools/pcq/runner.mjs [--once] [--dry] [--no-update]         (started by run-runner.ps1, which restarts it after updates)
  *
  * Error checking:
  * - Lane clash check at start (jobs.mjs laneClashes): no lane 1, no shared port or folder, no Live world.
@@ -295,6 +295,7 @@ async function status(queue) {
 // ---- self update: exit 75 when main changed the runner or lane tools and nothing is running ----
 const MY_SHA = spawnSync("git", ["rev-parse", "HEAD"], {cwd: ROOT, encoding: "utf8"}).stdout.trim();
 async function updateDue() {
+  if ( args.includes("--no-update") ) return false;
   if ( LANES.some(l => state[l].busy) || light > 0 ) return false;
   const d = await git(["diff", "--quiet", MY_SHA, "origin/main", "--", "tools/pcq", "tools/lanes", "tools/harness/gate-two.mjs"]);
   return d.status === 1;
