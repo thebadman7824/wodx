@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.31.1 (Body traits and cyberware keep their effect at prepare time too (B3808): the system works out the wound level and penalty again every time it prepares an actor, from the stored totals, which undid B3804 on the testbed (gatetraits step 29, gatecyber step 8). The fork now calls a "wodxActorDerived" hook after that, and Combat lays the extra Bruised levels and the eased penalty over it)
 - 3.31.0 (Weapon fittings and everyday arms in the fight (B3805, B3806): the attack list offers WoDX Library's everyday weapons, fittings on the matching weapon change its dice, difficulty, noise, Strength need and reload, a bowstring slackens in the rain without wax, and what a spray, shock, blast or flash leaves behind is marked on the target)
 - 3.30.1 (Body traits and cyberware keep their effect after the sheet recomputes (B3804): the system worked out health totals and the wound penalty again after every actor update and wrote over the extra Bruised level of Huge Size and Sturdy and the eased penalty of High Pain Tolerance, Insensate to Pain and the Pain Editor, so the testbed gate saw no change. The system now calls a "wodxActorTotals" hook after its own totals, and Combat lays the body over them there)
 - 3.30.0 (Maneuver follow-on states: a hit leaves Knocked down, Held or Staked on the target's token (B3754))

@@ -79,3 +79,19 @@ test("body traits and a Pain Editor survive the system's recompute (B3804)", () 
   assert.match(readFileSync(join(root, "system/worldofdarkness/module/actor/data/wod-actor-base.js"), "utf8"), /Hooks\.callAll\("wodxActorTotals"/);
   assert.match(src, /Hooks\.on\("wodxActorTotals"/);
 });
+
+test("the body is laid over the wound level the system works out at prepare time, once (B3808)", () => {
+  const lvl = (value, penalty) => ({value, total: value, penalty});
+  const mk = () => ({system: {health: {bruised: lvl(1, 0), hurt: lvl(1, -1), injured: lvl(1, -1), wounded: lvl(1, -2), mauled: lvl(1, -2), crippled: lvl(1, -5), incapacitated: lvl(1, 0),
+    damage: {bashing: 2, lethal: 0, aggravated: 0, woundpenalty: -1}}, traits: {health: {totalhealthlevels: {max: 7, value: 5}}}}});
+  const big = R.applyBodyDerived(mk(), {bruised: 1, shift: 0, ease: 0});
+  assert.equal(big.system.health.bruised.total, 2);
+  assert.equal(big.system.health.damage.woundpenalty, 0);
+  assert.equal(big.system.health.bruised.wodxBody, 1);
+  R.applyBodyDerived(big, {bruised: 1, shift: 0, ease: 0});
+  assert.equal(big.system.health.bruised.total, 2, "a second prepare adds nothing");
+  const numb = mk(); numb.system.health.damage.bashing = 4;
+  assert.equal(R.applyBodyDerived(numb, {bruised: 0, shift: 0, ease: 99}).system.health.damage.woundpenalty, 0);
+  const plain = mk();
+  assert.equal(R.applyBodyDerived(plain, null).system.health.damage.woundpenalty, -1);
+});

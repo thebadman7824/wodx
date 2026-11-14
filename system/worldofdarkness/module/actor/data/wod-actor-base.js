@@ -67,6 +67,7 @@ export class WoDActor extends Actor {
             if (actorData.type === "PC") {
                 // Derived calculations: Wound levels
                 await this._handleWoundLevelCalculations(actorData);                
+                Hooks.callAll("wodxActorDerived", actorData); // WoDX fork: see below
                 
                 // Derived calculations: Movement (needs total dexterity and all active items)
                 systemData.movement = await CombatHelper.CalculateMovementv2(actorData);
@@ -162,6 +163,8 @@ export class WoDActor extends Actor {
                 
                 // Derived calculations: Wound levels
                 await this._handleWoundLevelCalculations(actorData);
+                // WoDX fork: modules lay their own health rules over the derived wound level (WoDX Combat: body traits)
+                Hooks.callAll("wodxActorDerived", actorData);
                 
 
                 // Derived calculations: Movement (needs total dexterity and all active items)

@@ -1711,6 +1711,8 @@ async function createMacros() {
 Hooks.once("init", () => {
     // B3804: body traits and cyberware survive the system's own recompute
     Hooks.on("wodxActorTotals", (actor, data) => { try { bodyTotals(actor, data); } catch (e) { console.error(`${MOD} | body totals`, e); } });
+    // B3808: and over the wound level the system works out again whenever it prepares the actor
+    Hooks.on("wodxActorDerived", (actor) => { try { R.applyBodyDerived(actor, toughness(actor)); } catch (e) { console.error(`${MOD} | body derived`, e); } });
     registerSettings();
     CD.registerConductorSettings();
     ST.registerStartSettings();
@@ -1723,7 +1725,7 @@ Hooks.once("init", () => {
     const aftermath = AA.setupAftermath({ corpusTrack });
     FTime.setupFightTime();
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.31.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.31.1", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, followOn: R.followOn, markFollow, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;

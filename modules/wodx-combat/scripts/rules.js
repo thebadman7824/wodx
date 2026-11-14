@@ -609,6 +609,34 @@ export function applyBodyTotals(data, body) {
 }
 
 /**
+ * B3808: the same at prepare time. The system works out the wound level and penalty again every time it prepares an
+ * actor (prepareDerivedData), from the stored totals, so the body's ease and shift are laid over that too. The stored
+ * Bruised total is raised to its value plus the body's extra levels when the totals hook has not already done it, and
+ * marked (in memory only: the data model drops unknown keys) so the health track does not add them again. Idempotent.
+ */
+export function applyBodyDerived(data, body) {
+    const h = data?.system?.health;
+    if (!h?.bruised || !body) return data;
+    const n = v => Number(v) || 0;
+    const extra = n(body.bruised);
+    if (extra) {
+        h.bruised.total = Math.max(n(h.bruised.total ?? h.bruised.value), n(h.bruised.value) + extra);
+        h.bruised.wodxBody = extra;
+    }
+    if (!extra && !n(body.shift) && !n(body.ease)) return data;
+    const totals = {}, penalties = {}, labels = {};
+    for (const k of WOUND_LEVELS) { totals[k] = n(h[k]?.total ?? h[k]?.value ?? 1); penalties[k] = n(h[k]?.penalty); labels[k] = h[k]?.label ?? `wod.health.${k}`; }
+    const d = h.damage ?? (h.damage = {});
+    const ws = woundState({ bashing: n(d.bashing), lethal: n(d.lethal), aggravated: n(d.aggravated) }, totals, penalties, labels);
+    d.woundlevel = ws.label;
+    d.woundpenalty = bodyPenalty(ws, penalties, body);
+    const max = WOUND_LEVELS.reduce((s, k) => s + totals[k], 0);
+    const th = data.system.traits?.health?.totalhealthlevels;
+    if (th) { th.max = max; th.value = Math.max(0, max - ws.filled); }
+    return data;
+}
+
+/**
  * The state a maneuver leaves on its target after a hit (B3754): Sweep and Tackle knock down (V20 Dark Ages pp. 347-348),
  * Hold and Grapple hold until the victim's next action, and a Stake or Impale with three damage successes stakes a
  * vampire (V20 Dark Ages p. 347). [{condition, name, lasts: "turn" | "staked"}]; empty on a miss.
