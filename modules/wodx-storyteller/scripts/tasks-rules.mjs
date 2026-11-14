@@ -65,6 +65,9 @@ export const KINDS = {
   // B3612: a new self on paper (WoDX Chronicle law-papers-rules.mjs); the difficulty and goal are set by the age's records
   identity: {label: "Make a new self on paper", attr: "intelligence", ability: "streetwise", diff: 6, interval: "week", goal: 3, delicate: true, house: true, week: 2,
     ref: "Forged or bought papers for a new name; the more records the age keeps, the harder it is. Name the task after the new self."},
+  // B3553: soulforging (WoDX Actions soulforge-rules.js sets the goal and difficulty by what is made)
+  soulforge: {label: "Soulforge an item (wraiths)", attr: "dexterity", ability: "crafts", diff: 7, interval: "week", goal: 6, delicate: true, house: true, week: 4,
+    ref: "Corpus heated over soulfire and hammered into shape; one soul makes one item (Wraith 20th pp. 42-44). The pool and the time are WoDX's own."},
   other: {label: "Something else", attr: "intelligence", ability: "", diff: 6, interval: "day", goal: 5, delicate: false, house: true, week: 3,
     ref: "The Storyteller sets the pool, the interval, the difficulty and the goal (V20 p. 251; V20 Dark Ages p. 324)."}
 };
@@ -140,6 +143,7 @@ export function normTask(t = {}) {
 export const WORKSHOPS = {
   "": {label: "Anywhere", from: null},
   forge: {label: "A forge or smithy", from: null},
+  soulforge: {label: "A soulforge with soulfire crystals (the Underworld)", from: null},
   bench: {label: "A craftsman's bench (wood, leather, cloth)", from: null},
   still: {label: "A still or an alchemist's furnace", from: null},
   scriptorium: {label: "A scribe's desk, ink and parchment", from: null},
