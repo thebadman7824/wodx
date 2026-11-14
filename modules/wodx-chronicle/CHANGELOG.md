@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.110.0 (Lasting damage on the map: api.scars burns, floods or wrecks the adopted buildings in a spot or across a scene, with pictures from the extracted packs or plain marks, healed a share at a time, with Undo (B3759))
 - 0.109.0 (Filipinos in the Malay world's mix (B4750))
 - 0.108.0 (The Khmer in mainland Southeast Asia (B4740))
 - 0.107.0 (Sephardi and Mizrahi Jews in the world's mixes (B4730, B4731))

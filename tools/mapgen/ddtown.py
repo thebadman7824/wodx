@@ -633,6 +633,7 @@ def main():
     if a.layout == "organic":
         import organic
         t = organic.OrganicTown(a.seed, a.size, a.name, not a.day, {"random": None, "yes": True, "no": False}[a.walls], {"random": None, "yes": True, "no": False}[a.river], a.year, a.part, None if a.land == "random" else a.land).make()
+        t.region = a.region                            # the furnishing takes the region's own packs (Feudal Japan in japan)
     else:
         import furnishing as F                             # furnished by purpose, the age's palette and room value, as the farm
         if not F.DEFAULT: F.DEFAULT.update(year=1197, region="moravia", wealth=None, trade=None, seed=a.seed)
