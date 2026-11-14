@@ -108,6 +108,20 @@ export function weatherCause(d) {
 }
 
 /**
+ * B4627 (show-don't-tell desk v9): what the scene shows when the Storyteller sets its hardship weather by hand. Cold
+ * brings snow (a blizzard when severe or deadly), wet or windy weather rain (a storm when severe or deadly), and heat a
+ * glare over the scene. "No hardship" and "From the sky" hand the scene back to WoDX Atmosphere. Returns
+ * {weather, glare} or null.
+ */
+export function hardshipLook(severity, cause = null) {
+  if ( !WEATHER[severity] || severity === "none" ) return null;
+  const hard = severity === "severe" || severity === "deadly";
+  if ( cause === "cold" ) return {weather: hard ? "blizzard" : "snow", glare: false};
+  if ( cause === "heat" ) return {weather: "", glare: true};
+  return {weather: hard ? "rainStorm" : "rain", glare: false};
+}
+
+/**
  * B3906: the weather roll's difficulty with what the character carries (house rule): bedding or a blanket against the
  * cold, an umbrella or a fan against the heat, one easier. cause: weatherCause(), or null when the Storyteller set the
  * harshness by hand, and then either counts. kit: WoDX Library's roadKit. {diff, part} (part: the line for the card).

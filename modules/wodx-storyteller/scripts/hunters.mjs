@@ -16,6 +16,7 @@
  * Nothing runs on players' machines, and players never see the hunters' files.
  */
 import * as H from "./hunters-rules.mjs";
+import * as TownLooks from "./town-looks.mjs";
 import {MOD, esc, isActiveGM, setting, chron, npc, log} from "./core.mjs";
 import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
@@ -250,6 +251,8 @@ async function approve(entry) {
   const text = d.kind === "investigator" ? `A stranger from ${d.lead} is asking questions in ${place}.` : d.kind === "raid" ? `${cap(d.lead)} are hunting someone in ${place}${d.file?.name ? `, and the name ${d.file.name} is whispered` : ""}.` : `${cap(d.lead)} purge ${place}.`;
   try { await game.modules.get(MOD)?.api?.rumours?.start?.({text}); } catch (err) { console.error(`${MOD} |`, err); }
   await log({kind: "hunters", attention: "The hunters move", text: `${place}: ${d.text ?? text}`});
+  // B4623: a raid or purge brings a crowd with torches onto the region's town scenes for the night
+  if ( d.kind === "raid" || d.kind === "purge" ) { try { await TownLooks.torchesIn(d.region); } catch (err) { console.warn(`${MOD} | torches`, err); } }
   if ( d.kind === "investigator" ) {
     const files = Object.keys(state().regions[d.region]?.files ?? {});
     const w = npc()?.wanted;
