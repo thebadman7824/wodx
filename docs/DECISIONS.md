@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4660
+Next free block: B4670
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -215,6 +215,7 @@ Next free block: B4660
 | B4610-B4619 | The PC runner rechecks every failing gate before it reports (used B4610) | tools (no module) |
 | B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4635) | Storyteller |
 | B4650-B4659 | Inuit names in the People generator (used B4650-B4652) | Creation, Chronicle |
+| B4660-B4669 | Taino names in the People generator (used B4660-B4662) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7061,3 +7062,18 @@ Reverse: edit the lists in data/people-inuit.mjs.
 WoDX Creation. Before 1800 an own name alone; from 1800 a church given name and a family name, from the Danish church names of Greenland and the Project Surname names of Canada (which came in 1968 to 1971; the family groups stand in for the industrial age too, for want of a finer split).
 
 Reverse: change family or earlyChurch in data/people-inuit.mjs.
+
+## B4660. The Caribbean has people from 1197 (2026-11-14)
+WoDX Creation and Chronicle. The Caribbean had no people before 1492; it now holds the Taíno alone before the Spanish. From 1500 the mix holds the Spanish, English, French and Dutch, the Akan and Yoruba (the people brought in chains; their names are the ones WoDX already has for West Africa) and the Taíno at 13, falling to 1 in the hill towns after 1800. Hindi names arrive with the indentured workers after 1838. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old caribbean mixes and {from: 1492} in world-rules.mjs and drop tainoTables from people-world.mjs.
+
+## B4661. Names from the chroniclers, fewer than 300 (2026-11-14)
+WoDX Creation. The caciques and cacicas in Columbus, Pané, Las Casas, Oviedo and Peter Martyr, with the cacicazgos for women not named in the records. Fewer than 300 names. The Kalinago (Island Carib) wait for a better record.
+
+Reverse: edit the lists in data/people-taino.mjs.
+
+## B4662. Baptism from 1493 (2026-11-14)
+WoDX Creation. A Spanish church given name comes before the own name from 1493, as the encomienda rolls give them; Spanish family names after 1800.
+
+Reverse: change church or family in data/people-taino.mjs.
