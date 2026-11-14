@@ -10,6 +10,7 @@
  *              is added to who knows the way, or a fire is set; wodxHavenProbe fires for other modules.
  */
 import * as W from "./haven-works-rules.mjs";
+import * as TownLooks from "./town-looks.mjs";
 import * as H from "./haven-rules.mjs";
 import * as Havens from "./havens.mjs";
 import {MOD, esc, chron, npc, isActiveGM, isPC, setting, log} from "./core.mjs";
@@ -107,7 +108,7 @@ export async function monthRun({force = false} = {}) {
       await scene.update({[`flags.${MOD}.haven.probed.${r.id}`]: t});
       const owner = game.actors.get(against);
       await chron()?.propose?.({type: T_PROBE, key: `probe:${scene.id}:${r.id}`, title: `${r.name} probes ${h.name || scene.name}`,
-        detail: `${got.probe.label}. An old grudge against ${owner?.name ?? "an owner"}. Approve and ${got.probe.key === "fire" ? "the fire is set; the Storyteller plays it" : `${r.name} knows the way`}.`,
+        detail: `${got.probe.label}. An old grudge against ${owner?.name ?? "an owner"}. Approve and ${got.probe.key === "fire" ? "the fire is set on the haven's map, where it burns whoever stands in it" : `${r.name} knows the way`}.`,
         data: {scene: scene.id, rival: r.id, probe: got.probe.key}});
     }
   }
@@ -122,6 +123,8 @@ async function approveProbe(e) {
   if ( p.key === "fire" ) {
     const owner = game.actors.get(h.owners[0]);
     await log({kind: "haven", actor: isPC(owner) ? owner.id : null, name: owner?.name ?? null, attention: "A haven is attacked", text: `${r.name} sets a fire at ${h.name || scene.name}.`});
+    // B4626: the fire is on the map, and burns whoever stands in it
+    try { await TownLooks.havenFire(scene, {who: r.name}); } catch (err) { console.warn(`${MOD} | haven fire`, err); }
   } else await Havens.expose(scene, r.name, p.label.toLowerCase());
   Hooks.callAll("wodxHavenProbe", {scene, rival: r, probe: p.key});
 }
