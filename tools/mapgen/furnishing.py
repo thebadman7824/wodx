@@ -121,6 +121,13 @@ def _place(room, sp, pal, R):
         cands = next((c for c in (room.candidates(W * k, H * k, r, keep_windows=base[0] in ("chest", "store")) for r in rules) if c), [])
         if cands: break
     if not cands: return []
+    if C.BED.search(entry["path"]) or C.FIRE.search(entry["path"]):   # a bed kept well away from a fire, and a fire from a bed
+        bx, by, bw, bh = base[1:5]
+        def base_rect(c):
+            _, x, y, w, h, rot = c
+            return _frame(x, y, W * k, H * k, _side(room, x, y, w, h, sp["place"], rot), (bx * k, by * k, bw * k, bh * k))
+        cands = [c for c in cands if not C.fire_clash(room.items, entry["path"], base_rect(c))]
+        if not cands: return []
     if k != 1:
         W, H = W * k, H * k
         sp = dict(sp, parts=[(p, dx * k, dy * k, pw * k, ph * k, r) for p, dx, dy, pw, ph, r in sp["parts"]])
@@ -144,7 +151,7 @@ def _place(room, sp, pal, R):
             continue
         rect = _frame(x, y, W, H, side, (dx, dy, pw, ph))
         layer = 50 if piece == "rug" else 100
-        if layer == 100 and (not room.fits(rect) or piece in ("chest", "store") and room.under_window(rect)):
+        if layer == 100 and (not room.fits(rect) or piece in ("chest", "store") and room.under_window(rect) or C.fire_clash(room.items, e["path"], rect)):
             if prule == "base": return []
             continue
         it = _drawn(e, rect, piece, layer)
