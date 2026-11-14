@@ -4,6 +4,7 @@ import * as Media from "../../wodx-chronicle/scripts/media-rules.mjs";
 import {MOD, esc, chron, npc, isActiveGM, isPC, setting, mutate} from "./core.mjs";
 import {nightNow} from "./night.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as Signals from "./signals.mjs";
 
 /**
  * The rumour network: a rumour, once started (from the night's draw when approved, or by hand), passes between the
@@ -57,6 +58,8 @@ export async function startRumour({text, tellers = [], big = false, source = nul
   const at = await nightNow();
   const r = RR.normRumour({id, text, started: game.time?.worldTime ?? 0, night: at.jdn, knownBy: first, big: !!big, source: source ?? first[0] ?? null, about, truth, log: [{night: at.jdn, heard: first.length, label: at.label}]});
   await mutate("rumours", cur => ({value: [...RR.normRumours(cur), r]}));
+  // B3651: a big rumour goes on the signal board (a tale posts its own, below)
+  if ( r.big && !r.about ) Signals.post({key: `rumour:${r.id}`, kind: "rumour", weight: 2, what: String(text).slice(0, 200), from: "rumours"}).catch(e => console.error("wodx-storyteller | signals", e));
   return r;
 }
 
@@ -98,6 +101,9 @@ export async function startTale({about, did, where = null, tone = 0, tellers = [
   if ( !r ) return null;
   let out = r;
   await mutate("rumours", cur => ({value: RR.normRumours(cur).map(x => x.id === r.id ? (out = RR.normRumour({...x, tale, versions: [tale], heardAs: Object.fromEntries(first.map(id => [id, 0]))})) : x)}));
+  // B3651: the tale goes on the signal board; the louder the deed, the heavier
+  const loud = Math.abs(Number(tale.tone) || 0);
+  Signals.post({key: `tale:${r.id}`, kind: "tale", about: a.id, weight: big ? 3 : (loud >= 2 ? 2 : 1), who: a.name, where: tale.where ?? "", what: String(did).slice(0, 200), from: "tales"}).catch(e => console.error("wodx-storyteller | signals", e));
   return out;
 }
 

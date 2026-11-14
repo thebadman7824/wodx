@@ -3,7 +3,8 @@
  *
  *   Signals  read once a day from what the world is about to do: the chronicle's dated events within 90 days, NPC
  *            grudges against a character close to the mark (WoDX NPC memory), hunters investigating or worse in a
- *            region, a plague of history on its way to a region where a character is.
+ *            region, a plague of history on its way to a region where a character is, and (B3651) the shared signal
+ *            board every other system posts to (signals.mjs).
  *   Dreams   a gifted player character may dream of one. Each dream asks the Storyteller first (approval
  *            wodx-storyteller.omen); approved, it joins the Dreams list for the next sleep, where the Storyteller can
  *            still change its words, and comes as the dreams the Storyteller writes do.
@@ -18,6 +19,7 @@ import * as D from "./dreams-rules.mjs";
 import * as Hunters from "./hunters.mjs";
 import * as HR from "./hunters-rules.mjs";
 import * as CR from "./contagion-rules.mjs";
+import * as Signals from "./signals.mjs";
 import {backgroundsOf} from "./havens.mjs";
 import {MOD, esc, chron, npc, isActiveGM, isPC, setting, whereIs} from "./core.mjs";
 import {sphereFor} from "../../wodx-chronicle/scripts/world-rules.mjs";
@@ -76,6 +78,11 @@ export function signals() {
     try { for ( const o of CR.historyFor(rid, year) ?? [] ) out.push({key: `plague:${rid}:${o.key}`, kind: "plague", about: "", region: rid, weight: 3, where: regionLabel(rid)}); }
     catch (er) { /* no contagion */ }
   }
+  // B3651: the shared signal board, what every other system has posted (fights, cults, arrests, towns, battles...)
+  try {
+    const have = new Set(out.map(s => s.key));
+    for ( const s of Signals.forOmens() ) if ( !have.has(s.key) ) out.push(s);
+  } catch (er) { /* no board */ }
   return out;
 }
 

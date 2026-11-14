@@ -96,6 +96,18 @@ export function release(board = [], story = "") {
 /** Is any fresh signal strong enough (weight 3) to run the weave at once instead of waiting a week (B3650)? */
 export const urgent = (board = [], now = 0) => fresh(board, now).some(s => s.weight >= 3);
 
-/** The board as the omens system reads it: {key, kind, about, region, weight, who, where, what}. */
-export const forOmens = (board = [], now = 0) => normBoard(board).filter(s => live(s, now))
-  .map(({key, kind, about, region, weight, who, where, what}) => ({key, kind, about, region, weight, who, where, what}));
+/**
+ * The omens kind for each board kind that omens has no symbols of its own for. A fight dreams as war, an arrest as
+ * hunters, an heir as a death; the rest dream as change.
+ */
+export const OMEN_KIND = {fight: "war", seat: "war", arrest: "hunters", trial: "hunters", law: "hunters", breach: "hunters",
+  fate: "death", debt: "grudge", tale: "grudge", lifepath: "grudge", hook: "grudge"};
+const OMEN_KINDS = KINDS.slice(0, 8);
+export const omenKind = k => (OMEN_KINDS.includes(k) ? k : (OMEN_KIND[k] ?? "change"));
+
+/**
+ * The board as the omens system reads it: {key, kind, about, region, weight, who, where, what}, with the kind put in
+ * omens terms. Only weight 2 and up: a passing scuffle is not worth a dream.
+ */
+export const forOmens = (board = [], now = 0) => normBoard(board).filter(s => live(s, now) && s.weight >= 2)
+  .map(({key, kind, about, region, weight, who, where, what}) => ({key, kind: omenKind(kind), about, region, weight, who, where, what}));

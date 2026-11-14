@@ -36,6 +36,7 @@ import * as Ventures from "./ventures.mjs";
 import * as Inst from "./institutions.mjs";
 import * as Works from "./haven-works.mjs";
 import * as Omens from "./omens.mjs";
+import * as Signals from "./signals.mjs";
 import * as Patron from "./patronage.mjs";
 import * as Towns from "./towns.mjs";
 import * as Contagion from "./contagion.mjs";
@@ -122,6 +123,7 @@ Hooks.once("init", () => {
   Inst.registerInstitutionSettings();
   Works.registerWorksSettings();
   Omens.registerOmenSettings();
+  Signals.registerSignalSettings();
   Patron.registerPatronageSettings();
   Towns.registerTownSettings();
   Contagion.registerContagionSettings();
@@ -134,6 +136,7 @@ Hooks.once("init", () => {
   Inst.registerInstitutionHooks();
   Works.registerWorksHooks();
   Omens.registerOmenHooks();
+  Signals.registerSignalHooks();
   Patron.registerPatronageHooks();
   Cook.registerCookHooks();
   Body.registerBodyHooks();
@@ -240,6 +243,7 @@ Hooks.once("ready", () => {
     body: {open: Body.bodyDialog, add: Body.addChange, remove: Body.removeChange, of: Body.bodyOf, shown: Body.shownOf, newDialog: Body.newChangeDialog, rules: BodyRules},
     havenWorks: Works.api(),
     omens: Omens.api(),
+    signals: Signals.api(),
     patronage: Patron.api(),
     havens: {open: Havens.havensDialog, edit: Havens.editHaven, of: Havens.havenOf, list: Havens.havens, save: Havens.saveHaven, remove: Havens.removeHaven, expose: Havens.expose, forget: Havens.forget, exposeDialog: Havens.exposeDialog, rating: Havens.ratingOf, rules: HavenRules},
     passTime: {open: PassTime.open, vote: PassTime.vote, dialog: PassTime.passTimeDialog, choices: SpendRules.PASS_CHOICES},

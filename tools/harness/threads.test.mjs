@@ -48,6 +48,9 @@ test("signals: a player's own hook comes first, weight 3 runs at once, and omens
   assert.equal(S.urgent(b, 5), true); assert.equal(S.urgent([b[1]], 5), false);
   const o = S.forOmens(b, 5);
   assert.deepEqual(Object.keys(o[0]).sort(), ["about", "key", "kind", "region", "weight", "what", "where", "who"].sort());
+  assert.deepEqual(o.map(s => s.key), ["w"], "weight 1 is not worth a dream");
+  assert.equal(S.forOmens([{key: "f", kind: "fight", weight: 2, at: 5}], 5)[0].kind, "war", "board kinds become omens kinds");
+  assert.equal(S.omenKind("cult"), "change"); assert.equal(S.omenKind("plague"), "plague"); assert.equal(S.omenKind("arrest"), "hunters");
 });
 
 test("threads: a card fits by year, region, branch, lines, cuts, refusals and running chains", () => {
