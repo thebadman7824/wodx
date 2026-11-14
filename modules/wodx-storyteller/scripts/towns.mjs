@@ -14,6 +14,7 @@
  * Storyteller's log, and fire wodxTown {town, kind, text, big} for other modules (passers-by, factions).
  */
 import * as TR from "./town-rules.mjs";
+import * as TownLooks from "./town-looks.mjs";
 import * as MT from "./market-turn-rules.mjs";
 import * as MK from "./market-rules.mjs";
 import * as MV from "./market-moves-rules.mjs";
@@ -221,7 +222,7 @@ async function undo(msg) {
   for ( const s of f.marketSnap ?? [] ) await Markets.setMarket(s.id, {supply: {food: s.supply}, index: {food: s.index}});
   await msg.update({[`flags.${MOD}.townTurn.applied`]: false});
   // B4620: the marks the turn left on the town scenes go with it
-  try { await (await import("./town-looks.mjs")).endFor({towns: f.towns ?? [], since: f.at ?? 0}); } catch (e) { console.warn(`${MOD} | town looks undo`, e); }
+  try { await TownLooks.endFor({towns: f.towns ?? [], since: f.at ?? 0}); } catch (e) { console.warn(`${MOD} | town looks undo`, e); }
 }
 
 /* ------------------------------------------------------------------ */

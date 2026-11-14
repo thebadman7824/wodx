@@ -9,6 +9,7 @@
  *   machines. The Hardship window (Upkeep) marks who has eaten, drunk and slept, and sets the weather.
  */
 import * as H from "./hardship-rules.mjs";
+import * as TownLooks from "./town-looks.mjs";
 import {MOD, esc, isActiveGM, setting, isPC, chron} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -168,7 +169,7 @@ export async function showWeather(scene, sev = weatherSetOn(scene)) {
   try { indoor = game.modules.get(ATMO)?.api?.weather?.isOutdoor?.(scene) === false; } catch (e) { indoor = false; }
   const look = setting("townLooks") === false || indoor ? null : H.hardshipLook(sev, H.weatherCause(skyFor(scene)) ?? (Number(skyFor(scene)?.tempDay) < 3 ? "cold" : null));
   const had = scene.flags?.[MOD]?.hardshipSky ?? null;
-  const TL = await import("./town-looks.mjs");
+  const TL = TownLooks;
   if ( !look ) {
     if ( had !== null ) {
       await scene.update({weather: scene.weather === had ? "" : scene.weather, [`flags.${MOD}.-=hardshipSky`]: null});

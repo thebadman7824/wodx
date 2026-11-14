@@ -2,7 +2,7 @@
  * WoDX Storyteller gate: hardship weather shown on the scene (B4627), in Foundry, in rothenstein-wodx, as Gamemaster
  * Test:
  *   await (await import(`/wodx-gate/gatehardshipsky.mjs?${Date.now()}`)).run()
- * Works on a scratch scene; never moves the clock.
+ * Works on a scratch outdoor scene; never moves the clock.
  *   1. deadly weather set by hand puts a blizzard or a storm on the scene (or a glare in a heat)
  *   2. harsh weather softens it to snow or rain
  *   3. "No hardship" takes it off and hands the scene back to WoDX Atmosphere
@@ -18,7 +18,8 @@ export async function run() {
   const glare = scene => [...scene.drawings].some(d => d.flags?.[MOD]?.look?.source === `hardship:${scene.id}`)
     || (game.modules.get("wodx-chronicle")?.api?.looks?.list?.(scene) ?? []).some(l => l.source === `hardship:${scene.id}`);
   try {
-    const scene = await G.scene({width: 2000, height: 1500});
+    // an outdoor scene, as WoDX Atmosphere reads it
+    const scene = await G.scene({width: 2000, height: 1500, flags: {"wodx-atmosphere": {outdoors: "on"}}});
 
     await G.step("1. deadly shows", async () => {
       await HS().weather(scene, "deadly");

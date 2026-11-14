@@ -14,6 +14,7 @@
  *            to everyone.
  */
 import * as O from "./omen-rules.mjs";
+import * as TownLooks from "./town-looks.mjs";
 import * as Dreams from "./dreams.mjs";
 import * as D from "./dreams-rules.mjs";
 import * as Hunters from "./hunters.mjs";
@@ -142,7 +143,7 @@ async function approveWorld(e) {
   const text = String(e?.data?.text ?? "");
   if ( text ) await ChatMessage.create({speaker: {alias: "A sign"}, content: `<div class="wodx-card wstory wst-omen"><p><i>${esc(text)}</i></p></div>`});
   // B4628: the sign is seen on the map, for a night
-  if ( text ) { try { await (await import("./town-looks.mjs")).showOmen(text); } catch (er) { console.warn(`${MOD} | omen looks`, er); } }
+  if ( text ) { try { await TownLooks.showOmen(text); } catch (er) { console.warn(`${MOD} | omen looks`, er); } }
 }
 
 export function registerApproval() {

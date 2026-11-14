@@ -15,6 +15,11 @@
 import * as L from "./town-look-rules.mjs";
 import * as MK from "./market-rules.mjs";
 import * as Markets from "./markets.mjs";
+import * as CR from "./contagion-rules.mjs";
+import * as Hunters from "./hunters.mjs";
+import * as TR from "./town-rules.mjs";
+import * as Battles from "./battles.mjs";
+import * as Towns from "./towns.mjs";
 import {MOD, chron, isActiveGM, setting} from "./core.mjs";
 
 const all = c => (c ? [...(c.contents ?? c)] : []);
@@ -162,8 +167,9 @@ async function setLooksNow(scene, key, looks) {
 /** Sickness on the map (B4622): every scene of every town shows its outbreak's phase; a town that is well shows none. */
 export async function syncSick() {
   if ( !game.user.isGM ) return 0;
-  let st, mst, R;
-  try { R = await import("./contagion-rules.mjs"); st = R.normState(setting("contagionState")); mst = Markets.state(); } catch (e) { return 0; }
+  const R = CR;
+  let st, mst;
+  try { st = R.normState(setting("contagionState")); mst = Markets.state(); } catch (e) { return 0; }
   const sickOn = setting("townLooks") !== false && setting("contagion") !== "off";
   let n = 0;
   for ( const m of mst?.markets ?? [] ) {
@@ -191,8 +197,7 @@ function townScenes() {
 /** Hunters on the map (B4623): every town scene shows its region's stage; a quiet region shows none. */
 export async function syncHunters() {
   if ( !game.user.isGM ) return 0;
-  let Hn;
-  try { Hn = await import("./hunters.mjs"); } catch (e) { return 0; }
+  const Hn = Hunters;
   const show = setting("townLooks") !== false && setting("hunterPressure") !== false;
   let n = 0;
   for ( const {m, scene} of townScenes() ) {
@@ -214,8 +219,7 @@ export async function syncHunters() {
 /** A raid or purge approved in a region: a crowd with torches on each town scene there, for the night. */
 export async function torchesIn(regionId) {
   if ( !game.user.isGM || setting("townLooks") === false ) return 0;
-  let Hn;
-  try { Hn = await import("./hunters.mjs"); } catch (e) { return 0; }
+  const Hn = Hunters;
   let n = 0;
   for ( const {m, scene} of townScenes() ) {
     if ( Hn.regionAt(scene) !== regionId ) continue;
@@ -232,8 +236,7 @@ export async function torchesIn(regionId) {
 /** Sieges on the map (B4624): each town under siege shows the camp round its scenes, and the breach once there is one. */
 export async function syncSieges() {
   if ( !game.user.isGM ) return 0;
-  let TR, Bt;
-  try { TR = await import("./town-rules.mjs"); Bt = await import("./battles.mjs"); } catch (e) { return 0; }
+  const Bt = Battles;
   const markets = Markets.state()?.markets ?? [];
   const sceneName = id => { const s = game.scenes?.get(id); return s?.navName || s?.name || ""; };
   const sieges = {};
@@ -323,7 +326,7 @@ export async function showEvent(ev) {
 export async function syncProsperity() {
   if ( !game.user.isGM ) return 0;
   let towns = {};
-  try { towns = (await import("./towns.mjs")).state()?.towns ?? {}; } catch (e) { return 0; }
+  try { towns = Towns.state()?.towns ?? {}; } catch (e) { return 0; }
   const on = setting("townLooks") !== false;
   let n = 0;
   for ( const {m, scene} of townScenes() ) {

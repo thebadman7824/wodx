@@ -10,6 +10,7 @@
  *              is added to who knows the way, or a fire is set; wodxHavenProbe fires for other modules.
  */
 import * as W from "./haven-works-rules.mjs";
+import * as TownLooks from "./town-looks.mjs";
 import * as H from "./haven-rules.mjs";
 import * as Havens from "./havens.mjs";
 import {MOD, esc, chron, npc, isActiveGM, isPC, setting, log} from "./core.mjs";
@@ -123,7 +124,7 @@ async function approveProbe(e) {
     const owner = game.actors.get(h.owners[0]);
     await log({kind: "haven", actor: isPC(owner) ? owner.id : null, name: owner?.name ?? null, attention: "A haven is attacked", text: `${r.name} sets a fire at ${h.name || scene.name}.`});
     // B4626: the fire is on the map, and burns whoever stands in it
-    try { await (await import("./town-looks.mjs")).havenFire(scene, {who: r.name}); } catch (err) { console.warn(`${MOD} | haven fire`, err); }
+    try { await TownLooks.havenFire(scene, {who: r.name}); } catch (err) { console.warn(`${MOD} | haven fire`, err); }
   } else await Havens.expose(scene, r.name, p.label.toLowerCase());
   Hooks.callAll("wodxHavenProbe", {scene, rival: r, probe: p.key});
 }
