@@ -15,15 +15,16 @@
  *   7. the Maya (B3830): beside the Nahua in Mexico before the conquest, an own name and a patronym, a church name after
  *   8. the Armenians (B3940): in Anatolia's mix, a town byname before 1800 and -ian or -yan after
  *   9. the Missouri villages (B4130): the Mandan, Hidatsa, Arikara and Pawnee in the West, women named by village
- *  10. clean up
+ *  10. the northern Plains (B4140): the Crow with clans, the Blackfoot and Arapaho by division
+ *  11. clean up
  * Result: Data/wodx-gate/gateplains-result.json.
  */
 import {gate} from "./kit.mjs";
 
 const CR = "wodx-creation", CH = "wodx-chronicle";
 const WEST = "north-america-west", EAST = "american";
-const PEOPLES = ["lakota", "cheyenne", "comanche", "kiowa", "pueblo", "dine", "apache", "mandan", "hidatsa", "arikara", "pawnee"];
-const CLANS = ["pueblo", "dine"];
+const PEOPLES = ["lakota", "cheyenne", "comanche", "kiowa", "pueblo", "dine", "apache", "mandan", "hidatsa", "arikara", "pawnee", "blackfoot", "arapaho", "crow"];
+const CLANS = ["pueblo", "dine", "crow"];
 const gen = () => game.modules.get(CH).api.gen;
 const results = (ctx, id) => (gen().lookup({...gen().context(), ...ctx})(id)?.results ?? []).map(r => r.text);
 
@@ -109,14 +110,23 @@ export async function run() {
     });
     await G.step("9. the Missouri villages", async () => {
       const med = results({era: "medieval", culture: WEST}, "people.origin"), bad = [];
-      for ( const o of ["mandan", "hidatsa", "arikara", "pawnee"] ) {
+      for ( const o of ["mandan", "hidatsa", "arikara", "pawnee", "blackfoot", "arapaho", "crow"] ) {
         for ( const p of draw("medieval", o, 20, "mo") ) if ( !p.name || p.name.includes("{") || p.family ) bad.push(`${o}: ${p.name} / ${p.family}`);
         for ( const p of draw("modern", o, 10, "mo") ) if ( !p.family || p.name.includes("{") ) bad.push(`${o} modern: ${p.name}`);
       }
       const women = draw("medieval", "pawnee", 20, "mo-w").filter((p, i) => i % 2).map(p => p.name);
       G.ok("9. the Missouri villages in the West; own names, women of a village, then family names",
-        ["mandan", "hidatsa", "arikara", "pawnee"].every(o => med.includes(o)) && !bad.length && women.every(n => /^A woman of the /.test(n)),
+        ["mandan", "hidatsa", "arikara", "pawnee", "blackfoot", "arapaho", "crow"].every(o => med.includes(o)) && !bad.length && women.every(n => /^A woman of the /.test(n)),
         {medieval: med, bad: bad.slice(0, 6), sample: draw("medieval", "mandan", 4, "show").map(p => p.name), women: women.slice(0, 3)});
+    });
+    await G.step("10. the northern Plains", async () => {
+      const med = results({era: "medieval", culture: WEST}, "people.origin"), bad = [];
+      for ( const p of draw("medieval", "crow", 20, "np") ) if ( !/^of the .+ clan$/.test(p.family ?? "") || p.name.includes("{") ) bad.push(`crow: ${p.name}`);
+      for ( const o of ["blackfoot", "arapaho"] ) for ( const p of draw("medieval", o, 20, "np") ) if ( p.family || p.name.includes("{") ) bad.push(`${o}: ${p.name}`);
+      for ( const o of ["crow", "blackfoot", "arapaho"] ) for ( const p of draw("modern", o, 10, "np") ) if ( !p.family || p.name.includes("{") ) bad.push(`${o} modern: ${p.name}`);
+      G.ok("10. the Crow, Blackfoot and Arapaho in the West; clans or divisions, then family names",
+        ["crow", "blackfoot", "arapaho"].every(o => med.includes(o)) && !bad.length,
+        {medieval: med, bad: bad.slice(0, 6), sample: draw("medieval", "crow", 4, "show").map(p => p.name)});
     });
   } catch (e) {
     G.ok("error", false, {error: e.message});
