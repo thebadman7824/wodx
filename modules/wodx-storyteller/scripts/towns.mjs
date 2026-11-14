@@ -14,6 +14,7 @@
  * Storyteller's log, and fire wodxTown {town, kind, text, big} for other modules (passers-by, factions).
  */
 import * as TR from "./town-rules.mjs";
+import * as TownLooks from "./town-looks.mjs";
 import * as MT from "./market-turn-rules.mjs";
 import * as MK from "./market-rules.mjs";
 import * as MV from "./market-moves-rules.mjs";
@@ -207,7 +208,7 @@ async function card({events, snap, marketSnap = [], when, towns, after}) {
   const names = id => MK.marketById(Markets.state(), id)?.name ?? id;
   const list = events.map(e => `<li><b>${esc(e.name ?? names(e.town))}</b>: ${esc(e.text)}</li>`).join("");
   const rows = towns.map(id => { const t = after.towns[id]; return t ? `<li>${esc(names(id))}: ${t.people.toLocaleString("en")} people, ${esc(TR.prosperityWord(t.prosperity).toLowerCase())}, ${esc(TR.unrestWord(t.unrest).toLowerCase())}${t.struck ? `, ${esc(t.struck.name.toLowerCase())}` : ""}</li>` : ""; }).join("");
-  return ChatMessage.create({speaker: {alias: "Towns"}, whisper: gmIds(), flags: {[MOD]: {townTurn: {snap, marketSnap, applied: true}}},
+  return ChatMessage.create({speaker: {alias: "Towns"}, whisper: gmIds(), flags: {[MOD]: {townTurn: {snap, marketSnap, applied: true, towns, at: now()}}},
     content: `<div class="wodx-card wst-towns wst-town-turn"><h3>The towns after ${esc(when)}</h3>
       ${list ? `<ul>${list}</ul>` : ""}<details><summary>Every town</summary><ul>${rows}</ul></details>
       <p class="wodx-quiet">Undo puts these towns back as they were before this turn${marketSnap.length ? ", and their bread back in the market" : ""}.</p>
@@ -220,6 +221,8 @@ async function undo(msg) {
   await save({...TR.restore(state(), f.snap), last: state().last});
   for ( const s of f.marketSnap ?? [] ) await Markets.setMarket(s.id, {supply: {food: s.supply}, index: {food: s.index}});
   await msg.update({[`flags.${MOD}.townTurn.applied`]: false});
+  // B4620: the marks the turn left on the town scenes go with it
+  try { await TownLooks.endFor({towns: f.towns ?? [], since: f.at ?? 0}); } catch (e) { console.warn(`${MOD} | town looks undo`, e); }
 }
 
 /* ------------------------------------------------------------------ */

@@ -2,6 +2,11 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.104.0 (Central Africa has the Kongo, the Luba and Lunda and the Baganda from 1197 (B4690))
+- 0.103.0 (Australia has the Aboriginal nations from 1197 and a share of them after the colonies (B4680))
+- 0.102.0 (The Caribbean has the Taíno from 1197, and after 1500 the Akan, Yoruba and a Taíno share beside the Europeans (B4660))
+- 0.101.0 (Tokens show what grips them (B4632): Frenzy and Rotschreck show on the token for everyone, and a derangement bout shows at the edges of its own player's screen. Drawn on each client, never saved, and they follow each player's effects level. Other modules add looks with api.tokenLooks.register)
+- 0.100.0 (The Inuit in the Arctic's mix from 1197 and in Canada's (B4650))
 - 0.99.0 (Canada's mix before the colonies holds the Cree, the Anishinaabe and the Northwest coast beside the Haudenosaunee, with a share after (B4160))
 - 0.98.1 (Book check fix (ported from PR 655): the Chantry background cites M20 printed page 301, not 139)
 - 0.98.0 (Backgrounds nothing read (B3920): MORE_ATTITUDE_3, MORE_PROMPTS_7, refOf for background page refs, Alternate Identity in law-heat addDeed)

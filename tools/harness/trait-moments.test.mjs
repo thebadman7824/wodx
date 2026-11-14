@@ -84,5 +84,5 @@ test("the modules carry it out: Interactables holds the move, Storyteller draws 
   const tr = src("modules/wodx-chronicle/scripts/traits.mjs");
   assert.match(tr, /Hooks\.on\("wodxSocial"/);
   assert.match(tr, /Hooks\.on\("wodxFightStarted"/);
-  assert.match(JSON.parse(src("modules/wodx-chronicle/module.json")).version, /^0\.(2[2-9]|[3-9]\d)\./);
+  assert.ok(JSON.parse(src("modules/wodx-chronicle/module.json")).version.split(".").map(Number).reduce((a, n) => a * 1000 + n) >= 22000, "Chronicle is 0.22 or later");
 });

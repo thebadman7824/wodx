@@ -2,6 +2,10 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.50.0 (The Bakongo, the Luba and Lunda and the Baganda join the People generator with names from the Kongo court letters, the king lists and the Buganda records (B4690 to B4692))
+- 0.49.0 (Aboriginal Australians join the People generator with names from the colonial journals, the nations for women not named in the records and family names after 1800 (B4680 to B4682))
+- 0.48.0 (The Taíno join the People generator with the caciques' names from the chronicles, the cacicazgos, church names from 1493 and Spanish family names after (B4660 to B4662))
+- 0.47.0 (The Inuit join the People generator with one list of own names for anyone, church given names from the missions and family names from Greenland and Canada (B4650 to B4652))
 - 0.46.0 (People flags (B3925): people-rules peopleFlags, secretKind, WANT_TOPIC; createPeople writes them)
 - 0.45.0 (Canada's first nations join the People generator: the Cree and the Anishinaabe by division and town, the Haida and the Tlingit by the clan of the mother, with family names from the band lists and rolls (B4160 to B4162))
 - 0.44.0 (The Shoshone and the Ute join the People generator, with own names from the treaties, their divisions and bands, and the family names of the rolls (B4150 to B4152))

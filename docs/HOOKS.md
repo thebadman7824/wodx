@@ -26,7 +26,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxPowerShown | actions (a power rolled from its window, with the actor, a target, the power's name, its group, its kind and the character's line) | paperdoll (a sprite token plays its casting move with the effect that fits the power) |
 | wodxEndScene | chronicle | actions, storyteller |
 | wodxEraApplied | chronicle | atmosphere, chronicle, otherworlds |
-| wodxEventFired | chronicle | chronicle (Malkavians who saw it coming), interactables, storyteller (market news) |
+| wodxEventFired | chronicle | chronicle (Malkavians who saw it coming), interactables, storyteller (market news; a great event darkens the sky over the town scenes, B4628) |
 | wodxEventUndone | chronicle | interactables (living tiles resync), storyteller (market news undone) |
 | wodxDreamingGate | otherworlds | storyteller (the crossing log) |
 | wodxFightStarted | combat | chronicle (flaws that bite when a fight starts; a fight at a Black Fury's guarded place), npc (passers-by scatter), storyteller (a fight goes in the log for the pacing note) |
@@ -59,7 +59,9 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxSignal | storyteller | storyteller (Threads of Fate weaves at once for a weight 3 signal, B3650); every post to the shared signal board sends it with the clean signal {key, kind, about, region, weight, what, who, where} |
 | wodxCaravan | storyteller | storyteller (a caravan lost on the road costs the caravan ventures of its markets) |
 | wodxMarketMove | storyteller | storyteller (a raid costs the workshops and trading houses characters have put money into) |
-| wodxTraderBroke | storyteller | storyteller (a trader going broke costs the trading house ventures that back the trader) |
+| wodxTraderBroke | storyteller | storyteller (a trader going broke costs the trading house ventures that back the trader; the shut shop is boarded up on the map, B4625) |
+| wodxHunterStage | storyteller | storyteller (the region's town scenes show the hunters' notices and lanterns, B4623) |
+| wodxContagion | storyteller | storyteller (the sick town's scenes show crosses on doors, the cart for the dead and fog, B4622) |
 | wodxHavenProbe | storyteller | interactables (the probe leaves tracks, a witness, or ash at the haven, B3368); sent with {scene, rival, probe} (B3362) |
 | wodxGrudgeMove | npc | interactables (harm done leaves blood, a witness and traces, B3368); sent with {npc, character, move} (B3348) |
 | wodxWeather | atmosphere | interactables (rain and snow wash evidence outdoors, B3366); Senses reads `api.weather.now()` instead |
@@ -75,12 +77,10 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxInheritance | storyteller | the Inheritance step passed things from the dead to the heir: {dead, heir, done} (B3530) |
 | wodxLever | storyteller | a lever of an institution was pulled, approved by the Storyteller: {actor, institution, key, target} (B3356) |
 | wodxProjectComplication | storyteller | a downtime project met trouble: {actor, task, complication} (B3342) |
-| wodxHunterStage | storyteller (the hunters of a region change stage, B3300) | {region, stage, before, pressure} |
 | wodxHerdStage | storyteller (a district's herd changes stage, B3572) | {sceneId, stage, before, feeds, total} |
 | wodxSiteDraw | storyteller (a draw on shared holy ground, B3582) | {site, role, points, by, strength, max} |
 | wodxSiteQuarrel | storyteller (two claims on shared holy ground quarrel, B3585) | {site, roles, claims} |
 | wodxDayJobDone | npc (a day job ended, B3590) | {master, agent, job, status, faction} |
-| wodxContagion | storyteller (sickness in a town, B3430) | {phase (start, over or end), market, disease} |
 | wodxVenture | storyteller | money put into a venture or taken out, or a seat given: {phase (opened, added, taken, closed or seat), venture} |
 | wodxCultFormed | npc | a following gathered around a character (B3242): {cult, founder} |
 | wodxMarried | npc | a marriage made: {a, b, record} (the record has the rite, register, money and witnesses) |

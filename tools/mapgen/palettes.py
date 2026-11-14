@@ -31,7 +31,7 @@ WALL_WORDS = {"medieval": r"PlasterWood|Wood|Stone|Log", "early": r"PlasterWood|
               "modern": r"wall|concrete|Tyger", "future": r"hull|metal|Hivehall|interior|Bulkhead"}
 NOT_FLOOR = re.compile(r"Grate|Grill|Overlay|Shadow|Water|Snow|Slime|Rain|Hole|Spike|Roof|Fields|Background|transparent|tileset|Cracked|Damaged|Broken|Destroyed", re.I)
 HOME = "moravia"
-TABLEWARE = re.compile(r"Plate|Bowl|Mug|Cup|Jug|Pitcher|Bread|Cheese|Food|Fruit|Tankard|Dish|Pot_|Pan_|Kettle|Loaf|Apple|Meat|Fish|Vegetable|Basket|Ladle|Spoon|Knife", re.I)
+TABLEWARE = re.compile(r"Cutting_?Board|cutting-board|Plate|Bowl|Mug|Cup|Jug|Pitcher|Bread|Cheese|Food|Fruit|Tankard|Dish|Pot_|Pan_|Kettle|Loaf|Apple|Meat|Fish|Vegetable|Basket|Ladle|Spoon|Knife", re.I)
 _SET = 4                                               # assets a palette keeps for each piece
 _SET_CLUTTER = 24                                      # and of the small things, so a table and a shelf hold different ones
 
@@ -40,8 +40,13 @@ def load(path):
     return json.load(open(path, encoding="utf-8"))
 
 
+# the WoDX Chronicle regions whose rooms take a regional pack's furniture (a pack is tagged with the wider region)
+REGION_GROUPS = {"east-asia": ("japan", "china", "korea", "taiwan", "east-asia")}
+
+
 def region_key(region, catalogue):
     known = {HOME} | {r for e in catalogue for r in (e.get("regions") or [])}
+    region = next((g for g, members in REGION_GROUPS.items() if region in members), region)
     return region if region in known else HOME
 
 
@@ -80,7 +85,9 @@ def choose(year, region, wealth, rng, catalogue):
     pool = [e for e in catalogue if _fits(e, band, reg)]
     own = [e for e in pool if band in e["bands"]]
     styles = [s for s in STYLES.get(band, []) if any(e["style"] == s for e in own)] or sorted({e["style"] for e in own})
-    main = (styles[0] if band == "medieval" else rng.choice(styles[:2])) if styles else None   # FA Ashen for the middle ages
+    local = sorted({e["style"] for e in own if reg in (e.get("regions") or [])})
+    if local: styles = local + [s for s in styles if s not in local]   # a region's own pack first where it has one
+    main = (styles[0] if band == "medieval" or local else rng.choice(styles[:2])) if styles else None   # FA Ashen for the middle ages
     ranked = [main] + [s for s in styles if s != main]
     order = sorted(WEALTH, key=lambda w: abs(WEALTH.index(w) - WEALTH.index(wealth)))
     sets = {}

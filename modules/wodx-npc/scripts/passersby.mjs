@@ -236,7 +236,8 @@ export function build({MOD, esc, isActiveGM, chron}) {
       // B3321: the town's condition thins or fills the street
       let town = null;
       try { town = game.modules.get("wodx-storyteller")?.api?.upkeep?.towns?.ofScene?.(scene) ?? null; } catch (e) { town = null; }
-      const people = Math.min(num(max) > 0 ? num(max) : PR.MAX_CAP, Math.round(PR.crowdSize({year: time.year || year(), hour: time.hour, area: street.area, density: crowd.density, max, place}) * PR.townCrowd(town)));
+      const people = Math.min(num(max) > 0 ? num(max) : PR.MAX_CAP, Math.round(PR.crowdSize({year: time.year || year(), hour: time.hour, area: street.area, density: crowd.density, max, place}) * PR.townCrowd(town)
+        * PR.herdCrowd(PR.herdStageAt(scene.flags?.["wodx-storyteller"]?.herd, game.time.worldTime), time.hour)));
       const beasts = crowd.animals ? PR.animalCount({year: time.year || year(), hour: time.hour, area: street.area, density: crowd.density, max, people, place}) : 0;
       const nP = left.filter(t => !flagOf(t).animal).length, nA = left.filter(t => flagOf(t).animal).length;
       const make = [];
