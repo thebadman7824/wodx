@@ -110,3 +110,114 @@ export function nightText(n) {
   const pulls = (n.pulls ?? []).filter(p => p.text).map(p => ` ${p.name} (${p.actorName}): ${p.text}`).join("");
   return `${n.opening} ${enc}${n.rumour ? ` Rumour: ${n.rumour}` : ""}${pulls}`.trim();
 }
+
+/* ---- B3924 (no-effect audit w2): story-aid things made real, and the night's people put on a scene ---- */
+
+const cap1 = s => String(s ?? "").charAt(0).toUpperCase() + String(s ?? "").slice(1);
+const esc1 = s => String(s ?? "").replace(/[<>&"]/g, c => ({"<": "&lt;", ">": "&gt;", "&": "&amp;", "\"": "&quot;"})[c]);
+/** A short item name from an aid's text: the words before "that", "with", "from", "of a" or a comma, at most six. */
+export function thingName(text = "") {
+  const s = String(text ?? "").trim().replace(/^(a|an|the)\s+/i, "");
+  const head = s.split(/\s+(?:that|which|with|whose|from|carved|bound|holding|home to)\b|,/i)[0] ?? s;
+  return cap1(head.split(/\s+/).slice(0, 6).join(" ")) || "A strange thing";
+}
+
+/**
+ * The item a relic, fetish or talisman aid becomes, built by WoDX Library's crafting kits so it has the same powers and
+ * Use buttons as a made one. kits: {kitFor, rowOf, rows(line)}; rand: a seeded stream for the fetish pick.
+ * Returns item data, or null (a dream or vision, or the kit is missing).
+ *   relic     the inquisitors' enshrined relic: True Faith = the rating (1 to 3), a prayer once a story
+ *   talisman  a hedge magic talisman of the rating's level: dice to one roll, the rating in charges
+ *   fetish    a Werewolf fetish of the rating's level, its spirit the aid's own, attuned and woken in WoDX Actions
+ */
+export function aidItem(a = {}, {kitFor = () => null, rowOf = () => null, rows = () => [], rand = Math.random} = {}) {
+  const r = Math.max(1, Math.min(5, Math.round(Number(a.rating) || 1)));
+  const name = thingName(a.text);
+  const why = `<p>${esc1(cap1(a.text))}.</p><p>A story aid (WoDX Storyteller): the Storyteller decides where it is found.</p>`;
+  const tag = item => ({...item, name, flags: {...item.flags, "wodx-storyteller": {aid: {kind: a.kind, count: a.count ?? 0, nonce: a.nonce ?? 0}}},
+    system: {...item.system, description: why + (item.system?.description ?? "")}});
+  if ( a.kind === "relic" ) {
+    const kit = kitFor("hunter"), row = rowOf("hunter", "enshrine-relic");
+    if ( !kit?.flagFor || !row ) return null;
+    const rating = Math.min(3, r);
+    const flag = kit.flagFor(row, {successes: rating * 5, task: {opts: {}}});
+    return tag({type: "Item", img: "icons/svg/holy-shield.svg", system: {description: `<p>${esc1(row.does)}</p><p>${esc1(flag.ref)}.</p>`, reference: flag.ref},
+      flags: {"wodx-library": {wonder: flag}}});
+  }
+  if ( a.kind === "talisman" ) {
+    const kit = kitFor("hedge"), row = rowOf("hedge", `enchant-${r}`);
+    if ( !kit || !row ) return null;
+    const [item] = kit.itemsFor(row, {successes: r, task: {opts: {power: "dice", amount: Math.min(r, row.most ?? r), uses: "charges"}}});
+    return item ? tag(item) : null;
+  }
+  if ( a.kind === "fetish" ) {
+    const kit = kitFor("garou");
+    const list = (rows("garou") ?? []).filter(w => w.kind === "fetish");
+    const at = list.filter(w => Number(w.level) === r);
+    const pool = at.length ? at : list;
+    if ( !kit || !pool.length ) return null;
+    const row = pool[Math.floor(rand() * pool.length) % pool.length];
+    const sm = String(a.text).match(/([\w-]+\s+)?spirit(\s+of\s+(?:the\s+)?[\w-]+)?/i);
+    const spirit = sm ? `${sm[1] && !/^(an?|the|with|to)\s/i.test(sm[1]) ? sm[1] : ""}spirit${sm[2] ?? ""}`.trim() : row.spirit;
+    const [item] = kit.itemsFor(row, {successes: 1, task: {spirit}});
+    return item ? tag({...item, system: {...item.system, description: `<p>It works as a ${esc1(row.name)}.</p>${item.system?.description ?? ""}`}}) : null;
+  }
+  return null;
+}
+
+/** Words that name who an encounter brings, with the trade WoDX Creation's people tables know them by. */
+export const WHO = [
+  [/\bwatch(man|men)?\b|\bguards?\b|\bsentr(y|ies)\b|\bpolice\b|\bofficers?\b|\bcops?\b/i, "watch"],
+  [/\bfriars?\b|\bpriests?\b|\bmonks?\b|\bnuns?\b|\bpilgrims?\b/i, "priest"],
+  [/\bmerchants?\b|\bpedlars?\b|\bpeddlers?\b|\btraders?\b|\bhawkers?\b/i, "merchant"],
+  [/\bbeggars?\b|\bvagrants?\b|\bhomeless\b/i, "beggar"],
+  [/\bcarters?\b|\bcarriers?\b|\bdrivers?\b|\bcoachm[ae]n\b/i, "carter"],
+  [/\bsoldiers?\b|\bmen-at-arms\b|\bmercenar(y|ies)\b|\btroops?\b/i, "soldier"],
+  [/\bthieves\b|\bthief\b|\bcutpurses?\b|\bbandits?\b|\brobbers?\b|\bthugs?\b|\bgang\b|\bmuggers?\b/i, "thief"],
+  [/\bdrunks?\b|\bdrinkers?\b|\brevell?ers\b/i, "drinker"],
+  [/\bchild(ren)?\b|\bboy\b|\bgirl\b|\burchins?\b/i, null] // children are never made here (age floor): the Storyteller plays them
+];
+const COUNT = {a: 1, an: 1, one: 1, two: 2, pair: 2, couple: 2, three: 3, four: 4, five: 5, six: 6, several: 3, few: 3, some: 2};
+
+/**
+ * Who an encounter line brings onto a scene: [{role, count}] with role a key of WHO's roles ("watch", "priest", ...) or
+ * "someone". Counts come from the number word just before the noun (a, two, a pair of ...), held to 1..6. A line that
+ * names nobody brings one "someone". Children are left out.
+ */
+export function peopleIn(text = "") {
+  const s = String(text ?? "");
+  const out = [];
+  let kids = false;
+  for ( const [re, role] of WHO ) {
+    const m = s.match(re);
+    if ( !m ) continue;
+    if ( !role ) { kids = true; continue; }
+    const before = s.slice(0, m.index).toLowerCase().split(/[^a-z-]+/).filter(Boolean).slice(-3);
+    // "The watch, two with lanterns": a number word just after the noun counts too
+    const after = s.slice(m.index + m[0].length).toLowerCase().split(/[^a-z-]+/).filter(Boolean).slice(0, 1).filter(w => COUNT[w] > 1);
+    const word = [...before].reverse().find(w => COUNT[w]) ?? after[0];
+    const plural = /s$|men$|ies$|ves$/i.test(m[0]);
+    const count = Math.max(1, Math.min(6, word ? COUNT[word] : (plural ? 2 : 1)));
+    out.push({role, count});
+  }
+  if ( !out.length && !kids ) out.push({role: "someone", count: 1});
+  return out;
+}
+
+/** The trades in WoDX Creation's people tables that fit each role, as words in the trade's name. */
+export const ROLE_TRADE = {
+  watch: /watch|guard|constable|police|security|bouncer|sergeant|retainer/i,
+  priest: /priest|friar|monk|nun|imam|lama|dervish|ascetic|temple|pilgrim|clergy/i,
+  merchant: /merchant|trader|shop|pedlar|stall/i,
+  beggar: /beggar|vagrant/i,
+  carter: /carter|driver|coachman|courier|rider|porter|bearer|boatman|ferryman/i,
+  soldier: /soldier|man-at-arms|mercenar|mamluk|warrior|garrison|knight/i,
+  thief: /thief|gang|fixer|informer|smuggl|gambler/i,
+  drinker: /innkeeper|publican|bartender|brewer|tanner|labour|factory|apprentice|weaver/i
+};
+/** A trade for a role from the era's own trade list, seeded; "any" when none fits (Creation then picks). */
+export function tradeFor(role, trades = [], rand = Math.random) {
+  const re = ROLE_TRADE[role];
+  const fit = re ? trades.filter(t => re.test(String(t))) : [];
+  return fit.length ? fit[Math.floor(rand() * fit.length) % fit.length] : "any";
+}

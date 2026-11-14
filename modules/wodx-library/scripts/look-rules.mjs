@@ -237,9 +237,23 @@ export function describeMarks(m) {
   else if ( m.face === "monstrous" ) bits.push("with a face out of a nightmare");
   else if ( m.face === "striking" ) bits.push("with a face people remember");
   else if ( m.face === "ugly" ) bits.push("with an ugly face");
+  // B3925: a made person's own look (WoDX Creation's people), as a witness remembers it
+  for ( const f of (m.features ?? []).slice(0, 2) ) bits.push(featureWords(f));
   const dress = (m.dress ?? []).map(d => String(d).toLowerCase());
   if ( dress.length ) bits.push(`wearing ${dress.length > 1 ? `${dress.slice(0, -1).join(", ")} and ${dress.at(-1)}` : dress[0]}`);
   const cond = (m.condition ?? []).map(c => COND_SEEN[c]).filter(Boolean);
   if ( cond.length ) bits.push(`with ${cond.length > 1 ? `${cond.slice(0, -1).join(", ")} and ${cond.at(-1)}` : cond[0]}`);
   return [line, ...bits].join(", ");
+}
+
+/* ---- B3925: a person's own look (WoDX Creation's people tables), in witness descriptions ---- */
+
+/** Looks a passing witness would not see or would not remember as a mark. */
+const NOT_SEEN = /quick to offer help|uneasy in the dark|stutters when lying|counts coins|for their work|prays under/i;
+/** The features a witness would remember, from flags["wodx-library"].features: at most two, the unseen left out. */
+export const noticedFeatures = list => (Array.isArray(list) ? list.map(f => String(f ?? "").trim()).filter(f => f && !NOT_SEEN.test(f)).slice(0, 2) : []);
+/** A feature as it reads after a comma: "with a scar through one eyebrow", "missing two fingers". */
+export function featureWords(f) {
+  const s = String(f ?? "").trim().toLowerCase();
+  return /^(an?|old|ink|fine|freckled)\b/.test(s) ? `with ${s}` : s;
 }

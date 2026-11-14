@@ -200,7 +200,7 @@ Next free block: B4610
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Future Darkness disasters move the markets (used B3900-B3923) | Storyteller |
+| B3900-B3929 | A made person's want, secret and look as game data (used B3900-B3927) | Creation |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
@@ -210,6 +210,7 @@ Next free block: B4610
 | B4130-B4139 | Missouri village peoples in the People generator (used B4130-B4132) | Creation, Chronicle |
 | B4140-B4149 | Crow, Blackfoot and Arapaho names in the People generator (used B4140-B4142) | Creation, Chronicle |
 | B4150-B4159 | Shoshone and Ute names in the People generator (used B4150-B4152) | Creation, Chronicle |
+| B4160-B4169 | Canada first nations names in the People generator (used B4160-B4162) | Creation, Chronicle |
 | B4600-B4609 | Show, don't tell: a visible: line on every feature's release note (used B4600) | tools (no module) |
 <!-- decision-index:end -->
 
@@ -6795,6 +6796,18 @@ No-effect audit w1. Several dated events in the chronicle passed with only a lin
 ## B3923. Future Darkness disasters reach the markets (2026-11-14)
 No-effect audit w1. Only four Future Darkness events (the 1994 crash, the 1996 Collapse and two plagues) brought market news; the branch's wars, famines and its last Maelstrom changed nothing a player could buy. WoDX Storyteller now gives them the presets that already exist: war for the Mideast Meltdown, the First and Second Corporate Wars and the orbital war; famine for the Midwest drought and the food crash; a crash for the Third Corporate War in the Net; and a collapse for the Seventh Maelstrom over Moravia in both cascades that have it. Several lines describe the same happening, so only one event id per happening carries the news, and a test checks that no year gets the same card twice. The towns read the same news, as before. Reverse: remove the entries.
 
+## B3924. The night's people and things become real (2026-11-14)
+No-effect audit w2. The night's encounters went to a journal page and the story aids named relics, fetishes and talismans that nothing could use. Now, when the Storyteller approves a night, a card lists each encounter in the physical world with a "Put it on the scene" button. It reads who the line brings (the watch, a friar, soldiers, a merchant, a beggar, and so on, with any number word), makes them with WoDX Creation's people generator in the era's own trades, at most six, and puts their tokens hidden at the middle of the scene in view. A line that names nobody brings one person; children are never made this way (the Storyteller plays them). Penumbra and Shadowlands encounters keep no button, since they are spirits and the dead. A relic, fetish or talisman aid is made, when approved, by WoDX Library's crafting kits: a relic is an enshrined inquisitors' relic of True Faith equal to the rating (at most 3), a talisman is a hedge magic talisman of the rating's level with that many charges, and a fetish is a Werewolf fetish of the rating's level holding the aid's own spirit. Each goes to the Items folder "WoDX story aids" and the journal page links it; nothing lands on a sheet until the Storyteller hands it over. These are house rules. Reverse: remove the card and the item step.
+
+## B3925. Made people carry what they want, hide and look like (2026-11-14)
+No-effect audit w3, Creation part. WoDX Creation's people generator wrote the want, the secret and the look into the sheet's note only. Each person it makes now also carries: the want as flags["wodx-npc"].want and two lines on their own talk sheet ("[offer] a favour" and what they say about it), so a character can ask and the Storyteller can mark it met (B3926); the secret as one WoDX NPC secret, its kind read from the words (a debt, a crime, heresy, a breach of the Masquerade, or something else), weight 1, with a fixed id so a find sticks, so it can be dug out like any other and gives a hook when found; and the look as flags["wodx-library"].features for witness descriptions (B3927). The note stays as it was. Lifepath people come through the same step. Reverse: remove peopleFlags from createPeople.
+
+## B3926. Seeing to what someone wants (2026-11-14)
+No-effect audit w3, NPC part. A made person's want was text in the sheet's note. WoDX NPC now reads flags["wodx-npc"].want ({topic, text, met}). When a character asks that person about the topic (WoDX Creation sets "a favour", offered on the person's own talk sheet), the talk card carries the want, and the Storyteller's copy shows it with a "They saw to it" button. Pressing it moves the person's attitude toward that character up one step (the attitude track's own change, with the reason), marks it met for that character and posts a line to the Storyteller; a second press for the same character does nothing. Whether the deed was done is the Storyteller's call. Stored wanted descriptions keep up to two features from WoDX Library. House rule. Reverse: remove the button.
+
+## B3927. Witnesses remember a person's own look (2026-11-14)
+No-effect audit w3, Library part. A made person's look (a scar through one eyebrow, a heavy limp) sat in the sheet's note and nothing read it. WoDX Library's witness description now adds up to two of the person's features, kept in flags["wodx-library"].features, after the dress and size. Looks a passing witness would not see or remember as a mark (quick to offer help, uneasy in the dark, stutters when lying, counts coins, old or young for the work, prays under the breath) are left out. A disguise does not hide a scar, so features stay under one. House rule. Reverse: remove the features step.
+
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
 
@@ -6954,6 +6967,21 @@ Reverse: edit the lists in data/people-basin.mjs.
 WoDX Creation. Before 1800 an own name alone; from 1800 a church given name and a family name from the rolls. No church names before 1800: no mission held the Basin.
 
 Reverse: change towns or earlyChurch in data/people-basin.mjs.
+
+## B4160. Canada's first nations beside the Haudenosaunee (2026-11-14)
+WoDX Creation and Chronicle. Canada before the colonies was only Haudenosaunee; it now holds the Haudenosaunee 35, the Cree 30, the Anishinaabe 25 and the Haida and Tlingit 5 each (the Northwest coast stands under Canada, as no region of its own holds it). After the French come they keep a share, then 1 to 3 each, and the Cree and Anishinaabe 2 each today. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old canada mixes in world-rules.mjs and drop canadaTables from people-world.mjs.
+
+## B4161. Names from the numbered treaties and the coast records, fewer than 300 (2026-11-14)
+WoDX Creation. The lists come from Treaties 1 to 9, the Robinson treaties, the Great Lakes treaties, the Hudson's Bay journals, the Russian and mission records of the coast and the band lists since. Each people has fewer than 300 names; the Haida and Tlingit lists are short.
+
+Reverse: edit the lists in data/people-canada.mjs.
+
+## B4162. Divisions and towns, coast clans (2026-11-14)
+WoDX Creation. Before 1800 a Cree or Anishinaabe bears an own name alone, and a woman not named in the records is "a woman of" a division or town (the Swampy Cree, Bawating); a Haida bears the Raven or Eagle side of the mother and a Tlingit the clan of the mother (of the Kiks.ádi clan). From 1800 a church given name and a family name from the band lists and rolls.
+
+Reverse: change towns or clans in data/people-canada.mjs.
 
 ## B4600. Show, don't tell (Ben, 2026-11-14)
 Ben's standing rule: whatever happens in the game world must show on the map or screen wherever it can, not only be
