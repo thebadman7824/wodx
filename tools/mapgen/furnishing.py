@@ -119,7 +119,7 @@ def _place(room, sp, pal, R):
     sizes = [1, .75] if W * H <= 2 else [1]                     # a small piece may shrink to fit between walkways
     cands, k = [], 1
     for k in sizes:
-        cands = next((c for c in (room.candidates(W * k, H * k, r, keep_windows=base[0] in ("chest", "store")) for r in rules) if c), [])
+        cands = next((c for c in (room.candidates(W * k, H * k, r, keep_windows=base[0] in ("chest", "store") or bool(C.STORE_PIECE.search(entry["path"]))) for r in rules) if c), [])
         if cands: break
     if not cands: return []
     if C.BED.search(entry["path"]) or C.FIRE.search(entry["path"]):   # a bed kept well away from a fire, and a fire from a bed
@@ -271,7 +271,7 @@ def _along_walls(room, pal, R, dense):
         if max(aw, ah) > (3 if room.iw * room.ih >= 40 else 2): continue      # a big hall or shed takes bigger pieces
         sc = .75 if max(aw, ah) <= 1 and room.iw * room.ih < 40 else 1.0
         fw, fh = aw * sc, ah * sc
-        kw = order[k % len(order)] in ("chest", "store")       # nothing stored pushed up under a window
+        kw = order[k % len(order)] in ("chest", "store") or bool(C.STORE_PIECE.search(e["path"]))   # nothing stored under a window
         room.placing = e["path"]                               # stored goods score best touching other stored goods
         spots = room.candidates(fw, fh, "wall", keep_windows=kw)
         if not spots and STACKED.search(room.name):           # a shed's stacks go on across the floor, each by another
