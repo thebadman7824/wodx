@@ -53,8 +53,8 @@ async function makePack() {
     const get = n => game.actors.find(a => a.folder?.id === folder.id && a.name === n);
     // A sheet kept from an earlier run may have lost an item (a power used up or deleted by hand): put back any that is missing (B3462)
     const mk = async (name, type, system, items) => {
-        const had = get(name);
-        if (!had) return Actor.create({ name, type, folder: folder.id, system, items });
+        // Also after a fresh create: a lane reset from a clean copy still showed no Arcanos on the new sheet
+        const had = get(name) ?? await Actor.create({ name, type, folder: folder.id, system, items });
         const gone = items.filter(it => !had.items.some(i => i.type === it.type && i.name === it.name && i.system?.type === it.system.type));
         if (gone.length) await had.createEmbeddedDocuments("Item", gone);
         const fix = items.flatMap(it => had.items.filter(i => i.type === it.type && i.name === it.name && i.system?.type === it.system.type && Number(i.system?.value ?? 0) !== it.system.value)
@@ -121,7 +121,8 @@ export async function run() {
         await step("wraith sheet read", async () => {
             const i = A().wraithInfo(ada);
             ok("wraith sheet read", i.pathos.temp === 5 && i.passions.length === 1 && i.fetters.length === 1 && i.arcanoi[0]?.value === 3 && i.memoriam === 2 && i.hasCorpusTrack,
-                { info: { pathos: i.pathos, angst: i.angst, corpus: i.corpus, passions: i.passions.length, fetters: i.fetters.length, arcanoi: i.arcanoi, memoriam: i.memoriam, profile: A().getKind(ada) } });
+                { info: { pathos: i.pathos, angst: i.angst, corpus: i.corpus, passions: i.passions.length, fetters: i.fetters.length, arcanoi: i.arcanoi, memoriam: i.memoriam, profile: A().getKind(ada) },
+                  items: ada.items.map(x => `${x.type}|${x.name}|${x.system?.type ?? ""}|${x.system?.value ?? ""}`) });
         });
 
         await step("use an Arcanos", async () => {

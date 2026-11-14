@@ -78,7 +78,8 @@ export async function run() {
             pk = await makePooka();
             const i = A().c20Info(pk);
             ok("versions; the sheet's Arts, Realms and Tempers are read", !foundry.utils.isNewerVersion("3.9.0", A().version) && i.arts.metamorphosis === 3 && i.realms.actor === 3 && i.realms.fae === 2 && i.glamour.perm === 5 && i.seeming === "wilder",
-                { actions: A().version, arts: i.arts, realms: i.realms, glamour: i.glamour, seeming: i.seeming });
+                { actions: A().version, arts: i.arts, realms: i.realms, glamour: i.glamour, seeming: i.seeming,
+                  items: pk.items.filter(x => /realm|art/.test(x.system?.type ?? "")).map(x => `${x.type}|${x.name}|${x.system?.type}|${x.system?.label ?? ""}|${x.system?.value}`) });
         });
         await step("the menu follows the sheet's choice: Changeling 20th", async () => {
             let seen = null;
