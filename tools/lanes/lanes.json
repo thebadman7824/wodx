@@ -5,8 +5,9 @@
   "knownGood": "D:/WoDX/testbed-known-good",
   "backups": "D:/WoDX/Backups",
   "lockMaxMinutes": 180,
-  "_ignoreSettings": "World settings that change on their own while a world is open (a lease, the sky, applied weather, the healing clock, the last time a GM client was ready).",
-  "ignoreSettings": ["oh-you-dead.writerLease", "wodx-actions.sky", "wodx-atmosphere.applied", "wodx-actions.healClock", "wodx-actions.lastGmReady"],
+  "_ignoreSettings": "World settings that change on their own while a world is open (a lease, the sky, applied weather, the healing clock, the last time a GM client was ready), and the first-run notes the effects modules write when a GM first loads the world (B4701).",
+  "ignoreSettings": ["oh-you-dead.writerLease", "wodx-actions.sky", "wodx-atmosphere.applied", "wodx-actions.healClock", "wodx-actions.lastGmReady",
+    "fxmaster.legacyCleanupVersion", "fxmaster.releaseMessage", "sequencer.update-notice-shown-version", "tokenmagic.presets"],
   "lanes": [
     {"id": 1, "port": 30000, "dataPath": "%LOCALAPPDATA%/FoundryVTT", "autoReset": false},
     {"id": 2, "port": 30020, "dataPath": "D:/WoDX/FoundryData-lane2", "autoReset": true},
