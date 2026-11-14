@@ -2,7 +2,6 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 3.90.0 (The Storyteller's Hand in WoDX Actions (B4869-B4873, Ben's picks x1, x2, x4, t2, t3). Witnesses of a reveal now react by the book rule for the line (the Delirium, the Veil, Revelation, the Mists, Hysteria) without a button, act on the map, and the breach and what they know are recorded at once (setting "Witnesses react on their own", on). A botched frenzy runs to the end of the scene and then is rolled off turn by turn; the Thrall of the Wyrm lets go when the Garou drops or the fight ends; ending either by hand stays. The prince's court calls Blood Hunts by itself at each faction turn (setting "The court calls Blood Hunts", on; a player character's hunt waits in the approval queue). Persuading or charming another Kindred into a favour leaves a trivial or minor boon owed)
 - 3.89.0 (Great powers leave lasting damage where they strike: water, fire, broken ground and big blasts scar the map, with Undo on the card (B3759))
 - 3.88.0 (Powers that reach the world show it: ground areas, town-wide blows, plague and taint put WoDX Chronicle's looks on the map (B3758))
 - 3.87.0 (Powers that reach the world: 48 powers by name flood, burn or shake a town, sicken it, foul or cleanse a place, sway its mood, or leave deep water, fire or broken ground on the scene; the Cast and Storyteller effect windows get a "Reaches the world" choice (B3757))
