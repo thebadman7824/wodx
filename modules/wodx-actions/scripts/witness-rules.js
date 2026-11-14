@@ -99,3 +99,37 @@ export function placeNote(mode, secret, event = "") {
     : "Elysium: no rumour goes out to the town; the Kindred here keep the secret.";
   return "";
 }
+
+/* ---- The witness step (B4869-B4870, Ben's Storyteller's Hand picks x1 and x2, 14 November 2026) ---- */
+
+/**
+ * What a mortal witness does, by the reaction its line's book rule gives (the Delirium, W20 p. 263 and DA:W p. 97;
+ * the Veil, Mummy: The Resurrection p. 140; Revelation, Demon: The Fallen pp. 253-254). Acts:
+ *   freeze  falls still (Completely immobilized for the scene)
+ *   flee    Afraid for the scene: keeps away from or runs from the one it saw
+ *   fight   goes for it (a fight through the fight starter)
+ *   null    nothing the map shows (disbelief, curiosity, calm)
+ */
+const ACT_OF = {
+  "catatonic fear": "freeze", catatonia: "freeze", collapse: "freeze", rapt: "freeze",
+  panic: "flee", terror: "flee", "controlled fear": "flee",
+  berserk: "fight", bloodlust: "fight", anger: "fight"
+};
+export const witnessAct = reaction => ACT_OF[String(reaction ?? "").toLowerCase()] ?? null;
+
+/** The line rule a revealed actor's profile brings on mortal witnesses, or null for none (the Masquerade alone). */
+export const LINE_RULE = { lupine: "delirium", mummy: "veil", demon: "revelation", fae: "mists", wraith: "hysteria" };
+export const lineRule = secret => LINE_RULE[secret] ?? null;
+
+/**
+ * Does the witness keep what it saw? The Delirium's memory column (forgets, rationalizes, remembers); the Veil by the
+ * same Willpower bands (a house reading: the book gives reactions only); Revelation by the witness's roll; the Mists by
+ * Banality (a mortal of 6 or more forgets, C20 pp. 269-270, a house reading of "within a scene"); other kinds remember.
+ */
+export function remembers(rule, { memory = null, willpower = 3, reveal = null, banality = 6 } = {}) {
+  if ( rule === "delirium" ) return memory !== "forgets";
+  if ( rule === "veil" ) return Number(willpower) >= 7;
+  if ( rule === "revelation" ) return reveal === "copes";
+  if ( rule === "mists" ) return Number(banality) < 6;
+  return true;
+}

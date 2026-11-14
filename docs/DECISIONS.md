@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4960
+Next free block: B5040
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -232,8 +232,12 @@ Next free block: B4960
 | B4800-B4809 | Storyteller tools for the lone player: add experience (used B4800-B4806) | Solo |
 | B4810-B4819 | Rothenstein Rebuilt: Ways laid by the builder, old exits and doors to the places inside (used B4810-B4813) | Storyteller |
 | B4850-B4859 | Rothenstein Rebuilt: book one's twist web (six chains, locks, one twist a week) (used B4850-B4853) | Chronicle |
+| B4860-B4889 | The Storyteller's Hand: what is approved happens, the world acts on its own (Ben's desk picks, 14 November 2026) (used B4860-B4873) | Chronicle, Storyteller, NPC |
 | B4900-B4909 | Sami names (used B4900-B4902) | Creation, Chronicle |
+| B4910-B4919 | Rothenstein Rebuilt: book one fronts, roles and clue carriers (spine part two) (used B4910-B4917) | Chronicle |
 | B4950-B4959 | Tuareg names (used B4950-B4952) | Creation, Chronicle |
+| B5000-B5009 | Moro names (used B5000-B5002) | Creation, Chronicle |
+| B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7433,6 +7437,76 @@ WoDX Chronicle. Desk pick pl10: when one twist of a pair is revealed, its partne
 
 Reverse: none needed; the notes only advise.
 
+## B4860. New worlds start at Balanced (2026-11-14)
+WoDX Chronicle. Ben's pick a1 on the Storyteller's Hand desk. A world that has never had an automation level set moves to Balanced once, at its first start on the active Storyteller's client (setting automationSeeded). The Live world (rothenstein-live) is never moved; a world where someone picked a level, or whose automationBase is already set, is left alone; while the Lone Chronicle is on the move waits until the switch goes off. The testbed lanes reset to snapshots, so each lane starts at Balanced after a reset.
+
+Reverse: set START_LEVEL to null in automation-rules.mjs, or pick Hands on in the approval queue window.
+
+## B4861. The world's own hand sends people in plain sight (2026-11-14)
+WoDX Storyteller, reach.mjs and reach-rules.mjs. Ben, 14 November 2026: "I'm happy with gating things with human intelligence, but only if something actually happens afterwards." When a system acts on someone, the quick extras (kits-rules.mjs, house figures) are put on that character's scene a few squares away, visible, and a fight starts through WoDX Combat's fight starter when they mean harm (its own Auto or Suggest setting still applies). The Storyteller's card on each move has Send them away. Setting reachOn (default on). Which extras and how many is a house reading: the watch two, a patrol three, soldiers three, a raid one leader and three helpers, a purge six.
+
+Reverse: turn off "The world acts on its own".
+
+## B4862. An approved road encounter is put on the map (2026-11-14)
+WoDX Storyteller. Pick w3. Approving the encounter reads its words: beasts (wolves, dogs) and armed men (bandits, robbers, a gang) come as extras who fight; anyone else comes as people made by WoDX Creation, as the night card's Put it on the scene does. They stand by the traveller on the scene the trip reached.
+
+Reverse: the encounter handler in core.mjs logs again instead of calling reach.road.
+
+## B4863. Every institution lever does what it says (2026-11-14)
+WoDX Storyteller. Pick w2. Each of the 55 levers has moves (reach-rules.mjs LEVERS): a rumour, the law's heat raised or lowered, an arrest, people sent, hunter pressure, a town event (new LEVER_TOWN events: curfew, levy, prices, works, decree, short supplies, patrol, martial law, a change of hands), months of wages gained or lost, a seat given or taken, the seat holders' attitude, or a card of what is found (money and standing, where someone was seen, the closed shelves). A lever turned on someone other than the asker uses its "against" moves; with no target or on the asker, its "for" moves. "Trouble in an institution" on a player character's seat, once approved, lands: a scandal costs the seat and starts talk, a contest drops the holder a rank. House readings.
+
+Reverse: approveLever logs only, as before.
+
+## B4864. An approved raid or purge sends hunters (2026-11-14)
+WoDX Storyteller. Pick w4. Besides the rumour and the torches, the hunters go to the target: by day to a day sleeper's haven when WoDX knows it and the token is there, otherwise to wherever the target stands, and a fight starts. A purge goes after up to four known ones of the same kind in the region.
+
+Reverse: drop the reach.raid call in hunters.mjs approve.
+
+## B4865. The law comes for the wanted (2026-11-14)
+WoDX Chronicle and Storyteller. Pick w5. At Wanted (the warrant stage) and at a manhunt, Chronicle calls wodxLawStage and the watch (from 1600 the police) come to the culprit's scene. The culprit's players get a card: Go with them (the arrest goes to the trial as before, and the culprit's and the watch's tokens leave the scene) or Resist (a fight, and a fight deed on the heat). An NPC culprit goes with them. Through a manhunt a patrol comes each night (20:00 to 05:00), and by day (09:00 to 16:00) the law knocks at a vampire's haven when the token is there; one visit a culprit a day. The Storyteller's Make the arrest and Let it go buttons stay. Hours are by world time, a house reading.
+
+Reverse: turn off "The world acts on its own"; the cards stay as before.
+
+## B4866. The Veil's two lowest bands act (2026-11-14)
+WoDX Storyteller. Pick x3. Failing (1 to 2): each breach also adds a breach deed to the law's heat on the culprit and a point of hunter pressure more. Torn (0): the same with two points, every region's hunters gain a point of pressure each weekly turn, and big rumours spread twice a night. Torn ends when the Veil is mended on the ledger, as before.
+
+Reverse: veilMoves in reach-rules.mjs returns the holding moves for every band.
+
+## B4867. Threads of Fate endings and three projects write back on their own (2026-11-14)
+WoDX Storyteller. Picks w1 and w6. Each of the twenty kinds of ending write-back on the cards has moves (reach-rules.mjs WRITE_BACKS): the region's factions regard the player characters a step better or worse, the story's NPC and the factions' leaders remember them (NPC memory kinds), grudges pass to heirs, a ledger debt or boon, debts the story touched paid, hunter pressure with a lead on whom the story was about, or a town event. The Storyteller's card lists what was written. A finished language project puts the language on the sheet (from what it makes or its name), a trail names the scene and region where the quarry's token is, and research puts journal pages whose names match its subject into the character's codex. Business and Herd dots stay the Storyteller's to award (B850). House readings.
+
+Reverse: endStory posts the to-do list again; projectDone returns at once.
+
+## B4868. An absent player's character goes along with the party (2026-11-14)
+WoDX Storyteller and NPC. Pick w8. Marked away with "WoDX plays their character", the character gets the standIn flag: when a present player's character arrives on a scene, it is moved there too, and WoDX NPC takes its fight turns as it does an NPC's. Unticking, or the end of the session, takes the flag off. Its turn plan drops spending Willpower, using a power and taking a hostage, so it spends nothing of the player's.
+
+Reverse: setAbsent no longer sets the flag.
+
+## B4869. Witnesses react by their line's rule on their own (2026-11-14)
+WoDX Actions. Picks x1 and x2. When a shapechanger in Crinos is seen, or an act surely shows what someone is, each mortal witness rolls the line's rule hidden from players (rule 19): the Delirium (W20 p. 263, DA:W p. 97), the Veil (Mummy: The Resurrection p. 140), Revelation (Demon: The Fallen pp. 253-254), the Mists, or Hysteria (the scene's Shroud drops). Catatonia, collapse and rapt make the witness Immobilized for the scene, panic and terror make it Afraid, berserk and bloodlust start a fight. Who keeps it: the Delirium's memory column, the Veil at Willpower 7 or more, Revelation when the witness copes, the Mists below Banality 6 (house readings). Those who keep it go on the Masquerade record and know the kind from then on; a startled supernatural witness knows the kind at once. Setting autoWitness (on).
+
+Reverse: turn off "Witnesses react on their own".
+
+## B4870. Those who saw know (2026-11-14)
+WoDX Actions. Pick x2. The knows flag is set for witnesses who keep a reveal and for startled ones, without the button; an unlinked passer-by shares its base actor and is left out.
+
+Reverse: drop the knows writes in witnessStep and startledCard.
+
+## B4871. Derangements drawn by cause; grief rolled (2026-11-14)
+WoDX Chronicle, NPC, Library. Pick t2. Two causes join the table: loss (fugue, regression, obsession, paranoia, hysteria) and binding (multiple personalities, schizophrenia, paranoia, fugue), house picks. When someone close dies, those who loved them roll Willpower at 7 (8 for a spouse, child, lover or childe): a failure takes a temporary Willpower, a botch over one of those draws a derangement from loss. A soul twisted by a binder's Torment gets one from binding.
+
+Reverse: FROM_CAUSE without loss and binding; tellLoved without grieve.
+
+## B4872. A frenzy past the Storyteller's word ends by itself (2026-11-14)
+WoDX Actions. Pick t3. A botched frenzy or Rötschreck lasts to the end of the scene (the fight is deleted, or the vampire's token comes onto another scene), then Self-Control (Courage for the fear) at the frenzy's difficulty is rolled each turn of three seconds of world time until it passes. The Thrall of the Wyrm ends when the Garou reaches Incapacitated or the fight it was in ends. House reading; ending by hand stays.
+
+Reverse: drop frenzyHooks and markBotch in main.js.
+
+## B4873. The court calls Blood Hunts; favours become boons (2026-11-14)
+WoDX Actions and NPC. Pick x4. At each faction turn (WoDX NPC now calls wodxFactionTurn) a Kindred not already hunted, with a diablerie mark made since the court last looked or a breach record with three or more witnesses who still remember where word spreads, is hunted: for diablerie or for the Masquerade. A Storyteller's character at once, with Lift it on the card; a player character through the approval queue. Persuading or charming another Kindred to a win writes a boon owed to them in the Ledger: trivial, minor when won by three or more. House readings of V20 pp. 28 and 493 and of prestation. Setting autoBloodHunt (on).
+
+Reverse: turn off "The court calls Blood Hunts"; favourBoon returns null.
+
 ## B4900. Scandinavia holds the Sami beside the Norse (2026-11-14)
 WoDX Creation and Chronicle. Scandinavia was all Norse; the Sami of the north are now 6 in 100 in the medieval and early-modern mix, 4 in the industrial age and 3 today. The Kola Sami in the Russian mix wait. Taken as recommended; logged in PENDING-REVIEW.
 
@@ -7448,6 +7522,46 @@ WoDX Creation. Family names (Somby, Hætta, Turi, Valkeapää) came with the Nor
 
 Reverse: give the sami entry an old family list.
 
+## B4910. Fronts step on their own pace, gated by chapter (2026-11-14)
+WoDX Chronicle. Spine desk f1-f6 and m1: the court and the cult step every week of game time, the council, the Church and the Husbandman every two weeks, Marta every three. A step never comes before the chapter its scene belongs to, so the plot keeps its order when the company is slow. A front's first step is due at once. After a long skip the steps come one a tick, each counting from when the last was due.
+
+Reverse: set each front's `every` in data/fronts-rothenstein.mjs.
+
+## B4911. Fronts keep out of a twist's week (2026-11-14)
+WoDX Chronicle. Desk m1: a front does not step within seven days of a revealed twist, unless the company pushed it (the window's Pushed button). A front gives way to one twist only; it is not held up again by the next twist before it has stepped.
+
+Reverse: drop the twist check in whyNot.
+
+## B4912. Holds and strikes (2026-11-14)
+WoDX Chronicle. Desk m2: a front the company holds (a bribe, a threat, an ally inside) waits until let go, and its pace counts from then. A front struck (a key person gone, a ledger taken) goes back one step, and its map marks go back to the step before. The Storyteller can hold any front.
+
+Reverse: none needed.
+
+## B4913. A step shows on the map first (2026-11-14)
+WoDX Chronicle. Desk m3 and Ben's show, don't tell rule: each step's sight is drawn on its scene (found by part of its name, a walkable map before a session's or trial copy) through WoDX Storyteller's town looks, one key per front so the last step's marks give way. Street talk goes on the signal board; the Storyteller's card names the step's people (roles filled in) and place, and the saga clocks it moved. A world without that map gets the card with a note to tell it at the table.
+
+Reverse: set townLooks off in WoDX Storyteller.
+
+## B4914. Roles pass down a line (2026-11-14)
+WoDX Chronicle. Desk r1-r8: each role has an order of succession; marking a name gone passes the role on. The ally who is not is whoever the company leaned on most (the window counts it). Lines ending in a thing or someone found when needed never run out. Twist 24's "killed" heart takes the clerk out of the inside man's role. The Storyteller can put anyone in a role by hand.
+
+Reverse: none needed.
+
+## B4915. The courier east (2026-11-14)
+WoDX Chronicle. Desk r8: when the courier is stopped, the next rider goes a week later, with a card and a rider on the mountain trail.
+
+Reverse: none needed.
+
+## B4916. Judgements set later chapters (2026-11-14)
+WoDX Chronicle. Desk f7 and f8: whether the company lied to Reinhold (kin on the bridge in chapter 7, or a debt to call in from chapter 8) and what Baba Yaroslava decided (the Words offered at the choosing, or not). The Storyteller marks it; the card comes once when its chapter begins.
+
+Reverse: none needed.
+
+## B4917. Three carriers to a fact (2026-11-14)
+WoDX Chronicle. Desk c1-c7: six facts of the plot, each with a person, a place and a thing that carry it. Each carrier found pins a card on the open case board with a hint; the third pins the whole fact. Found carriers can be taken back.
+
+Reverse: none needed.
+
 ## B4950. The Tuareg at the desert edge (2026-11-14)
 WoDX Creation and Chronicle. The Tuareg of the Aïr and the Niger bend are 3 or 4 in 100 in West Africa's mix in every age, and 2 in the Maghreb's (the Ahaggar) before the industrial age. Taken as recommended; logged in PENDING-REVIEW.
 
@@ -7462,3 +7576,33 @@ Reverse: edit the tuareg entry in data/people-world.mjs.
 WoDX Creation. A Tuareg is "ag" (son of) or "welet" (daughter of) the father's name, then and now; no family names.
 
 Reverse: give the tuareg entry a fam list.
+
+## B5000. The Moro in the Malay world's mix (2026-11-14)
+WoDX Creation and Chronicle. The Maguindanao, Maranao and Tausug of Mindanao and Sulu are 4 in 100 in the Malay world's mix before the industrial age and 3 after, beside the Filipinos (B4750). Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: drop moro from the nusantara mixes in world-rules.mjs and the moro entry in people-world.mjs.
+
+## B5001. The names (2026-11-14)
+WoDX Creation. The sultans, datus and royal women of the tarsila and the Spanish and American records before 1800, given alone; the given names of the Bangsamoro since. Titles (datu, bai, hadji) are left out of the name lists. Fewer than 300 names.
+
+Reverse: edit the moro entry in data/people-world.mjs.
+
+## B5002. Bin, binti or a family name after 1800 (2026-11-14)
+WoDX Creation. From 1800 a Moro is bin or binti the father or carries a family name (Kiram, Alonto, Misuari).
+
+Reverse: change child or fam in the moro entry.
+
+## B5030. The Banyarwanda and Barundi in central Africa's mix (2026-11-14)
+WoDX Creation and Chronicle. The people of the kingdoms of Rwanda and Burundi are 10 in 100 in central Africa's mix in the medieval age, 9 in the early modern, 8 in the industrial and 9 in the modern, beside the Kongo, Luba and Baganda (B4690). Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: drop banyarwanda from the central-africa mixes in world-rules.mjs and the banyarwanda entry in people-world.mjs.
+
+## B5031. The names (2026-11-14)
+WoDX Creation. Before 1800, the royal names of the mwami king lists and the court histories with own Kinyarwanda and Kirundi names, given alone; from 1800, French church names. Fewer than 300 names.
+
+Reverse: edit the banyarwanda entry in data/people-world.mjs.
+
+## B5032. An own name in place of a family name (2026-11-14)
+WoDX Creation. From 1800 a Munyarwanda or Murundi carries a second, own Kinyarwanda or Kirundi name (Habimana, Uwimana, Nkurunziza) where other peoples carry a family name; it is the person's own and is not handed to the children.
+
+Reverse: drop fam from the banyarwanda entry.
