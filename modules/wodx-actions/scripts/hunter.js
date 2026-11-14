@@ -297,7 +297,12 @@ export function build(ctx) {
             if (fd.k === "repel") {
                 const r = await rollPool(rating, H.repelDifficulty(rules, fd.cw));
                 const R = H.repelResult(rules, r);
-                return post(actor, `${actor.name} holds up their faith`, rollBlock(`True Faith (${rating})`, r, ["1 Willpower"]) + `<div class="vta-res ${R.held ? "good" : "bad"}">${esc(R.text)}</div>`, [r.roll]);
+                let fxb = "", fxItems = [];
+                if (R.held && EF.isOn()) {
+                    const pp = EF.planOf(actor, H.repelResults(rules, r.successes, { source: rules === "da20" ? "V20 Dark Ages p. 394" : "The Hunters Hunted II p. 84" }), Math.max(1, r.successes));
+                    fxb = pp.html; fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+                }
+                return post(actor, `${actor.name} holds up their faith`, rollBlock(`True Faith (${rating})`, r, ["1 Willpower"]) + `<div class="vta-res ${R.held ? "good" : "bad"}">${esc(R.text)}</div>${fxb}`, [r.roll], fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
             }
             let fs = 0, rolls = [], body = "";
             if (rules === "hh2") { const r = await rollPool(rating, 7); fs = r.botch ? 0 : r.successes; rolls.push(r.roll); body = rollBlock(`True Faith (${rating})`, r, ["1 Willpower"]); }
@@ -373,7 +378,7 @@ export function build(ctx) {
             root.querySelector(".wodx-hedge-info").innerHTML = def ? `<b>${esc(def.label)}</b> · ${def.pool.filter(Boolean).map(cap).join(" + ") || "see the page"} · ${def.wp ? `${def.wp} Willpower` : "no Willpower"}${def.ritualOnly ? " · rituals only" : ""}${def.noRituals ? " · no rituals" : ""}${def.aspects ? ` · aspects: ${def.aspects.map(esc).join(", ")}` : ""} · p. ${def.p}${def.note ? `<br><span class="wodx-quiet">${esc(def.note)}</span>` : ""}` : "Not a Sorcerer path: set the roll by hand.";
         };
         return dialog(`Hedge magic: ${actor.name}`, content, "Cast", async fd => {
-            const { def, item } = pick(String(fd.path ?? ""));
+            const { key, def, item } = pick(String(fd.path ?? ""));
             const rating = item?.value ?? n(fd.rating);
             const statOf = k => (k === "willpower" ? n(actor.system?.advantages?.willpower?.permanent) : ATTR.includes(k) ? attr(actor, k) : (findAbility(actor, k)?.value ?? 0));
             if (fd.mode === "counter") {
@@ -397,7 +402,13 @@ export function build(ctx) {
             let body = rollBlock(`${cap(a)} + ${b === "animalken" ? "Animal Ken" : cap(b)}`, r, [cost ? `${cost} Willpower` : "", S.traded ? "skill traded for power" : "", n(fd.fast) && fd.mode === "spell" ? `${fd.fast} turn${n(fd.fast) === 1 ? "" : "s"} cut` : ""].filter(Boolean));
             body += `<div class="vta-res ${ok ? "good" : "bad"}">${r.botch ? "A botch: the magic slips its leash (see the page's price of failure)." : ok ? `It works (${s} of ${S.need} needed)${H.pushAspect(s, S.need) ? "; doubled: the Storyteller may let one aspect go a level higher" : ""}.` : `${s} of ${S.need} needed: not yet (an extended casting can go on).`}</div>`;
             body += `<div class="vta-note">${fd.mode === "ritual" ? `${esc(ritual?.name ?? "A ritual")}: at least 10 minutes, usually longer.` : `Casting time ${S.turns} turn${S.turns === 1 ? "" : "s"}.`}${S.overLimit ? " <b>An aspect is above the Path rating.</b>" : ""}</div><div class="wodx-quiet">Sorcerer (Revised) pp. 60–63, ${def.p}</div>`;
-            return post(actor, `${actor.name}: ${esc(def.label)}`, body, [r.roll]);
+            let fxItems = [];
+            if (ok && EF.isOn()) {
+                const pp = EF.planOf(actor, H.sorceryResults(key, { top: Math.max(...aspects), successes: s, need: S.need, rating, name: def.label, source: `Sorcerer p. ${def.p}` }), s);
+                body += pp.html;
+                fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+            }
+            return post(actor, `${actor.name}: ${esc(def.label)}`, body, [r.roll], fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 560, render: root => { describe(root); root.querySelector("[name=path]")?.addEventListener("change", () => describe(root)); } });
     }
 
