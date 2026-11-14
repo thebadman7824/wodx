@@ -54,3 +54,43 @@ test("the line on the way in says where and how long", () => {
   assert.equal(W.wayLine({kind: "door"}, "The Inn", 1), "The Inn, through the door, 1 minute.");
   assert.equal(W.wayLine({kind: "road"}, "Dolany", null), "Dolany, by the road.");
 });
+
+// Laying Ways in a built world (B4810-B4813)
+const exit = (id, name, dest, extra = {}) => ({id, name, flags: extra.flags ?? {}, behaviors: [{id: `${id}b`, type: "teleportToken", disabled: !!extra.off, system: {destinations: [dest]}}]});
+test("old exits between maps become Ways; twins, crossings and dead ends do not", () => {
+  const scenes = [
+    {id: "m", name: "Lower Town · Market Square", regions: [exit("r1", "Exit: quay", "Scene.q.Region.a1"), exit("r2", "Exit: twin", "Scene.q.Region.a1", {flags: {"wodx-otherworlds": {twinOf: "r1"}}}),
+      exit("r3", "Exit: nowhere", "Scene.zz.Region.x"), exit("r4", "Exit: up", "Scene.f.Region.a2"), exit("r5", "Exit: off", "Scene.q.Region.a1", {off: true})]},
+    {id: "q", name: "Lower Town · Riverside Quay", regions: [{id: "a1", name: "Arrive", behaviors: []}, exit("r6", "Cross", "Scene.q.Region.a1")]},
+    {id: "f", name: "Lower Town · Upper Floors and Cellars", regions: [{id: "a2", name: "Arrive", behaviors: []}]}
+  ];
+  const {ways, lost} = W.exitsToWays(scenes);
+  assert.deepEqual(ways.map(w => [w.regionId, w.to, w.arrive, w.kind]), [["r1", "q", "a1", "street"], ["r4", "f", "a2", "stair"]]);
+  assert.deepEqual(lost, ["Lower Town · Market Square: Exit: nowhere"]);
+});
+test("the kind of an old exit comes from the two names", () => {
+  assert.equal(W.exitKind("The Keep Road", "Kranzfels · The Outer Bailey"), "gate");
+  assert.equal(W.exitKind("Kranzfels · The Outer Bailey", "Kranzfels · Inner Ward and Great Hall"), "gate");
+  assert.equal(W.exitKind("The River Road and Fields", "Toll-post and Ivo's Ferry"), "ferry");
+  assert.equal(W.exitKind("The Forest Road", "The Old Grove"), "road");
+});
+test("doors are planned by scene name, and missing names are reported", () => {
+  const names = [{id: "s", name: "Street"}, {id: "h", name: "House"}];
+  const p = W.planDoors([{inside: "House", street: "Street", shut: "locked"}, {inside: "Shed", street: "Street", kind: "nonsense"}], names);
+  assert.deepEqual(p.doors, [{inside: "h", street: "s", kind: "door", shut: "locked"}]);
+  assert.deepEqual(p.missing, ["Shed"]);
+});
+test("doors on one street stand apart along the south edge", () => {
+  const box = {x: 0, y: 0, w: 1000, h: 800, g: 100};
+  const a = W.doorSpot(0, box), b = W.doorSpot(1, box), c = W.doorSpot(2, box), d = W.doorSpot(3, box);
+  assert.equal(a.y, 700); assert.equal(b.x - a.x, 300);
+  assert.ok(c.x + c.w <= 1000, "the last door fits");
+  assert.equal(d.y, 500, "a row further in once the edge is full");
+});
+test("the Rothenstein recipe's doors are each named once and pass the recipe check", async () => {
+  const {ROTHENSTEIN} = await import(join(root, "modules/wodx-storyteller/data/recipe-rothenstein.mjs"));
+  const R = await import(join(root, "modules/wodx-storyteller/scripts/recipe-rules.mjs"));
+  assert.ok(ROTHENSTEIN.doors.length >= 30);
+  assert.deepEqual(R.validate(ROTHENSTEIN).filter(m => /door/.test(m)), []);
+  assert.deepEqual(R.validate({...ROTHENSTEIN, doors: [{inside: "A", street: "B"}, {inside: "A", street: "C"}, {inside: "X"}]}).filter(m => /door/i.test(m)).length, 2);
+});
