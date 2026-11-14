@@ -43,14 +43,25 @@ async function upload() {
     const file = new File([JSON.stringify(R, null, 1)], "gate6c-result.json", { type: "application/json" });
     await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, { notify: false });
 }
-async function step(name, fn) { try { await fn(); } catch (e) { ok(name, false, { error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ") }); } }
+// A step whose dialog never opened leaves its answer queued, and the next step's dialog would get it: each step starts empty (B3462)
+async function step(name, fn) { queue.length = 0; try { await fn(); } catch (e) { ok(name, false, { error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ") }); } }
 const actorOf = a => ({ actor: a });
 
 async function makePack() {
     let folder = game.folders.find(f => f.type === "Actor" && f.name === "WoDX 6c test pack");
     if (!folder) folder = await Folder.create({ name: "WoDX 6c test pack", type: "Actor" });
     const get = n => game.actors.find(a => a.folder?.id === folder.id && a.name === n);
-    const mk = async (name, type, system, items) => get(name) ?? Actor.create({ name, type, folder: folder.id, system, items });
+    // A sheet kept from an earlier run may have lost an item (a power used up or deleted by hand): put back any that is missing (B3462)
+    const mk = async (name, type, system, items) => {
+        const had = get(name);
+        if (!had) return Actor.create({ name, type, folder: folder.id, system, items });
+        const gone = items.filter(it => !had.items.some(i => i.type === it.type && i.name === it.name && i.system?.type === it.system.type));
+        if (gone.length) await had.createEmbeddedDocuments("Item", gone);
+        const fix = items.flatMap(it => had.items.filter(i => i.type === it.type && i.name === it.name && i.system?.type === it.system.type && Number(i.system?.value ?? 0) !== it.system.value)
+            .map(i => ({ _id: i.id, "system.value": it.system.value })));
+        if (fix.length) await had.updateEmbeddedDocuments("Item", fix);
+        return had;
+    };
     const ada = await mk("Ada Brandt (wraith)", "Wraith", {
         advantages: { pathos: { temporary: 5, max: 10 }, angst: { temporary: 3, permanent: 4, max: 10 }, corpus: { temporary: 10, permanent: 10, max: 10 }, willpower: { permanent: 5, temporary: 5 } }
     }, [
@@ -234,7 +245,10 @@ export async function run() {
             const api = game.modules.get("wodx-chronicle").api, old = api.eras;
             const tommy = await (async () => {
                 const f = game.folders.find(x => x.type === "Actor" && x.name === "WoDX 6c test pack");
-                return game.actors.find(a => a.folder?.id === f.id && a.name === "Tommy Atkins (wraith, 1917)") ?? Actor.create({ name: "Tommy Atkins (wraith, 1917)", type: "Wraith", folder: f.id,
+                const had = game.actors.find(a => a.folder?.id === f.id && a.name === "Tommy Atkins (wraith, 1917)");
+                if (had && !had.items.some(i => i.type === "Power" && i.system?.type === "wod.types.arcanoi"))
+                    await had.createEmbeddedDocuments("Item", [{ name: "Kinesis", type: "Power", system: { type: "wod.types.arcanoi", value: 2 } }]);
+                return had ?? Actor.create({ name: "Tommy Atkins (wraith, 1917)", type: "Wraith", folder: f.id,
                     system: { advantages: { pathos: { temporary: 6, max: 10 }, corpus: { temporary: 10, permanent: 10, max: 10 } } },
                     items: [{ name: "Kinesis", type: "Power", system: { type: "wod.types.arcanoi", value: 2 } }] });
             })();
