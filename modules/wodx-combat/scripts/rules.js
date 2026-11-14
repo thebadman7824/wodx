@@ -175,6 +175,24 @@ export function woundState(damage, levelTotals, levelPenalties, levelLabels = {}
 }
 
 /**
+ * B3793: the wound penalty after the character's body traits (WoDX Chronicle api.traits.toughness): shift makes each
+ * wound level count as the one above it (C20 Increased Pain Threshold), ease gives dice back (Mummy High Pain
+ * Tolerance, Defiled), and ease 99 removes the penalty until Incapacitated (M20 Book of Secrets Insensate to Pain).
+ */
+export function bodyPenalty(ws, levelPenalties = {}, body = null) {
+    let p = ws?.penalty ?? 0;
+    const key = ws?.key ?? "";
+    if (!body || !key || key === "incapacitated") return p;
+    const shift = Math.max(0, Number(body.shift) || 0), ease = Math.max(0, Number(body.ease) || 0);
+    if (shift) {
+        const i = WOUND_LEVELS.indexOf(key);
+        if (i >= 0) p = levelPenalties[WOUND_LEVELS[Math.max(0, i - shift)]] ?? p;
+    }
+    if (ease >= 99) return 0;
+    return Math.min(0, p + ease);
+}
+
+/**
  * Narrative condition after damage (VtDA20 p. 345, 351). kind = actor profile key (see profiles.js).
  */
 export function condition(damage, maxLevels, kind) {

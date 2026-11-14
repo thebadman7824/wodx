@@ -409,3 +409,128 @@ export const MORE_PROMPTS_4 = {
   "luterate": {on: ["social"], text: "cannot read or write"},
   "vengeful-ancestors": {on: ["night"], text: "the ancestral ghost scares prey and makes trouble"}
 };
+
+/* Part 5 (B3791-B3792): the last merits and flaws outside combat. Combat and body traits go to WoDX Combat. */
+export const MORE_EFFECTS_5 = {
+  "nightmares": [tick("bad-dreams", "The character woke without shaking off the nightmares", {dice: -1, note: "-1 die on everything that night"})],
+  "true-faith": [{ch: "roll", tags: ["willpower"], dice: 1, note: "+1 die on Willpower rolls (one per point of Faith, and on Virtue rolls too)"}],
+  "outsider": [tick("local-ways", "Local speech or customs matter", {need: ["social"], diff: 1, note: "+1 difficulty where being foreign tells"})],
+  "vulgar": [tick("manners", "Grace or manners matter", {need: ["social"], diff: 1, note: "+1 difficulty on delicate social dealings"})],
+  "nature-s-child": [tick("wild-animal", "With an animal in its own surroundings", {need: ["animalken", "survival"], diff: -2, note: "-2 difficulty with animals in the wild"})],
+  "allergic": [tick("allergen", "In long contact with the allergen", {diff: 1, note: "+1 difficulty while exposed (more at higher ratings)"})],
+  "holy-aura": [{ch: "roll", tags: ["social"], diff: -1, note: "-1 difficulty on Social rolls (some Kindred grow hostile)"}],
+  "paranoid": [{ch: "roll", tags: ["social"], diff: 1, note: "+1 difficulty on Social rolls"}],
+  "ecstatic": [tick("among-faithful", "With the Society or others of like faith", {need: ["social"], dice: 1, note: "+1 die on Social rolls with the faithful"})],
+  "reputation": [tick("own-sept", "With Garou of the character's sept, not their pack", {need: ["social"], dice: 3, note: "+3 dice on Social rolls with the sept"})],
+  "conniver": [tick("asking-trust", "Asking to be trusted or believed", {need: ["social"], dice: -1, note: "-1 die when trust is at stake"})],
+  "inner-strength": [tick("long-odds", "Struggling against overwhelming odds", {need: ["willpower"], diff: -2, note: "-2 difficulty on Willpower against long odds"})],
+  "perfect-balance": [tick("balance", "Keeping balance (ice, a ledge, a rope, a climb)", {diff: -2, note: "-2 difficulty on balance"})],
+  "harano-prone": [tick("in-harano", "In a bout of Harano", {dice: -1, note: "-1 die on every roll while it lasts"})],
+  "rotting": [tick("rot-seen", "With mortals who can see the rot", {need: ["social"], diff: 2, note: "+2 difficulty on Social rolls with mortals (one to three by rating)"})],
+  "newmerits-fascinating-gaze": [tick("gaze", "Using the eyes to charm or to cow", {need: ["social"], diff: -2, note: "-2 difficulty when the gaze carries it"})],
+  "one-arm": [tick("two-hands", "The task needs two hands", {dice: -2, note: "-2 dice on two-handed tasks"})]
+};
+
+export const MORE_PROMPTS_5 = {
+  "twitch": {on: ["social"], text: "under stress the tic gives the character away unless a Willpower point is spent"},
+  "mute": {on: ["social"], text: "cannot speak; signs or writing only"},
+  "concentration": {on: ["fight", "social"], text: "distractions cost no dice"},
+  "language": {on: ["social"], text: "speaks one more language"},
+  "time-sense": {on: ["night"], text: "always knows the time without a clock"},
+  "nightmares": {on: ["night"], text: "on waking, Willpower at 7 or one die less on everything tonight"},
+  "amnesia": {on: ["night"], text: "the forgotten past may surface"},
+  "territorial": {on: ["night", "fight"], text: "another vampire in the hunting ground calls for a frenzy roll"},
+  "vengeful": {on: ["social", "fight"], text: "facing the object of revenge, vengeance comes first unless a Willpower point is spent"},
+  "rep": {on: ["social"], text: "everyone knows the character's name, if not the face"},
+  "open-road": {on: ["night"], text: "travels between cities without chance trouble on the way"},
+  "kid": {on: ["social"], text: "at the bottom of the sect's ladder, and tested for it"},
+  "bound": {on: ["social"], text: "blood bound to a regnant"},
+  "true-faith": {on: ["fight"], text: "True Faith can hold back the unholy"},
+  "patron": {on: ["night"], text: "the patron supplies goods for the agreed aim"},
+  "clan-apostate": {on: ["night"], text: "one in-clan Discipline is replaced by Daimoinon, with the Baali weakness too"},
+  "sterile": {on: ["social"], text: "cannot have children, and some Garou think less of the character for it"},
+  "gall": {on: ["social"], text: "stands up to anyone without flinching"},
+  "fetish": {on: ["fight", "night"], text: "owns a fetish of level one to three"},
+  "gnosis": {on: ["night"], text: "has Gnosis: can use fetishes and learn more Gifts"},
+  "veiled": {on: ["fight"], text: "not immune to the Delirium, though it is resisted a little better"},
+  "good-looking": {on: ["social"], text: "looks fully human in Homid form"},
+  "venomous": {on: ["fight"], text: "venom Gifts work in Homid form"},
+  "shark-teeth": {on: ["social"], text: "pointed teeth show in Homid form"},
+  "aging": {on: ["fight", "night"], text: "the body is too old or too young for full adult strength"},
+  "icy": {on: ["social"], text: "commits atrocities without a twitch; people keep their distance"},
+  "obsession": {on: ["social", "night"], text: "the obsession overrides common sense"},
+  "confidence": {on: ["social"], text: "an air of authority wins trust, even for a lie"},
+  "property": {on: ["night"], text: "a hidden bolt-hole few can find"},
+  "dark-triad": {on: ["social"], text: "a cold manipulator at heart"},
+  "ties": {on: ["social"], text: "connections that open doors"},
+  "rivalry": {on: ["night"], text: "the rival may spread rumours or lay a trap"},
+  "rogue": {on: ["social"], text: "answers to nobody, and the group knows it"},
+  "fae-blood": {on: ["night"], text: "kinain: low Banality, and sees what the enchanted see"},
+  "guardian-angel": {on: ["fight"], text: "an unseen protector may step in, at a price"},
+  "branded": {on: ["social"], text: "those who can see the Avatar's brand know the crime"},
+  "oathbreaker": {on: ["social"], text: "aura readers and gossips know the broken oath"},
+  "beast-within": {on: ["fight"], text: "intense stress calls for a frenzy roll"},
+  "psychic-vampire": {on: ["night"], text: "must drain life from nearby living things or wither"},
+  "allergic": {on: ["fight", "night"], text: "the allergen raises every difficulty while it touches the character"},
+  "asthma": {on: ["fight"], text: "after exertion, Stamina or no action next turn"},
+  "can": {on: ["fight"], text: "belief carries the character through"},
+  "know-you": {on: ["social"], text: "strangers assume they know the character and cannot dismiss them at once"},
+  "sage": {on: ["social"], text: "others come to the character for counsel"},
+  "geas": {on: ["night", "social"], text: "the geas binds the character"},
+  "echoes": {on: ["night"], text: "old faerie lore holds true for the character, for good and ill"},
+  "black-and-white": {on: ["social"], text: "sees everything as for or against"},
+  "sanctuary": {on: ["night"], text: "supernatural beings need Willpower at 9 to enter the house uninvited"},
+  "rebel": {on: ["social"], text: "the Society scorns or hates the character"},
+  "sanction": {on: ["fight"], text: "licensed to use lethal force on named targets"},
+  "innocent": {on: ["social"], text: "unproven wrongs are blamed on someone else"},
+  "thugs": {on: ["night"], text: "the Allies are criminals, willing to do violence"},
+  "legacy": {on: ["night"], text: "a hunting lineage: double contacts, or an heirloom"},
+  "dead-zone": {on: ["night"], text: "ghosts barely notice the character, as if with Obfuscate 1"},
+  "anachronism": {on: ["social"], text: "an Intelligence roll to deal with anything modern; net failures become a penalty"},
+  "different-body": {on: ["social"], text: "the old body's habits show through"},
+  "long-distance-runner": {on: ["night"], text: "runs at double speed for an hour per dot of Stamina"},
+  "metamorph": {on: ["fight"], text: "changes form without a roll, as if with five successes"},
+  "compulsion": {on: ["social", "night"], text: "the compulsion takes hold unless a Willpower point is spent"},
+  "curiosity": {on: ["night"], text: "an unknown calls for a Wits roll or the character must look"},
+  "deranged": {on: ["night"], text: "a lasting derangement; Willpower holds it off for a while"},
+  "hatred": {on: ["fight", "social"], text: "facing the hated thing calls for a frenzy roll"},
+  "favor": {on: ["social"], text: "someone powerful owes the character a favour"},
+  "reputation": {on: ["social"], text: "the sept thinks well of the character"},
+  "companion": {on: ["night"], text: "a loyal companion travels with the character"},
+  "ward": {on: ["night"], text: "the ward has a knack for finding trouble"},
+  "docile": {on: ["fight"], text: "maximum Rage is two lower per point"},
+  "harano-prone": {on: ["night", "fight"], text: "a setback calls for a Willpower roll or a bout of Harano"},
+  "taint-of-corruption": {on: ["social", "night"], text: "Sense Wyrm finds the character tainted, and the Wyrm's servants trouble the character's sleep"}
+};
+
+/**
+ * Part 6 (B3793): traits that change the body in a fight, read by WoDX Combat. bruised: extra Bruised health levels;
+ * shift: each wound level counts as the one above it (Hurt as Bruised); ease: dice given back from the wound penalty
+ * (99: none at all until Incapacitated); silver: silver wounds are aggravated.
+ */
+export const BODY = {
+  "huge-size": {bruised: 1, note: "one more Bruised health level"},
+  "sturdy": {bruised: 1, note: "one more Bruised health level"},
+  "increased-pain-threshold": {shift: 1, note: "each wound level counts as the one above it"},
+  "highpaintolerance": {ease: 1, note: "wound penalties one die less"},
+  "the-ten-thousand-defjud": {ease: 1, note: "wound penalties one die less"},
+  "insensate-to-pain": {ease: 99, note: "no wound penalties until Incapacitated"},
+  "vulnerability-to-silver": {silver: true, note: "silver wounds are aggravated"}
+};
+
+export const MORE_PROMPTS_6 = {
+  "ambidextrous": {on: ["fight"], text: "no off-hand penalty, with two weapons or the wrong hand"},
+  "short": {on: ["fight"], text: "runs at half speed and struggles to reach things made for adults"},
+  "lame": {on: ["fight"], text: "walks at a quarter of the usual speed and cannot run"},
+  "odd-gait": {on: ["fight", "social"], text: "moves at half speed, and the walk is recognised"},
+  "permanent-wound": {on: ["night"], text: "rises each night Wounded"},
+  "slow-healing": {on: ["night", "fight"], text: "two blood points heal one bashing or lethal level; aggravated heals one level each five days"},
+  "flesh-of-the-corpse": {on: ["fight", "social"], text: "healed wounds still show on the skin"},
+  "berserker": {on: ["fight"], text: "can enter a berserk frenzy at will, ignoring wound penalties"},
+  "too-tough-to-die": {on: ["fight"], text: "harder to kill than wounds suggest"},
+  "legendary-attributes": {on: ["night"], text: "one Attribute may go to six dots, with a heroic feat of its own"},
+  "regeneration": {on: ["fight", "night"], text: "heals one chimerical level each turn of rest, and one physical level each hour"},
+  "iron-allergy": {on: ["fight"], text: "cold iron burns: a chimerical level each turn of contact (real damage at higher ratings)"},
+  "detached": {on: ["fight"], text: "wound penalties do not touch Psychic Numina until Incapacitated"},
+  "poisonous-blood": {on: ["feed", "fight"], text: "each blood point a vampire drinks deals that vampire a bashing level"}
+};

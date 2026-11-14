@@ -190,7 +190,7 @@ ERA_TYPES = {
         "partitions": [((0, 8), (12, 8)), ((0, 4), (12, 4)), ((4, 4), (4, 8)), ((8, 8), (8, 12))],
         "furnish": {"Stables": [("Trough_Wood_Ashen_Grain_A_2x1.webp", "wall:N", 3), ("Hay_Bale_A_01_1x1.webp", "wall", 3, .8)], "Yard": [],
                     "Kitchen": [(B.OVEN, "corner:W", 1), (B.BARREL, "wall", 1, .8)],
-                    "Taproom": [("Bar_Wood_Ashen_A2_3x1.webp", "wall:N", 1), (B.ROUND, "wall", 2), (B.STOOL, "beside:table", 3, .8)], "Gateway": []},
+                    "Taproom": [("Bar_Wood_Ashen_A2_3x1.webp", "wall:N", 1), (B.KEG, "beside:bar", 1, .8), (B.STOOL, "front:bar", 3, .8), (B.ROUND, "wall", 2), (B.STOOL, "beside:table", 3, .8)], "Gateway": []},
     },
     "manufactory": {
         "label": "Cloth manufactory", "model": "Brno's fine-cloth works of the 1760s", "built": (1700, 1840), "role": "industry", "storeys": 2,

@@ -4363,7 +4363,7 @@
    "label": "Chest (Cellar store)",
    "rect": [
     56.68,
-    27.18,
+    29.92,
     0.9,
     0.9
    ],
@@ -4396,8 +4396,8 @@
    "id": "chapel-1-chancel-f0",
    "label": "Chest (Chancel)",
    "rect": [
-    34.18,
-    28.68,
+    33.58,
+    33.57,
     0.75,
     0.75
    ],
@@ -4430,24 +4430,7 @@
    "id": "chapel-1-nave-f0",
    "label": "Chest (Nave)",
    "rect": [
-    38.87,
-    33.57,
-    0.75,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "church"
-   }
-  },
-  {
-   "id": "chapel-1-nave-f3",
-   "label": "Chest (Nave)",
-   "rect": [
-    38.12,
+    35.68,
     28.68,
     0.75,
     0.75
@@ -4461,11 +4444,11 @@
    }
   },
   {
-   "id": "chapel-1-nave-f5",
+   "id": "chapel-1-nave-f4",
    "label": "Chest (Nave)",
    "rect": [
-    35.68,
-    29.68,
+    38.93,
+    33.57,
     0.75,
     0.75
    ],
@@ -4517,7 +4500,7 @@
    "id": "cottage-1-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    39.68,
+    40.32,
     40.68,
     2.0,
     1.0
@@ -4533,7 +4516,7 @@
    "label": "Chest (Cottage)",
    "rect": [
     37.68,
-    41.68,
+    41.7,
     1.0,
     1.0
    ],
@@ -4549,8 +4532,8 @@
    "id": "cottage-1-cottage-f0",
    "label": "Cupboard (Cottage)",
    "rect": [
-    37.68,
-    42.68,
+    41.57,
+    44.82,
     0.75,
     1.5
    ],
@@ -4604,25 +4587,8 @@
    "id": "smithy-1-forge-f0",
    "label": "Chest (Forge)",
    "rect": [
-    81.18,
-    59.68,
-    0.75,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "workshop"
-   }
-  },
-  {
-   "id": "smithy-1-forge-f1",
-   "label": "Chest (Forge)",
-   "rect": [
-    81.18,
-    61.57,
+    85.07,
+    60.68,
     0.75,
     0.75
    ],
@@ -4638,8 +4604,8 @@
    "id": "smithy-1-forge-f2",
    "label": "Chest (Forge)",
    "rect": [
-    85.07,
-    60.68,
+    81.18,
+    61.57,
     0.75,
     0.75
    ],
@@ -4724,7 +4690,7 @@
    "label": "Chest (Bakehouse)",
    "rect": [
     54.82,
-    46.68,
+    46.82,
     1.0,
     1.0
    ],
@@ -5675,7 +5641,7 @@
    "id": "workshop-1-workshop-3",
    "label": "Crates (Workshop)",
    "rect": [
-    21.82,
+    16.18,
     33.82,
     1.0,
     1.0
@@ -5691,8 +5657,8 @@
    "id": "workshop-1-workshop-4",
    "label": "Crates (Workshop)",
    "rect": [
-    16.18,
-    33.82,
+    21.82,
+    30.18,
     1.0,
     1.0
    ],
@@ -5708,7 +5674,7 @@
    "label": "Box bed (Workshop)",
    "rect": [
     21.82,
-    31.18,
+    31.93,
     1.0,
     2.0
    ],
@@ -5723,7 +5689,7 @@
    "label": "Chest (Workshop)",
    "rect": [
     20.82,
-    32.5,
+    32.82,
     1.0,
     1.0
    ],
@@ -5740,7 +5706,7 @@
    "label": "Hearth (Workshop)",
    "rect": [
     16.18,
-    32.5,
+    32.82,
     1.0,
     1.0
    ],
@@ -5760,10 +5726,27 @@
    "id": "workshop-1-workshop-f1",
    "label": "Chest (Workshop)",
    "rect": [
-    19.5,
-    33.82,
+    20.82,
+    30.18,
     1,
     1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-1-workshop-f3",
+   "label": "Chest (Workshop)",
+   "rect": [
+    17.18,
+    34.07,
+    0.75,
+    0.75
    ],
    "flags": {
     "container": true,
@@ -5778,7 +5761,7 @@
    "label": "Crates (Workshop)",
    "rect": [
     26.68,
-    28.68,
+    34.32,
     1.0,
     1.0
    ],
@@ -5794,7 +5777,7 @@
    "label": "Crates (Workshop)",
    "rect": [
     26.68,
-    34.32,
+    28.68,
     1.0,
     1.0
    ],
@@ -5841,7 +5824,7 @@
    "id": "workshop-2-workshop-8",
    "label": "Hearth (Workshop)",
    "rect": [
-    29.3,
+    28.32,
     28.68,
     1.0,
     1.0
@@ -5862,10 +5845,10 @@
    "id": "workshop-2-workshop-f1",
    "label": "Chest (Workshop)",
    "rect": [
-    28.57,
-    34.57,
-    0.75,
-    0.75
+    30.32,
+    33.18,
+    1,
+    1
    ],
    "flags": {
     "container": true,
@@ -5876,7 +5859,7 @@
    }
   },
   {
-   "id": "workshop-2-workshop-f4",
+   "id": "workshop-2-workshop-f3",
    "label": "Chest (Workshop)",
    "rect": [
     26.68,
@@ -5896,8 +5879,8 @@
    "id": "workshop-3-workshop-3",
    "label": "Crates (Workshop)",
    "rect": [
-    17.68,
-    39.68,
+    21.32,
+    45.32,
     1.0,
     1.0
    ],
@@ -5913,7 +5896,7 @@
    "label": "Crates (Workshop)",
    "rect": [
     21.32,
-    45.32,
+    39.68,
     1.0,
     1.0
    ],
@@ -5928,7 +5911,7 @@
    "id": "workshop-3-workshop-6",
    "label": "Box bed (Workshop)",
    "rect": [
-    18.68,
+    17.68,
     39.68,
     2.0,
     1.0
@@ -5943,7 +5926,7 @@
    "id": "workshop-3-workshop-7",
    "label": "Chest (Workshop)",
    "rect": [
-    20.68,
+    19.68,
     39.68,
     1.0,
     1.0
@@ -5960,7 +5943,7 @@
    "id": "workshop-3-workshop-8",
    "label": "Hearth (Workshop)",
    "rect": [
-    20.32,
+    18.68,
     45.32,
     1.0,
     1.0
@@ -5981,10 +5964,10 @@
    "id": "workshop-3-workshop-f1",
    "label": "Chest (Workshop)",
    "rect": [
-    18.68,
-    45.57,
-    0.75,
-    0.75
+    17.68,
+    41.18,
+    1,
+    1
    ],
    "flags": {
     "container": true,
@@ -6014,8 +5997,8 @@
    "id": "workshop-4-workshop-4",
    "label": "Crates (Workshop)",
    "rect": [
-    37.68,
-    62.32,
+    43.32,
+    58.68,
     1.0,
     1.0
    ],
@@ -6031,7 +6014,7 @@
    "label": "Box bed (Workshop)",
    "rect": [
     37.68,
-    60.32,
+    61.32,
     1.0,
     2.0
    ],
@@ -6045,8 +6028,8 @@
    "id": "workshop-4-workshop-7",
    "label": "Chest (Workshop)",
    "rect": [
-    38.68,
-    62.32,
+    37.68,
+    60.32,
     1.0,
     1.0
    ],
@@ -6063,7 +6046,7 @@
    "label": "Hearth (Workshop)",
    "rect": [
     43.32,
-    59.68,
+    61.3,
     1.0,
     1.0
    ],
@@ -6083,8 +6066,8 @@
    "id": "workshop-4-workshop-f1",
    "label": "Chest (Workshop)",
    "rect": [
-    42.57,
-    58.68,
+    39.18,
+    62.32,
     1,
     1
    ],
@@ -6133,7 +6116,7 @@
    "label": "Box bed (Workshop)",
    "rect": [
     75.82,
-    50.82,
+    50.43,
     1.0,
     2.0
    ],
@@ -6148,7 +6131,7 @@
    "label": "Chest (Workshop)",
    "rect": [
     74.82,
-    51.5,
+    51.93,
     1.0,
     1.0
    ],
@@ -6165,7 +6148,7 @@
    "label": "Hearth (Workshop)",
    "rect": [
     70.18,
-    50.18,
+    51.43,
     1.0,
     1.0
    ],
@@ -6185,10 +6168,10 @@
    "id": "workshop-5-workshop-f1",
    "label": "Chest (Workshop)",
    "rect": [
-    72.25,
-    49.18,
-    0.75,
-    0.75
+    73.5,
+    52.82,
+    1,
+    1
    ],
    "flags": {
     "container": true,
@@ -6200,22 +6183,6 @@
   },
   {
    "id": "workshop-6-workshop-3",
-   "label": "Crates (Workshop)",
-   "rect": [
-    21.32,
-    22.18,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
-   }
-  },
-  {
-   "id": "workshop-6-workshop-4",
    "label": "Crates (Workshop)",
    "rect": [
     21.32,
@@ -6231,10 +6198,26 @@
    }
   },
   {
+   "id": "workshop-6-workshop-4",
+   "label": "Crates (Workshop)",
+   "rect": [
+    17.68,
+    22.18,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
    "id": "workshop-6-workshop-6",
    "label": "Box bed (Workshop)",
    "rect": [
-    18.68,
+    20.3,
     22.18,
     2.0,
     1.0
@@ -6249,8 +6232,8 @@
    "id": "workshop-6-workshop-7",
    "label": "Chest (Workshop)",
    "rect": [
-    18.7,
-    23.18,
+    19.3,
+    22.18,
     1.0,
     1.0
    ],
@@ -6266,8 +6249,8 @@
    "id": "workshop-6-workshop-8",
    "label": "Hearth (Workshop)",
    "rect": [
-    19.68,
-    27.82,
+    19.43,
+    27.8,
     1.0,
     1.0
    ],
@@ -6287,8 +6270,8 @@
    "id": "workshop-6-workshop-f1",
    "label": "Chest (Workshop)",
    "rect": [
-    18.43,
-    27.82,
+    17.68,
+    23.18,
     1,
     1
    ],
@@ -6304,8 +6287,8 @@
    "id": "workshop-6-workshop-f3",
    "label": "Chest (Workshop)",
    "rect": [
-    21.57,
-    27.07,
+    18.68,
+    28.07,
     0.75,
     0.75
    ],
@@ -6322,7 +6305,7 @@
    "label": "Crates (Workshop)",
    "rect": [
     42.82,
-    11.68,
+    15.32,
     1.0,
     1.0
    ],
@@ -6354,7 +6337,7 @@
    "label": "Box bed (Workshop)",
    "rect": [
     42.82,
-    14.32,
+    12.68,
     1.0,
     2.0
    ],
@@ -6368,8 +6351,8 @@
    "id": "workshop-7-workshop-7",
    "label": "Chest (Workshop)",
    "rect": [
-    42.82,
-    13.32,
+    41.82,
+    13.68,
     1.0,
     1.0
    ],
@@ -6386,7 +6369,7 @@
    "label": "Hearth (Workshop)",
    "rect": [
     37.18,
-    14.32,
+    11.68,
     1.0,
     1.0
    ],
@@ -6406,10 +6389,10 @@
    "id": "workshop-7-workshop-f1",
    "label": "Chest (Workshop)",
    "rect": [
-    41.18,
+    38.18,
     11.68,
-    0.75,
-    0.75
+    1,
+    1
    ],
    "flags": {
     "container": true,
@@ -6421,38 +6404,6 @@
   },
   {
    "id": "storehouse-1-store-0",
-   "label": "Crates (Store)",
-   "rect": [
-    65.32,
-    34.32,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
-   }
-  },
-  {
-   "id": "storehouse-1-store-1",
-   "label": "Crates (Store)",
-   "rect": [
-    64.32,
-    34.32,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
-   }
-  },
-  {
-   "id": "storehouse-1-store-2",
    "label": "Crates (Store)",
    "rect": [
     65.32,
@@ -6468,7 +6419,23 @@
    }
   },
   {
-   "id": "storehouse-1-store-3",
+   "id": "storehouse-1-store-1",
+   "label": "Crates (Store)",
+   "rect": [
+    64.32,
+    29.68,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "storehouse-1-store-2",
    "label": "Crates (Store)",
    "rect": [
     65.32,
@@ -6484,11 +6451,27 @@
    }
   },
   {
+   "id": "storehouse-1-store-3",
+   "label": "Crates (Store)",
+   "rect": [
+    63.32,
+    29.7,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
    "id": "storehouse-1-store-f1",
    "label": "Chest (Store)",
    "rect": [
-    64.32,
-    29.7,
+    63.32,
+    34.32,
     1,
     1
    ],
@@ -6520,7 +6503,7 @@
    "label": "Chest (Guardroom)",
    "rect": [
     90.68,
-    41.18,
+    41.32,
     1.0,
     1.0
    ],
@@ -6557,7 +6540,7 @@
    "id": "guardhouse-1-guardroom-f0",
    "label": "Chest (Guardroom)",
    "rect": [
-    92.5,
+    90.03,
     39.68,
     0.75,
     0.75
@@ -6696,7 +6679,7 @@
    "label": "Box bed (Cottage)",
    "rect": [
     56.82,
-    12.32,
+    11.68,
     1.0,
     2.0
    ],
@@ -6917,7 +6900,7 @@
    "label": "Box bed (Cottage)",
    "rect": [
     49.68,
-    60.68,
+    61.32,
     1.0,
     2.0
    ],
@@ -6948,7 +6931,7 @@
    "id": "cottage-4-cottage-f0",
    "label": "Cupboard (Cottage)",
    "rect": [
-    50.68,
+    53.82,
     58.68,
     1.5,
     0.75
@@ -7325,7 +7308,7 @@
    "label": "Box bed (Cottage)",
    "rect": [
     20.82,
-    49.32,
+    48.68,
     1.0,
     2.0
    ],
@@ -7611,7 +7594,7 @@
    "id": "byre-house-5-living-room-0",
    "label": "Oven (Living room)",
    "rect": [
-    4.32,
+    4.3,
     33.32,
     2.0,
     2.0
@@ -7663,7 +7646,7 @@
    "label": "Chest (Living room)",
    "rect": [
     2.68,
-    31.7,
+    33.32,
     1.0,
     1.0
    ],
@@ -8123,7 +8106,7 @@
    "id": "cottage-15-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    50.82,
+    50.18,
     8.82,
     2.0,
     1.0
@@ -8293,7 +8276,7 @@
    "id": "cottage-17-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    42.68,
+    43.32,
     3.68,
     2.0,
     1.0
@@ -8463,7 +8446,7 @@
    "id": "cottage-19-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    52.68,
+    53.32,
     69.32,
     2.0,
     1.0
@@ -8479,7 +8462,7 @@
    "label": "Chest (Cottage)",
    "rect": [
     54.32,
-    68.32,
+    68.3,
     1.0,
     1.0
    ],
@@ -8495,8 +8478,8 @@
    "id": "cottage-19-cottage-f2",
    "label": "Cupboard (Cottage)",
    "rect": [
-    54.57,
-    66.48,
+    50.68,
+    64.98,
     0.75,
     1.5
    ],

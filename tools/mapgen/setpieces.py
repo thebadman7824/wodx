@@ -40,8 +40,8 @@ SET_PIECES = [
     # living and eating
     SP("long-table", ["hall", "tavern", "kitchen"], "centre", (5, 3), [("table", .5, 1, 4, 1, "base"), ("seat", .5, 0, 1, 1, "face:base"), ("seat", 2, 0, 1, 1, "face:base"), ("seat", 3.5, 0, 1, 1, "face:base"), ("seat", .5, 2, 1, 1, "face:base"), ("seat", 2, 2, 1, 1, "face:base"), ("seat", 3.5, 2, 1, 1, "face:base"), *on("clutter", 4), *on("light")]),
     SP("dining-table", ["hall", "kitchen"], "centre", (3, 3), [("table", .5, 1, 2, 1, "base"), ("seat", .5, 0, 1, 1, "face:base"), ("seat", 1.5, 2, 1, 1, "face:base"), ("seat", 1.5, 0, 1, 1, "face:base"), ("seat", .5, 2, 1, 1, "face:base"), *on("clutter", 2)]),
-    SP("hearth-and-settle", ["hall", "tavern", "kitchen"], "wall", (3, 3), [("hearth", .5, 0, 2, 1, "base"), ("seat", 0, 2, 2, 1, "face:base"), ("seat", 2, 1.5, 1, 1, "face:base")], bands=EARLY),
-    SP("fireside-seats", ["hall", "tavern", "study"], "wall", (3, 2), [("hearth", .5, 0, 2, 1, "base"), ("seat", 0, 1, 1, 1, "face:base"), ("seat", 2, 1, 1, 1, "face:base")], bands=EARLY + ["republic"]),
+    SP("hearth-and-settle", ["hall", "tavern", "kitchen"], "wall", (3, 3), [("hearth", .5, 0, 2, 1, "base"), ("rug", .5, 1, 2, 1, "under"), ("seat", 0, 2, 2, 1, "face:base"), ("seat", 2, 1.5, 1, 1, "face:base")], bands=EARLY),
+    SP("fireside-seats", ["hall", "tavern", "study"], "wall", (3, 2), [("hearth", .5, 0, 2, 1, "base"), ("rug", .5, 1, 2, 1, "under"), ("seat", 0, 1, 1, 1, "face:base"), ("seat", 2, 1, 1, 1, "face:base")], bands=EARLY + ["republic"]),
     SP("sofa-and-tv", ["hall"], "wall", (3, 3), [("machine", 1, 0, 1, 1, "base"), ("seat", 0, 2, 3, 1, "face:base"), ("table", 1, 1.2, 1, .8, "beside")], bands=["socialist", "modern", "future"]),
     SP("armchair-corner", ["hall", "sleep", "study"], "corner", (2, 2), [("seat", 0, 0, 1, 1, "base"), ("light", 1, 0, 1, 1, "back"), ("plant", 0, 1, 1, 1, "back")]),
     SP("side-table-lamp", HOMEY, "wall", (2, 1), [("table", 0, 0, 1, 1, "base"), *on("light"), ("seat", 1, 0, 1, 1, "back")]),
@@ -58,7 +58,7 @@ SET_PIECES = [
     # kitchens and stores
     SP("kitchen-hearth", ["kitchen"], "wall", (3, 2), [("hearth", .5, 0, 2, 1, "base"), ("store", 0, 1, 1, 1, "beside"), ("store", 2, 1, 1, 1, "beside")], bands=EARLY),
     SP("kitchen-stove", ["kitchen"], "wall", (3, 1), [("stove", 0, 0, 1, 1, "base"), ("cupboard", 1, 0, 2, 1, "back")], bands=["industrial"] + LATER),
-    SP("kitchen-table", ["kitchen"], "centre", (3, 2), [("table", .5, 0, 2, 1, "base"), ("seat", .5, 1, 1, 1, "face:base"), *on("clutter", 3)]),
+    SP("kitchen-table", ["kitchen"], "centre", (3, 2), [("table", .5, 0, 2, 1, "base"), ("seat", .5, 1, 1, 1, "face:base"), *on("tableware", 4)]),
     SP("store-barrels", ["store", "kitchen", "tavern", "work"], "corner", (2, 2), [("store", 0, 0, 1, 1, "base"), ("store", 1, 0, 1, 1, "back"), ("store", 0, 1, 1, 1, "back")]),
     SP("store-crates", ["store", "work", "shop"], "wall", (3, 1), [("store", 0, 0, 1, 1, "base"), ("store", 1, 0, 1, 1, "back"), ("store", 2, 0, 1, 1, "back")]),
     SP("shelf-store", ["store", "kitchen", "shop"], "wall", (2, 1), [("shelf", 0, 0, 2, 1, "base"), *on("clutter", 2)]),
@@ -69,7 +69,8 @@ SET_PIECES = [
     SP("shop-display", ["shop"], "wall", (3, 1), [("shelf", 0, 0, 2, 1, "base"), ("display", 2, 0, 1, 1, "back"), *on("clutter", 3)]),
     SP("counter-and-goods", ["shop", "tavern"], "wall", (4, 2), [("counter", 0, 1, 3, 1, "base"), ("shelf", 0, 0, 2, 1, "back"), ("store", 3, 0, 1, 1, "back"), *on("clutter", 2)]),
     SP("strong-counter", ["shop", "study"], "wall", (4, 2), [("counter", 0, 1, 4, 1, "base"), ("chest", 0, 0, 1, 1, "back"), ("cupboard", 2, 0, 2, 1, "back"), *on("clutter", 2)]),
-    SP("bar-counter", ["tavern"], "wall", (4, 2), [("counter", 0, 1, 4, 1, "base"), ("store", 0, 0, 1, 1, "back"), ("store", 1, 0, 1, 1, "back"), ("shelf", 2, 0, 2, 1, "back")]),
+    SP("bar-counter", ["tavern"], "wall", (5, 3), [("counter", 0, 1, 4, 1, "base"), ("store", 0, 0, 1, 1, "back"), ("shelf", 1, 0, 2, 1, "back"),   # one end open to walk behind
+                                                ("seat", 0, 2, 1, 1, "face:base"), ("seat", 1.5, 2, 1, 1, "face:base"), ("seat", 3, 2, 1, 1, "face:base")]),
     SP("tavern-table", ["tavern", "hall"], "centre", (3, 3), [("table", 1, 1, 1, 1, "base"), ("seat", 1, 0, 1, 1, "face:base"), ("seat", 1, 2, 1, 1, "face:base"), ("seat", 0, 1, 1, 1, "face:base"), ("seat", 2, 1, 1, 1, "face:base"), *on("clutter", 2)]),
     SP("corner-booth", ["tavern"], "corner", (3, 3), [("seat", 0, 0, 3, 1, "base"), ("table", .5, 1, 2, 1, "beside"), ("seat", 0, 2, 3, 1, "face:base")]),
     # worship
@@ -81,6 +82,8 @@ SET_PIECES = [
     SP("bench-wall", ["hall", "kitchen", "tavern", "passage", "work"], "wall", (2, 1), [("seat", 0, 0, 2, 1, "base")]),
     SP("chest-wall", ["sleep", "hall", "store", "study", "work"], "wall", (1, 1), [("chest", 0, 0, 1, 1, "base")]),
     SP("kitchen-worktable", ["kitchen", "work"], "wall", (2, 1), [("table", 0, 0, 2, 1, "base"), *on("clutter", 3)]),
+    SP("store-cluster", ["store", "work"], "corner", (3, 2), [("store", 0, 0, 1, 1, "base"), ("store", 1, 0, 1, 1, "back"), ("store", 2, 0, 1, 1, "back"),
+                                                         ("store", 0, 1, 1, 1, "back"), ("store", 1, 1, 1, 1, "back")]),   # goods stacked together, corner first
     SP("store-sacks", ["store", "kitchen", "work"], "wall", (2, 1), [("store", 0, 0, 1, 1, "base"), ("store", 1, 0, 1, 1, "back")]),
     SP("barrel-corner", ["store", "kitchen", "outdoor", "work", "tavern"], "corner", (1, 1), [("store", 0, 0, 1, 1, "base")]),
     SP("court-bench", ["outdoor"], "wall", (3, 1), [("seat", 0, 0, 2, 1, "base"), ("plant", 2, 0, 1, 1, "back")]),
