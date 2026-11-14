@@ -193,6 +193,7 @@ Next free block: B3780
 | B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3719) | Library |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
+| B3740-B3769 | Powers pass: every power gets a real effect (used B3740) | Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
 <!-- decision-index:end -->
 
@@ -6337,6 +6338,11 @@ Reverse: Each gate's own commit can be reverted on its own.
 Ben's standing rule: whenever something is added to the game, it must have some kind of tangible effect, unless it would be impossible to render. A minor or major release note in changes/ now carries an effect: line that says what a player or the Storyteller sees change (a roll, a card, a sheet row, a map or token change, a sound, a line an NPC says), or effect: none with the reason. node tools/release/merge-stamp.mjs --check warns when the line is missing. The rule is in docs/WORKFLOW.md and changes/README.md, and the gate for the feature checks that the effect happens.
 
 Reverse: Remove effectWarnings from merge-stamp.mjs and the paragraphs from docs/WORKFLOW.md and changes/README.md.
+
+## B3740. Wraith Arcanoi apply their keywords (2026-11-14)
+WoDX Actions. Ben asked that every power have a tangible effect in play. The inventory (tools/powers/inventory.mjs, Powers Desk) found every Arcanos art showed its effect line but applied nothing, though each art already had effect keywords (B781). Use an Arcanos now calls powerPlan with the "wraith" or "greatwar" set after a roll with successes, so the keywords go on the effects card under the same routes as Disciplines and Gifts: plain keywords on an NPC or the user apply with Undo, mind keywords and anything on a player character wait for approval, Storyteller keywords stay the Storyteller's call. The world setting "Power keywords on the effects card" (powerEffects) turns it off. The harness test powers-inventory.test.mjs keeps a ceiling on roll-only and empty powers, lowered as each line is built.
+
+Reverse: remove the powerPlan block in useArcanos (wraith.js), or turn powerEffects off in the world.
 
 ## B3770. Kuei-jin make stone weapons and true jade (2026-11-14)
 WoDX Library, data/wonders-kuei-jin.mjs and scripts/wonders-kuei-jin.mjs. The Item Crafting Desk pick kj2 (full). Kindred of the East has jade talismans only as a Background (pp. 86-87), but the Companion (p. 67) gives the masters of Jade Shintai two powers that make things, Blade of Stone and Taste of Jade. Both are a Kuei-jin kit on the shared wonders registry (B3683), world setting craftKueiJin, on by default like the other kits.
