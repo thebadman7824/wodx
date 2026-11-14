@@ -49,7 +49,8 @@ export function abilitiesOf(a) {
 export function poolFor(a, task) {
   const t = R.normTask(task);
   const at = a?.system?.attributes?.[t.attr];
-  const ab = t.ability ? a?.system?.abilities?.[t.ability] : null;
+  const abKey = R.abilityKey(t.ability);
+  const ab = abKey ? a?.system?.abilities?.[abKey] : null;
   // 0.27.0: a faction's building rolls its Resources + Retainers; workers add a die each
   if ( t.faction ) return Math.max(1, Own.factionPool(t.faction) + t.workers + t.dice);
   // B3632: the Rite of Binding rolls permanent Willpower alone
@@ -57,7 +58,7 @@ export function poolFor(a, task) {
   // B3683: a kit may roll one trait alone (Arete, say): a number, or {permanent} / {value} / {total}
   if ( t.pool.startsWith("path:") ) { const v = foundry.utils.getProperty(a, t.pool.slice(5)); return Math.max(1, num(typeof v === "object" ? (v?.permanent ?? v?.total ?? v?.value) : v) + t.dice); }
   // 0.42.0: followers helping add their own dots in the Ability
-  const help = R.helperDice(t.helpers.map(id => game.actors?.get?.(id)).filter(Boolean).map(h => ({dots: t.ability ? num(h.system?.abilities?.[t.ability]?.value) : 0})));
+  const help = R.helperDice(t.helpers.map(id => game.actors?.get?.(id)).filter(Boolean).map(h => ({dots: abKey ? num(h.system?.abilities?.[abKey]?.value) : 0})));
   return Math.max(1, num(at?.total ?? at?.value) + num(ab?.value) + t.dice + t.workers + help);
 }
 
