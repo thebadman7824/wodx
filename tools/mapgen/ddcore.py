@@ -143,6 +143,7 @@ class Room:
         for both turns of the item. Wall and corner rules are hard: the item must touch a wall."""
         out = []
         edges = self.blocked + [(i["x"], i["y"], i["w"], i["h"]) for i in self.items]
+        obstacles = [tuple(e[:4]) for e in edges]                    # what fits() tests against, with open floor kept
         kind, _, arg = rule.partition(":")
         turns = ((fw, fh, 0),) if kind == "end" else ((fh, fw, 1),) if kind == "endt" else ((fw, fh, 0), (fh, fw, 1))
         for (w, h, rot) in turns:
@@ -151,13 +152,17 @@ class Room:
             for bx, by, bw, bh, *_ in edges:
                 xs |= {round(bx + bw, 4), round(bx - w, 4)}; ys |= {round(by + bh, 4), round(by - h, 4)}
             for x in xs:
+                if x < self.ix - 1e-6 or x + w > self.ix + self.iw + 1e-6: continue
+                col = [b for b in obstacles if x < b[0] + b[2] - 1e-6 and b[0] < x + w - 1e-6]   # what this column could hit
                 for y in ys:
-                    if not self.fits((x, y, w, h)): continue
+                    # the cheap wall tests first, then the overlap test (same result as fits(), much faster in big rooms)
                     t = self.touching(x, y, w, h)
                     if kind in ("wall", "corner", "window", "end", "endt") and not (all(t[c] for c in arg) if arg else any(t.values())): continue
                     if kind == "corner" and sum(t.values()) < 2: continue
                     if kind in ("wall", "window") and w != h and sum(t.values()) == 1 and ((t["N"] or t["S"]) != (w > h)): continue
                     if kind == "wall" and len(arg) == 1 and w != h and ((arg in "NS") != (w > h)): continue
+                    if y < self.iy - 1e-6 or y + h > self.iy + self.ih + 1e-6: continue
+                    if any(y < by + bh - 1e-6 and by < y + h - 1e-6 for _, by, _, bh in col): continue
                     out.append((self.score(x, y, w, h, rule, rot), x, y, w, h, rot))
         out.sort(key=lambda c: -c[0])
         return out
