@@ -441,15 +441,25 @@ async function onAnswer(m) {
 }
 
 let timer = null;
+/** The approval cards this file answers: growing up, a child asked for, a wedding after a proposal. */
+export function registerHandlers() {
+  const reg = chron()?.registerApprovalHandler;
+  if ( !reg ) return false;
+  reg(GROW, {label: "A child grows up", approve: e => applyGrowth(e.data?.plan), reject: async () => "Left as it was"});
+  reg(ASK_CHILD, {label: "A child asked for by players", approve: e => conceive(e.data?.a, e.data?.b)});
+  reg(WEDDING, {label: "A wedding after a proposal", approve: wed, reject: unwed});
+  return true;
+}
+
 export function listen() {
   bindProposalCards();
   registerSettings();
   guardChildCharacters();
   Hooks.on("wodxSkipEnd", info => { onSkipEnd(info).catch(e => console.error(`${MOD} | growing up`, e)); });
+  // Chronicle's API may come after this module's ready, so the handlers are also registered on wodxChronicleReady
+  Hooks.on("wodxChronicleReady", registerHandlers);
   Hooks.once("ready", () => {
-    chron()?.registerApprovalHandler?.(GROW, {label: "A child grows up", approve: e => applyGrowth(e.data?.plan), reject: async () => "Left as it was"});
-    chron()?.registerApprovalHandler?.(ASK_CHILD, {label: "A child asked for by players", approve: e => conceive(e.data?.a, e.data?.b)});
-    chron()?.registerApprovalHandler?.(WEDDING, {label: "A wedding after a proposal", approve: wed, reject: unwed});
+    registerHandlers();
     game.socket.on(SOCKET, m => { if ( !isActiveGM() ) return;
       const run = m?.type === "family.child" ? onAsk : m?.type === "family.propose" ? onPropose : m?.type === "family.answer" ? onAnswer : null;
       if ( run ) run(m).catch(e => console.error(`${MOD} | family`, e));
