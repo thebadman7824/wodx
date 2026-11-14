@@ -2401,11 +2401,11 @@
    }
   },
   {
-   "id": "smithy-1-forge-f2",
+   "id": "smithy-1-forge-f1",
    "label": "Chest (Forge)",
    "rect": [
-    51.93,
-    3.68,
+    51.18,
+    7.57,
     0.75,
     0.75
    ],
@@ -2455,6 +2455,23 @@
    "rect": [
     51.18,
     9.57,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "smithy-1-smiths-room-f4",
+   "label": "Chest (Smith's room)",
+   "rect": [
+    54.18,
+    10.57,
     0.75,
     0.75
    ],
@@ -2722,13 +2739,13 @@
    }
   },
   {
-   "id": "cottage-2-cottage-f0",
+   "id": "cottage-2-cottage-f2",
    "label": "Cupboard (Cottage)",
    "rect": [
-    16.82,
-    21.32,
-    2,
-    1
+    18.07,
+    17.68,
+    0.75,
+    1.5
    ],
    "flags": {
     "container": true,
