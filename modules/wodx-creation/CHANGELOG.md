@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.41.1 (An elder's Lifepath years before 1197 now always offer one mark of their homeland on the first draw (B3180). Before this fix, the clan's own ways could fill all five places)
 - 0.41.0 (The Armenians join the People generator with over 300 names: given names of Greater Armenia and Cilicia, bynames of the home town before 1800 and family names in -ian or -yan after (B3940 to B3942))
 - 0.40.0 (The Southwest: the Pueblos (the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the People generator with recorded names, staged by age (B3930 to B3934))
 - 0.39.0 (The Maya join the People generator: lords and day names of Yucatán, the Petén and the K'iche' and Kaqchikel highlands before the conquest, church given names after, and the old lineage names as patronyms throughout (B3830 to B3833))
