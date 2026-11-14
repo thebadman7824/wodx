@@ -219,7 +219,7 @@ Next free block: B4750
 | B4670-B4679 | Furniture that does something: stocked shelves, desks and barrels; tables and counters as cover (used B4670-B4673) | Interactables, Combat (and the map generator in tools/mapgen) |
 | B4680-B4689 | Aboriginal Australian names in the People generator (used B4680-B4682) | Creation, Chronicle |
 | B4690-B4699 | Central Africa names (Kongo, Luba, Ganda) (used B4690-B4692) | Creation, Chronicle |
-| B4700-B4709 | A heartbeat from GitHub for the PC runner (used B4700) | tools (no module) |
+| B4700-B4709 | A heartbeat from GitHub for the PC runner (used B4700-B4701) | tools (no module) |
 | B4710-B4719 | Amazigh (Berber) names (used B4710-B4712) | Creation, Chronicle |
 | B4720-B4729 | Old installed tables stand aside for their replacements (used B4720) | Chronicle |
 | B4730-B4739 | Sephardi and Mizrahi Jewish names (used B4730-B4732) | Creation, Chronicle |
@@ -7160,6 +7160,14 @@ minutes. When the status is more than 15 minutes old, it opens a pc-alert issue 
 that issue once the status moves again. The coordinator already watches pc-alert issues.
 
 Reverse: delete .github/workflows/pc-heartbeat.yml.
+
+## B4701. The effects modules' first-run settings are not drift (2026-11-14)
+Testbed lanes (tools/lanes). After lanes 2-6 took the effects modules from lane 1, gates on two lanes stopped with
+DRIFT: fxmaster, Sequencer and Token Magic write their own housekeeping settings (a release note seen, a cleanup
+version, the preset list) the first time a GM loads the world, after the lane's clean fingerprint is taken. They are
+added to ignoreSettings in lanes.json, like the other settings that change on their own.
+
+Reverse: take the four names out of ignoreSettings.
 
 ## B4710. The Maghreb holds the Amazigh beside the Arabs (2026-11-14)
 WoDX Creation and Chronicle. The Maghreb was all Arab; the Amazigh now hold 42 in 100 in the medieval mix, 34 in the industrial age beside the French, and 38 today. Taken as recommended; logged in PENDING-REVIEW.
