@@ -11,7 +11,7 @@
  * World setting townTurn: Auto (the week lands with one Undo card for the Storyteller; an event where a player
  * character stands waits in the approval queue) or Suggest (every town's week waits in the queue) or Off.
  * Hidden world state wodx-storyteller.townState. Big events start rumours from the town's traders, go in the
- * Storyteller's log, and fire wodxTown {town, kind, text, big} for other modules (passers-by, factions).
+ * Storyteller's log, and fire wodxTown {town, kind, text, big} for other modules (passers-by, factions, town scars).
  */
 import * as TR from "./town-rules.mjs";
 import * as TownLooks from "./town-looks.mjs";
@@ -197,7 +197,7 @@ async function tell(e) {
   // B3618: with the town's name and region, so WoDX Chronicle can ask whether a rising wins
   let name = "", region = "";
   try { const m = MK.marketById(Markets.state(), e.town); name = m?.name ?? ""; region = regionOfMarket(m, state().towns?.[e.town]); } catch (err) { /* name and region are optional */ }
-  Hooks.callAll("wodxTown", {town: e.town, kind: e.kind, text: e.text, big: e.big, name, region, prosperity: e.effect?.prosperity ?? e.prosperity ?? 0});
+  Hooks.callAll("wodxTown", {town: e.town, kind: e.kind, text: e.text, big: e.big, prosperity: e.effect?.prosperity ?? e.prosperity ?? 0, name, region});
   if ( !e.big ) return;
   try { await log({kind: "note", text: ev(e)}); } catch (err) { /* log is optional */ }
   if ( setting("rumourNetwork") === false ) return;
