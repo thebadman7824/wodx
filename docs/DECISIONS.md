@@ -193,7 +193,7 @@ Next free block: B3820
 | B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3719) | Library |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
-| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3749) | Actions |
+| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3750) | Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
 | B3780-B3809 | The no-effect audit: gear in the fight (used B3780-B3803) | Combat |
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
@@ -6381,6 +6381,10 @@ How to reverse: drop the orpheus-horrors.js import in orpheus.js; the Horror win
 ## B3749. Hunter edges, hedge sorcery and Repel act on the effects card (2026-11-14)
 WoDX Actions. Use an edge showed the edge's line but applied nothing; a hedge spell that worked said only that it worked; Repel told the table what the creature must do. Now an edge that succeeds (or needs no roll) puts its Hunter: The Reckoning keywords on the effects card, as the Dark Ages Disciplines and Gifts do; a lost resisted roll applies nothing. Each of the fifteen hedge paths (Sorcerer pp. 64-86) has an outcome once the spell reaches its successes: Hellfire deals two lethal dice a success up to the Path rating, Healing heals by its aspect, Fascination and Fortune last the scene, Conveyance moves, and the rest note their level for the Storyteller. Repel puts Repelled on the creature's token: a turn of flight a success in the Dark Ages, the scene under The Hunters Hunted II. The Inquisitor Blessings stay typed in: the book's text could not be read.
 How to reverse: drop the EF calls in reckoning.js useEdge and hunter.js hedge magic and True Faith.
+
+## B3750. Kuei-jin Disciplines power by power, on the effects card (2026-11-14)
+WoDX Actions. Spend Chi took a Discipline, a kind of Chi, points and a bare roll, and applied nothing but the Chi spent; the Disciplines had no powers listed. Now each of the fifteen Disciplines (Kindred of the East pp. 101-126) lists its powers by level in our own words with the page, and Spend Chi offers the ones the rating reaches. Picking one fills in the Chi it costs, the pool (Attribute or Virtue plus Ability) and the difficulty (the local Wall where the book says so), and a power that works puts its result on the effects card: damage (Five Poison Cloud, Goblin Scorch, Bloodlash), timed effects (Dragon Dance, Shrouded Moon, Corpse Skin), Chi Interrupt's paralysis, moves, and notes for what the Storyteller rules. Powers whose scanned heading was unreadable carry a plain name for what they do and point to the page.
+How to reverse: drop the Power select and the EF call in kote.js spend; delete kote-arts.js.
 
 ## B3770. Kuei-jin make stone weapons and true jade (2026-11-14)
 WoDX Library, data/wonders-kuei-jin.mjs and scripts/wonders-kuei-jin.mjs. The Item Crafting Desk pick kj2 (full). Kindred of the East has jade talismans only as a Background (pp. 86-87), but the Companion (p. 67) gives the masters of Jade Shintai two powers that make things, Blade of Stone and Taste of Jade. Both are a Kuei-jin kit on the shared wonders registry (B3683), world setting craftKueiJin, on by default like the other kits.

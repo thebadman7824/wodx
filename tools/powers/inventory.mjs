@@ -31,7 +31,7 @@ const DE = await import(A("scripts/demon-evocations.js"));
 const H = await import(A("scripts/hunter-rules.js"));
 const R = await import(A("scripts/reckoning-rules.js"));
 const O = await import(A("scripts/orpheus-rules.js"));
-const K = await import(A("scripts/kote-rules.js"));
+const KA = await import(A("scripts/kote-arts.js"));
 const F = await import(A("scripts/fae-da-rules.js"));
 const MD = await import(A("scripts/mage-da-rules.js"));
 const M20 = await import(A("scripts/m20-rules.js"));
@@ -156,9 +156,12 @@ for ( const [id, h] of Object.entries(O.HORRORS) ) {
   add("Orpheus", `Horrors (${h.shade})`, h.label, { status: res.some(r => !["note", "st"].includes(r.out?.kind) && !r.st) ? "applies" : fx ? "card" : "roll", kw: kw?.keywords ?? [],
     page: fx ? `Orpheus ${fx.page}` : "Orpheus pp. 124, 190-193", how: fx ? "Horror window: the line for the Vitality put in, the usual pool, and the effects card" : "Vitality spend and roll; no effect" });
 }
-/* -- Kindred of the East: Chi arts (no power list) */
-for ( const [id, a] of Object.entries(K.ARTS) )
-  add("Kuei-jin (KotE)", `Chi art (${a.kind})`, id, { status: "none", page: "KotE", how: "the art is a sheet trait: no powers listed, no roll window (the book's scan is unreadable)" });
+/* -- Kindred of the East: the Disciplines power by power (kote.js Spend Chi) */
+for ( const p of KA.POWERS ) {
+  const res = KA.artResults(p.id, 2);
+  add("Kuei-jin (KotE)", KA.ART_LABEL[p.art], p.name, { status: res.some(r => !["note", "st"].includes(r.out?.kind) && !r.st) ? "applies" : "card", kw: [p.spec.kw],
+    page: `KotE p. ${p.p}`, how: "Spend Chi: the named power fills the Chi, pool and difficulty, and the effects card carries the result" });
+}
 /* -- Book rituals and rites (the Storyteller's effect window only) */
 for ( const [set, b] of Object.entries(BR.BOOK_RITUALS) ) for ( const r of b.list )
   add(`Rituals (${b.book})`, r.g, r.n, { status: applyingKw(r.k) ? "st" : "card", kw: r.k ?? [], page: `${b.book} ${r.page}`, how: "card and keywords in the Storyteller's effect window; the caster's own rite or ritual roll does not pull it" });
@@ -174,7 +177,6 @@ for ( const [id, u] of Object.entries(CB.UNARMED) ) add("Combat", "Unarmed attac
 for ( const g of D.GIFTS ) add("Demon (DtF)", "Pact gifts to thralls", g.label, { status: "card", page: "DtF", how: "Thralls window lists the gift and its Faith; nothing is applied" });
 add("Hunter (Inquisitor)", "Blessings (whole list)", "Benedictions, Investitures, Legacies, Psalms, Orisons, Holy Arts", { status: "roll", page: "DA:Inquisitor ch. 5", how: "the Blessing is typed in; roll and Conviction only; no list, no effect" });
 add("Werewolf (Changing Breeds)", "Fera Gifts (whole list)", "Gifts of the Changing Breeds", { status: "roll", page: "W20 Changing Breeds", how: "breed traits are known; their own Gifts are not listed (W20 Gifts by name catch the shared ones)" });
-add("Kuei-jin (KotE)", "Disciplines (whole list)", "Chi arts powers by level", { status: "none", page: "KotE (text now in book-text/kote)", how: "no power list; the page index scan was unreadable, the new text copy reads" });
 const out = { made: new Date().toISOString(), counts: {}, byLine: {}, rows };
 for ( const r of rows ) {
   out.counts[r.status] = (out.counts[r.status] ?? 0) + 1;

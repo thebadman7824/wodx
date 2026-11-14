@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.77.0 (Powers pass, Kuei-jin: every Discipline power by level in Spend Chi, with its effect on the effects card (B3750))
 - 3.76.0 (Powers pass, Hunter: edges, hedge sorcery and Repel put their effects on the effects card (B3749))
 - 3.75.0 (Powers pass, Orpheus: each Horror says what every level of Vitality does and puts it on the effects card (B3748); Powers pass, Werewolf: Use a Gift knows the 239 W20 Gifts the Dark Ages library lacks, each with its pool, difficulty, cost, duration, effect text and W20 page (B3747))
 - 3.74.0 (Powers pass, Vampire: Use a Discipline knows the V20 powers too. After the Dark Ages, the modern powers replace the Dark Ages ones at the same level, each with its card, roll, cost, duration and effects (B3746))
