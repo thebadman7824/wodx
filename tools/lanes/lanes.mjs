@@ -147,6 +147,8 @@ try {
       const src = getLane(cfg, 1);
       if ( fs.existsSync(worldDir(lane)) && !flag("again") ) die(`Lane ${lane.id} already has a world at ${worldDir(lane)}. Use reset, or --again.`);
       if ( !fs.existsSync(path.join(cfg.knownGood, cfg.world)) ) die(`No known-good copy at ${cfg.knownGood}. Stop lane 1 and run: lanes.mjs snapshot --from 1`);
+      // --again on a lane in use: stop its Foundry first, or the world copy lands on an open database
+      if ( flag("again") && await isUp(lane) ) await stop(lane);
       for ( const d of ["Data/modules", "Data/systems", "Data/worlds", "Config", "Logs"] ) fs.mkdirSync(path.join(lane.dataPath, d), {recursive: true});
       // Config: everything from lane 1 (licence, certificate), then options.json with this lane's port and UPnP off.
       // Not lane 1's lock files: a copied options.json.lock keeps the new lane from starting (B4103).
