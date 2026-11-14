@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3670
+Next free block: B3680
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -185,6 +185,7 @@ Next free block: B3670
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
 | B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3621) | Chronicle |
 | B3660-B3669 | The Rothenstein saga: the running step for other systems (used B3660-B3669) | Chronicle |
+| B3670-B3679 | The Rothenstein saga changes its town; the rebuild turns it on (used B3670-B3671) | Chronicle, Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5963,3 +5964,13 @@ Reverse: remove `branch: "future"` from the arcology book.
 WoDX Chronicle. api.pod.saga.current() returns {book, title, step, dealt, next} for the running book, or null, so the Storyteller's night draw (Threads of Fate) can use the saga's step when no storyline of its own is open. It reads only; nothing moves.
 
 Reverse: remove sagaCurrent from pod.mjs.
+
+## B3670. Saga steps change the town through towns over time (2026-11-14)
+WoDX Chronicle and WoDX Storyteller. Ben's pick on the Rothenstein Saga desk (d-world). A saga step may name a town change; Storyteller's towns over time applies it to the market named by the saga's place (Rothenstein) at once, like a dated event's news, once per step (kept in the town's seen list). The changes are SAGA_TOWN in town-rules.mjs: boom, war, famine and plague follow the news presets (plague takes 12 in 100 over its weeks), a siege also kills 1 in 100, exile drives out 1 in 10, the 1946 expulsion 35 in 100, a flood wrecks the riverside. Seventeen steps carry one, from the Mongols in 1241 to the 1997 flood.
+
+Reverse: remove `town` from the steps in data/saga-rothenstein.mjs, or the wodxSaga listener in towns.mjs; a card's Undo takes one back.
+
+## B3671. The rebuild turns the saga on (2026-11-14)
+WoDX Storyteller. Ben's pick (d-switch): the saga stays off by default, and the chronicle builder's settings step turns WoDX Chronicle's podSaga on when the recipe's spine names the saga (recipe-rothenstein.mjs spine.saga = "rothenstein").
+
+Reverse: remove spine.saga from the recipe, or turn the switch off in the built world.
