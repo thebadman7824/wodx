@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4750
+Next free block: B4760
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -224,6 +224,7 @@ Next free block: B4750
 | B4720-B4729 | Old installed tables stand aside for their replacements (used B4720) | Chronicle |
 | B4730-B4739 | Sephardi and Mizrahi Jewish names (used B4730-B4732) | Creation, Chronicle |
 | B4740-B4749 | Khmer names (used B4740-B4742) | Creation, Chronicle |
+| B4750-B4759 | Filipino names (used B4750-B4752) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7218,3 +7219,18 @@ Reverse: edit the khmer entry in data/people-world.mjs.
 WoDX Creation. Modern Khmer names put the family name first, as Chinese and Vietnamese names do in WoDX.
 
 Reverse: drop khmer from FAMILY_FIRST in data/people-world.mjs.
+
+## B4750. The Philippine islands share the Malay world's mix (2026-11-14)
+WoDX Creation and Chronicle. The world map has no Philippines region of its own; Filipinos join the Malay world's mix at 14 in 100 before the Spanish and 12 after. A region of its own (its own map point, law and weather) waits for a later pass. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old nusantara mixes in world-rules.mjs and drop filipinoTables from people-world.mjs.
+
+## B4751. One list for the Tagalog, Visayan and Ilocano peoples (2026-11-14)
+WoDX Creation. Own names of the datus and rajahs and their people in Pigafetta, Legazpi and the conquest of Manila, women unnamed in the records as "A woman of" a barangay or domain; the Moro sultanates wait for a list of their own. Fewer than 300 names.
+
+Reverse: edit the lists in data/people-filipino.mjs.
+
+## B4752. Church names from 1565, family names from 1800 (2026-11-14)
+WoDX Creation. Baptism brings church names from the Spanish settlement of 1565, sometimes before the own name; family names from the Clavería catalogue of 1849 and the native names kept, from 1800 (the era groups are coarser than 1849).
+
+Reverse: change church, family or earlyChurch in data/people-filipino.mjs.
