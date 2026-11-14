@@ -88,8 +88,11 @@ export const WORLD_REGIONS = {
     medieval: "swahili 55, amharic 30, arabic 15", industrial: "swahili 55, amharic 30, arabic 10, hindi 5"}),
   "southern-africa": R("Southern Africa (the Cape, the Highveld, Great Zimbabwe's heirs)", "other", -26.2, 28.0, "southern-africa", "southern-african", {
     medieval: "zulu 100", "early-modern": "zulu 90, dutch 10", industrial: "zulu 65, dutch 18, english 14, hindi 3"}),
+  // The Kongo, Luba and Lunda, and Buganda from 1197; the Portuguese at the Kongo court from 1491, the Swahili and
+  // French with the trade and the colony (B4690)
   "central-africa": R("Central Africa (Kongo, the great lakes, the rainforest)", "other", -4.3, 15.3, "tropical-wet", "kongo", {
-    industrial: "swahili 55, french 30, portuguese 15", modern: "swahili 60, french 40"}, {from: 1880}),
+    medieval: "kongo 45, luba 35, ganda 20", "early-modern": "kongo 46, luba 34, ganda 18, portuguese 2",
+    industrial: "kongo 36, luba 30, ganda 14, swahili 10, french 6, portuguese 4", modern: "kongo 38, luba 34, ganda 12, swahili 8, french 8"}),
   // The Americas
   "canada": R("Canada (Québec, the Great Lakes, the prairies, the north)", "americas", 45.5, -73.6, "boreal", "canadian", {
     // and the Cree, the Anishinaabe and the Haida and Tlingit of the Northwest coast (B4160)

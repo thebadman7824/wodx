@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4690
+Next free block: B4700
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -217,6 +217,7 @@ Next free block: B4690
 | B4650-B4659 | Inuit names in the People generator (used B4650-B4652) | Creation, Chronicle |
 | B4660-B4669 | Taino names in the People generator (used B4660-B4662) | Creation, Chronicle |
 | B4680-B4689 | Aboriginal Australian names in the People generator (used B4680-B4682) | Creation, Chronicle |
+| B4690-B4699 | Central Africa names (Kongo, Luba, Ganda) (used B4690-B4692) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7102,3 +7103,18 @@ Reverse: edit the lists in data/people-aboriginal.mjs.
 WoDX Creation. Before 1800 an own name alone; from 1800 an English given name and a family name of the missions, stations and the central desert.
 
 Reverse: change family or earlyChurch in data/people-aboriginal.mjs.
+
+## B4690. Central Africa has people from 1197 (2026-11-14)
+WoDX Creation and Chronicle. Central Africa had no people before 1880; the Kongo, the Luba and Lunda and the Baganda now hold it from 1197, with a few Portuguese at the Kongo court after 1491 and the Swahili and French with the trade and the colony. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old central-africa mixes and {from: 1880} in world-rules.mjs and drop centralAfricaTables from people-world.mjs.
+
+## B4691. Three peoples for the region, fewer than 300 names each (2026-11-14)
+WoDX Creation. The Bakongo of the lower Congo, the Luba and Lunda of the Katanga and Kasai, and the Baganda of Lake Victoria stand for the region; the rainforest peoples, Rwanda and Burundi wait for a later list. Lists from the Kongo court letters, the king lists and the Buganda court and mission records; fewer than 300 names each.
+
+Reverse: edit the lists in data/people-central-africa.mjs.
+
+## B4692. Clans and church names (2026-11-14)
+WoDX Creation. Kongo kanda from the mother and Ganda ebika from the father stand as the family before 1800; Luba women unnamed in the records are "A woman of" a chiefdom. The Kongo court took Portuguese church names from 1491; the Luba and Baganda take church names after 1800 (the missions of the 1870s), then family names.
+
+Reverse: change clans, towns or earlyChurch in data/people-central-africa.mjs.
