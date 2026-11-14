@@ -188,6 +188,18 @@ export async function run() {
       ok("8 Orpheus Horror by Vitality", !!m && /Three dots/.test(info) && /Three dots/.test(text(m)) && /pp\. 111-113/.test(text(m)) && items.some(i => i.key === "boost"),
         { info: info.slice(0, 200), card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`) });
     });
+    await step("9 Hunter edge on the effects card", async () => {
+      const hu = await mk("Avenger", "Hunter", { creed: "Avenger", advantages: { conviction: { permanent: 5, temporary: 5 }, willpower: { permanent: 4, temporary: 4 },
+        virtues: { mercy: { permanent: 0 }, vision: { permanent: 1 }, zeal: { permanent: 4 } } } }, [{ name: "Surge", type: "Power", system: { type: "wod.types.edge", value: 4 } }]);
+      await sleep(800);
+      await game.user.updateTokenTargets?.([]);
+      const n = game.messages.size;
+      answer(root => { set(root, "edge", "surge"); set(root, "risk", 0); });
+      A().useEdge({ actor: hu });
+      const m = await untilMsg(n);
+      const items = fx(m);
+      ok("9 Hunter edge on the effects card", !!m && /Surge/.test(text(m)) && /p\. 163/.test(text(m)) && items.some(i => i.key === "boost"), { card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`) });
+    });
   } finally {
     for (const [h, id] of hooks) Hooks.off(h, id);
     for (const a of made) await a.delete().catch(() => {});

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3810
+Next free block: B3820
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -193,9 +193,10 @@ Next free block: B3810
 | B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3719) | Library |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
-| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3748) | Actions |
+| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3749) | Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
 | B3780-B3809 | The no-effect audit: cyberware reaches the senses (used B3780-B3799) | Senses |
+| B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6377,6 +6378,10 @@ How to reverse: stop loading gifts-w20.json in garou.js loadData(); the Dark Age
 WoDX Actions. A Horror spent Vitality and rolled, but the card only said "the effect for that much, as the Horror describes". orpheus-horrors.js now holds, for each of the ten Horrors (Orpheus pp. 99-115), a line for each level of Vitality from zero to five, the usual pool and difficulty, and the effects it puts on the card: Wail soothes, riles or wounds by Vitality; Witch's Nimbus lights an aura and throws bolts from three Vitality; Helter Skelter and Congeal deal damage by Vitality; Puppetry possesses for as long as the successes and Vitality allow; Juggernaut gives Vitality + 1 dots for Vitality + 1 turns; Unearthly Repose entrances; Storm-Wending moves; Forebode and Inhabit give their reach. Choosing a Horror fills its pool and difficulty, and the window shows the line for the Vitality put in. The Orpheus keyword list now matches what the Horrors do (Witch's Nimbus harm and light, Unearthly Repose sway, Storm-Wending move).
 How to reverse: drop the orpheus-horrors.js import in orpheus.js; the Horror window rolls as before.
 
+## B3749. Hunter edges, hedge sorcery and Repel act on the effects card (2026-11-14)
+WoDX Actions. Use an edge showed the edge's line but applied nothing; a hedge spell that worked said only that it worked; Repel told the table what the creature must do. Now an edge that succeeds (or needs no roll) puts its Hunter: The Reckoning keywords on the effects card, as the Dark Ages Disciplines and Gifts do; a lost resisted roll applies nothing. Each of the fifteen hedge paths (Sorcerer pp. 64-86) has an outcome once the spell reaches its successes: Hellfire deals two lethal dice a success up to the Path rating, Healing heals by its aspect, Fascination and Fortune last the scene, Conveyance moves, and the rest note their level for the Storyteller. Repel puts Repelled on the creature's token: a turn of flight a success in the Dark Ages, the scene under The Hunters Hunted II. The Inquisitor Blessings stay typed in: the book's text could not be read.
+How to reverse: drop the EF calls in reckoning.js useEdge and hunter.js hedge magic and True Faith.
+
 ## B3770. Kuei-jin make stone weapons and true jade (2026-11-14)
 WoDX Library, data/wonders-kuei-jin.mjs and scripts/wonders-kuei-jin.mjs. The Item Crafting Desk pick kj2 (full). Kindred of the East has jade talismans only as a Background (pp. 86-87), but the Companion (p. 67) gives the masters of Jade Shintai two powers that make things, Blade of Stone and Taste of Jade. Both are a Kuei-jin kit on the shared wonders registry (B3683), world setting craftKueiJin, on by default like the other kits.
 
@@ -6501,3 +6506,23 @@ Reverse: drop withArms from tools/library/build-gear.mjs and rebuild gear.json.
 WoDX Senses. traitsOf reads WoDX Library's api.cyber.installedFx(actor).senses, and powersFor lays it in: a dark-sight piece takes away the darkness step for sight (as Eyes of the Cat; a power that already does it keeps its name), and each sense piece makes its sense one step easier, shown by name among the roll's reasons. Pieces count only while installed (equipped). The steps add up as powers do; the floor on difficulty still holds.
 
 Reverse: drop the gear line in traitsOf and the two lines in powersFor.
+
+## B3810. Hedge magic Enchantment makes real talismans (2026-11-14)
+WoDX Library (scripts/wonders-hedge.mjs). Ben picked the full build on the Item Crafting Desk (m4). Anyone with the Path of Enchantment as a hedge path (a numina Power item, as WoDX Actions reads it) can make talismans up to the level of the path: hedge sorcerers, hunters of the Hunters Hunted era, Kinfolk and ghouls alike. The book is Sorcerer (Revised), pdf 72-75, read from the PC's text pull. The talisman levels follow its five tiers, in WoDX's own words. A world setting (craftHedge, on) turns the line off.
+
+Reverse: drop the import of wonders-hedge.mjs from scripts/wonder-lines.mjs.
+
+## B3811. The work and its one roll (2026-11-14)
+WoDX Library. The object is crafted first (the Storyteller's Crafts roll, narrated). The Enchantment then runs as a long task: two days a level of work (the book gives one to three), then a single Intelligence + Occult roll, or Intelligence + Science for a technosorcerer, at difficulty 4 + level, one less for a mastered Enchantment, with a point of Willpower paid on the roll (Storyteller's perRoll, B3689). The task allows one roll (maxRolls 1).
+
+Reverse: daysOf and taskFor in wonders-hedge.mjs.
+
+## B3812. A fine object helps; a failed roll wastes the Willpower (2026-11-14)
+WoDX Library. The book says an exceptional crafting result may make the Enchantment easier; WoDX takes 1 off the difficulty for it (house), never below 3. A failed or botched roll leaves the object ordinary, and the Willpower stays spent.
+
+Reverse: difficultyOf in wonders-hedge.mjs.
+
+## B3813. What a talisman holds (2026-11-14)
+WoDX Library. The book's examples become seven kinds of power: Attribute dots while carried (the item's worn bonus), dice to one kind of roll, difficulty off one kind of roll, damage dice, soak dice, a ward against magic, or the Storyteller's own. Levels 1 and 2 give at most 2, level 3 at most 3, levels 4 and 5 up to 5. A talisman works always, once a day, once per success on the roll (then it is spent) or once. Its keeping, the condition most book talismans carry, is the Storyteller's to write.
+
+Reverse: POWERS, USES and LEVELS in wonders-hedge.mjs.
