@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.86.0 (Destiny and Fate bank rerolls (B3919): trait-hooks rerollsPerStory, fortuneName)
 - 3.85.0 (Nature gives a Willpower point back (B3916): nature-rules.js NATURES (the 30 V20 archetypes, WoDX wording), API nature({actor}), the end-of-scene Nature card)
 - 3.84.0 (Virtue-loss botches gain a derangement (B3915); API derangement({actor}) opens Chronicle's hold-off dialog)
 - 3.83.0 (Fera Gifts: the 359 Gifts of W20 Changing Breeds by breed, in Learn a Gift and Use a Gift, with their effects (B3756))
