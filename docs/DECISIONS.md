@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4650
+Next free block: B4660
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -213,7 +213,8 @@ Next free block: B4650
 | B4160-B4169 | Canada first nations names in the People generator (used B4160-B4162) | Creation, Chronicle |
 | B4600-B4609 | Show, don't tell: a visible: line on every feature's release note (used B4600) | tools (no module) |
 | B4610-B4619 | The PC runner rechecks every failing gate before it reports (used B4610) | tools (no module) |
-| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4629) | Storyteller |
+| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4629) | Storyteller, Otherworlds |
+| B4650-B4659 | Inuit names in the People generator (used B4650-B4652) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7036,3 +7037,18 @@ Show-don't-tell desk v10. WoDX Storyteller (OMEN_LOOKS, EVENT_LOOKS, showOmen, s
 
 ## B4629. A town's prosperity and unrest show (2026-11-14)
 Show-don't-tell desk v11. WoDX Storyteller (prosperityLooksFor, syncProsperity). A rich town (prosperity 4 or 5) shows six or ten lit windows; a poor one (0 or 1) three or six beggars at the corners; an angry one (unrest 3, 4, 5) two, four or six words daubed on the walls. Getting by and grumbling show nothing, and small moves inside a band draw nothing new. House rules. Reverse: remove syncProsperity from setupTownLooks.
+
+## B4650. The Inuit in the Arctic and Canada (2026-11-14)
+WoDX Creation and Chronicle. The Arctic was Norse alone in every age; it now holds the Inuit 70 and the Norse 30 before 1500 (the Thule crossing and the Greenland farms), the Inuit 92 before 1800 and about 85 after, beside the Danes under the norse names. Canada gains the Inuit of the north at 3 before 1500, 2 before 1800 and 1 after. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old arctic and canada mixes in world-rules.mjs and drop inuitTables from people-world.mjs.
+
+## B4651. One list of names for anyone, fewer than 300 (2026-11-14)
+WoDX Creation. Inuit names carry no sex, so one list serves men and women; it comes from the Greenland mission records, the Thule expeditions, the Hudson's Bay and mission records of the Canadian Arctic and the artists and elders of the co-operatives. Fewer than 300 names.
+
+Reverse: edit the lists in data/people-inuit.mjs.
+
+## B4652. Family names after 1800 (2026-11-14)
+WoDX Creation. Before 1800 an own name alone; from 1800 a church given name and a family name, from the Danish church names of Greenland and the Project Surname names of Canada (which came in 1968 to 1971; the family groups stand in for the industrial age too, for want of a finer split).
+
+Reverse: change family or earlyChurch in data/people-inuit.mjs.

@@ -93,9 +93,10 @@ export const WORLD_REGIONS = {
   // The Americas
   "canada": R("Canada (Québec, the Great Lakes, the prairies, the north)", "americas", 45.5, -73.6, "boreal", "canadian", {
     // and the Cree, the Anishinaabe and the Haida and Tlingit of the Northwest coast (B4160)
-    medieval: "haudenosaunee 35, cree 30, anishinaabe 25, haida 5, tlingit 5",
-    "early-modern": "french 55, haudenosaunee 12, cree 13, anishinaabe 12, haida 4, tlingit 4",
-    industrial: "english 52, french 34, irish 9, haudenosaunee 5, cree 3, anishinaabe 3, haida 1, tlingit 1",
+    // and the Inuit of the north (B4650)
+    medieval: "haudenosaunee 34, cree 29, anishinaabe 24, haida 5, tlingit 5, inuit 3",
+    "early-modern": "french 55, haudenosaunee 12, cree 13, anishinaabe 12, haida 4, tlingit 4, inuit 2",
+    industrial: "english 52, french 34, irish 9, haudenosaunee 5, cree 3, anishinaabe 3, haida 1, tlingit 1, inuit 1",
     modern: "english 59, french 27, chinese 6, hindi 6, haudenosaunee 2, cree 2, anishinaabe 2"}),
   // The Haudenosaunee and the Algonquian coast before the colonies, then a share (Ben's desks, B3120, B3510); the West borrows none of it (lend: false)
   "north-america-east": R("Eastern North America (New England, New York, the Ohio valley)", "americas", 40.7, -74.0, "american-east", "american", {
@@ -133,7 +134,8 @@ export const WORLD_REGIONS = {
     medieval: "hawaiian 100", industrial: "hawaiian 60, english 15, japanese 15, chinese 10", modern: "hawaiian 30, english 30, japanese 25, chinese 15"}),
   // The poles
   "arctic": R("The Arctic (Greenland, Svalbard, the northern ice)", "other", 64.2, -51.7, "polar", "nordic", {
-    medieval: "norse 100"}),
+    // The Inuit cross to Greenland in the 13th century beside the Norse farms, which fail by 1450; the Danes come back in 1721 (B4650)
+    medieval: "inuit 70, norse 30", "early-modern": "inuit 92, norse 8", industrial: "inuit 85, norse 15", modern: "inuit 86, norse 14"}),
   "antarctica": R("Antarctica and the southern ice", "other", -77.8, 166.7, "antarctic", "australian", {
     industrial: "english 55, norse 45", modern: "english 45, russian 30, spanish 25"}, {from: 1899})
 };
