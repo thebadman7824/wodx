@@ -7,6 +7,8 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | Hook | Sent by | Heard by |
 |---|---|---|
 | wodxCrimeSeen | npc | chronicle (a crime with witnesses raises the law's heat on the culprit in that land, B3606) |
+| wodxArrest | chronicle | chronicle (an arrest puts the accused before the court of the land: the forms of trial it allows, B3608) |
+| wodxVerdict | chronicle | chronicle (a guilty verdict brings the sentencing card: the sentences the land allows for deeds that grave, B3610) |
 | wodxAttitude | npc | npc (a fight when an NPC turns hostile; the NPC remembers the change, B3346) |
 | wodxBoonSettled | storyteller | npc (a boon kept or broken moves the debtor's standing in a court, and the holder's trust in the debtor) |
 | wodxMonthPaid | storyteller | npc (a household's keep is charged for the months each character was paid) |
@@ -47,7 +49,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxTradeDone | actions | storyteller (a week of player trade gluts or empties a market) |
 | wodxTrade | actions | chronicle (a Ravnos vice fed or called; a Nosferatu's page of secrets sold; a Setite's gift that feeds the victim's vice moves their Corruption) |
 | wodxXCard | chronicle | actions |
-| wodxTaskDone | storyteller | npc |
+| wodxTaskDone | storyteller | npc; chronicle (a finished "Make a new self on paper" puts the new self on the character, B3612) |
 | wodxBattle | storyteller | npc (an ended battle between factions proposes Status, Retainers and standing changes) |
 | wodxChase | interactables | npc (followers join a chase with their master) |
 | wodxGhoulFix | chronicle | npc |
@@ -90,4 +92,4 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxInteractablesHazard | interactables | a hazard went off |
 | wodxInteractablesTrap | interactables | a trap went off |
 | wodxColourSafe | senses | the colour-blind setting changed: true or false (Senses redraws its own rings) |
-| wodxArrest | chronicle | an arrest after the law's heat: {actor, name, region, deeds, year} (the trial hears it once trials are in) |
+| wodxSentence | chronicle | a sentence passed: {actor, region, mark} with the mark {id, kind, punish, words, region, year, until, record} |

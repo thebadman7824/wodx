@@ -62,6 +62,9 @@ export const KINDS = {
   // B3374: a work of art from an artist (patronage-rules.mjs); the goal is set by the form
   commission: {label: "Commission a work of art", attr: "charisma", ability: "expression", diff: 6, interval: "week", goal: 8, delicate: false, house: true, week: 1,
     ref: "The patron's eye and the artist's hand: the quality comes from the artist's skill, the money and the fashion of the day."},
+  // B3612: a new self on paper (WoDX Chronicle law-papers-rules.mjs); the difficulty and goal are set by the age's records
+  identity: {label: "Make a new self on paper", attr: "intelligence", ability: "streetwise", diff: 6, interval: "week", goal: 3, delicate: true, house: true, week: 2,
+    ref: "Forged or bought papers for a new name; the more records the age keeps, the harder it is. Name the task after the new self."},
   other: {label: "Something else", attr: "intelligence", ability: "", diff: 6, interval: "day", goal: 5, delicate: false, house: true, week: 3,
     ref: "The Storyteller sets the pool, the interval, the difficulty and the goal (V20 p. 251; V20 Dark Ages p. 324)."}
 };

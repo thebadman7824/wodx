@@ -29,6 +29,10 @@ import * as effects from "./effects.mjs";
 import * as church from "./church.mjs";
 import * as law from "./law.mjs";
 import * as lawHeat from "./law-heat.mjs";
+import * as lawTrial from "./law-trial.mjs";
+import * as lawPunish from "./law-punish.mjs";
+import * as lawPapers from "./law-papers.mjs";
+import * as lawStanding from "./law-standing.mjs";
 import * as release from "./release.mjs";
 import * as when from "./when.mjs";
 import * as referee from "./referee.mjs";
@@ -104,6 +108,14 @@ Hooks.once("init", () => {
   // B3606: the law's heat on criminals
   lawHeat.registerHeatSettings();
   lawHeat.registerHeatHooks();
+  // B3608: trials after an arrest
+  lawTrial.registerTrialHooks();
+  // B3610: sentences and their marks
+  lawPunish.registerPunishHooks();
+  // B3612: papers and the undying
+  lawPapers.registerPapersHooks();
+  // B3614: standing before the law
+  lawStanding.registerStandingSettings();
   // Phase 7a: the generator core
   gen.registerGenSettings();
   // Dated events
@@ -231,7 +243,7 @@ Hooks.once("ready", async () => {
     roster: {open: roster.openRoster, of: roster.rosterOf, play: roster.play, askToAdd: roster.askToAdd, setAway: roster.setAway, rules: rosterRules},
     referee: {open: opts => referee.RefereeApp.open(opts), ask: referee.ask, roll: referee.rollFor, sheetOf: referee.sheetOf,
       cases: refereeRules.CASES, profileOf: refereeRules.profileOf, rules: refereeRules},
-    law: {heat: {of: lawHeat.of, add: lawHeat.addDeed, arrest: lawHeat.arrest, lower: lawHeat.lowerHeat, amnesty: lawHeat.amnesty, state: lawHeat.state, rules: lawHeat.rules}, here: law.here, card: law.card, cardHTML: law.cardHTML, checkYear: law.checkYear, lawDots: law.lawDots, of: law.rules.lawOf, changes: law.rules.changesBetween, rules: law.rules},
+    law: {standing: {of: lawStanding.standingFor, officeCap: lawStanding.officeCap, mode: lawStanding.mode, rules: lawStanding.rules}, papers: {project: lawPapers.project, selvesOf: lawPapers.selvesOf, addSelf: lawPapers.addSelf, check: lawPapers.checkSelves, rules: lawPapers.rules}, sentence: {card: lawPunish.sentenceCard, pass: lawPunish.sentence, pardon: lawPunish.pardon, marksOf: lawPunish.marksOf, rules: lawPunish.rules}, trial: {card: lawTrial.trialCard, hold: lawTrial.hold, rules: lawTrial.rules}, heat: {of: lawHeat.of, add: lawHeat.addDeed, arrest: lawHeat.arrest, lower: lawHeat.lowerHeat, amnesty: lawHeat.amnesty, state: lawHeat.state, rules: lawHeat.rules}, here: law.here, card: law.card, cardHTML: law.cardHTML, checkYear: law.checkYear, lawDots: law.lawDots, of: law.rules.lawOf, changes: law.rules.changesBetween, rules: law.rules},
     church: {on: church.on, today: church.today, at: church.at, extra: church.extra, faithOf: church.faithOf, rules: church.rules, faiths: church.faiths},
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
