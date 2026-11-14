@@ -200,7 +200,7 @@ Next free block: B4160
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Backgrounds nothing read (used B3900-B3920) | Chronicle |
+| B3900-B3929 | Standing up from a knockdown (used B3900-B3921) | Combat |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
@@ -6784,6 +6784,9 @@ No-effect audit t3, first part. Destiny (M20, Mummy) and Fate (W20) were marked 
 
 ## B3920. Backgrounds nothing read get an effect (2026-11-14)
 No-effect audit t3. Four backgrounds seed a +1 first attitude with their own kind: Eminence with demons, Notoriety with wraiths, Pure Breed with Garou and Changing Breeds, Spirit Heritage with spirits. With Alternate Identity, a deed a witness can name counts as unnamed for the law's heat, because the name they know belongs to the other self. Nineteen backgrounds that were marked Storyteller-only get a card to the Storyteller in WoDX's own words at the moments they matter (social, fight, night): Alternate Identity, Arcane, Backing, Backup, Black Hand Membership, Blessing, Certification, Cypher, Dream, Eidolon, Enhancement, Familiar, Horde, Memento, Paragon, Requisitions, Secret Weapons, Spies and Vessels. Their hook in the Trait effects window changes from Storyteller only to a card. Cards now name a background's first book and page (they read "undefined" before). A test keeps every background off the plain Storyteller-only list. The sizes on the cards are the Storyteller's call. Destiny and Fate are B3919. Reverse: drop MORE_ATTITUDE_3, MORE_PROMPTS_7 and the law-heat lines.
+
+## B3921. Combat reads Knocked down (2026-11-14)
+No-effect audit t4. The Knocked down status showed on the token, but standing cost nothing unless the sweep or tackle card was followed by hand. WoDX Combat now rolls, on the Storyteller's client, at the start of the turn of any combatant with the status. The roll is Dexterity + Athletics, with wound penalties, at difficulty 6 (V20 Dark Ages p. 348). A success takes the status off and takes 2 off that character's Initiative when it is rolled for the next turn. A failure or a botch keeps them down, and the card says the action is lost. A world setting (on by default) turns it off, and api.standUp(actor) runs the roll by hand. Reverse: turn the setting off.
 
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
