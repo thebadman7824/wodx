@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.79.0 (Demeanor sets the talk tone (B3918): talk-rules toneOf, toneRegard, DEMEANOR_TONE)
 - 0.78.2 (First meetings (B3783): the NPC's faction names and its seats in a faction go to Chronicle's attitudeSeed)
 - 0.78.1 (Three new place tags: an office or counting house, a court of law or council chamber, and a Technocracy site, each with its crowd; WoDX Actions reads them for everyday Banality (B3555))
 - 0.78.0 (A talk sheet line can be marked "lie" after " | ": a character who reads the speaker's face may see it (B3444). Culprit descriptions keep a Kindred's uncanny face marks (B3443))
