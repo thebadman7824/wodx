@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3820
+Next free block: B3830
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -197,6 +197,7 @@ Next free block: B3820
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
 | B3780-B3809 | The no-effect audit: body effects survive the prepare-time wound level (used B3780-B3808) | Combat, system |
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
+| B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6595,3 +6596,28 @@ Reverse: difficultyOf in wonders-hedge.mjs.
 WoDX Library. The book's examples become seven kinds of power: Attribute dots while carried (the item's worn bonus), dice to one kind of roll, difficulty off one kind of roll, damage dice, soak dice, a ward against magic, or the Storyteller's own. Levels 1 and 2 give at most 2, level 3 at most 3, levels 4 and 5 up to 5. A talisman works always, once a day, once per success on the roll (then it is spent) or once. Its keeping, the condition most book talismans carry, is the Storyteller's to write.
 
 Reverse: POWERS, USES and LEVELS in wonders-hedge.mjs.
+
+## B3820. Four Plains peoples and where they live (2026-11-14)
+WoDX Creation and Chronicle. The next people on the global open list after the Algonquian coast was "the Lakota and the plains". Built: the Oceti Sakowin (Lakota, Dakota and Nakota as one people with its thirteen bands), the Cheyenne, the Comanche and the Kiowa. The American West, which had no names before 1598, now holds them alone before 1500 (Lakota 45, Cheyenne 20, Comanche 20, Kiowa 15), beside the Spanish from 1500 (Spanish 30), and as a share after 1800. The West lends none of it to the East. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
+
+Reverse: put back `{...AM, from: 1598}` and the old mixes on north-america-west in world-rules.mjs, and drop plainsTables from people-world.mjs.
+
+## B3821. Recorded names, and fewer than 300 for three of the four (2026-11-14)
+WoDX Creation. Names come from treaty signers, agency rolls and known leaders, spelled as printed with hyphens dropped. Lakota names are the clerks' English translations, as the rolls give them, with about twenty of the best known also in Lakota. The Oceti Sakowin reach 300 with family and church names; the Cheyenne, Comanche and Kiowa records reached hold fewer (house reading, as B3511). Names with a gendered pronoun in them (Man Afraid of His Horses, He Dog) are left out, since the text rules forbid the words.
+
+Reverse: edit the lists in data/people-plains.mjs.
+
+## B3822. No church names before 1800 (2026-11-14)
+WoDX Creation. The Haudenosaunee stages give a third of men a church name from 1500; on the Plains the missions came in the 19th century, so these peoples carry their own names alone until 1800 (stagedTables earlyChurch: false). From 1800 a church given name and a family name from the rolls, as for the Haudenosaunee.
+
+Reverse: drop `earlyChurch: false` from plainsTables.
+
+## B3823. Women by band (2026-11-14)
+WoDX Creation. Few women's names are in the records reached (19 Oceti Sakowin, 7 Cheyenne, 5 Comanche, none Kiowa), so a woman without one is "A woman of the Oglala" or of another band, as Algonquian women are named by town. The Storyteller can type a name.
+
+Reverse: add names to the women's lists in data/people-plains.mjs.
+
+## B3824. Left for later (2026-11-14)
+WoDX Creation and Chronicle. The region also covers the Rockies and the Southwest. The Pueblo peoples, the Diné and Apache, the village peoples of the Missouri (Mandan, Hidatsa, Arikara, Pawnee), the Crow, the Blackfoot and the Arapaho are not named yet and stay on the open list in docs/GLOBAL.md. The West's Threads of Fate hooks still start in 1598; hooks for the Plains before the Spanish are open too. Before about 1700 the Lakota and Cheyenne lived east of the Plains and the Comanche had not parted from the Shoshone; the medieval mix uses these peoples' names as the region's sound until the Southwest and the village peoples are built.
+
+Reverse: none needed; this records scope.
