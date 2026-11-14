@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.97.0 (Town disasters leave lasting damage on the town's scenes, rebuilt over the weekly town turns, with Undo on the town card (B3759))
 - 0.96.1 (Town looks through the shared looks layer (B4636): labelled and own-coloured marks stay this module's drawings)
 - 0.96.0 (The sick and places of power shown (B4633, B4635): a sick character's token shows it to the party, and places of power glow for the eyes that could see them, drawn on each client)
 - 0.95.0 (The world on the map (B4622-B4629): sickness, hunters, sieges, shut shops, haven fires, hardship weather, signs and great events, and prosperity and unrest show on the town's scenes. Each follows its system's state and is drawn again only when it changes, through WoDX Chronicle's shared looks layer when it is there and locked plain drawings otherwise. All of it follows the world setting "Show town events on the map")
