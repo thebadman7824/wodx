@@ -21,6 +21,7 @@
  *   itemsFor(row, {successes, maker, at, task}) -> item data,
  *   costs(row, task, facts) -> [{path, amount, label, floor, cap}] (cap: another path held at or below the new value),
  *   after?(ctx) -> [chat lines] (ctx: {row, task, status, services: {actor (the Foundry actor), spirits (Otherworlds api)}}),
+ *   marks?(row, task) -> true when the work marked an object the actor holds (Storyteller expects no new item, B3697),
  *   label(row) -> one line for the picker, detail?(row, task, maker) -> text for the approval card
  * }
  */

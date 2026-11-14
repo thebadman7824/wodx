@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.89.2 (Crafting kits see each item's id, so a ritual can be laid on an object the character already holds, and a kit that marked an object is no longer told "Nothing came of it" (B3697))
 - 0.89.1 (Fix: long tasks that use Crafts (making things, buildings, soulforging) now roll the character's Crafts dots; the system keeps Crafts under another key, so those rolls had left them out)
 - 0.89.0 (Long tasks can have a set number of rolls, after which work left short of its goal is ruined, and a cost paid before each roll, such as a blood point a night; the work waits when it can't be paid, and Undo gives the cost back (B3689))
 - 0.88.2 (A new long task of the soulforge kind opens the WoDX Actions forge window, which makes arms, armour and oboli itself and sends Artifacts and relics on to the crafting table's Wraith line (B3723))

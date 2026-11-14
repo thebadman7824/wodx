@@ -33,8 +33,8 @@ function ctxFor(a) {
   for ( const k of ["craftKinfolk", ...(W()?.lines?.() ?? []).flatMap(x => x.settingsRead ?? [])] ) settings[k] = W()?.settingOf?.(k);
   return {profile, gender, year: yearNow(), settings};
 }
-const plain = a => ({system: a?.system ?? {}, flags: a?.flags ?? {}, name: a?.name ?? "", type: a?.type ?? "",
-  items: [...(a?.items ?? [])].map(i => ({type: i.type, name: i.name, system: i.system ?? {}, flags: i.flags ?? {}}))});
+export const plain = a => ({system: a?.system ?? {}, flags: a?.flags ?? {}, name: a?.name ?? "", type: a?.type ?? "",
+  items: [...(a?.items ?? [])].map(i => ({id: i.id, type: i.type, name: i.name, system: i.system ?? {}, flags: i.flags ?? {}}))});
 
 /** The lines this actor can make things in: [{kit, maker, rows}] (B3683). */
 export function linesFor(a) {
@@ -171,7 +171,8 @@ async function finished({actor: a, task: t} = {}) {
   if ( t.status === "done" ) {
     const data = kit.itemsFor(w, {successes: Math.max(1, t.total), maker: a.name, at: game.time?.worldTime ?? 0, task: t});
     const made = data.length ? await a.createEmbeddedDocuments("Item", data) : [];
-    lines.push(made.length ? `Made: ${made.map(i => i.name).join(", ")}.` : "Nothing came of it.");
+    // B3697: a kit that marked an object the actor holds makes nothing new, and says so in after()
+    if ( made.length || !kit.marks?.(w, t) ) lines.push(made.length ? `Made: ${made.map(i => i.name).join(", ")}.` : "Nothing came of it.");
   }
   try { lines.push(...((await kit.after?.({row: w, task: t, status: t.status, services: {actor: a, spirits: spirits()}})) ?? [])); } catch (e) { console.warn(`${MOD} | wonders after`, e); }
   const T = await tasks();

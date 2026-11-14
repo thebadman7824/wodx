@@ -262,3 +262,10 @@ test("wonders, Mage kit: charms, periapts, trinkets and mage fetishes", () => {
   assert.equal(fi.type, "Fetish"); assert.equal(fw.type, "Melee Weapon");
   assert.ok(fi.flags["wodx-library"].wonder.mage && fi.flags["wodx-library"].wonder.unreliable);
 });
+
+test("wonders: kits see item ids, and a kit that marks an object is not told nothing came of it (B3697)", () => {
+  const w = src("modules/wodx-storyteller/scripts/wonders.mjs");
+  assert.match(w, /map\(i => \(\{id: i\.id, type: i\.type/);
+  assert.match(w, /if \( made\.length \|\| !kit\.marks\?\.\(w, t\) \)/);
+  assert.match(src("modules/wodx-library/scripts/wonder-registry.mjs"), /marks\?\(row, task\)/);
+});
