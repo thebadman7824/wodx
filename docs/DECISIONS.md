@@ -213,7 +213,7 @@ Next free block: B4660
 | B4160-B4169 | Canada first nations names in the People generator (used B4160-B4162) | Creation, Chronicle |
 | B4600-B4609 | Show, don't tell: a visible: line on every feature's release note (used B4600) | tools (no module) |
 | B4610-B4619 | The PC runner rechecks every failing gate before it reports (used B4610) | tools (no module) |
-| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4632) | Chronicle |
+| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4635) | Storyteller |
 | B4650-B4659 | Inuit names in the People generator (used B4650-B4652) | Creation, Chronicle |
 <!-- decision-index:end -->
 
@@ -7040,6 +7040,12 @@ Show-don't-tell desk v11. WoDX Storyteller (prosperityLooksFor, syncProsperity).
 
 ## B4632. Tokens show frenzy, Rotschreck and a derangement bout (2026-11-14)
 Show-don't-tell desk c1 and c3, approved by Ben 2026-11-14. WoDX Chronicle (token-look-rules.mjs, token-looks.mjs). A token whose actor has the Frenzy condition gets a red glow under it, a reddish tint and a slight shake, for everyone; Rotschreck a cold blue glow that flickers. A derangement bout (the Deranged condition) darkens, blurs, reddens, greys, brightens or greens the edges of the screen by the derangement, for the character's own player only (their assigned character or the tokens they control), since it happens inside the head; the Storyteller's screen stays clear. Drawn on each client from statuses and flags, never saved. Each player's effects level (wodx-chronicle.fxLevel, when the shared looks set it up) is obeyed: Light drops the shake, the flicker and the swim, Off shows nothing. api.tokenLooks.register(key, fn) lets other modules add looks (fn(token) returns {tint, aura, shake, flicker} or null), which may depend on who watches. Colours and strengths are house rules. Reverse: remove setupTokenLooks from main.mjs.
+
+## B4633. A sick character shows it (2026-11-14)
+Show-don't-tell desk c2, approved by Ben 2026-11-14. WoDX Storyteller (sick-looks.mjs). A character in the contagion state's people (caught a town's sickness) carries the Sick status, a WoDX Chronicle condition with no roll effect of its own, and a pale cast on the token through WoDX Chronicle's token looks, both for everyone. Getting better or being cured takes both away. The weekly Stamina rolls are as before. Reverse: remove setupSickLooks from main.mjs.
+
+## B4635. Places of power glow for those who could see them (2026-11-14)
+Show-don't-tell desk v13 (the smaller fix). WoDX Storyteller (power-look-rules.mjs, power-looks.mjs). On the scene of a Node, a soft blue glow at its heart for mages, sized by its rating and dimmed to less than half when drained; a caern a green glow for werebeasts and mages, by its level, none once dead; a freehold's balefire a flickering amber flame for changelings, its size following the ranks, gone when out. The Storyteller sees them all. Drawn on each client, never saved; Light stops the flicker, Off hides them. Sizes and strengths are house rules. Reverse: remove setupPowerLooks from main.mjs.
 
 ## B4650. The Inuit in the Arctic and Canada (2026-11-14)
 WoDX Creation and Chronicle. The Arctic was Norse alone in every age; it now holds the Inuit 70 and the Norse 30 before 1500 (the Thule crossing and the Greenland farms), the Inuit 92 before 1800 and about 85 after, beside the Danes under the norse names. Canada gains the Inuit of the north at 3 before 1500, 2 before 1800 and 1 after. Taken as recommended; logged in PENDING-REVIEW.
