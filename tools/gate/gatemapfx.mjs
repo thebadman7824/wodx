@@ -58,10 +58,10 @@ export async function run() {
       const before = scene.weather ?? "";
       const id = await L.weather({scene, kind: "storm", source: "gatemapfx"});
       await wait(1200);
-      const fx = scene.getFlag("fxmaster", "effects") ?? {};
+      const fx = scene.flags?.fxmaster?.effects ?? {};
       const on = M.fxmaster ? Object.keys(fx).length > 0 : scene.weather === "rainStorm";
       await L.end(id, scene); await wait(1000);
-      const fxAfter = Object.keys(scene.getFlag("fxmaster", "effects") ?? {}).length;
+      const fxAfter = Object.keys(scene.flags?.fxmaster?.effects ?? {}).length;
       const back = (scene.weather ?? "") === before && (!M.fxmaster || fxAfter < Object.keys(fx).length);
       G.ok("4. a storm over the whole scene", !!id && on && back, {fxmaster: M.fxmaster, effects: Object.keys(fx), weather: scene.weather ?? "", back});
     });
