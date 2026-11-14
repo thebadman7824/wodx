@@ -146,6 +146,9 @@ export function nextStep(run = {}, year = null) {
   const i = Number(run.at) || 0;
   if ( i >= c.steps.length ) return null;
   const s = c.steps[i];
+  // A saga chapter marked `wait` holds the book until it is played; nothing after it falls due before then.
+  const w = run.saga ? S.waitingOn(run, c) : null;
+  if ( w ) return {...s, index: i, due: Infinity, waiting: w.key, waitingTitle: w.title, last: i === c.steps.length - 1};
   return {...s, index: i, due: (Number(run.last) || 0) + s.days * DAY, last: i === c.steps.length - 1};
 }
 export function goalsFor(line, year) {

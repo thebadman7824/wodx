@@ -5,7 +5,8 @@
  * cards and the clock back.
  *   1. the api, the setting and the saga section of the window
  *   2. starting the first book deals Chapter I with a link to its notes
- *   3. fifty days on, the first interlude comes; at 176 days the thaw moves the Ashfield clock and fires wodxSaga with a signal
+ *   3. Chapter I holds the book however long the clock runs; marked played, the roads interlude and Chapter II follow,
+ *      and once Chapter II is played the Ashfield vigil moves the Ashfield clock and fires wodxSaga with a signal
  *   4. an ending changes the words of the steps still to come
  *   5. the next book that fits the year goes to the approval queue, once
  *   6. a sequel's chapter links to its own session page in the world
@@ -56,19 +57,23 @@ export async function run() {
       const run = await saga().start("red-stone");
       await until(() => cards().length > n0);
       const c = cards().at(-1)?.content ?? "";
-      ok("2 first chapter", !!run && /Chapter I: The guest-feast/.test(c) && /Notes:/.test(c) && saga().state().books["red-stone"] === "running", {card: c.slice(0, 300)});
+      ok("2 first chapter", !!run && /Chapter I: The First Night/.test(c) && /waits here/.test(c) && /Notes:/.test(c) && saga().state().books["red-stone"] === "running", {card: c.slice(0, 300)});
     });
 
     await step("3 seasons pass", async () => {
       const n0 = cards().length;
-      await game.time.advance(51 * DAY);
-      await until(() => cards().slice(n0).some(m => /First snow/.test(m.content)));
-      const first = cards().slice(n0).find(m => /First snow/.test(m.content))?.content ?? "";
+      await game.time.advance(40 * DAY);
       await sleep(2300);
-      await game.time.advance(125 * DAY);
+      const held = !cards().slice(n0).some(m => /The roads in/.test(m.content));
+      const played1 = await saga().played("red-stone");
+      await game.time.advance(8 * DAY);
+      await until(() => cards().slice(n0).some(m => /Chapter II: Court and Currents/.test(m.content)), 8000);
+      const roads = cards().slice(n0).some(m => /The roads in/.test(m.content));
+      const played2 = await saga().played("red-stone");
+      await game.time.advance(8 * DAY);
       await until(() => (saga().state().clocks.ashfield ?? 0) >= 1, 8000);
-      const st = saga().state(), sig = heard.find(h => h.step === "i2");
-      ok("3 seasons pass", /First snow/.test(first) && st.clocks.ashfield === 1 && sig?.signal?.region === "moravia", {clocks: st.clocks, heard: heard.map(h => h.step)});
+      const st = saga().state(), sig = heard.find(h => h.step === "c3");
+      ok("3 seasons pass", held && played1 === "c1" && roads && played2 === "c2" && st.clocks.ashfield === 1 && sig?.signal?.region === "moravia", {held, played1, roads, played2, clocks: st.clocks, heard: heard.map(h => h.step)});
     });
 
     await step("4 ending", async () => {

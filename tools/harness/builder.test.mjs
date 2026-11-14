@@ -15,7 +15,7 @@ const ctx = {regions: Object.keys(WORLD_REGIONS), placeKinds: Object.keys(PLACE_
 test("the Rothenstein recipe is in order", () => {
   assert.deepEqual(R.validate(ROTHENSTEIN, ctx), []);
   assert.equal(ROTHENSTEIN.world, "rothenstein-x");
-  assert.equal(ROTHENSTEIN.opening.year, 1197);
+  assert.equal(ROTHENSTEIN.opening.year, 1200);
   assert.ok(ROTHENSTEIN.reach.every(h => h.region === null || h.region !== ROTHENSTEIN.homeland));
 });
 

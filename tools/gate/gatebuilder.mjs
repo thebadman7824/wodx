@@ -9,7 +9,7 @@
  *   1. the module: Storyteller 0.61.0, api.builder, the world's recipe flag, the button wanted
  *   2. the builder refuses rothenstein-live, even forced, and another world unless forced
  *   3. every ready step runs in order: check, settings, carry, anchors
- *   4. the homeland is Moravia and the clock reads 1197
+ *   4. the homeland is Moravia and the clock reads the recipe's opening year (1200)
  *   5. every document in the carry file is in the world, with its old id
  *   6. links in carried journals to carried documents resolve
  *   7. running carry again makes nothing new
@@ -87,7 +87,7 @@ export async function run() {
     const C = game.modules.get("wodx-chronicle").api;
     const cal = await import(`/modules/wodx-chronicle/scripts/calendar.mjs`);
     const d = cal.getEngine().timeToDate(game.time.worldTime);
-    ok("4 settings", C.world.homeland() === "moravia" && d.year === 1197, {homeland: C.world.homeland(), date: d});
+    ok("4 settings", C.world.homeland() === "moravia" && d.year === recipe.opening.year, {homeland: C.world.homeland(), date: d});
   });
   await step("5 carried", async () => {
     carry = await (await fetch(`/${recipe.carry.file}?${Date.now()}`)).json();

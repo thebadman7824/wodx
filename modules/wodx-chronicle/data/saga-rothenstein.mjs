@@ -11,6 +11,8 @@
  * `town` names what the step does to the valley's town (WoDX Storyteller's towns over time; B3670).
  * `signal` is a note in the omens shape {kind, region, weight, words} for systems that read the world's signals.
  * `ending` lists the endings the Storyteller picks from when the step comes. Real people stay offstage.
+ * `wait` (a chapter) holds the book until the Storyteller marks the chapter played; the next gap counts from then
+ * (B4761: book one opens in the autumn of 1200 and runs on if the company goes slowly).
  */
 
 /** The long clocks the saga keeps from book to book. */
@@ -25,7 +27,8 @@ export const SAGA_CLOCKS = [
 export const SAGA_ENDINGS = {
   seal: {label: "Sealed", text: "The old binding was made again. The Husbandman sleeps under the stone, and the binding must be kept."},
   sever: {label: "Severed", text: "The valley's tie to the Husbandman was cut. The ground heals slowly, and the thing went somewhere else."},
-  take: {label: "Taken", text: "Someone took what the Husbandman offered. The door is held open from this side now, by one of the company."}
+  take: {label: "Taken", text: "Someone took what the Husbandman offered. The door is held open from this side now, by one of the company."},
+  alone: {label: "Left alone", text: "The company walked away. Nobody kept, cut or took the binding, and the long clocks decide what the valley becomes."}
 };
 
 const s = (key, kind, at, title, text, more = {}) => ({key, kind, at, title, text, ...more});
@@ -44,8 +47,8 @@ export const SAGA = {
         s("raid", "world", [902, 6, 1], "Riders on the plain", "Magyar horsemen burn the lowland villages. The valley's people hide in the caves under the ridge and hear something breathing in the rock.", {clocks: {sleeper: 1}}),
         s("bind", "chapter", [906, 10, 31], "The promise", "With the realm falling, the elders bind the thing under the ridge and promise it one life a generation. The rite holds, and the story waits three hundred years.", {clocks: {sleeper: -1}})
       ]},
-    {key: "red-stone", n: 1, title: "What Sleeps Beneath Rothenstein", from: 1197, to: 1202, era: "dark-ages", journal: "What Sleeps Beneath Rothenstein", lines: ["all"],
-      text: "The first book, told over five years instead of ten nights. Each chapter is a night of play; between them the seasons turn and the valley goes on without the company.",
+    {key: "red-stone", n: 1, title: "What Sleeps Beneath Rothenstein", from: 1200, to: 1202, era: "dark-ages", journal: "What Sleeps Beneath Rothenstein", lines: ["all"],
+      text: "The first book: ten nights from the first of September 1200 to the first snow. Each chapter is a night of play and waits until it has been played, so a company that goes slowly carries the book on into the next years.",
       doors: {
         vampire: "Bogdan's invitation and the Charter bring the Kindred in, as before.",
         werewolf: "The Ashfield is a wound in the land the Garou can smell from the passes; a caern's spirits go quiet.",
@@ -56,26 +59,23 @@ export const SAGA = {
         mortal: "A settler family, a miner's widow or the reeve's clerk sees one thing too many."
       },
       steps: [
-        s("c1", "chapter", [1197, 10, 1], "Chapter I: The guest-feast", "The strangers come down the one road, swear the Charter and are offered the welcome-feeding. Play the session notes for the first night.", {journal: "Session 1"}),
-        s("i1", "interlude", [1197, 11, 20], "First snow", "The High Pass closes for the winter. The newcomers learn the valley's feeding grounds and who owns them. Fit encounters: The Winter Pack, A Stranger at the Toll-Post.", {encounters: ["Encounter 10", "Encounter 13"]}),
-        s("c2", "chapter", [1197, 12, 25], "Chapter II: The midwinter court", "The first full court at Kranzfels at Christmastide. Marta, Konrad and Radu are met, and one of the company is set between two factions.", {journal: "Session 2"}),
-        s("i2", "interlude", [1198, 3, 25], "The thaw", "Spring opens the road. The Ashfield has taken another strip of plough land over the winter, and a miner went into the Adit and did not come out.", {clocks: {ashfield: 1}, encounters: ["Encounter 04", "Encounter 14"], signal: {kind: "saga", weight: 1, words: "the dead field grows in the Moravian valley"}}),
-        s("c3", "chapter", [1198, 4, 20], "Chapter III: The missing miner", "The dead field and the missing miner. Something is still moving that should have stopped. The first part ends: nobody can pretend the valley is right.", {journal: "Session 3"}),
-        s("i3", "interlude", [1198, 8, 15], "Harvest", "A thin harvest. The council presses the Adit harder to pay for a stone wall, and Bogdan sends a sealed letter east with a trusted courier.", {clocks: {sleeper: 1}, encounters: ["Encounter 02", "Encounter 15"]}),
-        s("c4", "chapter", [1198, 10, 10], "Chapter IV: The first descent", "Into the galleries no miner dug. Changed miners answer to their names, and Konrad is at home among them.", {journal: "Session 4"}),
-        s("i4", "interlude", [1199, 1, 15], "The hungry winter", "A long winter in a sealed valley. Konrad's changed miners grow in number; cattle in Dolany are born wrong. Time for downtime, feeding and the Herd.", {clocks: {sleeper: 1}, encounters: ["Encounter 17", "Encounter 22"]}),
-        s("c5", "chapter", [1199, 5, 1], "Chapter V: The older name", "Real lore, paid for. Old Radu, Baba Yaroslava and the village elders tell what the Grove was for, and the Grove's older name.", {journal: "Session 5"}),
-        s("i5", "interlude", [1199, 11, 1], "A year turns", "The council's wall goes up around the Lower Town. Father Ludovic writes to the bishop for the first time. The weavers win a guild charter, and Graff wants a seat for the silver.", {clocks: {church: 1}, encounters: ["Encounter 06", "Encounter 24"], signal: {kind: "saga", weight: 1, words: "a priest's letters about a Moravian town reach the bishop"}}),
-        s("c6", "chapter", [1200, 3, 1], "Chapter VI: The price of loyalty", "Lent of the year 1200. Bogdan demands more, Marta asks for a spy, and a trusted contact proves to be Konrad's.", {journal: "Session 6", clocks: {charter: -1}}),
-        s("i6", "interlude", [1200, 7, 20], "The dry summer", "Drought. The Ashfield crosses the brook, and wells near it taste of iron. Pilgrims pass through on the road to the shrine, one with a relic nobody suspects.", {clocks: {ashfield: 1}, encounters: ["Encounter 19", "Encounter 16"]}),
-        s("c7", "chapter", [1200, 9, 29], "Chapter VII: The Voice", "Michaelmas. Grafted flesh, a vision and a voice offering something true for something small. The second part ends.", {journal: "Session 7", clocks: {sleeper: 1}}),
-        s("i7", "interlude", [1201, 4, 1], "The bishop's decree", "The bishop orders an inquiry into Rothenstein. Anselm watches from the North Wood. The friar on the heresy circuit, the exorcist and the witch-finder come in over the spring and summer, one at a time.", {clocks: {church: 2}, encounters: ["Encounter 20", "Encounter 21"], signal: {kind: "saga", weight: 2, words: "the Church opens an inquiry into a Moravian valley"}}),
-        s("c8", "chapter", [1201, 8, 15], "Chapter VIII: The net", "The secret can no longer be kept safely. Anselm or Ludovic acts, Konrad's cult shows itself, and the company must manage their own exposure and the blight together.", {journal: "Session 8"}),
-        s("i8", "interlude", [1201, 12, 1], "The long gathering", "The pass shuts again. Over the winter the pieces of the old binding rite are found one by one through Yaroslava, and Bogdan overreaches.", {clocks: {charter: -1}, encounters: ["Encounter 08", "Encounter 09"]}),
-        s("c9", "chapter", [1202, 4, 13], "Chapter IX: Seal, sever or take", "The Easter vigil of 1202. The final choice. Bogdan is confronted, weaker than ever, and the temptation to devour Bogdan is real.", {journal: "Session 9"}),
-        s("c10", "chapter", [1202, 6, 23], "Chapter X: Saint John's Eve", "Midsummer night. The ending the company chose plays out and the Husbandman partly shows itself. Pick the ending in the saga window.", {journal: "Session 10", ending: ["seal", "sever", "take"], signal: {kind: "saga", weight: 3, words: "something under a Moravian ridge shows itself on Saint John's Eve"}}),
-        s("e1", "interlude", [1202, 11, 1], "The years after", "The valley counts its dead and its debts. The answer to Bogdan's bid comes, or does not. A year later a silent envoy from Constantinople rides in.", {
-          by: {seal: "The binding holds. The Ashfield stops growing, though nothing grows on it yet. Someone must keep the rite each year.", sever: "The ground starts to heal at the edges. Shepherds say the thing under the ridge went east with the spring floods.", take: "The valley is quiet in the wrong way. One of the company sleeps badly and wakes with dirt under their nails."},
+        s("c1", "chapter", [1200, 9, 1], "Chapter I: The First Night", "The company crosses the river at the toll-post, swears the Charter before the voivode and is set before the welcome-feeding. An oath, a haven and one image they cannot shake.", {journal: "Session 1", wait: true}),
+        s("i1", "interlude", [1200, 9, 5], "The roads in", "Late summer on the roads. Travellers and the starving come down to the river crossing. Fit encounters: Toll of the Ridge Road, A Stranger at the Toll-Post.", {encounters: ["Encounter 05", "Encounter 13"]}),
+        s("c2", "chapter", [1200, 9, 8], "Chapter II: Court and Currents", "The first full court at Kranzfels. Marta, Konrad and Radu are met, and an errand sets the company between two factions.", {journal: "Session 2", wait: true}),
+        s("c3", "chapter", [1200, 9, 15], "Chapter III: The Ashfield Vigil", "The missing miner and the dead field. Something moved after it should have stopped. The first act ends: nobody can pretend the valley is right.", {journal: "Session 3", wait: true, clocks: {ashfield: 1}, signal: {kind: "saga", weight: 1, words: "the dead field grows in the Moravian valley"}}),
+        s("i2", "interlude", [1200, 9, 20], "Harvest home", "The sheaves come in thin. The council presses the Adit harder, and Bogdan sends a sealed letter east with a trusted courier. Fit encounters: The Harvest Game, The Black Grain, The Wedding Without a Bride.", {clocks: {sleeper: 1}, encounters: ["Encounter 02", "Encounter 04", "Encounter 15"]}),
+        s("c4", "chapter", [1200, 9, 24], "Chapter IV: Into the Adit", "The first descent. Galleries no miner dug, changed miners who still answer to their names, and Konrad at home among them.", {journal: "Session 4", wait: true, clocks: {sleeper: 1}}),
+        s("c5", "chapter", [1200, 10, 1], "Chapter V: Old Debts", "Old Radu, then the Baba's fire in the Grove: a name for the thing under the valley, the outline of a rite, and a debt agreed.", {journal: "Session 5", wait: true}),
+        s("i3", "interlude", [1200, 10, 5], "The town talks", "Father Ludovic writes to the bishop. The margrave's man comes to count the silver. Fit encounters: The Apothecary's Debt, The Margrave's Auditor.", {clocks: {church: 1}, encounters: ["Encounter 06", "Encounter 24"], signal: {kind: "saga", weight: 1, words: "a priest's letters about a Moravian town reach the bishop"}}),
+        s("c6", "chapter", [1200, 10, 8], "Chapter VI: Cracks in the Court", "Loyalty becomes expensive. Bogdan asks more, Marta wants a spy, and a trusted contact already belongs to Konrad.", {journal: "Session 6", wait: true, clocks: {charter: -1}}),
+        s("c7", "chapter", [1200, 10, 15], "Chapter VII: First Contact", "Bogdan's rite in the dark field. Grafted flesh, a vision and a voice offering something true for something small. The second act ends.", {journal: "Session 7", wait: true, clocks: {sleeper: 1}}),
+        s("i4", "interlude", [1200, 10, 20], "The bishop's answer", "An inquiry is ordered. Brother Anselm watches from the North Wood, and the Ashfield crosses the brook. Fit encounters: The Knight Who Wanted a Duel, The Witch of Dolany, The Girl Who Saw the Lady.", {clocks: {church: 2, ashfield: 1}, encounters: ["Encounter 20", "Encounter 21", "Encounter 19"], signal: {kind: "saga", weight: 2, words: "the Church opens an inquiry into a Moravian valley"}}),
+        s("c8", "chapter", [1200, 10, 25], "Chapter VIII: The Net Tightens", "The Lower Town has drawn its own conclusions. Ludovic and Anselm act, Konrad's cult walks in the open, and the company must manage exposure and the blight together.", {journal: "Session 8", wait: true}),
+        s("i5", "interlude", [1200, 10, 29], "The long gathering", "The nights grow long. The pieces of the old rite turn up one by one, and Bogdan overreaches. Fit encounters: The Hermit of the North Wood, The Ruins of Altenhof.", {clocks: {charter: -1}, encounters: ["Encounter 08", "Encounter 09"]}),
+        s("c9", "chapter", [1200, 11, 1], "Chapter IX: The Choosing", "All Saints. Bogdan's confession and the temptation it brings, Konrad's last offer, and the three pieces of the old rite on the altar stone. A decision, a cost and a clock.", {journal: "Session 9", wait: true}),
+        s("c10", "chapter", [1200, 11, 11], "Chapter X: Harvest", "Martinmas. The first snow has shut the High Pass and the keep lights its beacon. The chosen ending plays out, each of the company has a scene alone with what they did, and a messenger comes down from the pass. Pick the ending in the saga window.", {journal: "Session 10", wait: true, ending: ["seal", "sever", "take", "alone"], signal: {kind: "saga", weight: 3, words: "something under a Moravian ridge shows itself at the first snow"}}),
+        s("e1", "interlude", [1201, 3, 25], "The years after", "The valley counts its dead and its debts. The answer to Bogdan's bid comes, or does not. A year later a silent envoy from Constantinople rides in.", {
+          by: {seal: "The binding holds. The Ashfield stops growing, though nothing grows on it yet. Someone must keep the rite each year.", sever: "The ground starts to heal at the edges. Shepherds say the thing under the ridge went east with the spring floods.", take: "The valley is quiet in the wrong way. One of the company sleeps badly and wakes with dirt under their nails.", alone: "Nobody tends the stones. The Ashfield keeps its slow pace, and the court tells itself the worst is over."},
           clocks: {church: -1}})
       ]},
     {key: "patriarch", n: 2, title: "The Patriarch's Last Dream", from: 1203, to: 1204, era: "dark-ages", journal: "The Patriarch's Last Dream (GM only)", lines: ["vampire"],
