@@ -68,3 +68,18 @@ test("the Trait effects window says what each handled trait does", () => {
   assert.match(line("deaf"), /no sound in WoDX Senses/);
   for ( const k of Object.keys(T.HANDLED) ) assert.ok(T.buildIndex().byKey.has(k), k);
 });
+
+test("Destiny and Fate bank a reroll a story for each dot, beside Lucky (B3919)", async () => {
+  for ( const k of Object.keys(flags) ) delete flags[k];
+  const withDots = (names) => { const a = actorOf("mortal", names.map(([n, k]) => [n, k])); a.view.features.forEach((f, i) => { f.value = names[i][2] ?? 1; }); return a; };
+  const d = withDots([["Destiny", "background", 2]]);
+  assert.equal(TH.rerollsPerStory(d), 2);
+  assert.equal(TH.luckyLeft(d), 2);
+  assert.match(TH.luckyHtml(d), /^.*Destiny: roll again if it fails \(2 left this story\)/);
+  for ( const k of Object.keys(flags) ) delete flags[k];
+  const both = withDots([["Lucky", "merit", 1], ["Fate", "background", 3]]);
+  assert.equal(TH.rerollsPerStory(both), 6);
+  assert.equal(TH.fortuneName(both), "Lucky and Fate");
+  assert.equal(TH.rerollsPerStory(actorOf("mortal", [])), 0);
+  assert.match(src("modules/wodx-actions/scripts/main.js"), /\$\{TH\.fortuneName\(actor\)\}: rolled again/);
+});

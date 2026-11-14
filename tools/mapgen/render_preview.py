@@ -4,18 +4,33 @@ their doors and windows, then light. Dungeondraft itself cannot be driven from o
 map is looked at by eye before it goes to the PC.
 
 The pictures come from the slim packs, shrunk to a quarter (64 px a square) by extract_pack_pictures.py; they are
-private and live outside the repo (default /mnt/project-files/map-furnishing/preview/pictures, or WODX_PACK_PICTURES).
+private and live outside the repo: one archive, /mnt/project-files/map-furnishing/preview/pictures.tar (one file, not
+25,000, for the shared folder's file cap), unpacked once into a local cache; or a folder (WODX_PACK_PICTURES).
 A picture that is not there is drawn as a magenta box and listed, so nothing missing goes unseen.
 
 Run: python3 render_preview.py MAP.dungeondraft_map OUT.png [--pictures DIR] [--px 64] [--no-grid]
 """
-import argparse, json, math, os, re, sys
+import argparse, json, math, os, re, sys, tarfile, tempfile
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
 CELL = 256
-PICTURES = os.environ.get("WODX_PACK_PICTURES", "/mnt/project-files/map-furnishing/preview/pictures")
+PICTURES = os.environ.get("WODX_PACK_PICTURES", "/mnt/project-files/map-furnishing/preview/pictures.tar")
+CACHE = os.environ.get("WODX_PICTURE_CACHE", os.path.join(tempfile.gettempdir(), "wodx-pack-pictures"))
+
+
+def picture_root(root):
+    """A folder of the pictures: the folder itself, or an archive (.tar) unpacked once into CACHE."""
+    if os.path.isdir(root): return root
+    tar = root if root.endswith(".tar") else root + ".tar"
+    if not os.path.exists(tar): return root                   # no pictures: every piece draws as missing
+    done = os.path.join(CACHE, ".from-" + str(int(os.path.getmtime(tar))))
+    if not os.path.exists(done):
+        os.makedirs(CACHE, exist_ok=True)
+        with tarfile.open(tar) as t: t.extractall(CACHE, filter="data")
+        open(done, "w").close()
+    return CACHE
 MISSING = (255, 0, 255, 200)
 
 def nums(s): return [float(v) for v in re.findall(r"-?\d+(?:\.\d+)?(?:e-?\d+)?", s.split("(", 1)[1])] if "(" in s else []
@@ -29,6 +44,7 @@ class Pictures:
     """Pack pictures by the path a map uses, scaled to the preview: k preview pixels for every world unit."""
 
     def __init__(self, root, k):
+        root = picture_root(root)
         self.root, self.k, self.cache, self.missing = root, k, {}, set()
         meta = os.path.join(root, "original-sizes.json")
         m = json.load(open(meta)) if os.path.exists(meta) else {"scale": 1, "sizes": {}}
@@ -239,7 +255,7 @@ def main():
     ap.add_argument("--pictures", default=PICTURES); ap.add_argument("--px", type=int, default=64)
     ap.add_argument("--no-grid", action="store_true")
     a = ap.parse_args()
-    if not os.path.isdir(a.pictures): sys.exit(f"no pack pictures at {a.pictures}")
+    if not os.path.isdir(picture_root(a.pictures)): sys.exit(f"no pack pictures at {a.pictures}")
     res = render(a.map, a.out, a.pictures, a.px, not a.no_grid)
     print(json.dumps({k: (v if k != "missing" else len(v)) for k, v in res.items()}))
     for m in res["missing"][:40]: print("missing picture:", m)

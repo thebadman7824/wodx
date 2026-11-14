@@ -257,6 +257,23 @@ export function regardOf(step) {
 }
 
 /**
+ * B3918: the face an NPC shows (their Demeanor, V20 archetypes) sets the tone of their stock talk: a cold mask speaks
+ * one step cooler than they feel, a warm one a step warmer. Only the words change; the attitude itself does not.
+ */
+export const DEMEANOR_TONE = {
+  autocrat: -1, bravo: -1, curmudgeon: -1, judge: -1, loner: -1, monster: -1, fanatic: -1, perfectionist: -1, rebel: -1, director: -1,
+  "bon vivant": 1, caregiver: 1, celebrant: 1, child: 1, conniver: 1, gallant: 1, trickster: 1, pedagogue: 1, conformist: 1, martyr: 1
+};
+export function toneOf(demeanor) {
+  const flat = String(demeanor ?? "").toLowerCase().replace(/[^a-z]/g, "");
+  if ( !flat ) return 0;
+  const k = Object.keys(DEMEANOR_TONE).find(d => flat.includes(d.replace(/[^a-z]/g, "")));
+  return k ? DEMEANOR_TONE[k] : 0;
+}
+/** The regard band the stock talk speaks in: the step, shifted by the Demeanor's tone, kept to the track. */
+export const toneRegard = (step, demeanor) => regardOf(Math.max(-3, Math.min(3, (Number(step) || 0) + toneOf(demeanor))));
+
+/**
  * The step to use: the NPC's own attitude toward the character when it is set, else the standing of the NPC's
  * factions toward them (the mean, rounded toward zero), else 0.
  */

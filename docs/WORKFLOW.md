@@ -121,3 +121,13 @@ filled on 14 November 2026 (31,400 map furniture pictures and 11,600 book pages)
 
 Before a job that writes many files (more than 1,000), check `registry/file-count.md`, write to a zip instead, or keep
 the output on the PC.
+
+For maps and picture packs in particular (Ben, 14 November 2026, after the map threads filled the folder):
+
+- **A picture set that code reads is one `.tar`, never a folder of images.** The map preview reads
+  `map-furnishing/preview/pictures.tar` and unpacks it once into a local cache (`tools/mapgen/render_preview.py`,
+  `WODX_PICTURE_CACHE`). The same goes for any new pack copy: pack it on the PC, copy the one file.
+- **No per-image writes into the shared folder.** A review of a pack or a Trove folder works from contact sheets
+  (`maps-sheets/`, one sheet for each subfolder) and pulls single pictures only for detail. Generated maps, previews and
+  check images go to the thread's own scratch space. Only the deliverable (a sample map, one preview) goes to the
+  shared folder.

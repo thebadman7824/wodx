@@ -200,7 +200,7 @@ Next free block: B4150
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Sheet buttons for Nature and derangements (used B3900-B3917) | Sheets |
+| B3900-B3929 | Destiny and Fate bank rerolls (used B3900-B3919) | Actions |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
@@ -6774,6 +6774,12 @@ No-effect audit t2. V20 gives back a point of Willpower when a character acts to
 
 ## B3917. A Nature button on every sheet; Set off on the Derangements panel (2026-11-14)
 No-effect audit t1 and t2 reach the sheet. Every WoDX sheet's button row ends with Nature, which calls WoDX Actions' nature (B3916). The Derangements panel gets a Set off link that calls Actions' derangement, which opens WoDX Chronicle's hold-off dialog (B3913, B3915). Reverse: drop the nature entry and the panel's roll link in Sheets main.mjs.
+
+## B3918. An NPC's Demeanor sets the tone of their stock talk (2026-11-14)
+No-effect audit t2, NPC side. WoDX NPC's stock talk picks lines by the regard band (hate to love) from the NPC's attitude. The Demeanor on the NPC's sheet, the face they show, now shifts the band the words are picked from by one step. It goes colder for Autocrat, Bravo, Curmudgeon, Director, Fanatic, Judge, Loner, Monster, Perfectionist and Rebel, and warmer for Bon Vivant, Caregiver, Celebrant, Child, Conformist, Conniver, Gallant, Martyr, Pedagogue and Trickster. Any other Demeanor, or none, leaves the band alone. The attitude, its track and the Storyteller's own lines are unchanged. The choice of masks is a house reading. Reverse: talk.mjs back to TK.regardOf(step).
+
+## B3919. Destiny and Fate are banked rerolls (2026-11-14)
+No-effect audit t3, first part. Destiny (M20, Mummy) and Fate (W20) were marked as reroll backgrounds, but nothing read them. WoDX Actions now counts one reroll of a failed roll a story for each dot of either, added to Lucky's three, on the same "roll again if it fails" box and the same per-story count. The box and card name what gives it ("Lucky and Fate"). The dot-for-dot rate is a house reading. Reverse: rerollsPerStory back to Lucky only.
 
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
