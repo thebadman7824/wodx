@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4700
+Next free block: B4760
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -213,11 +213,18 @@ Next free block: B4700
 | B4160-B4169 | Canada first nations names in the People generator (used B4160-B4162) | Creation, Chronicle |
 | B4600-B4609 | Show, don't tell: a visible: line on every feature's release note (used B4600) | tools (no module) |
 | B4610-B4619 | The PC runner rechecks every failing gate before it reports (used B4610) | tools (no module) |
-| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4635) | Otherworlds |
+| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4636) | Storyteller |
 | B4650-B4659 | Inuit names in the People generator (used B4650-B4652) | Creation, Chronicle |
 | B4660-B4669 | Taino names in the People generator (used B4660-B4662) | Creation, Chronicle |
+| B4670-B4679 | Furniture that does something: stocked shelves, desks and barrels; tables and counters as cover (used B4670-B4673) | Interactables, Combat (and the map generator in tools/mapgen) |
 | B4680-B4689 | Aboriginal Australian names in the People generator (used B4680-B4682) | Creation, Chronicle |
 | B4690-B4699 | Central Africa names (Kongo, Luba, Ganda) (used B4690-B4692) | Creation, Chronicle |
+| B4700-B4709 | A heartbeat from GitHub for the PC runner (used B4700-B4701) | tools (no module) |
+| B4710-B4719 | Amazigh (Berber) names (used B4710-B4712) | Creation, Chronicle |
+| B4720-B4729 | Old installed tables stand aside for their replacements (used B4720) | Chronicle |
+| B4730-B4739 | Sephardi and Mizrahi Jewish names (used B4730-B4732) | Creation, Chronicle |
+| B4740-B4749 | Khmer names (used B4740-B4742) | Creation, Chronicle |
+| B4750-B4759 | Filipino names (used B4750-B4752) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7063,6 +7070,9 @@ Show-don't-tell desk v14 and c4 (the smaller fix), approved by Ben 2026-11-14. W
 ## B4635. Places of power glow for those who could see them (2026-11-14)
 Show-don't-tell desk v13 (the smaller fix). WoDX Storyteller (power-look-rules.mjs, power-looks.mjs). On the scene of a Node, a soft blue glow at its heart for mages, sized by its rating and dimmed to less than half when drained; a caern a green glow for werebeasts and mages, by its level, none once dead; a freehold's balefire a flickering amber flame for changelings, its size following the ranks, gone when out. The Storyteller sees them all. Drawn on each client, never saved; Light stops the flicker, Off hides them. Sizes and strengths are house rules. Reverse: remove setupPowerLooks from main.mjs.
 
+## B4636. Town looks go through the shared looks layer, labels and own colours stay drawings (2026-11-14)
+Now that WoDX Chronicle's shared looks layer is on main (B3758), the town looks (B4620-B4629) hand it every look it can draw well: fire, smoke, rubble, flood and the other kinds it knows, and every whole-scene look, whose weather is the richer sight. A look with a mark (a torch, a notice, a bird, a banner) or a colour of its own on a spot stays one of this module's drawings, because the layer has no labels and draws each kind in its own colour. Rule: forLayer in town-look-rules.mjs. Reverse: make forLayer return false.
+
 ## B4650. The Inuit in the Arctic and Canada (2026-11-14)
 WoDX Creation and Chronicle. The Arctic was Norse alone in every age; it now holds the Inuit 70 and the Norse 30 before 1500 (the Thule crossing and the Greenland farms), the Inuit 92 before 1800 and about 85 after, beside the Danes under the norse names. Canada gains the Inuit of the north at 3 before 1500, 2 before 1800 and 1 after. Taken as recommended; logged in PENDING-REVIEW.
 
@@ -7093,6 +7103,26 @@ WoDX Creation. A Spanish church given name comes before the own name from 1493, 
 
 Reverse: change church or family in data/people-taino.mjs.
 
+## B4670. A made map's shelves, desks and barrels are stocked by the building's trade (2026-11-14)
+Map generator (tools/mapgen/stock.py, ddcore.feature_entries). Shelves, desks and stores (barrels, crates, sacks, baskets) the furnishing sets down become WoDX Interactables containers on Adopt, with a stock list by the building's trade (a smithy's nails and horseshoes, a baker's loaves, an inn's ale and wine, an office's ledgers), else a home's goods, kept to the years each thing was about (no coke before 1850, no floppy disks before 1980) and to the region (rice and rice wine in East Asia, no drink where Islam rules). "Draw the stock" is set: every dawn for a baker or butcher, every week for a trade, every month for a home or a church, so the first turn of the clock fills them. A desk in a trade keeps its papers; its goods stay on the shelves. The Storyteller can change or clear any list on the tile.
+
+Reverse: drop "shelf", "desk" and "store" from ddcore.DRESSED.
+
+## B4671. Cover on the map (2026-11-14)
+WoDX Interactables and WoDX Combat. A tile can be cover: a table (light, +1), a counter or a bar and a barricade (good, +2), a low wall or a parapet (superior, +3), the V20 cover table (pdf p. 286). Every shot and throw in WoDX Combat adds the cover the target crouches behind, and the shooter's own cover less one, as the book says for firing back from cover. The card names the cover. A made map's tables and counters are cover on Adopt (bar and altar pictures are not tables).
+
+Reverse: untick Cover on the tile; drop "table" and "counter" from ddcore.DRESSED.
+
+## B4672. A table can be tipped over for good cover (2026-11-14, house rule)
+WoDX Interactables. A table stands as light cover: legs and a gap below it hide little. Tipped on its side, in a turn and loudly, it is good cover, and whatever stood on it falls. It can be set on its legs again in a turn. Counters, bars and walls are fixed. Shown with the "Tipped over" marker and floating word.
+
+Reverse: set COVERS.table.tips to false in cover-rules.mjs.
+
+## B4673. Who counts as behind cover (2026-11-14, house rule)
+WoDX Interactables. Someone whose middle lies within a square of the cover, with the line of the shot crossing it. Someone standing on it or under it is not behind it, and cover the shooter also stands at does not shield the target from that shooter. A turned tile is read in its own frame. The books leave this to the Storyteller.
+
+Reverse: change coverOnShot in cover-rules.mjs.
+
 ## B4680. Australia has people from 1197 (2026-11-14)
 WoDX Creation and Chronicle. Australia had no people before 1788; the Aboriginal nations now hold it alone before the colonies, then 12 in 100 beside the English and Irish in the industrial age and 5 today. Taken as recommended; logged in PENDING-REVIEW.
 
@@ -7122,3 +7152,85 @@ Reverse: edit the lists in data/people-central-africa.mjs.
 WoDX Creation. Kongo kanda from the mother and Ganda ebika from the father stand as the family before 1800; Luba women unnamed in the records are "A woman of" a chiefdom. The Kongo court took Portuguese church names from 1491; the Luba and Baganda take church names after 1800 (the missions of the 1870s), then family names.
 
 Reverse: change clans, towns or earlyChurch in data/people-central-africa.mjs.
+
+## B4700. GitHub checks the PC runner is alive every 15 minutes (2026-11-14)
+PC runner (tools/pcq). The runner stopped once without a trace (14 November, about 17:25Z): no crash in its log or in
+Windows, and no alert, because the runner raises its own alerts. Jobs sat for minutes before anyone noticed. A
+scheduled GitHub workflow (pc-heartbeat.yml) now reads the runner's status issue, which the runner updates every 2
+minutes. When the status is more than 15 minutes old, it opens a pc-alert issue with the restart command, and it closes
+that issue once the status moves again. The coordinator already watches pc-alert issues.
+
+Reverse: delete .github/workflows/pc-heartbeat.yml.
+
+## B4701. The effects modules' first-run settings are not drift (2026-11-14)
+Testbed lanes (tools/lanes). After lanes 2-6 took the effects modules from lane 1, gates on two lanes stopped with
+DRIFT: fxmaster, Sequencer and Token Magic write their own housekeeping settings (a release note seen, a cleanup
+version, the preset list) the first time a GM loads the world, after the lane's clean fingerprint is taken. They are
+added to ignoreSettings in lanes.json, like the other settings that change on their own.
+
+Reverse: take the four names out of ignoreSettings.
+
+## B4710. The Maghreb holds the Amazigh beside the Arabs (2026-11-14)
+WoDX Creation and Chronicle. The Maghreb was all Arab; the Amazigh now hold 42 in 100 in the medieval mix, 34 in the industrial age beside the French, and 38 today. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old maghreb mixes in world-rules.mjs and drop amazigh from people-world.mjs.
+
+## B4711. One list for the Kabylie, the Rif, the Atlas and the Sous (2026-11-14)
+WoDX Creation. One Amazigh list from the Almoravid, Almohad, Zirid and Marinid records and the Kabyle and Moroccan names since; the Tuareg of the desert wait for a list of their own. Fewer than 300 names.
+
+Reverse: edit the amazigh entry in data/people-world.mjs.
+
+## B4712. Tribes and son-of names, then family names (2026-11-14)
+WoDX Creation. Before 1800 a person carries "ibn" or "bint" and the father's name, or the tribe (al-Sanhaji, al-Masmudi); from 1800 a Kabyle or Moroccan family name, many with Aït.
+
+Reverse: change fam or child in the amazigh entry.
+
+## B4720. An installed table no longer shipped stands aside (2026-11-14)
+WoDX Chronicle. When a region's mix is split by era (the Arctic's one table for every age became four), the table installed in the world under the old key was never updated, and as a world table it won every draw: the testbed's Arctic stayed all Norse. Now a world table whose module still registers but no longer ships its key, and which still holds the results it was installed with, is passed over in draws. Nothing is deleted; a table the Storyteller edited still wins.
+
+Reverse: drop the retired() check in allTables in gen.mjs.
+
+## B4730. Sephardi Jews where they lived (2026-11-14)
+WoDX Creation and Chronicle. Iberia's Jews to 1492 and the Jews of Constantinople, Anatolia and Thessaloniki, the Maghreb after 1492 and Amsterdam's Portuguese Nation now take Sephardi names instead of the Bohemian (Ashkenazi) list: Iberia medieval 7 in 100, Greece and Constantinople 5 and Anatolia 3 in the early-modern age, the Low Countries 3 beside 2 Ashkenazi. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put "jewish" back in those mixes in world-rules.mjs.
+
+## B4731. Mizrahi Jews from Baghdad to the Maghreb (2026-11-14)
+WoDX Creation and Chronicle. The Jews of the Levant and Mesopotamia, Egypt, Arabia (Yemen), Persia and the Maghreb, 2 to 4 in 100 before the modern age. The modern mixes of the Levant are left as they stood (all Arab); a desk for the modern Levant waits for Ben.
+
+Reverse: drop mizrahi from those mixes.
+
+## B4732. Names and families (2026-11-14)
+WoDX Creation. Sephardi names from the aljama and notarial records of Sefarad, then the Ladino communities and the Portuguese Nation, with family names in every age (Abravanel, Benveniste; later Modiano, Carasso, Curiel). Mizrahi names from the Cairo Geniza, Baghdad, Persia, Yemen and the Maghreb, carrying "ben" or "bat" or a place before 1800 and a family name after. Fewer than 300 names each.
+
+Reverse: edit the sephardi and mizrahi entries in data/people-world.mjs.
+
+## B4740. The Khmer on the mainland (2026-11-14)
+WoDX Creation and Chronicle. Mainland Southeast Asia was Vietnamese and Thai only; at 1197 Angkor holds most of it, so the Khmer are 45 in 100 in the medieval mix, 22 after Angkor's fall, and 12 in the industrial age and after. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old southeast-asia mixes in world-rules.mjs and drop khmer from people-world.mjs.
+
+## B4741. The names (2026-11-14)
+WoDX Creation. Before 1800 the kings, queens, priests and officials of the Angkor inscriptions and of the Longvek and Oudong chronicles, given names alone (the common people of the inscriptions are not named well enough to list); from 1800 the given names of modern Cambodia. Fewer than 300 names.
+
+Reverse: edit the khmer entry in data/people-world.mjs.
+
+## B4742. Family name first, from 1800 (2026-11-14)
+WoDX Creation. Modern Khmer names put the family name first, as Chinese and Vietnamese names do in WoDX.
+
+Reverse: drop khmer from FAMILY_FIRST in data/people-world.mjs.
+
+## B4750. The Philippine islands share the Malay world's mix (2026-11-14)
+WoDX Creation and Chronicle. The world map has no Philippines region of its own; Filipinos join the Malay world's mix at 14 in 100 before the Spanish and 12 after. A region of its own (its own map point, law and weather) waits for a later pass. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old nusantara mixes in world-rules.mjs and drop filipinoTables from people-world.mjs.
+
+## B4751. One list for the Tagalog, Visayan and Ilocano peoples (2026-11-14)
+WoDX Creation. Own names of the datus and rajahs and their people in Pigafetta, Legazpi and the conquest of Manila, women unnamed in the records as "A woman of" a barangay or domain; the Moro sultanates wait for a list of their own. Fewer than 300 names.
+
+Reverse: edit the lists in data/people-filipino.mjs.
+
+## B4752. Church names from 1565, family names from 1800 (2026-11-14)
+WoDX Creation. Baptism brings church names from the Spanish settlement of 1565, sometimes before the own name; family names from the Clavería catalogue of 1849 and the native names kept, from 1800 (the era groups are coarser than 1849).
+
+Reverse: change church, family or earlyChurch in data/people-filipino.mjs.

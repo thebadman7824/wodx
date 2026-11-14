@@ -2700,6 +2700,67 @@
  ],
  "features": [
   {
+   "id": "tavern-1-taproom-f0",
+   "label": "Barrel (Taproom)",
+   "rect": [
+    80.269,
+    61.395,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "material": "heavy",
+    "stock": "always: 4-12 bottles of beer\n1 in 2: 1-3 jugs of wine\n1 in 2: a bottle of brandy\n1 in 3: a round of cheese\n1 in 3: a tally of who owes what\n1 in 4: a pack of playing cards\n1 in 4: a bottle of slivovice",
+    "restock": "week"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "tavern-1-taproom-f1",
+   "label": "Crate (Taproom)",
+   "rect": [
+    79.769,
+    60.529,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: 4-12 bottles of beer\n1 in 2: 1-3 jugs of wine\n1 in 2: a bottle of brandy\n1 in 3: a round of cheese\n1 in 3: a tally of who owes what\n1 in 4: a pack of playing cards\n1 in 4: a bottle of slivovice",
+    "restock": "week"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "tavern-1-taproom-f2",
+   "label": "Crate (Taproom)",
+   "rect": [
+    81.135,
+    60.895,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: 4-12 bottles of beer\n1 in 2: 1-3 jugs of wine\n1 in 2: a bottle of brandy\n1 in 3: a round of cheese\n1 in 3: a tally of who owes what\n1 in 4: a pack of playing cards\n1 in 4: a bottle of slivovice",
+    "restock": "week"
+   },
+   "rotation": 150.0
+  },
+  {
    "id": "tavern-1-kitchen-0",
    "label": "Oven (Kitchen)",
    "rect": [
@@ -2756,6 +2817,320 @@
     "fillPlace": "church"
    },
    "rotation": 300.0
+  },
+  {
+   "id": "chapel-1-chancel-f0",
+   "label": "Crate (Chancel)",
+   "rect": [
+    91.282,
+    67.06,
+    0.75,
+    0.413
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 4: the parish register\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 300.0
+  },
+  {
+   "id": "chapel-1-chancel-f1",
+   "label": "Sack (Chancel)",
+   "rect": [
+    91.715,
+    66.473,
+    0.547,
+    0.42
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "ds": "open",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 4: the parish register\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 300.0
+  },
+  {
+   "id": "chapel-1-chancel-f3",
+   "label": "Shelves (Chancel)",
+   "rect": [
+    87.151,
+    63.929,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "church",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 4: the parish register\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 210.0
+  },
+  {
+   "id": "chapel-1-nave-f5",
+   "label": "Sack (Nave)",
+   "rect": [
+    90.828,
+    57.481,
+    0.73,
+    0.56
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "ds": "open",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 4: the parish register\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 300.0
+  },
+  {
+   "id": "chapel-1-nave-f7",
+   "label": "Barrel (Nave)",
+   "rect": [
+    93.515,
+    63.395,
+    0.45,
+    0.45
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "material": "heavy",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 4: the parish register\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 210.0
+  },
+  {
+   "id": "chapel-1-nave-f8",
+   "label": "Shelves (Nave)",
+   "rect": [
+    90.346,
+    58.302,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "church",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 4: the parish register\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 210.0
+  },
+  {
+   "id": "chapel-1-nave-f9",
+   "label": "Barrel (Nave)",
+   "rect": [
+    93.94,
+    60.54,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "material": "heavy",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 4: the parish register\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 300.0
+  },
+  {
+   "id": "chapel-1-nave-f11",
+   "label": "Sack (Nave)",
+   "rect": [
+    91.814,
+    59.544,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "ds": "open",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 4: the parish register\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 300.0
+  },
+  {
+   "id": "chapel-1-nave-f13",
+   "label": "Barrel (Nave)",
+   "rect": [
+    90.242,
+    60.946,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "material": "heavy",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 4: the parish register\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 300.0
+  },
+  {
+   "id": "chapel-1-nave-f15",
+   "label": "Sack (Nave)",
+   "rect": [
+    91.309,
+    58.098,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "ds": "open",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 4: the parish register\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 210.0
+  },
+  {
+   "id": "chapel-1-nave-f16",
+   "label": "Sack (Nave)",
+   "rect": [
+    94.35,
+    59.83,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "ds": "open",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 4: the parish register\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 210.0
+  },
+  {
+   "id": "chapel-1-vestry-f0",
+   "label": "Shelves (Vestry)",
+   "rect": [
+    87.253,
+    68.376,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "church",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 4: the parish register\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 210.0
+  },
+  {
+   "id": "chapel-1-vestry-f1",
+   "label": "Sack (Vestry)",
+   "rect": [
+    89.272,
+    69.034,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "ds": "open",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 4: the parish register\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 300.0
+  },
+  {
+   "id": "chapel-1-vestry-f2",
+   "label": "Sack (Vestry)",
+   "rect": [
+    89.647,
+    68.384,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "ds": "open",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 4: the parish register\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 300.0
+  },
+  {
+   "id": "chapel-1-vestry-f3",
+   "label": "Barrel (Vestry)",
+   "rect": [
+    88.011,
+    67.439,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "material": "heavy",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 4: the parish register\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 210.0
   },
   {
    "id": "cottage-1-cottage-0",
@@ -2920,6 +3295,22 @@
    "rotation": 285.0
   },
   {
+   "id": "cottage-12-cottage-f2",
+   "label": "Table (Cottage)",
+   "rect": [
+    67.791,
+    41.059,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 285.0
+  },
+  {
    "id": "sgraffito-house-1-back-room-0",
    "label": "Bed (Back room)",
    "rect": [
@@ -2994,6 +3385,43 @@
    "rotation": 255.0
   },
   {
+   "id": "sgraffito-house-1-black-kitchen-f0",
+   "label": "Shelves (Black kitchen)",
+   "rect": [
+    48.284,
+    88.469,
+    0.75,
+    0.3
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a loaf of bread\n1 in 2: a crock of salt\n1 in 2: 2-4 onions\n1 in 3: a tin of coffee\n1 in 4: a box of matches\n1 in 4: a prayer book\n1 in 3: a jar of honey\n1 in 4: a tin of soup\n1 in 5: a torch (flashlight)",
+    "restock": "month"
+   },
+   "rotation": 345.0
+  },
+  {
+   "id": "sgraffito-house-1-hall-f0",
+   "label": "Table (Hall)",
+   "rect": [
+    51.306,
+    83.526,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 255.0
+  },
+  {
    "id": "sgraffito-house-1-hall-f2",
    "label": "Cupboard (Hall)",
    "rect": [
@@ -3008,6 +3436,68 @@
     "lock": "none",
     "items": "",
     "fillPlace": "home"
+   },
+   "rotation": 255.0
+  },
+  {
+   "id": "sgraffito-house-1-hall-f4",
+   "label": "Crate (Hall)",
+   "rect": [
+    47.502,
+    85.647,
+    0.21,
+    0.203
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "1 in 2: 2-6 turnips\n1 in 3: 6-20 potatoes\n1 in 4: a coil of rope\n1 in 4: a crate of empty bottles",
+    "restock": "month"
+   },
+   "rotation": 255.0
+  },
+  {
+   "id": "sgraffito-house-1-hall-f6",
+   "label": "Shelves (Hall)",
+   "rect": [
+    47.854,
+    87.049,
+    0.413,
+    0.323
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a loaf of bread\n1 in 2: a crock of salt\n1 in 2: 2-4 onions\n1 in 3: a tin of coffee\n1 in 4: a box of matches\n1 in 4: a prayer book\n1 in 3: a jar of honey\n1 in 4: a tin of soup\n1 in 5: a torch (flashlight)",
+    "restock": "month"
+   },
+   "rotation": 255.0
+  },
+  {
+   "id": "sgraffito-house-1-hall-f7",
+   "label": "Sack (Hall)",
+   "rect": [
+    51.574,
+    85.906,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "ds": "open",
+    "stock": "1 in 2: 2-6 turnips\n1 in 3: 6-20 potatoes\n1 in 4: a coil of rope\n1 in 4: a crate of empty bottles",
+    "restock": "month"
    },
    "rotation": 255.0
   },
@@ -3104,6 +3594,27 @@
    "rotation": 255.0
   },
   {
+   "id": "sgraffito-house-3-black-kitchen-f0",
+   "label": "Barrel (Black kitchen)",
+   "rect": [
+    44.987,
+    71.874,
+    0.585,
+    0.383
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "material": "heavy",
+    "stock": "1 in 2: 2-6 turnips\n1 in 3: 6-20 potatoes\n1 in 4: a coil of rope\n1 in 4: a crate of empty bottles",
+    "restock": "month"
+   },
+   "rotation": 255.0
+  },
+  {
    "id": "sgraffito-house-3-hall-f0",
    "label": "Cupboard (Hall)",
    "rect": [
@@ -3158,6 +3669,27 @@
     "bright": 1,
     "color": "#ff9a3c",
     "on": true
+   },
+   "rotation": 255.0
+  },
+  {
+   "id": "passage-house-1-kitchen-f0",
+   "label": "Shelves (Kitchen)",
+   "rect": [
+    44.805,
+    80.262,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a loaf of bread\n1 in 2: a crock of salt\n1 in 2: 2-4 onions\n1 in 3: a tin of coffee\n1 in 4: a box of matches\n1 in 4: a prayer book\n1 in 3: a jar of honey\n1 in 4: a tin of soup\n1 in 5: a torch (flashlight)",
+    "restock": "month"
    },
    "rotation": 255.0
   },
@@ -3232,6 +3764,22 @@
    "rotation": 255.0
   },
   {
+   "id": "passage-house-1-room-f2",
+   "label": "Table (Room)",
+   "rect": [
+    48.023,
+    81.732,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 255.0
+  },
+  {
    "id": "passage-house-1-room-f3",
    "label": "Cupboard (Room)",
    "rect": [
@@ -3248,6 +3796,26 @@
     "fillPlace": "home"
    },
    "rotation": 255.0
+  },
+  {
+   "id": "passage-house-1-room-f6",
+   "label": "Crate (Room)",
+   "rect": [
+    47.445,
+    76.862,
+    0.427,
+    0.427
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "1 in 2: 2-6 turnips\n1 in 3: 6-20 potatoes\n1 in 4: a coil of rope\n1 in 4: a crate of empty bottles",
+    "restock": "month"
+   },
+   "rotation": 345.0
   },
   {
    "id": "passage-house-1-passage-0",
@@ -3297,6 +3865,27 @@
     "lock": "none",
     "items": "",
     "fillPlace": "home"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "sgraffito-house-5-back-room-f7",
+   "label": "Sack (Back room)",
+   "rect": [
+    51.707,
+    49.934,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "ds": "open",
+    "stock": "1 in 2: 2-6 turnips\n1 in 3: 6-20 potatoes\n1 in 4: a coil of rope\n1 in 4: a crate of empty bottles",
+    "restock": "month"
    },
    "rotation": 60.0
   },
@@ -3395,6 +3984,38 @@
    "rotation": 330.0
   },
   {
+   "id": "villa-1-salon-f6",
+   "label": "Table (Salon)",
+   "rect": [
+    58.838,
+    52.202,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 330.0
+  },
+  {
+   "id": "villa-1-hall-f0",
+   "label": "Table (Hall)",
+   "rect": [
+    60.289,
+    48.056,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 330.0
+  },
+  {
    "id": "villa-1-hall-f1",
    "label": "Cupboard (Hall)",
    "rect": [
@@ -3409,6 +4030,22 @@
     "lock": "none",
     "items": "",
     "fillPlace": "home"
+   },
+   "rotation": 330.0
+  },
+  {
+   "id": "villa-1-hall-f4",
+   "label": "Table (Hall)",
+   "rect": [
+    62.398,
+    48.127,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
    },
    "rotation": 330.0
   },
@@ -3453,6 +4090,43 @@
    "rotation": 330.0
   },
   {
+   "id": "villa-1-kitchen-f0",
+   "label": "Shelves (Kitchen)",
+   "rect": [
+    60.244,
+    46.636,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a loaf of bread\n1 in 2: a crock of salt\n1 in 2: 2-4 onions\n1 in 3: a tin of coffee\n1 in 4: a box of matches\n1 in 4: a prayer book\n1 in 3: a jar of honey\n1 in 4: a tin of soup\n1 in 5: a torch (flashlight)",
+    "restock": "month"
+   },
+   "rotation": 330.0
+  },
+  {
+   "id": "villa-1-kitchen-f1",
+   "label": "Table (Kitchen)",
+   "rect": [
+    59.921,
+    42.172,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 60.0
+  },
+  {
    "id": "villa-1-kitchen-f2",
    "label": "Cupboard (Kitchen)",
    "rect": [
@@ -3467,6 +4141,27 @@
     "lock": "none",
     "items": "",
     "fillPlace": "home"
+   },
+   "rotation": 330.0
+  },
+  {
+   "id": "villa-1-kitchen-f3",
+   "label": "Sack (Kitchen)",
+   "rect": [
+    60.45,
+    43.055,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "ds": "open",
+    "stock": "1 in 2: 2-6 turnips\n1 in 3: 6-20 potatoes\n1 in 4: a coil of rope\n1 in 4: a crate of empty bottles",
+    "restock": "month"
    },
    "rotation": 330.0
   },
@@ -3489,6 +4184,69 @@
     "bright": 1,
     "color": "#ff9a3c",
     "on": true
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "colony-house-1-kitchen-f0",
+   "label": "Shelves (Kitchen)",
+   "rect": [
+    72.618,
+    55.93,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a loaf of bread\n1 in 2: a crock of salt\n1 in 2: 2-4 onions\n1 in 3: a tin of coffee\n1 in 4: a box of matches\n1 in 4: a prayer book\n1 in 3: a jar of honey\n1 in 4: a tin of soup\n1 in 5: a torch (flashlight)",
+    "restock": "month"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "colony-house-1-kitchen-f1",
+   "label": "Sack (Kitchen)",
+   "rect": [
+    70.723,
+    52.749,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "ds": "open",
+    "stock": "1 in 2: 2-6 turnips\n1 in 3: 6-20 potatoes\n1 in 4: a coil of rope\n1 in 4: a crate of empty bottles",
+    "restock": "month"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "colony-house-1-kitchen-f2",
+   "label": "Sack (Kitchen)",
+   "rect": [
+    74.671,
+    53.807,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "ds": "open",
+    "stock": "1 in 2: 2-6 turnips\n1 in 3: 6-20 potatoes\n1 in 4: a coil of rope\n1 in 4: a crate of empty bottles",
+    "restock": "month"
    },
    "rotation": 60.0
   },
@@ -3541,6 +4299,86 @@
     "fillPlace": "home"
    },
    "rotation": 60.0
+  },
+  {
+   "id": "school-1-classroom-f0",
+   "label": "Desk (Classroom)",
+   "rect": [
+    80.38,
+    89.739,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "drawers",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "office",
+    "stock": "1 in 2: 1-4 books\n1 in 2: a bundle of notes",
+    "restock": "month"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "school-1-classroom-f1",
+   "label": "Desk (Classroom)",
+   "rect": [
+    79.63,
+    88.44,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "drawers",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "office",
+    "stock": "1 in 2: 1-4 books\n1 in 2: a bundle of notes",
+    "restock": "month"
+   },
+   "rotation": 240.0
+  },
+  {
+   "id": "school-1-classroom-f2",
+   "label": "Desk (Classroom)",
+   "rect": [
+    78.88,
+    87.141,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "drawers",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "office",
+    "stock": "1 in 2: 1-4 books\n1 in 2: a bundle of notes",
+    "restock": "month"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "school-1-classroom-f6",
+   "label": "Desk (Classroom)",
+   "rect": [
+    76.044,
+    89.409,
+    1,
+    2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "drawers",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "office",
+    "stock": "1 in 2: 1-4 books\n1 in 2: a bundle of notes",
+    "restock": "month"
+   },
+   "rotation": 150.0
   },
   {
    "id": "school-1-classroom-f8",
@@ -3651,6 +4489,54 @@
    "rotation": 240.0
   },
   {
+   "id": "school-1-third-classroom-f7",
+   "label": "Table (Third classroom)",
+   "rect": [
+    67.072,
+    95.69,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "school-1-third-classroom-f10",
+   "label": "Table (Third classroom)",
+   "rect": [
+    64.733,
+    93.837,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "school-1-third-classroom-f13",
+   "label": "Table (Third classroom)",
+   "rect": [
+    67.938,
+    95.19,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 240.0
+  },
+  {
    "id": "colony-house-2-kitchen-0",
    "label": "Hearth (Kitchen)",
    "rect": [
@@ -3669,6 +4555,27 @@
     "bright": 1,
     "color": "#ff9a3c",
     "on": true
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "colony-house-2-kitchen-f0",
+   "label": "Shelves (Kitchen)",
+   "rect": [
+    41.279,
+    56.917,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a loaf of bread\n1 in 2: a crock of salt\n1 in 2: 2-4 onions\n1 in 3: a tin of coffee\n1 in 4: a box of matches\n1 in 4: a prayer book\n1 in 3: a jar of honey\n1 in 4: a tin of soup\n1 in 5: a torch (flashlight)",
+    "restock": "month"
    },
    "rotation": 0.0
   },
@@ -3759,6 +4666,38 @@
    "rotation": 45.0
   },
   {
+   "id": "func-villa-1-living-space-f7",
+   "label": "Table (Living space)",
+   "rect": [
+    84.298,
+    125.581,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 135.0
+  },
+  {
+   "id": "func-villa-1-living-space-f14",
+   "label": "Table (Living space)",
+   "rect": [
+    80.726,
+    123.41,
+    4,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 135.0
+  },
+  {
    "id": "func-villa-1-living-space-f21",
    "label": "Cupboard (Living space)",
    "rect": [
@@ -3777,6 +4716,27 @@
    "rotation": 135.0
   },
   {
+   "id": "func-villa-1-kitchen-f0",
+   "label": "Shelves (Kitchen)",
+   "rect": [
+    91.808,
+    127.138,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a loaf of bread\n1 in 2: a crock of salt\n1 in 2: 2-4 onions\n1 in 3: a tin of coffee\n1 in 4: a box of matches\n1 in 4: a prayer book\n1 in 3: a jar of honey\n1 in 4: a tin of soup\n1 in 5: a torch (flashlight)",
+    "restock": "month"
+   },
+   "rotation": 135.0
+  },
+  {
    "id": "panel-block-1-flat-f0",
    "label": "Cupboard (Flat)",
    "rect": [
@@ -3791,6 +4751,22 @@
     "lock": "none",
     "items": "",
     "fillPlace": "home"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "panel-block-1-flat-f7",
+   "label": "Table (Flat)",
+   "rect": [
+    99.07,
+    73.0,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
    },
    "rotation": 90.0
   },
@@ -3867,6 +4843,22 @@
    "rotation": 90.0
   },
   {
+   "id": "panel-block-1-fourth-flat-f7",
+   "label": "Table (Fourth flat)",
+   "rect": [
+    99.07,
+    96.0,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 90.0
+  },
+  {
    "id": "panel-block-2-flat-f0",
    "label": "Cupboard (Flat)",
    "rect": [
@@ -3885,6 +4877,22 @@
    "rotation": 270.0
   },
   {
+   "id": "panel-block-2-flat-f7",
+   "label": "Table (Flat)",
+   "rect": [
+    54.0,
+    102.07,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 270.0
+  },
+  {
    "id": "panel-block-2-second-flat-f0",
    "label": "Cupboard (Second flat)",
    "rect": [
@@ -3892,6 +4900,56 @@
     103.57,
     1,
     2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "panel-block-2-second-flat-f4",
+   "label": "Table (Second flat)",
+   "rect": [
+    44.68,
+    102.57,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "panel-block-2-second-flat-f8",
+   "label": "Table (Second flat)",
+   "rect": [
+    46.82,
+    102.57,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "panel-block-2-second-flat-f10",
+   "label": "Cupboard (Second flat)",
+   "rect": [
+    44.195,
+    105.82,
+    2,
+    1
    ],
    "flags": {
     "container": true,
@@ -3921,6 +4979,22 @@
    "rotation": 180.0
   },
   {
+   "id": "panel-block-2-third-flat-f4",
+   "label": "Table (Third flat)",
+   "rect": [
+    39.68,
+    102.57,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 270.0
+  },
+  {
    "id": "panel-block-2-second-stair-core-f0",
    "label": "Cupboard (Second stair core)",
    "rect": [
@@ -3939,6 +5013,22 @@
    "rotation": 180.0
   },
   {
+   "id": "panel-block-2-second-stair-core-f5",
+   "label": "Table (Second stair core)",
+   "rect": [
+    35.18,
+    104.82,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 270.0
+  },
+  {
    "id": "panel-block-2-fourth-flat-f0",
    "label": "Cupboard (Fourth flat)",
    "rect": [
@@ -3953,6 +5043,54 @@
     "lock": "none",
     "items": "",
     "fillPlace": "home"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "panel-block-2-fourth-flat-f4",
+   "label": "Table (Fourth flat)",
+   "rect": [
+    30.57,
+    102.57,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "panel-block-2-fourth-flat-f7",
+   "label": "Table (Fourth flat)",
+   "rect": [
+    33.82,
+    102.43,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "panel-block-2-fourth-flat-f11",
+   "label": "Table (Fourth flat)",
+   "rect": [
+    29.57,
+    102.07,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
    },
    "rotation": 270.0
   },
@@ -4045,6 +5183,22 @@
     "fillPlace": "home"
    },
    "rotation": 75.0
+  },
+  {
+   "id": "cottage-13-cottage-f3",
+   "label": "Table (Cottage)",
+   "rect": [
+    117.186,
+    23.343,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 345.0
   },
   {
    "id": "cottage-14-cottage-0",
@@ -4302,10 +5456,10 @@
    "id": "cottage-18-cottage-f2",
    "label": "Cupboard (Cottage)",
    "rect": [
-    95.314,
-    34.717,
-    1.5,
-    0.75
+    95.689,
+    34.342,
+    0.75,
+    1.5
    ],
    "flags": {
     "container": true,
@@ -4314,7 +5468,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 180.0
+   "rotation": 270.0
   },
   {
    "id": "family-house-1-garage-1",
@@ -4330,6 +5484,84 @@
     "hideKind": "crawl",
     "room": 1,
     "title": "Behind the crates"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "family-house-1-garage-f0",
+   "label": "Shelves (Garage)",
+   "rect": [
+    108.794,
+    35.734,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a loaf of bread\n1 in 2: a crock of salt\n1 in 2: 2-4 onions\n1 in 3: a tin of coffee\n1 in 4: a box of matches\n1 in 4: a prayer book\n1 in 3: a jar of honey\n1 in 4: a tin of soup\n1 in 5: a torch (flashlight)",
+    "restock": "month"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "family-house-1-garage-f1",
+   "label": "Sack (Garage)",
+   "rect": [
+    108.169,
+    36.559,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "ds": "open",
+    "stock": "1 in 2: 2-6 turnips\n1 in 3: 6-20 potatoes\n1 in 4: a coil of rope\n1 in 4: a crate of empty bottles",
+    "restock": "month"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "family-house-1-garage-f2",
+   "label": "Basket (Garage)",
+   "rect": [
+    107.279,
+    36.309,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "1 in 2: 2-6 turnips\n1 in 3: 6-20 potatoes\n1 in 4: a coil of rope\n1 in 4: a crate of empty bottles",
+    "restock": "month"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "family-house-1-hall-f2",
+   "label": "Table (Hall)",
+   "rect": [
+    102.279,
+    34.844,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
    },
    "rotation": 180.0
   },
@@ -4352,6 +5584,43 @@
    "rotation": 180.0
   },
   {
+   "id": "family-house-1-hall-f5",
+   "label": "Table (Hall)",
+   "rect": [
+    104.099,
+    34.809,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "family-house-1-hall-f7",
+   "label": "Sack (Hall)",
+   "rect": [
+    105.099,
+    36.239,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "ds": "open",
+    "stock": "1 in 2: 2-6 turnips\n1 in 3: 6-20 potatoes\n1 in 4: a coil of rope\n1 in 4: a crate of empty bottles",
+    "restock": "month"
+   },
+   "rotation": 270.0
+  },
+  {
    "id": "family-house-1-living-room-f4",
    "label": "Cupboard (Living room)",
    "rect": [
@@ -4370,13 +5639,66 @@
    "rotation": 270.0
   },
   {
+   "id": "family-house-1-living-room-f6",
+   "label": "Table (Living room)",
+   "rect": [
+    106.599,
+    39.239,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "family-house-1-kitchen-f0",
+   "label": "Shelves (Kitchen)",
+   "rect": [
+    104.169,
+    38.169,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a loaf of bread\n1 in 2: a crock of salt\n1 in 2: 2-4 onions\n1 in 3: a tin of coffee\n1 in 4: a box of matches\n1 in 4: a prayer book\n1 in 3: a jar of honey\n1 in 4: a tin of soup\n1 in 5: a torch (flashlight)",
+    "restock": "month"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "family-house-1-kitchen-f1",
+   "label": "Table (Kitchen)",
+   "rect": [
+    103.794,
+    41.434,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 270.0
+  },
+  {
    "id": "family-house-1-kitchen-f2",
    "label": "Cupboard (Kitchen)",
    "rect": [
-    101.904,
-    40.544,
-    1.5,
-    0.75
+    102.279,
+    40.169,
+    0.75,
+    1.5
    ],
    "flags": {
     "container": true,
@@ -4385,7 +5707,28 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 270.0
+   "rotation": 180.0
+  },
+  {
+   "id": "family-house-1-kitchen-f3",
+   "label": "Sack (Kitchen)",
+   "rect": [
+    103.919,
+    40.809,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "ds": "open",
+    "stock": "1 in 2: 2-6 turnips\n1 in 3: 6-20 potatoes\n1 in 4: a coil of rope\n1 in 4: a crate of empty bottles",
+    "restock": "month"
+   },
+   "rotation": 180.0
   },
   {
    "id": "suburban-house-1-living-room-f5",
@@ -4406,6 +5749,43 @@
    "rotation": 0.0
   },
   {
+   "id": "suburban-house-1-kitchen-f0",
+   "label": "Shelves (Kitchen)",
+   "rect": [
+    95.696,
+    21.008,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a loaf of bread\n1 in 2: a crock of salt\n1 in 2: 2-4 onions\n1 in 3: a tin of coffee\n1 in 4: a box of matches\n1 in 4: a prayer book\n1 in 3: a jar of honey\n1 in 4: a tin of soup\n1 in 5: a torch (flashlight)",
+    "restock": "month"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "suburban-house-1-kitchen-f1",
+   "label": "Table (Kitchen)",
+   "rect": [
+    93.181,
+    22.523,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 90.0
+  },
+  {
    "id": "suburban-house-1-garage-2",
    "label": "Crates (Garage)",
    "rect": [
@@ -4421,6 +5801,211 @@
     "title": "Behind the crates"
    },
    "rotation": 90.0
+  },
+  {
+   "id": "suburban-house-1-garage-f0",
+   "label": "Shelves (Garage)",
+   "rect": [
+    100.196,
+    22.008,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a loaf of bread\n1 in 2: a crock of salt\n1 in 2: 2-4 onions\n1 in 3: a tin of coffee\n1 in 4: a box of matches\n1 in 4: a prayer book\n1 in 3: a jar of honey\n1 in 4: a tin of soup\n1 in 5: a torch (flashlight)",
+    "restock": "month"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "suburban-house-1-garage-f1",
+   "label": "Crate (Garage)",
+   "rect": [
+    100.196,
+    23.508,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "1 in 2: 2-6 turnips\n1 in 3: 6-20 potatoes\n1 in 4: a coil of rope\n1 in 4: a crate of empty bottles",
+    "restock": "month"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "suburban-house-1-garage-f2",
+   "label": "Crate (Garage)",
+   "rect": [
+    100.196,
+    24.258,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "1 in 2: 2-6 turnips\n1 in 3: 6-20 potatoes\n1 in 4: a coil of rope\n1 in 4: a crate of empty bottles",
+    "restock": "month"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "suburban-house-1-garage-f3",
+   "label": "Crate (Garage)",
+   "rect": [
+    99.006,
+    21.008,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "1 in 2: 2-6 turnips\n1 in 3: 6-20 potatoes\n1 in 4: a coil of rope\n1 in 4: a crate of empty bottles",
+    "restock": "month"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "suburban-house-1-garage-f4",
+   "label": "Shelves (Garage)",
+   "rect": [
+    97.931,
+    23.883,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a loaf of bread\n1 in 2: a crock of salt\n1 in 2: 2-4 onions\n1 in 3: a tin of coffee\n1 in 4: a box of matches\n1 in 4: a prayer book\n1 in 3: a jar of honey\n1 in 4: a tin of soup\n1 in 5: a torch (flashlight)",
+    "restock": "month"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "suburban-house-1-garage-f5",
+   "label": "Crate (Garage)",
+   "rect": [
+    100.196,
+    25.008,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "1 in 2: 2-6 turnips\n1 in 3: 6-20 potatoes\n1 in 4: a coil of rope\n1 in 4: a crate of empty bottles",
+    "restock": "month"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "suburban-house-1-garage-f6",
+   "label": "Sack (Garage)",
+   "rect": [
+    100.196,
+    25.758,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "ds": "open",
+    "stock": "1 in 2: 2-6 turnips\n1 in 3: 6-20 potatoes\n1 in 4: a coil of rope\n1 in 4: a crate of empty bottles",
+    "restock": "month"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "suburban-house-1-garage-f7",
+   "label": "Crate (Garage)",
+   "rect": [
+    100.196,
+    26.508,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "1 in 2: 2-6 turnips\n1 in 3: 6-20 potatoes\n1 in 4: a coil of rope\n1 in 4: a crate of empty bottles",
+    "restock": "month"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "suburban-house-1-garage-f8",
+   "label": "Shelves (Garage)",
+   "rect": [
+    97.931,
+    25.383,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a loaf of bread\n1 in 2: a crock of salt\n1 in 2: 2-4 onions\n1 in 3: a tin of coffee\n1 in 4: a box of matches\n1 in 4: a prayer book\n1 in 3: a jar of honey\n1 in 4: a tin of soup\n1 in 5: a torch (flashlight)",
+    "restock": "month"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "suburban-house-1-garage-f9",
+   "label": "Sack (Garage)",
+   "rect": [
+    98.306,
+    26.508,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "ds": "open",
+    "stock": "1 in 2: 2-6 turnips\n1 in 3: 6-20 potatoes\n1 in 4: a coil of rope\n1 in 4: a crate of empty bottles",
+    "restock": "month"
+   },
+   "rotation": 0.0
   },
   {
    "id": "well",

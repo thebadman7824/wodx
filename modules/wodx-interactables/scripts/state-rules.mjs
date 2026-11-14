@@ -22,6 +22,7 @@ export const STATES = {
   shock: {live: "Live", dead: "Power cut"},
   sacred: {whole: "Whole", desecrated: "Desecrated", taken: "Taken"},
   target: {standing: "Standing", broken: "Broken"},
+  cover: {upright: "", tipped: "Tipped over"},
   plain: {plain: ""}
 };
 
@@ -33,6 +34,7 @@ export function groupOf(o) {
   if ( o.light ) return "light";
   if ( o.hazard ) return o.kind === "brazier" ? "brazier" : o.kind === "sharp" ? "sharp" : o.kind === "shock" ? "shock" : "fire";
   if ( o.sacred ) return "sacred";
+  if ( o.cover ) return o.tips ? "cover" : "plain";
   if ( o.isTarget ) return o.kind === "object" || o.kind === "bottles" ? "target" : "plain";
   if ( o.clue || o.hide ) return "plain"; // never shown: it would give away a clue or a hidden person
   if ( o.door || o.breakable ) return "door";
@@ -62,6 +64,7 @@ export function stateOf(o, f = {}) {
     case "sharp": return o.cleared ? "cleared" : "live";
     case "shock": return o.live ? "live" : "dead";
     case "sacred": return o.taken ? "taken" : o.desecrated ? "desecrated" : "whole";
+    case "cover": return o.tipped ? "tipped" : "upright";
     case "target": return (o.kind === "object" && o.broken) || (o.kind === "bottles" && !o.left) ? "broken" : "standing";
     default: return "plain";
   }

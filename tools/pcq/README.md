@@ -38,6 +38,9 @@ nightly), a health probe of each idle lane every 5 minutes with one restart, a t
 tree is ended past it), one retry after a lane reset on a lane fault (no free lane, drift, watchdog, failed deploy or
 start; a failing gate is a result and is not retried), and jobs that were running when it stopped are run again.
 
+Heartbeat (B4700): a GitHub workflow (.github/workflows/pc-heartbeat.yml) checks every 15 minutes that the status
+issue has moved in the last 15 minutes, and opens a pc-alert issue "the runner is silent" when it has not.
+
 Recheck (B4610): when a gates job fails, each failing gate (up to 12) is rerun on a freshly reset lane, alone on the
 same commit and then on main, and the result ends with a verdict per gate: NEW with this change, fails on main too,
 or passes alone (it fails only after other gates). A "fails on main too" gate is still a fault to fix, not a reason to

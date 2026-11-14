@@ -5,7 +5,7 @@
  * It makes a scene of its own the farmstead's size, with a door wall where the import would put each door and
  * shutter, and deletes the scene at the end. It does not switch the Storyteller's view.
  *   1. the module: Interactables 0.19.0 or later, api.adopt
- *   2. the plan: 10 doors and shutters found, none new, 8 things, 1 light, the regions (4 with WoDX NPC on, else 2)
+ *   2. the plan: 10 doors and shutters found, none new, a tile for every thing in the file, 1 light, the regions (4 with WoDX NPC on, else 2)
  *   3. applied: tiles, the light, regions and walls are real Foundry documents that Interactables reads
  *   4. the oven tile works its light; the house region is a home place; the track trigger is a WoDX: Trigger;
  *      the chest's fill starts from a home (Interactables 0.20.0)
@@ -49,14 +49,14 @@ export async function run() {
 
     const got = await X.plan(scene, text);
     const p = got.p;
-    ok("2. plan", p.wallUpdates.length === 10 && p.wallCreates.length === 0 && p.tiles.length === 8 && p.lights.length === 1 && p.regions.length === (npcOn ? 4 : 2),
+    ok("2. plan", p.wallUpdates.length === 10 && p.wallCreates.length === 0 && p.tiles.length === sc.features.length && p.lights.length === 1 && p.regions.length === (npcOn ? 4 : 2),
       {lines: X.rules.summary(p), notes: p.notes, errors: got.errors, npcOn});
 
     const rec = await X.apply(scene, p); await sleep(400);
     const api = M.api;
     const tiles = scene.tiles.contents, described = tiles.map(t => api.describeTile(t));
     const shutter = scene.walls.contents.find(w => w.flags?.[MOD]?.kind === "shutter");
-    ok("3. applied", tiles.length === 8 && described.every(Boolean) && scene.lights.size === 1 && scene.regions.size === p.regions.length
+    ok("3. applied", tiles.length === sc.features.length && described.every(Boolean) && scene.lights.size === 1 && scene.regions.size === p.regions.length
       && api.describeWall(shutter)?.kind === "shutter" && !!scene.flags?.[MOD]?.adopted,
       {tiles: tiles.length, kinds: described.map(d => d && (d.container ? "container" : d.light ? "light" : d.hide ? "hide" : d.climb ? "climb" : "?")), regions: scene.regions.size, made: rec.made});
 

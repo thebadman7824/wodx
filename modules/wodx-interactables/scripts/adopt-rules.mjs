@@ -23,7 +23,7 @@ const NPC = "wodx-npc";
 /** A wall counts as the one at an opening when its middle is within this many cells of the opening's middle. */
 export const MATCH_CELLS = 0.5;
 /** The tile flags a feature may carry, and which of them mark its kind. */
-export const TILE_KINDS = ["container", "trap", "clue", "light", "hide", "hazard", "sacred", "watch", "mount", "climb", "isTarget"];
+export const TILE_KINDS = ["container", "trap", "clue", "light", "hide", "hazard", "sacred", "watch", "mount", "climb", "isTarget", "cover"];
 const OPENING_KEYS = new Set(["kind", "material", "build", "lock", "electronic", "keyName", "barred", "stuck", "wall"]);
 /**
  * Houses of worship by the faith of the place (B3200): the town generator draws a chapel, and a scene in Cairo, Lhasa
@@ -287,7 +287,7 @@ export function summary(p) {
   return out;
 }
 const KIND_WORDS = {container: "containers", trap: "traps", clue: "clues", light: "lights", hide: "hiding places", hazard: "hazards", sacred: "sacred things",
-  watch: "things to watch through", mount: "mounts", climb: "climbs", isTarget: "targets"};
+  watch: "things to watch through", mount: "mounts", climb: "climbs", isTarget: "targets", cover: "pieces of cover"};
 
 /** What Undo needs: the ids made and each wall's settings from before. */
 export function record(made, p, at) {
