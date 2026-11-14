@@ -9,6 +9,7 @@
  * or tells the table what the character does. What a substance does to each line is in EFFECTS; a cell marked
  * sure: false waits for Ben on the Item Uses desk and asks the Storyteller until then.
  */
+import * as AR from "./arms-rules.mjs";
 
 /** The lines, in the chronicle's order. */
 export const LINES = ["mortal", "ghoul", "vampire", "werewolf", "mage", "changeling", "wraith", "hunter", "mummy", "demon", "revenant"];
@@ -65,7 +66,14 @@ export const ABILITIES = {
   burn: {label: "Burn it", effect: "note", verb: "burns", uses: true},
   throw: {label: "Throw or sprinkle it", effect: "take", verb: "throws"},
   letter: {label: "Write a letter or note", effect: "letter", verb: "writes a letter with"},
-  seal: {label: "Seal a letter", effect: "note", verb: "seals a letter with", uses: true}
+  seal: {label: "Seal a letter", effect: "note", verb: "seals a letter with", uses: true},
+  // B3805 to B3807: everyday arms, fittings and traps (arms-rules.mjs, arms-use.mjs)
+  ready: {label: "Ready it as a weapon", effect: "ready", verb: "readies"},
+  fit: {label: "Fit it or take it off", effect: "fit", verb: "fits"},
+  settrap: {label: "Set the trap", effect: "settrap", verb: "sets"},
+  springtrap: {label: "Someone walks into it", effect: "springtrap", verb: "springs"},
+  disarm: {label: "Disarm it", effect: "disarm", verb: "disarms"},
+  clean: {label: "Clean a gun", effect: "clean", verb: "cleans a gun with"}
 };
 
 const R = (...parts) => new RegExp(`\\b(?:${parts.join("|")})(?:e?s)?\\b`, "i");
@@ -230,6 +238,11 @@ export function abilitiesOf(good) {
   if ( k === "toys" && !out.size && /doll|horse|soldier|bear|figure|plush|figurine|balloon|pom poms|toy/i.test(n) ) out.add("game");
   if ( k === "light" && /glow ?stick/i.test(n) ) out.add("switchon");
   if ( k === "accessories" && /scope|laser sight|flashlight/i.test(n) ) out.add("search");
+  // B3805 to B3807: arms fight, fittings fit, traps catch (arms-rules.mjs)
+  if ( k === "arms" && AR.armOf(n) ) out.add("ready");
+  if ( (k === "accessories" || k === "arms") && (AR.fittingOf(n) || AR.carrierOf(n) || AR.wardOf(n)) ) { out.delete("wear"); out.add("fit"); }
+  if ( k === "traps" && AR.trapOf(n) ) { out.add("settrap"); out.add("springtrap"); out.add("disarm"); }
+  if ( AR.kitOf(n) ) out.add("clean");
   if ( k === "medicine" && /sunscreen/i.test(n) ) out.add("wash");
   if ( k === "house" && /tin bath|washboard/i.test(n) ) out.add("wash");
   if ( k === "house" && /mirror/i.test(n) ) out.add("disguise");
