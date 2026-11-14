@@ -9,7 +9,8 @@
  *   5. soulforging: a finished task makes a soulsteel sword
  *   6. soulforging: a finished obolus goes to the purse as the Underworld's money
  *   7. everyday Banality: weeks of a long task in an office count, and the card or the count follows
- *   8. every other WoDX module still answers
+ *   8. the crafting table (B3720-B3723): a finished soulforged Artifact task makes one Artifact, marked as a wonder
+ *   9. every other WoDX module still answers
  * Result: Data/wodx-gate/gatemwc-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -97,9 +98,19 @@ export async function run() {
       await until(seen);
       ok("7 everyday Banality", seen(), {tally: game.actors.get(fae.id).getFlag(MOD, "banalLife")});
     });
-    await step("8 other modules", async () => {
+    await step("8 Artifact from the table", async () => {
+      const lib = game.modules.get("wodx-library")?.api?.wonders;
+      if ( !lib?.kitFor?.("wraith")?.row?.("soulforged-artifact") ) return ok("8 Artifact from the table", false, {why: "the Wraith line is not on the table"});
+      const w = game.actors.get(wraith.id);
+      Hooks.callAll("wodxTaskDone", {actor: w, task: {id: "gate4", kind: "soulforge", line: "wraith", wonder: "soulforged-artifact", status: "done", total: 5, spend: 0, opts: {source: "soul"}, name: "Soulforge: soulforged Artifact"}});
+      const arts = () => game.actors.get(wraith.id).items.filter(i => i.flags?.["wodx-library"]?.wonder?.key === "soulforged-artifact");
+      await until(() => arts().length > 0);
+      await sleep(500);
+      ok("8 Artifact from the table", arts().length === 1 && arts()[0].type === "Item", {count: arts().length, enabled: lib.enabled?.("wraith")});
+    });
+    await step("9 other modules", async () => {
       const mods = ["wodx-chronicle", "wodx-combat", "wodx-npc", "wodx-storyteller", "wodx-library", "wodx-interactables"].filter(m => game.modules.get(m)?.active && !game.modules.get(m)?.api);
-      ok("8 other modules", !mods.length, {missing: mods});
+      ok("9 other modules", !mods.length, {missing: mods});
     });
   } catch (e) { R.errors.push(e.message); }
   finally {
