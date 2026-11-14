@@ -22,7 +22,8 @@
  *  14. the Taíno (B4660): the Caribbean named before 1492, church names after, the Akan and Yoruba beside them
  *  15. Aboriginal Australians (B4680): Australia named from 1197, women of a nation, family names later
  *  16. central Africa (B4690): the Kongo, Luba and Ganda from 1197, Kongo church names from 1491
- *  17. clean up
+ *  17. the Amazigh (B4710): the Maghreb's Berbers beside the Arabs, tribes and Aït family names
+ *  18. clean up
  * Result: Data/wodx-gate/gateplains-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -191,6 +192,14 @@ export async function run() {
       for ( const o of ["kongo", "luba", "ganda"] ) for ( const p of ca(o, "modern", 6) ) if ( !p.family || p.name.includes("{") ) bad.push(`${o} modern: ${p.name}`);
       G.ok("16. central Africa named from 1197; clans, then church and family names",
         ["kongo", "luba", "ganda"].every(o => med.includes(o)) && !bad.length, {medieval: med, bad: bad.slice(0, 6), sample: ca("kongo", "early-modern", 4).map(p => p.name)});
+    });
+    await G.step("17. the Amazigh", async () => {
+      const med = results({era: "medieval", culture: "maghreb"}, "people.origin"), bad = [];
+      const am = (era, n) => Array.from({length: n}, (_, i) => R.nameOf({rand: gen().random(`gateplains:am:${era}`, i),
+        tables: gen().lookup({...gen().context(), era, culture: "maghreb"}), origin: "amazigh", sex: i % 2 ? "female" : "male"}));
+      for ( const era of ["medieval", "modern"] ) for ( const p of am(era, 12) ) if ( !p.family || p.name.includes("{") ) bad.push(`${era}: ${p.name}`);
+      G.ok("17. the Amazigh in the Maghreb; tribes and son-of names, then family names",
+        med.includes("amazigh") && med.includes("arabic") && !bad.length, {medieval: med, bad: bad.slice(0, 6), sample: am("medieval", 4).map(p => p.name)});
     });
   } catch (e) {
     G.ok("error", false, {error: e.message});

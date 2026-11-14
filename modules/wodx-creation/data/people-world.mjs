@@ -201,6 +201,16 @@ const P = {
     f: "Taytu, Zewditu, Mentewab, Aster, Almaz, Tigist, Genet, Hirut, Meseret, Selamawit, Tsehay, Worknesh, Abebech, Bethlehem, Marta, Saba",
     // The second name is the father's given name
     child: ["", "", 1]},
+  // The Amazigh (Berbers) of the Kabylie, the Rif, the Atlas and the Sous (B4710): the dynasts and saints of the
+  // Almoravid, Almohad, Zirid and Marinid records, then the Kabyle and Moroccan given and family names since
+  amazigh: {
+    m: {old: "Yusuf, Tashfin, Ali, Ibrahim, Yahya, Abu Bakr, Tumart, Abd al-Mumin, Yaqub, Muhammad, Idris, Ziri, Buluggin, Hammad, Badis, Yaghmurasan, Abd al-Haqq, Abu Yusuf, Tariq, Kusayla, Hassan, Umar, Musa, Isa, Daud, Mansur, Wattas, Zayyan, Tamim, Muizz, Mazigh, Yidir, Mennad, Amghar, Ishaq, Abd Allah, Uthman, Ismail",
+      new: "Idir, Massinissa, Yuba, Aksil, Amastan, Mouloud, Lounes, Arezki, Ferhat, Saïd, Mokrane, Ameziane, Hocine, Mohand, Akli, Ali, Ahmed, Moha, Brahim, Lahcen, Hammou, Mbark, Lhoussaine, Omar, Youssef, Mustapha, Rachid, Kamel, Slimane, Belaïd, Mehdi, Karim"},
+    f: {old: "Zaynab, Tinhinan, Dihya, Fatima, Aisha, Kanza, Khadija, Tamima, Hawwa, Mariam, Tanina, Tafsut, Taous, Zahra, Safiyya, Mimuna, Itto, Yamina, Fadhma",
+      new: "Tiziri, Tanina, Dihya, Tafsut, Taous, Fadhma, Tassadit, Ouardia, Djamila, Tinhinane, Kahina, Itto, Tamazight, Lynda, Nadia, Fatima, Zahra, Aïcha, Malika, Yamina, Ouiza, Dahbia, Tounsia, Fadma, Khadija, Hayat, Amina"},
+    child: ["ibn", "bint", 3],
+    fam: {old: "al-Lamtuni, al-Masmudi, al-Sanhaji, al-Zanati, al-Kutami, al-Hawwari, al-Nafusi, al-Ghumari, al-Hintati, al-Jazuli, al-Lamti, al-Miknasi, al-Awrabi, al-Maghrawi, al-Ifrani, al-Matghari, al-Kumi, al-Masufi, al-Guddali, al-Tinmalli, al-Zayyani, al-Wattasi, al-Marini",
+      new: "Aït Ahmed, Feraoun, Mammeri, Amrouche, Matoub, Aït Menguellet, Ouyahia, Aït Ali, Amellal, Belaïd, Haddadi, Aït Hamouda, Ouali, Mokrani, Sadi, Mehenni, Lounès, Tighilt, Akhannouch, Oufkir, Aherdane, Oubaha, Chafik, Azaykou, Boukous, Ouzzine, Aït Baha, Ouhadi, Aït Lahcen, Bouzid, Ihaddaden, Oussedik, Aït Saada"}},
   zulu: {
     m: "Sipho, Themba, Bongani, Mandla, Sibusiso, Nkosana, Mthunzi, Dumisani, Jabulani, Vusumuzi, Zwelakhe, Mzwandile, Lungile, Siyabonga, Senzo, Bheki",
     f: "Nomvula, Thandiwe, Nomsa, Zanele, Lindiwe, Busisiwe, Nokuthula, Sibongile, Ntombi, Thandeka, Nonhlanhla, Zodwa, Khanyisile, Nomusa, Ayanda, Hlengiwe",

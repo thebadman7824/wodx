@@ -56,8 +56,9 @@ export const WORLD_REGIONS = {
   "egypt": R("Egypt and the Nile (Cairo, Alexandria, Thebes)", "other", 30.0, 31.2, "hot-desert", "arab", {
     medieval: "arabic 100", "early-modern": "arabic 92, turkish 8", industrial: "arabic 90, turkish 5, greek 3, italian 2", modern: "arabic 100"}),
   "arabia": R("Arabia (Mecca, Medina, Sanaa, the Gulf)", "other", 21.4, 39.8, "hot-desert", "arab", {medieval: "arabic 100"}),
+  // The Amazigh of the mountains and the desert edge beside the Arab towns (B4710)
   "maghreb": R("The Maghreb (Fez, Tunis, Tripoli)", "other", 34.0, -5.0, "mediterranean", "arab", {
-    medieval: "arabic 100", industrial: "arabic 90, french 10", modern: "arabic 100"}),
+    medieval: "arabic 58, amazigh 42", industrial: "arabic 56, amazigh 34, french 10", modern: "arabic 62, amazigh 38"}),
   "persia": R("Persia (Isfahan, Shiraz, Tabriz)", "other", 32.7, 51.7, "inner-asia", "persian", {
     medieval: "persian 80, steppe 8, turkish 8, arabic 4", "early-modern": "persian 82, turkish 14, armenian 4"}),
   "central-asia": R("The steppe and the Silk Road (Samarkand, Karakorum, Kashgar)", "other", 39.7, 67.0, "inner-asia", "persian", {
