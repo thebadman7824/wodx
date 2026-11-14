@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4710
+Next free block: B4720
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -219,6 +219,7 @@ Next free block: B4710
 | B4680-B4689 | Aboriginal Australian names in the People generator (used B4680-B4682) | Creation, Chronicle |
 | B4690-B4699 | Central Africa names (Kongo, Luba, Ganda) (used B4690-B4692) | Creation, Chronicle |
 | B4700-B4709 | A heartbeat from GitHub for the PC runner (used B4700) | tools (no module) |
+| B4710-B4719 | Amazigh (Berber) names (used B4710-B4712) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7132,3 +7133,18 @@ minutes. When the status is more than 15 minutes old, it opens a pc-alert issue 
 that issue once the status moves again. The coordinator already watches pc-alert issues.
 
 Reverse: delete .github/workflows/pc-heartbeat.yml.
+
+## B4710. The Maghreb holds the Amazigh beside the Arabs (2026-11-14)
+WoDX Creation and Chronicle. The Maghreb was all Arab; the Amazigh now hold 42 in 100 in the medieval mix, 34 in the industrial age beside the French, and 38 today. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old maghreb mixes in world-rules.mjs and drop amazigh from people-world.mjs.
+
+## B4711. One list for the Kabylie, the Rif, the Atlas and the Sous (2026-11-14)
+WoDX Creation. One Amazigh list from the Almoravid, Almohad, Zirid and Marinid records and the Kabyle and Moroccan names since; the Tuareg of the desert wait for a list of their own. Fewer than 300 names.
+
+Reverse: edit the amazigh entry in data/people-world.mjs.
+
+## B4712. Tribes and son-of names, then family names (2026-11-14)
+WoDX Creation. Before 1800 a person carries "ibn" or "bint" and the father's name, or the tribe (al-Sanhaji, al-Masmudi); from 1800 a Kabyle or Moroccan family name, many with Aït.
+
+Reverse: change fam or child in the amazigh entry.
