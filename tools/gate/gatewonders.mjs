@@ -73,7 +73,7 @@ export async function run() {
     ok("1. modules", ["kindred", "changeling", "mummy", "demon", "hunter", "kuei-jin"].every(l => lines.includes(l)) && typeof S?.start === "function" && typeof WU?.run === "function", {lines});
 
     // Kindred
-    const v = await mk("Vampire", "Tremere", {"advantages.bloodpool.temporary": 10, "advantages.willpower.temporary": 5, "attributes.intelligence.value": 3, "abilities.occult.value": 3},
+    const v = await mk("Vampire", "Tremere", {"advantages.bloodpool.temporary": 10, "advantages.willpower.permanent": 6, "advantages.willpower.temporary": 5, "attributes.intelligence.value": 3, "abilities.occult.value": 3},
       [power("Thaumaturgy", "wod.types.discipline", 3), power("Ward versus Ghouls", "wod.types.ritual"), power("Principal Focus of Vitae Infusion", "wod.types.ritual"),
         {name: "Sword", type: "Melee Weapon", system: {}}]);
     const sword = v.items.find(i => i.name === "Sword");
@@ -129,7 +129,7 @@ export async function run() {
 
     // Hunter
     const year = Number(game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.()) || 0;
-    const h = await mk("Hunter", "Inquisitor", {"advantages.willpower.temporary": 5, "attributes.charisma.value": 3, "abilities.religion.value": 3});
+    const h = await mk("Hunter", "Inquisitor", {"advantages.willpower.permanent": 6, "advantages.willpower.temporary": 5, "attributes.charisma.value": 3, "abilities.religion.value": 3});
     await h.update({"flags.wodx-actions.inquisitor": {order: "john", conviction: 3, faith: 3, wisdom: 2, zeal: 1}});
     const hw = await work(h, "hunter", "holy-water", {}, 2);
     const water = hw.items.find(i => wonderOf(i)?.key === "holy-water");
@@ -139,7 +139,7 @@ export async function run() {
     ok("11. picker lines", ls.length === 1 && ls[0] === "changeling", {lines: ls});
 
     // Kuei-jin
-    const k = await mk("Vampire", "Wangyu", {"settings.variant": "kindredeast", "advantages.willpower.temporary": 5, "advantages.yangchi.temporary": 1,
+    const k = await mk("Vampire", "Wangyu", {"settings.variant": "kindredeast", "advantages.willpower.permanent": 6, "advantages.willpower.temporary": 5, "advantages.yangchi.temporary": 1,
       "attributes.manipulation.value": 3, "attributes.perception.value": 3, "abilities.craft.value": 2, "abilities.meditation.value": 3},
       [power("Jade Shintai", "wod.types.discipline", 6)]);
     const bl = (await work(k, "kuei-jin", "blade-of-stone", {shape: "sword"}, 1)).items.find(i => i.type === "Melee Weapon");
@@ -152,7 +152,7 @@ export async function run() {
     const chi0 = Number(k.system.advantages.yangchi.temporary);
     const dr = jd ? await WU.run(jd, "wonder:draw", k) : null;
     ok("13. Kuei-jin true jade", !!ab && again === null && !!dr && Number(k.system.advantages.yangchi.temporary) === chi0 + 1 && wonderOf(jd)?.expires > (game.time?.worldTime ?? 0),
-      {pool: wonderOf(jd)?.pool, nights: wonderOf(jd)?.nights, chi: [chi0, k.system.advantages.yangchi.temporary], absorb: ab?.lines});
+      {pool: wonderOf(jd)?.pool, nightRun: wonderOf(jd)?.nightRun, drew: dr?.lines, again: again === null ? "blocked" : "ran", chi: [chi0, k.system.advantages.yangchi.temporary], absorb: ab?.lines});
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }
   try {
     for ( const k of SETS ) if ( keep[k] !== undefined ) await game.settings.set(LIB, k, keep[k]);
