@@ -10,7 +10,7 @@
 import * as MV from "./movement-rules.js";
 
 let D = null;
-const on = () => { try { return !D.off() && game.settings.get(D.MOD, "movementModes"); } catch (e) { return false; } };
+export const on = () => { try { return !D.off() && game.settings.get(D.MOD, "movementModes"); } catch (e) { return false; } };
 const isActiveGM = () => game.user.isGM && (game.users.activeGM ? game.users.activeGM.id === game.user.id : true);
 const strip = s => String(s ?? "").replace(/<[^>]+>/g, " ");
 
@@ -305,11 +305,10 @@ export function stanceOfActor(actor, tok = null) {
     under: !!w && w.kind === "deep" && (elev < (Number.isFinite(top) ? top : 0) || MV.underWater({athletics: D.ability(actor, "athletics"), ab, load: ab.waterwalk ? null : loadOf(actor)})),
     aloft: elev > groundAt(doc) + 0.5, jumped: !!tag && moved?.tag === tag && !!moved?.jumped});
 }
-/** An attack's changes from both stances: {diff, notes, blocked}. */
-export function attackMods(attacker, target, {attackerTok = null, targetTok = null} = {}) {
-  if ( !on() || !attacker || !target ) return {diff: 0, notes: [], blocked: ""};
-  const at = (attackerTok ? docOf(attackerTok) : null) ?? tokenOf(attacker), tt = (targetTok ? docOf(targetTok) : null) ?? tokenOf(target);
-  const sa = stanceOfActor(attacker, at), st = stanceOfActor(target, tt);
+/** The token an actor fights from: the one given, else its token on the viewed scene (B4770). */
+export const tokenFor = (actor, tok = null) => (tok ? docOf(tok) : null) ?? tokenOf(actor);
+/** Two tokens in reach of each other (height counts), and whether the first stands higher: {close, higher}. */
+export function reachBetween(at, tt) {
   let close = true, higher = false;
   try {
     if ( at?.object && tt?.object && globalThis.canvas?.grid ) {
@@ -321,6 +320,20 @@ export function attackMods(attacker, target, {attackerTok = null, targetTok = nu
       higher = MV.toFeet((Number(at.elevation) || 0) - (Number(tt.elevation) || 0), unitsOf(at)) >= 3;
     }
   } catch (e) { /* no canvas */ }
+  return {close, higher};
+}
+/** Yards a token has moved this fight turn (0 outside a fight). */
+export function movedYards(doc) {
+  const moved = doc?.getFlag?.(D.MOD, "moved"), c = game.combat;
+  const tag = c?.started ? `${c.id}:${c.round}` : null;
+  return tag && moved?.tag === tag ? Number(moved.yards) || 0 : 0;
+}
+/** An attack's changes from both stances: {diff, notes, blocked}. */
+export function attackMods(attacker, target, {attackerTok = null, targetTok = null} = {}) {
+  if ( !on() || !attacker || !target ) return {diff: 0, notes: [], blocked: ""};
+  const at = (attackerTok ? docOf(attackerTok) : null) ?? tokenOf(attacker), tt = (targetTok ? docOf(targetTok) : null) ?? tokenOf(target);
+  const sa = stanceOfActor(attacker, at), st = stanceOfActor(target, tt);
+  const {close, higher} = reachBetween(at, tt);
   const out = MV.attackStance(sa, st, {close, higher, sameStance: sa === st, attackerFly: abilitiesOf(attacker).flyBook, targetFly: abilitiesOf(target).flyBook});
   // 3.20.0: a load in the water spoils the blow as it spoils the footing
   if ( close && ["swimming", "under"].includes(sa) ) {
@@ -335,9 +348,7 @@ export function chargeOf(attacker, {ranged = false, attackerTok = null} = {}) {
   const doc = (attackerTok ? docOf(attackerTok) : null) ?? tokenOf(attacker);
   const ride = rideOf(doc);
   if ( !ride ) return {dice: 0, note: ""};
-  const moved = doc?.getFlag?.(D.MOD, "moved"), c = game.combat;
-  const tag = c?.started ? `${c.id}:${c.round}` : null;
-  const yards = tag && moved?.tag === tag ? Number(moved.yards) || 0 : 0;
+  const yards = movedYards(doc);
   const dice = MV.chargeDice(ride, yards, {ranged});
   return {dice, yards, note: dice ? `Mounted charge: ${Math.round(yards)} yards ridden this turn, +${dice} damage ${dice === 1 ? "die" : "dice"} (V20 Dark Ages p. 399, read for a map: house rule)` : ""};
 }
@@ -421,5 +432,5 @@ export function setupMovement(deps) {
   });
   try { configureActions(); } catch (e) { console.warn("WoDX | movement actions", e); }
   return {abilitiesOf, tokensOf, waterAt, groundAt, moveCheck, heightBetween, stanceOf: stanceOfActor, attackMods, defenseMods, rollMods, spotMod,
-    rideOf, loadOf, chargeOf, rideCapOf, setBurden, burdenDialog, rules: MV};
+    rideOf, loadOf, chargeOf, rideCapOf, setBurden, burdenDialog, tokenFor, reachBetween, movedYards, on, rules: MV};
 }

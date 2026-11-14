@@ -133,6 +133,8 @@ export async function run() {
             answer(root => { set(root, "e", 0); set(root, "who", "none"); set(root, "weave", 2); });
             A().daEcho({ actor: lord });
             const m = await untilMsg(n0);
+            // the Echo's flag is set just after the card is made: wait for it, not the card alone
+            for (let i = 0; i < 30 && !m?.getFlag(MOD, "daFaeEcho"); i++) await sleep(100);
             const t = text(m);
             ok("an Echo: 5 dice, the firstborn's +1, the Iron Oath and 2 Weaving against it", /The Echo \(5 dice\) : 5 dice, diff 7/.test(t) && /Iron Oath 2 : 2 dice, diff 7/.test(t) && /\+1 success/.test(t) && W(lord) === w0 - 2 && /(Echo, level \d|The Echo fails)/.test(t) && !!m.getFlag(MOD, "daFaeEcho"),
                 { card: t.slice(0, 360), weaving: W(lord) });
