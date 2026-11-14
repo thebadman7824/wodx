@@ -19,7 +19,8 @@
  *  11. the Great Basin (B4150): the Shoshone and the Ute by division and band
  *  12. Canada (B4160): the Cree and Anishinaabe by division and town, the Haida and Tlingit by clan
  *  13. the Inuit (B4650): in the Arctic beside the Norse and in Canada, own names for anyone, family names later
- *  14. clean up
+ *  14. the Taíno (B4660): the Caribbean named before 1492, church names after, the Akan and Yoruba beside them
+ *  15. clean up
  * Result: Data/wodx-gate/gateplains-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -160,6 +161,15 @@ export async function run() {
       G.ok("13. the Inuit in the Arctic and Canada; own names, then family names",
         med.includes("inuit") && med.includes("norse") && results({era: "medieval", culture: "canada"}, "people.origin").includes("inuit") && !bad.length,
         {medieval: med, bad: bad.slice(0, 6), sample: ar("medieval", 4).map(p => p.name)});
+    });
+    await G.step("14. the Taíno", async () => {
+      const med = results({era: "medieval", culture: "caribbean"}, "people.origin"), em = results({era: "early-modern", culture: "caribbean"}, "people.origin"), bad = [];
+      const cb = (era, n) => Array.from({length: n}, (_, i) => R.nameOf({rand: gen().random(`gateplains:ta:${era}`, i),
+        tables: gen().lookup({...gen().context(), era, culture: "caribbean"}), origin: "taino", sex: i % 2 ? "female" : "male"}));
+      for ( const p of cb("medieval", 20) ) if ( p.family || p.name.includes("{") ) bad.push(`medieval: ${p.name}`);
+      for ( const p of cb("modern", 10) ) if ( !p.family || p.name.includes("{") ) bad.push(`modern: ${p.name}`);
+      G.ok("14. the Taíno in the Caribbean; own names, then church and family names",
+        med.includes("taino") && em.includes("akan") && em.includes("taino") && !bad.length, {medieval: med, earlyModern: em, bad: bad.slice(0, 6), sample: cb("medieval", 4).map(p => p.name)});
     });
   } catch (e) {
     G.ok("error", false, {error: e.message});
