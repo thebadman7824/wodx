@@ -14,6 +14,9 @@ Ben read the digest of the entries below and approved all of them at 17:05 UTC, 
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-12 | When the quieter war after the Avatar Storm begins (book check) | 1999, from M20 pdf 480; the Ascension War row now ends in 1998 | after-the-storm and ascension-war in rivalry-rules.mjs |
+| 2026-11-12 | How the Kin-jin regard the Cathayans (book check) | Tense (-1), since Kindred of the East pdf 32 says open hostility is rare; the Cathayans stay Hostile (-2) | ba on the cathayan row in rivalry-rules.mjs |
+| 2026-11-12 | Chantry background page (book check) | M20 printed page 301 (Chantry as a Background, pdf 302); pooled Backgrounds cite W20 pdf 142 and M20 pdf 302 | chantry in trait-effects.mjs; the foundFaction comment in faction-rules.mjs |
 | 2026-11-14 | Where threads queue PC jobs | GitHub issues labelled pc-job in the WoDX repo (public; results give book and page only, never text), read by a runner on the PC (B4100) | Put runner-off in D:\WoDX\pcq and go back to the PC helper thread |
 | 2026-11-14 | Decision block for the PC runner | Taken by hand as B4100-B4109: the registry lock failed while the shared folder was full | Renumber changes/decisions/B4100.md if it clashes |
 | 2026-11-09 | Do NPCs set off traps? | Only when the trap tile has "NPCs set it off" ticked. Tokens owned by the Storyteller count as NPCs. | Tick the box on each trap. To change the default, flip the `npc` test in `trapsOnPath` (wodx-interactables/scripts/main.mjs). |
