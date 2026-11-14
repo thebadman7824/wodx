@@ -178,7 +178,7 @@ function block(key, a) {
     case "systemHealth": return { kind: "systemHealth" };
     case "experience": return { kind: "experience" };
     case "weakness": return { kind: "text", title: "Weakness", value: a.system.weakness || "—" };
-    case "derangements": return { kind: "list", title: "Derangements", lines: String(a.system.derangement ?? "").split(/\n+/).filter(Boolean).map(t => ({ text: t })), empty: "None (the Bio tab)." };
+    case "derangements": return { kind: "list", title: "Derangements", lines: String(a.system.derangement ?? "").split(/\n+/).filter(Boolean).map(t => ({ text: t })), empty: "None (the Bio tab).", roll: "derangement", rollLabel: "Set off" };
     case "disciplines": return { kind: "items", title: "Disciplines", roll: "useDiscipline", rows: itemRows(itemsOf(a, i => i.type === "Power" && isType(/types\.discipline$/)(i))), empty: "None yet." };
     case "rituals": return { kind: "items", title: "Rituals", rows: itemRows(itemsOf(a, i => i.type === "Power" && isType(/ritual/)(i)), false), empty: "None." };
     case "paths": return { kind: "items", title: "Paths", rows: itemRows(itemsOf(a, i => i.type === "Power" && isType(/disciplinepath$/)(i))), empty: "None." };
@@ -234,6 +234,8 @@ function expand(key, a) {
 }
 
 const BUTTONS = {
+  // B3917: every sheet, after its own buttons: the Nature cue and a Willpower point back (WoDX Actions, B3916)
+  nature: ["fa-compass", "Nature"],
   daFae: ["fa-scroll", "Edit Origin, Court, cantrips, Features, Echoes and Oaths"], daCounter: ["fa-shield-alt", "Counter"], daRest: ["fa-tree", "Rest in a faerie realm"],
   daMage: ["fa-scroll", "Fellowship and Pillars"], daQuintessence: ["fa-gem", "Gather Quintessence"],
   hunterSheet: ["fa-scroll", "Order, Superior Virtues, Piety"], hunterPower: ["fa-cross", "A Blessing"], prayer: ["fa-praying-hands", "Prayer"],
@@ -297,7 +299,7 @@ export function viewFor(id, a) {
     powers: def.powers ? { title: def.powers.title, cols: cols(def.powers.cols) } : null,
     advantages: cols(def.advantages), lower: cols(def.lower), hasLower: def.lower.length > 0, page2: cols(def.page2 ?? []),
     page2Title: id === "faeDA" ? "Oaths, Echoes and Features" : (def.page2Title ?? ""), page2InCore: !def.page2Tab,
-    buttons: (def.buttons ?? []).filter(b => BUTTONS[b]).map(b => ({ api: b, icon: BUTTONS[b][0], label: BUTTONS[b][1] }))
+    buttons: [...(def.buttons ?? []), "nature"].filter(b => BUTTONS[b]).map(b => ({ api: b, icon: BUTTONS[b][0], label: BUTTONS[b][1] }))
   };
 }
 
