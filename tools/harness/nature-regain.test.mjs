@@ -36,3 +36,10 @@ test("nature: Actions offers it on the end-of-scene card and as a button, with U
   assert.match(a, /case "natureUndo":/);
   assert.match(a, /\/\^nature\(\\d\+\)\$\//);
 });
+
+test("nature: every sheet has the Nature button, and Set off on its Derangements panel (B3917)", () => {
+  const m = src("modules/wodx-sheets/scripts/main.mjs");
+  assert.match(m, /nature: \["fa-compass", "Nature"\]/);
+  assert.match(m, /buttons: \[\.\.\.\(def\.buttons \?\? \[\]\), "nature"\]/);
+  assert.match(m, /case "derangements":[^\n]*roll: "derangement", rollLabel: "Set off"/);
+});
