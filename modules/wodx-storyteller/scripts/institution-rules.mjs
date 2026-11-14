@@ -182,7 +182,7 @@ export function promote(inst0, who, {at = 0, cap = RANKS - 1} = {}) {
   const inst = normInst(inst0);
   const have = bestSeat(inst, who.pawnOf || who.id);
   const target = have ? have.rank + 1 : 0;
-  if ( target > Math.min(cap, RANKS - 1) ) return {inst, why: target > RANKS - 1 ? "already at the top" : "a pawn can climb no higher than the character's Influence"};
+  if ( target > Math.min(cap, RANKS - 1) ) return {inst, why: target > RANKS - 1 ? "already at the top" : who.pawnOf ? "a pawn can climb no higher than the character's Influence, or than the law allows" : "the law bars someone of this standing from higher office"};
   let i = inst.seats.findIndex(s => s.rank === target && !s.holder);
   let bumped = null;
   if ( i < 0 ) {

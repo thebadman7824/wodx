@@ -10,6 +10,7 @@ import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
 import {currentYear} from "./eras.mjs";
 import * as L from "./law-rules.mjs";
 import * as T from "./law-trial-rules.mjs";
+import {standingFor} from "./law-standing.mjs";
 
 const yearNow = () => { try { return currentYear(); } catch (e) { return 1197; } };
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
@@ -45,8 +46,11 @@ export async function hold(info, form) {
   const bribe = await foundry.applications.api.DialogV2.wait({rejectClose: false, window: {title: "A bribe?"}, classes: ["wodx-dialog"],
     content: `<p>${esc(L.BRIBE_WORDS?.[law.bribe] ?? "Officials here can be bought.")} Was a bribe paid to the court?</p>`,
     buttons: [{action: "yes", label: "A bribe was paid"}, {action: "no", label: "No bribe", default: true}]});
+  let standing = {trialDiff: 0, words: ""};
+  try { standing = standingFor(actor, info.region, info.year); } catch (e) { /* standing off */ }
   const t = T.trialRequest(law, {form, actorId: info.actorId, name: info.name, witnesses: Math.min(4, info.deeds.length), bribed: bribe === "yes", courtRank: courtRank(info.actorId),
-    line: actorLine(actor), deeds: info.deeds.length});
+    line: actorLine(actor), deeds: info.deeds.length, standingDiff: standing.trialDiff});
+  if ( standing.words ) t.notes.push(standing.words);
   if ( t.combat ) {
     return ChatMessage.create({speaker: {alias: "The law"}, whisper: gmIds(), flags: {[MODULE_ID]: {lawTrial: {...info, form}}},
       content: `<div class="wodx-card wodx-law-trial"><h3>${esc(t.label)}</h3><p>${esc(t.notes.join(" "))}</p>

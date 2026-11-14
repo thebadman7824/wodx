@@ -182,7 +182,7 @@ Next free block: B3630
 | B3520-B3539 | Gaps from Ben's design notes: referee ticket, crisis levers, binding card, roster, inheritance, the 2022 cap (used B3520-B3536) | Chronicle, Storyteller, Otherworlds, NPC, Actions |
 | B3540-B3549 | Supernatural sight: the Penumbra, a mage's sight, chimerical sight, the Shadowlands view (notes gaps g8 to g11) (used B3540-B3547) | Senses, Actions |
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
-| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3613) | Chronicle, Storyteller |
+| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3615) | Chronicle, Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5841,3 +5841,13 @@ Reverse: drop the wodxTaskDone hook and the checkSelves call; the project kind s
 The noticed card carries a line for the kind of character (Kindred selves that must die on paper, a ghoul who stops ageing, the Technocracy reading records, a changeling's real mortal papers, a wraith's death certificate, a hunter's arrest record, a mummy's museum archives, a demon's host, a revenant family's own records). Only the undying lines are checked for notice.
 
 Reverse: empty LINE_PAPERS.
+
+## B3614. Standing before the law (2026-11-13)
+Ben's pick: a world setting, default as history. Classes come from WoDX NPC's rank words: unfree, clergy, noble, wealthy, common. Unfree: trial +2, sentence one tier heavier, no office of the state above the lowest rank, until 1848 (latin), 1600 (common), 1861 (orthodox), 1871 (Japan), 1888 (Americas), 1950 (South Asia) and so on. Clergy: trial -1, one tier lighter, until 1827 (common), 1800 (latin), 1917 (orthodox). Nobles: trial -2, one tier lighter, until 1850 (latin), 1948 (common), 1917 (orthodox). Wealthy: trial -1 always. Softened lifts the office bar only; off turns it all off. Gender is never read (B3500). Colonial and religious bars stay in the law records' warnings rather than in dice, as WoDX does not record a character's ancestry. House figures.
+
+Reverse: set the world setting Standing before the law to off.
+
+## B3615. Splat hooks for standing (2026-11-13)
+LINE_STANDING gives the Storyteller a line per kind: Kindred and Ventrue taking mortal titles, a ghoul lifted by a domitor, Kinfolk families, the Order of Hermes and the Technocracy, fae titles that mean nothing to a mortal court, a wraith's old standing, a hunter believed or locked up, an ancient noble of Egypt as a nobody, a demon's host, revenant families buying titles.
+
+Reverse: empty LINE_STANDING.

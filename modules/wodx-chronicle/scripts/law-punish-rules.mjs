@@ -37,10 +37,11 @@ export const MARKS = {
   hanging: {kind: "death", words: "Condemned to death"}, "death-state": {kind: "death", words: "Condemned to death"}, burning: {kind: "death", words: "Condemned to the fire"}
 };
 
-/** The sentences the court may pass: the tier's sentences the land allows, else the nearest tier's. */
-export function sentencesFor(law = {}, deeds = []) {
+/** The sentences the court may pass: the tier's sentences the land allows, else the nearest tier's. shift: standing (B3614). */
+export function sentencesFor(law = {}, deeds = [], {shift = 0} = {}) {
   const allowed = new Set(law.punish ?? []);
-  const {tier} = tierOf(deeds);
+  const names = ["light", "middle", "grave"];
+  const tier = names[clamp(names.indexOf(tierOf(deeds).tier) + Math.round(n(shift)), 0, 2)];
   const order = tier === "grave" ? ["grave", "middle", "light"] : tier === "middle" ? ["middle", "light", "grave"] : ["light", "middle"];
   for ( const t of order ) { const l = TIERS[t].filter(p => allowed.has(p)); if ( l.length ) return {tier: t, list: l}; }
   return {tier: "light", list: ["fine"]};
