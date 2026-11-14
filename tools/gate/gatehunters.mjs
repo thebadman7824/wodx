@@ -84,6 +84,8 @@ async function runGate(K) {
     });
 
     await step("the Hunt is harder", async () => {
+      // From Investigating exactly: the turn before may have moved the pressure on (the hunters act on their own now)
+      await setP(6, true);
       const h0 = st.upkeep.huntHere(sc);
       await setP(8, true);
       const h1 = st.upkeep.huntHere(sc);
