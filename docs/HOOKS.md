@@ -11,7 +11,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxVerdict | chronicle | chronicle (a guilty verdict brings the sentencing card: the sentences the land allows for deeds that grave, B3610) |
 | wodxAttitude | npc | npc (a fight when an NPC turns hostile; the NPC remembers the change, B3346) |
 | wodxBoonSettled | storyteller | npc (a boon kept or broken moves the debtor's standing in a court, and the holder's trust in the debtor) |
-| wodxMonthPaid | storyteller | npc (a household's keep is charged for the months each character was paid) |
+| wodxMonthPaid | storyteller | npc (a household's keep is charged for the months each character was paid); chronicle (taxes kept back or a levy owed on each allowance, B3616) |
 | wodxSessionEnded | storyteller | creation (a story hook counts the sessions since it was agreed) |
 | wodxBreach | actions | npc, storyteller, chronicle (the Watchers of the New World Order; the city's Masquerade exposure) |
 | wodxCultNoticed | npc | storyteller (a cult watched or moved against raises the hunters' pressure in its region and opens a file on its founder, B3306) |
