@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.101.0 (Tokens show what grips them (B4632): Frenzy and Rotschreck show on the token for everyone, and a derangement bout shows at the edges of its own player's screen. Drawn on each client, never saved, and they follow each player's effects level. Other modules add looks with api.tokenLooks.register)
 - 0.100.0 (The Inuit in the Arctic's mix from 1197 and in Canada's (B4650))
 - 0.99.0 (Canada's mix before the colonies holds the Cree, the Anishinaabe and the Northwest coast beside the Haudenosaunee, with a share after (B4160))
 - 0.98.1 (Book check fix (ported from PR 655): the Chantry background cites M20 printed page 301, not 139)
