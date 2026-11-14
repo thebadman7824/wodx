@@ -10,7 +10,7 @@ import * as DAE from "./mage-da-effects.js";
 import * as PE from "./path-effects.js";
 import * as PW from "./power-effects.js";
 import { ask } from "./profiles.js";
-import { BOOK_RITUALS, bookRitual } from "./book-rituals.js";
+import { BOOK_RITUALS, bookRitual, ritualResults } from "./book-rituals.js";
 export { E };
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -247,6 +247,12 @@ export function powerPlan(actor, {set, id, name, line = null, successes, source 
   const plan = planOf(actor, results, successes);
   if ( skipped.length ) plan.html += `<p class="wodx-quiet">Needs a target: ${esc(skipped.join(", "))}.</p>`;
   return {...plan, skipped};
+}
+/** A book ritual its caster worked, with these successes, on the effects card (B3753): {items, html}. */
+export function ritualPlan(actor, r, successes, source = "") {
+  if ( !isOn() || !powerEffectsOn() ) return {items: [], html: ""};
+  const t = targetsOf(actor);
+  return planOf(actor, ritualResults(r, successes, {source, hasTarget: !t.self && t.docs.length > 0}), successes);
 }
 export const powerEffectsOn = () => { try { return game.settings.get(MOD, "powerEffects") !== false; } catch (e) { return true; } };
 

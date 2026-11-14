@@ -168,9 +168,10 @@ for ( const p of KA.POWERS ) {
   add("Kuei-jin (KotE)", KA.ART_LABEL[p.art], p.name, { status: res.some(r => !["note", "st"].includes(r.out?.kind) && !r.st) ? "applies" : "card", kw: [p.spec.kw],
     page: `KotE p. ${p.p}`, how: "Spend Chi: the named power fills the Chi, pool and difficulty, and the effects card carries the result" });
 }
-/* -- Book rituals and rites (the Storyteller's effect window only) */
+/* -- Book rituals and rites: the caster's own window pulls them (B3753) */
+const RITE_WINDOW = { v20: "Cast a ritual", v20da: "Cast a ritual", w20: "Perform a rite", daw: "Perform a rite", mummy: "Hekau, by the spell's name" };
 for ( const [set, b] of Object.entries(BR.BOOK_RITUALS) ) for ( const r of b.list )
-  add(`Rituals (${b.book})`, r.g, r.n, { status: applyingKw(r.k) ? "st" : "card", kw: r.k ?? [], page: `${b.book} ${r.page}`, how: "card and keywords in the Storyteller's effect window; the caster's own rite or ritual roll does not pull it" });
+  add(`Rituals (${b.book})`, r.g, r.n, { status: applyingKw(r.k) ? "applies" : "card", kw: r.k ?? [], page: `${b.book} ${r.page}`, how: `${RITE_WINDOW[set] ?? "the Storyteller's effect window"}: the caster's roll puts its keywords on the effects card` });
 /* -- Combat maneuvers (wodx-combat) */
 for ( const [id, m] of Object.entries({ ...CB.MANEUVERS, ...CB.CLASSIC }) ) {
   const mods = m.diff || m.dmg || m.dice || m.defDiff || m.noDamage || m.noDefense;

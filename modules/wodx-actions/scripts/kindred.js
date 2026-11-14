@@ -26,6 +26,7 @@ import * as PE from "./path-effects.js";
 import * as PK from "./power-keywords.js";
 import * as TH from "./trait-hooks.js";
 import * as WR from "./witness-rules.js";
+import * as BR from "./book-rituals.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -225,6 +226,48 @@ export function build(ctx) {
             return post(actor, `${actor.name}: ${esc(p.n)}`, body, rolls, fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 540, render: root => { describe(root); root.querySelector("[name=power]")?.addEventListener("change", () => describe(root)); root.querySelector("[name=attr]")?.addEventListener("change", () => describe(root));
             aim(root, { actor, lib: "disc", power: r => list.find(x => x.id === r.querySelector("[name=power]")?.value), onPick: a => { tgt = a; describe(root); } }); } });
+    }
+
+    /* ---------------- Thaumaturgy and Necromancy rituals (B3753) ---------------- */
+    // Intelligence + Occult at the ritual's level + 3, at most 9 (V20 p. 230; V20 Dark Ages p. 302); five minutes a level.
+    async function castRitual(actor) {
+        const era = (() => { try { return game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { return null; } })();
+        const set = era === "dark-ages" || era === "long-night" ? "v20da" : "v20";
+        const list = BR.BOOK_RITUALS[set].list;
+        const dice = ctx.attr(actor, "intelligence") + n(ctx.findAbility?.(actor, "occult")?.value);
+        const content = `<form><p><b>${esc(actor.name)}</b>: Intelligence + Occult, ${dice} dice. The difficulty is the ritual's level + 3 (at most 9).</p>
+          <div class="form-group"><label>Ritual</label>${searchBox("select[name=rit]", "Search rituals…", "Search rituals")}<select name="rit">${BR.ritualOptions([set], esc)}</select></div>
+          <div class="wodx-ritual-info wodx-quiet"></div>
+          <div class="form-group"><label>Difficulty</label><input type="number" name="diff" min="2" max="10" value="4"/></div>
+          <div class="form-group"><label>Blood to spend</label><input type="number" name="blood" min="0" value="0"/></div>
+          <div class="form-group"><label><input type="checkbox" name="advance"/> Move the clock (five minutes a level)</label></div></form>`;
+        const pick = root => { const [s, i] = String(root.querySelector("[name=rit]")?.value ?? "").split(":"); return { s, r: BR.BOOK_RITUALS[s]?.list?.[n(i)] }; };
+        const describe = root => {
+            const { s, r } = pick(root); if (!r) return;
+            root.querySelector("[name=diff]").value = Math.min(9, BR.ritualLevel(r) + 3);
+            const b = /(\d+) blood/.exec(r.takes ?? ""); root.querySelector("[name=blood]").value = b ? b[1] : 0;
+            root.querySelector(".wodx-ritual-info").textContent = `${r.g}, level ${r.lvl}; takes ${r.takes}; on ${r.who}. ${BR.ritualNote(s, r)}`;
+        };
+        return dialog(`Cast a ritual: ${actor.name}`, content, "Cast", async fd => {
+            const [s, i] = String(fd.rit ?? "").split(":"); const r = BR.BOOK_RITUALS[s]?.list?.[n(i)];
+            if (!r) return null;
+            const spendB = Math.max(0, n(fd.blood)), bb = ctx.blood(actor);
+            if (spendB > bb.value) return ctx.notify(`${actor.name} has only ${bb.value} blood.`);
+            let body = "";
+            if (spendB) { const ch = await ctx.changeBlood(actor, -spendB); body += `<div class="vta-parts">blood ${ch.before} → ${ch.after}</div>`; }
+            const rr = await rollPool(dice, Math.max(2, Math.min(10, n(fd.diff))));
+            body += rollBlock("Intelligence + Occult", rr, [`level ${r.lvl}`]);
+            const got = rr.botch ? 0 : rr.successes;
+            body += rr.botch ? `<div class="vta-big bad">${esc(r.n)}: a botch; the Storyteller says what goes wrong.</div>` : got ? `<div class="vta-big good">${esc(r.n)}: it takes (${got} success${got === 1 ? "" : "es"}).</div>` : `<div class="vta-big">${esc(r.n)} fails.</div>`;
+            body += `<div class="vta-note">${esc(BR.ritualNote(s, r))}</div>`;
+            let fxItems = [];
+            if (got && EF.isOn()) {
+                const pp = EF.ritualPlan(actor, r, got, `${BR.BOOK_RITUALS[s].book} ${r.page}`);
+                body += pp.html; fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+            }
+            if (fd.advance) body += await spendTime(actor, 300 * BR.ritualLevel(r), "a ritual");
+            return post(actor, `${actor.name}: ${esc(r.n)}`, body, [rr.roll].filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
+        }, { width: 540, render: root => { describe(root); root.querySelector("[name=rit]")?.addEventListener("change", () => describe(root)); aim(root, { actor }); } });
     }
 
     /* ---------------- Roads ---------------- */
@@ -872,7 +915,7 @@ export function build(ctx) {
         });
     }
 
-    return { useDiscipline, setRoad, roadOf, boons, downtime, masquerade, recordBreach, setWitnessState, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt,
+    return { useDiscipline, castRitual, setRoad, roadOf, boons, downtime, masquerade, recordBreach, setWitnessState, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt,
         enterTorpor, onDamage, onBlood, onClock, healAll, healPlan, healing, riseHeal, stayAwake, crinosSeen, marksSeen, sunlit, onChatButton, onSocket, targetTraits, poolOf, hierarchyTable };
 }
 

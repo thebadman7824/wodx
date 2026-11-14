@@ -12,6 +12,7 @@ export { bringsDelirium } from "./garou-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as EF from "./effects.js";
+import * as BR from "./book-rituals.js";
 
 const MOD = "wodx-actions";
 const DATA = {};
@@ -513,12 +514,14 @@ export function build(ctx) {
 
     /* ---------------- Rites ---------------- */
 
+    const riteSets = () => basis() === "daw" ? ["daw", "w20"] : ["w20", "daw"];
     async function performRite(actor) {
         const i = info(actor), D = DATA.garou ?? {};
         const rites = (actor.items ?? []).filter(it => it.type === "Power" && it.system?.type === "wod.types.rite");
         const types = Object.entries(D.rites ?? {}).filter(([k]) => k !== "page");
         const content = `<form><p><b>${esc(actor.name)}</b>: Rituals ${abilityDots(actor, "rituals")}, Rank ${i.rank}.</p>
           ${rites.length ? `<div class="form-group"><label>Rite known</label>${rites.length > 5 ? searchBox("select[name=rite]", "Search rites…", "Search rites") : ""}<select name="rite"><option value="">(another rite)</option>${rites.map(r => `<option value="${r.id}">${esc(r.name)} (level ${n(r.system?.level)})</option>`).join("")}</select></div>` : ""}
+          <div class="form-group"><label>From the book (what it does)</label>${searchBox("select[name=book]", "Search rites…", "Search rites")}<select name="book"><option value="">(the known rite, by its name)</option>${BR.ritualOptions(riteSets(), esc)}</select></div>
           <div class="form-group"><label>Kind of rite</label><select name="type" data-fixed>${types.map(([k, v]) => `<option value="${k}">${esc(v.label)}</option>`).join("")}</select></div>
           <div class="form-group"><label>Level</label><input type="number" name="level" value="1" min="0" max="5"/></div>
           <div class="form-group"><label>Garou taking part (ritemaster included)</label><input type="number" name="people" value="1" min="1"/></div>
@@ -532,7 +535,7 @@ export function build(ctx) {
             if (lvl > abilityDots(actor, "rituals") && fd.type !== "minor") ctx.notify("A rite's level can't exceed Rituals (DA:W p. 144).");
             const rr0 = G.riteRoll(fd.type, { rank: i.rank, caern: fd.caern, participants: fd.people, table: D.rites });
             const ce = courtEffect(actor, fd.court);
-            let body = "", rolls = [];
+            let body = "", rolls = [], got = 0;
             if (rr0?.pool && rr0.pool !== "var") {
                 const pool = poolOf(actor, rr0.pool, i);
                 const diff = clampDiff(rr0.diff + ce.diff);
@@ -540,9 +543,21 @@ export function build(ctx) {
                 rolls.push(rr.roll);
                 body += rollBlock(pool.label, rr, [`${rr0.label} rite`, `difficulty ${diff}`, ...(ce.note ? [ce.note] : [])]);
                 body += rr.successes > 0 ? `<div class="vta-big good">The rite takes.</div>` : `<div class="vta-note">The rite fails${rr.botch ? ", badly" : ""}.</div>`;
-            } else body += `<div class="vta-note">${rr0?.pool === "var" ? "Caern rites roll as each rite says (capped by Gnosis)." : "Minor rites need no roll."}</div>`;
+                got = rr.botch ? 0 : rr.successes;
+            } else { body += `<div class="vta-note">${rr0?.pool === "var" ? "Caern rites roll as each rite says (capped by Gnosis)." : "Minor rites need no roll."}</div>`; got = rr0?.pool === "var" ? 0 : 1; }
+            // The book's rite: what it does on the effects card when it takes (B3753)
+            const [bs, bi] = String(fd.book ?? "").split(":");
+            const found = fd.book ? { set: bs, r: BR.BOOK_RITUALS[bs]?.list?.[n(bi)] } : BR.findRitual(riteSets(), it?.name);
+            let fxItems = [];
+            if (found?.r) {
+                body += `<div class="vta-note"><b>${esc(found.r.n)}</b>: ${esc(BR.ritualNote(found.set, found.r))}</div>`;
+                if (got > 0 && EF.isOn()) {
+                    const pp = EF.ritualPlan(actor, found.r, got, `${BR.BOOK_RITUALS[found.set].book} ${found.r.page}`);
+                    body += pp.html; fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+                }
+            }
             if (fd.advance) body += await spendTime(actor, 600 * Math.max(1, lvl), "a rite");
-            return post(actor, `${actor.name}: ${esc(it?.name ?? `${rr0?.label ?? ""} rite`)}`, body, rolls.filter(Boolean));
+            return post(actor, `${actor.name}: ${esc(it?.name ?? (fd.book ? BR.BOOK_RITUALS[bs]?.list?.[n(bi)]?.n : null) ?? `${rr0?.label ?? ""} rite`)}`, body, rolls.filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         });
     }
 

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.80.0 (Powers pass, rites and rituals: the caster's own roll puts the book ritual's effect on the effects card (B3753))
 - 3.79.0 (Powers pass, Dark Ages rotes and Fae cantrips: sharper rote results and cantrip keywords on the effects card (B3752))
 - 3.78.0 (Powers pass, Dark Ages: Disciplines and Gifts with no roll put their keywords on the effects card (B3751))
 - 3.77.0 (Powers pass, Kuei-jin: every Discipline power by level in Spend Chi, with its effect on the effects card (B3750))
