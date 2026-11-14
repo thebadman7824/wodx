@@ -12,6 +12,7 @@
  *   Monstrous: when the maker's permanent Torment is 7 or more, or the maker chooses it, the high-Torment version is made
  *     (cursed objects, twisted souls; B3715).
  */
+import * as DR from "../../wodx-chronicle/scripts/derangement-rules.mjs";
 import * as Dm from "../data/wonders-demon.mjs";
 import * as D from "../../wodx-actions/scripts/demon-rules.js";
 import {registerLine} from "./wonder-registry.mjs";
@@ -178,7 +179,7 @@ export const demonKit = {
       net = n(t.total) - res.successes;
       bound = net > 0;
       out.push(`The soul resists with Willpower ${n(o.soulWill)}: ${res.successes} success${res.successes === 1 ? "" : "es"} [${faces.join(", ")}]. ${bound ? `${o.soul || "It"} is bound.` : "It slips the binding."}`);
-      if ( bound && o.dark ) out.push(o.soulKind === "demon" ? `Twisted by the binder's Torment: +${net} permanent Torment to the bound demon.` : "Twisted by the binder's Torment: the soul gains a permanent derangement (the Storyteller's choice).");
+      if ( bound && o.dark ) out.push(o.soulKind === "demon" ? `Twisted by the binder's Torment: +${net} permanent Torment to the bound demon.` : `Twisted by the binder's Torment: the soul gains a permanent derangement, ${DR.TABLE[DR.pickNew("binding", [], rand())]?.label ?? "Paranoia"}.`);
     }
     if ( o.target ) {
       const it = a.items?.get?.(o.target);

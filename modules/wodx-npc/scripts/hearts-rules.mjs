@@ -259,12 +259,19 @@ export function masqueradeRisk(line, list = []) {
 /** Who counts as close: these tie kinds always, a lover or friend at Fond or warmer. */
 export const CLOSE_KINDS = ["spouse", "child", "parent", "sibling", "lover", "friend", "childe", "ward", "apprentice", "retainer"];
 export const isClose = (kind, warmth = 0) => (["lover", "friend"].includes(kind) ? Number(warmth) >= 2 || kind === "lover" : CLOSE_KINDS.includes(kind));
-const GREAT = ["spouse", "child", "lover", "childe"];
+export const GREAT = ["spouse", "child", "lover", "childe"];
 /**
  * The checks for harm to someone close, by the line of the one who loves them. ev: "harm", "death" or "taken".
  * Returns [{text}]. The books' checks: frenzy for the Kindred (V20) and Garou (W20), Willpower for the rest; a great
  * loss risks a Derangement on a botch. The difficulties are house rules.
  */
+/** B4871: the grief roll for a death, made for them: difficulty, and what a result does (lose a temporary Willpower; a botch over someone great leaves a derangement). */
+export const griefDiff = great => great ? 8 : 7;
+export function griefResult({successes = 0, botch = false} = {}, great = false) {
+  if ( successes > 0 ) return {held: true, lose: 0, derange: false};
+  return {held: false, lose: 1, derange: !!(botch && great)};
+}
+
 export function weakSpotChecks(line, kind, ev, {name = "them"} = {}) {
   const great = GREAT.includes(kind);
   const out = [];
@@ -276,7 +283,7 @@ export function weakSpotChecks(line, kind, ev, {name = "them"} = {}) {
   }
   if ( ev === "death" ) {
     out.push({text: `Grief for ${name}: Willpower at difficulty ${great ? 8 : 7}, or lose a point of temporary Willpower.`});
-    if ( great ) out.push({text: "A botch leaves a Derangement from the loss (the Storyteller picks it)."});
+    if ( great ) out.push({text: "A botch leaves a Derangement from the loss, drawn from those grief leaves."});
     if ( line === "vampire" ) out.push({text: "If the Kindred's own hand or neglect caused it, a degeneration roll may follow."});
     if ( line === "werewolf" ) out.push({text: "Rage at the loss: a frenzy check at difficulty 6."});
     if ( line === "changeling" ) out.push({text: "Grief dims the Dreaming: Banality may rise by one (Storyteller)."});

@@ -32,6 +32,7 @@ const EXTRAS_FOLDER = "WoDX · Extras";
 export function registerBetweenSettings() {
   game.settings.register(MOD, "kits", {scope: "world", config: false, type: Array, default: []});
   game.settings.register(MOD, "absent", {scope: "world", config: false, type: Object, default: {}, onChange: () => C.changed()});
+  Hooks.on("createToken", t => { followParty(t).catch(e => console.warn(`${MOD} | stand-in`, e)); });
 }
 
 export function registerBetweenTools() {
@@ -193,7 +194,7 @@ export async function kitsDialog() {
 const yearNow = () => { try { return C.chron()?.eras?.currentYear?.(); } catch (e) { return null; } };
 
 /** Make n extras of a template and place them at the middle of the view (or the given point) on the current scene. */
-export async function makeExtras(key, {n = 1, x = null, y = null} = {}) {
+export async function makeExtras(key, {n = 1, x = null, y = null, scene: onScene = null, hidden = true, quiet = false, flags = null} = {}) {
   if ( !game.user.isGM ) return [];
   const tpl = K.EXTRAS.find(e => e.key === key);
   if ( !tpl ) return [];
@@ -211,17 +212,20 @@ export async function makeExtras(key, {n = 1, x = null, y = null} = {}) {
     if ( system.advantages.bloodpool && actor.system?.advantages?.bloodpool ) { upd["system.advantages.bloodpool.temporary"] = system.advantages.bloodpool.temporary; upd["system.advantages.bloodpool.max"] = system.advantages.bloodpool.max; }
     await actor.update(upd);
   }
-  const scene = canvas?.scene;
+  // B4861: the world's own moves (the watch, hunters, a road encounter) put extras on a given scene, in plain sight
+  const scene = onScene ?? canvas?.scene;
   if ( !scene ) return [actor];
   const size = scene.grid?.size ?? 100;
   const cx = x ?? (canvas.stage?.pivot?.x ?? 0), cy = y ?? (canvas.stage?.pivot?.y ?? 0);
   const count = Math.max(1, Math.min(20, Math.round(num(n))));
   const tokens = [];
   for ( let i = 0; i < count; i++ ) {
-    const t = await actor.getTokenDocument({x: cx + (i % 5) * size, y: cy + Math.floor(i / 5) * size, actorLink: false, name: count > 1 ? `${tpl.label} ${i + 1}` : tpl.label, hidden: true});
+    const t = await actor.getTokenDocument({x: cx + (i % 5) * size, y: cy + Math.floor(i / 5) * size, actorLink: false, name: count > 1 ? `${tpl.label} ${i + 1}` : tpl.label, hidden: !!hidden,
+      ...(flags ? {flags: {[MOD]: flags}} : {})});
     tokens.push(t.toObject());
   }
   const made = await scene.createEmbeddedDocuments("Token", tokens);
+  if ( quiet ) return made;
   await ChatMessage.create({whisper: C.gmIds(), speaker: {alias: "Storyteller"},
     content: `<div class="wodx-card"><h3>${esc(tpl.label)}${count > 1 ? ` ×${count}` : ""}</h3><p>${esc(K.extraSummary(tpl))}</p><p class="wodx-quiet">Placed hidden; reveal them when they enter. ${esc(tpl.ref ?? "")}</p></div>`});
   return made;
@@ -294,17 +298,38 @@ export async function setAbsent(userId, absent, {runBy = "none"} = {}) {
   const m = absentMap(), u = game.users.get(userId);
   if ( absent ) m[userId] = {at: game.time.worldTime, runBy}; else delete m[userId];
   await game.settings.set(MOD, "absent", m);
-  if ( u ) await C.log({kind: "note", user: userId, text: absent ? `${u.name} is away tonight${runBy === "st" ? `; the Storyteller plays ${u.character?.name ?? "their character"}` : ""}.` : `${u.name} is back.`});
+  // B4868: the character of a player away with the Storyteller standing in follows the party and fights as an NPC
+  const ch = u?.character;
+  if ( ch ) await ch.setFlag(MOD, "standIn", !!absent && runBy === "st");
+  if ( u ) await C.log({kind: "note", user: userId, text: absent ? `${u.name} is away tonight${runBy === "st" ? `; ${u.character?.name ?? "their character"} goes along with the party` : ""}.` : `${u.name} is back.`});
   return m;
 }
-export const clearAbsent = () => (game.user.isGM ? game.settings.set(MOD, "absent", {}) : null);
+export async function clearAbsent() {
+  if ( !game.user.isGM ) return null;
+  for ( const a of all(game.actors) ) if ( a.getFlag?.(MOD, "standIn") ) await a.unsetFlag(MOD, "standIn");
+  return game.settings.set(MOD, "absent", {});
+}
+
+/** B4868: a stand-in goes where the party goes: when a present player's character arrives on a scene, it follows. */
+export async function followParty(token) {
+  if ( !C.isActiveGM() || !token?.actor?.hasPlayerOwner || token.actor.getFlag?.(MOD, "standIn") ) return null;
+  const away = absentMap();
+  const ins = all(game.users).filter(u => away[u.id]?.runBy === "st" && u.character?.getFlag?.(MOD, "standIn")).map(u => u.character);
+  const scene = token.parent;
+  const out = [];
+  for ( const a of ins ) {
+    if ( all(scene.tokens).some(t => t.actorId === a.id) ) continue;
+    try { out.push(await C.moveToScene(a, scene)); } catch (e) { console.warn(`${MOD} | stand-in follows`, e); }
+  }
+  return out;
+}
 
 export async function absentDialog() {
   if ( !game.user.isGM ) return null;
   const m = absentMap();
   const players = all(game.users).filter(u => !u.isGM);
-  const content = `<form><p>Mark who is away for this session. Their characters leave the spotlight count and are left unticked when you convene; long tasks go on. It clears when the session ends.</p>
-    <table class="wst-absent"><thead><tr><th>Player</th><th>Away</th><th>You play their character</th></tr></thead><tbody>${players.map(u => `<tr><td>${esc(u.name)}${u.character ? ` <span class="wodx-quiet">(${esc(u.character.name)})</span>` : ""}</td>
+  const content = `<form><p>Mark who is away for this session. Their characters leave the spotlight count and are left unticked when you convene; long tasks go on. A character WoDX plays follows the party from scene to scene and fights as an NPC does, without spending; untick it to take it over. It clears when the session ends.</p>
+    <table class="wst-absent"><thead><tr><th>Player</th><th>Away</th><th>WoDX plays their character</th></tr></thead><tbody>${players.map(u => `<tr><td>${esc(u.name)}${u.character ? ` <span class="wodx-quiet">(${esc(u.character.name)})</span>` : ""}</td>
       <td><input type="checkbox" name="away.${u.id}"${m[u.id] ? " checked" : ""} aria-label="${esc(u.name)} away"></td><td><input type="checkbox" name="st.${u.id}"${m[u.id]?.runBy === "st" ? " checked" : ""} aria-label="${esc(u.name)}: the Storyteller plays the character"></td></tr>`).join("")}</tbody></table></form>`;
   const data = await wait({window: {title: "Absent tonight"}, position: {width: 520}, content,
     buttons: [{action: "save", label: "Save", default: true, callback: formData}, {action: "cancel", label: "Cancel"}]});
