@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.99.0 (Ways laid by the builder (B4810-B4813): a new step after the anchors turns each old Teleport Token exit between the walkable maps into a WoDX Way in the same region (the teleport is switched off, and comes back on when the step is taken back), makes a door from its street to each place inside named in the recipe, and runs the network check. The api gains builder.layWays and builder.takeBackWays)
 - 0.98.0 (Ways, the open world's doorways (B4780-B4783): a door, gate, stair, street, road's end, ferry or the edge of the land is a region with the new behaviour WoDX: Way to. Walking a token into it takes the character, the company within three squares and any follower set to follow, to the place it leads to, through the trip rules (own time, the dark, road encounters, places that ask first). Ways can shut at night, lock, or exist only between two years. The Ways window makes both ends at once and checks that every place can be reached and left)
 - 0.97.1 (Rothenstein recipe: the rebuilt world opens on 1 September 1200, as the Storyteller volumes do (B4760))
 - 0.97.0 (Town disasters leave lasting damage on the town's scenes, rebuilt over the weekly town turns, with Undo on the town card (B3759))

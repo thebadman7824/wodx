@@ -5,13 +5,15 @@
  *
  * Phase 1 steps: check the world (and turn on the WoDX modules in a world made for the recipe), Start a chronicle
  * with the recipe's homeland, opening night and lines, bring across the old world's documents from the carry file,
- * and mark the anchor places and people. The later steps are listed with the phase that brings them.
+ * mark the anchor places and people, and lay the Ways between the walkable maps. The later steps are listed with the phase that brings them.
  *
  * The builder never works in rothenstein-live, and in no other world than the recipe's unless forced.
  */
 import * as R from "./recipe-rules.mjs";
 import * as S from "./setup-rules.mjs";
 import * as Setup from "./setup.mjs";
+import * as Ways from "./ways.mjs";
+import * as WR from "./way-rules.mjs";
 import {MOD, esc} from "./core.mjs";
 import {ROTHENSTEIN} from "../data/recipe-rothenstein.mjs";
 
@@ -156,7 +158,79 @@ async function stepAnchors(r) {
   return {made: changes, note: `${changes.length} anchors marked.${missing.length ? ` Not found: ${missing.join(", ")}.` : ""}`, missing};
 }
 
-const RUN = {check: stepCheck, settings: stepSettings, carry: stepCarry, anchors: stepAnchors};
+/* The scenes that are tries and prototypes, not places: no Ways are laid in them. */
+const NOT_WALKED = /\((gridless )?trial\)|^Prototype\b|^⚔|^WoDX gate/i;
+const WAY_T = `${MOD}.${Ways.TYPE}`;
+const FORBIDDEN = new RegExp(`^(${R.FORBIDDEN_WORLDS.join("|")})$`);
+const hasWayTo = (scene, toId) => all(scene.regions).some(r => all(r.behaviors).some(b => b.type === WAY_T && b.system?.to === toId));
+function sceneBox(scene) {
+  const d = scene.dimensions ?? {};
+  return {x: d.sceneX ?? 0, y: d.sceneY ?? 0, w: d.sceneWidth ?? scene.width ?? 2000, h: d.sceneHeight ?? scene.height ?? 2000, g: d.size ?? scene.grid?.size ?? 100};
+}
+
+/**
+ * The Ways (B4810-B4813): each old exit between two walkable maps (a Teleport Token region) gets a WoDX Way in the
+ * same region, and the teleport is switched off; each door in the recipe is made from its street to the place inside.
+ * Then the network check runs over every place with a Way. Running it again adds only what is missing. The builder's
+ * step calls it with the recipe; a gate may pass its own doors and `only` its own scenes, then takeBackWays.
+ */
+export async function layWays(r = recipe(), prev = record().steps?.ways?.made ?? [], {only = null} = {}) {
+  if ( !game.user.isGM || FORBIDDEN.test(game.world.id) ) return {made: [], note: "Not here.", problems: [], missing: [], lost: []};
+  const made = [...prev];
+  // only: a list of scene ids to work in (the gate's own places); else every scene that is a place
+  const scenes = only ? only.map(id => game.scenes.get(id)).filter(Boolean) : all(game.scenes).filter(s => !NOT_WALKED.test(s.name ?? ""));
+  const view = scenes.map(s => ({id: s.id, name: s.name, regions: all(s.regions).map(x => ({id: x.id, name: x.name, flags: x.flags,
+    behaviors: all(x.behaviors).map(b => ({id: b.id, type: b.type, disabled: b.disabled, system: b.system?.toObject?.() ?? b.system}))}))}));
+  const {ways, lost} = WR.exitsToWays(view);
+  let exits = 0, doors = 0;
+  for ( const w of ways ) {
+    const region = game.scenes.get(w.sceneId)?.regions.get(w.regionId);
+    if ( !region || all(region.behaviors).some(b => b.type === WAY_T) ) continue;
+    const [b] = await region.createEmbeddedDocuments("RegionBehavior", [{type: WAY_T, name: w.name, system: {to: w.to, arrive: w.arrive, kind: w.kind, shut: "", locked: false}}]);
+    const tp = region.behaviors.get(w.behaviorId);
+    if ( tp ) await tp.update({disabled: true});
+    made.push({kind: "behavior", uuid: b.uuid, teleport: tp?.uuid ?? null});
+    exits++;
+  }
+  const names = scenes.map(s => ({id: s.id, name: s.name}));
+  const plan = WR.planDoors(r.doors ?? [], names);
+  const onStreet = new Map();
+  for ( const d of plan.doors ) {
+    const street = game.scenes.get(d.street), inside = game.scenes.get(d.inside);
+    const n = onStreet.get(street.id) ?? all(street.regions).filter(x => x.flags?.[MOD]?.door).length;
+    onStreet.set(street.id, n + 1);
+    if ( hasWayTo(street, inside.id) ) continue;
+    const ends = await Ways.makeWay(street, inside, {kind: d.kind, shut: d.shut, fromRect: WR.doorSpot(n, sceneBox(street))});
+    await ends.from.update({[`flags.${MOD}.door`]: true});
+    made.push({kind: "region", uuid: ends.from.uuid}, {kind: "region", uuid: ends.to.uuid});
+    doors++;
+  }
+  const walked = new Set([...ways.flatMap(w => [w.sceneId, w.to]), ...plan.doors.flatMap(d => [d.street, d.inside])]);
+  const net = scenes.filter(s => walked.has(s.id)).map(s => ({id: s.id, name: s.name,
+    ways: all(s.regions).flatMap(x => all(x.behaviors).filter(b => b.type === WAY_T && !b.disabled).map(b => ({to: b.system.to})))}));
+  const problems = WR.checkNetwork(net);
+  const missing = plan.missing;
+  const note = `${exits} old exits became Ways and ${doors} doors were made; ${net.length} places can be walked.` +
+    (problems.length ? ` The network check: ${problems.slice(0, 6).join(" ")}${problems.length > 6 ? ` And ${problems.length - 6} more.` : ""}` : " Every place can be reached and left.") +
+    (missing.length ? ` Not found: ${missing.join(", ")}.` : "") + (lost.length ? ` ${lost.length} exits lead nowhere and were left as they were.` : "");
+  return {made, note, problems, missing, lost};
+}
+const stepWays = r => layWays(r);
+
+/** Take back what layWays made: its Ways and doors come off, and the old teleports come back on. */
+export async function takeBackWays(made = []) {
+  if ( !game.user.isGM ) return 0;
+  let n = 0;
+  for ( const c of [...made].reverse() ) {
+    const d = fromUuidSync(c.uuid);
+    if ( d ) { await d.delete(); n++; }
+    const tp = c.teleport ? fromUuidSync(c.teleport) : null;
+    if ( tp ) await tp.update({disabled: false});
+  }
+  return n;
+}
+
+const RUN = {check: stepCheck, settings: stepSettings, carry: stepCarry, anchors: stepAnchors, ways: stepWays};
 
 /**
  * Run one step. opts: {force} lets the builder work in another world than the recipe's (never in Live).
@@ -211,6 +285,8 @@ export async function undoStep(id) {
       await foundry.utils.getDocumentClass(type).deleteDocuments(ids);
       n += ids.length;
     }
+  } else if ( id === "ways" ) {
+    n = await takeBackWays(rec.made ?? []);
   } else if ( id === "anchors" ) {
     for ( const c of rec.made ?? [] ) {
       const d = fromUuidSync(c.uuid);
