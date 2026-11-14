@@ -109,7 +109,8 @@ export async function endAll({scene = null, source = null} = {}) {
 /** The Storyteller's computer ends looks whose time has run out. */
 async function expire() {
   if ( !game.user.isGM || game.users.activeGM?.id !== game.user.id ) return;
-  for ( const sc of game.scenes ) for ( const l of list(sc) ) if ( R.expired(l, {now: now(), round: roundNow()}) ) await end(l.id, sc);
+  const scenes = game.scenes?.[Symbol.iterator] ? [...game.scenes] : Object.values(game.scenes?.contents ?? {});
+  for ( const sc of scenes ) for ( const l of list(sc) ) if ( R.expired(l, {now: now(), round: roundNow()}) ) await end(l.id, sc);
 }
 
 /** Token Magic FX filters for a drawn shape, by kind. Only the filter type and an id: Token Magic FX fills in its own defaults. */
@@ -211,18 +212,20 @@ export function registerLooks() {
     name: "Moving effects on the map",
     hint: "Fire, floods, storms and earthquakes that powers and events bring. Light shows them fainter and fewer, Off keeps only the plain coloured shapes and still weather. Only for you: pick Light or Off on a slow computer.",
     scope: "client", config: true, type: String, choices: R.LEVELS, default: R.DEFAULT_LEVEL,
-    onChange: () => render()
+    onChange: () => { render().catch(e => console.warn("WoDX | looks", e)); }
   });
-  Hooks.on("canvasReady", () => { pathCache = null; for ( const l of list(globalThis.canvas?.scene) ) seen.add(l.id); render(); });
-  Hooks.on("updateScene", (sc, ch) => { if ( sc.id === globalThis.canvas?.scene?.id && ch?.flags?.[MODULE_ID]?.[FLAG] !== undefined ) render(); });
+  const draw = () => { render().catch(e => console.warn("WoDX | looks", e)); };
+  Hooks.on("canvasReady", () => { pathCache = null; for ( const l of list(globalThis.canvas?.scene) ) seen.add(l.id); draw(); });
+  Hooks.on("updateScene", (sc, ch) => { if ( sc.id === globalThis.canvas?.scene?.id && ch?.flags?.[MODULE_ID]?.[FLAG] !== undefined ) draw(); });
   // Token Magic FX puts its filters back when a shape redraws: keep them off on a computer set to Off
   Hooks.on("refreshDrawing", d => {
     if ( level() !== "off" ) return;
     const ids = new Set(list(globalThis.canvas?.scene).filter(l => l.drawing === d?.document?.id).map(l => l.id));
     if ( ids.size ) for ( const o of [d, d.shape, d.mesh] ) for ( const f of o?.filters ?? [] ) if ( ids.has(f?.filterId) ) f.enabled = false;
   });
-  Hooks.on("updateWorldTime", () => expire());
-  Hooks.on("updateCombat", () => expire());
+  const later = () => { expire().catch(e => console.warn("WoDX | looks ending", e)); };
+  Hooks.on("updateWorldTime", later);
+  Hooks.on("updateCombat", later);
 }
 
 export const api = () => ({show, weather, end, endAll, list, level, mods, render, shake, rules: R});
