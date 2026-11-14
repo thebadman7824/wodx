@@ -17,7 +17,8 @@
  *   9. the Missouri villages (B4130): the Mandan, Hidatsa, Arikara and Pawnee in the West, women named by village
  *  10. the northern Plains (B4140): the Crow with clans, the Blackfoot and Arapaho by division
  *  11. the Great Basin (B4150): the Shoshone and the Ute by division and band
- *  12. clean up
+ *  12. Canada (B4160): the Cree and Anishinaabe by division and town, the Haida and Tlingit by clan
+ *  13. clean up
  * Result: Data/wodx-gate/gateplains-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -137,6 +138,17 @@ export async function run() {
       }
       G.ok("11. the Shoshone and the Ute in the West; own names, then family names",
         ["shoshone", "ute"].every(o => med.includes(o)) && !bad.length, {bad: bad.slice(0, 6), sample: draw("medieval", "ute", 4, "show").map(p => p.name)});
+    });
+    await G.step("12. Canada", async () => {
+      const med = results({era: "medieval", culture: "canada"}, "people.origin"), bad = [];
+      const ca = (era, o, n) => Array.from({length: n}, (_, i) => R.nameOf({rand: gen().random(`gateplains:ca:${era}:${o}`, i),
+        tables: gen().lookup({...gen().context(), era, culture: "canada"}), origin: o, sex: i % 2 ? "female" : "male"}));
+      for ( const o of ["cree", "anishinaabe"] ) for ( const p of ca("medieval", o, 20) ) if ( p.family || p.name.includes("{") ) bad.push(`${o}: ${p.name}`);
+      for ( const o of ["haida", "tlingit"] ) for ( const p of ca("medieval", o, 20) ) if ( !/^of the .+ clan$/.test(p.family ?? "") ) bad.push(`${o}: ${p.name}`);
+      for ( const o of ["cree", "anishinaabe", "haida", "tlingit"] ) for ( const p of ca("industrial", o, 10) ) if ( !p.family || p.name.includes("{") ) bad.push(`${o} industrial: ${p.name}`);
+      G.ok("12. Canada's first nations before the colonies; towns or clans, then family names",
+        ["haudenosaunee", "cree", "anishinaabe", "haida", "tlingit"].every(o => med.includes(o)) && !bad.length,
+        {medieval: med, bad: bad.slice(0, 6), sample: ca("medieval", "tlingit", 4).map(p => p.name)});
     });
   } catch (e) {
     G.ok("error", false, {error: e.message});

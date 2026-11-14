@@ -210,6 +210,7 @@ Next free block: B4610
 | B4130-B4139 | Missouri village peoples in the People generator (used B4130-B4132) | Creation, Chronicle |
 | B4140-B4149 | Crow, Blackfoot and Arapaho names in the People generator (used B4140-B4142) | Creation, Chronicle |
 | B4150-B4159 | Shoshone and Ute names in the People generator (used B4150-B4152) | Creation, Chronicle |
+| B4160-B4169 | Canada first nations names in the People generator (used B4160-B4162) | Creation, Chronicle |
 | B4600-B4609 | Show, don't tell: a visible: line on every feature's release note (used B4600) | tools (no module) |
 <!-- decision-index:end -->
 
@@ -6960,6 +6961,21 @@ Reverse: edit the lists in data/people-basin.mjs.
 WoDX Creation. Before 1800 an own name alone; from 1800 a church given name and a family name from the rolls. No church names before 1800: no mission held the Basin.
 
 Reverse: change towns or earlyChurch in data/people-basin.mjs.
+
+## B4160. Canada's first nations beside the Haudenosaunee (2026-11-14)
+WoDX Creation and Chronicle. Canada before the colonies was only Haudenosaunee; it now holds the Haudenosaunee 35, the Cree 30, the Anishinaabe 25 and the Haida and Tlingit 5 each (the Northwest coast stands under Canada, as no region of its own holds it). After the French come they keep a share, then 1 to 3 each, and the Cree and Anishinaabe 2 each today. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old canada mixes in world-rules.mjs and drop canadaTables from people-world.mjs.
+
+## B4161. Names from the numbered treaties and the coast records, fewer than 300 (2026-11-14)
+WoDX Creation. The lists come from Treaties 1 to 9, the Robinson treaties, the Great Lakes treaties, the Hudson's Bay journals, the Russian and mission records of the coast and the band lists since. Each people has fewer than 300 names; the Haida and Tlingit lists are short.
+
+Reverse: edit the lists in data/people-canada.mjs.
+
+## B4162. Divisions and towns, coast clans (2026-11-14)
+WoDX Creation. Before 1800 a Cree or Anishinaabe bears an own name alone, and a woman not named in the records is "a woman of" a division or town (the Swampy Cree, Bawating); a Haida bears the Raven or Eagle side of the mother and a Tlingit the clan of the mother (of the Kiks.ádi clan). From 1800 a church given name and a family name from the band lists and rolls.
+
+Reverse: change towns or clans in data/people-canada.mjs.
 
 ## B4600. Show, don't tell (Ben, 2026-11-14)
 Ben's standing rule: whatever happens in the game world must show on the map or screen wherever it can, not only be
