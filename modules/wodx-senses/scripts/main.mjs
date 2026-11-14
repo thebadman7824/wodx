@@ -233,7 +233,9 @@ export function traitsOf(actor, {scene = null, layer = "physical", useAuspex = t
     spheres: {life: num(sp.life?.value), spirit: num(sp.spirit?.value), entropy: num(sp.entropy?.value), prime: num(sp.prime?.value)},
     woundPenalty: actor?.system?.conditions?.isignoringpain ? 0 : num(actor?.system?.health?.damage?.woundpenalty),
     // merits and flaws from WoDX Chronicle's trait table: Acute Sense, Bad Sight, Blind, Deaf, Medium, Deathsight
-    traitSenses: (() => { try { return chron()?.traits?.senses?.(actor) ?? null; } catch (e) { return null; } })()
+    traitSenses: (() => { try { return chron()?.traits?.senses?.(actor) ?? null; } catch (e) { return null; } })(),
+    // B3799: installed cyberware (WoDX Library): low-light and thermal optics, sharper hearing and smell
+    gear: (() => { try { return game.modules.get("wodx-library")?.api?.cyber?.installedFx?.(actor)?.senses ?? null; } catch (e) { return null; } })()
   };
 }
 
