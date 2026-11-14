@@ -11,7 +11,8 @@
  *   4. from 1800: a church given name and a family name from the rolls
  *   5. the People generator for the West makes a person of one of the West's peoples, whatever the clock's age
  *   6. the generated person becomes a sheet with that name
- *   7. clean up
+ *   7. the Maya (B3830): beside the Nahua in Mexico before the conquest, an own name and a patronym, a church name after
+ *   8. clean up
  * Result: Data/wodx-gate/gateplains-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -78,6 +79,17 @@ export async function run() {
       if ( actor ) await actor.setFlag("world", "wodxGate", {gate: "gateplains", run: G.run});
       G.ok("6. the sheet carries the name", !!actor && actor.name === person.name, {name: actor?.name, wanted: person?.name});
       if ( actor ) await actor.delete();
+    });
+
+    await G.step("7. the Maya", async () => {
+      const med = results({era: "medieval", culture: "mexico"}, "people.origin");
+      const ctx = era => gen().lookup({...gen().context(), era, culture: "mexico"});
+      const old = Array.from({length: 20}, (_, i) => R.nameOf({rand: gen().random("gateplains:maya:old", i), tables: ctx("medieval"), origin: "maya", sex: i % 2 ? "female" : "male"}));
+      const now = Array.from({length: 20}, (_, i) => R.nameOf({rand: gen().random("gateplains:maya:new", i), tables: ctx("modern"), origin: "maya", sex: i % 2 ? "female" : "male"}));
+      const church = /^(Juan|Pedro|Francisco|Diego|Gaspar|Andrés|Pablo|Martín|Antonio|María|Ana|Catalina|Juana|Francisca|Inés|Magdalena|Isabel)$/;
+      G.ok("7. the Maya beside the Nahua; own names and a patronym, then church names", med.includes("maya") && med.includes("nahua")
+        && old.every(p => p.family && !p.name.includes("{") && !church.test(p.given)) && now.every(p => p.family && !p.name.includes("{")),
+        {medieval: med, old: old.slice(0, 4).map(p => p.name), now: now.slice(0, 4).map(p => p.name)});
     });
   } catch (e) {
     G.ok("error", false, {error: e.message});
