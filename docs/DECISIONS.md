@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3740
+Next free block: B3770
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -193,6 +193,7 @@ Next free block: B3740
 | B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3719) | Library |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
+| B3740-B3769 | Powers pass: every power gets a real effect (used B3740) | Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6336,3 +6337,8 @@ Reverse: Each gate's own commit can be reverted on its own.
 Ben's standing rule: whenever something is added to the game, it must have some kind of tangible effect, unless it would be impossible to render. A minor or major release note in changes/ now carries an effect: line that says what a player or the Storyteller sees change (a roll, a card, a sheet row, a map or token change, a sound, a line an NPC says), or effect: none with the reason. node tools/release/merge-stamp.mjs --check warns when the line is missing. The rule is in docs/WORKFLOW.md and changes/README.md, and the gate for the feature checks that the effect happens.
 
 Reverse: Remove effectWarnings from merge-stamp.mjs and the paragraphs from docs/WORKFLOW.md and changes/README.md.
+
+## B3740. Wraith Arcanoi apply their keywords (2026-11-14)
+WoDX Actions. Ben asked that every power have a tangible effect in play. The inventory (tools/powers/inventory.mjs, Powers Desk) found every Arcanos art showed its effect line but applied nothing, though each art already had effect keywords (B781). Use an Arcanos now calls powerPlan with the "wraith" or "greatwar" set after a roll with successes, so the keywords go on the effects card under the same routes as Disciplines and Gifts: plain keywords on an NPC or the user apply with Undo, mind keywords and anything on a player character wait for approval, Storyteller keywords stay the Storyteller's call. The world setting "Power keywords on the effects card" (powerEffects) turns it off. The harness test powers-inventory.test.mjs keeps a ceiling on roll-only and empty powers, lowered as each line is built.
+
+Reverse: remove the powerPlan block in useArcanos (wraith.js), or turn powerEffects off in the world.
