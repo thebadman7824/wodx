@@ -235,6 +235,8 @@ export const ST_TOOLS = [
     hint: "Every card, roll and whisper meant for the Storyteller alone, as it arrives. You can press its buttons yourself."},
   {id: "give", label: "Give my character an item", icon: "fa-solid fa-gift",
     hint: "Any item in the world or the compendiums, put straight onto your character's sheet."},
+  {id: "xp", label: "Add experience", icon: "fa-solid fa-star",
+    hint: "Experience points for your character, recorded on the sheet like any award, to try out spends."},
   {id: "check", label: "Check the systems", icon: "fa-solid fa-stethoscope",
     hint: "Which WoDX parts are running, whether the switch still holds, what waits for a Storyteller and any errors on the seat."},
   {id: "hidden", label: "What is hidden here", icon: "fa-solid fa-user-secret",
@@ -324,6 +326,16 @@ export function hiddenRow(t = {}, grid = 100) {
   return {name: String(t.name ?? "Someone"), kind: String(t.kind ?? ""), disposition: disp,
     square: `${Math.floor((Number(t.x) || 0) / g) + 1}, ${Math.floor((Number(t.y) || 0) / g) + 1}`};
 }
+
+/** Experience the tool may give at once (B4806): a whole number from 1 to XP_MAX, or null. */
+export const XP_MAX = 100;
+export function xpAmount(v) {
+  const n = Number(v);
+  if ( !Number.isFinite(n) || !Number.isInteger(n) || n < 1 || n > XP_MAX ) return null;
+  return n;
+}
+/** The award's name on the sheet: the player's reason, or a plain one. */
+export const xpNote = note => (String(note ?? "").trim().slice(0, 100) || "Given with the Storyteller tools");
 
 export const EYES_CAP = 60;
 /** Keep the newest cards, one per message, at most EYES_CAP. */

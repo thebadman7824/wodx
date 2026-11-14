@@ -66,7 +66,7 @@ import {setupCase, registerCaseSettings, pinClue} from "./case.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.45.0";
+const VERSION = "0.46.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -216,7 +216,7 @@ function nearOnTile(doc, p, by = 4) {
 const distanceToTile = (doc, p) => { const r = rectOf(doc); return Math.hypot(Math.max(r.x - p.x, 0, p.x - r.x - r.w), Math.max(r.y - p.y, 0, p.y - r.y - r.h)); };
 /** Where a noise at an object starts, as heard from a point. */
 
-const LOCK_KEYS = ["larceny", "security", "legerdemain", "technology", "computer", "stealth", "alertness", "investigation", "athletics", "dodge", "ride", "drive", "firearms", "archery", "melee", "brawl"];
+const LOCK_KEYS = ["larceny", "security", "legerdemain", "technology", "computer", "stealth", "alertness", "investigation", "athletics", "dodge", "ride", "drive", "pilot", "firearms", "archery", "melee", "brawl"];
 const TOOLS = /lock ?picks?|picklock|thieves'? tools|skeleton key|bump key|pick gun|lock gun|tension wrench/i;
 const POWERS = /^(potence|celerity|protean|obtenebration|matter|forces|correspondence|inhabit|outrage|puppetry|argos|moliate)/i;
 
@@ -1580,7 +1580,10 @@ export async function carryAboard(tokDoc, scene, from, to, pos = {x: num(tokDoc.
     const f = doc.flags?.[MOD];
     if ( !f?.mount ) continue;
     const riders = Array.isArray(f.riders) ? f.riders : [];
-    if ( f.driver?.t === tokDoc.uuid ) {
+    if ( f.driver?.t === tokDoc.uuid && R.hullState(f.hull, f.hull?.structure).state === "wrecked" ) {
+      // B4791: a wrecked vehicle goes nowhere: the one at the wheel who moves has climbed out
+      if ( moved ) { await doc.update({[`flags.${MOD}.driver`]: null}); what = what ?? "off"; }
+    } else if ( f.driver?.t === tokDoc.uuid ) {
       // The vehicle goes where the driver's token now is, at the offset set when they took the reins (a step from the
       // last known place for older data); the same for each passenger, from the vehicle
       const at = fixed(f.driver) ? {x: pos.x + f.driver.dx, y: pos.y + f.driver.dy} : {x: num(doc.x) + dx, y: num(doc.y) + dy};
@@ -1756,12 +1759,13 @@ export function tileConfigHtml(doc) {
     ${field("Kind of watch point", `<select name="${p}.watchKind" data-fixed>${opt(R.WATCHES, wch.watchKind)}</select>`, "A telephone from about 1890, a radio from about 1930.")}
     ${field("Tied to", `<input type="text" name="${p}.target" value="${esc(wch.target)}" placeholder="A tile's id on this scene, or its UUID on another">`, "The area a window or mirror shows, or the phone a call reaches.")}
     <h4 class="wix-sub">Mount or vehicle</h4>
-    <p class="hint">A horse, a mule, a cart, a carriage, a rowing boat, a car, a motorcycle or a motorboat. One character takes the reins and others ride along; moving the token at the reins moves the tile and everyone aboard.</p>
+    <p class="hint">A horse, a mule, a cart, a carriage, a rowing boat, a car, a motorcycle, a motorboat, a lorry, an armoured car, a tank, a balloon, an aeroplane, a helicopter or a jet. One character takes the reins and others ride along; moving the token at the reins moves the tile and everyone aboard.</p>
     ${field("Mount or vehicle", `<input type="checkbox" name="${p}.mount"${mnt.mount ? " checked" : ""}>`, "Any other kind ticked on the same tile wins.")}
-    ${field("Kind of mount or vehicle", `<select name="${p}.mountKind" data-fixed>${opt(R.MOUNTS, mnt.mountKind)}</select>`, "A car from about 1900, a motorcycle or motorboat from about 1910.")}
+    ${field("Kind of mount or vehicle", `<select name="${p}.mountKind" data-fixed>${opt(R.MOUNTS, mnt.mountKind)}</select>`, "A car or lorry from about 1900, a motorcycle or motorboat from about 1910, an armoured car from 1914, a tank from 1916, a balloon from 1783, an aeroplane from 1909, a jet from 1944, a helicopter from 1945. Aircraft need Pilot.")}
     ${field("Seats", `<input type="number" name="${p}.seats" value="${esc(mnt.seats)}" min="1" max="40" placeholder="${R.MOUNTS[mnt.mountKind].seats}">`, "With the one at the reins. Blank: as the kind suggests.")}
     ${onNow.length ? `<p class="hint">Aboard now: ${esc(listWords(onNow.map(x => x.n)))}.</p>` : ""}
     ${field("Everyone off", `<input type="checkbox" name="${p}.clearAboard">`, "Tick and save to empty it.")}
+    ${field("Damage taken", `<input type="number" name="${p}.hullLost" value="${esc(Number(doc?.flags?.[MOD]?.hull?.lost) || 0)}" min="0" max="99">`, "Structure lost in fights and crashes. Set it to 0 to mend it.")}
     <h4 class="wix-sub">Climb or gap</h4>
     <p class="hint">A ladder, a rope, a tree, a rough wall or a cliff to climb, or a gap to jump. Tie it to a tile at the top or on the far side, and a character who makes it is moved there.</p>
     ${field("Climb or gap", `<input type="checkbox" name="${p}.climb"${clb.climb ? " checked" : ""}>`, "Any other kind ticked on the same tile wins.")}
@@ -1846,6 +1850,16 @@ function onPreUpdateTile(doc, changes) {
     delete f.clearScores;
   }
   if ( "clearAboard" in f ) { if ( f.clearAboard ) { f.driver = null; f.riders = []; } delete f.clearAboard; }
+  // B4791: the damage a vehicle has taken, set or mended by hand; the tile's tint follows it
+  if ( "hullLost" in f ) {
+    const old = doc.flags?.[MOD]?.hull ?? {}, n = Math.max(0, Math.round(Number(f.hullLost) || 0));
+    if ( n !== (Number(old.lost) || 0) ) {
+      f.hull = {...old, lost: n, burning: n ? !!old.burning : false};
+      const h = R.hullState(f.hull, old.structure ?? 0);
+      changes.texture = {...(changes.texture ?? {}), tint: h.tint ?? old.tint0 ?? "#ffffff"};
+    }
+    delete f.hullLost;
+  }
   // Arming a trap again by hand clears what it did last time
   if ( f.armed === true && doc.flags?.[MOD]?.sprung ) { f.sprung = false; f.holding = null; }
 }

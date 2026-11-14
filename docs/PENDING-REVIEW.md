@@ -1328,7 +1328,9 @@ Ben checked the overnight peoples work ("Checked. Everything looks good.").
 | 2026-11-14 | Armenian names, built while Ben was away (B3940 to B3942) | Over 300 names; a home-town byname (Narekatsi) before 1800 and -ian or -yan after; Anatolia 12 in 100 until the modern group and 1 after, Persia 4 and Constantinople 6 from 1500, the Levant 2, Russia 3 from 1800 | Edit data/people-armenian.mjs or the mixes in world-rules.mjs |
 | 2026-11-14 | Missouri village names, built while Ben was away (B4130 to B4132) | The WoD books hold no names for them, so the lists come from the treaties, Catlin and Bodmer, Lewis and Clark and the agency rolls, under 300 a people; own names and women of a village or band before 1800, family names after; the four peoples are 14 in 100 of the West before 1500 | Edit data/people-missouri.mjs or the West mix in world-rules.mjs |
 
-## Waiting for review
+## Approved by Ben, 14 November 2026, 22:05 UTC (all pending items)
+
+Ben approved everything that was waiting for review ("Approved on all pending review").
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
@@ -1380,15 +1382,6 @@ Ben checked the overnight peoples work ("Checked. Everything looks good.").
 | 2026-11-14 | Sephardi and Mizrahi Jewish names (B4730 to B4732) | Sephardi names replace the Bohemian Jewish list in Iberia to 1492, the Ottoman lands, the Maghreb after 1492 and Amsterdam; Mizrahi Jews 2 to 4 in 100 in the Levant, Egypt, Arabia, Persia and the Maghreb before the modern age; modern Levant mix left all Arab, a desk for it waits | Edit the sephardi and mizrahi entries in data/people-world.mjs or the mixes in world-rules.mjs |
 | 2026-11-14 | Khmer names (B4740 to B4742) | The Khmer 45 in 100 on the mainland at 1197, 22 after Angkor falls, 12 in the industrial age; Angkor and Middle Period names given alone before 1800, modern names family first | Edit the khmer entry in data/people-world.mjs or the southeast-asia mix in world-rules.mjs |
 | 2026-11-14 | Filipino names (B4750 to B4752) | No Philippines region yet: Filipinos join the Malay world mix at 14 in 100 before the Spanish, 12 after; one list for the Tagalog, Visayan and Ilocano, the Moro sultanates later; church names from 1565, family names from 1800 | Edit data/people-filipino.mjs or the nusantara mix in world-rules.mjs |
-| 2026-11-14 | Summoning control by profile (B4821) | Book servants are moved by the summoner's player; called beings take orders through the Orders tool; wild ones go for the nearest | summon-rules.js resolve() |
-| 2026-11-14 | An NPC's summoning runs by itself (B4837) | A plain being of the book's kind comes beside the NPC and serves it, no click needed; the Storyteller can dismiss or Undo | route pick for an NPC's summon in effects.js planOf |
-| 2026-11-14 | Away from the summoner is 20 yards (B4823) | A being that obeys only while near rolls its keeping roll each turn past 20 yards | AWAY_YARDS in summons.js |
-| 2026-11-14 | More than 12 summoned beings come as one swarm token (B4820) | Up to 12 tokens, then one swarm token with the count on its card | MAX_TOKENS in summon-rules.js |
-| 2026-11-14 | A familiar takes orders (B4824) | The M20 familiar takes the mage's orders and is not moved by the player | the familiar spec in summon-specs.js |
-| 2026-11-14 | Made things fade unless Prime makes them real (B4830) | A Make result vanishes when its duration ends; with Prime in the casting it stays | the lasting line in effects-rules.js make |
-| 2026-11-14 | One success throws off a resisted effect (B4831) | Hold, fear, sway, possession, bind and illusion end on any success of the target's resist roll | resolveResist in effects.js |
-| 2026-11-14 | Powers tagged as summonings that call nothing (B4836) | 22 powers work through Bind, Make or Sway instead of a summoning | NOT_SUMMON in summon-specs.js |
-| 2026-11-14 | Unclear summoning pages (B4820) | Solomonic Summoning, The Giant's Dance, Slip the Shadow, Welcoming Waters, Summon the Pack and Blood that wakes the image built from the best reading of badly scanned or silent pages | their entries in summon-specs.js |
 | 2026-11-14 | Storyteller tools in solo mode: make the player a Storyteller, or keep them a player (B4800) | Keep them a player: each tool is an ask the hidden seat answers, since a second Storyteller browser would run every WoDX module's work twice | Promote the player to Assistant in User Management instead, and turn stOffer off |
 | 2026-11-14 | Who may switch the tools on (B4801) | Only the one logged-in player, only while The Lone Chronicle is on and outside the Live world; the seat switches them off when anyone else logs in or the mode goes off. The switch sits on the panel, offered by default (setting stOffer), off until pressed | Set stOffer off, or change mayTurnOn in solo-rules.mjs |
 | 2026-11-14 | Which tools come first (B4802 to B4805) | The Storyteller's cards (with their buttons pressed by the seat), Give my character an item (world and compendium items), Check the systems, What is hidden here. No XP, trait edits or moving NPCs yet | Add rows to ST_TOOLS with a seat handler in st-tools.mjs |
@@ -1398,3 +1391,32 @@ Ben checked the overnight peoples work ("Checked. Everything looks good.").
 | 2026-11-14 | Keeping the saddle and the fall (B4772) | Every hit with damage successes asks Stamina + Ride at those successes (3 to 10); thrown: off the mount on the map, Knocked down, 2 to 4 dice by the ground (fields 2, road or streets 3, rough or a crowd 4), lethal on a botch | Turn off "Fighting from the saddle", or change saddleDiff and FALL_DICE |
 | 2026-11-14 | The lance (B4773) | Ride 3 and Melee 3 or a hit jars the user (bashing dice equal to the damage successes); a lance charge (10 yards ridden this turn) makes the target roll Strength + Athletics at 6 or go down, a rider unhorsed | Have isLance return false in mounted-rules.js |
 | 2026-11-14 | A bow from a moving horse (B4774) | Any yards ridden this turn +2, half the mount's pace or more +4, in place of the saddle's +1; no penalty with a Mounted specialty; bows only | Have mountedShot return no change |
+| 2026-11-14 | Lorries, armoured vehicles and aircraft (B4790) | Lorry 1900, armoured car 1914, tank 1916, balloon 1783, aeroplane 1909, jet 1944, helicopter 1945; the book's speeds for modern rows, house rows before; lorries need Drive 3 or a roll, military Drive 3 and aircraft Pilot or no option at all; motorcycles left at Drive 1 | Edit MOUNTS in interact-rules.mjs and WAYS in chase-rules.mjs |
+| 2026-11-14 | Vehicle Durability and Structure (B4791) | Damage up to Durability bounces off, the rest comes off Structure, wrecked at the end of it; house bodies for carts 2/4, carriages 2/5, rowing boats 1/3, early cars 2/3, early lorries, early armour and motorboats | Edit BODIES in chase-rules.mjs or hullBlow in vehicle-rules.js |
+| 2026-11-14 | Ramming (B4792) | Dexterity + Drive held to the Maneuver at 6 to hit; Durability + a die a 10 mph + mass in bashing, plus extra successes | Change ramDice or RAM_DIFF in vehicle-rules.js |
+| 2026-11-14 | The crash inside (B4793) | Those in a rammed vehicle and in the rammer take the dice less Durability (a lorry +3 more), halved strapped in (aircraft always, cars and lorries from 1970); hitting someone on foot does not shake the rammer | Change crashDice or strapped in vehicle-rules.js |
+| 2026-11-14 | Swerving and sitting inside (B4794) | The one at the wheel swerves (Dex + Drive held to the Maneuver, +2 vs shots) in place of a dodge; others sat inside cannot dodge; motorcyclists still dodge | Remove the swerve branch and seated check in planDefense |
+| 2026-11-14 | The fuel tank (B4796) | Any hit on a motor vehicle with 3 successes and 6 levels sets the fuel off: 12 aggravated dice to all aboard, burnt out, a fire on the map; no separate aim at the tank | Have fuelGoes return false, or ask for an aimed shot at the tank |
+| 2026-11-14 | NPCs taking vehicles (B4797) | A free vehicle within a run that the NPC can drive: just above flight when fleeing, or above the best attack when every foe is beyond a run; at the reins it moves at the vehicle's pace | Have boardOption in npc-rules.mjs return null, or change its scores |
+
+## Approved by Ben, 14 November 2026, 22:15 UTC (Powers Bounds Desk)
+
+Ben picked the recommendation on all 29 desk items (https://claude.ai/artifact/AfpAP4mUt6heeikGRwk9Cd).
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-14 | Summoning control by profile (B4821) | Book servants are moved by the summoner's player; called beings take orders through the Orders tool; wild ones go for the nearest | summon-rules.js resolve() |
+| 2026-11-14 | An NPC's summoning runs by itself (B4837) | A plain being of the book's kind comes beside the NPC and serves it, no click needed; the Storyteller can dismiss or Undo | route pick for an NPC's summon in effects.js planOf |
+| 2026-11-14 | Away from the summoner is 20 yards (B4823) | A being that obeys only while near rolls its keeping roll each turn past 20 yards | AWAY_YARDS in summons.js |
+| 2026-11-14 | More than 12 summoned beings come as one swarm token (B4820) | Up to 12 tokens, then one swarm token with the count on its card | MAX_TOKENS in summon-rules.js |
+| 2026-11-14 | A familiar takes orders (B4824) | The M20 familiar takes the mage's orders and is not moved by the player | the familiar spec in summon-specs.js |
+| 2026-11-14 | Made things fade unless Prime makes them real (B4830) | A Make result vanishes when its duration ends; with Prime in the casting it stays | the lasting line in effects-rules.js make |
+| 2026-11-14 | One success throws off a resisted effect (B4831) | Hold, fear, sway, possession, bind and illusion end on any success of the target's resist roll | resolveResist in effects.js |
+| 2026-11-14 | Powers tagged as summonings that call nothing (B4836) | 22 powers work through Bind, Make or Sway instead of a summoning | NOT_SUMMON in summon-specs.js |
+| 2026-11-14 | Unclear summoning pages (B4820) | Solomonic Summoning, The Giant's Dance, Slip the Shadow, Welcoming Waters, Summon the Pack and Blood that wakes the image built from the best reading of badly scanned or silent pages | their entries in summon-specs.js |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-14 | How much experience the Storyteller tools give at once (B4806) | A whole number from 1 to 100 per press, as a normal award through WoDX Creation | Change XP_MAX in solo-rules.mjs |
