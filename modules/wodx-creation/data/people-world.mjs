@@ -206,6 +206,14 @@ const P = {
       new: "Tarhata, Sitti, Nur, Fatima, Salima, Amina, Bainon, Johaira, Sittie, Noraida, Jalilah, Rohaida, Samira, Normina"},
     child: ["bin", "binti", 1],
     fam: {new: "Kiram, Piang, Alonto, Lucman, Dimaporo, Misuari, Ampatuan, Mangudadatu, Sinsuat, Pendatun, Abubakar, Sema, Jaafar, Lidasan, Matalam, Tan, Adiong, Macarambon, Dimakuta, Pangarungan, Dumarpa, Balindong, Sangki, Paglas, Masturah, Arbison, Jikiri, Tulawie, Sahali, Hataman, Ututalum"}},
+  // The Banyarwanda and Barundi of the kingdoms of Rwanda and Burundi (B5030): the mwami king lists and the court
+  // histories, then a church name with an own name of Kinyarwanda or Kirundi, which is not passed to the children
+  banyarwanda: {
+    m: {old: "Ruganzu, Cyilima, Kigeli, Mibambwe, Yuhi, Mutara, Rwabugiri, Musinga, Ntare, Mwezi, Mutaga, Mwambutsa, Gihanga, Rudahigwa, Ndori, Rwogera, Gahindiro, Mazimpaka, Ruhinankiko, Rwakagara, Kabare, Ntwari, Habimana, Mugabo, Ndayisaba, Bizimana, Nkurunziza, Hakizimana, Nsengiyumva, Ndikumana",
+      new: "Jean, Pierre, Emmanuel, Jean-Baptiste, Joseph, Innocent, Théogène, Alphonse, Déogratias, Félicien, Pascal, Eric, Patrick, Olivier, Fabrice, Claude, Aimable, Célestin"},
+    f: {old: "Kanjogera, Nyiramavugo, Nyirarumaga, Uwimana, Mukamana, Uwase, Ingabire, Umutoni, Mutesi, Uwera, Mukeshimana, Nyiramana, Kankindi, Kayitesi, Murekatete, Mukandoli, Nyirabukara",
+      new: "Marie, Jeanne, Claudine, Immaculée, Speciose, Béatrice, Chantal, Josiane, Diane, Aline, Solange, Grâce, Clarisse, Espérance, Vestine, Pélagie"},
+    fam: {new: "Habimana, Uwimana, Mugabo, Ndayisaba, Bizimana, Nkurunziza, Hakizimana, Nsengiyumva, Ndikumana, Niyonzima, Uwase, Ingabire, Mukamana, Mutesi, Uwera, Mukeshimana, Niyonsaba, Nshimiyimana, Twagiramungu, Munyaneza, Nzeyimana, Ntirenganya, Nizeyimana, Irakoze, Ndayishimiye, Bigirimana, Ntakirutimana, Kwizera, Iradukunda, Manirakiza, Nduwimana, Havyarimana"}},
   mande: {
     m: "Sundiata, Mamadou, Moussa, Bakary, Seydou, Modibo, Amadou, Ibrahima, Lassana, Boubacar, Souleymane, Fodé, Sékou, Tiémoko, Drissa, Oumar",
     f: "Fatoumata, Aminata, Mariam, Kadiatou, Oumou, Awa, Sogolon, Djénéba, Rokia, Bintou, Salimata, Nana, Assetou, Korotoumou, Hawa, Ramata",
@@ -325,7 +333,7 @@ for ( const id of Object.keys(WORLD_REGIONS) ) {
 const BUILT = {haudenosaunee: haudenosauneeTables(), ...Object.groupBy([...algonquianTables(), ...plainsTables(), ...southwestTables(), ...missouriTables(), ...plainsNorthTables(), ...basinTables(), ...canadaTables(), ...inuitTables(), ...tainoTables(), ...aboriginalTables(), ...centralAfricaTables(), ...filipinoTables()], t => t.id.split(".").at(-1))};
 export const WORLD_PEOPLE_TABLES = [...origins, ...names, ...Object.values(BUILT).flat()];
 /** Peoples who bear a given name alone in some or all ages. */
-export const GIVEN_ONLY = new Set(["new-england-algonquian", "powhatan", "lakota", "cheyenne", "comanche", "kiowa", "apache", "arikara", "pawnee", "mandan", "hidatsa", "blackfoot", "arapaho", "shoshone", "ute", "cree", "anishinaabe", "inuit", "taino", "aboriginal", "luba", "filipino", "moro", ...Object.entries(P).filter(([, p]) => !p.child && (!p.fam || (typeof p.fam !== "string" && !Object.keys(p.fam).some(k => k === "old" || k.includes("medieval"))))).map(([o]) => o)]);
+export const GIVEN_ONLY = new Set(["new-england-algonquian", "powhatan", "lakota", "cheyenne", "comanche", "kiowa", "apache", "arikara", "pawnee", "mandan", "hidatsa", "blackfoot", "arapaho", "shoshone", "ute", "cree", "anishinaabe", "inuit", "taino", "aboriginal", "luba", "filipino", "moro", "banyarwanda", ...Object.entries(P).filter(([, p]) => !p.child && (!p.fam || (typeof p.fam !== "string" && !Object.keys(p.fam).some(k => k === "old" || k.includes("medieval"))))).map(([o]) => o)]);
 /** Every people named here. */
 export const WORLD_PEOPLES = [...Object.keys(P), ...Object.keys(BUILT)];
 /** Peoples raised to at least 300 distinct names (Ben 2026-11-13, B3310 on): one at a time, the biggest homelands first. */

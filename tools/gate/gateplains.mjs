@@ -29,7 +29,8 @@
  *  21. the Sami (B4900): Scandinavia's north, given names alone, family names after 1800
  *  22. the Tuareg (B4950): the desert edge of West Africa and the Maghreb, ag and welet the father
  *  23. the Moro (B5000): Mindanao and Sulu in the Malay world's mix, sultanate names, then family names
- *  24. clean up
+ *  24. the Banyarwanda and Barundi (B5030): Rwanda and Burundi in central Africa, own names, then family names
+ *  25. clean up
  * Result: Data/wodx-gate/gateplains-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -259,6 +260,15 @@ export async function run() {
       for ( const p of mo("modern", 8) ) if ( !p.family || p.name.includes("{") ) bad.push(`modern: ${p.name}`);
       G.ok("23. the Moro in the Malay world; sultanate names, then family names",
         med.includes("moro") && !bad.length, {medieval: med, bad: bad.slice(0, 6), sample: mo("medieval", 4).map(p => p.name)});
+    });
+    await G.step("24. the Banyarwanda and Barundi", async () => {
+      const med = results({era: "medieval", culture: "central-africa"}, "people.origin"), bad = [];
+      const rw = (era, n) => Array.from({length: n}, (_, i) => R.nameOf({rand: gen().random(`gateplains:rw:${era}`, i),
+        tables: gen().lookup({...gen().context(), era, culture: "central-africa"}), origin: "banyarwanda", sex: i % 2 ? "female" : "male"}));
+      for ( const p of rw("medieval", 12) ) if ( p.family || p.name.includes("{") ) bad.push(`medieval: ${p.name}`);
+      for ( const p of rw("modern", 8) ) if ( !p.family || p.name.includes("{") ) bad.push(`modern: ${p.name}`);
+      G.ok("24. the Banyarwanda and Barundi in central Africa; own names, then family names",
+        med.includes("banyarwanda") && !bad.length, {medieval: med, bad: bad.slice(0, 6), sample: rw("medieval", 4).map(p => p.name)});
     });
   } catch (e) {
     G.ok("error", false, {error: e.message});
