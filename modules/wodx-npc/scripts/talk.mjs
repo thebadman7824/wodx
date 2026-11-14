@@ -813,5 +813,5 @@ export function build(ctx) {
     });
   }
 
-  return {registerSettings, hooks, openTalk, serve, editShared, talkHtml, speakerToken, stock, letterReply, openLine, say, bark, onPass, rules: TK, lines: MORE, stockLines: STOCK, get grammar() { return GRAMMAR; }, openGrammar, loadGrammar, reroll, keepLine, wantMet};
+  return {registerSettings, hooks, openTalk, serve, editShared, talkHtml, speakerToken, stock, say, bark, letterReply, openLine, onPass, rules: TK, lines: MORE, stockLines: STOCK, get grammar() { return GRAMMAR; }, openGrammar, loadGrammar, reroll, keepLine, wantMet};
 }
