@@ -32,7 +32,7 @@ test("adopt: the farmstead's sidecar reads cleanly", () => {
   assert.equal(got.ok, true);
   assert.deepEqual(got.errors, []);
   assert.equal(got.data.openings.length, 10);
-  assert.equal(got.data.features.length, 8);
+  assert.equal(got.data.features.length, 13);   // 8, and the byre's and barn's stores (B4670)
   assert.equal(got.data.regions.length, 4);
   assert.deepEqual(got.data.cells, [50, 36]);
 });
@@ -47,7 +47,7 @@ test("adopt: every feature and opening is something Interactables knows", () => 
   for ( const f of sc.features ) {
     const k = A.TILE_KINDS.filter(x => f.flags[x] === true);
     assert.equal(k.length, 1, f.id);
-    if ( f.flags.container ) { assert.equal(f.flags.fillPlace, "home"); assert.ok(R.CONTAINERS[f.flags.kind]); assert.ok(R.LOCKS[f.flags.lock]); assert.equal(R.describeContainer(f.flags).ds, "locked"); }
+    if ( f.flags.container ) { assert.ok(["home", "workshop"].includes(f.flags.fillPlace), f.id); assert.ok(R.CONTAINERS[f.flags.kind]); assert.ok(R.LOCKS[f.flags.lock]); assert.equal(R.describeContainer(f.flags).ds, f.flags.ds ?? (f.flags.lock === "none" ? "closed" : "locked")); }
     if ( f.flags.hide ) assert.equal(R.describeHide(f.flags).kind, f.flags.hideKind, f.id);
     if ( f.flags.climb ) { const o = R.describeClimb(f.flags); assert.equal(o.kind, "rope"); assert.equal(o.height, 25); }
     if ( f.flags.light ) { assert.ok(R.LIGHTS[f.flags.lightKind]); assert.ok(f.light); }
@@ -124,7 +124,7 @@ test("adopt: the plan sets up every opening, thing, light and region, and adopti
   const p = A.plan(sc, scene, fr, types);
   assert.equal(p.wallUpdates.length, 10);
   assert.equal(p.wallCreates.length, 0);
-  assert.equal(p.tiles.length, 8);
+  assert.equal(p.tiles.length, 13);
   assert.equal(p.lights.length, 1);
   assert.equal(p.regions.length, 4);
   const home = p.regions.find(r => r.name === "Longhouse");
@@ -135,7 +135,7 @@ test("adopt: the plan sets up every opening, thing, light and region, and adopti
   assert.equal(p.lights[0].data.config.dim, 15, "3 squares of 5 feet");
   const lines = A.summary(p);
   assert.ok(lines.some(l => /10 doors and windows/.test(l)));
-  assert.ok(lines.some(l => /8 things made interactable \(containers, lights, hiding places, climbs\)/.test(l)), lines.join(" | "));
+  assert.ok(lines.some(l => /13 things made interactable \(containers, lights, hiding places, climbs\)/.test(l)), lines.join(" | "));
   // Once adopted, every piece carries its id and nothing is made twice
   const after = {walls: scene.walls.map(w => { const u = p.wallUpdates.find(x => x._id === w.id); return u ? {...w, flags: u.flags} : w; }),
     tiles: p.tiles.map((t, i) => ({id: `t${i}`, flags: t.flags})), lights: p.lights.map((l, i) => ({id: `l${i}`, flags: l.data.flags})), regions: p.regions.map((r, i) => ({id: `r${i}`, flags: r.flags}))};
@@ -200,7 +200,7 @@ test("adopt: the runtime applies the plan, links the oven's light, and Undo puts
   const got = await Ad.planFor(scene, SAMPLE);
   const rec = await Ad.applyPlan(scene, got.p);
   assert.equal(rec.made.Wall.length, 1, "the barn window had no wall: one drawn");
-  assert.equal(scene.tiles.contents.length, 8);
+  assert.equal(scene.tiles.contents.length, 13);
   const oven = scene.tiles.contents.find(t => t.flags[MOD].light);
   assert.equal(oven.flags[MOD].lightIds, scene.lights.contents[0].id);
   assert.equal(scene.regions.contents.length, 4);
