@@ -195,7 +195,7 @@ Next free block: B3820
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
 | B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3754) | Combat |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
-| B3780-B3809 | The no-effect audit: body effects survive the sheet's recompute (used B3780-B3804) | Combat, system |
+| B3780-B3809 | The no-effect audit: everyday arms, weapon fittings and traps (used B3780-B3807) | Library, Combat |
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 <!-- decision-index:end -->
 
@@ -6551,6 +6551,21 @@ Reverse: remove heavyFire, heavyFireDialog and the macro.
 WoDX Combat and the worldofdarkness fork. The system recomputes health totals and the wound penalty after every actor update (and after an item change) and wrote over what Combat's healthUpdate set, so B3793's extra Bruised levels and eased penalties and B3802's Pain Editor showed nothing on the testbed (gatetraits step 29, gatecyber step 8). The fork now calls Hooks.callAll("wodxActorTotals", actor, data) after calculateTotals in both places; Combat's handler (R.applyBodyTotals) adds the body's Bruised levels to the stored total, marks them (health.bruised.wodxBody) so the health track does not add them twice, and works out the wound level, penalty and health-level counts again from those totals. With no body traits the system's own figures stand.
 
 Reverse: remove the two hook calls in wod-actor-base.js and the handler in Combat's init.
+
+## B3805. Everyday arms fight (2026-11-14)
+WoDX Library (data/goods-arms.mjs, scripts/arms-rules.mjs, arms-use.mjs). The 54 arms, accessories and traps goods were plain names with nothing in play (no-effect desk g2, approved by Ben 2026-11-14). The 19 everyday weapons get WoDX house figures on the V20 scale (a knife Strength + 1 lethal, a blackjack Strength + 1 bashing, a grenade 10 dice in a 5-yard blast) and a special where the thing does more than harm: pepper spray blinds unless the eyes are covered, a stun gun dazes on any damage that gets through, a flashbang dazes, fire burns, a thrown thing is used up. They stay plain Items: the Use window readies them (equipped) and WoDX Combat lists them beside the sheet's weapons. The eight kinds of ammunition wait for their own pass (desk g3).
+
+Reverse: drop ready from use-rules' abilitiesOf and the armsLib lines in Combat's weaponList.
+
+## B3806. Fittings change the shot (2026-11-14)
+WoDX Combat (rules.js fittingsPlan, main.js). A fitting is on when its box is ticked (Fit it), and it works only on its own kind of weapon: a laser sight -1 difficulty and a silencer a quiet shot on any gun, a rifle scope +2 dice beyond the listed range on a long gun, a weapon light cancels darkness, a smartgun link cable -1 more with a Smartgun Link installed, a cranequin spans a crossbow without the Strength, a speed loader reloads a revolver with another action, bowstring wax keeps a bow at its difficulty in the rain (an unwaxed string is +1), and a spare bowstring is fitted in a turn when a botch snaps the string. A worn holster, gun sling or scabbard with its weapon carried gives +1 initiative (house rule: it is at hand).
+
+Reverse: remove fitPlan from attackPoolFor and the atHand term in rollInitiative.
+
+## B3807. Traps are set, sprung and disarmed (2026-11-14)
+WoDX Library (arms-use.mjs). Setting a trap rolls the trap's own pool (Wits + Survival for most, Wits + Security for alarms, Wits + Demolitions for a land mine); a botch springs it on the setter and no successes leave it unset. Each success past the first makes it one harder to see (difficulty 6 to 9 by the trap). Someone who walks into it (the targeted character) rolls Perception + Alertness against that; caught, they take its damage through WoDX Combat's soak, are held or completely immobilized (Chronicle's conditions), and an alarm tells the setter. Disarming is Dexterity + Security at the same difficulty; a botch springs it.
+
+Reverse: drop settrap, springtrap and disarm from abilitiesOf.
 
 ## B3810. Hedge magic Enchantment makes real talismans (2026-11-14)
 WoDX Library (scripts/wonders-hedge.mjs). Ben picked the full build on the Item Crafting Desk (m4). Anyone with the Path of Enchantment as a hedge path (a numina Power item, as WoDX Actions reads it) can make talismans up to the level of the path: hedge sorcerers, hunters of the Hunters Hunted era, Kinfolk and ghouls alike. The book is Sorcerer (Revised), pdf 72-75, read from the PC's text pull. The talisman levels follow its five tiers, in WoDX's own words. A world setting (craftHedge, on) turns the line off.
