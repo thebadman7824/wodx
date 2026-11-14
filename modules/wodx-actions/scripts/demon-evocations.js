@@ -186,7 +186,7 @@ export const EVOCATIONS = {
       "Only predators, and away from her they attack anyone they meet unless they pass Intelligence 7.", S("summon")),
     "beast:3": E("Possess one animal a success within Faith miles; more than Wits leaves her body comatose, otherwise her own pools are halved.", "Faith turns", "Faith miles",
       "Only predators; Willpower at Torment each turn or the Storyteller takes her over until it ends.", S("possess")),
-    "beast:4": E("Take the shape of any animal whose blood or flesh she has tasted, any size.", "the scene", "self",
+    "beast:4": E("Become any beast she has once tasted, large or small.", "the scene", "self",
       "Willpower at Torment each turn or the beast takes over (Storyteller controls her).", T("shape", "Animal Form", "scene", "self")),
     "beast:5": E("Remake an animal: a trait point or a new feature a success, mass no object. Then Willpower: more successes than changes or the beast turns unstable (the Storyteller may roll in secret). Faith days, or for good for a Willpower point.", "Faith days", "touch",
       "No roll: the creature is always a rabid killer.", S("make")),
