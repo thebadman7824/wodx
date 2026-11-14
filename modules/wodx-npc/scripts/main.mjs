@@ -19,6 +19,7 @@ import * as MR from "./mortal-rules.mjs";
 import * as SR from "./supernatural-rules.mjs";
 import {build as buildRoutines} from "./routines.mjs";
 import {build as buildFactions} from "./factions.mjs";
+import * as FactionLooks from "./faction-looks.mjs";
 import {build as buildFounding} from "./founding.mjs";
 import * as OR from "./order-rules.mjs";
 import {build as buildOrders} from "./orders.mjs";
@@ -52,7 +53,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.81.0";
+const VERSION = "0.82.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -873,6 +874,7 @@ Hooks.once("init", () => {
   routines.registerSettings();
   MEMORY.registerSettings();
   factions.registerSettings();
+  FactionLooks.registerFactionLookSettings();
   orders.registerSettings();
   Faces.registerFaceSettings();
   talk.registerSettings();
@@ -896,7 +898,7 @@ Hooks.once("init", () => {
   LEGACY.registerSettings();
   LEGACY.listen();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
-  const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
+  const api = {version: VERSION, factionLooks: FactionLooks.api(), rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
     faces: {open: Faces.openFaces, apply: Faces.applyName}, nameFor: Faces.nameFor, knowledgeOf: a => rivalry.knowledgeOf(a), orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd, overheard, openOverheard: overheard.open,
@@ -937,6 +939,7 @@ Hooks.once("ready", () => {
   if ( !C() ) console.warn(`${MOD} | WoDX Combat is missing: NPCs cannot act.`);
   if ( chron()?.registerApprovalHandler ) { factions.registerHandler(); attitude.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); cults.registerHandler(); } // else on wodxChronicleReady
   ensureStyles();
+  FactionLooks.setupFactionLooks(); // B4631: who holds a place, on its scene
 });
 /**
  * NPC 0.15.0: the rest of an NPC's household within call on the scene being viewed (token ids, nearest first), for

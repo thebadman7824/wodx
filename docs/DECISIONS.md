@@ -213,7 +213,7 @@ Next free block: B4660
 | B4160-B4169 | Canada first nations names in the People generator (used B4160-B4162) | Creation, Chronicle |
 | B4600-B4609 | Show, don't tell: a visible: line on every feature's release note (used B4600) | tools (no module) |
 | B4610-B4619 | The PC runner rechecks every failing gate before it reports (used B4610) | tools (no module) |
-| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4635) | Storyteller |
+| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4635) | NPC |
 | B4650-B4659 | Inuit names in the People generator (used B4650-B4652) | Creation, Chronicle |
 <!-- decision-index:end -->
 
@@ -7037,6 +7037,12 @@ Show-don't-tell desk v10. WoDX Storyteller (OMEN_LOOKS, EVENT_LOOKS, showOmen, s
 
 ## B4629. A town's prosperity and unrest show (2026-11-14)
 Show-don't-tell desk v11. WoDX Storyteller (prosperityLooksFor, syncProsperity). A rich town (prosperity 4 or 5) shows six or ten lit windows; a poor one (0 or 1) three or six beggars at the corners; an angry one (unrest 3, 4, 5) two, four or six words daubed on the walls. Getting by and grumbling show nothing, and small moves inside a band draw nothing new. House rules. Reverse: remove syncProsperity from setupTownLooks.
+
+## B4630. A district fed on too much empties at night (2026-11-14)
+Show-don't-tell desk v12, approved by Ben 2026-11-14. WoDX NPC (passerby-rules.mjs herdCrowd, herdStageAt; passersby.mjs). The passers-by on a scene read WoDX Storyteller's herd stage there for this month: after dark (7 PM to 6 AM) a Thinning district has three quarters of its people out, an Over-hunted one half, a Stripped one a quarter. By day the streets are as the town makes them, and a new month fills the herd again. House rule. Reverse: drop the herdCrowd factor in passersby.mjs.
+
+## B4631. A held place shows its holder's banner (2026-11-14)
+Show-don't-tell desk v5. WoDX NPC (faction-look-rules.mjs, faction-looks.mjs). A place a faction holds shows the faction's banner, a flag and its name in a colour that comes from the faction itself: two at the gates of a held scene, one at the middle of a held place inside a scene. A secret or dormant faction shows none. Whenever the factions change, every scene's banners are drawn again to match, through WoDX Storyteller's townLooks.setLooks, so a place changing hands swaps its banner. Guards in the holder's colours among the passers-by are left for later. World setting factionBanners, on by default. Reverse: turn factionBanners off, or remove setupFactionLooks from main.mjs.
 
 ## B4632. Tokens show frenzy, Rotschreck and a derangement bout (2026-11-14)
 Show-don't-tell desk c1 and c3, approved by Ben 2026-11-14. WoDX Chronicle (token-look-rules.mjs, token-looks.mjs). A token whose actor has the Frenzy condition gets a red glow under it, a reddish tint and a slight shake, for everyone; Rotschreck a cold blue glow that flickers. A derangement bout (the Deranged condition) darkens, blurs, reddens, greys, brightens or greens the edges of the screen by the derangement, for the character's own player only (their assigned character or the tokens they control), since it happens inside the head; the Storyteller's screen stays clear. Drawn on each client from statuses and flags, never saved. Each player's effects level (wodx-chronicle.fxLevel, when the shared looks set it up) is obeyed: Light drops the shake, the flicker and the swim, Off shows nothing. api.tokenLooks.register(key, fn) lets other modules add looks (fn(token) returns {tint, aura, shake, flicker} or null), which may depend on who watches. Colours and strengths are house rules. Reverse: remove setupTokenLooks from main.mjs.
