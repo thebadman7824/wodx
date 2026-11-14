@@ -213,7 +213,7 @@ Next free block: B4650
 | B4160-B4169 | Canada first nations names in the People generator (used B4160-B4162) | Creation, Chronicle |
 | B4600-B4609 | Show, don't tell: a visible: line on every feature's release note (used B4600) | tools (no module) |
 | B4610-B4619 | The PC runner rechecks every failing gate before it reports (used B4610) | tools (no module) |
-| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620) | Storyteller |
+| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4621) | Otherworlds |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7009,3 +7009,6 @@ Reverse: drop recheck() from tools/pcq/runner.mjs.
 
 ## B4620. Town events leave marks on the town's scenes (2026-11-14)
 Show-don't-tell desk v1, approved by Ben 2026-11-14. WoDX Storyteller (town-look-rules.mjs, town-looks.mjs). A town event (the wodxTown hook, from the town turn, a sack, news or a power) used to post a line in chat only. Now each scene of that town's market gets marks by event: fire gives three fire spots and smoke over the scene for a day, then three burnt-out spots for four weeks; flood gives water in the lowest third for three days, rain for a day and wreckage for two weeks; storm, quake, riot, rising, sack, blight, dread and calm have their own sets. The spots are seeded by town, scene and turn. Marks go through WoDX Chronicle's looks layer (api.looks.show) when it is there, which draws them with the effects modules and obeys each player's effects level; without it, a locked plain drawing stands in. They end with game time (swept every ten game minutes) and the town card's Undo removes the marks made since the turn. How many marks and how long they last are house rules. World setting townLooks, on by default. Reverse: turn townLooks off, or remove setupTownLooks from main.mjs.
+
+## B4621. Wyrm corruption shows on the place's scene (2026-11-14)
+Show-don't-tell desk v2, approved by Ben 2026-11-14. WoDX Otherworlds (corruption-look-rules.mjs, corruption-looks.mjs). A tainted place's level, sources and Banes were numbers in a window and a weekly card. Now its scene shows them: a green-grey cast over the whole scene, a quarter strength when tainted, half when blighted, three quarters when foul and full in a hellhole; a patch of sludge and dead growth for each source, larger in a worse band; and a murky haze for each Bane, six at most. The marks follow the state, not the clock: any change to the place's corruption flag draws them again, the same state never draws twice, and a cleansed or untracked place has none. Spots are seeded by the scene. They go through WoDX Chronicle's looks layer when it is there, else locked plain drawings. Strengths and sizes are house rules. World setting wyrmLooks, on by default. Reverse: turn wyrmLooks off, or remove setupCorruptionLooks from main.mjs.
