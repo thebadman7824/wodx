@@ -239,11 +239,11 @@ export function numinaPlan(actor, key, level, successes, def) {
  * Any other power with keywords (a Discipline, a Gift): its keywords on the effects card (Traits With Teeth step 4).
  * set and id name the power in power-keywords.js; line is the line list to try by name. Off when the world setting is off.
  */
-export function powerPlan(actor, {set, id, name, line = null, successes, source = ""} = {}) {
+export function powerPlan(actor, {set, id, name, line = null, successes, source = "", noRoll = false} = {}) {
   if ( !isOn() || !powerEffectsOn() ) return {items: [], html: "", skipped: []};
   const kw = PW.powerKeywords(set, id, name, line);
   const t = targetsOf(actor);
-  const {results, skipped} = PW.powerOutcomes(kw, successes, {label: name, source, hasTarget: !t.self && t.docs.length > 0});
+  const {results, skipped} = PW.powerOutcomes(kw, successes, {label: name, source, hasTarget: !t.self && t.docs.length > 0, noRoll});
   const plan = planOf(actor, results, successes);
   if ( skipped.length ) plan.html += `<p class="wodx-quiet">Needs a target: ${esc(skipped.join(", "))}.</p>`;
   return {...plan, skipped};

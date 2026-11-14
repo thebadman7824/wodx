@@ -46,6 +46,10 @@ const CB = await import(pathToFileURL(path.join(ROOT, "modules/wodx-combat/scrip
 const INFO = new Set(["sense", "know", "speak"]);
 const applyingKw = (ks = []) => ks.some(k => E.KEYWORDS[k] && E.KEYWORDS[k].tier !== "st" && !INFO.has(k));
 const applyingSpec = s => !!s && !["note", "st"].includes(s.kind);
+/** Keywords a power used with no roll applies (its Harm readies the user; the attack roll deals it, B3751). */
+const noRollKw = (ks = []) => applyingKw(ks.map(k => k === "harm" ? "boost" : k));
+/** Always-on Disciplines WoDX Combat reads by rating: soak, damage dice and extra actions or speed. */
+const COMBAT_READS = new Set(["Celerity", "Fortitude", "Potence"]);
 const slug = s => PK.slugOf ? PK.slugOf(s) : String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 const rows = [];
@@ -58,9 +62,11 @@ const v20Lib = new Map(J("disciplines-v20.json").powers.map(p => [p.kw, p]));
 for ( const p of disc ) {
   const kw = PK.keywordsOf("disc", p.id);
   const path = PE.PATH_EFFECTS[p.id];
-  let status = !p.r ? "card" : path ? (applyingSpec(path) ? "applies" : "card") : (kw && !kw.passive && applyingKw(kw.keywords) ? "applies" : "card");
-  add("Vampire (Dark Ages)", p.d, p.n, { status, kw: kw?.keywords ?? (path ? [path.kw] : []), page: `VtDA20 p. ${p.p ?? "?"}`, passive: !!kw?.passive || !!p.passive,
-    how: path ? "path magic effect spec" : "Discipline roll, keywords, timed effect on the token" });
+  const passive = !!kw?.passive || !!p.passive, combat = passive && COMBAT_READS.has(p.d);
+  let status = combat ? "applies" : path && p.r ? (applyingSpec(path) ? "applies" : "card")
+    : (kw && !passive && (p.r ? applyingKw(kw.keywords) : noRollKw(kw.keywords)) ? "applies" : "card");
+  add("Vampire (Dark Ages)", p.d, p.n, { status, kw: kw?.keywords ?? (path ? [path.kw] : []), page: `VtDA20 p. ${p.p ?? "?"}`, passive,
+    how: combat ? "WoDX Combat reads the rating (soak, damage dice, actions and speed)" : path && p.r ? "path magic effect spec" : p.r ? "Discipline roll, keywords, timed effect on the token" : "no roll: one success, keywords and timed effect on the token" });
 }
 /* -- Vampire: V20 (modern) Disciplines: the same window when a Dark Ages power has the name, else the system roll */
 for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.v20) ) {
@@ -72,7 +78,7 @@ for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.v20) ) {
 /* -- Werewolf: Dark Ages Gifts (garou.js) */
 for ( const g of J("gifts-daw.json").gifts ) {
   const kw = PK.keywordsOf("gift", g.id);
-  add("Werewolf (Dark Ages)", "Gifts", g.n, { status: kw && !kw.passive && applyingKw(kw.keywords) && g.r ? "applies" : "card", kw: kw?.keywords ?? [], passive: !!kw?.passive, page: `DA:W p. ${g.p}`, how: "Gift roll, keywords, timed effect" });
+  add("Werewolf (Dark Ages)", "Gifts", g.n, { status: kw && !kw.passive && (g.r ? applyingKw(kw.keywords) : noRollKw(kw.keywords)) ? "applies" : "card", kw: kw?.keywords ?? [], passive: !!kw?.passive, page: `DA:W p. ${g.p}`, how: "Gift roll, keywords, timed effect" });
 }
 const daGift = new Set(J("gifts-daw.json").gifts.map(g => slug(g.n)));
 /* -- Werewolf: W20 Gifts (garou.js reads data/gifts-w20.json by name: pool, cost, duration, effect and page) */

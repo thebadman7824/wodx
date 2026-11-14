@@ -467,8 +467,9 @@ export function build(ctx) {
             }
             // The Gift's keywords on the effects card (Traits With Teeth step 4): the Dark Ages library, else the W20 list by name
             let fxItems = [];
-            if (code && successes > 0 && EF.isOn()) {
-                const pp = EF.powerPlan(actor, { set: "gift", id: g?.book === "W20" ? "" : (g?.id ?? ""), name: it.name, line: "w20", successes, source: g ? giftRef(g) : "W20" });
+            // A library Gift with no roll counts one success (B3751)
+            if ((code || g) && successes > 0 && EF.isOn()) {
+                const pp = EF.powerPlan(actor, { set: "gift", id: g?.book === "W20" ? "" : (g?.id ?? ""), name: it.name, line: "w20", successes, source: g ? giftRef(g) : "W20", noRoll: !code });
                 body += pp.html;
                 fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             }

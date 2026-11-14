@@ -37,3 +37,17 @@ test("Wraith arts with an applying keyword put it on the effects card (B3740)", 
   const got = PW.powerOutcomes(PW.powerKeywords("wraith", a.id), 3, {label: a.n, hasTarget: true});
   assert.ok(got.results.some(r => r.key === "harm"), `${a.n} does no harm on the card`);
 });
+
+test("Dark Ages powers with no roll and the always-on combat Disciplines take effect (B3751)", async () => {
+  const PW = await import("../../modules/wodx-actions/scripts/power-effects.js");
+  const da = [...line("Vampire (Dark Ages)"), ...line("Werewolf (Dark Ages)")];
+  assert.ok(da.filter(r => r.status === "card").length <= 118, "Dark Ages card-only powers rose");
+  for ( const d of ["Celerity", "Fortitude", "Potence"] )
+    assert.ok(line("Vampire (Dark Ages)").filter(r => r.group === d && r.passive).every(r => r.status === "applies"), `${d} is read by WoDX Combat`);
+  const claws = PW.powerOutcomes(PW.powerKeywords("disc", "protean-feral-weapons"), 1, {label: "Feral Weapons", noRoll: true});
+  assert.ok(!claws.results.some(r => r.key === "harm"), "no damage without the attack roll");
+  const ready = claws.results.find(r => r.key === "boost");
+  assert.equal(ready?.who, "self"); assert.equal(ready.out.timed.kind, "scene");
+  const hit = PW.powerOutcomes(PW.powerKeywords("disc", "protean-feral-weapons"), 2, {label: "Feral Weapons", hasTarget: true});
+  assert.ok(hit.results.some(r => r.key === "harm"), "a rolled use still harms");
+});
