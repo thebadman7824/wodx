@@ -301,6 +301,10 @@ export function attackPool(p) {
     if (p.opponents > 1) addD("Multiple opponents", Math.min(4, p.opponents - 1));
     if (p.blind) addD("Blind", 2);
     addD("Other", p.extraDiff || 0);
+    // B3800, B3801: the sheet's own attack rows, and a shield in the target's hands
+    add("Sheet bonuses", p.sheetDice || 0);
+    addD("Sheet bonuses", p.sheetDiff || 0);
+    addD("Shield", p.shieldDiff || 0);
     return { dice: Math.max(0, dice), difficulty: diff, parts };
 }
 
@@ -458,3 +462,96 @@ export function fightNoise(w = {}) {
 }
 
 export const isCrossbow = name => /crossbow|arbalest|arbalète|armbrust/i.test(String(name ?? ""));
+
+/* ------------------------------------------------------------------ */
+/*  Gear in the fight (B3800 to B3803)                                  */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The system's own bonus list, summed: active rows of this type (and setting, when given) on the actor's items and
+ * active Bonus items. items: [{type, system: {isactive, type, settingtype, value, bonuslist}}].
+ */
+export function sheetBonus(items, type, setting = null) {
+    let n = 0;
+    const hit = (t, s) => t === type && (setting === null || s === setting || (type === "soak_buff" && (s === "all" || s === "")));
+    for (const i of items ?? []) {
+        const s = i?.system ?? {};
+        if (i?.type === "Bonus" && s.isactive && hit(s.type, s.settingtype)) n += Number(s.value) || 0;
+        for (const b of Array.isArray(s.bonuslist) ? s.bonuslist : []) if (b?.isactive && hit(b.type, b.settingtype)) n += Number(b.value) || 0;
+    }
+    return n;
+}
+
+/** Parrying weapons (V20 Dark Ages p. 350): a dagger parries at 5, a sword at 6 and adds 1 to close attacks. */
+export const PARRY_WEAPONS = [
+    { re: /\b(dagger|knife|dirk|stiletto|main-gauche|poniard|kris|tanto)\b/i, parry: 5, attack: 0, closeOnly: false, label: "parrying dagger" },
+    { re: /\b(sword|sabre|saber|rapier|falchion|scimitar|katana|cutlass|broadsword|longsword|greatsword|shamshir|tulwar|jian|dao)\b/i, parry: 6, attack: 1, closeOnly: true, label: "parrying sword" }
+];
+
+/**
+ * What a defender's shields and parrying weapon do: shields [{name, parry, attack, closeOnly}] (equipped only),
+ * weapon: the name of the defender's equipped melee weapon, close: the attack is close combat.
+ * Returns {parryDiff (null: the usual 6), attackDiff, names}. The best of each counts, not the sum.
+ */
+export function shieldFor({ shields = [], weapon = "", close = true } = {}) {
+    let parryDiff = null, attackDiff = 0;
+    const names = [];
+    const pw = weapon ? PARRY_WEAPONS.find(p => p.re.test(weapon)) : null;
+    const all = [...shields, ...(pw ? [{ name: `${weapon} (${pw.label})`, parry: pw.parry, attack: pw.attack, closeOnly: pw.closeOnly }] : [])];
+    for (const s of all) {
+        let used = false;
+        if (s.parry && (parryDiff === null || s.parry < parryDiff)) { parryDiff = s.parry; used = true; }
+        if (s.attack && (!s.closeOnly || close) && s.attack > attackDiff) { attackDiff = s.attack; used = true; }
+        if (used) names.push(s.name);
+    }
+    return { parryDiff, attackDiff, names };
+}
+
+/** Bases of a cyber limb: the strongest counts; Reinforced Joints and limb Armor add to it (World of Future Darkness p. 24). */
+const LIMB_OPTIONS = /^(Reinforced Joints|Armor)$/;
+/**
+ * A cyber limb's or plate's own soak against a blow aimed at it. limbs: [{name, soak, part}]; aim: the part type aimed
+ * at (hit locations: arm, leg, hand, head, face, eye, mouth) or, without hit locations, the targeting size
+ * (medium = a limb, small = the head).
+ */
+const AIM_PART = { arm: "limb", leg: "limb", hand: "limb", head: "head", face: "head", eye: "head", mouth: "head", medium: "limb", small: "head" };
+export function limbSoak(limbs = [], aim = "none") {
+    const part = AIM_PART[aim] ?? null;
+    if (!part) return { dice: 0, names: [] };
+    const mine = limbs.filter(l => (l.part ?? "limb") === part);
+    const bases = mine.filter(l => !LIMB_OPTIONS.test(l.name)), opts = part === "limb" ? mine.filter(l => LIMB_OPTIONS.test(l.name)) : [];
+    if (!bases.length) return { dice: 0, names: [] };
+    const base = bases.reduce((a, b) => (b.soak > a.soak ? b : a));
+    return { dice: base.soak + opts.reduce((a, b) => a + b.soak, 0), names: [base.name, ...opts.map(o => o.name)] };
+}
+
+/**
+ * The Great War's heavy fire (pp. 73 to 77). pen: roll the gun's penetration dice against the armour's difficulty
+ * (a still target −2, firing on the move +2): 1 success harms the crew or kit, 3 stop the vehicle, 5 destroy it.
+ * naval: the gun's damage rating plus the crew's successes, rolled against the ship's armour as difficulty.
+ * blast: dice of damage on each person in the blast, plus one per success on the crew's roll.
+ */
+export function heavyPlan({ heavy = {}, armour = {}, still = false, moving = false, crew = 0 } = {}) {
+    if (heavy.naval) {
+        const diff = Math.min(10, Math.max(2, armour.ship || 6));
+        return { kind: "naval", dice: heavy.naval + Math.max(0, crew), diff, note: `damage rating ${heavy.naval} + ${Math.max(0, crew)} crew successes against the ship's armour ${diff}` };
+    }
+    if (heavy.pen) {
+        const parts = [];
+        let diff = armour.pen || 6;
+        if (still) { diff -= 2; parts.push("still target −2"); }
+        if (moving) { diff += 2; parts.push("firing on the move +2"); }
+        diff = Math.min(10, Math.max(2, diff));
+        return { kind: "pen", dice: heavy.pen, diff, note: `${heavy.pen} penetration dice at difficulty ${diff}${parts.length ? ` (${parts.join(", ")})` : ""}` };
+    }
+    if (heavy.blast) return { kind: "blast", dice: heavy.blast + Math.max(0, crew), diff: 6, note: `${heavy.blast} dice + ${Math.max(0, crew)} on each person in the blast${heavy.radius ? ` (${heavy.radius} feet)` : ""}` };
+    return { kind: "none", dice: 0, diff: 6, note: "no heavy-fire figures" };
+}
+
+/** What penetration successes do to a vehicle or emplacement. */
+export function penetrationResult(successes) {
+    if (successes >= 5) return "destroyed";
+    if (successes >= 3) return "disabled";
+    if (successes >= 1) return "crew or kit harmed";
+    return "no effect";
+}

@@ -86,7 +86,8 @@ export async function run() {
     await step("4. earshot", async () => {
       await game.settings.set(MOD, "overheard", true);
       await game.settings.set(MOD, "overheardChance", 1);
-      const [, , me] = await place(ear, [[mk[2], 5, 5], [mk[3], 6, 5], [listener, 18, 5]]);
+      // the tokens need not come back in the order asked: the listener's is found by its actor
+      const me = (await place(ear, [[mk[2], 5, 5], [mk[3], 6, 5], [listener, 18, 5]])).find(t => t.actorId === listener.id);
       const wasPaused = game.paused;
       if ( wasPaused ) await game.togglePause(false, {broadcast: true});
       await sleep(200);

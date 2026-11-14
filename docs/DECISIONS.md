@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3810
+Next free block: B3820
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -195,7 +195,8 @@ Next free block: B3810
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
 | B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3749) | Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
-| B3780-B3809 | The no-effect audit: cyberware reaches the senses (used B3780-B3799) | Senses |
+| B3780-B3809 | The no-effect audit: gear in the fight (used B3780-B3803) | Combat |
+| B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6505,3 +6506,43 @@ Reverse: drop withArms from tools/library/build-gear.mjs and rebuild gear.json.
 WoDX Senses. traitsOf reads WoDX Library's api.cyber.installedFx(actor).senses, and powersFor lays it in: a dark-sight piece takes away the darkness step for sight (as Eyes of the Cat; a power that already does it keeps its name), and each sense piece makes its sense one step easier, shown by name among the roll's reasons. Pieces count only while installed (equipped). The steps add up as powers do; the floor on difficulty still holds.
 
 Reverse: drop the gear line in traitsOf and the two lines in powersFor.
+
+## B3800. Combat reads the sheet's own bonus rows (2026-11-14)
+WoDX Combat. R.sheetBonus sums active rows of the system's bonus list on every item, and active Bonus items: attack_buff and attack_diff by weapon type ("TYPES.Item.Melee Weapon" / "TYPES.Item.Ranged Weapon", not for natural weapons) go into the attack pool as "Sheet bonuses", initiative_buff into the initiative roll, soak_buff ("all", or the damage's type) into the soak pool. Combat rolled its own pools and left these rows out, so cyberware and made wonders did nothing in a WoDX fight.
+
+Reverse: drop the sheetDice, sheetDiff, sheetSoak and sheetInit terms.
+
+## B3801. Shields and parrying weapons (2026-11-14)
+WoDX Combat. A shield the defender carries (equipped, with WoDX Library's shield figures) sets the parry difficulty (the lowest counts) and adds the highest attacker difficulty to attacks against the bearer (V20 Dark Ages p. 350; Sorcerers Crusade p. 202). The melee weapon in hand parries as the chart's dagger (5) or sword (6, +1 to close attacks only) when its name is one of those kinds. Shields do not stack.
+
+Reverse: drop shieldFor in planDefense and the shieldDiff term.
+
+## B3802. Cyberware in the body counts in the fight (2026-11-14)
+WoDX Combat. From WoDX Library's api.cyber.installedFx: a Pain Editor's ease joins Chronicle's toughness (the higher counts), so its wound penalty stays at 0 until Incapacitated; a cyberarm's Potence (1, 2 for Thickened Myomar, 3 for Hydraulic Rams) adds dice to Strength-based bare-handed or brawl damage; a cyber limb soaks a blow aimed at an arm, leg or hand with its own dice (the strongest limb, plus Reinforced Joints and limb Armor), and a cowl or faceplate a blow aimed at the head or face. Without hit locations a Medium target means a limb and a Small one the head.
+
+Reverse: drop the cyber() reads in toughness, damagePool and soakPoolFor.
+
+## B3803. Heavy fire (2026-11-14)
+WoDX Combat. api.heavyFire and the "WoDX: Heavy Fire" macro roll the Great War's heavy guns (Wraith: The Great War pp. 70 to 77) from their Library figures: penetration dice against the armour's difficulty, −2 for a still target and +2 when firing on the move, where 1 success harms the crew or kit, 3 stop the vehicle and 5 destroy it; a naval gun's damage rating plus the crew's successes against the ship's armour, each success one level of hull damage; a blast's dice (plus crew successes) on each targeted token, soaked through Soak & Apply. The armour comes from an item on the targeted token or from the chart. The crew's own aiming roll stays with the player; there are no vehicle sheets.
+
+Reverse: remove heavyFire, heavyFireDialog and the macro.
+
+## B3810. Hedge magic Enchantment makes real talismans (2026-11-14)
+WoDX Library (scripts/wonders-hedge.mjs). Ben picked the full build on the Item Crafting Desk (m4). Anyone with the Path of Enchantment as a hedge path (a numina Power item, as WoDX Actions reads it) can make talismans up to the level of the path: hedge sorcerers, hunters of the Hunters Hunted era, Kinfolk and ghouls alike. The book is Sorcerer (Revised), pdf 72-75, read from the PC's text pull. The talisman levels follow its five tiers, in WoDX's own words. A world setting (craftHedge, on) turns the line off.
+
+Reverse: drop the import of wonders-hedge.mjs from scripts/wonder-lines.mjs.
+
+## B3811. The work and its one roll (2026-11-14)
+WoDX Library. The object is crafted first (the Storyteller's Crafts roll, narrated). The Enchantment then runs as a long task: two days a level of work (the book gives one to three), then a single Intelligence + Occult roll, or Intelligence + Science for a technosorcerer, at difficulty 4 + level, one less for a mastered Enchantment, with a point of Willpower paid on the roll (Storyteller's perRoll, B3689). The task allows one roll (maxRolls 1).
+
+Reverse: daysOf and taskFor in wonders-hedge.mjs.
+
+## B3812. A fine object helps; a failed roll wastes the Willpower (2026-11-14)
+WoDX Library. The book says an exceptional crafting result may make the Enchantment easier; WoDX takes 1 off the difficulty for it (house), never below 3. A failed or botched roll leaves the object ordinary, and the Willpower stays spent.
+
+Reverse: difficultyOf in wonders-hedge.mjs.
+
+## B3813. What a talisman holds (2026-11-14)
+WoDX Library. The book's examples become seven kinds of power: Attribute dots while carried (the item's worn bonus), dice to one kind of roll, difficulty off one kind of roll, damage dice, soak dice, a ward against magic, or the Storyteller's own. Levels 1 and 2 give at most 2, level 3 at most 3, levels 4 and 5 up to 5. A talisman works always, once a day, once per success on the roll (then it is spent) or once. Its keeping, the condition most book talismans carry, is the Storyteller's to write.
+
+Reverse: POWERS, USES and LEVELS in wonders-hedge.mjs.

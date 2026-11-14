@@ -186,7 +186,30 @@ function woundPenalty(actor) {
 
 /** B3793: what the character's merits and flaws do to the body in a fight (WoDX Chronicle), or null. */
 function toughness(actor) {
-    try { return chronicle()?.traits?.toughness?.(actor) ?? null; } catch (e) { return null; }
+    let t = null;
+    try { t = chronicle()?.traits?.toughness?.(actor) ?? null; } catch (e) { t = null; }
+    // B3802: a Pain Editor (WoDX Library cyberware) eases the wound penalty as High Pain Tolerance does
+    const ease = num(cyber(actor)?.body?.ease);
+    if (!ease) return t;
+    const base = t ?? { bruised: 0, shift: 0, ease: 0, silver: false, names: [] };
+    return { ...base, ease: Math.max(num(base.ease), ease), names: [...(base.names ?? []), ...(cyber(actor)?.names ?? []).filter(n => /pain editor/i.test(n))] };
+}
+
+/** B3800: what installed cyberware gives the character (WoDX Library api.cyber.installedFx), or null. */
+function cyber(actor) {
+    try { return game.modules.get("wodx-library")?.api?.cyber?.installedFx?.(actor) ?? null; } catch (e) { return null; }
+}
+
+/** B3801: the shields the character carries (equipped) and the melee weapon in hand. */
+function shieldsOf(actor) {
+    const shields = [];
+    for (const i of actor?.items ?? []) {
+        const s = i.flags?.["wodx-library"]?.shield;
+        if (s && i.system?.isequipped) shields.push({ name: i.name, parry: num(s.parry) || null, attack: num(s.attack), closeOnly: !!s.closeOnly });
+    }
+    const mw = (actor?.items ?? []).filter(i => i.type === "Melee Weapon" && !i.system?.isnatural);
+    const weapon = (mw.find(i => i.system?.isequipped) ?? null)?.name ?? "";
+    return { shields, weapon };
 }
 
 function healthTrack(actor) {
@@ -720,6 +743,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         const p = tBody.parts.find(x => x.id === fd.aim);
         const size = p ? BodyRules.PART_TYPES[p.type]?.size : null;
         if (size && R.TARGETING[size]) fd.targeting = size;
+        if (p) fd.aimType = p.type;
     }
     const targeting = R.TARGETING[fd.targeting] ?? R.TARGETING.none;
     const pot = discipline(attacker, "Potence");
@@ -781,7 +805,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         if (use) boostSpend.push([bo.res, use]);
     }
     if (rageAction) fd.multi = 0;
-    const pool = attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice);
+    const pool = attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice, target);
     if (pool.difficulty > 10) log.push(`<b>Difficulty ${pool.difficulty}:</b> above 10: the action is impossible (VtDA20 p. 323). Rolled at 10.`);
 
     let bloodSpent = (fd.potBlood ? 1 : 0) + (fd.celMulti ? 1 : 0) + (fd.extraBlood || 0);
@@ -938,8 +962,14 @@ function attackBasics(attacker, w) {
 /** Combat 3.25.0 (B2902): the parts the attacker has marked Crippled. */
 const crippledParts = a => (a?.effects?.contents ?? [...(a?.effects ?? [])]).map(e => e?.flags?.[MOD]?.crippled).filter(Boolean);
 
-function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0) {
+function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0, target = null) {
     const { attrKey, ab, minStrDiff } = attackBasics(attacker, w);
+    // B3800: the system's own bonus rows (cyberware, made wonders, Bonus items) for this kind of weapon
+    const wtype = `TYPES.Item.${w.ranged ? "Ranged Weapon" : "Melee Weapon"}`;
+    const sheetDice = w.natural ? 0 : R.sheetBonus(attacker?.items, "attack_buff", wtype);
+    const sheetDiff = w.natural ? 0 : R.sheetBonus(attacker?.items, "attack_diff", wtype);
+    // B3801: a shield or parrying weapon in the target's hands makes it harder to hit
+    const sh = target ? R.shieldFor({ ...shieldsOf(target), close: isCloseCombat(w) }) : { attackDiff: 0 };
     const cel = discipline(attacker, "Celerity");
     // 3.20.1: in the saddle no Ability counts past the rider's Ride (V20 Dark Ages p. 399)
     let held = { value: ab.value, label: ab.name };
@@ -956,7 +986,8 @@ function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0) {
         crippledDiff: BodyRules.crippledAttackDiff(crippledParts(attacker), w),
         // Storyteller 0.64.0 (B2911): a night after bad dreams (the Nightmares Flaw) costs a die
         nightmareDice: Math.max(0, ...[...(attacker?.effects ?? [])].filter(e => !e.disabled).map(e => Number(e.flags?.["wodx-storyteller"]?.diceLess) || 0)),
-        bypassArmor: fd.bypass, opponents: fd.opponents, blind: fd.blind, extraDiff: fd.extraDiff
+        bypassArmor: fd.bypass, opponents: fd.opponents, blind: fd.blind, extraDiff: fd.extraDiff,
+        sheetDice, sheetDiff, shieldDiff: sh.attackDiff
     });
 }
 
@@ -979,11 +1010,14 @@ function damageProfile(target, tKind, w, fd) {
 
 function soakPoolFor(target, profile, w, fd, dp) {
     const arm = armor(target);
+    // B3802: a cyber limb or plate soaks a blow aimed at it with its own dice; B3800: the sheet's soak rows
+    const limb = R.limbSoak(cyber(target)?.limbs ?? [], fd.aimType ?? fd.targeting);
+    const sheetSoak = R.sheetBonus(target?.items, "soak_buff", dp.dmgType);
     return R.soakPool({
         profile, damageType: dp.dmgType,
         stamina: attr(target, "stamina"), fortitude: discipline(target, "Fortitude"),
-        armor: arm[dp.dmgType] ?? 0, armorPiercing: w.piercing, bypassArmor: fd.bypass,
-        fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: fd.soakBonus,
+        armor: (arm[dp.dmgType] ?? 0) + limb.dice, armorPiercing: w.piercing, bypassArmor: fd.bypass,
+        fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: num(fd.soakBonus) + sheetSoak,
         aggSoak: garouRules()?.isShifter?.(target) ? garouRules().aggSoak(target) : true,
         ...soakOpts(target, profile)
     });
@@ -1063,7 +1097,7 @@ function planAttacks(attacker, target, fd, distance, reachD = distance) {
         let rangeBand = null;
         if (w.ranged && distance != null && w.range > 0) rangeBand = distance <= w.range ? "short" : distance <= w.range * 2 ? "double" : "triple";
         const f = { ...fd, range: rangeBand ?? fd.range };
-        const pool = attackPoolFor(attacker, w, f, maneuver, targeting);
+        const pool = attackPoolFor(attacker, w, f, maneuver, targeting, 0, target);
         if (pool.dice <= 0) { plans.push({ w, valid: false, why: "no dice to roll", score: -1 }); continue; }
         let defDice = 0, defDiff = 6;
         if (target && f.defense !== "none") {
@@ -1109,8 +1143,14 @@ function planDefense(target, type, fd, w, maneuver) {
     const cel = fd.defCel ? discipline(target, "Celerity") : 0;
     const dice = Math.max(0, attr(target, "dexterity") + ab.value + (setting("celerityDice") ? cel : 0) + (fd.defDice || 0)
         + woundPenalty(target) - num(fd.defIndex));
-    let diff = 6 + (fd.defDiff || 0) + (maneuver.defDiff || 0);
     const notes = [];
+    // B3801: a shield or parrying weapon sets the parry's difficulty (V20 Dark Ages p. 350)
+    let base = 6;
+    if (type === "parry") {
+        const sh = R.shieldFor({ ...shieldsOf(target), close });
+        if (sh.parryDiff) { base = sh.parryDiff; notes.push(`${sh.names.join(", ")}: parry at ${sh.parryDiff}`); }
+    }
+    let diff = base + (fd.defDiff || 0) + (maneuver.defDiff || 0);
     if (type === "dodge" && w.ranged) {
         if (cel) notes.push("Celerity: no penalty to dodge missiles");
         else { diff += 2; notes.push("dodging missiles +2 diff"); }
@@ -1157,6 +1197,8 @@ function damagePool(attacker, w, net, maneuver, targeting, fd, pot) {
         if (fd.potBlood) { auto = pot; parts.push(`Potence ${pot} auto successes`); }
         else if (setting("potenceDice")) add("Potence", pot);
     }
+    // B3802: a cyberarm's own strength (Potence of its level, World of Future Darkness p. 24) on bare-handed blows
+    if (strBased && (w.natural || w.ability === "brawl")) add("Cyber arm", num(cyber(attacker)?.body?.potence));
     add("Weapon", w.dmgBonus);
     add("Net successes", net);
     add("Maneuver", maneuver.dmg);
@@ -1458,7 +1500,9 @@ export async function rollInitiative({ combat = game.combat, combatants = null, 
         // Celerity adds nothing to Initiative (V20 pdf 150 / p. 142)
         const cel = 0;
         const wp = woundPenalty(a);
-        const roll = new Roll(`1d10 + ${dex} + ${wits} + ${cel} + ${wp > -99 ? wp : 0}`);
+        // B3800: initiative rows on the sheet (Kerenzikov, Speedware, made wonders)
+        const sheetInit = R.sheetBonus(a.items, "initiative_buff");
+        const roll = new Roll(`1d10 + ${dex} + ${wits} + ${cel} + ${wp > -99 ? wp : 0} + ${sheetInit}`);
         if (GEN() < 12) await roll.evaluate({ async: true }); else await roll.evaluate();
         rolls.push(roll);
         // Ties go to the higher rating (Dexterity + Wits), encoded as decimals.
@@ -1466,7 +1510,7 @@ export async function rollInitiative({ combat = game.combat, combatants = null, 
         const value = roll.total + rating / 100;
         updates.push({ _id: c.id, initiative: value });
         const inc = wp <= -99 ? ": <i>Incapacitated, cannot act</i>" : "";
-        lines.push(`<tr><td>${c.name}</td><td>${roll.dice[0].total}</td><td>${dex}+${wits}${cel ? `+${cel}` : ""}${wp ? ` ${wp > -99 ? wp : ""}` : ""}</td><td><b>${roll.total}</b>${inc}</td></tr>`);
+        lines.push(`<tr><td>${c.name}</td><td>${roll.dice[0].total}</td><td>${dex}+${wits}${cel ? `+${cel}` : ""}${sheetInit ? `+${sheetInit}` : ""}${wp ? ` ${wp > -99 ? wp : ""}` : ""}</td><td><b>${roll.total}</b>${inc}</td></tr>`);
     }
     await combat.updateEmbeddedDocuments("Combatant", updates);
     const extra = list.map(c => [c.name, freeActionsIn(c.actor, combat)]).filter(([, n]) => n > 0);
@@ -1479,12 +1523,74 @@ export async function rollInitiative({ combat = game.combat, combatants = null, 
 }
 
 /* ------------------------------------------------------------------ */
+/*  Heavy fire (B3803): the Great War's guns against tanks, works and ships */
+/* ------------------------------------------------------------------ */
+
+const heavyOf = i => i?.flags?.["wodx-library"]?.heavy ?? null;
+const hardOf = i => i?.flags?.["wodx-library"]?.hardArmor ?? null;
+
+/**
+ * Fire a heavy gun: gun (an item with Library heavy figures), armour (an item with hardArmor figures, or
+ * {pen} / {ship}), targets (tokens in a blast), still, moving, crew (the crew's successes on their own roll).
+ * Penetration and naval fire roll against the armour and say what the hit did; blast fire rolls each target's
+ * damage and soak through soakAndApply. Returns {plan, successes, result} and posts a card.
+ */
+export async function heavyFire({ gun, armour = null, targets = [], still = false, moving = false, crew = 0, card = true } = {}) {
+    const heavy = heavyOf(gun) ?? gun?.heavy ?? gun ?? {};
+    const arm = hardOf(armour) ?? armour ?? {};
+    const plan = R.heavyPlan({ heavy, armour: arm, still, moving, crew: num(crew) });
+    const name = gun?.name ?? "Heavy gun";
+    const L = [`<div class="vtc-sec"><b>${esc(name)}</b>: ${esc(plan.note)}</div>`];
+    let successes = 0, result = "";
+    const rolls = [];
+    if (plan.kind === "pen" || plan.kind === "naval") {
+        const r = await rollPool(plan.dice, plan.diff, { canBotch: false });
+        if (r.roll) rolls.push(r.roll);
+        successes = Math.max(0, r.successes);
+        result = plan.kind === "pen" ? R.penetrationResult(successes) : `${successes} hull damage`;
+        L.push(`<div>Against <b>${esc(armour?.name ?? (arm.pen ? `armour ${arm.pen}` : `ship's armour ${arm.ship}`))}</b>: ${successes} success${successes === 1 ? "" : "es"} (${r.faces.join(", ")}). <b>${esc(result)}</b>.</div>`);
+    } else if (plan.kind === "blast") {
+        result = `${plan.dice} dice on each`;
+        for (const t of targets) await soakAndApply(t, { mode: "pool", amount: plan.dice, type: "lethal", soak: true });
+        L.push(`<div>${targets.length ? `${targets.map(t => esc(t.name)).join(", ")}: each takes ${plan.dice} dice of lethal damage, soaked on its own.` : `Each person in the blast takes ${plan.dice} dice of lethal damage: target them and fire again, or use Soak & Apply.`}</div>`);
+    } else L.push(`<div>No heavy-fire figures on this item.</div>`);
+    if (card) await ChatMessage.create({ speaker: ChatMessage.getSpeaker(), content: `<div class="vtc-card">${L.join("")}</div>`, rolls });
+    return { plan, successes, result };
+}
+
+/** Pick the gun from the selected token's sheet and the armour from the targeted token's (or a chart row). */
+export async function heavyFireDialog() {
+    const shooter = canvas.tokens?.controlled?.[0]?.actor ?? game.user.character;
+    const guns = (shooter?.items ?? []).filter(i => heavyOf(i));
+    if (!guns.length) return ui.notifications.warn("WoDX Combat: the selected token carries no heavy gun (Great War artillery, AP guns, naval guns).");
+    const targets = [...(game.user.targets ?? [])];
+    const onTarget = targets.flatMap(t => [...(t.actor?.items ?? [])].filter(i => hardOf(i)).map(i => ({ id: `${t.id}:${i.id}`, name: `${t.name}: ${i.name}`, item: i })));
+    const opt = (v, l) => `<option value="${esc(v)}">${esc(l)}</option>`;
+    const chart = [4, 5, 6, 7, 8, 9, 10].map(n => opt(`pen:${n}`, `Armour, penetration difficulty ${n}`)).join("") + [5, 6, 7, 8, 9, 10].map(n => opt(`ship:${n}`, `Ship's armour ${n}`)).join("");
+    const content = `<form class="vtc-form">
+  <div class="form-group"><label>Gun</label><select name="gun" data-fixed>${guns.map(g => opt(g.id, g.name)).join("")}</select></div>
+  <div class="form-group"><label>Armour</label><select name="armour" data-fixed>${onTarget.map(o => opt(o.id, o.name)).join("")}${chart}</select></div>
+  <div class="form-group"><label><input type="checkbox" name="still"/> The target is standing still (−2)</label></div>
+  <div class="form-group"><label><input type="checkbox" name="moving"/> Firing from a moving vehicle (+2)</label></div>
+  <div class="form-group"><label>Crew successes (naval and blast fire)</label><input type="number" name="crew" value="0" min="0"/></div>
+</form>`;
+    const r = await P.ask({ title: "WoDX Heavy Fire", content, width: 440, buttons: [{ id: "go", label: "Fire", icon: "fas fa-bomb", default: true }, { id: "cancel", label: "Cancel" }] });
+    if (!r || r.id !== "go") return;
+    const gun = guns.find(g => g.id === r.data.gun);
+    const pick = onTarget.find(o => o.id === r.data.armour);
+    const [k, v] = String(r.data.armour).split(":");
+    const armour = pick?.item ?? (k === "pen" ? { pen: num(v) } : k === "ship" ? { ship: num(v) } : {});
+    return heavyFire({ gun, armour, targets, still: !!r.data.still, moving: !!r.data.moving, crew: num(r.data.crew) });
+}
+
+/* ------------------------------------------------------------------ */
 /*  Macros                                                             */
 /* ------------------------------------------------------------------ */
 
 const MACROS = [
     { name: "WoDX: Attack", img: "icons/skills/melee/strike-sword-steel-yellow.webp", command: "game.wodxCombat.attack();" },
     { name: "WoDX: Soak & Apply Damage", img: "icons/equipment/shield/heater-steel-worn.webp", command: "game.wodxCombat.soakDialog();" },
+    { name: "WoDX: Heavy Fire", img: "icons/svg/explosion.svg", command: "game.wodxCombat.heavyFire.dialog();" },
     { name: "WoDX: Actor Type", img: "icons/svg/mystery-man.svg", command: "const a = canvas.tokens.controlled[0]?.actor ?? game.user.character; if (a) game.wodxCombat.pickKind(a); else ui.notifications.warn('Select a token first.');" },
     { name: "WoDX: Initiative", img: "icons/svg/d20-highlight.svg", command: "game.wodxCombat.rollInitiative({ all: game.user.isGM && canvas.tokens.controlled.length === 0 });" },
     { name: "WoDX: Quick Attack", img: "icons/skills/melee/blade-tip-orange.webp", command: "game.wodxCombat.quickAttack();" },
@@ -1519,8 +1625,8 @@ Hooks.once("init", () => {
     const movement = MVJ.setupMovement({ MOD, off: () => false, attr, ability: (a, k) => ability(a, k)?.value ?? 0, getKind, variant: P.variantText, applyDamage, movementFor, esc, discipline, armorPenalty, ask: P.ask });
     const aftermath = AA.setupAftermath({ corpusTrack });
     FTime.setupFightTime();
-    const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.28.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+    const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.29.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
