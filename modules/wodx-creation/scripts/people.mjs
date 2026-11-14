@@ -7,7 +7,7 @@
 import {MODULE_ID, esc, lineOf} from "./actor-data.mjs";
 import {makeGhoul} from "./change-of-state.mjs";
 import {PEOPLE_TABLES, TRADE_SHEETS} from "../data/people.mjs";
-import {person, noteOf} from "./people-rules.mjs";
+import {person, noteOf, peopleFlags} from "./people-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
@@ -58,7 +58,9 @@ export async function createPeople({people = [], domitorId = null} = {}) {
     const up = {
       "system.nature": p.nature, "system.demeanor": p.demeanor, "system.concept": p.trade, "system.notes": noteOf(p),
       // The system's create helper resets Willpower, so it is written after the sheet exists
-      "system.advantages.willpower.permanent": p.willpower, "system.advantages.willpower.temporary": p.willpower
+      "system.advantages.willpower.permanent": p.willpower, "system.advantages.willpower.temporary": p.willpower,
+      // B3925: the want, the secret and the look as things WoDX NPC and Library act on
+      ...peopleFlags(p)
     };
     for ( const [k, v] of Object.entries(p.attributes) ) up[`system.attributes.${k}.value`] = v;
     for ( const [k, v] of Object.entries(p.abilities) ) {
