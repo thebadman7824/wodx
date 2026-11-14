@@ -53,7 +53,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.83.0";
+const VERSION = "0.83.1";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -346,6 +346,8 @@ export function planTurn(tok, combat = game.combat) {
   if ( profile.erratic && !fight.state.self.surrendered ) options = SR.erraticPick(options, (combat?.round ?? 0) + (tok.id ?? "").length);
   if ( fight.state.self.afraid && !fight.state.self.rotschreck ) options.unshift({action: "flee", score: 98, why: "Afraid: a power has filled them with fear of the caster"});
   if ( fight.state.self.rotschreck ) options.unshift({action: "flee", score: 99, why: "Rötschreck: the Red Fear drives them from fire or sunlight"});
+  // B4868: a stand-in for an absent player spends nothing and takes no hostage: no Willpower, no powers
+  if ( actor.getFlag?.("wodx-storyteller", "standIn") === true ) options = options.filter(o => !["willpower", "power", "hostage"].includes(o.action));
   const topAttack = options.find(o => o.action === "attack" || o.action === "shoot");
   options = options.map(o => {
     const target = o.target ?? (o.action === "willpower" ? topAttack?.target : null);
@@ -730,7 +732,10 @@ export async function takeTurn(combat = game.combat, {force = false} = {}) {
   const c = combat?.combatant;
   const tok = c?.token?.object;
   if ( !c || !tok?.actor || c.isDefeated ) return null;
-  if ( tok.actor.hasPlayerOwner ) return null;
+  // B4868: an absent player's character the Storyteller stands in for fights like an NPC (WoDX Storyteller absent)
+  // a player's character only while its player is away and WoDX plays it (B4868)
+  const standIn = tok.actor.getFlag?.("wodx-storyteller", "standIn") === true;
+  if ( !standIn && tok.actor.hasPlayerOwner ) return null;
   if ( tok.scene?.id !== canvas.scene?.id ) return null;
   const key = `${combat.id}:${combat.round}:${c.id}:${phaseKey(combat)}`;
   if ( handled.has(key) && !force ) return null;

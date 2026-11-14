@@ -294,6 +294,13 @@ async function onPower({kind, scale = 1, scene = null, label = ""} = {}) {
   return n ? landNow([n], label || "a power") : null;
 }
 
+/** B4863: a lever pulled in an institution lands on its own town at once (town-rules LEVER_TOWN). */
+async function onLever({kind, town = null, label = ""} = {}) {
+  if ( !game.user.isGM || !town ) return null;
+  const n = TR.powerEvent(kind, town, {label});
+  return n ? landNow([n], label || "an institution") : null;
+}
+
 /* ------------------------------------------------------------------ */
 /*  The Towns window                                                   */
 /* ------------------------------------------------------------------ */
@@ -397,4 +404,4 @@ export async function setupTowns() {
 
 /** B3420: the town at each settlement age, for the chronicle rebuild's ages step (recipe ages). */
 export const atAges = (id, ages = []) => TR.townAtAges(state().towns[id] ?? null, ages);
-export const api = () => ({open: townsDialog, edit: editTown, state, of, ofScene, run, undo, atAges, saga: onSaga, power: onPower, rules: TR});
+export const api = () => ({open: townsDialog, edit: editTown, state, of, ofScene, run, undo, atAges, saga: onSaga, power: onPower, lever: onLever, rules: TR});
