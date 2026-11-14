@@ -8,7 +8,7 @@
   120,
   133
  ],
- "population": 133,
+ "population": 143,
  "parts": [
   {
    "id": "A1",
@@ -32,19 +32,19 @@
     "south": "B1",
     "east": "A2"
    },
-   "households": 7,
-   "population": 26
+   "households": 9,
+   "population": 36
   },
   {
    "id": "A2",
    "map": "linberg-a2.dungeondraft_map",
    "sidecar": "linberg-a2.wodx.json",
    "origin": [
-    60,
+    59,
     0
    ],
    "cells": [
-    60,
+    61,
     45
    ],
    "cut": [
@@ -57,8 +57,8 @@
     "south": "B2",
     "west": "A1"
    },
-   "households": 5,
-   "population": 23
+   "households": 6,
+   "population": 24
   },
   {
    "id": "B1",
@@ -70,7 +70,7 @@
    ],
    "cells": [
     60,
-    45
+    46
    ],
    "cut": [
     0,
@@ -83,19 +83,19 @@
     "south": "C1",
     "east": "B2"
    },
-   "households": 3,
-   "population": 17
+   "households": 4,
+   "population": 14
   },
   {
    "id": "B2",
    "map": "linberg-b2.dungeondraft_map",
    "sidecar": "linberg-b2.wodx.json",
    "origin": [
-    59,
+    60,
     44
    ],
    "cells": [
-    61,
+    60,
     45
    ],
    "cut": [
@@ -109,8 +109,8 @@
     "south": "C2",
     "west": "B1"
    },
-   "households": 8,
-   "population": 30
+   "households": 9,
+   "population": 38
   },
   {
    "id": "C1",
@@ -134,8 +134,8 @@
     "north": "B1",
     "east": "C2"
    },
-   "households": 7,
-   "population": 29
+   "households": 8,
+   "population": 27
   },
   {
    "id": "C2",
@@ -159,8 +159,8 @@
     "north": "B2",
     "west": "C1"
    },
-   "households": 2,
-   "population": 8
+   "households": 1,
+   "population": 4
   }
  ]
 }

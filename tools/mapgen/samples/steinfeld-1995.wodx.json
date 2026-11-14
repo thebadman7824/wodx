@@ -15,20 +15,160 @@
  "layout": "organic",
  "walled": false,
  "era": "modern",
- "population": 288,
+ "population": 282,
  "openings": [
+  {
+   "id": "tavern-1-double-0",
+   "label": "Tavern double",
+   "c": [
+    75.828,
+    60.337,
+    76.828,
+    62.069
+   ],
+   "inside": [
+    80.542,
+    60.502
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tavern-1-window-1",
+   "label": "Tavern window",
+   "c": [
+    75.078,
+    59.037,
+    75.578,
+    59.903
+   ],
+   "inside": [
+    80.542,
+    60.502
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tavern-1-window-2",
+   "label": "Tavern window",
+   "c": [
+    77.078,
+    62.502,
+    77.578,
+    63.368
+   ],
+   "inside": [
+    80.542,
+    60.502
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tavern-1-window-3",
+   "label": "Tavern window",
+   "c": [
+    78.475,
+    55.921,
+    77.609,
+    56.421
+   ],
+   "inside": [
+    80.542,
+    60.502
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tavern-1-window-4",
+   "label": "Tavern window",
+   "c": [
+    83.006,
+    56.77,
+    83.506,
+    57.636
+   ],
+   "inside": [
+    80.542,
+    60.502
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tavern-1-door-6",
+   "label": "Tavern door",
+   "c": [
+    80.243,
+    62.984,
+    79.377,
+    63.484
+   ],
+   "inside": [
+    80.542,
+    60.502
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "tavern-1-door-7",
+   "label": "Tavern door",
+   "c": [
+    84.341,
+    64.082,
+    83.475,
+    64.582
+   ],
+   "inside": [
+    80.542,
+    60.502
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
   {
    "id": "chapel-1-double-0",
    "label": "Chapel double",
    "c": [
-    51.09,
-    78.098,
-    50.573,
-    76.166
+    94.981,
+    58.28,
+    93.249,
+    57.28
    ],
    "inside": [
-    44.07,
-    78.944
+    90.615,
+    63.842
    ],
    "barInside": true,
    "flags": {
@@ -41,14 +181,14 @@
    "id": "chapel-1-window-2",
    "label": "Chapel window",
    "c": [
-    45.329,
-    81.712,
-    46.295,
-    81.454
+    93.464,
+    64.909,
+    93.964,
+    64.043
    ],
    "inside": [
-    44.07,
-    78.944
+    90.615,
+    63.842
    ],
    "barInside": true,
    "flags": {
@@ -61,14 +201,14 @@
    "id": "chapel-1-window-3",
    "label": "Chapel window",
    "c": [
-    48.227,
-    80.936,
-    49.193,
-    80.677
+    94.964,
+    62.311,
+    95.464,
+    61.445
    ],
    "inside": [
-    44.07,
-    78.944
+    90.615,
+    63.842
    ],
    "barInside": true,
    "flags": {
@@ -81,14 +221,14 @@
    "id": "chapel-1-window-4",
    "label": "Chapel window",
    "c": [
-    43.776,
-    75.917,
-    44.742,
-    75.658
+    88.267,
+    61.909,
+    88.767,
+    61.043
    ],
    "inside": [
-    44.07,
-    78.944
+    90.615,
+    63.842
    ],
    "barInside": true,
    "flags": {
@@ -101,14 +241,14 @@
    "id": "chapel-1-window-5",
    "label": "Chapel window",
    "c": [
-    46.674,
-    75.14,
-    47.64,
-    74.882
+    89.767,
+    59.311,
+    90.267,
+    58.445
    ],
    "inside": [
-    44.07,
-    78.944
+    90.615,
+    63.842
    ],
    "barInside": true,
    "flags": {
@@ -121,14 +261,14 @@
    "id": "chapel-1-window-7",
    "label": "Chapel window",
    "c": [
-    37.567,
-    81.722,
-    37.308,
-    80.756
+    88.414,
+    70.654,
+    87.548,
+    70.154
    ],
    "inside": [
-    44.07,
-    78.944
+    90.615,
+    63.842
    ],
    "barInside": true,
    "flags": {
@@ -138,17 +278,17 @@
    }
   },
   {
-   "id": "workshop-1-door-0",
-   "label": "Workshop (carpenter) door",
+   "id": "cottage-1-door-0",
+   "label": "Priest's house door",
    "c": [
-    48.071,
-    70.076,
-    47.812,
-    69.11
+    86.6,
+    84.266,
+    86.1,
+    83.4
    ],
    "inside": [
-    43.689,
-    69.18
+    83.685,
+    84.217
    ],
    "barInside": true,
    "flags": {
@@ -158,17 +298,17 @@
    }
   },
   {
-   "id": "workshop-1-window-1",
-   "label": "Workshop (carpenter) window",
+   "id": "cottage-1-window-1",
+   "label": "Priest's house window",
    "c": [
-    47.424,
-    67.662,
-    47.165,
-    66.696
+    85.6,
+    82.534,
+    85.1,
+    81.668
    ],
    "inside": [
-    43.689,
-    69.18
+    83.685,
+    84.217
    ],
    "barInside": true,
    "flags": {
@@ -178,17 +318,17 @@
    }
   },
   {
-   "id": "workshop-1-window-2",
-   "label": "Workshop (carpenter) window",
+   "id": "cottage-1-window-2",
+   "label": "Priest's house window",
    "c": [
-    45.691,
-    72.785,
-    46.657,
-    72.526
+    85.002,
+    87.499,
+    85.868,
+    86.999
    ],
    "inside": [
-    43.689,
-    69.18
+    83.685,
+    84.217
    ],
    "barInside": true,
    "flags": {
@@ -198,17 +338,17 @@
    }
   },
   {
-   "id": "workshop-1-window-3",
-   "label": "Workshop (carpenter) window",
+   "id": "cottage-1-window-3",
+   "label": "Priest's house window",
    "c": [
-    42.982,
-    70.405,
-    42.723,
-    69.439
+    82.02,
+    86.333,
+    81.52,
+    85.467
    ],
    "inside": [
-    43.689,
-    69.18
+    83.685,
+    84.217
    ],
    "barInside": true,
    "flags": {
@@ -218,37 +358,17 @@
    }
   },
   {
-   "id": "workshop-1-window-5",
-   "label": "Workshop (carpenter) window",
-   "c": [
-    39.437,
-    68.766,
-    39.179,
-    67.8
-   ],
-   "inside": [
-    43.689,
-    69.18
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-9-door-0",
+   "id": "cottage-12-door-0",
    "label": "Cottage door",
    "c": [
-    60.478,
-    53.574,
-    61.345,
-    53.074
+    68.07,
+    43.939,
+    68.328,
+    42.973
    ],
    "inside": [
-    58.978,
-    50.975
+    65.914,
+    42.326
    ],
    "barInside": true,
    "flags": {
@@ -258,17 +378,17 @@
    }
   },
   {
-   "id": "cottage-9-window-1",
+   "id": "cottage-12-window-1",
    "label": "Cottage window",
    "c": [
-    62.211,
-    52.574,
-    63.077,
-    52.074
+    68.587,
+    42.007,
+    68.846,
+    41.041
    ],
    "inside": [
-    58.978,
-    50.975
+    65.914,
+    42.326
    ],
    "barInside": true,
    "flags": {
@@ -278,17 +398,17 @@
    }
   },
   {
-   "id": "cottage-9-window-2",
+   "id": "cottage-12-window-2",
    "label": "Cottage window",
    "c": [
-    57.911,
-    48.127,
-    58.778,
-    47.627
+    64.654,
+    45.094,
+    65.62,
+    45.353
    ],
    "inside": [
-    58.978,
-    50.975
+    65.914,
+    42.326
    ],
    "barInside": true,
    "flags": {
@@ -298,77 +418,17 @@
    }
   },
   {
-   "id": "cottage-9-window-4",
+   "id": "cottage-12-window-3",
    "label": "Cottage window",
    "c": [
-    53.898,
-    52.176,
-    54.398,
-    53.042
+    63.369,
+    42.162,
+    63.628,
+    41.196
    ],
    "inside": [
-    58.978,
-    50.975
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "ghetto-house-1-door-0",
-   "label": "House in the Jewish quarter door",
-   "c": [
-    63.65,
-    90.043,
-    62.784,
-    90.543
-   ],
-   "inside": [
-    66.083,
-    93.257
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "door",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "ghetto-house-1-window-1",
-   "label": "House in the Jewish quarter window",
-   "c": [
-    65.815,
-    88.793,
-    64.949,
-    89.293
-   ],
-   "inside": [
-    66.083,
-    93.257
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "ghetto-house-1-window-4",
-   "label": "House in the Jewish quarter window",
-   "c": [
-    68.516,
-    96.471,
-    67.65,
-    96.971
-   ],
-   "inside": [
-    66.083,
-    93.257
+    65.914,
+    42.326
    ],
    "barInside": true,
    "flags": {
@@ -381,14 +441,14 @@
    "id": "sgraffito-house-1-double-0",
    "label": "Sgraffito house double",
    "c": [
-    49.778,
-    59.089,
-    51.51,
-    58.089
+    53.574,
+    85.925,
+    53.057,
+    83.993
    ],
    "inside": [
-    47.278,
-    54.759
+    48.745,
+    87.219
    ],
    "barInside": true,
    "flags": {
@@ -401,14 +461,14 @@
    "id": "sgraffito-house-1-window-1",
    "label": "Sgraffito house window",
    "c": [
-    47.613,
-    60.339,
-    48.479,
-    59.839
+    54.221,
+    88.34,
+    53.963,
+    87.374
    ],
    "inside": [
-    47.278,
-    54.759
+    48.745,
+    87.219
    ],
    "barInside": true,
    "flags": {
@@ -421,14 +481,14 @@
    "id": "sgraffito-house-1-door-4",
    "label": "Sgraffito house door",
    "c": [
-    47.211,
-    53.643,
-    48.077,
-    53.143
+    47.649,
+    86.995,
+    47.391,
+    86.029
    ],
    "inside": [
-    47.278,
-    54.759
+    48.745,
+    87.219
    ],
    "barInside": true,
    "flags": {
@@ -441,14 +501,14 @@
    "id": "sgraffito-house-1-window-5",
    "label": "Sgraffito house window",
    "c": [
-    44.345,
-    50.678,
-    45.211,
-    50.178
+    44.045,
+    88.996,
+    43.786,
+    88.03
    ],
    "inside": [
-    47.278,
-    54.759
+    48.745,
+    87.219
    ],
    "barInside": true,
    "flags": {
@@ -461,14 +521,114 @@
    "id": "sgraffito-house-1-window-6",
    "label": "Sgraffito house window",
    "c": [
-    48.126,
-    50.227,
-    48.626,
-    51.093
+    44.588,
+    85.227,
+    45.553,
+    84.968
    ],
    "inside": [
-    47.278,
-    54.759
+    48.745,
+    87.219
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "sgraffito-house-3-double-0",
+   "label": "Sgraffito house double",
+   "c": [
+    47.882,
+    68.751,
+    47.364,
+    66.819
+   ],
+   "inside": [
+    43.052,
+    70.045
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "sgraffito-house-3-window-1",
+   "label": "Sgraffito house window",
+   "c": [
+    48.529,
+    71.166,
+    48.27,
+    70.2
+   ],
+   "inside": [
+    43.052,
+    70.045
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "sgraffito-house-3-door-4",
+   "label": "Sgraffito house door",
+   "c": [
+    41.957,
+    69.821,
+    41.698,
+    68.855
+   ],
+   "inside": [
+    43.052,
+    70.045
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "sgraffito-house-3-window-5",
+   "label": "Sgraffito house window",
+   "c": [
+    38.352,
+    71.822,
+    38.093,
+    70.856
+   ],
+   "inside": [
+    43.052,
+    70.045
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "sgraffito-house-3-window-6",
+   "label": "Sgraffito house window",
+   "c": [
+    38.895,
+    68.053,
+    39.861,
+    67.794
+   ],
+   "inside": [
+    43.052,
+    70.045
    ],
    "barInside": true,
    "flags": {
@@ -481,14 +641,14 @@
    "id": "passage-house-1-double-0",
    "label": "Gate-passage house double",
    "c": [
-    52.72,
-    89.4,
-    54.652,
-    88.882
+    50.187,
+    75.473,
+    49.669,
+    73.541
    ],
    "inside": [
-    49.753,
-    86.053
+    46.841,
+    78.44
    ],
    "barInside": true,
    "flags": {
@@ -501,14 +661,14 @@
    "id": "passage-house-1-double-1",
    "label": "Gate-passage house double",
    "c": [
-    50.65,
-    81.672,
-    52.582,
-    81.154
+    42.459,
+    77.543,
+    41.942,
+    75.612
    ],
    "inside": [
-    49.753,
-    86.053
+    46.841,
+    78.44
    ],
    "barInside": true,
    "flags": {
@@ -521,14 +681,14 @@
    "id": "passage-house-1-window-2",
    "label": "Gate-passage house window",
    "c": [
-    47.408,
-    90.823,
-    48.374,
-    90.564
+    51.61,
+    80.785,
+    51.351,
+    79.82
    ],
    "inside": [
-    49.753,
-    86.053
+    46.841,
+    78.44
    ],
    "barInside": true,
    "flags": {
@@ -541,14 +701,14 @@
    "id": "passage-house-1-window-3",
    "label": "Gate-passage house window",
    "c": [
-    50.305,
-    90.047,
-    51.271,
-    89.788
+    50.834,
+    77.888,
+    50.575,
+    76.922
    ],
    "inside": [
-    49.753,
-    86.053
+    46.841,
+    78.44
    ],
    "barInside": true,
    "flags": {
@@ -561,14 +721,14 @@
    "id": "passage-house-1-door-4",
    "label": "Gate-passage house door",
    "c": [
-    51.59,
-    87.114,
-    51.849,
-    88.08
+    47.901,
+    76.603,
+    48.867,
+    76.344
    ],
    "inside": [
-    49.753,
-    86.053
+    46.841,
+    78.44
    ],
    "barInside": true,
    "flags": {
@@ -581,14 +741,14 @@
    "id": "passage-house-1-door-6",
    "label": "Gate-passage house door",
    "c": [
-    49.27,
-    86.183,
-    50.236,
-    85.924
+    46.97,
+    78.923,
+    46.711,
+    77.957
    ],
    "inside": [
-    49.753,
-    86.053
+    46.841,
+    78.44
    ],
    "barInside": true,
    "flags": {
@@ -601,14 +761,14 @@
    "id": "passage-house-1-window-7",
    "label": "Gate-passage house window",
    "c": [
-    48.235,
-    82.319,
-    49.201,
-    82.06
+    43.106,
+    79.958,
+    42.847,
+    78.992
    ],
    "inside": [
-    49.753,
-    86.053
+    46.841,
+    78.44
    ],
    "barInside": true,
    "flags": {
@@ -621,14 +781,274 @@
    "id": "passage-house-1-window-8",
    "label": "Gate-passage house window",
    "c": [
-    44.759,
-    84.803,
-    45.018,
-    85.769
+    45.59,
+    83.434,
+    46.556,
+    83.175
    ],
    "inside": [
-    49.753,
-    86.053
+    46.841,
+    78.44
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "sgraffito-house-5-double-0",
+   "label": "Sgraffito house double",
+   "c": [
+    53.242,
+    57.209,
+    54.974,
+    56.209
+   ],
+   "inside": [
+    50.742,
+    52.879
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "sgraffito-house-5-window-1",
+   "label": "Sgraffito house window",
+   "c": [
+    51.077,
+    58.459,
+    51.943,
+    57.959
+   ],
+   "inside": [
+    50.742,
+    52.879
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "sgraffito-house-5-door-4",
+   "label": "Sgraffito house door",
+   "c": [
+    50.675,
+    51.763,
+    51.541,
+    51.263
+   ],
+   "inside": [
+    50.742,
+    52.879
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "sgraffito-house-5-window-5",
+   "label": "Sgraffito house window",
+   "c": [
+    47.809,
+    48.799,
+    48.675,
+    48.299
+   ],
+   "inside": [
+    50.742,
+    52.879
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "sgraffito-house-5-window-6",
+   "label": "Sgraffito house window",
+   "c": [
+    51.59,
+    48.348,
+    52.09,
+    49.214
+   ],
+   "inside": [
+    50.742,
+    52.879
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "villa-1-double-0",
+   "label": "Villa double",
+   "c": [
+    63.226,
+    52.137,
+    64.958,
+    51.137
+   ],
+   "inside": [
+    58.994,
+    48.807
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "villa-1-window-1",
+   "label": "Villa window",
+   "c": [
+    58.03,
+    55.137,
+    58.896,
+    54.637
+   ],
+   "inside": [
+    58.994,
+    48.807
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "villa-1-window-2",
+   "label": "Villa window",
+   "c": [
+    60.628,
+    53.637,
+    61.494,
+    53.137
+   ],
+   "inside": [
+    58.994,
+    48.807
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "villa-1-window-3",
+   "label": "Villa window",
+   "c": [
+    55.664,
+    53.039,
+    56.164,
+    53.905
+   ],
+   "inside": [
+    58.994,
+    48.807
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "villa-1-window-4",
+   "label": "Villa window",
+   "c": [
+    53.164,
+    48.709,
+    53.664,
+    49.575
+   ],
+   "inside": [
+    58.994,
+    48.807
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "villa-1-door-7",
+   "label": "Villa door",
+   "c": [
+    62.285,
+    46.907,
+    63.151,
+    46.407
+   ],
+   "inside": [
+    58.994,
+    48.807
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "villa-1-door-8",
+   "label": "Villa door",
+   "c": [
+    61.824,
+    43.709,
+    62.324,
+    44.575
+   ],
+   "inside": [
+    58.994,
+    48.807
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "villa-1-window-9",
+   "label": "Villa window",
+   "c": [
+    54.329,
+    45.727,
+    55.195,
+    45.227
+   ],
+   "inside": [
+    58.994,
+    48.807
    ],
    "barInside": true,
    "flags": {
@@ -641,14 +1061,14 @@
    "id": "colony-house-1-door-0",
    "label": "Colony house door",
    "c": [
-    35.913,
-    58.792,
-    36.913,
-    58.792
+    70.84,
+    53.787,
+    71.34,
+    54.653
    ],
    "inside": [
-    37.413,
-    54.792
+    75.054,
+    53.086
    ],
    "barInside": true,
    "flags": {
@@ -661,14 +1081,14 @@
    "id": "colony-house-1-window-1",
    "label": "Colony house window",
    "c": [
-    37.913,
-    58.792,
-    38.913,
-    58.792
+    71.84,
+    55.519,
+    72.34,
+    56.385
    ],
    "inside": [
-    37.413,
-    54.792
+    75.054,
+    53.086
    ],
    "barInside": true,
    "flags": {
@@ -681,174 +1101,14 @@
    "id": "colony-house-1-window-3",
    "label": "Colony house window",
    "c": [
-    36.913,
-    50.792,
-    37.913,
-    50.792
+    78.268,
+    50.653,
+    78.768,
+    51.519
    ],
    "inside": [
-    37.413,
-    54.792
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "passage-house-2-double-0",
-   "label": "Gate-passage house double",
-   "c": [
-    75.739,
-    84.785,
-    74.007,
-    85.785
-   ],
-   "inside": [
-    79.471,
-    87.25
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "door",
-    "material": "heavy",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "passage-house-2-double-1",
-   "label": "Gate-passage house double",
-   "c": [
-    79.739,
-    91.714,
-    78.007,
-    92.714
-   ],
-   "inside": [
-    79.471,
-    87.25
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "door",
-    "material": "heavy",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "passage-house-2-window-2",
-   "label": "Gate-passage house window",
-   "c": [
-    80.502,
-    82.035,
-    79.636,
-    82.535
-   ],
-   "inside": [
-    79.471,
-    87.25
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "passage-house-2-window-3",
-   "label": "Gate-passage house window",
-   "c": [
-    77.904,
-    83.535,
-    77.038,
-    84.035
-   ],
-   "inside": [
-    79.471,
-    87.25
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "passage-house-2-door-4",
-   "label": "Gate-passage house door",
-   "c": [
-    77.422,
-    86.701,
-    76.922,
-    85.834
-   ],
-   "inside": [
-    79.471,
-    87.25
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "door",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "passage-house-2-door-6",
-   "label": "Gate-passage house door",
-   "c": [
-    79.904,
-    87.0,
-    79.038,
-    87.5
-   ],
-   "inside": [
-    79.471,
-    87.25
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "door",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "passage-house-2-window-7",
-   "label": "Gate-passage house window",
-   "c": [
-    81.904,
-    90.464,
-    81.038,
-    90.964
-   ],
-   "inside": [
-    79.471,
-    87.25
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "passage-house-2-window-8",
-   "label": "Gate-passage house window",
-   "c": [
-    84.618,
-    87.165,
-    84.118,
-    86.299
-   ],
-   "inside": [
-    79.471,
-    87.25
+    75.054,
+    53.086
    ],
    "barInside": true,
    "flags": {
@@ -861,14 +1121,14 @@
    "id": "school-1-double-0",
    "label": "School double",
    "c": [
-    76.578,
-    61.636,
-    77.578,
-    63.368
+    71.233,
+    86.571,
+    69.501,
+    87.571
    ],
    "inside": [
-    81.408,
-    60.002
+    72.867,
+    91.401
    ],
    "barInside": true,
    "flags": {
@@ -881,14 +1141,14 @@
    "id": "school-1-window-1",
    "label": "School window",
    "c": [
-    72.828,
-    55.14,
-    73.328,
-    56.006
+    77.728,
+    82.821,
+    76.862,
+    83.321
    ],
    "inside": [
-    81.408,
-    60.002
+    72.867,
+    91.401
    ],
    "barInside": true,
    "flags": {
@@ -901,14 +1161,14 @@
    "id": "school-1-window-2",
    "label": "School window",
    "c": [
-    80.328,
-    68.131,
-    80.828,
-    68.997
+    64.738,
+    90.321,
+    63.872,
+    90.821
    ],
    "inside": [
-    81.408,
-    60.002
+    72.867,
+    91.401
    ],
    "barInside": true,
    "flags": {
@@ -921,14 +1181,14 @@
    "id": "school-1-door-3",
    "label": "School door",
    "c": [
-    76.176,
-    54.939,
-    76.676,
-    55.805
+    77.929,
+    86.169,
+    77.063,
+    86.669
    ],
    "inside": [
-    81.408,
-    60.002
+    72.867,
+    91.401
    ],
    "barInside": true,
    "flags": {
@@ -941,14 +1201,14 @@
    "id": "school-1-door-4",
    "label": "School door",
    "c": [
-    79.426,
-    60.569,
-    79.926,
-    61.435
+    72.3,
+    89.419,
+    71.434,
+    89.919
    ],
    "inside": [
-    81.408,
-    60.002
+    72.867,
+    91.401
    ],
    "barInside": true,
    "flags": {
@@ -961,14 +1221,14 @@
    "id": "school-1-door-5",
    "label": "School door",
    "c": [
-    82.676,
-    66.198,
-    83.176,
-    67.064
+    66.671,
+    92.669,
+    65.805,
+    93.169
    ],
    "inside": [
-    81.408,
-    60.002
+    72.867,
+    91.401
    ],
    "barInside": true,
    "flags": {
@@ -981,14 +1241,14 @@
    "id": "school-1-window-6",
    "label": "School window",
    "c": [
-    81.488,
-    50.14,
-    81.988,
-    51.006
+    82.728,
+    91.481,
+    81.862,
+    91.981
    ],
    "inside": [
-    81.408,
-    60.002
+    72.867,
+    91.401
    ],
    "barInside": true,
    "flags": {
@@ -1001,14 +1261,14 @@
    "id": "school-1-window-7",
    "label": "School window",
    "c": [
-    82.988,
-    52.738,
-    83.488,
-    53.604
+    80.13,
+    92.981,
+    79.264,
+    93.481
    ],
    "inside": [
-    81.408,
-    60.002
+    72.867,
+    91.401
    ],
    "barInside": true,
    "flags": {
@@ -1021,14 +1281,14 @@
    "id": "school-1-window-8",
    "label": "School window",
    "c": [
-    85.488,
-    57.069,
-    85.988,
-    57.935
+    75.8,
+    95.481,
+    74.934,
+    95.981
    ],
    "inside": [
-    81.408,
-    60.002
+    72.867,
+    91.401
    ],
    "barInside": true,
    "flags": {
@@ -1041,14 +1301,14 @@
    "id": "school-1-window-9",
    "label": "School window",
    "c": [
-    87.988,
-    61.399,
-    88.488,
-    62.265
+    71.47,
+    97.981,
+    70.604,
+    98.481
    ],
    "inside": [
-    81.408,
-    60.002
+    72.867,
+    91.401
    ],
    "barInside": true,
    "flags": {
@@ -1061,14 +1321,14 @@
    "id": "school-1-window-10",
    "label": "School window",
    "c": [
-    89.488,
-    63.997,
-    89.988,
-    64.863
+    68.872,
+    99.481,
+    68.006,
+    99.981
    ],
    "inside": [
-    81.408,
-    60.002
+    72.867,
+    91.401
    ],
    "barInside": true,
    "flags": {
@@ -1078,17 +1338,17 @@
    }
   },
   {
-   "id": "bata-house-1-door-0",
-   "label": "Ba\u0165a house door",
+   "id": "colony-house-2-door-0",
+   "label": "Colony house door",
    "c": [
-    37.345,
-    93.997,
-    38.311,
-    93.738
+    38.209,
+    58.597,
+    39.209,
+    58.597
    ],
    "inside": [
-    40.079,
-    90.676
+    39.709,
+    54.597
    ],
    "barInside": true,
    "flags": {
@@ -1098,17 +1358,57 @@
    }
   },
   {
-   "id": "bata-house-1-door-1",
-   "label": "Ba\u0165a house door",
+   "id": "colony-house-2-window-1",
+   "label": "Colony house window",
    "c": [
-    43.14,
-    92.444,
-    44.106,
-    92.185
+    40.209,
+    58.597,
+    41.209,
+    58.597
    ],
    "inside": [
-    40.079,
-    90.676
+    39.709,
+    54.597
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "colony-house-2-window-3",
+   "label": "Colony house window",
+   "c": [
+    39.209,
+    50.597,
+    40.209,
+    50.597
+   ],
+   "inside": [
+    39.709,
+    54.597
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "func-villa-1-door-0",
+   "label": "Functionalist villa door",
+   "c": [
+    85.908,
+    133.555,
+    86.615,
+    134.262
+   ],
+   "inside": [
+    85.908,
+    127.191
    ],
    "barInside": true,
    "flags": {
@@ -1118,17 +1418,17 @@
    }
   },
   {
-   "id": "bata-house-1-window-2",
-   "label": "Ba\u0165a house window",
+   "id": "func-villa-1-window-1",
+   "label": "Functionalist villa window",
    "c": [
-    39.084,
-    93.531,
-    40.049,
-    93.272
+    79.19,
+    126.838,
+    79.897,
+    127.545
    ],
    "inside": [
-    40.079,
-    90.676
+    85.908,
+    127.191
    ],
    "barInside": true,
    "flags": {
@@ -1138,17 +1438,17 @@
    }
   },
   {
-   "id": "bata-house-1-window-3",
-   "label": "Ba\u0165a house window",
+   "id": "func-villa-1-window-2",
+   "label": "Functionalist villa window",
    "c": [
-    41.402,
-    92.91,
-    42.368,
-    92.651
+    82.019,
+    129.666,
+    82.726,
+    130.373
    ],
    "inside": [
-    40.079,
-    90.676
+    85.908,
+    127.191
    ],
    "barInside": true,
    "flags": {
@@ -1158,17 +1458,17 @@
    }
   },
   {
-   "id": "bata-house-1-window-4",
-   "label": "Ba\u0165a house window",
+   "id": "func-villa-1-window-3",
+   "label": "Functionalist villa window",
    "c": [
-    37.017,
-    88.909,
-    37.983,
-    88.65
+    85.554,
+    120.474,
+    86.261,
+    121.181
    ],
    "inside": [
-    40.079,
-    90.676
+    85.908,
+    127.191
    ],
    "barInside": true,
    "flags": {
@@ -1178,17 +1478,17 @@
    }
   },
   {
-   "id": "bata-house-1-window-5",
-   "label": "Ba\u0165a house window",
+   "id": "func-villa-1-window-4",
+   "label": "Functionalist villa window",
    "c": [
-    40.88,
-    87.873,
-    41.846,
-    87.614
+    88.383,
+    123.302,
+    89.09,
+    124.009
    ],
    "inside": [
-    40.079,
-    90.676
+    85.908,
+    127.191
    ],
    "barInside": true,
    "flags": {
@@ -1198,121 +1498,41 @@
    }
   },
   {
-   "id": "bata-house-2-door-0",
-   "label": "Ba\u0165a house door",
+   "id": "func-villa-1-window-5",
+   "label": "Functionalist villa window",
    "c": [
-    97.279,
-    27.789,
-    98.279,
-    27.789
+    81.312,
+    121.888,
+    80.605,
+    122.595
    ],
    "inside": [
-    100.779,
-    25.289
+    85.908,
+    127.191
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "func-villa-1-door-7",
+   "label": "Functionalist villa door",
+   "c": [
+    88.736,
+    130.727,
+    89.443,
+    131.434
+   ],
+   "inside": [
+    85.908,
+    127.191
    ],
    "barInside": true,
    "flags": {
     "kind": "door",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "bata-house-2-door-1",
-   "label": "Ba\u0165a house door",
-   "c": [
-    103.279,
-    27.789,
-    104.279,
-    27.789
-   ],
-   "inside": [
-    100.779,
-    25.289
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "door",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "bata-house-2-window-2",
-   "label": "Ba\u0165a house window",
-   "c": [
-    99.079,
-    27.789,
-    100.079,
-    27.789
-   ],
-   "inside": [
-    100.779,
-    25.289
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "bata-house-2-window-3",
-   "label": "Ba\u0165a house window",
-   "c": [
-    101.479,
-    27.789,
-    102.479,
-    27.789
-   ],
-   "inside": [
-    100.779,
-    25.289
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "bata-house-2-window-4",
-   "label": "Ba\u0165a house window",
-   "c": [
-    98.279,
-    22.789,
-    99.279,
-    22.789
-   ],
-   "inside": [
-    100.779,
-    25.289
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "bata-house-2-window-5",
-   "label": "Ba\u0165a house window",
-   "c": [
-    102.279,
-    22.789,
-    103.279,
-    22.789
-   ],
-   "inside": [
-    100.779,
-    25.289
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
     "material": "wood",
     "lock": "none"
    }
@@ -1601,10 +1821,10 @@
    "id": "panel-block-2-door-0",
    "label": "Panel block door",
    "c": [
-    36.0,
-    107.0,
-    37.0,
-    107.0
+    50.0,
+    99.0,
+    49.0,
+    99.0
    ],
    "inside": [
     43,
@@ -1621,10 +1841,10 @@
    "id": "panel-block-2-door-1",
    "label": "Panel block door",
    "c": [
-    49.0,
-    107.0,
-    50.0,
-    107.0
+    37.0,
+    99.0,
+    36.0,
+    99.0
    ],
    "inside": [
     43,
@@ -1641,10 +1861,10 @@
    "id": "panel-block-2-door-2",
    "label": "Panel block door",
    "c": [
-    35.0,
-    105.3,
-    35.0,
-    106.3
+    51.0,
+    100.7,
+    51.0,
+    99.7
    ],
    "inside": [
     43,
@@ -1661,10 +1881,10 @@
    "id": "panel-block-2-door-3",
    "label": "Panel block door",
    "c": [
-    38.0,
-    105.3,
-    38.0,
-    106.3
+    48.0,
+    100.7,
+    48.0,
+    99.7
    ],
    "inside": [
     43,
@@ -1681,10 +1901,10 @@
    "id": "panel-block-2-door-4",
    "label": "Panel block door",
    "c": [
-    48.0,
-    105.3,
-    48.0,
-    106.3
+    38.0,
+    100.7,
+    38.0,
+    99.7
    ],
    "inside": [
     43,
@@ -1701,10 +1921,10 @@
    "id": "panel-block-2-door-5",
    "label": "Panel block door",
    "c": [
-    51.0,
-    105.3,
-    51.0,
-    106.3
+    35.0,
+    100.7,
+    35.0,
+    99.7
    ],
    "inside": [
     43,
@@ -1721,10 +1941,10 @@
    "id": "panel-block-2-window-6",
    "label": "Panel block window",
    "c": [
-    31.0,
-    107.0,
-    32.0,
-    107.0
+    55.0,
+    99.0,
+    54.0,
+    99.0
    ],
    "inside": [
     43,
@@ -1741,10 +1961,10 @@
    "id": "panel-block-2-window-7",
    "label": "Panel block window",
    "c": [
-    40.0,
-    107.0,
-    41.0,
-    107.0
+    46.0,
+    99.0,
+    45.0,
+    99.0
    ],
    "inside": [
     43,
@@ -1761,10 +1981,10 @@
    "id": "panel-block-2-window-8",
    "label": "Panel block window",
    "c": [
-    45.0,
-    107.0,
-    46.0,
-    107.0
+    41.0,
+    99.0,
+    40.0,
+    99.0
    ],
    "inside": [
     43,
@@ -1781,10 +2001,10 @@
    "id": "panel-block-2-window-9",
    "label": "Panel block window",
    "c": [
-    54.0,
-    107.0,
-    55.0,
-    107.0
+    32.0,
+    99.0,
+    31.0,
+    99.0
    ],
    "inside": [
     43,
@@ -1801,10 +2021,10 @@
    "id": "panel-block-2-window-10",
    "label": "Panel block window",
    "c": [
-    31.0,
-    99.0,
-    32.0,
-    99.0
+    55.0,
+    107.0,
+    54.0,
+    107.0
    ],
    "inside": [
     43,
@@ -1821,10 +2041,10 @@
    "id": "panel-block-2-window-11",
    "label": "Panel block window",
    "c": [
-    40.0,
-    99.0,
-    41.0,
-    99.0
+    46.0,
+    107.0,
+    45.0,
+    107.0
    ],
    "inside": [
     43,
@@ -1841,10 +2061,10 @@
    "id": "panel-block-2-window-12",
    "label": "Panel block window",
    "c": [
-    45.0,
-    99.0,
-    46.0,
-    99.0
+    41.0,
+    107.0,
+    40.0,
+    107.0
    ],
    "inside": [
     43,
@@ -1861,10 +2081,10 @@
    "id": "panel-block-2-window-13",
    "label": "Panel block window",
    "c": [
-    54.0,
-    99.0,
-    55.0,
-    99.0
+    32.0,
+    107.0,
+    31.0,
+    107.0
    ],
    "inside": [
     43,
@@ -1878,7 +2098,7 @@
    }
   },
   {
-   "id": "cottage-12-door-0",
+   "id": "cottage-13-door-0",
    "label": "Suburban house door",
    "c": [
     116.905,
@@ -1898,7 +2118,7 @@
    }
   },
   {
-   "id": "cottage-12-window-1",
+   "id": "cottage-13-window-1",
    "label": "Suburban house window",
    "c": [
     118.837,
@@ -1918,7 +2138,7 @@
    }
   },
   {
-   "id": "cottage-12-window-2",
+   "id": "cottage-13-window-2",
    "label": "Suburban house window",
    "c": [
     114.196,
@@ -1938,7 +2158,7 @@
    }
   },
   {
-   "id": "cottage-12-window-3",
+   "id": "cottage-13-window-3",
    "label": "Suburban house window",
    "c": [
     116.094,
@@ -1958,7 +2178,7 @@
    }
   },
   {
-   "id": "cottage-13-door-0",
+   "id": "cottage-14-door-0",
    "label": "Suburban house door",
    "c": [
     117.869,
@@ -1978,7 +2198,7 @@
    }
   },
   {
-   "id": "cottage-13-window-1",
+   "id": "cottage-14-window-1",
    "label": "Suburban house window",
    "c": [
     115.938,
@@ -1998,7 +2218,7 @@
    }
   },
   {
-   "id": "cottage-13-window-2",
+   "id": "cottage-14-window-2",
    "label": "Suburban house window",
    "c": [
     120.578,
@@ -2018,7 +2238,7 @@
    }
   },
   {
-   "id": "cottage-13-window-3",
+   "id": "cottage-14-window-3",
    "label": "Suburban house window",
    "c": [
     118.681,
@@ -2038,97 +2258,17 @@
    }
   },
   {
-   "id": "cottage-14-door-0",
-   "label": "Suburban house door",
-   "c": [
-    88.653,
-    29.449,
-    89.653,
-    29.449
-   ],
-   "inside": [
-    89.653,
-    26.949
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "door",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-14-window-1",
-   "label": "Suburban house window",
-   "c": [
-    90.653,
-    29.449,
-    91.653,
-    29.449
-   ],
-   "inside": [
-    89.653,
-    26.949
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-14-window-2",
-   "label": "Suburban house window",
-   "c": [
-    86.653,
-    26.449,
-    86.653,
-    27.449
-   ],
-   "inside": [
-    89.653,
-    26.949
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-14-window-3",
-   "label": "Suburban house window",
-   "c": [
-    89.153,
-    24.449,
-    90.153,
-    24.449
-   ],
-   "inside": [
-    89.653,
-    26.949
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
    "id": "cottage-15-door-0",
    "label": "Suburban house door",
    "c": [
-    107.099,
-    33.739,
-    106.099,
-    33.739
+    104.59,
+    28.029,
+    105.59,
+    28.029
    ],
    "inside": [
-    106.099,
-    36.239
+    105.59,
+    25.529
    ],
    "barInside": true,
    "flags": {
@@ -2141,14 +2281,14 @@
    "id": "cottage-15-window-1",
    "label": "Suburban house window",
    "c": [
-    105.099,
-    33.739,
-    104.099,
-    33.739
+    106.59,
+    28.029,
+    107.59,
+    28.029
    ],
    "inside": [
-    106.099,
-    36.239
+    105.59,
+    25.529
    ],
    "barInside": true,
    "flags": {
@@ -2161,14 +2301,14 @@
    "id": "cottage-15-window-2",
    "label": "Suburban house window",
    "c": [
-    109.099,
-    36.739,
-    109.099,
-    35.739
+    102.59,
+    25.029,
+    102.59,
+    26.029
    ],
    "inside": [
-    106.099,
-    36.239
+    105.59,
+    25.529
    ],
    "barInside": true,
    "flags": {
@@ -2181,14 +2321,14 @@
    "id": "cottage-15-window-3",
    "label": "Suburban house window",
    "c": [
-    106.599,
-    38.739,
-    105.599,
-    38.739
+    105.09,
+    23.029,
+    106.09,
+    23.029
    ],
    "inside": [
-    106.099,
-    36.239
+    105.59,
+    25.529
    ],
    "barInside": true,
    "flags": {
@@ -2198,7 +2338,7 @@
    }
   },
   {
-   "id": "cottage-16-door-0",
+   "id": "cottage-18-door-0",
    "label": "Suburban house door",
    "c": [
     98.134,
@@ -2218,7 +2358,7 @@
    }
   },
   {
-   "id": "cottage-16-window-1",
+   "id": "cottage-18-window-1",
    "label": "Suburban house window",
    "c": [
     96.134,
@@ -2238,7 +2378,7 @@
    }
   },
   {
-   "id": "cottage-16-window-2",
+   "id": "cottage-18-window-2",
    "label": "Suburban house window",
    "c": [
     100.134,
@@ -2258,7 +2398,7 @@
    }
   },
   {
-   "id": "cottage-16-window-3",
+   "id": "cottage-18-window-3",
    "label": "Suburban house window",
    "c": [
     97.634,
@@ -2278,17 +2418,37 @@
    }
   },
   {
-   "id": "cottage-17-door-0",
-   "label": "Suburban house door",
+   "id": "family-house-1-double-0",
+   "label": "Family house double",
    "c": [
-    77.934,
-    32.966,
-    78.8,
-    32.466
+    109.599,
+    33.739,
+    107.599,
+    33.739
    ],
    "inside": [
-    77.55,
-    30.301
+    106.099,
+    38.239
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "family-house-1-door-1",
+   "label": "Family house door",
+   "c": [
+    106.099,
+    33.739,
+    105.099,
+    33.739
+   ],
+   "inside": [
+    106.099,
+    38.239
    ],
    "barInside": true,
    "flags": {
@@ -2298,17 +2458,17 @@
    }
   },
   {
-   "id": "cottage-17-window-1",
-   "label": "Suburban house window",
+   "id": "family-house-1-window-2",
+   "label": "Family house window",
    "c": [
-    79.666,
-    31.966,
-    80.532,
-    31.466
+    103.849,
+    33.739,
+    102.849,
+    33.739
    ],
    "inside": [
-    77.55,
-    30.301
+    106.099,
+    38.239
    ],
    "barInside": true,
    "flags": {
@@ -2318,17 +2478,57 @@
    }
   },
   {
-   "id": "cottage-17-window-2",
-   "label": "Suburban house window",
+   "id": "family-house-1-door-3",
+   "label": "Family house door",
    "c": [
-    74.702,
-    31.368,
-    75.202,
-    32.234
+    107.099,
+    36.239,
+    107.099,
+    35.239
    ],
    "inside": [
-    77.55,
-    30.301
+    106.099,
+    38.239
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "family-house-1-door-5",
+   "label": "Family house door",
+   "c": [
+    104.099,
+    37.739,
+    103.099,
+    37.739
+   ],
+   "inside": [
+    106.099,
+    38.239
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "family-house-1-window-7",
+   "label": "Family house window",
+   "c": [
+    108.099,
+    42.739,
+    107.099,
+    42.739
+   ],
+   "inside": [
+    106.099,
+    38.239
    ],
    "barInside": true,
    "flags": {
@@ -2338,17 +2538,157 @@
    }
   },
   {
-   "id": "cottage-17-window-3",
-   "label": "Suburban house window",
+   "id": "family-house-1-window-8",
+   "label": "Family house window",
    "c": [
-    75.867,
-    28.386,
-    76.733,
-    27.886
+    104.099,
+    42.739,
+    103.099,
+    42.739
    ],
    "inside": [
-    77.55,
-    30.301
+    106.099,
+    38.239
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "family-house-1-window-9",
+   "label": "Family house window",
+   "c": [
+    110.099,
+    40.739,
+    110.099,
+    39.739
+   ],
+   "inside": [
+    106.099,
+    38.239
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "suburban-house-1-door-0",
+   "label": "Entrepreneur's house door",
+   "c": [
+    94.626,
+    28.828,
+    95.626,
+    28.828
+   ],
+   "inside": [
+    96.626,
+    24.828
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "suburban-house-1-window-1",
+   "label": "Entrepreneur's house window",
+   "c": [
+    92.626,
+    28.828,
+    93.626,
+    28.828
+   ],
+   "inside": [
+    96.626,
+    24.828
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "suburban-house-1-window-2",
+   "label": "Entrepreneur's house window",
+   "c": [
+    96.626,
+    28.828,
+    97.626,
+    28.828
+   ],
+   "inside": [
+    96.626,
+    24.828
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "suburban-house-1-double-3",
+   "label": "Entrepreneur's house double",
+   "c": [
+    98.626,
+    28.828,
+    100.626,
+    28.828
+   ],
+   "inside": [
+    96.626,
+    24.828
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "heavy",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "suburban-house-1-door-5",
+   "label": "Entrepreneur's house door",
+   "c": [
+    98.126,
+    21.828,
+    98.126,
+    22.828
+   ],
+   "inside": [
+    96.626,
+    24.828
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "suburban-house-1-window-6",
+   "label": "Entrepreneur's house window",
+   "c": [
+    94.626,
+    20.828,
+    95.626,
+    20.828
+   ],
+   "inside": [
+    96.626,
+    24.828
    ],
    "barInside": true,
    "flags": {
@@ -2360,11 +2700,51 @@
  ],
  "features": [
   {
+   "id": "tavern-1-kitchen-0",
+   "label": "Oven (Kitchen)",
+   "rect": [
+    84.368,
+    61.673,
+    1.6,
+    1.6
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The bread oven"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "tavern-1-cellar-store-5",
+   "label": "Chest (Cellar store)",
+   "rect": [
+    78.489,
+    64.014,
+    0.9,
+    0.9
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 60.0
+  },
+  {
    "id": "chapel-1-chancel-3",
    "label": "Chest (Chancel)",
    "rect": [
-    42.659,
-    81.205,
+    90.533,
+    67.495,
     0.9,
     0.9
    ],
@@ -2375,32 +2755,14 @@
     "items": "",
     "fillPlace": "church"
    },
-   "rotation": 255.0
+   "rotation": 300.0
   },
   {
-   "id": "chapel-1-vestry-0",
-   "label": "Chest (Vestry)",
-   "rect": [
-    37.822,
-    81.466,
-    0.9,
-    0.9
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "church"
-   },
-   "rotation": 255.0
-  },
-  {
-   "id": "chapel-1-vestry-f1",
+   "id": "chapel-1-vestry-f4",
    "label": "Cupboard (Vestry)",
    "rect": [
-    38.211,
-    79.477,
+    87.448,
+    67.764,
     1.5,
     0.75
    ],
@@ -2411,121 +2773,14 @@
     "items": "",
     "fillPlace": "church"
    },
-   "rotation": 345.0
+   "rotation": 300.0
   },
   {
-   "id": "workshop-1-workshop-3",
-   "label": "Crates (Workshop)",
-   "rect": [
-    45.537,
-    64.614,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
-   },
-   "rotation": 255.0
-  },
-  {
-   "id": "workshop-1-workshop-4",
-   "label": "Crates (Workshop)",
-   "rect": [
-    47.256,
-    71.027,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
-   },
-   "rotation": 345.0
-  },
-  {
-   "id": "workshop-1-workshop-6",
-   "label": "Box bed (Workshop)",
-   "rect": [
-    44.088,
-    64.502,
-    1.0,
-    2.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
-   },
-   "rotation": 255.0
-  },
-  {
-   "id": "workshop-1-workshop-7",
-   "label": "Chest (Workshop)",
-   "rect": [
-    42.639,
-    65.39,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "workshop"
-   },
-   "rotation": 255.0
-  },
-  {
-   "id": "workshop-1-workshop-8",
-   "label": "Hearth (Workshop)",
-   "rect": [
-    46.29,
-    71.286,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "light": true,
-    "lightKind": "torch",
-    "title": "The hearth"
-   },
-   "light": {
-    "dim": 3,
-    "bright": 1,
-    "color": "#ff9a3c",
-    "on": true
-   },
-   "rotation": 345.0
-  },
-  {
-   "id": "workshop-1-shed-1",
-   "label": "Crates (Shed)",
-   "rect": [
-    39.836,
-    69.105,
-    0.8,
-    0.8
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
-   },
-   "rotation": 255.0
-  },
-  {
-   "id": "cottage-9-cottage-0",
+   "id": "cottage-1-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
-    56.175,
-    49.126,
+    83.019,
+    87.07,
     1.0,
     1.0
    ],
@@ -2540,14 +2795,14 @@
     "color": "#ff9a3c",
     "on": true
    },
-   "rotation": 60.0
+   "rotation": 240.0
   },
   {
-   "id": "cottage-9-cottage-2",
+   "id": "cottage-1-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    61.71,
-    46.932,
+    80.632,
+    81.435,
     1.0,
     2.0
    ],
@@ -2556,14 +2811,14 @@
     "hideKind": "bed",
     "title": "Under the box bed"
    },
-   "rotation": 330.0
+   "rotation": 240.0
   },
   {
-   "id": "cottage-9-cottage-3",
+   "id": "cottage-1-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    63.13,
-    49.392,
+    82.364,
+    80.435,
     1.0,
     2.0
    ],
@@ -2572,14 +2827,14 @@
     "hideKind": "bed",
     "title": "Under the box bed"
    },
-   "rotation": 330.0
+   "rotation": 240.0
   },
   {
-   "id": "cottage-9-cottage-4",
+   "id": "cottage-1-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    62.514,
-    50.825,
+    80.699,
+    83.051,
     1.0,
     1.0
    ],
@@ -2590,120 +2845,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 60.0
+   "rotation": 240.0
   },
   {
-   "id": "cottage-9-cottage-f0",
-   "label": "Cupboard (Cottage)",
+   "id": "cottage-12-cottage-0",
+   "label": "Hearth (Cottage)",
    "rect": [
-    57.745,
-    51.346,
-    1,
-    2
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 330.0
-  },
-  {
-   "id": "cottage-9-cottage-f1",
-   "label": "Cupboard (Cottage)",
-   "rect": [
-    59.543,
-    47.018,
-    1.5,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 330.0
-  },
-  {
-   "id": "cottage-9-lean-to-f0",
-   "label": "Cupboard (Lean-to)",
-   "rect": [
-    54.147,
-    51.114,
-    1,
-    2
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 330.0
-  },
-  {
-   "id": "cottage-9-lean-to-f1",
-   "label": "Cupboard (Lean-to)",
-   "rect": [
-    54.926,
-    53.021,
-    1.5,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 330.0
-  },
-  {
-   "id": "ghetto-house-1-living-room-0",
-   "label": "Bed (Living room)",
-   "rect": [
-    65.349,
-    95.359,
-    2.0,
-    2.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the bed"
-   },
-   "rotation": 150.0
-  },
-  {
-   "id": "ghetto-house-1-living-room-f2",
-   "label": "Cupboard (Living room)",
-   "rect": [
-    64.558,
-    94.406,
-    0.75,
-    1.5
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 150.0
-  },
-  {
-   "id": "ghetto-house-1-kitchen-0",
-   "label": "Hearth (Kitchen)",
-   "rect": [
-    66.819,
-    91.258,
+    63.055,
+    43.596,
     1.0,
     1.0
    ],
@@ -2718,31 +2867,82 @@
     "color": "#ff9a3c",
     "on": true
    },
-   "rotation": 240.0
+   "rotation": 15.0
   },
   {
-   "id": "ghetto-house-1-shop-0",
-   "label": "Crates (Shop)",
+   "id": "cottage-12-cottage-2",
+   "label": "Box bed (Cottage)",
    "rect": [
-    65.442,
-    92.463,
-    0.7,
-    0.7
+    67.289,
+    39.427,
+    1.0,
+    2.0
    ],
    "flags": {
     "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
+    "hideKind": "bed",
+    "title": "Under the box bed"
    },
-   "rotation": 240.0
+   "rotation": 285.0
+  },
+  {
+   "id": "cottage-12-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    64.739,
+    38.744,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 285.0
+  },
+  {
+   "id": "cottage-12-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    63.997,
+    40.08,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 15.0
+  },
+  {
+   "id": "cottage-12-cottage-f2",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    67.319,
+    41.421,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 285.0
   },
   {
    "id": "sgraffito-house-1-back-room-0",
    "label": "Bed (Back room)",
    "rect": [
-    45.945,
-    49.54,
+    43.584,
+    85.45,
     2.0,
     2.0
    ],
@@ -2751,14 +2951,14 @@
     "hideKind": "bed",
     "title": "Under the bed"
    },
-   "rotation": 330.0
+   "rotation": 345.0
   },
   {
    "id": "sgraffito-house-1-back-room-1",
    "label": "Chest (Back room)",
    "rect": [
-    44.896,
-    50.357,
+    45.197,
+    87.205,
     1.0,
     1.0
    ],
@@ -2769,14 +2969,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 330.0
+   "rotation": 255.0
   },
   {
    "id": "sgraffito-house-1-back-room-f0",
    "label": "Cupboard (Back room)",
    "rect": [
-    43.179,
-    52.165,
+    45.155,
+    89.449,
     1,
     2
    ],
@@ -2787,36 +2987,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 330.0
+   "rotation": 255.0
   },
   {
-   "id": "sgraffito-house-1-black-kitchen-0",
-   "label": "Hearth (Black kitchen)",
+   "id": "sgraffito-house-1-back-room-f5",
+   "label": "Cupboard (Back room)",
    "rect": [
-    45.163,
-    54.821,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "light": true,
-    "lightKind": "torch",
-    "title": "The hearth"
-   },
-   "light": {
-    "dim": 3,
-    "bright": 1,
-    "color": "#ff9a3c",
-    "on": true
-   },
-   "rotation": 60.0
-  },
-  {
-   "id": "sgraffito-house-1-hall-f2",
-   "label": "Cupboard (Hall)",
-   "rect": [
-    46.483,
-    54.17,
+    44.094,
+    87.687,
     0.75,
     1.5
    ],
@@ -2827,32 +3005,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 330.0
+   "rotation": 345.0
   },
   {
-   "id": "sgraffito-house-1-front-room-0",
-   "label": "Chest (Front room)",
+   "id": "sgraffito-house-1-black-kitchen-0",
+   "label": "Hearth (Black kitchen)",
    "rect": [
-    46.109,
-    57.739,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 330.0
-  },
-  {
-   "id": "passage-house-1-kitchen-0",
-   "label": "Hearth (Kitchen)",
-   "rect": [
-    46.288,
-    82.911,
+    48.536,
+    89.043,
     1.0,
     1.0
    ],
@@ -2867,14 +3027,200 @@
     "color": "#ff9a3c",
     "on": true
    },
+   "rotation": 255.0
+  },
+  {
+   "id": "sgraffito-house-1-hall-f2",
+   "label": "Cupboard (Hall)",
+   "rect": [
+    48.417,
+    86.917,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 255.0
+  },
+  {
+   "id": "sgraffito-house-1-front-room-0",
+   "label": "Chest (Front room)",
+   "rect": [
+    51.434,
+    88.267,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
    "rotation": 345.0
+  },
+  {
+   "id": "sgraffito-house-3-back-room-0",
+   "label": "Bed (Back room)",
+   "rect": [
+    37.892,
+    68.276,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the bed"
+   },
+   "rotation": 345.0
+  },
+  {
+   "id": "sgraffito-house-3-back-room-1",
+   "label": "Chest (Back room)",
+   "rect": [
+    39.504,
+    70.031,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 255.0
+  },
+  {
+   "id": "sgraffito-house-3-back-room-f0",
+   "label": "Cupboard (Back room)",
+   "rect": [
+    38.963,
+    72.775,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 345.0
+  },
+  {
+   "id": "sgraffito-house-3-back-room-f2",
+   "label": "Cupboard (Back room)",
+   "rect": [
+    40.642,
+    70.772,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 255.0
+  },
+  {
+   "id": "sgraffito-house-3-black-kitchen-0",
+   "label": "Hearth (Black kitchen)",
+   "rect": [
+    42.844,
+    71.869,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 255.0
+  },
+  {
+   "id": "sgraffito-house-3-hall-f2",
+   "label": "Cupboard (Hall)",
+   "rect": [
+    42.725,
+    69.743,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 255.0
+  },
+  {
+   "id": "sgraffito-house-3-front-room-0",
+   "label": "Chest (Front room)",
+   "rect": [
+    45.742,
+    71.092,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 345.0
+  },
+  {
+   "id": "passage-house-1-kitchen-0",
+   "label": "Hearth (Kitchen)",
+   "rect": [
+    44.122,
+    82.489,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 255.0
   },
   {
    "id": "passage-house-1-chamber-0",
    "label": "Box bed (Chamber)",
    "rect": [
-    49.315,
-    82.117,
+    43.404,
+    77.378,
     1.0,
     2.0
    ],
@@ -2883,14 +3229,14 @@
     "hideKind": "bed",
     "title": "Under the box bed"
    },
-   "rotation": 345.0
+   "rotation": 255.0
   },
   {
    "id": "passage-house-1-chamber-1",
    "label": "Chest (Chamber)",
    "rect": [
-    47.602,
-    82.559,
+    45.007,
+    79.146,
     1.0,
     1.0
    ],
@@ -2901,14 +3247,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 75.0
+   "rotation": 345.0
   },
   {
    "id": "passage-house-1-chamber-f0",
    "label": "Cupboard (Chamber)",
    "rect": [
-    50.014,
-    84.025,
+    43.745,
+    79.397,
     0.75,
     1.5
    ],
@@ -2919,32 +3265,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 345.0
-  },
-  {
-   "id": "passage-house-1-chamber-f2",
-   "label": "Cupboard (Chamber)",
-   "rect": [
-    48.188,
-    84.515,
-    0.75,
-    1.5
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 345.0
+   "rotation": 255.0
   },
   {
    "id": "passage-house-1-room-2",
    "label": "Chest (Room)",
    "rect": [
-    46.423,
-    89.749,
+    47.339,
+    79.039,
     1.0,
     1.0
    ],
@@ -2955,14 +3283,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 75.0
+   "rotation": 255.0
   },
   {
    "id": "passage-house-1-passage-0",
    "label": "Crates (Passage)",
    "rect": [
-    53.999,
-    86.856,
+    46.748,
+    76.15,
     0.5,
     0.5
    ],
@@ -2975,33 +3303,11 @@
    "rotation": 345.0
   },
   {
-   "id": "colony-house-1-kitchen-0",
-   "label": "Hearth (Kitchen)",
+   "id": "sgraffito-house-5-back-room-0",
+   "label": "Bed (Back room)",
    "rect": [
-    35.093,
-    54.972,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "light": true,
-    "lightKind": "torch",
-    "title": "The hearth"
-   },
-   "light": {
-    "dim": 3,
-    "bright": 1,
-    "color": "#ff9a3c",
-    "on": true
-   },
-   "rotation": 90.0
-  },
-  {
-   "id": "colony-house-1-room-0",
-   "label": "Bed (Room)",
-   "rect": [
-    35.093,
-    50.972,
+    49.408,
+    47.66,
     2.0,
     2.0
    ],
@@ -3010,30 +3316,14 @@
     "hideKind": "bed",
     "title": "Under the bed"
    },
-   "rotation": 90.0
+   "rotation": 60.0
   },
   {
-   "id": "colony-house-1-room-1",
-   "label": "Box bed (Room)",
+   "id": "sgraffito-house-5-back-room-1",
+   "label": "Chest (Back room)",
    "rect": [
-    38.233,
-    50.472,
-    1.0,
-    2.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
-   },
-   "rotation": 90.0
-  },
-  {
-   "id": "colony-house-1-room-2",
-   "label": "Chest (Room)",
-   "rect": [
-    38.733,
-    52.972,
+    48.984,
+    49.56,
     1.0,
     1.0
    ],
@@ -3044,14 +3334,50 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 90.0
+   "rotation": 330.0
   },
   {
-   "id": "passage-house-2-kitchen-0",
-   "label": "Hearth (Kitchen)",
+   "id": "sgraffito-house-5-back-room-f0",
+   "label": "Cupboard (Back room)",
    "rect": [
-    83.939,
-    87.715,
+    45.822,
+    50.23,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "sgraffito-house-5-back-room-f4",
+   "label": "Cupboard (Back room)",
+   "rect": [
+    48.191,
+    51.334,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 330.0
+  },
+  {
+   "id": "sgraffito-house-5-black-kitchen-0",
+   "label": "Hearth (Black kitchen)",
+   "rect": [
+    48.072,
+    53.262,
     1.0,
     1.0
    ],
@@ -3066,30 +3392,14 @@
     "color": "#ff9a3c",
     "on": true
    },
-   "rotation": 150.0
+   "rotation": 330.0
   },
   {
-   "id": "passage-house-2-chamber-0",
-   "label": "Box bed (Chamber)",
+   "id": "sgraffito-house-5-front-room-0",
+   "label": "Chest (Front room)",
    "rect": [
-    80.354,
-    89.285,
-    1.0,
-    2.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
-   },
-   "rotation": 240.0
-  },
-  {
-   "id": "passage-house-2-chamber-1",
-   "label": "Chest (Chamber)",
-   "rect": [
-    80.841,
-    88.349,
+    49.572,
+    55.86,
     1.0,
     1.0
    ],
@@ -3100,14 +3410,50 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 150.0
+   "rotation": 60.0
   },
   {
-   "id": "passage-house-2-chamber-f0",
-   "label": "Cupboard (Chamber)",
+   "id": "villa-1-salon-f0",
+   "label": "Cupboard (Salon)",
    "rect": [
-    78.368,
-    88.152,
+    59.444,
+    52.458,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 330.0
+  },
+  {
+   "id": "villa-1-salon-f2",
+   "label": "Cupboard (Salon)",
+   "rect": [
+    58.178,
+    48.986,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 330.0
+  },
+  {
+   "id": "villa-1-hall-f1",
+   "label": "Cupboard (Hall)",
+   "rect": [
+    61.059,
+    47.447,
     1.5,
     0.75
    ],
@@ -3118,16 +3464,16 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 240.0
+   "rotation": 330.0
   },
   {
-   "id": "passage-house-2-chamber-f2",
-   "label": "Cupboard (Chamber)",
+   "id": "villa-1-dining-room-f5",
+   "label": "Cupboard (Dining room)",
    "rect": [
-    80.38,
-    86.832,
-    0.75,
-    1.5
+    54.229,
+    45.617,
+    1.5,
+    0.75
    ],
    "flags": {
     "container": true,
@@ -3136,14 +3482,108 @@
     "items": "",
     "fillPlace": "home"
    },
+   "rotation": 330.0
+  },
+  {
+   "id": "villa-1-kitchen-0",
+   "label": "Oven (Kitchen)",
+   "rect": [
+    57.972,
+    43.409,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The bread oven"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
+   "rotation": 330.0
+  },
+  {
+   "id": "villa-1-kitchen-f1",
+   "label": "Cupboard (Kitchen)",
+   "rect": [
+    60.244,
+    46.636,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 330.0
+  },
+  {
+   "id": "colony-house-1-kitchen-0",
+   "label": "Hearth (Kitchen)",
+   "rect": [
+    72.589,
+    55.822,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   },
    "rotation": 150.0
   },
   {
-   "id": "passage-house-2-room-2",
+   "id": "colony-house-1-room-0",
+   "label": "Bed (Room)",
+   "rect": [
+    75.836,
+    49.533,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the bed"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "colony-house-1-room-1",
+   "label": "Box bed (Room)",
+   "rect": [
+    76.486,
+    53.072,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "colony-house-1-room-2",
    "label": "Chest (Room)",
    "rect": [
-    80.403,
-    82.089,
+    74.787,
+    50.35,
     1.0,
     1.0
    ],
@@ -3154,49 +3594,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 150.0
-  },
-  {
-   "id": "passage-house-2-room-f2",
-   "label": "Cupboard (Room)",
-   "rect": [
-    81.478,
-    82.734,
-    0.75,
-    1.5
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 150.0
-  },
-  {
-   "id": "passage-house-2-passage-0",
-   "label": "Crates (Passage)",
-   "rect": [
-    75.231,
-    88.229,
-    0.5,
-    0.5
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
-   },
-   "rotation": 150.0
+   "rotation": 60.0
   },
   {
    "id": "school-1-classroom-f5",
    "label": "Cupboard (Classroom)",
    "rect": [
-    78.396,
-    50.19,
+    76.804,
+    91.226,
     1,
     1
    ],
@@ -3207,32 +3612,14 @@
     "items": "",
     "fillPlace": "office"
    },
-   "rotation": 60.0
+   "rotation": 240.0
   },
   {
    "id": "school-1-classroom-f6",
    "label": "Cupboard (Classroom)",
    "rect": [
-    77.53,
-    50.69,
-    1,
-    1
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "office"
-   },
-   "rotation": 60.0
-  },
-  {
-   "id": "school-1-classroom-f7",
-   "label": "Cupboard (Classroom)",
-   "rect": [
-    76.664,
-    51.19,
+    76.304,
+    90.36,
     1,
     1
    ],
@@ -3246,13 +3633,13 @@
    "rotation": 150.0
   },
   {
-   "id": "school-1-second-classroom-f0",
-   "label": "Cupboard (Second classroom)",
+   "id": "school-1-classroom-f7",
+   "label": "Cupboard (Classroom)",
    "rect": [
-    80.718,
-    56.432,
+    75.804,
+    89.494,
     1,
-    2
+    1
    ],
    "flags": {
     "container": true,
@@ -3261,16 +3648,16 @@
     "items": "",
     "fillPlace": "office"
    },
-   "rotation": 60.0
+   "rotation": 240.0
   },
   {
-   "id": "school-1-second-classroom-f11",
+   "id": "school-1-second-classroom-f0",
    "label": "Cupboard (Second classroom)",
    "rect": [
-    78.747,
-    58.181,
-    0.75,
-    1.5
+    71.348,
+    93.275,
+    1,
+    2
    ],
    "flags": {
     "container": true,
@@ -3285,8 +3672,8 @@
    "id": "school-1-third-classroom-f0",
    "label": "Cupboard (Third classroom)",
    "rect": [
-    87.639,
-    62.02,
+    69.348,
+    97.132,
     1,
     2
    ],
@@ -3297,68 +3684,86 @@
     "items": "",
     "fillPlace": "office"
    },
-   "rotation": 150.0
+   "rotation": 240.0
   },
   {
-   "id": "school-1-third-classroom-f13",
-   "label": "Cupboard (Third classroom)",
+   "id": "colony-house-2-kitchen-0",
+   "label": "Hearth (Kitchen)",
    "rect": [
-    82.247,
-    64.244,
-    0.75,
-    1.5
+    41.029,
+    57.417,
+    1.0,
+    1.0
    ],
    "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "office"
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
    },
-   "rotation": 150.0
-  },
-  {
-   "id": "bata-house-1-living-room-f0",
-   "label": "Cupboard (Living room)",
-   "rect": [
-    35.884,
-    89.148,
-    2,
-    1
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 345.0
-  },
-  {
-   "id": "bata-house-2-living-room-f0",
-   "label": "Cupboard (Living room)",
-   "rect": [
-    99.099,
-    23.969,
-    2,
-    1
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
    },
    "rotation": 90.0
   },
   {
-   "id": "bata-house-2-neighbours-living-room-f0",
-   "label": "Cupboard (Neighbours' living room)",
+   "id": "colony-house-2-room-0",
+   "label": "Bed (Room)",
    "rect": [
-    100.459,
-    23.969,
+    37.389,
+    50.777,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the bed"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "colony-house-2-room-1",
+   "label": "Box bed (Room)",
+   "rect": [
+    41.029,
+    52.417,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "colony-house-2-room-2",
+   "label": "Chest (Room)",
+   "rect": [
+    37.389,
+    52.777,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "func-villa-1-living-space-f0",
+   "label": "Cupboard (Living space)",
+   "rect": [
+    81.45,
+    128.636,
     2,
     1
    ],
@@ -3369,14 +3774,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 90.0
+   "rotation": 45.0
   },
   {
    "id": "panel-block-1-flat-f0",
    "label": "Cupboard (Flat)",
    "rect": [
-    101.07,
-    75.32,
+    100.07,
+    69.68,
     1,
     2
    ],
@@ -3393,8 +3798,8 @@
    "id": "panel-block-1-second-flat-f0",
    "label": "Cupboard (Second flat)",
    "rect": [
-    100.57,
-    80.18,
+    95.68,
+    83.32,
     2,
     1
    ],
@@ -3405,13 +3810,13 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 180.0
+   "rotation": 90.0
   },
   {
    "id": "panel-block-1-third-flat-f0",
    "label": "Cupboard (Third flat)",
    "rect": [
-    98.2,
+    99.43,
     84.68,
     1,
     2
@@ -3429,7 +3834,7 @@
    "id": "panel-block-1-second-stair-core-f0",
    "label": "Cupboard (Second stair core)",
    "rect": [
-    102.32,
+    101.32,
     89.68,
     1,
     2
@@ -3447,7 +3852,7 @@
    "id": "panel-block-1-fourth-flat-f0",
    "label": "Cupboard (Fourth flat)",
    "rect": [
-    101.57,
+    99.82,
     92.68,
     1,
     2
@@ -3465,8 +3870,8 @@
    "id": "panel-block-2-flat-f0",
    "label": "Cupboard (Flat)",
    "rect": [
-    33.32,
-    100.18,
+    56.32,
+    103.07,
     2,
     1
    ],
@@ -3477,14 +3882,32 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 90.0
+   "rotation": 270.0
+  },
+  {
+   "id": "panel-block-2-flat-f7",
+   "label": "Cupboard (Flat)",
+   "rect": [
+    57.07,
+    101.07,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 180.0
   },
   {
    "id": "panel-block-2-second-flat-f0",
    "label": "Cupboard (Second flat)",
    "rect": [
-    41.82,
-    99.93,
+    43.68,
+    98.68,
     1,
     2
    ],
@@ -3495,32 +3918,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 0.0
-  },
-  {
-   "id": "panel-block-2-second-flat-f8",
-   "label": "Cupboard (Second flat)",
-   "rect": [
-    41.32,
-    103.43,
-    2,
-    1
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 90.0
+   "rotation": 270.0
   },
   {
    "id": "panel-block-2-third-flat-f0",
    "label": "Cupboard (Third flat)",
    "rect": [
-    46.82,
-    100.43,
+    41.82,
+    101.93,
     1,
     2
    ],
@@ -3531,14 +3936,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 0.0
+   "rotation": 180.0
   },
   {
    "id": "panel-block-2-second-stair-core-f0",
    "label": "Cupboard (Second stair core)",
    "rect": [
-    48.18,
-    99.18,
+    36.82,
+    103.82,
     1,
     2
    ],
@@ -3549,32 +3954,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 0.0
-  },
-  {
-   "id": "panel-block-2-second-stair-core-f5",
-   "label": "Cupboard (Second stair core)",
-   "rect": [
-    49.32,
-    103.68,
-    2,
-    1
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 90.0
+   "rotation": 180.0
   },
   {
    "id": "panel-block-2-fourth-flat-f0",
    "label": "Cupboard (Fourth flat)",
    "rect": [
-    50.68,
-    100.82,
+    33.32,
+    102.82,
     2,
     1
    ],
@@ -3585,10 +3972,28 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 90.0
+   "rotation": 270.0
   },
   {
-   "id": "cottage-12-cottage-0",
+   "id": "panel-block-2-fourth-flat-f10",
+   "label": "Cupboard (Fourth flat)",
+   "rect": [
+    28.18,
+    103.32,
+    1,
+    2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "cottage-13-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
     114.012,
@@ -3607,10 +4012,10 @@
     "color": "#ff9a3c",
     "on": true
    },
-   "rotation": 345.0
+   "rotation": 75.0
   },
   {
-   "id": "cottage-12-cottage-2",
+   "id": "cottage-13-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
     119.306,
@@ -3626,7 +4031,7 @@
    "rotation": 345.0
   },
   {
-   "id": "cottage-12-cottage-3",
+   "id": "cottage-13-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
     118.623,
@@ -3642,11 +4047,11 @@
    "rotation": 345.0
   },
   {
-   "id": "cottage-12-cottage-4",
+   "id": "cottage-13-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    118.47,
-    24.697,
+    117.528,
+    21.181,
     1.0,
     1.0
    ],
@@ -3657,10 +4062,10 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 345.0
+   "rotation": 75.0
   },
   {
-   "id": "cottage-13-cottage-0",
+   "id": "cottage-14-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
     119.763,
@@ -3682,11 +4087,11 @@
    "rotation": 255.0
   },
   {
-   "id": "cottage-13-cottage-2",
+   "id": "cottage-14-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    114.473,
-    32.93,
+    114.468,
+    32.91,
     1.0,
     2.0
    ],
@@ -3698,11 +4103,11 @@
    "rotation": 165.0
   },
   {
-   "id": "cottage-13-cottage-3",
+   "id": "cottage-14-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    114.991,
-    34.862,
+    115.151,
+    35.46,
     1.0,
     2.0
    ],
@@ -3714,11 +4119,11 @@
    "rotation": 165.0
   },
   {
-   "id": "cottage-13-cottage-4",
+   "id": "cottage-14-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    115.324,
-    32.663,
+    116.247,
+    36.185,
     1.0,
     1.0
    ],
@@ -3732,85 +4137,13 @@
    "rotation": 255.0
   },
   {
-   "id": "cottage-14-cottage-0",
-   "label": "Hearth (Cottage)",
-   "rect": [
-    86.833,
-    24.629,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "light": true,
-    "lightKind": "torch",
-    "title": "The hearth"
-   },
-   "light": {
-    "dim": 3,
-    "bright": 1,
-    "color": "#ff9a3c",
-    "on": true
-   },
-   "rotation": 90.0
-  },
-  {
-   "id": "cottage-14-cottage-2",
-   "label": "Box bed (Cottage)",
-   "rect": [
-    91.473,
-    27.269,
-    1.0,
-    2.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
-   },
-   "rotation": 0.0
-  },
-  {
-   "id": "cottage-14-cottage-3",
-   "label": "Box bed (Cottage)",
-   "rect": [
-    91.473,
-    24.629,
-    1.0,
-    2.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
-   },
-   "rotation": 0.0
-  },
-  {
-   "id": "cottage-14-cottage-4",
-   "label": "Chest (Cottage)",
-   "rect": [
-    90.473,
-    28.269,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 0.0
-  },
-  {
    "id": "cottage-14-cottage-f1",
    "label": "Cupboard (Cottage)",
    "rect": [
-    86.458,
-    28.144,
-    1.5,
-    0.75
+    115.639,
+    32.233,
+    0.75,
+    1.5
    ],
    "flags": {
     "container": true,
@@ -3819,14 +4152,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 90.0
+   "rotation": 255.0
   },
   {
    "id": "cottage-15-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
-    107.919,
-    37.559,
+    102.77,
+    23.209,
     1.0,
     1.0
    ],
@@ -3841,14 +4174,14 @@
     "color": "#ff9a3c",
     "on": true
    },
-   "rotation": 180.0
+   "rotation": 90.0
   },
   {
    "id": "cottage-15-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    103.279,
-    33.939,
+    107.41,
+    25.849,
     1.0,
     2.0
    ],
@@ -3857,14 +4190,14 @@
     "hideKind": "bed",
     "title": "Under the box bed"
    },
-   "rotation": 180.0
+   "rotation": 0.0
   },
   {
    "id": "cottage-15-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    103.279,
-    35.939,
+    107.41,
+    23.209,
     1.0,
     2.0
    ],
@@ -3873,14 +4206,14 @@
     "hideKind": "bed",
     "title": "Under the box bed"
    },
-   "rotation": 180.0
+   "rotation": 0.0
   },
   {
    "id": "cottage-15-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    104.299,
-    33.919,
+    106.41,
+    23.209,
     1.0,
     1.0
    ],
@@ -3891,10 +4224,10 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 180.0
+   "rotation": 90.0
   },
   {
-   "id": "cottage-16-cottage-0",
+   "id": "cottage-18-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
     98.954,
@@ -3916,11 +4249,11 @@
    "rotation": 270.0
   },
   {
-   "id": "cottage-16-cottage-2",
+   "id": "cottage-18-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
     94.314,
-    34.737,
+    34.717,
     1.0,
     2.0
    ],
@@ -3932,7 +4265,7 @@
    "rotation": 180.0
   },
   {
-   "id": "cottage-16-cottage-3",
+   "id": "cottage-18-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
     94.314,
@@ -3948,11 +4281,11 @@
    "rotation": 180.0
   },
   {
-   "id": "cottage-16-cottage-4",
+   "id": "cottage-18-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
     95.314,
-    34.717,
+    38.357,
     1.0,
     1.0
    ],
@@ -3966,76 +4299,110 @@
    "rotation": 270.0
   },
   {
-   "id": "cottage-17-cottage-0",
-   "label": "Hearth (Cottage)",
+   "id": "family-house-1-garage-1",
+   "label": "Crates (Garage)",
    "rect": [
-    74.131,
-    29.385,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "light": true,
-    "lightKind": "torch",
-    "title": "The hearth"
-   },
-   "light": {
-    "dim": 3,
-    "bright": 1,
-    "color": "#ff9a3c",
-    "on": true
-   },
-   "rotation": 330.0
-  },
-  {
-   "id": "cottage-17-cottage-2",
-   "label": "Box bed (Cottage)",
-   "rect": [
-    79.709,
-    29.267,
-    1.0,
-    2.0
+    107.279,
+    36.359,
+    0.7,
+    0.7
    ],
    "flags": {
     "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
    },
-   "rotation": 330.0
+   "rotation": 180.0
   },
   {
-   "id": "cottage-17-cottage-3",
-   "label": "Box bed (Cottage)",
+   "id": "family-house-1-hall-f2",
+   "label": "Cupboard (Hall)",
    "rect": [
-    78.399,
-    26.998,
-    1.0,
-    2.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
-   },
-   "rotation": 330.0
-  },
-  {
-   "id": "cottage-17-cottage-4",
-   "label": "Chest (Cottage)",
-   "rect": [
-    79.086,
-    30.727,
-    1.0,
-    1.0
+    101.904,
+    34.469,
+    1.5,
+    0.75
    ],
    "flags": {
     "container": true,
-    "kind": "chest",
-    "lock": "cheap",
+    "kind": "cabinet",
+    "lock": "none",
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 60.0
+   "rotation": 270.0
+  },
+  {
+   "id": "family-house-1-living-room-f4",
+   "label": "Cupboard (Living room)",
+   "rect": [
+    105.569,
+    41.809,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "family-house-1-kitchen-f1",
+   "label": "Cupboard (Kitchen)",
+   "rect": [
+    103.794,
+    41.434,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "suburban-house-1-living-room-f4",
+   "label": "Cupboard (Living room)",
+   "rect": [
+    97.196,
+    24.258,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "suburban-house-1-garage-2",
+   "label": "Crates (Garage)",
+   "rect": [
+    99.746,
+    21.008,
+    0.7,
+    0.7
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 0.0
   },
   {
    "id": "well",
@@ -4057,108 +4424,100 @@
  ],
  "regions": [
   {
+   "id": "tavern-1",
+   "label": "Tavern",
+   "rect": [
+    74.578,
+    54.171,
+    11.928,
+    12.66
+   ],
+   "points": [
+    81.506,
+    54.171,
+    86.506,
+    62.832,
+    79.578,
+    66.832,
+    74.578,
+    58.171
+   ],
+   "place": {
+    "kind": "tavern"
+   }
+  },
+  {
    "id": "chapel-1",
    "label": "Chapel",
    "rect": [
-    37.05,
-    74.235,
-    14.558,
-    8.643
+    86.017,
+    56.28,
+    10.696,
+    14.874
    ],
    "points": [
-    40.983,
-    82.877,
-    40.724,
-    81.911,
-    37.826,
-    82.688,
-    37.05,
-    79.79,
-    39.947,
-    79.013,
-    39.43,
-    77.082,
-    50.055,
-    74.235,
-    51.608,
-    80.03
+    91.214,
+    68.806,
+    90.781,
+    68.556,
+    89.281,
+    71.154,
+    86.682,
+    69.654,
+    88.182,
+    67.056,
+    86.017,
+    65.806,
+    91.517,
+    56.28,
+    96.714,
+    59.28
    ],
    "place": {
     "kind": "church"
    }
   },
   {
-   "id": "workshop-1",
-   "label": "Workshop (carpenter)",
+   "id": "cottage-1",
+   "label": "Priest's house",
    "rect": [
-    38.79,
-    64.281,
-    9.798,
-    9.022
+    79.77,
+    79.936,
+    7.83,
+    8.562
    ],
    "points": [
-    43.759,
-    73.302,
-    42.723,
-    69.439,
-    39.826,
-    70.215,
-    38.79,
-    66.351,
-    46.518,
-    64.281,
-    48.588,
-    72.008
-   ],
-   "place": {
-    "kind": "workplace"
-   }
-  },
-  {
-   "id": "cottage-9",
-   "label": "Cottage",
-   "rect": [
-    53.148,
-    45.877,
-    11.66,
-    8.696
-   ],
-   "points": [
-    53.148,
-    50.877,
-    61.809,
-    45.877,
-    64.809,
-    51.074,
-    58.746,
-    54.574,
-    57.746,
-    52.841,
-    55.148,
-    54.341
+    83.27,
+    88.499,
+    79.77,
+    82.436,
+    84.1,
+    79.936,
+    87.6,
+    85.999
    ],
    "place": {
     "kind": "home"
    }
   },
   {
-   "id": "ghetto-house-1",
-   "label": "House in the Jewish quarter",
+   "id": "cottage-12",
+   "label": "Cottage",
    "rect": [
-    61.918,
-    88.543,
-    8.33,
-    9.428
+    62.722,
+    38.781,
+    6.383,
+    7.09
    ],
    "points": [
-    70.248,
-    95.471,
-    65.918,
-    97.971,
-    61.918,
-    91.043,
-    66.248,
-    88.543
+    62.722,
+    44.577,
+    64.275,
+    38.781,
+    69.105,
+    40.075,
+    67.552,
+    45.871
    ],
    "place": {
     "kind": "home"
@@ -4168,20 +4527,43 @@
    "id": "sgraffito-house-1",
    "label": "Sgraffito house",
    "rect": [
-    42.18,
-    48.928,
-    10.196,
-    11.66
+    43.139,
+    83.027,
+    11.212,
+    8.384
    ],
    "points": [
-    42.18,
-    51.928,
-    47.376,
-    48.928,
-    52.376,
-    57.589,
-    47.18,
-    60.589
+    44.692,
+    91.411,
+    43.139,
+    85.616,
+    52.798,
+    83.027,
+    54.351,
+    88.823
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "sgraffito-house-3",
+   "label": "Sgraffito house",
+   "rect": [
+    37.446,
+    65.853,
+    11.212,
+    8.384
+   ],
+   "points": [
+    38.999,
+    74.237,
+    37.446,
+    68.441,
+    47.106,
+    65.853,
+    48.659,
+    71.649
    ],
    "place": {
     "kind": "home"
@@ -4191,20 +4573,66 @@
    "id": "passage-house-1",
    "label": "Gate-passage house",
    "rect": [
-    44.371,
-    81.025,
-    10.764,
-    10.057
+    41.812,
+    73.058,
+    10.057,
+    10.764
    ],
    "points": [
-    44.371,
-    83.354,
-    53.064,
-    81.025,
-    55.135,
-    88.752,
-    46.442,
-    91.082
+    44.142,
+    83.822,
+    41.812,
+    75.129,
+    49.54,
+    73.058,
+    51.869,
+    81.751
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "sgraffito-house-5",
+   "label": "Sgraffito house",
+   "rect": [
+    45.644,
+    47.049,
+    10.196,
+    11.66
+   ],
+   "points": [
+    45.644,
+    50.049,
+    50.84,
+    47.049,
+    55.84,
+    55.709,
+    50.644,
+    58.709
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "villa-1",
+   "label": "Villa",
+   "rect": [
+    52.164,
+    41.977,
+    13.66,
+    13.66
+   ],
+   "points": [
+    52.164,
+    46.977,
+    60.824,
+    41.977,
+    65.824,
+    50.637,
+    57.164,
+    55.637
    ],
    "place": {
     "kind": "home"
@@ -4214,43 +4642,20 @@
    "id": "colony-house-1",
    "label": "Colony house",
    "rect": [
-    34.913,
-    50.792,
-    5.0,
-    8.0
+    70.34,
+    48.921,
+    9.428,
+    8.33
    ],
    "points": [
-    34.913,
-    50.792,
-    39.913,
-    50.792,
-    39.913,
-    58.792,
-    34.913,
-    58.792
-   ],
-   "place": {
-    "kind": "home"
-   }
-  },
-  {
-   "id": "passage-house-2",
-   "label": "Gate-passage house",
-   "rect": [
-    73.574,
-    81.535,
-    11.794,
-    11.428
-   ],
-   "points": [
-    85.368,
-    88.464,
-    77.574,
-    92.964,
-    73.574,
-    86.035,
-    81.368,
-    81.535
+    77.268,
+    48.921,
+    79.768,
+    53.251,
+    72.84,
+    57.251,
+    70.34,
+    52.921
    ],
    "place": {
     "kind": "home"
@@ -4260,66 +4665,66 @@
    "id": "school-1",
    "label": "School",
    "rect": [
-    72.078,
-    48.841,
-    18.66,
-    22.321
+    61.707,
+    82.071,
+    22.321,
+    18.66
    ],
    "points": [
-    80.738,
-    48.841,
-    90.738,
-    66.162,
-    82.078,
-    71.162,
-    72.078,
-    53.841
+    84.027,
+    90.731,
+    66.707,
+    100.731,
+    61.707,
+    92.071,
+    79.027,
+    82.071
    ],
    "place": {
     "kind": "workplace"
    }
   },
   {
-   "id": "bata-house-1",
-   "label": "Ba\u0165a house",
+   "id": "colony-house-2",
+   "label": "Colony house",
    "rect": [
-    35.568,
-    87.226,
-    9.022,
-    6.9
+    37.209,
+    50.597,
+    5.0,
+    8.0
    ],
    "points": [
-    35.568,
-    89.297,
-    43.295,
-    87.226,
-    44.589,
-    92.056,
-    36.862,
-    94.126
+    37.209,
+    50.597,
+    42.209,
+    50.597,
+    42.209,
+    58.597,
+    37.209,
+    58.597
    ],
    "place": {
     "kind": "home"
    }
   },
   {
-   "id": "bata-house-2",
-   "label": "Ba\u0165a house",
+   "id": "func-villa-1",
+   "label": "Functionalist villa",
    "rect": [
-    96.779,
-    22.789,
-    8.0,
-    5.0
+    77.776,
+    119.059,
+    16.263,
+    16.263
    ],
    "points": [
-    96.779,
-    22.789,
-    104.779,
-    22.789,
-    104.779,
-    27.789,
-    96.779,
-    27.789
+    84.14,
+    119.059,
+    94.04,
+    128.959,
+    87.676,
+    135.323,
+    77.776,
+    125.423
    ],
    "place": {
     "kind": "home"
@@ -4358,21 +4763,21 @@
     8.0
    ],
    "points": [
-    28.0,
-    99.0,
-    58.0,
-    99.0,
     58.0,
     107.0,
     28.0,
-    107.0
+    107.0,
+    28.0,
+    99.0,
+    58.0,
+    99.0
    ],
    "place": {
     "kind": "home"
    }
   },
   {
-   "id": "cottage-12",
+   "id": "cottage-13",
    "label": "Suburban house",
    "rect": [
     113.679,
@@ -4396,7 +4801,7 @@
    "area": "suburb"
   },
   {
-   "id": "cottage-13",
+   "id": "cottage-14",
    "label": "Suburban house",
    "rect": [
     114.006,
@@ -4420,47 +4825,23 @@
    "area": "suburb"
   },
   {
-   "id": "cottage-14",
-   "label": "Suburban house",
-   "rect": [
-    86.653,
-    24.449,
-    6.0,
-    5.0
-   ],
-   "points": [
-    86.653,
-    24.449,
-    92.653,
-    24.449,
-    92.653,
-    29.449,
-    86.653,
-    29.449
-   ],
-   "place": {
-    "kind": "home"
-   },
-   "area": "suburb"
-  },
-  {
    "id": "cottage-15",
    "label": "Suburban house",
    "rect": [
-    103.099,
-    33.739,
+    102.59,
+    23.029,
     6.0,
     5.0
    ],
    "points": [
-    109.099,
-    38.739,
-    103.099,
-    38.739,
-    103.099,
-    33.739,
-    109.099,
-    33.739
+    102.59,
+    23.029,
+    108.59,
+    23.029,
+    108.59,
+    28.029,
+    102.59,
+    28.029
    ],
    "place": {
     "kind": "home"
@@ -4468,7 +4849,7 @@
    "area": "suburb"
   },
   {
-   "id": "cottage-16",
+   "id": "cottage-18",
    "label": "Suburban house",
    "rect": [
     94.134,
@@ -4492,28 +4873,50 @@
    "area": "suburb"
   },
   {
-   "id": "cottage-17",
-   "label": "Suburban house",
+   "id": "family-house-1",
+   "label": "Family house",
    "rect": [
-    73.702,
-    26.636,
-    7.696,
-    7.33
+    102.099,
+    33.739,
+    8.0,
+    9.0
    ],
    "points": [
-    73.702,
-    29.636,
-    78.898,
-    26.636,
-    81.398,
-    30.966,
-    76.202,
-    33.966
+    110.099,
+    42.739,
+    102.099,
+    42.739,
+    102.099,
+    33.739,
+    110.099,
+    33.739
    ],
    "place": {
     "kind": "home"
-   },
-   "area": "suburb"
+   }
+  },
+  {
+   "id": "suburban-house-1",
+   "label": "Entrepreneur's house",
+   "rect": [
+    92.126,
+    20.828,
+    9.0,
+    8.0
+   ],
+   "points": [
+    92.126,
+    20.828,
+    101.126,
+    20.828,
+    101.126,
+    28.828,
+    92.126,
+    28.828
+   ],
+   "place": {
+    "kind": "home"
+   }
   },
   {
    "id": "brook-1-1",
@@ -5312,56 +5715,27 @@
    "area": "cemetery"
   },
   {
-   "id": "workshop-1-plot",
-   "label": "Yard of the workshop (carpenter)",
-   "rect": [
-    31.991,
-    63.647,
-    18.351,
-    12.921
-   ],
-   "points": [
-    33.12,
-    76.567,
-    50.343,
-    71.952,
-    47.56,
-    63.673,
-    47.339,
-    63.647,
-    31.991,
-    67.759
-   ],
-   "place": {
-    "kind": "workplace",
-    "owner": "workshop-1",
-    "private": true
-   }
-  },
-  {
-   "id": "cottage-9-plot",
+   "id": "cottage-12-plot",
    "label": "Yard of the cottage",
    "rect": [
-    44.139,
-    34.125,
-    21.64,
-    23.235
+    61.216,
+    38.302,
+    9.878,
+    8.268
    ],
    "points": [
-    56.429,
-    57.36,
-    65.779,
-    52.754,
-    56.419,
-    36.543,
-    47.513,
-    34.125,
-    44.139,
-    36.073
+    68.618,
+    46.571,
+    71.094,
+    40.527,
+    62.9,
+    38.302,
+    61.216,
+    44.587
    ],
    "place": {
     "kind": "home",
-    "owner": "cottage-9",
+    "owner": "cottage-12",
     "private": true
    }
   },
@@ -5520,25 +5894,43 @@
  ],
  "households": [
   {
-   "id": "steinfeld-1995-7.workshop-1-household",
-   "building": "workshop-1",
-   "label": "Workshop (carpenter) household",
-   "trade": "joiner",
+   "id": "steinfeld-1995-7.tavern-1-household",
+   "building": "tavern-1",
+   "label": "Tavern household",
+   "trade": "publican",
    "people": [
     {
-     "role": "joiner"
+     "role": "publican"
     }
    ],
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.cottage-9-household",
-   "building": "cottage-9",
-   "label": "Cottage household",
-   "trade": "factory worker",
+   "id": "steinfeld-1995-7.cottage-1-household",
+   "building": "cottage-1",
+   "label": "Priest's house household",
+   "trade": "priest",
    "people": [
     {
-     "role": "factory worker"
+     "role": "priest"
+    },
+    {
+     "role": "housekeeper"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.cottage-12-household",
+   "building": "cottage-12",
+   "label": "Cottage household",
+   "trade": "schoolteacher",
+   "people": [
+    {
+     "role": "schoolteacher"
+    },
+    {
+     "role": "partner"
     },
     {
      "role": "child"
@@ -5547,9 +5939,9 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.ghetto-house-1-household",
-   "building": "ghetto-house-1",
-   "label": "House in the Jewish quarter household",
+   "id": "steinfeld-1995-7.sgraffito-house-1-household",
+   "building": "sgraffito-house-1",
+   "label": "Sgraffito house household",
    "trade": "nurse",
    "people": [
     {
@@ -5565,8 +5957,8 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.sgraffito-house-1-household",
-   "building": "sgraffito-house-1",
+   "id": "steinfeld-1995-7.sgraffito-house-3-household",
+   "building": "sgraffito-house-3",
    "label": "Sgraffito house household",
    "trade": "office worker",
    "people": [
@@ -5583,21 +5975,6 @@
    "id": "steinfeld-1995-7.passage-house-1-household",
    "building": "passage-house-1",
    "label": "Gate-passage house household",
-   "trade": "priest",
-   "people": [
-    {
-     "role": "priest"
-    },
-    {
-     "role": "housekeeper"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.colony-house-1-household",
-   "building": "colony-house-1",
-   "label": "Colony house household",
    "trade": "office worker",
    "people": [
     {
@@ -5607,13 +5984,43 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.passage-house-2-household",
-   "building": "passage-house-2",
-   "label": "Gate-passage house household",
-   "trade": "pensioner",
+   "id": "steinfeld-1995-7.sgraffito-house-5-household",
+   "building": "sgraffito-house-5",
+   "label": "Sgraffito house household",
+   "trade": "office worker",
    "people": [
     {
-     "role": "pensioner"
+     "role": "office worker"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.villa-1-household",
+   "building": "villa-1",
+   "label": "Villa household",
+   "trade": "builder",
+   "people": [
+    {
+     "role": "builder"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.colony-house-1-household",
+   "building": "colony-house-1",
+   "label": "Colony house household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
     }
    ],
    "wealth": "middling"
@@ -5635,56 +6042,32 @@
     },
     {
      "role": "staff"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.bata-house-1-household",
-   "building": "bata-house-1",
-   "label": "Ba\u0165a house household",
-   "trade": "student",
-   "people": [
-    {
-     "role": "student"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.bata-house-1-household-2",
-   "building": "bata-house-1",
-   "label": "Ba\u0165a house household",
-   "trade": "nurse",
-   "people": [
-    {
-     "role": "nurse"
     },
     {
-     "role": "child"
-    },
-    {
-     "role": "child"
+     "role": "staff"
     }
    ],
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.bata-house-2-household",
-   "building": "bata-house-2",
-   "label": "Ba\u0165a house household",
-   "trade": "unemployed",
+   "id": "steinfeld-1995-7.colony-house-2-household",
+   "building": "colony-house-2",
+   "label": "Colony house household",
+   "trade": "office worker",
    "people": [
     {
-     "role": "unemployed"
+     "role": "office worker"
+    },
+    {
+     "role": "partner"
     }
    ],
-   "wealth": "poor"
+   "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.bata-house-2-household-2",
-   "building": "bata-house-2",
-   "label": "Ba\u0165a house household",
+   "id": "steinfeld-1995-7.func-villa-1-household",
+   "building": "func-villa-1",
+   "label": "Functionalist villa household",
    "trade": "unemployed",
    "people": [
     {
@@ -5697,22 +6080,10 @@
    "id": "steinfeld-1995-7.panel-block-1-household-1",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "nurse",
    "people": [
     {
-     "role": "teacher"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "elder"
+     "role": "nurse"
     }
    ],
    "wealth": "middling"
@@ -5721,16 +6092,10 @@
    "id": "steinfeld-1995-7.panel-block-1-household-2",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "office worker",
+   "trade": "teacher",
    "people": [
     {
-     "role": "office worker"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
+     "role": "teacher"
     }
    ],
    "wealth": "middling"
@@ -5739,22 +6104,10 @@
    "id": "steinfeld-1995-7.panel-block-1-household-3",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "programmer",
+   "trade": "office worker",
    "people": [
     {
-     "role": "programmer"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
+     "role": "office worker"
     }
    ],
    "wealth": "middling"
@@ -5763,13 +6116,10 @@
    "id": "steinfeld-1995-7.panel-block-1-household-4",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "builder",
+   "trade": "office worker",
    "people": [
     {
-     "role": "builder"
-    },
-    {
-     "role": "partner"
+     "role": "office worker"
     },
     {
      "role": "child"
@@ -5784,13 +6134,10 @@
    "id": "steinfeld-1995-7.panel-block-1-household-5",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "nurse",
+   "trade": "teacher",
    "people": [
     {
-     "role": "nurse"
-    },
-    {
-     "role": "partner"
+     "role": "teacher"
     }
    ],
    "wealth": "middling"
@@ -5799,43 +6146,16 @@
    "id": "steinfeld-1995-7.panel-block-1-household-6",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "pensioner",
+   "trade": "teacher",
    "people": [
     {
-     "role": "pensioner"
+     "role": "teacher"
     }
    ],
    "wealth": "middling"
   },
   {
    "id": "steinfeld-1995-7.panel-block-1-household-7",
-   "building": "panel-block-1",
-   "label": "Panel block household",
-   "trade": "student",
-   "people": [
-    {
-     "role": "student"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.panel-block-1-household-8",
-   "building": "panel-block-1",
-   "label": "Panel block household",
-   "trade": "student",
-   "people": [
-    {
-     "role": "student"
-    },
-    {
-     "role": "partner"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.panel-block-1-household-9",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "shop assistant",
@@ -5853,16 +6173,55 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-10",
+   "id": "steinfeld-1995-7.panel-block-1-household-8",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "factory worker",
+   "trade": "builder",
    "people": [
     {
-     "role": "factory worker"
+     "role": "builder"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-9",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
     },
     {
      "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-10",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -5875,18 +6234,6 @@
    "people": [
     {
      "role": "factory worker"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.panel-block-1-household-12",
-   "building": "panel-block-1",
-   "label": "Panel block household",
-   "trade": "factory worker",
-   "people": [
-    {
-     "role": "factory worker"
     },
     {
      "role": "partner"
@@ -5896,15 +6243,51 @@
     },
     {
      "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-12",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
     },
     {
-     "role": "child"
+     "role": "partner"
     }
    ],
    "wealth": "middling"
   },
   {
    "id": "steinfeld-1995-7.panel-block-1-household-13",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-14",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-15",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "pensioner",
@@ -5919,7 +6302,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-14",
+   "id": "steinfeld-1995-7.panel-block-1-household-16",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "nurse",
@@ -5931,7 +6314,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-15",
+   "id": "steinfeld-1995-7.panel-block-1-household-17",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "office worker",
@@ -5949,7 +6332,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-16",
+   "id": "steinfeld-1995-7.panel-block-1-household-18",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "pensioner",
@@ -5961,7 +6344,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-17",
+   "id": "steinfeld-1995-7.panel-block-1-household-19",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "shop assistant",
@@ -5976,7 +6359,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-18",
+   "id": "steinfeld-1995-7.panel-block-1-household-20",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "factory worker",
@@ -5991,7 +6374,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-19",
+   "id": "steinfeld-1995-7.panel-block-1-household-21",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "office worker",
@@ -6012,7 +6395,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-20",
+   "id": "steinfeld-1995-7.panel-block-1-household-22",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "pensioner",
@@ -6024,7 +6407,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-21",
+   "id": "steinfeld-1995-7.panel-block-1-household-23",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "factory worker",
@@ -6036,7 +6419,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-22",
+   "id": "steinfeld-1995-7.panel-block-1-household-24",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "pensioner",
@@ -6054,7 +6437,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-23",
+   "id": "steinfeld-1995-7.panel-block-1-household-25",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "driver",
@@ -6078,7 +6461,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-24",
+   "id": "steinfeld-1995-7.panel-block-1-household-26",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "programmer",
@@ -6090,7 +6473,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-25",
+   "id": "steinfeld-1995-7.panel-block-1-household-27",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "shop assistant",
@@ -6108,7 +6491,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-26",
+   "id": "steinfeld-1995-7.panel-block-1-household-28",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "nurse",
@@ -6126,7 +6509,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-27",
+   "id": "steinfeld-1995-7.panel-block-1-household-29",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "nurse",
@@ -6144,7 +6527,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-28",
+   "id": "steinfeld-1995-7.panel-block-1-household-30",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "driver",
@@ -6168,7 +6551,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-29",
+   "id": "steinfeld-1995-7.panel-block-1-household-31",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "office worker",
@@ -6183,7 +6566,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-30",
+   "id": "steinfeld-1995-7.panel-block-1-household-32",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "pensioner",
@@ -6195,7 +6578,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-31",
+   "id": "steinfeld-1995-7.panel-block-1-household-33",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "factory worker",
@@ -6210,7 +6593,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-32",
+   "id": "steinfeld-1995-7.panel-block-1-household-34",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "office worker",
@@ -6222,55 +6605,13 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-33",
+   "id": "steinfeld-1995-7.panel-block-1-household-35",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "teacher",
    "people": [
     {
      "role": "teacher"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.panel-block-1-household-34",
-   "building": "panel-block-1",
-   "label": "Panel block household",
-   "trade": "shop assistant",
-   "people": [
-    {
-     "role": "shop assistant"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.panel-block-1-household-35",
-   "building": "panel-block-1",
-   "label": "Panel block household",
-   "trade": "nurse",
-   "people": [
-    {
-     "role": "nurse"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     },
     {
      "role": "child"
@@ -6288,6 +6629,48 @@
      "role": "shop assistant"
     },
     {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-37",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "nurse",
+   "people": [
+    {
+     "role": "nurse"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-38",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "shop assistant",
+   "people": [
+    {
+     "role": "shop assistant"
+    },
+    {
      "role": "partner"
     },
     {
@@ -6306,7 +6689,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-37",
+   "id": "steinfeld-1995-7.panel-block-1-household-39",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "office worker",
@@ -6321,7 +6704,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-38",
+   "id": "steinfeld-1995-7.panel-block-1-household-40",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "nurse",
@@ -6339,7 +6722,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-39",
+   "id": "steinfeld-1995-7.panel-block-1-household-41",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "nurse",
@@ -6351,7 +6734,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-40",
+   "id": "steinfeld-1995-7.panel-block-1-household-42",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "office worker",
@@ -6375,7 +6758,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-41",
+   "id": "steinfeld-1995-7.panel-block-1-household-43",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "office worker",
@@ -6396,49 +6779,49 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-1-household-42",
-   "building": "panel-block-1",
-   "label": "Panel block household",
-   "trade": "shop assistant",
-   "people": [
-    {
-     "role": "shop assistant"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.panel-block-1-household-43",
-   "building": "panel-block-1",
-   "label": "Panel block household",
-   "trade": "shop assistant",
-   "people": [
-    {
-     "role": "shop assistant"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
    "id": "steinfeld-1995-7.panel-block-1-household-44",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "shop assistant",
+   "people": [
+    {
+     "role": "shop assistant"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-45",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "trade": "shop assistant",
+   "people": [
+    {
+     "role": "shop assistant"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-46",
    "building": "panel-block-1",
    "label": "Panel block household",
    "trade": "factory worker",
@@ -6448,30 +6831,6 @@
     },
     {
      "role": "elder"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.panel-block-1-household-45",
-   "building": "panel-block-1",
-   "label": "Panel block household",
-   "trade": "factory worker",
-   "people": [
-    {
-     "role": "factory worker"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.panel-block-1-household-46",
-   "building": "panel-block-1",
-   "label": "Panel block household",
-   "trade": "student",
-   "people": [
-    {
-     "role": "student"
     }
    ],
    "wealth": "middling"
@@ -6484,18 +6843,6 @@
    "people": [
     {
      "role": "factory worker"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -6504,16 +6851,10 @@
    "id": "steinfeld-1995-7.panel-block-1-household-48",
    "building": "panel-block-1",
    "label": "Panel block household",
-   "trade": "teacher",
+   "trade": "student",
    "people": [
     {
-     "role": "teacher"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "lodger"
+     "role": "student"
     }
    ],
    "wealth": "middling"
@@ -6535,12 +6876,54 @@
     },
     {
      "role": "child"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
   },
   {
    "id": "steinfeld-1995-7.panel-block-2-household-2",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "teacher",
+   "people": [
+    {
+     "role": "teacher"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "lodger"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-3",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-4",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "builder",
@@ -6558,7 +6941,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-3",
+   "id": "steinfeld-1995-7.panel-block-2-household-5",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "pensioner",
@@ -6576,7 +6959,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-4",
+   "id": "steinfeld-1995-7.panel-block-2-household-6",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "teacher",
@@ -6594,7 +6977,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-5",
+   "id": "steinfeld-1995-7.panel-block-2-household-7",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "office worker",
@@ -6609,7 +6992,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-6",
+   "id": "steinfeld-1995-7.panel-block-2-household-8",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "programmer",
@@ -6627,42 +7010,6 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-7",
-   "building": "panel-block-2",
-   "label": "Panel block household",
-   "trade": "factory worker",
-   "people": [
-    {
-     "role": "factory worker"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.panel-block-2-household-8",
-   "building": "panel-block-2",
-   "label": "Panel block household",
-   "trade": "driver",
-   "people": [
-    {
-     "role": "driver"
-    },
-    {
-     "role": "partner"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
    "id": "steinfeld-1995-7.panel-block-2-household-9",
    "building": "panel-block-2",
    "label": "Panel block household",
@@ -6673,6 +7020,12 @@
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -6688,6 +7041,36 @@
     },
     {
      "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-11",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "factory worker",
+   "people": [
+    {
+     "role": "factory worker"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-12",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "partner"
     },
     {
      "role": "child"
@@ -6702,7 +7085,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-11",
+   "id": "steinfeld-1995-7.panel-block-2-household-13",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "office worker",
@@ -6723,7 +7106,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-12",
+   "id": "steinfeld-1995-7.panel-block-2-household-14",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "factory worker",
@@ -6735,7 +7118,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-13",
+   "id": "steinfeld-1995-7.panel-block-2-household-15",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "builder",
@@ -6750,7 +7133,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-14",
+   "id": "steinfeld-1995-7.panel-block-2-household-16",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "student",
@@ -6762,7 +7145,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-15",
+   "id": "steinfeld-1995-7.panel-block-2-household-17",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "office worker",
@@ -6780,7 +7163,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-16",
+   "id": "steinfeld-1995-7.panel-block-2-household-18",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "shop assistant",
@@ -6801,46 +7184,13 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-17",
+   "id": "steinfeld-1995-7.panel-block-2-household-19",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "driver",
    "people": [
     {
      "role": "driver"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.panel-block-2-household-18",
-   "building": "panel-block-2",
-   "label": "Panel block household",
-   "trade": "builder",
-   "people": [
-    {
-     "role": "builder"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.panel-block-2-household-19",
-   "building": "panel-block-2",
-   "label": "Panel block household",
-   "trade": "pensioner",
-   "people": [
-    {
-     "role": "pensioner"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
     }
    ],
    "wealth": "middling"
@@ -6861,6 +7211,27 @@
    "id": "steinfeld-1995-7.panel-block-2-household-21",
    "building": "panel-block-2",
    "label": "Panel block household",
+   "trade": "pensioner",
+   "people": [
+    {
+     "role": "pensioner"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-22",
+   "building": "panel-block-2",
+   "label": "Panel block household",
    "trade": "builder",
    "people": [
     {
@@ -6870,7 +7241,19 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-22",
+   "id": "steinfeld-1995-7.panel-block-2-household-23",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "builder",
+   "people": [
+    {
+     "role": "builder"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-24",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "factory worker",
@@ -6888,7 +7271,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-23",
+   "id": "steinfeld-1995-7.panel-block-2-household-25",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "office worker",
@@ -6909,7 +7292,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-24",
+   "id": "steinfeld-1995-7.panel-block-2-household-26",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "builder",
@@ -6921,7 +7304,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-25",
+   "id": "steinfeld-1995-7.panel-block-2-household-27",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "pensioner",
@@ -6933,7 +7316,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-26",
+   "id": "steinfeld-1995-7.panel-block-2-household-28",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "factory worker",
@@ -6948,7 +7331,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-27",
+   "id": "steinfeld-1995-7.panel-block-2-household-29",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "office worker",
@@ -6966,7 +7349,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-28",
+   "id": "steinfeld-1995-7.panel-block-2-household-30",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "programmer",
@@ -6978,7 +7361,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-29",
+   "id": "steinfeld-1995-7.panel-block-2-household-31",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "pensioner",
@@ -6999,49 +7382,13 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-30",
+   "id": "steinfeld-1995-7.panel-block-2-household-32",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "nurse",
    "people": [
     {
      "role": "nurse"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.panel-block-2-household-31",
-   "building": "panel-block-2",
-   "label": "Panel block household",
-   "trade": "office worker",
-   "people": [
-    {
-     "role": "office worker"
-    },
-    {
-     "role": "partner"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.panel-block-2-household-32",
-   "building": "panel-block-2",
-   "label": "Panel block household",
-   "trade": "office worker",
-   "people": [
-    {
-     "role": "office worker"
-    },
-    {
-     "role": "partner"
     },
     {
      "role": "child"
@@ -7056,6 +7403,42 @@
    "id": "steinfeld-1995-7.panel-block-2-household-33",
    "building": "panel-block-2",
    "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    },
+    {
+     "role": "partner"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-34",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-35",
+   "building": "panel-block-2",
+   "label": "Panel block household",
    "trade": "nurse",
    "people": [
     {
@@ -7071,7 +7454,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-34",
+   "id": "steinfeld-1995-7.panel-block-2-household-36",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "builder",
@@ -7089,7 +7472,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-35",
+   "id": "steinfeld-1995-7.panel-block-2-household-37",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "office worker",
@@ -7101,7 +7484,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-36",
+   "id": "steinfeld-1995-7.panel-block-2-household-38",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "driver",
@@ -7119,7 +7502,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-37",
+   "id": "steinfeld-1995-7.panel-block-2-household-39",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "builder",
@@ -7134,7 +7517,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-38",
+   "id": "steinfeld-1995-7.panel-block-2-household-40",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "factory worker",
@@ -7152,7 +7535,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-39",
+   "id": "steinfeld-1995-7.panel-block-2-household-41",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "office worker",
@@ -7176,7 +7559,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-40",
+   "id": "steinfeld-1995-7.panel-block-2-household-42",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "builder",
@@ -7194,7 +7577,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-41",
+   "id": "steinfeld-1995-7.panel-block-2-household-43",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "shop assistant",
@@ -7212,49 +7595,49 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-42",
-   "building": "panel-block-2",
-   "label": "Panel block household",
-   "trade": "driver",
-   "people": [
-    {
-     "role": "driver"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.panel-block-2-household-43",
-   "building": "panel-block-2",
-   "label": "Panel block household",
-   "trade": "driver",
-   "people": [
-    {
-     "role": "driver"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
    "id": "steinfeld-1995-7.panel-block-2-household-44",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-45",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "trade": "driver",
+   "people": [
+    {
+     "role": "driver"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-46",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "builder",
@@ -7266,7 +7649,7 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-45",
+   "id": "steinfeld-1995-7.panel-block-2-household-47",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "student",
@@ -7278,55 +7661,13 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.panel-block-2-household-46",
+   "id": "steinfeld-1995-7.panel-block-2-household-48",
    "building": "panel-block-2",
    "label": "Panel block household",
    "trade": "nurse",
    "people": [
     {
      "role": "nurse"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.panel-block-2-household-47",
-   "building": "panel-block-2",
-   "label": "Panel block household",
-   "trade": "pensioner",
-   "people": [
-    {
-     "role": "pensioner"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.panel-block-2-household-48",
-   "building": "panel-block-2",
-   "label": "Panel block household",
-   "trade": "office worker",
-   "people": [
-    {
-     "role": "office worker"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.cottage-12-household",
-   "building": "cottage-12",
-   "label": "Suburban house household",
-   "trade": "programmer",
-   "people": [
-    {
-     "role": "programmer"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "elder"
     }
    ],
    "wealth": "middling"
@@ -7347,6 +7688,36 @@
    "id": "steinfeld-1995-7.cottage-14-household",
    "building": "cottage-14",
    "label": "Suburban house household",
+   "trade": "office worker",
+   "people": [
+    {
+     "role": "office worker"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.cottage-15-household",
+   "building": "cottage-15",
+   "label": "Suburban house household",
+   "trade": "programmer",
+   "people": [
+    {
+     "role": "programmer"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "elder"
+    }
+   ],
+   "wealth": "middling"
+  },
+  {
+   "id": "steinfeld-1995-7.cottage-18-household",
+   "building": "cottage-18",
+   "label": "Suburban house household",
    "trade": "pensioner",
    "people": [
     {
@@ -7356,49 +7727,34 @@
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.cottage-15-household",
-   "building": "cottage-15",
-   "label": "Suburban house household",
-   "trade": "office worker",
+   "id": "steinfeld-1995-7.family-house-1-household",
+   "building": "family-house-1",
+   "label": "Family house household",
+   "trade": "pensioner",
    "people": [
     {
-     "role": "office worker"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
+     "role": "pensioner"
     }
    ],
    "wealth": "middling"
   },
   {
-   "id": "steinfeld-1995-7.cottage-16-household",
-   "building": "cottage-16",
-   "label": "Suburban house household",
+   "id": "steinfeld-1995-7.suburban-house-1-household",
+   "building": "suburban-house-1",
+   "label": "Entrepreneur's house household",
    "trade": "mayor",
    "people": [
     {
      "role": "mayor"
     },
     {
-     "role": "child"
-    }
-   ],
-   "wealth": "middling"
-  },
-  {
-   "id": "steinfeld-1995-7.cottage-17-household",
-   "building": "cottage-17",
-   "label": "Suburban house household",
-   "trade": "schoolteacher",
-   "people": [
-    {
-     "role": "schoolteacher"
+     "role": "partner"
     },
     {
-     "role": "partner"
+     "role": "child"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -7413,31 +7769,37 @@
  "umbral": {
   "year": 1995,
   "places": {
+   "tavern-1": {
+    "type": "tavern",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
    "chapel-1": {
     "type": "chapel",
     "wealth": null,
     "dirty": false,
     "rebuilt": false
    },
-   "workshop-1": {
-    "type": "workshop",
-    "wealth": "middling",
-    "dirty": false,
-    "rebuilt": false
-   },
-   "cottage-9": {
+   "cottage-1": {
     "type": "cottage",
     "wealth": "middling",
     "dirty": false,
     "rebuilt": false
    },
-   "ghetto-house-1": {
-    "type": "ghetto-house",
+   "cottage-12": {
+    "type": "cottage",
     "wealth": "middling",
     "dirty": false,
     "rebuilt": false
    },
    "sgraffito-house-1": {
+    "type": "sgraffito-house",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "sgraffito-house-3": {
     "type": "sgraffito-house",
     "wealth": "middling",
     "dirty": false,
@@ -7449,14 +7811,20 @@
     "dirty": false,
     "rebuilt": false
    },
-   "colony-house-1": {
-    "type": "colony-house",
+   "sgraffito-house-5": {
+    "type": "sgraffito-house",
     "wealth": "middling",
     "dirty": false,
     "rebuilt": false
    },
-   "passage-house-2": {
-    "type": "passage-house",
+   "villa-1": {
+    "type": "villa",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "colony-house-1": {
+    "type": "colony-house",
     "wealth": "middling",
     "dirty": false,
     "rebuilt": false
@@ -7467,14 +7835,14 @@
     "dirty": false,
     "rebuilt": false
    },
-   "bata-house-1": {
-    "type": "bata-house",
+   "colony-house-2": {
+    "type": "colony-house",
     "wealth": "middling",
     "dirty": false,
     "rebuilt": false
    },
-   "bata-house-2": {
-    "type": "bata-house",
+   "func-villa-1": {
+    "type": "func-villa",
     "wealth": "poor",
     "dirty": false,
     "rebuilt": false
@@ -7488,12 +7856,6 @@
    "panel-block-2": {
     "type": "panel-block",
     "wealth": null,
-    "dirty": false,
-    "rebuilt": false
-   },
-   "cottage-12": {
-    "type": "cottage",
-    "wealth": "middling",
     "dirty": false,
     "rebuilt": false
    },
@@ -7515,14 +7877,20 @@
     "dirty": false,
     "rebuilt": false
    },
-   "cottage-16": {
+   "cottage-18": {
     "type": "cottage",
     "wealth": "middling",
     "dirty": false,
     "rebuilt": false
    },
-   "cottage-17": {
-    "type": "cottage",
+   "family-house-1": {
+    "type": "family-house",
+    "wealth": "middling",
+    "dirty": false,
+    "rebuilt": false
+   },
+   "suburban-house-1": {
+    "type": "suburban-house",
     "wealth": "middling",
     "dirty": false,
     "rebuilt": false
@@ -7530,26 +7898,111 @@
   },
   "gone": [
    {
-    "id": "gone-cottage-2",
+    "id": "gone-cottage-7",
     "label": "Cottage",
     "type": "cottage",
     "year": 1450,
     "why": "rebuild-renaissance",
     "rect": [
-     61.052,
-     88.043,
-     9.062,
-     8.696
+     45.553,
+     82.061,
+     9.056,
+     9.022
     ],
     "points": [
-     70.114,
-     93.239,
-     64.052,
-     96.739,
-     61.052,
-     91.543,
-     67.114,
-     88.043
+     49.78,
+     91.083,
+     48.745,
+     87.219,
+     46.33,
+     87.866,
+     45.553,
+     84.968,
+     47.968,
+     84.321,
+     47.709,
+     83.356,
+     52.539,
+     82.061,
+     54.61,
+     89.789
+    ]
+   },
+   {
+    "id": "gone-cottage-8",
+    "label": "Cottage",
+    "type": "cottage",
+    "year": 1450,
+    "why": "rebuild-renaissance",
+    "rect": [
+     38.024,
+     84.097,
+     7.348,
+     9.375
+    ],
+    "points": [
+     38.024,
+     87.676,
+     39.473,
+     87.288,
+     38.826,
+     84.873,
+     41.724,
+     84.097,
+     42.371,
+     86.512,
+     43.82,
+     86.123,
+     45.373,
+     91.919,
+     39.577,
+     93.472
+    ]
+   },
+   {
+    "id": "gone-cottage-12",
+    "label": "Cottage",
+    "type": "cottage",
+    "year": 1450,
+    "why": "rebuild-renaissance",
+    "rect": [
+     62.722,
+     38.781,
+     6.383,
+     7.09
+    ],
+    "points": [
+     62.722,
+     44.577,
+     64.275,
+     38.781,
+     69.105,
+     40.075,
+     67.552,
+     45.871
+    ]
+   },
+   {
+    "id": "gone-cottage-11",
+    "label": "Cottage",
+    "type": "cottage",
+    "year": 1450,
+    "why": "rebuild-renaissance",
+    "rect": [
+     48.144,
+     51.379,
+     7.696,
+     7.33
+    ],
+    "points": [
+     48.144,
+     54.379,
+     53.34,
+     51.379,
+     55.84,
+     55.709,
+     50.644,
+     58.709
     ]
    },
    {
@@ -7559,28 +8012,43 @@
     "year": 1450,
     "why": "rebuild-renaissance",
     "rect": [
-     64.336,
-     96.438,
-     9.428,
-     8.562
+     41.051,
+     64.887,
+     7.866,
+     9.28
     ],
     "points": [
-     68.666,
-     96.438,
-     69.666,
-     98.17,
-     72.264,
-     96.67,
-     73.764,
-     99.268,
-     71.166,
-     100.768,
-     72.166,
-     102.5,
-     67.836,
-     105.0,
-     64.336,
-     98.938
+     43.122,
+     74.168,
+     41.051,
+     66.44,
+     46.847,
+     64.887,
+     48.917,
+     72.615
+    ]
+   },
+   {
+    "id": "gone-cottage-9",
+    "label": "Cottage",
+    "type": "cottage",
+    "year": 1450,
+    "why": "rebuild-renaissance",
+    "rect": [
+     32.808,
+     63.938,
+     6.0,
+     5.0
+    ],
+    "points": [
+     38.808,
+     68.938,
+     32.808,
+     68.938,
+     32.808,
+     63.938,
+     38.808,
+     63.938
     ]
    },
    {
@@ -7590,301 +8058,124 @@
     "year": 1450,
     "why": "rebuild-renaissance",
     "rect": [
-     43.381,
-     52.509,
-     10.294,
-     7.531
-    ],
-    "points": [
-     43.381,
-     57.009,
-     51.176,
-     52.509,
-     53.676,
-     56.839,
-     48.479,
-     59.839,
-     47.729,
-     58.54,
-     45.131,
-     60.04
-    ]
-   },
-   {
-    "id": "gone-townhouse-1",
-    "label": "House and shop (draper)",
-    "type": "townhouse",
-    "year": 1450,
-    "why": "rebuild-renaissance",
-    "rect": [
-     81.245,
-     63.86,
-     9.928,
-     9.196
-    ],
-    "points": [
-     88.173,
-     63.86,
-     91.173,
-     69.057,
-     84.245,
-     73.057,
-     81.245,
-     67.86
-    ]
-   },
-   {
-    "id": "gone-cottage-7",
-    "label": "Cottage",
-    "type": "cottage",
-    "year": 1450,
-    "why": "rebuild-renaissance",
-    "rect": [
-     87.643,
-     57.333,
-     10.607,
-     9.192
-    ],
-    "points": [
-     89.057,
-     62.99,
-     89.764,
-     62.283,
-     87.643,
-     60.162,
-     89.764,
-     58.04,
-     91.886,
-     60.162,
-     94.714,
-     57.333,
-     98.25,
-     60.869,
-     92.593,
-     66.526
-    ]
-   },
-   {
-    "id": "gone-tavern-1",
-    "label": "Tavern",
-    "type": "tavern",
-    "year": 1450,
-    "why": "rebuild-renaissance",
-    "rect": [
-     74.578,
-     54.171,
-     11.928,
-     12.66
-    ],
-    "points": [
-     81.506,
-     54.171,
-     86.506,
-     62.832,
-     79.578,
-     66.832,
-     74.578,
-     58.171
-    ]
-   },
-   {
-    "id": "gone-cottage-7",
-    "label": "Cottage",
-    "type": "cottage",
-    "year": 1450,
-    "why": "rebuild-renaissance",
-    "rect": [
-     87.643,
-     57.333,
-     10.607,
-     9.192
-    ],
-    "points": [
-     89.057,
-     62.99,
-     89.764,
-     62.283,
-     87.643,
-     60.162,
-     89.764,
-     58.04,
-     91.886,
-     60.162,
-     94.714,
-     57.333,
-     98.25,
-     60.869,
-     92.593,
-     66.526
-    ]
-   },
-   {
-    "id": "gone-townhouse-1",
-    "label": "House and shop (draper)",
-    "type": "townhouse",
-    "year": 1601,
-    "why": "rebuild-age-of-reason",
-    "rect": [
-     81.245,
-     63.86,
-     9.928,
-     9.196
-    ],
-    "points": [
-     88.173,
-     63.86,
-     91.173,
-     69.057,
-     84.245,
-     73.057,
-     81.245,
-     67.86
-    ]
-   },
-   {
-    "id": "gone-post-inn-1",
-    "label": "Post inn",
-    "type": "post-inn",
-    "year": 1601,
-    "why": "rebuild-age-of-reason",
-    "rect": [
-     74.078,
-     51.305,
-     16.392,
-     16.392
-    ],
-    "points": [
-     84.47,
-     51.305,
-     90.47,
-     61.698,
-     80.078,
-     67.698,
-     74.078,
-     57.305
-    ]
-   },
-   {
-    "id": "gone-cottage-4",
-    "label": "Cottage",
-    "type": "cottage",
-    "year": 1601,
-    "why": "rebuild-age-of-reason",
-    "rect": [
-     74.007,
-     81.785,
+     55.53,
+     45.392,
      9.428,
-     8.33
+     9.745
     ],
     "points": [
-     83.435,
-     86.116,
-     76.507,
-     90.116,
-     74.007,
-     85.785,
-     80.935,
-     81.785
+     55.53,
+     50.807,
+     58.561,
+     49.057,
+     57.311,
+     46.892,
+     59.909,
+     45.392,
+     61.159,
+     47.557,
+     62.458,
+     46.807,
+     64.958,
+     51.137,
+     58.03,
+     55.137
     ]
    },
    {
-    "id": "gone-storehouse-1",
-    "label": "Storehouse",
-    "type": "storehouse",
-    "year": 1601,
-    "why": "rebuild-age-of-reason",
+    "id": "gone-cottage-2",
+    "label": "Cottage",
+    "type": "cottage",
+    "year": 1450,
+    "why": "rebuild-renaissance",
     "rect": [
-     82.149,
-     84.982,
-     8.196,
-     8.196
+     60.75,
+     88.618,
+     7.696,
+     7.33
     ],
     "points": [
-     85.149,
-     93.178,
-     82.149,
-     87.982,
-     87.345,
-     84.982,
-     90.345,
-     90.178
+     68.446,
+     92.948,
+     63.25,
+     95.948,
+     60.75,
+     91.618,
+     65.946,
+     88.618
     ]
    },
    {
     "id": "gone-cottage-3",
     "label": "Cottage",
     "type": "cottage",
-    "year": 1601,
-    "why": "rebuild-age-of-reason",
+    "year": 1450,
+    "why": "rebuild-renaissance",
     "rect": [
-     68.051,
-     85.417,
-     7.696,
-     7.33
+     64.919,
+     97.254,
+     9.928,
+     7.696
     ],
     "points": [
-     75.748,
-     89.747,
-     70.551,
-     92.747,
-     68.051,
-     88.417,
-     73.248,
-     85.417
+     69.249,
+     97.254,
+     70.249,
+     98.986,
+     72.847,
+     97.486,
+     74.847,
+     100.95,
+     67.919,
+     104.95,
+     64.919,
+     99.754
     ]
    },
    {
-    "id": "gone-ghetto-house-1",
-    "label": "House in the Jewish quarter",
-    "type": "ghetto-house",
-    "year": 1601,
-    "why": "rebuild-age-of-reason",
-    "rect": [
-     61.918,
-     88.543,
-     8.33,
-     9.428
-    ],
-    "points": [
-     70.248,
-     95.471,
-     65.918,
-     97.971,
-     61.918,
-     91.043,
-     66.248,
-     88.543
-    ]
-   },
-   {
-    "id": "gone-cottage-11",
+    "id": "gone-cottage-6",
     "label": "Cottage",
     "type": "cottage",
     "year": 1601,
     "why": "rebuild-age-of-reason",
     "rect": [
-     33.413,
-     50.792,
-     8.0,
-     8.0
+     44.132,
+     74.507,
+     7.348,
+     7.348
     ],
     "points": [
-     33.413,
-     53.792,
-     36.413,
-     53.792,
-     36.413,
-     50.792,
-     39.413,
-     50.792,
-     39.413,
-     53.792,
-     41.413,
-     53.792,
-     41.413,
-     58.792,
-     33.413,
-     58.792
+     45.685,
+     81.855,
+     44.132,
+     76.06,
+     49.928,
+     74.507,
+     51.481,
+     80.302
+    ]
+   },
+   {
+    "id": "gone-sgraffito-house-2",
+    "label": "Sgraffito house",
+    "type": "sgraffito-house",
+    "year": 1601,
+    "why": "rebuild-age-of-reason",
+    "rect": [
+     45.644,
+     47.049,
+     10.196,
+     11.66
+    ],
+    "points": [
+     45.644,
+     50.049,
+     50.84,
+     47.049,
+     55.84,
+     55.709,
+     50.644,
+     58.709
     ]
    },
    {
@@ -7894,47 +8185,66 @@
     "year": 1601,
     "why": "rebuild-age-of-reason",
     "rect": [
-     45.148,
-     83.923,
-     9.987,
-     6.383
+     79.77,
+     79.936,
+     7.83,
+     8.562
     ],
     "points": [
-     45.148,
-     86.252,
-     53.841,
-     83.923,
-     55.135,
-     88.752,
-     49.339,
-     90.305,
-     48.951,
-     88.857,
-     46.053,
-     89.633
+     83.27,
+     88.499,
+     79.77,
+     82.436,
+     84.1,
+     79.936,
+     87.6,
+     85.999
     ]
    },
    {
-    "id": "gone-cottage-3",
-    "label": "Cottage",
+    "id": "gone-byre-house-1",
+    "label": "Farmhouse",
+    "type": "byre-house",
+    "year": 1601,
+    "why": "rebuild-age-of-reason",
+    "rect": [
+     33.209,
+     52.597,
+     13.0,
+     6.0
+    ],
+    "points": [
+     33.209,
+     52.597,
+     46.209,
+     52.597,
+     46.209,
+     58.597,
+     33.209,
+     58.597
+    ]
+   },
+   {
+    "id": "gone-cottage-1",
+    "label": "Priest's house",
     "type": "cottage",
     "year": 1837,
     "why": "rebuild-victorian",
     "rect": [
-     68.051,
-     85.417,
-     7.696,
-     7.33
+     79.77,
+     79.936,
+     7.83,
+     8.562
     ],
     "points": [
-     75.748,
-     89.747,
-     70.551,
-     92.747,
-     68.051,
-     88.417,
-     73.248,
-     85.417
+     83.27,
+     88.499,
+     79.77,
+     82.436,
+     84.1,
+     79.936,
+     87.6,
+     85.999
     ]
    },
    {
@@ -7944,388 +8254,254 @@
     "year": 1837,
     "why": "rebuild-victorian",
     "rect": [
-     61.918,
-     88.543,
+     55.329,
+     44.959,
      8.33,
      9.428
     ],
     "points": [
-     70.248,
-     95.471,
-     65.918,
-     97.971,
-     61.918,
-     91.043,
-     66.248,
-     88.543
+     55.329,
+     47.459,
+     59.659,
+     44.959,
+     63.659,
+     51.887,
+     59.329,
+     54.387
     ]
    },
    {
-    "id": "gone-sgraffito-house-3",
-    "label": "Sgraffito house",
-    "type": "sgraffito-house",
-    "year": 1837,
-    "why": "rebuild-victorian",
-    "rect": [
-     34.413,
-     48.792,
-     6.0,
-     10.0
-    ],
-    "points": [
-     34.413,
-     48.792,
-     40.413,
-     48.792,
-     40.413,
-     58.792,
-     34.413,
-     58.792
-    ]
-   },
-   {
-    "id": "gone-cottage-3",
+    "id": "gone-cottage-4",
     "label": "Cottage",
     "type": "cottage",
     "year": 1837,
     "why": "rebuild-victorian",
     "rect": [
-     68.051,
-     85.417,
-     7.696,
-     7.33
+     70.09,
+     48.488,
+     8.928,
+     9.196
     ],
     "points": [
-     75.748,
-     89.747,
-     70.551,
-     92.747,
-     68.051,
-     88.417,
-     73.248,
-     85.417
+     77.018,
+     48.488,
+     79.018,
+     51.952,
+     76.42,
+     53.452,
+     77.42,
+     55.184,
+     73.09,
+     57.684,
+     70.09,
+     52.488
     ]
    },
    {
-    "id": "gone-sgraffito-house-2",
+    "id": "gone-storehouse-1",
+    "label": "Storehouse",
+    "type": "storehouse",
+    "year": 1837,
+    "why": "rebuild-victorian",
+    "rect": [
+     66.903,
+     85.071,
+     9.928,
+     9.196
+    ],
+    "points": [
+     76.831,
+     90.267,
+     69.903,
+     94.267,
+     66.903,
+     89.071,
+     73.831,
+     85.071
+    ]
+   },
+   {
+    "id": "gone-sgraffito-house-4",
     "label": "Sgraffito house",
     "type": "sgraffito-house",
     "year": 1837,
     "why": "rebuild-victorian",
     "rect": [
-     74.873,
-     82.285,
+     60.75,
+     88.618,
      10.196,
      11.66
     ],
     "points": [
-     85.069,
-     90.946,
-     79.873,
-     93.946,
-     74.873,
-     85.285,
-     80.069,
-     82.285
+     70.946,
+     97.278,
+     65.75,
+     100.278,
+     60.75,
+     91.618,
+     65.946,
+     88.618
     ]
    },
    {
-    "id": "gone-townhouse-1",
-    "label": "House and shop (draper)",
-    "type": "townhouse",
-    "year": 1837,
-    "why": "rebuild-victorian",
-    "rect": [
-     81.245,
-     63.86,
-     9.928,
-     9.196
-    ],
-    "points": [
-     88.173,
-     63.86,
-     91.173,
-     69.057,
-     84.245,
-     73.057,
-     81.245,
-     67.86
-    ]
-   },
-   {
-    "id": "gone-post-inn-1",
-    "label": "Post inn",
-    "type": "post-inn",
-    "year": 1837,
-    "why": "rebuild-victorian",
-    "rect": [
-     74.078,
-     51.305,
-     16.392,
-     16.392
-    ],
-    "points": [
-     84.47,
-     51.305,
-     90.47,
-     61.698,
-     80.078,
-     67.698,
-     74.078,
-     57.305
-    ]
-   },
-   {
-    "id": "gone-cottage-6",
-    "label": "Cottage",
-    "type": "cottage",
-    "year": 1837,
-    "why": "rebuild-victorian",
-    "rect": [
-     69.795,
-     49.457,
-     7.33,
-     7.696
-    ],
-    "points": [
-     74.125,
-     49.457,
-     77.125,
-     54.653,
-     72.795,
-     57.153,
-     69.795,
-     51.957
-    ]
-   },
-   {
-    "id": "gone-post-inn-1",
-    "label": "Post inn",
-    "type": "post-inn",
-    "year": 1837,
-    "why": "rebuild-victorian",
-    "rect": [
-     74.078,
-     51.305,
-     16.392,
-     16.392
-    ],
-    "points": [
-     84.47,
-     51.305,
-     90.47,
-     61.698,
-     80.078,
-     67.698,
-     74.078,
-     57.305
-    ]
-   },
-   {
-    "id": "gone-townhouse-1",
-    "label": "House and shop (draper)",
-    "type": "townhouse",
-    "year": 1837,
-    "why": "rebuild-victorian",
-    "rect": [
-     81.245,
-     63.86,
-     9.928,
-     9.196
-    ],
-    "points": [
-     88.173,
-     63.86,
-     91.173,
-     69.057,
-     84.245,
-     73.057,
-     81.245,
-     67.86
-    ]
-   },
-   {
-    "id": "gone-cottage-6",
-    "label": "Cottage",
-    "type": "cottage",
-    "year": 1837,
-    "why": "rebuild-victorian",
-    "rect": [
-     69.795,
-     49.457,
-     7.33,
-     7.696
-    ],
-    "points": [
-     74.125,
-     49.457,
-     77.125,
-     54.653,
-     72.795,
-     57.153,
-     69.795,
-     51.957
-    ]
-   },
-   {
-    "id": "gone-post-inn-1",
-    "label": "Post inn",
-    "type": "post-inn",
-    "year": 1837,
-    "why": "rebuild-victorian",
-    "rect": [
-     74.078,
-     51.305,
-     16.392,
-     16.392
-    ],
-    "points": [
-     84.47,
-     51.305,
-     90.47,
-     61.698,
-     80.078,
-     67.698,
-     74.078,
-     57.305
-    ]
-   },
-   {
-    "id": "gone-cottage-8",
-    "label": "Cottage",
-    "type": "cottage",
+    "id": "gone-sgraffito-house-6",
+    "label": "Sgraffito house",
+    "type": "sgraffito-house",
     "year": 1919,
     "why": "rebuild-mid-century",
     "rect": [
-     35.309,
-     86.26,
-     9.28,
-     7.866
+     36.709,
+     48.597,
+     6.0,
+     10.0
     ],
     "points": [
-     35.309,
-     88.331,
-     43.036,
-     86.26,
-     44.589,
-     92.056,
-     36.862,
-     94.126
-    ]
-   },
-   {
-    "id": "gone-byre-house-3",
-    "label": "Farmhouse",
-    "type": "byre-house",
-    "year": 1919,
-    "why": "rebuild-mid-century",
-    "rect": [
-     94.779,
-     22.789,
-     12.0,
-     5.0
-    ],
-    "points": [
-     94.779,
-     22.789,
-     106.779,
-     22.789,
-     106.779,
-     27.789,
-     94.779,
-     27.789
-    ]
-   },
-   {
-    "id": "gone-byre-house-1",
-    "label": "Farmhouse",
-    "type": "byre-house",
-    "year": 1920,
-    "why": "suburbs",
-    "rect": [
-     77.802,
-     121.799,
-     12.021,
-     12.021
-    ],
-    "points": [
-     81.338,
-     121.799,
-     89.823,
-     130.284,
-     86.287,
-     133.819,
-     77.802,
-     125.334
+     36.709,
+     48.597,
+     42.709,
+     48.597,
+     42.709,
+     58.597,
+     36.709,
+     58.597
     ]
    },
    {
     "id": "gone-byre-house-2",
     "label": "Farmhouse",
     "type": "byre-house",
+    "year": 1919,
+    "why": "rebuild-mid-century",
+    "rect": [
+     78.483,
+     122.595,
+     12.021,
+     12.021
+    ],
+    "points": [
+     82.019,
+     122.595,
+     90.504,
+     131.08,
+     86.969,
+     134.616,
+     78.483,
+     126.131
+    ]
+   },
+   {
+    "id": "gone-byre-house-3",
+    "label": "Farmhouse",
+    "type": "byre-house",
     "year": 1920,
     "why": "suburbs",
     "rect": [
-     86.976,
-     35.577,
+     87.316,
+     35.546,
      12.0,
      5.0
     ],
     "points": [
-     98.976,
-     40.577,
-     86.976,
-     40.577,
-     86.976,
-     35.577,
-     98.976,
-     35.577
+     99.316,
+     40.546,
+     87.316,
+     40.546,
+     87.316,
+     35.546,
+     99.316,
+     35.546
     ]
    },
    {
-    "id": "gone-sgraffito-house-1",
-    "label": "Sgraffito house",
-    "type": "sgraffito-house",
-    "year": 1990,
-    "why": "rebuild-modern",
+    "id": "gone-byre-house-4",
+    "label": "Farmhouse",
+    "type": "byre-house",
+    "year": 1920,
+    "why": "suburbs",
     "rect": [
-     42.18,
-     48.928,
-     10.196,
-     11.66
+     59.838,
+     112.464,
+     7.935,
+     12.885
     ],
     "points": [
-     42.18,
-     51.928,
-     47.376,
-     48.928,
-     52.376,
-     57.589,
-     47.18,
-     60.589
+     62.944,
+     125.349,
+     59.838,
+     113.758,
+     64.668,
+     112.464,
+     67.774,
+     124.055
     ]
    },
    {
-    "id": "gone-colony-house-1",
-    "label": "Colony house",
-    "type": "colony-house",
+    "id": "gone-byre-house-5",
+    "label": "Farmhouse",
+    "type": "byre-house",
+    "year": 1920,
+    "why": "suburbs",
+    "rect": [
+     95.08,
+     22.762,
+     12.0,
+     5.0
+    ],
+    "points": [
+     95.08,
+     22.762,
+     107.08,
+     22.762,
+     107.08,
+     27.762,
+     95.08,
+     27.762
+    ]
+   },
+   {
+    "id": "gone-cottage-17",
+    "label": "Suburban house",
+    "type": "cottage",
     "year": 1990,
     "why": "rebuild-modern",
     "rect": [
-     34.913,
-     50.792,
-     5.0,
-     8.0
+     103.099,
+     33.739,
+     6.0,
+     5.0
     ],
     "points": [
-     34.913,
-     50.792,
-     39.913,
-     50.792,
-     39.913,
-     58.792,
-     34.913,
-     58.792
+     109.099,
+     38.739,
+     103.099,
+     38.739,
+     103.099,
+     33.739,
+     109.099,
+     33.739
+    ]
+   },
+   {
+    "id": "gone-cottage-16",
+    "label": "Suburban house",
+    "type": "cottage",
+    "year": 1990,
+    "why": "rebuild-modern",
+    "rect": [
+     93.626,
+     23.828,
+     6.0,
+     5.0
+    ],
+    "points": [
+     93.626,
+     23.828,
+     99.626,
+     23.828,
+     99.626,
+     28.828,
+     93.626,
+     28.828
     ]
    }
   ]
