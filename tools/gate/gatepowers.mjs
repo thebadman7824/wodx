@@ -160,6 +160,34 @@ export async function run() {
         : listed.includes("v20-feral-whispers") && listed.includes("v20-beckoning") && !!m && /Beckoning/.test(text(m)) && /V20 p\. 131/.test(text(m));
       ok("6 V20 Discipline library", pass, { era, listed, card: text(m).slice(0, 300) });
     });
+    await step("7 W20 Gift library", async () => {
+      const gw = await mk("Cub", "Werewolf", {}, [{ name: "Sense Prey", type: "Power", system: { type: "wod.types.gift", level: 1 } }]);
+      await sleep(800);
+      await gw.update({ "system.advantages.gnosis.permanent": 5, "system.advantages.gnosis.temporary": 5 });
+      await game.user.updateTokenTargets?.([]);
+      const n = game.messages.size;
+      let info = "", diff = "";
+      answer(root => { info = root.querySelector(".wodx-gift-info")?.textContent ?? ""; diff = root.querySelector("[name=diff]")?.value; });
+      A().useGift({ actor: gw });
+      const m = await untilMsg(n);
+      ok("7 W20 Gift library", !!m && /W20 p\. 159/.test(info) && /Perception \+ Primal-Urge/.test(info) && String(diff) === "5" && /W20 p\. 159/.test(text(m)) && /prey/i.test(text(m)),
+        { info: info.slice(0, 300), diff, card: text(m).slice(0, 300) });
+    });
+    await step("8 Orpheus Horror by Vitality", async () => {
+      const sp = await mk("Skinrider", "Mortal", { settings: { variant: "orpheus" } }, [{ name: "Juggernaut", type: "Power", system: { game: "orpheus", type: "wod.types.horror", value: 1 } }]);
+      await sleep(800);
+      await sp.update({ "system.settings.variant": "orpheus", "system.settings.hasvitality": true, "system.settings.hasspite": true, "system.variant.shade": "skinrider",
+        "system.advantages.vitality.permanent": 6, "system.advantages.vitality.temporary": 5, "system.advantages.spite.permanent": 1, "system.advantages.spite.temporary": 0 });
+      await game.user.updateTokenTargets?.([]);
+      const n = game.messages.size;
+      let info = "";
+      answer(root => { set(root, "v", 2); root.querySelector("[name=v]").dispatchEvent(new Event("input", { bubbles: true })); info = root.querySelector(".wodx-horror-info")?.textContent ?? ""; });
+      A().orphHorror({ actor: sp });
+      const m = await untilMsg(n);
+      const items = fx(m);
+      ok("8 Orpheus Horror by Vitality", !!m && /Three dots/.test(info) && /Three dots/.test(text(m)) && /pp\. 111-113/.test(text(m)) && items.some(i => i.key === "boost"),
+        { info: info.slice(0, 200), card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`) });
+    });
   } finally {
     for (const [h, id] of hooks) Hooks.off(h, id);
     for (const a of made) await a.delete().catch(() => {});
