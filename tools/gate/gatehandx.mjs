@@ -32,6 +32,9 @@ export async function run() {
       {name: "Gate Hand Steady Witness", type: "Mortal", system: {advantages: {willpower: {permanent: 8, temporary: 8}}}, prototypeToken: {actorLink: true}},
       {name: "Gate Hand Frenzied", type: "Vampire", prototypeToken: {actorLink: true}},
       {name: "Gate Hand Diablerist", type: "Vampire", prototypeToken: {actorLink: true}}]);
+    // The system's own defaults can overwrite Willpower given at creation: set it after
+    await weak.update({"system.advantages.willpower.permanent": 1, "system.advantages.willpower.temporary": 1});
+    await strong.update({"system.advantages.willpower.permanent": 8, "system.advantages.willpower.temporary": 8});
     await X().setKind(mummy, "mummy");
     await X().setKind(dia, "kindred");
     await X().setKind(vamp, "kindred");
@@ -44,7 +47,7 @@ export async function run() {
     await G.step("2 the Veil freezes", async () => {
       const r = await X().witnessStep({actor: mummy, tokens: [tw], secret: "mummy", event: "the gate"});
       const frozen = weak.effects.some(e => e.statuses?.has?.("wodx-immobilized") || /frozen/i.test(e.name));
-      G.ok("2 the Veil freezes", frozen && r?.kept?.length === 0, {frozen, kept: r?.kept?.length ?? null});
+      G.ok("2 the Veil freezes", frozen && r?.kept?.length === 0, {frozen, kept: r?.kept?.length ?? null, willpower: weak.system?.advantages?.willpower?.permanent, effects: weak.effects.map(e => e.name)});
     });
 
     await G.step("3 the steady one remembers", async () => {
@@ -52,7 +55,7 @@ export async function run() {
       const r = await X().witnessStep({actor: mummy, tokens: [ts], secret: "mummy", event: "the gate"});
       const knows = strong.flags?.world?.wodx?.knows ?? [];
       const recs = game.journal.getName("WoDX Masquerade")?.pages?.getName?.("All records")?.text?.content ?? "";
-      G.ok("3 the steady one remembers", r?.kept?.length === 1 && Array.isArray(knows) && knows.includes("mummy") && recs.includes("Gate Hand Steady Witness"), {knows, kept: r?.kept?.length ?? null, before});
+      G.ok("3 the steady one remembers", r?.kept?.length === 1 && Array.isArray(knows) && knows.includes("mummy") && recs.includes("Gate Hand Steady Witness"), {knows, kept: r?.kept?.length ?? null, before, willpower: strong.system?.advantages?.willpower?.permanent});
     });
 
     await G.step("4 a botched frenzy ends with its fight", async () => {
