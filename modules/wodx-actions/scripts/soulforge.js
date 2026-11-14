@@ -86,7 +86,7 @@ export function build(ctx) {
         if (task.status !== "done") return post(actor, `${actor.name}: the forging fails`, `<div class="vta-res bad">The work is ruined, and the Corpus that went into it is lost to the dark.</div><div class="wodx-quiet">${S.REF}</div>`);
         const oboli = S.oboliOf(pl.product);
         if (oboli) {
-            const r = await st()?.money?.receiveForeign?.(actor, "underworld", oboli * S.SLIVERS, { note: "Fresh from the soulforge" });
+            const r = await st()?.upkeep?.money?.receiveForeign?.(actor, "underworld", oboli * S.SLIVERS, { note: "Fresh from the soulforge" });
             if (!r?.ok) await actor.createEmbeddedDocuments("Item", [{ name: `${oboli} obol${oboli === 1 ? "us" : "i"}`, type: "Item", flags: { [MOD]: { soulforged: { product: pl.product } } } }]);
             return post(actor, `${actor.name} strikes an obolus`, `<div class="vta-res good">${oboli} obol${oboli === 1 ? "us" : "i"}, the seal of Stygia on one face and the Deathmask on the other${r?.ok ? ", into the purse as the Underworld's money" : ""}.</div><div class="wodx-quiet">${S.REF}</div>`);
         }
