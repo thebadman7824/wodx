@@ -19,7 +19,7 @@
  *    9c. Pause and Go on from the panel: the seat pauses the game and starts it again
  *    9d. Lift the curtain: the seat sends tonight's log and marks the night as seen
  *    9e. Storyteller tools (B4800): the player switches them on from the panel, sees the Storyteller's cards, gives
- *        the character the gate's item, opens Check the systems and What is hidden here, and switches them off
+ *        the character the gate's item and 3 experience, opens Check the systems and What is hidden here, and switches them off
  *   "finish" (Gamemaster Test):
  *    10. a fight between the character and the stranger: the character's turn is ended as a player would, and the
  *        stranger must then act with nobody at the Storyteller's hand
@@ -223,7 +223,7 @@ async function player(ids) {
     const toggleShown = !!panel()?.querySelector?.("button[data-action=sttoggle]");
     api.panel.ask("ask.st.toggle", {to: true});
     const on = await until(() => api.st.usable(game.user.id), 8000);
-    const tools = await until(() => (panel()?.querySelectorAll?.("button[data-action=st]")?.length ?? 0) === 4, 4000);
+    const tools = await until(() => (panel()?.querySelectorAll?.("button[data-action=st]")?.length ?? 0) === (api.rules.ST_TOOLS?.length ?? 4), 4000);
     // The Storyteller's cards: the gate's own cards from the setup, sent by the seat
     api.st.open("eyes");
     const eyes = await until(() => api.st.cards().length > 0, 8000);
@@ -233,6 +233,11 @@ async function player(ids) {
     const me = game.users.get(game.user.id).character;
     api.panel.ask("ask.st.give", {uuid: `Item.${ids.items[0]}`});
     const given = await until(() => me?.items?.some?.(i => i.name === `${TAG} trial item` && i.flags?.[MOD]?.granted), 8000);
+    // Add experience (B4806): an award on the character's sheet, through WoDX Creation
+    const xpWas = me?.items?.filter?.(i => i.type === "Experience").length ?? 0;
+    const hasXp = (api.rules.ST_TOOLS ?? []).some(t => t.id === "xp");
+    if ( hasXp ) api.panel.ask("ask.st.xp", {amount: 3, note: `${TAG} experience`});
+    const xpGiven = !hasXp || await until(() => me?.items?.some?.(i => i.type === "Experience" && i.name === `${TAG} experience` && Number(i.system?.amount) === 3), 8000);
     // Check the systems and What is hidden here open as windows on the player's screen
     const win = re => [...(foundry.applications.instances?.values?.() ?? [])].find(a => a.rendered && re.test(a.title ?? a.options?.window?.title ?? ""));
     api.st.open("check");
@@ -245,8 +250,8 @@ async function player(ids) {
     // Off again from the panel
     api.panel.ask("ask.st.toggle", {to: false});
     const off = await until(() => !api.st.usable(game.user.id), 8000);
-    ok("9e. Storyteller tools", toggleShown && on && tools && eyes && eyesWin && given && check && hid && off,
-      {toggleShown, on, tools, eyes, cards: api.st.cards().length, eyesWin, given, check, checkRows, hidden: hid, off});
+    ok("9e. Storyteller tools", toggleShown && on && tools && eyes && eyesWin && given && xpGiven && check && hid && off,
+      {toggleShown, on, tools, eyes, cards: api.st.cards().length, eyesWin, given, xpGiven, xpWas, check, checkRows, hidden: hid, off});
   });
   return steps;
 }
