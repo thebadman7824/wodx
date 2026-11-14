@@ -10,6 +10,7 @@
  * sure: false waits for Ben on the Item Uses desk and asks the Storyteller until then.
  */
 import * as AR from "./arms-rules.mjs";
+import * as HY from "./hygiene-rules.mjs";
 
 /** The lines, in the chronicle's order. */
 export const LINES = ["mortal", "ghoul", "vampire", "werewolf", "mage", "changeling", "wraith", "hunter", "mummy", "demon", "revenant"];
@@ -56,8 +57,8 @@ export const ABILITIES = {
   pray: {label: "Pray with it", effect: "pray", verb: "prays with"},
   ward: {label: "Set it as a ward or take it down", effect: "ward", verb: "sets up"},
   divine: {label: "Divine with it", effect: "divine", verb: "reads the signs with"},
-  wash: {label: "Wash or groom", effect: "note", verb: "uses", uses: true},
-  disguise: {label: "Change the look", effect: "note", verb: "changes the look with", uses: true},
+  wash: {label: "Wash or groom", effect: "wash", verb: "uses", uses: true},
+  disguise: {label: "Change the look", effect: "wash", verb: "changes the look with", uses: true},
   cook: {label: "Cook with it", effect: "cook", verb: "cooks with"},
   salvage: {label: "Take apart for parts", effect: "salvage", verb: "takes apart"},
   plant: {label: "Plant it", effect: "note", verb: "plants", uses: true},
@@ -248,6 +249,8 @@ export function abilitiesOf(good) {
   if ( k === "medicine" && /sunscreen/i.test(n) ) out.add("wash");
   if ( k === "house" && /tin bath|washboard/i.test(n) ) out.add("wash");
   if ( k === "house" && /mirror/i.test(n) ) out.add("disguise");
+  // B3909: a plunger or a bathroom scale does not wash anyone
+  if ( HY.hasNoUse(n) ) out.delete("wash");
   return [...out].filter(a => ABILITIES[a]);
 }
 

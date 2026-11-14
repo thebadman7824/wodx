@@ -9,6 +9,7 @@ import {setupGearInstall, gearInstallApi} from "./gear-install.mjs";
 import {armsApi} from "./arms-use.mjs";
 import {setupFaith, faithApi} from "./faith-use.mjs";
 import * as HR from "./house-rules.mjs";
+import {setupHygiene} from "./hygiene-use.mjs";
 import "./wonder-lines.mjs";
 
 /**
@@ -20,7 +21,7 @@ import "./wonder-lines.mjs";
 const MOD = G.MOD;
 const PACK_NAME = "wodx-gear";
 const PACK_LABEL = "WoDX · Gear by era";
-export const VERSION = "0.39.1";
+export const VERSION = "0.40.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 
@@ -186,6 +187,7 @@ Hooks.once("ready", async () => {
     manual: {open: Sh.openManual, ensure: Sh.ensureManual, page: Sh.openManualPage}, glossary: {open: Sh.openGlossary, ensure: Sh.ensureGlossary}, changelog: {open: Sh.openChangelog, ensure: Sh.ensureChangelog}};
   try { await setupExamine(); game.modules.get(MOD).api.examine = examineApi(); } catch (err) { console.warn("WoDX Library | Examine could not start", err); }
   try { await setupUse(); game.modules.get(MOD).api.use = useApi(); game.modules.get(MOD).api.arms = armsApi(); setupFaith(); game.modules.get(MOD).api.faith = faithApi(); game.modules.get(MOD).api.house = {roadKit: HR.roadKit}; } catch (err) { console.warn("WoDX Library | Use could not start", err); }
+  try { setupHygiene(); } catch (err) { console.warn("WoDX Library | washing could not start", err); }
   // B3795: cyberware in the body (bonus rows while installed, Humanity on install)
   try { setupGearInstall(); game.modules.get(MOD).api.cyber = gearInstallApi(); } catch (err) { console.warn("WoDX Library | cyberware could not start", err); }
   // B3690: powers, pools and worn bonuses of made supernatural items (wonder-use.mjs)

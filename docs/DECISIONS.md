@@ -199,7 +199,7 @@ Next free block: B4110
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Faith and occult goods in play (used B3900-B3908) | Library |
+| B3900-B3929 | Washing, grooming and cosmetics (used B3900-B3909) | Library |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
@@ -6697,6 +6697,11 @@ Reverse: drop tackMods from chase-rules.mjs and its call in chase.mjs.
 WoDX Library. B3903 capped the Willpower a prayer gives back at the permanent rating, so on a sheet where the rating read lower than the points (the testbed's new mortal, gatefaith step 2), a success set Willpower down to the rating. The prayer now only ever adds. gatefaith also sets its Willpower after the sheet is made.
 
 Reverse: drop the Math.max in prayResult.
+
+## B3909. Washing, grooming and cosmetics (2026-11-14)
+WoDX Library. The no-effect audit found washing and grooming goods that only posted a line (desk i3, the smaller build Ben approved). The look already turned a mortal colder at blood on someone and anyone of standing colder at filth, but nothing ever marked either, so Filthy and Bloody are now token statuses, and a new lethal or aggravated wound marks Bloody on its own. Soap, a towel, a sponge, a scrub brush, a pumice stone or a bath takes both off. Any wash, comb, razor, scent or cosmetic leaves them well groomed for the night: someone of standing meets them a step warmer (house rule), unless filth or blood still shows. A plunger, a toilet brush, a mop, a bathroom scale, pads and tampons do neither and lose their Use. Passing as living with cosmetics was left out, since no part of WoDX yet reads a Kindred's pallor.
+
+Reverse: set wash and disguise back to effect "note" in use-rules.mjs, and drop hygiene-rules.mjs, hygiene-use.mjs and the groomed lines in look.mjs and look-rules.mjs.
 
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
