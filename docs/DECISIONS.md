@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5010
+Next free block: B5040
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -236,6 +236,7 @@ Next free block: B5010
 | B4900-B4909 | Sami names (used B4900-B4902) | Creation, Chronicle |
 | B4950-B4959 | Tuareg names (used B4950-B4952) | Creation, Chronicle |
 | B5000-B5009 | Moro names (used B5000-B5002) | Creation, Chronicle |
+| B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7549,3 +7550,18 @@ Reverse: edit the moro entry in data/people-world.mjs.
 WoDX Creation. From 1800 a Moro is bin or binti the father or carries a family name (Kiram, Alonto, Misuari).
 
 Reverse: change child or fam in the moro entry.
+
+## B5030. The Banyarwanda and Barundi in central Africa's mix (2026-11-14)
+WoDX Creation and Chronicle. The people of the kingdoms of Rwanda and Burundi are 10 in 100 in central Africa's mix in the medieval age, 9 in the early modern, 8 in the industrial and 9 in the modern, beside the Kongo, Luba and Baganda (B4690). Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: drop banyarwanda from the central-africa mixes in world-rules.mjs and the banyarwanda entry in people-world.mjs.
+
+## B5031. The names (2026-11-14)
+WoDX Creation. Before 1800, the royal names of the mwami king lists and the court histories with own Kinyarwanda and Kirundi names, given alone; from 1800, French church names. Fewer than 300 names.
+
+Reverse: edit the banyarwanda entry in data/people-world.mjs.
+
+## B5032. An own name in place of a family name (2026-11-14)
+WoDX Creation. From 1800 a Munyarwanda or Murundi carries a second, own Kinyarwanda or Kirundi name (Habimana, Uwimana, Nkurunziza) where other peoples carry a family name; it is the person's own and is not handed to the children.
+
+Reverse: drop fam from the banyarwanda entry.

@@ -41,7 +41,7 @@ test("central Africa: Kongo kanda and Ganda ebika before 1800, Luba women of a c
 });
 
 test("central Africa: peopled from 1197, the Kongo, Luba and Ganda first, the colony later", () => {
-  assert.deepEqual(origin("medieval").sort(), ["ganda", "kongo", "luba"]);
+  assert.deepEqual(origin("medieval").sort(), ["banyarwanda", "ganda", "kongo", "luba"]);
   assert.ok(origin("industrial").includes("french") && origin("industrial").includes("kongo"));
   assert.equal(W.hasPeopleIn("central-africa", 1300), true);
 });
