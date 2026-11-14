@@ -57,9 +57,11 @@ function besiegedIds(markets) {
   try { for ( const b of Battles.list() ) if ( b.kind === "siege" && !b.over ) { const m = TR.townOfPlace(b.place || b.war?.place, markets, sceneName); if ( m ) out.add(m.id); } } catch (e) { /* no battles */ }
   return out;
 }
-function ctxFor(m, sieges) {
+function ctxFor(m, sieges, {town = null, year = 0} = {}) {
   const shut = m.traders.length ? m.traders.filter(t => t.shut).length / m.traders.length : 0;
-  const taxes = (m.moves ?? []).filter(v => v.type === "tax").reduce((s, v) => s + v.rate, 0);
+  let taxes = (m.moves ?? []).filter(v => v.type === "tax").reduce((s, v) => s + v.rate, 0);
+  // B3616: a levy of the land (WoDX Chronicle's taxes) weighs on the town too; a crushing one most of all
+  try { const law = chron()?.law?.tax; if ( law ) taxes += law.rules.townTaxFrom(law.here(regionOfMarket(m, town), year || undefined)); } catch (e) { /* no taxes of the land */ }
   return {foodSupply: MK.supplyOf(m, "food"), foodIndex: MK.indexOf(m, "food") * (1 + MV.taxOn(m, "food")), fuelIndex: MK.indexOf(m, "fuel"),
     taxes, closedRoads: Object.keys(m.unsafe ?? {}).length, shutShare: shut, besieged: sieges.has(m.id)};
 }
@@ -135,7 +137,7 @@ export async function run({force = false, reason = ""} = {}) {
   const events = [], food = new Set();
   for ( let i = 0; i < due.due; i++ ) {
     const at = base + (i + 1) * MT.WEEK, d = dateAt(at);
-    const r = TR.weekTowns(st, mst.markets, {year: d.year, month: d.month, ctxFor: m => ctxFor(m, sieges),
+    const r = TR.weekTowns(st, mst.markets, {year: d.year, month: d.month, ctxFor: m => ctxFor(m, sieges, {town: st.towns?.[m.id] ?? null, year: d.year}),
       regionOf: t => regionOfMarket(MK.marketById(mst, t.id), t), latOf: (t, region) => WORLD_REGIONS[region]?.lat ?? latitude(),
       randFor: id => seeded(`${id}:${at}:${st.turns}`), sickFor: sickFor()});
     st.turns = (st.turns ?? 0) + 1;

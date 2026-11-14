@@ -182,7 +182,7 @@ Next free block: B3630
 | B3520-B3539 | Gaps from Ben's design notes: referee ticket, crisis levers, binding card, roster, inheritance, the 2022 cap (used B3520-B3536) | Chronicle, Storyteller, Otherworlds, NPC, Actions |
 | B3540-B3549 | Supernatural sight: the Penumbra, a mage's sight, chimerical sight, the Shadowlands view (notes gaps g8 to g11) (used B3540-B3547) | Senses, Actions |
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
-| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3615) | Chronicle, Storyteller |
+| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3617) | Chronicle, Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5851,3 +5851,13 @@ Reverse: set the world setting Standing before the law to off.
 LINE_STANDING gives the Storyteller a line per kind: Kindred and Ventrue taking mortal titles, a ghoul lifted by a domitor, Kinfolk families, the Order of Hermes and the Technocracy, fae titles that mean nothing to a mortal court, a wraith's old standing, a hunter believed or locked up, an ancient noble of Egypt as a nobody, a demon's host, revenant families buying titles.
 
 Reverse: empty LINE_STANDING.
+
+## B3616. Taxes on the month's upkeep (2026-11-13)
+The allowance stays what the books pay: it is read as what is left after the usual taxes, so nothing changes for a character who pays. The usual share by family and year (15 in the hundred in the Dark Medieval, 10 by 1800, 20 by 1914, 30 by 1945, 35 by 1980, with Japan, Islam, China, Africa, the Americas, the steppe, the Pacific and the far north on their own steps) is what a dodger keeps. A dodger is caught each month at 0.3 times the law's catch plus 1.2 in the hundred per weight of records (B3612), at most half; a tax-office seat cuts that by a fifth per rank. A caught dodger or an unpaid levy is a "tax" deed of gravity 2 on the law's heat. Levies are dated and placed (twelve, 1377 to 1945, none after 2022); every levy weighs on the towns of the land (WoDX Storyteller's towns add it to the tax a town feels each week, a crushing one eight times, at most 1.6), so a crushing levy brings riots and risings. House figures.
+
+Reverse: remove registerTaxHooks from main.mjs; the paid field on wodxMonthPaid is harmless.
+
+## B3617. Splat hooks for taxes (2026-11-13)
+LINE_TAX: Kindred money passing through mortal hands, a ghoul keeping the books, a caern on taxed land, the Syndicate and the tax codes, a freehold lost to an unpaid bill, the dead's homes sold, a hunter off the books, a mummy's treasure, a demon's host's debts, revenant families' two sets of books.
+
+Reverse: empty LINE_TAX.

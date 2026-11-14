@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.82.2 (The month's pay (wodxMonthPaid) now carries each character's allowance, so WoDX Chronicle can reckon taxes on it, and each town feels the levy of the land (WoDX Chronicle) beside the factions' taxes)
 - 0.82.1 (Climbing the court, the ruler's officers, the tax office, the garrison or the council can be capped by the climber's standing before the law (WoDX Chronicle))
 - 0.82.0 (A new downtime project, Make a new self on paper, takes its difficulty and goal from WoDX Chronicle's papers of the age)
 - 0.81.0 (Offices of the law and the state: towns now hold a court, the ruler's officers, a tax office and a garrison, and where the law of the land keeps them, the Holy Office and the secret police. Their ranks and names follow the town's law family and year (a qadi's court, a yamen, Soviet first secretaries), and they close and open again with the law. The Storyteller sees a line on what each office means to the Kindred, the Garou, hunters and the Technocracy)
