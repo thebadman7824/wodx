@@ -74,6 +74,7 @@ import * as WorldMap from "./world-map.mjs";
 import * as DiscoveryRules from "./discovery-rules.mjs";
 import * as Teleport from "./teleport.mjs";
 import * as Own from "./owners.mjs";
+import * as Wonders from "./wonders.mjs";
 import * as Cook from "./cookery.mjs";
 import * as OwnRules from "./owner-rules.mjs";
 import * as CraftRules from "./craft-rules.mjs";
@@ -142,6 +143,7 @@ Hooks.once("init", () => {
   Threads.registerThreadHooks();
   Patron.registerPatronageHooks();
   Cook.registerCookHooks();
+  Wonders.registerWonderHooks();
   Body.registerBodyHooks();
   Hard.registerHardshipSettings();
   Hard.registerHardshipHooks();
@@ -176,7 +178,7 @@ Hooks.once("init", () => {
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
 
-Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Inherit.registerInheritance(); Led.registerLedgerHandlers(); Wills.registerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Hunters.registerHunterHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); Ventures.registerApproval(); Inst.registerApproval(); Works.registerApproval(); Omens.registerApproval(); Patron.registerApproval(); Towns.registerApproval(); Contagion.registerApproval(); Threads.registerApproval(); } });
+Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Inherit.registerInheritance(); Led.registerLedgerHandlers(); Wills.registerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Hunters.registerHunterHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); Ventures.registerApproval(); Inst.registerApproval(); Works.registerApproval(); Omens.registerApproval(); Patron.registerApproval(); Towns.registerApproval(); Contagion.registerApproval(); Threads.registerApproval(); Wonders.registerWonderApproval(); } });
 
 Hooks.once("ready", () => {
   if ( !active ) return;
@@ -268,6 +270,8 @@ Hooks.once("ready", () => {
       craft: Own.craftDialog, startCraft: Own.startCraft, makeable: Own.makeable, build: Own.buildDialog, startBuild: Own.startBuild,
       workshops: Own.workshopsMonth, factionBuilds: Own.factionBuildsMonth, rules: {owner: OwnRules, craft: CraftRules, build: BuildRules}},
     cookery: Cook.cookApi(),
+    // B3631: fetishes, talens and the other lines' supernatural items (WoDX Library api.wonders)
+    wonders: Wonders.wondersApi(),
     teleport: {arm: Teleport.arm, to: Teleport.teleport, cursor: Teleport.cursorPoint, armed: Teleport.isArmed},
     draw: Night.drawChooser, nightRules: Night.N
   };

@@ -12,6 +12,7 @@ import {MOD, esc, isActiveGM, setting, isPC, chron, log, npc} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Own from "./owners.mjs";
 import * as Cook from "./cookery.mjs";
+import * as W from "./wonders.mjs";
 
 const now = () => game.time?.worldTime ?? 0;
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -51,6 +52,8 @@ export function poolFor(a, task) {
   const ab = t.ability ? a?.system?.abilities?.[t.ability] : null;
   // 0.27.0: a faction's building rolls its Resources + Retainers; workers add a die each
   if ( t.faction ) return Math.max(1, Own.factionPool(t.faction) + t.workers + t.dice);
+  // B3632: the Rite of Binding rolls permanent Willpower alone
+  if ( t.pool === "willpower" ) { const w = a?.system?.willpower ?? a?.system?.advantages?.willpower; return Math.max(1, num(w?.permanent) + t.dice); }
   // 0.42.0: followers helping add their own dots in the Ability
   const help = R.helperDice(t.helpers.map(id => game.actors?.get?.(id)).filter(Boolean).map(h => ({dots: t.ability ? num(h.system?.abilities?.[t.ability]?.value) : 0})));
   return Math.max(1, num(at?.total ?? at?.value) + num(ab?.value) + t.dice + t.workers + help);
@@ -83,7 +86,7 @@ export async function saveTask(a, data) {
   const id = data.id && rawTasks(a)[data.id] ? data.id : R.newId(rawTasks(a));
   const old = rawTasks(a)[id];
   const t = R.normTask({...(old ?? {started: now()}), ...data, id});
-  if ( !old ) { t.started = now(); t.next = now() + R.intervalS(t); }
+  if ( !old ) { t.started = now(); t.next = now() + R.intervalS(t) + t.delay * R.DAY; }
   // B3357: a new climb needs the successes for the rank it climbs to
   if ( !old && t.kind === "climb" && t.institution ) {
     try { const I = game.modules.get(MOD).api.upkeep.institutions; const inst = I.byId(t.institution); const b = inst ? I.rules.bestSeat(inst, t.target?.id || a.id) : null; t.goal = I.rules.climbGoal(b ? b.rank + 1 : 0); } catch (e) { /* institutions off */ }
@@ -111,6 +114,8 @@ export async function removeTask(a, id) {
 
 export async function setPaused(a, id, paused) {
   if ( !canEdit(a) || !rawTasks(a)[id] ) return;
+  // B3631: a player's fetish waits for the Storyteller's go-ahead, not for a Resume
+  if ( !paused && !game.user.isGM && rawTasks(a)[id].wonder && rawTasks(a)[id].approved === false ) return ui.notifications.warn("This one waits for the Storyteller's go-ahead.");
   const t = paused ? R.pauseTask({...rawTasks(a)[id], id}) : R.resumeTask({...rawTasks(a)[id], id}, now());
   await a.update({[`flags.${MOD}.tasks.${id}`]: t});
 }
@@ -279,6 +284,8 @@ export async function editTask(actorId = null, taskId = null) {
       content: "<p>What kind of work is it? The kind fills in a starting pool, difficulty and goal, which you can change.</p>",
       buttons: [...Object.entries(R.KINDS).map(([k, v]) => ({action: k, label: v.label})), {action: "cancel", label: "Cancel"}]});
     if ( !kind || kind === "cancel" ) return null;
+    // B3631: a fetish or talen from the book lists, when the line's crafting is on
+    if ( kind === "fetish" && W.available(a) ) return W.makeDialog(a.id);
   }
   const t = taskId ? R.normTask({...rawTasks(a)[taskId], id: taskId}) : R.normTask({kind});
   const abil = abilitiesOf(a);

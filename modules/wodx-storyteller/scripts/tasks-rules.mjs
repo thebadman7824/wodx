@@ -37,7 +37,7 @@ export const KINDS = {
   train: {label: "Learn from a teacher", attr: "intelligence", ability: "", diff: 6, interval: "week", goal: 5, delicate: false, house: true, week: 3,
     ref: "A new trait needs a teacher and study as well as the experience, from a short course to years for a first dot of Thaumaturgy; no time is fixed (V20 p. 123)."},
   fetish: {label: "Make a fetish or talen", attr: "wits", ability: "rituals", diff: 10, interval: "day", goal: 1, delicate: true, house: false, week: 1,
-    ref: "The Rite of the Fetish: Wits + Rituals at difficulty 10, 2 less for each permanent Gnosis spent; talens come from the Rite of Binding, one more for each extra success (W20 pp. 213, 227-228)."},
+    ref: "The Rite of the Fetish: three nights of cleansing, then Wits + Rituals at difficulty 10, 2 less for each permanent Gnosis spent; talens come from the Rite of Binding, Willpower against the spirit's Gnosis, one talen a success (W20 pp. 210, 213, 228)."},
   wonder: {label: "Make a wonder or talisman", attr: "intelligence", ability: "occult", diff: 7, interval: "week", goal: 10, delicate: true, house: true, week: 4,
     ref: "Dark Ages: Mage gives no general rule for making a wonder; a creature part lowers the difficulty by 2 (p. 191)."},
   build: {label: "Put up a building", attr: "dexterity", ability: "crafts", diff: 6, interval: "week", goal: 6, delicate: false, house: true, week: 0,
@@ -116,7 +116,15 @@ export function normTask(t = {}) {
     haven: String(t.haven ?? "").slice(0, 40), upgrade: String(t.upgrade ?? "").slice(0, 30),
     // B3374: a commission's artist, form, money spent (0-5) and, for the fae, how the artist is handled
     artist: String(t.artist ?? "").slice(0, 40), form: String(t.form ?? "").slice(0, 20), money: Math.max(0, Math.min(5, Math.round(n(t.money)))),
-    handling: t.handling === "harsh" ? "harsh" : "kind"
+    handling: t.handling === "harsh" ? "harsh" : "kind",
+    // B3630-B3636: a supernatural item from WoDX Library's wonders table (wonder: its key). pool "willpower" rolls
+    // permanent Willpower alone (the Rite of Binding); spend: Gnosis spent at the rite; power: the bound spirit's
+    // strength (gaffling, jaggling, greater); forced: beaten into the vessel; delay: days of preparation before the
+    // first roll (three nights of cleansing for a fetish); approved: the Storyteller's go-ahead for a player's work
+    wonder: String(t.wonder ?? "").slice(0, 60), pool: t.pool === "willpower" ? "willpower" : "",
+    spend: Math.max(0, Math.min(10, Math.round(n(t.spend)))), power: ["gaffling", "jaggling", "greater"].includes(t.power) ? t.power : "gaffling",
+    forced: !!t.forced, delay: Math.max(0, Math.min(30, Math.round(n(t.delay)))), approved: t.approved !== false,
+    spirit: String(t.spirit ?? "").slice(0, 160)
   };
 }
 
