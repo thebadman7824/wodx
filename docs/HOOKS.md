@@ -49,7 +49,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxTradeDone | actions | storyteller (a week of player trade gluts or empties a market) |
 | wodxTrade | actions | chronicle (a Ravnos vice fed or called; a Nosferatu's page of secrets sold; a Setite's gift that feeds the victim's vice moves their Corruption) |
 | wodxXCard | chronicle | actions |
-| wodxTaskDone | storyteller | npc |
+| wodxTaskDone | storyteller | npc; chronicle (a finished "Make a new self on paper" puts the new self on the character, B3612) |
 | wodxBattle | storyteller | npc (an ended battle between factions proposes Status, Retainers and standing changes) |
 | wodxChase | interactables | npc (followers join a chase with their master) |
 | wodxGhoulFix | chronicle | npc |
