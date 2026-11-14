@@ -253,14 +253,14 @@ export async function run() {
     });
     await step("13 Cast a ritual puts its keywords on the card", async () => {
       const era = game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null;
-      const set = era === "dark-ages" || era === "long-night" ? "v20da" : "v20";
-      const list = A().effects.bookRituals[set].list;
+      const bs = era === "dark-ages" || era === "long-night" ? "v20da" : "v20";
+      const list = A().effects.bookRituals[bs].list;
       const i = list.findIndex(r => (r.k ?? []).includes("ward") && /self/.test(r.who));
       const th = await mk("Thaumaturge", "Vampire", { attributes: { intelligence: { value: 5, total: 5 } } }, []);
       await sleep(800);
       await game.user.updateTokenTargets?.([]);
       const n = game.messages.size;
-      answer(root => { set(root, "rit", `${set}:${i}`); set(root, "blood", 0); set(root, "diff", 4); });
+      answer(root => { set(root, "rit", `${bs}:${i}`); set(root, "blood", 0); set(root, "diff", 4); });
       A().castRitual({ actor: th });
       const m = await untilMsg(n);
       const items = fx(m), took = /it takes/.test(text(m));
@@ -275,6 +275,17 @@ export async function run() {
       await sleep(600);
       const down = !!cond?.hasCondition?.(v, "knockdown");
       ok("14 A Sweep knocks the target down on its token", f.length === 1 && !miss.length && down, { follow: f, down });
+    });
+    await step("15 An inquisitor's Blessing from the book list lands on the card", async () => {
+      const q = await mk("Inquisitor", "Mortal", {}, []);
+      await q.setFlag("wodx-actions", "inquisitor", { order: "oculi", faith: 3, wisdom: 3, zeal: 3, piety: 6, conviction: 5 });
+      await sleep(600);
+      const n = game.messages.size;
+      answer(root => { set(root, "bk", "lux-w"); });
+      A().blessing({ actor: q });
+      const m = await untilMsg(n);
+      const items = fx(m);
+      ok("15 An inquisitor's Blessing from the book list lands on the card", !!m && /Fiat Lux/.test(text(m)) && items.some(i => i.key === "light"), { card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`) });
     });
   } finally {
     for (const [h, id] of hooks) Hooks.off(h, id);

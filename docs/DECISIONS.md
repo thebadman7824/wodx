@@ -193,7 +193,7 @@ Next free block: B3820
 | B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3719) | Library |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
-| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3754) | Combat |
+| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3755) | Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
 | B3780-B3809 | The no-effect audit: everyday arms, weapon fittings and traps (used B3780-B3807) | Library, Combat |
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
@@ -6401,6 +6401,10 @@ How to reverse: drop castRitual from kindred.js and main.js, the book select and
 ## B3754. A maneuver that hits leaves its state on the target (2026-11-14)
 WoDX Combat. Sweep, Tackle, Hold, Grapple, Stake and Impale changed the attack and damage pools, and their after-effect was a line of text on the card. Now, with token status effects on (the same setting that marks Dazed), a hit leaves the state on the target's token as a WoDX condition: Sweep and Tackle mark Knocked down and Hold and Grapple mark Held, each until the victim's next action in a fight (the scene outside one); a Stake or Impale with three damage successes marks a vampire Staked until the stake is pulled out (V20 Dark Ages pp. 347-348). The card says what was marked. A player's attack on someone they do not own asks the Storyteller's client to mark it. The conditions already shape later rolls and turns (the conductor skips a staked actor; movement reads Knocked down).
 How to reverse: drop followOn and markFollow in wodx-combat main.js.
+
+## B3755. The inquisitors' Blessings, one by one, with effects (2026-11-14)
+WoDX Actions. The Blessing window took a typed name and rolled what the player set, with no effect. It now carries the Blessings of Dark Ages: Inquisitor Chapter Five (Orisons, Benedictions, Investitures, Legacies, Psalms, the three Holy Art paths and the Ritae, 94 entries) as short summaries in our own words with the printed page. Picking one sets the Attribute, the Superior Virtue or Virtue, the difficulty, the Conviction cost and the no-roll box, and shows the effect. A roll that takes puts its keywords on the effects card: damage (Fiat Lux, Wrath of God, Water to Wine), healing (Water to Wine, Resurrection, Restoration), wards (Rod and Staff, Aura of Sanctity, Mirror of Evil), holds (Tears of the Martyr, Oratorio), boosts, pools (Divine Liturgy, Hosanna, Arcana) and regained Conviction (Divine Liturgy, Resurrection), each with Undo. Reading powers (Moral Compass, Sophia Patris) show their answer on the card. The Superior Virtue rolls stay in the Virtue roll window. Pages follow the book's printed numbers (the scan runs one page ahead).
+How to reverse: drop inq-blessings.js and the "From the book" select in hunter.js blessing().
 
 ## B3770. Kuei-jin make stone weapons and true jade (2026-11-14)
 WoDX Library, data/wonders-kuei-jin.mjs and scripts/wonders-kuei-jin.mjs. The Item Crafting Desk pick kj2 (full). Kindred of the East has jade talismans only as a Background (pp. 86-87), but the Companion (p. 67) gives the masters of Jade Shintai two powers that make things, Blade of Stone and Taste of Jade. Both are a Kuei-jin kit on the shared wonders registry (B3683), world setting craftKueiJin, on by default like the other kits.
