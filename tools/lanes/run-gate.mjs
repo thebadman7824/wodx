@@ -213,7 +213,7 @@ try {
         } catch (e) { error ??= `putting the scene back: ${e?.message ?? e}`; }
         if ( game.paused !== paused ) await game.togglePause(paused, {broadcast: true});
         const text = typeof summary === "string" ? summary : summary?.summary ?? JSON.stringify(summary ?? null);
-        return {summary: String(text).slice(0, 300), error, moved, back: game.time.worldTime === t0, settingsBack, docsGone, shut};
+        return {summary: String(text).slice(0, 600), error, moved, back: game.time.worldTime === t0, settingsBack, docsGone, shut};
       }, {gate, ignore: cfg.ignoreSettings ?? [], cleanDocs: !!lane.autoReset, limit, stepMs: stepSec * 1000});
       let out;
       try { out = await within(run, limit + 3 * 60000, gate); }

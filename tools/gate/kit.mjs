@@ -133,6 +133,10 @@ export function gate(name, {stepTimeout = 30000} = {}) {
   async function save() {
     R.finished = new Date().toISOString();
     R.summary = `${R.steps.filter(s => s.pass).length}/${R.steps.length} passed`;
+    // a failing run names its failed steps and what they saw, so the queue's comment shows why without the PC file
+    const bad = R.steps.filter(s => !s.pass).map(({name: n, pass, ...d}) => `${n} ${JSON.stringify(d).slice(0, 160)}`);
+    if ( bad.length ) R.summary += `; failed: ${bad.join("; ")}`.slice(0, 280);
+    if ( R.errors.length ) R.summary += `; errors: ${R.errors.map(e => String(e?.message ?? e?.error ?? JSON.stringify(e))).join("; ")}`.slice(0, 200);
     const file = new File([JSON.stringify(R, null, 1)], `${name}-result.json`, {type: "application/json"});
     try { await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, {notify: false}); }
     catch (e) { R.notes.push(`save: ${e?.message ?? e}`); }
