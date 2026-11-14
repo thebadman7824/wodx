@@ -228,6 +228,33 @@ function fitPlan(attacker, w, fd = {}) {
     return R.fittingsPlan(fit, { range: fd.range ?? "short", smartLink, wet, bow, blind: !!fd.blind });
 }
 
+/** B3900: which ammunition this weapon takes (WoDX Library's ammoKindOf, with the gun's lock), or null. */
+function ammoKind(w) {
+    const A = armsLib();
+    // an everyday weapon brings its own (a grenade, a flare), except the sling, which throws stones
+    if (!A?.rules?.ammoKindOf || !w?.ranged || w.natural || (w.good && !/\bsling\b/i.test(w.name))) return null;
+    let lock = null;
+    try { lock = PW.gunLock(w, yearNow())?.lock ?? null; } catch (e) { lock = null; }
+    return A.rules.ammoKindOf(w, lock);
+}
+/** B3901: an arrow or a stone for this shot, when shots are counted: {ok, spend, why}, or null when nothing is counted. */
+function shotAmmo(actor, w) {
+    const kind = ammoKind(w);
+    if (!countShots() || !["bow", "sling"].includes(kind)) return null;
+    return armsLib().rules.shotPlan([...(actor?.items ?? [])], kind);
+}
+/** Take n from each row (the sheet's count, a count in the name, or the row itself). */
+async function spendRows(spend = []) {
+    for (const { item, n } of spend) {
+        if (!item || n <= 0) continue;
+        const have = armsLib()?.rules?.countOf?.(item) ?? 1;
+        const left = have - n;
+        if (left <= 0) { await item.delete(); continue; }
+        if (num(item.flags?.["wodx-sheets"]?.qty) > 0) await item.update({ "flags.wodx-sheets.qty": left });
+        else await item.update({ name: String(item.name).replace(/\(\d+\)\s*$/, `(${left})`) });
+    }
+}
+
 function healthTrack(actor) {
     const h = actor?.system?.health ?? {};
     const totals = {}, penalties = {}, labels = {};
@@ -802,6 +829,9 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         const t = R.reloadTurns({ crossbow: w.crossbow, darkAges: darkAgesNow(), archery: archeryOf(attacker) });
         throw new Error(`${attacker.name}'s ${w.name} is empty. Reload it first (${t.turns} turn${t.turns === 1 ? "" : "s"}, ${t.ref}).`);
     }
+    // ---- B3901: a bow needs an arrow and a sling a stone, when shots are counted
+    const perShot = shotAmmo(attacker, w);
+    if (perShot && !perShot.ok) throw new Error(`${attacker.name} has ${perShot.why} for ${w.name}.`);
     // ---- Black powder (3.24.0): wet powder or a match out in heavy rain will not fire
     const gun = powderOn() ? PW.gunLock(w, yearNow()) : null;
     const wet = gun?.black ? powderWet(attackerTok ?? attacker) : null;
@@ -855,6 +885,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
 
     const atk = await rollPool(pool.dice, pool.difficulty, { specialty: fd.specialty, willpower: fd.willpower });
     if (atk.roll) rolls.push(atk.roll);
+    if (perShot?.ok) { await spendRows([perShot.spend]); log.push(`${esc(perShot.spend.item.name)}: one is shot.`); }
     if (w?.ranged && w.shots?.counted && countShots()) {
         const left = await spendShot(attacker, w);
         if (left !== null) log.push(`${w.name}: ${left} of ${w.shots.max} round${w.shots.max === 1 ? "" : "s"} left.`);
@@ -1142,6 +1173,8 @@ function attackUsable(attacker, w, distance, reachD = distance) {
     if (w.id === "unarmed:claw" && !w.natural && !w.grow && !shifter)
         return discipline(attacker, "Vicissitude") >= 3 ? "no claws grown (sculpt bone talons first)" : "no claws (Protean 2, a shape with claws, or bone talons)";
     if (w.ranged && w.shots?.empty && countShots()) return "empty: reload first";
+    const perShot = shotAmmo(attacker, w);
+    if (perShot && !perShot.ok) return perShot.why;
     // 3.24.0: wet powder, or a match out in heavy rain
     if (w.ranged && powderOn()) {
         const g = PW.gunLock(w, yearNow());
@@ -1728,7 +1761,7 @@ Hooks.once("init", () => {
     const aftermath = AA.setupAftermath({ corpusTrack });
     FTime.setupFightTime();
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.31.2", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.32.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, followOn: R.followOn, markFollow, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -2129,7 +2162,13 @@ export async function reload({ actor: a = null, weaponId = null } = {}) {
     const item = actor.items.get(w.id);
     if (!item) return null;
     const t = R.reloadTurns({ crossbow: w.crossbow, darkAges: darkAgesNow(), archery: archeryOf(actor) });
-    await item.update({ "system.clip.value": w.shots.max });
+    // B3900: the rounds come out of Possessions (magazines first, then loose rounds; a ball needs a powder horn)
+    const kind = ammoKind(w);
+    const plan = kind ? armsLib().rules.reloadPlan([...actor.items], kind, w.shots.max - w.shots.value, w.shots.max) : null;
+    if (plan && !plan.ok) return ui.notifications.warn(`${actor.name} cannot reload ${w.name}: ${plan.why}.`);
+    const loaded = plan ? w.shots.value + plan.rounds : w.shots.max;
+    if (plan) await spendRows(plan.spend);
+    await item.update({ "system.clip.value": loaded });
     // 3.24.0: loading dry powder clears wet powder; the match still has to be lit
     const pw = item.getFlag?.(MOD, "powder") ?? null;
     const dried = !!pw?.wet;
@@ -2137,8 +2176,8 @@ export async function reload({ actor: a = null, weaponId = null } = {}) {
     // B3806: a speed loader reloads a revolver with another action, not a turn of its own
     const quick = !w.crossbow && armsLib()?.fitFor?.([...actor.items], w)?.quickReload;
     const how = quick ? "with the speed loader, done along with another action" : t.turns === 1 ? "one full turn, with concentration; it can be one of several actions" : `${t.turns} turns`;
-    await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="vtc-card"><b>${actor.name} reloads ${w.name}</b> (${w.shots.max} round${w.shots.max === 1 ? "" : "s"}): ${how} (${t.ref}).${dried ? " The wet powder is drawn and dry powder loaded." : ""}</div>` });
-    return { weapon: w.id, turns: t.turns, rounds: w.shots.max };
+    await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content: `<div class="vtc-card"><b>${actor.name} reloads ${w.name}</b> (${loaded} of ${w.shots.max} round${w.shots.max === 1 ? "" : "s"}${plan?.spend?.length ? `, from ${plan.spend.map(x => esc(x.item.name)).join(" and ")}` : ""}): ${how} (${t.ref}).${dried ? " The wet powder is drawn and dry powder loaded." : ""}</div>` });
+    return { weapon: w.id, turns: t.turns, rounds: loaded };
 }
 
 /**

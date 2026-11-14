@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.32.0 (Ammunition in the fight (B3900, B3901): Reload loads only what the character carries (magazines first, then loose rounds; a muzzle-loader's ball needs a powder horn), and with Count shots on, bows and slings spend an arrow or a stone a shot)
 - 3.31.2 (A hit with pepper spray, a flashbang or a firecracker no longer stops the attack (B3809): the attack card read the damage pool those things never roll, so the attack failed before it could blind or daze anyone. The card now says the hit does no damage of its own, and what it leaves follows)
 - 3.31.1 (Body traits and cyberware keep their effect at prepare time too (B3808): the system works out the wound level and penalty again every time it prepares an actor, from the stored totals, which undid B3804 on the testbed (gatetraits step 29, gatecyber step 8). The fork now calls a "wodxActorDerived" hook after that, and Combat lays the extra Bruised levels and the eased penalty over it)
 - 3.31.0 (Weapon fittings and everyday arms in the fight (B3805, B3806): the attack list offers WoDX Library's everyday weapons, fittings on the matching weapon change its dice, difficulty, noise, Strength need and reload, a bowstring slackens in the rain without wax, and what a spray, shock, blast or flash leaves behind is marked on the target)
