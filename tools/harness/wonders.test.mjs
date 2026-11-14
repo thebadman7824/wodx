@@ -198,3 +198,67 @@ test("wonders registry: a kit missing a part is refused, a good one is added and
   assert.ok(Reg.kitFor("test-line"));
   assert.ok(Reg.lines().some(k => k.line === "test-line"));
 });
+
+test("wonders, Mage kit: Talismans and Devices from Effect keywords (M20 Book of Secrets pdf 152-162, B3684-B3688)", () => {
+  const kit = Reg.kitFor("mage");
+  assert.ok(kit); assert.equal(kit.setting, "craftMage");
+  const sheet = (sph, o = {}) => ({system: {advantages: {arete: {permanent: 4}, willpower: {permanent: 6}}, quintessence: {temporary: 20},
+    spheres: Object.fromEntries(Object.entries(sph).map(([k, v]) => [k, {value: v}])), ...o}});
+  const m = kit.makerOf(kit.factsFrom(sheet({prime: 4, forces: 3, matter: 2}), {profile: "mage"}));
+  assert.equal(m.kind, "mage"); assert.equal(m.practice, "mystic");
+  assert.equal(kit.makerOf(kit.factsFrom(sheet({prime: 4}), {profile: "lupine"})).kind, null);
+  const tal = kit.row("talisman");
+  assert.deepEqual(kit.blockers(tal, m, {effect1: "light", effect2: "ward"}), []);
+  assert.ok(kit.blockers(tal, m, {}).some(b => /at least one Effect/.test(b)));
+  assert.ok(kit.blockers(tal, m, {effect1: "light", effect2: "ward", effect3: "sight"}).some(b => /at most 2/.test(b)));
+  const weak = kit.makerOf(kit.factsFrom(sheet({prime: 3, forces: 3}), {profile: "mage"}));
+  assert.ok(kit.blockers(tal, weak, {effect1: "light"}).some(b => /Prime 4/.test(b)));
+  const t = kit.taskFor(tal, m, {effect1: "light", effect2: "ward"});
+  assert.equal(t.pool, "path:system.advantages.arete.permanent");
+  assert.equal(t.diff, 8); assert.equal(t.goal, 12);
+  assert.equal(kit.taskFor(tal, m, {effect1: "light", sanctum: true, purify: 2}).diff, 5);
+  const nt = T.normTask(t);
+  assert.deepEqual(nt.opts.effects, ["light", "ward"]); assert.equal(nt.opts.dots, 2);
+  const [item] = kit.itemsFor(tal, {task: nt});
+  const f = item.flags["wodx-library"].wonder;
+  assert.equal(f.line, "mage"); assert.equal(f.arete, 2); assert.equal(f.powers.length, 2); assert.equal(f.pool.max, 10);
+  const paid = Reg.applyCosts(kit.costs(tal, {...nt, status: "done"}), {"system.quintessence.temporary": 20, "system.advantages.willpower.permanent": 6, "system.advantages.willpower.temporary": 6});
+  assert.equal(paid.updates["system.quintessence.temporary"], 10);
+  assert.equal(paid.updates["system.advantages.willpower.permanent"], 5);
+  assert.deepEqual(kit.costs(tal, {...nt, status: "ruined"}), []);
+  const tech = kit.makerOf(kit.factsFrom(sheet({prime: 4, forces: 3}, {affiliation: "Technocratic Union"}), {profile: "mage"}));
+  assert.equal(tech.practice, "tech");
+  const dt = T.normTask(kit.taskFor(tal, tech, {effect1: "light", practice: "tech", facility: true}));
+  assert.match(kit.itemsFor(tal, {task: dt})[0].name, /^Device/);
+  assert.equal(kit.costs(tal, {...dt, status: "done"}).length, 1, "a Union facility waives the Willpower");
+});
+
+test("wonders, Mage kit: charms, periapts, trinkets and mage fetishes", () => {
+  const kit = Reg.kitFor("mage");
+  const m = kit.makerOf(kit.factsFrom({system: {advantages: {arete: {permanent: 3}}, quintessence: {temporary: 5},
+    spheres: {prime: {value: 3}, forces: {value: 2}, matter: {value: 5}, spirit: {value: 4}}}}, {profile: "mage"}));
+  const ch = kit.row("charm");
+  assert.deepEqual(kit.blockers(ch, m, {effect1: "light", count: 6}), []);
+  assert.ok(kit.blockers(ch, m, {effect1: "light", count: 7}).some(b => /twice Arete/.test(b)));
+  const charms = kit.itemsFor(ch, {task: T.normTask(kit.taskFor(ch, m, {effect1: "light", count: 3}))});
+  assert.equal(charms.length, 3); assert.equal(charms[0].flags["wodx-library"].wonder.powers[0].uses, 1);
+  const pe = kit.row("periapt");
+  assert.deepEqual(kit.blockers(pe, m, {dots: 3}), []);
+  const [p] = kit.itemsFor(pe, {task: T.normTask(kit.taskFor(pe, m, {dots: 3}))});
+  const pf = p.flags["wodx-library"].wonder;
+  assert.deepEqual([pf.pool.value, pf.pool.max], [10, 15]);
+  assert.equal(pf.powers.find(x => x.id === "draw").transfer.need.min, 2);
+  assert.ok(kit.blockers(pe, m, {dots: 1, living: true}).some(b => /Life 5/.test(b)));
+  const tr = kit.row("trinket");
+  assert.ok(kit.blockers(tr, m, {}).some(b => /exactly one Effect/.test(b)));
+  const fx = kit.rows().filter(w => w.kind === "fetish");
+  assert.ok(fx.some(w => w.garou === "klaive")); assert.ok(!fx.some(w => w.wyrm || w.breeds));
+  const fk = kit.row("fetish-klaive");
+  assert.deepEqual(kit.blockers(fk, m, {forced: true}), []);
+  assert.ok(kit.blockers(fk, m, {}).some(b => /Prime 4/.test(b)), "a willing spirit needs Prime 4");
+  const ft = kit.taskFor(fk, m, {forced: true});
+  assert.equal(ft.goal, 12); assert.equal(ft.diff, 8);
+  const [fi, fw] = kit.itemsFor(fk, {task: {...T.normTask(ft), forced: true}});
+  assert.equal(fi.type, "Fetish"); assert.equal(fw.type, "Melee Weapon");
+  assert.ok(fi.flags["wodx-library"].wonder.mage && fi.flags["wodx-library"].wonder.unreliable);
+});

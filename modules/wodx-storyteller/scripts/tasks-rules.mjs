@@ -79,6 +79,19 @@ const stagesOf = v => (Array.isArray(v) ? v.slice(0, 8).map(x => ({name: String(
 const clampDiff = d => Math.max(2, Math.min(10, Math.round(n(d) || 6)));
 
 /** A task as stored on the actor flag wodx-storyteller.tasks[id]. */
+/** A kit's options on a task: up to 16 keys of numbers, booleans, short text or short lists of text (B3684). */
+export function smallOpts(o) {
+  if ( !o || typeof o !== "object" || Array.isArray(o) ) return {};
+  const out = {};
+  for ( const [k, v] of Object.entries(o).slice(0, 16) ) {
+    if ( !/^[A-Za-z][A-Za-z0-9_]{0,30}$/.test(k) ) continue;
+    if ( typeof v === "boolean" || (typeof v === "number" && Number.isFinite(v)) ) out[k] = v;
+    else if ( typeof v === "string" ) out[k] = v.slice(0, 80);
+    else if ( Array.isArray(v) ) out[k] = v.filter(x => typeof x === "string").slice(0, 6).map(x => x.slice(0, 40));
+  }
+  return out;
+}
+
 export function normTask(t = {}) {
   const kind = KINDS[t.kind] ? t.kind : t.kind === "talen" ? "fetish" : "other";
   const k = KINDS[kind];
@@ -129,7 +142,9 @@ export function normTask(t = {}) {
     pool: t.pool === "willpower" || /^path:[A-Za-z0-9_.]{1,80}$/.test(String(t.pool ?? "")) ? String(t.pool) : "",
     spend: Math.max(0, Math.min(10, Math.round(n(t.spend)))), power: ["gaffling", "jaggling", "greater"].includes(t.power) ? t.power : "gaffling",
     forced: !!t.forced, delay: Math.max(0, Math.min(30, Math.round(n(t.delay)))), approved: t.approved !== false,
-    spirit: String(t.spirit ?? "").slice(0, 160)
+    spirit: String(t.spirit ?? "").slice(0, 160),
+    // B3684: a line kit's own choices (Effects sealed in, dots, count...): plain values only, kept small
+    opts: smallOpts(t.opts)
   };
 }
 

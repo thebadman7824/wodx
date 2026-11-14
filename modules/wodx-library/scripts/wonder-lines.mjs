@@ -4,3 +4,4 @@
  * setting, and exposes the registry on api.wonders.
  */
 import "./wonders-garou.mjs";
+import "./wonders-mage.mjs";
