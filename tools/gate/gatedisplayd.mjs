@@ -190,11 +190,14 @@ async function player(ids) {
     const posted = await until(() => game.messages.contents.some(x => x.timestamp >= since && /reads .* face/.test(x.content ?? "") && x.speaker?.actor === ids.pc), 8000);
     const mine = game.messages.contents.filter(x => x.timestamp >= since && /reads .* face/.test(x.content ?? "")).at(-1);
     await sleep(800);
-    const leak = game.messages.contents.filter(x => x.timestamp >= since && /keeps a straight face/.test(x.content ?? "") && x.visible);
+    // Foundry hands a blind GM roll to every client as a hidden "private roll"; a leak is one whose content this player can actually read.
+    const leakMsgs = game.messages.contents.filter(x => x.timestamp >= since && /keeps a straight face/.test(x.content ?? ""));
+    const leak = leakMsgs.filter(x => x.isContentVisible);
+    const shown = /keeps a straight face/.test(ui.chat?.element?.textContent ?? "");
     const marked = (game.actors.get(ids.pc)?.flags?.["wodx-paperdoll"]?.faceReads ?? []).includes(ids.talkMsg);
     el.remove();
-    ok("d2. Read their face", label === "Read their face" && posted && mine?.whisper?.includes(game.user.id) && leak.length === 0 && marked,
-      {button: label, card: mine ? mine.content.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").slice(0, 240) : null, leak: leak.length, marked});
+    ok("d2. Read their face", label === "Read their face" && posted && mine?.whisper?.includes(game.user.id) && leak.length === 0 && !shown && marked,
+      {button: label, hiddenRolls: leakMsgs.length, shownInLog: shown, card: mine ? mine.content.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").slice(0, 240) : null, leak: leak.length, marked});
   });
   return steps;
 }
