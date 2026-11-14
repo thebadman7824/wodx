@@ -3,6 +3,7 @@ import {propose, registerHandler} from "./approvals.mjs";
 import {currentYear} from "./eras.mjs";
 import * as P from "./pod-rules.mjs";
 import * as TW from "./twist-rules.mjs";
+import * as Fronts from "./fronts.mjs";
 import {watched} from "./signature-rules.mjs";
 
 /**
@@ -530,6 +531,7 @@ export class PodApp extends ApplicationV2 {
       twist: async function(e, el) { const row = el.closest("[data-twist]"), v = row.querySelector("select")?.value ?? "";
         try { await revealTwist(el.dataset.n, {variant: v, force: el.dataset.force === "1"}); } catch (err) { ui.notifications.warn(err.message); } this.render(); },
       untwist: async function(e, el) { await unrevealTwist(el.dataset.n); this.render(); },
+      ...Fronts.ACTIONS,
       sagaClocks: async function() { for ( const i of this.element.querySelectorAll("[data-clock]") ) await setSagaClock(i.dataset.clock, i.value); this.render(); },
       thread: async function(e, el) { const a = game.actors.get(el.dataset.actor), x = threadsOf(a).find(t => t.id === el.dataset.thread); if ( x ) await startThread(a.id, x); this.render(); },
       build: async function() { const f = this.element.querySelector("[data-build]"), v = n => f.querySelector(`[name=${n}]`).value.trim();
@@ -537,6 +539,7 @@ export class PodApp extends ApplicationV2 {
     }};
   _onRender() {
     for ( const sel of this.element.querySelectorAll("select[data-ending]") ) sel.addEventListener("change", () => setEnding(sel.dataset.ending, sel.value).then(() => this.render()));
+    Fronts.bind(this);
   }
   async _renderHTML() {
     const s = state(), yr = currentYear(), parts = [];
@@ -576,6 +579,7 @@ export class PodApp extends ApplicationV2 {
           ${endable ? ` <select data-ending="${b.key}" data-fixed><option value="">No ending yet</option>${ends.map(([k, e]) => `<option value="${k}" ${x.endings[b.key] === k ? "selected" : ""}>${esc(e.label)}</option>`).join("")}</select>` : ""}</li>`; }).join("")}</ul>
         <p class="vta-note">${x.endings[P.saga.FIRST_BOOK] ? esc(P.saga.SAGA_ENDINGS[x.endings[P.saga.FIRST_BOOK]].text) : "The first book's ending changes the words of later books."}</p>`);
       if ( x.books[P.saga.FIRST_BOOK] === "running" || Object.keys(x.twists?.revealed ?? {}).length ) parts.push(twistSection(s));
+      if ( x.books[P.saga.FIRST_BOOK] === "running" || x.fronts ) parts.push(Fronts.section(s));
     }
     if ( lineOn("podGolconda") ) {
       const list = seekers();
@@ -608,7 +612,7 @@ export function registerPodHooks() {
   Hooks.on("wodxFirstNightSigned", onFirstNight);
   let last = 0;
   const tick = () => { if ( !isActiveGM() || Date.now() - last < 2000 ) return; last = Date.now();
-    dealChains().then(() => lifepathTick()).then(() => sagaTick()).catch(e => console.error(`${MODULE_ID} | story chains`, e));
+    dealChains().then(() => lifepathTick()).then(() => sagaTick()).then(() => Fronts.frontTick()).catch(e => console.error(`${MODULE_ID} | story chains`, e));
     if ( lineOn("podGolconda") ) teachTick().catch(e => console.error(`${MODULE_ID} | Golconda`, e)); };
   Hooks.on("updateWorldTime", tick);
   Hooks.on("wodxSkipEnd", tick);
@@ -623,4 +627,4 @@ export function registerPodHooks() {
 
 export const podApi = {exposure, expose, setSect, cityOf, cityState, raiseBuilding, golconda, seek, golcondaStep, setback, setMentor,
   startChain, stopChain, dealChains, lifepathTick, startThread, threads: threadsOf, goals, setGoal,
-  saga: {state: sagaState, current: sagaCurrent, start: startSaga, skip: skipSaga, played: sagaPlayed, twists: {state: twistState, reveal: revealTwist, takeBack: unrevealTwist, rules: TW}, ending: setEnding, clock: setSagaClock, tick: sagaTick, rules: P.saga}, open: () => new PodApp().render(true), rules: P};
+  saga: {state: sagaState, current: sagaCurrent, start: startSaga, skip: skipSaga, played: sagaPlayed, twists: {state: twistState, reveal: revealTwist, takeBack: unrevealTwist, rules: TW}, fronts: Fronts.api(), ending: setEnding, clock: setSagaClock, tick: sagaTick, rules: P.saga}, open: () => new PodApp().render(true), rules: P};

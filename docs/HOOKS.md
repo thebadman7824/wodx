@@ -75,6 +75,7 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxScar | chronicle | lasting damage left on a scene: {scene, id, kind, severity, hit} (B3759) |
 | wodxWay | storyteller | a company went through a Way: {from, to, kind, actors, minutes} (B4780) |
 | wodxTwist | chronicle | a twist of book one was revealed: {n, variant, chains, changes} (B4850) |
+| wodxFront | chronicle | a front of book one stepped or was struck, a clue carrier was found, or a judgement came due: {front, step, at, title, scene, people, moves, struck} or {clue, carrier, whole} or {judgement, choice} (B4910) |
 | wodxThreadOpened | storyteller | a Threads of Fate storyline opened: {story} (B3650) |
 | wodxThreadEnded | storyteller | a Threads of Fate storyline ended: {story, ending} (B3654) |
 | wodxInheritance | storyteller | the Inheritance step passed things from the dead to the heir: {dead, heir, done} (B3530) |
