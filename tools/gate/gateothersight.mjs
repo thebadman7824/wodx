@@ -55,8 +55,11 @@ export async function run() {
     const wraith = await mk("WoDX gate: Sight wraith", "Wraith", [{name: "My brass locket", type: "Trait", system: {type: "wod.types.fetter", value: 3}}]);
     const fae = await mk("WoDX gate: Sight changeling", "Changeling");
     const mortal = await mk("Brass locket", "Mortal"); // named as the wraith's Fetter, so the Fetter is found by name
-    const spirit = await mk("WoDX gate: Glass spider", "Spirit");
+    // The system has no Spirit actor type: a Creature with the WoDX Actions profile set to spirit
+    const spirit = await mk("WoDX gate: Glass spider", "Creature", [], {flags: {world: {wodx: {profile: "spirit"}}}});
     made.actors.push(mage, wraith, fae, mortal, spirit);
+    const missing = ["mage", "wraith", "changeling", "mortal", "spirit"].filter((k, i) => !made.actors[i]);
+    if ( missing.length ) throw new Error(`Could not make the gate actors: ${missing.join(", ")}`);
     made.scene = await Scene.create({name: "WoDX gate: Other sight", width: 2000, height: 1500, grid: {size: 100}, padding: 0});
     await made.scene.view();
     await sleep(1500);
