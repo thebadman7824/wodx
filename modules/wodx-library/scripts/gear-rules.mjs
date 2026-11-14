@@ -201,3 +201,93 @@ export function summary(i) {
   }
   return "";
 }
+
+/* ---------------------------------------------------------------------------------------------------------------
+ * Cyberware in the body (B3795 to B3797): the bonus list a piece turns on, and the Humanity it costs going in.
+ * ------------------------------------------------------------------------------------------------------------- */
+
+const BONUS_TYPE = {attr: "attribute_buff", fixed: "attribute_fixed_value", dice: "attribute_dice_buff", ab: "ability_buff",
+  abd: "ability_diff", atk: "attack_buff", atkd: "attack_diff", soak: "soak_buff", init: "initiative_buff"};
+
+/** The system's bonus list rows for a piece's fx (off until it is installed). */
+export function fxBonusList(name, fx = {}, on = false) {
+  return (fx.bonus ?? []).map(([t, setting, value]) => ({
+    name: `${name}: ${t === "init" ? "initiative" : setting}`,
+    settingtype: t === "atk" || t === "atkd" ? `TYPES.Item.${setting}` : String(setting ?? ""),
+    type: BONUS_TYPE[t] ?? t, value: Number(value) || 0, isactive: !!on, wodxGear: true}));
+}
+
+/** Turn a piece's own rows on or off and keep anything else on its list as it is. */
+export function gearBonusList(list = [], on = false) {
+  return (Array.isArray(list) ? list : []).map(b => b?.wodxGear ? {...b, isactive: !!on} : b);
+}
+
+const LABEL = {attr: "", fixed: "", dice: "dice on", ab: "dice on", abd: "difficulty on", atk: "attack dice with", atkd: "attack difficulty with",
+  soak: "soak dice", init: "initiative"};
+const sign = n => `${n > 0 ? "+" : n < 0 ? "−" : "±"}${Math.abs(n)}`;
+const word = s => String(s).replace(/^\w/, c => c.toUpperCase());
+
+/** One line saying what a piece does once installed. */
+export function fxSummary(fx = {}) {
+  const bits = [];
+  for ( const [t, s, v] of fx.bonus ?? [] ) {
+    if ( t === "fixed" ) bits.push(`${word(s)} becomes ${v}`);
+    else if ( t === "attr" ) bits.push(`${sign(v)} ${word(s)}`);
+    else if ( t === "init" ) bits.push(`${sign(v)} initiative`);
+    else if ( t === "soak" ) bits.push(`${sign(v)} soak dice${s && s !== "all" ? ` against ${s}` : ""}`);
+    else if ( t === "atkd" || t === "abd" ) bits.push(`${sign(v)} ${LABEL[t]} ${t === "abd" ? word(s) : s.toLowerCase().replace(" weapon", " weapons")}`);
+    else bits.push(`${sign(v)} ${LABEL[t]} ${t === "atk" ? s.toLowerCase() : word(s)} rolls`);
+  }
+  if ( fx.senses?.dark ) bits.push("sees in the dark (no darkness step for sight)");
+  for ( const [n, senses] of fx.senses?.mods ?? [] ) bits.push(`${senses.join(" and ")} ${n} easier`);
+  if ( fx.body?.ease ) bits.push(fx.body.ease >= 5 ? "no wound penalties" : `wound penalties ${fx.body.ease} less`);
+  if ( fx.body?.potence ) bits.push(`${sign(fx.body.potence)} unarmed damage dice, as Potence`);
+  if ( fx.limb?.soak ) bits.push(`${fx.limb.soak} soak dice of its own against blows aimed at the ${fx.limb.part ?? "limb"}`);
+  if ( fx.weapon ) bits.push(`a ${fx.weapon.type === "Ranged Weapon" ? "ranged" : "close"} weapon: ${fx.weapon.dmg} ${fx.weapon.kind}${fx.weapon.attribute ? " + Strength" : ""}`);
+  if ( fx.humanityLess ) bits.push(`takes back ${fx.humanityLess} of the Humanity cost`);
+  return bits.join("; ");
+}
+
+/**
+ * A Humanity cost as printed ("2D6", "1D6/2", "3D6+1", "0.5", "2pts", "1D6/pair", "1D6/2D6 (as printed)") as
+ * {dice, sides, div, plus, fixed}; null when the text holds no cost.
+ */
+export function parseHumanity(text) {
+  const s = String(text ?? "").replace(/,/g, " ").trim();
+  const d = s.match(/(\d+)\s*d\s*6(?:\s*\/\s*(\d+)(?!\s*d))?(?:\s*\+\s*(\d+))?/i);
+  if ( d ) return {dice: Number(d[1]), sides: 6, div: Number(d[2]) || 1, plus: Number(d[3]) || 0, fixed: 0};
+  const f = s.match(/(\d*\.?\d+)/);
+  return f ? {dice: 0, sides: 6, div: 1, plus: 0, fixed: Number(f[1])} : null;
+}
+
+/** Roll a cost: rng gives 0 to 1. Halves round up, as the book's dice do. */
+export function humanityCost(text, rng = Math.random) {
+  const c = parseHumanity(text);
+  if ( !c ) return {points: 0, faces: [], text: ""};
+  const faces = Array.from({length: c.dice}, () => 1 + Math.floor(rng() * c.sides));
+  const sum = faces.reduce((a, b) => a + b, 0);
+  const points = c.dice ? Math.ceil(sum / c.div) + c.plus : c.fixed;
+  return {points, faces, text: String(text)};
+}
+
+/**
+ * Humanity Index (the article's ten points to a dot): lost points so far, points added, current dots.
+ * Returns {lost: points after, dots: dots to take off, left: dots after}.
+ */
+export function dotsLost(before = 0, add = 0, dots = 0) {
+  const lost = Math.max(0, Number(before) + Number(add));
+  const taken = Math.max(0, Math.floor(lost / 10) - Math.floor(Math.max(0, Number(before)) / 10));
+  return {lost, dots: Math.min(Number(dots) || 0, taken), left: Math.max(0, (Number(dots) || 0) - taken)};
+}
+
+/** A weapon item from a piece's weapon fx (keeps the piece's flags and reference). */
+export function fxWeapon(item, w) {
+  const melee = w.type === "Melee Weapon";
+  const system = {...item.system, isequipped: false, difficulty: w.diff ?? 6,
+    damage: {attribute: w.attribute ?? (melee ? "strength" : ""), bonus: w.dmg, type: w.kind, isrollable: true},
+    attack: {attribute: "dexterity", ability: w.ability ?? (melee ? "brawl" : "firearms"), accuracy: 0, isrollable: true},
+    minstrength: 0, conceal: "P"};
+  if ( !melee ) Object.assign(system, {range: w.range ?? 10, rate: w.rate ?? 1, clip: {value: w.clip ?? 1, max: w.clip ?? 1},
+    mode: {hasreload: true, hasburst: false, hasfullauto: false, hasspray: false}});
+  return {...item, type: w.type, img: melee ? "icons/svg/sword.svg" : "icons/svg/target.svg", system};
+}

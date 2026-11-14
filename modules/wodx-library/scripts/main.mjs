@@ -5,6 +5,7 @@ import {setupExamine, examineApi} from "./examine.mjs";
 import {setupUse, useApi} from "./use.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Reg from "./wonder-registry.mjs";
+import {setupGearInstall, gearInstallApi} from "./gear-install.mjs";
 import "./wonder-lines.mjs";
 
 /**
@@ -16,7 +17,7 @@ import "./wonder-lines.mjs";
 const MOD = G.MOD;
 const PACK_NAME = "wodx-gear";
 const PACK_LABEL = "WoDX · Gear by era";
-export const VERSION = "0.33.0";
+export const VERSION = "0.34.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 
@@ -182,6 +183,8 @@ Hooks.once("ready", async () => {
     manual: {open: Sh.openManual, ensure: Sh.ensureManual, page: Sh.openManualPage}, glossary: {open: Sh.openGlossary, ensure: Sh.ensureGlossary}, changelog: {open: Sh.openChangelog, ensure: Sh.ensureChangelog}};
   try { await setupExamine(); game.modules.get(MOD).api.examine = examineApi(); } catch (err) { console.warn("WoDX Library | Examine could not start", err); }
   try { await setupUse(); game.modules.get(MOD).api.use = useApi(); } catch (err) { console.warn("WoDX Library | Use could not start", err); }
+  // B3795: cyberware in the body (bonus rows while installed, Humanity on install)
+  try { setupGearInstall(); game.modules.get(MOD).api.cyber = gearInstallApi(); } catch (err) { console.warn("WoDX Library | cyberware could not start", err); }
   // B3690: powers, pools and worn bonuses of made supernatural items (wonder-use.mjs)
   try { const Wu = await import("./wonder-use.mjs"); Wu.setupWonderUse(); game.modules.get(MOD).api.wonderUse = Wu.wonderUseApi(); } catch (err) { console.warn("WoDX Library | item powers could not start", err); }
   // 0.14.0: the look of a character, for NPC first meetings, talk lines and guards
