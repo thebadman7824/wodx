@@ -371,8 +371,26 @@ export function build(ctx) {
       + `${taught.length ? `<button type="button" class="wnpc-talk-undo">Undo what was taught</button>` : ""}</div></div>`;
     const aloud = !!line?.then?.aloud;
     await ChatMessage.create({speaker: {alias: name, scene: r.scene.id, token: r.npcTok.id}, content, ...(aloud ? {} : {whisper: [...new Set([user.id, ...gmIds()])]}),
-      flags: {[MOD]: {talk: {actor: actor.id, taught, topic, stock: line?.kind === "stock", generated: !!line?.rule, gen: line?.gen ?? null, said: say, rumour: line?.rumourId ?? null, lie: !!line?.then?.lie}}}});
+      flags: {[MOD]: {talk: {actor: actor.id, taught, topic, stock: line?.kind === "stock", generated: !!line?.rule, gen: line?.gen ?? null, said: say, rumour: line?.rumourId ?? null, lie: !!line?.then?.lie,
+        ...(wantAsked(r, topic) ? {want: {npc: game.actors.get(r.npcTok.actor?.id)?.id ?? null}} : {})}}}});
     return {said: say, taught, notes, none: !line};
+  }
+
+  /** B3925: the character asked the NPC about the favour they want (a made person's want, flags.wodx-npc.want). */
+  function wantAsked(r, topic) {
+    const w = game.actors.get(r.npcTok?.actor?.id)?.flags?.[MOD]?.want;
+    return !!w?.topic && TK.normTopic(w.topic) === TK.normTopic(topic);
+  }
+  /** The Storyteller marks the want seen to: the NPC thinks a step better of the character, once per character. */
+  async function wantMet(msg) {
+    const t = msg.flags?.[MOD]?.talk, npc = game.actors.get(t?.want?.npc), ch = game.actors.get(t?.actor);
+    if ( !game.user.isGM || !npc || !ch ) return null;
+    const w = npc.flags?.[MOD]?.want ?? {};
+    if ( w.met?.[ch.id] ) return null;
+    const entry = await game.modules.get(MOD)?.api?.attitude?.apply?.(npc, ch, {delta: 1, why: `saw to what they wanted (${w.text ?? "a favour"})`});
+    await npc.update({[`flags.${MOD}.want.met.${ch.id}`]: game.time.worldTime});
+    await ChatMessage.create({speaker: {alias: npc.name}, whisper: gmIds(), content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p>${esc(ch.name)} saw to what ${esc(npc.name)} wanted. ${esc(npc.name)} thinks better of them.</p></div></div>`});
+    return entry;
   }
 
   /** Another line from the same facts (the Storyteller's Reroll). */
@@ -731,6 +749,15 @@ export function build(ctx) {
           body.querySelector(".wnpc-gen-keep")?.addEventListener("click", ev => { ev.preventDefault(); ev.currentTarget.disabled = true; keepLine(msg).catch(e => console.error(`${MOD} | talk`, e)); });
         }
       }
+      // B3925: the favour a made person asks for; the Storyteller marks it done
+      const wt = msg.flags?.[MOD]?.talk?.want;
+      if ( wt?.npc && game.user.isGM ) {
+        const npc = game.actors.get(wt.npc), body = html?.querySelector?.(".wnpc-talk-card .vta-body");
+        if ( npc && body && !body.querySelector(".wnpc-want") && !npc.flags?.[MOD]?.want?.met?.[msg.flags[MOD].talk.actor] ) {
+          body.insertAdjacentHTML("beforeend", `<p class="wodx-quiet wnpc-want">${esc(npc.flags[MOD].want?.text ?? "")} <button type="button" class="wnpc-want-met">They saw to it</button></p>`);
+          body.querySelector(".wnpc-want-met")?.addEventListener("click", ev => { ev.preventDefault(); ev.currentTarget.disabled = true; wantMet(msg).catch(e => console.error(`${MOD} | want`, e)); });
+        }
+      }
       if ( msg.flags?.[MOD]?.talk ) html?.querySelectorAll?.("button.wnpc-talk-undo").forEach(b => {
         if ( !game.user.isGM ) { b.remove(); return; }
         b.addEventListener("click", ev => { ev.preventDefault(); b.disabled = true; undoTaught(msg).catch(e => console.error(`${MOD} | talk`, e)); });
@@ -743,5 +770,5 @@ export function build(ctx) {
     });
   }
 
-  return {registerSettings, hooks, openTalk, serve, editShared, talkHtml, speakerToken, stock, say, bark, onPass, rules: TK, lines: MORE, stockLines: STOCK, get grammar() { return GRAMMAR; }, openGrammar, loadGrammar, reroll, keepLine};
+  return {registerSettings, hooks, openTalk, serve, editShared, talkHtml, speakerToken, stock, say, bark, onPass, rules: TK, lines: MORE, stockLines: STOCK, get grammar() { return GRAMMAR; }, openGrammar, loadGrammar, reroll, keepLine, wantMet};
 }
