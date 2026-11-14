@@ -14,7 +14,7 @@
  "tradeAge": "medieval",
  "walled": false,
  "country": null,
- "population": 67,
+ "population": 56,
  "whole": [
   96,
   103
@@ -31,22 +31,18 @@
  "layers": [],
  "buildings": {
   "Chapel": 1,
-  "Cottage": 10,
-  "Farmhouse": 2,
-  "House and shop": 1,
+  "Cottage": 11,
+  "Farmhouse": 3,
   "Priest's house": 1,
   "Storehouse": 1,
-  "Tavern": 1,
-  "Workshop": 1
+  "Tavern": 1
  },
  "trades": {
+  "herder": 5,
   "cottager": 3,
-  "herder": 3,
-  "labourer": 3,
-  "farmer": 2,
+  "farmer": 3,
+  "carter": 2,
   "alehouse keeper": 1,
-  "carpenter": 1,
-  "draper": 1,
   "priest": 1,
   "widowed spinner": 1
  },
@@ -64,10 +60,7 @@
     "partner",
     "child",
     "child",
-    "child",
-    "elder",
-    "servant",
-    "lodger"
+    "elder"
    ],
    "map": "",
    "at": [
@@ -83,13 +76,12 @@
    "trade": "priest",
    "wealth": "middling",
    "people": [
-    "priest",
-    "clerk"
+    "priest"
    ],
    "map": "",
    "at": [
-    32.1,
-    69.5
+    65.7,
+    66.2
    ]
   },
   {
@@ -102,12 +94,13 @@
    "people": [
     "herder",
     "partner",
+    "child",
     "child"
    ],
    "map": "",
    "at": [
-    47.6,
-    74.4
+    46.6,
+    74.3
    ]
   },
   {
@@ -119,14 +112,12 @@
    "wealth": "middling",
    "people": [
     "herder",
-    "child",
-    "child",
-    "child"
+    "partner"
    ],
    "map": "",
    "at": [
-    53.9,
-    71.1
+    51.9,
+    82.4
    ]
   },
   {
@@ -139,13 +130,12 @@
    "people": [
     "cottager",
     "partner",
-    "child",
-    "elder"
+    "child"
    ],
    "map": "",
    "at": [
-    60.7,
-    68.0
+    57.1,
+    35.1
    ]
   },
   {
@@ -153,39 +143,18 @@
    "building": "cottage-5",
    "label": "Cottage household",
    "type": "cottage",
-   "trade": "herder",
+   "trade": "cottager",
    "wealth": "middling",
    "people": [
-    "herder",
+    "cottager",
     "partner",
+    "child",
     "child"
    ],
    "map": "",
    "at": [
-    51.6,
-    82.0
-   ]
-  },
-  {
-   "id": "steinfeld-1197-7.townhouse-1-household",
-   "building": "townhouse-1",
-   "label": "House and shop (draper) household",
-   "type": "townhouse",
-   "trade": "draper",
-   "wealth": "middling",
-   "people": [
-    "draper",
-    "partner",
-    "child",
-    "child",
-    "child",
-    "child",
-    "servant"
-   ],
-   "map": "",
-   "at": [
-    68.2,
-    50.5
+    27.0,
+    51.5
    ]
   },
   {
@@ -196,17 +165,12 @@
    "trade": "cottager",
    "wealth": "middling",
    "people": [
-    "cottager",
-    "partner",
-    "child",
-    "child",
-    "child",
-    "elder"
+    "cottager"
    ],
    "map": "",
    "at": [
-    55.5,
-    35.3
+    29.8,
+    60.2
    ]
   },
   {
@@ -214,32 +178,18 @@
    "building": "cottage-7",
    "label": "Cottage household",
    "type": "cottage",
-   "trade": "labourer",
+   "trade": "carter",
    "wealth": "middling",
    "people": [
-    "labourer",
+    "carter",
+    "partner",
+    "child",
     "child"
    ],
    "map": "",
    "at": [
-    74.6,
-    42.9
-   ]
-  },
-  {
-   "id": "steinfeld-1197-7.workshop-1-household",
-   "building": "workshop-1",
-   "label": "Workshop (carpenter) household",
-   "type": "workshop",
-   "trade": "carpenter",
-   "wealth": "middling",
-   "people": [
-    "carpenter"
-   ],
-   "map": "",
-   "at": [
-    25.7,
-    51.2
+    32.0,
+    68.9
    ]
   },
   {
@@ -247,18 +197,16 @@
    "building": "cottage-8",
    "label": "Cottage household",
    "type": "cottage",
-   "trade": "cottager",
+   "trade": "widowed spinner",
    "wealth": "middling",
    "people": [
-    "cottager",
-    "partner",
-    "child",
-    "elder"
+    "widowed spinner",
+    "partner"
    ],
    "map": "",
    "at": [
-    21.9,
-    72.2
+    23.4,
+    70.6
    ]
   },
   {
@@ -266,19 +214,20 @@
    "building": "cottage-9",
    "label": "Cottage household",
    "type": "cottage",
-   "trade": "labourer",
+   "trade": "herder",
    "wealth": "middling",
    "people": [
-    "labourer",
+    "herder",
     "partner",
+    "child",
     "child",
     "child",
     "child"
    ],
    "map": "",
    "at": [
-    41.0,
-    33.0
+    17.8,
+    48.4
    ]
   },
   {
@@ -286,18 +235,17 @@
    "building": "cottage-10",
    "label": "Cottage household",
    "type": "cottage",
-   "trade": "labourer",
+   "trade": "carter",
    "wealth": "middling",
    "people": [
-    "labourer",
-    "child",
+    "carter",
     "child",
     "child"
    ],
    "map": "",
    "at": [
-    30.5,
-    38.9
+    41.6,
+    31.9
    ]
   },
   {
@@ -305,18 +253,39 @@
    "building": "cottage-11",
    "label": "Cottage household",
    "type": "cottage",
-   "trade": "widowed spinner",
+   "trade": "herder",
    "wealth": "middling",
    "people": [
-    "widowed spinner",
-    "partner",
+    "herder",
+    "child",
+    "child",
     "child",
     "child"
    ],
    "map": "",
    "at": [
-    19.4,
-    36.8
+    34.0,
+    37.0
+   ]
+  },
+  {
+   "id": "steinfeld-1197-7.cottage-12-household",
+   "building": "cottage-12",
+   "label": "Cottage household",
+   "type": "cottage",
+   "trade": "herder",
+   "wealth": "middling",
+   "people": [
+    "herder",
+    "partner",
+    "child",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    47.9,
+    24.3
    ]
   },
   {
@@ -325,20 +294,17 @@
    "label": "Farmhouse household",
    "type": "byre-house",
    "trade": "farmer",
-   "wealth": "poor",
+   "wealth": "middling",
    "people": [
     "farmer",
-    "partner",
     "child",
     "child",
-    "child",
-    "child",
-    "elder"
+    "child"
    ],
    "map": "",
    "at": [
-    73.8,
-    20.2
+    21.7,
+    37.6
    ]
   },
   {
@@ -350,13 +316,32 @@
    "wealth": "poor",
    "people": [
     "farmer",
-    "child",
-    "farmhand"
+    "partner",
+    "child"
    ],
    "map": "",
    "at": [
-    83.6,
-    7.2
+    73.2,
+    20.2
+   ]
+  },
+  {
+   "id": "steinfeld-1197-7.byre-house-3-household",
+   "building": "byre-house-3",
+   "label": "Farmhouse household",
+   "type": "byre-house",
+   "trade": "farmer",
+   "wealth": "poor",
+   "people": [
+    "farmer",
+    "partner",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    84.6,
+    7.1
    ]
   }
  ],
@@ -369,7 +354,7 @@
   },
   {
    "a": "steinfeld-1197-7.cottage-3-household",
-   "b": "steinfeld-1197-7.byre-house-2-household",
+   "b": "steinfeld-1197-7.byre-house-3-household",
    "kind": "sibling",
    "note": "brothers or sisters"
   },
@@ -381,42 +366,42 @@
   },
   {
    "a": "steinfeld-1197-7.cottage-4-household",
-   "b": "steinfeld-1197-7.cottage-2-household",
+   "b": "steinfeld-1197-7.cottage-12-household",
    "kind": "friend",
    "note": "neighbours who help each other"
   },
   {
    "a": "steinfeld-1197-7.cottage-5-household",
-   "b": "steinfeld-1197-7.townhouse-1-household",
+   "b": "steinfeld-1197-7.cottage-6-household",
    "kind": "sibling",
    "note": "brothers or sisters"
   },
   {
-   "a": "steinfeld-1197-7.cottage-6-household",
+   "a": "steinfeld-1197-7.cottage-7-household",
    "b": "steinfeld-1197-7.cottage-3-household",
    "kind": "child",
    "note": "a grown child with a house of their own"
   },
   {
-   "a": "steinfeld-1197-7.cottage-7-household",
-   "b": "steinfeld-1197-7.cottage-10-household",
+   "a": "steinfeld-1197-7.cottage-8-household",
+   "b": "steinfeld-1197-7.cottage-12-household",
    "kind": "child",
    "note": "a grown child with a house of their own"
   },
   {
-   "a": "steinfeld-1197-7.cottage-7-household",
-   "b": "steinfeld-1197-7.cottage-6-household",
+   "a": "steinfeld-1197-7.cottage-8-household",
+   "b": "steinfeld-1197-7.cottage-5-household",
    "kind": "friend",
    "note": "neighbours who help each other"
   },
   {
-   "a": "steinfeld-1197-7.cottage-11-household",
-   "b": "steinfeld-1197-7.cottage-9-household",
+   "a": "steinfeld-1197-7.byre-house-1-household",
+   "b": "steinfeld-1197-7.cottage-11-household",
    "kind": "child",
    "note": "a grown child with a house of their own"
   },
   {
-   "a": "steinfeld-1197-7.byre-house-2-household",
+   "a": "steinfeld-1197-7.byre-house-3-household",
    "b": "steinfeld-1197-7.tavern-1-household",
    "kind": "friend",
    "note": "neighbours who help each other"
