@@ -63,21 +63,36 @@ async function roll(actor, spec) {
   return {...P.countSuccesses(faces, spec.diff), dice, label, faces, roll: r};
 }
 
+/** Ask for the number a roll needs first (the local Wall); null when closed. */
+async function askFor(item, ask = {}) {
+  const D = foundry.applications.api.DialogV2;
+  const v = await D.prompt({window: {title: item.name}, rejectClose: false,
+    content: `<div class="form-group"><label>${esc(ask.label ?? "Number")}</label><input type="number" name="v" min="${n(ask.min)}" max="${n(ask.max) || 10}" value="${n(ask.value)}"/></div>`,
+    ok: {label: "Roll", callback: (ev, button) => button.form.elements.v.valueAsNumber}});
+  return Number.isFinite(v) ? v : null;
+}
+
 const ownersOf = a => game.users.filter(u => a?.testUserPermission?.(u, "OWNER")).map(u => u.id);
 const gms = () => game.users.filter(u => u.isGM).map(u => u.id);
 
-/** Run one power. Returns the plan, or null when it could not run. */
-export async function runPower(item, key, actor) {
+/** Run one power. Returns the plan, or null when it could not run. opts.answer answers a roll's ask without the prompt. */
+export async function runPower(item, key, actor, {answer = null} = {}) {
   const f = flagOf(item);
   const id = String(key).replace(/^wonder:/, "");
   const power = P.powerOf(f, id);
   if ( !f || !power ) return null;
   if ( !actor ) { ui.notifications.warn("Pick the character who uses it first."); return null; }
-  const values = valuesFor(actor, item, power);
-  const bl = P.blockersOf(power, {flag: f, values, isGM: game.user.isGM});
+  const values = valuesFor(actor, item, power), now = game.time?.worldTime ?? 0;
+  const bl = P.blockersOf(power, {flag: f, values, isGM: game.user.isGM, now});
   if ( bl.length ) { ui.notifications.warn(`${item.name}: ${bl.join("; ")}.`); return null; }
-  const r = power.roll ? await roll(actor, power.roll) : null;
-  const out = P.plan(power, {flag: f, values, roll: r});
+  let spec = power.roll;
+  if ( spec?.ask ) {
+    const a = answer ?? await askFor(item, spec.ask);
+    if ( a === null ) return null;
+    spec = {...spec, diff: P.askedDiff(spec, a)};
+  }
+  const r = spec ? await roll(actor, spec) : null;
+  const out = P.plan(power, {flag: f, values, roll: r, now});
   const itemUp = {...out.item};
   if ( out.spent && f.worn?.length ) itemUp["system.bonuslist"] = P.wornList({...f, spent: true}, false, item.system?.bonuslist);
   if ( Object.keys(itemUp).length ) await item.update(itemUp);

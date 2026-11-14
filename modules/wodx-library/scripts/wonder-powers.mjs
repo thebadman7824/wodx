@@ -13,16 +13,22 @@
  *   spent: true                        set by WoDX when it has nothing left
  *   used: {powerId: n}                 how often a power with its own `uses` has run
  *   worn: [{attr, value, label}]       Attribute bonuses while the item is equipped (the system's bonuslist)
+ *   expires: worldTime                 after it nothing runs (true jade for some nights, B3773)
+ *   nights: {powerId: night}           the night a `perNight` power last ran
  *   powers: [power]
  * A power: {id, label, text,
  *   roll?: {attr, ability, diff} | {dice, diff} | {path: "actor:<dot path>", diff, label},
+ *          with ask?: {label, min, max, value, add}: the user names a number first (the local Wall) and the
+ *          difficulty is that number, held to min..max, plus add (B3774)
+ *   gain?: {amount: n | "successes"}             fills the item's pool from outside (ambient Chi), up to its max (B3774)
+ *   perNight?: true                              runs once a night (from dusk to dusk), tried or not (B3774)
  *   spend?: {pool: "item" | "actor:<dot path>", amount},
  *   drawback?: {path, amount, label, max}        added to the user's actor (Paradox, Torment), capped (20 default)
  *   onBotch?: {path, amount, label}              taken from the user's actor when the roll botches (B3713)
  *   requires?: id | [ids]                        runs only once one of those powers has been used (attuned first, B3713)
  *   transfer?: {from, to, amount, need?: {path, min}, cap?}  from/to: "item" or "actor:<dot path>"; amount "successes"
  *                                      moves one a success of the power's roll; cap: an actor dot path whose number the
- *                                      receiving actor trait may not pass (a Sekhem rating, B3709)
+ *                                      receiving actor trait may not pass (a Sekhem rating, B3709), or a plain number
  *   uses?: n (this power's own limit), gm?: true (only the Storyteller runs it), consume?: true (spends the item)}
  * A transfer power gets a reverse button of its own (`<id>~back`) when `back` is set: {label}.
  */
@@ -30,6 +36,14 @@
 export const FLAG = "wonder";
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const ITEM_POOL = "flags.wodx-library.wonder.pool.value";
+/** The night a world time falls in, dusk to dusk (as WoDX Actions counts Kuei-jin nights). */
+export const nightOf = t => Math.floor((n(t) - 18 * 3600) / 86400);
+/** The difficulty of a roll that asks for a number first: the answer held to min..max, plus add, 2 to 10. */
+export function askedDiff(roll = {}, answer = 0) {
+  const a = roll.ask ?? {};
+  const v = Math.max(n(a.min ?? 0), Math.min(n(a.max ?? 10) || 10, n(answer)));
+  return Math.max(2, Math.min(10, v + n(a.add)));
+}
 
 /** Where a reference points: {on: "item"|"actor", path}. */
 export function refOf(ref = "") {
@@ -66,7 +80,7 @@ export function pathsOf(power = {}) {
   const out = new Set();
   const add = ref => { const r = refOf(ref); if ( r.on === "actor" ) out.add(r.path); };
   if ( power.spend ) add(power.spend.pool);
-  if ( power.transfer ) { add(power.transfer.from); add(power.transfer.to); if ( power.transfer.need ) out.add(power.transfer.need.path); if ( power.transfer.cap ) out.add(power.transfer.cap); }
+  if ( power.transfer ) { add(power.transfer.from); add(power.transfer.to); if ( power.transfer.need ) out.add(power.transfer.need.path); if ( typeof power.transfer.cap === "string" ) out.add(power.transfer.cap); }
   if ( power.drawback ) out.add(power.drawback.path);
   if ( power.onBotch ) out.add(power.onBotch.path);
   if ( power.roll?.path ) add(power.roll.path);
@@ -78,12 +92,15 @@ const read = (values, ref) => n(values?.[keyOf(refOf(ref))]);
 
 /**
  * Why the power can't run now; empty when it can.
- * ctx: {flag, values, isGM}
+ * ctx: {flag, values, isGM, now (world time; the night and expiry checks need it)}
  */
-export function blockersOf(power, {flag = {}, values = {}, isGM = false} = {}) {
+export function blockersOf(power, {flag = {}, values = {}, isGM = false, now = null} = {}) {
   const out = [];
   if ( !power ) return ["no such power"];
   if ( flag?.spent ) out.push("it has nothing left in it");
+  if ( flag?.expires && now !== null && n(now) > n(flag.expires) ) out.push(flag.expiredText ?? "its time has run out");
+  if ( power.perNight && now !== null && flag?.nights?.[power.id] != null && n(flag.nights[power.id]) === nightOf(now) ) out.push("already tried tonight");
+  if ( power.gain ) { const p = poolOf(flag); if ( p && p.value >= p.max ) out.push(`the ${p.label} is full`); }
   if ( power.gm && !isGM ) out.push("only the Storyteller sets this off");
   const req = [power.requires ?? []].flat();
   if ( req.length && !req.some(id => n(flag?.used?.[id])) ) out.push(`first: ${powerOf(flag, req[0])?.label ?? req[0]}`);
@@ -118,7 +135,7 @@ export function countSuccesses(faces = [], diff = 6) {
  * Returns {item: {path: v}, actor: {path: v}, undo: {item, actor}, lines, spent, failed}.
  * A failed roll still pays what the power spends (the attempt was made); a botch spends and says so.
  */
-export function plan(power, {flag = {}, values = {}, roll = null, max = {}} = {}) {
+export function plan(power, {flag = {}, values = {}, roll = null, max = {}, now = null} = {}) {
   const item = {}, actor = {}, undoItem = {}, undoActor = {}, lines = [];
   const set = (ref, v) => {
     const r = refOf(ref), k = keyOf(r);
@@ -138,7 +155,7 @@ export function plan(power, {flag = {}, values = {}, roll = null, max = {}} = {}
   if ( power.transfer && !failed ) {
     const t = power.transfer, have = read(values, t.from);
     const toR = refOf(t.to), pool = poolOf(flag);
-    const capOf = t.cap ? read(values, `actor:${t.cap}`) : n(max[toR.path]);
+    const capOf = typeof t.cap === "number" ? t.cap : t.cap ? read(values, `actor:${t.cap}`) : n(max[toR.path]);
     const room = toR.on === "item" && pool ? Math.max(0, pool.max - read(values, t.to)) : (capOf ? Math.max(0, capOf - read(values, t.to)) : Infinity);
     const want = t.amount === "successes" ? n(roll?.successes) : n(t.amount) || have;
     const amt = Math.max(0, Math.min(have, want, room));
@@ -147,6 +164,17 @@ export function plan(power, {flag = {}, values = {}, roll = null, max = {}} = {}
       set(t.to, read(values, t.to) + amt);
       lines.push(`${amt} moved ${refOf(t.from).on === "item" ? "out of the item" : "into the item"}.`);
     } else lines.push("Nothing moved.");
+  }
+  if ( power.gain && !failed ) {
+    const pool = poolOf(flag), have = read(values, "item");
+    const want = power.gain.amount === "successes" ? n(roll?.successes) : n(power.gain.amount);
+    const amt = Math.max(0, Math.min(want, (pool?.max ?? 0) - have));
+    if ( amt > 0 ) { set("item", have + amt); lines.push(`${amt} ${pool?.label ?? "points"} taken in.`); }
+    else lines.push("Nothing taken in.");
+  }
+  if ( power.perNight && now !== null ) {
+    const p = `flags.wodx-library.wonder.nights.${power.id}`;
+    undoItem[p] = flag?.nights?.[power.id] ?? null; item[p] = nightOf(now);
   }
   if ( power.drawback && n(power.drawback.amount) ) {
     const d = power.drawback, cap = n(d.max) || 20;
@@ -210,6 +238,7 @@ export function summary(flag = {}) {
   if ( pool ) bits.push(`${pool.value} of ${pool.max} ${pool.label}`);
   if ( flag?.uses ) bits.push(`${n(flag.uses.value)} of ${n(flag.uses.max ?? flag.uses.value)} charges`);
   if ( flag?.worn?.length ) bits.push(`while worn: ${flag.worn.map(w => `+${n(w.value)} ${w.attr}`).join(", ")}`);
+  if ( flag?.expires && flag?.expiresText ) bits.push(flag.expiresText);
   if ( flag?.spent ) bits.push("spent");
   return bits.join("; ");
 }
