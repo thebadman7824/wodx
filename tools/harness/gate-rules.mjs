@@ -35,8 +35,10 @@ export const RULES = {
     return hits;
   },
   laneScene(src) {
-    const uses = /\bcanvas\.(?:scene|tokens|walls|tiles|lighting|grid|dimensions)\b|game\.scenes\.(?:active|viewed|current)\b/.test(src);
-    const own = /\bkitRun\(|\bG\.(?:scene|fixtureScene)\(|\.fixtureScene\(|\bkit\.scene\(|Scene\.create(?:Documents)?\(|Scene\.implementation\.create\(/.test(src);
+    const uses = /\bcanvas\??\.(?:scene|tokens|walls|tiles|lighting|grid|dimensions)\b|game\??\.scenes\??\.(?:active|viewed|current)\b/.test(src);
+    // A scene of its own: the kit's, or one it makes and views itself.
+    const own = /\bkitRun\(|\bG\.(?:scene|fixtureScene)\(|\.fixtureScene\(|\bkit\.scene\(/.test(src)
+      || (/Scene\.create(?:Documents)?\(|Scene\.implementation\.create\(/.test(src) && /\.(?:view|activate)\(\)/.test(src));
     return uses && !own ? ["canvas or viewed scene without a scene of its own"] : [];
   },
   laneDoc(src) {
