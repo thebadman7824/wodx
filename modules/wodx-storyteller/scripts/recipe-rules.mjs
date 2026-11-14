@@ -20,6 +20,7 @@ export const STEPS = [
   {id: "settings", phase: 1, label: "Homeland, opening night and lines", undo: false, needs: {"wodx-chronicle": "0.48.0"}},
   {id: "carry", phase: 1, label: "Bring across the old world's scenes, journals and cast", undo: true, needs: {}},
   {id: "anchors", phase: 1, label: "Mark the anchor places and people", undo: true, needs: {}},
+  {id: "ways", phase: 1, label: "Lay the Ways: the old exits, and doors to the places inside", undo: true, needs: {}},
   {id: "ground", phase: 2, label: "Generate the town around the anchors", undo: true, needs: {"wodx-interactables": "0.36.0"}},
   {id: "realms", phase: 2, label: "Penumbra, Shadowlands and Dreaming over the town", undo: true, needs: {"wodx-otherworlds": "0.24.0"}},
   {id: "people", phase: 3, label: "Households, residents, routines and prayers", undo: true, needs: {"wodx-npc": "0.54.0"}},
@@ -81,6 +82,12 @@ export function validate(r, ctx = {}) {
   for ( const h of r.reach ?? [] ) {
     if ( ctx.regions && h.region && !ctx.regions.includes(h.region) ) out.push(`The away hub ${h.place} names the unknown region ${h.region}.`);
     if ( !(h.from <= h.to) ) out.push(`The away hub ${h.place} ends before it begins.`);
+  }
+  const doorAt = new Set();
+  for ( const d of r.doors ?? [] ) {
+    if ( !d?.inside || !d?.street ) { out.push("A door in the recipe needs both an inside and a street."); continue; }
+    if ( doorAt.has(d.inside) ) out.push(`${d.inside} has two doors in the recipe.`);
+    doorAt.add(d.inside);
   }
   const ages = r.ages ?? [];
   if ( ages.some((a, i) => i && a <= ages[i - 1]) ) out.push("The ages are not in order.");
