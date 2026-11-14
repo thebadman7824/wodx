@@ -4,7 +4,7 @@
  * Other systems already announce what happens through their own hooks: a fight starts, a town falls sick, hunters
  * close in, a cult forms, someone is arrested or tried, a dated event fires, a town changes, a grudge moves, a battle
  * turns, a secret comes out, a project goes wrong, a ruler falls, a crime is seen, an heir inherits, someone crosses
- * into another world, a child is born, two people marry, a caravan is lost. This file listens to those hooks and posts
+ * into another world, a child is born, two people marry, a caravan is lost, a Rothenstein saga book takes a step. This file listens to those hooks and posts
  * a short signal for each one to one shared list, so nothing else has to change. Rumours and tales post their own when
  * they start (rumours.mjs). The omens system reads the same list (omens.mjs signals), and Threads of Fate weaves its
  * storylines from it.
@@ -82,6 +82,9 @@ export const LISTEN = {
   wodxDreamingGate: ({out} = {}) => ({key: `breach:dreaming:${dayOf(now())}`, kind: "breach", weight: 1, what: out ? "Someone came out of the Dreaming" : "Someone went into the Dreaming", from: "otherworlds"}),
   wodxBirth: ({mother, child} = {}) => (child ? {key: `arrival:birth:${idOf(child)}`, kind: "arrival", about: idOf(mother), weight: 1, who: nameOf(mother), what: "A child is born", from: "family"} : null),
   wodxMarried: ({a, b} = {}) => ({key: `tale:wed:${idOf(a)}:${idOf(b)}`, kind: "tale", weight: 1, who: `${nameOf(a)} and ${nameOf(b)}`, what: "A wedding", from: "hearts"}),
+  // A step of a Rothenstein saga book (WoDX Chronicle): its signal is already in the omens shape
+  wodxSaga: ({book, step, signal} = {}) => (signal ? {key: `saga:${book}:${step?.key ?? step ?? ""}`, kind: "saga", region: signal.region || "moravia", about: signal.about ?? "",
+    weight: signal.weight ?? 2, what: signal.words ?? signal.what ?? step?.title ?? "", from: "saga"} : null),
   wodxCaravan: ({phase, caravan} = {}) => (phase === "lost" ? {key: `event:caravan:${idOf(caravan)}`, kind: "event", weight: 1, what: `${caravan?.name ?? "A caravan"} is lost`, from: "caravans"} : null)
 };
 

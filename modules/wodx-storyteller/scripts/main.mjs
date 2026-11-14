@@ -37,6 +37,7 @@ import * as Inst from "./institutions.mjs";
 import * as Works from "./haven-works.mjs";
 import * as Omens from "./omens.mjs";
 import * as Signals from "./signals.mjs";
+import * as Threads from "./threads.mjs";
 import * as Patron from "./patronage.mjs";
 import * as Towns from "./towns.mjs";
 import * as Contagion from "./contagion.mjs";
@@ -124,6 +125,7 @@ Hooks.once("init", () => {
   Works.registerWorksSettings();
   Omens.registerOmenSettings();
   Signals.registerSignalSettings();
+  Threads.registerThreadSettings();
   Patron.registerPatronageSettings();
   Towns.registerTownSettings();
   Contagion.registerContagionSettings();
@@ -137,6 +139,7 @@ Hooks.once("init", () => {
   Works.registerWorksHooks();
   Omens.registerOmenHooks();
   Signals.registerSignalHooks();
+  Threads.registerThreadHooks();
   Patron.registerPatronageHooks();
   Cook.registerCookHooks();
   Body.registerBodyHooks();
@@ -173,7 +176,7 @@ Hooks.once("init", () => {
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
 
-Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Inherit.registerInheritance(); Led.registerLedgerHandlers(); Wills.registerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Hunters.registerHunterHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); Ventures.registerApproval(); Inst.registerApproval(); Works.registerApproval(); Omens.registerApproval(); Patron.registerApproval(); Towns.registerApproval(); Contagion.registerApproval(); } });
+Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Inherit.registerInheritance(); Led.registerLedgerHandlers(); Wills.registerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Hunters.registerHunterHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); Ventures.registerApproval(); Inst.registerApproval(); Works.registerApproval(); Omens.registerApproval(); Patron.registerApproval(); Towns.registerApproval(); Contagion.registerApproval(); Threads.registerApproval(); } });
 
 Hooks.once("ready", () => {
   if ( !active ) return;
@@ -244,6 +247,7 @@ Hooks.once("ready", () => {
     havenWorks: Works.api(),
     omens: Omens.api(),
     signals: Signals.api(),
+    threads: Threads.api(),
     patronage: Patron.api(),
     havens: {open: Havens.havensDialog, edit: Havens.editHaven, of: Havens.havenOf, list: Havens.havens, save: Havens.saveHaven, remove: Havens.removeHaven, expose: Havens.expose, forget: Havens.forget, exposeDialog: Havens.exposeDialog, rating: Havens.ratingOf, rules: HavenRules},
     passTime: {open: PassTime.open, vote: PassTime.vote, dialog: PassTime.passTimeDialog, choices: SpendRules.PASS_CHOICES},
@@ -356,6 +360,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: true, onChange: () => Clocks.ClocksApp.open()};
   tokens.tools.wodxTracker = {name: "wodxTracker", title: "The Storyteller's tracker (every character, convening, beats)", icon: "fa-solid fa-binoculars", order: 113,
     button: true, visible: game.user.isGM, onChange: () => A.openTracker()};
+  tokens.tools.wodxThreads = {name: "wodxThreads", title: "Threads of Fate (storylines woven from what has happened)", icon: "fa-solid fa-dharmachakra", order: 113.5,
+    button: true, visible: game.user.isGM, onChange: () => Threads.ThreadsApp.open()};
   tokens.tools.wodxLedger = {name: "wodxLedger", title: "The Ledger (oaths, debts, boons, consequences, the Veil)", icon: "fa-solid fa-scale-unbalanced", order: 114,
     button: true, visible: game.user.isGM, onChange: () => Led.LedgerApp.open()};
   tokens.tools.wodxUpkeep = {name: "wodxUpkeep", title: "Upkeep (ties that need tending, hunting grounds and heat)", icon: "fa-solid fa-hand-holding-heart", order: 121,

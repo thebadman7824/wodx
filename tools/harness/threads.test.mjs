@@ -144,3 +144,13 @@ test("threads: the deck has about 150 cards, a unique hook for every world regio
   const anchors = deck.filter(c => c.role === "anchor");
   assert.ok(anchors.every(a => deck.some(t => t.role === "twist" && T.shares(a, t))), "every anchor has a twist that can join it");
 });
+
+test("threads: a locked storyline waits, and Session Zero lines cut tagged cards", () => {
+  let st = T.open({}, {key: "k", title: "Fever", anchor: "fever-ferry", steps: ferry.steps}, 0);
+  st = T.lock(st, "k");
+  assert.equal(T.due(st, 999 * DAY).length, 0, "nothing comes due while locked");
+  assert.equal(T.nightBeat(st, () => 0), null, "a locked storyline gives no night beat");
+  assert.equal(T.due(T.lock(st, "k", false), 0).length, 1);
+  assert.deepEqual(T.cutsFrom(["No harm to children", "nothing sexual"]).sort(), ["children", "romance"]);
+  assert.deepEqual(T.cutsFrom([]), []);
+});

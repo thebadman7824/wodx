@@ -18,11 +18,11 @@ export const TTL = {1: 14 * DAY, 2: 28 * DAY, 3: 56 * DAY};
 export const MAX = 200;
 /**
  * The kinds of signal. The first eight are the omens kinds (omen-rules.mjs KINDS); a kind omens has no symbols for
- * falls back to "change" there.
+ * falls back to "change" there. "saga" is a step of a Rothenstein saga book (WoDX Chronicle, wodxSaga).
  */
 export const KINDS = ["grudge", "hunters", "plague", "war", "fire", "flood", "death", "change",
   "fight", "rumour", "tale", "fate", "cult", "wyrm", "caern", "node", "freehold", "town", "seat", "arrest", "trial",
-  "law", "project", "event", "breach", "debt", "lifepath", "hook", "arrival", "chain"];
+  "law", "project", "event", "breach", "debt", "lifepath", "hook", "arrival", "chain", "saga"];
 /** Kinds that come from a player character's own story: they are woven first (B3652, desk item 13). */
 export const OWN = ["hook", "lifepath"];
 /** Kinds that bring the past back: used as a storyline's echo (B3652). */
@@ -101,7 +101,7 @@ export const urgent = (board = [], now = 0) => fresh(board, now).some(s => s.wei
  * hunters, an heir as a death; the rest dream as change.
  */
 export const OMEN_KIND = {fight: "war", seat: "war", arrest: "hunters", trial: "hunters", law: "hunters", breach: "hunters",
-  fate: "death", debt: "grudge", tale: "grudge", lifepath: "grudge", hook: "grudge"};
+  fate: "death", saga: "change", debt: "grudge", tale: "grudge", lifepath: "grudge", hook: "grudge"};
 const OMEN_KINDS = KINDS.slice(0, 8);
 export const omenKind = k => (OMEN_KINDS.includes(k) ? k : (OMEN_KIND[k] ?? "change"));
 

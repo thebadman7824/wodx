@@ -49,11 +49,11 @@ This page is a map of where each part lives. Most parts come as a pair: a `*-rul
 
 ## Threads of Fate
 
-Procedural storylines woven from what has happened in the world (B3650-B3656). Every system posts a short signal to one shared board when something notable happens: a fight, a sickness, hunters closing in, a cult, an arrest or trial, a dated event, a town change, a grudge, a battle, a tale. The weave picks the freshest signals, a player's own hooks first, and makes a storyline from an anchor card that answers one, a twist card that shares a place or a cast slot with it, and an echo from the past. Three storylines are open at most, plus one for each player's own hook; when one ends, the next can open. Each storyline is only a proposal until the Storyteller approves it, and the Storyteller's lines always win. Dreams and omens read the same board.
+Procedural storylines woven from what has happened in the world (B3650-B3656). Every system posts a short signal to one shared board when something notable happens: a fight, a sickness, hunters closing in, a cult, an arrest or trial, a dated event, a town change, a grudge, a battle, a tale. The weave picks the freshest signals, a player's own hooks first, and makes a storyline from an anchor card that answers one, a twist card that shares a place or a cast slot with it, and an echo from the past. Three storylines are open at most, plus one for each player's own hook; when one ends, the next can open. Each storyline is only a proposal until the Storyteller approves it, and the Storyteller's lines always win. An opened storyline gets a page in the journal folder Threads of Fate, a progress clock and an opening rumour; its steps come due by their days, the night's draw gives its next beat one time in three, and its ending goes to the Legends of the chronicle. The Threads of Fate window (Storyteller toolbar) ends, locks or refuses storylines and takes a player's own hook. Dreams and omens read the same board.
 
-- Files: `signals.mjs` and `signals-rules.mjs` (the shared signal board and the hooks that fill it), `threads-rules.mjs` (hook cards and the weave), `data/threads-cards.mjs` (the hook cards: Rothenstein, two for each of the 44 world regions, doors for each line, and a player's own threads).
-- Settings: `signalBoard` (hidden).
-- API: `signals`.
+- Files: `signals.mjs` and `signals-rules.mjs` (the shared signal board and the hooks that fill it), `threads.mjs` and `threads-rules.mjs` (the weave, storylines, their steps and endings, and the Threads of Fate window), `data/threads-cards.mjs` (the hook cards: Rothenstein, two for each of the 44 world regions, doors for each line, and a player's own threads).
+- Settings: `threads` (Off, Suggest or Open by itself; off by default), `threadsState` and `signalBoard` (hidden).
+- API: `signals`, `threads`.
 
 ## Money, holdings and making things
 

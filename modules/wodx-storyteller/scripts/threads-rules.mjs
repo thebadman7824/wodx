@@ -159,7 +159,7 @@ export function open(state = {}, story = {}, now = 0) {
 }
 
 /** Storylines whose next step is due by now, with that step. */
-export const due = (state = {}, now = 0) => (state.open ?? []).filter(s => s.status === "open" && s.step < (s.steps?.length ?? 0) && num(s.next) <= num(now))
+export const due = (state = {}, now = 0) => (state.open ?? []).filter(s => s.status === "open" && !s.locked && s.step < (s.steps?.length ?? 0) && num(s.next) <= num(now))
   .map(s => ({key: s.key, step: s.steps[s.step]}));
 
 /** Move a storyline on one step; at the last step it waits for an ending. */
@@ -183,9 +183,22 @@ export function close(state = {}, key = "", ending = "", now = 0) {
 export const refuse = (state = {}, cardKey = "") => ({...state, refused: [...new Set([...(state.refused ?? []), String(cardKey)])]});
 export const unrefuse = (state = {}, cardKey = "") => ({...state, refused: (state.refused ?? []).filter(k => k !== String(cardKey))});
 
+/** The Storyteller locks a storyline: it stays as it is, no step comes due by itself, until unlocked. */
+export const lock = (state = {}, key = "", on = true) => ({...state, open: (state.open ?? []).map(s => (s.key === key ? {...s, locked: !!on} : s))});
+
+/**
+ * Content tags cut by the table's lines (Session Zero). Each line is free text; a tag is cut when a line names it.
+ * Cards carry tags for the things a line most often removes.
+ */
+export const TAG_WORDS = {children: /\b(child|children|kids?|minors?|infants?|bab(y|ies))\b/i, romance: /\b(romance|romantic|sex|sexual|love scenes?|seduction)\b/i,
+  fire: /\b(burn|burning|fire|pyre)\b/i, mob: /\b(mob|lynch|lynching)\b/i, torture: /\btortur/i, plague: /\b(plague|disease|sickness|epidemic)\b/i,
+  slavery: /\b(slave|slavery|bondage)\b/i, cannibalism: /\bcannibal/i, animals: /\b(animal|animals|dogs?|wolves|horses?)\s+(harm|death|cruelty)\b/i,
+  atrocity: /\b(genocide|massacre|atrocit)/i, suicide: /\bsuicid/i};
+export const cutsFrom = (lines = []) => Object.keys(TAG_WORDS).filter(t => list(lines).some(x => TAG_WORDS[t].test(x)));
+
 /** For a night draw: an open storyline's current beat one draw in three, else null (the tables draw as before). */
 export function nightBeat(state = {}, rand = Math.random) {
-  const live = (state.open ?? []).filter(s => s.status === "open" && s.step < (s.steps?.length ?? 0));
+  const live = (state.open ?? []).filter(s => s.status === "open" && !s.locked && s.step < (s.steps?.length ?? 0));
   if ( !live.length || !(rand() < NIGHT_SHARE) ) return null;
   const s = pick(live, rand);
   return {key: s.key, title: s.title, step: s.steps[s.step]};

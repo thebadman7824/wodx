@@ -90,7 +90,8 @@ export const CARDS = [
   "needs": [
    "fight",
    "death",
-   "hunters"
+   "hunters",
+   "saga"
   ],
   "surface": "A hunting party went into the woods after a beast and did not come back whole.",
   "want": "To have the beast named and killed, and the blame put somewhere else.",
@@ -196,7 +197,8 @@ export const CARDS = [
   "needs": [
    "fight",
    "grudge",
-   "tale"
+   "tale",
+   "saga"
   ],
   "surface": "A rough game between two villages has turned into a quarrel that will outlast the winter.",
   "want": "Revenge before the first snow.",
@@ -299,7 +301,8 @@ export const CARDS = [
   "needs": [
    "plague",
    "change",
-   "cult"
+   "cult",
+   "saga"
   ],
   "surface": "Spoiled grain is making the town mad with fits and visions.",
   "want": "To sell the grain anyway, before the price falls.",
@@ -315,7 +318,11 @@ export const CARDS = [
   "cost": "Burning the grain means a hungry winter.",
   "valve": "A wise woman in the woods knows the cure, for a price.",
   "fight": "market",
-  "faction": "the guild"
+  "faction": "the guild",
+  "tags": [
+   "fire",
+   "plague"
+  ]
  },
  {
   "key": "roth-ridge-toll",
@@ -406,7 +413,8 @@ export const CARDS = [
   "needs": [
    "grudge",
    "law",
-   "debt"
+   "debt",
+   "saga"
   ],
   "surface": "A toll-keeper is squeezing every traveller, and someone powerful lets it happen.",
   "want": "Enough silver to buy a way out of the margrave's service.",
@@ -508,7 +516,8 @@ export const CARDS = [
   "needs": [
    "debt",
    "project",
-   "rumour"
+   "rumour",
+   "saga"
   ],
   "surface": "An apothecary owes a dangerous person and offers payment no one wants.",
   "want": "To be free of the debt without giving up the shop.",
@@ -610,7 +619,8 @@ export const CARDS = [
   "needs": [
    "fire",
    "war",
-   "town"
+   "town",
+   "saga"
   ],
   "surface": "A fire in the poor quarter, set or allowed, that clears land someone wants.",
   "want": "The quarter cleared, and no questions.",
@@ -626,7 +636,10 @@ export const CARDS = [
   "cost": "Whoever is saved, someone else burns.",
   "valve": "The watch captain hates the guild and will listen.",
   "fight": "town",
-  "faction": "the guild"
+  "faction": "the guild",
+  "tags": [
+   "fire"
+  ]
  },
  {
   "key": "roth-north-hermit",
@@ -718,7 +731,8 @@ export const CARDS = [
   "needs": [
    "node",
    "caern",
-   "fate"
+   "fate",
+   "saga"
   ],
   "surface": "A holy hermit in the woods keeps something and wants to hand it on before dying.",
   "want": "An heir worth the burden.",
@@ -826,7 +840,8 @@ export const CARDS = [
   "needs": [
    "breach",
    "death",
-   "change"
+   "change",
+   "saga"
   ],
   "surface": "A burned manor where something of its last family still waits.",
   "want": "Its last secret kept, or told to the right person.",
@@ -842,7 +857,10 @@ export const CARDS = [
   "cost": "Opening the cellar wakes it.",
   "valve": "The old cook in town lived there once.",
   "fight": "grave",
-  "faction": "the castle"
+  "faction": "the castle",
+  "tags": [
+   "fire"
+  ]
  },
  {
   "key": "roth-winter-pack",
@@ -932,7 +950,8 @@ export const CARDS = [
   "needs": [
    "wyrm",
    "caern",
-   "fight"
+   "fight",
+   "saga"
   ],
   "surface": "A wolf pack, too bold and too clever, presses on the town all winter.",
   "want": "Something the town took back.",
@@ -1041,7 +1060,8 @@ export const CARDS = [
   "needs": [
    "arrival",
    "tale",
-   "rumour"
+   "rumour",
+   "saga"
   ],
   "surface": "The one to be wed has fled or been taken on the eve of a great match.",
   "want": "The match made, whatever the cost.",
@@ -1143,7 +1163,8 @@ export const CARDS = [
   "needs": [
    "flood",
    "death",
-   "town"
+   "town",
+   "saga"
   ],
   "surface": "A failing dam and a drained pond expose an old crime.",
   "want": "The dam mended and the mud covered.",
@@ -1158,7 +1179,10 @@ export const CARDS = [
   "cost": "Opening the old crime ruins a family.",
   "valve": "The widow will trade the truth for help with the dam.",
   "fight": "river",
-  "faction": "the guild"
+  "faction": "the guild",
+  "tags": [
+   "plague"
+  ]
  },
  {
   "key": "roth-missing-child",
@@ -1245,7 +1269,8 @@ export const CARDS = [
   "needs": [
    "death",
    "rumour",
-   "change"
+   "change",
+   "saga"
   ],
   "surface": "A child is lost in the fog and the town has given up.",
   "want": "The child home, or the truth.",
@@ -1260,7 +1285,10 @@ export const CARDS = [
   "cost": "Following the lantern means leaving the road.",
   "valve": "The old shepherd knows where the fog is thickest.",
   "fight": "wild",
-  "faction": "the church"
+  "faction": "the church",
+  "tags": [
+   "children"
+  ]
  },
  {
   "key": "roth-strange-silver",
@@ -1352,7 +1380,8 @@ export const CARDS = [
   "needs": [
    "project",
    "rumour",
-   "event"
+   "event",
+   "saga"
   ],
   "surface": "Old coins are turning up new, and the margrave's mint wants to know why.",
   "want": "The source, before the margrave finds it.",
@@ -1458,7 +1487,8 @@ export const CARDS = [
   "needs": [
    "tale",
    "change",
-   "trial"
+   "trial",
+   "saga"
   ],
   "surface": "A vision draws pilgrims and makes the church nervous.",
   "want": "To be believed.",
@@ -1564,7 +1594,8 @@ export const CARDS = [
   "needs": [
    "grudge",
    "fight",
-   "debt"
+   "debt",
+   "saga"
   ],
   "surface": "A knight demands a duel over an insult, real or made up.",
   "want": "Honour, or a death that looks like honour.",
@@ -1671,7 +1702,8 @@ export const CARDS = [
   "needs": [
    "hunters",
    "trial",
-   "arrest"
+   "arrest",
+   "saga"
   ],
   "surface": "A village accuses a healer of witchcraft after a death.",
   "want": "Someone to blame for the death.",
@@ -1687,7 +1719,11 @@ export const CARDS = [
   "cost": "Saving the healer means facing the mob.",
   "valve": "The reeve can be persuaded to send for a court.",
   "fight": "town",
-  "faction": "the church"
+  "faction": "the church",
+  "tags": [
+   "children",
+   "mob"
+  ]
  },
  {
   "key": "roth-blind-cross",
@@ -1774,7 +1810,8 @@ export const CARDS = [
   "needs": [
    "fate",
    "lifepath",
-   "hook"
+   "hook",
+   "saga"
   ],
   "surface": "A blind beggar at the crossroads tells fortunes that come true.",
   "want": "Something only a player character can give.",
@@ -1790,7 +1827,10 @@ export const CARDS = [
   "cost": "The rest of the fortune has a price.",
   "valve": "Havel will speak plainly to someone who sits all night.",
   "fight": "road",
-  "faction": "the dead"
+  "faction": "the dead",
+  "tags": [
+   "children"
+  ]
  },
  {
   "key": "roth-high-woods",
@@ -1877,7 +1917,8 @@ export const CARDS = [
   "needs": [
    "wyrm",
    "breach",
-   "change"
+   "change",
+   "saga"
   ],
   "surface": "Something in the high woods has driven out the people who work there.",
   "want": "To go home.",
@@ -1985,7 +2026,8 @@ export const CARDS = [
   "needs": [
    "law",
    "seat",
-   "event"
+   "event",
+   "saga"
   ],
   "surface": "An auditor from the margrave counts the town's debts and finds more than money.",
   "want": "A reason to replace the town's masters.",
@@ -2089,7 +2131,8 @@ export const CARDS = [
    "change",
    "wyrm",
    "cult",
-   "breach"
+   "breach",
+   "saga"
   ],
   "surface": "The Silver Adit has broken into something older than the town.",
   "want": "The silver to keep coming.",
@@ -2198,7 +2241,8 @@ export const CARDS = [
   "needs": [
    "hunters",
    "cult",
-   "trial"
+   "trial",
+   "saga"
   ],
   "surface": "Heretics hide across the river and the inquisitors are close.",
   "want": "Safe passage for the hunted, or their names.",
@@ -2213,7 +2257,10 @@ export const CARDS = [
   "cost": "Every choice burns someone.",
   "valve": "The chapter-house has a back door.",
   "fight": "river",
-  "faction": "the church"
+  "faction": "the church",
+  "tags": [
+   "fire"
+  ]
  },
  {
   "key": "roth-patriarch-dream",
@@ -2302,7 +2349,8 @@ export const CARDS = [
   "needs": [
    "arrival",
    "fate",
-   "seat"
+   "seat",
+   "saga"
   ],
   "surface": "A long road south to a city across the water, where an old power is dying.",
   "want": "The dream fulfilled, or ended.",
@@ -2406,7 +2454,8 @@ export const CARDS = [
   "needs": [
    "project",
    "fate",
-   "rumour"
+   "rumour",
+   "saga"
   ],
   "surface": "A ledger points east, toward the oldest city of the Kindred legends.",
   "want": "The city found, or the ledger burned.",
@@ -2421,7 +2470,10 @@ export const CARDS = [
   "cost": "Every step east costs the road home.",
   "valve": "The Iron Gates can be passed by river.",
   "fight": "road",
-  "faction": "the scribes"
+  "faction": "the scribes",
+  "tags": [
+   "fire"
+  ]
  },
  {
   "key": "r-moravia",
@@ -2704,7 +2756,10 @@ export const CARDS = [
    "german-lands"
   ],
   "region": "german-lands",
-  "src": "history"
+  "src": "history",
+  "tags": [
+   "fire"
+  ]
  },
  {
   "key": "r-german-lands-alt",
@@ -2889,7 +2944,10 @@ export const CARDS = [
    "british-isles"
   ],
   "region": "british-isles",
-  "src": "history"
+  "src": "history",
+  "tags": [
+   "children"
+  ]
  },
  {
   "key": "r-british-isles-alt",
@@ -3171,7 +3229,10 @@ export const CARDS = [
    "france"
   ],
   "region": "france",
-  "src": "history"
+  "src": "history",
+  "tags": [
+   "romance"
+  ]
  },
  {
   "key": "r-iberia",
@@ -3457,7 +3518,11 @@ export const CARDS = [
    "italy"
   ],
   "region": "italy",
-  "src": "history"
+  "src": "history",
+  "tags": [
+   "children",
+   "romance"
+  ]
  },
  {
   "key": "r-italy-alt",
@@ -4285,7 +4350,10 @@ export const CARDS = [
    "carpathians-balkans"
   ],
   "region": "carpathians-balkans",
-  "src": "history"
+  "src": "history",
+  "tags": [
+   "cannibalism"
+  ]
  },
  {
   "key": "r-russia",
@@ -5030,7 +5098,10 @@ export const CARDS = [
    "levant"
   ],
   "region": "levant",
-  "src": "history"
+  "src": "history",
+  "tags": [
+   "fire"
+  ]
  },
  {
   "key": "r-egypt",
@@ -5486,7 +5557,10 @@ export const CARDS = [
    "maghreb"
   ],
   "region": "maghreb",
-  "src": "history"
+  "src": "history",
+  "tags": [
+   "children"
+  ]
  },
  {
   "key": "r-maghreb-alt",
@@ -6221,7 +6295,10 @@ export const CARDS = [
    "tibet-himalaya"
   ],
   "region": "tibet-himalaya",
-  "src": "history"
+  "src": "history",
+  "tags": [
+   "children"
+  ]
  },
  {
   "key": "r-tibet-himalaya-alt",
@@ -6490,7 +6567,10 @@ export const CARDS = [
    "india"
   ],
   "region": "india",
-  "src": "history"
+  "src": "history",
+  "tags": [
+   "fire"
+  ]
  },
  {
   "key": "r-china",
@@ -7415,7 +7495,10 @@ export const CARDS = [
    "nusantara"
   ],
   "region": "nusantara",
-  "src": "history"
+  "src": "history",
+  "tags": [
+   "atrocity"
+  ]
  },
  {
   "key": "r-west-africa",
@@ -8071,7 +8154,11 @@ export const CARDS = [
   ],
   "region": "central-africa",
   "src": "history",
-  "from": 1880
+  "from": 1880,
+  "tags": [
+   "atrocity",
+   "fire"
+  ]
  },
  {
   "key": "r-central-africa-alt",
@@ -8252,7 +8339,10 @@ export const CARDS = [
    "canada"
   ],
   "region": "canada",
-  "src": "history"
+  "src": "history",
+  "tags": [
+   "cannibalism"
+  ]
  },
  {
   "key": "r-canada-alt",
@@ -9177,7 +9267,10 @@ export const CARDS = [
    "andes"
   ],
   "region": "andes",
-  "src": "history"
+  "src": "history",
+  "tags": [
+   "slavery"
+  ]
  },
  {
   "key": "r-andes-alt",
@@ -9358,7 +9451,10 @@ export const CARDS = [
   ],
   "region": "brazil",
   "src": "history",
-  "from": 1500
+  "from": 1500,
+  "tags": [
+   "slavery"
+  ]
  },
  {
   "key": "r-brazil-alt",
@@ -9451,7 +9547,10 @@ export const CARDS = [
   ],
   "region": "brazil",
   "src": "history",
-  "from": 1500
+  "from": 1500,
+  "tags": [
+   "atrocity"
+  ]
  },
  {
   "key": "r-southern-cone",
@@ -9549,7 +9648,10 @@ export const CARDS = [
   ],
   "region": "southern-cone",
   "src": "history",
-  "from": 1536
+  "from": 1536,
+  "tags": [
+   "fire"
+  ]
  },
  {
   "key": "r-southern-cone-alt",
@@ -10802,7 +10904,10 @@ export const CARDS = [
    "vampire": "The people the characters feed on are touched by it, and the blood tastes wrong."
   },
   "complication": "The people the characters feed on are touched by it, and the blood tastes wrong.",
-  "src": "lore"
+  "src": "lore",
+  "tags": [
+   "plague"
+  ]
  },
  {
   "key": "door-werewolf-1",

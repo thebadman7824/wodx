@@ -86,7 +86,11 @@ export async function drawNight({jdn = null, part = null, nonce = 0} = {}) {
   const n = N.composeNight({randFor: k => g.random(`night:${jdn}:${k}`, nonce), tables, part, layers: layersInPlay(), vars: {places: f.places, people: f.people}});
   let weather = "";
   try { weather = game.modules.get("wodx-atmosphere")?.api?.weather?.on?.(jdn)?.label ?? ""; } catch (e) { weather = ""; }
-  return {...n, pulls: pullsFor(g, jdn, nonce), jdn, nonce, date: jdn === at.jdn ? at.label : "", weather, era: ctx.eraId};
+  // B3652: one draw in three gives an open Threads of Fate storyline's beat as well (desk item 9)
+  let thread = null;
+  try { thread = game.modules.get(MOD)?.api?.threads?.nightBeat?.(g.random(`night:${jdn}:thread`, nonce)) ?? null; } catch (e) { thread = null; }
+  return {...n, pulls: pullsFor(g, jdn, nonce), jdn, nonce, date: jdn === at.jdn ? at.label : "", weather, era: ctx.eraId,
+    thread: thread ? {key: thread.key, title: thread.title, step: thread.step?.title ?? "", text: thread.step?.text ?? ""} : null};
 }
 
 /** The trouble dial set before the first night (WoDX Creation 0.12.0): 0.5, 1 or 1.5. */
@@ -116,12 +120,13 @@ function nightHtml(n) {
   return `<p class="wodx-quiet">${esc(n.date || "")}${n.date ? ", " : ""}${esc(n.partLabel)}${n.weather ? `. ${esc(n.weather)}` : ""}</p>
     <p>${esc(n.opening)}</p><ul>${n.encounters.map(e => `<li><b>${esc(e.label)}:</b> ${esc(e.text)}</li>`).join("")}</ul>
     ${n.rumour ? `<p><b>A rumour:</b> ${esc(n.rumour)}</p>` : ""}
+    ${n.thread ? `<p><b>A storyline moves (${esc(n.thread.title)}):</b> ${esc(n.thread.step)}${n.thread.text ? `. ${esc(n.thread.text)}` : ""}</p>` : ""}
     ${(n.pulls ?? []).length ? `<p><b>From the characters' flaws and merits:</b></p><ul>${n.pulls.map(p => `<li><b>${esc(p.name)}</b> (${esc(p.actorName)}): ${esc(p.text || `a story aid is drawn for ${p.actorName}`)}</li>`).join("")}</ul>` : ""}`;
 }
 
 export async function proposeNight(n) {
   const p = pacingNow();
-  return chron()?.propose?.({type: TN.night, key: `night:${n.jdn}:${n.nonce}`, title: `The night's draw${n.date ? `: ${n.date}` : ""}`, detail: `${p ? `Pacing: ${p.text} ` : ""}${N.nightText(n)}`, data: n});
+  return chron()?.propose?.({type: TN.night, key: `night:${n.jdn}:${n.nonce}`, title: `The night's draw${n.date ? `: ${n.date}` : ""}`, detail: `${p ? `Pacing: ${p.text} ` : ""}${N.nightText(n)}${n.thread ? ` A storyline moves (${n.thread.title}): ${n.thread.step}.` : ""}`, data: n});
 }
 
 /** Approved: into the log and the nights journal. */
