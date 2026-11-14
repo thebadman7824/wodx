@@ -1,5 +1,6 @@
 import * as D from "./doll-rules.mjs";
 import {registerSpriteSettings, startSprites, spriteApi, ageOf, markChild} from "./sprites.mjs";
+import {registerMountSettings, startMounts, mountApi} from "./mounts.mjs";
 import {registerFaceSettings, startFaces, faceApi} from "./face64.mjs";
 import {makeFigureApp} from "./figure.mjs";
 import * as FG from "./figure-rules.mjs";
@@ -384,12 +385,14 @@ Hooks.once("init", () => {
   active = true;
   registerSettings();
   registerSpriteSettings();
+  registerMountSettings();
   registerFaceSettings();
   startFaces();
 });
 Hooks.once("ready", () => {
   if ( !active ) return;
-  game.modules.get(MOD).api = {version: VERSION, last: () => lastBake, open: a => PaperdollApp.open(a), figure: {open: openFigure, of: a => a?.flags?.[MOD]?.figure ?? null, rules: FG}, bake, bakeAll, schedule, settled, save: saveLook, draw, anchorsFor, state: stateOf, rules: D, sprites: spriteApi, faces: faceApi};
+  game.modules.get(MOD).api = {version: VERSION, last: () => lastBake, open: a => PaperdollApp.open(a), figure: {open: openFigure, of: a => a?.flags?.[MOD]?.figure ?? null, rules: FG}, bake, bakeAll, schedule, settled, save: saveLook, draw, anchorsFor, state: stateOf, rules: D, sprites: {...spriteApi, mounts: mountApi}, faces: faceApi};
   startSprites();
+  startMounts();
   if ( drawnOn() && isBaker() ) setTimeout(bakeAll, 1500);
 });
