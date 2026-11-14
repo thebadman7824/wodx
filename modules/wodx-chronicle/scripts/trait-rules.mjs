@@ -10,7 +10,7 @@
  * kind that cannot hold it is matched but marked wrongKind: it does nothing until fixed. Mixed kinds count as both
  * where the books say so: a ghoul is also a mortal, a revenant is a ghoul, a Kinfolk is a mortal.
  */
-import {BACKGROUND_HOOKS as BACKGROUND_HOOKS_TEXT, MERITS_FLAWS, BACKGROUNDS, PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED, TRIGGERS, PULLS, LEDGER, PROMPTS, BG_WORLD} from "../data/trait-effects.mjs";
+import {BACKGROUND_HOOKS as BACKGROUND_HOOKS_TEXT, MERITS_FLAWS, BACKGROUNDS, PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED, TRIGGERS, PULLS, LEDGER, PROMPTS, BG_WORLD, BODY} from "../data/trait-effects.mjs";
 
 export {PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED, TRIGGERS, PULLS, LEDGER, PROMPTS, BG_WORLD};
 
@@ -262,6 +262,23 @@ export function attitudeSeed(view, npcKind = null, idx = index()) {
   return {delta: Math.max(-2, Math.min(2, delta)), names};
 }
 
+/**
+ * B3793: what a character's traits do to the body in a fight, for WoDX Combat: {bruised, shift, ease, silver, names}.
+ */
+export function bodyOf(view, idx = index()) {
+  const out = {bruised: 0, shift: 0, ease: 0, silver: false, names: []};
+  for ( const m of working(view, idx) ) {
+    const B = BODY[m.key];
+    if ( !B ) continue;
+    out.bruised += B.bruised ?? 0;
+    out.shift = Math.max(out.shift, B.shift ?? 0);
+    out.ease = Math.max(out.ease, B.ease ?? 0);
+    out.silver ||= !!B.silver;
+    out.names.push(m.entry.name);
+  }
+  return out;
+}
+
 /* ---- Step 7 (Chronicle 0.22.0): triggers on the map, the night's draw, the Ledger, prompts ---- */
 
 const working = (view, idx) => traitsOf(view, idx).matched.filter(m => !m.wrongKind);
@@ -381,7 +398,8 @@ export function describe(m) {
     ...(TRIGGERS[k] ? [`goes off on the map (${TRIGGERS[k].fromName ? "what the name says in brackets" : TRIGGERS[k].words.slice(0, 3).join(", ")})${TRIGGERS[k].stop ? ", and holds a player's move" : ""}`] : []),
     ...(PULLS[k] ? [`turns up in the night's draw about one night in ${Math.round(1 / PULLS[k].chance)}`] : []),
     ...(LEDGER[k] ? [`a ${LEDGER[k].kind} in the Ledger`] : []),
-    ...(PROMPTS[k] ? [`a card to the Storyteller (${PROMPTS[k].on.join(", ")})`] : [])];
+    ...(PROMPTS[k] ? [`a card to the Storyteller (${PROMPTS[k].on.join(", ")})`] : []),
+    ...(BODY[k] ? [`in a fight: ${BODY[k].note}`] : [])];
   const live = ways.length ? ways.join("; ") : "no automatic effect yet";
   return `${pats}. ${live}. ${e.book} p. ${e.page}`;
 }

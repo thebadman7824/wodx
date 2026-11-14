@@ -502,3 +502,35 @@ export const MORE_PROMPTS_5 = {
   "harano-prone": {on: ["night", "fight"], text: "a setback calls for a Willpower roll or a bout of Harano"},
   "taint-of-corruption": {on: ["social", "night"], text: "Sense Wyrm finds the character tainted, and the Wyrm's servants trouble the character's sleep"}
 };
+
+/**
+ * Part 6 (B3793): traits that change the body in a fight, read by WoDX Combat. bruised: extra Bruised health levels;
+ * shift: each wound level counts as the one above it (Hurt as Bruised); ease: dice given back from the wound penalty
+ * (99: none at all until Incapacitated); silver: silver wounds are aggravated.
+ */
+export const BODY = {
+  "huge-size": {bruised: 1, note: "one more Bruised health level"},
+  "sturdy": {bruised: 1, note: "one more Bruised health level"},
+  "increased-pain-threshold": {shift: 1, note: "each wound level counts as the one above it"},
+  "highpaintolerance": {ease: 1, note: "wound penalties one die less"},
+  "the-ten-thousand-defjud": {ease: 1, note: "wound penalties one die less"},
+  "insensate-to-pain": {ease: 99, note: "no wound penalties until Incapacitated"},
+  "vulnerability-to-silver": {silver: true, note: "silver wounds are aggravated"}
+};
+
+export const MORE_PROMPTS_6 = {
+  "ambidextrous": {on: ["fight"], text: "no off-hand penalty, with two weapons or the wrong hand"},
+  "short": {on: ["fight"], text: "runs at half speed and struggles to reach things made for adults"},
+  "lame": {on: ["fight"], text: "walks at a quarter of the usual speed and cannot run"},
+  "odd-gait": {on: ["fight", "social"], text: "moves at half speed, and the walk is recognised"},
+  "permanent-wound": {on: ["night"], text: "rises each night Wounded"},
+  "slow-healing": {on: ["night", "fight"], text: "two blood points heal one bashing or lethal level; aggravated heals one level each five days"},
+  "flesh-of-the-corpse": {on: ["fight", "social"], text: "healed wounds still show on the skin"},
+  "berserker": {on: ["fight"], text: "can enter a berserk frenzy at will, ignoring wound penalties"},
+  "too-tough-to-die": {on: ["fight"], text: "harder to kill than wounds suggest"},
+  "legendary-attributes": {on: ["night"], text: "one Attribute may go to six dots, with a heroic feat of its own"},
+  "regeneration": {on: ["fight", "night"], text: "heals one chimerical level each turn of rest, and one physical level each hour"},
+  "iron-allergy": {on: ["fight"], text: "cold iron burns: a chimerical level each turn of contact (real damage at higher ratings)"},
+  "detached": {on: ["fight"], text: "wound penalties do not touch Psychic Numina until Incapacitated"},
+  "poisonous-blood": {on: ["feed", "fight"], text: "each blood point a vampire drinks deals that vampire a bashing level"}
+};
