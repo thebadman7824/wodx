@@ -10,6 +10,8 @@
  *   5. ten Humanity Index points take a dot: a mortal at 9 lost points with a cost of 3 drops a dot of Humanity;
  *      a werewolf in the same place drops a dot of Gnosis
  *   6. the cyber weapons that were plain items arrive as weapons (Popup Gun is a Ranged Weapon with damage 4)
+ *   7. WoDX Senses: a mortal with Low Lite optics installed sees in the dark (traitsOf gives the gear's dark sight,
+ *      powersFor names it) and Amplified Hearing makes hearing one step easier
  * Result: Data/wodx-gate/gatecyber-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -76,6 +78,14 @@ export async function run() {
     await G.step("6. cyber weapons fight", async () => {
       const [gun] = await m.createEmbeddedDocuments("Item", [piece("Popup Gun")]);
       G.ok("6. cyber weapons fight", gun.type === "Ranged Weapon" && Number(gun.system.damage.bonus) === 4, {type: gun.type, damage: gun.system.damage});
+    });
+    await G.step("7. senses read the optics", async () => {
+      const S = game.modules.get("wodx-senses")?.api;
+      const [eye, ear] = await m.createEmbeddedDocuments("Item", [piece("Low Lite"), piece("Amplified Hearing")]);
+      await eye.update({"system.isequipped": true}); await ear.update({"system.isequipped": true});
+      const t = S.traitsOf(m), pw = S.rules.powersFor(t);
+      const base = S.rules.difficulty("sound", {}, S.rules.powersFor({})).diff, now = S.rules.difficulty("sound", {}, pw).diff;
+      G.ok("7. senses read the optics", pw.darkSight === "Low-light optics" && now === base - 1, {dark: pw.darkSight, base, now});
     });
   } finally { return G.finish(); }
 }
