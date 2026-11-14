@@ -137,3 +137,11 @@ test("prosperity looks: rich towns light their windows, poor ones have beggars, 
   for ( const l of angry ) assert.ok(L.SLOGANS.includes(l.text));
   assert.equal(L.signatureOf(at({prosperity: 4.2, unrest: 1})), L.signatureOf(at({prosperity: 3.8, unrest: 1})), "small moves inside a band draw nothing new");
 });
+
+test("town looks: only unlabelled looks go to the shared layer (B4636)", () => {
+  assert.equal(L.forLayer({kind: "fire", at: {x: 1, y: 1, radius: 50}}), true);
+  assert.equal(L.forLayer({kind: "plague", at: null, color: "#6f6a5a"}), true, "a whole-scene look takes the layer's weather");
+  assert.equal(L.forLayer({kind: "rubble", at: {x: 1, y: 1, radius: 50}, mark: "notice"}), false, "a mark keeps its label");
+  assert.equal(L.forLayer({kind: "calm", at: {x: 1, y: 1, radius: 50}, color: "#1b1b1b"}), false, "an own colour on a spot stays");
+  assert.equal(L.forLayer(null), false);
+});
