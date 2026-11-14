@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4700
+Next free block: B4710
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -218,6 +218,7 @@ Next free block: B4700
 | B4660-B4669 | Taino names in the People generator (used B4660-B4662) | Creation, Chronicle |
 | B4680-B4689 | Aboriginal Australian names in the People generator (used B4680-B4682) | Creation, Chronicle |
 | B4690-B4699 | Central Africa names (Kongo, Luba, Ganda) (used B4690-B4692) | Creation, Chronicle |
+| B4700-B4709 | A heartbeat from GitHub for the PC runner (used B4700) | tools (no module) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7122,3 +7123,12 @@ Reverse: edit the lists in data/people-central-africa.mjs.
 WoDX Creation. Kongo kanda from the mother and Ganda ebika from the father stand as the family before 1800; Luba women unnamed in the records are "A woman of" a chiefdom. The Kongo court took Portuguese church names from 1491; the Luba and Baganda take church names after 1800 (the missions of the 1870s), then family names.
 
 Reverse: change clans, towns or earlyChurch in data/people-central-africa.mjs.
+
+## B4700. GitHub checks the PC runner is alive every 15 minutes (2026-11-14)
+PC runner (tools/pcq). The runner stopped once without a trace (14 November, about 17:25Z): no crash in its log or in
+Windows, and no alert, because the runner raises its own alerts. Jobs sat for minutes before anyone noticed. A
+scheduled GitHub workflow (pc-heartbeat.yml) now reads the runner's status issue, which the runner updates every 2
+minutes. When the status is more than 15 minutes old, it opens a pc-alert issue with the restart command, and it closes
+that issue once the status moves again. The coordinator already watches pc-alert issues.
+
+Reverse: delete .github/workflows/pc-heartbeat.yml.
