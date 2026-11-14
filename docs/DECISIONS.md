@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4620
+Next free block: B4650
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -213,6 +213,7 @@ Next free block: B4620
 | B4160-B4169 | Canada first nations names in the People generator (used B4160-B4162) | Creation, Chronicle |
 | B4600-B4609 | Show, don't tell: a visible: line on every feature's release note (used B4600) | tools (no module) |
 | B4610-B4619 | The PC runner rechecks every failing gate before it reports (used B4610) | tools (no module) |
+| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620) | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7005,3 +7006,6 @@ and an old one names a gate to fix rather than a reason to merge past it. A job 
 "recheck": false.
 
 Reverse: drop recheck() from tools/pcq/runner.mjs.
+
+## B4620. Town events leave marks on the town's scenes (2026-11-14)
+Show-don't-tell desk v1, approved by Ben 2026-11-14. WoDX Storyteller (town-look-rules.mjs, town-looks.mjs). A town event (the wodxTown hook, from the town turn, a sack, news or a power) used to post a line in chat only. Now each scene of that town's market gets marks by event: fire gives three fire spots and smoke over the scene for a day, then three burnt-out spots for four weeks; flood gives water in the lowest third for three days, rain for a day and wreckage for two weeks; storm, quake, riot, rising, sack, blight, dread and calm have their own sets. The spots are seeded by town, scene and turn. Marks go through WoDX Chronicle's looks layer (api.looks.show) when it is there, which draws them with the effects modules and obeys each player's effects level; without it, a locked plain drawing stands in. They end with game time (swept every ten game minutes) and the town card's Undo removes the marks made since the turn. How many marks and how long they last are house rules. World setting townLooks, on by default. Reverse: turn townLooks off, or remove setupTownLooks from main.mjs.

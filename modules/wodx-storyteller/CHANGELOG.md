@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.94.0 (Town events shown on the map (B4620): when a town event lands, every scene of that market gets its marks, through WoDX Chronicle's shared looks layer when it is there and plain locked drawings otherwise. Spots are seeded, so a turn always draws the same marks. They end by themselves with game time, and the town card's Undo takes them back. World setting "Show town events on the map", on by default)
 - 0.93.0 (Powers that reach the town: towns.power lands a flood, fire, quake, storm, blight, good harvest, riot, dread or calm as a town event, and contagion.power starts a plague in the scene's town (B3757))
 - 0.92.0 (Night people and story-aid items (B3924): night-rules peopleIn, tradeFor, thingName, aidItem; night.mjs placeCard, placeFromCard, placeEncounter, makeAidItem; api night.place, night.placeCard, night.placeFrom, aid.makeItem. Gate gatenightplace, test night-place)
 - 0.91.0 (Future Darkness market news (B3923): EVENT_NEWS gains nine branch events, one id per happening; test event-effects)
