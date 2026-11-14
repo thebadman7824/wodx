@@ -190,7 +190,10 @@ async function shortBread(id) {
 
 /** A big event: rumours from the town's traders, a line in the log, and the hook for other modules. */
 async function tell(e) {
-  Hooks.callAll("wodxTown", {town: e.town, kind: e.kind, text: e.text, big: e.big});
+  // B3618: with the town's name and region, so WoDX Chronicle can ask whether a rising wins
+  let name = "", region = "";
+  try { const m = MK.marketById(Markets.state(), e.town); name = m?.name ?? ""; region = regionOfMarket(m, state().towns?.[e.town]); } catch (err) { /* name and region are optional */ }
+  Hooks.callAll("wodxTown", {town: e.town, kind: e.kind, text: e.text, big: e.big, name, region});
   if ( !e.big ) return;
   try { await log({kind: "note", text: ev(e)}); } catch (err) { /* log is optional */ }
   if ( setting("rumourNetwork") === false ) return;

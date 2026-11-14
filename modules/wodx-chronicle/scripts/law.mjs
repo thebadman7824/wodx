@@ -14,6 +14,7 @@ import {playerLine} from "./law-heat.mjs";
 import {playerMarks} from "./law-punish.mjs";
 import {cardLines as paperLines, checkSelves} from "./law-papers.mjs";
 import {playerTax} from "./law-tax.mjs";
+import {checkTurns} from "./law-regime.mjs";
 
 export function registerLawSettings() {
   game.settings.register(MODULE_ID, "lawYear", {scope: "world", config: false, type: Number, default: 0});
@@ -74,6 +75,7 @@ export async function checkYear() {
   if ( !seen ) return [];
   const region = place.homeland() ?? "moravia";
   try { await checkSelves(seen, y); } catch (e) { console.error("WoDX | papers", e); }
+  try { await checkTurns(seen, y); } catch (e) { console.error("WoDX | regime", e); }
   const changes = L.changesBetween(region, seen, y);
   if ( !changes.length ) return [];
   const gm = game.users.filter(u => u.isGM).map(u => u.id);
