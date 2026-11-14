@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3950
+Next free block: B3960
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -202,6 +202,7 @@ Next free block: B3950
 | B3900-B3929 | Faith and occult goods in play (used B3900-B3904) | Library |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
+| B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6705,3 +6706,33 @@ Reverse: change the fam keys of ARMENIAN in data/people-armenian.mjs.
 WoDX Creation. The older lists hold the names of the Bagratid, Artsruni, Rubenid and Hetumid ages and the scribes; the newer ones the Western Armenian spellings of the Ottoman cities (Garabed, Krikor) beside the Eastern ones (Karapet, Grigor).
 
 Reverse: edit the lists in data/people-armenian.mjs.
+
+## B3950. Books are kept one file per book in the shared folder (2026-11-14)
+Tools only. The project files folder holds at most 50,000 files and filled on 14 November 2026, 11,600 of them single
+book pages. Each book is now one `<batch>/<id>.txt` with `=== pNNNN` page markers (the layout the PC's join step
+already writes), plus the optional `<id>.toc.txt`. `books.mjs` reads the markers, so `page`, `find` and `overlap` give
+the same pdf page numbers; it skips `.toc.txt` files and no longer reads a book twice when a page folder and its joined
+file stand side by side. `books.mjs pack <folder>` joins page folders and checks the page count reads back. OCR still
+writes page files on the PC; only joined files are copied.
+
+Reverse: copy the page folders again; books.mjs still reads them where no joined file stands beside them.
+
+## B3951. Large picture sets stay on the PC (2026-11-14)
+Tools only. A set of more than 200 images is not copied to the shared folder; threads look at a sample or a contact
+sheet made by `tools/storage/contact-sheet.py`. The daily count lists any folder that breaks this.
+
+Reverse: drop the rule from docs/WORKFLOW.md section 7.
+
+## B3952. Gate reports and finished jobs are swept into one zip each week (2026-11-14)
+Tools only. `tools/storage/files.mjs sweep --apply`, scheduled Sundays 03:41 UTC, zips every file in `gates/` and
+`jobs/` unchanged for 7 days into `archive/sweep-<date>.zip`, lists the zip back and tests it, and only then removes the
+originals. Files saying `Status: open` or `KEEP` in their first lines stay. Ben approved the weekly sweep on 14
+November 2026.
+
+Reverse: delete the scheduled task; unzip an archive to restore its files.
+
+## B3953. A daily file count warns the coordinator at 45,000 (2026-11-14)
+Tools only. `tools/storage/files.mjs count`, scheduled daily at 01:27 UTC, writes `registry/file-count.md` and exits 3
+at 45,000 files or more; the scheduled run then messages the coordinator with the largest folders to clear.
+
+Reverse: delete the scheduled task.

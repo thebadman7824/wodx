@@ -42,3 +42,22 @@ test("overlap reports file, line, words and page", () => {
   assert.equal(hits[0].run.split(" ").length, 8);
   assert.deepEqual(B.overlap([{file: "c.md", text: "owls and the moon over quiet fields"}], books), [], "seven words is not a hit");
 });
+
+test("one file per book: page markers, toc files skipped, page folder not read twice (B3950)", () => {
+  const d = fs.mkdtempSync(path.join(os.tmpdir(), "wodx-books1-"));
+  fs.mkdirSync(path.join(d, "b1", "two"), {recursive: true});
+  fs.writeFileSync(path.join(d, "b1", "one.txt"), "﻿\r\n=== p0001\r\nCover\r\n=== p0002\r\nthe heron waits by the mill pond at dawn\r\n");
+  fs.writeFileSync(path.join(d, "b1", "one.toc.txt"), "Contents | 1");
+  fs.writeFileSync(path.join(d, "b1", "two", "p0001.txt"), "first");
+  fs.writeFileSync(path.join(d, "b1", "two", "p0003.txt"), "third page text");
+  let bs = B.findBooks(d);
+  assert.deepEqual(bs.map(b => b.id), ["one", "two"]);
+  assert.deepEqual(B.pagesOf(bs[0]).map(p => p.n), [1, 2]);
+  assert.equal(B.pagesOf(bs[0])[1].text.trim(), "the heron waits by the mill pond at dawn");
+  const done = B.pack(d);
+  assert.deepEqual(done.map(x => [path.basename(x.book), x.pages]), [["two.txt", 2]]);
+  bs = B.findBooks(d);
+  assert.deepEqual(bs.map(b => [b.id, !!b.file]), [["one", true], ["two", true]], "the joined file replaces the page folder");
+  assert.deepEqual(B.pagesOf(bs[1]).map(p => [p.n, p.text.trim()]), [[1, "first"], [3, "third page text"]], "page numbers survive the join");
+  assert.equal(B.pack(d)[0].skipped, true, "an existing joined file is kept");
+});
