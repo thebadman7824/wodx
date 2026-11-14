@@ -2,7 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.115.0 (The Moro in the Malay world's mix (B5000))
+- 0.116.0 (The Moro in the Malay world's mix (B5000))
+- 0.115.0 (New worlds start at Balanced (B4860): a world that never had a level set moves to Balanced once at its first start, never the Live world, never over a level someone picked, and not while the Lone Chronicle is on (it waits for the switch to go off). The law's heat sends wodxLawStage when a culprit reaches Wanted or a manhunt (B4865), and the setting hint now says the watch come. Derangements gain two causes, loss (a death mourned) and binding (a soul bound), each with its own list (B4871))
 - 0.114.0 (The Tuareg in West Africa's and the Maghreb's mixes (B4950))
 - 0.113.0 (The Sami in Scandinavia's mix (B4900))
 - 0.112.0 (Book one's twist web (B4850-B4853): the shape of the Storyteller's third volume (twenty-four twists, six chains with their pay-off chapters, the pairs that cannot both stand as written, the quick order) as data, with rules for what can be revealed now. One twist a week of game time; a twist waits for its chapter; none after the choosing is played; a twist with two hearts asks for one. "Reveal anyway" covers a twist the company dug out by its own hand. The api gains pod.saga.twists and the hook wodxTwist)

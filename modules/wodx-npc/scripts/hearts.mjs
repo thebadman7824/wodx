@@ -232,6 +232,25 @@ function closeTo(victimId) {
   return edges.filter(e => e.to?.id === victimId && e.from !== victimId && H.isClose(e.kind, warmthOf(e.from, victimId)))
     .filter(e => { const k = `${e.from}`; if ( seen.has(k) ) return false; seen.add(k); return true; });
 }
+/** B4871: the grief roll is made for them: Willpower, a point of temporary Willpower lost on a failure, a derangement drawn on a botch. */
+async function grieve(who, kind) {
+  const great = H.GREAT.includes(kind);
+  const diff = H.griefDiff(great);
+  const dice = Math.max(1, Number(who.system?.advantages?.willpower?.permanent) || 3);
+  const roll = await new Roll(`${dice}d10`).evaluate();
+  const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
+  const hits = faces.filter(f => f >= diff).length, ones = faces.filter(f => f === 1).length;
+  const res = H.griefResult({successes: Math.max(0, hits - ones), botch: hits === 0 && ones > 0}, great);
+  let line = `Grief, Willpower ${dice} dice at ${diff}: ${faces.join(", ")}. `;
+  if ( res.held ) line += "They hold together.";
+  else {
+    const wp = Number(who.system?.advantages?.willpower?.temporary) || 0;
+    if ( wp > 0 ) await who.update({"system.advantages.willpower.temporary": wp - 1});
+    line += wp > 0 ? "A point of temporary Willpower is lost." : "There is no Willpower left to lose.";
+    if ( res.derange ) { const k = await game.modules.get("wodx-chronicle")?.api?.derangements?.gain?.(who, "loss", "from grief"); if ( k ) line += " The loss leaves a derangement."; }
+  }
+  return {line, roll};
+}
 async function tellLoved(victim, ev) {
   if ( !isActiveGM() || !on() || !victim?.id ) return [];
   const out = [];
@@ -240,8 +259,10 @@ async function tellLoved(victim, ev) {
     if ( !who ) continue;
     const checks = H.weakSpotChecks(lineOf(who), e.kind, ev, {name: victim.name});
     if ( !checks.length ) continue;
-    await ChatMessage.create({whisper: ownersOf(who), speaker: {alias: who.name}, flags: {[MOD]: {heartCard: true}},
-      content: card(`${victim.name} ${ev === "death" ? "is dead" : ev === "taken" ? "is taken" : "is hurt"}`, checks.map(c => c.text))});
+    const lines = checks.map(c => c.text), rolls = [];
+    if ( ev === "death" ) { const g = await grieve(who, e.kind); if ( g ) { lines.push(g.line); rolls.push(g.roll); } }
+    await ChatMessage.create({whisper: ownersOf(who), speaker: {alias: who.name}, flags: {[MOD]: {heartCard: true}}, rolls,
+      content: card(`${victim.name} ${ev === "death" ? "is dead" : ev === "taken" ? "is taken" : "is hurt"}`, lines)});
     out.push({to: who.id, checks});
   }
   return out;

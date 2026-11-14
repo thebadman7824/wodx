@@ -37,6 +37,21 @@ const HANDS_OFF = [
   {mod: "wodx-chronicle", key: "npcCap", to: 0, what: "no cap on NPC proposals"}
 ];
 export const SETTINGS = {handsOn: [], balanced: BALANCED, handsOff: HANDS_OFF};
+/**
+ * B4860: the level a world starts at. A world that has never had a level set moves to Balanced once, at its first
+ * start, so NPC turns, routines, fights and markets run on their own out of the box (Ben's pick a1, 14 November 2026).
+ * The Live world is never moved, and a world where someone already picked a level or the Lone Chronicle is on is left
+ * alone.
+ */
+export const START_LEVEL = "balanced";
+export const NEVER_SEED = ["rothenstein-live"];
+export function seedPlan({worldId = "", seeded = false, level = "handsOn", base = {}, solo = false} = {}) {
+  if ( seeded || solo ) return null;
+  if ( NEVER_SEED.includes(String(worldId)) ) return null;
+  if ( level !== "handsOn" || base?.at ) return null;
+  return START_LEVEL;
+}
+
 /** Every setting any level touches, once. */
 export const TOUCHED = [...new Map(HANDS_OFF.map(p => [`${p.mod}.${p.key}`, p])).values()];
 
