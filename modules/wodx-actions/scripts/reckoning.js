@@ -8,6 +8,7 @@ import * as K from "./reckoning-rules.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
+import * as EF from "./effects.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -136,7 +137,14 @@ export function build(ctx) {
             if (e.conviction > i.conviction) return ctx.notify(`${e.name} needs ${e.conviction} Conviction (${i.conviction} left).`);
             let conv = i.conviction - e.conviction - risk;
             await setConviction(actor, conv);
-            if (!e.roll) return post(actor, `${actor.name}: ${esc(e.name)}`, `<div class="vta-note">${e.conviction ? `${e.conviction} Conviction. ` : ""}${esc(e.e)}</div><div class="wodx-quiet">Hunter: The Reckoning p. ${e.p}</div>`);
+            // The edge's keywords on the effects card (the HtR list), from its successes (one for an edge with no roll)
+            const plan = got => {
+                if (!(got > 0) || !EF.isOn()) return { html: "", items: [] };
+                const pp = EF.powerPlan(actor, { set: "htr", id: `${e.path}-${e.id}`, name: e.name, line: "htr", successes: got, source: `Hunter: The Reckoning p. ${e.p}` });
+                return { html: pp.html, items: pp.items.filter(x => x.route !== "off" && x.route !== "st") };
+            };
+            const fxOf = items => items.length ? { kind: "effects", caster: actor.name, items } : undefined;
+            if (!e.roll) { const pl = plan(1); return post(actor, `${actor.name}: ${esc(e.name)}`, `<div class="vta-note">${e.conviction ? `${e.conviction} Conviction. ` : ""}${esc(e.e)}</div>${pl.html}<div class="wodx-quiet">Hunter: The Reckoning p. ${e.p}</div>`, [], fxOf(pl.items)); }
             const [a, v] = e.roll;
             const stat = k => (ATTR.includes(k) ? attr(actor, k) : K.VIRTUES.includes(k) ? i.virtues[k] : (findAbility(actor, k)?.value ?? 0));
             const dice = (a ? stat(a) : 0) + stat(v) + risk + n(fd.bonus);
@@ -149,8 +157,9 @@ export function build(ctx) {
                 await setConviction(actor, R.after);
                 body += `<div class="vta-res ${ok ? "good" : "bad"}">Risked ${risk}: Conviction ${conv + risk} → ${R.after}${R.lostAll ? " (a botch: all of it lost)" : ""}. A success counts only if the edge achieves something (Hunter: The Reckoning p. 137).</div>`;
             }
-            body += `<div class="vta-note">${esc(e.e)}</div><div class="wodx-quiet">Hunter: The Reckoning p. ${e.p}</div>`;
-            return post(actor, `${actor.name}: ${esc(e.name)}`, body, [r.roll]);
+            const pl = plan(r.botch || (fd.resisted && !fd.won) ? 0 : r.successes);
+            body += `<div class="vta-note">${esc(e.e)}</div>${pl.html}<div class="wodx-quiet">Hunter: The Reckoning p. ${e.p}</div>`;
+            return post(actor, `${actor.name}: ${esc(e.name)}`, body, [r.roll], fxOf(pl.items));
         }, { width: 560, render: root => { describe(root); root.querySelector("[name=edge]")?.addEventListener("change", () => describe(root));
             aim(root, { actor, lib: "edge", power: r => K.edgeFor(r.querySelector("[name=edge]")?.value), onPick: a => { tgt = a; describe(root); } }); } });
     }
