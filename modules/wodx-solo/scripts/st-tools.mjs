@@ -9,6 +9,7 @@
  *   The Storyteller's cards   every card, roll and whisper meant for the Storyteller alone, sent on as it arrives,
  *                             and its buttons pressed by the seat when the player picks one
  *   Give my character an item any item in the world or an Item compendium, made on the character's sheet
+ *   Add experience            points for the character through WoDX Creation's award (B4806)
  *   Check the systems         WoDX parts running, the switch's settings, the approval queue, what was left waiting
  *                             and errors seen on the seat
  *   What is hidden here       hidden tokens on the player's scene
@@ -135,6 +136,27 @@ async function give({userId, uuid}) {
     return made ?? null;
   } catch (e) {
     reply(userId, "st.refused", {why: `${actor.name} cannot take ${src.name}: ${e.message}`});
+    return null;
+  }
+}
+
+/** Experience for the player's character, through WoDX Creation's own award, so the sheet and its log stay right (B4806). */
+async function xp({userId, amount, note}) {
+  if ( !usable(userId) ) return reply(userId, "st.refused", {why: "the tools are off"});
+  const user = game.users.get(userId);
+  const actor = characterOf(user);
+  if ( !actor ) return reply(userId, "st.refused", {why: "you have no character to give it to"});
+  const n = R.xpAmount(amount);
+  if ( !n ) return reply(userId, "st.refused", {why: `give a whole number from 1 to ${R.XP_MAX}`});
+  const award = game.modules.get("wodx-creation")?.api?.award;
+  if ( !award ) return reply(userId, "st.refused", {why: "experience needs WoDX Creation"});
+  try {
+    await award([actor], n, R.xpNote(note));
+    await H.log({kind: "note", source: MOD, title: `Experience: +${n}`, note: `to ${actor.name}, asked by ${user.name}`});
+    reply(userId, "st.xp", {amount: n, actor: actor.name});
+    return n;
+  } catch (e) {
+    reply(userId, "st.refused", {why: e.message});
     return null;
   }
 }
@@ -270,6 +292,7 @@ const CLIENT = {
   "st.refused": p => ui.notifications.warn(`Storyteller tools: ${p.why}.`),
   "st.pressed": p => ui.notifications.info(p.done ? `The seat pressed ${p.label}.` : `${p.label} could not be pressed on the seat.`),
   "st.given": p => ui.notifications.info(`${p.name} is now on ${p.actor}'s sheet.`),
+  "st.xp": p => ui.notifications.info(`${p.actor} has ${p.amount} more experience.`),
   "st.items": p => StGive.show(p.rows ?? [], p.query ?? null),
   "st.eyes": p => {
     const incoming = p.cards ?? [];
@@ -284,6 +307,19 @@ const CLIENT = {
   "st.hidden": p => table(p.scene ? `Hidden on ${p.scene}` : "What is hidden here", ["Who", "Kind", "Stance", "Square (across, down)"],
     (p.rows ?? []).map(r => [esc(r.name), esc(r.kind), esc(r.disposition), esc(r.square)]))
 };
+
+async function xpDialog() {
+  const who = characterOf(game.user);
+  if ( !who ) return ui.notifications.warn("Storyteller tools: you have no character to give it to.");
+  const got = await DialogV2.prompt({classes: ["wodx", "wodx-dialog", "wsolo-dialog"], window: {title: "Add experience"}, rejectClose: false,
+    content: `<p>For <b>${esc(who.name)}</b>. It goes on the sheet as an award, ready to spend.</p>
+      <div class="form-group"><label>Points</label><input type="number" name="amount" value="5" min="1" max="${R.XP_MAX}" step="1" autofocus></div>
+      <div class="form-group"><label>Reason</label><input type="text" name="note" placeholder="Given with the Storyteller tools" maxlength="100"></div>`,
+    ok: {label: "Add", callback: (ev, b) => ({amount: Number(b.form.elements.amount.value), note: b.form.elements.note.value})}});
+  if ( !got ) return null;
+  if ( !R.xpAmount(got.amount) ) return ui.notifications.warn(`Give a whole number from 1 to ${R.XP_MAX}.`);
+  return ask("ask.st.xp", got);
+}
 
 function refreshPanel() { if ( foundry.applications.instances?.get?.("wodx-solo-panel")?.rendered ) SoloPanel.open(); }
 
@@ -311,6 +347,7 @@ function openTool(id) {
   if ( !mine() ) return ui.notifications.warn("Storyteller tools are off.");
   if ( id === "eyes" ) { StEyes.open(); return ask("ask.st.eyes"); }
   if ( id === "give" ) return StGive.open();
+  if ( id === "xp" ) return xpDialog();
   if ( id === "check" ) return ask("ask.st.check");
   if ( id === "hidden" ) return ask("ask.st.hidden");
 }
@@ -328,7 +365,7 @@ export function registerStSettings() {
 
 export function installStTools(helpers) {
   H = helpers;
-  addAsks({"ask.st.toggle": toggle, "ask.st.eyes": eyes, "ask.st.press": press, "ask.st.items": items, "ask.st.give": give,
+  addAsks({"ask.st.toggle": toggle, "ask.st.eyes": eyes, "ask.st.press": press, "ask.st.items": items, "ask.st.give": give, "ask.st.xp": xp,
     "ask.st.check": check, "ask.st.hidden": hidden}, CLIENT);
   setStUi({toggleHtml, toolsHtml, open: openTool, toggle: onToggle});
   // A world setting saved for the first time is created, not updated, so both hooks count
@@ -347,5 +384,5 @@ export function installStTools(helpers) {
   setTimeout(() => guard("someone else is playing").catch(() => {}), 3500);
 }
 
-export const stApi = {state, usable, report, mayUse: R.mayUse, open: openTool, toggle, eyes, press, items, give, check, hidden, guard,
+export const stApi = {state, usable, report, mayUse: R.mayUse, open: openTool, toggle, eyes, press, items, give, xp, check, hidden, guard,
   cards: () => [...seenCards]};

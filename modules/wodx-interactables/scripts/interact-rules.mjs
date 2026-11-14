@@ -258,8 +258,36 @@ export const MOUNTS = {
   boat: {label: "Rowing boat", verb: "Take the oars", reins: "at the oars", skill: "athletics", attr: "stamina", seats: 4, noise: "quiet"},
   car: {label: "Motor car", verb: "Drive it", reins: "at the wheel", skill: "drive", attr: "dexterity", seats: 5, from: 1900, noise: "loud"},
   motorbike: {label: "Motorcycle", verb: "Ride it", reins: "on it", skill: "drive", attr: "dexterity", seats: 2, from: 1910, thrown: true, noise: "loud"},
-  motorboat: {label: "Motorboat", verb: "Take the helm", reins: "at the helm", skill: "drive", attr: "dexterity", seats: 6, from: 1910, noise: "loud"}
+  motorboat: {label: "Motorboat", verb: "Take the helm", reins: "at the helm", skill: "drive", attr: "dexterity", seats: 6, from: 1910, noise: "loud"},
+  // B4790: lorries, armoured vehicles and aircraft (Mage 20th pp. 459-463). min: the dots the book asks to drive or fly
+  // it at all (lorries 3, military 3, aircraft Pilot); below it a lorry is a roll, the rest cannot be worked at all.
+  truck: {label: "Lorry or truck", verb: "Drive it", reins: "at the wheel", skill: "drive", attr: "dexterity", seats: 3, from: 1900, min: 3, noise: "loud"},
+  armoured: {label: "Armoured car or carrier", verb: "Drive it", reins: "at the wheel", skill: "drive", attr: "dexterity", seats: 8, from: 1914, min: 3, military: true, noise: "loud"},
+  tank: {label: "Tank", verb: "Drive it", reins: "at the controls", skill: "drive", attr: "dexterity", seats: 4, from: 1916, min: 3, military: true, noise: "loud"},
+  balloon: {label: "Balloon or airship", verb: "Take the helm", reins: "at the helm", skill: "pilot", attr: "dexterity", seats: 4, from: 1783, min: 1, air: true, noise: "quiet"},
+  plane: {label: "Propeller aeroplane", verb: "Fly it", reins: "at the controls", skill: "pilot", attr: "dexterity", seats: 4, from: 1909, min: 1, air: true, noise: "loud"},
+  helicopter: {label: "Helicopter", verb: "Fly it", reins: "at the controls", skill: "pilot", attr: "dexterity", seats: 5, from: 1945, min: 1, air: true, noise: "loud"},
+  jet: {label: "Jet aircraft", verb: "Fly it", reins: "at the controls", skill: "pilot", attr: "dexterity", seats: 2, from: 1944, min: 1, air: true, noise: "loud"}
 };
+/** Dots in the Ability needed to work a kind without a roll; aircraft and military vehicles cannot be worked below it. */
+export const minSkill = kind => MOUNTS[kind]?.min ?? 1;
+export const cannotWithout = kind => !!(MOUNTS[kind]?.air || MOUNTS[kind]?.military);
+
+/**
+ * B4791: the damage a vehicle has taken, kept on its tile as flags.wodx-interactables.hull = {lost, burning}. lost:
+ * Structure lost; structure: the kind's Structure in the year (chase-rules bodyOf). Shown on the map by the tile's
+ * tint: scuffed, battered past half, wrecked at its Structure, and black when the fuel went up.
+ * -> {state: "sound"|"damaged"|"battered"|"wrecked", lost, structure, tint, label}
+ */
+export const HULL_TINTS = {sound: null, damaged: "#c9b8a0", battered: "#8a6a58", wrecked: "#4a4440", burnt: "#242020"};
+export function hullState(hull = {}, structure = 0) {
+  const lost = Math.max(0, Math.round(Number(hull?.lost) || 0)), max = Math.max(0, Math.round(Number(structure) || 0));
+  if ( !max ) return {state: "sound", lost: 0, structure: 0, tint: null, label: ""};
+  const state = lost >= max ? "wrecked" : lost * 2 >= max ? "battered" : lost > 0 ? "damaged" : "sound";
+  const burnt = state === "wrecked" && !!hull?.burning;
+  const label = burnt ? "burnt out" : state === "wrecked" ? "wrecked" : state === "sound" ? "" : `${state} (${lost} of ${max} Structure lost)`;
+  return {state, lost: Math.min(lost, max), structure: max, tint: HULL_TINTS[burnt ? "burnt" : state], label, burning: !!hull?.burning};
+}
 export const FLAT_OUT = 3;
 
 /**
@@ -369,7 +397,8 @@ export function datedParts(f = {}, {wall = false} = {}) {
  */
 export const SWAPS = {
   light: {switch: {early: "lamp"}, lamp: {late: "switch"}},
-  mount: {car: {early: "carriage"}, motorbike: {early: "horse"}, motorboat: {early: "boat"}, carriage: {late: "car"}},
+  mount: {car: {early: "carriage"}, motorbike: {early: "horse"}, motorboat: {early: "boat"}, carriage: {late: "car"},
+    truck: {early: "cart"}, armoured: {early: "car"}, tank: {early: "armoured"}, plane: {early: "balloon"}, helicopter: {early: "plane"}, jet: {early: "plane"}},
   watch: {radio: {early: "phone"}, phone: {early: "bell"}}
 };
 const FAMILY = {
@@ -686,6 +715,7 @@ export function describeMount(f = {}) {
   return {
     mount: true, watch: false, sacred: false, hazard: false, hide: false, light: false, clue: false, trap: false, container: false, door: false, secret: false, ds: "open",
     kind, seats, driver: person(f.driver), riders: (Array.isArray(f.riders) ? f.riders : []).map(person).filter(Boolean).slice(0, 40),
+    hull: {lost: Math.max(0, Math.round(Number(f.hull?.lost) || 0)), burning: !!f.hull?.burning, structure: Math.max(0, Math.round(Number(f.hull?.structure) || 0))},
     title: String(f.title ?? "").trim().slice(0, 80), electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
   };
 }
@@ -776,8 +806,8 @@ export function nameOf(o, era = {}) {
     return `${o.title || C.label}${C.jump ? ` (${o.gap} yard${o.gap === 1 ? "" : "s"} across)` : ` (${o.height} feet)`}`;
   }
   if ( o.mount ) {
-    const M = MOUNTS[o.kind], n = aboard(o).length;
-    return `${o.title || M.label}${o.driver ? `, ${o.driver.n} ${M.reins}` : ""}${n > (o.driver ? 1 : 0) ? `, ${n} aboard` : ""}`;
+    const M = MOUNTS[o.kind], n = aboard(o).length, h = hullState(o.hull, o.hull?.structure);
+    return `${o.title || M.label}${h.label ? `, ${h.label}` : ""}${o.driver ? `, ${o.driver.n} ${M.reins}` : ""}${n > (o.driver ? 1 : 0) ? `, ${n} aboard` : ""}`;
   }
   if ( o.watch ) return o.title || WATCHES[o.kind].label;
   if ( o.sacred ) {
@@ -1212,12 +1242,18 @@ function targetOptions(o, ch) {
 function mountOptions(o, ch) {
   const M = MOUNTS[o.kind], me = ch.actorId ?? "", year = Number(ch.year) || 0;
   if ( M.from && !ch.kept && year && year < M.from ) return [{id: "eraNote", label: `No ${M.label.toLowerCase()} yet`, roll: null, disabled: true, note: `Not before about ${M.from}.`}];
-  const sk = bestOf(ch.abilities ?? {}, [M.skill]), trained = sk.value > 0;
+  const sk = bestOf(ch.abilities ?? {}, [M.skill]), trained = sk.value >= minSkill(o.kind);
+  const wrecked = hullState(o.hull, o.hull?.structure).state === "wrecked";
   const attrDots = Number(ch[M.attr]) || 0, attrLabel = cap(M.attr), skillLabel = cap(M.skill);
   const pool = (base, extra = 0) => ({attr: M.attr, attrLabel, ability: M.skill, abilityLabel: skillLabel, dice: attrDots + sk.value,
     diff: Math.min(10, base + extra), need: null, skill: !!plus});
   const plus = M.skill === "athletics" ? "" : ", +1 difficulty";
-  const untrained = trained ? "" : ` No ${skillLabel}: ${attrLabel} alone${plus}.`;
+  const untrained = trained ? "" : sk.value ? ` ${skillLabel} ${sk.value}, short of the ${minSkill(o.kind)} it takes: hard to hold.` : ` No ${skillLabel}: ${attrLabel} alone${plus}.`;
+  if ( wrecked ) {
+    const off = o.driver?.a === me || o.riders.some(r => r.a === me);
+    return [{id: "wreckNote", label: "Wrecked", roll: null, disabled: true, note: "Too broken to go anywhere: the Storyteller says when it is mended."},
+      ...(off ? [{id: "dismount", label: "Get out", roll: null, seconds: TURN, noise: {success: "quiet"}}] : [])];
+  }
   if ( o.driver?.a === me ) {
     return [
       {id: "control", label: "Keep control", roll: pool(6), seconds: TURN, noise: {success: M.noise, fail: M.noise, botch: "loud"},
@@ -1229,10 +1265,13 @@ function mountOptions(o, ch) {
   }
   if ( o.riders.some(r => r.a === me) ) return [{id: "dismount", label: "Get off", roll: null, seconds: TURN, noise: {success: "quiet"}}];
   const out = [], n = aboard(o).length, full = n >= o.seats;
-  if ( !o.driver && !full ) {
+  if ( !o.driver && !full && !trained && cannotWithout(o.kind) ) {
+    out.push({id: "skillNote", label: `${M.verb}: needs ${skillLabel} ${minSkill(o.kind)}`, roll: null, disabled: true,
+      note: M.air ? `Nobody flies one without ${skillLabel} (Mage 20th p. 462).` : `A military vehicle needs ${skillLabel} ${minSkill(o.kind)} to work at all (Mage 20th p. 461).`});
+  } else if ( !o.driver && !full ) {
     out.push(trained ? {id: "mount", label: M.verb, roll: null, seconds: TURN, noise: {success: M.noise}, note: `${skillLabel} ${sk.value}: no roll at an ordinary pace. Whoever is at the reins moves it by moving their token.`}
       : {id: "mount", label: M.verb, roll: pool(6), seconds: TURN, noise: {success: M.noise, fail: "quiet", botch: "loud"},
-        note: `No ${skillLabel}: ${attrLabel} alone${plus} to get it going. A failure: it won't go. A botch: ${M.thrown ? "thrown" : "a scrape or a stall"}.`});
+        note: `${sk.value ? `${skillLabel} ${sk.value}, short of the ${minSkill(o.kind)} it takes (Mage 20th p. 459): a roll` : `No ${skillLabel}: ${attrLabel} alone${plus}`} to get it going. A failure: it won't go. A botch: ${M.thrown ? "thrown" : "a scrape or a stall"}.`});
   }
   // A seat is kept for the one at the reins while nobody holds them
   if ( n + (o.driver ? 0 : 1) < o.seats ) out.push({id: "board", label: "Get on as a passenger", roll: null, seconds: TURN, noise: {success: "silent"},
@@ -1703,7 +1742,10 @@ export function cleanSacred(s = {}) {
 /** Clean a tile's mount or vehicle settings from the config form. */
 export function cleanMount(s = {}) {
   const seats = s.seats === "" || s.seats === null || s.seats === undefined ? "" : Math.max(1, Math.min(40, Math.round(Number(s.seats) || 1)));
-  return {mount: !!s.mount, mountKind: MOUNTS[s.mountKind] ? s.mountKind : "horse", seats};
+  const out = {mount: !!s.mount, mountKind: MOUNTS[s.mountKind] ? s.mountKind : "horse", seats};
+  // B4791: mended in the config, or set by hand (Structure lost; 0 is sound)
+  if ( s.hullLost !== undefined && s.hullLost !== "" ) out.hullLost = Math.max(0, Math.min(99, Math.round(Number(s.hullLost) || 0)));
+  return out;
 }
 
 /** Clean a tile's climb or gap settings from the config form. */

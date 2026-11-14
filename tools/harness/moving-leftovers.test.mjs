@@ -26,7 +26,7 @@ test("every mount and vehicle on a tile has a pace in a fight, the same as its p
     assert.ok(r, `${kind} has a way to run`);
     assert.ok(r.yards > 0, `${kind} moves on a road or the water`);
     assert.equal(r.yards, C.speedOf({way: r.way}, r.ground, 1990).yards, `${kind}: chase and fight agree`);
-    assert.ok(["ride", "drive", "athletics"].includes(r.skill), `${kind}: ${r.skill}`);
+    assert.ok(["ride", "drive", "athletics", "pilot"].includes(r.skill), `${kind}: ${r.skill}`);
   }
   assert.equal(C.rideInFight("dragon", 1990), null);
 });

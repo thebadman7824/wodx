@@ -296,7 +296,7 @@ export function rideMove(ride, {skill = 0} = {}) {
   const full = Math.max(0, Math.round(Number(ride.yards) || 0));
   const trained = (Number(skill) || 0) > 0;
   return {limit: trained ? full : Math.floor(full / 2), carried: false,
-    note: trained ? `${ride.label ?? "the mount"}'s pace` : `${ride.label ?? "the mount"} at half pace: no ${ride.skill === "drive" ? "Drive" : ride.skill === "athletics" ? "Athletics" : "Ride"}`};
+    note: trained ? `${ride.label ?? "the mount"}'s pace` : `${ride.label ?? "the mount"} at half pace: no ${ride.skill === "drive" ? "Drive" : ride.skill === "pilot" ? "Pilot" : ride.skill === "athletics" ? "Athletics" : "Ride"}`};
 }
 
 /**
