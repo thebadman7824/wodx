@@ -22,7 +22,8 @@ export function prayResult({successes = 0, botch = false} = {}, {temporary = 0, 
   if ( prayedNight === night ) return {ok: false, willpower: temporary, line: "They have prayed already tonight: the comfort does not come twice."};
   if ( botch ) return {ok: true, willpower: temporary, doubt: true, line: "The words ring hollow: doubt, and nothing comes back tonight."};
   if ( successes < 1 ) return {ok: true, willpower: temporary, line: "Quiet words, and no answer tonight."};
-  const after = Math.min(Number(permanent) || 0, (Number(temporary) || 0) + 1);
+  // never takes Willpower away, even from a sheet whose permanent rating reads below its points
+  const after = Math.max(Number(temporary) || 0, Math.min(Number(permanent) || 0, (Number(temporary) || 0) + 1));
   return {ok: true, willpower: after, line: after > temporary ? "A little calm comes back: 1 Willpower." : "A little calm comes back, though Willpower is already full."};
 }
 
