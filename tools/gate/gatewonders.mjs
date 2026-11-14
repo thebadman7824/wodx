@@ -38,7 +38,11 @@ export async function run() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   if ( game.world.id !== "rothenstein-wodx" ) { ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"}); return save(R); }
+  // WoDX Library sets api.wonderUse and api.wonders late in its ready hook: wait for both, so a gate started right
+  // after the world loads does not read them before they exist (lane 2, 2026-11-14: lines [] and WU undefined)
+  for ( let i = 0; i < 120 && !(game.modules.get(LIB)?.api?.wonders && game.modules.get(LIB)?.api?.wonderUse && game.modules.get(ST)?.api?.wonders); i++ ) await new Promise(r => setTimeout(r, 250));
   const W = game.modules.get(LIB)?.api?.wonders, WU = game.modules.get(LIB)?.api?.wonderUse, S = game.modules.get(ST)?.api?.wonders;
+  if ( !W || !WU || !S ) { ok("0. ready", false, {error: "WoDX Library or Storyteller did not finish loading in 30 seconds", wonders: !!W, wonderUse: !!WU, storyteller: !!S}); return save(R); }
   const SETS = ["craftKindred", "craftChangeling", "craftMummy", "craftDemon", "craftHunter", "craftKueiJin"];
   const keep = Object.fromEntries(SETS.map(k => { try { return [k, game.settings.get(LIB, k)]; } catch (e) { return [k, undefined]; } }));
   const msgsBefore = new Set(game.messages.map(m => m.id));
