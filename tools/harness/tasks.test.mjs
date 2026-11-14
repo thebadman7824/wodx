@@ -98,3 +98,37 @@ test("tasks: wiring, the cap on rolls, Undo, and the window's search box", () =>
   const v = JSON.parse(src("modules/wodx-storyteller/module.json")).version.split(".").map(Number);
   assert.ok(v[0] > 0 || v[1] >= 17, "Storyteller 0.17.0 or later");
 });
+
+test("tasks: maxRolls ruins work left short of its goal (B3689, V20 Enchant Talisman)", () => {
+  let t = R.normTask({kind: "wonder", goal: 20, maxRolls: 4, started: 0});
+  assert.equal(t.maxRolls, 4);
+  for ( let i = 0; i < 3; i++ ) t = R.stepTask(t, {successes: 4, botch: false}, t.next);
+  assert.equal(t.status, "open");
+  t = R.stepTask(t, {successes: 4, botch: false}, t.next);
+  assert.equal(t.status, "ruined");
+  assert.equal(t.ruinedBy, "rolls");
+  assert.match(R.describe(t), /16 of 20 after the 4 rolls/);
+  let u = R.normTask({kind: "wonder", goal: 8, maxRolls: 2, started: 0});
+  u = R.stepTask(u, {successes: 4, botch: false}, u.next);
+  u = R.stepTask(u, {successes: 4, botch: false}, u.next);
+  assert.equal(u.status, "done");
+  const b = R.stepTask(R.normTask({kind: "wonder", started: 0}), {successes: 0, botch: true}, 0);
+  assert.equal(b.ruinedBy, "botch");
+  assert.equal(R.normTask({}).maxRolls, 0);
+});
+
+test("tasks: perRoll costs are paid each roll, or the work waits (B3689)", () => {
+  const per = [{path: "system.advantages.bloodpool.temporary", amount: 1, label: "a blood point"}, {path: "nope", amount: 1}];
+  const t = R.normTask({perRoll: per});
+  assert.equal(t.perRoll.length, 1);
+  const p = R.payRoll(t.perRoll, {"system.advantages.bloodpool.temporary": 3});
+  assert.deepEqual(p, {ok: true, updates: {"system.advantages.bloodpool.temporary": 2}, adds: 0, why: ""});
+  const q = R.payRoll(t.perRoll, {"system.advantages.bloodpool.temporary": 0});
+  assert.equal(q.ok, false);
+  assert.match(q.why, /a blood point/);
+  const w = R.payRoll([{path: "system.willpower.temporary", amount: 1, adds: 1, floor: 0}], {"system.willpower.temporary": 1});
+  assert.equal(w.adds, 1);
+  const src2 = src("modules/wodx-storyteller/scripts/tasks.mjs");
+  assert.match(src2, /R\.payRoll\(/);
+  assert.match(src2, /f\.paid/);
+});
