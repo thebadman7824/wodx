@@ -115,6 +115,7 @@ def _place(room, sp, pal, R):
     if not entry: return []
     if W > room.iw + 1e-6 and W > room.ih + 1e-6: return []
     rules = {"wall": ["wall"], "corner": ["corner", "wall"], "centre": ["centre"]}[sp["place"]]
+    room.placing = entry["path"]
     sizes = [1, .75] if W * H <= 2 else [1]                     # a small piece may shrink to fit between walkways
     cands, k = [], 1
     for k in sizes:
@@ -175,7 +176,9 @@ def _reskin(room, pal, R):
         opts = list(pal.sets.get(piece) or [])
         R.shuffle(opts)
         best = None
+        under = room.under_window((it["x"], it["y"], it["w"], it["h"]))
         for e in opts:
+            if under and C.STORE_PIECE.search(e["path"]): continue       # a basket under a window is not redrawn as a crate
             aw, ah = e["cells"]
             fw, fh = (ah, aw) if r else (aw, ah)
             if aw != ah and abs(w - h) > 1e-6 and (fw > fh) != (w > h): continue
@@ -218,6 +221,28 @@ def _things_on(room, pal, R, added):
     return out
 
 
+def _laid_tables(room, pal, R, added, each=2):
+    """In a taproom or a kitchen every table, counter and bar has at least `each` things on it: mugs, plates,
+    bread, a jug (Ben's reference maps)."""
+    out = []
+    hosts = [it for it in room.items if (it.get("piece") or K.piece_of(it["asset"])) in ("table", "counter") or C.BAR.search(it["asset"])]
+    for b in hosts:
+        have = sum(1 for o in added + out if o.get("layer") == 150 and b["x"] <= o["x"] <= b["x"] + b["w"] and b["y"] <= o["y"] <= b["y"] + b["h"])
+        for _ in range(max(0, each - have)):
+            e = None
+            for _try in range(10):
+                e = pal.pick("tableware", R) or pal.pick("clutter", R)
+                if e and TABLEWARE.search(e["name"]) and not ((room.ctx["wealth"] == "poor" or room.ctx["band"] == "medieval")
+                                                             and LETTERED.search(e["name"]) and room.ctx["wealth"] != "noble"): break
+                e = None
+            if not e: break
+            sz = min(.45, b["w"] * .45, b["h"] * .45)
+            out.append({"asset": e["path"], "x": b["x"] + R.uniform(.08, max(.08, b["w"] - sz - .08)),
+                        "y": b["y"] + R.uniform(.08, max(.08, b["h"] - sz - .08)), "w": sz, "h": sz, "rot": 0,
+                        "scale": round(sz / max(e["cells"]), 3), "layer": 150, "spin": R.uniform(0, 6.28), "piece": "tableware"})
+    return out
+
+
 TABLEWARE = PAL.TABLEWARE
 FITS_ON = {"table": TABLEWARE, "counter": TABLEWARE, "desk": re.compile(r"Book|Paper|Quill|Ink|Pen|Candle|Scroll|Letter|Map", re.I),
            "bed": re.compile(r"Blanket|Cloth|Pillow|Fur|Pelt", re.I), "shelf": TABLEWARE, "cupboard": TABLEWARE,
@@ -247,6 +272,7 @@ def _along_walls(room, pal, R, dense):
         sc = .75 if max(aw, ah) <= 1 and room.iw * room.ih < 40 else 1.0
         fw, fh = aw * sc, ah * sc
         kw = order[k % len(order)] in ("chest", "store")       # nothing stored pushed up under a window
+        room.placing = e["path"]                               # stored goods score best touching other stored goods
         spots = room.candidates(fw, fh, "wall", keep_windows=kw)
         if not spots and STACKED.search(room.name):           # a shed's stacks go on across the floor, each by another
             spots = [c for c in room.candidates(fw, fh, "free", keep_windows=kw) if _beside_any(room, c[1:5])]
@@ -344,6 +370,44 @@ def _straw(room, R):
     return out
 
 
+FIRESIDE = re.compile(r"Fireplace|Hearth|Cooking_Pit|Fire_?Pit|Stove|Oven", re.I)
+
+def _fireside(room, pal, R):
+    """A rug on the floor in front of the room's fire and a seat on it facing the fire (Ben's reference maps: the
+    fire anchors a living room, a taproom or a hall). Only where nothing stands there already."""
+    if room.kind not in ("hall", "tavern"): return []
+    fires = [i for i in room.items if i.get("layer", 100) == 100 and FIRESIDE.search(i["asset"])]
+    out = []
+    for f in fires[:1]:
+        t = room.touching(f["x"], f["y"], f["w"], f["h"], .1)
+        side = next((d for d in "NSWE" if t[d]), None)
+        if not side: continue
+        x, y, w, h = f["x"], f["y"], f["w"], f["h"]
+        rw = max(w, h) if side in "NS" else 1.0
+        rh = 1.0 if side in "NS" else max(w, h)
+        if side == "N": rug = (x + w / 2 - rw / 2, y + h, rw, rh)
+        elif side == "S": rug = (x + w / 2 - rw / 2, y - rh, rw, rh)
+        elif side == "W": rug = (x + w, y + h / 2 - rh / 2, rw, rh)
+        else: rug = (x - rw, y + h / 2 - rh / 2, rw, rh)
+        if not room.fits(rug, open_floor=False): continue
+        e = pal.pick("rug", R)
+        it = _drawn(e, rug, "rug", 50) if e else None
+        if it: out.append(it)
+        # the seat stands on the far edge of the rug, facing the fire
+        s = .8
+        cx, cy = rug[0] + rug[2] / 2, rug[1] + rug[3] / 2
+        seat = {"N": (cx - s / 2, rug[1] + rug[3] - s / 2), "S": (cx - s / 2, rug[1] - s / 2),
+                "W": (rug[0] + rug[2] - s / 2, cy - s / 2), "E": (rug[0] - s / 2, cy - s / 2)}[side]
+        r = (seat[0], seat[1], s, s)
+        e = pal.pick("seat", R)
+        if e and room.fits(r) and not C.fire_clash(room.items, e["path"], r):
+            it = _drawn(e, r, "seat", 100)
+            if it:
+                it["angle"] = it["spin"] = {"N": math.pi, "S": 0.0, "W": math.pi / 2, "E": -math.pi / 2}[side]   # its back to the room
+                room.items.append(it)
+    return out
+
+
 def fill_room(room):
     ctx = room.ctx
     pal = ctx["palette"]
@@ -366,7 +430,9 @@ def fill_room(room):
                                                                # walkways (a barn keeps its threshing floor open)
             room.blocked = [b for b in room.blocked if b[4] != "open floor"]
         limit = FULL.get(kind, FULL_DEFAULT) * room.iw * room.ih
-        options = SP.fitting(kind, ctx["role"], ctx["trade"], ctx["band"], ctx["prefers"])
+        # a kitchen always tries for a work table in the middle and a shelf of pots and plates (Ben's reference maps)
+        prefers = ctx["prefers"] + (["kitchen-table", "shelf-store"] if kind == "kitchen" else [])
+        options = SP.fitting(kind, ctx["role"], ctx["trade"], ctx["band"], prefers)
         used, added = {}, []
         def dense():                                           # lived in, however poor: enough pieces for the floor
             if kind == "passage": return True                  # a gateway or stair hall stays open
@@ -391,6 +457,8 @@ def fill_room(room):
                     placed_any = True
             if done: break
             if not placed_any: room.full = True; break
+        added += _fireside(room, pal, R)
+        if kind in ("tavern", "kitchen"): added += _laid_tables(room, pal, R, added)
         if not dense(): added += _things_on(room, pal, R, added)
         if not dense(): _along_walls(room, pal, R, dense)
         mine = room.items[n0:]

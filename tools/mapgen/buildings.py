@@ -112,8 +112,8 @@ TYPES = {
                      ("window", 3.5, 0, "h"), ("doorway", 7, 2, "v"), ("door", 7, 6, "v"), ("door", 10, 3, "v")],
         "partitions": [((7, 0), (7, 8)), ((7, 4), (10, 4))],
         "furnish": {
-            "Taproom": [("Bar_Wood_Ashen_A2_3x1.webp", "wall:N", 1), (KEG, "beside:bar", 2, .8), (ROUND, "corner:W", 2),
-                        (STOOL, "beside:table", 3, .8), (BENCH, "wall:S", 1)],
+            "Taproom": [("Bar_Wood_Ashen_A2_3x1.webp", "wall:N", 1), (KEG, "beside:bar", 2, .8), (STOOL, "front:bar", 3, .8),
+                        (ROUND, "corner:W", 2), (STOOL, "beside:table", 3, .8), (BENCH, "wall:S", 1)],
             "Kitchen": [(OVEN, "corner:NE", 1, .8), (WOOD, "hearth", 1, .7), (BARREL, "wall", 1, .7)],
             "Cellar store": [(KEG, "wall", 3, .8), (BARREL, "wall", 2, .8), (CHEST, "corner", 1, .9)],
         },

@@ -2725,8 +2725,8 @@
    "id": "tavern-1-cellar-store-5",
    "label": "Chest (Cellar store)",
    "rect": [
-    78.489,
-    64.014,
+    81.732,
+    64.151,
     0.9,
     0.9
    ],
@@ -2737,7 +2737,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 60.0
+   "rotation": 150.0
   },
   {
    "id": "chapel-1-chancel-3",
@@ -3453,13 +3453,13 @@
    "rotation": 330.0
   },
   {
-   "id": "villa-1-kitchen-f1",
+   "id": "villa-1-kitchen-f2",
    "label": "Cupboard (Kitchen)",
    "rect": [
-    59.425,
-    42.617,
-    1.5,
-    0.75
+    58.931,
+    45.487,
+    0.75,
+    1.5
    ],
    "flags": {
     "container": true,
@@ -3512,8 +3512,8 @@
    "id": "colony-house-1-room-1",
    "label": "Box bed (Room)",
    "rect": [
-    76.486,
-    53.072,
+    78.089,
+    51.569,
     1.0,
     2.0
    ],
@@ -3522,7 +3522,7 @@
     "hideKind": "bed",
     "title": "Under the box bed"
    },
-   "rotation": 60.0
+   "rotation": 150.0
   },
   {
    "id": "colony-house-1-room-2",
@@ -3710,8 +3710,8 @@
    "id": "colony-house-2-room-1",
    "label": "Box bed (Room)",
    "rect": [
-    41.029,
-    52.417,
+    40.529,
+    50.277,
     1.0,
     2.0
    ],
@@ -3720,7 +3720,7 @@
     "hideKind": "bed",
     "title": "Under the box bed"
    },
-   "rotation": 0.0
+   "rotation": 90.0
   },
   {
    "id": "colony-house-2-room-2",
@@ -3744,8 +3744,8 @@
    "id": "func-villa-1-living-space-f0",
    "label": "Cupboard (Living space)",
    "rect": [
-    80.312,
-    122.35,
+    79.682,
+    126.868,
     2,
     1
    ],
@@ -3756,14 +3756,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 135.0
+   "rotation": 45.0
   },
   {
    "id": "panel-block-1-flat-f0",
    "label": "Cupboard (Flat)",
    "rect": [
-    100.07,
-    69.68,
+    99.82,
+    75.32,
     1,
     2
    ],
@@ -3798,8 +3798,8 @@
    "id": "panel-block-1-third-flat-f0",
    "label": "Cupboard (Third flat)",
    "rect": [
-    97.93,
-    84.68,
+    101.32,
+    88.32,
     1,
     2
    ],
@@ -3834,8 +3834,8 @@
    "id": "panel-block-1-fourth-flat-f0",
    "label": "Cupboard (Fourth flat)",
    "rect": [
-    99.2,
-    92.68,
+    98.93,
+    98.32,
     1,
     2
    ],
@@ -3852,8 +3852,8 @@
    "id": "panel-block-2-flat-f0",
    "label": "Cupboard (Flat)",
    "rect": [
-    56.32,
-    103.07,
+    50.68,
+    102.82,
     2,
     1
    ],
@@ -3865,24 +3865,6 @@
     "fillPlace": "home"
    },
    "rotation": 270.0
-  },
-  {
-   "id": "panel-block-2-flat-f9",
-   "label": "Cupboard (Flat)",
-   "rect": [
-    57.07,
-    101.07,
-    0.75,
-    1.5
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 180.0
   },
   {
    "id": "panel-block-2-second-flat-f0",
@@ -3906,8 +3888,8 @@
    "id": "panel-block-2-second-flat-f7",
    "label": "Cupboard (Second flat)",
    "rect": [
-    43.93,
-    105.82,
+    46.32,
+    102.43,
     2,
     1
    ],
@@ -3918,14 +3900,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 180.0
+   "rotation": 270.0
   },
   {
    "id": "panel-block-2-third-flat-f0",
    "label": "Cupboard (Third flat)",
    "rect": [
-    41.82,
-    100.43,
+    38.18,
+    103.82,
     1,
     2
    ],
@@ -3960,8 +3942,8 @@
    "id": "panel-block-2-fourth-flat-f0",
    "label": "Cupboard (Fourth flat)",
    "rect": [
-    33.32,
-    102.2,
+    27.68,
+    101.93,
     2,
     1
    ],
@@ -3973,24 +3955,6 @@
     "fillPlace": "home"
    },
    "rotation": 270.0
-  },
-  {
-   "id": "panel-block-2-fourth-flat-f9",
-   "label": "Cupboard (Fourth flat)",
-   "rect": [
-    28.18,
-    101.7,
-    1,
-    2
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 180.0
   },
   {
    "id": "cottage-13-cottage-0",
@@ -4339,7 +4303,7 @@
    "label": "Crates (Garage)",
    "rect": [
     109.219,
-    36.359,
+    36.859,
     0.7,
     0.7
    ],
@@ -4388,24 +4352,6 @@
    "rotation": 270.0
   },
   {
-   "id": "family-house-1-kitchen-f1",
-   "label": "Cupboard (Kitchen)",
-   "rect": [
-    101.904,
-    40.544,
-    1.5,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 270.0
-  },
-  {
    "id": "suburban-house-1-living-room-f5",
    "label": "Cupboard (Living room)",
    "rect": [
@@ -4427,7 +4373,7 @@
    "id": "suburban-house-1-garage-2",
    "label": "Crates (Garage)",
    "rect": [
-    99.746,
+    98.306,
     21.008,
     0.7,
     0.7
@@ -4438,7 +4384,7 @@
     "room": 1,
     "title": "Behind the crates"
    },
-   "rotation": 0.0
+   "rotation": 90.0
   },
   {
    "id": "well",
