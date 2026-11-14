@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Stale pull request sweeper (B4105). Old pull requests sat open for days because CI never ran on them: a branch far
+ * Stale pull request sweeper (B4110). Old pull requests sat open for days because CI never ran on them: a branch far
  * behind main, a merge conflict, or a push that started no run. Every hour the PC runner sweeps every open pull
  * request of the owner's:
  *   - conflict (GitHub says it cannot merge): stuck, its thread must merge main by hand

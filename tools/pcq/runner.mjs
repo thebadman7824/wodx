@@ -20,7 +20,7 @@
  * - A runner that stopped mid-job: on start, issues still marked pc-running are queued again.
  * - Status: the issue labelled pc-status shows each lane, the queue and the last results, updated every 2 minutes,
  *   so any thread can see the runner is alive.
- * Every hour it also sweeps stale pull requests (sweep.mjs, B4105).
+ * Every hour it also sweeps stale pull requests (sweep.mjs, B4110).
  * Never touches lane 1 or the Live world; writes nothing to the shared project folder.
  */
 import fs from "node:fs";
@@ -325,7 +325,7 @@ for ( ;; ) {
       if ( !active.size ) { log("runner-off found and nothing running; stopping"); process.exit(0); }
       await sleep(30000); continue;
     }
-    // Stale pull requests, every hour, beside the jobs (B4105).
+    // Stale pull requests, every hour, beside the jobs (B4110).
     if ( !sweeping && Date.now() - lastSweep > HOUR ) {
       lastSweep = Date.now(); sweeping = true;
       sweep(gh, {apply: !DRY, log: m => log(`sweep ${m}`), stateFile: path.join(HOME, "sweep-state.json")})

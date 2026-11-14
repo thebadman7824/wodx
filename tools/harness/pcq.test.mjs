@@ -106,7 +106,7 @@ test("the runner and the submit helper parse", () => {
   }
 });
 
-test("the stale pull request sweep moves on what it can and lists what is stuck (B4105)", async () => {
+test("the stale pull request sweep moves on what it can and lists what is stuck (B4110)", async () => {
   const {classify, HOUR} = await import("../pcq/sweep.mjs");
   const base = {mergeable: true, behind: 0, checks: 8, running: false, failed: "", headAge: 5 * HOUR, tried: false};
   assert.equal(classify(base).action, "ok");
