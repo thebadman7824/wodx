@@ -4,7 +4,7 @@
  *   node tools/lanes/nightly.mjs [--lanes 2,3] [--no-pull]
  * 1. Pulls this clone's main (fast-forward only; a clone with local changes is left alone).
  * 2. Deploys it to each lane, only where the lane's code or gates differ (lanes.mjs deploy --if-changed).
- * 3. Runs every gate in the gate map, split between the lanes, each lane in its own process at below-normal
+ * 3. Runs every gate in the gate map, split between the lanes (every autoReset lane in lanes.json, B4103), each lane in its own process at below-normal
  *    priority, through run-gate.mjs (so the drift check still guards every run).
  * Each gate's line goes to %LOCALAPPDATA%\FoundryVTT\nightly-gates.log; the last line of each run there says its exit
  * code. Put a file named nightly-off next to this script to skip the full run.
@@ -17,7 +17,9 @@ import {fileURLToPath} from "node:url";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)), ROOT = path.resolve(HERE, "../..");
 const args = process.argv.slice(2), opt = k => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : null; };
-const lanes = (opt("lanes") ?? "2,3").split(",").map(s => s.trim()).filter(Boolean);
+// Every lane reset nightly (lanes.json autoReset), not just 2 and 3 (B4103).
+const autoLanes = JSON.parse(fs.readFileSync(path.join(HERE, "lanes.json"), "utf8")).lanes.filter(l => l.autoReset).map(l => String(l.id));
+const lanes = (opt("lanes") ?? autoLanes.join(",")).split(",").map(s => s.trim()).filter(Boolean);
 const base = process.env.LOCALAPPDATA ? path.join(process.env.LOCALAPPDATA, "FoundryVTT") : os.tmpdir();
 const report = path.join(base, "nightly-gates.log");
 const log = (...a) => console.log(new Date().toISOString(), ...a);

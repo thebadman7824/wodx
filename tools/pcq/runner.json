@@ -1,0 +1,11 @@
+{
+  "_about": "PC runner settings (B4100-B4109). lanes: the testbed lanes the runner drives, never 1. light: jobs that need no lane (book and Trove lookups) run side by side up to this many. Folders use %NAME% from the environment.",
+  "home": "D:/WoDX/pcq",
+  "lanes": [2, 3, 4, 5, 6],
+  "light": 2,
+  "pollSeconds": 30,
+  "minFreeGB": {"C": 15, "D": 50},
+  "minFreeRamGB": 3,
+  "bookText": "%LOCALAPPDATA%/FoundryVTT/wodx-repo/tools-env/text",
+  "trove": "F:/TheTrove"
+}

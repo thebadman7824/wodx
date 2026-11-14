@@ -110,6 +110,7 @@ function lockOrDie(lane, quietIfBusy = false) {
   return lock;
 }
 
+if ( cmd === "auto-lanes" ) { console.log(cfg.lanes.filter(l => l.autoReset).map(l => l.id).join(" ")); process.exit(0); } // B4103: lane-reset.cmd's list
 const lane = (opt("lane") || cmd === "status" || cmd === "compare" || cmd === "snapshot") ? (opt("lane") ? getLane(cfg, opt("lane")) : null) : die("Give --lane N.", 2);
 try {
   switch ( cmd ) {
