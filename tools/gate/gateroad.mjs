@@ -4,7 +4,8 @@
  *   await (await import(`/wodx-gate/gateroad.mjs?${Date.now()}`)).run()
  * Makes its own scratch scene, actors and tokens and removes them; never moves the clock.
  *   1. the Library's api.house reads a carried blanket and saddle
- *   2. hardship in harsh weather: the weather roll for the one with a blanket says it is one easier
+ *   2. hardship in harsh weather: the weather roll for the one with a blanket says it is one easier (hardship is for
+ *      player characters, so the rider is given to every player for the step; the world needs one player user)
  *   3. a chase turn: a rider on horseback with a saddle and no bridle rolls at +1 ("no bridle +1" on the Storyteller card)
  * Result: Data/wodx-gate/gateroad-result.json.
  */
@@ -30,6 +31,9 @@ export async function run() {
     });
 
     await G.step("2. a blanket in harsh weather", async () => {
+      // hardship is for player characters: every player owns the scratch rider for this step
+      await a.update({"ownership.default": CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER});
+      const pc = !!a.hasPlayerOwner;
       await ST.weather(scene, "harsh");
       const t = game.time.worldTime;
       const x = ST.rules.normNeeds({}, t);
@@ -37,7 +41,7 @@ export async function run() {
       await a.setFlag("wodx-storyteller", "needs", x);
       const out = await ST.tick({force: true, actorIds: [a.id]});
       const lines = (out ?? []).find(r => r.actor === a.id)?.lines ?? [];
-      G.ok("2. a blanket in harsh weather", lines.some(l => /a woollen blanket against the cold, -1 difficulty/.test(l)), {lines});
+      G.ok("2. a blanket in harsh weather", lines.some(l => /a woollen blanket against the cold, -1 difficulty/.test(l)), {pc, players: game.users.filter(u => !u.isGM).length, lines});
     });
 
     await G.step("3. a chase without a bridle", async () => {

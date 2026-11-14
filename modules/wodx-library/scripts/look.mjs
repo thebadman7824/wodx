@@ -7,6 +7,7 @@
  */
 import * as L from "./look-rules.mjs";
 import * as X from "./examine-rules.mjs";
+import * as HY from "./hygiene-rules.mjs";
 
 const MOD = "wodx-library";
 let G = null;
@@ -66,6 +67,8 @@ export function viewOf(actor) {
   const items = [...(a.items ?? [])].map(i => itemView(i, era, year));
   // Library 0.24.0 (B3442): with no clothes worn on the sheet, the clothes of WoDX Paperdoll's figure are what they wear
   if ( !items.some(i => i.worn && L.DRESS_KINDS.has(i.kind)) ) items.push(...figurePieces(a).map(p => itemView(p, era, year)));
+  // B3909: well groomed tonight (washed, combed, scented or made up)
+  if ( HY.groomedTonight(a.flags?.[MOD]?.groomed, game.time?.worldTime) ) conds.push("groomed");
   return {items, year: Number.isFinite(year) ? year : null, appearance, status,
     conditions: conds, wounds, weaponOut, monstrous};
 }

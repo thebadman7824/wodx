@@ -77,7 +77,7 @@ export function stationOf(items = []) {
 
 /** Condition words a stranger sees. */
 export const CONDITIONS = {
-  bloody: "blood on them", wounded: "wounds showing", filthy: "filthy", soaked: "soaked through", torn: "torn clothes", weapon: "a weapon drawn"
+  bloody: "blood on them", wounded: "wounds showing", filthy: "filthy", soaked: "soaked through", torn: "torn clothes", weapon: "a weapon drawn", groomed: "well groomed"
 };
 
 /**
@@ -94,6 +94,7 @@ export function lookOf(view = {}) {
   if ( num(view.wounds) >= 2 ) condition.push("wounded");
   if ( conds.has("filthy") || conds.has("dirty") ) condition.push("filthy");
   if ( conds.has("soaked") || conds.has("wet") ) condition.push("soaked");
+  if ( conds.has("groomed") && !condition.includes("filthy") && !condition.includes("bloody") ) condition.push("groomed");
   if ( items.some(i => i.worn && DRESS_KINDS.has(i.kind) && i.examine?.worn) ) condition.push("torn");
   if ( view.weaponOut ) condition.push("weapon");
   const sides = [];
@@ -146,6 +147,7 @@ export function lookSeed(look, npc = {}, year = null) {
   if ( mortal && look.strange?.length ) add(-1, "strange dress");
   if ( look.condition?.includes("bloody") || look.condition?.includes("wounded") ) add(mortal ? -1 : 0, look.condition.includes("bloody") ? "blood on them" : "wounds showing");
   if ( mortal && num(npc.station) >= 3 && (look.condition?.includes("filthy") || look.condition?.includes("soaked")) ) add(-1, look.condition.includes("filthy") ? "filth" : "soaked through");
+  if ( mortal && num(npc.station) >= 3 && look.condition?.includes("groomed") ) add(1, "well groomed");
   if ( look.appearance !== null && look.appearance !== undefined ) {
     if ( look.appearance >= 4 ) add(1, "good looks");
     else if ( look.appearance === 0 && !look.monstrous && mortal ) add(-1, "an ugly face");
