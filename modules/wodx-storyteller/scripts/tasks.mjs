@@ -54,6 +54,8 @@ export function poolFor(a, task) {
   if ( t.faction ) return Math.max(1, Own.factionPool(t.faction) + t.workers + t.dice);
   // B3632: the Rite of Binding rolls permanent Willpower alone
   if ( t.pool === "willpower" ) { const w = a?.system?.willpower ?? a?.system?.advantages?.willpower; return Math.max(1, num(w?.permanent) + t.dice); }
+  // B3683: a kit may roll one trait alone (Arete, say): a number, or {permanent} / {value} / {total}
+  if ( t.pool.startsWith("path:") ) { const v = foundry.utils.getProperty(a, t.pool.slice(5)); return Math.max(1, num(typeof v === "object" ? (v?.permanent ?? v?.total ?? v?.value) : v) + t.dice); }
   // 0.42.0: followers helping add their own dots in the Ability
   const help = R.helperDice(t.helpers.map(id => game.actors?.get?.(id)).filter(Boolean).map(h => ({dots: t.ability ? num(h.system?.abilities?.[t.ability]?.value) : 0})));
   return Math.max(1, num(at?.total ?? at?.value) + num(ab?.value) + t.dice + t.workers + help);
@@ -285,7 +287,7 @@ export async function editTask(actorId = null, taskId = null) {
       buttons: [...Object.entries(R.KINDS).map(([k, v]) => ({action: k, label: v.label})), {action: "cancel", label: "Cancel"}]});
     if ( !kind || kind === "cancel" ) return null;
     // B3631: a fetish or talen from the book lists, when the line's crafting is on
-    if ( kind === "fetish" && W.available(a) ) return W.makeDialog(a.id);
+    if ( (kind === "fetish" || kind === "wonder") && W.available(a) ) return W.makeDialog(a.id);
   }
   const t = taskId ? R.normTask({...rawTasks(a)[taskId], id: taskId}) : R.normTask({kind});
   const abil = abilitiesOf(a);

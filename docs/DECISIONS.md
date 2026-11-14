@@ -189,7 +189,7 @@ Next free block: B3690
 | B3650-B3659 | Threads of Fate: procedural storylines and encounters from story hooks (used B3650-B3656) | Storyteller |
 | B3660-B3669 | The Rothenstein saga: the running step for other systems (used B3660-B3669) | Chronicle |
 | B3670-B3679 | The Rothenstein saga keeps its calendar on long skips (used B3670-B3672) | Chronicle |
-| B3680-B3689 | Baneklaives and Bane fetishes; the Kinfolk book check (used B3680-B3682) | Library, Storyteller |
+| B3680-B3689 | One wonders engine for every line (registry of line kits) (used B3680-B3683) | Library, Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6103,3 +6103,8 @@ Reverse: drop the `!!w.wyrm === spiral` filter in wonder-rules.mjs listFor to gi
 WoDX Library. The baneklaive is level 5, Gnosis 7, a two-handed silver sword at Strength +3 aggravated, difficulty 7, and costs a carrier 2 effective Gnosis as silver, like a grand klaive (silver 2). Its extra Melee die when woken and its Gnosis drawn from spirits stay in its text for the Storyteller. The book gives the Devilwhip's damage (Strength +1 aggravated) but no difficulty: WoDX uses 6, marked as a house figure.
 
 Reverse: edit the weapon fields of the two rows in data/wonders.mjs.
+
+## B3683. Each line's supernatural items are a kit in one registry (2026-11-14)
+WoDX Library and Storyteller. So that Mage, Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin can be built side by side, WoDX Library keeps a registry (scripts/wonder-registry.mjs): a line calls registerLine with a kit of plain functions (its rows, who may make what, the dialog inputs, the task seed, the items made, the costs paid, an optional after() hook) and names its own world switch. Each line has one import in scripts/wonder-lines.mjs. Werewolf is the first kit (scripts/wonders-garou.mjs) and plays as before. WoDX Storyteller's window lists every line a character can make things in and builds its inputs from the kit; the finished task pays the kit's costs through applyCosts, makes its items and runs after(), where the Garou kit keeps its spirit-court moves. A long task may now roll a single trait (pool "path:<dot path>"), such as a mage's Arete.
+
+Reverse: restore the Garou-only wonders.mjs in Storyteller from PR 993 and drop the registry import from Library main.

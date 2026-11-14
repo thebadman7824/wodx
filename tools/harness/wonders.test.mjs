@@ -108,18 +108,20 @@ test("wonders: player characters' gender never blocks the labrys", () => {
 
 test("wonders: Storyteller wiring (fetish kind opens the picker, approval, finish on task end)", () => {
   const t = src("modules/wodx-storyteller/scripts/tasks.mjs");
-  assert.match(t, /kind === "fetish" && W\.available\(a\)/);
+  assert.match(t, /kind === "fetish" \|\| kind === "wonder"\) && W\.available\(a\)/);
   assert.match(t, /t\.pool === "willpower"/);
   assert.match(t, /t\.delay \* R\.DAY/);
   const w = src("modules/wodx-storyteller/scripts/wonders.mjs");
   assert.match(w, /wodxTaskDone/);
   assert.match(w, /registerHandler\?\.\(T_WONDER/);
+  assert.match(w, /kit\.costs\(/); assert.match(w, /kit\.after\?\.\(/);
   const m = src("modules/wodx-storyteller/scripts/main.mjs");
   assert.match(m, /Wonders\.registerWonderApproval\(\)/);
   assert.match(m, /Wonders\.registerWonderHooks\(\)/);
   const lib = src("modules/wodx-library/scripts/main.mjs");
-  assert.match(lib, /"craftGarou"/);
+  assert.match(src("modules/wodx-library/scripts/wonders-garou.mjs"), /setting: "craftGarou"/);
   assert.match(lib, /api\.wonders/);
+  assert.match(lib, /Reg\.lines\(\)/);
 });
 
 test("wonders: carried silver lowers a shapechanger's Gnosis dice for fetishes and spirits (WoDX Actions)", () => {
@@ -155,5 +157,44 @@ test("wonders: Bane fetishes and the baneklaive (W20 Book of the Wyrm pdf 184-18
 test("wonders: Kinfolk making is a world setting, off by default (WoDX Library, B3680)", () => {
   const lib = src("modules/wodx-library/scripts/main.mjs");
   assert.match(lib, /"craftKinfolk"[\s\S]*?default: false/);
-  assert.match(src("modules/wodx-storyteller/scripts/wonders.mjs"), /kinfolkMay/);
+  assert.match(src("modules/wodx-storyteller/scripts/wonders.mjs"), /"craftKinfolk"/);
+  assert.match(src("modules/wodx-library/scripts/wonders-garou.mjs"), /kinfolkMay: !!ctx\.settings\?\.craftKinfolk/);
+});
+
+const Reg = await imp("modules/wodx-library/scripts/wonder-registry.mjs");
+await imp("modules/wodx-library/scripts/wonder-lines.mjs");
+
+test("wonders registry: the Garou kit is registered and works through the kit calls (B3683)", () => {
+  const kit = Reg.kitFor("garou");
+  assert.ok(kit); assert.equal(kit.setting, "craftGarou");
+  assert.ok(Reg.lines().some(k => k.line === "garou"));
+  const facts = kit.factsFrom({system: {advantages: {gnosis: {permanent: 5}, willpower: {permanent: 6}}, abilities: {rituals: {value: 3}}, tribe: "Fianna"},
+    items: [{type: "Power", name: "Rite of the Fetish", system: {type: "wod.types.rite"}}]}, {profile: "lupine"});
+  const m = kit.makerOf(facts);
+  assert.equal(m.kind, "garou"); assert.equal(m.gnosis, 5); assert.equal(m.rituals, 3);
+  assert.ok(kit.listFor(m, {year: 1300}).some(w => w.key === "klaive"));
+  assert.ok(kit.fields(m, {isGM: false}).every(f => !f.gm));
+  assert.ok(kit.fields(m, {isGM: true}).some(f => f.name === "persuasion"));
+  const seed = kit.taskFor(kit.row("klaive"), m, {spend: 2, power: "gaffling"});
+  assert.equal(seed.line, "garou"); assert.equal(seed.diff, 6);
+  const costs = kit.costs(kit.row("klaive"), {spend: 2});
+  const paid = Reg.applyCosts(costs, {"system.advantages.gnosis.permanent": 5, "system.advantages.gnosis.temporary": 5});
+  assert.deepEqual(paid.updates, {"system.advantages.gnosis.permanent": 3, "system.advantages.gnosis.temporary": 3});
+  const tal = Reg.applyCosts(kit.costs(kit.row("bane-arrow"), {spend: 9}), {"system.advantages.gnosis.temporary": 4});
+  assert.equal(tal.updates["system.advantages.gnosis.temporary"], 0);
+  assert.equal(kit.itemsFor(kit.row("bane-arrow"), {successes: 2, task: {power: "jaggling"}}).length, 4);
+  assert.equal(T.normTask(seed).line, "garou");
+  assert.equal(T.normTask({pool: "path:system.arete"}).pool, "path:system.arete");
+  assert.equal(T.normTask({pool: "rm -rf"}).pool, "");
+});
+
+test("wonders registry: a kit missing a part is refused, a good one is added and listed", () => {
+  assert.throws(() => Reg.registerLine("test-line", {title: "Test"}), /lacks/);
+  assert.throws(() => Reg.registerLine("Bad Key", {}), /bad line key/);
+  const f = () => [];
+  const kit = {title: "Test", rows: f, row: () => null, factsFrom: () => ({}), makerOf: () => ({kind: null}), listFor: f, blockers: f, cautions: f,
+    fields: f, taskFor: () => ({}), itemsFor: f, costs: f, label: () => ""};
+  Reg.registerLine("test-line", kit);
+  assert.ok(Reg.kitFor("test-line"));
+  assert.ok(Reg.lines().some(k => k.line === "test-line"));
 });

@@ -124,7 +124,9 @@ export function normTask(t = {}) {
     // permanent Willpower alone (the Rite of Binding); spend: Gnosis spent at the rite; power: the bound spirit's
     // strength (gaffling, jaggling, greater); forced: beaten into the vessel; delay: days of preparation before the
     // first roll (three nights of cleansing for a fetish); approved: the Storyteller's go-ahead for a player's work
-    wonder: String(t.wonder ?? "").slice(0, 60), pool: t.pool === "willpower" ? "willpower" : "",
+    // B3683: line is the WoDX Library kit that made the seed; pool may also be "path:<dot path>" to roll one trait
+    wonder: String(t.wonder ?? "").slice(0, 60), line: /^[a-z][a-z0-9-]{1,30}$/.test(String(t.line ?? "")) ? String(t.line) : "",
+    pool: t.pool === "willpower" || /^path:[A-Za-z0-9_.]{1,80}$/.test(String(t.pool ?? "")) ? String(t.pool) : "",
     spend: Math.max(0, Math.min(10, Math.round(n(t.spend)))), power: ["gaffling", "jaggling", "greater"].includes(t.power) ? t.power : "gaffling",
     forced: !!t.forced, delay: Math.max(0, Math.min(30, Math.round(n(t.delay)))), approved: t.approved !== false,
     spirit: String(t.spirit ?? "").slice(0, 160)
