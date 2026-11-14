@@ -15,6 +15,7 @@
  */
 import * as TR from "./town-rules.mjs";
 import * as TownLooks from "./town-looks.mjs";
+import * as TownScars from "./town-scars.mjs";
 import * as MT from "./market-turn-rules.mjs";
 import * as MK from "./market-rules.mjs";
 import * as MV from "./market-moves-rules.mjs";
@@ -148,6 +149,8 @@ export async function run({force = false, reason = ""} = {}) {
   if ( due.skipped ) st = TR.settleWeeks(st, due.skipped, {year: dateAt(t0).year});
   st.last = force ? (before.last ?? t0) : due.skipped ? t0 : base + due.due * MT.WEEK;
   const when = reason || (due.due > 1 || due.skipped ? `${due.due + due.skipped} weeks` : "a week");
+  // B3759: the week's rebuilding mends some of the damage earlier disasters left on the town scenes
+  if ( due.due ) { try { await TownScars.healTowns(TR.normState(before).towns); } catch (e) { console.warn(`${MOD} | town scars heal`, e); } }
   return land({before, after: st, events, food, pcs, when});
 }
 
@@ -194,7 +197,7 @@ async function tell(e) {
   // B3618: with the town's name and region, so WoDX Chronicle can ask whether a rising wins
   let name = "", region = "";
   try { const m = MK.marketById(Markets.state(), e.town); name = m?.name ?? ""; region = regionOfMarket(m, state().towns?.[e.town]); } catch (err) { /* name and region are optional */ }
-  Hooks.callAll("wodxTown", {town: e.town, kind: e.kind, text: e.text, big: e.big, name, region});
+  Hooks.callAll("wodxTown", {town: e.town, kind: e.kind, text: e.text, big: e.big, name, region, prosperity: e.effect?.prosperity ?? e.prosperity ?? 0});
   if ( !e.big ) return;
   try { await log({kind: "note", text: ev(e)}); } catch (err) { /* log is optional */ }
   if ( setting("rumourNetwork") === false ) return;
@@ -223,6 +226,7 @@ async function undo(msg) {
   await msg.update({[`flags.${MOD}.townTurn.applied`]: false});
   // B4620: the marks the turn left on the town scenes go with it
   try { await TownLooks.endFor({towns: f.towns ?? [], since: f.at ?? 0}); } catch (e) { console.warn(`${MOD} | town looks undo`, e); }
+  try { await TownScars.undoFor({towns: f.towns ?? [], since: f.at ?? 0}); } catch (e) { console.warn(`${MOD} | town scars undo`, e); }
 }
 
 /* ------------------------------------------------------------------ */
