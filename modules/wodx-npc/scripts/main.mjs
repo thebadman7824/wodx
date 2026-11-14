@@ -55,7 +55,7 @@ const MOD = "wodx-npc";
 <<<<<<< HEAD
 const VERSION = "0.76.0";
 =======
-const VERSION = "0.77.3";
+const VERSION = "0.78.0";
 >>>>>>> origin/main
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;

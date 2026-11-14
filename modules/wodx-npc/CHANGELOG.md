@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.78.0 (A talk sheet line can be marked "lie" after " | ": a character who reads the speaker's face may see it (B3444). Culprit descriptions keep a Kindred's uncanny face marks (B3443))
 - 0.77.3 (Family approvals: the cards for a child grows up, a child asked for by players, and a wedding after a proposal now also register when Chronicle says it is ready, so approving them starts the pregnancy or holds the wedding even when Chronicle loads after WoDX NPC (B3224, B3230))
 - 0.77.2 (A description that goes round now also tells WoDX Chronicle's law of the land about the crime (hook wodxCrimeSeen))
 - 0.77.1 (Ancestors as a past-self Background for the Garou (B3533): a werewolf's Ancestors dots now set the recall roll for the forebears WoDX Storyteller's Inheritance step names, as Avatar, Remembrance and Memoriam already do for the other lines)
