@@ -30,8 +30,16 @@ export async function run() {
     await G.step("1 api", async () => { G.ok("1 api", typeof S()?.soakFor === "function"); });
 
     await G.step("2 the Ahroun's soak", async () => {
+      // Crinos set the way WoDX Actions sets it (the sheet may make a new Garou in Homid)
+      const shapes = foundry.utils.deepClone(ahroun.system.shapes ?? {});
+      for ( const k of Object.keys(shapes) ) if ( shapes[k] && typeof shapes[k] === "object" ) shapes[k].isactive = k === "crinos";
+      if ( !shapes.crinos ) shapes.crinos = {isactive: true};
+      await ahroun.update({"system.shapes": shapes, "system.auspice": "Ahroun"});
+      await dancer.update({"system.tribe": "Black Spiral Dancers"});
       const vsWyrm = S().soakFor(ahroun, {attacker: dancer}), vsMortal = S().soakFor(ahroun, {attacker: mortal});
-      G.ok("2 the Ahroun's soak", vsWyrm.dice >= 1 && vsWyrm.names.includes("First into battle"), {vsWyrm, vsMortal});
+      G.ok("2 the Ahroun's soak", vsWyrm.dice >= 1 && vsWyrm.names.includes("First into battle") && vsMortal.dice === 0, {vsWyrm, vsMortal,
+        rows: S().allRowsOf(ahroun).map(r => r.key), foeRows: S().allRowsOf(dancer).map(r => r.key), auspice: ahroun.system.auspice, tribe: dancer.system.tribe,
+        crinos: !!ahroun.system.shapes?.crinos?.isactive, line: game.settings.get(MOD, "sigWerewolf")});
     });
 
     await G.step("3 the Bunyip", async () => {

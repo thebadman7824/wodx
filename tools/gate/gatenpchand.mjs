@@ -38,10 +38,13 @@ export async function run() {
     });
 
     await G.step("2 familiar", async () => {
+      // the sheet may set Willpower on its own when made, so it is set here and read back
+      await mage.update({"system.advantages.willpower.permanent": 6, "system.advantages.willpower.temporary": 6, "system.quintessence.temporary": 3, "system.paradox.temporary": 0});
+      const w0 = Number(mage.system.advantages.willpower.permanent);
       const c = await N().bonds.payFamiliar(mage, "Gate Hand Cat");
       const s = mage.system;
-      G.ok("2 familiar", !!c && Number(s.advantages.willpower.permanent) === 5 && Number(s.quintessence?.temporary ?? 0) === 0 && Number(s.paradox?.temporary ?? 0) === 1,
-        {c, wp: s.advantages.willpower.permanent, q: s.quintessence?.temporary, p: s.paradox?.temporary});
+      G.ok("2 familiar", !!c && w0 > 0 && Number(s.advantages.willpower.permanent) === w0 - 1 && Number(s.quintessence?.temporary ?? 0) === 0 && Number(s.paradox?.temporary ?? 0) === 1,
+        {c, w0, wp: s.advantages.willpower.permanent, q: s.quintessence?.temporary, p: s.paradox?.temporary});
     });
 
     await G.step("3 letter", async () => {
