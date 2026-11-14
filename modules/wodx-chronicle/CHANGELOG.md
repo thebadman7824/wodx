@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.94.0 (Player interface (B4120-B4123): the Storyteller's Player toolbar buttons window is now Player interface, and also hides parts of Foundry's own screen for each player. Chat, Settings, notifications, the scene controls and the X-card always stay)
 - 0.93.0 (The Mandan, Hidatsa, Arikara and Pawnee in the American West's mix from 1197 (B4130))
 - 0.92.1 (book check: the lethal soak clash no longer cites Ghouls and Revenants p. 262, which does not exist; the page is still to find)
 - 0.92.0 (Armenians in the world's mixes: 12 in 100 in Anatolia until 1915 and 1 after, a share in New Julfa's Persia, Constantinople, the Levant and Russia (B3940))

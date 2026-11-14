@@ -456,7 +456,7 @@ game.world.id = worldId;
       zm.system.quintessence = {temporary: 5}; zm.system.paradox = {temporary: 3, permanent: 0};
       tries.push(["Cast an Effect (Mage 20th)", () => ga.m20Cast({actor: A(zm)})], ["Paradox backlash", () => ga.m20Backlash({actor: A(zm)})], ["Countermagick", () => ga.m20Counter({actor: A(zm)})], ["Consensus here", () => ga.m20Place()]);
     }
-    tries.push(["Player toolbar buttons", () => game.modules.get("wodx-chronicle").api.openPlayerTools()]);
+    tries.push(["Player interface", () => game.modules.get("wodx-chronicle").api.openPlayerTools()]);
     tries.push(["Wraith menu", () => ga.menu({actor: A(ghost)})], ["Use an Arcanos", () => ga.useArcanos({actor: A(ghost)})], ["Passion", () => ga.passion({actor: A(ghost)})],
       ["Fetter", () => ga.fetter({actor: A(ghost)})], ["Heal Corpus", () => ga.healCorpus({actor: A(ghost)})], ["The Caul", () => ga.caul({actor: A(ghost)})],
       ["The Shadow", () => ga.shadow({actor: A(ghost)})], ["Whisper", () => ga.shadowWhisper({actor: A(ghost)})], ["Shadowguide", () => ga.shadowguide({actor: A(ghost)})],
