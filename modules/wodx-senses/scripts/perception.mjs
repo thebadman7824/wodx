@@ -226,7 +226,7 @@ export async function whoSees(token, {quiet = false, only = null} = {}) {
   return {results, seenBy: after};
 }
 /*
- * B4891: the noticing rolls itself. When a player character comes within sight range of a hidden token, again after
+ * B5011: the noticing rolls itself. When a player character comes within sight range of a hidden token, again after
  * either moves five squares since the last roll for the pair, and once at each turn of a fight. Only someone who
  * finds the token is told; the Storyteller's card comes only when someone new does.
  */

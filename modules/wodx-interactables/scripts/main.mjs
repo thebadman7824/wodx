@@ -1329,12 +1329,12 @@ export async function hazardOn(tokDoc, actor, o) {
     } else lines.push(`${cap(what)}: WoDX Combat is off, so soak and apply it by hand.`);
   }
   lines.push(...hit.notes);
-  // B4890: a vampire burned faces the Red Fear at once
+  // B5010: a vampire burned faces the Red Fear at once
   if ( hit.fireSun && ch.profile === "vampire" ) { try { await game.modules.get("wodx-actions")?.api?.rotschreckAuto?.({actor, provocation: "burned"}); } catch (e) { console.warn(`${MOD} | red fear`, e); } }
   return {text: hit.text, lines, damageMsg, faces, diff: cr?.diff ?? 6};
 }
 const burning = new Set();
-// B4890: once a scene for each fire and each vampire (cleared when the scene changes)
+// B5010: once a scene for each fire and each vampire (cleared when the scene changes)
 const feared = new Set();
 Hooks.on("canvasReady", () => feared.clear());
 async function fearOfFire(scene, tokDoc, actor, p) {

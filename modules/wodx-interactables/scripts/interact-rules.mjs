@@ -641,7 +641,7 @@ export function describeHazard(f = {}) {
     title: String(f.title ?? "").trim().slice(0, 80), electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
   };
 }
-/** B4890: the Rötschreck provocation a fire is to a vampire near it, by its size (WoDX Actions' table). */
+/** B5010: the Rötschreck provocation a fire is to a vampire near it, by its size (WoDX Actions' table). */
 export const FEAR_OF_FIRE = {small: "torch", large: "bonfire", inferno: "trapped"};
 export const FEAR_YARDS = 6;
 /**

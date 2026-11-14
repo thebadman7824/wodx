@@ -1132,7 +1132,7 @@ export async function rotschreck({ actor: a, provocation = "torch" } = {}) {
 }
 
 /**
- * B4890: the Red Fear rolled with no window, when a vampire is burned or comes near a fire (WoDX Interactables).
+ * B5010: the Red Fear rolled with no window, when a vampire is burned or comes near a fire (WoDX Interactables).
  * provocation: an ROTSCHRECK_PROVOCATIONS key. Golconda and a frenzy already running hold it off, as in the window.
  */
 export async function rotschreckAuto({ actor: a, provocation = "torch", why = "" } = {}) {
