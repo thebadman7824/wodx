@@ -17,6 +17,7 @@
  *             it falls still or leaves; a familiar's death costs its mage as M20 says
  * An NPC's summons serve that NPC: WoDX NPC runs their turns like any of its fighters.
  */
+import * as E from "./effects-rules.js";
 import * as SR from "./summon-rules.js";
 import { SPECS, NOT_SUMMON, specKey } from "./summon-specs.js";
 import { countSuccesses } from "./core-rules.js";
@@ -136,6 +137,15 @@ export async function bring(item, {src = null, at, casterName = "the summoner", 
   const caster = actorOf(docOf(item.caster)) ?? null;
   const casterTok = caster?.getActiveTokens?.()?.[0]?.document ?? null;
   if ( !scene || !at ) return {note: `${o.label ?? "Summon"}: no spot to place it`};
+  // B4841: a summoning with a price per being pays it from the caster's pool, and only what is paid for comes
+  if ( r.cost && caster ) {
+    const P = E.poolOf(r.cost.pool);
+    const have = n(foundry.utils.getProperty(caster, P.path));
+    const pay = SR.payFor(r.cost, r.tokens, have);
+    if ( pay.count < 1 ) return {note: `${o.label ?? "Summon"}: not enough ${r.cost.pool} to pay for even one`};
+    await caster.update({[P.path]: have - pay.paid});
+    r.tokens = pay.count; r.count = pay.count;
+  }
   src ??= await baseFor(r.what);
   const id = foundry.utils.randomID();
   const owners = r.control === "direct" ? ownersOf(caster) : [];
@@ -143,7 +153,7 @@ export async function bring(item, {src = null, at, casterName = "the summoner", 
   const disposition = r.control === "hostile" ? D.HOSTILE : (casterTok?.disposition ?? (caster?.hasPlayerOwner ? D.FRIENDLY : D.HOSTILE));
   const record = {id, by: caster?.uuid ?? null, byId: caster?.id ?? null, byName: caster?.name ?? casterName, power: o.label ?? "Summon", what: r.what,
     profile: r.profile, control: r.control, range: r.range, roll: r.roll, lasts: r.lasts, lastsKind: r.lastsKind, persist: r.persist, upkeep: r.upkeep,
-    page: r.page, look: r.look, made: game.time?.worldTime ?? 0, scene: scene.id, owners: owners.map(u => u.id)};
+    page: r.page, look: r.look, made: game.time?.worldTime ?? 0, scene: scene.id, owners: owners.map(u => u.id), shareWounds: r.shareWounds ?? null};
   const proto = (await src.getTokenDocument()).toObject();
   const size = scene.grid?.size ?? 100;
   const k = Math.max(1, Math.min(SR.MAX_TOKENS, r.tokens));
@@ -401,8 +411,38 @@ export async function callFamiliar(mage, {src = null, at = null} = {}) {
 
 function refreshLook(tok) { try { chron()?.tokenLooks?.refresh?.(); } catch (e) { /* no looks */ } }
 
+const HURT = ["aggravated", "lethal", "bashing"];
+
+/**
+ * B4841 (One Fights as Many, DA Mage p. 109): at each round's end the caster takes only the worst harm any copy took,
+ * and the copies' own wounds clear.
+ */
+export async function shareWounds(scene = canvas?.scene) {
+  if ( !isActiveGM() || !scene ) return 0;
+  const C = game.modules.get("wodx-combat")?.api;
+  const by = new Map();
+  for ( const t of scene.tokens ) {
+    const rec = flagOf(t);
+    if ( rec?.shareWounds !== "highest" || !rec.by || !t.actor ) continue;
+    if ( !by.has(rec.by) ) by.set(rec.by, []);
+    by.get(rec.by).push(t);
+  }
+  let k = 0;
+  for ( const [uuid, toks] of by ) {
+    const caster = actorOf(docOf(uuid));
+    const worst = toks.map(t => ({t, d: t.actor.system?.health?.damage ?? {}})).sort((a, b) => HURT.reduce((x, h) => x + n(b.d[h]), 0) - HURT.reduce((x, h) => x + n(a.d[h]), 0))[0];
+    if ( !worst || !caster || !C ) continue;
+    for ( const h of HURT ) if ( n(worst.d[h]) ) await C.soakAndApply(caster.getActiveTokens?.()?.[0] ?? caster, {mode: "levels", amount: n(worst.d[h]), type: h, soak: false});
+    for ( const t of toks ) for ( const h of HURT ) { const v = n(t.actor.system?.health?.damage?.[h]); if ( v ) await C.healDamage(t.actor, h, v); }
+    if ( HURT.some(h => n(worst.d[h])) ) { k++; await ChatMessage.create({speaker: {alias: caster.name}, whisper: game.users.filter(u => u.isGM || caster.testUserPermission?.(u, "OWNER")).map(u => u.id),
+      content: `<div class="wodx-card"><p>${esc(caster.name)} takes the worst harm any self took this round: ${HURT.filter(h => n(worst.d[h])).map(h => `${n(worst.d[h])} ${h}`).join(", ")}.</p></div>`}); }
+  }
+  return k;
+}
+
 export function setup() {
   Hooks.on("updateCombat", (combat, changed) => {
+    if ( "round" in (changed ?? {}) ) shareWounds(combat.scene ?? canvas?.scene).catch(e => console.error("WoDX | shared wounds", e));
     if ( !("turn" in (changed ?? {}) || "round" in (changed ?? {})) ) return;
     onTurn(combat).catch(e => console.error("WoDX | summons", e));
   });
@@ -469,4 +509,4 @@ export function connect(C = chron()) {
   });
 }
 
-export const api = () => ({rules: SR, connect, specs: () => SPECS, specFor, bring, dismiss, dismissAll, slip, canDismiss, requestDismiss, sweepUpkeep, wake, callFamiliar, poolDice, flagOf});
+export const api = () => ({rules: SR, connect, specs: () => SPECS, specFor, bring, dismiss, dismissAll, slip, canDismiss, requestDismiss, sweepUpkeep, shareWounds, wake, callFamiliar, poolDice, flagOf});

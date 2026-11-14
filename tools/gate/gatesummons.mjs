@@ -163,6 +163,46 @@ export async function run() {
       await waitFor(() => dmg(victim) > mid, 8000).catch(() => null);
       G.ok("12. lasting harm hurts again on the victim's turn", mid === before + 1 && dmg(victim) === mid + 1, {before, mid, after: dmg(victim)});
     });
+    await G.step("13. a whirlwind hurts everyone inside on the demon's turn, one weaker each turn", async () => {
+      const TR = A.turnRules;
+      const rec = TR.resolveRec(TR.EVERY_TURN.cyclone, {successes: 3, faith: 10, by: dt.uuid});
+      const before = dmg(victim);
+      const uuid = await A.turns.attach(demon, rec, {label: "Cyclone", by: demon.name});
+      const idx = fight.turns.findIndex(x => x.tokenId === dt.id);
+      if ( fight.turn === idx ) await fight.update({turn: (idx + 1) % fight.turns.length});
+      await fight.update({turn: idx});
+      await waitFor(() => fromUuidSync(uuid)?.getFlag(MOD, "everyTurn")?.counter?.value === 2, 8000).catch(() => null);
+      const left = fromUuidSync(uuid)?.getFlag(MOD, "everyTurn")?.counter?.value;
+      G.ok("13. a whirlwind hurts everyone inside on the demon's turn, one weaker each turn", left === 2 && dmg(victim) >= before, {left, before, after: dmg(victim)});
+      await fromUuidSync(uuid)?.delete();
+    });
+    await G.step("14. a burning nimbus burns whoever lands a close blow", async () => {
+      const e = await (game.modules.get("wodx-chronicle").api.timed.applyTimed(victim, {name: "Gate nimbus", duration: {kind: "scene"}, key: "gate-nimbus"}));
+      await e.setFlag(MOD, "touchHarm", {levels: 2, type: "lethal"});
+      const before = dmg(demon);
+      await A.turns.onBlow(demon, {hit: true, ranged: false, targetToken: vt.uuid, attackerToken: dt.uuid});
+      await wait(400);
+      G.ok("14. a burning nimbus burns whoever lands a close blow", dmg(demon) >= before + 1, {before, after: dmg(demon)});
+      await e.delete();
+    });
+    await G.step("15. One Fights as Many: paid in Quintessence, the mage takes only the worst harm", async () => {
+      await mage.update({"system.quintessence.temporary": 2});
+      const spec = S.specFor("One Fights as Many", "Mage (Dark Ages)");
+      const r = S.rules.resolve(spec, {successes: 4});
+      const out = await EF.apply({key: "summon", out: {kind: "summon", label: "One Fights as Many", summon: r}, target: null, caster: mage.uuid, name: "a spot", at: {x: 950, y: 950}}, mage.name);
+      await wait(900);
+      const copies = scene.tokens.filter(t => t.flags?.[MOD]?.summon?.byId === mage.id && t.flags[MOD].summon.shareWounds);
+      const quint = mage.system?.quintessence?.temporary;
+      const C = game.modules.get("wodx-combat").api;
+      if ( copies[0] ) await C.soakAndApply(copies[0].object ?? copies[0], {mode: "levels", amount: 2, type: "lethal", soak: false});
+      if ( copies[1] ) await C.soakAndApply(copies[1].object ?? copies[1], {mode: "levels", amount: 1, type: "lethal", soak: false});
+      const before = dmg(mage);
+      await S.shareWounds(scene);
+      await wait(400);
+      G.ok("15. One Fights as Many: paid in Quintessence, the mage takes only the worst harm", copies.length === 2 && quint === 0 && dmg(mage) === before + 2 && copies.every(t => dmg(t.actor) === 0),
+        {copies: copies.length, quint, before, after: dmg(mage)});
+      for ( const t of copies ) await S.dismiss(t).catch(() => null);
+    });
   } catch (e) {
     G.R.errors.push(String(e?.message ?? e));
   } finally {

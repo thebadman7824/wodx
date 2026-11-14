@@ -10,6 +10,18 @@ export const slug = s => String(s ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-
 export const specKey = (line, name) => `${slug(line)}|${slug(String(name ?? "").replace(/^[•\s]+/, ""))}`;
 
 export const SPECS = {
+ "mage-dark-ages|one-fights-as-many": {
+  "extra": true,
+  "what": "double",
+  "profile": "servant",
+  "count": {"by": "successes"},
+  "lasts": {"kind": "scene"},
+  "control": {"mode": "direct", "range": "near"},
+  "cost": {"pool": "quintessence", "per": 1},
+  "shareWounds": "highest",
+  "page": "DA Mage p. 109",
+  "note": "One Quintessence a self, up to the successes. One self casts or spends Willpower a turn; the mage takes the worst harm any self took. B4841."
+ },
  "vampire-dark-ages|call-the-wild": {
   "what": "animal",
   "profile": "called",

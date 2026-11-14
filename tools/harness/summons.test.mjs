@@ -141,7 +141,7 @@ test("the bounds check: no applying power has an unbound keyword or a summoning 
   assert.ok(m, out);
   assert.equal(+m[1], 0, "unbound keywords");
   assert.equal(+m[2], 0, "summonings with no spec");
-  assert.ok(+m[3] <= 14, `each-turn text not worked rose to ${m[3]}`);
+  assert.equal(+m[3], 0, `each-turn text not worked: ${m[3]}`);
 });
 
 test("lights end, made things fade, resistance is rolled (B4830, B4831)", () => {
@@ -165,4 +165,43 @@ test("powers tagged as summonings that call nothing work through their own keywo
   assert.match(src("modules/wodx-actions/scripts/summons.js"), /export function notSummonOf/);
   assert.equal(SR.diffOf("spirit-rank", {spiritRank: "incarna"}), 8);
   assert.equal(SR.diffOf("faith", {faith: 4}), 4);
+});
+
+test("the fourteen each-turn powers from the desk (B4838-B4849)", async () => {
+  const TR = await import(join(root, "modules/wodx-actions/scripts/turn-rules.js"));
+  const want = [["Summon the Simple Form", "Vampire (V20)"], ["Clenched Jaw", "Werewolf (W20)"], ["Scabwalker Curse", "Werewolf (W20)"], ["One Fights as Many", "Mage (Dark Ages)"],
+    ["Bitter Fruit", "Mage (Dark Ages)"], ["••••• Tripping the Ire", "Changeling (C20)"], ["••••• Ride the Flames", "Demon (DtF)"], ["••• Command the Wind", "Demon (DtF)"],
+    ["••••• Cyclone", "Demon (DtF)"], ["• Earth Meld", "Demon (DtF)"], ["••••• Invoke the Storm", "Demon (DtF)"], ["•••• Naming the Body's Destruction", "Mummy (2nd)"],
+    ["Witch's Nimbus", "Orpheus"], ["••• Blood Pump", "Werewolf (Changing Breeds)"]];
+  for ( const [name, line] of want ) assert.ok(TR.everyTurnOf(name, line), `${line}|${name}`);
+  assert.equal(TR.everyTurnOf("Earth Meld", "Vampire (V20)"), null, "the vampire's Earth Meld has no each-turn roll");
+  // Cyclone: its Strength rolls as damage, then drops by one
+  const cy = TR.resolveRec(TR.EVERY_TURN.cyclone, {successes: 3, faith: 4});
+  assert.equal(cy.counter.value, 3); assert.equal(cy.area.yards, 4);
+  assert.deepEqual(TR.stepOf(cy).map(s => s.kind), ["damage", "counter"]);
+  assert.equal(TR.damageDice(TR.EVERY_TURN.cyclone.each.damage, cy), 3);
+  // Clenched Jaw rolls the Garou's Strength + 1
+  assert.equal(TR.damageDice({pool: "caster:strength+1"}, {}, p => p === "strength" ? 4 : 0), 5);
+  // Invoke the Storm: Faith turns, Torment dice, a 9 strikes
+  const st = TR.resolveRec(TR.EVERY_TURN["invoke the storm"], {faith: 3, torment: 6});
+  assert.equal(st.rounds, 3); assert.equal(TR.damageDice(st.strike.damage, st), 6);
+  assert.ok(TR.struck(st, 9)); assert.ok(!TR.struck(st, 8));
+  // only the high-Torment Command the Wind, only the serious Naming
+  assert.ok(!TR.fits(TR.EVERY_TURN["command the wind"], {})); assert.ok(TR.fits(TR.EVERY_TURN["command the wind"], {high: true}));
+  assert.ok(TR.fits(TR.EVERY_TURN["naming the body's destruction"], {levels: 3})); assert.ok(!TR.fits(TR.EVERY_TURN["naming the body's destruction"], {levels: 7}));
+  // records with nothing to roll each turn only mark the effect
+  for ( const k of ["witch's nimbus", "blood pump", "one fights as many"] ) assert.ok(TR.resolveRec(TR.EVERY_TURN[k]).passive, k);
+  assert.ok(!TR.resolveRec(TR.EVERY_TURN.cyclone).passive);
+  assert.equal(TR.worstOf([0, 3, 1]), 3);
+  // One Fights as Many: a Quintessence a copy, only what is paid comes
+  assert.deepEqual(SR.payFor({pool: "quintessence", per: 1}, 4, 2), {count: 2, paid: 2});
+  assert.equal(SS.SPECS["mage-dark-ages|one-fights-as-many"].extra, true);
+  const sm = src("modules/wodx-actions/scripts/summons.js"), tu = src("modules/wodx-actions/scripts/turns.js"), fx = src("modules/wodx-actions/scripts/effects.js");
+  assert.match(sm, /import \* as E from "\.\/effects-rules\.js"/);
+  for ( const needle of ["export async function shareWounds", "SR.payFor("] ) assert.ok(sm.includes(needle), needle);
+  for ( const needle of ["wodxAttackRolled", "wodx-turn-skip", "export async function onHealed", "export const noBloodCap", "strikes("] ) assert.ok(tu.includes(needle), needle);
+  for ( const needle of ["TR.resolveRec(", "TURN.onHealed(", "touchHarm", "onBreak", "everyEffect", "?.extra"] ) assert.ok(fx.includes(needle), needle);
+  assert.match(src("modules/wodx-actions/scripts/main.js"), /TURN\.noBloodCap\(actor\)/);
+  assert.match(src("modules/wodx-actions/scripts/orpheus-horrors.js"), /touch: \{ levels: k/);
+  assert.match(src("modules/wodx-actions/scripts/demon-evocations.js"), /high: true/);
 });

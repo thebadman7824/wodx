@@ -318,12 +318,22 @@ export function planOf(actor, results, successes, power = null) {
   }
   const bound = results.some(r => r.key === "bind");
   // B4832: a power whose book acts each turn rides that rule on its first matching result
-  const et = power?.name ? TR.everyTurnOf(power.name, power.line ?? "") : null;
-  if ( et ) {
-    const i = results.findIndex(r => et.on === "target" ? r.who !== "self" : r.who === "self");
-    const j = i >= 0 ? i : 0;
-    if ( results[j] ) results = results.map((r, x) => x === j ? {...r, out: {...r.out, everyTurn: et, text: `${r.out?.text ?? ""}; ${et.text}`}} : r);
+  const et0 = power?.name ? TR.everyTurnOf(power.name, power.line ?? "") : null;
+  if ( et0 ) {
+    // B4838: the casting's own numbers (successes, Faith, Torment) and the caster go on the record now
+    const adv = actor?.system?.advantages ?? {};
+    const et = TR.resolveRec(et0, {successes, faith: n(power.faith) || n(adv.faith?.permanent), torment: n(adv.torment?.permanent), by: own?.uuid ?? actor?.uuid ?? null});
+    const want = r => (et.on === "target" ? r.who !== "self" : r.who === "self") && TR.fits(et, r.out);
+    const i = results.findIndex(want);
+    const j = i >= 0 ? i : (et.high || et.levelsEq || et.on !== "target") ? -1 : 0;
+    if ( j >= 0 && results[j] ) results = results.map((r, x) => x === j ? {...r, out: {...r.out, everyTurn: et, text: `${r.out?.text ?? ""}; ${et.text}`}} : r);
+    // A rule on the caster with no result of the caster's own to ride (Tripping the Ire): it gets a timed effect for the scene
+    else if ( i < 0 && et.on !== "target" && !et.high && !et.levelsEq && results.length )
+      results = [...results, {key: "boost", who: "self", out: {key: "boost", kind: "timed", label: power.name, name: power.name, timed: {kind: "scene"}, duration: "the scene", everyTurn: et, source: power.source ?? et.page, text: et.text}}];
   }
+  // B4841: a power whose book makes copies or servants but whose keywords say otherwise (One Fights as Many) also summons
+  if ( power?.name && !results.some(r => r.key === "summon") && SUM.specFor(power.name, power.line ?? "")?.extra )
+    results = [...results, {key: "summon", who: "self", out: {key: "summon", kind: "summon", label: power.name, source: power.source ?? ""}}];
   for ( const r0 of results ) {
     const r = r0.key === "summon" ? summonResult(actor, r0, successes, power, {bound}) : r0;
     const k = DAE.targetCount(r.who, successes, t.self ? 0 : t.docs.length);
@@ -397,6 +407,13 @@ const tokenOf = d => (d?.documentName === "Token" ? d : actorOf(d)?.getActiveTok
 /** Apply one item. Returns an undo record, or {note} when nothing could change. */
 export async function applyItem(item, casterName = "the caster") {
   const rec = await applyCore(item, casterName);
+  // B4838: an each-turn rule on any other kind of result (a thing made, a hold, a boost) gets a timed effect of its own
+  const et = item?.out?.everyTurn;
+  if ( et && !["damage", "timed"].includes(item.out.kind) && rec && typeof rec === "object" && !rec.note ) {
+    const a = actorOf(docOf(item.target));
+    const uuid = a ? await TURN.attach(a, et, {label: item.out.label ?? item.out.name ?? "A power", by: casterName}) : null;
+    if ( uuid ) rec.everyEffect = uuid;
+  }
   // B3528: a mind or body binding on a player character gets the player a binding card (no hold on the token)
   try { await bindingCard(item, casterName); } catch (e) { console.warn("WoDX | binding card", e); }
   // Traits With Teeth step 5: Sway and Fear move an NPC's regard for the caster (WoDX NPC), undone with the rest
@@ -448,7 +465,8 @@ async function applyCore(item, casterName = "the caster") {
     case "damage":
       if ( !C ) return {note: "WoDX Combat is off: apply the damage by hand"};
       // A pool rolls its damage dice first (C20 Holly-Strike, Lord of Levin), levels go on as they are
-      await C.soakAndApply(tokenOf(d)?.object ?? a, {mode: o.pool ? "pool" : "levels", amount: o.pool || o.levels, type: o.type, soak: o.soak});
+      // B4842: a poison eaten later (Bitter Fruit) does its harm only through its each-turn roll
+      if ( !o.everyTurn?.only ) await C.soakAndApply(tokenOf(d)?.object ?? a, {mode: o.pool ? "pool" : "levels", amount: o.pool || o.levels, type: o.type, soak: o.soak});
       // B4832: harm that lasts goes on each turn, and a power whose book says so hurts each turn until it is stopped
       const every = o.everyTurn ?? TR.lastingHarm(o);
       const effect = every ? await TURN.attach(a, every, {label: o.label ?? "Harm", by: casterName}) : null;
@@ -461,6 +479,7 @@ async function applyCore(item, casterName = "the caster") {
         const take = Math.min(has, left);
         if ( take > 0 ) { await C.healDamage(a, type, take); left -= take; }
       }
+      await TURN.onHealed(a);
       return {uuid: a.uuid, health};
     }
     case "quint": {
@@ -482,6 +501,8 @@ async function applyCore(item, casterName = "the caster") {
       }
       if ( tok && o.vision ) await tok.update({"sight.visionMode": "darkvision", "sight.range": Math.max(n(tok.sight?.range), 30)});
       if ( o.everyTurn && effect?.uuid ) await TURN.attach(a, o.everyTurn, {effect: effect.uuid, label: o.label ?? o.name, by: casterName});
+      // B4846: a burning sheath hurts whoever lands a close blow on its bearer
+      if ( o.touch?.levels && effect?.uuid ) await fromUuidSync(effect.uuid)?.setFlag?.(MOD, "touchHarm", o.touch);
       return {uuid: a.uuid, effect: effect?.uuid ?? null, token: tok && (o.feet || o.vision) ? tokenWas : null};
     }
     case "pool": {
@@ -836,6 +857,7 @@ export async function undo(records = []) {
         if ( AT && npc && ch ) await (r.attitude.met ? AT.apply(npc, ch, {to: r.attitude.before, why: "Undone"}) : AT.forget(npc, ch));
       }
       if ( r.effect ) await fromUuidSync(r.effect)?.delete?.({wodxUndo: true});
+      if ( r.everyEffect ) await fromUuidSync(r.everyEffect)?.delete?.({wodxUndo: true});
       if ( r.across ) { const t = fromUuidSync(r.across); if ( t ) await game.modules.get("wodx-otherworlds")?.api?.sendAcross?.(t, {to: r.to}); }
       if ( r.weather ) await game.modules.get("wodx-atmosphere")?.api?.weather?.set?.(r.weather.jdn, r.weather.prev ?? null);
       if ( r.taint ) { const sc = fromUuidSync(r.taint.scene); if ( sc ) await corruption()?.set?.(sc, r.taint.prev); }
@@ -1058,6 +1080,9 @@ export async function resolveResist(msg, i, won) {
   const item = data?.items?.[i];
   if ( !item ) return null;
   if ( won && ENDS_ON_RESIST.has(item.key) ) {
+    // B4839: tearing free of a bite costs the one who tears loose (Clenched Jaw)
+    const brk = item.out?.everyTurn?.onBreak?.damage;
+    if ( brk ) { const t = docOf(item.target); await combat()?.soakAndApply?.(tokenOf(t)?.object ?? actorOf(t), {mode: "levels", amount: n(brk.levels) || 1, type: brk.type ?? "lethal", soak: brk.soak !== false}); }
     const recs = (data.undo ?? []).filter(r => r?.i === i);
     await undo(recs);
     await msg.update({[`flags.${MOD}.undo`]: (data.undo ?? []).filter(r => r?.i !== i), [`flags.${MOD}.resisted`]: [...(data.resisted ?? []), i]});

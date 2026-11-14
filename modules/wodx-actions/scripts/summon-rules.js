@@ -194,6 +194,14 @@ export function statsOf(stats, ctx = {}) {
  * ctx: {successes, faith, level, torment, gnosisSpent, rageSpent, willpowerSpent, bloodSpent, ladder, ladderLabel,
  *       bound (a Bind keyword on the same casting), npc (the summoner has no player)}
  */
+/** What a summoning costs up front (One Fights as Many: a Quintessence a copy): how many can come and what is paid. */
+export function payFor(cost, count, have) {
+  if ( !cost?.per ) return {count, paid: 0};
+  const can = Math.floor(n(have) / n(cost.per));
+  const k = Math.max(0, Math.min(count, can));
+  return {count: k, paid: k * n(cost.per)};
+}
+
 export function resolve(spec, ctx = {}) {
   const s = spec ?? KEYWORD_SPEC;
   const what = WHAT[s.what] ? s.what : "spirit";
@@ -214,7 +222,7 @@ export function resolve(spec, ctx = {}) {
     count, tokens: swarm ? 1 : count, swarm, timed: endless ? {kind: "scene"} : timed,
     lasts: lastsText({...(s.lasts ?? {}), kind: lastsKind}, ctx), lastsKind, roll, upkeep: s.upkeep ?? null, persist: !!s.persist,
     stats: statsOf(s.stats, ctx), onDeath: s.onDeath ?? null, page: s.page ?? "", note: s.note ?? "", look: LOOK[what] ?? null,
-    dismiss: true
+    dismiss: true, cost: s.cost ?? null, shareWounds: s.shareWounds ?? null
   };
   return out;
 }
