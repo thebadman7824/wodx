@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4120
+Next free block: B4140
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -206,6 +206,7 @@ Next free block: B4120
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
 | B4100-B4109 | PC job queue and runner: threads queue PC work as GitHub issues, five testbed lanes run it side by side (used B4100-B4104) | tools (no module) |
 | B4110-B4119 | Stale pull request sweeper in the PC runner (used B4110) | tools (no module) |
+| B4130-B4139 | Missouri village peoples in the People generator (used B4130-B4132) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6839,3 +6840,18 @@ pull request that is behind main and has had no commit for 2 hours (update-branc
 (workflow_dispatch, added to checks.yml) on one that is up to date but never got a run, and lists the rest (merge
 conflicts, CI that cannot start, CI that failed) in one pc-alert issue that it closes when the list is empty. It uses
 Ben's sign-in on the PC because a push made with the workflow token starts no CI.
+
+## B4130. The village peoples of the Missouri join the West (2026-11-14)
+WoDX Creation and Chronicle. The Mandan, the Hidatsa, the Arikara and the Pawnee join the American West's mix from 1197: together 14 in 100 before 1500 and 8 in 100 before 1800, then 1 each after the smallpox of 1837 and the reservations (the Pawnee and the Hidatsa still 1 each today). Taken as recommended while Ben was away; logged in PENDING-REVIEW.
+
+Reverse: put back the old north-america-west mixes in world-rules.mjs and drop missouriTables from people-world.mjs.
+
+## B4131. Names from the historical record, fewer than 300 (2026-11-14)
+WoDX Creation. The WoD books on the PC hold no names for these peoples (a search of the OCR text found one Mandan chief, Four Bears, and people-level mentions in Croatan Song and the Wendigo tribebook). The lists come from the treaties of 1825 to 1857, Catlin and Bodmer's sitters, Lewis and Clark, the agency rolls of Fort Berthold and the Pawnee agency, and the family names on the rolls since. Each people has fewer than 300 names, as with the Plains and Southwest peoples; the lists grow when more records are checked.
+
+Reverse: edit the lists in data/people-missouri.mjs.
+
+## B4132. Villages and bands before 1800, family names after (2026-11-14)
+WoDX Creation. Before 1800 a person bears an own name alone, and a woman not named in the records is "a woman of" her village (On-a-Slant, Big Hidatsa, Star Village) or Pawnee band (the Skidi, the Chawi). From 1800 a church given name and a family name from the rolls. No church names before 1800: no mission reached the upper Missouri or the Platte before then.
+
+Reverse: change earlyChurch or towns for the four peoples in data/people-missouri.mjs.
