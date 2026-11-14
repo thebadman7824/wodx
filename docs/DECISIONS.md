@@ -199,7 +199,7 @@ Next free block: B3950
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Faith and occult goods in play (used B3900-B3902) | Chronicle, Library |
+| B3900-B3929 | Faith and occult goods in play (used B3900-B3904) | Library |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 <!-- decision-index:end -->
@@ -6665,6 +6665,16 @@ Reverse: remove shotAmmo from the attack and attackUsable.
 WoDX Chronicle. The no-effect audit found faith and occult goods with only a note behind Pray, Set it as a ward and Divine (desk i1, approved by Ben). A ward has to reach the rolls WoDX Actions already makes against a character's mind and magic, and those read Chronicle's trait effects, so Chronicle now takes extra effect sources from other modules (api.traits.addSource). A source that throws is skipped with a warning, so a broken module never stops a roll.
 
 Reverse: drop SOURCES, addSource and fromSources from traits.mjs.
+
+## B3903. Praying and divining (2026-11-14)
+WoDX Library. Pray with a thing of faith: with True Faith it opens WoDX Actions' True Faith (repel, stand against a power). Without it, once a night, Willpower at difficulty 8, and a success gives back 1 temporary Willpower, never above the rating (house rule: the comfort of faith, kept small and once a night so it cannot be farmed). Divine with an astrolabe, tarot, crystal ball or the like: Perception + Occult at difficulty 7, on a card to the Storyteller that says how many questions it answers plainly (one success a riddle, two one question, more up to three; a botch one false answer). Taken as the desk recommended.
+
+Reverse: set pray and divine back to effect "note" in use-rules.mjs.
+
+## B3904. A charm set as a ward (2026-11-14)
+WoDX Library. Set it as a ward: a folk charm carried and set makes mind powers and magic used on the bearer by a supernatural one harder (+1 difficulty, house rule), through Chronicle's trait effects (B3902). Wards do not stack, and a mortal's own tricks are not touched. Taking it down, or leaving it unequipped, ends it.
+
+Reverse: set ward back to effect "note" in use-rules.mjs and drop setupFaith from main.mjs.
 
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
