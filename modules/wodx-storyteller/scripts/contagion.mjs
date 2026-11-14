@@ -95,6 +95,21 @@ export async function start({market, disease, source = "", scale = 1, quiet = fa
   return b.o;
 }
 
+/**
+ * A power that sickens a town (WoDX Actions, B3757), once the Storyteller approved it: the scene's market town falls
+ * sick with plague (M20 p. 442; the bioplague after 2022), stronger at a higher scale. {market} or {why}.
+ */
+export async function power({scene = null, scale = 1, source = ""} = {}) {
+  if ( !game.user.isGM ) return {why: "Only the Storyteller can start a sickness"};
+  const m = MK.marketOfScene(Markets.state(), typeof scene === "string" ? scene : scene?.id ?? globalThis.canvas?.scene?.id);
+  if ( !m ) return {why: "No town on this scene for the sickness to take"};
+  if ( state().towns[m.id] ) return {why: `${m.name} is already sick`};
+  const year = tripContext(now()).year;
+  const pick = year > 2022 ? "bioplague" : "plague";
+  const o = await start({market: m.id, disease: pick, source, scale: 1 + 0.5 * (Math.max(1, Math.min(3, Number(scale) || 1)) - 1)});
+  return o ? {market: m.id, disease: pick} : {why: "The sickness did not take"};
+}
+
 /** The town is rid of it now (the Storyteller ends it): prices, supply, crowds and quarantine go back. */
 export async function end(market, {immune = true} = {}) {
   if ( !game.user.isGM ) return;
@@ -384,4 +399,4 @@ export async function setupContagion() {
 }
 
 export const rules = R;
-export const api = () => ({open: contagionDialog, state, on, here, start, end, quarantine, week: weekRun, undo, regionOf: regionOfMarket, rules: R});
+export const api = () => ({open: contagionDialog, state, on, here, start, power, end, quarantine, week: weekRun, undo, regionOf: regionOfMarket, rules: R});

@@ -152,7 +152,7 @@ export const AREA = {cost: 2, feet: 15, keys: ["harm", "ward", "fortune", "veil"
 export const inArea = (p, a) => !!p && !!a && Math.hypot(n(p.x) - n(a.x), n(p.y) - n(a.y)) <= n(a.radius);
 
 /** The radius of an area in scene pixels: feet over the grid's distance per square. */
-export const areaRadius = ({size = 100, distance = 5} = {}) => Math.round(AREA.feet / (n(distance) || 5) * (n(size) || 100));
+export const areaRadius = ({size = 100, distance = 5, feet = null} = {}) => Math.round((n(feet) > 0 ? n(feet) : AREA.feet) / (n(distance) || 5) * (n(size) || 100));
 
 /**
  * Spend the successes rolled (dividing successes, p. 504). base: the successes needed before extras.

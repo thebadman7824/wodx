@@ -198,7 +198,7 @@ export function build(ctx) {
                 body += `<div class="vta-note">Lasts ${esc(card.lasts)}; range ${esc(card.range)}.</div>`;
                 body += `<div class="vta-note${high ? " bad" : ""}"><b>High Torment:</b> ${esc(card.high)}</div>`;
                 if (works && EF.isOn()) {
-                    const pp = EF.planOf(actor, DE.evocationResults(lore, e.level, r.successes, { high, faith: i.faith.perm, name: e.name, source: `${REF} p. ${D.LORES[lore].page}` }), r.successes);
+                    const pp = EF.planOf(actor, DE.evocationResults(lore, e.level, r.successes, { high, faith: i.faith.perm, name: e.name, source: `${REF} p. ${D.LORES[lore].page}` }), r.successes, { name: e.name, line: "Demon (DtF)", faith: i.faith.perm });
                     body += pp.html;
                     fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
                 }

@@ -219,7 +219,7 @@ export function build(ctx) {
             // Any other Discipline: its keywords on the effects card (Traits With Teeth step 4)
             // A power with no roll counts one success (B3751)
             if (!fx && !p.passive && successes > 0 && EF.isOn()) {
-                const pp = EF.powerPlan(actor, { set: p.book === "V20" ? "v20" : "disc", id: p.book === "V20" ? p.kw : p.id, name: p.n, line: "v20", successes, source: `${p.book ?? "VtDA20"} p. ${p.p ?? "?"}`, noRoll: !p.r });
+                const pp = EF.powerPlan(actor, { set: p.book === "V20" ? "v20" : "disc", id: p.book === "V20" ? p.kw : p.id, name: p.n, line: "v20", successes, source: `${p.book ?? "VtDA20"} p. ${p.p ?? "?"}`, noRoll: !p.r, world: p.book === "V20" ? "Vampire (V20)" : "Vampire (Dark Ages)" });
                 if (pp.items.length || pp.skipped.length) { fx = pp; body += pp.html; }
             }
             const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");
@@ -264,7 +264,7 @@ export function build(ctx) {
             body += `<div class="vta-note">${esc(BR.ritualNote(s, r))}</div>`;
             let fxItems = [];
             if (got && EF.isOn()) {
-                const pp = EF.ritualPlan(actor, r, got, `${BR.BOOK_RITUALS[s].book} ${r.page}`);
+                const pp = EF.ritualPlan(actor, r, got, `${BR.BOOK_RITUALS[s].book} ${r.page}`, `Rituals (${BR.BOOK_RITUALS[s].book})`);
                 body += pp.html; fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             }
             if (fd.advance) body += await spendTime(actor, 300 * BR.ritualLevel(r), "a ritual");

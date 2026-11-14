@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4610
+Next free block: B4620
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -194,7 +194,7 @@ Next free block: B4610
 | B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3719) | Library |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
-| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3756) | Actions |
+| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3757) | Actions, Storyteller |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
 | B3780-B3809 | The no-effect audit: a harmless hit makes its card (used B3780-B3809) | Combat |
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
@@ -212,6 +212,7 @@ Next free block: B4610
 | B4150-B4159 | Shoshone and Ute names in the People generator (used B4150-B4152) | Creation, Chronicle |
 | B4160-B4169 | Canada first nations names in the People generator (used B4160-B4162) | Creation, Chronicle |
 | B4600-B4609 | Show, don't tell: a visible: line on every feature's release note (used B4600) | tools (no module) |
+| B4610-B4619 | The PC runner rechecks every failing gate before it reports (used B4610) | tools (no module) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6460,6 +6461,10 @@ How to reverse: drop inq-blessings.js and the "From the book" select in hunter.j
 WoDX Actions. A Changing Breed's sheet could hold a Gift only by typing its name: the shared Gifts matched the W20 list, and the breeds' own Gifts rolled bare. data/gifts-fera.json now holds 359 Gifts of W20 Changing Breeds for the thirteen Fera with their own lists (Ajaba, Ananasi, Bastet, Corax, Gurahl, Kitsune, Mokole, Nagah, Nuwisha, Ratkin, Rokea, Apis, Grondr, Camazotz), each with the level, cost, pool, difficulty, duration, a short summary in our own words and the printed page. Learn a Gift offers a Fera its own breed's Gifts beside the shared list; Use a Gift reads the pool and cost from the entry, a breed's own Gift wins over a Garou Gift of the same name, and a use that takes puts its keywords on the effects card (damage, healing, holds, blindness, fear, wards, boosts, shapes, movement and the rest). Gifts the book sends to the Garou list stay on the W20 list. Fourteen Gifts the Storyteller must rule (a fertility blessing, a stored item) show their card only.
 How to reverse: drop gifts-fera.json from loadData and the feraGifts lookups in garou.js.
 
+## B3757. Powers that reach the world: towns, sickness, taint and ground (2026-11-14)
+WoDX Actions and WoDX Storyteller. A power that floods, burns or shakes a town, sickens it, fouls or cleanses a place, or turns a whole town's mood changed nothing past the people it touched. tools/powers/world-sweep.mjs reads every power WoDX lists for those effects; 48 of 2,853 reach the world, listed by name in world-effects.js WORLD_POWERS (a "Line|name" key keeps a name to one line, since Wraith Intimation's Ignite stirs a passion). The sweep also lists the powers whose words flag but were read and left out (sensing or hiding taint, one burning weapon, a drink); the harness fails when a new one appears. When a listed power takes, its effects card carries a world result next to its usual ones. Town-wide results (flood, fire, quake, storm damage, blight, a good harvest, riot, dread, calm) wait in the approval queue; once the Storyteller says yes, the scene's market town takes the blow as a town event with its own card and Undo (town-rules POWER_TOWN, beside the saga's flood: one power is one blow, scaled 1, 1.5 or 2 by 3, 5 or 7 successes). A sickness starts plague in the town (the bioplague after 2022) through contagion.power. Taint and cleansing move the place's Wyrm corruption a step a scale, with Undo. Ground results (deep water, fire, broken ground) are areas the Storyteller places, sized from the power where the book gives a reach (Summon Water: Faith yards) and drawn on the map for everyone (blue water, orange fire, brown rubble) under the tokens, gone with the area: deep water carries WoDX Combat's water flag so swimming and drowning hold there, fire deals two dice of lethal damage (more with more successes), broken ground knocks down. Thresholds (house rule): 3 successes for a town result, 2 for taint, 1 for ground, 3 for deep water. The Mage Cast window and the Storyteller's effect window get a "Reaches the world" choice for powers with no list.
+How to reverse: drop the world results from effects.js planOf, plan and stItems, and the power functions from the towns and contagion apis.
+
 ## B3770. Kuei-jin make stone weapons and true jade (2026-11-14)
 WoDX Library, data/wonders-kuei-jin.mjs and scripts/wonders-kuei-jin.mjs. The Item Crafting Desk pick kj2 (full). Kindred of the East has jade talismans only as a Background (pp. 86-87), but the Companion (p. 67) gives the masters of Jade Shintai two powers that make things, Blade of Stone and Taste of Jade. Both are a Kuei-jin kit on the shared wonders registry (B3683), world setting craftKueiJin, on by default like the other kits.
 
@@ -6988,3 +6993,15 @@ Ben's standing rule: whatever happens in the game world must show on the map or 
 told in text (a demon's flood shows rain forming and the town flooding, not a card saying it flooded). Like the
 effect: rule (B3734), every minor or major release note in changes/ carries a visible: line, or visible: none and why,
 and merge-stamp.mjs refuses to stamp (so the branch cannot merge) while it is missing. Written into docs/WORKFLOW.md and changes/README.md.
+
+## B4610. A failing gate is rerun alone and on main before the result goes back (2026-11-14)
+PC runner (tools/pcq). Five gates failed on main for hours (gatehuntpowder, gatesurvival, gateworld, gatetraits,
+gatearms) and each thread read them as "already failing, not mine", so nobody fixed them. The changes that broke them
+(B3900, B3830) did run them in their touched sets: the failures were seen and waved through. Now a gates job that
+fails reruns each failing gate (up to 12) on a freshly reset lane, first alone on the same commit, then on main, and
+the result lists a verdict for each: NEW with this change, fails on main too, or passes alone (it fails only after
+other gates, so leftovers or order are at fault). A thread can then tell its own fault from an old one at a glance,
+and an old one names a gate to fix rather than a reason to merge past it. A job can turn this off with
+"recheck": false.
+
+Reverse: drop recheck() from tools/pcq/runner.mjs.

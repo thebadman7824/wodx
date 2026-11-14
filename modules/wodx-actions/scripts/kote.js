@@ -174,7 +174,7 @@ export function build(ctx) {
             if (pw) {
                 body += `<div class="vta-sec"><b>${esc(pw.name)}</b>: ${esc(pw.fx)}${pw.cost.wp ? ` (${pw.cost.wp} Willpower as well)` : ""}</div>`;
                 if (got > 0 && EF.isOn()) {
-                    const pp = EF.planOf(actor, KA.artResults(pw.id, got, { source: `${REF} p. ${pw.p}` }), got);
+                    const pp = EF.planOf(actor, KA.artResults(pw.id, got, { source: `${REF} p. ${pw.p}` }), got, { name: pw.name, line: "Kuei-jin (KotE)" });
                     body += pp.html;
                     fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
                 }

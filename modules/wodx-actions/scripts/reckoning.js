@@ -140,7 +140,7 @@ export function build(ctx) {
             // The edge's keywords on the effects card (the HtR list), from its successes (one for an edge with no roll)
             const plan = got => {
                 if (!(got > 0) || !EF.isOn()) return { html: "", items: [] };
-                const pp = EF.powerPlan(actor, { set: "htr", id: `${e.path}-${e.id}`, name: e.name, line: "htr", successes: got, source: `Hunter: The Reckoning p. ${e.p}` });
+                const pp = EF.powerPlan(actor, { set: "htr", id: `${e.path}-${e.id}`, name: e.name, line: "htr", successes: got, source: `Hunter: The Reckoning p. ${e.p}`, world: "Hunter (HtR)" });
                 return { html: pp.html, items: pp.items.filter(x => x.route !== "off" && x.route !== "st") };
             };
             const fxOf = items => items.length ? { kind: "effects", caster: actor.name, items } : undefined;

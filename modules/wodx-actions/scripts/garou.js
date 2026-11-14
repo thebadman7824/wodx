@@ -487,11 +487,11 @@ export function build(ctx) {
             let fxItems = [];
             // A library Gift with no roll counts one success (B3751)
             if (g?.book === "W20 CB" && successes > 0 && EF.isOn()) {
-                const pp = EF.planOf(actor, feraGiftResults(g, successes), successes);
+                const pp = EF.planOf(actor, feraGiftResults(g, successes), successes, { name: g.n, line: "Werewolf (Changing Breeds)" });
                 body += pp.html;
                 fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             } else if ((code || g) && successes > 0 && EF.isOn()) {
-                const pp = EF.powerPlan(actor, { set: "gift", id: g?.book === "W20" ? "" : (g?.id ?? ""), name: it.name, line: "w20", successes, source: g ? giftRef(g) : "W20", noRoll: !code });
+                const pp = EF.powerPlan(actor, { set: "gift", id: g?.book === "W20" ? "" : (g?.id ?? ""), name: it.name, line: "w20", successes, source: g ? giftRef(g) : "W20", noRoll: !code, world: g?.book === "W20" ? "Werewolf (W20)" : "Werewolf (Dark Ages)" });
                 body += pp.html;
                 fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             }
@@ -576,7 +576,7 @@ export function build(ctx) {
             if (found?.r) {
                 body += `<div class="vta-note"><b>${esc(found.r.n)}</b>: ${esc(BR.ritualNote(found.set, found.r))}</div>`;
                 if (got > 0 && EF.isOn()) {
-                    const pp = EF.ritualPlan(actor, found.r, got, `${BR.BOOK_RITUALS[found.set].book} ${found.r.page}`);
+                    const pp = EF.ritualPlan(actor, found.r, got, `${BR.BOOK_RITUALS[found.set].book} ${found.r.page}`, `Rituals (${BR.BOOK_RITUALS[found.set].book})`);
                     body += pp.html; fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
                 }
             }

@@ -391,6 +391,32 @@ export const SAGA_TOWN = {
   expulsion: {kind: "expulsion", prosperity: -1, unrest: 0.6, fled: 0.35, text: "A whole people is put on the road with what they can carry; their houses stand empty.", big: true},
   flood: {kind: "flood", prosperity: -0.6, unrest: 0.2, dead: 0.003, fled: 0.01, text: "The river floods the low streets and the old workings.", big: true}
 };
+/**
+ * What a power that reaches the world does to the town (WoDX Actions world-effects.js, B3757), at scale 1 (the
+ * figures as written), 2 (half again) or 3 (twice). The figures sit beside the saga's flood: a power is one blow, not
+ * a season. House rule, logged in DECISIONS.
+ */
+export const POWER_TOWN = {
+  flood: {...SAGA_TOWN.flood, prosperity: -0.4, dead: 0.002, fled: 0.01},
+  fire: {kind: "fire", prosperity: -0.5, unrest: 0.3, dead: 0.002, fled: 0.01, text: "Fire runs through the streets: homes and workshops burn.", big: true},
+  quake: {kind: "quake", prosperity: -0.6, unrest: 0.3, dead: 0.004, fled: 0.02, text: "The ground shakes: walls crack, roofs fall and roads break.", big: true},
+  storm: {kind: "storm", prosperity: -0.25, unrest: 0.1, dead: 0.0005, text: "A great storm tears off roofs and floods the cellars.", big: false},
+  blight: {kind: "blight", prosperity: -0.3, unrest: 0.3, marks: [{kind: "famine", weeks: 8, why: "blight"}], text: "Blight in the fields and the stores: food grows short and dear.", big: true},
+  boon: {kind: "boon", prosperity: 0.3, unrest: -0.2, marks: [{kind: "boom", weeks: 8, why: "a good harvest"}], text: "The fields and herds do well: the town eats better and trades more.", big: false},
+  riot: {kind: "riot", prosperity: -0.2, unrest: 0.8, dead: 0.0005, text: "The town's temper breaks: fights in the streets, shutters smashed.", big: true},
+  dread: {kind: "dread", prosperity: -0.1, unrest: 0.4, fled: 0.01, text: "Fear settles on the town: people keep indoors, and some leave.", big: false},
+  calm: {kind: "calm", unrest: -0.6, text: "Tempers cool and the town settles.", big: false}
+};
+const SCALE = {1: 1, 2: 1.5, 3: 2};
+/** A power's blow to one town: the POWER_TOWN figures times its scale; label names the caster and power. */
+export function powerEvent(kind, townId, {scale = 1, label = ""} = {}) {
+  const e = POWER_TOWN[kind];
+  if ( !e || !townId ) return null;
+  const k = SCALE[scale] ?? 1, out = {...e, town: townId};
+  for ( const f of ["prosperity", "unrest", "dead", "fled"] ) if ( Number.isFinite(e[f]) ) out[f] = Math.round(e[f] * k * 10000) / 10000;
+  out.text = label ? `${label}: ${e.text.charAt(0).toLowerCase()}${e.text.slice(1)}` : e.text;
+  return out;
+}
 /** A saga step's change as news for one town; name is the step's title. */
 export function sagaEvent(kind, townId, name = "") {
   const e = SAGA_TOWN[kind];
