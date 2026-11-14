@@ -21,6 +21,8 @@ async function save(R, name) {
   return R.summary;
 }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+// Actor.create of a list may hand them back in any order: match by name
+const createActors = async data => { const made = await Actor.create(data); return data.map(d => made.find(a => a.name === d.name) ?? null); };
 
 export async function run() {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
@@ -40,13 +42,13 @@ export async function run() {
   const OWNER = CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;
   const own = player ? {[player.id]: OWNER} : {};
   try {
-    const made = await Actor.create([
+    const made = await createActors([
       {name: "WoDX gate gaps: Player", type: "Mortal", ownership: own, system: {attributes: {dexterity: {value: 3}}, abilities: {athletics: {value: 2}}}},
       {name: "WoDX gate gaps: Ghoul", type: "Mortal", ownership: own, flags: {"wodx-creation": {ghoul: true}}},
       {name: "WoDX gate gaps: Dead", type: "Mortal"},
       {name: "WoDX gate gaps: Heir", type: "Mortal"},
       {name: "WoDX gate gaps: Dying", type: "Mortal"}]);
-    actors.push(...made);
+    actors.push(...made.filter(Boolean));
     const [pc, ghoul, dead, heir, dying] = made;
     R.notes.push({player: player?.name ?? null, versions: Object.fromEntries(["wodx-chronicle", "wodx-storyteller", "wodx-actions"].map(id => [id, game.modules.get(id)?.version]))});
 
