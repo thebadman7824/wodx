@@ -80,7 +80,7 @@ export function rideOf(tokDoc) {
   return null;
 }
 const MOUNT_LABELS = {horse: "Riding horse", mule: "Mule", cart: "Cart", carriage: "Carriage", boat: "Rowing boat", car: "Motor car", motorbike: "Motorcycle", motorboat: "Motorboat",
-  truck: "Lorry", armoured: "Armoured car", tank: "Tank", balloon: "Balloon", plane: "Aeroplane", helicopter: "Helicopter", jet: "Jet"};
+  truck: "Lorry", armoured: "Armoured car", tank: "Tank", balloon: "Balloon", plane: "Aeroplane", helicopter: "Helicopter", jet: "Jet", bicycle: "Bicycle", ghoulhorse: "Ghouled horse", szlachta: "Fleshcrafted steed", chimera: "Chimerical steed", stygian: "Stygian steed", gryphon: "Gryphon"};
 
 /** The Garou form a sheet is in (the system's shapes), or "homid". */
 const formOf = actor => { const sh = actor?.system?.shapes ?? {}; return ["glabro", "crinos", "hispo", "lupus"].find(k => sh[k]?.isactive) ?? "homid"; };

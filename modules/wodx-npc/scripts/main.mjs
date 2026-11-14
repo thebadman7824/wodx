@@ -319,6 +319,8 @@ function vehiclesNear(tok) {
     if ( !M || o.driver || (M.from && year && year < M.from) ) continue;
     if ( R.aboard?.(o)?.length >= o.seats ) continue;
     if ( R.hullState?.(o.hull, o.hull?.structure)?.state === "wrecked" ) continue;
+    // B4961: a chimerical steed is for the fae, a Stygian steed for the dead
+    if ( R.riderMay && !R.riderMay(o.kind, C()?.getKind?.(tok.actor) ?? "mortal") ) continue;
     const dots = C()?.ability?.(tok.actor, M.skill)?.value ?? 0;
     const pseudo = tileAsToken(t);
     out.push({id: t.id, label: o.title || M.label, distance: Math.max(0, Math.round((yardsBetween(tok, pseudo) ?? 999) - tileReach(t))), canDrive: dots >= (R.minSkill?.(o.kind) ?? 1)});

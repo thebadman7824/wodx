@@ -49,7 +49,7 @@ export const WAYS = {
   cart:      {label: "By cart or wagon", pool: ["dexterity", "ride"], wheels: true, mounted: true, mount: "cart", to: 1960, speed: () => 15},
   carriage:  {label: "By carriage or coach", pool: ["dexterity", "ride"], wheels: true, mounted: true, mount: "carriage", to: 1945, speed: () => 25},
   boat:      {label: "By rowing boat", pool: ["stamina", "athletics"], water: true, mounted: true, mount: "boat", speed: () => 6},
-  bicycle:   {label: "By bicycle", pool: ["dexterity", "athletics"], wheels: true, light: true, mounted: true, from: 1885, thrown: true,
+  bicycle:   {label: "By bicycle", pool: ["dexterity", "athletics"], wheels: true, light: true, mounted: true, mount: "bicycle", from: 1885, thrown: true,
     speed: y => band(y, [[1885, 20], [1950, 25]])},
   car:       {label: "By car", pool: ["dexterity", "drive"], wheels: true, motor: true, mounted: true, mount: "car", from: 1900,
     // [from year, safe mph, top mph, Maneuver]: the V20 chart's sedan and luxury sedan from 1990 and 2040, house figures before
@@ -73,7 +73,15 @@ export const WAYS = {
   helicopter: {label: "By helicopter", pool: ["dexterity", "pilot"], air: true, motor: true, mounted: true, mount: "helicopter", from: 1945,
     chart: [[1945, 60, 90, 5], [1960, 140, 220, 6], [2000, 150, 250, 6], [2040, 180, 280, 7]]},
   jet:       {label: "By jet", pool: ["dexterity", "pilot"], air: true, motor: true, mounted: true, mount: "jet", from: 1944,
-    chart: [[1944, 350, 500, 5], [1960, 350, 450, 4], [2040, 450, 600, 5]]}
+    chart: [[1944, 350, 500, 5], [1960, 350, 450, 4], [2040, 450, 600, 5]]},
+  // B4962 (house figures): the beasts out of the books. A ghouled horse has a dot of Celerity in it (Vampire: Dark Ages
+  // 20th p. 401: animal ghouls learn Celerity, Fortitude and Potence); Charon's horses are "swift beyond telling"
+  // (Wraith 20th p. 31); a gryphon flies.
+  ghoulhorse: {label: "On a ghouled horse", pool: ["dexterity", "ride"], hooves: true, mounted: true, mount: "ghoulhorse", thrown: true, speed: () => 60},
+  szlachta:   {label: "On a fleshcrafted steed", pool: ["dexterity", "ride"], hooves: true, mounted: true, mount: "szlachta", thrown: true, speed: () => 45},
+  chimera:    {label: "On a chimerical steed", pool: ["dexterity", "ride"], hooves: true, mounted: true, mount: "chimera", thrown: true, speed: () => 55},
+  stygian:    {label: "On a Stygian steed", pool: ["dexterity", "ride"], hooves: true, mounted: true, mount: "stygian", thrown: true, speed: () => 75},
+  gryphon:    {label: "On a gryphon", pool: ["dexterity", "ride"], hooves: true, air: true, mounted: true, mount: "gryphon", thrown: true, speed: () => 65}
 };
 
 /**
@@ -121,8 +129,8 @@ export const GROUNDS = {
   streets: {label: "Town streets", diff: 0, cap: {hooves: 30, wheels: 40}, shuts: ["boat", "motorboat"], cover: true},
   crowd:   {label: "A crowd or a market", diff: 1, wheelDiff: 2, cap: {hooves: 10, wheels: 10}, shuts: ["boat", "motorboat"], cover: true},
   rough:   {label: "Rough ground or woods", diff: 1, cap: {hooves: 25, light: 15, wheels: 20}, shuts: ["cart", "carriage", "car", "truck", "boat", "motorboat"], cover: true},
-  indoors: {label: "Indoors, alleys or rooftops", diff: 1, cap: {}, shuts: ["horse", "mule", "cart", "carriage", "car", "boat", "motorboat", "bicycle", "motorbike", "truck", "armoured", "tank", "balloon", "plane", "helicopter", "jet"], cover: true},
-  water:   {label: "A river or a lake", diff: 0, cap: {}, shuts: ["foot", "horse", "mule", "cart", "carriage", "bicycle", "car", "motorbike", "truck", "armoured", "tank"], cover: false}
+  indoors: {label: "Indoors, alleys or rooftops", diff: 1, cap: {}, shuts: ["horse", "mule", "cart", "carriage", "car", "boat", "motorboat", "bicycle", "motorbike", "truck", "armoured", "tank", "balloon", "plane", "helicopter", "jet", "ghoulhorse", "szlachta", "chimera", "stygian", "gryphon"], cover: true},
+  water:   {label: "A river or a lake", diff: 0, cap: {}, shuts: ["foot", "horse", "mule", "cart", "carriage", "bicycle", "car", "motorbike", "truck", "armoured", "tank", "ghoulhorse", "szlachta", "chimera", "stygian"], cover: false}
 };
 export const groundKind = k => (GROUNDS[k] ? k : "streets");
 

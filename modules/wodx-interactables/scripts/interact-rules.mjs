@@ -267,11 +267,24 @@ export const MOUNTS = {
   balloon: {label: "Balloon or airship", verb: "Take the helm", reins: "at the helm", skill: "pilot", attr: "dexterity", seats: 4, from: 1783, min: 1, air: true, noise: "quiet"},
   plane: {label: "Propeller aeroplane", verb: "Fly it", reins: "at the controls", skill: "pilot", attr: "dexterity", seats: 4, from: 1909, min: 1, air: true, noise: "loud"},
   helicopter: {label: "Helicopter", verb: "Fly it", reins: "at the controls", skill: "pilot", attr: "dexterity", seats: 5, from: 1945, min: 1, air: true, noise: "loud"},
-  jet: {label: "Jet aircraft", verb: "Fly it", reins: "at the controls", skill: "pilot", attr: "dexterity", seats: 2, from: 1944, min: 1, air: true, noise: "loud"}
+  jet: {label: "Jet aircraft", verb: "Fly it", reins: "at the controls", skill: "pilot", attr: "dexterity", seats: 2, from: 1944, min: 1, air: true, noise: "loud"},
+  // B4960: the bicycle as a tile (it was a way to run in a chase only), Athletics as the chase has it, from 1885
+  bicycle: {label: "Bicycle", verb: "Ride it", reins: "on it", skill: "athletics", attr: "dexterity", seats: 1, from: 1885, thrown: true, noise: "quiet"},
+  // B4961 to B4965: beasts out of the books. only: the kinds of rider (WoDX Actions' profiles) who can ride it at all;
+  // min: the Ride it takes to stay on an exotic mount (Mage 20th p. 298: griffins and the like need Riding 3).
+  ghoulhorse: {label: "Ghouled horse", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 2, thrown: true, noise: "quiet", beast: true},
+  szlachta: {label: "Fleshcrafted steed", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 2, min: 3, thrown: true, noise: "loud", beast: true},
+  chimera: {label: "Chimerical steed", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 2, thrown: true, noise: "quiet", beast: true,
+    only: ["fae"], onlyNote: "Only the fae (and those they have enchanted) can see a chimerical steed, let alone ride one (Changeling 20th p. 280)."},
+  stygian: {label: "Stygian steed", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 1, thrown: true, noise: "quiet", beast: true,
+    only: ["wraith", "spirit"], onlyNote: "One of Charon's horses of the dead: only the dead ride it (Wraith 20th p. 31)."},
+  gryphon: {label: "Gryphon or hippogryph", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 1, min: 3, thrown: true, air: true, noise: "loud", beast: true}
 };
+/** B4961: whether a rider of this kind (WoDX Actions' profile) can get on at all. The Storyteller's kept tiles aside. */
+export const riderMay = (kind, riderKind) => !MOUNTS[kind]?.only || MOUNTS[kind].only.includes(riderKind ?? "mortal");
 /** Dots in the Ability needed to work a kind without a roll; aircraft and military vehicles cannot be worked below it. */
 export const minSkill = kind => MOUNTS[kind]?.min ?? 1;
-export const cannotWithout = kind => !!(MOUNTS[kind]?.air || MOUNTS[kind]?.military);
+export const cannotWithout = kind => !!(MOUNTS[kind]?.air || MOUNTS[kind]?.military || (MOUNTS[kind]?.beast && MOUNTS[kind]?.min));
 
 /**
  * B4791: the damage a vehicle has taken, kept on its tile as flags.wodx-interactables.hull = {lost, burning}. lost:
@@ -1265,9 +1278,11 @@ function mountOptions(o, ch) {
   }
   if ( o.riders.some(r => r.a === me) ) return [{id: "dismount", label: "Get off", roll: null, seconds: TURN, noise: {success: "quiet"}}];
   const out = [], n = aboard(o).length, full = n >= o.seats;
+  if ( !ch.kept && !riderMay(o.kind, ch.kind) ) return [{id: "onlyNote", label: `Not for ${ch.kind === "mortal" ? "the living" : "you"}`, roll: null, disabled: true, note: M.onlyNote ?? ""}];
   if ( !o.driver && !full && !trained && cannotWithout(o.kind) ) {
     out.push({id: "skillNote", label: `${M.verb}: needs ${skillLabel} ${minSkill(o.kind)}`, roll: null, disabled: true,
-      note: M.air ? `Nobody flies one without ${skillLabel} (Mage 20th p. 462).` : `A military vehicle needs ${skillLabel} ${minSkill(o.kind)} to work at all (Mage 20th p. 461).`});
+      note: M.beast ? `A dangerous or exotic mount: ${skillLabel} ${minSkill(o.kind)} or better to stay on it at all (Mage 20th p. 298).`
+        : M.air ? `Nobody flies one without ${skillLabel} (Mage 20th p. 462).` : `A military vehicle needs ${skillLabel} ${minSkill(o.kind)} to work at all (Mage 20th p. 461).`});
   } else if ( !o.driver && !full ) {
     out.push(trained ? {id: "mount", label: M.verb, roll: null, seconds: TURN, noise: {success: M.noise}, note: `${skillLabel} ${sk.value}: no roll at an ordinary pace. Whoever is at the reins moves it by moving their token.`}
       : {id: "mount", label: M.verb, roll: pool(6), seconds: TURN, noise: {success: M.noise, fail: "quiet", botch: "loud"},
