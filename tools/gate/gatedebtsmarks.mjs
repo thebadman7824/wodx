@@ -195,7 +195,10 @@ async function finish(ids, playerSteps = []) {
       await until(() => game.messages.contents.some(m => m.timestamp >= since && /The Beast has/.test(m.content ?? "")), 8000);
       const card = game.messages.contents.filter(m => m.timestamp >= since && /The Beast has/.test(m.content ?? "")).at(-1);
       const plan = game.messages.contents.filter(m => m.timestamp >= since && m.flags?.["wodx-npc"]).length;
-      return {name, pass: !!card && plan > 0, card: plain(card), planCards: plan};
+      const fallback = game.messages.contents.filter(m => m.timestamp >= since && /What the Beast wants/.test(m.content ?? "")).length;
+      let planErr = null;
+      if ( !card ) { try { const t = combat.combatant?.token?.object; NPC().planTurn(t, combat); } catch (e) { planErr = String(e.stack ?? e.message).split("\n").slice(0, 3).join(" | "); } }
+      return {name, pass: !!card && plan > 0, card: plain(card), planCards: plan, fallback, planErr, turnOf: combat.combatant?.actor?.name, round: combat.round};
     } catch (e) { return {name, pass: false, error: e.message}; }
   })());
   try {
