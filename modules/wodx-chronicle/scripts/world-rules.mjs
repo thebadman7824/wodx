@@ -118,7 +118,11 @@ export const WORLD_REGIONS = {
     // the Maya of Yucatán, the Petén and the Guatemalan highlands beside the Nahua (B3830)
     medieval: "nahua 70, maya 30", "early-modern": "nahua 38, maya 17, spanish 45", industrial: "spanish 80, nahua 12, maya 8"}),
   "caribbean": R("The Caribbean (Havana, Kingston, Santo Domingo)", "americas", 23.1, -82.4, "caribbean", "caribbean", {
-    "early-modern": "spanish 55, english 25, french 15, dutch 5", industrial: "spanish 50, english 30, french 20"}, {from: 1492}),
+    // The Taíno of the islands from 1197; after 1492 the Spanish, English, French and Dutch, and the Akan and Yoruba
+    // brought in chains, while the Taíno dwindle to a share in the hill towns (B4660)
+    medieval: "taino 100", "early-modern": "spanish 34, english 16, french 10, dutch 3, akan 16, yoruba 8, taino 13",
+    industrial: "spanish 38, english 20, french 14, akan 15, yoruba 8, hindi 4, taino 1",
+    modern: "spanish 40, english 18, french 12, akan 16, yoruba 8, hindi 5, taino 1"}),
   "andes": R("The Andes (Cuzco, Lima, Potosí)", "americas", -13.5, -72.0, "andes", "andean", {
     medieval: "quechua 100", "early-modern": "quechua 65, spanish 35", industrial: "spanish 60, quechua 40"}),
   "brazil": R("Brazil (Salvador, Rio de Janeiro, the Amazon)", "americas", -13.0, -38.5, "brazil-coast", "brazilian", {
