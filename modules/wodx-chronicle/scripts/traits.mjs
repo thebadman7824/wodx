@@ -59,6 +59,8 @@ export const senses = actor => T.senseEffects(view(actor));
 export const shows = actor => T.showsOf(view(actor));
 /** For WoDX Actions (B3780): the situations the character's merits and flaws ask the player to tick on a roll. */
 export const ticks = actor => T.ticksOf(view(actor));
+/** For WoDX Combat (B3793): extra health levels, softer wound penalties, silver. */
+export const toughness = actor => T.bodyOf(view(actor));
 /** For WoDX NPC: how the character's traits move a first meeting with this NPC: {delta, names}. */
 export const attitudeSeed = (actor, npc, extra = {}) => T.attitudeSeed(view(actor), npc ? {
   kind: kindOf(npc),
@@ -180,4 +182,4 @@ export function registerTraitHooks() {
   });
 }
 
-export const traitsApi = {view, of, has, effects, senses, shows, ticks, attitudeSeed, groupsOf, triggers, pulls, ledgerFor, prompt, worldPlan, makeReal, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};
+export const traitsApi = {view, of, has, effects, senses, shows, ticks, toughness, attitudeSeed, groupsOf, triggers, pulls, ledgerFor, prompt, worldPlan, makeReal, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};

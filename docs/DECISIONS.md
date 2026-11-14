@@ -195,7 +195,7 @@ Next free block: B3810
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
 | B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3746) | Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
-| B3780-B3809 | No-effect audit: items, gear, traits, settings, tables, world data (used B3780-B3792) | Chronicle |
+| B3780-B3809 | No-effect audit: items, gear, traits, settings, tables, world data (used B3780-B3793) | Chronicle, Combat |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6463,3 +6463,8 @@ Reverse: empty MORE_EFFECTS_5.
 WoDX Chronicle. 69 more get a card at their moment, as B3790. What is left (21 traits) changes health levels, wound penalties, soak or movement and belongs in WoDX Combat; Extreme Kink stays without an effect under the age and content rules.
 
 Reverse: empty MORE_PROMPTS_5.
+
+## B3793. Merits and flaws that change the body in a fight (2026-11-14)
+WoDX Chronicle, WoDX Combat. Chronicle's BODY table (api.traits.toughness) gives extra Bruised levels (Huge Size, V20 p. 480; Sturdy, V20 Dark Ages p. 421), a wound-level shift (Increased Pain Threshold, C20 p. 179), dice back from the wound penalty (High Pain Tolerance, Mummy: the Resurrection p. 69; Defiled, Kindred of the East p. 97), no wound penalty until Incapacitated (Insensate to Pain, M20 Book of Secrets p. 39) and aggravated silver (Vulnerability to Silver, V20 p. 482). Combat adds the levels to the health track, writes the eased penalty, and makes a silver weapon aggravated against the character. The other 14 body traits (movement, healing, regeneration, off hand) get a card at the fight, as B3790. Extreme Kink alone stays without an effect.
+
+Reverse: empty BODY and MORE_PROMPTS_6; remove toughness() from Combat's healthTrack, healthUpdate and damageProfile.

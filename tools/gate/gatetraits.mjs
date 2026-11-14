@@ -31,6 +31,8 @@
  *      adds 1 to Social rolls against a vampire
  *  28. the no-effect audit, part 5 (B3791-B3792): a hunter's Holy Aura takes 1 from Social difficulty, and a vampire's
  *      Territorial is a card when the night starts
+ *  29. body traits (B3793): a mortal with Huge Size takes two bashing and is still Bruised (no penalty), while one
+ *      without it is Hurt; a mage with Insensate to Pain takes four and has no wound penalty
  * Result: Data/wodx-gate/gatetraits-result.json.
  */
 async function save(R, name) {
@@ -278,6 +280,18 @@ export async function run() {
       const social = T().rules.sumEffects(T().rules.effectsFor(T().view(saint), {channel: "roll", tags: ["social"]})).diff;
       const nightCards = T().rules.promptsOn(T().view(keeper), "night").map(c => c.key);
       ok("28 no-effect audit, part 5", social === -1 && nightCards.includes("territorial"), {social, nightCards});
+    });
+    await step("29 body traits", async () => {
+      const C = game.modules.get("wodx-combat")?.api;
+      const big = await mk("Trait big", "Mortal", [feat("Huge Size", "merit", 4)]);
+      const plainMortal = await mk("Trait plain", "Mortal", []);
+      const numb = await mk("Trait numb", "Mage", [feat("Insensate to Pain", "merit", 5)]);
+      await C.applyDamage(big, "bashing", 2, {status: false});
+      await C.applyDamage(plainMortal, "bashing", 2, {status: false});
+      await C.applyDamage(numb, "bashing", 4, {status: false});
+      const pen = a => Number(a.system?.health?.damage?.woundpenalty) || 0;
+      const r = {big: pen(big), plain: pen(plainMortal), numb: pen(numb), bruised: T().toughness(big).bruised};
+      ok("29 body traits", r.bruised === 1 && r.big === 0 && r.plain < 0 && r.numb === 0, r);
     });
   } catch (e) {
     R.errors.push(e.message);

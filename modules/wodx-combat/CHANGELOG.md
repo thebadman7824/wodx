@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.28.0 (B3793: healthTrack adds the Bruised levels from WoDX Chronicle's toughness(); healthUpdate and applyDamage write the penalty through rules.bodyPenalty (shift a level, give dice back, or none until Incapacitated); damageProfile turns a silver weapon aggravated for Vulnerability to Silver)
 - 3.27.1 (The word that an attack was rolled also says which defence met it, dodge, block, parry or none, so the map can show it; nothing else changes; not for Live (B2614))
 - 3.27.0 (When a fight ends, the after-action card also writes it into WoDX Chronicle's Legends book as a deed (won when a player character is still up and every other fighter is down) and notes each player character's harm for the end-of-night experience draft in WoDX Storyteller (B3171))
 - 3.26.0 (a night after bad dreams (the Nightmares Flaw, from WoDX Storyteller) takes a die from attacks (B2911); not deployed)

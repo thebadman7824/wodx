@@ -184,6 +184,11 @@ function woundPenalty(actor) {
     return p;
 }
 
+/** B3793: what the character's merits and flaws do to the body in a fight (WoDX Chronicle), or null. */
+function toughness(actor) {
+    try { return chronicle()?.traits?.toughness?.(actor) ?? null; } catch (e) { return null; }
+}
+
 function healthTrack(actor) {
     const h = actor?.system?.health ?? {};
     const totals = {}, penalties = {}, labels = {};
@@ -192,6 +197,9 @@ function healthTrack(actor) {
         penalties[k] = num(h[k]?.penalty);
         labels[k] = h[k]?.label ?? `wod.health.${k}`;
     }
+    // B3793: Huge Size and Sturdy give one more Bruised level
+    const body = toughness(actor);
+    if (body?.bruised) totals.bruised += num(body.bruised);
     const d = h.damage ?? {};
     const damage = { bashing: num(d.bashing), lethal: num(d.lethal), aggravated: num(d.aggravated) };
     const max = R.WOUND_LEVELS.reduce((s, k) => s + totals[k], 0);
@@ -371,7 +379,7 @@ function healthUpdate(actor, damage) {
         "system.health.damage.lethal": damage.lethal,
         "system.health.damage.aggravated": damage.aggravated,
         "system.health.damage.woundlevel": ws.label,
-        "system.health.damage.woundpenalty": ws.penalty,
+        "system.health.damage.woundpenalty": R.bodyPenalty(ws, t.penalties, toughness(actor)),
         "system.traits.health.totalhealthlevels.max": t.max,
         "system.traits.health.totalhealthlevels.value": Math.max(0, t.max - ws.filled)
     };
@@ -441,7 +449,7 @@ export async function applyDamage(actor, type, levels, { status = true } = {}) {
     const cond = R.condition(after, t.max, kind);
     if (status && cond.key !== "ok") await setStatus(actor, cond.key);
     const ws = R.woundState(after, t.totals, t.penalties, t.labels);
-    return { before, after, condition: cond, woundLabel: ws.label ? game.i18n.localize(ws.label) : "Unhurt", penalty: ws.penalty, effType };
+    return { before, after, condition: cond, woundLabel: ws.label ? game.i18n.localize(ws.label) : "Unhurt", penalty: R.bodyPenalty(ws, t.penalties, toughness(actor)), effType };
 }
 
 export async function setDamage(actor, damage) {
@@ -957,6 +965,8 @@ function damageProfile(target, tKind, w, fd) {
     let dmgType = (fd.fireSun || fd.bane2 || (R.BANES[tKind] === "Cold iron" && /cold iron/i.test(w.name))) ? "aggravated" : (w.type || "lethal");
     let bane = !!(fd.bane || fd.bane2 || (R.BANES[tKind] && new RegExp(R.BANES[tKind], "i").test(`${w.name} ${w.desc || ""}`)));
     let soakDiff = 6, minLevels = 0, note = "";
+    // B3793: Vulnerability to Silver: silver wounds the character as the sun does
+    if (!fd.fireSun && toughness(target)?.silver && /\bsilver/i.test(`${w.name} ${w.desc || ""}`)) { dmgType = "aggravated"; note = "Silver: aggravated for this character (Vulnerability to Silver)."; }
     const sb = shifterBane(target, w, fd);
     if (sb) {
         // Era-, breed- and form-aware (DA:W p. 102; W20 p. 255; W20 Changing Breeds)
@@ -1510,7 +1520,7 @@ Hooks.once("init", () => {
     const aftermath = AA.setupAftermath({ corpusTrack });
     FTime.setupFightTime();
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile,
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.27.1", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.28.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
