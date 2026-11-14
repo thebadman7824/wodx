@@ -218,7 +218,11 @@ export async function rollTurn(scene, st = stateOf(scene), {dialog = false} = {}
     const actor = scene.tokens.get(x.id)?.actor ?? game.actors.get(x.actorId);
     if ( !actor ) { rolls[x.id] = {successes: 0, botch: false}; continue; }
     const p = C.rollFor(x, st.ground, {night: st.night, year: st.year});
-    const res = await rollPool(actor, p.attr, p.ability, p.diff, p.parts, p.cap);
+    // B3907: the rider's tack (WoDX Library's road kit)
+    let kit = null;
+    try { kit = game.modules.get("wodx-library")?.active ? game.modules.get("wodx-library").api?.house?.roadKit?.([...(actor.items ?? [])]) ?? null : null; } catch (e) { kit = null; }
+    const tk = C.tackMods(x, kit);
+    const res = await rollPool(actor, p.attr, p.ability, Math.max(2, Math.min(10, p.diff + tk.diff)), [...p.parts, ...tk.parts], p.cap);
     rolls[x.id] = res;
     if ( res.roll ) all.push(res.roll);
     lines.push(`<p><b>${esc(x.name)}</b>: ${esc(C.WAYS[x.way].label)}, ${res.dice} dice at ${res.diff}${res.parts.length ? ` (${esc(res.parts.join(", "))})` : ""}: ${res.botch ? "a botch" : `${res.successes} success${res.successes === 1 ? "" : "es"}`} <span class="wodx-quiet">[${res.faces.join(" ")}]</span></p>`);
