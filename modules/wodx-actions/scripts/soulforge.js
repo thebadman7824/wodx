@@ -7,6 +7,9 @@
  * Underworld's money (WoDX Storyteller receiveForeign, region "underworld").
  *
  * The plan is kept on the actor flag wodx-actions.soulforge[task id], so the finished task knows what it was for.
+ *
+ * B3723: Artifacts and reworked relics go through the shared crafting table (WoDX Library wonders, WoDX Storyteller
+ * wonders.mjs), as Ben picked on the Item Crafting Desk; this window hands them on and keeps arms, armour and oboli.
  */
 import * as S from "./soulforge-rules.js";
 import * as P from "./profiles.js";
@@ -35,6 +38,7 @@ export function build(ctx) {
           <div class="form-group"><label><input type="checkbox" name="artificer"${art ? " checked" : ""}/> A member of the Artificers' Guild</label></div>
           <p class="hint">Dexterity + Crafts (${dex + crafts} dice), a roll a week; a botch ruins the work and the Corpus. The soulfire's Pathos is paid now. ${S.REF}; the dice and time are WoDX's own.</p></form>`;
         return dialog(`Soulforge: ${actor.name}`, content, "Start", async fd => {
+            if (S.PRODUCTS[fd.product]?.kind === "artifact") return toTable(actor, fd.product, fd.source, !!fd.artificer);
             const pl = S.plan({ product: fd.product, source: fd.source, artificer: !!fd.artificer, year: y, dexterity: dex, crafts });
             if (!pl.ok) { notify(`${actor.name}: ${pl.why}.`); return null; }
             const pathos = P.resource(actor, "pathos");
@@ -49,6 +53,16 @@ export function build(ctx) {
             return post(actor, `${actor.name} lights the soulforge`, `<div class="vta-res">${esc(S.PRODUCTS[pl.product].label)}: ${pl.goal} successes at difficulty ${pl.diff}, a roll a week (a long task).</div>
               <div class="vta-note">${pathos.ok ? `${pl.pathos} Pathos spent on soulfire.` : `Soulfire for ${pl.pathos} Pathos, bought or given (no Pathos track on the sheet).`}${pl.selfCost ? " A Corpus level pledged to the forge, gone for good." : ""}${pl.lostShare ? ` Forging an obolus again loses ${pl.lostShare === 0.5 ? "half" : "a quarter"} of the soul's mass.` : ""}</div><div class="wodx-quiet">${S.REF}</div>`);
         }, { width: 540 });
+    }
+
+    /** B3723: an Artifact or a reworked relic: the crafting table sets up the task and pays for it when it ends. */
+    async function toTable(actor, product, source, artificer) {
+        const W = st()?.wonders, lib = game.modules.get("wodx-library")?.api?.wonders;
+        if (!W?.start || !lib) { notify("Artifacts and relics are made from the crafting table: WoDX Library must be on."); return null; }
+        if (!lib.enabled?.("wraith")) { notify("Soulforging Artifacts and relics is switched off in this world."); return null; }
+        const key = lib.kitFor?.("wraith")?.rows?.().find(w => w.product === product)?.key;
+        if (!key) { notify("The crafting table has no Wraith line yet."); return null; }
+        return W.start(actor, key, { line: "wraith", source: product === "relic" ? "relic" : source, artificer });
     }
 
     /** An Artificer's own plasm: the Corpus track loses a level for good. */

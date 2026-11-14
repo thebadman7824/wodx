@@ -301,6 +301,8 @@ export async function editTask(actorId = null, taskId = null) {
     if ( !kind || kind === "cancel" ) return null;
     // B3631: a fetish or talen from the book lists, when the line's crafting is on
     if ( (kind === "fetish" || kind === "wonder") && W.available(a) ) return W.makeDialog(a.id);
+    // B3723: soulforging opens WoDX Actions' forge window (arms, armour, oboli; Artifacts and relics go on to the table)
+    if ( kind === "soulforge" && game.modules.get("wodx-actions")?.api?.soulforge ) return game.modules.get("wodx-actions").api.soulforge({actor: a});
   }
   const t = taskId ? R.normTask({...rawTasks(a)[taskId], id: taskId}) : R.normTask({kind});
   const abil = abilitiesOf(a);
