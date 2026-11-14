@@ -58,6 +58,8 @@
 <text x="302.88" y="425.04" font-size="7">Firewood Pile</text>
 <rect x="325.44" y="439.43999999999994" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="326.15999999999997" y="444.23999999999995" font-size="7">Barrel</text>
+<rect x="326.64" y="432.0" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="327.35999999999996" y="436.79999999999995" font-size="7">Bucket</text>
 <text x="303.0" y="446.0" font-weight="bold">Kitchen</text>
 <rect x="300.0" y="354.0" width="36" height="48" fill="#fffdf8" stroke="#333" stroke-width="3"/>
 <rect x="322.79999999999995" y="372.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
