@@ -199,7 +199,7 @@ Next free block: B3960
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Household things and tack on the road (used B3900-B3905) | Library |
+| B3900-B3929 | Household things and tack on the road (used B3900-B3906) | Storyteller |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
@@ -6681,6 +6681,11 @@ Reverse: set ward back to effect "note" in use-rules.mjs and drop setupFaith fro
 WoDX Library. The no-effect audit found 76 household and travel goods that nothing read (desk i2, approved by Ben). Bedding and blankets count against the cold, umbrellas and hand fans against the heat, and a saddle, a bridle (or a set of tack), spurs and a riding crop for riding. They count when carried in Possessions, with no Use to press, since nobody takes a blanket out to make it warm. Saddlebags have no carrying rule to read, since WoDX keeps no load limit, and the other household things (a stool, a broom, a lawnmower) have no sensible rule of their own, so they stay plain things on the sheet.
 
 Reverse: drop data/goods-house.mjs, scripts/house-rules.mjs and api.house.
+
+## B3906. Bedding and shade in the weather (2026-11-14)
+WoDX Storyteller. The hardship weather roll (Stamina + Survival, difficulty 6) is one easier for a character carrying bedding or a blanket when the danger is cold, or an umbrella or a fan when it is scorching heat (house rule, from M20's note that shelter and dress count). The danger is read from WoDX Atmosphere's day; when the Storyteller set the harshness by hand, either counts, never both.
+
+Reverse: use H.WEATHER_DIFF again in hardship.mjs.
 
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.

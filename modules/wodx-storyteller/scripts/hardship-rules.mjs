@@ -97,3 +97,24 @@ export const tiredPenalty = tired => -Math.max(0, Math.min(MAX_TIRED, Math.round
  * knowing how to shelter and dress for it counts), so a hunter or a Gangrel of the wilds weathers more than a clerk.
  */
 export const weatherDice = (stamina, survival = 0) => Math.max(1, Math.round(n(stamina)) + Math.max(0, Math.round(n(survival))));
+
+/** B3906: what the danger of a day's weather is, "cold", "heat", or null when it is neither (or not known). */
+export function weatherCause(d) {
+  if ( !d || typeof d !== "object" ) return null;
+  const cold = Math.min(Number(d.tempNight ?? 10), Number(d.tempDay ?? 10)), hot = Number(d.tempDay ?? 10);
+  if ( cold < FREEZING ) return "cold";
+  if ( hot >= SCORCHING ) return "heat";
+  return null;
+}
+
+/**
+ * B3906: the weather roll's difficulty with what the character carries (house rule): bedding or a blanket against the
+ * cold, an umbrella or a fan against the heat, one easier. cause: weatherCause(), or null when the Storyteller set the
+ * harshness by hand, and then either counts. kit: WoDX Library's roadKit. {diff, part} (part: the line for the card).
+ */
+export function weatherDiffFor(cause, kit = {}) {
+  const warm = kit?.cold && cause !== "heat", shade = kit?.heat && cause !== "cold" && !warm;
+  if ( warm ) return {diff: WEATHER_DIFF - 1, part: `${kit.names?.cold ?? "bedding"} against the cold, -1 difficulty`};
+  if ( shade ) return {diff: WEATHER_DIFF - 1, part: `${kit.names?.heat ?? "shade"} against the heat, -1 difficulty`};
+  return {diff: WEATHER_DIFF, part: ""};
+}
