@@ -200,7 +200,7 @@ Next free block: B4140
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Gadgets, fuel and seeds (used B3900-B3911) | Library |
+| B3900-B3929 | Gate summaries name their failed steps (used B3900-B3912) | tools |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
@@ -6754,6 +6754,9 @@ Reverse: set gamble back to effect "note" in use-rules.mjs and drop gamble-rules
 WoDX Library. The no-effect audit found seeds, fire-lighters and timepieces that only posted a line (desk i5, the smaller build Ben approved). Plant it puts a seed in the ground. Used again, it says how many days are left, and once they are past it harvests the crop into Possessions (seed potatoes give 8 potatoes after 100 days; house figures, data/goods-crops.mjs). A vine only bears after three years and gives nothing to eat. Strike a light lights the first unlit light the character carries, through WoDX Interactables' carried light. A clock or a watch tells the hour on a card to its owner. A sundial does so only while the sun is up, and an hourglass gives the minutes since it was last turned. Fuel for a fire (petrol, firewood, coal) and switched-on gadgets stay a line, since there is no fire to feed nor a gadget rule to read; lamp oil and kerosene already refill a lamp.
 
 Reverse: set plant and strike back to effect "note" in use-rules.mjs, drop the time ability, gadget-rules.mjs, gadget-use.mjs and data/goods-crops.mjs.
+
+## B3912. A failing gate's summary names its failed steps (2026-11-14)
+The gate kit's summary line, which the PC job queue posts on the issue, now ends with each failed step's name and what it saw (cut short), plus any errors, so a failed run is understood without fetching the result file from the PC. A passing run's line is unchanged ("n/n passed"). The lane runner keeps up to 600 characters of the line instead of 300. Reverse: drop the two added lines in tools/gate/kit.mjs save().
 
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
