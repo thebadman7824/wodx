@@ -122,4 +122,7 @@ test("wiring: the sight button steps through the new sights, Actions says when m
   const ow = src("modules/wodx-senses/scripts/otherworld-sight.mjs");
   for ( const h of ["wodxCrossing", "wodxMapEvent", "wodxDamageApplied", "wodxMagickWorked"] ) assert.ok(ow.includes(`Hooks.on("${h}"`), h);
   assert.ok(ow.includes("searchBox("), "the Fetter list has a search box");
+  // Foundry 14's PIXI takes a plain colour for a text outline; an object stops the whole layer (testbed find)
+  for ( const f of ["modules/wodx-senses/scripts/otherworld-sight.mjs", "modules/wodx-senses/scripts/sight.mjs", "modules/wodx-otherworlds/scripts/senses.mjs"] )
+    assert.doesNotMatch(src(f), /stroke: \{color/, f);
 });
