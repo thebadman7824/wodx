@@ -40,6 +40,7 @@ import * as Signals from "./signals.mjs";
 import * as Threads from "./threads.mjs";
 import * as Patron from "./patronage.mjs";
 import * as Towns from "./towns.mjs";
+import * as TownLooks from "./town-looks.mjs";
 import * as Contagion from "./contagion.mjs";
 import * as Power from "./power.mjs";
 import * as Herds from "./herds.mjs";
@@ -129,6 +130,7 @@ Hooks.once("init", () => {
   Threads.registerThreadSettings();
   Patron.registerPatronageSettings();
   Towns.registerTownSettings();
+  TownLooks.registerTownLookSettings();
   Contagion.registerContagionSettings();
   Power.registerPowerSettings();
   Herds.registerHerdSettings();
@@ -195,6 +197,7 @@ Hooks.once("ready", () => {
   Caravans.setupCaravans().catch(e => console.error("WoDX | caravans", e));
   Ventures.setupVentures().catch(e => console.error("WoDX | ventures", e));
   Towns.setupTowns().catch(e => console.error("WoDX | towns", e));
+  TownLooks.setupTownLooks();
   Contagion.setupContagion().catch(e => console.error("WoDX | contagion", e));
   Power.setupPower().catch(e => console.error("WoDX | places of power", e));
   Herds.setupHerds();
@@ -212,8 +215,8 @@ Hooks.once("ready", () => {
     beatsDialog: A.beatsDialog, endSessionDialog: A.endSessionDialog, editBeat: A.editBeat, placesDialog: A.placesDialog, TrackerClass: A.TrackerClass,
     setup: {open: Setup.openSetup, run: Setup.runSetup, have: Setup.have, enableModules: Setup.enableModules},
     builder: {open: Builder.openBuilder, plan: Builder.plan, run: Builder.runStep, again: Builder.rerunStep, undo: Builder.undoStep, runAll: Builder.runAll, record: Builder.record, recipe: Builder.recipe, recipes: Builder.RECIPES},
-    night: {pacing: Night.pacingNow, draw: Night.drawNight, propose: Night.proposeNight, approve: Night.approveNight, dialog: Night.nightDialog, now: Night.nightNow, layers: Night.layersInPlay, road: Night.roadEncounter},
-    aid: {draw: Night.drawAid, propose: Night.proposeAid, approve: Night.approveAid, dialog: Night.aidDialog, fragments: Night.fragmentsFor},
+    night: {pacing: Night.pacingNow, draw: Night.drawNight, propose: Night.proposeNight, approve: Night.approveNight, dialog: Night.nightDialog, now: Night.nightNow, layers: Night.layersInPlay, road: Night.roadEncounter, place: Night.placeEncounter, placeCard: Night.placeCard, placeFrom: Night.placeFromCard, peopleIn: Night.N.peopleIn},
+    aid: {draw: Night.drawAid, propose: Night.proposeAid, approve: Night.approveAid, dialog: Night.aidDialog, fragments: Night.fragmentsFor, makeItem: Night.makeAidItem},
     dreams: {open: () => Dreams.DreamsApp.open(), list: Dreams.dreams, save: Dreams.saveDream, release: Dreams.releaseDream, remove: Dreams.removeDream, check: Dreams.checkDreams},
     rumours: {tale: Rumours.startTale, toneFor: Rumours.toneFor, aboutView: Rumours.aboutView, openAbout: Rumours.aboutDialog, open: () => Rumours.RumoursApp.open(), media: Rumours.mediaNow, list: Rumours.rumours, start: Rumours.startRumour, doubt: Rumours.doubtRumour, about: Rumours.rumoursAbout, tick: Rumours.tick, end: Rumours.endRumour, remove: Rumours.removeRumour, contacts: Rumours.contacts, heardBy: Rumours.heardBy},
     dashboard: {open: () => Dash.DashboardApp.open(), gather: Dash.gather},
@@ -237,7 +240,7 @@ Hooks.once("ready", () => {
       money: {of: Money.moneyOf, dialog: Money.moneyDialog, monthly: Money.monthly, setAway: Money.setAway, setNeglected: Money.setNeglected, coins: Money.coinsNow, rules: MoneyRules,
         purse: Money.purseOf, pay: Money.pay, receive: Money.receive, transfer: Money.transfer, undo: Money.undoLast, price: Money.priceNow, findGood: Money.findGood,
         cashIn: Money.cashIn, payDay: Money.payDay, priceSync: Money.priceSync, awayMoney: Money.awayMoney, changeQuote: Money.changeQuote, change: Money.changePurse, receiveForeign: Money.receiveForeign, foreign: Money.foreignOf, arrival: Money.arrival, market: Money.marketFor, money: Money.moneyNow, format: (v, m) => MoneyRules.formatMoney(v, m ?? Money.moneyNow())},
-      markets: Markets.api(), marketNews: News.api(), marketTurn: Turn.api(), marketMoves: Moves.api(), caravans: Caravans.api(), ventures: Ventures.api(), institutions: Inst.api(), towns: Towns.api(), contagion: Contagion.api(), power: Power.api(), herds: Herds.api(), sites: Sites.api()},
+      markets: Markets.api(), marketNews: News.api(), marketTurn: Turn.api(), marketMoves: Moves.api(), caravans: Caravans.api(), ventures: Ventures.api(), institutions: Inst.api(), towns: Towns.api(), townLooks: TownLooks.api(), contagion: Contagion.api(), power: Power.api(), herds: Herds.api(), sites: Sites.api()},
     hardship: {open: Hard.hardshipDialog, weatherOf: Hard.weatherOf, tick: Hard.tick, undo: Hard.undoTick, mark: Hard.mark, off: Hard.setOff, weather: Hard.setWeather, of: Hard.needsOf, living: Hard.living, rules: HardRules},
     hunters: Hunters.api(),
     // B3524-B3527: crisis levers for a region

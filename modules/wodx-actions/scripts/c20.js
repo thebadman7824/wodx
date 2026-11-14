@@ -158,7 +158,7 @@ export function build(ctx) {
                 body += `<div class="vta-sec"><b>${esc(cantripName(fd.power))}${r.successes && !r.botch ? "" : " (had it taken)"}:</b> ${esc(cp.fx)}</div>`;
                 body += `<div class="vta-note">Lasts ${esc(cp.lasts)}; ${esc(cp.type)}.</div>`;
                 if (r.successes && !r.botch && EF.isOn()) {
-                    const pp = EF.planOf(actor, CA.cantripResults(fd.power, r.successes, { willpower: i.willpower.perm, glamour: i.glamour.perm }, { name: cantripName(fd.power), source: `${REF} p. ${art.page}` }), r.successes);
+                    const pp = EF.planOf(actor, CA.cantripResults(fd.power, r.successes, { willpower: i.willpower.perm, glamour: i.glamour.perm }, { name: cantripName(fd.power), source: `${REF} p. ${art.page}` }), r.successes, { name: cantripName(fd.power), line: "Changeling (C20)" });
                     body += pp.html;
                     fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
                 }

@@ -15,6 +15,8 @@
  *   own per-gate limits inside that).
  * - One retry on a lane fault (no free lane, drift, run-gate's watchdog, a deploy or start that fails): reset the
  *   lane, deploy again and run once more. A gate that fails is a result, not a fault, and is not retried.
+ * - Recheck (B4610): each failing gate is rerun on a fresh lane, alone and then on main, and the result says whether it
+ *   is new with this change, failing on main too, or failing only after other gates.
  * - Resources: no lane job starts below minFreeRamGB of free memory or minFreeGB on a drive; a hold of more than
  *   30 minutes raises an alert.
  * - A runner that stopped mid-job: on start, issues still marked pc-running are queued again.
@@ -28,7 +30,7 @@ import os from "node:os";
 import path from "node:path";
 import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
-import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit} from "./jobs.mjs";
+import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, recheckVerdicts} from "./jobs.mjs";
 import {loadConfig, getLane, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
 
@@ -192,7 +194,7 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
     return laneWork(job, lane, i, n, tag, true);
   };
   if ( job.kind === "setup-lane" ) {
-    const r = await lanesCmd(["setup", "--lane", lane, ...repo], {logTo: L, minutes: 90});
+    const r = await lanesCmd(["setup", "--lane", lane, ...(job.again ? ["--again"] : []), ...repo], {logTo: L, minutes: 90});
     if ( r.code === 0 ) { state[lane].down = false; state[lane].why = null; }
     return {code: r.code, text: r.out.trim().split("\n").slice(-10).join("\n")};
   }
@@ -222,7 +224,37 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
   const r = await node("tools/lanes/run-gate.mjs", [...gateArgs(job, lane, i, n, report), ...repo], {logTo: L, minutes: Math.min(16 * Math.ceil(gatesN / n) + 20, 900)});
   const rep = fs.existsSync(report) ? fs.readFileSync(report, "utf8") : r.out.slice(-4000);
   if ( isInfraFault(r.code) ) return faultRetry(`run-gate on lane ${lane} stopped with ${r.code === null ? "a time limit" : `exit ${r.code}`}`, rep);
-  return {code: r.code, text: `${rep.trim()}\n${failDetail(lane, rep)}`.trim()};
+  const text = `${rep.trim()}\n${failDetail(lane, rep)}`.trim();
+  if ( r.code !== 1 || job.recheck === false ) return {code: r.code, text};
+  return {code: r.code, text: `${text}\n\n${await recheck(job, lane, tag, wt, rep, L)}`};
+}
+
+/**
+ * B4610: a failing gate is run again before the result goes back, so the thread knows whose it is: alone on a fresh
+ * lane on the same commit (does it fail only after other gates?), then on main (was it failing already?).
+ */
+async function recheck(job, lane, tag, wt, rep, L) {
+  const failing = failingGates(rep).slice(0, 12);
+  if ( !failing.length ) return "";
+  const runOn = async (dir, name) => {
+    const f = path.join(LOGS, `${tag}-l${lane}-${name}.txt`);
+    fs.rmSync(f, {force: true});
+    await lanesCmd(["reset", "--lane", lane, "--repo", dir], {logTo: L});
+    const d = await lanesCmd(["deploy", "--lane", lane, "--if-changed", "--repo", dir], {logTo: L});
+    if ( d.code !== 0 ) return null;
+    await node("tools/lanes/run-gate.mjs", [...failing, "--lane", String(lane), "--wait", "10", "--report", f, "--repo", dir], {logTo: L, minutes: 16 * failing.length + 20});
+    return fs.existsSync(f) ? fs.readFileSync(f, "utf8") : null;
+  };
+  log(`${tag} lane ${lane}: rechecking ${failing.join(" ")}`);
+  const alone = await runOn(wt.dir, "alone");
+  let main = null;
+  if ( job.ref !== "main" ) {
+    const m = await worktree(lane, "main");
+    if ( !m.error ) main = m.sha === wt.sha ? alone : await runOn(m.dir, "main");
+  }
+  if ( alone === null ) return "Recheck: the lane would not take the rerun; nothing more to say.";
+  const rows = recheckVerdicts(failing, alone, main);
+  return ["Recheck (each failing gate rerun on a fresh lane):", ...rows.map(r => `- ${r.gate}: ${r.verdict}`)].join("\n");
 }
 async function runLight(job, tag) {
   const L = path.join(LOGS, `${tag}.log`);

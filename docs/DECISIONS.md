@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4150
+Next free block: B4650
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -194,13 +194,13 @@ Next free block: B4150
 | B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3719) | Library |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
-| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3756) | Actions |
+| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3757) | Actions, Storyteller |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
 | B3780-B3809 | The no-effect audit: a harmless hit makes its card (used B3780-B3809) | Combat |
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Destiny and Fate bank rerolls (used B3900-B3919) | Actions |
+| B3900-B3929 | A made person's want, secret and look as game data (used B3900-B3927) | Creation |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
@@ -209,6 +209,11 @@ Next free block: B4150
 | B4120-B4129 | Player interface: the Storyteller hides parts of Foundry's screen for each player (used B4120-B4123) | Chronicle |
 | B4130-B4139 | Missouri village peoples in the People generator (used B4130-B4132) | Creation, Chronicle |
 | B4140-B4149 | Crow, Blackfoot and Arapaho names in the People generator (used B4140-B4142) | Creation, Chronicle |
+| B4150-B4159 | Shoshone and Ute names in the People generator (used B4150-B4152) | Creation, Chronicle |
+| B4160-B4169 | Canada first nations names in the People generator (used B4160-B4162) | Creation, Chronicle |
+| B4600-B4609 | Show, don't tell: a visible: line on every feature's release note (used B4600) | tools (no module) |
+| B4610-B4619 | The PC runner rechecks every failing gate before it reports (used B4610) | tools (no module) |
+| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4621) | Otherworlds |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6457,6 +6462,10 @@ How to reverse: drop inq-blessings.js and the "From the book" select in hunter.j
 WoDX Actions. A Changing Breed's sheet could hold a Gift only by typing its name: the shared Gifts matched the W20 list, and the breeds' own Gifts rolled bare. data/gifts-fera.json now holds 359 Gifts of W20 Changing Breeds for the thirteen Fera with their own lists (Ajaba, Ananasi, Bastet, Corax, Gurahl, Kitsune, Mokole, Nagah, Nuwisha, Ratkin, Rokea, Apis, Grondr, Camazotz), each with the level, cost, pool, difficulty, duration, a short summary in our own words and the printed page. Learn a Gift offers a Fera its own breed's Gifts beside the shared list; Use a Gift reads the pool and cost from the entry, a breed's own Gift wins over a Garou Gift of the same name, and a use that takes puts its keywords on the effects card (damage, healing, holds, blindness, fear, wards, boosts, shapes, movement and the rest). Gifts the book sends to the Garou list stay on the W20 list. Fourteen Gifts the Storyteller must rule (a fertility blessing, a stored item) show their card only.
 How to reverse: drop gifts-fera.json from loadData and the feraGifts lookups in garou.js.
 
+## B3757. Powers that reach the world: towns, sickness, taint and ground (2026-11-14)
+WoDX Actions and WoDX Storyteller. A power that floods, burns or shakes a town, sickens it, fouls or cleanses a place, or turns a whole town's mood changed nothing past the people it touched. tools/powers/world-sweep.mjs reads every power WoDX lists for those effects; 48 of 2,853 reach the world, listed by name in world-effects.js WORLD_POWERS (a "Line|name" key keeps a name to one line, since Wraith Intimation's Ignite stirs a passion). The sweep also lists the powers whose words flag but were read and left out (sensing or hiding taint, one burning weapon, a drink); the harness fails when a new one appears. When a listed power takes, its effects card carries a world result next to its usual ones. Town-wide results (flood, fire, quake, storm damage, blight, a good harvest, riot, dread, calm) wait in the approval queue; once the Storyteller says yes, the scene's market town takes the blow as a town event with its own card and Undo (town-rules POWER_TOWN, beside the saga's flood: one power is one blow, scaled 1, 1.5 or 2 by 3, 5 or 7 successes). A sickness starts plague in the town (the bioplague after 2022) through contagion.power. Taint and cleansing move the place's Wyrm corruption a step a scale, with Undo. Ground results (deep water, fire, broken ground) are areas the Storyteller places, sized from the power where the book gives a reach (Summon Water: Faith yards) and drawn on the map for everyone (blue water, orange fire, brown rubble) under the tokens, gone with the area: deep water carries WoDX Combat's water flag so swimming and drowning hold there, fire deals two dice of lethal damage (more with more successes), broken ground knocks down. Thresholds (house rule): 3 successes for a town result, 2 for taint, 1 for ground, 3 for deep water. The Mage Cast window and the Storyteller's effect window get a "Reaches the world" choice for powers with no list.
+How to reverse: drop the world results from effects.js planOf, plan and stItems, and the power functions from the towns and contagion apis.
+
 ## B3770. Kuei-jin make stone weapons and true jade (2026-11-14)
 WoDX Library, data/wonders-kuei-jin.mjs and scripts/wonders-kuei-jin.mjs. The Item Crafting Desk pick kj2 (full). Kindred of the East has jade talismans only as a Background (pp. 86-87), but the Companion (p. 67) gives the masters of Jade Shintai two powers that make things, Blade of Stone and Taste of Jade. Both are a Kuei-jin kit on the shared wonders registry (B3683), world setting craftKueiJin, on by default like the other kits.
 
@@ -6781,6 +6790,30 @@ No-effect audit t2, NPC side. WoDX NPC's stock talk picks lines by the regard ba
 ## B3919. Destiny and Fate are banked rerolls (2026-11-14)
 No-effect audit t3, first part. Destiny (M20, Mummy) and Fate (W20) were marked as reroll backgrounds, but nothing read them. WoDX Actions now counts one reroll of a failed roll a story for each dot of either, added to Lucky's three, on the same "roll again if it fails" box and the same per-story count. The box and card name what gives it ("Lucky and Fate"). The dot-for-dot rate is a house reading. Reverse: rerollsPerStory back to Lucky only.
 
+## B3920. Backgrounds nothing read get an effect (2026-11-14)
+No-effect audit t3. Four backgrounds seed a +1 first attitude with their own kind: Eminence with demons, Notoriety with wraiths, Pure Breed with Garou and Changing Breeds, Spirit Heritage with spirits. With Alternate Identity, a deed a witness can name counts as unnamed for the law's heat, because the name they know belongs to the other self. Nineteen backgrounds that were marked Storyteller-only get a card to the Storyteller in WoDX's own words at the moments they matter (social, fight, night): Alternate Identity, Arcane, Backing, Backup, Black Hand Membership, Blessing, Certification, Cypher, Dream, Eidolon, Enhancement, Familiar, Horde, Memento, Paragon, Requisitions, Secret Weapons, Spies and Vessels. Their hook in the Trait effects window changes from Storyteller only to a card. Cards now name a background's first book and page (they read "undefined" before). A test keeps every background off the plain Storyteller-only list. The sizes on the cards are the Storyteller's call. Destiny and Fate are B3919. Reverse: drop MORE_ATTITUDE_3, MORE_PROMPTS_7 and the law-heat lines.
+
+## B3921. Combat reads Knocked down (2026-11-14)
+No-effect audit t4. The Knocked down status showed on the token, but standing cost nothing unless the sweep or tackle card was followed by hand. WoDX Combat now rolls, on the Storyteller's client, at the start of the turn of any combatant with the status. The roll is Dexterity + Athletics, with wound penalties, at difficulty 6 (V20 Dark Ages p. 348). A success takes the status off and takes 2 off that character's Initiative when it is rolled for the next turn. A failure or a botch keeps them down, and the card says the action is lost. A world setting (on by default) turns it off, and api.standUp(actor) runs the roll by hand. Reverse: turn the setting off.
+
+## B3922. More events move the factions (2026-11-14)
+No-effect audit w1. Several dated events in the chronicle passed with only a line in the history. WoDX NPC now offers a new power for each of them when the clock reaches it: changelings in hiding at the Shattering, the Giovanni at the fall of the Cappadocians, a Justicar's archons at the First Conclave, a freehold at the Resurgence, Kuei-jin envoys after the Week of Nightmares, a Fallen and their faithful at the escape from the Abyss, the Children of Carthage at the Venice Conclave, a Cyberpunks crew and a corporate hunter team in Future Darkness. Events that wipe out a line also put to sleep any faction named for it: Croatan, Bunyip, Ravnos, Cappadocian and Doissetep. A test checks that every classic event, except the Time of Judgment (the Storyteller sets up the ending) and the Avatar Storm (WoDX Otherworlds already reads it for the Umbra storm), has at least one effect. Reverse: remove the entries.
+
+## B3923. Future Darkness disasters reach the markets (2026-11-14)
+No-effect audit w1. Only four Future Darkness events (the 1994 crash, the 1996 Collapse and two plagues) brought market news; the branch's wars, famines and its last Maelstrom changed nothing a player could buy. WoDX Storyteller now gives them the presets that already exist: war for the Mideast Meltdown, the First and Second Corporate Wars and the orbital war; famine for the Midwest drought and the food crash; a crash for the Third Corporate War in the Net; and a collapse for the Seventh Maelstrom over Moravia in both cascades that have it. Several lines describe the same happening, so only one event id per happening carries the news, and a test checks that no year gets the same card twice. The towns read the same news, as before. Reverse: remove the entries.
+
+## B3924. The night's people and things become real (2026-11-14)
+No-effect audit w2. The night's encounters went to a journal page and the story aids named relics, fetishes and talismans that nothing could use. Now, when the Storyteller approves a night, a card lists each encounter in the physical world with a "Put it on the scene" button. It reads who the line brings (the watch, a friar, soldiers, a merchant, a beggar, and so on, with any number word), makes them with WoDX Creation's people generator in the era's own trades, at most six, and puts their tokens hidden at the middle of the scene in view. A line that names nobody brings one person; children are never made this way (the Storyteller plays them). Penumbra and Shadowlands encounters keep no button, since they are spirits and the dead. A relic, fetish or talisman aid is made, when approved, by WoDX Library's crafting kits: a relic is an enshrined inquisitors' relic of True Faith equal to the rating (at most 3), a talisman is a hedge magic talisman of the rating's level with that many charges, and a fetish is a Werewolf fetish of the rating's level holding the aid's own spirit. Each goes to the Items folder "WoDX story aids" and the journal page links it; nothing lands on a sheet until the Storyteller hands it over. These are house rules. Reverse: remove the card and the item step.
+
+## B3925. Made people carry what they want, hide and look like (2026-11-14)
+No-effect audit w3, Creation part. WoDX Creation's people generator wrote the want, the secret and the look into the sheet's note only. Each person it makes now also carries: the want as flags["wodx-npc"].want and two lines on their own talk sheet ("[offer] a favour" and what they say about it), so a character can ask and the Storyteller can mark it met (B3926); the secret as one WoDX NPC secret, its kind read from the words (a debt, a crime, heresy, a breach of the Masquerade, or something else), weight 1, with a fixed id so a find sticks, so it can be dug out like any other and gives a hook when found; and the look as flags["wodx-library"].features for witness descriptions (B3927). The note stays as it was. Lifepath people come through the same step. Reverse: remove peopleFlags from createPeople.
+
+## B3926. Seeing to what someone wants (2026-11-14)
+No-effect audit w3, NPC part. A made person's want was text in the sheet's note. WoDX NPC now reads flags["wodx-npc"].want ({topic, text, met}). When a character asks that person about the topic (WoDX Creation sets "a favour", offered on the person's own talk sheet), the talk card carries the want, and the Storyteller's copy shows it with a "They saw to it" button. Pressing it moves the person's attitude toward that character up one step (the attitude track's own change, with the reason), marks it met for that character and posts a line to the Storyteller; a second press for the same character does nothing. Whether the deed was done is the Storyteller's call. Stored wanted descriptions keep up to two features from WoDX Library. House rule. Reverse: remove the button.
+
+## B3927. Witnesses remember a person's own look (2026-11-14)
+No-effect audit w3, Library part. A made person's look (a scar through one eyebrow, a heavy limp) sat in the sheet's note and nothing read it. WoDX Library's witness description now adds up to two of the person's features, kept in flags["wodx-library"].features, after the dress and size. Looks a passing witness would not see or remember as a mark (quick to offer help, uneasy in the dark, stutters when lying, counts coins, old or young for the work, prays under the breath) are left out. A disguise does not hide a scar, so features stay under one. House rule. Reverse: remove the features step.
+
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
 
@@ -6925,3 +6958,57 @@ Reverse: edit the lists in data/people-plains-north.mjs.
 WoDX Creation. Before 1800 a Crow bears the clan of the mother (of the Whistling Water clan); a Blackfoot or Arapaho bears an own name alone, and a woman not named in the records is "a woman of" the division (the Kainai, the Southern Arapaho). From 1800 a church given name and a family name from the rolls.
 
 Reverse: change clans or towns for the three peoples in data/people-plains-north.mjs.
+
+## B4150. The Shoshone and the Ute join the West (2026-11-14)
+WoDX Creation and Chronicle. The Shoshone and the Ute join the American West's mix from 1197 (the Numic peoples had spread across the Basin by then): 9 in 100 before 1500, 8 before 1800, then 1 each, and the Ute 1 today. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old north-america-west mixes in world-rules.mjs and drop basinTables from people-world.mjs.
+
+## B4151. Names from the treaties and rolls, fewer than 300 (2026-11-14)
+WoDX Creation. The lists come from the Fort Bridger, Box Elder and Ruby Valley treaties, the Ute treaties and the Brunot agreement, the agency records and the rolls since. Each people has fewer than 300 names; women are seldom named (Sacagawea, Chipeta), so most women before 1800 are "a woman of" a division or band.
+
+Reverse: edit the lists in data/people-basin.mjs.
+
+## B4152. Divisions and bands before 1800, family names after (2026-11-14)
+WoDX Creation. Before 1800 an own name alone; from 1800 a church given name and a family name from the rolls. No church names before 1800: no mission held the Basin.
+
+Reverse: change towns or earlyChurch in data/people-basin.mjs.
+
+## B4160. Canada's first nations beside the Haudenosaunee (2026-11-14)
+WoDX Creation and Chronicle. Canada before the colonies was only Haudenosaunee; it now holds the Haudenosaunee 35, the Cree 30, the Anishinaabe 25 and the Haida and Tlingit 5 each (the Northwest coast stands under Canada, as no region of its own holds it). After the French come they keep a share, then 1 to 3 each, and the Cree and Anishinaabe 2 each today. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old canada mixes in world-rules.mjs and drop canadaTables from people-world.mjs.
+
+## B4161. Names from the numbered treaties and the coast records, fewer than 300 (2026-11-14)
+WoDX Creation. The lists come from Treaties 1 to 9, the Robinson treaties, the Great Lakes treaties, the Hudson's Bay journals, the Russian and mission records of the coast and the band lists since. Each people has fewer than 300 names; the Haida and Tlingit lists are short.
+
+Reverse: edit the lists in data/people-canada.mjs.
+
+## B4162. Divisions and towns, coast clans (2026-11-14)
+WoDX Creation. Before 1800 a Cree or Anishinaabe bears an own name alone, and a woman not named in the records is "a woman of" a division or town (the Swampy Cree, Bawating); a Haida bears the Raven or Eagle side of the mother and a Tlingit the clan of the mother (of the Kiks.ádi clan). From 1800 a church given name and a family name from the band lists and rolls.
+
+Reverse: change towns or clans in data/people-canada.mjs.
+
+## B4600. Show, don't tell (Ben, 2026-11-14)
+Ben's standing rule: whatever happens in the game world must show on the map or screen wherever it can, not only be
+told in text (a demon's flood shows rain forming and the town flooding, not a card saying it flooded). Like the
+effect: rule (B3734), every minor or major release note in changes/ carries a visible: line, or visible: none and why,
+and merge-stamp.mjs refuses to stamp (so the branch cannot merge) while it is missing. Written into docs/WORKFLOW.md and changes/README.md.
+
+## B4610. A failing gate is rerun alone and on main before the result goes back (2026-11-14)
+PC runner (tools/pcq). Five gates failed on main for hours (gatehuntpowder, gatesurvival, gateworld, gatetraits,
+gatearms) and each thread read them as "already failing, not mine", so nobody fixed them. The changes that broke them
+(B3900, B3830) did run them in their touched sets: the failures were seen and waved through. Now a gates job that
+fails reruns each failing gate (up to 12) on a freshly reset lane, first alone on the same commit, then on main, and
+the result lists a verdict for each: NEW with this change, fails on main too, or passes alone (it fails only after
+other gates, so leftovers or order are at fault). A thread can then tell its own fault from an old one at a glance,
+and an old one names a gate to fix rather than a reason to merge past it. A job can turn this off with
+"recheck": false.
+
+Reverse: drop recheck() from tools/pcq/runner.mjs.
+
+## B4620. Town events leave marks on the town's scenes (2026-11-14)
+Show-don't-tell desk v1, approved by Ben 2026-11-14. WoDX Storyteller (town-look-rules.mjs, town-looks.mjs). A town event (the wodxTown hook, from the town turn, a sack, news or a power) used to post a line in chat only. Now each scene of that town's market gets marks by event: fire gives three fire spots and smoke over the scene for a day, then three burnt-out spots for four weeks; flood gives water in the lowest third for three days, rain for a day and wreckage for two weeks; storm, quake, riot, rising, sack, blight, dread and calm have their own sets. The spots are seeded by town, scene and turn. Marks go through WoDX Chronicle's looks layer (api.looks.show) when it is there, which draws them with the effects modules and obeys each player's effects level; without it, a locked plain drawing stands in. They end with game time (swept every ten game minutes) and the town card's Undo removes the marks made since the turn. How many marks and how long they last are house rules. World setting townLooks, on by default. Reverse: turn townLooks off, or remove setupTownLooks from main.mjs.
+
+## B4621. Wyrm corruption shows on the place's scene (2026-11-14)
+Show-don't-tell desk v2, approved by Ben 2026-11-14. WoDX Otherworlds (corruption-look-rules.mjs, corruption-looks.mjs). A tainted place's level, sources and Banes were numbers in a window and a weekly card. Now its scene shows them: a green-grey cast over the whole scene, a quarter strength when tainted, half when blighted, three quarters when foul and full in a hellhole; a patch of sludge and dead growth for each source, larger in a worse band; and a murky haze for each Bane, six at most. The marks follow the state, not the clock: any change to the place's corruption flag draws them again, the same state never draws twice, and a cleansed or untracked place has none. Spots are seeded by the scene. They go through WoDX Chronicle's looks layer when it is there, else locked plain drawings. Strengths and sizes are house rules. World setting wyrmLooks, on by default. Reverse: turn wyrmLooks off, or remove setupCorruptionLooks from main.mjs.

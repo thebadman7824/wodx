@@ -54,7 +54,17 @@ if ( args.includes("--touched") ) {
 }
 gates = [...new Set(gates)];
 const shard = /^(\d+)\/(\d+)$/.exec(opt("shard") ?? "");
-if ( shard ) gates = gates.filter((_, i) => i % +shard[2] === +shard[1] - 1);
+if ( shard ) {
+  const before = gates.length;
+  gates = gates.filter((_, i) => i % +shard[2] === +shard[1] - 1);
+  // More lanes than gates: this share is empty, which is nothing to run, not a usage fault
+  if ( before && !gates.length && gates.every(g => /^[\w-]+$/.test(g)) ) {
+    const line = `==== ${new Date().toISOString()} 0 gate(s) shard ${shard[0]}: nothing left for this share (${before} gate(s) over ${shard[2]} shares)`;
+    console.log(line);
+    if ( opt("report") ) fs.appendFileSync(opt("report"), `${line}\nexit 0\n`);
+    process.exit(0);
+  }
+}
 if ( !gates.length || gates.some(g => !/^[\w-]+$/.test(g)) ) {
   console.error("Usage: node tools/lanes/run-gate.mjs <gate> [<gate> ...] | --touched | --all [--shard i/n] [--lane N] [--wait minutes]");
   process.exit(2);

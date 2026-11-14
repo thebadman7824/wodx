@@ -38,7 +38,18 @@ export const EVENT_NEWS = {
   "wofd-1994-2": "crash",
   "wofd-1996-1": "collapse",
   "wofd-2000-2": "plague",
-  "wofd-2012-2": "plague"
+  "wofd-2012-2": "plague",
+  // B3923 (no-effect audit w1): the rest of the Future Darkness branch's mortal disasters, one event id each so a
+  // happening that several lines describe moves the markets once
+  "wofd-1997-1": "war",
+  "wofd-1998-1": "famine",
+  "wofd-2002-1": "famine",
+  "wofd-2004-2": "war",
+  "wofd-2007-3": "war",
+  "wofd-2008-4": "war",
+  "wofd-2016-1": "crash",
+  "tofj-k3-22": "collapse",
+  "tofj-k5-22": "collapse"
 };
 
 /** The preset key for an event, or null. */

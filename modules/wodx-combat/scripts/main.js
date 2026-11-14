@@ -55,6 +55,9 @@ function registerSettings() {
     s("spendResources", "Deduct Willpower and blood",
         "Remove the Willpower and blood points spent in the attack and soak options from the character sheet.",
         Boolean, true);
+    // B3921: Knocked down is read at the start of the fallen character's turn
+    s("standUpRoll", "Roll to stand up when knocked down",
+        "At the start of a knocked-down character's turn, roll Dexterity + Athletics at difficulty 6 (V20 Dark Ages p. 348): a success stands them up at -2 Initiative next turn; a failure keeps them down and loses the action.", Boolean, true);
     s("celerityDice", "Celerity adds dice to Dexterity rolls",
         "Add Celerity dots to Dexterity-based attack and defense pools (never to Initiative, V20 p. 142).", Boolean, true);
     s("potenceDice", "Potence adds dice to Strength damage",
@@ -1632,7 +1635,10 @@ export async function rollInitiative({ combat = game.combat, combatants = null, 
         const wp = woundPenalty(a);
         // B3800: initiative rows on the sheet (Kerenzikov, Speedware, made wonders)
         // B3806: a worn holster, gun sling or scabbard with its weapon carried: the weapon is at hand
-        const sheetInit = R.sheetBonus(a.items, "initiative_buff") + num(armsLib()?.atHand?.([...a.items], weaponList(a))?.init);
+        // B3921: standing up from a knockdown last turn costs 2 Initiative this turn
+        const stood = R.stoodPenalty(a.getFlag?.(MOD, "stoodUp"), combat);
+        if (stood) await a.unsetFlag(MOD, "stoodUp");
+        const sheetInit = R.sheetBonus(a.items, "initiative_buff") + num(armsLib()?.atHand?.([...a.items], weaponList(a))?.init) - stood;
         const roll = new Roll(`1d10 + ${dex} + ${wits} + ${cel} + ${wp > -99 ? wp : 0} + ${sheetInit}`);
         if (GEN() < 12) await roll.evaluate({ async: true }); else await roll.evaluate();
         rolls.push(roll);
@@ -1760,8 +1766,8 @@ Hooks.once("init", () => {
     const movement = MVJ.setupMovement({ MOD, off: () => false, attr, ability: (a, k) => ability(a, k)?.value ?? 0, getKind, variant: P.variantText, applyDamage, movementFor, esc, discipline, armorPenalty, ask: P.ask });
     const aftermath = AA.setupAftermath({ corpusTrack });
     FTime.setupFightTime();
-    const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.32.1", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+    const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.33.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, followOn: R.followOn, markFollow, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -1893,6 +1899,29 @@ Hooks.on("createChatMessage", msg => {
 Hooks.on("combatStart", combat => {
     if (!isActiveGM() || setting("autoInitiative") === "off") return;
     autoInitiative(combat).catch(e => console.error("WoDX |", e));
+});
+/* B3921: a knocked-down character tries to stand at the start of their turn (V20 Dark Ages p. 348) */
+const standSeen = new Set();
+export async function standUp(actor, combat = game.combat) {
+    if (!actor || !chronicle()?.conditions?.hasCondition?.(actor, "knockdown")) return null;
+    const dice = Math.max(0, attr(actor, "dexterity") + ability(actor, "athletics").value + woundPenalty(actor));
+    const r = await rollPool(dice, R.STAND_DIFF);
+    const res = R.standResult(r);
+    if (res.up) {
+        await chronicle().conditions.setCondition(actor, "knockdown", false);
+        if (combat?.started) await actor.setFlag(MOD, "stoodUp", { combat: combat.id, round: combat.round });
+    }
+    await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), rolls: r.roll ? [r.roll] : [],
+        content: `<div class="vtc-card"><h3>${esc(actor.name)} tries to stand</h3><p>Dexterity + Athletics, ${dice} dice at ${R.STAND_DIFF}: ${r.botch ? "a botch" : `${r.successes} success${r.successes === 1 ? "" : "es"}`}.</p>${diceHtml(r.faces, R.STAND_DIFF)}<p>${esc(res.line)}</p></div>` });
+    return { ...res, roll: r };
+}
+Hooks.on("updateCombat", (combat, changed) => {
+    if (!isActiveGM() || !combat.started || !("turn" in (changed ?? {}) || "round" in (changed ?? {}))) return;
+    try { if (!setting("standUpRoll")) return; } catch (e) { return; }
+    const c = combat.combatant, key = `${combat.id}:${combat.round}:${combat.turn}`;
+    if (!c?.actor || standSeen.has(key)) return;
+    standSeen.add(key);
+    standUp(c.actor, combat).catch(e => console.error("WoDX | stand up", e));
 });
 const lastInitRound = new Map();
 Hooks.on("updateCombat", (combat, changed) => {

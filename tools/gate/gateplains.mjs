@@ -16,14 +16,16 @@
  *   8. the Armenians (B3940): in Anatolia's mix, a town byname before 1800 and -ian or -yan after
  *   9. the Missouri villages (B4130): the Mandan, Hidatsa, Arikara and Pawnee in the West, women named by village
  *  10. the northern Plains (B4140): the Crow with clans, the Blackfoot and Arapaho by division
- *  11. clean up
+ *  11. the Great Basin (B4150): the Shoshone and the Ute by division and band
+ *  12. Canada (B4160): the Cree and Anishinaabe by division and town, the Haida and Tlingit by clan
+ *  13. clean up
  * Result: Data/wodx-gate/gateplains-result.json.
  */
 import {gate} from "./kit.mjs";
 
 const CR = "wodx-creation", CH = "wodx-chronicle";
 const WEST = "north-america-west", EAST = "american";
-const PEOPLES = ["lakota", "cheyenne", "comanche", "kiowa", "pueblo", "dine", "apache", "mandan", "hidatsa", "arikara", "pawnee", "blackfoot", "arapaho", "crow"];
+const PEOPLES = ["lakota", "cheyenne", "comanche", "kiowa", "pueblo", "dine", "apache", "mandan", "hidatsa", "arikara", "pawnee", "blackfoot", "arapaho", "crow", "shoshone", "ute"];
 const CLANS = ["pueblo", "dine", "crow"];
 const gen = () => game.modules.get(CH).api.gen;
 const results = (ctx, id) => (gen().lookup({...gen().context(), ...ctx})(id)?.results ?? []).map(r => r.text);
@@ -110,13 +112,13 @@ export async function run() {
     });
     await G.step("9. the Missouri villages", async () => {
       const med = results({era: "medieval", culture: WEST}, "people.origin"), bad = [];
-      for ( const o of ["mandan", "hidatsa", "arikara", "pawnee", "blackfoot", "arapaho", "crow"] ) {
+      for ( const o of ["mandan", "hidatsa", "arikara", "pawnee"] ) {
         for ( const p of draw("medieval", o, 20, "mo") ) if ( !p.name || p.name.includes("{") || p.family ) bad.push(`${o}: ${p.name} / ${p.family}`);
         for ( const p of draw("modern", o, 10, "mo") ) if ( !p.family || p.name.includes("{") ) bad.push(`${o} modern: ${p.name}`);
       }
       const women = draw("medieval", "pawnee", 20, "mo-w").filter((p, i) => i % 2).map(p => p.name);
       G.ok("9. the Missouri villages in the West; own names, women of a village, then family names",
-        ["mandan", "hidatsa", "arikara", "pawnee", "blackfoot", "arapaho", "crow"].every(o => med.includes(o)) && !bad.length && women.every(n => /^A woman of the /.test(n)),
+        ["mandan", "hidatsa", "arikara", "pawnee"].every(o => med.includes(o)) && !bad.length && women.every(n => /^A woman of the /.test(n)),
         {medieval: med, bad: bad.slice(0, 6), sample: draw("medieval", "mandan", 4, "show").map(p => p.name), women: women.slice(0, 3)});
     });
     await G.step("10. the northern Plains", async () => {
@@ -127,6 +129,26 @@ export async function run() {
       G.ok("10. the Crow, Blackfoot and Arapaho in the West; clans or divisions, then family names",
         ["crow", "blackfoot", "arapaho"].every(o => med.includes(o)) && !bad.length,
         {medieval: med, bad: bad.slice(0, 6), sample: draw("medieval", "crow", 4, "show").map(p => p.name)});
+    });
+    await G.step("11. the Great Basin", async () => {
+      const med = results({era: "medieval", culture: WEST}, "people.origin"), bad = [];
+      for ( const o of ["shoshone", "ute"] ) {
+        for ( const p of draw("medieval", o, 20, "gb") ) if ( p.family || p.name.includes("{") ) bad.push(`${o}: ${p.name}`);
+        for ( const p of draw("modern", o, 10, "gb") ) if ( !p.family || p.name.includes("{") ) bad.push(`${o} modern: ${p.name}`);
+      }
+      G.ok("11. the Shoshone and the Ute in the West; own names, then family names",
+        ["shoshone", "ute"].every(o => med.includes(o)) && !bad.length, {bad: bad.slice(0, 6), sample: draw("medieval", "ute", 4, "show").map(p => p.name)});
+    });
+    await G.step("12. Canada", async () => {
+      const med = results({era: "medieval", culture: "canada"}, "people.origin"), bad = [];
+      const ca = (era, o, n) => Array.from({length: n}, (_, i) => R.nameOf({rand: gen().random(`gateplains:ca:${era}:${o}`, i),
+        tables: gen().lookup({...gen().context(), era, culture: "canada"}), origin: o, sex: i % 2 ? "female" : "male"}));
+      for ( const o of ["cree", "anishinaabe"] ) for ( const p of ca("medieval", o, 20) ) if ( p.family || p.name.includes("{") ) bad.push(`${o}: ${p.name}`);
+      for ( const o of ["haida", "tlingit"] ) for ( const p of ca("medieval", o, 20) ) if ( !/^of the .+ clan$/.test(p.family ?? "") ) bad.push(`${o}: ${p.name}`);
+      for ( const o of ["cree", "anishinaabe", "haida", "tlingit"] ) for ( const p of ca("industrial", o, 10) ) if ( !p.family || p.name.includes("{") ) bad.push(`${o} industrial: ${p.name}`);
+      G.ok("12. Canada's first nations before the colonies; towns or clans, then family names",
+        ["haudenosaunee", "cree", "anishinaabe", "haida", "tlingit"].every(o => med.includes(o)) && !bad.length,
+        {medieval: med, bad: bad.slice(0, 6), sample: ca("medieval", "tlingit", 4).map(p => p.name)});
     });
   } catch (e) {
     G.ok("error", false, {error: e.message});

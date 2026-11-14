@@ -207,7 +207,7 @@ async function card({events, snap, marketSnap = [], when, towns, after}) {
   const names = id => MK.marketById(Markets.state(), id)?.name ?? id;
   const list = events.map(e => `<li><b>${esc(e.name ?? names(e.town))}</b>: ${esc(e.text)}</li>`).join("");
   const rows = towns.map(id => { const t = after.towns[id]; return t ? `<li>${esc(names(id))}: ${t.people.toLocaleString("en")} people, ${esc(TR.prosperityWord(t.prosperity).toLowerCase())}, ${esc(TR.unrestWord(t.unrest).toLowerCase())}${t.struck ? `, ${esc(t.struck.name.toLowerCase())}` : ""}</li>` : ""; }).join("");
-  return ChatMessage.create({speaker: {alias: "Towns"}, whisper: gmIds(), flags: {[MOD]: {townTurn: {snap, marketSnap, applied: true}}},
+  return ChatMessage.create({speaker: {alias: "Towns"}, whisper: gmIds(), flags: {[MOD]: {townTurn: {snap, marketSnap, applied: true, towns, at: now()}}},
     content: `<div class="wodx-card wst-towns wst-town-turn"><h3>The towns after ${esc(when)}</h3>
       ${list ? `<ul>${list}</ul>` : ""}<details><summary>Every town</summary><ul>${rows}</ul></details>
       <p class="wodx-quiet">Undo puts these towns back as they were before this turn${marketSnap.length ? ", and their bread back in the market" : ""}.</p>
@@ -220,6 +220,8 @@ async function undo(msg) {
   await save({...TR.restore(state(), f.snap), last: state().last});
   for ( const s of f.marketSnap ?? [] ) await Markets.setMarket(s.id, {supply: {food: s.supply}, index: {food: s.index}});
   await msg.update({[`flags.${MOD}.townTurn.applied`]: false});
+  // B4620: the marks the turn left on the town scenes go with it
+  try { await (await import("./town-looks.mjs")).endFor({towns: f.towns ?? [], since: f.at ?? 0}); } catch (e) { console.warn(`${MOD} | town looks undo`, e); }
 }
 
 /* ------------------------------------------------------------------ */
@@ -273,6 +275,18 @@ async function onSaga(p = {}) {
   const s2 = state();
   if ( s2.towns[m.id] ) { s2.towns[m.id].seen = [...s2.towns[m.id].seen, key].slice(-40); await save(s2); }
   return r;
+}
+
+/**
+ * A power that reaches the town (WoDX Actions, B3757), once the Storyteller approved it: kind one of TR.POWER_TOWN,
+ * scene the scene it was used on (its market's town). Lands at once with the town card and its Undo.
+ */
+async function onPower({kind, scale = 1, scene = null, label = ""} = {}) {
+  if ( !game.user.isGM ) return null;
+  const m = MK.marketOfScene(Markets.state(), typeof scene === "string" ? scene : scene?.id ?? globalThis.canvas?.scene?.id);
+  if ( !m ) return null;
+  const n = TR.powerEvent(kind, m.id, {scale, label});
+  return n ? landNow([n], label || "a power") : null;
 }
 
 /* ------------------------------------------------------------------ */
@@ -378,4 +392,4 @@ export async function setupTowns() {
 
 /** B3420: the town at each settlement age, for the chronicle rebuild's ages step (recipe ages). */
 export const atAges = (id, ages = []) => TR.townAtAges(state().towns[id] ?? null, ages);
-export const api = () => ({open: townsDialog, edit: editTown, state, of, ofScene, run, undo, atAges, saga: onSaga, rules: TR});
+export const api = () => ({open: townsDialog, edit: editTown, state, of, ofScene, run, undo, atAges, saga: onSaga, power: onPower, rules: TR});

@@ -6,7 +6,7 @@
  * `against`: the kinds it works on or reacts to.
  */
 import {LINE_BOOKS, WIDEN, LINE_MERITS_FLAWS} from "./trait-lines.mjs";
-import {MORE_EFFECTS, MORE_PROMPTS, RENAMES, MORE_EFFECTS_2, MORE_ATTITUDE, MORE_PROMPTS_2, MORE_EFFECTS_3, MORE_PROMPTS_3, MORE_EFFECTS_4, MORE_ATTITUDE_2, MORE_PROMPTS_4, MORE_EFFECTS_5, MORE_PROMPTS_5, BODY, MORE_PROMPTS_6} from "./trait-effects-more.mjs";
+import {MORE_EFFECTS, MORE_PROMPTS, RENAMES, MORE_EFFECTS_2, MORE_ATTITUDE, MORE_PROMPTS_2, MORE_EFFECTS_3, MORE_PROMPTS_3, MORE_EFFECTS_4, MORE_ATTITUDE_2, MORE_PROMPTS_4, MORE_EFFECTS_5, MORE_PROMPTS_5, BODY, MORE_PROMPTS_6, MORE_ATTITUDE_3, MORE_PROMPTS_7} from "./trait-effects-more.mjs";
 
 export const PATTERNS = {
  "P1": "Roll modifier",
@@ -227,7 +227,7 @@ export const BACKGROUNDS = [
   {"key": "black-hand-membership", "name": "Black Hand Membership", "kind": "background", "books": ["V20 core"], "page": {"V20 core": 82}, "hook": "story"},
   {"key": "blessing", "name": "Blessing", "kind": "background", "books": ["M20 core", "M20 Book of Secrets"], "page": {"M20 core": 252, "M20 Book of Secrets": null}, "hook": "story"},
   {"key": "certification", "name": "Certification", "kind": "background", "books": ["M20 core", "M20 Book of Secrets"], "page": {"M20 core": 252, "M20 Book of Secrets": null}, "hook": "story"},
-  {"key": "chantry", "name": "Chantry", "kind": "background", "books": ["M20 core", "M20 Book of Secrets"], "page": {"M20 core": 139, "M20 Book of Secrets": 214}, "hook": "place"},
+  {"key": "chantry", "name": "Chantry", "kind": "background", "books": ["M20 core", "M20 Book of Secrets"], "page": {"M20 core": 301, "M20 Book of Secrets": 214}, "hook": "place"},
   {"key": "chimera", "name": "Chimera", "kind": "background", "books": ["C20"], "page": {"C20": null}, "hook": "item"},
   {"key": "contacts", "name": "Contacts", "kind": "background", "books": ["V20 core", "V20 Dark Ages", "W20 core", "W20 Changing Breeds", "M20 core", "M20 Book of Secrets", "Wraith 20", "C20", "Hunters Hunted II", "Demon: The Fallen", "Mummy: The Resurrection", "Mummy 2nd", "Kindred of the East", "Orpheus"], "page": {"V20 core": 82, "V20 Dark Ages": 158, "W20 core": 113, "W20 Changing Breeds": 127, "M20 core": 252, "M20 Book of Secrets": null, "Wraith 20": 77, "C20": null, "Hunters Hunted II": 156, "Demon: The Fallen": 124, "Mummy: The Resurrection": null, "Mummy 2nd": 62, "Kindred of the East": null, "Orpheus": 124}, "hook": "rumour"},
   {"key": "cult", "name": "Cult", "kind": "background", "books": ["M20 core", "M20 Book of Secrets", "Mummy: The Resurrection", "Mummy 2nd"], "page": {"M20 core": 146, "M20 Book of Secrets": 219, "Mummy: The Resurrection": null, "Mummy 2nd": 33}, "hook": "people"},
@@ -346,7 +346,7 @@ export const ATTITUDE = {
   "lord-of-the-flies": {delta: -1, againstKinds: ["mortal"]},
   "cold-breeze": {delta: -1, againstKinds: ["mortal"]}
 };
-for ( const [k, v] of Object.entries({...MORE_ATTITUDE, ...MORE_ATTITUDE_2}) ) ATTITUDE[k] ??= v;
+for ( const [k, v] of Object.entries({...MORE_ATTITUDE, ...MORE_ATTITUDE_2, ...MORE_ATTITUDE_3}) ) ATTITUDE[k] ??= v;
 
 /** Step 6 (Chronicle 0.21.0): traits WoDX Actions carries out in its own windows, for the Trait effects window. */
 export const HANDLED = {
@@ -435,7 +435,12 @@ export const PROMPTS = {
   "dark-fate": {on: ["night"], text: "the dark fate draws a little closer"}
 };
 // B3781: the no-effect audit's cards, for traits that are a Storyteller's call at a known moment
-for ( const [k, v] of Object.entries({...MORE_PROMPTS, ...MORE_PROMPTS_2, ...MORE_PROMPTS_3, ...MORE_PROMPTS_4, ...MORE_PROMPTS_5, ...MORE_PROMPTS_6}) ) PROMPTS[k] ??= v;
+for ( const [k, v] of Object.entries({...MORE_PROMPTS, ...MORE_PROMPTS_2, ...MORE_PROMPTS_3, ...MORE_PROMPTS_4, ...MORE_PROMPTS_5, ...MORE_PROMPTS_6, ...MORE_PROMPTS_7}) ) PROMPTS[k] ??= v;
+// B3920: the backgrounds that now have a card or an attitude seed say so in the Trait effects window
+for ( const b of BACKGROUNDS ) {
+  if ( b.hook === "story" && MORE_PROMPTS_7[b.key] ) b.hook = "prompt";
+  if ( b.hook === "story" && MORE_ATTITUDE_3[b.key] ) b.hook = "attitude";
+}
 
 /**
  * Step 8 (Chronicle 0.23.0): backgrounds made into things in the world. People backgrounds become NPC sheets tied to the

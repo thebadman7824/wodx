@@ -110,7 +110,9 @@ export async function run() {
       const PW = game.wodxCombat.powder;
       const [gunman] = await Actor.create([{name: "WoDX gate: musketeer", type: "Mortal"}]);
       actors.push(gunman);
-      const [gun] = await gunman.createEmbeddedDocuments("Item", [{name: "Matchlock arquebus", type: "Ranged Weapon", system: {clip: {value: 0, max: 1}}}]);
+      const [gun] = await gunman.createEmbeddedDocuments("Item", [{name: "Matchlock arquebus", type: "Ranged Weapon", system: {clip: {value: 0, max: 1}}},
+        // B3900: a reload takes its ball from Possessions, and a ball needs a powder horn
+        {name: "a lead musket ball", type: "Item"}, {name: "a powder horn", type: "Item"}]);
       await gun.setFlag("wodx-combat", "powder", {wet: true, matchOut: true});
       await game.wodxCombat.reload({actor: gunman, weaponId: gun.id});
       const afterReload = gun.getFlag("wodx-combat", "powder");

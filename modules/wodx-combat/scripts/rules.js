@@ -650,3 +650,17 @@ export function followOn(key, { hit = false, damageSuccesses = 0, profile = "" }
 }
 /** The maneuver's key in MANEUVERS or CLASSIC ("normal" when it is neither). */
 export const maneuverKey = m => Object.entries({ ...MANEUVERS, ...CLASSIC }).find(([, v]) => v === m)?.[0] ?? "normal";
+
+/* B3921: standing up from a knockdown (V20 Dark Ages p. 348): Dexterity + Athletics at 6. A success stands them
+ * up and costs 2 Initiative on the next turn; a failure keeps them down and loses the action. */
+export const STAND_DIFF = 6;
+export function standResult(r = {}) {
+    if (r.botch) return { up: false, line: "A botch: they stay down and lose the action." };
+    if ((Number(r.successes) || 0) >= 1) return { up: true, line: "They get up: -2 Initiative next turn." };
+    return { up: false, line: "They stay down and lose the action." };
+}
+/** The Initiative cost on the turn after standing: 2 when the flag is from this fight's previous turn, else 0. */
+export function stoodPenalty(flag, combat) {
+    if (!flag || !combat || flag.combat !== combat.id) return 0;
+    return Number(combat.round) === Number(flag.round) + 1 ? 2 : 0;
+}

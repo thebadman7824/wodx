@@ -32,6 +32,9 @@ const SHEET = `[greet] Looks up at the sky.
 async function save(R) {
   R.finished = new Date().toISOString();
   R.summary = `${R.steps.filter(s => s.pass).length}/${R.steps.length} passed${R.errors?.length ? `, ${R.errors.length} error(s)` : ""}`;
+  // The runner's comment carries only this line: name what failed, with its detail
+  const bad = R.steps.filter(s => !s.pass);
+  if ( bad.length ) R.summary += `; failed: ${bad.map(s => JSON.stringify(s).slice(0, 400)).join(" ; ")}`;
   const file = new File([JSON.stringify(R, null, 1)], "gatedisplayd-result.json", {type: "application/json"});
   await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, {notify: false});
   return R.summary;
@@ -187,11 +190,14 @@ async function player(ids) {
     const posted = await until(() => game.messages.contents.some(x => x.timestamp >= since && /reads .* face/.test(x.content ?? "") && x.speaker?.actor === ids.pc), 8000);
     const mine = game.messages.contents.filter(x => x.timestamp >= since && /reads .* face/.test(x.content ?? "")).at(-1);
     await sleep(800);
-    const leak = game.messages.contents.filter(x => x.timestamp >= since && /keeps a straight face/.test(x.content ?? "") && x.visible);
+    // Foundry hands a blind GM roll to every client as a hidden "private roll"; a leak is one whose content this player can actually read.
+    const leakMsgs = game.messages.contents.filter(x => x.timestamp >= since && /keeps a straight face/.test(x.content ?? ""));
+    const leak = leakMsgs.filter(x => x.isContentVisible);
+    const shown = /keeps a straight face/.test(ui.chat?.element?.textContent ?? "");
     const marked = (game.actors.get(ids.pc)?.flags?.["wodx-paperdoll"]?.faceReads ?? []).includes(ids.talkMsg);
     el.remove();
-    ok("d2. Read their face", label === "Read their face" && posted && mine?.whisper?.includes(game.user.id) && leak.length === 0 && marked,
-      {button: label, card: mine ? mine.content.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").slice(0, 240) : null, leak: leak.length, marked});
+    ok("d2. Read their face", label === "Read their face" && posted && mine?.whisper?.includes(game.user.id) && leak.length === 0 && !shown && marked,
+      {button: label, hiddenRolls: leakMsgs.length, shownInLog: shown, card: mine ? mine.content.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").slice(0, 240) : null, leak: leak.length, marked});
   });
   return steps;
 }

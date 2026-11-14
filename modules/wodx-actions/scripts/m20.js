@@ -85,7 +85,7 @@ export function build(ctx) {
             const mods = Object.keys(M.MODIFIERS).filter(k => fd[`m-${k}`]);
             const form = EF.read(fd);
             if (form.save && form.keywords.length) await EF.saveRote(actor, EF.E.roteFrom(form.save, { keywords: form.keywords, used, plan: form.plan, ctx: form.ctx, kind: fd.kind, feat: n(fd.feat) }));
-            const kw = form.keywords.length ? EF.plan(actor, form, 0, { used, feat: n(fd.feat), age: sg.age.key }) : null;
+            const kw = form.keywords.length || form.world ? EF.plan(actor, form, 0, { used, feat: n(fd.feat), age: sg.age.key }) : null;
             const plan = M.castPlan({ arete: i.arete, willpower: i.willpower.perm, used, known: i.spheres, kind: fd.kind, mods, quint: n(fd.q), avatar: i.avatar, need: kw ? kw.need : n(fd.feat), extra: n(fd.extra), freeMod: n(fd.free) });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
             if (plan.quintUsed) { if (plan.quintUsed > i.quint) { notify(`${actor.name} has ${i.quint} Quintessence.`); return null; } await updateActor(actor, { "system.quintessence.temporary": i.quint - plan.quintUsed }); }
@@ -101,7 +101,7 @@ export function build(ctx) {
                 ...(plan.quintUsed ? [`${plan.quintUsed} Quintessence`] : []), ...(plan.over ? [`+${plan.over} needed: past difficulty 10`] : []), ...(wp ? ["Willpower"] : [])]);
             body += `<div class="vta-big ${d.key === "botch" ? "bad" : d.key === "success" || d.key === "extraordinary" ? "good" : ""}">${r.successes} of ${plan.need}: ${esc(d.text)}.</div>`;
             const fx = kw && r.successes && !r.botch ? EF.plan(actor, form, r.successes, { used, feat: n(fd.feat), age: sg.age.key }) : null;
-            if (fx?.got?.ok) body += fx.html;
+            if (fx?.got?.ok || fx?.items?.length) body += fx.html;
             else if ((d.key === "success" || d.key === "extraordinary" || d.key === "partial") && r.successes) {
                 body += fd.dmg ? `<div class="vta-res">Damage: ${EF.E.eraRules(sg.age.key).levels(r.successes, { forces: used.some(x => x.sphere === "forces") })} levels (${M.damageType({ spheres: used.map(x => x.sphere) })}, unless charged with Prime or Pattern-breaking); the Effect is instant.</div>`
                     : `<div class="vta-res">Duration: ${M.duration(r.successes)}.</div>`;
@@ -110,7 +110,7 @@ export function build(ctx) {
             if (fortune) body += fortune.html;
             if (r.botch && sg.age.key !== "crusade") body += `<div class="vta-note">To stave off the backlash: ${esc(M.STAVE)}.</div>`;
             body += `<div class="wodx-quiet">${sg.age.key === "crusade" ? `Sorcerers Crusade pdf pp. 244–249; ${REF} pp. 501–504 for the feats` : `${REF} pp. 501–504`}</div>`;
-            const fxData = fx?.got?.ok && fx.items.length ? { kind: "effects", caster: actor.name, items: fx.items.filter(x => x.route !== "off" && x.route !== "st"), recipe: fx.recipe, hold: fx.hold } : null;
+            const fxData = (fx?.got?.ok || fx?.items?.some(x => x.key === "world")) && fx.items.length ? { kind: "effects", caster: actor.name, items: fx.items.filter(x => x.route !== "off" && x.route !== "st"), recipe: fx.recipe, hold: fx.hold } : null;
             if (["vulgar", "witnessed"].includes(fd.kind)) ctx.revealed?.(actor, { secret: "mage", event: "worked vulgar magick" })?.catch?.(e => console.error("WoDX |", e));
             // B3545: other modules hear that magick was worked (WoDX Senses marks vulgar strain for Prime sight)
             Hooks.callAll("wodxMagickWorked", actor, { kind: fd.kind, highest: plan.highest, age: sg.age.key, botch: !!r.botch, spheres: used.map(x => x.sphere) });

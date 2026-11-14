@@ -534,3 +534,35 @@ export const MORE_PROMPTS_6 = {
   "detached": {on: ["fight"], text: "wound penalties do not touch Psychic Numina until Incapacitated"},
   "poisonous-blood": {on: ["feed", "fight"], text: "each blood point a vampire drinks deals that vampire a bashing level"}
 };
+
+/**
+ * B3920 (no-effect audit t3): backgrounds nothing read. Attitude seeds for standing among one's own kind, and cards
+ * to the Storyteller at the moment the rest matter. WoDX wording; the ratings' size is the Storyteller's call.
+ */
+export const MORE_ATTITUDE_3 = {
+  "eminence": {delta: 1, againstKinds: ["demon"]},
+  "notoriety": {delta: 1, againstKinds: ["wraith"]},
+  "pure-breed": {delta: 1, againstKinds: ["lupine"]},
+  "spirit-heritage": {delta: 1, againstKinds: ["spirit"]}
+};
+export const MORE_PROMPTS_7 = {
+  "alternate-identity": {on: ["social"], text: "a second name with its own past: a question, a search or a warrant can be turned toward the other self"},
+  "arcane": {on: ["social", "night"], text: "people forget the character: searching for them, or recalling their face, is one die harder per dot"},
+  "backing": {on: ["social", "night"], text: "a court or a temple behind them can be asked for one favour a story, its size by the rating"},
+  "backup": {on: ["fight", "social"], text: "the character can call for agents to arrive, more and better with each dot"},
+  "black-hand-membership": {on: ["social", "night"], text: "a Black Hand contact can be reached for a safe house, a message or help, at the price of a task later"},
+  "blessing": {on: ["fight", "social"], text: "the blessing gives its edge once a scene: a die on the roll it suits"},
+  "certification": {on: ["social"], text: "papers and licences open doors a stranger could not: official, legal or medical places let them in"},
+  "cypher": {on: ["night", "social"], text: "the cipher hides a clue: one fact a story about the case, the rating sets how deep"},
+  "dream": {on: ["night"], text: "a dream may give a die to an Ability they lack, once a story, per dot"},
+  "eidolon": {on: ["social", "night"], text: "the inner light speaks: a die on a Willpower roll against the Shadow, once a scene"},
+  "enhancement": {on: ["fight"], text: "the body has been improved: the Storyteller adds the gift, and its price in Paradox or health, to this roll"},
+  "familiar": {on: ["night", "social"], text: "the familiar can scout, carry a message or warn of danger, and needs feeding with Quintessence"},
+  "horde": {on: ["fight", "night"], text: "the horde of spirits or ghosts can be sent to watch, fetch or fight, more of them per dot"},
+  "memento": {on: ["night", "fight"], text: "the keepsake holds a dead person's tie: a die when the spirit it keeps is called on"},
+  "paragon": {on: ["social"], text: "the demon's legend among the faithful: mortals who know it may come to worship or to fear"},
+  "requisitions": {on: ["night", "social"], text: "gear can be drawn from the Union's stores between scenes: a better item per dot, with papers to sign"},
+  "secret-weapons": {on: ["fight", "night"], text: "the lab may send a new device to try out: it works, mostly, and must be reported on"},
+  "spies": {on: ["night", "social"], text: "the network brings a report a night: rumours, who came and went, and one true lead per dot"},
+  "vessels": {on: ["night", "fight"], text: "the vessels hold Sekhem to draw on: one point per dot a story, and they must be kept safe"}
+};
