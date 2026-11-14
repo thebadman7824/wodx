@@ -109,3 +109,103 @@ export const RENAMES = {
   "the-ten-thousand-defjud": "Defiled",
   "luterate": "Illiterate"
 };
+
+/*
+ * Part 2 (B3783-B3785): the traits on how people take the character, read against V20 core pp. 483-493, V20 Dark Ages
+ * p. 427, W20 pp. 476-482, M20 Book of Secrets pp. 37-93, C20 pp. 180-187, Hunters Hunted II pp. 123-133 and
+ * Mummy 2nd p. 68. Words are WoDX's own.
+ */
+export const MORE_EFFECTS_2 = {
+  "feral-appearance": [{ch: "roll", tags: ["appearance"], againstKinds: ["lupine"], dice: 1, note: "+1 die on Appearance rolls with werewolves"}],
+  "poker-face": [{ch: "roll", tags: ["intimidation", "subterfuge"], diff: -2, note: "-2 difficulty to intimidate or deceive with a blank face"}],
+  "master-of-red-tape": [tick("bureaucracy", "Getting something done through an official system", {diff: -2, note: "-2 difficulty on dealings with the system"})],
+  "red-tape": [tick("bureaucracy", "Getting something done through an official system", {diff: 2, note: "+2 difficulty on dealings with the system"})],
+  "local-hero": [tick("own-community", "With the people of the character's own community", {need: ["social"], diff: -2, note: "-2 difficulty on Social rolls with the community"})],
+  "hit-list": [tick("hunting-group", "With a member of the group that wants the character dead", {need: ["social"], diff: 2, note: "+2 difficulty on Social rolls with that group"})],
+  "parfum-de-goat": [{ch: "roll", tags: ["social"], diff: 3, note: "+3 difficulty on Social rolls with anyone who can smell (satyrs and redcaps do not mind)"}],
+  "good-listener": [tick("drawing-out", "Getting someone to tell what they know", {need: ["social", "perception"], diff: -2, note: "-2 difficulty to draw information out of someone"})],
+  "your-best-advocate": [tick("own-deeds", "Telling of the character's own deeds, true or not", {need: ["social"], diff: -2, note: "-2 difficulty on Social rolls about the character's exploits"})],
+  "voice-of-a-songbird": [tick("voice-inspire", "Singing, or speaking to inspire", {diff: -2, note: "-2 difficulty on singing and stirring speech"})],
+  "fake-it": [tick("proving-claim", "Proving a boast the character's Subterfuge + Manipulation sold", {diff: -2, note: "-2 difficulty on the roll that proves the boast"})],
+  "shrinking-violet": [tick("not-own-kind", "Not mostly among the character's own kind", {need: ["social"], diff: 2, note: "+2 difficulty on Social rolls away from their own"})],
+  "living-legend": [tick("legend-known", "With someone who recognises the legend", {need: ["social"], diff: -2, note: "-2 difficulty on Social rolls when recognised"})],
+  "camp-goodwill": [tick("friendly-camp", "With the camp that favours the character", {need: ["social"], diff: -1, note: "-1 difficulty on Social rolls with that camp"})],
+  "notable-heritage": [tick("heritage-known", "In the society where the family line is known", {need: ["social"], diff: -1, note: "-1 difficulty on Social rolls in that society"})],
+  "supporter": [{ch: "roll", tags: ["social"], diff: -2, note: "-2 difficulty on Social rolls (and +1 die to a group effort)"}],
+  "naive": [tick("ill-intent", "Trying to tell whether someone means harm", {diff: 2, note: "+2 difficulty to sense ill intent"})],
+  "ancestor-ally": [tick("close-ancestor", "Calling on the close ancestor through Ancestors", {diff: -2, note: "-2 difficulty to reach the ancestor"})],
+  "embedded-agent": [tick("own-agency", "With members of the character's own agency", {need: ["empathy", "leadership", "investigation"], dice: 1, note: "+1 die on Empathy, Leadership and Investigation with the agency"})],
+  "noblebearing": [tick("bearing", "The character can bring their presence to bear", {need: ["social"], diff: -2, note: "-2 difficulty on Social rolls"})],
+  "seducttve": [{ch: "roll", tags: ["seduce"], diff: -2, note: "-2 difficulty on seduction"}],
+  "soothingvoice": [tick("using-voice", "The roll rests on the voice (singing, debate, leading)", {dice: 2, note: "+2 dice when the voice carries it"})],
+  "offensivetoanimals": [{ch: "roll", tags: ["animalken"], dice: -2, note: "-2 dice on actions with animals"}]
+};
+
+/**
+ * How a trait moves an NPC's first regard, beyond the kind of being (attitudeSeed). group "same": the NPC shares the
+ * character's sect, faction, tribe or kith; office: the NPC holds a seat or title; words: the NPC's groups or title hold
+ * one of them; fromName: the words in brackets in the trait's own name, "Bigot (Tremere)".
+ */
+export const MORE_ATTITUDE = {
+  "unconvinced": {delta: -1, group: "same", office: true},
+  "elysium-regular": {delta: 1, againstKinds: ["kindred"], office: true},
+  "lawmans-friend": {delta: 1, words: ["sheriff", "scourge", "bishop", "templar", "paladin", "hound"]},
+  "sanctity": {delta: 1},
+  "bishop-friendship": {delta: 2, group: "same", office: true},
+  "expendable": {delta: -1, group: "same", office: true},
+  "sympathizer": {delta: -1, group: "same", office: true},
+  "catspaw": {delta: -1, group: "same", office: true},
+  "former-prince": {delta: -1, words: ["prince"]},
+  "probationary-sect-member": {delta: -2, againstKinds: ["kindred"], group: "same"},
+  "repulsive-to-animals": {delta: -2, againstKinds: ["beast"]},
+  "enchanting-feature": {delta: 1},
+  "repulsive-feature": {delta: -1},
+  "profiled-appearance": {delta: -1, againstKinds: ["mortal"]},
+  "troublemaker": {delta: -1},
+  "bigot": {delta: -1, fromName: true},
+  "hit-list": {delta: -1, fromName: true},
+  "camp-goodwill": {delta: 1, fromName: true},
+  "parfum-de-goat": {delta: -1},
+  "fallen-noble": {delta: -1, group: "same", office: true},
+  "on-probation": {delta: -2, againstKinds: ["fae"]},
+  "living-legend": {delta: 1, againstKinds: ["fae"]},
+  "noted-messenger": {delta: 1, againstKinds: ["lupine"]},
+  "noblebearing": {delta: 1}
+};
+
+export const MORE_PROMPTS_2 = {
+  "disease-carrier": {on: ["feed", "night"], text: "one more blood point on waking or the sickness shows; a vampire who drinks has a one in ten chance to carry it"},
+  "old-pal": {on: ["night"], text: "the old friend is a loyal ally, and expects the same back"},
+  "incomplete-understanding": {on: ["social"], text: "the character may break a custom of the sect without knowing it"},
+  "mistaken-identity": {on: ["social", "night"], text: "someone may take the character for the look-alike, for good or ill"},
+  "recruitment-target": {on: ["night"], text: "the rival sect's recruiters may turn up, at the worst moment"},
+  "special-responsibility": {on: ["night"], text: "the task the character took on calls for work tonight"},
+  "loathsome-regnant": {on: ["night"], text: "the regnant may call the character to some humiliation"},
+  "spirit-mentor": {on: ["night", "fight"], text: "the spirit guide can be asked for help and counsel"},
+  "witch-hunted": {on: ["night"], text: "the people hunting the character may close in"},
+  "diabolical-mentor": {on: ["night"], text: "the old mentor's plans may reach the character"},
+  "double-agent": {on: ["social"], text: "the other side may call in the character's loyalty, or the cover may slip"},
+  "officially-dead": {on: ["social"], text: "records show the character as dead; anyone from the old life is a risk"},
+  "socially-networked": {on: ["night"], text: "followers online can give money, news or a bed almost anywhere"},
+  "powerful-ally": {on: ["night"], text: "the mighty friend can be asked for aid, and wants something back"},
+  "imperative": {on: ["night", "social"], text: "the geas binds: keeping it matters more than the scene"},
+  "immortal-enemy": {on: ["night"], text: "the undying enemy may move against the character"},
+  "benevolent-patron": {on: ["social"], text: "the patron keeps the character close while the interest holds, like a one-dot Mentor"},
+  "dangerous-mentor": {on: ["night"], text: "the mentor's schemes may pull the character in or stain their name"},
+  "oathbound": {on: ["night", "social"], text: "the oath must be kept, or dire things follow"},
+  "ecclesial-rank": {on: ["social"], text: "the character holds church rank and can call on it within the hierarchy"},
+  "sanctioned-witch": {on: ["social"], text: "the Society cannot punish the character's occult study, though many still despise it"},
+  "ecumenist": {on: ["fight"], text: "the character can use other faiths' symbols and holy ground, and lets believers of different faiths pool True Faith"},
+  "manchurian-candidate": {on: ["night"], text: "a trigger may set off the hidden orders"},
+  "inter-agency-liaison": {on: ["night"], text: "the character can draw on both agencies' intelligence and resources"},
+  "perfect-liar": {on: ["social"], text: "small, casual lies are believed without a roll; only mind reading catches them"},
+  "subculture-insider": {on: ["social"], text: "insiders of the chosen subculture take the character for one of their own"},
+  "self-confident": {on: ["fight", "social"], text: "Willpower spent for a success at difficulty six or more is kept unless that is the only success"},
+  "overconfident": {on: ["fight"], text: "the character never backs down from a challenge, however outmatched"},
+  "family-support": {on: ["night"], text: "the family knows and stands by the character"},
+  "persistent-parents": {on: ["night"], text: "the parents' search may draw eyes to the character"},
+  "twisted-upbringing": {on: ["social"], text: "what the character was taught about Garou ways is wrong and may cause trouble"},
+  "trusty-companion": {on: ["night"], text: "each companion in the group gets one extra Willpower point a chapter while the character stands by them"},
+  "character-creation-and-traits-boon": {on: ["social"], text: "someone owes the character a single favour"},
+  "animalistic-favor": {on: ["fight"], text: "the animal feature's attack uses the standard pool"}
+};

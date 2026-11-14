@@ -23,6 +23,8 @@
  *  15. signs others sense: the Kindred gives off Eerie Presence and Cast No Reflection, the mortal nothing; a Veil keeps its difficulty for Senses
  *  24. the no-effect audit (B3780-B3782): Introspection offers its own tick box and adds 2 dice only on a ticked Perception
  *      roll, Combat Novice is a card when a fight starts, and a mage's "Unbondable" is the Book of Secrets merit
+ *  25. the no-effect audit, part 2 (B3783-B3785): a mage's "Bigot (Tremere)" sours a first meeting with a Tremere NPC
+ *      read from its sheet and not with a Ventrue, Sanctity warms anyone, and Red Tape offers its own tick box
  * Result: Data/wodx-gate/gatetraits-result.json.
  */
 async function save(R, name) {
@@ -232,6 +234,19 @@ export async function run() {
       const unb = T().of(adept).matched.map(m => m.key);
       ok("24 no-effect audit", box && ticked.dice === 2 && plain.dice === 0 && other.dice === 0 && cards.includes("combat-novice") && unb.includes("onbondable"),
         {box, ticked, plain, other, cards, unb});
+    });
+    await step("25 no-effect audit, part 2", async () => {
+      const bigot = await mk("Trait bigot", "Mage", [feat("Bigot (Tremere)", "flaw", 3), feat("Red Tape", "flaw", 4)]);
+      const saint = await mk("Trait saint", "Mortal", [feat("Sanctity", "merit", 2)]);
+      const warlock = await mk("Trait Tremere", "Vampire", []), lord = await mk("Trait Ventrue", "Vampire", []);
+      await warlock.update({"system.clan": "Tremere"});
+      await lord.update({"system.clan": "Ventrue"});
+      const groups = T().groupsOf?.(warlock) ?? [];
+      const onTremere = T().attitudeSeed(bigot, warlock).delta, onVentrue = T().attitudeSeed(bigot, lord).delta;
+      const warm = T().attitudeSeed(saint, lord).delta;
+      const box = /tag-bureaucracy/.test(TH.ticksHtml(bigot));
+      ok("25 no-effect audit, part 2", groups.includes("Tremere") && onTremere === -1 && onVentrue === 0 && warm === 1 && box,
+        {groups, onTremere, onVentrue, warm, box});
     });
   } catch (e) {
     R.errors.push(e.message);
