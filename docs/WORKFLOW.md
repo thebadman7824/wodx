@@ -38,7 +38,13 @@ clashes with other branches more likely. So:
 
 ## 4. Gates: only what the change touches
 
-On the PC, from the branch's checkout:
+Queue PC gate runs yourself through the PC job queue, not through the coordinator (B4100-B4109,
+[tools/pcq/README.md](../tools/pcq/README.md)):
+
+    node tools/pcq/submit.mjs gates --touched --lanes 3 --ref claude/<branch> --thread <id>   then open the printed issue
+
+The runner on the PC takes it within a minute when a lane is free (lanes 2 to 6), and the result comes back as a
+comment on the issue. Gate the branch before merging and main after it. What the runner runs, by hand:
 
     node tools/lanes/run-gate.mjs --touched --lanes 2,3   the gates the branch's changes need, split over lanes 2 and 3
     node tools/lanes/gate-map.mjs --touched           just the list, to put in a PC job
@@ -79,7 +85,8 @@ happens (rule 3 above). `merge-stamp.mjs --check` warns when a minor or major no
     node tools/books/books.mjs overlap modules/wodx-npc
 
 The texts are in `/mnt/project-files/book-text`, one file per book (see [tools/books/README.md](../tools/books/README.md)). A book not
-there yet (no OCR, or not copied) still goes to the PC helper.
+there yet (no OCR, or not copied) goes to the PC job queue as a `books-find` job (book and page back, no text),
+and Trove file name searches as `trove-find`.
 
 ## 6. Merging
 

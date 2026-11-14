@@ -1,0 +1,107 @@
+/* The PC job queue (B4100-B4109): job checks, queue order, lane clash checks and the submit preflight. */
+import assert from "node:assert/strict";
+import {test} from "node:test";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import {spawnSync} from "node:child_process";
+import {parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, issueBody} from "../pcq/jobs.mjs";
+import {preflight} from "../pcq/submit.mjs";
+
+const LANES = [2, 3, 4, 5, 6];
+const lanesCfg = JSON.parse(fs.readFileSync(new URL("../lanes/lanes.json", import.meta.url)));
+const runnerCfg = JSON.parse(fs.readFileSync(new URL("../pcq/runner.json", import.meta.url)));
+
+test("an issue body round-trips through issueBody and parseBody", () => {
+  const job = {kind: "gates", gates: ["gateplains"], prio: 1};
+  assert.deepEqual(parseBody(issueBody(job, "From the plains thread.")).job, job);
+  assert.ok(parseBody("no block here").error);
+  assert.ok(parseBody("```json\n{nope\n```").error);
+});
+
+test("validate accepts the job kinds and fills defaults", () => {
+  const g = validate({kind: "gates", gates: ["gateplains", "gateplains", "gatelifepath"], lanes: 9}, LANES).job;
+  assert.deepEqual(g.gates, ["gateplains", "gatelifepath"]);
+  assert.equal(g.lanes, 5, "lanes is capped at the runner's lane count");
+  assert.equal(g.ref, "main"); assert.equal(g.prio, 3);
+  assert.equal(validate({kind: "gates", touched: true}, LANES).job.lanes, 1);
+  assert.equal(validate({kind: "gates", gates: ["gatex"], lane: 4, lanes: 3}, LANES).job.lanes, 1);
+  assert.ok(validate({kind: "gate-two", gate: "gatelookhand"}, LANES).job);
+  assert.ok(validate({kind: "reset", lane: 3}, LANES).job);
+  assert.ok(validate({kind: "books-find", terms: ["Four Bears", "Mato-Tope", "Buffalo Bird Woman"]}, LANES).job);
+  assert.ok(validate({kind: "trove-find", pattern: "Catlin", under: "The Ultimate Trove - Books (C-D)"}, LANES).job);
+  assert.ok(validate({kind: "gates", gates: ["gatex"], ref: "claude/project-thread-abc"}, LANES).job);
+  assert.ok(validate({kind: "gates", gates: ["gatex"], ref: "fa2a3729"}, LANES).job);
+});
+
+test("validate refuses anything that could reach lane 1, Live, a shell or outside the Trove", () => {
+  const bad = [
+    {kind: "rm"}, {kind: "gates"}, {kind: "gates", gates: ["gatex; del *"]}, {kind: "gates", gates: ["../x"]},
+    {kind: "reset", lane: 1}, {kind: "reset"}, {kind: "gates", gates: ["gatex"], lane: 7},
+    {kind: "gates", gates: ["gatex"], ref: "origin/main"}, {kind: "gates", gates: ["gatex"], ref: "claude/../../x"},
+    {kind: "gates", gates: ["gatex"], ref: "main; calc"}, {kind: "gates", gates: ["gatex"], prio: 9},
+    {kind: "books-find", terms: []}, {kind: "books-find", terms: ['x" & calc']}, {kind: "books-find", terms: ["a\nb"]},
+    {kind: "trove-find", pattern: "*"}, {kind: "trove-find", pattern: "Catlin", under: "..\\Windows"},
+    {kind: "gates", gates: ["gatex"], thread: "anything"}, [], null,
+  ];
+  for ( const b of bad ) assert.ok(validate(b, LANES).error, JSON.stringify(b));
+});
+
+test("the queue runs priority first, then the oldest, and holds jobs waiting on an open issue", () => {
+  const q = [{number: 5, job: {prio: 3}}, {number: 7, job: {prio: 1}}, {number: 6, job: {prio: 1}}, {number: 8, job: {prio: 1, after: 2}}, {number: 9, job: {prio: 2, after: 3}}];
+  assert.deepEqual(order(q, new Set([2])).map(j => j.number), [6, 7, 9, 5]);
+});
+
+test("a gates job splits over its lanes with a report file", () => {
+  const job = validate({kind: "gates", gates: ["a", "b", "c"], lanes: 2}, LANES).job;
+  assert.deepEqual(gateArgs(job, "4", 1, 2, "r.txt"), ["a", "b", "c", "--lane", "4", "--shard", "2/2", "--wait", "10", "--report", "r.txt"]);
+  assert.deepEqual(gateArgs(validate({kind: "gates", touched: true}, LANES).job, "2", 0, 1, "r"), ["--touched", "--lane", "2", "--wait", "10", "--report", "r"]);
+});
+
+test("lane faults are retried, gate failures are not", () => {
+  for ( const c of [3, 4, 5, null] ) assert.ok(isInfraFault(c));
+  for ( const c of [0, 1, 2] ) assert.ok(!isInfraFault(c));
+});
+
+test("the runner's lanes are clean: no lane 1, no shared port or folder, all reset nightly, no Live world", () => {
+  assert.deepEqual(laneClashes(lanesCfg, runnerCfg.lanes), []);
+  assert.ok(runnerCfg.lanes.length >= 5, "at least lanes 2 to 6");
+  assert.ok(!runnerCfg.lanes.includes(1));
+  const clash = {world: "rothenstein-wodx", lanes: [{id: 1, port: 30000, dataPath: "a"}, {id: 2, port: 30020, dataPath: "b", autoReset: true}, {id: 3, port: 30020, dataPath: "B", autoReset: false}]};
+  const out = laneClashes(clash, [1, 2, 3, 9]).join("\n");
+  for ( const w of ["lane 9 is not in", "lane 1 is Ben's", "share port 30020", "share the data folder", "lane 3 is not reset"] ) assert.match(out, new RegExp(w));
+  assert.match(laneClashes({...clash, world: "rothenstein-live"}, [2]).join(), /Live world/);
+});
+
+test("long results are cut to GitHub's comment limit", () => {
+  assert.equal(fit("short"), "short");
+  assert.ok(fit("x".repeat(70000)).length <= 60000);
+});
+
+test("submit's preflight catches a missing gate, a two-browser gate in a gates job and a gate that does not parse", async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "pcq-"));
+  fs.writeFileSync(path.join(dir, "gateok.mjs"), "export async function run() { return 'ok'; }\n");
+  fs.writeFileSync(path.join(dir, "gatetwo.mjs"), "export async function run({phase}) { if ( phase === \"player\" ) return []; }\n");
+  fs.writeFileSync(path.join(dir, "gatebroken.mjs"), "export async function run( {\n");
+  assert.deepEqual(await preflight({kind: "gates", gates: ["gateok"]}, dir), []);
+  const out = (await preflight({kind: "gates", gates: ["gatenone", "gatetwo", "gatebroken"]}, dir)).join("\n");
+  assert.match(out, /gatenone: no tools/); assert.match(out, /gatetwo is a two-browser gate/); assert.match(out, /gatebroken does not parse/);
+  assert.deepEqual(await preflight({kind: "gate-two", gate: "gatetwo"}, dir), []);
+  assert.match((await preflight({kind: "gate-two", gate: "gateok"}, dir)).join(), /not a two-browser gate/);
+});
+
+test("every real two-browser gate is caught by the preflight's pattern, and run-gate's map leaves them out", async () => {
+  const {gateMap} = await import("../lanes/gate-map.mjs");
+  const map = gateMap();
+  for ( const g of ["gatelookhand", "gatesolo", "gatedisplayb", "gatedisplayd"] ) {
+    assert.deepEqual(await preflight({kind: "gate-two", gate: g}), [], g);
+    assert.ok(!(g in map), `${g} should not be in the gate map`);
+  }
+});
+
+test("the runner and the submit helper parse", () => {
+  for ( const f of ["runner.mjs", "submit.mjs", "jobs.mjs"] ) {
+    const r = spawnSync(process.execPath, ["--check", new URL(`../pcq/${f}`, import.meta.url).pathname], {encoding: "utf8"});
+    assert.equal(r.status, 0, r.stderr);
+  }
+});

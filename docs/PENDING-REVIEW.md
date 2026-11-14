@@ -14,6 +14,8 @@ Ben read the digest of the entries below and approved all of them at 17:05 UTC, 
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-14 | Where threads queue PC jobs | GitHub issues labelled pc-job in the WoDX repo (public; results give book and page only, never text), read by a runner on the PC (B4100) | Put runner-off in D:\WoDX\pcq and go back to the PC helper thread |
+| 2026-11-14 | Decision block for the PC runner | Taken by hand as B4100-B4109: the registry lock failed while the shared folder was full | Renumber changes/decisions/B4100.md if it clashes |
 | 2026-11-09 | Do NPCs set off traps? | Only when the trap tile has "NPCs set it off" ticked. Tokens owned by the Storyteller count as NPCs. | Tick the box on each trap. To change the default, flip the `npc` test in `trapsOnPath` (wodx-interactables/scripts/main.mjs). |
 | 2026-11-09 | How much damage does a pit do? | 2 bashing dice, with lethal as an option for spikes. The core falling rule is one bashing die per 10 feet, soakable (V20 core printed p. 296), so 2 dice is a pit of about 20 feet. | Set damage dice on the tile, or change `TRAPS.pit.dice` in interact-rules.mjs. |
 | 2026-11-09 | How many search successes does each trap grade need? | Crude 1, good 2, excellent 3, masterwork 4, searching within three squares. | `TRAP_GRADES[*].hide` and `SEARCH_SQUARES`. |

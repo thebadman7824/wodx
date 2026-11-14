@@ -1,18 +1,24 @@
 # Testbed lanes
 
-Three local Foundry servers on Ben's PC, so gates can run side by side. Decisions B3020 to B3024.
+Six local Foundry servers on Ben's PC, so gates can run side by side. Decisions B3020 to B3024; lanes 4 to 6 B4103.
 
 | Lane | Port | User-data folder | Nightly reset |
 |---|---|---|---|
 | 1 | 30000 | %LOCALAPPDATA%\FoundryVTT (the existing testbed; lanes.json reads %NAME% from the environment) | never |
 | 2 | 30020 | D:\WoDX\FoundryData-lane2 | 04:40 |
 | 3 | 30030 | D:\WoDX\FoundryData-lane3 | 04:40 |
+| 4 | 30040 | D:\WoDX\FoundryData-lane4 | 04:40 |
+| 5 | 30050 | D:\WoDX\FoundryData-lane5 | 04:40 |
+| 6 | 30060 | D:\WoDX\FoundryData-lane6 | 04:40 |
 
 Licence: the Foundry EULA (Terms item 2) and FAQ (License Questions, example 3) allow more than one instance on one
 licence while only one is reachable by anyone other than the licence owner. Live is that one. Every lane stays local:
 UPnP off, no router forward, never a link to players.
 
 ## Running gates
+
+Threads queue gate runs through the PC job queue (tools/pcq/README.md); the runner there drives lanes 2 to 6.
+The commands below are what it runs, and still work by hand.
 
     node tools/lanes/run-gate.mjs gate6b gatebattle [--lane 2] [--wait 30]
 
@@ -23,7 +29,7 @@ The runner takes the first free lane, locks it, checks for drift and only then r
 
 Only the gates a change needs: `run-gate.mjs --touched [--base origin/main]` (the map is `gate-map.mjs`; corrections in
 `gate-map-extra.json`). Every gate: `--all`, split with `--shard 1/2`. `--report <file>` appends each gate's line.
-The nightly task resets lanes 2 and 3 and then runs `nightly.mjs`: pull main, deploy where the code differs
+The nightly task resets every lane marked autoReset (2 to 6) and then runs `nightly.mjs`: pull main, deploy where the code differs
 (`lanes.mjs deploy --if-changed`), every gate split across the two lanes, lines in nightly-gates.log. A file named
 `nightly-off` here turns the full run off. B3083, B3084.
 
