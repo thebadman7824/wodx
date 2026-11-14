@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.88.1 (A long task keeps a line's own small choices (such as the Effects sealed into a Wonder) so the finished work makes the right item (B3684))
 - 0.88.0 (The making window lists every line a character can make things in, with the inputs each line asks for; a finished work pays that line's costs and makes its items. A long task of kind "wonder" now opens the same window, and a kit may roll a single trait such as Arete (B3683))
 - 0.87.0 (The Underworld's money: oboli in every era, cut into slivers for small prices, with coins of the day that change after Stygia's fall in 1999 (B3552); `money.receiveForeign` puts coin of another money straight into a purse. Long tasks gain the soulforge kind and the soulforge workshop for WoDX Actions' soulforging (B3553))
 - 0.86.1 (The fetish picker reads the maker's tribe, so a Black Spiral Dancer gets the Bane fetishes, and asks WoDX Library whether Kinfolk may make fetishes in this world (B3680-B3681))
