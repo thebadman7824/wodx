@@ -2,7 +2,7 @@
   "id": "wodx-senses",
   "title": "WoDX Senses",
   "description": "World of Darkness Expanded: what a character sees, hears, smells and feels, answered in chat, and on the player's own map while a sight power is in use; a quiet interface for players who want less on screen. A player types /look, /listen, /smell, /touch or /sense, or presses What do I notice?, and gets a whispered answer put together from the place, the hour and sky, and what is on the map, trimmed by light, walls and distance. Looking closer rolls Perception + Alertness; each success adds a detail. Powers that sharpen or open the senses, and the Penumbra and Shadowlands, have lines of their own. With WoDX Atmosphere on, the night's weather adds its own lines (snow, fog, wind, snow on the ground) and its steps to the rolls. Every line comes from editable tables. Private use only; not for distribution or sale.",
-  "version": "0.10.0",
+  "version": "0.11.1",
   "authors": [{"name": "WoDX Project (private)"}],
   "compatibility": {"minimum": "14", "verified": "14.369"},
   "relationships": {

@@ -33,6 +33,7 @@ import {build as buildOverheard} from "./overheard.mjs";
 import {build as buildPeople} from "./people.mjs";
 import {build as buildWanted} from "./wanted.mjs";
 import {build as buildFollowers} from "./followers.mjs";
+import {build as buildDayJobs} from "./day-jobs.mjs";
 import {build as buildResidents} from "./residents.mjs";
 import {build as buildSettlements} from "./settlement.mjs";
 import {build as buildCults} from "./cults.mjs";
@@ -51,7 +52,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.76.3";
+const VERSION = "0.78.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -720,7 +721,7 @@ export async function editBehavior(actor) {
     <fieldset><legend>Fears</legend>${Object.entries(FEARS).map(([k, l]) => `<label class="wnpc-check"><input type="checkbox" name="fear-${k}"${p.fears.includes(k) ? " checked" : ""}/> ${l}</label>`).join("")}</fieldset>
     <fieldset><legend>Talk sheet (only you see it)</legend>
     <textarea name="talk" rows="4" style="width:100%" placeholder="[the abbot] carries bishop's seal => Opens the archive and names the night porter. | teach the night porter">${esc(saved.talk ?? "")}</textarea>
-    <p class="wodx-quiet">One a line. Put WoDX Chronicle tests about the character they talk to before =&gt; to use a line only when it fits. A line that starts with a [topic] is their answer when a player asks about it from Talk; [greet], [none] and [offer] topic, topic are the greeting, the answer when nothing fits, and topics they bring up. After " | ": teach a topic; codex a page; aloud; or a WoDX Chronicle outcome. Lines with no [topic] are your notes only. The HUD's speech button shows the lines for the targeted character.</p>
+    <p class="wodx-quiet">One a line. Put WoDX Chronicle tests about the character they talk to before =&gt; to use a line only when it fits. A line that starts with a [topic] is their answer when a player asks about it from Talk; [greet], [none] and [offer] topic, topic are the greeting, the answer when nothing fits, and topics they bring up. After " | ": teach a topic; codex a page; aloud; lie (the line is a lie: a character who reads the face may see it); or a WoDX Chronicle outcome. Lines with no [topic] are your notes only. The HUD's speech button shows the lines for the targeted character.</p>
     <label class="wnpc-check"><input type="checkbox" name="talkAsk"${saved.talkAsk ? " checked" : ""}/> Ask me first: when a player asks them something, you pick the answer</label>
     <label class="wnpc-check"><input type="checkbox" name="noStock"${saved.noStock ? " checked" : ""}/> No stock talk: only the lines you write</label>
     <label class="wnpc-check"><input type="checkbox" name="noBarks"${saved.noBarks ? " checked" : ""}/> Quiet: no cries or remarks while about their routine</label>
@@ -853,6 +854,9 @@ people.hooks();
 const wanted = buildWanted({MOD, esc, gmIds, isActiveGM, chron, routines, profileFor, attitude: () => attitude, servesOf: a => orders.servesOf(a), isPasserby: doc => passersby.isPasserby(doc), isAnimal: AN.isAnimal});
 wanted.hooks();
 const followers = buildFollowers({MOD, esc, orders, attitude: () => attitude, wanted});
+/* B3590-B3596: day jobs for a character's mortal agents, as long tasks on the clock */
+const dayJobs = buildDayJobs({MOD, esc, gmIds, isActiveGM, chron, factions, followers});
+dayJobs.hooks();
 /* 0.46.0: the residents of a generated town, from the households kept on its buildings */
 /* 0.48.0: settlements, the record of a whole generated place, reviewed before it enters the world */
 const settlements = buildSettlements({MOD, esc, chron});
@@ -898,7 +902,7 @@ Hooks.once("init", () => {
     faces: {open: Faces.openFaces, apply: Faces.applyName}, nameFor: Faces.nameFor, knowledgeOf: a => rivalry.knowledgeOf(a), orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd, overheard, openOverheard: overheard.open,
     politics: {rules: PO, polities: PO.POLITIES, polityFor: PO.polityFor},
     ties: people.ties, openTree: people.openTree, secrets: people.secrets, openSecrets: people.secrets.open, opinion: people.opinion,
-    wanted, openWanted: wanted.openList, followers, openFollowers: followers.openFollowers, residents, openResidents: residents.open,
+    wanted, openWanted: wanted.openList, followers, openFollowers: followers.openFollowers, dayJobs, openDayJobs: dayJobs.openDayJobs, residents, openResidents: residents.open,
     settlements, openSettlements: settlements.open,
     fates: {plan: FATES.planFor, apply: FATES.apply, brood: FATES.brood, bring: FATES.bring, cast: FATES.cast, personOf: FATES.personOf, wakeDue: FATES.wakeDue, onSkipEnd: FATES.onSkipEnd, rules: FATES.rules},
     cults, openCults: cults.open,

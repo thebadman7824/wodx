@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3630
+Next free block: B3680
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -146,7 +146,7 @@ Next free block: B3630
 | B3040-B3059 | Many more face features so that two faces seldom look alike: 100 or more for anyone, 50 per line, 15 per clan, tribe, kith and the like (used B3040-B3052) | Paperdoll |
 | B3060-B3069 | Faster GitHub check: the harness split into parallel shards by past run time, cached packages, a lighter run for docs-only changes (used B3060) | Tools only (.github/workflows, tools/harness) |
 | B3070-B3079 | Gear by region: where each piece of Gear by era is at home, the weapons of other lands, the fill and the Gear window by the scene's land (used B3070-B3073) | Library, Interactables |
-| B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3088) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
+| B3080-B3089 | Workflow speed-ups: merge-time stamping, decision blocks per thread, gates by module, book text in the cloud (used B3080-B3089) | Tools only (tools/release, tools/decisions, tools/lanes, tools/books) |
 | B3090-B3099 | Courts beyond Europe after the book check: the books' own seats for the Laibon, Ashirra, Ravnos, Beast Courts, Bastet, Nunnehi and Nagah (used B3090-B3091) | NPC |
 | B3100-B3109 | Crafting and cookery by region (used B3100-B3102) | Library, Storyteller |
 | B3110-B3119 | Putting money into a venture: a caravan, a workshop or a trading house on a market, paid or hurt by the weekly market turn, by way of life and age (used B3110-B3113) | Storyteller |
@@ -172,15 +172,22 @@ Next free block: B3630
 | B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3378) | Storyteller |
 | B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
 | B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3438) | Storyteller, Actions |
+| B3440-B3449 | Display-only desk batch D: face tell, uncanny marks, war-form Delirium, figure dress (used B3440-B3444) | Actions, Library, Paperdoll, NPC |
 | B3450-B3459 | Places of power: Mage Nodes and Tass, chantries, Changeling freeholds and balefires (used B3450-B3456) | Storyteller |
-| B3460-B3469 | Town generator buildings by region (used B3460-B3461) | tools |
+| B3460-B3469 | Town generator buildings by region (used B3460-B3462) | tools |
 | B3470-B3479 | Living caerns: level, sept and offices, moots, raids, caern wars, a caern dying or taken (used B3470-B3476) | Storyteller |
 | B3480-B3489 | Child pixel sprites (used B3480-B3483) | Paperdoll |
 | B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3499) | Chronicle |
 | B3500-B3509 | One shared gender; a player's gender has no bearing on play (used B3500-B3503) | Chronicle, Sheets, Creation, NPC, Storyteller, Actions, Paperdoll |
 | B3510-B3519 | Algonquian coast names (Lenape, New England, Powhatan) (used B3510-B3512) | Creation, Chronicle |
-| B3550-B3559 | Notes gaps g21-g23: the Quiet as a state, soulforging and oboli, Banality from everyday life (used B3550-B3556) | Actions, Storyteller, Chronicle, NPC |
-| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3602) | Chronicle |
+| B3520-B3539 | Gaps from Ben's design notes: referee ticket, crisis levers, binding card, roster, inheritance, the 2022 cap (used B3520-B3536) | Chronicle, Storyteller, Otherworlds, NPC, Actions |
+| B3540-B3549 | Supernatural sight: the Penumbra, a mage's sight, chimerical sight, the Shadowlands view (notes gaps g8 to g11) (used B3540-B3547) | Senses, Actions |
+| B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
+| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3621) | Chronicle |
+| B3630-B3649 | Supernatural item crafting by line: the shared table and Werewolf fetishes, klaives and talens (used B3630-B3636) | Library, Storyteller, Actions |
+| B3650-B3659 | Threads of Fate: procedural storylines and encounters from story hooks (used B3650-B3656) | Storyteller |
+| B3660-B3669 | The Rothenstein saga: the running step for other systems (used B3660-B3669) | Chronicle |
+| B3670-B3679 | The Rothenstein saga keeps its calendar on long skips (used B3670-B3672) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -4666,6 +4673,11 @@ Two threads claimed B3260-B3269 in the same minute and one claim was lost: the p
 
 Reverse: Remove the claim files and the second check from tools/decisions/claim.mjs.
 
+## B3089. No gate run can hang a lane (2026-11-13)
+Gate runs hung for hours on lanes 1, 2 and 3 (gateage, gateadopt, a touched run): the runner waited on each gate with no limit, so a step waiting on a dialog nobody clicks in the headless browser, or a reply that never comes, held the browser open and the lane locked until someone ended the processes by hand. tools/lanes/run-gate.mjs now closes any window a gate opened (not document sheets) that waits longer than 45 seconds, so the step goes on; a gate past its limit (15 minutes, or its own in gate-map-extra.json "timeouts") fails with its world changes put back; when the page itself stops answering the browser is closed and a new one signs in for the next gate; and past the whole run's limit the runner closes its browser, frees the lane and exits with 5. The lane lock carries a deadline that moves on before each gate, and a run that finds a lock past its deadline ends that hung run (only a gate run's own node process, with its browser) and takes the lane.
+
+Reverse: Remove the sweep, the limits and the watchdog from run-gate.mjs and the deadline from the lane lock in tools/lanes/lib.mjs.
+
 ## B3090. The courts beyond Europe take the books' own seats (2026-11-13)
 WoDX NPC, from the PC book check (global-world/world-courts-book-check-2026-11-13.md). The Laibon: the magaji of the domain and the kholo, the eldest of each legacy, with the Tenets as law (Kindred of the Ebony Kingdom). The Ashirra: a Sultan and an Imam, the ulama, a Qadi (Veil of Night), a sect of its own in the modern nights (V20 Lore of the Clans). The Ravnos of India: voices of the Brahmins, Kshatriyas and Vaisyas by jati (Clanbook Ravnos, Revised). The Beast Courts: a Nagah judge of the Mandates. The Bastet: Holder of the Den-Realm. The Nunnehi: a voice for each tribe, and their Camps and Medicine in the notes (C20). The Nagah: the Crown and Sesha. The Golden Courts and the Mokolé streams are named in the notes. Seat keys are unchanged, so seats already held keep their holders. Seats the books do not name stay in WoDX's own words.
 
@@ -5388,6 +5400,31 @@ Reverse: pass no sickFor from towns.mjs.
 WoDX Actions, the Hunt and feeding (main.js). When upkeep.huntHere(scene).outbreak carries a diff (WoDX Storyteller's contagion: -1 while the town's sickness spreads or stands at its height, B3432), the Hunt shows "The sick are everywhere" with that number, added to the difficulty after the Fame and Domain floor, and named in the roll's parts. A vampire who becomes a carrier on a diseased vessel (V20 p. 303) gets flags.wodx-actions.carrier.disease and .what from the scene's outbreak when that sickness rides in the blood, so WoDX Storyteller's weekly run can offer it to a clean town the carrier stands in (B3433); otherwise the flag stays "a blood-borne disease" with no disease.
 Reverse: remove the sickDiff field and the named carrier in main.js.
 
+## B3440. A war-form sprite brings the Delirium; Hispo does not (2026-11-13)
+Desk item f4. The automatic Delirium prompt (Actions 3.42.0) only looked at a shifter's sheet in Crinos. It now also fires for a token that WoDX Paperdoll draws as a war form, such as an NPC with no Garou sheet, and again when a token's sprite changes. The desk said Crinos or Hispo, but the book check found the Delirium comes from Crinos only (W20 p. 45); Hispo brings it only through a Gift (W20 p. 186), so Hispo stays out. The shift card no longer sends the Storyteller to the Garou tools when the prompt is on.
+
+Reverse: Restore the shifter-only test in crinosSeen and the old note.
+
+## B3441. Dress against the other's station on Etiquette and Subterfuge (2026-11-13)
+Desk item f5. WoDX Library's dressedVs ("fine", "even", "poor") against the first targeted person's station now gives +1 die ("fine") or -1 die ("poor") on Etiquette and Subterfuge rolls. V20 leaves dress to the Storyteller in its Etiquette notes; the one die is WoDX's figure. The desk said "a scene's station"; scenes have no station yet, so it is the station of the one dealt with.
+
+Reverse: Drop dressed from deeperMods.
+
+## B3442. The figure's clothes are worn dress (2026-11-13)
+Desk item f5. The wardrobe pieces of WoDX Paperdoll's figure already match WoDX Library goods by name (277 of 297 worn pieces, each with its value by era and its years). When the sheet has no clothes worn, the look reads the figure's worn places (not what is held), so station, strange dress, the first meeting and the witness description follow what the player dressed the figure in. Clothes worn on the sheet still win.
+
+Reverse: Remove figurePieces from viewOf.
+
+## B3443. A Kindred's uncanny face marks are seen (2026-11-13)
+Desk item f2. face64-seen.mjs lists the face features no mortal has: every Nosferatu, Gargoyle and Samedi mark, and named marks of the other clans, such as a Gangrel's beast eyes and whiskers, a Tzimisce's shaped bone, a Setite's scales, a Baali's horn buds, and long fangs or eyes black from lid to lid. Pallor, scars, paint, jewellery and glows of mood pass for mortal, and form marks count only while their state is on. A mask over the face (the figure's face or head piece) or the Obfuscated status hides them. The witness description names up to three of them, and a mortal who does not know and sees the Kindred brings the Masquerade card, once for each witness in a scene, with the button to record them. Which marks count is WoDX's reading of each clan's look.
+
+Reverse: Remove the uncanny call from Library describe and marksSeen from the move hook.
+
+## B3444. Reading a face (2026-11-13)
+Desk item f1. Under a talk line's face, the player of the character spoken to can read the face once for that line: Perception + Empathy against the speaker's Manipulation + Subterfuge, difficulty 6 each (V20 resisted rolls). The speaker's roll goes to the Storyteller only. Won, the reader learns the true feeling (the attitude step, or a mood the Storyteller set), the face shows it for a moment, and a line the Storyteller marked "lie" on the talk sheet shows a flicker. A tie or a loss shows nothing; a botch misreads them as sincere.
+
+Reverse: Remove readButton and readFace, and the lie tag from parseThen.
+
 ## B3450. Places of power live in one register in WoDX Storyteller (2026-11-13)
 WoDX Storyteller. Nodes, chantries and freeholds are kept in a hidden world setting (powerState), each tied to a scene and to the characters who keep it, and run on the clock once a game hour and after a skip (power.mjs, power-rules.mjs). The window opens from Upkeep, Places of power. Setting placesOfPower switches the clock off.
 
@@ -5432,6 +5469,11 @@ Reverse: let first_group_ok return true everywhere.
 tools/mapgen/samples. The steinfeld 1197 and 1995 records are made again so they carry the record's new band and tradeAge fields; the households, ties and maps are unchanged.
 
 Reverse: nothing to reverse; the samples follow the generator.
+
+## B3462. Gates set up their own sheets and fixtures again on a kept lane (2026-11-14)
+tools/lanes and tools/gate. run-gate.mjs copies the map sidecars and settlement records in tools/mapgen/samples into the lane's Data/wodx-gate before the gates run, so gateadopt finds kessler-steading.wodx.json; gateadopt says plainly when the file is missing. Gate 6c puts back any item a kept test sheet has lost (Argos on Ada Brandt, Kinesis on Tommy Atkins) and clears its queue of dialog answers at each step, so one dialog that never opens no longer feeds the wrong answers to every later step. Gate 6h sets each Realm to the value it expects on whichever item carries it, because the system adds its own six Realm items at 0. Gates 6i and 6m read the actions version as 3.9 or newer, like 6h, instead of 3.1x only.
+
+Reverse: revert the commit; the gates then need the fixture copied and fresh test sheets by hand.
 
 ## B3470. Caerns join the register of places of power (2026-11-13)
 WoDX Storyteller. A caern is a fourth kind on the places-of-power register (caern-rules.mjs, power.mjs): level 0 to 5, its kind from the W20 Caerns chart (p. 310), a totem, the sept with its Garou, tribes and offices (sept leader, Master of the Rite, Warder, Gatekeeper, Master of the Howl, Talesinger, Truthcatcher, den parent; W20 pp. 55-56, 252), and its Gnosis from the last Moot Rite (5 a level, p. 206). Gauntlet and Moon Bridge reach follow the level (p. 311). The window holds the moot, opens the caern (Wits + Rituals at 7 against the caern spirit, p. 206), meets raids, fights caern wars, raises the caern and takes it back.
@@ -5573,40 +5615,195 @@ WoDX Creation, WoDX NPC (no code change there: the clan rule of B3121 serves the
 
 Reverse: edit the lists in data/people-algonquian.mjs.
 
-## B3550. The Quiet is a state with the M20 forms, from 1450 (2026-11-13)
-WoDX Actions (quiet-rules.js, quiet.js). Ben approved notes-gaps item g21 as suggested. The actor flag wodx-actions.quiet holds the form (Denial, Madness, Morbidity), the cause and the tokens shown; the level is read from the current Paradox pool by the Levels of Quiet chart (M20 pp. 555-556). Before 1450 a mage follows Dark Ages: Mage and the window says so. Level 6 is Marauder and passes to the Storyteller.
+## B3520. A ruling for an unclear action is a ticket in the approval queue (2026-11-13)
+WoDX Chronicle. Ben's Notes Gaps Desk item g1, built as suggested. A player ticks "ask for a ruling" in Ask the Storyteller and names what the character does, an Attribute and Ability, an expected difficulty, an optional power and whether mortals can see it. Only those choices travel by socket; the Storyteller's client reads both sheets itself and refuses a ticket for a character the player does not own. The ticket shows the pool, the crossover referee's cases for the power (B-numbers and pages from data/crossover.mjs) and the risks.
 
-Reverse: drop the menu entry api:m20Quiet; the flag does nothing on its own.
+Reverse: untick nothing; the old Ask the Storyteller request still works. Remove ticket.mjs and its registerTicket() call in main.mjs.
 
-## B3551. What the player sees, and how the Quiet ends (2026-11-13)
-WoDX Actions. The Storyteller can send a vision card whispered to the mage's players, mark selected tokens as seen only by them (token flag wodx-actions.quietSeen, hidden on refreshToken for everyone else), and whisper a false line under any speaker's name; the Storyteller's copy of each card says what it is. It ends by the book's means (pp. 556-559): rising out of it (a Willpower point, three successes in one roll at 7, or the optional level + 5; one or two make it seem more real; a botch makes a hobgoblin lasting a day a dot of Arete), a mindscape (a day a Paradox point, a week a point past 10; coming out clears the pool), another mage's cure (two or three Quintessence a point), an empty pool, or the Storyteller. The old Countermagick "dispel a Quiet delusion" now uses the same three-success roll.
+## B3521. The risks a ticket names, by line and the era's book (2026-11-13)
+WoDX Chronicle, ticket-rules.mjs risksFor(). Mage: Paradox if vulgar (M20); under the Dark Ages books, the Dark Ages mage book's own rules, since M20 Paradox does not apply there. Kindred: a sin against Humanity or a Path (V20), or against the Road (V20 Dark Ages). Changeling: Banality (C20). Garou: Rage, frenzy and the Delirium (W20). Wraith: Angst (Wraith 20th). Hunter: Conviction. Demon: Torment. Witnesses add a line for the Masquerade, the Veil or the Consensus. The risks are reminders for the Storyteller; nothing is rolled or applied by them. A ticket is in NEVER_AUTO beside a player's request, so no standing rule or Light-touch mode passes or holds it.
 
-Reverse: set the counter branch in m20.js back to one success.
+Reverse: edit risksFor() in ticket-rules.mjs.
 
-## B3552. Oboli are the Underworld's money (2026-11-13)
-WoDX Storyteller, WoDX Chronicle. A money region "underworld" with one money, oboli, of 32 slivers (prices go as low as a thirty-second of an obolus, Wraith 20th p. 44), no banking, a house wage of half an obolus a month (most trade runs on ledgers, p. 45). The coins of the day change wording after Stygia's fall in 1999. A scene names it in Where this scene stands and counts as abroad for money. money.receiveForeign adds coin of another money to a purse.
+## B3522. Change difficulty and Complication on the ticket (2026-11-13)
+WoDX Chronicle. The approval queue lets a kind put its own controls on its card (handler.controls and handler.control, approvals.updatePending). The ticket's Change difficulty moves the player's difficulty 1 to 3 either way from the first one, kept inside 2 to 10; a new change replaces the last. Complication draws a foreshadowing from WoDX Storyteller's story aids for the character (at most three kept), or a short line of WoDX's own when Storyteller is off. Approving whispers the player and the Storyteller a card with a Roll button for the pool at the ruled difficulty. House rule "Pause the game while a ruling waits" (off by default) pauses the game when a ticket arrives and lifts the pause when it is decided.
 
-Reverse: remove MONIES.underworld, COINS.underworld and PLACE_MONIES.underworld.
+Reverse: turn the house rule off; set the Change difficulty back to "as asked".
 
-## B3553. Soulforging as a long task (2026-11-13)
-WoDX Actions (soulforge-rules.js), WoDX Storyteller (task kind soulforge, workshop soulforge). Products: an obolus, a soulsteel knife, sword, axe or mace (V20 Melee Weapons Chart, pdf p. 288), soulsteel mail or plate (armor class 3 or 4), an Artifact, or a relic reworked. Sources: a soul (the Storyteller's), an Artificer's own plasm (a Corpus level lost for good), an obolus forged again (half the mass lost, a quarter for an Artificer, and a harder task), or a relic. Dexterity + Crafts, a roll a week, delicate; difficulty 6 for an Artificer, 7 otherwise, +1 for an outsider under Stygia's law. Soulfire costs half the goal in Pathos, one more after 1999. House rules: the setting chapter gives no dice for it.
+## B3523. The 2022 cap covers lifepaths and the main timeline only (2026-11-13)
+Ben's pick on g7 of the Notes Gaps Desk: delete nothing. The Future Darkness branch stays off by default (house rule futureBranch) and keeps its events to 2098 and the Time of Future Judgement in 2099. The standing rule that dated events stop at 2022 applies to lifepaths and the main timeline, not to the optional future branch.
 
-Reverse: change PRODUCTS, plan() and soulfireCost in soulforge-rules.js.
+Reverse: none needed; a record of Ben's choice.
 
-## B3554. What a finished forging makes (2026-11-13)
-WoDX Actions. On wodxTaskDone the plan kept in wodx-actions.soulforge[task id] makes the item: weapons and armor as system gear with their soak and damage, an Artifact as an Item, oboli into the purse as foreign coin of the Underworld (an item if WoDX Storyteller is older). A ruined task loses the Corpus. Forging outside the Guild before 1999 whispers the Storyteller.
+## B3524. Crisis levers write into each system's own regional record (2026-11-13)
+WoDX Storyteller, Notes Gaps Desk g2, built as suggested. One window per region (Crisis levers for a region, in the Storyteller's hand). Plague strength (0.5 to 2 times) scales the weekly attack rate of the region's outbreaks, and only those running now. Hunter pressure (0 to 10) adds or takes away points in the hunters' record for the region, as a "manual" change so the witch-trial factor does not double it. Wyrm spread (0 to 3 times) is the region's rate in WoDX Otherworlds. Gauntlet, Shroud and Banality (up to 2 either way) move drift at every place in the region; drift still stays inside -3 to +3 and only places with that rating change. A slider shows only when its system runs. Every change is dated, written to the chronicle log with an optional reason, and kept with what it did, so "Take back the last change" reverses it exactly.
 
-Reverse: remove the wodxTaskDone hook's soulforge call in main.js.
+Reverse: take back each change from the window, or clear wodx-storyteller.leverState.
 
-## B3555. Banal places and the Autumn People (2026-11-13)
-WoDX NPC (place tags office, courthouse, technocracy with their crowds), WoDX Actions (banal-life-rules.js). A scene in such a place, a scene with Autumn People present (actor flag wodx-actions.autumn, set from the Storyteller's panel) and each full week of a long task on such a scene count as exposure (C20 p. 269). Grumps are spared. Weight by era, a house rule: three exposures make a point before 1450, two to 1699, one from 1700.
+## B3525. Wyrm spread rate per region (2026-11-13)
+WoDX Otherworlds. corruptionState.rates holds a rate per region (missing means 1). It multiplies riseChance and spreadChance and nothing else; 0 holds the region's corruption where it is. A place's region is WoDX Chronicle's world.here().
 
-Reverse: change NEED or weightOf in banal-life-rules.js; untag the places.
+Reverse: set the rate back to 1, which removes it.
 
-## B3556. The card suggests, the Storyteller decides (2026-11-13)
-WoDX Actions (banal-life.js). The count runs at the end of each scene (wodxEndScene) and when a long task ends. When it reaches a point, the Storyteller gets a card with Give it and Not this time; one short of it, the player and Storyteller hear that the grey is close, as C20 asks the Storyteller to say.
+## B3526. A lever step on drift (2026-11-13)
+WoDX Otherworlds. Drift kind "lever" carries its own track (value, banality or shroud) and step in the log, so undo reverses the right track. It is the only drift kind with a step set at the time.
 
-Reverse: remove the wodxEndScene and wodxTaskDone hooks for blx() in main.js.
+Reverse: undo the step in The Gauntlet over time, or from the levers window.
+
+## B3527. Hunters in the era's words on the lever (2026-11-13)
+WoDX Storyteller, house wording. Before 1231 the lever reads "zealots and witch-finders"; from the Inquisition's founding in 1231 to 1750 "the Inquisition and the witch-hunters"; after that plain "Hunter pressure". The hunters system's own stages and who hunts in each region are unchanged.
+
+Reverse: edit huntersLabel() in levers-rules.mjs.
+
+## B3528. A binding card for a player character, with no hold on the token (2026-11-13)
+WoDX Actions, Notes Gaps Desk g3 in Ben's smaller form. The keywords that bind are Fear, Sway, Bind, Possess and Hold (Dominate's commands, Presence's awe and dread, Mind's sway, a hold). When one is applied to an actor with a player owner, on its own or from the approval queue, the owners and the Storyteller get a card: the power and its command, who laid it, how long it lasts (the effect's own duration) and the resist roll from the keyword (Willpower at 6 or 7, Strength for a hold), "where the power's own book allows a resistance roll". The token is not held or moved; the Storyteller rules on what the player tries.
+
+Reverse: remove the bindingCard() call in applyItem (effects.js).
+
+## B3530. The Inheritance step moves what the estate card does not (2026-11-13)
+WoDX Storyteller, Notes Gaps Desk g6, built as suggested. A death recorded on the sheet now also queues "the Inheritance step"; approving opens it, and the Storyteller's hand has it for someone who leaves play alive. The heir list puts the will's heir first, then the Ledger's named heir, the heir Pass the Years made, the dead's kin from WoDX NPC ties, then everyone living. Ticked parts: carried items (the system's Item, Fetish, Armor and weapon types; traits and powers stay), places whose owner record names the dead, the money left in purse and bank (unticked when an estate card divides money by the will and the law, B2773), the dead's side of every open Ledger entry (older per-entry cards for the dead are set aside so the heir chosen here wins), and ties.
+
+Reverse: untick a part; give items and places back by hand.
+
+## B3531. Rivals' grudges pass to the heir (2026-11-13)
+WoDX Storyteller, house rule. Any NPC whose regard for the dead is -2 or worse looks on the heir the same way, unless they already think worse of the heir. Feuds already pass by family name and line (WoDX NPC standing), so they need nothing here.
+
+Reverse: untick Rivals; mend regard in the NPC window.
+
+## B3532. Ties pass marked as known through the dead (2026-11-13)
+WoDX Storyteller. The dead's hand-made ties (WoDX Sheets) are copied to the heir with "Known through" and the dead's name, without the heir's own tie to the dead and without doubling a tie the heir has.
+
+Reverse: remove the ties on the heir's Relationships tab.
+
+## B3533. The dead as a past self: Ancestors and Past Lives (2026-11-13)
+WoDX Storyteller and NPC. A Garou or Kinfolk heir of the dead's blood (kin by ties, or the heir Pass the Years made) with the Ancestors Background (W20), or a mage heir with Past Lives or Avatar (M20), gets the dead as a past life in WoDX NPC (flags pastLives) with the dead's ties, so NPC's recall can reach them. NPC's past-self Backgrounds gain Ancestors for the werewolf line beside Avatar, Remembrance and Memoriam; the recall roll is the same house roll (B2873).
+
+Reverse: delete the past life on the heir's sheet; drop the Ancestors row in legacy-rules.mjs.
+
+## B3534. A roster of characters for each player (2026-11-13)
+WoDX Chronicle, Notes Gaps Desk g5, built as suggested. My characters lists every actor the player owns. The tie uses the books' names: ghoul (a domitor or the ghoul flag), Kinfolk, and from the main character's tie role on the sheet: retainer, apprentice, thrall, follower; anyone else is an ally. State: dead (a death year on the chronology), in torpor (WoDX Actions' torpor flag), away (set by the Storyteller from the roster for a long journey), else awake. Play makes it the user's character and selects its token; if Foundry refuses the player that change, the Storyteller's client makes it.
+
+Reverse: none needed; the window changes nothing until used.
+
+## B3535. The roster opens when the played character falls (2026-11-13)
+WoDX Chronicle. On the player's own client, when the played character goes from awake to torpor, dead or away, a notice names it and, if the player owns anyone playable, the roster opens to pick another.
+
+Reverse: remove the updateActor hook in roster.mjs.
+
+## B3536. A new roster entry waits on the Storyteller (2026-11-13)
+WoDX Chronicle. A player's "Ask to add a character" names who and why. It never passes on its own (NEVER_AUTO). Approving opens a pick of sheets the player does not own yet; the chosen one is given to the player as owner.
+
+Reverse: take the player's ownership off the sheet.
+
+## B3540. A peek opens the Penumbra on the peeker's own map (2026-11-13)
+WoDX Senses. A successful peek (WoDX Otherworlds) turns on the sight "The Penumbra" for that player alone: the map's reflection from its .wodx.json, Banes from the scene's Wyrm corruption, a web veil for the era's webbing when the map has no file, and spirit tokens ringed by the peeker's standing with their court. The physical map is dimmed, since a peeker cannot perceive their own side (W20 pdf 313). The peek holds for ten minutes of game time or until the player steps the sight off (house rule). Ben approved the desk item as suggested.
+
+Reverse: remove "penumbra" from OTHER and the wodxCrossing handler in otherworld-sight.mjs.
+
+## B3541. A mage's sights cost the casting roll (2026-11-13)
+WoDX Senses. Prime, Time, Entropy and Correspondence at rank 1 roll Arete at difficulty 4 (highest Sphere + 3, coincidental, M20 pdf 502). Successes set the hold by the duration chart (M20 pdf 504): house readings make a turn one game minute, a scene one hour, a story one week. A botch says the Storyteller may call for Paradox; nothing is added by itself.
+
+Reverse: HOLD and mageRoll in otherworld-sight-rules.mjs.
+
+## B3542. Dark Ages mages see through a fitting Pillar (2026-11-13)
+WoDX Senses. House reading of the Pillar domains: Prime through Primus, Galdrar or Wise One; Time through Al-Anbiya or Autumn; Entropy through Forlog, Uri-El, Winter or Al-Anbiya; Correspondence through Al-Hajj or Fara. The roll is WoDX Actions' castPlan for a simple first-level spell.
+
+Reverse: DA_PILLARS.
+
+## B3543. Time sight reads the place's echoes (2026-11-13)
+WoDX Senses. The active Storyteller's client keeps up to 80 echoes on each scene (flags.wodx-senses.echoes) from map events that leave a mark (breaking, forcing, fights, loud noise, the uncanny), wounds, Gauntlet crossings and magick. Time 1 sees the last day (house reading of Time Sense, M20 pdf 523); Time 2 or more sees all of them (Postcognition).
+
+Reverse: echoesSeen and the four hooks in setupOtherSight.
+
+## B3544. Chimerical sight (2026-11-13)
+WoDX Senses. Changelings, and mortals the Storyteller enchants, see other changelings' fae mien (a picture set on the actor, else the pixel face drawn as the fae see it), freeholds and the Near Dreaming dressed, and a grey wash that grows with the place's Banality past 4; a person at Banality 8 or more is ringed "dull and grey" (house rules on C20 pdf 46-47). Enchantment lasts one day per Glamour point spent; a kinain always sees.
+
+Reverse: chimerical in OTHER; enchant and tiesDialog.
+
+## B3545. Vulgar magick strains the place (2026-11-13)
+WoDX Senses, WoDX Actions. WoDX Actions calls wodxMagickWorked after an M20 casting. Vulgar magick leaves a strain mark for Prime sight for 30 days, 60 when witnessed, twice as long on a botch (house rule).
+
+Reverse: remove the hook line in m20.js and strainDays.
+
+## B3546. The view from the Shadowlands (2026-11-13)
+WoDX Senses. A wraith player sees the living scene greyed and worn (Wraith 20th pdf 85), heavier in 1914 to 1918 (house rule), with Fetters lit: a Fetter tied to a token, tile or note in the new window, else a thing whose name is the Fetter's name. Other wraiths' tokens show to a wraith even when hidden. When the wraith stands in the Shadowlands level, WoDX Otherworlds' own decay is left in place.
+
+Reverse: shroud in OTHER and its branch in drawOther.
+
+## B3547. A character's own eyes (2026-11-13)
+WoDX Senses. Without choosing a sight, a peeker sees the Penumbra, a wraith the Shadowlands view and a changeling or enchanted mortal the chimerical world. A client setting ("My character's own eyes") turns this off for those who want only the sights they pick.
+
+Reverse: autoSight and the otherAuto setting.
+
+## B3570. Herd pools by district (2026-11-13)
+WoDX Storyteller. Ben approved notes gap g12 as suggested (Notes Gaps Desk, 13 November 2026). A district is a scene with a hunting ground; its month's pool of vessels is split into the classes of the age (five ages, the same breaks as the spheres of Influence) with local names for clergy and the early nobility by the land's faith. A feeding on a vessel (wodxFed) or prey caught on a hunt (wodxHunted) takes one; animals do not count. The pool fills again every 30 days of world time. Rules in herd-rules.mjs.
+
+Reverse: turn off the herdPools setting.
+
+## B3571. How big a district's herd is (2026-11-13)
+WoDX Storyteller. House rule: the town's people (Towns over time) times the district's share (slums a quarter, lower-class three tenths, market a fifth, merchant-class 15 in 100, patrolled a tenth), one feeding a month for each hundred, never fewer than two. A district with no town uses 3,000 people before 1450, 8,000 to 1799, 40,000 to 1913, 150,000 to 2022 and 200,000 after.
+
+Reverse: change AREA_SHARE, PEOPLE_PER_FEEDING or DEFAULT_PEOPLE in herd-rules.mjs.
+
+## B3572. What over-hunting does to the hunt (2026-11-13)
+WoDX Storyteller. House rule: past the pool the district is Thinning (+1 difficulty), past half again Over-hunted (+2), past double Stripped (+3). The difficulty goes into the heat field WoDX Actions' Hunt already shows, with the herd's stage named beside the heat band.
+
+Reverse: change STAGES in herd-rules.mjs.
+
+## B3573. The harm over-hunting brings (2026-11-13)
+WoDX Storyteller. House rule: every stage sends the Storyteller a card. Over-hunted: a vessel dies (the Storyteller names who), the ground takes a hunt's heat and a rumour starts in the words of the age. Stripped: two die, a botch's heat, a big rumour and the region's hunters get a response's pressure.
+
+Reverse: change harmFor in herd-rules.mjs.
+
+## B3580. Holy ground shared by several claims (2026-11-13)
+WoDX Storyteller. Ben approved notes gap g13 as suggested. A site ties places on the places of power register (caern, Node, freehold, chantry) and an Elysium to one strength; each place keeps its own rules. Rules in site-rules.mjs.
+
+Reverse: turn off the holyGround setting.
+
+## B3581. How strong holy ground is (2026-11-13)
+WoDX Storyteller. House rule: ten points a level of the strongest place (caern level, a Node's caern level, a freehold's rank), times 1.5 to 1450, 1.25 to 1700, 1 to 1900, 0.8 to 2022 and 0.6 after; each step of the scene's Gauntlet drift takes a tenth off or puts one back. It wells up two points a level a week, by the same factor.
+
+Reverse: change ERA_STRENGTH, maxFor or weeklyFor in site-rules.mjs.
+
+## B3582. Drawing on shared ground (2026-11-13)
+WoDX Storyteller. House rule: Quintessence from meditation, Tass, Glamour by the balefire and the Opened Caern's gain each take a point of strength a point drawn, never more than is left. Below half every role gives half; at nothing, nothing.
+
+Reverse: change WEAK and allow in site-rules.mjs, or remove the Sites.gate calls in power.mjs.
+
+## B3583. Each holder hears of a draw (2026-11-13)
+WoDX Storyteller. Every keeper of another role on the site, the Keeper of Elysium and the Storyteller get a whispered card of each draw: who drew, how much, and what is left.
+
+Reverse: remove the card in sites.mjs onDraw.
+
+## B3584. A moot feeds the ground (2026-11-13)
+WoDX Storyteller. House rule: a moot at a caern on a site gives the site half the Gnosis the sept gave.
+
+Reverse: change mootGift in site-rules.mjs.
+
+## B3585. Quarrels over shared ground (2026-11-13)
+WoDX Storyteller. House rule: each draw on a weak site counts against every other claim on it; at three for a pair, the quarrel goes to the approval queue. Approving starts a rumour and logs it, and the pair can make a treaty or fight; the count starts again. The claims (who holds each role, and for which faction) are read by api.upkeep.sites.claimsIn for faction politics, with the hooks wodxSiteDraw and wodxSiteQuarrel.
+
+Reverse: change QUARREL_AT in site-rules.mjs.
+
+## B3590. Day jobs for mortal agents (2026-11-13)
+WoDX NPC. Ben approved notes gap g14 as suggested. Six jobs (watch a place, scrub the records, stir up a crowd, buy up a debt, sabotage the works, hide a body) run as long tasks on WoDX Storyteller's clock. Rules in day-jobs-rules.mjs.
+
+Reverse: remove the Day jobs button from the Followers window.
+
+## B3591. The powers a job works through (2026-11-13)
+WoDX NPC. House rule: guilds, lords and moneylenders to 1799, mercenary companies to 1699, the garrison 1700 to 1829, printers 1500 to 1829, the police from 1830, the press 1830 to 1949, broadcast media 1950 to 2022, the networks after, banks and officials from 1800, industry 1800 to 1969, corporations from 1900, technology firms from 1970; the Church, the streets and the underworld always. Each touches one sphere of Influence of its age; the Church, the lords, the guilds and the mercenaries take local names by the land's faith.
+
+Reverse: change CHANNELS or LOCAL in day-jobs-rules.mjs.
+
+## B3592. Who rolls a day job (2026-11-13)
+WoDX NPC. A follower rolls its own Attribute and Ability for the job. A Background dot with no character behind it rolls the master's Manipulation plus the dots, since V20 lets Influence stand in for an Ability (V20 p. 115). Difficulty 6; goals of 3 or 4 successes, by the hour or the day.
+
+Reverse: change jobTask in day-jobs-rules.mjs.
+
+## B3593. How factions react to a day job (2026-11-13)
+WoDX NPC. House rule: the faction aimed at, else the one holding the most Influence in the sphere (never the master's own). A done scrub, stir or sabotage proposes that it lose a dot of the sphere (approval queue); any ruined job moves its regard for the master a step down; a ruined body-hiding reports a breach.
+
+Reverse: change reaction in day-jobs-rules.mjs.
 
 ## B3600. Steppe and northern Asia law family (2026-11-13)
 Central Asia and Siberia use the steppe family: clan custom and the khans, the Great Yassa from 1206, then Russian and Soviet rule and the independent republics. New id: clan-elders.
@@ -5622,3 +5819,235 @@ Reverse: remove the family and its region rows; the regions fall back to the cus
 Australia, Aotearoa and the Pacific islands use the Pacific family: chiefs and sacred restrictions, the first peoples' own law, then colonial and national courts; each region's death penalty ends on its real date.
 
 Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3603. Far north law family (2026-11-13)
+The Arctic uses the far north family: the community's own judgment, then the crowns' courts in the trading posts and the state's police. With this, all regions but Antarctica have their own law family.
+
+Reverse: remove the family and its region rows; the regions fall back to the custom stand-in.
+
+## B3604. Offices of the law and the state (2026-11-13)
+Institutions gain six kinds: court, the ruler's officers, tax office and garrison in every town big enough, and the Holy Office and secret police only while the town's law record lists inquisitors or secret police. Ranks come from tables by law family and year, with a general fallback. A town's institutions store their law family. Sizes: court 1000 people, officers and tax office 2000, garrison, Holy Office and secret police 5000. House figures.
+
+Reverse: remove the six kinds; existing seats in them stay in the saved state but are not shown.
+
+## B3605. Splat hooks for the offices (2026-11-13)
+Each new office carries a Storyteller-only line on how the lines touch it (Dominate on judges, ghoul stewards, Kinfolk in the garrison, the Inquisition's hunters, files read by hunters and the Technocracy).
+
+Reverse: drop the hook lines.
+
+## B3606. The law's heat (2026-11-13)
+Heat per region and culprit, apart from the hunters' pressure and a hunting ground's heat. Fed only by WoDX NPC's descriptions (wodxCrimeSeen), so the witness rolls are not made twice. Gravity: theft 2, breaking in 2, forcing 1, fire 3, desecration 2 (3 where heresy or blasphemy is a crime), fight 1, breach 2; half again when a witness knows the culprit, plus a half with three or more witnesses; times 0.5 plus the land's catch. Stages at 2, 5 and 8 of 10. Half-life 14 days with a watch, 60 with police, 90 with only secret police, 365 with cameras. The law's case stays on the Storyteller's card, not on a player case board, because case boards are owned by every player. House figures.
+
+Bribe figures read as BRIBE_WORDS says, 1 cheap to 5 dangerous to try. Three region rows that meant the opposite are corrected: Zaire under Mobutu is 1, Mexico under one party and after 2000 is 2; the Pacific family is 3 and the far north 4.
+
+Reverse: turn off the world setting The law looks for criminals.
+
+## B3607. Splat hooks for the law's heat (2026-11-13)
+The warrant card carries a line for the culprit's kind: day arrests for the Kindred, a ghoul's domitor, Kinfolk in the watch, a mage's impossible witnesses, a changeling's mortal seeming, a wraith's borrowed body, a hunter's killing as murder, a mummy's old names, a demon's host, a revenant's family lawyers.
+
+Reverse: empty LINE_HOOKS.
+
+## B3608. Trials (2026-11-13)
+The forms of trial come from the law record's proof list (party: show trial; jury; confession; witnesses, evidence or forensic: a judge; ordeal; oath; combat), the usual one first. Ordeal: Stamina at 8. Compurgation: Charisma + Etiquette or Manipulation + Politics at 7. Confession: Stamina at 7 against the questioners. Judge and jury: Manipulation + Law, Charisma + Politics or Expression at 6 against the prosecution. Show trial: at 9 against 6 dice and more. Prosecution dice: the form's base, plus witnesses up to 4, plus 2 with forensic proof and 1 with evidence, plus extra deeds up to 3. A bribe takes 1 off where the bribe figure is 4 or less; a court seat takes 1, or 2 from the fourth rank. A botch at the ordeal or the question is a confession. House figures.
+
+Reverse: drop the wodxArrest hook in law-trial.mjs; arrests then end at the arrest.
+
+## B3609. Splat hooks for trials (2026-11-13)
+Kindred defendants roll at +1 difficulty (courts sit by day), and hot iron and fire are death to them at the ordeal; a revenant's family lawyers take 1 off. Other lines get a Storyteller line: Rage in the dock, vulgar magic before sleepers, cold iron in the cells, a wraith's whisper to a juror, no court hearing that the dead were monsters, a mummy's old names, a demon host's past.
+
+Reverse: zero the diff figures in LINE_TRIAL.
+
+## B3610. Sentences and their marks (2026-11-13)
+Deeds weigh by the law heat's gravity: up to 2 light, up to 5 middle, more grave. The court offers the tier's sentences the land allows, else the nearest tier's. Time: prison 1 to 5 years, hard labour 2 to 10, galleys 3 to 10, camp 5 to 25, transportation 7 to 14, slavery 5 to 40, longer for graver deeds. Records are a register before 1880, a file to 1969, a database from 1970. Outlawry, banishment and a death sentence hold in the land that passed them until pardoned; a brand is for good. Marks are a flag on the actor (lawMarks). Fines are taken by hand through the money window. House figures.
+
+Reverse: drop the wodxVerdict hook in law-punish.mjs.
+
+## B3611. Splat hooks for sentences (2026-11-13)
+The sentencing card carries a line for the kind of character: a hanged Kindred wakes, and a cell with a window is a sentence of its own; a ghoul starves of the domitor's blood; years in a cell for a Garou or a mage; iron bars and Glamour; Fetters in the gallows yard; hunters meet others in the cells; an executed mummy rises; a demon's host; a revenant's family buys the pardon.
+
+Reverse: empty LINE_PUNISH.
+
+## B3612. Papers and the undying (2026-11-13)
+Records by law family and year: rolls always; registers from 1538 (common), 1563 (latin), 1722 (orthodox), else 1900; household registers in China always and Japan from 1638; censuses from 1790 to 1950 by family; passports 1914; fingerprints 1901; identity cards 1932 to 1985 by family and never in common-law lands; citizen's numbers 1935 to 1960; computers 1965; biometrics 2005. The weights add to a paper weight. A new self: difficulty 5 plus a third of the weight (5 to 9), goal 2 plus the weight, 1 to 3 Resources. Notice each decade kept: 3 percent plus 2.5 per weight point, less 2 per quality above 3. Selves live on the actor flag selves. House figures.
+
+Reverse: drop the wodxTaskDone hook and the checkSelves call; the project kind stays as a plain project.
+
+## B3613. Splat hooks for papers (2026-11-13)
+The noticed card carries a line for the kind of character (Kindred selves that must die on paper, a ghoul who stops ageing, the Technocracy reading records, a changeling's real mortal papers, a wraith's death certificate, a hunter's arrest record, a mummy's museum archives, a demon's host, a revenant family's own records). Only the undying lines are checked for notice.
+
+Reverse: empty LINE_PAPERS.
+
+## B3614. Standing before the law (2026-11-13)
+Ben's pick: a world setting, default as history. Classes come from WoDX NPC's rank words: unfree, clergy, noble, wealthy, common. Unfree: trial +2, sentence one tier heavier, no office of the state above the lowest rank, until 1848 (latin), 1600 (common), 1861 (orthodox), 1871 (Japan), 1888 (Americas), 1950 (South Asia) and so on. Clergy: trial -1, one tier lighter, until 1827 (common), 1800 (latin), 1917 (orthodox). Nobles: trial -2, one tier lighter, until 1850 (latin), 1948 (common), 1917 (orthodox). Wealthy: trial -1 always. Softened lifts the office bar only; off turns it all off. Gender is never read (B3500). Colonial and religious bars stay in the law records' warnings rather than in dice, as WoDX does not record a character's ancestry. House figures.
+
+Reverse: set the world setting Standing before the law to off.
+
+## B3615. Splat hooks for standing (2026-11-13)
+LINE_STANDING gives the Storyteller a line per kind: Kindred and Ventrue taking mortal titles, a ghoul lifted by a domitor, Kinfolk families, the Order of Hermes and the Technocracy, fae titles that mean nothing to a mortal court, a wraith's old standing, a hunter believed or locked up, an ancient noble of Egypt as a nobody, a demon's host, revenant families buying titles.
+
+Reverse: empty LINE_STANDING.
+
+## B3616. Taxes on the month's upkeep (2026-11-13)
+The allowance stays what the books pay: it is read as what is left after the usual taxes, so nothing changes for a character who pays. The usual share by family and year (15 in the hundred in the Dark Medieval, 10 by 1800, 20 by 1914, 30 by 1945, 35 by 1980, with Japan, Islam, China, Africa, the Americas, the steppe, the Pacific and the far north on their own steps) is what a dodger keeps. A dodger is caught each month at 0.3 times the law's catch plus 1.2 in the hundred per weight of records (B3612), at most half; a tax-office seat cuts that by a fifth per rank. A caught dodger or an unpaid levy is a "tax" deed of gravity 2 on the law's heat. Levies are dated and placed (twelve, 1377 to 1945, none after 2022); every levy weighs on the towns of the land (WoDX Storyteller's towns add it to the tax a town feels each week, a crushing one eight times, at most 1.6), so a crushing levy brings riots and risings. House figures.
+
+Reverse: remove registerTaxHooks from main.mjs; the paid field on wodxMonthPaid is harmless.
+
+## B3617. Splat hooks for taxes (2026-11-13)
+LINE_TAX: Kindred money passing through mortal hands, a ghoul keeping the books, a caern on taxed land, the Syndicate and the tax codes, a freehold lost to an unpaid bill, the dead's homes sold, a hunter off the books, a mummy's treasure, a demon's host's debts, revenant families' two sets of books.
+
+Reverse: empty LINE_TAX.
+
+## B3618. Regime change (2026-11-13)
+Speculation where the books are silent, marked as a house rule on the card. Dated turns come from the law records: a row that sets a new form of government sweeps the ruler's officers, the court, the garrison, the secret police, the tax office and the council, each holder going at half chance (a little likelier the higher the seat), and lets heat, outlawry and banishment in that land lapse; a row that only sets a new ruler sweeps the ruler's officers at a quarter. Up to six turns are sent on one clock jump. A town's rising (WoDX Storyteller's towns) asks the Storyteller whether it wins; a win sweeps that town's ruler's officers, court, tax office and garrison at 60 in the hundred, with no amnesty. Elections: where the council is a parliament, assembly, congress, diet or the like and no one party, army, occupier or absolute monarch stands over it, from 1832 (common law), 1848 (latin), 1824 (Americas) and so on, every 4 years (5 under common law). Each player character on a council rolls Manipulation + Politics at difficulty 6, 7 at the top three ranks, one more from 1950; a failure or botch costs the seat. Levies (B3616) feed the towns' anger, so a crushing levy can bring a rising and a turn.
+
+Reverse: remove registerRegimeHooks from main.mjs and checkTurns from law.mjs.
+
+## B3619. Splat hooks for regime change (2026-11-13)
+LINE_REGIME, shown on each turn card for the lines at the table: the Prince's pawns falling with the old order, a ghoul in office, the wild lands opened or closed, the Technocracy's love of order, Banality or Glamour from upheaval, the newly dead, the new secret police, a mummy's missing treasures, a demon feeding on revolution, revenant families serving the next regime.
+
+Reverse: empty LINE_REGIME.
+
+## B3620. The law of the Future Darkness (2026-11-13)
+Ben's pick: marked as speculation. Seven rows in law-future-rules.mjs, from 2026 to 2075, laid on the law records only when the house rule futureBranch is on; every record that uses one carries spec and the card says it is a guess about the future, not history. Corporate policing first in the latin, common-law, American, Japanese and Pacific families; citizens' scores in the Chinese, Orthodox, Islamic and steppe families. New ids: crimes low-score, unregistered and unlicensed-cyberware; the sentence erasure (an outlaw mark, among the grave sentences); keepers of order algorithm and corporate. No real person, company or dated real event after 2022. The Time of Future Judgement adds nothing: its endings are the Cascades in Dated events.
+
+Reverse: remove the rows from FUTURE_ROWS; off the branch nothing changes.
+
+## B3621. Splat hooks for the Future Darkness's law (2026-11-13)
+LINE_FUTURE, on the Storyteller's Law here card when a record is speculation: cameras and the Masquerade, a ghoul's corporate papers, the corporate districts as the Wyrm's cities, the Technocracy and the corporate courts, Banality, the dead with no score, an erased hunter, a mummy's new identities, a demon's data trail, revenant families' shares.
+
+Reverse: empty LINE_FUTURE.
+
+## B3630. One table of supernatural items for every line (2026-11-13)
+WoDX Library data/wonders.mjs and scripts/wonder-rules.mjs, read by Storyteller's long tasks (Ben's Item Crafting Desk, g1 and g2, all recommendations picked 23:19 UTC). Each row names what must be bound, the level and Gnosis, what it does in WoDX's own words and the page. A finished task makes the real item: a Fetish item the fetish window attunes and wakes, a weapon beside a war fetish, talens marked one use. Other lines add LINES entries and rows; Wraith artifacts come from the soulforging work onto the same table.
+
+Reverse: switch off "Making fetishes and talens" in the world settings; the old free-form fetish task returns.
+
+## B3631. Players start the work, the Storyteller says yes (2026-11-13)
+WoDX Storyteller scripts/wonders.mjs (desk g3). The Make a fetish or talen task kind opens a picker; WoDX checks the rite (Rite of the Fetish level 3, Rite of Binding level 1) and Rituals. A player's task waits paused for an approval card (is the spirit found and willing?); a Storyteller's starts at once. Gnosis spent is paid when the rite ends.
+
+Reverse: drop the approval in start() so player tasks begin at once.
+
+## B3632. The W20 fetish and talen lists, with the spirit each needs (2026-11-13)
+33 fetishes and talens from W20 (pdf 223 to 231), 11 from the Revised breedbooks for the other Changing Breeds. Klaive: level 4, Gnosis 6, Strength + 2 aggravated at difficulty 6, a war-spirit, silver 1. Grand klaive: level 5, Gnosis 7, Strength + 3 at 7, silver 2. Rows the book leaves open are marked house and logged in PENDING-REVIEW.
+
+Reverse: edit or remove rows in data/wonders.mjs.
+
+## B3633. The rites as the book runs them (2026-11-13)
+Rite of the Fetish (W20 pdf 215): three nights of cleansing, then one Wits + Rituals roll at 10, two lower per permanent Gnosis spent, up to three lower for persuasion (Storyteller), plus the spirit court's regard; delicate. Rite of Binding (pdf 212, 229): Willpower against the spirit's Gnosis, one lower per Gnosis spent (at least one); one talen a success, two more for a Jaggling and three for a greater spirit (house split of the book's two or three).
+
+Reverse: MAKES and TALEN_EXTRA in data/wonders.mjs.
+
+## B3634. Kinfolk and the other Changing Breeds (2026-11-13)
+Desk w4 and w5. A Changing Breed sees the Garou list and its own breed's fetishes; Kinfolk with at least 1 permanent Gnosis may make fetishes and talens (house reading until W20 Kinfolk is read, PENDING-REVIEW).
+
+Reverse: MAKERS and listFor in wonder-rules.mjs.
+
+## B3635. One world setting per line (2026-11-13)
+Desk g6. WoDX Library "craftGarou", on by default for the testbed; set it off in the Live world until Ben says.
+
+Reverse: change the default.
+
+## B3636. Silver fetishes cost Gnosis (2026-11-13)
+WoDX Actions garou.js silverPenalty and effectiveGnosis: a made klaive takes 1, a grand klaive 2 from the Gnosis dice of a shapechanger that fears silver, when waking a fetish or reading a summoned spirit's attitude (W20 pdf 227 to 228, through the existing silverGnosisPenalty).
+
+Reverse: roll info(actor).gnosis.perm again in useFetish and summonSpirit.
+
+## B3650. Threads of Fate lives in WoDX Storyteller and only proposes (2026-11-14)
+WoDX Storyteller. Ben picked every recommendation on the Threads of Fate Desk (https://claude.ai/artifact/23g3uDGrq1XeAe66PUsP7t) on 2026-11-14, except card depth (B3655). Story hooks are cards; storylines are woven from them on the weekly upkeep turn, when a session ends, and at once on a weight 3 signal. Suggest by default (an approval card), Auto as a choice, off in a world until switched on. The Storyteller's own lines win: authored journals, scenes and chains are anchors the weave fills around, a Storyteller hook journal overrides any card, and any storyline can be refused, locked or rewritten. Rules in scripts/threads-rules.mjs.
+
+Reverse: leave the setting off; nothing else reads the threads state.
+
+## B3651. One signal board for every system (2026-11-14)
+WoDX Storyteller. Systems post {key, kind, about, region, weight 1-3, what} to one list (scripts/signals-rules.mjs), the shape the omens system already reads, so dreams can foreshadow any storyline and no system reads another's insides. A repost of a key updates it; signals last 14, 28 or 56 days by weight; at most 200 kept. House figures.
+
+Reverse: omens can go back to gathering its own four sources only.
+
+## B3652. A storyline is an anchor, a twist and an echo (2026-11-14)
+WoDX Storyteller. The freshest signal (a player's own hook or lifepath thread first, then by weight and age) picks an anchor card that answers it; a twist card sharing a kind of place or a cast slot with it goes in the middle of its steps, preferring one that answers another live signal; a grudge, tale, debt, fate or lifepath signal about the same character is the echo. The signals used are marked so they feed no second storyline, and freed when it ends or is refused. Drawn from V20 p. 356 (pdf 364), M20 p. 360 (pdf 361), C20 p. 333 (pdf 334) and the Rothenstein journals' own shape.
+
+Reverse: weave from the anchor alone.
+
+## B3653. Three open storylines, plus one per player's hook (2026-11-14)
+WoDX Storyteller. Desk item 7, with Ben's note that more open as storylines end: the cap counts open storylines only, and an ending frees its slot for the next turn. Hunter: The Hunted 2nd p. 98 (pdf 99) on running a few threads as a season.
+
+Reverse: change CAP in threads-rules.mjs.
+
+## B3654. It fits what exists and writes only through each system's controls (2026-11-14)
+WoDX Storyteller. The six story chains stay in Chronicle; while one runs, no storyline repeats its kind (CHAIN_KINDS). One night draw in three gives an open storyline's next beat (NIGHT_SHARE). Endings write through rumours, clocks, the hooks board, omens, fight starter, cults, hunters and factions, never a simulation of its own. Finished storylines go to the Legends book and start a tale.
+
+Reverse: set NIGHT_SHARE to 0; empty CHAIN_KINDS.
+
+## B3655. About 150 cards to start, one kind of storyline per region (2026-11-14)
+WoDX Storyteller. Ben picked about 150 cards to start, more later (desk item 17), and every region's drafted kind (44 items). Each card opens doors only for lines with a beneath; Demon doors from 1999 on the classic timeline only, none in the Future Darkness branch; future variants only while the branch is on. History in WoDX's own words; WoD lore only with a page ref.
+
+Reverse: cards are data in data/threads-cards.mjs.
+
+## B3656. Safety and words (2026-11-14)
+WoDX Storyteller. No card puts anyone under 18 in a romantic beat (ageSafe with Chronicle api.age.romance); cards use slots, so a player character's gender never changes one; a Session Zero line cuts a card by its content tags and a veil plays the beat off screen; every card in WoDX's own words, checked with tools/books overlap and the guard test.
+
+Reverse: none needed; these follow standing rules.
+
+## B3660. The saga runs on the story chain runner (2026-11-14)
+WoDX Chronicle. Ben asked (Threads of Fate desk, item 16) to spread the Rothenstein story over a longer time than ten nights. Each book of the saga is a story chain whose steps are dated; the gap on the clock is the gap between dates, so the chain runner deals the steps as time passes. A saga run carries `saga: {book, endings}`. The switch is podSaga, off by default like the other pod switches; the chronicle builder's spine step should turn it on in rothenstein-x.
+
+Reverse: turn podSaga off; remove the saga lines in pod.mjs and chainOf/chainByKey in pod-rules.mjs.
+
+## B3661. The first book runs five years (2026-11-14)
+WoDX Chronicle. What Sleeps Beneath Rothenstein becomes ten chapters (the old ten sessions) from 1 October 1197 to Saint John's Eve 1202, with an interlude between each: the pass closing, the thaw, harvests, the hungry winter, the bishop's decree. Interludes name encounters that suit the season, move the long clocks and give downtime. The book ends with "The years after" in November 1202, a year before the Patriarch's envoy (late 1203).
+
+Reverse: change the `at` dates of the red-stone book in data/saga-rothenstein.mjs.
+
+## B3662. The old journal pages stay as they are (2026-11-14)
+WoDX Chronicle. The session pages are not rewritten. Each chapter links to its page by name ("Session 1" for the sequels' "Session 1: The Envoy"), or names it when the world does not have it.
+
+Reverse: none needed; new text could be written and linked instead.
+
+## B3663. Nineteen books, one at a time (2026-11-14)
+WoDX Chronicle. A prologue (880 to 906, the binding at the fall of Great Moravia), the four existing stories, then a book for each age: the Inquisition (1231), the Mongols (1241), the silver rush (1290), the plague that passed (1348 and 1380), the Hussite wars, the Thirty Years War, the witch trials of the 1680s, Joseph II's patents, 1848 to 1866, the Great War, 1938 to 1948, the uranium shaft to 1989, the 1997 flood and the red star, the Time of Judgment to 2030. Books never overlap, so only one runs at a time; The Lantern and the Flame ends in 1216 and the 1231 Inquisition is its own book. Real people stay offstage; invented ones are named as invented.
+
+Reverse: edit or remove books in data/saga-rothenstein.mjs (the harness checks they stay apart).
+
+## B3664. Four long clocks (2026-11-14)
+WoDX Chronicle. The Red Husbandman stirs (10), the Ashfield spreads (8), the Church's eye (8), the Charter holds (6). Steps move them; the card says when one fills. The Storyteller can set them in the window.
+
+Reverse: edit SAGA_CLOCKS and the steps' `clocks`.
+
+## B3665. The first book's ending answers later (2026-11-14)
+WoDX Chronicle. Sealed, severed or taken, picked in the window. Later steps with `by` add the words for that ending. The last book offers the ending choice again.
+
+Reverse: clear the ending in the window.
+
+## B3666. Books the clock passes still move the world (2026-11-14)
+WoDX Chronicle. A book whose years go by without anyone starting it is marked passed, and its world steps' clock moves apply, with one card. It can still be started from the window.
+
+Reverse: set the clocks back in the window; remove passedBooks from sagaTick.
+
+## B3667. Steps post a signal (2026-11-14)
+WoDX Chronicle. Each step fires hook wodxSaga {book, step, kind, clocks, signal, ending}; signal is in the omens shape {kind: "saga", region: "moravia", about: "", weight, words} so Threads of Fate and the dreams system can read it.
+
+Reverse: drop the Hooks.callAll line in sagaStep.
+
+## B3668. The future book needs the branch (2026-11-14)
+WoDX Chronicle. The Valley Under Glass (2031 on) is offered only when the house rule futureBranch is on.
+
+Reverse: remove `branch: "future"` from the arcology book.
+
+## B3669. The running saga step is readable (2026-11-14)
+WoDX Chronicle. api.pod.saga.current() returns {book, title, step, dealt, next} for the running book, or null, so the Storyteller's night draw (Threads of Fate) can use the saga's step when no storyline of its own is open. It reads only; nothing moves.
+
+Reverse: remove sagaCurrent from pod.mjs.
+
+## B3670. Saga steps change the town through towns over time (2026-11-14)
+WoDX Chronicle and WoDX Storyteller. Ben's pick on the Rothenstein Saga desk (d-world). A saga step may name a town change; Storyteller's towns over time applies it to the market named by the saga's place (Rothenstein) at once, like a dated event's news, once per step (kept in the town's seen list). The changes are SAGA_TOWN in town-rules.mjs: boom, war, famine and plague follow the news presets (plague takes 12 in 100 over its weeks), a siege also kills 1 in 100, exile drives out 1 in 10, the 1946 expulsion 35 in 100, a flood wrecks the riverside. Seventeen steps carry one, from the Mongols in 1241 to the 1997 flood.
+
+Reverse: remove `town` from the steps in data/saga-rothenstein.mjs, or the wodxSaga listener in towns.mjs; a card's Undo takes one back.
+
+## B3671. The rebuild turns the saga on (2026-11-14)
+WoDX Storyteller. Ben's pick (d-switch): the saga stays off by default, and the chronicle builder's settings step turns WoDX Chronicle's podSaga on when the recipe's spine names the saga (recipe-rothenstein.mjs spine.saga = "rothenstein").
+
+Reverse: remove spine.saga from the recipe, or turn the switch off in the built world.
+
+## B3672. Saga gaps count from the due time (2026-11-14)
+WoDX Chronicle. The testbed gate found that a saga run counted each gap from the moment a step was dealt, so a skip of months dealt one step and pushed the rest later. A saga run now sets `last` to the step's due time, so the book holds its dates and a long skip deals every step it passes over, in order. Plain story chains keep the old way.
+
+Reverse: in dealChains (pod.mjs), set run.last = t for saga runs too.

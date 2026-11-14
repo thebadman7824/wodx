@@ -14,7 +14,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 const MOD = G.MOD;
 const PACK_NAME = "wodx-gear";
 const PACK_LABEL = "WoDX · Gear by era";
-export const VERSION = "0.23.1";
+export const VERSION = "0.25.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 
@@ -160,6 +160,10 @@ export class GearApp extends ApplicationV2 {
 Hooks.once("init", () => {
   game.settings.register(MOD, "installed", {scope: "world", config: false, type: Number, default: 0});
   game.settings.register(MOD, "shelves", {scope: "world", config: false, type: Number, default: 0});
+  // B3635: making each line's supernatural items, one switch per line (on in the testbed; Live waits for Ben)
+  game.settings.register(MOD, "craftGarou", {name: "Making fetishes and talens (Werewolf and the Changing Breeds)",
+    hint: "Garou, the other Changing Breeds and Kinfolk with Gnosis pick a fetish or talen from the book lists, bind the spirit it needs, and the finished work makes the real item: a klaive also becomes a weapon and costs Gnosis for its silver.",
+    scope: "world", config: true, type: Boolean, default: true});
   game.settings.registerMenu(MOD, "gearMenu", {
     name: "Gear by era", label: "Open gear by era",
     hint: "Weapons, armor and cyberware from each era's books, with their pages. Give them to characters, or browse the compendium.",
@@ -177,6 +181,8 @@ Hooks.once("ready", async () => {
   try { const Lk = await import("./look.mjs"); await Lk.setupLook(); game.modules.get(MOD).api.look = Lk.api(); } catch (err) { console.warn("WoDX Library | the look could not start", err); }
   // 0.10.0: recipes for food, drink, medicine and drugs (the window is Storyteller's Cook, brew or mix)
   try { const Kn = await import("./know.mjs"); game.modules.get(MOD).api.know = Kn.setupKnow(); } catch (err) { console.warn("WoDX Library | What they could know could not start", err); }
+  // B3630: the supernatural items each line can make (Storyteller's long tasks run the work)
+  try { const Wr = await import("./wonder-rules.mjs"); game.modules.get(MOD).api.wonders = {...Wr, enabled: line => { const k = Wr.LINES[line]?.setting; try { return !!k && !!game.settings.get(MOD, k); } catch (e) { return false; } }}; } catch (err) { console.warn("WoDX Library | supernatural items could not load", err); }
   try { game.modules.get(MOD).api.recipes = await import("./recipe-rules.mjs"); } catch (err) { console.warn("WoDX Library | recipes could not load", err); }
   if ( game.user.isGM && game.users.activeGM?.isSelf ) {
     const data = await gear();

@@ -255,3 +255,12 @@ test("The Pacific and Australia (B3602)", () => {
   assert.ok(!au(1990).punish.includes("hanging") && !nz(1970).punish.includes("hanging"));
   assert.ok(!au(1950).order.includes("clan-elders"));
 });
+
+test("The far north (B3603)", () => {
+  const at = y => L.lawOf("arctic", y);
+  assert.equal(at(1300).family, "north");
+  assert.ok(at(1300).courts.some(c => /song duels/.test(c)));
+  assert.ok(at(1800).courts.some(c => /trading posts/.test(c)) && !at(1700).courts.some(c => /trading posts/.test(c)));
+  assert.ok(at(1950).order.includes("police") && !at(1900).order.includes("police"));
+  assert.match(at(1990).rule.ruler, /Nuuk/);
+});

@@ -371,7 +371,7 @@ export function build(ctx) {
       + `${taught.length ? `<button type="button" class="wnpc-talk-undo">Undo what was taught</button>` : ""}</div></div>`;
     const aloud = !!line?.then?.aloud;
     await ChatMessage.create({speaker: {alias: name, scene: r.scene.id, token: r.npcTok.id}, content, ...(aloud ? {} : {whisper: [...new Set([user.id, ...gmIds()])]}),
-      flags: {[MOD]: {talk: {actor: actor.id, taught, topic, stock: line?.kind === "stock", generated: !!line?.rule, gen: line?.gen ?? null, said: say, rumour: line?.rumourId ?? null}}}});
+      flags: {[MOD]: {talk: {actor: actor.id, taught, topic, stock: line?.kind === "stock", generated: !!line?.rule, gen: line?.gen ?? null, said: say, rumour: line?.rumourId ?? null, lie: !!line?.then?.lie}}}});
     return {said: say, taught, notes, none: !line};
   }
 
@@ -577,7 +577,7 @@ export function build(ctx) {
       content: `${keys.length > 5 ? searchBox("select[name=key]", "Search sheets…", "Search sheets") : ""}
         <div class="wodx-field"><label>Sheet</label><select name="key"${keys.length > 5 ? "" : " data-fixed"}>${opts}</select></div>
         <textarea name="text" rows="10" style="width:100%" placeholder="[rumours] night => Talk of a wolf seen on the Linberg road.">${esc(shared[cur] ?? "")}</textarea>
-        <p class="wodx-quiet">Anyone in a household, a faction or this scene, or anyone at all, falls back to these lines when their own sheet has no answer. Same format as an NPC's talk sheet: [topic] tests =&gt; what they say | teach a topic; codex a page; aloud.</p>`,
+        <p class="wodx-quiet">Anyone in a household, a faction or this scene, or anyone at all, falls back to these lines when their own sheet has no answer. Same format as an NPC's talk sheet: [topic] tests =&gt; what they say | teach a topic; codex a page; aloud; lie (a reader of faces may see it).</p>`,
       render: (ev, dlg) => {
         const sel = dlg.element.querySelector("select[name=key]"), ta = dlg.element.querySelector("textarea[name=text]");
         sel?.addEventListener("change", () => { shared[cur] = ta.value; cur = sel.value; ta.value = shared[cur] ?? ""; });

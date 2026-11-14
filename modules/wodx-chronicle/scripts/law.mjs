@@ -6,13 +6,22 @@
  *                       Storyteller, everything
  *   checkYear()         on a clock jump, whispers the Storyteller what changed in the homeland's law
  */
-import {MODULE_ID, esc, setting, setSetting, isActiveGM} from "./util.mjs";
+import {MODULE_ID, esc, setting, setSetting, isActiveGM, rule} from "./util.mjs";
 import {currentYear} from "./eras.mjs";
 import * as L from "./law-rules.mjs";
 import * as place from "./place.mjs";
+import {playerLine} from "./law-heat.mjs";
+import {playerMarks} from "./law-punish.mjs";
+import {cardLines as paperLines, checkSelves} from "./law-papers.mjs";
+import {playerTax} from "./law-tax.mjs";
+import {checkTurns} from "./law-regime.mjs";
+import {LINE_FUTURE} from "./law-future-rules.mjs";
 
 export function registerLawSettings() {
   game.settings.register(MODULE_ID, "lawYear", {scope: "world", config: false, type: Number, default: 0});
+  // B3620: the Future Darkness rows follow the house rule futureBranch
+  Hooks.once("ready", () => L.setFuture(rule("futureBranch")));
+  Hooks.on("updateSetting", s => { if ( s?.key === `${MODULE_ID}.rule.futureBranch` ) L.setFuture(rule("futureBranch")); });
 }
 
 const activeScene = () => { try { return globalThis.canvas?.scene ?? game.scenes?.active ?? null; } catch (e) { return null; } };
@@ -36,19 +45,30 @@ function abilityDots(a, key) {
 /** The best of Law, Politics and Streetwise on an actor (B3492). */
 export const lawDots = actor => Math.max(abilityDots(actor, "law"), abilityDots(actor, "politics"), abilityDots(actor, "streetwise"));
 
-export function cardHTML(rec, {dots = 0, full = false} = {}) {
+export function cardHTML(rec, {dots = 0, full = false, mine = "", taxes = ""} = {}) {
   const secs = L.cardSections(rec, {dots, full});
+  const shown = secs.length;
+  let papers = [];
+  try { papers = full || dots >= 2 ? paperLines(rec.region, rec.year) : []; } catch (e) { papers = []; }
+  if ( papers.length ) secs.push({key: "papers", title: "Records kept of everyone", lines: papers});
   const body = secs.map(s => `<p><strong>${esc(s.title)}</strong></p><ul>${s.lines.map(l => `<li>${esc(l)}</li>`).join("")}</ul>`).join("");
-  const guess = rec.guess && full ? `<p><em>This land's own law is not written yet; a general picture stands in.</em></p>` : "";
+  const guess = (rec.guess && full ? `<p><em>This land's own law is not written yet; a general picture stands in.</em></p>` : "")
+    + (rec.spec ? `<p><em>Speculation: what the law has become in these years is a guess about the future, not history.</em></p>` : "")
+    + (rec.spec && full ? `<details><summary>What this law means for each kind</summary><ul>${Object.values(LINE_FUTURE).filter(Boolean).map(l => `<li>${esc(l)}</li>`).join("")}</ul></details>` : "");
   const since = full && rec.since?.year ? `<p class="hint">In force since ${esc(rec.since.year)}: ${esc(rec.since.note)}</p>` : "";
-  const more = !full && secs.length < L.cardSections(rec, {full: true}).length ? `<p class="hint">Law, Politics or Streetwise would tell you more.</p>` : "";
-  return `<div class="wodx-card wodx-law"><h3>Law here, ${esc(rec.year)}</h3>${body}${guess}${since}${more}</div>`;
+  const more = !full && shown < L.cardSections(rec, {full: true}).length ? `<p class="hint">Law, Politics or Streetwise would tell you more.</p>` : "";
+  return `<div class="wodx-card wodx-law"><h3>Law here, ${esc(rec.year)}</h3>${body}${mine ? `<p><strong>${esc(mine)}</strong></p>` : ""}${taxes}${guess}${since}${more}</div>`;
 }
 
 export async function card({scene = activeScene(), actor = null, full = game.user?.isGM} = {}) {
   const rec = here(scene);
   const who = actor ?? game.user?.character ?? null;
-  await ChatMessage.create({content: cardHTML(rec, {dots: lawDots(who), full: !!full}), speaker: {alias: "Chronicle"}, whisper: [game.user.id]});
+  const dots = lawDots(who);
+  let mine = "";
+  try { mine = [dots >= 1 ? playerLine(who, scene) : "", ...(who ? playerMarks(who, rec.region, rec.year) : [])].filter(Boolean).join(" "); } catch (e) { mine = ""; }
+  let taxes = "";
+  try { taxes = who ? playerTax(who, rec.region, rec.year) : ""; } catch (e) { taxes = ""; }
+  await ChatMessage.create({content: cardHTML(rec, {dots, full: !!full, mine, taxes}), speaker: {alias: "Chronicle"}, whisper: [game.user.id]});
   return rec;
 }
 
@@ -60,6 +80,8 @@ export async function checkYear() {
   await setSetting("lawYear", y);
   if ( !seen ) return [];
   const region = place.homeland() ?? "moravia";
+  try { await checkSelves(seen, y); } catch (e) { console.error("WoDX | papers", e); }
+  try { await checkTurns(seen, y); } catch (e) { console.error("WoDX | regime", e); }
   const changes = L.changesBetween(region, seen, y);
   if ( !changes.length ) return [];
   const gm = game.users.filter(u => u.isGM).map(u => u.id);

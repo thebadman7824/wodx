@@ -36,10 +36,14 @@ import * as Ventures from "./ventures.mjs";
 import * as Inst from "./institutions.mjs";
 import * as Works from "./haven-works.mjs";
 import * as Omens from "./omens.mjs";
+import * as Signals from "./signals.mjs";
+import * as Threads from "./threads.mjs";
 import * as Patron from "./patronage.mjs";
 import * as Towns from "./towns.mjs";
 import * as Contagion from "./contagion.mjs";
 import * as Power from "./power.mjs";
+import * as Herds from "./herds.mjs";
+import * as Sites from "./sites.mjs";
 import * as Tasks from "./tasks.mjs";
 import * as Spend from "./spend.mjs";
 import * as PassTime from "./pass-time.mjs";
@@ -55,6 +59,8 @@ import * as HardRules from "./hardship-rules.mjs";
 import * as Remains from "./remains.mjs";
 import * as RemainsRules from "./remains-rules.mjs";
 import * as Hunters from "./hunters.mjs";
+import * as Levers from "./levers.mjs";
+import * as Inherit from "./inherit.mjs";
 import * as MoneyRules from "./money-rules.mjs";
 import * as Rumours from "./rumours.mjs";
 import * as Road from "./road-rules.mjs";
@@ -68,6 +74,7 @@ import * as WorldMap from "./world-map.mjs";
 import * as DiscoveryRules from "./discovery-rules.mjs";
 import * as Teleport from "./teleport.mjs";
 import * as Own from "./owners.mjs";
+import * as Wonders from "./wonders.mjs";
 import * as Cook from "./cookery.mjs";
 import * as OwnRules from "./owner-rules.mjs";
 import * as CraftRules from "./craft-rules.mjs";
@@ -118,18 +125,25 @@ Hooks.once("init", () => {
   Inst.registerInstitutionSettings();
   Works.registerWorksSettings();
   Omens.registerOmenSettings();
+  Signals.registerSignalSettings();
+  Threads.registerThreadSettings();
   Patron.registerPatronageSettings();
   Towns.registerTownSettings();
   Contagion.registerContagionSettings();
   Power.registerPowerSettings();
+  Herds.registerHerdSettings();
+  Sites.registerSiteSettings();
   Tasks.registerTaskSettings();
   Spend.registerSpendSettings();
   Tasks.registerTaskHooks();
   Inst.registerInstitutionHooks();
   Works.registerWorksHooks();
   Omens.registerOmenHooks();
+  Signals.registerSignalHooks();
+  Threads.registerThreadHooks();
   Patron.registerPatronageHooks();
   Cook.registerCookHooks();
+  Wonders.registerWonderHooks();
   Body.registerBodyHooks();
   Hard.registerHardshipSettings();
   Hard.registerHardshipHooks();
@@ -137,6 +151,9 @@ Hooks.once("init", () => {
   Remains.registerRemainsHooks();
   Hunters.registerHunterSettings();
   Hunters.registerHunterHooks();
+  Levers.registerLeverSettings();
+  Levers.registerLeverTools();
+  Inherit.registerInheritTools();
   Rumours.registerRumourHooks();
   Dash.registerDashboardHooks();
   Clocks.registerClockSettings();
@@ -161,7 +178,7 @@ Hooks.once("init", () => {
   game.keybindings?.register?.(C.MOD, "tracker", {name: "The Storyteller's tracker", editable: [], onDown: () => { A.openTracker(); return true; }, restricted: true});
 });
 
-Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Led.registerLedgerHandlers(); Wills.registerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Hunters.registerHunterHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); Ventures.registerApproval(); Inst.registerApproval(); Works.registerApproval(); Omens.registerApproval(); Patron.registerApproval(); Towns.registerApproval(); Contagion.registerApproval(); } });
+Hooks.once("wodxChronicleReady", () => { if ( active ) { C.registerHandlers(); Inherit.registerInheritance(); Led.registerLedgerHandlers(); Wills.registerHandlers(); Night.registerNight(); Up.registerUpkeepHandlers(); Hunters.registerHunterHandlers(); Between.registerBetweenHandlers(); Own.registerApproval(); Spend.registerTimeApproval(); Turn.registerApproval(); Moves.registerApproval(); Ventures.registerApproval(); Inst.registerApproval(); Works.registerApproval(); Omens.registerApproval(); Patron.registerApproval(); Towns.registerApproval(); Contagion.registerApproval(); Threads.registerApproval(); Wonders.registerWonderApproval(); } });
 
 Hooks.once("ready", () => {
   if ( !active ) return;
@@ -180,6 +197,8 @@ Hooks.once("ready", () => {
   Towns.setupTowns().catch(e => console.error("WoDX | towns", e));
   Contagion.setupContagion().catch(e => console.error("WoDX | contagion", e));
   Power.setupPower().catch(e => console.error("WoDX | places of power", e));
+  Herds.setupHerds();
+  Sites.setupSites();
   const api = {
     version: C.VERSION, rules: W,
     openTracker: A.openTracker, openOnYourOwn: A.openOnYourOwn, convene: C.convene, conveneDialog: A.conveneDialog, release: C.release,
@@ -218,13 +237,19 @@ Hooks.once("ready", () => {
       money: {of: Money.moneyOf, dialog: Money.moneyDialog, monthly: Money.monthly, setAway: Money.setAway, setNeglected: Money.setNeglected, coins: Money.coinsNow, rules: MoneyRules,
         purse: Money.purseOf, pay: Money.pay, receive: Money.receive, transfer: Money.transfer, undo: Money.undoLast, price: Money.priceNow, findGood: Money.findGood,
         cashIn: Money.cashIn, payDay: Money.payDay, priceSync: Money.priceSync, awayMoney: Money.awayMoney, changeQuote: Money.changeQuote, change: Money.changePurse, receiveForeign: Money.receiveForeign, foreign: Money.foreignOf, arrival: Money.arrival, market: Money.marketFor, money: Money.moneyNow, format: (v, m) => MoneyRules.formatMoney(v, m ?? Money.moneyNow())},
-      markets: Markets.api(), marketNews: News.api(), marketTurn: Turn.api(), marketMoves: Moves.api(), caravans: Caravans.api(), ventures: Ventures.api(), institutions: Inst.api(), towns: Towns.api(), contagion: Contagion.api(), power: Power.api()},
+      markets: Markets.api(), marketNews: News.api(), marketTurn: Turn.api(), marketMoves: Moves.api(), caravans: Caravans.api(), ventures: Ventures.api(), institutions: Inst.api(), towns: Towns.api(), contagion: Contagion.api(), power: Power.api(), herds: Herds.api(), sites: Sites.api()},
     hardship: {open: Hard.hardshipDialog, weatherOf: Hard.weatherOf, tick: Hard.tick, undo: Hard.undoTick, mark: Hard.mark, off: Hard.setOff, weather: Hard.setWeather, of: Hard.needsOf, living: Hard.living, rules: HardRules},
     hunters: Hunters.api(),
+    // B3524-B3527: crisis levers for a region
+    levers: Levers.api(),
+    // B3530-B3533: the Inheritance step
+    inheritance: Inherit.api(),
     remains: {open: Remains.remainsDialog, mark: Remains.mark, unmark: Remains.unmark, stage: Remains.stageOf, found: Remains.found, tick: Remains.tick, rules: RemainsRules},
     body: {open: Body.bodyDialog, add: Body.addChange, remove: Body.removeChange, of: Body.bodyOf, shown: Body.shownOf, newDialog: Body.newChangeDialog, rules: BodyRules},
     havenWorks: Works.api(),
     omens: Omens.api(),
+    signals: Signals.api(),
+    threads: Threads.api(),
     patronage: Patron.api(),
     havens: {open: Havens.havensDialog, edit: Havens.editHaven, of: Havens.havenOf, list: Havens.havens, save: Havens.saveHaven, remove: Havens.removeHaven, expose: Havens.expose, forget: Havens.forget, exposeDialog: Havens.exposeDialog, rating: Havens.ratingOf, rules: HavenRules},
     passTime: {open: PassTime.open, vote: PassTime.vote, dialog: PassTime.passTimeDialog, choices: SpendRules.PASS_CHOICES},
@@ -245,6 +270,8 @@ Hooks.once("ready", () => {
       craft: Own.craftDialog, startCraft: Own.startCraft, makeable: Own.makeable, build: Own.buildDialog, startBuild: Own.startBuild,
       workshops: Own.workshopsMonth, factionBuilds: Own.factionBuildsMonth, rules: {owner: OwnRules, craft: CraftRules, build: BuildRules}},
     cookery: Cook.cookApi(),
+    // B3631: fetishes, talens and the other lines' supernatural items (WoDX Library api.wonders)
+    wonders: Wonders.wondersApi(),
     teleport: {arm: Teleport.arm, to: Teleport.teleport, cursor: Teleport.cursorPoint, armed: Teleport.isArmed},
     draw: Night.drawChooser, nightRules: Night.N
   };
@@ -337,6 +364,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: true, onChange: () => Clocks.ClocksApp.open()};
   tokens.tools.wodxTracker = {name: "wodxTracker", title: "The Storyteller's tracker (every character, convening, beats)", icon: "fa-solid fa-binoculars", order: 113,
     button: true, visible: game.user.isGM, onChange: () => A.openTracker()};
+  tokens.tools.wodxThreads = {name: "wodxThreads", title: "Threads of Fate (storylines woven from what has happened)", icon: "fa-solid fa-dharmachakra", order: 113.5,
+    button: true, visible: game.user.isGM, onChange: () => Threads.ThreadsApp.open()};
   tokens.tools.wodxLedger = {name: "wodxLedger", title: "The Ledger (oaths, debts, boons, consequences, the Veil)", icon: "fa-solid fa-scale-unbalanced", order: 114,
     button: true, visible: game.user.isGM, onChange: () => Led.LedgerApp.open()};
   tokens.tools.wodxUpkeep = {name: "wodxUpkeep", title: "Upkeep (ties that need tending, hunting grounds and heat)", icon: "fa-solid fa-hand-holding-heart", order: 121,
@@ -376,6 +405,7 @@ async function onSocket(message) {
   if ( type === "req.passTime" ) { await PassTime.open(payload); return; }
   if ( type === "req.passVote" ) { await PassTime.vote(payload); return; }
   if ( type === "req.hunted" ) { await Up.onHunted(payload, {userId: payload.userId}); return; }
+  if ( type === "req.fed" ) { await Herds.feedFrom(payload, {userId: payload.userId}); return; }
   if ( type === "req.venture" ) { await Ventures.onRequest(payload); return; }
   if ( type !== "req.travel" && type !== "req.solo" ) return;
   // A player may only act for a character they own

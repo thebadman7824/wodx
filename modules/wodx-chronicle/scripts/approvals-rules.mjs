@@ -4,7 +4,7 @@
  */
 
 /** A player's own request always waits for the Storyteller; no standing rule approves it. */
-export const NEVER_AUTO = ["request"];
+export const NEVER_AUTO = ["request", "ticket", "roster.add"]; // B3521: a player's ruling always waits, like a request
 /** Proposals from WoDX NPC (faction moves and the like) count toward the per-session cap. */
 export const isNpcType = type => /^wodx-npc[.:-]/.test(String(type ?? ""));
 

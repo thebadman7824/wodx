@@ -7,11 +7,19 @@
  * how is guilt found, what is a crime, what is the punishment, who keeps order, what is owed": every other system
  * reads it through api.law.
  *
- * The content is legal history in WoDX's own words. Game figures (bribe, catch) are house figures (B3492). A family
+ * The content is legal history in WoDX's own words. Game figures (bribe, catch) are house figures (B3492); bribe runs from
+ * 1 (cheap) to 5 (dangerous even to try), as BRIBE_WORDS says. A family
  * whose rows are not written yet stands in with the general "custom" family, marked as a guess.
  */
 
 /** Crimes a row can put on or take off the books. Evergreen ones are on every record from the first row. */
+import {futureRowsFor, FUTURE_FROM} from "./law-future-rules.mjs";
+
+/** The Future Darkness branch (B3620): set by WoDX Chronicle from the house rule futureBranch; off by default. */
+let FUTURE = false;
+export const setFuture = on => { FUTURE = !!on; };
+export const futureOn = () => FUTURE;
+
 export const CRIMES = {
   murder: "Murder", theft: "Theft", arson: "Arson", treason: "Treason against the ruler", violence: "Wounding or beating",
   forgery: "Forgery and false coin", rebellion: "Rising against the lord",
@@ -25,7 +33,10 @@ export const CRIMES = {
   "caste-breach": "Breaking the rules of caste in food, touch or marriage", "cow-killing": "Killing a cow",
   "pass-law": "Being found without a pass where the pass laws apply",
   "commoner-arms": "A commoner carrying a sword", "leaving-country": "Leaving the country, or coming back from abroad",
-  "alcohol": "Making or selling alcohol"
+  "alcohol": "Making or selling alcohol",
+  // B3620: the Future Darkness only
+  "low-score": "Falling below the citizen's score the state requires", unregistered: "Living without a registered identity",
+  "unlicensed-cyberware": "Fitting or carrying unlicensed cyberware"
 };
 export const EVERGREEN_CRIMES = ["murder", "theft", "arson", "treason", "violence", "forgery"];
 
@@ -51,7 +62,9 @@ export const PUNISH = {
   prison: "Prison", "hard-labour": "Hard labour", camp: "A labour camp", "death-state": "Death by the state's own method",
   confiscation: "Loss of land and goods", flogging: "Flogging", bamboo: "Beating with the light or the heavy bamboo",
   "outcaste": "Being put out of one's caste", "transportation": "Transportation to a penal colony overseas",
-  "enslave": "Being sold into slavery"
+  "enslave": "Being sold into slavery",
+  // B3620: the Future Darkness only
+  erasure: "Erasure: name, accounts and rights deleted"
 };
 
 /** Keepers of order. */
@@ -68,12 +81,14 @@ export const ORDER = {
   "sheriff": "The sheriff of the shire, who can raise the posse",
   "jito": "The shogun's land stewards and constables",
   "clan-elders": "The elders and fighters of each clan",
-  "marshals": "Federal marshals and town marshals"
+  "marshals": "Federal marshals and town marshals",
+  // B3620: the Future Darkness only
+  algorithm: "Predictive policing: the machine names who to watch", corporate: "Corporate security with the powers of police"
 };
 
 /** A record with nothing in it. Lists hold ids; rule is words. */
 export const blank = () => ({rule: {form: "", ruler: "", council: ""}, courts: [], proof: [], crimes: [...EVERGREEN_CRIMES],
-  punish: [], order: [], taxes: [], warn: [], bribe: 2, catch: 0.3, guess: false});
+  punish: [], order: [], taxes: [], warn: [], bribe: 2, catch: 0.3, guess: false, spec: false});
 
 /**
  * A row: {from, to?, note, set?: {...}, add?: {list: [ids]}, drop?: {list: [ids]}}.
@@ -301,11 +316,23 @@ export const FAMILIES = {
     {from: 0, note: "Chiefs and elders; sacred restrictions and their keepers", set: {
       rule: {form: "Chiefdoms and the custom of the first peoples", ruler: "The chiefs or the elders", council: "The elders and the priests"},
       courts: ["The chief's judgment", "Elders keeping the custom of the people"], proof: ["oath", "witnesses"], punish: ["fine", "banishment", "hanging"],
-      order: ["clan-elders"], taxes: ["Gifts and shares to the chiefs"], bribe: 1, catch: 0.35},
+      order: ["clan-elders"], taxes: ["Gifts and shares to the chiefs"], bribe: 3, catch: 0.35},
       add: {warn: ["Breaking a sacred restriction (tapu) can bring death"]}},
     {from: 1900, note: "Colonial and then national courts, police and prisons", set: {rule: {form: "Colonies, dominions and new nations"}, catch: 0.45},
       add: {courts: ["The state's courts"], order: ["police", "detectives"], punish: ["prison"], proof: ["evidence", "forensic"], crimes: ["drug-trade"]}, drop: {order: ["clan-elders"]}},
     {from: 1990, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime"]}}
+  ]},
+
+  // The far north: the custom of the Inuit and the Sámi, Norse Greenland, then Danish, Norwegian, Russian and Canadian law (B3603)
+  north: {label: "The far north", rows: [
+    {from: 0, note: "The Inuit and the Sámi keep their own custom", set: {
+      rule: {form: "Bands and families under their own custom", ruler: "The elders and the best hunters", council: "The gathering of families"},
+      courts: ["The community's judgment: song duels, shaming, and in the end exile"], proof: ["witnesses"], punish: ["banishment", "fine"],
+      order: ["clan-elders"], taxes: ["Shares of the hunt"], bribe: 4, catch: 0.4},
+      add: {warn: ["One who will not share in hard times may be left behind"]}},
+    {from: 1721, note: "Danish mission and trade in Greenland; Norwegian, Swedish and Russian law over the Sámi", set: {rule: {form: "Colonies and northern provinces", ruler: "The Danish, Norwegian, Swedish or Russian crown"}}, add: {courts: ["The crown's courts in the trading posts"]}},
+    {from: 1920, note: "The Svalbard treaty; the state's police reach the north", add: {order: ["police"], punish: ["prison"]}},
+    {from: 1979, note: "Home rule in Greenland", set: {rule: {form: "Self-governing lands under the crown", ruler: "The home government in Nuuk"}}}
   ]}
 };
 
@@ -356,8 +383,8 @@ export const REGION_ROWS = {
     {from: 1821, note: "Independent Mexico; the Inquisition ended (1820)", set: {rule: {form: "An independent republic, often under strongmen", ruler: "The President", council: "Congress"}},
       drop: {courts: ["The Audiencia of Mexico", "The Holy Office of the Inquisition, for heresy and sorcery", "The General Court of the Indians"], crimes: ["heresy", "sorcery", "wrong-faith"], punish: ["burning", "galleys"], order: ["inquisitors"], taxes: ["The tribute of the Indian towns", "The tithe"]}, add: {courts: ["The republic's courts"]}},
     {from: 1910, to: 1920, note: "The Revolution", add: {warn: ["Revolutionary armies are the only law in much of the land"]}},
-    {from: 1929, to: 1999, note: "One party holds power", add: {warn: ["The ruling party decides who wins and who is charged"]}, set: {bribe: 4}},
-    {from: 2000, note: "Contested elections; the drug wars", set: {bribe: 4}}
+    {from: 1929, to: 1999, note: "One party holds power", add: {warn: ["The ruling party decides who wins and who is charged"]}, set: {bribe: 2}},
+    {from: 2000, note: "Contested elections; the drug wars", set: {bribe: 2}}
   ],
   andes: [
     {from: 1438, note: "Tawantinsuyu, the Inca state: labour owed to the state, harsh law for idleness and theft", set: {rule: {form: "An empire of labour service", ruler: "The Sapa Inca", council: "The Inca nobility"}},
@@ -510,7 +537,7 @@ export const REGION_ROWS = {
     {from: 0, note: "The Kongo kingdom and the kingdoms of the great lakes", set: {rule: {ruler: "The Manikongo, and the kings of the lakes"}}},
     {from: 1491, note: "Kongo's kings take the Christian faith", add: {courts: ["Church courts at the Kongo royal capital"]}},
     {from: 1885, to: 1908, note: "The Congo Free State: rubber quotas, hostages and severed hands", add: {warn: ["The Free State's soldiers maim those who fall short of the rubber quota"]}},
-    {from: 1965, to: 1997, note: "Mobutu's rule in Zaire", add: {warn: ["In Zaire every official must be bought, and the President's men can do anything"]}, set: {bribe: 4}},
+    {from: 1965, to: 1997, note: "Mobutu's rule in Zaire", add: {warn: ["In Zaire every official must be bought, and the President's men can do anything"]}, set: {bribe: 1}},
     {from: 1998, note: "War in the Congo", set: {bribe: 3}}
   ],
   india: [
@@ -700,10 +727,13 @@ export function familyOf(region) {
 }
 
 /** Every row that applies to a region, in year order (family rows before the region's own for the same year). */
-export function rowsFor(region) {
-  const fam = familyOf(region).family.rows.map(r => ({...r, own: false}));
+export function rowsFor(region, {future = FUTURE} = {}) {
+  const f = familyOf(region);
+  const fam = f.family.rows.map(r => ({...r, own: false}));
   const own = (REGION_ROWS[region] ?? []).map(r => ({...r, own: true}));
-  return [...fam, ...own].sort((a, b) => a.from - b.from || (a.own - b.own));
+  // B3620: on the Future Darkness branch, the guesses from 2023 on, after the land's own rows
+  const fut = future ? futureRowsFor(f.id, region).filter(r => r.from >= FUTURE_FROM).map(r => ({...r, own: true, spec: true})) : [];
+  return [...fam, ...own, ...fut].sort((a, b) => a.from - b.from || (a.own - b.own) || ((a.spec ? 1 : 0) - (b.spec ? 1 : 0)));
 }
 
 /**
@@ -711,24 +741,24 @@ export function rowsFor(region) {
  * @returns {{region, year, family, familyLabel, guess, planned?, rule, courts, proof, crimes, punish, order, taxes, warn, bribe, catch, since}}
  *   since: the year and note of the newest row in force
  */
-export function lawOf(region = "moravia", year = 1197) {
+export function lawOf(region = "moravia", year = 1197, {future = FUTURE} = {}) {
   const y = Math.round(Number(year) || 0);
   const f = familyOf(region);
   const rec = blank(); let since = null;
-  for ( const row of rowsFor(region) ) {
+  for ( const row of rowsFor(region, {future}) ) {
     if ( row.from > y ) break;
     apply(rec, row, y);
-    if ( !(row.to != null && y > row.to) ) since = {year: row.from, note: row.note};
+    if ( !(row.to != null && y > row.to) ) { since = {year: row.from, note: row.note}; if ( row.spec ) rec.spec = true; }
   }
   for ( const k of ROW_LISTS ) rec[k] = uniq(rec[k]);
   return {region, year: y, family: f.id, familyLabel: f.family.label, ...rec, guess: f.guess, ...(f.planned ? {planned: f.planned} : {}), since};
 }
 
 /** The rows crossed going from one year to another (either way), for the Storyteller's note when the clock jumps. */
-export function changesBetween(region, from, to) {
+export function changesBetween(region, from, to, {future = FUTURE} = {}) {
   const a = Math.min(from, to), b = Math.max(from, to);
   const out = [];
-  for ( const row of rowsFor(region) ) {
+  for ( const row of rowsFor(region, {future}) ) {
     if ( row.from > a && row.from <= b ) out.push({year: row.from, note: row.note});
     if ( row.to != null && row.to + 1 > a && row.to + 1 <= b ) out.push({year: row.to + 1, note: `No longer: ${row.note.charAt(0).toLowerCase()}${row.note.slice(1)}`});
   }

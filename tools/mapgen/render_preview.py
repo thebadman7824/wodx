@@ -93,6 +93,7 @@ def missing_box(draw, cx, cy, w, h, angle):
 def render(path, out, pictures=PICTURES, px=64, grid=True, sizes=None):
     doc = json.load(open(path))
     W, H = doc["world"]["width"], doc["world"]["height"]
+    px = min(px, max(16, 6000 // max(W, H)))               # a big town is drawn smaller so it fits in memory
     k = px / CELL                                            # preview pixels for one world unit
     P = Pictures(pictures, k)
     if sizes: P.sizes = {**{p: (w * CELL, h * CELL) for p, (w, h) in sizes.items()}, **P.sizes}

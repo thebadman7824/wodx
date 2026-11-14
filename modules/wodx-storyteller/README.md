@@ -30,9 +30,9 @@ This page is a map of where each part lives. Most parts come as a pair: a `*-rul
 
 ## The ledger and the clocks
 
-- Files: `ledger.mjs` and `ledger-rules.mjs` (oaths, debts, boons, the Veil track, heirs), `wills.mjs` and `will-rules.mjs` (wills, inheritance law by place and year, false heirs), `clocks.mjs` and `clock-rules.mjs`.
-- Settings: `ledger`, `veilOn`, `ledgerTraits`, `clocks`.
-- API: `ledger`, `clocks`.
+- Files: `ledger.mjs` and `ledger-rules.mjs` (oaths, debts, boons, the Veil track, heirs), `wills.mjs` and `will-rules.mjs` (wills, inheritance law by place and year, false heirs), `inherit.mjs` and `inherit-rules.mjs` (the Inheritance step: heir, items, places, money left, Ledger, rivals, ties), `levers.mjs` and `levers-rules.mjs` (crisis levers for a region, with a dated log and undo), `clocks.mjs` and `clock-rules.mjs`.
+- Settings: `ledger`, `veilOn`, `ledgerTraits`, `clocks`, `leverState`.
+- API: `ledger`, `clocks`, `levers`, `inheritance`.
 
 ## Travel and the maps
 
@@ -47,14 +47,22 @@ This page is a map of where each part lives. Most parts come as a pair: a `*-rul
 - Settings: `betweenNights`, `ties`, `heat`, `plague`, `tieDay`, `remains`, `hunterPressure`, `hunterState`, `longTasks`, `timeApart`.
 - API: `upkeep`.
 
+## Threads of Fate
+
+Procedural storylines woven from what has happened in the world (B3650-B3656). Every system posts a short signal to one shared board when something notable happens: a fight, a sickness, hunters closing in, a cult, an arrest or trial, a dated event, a town change, a grudge, a battle, a tale. The weave picks the freshest signals, a player's own hooks first, and makes a storyline from an anchor card that answers one, a twist card that shares a place or a cast slot with it, and an echo from the past. Three storylines are open at most, plus one for each player's own hook; when one ends, the next can open. Each storyline is only a proposal until the Storyteller approves it, and the Storyteller's lines always win. An opened storyline gets a page in the journal folder Threads of Fate, a progress clock and an opening rumour; its steps come due by their days, the night's draw gives its next beat one time in three, and its ending goes to the Legends of the chronicle. The Threads of Fate window (Storyteller toolbar) ends, locks or refuses storylines and takes a player's own hook. Dreams and omens read the same board.
+
+- Files: `signals.mjs` and `signals-rules.mjs` (the shared signal board and the hooks that fill it), `threads.mjs` and `threads-rules.mjs` (the weave, storylines, their steps and endings, and the Threads of Fate window), `data/threads-cards.mjs` (the hook cards: Rothenstein, two for each of the 44 world regions, doors for each line, and a player's own threads).
+- Settings: `threads` (Off, Suggest or Open by itself; off by default), `threadsState` and `signalBoard` (hidden).
+- API: `signals`, `threads`.
+
 ## Money, holdings and making things
 
-- Files: `money.mjs` and `money-rules.mjs` (money by era and by region, money changers, coin of the place), `owners.mjs` and `owner-rules.mjs` (who owns what, holdings and upkeep), `craft-rules.mjs`, `build-rules.mjs`, `cookery.mjs`.
+- Files: `money.mjs` and `money-rules.mjs` (money by era and by region, money changers, coin of the place), `owners.mjs` and `owner-rules.mjs` (who owns what, holdings and upkeep), `craft-rules.mjs`, `build-rules.mjs`, `cookery.mjs`, `wonders.mjs` (making each line's supernatural items: fetishes, klaives and talens, with the Storyteller's go-ahead).
 - Settings: `money`, `changers`, `moneyRegion`, `moneyMonth`.
 
 ## Markets and trade
 
-- Files: `markets.mjs` and `market-rules.mjs`, `market-news.mjs` and `market-news-rules.mjs`, `market-turn.mjs` and `market-turn-rules.mjs` (the weekly turn), `market-moves.mjs` and `market-moves-rules.mjs` (factions and traders who go broke), `caravans.mjs` and `caravan-rules.mjs`, `ventures.mjs` and `venture-rules.mjs` (money put into a caravan, a workshop or a trading house), `towns.mjs` and `town-rules.mjs` (each market's town: its people, prosperity and unrest week by week, with plague, fire, flood, storm, earthquake, famine, riots and risings), `contagion.mjs` and `contagion-rules.mjs` (sickness that moves through each town week by week, spreads along trade links and caravans, and reaches living characters and the Hunt), `power.mjs`, `power-rules.mjs` and `caern-rules.mjs` (caerns, B3470-B3476; Nodes, chantries and freeholds).
+- Files: `markets.mjs` and `market-rules.mjs`, `market-news.mjs` and `market-news-rules.mjs`, `market-turn.mjs` and `market-turn-rules.mjs` (the weekly turn), `market-moves.mjs` and `market-moves-rules.mjs` (factions and traders who go broke), `caravans.mjs` and `caravan-rules.mjs`, `ventures.mjs` and `venture-rules.mjs` (money put into a caravan, a workshop or a trading house), `towns.mjs` and `town-rules.mjs` (each market's town: its people, prosperity and unrest week by week, with plague, fire, flood, storm, earthquake, famine, riots and risings), `contagion.mjs` and `contagion-rules.mjs` (sickness that moves through each town week by week, spreads along trade links and caravans, and reaches living characters and the Hunt), `power.mjs`, `power-rules.mjs` and `caern-rules.mjs` (caerns, B3470-B3476; Nodes, chantries and freeholds), `herds.mjs` and `herd-rules.mjs` (herd pools by district, B3570-B3573), `sites.mjs` and `site-rules.mjs` (holy ground shared by several claims, B3580-B3585).
 - Settings: `markets`, `tradeTally`, `marketTurn`, `marketTurnState`, `marketMoves`, `tradersBroke`, `caravans`, `caravanState`, `ventures`, `ventureState`, `townTurn`, `townState`, `contagion`, `contagionPeople`, `contagionState`, `placesOfPower`, `powerState`.
 
 ## Battles, sieges and ships

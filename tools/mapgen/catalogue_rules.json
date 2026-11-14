@@ -388,7 +388,8 @@
   "Lamp_?p?ost|Street_?Lamps?|Piano": "early",
   "Couch|Sofa|Chaise|Ottoman|Wingback|Armchair": "early",
   "Rocking": "reform",
-  "Pump": "reform"
+  "Pump": "reform",
+    "(?<![a-z])Rum(?![a-z])|Whiske?y|Tobacco|Coffee|Tea_?pot|Potato|Tomato|Maize": "early"
  },
  "piece_words_about": "Pieces by whole words of the file name (split at capitals, underscores, spaces and digits), first rule that matches wins; a word matches itself and its plural; a word ending in * matches any word it starts. A name with a word from veto_words is no piece of furniture at all (a tree, a mine track, a coffin, a toy) and is left out.",
  "veto_words": [

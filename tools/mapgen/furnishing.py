@@ -288,6 +288,28 @@ def _wall_lights(room, pal, tier, R):
         room.lights.append((cx, cy, rng))
 
 
+BEDDED = re.compile(r"Byre|Stable|Sty|Barn|Kennel", re.I)
+STRAW = ["Hay_Bedding_B_2x3.webp", "Hay_Bedding_A_1x2.webp"]
+
+def _straw(room, R):
+    """Straw strewn on a beasts' floor, under everything else (layer 50, like a rug): about a third of the floor."""
+    if not BEDDED.search(room.name) or room.iw < 1.5 or room.ih < 1.5: return []
+    kinds = [a for a in STRAW if C.have(a)]
+    if not kinds: return []
+    out, cover, goal = [], 0.0, room.iw * room.ih / 3
+    for _ in range(40):
+        if cover >= goal: break
+        a = R.choice(kinds); aw, ah = C.cells_of(a)
+        rot = R.random() < .5
+        w, h = (ah, aw) if rot else (aw, ah)
+        if w > room.iw or h > room.ih: continue
+        x = room.ix + R.random() * (room.iw - w); y = room.iy + R.random() * (room.ih - h)
+        if any(x < o["x"] + o["w"] - .5 and o["x"] < x + w - .5 and y < o["y"] + o["h"] - .5 and o["y"] < y + h - .5 for o in out): continue
+        out.append({"asset": a, "x": x, "y": y, "w": w, "h": h, "rot": int(rot), "scale": 1.0, "layer": 50, "piece": "rug"})
+        cover += w * h
+    return out
+
+
 def fill_room(room):
     ctx = room.ctx
     pal = ctx["palette"]
@@ -339,7 +361,7 @@ def fill_room(room):
         if not dense(): _along_walls(room, pal, R, dense)
         mine = room.items[n0:]
         del room.items[n0:]
-        room.dressing += mine + added
+        room.dressing += _straw(room, R) + mine + added
         room.tier = tier_of(room_value(room, pal), kind, ctx["band"])
         if kind != "outdoor": _wall_lights(room, pal, room.tier, R)    # no chandelier hung in a court
     finally:
