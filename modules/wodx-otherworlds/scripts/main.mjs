@@ -13,6 +13,7 @@ import * as drift from "./drift.mjs";
 import * as driftRules from "./drift-rules.mjs";
 import * as corruption from "./corruption.mjs";
 import * as corruptionRules from "./corruption-rules.mjs";
+import * as corruptionLooks from "./corruption-looks.mjs";
 import * as waysRules from "./ways-rules.mjs";
 import * as realmsRules from "./realms-rules.mjs";
 import * as realmMaps from "./realm-maps.mjs";
@@ -46,6 +47,7 @@ Hooks.once("init", () => {
   realms.registerRealmSettings();
   realmWorlds.registerRealmWorldSettings();
   corruption.registerCorruptionSettings();
+  corruptionLooks.registerCorruptionLookSettings();
   realms.setupRealms();
 });
 
@@ -68,7 +70,8 @@ Hooks.once("ready", () => {
       netContest: realms.netContest, rollsDialog: realms.rollsDialog, applyLayerSound: realms.applyLayerSound, wantedLayerSound: realms.wantedLayerSound, layerSoundNow: realms.layerSoundNow},
     // B3270-B3276: Wyrm corruption that spreads between places and into people
     corruption: {of: corruption.placeOf, set: corruption.setPlace, taintOf: corruption.taintOf, setTaint: corruption.setTaint, senseWyrm: corruption.senseWyrm,
-      plan: corruption.planTurn, apply: corruption.applyTurn, rates: corruption.rates, rateOf: corruption.rateOf, setRate: corruption.setRate, regionOf: corruption.regionOfScene, undo: corruption.undoTurn, run: corruption.run, dialog: corruption.corruptionDialog, rules: corruptionRules},
+      plan: corruption.planTurn, apply: corruption.applyTurn, rates: corruption.rates, rateOf: corruption.rateOf, setRate: corruption.setRate, regionOf: corruption.regionOfScene, undo: corruption.undoTurn, run: corruption.run, dialog: corruption.corruptionDialog, rules: corruptionRules,
+      looks: corruptionLooks.api()},
     drift: {of: drift.driftOf, step: drift.stepDrift, lever: drift.leverStep, undo: drift.undoStep, dialog: drift.driftDialog, onMapEvent: drift.onMapEvent, rules: driftRules},
     ways: {make: ways.makeWay, realm: ways.makeRealm, dialog: ways.waysDialog, isRealm: ways.isRealm, rules: waysRules},
     worldsChart: {rules: worldsChartRules, svg: (o = {}) => worldsChartRules.svg(realmMapsRules.REALMS, o), layout: () => worldsChartRules.layout(realmMapsRules.REALMS)},
@@ -89,6 +92,7 @@ Hooks.once("ready", () => {
   if ( game.modules.get("wodx-chronicle")?.api ) { registerYearHandler(); drift.registerDriftHandler(); corruption.registerCorruptionHandlers(); }
   else Hooks.once("wodxChronicleReady", () => { registerYearHandler(); drift.registerDriftHandler(); corruption.registerCorruptionHandlers(); });
   corruption.setupCorruption();
+  corruptionLooks.setupCorruptionLooks();
   journey.registerJourneys();
   journey.applyDecay();
 });
