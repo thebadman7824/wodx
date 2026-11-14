@@ -73,7 +73,8 @@ export const ABILITIES = {
   settrap: {label: "Set the trap", effect: "settrap", verb: "sets"},
   springtrap: {label: "Someone walks into it", effect: "springtrap", verb: "springs"},
   disarm: {label: "Disarm it", effect: "disarm", verb: "disarms"},
-  clean: {label: "Clean a gun", effect: "clean", verb: "cleans a gun with"}
+  clean: {label: "Clean a gun", effect: "clean", verb: "cleans a gun with"},
+  load: {label: "Load a weapon with it", effect: "load", verb: "loads a weapon with"}
 };
 
 const R = (...parts) => new RegExp(`\\b(?:${parts.join("|")})(?:e?s)?\\b`, "i");
@@ -243,6 +244,7 @@ export function abilitiesOf(good) {
   if ( (k === "accessories" || k === "arms") && (AR.fittingOf(n) || AR.carrierOf(n) || AR.wardOf(n)) ) { out.delete("wear"); out.add("fit"); }
   if ( k === "traps" && AR.trapOf(n) ) { out.add("settrap"); out.add("springtrap"); out.add("disarm"); }
   if ( AR.kitOf(n) ) out.add("clean");
+  if ( AR.ammoOf(n) || AR.isAmmoNeed(n) ) out.add("load");
   if ( k === "medicine" && /sunscreen/i.test(n) ) out.add("wash");
   if ( k === "house" && /tin bath|washboard/i.test(n) ) out.add("wash");
   if ( k === "house" && /mirror/i.test(n) ) out.add("disguise");

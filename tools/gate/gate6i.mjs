@@ -82,11 +82,13 @@ export async function run() {
                 { card: text(m).slice(0, 320), faith: F(dv) });
         });
         await step("a level not known is refused (Radiance 2)", async () => {
-            const n0 = game.messages.size;
+            // the Evoke before may still post a follow-up card: wait for the chat to settle before counting
+            for (let last = -1, t = Date.now(); Date.now() - t < 6000 && last !== game.messages.size; ) { last = game.messages.size; await sleep(1000); }
+            const n0 = game.messages.size, ids0 = new Set(game.messages.map(m => m.id));
             let opts = [];
             answer(root => { opts = [...root.querySelectorAll("select[name=evo] option")].map(x => x.value); return "cancel"; });
             A().demonEvoke({ actor: dv }); await sleep(1500);
-            ok("a level not known is refused (Radiance 2)", game.messages.size === n0 && opts.includes("radiance:1") && !opts.includes("radiance:2") && opts.length === 4, { opts });
+            ok("a level not known is refused (Radiance 2)", game.messages.size === n0 && opts.includes("radiance:1") && !opts.includes("radiance:2") && opts.length === 4, { opts, posted: game.messages.filter(m => !ids0.has(m.id)).map(m => text(m).slice(0, 200)) });
         });
         await step("choosing the dark effect costs a temporary Torment point", async () => {
             const n0 = game.messages.size, t0 = T(dv);

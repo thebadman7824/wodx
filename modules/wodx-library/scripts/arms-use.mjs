@@ -68,6 +68,16 @@ export async function clean(actor, item) {
     [dried.length ? `The wet powder is drawn out: ${esc(dried.join(", "))} can fire again once loaded.` : "Clean and ready: nothing was wet."]);
 }
 
+/** B3900: load a weapon from this ammunition (WoDX Combat's Reload takes the rounds out of Possessions). */
+export async function load(actor, item) {
+  const a = A.ammoOf(item.name);
+  if ( !a && !A.isAmmoNeed(item.name) ) return null;
+  if ( a?.spentPerShot ) return card(actor, `${actor.name} has ${item.name} ready`, [`${esc(cap(A.AMMO_LABEL[a.kind]))} are taken one at a time as they are shot (when shots are counted).`]);
+  const C = combat();
+  if ( !C?.reload ) return ui.notifications.warn("Loading a weapon needs WoDX Combat.");
+  return C.reload({actor});
+}
+
 const trapState = item => item.flags?.[MOD]?.trap ?? null;
 const victimToken = () => [...(game.user.targets ?? [])][0] ?? null;
 
@@ -154,4 +164,4 @@ const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : s);
 
 /** For WoDX Combat and the gate. */
 export const armsApi = () => ({rules: A, weaponEntry: A.weaponEntry, fitFor: A.fitFor, atHand: A.atHand, coveredBy: A.coveredBy,
-  ready, fit, clean, setTrap, springTrap, disarmTrap, rollPool});
+  ready, fit, clean, load, setTrap, springTrap, disarmTrap, rollPool});

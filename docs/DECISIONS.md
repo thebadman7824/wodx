@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3840
+Next free block: B3930
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -199,6 +199,7 @@ Next free block: B3840
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
+| B3900-B3929 | The no-effect audit, part 2: ammunition, everyday goods, character traits, the world (used B3900-B3901) | Library, Combat |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6647,3 +6648,13 @@ Reverse: give MAYA an era key for the early modern own names in data/people-maya
 WoDX Creation. Before the conquest a woman is named by the first mothers of the K'iche', a lady of the inscriptions, or Ix with a lineage name (Ix Pech), since the records give few women's own names.
 
 Reverse: edit WOMEN_OLD in data/people-maya.mjs.
+
+## B3900. A reload comes out of Possessions (2026-11-14)
+WoDX Library (data/goods-arms.mjs AMMO, arms-rules.mjs) and WoDX Combat (reload). The eight ammunition goods had no effect (no-effect desk g3, approved by Ben 2026-11-14). Each now says which weapons it feeds: arrows for bows, bolts for crossbows, stones for slings, a lead ball (with a powder horn in Possessions) for a muzzle-loader, shells for shotguns, a magazine for a box-fed pistol, and cartridges for any other firearm. Reload takes the rounds the weapon lacks out of what the character holds (a magazine fills it, loose rounds fill what they can) and refuses with nothing to load. A weapon with no known ammunition (a laser, a flare pistol, a thrown thing) reloads as before. The block was taken by hand at B3900-B3929 because the shared registry folder was full and claim.mjs could not lock it.
+
+Reverse: drop the reloadPlan lines in Combat's reload.
+
+## B3901. A bow shot spends an arrow (2026-11-14)
+WoDX Combat. Bows and slings have no capacity on the sheet, so Count shots never counted them. With Count shots on, a bow or sling now needs an arrow or a stone in Possessions to shoot, and each shot spends one. The automatic attack skips a bow with no arrows. With Count shots off, nothing changes.
+
+Reverse: remove shotAmmo from the attack and attackUsable.
