@@ -173,10 +173,21 @@ def seg_dist(x, y, a, b):
     return math.hypot(x - a[0] - t * dx, y - a[1] - t * dy)
 
 
+def walled_off(g, o, segs):
+    """True when another wall stands between opening g and piece o: a neighbour's door or window, the next house's
+    window a hand's width from this wall, opens onto something else."""
+    p, q = (g[0], g[1]), (o["cx"], o["cy"])
+    def cross(a, b, c, d):
+        def side(u, v, w): return (v[0] - u[0]) * (w[1] - u[1]) - (v[1] - u[1]) * (w[0] - u[0])
+        return side(a, b, c) * side(a, b, d) < 0 and side(c, d, a) * side(c, d, b) < 0
+    return any(seg_dist(g[0], g[1], *s) > .1 and cross(p, q, *s) for s in segs)
+
+
 def wall_angle(o, segs):
-    """The direction of the wall nearest a piece; 0 when there is none within 4 squares (open ground)."""
+    """The direction of the wall nearest a piece; 0 out on open ground with no wall within 4 squares. A piece inside a
+    room squares to the room's walls however far they are (the middle of a big turned hall)."""
     best = min(segs, key=lambda s: seg_dist(o["cx"], o["cy"], *s), default=None)
-    if best is None or seg_dist(o["cx"], o["cy"], *best) > 4: return 0.0
+    if best is None or (o.get("room") is None and seg_dist(o["cx"], o["cy"], *best) > 4): return 0.0
     return math.atan2(best[1][1] - best[0][1], best[1][0] - best[0][0])
 
 
@@ -243,8 +254,8 @@ def check(path, sizes_path=None):
             if not C.BED.search(o["name"]): continue
             near = [f for f in fires if f["room"] == o["room"] and gap2(o, f) < C.bed_fire_gap(f["name"]) - .1]
             if near: found.append(("bed by the fire", o, near[0]["name"]))
-        for o in objs:
-            if not (0 <= o["cx"] <= W and 0 <= o["cy"] <= H) and not re.search(r"Tree|Pine|Bush|Stone|Rock|Stump|Pebble|Grass|Leaves|Twig", o["name"]): found.append(("outside", o, ""))
+        for o in objs:                                         # wholly off the map (a stall across the seam of two parts is in both)
+            if not any(0 <= x <= W and 0 <= y <= H for x, y in o["pts"]) and not re.search(r"Tree|Pine|Bush|Stone|Rock|Stump|Pebble|Grass|Leaves|Twig", o["name"]): found.append(("outside", o, ""))
         for o in objs:                                         # a tree's crown drawn over a room hides what is in it
             if not re.search(r"Tree|Pine|Oak|Birch|Fir_|Canopy", o["name"]) or o["room"] is not None: continue
             r = .38 * max(o["w"], o["h"])
@@ -265,7 +276,8 @@ def check(path, sizes_path=None):
                     c, sn = math.cos(g[4]), math.sin(g[4])      # blocking it
                     us = [(p[0] - g[0]) * c + (p[1] - g[1]) * sn for p in o["pts"]]
                     vs = [-(p[0] - g[0]) * sn + (p[1] - g[1]) * c for p in o["pts"]]
-                    if min(us) < g[2] - .05 and max(us) > -(g[2] - .05) and min(vs) < .8 and max(vs) > -.8:
+                    if min(us) < g[2] - .05 and max(us) > -(g[2] - .05) and min(vs) < .75 and max(vs) > -.75 \
+                            and not walled_off(g, o, segs):     # a touch at the clear zone's edge is not in front of it
                         found.append(("in front of a window", o, "")); break
                     continue
                 if g[3] != "door": continue
@@ -274,6 +286,7 @@ def check(path, sizes_path=None):
                 vs = [-(p[0] - g[0]) * sn + (p[1] - g[1]) * c for p in o["pts"]]
                 hw = g[2] - .05                                 # a touch at the edge is not in the way
                 if min(us) < hw and max(us) > -hw and min(vs) < DOOR_DEEP and max(vs) > -DOOR_DEEP:
+                    if walled_off(g, o, segs): continue    # a neighbour's door across another wall is not in its way
                     found.append(("in a doorway", o, "")); break
         solid = [o for o in furn if not RUG.search(o["name"])]
         for i, o in enumerate(solid):
@@ -365,7 +378,7 @@ def main():
     if a.against: res["found"] += lost_since(a.against, a.map)
     if a.preview:
         import render_preview as R
-        if os.path.isdir(R.PICTURES):
+        if os.path.isdir(R.picture_root(R.PICTURES)):
             pv = R.render(a.map, a.preview)
             res["found"] += [("picture not in the packs", {"name": m.rsplit("/", 1)[-1], "cx": 0, "cy": 0}, m) for m in pv["missing"]]
         else:
