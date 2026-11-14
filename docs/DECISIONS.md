@@ -184,7 +184,6 @@ Next free block: B3680
 | B3540-B3549 | Supernatural sight: the Penumbra, a mage's sight, chimerical sight, the Shadowlands view (notes gaps g8 to g11) (used B3540-B3547) | Senses, Actions |
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
 | B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3621) | Chronicle |
-| B3630-B3649 | Supernatural item crafting by line: the shared table and Werewolf fetishes, klaives and talens (used B3630-B3636) | Library, Storyteller, Actions |
 | B3660-B3669 | The Rothenstein saga: the running step for other systems (used B3660-B3669) | Chronicle |
 | B3670-B3679 | The Rothenstein saga keeps its calendar on long skips (used B3670-B3672) | Chronicle |
 <!-- decision-index:end -->
@@ -5915,41 +5914,6 @@ Reverse: remove the rows from FUTURE_ROWS; off the branch nothing changes.
 LINE_FUTURE, on the Storyteller's Law here card when a record is speculation: cameras and the Masquerade, a ghoul's corporate papers, the corporate districts as the Wyrm's cities, the Technocracy and the corporate courts, Banality, the dead with no score, an erased hunter, a mummy's new identities, a demon's data trail, revenant families' shares.
 
 Reverse: empty LINE_FUTURE.
-
-## B3630. One table of supernatural items for every line (2026-11-13)
-WoDX Library data/wonders.mjs and scripts/wonder-rules.mjs, read by Storyteller's long tasks (Ben's Item Crafting Desk, g1 and g2, all recommendations picked 23:19 UTC). Each row names what must be bound, the level and Gnosis, what it does in WoDX's own words and the page. A finished task makes the real item: a Fetish item the fetish window attunes and wakes, a weapon beside a war fetish, talens marked one use. Other lines add LINES entries and rows; Wraith artifacts come from the soulforging work onto the same table.
-
-Reverse: switch off "Making fetishes and talens" in the world settings; the old free-form fetish task returns.
-
-## B3631. Players start the work, the Storyteller says yes (2026-11-13)
-WoDX Storyteller scripts/wonders.mjs (desk g3). The Make a fetish or talen task kind opens a picker; WoDX checks the rite (Rite of the Fetish level 3, Rite of Binding level 1) and Rituals. A player's task waits paused for an approval card (is the spirit found and willing?); a Storyteller's starts at once. Gnosis spent is paid when the rite ends.
-
-Reverse: drop the approval in start() so player tasks begin at once.
-
-## B3632. The W20 fetish and talen lists, with the spirit each needs (2026-11-13)
-33 fetishes and talens from W20 (pdf 223 to 231), 11 from the Revised breedbooks for the other Changing Breeds. Klaive: level 4, Gnosis 6, Strength + 2 aggravated at difficulty 6, a war-spirit, silver 1. Grand klaive: level 5, Gnosis 7, Strength + 3 at 7, silver 2. Rows the book leaves open are marked house and logged in PENDING-REVIEW.
-
-Reverse: edit or remove rows in data/wonders.mjs.
-
-## B3633. The rites as the book runs them (2026-11-13)
-Rite of the Fetish (W20 pdf 215): three nights of cleansing, then one Wits + Rituals roll at 10, two lower per permanent Gnosis spent, up to three lower for persuasion (Storyteller), plus the spirit court's regard; delicate. Rite of Binding (pdf 212, 229): Willpower against the spirit's Gnosis, one lower per Gnosis spent (at least one); one talen a success, two more for a Jaggling and three for a greater spirit (house split of the book's two or three).
-
-Reverse: MAKES and TALEN_EXTRA in data/wonders.mjs.
-
-## B3634. Kinfolk and the other Changing Breeds (2026-11-13)
-Desk w4 and w5. A Changing Breed sees the Garou list and its own breed's fetishes; Kinfolk with at least 1 permanent Gnosis may make fetishes and talens (house reading until W20 Kinfolk is read, PENDING-REVIEW).
-
-Reverse: MAKERS and listFor in wonder-rules.mjs.
-
-## B3635. One world setting per line (2026-11-13)
-Desk g6. WoDX Library "craftGarou", on by default for the testbed; set it off in the Live world until Ben says.
-
-Reverse: change the default.
-
-## B3636. Silver fetishes cost Gnosis (2026-11-13)
-WoDX Actions garou.js silverPenalty and effectiveGnosis: a made klaive takes 1, a grand klaive 2 from the Gnosis dice of a shapechanger that fears silver, when waking a fetish or reading a summoned spirit's attitude (W20 pdf 227 to 228, through the existing silverGnosisPenalty).
-
-Reverse: roll info(actor).gnosis.perm again in useFetish and summonSpirit.
 
 ## B3660. The saga runs on the story chain runner (2026-11-14)
 WoDX Chronicle. Ben asked (Threads of Fate desk, item 16) to spread the Rothenstein story over a longer time than ten nights. Each book of the saga is a story chain whose steps are dated; the gap on the clock is the gap between dates, so the chain runner deals the steps as time passes. A saga run carries `saga: {book, endings}`. The switch is podSaga, off by default like the other pod switches; the chronicle builder's spine step should turn it on in rothenstein-x.

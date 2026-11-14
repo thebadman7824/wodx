@@ -2,7 +2,6 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.85.0 (Make a fetish or talen: the long task kind now opens a picker from WoDX Library's book list, checks the rite and Rituals, waits three nights of cleansing, and asks the Storyteller's go-ahead for a player's work. When it ends the Gnosis spent is paid and a success makes the real items: the fetish, a weapon for a klaive, or one talen a success (api.wonders, B3630-B3636))
 - 0.84.0 (Towns over time hear the Rothenstein saga: a saga step with a town change lands on the saga's town at once (the 1997 flood floods the low streets, 1946 empties the German households, sieges, plagues and booms), once per step, with the usual card and Undo; api.upkeep.towns.saga. The chronicle builder turns WoDX Chronicle's saga switch on in the world it builds when the recipe's spine names the saga (B3670, B3671))
 - 0.83.1 (Places of power: dreaming by a balefire or marking a freehold destroyed no longer drops the freehold from the register (it lost its id and name when the change was written back))
 - 0.83.0 (Institutions hear a turn of rule from WoDX Chronicle (wodxRegimeTurn) and sweep holders out of the offices it names, in its region or town; a player character who loses a seat gets a line in the log. A town's riot or rising now tells other modules the town's name and region)
