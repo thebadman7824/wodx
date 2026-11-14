@@ -300,7 +300,7 @@
 <polygon points="530.9,582.8 530.9,596.8 516.9,596.8 516.9,582.8" fill="#9cc79a" stroke="#2c5a2a" stroke-width=".5"/>
 <polygon points="521.1,577.2 526.7,577.2 526.7,582.8 521.1,582.8" fill="#9cc79a" stroke="#2c5a2a" stroke-width=".5"/>
 <polygon points="526.7,562.9 521.1,562.9 521.1,557.3 526.7,557.3" fill="#9cc79a" stroke="#2c5a2a" stroke-width=".5"/>
-<polygon points="516.9,562.9 522.5,562.9 522.5,568.5 516.9,568.5" fill="#9cc79a" stroke="#2c5a2a" stroke-width=".5"/>
+<polygon points="516.9,568.5 516.9,562.9 522.5,562.9 522.5,568.5" fill="#9cc79a" stroke="#2c5a2a" stroke-width=".5"/>
 <polygon points="563.2,596.8 549.2,596.8 549.2,589.8 563.2,589.8" fill="#9cc79a" stroke="#2c5a2a" stroke-width=".5"/>
 <polygon points="573.1,543.3 584.3,543.3 584.3,554.5 573.1,554.5" fill="#9cc79a" stroke="#2c5a2a" stroke-width=".5"/>
 <polygon points="572.3,554.5 577.2,554.5 577.2,559.4 572.3,559.4" fill="#9cc79a" stroke="#2c5a2a" stroke-width=".5"/>
@@ -504,7 +504,7 @@
 <polygon points="172.4,404.0 177.6,404.0 177.6,409.2 172.4,409.2" fill="#9cc79a" stroke="#2c5a2a" stroke-width=".5"/>
 <polygon points="204.8,407.5 204.8,414.5 197.8,414.5 197.8,407.5" fill="#9cc79a" stroke="#2c5a2a" stroke-width=".5"/>
 <polygon points="204.8,354.0 204.8,361.0 190.8,361.0 190.8,354.0" fill="#9cc79a" stroke="#2c5a2a" stroke-width=".5"/>
-<polygon points="204.7,373.9 204.7,379.5 199.1,379.5 199.1,373.9" fill="#9cc79a" stroke="#2c5a2a" stroke-width=".5"/>
+<polygon points="204.7,379.5 199.1,379.5 199.1,373.9 204.7,373.9" fill="#9cc79a" stroke="#2c5a2a" stroke-width=".5"/>
 <polygon points="172.4,338.2 172.4,333.0 177.6,333.0 177.6,338.2" fill="#9cc79a" stroke="#2c5a2a" stroke-width=".5"/>
 <polygon points="172.4,338.2 177.6,338.2 177.6,343.5 172.4,343.5" fill="#9cc79a" stroke="#2c5a2a" stroke-width=".5"/>
 <line x1="206.1" y1="405.2" x2="206.1" y2="391.2" stroke="#a30" stroke-width="3"/>

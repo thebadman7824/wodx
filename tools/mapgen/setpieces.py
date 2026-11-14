@@ -82,6 +82,22 @@ SET_PIECES = [
     SP("bench-wall", ["hall", "kitchen", "tavern", "passage", "work"], "wall", (2, 1), [("seat", 0, 0, 2, 1, "base")]),
     SP("chest-wall", ["sleep", "hall", "store", "study", "work"], "wall", (1, 1), [("chest", 0, 0, 1, 1, "base")]),
     SP("kitchen-worktable", ["kitchen", "work"], "wall", (2, 1), [("table", 0, 0, 2, 1, "base"), *on("clutter", 3)]),
+    # from Ben's interior packs (14 November 2026): a chopping block in every kitchen, a forge's working corner,
+    # each craft's own bench, a shop's L-shaped counter. Every piece comes from the age's and region's palette.
+    SP("chopping-block", ["kitchen"], "wall", (1, 1), [("block", 0, 0, 1, 1, "base")], bands=EARLY + ["republic"]),   # a cutting board on the worktop after
+    SP("forge-corner", ["work"], "wall", (4, 3), [("hearth", 1, 0, 2, 1, "base"), ("bellows", 0, 0, 1, 1, "back"), ("quench", 3, 0, 1, 1, "back"),
+                                                ("anvil", 1.5, 1.5, 1, 1, "beside")],   # the anvil a step from the fire
+       trades=r"smith|forge|farrier|armou?rer|cutler|nailer|locksmith|wheelwright"),
+    SP("apothecary-bench", ["work", "shop", "study"], "wall", (3, 2), [("table", 0, 0, 2, 1, "base"), ("seat", .5, 1, 1, 1, "face:base"), ("shelf", 2, 0, 1, 1, "back"),
+                                                                      *on("mortar"), *on("clutter", 2)],
+       trades=r"apothecar|herbal|pharmac|chemist|druggist|physician|barber|surgeon"),
+    SP("lab-bench", ["work", "study"], "wall", (3, 2), [("lab", 0, 0, 2, 1, "base"), ("seat", .5, 1, 1, 1, "face:base"), ("shelf", 2, 0, 1, 1, "back"), *on("clutter", 2)],
+       trades=r"alchem|chemist|laborat|scien|assay"),
+    SP("leather-bench", ["work", "shop"], "wall", (3, 2), [("table", 0, 0, 2, 1, "base"), ("seat", .5, 1, 1, 1, "face:base"), ("store", 2, 0, 1, 1, "back"), *on("clutter", 3)],
+       trades=r"leather|tanner|saddler|cobbler|shoemaker|cordwainer|harness"),
+    SP("craft-bench", ["work"], "wall", (3, 2), [("table", 0, 0, 2, 1, "base"), ("seat", .5, 1, 1, 1, "face:base"), ("shelf", 2, 0, 1, 1, "back"), *on("clutter", 3)]),
+    SP("corner-counter", ["shop"], "corner", (4, 3), [("shelf", 0, 0, 2, 1, "base"), ("counter", 3, 0, 1, 2, "beside"), ("counter", 1, 2, 3, 1, "beside"), *on("clutter", 2)]),
+                                                   # the shopkeeper's corner: shelves behind, an L of counter, a way in at one end
     SP("store-cluster", ["store", "work"], "corner", (3, 2), [("store", 0, 0, 1, 1, "base"), ("store", 1, 0, 1, 1, "back"), ("store", 2, 0, 1, 1, "back"),
                                                          ("store", 0, 1, 1, 1, "back"), ("store", 1, 1, 1, 1, "back")]),   # goods stacked together, corner first
     SP("store-sacks", ["store", "kitchen", "work"], "wall", (2, 1), [("store", 0, 0, 1, 1, "base"), ("store", 1, 0, 1, 1, "back")]),

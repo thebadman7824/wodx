@@ -219,7 +219,7 @@ class Building:
         for rname, rx, ry, rw, rh, floor in t["rooms"]:
             ax, ay, aw, ah = _rect(k, w, h, rx, ry, rw, rh)
             furn = [(e[0], _rule(k, e[1]), *e[2:]) for e in t["furnish"].get(rname, [])]
-            self.rooms.append(Room(rname, x + ax, y + ay, aw, ah, floor, self.openings, furn))
+            self.rooms.append(Room(rname, x + ax, y + ay, aw, ah, floor, self.openings, furn, t.get("portals")))
 
     @property
     def rect(self): return (self.x, self.y, self.w, self.h)

@@ -389,9 +389,9 @@
   "Couch|Sofa|Chaise|Ottoman|Wingback|Armchair": "early",
   "Rocking": "reform",
   "Pump": "reform",
-    "(?<![a-z])Rum(?![a-z])|Whiske?y|Tobacco|Coffee|Tea_?pot|Potato|Tomato|Maize": "early"
+  "(?<![a-z])Rum(?![a-z])|Whiske?y|Tobacco|Coffee|Tea_?pot|Potato|Tomato|Maize": "early"
  },
- "piece_words_about": "Pieces by whole words of the file name (split at capitals, underscores, spaces and digits), first rule that matches wins; a word matches itself and its plural; a word ending in * matches any word it starts. A name with a word from veto_words is no piece of furniture at all (a tree, a mine track, a coffin, a toy) and is left out.",
+ "piece_words_about": "Pieces by whole words of the file name (split at capitals, underscores, spaces and digits), first rule that matches wins; a word matches itself and its plural; a word ending in * matches any word it starts. A name with a word from veto_words is no piece of furniture at all (a tree, a mine track, a coffin, a toy) and is left out. Kitchenware hung on a wall, chopping blocks, forge pieces, signs, mortars and laboratory benches come first (Ben's interior packs, 14 November 2026). A sign is its own piece, used only for the sign hung outside a tavern's or shop's door, never inside.",
  "veto_words": [
   "tree",
   "trees",
@@ -501,7 +501,6 @@
   "exit",
   "enter",
   "ramp",
-  "sign",
   "holo",
   "barbed",
   "wire",
@@ -553,6 +552,74 @@
   "narcotics"
  ],
  "piece_words": [
+  [
+   "hanging",
+   [
+    "cooking pot hanging",
+    "metal pot hanging",
+    "pan hanging",
+    "hanging herbs",
+    "hanging rack herbs",
+    "meat hook",
+    "sausage string hanging",
+    "kitchen hooks",
+    "pans hanging"
+   ]
+  ],
+  [
+   "block",
+   [
+    "chopping block",
+    "butcher block"
+   ]
+  ],
+  [
+   "clutter",
+   [
+    "cutting board"
+   ]
+  ],
+  [
+   "anvil",
+   [
+    "anvil"
+   ]
+  ],
+  [
+   "quench",
+   [
+    "quenching"
+   ]
+  ],
+  [
+   "bellows",
+   [
+    "bellows"
+   ]
+  ],
+  [
+   "sign",
+   [
+    "sign"
+   ]
+  ],
+  [
+   "mortar",
+   [
+    "mortar pestle",
+    "mortar pestel",
+    "mortar and pestle"
+   ]
+  ],
+  [
+   "lab",
+   [
+    "alchemy lab",
+    "alchemy table",
+    "lab desk",
+    "laboratory"
+   ]
+  ],
   [
    "special",
    [
@@ -910,7 +977,10 @@
   "table setting",
   "table runner",
   "bar top",
-  "bedroll"
+  "bedroll",
+  "doormat",
+  "door mat",
+  "curtain"
  ],
  "asia_words": [
   "bamboo",

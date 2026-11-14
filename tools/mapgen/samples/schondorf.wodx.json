@@ -2476,6 +2476,24 @@
    "rotation": 150.0
   },
   {
+   "id": "chapel-1-chancel-f3",
+   "label": "Chest (Chancel)",
+   "rect": [
+    74.972,
+    69.829,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "church"
+   },
+   "rotation": 150.0
+  },
+  {
    "id": "chapel-1-nave-f3",
    "label": "Chest (Nave)",
    "rect": [
@@ -2713,8 +2731,26 @@
    "id": "workshop-1-workshop-f1",
    "label": "Chest (Workshop)",
    "rect": [
-    23.55,
-    56.042,
+    24.721,
+    57.912,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "workshop-1-workshop-f3",
+   "label": "Chest (Workshop)",
+   "rect": [
+    25.553,
+    53.731,
     0.75,
     0.75
    ],
@@ -2787,10 +2823,10 @@
    "id": "smithy-1-smiths-room-f0",
    "label": "Cupboard (Smith's room)",
    "rect": [
-    66.44,
-    32.837,
-    2,
-    1
+    66.94,
+    32.337,
+    1,
+    2
    ],
    "flags": {
     "container": true,
@@ -2799,7 +2835,7 @@
     "items": "",
     "fillPlace": "workshop"
    },
-   "rotation": 90.0
+   "rotation": 0.0
   },
   {
    "id": "cottage-2-cottage-0",
@@ -2877,10 +2913,10 @@
    "id": "cottage-2-cottage-f0",
    "label": "Cupboard (Cottage)",
    "rect": [
-    45.074,
-    33.05,
-    2,
-    1
+    45.574,
+    32.55,
+    1,
+    2
    ],
    "flags": {
     "container": true,
@@ -2889,7 +2925,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 90.0
+   "rotation": 0.0
   },
   {
    "id": "cottage-2-cottage-f4",
@@ -3066,6 +3102,24 @@
     "fillPlace": "home"
    },
    "rotation": 270.0
+  },
+  {
+   "id": "cottage-3-cottage-f2",
+   "label": "Chest (Cottage)",
+   "rect": [
+    43.589,
+    14.58,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 180.0
   },
   {
    "id": "cottage-4-cottage-0",
@@ -3248,13 +3302,13 @@
    "rotation": 180.0
   },
   {
-   "id": "cottage-5-cottage-f0",
+   "id": "cottage-5-cottage-f2",
    "label": "Cupboard (Cottage)",
    "rect": [
-    61.353,
-    16.827,
-    2,
-    1
+    59.553,
+    21.217,
+    1.5,
+    0.75
    ],
    "flags": {
     "container": true,
@@ -3263,13 +3317,13 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 270.0
+   "rotation": 180.0
   },
   {
-   "id": "cottage-5-cottage-f3",
+   "id": "cottage-5-cottage-f6",
    "label": "Chest (Cottage)",
    "rect": [
-    61.103,
+    61.053,
     16.327,
     0.75,
     0.75
@@ -4148,13 +4202,13 @@
    "rotation": 150.0
   },
   {
-   "id": "cottage-13-cottage-f0",
+   "id": "cottage-13-cottage-f2",
    "label": "Cupboard (Cottage)",
    "rect": [
-    26.245,
-    37.307,
-    2,
-    1
+    26.853,
+    42.15,
+    1.5,
+    0.75
    ],
    "flags": {
     "container": true,
@@ -4163,14 +4217,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 240.0
+   "rotation": 150.0
   },
   {
-   "id": "cottage-13-cottage-f3",
+   "id": "cottage-13-cottage-f6",
    "label": "Chest (Cottage)",
    "rect": [
-    25.8,
-    37.328,
+    25.757,
+    37.353,
     0.75,
     0.75
    ],
@@ -4277,8 +4331,26 @@
    "id": "workshop-2-workshop-f1",
    "label": "Chest (Workshop)",
    "rect": [
-    34.555,
-    32.824,
+    32.435,
+    33.994,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "workshop-2-workshop-f3",
+   "label": "Chest (Workshop)",
+   "rect": [
+    36.866,
+    34.826,
     0.75,
     0.75
    ],
@@ -4382,6 +4454,24 @@
    "rotation": 105.0
   },
   {
+   "id": "cottage-14-lean-to-f1",
+   "label": "Chest (Lean-to)",
+   "rect": [
+    80.439,
+    32.531,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 105.0
+  },
+  {
    "id": "cottage-15-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -4454,11 +4544,11 @@
    "rotation": 195.0
   },
   {
-   "id": "cottage-15-cottage-f1",
+   "id": "cottage-15-cottage-f0",
    "label": "Cupboard (Cottage)",
    "rect": [
-    78.206,
-    25.001,
+    82.259,
+    24.906,
     1.5,
     0.75
    ],
@@ -4616,7 +4706,7 @@
    "rotation": 15.0
   },
   {
-   "id": "cottage-17-cottage-f3",
+   "id": "cottage-17-cottage-f1",
    "label": "Chest (Cottage)",
    "rect": [
     104.841,
