@@ -195,7 +195,7 @@ Next free block: B3810
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
 | B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3745) | Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
-| B3780-B3809 | No-effect audit: items, gear, traits, settings, tables, world data (used B3780-B3790) | Chronicle |
+| B3780-B3809 | No-effect audit: items, gear, traits, settings, tables, world data (used B3780-B3792) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6449,3 +6449,13 @@ Reverse: empty MORE_ATTITUDE_2.
 WoDX Chronicle. 120 merits and flaws whose effect is a standing rule of play (a blood pool, an immunity, an experience cost, a form, an aging rule) or a matter the Storyteller settles send a card at the moment they matter (feed, fight, social, night), as B3781. The sheet's own numbers are not changed by these cards; the player and Storyteller apply them.
 
 Reverse: empty MORE_PROMPTS_4.
+
+## B3791. The last merits and flaws outside combat change rolls (2026-11-14)
+WoDX Chronicle. 17 more change dice or difficulty: True Faith, Holy Aura, Paranoid, Nightmares, Outsider, Vulgar, Nature's Child, Allergic, Ecstatic, Reputation, Conniver, Inner Strength, Perfect Balance, Harano Prone, Rotting, Fascinating Gaze, One Arm. Read against the same books as B3788, and W20 printed pp. 382-485.
+
+Reverse: empty MORE_EFFECTS_5.
+
+## B3792. Only combat and body traits are left without an effect (2026-11-14)
+WoDX Chronicle. 69 more get a card at their moment, as B3790. What is left (21 traits) changes health levels, wound penalties, soak or movement and belongs in WoDX Combat; Extreme Kink stays without an effect under the age and content rules.
+
+Reverse: empty MORE_PROMPTS_5.
