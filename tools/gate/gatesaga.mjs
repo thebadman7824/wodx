@@ -69,6 +69,8 @@ export async function run() {
       await game.time.advance(8 * DAY);
       await until(() => cards().slice(n0).some(m => /Chapter II: Court and Currents/.test(m.content)), 8000);
       const roads = cards().slice(n0).some(m => /The roads in/.test(m.content));
+      // The card shows before the run's place is saved; wait for the book to stand at Chapter II
+      await until(() => saga().current?.()?.step?.key === "c2", 6000);
       const played2 = await saga().played("red-stone");
       await game.time.advance(8 * DAY);
       await until(() => (saga().state().clocks.ashfield ?? 0) >= 1, 8000);
