@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.74.0 (Powers pass, Vampire: Use a Discipline knows the V20 powers too. After the Dark Ages, the modern powers replace the Dark Ages ones at the same level, each with its card, roll, cost, duration and effects (B3746))
 - 3.73.0 (Powers pass, Mummy: the Hekau window lists every spell and ritual of the six paths the character reaches; picking one fills in its pool, difficulty and Sekhem, the card says what it does and for how long, and what it can apply goes on the effects card (B3745))
 - 3.72.0 (Merits and flaws' own tick boxes (B3780): the roll window offers the situations WoDX Chronicle's trait table names, beside the fixed ones (by voice, a first meeting, a sense), and the roll counts the ticked ones)
 - 3.71.0 (Powers pass, Demon: every evocation's card says what it does, how long, how far and what high Torment makes of it, and puts what it can on the effects card (B3741). Lasting evocations are counted against the permanent Faith, with an option to end the oldest (B3742). The apocalyptic form lists each power's effect and puts its Attribute, initiative and soak changes on the sheet for the scene (B3743). Changeling 20th: Cast a cantrip lists the ninety named cantrips the character's Arts reach; the card says what the chosen one does, for how long and whether it is Wyrd, and puts what it can on the effects card (B3744))

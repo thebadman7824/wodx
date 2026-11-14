@@ -193,7 +193,7 @@ Next free block: B3810
 | B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3719) | Library |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
-| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3745) | Actions |
+| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3746) | Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
 | B3780-B3809 | No-effect audit: items, gear, traits, settings, tables, world data (used B3780-B3790) | Chronicle |
 <!-- decision-index:end -->
@@ -6364,6 +6364,10 @@ How to reverse: drop the cantrip list and card block in c20.js; the roll is unch
 ## B3745. Hekau spells and rituals are chosen by name (2026-11-14)
 WoDX Actions. The Hekau window rolled a path and a level but never said what a spell did. mummy-hekau.js now holds the spells and rituals of all six paths (Mummy: The Resurrection pp. 81-131) in WoDX's own words: type, dice pool, difficulty, Sekhem cost, effect and duration. The window lists the ones the character's paths reach; picking one fills in the path, Trait, level, difficulty, cost and whether it is a ritual, and the card shows what it does. Where an effect can apply (healing, damage, a timed state, a hold, fear, sway) it goes on the effects card: tonics heal a set amount, poisons do a set harm, Greater Weather Magic's lightning rolls ten dice, and table durations follow the successes. Counter-spells (Wisdom of Isis, the Inertions, Name of Hekau) use the Banish keyword, which already covers ending another power, so no new keyword family was needed. Setting the path and level by hand still works.
 How to reverse: drop the named-spell list and card block in mummy.js cast(); the roll is unchanged.
+
+## B3746. V20 Disciplines join the Discipline library (2026-11-14)
+WoDX Actions. Use a Discipline knew only the V20 Dark Ages library, so 96 powers of the modern V20 book (Feral Whispers, Aura Perception, the Necromancy and Thaumaturgy paths, Serpentis, Vicissitude's later levels and others) fell back to the sheet's bare roll. data/disciplines-v20.json now holds them in WoDX's own words with their pool, difficulty, cost, duration and V20 page. In the Dark Ages and the Long Night the window offers the Dark Ages powers alone; in later eras a V20 power takes the place of the Dark Ages power of the same Discipline and level, unless both books give that power the same name. V20 powers use the V20 keyword list on the effects card and timed effects on the token, like the Dark Ages ones.
+How to reverse: stop loading disciplines-v20.json in kindred.js loadData(); the Dark Ages library is unchanged.
 
 ## B3770. Kuei-jin make stone weapons and true jade (2026-11-14)
 WoDX Library, data/wonders-kuei-jin.mjs and scripts/wonders-kuei-jin.mjs. The Item Crafting Desk pick kj2 (full). Kindred of the East has jade talismans only as a Background (pp. 86-87), but the Companion (p. 67) gives the masters of Jade Shintai two powers that make things, Blade of Stone and Taste of Jade. Both are a Kuei-jin kit on the shared wonders registry (B3683), world setting craftKueiJin, on by default like the other kits.
