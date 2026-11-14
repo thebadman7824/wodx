@@ -1407,4 +1407,7 @@ Ben approved everything that was waiting for review ("Approved on all pending re
 | 2026-11-14 | How long "the whole scene" awake by day lasts on the clock (B4891) | An hour of the clock, or until the scene is ended | SCENE_SECONDS in daysleep-rules.js |
 | 2026-11-14 | Does a sleeper hurt by day roll Perception before the Awakening roll? (B4892) | No: being hurt counts as noticed, so only the Road roll is made | onHurt in daysleep.js; the Awaken by day dialog still offers Perception |
 | 2026-11-14 | Heal on rising by itself, or keep the button? (B4893) | By itself, spending only blood above the hunger line, as the button did | Turn off "Heal on rising" |
-| 2026-11-14 | Rötschreck after a sun burn: roll it by itself too? (B4895) | No, it stays a button, because the player chooses whether to spend Willpower | Call api.rotschreck after applySun in sunlight.js |
+| 2026-11-14 | Rötschreck after a sun burn: roll it by itself too? (B4895, B4981) | Yes, per Ben's Automation Desk pick v2: it rolls by itself, and Willpower is spent only for a character marked to in the check's dialog | Turn off "Frenzy and Rötschreck by themselves" |
+| 2026-11-14 | How much Quintessence a mage draws by meditation each day (B4991) | The Avatar's rating, or the Node's when higher, once a day, no roll, never past the wheel's room | drawAll in m20.js |
+| 2026-11-14 | How fast aggravated chimerical wounds heal (B4993) | As lethal on the Chimerical Healing Times, at least a day a level (twelve hours in the Dreaming) | chimericalHealing in c20-rules.js |
+| 2026-11-14 | Which Orpheus projectors regain Vitality an hour (B4998) | Only skimmers, whose Lament grants it; sleepers and ghosts take eight hours | restAll in orpheus.js |

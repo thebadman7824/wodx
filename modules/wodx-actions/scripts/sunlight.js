@@ -167,6 +167,12 @@ export function build(ctx) {
 
     /** Burn a Cainite for some turns of sunlight: Fortitude soaks each turn, the rest aggravated (p. 359). */
     async function applySun(actor, { light = "direct", exposure = 3, turns = 1, why = "", lethal = false, noRotschreck = false } = {}) {
+        // B4985: the sun rots a Kuei-jin by Kindred of the East's own rule (p. 151), not a Cainite's burn
+        if (actor?.system?.settings?.variant === "kindredeast" && ctx.kotSunAuto) {
+            const r = await ctx.kotSunAuto(actor, { turns, direct: light === "direct" });
+            await showBurn(actor, true, r?.rot ? `Rots: ${r.rot}` : "Endures the sun");
+            return r;
+        }
         const fort = ctx.discipline(actor, "Fortitude");
         const diff = S.SOAK_DIFF[light] ?? 10;
         const rolls = [];
@@ -190,8 +196,12 @@ export function build(ctx) {
             if (res?.after) html += `<div class="vta-res">Now ${ctx.healthText(actor, res.after)}${res.condition?.text ? `: <b>${esc(res.condition.text)}</b>` : ""}</div>`;
             await ctx.logEvent?.(actor, `Burned by the sun: ${levels} ${type}.`, "sun");
         }
-        if (!noRotschreck && !actor.system?.conditions?.isfrenzy) html += `<button type="button" class="vta-btn" data-kx="rotschreck" data-actor="${esc(actor.uuid)}" data-arg="${light === "direct" ? "directsun" : "obscuredsun"}">Rötschreck check</button>`;
-        return post(actor, `${actor.name}: sunlight`, html, rolls);
+        const autoFear = !noRotschreck && !actor.system?.conditions?.isfrenzy && (() => { try { return setting("autoBeast") !== false; } catch (e) { return false; } })() && !!ctx.autoBeast;
+        if (!noRotschreck && !actor.system?.conditions?.isfrenzy && !autoFear) html += `<button type="button" class="vta-btn" data-kx="rotschreck" data-actor="${esc(actor.uuid)}" data-arg="${light === "direct" ? "directsun" : "obscuredsun"}">Rötschreck check</button>`;
+        const msg = await post(actor, `${actor.name}: sunlight`, html, rolls);
+        // B4981: the Rötschreck check follows the burn by itself
+        if (autoFear) await ctx.autoBeast({ actor, kind: "fear", provocation: light === "direct" ? "directsun" : "obscuredsun" }).catch(e => console.warn("WoDX | Rötschreck", e));
+        return msg;
     }
 
     async function sunCard(actor, ex, { turns = 1, title = "In the sun", note = "" } = {}) {

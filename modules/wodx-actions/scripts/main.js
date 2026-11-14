@@ -402,6 +402,7 @@ async function readFace({ actor, npc, lie = false } = {}) {
     else game.socket.emit(SOCKET, { action: "straightFace", data: hidden });
     return res;
 }
+const AUTO_HIDE = new Set();
 async function post(actor, title, body, rolls = [], data = null) {
     let flav = "", mode = "off";
     try { mode = setting("flavorText"); } catch (e) { mode = "all"; }
@@ -417,6 +418,8 @@ async function post(actor, title, body, rolls = [], data = null) {
     const content = TR.cardLayout({ title, body: `${body}${mode === "all" ? F.html(flav) : ""}`, line, changes });
     if (flav && mode === "gm") ChatMessage.create({ content: `<div class="vta-card">${F.html(flav)}</div>`, whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: { alias: "WoDX" } });
     const md = { speaker: ChatMessage.getSpeaker({ actor }), content, rolls: rolls.filter(Boolean) };
+    // B4981: a check rolled by itself for a Storyteller's character is the Storyteller's only (standing rule 19)
+    if (actor && AUTO_HIDE.has(actor.id)) { md.whisper = game.users.filter(u => u.isGM).map(u => u.id); md.blind = true; }
     if (rolls.filter(Boolean).length) { md.sound = CONFIG.sounds.dice; if (GEN() < 12) md.type = CONST.CHAT_MESSAGE_TYPES.ROLL; }
     // Cards with prompt buttons (sin, witnesses, Rötschreck after sunlight) need the module's flag to be bound
     if (!data && /data-(kx|sx|wx|vx)=/.test(content)) data = { kind: "buttons" };
@@ -1097,8 +1100,10 @@ export async function frenzy({ actor: a, provocation = "physical", difficulty = 
       <div class="form-group"><label>Difficulty (custom)</label><input type="number" name="diff" value="${difficulty ?? 6}"/></div>
       <div class="form-group"><label>Difficulty modifier (drugs –1, Intimidation powers +n…)</label><input type="number" name="mod" value="0"/></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div>
+      <div class="form-group"><label><input type="checkbox" name="wpAuto" ${flag(actor, "beastWillpower") ? "checked" : ""}/> When these checks roll by themselves, spend Willpower if there is any</label></div>
     </form>`;
     return dialog(`${v.selfcontrol.isInstinct ? "Instinct" : "Frenzy"} check`, content, "Roll", async fd => {
+        await setFlag(actor, "beastWillpower", fd.wpAuto ? true : null);
         if (golconda) return post(actor, `${actor.name} resists frenzy`, `<div class="vta-big good">Golconda: the Beast is mastered: no frenzy.</div>`);
         const p = R.FRENZY_PROVOCATIONS[fd.prov];
         let diff = p?.diff ?? fd.diff;
@@ -1125,8 +1130,10 @@ export async function rotschreck({ actor: a, provocation = "torch" } = {}) {
       <div class="form-group"><label>Difficulty (custom)</label><input type="number" name="diff" value="6"/></div>
       <div class="form-group"><label>Difficulty modifier</label><input type="number" name="mod" value="${dawn}"/></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div>
+      <div class="form-group"><label><input type="checkbox" name="wpAuto" ${flag(actor, "beastWillpower") ? "checked" : ""}/> When these checks roll by themselves, spend Willpower if there is any</label></div>
     </form>`;
     return dialog("Rötschreck check", content, "Roll", async fd => {
+        await setFlag(actor, "beastWillpower", fd.wpAuto ? true : null);
         if (flag(actor, "golconda")) return post(actor, `${actor.name} faces the flame`, `<div class="vta-big good">Golconda: immune to Rötschreck.</div>`);
         if (actor.system?.conditions?.isfrenzy && flag(actor, "frenzyType") !== "fear")
             return post(actor, `${actor.name} faces the flame`, `<div class="vta-big">Already in frenzy: immune to Rötschreck (V20 Dark Ages p. 357).</div>`);
@@ -1183,6 +1190,85 @@ async function beastRoll(actor, d, msg = null) {
     }
     if (msg) await markUsed(msg);
     return post(actor, `${actor.name}: ${fear ? "Rötschreck" : d.kind === "instinct" ? "Instinct" : "Frenzy"} check`, body, [r.roll], data);
+}
+
+/**
+ * B4980-B4981: frenzy and Rötschreck checks rolled by themselves when something provokes them. The difficulty is
+ * worked out as the dialogs do; Willpower is spent when the character is marked to (the dialogs' "when these checks
+ * roll by themselves" box). Holding the Beast off rolls again each turn until it subsides or breaks free (V20 p. 297).
+ * A Storyteller's character's rolls go to the Storyteller only.
+ */
+export async function autoBeast({ actor: a, kind = "frenzy", provocation = null } = {}) {
+    const actor = a?.actor ?? a;
+    if (!actor || !isVampire(actor) || flag(actor, "torpor")) return null;
+    const fear = kind === "fear";
+    if (flag(actor, "golconda")) return null;
+    if (fear && actor.system?.conditions?.isfrenzy && flag(actor, "frenzyType") !== "fear") return null;
+    if (!fear && actor.system?.conditions?.isfrenzy) return null;
+    const v = virtues(actor);
+    let diff, prov, traitDice = 0, traitParts = [];
+    if (fear) {
+        const p = R.ROTSCHRECK_PROVOCATIONS[provocation] ?? R.ROTSCHRECK_PROVOCATIONS.torch;
+        let dawn = 0;
+        try { const at = game.modules.get("wodx-atmosphere"); dawn = at?.active ? Number(at.api?.dread?.rotschreck?.()) || 0 : 0; } catch (e) { dawn = 0; }
+        diff = R.clampDifficulty(n0(p?.diff ?? 6) + dawn + DH.fireStep(actor));
+        prov = p?.label ?? "Fire";
+    } else {
+        const p = R.FRENZY_PROVOCATIONS[provocation] ?? R.FRENZY_PROVOCATIONS.physical;
+        let d0 = p?.diff ?? 6;
+        if (provocation === "atrocity") d0 = 9 - v.conscience.value;
+        const tm = TH.traitMods(actor, ["frenzy"]);
+        const fire = DH.fireStep(actor);
+        diff = R.clampDifficulty(d0 + tm.diff + fire);
+        traitDice = tm.dice; traitParts = fire ? [...(tm.parts ?? []), `Open fire here +${fire} diff`] : tm.parts;
+        prov = p?.label ?? "Frenzy";
+    }
+    const hide = !actor.hasPlayerOwner;
+    if (hide) AUTO_HIDE.add(actor.id);
+    try {
+        let d = { kind: fear ? "fear" : v.selfcontrol.isInstinct ? "instinct" : "frenzy", diff, prov: `${prov} (rolled by itself)`, wp: !!flag(actor, "beastWillpower") && willpower(actor).temp > 0, total: 0, traitDice, traitParts };
+        let msg = null;
+        for (let i = 0; i < 8; i++) {
+            msg = await beastRoll(actor, d);
+            const f = msg?.flags?.[MOD];
+            if (f?.kind !== "beast") break;
+            d = { ...f.d, wp: false };
+        }
+        return msg;
+    } finally { AUTO_HIDE.delete(actor.id); }
+}
+const n0 = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
+
+/**
+ * B4982: rising from torpor when its time is up: a blood point and the Road at 8 by itself; on a failure, the next
+ * night tries again. With no blood, the Storyteller is told the body needs feeding first.
+ */
+export async function autoTorporRise({ actor: a } = {}) {
+    const actor = a?.actor ?? a;
+    const t = actor ? flag(actor, "torpor") : null;
+    if (!t) return null;
+    const rd = road(actor), b = blood(actor);
+    const hide = !actor.hasPlayerOwner;
+    if (hide) AUTO_HIDE.add(actor.id);
+    try {
+        if (b.value < 1) {
+            await setFlag(actor, "torpor", { ...t, retryAt: game.time.worldTime + 86400 });
+            return post(actor, `${actor.name} cannot rise`, `<div class="vta-big bad">No blood in the body: no rising until someone feeds them.</div>`);
+        }
+        await changeBlood(actor, -1);
+        const r = await rollPool(rd.value, 8);
+        let html = rollBlock(`${rd.name} (1 blood spent)`, r);
+        if (r.successes) {
+            await setFlag(actor, "torpor", null); await statusEffect(actor, "unconscious", false); await condition(actor, "torpor", false);
+            await kx().logEvent(actor, "Rises from torpor.", "torpor");
+            await dm().wake(actor, t?.since);
+            html += `<div class="vta-big good">${esc(actor.name)} rises: Crippled; heal or hunt at once.</div>`;
+        } else {
+            await setFlag(actor, "torpor", { ...t, retryAt: game.time.worldTime + 86400 });
+            html += `<div class="vta-big bad">${esc(actor.name)} sleeps on. The next night brings another try.</div>`;
+        }
+        return post(actor, `${actor.name} tries to rise from torpor`, html, [r.roll]);
+    } finally { AUTO_HIDE.delete(actor.id); }
 }
 
 export async function endFrenzy({ actor: a } = {}) {
@@ -2271,7 +2357,8 @@ export async function endStory({ actors } = {}) {
         if (to > w.temp) { await actor.update({ "system.advantages.willpower.temporary": to }); lines.push(`<li><b>${esc(actor.name)}</b>: Willpower ${w.temp} → ${to}</li>`); }
         const c = await hx().newStory(actor);
         if (c) lines.push(`<li>${esc(c)} (a new story, Dark Ages: Inquisitor p. 160)</li>`);
-        if (actor.type === "Hunter" && HX.lineNow() === "reckoning") {
+        // B4997: any imbued with a creed (a Hunter sheet or another type marked in Hunter traits) goes back to the creed's level
+        if ((actor.type === "Hunter" || rx().info(actor).creed) && HX.lineNow() === "reckoning") {
             const ri = rx().info(actor), start = ri.creedDef?.conviction;
             if (start && ri.conviction < start) { await rx().setConviction(actor, start); lines.push(`<li><b>${esc(actor.name)}</b>: Conviction ${ri.conviction} → ${start} (Hunter: The Reckoning p. 138)</li>`); }
         }
@@ -2534,7 +2621,7 @@ function sox() {
 let CXE = null;
 /** Changelings of the later eras (3.9.0, Phase 6h). */
 function cx() {
-    return CXE ??= CXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, background, spendWillpower, notify: m => ui.notifications.warn(m), crowdNear, crowdRules });
+    return CXE ??= CXD.build({ setting, post, rollPool, rollBlock, dialog, setFlag, updateActor, background, spendWillpower, notify: m => ui.notifications.warn(m), crowdNear, crowdRules });
 }
 
 let DXE = null;
@@ -2549,7 +2636,7 @@ function dx() {
 let UXE = null;
 /** The Reborn (3.10.0, Phase 6k). */
 function ux() {
-    return UXE ??= UXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, attr, findAbility, background, spendWillpower, healthTrack, setDamage, applyDamage, notify: m => ui.notifications.warn(m),
+    return UXE ??= UXD.build({ setting, post, rollPool, rollBlock, dialog, setFlag, updateActor, attr, findAbility, background, spendWillpower, healthTrack, setDamage, applyDamage, notify: m => ui.notifications.warn(m),
         traits: a => [...ATTRS.map(k => ({ key: k, label: game.i18n.localize(a.system?.attributes?.[k]?.label || k) || k, value: attr(a, k) })),
             ...abilityList(a).map(x => ({ key: x.key, label: x.name, value: x.value }))] });
 }
@@ -2557,7 +2644,7 @@ function ux() {
 let OXE = null;
 /** The crucible (3.10.0, Phase 6l). */
 function ox() {
-    return OXE ??= OXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, attr, findAbility, spendWillpower, healthTrack, setDamage, applyDamage, notify: m => ui.notifications.warn(m),
+    return OXE ??= OXD.build({ setting, post, rollPool, rollBlock, dialog, setFlag, updateActor, attr, findAbility, spendWillpower, healthTrack, setDamage, applyDamage, notify: m => ui.notifications.warn(m),
         traits: a => [...ATTRS.map(k => ({ key: k, label: game.i18n.localize(a.system?.attributes?.[k]?.label || k) || k, value: attr(a, k) })),
             ...abilityList(a).map(x => ({ key: x.key, label: x.name, value: x.value }))] });
 }
@@ -2565,7 +2652,7 @@ function ox() {
 let ZXE = null;
 /** Mages of the later eras (3.11.0, Phase 6m). */
 function zx() {
-    return ZXE ??= ZXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, spendWillpower, notify: m => ui.notifications.warn(m),
+    return ZXE ??= ZXD.build({ setting, post, rollPool, rollBlock, dialog, setFlag, updateActor, spendWillpower, notify: m => ui.notifications.warn(m),
         observersOf: a => { const t = a?.getActiveTokens?.()[0]; return t ? kx().observersOf(t, { secret: "mage", exclude: [a.id] }) : null; }, revealed: (a, o) => kx().revealed(a, o),
         quiet: () => qtx() });
 }
@@ -2610,7 +2697,7 @@ const withActor = f => async (o = {}) => {
 let SXE = null;
 /** The sunlight system (3.3.0). */
 function sx() {
-    return SXE ??= SX.build({ post, rollPool, rollBlock, dialog, setting, setFlag, attr, discipline, applyDamage, healthText, statusEffect,
+    return SXE ??= SX.build({ post, rollPool, rollBlock, dialog, setting, setFlag, attr, discipline, applyDamage, healthText, statusEffect, autoBeast: o => autoBeast(o), kotSunAuto: (a, o) => qx().sunAuto(a, o),
         logEvent: (a, t, k) => kx().logEvent(a, t, k), notify: m => ui.notifications.warn(m),
         clockActors: () => { const on = new Set((game.scenes?.active?.tokens ?? []).map(t => t.actor).filter(Boolean)); return [...new Set([...on, ...game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner)])]; } });
 }
@@ -2916,12 +3003,12 @@ async function createMacros() {
 async function gainDerangement(actor, cause, why) {
     try { return await game.modules.get("wodx-chronicle")?.api?.derangements?.gain?.(actor, cause, why); } catch (e) { console.warn("WoDX Actions | derangement", e); return null; }
 }
-const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
+const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard, autoBeast, autoTorporRise,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
     getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.89.0", effects: { powerPlan: EFX.powerPlan, planOf: EFX.planOf, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
-    m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Place: () => zx().placeDialog(), m20Quiet: withActor(a => qtx().panel(a)), quiet: { state: a => qtx().state(resolveActor(a)), act: (a, fd) => qtx().act(resolveActor(a), fd), rules: QR, onRefreshToken: QX.onRefreshToken }, consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
+    m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Draw: withActor(a => zx().drawDialog(a)), m20Place: () => zx().placeDialog(), m20Quiet: withActor(a => qtx().panel(a)), quiet: { state: a => qtx().state(resolveActor(a)), act: (a, fd) => qtx().act(resolveActor(a), fd), rules: QR, onRefreshToken: QX.onRefreshToken }, consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
     // Dark Ages mages (3.7.0)
     daCast: withActor(a => mx().cast(a)), daMage: withActor(a => mx().sheet(a)), daQuintessence: withActor(a => mx().quintessence(a)),
     daCountermagic: withActor(a => mx().counter(a)), daGuide: withActor(a => mx().guide(a)), daCertamen: withActor(a => mx().certamen(a)),
@@ -2937,13 +3024,13 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     // Changelings of the later eras (3.9.0)
     c20Cantrip: withActor(a => cx().cantrip(a)), c20Unleash: withActor(a => cx().unleash(a)), c20Invoke: withActor(a => cx().invoke(a)),
     c20Trigger: withActor(a => cx().trigger(a)), c20Epiphany: withActor(a => cx().epiphany(a)), c20Bedlam: withActor(a => cx().bedlam(a)),
-    c20ColdIron: withActor(a => cx().coldIron(a)), c20Mists: withActor(a => cx().mists(a)), c20Info: a => cx().info(resolveActor(a)), c20Everyday: () => blx().panel(), everydayBanality: { endScene: sc => blx().endScene(sc), panel: () => blx().panel(), rules: BLX },
+    c20ColdIron: withActor(a => cx().coldIron(a)), c20Mists: withActor(a => cx().mists(a)), c20Place: () => cx().placeDialog(), c20Info: a => cx().info(resolveActor(a)), c20Everyday: () => blx().panel(), everydayBanality: { endScene: sc => blx().endScene(sc), panel: () => blx().panel(), rules: BLX },
     demonEvoke: withActor(a => dx().evoke(a)), demonForm: withActor(a => dx().form(a)), demonRevelation: withActor(a => dx().revelation(a)), demonReap: withActor(a => dx().reap(a)),
     demonThralls: withActor(a => dx().thralls(a)), demonSin: withActor(a => dx().sin(a)), demonKindness: withActor(a => dx().kindness(a)), demonHeal: withActor(a => dx().heal(a)),
     demonHoly: withActor(a => dx().holy(a)), demonName: withActor(a => dx().named(a)), demonIllusion: withActor(a => dx().illusion(a)), demonInfo: a => dx().info(resolveActor(a)),
     demonDaily: () => dx().daily(), demonRules: DR, isDemon: a => DXD.isDemon(resolveActor(a)),
     kotFeed: withActor(a => qx().feed(a)), kotSpend: withActor(a => qx().spend(a)), kotNature: withActor(a => qx().nature(a)), kotDharma: withActor(a => qx().dharmaRoll(a)),
-    kotDemon: withActor(a => qx().demon(a)), kotRise: withActor(a => qx().rise(a)), kotSun: withActor(a => qx().sun(a)), kotHeal: withActor(a => qx().heal(a)),
+    kotDemon: withActor(a => qx().demon(a)), kotRise: withActor(a => qx().rise(a)), kotRiseAuto: a => qx().riseAuto(resolveActor(a) ?? a), kotSunAuto: (a, o) => qx().sunAuto(resolveActor(a) ?? a, o), kotSun: withActor(a => qx().sun(a)), kotHeal: withActor(a => qx().heal(a)),
     kotSight: withActor(a => qx().sight(a)), kotSetup: withActor(a => qx().setup(a)), kotInfo: a => qx().info(resolveActor(a)), kotRules: KER, isKotE: a => KXD.isKotE(resolveActor(a)),
     mummyCast: withActor(a => ux().cast(a)), mummySekhem: withActor(a => ux().regain(a)), mummyBalance: withActor(a => ux().balance(a)), mummyOffense: withActor(a => ux().offense(a)),
     mummyResurrect: withActor(a => ux().resurrect(a)), mummyVeil: withActor(a => ux().veil(a)), mummySetup: withActor(a => ux().setup(a)), mummyInfo: a => ux().info(resolveActor(a)),
@@ -2953,7 +3040,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     shift: withActor(a => GX.isShifter(a) ? gx().shift(a) : pm().shift(a)), regen: (o = {}) => pm().regen(o.actor ?? resolveActor()),
     // Werewolf and Fera (Phase 6b)
     shiftForm: withActor(a => gx().shift(a)), rageRoll: withActor((a, o) => gx().rageRoll(a, o)), spendRage: withActor(a => gx().spendRage(a)),
-    garouEndFrenzy: withActor(a => gx().endFrenzy(a)), remainActive: withActor(a => gx().remainActive(a)), meditate: withActor(a => gx().meditate(a)),
+    garouEndFrenzy: withActor(a => gx().endFrenzy(a)), remainActive: withActor(a => gx().remainActive(a)), remainActiveAuto: withActor(a => gx().remainActiveAuto(a)), meditate: withActor(a => gx().meditate(a)),
     useGift: withActor(a => gx().useGift(a)), learnGift: withActor(a => gx().learnGift(a)), performRite: withActor(a => gx().performRite(a)),
     summonSpirit: withActor(a => gx().summonSpirit(a)), useFetish: withActor(a => gx().useFetish(a)), accomplishment: withActor(a => gx().accomplishment(a)),
     battleScar: withActor(a => gx().battleScar(a)), curse: withActor(a => gx().curse(a)), kinfolk: withActor(a => gx().kinfolk(a)),
@@ -3081,7 +3168,7 @@ function garouHooks() {
     Hooks.on("updateWorldTime", () => {
         if (moonBusy || !game.user.isGM || chronicle()?.isSkipping?.()) return;
         moonBusy = true;
-        gx().moonRise().catch(e => console.error("WoDX |", e)).finally(() => { moonBusy = false; });
+        gx().moonRise().then(() => setting("autoMeditate") !== false ? gx().meditateDaily() : null).catch(e => console.error("WoDX |", e)).finally(() => { moonBusy = false; });
     });
     Hooks.on("wodxSkipEnd", () => { if (game.user.isGM) gx().moonRise().catch(e => console.error("WoDX |", e)); });
     const lastRound = new Map();
@@ -3133,7 +3220,7 @@ function kindredHooks() {
     Hooks.on("updateWorldTime", () => {
         if (fadeBusy || !game.user.isGM || chronicle()?.isSkipping?.()) return;
         fadeBusy = true;
-        mx().fadeAll().then(() => fx().daily()).then(() => dx().daily()).then(() => ux().daily()).then(() => zx().shedAll()).catch(e => console.error("WoDX |", e)).finally(() => { fadeBusy = false; });
+        mx().fadeAll().then(() => fx().daily()).then(() => dx().daily()).then(() => ux().daily()).then(() => zx().shedAll()).then(() => wx().restAll()).then(() => ox().restAll()).then(() => cx().healChimerical()).catch(e => console.error("WoDX |", e)).finally(() => { fadeBusy = false; });
     });
     const sunRound = new Map();
     Hooks.on("updateCombat", (combat, changed) => {

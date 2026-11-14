@@ -36,6 +36,15 @@ export function floatLocal({ tokens = [], word = "", color = "#ffffff" } = {}) {
     } catch (e) { /* no canvas */ }
 }
 
+/** A word floats over an actor's tokens for everyone (show, don't tell). */
+export function floatOver(actor, word, color = "#ffffff") {
+    const tokens = (actor?.getActiveTokens?.() ?? []).map(t => t.id ?? t.document?.id).filter(Boolean);
+    if (!tokens.length || !word) return;
+    const p = { tokens, word, color };
+    floatLocal(p);
+    try { game.socket?.emit?.("module.wodx-actions", { action: "float", ...p }); } catch (e) { /* offline */ }
+}
+
 export function build(ctx) {
     const { rollPool, rollBlock, setting, setFlag } = ctx;
     const on = () => { try { return setting("daySleep") !== false; } catch (e) { return true; } };
@@ -83,6 +92,11 @@ export function build(ctx) {
         await ctx.statusEffect(a, "sleep", false);
         float(a, rising ? "Rises" : "Wakes", "#ffd27f");
         let healed = "";
+        // B4984: a Kuei-jin rises with Chi, not blood (Kindred of the East pp. 91, 139)
+        if (rising && a?.system?.settings?.variant === "kindredeast") {
+            try { await ctx.api?.()?.kotRiseAuto?.(a); } catch (e) { console.warn("WoDX | Kuei-jin rising", e); }
+            return "rises, and the evening's Chi is spent";
+        }
         if (rising && setting("riseHeal") !== false) {
             const d = a.system?.health?.damage ?? {};
             if (n(d.bashing) + n(d.lethal)) {

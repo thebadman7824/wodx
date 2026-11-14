@@ -598,6 +598,13 @@ export function build(ctx) {
     /* ---------------- Prompts ---------------- */
 
     const kbtn = (k, actor, label, arg = "") => `<button type="button" class="vta-btn" data-kx="${k}" data-actor="${esc(actor?.uuid ?? "")}" data-arg="${esc(arg)}">${esc(label)}</button>`;
+    /** B4980: the Beast's check rolls by itself (setting "autoBeast"), or the old button. Returns the button html or "". */
+    const autoBeastOn = () => setting("autoBeast") !== false;
+    function beastCheck(actor, kind, prov, label) {
+        if (!autoBeastOn()) return kbtn(kind === "fear" ? "rotschreck" : "frenzy", actor, label, prov);
+        Promise.resolve().then(() => ctx.api().autoBeast?.({ actor, kind, provocation: prov })).catch(e => console.warn("WoDX | Beast check", e));
+        return `<p class="wodx-quiet">The check is rolled by itself.</p>`;
+    }
     async function prompt(actor, title, html, { gmOnly = false } = {}) {
         return ChatMessage.create({ content: `<div class="vta-card"><h3>${esc(title)}</h3>${html}</div>`, whisper: gmOnly ? gmIds() : ownerIds(actor),
             speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
@@ -620,17 +627,21 @@ export function build(ctx) {
             if (total(after) <= total(before)) return null;
             if (kind === "kindred" && !actor.getFlag(MOD, "torpor")) {
                 const prov = K.woundProvocation(before, after);
-                if (prov && !actor.system?.conditions?.isfrenzy) bits.push(`<p>${prov === "lifethreat" ? "Their existence is in danger" : "A grievous wound"}: the Beast stirs (VtDA20 p. 357).</p>${kbtn("frenzy", actor, "Frenzy check", prov)}`);
+                if (prov && !actor.system?.conditions?.isfrenzy) bits.push(`<p>${prov === "lifethreat" ? "Their existence is in danger" : "A grievous wound"}: the Beast stirs (VtDA20 p. 357).</p>${beastCheck(actor, "frenzy", prov, "Frenzy check")}`);
                 const t = ctx.healthTrack(actor);
                 const cond = ctx.R.condition(after, t.max, "vampire");
                 if (cond.key === "torpor" && setting("autoTorpor")) await enterTorpor(actor, { cause: "wounds" });
             }
             if (kind === "lupine") {
                 const t = ctx.healthTrack(actor);
-                if (total(after) >= t.max && total(before) < t.max && n(after.aggravated) < t.max) bits.push(`<p>Beyond Incapacitated: Rage can keep the shapechanger on their feet once a scene.</p>${kbtn("riseRage", actor, "Rise on Rage")}`);
+                if (total(after) >= t.max && total(before) < t.max && n(after.aggravated) < t.max) {
+                    // B4986: rising on Rage rolls by itself (setting autoRiseRage)
+                    if (setting("autoRiseRage") !== false) Promise.resolve().then(() => ctx.api().remainActiveAuto?.({ actor })).catch(e => console.warn("WoDX | Rage", e));
+                    else bits.push(`<p>Beyond Incapacitated: Rage can keep the shapechanger on their feet once a scene.</p>${kbtn("riseRage", actor, "Rise on Rage")}`);
+                }
             }
         } else {
-            if (kind === "kindred" && fireSun && !actor.getFlag(MOD, "torpor")) bits.push(`<p>Burned by fire or sun: Rötschreck (VtDA20 p. 357).</p>${kbtn("rotschreck", actor, "Rötschreck check", "burned")}`);
+            if (kind === "kindred" && fireSun && !actor.getFlag(MOD, "torpor")) bits.push(`<p>Burned by fire or sun: Rötschreck (VtDA20 p. 357).</p>${beastCheck(actor, "fear", "burned", "Rötschreck check")}`);
             if (attacker && ["mortal", "hunter", "mage", "beast", "ghoul"].includes(kind)) {
                 const t = ctx.healthTrack(actor);
                 const dead = n(after?.lethal) + n(after?.aggravated) >= t.max && n(before?.lethal) + n(before?.aggravated) < t.max;
@@ -650,8 +661,8 @@ export function build(ctx) {
     async function onBlood(actor, before, after) {
         if (!isActiveGM() || !setting("eventPrompts") || P.detectProfile(actor) !== "kindred" || actor.getFlag(MOD, "torpor")) return null;
         const sc = n(actor.system?.advantages?.virtues?.selfcontrol?.permanent);
-        if (K.hungerCrossed(before, after, sc)) return prompt(actor, `${actor.name} hungers`, `<p>Blood ${after}, under ${7 - sc}: the sight, smell or taste of blood can drive ${esc(actor.name)} to frenzy (V20 Dark Ages p. 357).</p>${kbtn("frenzy", actor, "Frenzy check (sight of blood)", "sightblood")}`);
-        if (n(after) === 0 && n(before) > 0) return prompt(actor, `${actor.name} is empty`, `<p>No blood left: ${esc(actor.name)} is ravenous; hunger frenzy is likely, and they can't rise without blood (V20 Dark Ages p. 340).</p>${kbtn("frenzy", actor, "Frenzy check (hunger)", "hunger")}`);
+        if (K.hungerCrossed(before, after, sc)) return prompt(actor, `${actor.name} hungers`, `<p>Blood ${after}, under ${7 - sc}: the sight, smell or taste of blood can drive ${esc(actor.name)} to frenzy (V20 Dark Ages p. 357).</p>${beastCheck(actor, "frenzy", "sightblood", "Frenzy check (sight of blood)")}`);
+        if (n(after) === 0 && n(before) > 0) return prompt(actor, `${actor.name} is empty`, `<p>No blood left: ${esc(actor.name)} is ravenous; hunger frenzy is likely, and they can't rise without blood (V20 Dark Ages p. 340).</p>${beastCheck(actor, "frenzy", "hunger", "Frenzy check (hunger)")}`);
         return null;
     }
 
@@ -752,6 +763,11 @@ export function build(ctx) {
         for (const a of game.actors.filter(x => x.type !== "Group" && x.getFlag(MOD, "torpor"))) {
             const t = a.getFlag(MOD, "torpor");
             const until = t.until ?? K.torporUntil(t.since ?? 0, n(a.system?.advantages?.path?.permanent), { voluntary: t.voluntary, days: t.days });
+            // B4982: with "Rise from torpor by itself" on, the try is made on the date and each night after a failure
+            if (setting("autoTorporRise") !== false) {
+                if (now >= until && now >= n(t.retryAt)) { if (t.until !== until) await a.setFlag(MOD, "torpor", { ...t, until }); await ctx.api().autoTorporRise?.({ actor: a }); }
+                continue;
+            }
             if (now >= until && !t.reminded) {
                 await a.setFlag(MOD, "torpor", { ...t, until, reminded: true });
                 await prompt(a, `${a.name} may rise`, `<p>The torpor's time has passed. Rising costs a blood point and a Road roll (8).</p>${kbtn("torpor", a, "Attempt to rise")}`);
@@ -956,6 +972,17 @@ export function registerSettings(register) {
     register("naturalHealing", "Heal with the clock", "As the Chronicle clock advances, mortals and ghouls heal by the chart (VtDA20 p. 352) and shapechangers regenerate; a whispered card lists it.", Boolean, true);
     register("eventPrompts", "Prompts from what happens", "Whispered cards with a button when a wound, fire, sunlight or hunger provokes the Beast, a killing may be a sin, or a shapechanger falls below Incapacitated.", Boolean, true);
     register("daySleep", "The day's sleep", "Cainites fall asleep by themselves when the sun rises and rise at their own hour after sunset (Humanity or Road sets it), with the sleep marker on the token; one marked to stay awake rolls the Road at dawn, and a sleeper who is hurt rolls to wake (V20 pp. 262-263, 311).", Boolean, true);
+    register("autoBeast", "Frenzy and Rötschreck by themselves", "When a wound, hunger, blood, fire or the sun provokes the Beast, the check rolls by itself (Willpower spent when the character is marked to, in the check's dialog), holding on each turn until it subsides or breaks free. Off: a card with a button.", Boolean, true);
+    register("autoTorporRise", "Rise from torpor by itself", "When a torpor's time is up, the blood point and the Road roll (8) are made by themselves, and again each night after a failure. Off: a reminder with a button.", Boolean, true);
+    register("autoRiseRage", "Rise on Rage by itself", "A shapechanger falling past Incapacitated rolls Rage at 8 to stay up by itself, once a scene (W20 pp. 145, 256; DA:W p. 91). A character can be marked not to. Off: a card with a button.", Boolean, true);
+    register("autoMeditate", "Meditation by itself", "A shapechanger marked in the Meditate dialog rolls Wits + Enigmas for Gnosis once a day as the clock passes, outside a fight (DA:W p. 92; W20 p. 146).", Boolean, true);
+    register("autoSekhem", "A mummy's day for Sekhem by itself", "A mummy marked in the Sekhem dialog spends each day in Osiris's Blessing or the haven's meditation and rolls it by itself after the Gift of Ra (Mummy: The Resurrection pp. 143-144).", Boolean, true);
+    register("autoQuintessence", "A mage's Quintessence by itself", "A mage marked to meditate draws the Avatar's rating (or a Node's) in Quintessence once a day by itself (M20 p. 330).", Boolean, true);
+    register("autoPurify", "Purifying the Scourge on the clock", "In the Sorcerers Crusade, the days alone in meditation are kept on the clock and the Scourge clears by itself when they pass (Sorcerers Crusade p. 249).", Boolean, true);
+    register("autoChimerical", "Chimerical wounds heal by themselves", "Chimerical damage heals with the clock by Changeling 20th's times, halved where the scene is marked a freehold, fast in the Dreaming (Changeling 20th pp. 290-291).", Boolean, true);
+    register("autoCorpus", "Corpus mends by itself", "A wraith's bashing Corpus heals a level an hour with the clock (Wraith 20th p. 295).", Boolean, true);
+    register("autoFetter", "Fetters give Willpower by themselves", "At the end of a scene, a wraith sharing it with a token marked as their Fetter rolls the Fetter at 6 for Willpower (Wraith 20th p. 308).", Boolean, true);
+    register("autoVitality", "Vitality returns with rest", "Orpheus: a Vitality point each eight hours of the clock (an hour for a skimmer) up to the starting rating, outside a fight (Orpheus pp. 191-192).", Boolean, true);
     register("riseHeal", "Heal on rising", "As a Cainite rises from the day's sleep, blood above the hunger line heals bashing and lethal wounds by itself.", Boolean, true);
     register("autoTorpor", "Torpor from wounds", "A Cainite whose health track fills with lethal damage sinks into torpor for as long as their Road sets, with a reminder on the date they may rise (VtDA20 p. 350).", Boolean, true);
     register("autoDelirium", "The Delirium when a Crinos is seen", "When a shapechanger in Crinos moves or changes where mortal tokens can see it, the GM gets a card to run the Delirium for them.", Boolean, true);

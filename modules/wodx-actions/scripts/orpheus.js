@@ -12,6 +12,7 @@
  * Built by main.js with its helpers (ctx). Pure rules: orpheus-rules.js.
  */
 import * as O from "./orpheus-rules.js";
+import { floatOver } from "./daysleep.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as OH from "./orpheus-horrors.js";
@@ -252,5 +253,32 @@ export function build(ctx) {
         return post(actor, `${actor.name}, of the crucible`, body);
     }
 
-    return { info, horror, vitality, harm, spite, project, setup, isOrpheus, rules: O };
+    /**
+     * B4998: Vitality returns with rest by itself, a point each eight hours of the clock (an hour for a skimmer resting
+     * in the body, p. 122), up to the starting rating (pp. 191-192). Not during a fight the character is in; any loss starts the
+     * count again, as the dialog says.
+     */
+    async function restAll(actors = game.actors?.filter?.(isOrpheus) ?? []) {
+        if (!game.user?.isGM || ctx.setting?.("autoVitality") === false) return [];
+        const now = game.time?.worldTime ?? 0, lines = [];
+        for (const a of actors) {
+            const i = info(a), clock = i.f.restClock;
+            if (i.vitality.now >= i.vitality.start) { if (clock) await saveFlag(a, { restClock: null }); continue; }
+            const fighting = game.combat?.started && game.combat.combatants?.some?.(c => c.actorId === a.id);
+            if (!clock || clock.v > i.vitality.now || fighting) { await saveFlag(a, { restClock: { since: now, v: i.vitality.now } }); continue; }
+            const fast = i.lament === "skimmer"; // the skimmer's bonus: an hour a point resting in the body (p. 122)
+            const step = fast ? 3600 : 8 * 3600;
+            const hours = (now - n(clock.since)) / 3600;
+            if (now - n(clock.since) < step) continue;
+            const v = O.rest(i.vitality.now, i.vitality.start, hours, fast);
+            const used = (v - i.vitality.now) * step;
+            await setVitality(a, v);
+            await saveFlag(a, { restClock: { since: n(clock.since) + used, v } });
+            lines.push(`<b>${esc(a.name)}</b>: Vitality ${i.vitality.now} → ${v}`);
+            floatOver(a, `+${v - i.vitality.now} Vitality`, "#8fd18f");
+        }
+        if (lines.length) await ChatMessage.create({ content: `<div class="vta-card"><h3>Rest</h3><ul>${lines.map(l => `<li>${l}</li>`).join("")}</ul><p class="wodx-quiet">${REF} pp. 191–192</p></div>`, whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: { alias: "WoDX" }, flags: { [MOD]: { info: true } } });
+        return lines;
+    }
+    return { restAll, info, horror, vitality, harm, spite, project, setup, isOrpheus, rules: O };
 }
