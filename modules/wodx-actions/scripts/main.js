@@ -78,6 +78,7 @@ import * as AIM from "./aim.js";
 import * as DMK from "./debts-marks.js";
 import * as DR_DEBTS from "./debts-rules.js";
 import * as DR_BEAST from "./beast-marks-rules.js";
+import * as NAT from "./nature-rules.js";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -2100,6 +2101,39 @@ async function statusEffect(actor, id, active) {
 }
 
 /** Clear scene-length effects: Quickening, ignoring pain, daytime activity. */
+/* B3916: acting to one's Nature gives a Willpower point back (V20), never above the rating; the card has an Undo. */
+async function natureRegain(actor) {
+    const w = willpower(actor), cue = NAT.cueFor(actor.system?.nature);
+    const after = NAT.regain(w.temp, w.perm);
+    if (after === w.temp) return post(actor, `${actor.name} acts to their Nature`, `<div class="vta-note">Willpower is already at its rating (${w.perm}): nothing to give back.</div>`);
+    await updateActor(actor, { "system.advantages.willpower.temporary": after });
+    return post(actor, `${actor.name} acts to their Nature`, `<div class="vta-sub">${esc(cue?.label ?? "Nature")}: ${esc(cue?.cue ?? "")}</div><div class="vta-big good">A Willpower point back: ${w.temp} to ${after}.</div>${btn("natureUndo", "Undo")}`,
+        [], { kind: "nature", actor: actor.uuid, before: w.temp, after });
+}
+
+/** The Nature button: the cue for the character's Nature, and a point back when they acted to it. */
+async function nature({ actor } = {}) {
+    actor = actor ?? resolveActor();
+    if (!actor) return null;
+    const cue = NAT.cueFor(actor.system?.nature);
+    if (!cue) return ui.notifications.info(`${actor.name} has no Nature on the sheet yet.`);
+    const w = willpower(actor);
+    const ok = await foundry.applications.api.DialogV2.confirm({ window: { title: `${actor.name}: ${cue.label}` }, classes: ["wodx-dialog"],
+        content: `<p><b>${esc(cue.label)}</b>: ${esc(cue.cue)}</p><p>Willpower ${w.temp} of ${w.perm}. Did they act to their Nature in a way that mattered?</p>`,
+        yes: { label: "Yes: a point back" }, no: { label: "Not this time" }, rejectClose: false });
+    return ok ? natureRegain(actor) : null;
+}
+
+/** The end-of-scene card's Nature list: one line per character with a Nature, each with a button for the Storyteller. */
+async function natureCard(list) {
+    const rows = list.filter(a => a?.isOwner && a.hasPlayerOwner && NAT.cueFor(a.system?.nature)).slice(0, 12);
+    if (!rows.length) return null;
+    const lines = rows.map((a, i) => { const c = NAT.cueFor(a.system.nature), w = willpower(a);
+        return `<li><b>${esc(a.name)}</b>, ${esc(c.label)} (Willpower ${w.temp}/${w.perm}): ${esc(c.cue)} ${w.temp < w.perm ? btn(`nature${i}`, "A point back") : ""}</li>`; });
+    return post(null, "Nature at the end of the scene", `<div class="vta-sub">Did anyone act to their Nature this scene? The Storyteller gives the point back.</div><ul>${lines.join("")}</ul>`,
+        [], { kind: "natureScene", natures: rows.map(a => a.uuid) });
+}
+
 export async function endScene({ actors, fromChronicle = false } = {}) {
     const list = actors ?? (canvas.tokens.controlled.length ? canvas.tokens.controlled.map(t => t.actor) : game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner && a.isOwner));
     if (!fromChronicle && game.user.isGM) await wx().newScene({ quiet: true }); // Passions can be tapped again; Hysteria ends
@@ -2125,6 +2159,7 @@ export async function endScene({ actors, fromChronicle = false } = {}) {
         if (flag(actor, "daytime")) { await actor.unsetFlag(MOD, "daytime"); bits.push("daytime activity ends"); }
         if (bits.length) lines.push(`<li><b>${esc(actor.name)}</b>: ${bits.join(", ")}</li>`);
     }
+    await natureCard(list);
     if (fromChronicle && !lines.length) return null;
     return post(null, "End of scene", lines.length ? `<ul>${lines.join("")}</ul>` : "<p>Nothing to clear.</p>");
 }
@@ -2770,6 +2805,13 @@ async function onButton(msg, action) {
     const actor = d.actor ? await fromUuid(d.actor) : null;
     const owner = actor?.isOwner || game.user.isGM;
     if (!owner) return ui.notifications.warn("Only the character's owner or the GM can do that.");
+    const nat = /^nature(\d+)$/.exec(action);
+    if (nat && d.kind === "natureScene") {
+        const who = await fromUuid(d.natures?.[num(nat[1])] ?? "");
+        if (!who || !game.user.isGM) return null;
+        await markUsed(msg, action);
+        return natureRegain(who);
+    }
     switch (action) {
         case "extended": return continueExtended(msg, d);
         case "beast": return beastRoll(actor, d.d, msg);
@@ -2778,6 +2820,8 @@ async function onButton(msg, action) {
         case "sin": await markUsed(msg, "sin"); return sin({ actor });
         case "rotschreck": await markUsed(msg, "rotschreck"); return rotschreck({ actor, provocation: d.rotProv });
         case "feedUndo": return feedUndo(msg, d);
+        case "natureUndo": { await markUsed(msg, "natureUndo"); if (num(willpower(actor).temp) === num(d.after)) await updateActor(actor, { "system.advantages.willpower.temporary": num(d.before) });
+            return post(actor, `${actor.name}: Nature point taken back`, `<div class="vta-res">Willpower back to ${num(d.before)}.</div>`); }
         case "damage": { await markUsed(msg, "damage"); const r = await applyDamage(actor, d.type, d.levels); return r?.after ? post(actor, `${actor.name} takes damage`, `<div class="vta-res">${d.levels} ${d.type}: ${healthText(actor, r.after)}</div>`) : null; }
     }
 }
@@ -2932,6 +2976,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     // The wraith line (3.4.0)
     useArcanos: withActor(a => wx().useArcanos(a)), passion: withActor(a => wx().passion(a)), fetter: withActor(a => wx().fetter(a)),
     memoriam: withActor(a => wx().memoriam(a)), healCorpus: withActor(a => wx().healCorpus(a)), caul: withActor(a => wx().caul(a)),
+    nature: withActor(a => nature({ actor: a })),
     derangement: withActor(a => game.modules.get("wodx-chronicle")?.api?.derangements?.hold?.(a)),
     shadow: withActor(a => wx().shadow(a)), shadowWhisper: withActor(a => wx().whisper(a)), shadowguide: withActor(a => wx().shadowguide(a)),
     harrowing: withActor((a, o) => wx().harrowing(a, o)), hysteria: () => wx().hysteria(), maelstrom: () => wx().maelstrom(), newWraithScene: () => wx().newScene(), newSession: () => wx().newSession(),
