@@ -195,7 +195,7 @@ Next free block: B3810
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
 | B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3748) | Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
-| B3780-B3809 | The no-effect audit: cyberware in the body (used B3780-B3798) | Library |
+| B3780-B3809 | The no-effect audit: cyberware reaches the senses (used B3780-B3799) | Senses |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6496,3 +6496,8 @@ Reverse: drop the weapon entries in data/gear-effects.mjs.
 WoDX Library. The shields of V20 Dark Ages (p. 350: parry difficulty and the attacker's added difficulty) and Sorcerers Crusade (p. 202: Buckler +1, War Shield +2 to the attacker), the two parrying weapons (dagger 5, sword 6 with +1 against close attacks only), the Great War's heavy guns (penetration dice, blast dice, naval damage rating, from pp. 70 to 77) and its armour (penetration difficulty 4 to 10, ship protection 5 to 10) carry those figures as flags (shield, parryWith, heavy, hardArmor), with a line on each item saying what they do. The trench mortar fires as light artillery's high explosive (3 dice), as the book says. WoDX Combat reads them in its own change.
 
 Reverse: drop withArms from tools/library/build-gear.mjs and rebuild gear.json.
+
+## B3799. Installed sense cyberware counts in Senses rolls (2026-11-14)
+WoDX Senses. traitsOf reads WoDX Library's api.cyber.installedFx(actor).senses, and powersFor lays it in: a dark-sight piece takes away the darkness step for sight (as Eyes of the Cat; a power that already does it keeps its name), and each sense piece makes its sense one step easier, shown by name among the roll's reasons. Pieces count only while installed (equipped). The steps add up as powers do; the floor on difficulty still holds.
+
+Reverse: drop the gear line in traitsOf and the two lines in powersFor.
