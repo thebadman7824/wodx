@@ -12,3 +12,4 @@ import "./wonders-demon.mjs";
 import "./wonders-hunter.mjs";
 import "./wonders-kindred.mjs";
 import "./wonders-kuei-jin.mjs";
+import "./wonders-hedge.mjs";

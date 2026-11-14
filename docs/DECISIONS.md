@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3810
+Next free block: B3820
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -196,6 +196,7 @@ Next free block: B3810
 | B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3749) | Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
 | B3780-B3809 | The no-effect audit: cyberware reaches the senses (used B3780-B3799) | Senses |
+| B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6505,3 +6506,23 @@ Reverse: drop withArms from tools/library/build-gear.mjs and rebuild gear.json.
 WoDX Senses. traitsOf reads WoDX Library's api.cyber.installedFx(actor).senses, and powersFor lays it in: a dark-sight piece takes away the darkness step for sight (as Eyes of the Cat; a power that already does it keeps its name), and each sense piece makes its sense one step easier, shown by name among the roll's reasons. Pieces count only while installed (equipped). The steps add up as powers do; the floor on difficulty still holds.
 
 Reverse: drop the gear line in traitsOf and the two lines in powersFor.
+
+## B3810. Hedge magic Enchantment makes real talismans (2026-11-14)
+WoDX Library (scripts/wonders-hedge.mjs). Ben picked the full build on the Item Crafting Desk (m4). Anyone with the Path of Enchantment as a hedge path (a numina Power item, as WoDX Actions reads it) can make talismans up to the level of the path: hedge sorcerers, hunters of the Hunters Hunted era, Kinfolk and ghouls alike. The book is Sorcerer (Revised), pdf 72-75, read from the PC's text pull. The talisman levels follow its five tiers, in WoDX's own words. A world setting (craftHedge, on) turns the line off.
+
+Reverse: drop the import of wonders-hedge.mjs from scripts/wonder-lines.mjs.
+
+## B3811. The work and its one roll (2026-11-14)
+WoDX Library. The object is crafted first (the Storyteller's Crafts roll, narrated). The Enchantment then runs as a long task: two days a level of work (the book gives one to three), then a single Intelligence + Occult roll, or Intelligence + Science for a technosorcerer, at difficulty 4 + level, one less for a mastered Enchantment, with a point of Willpower paid on the roll (Storyteller's perRoll, B3689). The task allows one roll (maxRolls 1).
+
+Reverse: daysOf and taskFor in wonders-hedge.mjs.
+
+## B3812. A fine object helps; a failed roll wastes the Willpower (2026-11-14)
+WoDX Library. The book says an exceptional crafting result may make the Enchantment easier; WoDX takes 1 off the difficulty for it (house), never below 3. A failed or botched roll leaves the object ordinary, and the Willpower stays spent.
+
+Reverse: difficultyOf in wonders-hedge.mjs.
+
+## B3813. What a talisman holds (2026-11-14)
+WoDX Library. The book's examples become seven kinds of power: Attribute dots while carried (the item's worn bonus), dice to one kind of roll, difficulty off one kind of roll, damage dice, soak dice, a ward against magic, or the Storyteller's own. Levels 1 and 2 give at most 2, level 3 at most 3, levels 4 and 5 up to 5. A talisman works always, once a day, once per success on the roll (then it is spent) or once. Its keeping, the condition most book talismans carry, is the Storyteller's to write.
+
+Reverse: POWERS, USES and LEVELS in wonders-hedge.mjs.
