@@ -27,6 +27,7 @@ const PE = await import(A("scripts/path-effects.js"));
 const DAE = await import(A("scripts/mage-da-effects.js"));
 const BR = await import(A("scripts/book-rituals.js"));
 const D = await import(A("scripts/demon-rules.js"));
+const DE = await import(A("scripts/demon-evocations.js"));
 const H = await import(A("scripts/hunter-rules.js"));
 const R = await import(A("scripts/reckoning-rules.js"));
 const O = await import(A("scripts/orpheus-rules.js"));
@@ -36,6 +37,7 @@ const MD = await import(A("scripts/mage-da-rules.js"));
 const M20 = await import(A("scripts/m20-rules.js"));
 const MU = await import(A("scripts/mummy-rules.js"));
 const C20 = await import(A("scripts/c20-rules.js"));
+const CA = await import(A("scripts/c20-arts.js"));
 const CB = await import(pathToFileURL(path.join(ROOT, "modules/wodx-combat/scripts/rules.js")).href);
 
 /** Keywords that only tell the user something; they do not change the game. */
@@ -92,8 +94,11 @@ for ( const r of MD.ROTES ) {
   add("Mage (Dark Ages)", r.f, r.name, { status: applyingSpec(s) ? "applies" : "card", kw: s?.kw ? [s.kw] : [], page: `p. ${r.page}`, how: s ? `rote effect spec (${s.kind})` : "rote text only" });
 }
 /* -- Changeling: C20 Arts (cantrip roll by Art and level; no power names, no effect text) */
-for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.c20) )
-  add("Changeling (C20)", "Arts", e.n, { status: "roll", kw: e.k, passive: !!e.p, page: "C20", how: "cantrip roll by Art level and Realm; the power itself is not named" });
+for ( const [id, c] of Object.entries(CA.CANTRIPS) ) {
+  const st = c.dice || (applyingSpec(c.spec) && !INFO.has(c.spec.kw) && E.KEYWORDS[c.spec.kw]?.tier !== "st") ? "applies" : "card";
+  add("Changeling (C20)", C20.ARTS[c.art].label, `${"•".repeat(c.level)} ${c.name}`, { status: st, kw: c.spec?.kw ? [c.spec.kw] : [], page: `C20 p. ${C20.ARTS[c.art].page}`,
+    how: `named in Cast a cantrip: card (effect, duration, type)${st === "applies" ? `; effects card ${c.dice ? "damage dice" : c.spec.kind}` : ""}` });
+}
 /* -- Changeling: Dark Ages Fae (cantrips by Dominion and level) */
 for ( const [id, d] of Object.entries(F.DOMINIONS) ) for ( let l = 1; l <= 5; l++ )
   add("Fae (Dark Ages)", `Dominion of ${d.label}`, `${d.label} ${l}`, { status: "roll", page: `DA:Fae p. ${d.page ?? "?"}`, how: "cantrip roll and reach; the cantrip's effect is the player's text" });
@@ -102,11 +107,20 @@ const dtfNames = new Set();
 for ( const [id, l] of Object.entries(D.LORES) ) for ( const [k, e] of (l.evo ?? []).entries() ) {
   dtfNames.add(slug(e.name));
   const kw = PK.keywordsOf("dtf", slug(e.name));
-  add("Demon (DtF)", `Lore of ${l.label.replace(/^the /, "")}`, `${"•".repeat(k + 1)} ${e.name}`, { status: "roll", kw: kw?.keywords ?? [], page: `DtF p. ${l.page}`, how: "Evoke rolls and spends Faith/Torment; no effect text, no active-evocation limit" });
+  const c = DE.evocationCard(id, k + 1);
+  const st = !c ? "roll" : applyingSpec(c.spec) && !INFO.has(c.spec.kw) && E.KEYWORDS[c.spec.kw]?.tier !== "st" ? "applies" : "card";
+  add("Demon (DtF)", `Lore of ${l.label.replace(/^the /, "")}`, `${"•".repeat(k + 1)} ${e.name}`, { status: st, kw: c?.spec?.kw ? [c.spec.kw] : kw?.keywords ?? [], page: `DtF p. ${l.page}`,
+    how: c ? `evocation card (effect, duration, range, high Torment)${st === "applies" ? `; effects card ${c.spec.kind}` : ""}; running count against permanent Faith` : "Evoke rolls only" });
 }
-for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.dtf) ) if ( !dtfNames.has(id) )
+const dtfFull = Object.values(D.LORES).flatMap(l => (l.evo ?? []).map(e => e.name.toLowerCase()));
+// A short name in the keyword list ("Manipulate", "Reach Across") is one of the Lore table's evocations, already counted
+for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.dtf) ) if ( !dtfNames.has(id) && !dtfFull.some(f => f.startsWith(String(e.n).toLowerCase())) )
   add("Demon (DtF)", "Lores (keyword list only)", e.n, { status: "none", kw: e.k, page: "DtF", how: "named in the keyword list, not in the Lore table" });
-add("Demon (DtF)", "Apocalyptic form", "Form powers (per House visage)", { status: "roll", page: "DtF pp. 162, 254", how: "Manifest rolls; form powers are free text from the sheet, nothing fills in from the table" });
+for ( const l of Object.values(D.LORES) ) for ( const nm of [...(l.form ?? []), ...(l.high ?? [])] ) {
+  const fp = DE.formPower(nm, l.visage);
+  const sheet = fp && (fp.attrs || fp.init || fp.armor);
+  add("Demon (DtF)", `Apocalyptic form: ${l.visage}`, nm, { status: !fp ? "roll" : sheet ? "applies" : "card", page: `DtF p. ${l.formPage}`, how: !fp ? "name only" : sheet ? "form puts it on the sheet for the scene" : "form card text" });
+}
 /* -- Hunter: the Reckoning edges (reckoning.js) */
 for ( const e of R.EDGES ) {
   const kw = PK.keywordsOf("htr", slug(e.name));

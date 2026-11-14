@@ -15,7 +15,7 @@ const inv = JSON.parse(fs.readFileSync(out, "utf8"));
 const line = l => inv.rows.filter(r => r.line === l);
 
 /** Ceilings: raise none of them. Lower each when a line is built (powers pass, desk order). */
-const MOST_ROLL_ONLY = 510, MOST_NOTHING = 20;
+const MOST_ROLL_ONLY = 306, MOST_NOTHING = 15;
 
 test("every line WoDX has powers for is in the list", () => {
   assert.ok(inv.rows.length >= 2100, `only ${inv.rows.length} powers listed`);
