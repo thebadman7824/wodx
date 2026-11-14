@@ -46,7 +46,7 @@ export async function run() {
   if ( game.world.id !== "rothenstein-wodx" ) { ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"}); return save(R); }
   const S = game.modules.get(ST)?.api, N = game.modules.get(NPC)?.api, X = game.modules.get(IX)?.api, C = game.modules.get("wodx-chronicle")?.api;
   const has = k => game.settings.settings.has(k);
-  const KEEP = [[ST, "rumours"], [ST, "tales"], [ST, "institutionState"], [ST, "institutions"], [ST, "havenWorks"], [ST, "havenTurn"], [ST, "omens"], [ST, "omenState"],
+  const KEEP = [[ST, "markets"], [ST, "rumours"], [ST, "tales"], [ST, "institutionState"], [ST, "institutions"], [ST, "havenWorks"], [ST, "havenTurn"], [ST, "omens"], [ST, "omenState"],
     [ST, "patronage"], [ST, "artistState"], [NPC, "memory"], [NPC, "memoryTurn"], [IX, "evidence"], [IX, "evidenceOn"], [IX, "caseBoard"]].filter(([m, k]) => has(`${m}.${k}`));
   const keep = KEEP.map(([m, k]) => [m, k, foundry.utils.deepClone(game.settings.get(m, k))]);
   const msgsBefore = new Set(game.messages.map(m => m.id));
@@ -77,8 +77,8 @@ export async function run() {
     ok("2. downtime projects", budget === 6 && (!tUp || tUp.goal === 8) && (!tCo || tCo.goal === 6), {budget, upgradeGoal: tUp?.goal, commissionGoal: tCo?.goal, saveApi: !!S.tasks.save});
 
     // 3. Memory
-    await MEM.remember(rival, pc, {kind: "insult", weight: 3, text: "laughed at in front of the guild"});
-    await MEM.remember(rival, pc, {kind: "insult", weight: 3, text: "laughed at again"});
+    await MEM.remember(rival, pc, {kind: "insult", weight: -3, text: "laughed at in front of the guild"});
+    await MEM.remember(rival, pc, {kind: "insult", weight: -3, text: "laughed at again"});
     const bal = MEM.balance(rival, pc);
     await MEM.turn({force: true});
     await sleep(400);
@@ -92,8 +92,11 @@ export async function run() {
     ok("4. tales", !!tale && view.length > 0, {text: tale?.text ?? null, communities: view.length});
 
     // 5. Institutions
+    // A market of its own on the gate scene, so a freshly reset world with no markets still has a town
+    const mk = S.upkeep.markets.state();
+    await game.settings.set(ST, "markets", {...mk, markets: [...(mk.markets ?? []), {id: "gate-wsys", name: "WoDX gate town", scenes: [scene.id], links: []}]});
     await I.reconcile();
-    const list = I.state().list;
+    const list = I.ofTown("gate-wsys");
     ok("5. institutions", list.length > 0 && list.every(i => Array.isArray(i.seats)), {count: list.length, kinds: [...new Set(list.map(i => i.kind))]});
 
     // 6. Haven works

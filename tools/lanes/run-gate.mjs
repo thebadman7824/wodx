@@ -138,6 +138,8 @@ try {
     report(`DRIFT on lane ${lane.id}: no gate was run (see ${path.join(laneDir(lane), "drift.json")})`);
   } else {
     console.log(`Lane ${lane.id} matches the repo and its clean fingerprint.`);
+    const copied = copyFixtures(repo, lane.dataPath);
+    if ( copied.length ) console.log(`Copied ${copied.length} gate fixture(s) into Data/wodx-gate: ${copied.join(", ")}`);
     for ( const gate of gates ) {
       const limit = limitOf(gate);
       extendLock(lane, Date.now() + limit + 5 * 60000);
@@ -239,3 +241,25 @@ try {
 }
 report(`exit ${code} on lane ${lane.id}`);
 process.exit(code);
+
+
+/**
+ * The sample files gates read from Data/wodx-gate (B3462): the map sidecars and settlement records in
+ * tools/mapgen/samples. A lane reset from a clean copy can lack them, and gateadopt then stops at its second step
+ * ("Cannot read properties of null (reading 'cells')"). Copies each one that is missing or differs; returns their names.
+ */
+function copyFixtures(repo, dataPath) {
+  const from = path.join(repo, "tools", "mapgen", "samples"), to = path.join(dataPath, "Data", "wodx-gate");
+  if ( !fs.existsSync(from) ) return [];
+  fs.mkdirSync(to, {recursive: true});
+  const out = [];
+  for ( const f of fs.readdirSync(from) ) {
+    if ( !/\.(wodx|settlement)\.json$/.test(f) ) continue;
+    const src = path.join(from, f), dst = path.join(to, f);
+    const a = fs.readFileSync(src);
+    if ( fs.existsSync(dst) && Buffer.compare(a, fs.readFileSync(dst)) === 0 ) continue;
+    fs.writeFileSync(dst, a);
+    out.push(f);
+  }
+  return out;
+}

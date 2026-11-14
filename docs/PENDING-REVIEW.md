@@ -1262,6 +1262,15 @@ Ben approved everything that was waiting for review ("I approve everything pendi
 | 2026-11-13 | Peoples without names, second desk: the Algonquian coast (desk https://claude.ai/artifact/MiX1eYZE8JxsSjGqiiWswt, picks in its `verdicts` collection) | Ben picked all recommended (22:20 UTC), built as the next row; recommended: three peoples (Lenape, New England Algonquian, Powhatan) from recorded names, the Lenape clan from the mother, names staged as for the Haudenosaunee, shared with the Haudenosaunee before contact and a share after, women as for the Haudenosaunee | Pick on the desk |
 | 2026-11-13 | Algonquian coast names as built from Ben's desk picks (all recommended, 22:20 UTC; B3510 to B3512) | Lenape 91 men's names with clans from the mother; New England 114 men's and 17 women's; Powhatan 54 and 6; fewer than 300 each since the records reached hold no more; women without a recorded name as "A woman of the Turtle clan" or "A woman of Pokanoket"; later family names from the reserve rolls (house reading); eastern North America before contact Haudenosaunee 40, Lenape 25, New England 25, Powhatan 10 | Edit data/people-algonquian.mjs or the mixes in world-rules.mjs |
 
+## Approved by Ben, 14 November 2026, 01:42 UTC (Rothenstein Saga desk, every recommendation)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-14 | Rothenstein saga: how long the first book runs (B3661) | Five years, October 1197 to 1202, one chapter per old session with an interlude between each | Change the red-stone dates in modules/wodx-chronicle/data/saga-rothenstein.mjs |
+| 2026-11-14 | Rothenstein saga: keep the old ten-night pages (B3662) | Kept unchanged; each chapter links to its page | Write new pages and point the chapters at them |
+| 2026-11-14 | Rothenstein saga: books after the four stories (B3663) | Fifteen more books from the prologue (880) to 2030, plus one on the future branch | Edit or remove books in saga-rothenstein.mjs |
+| 2026-11-14 | Rothenstein saga: the long clocks and endings (B3664, B3665) | Four clocks (Husbandman, Ashfield, Church's eye, Charter); the first book's ending (sealed, severed, taken) changes later words | Edit SAGA_CLOCKS, SAGA_ENDINGS and the steps' by |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |
@@ -1285,3 +1294,6 @@ Ben approved everything that was waiting for review ("I approve everything pendi
 | 2026-11-13 | Sentences and their marks (B3610-B3611) | Tiers by gravity (light up to 2, middle up to 5); sentence lengths as in B3610; records a register before 1880, a file to 1969, a database from 1970. | Edit TIERS, MARKS and recordKind in law-punish-rules.mjs. |
 | 2026-11-13 | Papers and the undying (B3612-B3613) | Record dates and weights as in B3612; new self difficulty 5 to 9 and goal 2 plus the paper weight; notice 3 percent plus 2.5 per weight point a decade. | Edit RECORDS, newSelfProject and noticeChance in law-papers-rules.mjs. |
 | 2026-11-13 | Standing before the law (B3614-B3615) | Unfree +2 trial and a heavier sentence, clergy -1 and lighter, nobles -2 and lighter, wealthy -1; end dates by law family as in B3614. Default as history. | Edit ENDS and standingOf in law-standing-rules.mjs, or set the world setting. |
+| 2026-11-13 | Taxes on the month's upkeep (B3616-B3617) | Usual share 15 in the hundred to 35 by 1980 (by family), kept by a dodger; caught at 0.3 x catch + 1.2% per records weight, at most 50% a month, less a fifth per tax-office rank; twelve dated levies with extra shares 3 to 30 in the hundred; a levy adds to the tax a town feels each week, eight times when crushing, at most 1.6. | Edit SHARE, LEVIES, catchChance and townTaxFrom in law-tax-rules.mjs. |
+| 2026-11-13 | Regime change (B3618-B3619) | New form of government: officers of six kinds swept at 50 in the hundred (x 0.75 to 1.25 by rank), old heat, outlawry and banishment lapse; new ruler: the ruler's officers at 25; a won rising: four kinds in the town at 60, no amnesty; elections every 4 years (5 under common law) from the family's year, Manipulation + Politics difficulty 6 (+1 at the top ranks, +1 from 1950). | Edit SWEEP, ELECT_FROM, ELECT_EVERY and electionRequest in law-regime-rules.mjs. |
+| 2026-11-13 | The law of the Future Darkness (B3620-B3621) | Seven speculative rows 2026-2075 on the Future Darkness branch only; scored lands catch 0.6 and bribe 4, corporate lands catch 0.5 and bribe 3; the corporate war 2050-2056; erasure as a grave sentence. | Edit FUTURE_ROWS in law-future-rules.mjs. |

@@ -57,9 +57,11 @@ function besiegedIds(markets) {
   try { for ( const b of Battles.list() ) if ( b.kind === "siege" && !b.over ) { const m = TR.townOfPlace(b.place || b.war?.place, markets, sceneName); if ( m ) out.add(m.id); } } catch (e) { /* no battles */ }
   return out;
 }
-function ctxFor(m, sieges) {
+function ctxFor(m, sieges, {town = null, year = 0} = {}) {
   const shut = m.traders.length ? m.traders.filter(t => t.shut).length / m.traders.length : 0;
-  const taxes = (m.moves ?? []).filter(v => v.type === "tax").reduce((s, v) => s + v.rate, 0);
+  let taxes = (m.moves ?? []).filter(v => v.type === "tax").reduce((s, v) => s + v.rate, 0);
+  // B3616: a levy of the land (WoDX Chronicle's taxes) weighs on the town too; a crushing one most of all
+  try { const law = chron()?.law?.tax; if ( law ) taxes += law.rules.townTaxFrom(law.here(regionOfMarket(m, town), year || undefined)); } catch (e) { /* no taxes of the land */ }
   return {foodSupply: MK.supplyOf(m, "food"), foodIndex: MK.indexOf(m, "food") * (1 + MV.taxOn(m, "food")), fuelIndex: MK.indexOf(m, "fuel"),
     taxes, closedRoads: Object.keys(m.unsafe ?? {}).length, shutShare: shut, besieged: sieges.has(m.id)};
 }
@@ -135,7 +137,7 @@ export async function run({force = false, reason = ""} = {}) {
   const events = [], food = new Set();
   for ( let i = 0; i < due.due; i++ ) {
     const at = base + (i + 1) * MT.WEEK, d = dateAt(at);
-    const r = TR.weekTowns(st, mst.markets, {year: d.year, month: d.month, ctxFor: m => ctxFor(m, sieges),
+    const r = TR.weekTowns(st, mst.markets, {year: d.year, month: d.month, ctxFor: m => ctxFor(m, sieges, {town: st.towns?.[m.id] ?? null, year: d.year}),
       regionOf: t => regionOfMarket(MK.marketById(mst, t.id), t), latOf: (t, region) => WORLD_REGIONS[region]?.lat ?? latitude(),
       randFor: id => seeded(`${id}:${at}:${st.turns}`), sickFor: sickFor()});
     st.turns = (st.turns ?? 0) + 1;
@@ -188,7 +190,10 @@ async function shortBread(id) {
 
 /** A big event: rumours from the town's traders, a line in the log, and the hook for other modules. */
 async function tell(e) {
-  Hooks.callAll("wodxTown", {town: e.town, kind: e.kind, text: e.text, big: e.big});
+  // B3618: with the town's name and region, so WoDX Chronicle can ask whether a rising wins
+  let name = "", region = "";
+  try { const m = MK.marketById(Markets.state(), e.town); name = m?.name ?? ""; region = regionOfMarket(m, state().towns?.[e.town]); } catch (err) { /* name and region are optional */ }
+  Hooks.callAll("wodxTown", {town: e.town, kind: e.kind, text: e.text, big: e.big, name, region});
   if ( !e.big ) return;
   try { await log({kind: "note", text: ev(e)}); } catch (err) { /* log is optional */ }
   if ( setting("rumourNetwork") === false ) return;
@@ -250,6 +255,21 @@ async function onBattle({battle, step} = {}) {
   if ( !n ) return;
   const r = await landNow([n], battle.name || "the battle");
   // A battle reaches a town once, whatever is undone or fought on after
+  const s2 = state();
+  if ( s2.towns[m.id] ) { s2.towns[m.id].seen = [...s2.towns[m.id].seen, key].slice(-40); await save(s2); }
+  return r;
+}
+
+/** A Rothenstein saga step that changes its town (hook wodxSaga with `town`; B3670). Once per step. */
+async function onSaga(p = {}) {
+  if ( !isActiveGM() || !p.town || !p.where ) return null;
+  const m = TR.townOfPlace(p.where, Markets.state().markets, sceneName);
+  if ( !m ) return null;
+  const key = `saga:${p.book}:${p.step}`;
+  if ( state().towns[m.id]?.seen?.includes(key) ) return null;
+  const n = TR.sagaEvent(p.town, m.id, p.title ?? "");
+  if ( !n ) return null;
+  const r = await landNow([n], p.title ? `the saga (${p.title})` : "the saga");
   const s2 = state();
   if ( s2.towns[m.id] ) { s2.towns[m.id].seen = [...s2.towns[m.id].seen, key].slice(-40); await save(s2); }
   return r;
@@ -344,6 +364,7 @@ export async function setupTowns() {
   Hooks.on("wodxSkipEnd", () => { if ( isActiveGM() ) run().catch(e => console.error(`${MOD} | towns`, e)); });
   Hooks.on("wodxEventFired", e => { onEventFired(e).catch(err => console.error(`${MOD} | towns`, err)); });
   Hooks.on("wodxBattle", p => { onBattle(p).catch(err => console.error(`${MOD} | towns`, err)); });
+  Hooks.on("wodxSaga", p => { onSaga(p).catch(err => console.error(`${MOD} | towns`, err)); });
   Hooks.on("renderChatMessageHTML", (message, el) => {
     const html = el?.[0] ?? el;
     const f = message.flags?.[MOD]?.townTurn;
@@ -357,4 +378,4 @@ export async function setupTowns() {
 
 /** B3420: the town at each settlement age, for the chronicle rebuild's ages step (recipe ages). */
 export const atAges = (id, ages = []) => TR.townAtAges(state().towns[id] ?? null, ages);
-export const api = () => ({open: townsDialog, edit: editTown, state, of, ofScene, run, undo, atAges, rules: TR});
+export const api = () => ({open: townsDialog, edit: editTown, state, of, ofScene, run, undo, atAges, saga: onSaga, rules: TR});

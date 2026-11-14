@@ -1802,6 +1802,8 @@ Evening fix: the remade Kessler map had lost the living room's wooden floor (Ben
 
 The map preview (tools/mapgen/render_preview.py) draws a map with the slim packs' own pictures, shrunk to a quarter: terrain blend, floors, paths and fences, objects by layer at real size and turn with shadows, walls cut for doors and windows, then light. Ben agreed to copying the pictures out of the 8 slim packs; the copy stays private in project files. `check_map.py --preview out.png` draws it and counts any picture the slim packs lack as a problem. Unit test test_render_preview.py, run from furnishing.test.mjs.
 
+First look with the preview (Kessler): grass showed through inside the barn, byre, coop and sty, a rum barrel stood in a 1197 house, and the stalls looked bare. Now the farm's terrain is beaten earth under every building, beasts' rooms get straw bedding on the floor (layer 50, counted as floor like a rug), and rum, whisky, tobacco, coffee, tea, potatoes, tomatoes and maize wait for the early modern age. The preview also showed the village and town maps use 47 packs that are not in Ben's slim Dungeondraft folder; Ben agreed to add them. Big maps are previewed at a smaller scale so they fit in memory.
+
 
 ## 2026-11-13: the Traits that follow from the others (Creation 0.26.0, B3000-B3004)
 

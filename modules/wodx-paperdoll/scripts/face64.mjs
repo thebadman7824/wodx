@@ -2,6 +2,7 @@ import * as P from "./face64-rules.mjs";
 import {healthLevel} from "./doll-rules.mjs";
 import {FEATURES, featuresFor, rollFeatures} from "./face64-features.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as SEEN from "./face64-seen.mjs";
 
 /**
  * WoDX Paperdoll 0.16.0: talking faces (B2790-B2796). When an NPC speaks to a character through WoDX NPC's Talk, the
@@ -177,6 +178,7 @@ function onRender(msg, el) {
   wrap.append(c);
   const body = el.querySelector(".message-content") ?? el;
   body.prepend(wrap);
+  if ( talk && pc ) readButton(wrap, c, msg, npc, pc, tokDoc, talk);
   const live = PLAYING.get(msg.id);
   if ( live && !live.stopped ) return live.join(c);
   const fresh = Date.now() - (msg.timestamp ?? 0) < 20000 && !PLAYED.has(msg.id);
@@ -184,6 +186,34 @@ function onRender(msg, el) {
   if ( !(fresh && mode === "move") ) return;
   PLAYED.add(msg.id); PLAYING.set(msg.id, t);
   t.play(talk?.said ?? body.textContent ?? "");
+}
+
+/* ---- Paperdoll 0.26.0 (B3444): reading the face ---- */
+const READS = "faceReads";
+/**
+ * Under a talk line's face, for the player of the character spoken to: "Read their face", once for each line (WoDX
+ * Actions rolls Perception + Empathy against the speaker's Manipulation + Subterfuge). Won, the face shows its true
+ * feeling for a moment, and flickers when the line was a lie.
+ */
+function readButton(wrap, c, msg, npc, pc, tokDoc, talk) {
+  const A = game.modules.get("wodx-actions")?.active ? game.modules.get("wodx-actions").api : null;
+  if ( !A?.readFace || !pc.isOwner || game.user.isGM && pc.hasPlayerOwner ) return;
+  const done = Array.isArray(pc.flags?.[MOD]?.[READS]) ? pc.flags[MOD][READS] : [];
+  const b = Object.assign(document.createElement("button"), {type: "button", className: "wodx-face64-read", textContent: done.includes(msg.id) ? "Face read" : "Read their face"});
+  b.disabled = done.includes(msg.id);
+  b.title = "Perception + Empathy against their Manipulation + Subterfuge, once for this line";
+  b.addEventListener("click", async ev => {
+    ev.preventDefault(); b.disabled = true;
+    await pc.setFlag(MOD, READS, [...done, msg.id].slice(-50));
+    const res = await A.readFace({actor: pc, npc, lie: !!talk.lie});
+    b.textContent = "Face read";
+    if ( !res?.face ) return;
+    const live = PLAYING.get(msg.id); live?.stop();
+    const level = healthLevel(npc.system?.health);
+    drawCanvas(npc, {expr: res.face, canvas: c, tokDoc, level});
+    setTimeout(() => drawCanvas(npc, {expr: "neutral", canvas: c, tokDoc, level}), 1400);
+  });
+  wrap.append(b);
 }
 
 /* ---- The Storyteller's switch for a Kindred's fangs ---- */
@@ -256,8 +286,17 @@ export function startFaces() {
 }
 
 /** api.faces: draw a face, read its look, or play one in a canvas of your own. */
+/**
+ * Paperdoll 0.26.0 (B3443): the marks on this face a mortal sees and cannot explain away, as labels. A mask over the
+ * face (the figure's face or head piece) or Obfuscate hides them.
+ */
+export function uncanny(actor, tokDoc = null) {
+  if ( !actor ) return [];
+  const hidden = SEEN.masked(actor.flags?.[MOD]?.figure?.slots) || !!actor.statuses?.has?.("wodx-obfuscated");
+  return SEEN.uncannyMarks(specOf(actor, tokDoc), FEATURES, {state: stateOf(actor), hidden});
+}
 export const faceApi = {
-  rules: P, features: FEATURES, spec: specOf, state: stateOf, canvas: drawCanvas, reaction: reactionOf, pickFeatures, portrait: facePortrait, inNet,
+  rules: P, features: FEATURES, spec: specOf, uncanny, seen: SEEN, state: stateOf, canvas: drawCanvas, reaction: reactionOf, pickFeatures, portrait: facePortrait, inNet,
   play(canvas, actor, text, {expr = "neutral", rest = "neutral", tokDoc = null} = {}) {
     const S = specOf(actor, tokDoc); if ( !S || !canvas ) return null;
     const t = new Talker(canvas, S, {level: healthLevel(actor.system?.health), expr, rest, state: stateOf(actor), net: inNet(actor)}); t.play(text); return t;

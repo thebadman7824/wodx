@@ -3476,7 +3476,7 @@
    }
   },
   {
-   "id": "townhouse-9-back-room-f0",
+   "id": "townhouse-9-back-room-f1",
    "label": "Cupboard (Back room)",
    "rect": [
     14.68,
@@ -3488,23 +3488,6 @@
     "container": true,
     "kind": "cabinet",
     "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   }
-  },
-  {
-   "id": "townhouse-9-back-room-f2",
-   "label": "Chest (Back room)",
-   "rect": [
-    16.32,
-    11.18,
-    1,
-    1
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
     "items": "",
     "fillPlace": "home"
    }
@@ -5408,6 +5391,23 @@
    }
   },
   {
+   "id": "cottage-27-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    50.82,
+    39.68,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
    "id": "cottage-31-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -5789,40 +5789,6 @@
     39.68,
     1.0,
     1.0
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   }
-  },
-  {
-   "id": "cottage-53-cottage-f2",
-   "label": "Chest (Cottage)",
-   "rect": [
-    16.43,
-    43.57,
-    0.75,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   }
-  },
-  {
-   "id": "cottage-53-cottage-f4",
-   "label": "Chest (Cottage)",
-   "rect": [
-    16.57,
-    39.68,
-    0.75,
-    0.75
    ],
    "flags": {
     "container": true,

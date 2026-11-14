@@ -16,7 +16,7 @@ const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 export const TIERS = {
   light: ["fine", "penance", "pillory", "flogging", "bamboo", "confiscation"],
   middle: ["prison", "hard-labour", "banishment", "transportation", "galleys", "camp", "maiming", "outlawry", "outcaste", "enslave"],
-  grave: ["hanging", "death-state", "burning", "camp", "transportation", "galleys", "hard-labour", "prison", "outlawry"]
+  grave: ["hanging", "death-state", "burning", "erasure", "camp", "transportation", "galleys", "hard-labour", "prison", "outlawry"]
 };
 /** Which tier a set of deeds earns: light up to 2, middle up to 5, grave beyond. */
 export function tierOf(deeds = []) {
@@ -34,6 +34,7 @@ export const MARKS = {
   transportation: {kind: "time", words: "Transportation overseas", years: [7, 14], away: true},
   banishment: {kind: "banished", words: "Banished from the land"}, outlawry: {kind: "outlaw", words: "Outlawed: anyone may kill them"},
   maiming: {kind: "brand", words: "Branded"}, outcaste: {kind: "record", words: "Put out of caste"}, enslave: {kind: "time", words: "Sold into slavery", years: [5, 40]},
+  erasure: {kind: "outlaw", words: "Erased: no name, no accounts, no rights"},
   hanging: {kind: "death", words: "Condemned to death"}, "death-state": {kind: "death", words: "Condemned to death"}, burning: {kind: "death", words: "Condemned to the fire"}
 };
 

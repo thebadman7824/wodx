@@ -133,7 +133,7 @@ function svgTexture(key, svg) {
 }
 
 function label(layer, text, x, y, colour, size = 14) {
-  const style = {fontFamily: "Signika, sans-serif", fontSize: size, fill: `#${(colour >>> 0).toString(16).padStart(6, "0")}`, stroke: {color: "#000000", width: 3}, strokeThickness: 3, wordWrap: true, wordWrapWidth: 260};
+  const style = {fontFamily: "Signika, sans-serif", fontSize: size, fill: `#${(colour >>> 0).toString(16).padStart(6, "0")}`, stroke: 0x000000, strokeThickness: 3, wordWrap: true, wordWrapWidth: 260};
   const t = typeof layer.circle === "function" ? new PIXI.Text({text, style}) : new PIXI.Text(text, style);
   t.anchor?.set?.(0.5, 0); t.x = x; t.y = y;
   layer.addChild(t);

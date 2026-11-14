@@ -19,6 +19,7 @@ import * as Rumours from "./rumours.mjs";
 import {MOD, esc, chron, npc, isActiveGM, isPC, gmIds, setting, log} from "./core.mjs";
 import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
 import {lawOf} from "../../wodx-chronicle/scripts/law-rules.mjs";
+import {sweepSeats} from "../../wodx-chronicle/scripts/law-regime-rules.mjs";
 import {influenceOf} from "./ventures.mjs";
 
 const T_CLIMB = `${MOD}.climb`, T_LEVER = `${MOD}.lever`;
@@ -43,7 +44,7 @@ function townInfo(m) {
   try { faith = faithFor(region, yearNow()) || "western"; } catch (e) { /* western */ }
   let law = "", order = null;
   try { const l = lawOf(region, yearNow()); law = l.family; order = l.order; } catch (e) { /* no law of the land */ }
-  return {town: m.id, name: m.name, people: Number(t?.people) || 1000, faith, law, order, year: yearNow()};
+  return {town: m.id, name: m.name, region, people: Number(t?.people) || 1000, faith, law, order, year: yearNow()};
 }
 
 /** Open what each town should have now, close what has had its day. Returns the events. */
@@ -63,6 +64,34 @@ export function seatsOf(id) {
   const out = [];
   for ( const i of state().list ) { if ( i.closed ) continue; const b = I.bestSeat(i, id); if ( b ) out.push({inst: i.id, name: i.name, kind: i.kind, rank: b.rank, title: I.ranksOf(i.kind, yearNow(), i.faith, i.law)[b.rank], pawn: b.pawn}); }
   return out;
+}
+
+/**
+ * B3618: a turn of rule (WoDX Chronicle's regime change) sweeps holders out of the institutions of its kinds: in a
+ * town when it names one (a rising), else in every town of its region; only: just that character's seats (an election).
+ */
+export async function onRegimeTurn({region = "", kinds = [], chance = 0.5, town = null, only = null, note = ""} = {}) {
+  if ( !isActiveGM() || !on() || !kinds?.length ) return [];
+  const s = state(), markets = Markets.state()?.markets ?? [], gone = [];
+  const regionOf = id => { const m = markets.find(x => x.id === id); try { return m ? townInfo(m).region : ""; } catch (e) { return ""; } };
+  for ( const i of s.list ) {
+    if ( i.closed || !kinds.includes(i.kind) ) continue;
+    if ( town ? i.town !== town : (!only && regionOf(i.town) !== region) ) continue;
+    const r = sweepSeats(i.seats, {chance, only});
+    if ( !r.gone.length ) continue;
+    i.seats = r.seats;
+    i.log = [...i.log, {at: now(), text: `${note || "A turn of rule"}: ${r.gone.map(g => g.name).join(", ")} lose their seats.`}].slice(-30);
+    for ( const g of r.gone ) gone.push({...g, inst: i.name});
+  }
+  if ( !gone.length ) return [];
+  await save(s);
+  for ( const g of gone ) {
+    const a = game.actors.get(g.pawnOf || g.id);
+    if ( a && isPC(a) ) await log({kind: "note", actor: a.id, name: a.name, attention: "Seat lost", text: `${g.name} loses the seat in ${g.inst}${note ? ` (${note})` : ""}.`});
+  }
+  if ( !only ) await ChatMessage.create({whisper: gmIds(), speaker: {alias: "Institutions"},
+    content: `<div class="wodx-card"><h3>Swept from office</h3><ul>${gone.slice(0, 20).map(g => `<li>${esc(g.name)}, ${esc(g.inst)}</li>`).join("")}</ul>${gone.length > 20 ? `<p>And ${gone.length - 20} more.</p>` : ""}</div>`});
+  return gone;
 }
 
 /* ---- Climbing (B3357) ---- */
@@ -167,6 +196,7 @@ export function registerInstitutionHooks() {
   Hooks.on("updateWorldTime", () => { try { if ( chron()?.isSkipping?.() ) return; } catch (e) { /* no Chronicle */ } monthRun().catch(er => console.error(`${MOD} | institutions`, er)); });
   Hooks.on("wodxSkipEnd", () => { monthRun().catch(er => console.error(`${MOD} | institutions`, er)); });
   Hooks.on("wodxTaskDone", ({actor, task} = {}) => { onClimbDone(actor, task).catch(er => console.error(`${MOD} | institutions`, er)); });
+  Hooks.on("wodxRegimeTurn", p => { onRegimeTurn(p).catch(er => console.error(`${MOD} | institutions`, er)); });
 }
 
 /* ---- The window ---- */
@@ -203,4 +233,4 @@ export async function institutionsDialog() {
     buttons: [{action: "close", label: "Close", default: true}]});
 }
 
-export const api = () => ({open: institutionsDialog, state, ofTown, byId, seatsOf, reconcile: reconcileAll, month: monthRun, askLever, rules: I});
+export const api = () => ({open: institutionsDialog, state, ofTown, byId, seatsOf, sweep: onRegimeTurn, reconcile: reconcileAll, month: monthRun, askLever, rules: I});

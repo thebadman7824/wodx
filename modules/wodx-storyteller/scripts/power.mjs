@@ -193,7 +193,7 @@ export async function dream(placeId, actorIds = []) {
     if ( p.keepers.includes(a.id) ) await tendTie(a, "freehold");
   }
   if ( actors.length && !actors.some(a => p.keepers.includes(a.id)) ) lines.push("No keeper slept here: only the keeper, or someone the keeper allows, may harvest the balefire.");
-  await update(placeId, x => P.noteHarvest(x, now()), `Dreamed by the balefire: ${actors.map(a => a.name).join(", ")}.`);
+  await update(placeId, x => ({...x, ...P.noteHarvest(x, now())}), `Dreamed by the balefire: ${actors.map(a => a.name).join(", ")}.`);
   await say([`A night by the balefire of ${p.name}:`, ...lines]);
   await Sites.onDraw(placeId, "freehold", r.gains.reduce((n, g) => n + num(g.gain), 0), {by: actors.find(a => p.keepers.includes(a.id)) ?? actors[0] ?? null});
   return r;
@@ -239,7 +239,7 @@ export async function destroy(placeId) {
     await a.update(upd);
     lines.push(`${a.name} takes ${r.banality} Banality${r.glamourBack ? ` and has ${r.glamourBack} Glamour back` : ""}.`);
   }
-  await update(placeId, x => P.destroyFreehold(x).freehold, "Destroyed.");
+  await update(placeId, x => ({...x, ...P.destroyFreehold(x).freehold}), "Destroyed.");
   await say([`${p.name} is lost.`, ...lines]);
   return true;
 }

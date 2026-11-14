@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.37.1 (The Croatan lifepath ends in 1589 and era advancement counts the tribe gone from 1590, matching the books' year for Roanoke (timeline check, 14 November))
 - 0.37.0 (The Algonquian peoples of the east coast in the People generator (B3510 to B3512): the Lenape (91 recorded men's names, the Turtle, Turkey and Wolf clans from the mother), the New England Algonquian (114 men's and 17 women's names) and the Powhatan towns (54 men's and 6 women's names), with church names in the early modern age and family names from the 19th century. data/people-algonquian.mjs; the staged builder in people-haudenosaunee.mjs now serves every such people)
 - 0.36.0 (The People generator makes 1 person in 100 nonbinary when asked for anyone, and can be asked for nonbinary people; everyone it made before keeps the same sex and name (B3503))
 - 0.35.0 (Arab world names raised to over 300 (B3312): 82 older and 70 newer men's names, 70 older and 70 newer women's names, 40 older bynames of city, tribe and trade and 64 newer family names. "ibn" and "bint" keep the same share in each age)

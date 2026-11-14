@@ -8,6 +8,7 @@
 import { spendTime } from "./spend-time.js";
 import * as P from "./profiles.js";
 import * as G from "./garou-rules.js";
+export { bringsDelirium } from "./garou-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as EF from "./effects.js";
@@ -233,7 +234,7 @@ export function build(ctx) {
             }
             await setForm(actor, reached, i);
             body += `<div class="vta-big good">${esc(formLabel(actor, reached))}</div>`;
-            if (reached === "crinos") body += `<div class="vta-note">Humans who see the Crinos suffer the Delirium (Storyteller: Garou tools → The Delirium).</div>`;
+            if (reached === "crinos") body += `<div class="vta-note">Humans who see the Crinos suffer the Delirium${setting("autoDelirium") ? ": the Storyteller is told who can see it" : " (Storyteller: Garou tools → The Delirium)"}.</div>`;
             body += `<div class="vta-note">The sheet's form table applies the Attribute changes.${basis() === "daw" ? " Dark Ages: Glabro bites lethal, no claws; Crinos and Hispo teeth and claws aggravated; Lupus bite lethal (DA:W pp. 106–107)." : ""}</div>`;
             return post(actor, `${actor.name} becomes ${formLabel(actor, reached)}`, body, rolls.filter(Boolean));
         });

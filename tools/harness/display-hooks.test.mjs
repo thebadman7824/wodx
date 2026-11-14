@@ -194,3 +194,62 @@ test("B3170, B3171: a fight becomes a deed and marks real danger for the experie
   const d = WUR.dangerFrom([{id: "c", rows: [{id: "a", pc: true, taken: 3}, {id: "b", pc: true, taken: 1}, {id: "c", pc: true, down: true}, {id: "n", pc: false, taken: 7}]}]);
   assert.deepEqual([...d].sort(), ["a", "c"]);
 });
+
+/* ---- Batch D (B3440 to B3444) ---- */
+import * as GAR from "../../modules/wodx-actions/scripts/garou-rules.js";
+import * as DRD from "../../modules/wodx-actions/scripts/deeper-rules.js";
+import * as LKR from "../../modules/wodx-library/scripts/look-rules.mjs";
+import * as SEEN from "../../modules/wodx-paperdoll/scripts/face64-seen.mjs";
+import {FEATURES as F64} from "../../modules/wodx-paperdoll/scripts/face64-features.mjs";
+import * as TKR from "../../modules/wodx-npc/scripts/talk-rules.mjs";
+import * as WNR from "../../modules/wodx-npc/scripts/wanted-rules.mjs";
+
+test("B3440: Crinos on the sheet or a war-form sprite brings the Delirium; Hispo does not", () => {
+  assert.ok(GAR.bringsDelirium({form: "crinos"}));
+  assert.ok(GAR.bringsDelirium({sprite: "garou-crinos"}));
+  assert.ok(GAR.bringsDelirium({form: "homid", sprite: "bastet-crinos"}));
+  assert.ok(!GAR.bringsDelirium({form: "hispo"}));
+  assert.ok(!GAR.bringsDelirium({form: "homid", sprite: "garou-homid"}));
+  assert.ok(!GAR.bringsDelirium({}));
+});
+
+test("B3441: dress against the other's station moves Etiquette and Subterfuge by a die", () => {
+  assert.ok(DRD.dressCounts("etiquette") && DRD.dressCounts("", "Subterfuge") && !DRD.dressCounts("brawl"));
+  assert.equal(DRD.deeperMods({dressed: "fine"}).dice, 1);
+  assert.equal(DRD.deeperMods({dressed: "poor"}).dice, -1);
+  assert.equal(DRD.deeperMods({dressed: "even"}).dice, 0);
+  assert.match(DRD.deeperMods({dressed: "poor"}).parts[0], /below their station/);
+});
+
+test("B3442: the figure's worn places, not what is held, are dress", () => {
+  const names = LKR.figureNames({body: {n: "a frock coat"}, hand: {n: "Mace"}, head: {n: "a top hat"}, feet: {n: ""}});
+  assert.deepEqual(names, ["a frock coat", "a top hat"]);
+  assert.deepEqual(LKR.figureNames(null), []);
+});
+
+test("B3443: uncanny Kindred marks reach the witness; a mask or another line hides them", () => {
+  const nos = {line: "nosferatu", features: ["vn-boils", "a-scar-brow", "v-pallor-blue"]};
+  assert.deepEqual(SEEN.uncannyMarks(nos, F64), [F64["vn-boils"].label]);
+  assert.deepEqual(SEEN.uncannyMarks(nos, F64, {hidden: true}), []);
+  assert.deepEqual(SEEN.uncannyMarks({line: "kindred", features: ["vc-gan-whiskers", "v-pallor-blue"]}, F64), [F64["vc-gan-whiskers"].label]);
+  assert.deepEqual(SEEN.uncannyMarks({line: "werewolf", features: ["w-shaggy"]}, F64), [], "the Masquerade guards Kindred faces");
+  assert.deepEqual(SEEN.uncannyMarks({line: "kindred", features: ["v-beast-eyes"]}, F64), [], "a form mark shows only in its state");
+  assert.equal(SEEN.uncannyMarks({line: "kindred", features: ["v-beast-eyes"]}, F64, {state: {frenzy: true}}).length, 1);
+  for ( const id of SEEN.UNCANNY_IDS ) assert.ok(F64[id], `${id} is a face feature`);
+  assert.ok(SEEN.masked({face: {n: "a gas mask"}}) && SEEN.masked({head: {n: "a balaclava"}}) && !SEEN.masked({head: {n: "a top hat"}}));
+  const m = WNR.normMarks({station: 2, uncanny: ["Weeping boils"]});
+  assert.deepEqual(m.uncanny, ["Weeping boils"]);
+  assert.match(LKR.describeMarks({...m, face: "monstrous"}), /with weeping boils/);
+});
+
+test("B3444: a face read against a straight face; the lie mark on a talk line", () => {
+  const won = DRD.faceRead({successes: 3}, {successes: 1}, {lie: true, step: 1});
+  assert.ok(won.won && won.face === "smirk");
+  assert.match(won.lines.join(" "), /warm to you/);
+  assert.match(won.lines.join(" "), /not the truth/);
+  assert.ok(!DRD.faceRead({successes: 1}, {successes: 1}).won, "a tie keeps the face");
+  assert.match(DRD.faceRead({botch: true, successes: 0}, {successes: 0}).lines[0], /misread/);
+  assert.equal(DRD.faceRead({successes: 2}, {successes: 0}, {mood: "Afraid"}).face, "fear");
+  assert.equal(TKR.parseThen("teach the mill; lie").lie, true);
+  assert.equal(TKR.parseThen("aloud").lie, false);
+});
