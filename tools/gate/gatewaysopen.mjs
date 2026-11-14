@@ -80,10 +80,11 @@ export async function run() {
       ok("4 shut at night", r && !r.ok && /night/.test(r.why ?? "") && !b.tokens.some(t => t.actorId === s.id), {why: r?.why});
     });
     await step("5 network", async () => {
+      // The pair alone, before the lonely place gets its way
+      const pair = W().rules.checkNetwork(W().network().filter(x => made.scenes.slice(0, 2).includes(x.id)));
       const lone = await mk("ways lonely");
       made.scenes.push(lone.id);
       await W().make(lone, a, {kind: "street"});
-      const pair = W().rules.checkNetwork(W().network().filter(x => made.scenes.slice(0, 2).includes(x.id)));
       const mine = W().network().filter(x => made.scenes.includes(x.id));
       const cut = mine.map(x => x.id === lone.id ? {...x, ways: []} : x).map(x => ({...x, ways: x.ways.filter(y => y.to !== lone.id)}));
       const out = W().rules.checkNetwork(cut);
