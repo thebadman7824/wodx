@@ -69,6 +69,8 @@ export function validate(raw, laneIds = []) {
       j.lanes = j.lane !== undefined ? 1 : (j.lanes ?? 1);
       if ( !Number.isInteger(j.lanes) || j.lanes < 1 ) return err("lanes must be a whole number, 1 or more.");
       j.lanes = Math.min(j.lanes, Math.max(1, lanes.length));
+      // a named list is never split over more lanes than it has gates (an empty share used to read as a failure)
+      if ( list.length && !j.touched && !j.all ) j.lanes = Math.min(j.lanes, j.gates.length);
       break;
     }
     case "gate-two":

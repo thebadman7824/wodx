@@ -22,7 +22,8 @@ test("an issue body round-trips through issueBody and parseBody", () => {
 test("validate accepts the job kinds and fills defaults", () => {
   const g = validate({kind: "gates", gates: ["gateplains", "gateplains", "gatelifepath"], lanes: 9}, LANES).job;
   assert.deepEqual(g.gates, ["gateplains", "gatelifepath"]);
-  assert.equal(g.lanes, 5, "lanes is capped at the runner's lane count");
+  assert.equal(g.lanes, 2, "lanes is capped at the gate count (and the runner's lane count)");
+  assert.equal(validate({kind: "gates", all: true, lanes: 9}, LANES).job.lanes, 5, "lanes is capped at the runner's lane count");
   assert.equal(g.ref, "main"); assert.equal(g.prio, 3);
   assert.equal(validate({kind: "gates", touched: true}, LANES).job.lanes, 1);
   assert.equal(validate({kind: "gates", gates: ["gatex"], lane: 4, lanes: 3}, LANES).job.lanes, 1);
@@ -148,4 +149,10 @@ test("the sweep runs on a mock GitHub: updates the one behind, starts CI on the 
   assert.ok(calls.includes("POST /actions/workflows/checks.yml/dispatches"));
   assert.ok(calls.includes("POST /issues"), "one alert issue for the stuck one");
   assert.ok(!calls.some(c => /pulls\/4|update-branch.*3/.test(c)));
+});
+
+test("a named gate list is never split over more lanes than it has gates", () => {
+  assert.equal(validate({kind: "gates", gates: ["gatelibrary"], lanes: 2}, LANES).job.lanes, 1);
+  assert.equal(validate({kind: "gates", gates: ["a", "b", "c"], lanes: 5}, LANES).job.lanes, 3);
+  assert.equal(validate({kind: "gates", touched: true, lanes: 3}, LANES).job.lanes, 3);
 });
