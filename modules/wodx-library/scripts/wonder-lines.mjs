@@ -6,3 +6,4 @@
 import "./wonders-garou.mjs";
 import "./wonders-mage.mjs";
 import "./wonders-wraith.mjs";
+import "./wonders-kindred.mjs";
