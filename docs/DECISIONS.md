@@ -189,7 +189,7 @@ Next free block: B3690
 | B3650-B3659 | Threads of Fate: procedural storylines and encounters from story hooks (used B3650-B3656) | Storyteller |
 | B3660-B3669 | The Rothenstein saga: the running step for other systems (used B3660-B3669) | Chronicle |
 | B3670-B3679 | The Rothenstein saga keeps its calendar on long skips (used B3670-B3672) | Chronicle |
-| B3680-B3689 | One wonders engine for every line (registry of line kits) (used B3680-B3683) | Library, Storyteller |
+| B3680-B3689 | Mage Wonders, charms, periapts, trinkets and mage fetishes (used B3680-B3688) | Library, Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6108,3 +6108,28 @@ Reverse: edit the weapon fields of the two rows in data/wonders.mjs.
 WoDX Library and Storyteller. So that Mage, Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin can be built side by side, WoDX Library keeps a registry (scripts/wonder-registry.mjs): a line calls registerLine with a kit of plain functions (its rows, who may make what, the dialog inputs, the task seed, the items made, the costs paid, an optional after() hook) and names its own world switch. Each line has one import in scripts/wonder-lines.mjs. Werewolf is the first kit (scripts/wonders-garou.mjs) and plays as before. WoDX Storyteller's window lists every line a character can make things in and builds its inputs from the kit; the finished task pays the kit's costs through applyCosts, makes its items and runs after(), where the Garou kit keeps its spirit-court moves. A long task may now roll a single trait (pool "path:<dot path>"), such as a mage's Arete.
 
 Reverse: restore the Garou-only wonders.mjs in Storyteller from PR 993 and drop the registry import from Library main.
+
+## B3684. The Mage kit and how a Wonder is made (2026-11-14)
+WoDX Library (scripts/wonders-mage.mjs, data/wonders-mage.mjs). Ben picked the full builds on the Item Crafting Desk (m1, m2, m3). WoDX follows the Book of Secrets chart (pdf 161-162) over the shorter M20 rules (pdf 652-654). A Talisman or Device needs Prime 4 and the Spheres of its Effects, which are chosen from the Effect keywords WoDX Actions already casts. Its dots are the highest Sphere its Effects need, and it holds one Effect a dot. A charm or gadget needs Prime 3, or Prime 2 when the energy fits; it holds one Effect, works once, and a mage makes up to twice Arete at a sitting. A periapt or matrix needs Matter 5, or Life 5 for a living one, with Prime 3. A trinket needs Prime 2 and holds one simple Effect. Storyteller's task keeps the kit's choices on the task (opts).
+
+Reverse: drop the import of wonders-mage.mjs from scripts/wonder-lines.mjs.
+
+## B3685. One extended Arete roll for the energy and the investment (2026-11-14)
+WoDX Library. The Book of Secrets has three steps: an Attribute + Ability foundation, an Arete roll for the energy, and an extended Arete roll for the investment, each wanting three successes a dot (pdf 161). WoDX narrates the foundation as a Storyteller roll and runs the other two steps as one extended Arete roll, one roll a week, wanting six successes a dot for a Talisman or Device and three a dot for a periapt (which has no energy step). A charm wants two successes for each charm, a trinket twice its Effect's feat, and a mage fetish three a level. The difficulty is the highest Sphere + 4, or + 3 in the mage's Sanctum, less up to 3 for purification (pdf 157). The interval and the charm and trinket goals are house readings.
+
+Reverse: edit goalOf and taskFor in wonders-mage.mjs.
+
+## B3686. What a Talisman or Device costs, and when (2026-11-14)
+WoDX Library. A Talisman or Device seals five Quintessence a dot (M20 pdf 653) and one permanent Willpower (Book of Secrets pdf 161-162; a Union facility waives the Willpower for a Device). WoDX checks the Quintessence when the work starts and takes both when it succeeds, not as it goes. M20's extra point of Quintessence for each crafting roll is left out, since its own example contradicts it.
+
+Reverse: costs() in wonders-mage.mjs.
+
+## B3687. What a finished Wonder carries (2026-11-14)
+WoDX Library. A Talisman or Device has an Arete equal to its dots and a pool of five Quintessence a dot, starting full. Each Effect becomes a power with that many dice at the Effect's own Sphere + 3, or + 4 when vulgar; a vulgar use gives the user 1 Paradox. A charm's power has one use. A periapt holds five Quintessence a dot and starts with the ten points of Tass fused into it (capped). Drawing from it or pouring back in needs Prime 2 (M20 pdf 653). The power shape is the one shared with the other lines (flags.wodx-library.wonder.powers).
+
+Reverse: itemsFor() in wonders-mage.mjs.
+
+## B3688. Mage fetishes from the Garou list (2026-11-14)
+WoDX Library. A mage binds a spirit into any Garou fetish (not the Bane fetishes or a breed's own) with Spirit 4 to force an unwilling spirit, which makes an unreliable fetish, or Prime 4 and a bargain with a willing one (M20 pdf 509; Book of Secrets pdf 161). The work is extended Arete at difficulty 8, three successes a level. A forced spirit's court remembers, as for a Garou. Using it is Willpower at difficulty 7, with the fetish's Gnosis as the pool (M20 pdf 653).
+
+Reverse: drop FETISH_ROWS from ROWS in wonders-mage.mjs.
