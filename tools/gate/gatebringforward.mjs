@@ -47,7 +47,10 @@ export async function run() {
       {...at, flags: {[IX]: {watch: true, watchKind: "sprinkler"}}},
       {...at, flags: {[IX]: {container: true, kind: "chest", electronic: "excellent", items: "a banknote (4)\nBread"}}},
       {...at, flags: {[IX]: {mount: true, mountKind: "motorbike"}, [MOD]: {keepOutOfEra: true}}}]);
-    const [car, phone, sprink, chest, bike] = tiles.map(t => t.id);
+    // createEmbeddedDocuments need not hand the tiles back in the order asked: find each one by what it is
+    const find = test => tiles.find(t => test(t.flags?.[IX] ?? {}, t.flags?.[MOD] ?? {}))?.id;
+    const car = find(x => x.mountKind === "car"), phone = find(x => x.watchKind === "phone"), sprink = find(x => x.watchKind === "sprinkler");
+    const chest = find(x => x.container), bike = find((x, k) => x.mountKind === "motorbike" && k.keepOutOfEra);
     const rowsFor = async (after, before = {}) => api().scanMaps(before, after, [scene]);
     await step("api", async () => {
       ok("api", typeof api()?.bringForward === "function" && typeof api()?.undoForward === "function" && typeof game.modules.get(IX)?.api?.rules?.bringForward === "function");

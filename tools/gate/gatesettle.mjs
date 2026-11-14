@@ -3,12 +3,13 @@
  * rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatesettle.mjs?${Date.now()}`)).run()
  * Needs in Data/wodx-gate/ the copies of tools/mapgen/samples/steinfeld-1995.settlement.json and
- * steinfeld-1995.wodx.json (a village of 1995 from ddsettle.py: 113 households, two blocks of flats).
+ * steinfeld-1995.wodx.json (a village of 1995 from ddsettle.py: about 114 households, two blocks of flats).
+ * The household count is read from the sample itself, since a remade sample may gain or lose a cottage.
  * It makes a scene of its own the map's size, adopts the map's sidecar onto it, enters the settlement with a review
  * of its own, seeds a handful of households (not the whole village), checks what the review wrote, removes the
  * residents, and deletes its scene and journal at the end. It does not switch the Storyteller's view or the clock.
  *   1. the modules: NPC 0.48.0 or later with api.settlements, Interactables 0.35.2 or later, the People generator
- *   2. the record reads: steinfeld-1995-7, 113 households, 288 people; a broken record is refused in plain words
+ *   2. the record reads: steinfeld-1995-7, as many households as the map's sidecar, 288 people; a broken record is refused in plain words
  *   3. adopted: every household of the record stands on the scene, a block of flats carrying all of its households
  *   4. entered: a journal of four pages no player can read, found again by the settlement's id
  *   5. the residents' plan reads the review: the struck household marked, the hidden folk on their households
@@ -50,10 +51,11 @@ export async function run() {
     let refused = "";
     try { await S.read(JSON.stringify({format: "wodx-settlement", version: 1, id: "bad id!", name: "x", households: []})); } catch (e) { refused = e.message; }
     const people = rec.households.reduce((s, h) => s + h.people.length, 0);
-    ok("2. record", rec.id === SID && rec.year === 1995 && rec.households.length === 113 && people === 288 && rec.population === 288 && rec.ties.length > 0 && refused.length > 0,
-      {id: rec.id, households: rec.households.length, people, ties: rec.ties.length, refused});
-
     const text = await (await fetch(`/wodx-gate/steinfeld-1995.wodx.json?${Date.now()}`, {cache: "no-store"})).text();
+    const H = rec.households.length, sideH = JSON.parse(text).households?.length;
+    ok("2. record", rec.id === SID && rec.year === 1995 && H > 100 && H === sideH && people === 288 && rec.population === 288 && rec.ties.length > 0 && refused.length > 0,
+      {id: rec.id, households: H, sidecar: sideH, people, ties: rec.ties.length, refused});
+
     const sc = A.rules.parseSidecar(text).data;
     scene = await Scene.create({name: NAME, width: sc.cells[0] * 100, height: sc.cells[1] * 100, padding: 0, grid: {size: 100, distance: 5}});
     const got = await A.plan(scene, text);
@@ -62,7 +64,7 @@ export async function run() {
     const ids = new Set(rec.households.map(h => h.id));
     const block = scene.regions.contents.find(r => (r.flags?.[IX]?.households?.length ?? 0) > 1);
     const flats = onScene.filter(h => h.region === block?.uuid);
-    ok("3. adopted", onScene.length === 113 && onScene.every(h => ids.has(h.household.id)) && flats.length === 48 && flats.every(h => h.shared === 48)
+    ok("3. adopted", onScene.length === H && onScene.every(h => ids.has(h.household.id)) && flats.length === 48 && flats.every(h => h.shared === 48)
       && sc.settlement?.id === SID, {households: onScene.length, block: block?.name, flats: flats.length, errors: got.errors});
 
     // the review: one household struck, three hidden folk of the gate's choosing, every tie kept
@@ -85,7 +87,7 @@ export async function run() {
 
     const list = X.plan(scene);
     const row = id => list.find(h => h.household.id === id);
-    ok("5. plan reads the review", list.length === 113 && row(struck.id)?.settled?.struck === true && row(tie.a)?.settled?.folk?.[0]?.key === "mage"
+    ok("5. plan reads the review", list.length === H && row(struck.id)?.settled?.struck === true && row(tie.a)?.settled?.folk?.[0]?.key === "mage"
       && row(flatIds[0])?.settled?.folk?.[0]?.key === "kinfolk" && row(tie.b)?.settled?.folk?.[0]?.key === "wraith" && row(flatIds[1])?.settled?.struck === false
       && list.every(h => h.settled?.settlement === SID), {struck: struck.id});
 
