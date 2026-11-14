@@ -133,7 +133,8 @@ test("threads: the deck has about 150 cards, a unique hook for every world regio
   for ( const [rid, r] of Object.entries(W.WORLD_REGIONS) ) {
     const own = deck.filter(c => c.role === "anchor" && c.regions.includes(rid) && !c.regions.includes("*"));
     assert.ok(own.length, `${rid} has its own hook`);
-    const year = Math.max(1197, Number(r.from) || 0);
+    // the region's first named year, or its own hook's first year when that is later (the West has people from 1197, B3820)
+    const year = Math.max(1197, Number(r.from) || 0, Math.min(...own.map(c => c.from)));
     const sig = {key: `t:${rid}`, kind: own[0].needs[0], region: rid, weight: 3, at: 0};
     const st = T.weave({board: [sig], cards: CARDS, state: {}, ctx: {year, region: rid, lines: []}, now: 0, rand: () => 0});
     assert.ok(st, `${rid} weaves a storyline in ${year}`);

@@ -225,7 +225,8 @@ export const COMING_OF_AGE = {M: 14, E: 15, I: 16, N: 18, F: 18};
 export const REGION_COMING_OF_AGE = {japan: {M: 15, E: 15}};
 
 /** Peoples whose plain name needs more than a capital letter. */
-export const PEOPLE_LABELS = {steppe: "Steppe peoples", arabic: "Arab", hindi: "Hindustani", anglo: "Anglo-American", norse: "Norse", jewish: "Jewish"};
+export const PEOPLE_LABELS = {steppe: "Steppe peoples", arabic: "Arab", hindi: "Hindustani", anglo: "Anglo-American", norse: "Norse", jewish: "Jewish",
+  lakota: "Lakota, Dakota and Nakota"};
 
 /** What brought a character from elsewhere to the chronicle's homeland. */
 export const ARRIVALS = ["Work, trade or study", "Flight from something at home", "Sent by someone you answer to", "Following a person", "Something called you here"];
