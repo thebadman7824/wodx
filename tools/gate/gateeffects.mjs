@@ -14,7 +14,7 @@
  *   9. an area works on a token inside it once, on one standing outside only when it walks in, and Undo removes it
  *  10. a rote is saved as a Rote item on the caster, replaced by name, and forgotten
  *  12. a held card waits; countermagick cuts its successes, then a reflected counter turns it on the caster
- *  13. a Dark Ages rote's card: Verdant Slumber hurts, Self Possession is a timed effect, a summoning stays the Storyteller's
+ *  13. a Dark Ages rote's card: Verdant Slumber hurts, Self Possession is a timed effect, a summoning stays the Storyteller's, the golem does not (B3752)
  *  15. the shared roster (3.30.0): Drain on a Willpower pool, Boost as a timed effect, both undone; power labels
  *  16. the Storyteller's effect (3.31.0): Ward, Make into an inventory and Summon on the map, all undone
  *  11. a Rote item opens the WoDX Cast window filled in (a Mage 20th era), or is left to the system's dialog (Dark Ages)
@@ -207,7 +207,9 @@ async function runGate(K) {
       const ward = game.modules.get(MOD).api.effects.daPlan(caster, rote("g-selfpossess"), 2);
       const wr = ward.items[0]?.route === "auto" ? await fx().apply(ward.items[0], caster.name) : null;
       const timed = !!(wr?.effect && fromUuidSync(wr.effect));
-      const st = game.modules.get(MOD).api.effects.daPlan(caster, rote("g-72names"), 4).items.every(i => i.route === "st");
+      // A summoning stays the Storyteller's call; since B3752 the Golem of the 72 Names shows on the token, not with the Storyteller.
+      const st = game.modules.get(MOD).api.effects.daPlan(caster, rote("g-summoning"), 4).items.every(i => i.route === "st")
+        && game.modules.get(MOD).api.effects.daPlan(caster, rote("g-72names"), 4).items.some(i => i.route !== "st");
       await fx().undo([...recs, wr].filter(Boolean));
       ok("13 a Dark Ages rote", hurt && timed && st && sum(dmg(caster)) === sum(before), {hurt, timed, st, routes: harm?.items?.map(i => i.route)});
     });
