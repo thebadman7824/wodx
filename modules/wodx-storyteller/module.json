@@ -43,5 +43,10 @@
     "wodx": {
       "phase": 7
     }
+  },
+  "documentTypes": {
+    "RegionBehavior": {
+      "way": {}
+    }
   }
 }
