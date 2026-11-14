@@ -324,6 +324,55 @@ export async function sagaPlayed(book) {
   await dealChains();
   return w.key;
 }
+/* ---- Book one's twist web (B4850-B4853) ---- */
+/** The chapters of book one played so far: all of them once the book is done. */
+function bookOnePlayed(s = state()) {
+  const x = sagaOf(s), run = (s.chains ?? []).find(r => r.saga?.book === S.FIRST_BOOK);
+  if ( x.books[S.FIRST_BOOK] === "done" ) return [...TW.CHAPTERS];
+  return [...(run?.played ?? [])];
+}
+export const twistState = () => sagaOf(state()).twists ?? {revealed: {}};
+/** Reveal a twist of book one: its partners keep another heart, and the Storyteller gets the card. */
+export async function revealTwist(n, {variant = "", force = false} = {}) {
+  if ( !game.user.isGM ) return null;
+  const s = state(), x = sagaOf(s);
+  const r = TW.reveal(x.twists ?? {revealed: {}}, n, {variant, now: now(), played: bookOnePlayed(s), force});
+  x.twists = r.state;
+  await saveState(s);
+  const t = TW.twistOf(n), chains = TW.chainsOf(n).map(k => TW.CHAINS.find(c => c.key === k)?.label).filter(Boolean);
+  const lines = r.changes.filter(c => !c.variant).map(c => `<li>Twist ${c.n}, ${esc(TW.twistOf(c.n)?.label ?? "")}: ${esc(c.note)}</li>`);
+  await card(`Twist ${t.n} revealed: ${t.label}`, `<p>${chains.length ? `On ${esc(chains.join(" and "))}. ` : "A quiet twist. "}${variant && t.variants ? `Its heart: ${esc(t.variants[variant])}. ` : ""}The next twist can come in a week of game time.</p>${lines.length ? `<p>It changes:</p><ul>${lines.join("")}</ul>` : ""}<p class="vta-note">The twist's own words are in the Storyteller's third volume.</p>`);
+  Hooks.callAll("wodxTwist", {n: t.n, variant, chains: TW.chainsOf(n), changes: r.changes});
+  return r;
+}
+/** Take a reveal back (a slip of the hand). The week counts from the reveal before it. */
+export async function unrevealTwist(n) {
+  if ( !game.user.isGM ) return;
+  const s = state(), x = sagaOf(s), tw = x.twists ?? {revealed: {}};
+  if ( !tw.revealed?.[n] ) return;
+  delete tw.revealed[n];
+  const ats = Object.values(tw.revealed).map(v => Number(v.at) || 0);
+  tw.last = ats.length ? Math.max(...ats) : null;
+  x.twists = tw;
+  await saveState(s);
+}
+/** The twist web in the saga window: each chain's knots, the next by the quick order, and every twist with why not. */
+function twistSection(s) {
+  const tw = sagaOf(s).twists ?? {revealed: {}}, played = bookOnePlayed(s), ctx = {now: now(), played};
+  const sug = TW.suggest(tw, ctx), ch = TW.chapterNow(played);
+  const tally = TW.chainTally(tw, played).map(c => `<li>${esc(c.label)}: ${c.found} of ${c.of}${c.due.length ? `, pays off ${c.due.map(k => `in chapter ${TW.CHAPTERS.indexOf(k) + 1}`).join(" and ")}` : ""}</li>`).join("");
+  const rows = TW.TWISTS.map(t => {
+    const r = tw.revealed?.[t.n], why = TW.whyNot(t.n, tw, ctx), notes = TW.heartNotes(t.n, tw);
+    const hearts = t.variants && !r ? `<select data-fixed>${Object.entries(t.variants).map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join("")}</select>` : "";
+    const act = r ? `revealed${r.variant ? ` (${esc(t.variants?.[r.variant] ?? r.variant)})` : ""} <button type="button" data-action="untwist" data-n="${t.n}">Take back</button>`
+      : why ? `<span class="vta-note">${esc(why)}</span>${/week|fits from/.test(why) ? ` <button type="button" data-action="twist" data-n="${t.n}" data-force="1" title="The company found it by its own hand">Reveal anyway</button>` : ""}`
+      : `<button type="button" data-action="twist" data-n="${t.n}">Reveal</button>`;
+    return `<tr data-twist><td>${t.n}</td><td>${esc(t.label)}${t.free ? " (quiet)" : ""}${notes.length ? `<br><span class="vta-note">Another heart: ${esc(notes.join(" "))}</span>` : ""}</td><td>${hearts} ${act}</td></tr>`;
+  }).join("");
+  return `<h3>Book one's twists</h3><p>${ch ? `Chapter ${TW.CHAPTERS.indexOf(ch) + 1}. ` : ""}One twist a week of game time. ${sug.next ? `Next by the quick order: ${sug.next}, ${esc(TW.twistOf(sug.next).label)}.` : "No twist is due."}${sug.quiet.length ? ` Quiet ones that fit any night: ${sug.quiet.join(", ")}.` : ""}</p>
+    <ul>${tally}</ul><table class="wodx-check"><tbody>${rows}</tbody></table>
+    <p class="vta-note">Each twist sits under the encounter of the same number. The twists' words are in the Storyteller's third volume; a revealed twist gives its partner another heart.</p>`;
+}
 export async function skipSaga(book) {
   if ( !P.saga.bookByKey(book) || !game.user.isGM ) return;
   const s = state(), x = sagaOf(s);
@@ -477,6 +526,9 @@ export class PodApp extends ApplicationV2 {
       sagaStart: async function(e, el) { await startSaga(el.dataset.book); this.render(); },
       sagaSkip: async function(e, el) { await skipSaga(el.dataset.book); this.render(); },
       sagaPlayed: async function(e, el) { await sagaPlayed(el.dataset.book); this.render(); },
+      twist: async function(e, el) { const row = el.closest("[data-twist]"), v = row.querySelector("select")?.value ?? "";
+        try { await revealTwist(el.dataset.n, {variant: v, force: el.dataset.force === "1"}); } catch (err) { ui.notifications.warn(err.message); } this.render(); },
+      untwist: async function(e, el) { await unrevealTwist(el.dataset.n); this.render(); },
       sagaClocks: async function() { for ( const i of this.element.querySelectorAll("[data-clock]") ) await setSagaClock(i.dataset.clock, i.value); this.render(); },
       thread: async function(e, el) { const a = game.actors.get(el.dataset.actor), x = threadsOf(a).find(t => t.id === el.dataset.thread); if ( x ) await startThread(a.id, x); this.render(); },
       build: async function() { const f = this.element.querySelector("[data-build]"), v = n => f.querySelector(`[name=${n}]`).value.trim();
@@ -522,6 +574,7 @@ export class PodApp extends ApplicationV2 {
             return w ? ` Waiting on ${esc(w.title)}. <button type="button" data-action="sagaPlayed" data-book="${b.key}">Played</button>` : ""; })()}
           ${endable ? ` <select data-ending="${b.key}" data-fixed><option value="">No ending yet</option>${ends.map(([k, e]) => `<option value="${k}" ${x.endings[b.key] === k ? "selected" : ""}>${esc(e.label)}</option>`).join("")}</select>` : ""}</li>`; }).join("")}</ul>
         <p class="vta-note">${x.endings[P.saga.FIRST_BOOK] ? esc(P.saga.SAGA_ENDINGS[x.endings[P.saga.FIRST_BOOK]].text) : "The first book's ending changes the words of later books."}</p>`);
+      if ( x.books[S.FIRST_BOOK] === "running" || Object.keys(x.twists?.revealed ?? {}).length ) parts.push(twistSection(s));
     }
     if ( lineOn("podGolconda") ) {
       const list = seekers();
@@ -569,4 +622,4 @@ export function registerPodHooks() {
 
 export const podApi = {exposure, expose, setSect, cityOf, cityState, raiseBuilding, golconda, seek, golcondaStep, setback, setMentor,
   startChain, stopChain, dealChains, lifepathTick, startThread, threads: threadsOf, goals, setGoal,
-  saga: {state: sagaState, current: sagaCurrent, start: startSaga, skip: skipSaga, played: sagaPlayed, ending: setEnding, clock: setSagaClock, tick: sagaTick, rules: P.saga}, open: () => new PodApp().render(true), rules: P};
+  saga: {state: sagaState, current: sagaCurrent, start: startSaga, skip: skipSaga, played: sagaPlayed, twists: {state: twistState, reveal: revealTwist, takeBack: unrevealTwist, rules: TW}, ending: setEnding, clock: setSagaClock, tick: sagaTick, rules: P.saga}, open: () => new PodApp().render(true), rules: P};
