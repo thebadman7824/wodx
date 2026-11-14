@@ -10,6 +10,7 @@
  *   5. the next book that fits the year goes to the approval queue, once
  *   6. a sequel's chapter links to its own session page in the world
  *   7. skipping a book stops its run
+ *   9. a saga town change lands on the town named Rothenstein (skipped, with a note, when there is none)
  *   8. every other WoDX module still answers (and current() names the running step)
  * Result: Data/wodx-gate/gatesaga-result.json.
  */
@@ -32,6 +33,7 @@ export async function run() {
   const C = "wodx-chronicle", pod = () => game.modules.get(C)?.api?.pod, saga = () => pod()?.saga, appr = () => game.modules.get(C)?.api?.approvals;
   const KEYS = ["podChains", "podSaga", "podState"];
   const t0 = Date.now(), time0 = game.time.worldTime, was = Object.fromEntries(KEYS.map(k => [k, foundry.utils.deepClone(game.settings.get(C, k))]));
+  let towns0 = null; try { towns0 = foundry.utils.deepClone(game.settings.get("wodx-storyteller", "townState")); } catch (e) { towns0 = null; }
   const pend0 = new Set((appr()?.pending?.() ?? []).map(p => p.id));
   const cards = () => game.messages.contents.filter(m => m.timestamp >= t0 && m.content?.includes("wct-pod"));
   const heard = [];
@@ -103,6 +105,17 @@ export async function run() {
       ok("7 skip", !st.chains.some(r => r.saga?.book === "patriarch") && st.saga.books.patriarch === "skipped", {});
     });
 
+    await step("9 the town", async () => {
+      const towns = game.modules.get("wodx-storyteller")?.api?.upkeep?.towns;
+      if ( typeof towns?.saga !== "function" ) { ok("9 the town", false, {why: "api.upkeep.towns.saga is missing"}); return; }
+      const scars = () => Object.values(towns.state().towns).reduce((n, x) => n + (x.scars?.length ?? 0), 0);
+      const n0 = scars();
+      const r = await towns.saga({book: "gate", step: `flood-${Date.now()}`, kind: "world", title: "A gate flood", where: "Rothenstein", year: 1997, town: "flood"});
+      const hit = scars() > n0;
+      ok("9 the town", r === null ? true : hit, {landed: !!r, scars: [n0, scars()]});
+      if ( r === null ) R.notes.push("No town named Rothenstein in this world (or towns over time is off): the saga's town change was not landed.");
+    });
+
     await step("8 other modules", async () => {
       const mods = ["wodx-actions", "wodx-combat", "wodx-npc", "wodx-storyteller", "wodx-library", "wodx-senses"].filter(m => game.modules.get(m)?.active && !game.modules.get(m)?.api);
       ok("8 other modules", !mods.length, {missing: mods});
@@ -115,6 +128,7 @@ export async function run() {
       const msgs = game.messages.filter(m => m.timestamp >= t0);
       if ( msgs.length ) await ChatMessage.deleteDocuments(msgs.map(m => m.id));
       for ( const k of KEYS ) await game.settings.set(C, k, was[k]);
+      if ( towns0 ) await game.settings.set("wodx-storyteller", "townState", towns0);
       if ( game.time.worldTime !== time0 ) await game.time.advance(time0 - game.time.worldTime);
     } catch (e) { R.errors.push(`cleanup: ${e.message}`); }
   }

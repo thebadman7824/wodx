@@ -275,7 +275,8 @@ async function sagaStep(s, run, c, n) {
     n.ending ? `<p class="vta-note">Pick the ending in the saga window: ${n.ending.map(k => esc(P.saga.SAGA_ENDINGS[k].label)).join(", ")}.</p>` : "",
     n.last ? `<p class="vta-note">The last step of this book.</p>` : ""].join("");
   await card(`${c.label}, ${n.index + 1} of ${c.steps.length}: ${n.title}`, body);
-  Hooks.callAll("wodxSaga", {book: run.saga.book, step: n.key, kind: n.kind, clocks: {...x.clocks}, signal: n.signal ?? null, ending: n.ending ?? null});
+  Hooks.callAll("wodxSaga", {book: run.saga.book, step: n.key, kind: n.kind, title: n.title, where: run.where, year: n.at?.[0] ?? null,
+    clocks: {...x.clocks}, signal: n.signal ?? null, ending: n.ending ?? null, town: n.town ?? null});
 }
 export function sagaState() { return foundry.utils.deepClone(sagaOf(state())); }
 /**

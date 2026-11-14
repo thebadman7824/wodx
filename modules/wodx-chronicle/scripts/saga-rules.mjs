@@ -10,6 +10,8 @@ import {SAGA, SAGA_CLOCKS, SAGA_ENDINGS} from "../data/saga-rothenstein.mjs";
 
 export {SAGA, SAGA_CLOCKS, SAGA_ENDINGS};
 export const DAY = 86400;
+/** What a step may do to the town (WoDX Storyteller town-rules SAGA_TOWN has the same keys; B3670). */
+export const TOWN_KINDS = ["boom", "war", "siege", "famine", "plague", "exile", "expulsion", "flood"];
 export const SAGA_PREFIX = `saga:${SAGA.key}:`;
 /** The book whose ending later books answer. */
 export const FIRST_BOOK = "red-stone";
@@ -41,7 +43,7 @@ export function bookChain(book, endings = {}) {
     days: i ? Math.max(0, daysBetween(b.steps[i - 1].at, x.at)) : 0, at: x.at, date: dateText(x.at),
     journal: x.journal && b.journal ? {entry: b.journal, page: x.journal} : null,
     clocks: x.clocks ?? null, signal: x.signal ? {region: SAGA.region, about: "", ...x.signal} : null,
-    ending: x.ending ?? null, encounters: x.encounters ?? []}));
+    ending: x.ending ?? null, encounters: x.encounters ?? [], town: x.town ?? null}));
   return {key: chainKey(b.key), label: `${SAGA.title}, book ${b.n}: ${b.title}`, lines: b.lines, from: b.from, to: b.to,
     page: "The Rothenstein saga (WoDX's own story)", saga: b.key, steps};
 }
@@ -125,6 +127,7 @@ export function validate(saga = SAGA, {eras = null} = {}) {
       for ( const k of Object.keys(x.clocks ?? {}) ) if ( !clockKeys.includes(k) ) out.push(`The step ${id} moves an unknown clock (${k}).`);
       for ( const k of Object.keys(x.by ?? {}) ) if ( !SAGA_ENDINGS[k] ) out.push(`The step ${id} answers an unknown ending (${k}).`);
       for ( const k of x.ending ?? [] ) if ( !SAGA_ENDINGS[k] ) out.push(`The step ${id} offers an unknown ending (${k}).`);
+      if ( x.town && !TOWN_KINDS.includes(x.town) ) out.push(`The step ${id} names an unknown town change (${x.town}).`);
       if ( x.journal && !b.journal ) out.push(`The step ${id} points at a page, but its book has no journal.`);
     });
   }
