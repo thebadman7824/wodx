@@ -10,8 +10,14 @@ the same version number.
     ---
     bump: minor
     what: (optional) a new "What it does" cell for docs/MODULES.md, 300 characters at most
+    effect: the local weapons show in the Gear window and on the sheet, with their own damage
     ---
     Gear by region: a scene's land picks the local weapons (B3070-B3073).
+
+`effect` is required for a `minor` or `major` note (Ben's standing rule, 14 November 2026: anything added to the game
+has a tangible effect in play unless that is impossible to render). Say what a player or the Storyteller sees change:
+a roll, a card, a sheet row, a map change, a sound. Where nothing can be shown, write `effect: none, ` and why.
+`merge-stamp.mjs --check` warns when it is missing.
 
 `bump` is `patch` (fixes), `minor` (new features) or `major`. Write the note as one paragraph and leave the version
 out: the stamp writes `- 0.21.0 (your note)` at the top of the module's CHANGELOG.md, bumps module.json and the
