@@ -193,7 +193,7 @@ Next free block: B3820
 | B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3719) | Library |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
-| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3753) | Actions |
+| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3754) | Combat |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
 | B3780-B3809 | The no-effect audit: gear in the fight (used B3780-B3803) | Combat |
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
@@ -6397,6 +6397,10 @@ How to reverse: put back S() on those rotes in mage-da-effects.js; drop the kw s
 ## B3753. Rites and rituals from the caster's own roll (2026-11-14)
 WoDX Actions. The 314 rituals and rites the books list (V20 and V20 Dark Ages Thaumaturgy and Necromancy, W20 and Dark Ages: Werewolf rites, Mummy spells and rituals) reached the effects card only through the Storyteller's effect window. Now the caster's roll does it. A vampire has a new Cast a ritual window: pick the ritual from the era's list, and it shows what the ritual does, its time and its blood, sets the difficulty at its level + 3 (at most 9), rolls Intelligence + Occult (V20 p. 230; V20 Dark Ages p. 302), and a ritual that takes puts its keywords on the effects card at the successes. Perform a rite gets a "From the book" list (the era's rites first) and reads a known rite by its name; a rite that takes does the same. Mummy Hekau reads a sheet spell or ritual by its name in the book list when the named library has none.
 How to reverse: drop castRitual from kindred.js and main.js, the book select and EF.ritualPlan call in garou.js performRite, and the findRitual block in mummy.js.
+
+## B3754. A maneuver that hits leaves its state on the target (2026-11-14)
+WoDX Combat. Sweep, Tackle, Hold, Grapple, Stake and Impale changed the attack and damage pools, and their after-effect was a line of text on the card. Now, with token status effects on (the same setting that marks Dazed), a hit leaves the state on the target's token as a WoDX condition: Sweep and Tackle mark Knocked down and Hold and Grapple mark Held, each until the victim's next action in a fight (the scene outside one); a Stake or Impale with three damage successes marks a vampire Staked until the stake is pulled out (V20 Dark Ages pp. 347-348). The card says what was marked. A player's attack on someone they do not own asks the Storyteller's client to mark it. The conditions already shape later rolls and turns (the conductor skips a staked actor; movement reads Knocked down).
+How to reverse: drop followOn and markFollow in wodx-combat main.js.
 
 ## B3770. Kuei-jin make stone weapons and true jade (2026-11-14)
 WoDX Library, data/wonders-kuei-jin.mjs and scripts/wonders-kuei-jin.mjs. The Item Crafting Desk pick kj2 (full). Kindred of the East has jade talismans only as a Background (pp. 86-87), but the Companion (p. 67) gives the masters of Jade Shintai two powers that make things, Blade of Stone and Taste of Jade. Both are a Kuei-jin kit on the shared wonders registry (B3683), world setting craftKueiJin, on by default like the other kits.

@@ -18,6 +18,7 @@
  *  11. A Discipline with no roll (Protean 2) readies the user and harms no one (B3751)
  *  12. A Dark Ages cantrip with [veil] on its sheet line puts Veil on the card when it takes (B3752)
  *  13. Cast a ritual: a self ward from the era's ritual list puts Ward on the card when it takes (B3753)
+ *  14. WoDX Combat: a Sweep that hits marks Knocked down on the target (B3754)
  * Result: Data/wodx-gate/gatepowers-result.json.
  */
 const R = { started: new Date().toISOString(), steps: [], errors: [], notes: [] };
@@ -264,6 +265,16 @@ export async function run() {
       const m = await untilMsg(n);
       const items = fx(m), took = /it takes/.test(text(m));
       ok("13 Cast a ritual puts its keywords on the card", !!m && i >= 0 && text(m).includes(list[i].n) && (took ? items.some(x => x.key === "ward") : items.length === 0), { era, ritual: list[i]?.n, took, card: text(m).slice(0, 300), items: items.map(x => `${x.key}:${x.route}`) });
+    });
+    await step("14 A Sweep knocks the target down on its token", async () => {
+      const C = game.wodxCombat, cond = game.modules.get("wodx-chronicle")?.api?.conditions;
+      const v = await mk("Swept", "Mortal", {}, []);
+      const f = C?.followOn?.("sweep", { hit: true }) ?? [];
+      const miss = C?.followOn?.("sweep", { hit: false }) ?? [];
+      for (const x of f) await C.markFollow(v, x);
+      await sleep(600);
+      const down = !!cond?.hasCondition?.(v, "knockdown");
+      ok("14 A Sweep knocks the target down on its token", f.length === 1 && !miss.length && down, { follow: f, down });
     });
   } finally {
     for (const [h, id] of hooks) Hooks.off(h, id);

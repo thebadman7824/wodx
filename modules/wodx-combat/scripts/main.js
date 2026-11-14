@@ -521,6 +521,7 @@ async function onSocket(p) {
         }
     } else if (p.action === "setDamage") await setDamage(actor, p.damage);
     else if (p.action === "dazed") await markDazed(actor);
+    else if (p.action === "follow" && ["knockdown", "held", "staked"].includes(p.follow?.condition)) await markFollow(actor, p.follow);
     else if (p.action === "update") await actor.update(p.data);
 }
 
@@ -922,6 +923,9 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     };
     if (autoAtkNote) log.unshift(esc(autoAtkNote));
     if (autoNotes.length) log.unshift(esc(`Automatic: ${autoNotes.join("; ")}.`));
+    // What the maneuver leaves on the target, shown on its token (B3754)
+    const follow = target && setting("statusEffects") ? R.followOn(R.maneuverKey(maneuver), { hit: !!hit && !atk.botch, damageSuccesses: dmg?.successes ?? 0, profile }) : [];
+    for (const f of follow) log.push(`${f.name}: ${target.name} is marked on the token${f.lasts === "staked" ? " until the stake is pulled out" : " until their next action"} (V20 Dark Ages pp. 347–348).`);
     let html = attackCard({ attacker, target, w, ab, attrKey, pool, atk, def, defNote, autoNote, net, hit, dmg, dmgPool, soak, outcome, profile, armorBroken, counter, spendNotes, fd, maneuver, log });
     const fkey = F.attackKey({ hit, botch: atk.botch, noDamage: !!maneuver.noDamage, levels: soak ? (outcome?.levels ?? 0) : (dmg?.successes ?? 0),
         type: outcome?.type ?? w.type, soaked: !!(soak && hit && !maneuver.noDamage && !outcome?.levels) });
@@ -938,6 +942,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         if (counter?.levels > 0) await applyFromMessage(msg, "counter");
     }
     if (target && outcome?.dazed && setting("statusEffects")) await markDazed(target);
+    for (const f of follow) await markFollow(target, f);
     if (target && location && outcome?.levels) {
         const offer = BodyRules.maimOffer(location, { levels: outcome.levels, type: outcome.type });
         if (offer) await BD.offerMaim(target, offer, { attacker });
@@ -1626,8 +1631,8 @@ Hooks.once("init", () => {
     const aftermath = AA.setupAftermath({ corpusTrack });
     FTime.setupFightTime();
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.29.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
-        conditionMods, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.30.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        conditionMods, followOn: R.followOn, markFollow, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
     game.wodx ??= {};
@@ -2130,6 +2135,16 @@ export function dazedThreshold(target, kind = getKind(target)) {
     // WoDX reading: hunters, mages and animals have mortal bodies; every other profile is supernatural
     const mortalBodied = ["mortal", "hunter", "mage", "beast"].includes(kind);
     return mortalBodied ? { threshold: stamina, label: "Stamina" } : { threshold: stamina + 2, label: "Stamina + 2" };
+}
+
+/** A maneuver's follow-on state on the target (B3754): a turn in a fight (the scene outside one), or a stake until pulled. */
+async function markFollow(actor, f) {
+    const api = chronicle();
+    if (!actor.isOwner) return requestGM({ action: "follow", uuid: actor.uuid, follow: f });
+    if (f.lasts === "staked") return api?.conditions?.setCondition?.(actor, "staked", true);
+    if (!api?.applyTimed) return;
+    const duration = game.combat?.started ? { kind: "rounds", rounds: 1 } : { kind: "scene" };
+    await api.applyTimed(actor, { name: f.name, condition: f.condition, key: `wodx-${f.condition}`, duration, source: "V20 Dark Ages pp. 347–348" });
 }
 
 async function markDazed(actor) {
