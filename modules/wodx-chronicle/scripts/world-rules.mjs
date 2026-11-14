@@ -102,8 +102,9 @@ export const WORLD_REGIONS = {
   // The Kongo, Luba and Lunda, and Buganda from 1197; the Portuguese at the Kongo court from 1491, the Swahili and
   // French with the trade and the colony (B4690)
   "central-africa": R("Central Africa (Kongo, the great lakes, the rainforest)", "other", -4.3, 15.3, "tropical-wet", "kongo", {
-    medieval: "kongo 45, luba 35, ganda 20", "early-modern": "kongo 46, luba 34, ganda 18, portuguese 2",
-    industrial: "kongo 36, luba 30, ganda 14, swahili 10, french 6, portuguese 4", modern: "kongo 38, luba 34, ganda 12, swahili 8, french 8"}),
+    // and the Banyarwanda and Barundi of the two lake kingdoms (B5030)
+    medieval: "kongo 40, luba 32, ganda 18, banyarwanda 10", "early-modern": "kongo 42, luba 31, ganda 16, banyarwanda 9, portuguese 2",
+    industrial: "kongo 33, luba 28, ganda 13, banyarwanda 8, swahili 10, french 5, portuguese 3", modern: "kongo 35, luba 31, ganda 11, banyarwanda 9, swahili 7, french 7"}),
   // The Americas
   "canada": R("Canada (Québec, the Great Lakes, the prairies, the north)", "americas", 45.5, -73.6, "boreal", "canadian", {
     // and the Cree, the Anishinaabe and the Haida and Tlingit of the Northwest coast (B4160)
