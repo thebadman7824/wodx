@@ -41,7 +41,7 @@ const toolsNow = () => { const c = ui.controls.controls; return (c.tokens ?? c.t
 const shown = () => Object.values(toolsNow()).filter(t => t.button && t.visible !== false).map(t => t.name);
 async function redraw() { await ui.controls.render({reset: true}); await sleep(300); }
 
-export async function run() {
+async function runGate(K) {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   if ( game.world.id !== "rothenstein-wodx" ) { ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"}); return save(R); }
@@ -221,3 +221,7 @@ export async function run() {
   }
   return save(R);
 }
+
+// The gate kit (B3733): its own scratch scene, cleaned up after.
+import {kitRun} from "./kit.mjs";
+export const run = kitRun("gateplayerview", runGate);

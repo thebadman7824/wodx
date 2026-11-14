@@ -21,14 +21,14 @@ async function save(R, name) {
   return R.summary;
 }
 
-export async function run() {
+async function runGate(K) {
   const R = {started: new Date().toISOString(), steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 4).join(" | ")}); } };
   const t0 = game.time.worldTime;
   const st = () => game.modules.get(ST).api;
   const MEX = {way: "mesoamerican", region: "mexico"}, MOR = {way: "latin", region: "moravia"};
-  const actor = game.actors.find(a => a.type !== "npc" && a.hasPlayerOwner) ?? game.actors.contents[0];
+  const actor = await K.make(Actor, {name: "WoDX gate: cook", type: "Mortal"});
   R.notes.push(`actor ${actor?.name ?? "none"}`);
 
   await step("1. rules", async () => {
@@ -69,3 +69,7 @@ export async function run() {
   ok("5. nothing changed: the clock is where it was", game.time.worldTime === t0);
   return save(R, "gatecookways-result.json");
 }
+
+// The gate kit (B3733): its own scratch scene, cleaned up after.
+import {kitRun} from "./kit.mjs";
+export const run = kitRun("gatecookways", runGate);

@@ -25,7 +25,7 @@ async function save(R, name) {
   return R.summary;
 }
 
-export async function run() {
+async function runGate(K) {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ")}); } };
@@ -77,7 +77,7 @@ export async function run() {
       ok("the clock check", at.year === now.year && at.era === now.era, {now, at, card: !!m});
     });
     if ( game.modules.get(IX)?.active ) {
-      scene = game.scenes.viewed ?? game.scenes.active ?? game.scenes.contents[0];
+      scene = canvas.scene ?? (await K.scene());
       const back = {era: "modern", year: 2020}, then = {era: "victorian", year: 1850};
       await step("the maps", async () => {
         const at = {x: 0, y: 0, width: 100, height: 100, hidden: true, texture: {src: null}};
@@ -98,11 +98,11 @@ export async function run() {
         ok("the map card", !!m && /On the maps/.test(m.content) && keep === 2 && show === 2, {keep, show});
       });
       await step("keep on the map", async () => {
-        const car = tiles[0];
+        const car = tiles.find(t => t.flags?.[IX]?.mountKind === "car");
         await api().keepThing(scene.id, car.id, false, "mount");
         const left = (await api().scanMaps(back, then, [scene])).filter(r => r.id === car.id).length;
         const ix = game.modules.get(IX).api;
-        const kept = ix.characterFor(null, null, car).kept === true, plain = ix.characterFor(null, null, tiles[1]).kept === false;
+        const kept = ix.characterFor(null, null, car).kept === true, plain = ix.characterFor(null, null, tiles.find(t => t.flags?.[IX]?.watchKind === "radio")).kept === false;
         const ops = ix.rules.optionsFor(ix.describeTile(car), {actorId: "x", year: 1850, kept: true, abilities: {}});
         ok("keep on the map", !!car.flags?.[MOD]?.keepOutOfEra && left === 0 && kept && plain && !ops.some(o => o.id === "eraNote"), {left, kept, plain, ops: ops.map(o => o.id)});
       });
@@ -128,3 +128,7 @@ export async function run() {
   }
   return save(R, "gateanachronism-result.json");
 }
+
+// The gate kit (B3733): its own scratch scene, cleaned up after.
+import {kitRun} from "./kit.mjs";
+export const run = kitRun("gateanachronism", runGate);
