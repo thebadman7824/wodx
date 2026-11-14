@@ -200,12 +200,13 @@ Next free block: B4140
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Gate summaries name their failed steps (used B3900-B3912) | tools |
+| B3900-B3929 | Gambling moves money (used B3900-B3914) | Library |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
 | B4100-B4109 | PC job queue and runner: threads queue PC work as GitHub issues, five testbed lanes run it side by side (used B4100-B4104) | tools (no module) |
 | B4110-B4119 | Stale pull request sweeper in the PC runner (used B4110) | tools (no module) |
+| B4120-B4129 | Player interface: the Storyteller hides parts of Foundry's screen for each player (used B4120-B4123) | Chronicle |
 | B4130-B4139 | Missouri village peoples in the People generator (used B4130-B4132) | Creation, Chronicle |
 <!-- decision-index:end -->
 
@@ -6758,6 +6759,9 @@ Reverse: set plant and strike back to effect "note" in use-rules.mjs, drop the t
 ## B3912. A failing gate's summary names its failed steps (2026-11-14)
 The gate kit's summary line, which the PC job queue posts on the issue, now ends with each failed step's name and what it saw (cut short), plus any errors, so a failed run is understood without fetching the result file from the PC. A passing run's line is unchanged ("n/n passed"). The lane runner keeps up to 600 characters of the line instead of 300. Reverse: drop the two added lines in tools/gate/kit.mjs save().
 
+## B3914. Gambling reaches the purses at api.upkeep.money (2026-11-14)
+B3910's gambling read WoDX Storyteller's money api at api.money, which does not exist; the purse api is api.upkeep.money. Every game rolled and posted its card, but the stake never moved and the stake offered was always nothing. Fixed in gamble-use.mjs; gategamble now fails when the api is missing or the stake is nothing, and a harness test checks the path. Found by the gate summary change (B3912). Reverse: none needed.
+
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
 
@@ -6852,6 +6856,26 @@ pull request that is behind main and has had no commit for 2 hours (update-branc
 (workflow_dispatch, added to checks.yml) on one that is up to date but never got a run, and lists the rest (merge
 conflicts, CI that cannot start, CI that failed) in one pc-alert issue that it closes when the list is empty. It uses
 Ben's sign-in on the PC because a push made with the workflow token starts no CI.
+
+## B4120. Player interface window (2026-11-14)
+WoDX Chronicle. The Player toolbar buttons window (B60) becomes Player interface. Below the WoDX buttons it lists Screen parts with a tick for each player: scene navigation, the player list, the macro bar, camera and voice, and the sidebar tabs Combat, Actors, Items, Journal, Roll tables, Cards, Playlists and Compendium packs. World setting playerUi keeps only the unticked parts. The approved study of 2026-11-10 (priority 6) planned this.
+
+Reverse: tick every part again, or clear the playerUi setting.
+
+## B4121. What always stays (2026-11-14)
+WoDX Chronicle. Chat, Settings, notifications, the scene controls and the X-card are never listed, so a player can always talk, reach their own settings, read warnings, use the WoDX buttons and stop a scene. The Storyteller never loses a part.
+
+Reverse: none planned.
+
+## B4122. Cosmetic only (2026-11-14)
+WoDX Chronicle. A hidden part is hidden with a body class and a fixed style sheet on that player's screen. It does not change what the player may open or edit; that stays with Foundry's user roles and ownership. When a hidden sidebar tab was open, the sidebar goes back to chat. The Senses quiet interface (Alt+Q) may tuck more away but never shows what the Storyteller hid.
+
+Reverse: none planned.
+
+## B4123. Preview on the Storyteller's screen (2026-11-14)
+WoDX Chronicle. api.playerTools.previewUi(keys) shows the Storyteller a player's screen parts hidden on their own screen for this session; previewUi(null) puts it back. The gate gateplayerui uses it.
+
+Reverse: drop the preview.
 
 ## B4130. The village peoples of the Missouri join the West (2026-11-14)
 WoDX Creation and Chronicle. The Mandan, the Hidatsa, the Arikara and the Pawnee join the American West's mix from 1197: together 14 in 100 before 1500 and 8 in 100 before 1800, then 1 each after the smallpox of 1837 and the reservations (the Pawnee and the Hidatsa still 1 each today). Taken as recommended while Ben was away; logged in PENDING-REVIEW.

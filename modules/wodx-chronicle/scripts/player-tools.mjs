@@ -4,6 +4,7 @@
  * the X-card can never be hidden (it is a safety tool). Foundry's own buttons and other modules' are not touched.
  *
  * World setting "playerTools": {<userId>: {<toolName>: false}}; a button not listed is shown.
+ * B4120: the same window ("Player interface") also hides parts of Foundry's own screen per player (setting "playerUi").
  */
 import {MODULE_ID, esc, emit, isActiveGM} from "./util.mjs";
 import {searchBox} from "./search.mjs";
@@ -72,12 +73,94 @@ export function fromTicks(ticks) {
   return out;
 }
 
+/* -------------------------------------------- */
+/*  Player interface: screen parts (B4120)      */
+/* -------------------------------------------- */
+
+/** The parts of Foundry's own screen the Storyteller may hide from a player, in screen order. tab: a sidebar tab. */
+export const UI_PARTS = [
+  {key: "nav", label: "Scene navigation", hint: "the row of scene names at the top", sel: ["#scene-navigation", "#navigation"]},
+  {key: "players", label: "Player list", hint: "who is here, at the bottom left", sel: ["#players"]},
+  {key: "hotbar", label: "Macro bar", hint: "the numbered slots at the bottom", sel: ["#hotbar"]},
+  {key: "camera", label: "Camera and voice", hint: "the video and voice windows", sel: ["#camera-views"]},
+  {key: "combat", label: "Sidebar: Combat", tab: "combat"},
+  {key: "actors", label: "Sidebar: Actors", tab: "actors"},
+  {key: "items", label: "Sidebar: Items", tab: "items"},
+  {key: "journal", label: "Sidebar: Journal", tab: "journal"},
+  {key: "tables", label: "Sidebar: Roll tables", tab: "tables"},
+  {key: "cards", label: "Sidebar: Cards", tab: "cards"},
+  {key: "playlists", label: "Sidebar: Playlists", tab: "playlists"},
+  {key: "compendium", label: "Sidebar: Compendium packs", tab: "compendium"}
+];
+/** Never hidden: a player must always be able to talk, reach Settings, read warnings, use the controls and the X-card. */
+export const UI_KEPT = "Chat, Settings, notifications, the scene controls and the X-card are always shown.";
+
+/** The CSS selectors of one part. Pure. */
+export function partSelectors(part) {
+  if ( part.tab ) return [`#sidebar-tabs [data-tab="${part.tab}"]`, `#sidebar-content [data-tab="${part.tab}"]`, `#sidebar > nav [data-tab="${part.tab}"]`];
+  return part.sel ?? [];
+}
+
+/** The body class that hides one part. Pure. */
+export const uiClass = key => `wodx-ui-no-${key}`;
+
+/** The style sheet: one rule per part, shown only while its body class is on. Pure. */
+export function uiCss() {
+  return UI_PARTS.map(p => `${partSelectors(p).map(s => `body.${uiClass(p.key)} ${s}`).join(", ")} { display: none !important; }`).join("\n");
+}
+
+/** The parts this player does not see. Pure. ui: the playerUi setting. The Storyteller never loses any. */
+export function uiHidden(ui, userId, isGM = false) {
+  if ( isGM ) return [];
+  const row = ui?.[userId] ?? {};
+  return UI_PARTS.filter(p => row[p.key] === false).map(p => p.key);
+}
+
+/** The setting from the window's ticks: only the hidden parts are kept. Pure. ticks: {userId: {key: bool}}. */
+export function uiFromTicks(ticks) {
+  const out = {};
+  for ( const [u, row] of Object.entries(ticks ?? {}) ) {
+    for ( const p of UI_PARTS ) if ( row?.[p.key] === false ) (out[u] ??= {})[p.key] = false;
+  }
+  return out;
+}
+
+const uiMap = () => { try { return game.settings.get(MODULE_ID, "playerUi") ?? {}; } catch { return {}; } };
+let uiPreview = null;
+
+/** Put this client's body classes in line with the setting (or the Storyteller's preview). */
+export function applyUi() {
+  if ( typeof document === "undefined" || !document.body ) return [];
+  if ( !document.getElementById("wodx-player-ui") ) {
+    const st = document.createElement("style");
+    st.id = "wodx-player-ui";
+    st.textContent = uiCss();
+    document.head.append(st);
+  }
+  const hide = uiPreview ?? uiHidden(uiMap(), game.user.id, game.user.isGM);
+  for ( const p of UI_PARTS ) document.body.classList.toggle(uiClass(p.key), hide.includes(p.key));
+  // A hidden sidebar tab that was open: the sidebar goes back to chat
+  const open = ui.sidebar?.tabGroups?.primary ?? ui.sidebar?.activeTab;
+  if ( open && hide.includes(open) ) { try { ui.sidebar.changeTab("chat", "primary"); } catch (e) { /* the sidebar redraws on chat later */ } }
+  return hide;
+}
+
+/** The Storyteller sees a player's screen parts on their own screen, this session only; null puts everything back. */
+export function previewUi(keys = null) {
+  uiPreview = Array.isArray(keys) ? keys.filter(k => UI_PARTS.some(p => p.key === k)) : null;
+  return applyUi();
+}
+
 const map = () => { try { return game.settings.get(MODULE_ID, "playerTools") ?? {}; } catch { return {}; } };
 
 export function registerPlayerToolSettings() {
   game.settings.register(MODULE_ID, "playerTools", {
     scope: "world", config: false, type: Object, default: {},
     onChange: () => { try { ui.controls?.render?.({reset: true}); } catch (e) { console.warn("WoDX | toolbar refresh", e); } }
+  });
+  // B4120: the parts of Foundry's own screen each player sees
+  game.settings.register(MODULE_ID, "playerUi", {
+    scope: "world", config: false, type: Object, default: {}, onChange: () => applyUi()
   });
 }
 
@@ -112,24 +195,31 @@ export async function openPlayerTools() {
   const rows = PLAYER_TOOLS.map(t => `<tr data-search-text="${esc(`${t.label} ${t.module}`)}"><td><b>${esc(t.label)}</b><br><span class="wodx-quiet">${esc(t.module)}${t.locked ? " · always shown (safety)" : ""}</span></td>${
     players.map(u => `<td style="text-align:center"><input type="checkbox" name="t.${u.id}.${t.name}" ${toolShown(m, u.id, t.name) ? "checked" : ""} ${t.locked ? "disabled" : ""}
       aria-label="${esc(`${t.label} for ${u.name}`)}"></td>`).join("")}</tr>`).join("");
-  const content = `<p class="wodx-prompt">Tick the WoDX buttons each player sees in the Token controls. Storyteller-only buttons stay yours; Foundry's own buttons are not changed.</p>
-    ${searchBox("table.wodx-player-tools", "Search buttons…", "Search buttons")}
-    <div class="wodx-scroll" style="overflow:auto"><table class="wodx-player-tools" style="width:100%"><thead>${head}</thead><tbody>${viewRow}${rows}</tbody></table></div>`;
+  const um = uiMap();
+  const partHead = `<tr class="wodx-ui-head" data-search-text="screen parts"><td colspan="${players.length + 1}"><b>Screen parts</b><br><span class="wodx-quiet">${esc(UI_KEPT)}</span></td></tr>`;
+  const partRows = UI_PARTS.map(p => `<tr data-search-text="${esc(`${p.label} ${p.hint ?? ""} screen`)}"><td><b>${esc(p.label)}</b>${p.hint ? `<br><span class="wodx-quiet">${esc(p.hint)}</span>` : ""}</td>${
+    players.map(u => `<td style="text-align:center"><input type="checkbox" name="p.${u.id}.${p.key}" ${um?.[u.id]?.[p.key] === false ? "" : "checked"}
+      aria-label="${esc(`${p.label} for ${u.name}`)}"></td>`).join("")}</tr>`).join("");
+  const content = `<p class="wodx-prompt">Tick what each player sees: the WoDX buttons in the Token controls, then the parts of the screen. Storyteller-only buttons stay yours. This only tidies the screen; what a player may do is set by their role and by who owns what.</p>
+    ${searchBox("table.wodx-player-tools", "Search buttons and screen parts…", "Search buttons and screen parts")}
+    <div class="wodx-scroll" style="overflow:auto"><table class="wodx-player-tools" style="width:100%"><thead>${head}</thead><tbody>${viewRow}${rows}${partHead}${partRows}</tbody></table></div>`;
   const {DialogV2} = foundry.applications.api;
   const ticks = await DialogV2.prompt({
     classes: ["wodx", "wodx-dialog"],
-    window: {title: "Player toolbar buttons"},
+    window: {title: "Player interface"},
     position: {width: Math.min(900, 360 + 90 * players.length)},
     content,
     ok: {
       label: "Save", icon: "fa-solid fa-floppy-disk",
       callback: (event, button) => {
-        const out = {__views: {}};
+        const out = {__views: {}, __ui: {}};
         for ( const u of players ) {
           const v = button.form.querySelector(`[name="v.${u.id}"]`)?.value ?? "";
           if ( v ) out.__views[u.id] = v;
           out[u.id] = {};
           for ( const t of PLAYER_TOOLS ) out[u.id][t.name] = !!button.form.querySelector(`[name="t.${u.id}.${t.name}"]`)?.checked;
+          out.__ui[u.id] = {};
+          for ( const p of UI_PARTS ) out.__ui[u.id][p.key] = !!button.form.querySelector(`[name="p.${u.id}.${p.key}"]`)?.checked;
         }
         return out;
       }
@@ -137,10 +227,11 @@ export async function openPlayerTools() {
     rejectClose: false
   });
   if ( !ticks ) return;
-  const {__views: chosen = {}, ...rest} = ticks;
+  const {__views: chosen = {}, __ui: parts = {}, ...rest} = ticks;
   await game.settings.set(MODULE_ID, "playerViews", chosen);
   await game.settings.set(MODULE_ID, "playerTools", fromTicks(rest));
-  ui.notifications.info("Player toolbar buttons saved; each player's toolbar changes now.");
+  await game.settings.set(MODULE_ID, "playerUi", uiFromTicks(parts));
+  ui.notifications.info("Player interface saved; each player's screen changes now.");
 }
 
 /* -------------------------------------------- */

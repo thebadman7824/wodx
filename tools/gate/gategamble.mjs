@@ -15,7 +15,7 @@ export async function run() {
   const G = gate("gategamble");
   try {
     const lib = game.modules.get("wodx-library")?.api;
-    const M = game.modules.get("wodx-storyteller")?.api?.money;
+    const M = game.modules.get("wodx-storyteller")?.api?.upkeep?.money;
     const [a, b] = await G.make(Actor, [body("Gate Gamble Player"), body("Gate Gamble Rival")]);
     const [cards] = await a.createEmbeddedDocuments("Item", [{name: "a worn deck of cards", type: "Item"}]);
     const carried = x => Number(M?.purse?.(x)?.carried) || 0;
@@ -32,7 +32,7 @@ export async function run() {
       const before = carried(a);
       const GU = await import("/modules/wodx-library/scripts/gamble-use.mjs");
       const r = await GU.gamble(a, cards, {stakeKey: "fair", against: null});
-      G.ok("2. against the house", !!r && r.stake === Math.round(before * 0.2) && carried(a) - before === r.delta, {stake: r?.stake, delta: r?.delta, moved: carried(a) - before});
+      G.ok("2. against the house", !!M && !!r && r.stake > 0 && r.stake === Math.round(before * 0.2) && carried(a) - before === r.delta, {stake: r?.stake, delta: r?.delta, moved: carried(a) - before});
     });
 
     await G.step("3. against another character", async () => {
@@ -40,7 +40,7 @@ export async function run() {
       const GU = await import("/modules/wodx-library/scripts/gamble-use.mjs");
       const r = await GU.gamble(a, cards, {stakeKey: "small", against: b});
       const da = carried(a) - ba, db = carried(b) - bb;
-      G.ok("3. against another character", !!r && da === r.delta && db === -r.delta, {delta: r?.delta, a: da, b: db});
+      G.ok("3. against another character", !!M && !!r && r.stake > 0 && da === r.delta && db === -r.delta, {delta: r?.delta, a: da, b: db});
     });
   } finally { return G.finish(); }
 }
