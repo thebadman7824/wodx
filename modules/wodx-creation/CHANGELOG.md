@@ -2,6 +2,9 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.54.0 (Filipinos join the People generator with names from Pigafetta, Legazpi and the Clavería catalogue (B4750 to B4752))
+- 0.53.0 (The Khmer join the People generator (B4740 to B4742))
+- 0.52.0 (Sephardi and Mizrahi Jews join the People generator with their own names and families (B4730 to B4732))
 - 0.51.0 (The Amazigh (Berbers) join the People generator with names from the Almoravid and Almohad records and the Kabyle and Moroccan names since (B4710 to B4712))
 - 0.50.0 (The Bakongo, the Luba and Lunda and the Baganda join the People generator with names from the Kongo court letters, the king lists and the Buganda records (B4690 to B4692))
 - 0.49.0 (Aboriginal Australians join the People generator with names from the colonial journals, the nations for women not named in the records and family names after 1800 (B4680 to B4682))

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4730
+Next free block: B4760
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -194,7 +194,7 @@ Next free block: B4730
 | B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3719) | Library |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
-| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3758) | Chronicle, Actions |
+| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3759) | Chronicle, Storyteller, Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
 | B3780-B3809 | The no-effect audit: a harmless hit makes its card (used B3780-B3809) | Combat |
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
@@ -219,9 +219,12 @@ Next free block: B4730
 | B4670-B4679 | Furniture that does something: stocked shelves, desks and barrels; tables and counters as cover (used B4670-B4673) | Interactables, Combat (and the map generator in tools/mapgen) |
 | B4680-B4689 | Aboriginal Australian names in the People generator (used B4680-B4682) | Creation, Chronicle |
 | B4690-B4699 | Central Africa names (Kongo, Luba, Ganda) (used B4690-B4692) | Creation, Chronicle |
-| B4700-B4709 | A heartbeat from GitHub for the PC runner (used B4700) | tools (no module) |
+| B4700-B4709 | A heartbeat from GitHub for the PC runner (used B4700-B4701) | tools (no module) |
 | B4710-B4719 | Amazigh (Berber) names (used B4710-B4712) | Creation, Chronicle |
 | B4720-B4729 | Old installed tables stand aside for their replacements (used B4720) | Chronicle |
+| B4730-B4739 | Sephardi and Mizrahi Jewish names (used B4730-B4732) | Creation, Chronicle |
+| B4740-B4749 | Khmer names (used B4740-B4742) | Creation, Chronicle |
+| B4750-B4759 | Filipino names (used B4750-B4752) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6478,6 +6481,10 @@ How to reverse: drop the world results from effects.js planOf, plan and stItems,
 WoDX Chronicle and WoDX Actions. Show, don't tell: a flood, a fire, a storm or a quake should be seen on the map, not only named on a card. WoDX Chronicle gets one layer every module calls, api.looks: show({scene, kind, at, until, fade, source}) puts a look on a scene (a spot with a radius, a region, or the whole scene), weather({scene, kind}) a scene-wide one, and end, endAll and list take them off. Kinds: water, flood, fire, smoke, rubble, taint, plague, storm, rain, fog, snow, quake and calm (looks-rules.mjs). Each look is kept on its scene, so it survives a reload, and ends by the world clock or the combat round. The Storyteller's computer places what everyone shares: a coloured shape at the spot (the old fallback), a Token Magic FX filter on it (flames, flood water, smoke) and the weather (FXMaster's rain, clouds, lightning, embers, fog or tint, or Foundry's own scene weather when FXMaster is off, put back when the look ends). Each player's computer draws the rest itself (Sequencer animations from the JB2A pack, picked by name from Sequencer's database, and a short screen shake for a quake) at that player's own level, a new client setting: Full, Light (fainter, one animation an area, weather at half strength, no shake) or Off (the plain shape and still weather), for slow computers. Every module is optional: with none on, a look is its shape and Foundry's own weather. Ben chose FXMaster, Token Magic FX, Sequencer and JB2A on 2026-11-14 (installed on the testbed). WoDX Actions' world results (B3757) now use it: a ground area gets its look on its drawing, gone with the area; a town-wide power that lands, a plague or a taint puts a look over the scene for a while (a quake a minute, a storm three hours, a plague a day), and its Undo takes the look off. Other modules (town turns, Wyrm corruption, havens, sieges) can call the same layer.
 How to reverse: drop looks.mjs and looks-rules.mjs from WoDX Chronicle and api.looks from its main.mjs, and the LOOK_KIND calls from WoDX Actions' effects.js.
 
+## B3759. Disasters and great powers leave lasting damage on the map (2026-11-14)
+WoDX Chronicle, WoDX Storyteller and WoDX Actions. Ben asked on 2026-11-14 that every disaster and major power use damage the map itself, not only lay a passing look over it. WoDX Chronicle gets api.scars (scars.mjs, rules in scars-rules.mjs): scar({scene, kind, severity, at, source}) finds the buildings WoDX Interactables adopted (a region with its key, and the things, doors, walls and lights whose ids start with it) and hits those in the spot, or a share of them over the whole scene by severity (15, 30 or half). Fire and a sack darken the things and put every light out; a flood washes them grey-blue; a quake, a storm, a battle or a blast also bursts doors and breaks some walls through, so nothing blocks sight or passage there; a riot smashes doors and lights. Marks go over each hit building: ash, rubble or wet mud pictures extracted from Ben's own Dungeondraft packs into the testbed's Data (wodx-assets/scars, never in the repo), or a plain blot where those pictures are not on that Foundry. A map with no adopted buildings is hit in spots. Every piece is remembered on the scene as it stood, so Undo puts it all back; heal({scene, share}) puts back a share, lights first, then things, doors, walls and the marks last. WoDX Storyteller (town-scars.mjs, world setting townScars, on) scars every scene of a town when its fire, flood, storm, quake, battle, sack or riot lands (severity from the blow to prosperity; a sack is always the worst), rebuilds a share each week of the town turn (10% in a ruined town up to 40% in a thriving one), and the town card's Undo takes the damage back. WoDX Actions scars the spot of a ground area (flood water, fire, broken ground) and of a harm area three squares across or more (fire by name, else a blast); the area running out leaves the damage, the card's Undo takes it back.
+How to reverse: turn off townScars, or drop scars.mjs and scars-rules.mjs and api.scars from WoDX Chronicle, town-scars.mjs from WoDX Storyteller, and the SCAR_KIND call from WoDX Actions' effects.js.
+
 ## B3770. Kuei-jin make stone weapons and true jade (2026-11-14)
 WoDX Library, data/wonders-kuei-jin.mjs and scripts/wonders-kuei-jin.mjs. The Item Crafting Desk pick kj2 (full). Kindred of the East has jade talismans only as a Background (pp. 86-87), but the Companion (p. 67) gives the masters of Jade Shintai two powers that make things, Blade of Stone and Taste of Jade. Both are a Kuei-jin kit on the shared wonders registry (B3683), world setting craftKueiJin, on by default like the other kits.
 
@@ -7159,6 +7166,14 @@ that issue once the status moves again. The coordinator already watches pc-alert
 
 Reverse: delete .github/workflows/pc-heartbeat.yml.
 
+## B4701. The effects modules' first-run settings are not drift (2026-11-14)
+Testbed lanes (tools/lanes). After lanes 2-6 took the effects modules from lane 1, gates on two lanes stopped with
+DRIFT: fxmaster, Sequencer and Token Magic write their own housekeeping settings (a release note seen, a cleanup
+version, the preset list) the first time a GM loads the world, after the lane's clean fingerprint is taken. They are
+added to ignoreSettings in lanes.json, like the other settings that change on their own.
+
+Reverse: take the four names out of ignoreSettings.
+
 ## B4710. The Maghreb holds the Amazigh beside the Arabs (2026-11-14)
 WoDX Creation and Chronicle. The Maghreb was all Arab; the Amazigh now hold 42 in 100 in the medieval mix, 34 in the industrial age beside the French, and 38 today. Taken as recommended; logged in PENDING-REVIEW.
 
@@ -7178,3 +7193,48 @@ Reverse: change fam or child in the amazigh entry.
 WoDX Chronicle. When a region's mix is split by era (the Arctic's one table for every age became four), the table installed in the world under the old key was never updated, and as a world table it won every draw: the testbed's Arctic stayed all Norse. Now a world table whose module still registers but no longer ships its key, and which still holds the results it was installed with, is passed over in draws. Nothing is deleted; a table the Storyteller edited still wins.
 
 Reverse: drop the retired() check in allTables in gen.mjs.
+
+## B4730. Sephardi Jews where they lived (2026-11-14)
+WoDX Creation and Chronicle. Iberia's Jews to 1492 and the Jews of Constantinople, Anatolia and Thessaloniki, the Maghreb after 1492 and Amsterdam's Portuguese Nation now take Sephardi names instead of the Bohemian (Ashkenazi) list: Iberia medieval 7 in 100, Greece and Constantinople 5 and Anatolia 3 in the early-modern age, the Low Countries 3 beside 2 Ashkenazi. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put "jewish" back in those mixes in world-rules.mjs.
+
+## B4731. Mizrahi Jews from Baghdad to the Maghreb (2026-11-14)
+WoDX Creation and Chronicle. The Jews of the Levant and Mesopotamia, Egypt, Arabia (Yemen), Persia and the Maghreb, 2 to 4 in 100 before the modern age. The modern mixes of the Levant are left as they stood (all Arab); a desk for the modern Levant waits for Ben.
+
+Reverse: drop mizrahi from those mixes.
+
+## B4732. Names and families (2026-11-14)
+WoDX Creation. Sephardi names from the aljama and notarial records of Sefarad, then the Ladino communities and the Portuguese Nation, with family names in every age (Abravanel, Benveniste; later Modiano, Carasso, Curiel). Mizrahi names from the Cairo Geniza, Baghdad, Persia, Yemen and the Maghreb, carrying "ben" or "bat" or a place before 1800 and a family name after. Fewer than 300 names each.
+
+Reverse: edit the sephardi and mizrahi entries in data/people-world.mjs.
+
+## B4740. The Khmer on the mainland (2026-11-14)
+WoDX Creation and Chronicle. Mainland Southeast Asia was Vietnamese and Thai only; at 1197 Angkor holds most of it, so the Khmer are 45 in 100 in the medieval mix, 22 after Angkor's fall, and 12 in the industrial age and after. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old southeast-asia mixes in world-rules.mjs and drop khmer from people-world.mjs.
+
+## B4741. The names (2026-11-14)
+WoDX Creation. Before 1800 the kings, queens, priests and officials of the Angkor inscriptions and of the Longvek and Oudong chronicles, given names alone (the common people of the inscriptions are not named well enough to list); from 1800 the given names of modern Cambodia. Fewer than 300 names.
+
+Reverse: edit the khmer entry in data/people-world.mjs.
+
+## B4742. Family name first, from 1800 (2026-11-14)
+WoDX Creation. Modern Khmer names put the family name first, as Chinese and Vietnamese names do in WoDX.
+
+Reverse: drop khmer from FAMILY_FIRST in data/people-world.mjs.
+
+## B4750. The Philippine islands share the Malay world's mix (2026-11-14)
+WoDX Creation and Chronicle. The world map has no Philippines region of its own; Filipinos join the Malay world's mix at 14 in 100 before the Spanish and 12 after. A region of its own (its own map point, law and weather) waits for a later pass. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old nusantara mixes in world-rules.mjs and drop filipinoTables from people-world.mjs.
+
+## B4751. One list for the Tagalog, Visayan and Ilocano peoples (2026-11-14)
+WoDX Creation. Own names of the datus and rajahs and their people in Pigafetta, Legazpi and the conquest of Manila, women unnamed in the records as "A woman of" a barangay or domain; the Moro sultanates wait for a list of their own. Fewer than 300 names.
+
+Reverse: edit the lists in data/people-filipino.mjs.
+
+## B4752. Church names from 1565, family names from 1800 (2026-11-14)
+WoDX Creation. Baptism brings church names from the Spanish settlement of 1565, sometimes before the own name; family names from the Clavería catalogue of 1849 and the native names kept, from 1800 (the era groups are coarser than 1849).
+
+Reverse: change church, family or earlyChurch in data/people-filipino.mjs.

@@ -25,7 +25,7 @@ test("amazigh: medieval names carry a son-of or a tribe, modern names a family n
   assert.ok(mod.some(p => /^Aït /.test(p.family)) && mod.every(p => !p.name.includes("{")));
 });
 
-test("amazigh: the Maghreb holds Arabs and Amazigh in every age, the French a share in the industrial age", () => {
-  for ( const era of ["medieval", "early-modern", "modern"] ) assert.deepEqual(origin(era).sort(), ["amazigh", "arabic"], era);
+test("amazigh: the Maghreb holds Arabs and Amazigh in every age (Jews beside them since B4730), the French a share in the industrial age", () => {
+  for ( const era of ["medieval", "early-modern", "industrial", "modern"] ) assert.ok(origin(era).includes("amazigh") && origin(era).includes("arabic"), era);
   assert.ok(origin("industrial").includes("french"));
 });

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.89.0 (Great powers leave lasting damage where they strike: water, fire, broken ground and big blasts scar the map, with Undo on the card (B3759))
 - 3.88.0 (Powers that reach the world show it: ground areas, town-wide blows, plague and taint put WoDX Chronicle's looks on the map (B3758))
 - 3.87.0 (Powers that reach the world: 48 powers by name flood, burn or shake a town, sicken it, foul or cleanse a place, sway its mood, or leave deep water, fire or broken ground on the scene; the Cast and Storyteller effect windows get a "Reaches the world" choice (B3757))
 - 3.86.0 (Destiny and Fate bank rerolls (B3919): trait-hooks rerollsPerStory, fortuneName)

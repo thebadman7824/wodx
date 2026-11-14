@@ -24,6 +24,7 @@ import {inuitTables} from "./people-inuit.mjs";
 import {tainoTables} from "./people-taino.mjs";
 import {aboriginalTables} from "./people-aboriginal.mjs";
 import {centralAfricaTables} from "./people-central-africa.mjs";
+import {filipinoTables} from "./people-filipino.mjs";
 import {ARMENIAN} from "./people-armenian.mjs";
 
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
@@ -32,7 +33,7 @@ const tbl = (id, name, list, era) => ({id, name, results: list.map(x => (typeof 
 const tag = era => era ? ` (${era[0]})` : "";
 
 /** Peoples whose family name comes before the given name. */
-export const FAMILY_FIRST = new Set(["chinese", "japanese", "korean", "vietnamese", "hungarian"]);
+export const FAMILY_FIRST = new Set(["chinese", "japanese", "korean", "vietnamese", "hungarian", "khmer"]);
 
 /**
  * Each people: m and f given names, fam family names ("male/female" where the form follows sex). A value is one list
@@ -173,6 +174,14 @@ const P = {
   thai: {
     m: "Somchai, Somsak, Prasert, Sombat, Boonmee, Wichai, Suchart, Chaiya, Thongchai, Anan, Kiet, Niran",
     f: "Somying, Malee, Siriporn, Ratana, Kanya, Pensri, Sunee, Wanida, Nok, Dao, Mali, Busaba"},
+  // The Khmer of Kambuja (B4740): the kings, queens, priests and officials of the Angkor inscriptions and the
+  // chronicles of Longvek and Oudong, then the given and family names of modern Cambodia (family name first)
+  khmer: {
+    m: {old: "Jayavarman, Suryavarman, Yasovarman, Indravarman, Rajendravarman, Udayadityavarman, Harshavarman, Dharanindravarman, Srindravarman, Jayaviravarman, Narapatindra, Divakara, Yogisvara, Kavindrarimathana, Sangrama, Prithivindra, Kirtipandita, Bhupatindra, Sivacarya, Ponhea Yat, Ang Chan, Ang Duong, Ang Eng, Chey Chettha, Barom Reachea, Satha, Soryopor, Thommo Reachea, Ponhea Nou, Srei Saukonthor",
+      new: "Sophal, Sokha, Vannak, Rithy, Sovann, Dara, Vuthy, Kosal, Sambath, Visal, Piseth, Bunthoeun, Sokun, Samnang, Chhay, Narith, Vibol, Rathanak, Sarin, Veasna, Chantha, Ponleu, Vireak, Sothy"},
+    f: {old: "Indradevi, Jayarajadevi, Rajendradevi, Kambujalakshmi, Vijayendralakshmi, Tribhuvanadevi, Prana, Narendralakshmi, Jayadevi, Kulaprabhavati, Chakravartirajadevi, Ang Mey, Ang Pen, Ang Snguon, Ang Em, Tep, Pou, Pen, Mau, Neang Kong Rei",
+      new: "Sreymom, Sophea, Chanthy, Bopha, Sokunthea, Srey Pov, Channary, Kunthea, Sothea, Davy, Leakhena, Malis, Sopheap, Rachana, Pisey, Thida, Phalla, Chenda, Kolab, Neary"},
+    fam: {new: "Sok, Chea, Kim, Heng, Ly, Lim, Seng, Keo, Chan, Pich, Meas, Ouk, Prak, Sam, Sun, Mao, Nhem, Yim, Tep, Long, Chhim, Khiev, Nuon, Ieng, Vann, Hang, Touch, Chhun, Pen, Nou, Om, Sar, Ros, Thach, Phan"}},
   javanese: {
     m: "Slamet, Joko, Bambang, Agus, Sutrisno, Wahyu, Budi, Hadi, Sugeng, Teguh, Wiranto, Purnomo, Suparman, Harjo, Darmo, Kusno",
     f: "Sri, Siti, Wati, Endang, Sulastri, Ningsih, Lestari, Dewi, Kartini, Rukmini, Sumiati, Tuti, Yanti, Ratna, Wulan, Ayu"},
@@ -211,6 +220,25 @@ const P = {
     child: ["ibn", "bint", 3],
     fam: {old: "al-Lamtuni, al-Masmudi, al-Sanhaji, al-Zanati, al-Kutami, al-Hawwari, al-Nafusi, al-Ghumari, al-Hintati, al-Jazuli, al-Lamti, al-Miknasi, al-Awrabi, al-Maghrawi, al-Ifrani, al-Matghari, al-Kumi, al-Masufi, al-Guddali, al-Tinmalli, al-Zayyani, al-Wattasi, al-Marini",
       new: "Aït Ahmed, Feraoun, Mammeri, Amrouche, Matoub, Aït Menguellet, Ouyahia, Aït Ali, Amellal, Belaïd, Haddadi, Aït Hamouda, Ouali, Mokrani, Sadi, Mehenni, Lounès, Tighilt, Akhannouch, Oufkir, Aherdane, Oubaha, Chafik, Azaykou, Boukous, Ouzzine, Aït Baha, Ouhadi, Aït Lahcen, Bouzid, Ihaddaden, Oussedik, Aït Saada"}},
+  // Sephardi Jews of Sefarad (Castile, Aragon, Portugal) to 1492, then of Thessaloniki, Constantinople, the Maghreb and
+  // Amsterdam (B4730): names from the aljama and notarial records, the Ladino communities and the Portuguese Nation
+  sephardi: {
+    m: {old: "Yehuda, Shelomo, Mosse, Yuçaf, Yuçe, Abraham, Isaac, Samuel, Jacob, David, Hasdai, Bahya, Todros, Meir, Vidal, Bonafos, Astruc, Profet, Zerahiah, Menahem, Hayyim, Crescas, Joseph, Ezra, Mair, Bonjuha, Abram",
+      new: "Avram, Ishak, Moshe, Yaakov, Yosef, Haim, Shabetay, Eliyahu, Menahem, Daniel, Raphael, David, Samuel, Isaac, Salomon, Benjamin, Elias, Alberto, Leon, Jacques, Maurice, Victor, Moïse, Joseph, Baruch, Manuel, Duarte, Uriel"},
+    f: {old: "Jamila, Oro, Bellida, Dona, Reina, Sol, Esther, Mira, Clara, Bienvenida, Estrella, Luna, Duenya, Preciosa, Velida, Sara, Rica, Bonadona, Astruga, Gracia",
+      new: "Rebeka, Sarina, Reyna, Sultana, Djoya, Allegra, Bulisa, Rachel, Esther, Fortunée, Matilde, Rosa, Luna, Estrella, Sol, Vida, Mazaltov, Gracia, Bienvenida, Clara, Ines, Rica, Simha, Perla"},
+    fam: {old: "Abravanel, Benveniste, Ibn Ezra, Ibn Tibbon, Halevi, Abulafia, Crescas, Albalag, Alfakhar, Ibn Shushan, Ibn Nahmias, Ibn Verga, Sasportas, Caballería, Senior, Ibn Zadok, Alconstantini, Ravaya, Bonafed, Gerondi, Saporta, Toledano, Carcassona, Najara",
+      new: "Toledano, Saporta, Benveniste, Carasso, Modiano, Alhadeff, Angel, Benaroya, Covo, Pardo, Franco, Gattegno, Matalon, Navarro, Nahmias, Saltiel, Cohen, Levi, Halfon, Benbassat, Abolafio, Molho, Recanati, Mallah, de Pinto, Mendes, Lopes Suasso, Curiel, Belmonte, Teixeira, Henriques, da Costa, Castro, Pereira"}},
+  // Mizrahi Jews of Baghdad, Persia, Yemen, Egypt and the Maghreb (B4731): names from the Cairo Geniza, the Baghdad and
+  // Persian communities and the Yemenite and Maghrebi families since
+  mizrahi: {
+    m: {old: "Saadia, Sherira, Hai, Natan, Yosef, Daniel, Shemuel, Yehuda, Avraham, Yishaq, Halfon, Nissim, Sason, Ezra, Yaish, Mevorakh, Netanel, Hizkiyahu, Yefet, Faraj, Khalaf, Mukhtar, Abu Imran, Maimun, Musa, Harun, Yahya, Yeshua",
+      new: "Ezra, Sasson, Nissim, Saleh, Menashe, Yosef, Eliyahu, Shaul, Naim, David, Yehezkel, Shlomo, Haron, Moshe, Yaakov, Shalom, Yihya, Avraham, Mordechai, Ovadia, Rahamim, Selim, Yitzhak, Khedouri, Meir, Hai"},
+    f: {old: "Sitt al-Dar, Sitt al-Husn, Karima, Wuhsha, Sitt al-Ahl, Mulk, Ghaliya, Sara, Rivka, Esther, Mazal, Hanna, Simha, Sitt al-Sada, Nasiba, Thamar, Bahja, Sultana",
+      new: "Farha, Masuda, Naima, Marcelle, Regina, Simha, Mazal, Tova, Rachel, Habiba, Salha, Louise, Aziza, Hanna, Shoshana, Ruth, Miriam, Esther, Rivka, Yona, Batya, Malka, Bracha, Sultana, Ziva"},
+    child: ["ben", "bat", 3],
+    fam: {old: "ha-Kohen, ha-Levi, al-Baghdadi, al-Fasi, al-Tustari, al-Maghribi, al-Halabi, al-Ammani, al-Iskandarani, ha-Bavli, al-Sanaani, al-Dimashqi, al-Qabisi, al-Tahiri",
+      new: "Sassoon, Kadoorie, Shasha, Somekh, Shamash, Dangoor, Twena, Basri, Moallem, Shohet, Elias, Gabbay, Zilkha, Hakim, Sehayek, Kohen, Levi, Mizrahi, Hakimian, Elghanayan, Nazarian, Kashani, Sharabi, Tzadok, Damari, Nahari, Kafih, Hamami, Abergel, Ohayon, Azoulay, Bitton, Elbaz, Dahan, Amsalem, Benchetrit, Ohana, Assaraf"}},
   zulu: {
     m: "Sipho, Themba, Bongani, Mandla, Sibusiso, Nkosana, Mthunzi, Dumisani, Jabulani, Vusumuzi, Zwelakhe, Mzwandile, Lungile, Siyabonga, Senzo, Bheki",
     f: "Nomvula, Thandiwe, Nomsa, Zanele, Lindiwe, Busisiwe, Nokuthula, Sibongile, Ntombi, Thandeka, Nonhlanhla, Zodwa, Khanyisile, Nomusa, Ayanda, Hlengiwe",
@@ -271,10 +299,10 @@ for ( const id of Object.keys(WORLD_REGIONS) ) {
 
 // Peoples with hand-built tables of their own (clans, names staged by age): the Haudenosaunee (B3120), the Algonquian
 // coast (B3510), the Plains (B3820) and the Southwest (B3930)
-const BUILT = {haudenosaunee: haudenosauneeTables(), ...Object.groupBy([...algonquianTables(), ...plainsTables(), ...southwestTables(), ...missouriTables(), ...plainsNorthTables(), ...basinTables(), ...canadaTables(), ...inuitTables(), ...tainoTables(), ...aboriginalTables(), ...centralAfricaTables()], t => t.id.split(".").at(-1))};
+const BUILT = {haudenosaunee: haudenosauneeTables(), ...Object.groupBy([...algonquianTables(), ...plainsTables(), ...southwestTables(), ...missouriTables(), ...plainsNorthTables(), ...basinTables(), ...canadaTables(), ...inuitTables(), ...tainoTables(), ...aboriginalTables(), ...centralAfricaTables(), ...filipinoTables()], t => t.id.split(".").at(-1))};
 export const WORLD_PEOPLE_TABLES = [...origins, ...names, ...Object.values(BUILT).flat()];
 /** Peoples who bear a given name alone in some or all ages. */
-export const GIVEN_ONLY = new Set(["new-england-algonquian", "powhatan", "lakota", "cheyenne", "comanche", "kiowa", "apache", "arikara", "pawnee", "mandan", "hidatsa", "blackfoot", "arapaho", "shoshone", "ute", "cree", "anishinaabe", "inuit", "taino", "aboriginal", "luba", ...Object.entries(P).filter(([, p]) => !p.child && (!p.fam || (typeof p.fam !== "string" && !Object.keys(p.fam).some(k => k === "old" || k.includes("medieval"))))).map(([o]) => o)]);
+export const GIVEN_ONLY = new Set(["new-england-algonquian", "powhatan", "lakota", "cheyenne", "comanche", "kiowa", "apache", "arikara", "pawnee", "mandan", "hidatsa", "blackfoot", "arapaho", "shoshone", "ute", "cree", "anishinaabe", "inuit", "taino", "aboriginal", "luba", "filipino", ...Object.entries(P).filter(([, p]) => !p.child && (!p.fam || (typeof p.fam !== "string" && !Object.keys(p.fam).some(k => k === "old" || k.includes("medieval"))))).map(([o]) => o)]);
 /** Every people named here. */
 export const WORLD_PEOPLES = [...Object.keys(P), ...Object.keys(BUILT)];
 /** Peoples raised to at least 300 distinct names (Ben 2026-11-13, B3310 on): one at a time, the biggest homelands first. */
