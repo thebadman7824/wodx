@@ -8,7 +8,7 @@ const MOD = "wodx-library";
 const SOCKET = `module.${MOD}`;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 const num = v => Number(v) || 0;
-const money = () => game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api?.money ?? null : null;
+const money = () => game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api?.upkeep?.money ?? null : null;
 const attr = (a, k) => num(a?.system?.attributes?.[k]?.total ?? a?.system?.attributes?.[k]?.value);
 const abil = (a, k) => {
   const v = a?.system?.abilities?.[k];
