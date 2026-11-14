@@ -213,7 +213,7 @@ Next free block: B4700
 | B4160-B4169 | Canada first nations names in the People generator (used B4160-B4162) | Creation, Chronicle |
 | B4600-B4609 | Show, don't tell: a visible: line on every feature's release note (used B4600) | tools (no module) |
 | B4610-B4619 | The PC runner rechecks every failing gate before it reports (used B4610) | tools (no module) |
-| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4636) | Otherworlds |
+| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4636) | Storyteller |
 | B4650-B4659 | Inuit names in the People generator (used B4650-B4652) | Creation, Chronicle |
 | B4660-B4669 | Taino names in the People generator (used B4660-B4662) | Creation, Chronicle |
 | B4680-B4689 | Aboriginal Australian names in the People generator (used B4680-B4682) | Creation, Chronicle |
@@ -7062,6 +7062,9 @@ Show-don't-tell desk v14 and c4 (the smaller fix), approved by Ben 2026-11-14. W
 
 ## B4635. Places of power glow for those who could see them (2026-11-14)
 Show-don't-tell desk v13 (the smaller fix). WoDX Storyteller (power-look-rules.mjs, power-looks.mjs). On the scene of a Node, a soft blue glow at its heart for mages, sized by its rating and dimmed to less than half when drained; a caern a green glow for werebeasts and mages, by its level, none once dead; a freehold's balefire a flickering amber flame for changelings, its size following the ranks, gone when out. The Storyteller sees them all. Drawn on each client, never saved; Light stops the flicker, Off hides them. Sizes and strengths are house rules. Reverse: remove setupPowerLooks from main.mjs.
+
+## B4636. Town looks go through the shared looks layer, labels and own colours stay drawings (2026-11-14)
+Now that WoDX Chronicle's shared looks layer is on main (B3758), the town looks (B4620-B4629) hand it every look it can draw well: fire, smoke, rubble, flood and the other kinds it knows, and every whole-scene look, whose weather is the richer sight. A look with a mark (a torch, a notice, a bird, a banner) or a colour of its own on a spot stays one of this module's drawings, because the layer has no labels and draws each kind in its own colour. Rule: forLayer in town-look-rules.mjs. Reverse: make forLayer return false.
 
 ## B4650. The Inuit in the Arctic and Canada (2026-11-14)
 WoDX Creation and Chronicle. The Arctic was Norse alone in every age; it now holds the Inuit 70 and the Norse 30 before 1500 (the Thule crossing and the Greenland farms), the Inuit 92 before 1800 and about 85 after, beside the Danes under the norse names. Canada gains the Inuit of the north at 3 before 1500, 2 before 1800 and 1 after. Taken as recommended; logged in PENDING-REVIEW.
