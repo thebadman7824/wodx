@@ -1,4 +1,4 @@
-import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
+import {MODULE_ID, esc, isActiveGM, rule} from "./util.mjs";
 import {propose, registerHandler} from "./approvals.mjs";
 import {currentYear} from "./eras.mjs";
 import * as P from "./pod-rules.mjs";
@@ -25,12 +25,18 @@ import {watched} from "./signature-rules.mjs";
  * World setting podState = {cities: {<name>: {value, at, sect}}, chains: [{id, key, where, at, last, lp?}],
  *   lp: {<actorId>: {since, last, seen: {<threadId>: "put"|"running"|"dismissed"}}}}.
  * Actor flags wodx-chronicle.golconda = {step, mentor, mentorAt, log} and wodx-chronicle.goal = {key, label}.
+ *
+ *   The Rothenstein saga (podSaga, B3660-B3669): What Sleeps Beneath Rothenstein told over years and ages. Each book
+ *     runs as a story chain of dated chapters, interludes and world steps; the next book that fits the year goes to the
+ *     approval queue. Steps move four long clocks and post signals (hook wodxSaga); the first book's ending changes
+ *     the words of later books. State in podState.saga = {endings, clocks, books}.
  * Each switch starts off. The city of a scene is its flag wodx-chronicle.city, or the setting podCity.
  */
 
 const DAY = 86400;
 const T_TEACH = `${MODULE_ID}.podTeach`;
 const T_LP = `${MODULE_ID}.podLifepath`;
+const T_SAGA = `${MODULE_ID}.podSaga`;
 const lineOn = k => { try { return !!game.settings.get(MODULE_ID, k); } catch (e) { return false; } };
 const now = () => game.time?.worldTime ?? 0;
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
@@ -49,6 +55,7 @@ export function registerPodSettings() {
   flag("podCities", "Great cities that change with history", "Paris, Rome, Constantinople, Baghdad, Cairo, Jerusalem, Prague, Brno and Olomouc change by date; Senses and map generation follow.");
   flag("podGolconda", "Golconda as a long road", "A seeker's road of ten steps, set back by killing, frenzy, theft and harmful feeding, and taught by a mentor month by month.");
   flag("podChains", "Story chains and opening goals", "Dated runs of scenes dealt out by the clock, and three opening goals for each new character.");
+  flag("podSaga", "The Rothenstein saga over the years", "What Sleeps Beneath Rothenstein told over years and ages: books of dated chapters and interludes from 880 to 2030, long clocks, and endings that later books answer.");
   game.settings.register(MODULE_ID, "podCity", {name: "The chronicle's city", hint: "The city a scene is in when the scene names none (scene flag wodx-chronicle.city).", scope: "world", config: true, type: String, default: "Rothenstein"});
   game.settings.register(MODULE_ID, "podState", {scope: "world", config: false, type: Object, default: {cities: {}, chains: []}});
   game.settings.registerMenu(MODULE_ID, "podMenu", {name: "Cities, Golconda and story chains", label: "Open", hint: "City exposure, the great cities, story chains and opening goals.",
@@ -224,19 +231,107 @@ export async function startChain(key, where = "") {
 export async function stopChain(id) { const s = state(); s.chains = (s.chains ?? []).filter(r => r.id !== id); return saveState(s); }
 /** Post every step that has fallen due. */
 export async function dealChains() {
-  if ( !lineOn("podChains") || !isActiveGM() ) return;
+  if ( !(lineOn("podChains") || lineOn("podSaga")) || !isActiveGM() ) return;
   const s = state(), t = now(), yr = currentYear();
   let changed = false;
   for ( const run of s.chains ?? [] ) {
+    if ( !lineOn(run.saga ? "podSaga" : "podChains") ) continue;
     let n = P.nextStep(run, yr);
     while ( n && n.due <= t ) {
       const c = P.chainOf(run, yr);
-      await card(`${c.label}, ${n.index + 1} of ${c.steps.length}: ${n.title}`, `<p>${esc(run.where)}. ${esc(n.text)}</p>${n.last ? `<p class="vta-note">The last step. ${esc(c.page)}.</p>` : ""}`);
+      if ( run.saga ) await sagaStep(s, run, c, n);
+      else await card(`${c.label}, ${n.index + 1} of ${c.steps.length}: ${n.title}`, `<p>${esc(run.where)}. ${esc(n.text)}</p>${n.last ? `<p class="vta-note">The last step. ${esc(c.page)}.</p>` : ""}`);
       run.at = n.index + 1; run.last = t; changed = true;
       n = P.nextStep(run, yr);
     }
+    if ( run.saga && !n ) { (s.saga ??= {}).books ??= {}; s.saga.books[run.saga.book] = "done"; changed = true; }
   }
   if ( changed ) { s.chains = s.chains.filter(r => P.nextStep(r, yr)); await saveState(s); }
+}
+
+/* ---------------- the Rothenstein saga (B3660-B3669) ---------------- */
+
+const sagaOf = s => { const x = s.saga ??= {}; x.endings ??= {}; x.clocks ??= {}; x.books ??= {}; return x; };
+const futureOn = () => { try { return !!rule("futureBranch"); } catch (e) { return false; } };
+/** A link to the step's notes page when the world has it, else its name. */
+function notesLink(j) {
+  if ( !j ) return "";
+  const e = game.journal?.getName?.(j.entry);
+  const p = e?.pages?.find?.(x => x.name === j.page || x.name.startsWith(`${j.page}:`));
+  return p ? `@UUID[${p.uuid}]{${esc(p.name)}}` : `${esc(j.entry)}, ${esc(j.page)}`;
+}
+async function sagaStep(s, run, c, n) {
+  const x = sagaOf(s), kind = {chapter: "A chapter to play", interlude: "Time passes", world: "The world moves"}[n.kind] ?? "";
+  const before = {...x.clocks};
+  x.clocks = P.saga.moveClocks(x.clocks, n.clocks ?? {});
+  const moved = P.saga.SAGA_CLOCKS.filter(k => (x.clocks[k.key] ?? 0) !== (before[k.key] ?? 0))
+    .map(k => `${esc(k.label)}: ${x.clocks[k.key]} of ${k.size}`);
+  const full = P.saga.fullClocks(x.clocks).filter(k => (before[k.key] ?? 0) < k.size);
+  const body = [`<p><b>${esc(kind)}</b>, planned for ${esc(n.date)}. ${esc(run.where)}. ${esc(n.text)}</p>`,
+    n.journal ? `<p>Notes: ${notesLink(n.journal)}.</p>` : "",
+    n.encounters?.length ? `<p>Encounters that fit the season: ${esc(n.encounters.join(", "))}.</p>` : "",
+    moved.length ? `<p>The long clocks: ${moved.join("; ")}.</p>` : "",
+    full.length ? `<p class="vta-note">Full now: ${full.map(k => esc(k.text)).join(" ")}</p>` : "",
+    n.ending ? `<p class="vta-note">Pick the ending in the saga window: ${n.ending.map(k => esc(P.saga.SAGA_ENDINGS[k].label)).join(", ")}.</p>` : "",
+    n.last ? `<p class="vta-note">The last step of this book.</p>` : ""].join("");
+  await card(`${c.label}, ${n.index + 1} of ${c.steps.length}: ${n.title}`, body);
+  Hooks.callAll("wodxSaga", {book: run.saga.book, step: n.key, kind: n.kind, clocks: {...x.clocks}, signal: n.signal ?? null, ending: n.ending ?? null});
+}
+export function sagaState() { return foundry.utils.deepClone(sagaOf(state())); }
+/** Start a book of the saga now (approval, or the window). */
+export async function startSaga(book, where = "") {
+  const b = P.saga.bookByKey(book);
+  if ( !b || !lineOn("podSaga") || !game.user.isGM ) return null;
+  const s = state(), x = sagaOf(s);
+  s.chains ??= [];
+  if ( s.chains.some(r => r.saga?.book === b.key) ) return null;
+  const run = {id: foundry.utils.randomID(), key: P.saga.chainKey(b.key), where: where || P.saga.SAGA.where, at: 0, last: now(),
+    saga: {book: b.key, endings: {...x.endings}}};
+  s.chains.push(run);
+  x.books[b.key] = "running";
+  await saveState(s);
+  await dealChains();
+  return run;
+}
+export async function skipSaga(book) {
+  if ( !P.saga.bookByKey(book) || !game.user.isGM ) return;
+  const s = state(), x = sagaOf(s);
+  s.chains = (s.chains ?? []).filter(r => r.saga?.book !== book);
+  x.books[book] = "skipped";
+  await saveState(s);
+}
+/** Record a book's ending; running books pick up the first book's ending for their later words. */
+export async function setEnding(book, ending) {
+  if ( !P.saga.bookByKey(book) || (ending && !P.saga.SAGA_ENDINGS[ending]) || !game.user.isGM ) return;
+  const s = state(), x = sagaOf(s);
+  if ( ending ) x.endings[book] = ending; else delete x.endings[book];
+  for ( const r of s.chains ?? [] ) if ( r.saga ) r.saga.endings = {...x.endings};
+  await saveState(s);
+}
+export async function setSagaClock(key, value) {
+  if ( !P.saga.SAGA_CLOCKS.some(c => c.key === key) || !game.user.isGM ) return;
+  const s = state(), x = sagaOf(s);
+  x.clocks = P.saga.moveClocks({...x.clocks, [key]: Number(value) || 0});
+  await saveState(s);
+}
+/** Put the next book that fits the year to the Storyteller, once. */
+export async function sagaTick() {
+  if ( !lineOn("podSaga") || !isActiveGM() ) return;
+  const s = state(), x = sagaOf(s), yr = currentYear();
+  const gone = P.saga.passedBooks(x, yr, {future: futureOn()});
+  if ( gone.length ) {
+    const before = {...x.clocks};
+    for ( const g of gone ) { x.clocks = P.saga.moveClocks(x.clocks, P.saga.worldDelta(g)); x.books[g.key] = "passed"; }
+    await saveState(s);
+    const moved = P.saga.SAGA_CLOCKS.filter(k => (x.clocks[k.key] ?? 0) !== (before[k.key] ?? 0)).map(k => `${esc(k.label)}: ${x.clocks[k.key]} of ${k.size}`);
+    await card("The Rothenstein saga: years gone by", `<p>The clock passed ${gone.map(g => esc(g.title)).join(", ")} without play. What the wider world did in those years still happened.</p>${moved.length ? `<p>The long clocks: ${moved.join("; ")}.</p>` : ""}<p class="vta-note">Any of them can still be started from the saga window.</p>`);
+  }
+  const b = P.saga.dueBook(x, yr, {future: futureOn()});
+  if ( !b ) return;
+  x.books[b.key] = "offered";
+  await saveState(s);
+  await propose({type: T_SAGA, key: `saga:${b.key}`, title: `The Rothenstein saga, book ${b.n}: ${b.title}`,
+    detail: `${b.from} to ${b.to}. ${b.text} Approve to start it; reject to skip this book.`, data: {book: b.key}});
 }
 
 /* ---------------- lifepath threads (cr2) ---------------- */
@@ -348,10 +443,16 @@ export class PodApp extends ApplicationV2 {
       quiet: async function(e, el) { const s = state(); delete s.cities?.[el.dataset.city]; await saveState(s); this.render(); },
       chain: async function(e, el) { const k = this.element.querySelector("select[name=chain]").value, w = this.element.querySelector("input[name=where]").value.trim(); await startChain(k, w); this.render(); },
       stop: async function(e, el) { await stopChain(el.dataset.id); this.render(); },
+      sagaStart: async function(e, el) { await startSaga(el.dataset.book); this.render(); },
+      sagaSkip: async function(e, el) { await skipSaga(el.dataset.book); this.render(); },
+      sagaClocks: async function() { for ( const i of this.element.querySelectorAll("[data-clock]") ) await setSagaClock(i.dataset.clock, i.value); this.render(); },
       thread: async function(e, el) { const a = game.actors.get(el.dataset.actor), x = threadsOf(a).find(t => t.id === el.dataset.thread); if ( x ) await startThread(a.id, x); this.render(); },
       build: async function() { const f = this.element.querySelector("[data-build]"), v = n => f.querySelector(`[name=${n}]`).value.trim();
         await raiseBuilding({patron: v("patron"), building: v("building"), faction: v("faction"), restore: f.querySelector("[name=restore]").checked}); }
     }};
+  _onRender() {
+    for ( const sel of this.element.querySelectorAll("select[data-ending]") ) sel.addEventListener("change", () => setEnding(sel.dataset.ending, sel.value).then(() => this.render()));
+  }
   async _renderHTML() {
     const s = state(), yr = currentYear(), parts = [];
     const sects = Object.entries(P.SECT_LAW);
@@ -374,11 +475,25 @@ export class PodApp extends ApplicationV2 {
       const rows = pcs().flatMap(a => threadsOf(a).map(x => `<li>${esc(a.name)}: ${esc(x.label)} (${x.year}, ${esc(x.name ? `${x.name}, ${x.role}` : x.role)})${seenOf(a.id)[x.id] ? `, ${word[seenOf(a.id)[x.id]] ?? ""}` : ` <button type="button" data-action="thread" data-actor="${a.id}" data-thread="${esc(x.id)}">Start now</button>`}</li>`));
       parts.push(`<h3>Threads from the past</h3><ul>${rows.join("") || "<li>No open threads. They come from a character's lifepath.</li>"}</ul><p class="vta-note">Each falls due by itself in time and comes to the approval queue.</p>`);
     }
+    if ( lineOn("podSaga") ) {
+      const x = sagaOf(s), word = {running: "running", done: "done", skipped: "skipped", passed: "passed without play", offered: "waiting for approval", ready: "fits the year", ahead: "later", past: "its years are past"};
+      const books = P.saga.bookStates(x, yr, {future: futureOn()});
+      const ends = Object.entries(P.saga.SAGA_ENDINGS);
+      parts.push(`<h3>The Rothenstein saga</h3><p>${esc(P.saga.SAGA.title)}, told over the years. The next book that fits the year comes to the approval queue.</p>
+        <table class="wodx-check"><tbody>${P.saga.SAGA_CLOCKS.map(c => `<tr><td>${esc(c.label)}</td><td><input type="number" min="0" max="${c.size}" value="${x.clocks[c.key] ?? 0}" data-clock="${c.key}" style="width:4em"> of ${c.size}</td></tr>`).join("")}</tbody></table>
+        <button type="button" data-action="sagaClocks">Set the clocks</button>
+        <ul>${books.map(b => { const bk = P.saga.bookByKey(b.key), endable = bk.steps.some(st => st.ending);
+          return `<li><b>${b.n}. ${esc(b.title)}</b> (${b.from < 0 ? `${-b.from} BCE` : b.from} to ${b.to}): ${esc(word[b.state] ?? b.state)}
+          ${["ready", "past", "passed", "offered", "skipped", "ahead"].includes(b.state) ? ` <button type="button" data-action="sagaStart" data-book="${b.key}">Start</button>` : ""}
+          ${b.state === "running" || b.state === "ready" ? ` <button type="button" data-action="sagaSkip" data-book="${b.key}">Skip</button>` : ""}
+          ${endable ? ` <select data-ending="${b.key}" data-fixed><option value="">No ending yet</option>${ends.map(([k, e]) => `<option value="${k}" ${x.endings[b.key] === k ? "selected" : ""}>${esc(e.label)}</option>`).join("")}</select>` : ""}</li>`; }).join("")}</ul>
+        <p class="vta-note">${x.endings[P.saga.FIRST_BOOK] ? esc(P.saga.SAGA_ENDINGS[x.endings[P.saga.FIRST_BOOK]].text) : "The first book's ending changes the words of later books."}</p>`);
+    }
     if ( lineOn("podGolconda") ) {
       const list = seekers();
       parts.push(`<h3>Seekers of Golconda</h3><ul>${list.map(a => `<li>${esc(a.name)}: step ${golOf(a).step} of ${P.GOLCONDA_STEPS}${golOf(a).mentor ? `, taught by ${esc(golOf(a).mentor)}` : ""}</li>`).join("") || "<li>None.</li>"}</ul><p class="vta-note">Start or teach from the character's Signature feature window.</p>`);
     }
-    if ( !parts.length ) parts.push(`<p>Turn on City Masquerade exposure, Great cities, Golconda as a long road or Story chains in the module settings.</p>`);
+    if ( !parts.length ) parts.push(`<p>Turn on City Masquerade exposure, Great cities, Golconda as a long road, Story chains or the Rothenstein saga in the module settings.</p>`);
     return `<div class="wodx-pod-body" style="overflow-y:auto;height:100%">${parts.join("")}</div>`;
   }
   _replaceHTML(result, content) { content.innerHTML = result; }
@@ -395,6 +510,7 @@ export function registerPodHooks() {
   }});
   registerHandler(T_LP, {label: "A thread from a character's lifepath returns as a story chain",
     approve: e => startThread(e.data?.actor, e.data?.thread), reject: e => dismissThread(e.data?.actor, e.data?.thread?.id)});
+  registerHandler(T_SAGA, {label: "The next book of the Rothenstein saga", approve: e => startSaga(e.data?.book), reject: e => skipSaga(e.data?.book)});
   Hooks.on("wodxBreach", p => { onBreach(p).catch(e => console.error(`${MODULE_ID} | exposure`, e)); });
   Hooks.on("wodxSensesGather", onSenses);
   Hooks.on("wodxDamageApplied", onDamage);
@@ -404,7 +520,7 @@ export function registerPodHooks() {
   Hooks.on("wodxFirstNightSigned", onFirstNight);
   let last = 0;
   const tick = () => { if ( !isActiveGM() || Date.now() - last < 2000 ) return; last = Date.now();
-    dealChains().then(() => lifepathTick()).catch(e => console.error(`${MODULE_ID} | story chains`, e));
+    dealChains().then(() => lifepathTick()).then(() => sagaTick()).catch(e => console.error(`${MODULE_ID} | story chains`, e));
     if ( lineOn("podGolconda") ) teachTick().catch(e => console.error(`${MODULE_ID} | Golconda`, e)); };
   Hooks.on("updateWorldTime", tick);
   Hooks.on("wodxSkipEnd", tick);
@@ -418,4 +534,5 @@ export function registerPodHooks() {
 }
 
 export const podApi = {exposure, expose, setSect, cityOf, cityState, raiseBuilding, golconda, seek, golcondaStep, setback, setMentor,
-  startChain, stopChain, dealChains, lifepathTick, startThread, threads: threadsOf, goals, setGoal, open: () => new PodApp().render(true), rules: P};
+  startChain, stopChain, dealChains, lifepathTick, startThread, threads: threadsOf, goals, setGoal,
+  saga: {state: sagaState, start: startSaga, skip: skipSaga, ending: setEnding, clock: setSagaClock, tick: sagaTick, rules: P.saga}, open: () => new PodApp().render(true), rules: P};
