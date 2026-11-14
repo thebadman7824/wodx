@@ -33,7 +33,8 @@ export const regionHere = (scene = globalThis.canvas?.scene ?? null) => {
   return p.money && r ? {...r, money: p.money} : r;
 };
 /** Is the scene abroad (given a region other than the homeland)? */
-export const isAbroad = (scene = globalThis.canvas?.scene ?? null) => { const r = placeOf(scene).region; return !!r && r !== homeland(); };
+// B3552: a scene in the Underworld pays in oboli though it stands over home, so for money it counts as abroad
+export const isAbroad = (scene = globalThis.canvas?.scene ?? null) => { const p = placeOf(scene), r = p.region; return (!!r && r !== homeland()) || p.money === "underworld"; };
 
 export async function setPlace(scene, place) {
   if ( !game.user.isGM || !scene ) return null;

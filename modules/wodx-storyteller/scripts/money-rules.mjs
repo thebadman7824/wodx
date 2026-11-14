@@ -263,7 +263,11 @@ export const COINS = {
     {from: 1688, coin: "the kuruş and para", account: "the kuruş"},
     {from: 1867, coin: "the Serbian dinar; the Romanian leu, and the Bulgarian lev from 1881", account: "the dinar"},
     {from: 1920, coin: "the Yugoslav dinar; the leu and the lev beyond Yugoslavia", account: "the dinar"},
-    {from: 1994, coin: "the new dinar; the leu, the lev and the convertible mark beyond Serbia", account: "the dinar"}]}
+    {from: 1994, coin: "the new dinar; the leu, the lev and the convertible mark beyond Serbia", account: "the dinar"}]},
+  // B3552: the Shadowlands and Stygia (Wraith 20th pp. 44-45)
+  underworld: {label: "The Underworld (oboli)", rows: [
+    {from: 0, coin: "soulforged oboli, cut into slivers for small prices; relic coin of the living in some Necropoli", account: "the obolus, and ledgers of what would be owed"},
+    {from: 1999, coin: "oboli from the forges that outlasted Stygia's fall, under whoever holds them now", account: "the obolus, and more ledgers than coin"}]}
 };
 
 export function coinsFor(year, region = "moravian") {
@@ -570,6 +574,17 @@ Object.assign(MONIES, {
     m("rsd", 1994, 2019, "new dinars", [["dinar", "dinars", 100], ["para", "para", 1]], [[1994, 10000], [2004, 1500000], [2019, 5000000]]),
     EB]}
 });
+
+/*
+ * B3552: the Underworld's money. Oboli are the one coin every Stygian market takes (Wraith 20th p. 44); prices go as
+ * low as a thirty-second of an obolus, paid with a cut fragment, so the smallest unit here is that fragment ("a
+ * sliver", WoDX's word). Hard coin is scarce and most trade runs on ledgers of what would be owed (p. 45), so the
+ * wage is small and no one banks it. One money for every era: after Stygia falls in 1999 the coins still pass, under
+ * whoever holds the forges (COINS below). House figures; the books give no wage.
+ */
+MONIES.underworld = {label: "The Underworld (oboli)", list: [
+  {id: "oboli", from: -99999, to: 99999, label: "oboli", units: [["obolus", "oboli", 32], ["sliver of an obolus", "slivers of an obolus", 1]], bank: false, wage: [[-99999, 16]]}]};
+
 
 /** The money in use in a region and year (falls back to another region's list where this one has nothing yet). */
 export function moneyFor(year, region = "moravian") {

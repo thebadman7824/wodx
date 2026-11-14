@@ -34,6 +34,8 @@ export const PLACE_KINDS = {
   alley: "Back alley or courtyard", yard: "Farmyard, stable or village", docks: "Docks or riverside", park: "Park, garden or churchyard",
   sewer: "Sewer, cellar or tunnels", hospital: "Hospital or asylum", station: "Station or depot",
   elysium: "Elysium (the Prince's neutral ground)", chantry: "Chantry or Horizon (a mage's stronghold)",
+  // B3555: places that weigh on the faerie soul (WoDX Actions everyday Banality)
+  office: "Office, counting house or bureau", courthouse: "Court of law, town hall or council chamber", technocracy: "Technocracy site (a Construct, a lab)",
   other: "Other"
 };
 
