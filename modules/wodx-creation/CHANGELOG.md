@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.55.0 (The Sami join the People generator (B4900 to B4902))
 - 0.54.0 (Filipinos join the People generator with names from Pigafetta, Legazpi and the Clavería catalogue (B4750 to B4752))
 - 0.53.0 (The Khmer join the People generator (B4740 to B4742))
 - 0.52.0 (Sephardi and Mizrahi Jews join the People generator with their own names and families (B4730 to B4732))
