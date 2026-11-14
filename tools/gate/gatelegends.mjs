@@ -17,6 +17,9 @@
  *  10. put everything back
  * Result: Data/wodx-gate/gatelegends-result.json.
  */
+// a batch create need not hand the documents back in the order asked: put them back in that order by name
+const inOrder = (docs, data) => data.map(d => docs.find(x => x.name === d.name));
+
 const M = "wodx-chronicle", ST = "wodx-storyteller", NPC = "wodx-npc", CR = "wodx-creation";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const clone = v => foundry.utils.deepClone(v);
@@ -59,10 +62,11 @@ export async function run() {
     const j = journal();
     ok("2. journal", !!j && j.ownership.default >= CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER && !!j.pages.getName("About this book"), {pages: j?.pages.size});
 
-    const [dead, childe] = await Actor.createDocuments([
+    const legendData = [
       {name: "Gate Legend Dead", type: "Mortal", flags: {[CR]: {chronology: {died: t - 86400 * 400, cause: "a gate's fever"}}}},
       {name: "Gate Legend Childe", type: "Vampire", flags: {[CR]: {chronology: {embraced: t - 86400 * 30}, lineage: {sire: {id: null, name: "Gate Legend Sire"}}}}}
-    ]);
+    ];
+    const [dead, childe] = inOrder(await Actor.createDocuments(legendData), legendData);
     made.actors.push(dead.id, childe.id);
     await api.legends.build();
     const d = lines().find(e => e.id === `death:${dead.id}`), em = lines().find(e => e.id === `embrace:${childe.id}`);

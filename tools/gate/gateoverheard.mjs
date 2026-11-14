@@ -12,6 +12,9 @@
  *   7. the Overheard talk window opens with its record and a search box, and the token tool is there
  * Result: Data/wodx-gate/gateoverheard-result.json.
  */
+// a batch create need not hand the documents back in the order asked: put them back in that order by name
+const inOrder = (docs, data) => data.map(d => docs.find(x => x.name === d.name));
+
 const N = 7;
 const MOD = "wodx-npc";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -37,11 +40,13 @@ export async function run() {
   const fresh = before => game.messages.contents.filter(m => !before.has(m.id) && m.flags?.[MOD]?.overheard);
   try {
     const OR = await import(`/modules/wodx-npc/scripts/overheard-rules.mjs?${Date.now()}`);
-    const made = await Scene.create(["Brno", "Cairo", "earshot", "street"].map(n => ({name: `WoDX gate: Overheard ${n}`, width: 2000, height: 1200, padding: 0.1, grid: {size: G, distance: 5}})));
+    const sceneData = ["Brno", "Cairo", "earshot", "street"].map(n => ({name: `WoDX gate: Overheard ${n}`, width: 2000, height: 1200, padding: 0.1, grid: {size: G, distance: 5}}));
+    const made = inOrder(await Scene.createDocuments(sceneData), sceneData);
     scenes.push(...made);
     const [brno, cairo, ear, street] = made;
     await cairo.update({"flags.wodx-chronicle.place.region": "egypt"});
-    const mk = await Actor.create([1, 2, 3, 4].map(i => ({name: `WoDX gate: Overheard speaker ${i}`, type: "Mortal"})).concat([{name: "WoDX gate: Overheard listener", type: "Mortal"}]));
+    const actorData = [1, 2, 3, 4].map(i => ({name: `WoDX gate: Overheard speaker ${i}`, type: "Mortal"})).concat([{name: "WoDX gate: Overheard listener", type: "Mortal"}]);
+    const mk = inOrder(await Actor.createDocuments(actorData), actorData);
     actors.push(...mk);
     const listener = mk.at(-1);
     const player = game.users.find(u => !u.isGM);
