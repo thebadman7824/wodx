@@ -72,3 +72,74 @@ test("fewer merits and flaws do nothing: the count may only fall (408 before the
   const none = D.MERITS_FLAWS.filter(e => T.describe({entry: e}).includes("no automatic effect yet")).length;
   assert.ok(none <= 354, `${none} merits and flaws with no automatic effect`);
 });
+
+/* Part 2 (B3783-B3785): how people take the character */
+
+test("part 2: every key is in the table, and the roll effects work", () => {
+  const keys = new Set(D.MERITS_FLAWS.map(e => e.key));
+  for ( const o of [M.MORE_EFFECTS_2, M.MORE_ATTITUDE, M.MORE_PROMPTS_2] ) for ( const k of Object.keys(o) ) assert.ok(keys.has(k), k);
+  const garou = view("lupine", feat("Feral Appearance"));
+  assert.equal(T.sumEffects(T.effectsFor(garou, {channel: "roll", tags: ["appearance"], against: "lupine"})).dice, 1);
+  assert.equal(T.sumEffects(T.effectsFor(garou, {channel: "roll", tags: ["appearance"], against: "mortal"})).dice, 0);
+  const goat = view("fae", feat("Parfum de Goat", "flaw"));
+  assert.equal(T.sumEffects(T.effectsFor(goat, {channel: "roll", tags: T.rollTags("charisma", "empathy")})).diff, 3);
+  const tape = view("mage", feat("Red Tape", "flaw"));
+  assert.deepEqual(T.ticksOf(tape).map(t => t.key), ["bureaucracy"]);
+  assert.equal(T.sumEffects(T.effectsFor(tape, {channel: "roll", tags: ["social", "bureaucracy"]})).diff, 2);
+});
+
+test("part 2: a first meeting reads the NPC's sect, seat and title", () => {
+  const v = {...view("kindred", feat("Bishop Friendship")), groups: ["Sabbat"]};
+  const bishop = {kind: "kindred", groups: ["Sabbat"], words: ["bishop"], office: true};
+  assert.equal(T.attitudeSeed(v, bishop).delta, 2);
+  assert.equal(T.attitudeSeed(v, {...bishop, office: false}).delta, 0);
+  assert.equal(T.attitudeSeed(v, {...bishop, groups: ["Camarilla"]}).delta, 0);
+  assert.equal(T.attitudeSeed(v, "kindred").delta, 0);
+  const law = view("kindred", feat("Lawman's Friend"));
+  assert.equal(T.attitudeSeed(law, {kind: "kindred", words: ["sheriff"], office: true}).delta, 1);
+  assert.equal(T.attitudeSeed(law, {kind: "kindred", words: ["harpy"], office: true}).delta, 0);
+  const bigot = view("mage", feat("Bigot (Tremere)", "flaw"));
+  assert.equal(T.attitudeSeed(bigot, {kind: "kindred", groups: ["Tremere"]}).delta, -1);
+  assert.equal(T.attitudeSeed(bigot, {kind: "kindred", groups: ["Ventrue"]}).delta, 0);
+  assert.equal(T.attitudeSeed(view("mortal", feat("Sanctity")), "mortal").delta, 1);
+});
+
+test("part 2: the count of merits and flaws with no effect falls again", () => {
+  const none = D.MERITS_FLAWS.filter(e => T.describe({entry: e}).includes("no automatic effect yet")).length;
+  assert.ok(none <= 278, `${none} merits and flaws with no automatic effect`);
+});
+
+/* Part 3 (B3786-B3787): W20 core, printed pp. 472-485 */
+
+test("part 3: the W20 core traits are in the table and change rolls", () => {
+  const keys = new Set(D.MERITS_FLAWS.map(e => e.key));
+  for ( const o of [M.MORE_EFFECTS_3, M.MORE_PROMPTS_3] ) for ( const k of Object.keys(o) ) assert.ok(keys.has(k), k);
+  const dupe = view("mage", feat("Gullible", "flaw"));
+  assert.equal(T.sumEffects(T.effectsFor(dupe, {channel: "roll", tags: T.rollTags("manipulation", "subterfuge")})).dice, -3);
+  const wolf = view("lupine", feat("Moon-Bound"));
+  assert.deepEqual(T.ticksOf(wolf).map(t => t.key), ["own-moon-waxing", "own-moon-waning"]);
+  assert.equal(T.sumEffects(T.effectsFor(wolf, {channel: "roll", tags: ["melee", "own-moon-waxing"]})).dice, 1);
+  const pack = view("lupine", feat("Pack Mentality", "flaw"));
+  assert.equal(T.sumEffects(T.effectsFor(pack, {channel: "roll", tags: ["athletics", "without-pack"]})).diff, 2);
+  assert.ok(T.promptsOn(view("lupine", feat("Pierced Veil", "flaw")), "fight").some(c => c.key === "pierced-veil"));
+});
+
+test("part 3: the count of merits and flaws with no effect falls again", () => {
+  const none = D.MERITS_FLAWS.filter(e => T.describe({entry: e}).includes("no automatic effect yet")).length;
+  assert.ok(none <= 234, `${none} merits and flaws with no automatic effect`);
+});
+
+/* Part 4 (B3788-B3790): the rest outside combat */
+
+test("part 4: keys exist, rolls change, cards come, first meetings move", () => {
+  const keys = new Set(D.MERITS_FLAWS.map(e => e.key));
+  for ( const o of [M.MORE_EFFECTS_4, M.MORE_ATTITUDE_2, M.MORE_PROMPTS_4] ) for ( const k of Object.keys(o) ) assert.ok(keys.has(k), k);
+  const liar = view("mage", feat("Rotten Liar", "flaw"));
+  assert.equal(T.sumEffects(T.effectsFor(liar, {channel: "roll", tags: T.rollTags("manipulation", "subterfuge")})).diff, 2);
+  const shade = view("kindred", feat("Cloaked in Shadow", "flaw"));
+  assert.equal(T.sumEffects(T.effectsFor(shade, {channel: "roll", tags: ["social"], against: "kindred"})).diff, 1);
+  assert.equal(T.attitudeSeed(view("fae", feat("Calming Presence")), "beast").delta, 2);
+  assert.ok(T.promptsOn(view("kindred", feat("Dulled Bite", "flaw")), "feed").some(c => c.key === "dulled-bite"));
+  const none = D.MERITS_FLAWS.filter(e => T.describe({entry: e}).includes("no automatic effect yet")).length;
+  assert.ok(none <= 103, `${none} merits and flaws with no automatic effect`);
+});

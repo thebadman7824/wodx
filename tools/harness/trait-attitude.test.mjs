@@ -33,7 +33,7 @@ test("the seed carries the traits into the first-meeting log", () => {
   const e = AT.changed({}, "c1", {delta: 0, why: "met"}, AT.withTraits({step: 0, from: ""}, {delta: 1, names: ["Harmless"]}));
   assert.match(e.log[0].why, /Harmless/);
   assert.equal(e.log[0].step, 1);
-  assert.match(src("modules/wodx-npc/scripts/attitude.mjs"), /traits\?\.attitudeSeed\?\.\(ch, npc\)/);
+  assert.match(src("modules/wodx-npc/scripts/attitude.mjs"), /traits\?\.attitudeSeed\?\.\(ch, npc[,)]/);
 });
 
 test("Sway warms an NPC toward the caster, Fear chills; Awe and calming do not count", () => {

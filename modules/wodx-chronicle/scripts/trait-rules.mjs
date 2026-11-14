@@ -236,12 +236,26 @@ export function showsOf(view, idx = index()) {
  * againstKinds needs it). The sum is held to two steps either way, so traits never make a first meeting hunted on sight.
  */
 export function attitudeSeed(view, npcKind = null, idx = index()) {
+  // B3783: the NPC may come as {kind, groups, words, office}: groups are its sect, faction, tribe or kith; words also
+  // hold its title; office says it holds a seat. A plain kind still works as before.
+  const npc = npcKind && typeof npcKind === "object" ? npcKind : {kind: npcKind};
+  const kind = npc.kind ?? null;
+  const npcWords = [...(npc.groups ?? []), ...(npc.words ?? [])].filter(Boolean);
+  const mine = (view.groups ?? []).filter(Boolean);
+  const same = npc.groups?.length && mine.length ? npc.groups.some(g => mine.some(c => plain(c) && plain(c) === plain(g))) : false;
   let delta = 0;
   const names = [];
   for ( const m of traitsOf(view, idx).matched ) {
     const A = ATTITUDE[m.key];
     if ( !A || m.wrongKind ) continue;
-    if ( A.againstKinds?.length && !(npcKind && kindFits(A.againstKinds, npcKind)) ) continue;
+    if ( A.againstKinds?.length && !(kind && kindFits(A.againstKinds, kind)) ) continue;
+    if ( A.group === "same" && !same ) continue;
+    if ( A.office && !npc.office ) continue;
+    if ( A.words?.length && !A.words.some(w => npcWords.some(n => hasWord(n, w))) ) continue;
+    if ( A.fromName ) {
+      const ws = bracketWords(m.name);
+      if ( !ws.length || !ws.some(w => npcWords.some(n => hasWord(n, w))) ) continue;
+    }
     delta += A.delta;
     names.push(m.entry.name);
   }

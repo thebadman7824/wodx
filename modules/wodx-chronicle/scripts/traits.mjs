@@ -32,7 +32,22 @@ export function view(actor) {
     if ( kind ) features.push({id: i.id, name: i.name ?? "", kind, value: Number(i.system?.value) || 0, flagKey: i.flags?.[MODULE_ID]?.trait?.key ?? null});
     else if ( i.type === "Power" ) powers.push(i.name ?? "");
   }
-  return {kind: kindOf(actor), pc: !!actor?.hasPlayerOwner, features, powers};
+  return {kind: kindOf(actor), pc: !!actor?.hasPlayerOwner, features, powers, groups: groupsOf(actor)};
+}
+
+/** B3783: the sect, clan, tribe, affiliation, kith and the like on a sheet, wherever the line keeps them. */
+const GROUP_KEYS = new Set(["sect", "clan", "tribe", "affiliation", "kith", "house", "court", "camp", "faction", "conspiracy", "creed", "lineage", "dynasty", "legacy", "guild"]);
+export function groupsOf(actor) {
+  const out = new Set();
+  const walk = (o, depth) => {
+    if ( !o || typeof o !== "object" || depth > 3 ) return;
+    for ( const [k, v] of Object.entries(o) ) {
+      if ( typeof v === "string" ) { if ( GROUP_KEYS.has(k.toLowerCase()) && v.trim() && !v.includes(".") ) out.add(v.trim()); }
+      else if ( v && typeof v === "object" && !Array.isArray(v) ) walk(v, depth + 1);
+    }
+  };
+  try { walk(actor?.system ?? {}, 0); } catch (e) { /* no sheet */ }
+  return [...out];
 }
 
 export const of = actor => T.traitsOf(view(actor));
@@ -45,7 +60,12 @@ export const shows = actor => T.showsOf(view(actor));
 /** For WoDX Actions (B3780): the situations the character's merits and flaws ask the player to tick on a roll. */
 export const ticks = actor => T.ticksOf(view(actor));
 /** For WoDX NPC: how the character's traits move a first meeting with this NPC: {delta, names}. */
-export const attitudeSeed = (actor, npc) => T.attitudeSeed(view(actor), npc ? kindOf(npc) : null);
+export const attitudeSeed = (actor, npc, extra = {}) => T.attitudeSeed(view(actor), npc ? {
+  kind: kindOf(npc),
+  groups: [...groupsOf(npc), ...(extra.groups ?? [])],
+  words: [...(extra.words ?? []), ...(extra.office ? [extra.office] : [])],
+  office: !!extra.office
+} : null);
 
 /** For "Only when": the working traits as {name, key, kind, value, aliases}, and the power names. */
 export function whenFeats(actor) {
@@ -160,4 +180,4 @@ export function registerTraitHooks() {
   });
 }
 
-export const traitsApi = {view, of, has, effects, senses, shows, ticks, attitudeSeed, triggers, pulls, ledgerFor, prompt, worldPlan, makeReal, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};
+export const traitsApi = {view, of, has, effects, senses, shows, ticks, attitudeSeed, groupsOf, triggers, pulls, ledgerFor, prompt, worldPlan, makeReal, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};
