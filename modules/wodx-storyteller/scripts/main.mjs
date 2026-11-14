@@ -40,6 +40,7 @@ import * as Signals from "./signals.mjs";
 import * as Threads from "./threads.mjs";
 import * as Patron from "./patronage.mjs";
 import * as Towns from "./towns.mjs";
+import * as TownLooks from "./town-looks.mjs";
 import * as Contagion from "./contagion.mjs";
 import * as Power from "./power.mjs";
 import * as Herds from "./herds.mjs";
@@ -129,6 +130,7 @@ Hooks.once("init", () => {
   Threads.registerThreadSettings();
   Patron.registerPatronageSettings();
   Towns.registerTownSettings();
+  TownLooks.registerTownLookSettings();
   Contagion.registerContagionSettings();
   Power.registerPowerSettings();
   Herds.registerHerdSettings();
@@ -195,6 +197,7 @@ Hooks.once("ready", () => {
   Caravans.setupCaravans().catch(e => console.error("WoDX | caravans", e));
   Ventures.setupVentures().catch(e => console.error("WoDX | ventures", e));
   Towns.setupTowns().catch(e => console.error("WoDX | towns", e));
+  TownLooks.setupTownLooks();
   Contagion.setupContagion().catch(e => console.error("WoDX | contagion", e));
   Power.setupPower().catch(e => console.error("WoDX | places of power", e));
   Herds.setupHerds();
@@ -237,7 +240,7 @@ Hooks.once("ready", () => {
       money: {of: Money.moneyOf, dialog: Money.moneyDialog, monthly: Money.monthly, setAway: Money.setAway, setNeglected: Money.setNeglected, coins: Money.coinsNow, rules: MoneyRules,
         purse: Money.purseOf, pay: Money.pay, receive: Money.receive, transfer: Money.transfer, undo: Money.undoLast, price: Money.priceNow, findGood: Money.findGood,
         cashIn: Money.cashIn, payDay: Money.payDay, priceSync: Money.priceSync, awayMoney: Money.awayMoney, changeQuote: Money.changeQuote, change: Money.changePurse, receiveForeign: Money.receiveForeign, foreign: Money.foreignOf, arrival: Money.arrival, market: Money.marketFor, money: Money.moneyNow, format: (v, m) => MoneyRules.formatMoney(v, m ?? Money.moneyNow())},
-      markets: Markets.api(), marketNews: News.api(), marketTurn: Turn.api(), marketMoves: Moves.api(), caravans: Caravans.api(), ventures: Ventures.api(), institutions: Inst.api(), towns: Towns.api(), contagion: Contagion.api(), power: Power.api(), herds: Herds.api(), sites: Sites.api()},
+      markets: Markets.api(), marketNews: News.api(), marketTurn: Turn.api(), marketMoves: Moves.api(), caravans: Caravans.api(), ventures: Ventures.api(), institutions: Inst.api(), towns: Towns.api(), townLooks: TownLooks.api(), contagion: Contagion.api(), power: Power.api(), herds: Herds.api(), sites: Sites.api()},
     hardship: {open: Hard.hardshipDialog, weatherOf: Hard.weatherOf, tick: Hard.tick, undo: Hard.undoTick, mark: Hard.mark, off: Hard.setOff, weather: Hard.setWeather, of: Hard.needsOf, living: Hard.living, rules: HardRules},
     hunters: Hunters.api(),
     // B3524-B3527: crisis levers for a region
