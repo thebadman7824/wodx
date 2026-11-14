@@ -218,6 +218,19 @@ export async function run() {
       ok("10 Kuei-jin named power on the effects card", !!m && /Dragon Dance/.test(text(m)) && /p\. 105/.test(text(m)) && items.some(i => i.key === "boost") && yang === 3,
         { card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`), yang });
     });
+    await step("11 Discipline with no roll readies the user", async () => {
+      const era = game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null;
+      const da = era === "dark-ages" || era === "long-night";
+      const vp = await mk("Clawed", "Vampire", {}, [{ name: "Protean", type: "Power", system: { type: "wod.types.discipline", value: 2 } }]);
+      await sleep(800);
+      await game.user.updateTokenTargets?.([]);
+      const n = game.messages.size;
+      answer(root => { set(root, "power", da ? "protean-feral-weapons" : "v20-feral-claws"); set(root, "blood", 0); });
+      A().useDiscipline({ actor: vp });
+      const m = await untilMsg(n);
+      const items = fx(m);
+      ok("11 Discipline with no roll readies the user", !!m && items.some(i => i.key === "boost") && !items.some(i => i.key === "harm"), { era, card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`) });
+    });
   } finally {
     for (const [h, id] of hooks) Hooks.off(h, id);
     for (const a of made) await a.delete().catch(() => {});

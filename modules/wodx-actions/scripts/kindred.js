@@ -214,8 +214,9 @@ export function build(ctx) {
                 if (marked) body += `<div class="vta-note">Masquerade: ${esc(tgt.name)} marked as made to forget (${marked} record${marked === 1 ? "" : "s"}).</div>`;
             }
             // Any other Discipline: its keywords on the effects card (Traits With Teeth step 4)
-            if (!fx && p.r && !p.passive && successes > 0 && EF.isOn()) {
-                const pp = EF.powerPlan(actor, { set: p.book === "V20" ? "v20" : "disc", id: p.book === "V20" ? p.kw : p.id, name: p.n, line: "v20", successes, source: `${p.book ?? "VtDA20"} p. ${p.p ?? "?"}` });
+            // A power with no roll counts one success (B3751)
+            if (!fx && !p.passive && successes > 0 && EF.isOn()) {
+                const pp = EF.powerPlan(actor, { set: p.book === "V20" ? "v20" : "disc", id: p.book === "V20" ? p.kw : p.id, name: p.n, line: "v20", successes, source: `${p.book ?? "VtDA20"} p. ${p.p ?? "?"}`, noRoll: !p.r });
                 if (pp.items.length || pp.skipped.length) { fx = pp; body += pp.html; }
             }
             const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");
