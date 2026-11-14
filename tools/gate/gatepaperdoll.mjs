@@ -31,9 +31,15 @@ async function runGate(K) {
   const follow = game.settings.get(MOD, "followHealth");
   try {
     actor = await Actor.create({name: "WoDX gate: paperdoll", type: "Mortal", ownership: {default: 0, [game.user.id]: 3}});
-    const buttons = [];
+    // The drawn portrait faces are retired (B2990), so their Paperdoll button is gone; the sheet shows the Figure button
+    // instead (on a v1 or a v2 sheet). Gate rule 3: check what the sheet offers, not a version (B3733).
+    const {DRAWN_FACES_RETIRED: retired = false} = await import(`/modules/${MOD}/scripts/main.mjs`).catch(() => ({}));
+    const buttons = [], controls = [];
     Hooks.callAll("getActorSheetHeaderButtons", actor.sheet, buttons);
-    ok("1. module", M?.active && !foundry.utils.isNewerVersion("0.1.0", M.version) && typeof api?.bake === "function" && buttons.some(b => b.class === "wodx-paperdoll"), {version: M?.version});
+    Hooks.callAll("getHeaderControlsActorSheetV2", actor.sheet, controls);
+    const offered = [...buttons.map(b => b.class), ...controls.map(c => c.action)];
+    const want = retired ? ["wodx-figure", "wodxFigure"] : ["wodx-paperdoll", "wodxPaperdoll"];
+    ok("1. module", M?.active && typeof api?.bake === "function" && offered.some(x => want.includes(x)), {version: M?.version, retired, offered});
 
     const look = D.normalize({...D.defaultLook("Ada Brandt"), clothes: {...D.defaultLook().clothes, headwear: "fillet"}});
     const A = await api.anchorsFor(look);
@@ -83,7 +89,8 @@ async function runGate(K) {
     const p3 = tex();
     await actor.update({"system.health.damage.bashing": 0});
     await sleep(600); await api.settled();
-    ok("5. the health track", st.level === 1 && st.mood === "disgruntled" && p3 !== p1 && tex() === p1, {level: st.level, mood: st.mood, hurt: p3});
+    // With the drawn faces retired the token keeps its picture; the face state still follows the health track.
+    ok("5. the health track", st.level === 1 && st.mood === "disgruntled" && (retired || p3 !== p1) && tex() === p1, {level: st.level, mood: st.mood, hurt: p3, retired});
 
     await actor.update({"system.conditions.isfrenzy": true});
     const fr = api.state(actor).mood;

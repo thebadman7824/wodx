@@ -135,7 +135,7 @@ test("Iron Will and Magic Resistance make powers on the holder harder, NPC or pl
 });
 
 test("roll tags come from the pool, the quick check and the social action", () => {
-  assert.deepEqual(T.rollTags("charisma", "leadership").sort(), ["leadership", "social"]);
+  assert.deepEqual(T.rollTags("charisma", "leadership").sort(), ["charisma", "leadership", "social"]);
   assert.ok(T.rollTags("check-notice").includes("sight"));
   assert.ok(T.rollTags("social-persuade").includes("voice"));
   assert.ok(T.rollTags("social-intimidate").includes("intimidation"));
@@ -181,5 +181,5 @@ test("ability keys the signature features read are tags of their own (Chronicle 
   assert.deepEqual(T.rollTags("survival"), ["survival"]);
   assert.ok(T.rollTags("social-lift").includes("lift"));
   assert.ok(T.rollTags("social-con").includes("con"));
-  assert.deepEqual(T.rollTags("charisma", "leadership").sort(), ["leadership", "social"]);
+  assert.deepEqual(T.rollTags("charisma", "leadership").sort(), ["charisma", "leadership", "social"]);
 });

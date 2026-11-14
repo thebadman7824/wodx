@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3780
+Next free block: B3810
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -195,6 +195,7 @@ Next free block: B3780
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
 | B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3744) | Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
+| B3780-B3809 | No-effect audit: items, gear, traits, settings, tables, world data (used B3780-B3782) | Chronicle, Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6389,3 +6390,18 @@ Reverse: drop the new fields; kits that use them lose those buttons.
 WoDX Library. Take in Chi: two dice at the Wall plus three, the Wall held to 6 or lower, once a night, a point a success up to two. Draw: a point a turn into the user's Yin or Yang Chi (at most 10). Burst: pressed when a roll spending its Chi botches; it rolls two dice of lethal damage and the jade is gone. Logged for review.
 
 Reverse: change the powers in flagFor.
+
+## B3780. Merits and flaws name the situations a roll cannot see (2026-11-14)
+WoDX Chronicle, WoDX Actions. The no-effect audit desk (Ben approved every recommendation, 14 November 2026) found 408 of 497 merits and flaws with no automatic effect. A roll effect can now carry `tick` (a label) and `need` (roll kinds): the roll window shows the label as a box to a character who holds the trait, and the effect counts only when the box is ticked and the roll is of one of the `need` kinds. Read against V20 core pp. 484-494, V20 Dark Ages p. 427, W20 Changing Breeds p. 209, M20 Book of Secrets pp. 37-78, C20 pp. 177-186 and 444, Hunters Hunted II pp. 43-141.
+
+Reverse: delete `tick` and `need` from the entries in data/trait-effects-more.mjs and the `need` test in effectsFor.
+
+## B3781. Storyteller's-call traits send a card (2026-11-14)
+WoDX Chronicle. Traits whose effect the books leave to the Storyteller get a PROMPTS card at the moment named (fight, feed, social, night), through the approval queue.
+
+Reverse: remove the keys from MORE_PROMPTS.
+
+## B3782. The book's spelling for names the text scan spoiled (2026-11-14)
+WoDX Chronicle. Ben authorised the fix on 14 November 2026. 21 names corrected, the old spelling kept as an alias; where two books share a name, matchFeature prefers the entry the character's kind can hold.
+
+Reverse: empty RENAMES in data/trait-effects-more.mjs.
