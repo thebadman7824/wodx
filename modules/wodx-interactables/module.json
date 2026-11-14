@@ -50,5 +50,14 @@
       "phase": 7
     }
   },
-  "socket": true
+  "socket": true,
+  "documentTypes": {
+    "Actor": {
+      "vehicle": {
+        "htmlFields": [
+          "notes"
+        ]
+      }
+    }
+  }
 }

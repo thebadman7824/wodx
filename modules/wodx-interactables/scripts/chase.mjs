@@ -74,14 +74,16 @@ export function rideOf(tokDoc) {
     if ( isBeast && !o?.beast ) continue;
     const kind = o?.kind ?? f.mountKind ?? "horse";
     const sf = scene.flags?.[MOD] ?? {};
-    const r = C.rideInFight(kind, yearNow(), sf[FLAG]?.ground ?? sf.ground ?? "streets");
+    // B4968: a vehicle on its own sheet goes by the year it was built
+    const year = o?.vehicle && o.built ? o.built : yearNow();
+    const r = C.rideInFight(kind, year, sf[FLAG]?.ground ?? sf.ground ?? "streets");
     if ( !r ) return null;
     // B4791: the damage it has taken (Structure lost), and whether that wrecked it
-    const lost = Math.max(0, Number(f.hull?.lost) || 0);
+    const lost = Math.max(0, Number(isBeast ? o?.hull?.lost : f.hull?.lost) || 0);
     const ride = {...r, kind, tile: t.id, tileUuid: t.uuid, role: reins ? "reins" : "passenger", label: o?.title || MOUNT_LABELS[kind] || "Mount",
-      lost, wrecked: !!(r.body && lost >= r.body.structure), year: yearNow()};
+      lost, wrecked: !!(r.body && lost >= r.body.structure), year, vehicleActor: o?.vehicle ? t.actor?.uuid ?? null : null};
     // B4966: the beast's own sheet gives its traits in a fight, and its own running pace
-    if ( isBeast && t.actor ) {
+    if ( isBeast && t.actor && !o?.vehicle ) {
       ride.beast = beastTraits(t.actor);
       ride.beastUuid = t.uuid;
       const run = runOf(t.actor);

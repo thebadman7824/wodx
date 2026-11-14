@@ -18,6 +18,8 @@
  *      ghouled horse dodges shots for its rider with no +2
  *  12. B4966-B4967: a horse on its own sheet: mounted from its token, it carries its rider, fights with its own
  *      Dexterity, and throws the rider when it goes down
+ *  13. B4968-B4969: a vehicle on its own sheet: its sheet opens, someone gets in and drives its token, a blow comes
+ *      off its Structure on the sheet, its mounted gun is on the driver's attack menu, its headlights light the token
  * Result: Data/wodx-gate/gatevehicles-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -173,6 +175,33 @@ export async function run() {
       await steed.update({"system.health.damage.lethal": 7});
       const thrown = await waitFor(() => !scene.tokens.get(ts.id)?.flags?.[IX]?.driver, 10000);
       G.ok("12. riding the beast itself", listed && on && carried && own && thrown, {listed, on, carried, own, thrown, beast: ride?.beast ?? null});
+    });
+
+    await G.step("13. a vehicle sheet", async () => {
+      const VT = "wodx-interactables.vehicle";
+      const [van] = await G.make(Actor, [{name: "Gate Sheet Car", type: VT, system: {kind: "car", built: 1990}}]);
+      await van.createEmbeddedDocuments("Item", [{name: "Gate mounted gun", type: "Ranged Weapon", system: {isequipped: true, difficulty: 6, range: 100,
+        damage: {attribute: "", bonus: 7, type: "lethal", isrollable: true}, attack: {attribute: "dexterity", ability: "firearms"}}}]);
+      const [tv] = await G.tokens(scene, [{actor: van, x: 10, y: 12, actorLink: true}]);
+      await tn.update({x: tv.x, y: tv.y + (scene.grid?.size ?? 100)});
+      await waitFor(() => tv?.object && tn?.object, 4000);
+      await van.sheet.render(true);
+      const opened = await waitFor(() => !!van.sheet.element?.querySelector?.(".wvx-track .wvx-box"), 6000);
+      await van.sheet.close();
+      await ix.attempt(tn.object, tv.id, "mount", {fd: {bonus: 0}});
+      const on = await waitFor(() => scene.tokens.get(tv.id)?.flags?.[IX]?.driver?.t === tn.uuid, 10000);
+      const g = scene.grid?.size ?? 100, x0 = scene.tokens.get(tv.id).x;
+      await tn.update({x: tn.x + g * 2, y: tn.y});
+      const drove = await waitFor(() => scene.tokens.get(tv.id).x === x0 + g * 2, 8000);
+      const ride = ix.rideOf(tn);
+      const r = await V().strikeHull(scene.tokens.get(tv.id), ride.body, ride.body.durability + 1);
+      const struck = await waitFor(() => van.system.lost === 1, 6000);
+      const plans = C.bestAttack(nopilot, foe, {}, {attackerTok: tn, targetTok: tf, ignoreDistance: true}).plans;
+      const gun = plans.some(p => String(p.w?.id ?? "").startsWith("vgun:"));
+      await van.update({"system.lights": true});
+      const lit = await waitFor(() => Number(scene.tokens.get(tv.id)?.light?.dim) > 0, 6000);
+      G.ok("13. a vehicle sheet", opened && on && drove && ride?.vehicleActor === van.uuid && struck && gun && lit,
+        {opened, on, drove, vehicleActor: ride?.vehicleActor ?? null, r, lost: van.system.lost, gun, lit, plans: plans.map(p => p.w?.name)});
     });
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }
   finally { return G.finish(); }

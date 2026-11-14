@@ -347,6 +347,17 @@ function weaponList(actor) {
     const A = armsLib();
     if (A) for (const i of actor.items) { const e = i.type === "Item" ? A.weaponEntry(i) : null; if (e) list.push(e); }
     list.sort((a, b) => (b.equipped - a.equipped) || a.name.localeCompare(b.name));
+    // B4968: the guns mounted on the vehicle the actor is aboard (its own sheet), for whoever is aboard
+    try {
+        for (const { item: i, vehicle: v } of VH.mountedGuns(actor)) {
+            const s = i.system;
+            list.push({ id: `vgun:${v.id}:${i.id}`, mounted: true, name: `${i.name} (mounted on the ${v.name})`, ranged: i.type === "Ranged Weapon", natural: false,
+                attribute: s.attack?.attribute || "dexterity", ability: s.attack?.ability || (i.type === "Ranged Weapon" ? "firearms" : "melee"),
+                secondaryId: s.attack?.secondaryabilityid || "", accuracy: num(s.attack?.accuracy), dmgAttr: s.damage?.attribute || "", dmgBonus: num(s.damage?.bonus),
+                type: s.damage?.type || "lethal", diff: num(s.difficulty) || 6, minStr: 0, piercing: num(s.piercing), range: num(s.range), equipped: true,
+                shots: i.type === "Ranged Weapon" ? R.shotsOf(s.clip) : null, crossbow: R.isCrossbow(i.name), desc: String(s.description || "").replace(/<[^>]+>/g, " ") });
+        }
+    } catch (e) { /* not aboard a vehicle */ }
     // B4792: at the wheel, the vehicle itself is a weapon (ramming, Mage 20th p. 459)
     try { const rw = VH.ramWeapon(actor); if (rw) list.push(rw); } catch (e) { /* no vehicle */ }
     const GXR = garouRules();

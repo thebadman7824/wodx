@@ -62,6 +62,8 @@ import * as Fill from "./fill.mjs";
 import * as FillRules from "./fill-rules.mjs";
 import * as Stock from "./stock.mjs";
 import {setupChase} from "./chase.mjs";
+import {setupVehicleSheet, setLights} from "./vehicle-sheet.mjs";
+import * as VS from "./vehicle-sheet-rules.mjs";
 import {setupCase, registerCaseSettings, pinClue} from "./case.mjs";
 
 const MOD = "wodx-interactables";
@@ -148,6 +150,8 @@ export function describeWall(doc) {
  */
 export function beastOf(doc) {
   if ( doc?.documentName !== "Token" || !doc.actor ) return null;
+  // B4968: a vehicle on its own sheet is got into and driven as a mount tile is
+  if ( doc.actor.type === VS.VEHICLE_TYPE ) return VS.figures(doc.actor.system).kind;
   const flag = R.mountableFlag(doc.flags?.[MOD]?.mountable) ?? R.mountableFlag(doc.actor.flags?.[MOD]?.mountable);
   if ( flag === undefined && doc.actor.hasPlayerOwner && String(doc.actor.type ?? "") !== "Creature" ) return null;
   return R.beastKind(doc.actor.name ?? doc.name, flag);
@@ -159,6 +163,11 @@ const beastFlags = (doc, kind) => {
 };
 export function describeTile(doc) {
   const kind = beastOf(doc);
+  if ( kind && doc.actor?.type === VS.VEHICLE_TYPE ) {
+    // its damage is on its sheet (B4968)
+    const fig = VS.figures(doc.actor.system, eraNow().year);
+    return {...R.describeMount({...beastFlags(doc, kind), seats: fig.seats, hull: {lost: doc.actor.system.lost, burning: doc.actor.system.burning, structure: fig.body?.structure ?? 0}}), vehicle: true, built: fig.year};
+  }
   if ( kind ) return {...R.describeMount(beastFlags(doc, kind)), beast: true};
   if ( doc?.documentName === "Token" ) return null;
   const f = doc?.flags?.[MOD] ?? {};
@@ -1662,7 +1671,8 @@ export async function carryAboard(tokDoc, scene, from, to, pos = {x: num(tokDoc.
     const f = doc.flags?.[MOD] ?? {};
     if ( doc.id === tokDoc.id ) continue;
     const riders = Array.isArray(f.riders) ? f.riders : [];
-    if ( f.driver?.t === tokDoc.uuid && R.hullState(f.hull, f.hull?.structure).state === "wrecked" ) {
+    const hull = doc.documentName === "Token" ? describeTile(doc)?.hull : f.hull;
+    if ( f.driver?.t === tokDoc.uuid && R.hullState(hull, hull?.structure).state === "wrecked" ) {
       // B4791: a wrecked vehicle goes nowhere: the one at the wheel who moves has climbed out
       if ( moved ) { await doc.update({[`flags.${MOD}.driver`]: null}); what = what ?? "off"; }
     } else if ( f.driver?.t === tokDoc.uuid ) {
@@ -1984,6 +1994,8 @@ function installDoorClick() {
 }
 
 Hooks.once("init", () => {
+  // B4968: the vehicle's own kind of actor and its sheet
+  try { setupVehicleSheet(); } catch (e) { console.error(`${MOD} | vehicle sheet`, e); }
   registerSettings();
   registerStateSettings();
   registerCaseSettings();
@@ -1992,7 +2004,7 @@ Hooks.once("init", () => {
     editable: [{key: "KeyI"}], onDown: () => { openInteract().catch(e => console.error(`${MOD} |`, e)); return true; }
   });
   if ( !installDoorClick() ) console.warn(`${MOD} | the door-click shortcut is off: this Foundry has no door control class to extend.`);
-  game.modules.get(MOD).api = {version: VERSION, rules: R, coverOnShot, fill: {open: Fill.fillDialog, draw: Fill.drawFor, index: Fill.gearIndex, guess: Fill.guessFor, rules: FillRules}, describeWall, describeTile, lightsOf, useRoom, sunUp, _roomEffects: roomEffects, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, labelsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, beastOf, beastDown, riddenBy, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, noiseAt, optionSummary, configHtml};
+  game.modules.get(MOD).api = {version: VERSION, rules: R, coverOnShot, fill: {open: Fill.fillDialog, draw: Fill.drawFor, index: Fill.gearIndex, guess: Fill.guessFor, rules: FillRules}, describeWall, describeTile, lightsOf, useRoom, sunUp, _roomEffects: roomEffects, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, labelsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, beastOf, beastDown, riddenBy, vehicles: {rules: VS, setLights}, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, noiseAt, optionSummary, configHtml};
   game.modules.get(MOD).api.states = setupStates({describeObj, describeWall, describeTile, objectIn, rules: R});
   game.modules.get(MOD).api.living = setupLiving();
   game.modules.get(MOD).api.carry = setupCarry();

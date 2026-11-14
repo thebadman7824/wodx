@@ -32,6 +32,29 @@ export function vehicleFor(actor, tok = null) {
 }
 
 /** The tile a ride is on. */
+const VEH = "wodx-interactables.vehicle";
+/** B4968: a vehicle's own ride (as rideOf would give someone aboard it), from its token. */
+function ownRide(actor, tok = null) {
+  const doc = tok?.document ?? tok ?? canvas?.scene?.tokens?.find(t => t.actor?.id === actor.id);
+  const api = ix(), R = api?.rules;
+  if ( !doc || !api?.describeObj ) return null;
+  const o = api.describeObj(doc);
+  if ( !o?.vehicle ) return null;
+  const C = api.chase?.rules ?? null;
+  const body = C?.bodyOf ? C.bodyOf(o.kind, o.built) : null;
+  if ( !body ) return null;
+  return {kind: o.kind, body, role: "none", tile: doc.id, tileUuid: doc.uuid, label: o.title || R?.MOUNTS?.[o.kind]?.label || "vehicle",
+    lost: Number(o.hull?.lost) || 0, wrecked: (Number(o.hull?.lost) || 0) >= body.structure, year: o.built, motor: !!C?.WAYS?.[o.kind]?.motor, air: !!C?.WAYS?.[o.kind]?.air};
+}
+/** B4968: the mounted guns of the vehicle someone is aboard, for the attack menu. */
+export function mountedGuns(actor, tok = null) {
+  try {
+    const at = MVJ.tokenFor(actor, tok), r = at ? MVJ.rideOf(at) : null;
+    if ( !r?.vehicleActor ) return [];
+    const v = fromUuidSync(r.vehicleActor);
+    return v ? v.items.filter(i => i.type === "Ranged Weapon" || i.type === "Melee Weapon").map(i => ({item: i, vehicle: v})) : [];
+  } catch (e) { return []; }
+}
 const tileOf = ride => { try { return ride?.tileUuid ? fromUuidSync(ride.tileUuid) : canvas?.scene?.tiles?.get(ride?.tile) ?? null; } catch (e) { return null; } };
 /** Everyone aboard a vehicle tile: [{a, t, n}]. */
 function aboardOf(tile) {
@@ -59,16 +82,19 @@ export function floatOn(tile, word, color) {
  */
 export async function strikeHull(tile, body, levels = 0, {burning = false} = {}) {
   if ( !tile || !body ) return null;
-  const h0 = tile.flags?.[IX]?.hull ?? {};
+  // B4968: a vehicle on its own sheet keeps its damage there; its token shows it (Interactables setLights tints it)
+  const sheet = tile.documentName === "Token" && tile.actor?.type === VEH ? tile.actor : null;
+  const h0 = sheet ? {lost: sheet.system.lost, burning: sheet.system.burning} : tile.flags?.[IX]?.hull ?? {};
   const r = VR.hullBlow(body, burning ? body.structure + body.durability : levels, h0.lost);
   if ( !game.user.isGM ) {
     game.socket.emit(D.SOCKET, {vehicles: "hull", tile: tile.uuid, body, levels, burning});
     return r;
   }
   if ( !r.lost && !burning ) { floatOn(tile, "Bounces off", "#d8d8d8"); return r; }
+  if ( sheet ) await sheet.update({"system.lost": r.total, "system.burning": burning || !!h0.burning});
   const hull = {lost: r.total, structure: body.structure, burning: burning || !!h0.burning, tint0: h0.tint0 ?? tile.texture?.tint?.css ?? tile.texture?.tint ?? "#ffffff"};
   const st = ix()?.rules?.hullState?.(hull, body.structure) ?? {tint: null, state: r.wrecked ? "wrecked" : "damaged"};
-  await tile.update({[`flags.${IX}.hull`]: hull, "texture.tint": st.tint ?? hull.tint0});
+  if ( !sheet ) await tile.update({[`flags.${IX}.hull`]: hull, "texture.tint": st.tint ?? hull.tint0});
   floatOn(tile, burning ? "The fuel goes up!" : r.wrecked ? "Wrecked!" : `−${r.lost} Structure`, burning || r.wrecked ? "#ff6040" : "#ffb070");
   if ( r.wrecked ) { try { ix()?.mapEvent?.("crash", {doc: tile, noise: "loud", object: tile.flags?.[IX]?.mountKind ?? "", extra: {how: burning ? "fire" : "wrecked"}}); } catch (e) { /* no listeners */ } }
   if ( burning ) {
@@ -125,6 +151,11 @@ export function seatedIn(target, targetTok = null) {
  * through, note}
  */
 export function shelterFor({attacker, attackerTok = null, target, targetTok = null, w, attackSuccesses = 0} = {}) {
+  // B4968: the vehicle itself is the target: its body takes every blow
+  if ( target?.type === VEH ) {
+    const own = ownRide(target, targetTok);
+    if ( own ) return {ride: own, shielded: true, through: false, note: `The ${String(own.label).toLowerCase()} itself is struck.`};
+  }
   const ride = target ? vehicleFor(target, targetTok) : null;
   if ( !ride ) return {ride: null, shielded: false, through: false, note: ""};
   const aRide = attacker ? vehicleFor(attacker, attackerTok) : null;
