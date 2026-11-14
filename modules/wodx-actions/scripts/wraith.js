@@ -176,7 +176,7 @@ export function build(ctx) {
             // The art's keywords on the effects card, as Disciplines and Gifts do (B3740): W20 or The Great War set by id
             let fxItems = [];
             if (a.r && successes > 0 && EF.isOn()) {
-                const pp = EF.powerPlan(actor, { set: String(a.id).startsWith("gw-") ? "greatwar" : "wraith", id: a.id, name: a.n, successes, source: `${bookOf(lib)} p. ${a.p}` });
+                const pp = EF.powerPlan(actor, { set: String(a.id).startsWith("gw-") ? "greatwar" : "wraith", id: a.id, name: a.n, successes, source: `${bookOf(lib)} p. ${a.p}`, world: String(a.id).startsWith("gw-") ? "Wraith (Great War)" : "Wraith (W20)" });
                 body += pp.html;
                 fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             }

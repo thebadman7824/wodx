@@ -9,9 +9,10 @@ import * as E from "./effects-rules.js";
 import * as DAE from "./mage-da-effects.js";
 import * as PE from "./path-effects.js";
 import * as PW from "./power-effects.js";
+import * as W from "./world-effects.js";
 import { ask } from "./profiles.js";
 import { BOOK_RITUALS, bookRitual, ritualResults } from "./book-rituals.js";
-export { E };
+export { E, W };
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-actions";
@@ -23,6 +24,8 @@ const isLive = () => LIVE_WORLDS.includes(game.world?.id) || !!game.world?.flags
 const isActiveGM = () => !!game.user?.isGM && (game.users?.activeGM ? game.users.activeGM.id === game.user.id : true);
 const combat = () => game.modules.get("wodx-combat")?.api ?? null;
 const chron = () => game.modules.get("wodx-chronicle")?.api ?? null;
+const upkeep = () => game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api?.upkeep ?? null : null;
+const corruption = () => game.modules.get("wodx-otherworlds")?.active ? game.modules.get("wodx-otherworlds").api?.corruption ?? null : null;
 
 export function isOn() {
   let mode = "auto";
@@ -101,7 +104,8 @@ export function optionsHtml() {
       <label><input type="checkbox" name="kw-derange"/> Mend a derangement or scar</label></div></div>
     <div class="form-group"><label>Pool (Charge, Drain or Mend)</label><select name="kw-pool" data-fixed><option value="">(Quintessence, or health for Mend)</option>${Object.entries(E.POOLS).filter(([k]) => k !== "quintessence").map(([k, P]) => `<option value="${k}">${esc(P.label)}</option>`).join("")}</select></div>
     <div class="form-group"><label>Boost or Sap works on</label><select name="kw-boost" data-fixed>${Object.entries(E.BOOSTS).map(([k, l]) => `<option value="${k}">${esc(l)}</option>`).join("")}</select></div>
-    <div class="form-group"><label>Kind (Harm's damage, or what a Ward stands against)</label><select name="kw-of" data-fixed>${E.KINDS.map(k => `<option value="${k}">${k === "any" ? "(any)" : k}</option>`).join("")}</select></div>`;
+    <div class="form-group"><label>Kind (Harm's damage, or what a Ward stands against)</label><select name="kw-of" data-fixed>${E.KINDS.map(k => `<option value="${k}">${k === "any" ? "(any)" : k}</option>`).join("")}</select></div>
+    <div class="form-group"><label>Reaches the world (a town-wide one waits for the Storyteller's yes)</label><select name="kw-world" data-fixed><option value="">(nothing beyond the scene)</option>${Object.entries(W.WORLD).map(([k, K]) => `<option value="${k}">${esc(K.label)}${K.scope === "ground" ? " (an area on the map)" : K.scope === "taint" ? " (this place)" : " (the town)"}</option>`).join("")}</select></div>`;
 }
 
 const CTX_BOXES = {fire: "kw-fire", primeCharged: "kw-prime", curse: "kw-curse", slow: "kw-slow", dark: "kw-dark", drain: "kw-drain", aggravated: "kw-agg",
@@ -161,7 +165,7 @@ export function read(fd) {
   return {keywords, plan: {targets: n(fd["kw-targets"]), duration: n(fd["kw-duration"]), area: !!fd["kw-area"]},
     ctx: {...Object.fromEntries(Object.entries(CTX_BOXES).map(([k, name]) => [k, !!fd[name]])),
       ...Object.fromEntries(Object.entries(CTX_SELECTS).map(([k, name]) => [k, String(fd[name] ?? "")]).filter(([, v]) => v && v !== "any"))},
-    save: String(fd["kw-save"] ?? "").trim()};
+    save: String(fd["kw-save"] ?? "").trim(), world: W.WORLD[fd["kw-world"]] ? String(fd["kw-world"]) : ""};
 }
 
 /** The targets: the user's targets, else the caster's own token (or the actor). */
@@ -205,9 +209,14 @@ export function plan(actor, form, successes, {used = [], witnessed = false, feat
       items.push({key, out, target: d?.uuid ?? null, name: d?.name ?? a?.name ?? "", route: route === "auto" && out.kind === "move" ? "pick" : route});
     }
   }
+  // What it does to the world (B3757): picked in the Cast window, on the same successes
+  if ( form.world && successes > 0 ) for ( const r of W.worldResults({world: [form.world]}, successes) ) {
+    items.push({key: "world", out: r.out, target: null, name: r.out.scope === "ground" ? "an area" : r.out.scope === "taint" ? "this place" : "the town",
+      caster: caster?.uuid ?? null, scene: canvas?.scene?.id ?? null, route: isOn() ? W.worldRoute(r.out) : "off"});
+  }
   const word = {auto: "applies", queue: "waits in the approval queue", st: "is the Storyteller's call", off: "is for the Storyteller to apply",
     pick: "goes where the Storyteller clicks", area: "waits for the Storyteller to place it"};
-  const html = !got.ok ? "" : `<div class="vta-res wodx-effects"><b>What it does</b><ul>${items.map(i =>
+  const html = !got.ok && !items.length ? "" : `<div class="vta-res wodx-effects"><b>What it does</b><ul>${items.map(i =>
     `<li><b>${esc(i.out.label)}</b> on ${esc(i.name)}: ${esc(i.out.text)}. <span class="wodx-quiet">It ${word[i.route]}.</span></li>`).join("")}</ul>
     ${got.dropped.length ? `<div class="vta-note">Too few successes for ${esc(got.dropped.join(" and "))}.</div>` : ""}</div>`;
   // What a countermagick roll needs to work the card out again (3.25.0)
@@ -222,46 +231,56 @@ export function plan(actor, form, successes, {used = [], witnessed = false, feat
  * any keyword result. Returns {items, html}.
  */
 export function daPlan(actor, rote, successes) {
-  return planOf(actor, DAE.daOutcomes(rote, successes), successes);
+  return planOf(actor, DAE.daOutcomes(rote, successes), successes, {name: rote?.name, line: "Mage (Dark Ages)"});
 }
 
 /** A Thaumaturgy, Necromancy or Koldunic path power on the effects card (Dark Ages Disciplines). */
 export function pathPlan(actor, power, successes) {
-  return planOf(actor, PE.pathOutcomes(power, successes), successes);
+  return planOf(actor, PE.pathOutcomes(power, successes), successes, {name: power?.n, line: "Vampire (Dark Ages)"});
 }
 
 /** A Numen at a level on the effects card (The Hunters Hunted II). */
 export function numinaPlan(actor, key, level, successes, def) {
-  return planOf(actor, PE.numinaOutcomes(key, level, successes, def), successes);
+  return planOf(actor, PE.numinaOutcomes(key, level, successes, def), successes, {name: def?.label ? `${def.label} ${level}` : "", line: "Hunter (HH2)"});
 }
 
 /**
  * Any other power with keywords (a Discipline, a Gift): its keywords on the effects card (Traits With Teeth step 4).
  * set and id name the power in power-keywords.js; line is the line list to try by name. Off when the world setting is off.
  */
-export function powerPlan(actor, {set, id, name, line = null, successes, source = "", noRoll = false} = {}) {
+export function powerPlan(actor, {set, id, name, line = null, successes, source = "", noRoll = false, world = ""} = {}) {
   if ( !isOn() || !powerEffectsOn() ) return {items: [], html: "", skipped: []};
   const kw = PW.powerKeywords(set, id, name, line);
   const t = targetsOf(actor);
   const {results, skipped} = PW.powerOutcomes(kw, successes, {label: name, source, hasTarget: !t.self && t.docs.length > 0, noRoll});
-  const plan = planOf(actor, results, successes);
+  const plan = planOf(actor, results, successes, {name, line: world, source});
   if ( skipped.length ) plan.html += `<p class="wodx-quiet">Needs a target: ${esc(skipped.join(", "))}.</p>`;
   return {...plan, skipped};
 }
 /** A book ritual its caster worked, with these successes, on the effects card (B3753): {items, html}. */
-export function ritualPlan(actor, r, successes, source = "") {
+export function ritualPlan(actor, r, successes, source = "", line = "") {
   if ( !isOn() || !powerEffectsOn() ) return {items: [], html: ""};
   const t = targetsOf(actor);
-  return planOf(actor, ritualResults(r, successes, {source, hasTarget: !t.self && t.docs.length > 0}), successes);
+  return planOf(actor, ritualResults(r, successes, {source, hasTarget: !t.self && t.docs.length > 0}), successes, {name: r?.n, line, source});
 }
 export const powerEffectsOn = () => { try { return game.settings.get(MOD, "powerEffects") !== false; } catch (e) { return true; } };
 
-/** Results in the [{key, who, ask?, st?, out}] shape, spread over the caster's targets: {items, html}. */
-export function planOf(actor, results, successes) {
-  if ( !results.length ) return {items: [], html: ""};
+/**
+ * Results in the [{key, who, ask?, st?, out}] shape, spread over the caster's targets: {items, html}. power: {name,
+ * line, source} names the power, so a power that reaches the world (world-effects.js WORLD_POWERS, B3757) adds its
+ * town, sickness, taint or ground result: town-wide ones to the approval queue, ground for the Storyteller to place.
+ */
+export function planOf(actor, results, successes, power = null) {
+  const world = power?.name ? W.worldResults({source: results[0]?.out?.source ?? "", ...power}, successes) : [];
+  if ( !results.length && !world.length ) return {items: [], html: ""};
   const t = targetsOf(actor);
   const own = actor?.getActiveTokens?.()?.[0]?.document ?? actor;
   const items = [];
+  for ( const r of world ) {
+    const route = !isOn() ? "off" : W.worldRoute(r.out);
+    items.push({key: "world", out: r.out, target: null, name: r.out.scope === "ground" ? "an area" : r.out.scope === "taint" ? "this place" : "the town",
+      caster: own?.uuid ?? null, scene: canvas?.scene?.id ?? null, route});
+  }
   for ( const r of results ) {
     const k = DAE.targetCount(r.who, successes, t.self ? 0 : t.docs.length);
     const docs = r.who === "self" || !k ? [own] : t.docs.slice(0, k);
@@ -274,7 +293,8 @@ export function planOf(actor, results, successes) {
       items.push({key: r.key, out: r.out, target: d?.uuid ?? null, name: d?.name ?? a?.name ?? "", route});
     }
   }
-  const word = {auto: "applies", queue: "waits in the approval queue", st: "is the Storyteller's call", off: "is for the Storyteller to apply", pick: "goes where the Storyteller clicks"};
+  const word = {auto: "applies", queue: "waits in the approval queue", st: "is the Storyteller's call", off: "is for the Storyteller to apply", pick: "goes where the Storyteller clicks",
+    area: "waits for the Storyteller to place it"};
   const html = `<div class="vta-res wodx-effects"><b>What it does</b><ul>${items.map(i =>
     `<li><b>${esc(i.out.label)}</b> on ${esc(i.name)}: ${esc(String(i.out.text).slice(0, 220))}. <span class="wodx-quiet">It ${word[i.route]}.</span></li>`).join("")}</ul></div>`;
   return {items, html};
@@ -370,6 +390,7 @@ async function moodAfter(item, casterName) {
 async function applyCore(item, casterName = "the caster") {
   // item is reassigned when the Storyteller picks a spot (Summon, Move)
   const d = docOf(item.target), a = actorOf(d), o = item.out;
+  if ( o?.kind === "world" ) return applyWorld(item, casterName, a);
   if ( !a && !["summon", "weather"].includes(o?.kind) ) return {note: `${item.name}: not found`};
   const C = combat(), T = chron();
   const health = foundry.utils.deepClone(a?.system?.health?.damage ?? {});
@@ -482,6 +503,44 @@ async function applyCore(item, casterName = "the caster") {
 }
 
 /** The Storyteller picks one of [[value, label]]. map: turns the value into what is returned. Null when cancelled. */
+/**
+ * A world result (B3757): a town event, a sickness or a taint change for the scene's town or place, once the Storyteller
+ * has approved it; or, from a ground area, what the spot does to a token in it. Returns an undo record or {note}.
+ */
+async function applyWorld(item, casterName, a) {
+  const o = item.out ?? {};
+  const scene = game.scenes?.get(item.scene) ?? canvas?.scene ?? null;
+  const why = `${casterName}: ${o.power || o.label}`;
+  if ( o.scope === "ground" ) {
+    // Deep water is WoDX Combat's own (the region carries its water flag); fire burns, broken ground knocks down
+    if ( !a ) return {note: `${item.name}: not found`};
+    if ( o.world === "blaze" ) return applyCore({...item, out: {...o, kind: "damage", pool: Math.max(1, n(o.dice) || 2), type: "lethal", of: "fire", soak: true}}, casterName);
+    if ( o.world === "rubble" ) return applyCore({...item, out: {...o, kind: "condition", condition: "knockdown", difficulty: 6 + Math.min(3, n(o.scale)), timed: {kind: "rounds", rounds: 1}}}, casterName);
+    return {note: `${item.name} is in deep water: WoDX Combat's swimming and drowning rules hold there`};
+  }
+  if ( o.scope === "taint" ) {
+    const K = corruption();
+    if ( !K?.of || !K?.set || !scene ) return {note: "WoDX Otherworlds' Wyrm corruption is off: change the place's taint by hand"};
+    const prev = K.of(scene), step = o.world === "cleanse" ? -n(o.scale) : n(o.scale);
+    const level = Math.max(0, n(prev.level) + step);
+    await K.set(scene, {...prev, level, log: [...(prev.log ?? []), {at: game.time?.worldTime ?? 0, what: `${why}: ${o.world === "cleanse" ? "cleansed" : "fouled"} (${prev.level} to ${level})`}]});
+    return {taint: {scene: scene.uuid, prev}};
+  }
+  const U = upkeep();
+  if ( o.world === "plague" ) {
+    const CG = U?.contagion;
+    if ( !CG?.power ) return {note: "WoDX Storyteller's sickness is off: describe the sickness by hand"};
+    const r = await CG.power({scene, scale: o.scale, source: why});
+    return r?.market ? {sick: r.market} : {note: r?.why ?? "No town on this scene for the sickness to take"};
+  }
+  const TW = U?.towns;
+  const kind = W.townKindOf(o);
+  if ( !TW?.power || !kind ) return {note: "WoDX Storyteller's towns are off: describe what befalls the town by hand"};
+  const r = await TW.power({kind, scale: o.scale, scene, label: why});
+  // The town card carries its own Undo; nothing to keep here
+  return r ? {note: `${o.label}: the town card has its own Undo`} : {note: "No town on this scene for it to reach"};
+}
+
 async function choose(title, list, map = v => v) {
   if ( !list.length || !game.user.isGM ) return null;
   const DialogV2 = foundry.applications.api.DialogV2;
@@ -533,7 +592,7 @@ function untilOf(timed) {
 /** Does the area touch this token? Not the caster, for an area meant to hurt or bind. */
 function touches(area, tok) {
   if ( !tok || area.applied?.includes(tok.id) ) return false;
-  if ( HOSTILE.includes(area.item?.key) || (area.item?.key === "fortune" && area.item?.out?.name === "Cursed") ) {
+  if ( HOSTILE.includes(area.item?.key) || (area.item?.key === "fortune" && area.item?.out?.name === "Cursed") || ["blaze", "rubble"].includes(area.item?.out?.world) ) {
     if ( area.casterToken && tok.uuid === area.casterToken ) return false;
   }
   return E.inArea(centerOf(tok), area);
@@ -544,7 +603,8 @@ async function areaOn(region, tok) {
   const area = areaOf(region);
   if ( !area ) return null;
   const a = tok.actor;
-  const route = E.route(area.item.key, {self: false, playerCharacter: !!a?.hasPlayerOwner, count: 1, need: 0}, area.item.out);
+  // A world area is the Storyteller's already: they placed it (B3757)
+  const route = area.item.key === "world" ? "auto" : E.route(area.item.key, {self: false, playerCharacter: !!a?.hasPlayerOwner, count: 1, need: 0}, area.item.out);
   const item = {...area.item, target: tok.uuid, name: tok.name, route};
   let rec = null;
   if ( route === "auto" ) {
@@ -559,15 +619,35 @@ async function areaOn(region, tok) {
   return rec;
 }
 
+/** How a ground area looks to everyone: flood water, fire, broken ground (B3757). */
+const GROUND_LOOK = {water: {fill: "#2f6f9f", edge: "#9fd0f0", alpha: 0.5}, blaze: {fill: "#c8501e", edge: "#ffb347", alpha: 0.45},
+  rubble: {fill: "#6b5536", edge: "#b89b6a", alpha: 0.5}};
+/** A ground area's drawing goes with its region, however the region ends (Undo, its time, the end of the scene). */
+async function dropGroundDrawing(region) {
+  const id = region?.flags?.[MOD]?.effectArea?.drawing;
+  if ( id && isActiveGM() ) await region.parent?.drawings?.get(id)?.delete?.().catch(() => null);
+}
+
 /** Place an area on the scene at a spot, and work it on whoever stands in it already. */
 export async function placeArea(item, at, {caster = "the caster", scene = canvas?.scene} = {}) {
   if ( !scene || !at ) return null;
-  const radius = E.areaRadius({size: scene.grid?.size, distance: scene.grid?.distance});
-  const color = HOSTILE.includes(item.key) ? "#9b3b3b" : "#5a7fb0";
+  const ground = item.key === "world" ? item.out?.world : null;
+  const radius = E.areaRadius({size: scene.grid?.size, distance: scene.grid?.distance, feet: ground ? item.out?.area : null});
+  const color = ground === "water" ? "#2f5f8f" : ground ? "#9b5b2b" : HOSTILE.includes(item.key) ? "#9b3b3b" : "#5a7fb0";
+  // A world area (B3757): deep water carries WoDX Combat's water flag, so swimming and drowning hold inside it
   const [region] = await scene.createEmbeddedDocuments("Region", [{name: `${item.out.label} (${caster})`, color,
     shapes: [{type: "ellipse", x: Math.round(at.x), y: Math.round(at.y), radiusX: radius, radiusY: radius, rotation: 0, hole: false}],
-    flags: {[MOD]: {effectArea: {x: Math.round(at.x), y: Math.round(at.y), radius, item, caster, casterToken: item.caster ?? null,
+    flags: {...(ground === "water" ? {"wodx-combat": {water: "deep"}} : {}), [MOD]: {effectArea: {x: Math.round(at.x), y: Math.round(at.y), radius, item, caster, casterToken: item.caster ?? null,
       until: untilOf(item.out.timed), scene: item.out.timed?.kind === "scene" || !item.out.timed, applied: [], undo: []}}}}]);
+  // Ground the players can see (B3757): regions show to the Storyteller only, so water, fire or broken ground gets a
+  // drawing on the map under the tokens, removed with its region
+  const look = GROUND_LOOK[ground];
+  if ( look ) {
+    const [drawing] = await scene.createEmbeddedDocuments("Drawing", [{x: Math.round(at.x - radius), y: Math.round(at.y - radius),
+      shape: {type: "e", width: radius * 2, height: radius * 2}, fillType: 1, fillColor: look.fill, fillAlpha: look.alpha,
+      strokeColor: look.edge, strokeAlpha: 0.8, strokeWidth: 6, locked: true, hidden: false, flags: {[MOD]: {groundOf: region.id}}}]).catch(() => []);
+    if ( drawing ) await region.update({[`flags.${MOD}.effectArea.drawing`]: drawing.id});
+  }
   for ( const tok of scene.tokens ) {
     const area = areaOf(region);
     if ( touches(area, tok) ) await areaOn(region, tok);
@@ -621,6 +701,8 @@ export async function undo(records = []) {
       if ( r.effect ) await fromUuidSync(r.effect)?.delete?.({wodxUndo: true});
       if ( r.across ) { const t = fromUuidSync(r.across); if ( t ) await game.modules.get("wodx-otherworlds")?.api?.sendAcross?.(t, {to: r.to}); }
       if ( r.weather ) await game.modules.get("wodx-atmosphere")?.api?.weather?.set?.(r.weather.jdn, r.weather.prev ?? null);
+      if ( r.taint ) { const sc = fromUuidSync(r.taint.scene); if ( sc ) await corruption()?.set?.(sc, r.taint.prev); }
+      if ( r.sick ) await upkeep()?.contagion?.end?.(r.sick, {immune: false});
       if ( r.token ) {
         const tok = fromUuidSync(r.token.uuid);
         const back = {};
@@ -720,6 +802,7 @@ export function setup() {
   Hooks.on("createChatMessage", msg => { onCard(msg).catch(e => console.error("WoDX | effects", e)); });
   Hooks.on("updateToken", (tok, change) => { onMove(tok, change).catch(e => console.error("WoDX | effect areas", e)); });
   Hooks.on("updateWorldTime", () => { expireAreas().catch(e => console.error("WoDX | effect areas", e)); });
+  Hooks.on("deleteRegion", region => { dropGroundDrawing(region).catch(e => console.error("WoDX | ground drawing", e)); });
   Hooks.on("wodxEndScene", () => { expireAreas({sceneEnd: true}).catch(e => console.error("WoDX | effect areas", e)); });
   Hooks.on("renderChatMessageHTML", (msg, el) => {
     const data = msg.flags?.[MOD];
@@ -860,6 +943,12 @@ export function stItems(form, docs) {
       if ( key === "make" && form.item ) o = {...out, kind: "give", item: form.item, text: `${form.itemName} into ${d.name}'s inventory`};
       items.push({key, out: o, target: d.uuid, name: d.name, route: o.kind === "move" ? "pick" : "auto"});
     }
+  }
+  // The Storyteller's own world effect (B3757): it is their say already, so a town-wide one lands at once
+  if ( form.world ) for ( const r of W.worldResults({world: [form.world]}, Math.max(W.WORLD[form.world].need, n(form.strength))) ) {
+    items.push({key: "world", out: {...r.out, text: r.out.text.replace(/; the Storyteller approves it first$/, "")}, target: null,
+      name: r.out.scope === "ground" ? "an area" : r.out.scope === "taint" ? "this place" : "the town", caster: null, scene: canvas?.scene?.id ?? null,
+      route: r.out.scope === "ground" ? "area" : "auto"});
   }
   return items;
 }

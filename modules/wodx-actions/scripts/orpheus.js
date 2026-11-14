@@ -113,7 +113,7 @@ export function build(ctx) {
             if (hfx) {
                 body += `<div class="vta-sec">${esc(OH.horrorLevel(hk, k))}</div>`;
                 if (got > 0 && EF.isOn()) {
-                    const pp = EF.planOf(actor, OH.horrorResults(hk, k, got, { name: it.name, source: `${REF} ${hfx.page}` }), got);
+                    const pp = EF.planOf(actor, OH.horrorResults(hk, k, got, { name: it.name, source: `${REF} ${hfx.page}` }), got, { name: it.name, line: "Orpheus" });
                     body += pp.html;
                     fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
                 }

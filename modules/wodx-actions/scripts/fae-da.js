@@ -228,7 +228,7 @@ export function build(ctx) {
             const kw = c?.kw?.length ? c.kw : fd.kw ? [fd.kw] : [];
             if (kw.length && !r.botch && r.successes > 0 && EF.isOn()) {
                 const t = EF.targetsOf(actor);
-                const pp = EF.planOf(actor, cantripResults(kw, r.successes, { name, source: `${REF} pp. 120–121`, hasTarget: !t.self && t.docs.length > 0 }), r.successes);
+                const pp = EF.planOf(actor, cantripResults(kw, r.successes, { name, source: `${REF} pp. 120–121`, hasTarget: !t.self && t.docs.length > 0 }), r.successes, { name, line: "Fae (Dark Ages)" });
                 body += pp.html;
                 fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             }

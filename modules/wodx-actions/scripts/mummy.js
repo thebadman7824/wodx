@@ -122,7 +122,7 @@ export function build(ctx) {
             if (ns) {
                 body += `<div class="vta-sec"><b>${esc(ns.name)}${got ? "" : " (had it worked)"}:</b> ${esc(ns.fx)}</div><div class="vta-note">${esc(MH.spellLine(fd.named))}.</div>`;
                 if (got && EF.isOn()) {
-                    const pp = EF.planOf(actor, MH.hekauResults(fd.named, got, { name: ns.name, source: `${REF} p. ${MH.PATH_PAGE[ns.path]}` }), got);
+                    const pp = EF.planOf(actor, MH.hekauResults(fd.named, got, { name: ns.name, source: `${REF} p. ${MH.PATH_PAGE[ns.path]}` }), got, { name: ns.name, line: "Mummy (2nd)" });
                     body += pp.html;
                     fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
                 }
@@ -132,7 +132,7 @@ export function build(ctx) {
             if (found) {
                 body += `<div class="vta-note"><b>${esc(found.r.n)}</b>: ${esc(BR.ritualNote(found.set, found.r))}</div>`;
                 if (got && EF.isOn()) {
-                    const pp = EF.ritualPlan(actor, found.r, got, `${REF} ${found.r.page}`);
+                    const pp = EF.ritualPlan(actor, found.r, got, `${REF} ${found.r.page}`, "Rituals (Mummy: The Resurrection)");
                     body += pp.html; fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
                 }
             }
