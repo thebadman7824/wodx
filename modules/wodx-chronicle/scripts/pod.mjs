@@ -2,6 +2,7 @@ import {MODULE_ID, esc, isActiveGM, rule} from "./util.mjs";
 import {propose, registerHandler} from "./approvals.mjs";
 import {currentYear} from "./eras.mjs";
 import * as P from "./pod-rules.mjs";
+import * as TW from "./twist-rules.mjs";
 import {watched} from "./signature-rules.mjs";
 
 /**
@@ -327,8 +328,8 @@ export async function sagaPlayed(book) {
 /* ---- Book one's twist web (B4850-B4853) ---- */
 /** The chapters of book one played so far: all of them once the book is done. */
 function bookOnePlayed(s = state()) {
-  const x = sagaOf(s), run = (s.chains ?? []).find(r => r.saga?.book === S.FIRST_BOOK);
-  if ( x.books[S.FIRST_BOOK] === "done" ) return [...TW.CHAPTERS];
+  const x = sagaOf(s), run = (s.chains ?? []).find(r => r.saga?.book === P.saga.FIRST_BOOK);
+  if ( x.books[P.saga.FIRST_BOOK] === "done" ) return [...TW.CHAPTERS];
   return [...(run?.played ?? [])];
 }
 export const twistState = () => sagaOf(state()).twists ?? {revealed: {}};
@@ -574,7 +575,7 @@ export class PodApp extends ApplicationV2 {
             return w ? ` Waiting on ${esc(w.title)}. <button type="button" data-action="sagaPlayed" data-book="${b.key}">Played</button>` : ""; })()}
           ${endable ? ` <select data-ending="${b.key}" data-fixed><option value="">No ending yet</option>${ends.map(([k, e]) => `<option value="${k}" ${x.endings[b.key] === k ? "selected" : ""}>${esc(e.label)}</option>`).join("")}</select>` : ""}</li>`; }).join("")}</ul>
         <p class="vta-note">${x.endings[P.saga.FIRST_BOOK] ? esc(P.saga.SAGA_ENDINGS[x.endings[P.saga.FIRST_BOOK]].text) : "The first book's ending changes the words of later books."}</p>`);
-      if ( x.books[S.FIRST_BOOK] === "running" || Object.keys(x.twists?.revealed ?? {}).length ) parts.push(twistSection(s));
+      if ( x.books[P.saga.FIRST_BOOK] === "running" || Object.keys(x.twists?.revealed ?? {}).length ) parts.push(twistSection(s));
     }
     if ( lineOn("podGolconda") ) {
       const list = seekers();
