@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4160
+Next free block: B4610
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -210,6 +210,7 @@ Next free block: B4160
 | B4130-B4139 | Missouri village peoples in the People generator (used B4130-B4132) | Creation, Chronicle |
 | B4140-B4149 | Crow, Blackfoot and Arapaho names in the People generator (used B4140-B4142) | Creation, Chronicle |
 | B4150-B4159 | Shoshone and Ute names in the People generator (used B4150-B4152) | Creation, Chronicle |
+| B4600-B4609 | Show, don't tell: a visible: line on every feature's release note (used B4600) | tools (no module) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6950,3 +6951,9 @@ Reverse: edit the lists in data/people-basin.mjs.
 WoDX Creation. Before 1800 an own name alone; from 1800 a church given name and a family name from the rolls. No church names before 1800: no mission held the Basin.
 
 Reverse: change towns or earlyChurch in data/people-basin.mjs.
+
+## B4600. Show, don't tell (Ben, 2026-11-14)
+Ben's standing rule: whatever happens in the game world must show on the map or screen wherever it can, not only be
+told in text (a demon's flood shows rain forming and the town flooding, not a card saying it flooded). Like the
+effect: rule (B3734), every minor or major release note in changes/ carries a visible: line, or visible: none and why,
+and merge-stamp.mjs refuses to stamp (so the branch cannot merge) while it is missing. Written into docs/WORKFLOW.md and changes/README.md.
