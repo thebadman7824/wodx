@@ -193,7 +193,7 @@ Next free block: B3820
 | B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3719) | Library |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
-| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3750) | Actions |
+| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3751) | Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
 | B3780-B3809 | The no-effect audit: gear in the fight (used B3780-B3803) | Combat |
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
@@ -6385,6 +6385,10 @@ How to reverse: drop the EF calls in reckoning.js useEdge and hunter.js hedge ma
 ## B3750. Kuei-jin Disciplines power by power, on the effects card (2026-11-14)
 WoDX Actions. Spend Chi took a Discipline, a kind of Chi, points and a bare roll, and applied nothing but the Chi spent; the Disciplines had no powers listed. Now each of the fifteen Disciplines (Kindred of the East pp. 101-126) lists its powers by level in our own words with the page, and Spend Chi offers the ones the rating reaches. Picking one fills in the Chi it costs, the pool (Attribute or Virtue plus Ability) and the difficulty (the local Wall where the book says so), and a power that works puts its result on the effects card: damage (Five Poison Cloud, Goblin Scorch, Bloodlash), timed effects (Dragon Dance, Shrouded Moon, Corpse Skin), Chi Interrupt's paralysis, moves, and notes for what the Storyteller rules. Powers whose scanned heading was unreadable carry a plain name for what they do and point to the page.
 How to reverse: drop the Power select and the EF call in kote.js spend; delete kote-arts.js.
+
+## B3751. Dark Ages Disciplines and Gifts with no roll take effect (2026-11-14)
+WoDX Actions. A Dark Ages Discipline or Gift used with no roll (most of them: a blood or Gnosis point and it works) showed its card but put nothing on the effects card, because only rolled powers did. Now a power with no roll counts one success and its keywords go on the effects card the way a rolled power's do: a ward, a veil, a boost, a move. A power whose effect is damage with no roll (claws grown, a blade of shadow) readies the user for the scene instead, and the attack roll deals the damage, so nothing is hurt without a blow. Celerity, Fortitude and Potence, always on, were already read by WoDX Combat (soak, damage dice, actions and speed) and are now counted as working. Card-only Dark Ages powers fall from 301 to 118; what is left gives information (Auspex, Heightened Senses), stays the Storyteller's call, or is always on.
+How to reverse: put back `p.r &&` in kindred.js and `code &&` in garou.js before EF.powerPlan; drop noRoll in power-effects.js.
 
 ## B3770. Kuei-jin make stone weapons and true jade (2026-11-14)
 WoDX Library, data/wonders-kuei-jin.mjs and scripts/wonders-kuei-jin.mjs. The Item Crafting Desk pick kj2 (full). Kindred of the East has jade talismans only as a Background (pp. 86-87), but the Companion (p. 67) gives the masters of Jade Shintai two powers that make things, Blade of Stone and Taste of Jade. Both are a Kuei-jin kit on the shared wonders registry (B3683), world setting craftKueiJin, on by default like the other kits.
