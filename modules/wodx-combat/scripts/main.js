@@ -1368,6 +1368,9 @@ function attackCard(c) {
         L.push(`<div class="vtc-big miss">${atk.botch ? "Botched attack" : "Miss"}</div>`);
     } else if (maneuver.noDamage) {
         L.push(`<div class="vtc-big hit">${maneuver.label.split(" (")[0]} succeeds (${net} net success${net === 1 ? "" : "es"}): no damage</div>`);
+    } else if (!dmgPool) {
+        // B3809: a spray, flash or bang does no harm of its own: what it leaves follows on its own card
+        L.push(`<div class="vtc-big hit">Hit (${net} net success${net === 1 ? "" : "es"}): ${esc(w.name)} does no damage of its own</div>`);
     } else {
         L.push(`<div class="vtc-sec"><b>Damage</b> ${dmgPool.dice} dice${dmgPool.auto ? ` + ${dmgPool.auto} auto` : ""}, diff 6: <i>${TYPE_LABEL[outcome?.type ?? (fd.fireSun ? "aggravated" : w.type)] ?? w.type}</i>`);
         L.push(`<div class="vtc-parts">${dmgPool.parts.join(" · ")}</div>`);
