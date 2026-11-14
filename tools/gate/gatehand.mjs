@@ -139,9 +139,22 @@ export async function run() {
 
     // Downtime: a request reaches the queue; rejecting it changes nothing but tells the player
     const Q = game.modules.get("wodx-chronicle").api.approvals;
+    // A standing rule ("small" downtime) or light touch left on by the lane would approve or hold the request before it
+    // reaches the queue, so both are off for this step and put back after
+    const CH = "wodx-chronicle", autoWas = foundry.utils.deepClone(game.settings.get(CH, "autoApprove") ?? {});
+    let lightWas = null;
+    try { lightWas = game.settings.get(CH, "rule.lightTouch"); } catch (e) { lightWas = null; }
     const n0 = Q.pending().length;
-    await B.downtime({actorId: a1.id, kind: "study", nights: 2, what: "Gate: reads the old books"});
-    await sleep(800);
+    try {
+      const auto = foundry.utils.deepClone(autoWas); delete auto[`${MOD}.downtime`];
+      await game.settings.set(CH, "autoApprove", auto);
+      if ( lightWas ) await game.settings.set(CH, "rule.lightTouch", false);
+      await B.downtime({actorId: a1.id, kind: "study", nights: 2, what: "Gate: reads the old books"});
+      await sleep(800);
+    } finally {
+      await game.settings.set(CH, "autoApprove", autoWas);
+      if ( lightWas ) await game.settings.set(CH, "rule.lightTouch", lightWas);
+    }
     const q = Q.pending().find(e => e.type === `${MOD}.downtime` && /Gate: reads/.test(e.detail));
     if ( q ) await Q.decide(q.id, "reject");
     await sleep(800);
