@@ -28,7 +28,7 @@ export async function run() {
   if ( game.world.id === "rothenstein-live" ) return "Not on the Live world.";
   const C = "wodx-chronicle", ST = "wodx-storyteller", IX = "wodx-interactables";
   const saga = () => game.modules.get(C)?.api?.pod?.saga, fr = () => saga()?.fronts;
-  const TL = () => game.modules.get(ST)?.api?.townLooks, CB = () => game.modules.get(IX)?.api?.caseBoard;
+  const TL = () => game.modules.get(ST)?.api?.upkeep?.townLooks ?? game.modules.get(ST)?.api?.townLooks, CB = () => game.modules.get(IX)?.api?.caseBoard;
   const KEYS = ["podChains", "podSaga", "podState"];
   const t0 = Date.now(), time0 = game.time.worldTime, was = Object.fromEntries(KEYS.map(k => [k, foundry.utils.deepClone(game.settings.get(C, k))]));
   const boardWas = game.settings.get(IX, "caseBoard");
@@ -53,9 +53,9 @@ export async function run() {
     await step("1 api", async () => {
       const app = await game.modules.get(C).api.pod.open(); await sleep(600);
       const el = app?.element;
-      const fronts = el?.querySelectorAll?.("[data-fronts] [data-front]")?.length ?? 0;
-      const roles = el?.querySelectorAll?.("[data-roles] [data-role]")?.length ?? 0;
-      const clues = el?.querySelectorAll?.("[data-clues] [data-clue]")?.length ?? 0;
+      const fronts = el?.querySelectorAll?.("[data-fronts] tr[data-front]")?.length ?? 0;
+      const roles = el?.querySelectorAll?.("[data-roles] tr[data-role]")?.length ?? 0;
+      const clues = el?.querySelectorAll?.("[data-clues] tr[data-clue]")?.length ?? 0;
       await app?.close?.();
       ok("1 api", typeof fr()?.tick === "function" && !fr().rules.validate().length && fronts === 6 && roles === 8 && clues === 6, {fronts, roles, clues});
     });

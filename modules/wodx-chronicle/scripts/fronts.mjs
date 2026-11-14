@@ -77,7 +77,7 @@ function rectOf(scene) {
  * (one key per front, so the last step's marks give way). Returns the scene's name, or "" when nothing could be drawn.
  */
 export async function showSight(key, sight, seed = key) {
-  const TL = mod("wodx-storyteller")?.townLooks;
+  const ST = mod("wodx-storyteller"), TL = ST?.upkeep?.townLooks ?? ST?.townLooks;
   const sc = sight ? sceneFor(sight.scene) : null;
   const k = `front:${key}`;
   // Take this front's marks off every other scene first
