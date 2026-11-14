@@ -19,6 +19,8 @@ import * as W from "./world-rules.mjs";
 import * as Led from "./ledger.mjs";
 import * as Setup from "./setup.mjs";
 import * as Builder from "./builder.mjs";
+import * as Ways from "./ways.mjs";
+import * as WayRules from "./way-rules.mjs";
 import * as Night from "./night.mjs";
 import * as Dreams from "./dreams.mjs";
 import * as Codex from "./codex.mjs";
@@ -109,6 +111,8 @@ Hooks.once("init", () => {
   Wills.listen();
   Setup.registerSetupSettings();
   Builder.registerBuilderSettings();
+  Ways.registerWaySettings();
+  Ways.registerWayBehavior();
   Night.registerNightSettings();
   Dreams.registerDreamSettings();
   Dreams.registerDreamHooks();
@@ -221,7 +225,7 @@ Hooks.once("ready", () => {
     ledger: {open: () => Led.LedgerApp.open(), state: Led.ledger, save: Led.saveEntry, remove: Led.removeEntry, status: Led.setStatus, veil: Led.moveVeil, checkDue: Led.checkDue, heirOf: Led.heirOf, breach: Led.onBreach, syncTraits: Led.syncTraits},
     beatsDialog: A.beatsDialog, endSessionDialog: A.endSessionDialog, editBeat: A.editBeat, placesDialog: A.placesDialog, TrackerClass: A.TrackerClass,
     setup: {open: Setup.openSetup, run: Setup.runSetup, have: Setup.have, enableModules: Setup.enableModules},
-    builder: {open: Builder.openBuilder, plan: Builder.plan, run: Builder.runStep, again: Builder.rerunStep, undo: Builder.undoStep, runAll: Builder.runAll, record: Builder.record, recipe: Builder.recipe, recipes: Builder.RECIPES},
+    builder: {open: Builder.openBuilder, plan: Builder.plan, run: Builder.runStep, again: Builder.rerunStep, undo: Builder.undoStep, runAll: Builder.runAll, record: Builder.record, recipe: Builder.recipe, recipes: Builder.RECIPES, layWays: Builder.layWays, takeBackWays: Builder.takeBackWays},
     night: {pacing: Night.pacingNow, draw: Night.drawNight, propose: Night.proposeNight, approve: Night.approveNight, dialog: Night.nightDialog, now: Night.nightNow, layers: Night.layersInPlay, road: Night.roadEncounter, place: Night.placeEncounter, placeCard: Night.placeCard, placeFrom: Night.placeFromCard, peopleIn: Night.N.peopleIn},
     aid: {draw: Night.drawAid, propose: Night.proposeAid, approve: Night.approveAid, dialog: Night.aidDialog, fragments: Night.fragmentsFor, makeItem: Night.makeAidItem},
     dreams: {open: () => Dreams.DreamsApp.open(), list: Dreams.dreams, save: Dreams.saveDream, release: Dreams.releaseDream, remove: Dreams.removeDream, check: Dreams.checkDreams},
@@ -283,6 +287,7 @@ Hooks.once("ready", () => {
     // B3631: fetishes, talens and the other lines' supernatural items (WoDX Library api.wonders)
     wonders: Wonders.wondersApi(),
     teleport: {arm: Teleport.arm, to: Teleport.teleport, cursor: Teleport.cursorPoint, armed: Teleport.isArmed},
+    ways: {open: Ways.waysDialog, make: Ways.makeWay, walk: Ways.walk, network: Ways.network, check: Ways.check, region: Ways.wayRegion, rules: WayRules},
     draw: Night.drawChooser, nightRules: Night.N
   };
   const mod = game.modules.get(C.MOD);
@@ -390,6 +395,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: game.user.isGM, onChange: () => Hand.handDialog()};
   tokens.tools.wodxDowntime = {name: "wodxDowntime", title: "Downtime request (what your character does between sessions)", icon: "fa-solid fa-bed", order: 124,
     button: true, visible: true, onChange: () => Between.downtimeDialog()};
+  tokens.tools.wodxWays = {name: "wodxWays", title: "Ways (doors, gates and roads between places; check that every place can be reached)", icon: "fa-solid fa-door-open", order: 135,
+    button: true, visible: game.user.isGM, onChange: () => Ways.waysDialog()};
   tokens.tools.wodxTeleport = {name: "wodxTeleport", title: "Teleport the selected tokens (then click the map; Alt+Shift+P sends them to the cursor)", icon: "fa-solid fa-person-through-window", order: 125,
     button: true, visible: game.user.isGM, onChange: () => Teleport.arm()};
   tokens.tools.wodxDraw = {name: "wodxDraw", title: "Draw for the story (tonight, a story aid, an Otherworld journey)", icon: "fa-solid fa-dice-d20", order: 119,
@@ -417,6 +424,7 @@ async function onSocket(message) {
   if ( type === "req.hunted" ) { await Up.onHunted(payload, {userId: payload.userId}); return; }
   if ( type === "req.fed" ) { await Herds.feedFrom(payload, {userId: payload.userId}); return; }
   if ( type === "req.venture" ) { await Ventures.onRequest(payload); return; }
+  if ( type === "req.way" ) { await Ways.onRequest(payload); return; }
   if ( type !== "req.travel" && type !== "req.solo" ) return;
   // A player may only act for a character they own
   const user = game.users.get(payload.userId);

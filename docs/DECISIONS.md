@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4770
+Next free block: B4860
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -226,6 +226,10 @@ Next free block: B4770
 | B4740-B4749 | Khmer names (used B4740-B4742) | Creation, Chronicle |
 | B4750-B4759 | Filipino names (used B4750-B4752) | Creation, Chronicle |
 | B4760-B4769 | Rothenstein Rebuilt: book one opens in autumn 1200, chapters wait to be played, a fourth ending (used B4760-B4762) | Chronicle, Storyteller |
+| B4770-B4779 | Fighting from the saddle after the books: the mount's Attributes and dodge, keeping the saddle, the lance, the bow from a moving horse (used B4770-B4776) | Combat |
+| B4780-B4789 | Rothenstein Rebuilt: Ways, the open world's doorways (used B4780-B4783) | Storyteller |
+| B4810-B4819 | Rothenstein Rebuilt: Ways laid by the builder, old exits and doors to the places inside (used B4810-B4813) | Storyteller |
+| B4850-B4859 | Rothenstein Rebuilt: book one's twist web (six chains, locks, one twist a week) (used B4850-B4853) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7254,3 +7258,98 @@ Reverse: drop `wait` from the chapters.
 WoDX Chronicle. Ben picked (desk pl6) a fourth ending for a company that walks away: nobody keeps, cuts or takes the binding and the long clocks decide what follows. It is offered at Chapter X with the other three; later steps without words for it keep their plain text.
 
 Reverse: remove `alone` from SAGA_ENDINGS and Chapter X.
+
+## B4770. The mount's Attributes in the rider's blows (2026-11-14, Master Plan leftover of the riding book check B2445; house reading)
+V20 Dark Ages p. 399 lets the rider use the mount's Attributes in combat actions. WoDX Combat reads that for blows struck from the saddle (close combat) at the reins of a horse or a mule: the higher of the rider's and the mount's Strength (in the damage) and Dexterity (in the attack). Stamina stays the rider's, since a blow lands on the rider's body. Shots are the rider's own. The books give a small and a large horse (p. 399); a riding or war horse is the large one (Strength 6, Dexterity 2, Stamina 5, Athletics 3), and with no mule in the books a mule or donkey takes the small horse (Strength 4, Dexterity 2, Stamina 3, Athletics 3). A motorcycle has no Attributes of its own.
+
+Reverse: have strikeAttr in mounted-rules.js return the rider's own value, or change MOUNT_TRAITS.
+
+## B4771. The mount dodges for its rider (2026-11-14, house reading)
+V20 Dark Ages p. 399: a mount may take one defensive action a turn for its rider, generally a dodge, without costing the rider an action. WoDX: the mount dodges with its Dexterity + Athletics, the Athletics held to the rider's Ride (every Ability in the saddle is held to Ride, and the rider steers), at 6, +2 against shots as for anyone. It is once a turn (counted from the attack cards of the round) and does not count as one of the rider's defenses. The attack window offers it as "The mount dodges for the rider"; the automatic defense takes it unless the rider's own best defense is a whole expected success better.
+
+Reverse: remove the "mount" branch in planDefense and bestDefense in main.js.
+
+## B4772. Keeping the saddle and the fall (2026-11-14, house reading)
+Dark Ages: Vampire pp. 244-245 (printed): a rider who is hit rolls Stamina + Ride, at the attacker's successes before soak; a failure throws them for 2 to 4 bashing dice, lethal on a botch. The Dark Ages Companion (printed p. 38) sets the fall by the ground. WoDX: any hit that rolls damage successes asks the roll, at those successes, 3 at least and 10 at most (below 3 it would hardly be a roll); Drive on a motorcycle. The fall is by the ground the mount is on (WoDX Interactables' chase ground): open fields 2, a road, town streets or indoors 3, rough ground or a crowd 4, water none; soaked as a blow of its type. A thrown rider's token comes off the mount's seat on the map, is set down a square to the left of the beast and is Knocked down, with "Thrown!" over the token for everyone. A knockdown maneuver that lands on a rider throws them without a roll (no fall dice past the maneuver's). World setting "mountedCombat" turns it off.
+
+Reverse: set the setting off, or change saddleDiff and FALL_DICE in mounted-rules.js.
+
+## B4773. The lance (2026-11-14, house reading)
+Dark Ages: Vampire pp. 244-245: using a lance well needs Ride 3 and Melee 3, or a hit hurts the user too, bashing dice equal to the lethal dealt; a botch is 4 lethal dice and a roll to stay mounted; a lance charge that hits makes the target roll Strength + Athletics or be knocked down, and anyone unhorsed takes 2 to 4 more dice. WoDX: a lance is a melee weapon named Lance (never a fire lance). The jolt is bashing dice equal to the damage successes before soak, soaked. The botch's saddle roll is at 6. A lance charge is a hit from the saddle after riding at least 10 yards this turn (the mounted charge, B2442); the target rolls Strength + Athletics at 6; a rider who fails is unhorsed and takes the fall by the ground (B4772); one on foot is Knocked down. The charge's damage dice stay as B2442 gives them, and the lance's own figures stay those of the gear list.
+
+Reverse: have isLance in mounted-rules.js return false.
+
+## B4774. A bow from a moving horse (2026-11-14, house reading)
+Dark Ages: Vampire p. 244: a bow shot from a moving horse is +2 difficulty, +4 at a trot or faster, unless the archer has the Archery specialty Mounted. WoDX counts the yards the rider has ridden this turn: any at all is moving, half the mount's fight pace or more (25 yards for a horse on a road) is a trot or faster. The book's figure replaces the saddle's own +1 on shots (B2441), which a still horse keeps; with the specialty (any specialty naming mounted, horseback or the saddle) the +1 goes too. Bows only, not crossbows or guns: the book names the bow.
+
+Reverse: have mountedShot in mounted-rules.js return {diff: 0}.
+
+## B4775. One world setting for all of it (2026-11-14)
+"Fighting from the saddle" (mountedCombat, on by default) switches B4770 to B4774 off together. It needs the ways of moving setting (movementModes) and WoDX Interactables' mounts. The saddle's Ability cap and the charge dice (B2440 to B2445) stay with the ways of moving.
+
+Reverse: nothing to reverse; turn the setting off.
+
+## B4776. Not taken from the books (2026-11-14)
+Left as they are: the lance thrust (damage dice equal to Strength) and staking with a lance (+2, 5 successes, 3 levels), since WoDX's lance keeps the gear list's figures and staking has its own maneuver; jousting and leaping from the saddle (Dark Ages Companion), which are sport and stunts the Storyteller runs; a polearm's sweep against riders (V20 Dark Ages Companion p. 123); a moving shooter at +1 for guns (M20 p. 419), which the saddle's +1 already gives; and horses' fear of the undead (V20 Dark Ages p. 399), which belongs with the mount's own menu.
+
+Reverse: nothing built.
+
+## B4780. A Way is a region behaviour that calls the trip rules (2026-11-14)
+WoDX Storyteller. Ben's point 3 for the rebuilt chronicle: players travel from scene to scene without the Storyteller teleporting them (desk ow1). A Way is a region with the behaviour "WoDX: Way to" (to: a scene, arrive: the region at the far end, kind, shut, locked, minutes, from and until years). Walking in calls core.mjs travel() with a `way` option, so the time, the dark, road encounters, approvals, fares and the pull of each player's screen all work as for any trip. No confirm by default; the world setting "Ways ask before they move a character" adds a Go button on the walker's own client (desk ow2).
+
+Reverse: delete the behaviour type; the regions stay as plain regions.
+
+## B4781. A Way leads to its scene even when the scene is not set out for travel (2026-11-14)
+WoDX Storyteller. planTrip takes `way: {minutes, at, ask}`: a Way's minutes replace the trip plan (a road's end and the edge of the land have none and use the trip rules), its arrival point replaces the landing spot, and a Way that asks first goes to the approval queue with that reason.
+
+Reverse: drop the way option from planTrip and travel.
+
+## B4782. Who goes along, and no walking straight back (2026-11-14)
+WoDX Storyteller. The company's tokens within three squares of the walker, and any follower whose order is Follow me with the walker as leader, go together (desk ow3); anyone else stays. Characters just carried through land on the far end and are ignored there for five seconds, so they are not sent back.
+
+Reverse: companions() returns the walker alone.
+
+## B4783. Shut Ways and the network check (2026-11-14)
+WoDX Storyteller. A Way can be shut from dusk to dawn (a town gate, by the walker's own time), locked until the Storyteller unticks Locked, shut for now, or ask first; a Way outside its from and until years is not there. Each refusal tells the player why and what can be done. The Ways window names every place with no way in, no way out, a way to a missing scene, or no route from the first place (desk ow6).
+
+Reverse: wayBlocked() returns null.
+
+## B4810. The old exits become Ways in place (2026-11-14)
+WoDX Storyteller. The testbed's walkable maps (the Lower Town, Kranzfels, the roads, woods, river and mine) already link to each other with Teleport Token regions paired with arrival regions. The builder's Ways step adds a WoDX Way to each such region, pointing at the same arrival, and switches the teleport off, so walking through runs the trip rules (personal time, the company, encounters) instead of a bare jump. The kind of Way comes from the two names: a stair for floors and cellars, a gate into or within Kranzfels and at the West Gate, a ferry to the ferry or the ford, a street inside the Lower Town, else a road. Penumbra and Shadowlands twin regions are left to wodx-otherworlds, and a crossing inside one map (the ferry over the river) stays a teleport.
+
+Reverse: take the step back; the Ways come off and the teleports come on again.
+
+## B4811. Doors to the places inside come from the recipe (2026-11-14)
+WoDX Storyteller. The private quarters, workplaces and indoor places have no exits of their own. The recipe lists, by scene name, which street map each one opens from (36 doors), with a stair for the rooms above the inn, locked doors for the schemers' private places (Kasimir, Konrad, Voss, Graff) and an ask-first door to Bogdan's chambers. The street end sits on the south edge, three squares apart, until the Storyteller moves it to the house on the map. Where the houses stand on each street was a best guess from the names and the anchors' homes.
+
+Reverse: edit or remove the doors list in data/recipe-rothenstein.mjs and run the step again.
+
+## B4812. The network check runs at the end of the step (2026-11-14)
+WoDX Storyteller. The step's note in the builder window says how many exits and doors were laid and lists any place with no way in or out, or that cannot be reached from the first. On the exported testbed world every walkable map and every place inside can be reached and left; the gridless trial copy of Dolany and the battlemap copies are left out.
+
+Reverse: none needed; the check only reads.
+
+## B4813. A gate can lay and take back Ways in its own scenes (2026-11-14)
+WoDX Storyteller. builder.layWays(recipe, made, {only}) and builder.takeBackWays(made) are on the api, so a gate tests the step in scenes of its own in any testbed world without running the earlier steps or touching the lane's maps.
+
+Reverse: drop the two api entries; the step keeps working.
+
+## B4850. The twist web keeps the shape, not the words (2026-11-14)
+WoDX Chronicle. data/twists-rothenstein.mjs holds the twenty-four twists by number with a short handle in our own words, the six chains with their twists and pay-off chapters, the pairs that cannot both stand as written, and the quick order. The twists' own words stay in the Storyteller's third volume, which is kept privately and never in the repo.
+
+Reverse: delete the data file and the section in the saga window.
+
+## B4851. One twist a week of game time (2026-11-14)
+WoDX Chronicle. Ben's note on the rebuild desk (ow7): one twist per week, not one per night. A second twist within seven days of game time is refused with the days left. "Reveal anyway" skips the week (and the chapter) for a twist the company dug out by its own hand.
+
+Reverse: set WEEK to 0 in the data file.
+
+## B4852. Chapters gate the twists, and the choosing ends them (2026-11-14)
+WoDX Chronicle. Each twist fits from the chapter the volume ties it to (the free quiet twists 4, 10, 12 and 14 from the first night). The chapter the company is in is the first one of book one not marked played. Once chapter 9, the choosing, is played, no new twist comes, as the volume asks.
+
+Reverse: drop the chapter check in whyNot.
+
+## B4853. A revealed twist gives its partner another heart (2026-11-14)
+WoDX Chronicle. Desk pick pl10: when one twist of a pair is revealed, its partner can still be used but keeps a different heart, and the card and the table say which. A twist with two hearts (22, 24) asks which one at the reveal. Taking a reveal back clears it, and the week then counts from the reveal before.
+
+Reverse: none needed; the notes only advise.
