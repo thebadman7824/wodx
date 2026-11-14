@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.72.0 (Merits and flaws' own tick boxes (B3780): the roll window offers the situations WoDX Chronicle's trait table names, beside the fixed ones (by voice, a first meeting, a sense), and the roll counts the ticked ones)
 - 3.71.0 (Powers pass, Demon: every evocation's card says what it does, how long, how far and what high Torment makes of it, and puts what it can on the effects card (B3741). Lasting evocations are counted against the permanent Faith, with an option to end the oldest (B3742). The apocalyptic form lists each power's effect and puts its Attribute, initiative and soak changes on the sheet for the scene (B3743). Changeling 20th: Cast a cantrip lists the ninety named cantrips the character's Arts reach; the card says what the chosen one does, for how long and whether it is Wyrd, and puts what it can on the effects card (B3744))
 - 3.70.0 (Powers pass: Use an Arcanos puts the art's effect keywords on the effects card, as Disciplines and Gifts already do, for Wraith 20th and The Great War arts alike (B3740). Tool tools/powers/inventory.mjs lists every power WoDX knows and what using it does; gate gatepowers)
 - 3.69.1 (The soulforge window hands Artifacts and reworked relics on to the shared crafting table, as Ben picked on the Item Crafting Desk; arms, armour and oboli are made here as before (B3723))
