@@ -105,10 +105,11 @@ export const WORLD_REGIONS = {
     // and the Southwest: the Pueblos, the Diné and the Apache (B3930)
     // and the village peoples of the Missouri: the Mandan, the Hidatsa, the Arikara and the Pawnee (B4130)
     // and the northern Plains: the Blackfoot, the Arapaho and the Crow (B4140)
-    medieval: "lakota 26, cheyenne 10, comanche 10, kiowa 6, pueblo 20, dine 8, apache 6, mandan 4, hidatsa 3, arikara 3, pawnee 4, blackfoot 5, arapaho 3, crow 2",
-    "early-modern": "spanish 30, lakota 18, comanche 11, cheyenne 7, kiowa 5, pueblo 11, dine 6, apache 4, mandan 2, hidatsa 2, arikara 1, pawnee 3, blackfoot 4, arapaho 3, crow 3",
-    industrial: "anglo 60, hispanic 20, chinese 5, irish 5, lakota 6, cheyenne 2, comanche 1, kiowa 1, dine 3, pueblo 2, apache 1, pawnee 1, hidatsa 1, mandan 1, arikara 1, blackfoot 1, crow 1, arapaho 1",
-    modern: "anglo 66, hispanic 28, lakota 4, cheyenne 1, comanche 1, dine 3, pueblo 1, apache 1, hidatsa 1, pawnee 1, blackfoot 1, crow 1"}, {...AM, lend: false}),
+    // and the Great Basin and the Rockies: the Shoshone and the Ute (B4150)
+    medieval: "lakota 26, cheyenne 10, comanche 10, kiowa 6, pueblo 20, dine 8, apache 6, mandan 4, hidatsa 3, arikara 3, pawnee 4, blackfoot 5, arapaho 3, crow 2, shoshone 5, ute 4",
+    "early-modern": "spanish 30, lakota 18, comanche 11, cheyenne 7, kiowa 5, pueblo 11, dine 6, apache 4, mandan 2, hidatsa 2, arikara 1, pawnee 3, blackfoot 4, arapaho 3, crow 3, shoshone 4, ute 4",
+    industrial: "anglo 60, hispanic 20, chinese 5, irish 5, lakota 6, cheyenne 2, comanche 1, kiowa 1, dine 3, pueblo 2, apache 1, pawnee 1, hidatsa 1, mandan 1, arikara 1, blackfoot 1, crow 1, arapaho 1, shoshone 1, ute 1",
+    modern: "anglo 66, hispanic 28, lakota 4, cheyenne 1, comanche 1, dine 3, pueblo 1, apache 1, hidatsa 1, pawnee 1, blackfoot 1, crow 1, ute 1"}, {...AM, lend: false}),
   "mexico": R("Mexico and Central America (Tenochtitlan, New Spain)", "americas", 19.4, -99.1, "highland-tropics", "mexican", {
     // the Maya of Yucatán, the Petén and the Guatemalan highlands beside the Nahua (B3830)
     medieval: "nahua 70, maya 30", "early-modern": "nahua 38, maya 17, spanish 45", industrial: "spanish 80, nahua 12, maya 8"}),
