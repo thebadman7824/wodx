@@ -70,3 +70,11 @@ test("derangements: Chronicle wires the bout into roll effects and the api", () 
   assert.match(m, /derangements\.setupDerangements\(\)/);
   assert.match(m, /derangements: derangements\.derangementsApi/);
 });
+
+test("derangements: Actions' Virtue-loss botches write one into the box (B3915)", () => {
+  const a = src("modules/wodx-actions/scripts/main.js");
+  assert.match(a, /async function gainDerangement\(actor, cause, why\)/);
+  assert.equal((a.match(/await gainDerangement\(actor, /g) ?? []).length, 3);
+  assert.match(a, /derangement: withActor\(a => game\.modules\.get\("wodx-chronicle"\)\?\.api\?\.derangements\?\.hold\?\.\(a\)\)/);
+  assert.doesNotMatch(a, /a Derangement may follow/);
+});

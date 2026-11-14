@@ -200,7 +200,7 @@ Next free block: B4140
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Derangements in play (used B3900-B3914) | Chronicle |
+| B3900-B3929 | Virtue-loss botches gain a derangement (used B3900-B3915) | Actions, Sheets |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
@@ -6764,6 +6764,9 @@ No-effect audit t1. WoDX Chronicle reads the sheet's Derangements box against a 
 
 ## B3914. Gambling reaches the purses at api.upkeep.money (2026-11-14)
 B3910's gambling read WoDX Storyteller's money api at api.money, which does not exist; the purse api is api.upkeep.money. Every game rolled and posted its card, but the stake never moved and the stake offered was always nothing. Fixed in gamble-use.mjs; gategamble now fails when the api is missing or the stake is nothing, and a harness test checks the path. Found by the gate summary change (B3912). Reverse: none needed.
+
+## B3915. A Virtue-loss botch writes a derangement (2026-11-14)
+No-effect audit t1, second half. WoDX Actions' frenzy (riding the wave or resisting) and sin rolls used to say a Derangement "may follow". A botch now calls WoDX Chronicle's derangements.gain (B3913) with the cause: frenzy, fear for Rötschreck, or sin with the sin's words, which writes a new one into the box and posts a card; the Storyteller may change it. The Actions API gains derangement({actor}), and WoDX Sheets' Derangements panel gets a "Set off" link that opens Chronicle's dialog (roll Willpower, spend a point, give in, or end the bout). With Chronicle off, nothing changes. Reverse: drop gainDerangement and its three calls in Actions main.js, and the panel's roll link.
 
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
