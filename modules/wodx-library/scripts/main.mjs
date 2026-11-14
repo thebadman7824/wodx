@@ -6,6 +6,7 @@ import {setupUse, useApi} from "./use.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Reg from "./wonder-registry.mjs";
 import {setupGearInstall, gearInstallApi} from "./gear-install.mjs";
+import {armsApi} from "./arms-use.mjs";
 import "./wonder-lines.mjs";
 
 /**
@@ -182,7 +183,7 @@ Hooks.once("ready", async () => {
     library: {open: () => Sh.LibraryApp.open(), install: Sh.installShelves, catalogue: Sh.catalogue, rules: SR},
     manual: {open: Sh.openManual, ensure: Sh.ensureManual, page: Sh.openManualPage}, glossary: {open: Sh.openGlossary, ensure: Sh.ensureGlossary}, changelog: {open: Sh.openChangelog, ensure: Sh.ensureChangelog}};
   try { await setupExamine(); game.modules.get(MOD).api.examine = examineApi(); } catch (err) { console.warn("WoDX Library | Examine could not start", err); }
-  try { await setupUse(); game.modules.get(MOD).api.use = useApi(); } catch (err) { console.warn("WoDX Library | Use could not start", err); }
+  try { await setupUse(); game.modules.get(MOD).api.use = useApi(); game.modules.get(MOD).api.arms = armsApi(); } catch (err) { console.warn("WoDX Library | Use could not start", err); }
   // B3795: cyberware in the body (bonus rows while installed, Humanity on install)
   try { setupGearInstall(); game.modules.get(MOD).api.cyber = gearInstallApi(); } catch (err) { console.warn("WoDX Library | cyberware could not start", err); }
   // B3690: powers, pools and worn bonuses of made supernatural items (wonder-use.mjs)

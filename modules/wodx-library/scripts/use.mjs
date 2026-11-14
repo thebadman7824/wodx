@@ -19,6 +19,8 @@ import * as U from "./use-rules.mjs";
 import * as L from "./link-rules.mjs";
 import * as X from "./examine-rules.mjs";
 import * as WU from "./wonder-use.mjs";
+import * as AU from "./arms-use.mjs";
+import * as AR from "./arms-rules.mjs";
 
 const MOD = "wodx-library";
 const SOCKET = `module.${MOD}`;
@@ -314,6 +316,12 @@ export async function run(item, ability, actor = holderOf(item)) {
       return null;
     }
     case "dressas": return dressAs(actor, item);
+    case "ready": return AU.ready(actor, item);
+    case "fit": return AU.fit(actor, item);
+    case "settrap": return AU.setTrap(actor, item);
+    case "springtrap": return AU.springTrap(actor, item);
+    case "disarm": return AU.disarmTrap(actor, item);
+    case "clean": return AU.clean(actor, item);
     case "wear": {
       const on = !(item.system?.isequipped);
       await item.update({"system.isequipped": on});
@@ -353,9 +361,10 @@ export async function openUse(item, actor = holderOf(item)) {
   if ( list.length === 1 && !extra.length ) return run(item, list[0], actor);
   const can = L.qualitiesOf(good ?? item.name).map(k => L.QUALITIES[k].label);
   const holds = WU.isWonder(item) ? WU.wonderUseApi().rules.summary(item.flags?.[MOD]?.wonder) : "";
+  const armsLine = AR.summaryOf(item.name) + (item.flags?.[MOD]?.trap?.set ? ` Set by ${item.flags[MOD].trap.by}: difficulty ${item.flags[MOD].trap.diff} to see it.` : "");
   const state = sup ? (isEmpty(item) ? `Empty: it needs ${sup.charge ? "charging" : `more ${sup.label}`}.` : `It has ${sup.label}.`) : "";
   const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 360}, window: {title: `Use: ${item.name}`}, classes: ["wodx-dialog", "wlib-use"],
-    content: `<p class="hint">${esc(actor?.name ?? "")}${targetActor() ? `, with ${esc(targetActor().name)} targeted` : ""}</p>${can.length ? `<p class="hint">It ${esc(can.join(", "))}.</p>` : ""}${state ? `<p class="hint">${esc(state)}</p>` : ""}${holds ? `<p class="hint">${esc(holds)}</p>` : ""}`,
+    content: `<p class="hint">${esc(actor?.name ?? "")}${targetActor() ? `, with ${esc(targetActor().name)} targeted` : ""}</p>${can.length ? `<p class="hint">It ${esc(can.join(", "))}.</p>` : ""}${state ? `<p class="hint">${esc(state)}</p>` : ""}${holds ? `<p class="hint">${esc(holds)}</p>` : ""}${armsLine ? `<p class="hint">${esc(armsLine)}</p>` : ""}`,
     buttons: [...list.map((k, i) => ({action: k, label: k.startsWith("wonder:") ? WU.powerLabel(item, k) : U.ABILITIES[k].label, default: i === 0})), ...extra, {action: "cancel", label: "Cancel"}]});
   if ( res && (U.ABILITIES[res] || String(res).startsWith("wonder:") || res === "_empty" || res === "_refill") ) return run(item, res, actor);
 }
@@ -374,6 +383,7 @@ async function onCreateItem(item, opts, userId) {
 export async function setupUse() {
   await load();
   game.socket?.on(SOCKET, onSocket);
+  game.socket?.on(SOCKET, AU.onArmsSocket);
   Hooks.on("createItem", onCreateItem);
   const can = it => !!it && it.isOwner;
   Hooks.on("getHeaderControlsItemSheetV2", (app, controls) => {
