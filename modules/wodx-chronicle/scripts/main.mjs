@@ -194,6 +194,7 @@ Hooks.once("ready", async () => {
   contentFixes.registerContentFixes();
   eras.applyProfile(eras.activeEra().profile);
   playerTools.installToolFilter();
+  playerTools.applyUi();
   playerView.installViewFilter();
   playerView.installHudGroups();
   playerView.installQuietChat();
@@ -350,7 +351,7 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: game.user.isGM, onChange: () => waiting.WaitingApp.open()
   };
   tokens.tools.wodxPlayerTools = {
-    name: "wodxPlayerTools", title: "Player toolbar buttons", icon: "fa-solid fa-user-gear", order: base + 3,
+    name: "wodxPlayerTools", title: "Player interface", icon: "fa-solid fa-user-gear", order: base + 3,
     button: true, visible: game.user.isGM, onChange: () => playerTools.openPlayerTools()
   };
 });

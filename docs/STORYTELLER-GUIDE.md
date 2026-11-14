@@ -36,14 +36,14 @@ How the build works from the Storyteller's chair, and how to keep a session movi
 
 ## The toolbar
 
-All WoDX buttons sit in the **token controls** on the left. Players see only the ones you allow in **Player toolbar buttons**.
+All WoDX buttons sit in the **token controls** on the left. Players see only the ones you allow in **Player interface**.
 
 | Button | Name | Who |
 |---|---|---|
 | Moon | Chronicle Clock | everyone (players can view) |
 | X | X-card (anonymous) | everyone |
 | Inbox | Approval queue | Storyteller |
-| Person and cog | Player toolbar buttons | Storyteller |
+| Person and cog | Player interface | Storyteller |
 | Crosshairs | Find my character | everyone |
 | Door | Step sideways (selected Garou) | everyone |
 | Eye | Peek across the Gauntlet | everyone |
@@ -115,7 +115,7 @@ The Clock's buttons:
 
 **Safety.** The X-card (button, the Clock, or Ctrl+Shift+X) shows everyone the card, never says who pressed it, and pauses the game while that switch is on. NPCs never act while the game is paused, and every inner voice stops for the scene. Lines and veils are the table's content limits: a line is something that never appears in the game, and a veil is something that may happen but off screen, with the scene cut away. Players add them from the Clock, and they go into the Session Zero journal without names.
 
-**Players' buttons.** **Player toolbar buttons** has a tick for each WoDX button and each player. **Find my character** takes a player to their token on any scene; if the player cannot view that scene, your client pulls them there.
+**Players' buttons and screen.** **Player interface** has a tick for each WoDX button and each player, then a Screen parts list: scene navigation, the player list, the macro bar, camera and voice, and each sidebar tab but chat and Settings. Untick a part and it leaves that player's screen at once; if that sidebar tab was open, the sidebar goes back to chat. Chat, Settings, notifications, the scene controls and the X-card always stay. This only tidies the screen: what a player may open or change is still set by their role and by who owns what. A player's quiet interface (Alt+Q) can tuck more away, but cannot bring back what you hid. **Find my character** takes a player to their token on any scene; if the player cannot view that scene, your client pulls them there.
 
 **The look.** WoDX windows and cards wear the era's kit (manuscript for the Dark Ages, typewriter for the Great War, neon for the Modern nights) and the line's accent. Each person can change their own look, text size and motion under Configure Settings (client settings).
 
