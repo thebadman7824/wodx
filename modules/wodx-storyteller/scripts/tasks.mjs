@@ -92,6 +92,10 @@ export async function saveTask(a, data) {
   if ( !old && t.kind === "commission" && t.form ) {
     try { const f = game.modules.get(MOD).api.patronage.rules.form(t.form); if ( f ) t.goal = f.goal; } catch (e) { /* patronage off */ }
   }
+  // B3612: a new self needs what the age's records ask (WoDX Chronicle's papers)
+  if ( !old && t.kind === "identity" ) {
+    try { const p = game.modules.get("wodx-chronicle").api.law.papers.project(); t.goal = p.goal; t.diff = p.diff; } catch (e) { /* papers off */ }
+  }
   // B3359: works on a haven need the successes the upgrade asks
   if ( !old && t.kind === "upgrade" && t.upgrade ) {
     try { const u = game.modules.get(MOD).api.havenWorks.rules.upgrade(t.upgrade); if ( u ) t.goal = u.goal; } catch (e) { /* works off */ }
