@@ -190,7 +190,7 @@ Next free block: B3730
 | B3660-B3669 | The Rothenstein saga: the running step for other systems (used B3660-B3669) | Chronicle |
 | B3670-B3679 | The Rothenstein saga keeps its calendar on long skips (used B3670-B3672) | Chronicle |
 | B3680-B3689 | Mage Wonders, charms, periapts, trinkets and mage fetishes (used B3680-B3689) | Library, Storyteller |
-| B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3699) | Library, Storyteller |
+| B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3692) | Library |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
 <!-- decision-index:end -->
 
@@ -6155,41 +6155,6 @@ Reverse: change countSuccesses and the failed check in plan().
 WoDX Library. An amulet's or talisman's Attribute bonus while worn is an attribute_buff entry in the item's own system.bonuslist, switched with the equipped box in the same update, so the worldofdarkness system's totals pick it up with nothing else to keep in step. A spent item's bonus goes off.
 
 Reverse: drop the preUpdateItem hook in wonder-use.mjs; bonuses then stay as the item was made.
-
-## B3693. Kindred rituals that touch objects, one table for every blood sorcery (2026-11-14)
-WoDX Library, data/wonders-kindred.mjs and scripts/wonders-kindred.mjs. Ben's Item Crafting Desk k1 (full) and k2 (fold into k1). Rows are the V20 and V20 Dark Ages Thaumaturgy rituals and the V20 Necromancy rituals that make or work on an object (V20 pdf 185 to 189, 239 to 248; V20 Dark Ages pdf 304 to 310). Dark Thaumaturgy, Assamite, Setite and Koldunic sorcery count as Thaumaturgy for these rows, as the desk asked. Rituals that only change the caster (Firewalker, Occhio d'Uomo Morto) or make a servant rather than an object (Sanguine Assistant) are left to the ritual catalogue.
-
-Reverse: drop the import in wonder-lines.mjs; the setting and the rows go with it.
-
-## B3694. Dark Ages rules before 1500 (2026-11-14)
-WoDX Library. Where the two books differ (Blood Contract is level 1 in the Dark Ages, every Dark Ages ritual costs a blood point, the Dark Ages talisman adds damage and takes Willpower for a success, rows only one book has), years before 1500 use V20 Dark Ages and later years V20. Logged for review.
-
-Reverse: change DA_UNTIL in data/wonders-kindred.mjs.
-
-## B3695. Only Kindred cast these, with the ritual known and the rating for its level (2026-11-14)
-WoDX Library. The maker must be Kindred (WoDX Actions profile), know the ritual (a ritual Power of that name), have the Thaumaturgy or Necromancy rating for its level, and hold the blood it costs. Ghouls with Thaumaturgy are not included until the ghoul rules are checked.
-
-Reverse: widen makerOf in the kit.
-
-## B3696. A ritual is one roll, its blood paid first (2026-11-14)
-WoDX Library. Each ritual is a long task of one roll (maxRolls 1) of Intelligence + Occult at 3 + level, at most 9 (V20 pdf 238; Necromancy pdf 185; V20 Dark Ages pdf 303), after its days of preparation (the Hand of Glory's fortnight in salt, a ward's ten hours), with the blood paid before the roll. A failure does nothing; a botch is the Storyteller's to describe. The Baleful Doll is made with Stamina + Crafts at 8 as the book says. Enchant Talisman is four weekly rolls at 8 for 20 net successes with seven blood a week (one each night), else ruined (V20 pdf 247; V20 Dark Ages pdf 310, where a Willpower a roll buys a success).
-
-Reverse: change taskFor in the kit.
-
-## B3697. A ritual marks the object the caster picks (2026-11-14)
-WoDX Library and WoDX Storyteller. The ritual window lists what the caster carries; the finished ritual puts its powers, pool and ward on that item (after() in the kit), or makes a new object when none is picked. Storyteller now passes item ids to kits and skips "Nothing came of it" when the kit says it marked something. A talisman made from a melee weapon gets its to-hit die (and in the Dark Ages its two damage) on the weapon itself.
-
-Reverse: remove marks() and the after() update; every ritual then makes a new item.
-
-## B3698. Wards are the Storyteller's to set off (2026-11-14)
-WoDX Library. A warded object carries who it hurts and a Storyteller-only "touches it" power that rolls three dice of lethal damage. It does not fire by itself when someone picks it up, because touching is often off-screen; the Storyteller presses it when it happens.
-
-Reverse: make the power open to players, or hook it to Interactables' take.
-
-## B3699. Charges and life from the ritual's successes (2026-11-14)
-WoDX Library. Flaming Weapon's aggravated strikes and the Candle of Haunting's burnings are charges equal to the casting's successes (V20 Dark Ages pdf 305, 309); a Splinter Servant or Animated Weapon lives five turns per success; shafts and servants roll the caster's Thaumaturgy and Wits + Occult as they were at the making.
-
-Reverse: change flagFor in the kit.
 
 ## B3720. Soulforged Artifacts and relics are a line on the crafting table (2026-11-14)
 WoDX Library. Ben's pick on the Item Crafting Desk: soulforged relics and Artifacts stay with the soulforging build but are made through the shared crafting engine. The wonders registry (B3683) gains a Wraith kit, scripts/wonders-wraith.mjs (world setting craftWraith, on by default like the other kits), with two rows, a soulforged Artifact and a reworked relic (Wraith 20th book p. 44, pdf 109). Arms, armour and oboli stay in the WoDX Actions forge window, since they are gear and money, not Artifacts.
