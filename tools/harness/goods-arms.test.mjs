@@ -70,3 +70,26 @@ test("traps are set, seen, sprung and disarmed", () => {
   const g = G.GOODS.find(x => x.name === "a bear trap");
   assert.deepEqual(U.abilitiesOf(g).sort(), ["disarm", "settrap", "springtrap"]);
 });
+
+test("ammunition: each weapon takes its own, reloads come out of Possessions, arrows go one a shot (B3900, B3901)", () => {
+  assert.equal(A.ammoKindOf({name: "Longbow", ranged: true, ability: "archery"}), "bow");
+  assert.equal(A.ammoKindOf({name: "Heavy crossbow", ranged: true, ability: "archery"}), "crossbow");
+  assert.equal(A.ammoKindOf({name: "Brown Bess musket", ranged: true, ability: "firearms"}, "flintlock"), "muzzle");
+  assert.equal(A.ammoKindOf({name: "Pump shotgun", ranged: true, ability: "firearms"}, "cartridge"), "shotgun");
+  assert.equal(A.ammoKindOf({name: "Glock pistol", ranged: true, ability: "firearms"}, "cartridge"), "magazine");
+  assert.equal(A.ammoKindOf({name: "Colt revolver", ranged: true, ability: "firearms"}, "cartridge"), "cartridge");
+  assert.equal(A.ammoKindOf({name: "Broadsword", ranged: false}), null);
+  const row = (name, qty) => ({name, flags: qty ? {"wodx-sheets": {qty}} : {}});
+  assert.equal(A.countOf(row("a cartridge", 12)), 12);
+  assert.equal(A.countOf(row("a cartridge (7)")), 7);
+  const two = A.reloadPlan([row("a cartridge", 2)], "cartridge", 6, 6);
+  assert.equal(two.rounds, 2); assert.equal(two.spend[0].n, 2);
+  assert.equal(A.reloadPlan([], "cartridge", 6, 6).ok, false);
+  assert.equal(A.reloadPlan([row("a lead musket ball", 5)], "muzzle", 1, 1).ok, false, "a ball needs a powder horn");
+  assert.equal(A.reloadPlan([row("a lead musket ball", 5), row("a powder horn")], "muzzle", 1, 1).rounds, 1);
+  const mag = A.reloadPlan([row("a cartridge", 30), row("a spare pistol magazine", 2)], "magazine", 15, 15);
+  assert.equal(mag.rounds, 15); assert.equal(mag.spend[0].item.name, "a spare pistol magazine"); assert.equal(mag.spend[0].n, 1);
+  assert.ok(A.shotPlan([row("an arrow", 3)], "bow").ok);
+  assert.equal(A.shotPlan([], "bow").ok, false);
+  for ( const n of D.AMMUNITION ) assert.ok(U.abilitiesOf(G.GOODS.find(g => g.name === n)).includes("load"), `${n} has no Load`);
+});
