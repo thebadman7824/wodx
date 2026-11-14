@@ -4,7 +4,7 @@
  * It makes (or refreshes) the five shelf compendiums and the two journals; they stay, since they belong to the world.
  *   1. the module: Library 0.2.0 or later, api.library, the toolbar button
  *   2. the shelves: five world compendiums (the encyclopedia may still be empty), the other four with entries
- *   3. a second refresh changes nothing
+ *   3. a second refresh changes nothing, and no shelf holds two documents with one key (the 104 Dark Ages copies, Library 0.5.1)
  *   4. the catalogue: a Dark Ages power entry fits the Dark Ages, not Modern; Wraith 20th fits both
  *   5. the window lists entries with a search box and opens one
  *   6. the manual (players can read it; the Storyteller page is hidden) and What's new (lists this build)
@@ -33,7 +33,13 @@ export async function run() {
     const sizes = await Promise.all(packs.map(async p => (await p.getIndex()).size));
     ok("2. the shelves", packs.length === 5 && packs.every(p => p?.documentName === "JournalEntry") && sizes.slice(0, 4).every(n => n > 0), {sizes, first: r1});
     const r2 = await L.install();
-    ok("3. no change", r2.created === 0 && r2.remade === 0 && r2.kept > 0 && r2.kept <= sizes.reduce((a, b) => a + b, 0), {r2});
+    const shared = {};
+    for ( const p of packs ) {
+      const keys = [...(await p.getIndex({fields: [`flags.${MOD}.shelf`]}))].map(d => d.flags?.[MOD]?.shelf).filter(Boolean);
+      shared[p.metadata.name] = keys.length - new Set(keys).size;
+    }
+    ok("3. no change", r2.created === 0 && r2.remade === 0 && r2.removed === 0 && r2.kept > 0 && r2.kept <= sizes.reduce((a, b) => a + b, 0)
+      && Object.values(shared).every(n => n === 0), {r2, shared});
     const cat = await L.catalogue();
     const fit = (n, era) => { const e = cat.find(x => x.name === n); return e && L.rules.fits(e, {era}); };
     ok("4. by era", fit("Animalism (Dark Ages)", "dark-ages") && !fit("Animalism (Dark Ages)", "modern") && fit("Argos", "modern") && fit("Argos", "dark-ages"), {entries: cat.length});

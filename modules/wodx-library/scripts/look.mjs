@@ -99,6 +99,9 @@ export function describe(actor, {token = null} = {}) {
   let uncanny = [];
   try { uncanny = game.modules.get("wodx-paperdoll")?.active ? game.modules.get("wodx-paperdoll").api?.faces?.uncanny?.(actor?.actor ?? actor, tok) ?? [] : []; } catch (e) { uncanny = []; }
   if ( uncanny.length ) { marks.uncanny = uncanny.slice(0, 3); marks.face = "monstrous"; }
+  // B3925: a made person's own look (a scar, a limp, a booming voice) is what a witness remembers first
+  const feats = L.noticedFeatures((actor?.actor ?? actor)?.flags?.[MOD]?.features);
+  if ( feats.length ) marks.features = feats;
   return {marks, text: L.describeMarks(marks)};
 }
 

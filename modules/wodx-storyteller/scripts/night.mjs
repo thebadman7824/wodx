@@ -30,6 +30,18 @@ export function registerNight() {
     chron()?.registerApprovalHandler?.(TN.aid, {label: "Story aid", approve: e => approveAid(e.data)});
   };
   if ( chron()?.gen ) go(); else Hooks.once("wodxChronicleReady", go);
+  // B3924: the night card's "Put it on the scene" buttons (the Storyteller's only)
+  Hooks.on("renderChatMessageHTML", (message, el) => {
+    const html = el?.[0] ?? el;
+    const f = message.flags?.[MOD]?.nightPlace;
+    if ( !html || !f ) return;
+    for ( const b of html.querySelectorAll?.("[data-action=wst-night-place]") ?? [] ) {
+      if ( !game.user.isGM ) { b.remove(); continue; }
+      const i = Number(b.dataset.i);
+      if ( (f.done ?? []).includes(i) ) b.disabled = true;
+      b.addEventListener("click", () => { b.disabled = true; placeFromCard(message, i).catch(e => console.error(`${MOD} | night place`, e)); });
+    }
+  });
   // 0.41.0: a fight goes in the log, so the pacing note knows a night was hard
   Hooks.on("wodxFightStarted", ({combat} = {}) => {
     if ( !isActiveGM() ) return;
@@ -134,6 +146,7 @@ export async function approveNight(n) {
   if ( !n ) return;
   await log({kind: "world", text: `The night's draw: ${N.nightText(n)}`});
   await appendPage(NIGHTS, n.date || `Night ${n.jdn}`, nightHtml(n), "nights");
+  await placeCard(n);
   // The night's rumour starts going round
   if ( n.rumour && setting("rumourNetwork") !== false ) await game.modules.get(MOD)?.api?.rumours?.start?.({text: n.rumour});
   // Chronicle 0.22.0: a trait that brings a story aid draws it (into the queue), and the night's flaws are asked about
@@ -220,8 +233,82 @@ export async function approveAid(a) {
     await ChatMessage.create({content: `<div class="wodx-card wstory-card"><h3>${esc(a.label)}</h3><p>${esc(a.text)}</p></div>`, whisper: users,
       speaker: {alias: actor.name}, flags: {[MOD]: {aid: a.kind}}});
   }
-  await appendPage(AIDS, `${a.label}${a.actorName ? `: ${a.actorName}` : ""}`, aidHtml(a), "aids");
+  const item = await makeAidItem(a);
+  await appendPage(AIDS, `${a.label}${a.actorName ? `: ${a.actorName}` : ""}`, aidHtml(a) + (item ? `<p>The thing itself: @UUID[${item.uuid}]{${esc(item.name)}}. Drag it to whoever finds it.</p>` : ""), "aids");
   await log({kind: "note", actor: a.actorId ?? undefined, name: a.actorName ?? undefined, text: `${a.label}: ${a.text}`});
+  return item;
+}
+
+/**
+ * B3924: a relic, fetish or talisman aid becomes a real item in the Items folder "WoDX story aids", made by WoDX
+ * Library's crafting kits so its Use buttons work (True Faith prayer, talisman charges, a fetish to attune). The
+ * Storyteller hands it on; nothing goes to a character's sheet here. Returns the item, or null.
+ */
+export async function makeAidItem(a) {
+  if ( !a || !game.user.isGM || !["relic", "fetish", "talisman"].includes(a.kind) ) return null;
+  const W = game.modules.get("wodx-library")?.api?.wonders;
+  if ( !W?.kitFor ) return null;
+  const g = chron()?.gen;
+  const rand = g?.random?.(`aid-item:${a.kind}:${a.actorId ?? "-"}:${a.count ?? 0}`, a.nonce ?? 0) ?? Math.random;
+  const data = N.aidItem(a, {kitFor: W.kitFor, rowOf: W.rowOf, rows: line => W.kitFor(line)?.rows?.() ?? [], rand});
+  if ( !data ) return null;
+  const folder = all(game.folders).find(f => f.type === "Item" && f.name === AIDS) ?? await Folder.create({name: AIDS, type: "Item"});
+  return Item.create({...data, folder: folder.id});
+}
+
+/* ---- B3924: the night's people, put on a scene ---- */
+
+const MAX_PLACED = 6;
+/** After a night is approved: a card for the Storyteller with a "Put it on the scene" button for each physical encounter. */
+export async function placeCard(n) {
+  const enc = (n?.encounters ?? []).map((e, i) => ({i, label: e.label, text: e.text, layer: e.layer})).filter(e => e.layer === "physical");
+  if ( !enc.length || !game.user.isGM ) return null;
+  const rows = enc.map(e => `<li><b>${esc(e.label)}:</b> ${esc(e.text)} <button type="button" data-action="wst-night-place" data-i="${e.i}">Put it on the scene</button></li>`).join("");
+  return ChatMessage.create({speaker: {alias: "Storyteller"}, whisper: all(game.users).filter(u => u.isGM).map(u => u.id),
+    content: `<div class="wodx-card wstory-card"><h3>Tonight's people</h3><ul>${rows}</ul><p class="wodx-quiet">The button makes the people with WoDX Creation and puts them, hidden, at the middle of the scene you are looking at.</p></div>`,
+    flags: {[MOD]: {nightPlace: {jdn: n.jdn, nonce: n.nonce ?? 0, encounters: enc, done: []}}}});
+}
+
+export async function placeFromCard(message, i) {
+  const f = message.flags?.[MOD]?.nightPlace;
+  const e = f?.encounters?.find(x => x.i === i);
+  if ( !e || (f.done ?? []).includes(i) ) return null;
+  const made = await placeEncounter(e.text, {key: `night${f.jdn}x${i}`, nonce: f.nonce});
+  await message.update({[`flags.${MOD}.nightPlace.done`]: [...(f.done ?? []), i]});
+  return made;
+}
+
+/**
+ * Make the people one encounter line brings (N.peopleIn) with WoDX Creation's people generator, seeded by key, and put
+ * their tokens hidden on the current scene. Returns the tokens made (or the actors when no scene is open).
+ */
+export async function placeEncounter(text, {key = "night", nonce = 0, x = null, y = null} = {}) {
+  if ( !game.user.isGM ) return [];
+  const P = game.modules.get("wodx-creation")?.api?.people;
+  const g = chron()?.gen;
+  if ( !P?.generate || !P?.create || !g ) { ui.notifications?.warn?.("WoDX Creation makes the night's people; it is not active."); return []; }
+  const trades = g.lookup(g.context())("people.trade")?.results?.map(r => r.text) ?? [];
+  const who = N.peopleIn(text);
+  const people = [];
+  let row = 0;
+  for ( const w of who ) for ( let k = 0; k < w.count && people.length < MAX_PLACED; k++, row++ ) {
+    const trade = N.tradeFor(w.role, trades, g.random(`${key}:trade:${row}`, nonce));
+    try { people.push(P.generate({batch: key, row, nonce, trade})); } catch (err) { console.warn(`${MOD} | night person`, err); }
+  }
+  if ( !people.length ) return [];
+  const actors = await P.create({people});
+  const scene = canvas?.scene;
+  if ( !scene ) return actors;
+  const size = scene.grid?.size ?? 100;
+  const cx = x ?? (canvas.stage?.pivot?.x ?? 0), cy = y ?? (canvas.stage?.pivot?.y ?? 0);
+  const tokens = [];
+  for ( const [j, a] of actors.entries() ) {
+    const t = await a.getTokenDocument({x: cx + (j % 3) * size, y: cy + Math.floor(j / 3) * size, hidden: true});
+    tokens.push(t.toObject());
+  }
+  const made = tokens.length ? await scene.createEmbeddedDocuments("Token", tokens) : [];
+  await log({kind: "note", place: scene.id, text: `Put on ${scene.navName || scene.name}: ${actors.map(a => a.name).join(", ")} (${text})`});
+  return made;
 }
 
 export async function aidDialog() {

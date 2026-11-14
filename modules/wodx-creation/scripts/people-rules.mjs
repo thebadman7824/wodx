@@ -90,3 +90,38 @@ export function noteOf(p) {
     <p class="wodx-quiet">Made by the WoDX People generator. Nature ${p.nature}, Demeanor ${p.demeanor}.</p>`;
 }
 const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;
+
+/* ---- B3925 (no-effect audit w3): what a made person wants, hides and looks like, as things the game reads ---- */
+
+/** The talk topic every made person raises (WoDX NPC talk sheet). */
+export const WANT_TOPIC = "a favour";
+/** The secrets system's kind for what a person hides, from the words (WoDX NPC secrets-rules SECRET_KINDS). */
+const SECRET_WORDS = [
+  [/owes money|lost a fortune|debt/i, "debt"],
+  [/keeps a faith in secret/i, "heresy"],
+  [/served a monster|was bitten/i, "masquerade"],
+  [/steals|forged|cheats|blackmail|deserted|had a hand in a death|wrote an anonymous|shelters a relative the law/i, "crime"]
+];
+export function secretKind(text = "") {
+  for ( const [re, kind] of SECRET_WORDS ) if ( re.test(String(text)) ) return kind;
+  return "other";
+}
+const seedId = (p, tag) => `${tag}${String(p.batch ?? "x").replace(/[^a-z0-9]/gi, "").slice(-8)}${p.row ?? 0}${p.nonce ?? 0}`.slice(0, 20);
+
+/**
+ * The flags a made person carries so the other modules act on them:
+ *   wodx-npc.want       {topic, text, met: {}}: the favour they ask, which the Storyteller marks done for an opinion step
+ *   wodx-npc.behavior.talk  "[offer] a favour" and the line they say about it (their own talk sheet)
+ *   wodx-npc.secrets    what they hide, as a secret the characters can dig out (a hook when found)
+ *   wodx-library.features  the look, for witness descriptions and the Storyteller's reading
+ */
+export function peopleFlags(p = {}) {
+  const out = {};
+  if ( p.motive ) {
+    out["flags.wodx-npc.want"] = {topic: WANT_TOPIC, text: String(p.motive), met: {}};
+    out["flags.wodx-npc.behavior.talk"] = `[offer] ${WANT_TOPIC}\n[${WANT_TOPIC}] Speaks of wanting ${p.motive}; whoever helps will be remembered kindly.`;
+  }
+  if ( p.secret ) out["flags.wodx-npc.secrets"] = [{id: seedId(p, "ps"), kind: secretKind(p.secret), text: `Hides that this person ${p.secret}.`, weight: 1, tie: null, public: false, found: {}}];
+  if ( p.look ) out["flags.wodx-library.features"] = [String(p.look)];
+  return out;
+}

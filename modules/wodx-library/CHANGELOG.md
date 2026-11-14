@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.43.0 (Witness features (B3927): look-rules noticedFeatures, featureWords, describeMarks reads marks.features; look describe reads flags["wodx-library"].features)
 - 0.42.1 (Gambling now really moves the stake: it looked for WoDX Storyteller's purses in the wrong place, so no money changed hands (B3914))
 - 0.42.0 (Seeds, fire-lighters and timepieces (B3911): Plant it, Strike a light and a new Tell the time act instead of posting a line)
 - 0.41.0 (Gambling (B3910): Gamble asks how much goes on the table (a little, a fair sum or a lot of what they carry), rolls, and pays or collects through WoDX Storyteller's money)
