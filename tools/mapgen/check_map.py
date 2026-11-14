@@ -158,7 +158,7 @@ PASSAGE = re.compile(r"corridor|passage|stair|entry|entrance|vestibule|lift|conc
 EARTH_OK = re.compile(r"byre|barn|stable|coop|sty|pen|kennel|mews|shed|cellar|hut|lean to|smithy|forge", re.I)   # earth floors are right here
 OPEN_AIR = re.compile(r"court|yard|garden|cloister|terrace|courtyard", re.I)
 
-RUG = re.compile(r"Rug_|Carpet", re.I)
+RUG = re.compile(r"Rug_|Carpet|Hay_Bedding", re.I)
 
 
 def seg_dist(x, y, a, b):

@@ -86,6 +86,7 @@ def site_check(margin=.35):
 # ------------------------------------------------------------------ buildings
 # Each building is a type from buildings.py, set on its yard footprint facing south.
 BUILDINGS = {"house": "byre-house", "barn": "barn", "coop": "coop"}
+INDOOR_EARTH = ("house", "barn", "coop", "sty")     # bare ground under these is beaten earth or trodden mud, never grass
 
 def build_rooms():
     blds = []
@@ -124,6 +125,9 @@ def terrain_splat():
                 if fx <= x <= fx + fw and fy <= y <= fy + fh: dirt = max(dirt, .85)
             yard = math.hypot((x - 23.5) / 6.5, (y - 17.3) / 2.6)
             dirt = max(dirt, min(.75, max(0, (1 - yard) / .35)))
+            for kind in INDOOR_EARTH:                                  # beaten earth inside, no grass growing indoors
+                _, _, fx, fy, fw, fh = F[kind]
+                if fx <= x <= fx + fw and fy <= y <= fy + fh: dirt = 1
             db = min((math.hypot(x - a_, y - b_) for a_, b_ in brook_pts if abs(y - b_) < 1.5), default=9)
             water = min(1, max(0, (BROOK_HALF + .1 - db) / .25))
             wgt = [v * (1 - dirt) for v in wgt]; wgt[2] = dirt
