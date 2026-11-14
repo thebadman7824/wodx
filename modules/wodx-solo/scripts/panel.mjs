@@ -25,6 +25,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const {ApplicationV2, DialogV2} = foundry.applications.api;
 
 let H = null; // what main.mjs lends: {isOn, isSeat, log, entries, get}
+/** What st-tools.mjs draws on the panel and opens from it (B4800): {toggleHtml, toolsHtml, open, toggle}. */
+const ST_UI = {};
+export const setStUi = ui => Object.assign(ST_UI, ui);
 
 /* ------------------------------------------------------------------ */
 /*  Who and where                                                      */
@@ -36,7 +39,7 @@ let H = null; // what main.mjs lends: {isOn, isSeat, log, entries, get}
  */
 const ownable = a => a?.hasPlayerOwner && !/group/i.test(String(a.type ?? ""));
 const ownsAlone = (a, user) => !all(game.users).some(u => u.id !== user.id && !u.isGM && a.testUserPermission?.(u, "OWNER"));
-function characterOf(user) {
+export function characterOf(user) {
   if ( !user ) return null;
   if ( user.character ) return user.character;
   const mine = all(game.actors).filter(a => ownable(a) && a.testUserPermission?.(user, "OWNER"));
@@ -46,7 +49,7 @@ function characterOf(user) {
   return alone(onView) ?? onView[0] ?? alone(mine) ?? mine[0] ?? null;
 }
 /** The scene and token where the character is: the one the player views first, else any that holds a token. */
-function placeOf(user) {
+export function placeOf(user) {
   const actor = characterOf(user);
   if ( !actor ) return {actor: null, scene: null, token: null};
   const scenes = all(game.scenes);
@@ -68,7 +71,7 @@ async function sunFrom(scene) {
 }
 
 /** A whisper to the player and the seat from The Lone Chronicle. */
-async function tell(userId, html) {
+export async function tell(userId, html) {
   const ids = [...new Set([userId, ...game.users.filter(u => u.isGM).map(u => u.id)].filter(Boolean))];
   return ChatMessage.create({whisper: ids, speaker: {alias: R.NAME}, flags: {[MOD]: {panel: true}}, content: `<div class="wodx-card">${html}</div>`});
 }
@@ -191,14 +194,24 @@ const SEAT = {
   "ask.curtain": p => curtain(p.userId)
 };
 
-function onSocket(msg) {
+/** Answers the seat sends back to one player, by type (the curtain here, Storyteller tools in st-tools.mjs). */
+const CLIENT = {"curtain.rows": showCurtain};
+/** Other parts of the module add their asks and answers here (B4800). */
+export function addAsks(seat = {}, client = {}) { Object.assign(SEAT, seat); Object.assign(CLIENT, client); }
+
+/**
+ * Foundry hands a module's socket listener the sending user's id after the data. An ask whose payload names another
+ * user than the one who sent it is dropped (B4801).
+ */
+function onSocket(msg, senderId) {
   const {type, payload} = msg ?? {};
-  if ( type === "curtain.rows" ) {
-    if ( payload?.userId === game.user.id ) showCurtain(payload);
+  if ( CLIENT[type] ) {
+    if ( payload?.userId === game.user.id ) CLIENT[type](payload);
     return;
   }
   const run = SEAT[type];
   if ( !run || !H.isSeat() || !game.users.get(payload?.userId) ) return;
+  if ( typeof senderId === "string" && senderId && senderId !== payload.userId ) return;
   run(payload).catch(e => console.error(`${MOD} | ${type}`, e));
 }
 
@@ -262,7 +275,7 @@ export class SoloPanel extends ApplicationV2 {
     classes: ["wodx", "wsolo-panel"],
     window: {title: R.NAME, icon: "fa-solid fa-moon", resizable: false},
     position: {width: 340, height: "auto", top: 80, left: 120},
-    actions: {act: SoloPanel.#onAct}
+    actions: {act: SoloPanel.#onAct, st: (ev, t) => ST_UI.open?.(t.dataset.id), sttoggle: () => ST_UI.toggle?.()}
   };
   static open() {
     const app = foundry.applications.instances?.get?.("wodx-solo-panel") ?? new SoloPanel();
@@ -280,7 +293,7 @@ export class SoloPanel extends ApplicationV2 {
     // One main button; the rest under More, open once the player has opened it (B2831)
     div.innerHTML = `<button type="button" class="wsolo-next" data-action="act" data-id="${R.NEXT.id}" title="${esc(R.NEXT.hint)}"><i class="${R.NEXT.icon}"></i> ${esc(R.NEXT.label)}</button>
       <p class="wodx-quiet wsolo-next-hint">${esc(R.NEXT.hint)}</p>
-      <details class="wsolo-more"${SoloPanel.moreOpen ? " open" : ""}><summary>More: time, travel, pause, I am stuck, the curtain</summary><div class="wsolo-buttons">${rest}</div></details>`;
+      <details class="wsolo-more"${SoloPanel.moreOpen ? " open" : ""}><summary>More: time, travel, pause, I am stuck, the curtain</summary><div class="wsolo-buttons">${rest}${ST_UI.toggleHtml?.() ?? ""}</div></details>${ST_UI.toolsHtml?.() ?? ""}`;
     div.querySelector("details.wsolo-more")?.addEventListener("toggle", ev => { SoloPanel.moreOpen = ev.target.open; });
     return div;
   }
@@ -316,3 +329,4 @@ export function installPanel(helpers) {
 }
 
 export const panelApi = {open: () => SoloPanel.open(), ask, passTime, togglePause, unstick, curtain, busy: () => waiting};
+export {ask, SOCKET};

@@ -228,6 +228,7 @@ Next free block: B4860
 | B4760-B4769 | Rothenstein Rebuilt: book one opens in autumn 1200, chapters wait to be played, a fourth ending (used B4760-B4762) | Chronicle, Storyteller |
 | B4770-B4779 | Fighting from the saddle after the books: the mount's Attributes and dodge, keeping the saddle, the lance, the bow from a moving horse (used B4770-B4776) | Combat |
 | B4780-B4789 | Rothenstein Rebuilt: Ways, the open world's doorways (used B4780-B4783) | Storyteller |
+| B4800-B4809 | Storyteller tools for the lone player in The Lone Chronicle (used B4800-B4805) | Solo |
 | B4810-B4819 | Rothenstein Rebuilt: Ways laid by the builder, old exits and doors to the places inside (used B4810-B4813) | Storyteller |
 | B4850-B4859 | Rothenstein Rebuilt: book one's twist web (six chains, locks, one twist a week) (used B4850-B4853) | Chronicle |
 <!-- decision-index:end -->
@@ -7313,6 +7314,36 @@ Reverse: companions() returns the walker alone.
 WoDX Storyteller. A Way can be shut from dusk to dawn (a town gate, by the walker's own time), locked until the Storyteller unticks Locked, shut for now, or ask first; a Way outside its from and until years is not there. Each refusal tells the player why and what can be done. The Ways window names every place with no way in, no way out, a way to a missing scene, or no route from the first place (desk ow6).
 
 Reverse: wayBlocked() returns null.
+
+## B4800. The lone player stays a player; Storyteller tools are asks the seat answers (2026-11-14)
+WoDX Solo. Ben asked for a switch in single-player mode that shows Storyteller options, to check that everything works and to give the character items to test. Making the player a Storyteller (or Assistant) would make their browser run the work every WoDX module does on a Storyteller's client, beside the hidden seat. So the player keeps the Player role, and each tool (st-tools.mjs) sends an ask over the module's socket that the seat answers for that one player only.
+
+Reverse: promote the player in User Management and turn the stOffer setting off.
+
+## B4801. Only the one logged-in player, only in solo mode (2026-11-14)
+WoDX Solo. The tools go on (world setting wodx-solo.st, written only by the seat) when The Lone Chronicle is on, the world is not rothenstein-live, the asker is not a Storyteller and no other player is logged in (solo-rules.mjs mayTurnOn). Every ask checks again (mayUse). The seat switches them off when another player logs in or the mode goes off. An ask whose payload names another user than the socket's sender is dropped. The switch is offered on the panel by default and is off until pressed; setting stOffer takes it away.
+
+Reverse: change mayTurnOn and mayUse in solo-rules.mjs.
+
+## B4802. The Storyteller's cards (2026-11-14)
+WoDX Solo. Every chat card whispered to the Storyteller alone is rendered on the seat and sent to the player as it arrives or changes, the last 30 on opening and at most 60 kept. The card itself is shown inert; its buttons are listed below it and a press is done on the seat (the same button finder as the watcher) and logged. The seat still answers cards after its wait, so the player who wants to choose presses first or raises the wait.
+
+Reverse: drop the eyes tool from ST_TOOLS.
+
+## B4803. Give my character an item (2026-11-14)
+WoDX Solo. The seat searches the world's items and every Item compendium (index kept five minutes), names that start with the words first, 40 at most. The pick is copied onto the player's character without its id, folder, sort or ownership, with a flag wodx-solo.granted {by, at}, logged and told to the player.
+
+Reverse: drop the give tool from ST_TOOLS.
+
+## B4804. Check the systems (2026-11-14)
+WoDX Solo. A table of how things stand: WoDX parts running (and a part whose required part is off), versions, any setting on the switch's list that has drifted, the approval queue, cards and windows left waiting since the seat sat down, errors the seat has seen (window errors, unhandled rejections and console errors, last 30), whether the game is paused and whether the seat views the player's scene.
+
+Reverse: drop the check tool from ST_TOOLS.
+
+## B4805. What is hidden here (2026-11-14)
+WoDX Solo. The hidden tokens on the player's scene with kind, stance and grid square, so the player can see what the Storyteller hid without revealing it on the map.
+
+Reverse: drop the hidden tool from ST_TOOLS.
 
 ## B4810. The old exits become Ways in place (2026-11-14)
 WoDX Storyteller. The testbed's walkable maps (the Lower Town, Kranzfels, the roads, woods, river and mine) already link to each other with Teleport Token regions paired with arrival regions. The builder's Ways step adds a WoDX Way to each such region, pointing at the same arrival, and switches the teleport off, so walking through runs the trip rules (personal time, the company, encounters) instead of a bare jump. The kind of Way comes from the two names: a stair for floors and cellars, a gate into or within Kranzfels and at the West Gate, a ferry to the ferry or the ford, a street inside the Lower Town, else a road. Penumbra and Shadowlands twin regions are left to wodx-otherworlds, and a crossing inside one map (the ferry over the river) stays a teleport.
