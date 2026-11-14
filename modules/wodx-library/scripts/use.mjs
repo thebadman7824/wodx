@@ -23,6 +23,8 @@ import * as AU from "./arms-use.mjs";
 import * as AR from "./arms-rules.mjs";
 import * as FU from "./faith-use.mjs";
 import * as HU from "./hygiene-use.mjs";
+import * as GU from "./gamble-use.mjs";
+import * as DU from "./gadget-use.mjs";
 
 const MOD = "wodx-library";
 const SOCKET = `module.${MOD}`;
@@ -328,6 +330,15 @@ export async function run(item, ability, actor = holderOf(item)) {
     case "pray": return FU.pray(actor, item);
     case "ward": return FU.ward(actor, item);
     case "divine": return FU.divine(actor, item);
+    case "gamble": return GU.gamble(actor, item);
+    case "plant": return DU.plant(actor, item);
+    case "time": return DU.tellTime(actor, item);
+    case "strike": {
+      const lights = [...(actor.items ?? [])].map(i => ({item: i, good: goodOfItem(i)})).filter(x => x.good && U.lightOf(x.good) && !isEmpty(x.item));
+      const r = await DU.strike(actor, item, {lights, lightIt: (a, i, g) => light(a, i, g, false)});
+      if ( U.spends(good, ability) ) await spendOne(item);
+      return r;
+    }
     case "wash": { const r = await HU.wash(actor, item); if ( U.spends(good, ability) ) await spendOne(item); return r; }
     case "wear": {
       const on = !(item.system?.isequipped);
@@ -391,6 +402,7 @@ export async function setupUse() {
   await load();
   game.socket?.on(SOCKET, onSocket);
   game.socket?.on(SOCKET, AU.onArmsSocket);
+  game.socket?.on(SOCKET, GU.onGambleSocket);
   Hooks.on("createItem", onCreateItem);
   const can = it => !!it && it.isOwner;
   Hooks.on("getHeaderControlsItemSheetV2", (app, controls) => {

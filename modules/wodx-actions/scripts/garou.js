@@ -13,6 +13,7 @@ import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as EF from "./effects.js";
 import * as BR from "./book-rituals.js";
+import { outcomesOf } from "./mage-da-effects.js";
 
 const MOD = "wodx-actions";
 const DATA = {};
@@ -37,7 +38,7 @@ async function fetchData(name) {
     try { const r = await fetch(url); return r.ok ? await r.json() : null; } catch (e) { return null; }
 }
 export async function loadData() {
-    for (const k of ["garou", "fera", "gifts-daw", "gifts-w20"]) if (!DATA[k]) DATA[k] = await fetchData(k);
+    for (const k of ["garou", "fera", "gifts-daw", "gifts-w20", "gifts-fera"]) if (!DATA[k]) DATA[k] = await fetchData(k);
     if (!DATA.garou) console.error("WoDX | WoDX Actions could not load data/garou.json");
     return DATA;
 }
@@ -52,6 +53,19 @@ export function w20Gifts() { return DATA["gifts-w20"]?.gifts ?? []; }
 export function findW20Gift(name) {
     const key = String(name ?? "").toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, " ").trim();
     return w20Gifts().find(g => g.n.toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, " ").trim() === key || g.kw.replace(/-/g, " ") === key) ?? null;
+}
+/** The Fera's own Gifts (W20 Changing Breeds, data/gifts-fera.json, B3756): by breed, with an effects-card spec. */
+export function feraGifts() { return DATA["gifts-fera"]?.gifts ?? []; }
+export function findFeraGift(name, breed = "") {
+    const key = String(name ?? "").toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+    const hits = feraGifts().filter(g => g.n.toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, " ").trim() === key);
+    return hits.find(g => g.breed === breed) ?? hits[0] ?? null;
+}
+/** What a Fera Gift does with its successes, for EF.planOf. */
+export function feraGiftResults(g, successes) {
+    if (!g?.spec) return [];
+    const s = g.r ? Number(successes) || 0 : Math.max(1, Number(successes) || 0);
+    return s > 0 ? outcomesOf(g.spec, { key: g.spec.kw, label: g.n, source: giftRef(g) }, s, g.e) : [];
 }
 /** Where a library Gift is printed: "DA:W p. N" or "W20 p. N". */
 export const giftRef = g => g ? `${g.book ?? "DA:W"} p. ${g.p}` : "";
@@ -405,7 +419,10 @@ export function build(ctx) {
     }
     function giftData(item) {
         const id = item.getFlag?.(MOD, "gift");
-        return (id && gifts().find(g => g.id === id)) || findGift(item.name) || findW20Gift(item.name);
+        // A Fera's own breed Gift wins over a Garou Gift of the same name (B3756)
+        const fk = feraKey(item.parent), mine = fk !== "Garou" ? findFeraGift(item.name, fk) : null;
+        return (id && (gifts().find(g => g.id === id) || feraGifts().find(g => g.id === id))) || (mine?.breed === fk ? mine : null)
+            || findGift(item.name) || findW20Gift(item.name) || findFeraGift(item.name);
     }
 
     async function useGift(actor) {
@@ -469,7 +486,11 @@ export function build(ctx) {
             // The Gift's keywords on the effects card (Traits With Teeth step 4): the Dark Ages library, else the W20 list by name
             let fxItems = [];
             // A library Gift with no roll counts one success (B3751)
-            if ((code || g) && successes > 0 && EF.isOn()) {
+            if (g?.book === "W20 CB" && successes > 0 && EF.isOn()) {
+                const pp = EF.planOf(actor, feraGiftResults(g, successes), successes);
+                body += pp.html;
+                fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+            } else if ((code || g) && successes > 0 && EF.isOn()) {
                 const pp = EF.powerPlan(actor, { set: "gift", id: g?.book === "W20" ? "" : (g?.id ?? ""), name: it.name, line: "w20", successes, source: g ? giftRef(g) : "W20", noRoll: !code });
                 body += pp.html;
                 fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
@@ -483,11 +504,14 @@ export function build(ctx) {
         const i = info(actor);
         const known = new Set(giftItems(actor).map(it => it.name.toLowerCase()));
         const rankCap = Math.max(1, i.rank);
-        const rows = gifts().filter(g => !known.has(g.n.toLowerCase())).map(g => {
-            const own = G.giftIsOwn(g, i);
+        // A Fera learns its own breed's Gifts as well as the shared list (B3756)
+        const pool = i.feraKey && i.feraKey !== "Garou" ? [...feraGifts().filter(g => g.breed === i.feraKey), ...gifts()] : gifts();
+        const ownOf = g => g.breed ? g.breed === i.feraKey : G.giftIsOwn(g, i);
+        const rows = pool.filter(g => !known.has(g.n.toLowerCase())).map(g => {
+            const own = ownOf(g);
             return { g, own, ok: g.l <= rankCap, xp: G.giftXP(g.l, own) };
         }).sort((a, b) => (b.own - a.own) || (a.g.l - b.g.l) || a.g.n.localeCompare(b.g.n));
-        const groupsTxt = g => g.g.map(cap).join(", ").replace(/-/g, " ");
+        const groupsTxt = g => g.breed ? [g.breed, g.sub].filter(Boolean).join(", ") : (g.g ?? []).map(cap).join(", ").replace(/-/g, " ");
         const content = `<form class="wodx-learn"><p><b>${esc(actor.name)}</b>: ${esc(cap(i.breed))}, ${esc(cap(i.auspice) || "no auspice")}, ${esc(cap(i.tribe).replace(/-/g, " ") || "no tribe")}; Rank ${i.rank} (Gifts up to level ${rankCap}, DA:W p. 111).</p>
           ${searchBox("ul.wodx-gift-list", "Search Gifts…", "Search Gifts")}
           <ul class="wodx-gift-list" style="max-height:340px;overflow-y:auto;flex:none">${rows.map(r => `<li data-search-item><label><input type="radio" name="gift" value="${r.g.id}" ${r.ok ? "" : "disabled"}/> <b>${esc(r.g.n)}</b> (level ${r.g.l}): ${esc(groupsTxt(r.g))} · ${r.xp} XP${r.own ? "" : " (outside)"}${r.ok ? "" : " · rank too low"}<br><span class="wodx-quiet">${esc(r.g.e)}</span></label></li>`).join("")}</ul>
@@ -495,8 +519,8 @@ export function build(ctx) {
           ${spiritApi() ? `<p class="vta-note">The spirits: ${esc((spiritApi().rules.summary(spiritApi().of(actor)).join("; ")) || "no court knows this one yet")}. Standing changes the difficulty to summon the teacher; a scorned court may refuse to teach.</p>` : ""}
           <p class="vta-note">Learned from a spirit (summoned at a caern), another Garou (a month; +1 difficulty until practised) or a quest (DA:W p. 111). Cost: level × 3 for the breed's, auspice's or tribe's own, × 5 otherwise (p. 107).</p></form>`;
         return dialog(`Learn a Gift: ${actor.name}`, content, "Learn", async fd => {
-            const g = gifts().find(x => x.id === fd.gift); if (!g) return null;
-            const own = G.giftIsOwn(g, i), xp = G.giftXP(g.l, own);
+            const g = pool.find(x => x.id === fd.gift); if (!g) return null;
+            const own = ownOf(g), xp = G.giftXP(g.l, own);
             await actor.createEmbeddedDocuments("Item", [giftItem(g)]);
             let xpNote = "";
             if (fd.xp) {

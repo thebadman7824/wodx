@@ -20,6 +20,7 @@
  * - A runner that stopped mid-job: on start, issues still marked pc-running are queued again.
  * - Status: the issue labelled pc-status shows each lane, the queue and the last results, updated every 2 minutes,
  *   so any thread can see the runner is alive.
+ * Every hour it also sweeps stale pull requests (sweep.mjs, B4110).
  * Never touches lane 1 or the Live world; writes nothing to the shared project folder.
  */
 import fs from "node:fs";
@@ -29,6 +30,7 @@ import {spawn, spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
 import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit} from "./jobs.mjs";
 import {loadConfig, getLane, lockState, isUp, readJson} from "../lanes/lib.mjs";
+import {sweep, HOUR} from "./sweep.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)), ROOT = path.resolve(HERE, "../..");
 const args = process.argv.slice(2), DRY = args.includes("--dry"), ONCE = args.includes("--once");
@@ -315,13 +317,20 @@ for ( const i of await openIssues(LABEL.running) ) {
   await setLabels(i.number, [], [LABEL.running]);
   await comment(i.number, "The runner restarted while this ran; it will run again from the start.").catch(() => {});
 }
-let light = 0, lastFetch = 0;
+let light = 0, lastFetch = 0, lastSweep = 0, sweeping = false;
 for ( ;; ) {
   try {
     if ( Date.now() - lastFetch > 5 * 60000 ) { await git(["fetch", "-q", "origin"]); lastFetch = Date.now(); if ( await updateDue() ) { log("main changed the runner; exiting for an update"); process.exit(75); } }
     if ( fs.existsSync(path.join(HOME, "runner-off")) ) {
       if ( !active.size ) { log("runner-off found and nothing running; stopping"); process.exit(0); }
       await sleep(30000); continue;
+    }
+    // Stale pull requests, every hour, beside the jobs (B4110).
+    if ( !sweeping && Date.now() - lastSweep > HOUR ) {
+      lastSweep = Date.now(); sweeping = true;
+      sweep(gh, {apply: !DRY, log: m => log(`sweep ${m}`), stateFile: path.join(HOME, "sweep-state.json")})
+        .then(r => log(`sweep: ${r.rows.length} open, ${r.stuck} stuck, ${r.red} red, ${r.fixed} moved on`))
+        .catch(e => log(`sweep failed: ${e.message}`)).finally(() => { sweeping = false; });
     }
     for ( const id of LANES ) await healthCheck(id);
     const issues = await openIssues(LABEL.job);

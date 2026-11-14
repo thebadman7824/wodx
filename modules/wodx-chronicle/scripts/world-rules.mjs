@@ -103,10 +103,11 @@ export const WORLD_REGIONS = {
   // The Plains peoples before the Spanish, then beside them, then a share (B3820); the East borrows none of it (lend: false)
   "north-america-west": R("The American West (the Plains, the Rockies, the Southwest)", "americas", 39.0, -105.0, "great-plains", "american", {
     // and the Southwest: the Pueblos, the Diné and the Apache (B3930)
-    medieval: "lakota 28, cheyenne 12, comanche 12, kiowa 8, pueblo 22, dine 10, apache 8",
-    "early-modern": "spanish 30, lakota 20, comanche 12, cheyenne 8, kiowa 6, pueblo 12, dine 7, apache 5",
-    industrial: "anglo 60, hispanic 20, chinese 5, irish 5, lakota 6, cheyenne 2, comanche 1, kiowa 1, dine 3, pueblo 2, apache 1",
-    modern: "anglo 66, hispanic 28, lakota 4, cheyenne 1, comanche 1, dine 3, pueblo 1, apache 1"}, {...AM, lend: false}),
+    // and the village peoples of the Missouri: the Mandan, the Hidatsa, the Arikara and the Pawnee (B4130)
+    medieval: "lakota 26, cheyenne 10, comanche 10, kiowa 6, pueblo 20, dine 8, apache 6, mandan 4, hidatsa 3, arikara 3, pawnee 4",
+    "early-modern": "spanish 30, lakota 18, comanche 11, cheyenne 7, kiowa 5, pueblo 11, dine 6, apache 4, mandan 2, hidatsa 2, arikara 1, pawnee 3",
+    industrial: "anglo 60, hispanic 20, chinese 5, irish 5, lakota 6, cheyenne 2, comanche 1, kiowa 1, dine 3, pueblo 2, apache 1, pawnee 1, hidatsa 1, mandan 1, arikara 1",
+    modern: "anglo 66, hispanic 28, lakota 4, cheyenne 1, comanche 1, dine 3, pueblo 1, apache 1, hidatsa 1, pawnee 1"}, {...AM, lend: false}),
   "mexico": R("Mexico and Central America (Tenochtitlan, New Spain)", "americas", 19.4, -99.1, "highland-tropics", "mexican", {
     // the Maya of Yucatán, the Petén and the Guatemalan highlands beside the Nahua (B3830)
     medieval: "nahua 70, maya 30", "early-modern": "nahua 38, maya 17, spanish 45", industrial: "spanish 80, nahua 12, maya 8"}),

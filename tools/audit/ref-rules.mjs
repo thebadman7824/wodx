@@ -9,6 +9,16 @@
 
 /** Book names as written in code and docs, longest first, mapped to Encyclopaedia book ids where one exists. */
 export const ALIASES = [
+  // Books the 2026-11-12 sample found read as another book (ref-sample-60): named before any shorter name they contain
+  ["Cyberpunk 2020", "cp2020"], ["CP2020", "cp2020"], ["CP 2020", "cp2020"],
+  ["World of Future Darkness", "wofd"], ["WoFD", "wofd"],
+  ["Mummy: The Resurrection", "mtr"], ["Mummy: the Resurrection", "mtr"], ["MtR", "mtr"], ["Mummy 2nd", "mummy2"],
+  ["Time of Judgment", "toj"], ["Ascension", "ascension"], ["Apocalypse", "apocalypse"], ["Gehenna", "gehenna"], ["End Game", "endgame"],
+  ["War of Ages", "warofages"], ["A World of Rage", "worldofrage"], ["Mage Storytellers Companion", "mstc"],
+  ["Los Angeles by Night", "labn"], ["LA by Night", "labn"], ["Chicago by Night", "chibn"], ["Montreal by Night", "montrealbn"],
+  ["Clanbook: Assamite", "cbassamite"], ["Clanbook Assamite", "cbassamite"], ["Blood Sacrifice", "bloodsac"],
+  ["Kindred of the East Companion", "kotecomp"], ["KotE Companion", "kotecomp"], ["Succubus Club", "succubus"],
+  ["Children of the Night", "cotn"], ["Umbra: The Velvet Shadow", "velvet"], ["Book of the Wyrm", "botw"],
   ["V20 Dark Ages Companion", "v20dacomp"], ["Tome of Secrets", "tome"], ["Lore of the Clans", "lotc"],
   ["Lore of the Bloodlines", "lotb"], ["Rites of the Blood", "rotb"], ["Black Hand", "blackhand"],
   ["Anarchs Unbound", "anarchs"], ["Red List", "redlist"], ["Children of the Revolution", "cotr"],
@@ -35,8 +45,7 @@ export const ALIASES = [
 ];
 
 const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const BOOK_RE = new RegExp(`(?<![A-Za-z0-9])(${ALIASES.map(a => esc(a[0])).join("|")})(?![A-Za-z0-9])`, "g");
-const BOOK_OF = new Map(ALIASES.map(a => [a[0], a[1]]));
+let BOOK_RE, BOOK_OF;
 const REF_RE = /(?<![A-Za-z])(?:(pdf|printed)\s+)?(pp?\.|page|pages)\s*(\d{1,3})(?:\s*[-–]\s*(\d{1,3}))?(?:\s*\(\s*pdf\s*(?:p\.\s*)?(\d{1,3}))?/gi;
 
 /**
@@ -92,6 +101,34 @@ export function stems(text) {
   return s;
 }
 
+/**
+ * Book names from books.json: {"cp2020": {"file": "...", "aliases": ["Cyberpunk 2020"]}} adds those names for that id,
+ * so a new book or a local short name needs no code change. Returns the full alias list, longest names first.
+ */
+export function withAliases(map = {}) {
+  const extra = [];
+  for ( const [id, m] of Object.entries(map ?? {}) ) for ( const a of m?.aliases ?? [] ) if ( typeof a === "string" && a.trim() ) extra.push([a.trim(), id]);
+  const seen = new Set(), all = [];
+  for ( const a of [...extra, ...ALIASES] ) if ( !seen.has(a[0]) ) { seen.add(a[0]); all.push(a); }
+  return all.sort((x, y) => y[0].length - x[0].length);
+}
+
+/** Set the names refsInLine knows (the built-in list plus books.json aliases). */
+export function useAliases(list = ALIASES) {
+  BOOK_RE = new RegExp(`(?<![A-Za-z0-9])(${[...list].sort((x, y) => y[0].length - x[0].length).map(a => esc(a[0])).join("|")})(?![A-Za-z0-9])`, "g");
+  BOOK_OF = new Map(list.map(a => [a[0], a[1]]));
+}
+
+/** Fewer letters than this on the cited pages (one either side) means the OCR is blank there, not that the ref is wrong. */
+export const BLANK_LETTERS = 200;
+
+/** True when the cited pdf pages exist in the text but hold next to no letters (a scanned image with no OCR). */
+export function blankPages(pages, from, to = from) {
+  let seen = false, letters = 0;
+  for ( let p = from - 1; p <= to + 1; p++ ) { const t = pages.get(p); if ( t != null ) { seen = true; letters += (t.match(/[A-Za-z]/g) ?? []).length; } }
+  return seen && letters < BLANK_LETTERS;
+}
+
 /** Share of the keywords found on pdf pages from..to, one page either side. */
 export function support(words, pages, from, to = from) {
   if ( !words.length ) return null;
@@ -114,6 +151,11 @@ export function judge(ref, words, pages, offset) {
   }
   let reading = null, score = null;
   for ( const [k, v] of Object.entries(scores) ) if ( v != null && (score == null || v > score) ) { reading = k; score = v; }
+  // Nothing found, and blank OCR on every reading tried: the text can't judge this ref, so it is not counted as low
+  const tried = ref.pdf != null ? [[ref.pdf, ref.pdf + (ref.to - ref.page)]]
+    : [ref.kind !== "pdf" && offset != null ? [ref.page + offset, ref.to + offset] : null, ref.kind !== "printed" ? [ref.page, ref.to] : null].filter(Boolean);
+  const blank = !score && tried.length > 0 && tried.every(([a, b]) => blankPages(pages, a, b));
+  if ( blank ) return {score: null, reading: "blank", scores, blank: true};
   return {score, reading, scores};
 }
 
@@ -125,3 +167,5 @@ export function offsetsFrom(refs) {
   for ( const [b, c] of Object.entries(by) ) out[b] = Number(Object.entries(c).sort((x, y) => y[1] - x[1])[0][0]);
   return out;
 }
+
+useAliases(ALIASES);

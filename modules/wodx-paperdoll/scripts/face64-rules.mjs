@@ -653,11 +653,24 @@ function netRgba(F, S) {
   return out;
 }
 
+/** How far low Humanity shows (0 none, 1, 2), from stateOf's lowHumanity. */
+export const lowHumanityLevel = v => Math.max(0, Math.min(2, Math.round(Number(v) || 0)));
+/** The level for a Humanity rating: 3-2 → 1, 1-0 → 2 (V20 p. 311). Roads and Paths other than Humanity: 0. */
+export function lowHumanityFor(rating, {humanity = true} = {}) {
+  const r = Number(rating);
+  if ( !humanity || !Number.isFinite(r) ) return 0;
+  return r <= 1 ? 2 : r <= 3 ? 1 : 0;
+}
+
 export function drawFace(S, {expr = "neutral", eyes = "open", mouth = null, level = 0, sees = {fae: true, sigil: true}, state = {}, net = false} = {}) {
   level = Math.max(0, Math.min(7, Math.round(Number(level) || 0)));
   const on = {...state, tears: expr === "sorrow" || expr === "fear"};
   const feats = (S.features ?? []).map(id => FEATURES[id]).filter(f => f && (!f.state || on[f.state]));
   if ( feats.some(f => f.tone) ) { S = {...S}; for ( const f of feats ) f.tone?.(S); }
+  // B3566: low Humanity on the face (V20 p. 311): 1 pale and sunken (Humanity 3-2), 2 a beast's look as well (1-0)
+  const low = lowHumanityLevel(state.lowHumanity);
+  if ( low ) S = {...S, skin: mix(S.skin, [204, 204, 198], low > 1 ? 0.5 : 0.3), cool: true, sunk: true};
+  if ( low > 1 && expr === "neutral" ) expr = "anger";
   const stage = (k, c) => { for ( const f of feats ) f[k]?.(c); };
   if ( !EXPRESSIONS.includes(expr) ) expr = "neutral";
   if ( level >= 7 ) { expr = "slack"; eyes = "shut"; mouth = null; }      // Incapacitated: eyes shut, jaw slack, no speech
