@@ -370,7 +370,8 @@ async function applyCore(item, casterName = "the caster") {
   switch ( o.kind ) {
     case "damage":
       if ( !C ) return {note: "WoDX Combat is off: apply the damage by hand"};
-      await C.soakAndApply(tokenOf(d)?.object ?? a, {mode: "levels", amount: o.levels, type: o.type, soak: o.soak});
+      // A pool rolls its damage dice first (C20 Holly-Strike, Lord of Levin), levels go on as they are
+      await C.soakAndApply(tokenOf(d)?.object ?? a, {mode: o.pool ? "pool" : "levels", amount: o.pool || o.levels, type: o.type, soak: o.soak});
       return {uuid: a.uuid, health};
     case "heal": {
       if ( !C ) return {note: "WoDX Combat is off: heal by hand"};
