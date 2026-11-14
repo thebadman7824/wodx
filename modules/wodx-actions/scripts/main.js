@@ -1144,7 +1144,8 @@ async function beastRoll(actor, d, msg = null) {
         const res = R.instinctResult(r);
         enter = true;
         body += `<div class="vta-big ${res === "ride" ? "good" : "bad"}">${res === "ride" ? "Rides the wave: the vampire frenzies but directs the Beast (chooses targets, may stop when the threat is gone)." :
-            res === "botch" ? "Botch: the Beast takes over until the Storyteller says otherwise; a Derangement may follow." : "Uncontrolled frenzy."}</div>`;
+            res === "botch" ? "Botch: the Beast takes over until the Storyteller says otherwise; a Derangement follows, written into the box." : "Uncontrolled frenzy."}</div>`;
+        if (res === "botch") await gainDerangement(actor, "frenzy", "from a frenzy botch");
         if (res !== "ride") body += `<div class="vta-note">Failing to ride the wave is a sin on several Roads of the Beast.</div>`;
     } else {
         state = R.beastStep({ total: d.total }, r);
@@ -1157,7 +1158,8 @@ async function beastRoll(actor, d, msg = null) {
             enter = true;
             body += fear
                 ? `<div class="vta-big bad">${state.outcome === "botch" ? "Botch: immediate frenzy, lasting until the Storyteller decides." : "Rötschreck! The vampire flees blindly toward safety, tearing through anyone in the way."}</div>`
-                : `<div class="vta-big bad">${state.outcome === "botch" ? "Botch: frenzy until the Storyteller decides, and a Derangement may follow." : "Frenzy! The Beast does exactly what it wants."}</div>`;
+                : `<div class="vta-big bad">${state.outcome === "botch" ? "Botch: frenzy until the Storyteller decides, and a Derangement follows, written into the box." : "Frenzy! The Beast does exactly what it wants."}</div>`;
+            if (state.outcome === "botch") await gainDerangement(actor, fear ? "fear" : "frenzy", fear ? "from a Rötschreck botch" : "from a frenzy botch");
         }
     }
     if (enter) {
@@ -1222,7 +1224,7 @@ export async function sin({ actor: a, level = null, desc = "" } = {}) {
             rolls.push(r.roll);
             body += rollBlock(v.conscience.label, r, [`base 6 + ${rd.value - fd.level} (Road ${rd.value} – sin ${fd.level})`].concat(chk.rawDifficulty > 10 ? ["capped at 10"] : []));
             fail = r.successes === 0;
-            if (r.botch) body += `<div class="vta-note">Botch: the Storyteller may add a Derangement tied to the sin.</div>`;
+            if (r.botch) { body += `<div class="vta-note">Botch: a Derangement tied to the sin, written into the box (the Storyteller may change it).</div>`; await gainDerangement(actor, "sin", fd.desc ? `from the sin: ${String(fd.desc).slice(0, 60)}` : "from a sin botch"); }
         }
         if (!fail) {
             body += `<div class="vta-big good">The sin is rationalized; the Road holds.</div>`;
@@ -2859,6 +2861,10 @@ async function createMacros() {
     }
 }
 
+/** B3913: a Virtue loss writes a derangement into the box through WoDX Chronicle (nothing when it is off). */
+async function gainDerangement(actor, cause, why) {
+    try { return await game.modules.get("wodx-chronicle")?.api?.derangements?.gain?.(actor, cause, why); } catch (e) { console.warn("WoDX Actions | derangement", e); return null; }
+}
 const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
     getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.83.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
@@ -2926,6 +2932,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     // The wraith line (3.4.0)
     useArcanos: withActor(a => wx().useArcanos(a)), passion: withActor(a => wx().passion(a)), fetter: withActor(a => wx().fetter(a)),
     memoriam: withActor(a => wx().memoriam(a)), healCorpus: withActor(a => wx().healCorpus(a)), caul: withActor(a => wx().caul(a)),
+    derangement: withActor(a => game.modules.get("wodx-chronicle")?.api?.derangements?.hold?.(a)),
     shadow: withActor(a => wx().shadow(a)), shadowWhisper: withActor(a => wx().whisper(a)), shadowguide: withActor(a => wx().shadowguide(a)),
     harrowing: withActor((a, o) => wx().harrowing(a, o)), hysteria: () => wx().hysteria(), maelstrom: () => wx().maelstrom(), newWraithScene: () => wx().newScene(), newSession: () => wx().newSession(),
     corpusDamage: (a, type, k) => wx().corpusDamage(resolveActor(a), type, k), soulforge: withActor(a => sfx().forge(a)), soulforgeRules: () => sfx().rules, wraithInfo: a => WX.info(a), wraithRules: WR, arcanoi: () => WX.library(), arcanoiLibraries: () => ({ w20: WX.DATA.w20, gw: WX.DATA.gw }),
