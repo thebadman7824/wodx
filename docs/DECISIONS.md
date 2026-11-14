@@ -200,7 +200,7 @@ Next free block: B4140
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Gate summaries name their failed steps (used B3900-B3912) | tools |
+| B3900-B3929 | Gambling moves money (used B3900-B3914) | Library |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
@@ -6757,6 +6757,9 @@ Reverse: set plant and strike back to effect "note" in use-rules.mjs, drop the t
 
 ## B3912. A failing gate's summary names its failed steps (2026-11-14)
 The gate kit's summary line, which the PC job queue posts on the issue, now ends with each failed step's name and what it saw (cut short), plus any errors, so a failed run is understood without fetching the result file from the PC. A passing run's line is unchanged ("n/n passed"). The lane runner keeps up to 600 characters of the line instead of 300. Reverse: drop the two added lines in tools/gate/kit.mjs save().
+
+## B3914. Gambling reaches the purses at api.upkeep.money (2026-11-14)
+B3910's gambling read WoDX Storyteller's money api at api.money, which does not exist; the purse api is api.upkeep.money. Every game rolled and posted its card, but the stake never moved and the stake offered was always nothing. Fixed in gamble-use.mjs; gategamble now fails when the api is missing or the stake is nothing, and a harness test checks the path. Found by the gate summary change (B3912). Reverse: none needed.
 
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
