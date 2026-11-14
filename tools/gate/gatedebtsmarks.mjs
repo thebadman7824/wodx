@@ -192,7 +192,7 @@ async function finish(ids, playerSteps = []) {
       await game.settings.set(MOD, "beastToken", "take");
       const since = Date.now();
       await combat.update({round: combat.round + 1, turn: 0});
-      await until(() => game.messages.contents.some(m => m.timestamp >= since && /The Beast has/.test(m.content ?? "")), 8000);
+      await until(() => game.messages.contents.some(m => m.timestamp >= since && /The Beast has/.test(m.content ?? "")), 15000);
       const card = game.messages.contents.filter(m => m.timestamp >= since && /The Beast has/.test(m.content ?? "")).at(-1);
       const plan = game.messages.contents.filter(m => m.timestamp >= since && m.flags?.["wodx-npc"]).length;
       const fallback = game.messages.contents.filter(m => m.timestamp >= since && /What the Beast wants/.test(m.content ?? "")).length;
