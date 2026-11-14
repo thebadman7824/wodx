@@ -84,11 +84,15 @@ async function runGate(K) {
     });
 
     await step("the Hunt is harder", async () => {
+      // From Investigating exactly: the turn before may have moved the pressure on (the hunters act on their own now)
+      await setP(6, true);
       const h0 = st.upkeep.huntHere(sc);
       await setP(8, true);
       const h1 = st.upkeep.huntHere(sc);
       const heatOn = game.settings.get(S, "heat");
-      ok("the Hunt is harder", !heatOn || (h1.extra === Math.min(3, h0.extra + 1)), {before: h0.extra, after: h1.extra, heatOn, stage: Hu.here(sc).stage.key});
+      ok("the Hunt is harder", !heatOn || (h1.extra === Math.min(3, h0.extra + 1)), {before: h0.extra, after: h1.extra, heatOn, stage: Hu.here(sc).stage.key,
+        parts: {h0: {heat: h0.heat, herd: h0.herd}, h1: {heat: h1.heat, herd: h1.herd}, stageDiff: Hu.stageDiff?.(sc), pressure: Hu.here(sc).pressure, on: game.settings.get(S, "hunterPressure"),
+          level: typeof Ch.automation?.level === "function" ? Ch.automation.level() : (Ch.automation?.level ?? null), scene: sc.name}});
     });
 
     await step("a raid, once", async () => {

@@ -168,16 +168,28 @@ export function outcomeOf(task, targetName = "") {
   switch ( task?.kind ) {
     case "business": return {text: `The business is running. A dot of Resources is the Storyteller's to award, or a venture can be opened on the market.`, background: "Resources"};
     case "herd": return {text: "A flock is gathered. A dot of Herd is the Storyteller's to award.", background: "Herd"};
-    case "language": return {text: "The language is learned. The Storyteller adds it to the sheet.", background: ""};
-    case "track": return {text: `The trail leads to ${who}. The Storyteller says where ${who === "them" ? "they are" : "they are found"}.`, background: ""};
+    case "language": return {text: "The language is learned and goes on the sheet's languages.", background: ""};
+    case "track": return {text: `The trail leads to ${who}: where ${who === "them" ? "they are" : "they are found"} is on the card.`, background: ""};
     case "court": return {text: `The long courtship of ${who} has run its course. Where it stands now is in the warmth between them.`, background: ""};
     case "train": return {text: "The teaching is done. The experience can now be spent on what was taught.", background: ""};
     case "climb": return {text: "The climb is done. The Storyteller is asked for the next seat.", background: ""};
     case "commission": return {text: "The work is finished and made over to its patron.", background: ""};
     case "upgrade": return {text: "The works are done. The Storyteller is asked to put them in.", background: ""};
-    case "research": return {text: "The research is done. The Storyteller says what was found.", background: ""};
+    case "research": return {text: "The research is done: what was found goes into the character's codex.", background: ""};
     default: return {text: "The project is finished.", background: ""};
   }
+}
+
+/** B4867: the language a finished language project teaches, from what it makes or its name ("Learn Latin": Latin). */
+export function languageOf(task = {}) {
+  const raw = String(task?.makes || task?.name || "").trim();
+  const t = raw.replace(/^(learn(ing)?|study(ing)?|the)\s+/i, "").replace(/^(to speak|to read)\s+/i, "").replace(/\s+(language|tongue)$/i, "").trim();
+  return t && !/^language$/i.test(t) ? t.charAt(0).toUpperCase() + t.slice(1) : "";
+}
+/** B4867: words to look for in journal page names for a research project ("Research the Tremere": tremere). */
+export function researchWords(task = {}) {
+  const raw = String(task?.makes || task?.name || "").toLowerCase();
+  return raw.replace(/^(research(ing)?|study(ing)?|look into|read up on)\s+/i, "").split(/[^a-z\u00c0-\u024f]+/).filter(w => w.length > 3 && !["about", "into", "their", "these", "those", "what", "with", "from"].includes(w)).slice(0, 4);
 }
 
 /** A courting roll's effect on warmth (WoDX NPC hearts): a success is time well spent, a botch a slight. */

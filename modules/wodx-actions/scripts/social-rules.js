@@ -227,3 +227,11 @@ export function askFacts(successes, info = {}) {
     if (n >= 2 && info.name) out.push(`Their name is ${info.name}.`);
     return out;
 }
+
+/** x4 (B4873): a favour won from another Kindred by asking is owed back: a trivial boon, a minor one when it was a hard sell
+ *  (won by three or more). Null when nothing is owed. House reading of V20 prestation. */
+export const FAVOUR_ACTS = ["persuade", "charm"];
+export function favourBoon(actKey, result, margin = 0, bothKindred = false) {
+    if (!bothKindred || result !== "win" || !FAVOUR_ACTS.includes(actKey)) return null;
+    return Number(margin) >= 3 ? "minor" : "trivial";
+}

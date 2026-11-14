@@ -407,10 +407,22 @@ export const POWER_TOWN = {
   dread: {kind: "dread", prosperity: -0.1, unrest: 0.4, fled: 0.01, text: "Fear settles on the town: people keep indoors, and some leave.", big: false},
   calm: {kind: "calm", unrest: -0.6, text: "Tempers cool and the town settles.", big: false}
 };
+/** B4863: what a lever pulled in an institution does to its town (WoDX Storyteller reach-rules LEVERS; house figures). */
+export const LEVER_TOWN = {
+  curfew: {kind: "curfew", prosperity: -0.05, unrest: 0.15, text: "A curfew: the streets empty at dark and the watch stop anyone abroad.", big: false},
+  levy: {kind: "levy", prosperity: -0.15, unrest: 0.25, text: "A new tax: purses are lighter and the market grumbles.", big: false},
+  prices: {kind: "prices", prosperity: -0.05, unrest: 0.1, text: "The guild sets its prices for the season, and buyers pay more.", big: false},
+  works: {kind: "works", prosperity: -0.2, unrest: 0.2, text: "The works close or move, and their people are out of work.", big: true},
+  decree: {kind: "decree", unrest: 0.2, text: "An order is cried in the ruler's name, and the town talks of nothing else.", big: false},
+  short: {kind: "short", prosperity: -0.1, unrest: 0.1, text: "Supplies go missing, and the stores run short.", big: false},
+  patrol: {kind: "patrol", unrest: -0.1, text: "Patrols walk the streets, and people keep their heads down.", big: false},
+  hands: {kind: "hands", unrest: 0.3, prosperity: -0.1, text: "The place changes hands: new masters, new rules, and old loyalties count for little.", big: true},
+  martial: {kind: "martial", prosperity: -0.2, unrest: 0.4, text: "Martial law: soldiers at the gates and in the squares, and no one gathers.", big: true}
+};
 const SCALE = {1: 1, 2: 1.5, 3: 2};
 /** A power's blow to one town: the POWER_TOWN figures times its scale; label names the caster and power. */
 export function powerEvent(kind, townId, {scale = 1, label = ""} = {}) {
-  const e = POWER_TOWN[kind];
+  const e = POWER_TOWN[kind] ?? LEVER_TOWN[kind];
   if ( !e || !townId ) return null;
   const k = SCALE[scale] ?? 1, out = {...e, town: townId};
   for ( const f of ["prosperity", "unrest", "dead", "fled"] ) if ( Number.isFinite(e[f]) ) out[f] = Math.round(e[f] * k * 10000) / 10000;
