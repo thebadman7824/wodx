@@ -21,6 +21,7 @@ import * as X from "./examine-rules.mjs";
 import * as WU from "./wonder-use.mjs";
 import * as AU from "./arms-use.mjs";
 import * as AR from "./arms-rules.mjs";
+import * as FU from "./faith-use.mjs";
 
 const MOD = "wodx-library";
 const SOCKET = `module.${MOD}`;
@@ -323,6 +324,9 @@ export async function run(item, ability, actor = holderOf(item)) {
     case "disarm": return AU.disarmTrap(actor, item);
     case "clean": return AU.clean(actor, item);
     case "load": return AU.load(actor, item);
+    case "pray": return FU.pray(actor, item);
+    case "ward": return FU.ward(actor, item);
+    case "divine": return FU.divine(actor, item);
     case "wear": {
       const on = !(item.system?.isequipped);
       await item.update({"system.isequipped": on});
