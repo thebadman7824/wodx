@@ -27,7 +27,7 @@ const set = (root, name, value) => {
     if (el.type === "checkbox") el.checked = !!value; else el.value = String(value);
     el.dispatchEvent(new Event("change", { bubbles: true }));
 };
-const lastMsg = () => game.messages.contents.at(-1);
+const lastMsg = () => newestMessage();
 const text = m => String(m?.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 /** The first WoDX card posted after message index `after` (other modules' messages, such as dice trackers, are skipped). */
 async function untilMsg(after, ms = 6000) {
@@ -96,7 +96,7 @@ async function makePack() {
     return { folder, ada, anselm, mara, agnes, greta };
 }
 
-export async function run() {
+async function runGate(K) {
     const origErr = console.error;
     console.error = (...a) => { R.errors.push(a.map(x => x?.message ?? String(x)).join(" ").slice(0, 300)); origErr(...a); };
     const hook = Hooks.on("renderDialogV2", onRender);
@@ -287,3 +287,7 @@ export async function run() {
     }
     return R.summary;
 }
+
+// The gate kit (B3733): its own scratch scene, cleaned up after.
+import {kitRun, newestMessage} from "./kit.mjs";
+export const run = kitRun("gate6c", runGate);

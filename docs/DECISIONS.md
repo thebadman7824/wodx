@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3730
+Next free block: B3740
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -192,6 +192,7 @@ Next free block: B3730
 | B3680-B3689 | Mage Wonders, charms, periapts, trinkets and mage fetishes (used B3680-B3689) | Library, Storyteller |
 | B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3699) | Library, Storyteller |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
+| B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3733) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6210,3 +6211,23 @@ Reverse: make a plain Item from the row.
 WoDX Actions, WoDX Storyteller. Picking an Artifact or a relic in the forge window starts the table's task; a new long task of the soulforge kind opens the forge window.
 
 Reverse: remove the hand-offs; each window makes only its own things.
+
+## B3730. Every gate follows four rules, with a shared kit (2026-11-14)
+Ben approved standard test rules to cut gate failures. A gate finds the documents it made by name or by its flag, never by their place in a list. It makes its own scratch scene and actors and removes them afterwards, never leaning on what an earlier gate or the lane left. It checks what a feature does, not a count, an exact version or an old window's markup. It brings its own fixtures from tools/gate/fixtures. tools/gate/kit.mjs does this work: gate() with make (documents back in the order asked), scene, tokens, fixture, fixtureScene, step (30 second limit, closes the windows it opened), cleanup and finish, plus inOrder, byFlag, byName and newestMessage. The rules are in docs/WORKFLOW.md.
+
+Reverse: Gates may go back to their own helpers; the kit and the rules section can be removed.
+
+## B3731. A guard test holds every gate to the rules (2026-11-14)
+tools/harness/gate-rules.test.mjs reads every gate's source. It fails one that picks a document it made by position, uses the canvas or the viewed scene without a scene of its own, looks up a scene, actor or journal by a name it never makes, or checks for one exact version number. Gates from before the rules that still break one are listed in tools/harness/gate-rules-baseline.json, which may only shrink. At first it is empty, because every gate was moved over (B3733).
+
+Reverse: Delete gate-rules.test.mjs, gate-rules.mjs and the baseline.
+
+## B3732. A feature change updates its gate (2026-11-14)
+A PR that changes a feature updates the gate that covers it in the same PR. node tools/release/merge-stamp.mjs --check warns when a branch changes a module's scripts but none of the gates covering that module. It is a warning, not a stop, since a pure refactor needs no gate change.
+
+Reverse: Remove the warning block from merge-stamp.mjs and the paragraph from docs/WORKFLOW.md.
+
+## B3733. The older gates moved to the kit (2026-11-14)
+Seventeen gates that used the viewed scene now run inside kitRun, which gives each one a scratch scene of its own, viewed for the whole gate and removed after: gate6b, gate6c, gate7b1, gateanachronism, gatecrowd, gategroup6, gatepaperdoll, gateperf, gateplayerview, gatepod, gatequiet, gatesigs, gatesprites, gatewhen, gatewolf, gatechurch and gatecookways. gatechurch, gatecookways and gatesprites make their own actor instead of borrowing the first one in the world. gate6b, gate6c, gatelaw, gatepassing and gatepolitics read the newest message by its time. gateadopt, gateanachronism, gateeffects and gatesheet5 find their walls, tiles, tokens and items by what they are.
+
+Reverse: Each gate's own commit can be reverted on its own.

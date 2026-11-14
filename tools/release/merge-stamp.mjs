@@ -183,7 +183,7 @@ function versionAt(ref, mod) {
   try { return s ? JSON.parse(s).version : null; } catch { return null; }
 }
 
-function main() {
+async function main() {
   const args = new Set(process.argv.slice(2));
   const check = args.has("--check"), dry = args.has("--dry");
   if ( !args.has("--no-fetch") ) {
@@ -213,6 +213,17 @@ function main() {
   }
 
   if ( check ) {
+    // B3732: a branch that changes a module's scripts should change a gate covering that module too (a warning only).
+    try {
+      const {gateMap} = await import("../lanes/gate-map.mjs");
+      const changed = (tryGit("diff", "--name-only", base ?? "origin/main", "HEAD") ?? "").split("\n").filter(Boolean);
+      const map = gateMap(), gatesTouched = new Set(changed.map(f => /^tools\/gate\/(gate[\w-]*)\.mjs$/.exec(f)?.[1]).filter(Boolean));
+      const scripted = new Set(changed.map(f => /^modules\/(wodx-[a-z]+)\/scripts\//.exec(f)?.[1]).filter(Boolean));
+      for ( const mod of scripted ) {
+        const cover = Object.keys(map).filter(g => map[g].includes(mod));
+        if ( cover.length && !cover.some(g => gatesTouched.has(g)) ) console.log(`  warning: ${mod} scripts changed but none of its ${cover.length} gates did; update the gate for the feature (docs/WORKFLOW.md, Gate rules)`);
+      }
+    } catch {}
     if ( mf.length || df.length ) problems.push(`${mf.length + df.length} fragment(s) wait to be stamped: run node tools/release/merge-stamp.mjs`);
     for ( const p of problems ) console.log(`  ${p}`);
     console.log(problems.length ? `Not ready to merge: ${problems.length} problem(s).` : "Ready to merge: nothing waits to be stamped.");
