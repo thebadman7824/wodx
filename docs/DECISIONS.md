@@ -185,7 +185,7 @@ Next free block: B3680
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
 | B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3621) | Chronicle |
 | B3660-B3669 | The Rothenstein saga: the running step for other systems (used B3660-B3669) | Chronicle |
-| B3670-B3679 | The Rothenstein saga changes its town; the rebuild turns it on (used B3670-B3671) | Chronicle, Storyteller |
+| B3670-B3679 | The Rothenstein saga keeps its calendar on long skips (used B3670-B3672) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5974,3 +5974,8 @@ Reverse: remove `town` from the steps in data/saga-rothenstein.mjs, or the wodxS
 WoDX Storyteller. Ben's pick (d-switch): the saga stays off by default, and the chronicle builder's settings step turns WoDX Chronicle's podSaga on when the recipe's spine names the saga (recipe-rothenstein.mjs spine.saga = "rothenstein").
 
 Reverse: remove spine.saga from the recipe, or turn the switch off in the built world.
+
+## B3672. Saga gaps count from the due time (2026-11-14)
+WoDX Chronicle. The testbed gate found that a saga run counted each gap from the moment a step was dealt, so a skip of months dealt one step and pushed the rest later. A saga run now sets `last` to the step's due time, so the book holds its dates and a long skip deals every step it passes over, in order. Plain story chains keep the old way.
+
+Reverse: in dealChains (pod.mjs), set run.last = t for saga runs too.
