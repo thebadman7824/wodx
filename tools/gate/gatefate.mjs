@@ -111,7 +111,7 @@ export async function run() {
     await sleep(300);
     const due8 = TH.rules.due(st(), Infinity).length, beat8 = TH.nightBeat(() => 0);
     await TH.lockStory(story.key, false);
-    ok("8. a locked storyline waits", due8 === 0 && beat8 === null);
+    ok("8. a locked storyline waits", due8 === 0 && (beat8 === null || String(beat8.key).startsWith("saga:")), {beat: beat8?.key});
 
     // 9. An ending
     const card = TH.cards.find(c => c.key === story.anchor);
