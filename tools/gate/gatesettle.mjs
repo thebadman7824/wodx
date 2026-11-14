@@ -9,7 +9,7 @@
  * of its own, seeds a handful of households (not the whole village), checks what the review wrote, removes the
  * residents, and deletes its scene and journal at the end. It does not switch the Storyteller's view or the clock.
  *   1. the modules: NPC 0.48.0 or later with api.settlements, Interactables 0.35.2 or later, the People generator
- *   2. the record reads: steinfeld-1995-7, as many households as the map's sidecar, 288 people; a broken record is refused in plain words
+ *   2. the record reads: steinfeld-1995-7, as many households and people as the map's sidecar; a broken record is refused in plain words
  *   3. adopted: every household of the record stands on the scene, a block of flats carrying all of its households
  *   4. entered: a journal of four pages no player can read, found again by the settlement's id
  *   5. the residents' plan reads the review: the struck household marked, the hidden folk on their households
@@ -52,9 +52,9 @@ export async function run() {
     try { await S.read(JSON.stringify({format: "wodx-settlement", version: 1, id: "bad id!", name: "x", households: []})); } catch (e) { refused = e.message; }
     const people = rec.households.reduce((s, h) => s + h.people.length, 0);
     const text = await (await fetch(`/wodx-gate/steinfeld-1995.wodx.json?${Date.now()}`, {cache: "no-store"})).text();
-    const H = rec.households.length, sideH = JSON.parse(text).households?.length;
-    ok("2. record", rec.id === SID && rec.year === 1995 && H > 100 && H === sideH && people === 288 && rec.population === 288 && rec.ties.length > 0 && refused.length > 0,
-      {id: rec.id, households: H, sidecar: sideH, people, ties: rec.ties.length, refused});
+    const side = JSON.parse(text), H = rec.households.length, sideH = side.households?.length;
+    ok("2. record", rec.id === SID && rec.year === 1995 && H > 100 && H === sideH && people > 200 && rec.population === people && side.population === people && rec.ties.length > 0 && refused.length > 0,
+      {id: rec.id, households: H, sidecar: sideH, people, sidecarPeople: side.population, ties: rec.ties.length, refused});
 
     const sc = A.rules.parseSidecar(text).data;
     scene = await Scene.create({name: NAME, width: sc.cells[0] * 100, height: sc.cells[1] * 100, padding: 0, grid: {size: 100, distance: 5}});
