@@ -253,3 +253,26 @@ test("B3444: a face read against a straight face; the lie mark on a talk line", 
   assert.equal(TKR.parseThen("teach the mill; lie").lie, true);
   assert.equal(TKR.parseThen("aloud").lie, false);
 });
+
+test("gate finds: the fight note reaches Storyteller's hand api; a reader's client never writes the speaker's roll", async () => {
+  const {readFileSync} = await import("node:fs");
+  const after = readFileSync(new URL("../../modules/wodx-combat/scripts/aftermath.js", import.meta.url), "utf8");
+  const st = readFileSync(new URL("../../modules/wodx-storyteller/scripts/main.mjs", import.meta.url), "utf8");
+  assert.match(after, /st\?\.hand\?\.noteFight/);
+  assert.match(st, /hand: \{[^}]*noteFight: Hand\.noteFight/s);
+  const ax = readFileSync(new URL("../../modules/wodx-actions/scripts/main.js", import.meta.url), "utf8");
+  const rf = ax.slice(ax.indexOf("async function readFace"), ax.indexOf("async function post("));
+  assert.match(rf, /if \(game\.user\.isGM\) await ChatMessage\.create\(hidden\);\s*else game\.socket\.emit\(SOCKET, \{ action: "straightFace"/);
+  assert.match(ax, /p\.action === "straightFace"/);
+});
+
+test("B3180: an elder's years before 1197 always offer a mark of their land", async () => {
+  const LD = await import("../../modules/wodx-creation/scripts/lifepath-drill-rules.mjs");
+  const marks = LD.datedMarks("moravia", 477, 1196).map(m => m[0]);
+  for ( const seed of ["wodx-gate", "a", "b", "c", "d", "e", "f", "g"] ) {
+    const st = LD.sinceSteps(LD.newSince({turnYear: 330, nowYear: 1490, line: "vampire", seed, region: "moravia"})).find(s => s.from === 477);
+    assert.equal(st.options.length, 5);
+    assert.ok(st.options.some(o => marks.includes(o.label)), `seed ${seed}`);
+    assert.equal(new Set(st.options.map(o => o.id)).size, 5, "no option twice");
+  }
+});

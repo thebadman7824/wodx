@@ -276,6 +276,8 @@ async function onSocket(p) {
     if (!isResponsibleGM()) return;
     if (p.action === "kx" && !p.uuid) return kx().onSocket(p);
     // B3133: a player's codex entry spent on research (the codex journal is the Storyteller's)
+    // B3444: a speaker's hidden roll against a player reading their face
+    if (p.action === "straightFace") { const d = p.data ?? {}; await ChatMessage.create({ ...d, whisper: game.users.filter(u => u.isGM).map(u => u.id), blind: true, speaker: { alias: "WoDX" } }); return; }
     if (p.action === "research") { const pg = await fromUuid(p.uuid); if (pg?.documentName === "JournalEntryPage") await pg.setFlag(MOD, "researchUsed", true); return; }
     const doc = await fromUuid(p.uuid);
     const actor = doc?.actor ?? doc;
@@ -384,9 +386,12 @@ async function readFace({ actor, npc, lie = false } = {}) {
     const owners = game.users.filter(u => actor.testUserPermission?.(u, "OWNER")).map(u => u.id);
     await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), whisper: [...new Set([...owners, ...gms])], rolls: me.roll ? [me.roll] : [],
         content: `<div class="vta-card wodx-x"><div class="vta-title">${esc(actor.name)} reads ${esc(npc.name)}'s face</div><div class="vta-body">${rollBlock("Perception + Empathy", me)}<ul>${res.lines.map(l => `<li>${esc(l)}</li>`).join("")}</ul></div></div>` });
-    // blind: a player's client writes it, and still may not read it
-    await ChatMessage.create({ speaker: { alias: "WoDX" }, whisper: gms, blind: !game.user.isGM, rolls: hide.roll ? [hide.roll] : [],
-        content: `<div class="vta-card wodx-x"><div class="vta-title">${esc(npc.name)} keeps a straight face (Storyteller only)</div><div class="vta-body">${rollBlock("Manipulation + Subterfuge", hide)}${lie ? `<p class="vta-note">The line was marked a lie.</p>` : ""}</div></div>` });
+    // The speaker's roll is the Storyteller's alone: a player's own whisper stays readable to its author, so the
+    // active Storyteller writes it (B3444)
+    const hidden = { speaker: { alias: "WoDX" }, whisper: gms, blind: true, rolls: hide.roll ? [hide.roll.toJSON()] : [],
+        content: `<div class="vta-card wodx-x"><div class="vta-title">${esc(npc.name)} keeps a straight face (Storyteller only)</div><div class="vta-body">${rollBlock("Manipulation + Subterfuge", hide)}${lie ? `<p class="vta-note">The line was marked a lie.</p>` : ""}</div></div>` };
+    if (game.user.isGM) await ChatMessage.create(hidden);
+    else game.socket.emit(SOCKET, { action: "straightFace", data: hidden });
     return res;
 }
 async function post(actor, title, body, rolls = [], data = null) {

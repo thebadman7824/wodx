@@ -118,7 +118,8 @@ export function setupAftermath({corpusTrack}) {
     const at = game.time.worldTime;
     await chron()?.legends?.addDeed?.({id: combat.id, at, text, won, place, people: pcs.map(f => ({id: f.id, name: f.name}))});
     const taken = new Map(list.map(r => [r.uuid, r.taken]));
-    await game.modules.get("wodx-storyteller")?.api?.noteFight?.({id: combat.id, at, text, won, rows: pcs.map(f => ({id: f.id, pc: true, taken: taken.get(f.uuid) ?? 0, down: f.down}))});
+    const st = game.modules.get("wodx-storyteller")?.api;
+    await (st?.hand?.noteFight ?? st?.noteFight)?.({id: combat.id, at, text, won, rows: pcs.map(f => ({id: f.id, pc: true, taken: taken.get(f.uuid) ?? 0, down: f.down}))});
   }
 
   async function recordFromCard(msg) {
