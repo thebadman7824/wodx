@@ -10,6 +10,7 @@
  * kind that cannot hold it is matched but marked wrongKind: it does nothing until fixed. Mixed kinds count as both
  * where the books say so: a ghoul is also a mortal, a revenant is a ghoul, a Kinfolk is a mortal.
  */
+import {BITES} from "./trait-bite-rules.mjs";
 import {BACKGROUND_HOOKS as BACKGROUND_HOOKS_TEXT, MERITS_FLAWS, BACKGROUNDS, PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED, TRIGGERS, PULLS, LEDGER, PROMPTS, BG_WORLD, BODY} from "../data/trait-effects.mjs";
 
 export {PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED, TRIGGERS, PULLS, LEDGER, PROMPTS, BG_WORLD};
@@ -404,7 +405,7 @@ export function describe(m) {
     ...(TRIGGERS[k] ? [`goes off on the map (${TRIGGERS[k].fromName ? "what the name says in brackets" : TRIGGERS[k].words.slice(0, 3).join(", ")})${TRIGGERS[k].stop ? ", and holds a player's move" : ""}`] : []),
     ...(PULLS[k] ? [`turns up in the night's draw about one night in ${Math.round(1 / PULLS[k].chance)}`] : []),
     ...(LEDGER[k] ? [`a ${LEDGER[k].kind} in the Ledger`] : []),
-    ...(PROMPTS[k] ? [`a card to the Storyteller (${PROMPTS[k].on.join(", ")})`] : []),
+    ...(PROMPTS[k] ? [BITES[k] ? `rolls for itself and takes effect (${PROMPTS[k].on.join(", ")})` : `a card to the Storyteller (${PROMPTS[k].on.join(", ")})`] : []),
     ...(BODY[k] ? [`in a fight: ${BODY[k].note}`] : [])];
   const live = ways.length ? ways.join("; ") : "no automatic effect yet";
   return `${pats}. ${live}. ${e.book} p. ${e.page}`;
