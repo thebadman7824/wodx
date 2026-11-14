@@ -9,6 +9,7 @@
  *   4. pepper spray in the face: the target is Blinded; a target in a gas mask is not
  *   5. a hand grenade thrown is used up
  *   6. a bear trap set and walked into: the victim takes damage and is completely immobilized
+ *   7. ammunition (B3900): an empty revolver reloads from the two cartridges in Possessions (2 of 6), and they are gone
  * Result: Data/wodx-gate/gatearms-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -96,6 +97,14 @@ export async function run() {
       await settle(() => imm());
       const card = [...game.messages].slice(-8).some(x => /takes damage/i.test(x.content) && /Gate Arms Victim/.test(x.content));
       G.ok("6. a bear trap", caught && imm() && card, {caught, sets, immobilized: imm(), damageCard: card});
+    });
+    await G.step("7. reloading from Possessions", async () => {
+      const [rev, ammo] = await m.createEmbeddedDocuments("Item", [{name: "Gate Arms Colt revolver", type: "Ranged Weapon", system: {isequipped: true, difficulty: 6, range: 12,
+        damage: {attribute: "", bonus: 4, type: "lethal"}, attack: {attribute: "dexterity", ability: "firearms"}, clip: {value: 0, max: 6}}},
+        {name: "a cartridge", type: "Item", flags: {"wodx-sheets": {qty: 2}}}]);
+      const r = await C.reload({actor: m, weaponId: rev.id});
+      await settle(() => Number(rev.system.clip.value) === 2 && !m.items.get(ammo.id));
+      G.ok("7. reloading from Possessions", Number(rev.system.clip.value) === 2 && !m.items.get(ammo.id), {clip: rev.system.clip.value, left: !!m.items.get(ammo.id), r});
     });
   } finally { return G.finish(); }
 }
