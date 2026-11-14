@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4110
+Next free block: B4120
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -205,6 +205,7 @@ Next free block: B4110
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
 | B4100-B4109 | PC job queue and runner: threads queue PC work as GitHub issues, five testbed lanes run it side by side (used B4100-B4104) | tools (no module) |
+| B4110-B4119 | Stale pull request sweeper in the PC runner (used B4110) | tools (no module) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6826,3 +6827,10 @@ job when memory runs short.
 ## B4104. submit.mjs checks a job before it is queued (2026-11-14)
 A missing gate file, a two-browser gate in a plain gates job (or the reverse), a gate that does not parse or breaks
 the gate rules: each used to cost a PC run. They are refused in the cloud now.
+
+## B4110. The PC runner sweeps stale pull requests every hour (2026-11-14)
+Pull requests 655 and 701 sat open for two days with no CI run. Every hour the runner merges main into an owner's
+pull request that is behind main and has had no commit for 2 hours (update-branch, a merge, never a rebase), starts CI
+(workflow_dispatch, added to checks.yml) on one that is up to date but never got a run, and lists the rest (merge
+conflicts, CI that cannot start, CI that failed) in one pc-alert issue that it closes when the list is empty. It uses
+Ben's sign-in on the PC because a push made with the workflow token starts no CI.
