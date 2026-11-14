@@ -36,7 +36,7 @@ async function fetchData(name) {
     try { const r = await fetch(url); return r.ok ? await r.json() : null; } catch (e) { return null; }
 }
 export async function loadData() {
-    for (const k of ["garou", "fera", "gifts-daw"]) if (!DATA[k]) DATA[k] = await fetchData(k);
+    for (const k of ["garou", "fera", "gifts-daw", "gifts-w20"]) if (!DATA[k]) DATA[k] = await fetchData(k);
     if (!DATA.garou) console.error("WoDX | WoDX Actions could not load data/garou.json");
     return DATA;
 }
@@ -46,6 +46,14 @@ export function findGift(name) {
     const key = String(name ?? "").toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, " ").trim();
     return gifts().find(g => g.n.toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, " ").trim() === key) ?? null;
 }
+/** The W20 Gifts the Dark Ages library does not hold (data/gifts-w20.json): pool, cost, duration, effect and page. */
+export function w20Gifts() { return DATA["gifts-w20"]?.gifts ?? []; }
+export function findW20Gift(name) {
+    const key = String(name ?? "").toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+    return w20Gifts().find(g => g.n.toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, " ").trim() === key || g.kw.replace(/-/g, " ") === key) ?? null;
+}
+/** Where a library Gift is printed: "DA:W p. N" or "W20 p. N". */
+export const giftRef = g => g ? `${g.book ?? "DA:W"} p. ${g.p}` : "";
 
 /** Item data for a Gift from the library: a system Power of type Gift, linked back to the library entry. */
 export function giftItem(g) {
@@ -396,7 +404,7 @@ export function build(ctx) {
     }
     function giftData(item) {
         const id = item.getFlag?.(MOD, "gift");
-        return (id && gifts().find(g => g.id === id)) || findGift(item.name);
+        return (id && gifts().find(g => g.id === id)) || findGift(item.name) || findW20Gift(item.name);
     }
 
     async function useGift(actor) {
@@ -426,7 +434,7 @@ export function build(ctx) {
             const costTxt = [c.gnosis && `${c.gnosis} Gnosis`, c.rage && `${c.rage} Rage`, c.willpower && `${c.willpower} Willpower`].filter(Boolean).join(", ") || (c.variable ? "variable" : "none");
             const d = G.giftDifficulty(g.d, { t: targetTraits(tgt), own: { willpower: i.willpower.perm, rage: i.rage.perm }, gauntlet });
             if (d !== null) root.querySelector("[name=diff]").value = d;
-            box.innerHTML = `<b>Level ${g.l}</b> · cost ${esc(costTxt)}${c.per ? ` (${esc(c.per)})` : ""} · ${g.r ? `roll ${esc(poolOf(actor, g.r, i).label)}` : "no roll"} · ${esc(g.t ?? "")} · DA:W p. ${g.p}<br>${esc(g.e)}${g.chk ? "<br><i>Partly read from a damaged scan: check the page.</i>" : ""}${d === null && g.d ? `<br><i>Difficulty from ${esc(g.d)}: target a token or set it.</i>` : ""}`;
+            box.innerHTML = `<b>Level ${g.l}</b> · cost ${esc(costTxt)}${c.per ? ` (${esc(c.per)})` : ""} · ${g.r ? `roll ${esc(poolOf(actor, g.r, i).label)}` : "no roll"} · ${esc(g.t ?? "")} · ${giftRef(g)}<br>${esc(g.e)}${g.chk ? "<br><i>Partly read from a damaged scan: check the page.</i>" : ""}${d === null && g.d ? `<br><i>Difficulty from ${esc(g.d)}: target a token or set it.</i>` : ""}`;
         };
         return dialog(`Use a Gift: ${actor.name}`, content, "Use", async fd => {
             const it = actor.items.get(fd.gift); if (!it) return null;
@@ -450,17 +458,17 @@ export function build(ctx) {
                 successes = rr.botch ? 0 : rr.successes;
                 body += rollBlock(pool.label, rr, [n(fd.bonus) ? `bonus ${fd.bonus}` : ""].filter(Boolean));
             }
-            if (g) body += `<div class="vta-note">${esc(g.e)} <span class="wodx-quiet">(DA:W p. ${g.p})</span></div>`;
+            if (g) body += `<div class="vta-note">${esc(g.e)} <span class="wodx-quiet">(${giftRef(g)})</span></div>`;
             const dur = successes > 0 ? G.giftDuration(g?.t, successes) : null;
             if (dur && chronicle()?.applyTimed && actor.isOwner) {
                 await chronicle().applyTimed(actor, { name: it.name, img: it.img || "icons/svg/aura.svg", description: g?.e ?? "", duration: dur,
-                    source: g ? `DA:W p. ${g.p}` : "", key: `gift-${it.id}` });
+                    source: giftRef(g), key: `gift-${it.id}` });
                 body += `<div class="vta-note">Shown on the token until it ends (${esc(dur.kind === "rounds" ? `${dur.rounds} turn${dur.rounds === 1 ? "" : "s"}` : dur.kind === "scene" ? "the scene" : "its time")}).</div>`;
             }
             // The Gift's keywords on the effects card (Traits With Teeth step 4): the Dark Ages library, else the W20 list by name
             let fxItems = [];
             if (code && successes > 0 && EF.isOn()) {
-                const pp = EF.powerPlan(actor, { set: "gift", id: g?.id ?? "", name: it.name, line: "w20", successes, source: g ? `DA:W p. ${g.p}` : "W20" });
+                const pp = EF.powerPlan(actor, { set: "gift", id: g?.book === "W20" ? "" : (g?.id ?? ""), name: it.name, line: "w20", successes, source: g ? giftRef(g) : "W20" });
                 body += pp.html;
                 fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             }
