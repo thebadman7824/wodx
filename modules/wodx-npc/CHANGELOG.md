@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.78.2 (First meetings (B3783): the NPC's faction names and its seats in a faction go to Chronicle's attitudeSeed)
 - 0.78.1 (Three new place tags: an office or counting house, a court of law or council chamber, and a Technocracy site, each with its crowd; WoDX Actions reads them for everyday Banality (B3555))
 - 0.78.0 (A talk sheet line can be marked "lie" after " | ": a character who reads the speaker's face may see it (B3444). Culprit descriptions keep a Kindred's uncanny face marks (B3443))
 - 0.77.3 (Family approvals: the cards for a child grows up, a child asked for by players, and a wedding after a proposal now also register when Chronicle says it is ready, so approving them starts the pregnancy or holds the wedding even when Chronicle loads after WoDX NPC (B3224, B3230))
