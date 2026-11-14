@@ -33,6 +33,14 @@ export default {
       "source": "WoDX plan: Light-touch mode"
     },
     {
+      "id": "ticketPause",
+      "group": "automation",
+      "name": "Pause the game while a ruling waits",
+      "hint": "When a player asks for a ruling on an unclear action, the game pauses until you decide the ticket.",
+      "default": false,
+      "source": "WoDX plan: referee ticket (B3522)"
+    },
+    {
       "id": "eraProposals",
       "group": "automation",
       "name": "Propose an era change at era boundaries",
@@ -117,7 +125,7 @@ export default {
       "id": "feastFast",
       "group": "rules",
       "name": "Feast and fast days",
-      "hint": "The church year shapes the night: on a night of revel the curfew starts at midnight and hunting in town is 1 easier; on a fast kept strictly (before 1600) hunting in town is 1 harder. The Chronicle Clock always shows the day.",
+      "hint": "The holy days of the place shape the night: on a night of revel or celebration (Ramadan nights and the new year of the lunar calendar among them) or a fair the curfew starts at midnight and hunting in town is 1 easier; on a fast kept strictly hunting in town is 1 harder, on Good Friday or Yom Kippur 2 harder; by day a holy day or the day of rest shuts the market. The curfew of the older towns and the wartime blackouts make a hunt 1 harder. The hunt window lists each change by name. The Chronicle Clock always shows the day.",
       "default": true,
       "source": "House rule"
     },

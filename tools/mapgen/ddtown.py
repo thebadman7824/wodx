@@ -94,6 +94,12 @@ def clip(rect, win):
 
 def inside(x, y, win, pad=0): return win[0] - pad <= x < win[0] + win[2] + pad and win[1] - pad <= y < win[1] + win[3] + pad
 
+def on_map(o, win):
+    """True when an object's middle lies on the part's map (its position is already relative to the part)."""
+    x, y = (float(v) / C.CELL for v in re.findall(r"-?[\d.]+", o["position"].split("(", 1)[1])[:2])
+    return 0 <= x <= win[2] and 0 <= y <= win[3]
+
+
 class Town:
     def __init__(self, seed, size, name=None, night=True):
         self.R = C.R
@@ -413,16 +419,19 @@ class Town:
         walls, patterns, objects, paths = [], [], [], []
         for b in self.blds:
             if not overlaps(b.rect, win): continue
-            walls.append(wall_with_portals(b.outline, b.t["wall"], b.openings, True))
-            for a, c in b.partitions: walls.append(wall_with_portals([a, c], b.t["wall"], b.openings, False))
+            walls.append(wall_with_portals(b.outline, getattr(b, "wall_tex", None) or b.t["wall"], b.openings, True, textures=getattr(b, "portal_tex", None)))
+            for a, c in b.partitions: walls.append(wall_with_portals([a, c], getattr(b, "wall_tex", None) or b.t["wall"], b.openings, False, textures=getattr(b, "portal_tex", None)))
             for r in b.rooms:
-                if B.FLOORS.get(r.floor):
-                    patterns.append(pattern([(r.x, r.y), (r.x + r.w, r.y), (r.x + r.w, r.y + r.h), (r.x, r.y + r.h)], B.FLOORS[r.floor]))
+                if B.floor_tex(r.floor):
+                    patterns.append(pattern([(r.x, r.y), (r.x + r.w, r.y), (r.x + r.w, r.y + r.h), (r.x, r.y + r.h)], B.floor_tex(r.floor)))
+                n0 = len(objects)
                 objects.extend(C.dressing_objects(r, True))
                 for it in r.items:
                     rot = it.get("angle", 0.0 if not it["rot"] else math.pi / 2)
-                    objects.append(obj(it["asset"], *C.centre(it), rot, it["scale"], 100))
+                    objects.append(obj(C.drawn(it)[0], *C.centre(it), rot, C.drawn(it)[1], 100))
                 objects.extend(C.dressing_objects(r, False))
+                if not self.mine(b, pt):                       # a neighbour's house at the edge: only what is on this map
+                    objects[n0:] = [o for o in objects[n0:] if on_map(o, win)]
         for g in self.gardens:
             x, y, w, h = g["rect"]
             if not inside(x + w / 2, y + h / 2, win, 2): continue
@@ -571,6 +580,21 @@ def clip_whole(r, whole):
     c = clip(r, whole)
     return tuple(c) if c else (0, 0, 0, 0)
 
+def street_plan(t, pt):
+    """The ways of one part as centre lines in its own squares, with the river and the brooks: what runs under
+    the streets (sewers, culverts) is laid from this (ddwarren.py). Only written when --plan asks for it."""
+    import geom as G
+    win = pt["win"]
+    loc = lambda q: [round(q[0] - win[0], 2), round(q[1] - win[1], 2)]
+    def lines(pts):
+        return [[loc(q) for q in piece] for piece in G.clip_line(list(pts), win) if len(piece) >= 2]
+    streets = []
+    for a, b, half, kind in t.segs:
+        for piece in lines([a, b]): streets.append({"kind": kind, "half": half, "line": piece[0] + piece[-1]})
+    return {"streets": streets, "river": lines(t.river_line) if t.river_line else [], "riverHalf": round(getattr(t, "river_half", 0), 2),
+            "brooks": [l for st in t.streams for l in lines(st["line"])]}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, default=1197)
@@ -583,9 +607,26 @@ def main():
     ap.add_argument("--river", choices=("random", "yes", "no"), default="random", help="organic layout only: a river across the map")
     ap.add_argument("--land", choices=("random", "plain", "hills", "upland", "foothills", "mountain", "karst"), default="random", help="organic layout only: the landform the town stands in (land.py); random picks by Moravian odds")
     ap.add_argument("--year", type=int, help="organic layout only: grow the medieval town through every later age up to this year (eras.py)")
+    ap.add_argument("--at", help="organic layout only: where the town stands on the country map, as town, or town:km:DIR (brno:12:NE). The landform and the river then come from the country there, unless --land or --river says otherwise")
+    ap.add_argument("--plan", action="store_true", help="organic layout only: add the street plan (centre lines of the ways, the river and the brooks) to each sidecar, for ddwarren.py to lay sewers and culverts under")
+    ap.add_argument("--settle", action="store_true", help="organic layout only: also write <name>.settlement.json, the record of the whole place (households, trades, ties) that WoDX NPC's Settlements window reviews; household ids then carry the settlement's id")
+    ap.add_argument("--faith", choices=("western", "orthodox", "islamic", "jewish", "hindu", "theravada", "tibetan", "chinese", "own"),
+                    help="the faith the town's house of worship keeps (B3200); WoDX Interactables adopts the chapel as a church, mosque, synagogue or temple. Left out, the faith of the scene's region decides on adoption")
+    ap.add_argument("--region", default="moravia", help="organic layout only: the WoDX Chronicle region the town stands in; from 1781 the households take its trades (settle.py, B3290). --at needs moravia")
     ap.add_argument("--day", action="store_true")
     ap.add_argument("--out", default=".")
     a = ap.parse_args()
+    import settle
+    if a.region not in settle.REGIONS: raise SystemExit(f"--region must be one of: {', '.join(settle.REGIONS)}")
+    if a.at and a.region != "moravia": raise SystemExit("--at reads the Moravian country map; leave out --region or use moravia")
+    settle.REGION = a.region
+    where = None
+    if a.at:
+        import country
+        try: where = country.land_at(a.at, a.year or 1197)
+        except ValueError as e: raise SystemExit(str(e))
+        if a.land == "random": a.land = where["landform"]
+        if a.river == "random": a.river = "yes" if where["river"] and where["river"]["km"] <= 5 else "no"
     if a.part and a.part < 24: raise SystemExit("--part must be 24 squares or more (or 0 for one map)")
     if a.size == "metropolis" and a.layout != "organic": raise SystemExit("a metropolis needs the organic layout")
     C.init(a.seed, a.assets)
@@ -593,8 +634,16 @@ def main():
         import organic
         t = organic.OrganicTown(a.seed, a.size, a.name, not a.day, {"random": None, "yes": True, "no": False}[a.walls], {"random": None, "yes": True, "no": False}[a.river], a.year, a.part, None if a.land == "random" else a.land).make()
     else:
+        import furnishing as F                             # furnished by purpose, the age's palette and room value, as the farm
+        if not F.DEFAULT: F.DEFAULT.update(year=1197, region="moravia", wealth=None, trade=None, seed=a.seed)
         t = Town(a.seed, a.size, a.name, not a.day).make()
+    if a.layout == "organic": settle.relabel(t, a.faith)   # local building names (B3298)
     base = slug(t.name)
+    settled = None
+    if a.settle:
+        if a.layout != "organic": raise SystemExit("--settle needs the organic layout")
+        import settle
+        settled = {"id": settle.stamp(t), "parts": []}
     parts = t.parts(a.part)
     index = {"format": "wodx-map-parts", "version": 1, "name": t.name, "kind": t.size, "seed": a.seed, "whole": [t.cols, t.rows],
              "population": t.population(), "parts": []}
@@ -607,6 +656,23 @@ def main():
         lvl = C.level(cw, ch, walls, patterns, objects, paths, TERRAIN, t.splat(pt["win"]), NIGHT if t.night else DAY)
         C.write_map(f"{a.out}/{mapname}", cw, ch, a.seed, lvl)
         sc = t.sidecar(mapname, pt, base)
+        if where:
+            # The country the map stands in, and where a paid ride is taken from in this year (B2339).
+            sc["country"] = {"at": a.at, **where}
+            stops = []
+            for r in sc.get("regions", []):
+                if r.get("label") == "Tavern" and not any(x["mode"] == "hire:coach" for x in stops) and (a.year or 1197) <= 1945: stops.append({"mode": "hire:coach", "region": r["id"], "label": "Coach stand at the tavern"})
+                if r.get("label") == "Railway station" and not any(x["mode"] == "hire:train" for x in stops): stops.append({"mode": "hire:train", "region": r["id"], "label": "Railway station"})
+                if r.get("label") == "Bus station" and not any(x["mode"] == "hire:bus" for x in stops): stops.append({"mode": "hire:bus", "region": r["id"], "label": "Bus station"})
+                if r.get("label") == "Pod station" and not any(x["mode"] == "hire:pod" for x in stops): stops.append({"mode": "hire:pod", "region": r["id"], "label": "Pod station"})
+            sc["transit"] = stops
+        if a.plan and a.layout == "organic": sc["plan"] = street_plan(t, pt)
+        if a.faith:
+            for r in sc.get("regions", []):
+                if r.get("place", {}).get("kind") == "church": r["place"]["faith"] = a.faith
+        if settled:
+            sc["settlement"] = {"id": settled["id"], "name": t.name, "year": t.year or 1197}
+            settled["parts"].append({"id": pt["id"], "name": sc["name"], "map": mapname, "sidecar": f"{stem}.wodx.json", "household_ids": [h["id"] for h in sc["households"]]})
         json.dump(sc, open(f"{a.out}/{stem}.wodx.json", "w"), indent=1)
         totals[0] += len(walls); totals[1] += sum(len(w["portals"]) for w in walls); totals[2] += len(objects)
         index["parts"].append({"id": pt["id"], "map": mapname, "sidecar": f"{stem}.wodx.json", "origin": list(pt["win"][:2]), "cells": [cw, ch], "cut": list(pt["cell"]),
@@ -614,6 +680,11 @@ def main():
         if len(parts) > 1: print(f"  part {pt['id']}: {cw} x {ch} squares, {len(sc['households'])} households, {len(walls)} walls, {len(objects)} objects")
     if len(parts) > 1: json.dump(index, open(f"{a.out}/{base}-parts.json", "w"), indent=1)
     t.plan_svg(f"{a.out}/{base}-plan.svg", parts)
+    if settled:
+        import settle, eras
+        rec = settle.record(t, settled["parts"], B.TYPES, eras.era_id(t.year), {"at": a.at, **where} if where else None)
+        settle.write(f"{a.out}/{base}.settlement.json", rec)
+        print(f"  settlement: {rec['id']}, {rec['population']} people in {len(rec['households'])} households, {len(rec['ties'])} ties, {len(rec['notables'])} offices -> {base}.settlement.json")
     kinds = {}
     for b in t.blds: kinds[b.label.split(" (")[0]] = kinds.get(b.label.split(" (")[0], 0) + 1
     print(f"ok: {t.name}, {'walled ' if getattr(t, 'wall', None) else ''}{t.cfg['label']}, {t.population()} people in {len(t.households)} households (aimed at {t.pop_target})"
@@ -621,6 +692,8 @@ def main():
     print("  " + ", ".join(f"{k} {v}" for k, v in sorted(kinds.items())))
     print(f"  {totals[0]} walls, {totals[1]} portals, {totals[2]} objects, {len(t.gardens)} gardens")
     for n in t.notes: print("  note:", n)
+    if where: print(f"  country: {where['km'] or ''}{' km ' + where['dir'] + ' of ' if where['km'] else 'at '}{where['town']}, {where['land']}" + (f" ({where['landName']})" if where["landName"] else "")
+                    + (f", {where['river']['name']} {where['river']['km']} km off" if where["river"] else "") + f"; drawn as {a.land}, river {a.river}")
 
 if __name__ == "__main__":
     main()

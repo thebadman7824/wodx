@@ -1,4 +1,6 @@
 import * as B from "./battle-rules.mjs";
+import * as X from "./battle-extras.mjs";
+import * as W from "./siege-works.mjs";
 import * as C from "./core.mjs";
 import * as Clocks from "./clocks.mjs";
 import * as T from "./tasks-rules.mjs";
@@ -25,6 +27,7 @@ const opt = (o, cur) => Object.entries(o).map(([k, v]) => `<option value="${esc(
 
 export function registerBattleSettings() {
   game.settings.register(MOD, KEY, {scope: "world", config: false, type: Object, default: B.blankBattles(), onChange: () => BattlesApp.refresh()});
+  X.registerHooks();
 }
 
 export const state = () => B.normBattles(setting(KEY));
@@ -108,46 +111,55 @@ async function syncClock(b) {
 }
 
 /** Fight one phase. `deeds` = [[{name, successes}], [...]]; `extra` = dice added to each side's commander. */
-export async function fight(id, {deeds = [[], []], extra = [0, 0]} = {}) {
+export async function fight(id, {deeds = [[], []], extra = [0, 0], actions = ["melee", "melee"], quiet = false} = {}) {
   const b0 = get(id);
   if ( !b0 || b0.over || !game.user.isGM ) return null;
   const {age} = contextOf(b0);
-  const setup = B.phaseSetup(b0, age, {extra});
+  deeds = X.withOffers(b0, deeds);
+  const setup = B.isBook(b0) ? B.bookSetup(b0, age, {extra}) : B.phaseSetup(b0, age, {extra});
   const rolls = [await roll(setup[0].pool, setup[0].difficulty), await roll(setup[1].pool, setup[1].difficulty)];
-  const step = B.settlePhase(b0, age, rolls, deeds);
-  let b = B.applyStep(b0, step, now());
+  let step;
+  if ( B.isBook(b0) ) {
+    // Right of Command: the commanders' roll sets the pools, then each army's action is rolled against the other
+    const plan = {...B.bookPools(b0, age, rolls), commandRolls: rolls};
+    plan.contests = B.bookContests(b0, age, plan.pools, actions);
+    for ( const c of plan.contests ) c.rolls = {attack: c.attack.pool ? await roll(c.attack.pool, c.attack.difficulty) : null, resist: c.resist.pool ? await roll(c.resist.pool, c.resist.difficulty) : null};
+    step = B.settleBookTurn(b0, age, plan, deeds);
+  } else step = B.settlePhase(b0, age, rolls, deeds);
+  let b = {...B.applyStep(b0, step, now()), offers: null};
   if ( step.waver ) {
     const w = step.waver, r = await roll(b.sides[w.side].commander.morale, w.difficulty);
     b = B.applyWaver(b, w.side, r, now());
     b.phases.at(-1).waver.difficulty = w.difficulty;
   }
   b = await put(b);
-  await cards(b, b.phases.at(-1), setup);
+  if ( !quiet ) await cards(b, b.phases.at(-1), setup);
   await afterStep(b, step.phase);
   return b;
 }
 
-/** One week of a siege. */
-export async function week(id) {
+/** One week of a siege. `quiet`: no cards (a war fought off the screen). */
+export async function week(id, {quiet = false} = {}) {
   const b0 = get(id);
   if ( !b0 || b0.over || b0.kind !== "siege" || !game.user.isGM ) return null;
   const {age} = contextOf(b0);
   const setup = B.siegeSetup(b0, age);
   const r = await roll(setup.pool, setup.difficulty);
   const sick = [await roll(b0.sides[0].commander.medicine, B.diseaseDifficulty(b0.sides[0])), await roll(b0.sides[1].commander.medicine, B.diseaseDifficulty(b0.sides[1]))];
-  const step = B.settleWeek(b0, age, r, sick);
+  // Storyteller 0.50.0: foraging, order, mines, engines and the walls ride on the same week (siege-works.mjs)
+  const step = W.week(b0, B.settleWeek(b0, age, r, sick));
   const b = await put(B.applyStep(b0, step, now()));
   await syncClock(b);
-  await cards(b, step.phase, [setup]);
+  if ( !quiet ) await cards(b, step.phase, [setup]);
   await afterStep(b, step.phase);
   return b;
 }
 
-export async function storm(id) {
+export async function storm(id, {quiet = false} = {}) {
   const b0 = get(id);
   if ( !b0 || b0.over || b0.kind !== "siege" ) return null;
   const b = await put(B.assault(b0));
-  await say(b, `<p>${esc(b.sides[0].name)} storm the walls of ${esc(b.place || b.sides[1].name)}.</p>`);
+  if ( !quiet ) await say(b, `<p>${esc(b.sides[0].name)} storm the walls of ${esc(b.place || b.sides[1].name)}.</p>`);
   return b;
 }
 export async function withdrawSide(id, side) {
@@ -158,12 +170,12 @@ export async function withdrawSide(id, side) {
   await say(b, `<p>${esc(b.over.text)}</p>`);
   return b;
 }
-export async function callDraw(id) {
+export async function callDraw(id, {quiet = false} = {}) {
   const b0 = get(id);
   if ( !b0 || b0.over ) return null;
   const b = await put(B.stalemate(b0, now()));
   await afterStep(b, null);
-  await say(b, `<p>${esc(b.over.text)}</p>`);
+  if ( !quiet ) await say(b, `<p>${esc(b.over.text)}</p>`);
   return b;
 }
 export async function undo(id) {
@@ -206,11 +218,14 @@ export async function hazard(id, actorId, {attention = false} = {}) {
   if ( !res.dice ) return res;
   if ( !game.wodxCombat?.soakAndApply ) { ui.notifications.warn(`WoDX Combat is off: ${res.dice} dice of ${res.type} damage to ${a.name}; roll soak and apply it by hand.`); return res; }
   const tok = a.getActiveTokens?.()?.[0];
-  await game.wodxCombat.soakAndApply(tok ?? a, {mode: "pool", amount: res.dice, type: res.type, fireSun: false, soakDiff: 6, soak: true, fortBlood: "auto", soakBonus: 0});
-  return res;
+  const done = await game.wodxCombat.soakAndApply(tok ?? a, {mode: "pool", amount: res.dice, type: res.type, fireSun: false, soakDiff: 6, soak: true, fortBlood: "auto", soakBonus: 0});
+  // the levels left after soak (0 when it was all soaked)
+  return {...res, levels: Number(done?.levels ?? res.dice) || 0};
 }
 
 /* ---- Cards, log and hooks ---- */
+
+const unitWords = units => Object.entries(units ?? {}).map(([k, c]) => `${c} ${B.UNIT_TYPES[k].label.toLowerCase()}`).join(", ") || "no units left";
 
 async function say(b, html) {
   await ChatMessage.create({content: `<div class="wodx-card wst-battle-card"><h3>${esc(b.name)}</h3>${html}</div>`, speaker: {alias: "Battles"}, flags: {[MOD]: {battle: b.id}}});
@@ -222,6 +237,8 @@ async function cards(b, p, setup) {
   let words;
   if ( p.kind === "week" ) {
     words = `Week ${p.week} of the siege. ${p.work ? `${esc(s0.name)} work at the walls.` : `The walls of ${esc(b.place || s1.name)} hold.`}${p.hungry ? ` Hunger inside the walls.` : ""}${b.breached ? " There is a breach." : ""}`;
+    const cl = W.cardLines(b, p);
+    if ( cl.words ) words += ` ${cl.words}`;
   } else {
     const lead = p.winner === null ? "Neither side gives ground." : `${esc(b.sides[p.winner].name)} gain the upper hand${p.net >= 3 || p.net <= -3 ? " and drive the enemy back" : ""}.`;
     const deeds = [0, 1].flatMap(i => p.deeds[i]).filter(d => d.successes > 0 && d.name).map(d => esc(d.name));
@@ -231,9 +248,10 @@ async function cards(b, p, setup) {
   await say(b, `<p>${words}</p>${b.over ? `<p><strong>${esc(b.over.text)}</strong></p>` : ""}`);
   const dice = p.rolls.map((r, i) => `${esc(b.sides[i].name)}: ${setup[i]?.pool ?? "?"} dice at ${setup[i]?.difficulty ?? "?"}, ${r.successes} success${r.successes === 1 ? "" : "es"}${r.botch ? " (a botch)" : ""} [${r.faces.join(", ")}]`).join("<br>");
   const deedSum = p.deeds ? [0, 1].map(i => p.deeds[i].reduce((t, d) => t + d.successes, 0)) : [0, 0];
-  const side = (s, i) => `${esc(s.name)}: ${s.men.toLocaleString("en")} left (lost ${n(p.lost?.[i]).toLocaleString("en")}), resolve ${s.resolve}${b.kind === "siege" && i === 1 ? `, stores ${s.stores} days` : ""}`;
+  const side = (s, i) => `${esc(s.name)}: ${s.men.toLocaleString("en")} left (lost ${n(p.lost?.[i]).toLocaleString("en")}${p.book ? `, ${p.units[i]} unit${p.units[i] === 1 ? "" : "s"}` : ""}), ${b.book ? unitWords(s.units) : `resolve ${s.resolve}`}${b.kind === "siege" && i === 1 ? `, stores ${s.stores} days` : ""}`;
+  const contests = p.book ? `<br>${p.contests.map((c, i) => `${esc(b.sides[i].name)} ${esc(B.ACTIONS[c.action].toLowerCase())}: ${c.attack.pool} dice, ${c.rolls.attack.successes}, against ${c.resist.pool} dice, ${c.rolls.resist.successes}`).join("<br>")}` : "";
   await ChatMessage.create({whisper: gmIds(), speaker: {alias: "Battles"}, content: `<div class="wodx-card wst-battle-card"><h3>${esc(b.name)}: the numbers</h3>
-    <p>${dice}${deedSum.some(Boolean) ? `<br>Deeds: ${deedSum.join(" and ")}` : ""}${p.kind === "week" ? `<br>The breach: ${b.breach} of ${B.BREACH_SEGMENTS}. Disease: ${p.sick.join(" and ")}` : ""}${p.waver ? `<br>Wavering: ${esc(b.sides[p.waver.side].name)} rolled Charisma + Leadership at ${p.waver.difficulty ?? "?"}, ${p.waver.successes} (${esc(p.waver.result)})` : ""}</p>
+    <p>${dice}${contests}${deedSum.some(Boolean) ? `<br>Deeds: ${deedSum.join(" and ")}` : ""}${p.kind === "week" ? `<br>The breach: ${b.breach} of ${B.BREACH_SEGMENTS}. Disease: ${p.sick.join(" and ")}${W.cardLines(b, p).dice ? `<br>${W.cardLines(b, p).dice}` : ""}` : ""}${p.waver ? `<br>Wavering: ${esc(b.sides[p.waver.side].name)} rolled Charisma + Leadership at ${p.waver.difficulty ?? "?"}, ${p.waver.successes} (${esc(p.waver.result)})` : ""}</p>
     <p>${b.sides.map(side).join("<br>")}</p></div>`});
 }
 
@@ -267,6 +285,10 @@ function sideForm(i, s, year) {
       <input type="number" name="s${i}.works" value="${s.commander.works}" min="1" max="15" style="width:4em" title="Intelligence + Leadership: siege works">
       <input type="number" name="s${i}.medicine" value="${s.commander.medicine}" min="1" max="15" style="width:4em" title="Wits + Medicine: disease in camp"></div>
     ${i === 1 ? `<div class="form-group"><label>Stores (days, a siege)</label><input type="number" name="s1.stores" value="${s.stores}" min="0" step="1"></div>` : ""}
+    <details${B.unitCount(s.units) ? " open" : ""}><summary>The book's army, by units (Spoils of War)</summary>
+      <p class="wodx-quiet">Fill this in for both sides to fight with the book's army: its units set the men and the Maneuver, Melee, Ranged and Defense pools. Leave it empty to use men and quality.</p>
+      ${Object.entries(B.UNIT_TYPES).map(([k, t]) => `<div class="form-group"><label>${esc(t.label)} <span class="wodx-quiet">(${t.troops.toLocaleString("en")} a unit)</span></label><input type="number" name="s${i}.u.${k}" value="${n(s.units?.[k])}" min="0" max="999" step="1" style="width:5em"></div>`).join("")}
+    </details>
   </fieldset>`;
 }
 
@@ -302,10 +324,12 @@ export async function setupDialog({kind = "field", id = null} = {}) {
   const ev = evs.find(x => x.id === data.eventId);
   const side = i => ({name: data[`s${i}.name`], faction: data[`s${i}.faction`], men: data[`s${i}.men`], quality: data[`s${i}.quality`], supernatural: data[`s${i}.supernatural`],
     position: data[`s${i}.position`], defends: i === 1, stores: i === 1 ? data["s1.stores"] : 0,
+    units: Object.fromEntries(Object.keys(B.UNIT_TYPES).map(k => [k, data[`s${i}.u.${k}`]])),
     commander: {actorId: data[`s${i}.actorId`], name: data[`s${i}.cname`] || game.actors.get(data[`s${i}.actorId`])?.name || "",
       pool: data[`s${i}.pool`], morale: data[`s${i}.morale`], works: data[`s${i}.works`], medicine: data[`s${i}.medicine`]}});
   const chars = pcs.filter(a => data[`c.${a.id}`]).map(a => ({actorId: a.id, name: a.name, side: Number(data[`cs.${a.id}`]) === 1 ? 1 : 0, stance: data[`ct.${a.id}`]}));
   const raw = {...(id ? b : {}), kind: data.kind, realm: data.realm, name: data.name || ev?.name || "", place: data.place, eventId: ev?.id ?? "", sides: [side(0), side(1)], chars};
+  raw.book = undefined;
   if ( id ) { raw.sides = raw.sides.map((s, i) => ({...s, resolve: b.phases.length ? b.sides[i].resolve : null, start: b.phases.length ? b.sides[i].start : null})); }
   for ( const sd of raw.sides ) { const a = sd.commander.actorId ? game.actors.get(sd.commander.actorId) : null; if ( a ) Object.assign(sd.commander, commandPools(a)); }
   const out = id ? await put(raw) : await start(raw);
@@ -326,6 +350,8 @@ export class BattlesApp extends ApplicationV2 {
       fight: (e, t) => BattlesApp.#onFight(t), week: (e, t) => week(t.dataset.id), storm: (e, t) => storm(t.dataset.id),
       withdraw: (e, t) => withdrawSide(t.dataset.id, Number(t.dataset.side)), draw: (e, t) => callDraw(t.dataset.id),
       undo: (e, t) => undo(t.dataset.id), time: (e, t) => passTime(t.dataset.id),
+      ...X.ACTIONS,
+      ...W.ACTIONS,
       hit: (e, t) => hazard(t.dataset.id, t.dataset.actor, {attention: !!BattlesApp.field(`att.${t.dataset.actor}`)?.checked}), remove: (e, t) => BattlesApp.#onRemove(t)
     }
   };
@@ -348,6 +374,7 @@ export class BattlesApp extends ApplicationV2 {
     div.className = "wodx-body";
     const b = this.#current ? get(this.#current) : null;
     div.innerHTML = b ? this.#detail(b) : this.#list();
+    X.bindChanges(div);
     return div;
   }
   _replaceHTML(result, content) { content.replaceChildren(result); }
@@ -361,17 +388,20 @@ export class BattlesApp extends ApplicationV2 {
       <p class="wodx-quiet">Battles and sieges fought as two forces, with the characters' deeds tipping the result (Spoils of War and the Dark Ages Companion, with house rules for every age).</p>
       <div class="wodx-scroll wst-battle-list">${all.map(row).join("") || `<p class="wodx-quiet">No battles yet.</p>`}</div>
       <div class="wodx-buttons"><button type="button" data-action="newField"><i class="fa-solid fa-flag"></i> A new battle</button>
-        <button type="button" data-action="newSiege"><i class="fa-solid fa-chess-rook"></i> A new siege</button></div>`;
+        <button type="button" data-action="newSiege"><i class="fa-solid fa-chess-rook"></i> A new siege</button></div>
+      ${(() => { const {year, branch} = contextOf(null); return X.renderOldFields(list(), year, branch); })()}`;
   }
 
   #detail(b) {
     const {year, age} = contextOf(b);
     const id = esc(b.id);
-    const setup = b.kind === "siege" ? null : B.phaseSetup(b, age);
+    const setup = b.kind === "siege" ? null : B.isBook(b) ? B.bookSetup(b, age) : B.phaseSetup(b, age);
+    const bp = B.isBook(b) ? B.bookPools(b, age).pools : null;
     const side = (s, i) => `<div class="wst-battle-side"><strong>${esc(s.name)}</strong>${s.faction ? ` <span class="wodx-quiet">(${esc(s.faction)})</span>` : ""}
-      <div>${s.men.toLocaleString("en")} of ${s.start.toLocaleString("en")} men, ${esc(B.QUALITY[s.quality])}. Resolve ${s.resolve}.</div>
-      <div class="wodx-quiet">${esc(B.POSITIONS[s.position].label)}${s.supernatural ? `; ${esc(B.SUPERNATURAL[s.supernatural])}` : ""}. ${esc(s.commander.name || "No named commander")}, ${setup ? `${setup[i].pool} dice at ${setup[i].difficulty}` : `${b.sides[0] === s ? `${s.commander.works} dice for the works` : `${s.commander.pool} dice`}`}.${b.kind === "siege" && i === 1 ? ` Stores for ${s.stores} days.` : ""}${s.penalty ? " Wavering: 2 dice less." : ""}${B.demoralised(s) ? ` Demoralised: ${B.demoralised(s)} dice less.` : ""}${s.sick ? ` Disease: +${s.sick} difficulty.` : ""}</div>
+      <div>${s.men.toLocaleString("en")} of ${s.start.toLocaleString("en")} men, ${bp ? `${esc(unitWords(s.units))}. Maneuver ${bp[i].maneuver}, Melee ${bp[i].melee}, Ranged ${bp[i].ranged}, Defense ${bp[i].defense}, before the commanders roll.` : `${esc(B.QUALITY[s.quality])}. Resolve ${s.resolve}.`}</div>
+      <div class="wodx-quiet">${esc(B.POSITIONS[s.position].label)}${s.supernatural ? `; ${esc(B.SUPERNATURAL[s.supernatural])}` : ""}. ${esc(s.commander.name || "No named commander")}, ${setup ? `${setup[i].pool} dice at ${setup[i].difficulty}` : `${b.sides[0] === s ? `${s.commander.works} dice for the works` : `${s.commander.pool} dice`}`}.${b.kind === "siege" && i === 1 ? ` Stores for ${s.stores} days.` : ""}${s.penalty ? " Wavering: 2 dice less." : ""}${B.demoralised(s) ? ` Demoralised: ${B.demoralised(s)} dice less.` : ""}${s.sick ? ` Disease: +${s.sick} difficulty.` : ""}${s.unrest ? ` Unrest: +${s.unrest} difficulty.` : ""}</div>
       ${b.over ? "" : `<div class="form-group"><label>Deeds this phase</label><input type="number" name="deed${i}" value="0" min="0" max="20" style="width:4em" title="Successes from the characters' deeds for this side"><input type="text" name="deedName${i}" placeholder="Who, and what they did" maxlength="120"></div>`}
+      ${b.over || !bp || b.kind === "siege" ? "" : `<div class="form-group"><label>This turn</label><select name="act${i}" data-fixed>${opt(B.ACTIONS, "melee")}</select></div>`}
       ${b.over ? "" : `<button type="button" data-action="withdraw" data-id="${id}" data-side="${i}">${i === 0 && b.kind === "siege" ? "Lift the siege" : "Draw off"}</button>`}</div>`;
     const chars = b.chars.map(c => {
       const a = game.actors.get(c.actorId);
@@ -379,15 +409,17 @@ export class BattlesApp extends ApplicationV2 {
         ${b.kind === "field" && !b.over ? `<label title="Opened a hole in the line: 2 more dice against them"><input type="checkbox" name="att.${esc(c.actorId)}"> drew attention</label>
           <button type="button" data-action="hit" data-id="${id}" data-actor="${esc(c.actorId)}" title="The battle's counterattack on this character, soaked through WoDX Combat">The battle turns on ${esc(a.name)}</button>` : ""}</div>` : "";
     }).join("");
-    const steps = [...b.phases].reverse().slice(0, 30).map(p => `<li>${p.kind === "week" ? `Week ${p.week}: breach ${p.breach} of ${B.BREACH_SEGMENTS}${p.hungry ? ", hunger" : ""}` : p.kind === "phase" ? `Phase: ${p.total.join(" to ")}${p.winner === null ? ", even" : `, ${esc(b.sides[p.winner].name)}`}` : p.kind === "assault" ? "The walls are stormed" : `${esc(b.sides[p.side ?? 0].name)} drew off`}</li>`).join("");
+    const steps = [...b.phases].reverse().slice(0, 30).map(p => `<li>${p.kind === "week" ? `Week ${p.week}: breach ${p.breach} of ${B.BREACH_SEGMENTS}${p.hungry ? ", hunger" : ""}` : p.kind === "phase" ? p.book ? `Turn: units lost ${p.units.join(" and ")}` : `Phase: ${p.total.join(" to ")}${p.winner === null ? ", even" : `, ${esc(b.sides[p.winner].name)}`}` : p.kind === "assault" ? "The walls are stormed" : `${esc(b.sides[p.side ?? 0].name)} drew off`}</li>`).join("");
     const taken = B.timeTaken(b, age);
     return `<p><button type="button" data-action="back"><i class="fa-solid fa-arrow-left"></i> All battles</button></p>
       <h3>${esc(b.name)}${b.place ? ` <span class="wodx-quiet">at ${esc(b.place)}</span>` : ""}</h3>
       <p class="wodx-quiet">${esc(String(year))}, ${esc(B.REALMS[b.realm])}: ${esc(age.label)}. ${esc(age.note)}</p>
+      ${b.war ? `<p class="wodx-quiet">A war between factions${b.war.kind === "supernatural" ? " of the hidden world, fought with their powers" : ", fought by mortal hands"}${b.war.auto ? "; it is fought off the screen at each faction turn" : "; it waits for you because a player character is there"}.</p>` : ""}
       ${b.over ? `<p><strong>${esc(b.over.text)}</strong></p>` : ""}
       <div class="wst-battle-sides">${b.sides.map(side).join("")}</div>
-      ${b.kind === "siege" ? `<p>Week ${b.weeks} of the siege. The breach: ${b.breach} of ${B.BREACH_SEGMENTS}${b.breached ? ", the walls are open" : ""}. The progress clock "${esc(B.clockFor(b).name)}" follows it.</p>` : ""}
+      ${b.kind === "siege" ? `<p>Week ${b.weeks} of the siege. The breach: ${b.breach} of ${B.BREACH_SEGMENTS}${b.breached ? ", the walls are open" : ""}. The progress clock "${esc(B.clockFor(b).name)}" follows it.</p>${W.render(b)}` : ""}
       ${chars ? `<fieldset><legend>Characters</legend>${chars}</fieldset>` : ""}
+      ${X.renderOffers(b)}${X.renderAftermath(b)}
       <div class="wodx-buttons">
         ${b.over ? "" : b.kind === "siege" ? `<button type="button" data-action="week" data-id="${id}">A week of siege</button><button type="button" data-action="storm" data-id="${id}">Storm the walls</button>`
           : `<button type="button" data-action="fight" data-id="${id}"><i class="fa-solid fa-dice"></i> Fight a phase</button><button type="button" data-action="draw" data-id="${id}">Stop the fighting</button>`}
@@ -405,7 +437,8 @@ export class BattlesApp extends ApplicationV2 {
       const s = n(el?.querySelector(`[name="deed${i}"]`)?.value), name = el?.querySelector(`[name="deedName${i}"]`)?.value ?? "";
       return s > 0 ? [{name, successes: s}] : [];
     });
-    return fight(target.dataset.id, {deeds});
+    const actions = [0, 1].map(i => el?.querySelector(`[name="act${i}"]`)?.value || "melee");
+    return fight(target.dataset.id, {deeds, actions});
   }
   static async #onRemove(target) {
     const b = get(target.dataset.id);
@@ -414,3 +447,8 @@ export class BattlesApp extends ApplicationV2 {
     if ( ok ) { await remove(b.id); BattlesApp.open(null); }
   }
 }
+
+// Storyteller 0.47.0: deeds and the field's aftermath (battle-extras.mjs) use this module's store
+X.bind({get, save: put, open: id => BattlesApp.open(id), ageId: b => contextOf(b).age.id});
+// Storyteller 0.50.0: the campaign around a siege (siege-works.mjs)
+W.bind({get, save: put, open: id => BattlesApp.open(id), context: contextOf});

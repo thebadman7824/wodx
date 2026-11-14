@@ -47,6 +47,19 @@ export function discMatches(libHeading, sheet) {
 }
 
 /**
+ * The Discipline library for an era (powers pass, B3746): in the Dark Ages and the Long Night, the V20 Dark Ages
+ * library alone; in later eras, the V20 powers (data/disciplines-v20.json) take the place of the Dark Ages powers of
+ * the same Discipline and level, unless the Dark Ages power is also a V20 power by name (v20Names: slugs).
+ */
+export function librarySet(da = [], v20 = [], { darkAges = false, v20Names = new Set() } = {}) {
+    if (darkAges || !v20?.length) return [...(da ?? [])];
+    const key = p => `${normName(p.d)}|${p.l}`;
+    const covered = new Set(v20.map(key));
+    const slug = s => String(s ?? "").toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    return [...(da ?? []).filter(p => !covered.has(key(p)) || v20Names.has(slug(p.n))), ...v20];
+}
+
+/**
  * The powers a character can use: sheet = [{name, value}] (Disciplines and paths). For each library power, the
  * rating of the best-matching sheet entry must reach the power's level. Elder powers need the level too.
  */

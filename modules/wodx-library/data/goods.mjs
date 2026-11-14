@@ -17,16 +17,20 @@
  * changes, "4>1600:2>1850:1" (tier 4, from 1600 tier 2, from 1850 tier 1). source defaults by category.
  */
 
+import {WAYS, WAY_ROWS, LOCAL_COIN, REDATED, REDATED_WAYS, inUseAt, firstYearAt} from "./goods-ways.mjs";
+export {WAYS, LOCAL_COIN, inUseAt, firstYearAt};
+
 /** Chronicle's eras in the order goods pass through them. The Wild West runs beside the Victorian era. */
-export const ERAS = ["living-gods", "classical", "dark-ages", "long-night", "renaissance", "age-of-reason", "victorian",
+export const ERAS = ["mythic-age", "bronze-kings", "iron-dawn", "greece-republic", "roman-empire", "migration-age", "premyslid-duchy", "dark-ages", "long-night", "renaissance", "age-of-reason", "victorian",
   "wild-west", "great-war", "mid-century", "modern", "time-of-judgment", "future-darkness", "time-of-future-judgement"];
 
 /**
- * The years of each era, as Chronicle's data/eras.json gives them (a test keeps the two in step). The prologues have
- * no years there; the ones here are a house rule so prologue goods can be dated too.
+ * The years of each era, as Chronicle's data/eras.json gives them (a test keeps the two in step). The seven prologue
+ * eras (split from Living Gods and Classical, Ben 2026-11-12) carry their years there too.
  */
 export const ERA_YEARS = {
-  "living-gods": [-10000, -801], "classical": [-800, 1196], "dark-ages": [1197, 1346], "long-night": [1347, 1449],
+  "mythic-age": [-10000, -3101], "bronze-kings": [-3100, -1178], "iron-dawn": [-1177, -801],
+  "greece-republic": [-800, -28], "roman-empire": [-27, 476], "migration-age": [477, 907], "premyslid-duchy": [908, 1196], "dark-ages": [1197, 1346], "long-night": [1347, 1449],
   "renaissance": [1450, 1600], "age-of-reason": [1601, 1836], "victorian": [1837, 1901], "wild-west": [1860, 1899], "great-war": [1914, 1918], "mid-century": [1919, 1989],
   "modern": [1990, 2003], "time-of-judgment": [2004, 2004], "future-darkness": [2010, 2098],
   "time-of-future-judgement": [2099, 2099]
@@ -332,6 +336,9 @@ const END = 2099;
  * measure ("a sack of grain", "a bottle of gin") stacks one to three of that measure unless listed here.
  */
 export const STACK_SIZES = {
+  "a coin of the place": ["coins of the place", 3, 12],
+  "a bag of cacao beans": ["bags of cacao beans", 1, 3],
+  "a kola nut": ["kola nuts", 2, 8],
   "a bronze coin": ["bronze coins", 2, 12],
   "a cowrie shell": ["cowrie shells", 5, 40],
   "a square-holed copper coin": ["square-holed copper coins", 10, 100],
@@ -702,6 +709,8 @@ export const ROWS = [
   ["a smart speaker", "house", 2014, END, "J", 1],
   ["an air purifier", "house", 2020, END, "N", 2, "future"],
   // CLOTH
+  ["a hide cloak", "cloth", -10000, 1600, "T", 0],
+  ["a stone lamp of animal fat", "light", -10000, -801, "J", 0],
   ["a folded wool cloak", "cloth", -3000, 1600, "T", 1],
   ["a linen shift", "cloth", -3000, 1600, "J", 1],
   ["a coarse wool tunic", "cloth", -500, 1450, "T", 1],
@@ -2610,13 +2619,19 @@ export function splitContainer(name) {
   return m ? {name: m[2], container: `a ${m[1]}`} : null;
 }
 
-export const GOODS = ROWS.map(([name, kind, from, to, conceal, value, src]) => {
+
+/** Library 0.19.0: every row, the goods of each way of life last (goods-ways.mjs). */
+/** B3150: the imported goods that belong to later centuries take their own first year. */
+export const ALL_ROWS = [...ROWS.map(r => (REDATED[r[0]] ? [r[0], r[1], REDATED[r[0]], ...r.slice(3)] : r)), ...WAY_ROWS.map(r => r.slice(0, 7))];
+const WHERE = Object.fromEntries(WAY_ROWS.map(r => [r[0], r[7]]));
+
+export const GOODS = ALL_ROWS.map(([name, kind, from, to, conceal, value, src]) => {
   const eras = erasFor(from, to);
   const steps = parseValue(value ?? 0, from);
   const split = splitContainer(name);
   const g = {id: slug(RENAMED[name] ?? name), name: split?.name ?? name, was: RENAMED[name] ?? null, former: split ? name : null,
     container: split?.container ?? null, kind, from, to, eras, conceal, small: conceal === "P" || conceal === "J",
-    source: src ?? KIND_SOURCE[kind] ?? "hist", steps};
+    source: src ?? KIND_SOURCE[kind] ?? "hist", steps, ways: WHERE[name] ?? WAYS[name] ?? REDATED_WAYS[name] ?? null, localCoin: name === LOCAL_COIN};
   g.values = Object.fromEntries(eras.map(e => [e, valueAt(g, Math.max(ERA_YEARS[e][0], from))]));
   g.value = eras.length ? g.values[eras[0]] : valueAt(g, from);
   const [use, kindStacks] = BEHAVIOUR_OVERRIDES[name] ?? KIND_BEHAVIOUR[kind] ?? ["kept", false];
@@ -2626,6 +2641,6 @@ export const GOODS = ROWS.map(([name, kind, from, to, conceal, value, src]) => {
   g.stack = stacks ? {plural, min: listed?.[1] ?? 1, max: listed?.[2] ?? (plural ? 3 : 1)} : null;
   const uses = USES_OVERRIDES[name] ?? KIND_BEHAVIOUR[kind]?.[3] ?? [];
   Object.assign(g, {use, stacks, uses, sheet: KIND_BEHAVIOUR[kind]?.[2] ?? "Item"});
-  g.tags = {category: kind, era: eras, value: g.values, use, stacks, stack: g.stack, uses, conceal, container: g.container};
+  g.tags = {category: kind, ways: g.ways, era: eras, value: g.values, use, stacks, stack: g.stack, uses, conceal, container: g.container};
   return g;
 });

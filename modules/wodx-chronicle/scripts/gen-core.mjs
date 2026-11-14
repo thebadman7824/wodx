@@ -8,6 +8,7 @@
  *   {a|b|c}         one of these, evenly
  *   {{name}}        a value given by the caller (vars)
  */
+import {CULTURE_BORROW} from "./world-rules.mjs";
 
 /** A 128-bit hash of a string, as four 32-bit numbers (cyrb128). */
 export function hash128(str) {
@@ -115,12 +116,17 @@ export function draw(tableId, {rand, tables, vars} = {}) {
  * The tables that fit the chronicle: an id may have variants tagged by era group and culture
  * ("names.male" for medieval Bohemia). Picks the most specific: culture and era, then era, then culture, then plain.
  */
-export function resolveTable(all, id, {era = null, culture = null} = {}) {
+export function resolveTable(all, id, {era = null, culture = null, borrow = null} = {}) {
   const c = all.filter(t => t.id === id);
-  const score = t => (t.era ? 2 : 0) + (t.culture ? 1 : 0);
+  // A culture's own tables first, then those of the cultures it borrows from (the German lands draw Bohemia's
+  // German names), then tables written for no culture
+  const lend = borrow ?? CULTURE_BORROW[culture] ?? [];
+  const own = t => !t.culture ? 0 : t.culture.includes(culture) ? 1 : 0.5;
+  const score = t => (t.era ? 2 : 0) + own(t);
   // The era group first, then the groups it borrows from while it has no table of its own (future: modern)
   for ( const g of groupChain(era) ) {
-    const fit = t => (!t.era || t.era.includes(g)) && (!t.culture || t.culture.includes(culture));
+    // A table marked lend: false serves its own culture only (eastern North America's first peoples are not the West's)
+    const fit = t => (!t.era || t.era.includes(g)) && (!t.culture || t.culture.includes(culture) || (t.lend !== false && lend.some(b => t.culture.includes(b))));
     const best = c.filter(fit).sort((a, b) => score(b) - score(a))[0];
     if ( best && (best.era || g === groupChain(era).at(-1)) ) return best;
   }
@@ -148,6 +154,7 @@ export function eraGroupFor(profileId, year = null) {
 /** Era profiles gathered into the groups the people tables are written for. */
 export const ERA_GROUP = {
   "dark-ages": "medieval", "long-night": "medieval", "classical": "ancient", "living-gods": "ancient",
+  "mythic-age": "ancient", "bronze-kings": "ancient", "iron-dawn": "ancient", "greece-republic": "ancient", "roman-empire": "ancient", "migration-age": "ancient", "premyslid-duchy": "ancient",
   "renaissance": "early-modern", "age-of-reason": "early-modern", "mid-century": "mid-century", "victorian": "industrial", "wild-west": "industrial", "great-war": "industrial",
   "modern": "modern", "time-of-judgment": "modern", "future-darkness": "future", "time-of-future-judgement": "future"
 };

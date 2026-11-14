@@ -31,7 +31,7 @@ const newer = (a, b) => {
 };
 const shown = sel => { const el = document.querySelector(sel); return !!el && getComputedStyle(el).display !== "none"; };
 
-export async function run() {
+async function runGate(K) {
   const R = {started: new Date().toISOString(), steps: [], errors: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message}); } };
@@ -100,3 +100,7 @@ export async function run() {
   }
   return save(R, "gatequiet-result.json");
 }
+
+// The gate kit (B3733): its own scratch scene, cleaned up after.
+import {kitRun} from "./kit.mjs";
+export const run = kitRun("gatequiet", runGate);

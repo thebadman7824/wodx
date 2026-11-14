@@ -21,6 +21,18 @@
  *  17. a first meeting: the Kindred's Eerie Presence chills a mortal NPC one step, not a Kindred one; WoDX NPC's seed takes it
  *  18. Lucky counts three rerolls a story on the actor; Efficient Digestion, Thin Blood and Deep Sleeper read from the sheet
  *  15. signs others sense: the Kindred gives off Eerie Presence and Cast No Reflection, the mortal nothing; a Veil keeps its difficulty for Senses
+ *  24. the no-effect audit (B3780-B3782): Introspection offers its own tick box and adds 2 dice only on a ticked Perception
+ *      roll, Combat Novice is a card when a fight starts, and a mage's "Unbondable" is the Book of Secrets merit
+ *  25. the no-effect audit, part 2 (B3783-B3785): a mage's "Bigot (Tremere)" sours a first meeting with a Tremere NPC
+ *      read from its sheet and not with a Ventrue, Sanctity warms anyone, and Red Tape offers its own tick box
+ *  26. the no-effect audit, part 3 (B3786-B3787): a mage's Gullible takes 3 dice from a lie, Pack Mentality offers
+ *      its two boxes, and Jack-Of-All-Trades is a card when a fight starts
+ *  27. the no-effect audit, part 4 (B3788-B3790): a vampire's Dulled Bite is a card at feeding, and Cloaked in Shadow
+ *      adds 1 to Social rolls against a vampire
+ *  28. the no-effect audit, part 5 (B3791-B3792): a hunter's Holy Aura takes 1 from Social difficulty, and a vampire's
+ *      Territorial is a card when the night starts
+ *  29. body traits (B3793): a mortal with Huge Size takes two bashing and is still Bruised (no penalty), while one
+ *      without it is Hurt; a mage with Insensate to Pain takes four and has no wound penalty
  * Result: Data/wodx-gate/gatetraits-result.json.
  */
 async function save(R, name) {
@@ -121,8 +133,9 @@ export async function run() {
 
     await step("12 window", async () => {
       const p = T().open(human);
-      await new Promise(r => setTimeout(r, 600));
-      const el = document.querySelector(".wct-traits");
+      // the window may take more than a moment to draw on a busy lane: wait for its rows, up to 5 seconds
+      let el = null;
+      for ( let i = 0; i < 25 && !(el?.querySelector(".wct-traits-list li")); i++ ) { await new Promise(r => setTimeout(r, 200)); el = document.querySelector(".wct-traits"); }
       const rows = el?.querySelectorAll(".wct-traits-list li").length ?? 0;
       const picks = el?.querySelectorAll("select[data-wct-item]").length ?? 0;
       const app = [...foundry.applications.instances.values()].find(a => a.element === el || a.element?.contains?.(el));
@@ -220,6 +233,66 @@ export async function run() {
       const merits = T().table.merits;
       const w20 = merits.filter(e => e.book === "W20").length, m20 = merits.filter(e => e.book === "M20 Book of Secrets").length;
       ok("23 other lines in the table", merits.length >= 450 && w20 > 50 && m20 > 50 && T().rules.problems().length === 0, {total: merits.length, w20, m20});
+    });
+    await step("24 no-effect audit", async () => {
+      const seer = await mk("Trait seer", "Mortal", [feat("Introspection", "merit", 1), feat("Combat Novice", "flaw", 2)]);
+      const adept = await mk("Trait adept", "Mage", [feat("Unbondable", "merit", 3)]);
+      const box = /tag-same-nature/.test(TH.ticksHtml(seer));
+      const ticked = TH.traitMods(seer, ["perception", "same-nature"]), plain = TH.traitMods(seer, ["perception"]), other = TH.traitMods(seer, ["social", "same-nature"]);
+      const cards = T().rules.promptsOn(T().view(seer), "fight").map(c => c.key);
+      const unb = T().of(adept).matched.map(m => m.key);
+      ok("24 no-effect audit", box && ticked.dice === 2 && plain.dice === 0 && other.dice === 0 && cards.includes("combat-novice") && unb.includes("onbondable"),
+        {box, ticked, plain, other, cards, unb});
+    });
+    await step("25 no-effect audit, part 2", async () => {
+      const bigot = await mk("Trait bigot", "Mage", [feat("Bigot (Tremere)", "flaw", 3), feat("Red Tape", "flaw", 4)]);
+      const saint = await mk("Trait saint", "Mortal", [feat("Sanctity", "merit", 2)]);
+      const warlock = await mk("Trait Tremere", "Vampire", []), lord = await mk("Trait Ventrue", "Vampire", []);
+      await warlock.update({"system.clan": "Tremere"});
+      await lord.update({"system.clan": "Ventrue"});
+      const groups = T().groupsOf?.(warlock) ?? [];
+      const onTremere = T().attitudeSeed(bigot, warlock).delta, onVentrue = T().attitudeSeed(bigot, lord).delta;
+      const warm = T().attitudeSeed(saint, lord).delta;
+      const box = /tag-bureaucracy/.test(TH.ticksHtml(bigot));
+      ok("25 no-effect audit, part 2", groups.includes("Tremere") && onTremere === -1 && onVentrue === 0 && warm === 1 && box,
+        {groups, onTremere, onVentrue, warm, box});
+    });
+    await step("26 no-effect audit, part 3", async () => {
+      const dupe = await mk("Trait dupe", "Mage", [feat("Gullible", "flaw", 2), feat("Jack-Of-All-Trades", "merit", 3)]);
+      const lie = TH.traitMods(dupe, T().rules.rollTags("manipulation", "subterfuge"));
+      const cards = T().rules.promptsOn(T().view(dupe), "fight").map(c => c.key);
+      let boxes = null;
+      if ( wolf ) {
+        const packer = await mk("Trait packer", "Werewolf", [feat("Pack Mentality", "flaw", 2)]);
+        const html = TH.ticksHtml(packer);
+        boxes = /tag-with-pack/.test(html) && /tag-without-pack/.test(html);
+      }
+      ok("26 no-effect audit, part 3", lie.dice === -3 && cards.includes("jack-of-all-trades") && boxes !== false, {lie, cards, boxes});
+    });
+    await step("27 no-effect audit, part 4", async () => {
+      const gloom = await mk("Trait gloom", "Vampire", [feat("Dulled Bite", "flaw", 2), feat("Cloaked in Shadow", "flaw", 3)]);
+      const feedCards = T().rules.promptsOn(T().view(gloom), "feed").map(c => c.key);
+      const social = T().rules.sumEffects(T().rules.effectsFor(T().view(gloom), {channel: "roll", tags: ["social"], against: "kindred"})).diff;
+      ok("27 no-effect audit, part 4", feedCards.includes("dulled-bite") && social === 1, {feedCards, social});
+    });
+    await step("28 no-effect audit, part 5", async () => {
+      const saint = await mk("Trait aura", "Hunter", [feat("Holy Aura", "merit", 2)]).catch(() => mk("Trait aura", "Mortal", [feat("Holy Aura", "merit", 2)]));
+      const keeper = await mk("Trait keeper", "Vampire", [feat("Territorial", "flaw", 2)]);
+      const social = T().rules.sumEffects(T().rules.effectsFor(T().view(saint), {channel: "roll", tags: ["social"]})).diff;
+      const nightCards = T().rules.promptsOn(T().view(keeper), "night").map(c => c.key);
+      ok("28 no-effect audit, part 5", social === -1 && nightCards.includes("territorial"), {social, nightCards});
+    });
+    await step("29 body traits", async () => {
+      const C = game.modules.get("wodx-combat")?.api;
+      const big = await mk("Trait big", "Mortal", [feat("Huge Size", "merit", 4)]);
+      const plainMortal = await mk("Trait plain", "Mortal", []);
+      const numb = await mk("Trait numb", "Mage", [feat("Insensate to Pain", "merit", 5)]);
+      await C.applyDamage(big, "bashing", 2, {status: false});
+      await C.applyDamage(plainMortal, "bashing", 2, {status: false});
+      await C.applyDamage(numb, "bashing", 4, {status: false});
+      const pen = a => Number(a.system?.health?.damage?.woundpenalty) || 0;
+      const r = {big: pen(big), plain: pen(plainMortal), numb: pen(numb), bruised: T().toughness(big).bruised};
+      ok("29 body traits", r.bruised === 1 && r.big === 0 && r.plain < 0 && r.numb === 0, r);
     });
   } catch (e) {
     R.errors.push(e.message);

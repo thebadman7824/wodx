@@ -13,16 +13,24 @@ For a release of the system and the WoDX modules to the live server (wodx.online
 
 ## Release (PC helper, with Ben's go-ahead)
 
-7. Back up the live server first: run the nightly backup by hand (`/usr/local/bin/wodx-backup`), check that its .md5 matches, and keep the previous release folder.
+7. Take a droplet snapshot in the DigitalOcean panel. Then back up the live server: run the nightly backup by hand (`/usr/local/bin/wodx-backup`), check that its .md5 matches, and keep the previous release folder.
 8. Build the release with `git archive <commit>`, so release.json in every package is stamped. If the release is copied any other way, stamp it with `node tools/release/stamp.mjs <folder> --commit <sha>`.
 9. Upload, then check each file's hash against the archive.
-10. Restart Foundry on the server.
+10. Restart Foundry on the server. If `/var/run/reboot-required` exists, reboot the server instead (Foundry starts by itself).
 
 ## After
 
 11. As the Storyteller on Live: Game Settings shows "WoDX build <sha>" with no warning about mixed commits; the browser console shows no errors from WoDX modules (apart from the known harmless "filters" error); a sheet of each kind in the world opens.
+11a. Look over the Users list on Live: remove accounts nobody uses, and make sure none has a blank password.
 12. Write the release log entry: date, commit, versions, settings changed.
 13. If something is wrong, put the previous release folder back and restart. Restore the backup only if world data changed.
+
+## Security routine (Security Desk, 13 November 2026)
+
+- Before each game night, even without a release: the Users list check (step 11a) and a reboot if `/var/run/reboot-required` exists.
+- Monthly patch day, the day before a game night: update every package (this covers Node and Caddy, which automatic updates skip), reboot, check the site.
+- A newer Foundry build goes on Live only after it passes on a testbed lane. Modules on Live come only from Foundry's own package list, never from a pasted manifest link.
+- The Setup screen is reached through an SSH tunnel only (tools/security/README.md).
 
 ## Dry run, 2026-11-10 (Phase 10; nothing released)
 

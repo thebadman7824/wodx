@@ -11,6 +11,7 @@ import {dirname, join} from "node:path";
 import {writeFileSync, mkdirSync, existsSync} from "node:fs";
 import {tmpdir} from "node:os";
 import {installMock} from "./foundry-mock.mjs";
+import {audit} from "../gate/fit-audit.mjs";
 
 const require = createRequire(import.meta.url);
 let chromium;
@@ -223,6 +224,14 @@ await states.secondBreathDialog();
   // The Realm maps window (Otherworlds 0.11.0 adds the Extra keywords field)
   const rmaps = await import(join(root, "modules/wodx-otherworlds/scripts/realm-maps.mjs"));
   await rmaps.realmMapsDialog();
+  // Otherworlds 0.21.0: the realm world maps window, its closer look and its found places
+  const rworlds = await import(join(root, "modules/wodx-otherworlds/scripts/realm-worlds.mjs"));
+  await rworlds.realmWorldsDialog({realm: "tempest"});
+  await rworlds.realmWorldsDialog({realm: "flux", eyes: "all"});
+  await rworlds.realmWorldsDialog({realm: "dark-kingdom", which: "Jade"});
+  await rworlds.realmWorldsDialog({realm: "far-dreaming"});
+  await rworlds.closerDialog({realm: "stygia"});
+  await rworlds.foundDialog({realm: "enoch"});
   globalThis.canvas = old;
   api.DialogV2.wait = wait;
 }
@@ -484,6 +493,38 @@ game.world.id = worldId;
     if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
   }
   globalThis.canvas = oldCanvas;
+  api.DialogV2.wait = wait;
+}
+// Storyteller 0.55.0: the world map (the Earth, a mirror, the chart of the worlds) and the closer look at one square
+{
+  const WMap = game.modules.get("wodx-storyteller").api.worldMap;
+  const wait = api.DialogV2.wait;
+  api.DialogV2.wait = async cfg => { captured.push(cfg); return null; };
+  for ( const [label, fn] of [["The world map", () => WMap.open({from: "moravia", to: "japan", year: 1700})], ["The world map, Shadowlands", () => WMap.open({layer: "shadowlands"})],
+    ["The world map, chart", () => WMap.open({layer: "chart"})], ["A closer look", () => WMap.closer({from: "italy", fromAt: "41.9, 12.5"})],
+    ["The world map, unknown land", () => WMap.open({from: "iberia", to: "caribbean", year: 1300})], ["Discoveries", () => WMap.discoveries(1300)]] ) {
+    const n = captured.length;
+    try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
+    if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
+  }
+  api.DialogV2.wait = wait;
+}
+// NPC 0.48.0: a settlement's review (a village of 1995: 113 households, hidden folk, ties) and the Settlements window
+{
+  const S = game.modules.get("wodx-npc").api.settlements;
+  const {readFileSync} = await import("node:fs");
+  const rec = S.rules.readRecord(readFileSync(join(root, "tools/mapgen/samples/steinfeld-1995.settlement.json"), "utf8")).data;
+  const wait = api.DialogV2.wait, hadJournal = game.journal;
+  api.DialogV2.wait = async cfg => { captured.push(cfg); return null; };
+  const entry = {record: rec, review: S.rules.normReview(rec, {folk: S.rules.proposeFolk(rec, {nonce: 0})}), at: 0};
+  const journals = Array.from({length: 12}, (_, k) => ({id: `set${k}`, flags: {"wodx-npc": {settlement: {...entry, record: {...rec, id: `steinfeld-1995-${k}`, name: `Steinfeld an der Schwarzach ${k}`}}}}}));
+  game.journal = {filter: f => journals.filter(f)};
+  for ( const [label, fn] of [["Settlement review", () => S.review(rec)], ["Settlements", () => S.open()]] ) {
+    const n = captured.length;
+    try { await fn(); } catch (err) { console.error(`FAIL could not build the ${label} window: ${err.message}`); process.exitCode = 1; }
+    if ( captured.length === n ) { console.error(`FAIL the ${label} window was not captured`); process.exitCode = 1; }
+  }
+  game.journal = hadJournal;
   api.DialogV2.wait = wait;
 }
 // NPC 0.10.0: the topic menu (24 topics of long names, a long answer log) and the shared talk sheets
@@ -770,6 +811,41 @@ game.world.id = worldId;
   CONFIG.Canvas = oldConfigCanvas;
   api.DialogV2.wait = wait;
 }
+// Interactables 0.32.0: the case board (twelve cards, long words, lines, a hidden card); Library 0.17.0: What they could know
+{
+  const CB = await import(join(root, "modules/wodx-interactables/scripts/case.mjs"));
+  const CR = await import(join(root, "modules/wodx-interactables/scripts/case-rules.mjs"));
+  let b = CR.emptyBoard();
+  for ( let i = 0; i < 12; i++ ) b = CR.addCard(b, {kind: Object.keys(CR.KINDS)[i % 5], ref: i % 5 === 4 ? "" : `Actor.x${i}`, title: `A card with a long title to wrap, number ${i}`,
+    text: "What the finder learned, written out at some length so the card has to scroll a little. ".repeat(2), hidden: i === 3, by: "Gamemaster Test"}).board;
+  for ( let i = 1; i < 12; i++ ) b = CR.link(b, `c${i}`, `c${i + 1}`, `seen with, number ${i}`);
+  const j = {id: "caseboard00001", name: "Case board: the missing courier and the burnt mill", flags: {"wodx-interactables": {board: b}}, isOwner: true,
+    testUserPermission: () => true, update: async () => {}};
+  game.journal.set(j.id, j);
+  const ca = new CB.CaseBoardApp({});
+  ca.boardId = j.id;
+  await ca.render({force: true});
+  const cop = CB.CaseBoardApp.DEFAULT_OPTIONS;
+  windows.push({name: "Case board", tag: cop.tag ?? "div", classes: ["application", ...(cop.classes ?? [])].join(" "), width: cop.position.width, height: cop.position.height,
+    content: ca.element.querySelector("section.window-content").innerHTML});
+  game.journal.delete(j.id);
+
+  const Sh = await import(join(root, "modules/wodx-library/scripts/shelves.mjs"));
+  const KN = await import(join(root, "modules/wodx-library/scripts/know.mjs"));
+  Sh.setSources({encyclopedia: {books: [], entries: Array.from({length: 60}, (_, i) => ({id: `fit-${i}`, title: `An entry with a long title that wraps, number ${i}`,
+    kind: ["term", "faction", "event", "lore", "character"][i % 5], lines: [i % 3 ? "vampire" : "werewolf"], eras: ["dark-ages"]}))}});
+  const pc = {id: "knowpc0000001", name: "Anezka of the Silver Adit, a long name", type: "Vampire", hasPlayerOwner: true, items: [],
+    system: {attributes: {intelligence: {value: 3}}, abilities: {occult: {value: 3}, academics: {value: 2}, politics: {value: 1}}}};
+  game.actors.set(pc.id, pc);
+  const ka = new KN.KnowApp({});
+  ka.actorId = pc.id;
+  await ka.render({force: true});
+  const kop = KN.KnowApp.DEFAULT_OPTIONS;
+  windows.push({name: "What they could know", tag: kop.tag ?? "div", classes: ["application", ...(kop.classes ?? [])].join(" "), width: kop.position.width, height: kop.position.height,
+    content: ka.element.querySelector("section.window-content").innerHTML});
+  game.actors.delete(pc.id);
+  Sh.setSources(null);
+}
 // WoDX Senses 0.1.0: the ask window (a character with Auspex) and the Place senses window (a scene with twelve regions)
 {
   game.modules.set("wodx-senses", {active: true});
@@ -929,7 +1005,8 @@ const css = [...extras, pathToFileURL(foundryCss).href,
   pathToFileURL(join(root, "modules/wodx-senses/styles/wodx-senses.css")).href,
   pathToFileURL(join(root, "modules/wodx-paperdoll/styles/wodx-paperdoll.css")).href,
   pathToFileURL(join(root, "modules/wodx-atmosphere/styles/wodx-atmosphere.css")).href];
-const sizes = [[1280, 720], [1366, 768], [1920, 1080]];
+// WODX_FIT_SIZES=1366x768 checks one screen size (a quick run while fixing); the full run checks all three
+const sizes = process.env.WODX_FIT_SIZES ? process.env.WODX_FIT_SIZES.split(",").map(s => s.split("x").map(Number)) : [[1280, 720], [1366, 768], [1920, 1080]];
 // 6e: the WoDX look is on. WODX_KIT picks the era kit (default the Dark Ages), WODX_SCALE the text size, WODX_LOOK the look.
 const {toneFor} = await import(join(root, "modules/wodx-chronicle/scripts/theme.mjs"));
 const KIT = process.env.WODX_KIT ?? "dark-ages", SCALE = process.env.WODX_SCALE ?? "1", LOOK = process.env.WODX_LOOK ?? "era";
@@ -1114,6 +1191,10 @@ for ( const [vw, vh] of sizes ) {
       }
       return {problems, controls: controls.length, height: Math.round(ar.height)};
     }, iconCss);
+    // The layout checks (cut-off and crowded controls, words over words, uneven shade, hard-to-read words)
+    await page.evaluate(() => document.querySelectorAll("*").forEach(s => { if ( s.scrollTop ) s.scrollTop = 0; }));
+    const layout = await page.evaluate(`(${audit.toString()})(document.getElementById("app"))`);
+    for ( const f of layout ) result.problems.push(`${f.kind}: ${f.msg} [${f.el.slice(0, 70)}]`);
     const label = `${vw}x${vh} ${w.name}`;
     if ( result.problems.length ) {
       failures++;

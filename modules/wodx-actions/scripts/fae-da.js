@@ -19,6 +19,9 @@
 import * as F from "./fae-da-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
+import * as EF from "./effects.js";
+import * as E from "./effects-rules.js";
+import * as PW from "./power-effects.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -38,14 +41,18 @@ export function isDA(actor) {
     return F.isDarkAgesEra(eraId());
 }
 
-/* Lines on the sheet: "Night 1: Hush (manipulation)", "Iron 2: keeps the mill (inactive)" */
+/* Lines on the sheet: "Night 1: Hush (manipulation)", "Iron 2: keeps the mill (inactive)", "Day 2: Sunflash [light, harm]" (what it does, B3752) */
 export function parseCantrips(text) {
     return String(text ?? "").split(/\n+/).map(l => l.trim()).filter(Boolean).map(l => {
-        const m = l.match(/^(day|night|dawn|dusk)\s*(\d)\s*[:\-–]\s*(.+?)(?:\s*\(([^)]+)\))?\s*$/i);
-        return m ? { dominion: m[1].toLowerCase(), level: n(m[2]), name: m[3].trim(), trait: (m[4] ?? "").trim().toLowerCase() } : null;
+        const m = l.match(/^(day|night|dawn|dusk)\s*(\d)\s*[:\-–]\s*(.+?)(?:\s*\(([^)]+)\))?(?:\s*\[([^\]]*)\])?\s*$/i);
+        if (!m) return null;
+        const kw = String(m[5] ?? "").toLowerCase().split(/[\s,]+/).filter(k => E.KEYWORDS[k]);
+        return { dominion: m[1].toLowerCase(), level: n(m[2]), name: m[3].trim(), trait: (m[4] ?? "").trim().toLowerCase(), ...(kw.length ? { kw } : {}) };
     }).filter(Boolean);
 }
-export const cantripLine = c => `${F.DOMINIONS[c.dominion]?.label ?? c.dominion} ${c.level}: ${c.name}${c.trait ? ` (${c.trait})` : ""}`;
+export const cantripLine = c => `${F.DOMINIONS[c.dominion]?.label ?? c.dominion} ${c.level}: ${c.name}${c.trait ? ` (${c.trait})` : ""}${c.kw?.length ? ` [${c.kw.join(", ")}]` : ""}`;
+/** What a cantrip that took does on the effects card: its keywords at its successes (B3752). */
+export const cantripResults = (kw, successes, { name = "", source = "", hasTarget = false } = {}) => PW.powerOutcomes({ keywords: kw ?? [] }, successes, { label: name, source, hasTarget }).results;
 export function parseOaths(text) {
     return String(text ?? "").split(/\n+/).map(l => l.trim()).filter(Boolean).map(l => {
         const m = l.match(/^(iron|stone|gold)\s*(\d)\s*[:\-–]\s*(.+?)\s*$/i);
@@ -135,7 +142,7 @@ export function build(ctx) {
             <div class="form-group"><label><input type="checkbox" name="fill"/> Start from the Origin (Mists, Weaving)</label></div>
           </fieldset>
           <fieldset><legend>Dominions</legend>${dom}</fieldset>
-          ${area("cantrips", "Cantrips", i.cantrips.map(cantripLine).join("\n"), "one a line: Night 1: Hush (manipulation)")}
+          ${area("cantrips", "Cantrips", i.cantrips.map(cantripLine).join("\n"), "one a line: Night 1: Hush (manipulation) [veil]; the brackets say what it does")}
           ${area("lesser", "Lesser Features", i.lesser.join("\n"), "one a line")}
           ${area("greater", "Greater Features", i.greater.join("\n"), "one a line")}
           ${area("echoes", "Echoes", i.echoes.map(e => e.trigger).join("\n"), "one trigger a line")}
@@ -189,6 +196,7 @@ export function build(ctx) {
             <div class="form-group"><label>Dominion</label><select name="dominion" data-fixed>${DOM_OPTS(i.C?.favored, i.dominions)}</select></div>
             <div class="form-group"><label>Level</label><input type="number" name="level" min="1" max="5" value="1"/></div>
             <div class="form-group"><label>Trait</label>${traitSelect(actor, "manipulation")}</div>
+            <div class="form-group"><label>What it does</label><select name="kw" data-fixed><option value="">(the Storyteller rules it)</option>${Object.entries(E.KEYWORDS).filter(([, K]) => K.tier !== "st").map(([k, K]) => `<option value="${k}" title="${esc(K.does)}">${esc(K.label)}</option>`).join("")}</select></div>
           </fieldset>
           <div class="form-group"><label>Difficulty before modifiers</label><input type="number" name="base" min="3" max="10" value="6"/></div>
           <div class="form-group"><label>The Storyteller's modifier</label><input type="number" name="mod" min="-3" max="3" value="0"/></div>
@@ -215,13 +223,22 @@ export function build(ctx) {
                 : `<div class="vta-big">${esc(name)} does not take.</div>`;
             if (i.imbalance === "mists") body += `<div class="vta-note">Mists imbalance: cantrips come harder (Dark Ages: Fae p. 102).</div>`;
             if (c?.note) body += `<div class="vta-note">${esc(c.note)}</div>`;
+            // What it does: the cantrip's own keywords, else the one picked by hand, on the effects card (B3752)
+            let fxItems = [];
+            const kw = c?.kw?.length ? c.kw : fd.kw ? [fd.kw] : [];
+            if (kw.length && !r.botch && r.successes > 0 && EF.isOn()) {
+                const t = EF.targetsOf(actor);
+                const pp = EF.planOf(actor, cantripResults(kw, r.successes, { name, source: `${REF} pp. 120–121`, hasTarget: !t.self && t.docs.length > 0 }), r.successes);
+                body += pp.html;
+                fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+            }
             body += `<div class="wodx-quiet">${REF} pp. 120–121${F.DOMINIONS[dominion] ? `, ${F.DOMINIONS[dominion].page}` : ""}</div>`;
             const casts = actor.getFlag(MOD, "daFaeCasts");
             const key = `${game.scenes?.viewed?.id ?? ""}:${Math.floor(game.time.worldTime / 3600)}:${name}`;
             const count = casts?.key === key ? n(casts.n) + 1 : 1;
             await setFlag(actor, "daFaeCasts", { key, n: count });
             if (count > 5) body += `<div class="vta-note">${count} castings of this cantrip this scene: overuse draws the fae toward the Locked state (Dark Ages: Fae p. 104).</div>`;
-            return post(actor, `${actor.name} casts ${name}`, body, [r.roll].filter(Boolean));
+            return post(actor, `${actor.name} casts ${name}`, body, [r.roll].filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 520, render: root => aim(root, { actor, cast: { intent: "e" } }) });
     }
 

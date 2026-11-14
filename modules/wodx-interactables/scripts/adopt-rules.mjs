@@ -25,7 +25,24 @@ export const MATCH_CELLS = 0.5;
 /** The tile flags a feature may carry, and which of them mark its kind. */
 export const TILE_KINDS = ["container", "trap", "clue", "light", "hide", "hazard", "sacred", "watch", "mount", "climb", "isTarget"];
 const OPENING_KEYS = new Set(["kind", "material", "build", "lock", "electronic", "keyName", "barred", "stuck", "wall"]);
-const PLACE_KINDS = new Set(["home", "workplace", "church", "tavern", "haven", "gate", "market", "street", "castle", "wilds", "caern", "alley", "yard", "docks", "park", "sewer", "hospital", "station", "elysium", "chantry", "other"]);
+/**
+ * Houses of worship by the faith of the place (B3200): the town generator draws a chapel, and a scene in Cairo, Lhasa
+ * or a Jewish quarter adopts it as a mosque, a temple or a synagogue. Faiths are WoDX Chronicle's (faith-rules.mjs).
+ */
+export const WORSHIP_KIND = {western: "church", orthodox: "church", islamic: "mosque", jewish: "synagogue", hindu: "temple", theravada: "temple",
+  tibetan: "temple", chinese: "temple", own: "temple"};
+const WORSHIP_WORD = {church: "Church", mosque: "Mosque", synagogue: "Synagogue", temple: "Temple"};
+const WORSHIP_LABEL = /^(castle )?(chapel|church|mosque|synagogue|temple)$/i;
+/** A region's place and label, tagged for the faith (its own, else the scene's). Other places are left as they are. */
+export function worshipFor(place, label, faith = null) {
+  if ( !place || !WORSHIP_WORD[place.kind] ) return {place, label, changed: false};
+  const f = WORSHIP_KIND[place.faith] ? place.faith : (WORSHIP_KIND[faith] ? faith : null);
+  if ( !f ) return {place, label, changed: false};
+  const kind = WORSHIP_KIND[f], changed = kind !== place.kind;
+  const named = changed && WORSHIP_LABEL.test(label ?? "") ? String(label).replace(/(chapel|church|mosque|synagogue|temple)$/i, w => (w[0] === w[0].toUpperCase() ? WORSHIP_WORD[kind] : WORSHIP_WORD[kind].toLowerCase())) : label;
+  return {place: {...place, kind, faith: f}, label: named, changed};
+}
+const PLACE_KINDS = new Set(["home", "workplace", "church", "mosque", "synagogue", "temple", "tavern", "haven", "gate", "market", "street", "castle", "wilds", "caern", "alley", "yard", "docks", "park", "sewer", "hospital", "station", "elysium", "chantry", "other"]);
 /** Region behaviours a sidecar may ask for, by its short name: the full type comes from WoDX NPC. */
 export const BEHAVIORS = {trigger: `${NPC}.trigger`, alertZone: `${NPC}.alertZone`, reaction: `${NPC}.reaction`};
 
@@ -82,7 +99,8 @@ export function parseSidecar(input) {
   for ( const r of Array.isArray(d.regions) ? d.regions : [] ) {
     if ( !fresh("region", r) ) continue;
     if ( !isRect(r.rect) || !onMap(r.rect, r.rect[2], r.rect[3]) ) { errors.push(`${r.id}: its area is not on the map.`); continue; }
-    const place = plain(r.place) && PLACE_KINDS.has(r.place.kind) ? {kind: r.place.kind, owner: String(r.place.owner ?? "").slice(0, 80), private: !!r.place.private} : null;
+    const place = plain(r.place) && PLACE_KINDS.has(r.place.kind) ? {kind: r.place.kind, owner: String(r.place.owner ?? "").slice(0, 80), private: !!r.place.private,
+      ...(WORSHIP_KIND[r.place.faith] ? {faith: r.place.faith} : {})} : null;
     const behaviors = (Array.isArray(r.behaviors) ? r.behaviors : []).filter(b => {
       if ( plain(b) && BEHAVIORS[b.type] ) return true;
       errors.push(`${r.id}: a behaviour of an unknown type was left out.`); return false;
@@ -109,12 +127,15 @@ export function parseSidecar(input) {
     if ( !people.length ) { errors.push(`${h.id}: nobody lives in it, so it was left out.`); continue; }
     const hh = {id: h.id, label: String(h.label ?? h.id).slice(0, 80), trade: String(h.trade ?? "").slice(0, 40), people};
     reg.household = hh;
+    (reg.households ??= []).push(hh);                         // 0.35.2: a block of flats keeps every flat's household
     households.push(hh);
   }
   // 0.26.2: the kind of place the whole map is (WoDX NPC's place tag on the scene: what passers-by, sounds and the Masquerade read)
   const place = plain(d.place) && PLACE_KINDS.has(d.place.kind) ? {kind: d.place.kind} : null;
   if ( d.place !== undefined && !place ) errors.push("The map's kind of place is not one WoDX knows, so it was left out.");
-  return {ok: true, errors, data: {name: String(d.name ?? "Generated map").slice(0, 120), map: String(d.map ?? ""), cells, openings, features, regions, households, place}};
+  // 0.35.2: the settlement the map is part of (the town generator's --settle), for the plan to say where its record goes
+  const settlement = plain(d.settlement) && idOk(d.settlement.id) ? {id: d.settlement.id, name: String(d.settlement.name ?? d.name ?? "").slice(0, 120), year: Math.round(Number(d.settlement.year)) || 0} : null;
+  return {ok: true, errors, data: {name: String(d.name ?? "Generated map").slice(0, 120), map: String(d.map ?? ""), cells, openings, features, regions, households, place, settlement}};
 }
 
 /**
@@ -201,7 +222,8 @@ export function regionData(r, fr, types = new Set()) {
     shapes: [r.points
       ? {type: "polygon", points: r.points.flatMap((v, i, a) => (i % 2 ? [] : px(fr, v, a[i + 1]).map(Math.round))), hole: false}
       : {type: "rectangle", x: Math.round(x), y: Math.round(y), width: Math.round(r.rect[2] * fr.size), height: Math.round(r.rect[3] * fr.size), rotation: 0, hole: false}],
-    behaviors, flags: {[MOD]: {adoptId: r.id, ...(r.household ? {household: r.household} : {})}, ...(r.place ? {[NPC]: {place: r.place}} : {})}};
+    behaviors, flags: {[MOD]: {adoptId: r.id, ...(r.household ? {household: r.household} : {}), ...(r.households?.length > 1 ? {households: r.households.slice(0, 80)} : {})},
+      ...(r.place ? {[NPC]: {place: r.place}} : {})}};
   return {data, skipped};
 }
 
@@ -225,18 +247,25 @@ export function plan(sc, scene, fr, types = new Set()) {
   const feats = sc.features.filter(f => !have.has(`tiles:${f.id}`));
   const tiles = feats.map(f => tileData(f, fr));
   const lights = feats.filter(f => f.light && !have.has(`lights:${f.id}.light`)).map(f => ({data: lightData(f, fr), featureId: f.id}));
-  const regions = [];
-  for ( const r of sc.regions.filter(x => !have.has(`regions:${x.id}`)) ) {
+  const regions = [], tagged = [];
+  for ( const r0 of sc.regions.filter(x => !have.has(`regions:${x.id}`)) ) {
+    // B3200: a house of worship takes the faith of the place
+    const w = worshipFor(r0.place, r0.label, scene.faith ?? null);
+    const r = w.place === r0.place ? r0 : {...r0, place: w.place, label: w.label};
+    if ( w.changed ) tagged.push(`${r0.label} as a ${w.place.kind}`);
     const {data, skipped} = regionData(r, fr, types);
     if ( skipped.length && !data.behaviors.length && !r.place ) { notes.push(`${r.label}: left out, because WoDX NPC is off and it only has NPC behaviours.`); continue; }
     if ( skipped.length ) notes.push(`${r.label}: made without its ${skipped.join(", ")} behaviour, because WoDX NPC is off. Add it by hand later.`);
     regions.push(data);
   }
+  if ( tagged.length ) notes.push(`Houses of worship follow the faith kept here: ${tagged.join(", ")}.`);
   const already = sc.openings.length - todo.length + sc.features.length - feats.length;
   if ( already ) notes.push(`${already} ${already === 1 ? "thing was" : "things were"} adopted before and ${already === 1 ? "is" : "are"} left as ${already === 1 ? "it is" : "they are"}.`);
   // The scene's own kind of place stays if the Storyteller already set one, or cleared it after an earlier adoption
   const scenePlace = sc.place && !scene.placeKind && !have.size ? sc.place : null;
   if ( sc.place && scene.placeKind && scene.placeKind !== sc.place.kind ) notes.push(`The scene is already tagged as ${scene.placeKind}; the map's ${sc.place.kind} was left out.`);
+  if ( sc.settlement && regions.some(r => r.flags?.[MOD]?.household) )
+    notes.push(`This map is part of ${sc.settlement.name || "a settlement"}${sc.settlement.year ? ` as it stands in ${sc.settlement.year}` : ""}. Bring in its record under Settlements in the Storyteller's hand before seeding the residents.`);
   return {wallUpdates, wallCreates, tiles, lights, regions, notes, scenePlace};
 }
 
@@ -252,7 +281,7 @@ export function summary(p) {
     const names = p.regions.map(r => r.name), shown = names.slice(0, 8).join(", ");
     out.push(`${n(p.regions.length, "region", "regions")} drawn (${names.length > 8 ? `${shown} and ${names.length - 8} more` : shown})`);
   }
-  const hh = p.regions.map(r => r.flags?.[MOD]?.household).filter(Boolean);
+  const hh = p.regions.flatMap(r => r.flags?.[MOD]?.households ?? r.flags?.[MOD]?.household ?? []).filter(Boolean);
   if ( hh.length ) out.push(`${n(hh.length, "household", "households")} of ${hh.reduce((s, h) => s + h.people.length, 0)} people noted on their buildings, for WoDX NPC to seed later`);
   if ( p.scenePlace ) out.push(`the scene tagged as a kind of place: ${p.scenePlace.kind}`);
   return out;

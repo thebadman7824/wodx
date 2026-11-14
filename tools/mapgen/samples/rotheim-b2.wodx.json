@@ -4,7 +4,7 @@
  "name": "Rotheim B2",
  "map": "rotheim-b2.dungeondraft_map",
  "cells": [
-  47,
+  64,
   62
  ],
  "seed": 5,
@@ -13,19 +13,19 @@
  },
  "kind": "city",
  "era": "dark-ages",
- "population": 80,
+ "population": 134,
  "openings": [
   {
    "id": "tavern-1-double-0",
    "label": "Tavern double",
    "c": [
-    16.0,
+    38.0,
     7.0,
-    18.0,
+    40.0,
     7.0
    ],
    "inside": [
-    15.5,
+    37.5,
     11.0
    ],
    "barInside": true,
@@ -39,13 +39,13 @@
    "id": "tavern-1-window-1",
    "label": "Tavern window",
    "c": [
-    18.5,
+    40.5,
     7.0,
-    19.5,
+    41.5,
     7.0
    ],
    "inside": [
-    15.5,
+    37.5,
     11.0
    ],
    "barInside": true,
@@ -59,13 +59,13 @@
    "id": "tavern-1-window-2",
    "label": "Tavern window",
    "c": [
-    14.5,
+    36.5,
     7.0,
-    15.5,
+    37.5,
     7.0
    ],
    "inside": [
-    15.5,
+    37.5,
     11.0
    ],
    "barInside": true,
@@ -79,13 +79,13 @@
    "id": "tavern-1-window-3",
    "label": "Tavern window",
    "c": [
-    20.5,
+    42.5,
     10.5,
-    20.5,
+    42.5,
     11.5
    ],
    "inside": [
-    15.5,
+    37.5,
     11.0
    ],
    "barInside": true,
@@ -99,13 +99,13 @@
    "id": "tavern-1-window-4",
    "label": "Tavern window",
    "c": [
-    16.5,
+    38.5,
     15.0,
-    17.5,
+    39.5,
     15.0
    ],
    "inside": [
-    15.5,
+    37.5,
     11.0
    ],
    "barInside": true,
@@ -119,13 +119,13 @@
    "id": "tavern-1-door-6",
    "label": "Tavern door",
    "c": [
-    13.5,
+    35.5,
     8.5,
-    13.5,
+    35.5,
     9.5
    ],
    "inside": [
-    15.5,
+    37.5,
     11.0
    ],
    "barInside": true,
@@ -139,13 +139,13 @@
    "id": "tavern-1-door-7",
    "label": "Tavern door",
    "c": [
-    10.5,
+    32.5,
     11.5,
-    10.5,
+    32.5,
     12.5
    ],
    "inside": [
-    15.5,
+    37.5,
     11.0
    ],
    "barInside": true,
@@ -156,36 +156,116 @@
    }
   },
   {
-   "id": "chapel-1-double-0",
-   "label": "Chapel double",
+   "id": "cottage-1-door-0",
+   "label": "Priest's house door",
    "c": [
-    28.5,
-    4.0,
-    28.5,
-    6.0
+    50.5,
+    3.5,
+    50.5,
+    4.5
    ],
    "inside": [
-    33.5,
+    53.0,
+    4.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-1-window-1",
+   "label": "Priest's house window",
+   "c": [
+    50.5,
+    5.5,
+    50.5,
+    6.5
+   ],
+   "inside": [
+    53.0,
+    4.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-1-window-2",
+   "label": "Priest's house window",
+   "c": [
+    52.5,
+    1.5,
+    53.5,
+    1.5
+   ],
+   "inside": [
+    53.0,
+    4.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-1-window-3",
+   "label": "Priest's house window",
+   "c": [
+    55.5,
+    4.0,
+    55.5,
+    5.0
+   ],
+   "inside": [
+    53.0,
+    4.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "bakehouse-2-door-0",
+   "label": "Bakehouse door",
+   "c": [
+    61.0,
+    2.5,
+    62.0,
+    2.5
+   ],
+   "inside": [
+    60.5,
     5.0
    ],
    "barInside": true,
    "flags": {
     "kind": "door",
-    "material": "heavy",
+    "material": "wood",
     "lock": "none"
    }
   },
   {
-   "id": "chapel-1-window-2",
-   "label": "Chapel window",
+   "id": "bakehouse-2-window-1",
+   "label": "Bakehouse window",
    "c": [
-    33.0,
-    2.0,
-    34.0,
-    2.0
+    58.5,
+    2.5,
+    59.5,
+    2.5
    ],
    "inside": [
-    33.5,
+    60.5,
     5.0
    ],
    "barInside": true,
@@ -196,76 +276,16 @@
    }
   },
   {
-   "id": "chapel-1-window-3",
-   "label": "Chapel window",
+   "id": "bakehouse-2-window-2",
+   "label": "Bakehouse window",
    "c": [
-    30.0,
-    2.0,
-    31.0,
-    2.0
+    60.0,
+    7.5,
+    61.0,
+    7.5
    ],
    "inside": [
-    33.5,
-    5.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "chapel-1-window-4",
-   "label": "Chapel window",
-   "c": [
-    33.0,
-    8.0,
-    34.0,
-    8.0
-   ],
-   "inside": [
-    33.5,
-    5.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "chapel-1-window-5",
-   "label": "Chapel window",
-   "c": [
-    30.0,
-    8.0,
-    31.0,
-    8.0
-   ],
-   "inside": [
-    33.5,
-    5.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "chapel-1-window-6",
-   "label": "Chapel window",
-   "c": [
-    38.5,
-    4.5,
-    38.5,
-    5.5
-   ],
-   "inside": [
-    33.5,
+    60.5,
     5.0
    ],
    "barInside": true,
@@ -279,14 +299,14 @@
    "id": "bakehouse-3-door-0",
    "label": "Bakehouse door",
    "c": [
-    25.5,
-    10.5,
-    25.5,
-    11.5
+    48.5,
+    15.5,
+    49.5,
+    15.5
    ],
    "inside": [
-    28.0,
-    12.0
+    50.0,
+    13.0
    ],
    "barInside": true,
    "flags": {
@@ -299,14 +319,14 @@
    "id": "bakehouse-3-window-1",
    "label": "Bakehouse window",
    "c": [
-    25.5,
-    13.0,
-    25.5,
-    14.0
+    51.0,
+    15.5,
+    52.0,
+    15.5
    ],
    "inside": [
-    28.0,
-    12.0
+    50.0,
+    13.0
    ],
    "barInside": true,
    "flags": {
@@ -319,114 +339,14 @@
    "id": "bakehouse-3-window-2",
    "label": "Bakehouse window",
    "c": [
-    30.5,
-    11.5,
-    30.5,
-    12.5
-   ],
-   "inside": [
-    28.0,
-    12.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "townhouse-2-door-0",
-   "label": "House and shop (spicer) door",
-   "c": [
-    40.5,
-    13.0,
-    40.5,
-    14.0
-   ],
-   "inside": [
-    37.0,
-    12.5
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "door",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "townhouse-2-window-1",
-   "label": "House and shop (spicer) window",
-   "c": [
-    40.5,
+    49.5,
     10.5,
-    40.5,
-    11.5
+    50.5,
+    10.5
    ],
    "inside": [
-    37.0,
-    12.5
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "townhouse-2-window-3",
-   "label": "House and shop (spicer) window",
-   "c": [
-    34.5,
-    15.5,
-    35.5,
-    15.5
-   ],
-   "inside": [
-    37.0,
-    12.5
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "townhouse-2-window-4",
-   "label": "House and shop (spicer) window",
-   "c": [
-    38.0,
-    9.5,
-    39.0,
-    9.5
-   ],
-   "inside": [
-    37.0,
-    12.5
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "townhouse-2-window-5",
-   "label": "House and shop (spicer) window",
-   "c": [
-    33.5,
-    13.0,
-    33.5,
-    14.0
-   ],
-   "inside": [
-    37.0,
-    12.5
+    50.0,
+    13.0
    ],
    "barInside": true,
    "flags": {
@@ -439,14 +359,14 @@
    "id": "townhouse-3-door-0",
    "label": "House and shop (cutler) door",
    "c": [
-    7.0,
-    7.5,
-    8.0,
-    7.5
+    55.5,
+    16.0,
+    56.5,
+    16.0
    ],
    "inside": [
-    6.5,
-    11.0
+    57.0,
+    12.5
    ],
    "barInside": true,
    "flags": {
@@ -459,14 +379,14 @@
    "id": "townhouse-3-window-1",
    "label": "House and shop (cutler) window",
    "c": [
-    4.5,
-    7.5,
-    5.5,
-    7.5
+    58.0,
+    16.0,
+    59.0,
+    16.0
    ],
    "inside": [
-    6.5,
-    11.0
+    57.0,
+    12.5
    ],
    "barInside": true,
    "flags": {
@@ -479,14 +399,14 @@
    "id": "townhouse-3-window-3",
    "label": "House and shop (cutler) window",
    "c": [
-    9.5,
-    12.5,
-    9.5,
-    13.5
+    54.0,
+    10.0,
+    54.0,
+    11.0
    ],
    "inside": [
-    6.5,
-    11.0
+    57.0,
+    12.5
    ],
    "barInside": true,
    "flags": {
@@ -499,14 +419,14 @@
    "id": "townhouse-3-window-4",
    "label": "House and shop (cutler) window",
    "c": [
-    3.5,
-    9.0,
-    3.5,
-    10.0
+    60.0,
+    13.5,
+    60.0,
+    14.5
    ],
    "inside": [
-    6.5,
-    11.0
+    57.0,
+    12.5
    ],
    "barInside": true,
    "flags": {
@@ -519,14 +439,14 @@
    "id": "townhouse-3-window-5",
    "label": "House and shop (cutler) window",
    "c": [
-    7.0,
-    14.5,
-    8.0,
-    14.5
+    55.5,
+    9.0,
+    56.5,
+    9.0
    ],
    "inside": [
-    6.5,
-    11.0
+    57.0,
+    12.5
    ],
    "barInside": true,
    "flags": {
@@ -536,17 +456,17 @@
    }
   },
   {
-   "id": "townhouse-11-door-0",
-   "label": "House and shop (draper) door",
+   "id": "townhouse-4-door-0",
+   "label": "House and shop (saddler) door",
    "c": [
-    20.0,
-    23.5,
-    20.0,
-    24.5
+    29.0,
+    7.0,
+    30.0,
+    7.0
    ],
    "inside": [
-    16.5,
-    23.0
+    28.5,
+    10.5
    ],
    "barInside": true,
    "flags": {
@@ -556,17 +476,17 @@
    }
   },
   {
-   "id": "townhouse-11-window-1",
-   "label": "House and shop (draper) window",
+   "id": "townhouse-4-window-1",
+   "label": "House and shop (saddler) window",
    "c": [
-    20.0,
-    21.0,
-    20.0,
-    22.0
+    26.5,
+    7.0,
+    27.5,
+    7.0
    ],
    "inside": [
-    16.5,
-    23.0
+    28.5,
+    10.5
    ],
    "barInside": true,
    "flags": {
@@ -576,37 +496,157 @@
    }
   },
   {
-   "id": "townhouse-11-window-3",
-   "label": "House and shop (draper) window",
+   "id": "townhouse-4-window-3",
+   "label": "House and shop (saddler) window",
+   "c": [
+    31.5,
+    12.0,
+    31.5,
+    13.0
+   ],
+   "inside": [
+    28.5,
+    10.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-4-window-4",
+   "label": "House and shop (saddler) window",
+   "c": [
+    25.5,
+    8.5,
+    25.5,
+    9.5
+   ],
+   "inside": [
+    28.5,
+    10.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-4-window-5",
+   "label": "House and shop (saddler) window",
+   "c": [
+    29.0,
+    14.0,
+    30.0,
+    14.0
+   ],
+   "inside": [
+    28.5,
+    10.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-7-door-0",
+   "label": "House and shop (fishmonger) door",
+   "c": [
+    21.0,
+    5.5,
+    21.0,
+    6.5
+   ],
+   "inside": [
+    17.5,
+    5.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-7-window-1",
+   "label": "House and shop (fishmonger) window",
+   "c": [
+    21.0,
+    3.0,
+    21.0,
+    4.0
+   ],
+   "inside": [
+    17.5,
+    5.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-7-window-3",
+   "label": "House and shop (fishmonger) window",
+   "c": [
+    15.0,
+    8.0,
+    16.0,
+    8.0
+   ],
+   "inside": [
+    17.5,
+    5.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-7-window-4",
+   "label": "House and shop (fishmonger) window",
+   "c": [
+    18.5,
+    2.0,
+    19.5,
+    2.0
+   ],
+   "inside": [
+    17.5,
+    5.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-7-window-5",
+   "label": "House and shop (fishmonger) window",
    "c": [
     14.0,
-    26.0,
-    15.0,
-    26.0
+    5.5,
+    14.0,
+    6.5
    ],
    "inside": [
-    16.5,
-    23.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "townhouse-11-window-4",
-   "label": "House and shop (draper) window",
-   "c": [
     17.5,
-    20.0,
-    18.5,
-    20.0
-   ],
-   "inside": [
-    16.5,
-    23.0
+    5.0
    ],
    "barInside": true,
    "flags": {
@@ -616,17 +656,97 @@
    }
   },
   {
-   "id": "townhouse-11-window-5",
-   "label": "House and shop (draper) window",
+   "id": "townhouse-9-door-0",
+   "label": "House and shop (mercer) door",
    "c": [
-    13.0,
-    23.5,
-    13.0,
-    24.5
+    21.0,
+    12.5,
+    21.0,
+    13.5
    ],
    "inside": [
-    16.5,
-    23.0
+    17.5,
+    12.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-9-window-1",
+   "label": "House and shop (mercer) window",
+   "c": [
+    21.0,
+    10.0,
+    21.0,
+    11.0
+   ],
+   "inside": [
+    17.5,
+    12.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-9-window-3",
+   "label": "House and shop (mercer) window",
+   "c": [
+    15.0,
+    15.0,
+    16.0,
+    15.0
+   ],
+   "inside": [
+    17.5,
+    12.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-9-window-4",
+   "label": "House and shop (mercer) window",
+   "c": [
+    18.5,
+    9.0,
+    19.5,
+    9.0
+   ],
+   "inside": [
+    17.5,
+    12.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-9-window-5",
+   "label": "House and shop (mercer) window",
+   "c": [
+    14.0,
+    12.5,
+    14.0,
+    13.5
+   ],
+   "inside": [
+    17.5,
+    12.0
    ],
    "barInside": true,
    "flags": {
@@ -639,14 +759,14 @@
    "id": "townhouse-14-door-0",
    "label": "House and shop (saddler) door",
    "c": [
-    24.5,
-    22.0,
-    24.5,
-    23.0
+    39.0,
+    20.5,
+    40.0,
+    20.5
    ],
    "inside": [
-    28.0,
-    23.5
+    38.5,
+    24.0
    ],
    "barInside": true,
    "flags": {
@@ -659,14 +779,14 @@
    "id": "townhouse-14-window-1",
    "label": "House and shop (saddler) window",
    "c": [
-    24.5,
-    24.5,
-    24.5,
-    25.5
+    36.5,
+    20.5,
+    37.5,
+    20.5
    ],
    "inside": [
-    28.0,
-    23.5
+    38.5,
+    24.0
    ],
    "barInside": true,
    "flags": {
@@ -679,14 +799,14 @@
    "id": "townhouse-14-window-3",
    "label": "House and shop (saddler) window",
    "c": [
-    29.5,
-    20.5,
-    30.5,
-    20.5
+    41.5,
+    25.5,
+    41.5,
+    26.5
    ],
    "inside": [
-    28.0,
-    23.5
+    38.5,
+    24.0
    ],
    "barInside": true,
    "flags": {
@@ -699,14 +819,14 @@
    "id": "townhouse-14-window-4",
    "label": "House and shop (saddler) window",
    "c": [
-    26.0,
-    26.5,
-    27.0,
-    26.5
+    35.5,
+    22.0,
+    35.5,
+    23.0
    ],
    "inside": [
-    28.0,
-    23.5
+    38.5,
+    24.0
    ],
    "barInside": true,
    "flags": {
@@ -719,14 +839,214 @@
    "id": "townhouse-14-window-5",
    "label": "House and shop (saddler) window",
    "c": [
-    31.5,
-    22.0,
-    31.5,
-    23.0
+    39.0,
+    27.5,
+    40.0,
+    27.5
    ],
    "inside": [
-    28.0,
-    23.5
+    38.5,
+    24.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-17-door-0",
+   "label": "House and shop (fishmonger) door",
+   "c": [
+    47.5,
+    21.5,
+    47.5,
+    22.5
+   ],
+   "inside": [
+    51.0,
+    23.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-17-window-1",
+   "label": "House and shop (fishmonger) window",
+   "c": [
+    47.5,
+    24.0,
+    47.5,
+    25.0
+   ],
+   "inside": [
+    51.0,
+    23.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-17-window-3",
+   "label": "House and shop (fishmonger) window",
+   "c": [
+    52.5,
+    20.0,
+    53.5,
+    20.0
+   ],
+   "inside": [
+    51.0,
+    23.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-17-window-4",
+   "label": "House and shop (fishmonger) window",
+   "c": [
+    49.0,
+    26.0,
+    50.0,
+    26.0
+   ],
+   "inside": [
+    51.0,
+    23.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-17-window-5",
+   "label": "House and shop (fishmonger) window",
+   "c": [
+    54.5,
+    21.5,
+    54.5,
+    22.5
+   ],
+   "inside": [
+    51.0,
+    23.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-20-door-0",
+   "label": "House and shop (salter) door",
+   "c": [
+    63.0,
+    23.5,
+    63.0,
+    24.5
+   ],
+   "inside": [
+    59.5,
+    23.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-20-window-1",
+   "label": "House and shop (salter) window",
+   "c": [
+    63.0,
+    21.0,
+    63.0,
+    22.0
+   ],
+   "inside": [
+    59.5,
+    23.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-20-window-3",
+   "label": "House and shop (salter) window",
+   "c": [
+    57.0,
+    26.0,
+    58.0,
+    26.0
+   ],
+   "inside": [
+    59.5,
+    23.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-20-window-4",
+   "label": "House and shop (salter) window",
+   "c": [
+    60.5,
+    20.0,
+    61.5,
+    20.0
+   ],
+   "inside": [
+    59.5,
+    23.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-20-window-5",
+   "label": "House and shop (salter) window",
+   "c": [
+    56.0,
+    23.5,
+    56.0,
+    24.5
+   ],
+   "inside": [
+    59.5,
+    23.0
    ],
    "barInside": true,
    "flags": {
@@ -739,14 +1059,14 @@
    "id": "townhouse-21-door-0",
    "label": "House and shop (draper) door",
    "c": [
-    36.5,
-    20.5,
-    37.5,
-    20.5
+    26.5,
+    21.5,
+    26.5,
+    22.5
    ],
    "inside": [
-    36.0,
-    24.0
+    30.0,
+    23.0
    ],
    "barInside": true,
    "flags": {
@@ -759,14 +1079,14 @@
    "id": "townhouse-21-window-1",
    "label": "House and shop (draper) window",
    "c": [
-    34.0,
-    20.5,
-    35.0,
-    20.5
+    26.5,
+    24.0,
+    26.5,
+    25.0
    ],
    "inside": [
-    36.0,
-    24.0
+    30.0,
+    23.0
    ],
    "barInside": true,
    "flags": {
@@ -779,14 +1099,14 @@
    "id": "townhouse-21-window-3",
    "label": "House and shop (draper) window",
    "c": [
-    39.0,
-    25.5,
-    39.0,
-    26.5
+    31.5,
+    20.0,
+    32.5,
+    20.0
    ],
    "inside": [
-    36.0,
-    24.0
+    30.0,
+    23.0
    ],
    "barInside": true,
    "flags": {
@@ -799,14 +1119,14 @@
    "id": "townhouse-21-window-4",
    "label": "House and shop (draper) window",
    "c": [
-    33.0,
-    22.0,
-    33.0,
-    23.0
+    28.0,
+    26.0,
+    29.0,
+    26.0
    ],
    "inside": [
-    36.0,
-    24.0
+    30.0,
+    23.0
    ],
    "barInside": true,
    "flags": {
@@ -819,14 +1139,14 @@
    "id": "townhouse-21-window-5",
    "label": "House and shop (draper) window",
    "c": [
-    36.5,
-    27.5,
-    37.5,
-    27.5
+    33.5,
+    21.5,
+    33.5,
+    22.5
    ],
    "inside": [
-    36.0,
-    24.0
+    30.0,
+    23.0
    ],
    "barInside": true,
    "flags": {
@@ -836,16 +1156,196 @@
    }
   },
   {
-   "id": "townhouse-22-door-0",
-   "label": "House and shop (spicer) door",
+   "id": "townhouse-23-door-0",
+   "label": "House and shop (cutler) door",
    "c": [
-    3.5,
-    22.0,
-    3.5,
-    23.0
+    10.5,
+    2.0,
+    11.5,
+    2.0
    ],
    "inside": [
+    10.0,
+    5.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-23-window-1",
+   "label": "House and shop (cutler) window",
+   "c": [
+    8.0,
+    2.0,
+    9.0,
+    2.0
+   ],
+   "inside": [
+    10.0,
+    5.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-23-window-3",
+   "label": "House and shop (cutler) window",
+   "c": [
+    13.0,
     7.0,
+    13.0,
+    8.0
+   ],
+   "inside": [
+    10.0,
+    5.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-23-window-4",
+   "label": "House and shop (cutler) window",
+   "c": [
+    7.0,
+    3.5,
+    7.0,
+    4.5
+   ],
+   "inside": [
+    10.0,
+    5.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "townhouse-23-window-5",
+   "label": "House and shop (cutler) window",
+   "c": [
+    10.5,
+    9.0,
+    11.5,
+    9.0
+   ],
+   "inside": [
+    10.0,
+    5.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-4-door-0",
+   "label": "Workshop (potter) door",
+   "c": [
+    8.0,
+    15.5,
+    9.0,
+    15.5
+   ],
+   "inside": [
+    9.5,
+    13.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-4-window-1",
+   "label": "Workshop (potter) window",
+   "c": [
+    10.5,
+    15.5,
+    11.5,
+    15.5
+   ],
+   "inside": [
+    9.5,
+    13.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-4-window-2",
+   "label": "Workshop (potter) window",
+   "c": [
+    6.0,
+    12.5,
+    6.0,
+    13.5
+   ],
+   "inside": [
+    9.5,
+    13.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-4-window-3",
+   "label": "Workshop (potter) window",
+   "c": [
+    9.0,
+    10.5,
+    10.0,
+    10.5
+   ],
+   "inside": [
+    9.5,
+    13.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-5-door-0",
+   "label": "Workshop (tanner) door",
+   "c": [
+    21.0,
+    24.0,
+    21.0,
+    25.0
+   ],
+   "inside": [
+    18.5,
     23.5
    ],
    "barInside": true,
@@ -856,16 +1356,16 @@
    }
   },
   {
-   "id": "townhouse-22-window-1",
-   "label": "House and shop (spicer) window",
+   "id": "workshop-5-window-1",
+   "label": "Workshop (tanner) window",
    "c": [
-    3.5,
-    24.5,
-    3.5,
-    25.5
+    21.0,
+    21.5,
+    21.0,
+    22.5
    ],
    "inside": [
-    7.0,
+    18.5,
     23.5
    ],
    "barInside": true,
@@ -876,16 +1376,16 @@
    }
   },
   {
-   "id": "townhouse-22-window-3",
-   "label": "House and shop (spicer) window",
+   "id": "workshop-5-window-2",
+   "label": "Workshop (tanner) window",
    "c": [
-    8.5,
-    20.5,
-    9.5,
-    20.5
+    18.0,
+    27.0,
+    19.0,
+    27.0
    ],
    "inside": [
-    7.0,
+    18.5,
     23.5
    ],
    "barInside": true,
@@ -896,17 +1396,57 @@
    }
   },
   {
-   "id": "townhouse-22-window-4",
-   "label": "House and shop (spicer) window",
+   "id": "workshop-5-window-3",
+   "label": "Workshop (tanner) window",
    "c": [
-    5.0,
-    26.5,
+    16.0,
+    23.0,
+    16.0,
+    24.0
+   ],
+   "inside": [
+    18.5,
+    23.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-7-door-0",
+   "label": "Workshop (chandler) door",
+   "c": [
+    1.0,
+    3.5,
+    1.0,
+    4.5
+   ],
+   "inside": [
+    3.5,
+    5.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-7-window-1",
+   "label": "Workshop (chandler) window",
+   "c": [
+    1.0,
     6.0,
-    26.5
+    1.0,
+    7.0
    ],
    "inside": [
-    7.0,
-    23.5
+    3.5,
+    5.0
    ],
    "barInside": true,
    "flags": {
@@ -916,17 +1456,37 @@
    }
   },
   {
-   "id": "townhouse-22-window-5",
-   "label": "House and shop (spicer) window",
+   "id": "workshop-7-window-2",
+   "label": "Workshop (chandler) window",
    "c": [
-    10.5,
-    22.0,
-    10.5,
-    23.0
+    3.0,
+    1.5,
+    4.0,
+    1.5
    ],
    "inside": [
-    7.0,
-    23.5
+    3.5,
+    5.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-7-window-3",
+   "label": "Workshop (chandler) window",
+   "c": [
+    6.0,
+    4.5,
+    6.0,
+    5.5
+   ],
+   "inside": [
+    3.5,
+    5.0
    ],
    "barInside": true,
    "flags": {
@@ -939,14 +1499,14 @@
    "id": "workshop-10-door-0",
    "label": "Workshop (dyer) door",
    "c": [
-    20.0,
-    32.5,
-    20.0,
-    33.5
+    46.5,
+    29.5,
+    46.5,
+    30.5
    ],
    "inside": [
-    17.5,
-    32.0
+    49.0,
+    31.0
    ],
    "barInside": true,
    "flags": {
@@ -959,14 +1519,14 @@
    "id": "workshop-10-window-1",
    "label": "Workshop (dyer) window",
    "c": [
-    20.0,
-    30.0,
-    20.0,
-    31.0
+    46.5,
+    32.0,
+    46.5,
+    33.0
    ],
    "inside": [
-    17.5,
-    32.0
+    49.0,
+    31.0
    ],
    "barInside": true,
    "flags": {
@@ -979,14 +1539,14 @@
    "id": "workshop-10-window-2",
    "label": "Workshop (dyer) window",
    "c": [
-    17.0,
-    35.5,
-    18.0,
-    35.5
+    48.5,
+    27.5,
+    49.5,
+    27.5
    ],
    "inside": [
-    17.5,
-    32.0
+    49.0,
+    31.0
    ],
    "barInside": true,
    "flags": {
@@ -999,14 +1559,14 @@
    "id": "workshop-10-window-3",
    "label": "Workshop (dyer) window",
    "c": [
-    15.0,
-    31.5,
-    15.0,
-    32.5
+    51.5,
+    30.5,
+    51.5,
+    31.5
    ],
    "inside": [
-    17.5,
-    32.0
+    49.0,
+    31.0
    ],
    "barInside": true,
    "flags": {
@@ -1019,14 +1579,14 @@
    "id": "workshop-11-door-0",
    "label": "Workshop (carpenter) door",
    "c": [
-    25.5,
-    29.5,
-    25.5,
-    30.5
+    42.5,
+    33.0,
+    42.5,
+    34.0
    ],
    "inside": [
-    28.0,
-    31.0
+    40.0,
+    32.5
    ],
    "barInside": true,
    "flags": {
@@ -1039,14 +1599,14 @@
    "id": "workshop-11-window-1",
    "label": "Workshop (carpenter) window",
    "c": [
-    25.5,
-    32.0,
-    25.5,
-    33.0
+    42.5,
+    30.5,
+    42.5,
+    31.5
    ],
    "inside": [
-    28.0,
-    31.0
+    40.0,
+    32.5
    ],
    "barInside": true,
    "flags": {
@@ -1059,14 +1619,14 @@
    "id": "workshop-11-window-2",
    "label": "Workshop (carpenter) window",
    "c": [
-    27.5,
-    27.5,
-    28.5,
-    27.5
+    39.5,
+    36.0,
+    40.5,
+    36.0
    ],
    "inside": [
-    28.0,
-    31.0
+    40.0,
+    32.5
    ],
    "barInside": true,
    "flags": {
@@ -1079,14 +1639,14 @@
    "id": "workshop-11-window-3",
    "label": "Workshop (carpenter) window",
    "c": [
-    30.5,
-    30.5,
-    30.5,
-    31.5
+    37.5,
+    32.0,
+    37.5,
+    33.0
    ],
    "inside": [
-    28.0,
-    31.0
+    40.0,
+    32.5
    ],
    "barInside": true,
    "flags": {
@@ -1096,16 +1656,96 @@
    }
   },
   {
-   "id": "workshop-15-door-0",
-   "label": "Workshop (tanner) door",
+   "id": "workshop-12-door-0",
+   "label": "Workshop (cooper) door",
    "c": [
-    7.5,
+    31.5,
+    35.0,
+    32.5,
+    35.0
+   ],
+   "inside": [
+    33.0,
+    32.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-12-window-1",
+   "label": "Workshop (cooper) window",
+   "c": [
+    34.0,
+    35.0,
+    35.0,
+    35.0
+   ],
+   "inside": [
+    33.0,
+    32.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-12-window-2",
+   "label": "Workshop (cooper) window",
+   "c": [
+    29.5,
+    32.0,
+    29.5,
+    33.0
+   ],
+   "inside": [
+    33.0,
+    32.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-12-window-3",
+   "label": "Workshop (cooper) window",
+   "c": [
+    32.5,
+    30.0,
+    33.5,
+    30.0
+   ],
+   "inside": [
+    33.0,
+    32.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-14-door-0",
+   "label": "Workshop (potter) door",
+   "c": [
+    54.5,
     34.5,
-    8.5,
+    55.5,
     34.5
    ],
    "inside": [
-    9.0,
+    56.0,
     32.0
    ],
    "barInside": true,
@@ -1116,16 +1756,16 @@
    }
   },
   {
-   "id": "workshop-15-window-1",
-   "label": "Workshop (tanner) window",
+   "id": "workshop-14-window-1",
+   "label": "Workshop (potter) window",
    "c": [
-    10.0,
+    57.0,
     34.5,
-    11.0,
+    58.0,
     34.5
    ],
    "inside": [
-    9.0,
+    56.0,
     32.0
    ],
    "barInside": true,
@@ -1136,16 +1776,16 @@
    }
   },
   {
-   "id": "workshop-15-window-2",
-   "label": "Workshop (tanner) window",
+   "id": "workshop-14-window-2",
+   "label": "Workshop (potter) window",
    "c": [
-    5.5,
+    52.5,
     31.5,
-    5.5,
+    52.5,
     32.5
    ],
    "inside": [
-    9.0,
+    56.0,
     32.0
    ],
    "barInside": true,
@@ -1156,16 +1796,16 @@
    }
   },
   {
-   "id": "workshop-15-window-3",
-   "label": "Workshop (tanner) window",
+   "id": "workshop-14-window-3",
+   "label": "Workshop (potter) window",
    "c": [
-    8.5,
+    55.5,
     29.5,
-    9.5,
+    56.5,
     29.5
    ],
    "inside": [
-    9.0,
+    56.0,
     32.0
    ],
    "barInside": true,
@@ -1176,16 +1816,256 @@
    }
   },
   {
-   "id": "workshop-17-door-0",
-   "label": "Workshop (chandler) door",
+   "id": "workshop-16-door-0",
+   "label": "Workshop (cobbler) door",
    "c": [
-    34.0,
+    12.0,
+    20.5,
+    13.0,
+    20.5
+   ],
+   "inside": [
+    11.5,
+    23.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-16-window-1",
+   "label": "Workshop (cobbler) window",
+   "c": [
+    9.5,
+    20.5,
+    10.5,
+    20.5
+   ],
+   "inside": [
+    11.5,
+    23.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-16-window-2",
+   "label": "Workshop (cobbler) window",
+   "c": [
+    15.0,
+    22.5,
+    15.0,
+    23.5
+   ],
+   "inside": [
+    11.5,
+    23.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "workshop-16-window-3",
+   "label": "Workshop (cobbler) window",
+   "c": [
+    11.0,
+    25.5,
+    12.0,
+    25.5
+   ],
+   "inside": [
+    11.5,
+    23.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-9-door-0",
+   "label": "Cottage door",
+   "c": [
+    18.0,
+    34.5,
+    19.0,
+    34.5
+   ],
+   "inside": [
+    19.0,
+    32.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-9-window-1",
+   "label": "Cottage window",
+   "c": [
+    20.0,
+    34.5,
+    21.0,
+    34.5
+   ],
+   "inside": [
+    19.0,
+    32.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-9-window-2",
+   "label": "Cottage window",
+   "c": [
+    16.0,
+    31.5,
+    16.0,
+    32.5
+   ],
+   "inside": [
+    19.0,
+    32.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-9-window-3",
+   "label": "Cottage window",
+   "c": [
+    18.5,
+    29.5,
+    19.5,
+    29.5
+   ],
+   "inside": [
+    19.0,
+    32.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-10-door-0",
+   "label": "Cottage door",
+   "c": [
+    1.0,
+    22.0,
+    1.0,
+    23.0
+   ],
+   "inside": [
+    3.5,
+    23.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-10-window-1",
+   "label": "Cottage window",
+   "c": [
+    1.0,
+    24.0,
+    1.0,
+    25.0
+   ],
+   "inside": [
+    3.5,
+    23.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-10-window-2",
+   "label": "Cottage window",
+   "c": [
+    3.0,
+    20.0,
+    4.0,
+    20.0
+   ],
+   "inside": [
+    3.5,
+    23.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-10-window-3",
+   "label": "Cottage window",
+   "c": [
+    6.0,
+    22.5,
+    6.0,
+    23.5
+   ],
+   "inside": [
+    3.5,
+    23.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-17-door-0",
+   "label": "Cottage door",
+   "c": [
+    9.0,
     35.5,
-    35.0,
+    10.0,
     35.5
    ],
    "inside": [
-    35.5,
+    10.0,
     33.0
    ],
    "barInside": true,
@@ -1196,16 +2076,16 @@
    }
   },
   {
-   "id": "workshop-17-window-1",
-   "label": "Workshop (chandler) window",
+   "id": "cottage-17-window-1",
+   "label": "Cottage window",
    "c": [
-    36.5,
+    11.0,
     35.5,
-    37.5,
+    12.0,
     35.5
    ],
    "inside": [
-    35.5,
+    10.0,
     33.0
    ],
    "barInside": true,
@@ -1216,16 +2096,16 @@
    }
   },
   {
-   "id": "workshop-17-window-2",
-   "label": "Workshop (chandler) window",
+   "id": "cottage-17-window-2",
+   "label": "Cottage window",
    "c": [
-    32.0,
+    7.0,
     32.5,
-    32.0,
+    7.0,
     33.5
    ],
    "inside": [
-    35.5,
+    10.0,
     33.0
    ],
    "barInside": true,
@@ -1236,16 +2116,16 @@
    }
   },
   {
-   "id": "workshop-17-window-3",
-   "label": "Workshop (chandler) window",
+   "id": "cottage-17-window-3",
+   "label": "Cottage window",
    "c": [
-    35.0,
+    9.5,
     30.5,
-    36.0,
+    10.5,
     30.5
    ],
    "inside": [
-    35.5,
+    10.0,
     33.0
    ],
    "barInside": true,
@@ -1256,96 +2136,16 @@
    }
   },
   {
-   "id": "cottage-22-door-0",
+   "id": "cottage-21-door-0",
    "label": "Cottage door",
    "c": [
-    29.5,
-    39.5,
-    30.5,
-    39.5
-   ],
-   "inside": [
-    29.5,
-    42.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "door",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-22-window-1",
-   "label": "Cottage window",
-   "c": [
-    27.5,
-    39.5,
-    28.5,
-    39.5
-   ],
-   "inside": [
-    29.5,
-    42.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-22-window-2",
-   "label": "Cottage window",
-   "c": [
-    32.5,
-    41.5,
-    32.5,
-    42.5
-   ],
-   "inside": [
-    29.5,
-    42.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-22-window-3",
-   "label": "Cottage window",
-   "c": [
-    29.0,
-    44.5,
-    30.0,
-    44.5
-   ],
-   "inside": [
-    29.5,
-    42.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-29-door-0",
-   "label": "Cottage door",
-   "c": [
-    15.5,
+    50.0,
     40.0,
-    16.5,
+    51.0,
     40.0
    ],
    "inside": [
-    15.5,
+    50.0,
     42.5
    ],
    "barInside": true,
@@ -1356,16 +2156,16 @@
    }
   },
   {
-   "id": "cottage-29-window-1",
+   "id": "cottage-21-window-1",
    "label": "Cottage window",
    "c": [
-    13.5,
+    48.0,
     40.0,
-    14.5,
+    49.0,
     40.0
    ],
    "inside": [
-    15.5,
+    50.0,
     42.5
    ],
    "barInside": true,
@@ -1376,16 +2176,16 @@
    }
   },
   {
-   "id": "cottage-29-window-2",
+   "id": "cottage-21-window-2",
    "label": "Cottage window",
    "c": [
-    18.5,
+    53.0,
     42.0,
-    18.5,
+    53.0,
     43.0
    ],
    "inside": [
-    15.5,
+    50.0,
     42.5
    ],
    "barInside": true,
@@ -1396,17 +2196,257 @@
    }
   },
   {
-   "id": "cottage-29-window-3",
+   "id": "cottage-21-window-3",
    "label": "Cottage window",
    "c": [
-    15.0,
+    49.5,
     45.0,
-    16.0,
+    50.5,
     45.0
    ],
    "inside": [
-    15.5,
+    50.0,
     42.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-25-door-0",
+   "label": "Cottage door",
+   "c": [
+    36.5,
+    39.5,
+    37.5,
+    39.5
+   ],
+   "inside": [
+    36.5,
+    42.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-25-window-1",
+   "label": "Cottage window",
+   "c": [
+    34.5,
+    39.5,
+    35.5,
+    39.5
+   ],
+   "inside": [
+    36.5,
+    42.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-25-window-2",
+   "label": "Cottage window",
+   "c": [
+    39.5,
+    41.5,
+    39.5,
+    42.5
+   ],
+   "inside": [
+    36.5,
+    42.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-25-window-3",
+   "label": "Cottage window",
+   "c": [
+    36.0,
+    44.5,
+    37.0,
+    44.5
+   ],
+   "inside": [
+    36.5,
+    42.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-32-door-0",
+   "label": "Cottage door",
+   "c": [
+    0.5,
+    29.0,
+    0.5,
+    30.0
+   ],
+   "inside": [
+    3.0,
+    30.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-32-window-1",
+   "label": "Cottage window",
+   "c": [
+    0.5,
+    31.0,
+    0.5,
+    32.0
+   ],
+   "inside": [
+    3.0,
+    30.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-32-window-2",
+   "label": "Cottage window",
+   "c": [
+    2.5,
+    27.0,
+    3.5,
+    27.0
+   ],
+   "inside": [
+    3.0,
+    30.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-32-window-3",
+   "label": "Cottage window",
+   "c": [
+    5.5,
+    29.5,
+    5.5,
+    30.5
+   ],
+   "inside": [
+    3.0,
+    30.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-33-door-0",
+   "label": "Cottage door",
+   "c": [
+    57.5,
+    39.5,
+    58.5,
+    39.5
+   ],
+   "inside": [
+    57.5,
+    42.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-33-window-1",
+   "label": "Cottage window",
+   "c": [
+    55.5,
+    39.5,
+    56.5,
+    39.5
+   ],
+   "inside": [
+    57.5,
+    42.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-33-window-2",
+   "label": "Cottage window",
+   "c": [
+    60.5,
+    41.5,
+    60.5,
+    42.5
+   ],
+   "inside": [
+    57.5,
+    42.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-33-window-3",
+   "label": "Cottage window",
+   "c": [
+    57.0,
+    44.5,
+    58.0,
+    44.5
+   ],
+   "inside": [
+    57.5,
+    42.0
    ],
    "barInside": true,
    "flags": {
@@ -1419,13 +2459,13 @@
    "id": "cottage-34-door-0",
    "label": "Cottage door",
    "c": [
-    36.5,
+    27.5,
     39.5,
-    37.5,
+    28.5,
     39.5
    ],
    "inside": [
-    36.5,
+    27.5,
     42.0
    ],
    "barInside": true,
@@ -1439,13 +2479,13 @@
    "id": "cottage-34-window-1",
    "label": "Cottage window",
    "c": [
-    34.5,
+    25.5,
     39.5,
-    35.5,
+    26.5,
     39.5
    ],
    "inside": [
-    36.5,
+    27.5,
     42.0
    ],
    "barInside": true,
@@ -1459,13 +2499,13 @@
    "id": "cottage-34-window-2",
    "label": "Cottage window",
    "c": [
-    39.5,
+    30.5,
     41.5,
-    39.5,
+    30.5,
     42.5
    ],
    "inside": [
-    36.5,
+    27.5,
     42.0
    ],
    "barInside": true,
@@ -1479,13 +2519,13 @@
    "id": "cottage-34-window-3",
    "label": "Cottage window",
    "c": [
-    36.0,
+    27.0,
     44.5,
-    37.0,
+    28.0,
     44.5
    ],
    "inside": [
-    36.5,
+    27.5,
     42.0
    ],
    "barInside": true,
@@ -1496,96 +2536,16 @@
    }
   },
   {
-   "id": "cottage-35-door-0",
+   "id": "cottage-47-door-0",
    "label": "Cottage door",
    "c": [
-    5.5,
-    40.5,
-    6.5,
-    40.5
-   ],
-   "inside": [
-    5.5,
-    43.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "door",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-35-window-1",
-   "label": "Cottage window",
-   "c": [
-    3.5,
-    40.5,
-    4.5,
-    40.5
-   ],
-   "inside": [
-    5.5,
-    43.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-35-window-2",
-   "label": "Cottage window",
-   "c": [
-    8.5,
-    42.5,
-    8.5,
-    43.5
-   ],
-   "inside": [
-    5.5,
-    43.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-35-window-3",
-   "label": "Cottage window",
-   "c": [
-    5.0,
-    45.5,
-    6.0,
-    45.5
-   ],
-   "inside": [
-    5.5,
-    43.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-39-door-0",
-   "label": "Cottage door",
-   "c": [
-    43.5,
+    19.5,
     39.5,
-    44.5,
+    20.5,
     39.5
    ],
    "inside": [
-    43.5,
+    19.5,
     42.0
    ],
    "barInside": true,
@@ -1596,16 +2556,16 @@
    }
   },
   {
-   "id": "cottage-39-window-1",
+   "id": "cottage-47-window-1",
    "label": "Cottage window",
    "c": [
-    41.5,
+    17.5,
     39.5,
-    42.5,
+    18.5,
     39.5
    ],
    "inside": [
-    43.5,
+    19.5,
     42.0
    ],
    "barInside": true,
@@ -1616,16 +2576,16 @@
    }
   },
   {
-   "id": "cottage-39-window-2",
+   "id": "cottage-47-window-2",
    "label": "Cottage window",
    "c": [
-    46.5,
+    22.5,
     41.5,
-    46.5,
+    22.5,
     42.5
    ],
    "inside": [
-    43.5,
+    19.5,
     42.0
    ],
    "barInside": true,
@@ -1636,17 +2596,177 @@
    }
   },
   {
-   "id": "cottage-39-window-3",
+   "id": "cottage-47-window-3",
    "label": "Cottage window",
    "c": [
-    43.0,
+    19.0,
     44.5,
-    44.0,
+    20.0,
     44.5
    ],
    "inside": [
-    43.5,
+    19.5,
     42.0
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-56-door-0",
+   "label": "Cottage door",
+   "c": [
+    12.5,
+    40.0,
+    13.5,
+    40.0
+   ],
+   "inside": [
+    12.5,
+    42.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-56-window-1",
+   "label": "Cottage window",
+   "c": [
+    10.5,
+    40.0,
+    11.5,
+    40.0
+   ],
+   "inside": [
+    12.5,
+    42.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-56-window-2",
+   "label": "Cottage window",
+   "c": [
+    15.5,
+    42.0,
+    15.5,
+    43.0
+   ],
+   "inside": [
+    12.5,
+    42.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-56-window-3",
+   "label": "Cottage window",
+   "c": [
+    12.0,
+    45.0,
+    13.0,
+    45.0
+   ],
+   "inside": [
+    12.5,
+    42.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-62-door-0",
+   "label": "Cottage door",
+   "c": [
+    47.0,
+    49.5,
+    47.0,
+    50.5
+   ],
+   "inside": [
+    49.5,
+    50.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-62-window-1",
+   "label": "Cottage window",
+   "c": [
+    47.0,
+    51.5,
+    47.0,
+    52.5
+   ],
+   "inside": [
+    49.5,
+    50.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-62-window-2",
+   "label": "Cottage window",
+   "c": [
+    49.0,
+    47.5,
+    50.0,
+    47.5
+   ],
+   "inside": [
+    49.5,
+    50.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   }
+  },
+  {
+   "id": "cottage-62-window-3",
+   "label": "Cottage window",
+   "c": [
+    52.0,
+    50.0,
+    52.0,
+    51.0
+   ],
+   "inside": [
+    49.5,
+    50.5
    ],
    "barInside": true,
    "flags": {
@@ -1659,14 +2779,14 @@
    "id": "cottage-63-door-0",
    "label": "Cottage door",
    "c": [
-    19.5,
-    49.0,
-    19.5,
-    50.0
+    41.5,
+    48.5,
+    41.5,
+    49.5
    ],
    "inside": [
-    17.0,
-    49.0
+    39.0,
+    48.5
    ],
    "barInside": true,
    "flags": {
@@ -1679,14 +2799,14 @@
    "id": "cottage-63-window-1",
    "label": "Cottage window",
    "c": [
-    19.5,
-    47.0,
-    19.5,
-    48.0
+    41.5,
+    46.5,
+    41.5,
+    47.5
    ],
    "inside": [
-    17.0,
-    49.0
+    39.0,
+    48.5
    ],
    "barInside": true,
    "flags": {
@@ -1699,14 +2819,14 @@
    "id": "cottage-63-window-2",
    "label": "Cottage window",
    "c": [
-    16.5,
-    52.0,
-    17.5,
-    52.0
+    38.5,
+    51.5,
+    39.5,
+    51.5
    ],
    "inside": [
-    17.0,
-    49.0
+    39.0,
+    48.5
    ],
    "barInside": true,
    "flags": {
@@ -1719,54 +2839,14 @@
    "id": "cottage-63-window-3",
    "label": "Cottage window",
    "c": [
-    14.5,
-    48.5,
-    14.5,
-    49.5
-   ],
-   "inside": [
-    17.0,
-    49.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-65-door-0",
-   "label": "Cottage door",
-   "c": [
-    25.5,
+    36.5,
     48.0,
-    25.5,
+    36.5,
     49.0
    ],
    "inside": [
-    28.0,
-    49.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "door",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-65-window-1",
-   "label": "Cottage window",
-   "c": [
-    25.5,
-    50.0,
-    25.5,
-    51.0
-   ],
-   "inside": [
-    28.0,
-    49.0
+    39.0,
+    48.5
    ],
    "barInside": true,
    "flags": {
@@ -1776,57 +2856,17 @@
    }
   },
   {
-   "id": "cottage-65-window-2",
-   "label": "Cottage window",
-   "c": [
-    27.5,
-    46.0,
-    28.5,
-    46.0
-   ],
-   "inside": [
-    28.0,
-    49.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-65-window-3",
-   "label": "Cottage window",
-   "c": [
-    30.5,
-    48.5,
-    30.5,
-    49.5
-   ],
-   "inside": [
-    28.0,
-    49.0
-   ],
-   "barInside": true,
-   "flags": {
-    "kind": "shutter",
-    "material": "wood",
-    "lock": "none"
-   }
-  },
-  {
-   "id": "cottage-81-door-0",
+   "id": "cottage-68-door-0",
    "label": "Cottage door",
    "c": [
-    19.5,
-    56.0,
-    19.5,
-    57.0
+    5.5,
+    40.0,
+    6.5,
+    40.0
    ],
    "inside": [
-    17.0,
-    56.0
+    5.5,
+    42.5
    ],
    "barInside": true,
    "flags": {
@@ -1836,17 +2876,17 @@
    }
   },
   {
-   "id": "cottage-81-window-1",
+   "id": "cottage-68-window-1",
    "label": "Cottage window",
    "c": [
-    19.5,
-    54.0,
-    19.5,
-    55.0
+    3.5,
+    40.0,
+    4.5,
+    40.0
    ],
    "inside": [
-    17.0,
-    56.0
+    5.5,
+    42.5
    ],
    "barInside": true,
    "flags": {
@@ -1856,17 +2896,17 @@
    }
   },
   {
-   "id": "cottage-81-window-2",
+   "id": "cottage-68-window-2",
    "label": "Cottage window",
    "c": [
-    16.5,
-    59.0,
-    17.5,
-    59.0
+    8.5,
+    42.0,
+    8.5,
+    43.0
    ],
    "inside": [
-    17.0,
-    56.0
+    5.5,
+    42.5
    ],
    "barInside": true,
    "flags": {
@@ -1876,17 +2916,17 @@
    }
   },
   {
-   "id": "cottage-81-window-3",
+   "id": "cottage-68-window-3",
    "label": "Cottage window",
    "c": [
-    14.5,
-    55.5,
-    14.5,
-    56.5
+    5.0,
+    45.0,
+    6.0,
+    45.0
    ],
    "inside": [
-    17.0,
-    56.0
+    5.5,
+    42.5
    ],
    "barInside": true,
    "flags": {
@@ -1901,7 +2941,7 @@
    "id": "tavern-1-kitchen-0",
    "label": "Oven (Kitchen)",
    "rect": [
-    10.68,
+    32.68,
     13.22,
     1.6,
     1.6
@@ -1922,8 +2962,8 @@
    "id": "tavern-1-cellar-store-5",
    "label": "Chest (Cellar store)",
    "rect": [
-    10.68,
-    9.92,
+    34.42,
+    7.18,
     0.9,
     0.9
    ],
@@ -1936,28 +2976,149 @@
    }
   },
   {
-   "id": "chapel-1-chancel-3",
-   "label": "Chest (Chancel)",
+   "id": "cottage-1-cottage-0",
+   "label": "Hearth (Cottage)",
    "rect": [
-    35.68,
-    6.92,
-    0.9,
-    0.9
+    54.32,
+    1.68,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "cottage-1-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    53.32,
+    6.32,
+    2.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "cottage-1-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    50.68,
+    6.32,
+    2.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "cottage-1-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    54.32,
+    5.32,
+    1.0,
+    1.0
    ],
    "flags": {
     "container": true,
     "kind": "chest",
     "lock": "cheap",
     "items": "",
-    "fillPlace": "church"
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-1-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    51.52,
+    1.68,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "bakehouse-2-bakehouse-0",
+   "label": "Oven (Bakehouse)",
+   "rect": [
+    57.68,
+    5.32,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The bread oven"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "bakehouse-2-bakehouse-6",
+   "label": "Box bed (Bakehouse)",
+   "rect": [
+    62.32,
+    3.68,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "bakehouse-2-bakehouse-7",
+   "label": "Chest (Bakehouse)",
+   "rect": [
+    62.32,
+    2.68,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
    }
   },
   {
    "id": "bakehouse-3-bakehouse-0",
    "label": "Oven (Bakehouse)",
    "rect": [
-    28.32,
-    12.82,
+    50.82,
+    10.7,
     2.0,
     2.0
    ],
@@ -1977,10 +3138,10 @@
    "id": "bakehouse-3-bakehouse-6",
    "label": "Box bed (Bakehouse)",
    "rect": [
-    26.43,
-    9.18,
-    2.0,
-    1.0
+    47.18,
+    12.57,
+    1.0,
+    2.0
    ],
    "flags": {
     "hide": true,
@@ -1992,8 +3153,8 @@
    "id": "bakehouse-3-bakehouse-7",
    "label": "Chest (Bakehouse)",
    "rect": [
-    27.18,
-    10.18,
+    48.18,
+    12.7,
     1.0,
     1.0
    ],
@@ -2006,96 +3167,28 @@
    }
   },
   {
-   "id": "townhouse-2-back-room-0",
-   "label": "Bed (Back room)",
+   "id": "bakehouse-3-bakehouse-f1",
+   "label": "Cupboard (Bakehouse)",
    "rect": [
-    33.68,
-    9.68,
-    2.0,
-    2.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the bed"
-   }
-  },
-  {
-   "id": "townhouse-2-back-room-1",
-   "label": "Chest (Back room)",
-   "rect": [
-    33.68,
-    11.68,
-    1.0,
-    1.0
+    52.07,
+    13.82,
+    0.75,
+    1.5
    ],
    "flags": {
     "container": true,
-    "kind": "chest",
-    "lock": "cheap",
+    "kind": "cabinet",
+    "lock": "none",
     "items": "",
-    "fillPlace": "home"
-   }
-  },
-  {
-   "id": "townhouse-2-back-room-2",
-   "label": "Hearth (Back room)",
-   "rect": [
-    33.68,
-    12.68,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "light": true,
-    "lightKind": "torch",
-    "title": "The hearth"
-   },
-   "light": {
-    "dim": 3,
-    "bright": 1,
-    "color": "#ff9a3c",
-    "on": true
-   }
-  },
-  {
-   "id": "townhouse-2-shop-1",
-   "label": "Crates (Shop)",
-   "rect": [
-    39.32,
-    14.32,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
-   }
-  },
-  {
-   "id": "townhouse-2-shop-2",
-   "label": "Crates (Shop)",
-   "rect": [
-    36.68,
-    9.68,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
+    "fillPlace": "workshop"
    }
   },
   {
    "id": "townhouse-3-back-room-0",
    "label": "Bed (Back room)",
    "rect": [
-    3.68,
-    12.32,
+    57.82,
+    9.18,
     2.0,
     2.0
    ],
@@ -2109,8 +3202,8 @@
    "id": "townhouse-3-back-room-1",
    "label": "Chest (Back room)",
    "rect": [
-    5.68,
-    13.32,
+    56.82,
+    9.18,
     1.0,
     1.0
    ],
@@ -2126,8 +3219,8 @@
    "id": "townhouse-3-back-room-2",
    "label": "Hearth (Back room)",
    "rect": [
-    6.68,
-    13.32,
+    54.18,
+    9.18,
     1.0,
     1.0
    ],
@@ -2144,11 +3237,28 @@
    }
   },
   {
+   "id": "townhouse-3-back-room-f0",
+   "label": "Cupboard (Back room)",
+   "rect": [
+    55.32,
+    9.18,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
    "id": "townhouse-3-shop-1",
    "label": "Crates (Shop)",
    "rect": [
-    3.68,
-    7.68,
+    54.18,
+    12.18,
     1.0,
     1.0
    ],
@@ -2163,8 +3273,8 @@
    "id": "townhouse-3-shop-2",
    "label": "Crates (Shop)",
    "rect": [
-    8.32,
-    7.68,
+    54.18,
+    14.82,
     1.0,
     1.0
    ],
@@ -2176,11 +3286,11 @@
    }
   },
   {
-   "id": "townhouse-11-back-room-0",
+   "id": "townhouse-4-back-room-0",
    "label": "Bed (Back room)",
    "rect": [
-    13.18,
-    20.18,
+    25.68,
+    11.18,
     2.0,
     2.0
    ],
@@ -2191,11 +3301,11 @@
    }
   },
   {
-   "id": "townhouse-11-back-room-1",
+   "id": "townhouse-4-back-room-1",
    "label": "Chest (Back room)",
    "rect": [
-    13.18,
-    22.18,
+    27.68,
+    11.18,
     1.0,
     1.0
    ],
@@ -2208,11 +3318,11 @@
    }
   },
   {
-   "id": "townhouse-11-back-room-2",
+   "id": "townhouse-4-back-room-2",
    "label": "Hearth (Back room)",
    "rect": [
-    13.18,
-    23.18,
+    30.32,
+    12.82,
     1.0,
     1.0
    ],
@@ -2229,11 +3339,28 @@
    }
   },
   {
-   "id": "townhouse-11-shop-1",
+   "id": "townhouse-4-back-room-f2",
+   "label": "Cupboard (Back room)",
+   "rect": [
+    30.57,
+    11.18,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "townhouse-4-shop-1",
    "label": "Crates (Shop)",
    "rect": [
-    18.82,
-    24.82,
+    30.32,
+    9.82,
     1.0,
     1.0
    ],
@@ -2245,11 +3372,232 @@
    }
   },
   {
-   "id": "townhouse-11-shop-2",
+   "id": "townhouse-4-shop-2",
    "label": "Crates (Shop)",
    "rect": [
-    16.18,
-    24.82,
+    30.32,
+    7.18,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "townhouse-7-back-room-0",
+   "label": "Bed (Back room)",
+   "rect": [
+    14.18,
+    2.18,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the bed"
+   }
+  },
+  {
+   "id": "townhouse-7-back-room-1",
+   "label": "Chest (Back room)",
+   "rect": [
+    14.68,
+    4.18,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "townhouse-7-back-room-2",
+   "label": "Hearth (Back room)",
+   "rect": [
+    14.18,
+    6.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "townhouse-7-back-room-f0",
+   "label": "Cupboard (Back room)",
+   "rect": [
+    14.18,
+    5.32,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "townhouse-7-back-room-f2",
+   "label": "Chest (Back room)",
+   "rect": [
+    15.82,
+    4.32,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "townhouse-7-shop-1",
+   "label": "Crates (Shop)",
+   "rect": [
+    19.82,
+    6.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "townhouse-7-shop-2",
+   "label": "Crates (Shop)",
+   "rect": [
+    17.18,
+    6.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "townhouse-9-back-room-0",
+   "label": "Bed (Back room)",
+   "rect": [
+    14.82,
+    9.18,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the bed"
+   }
+  },
+  {
+   "id": "townhouse-9-back-room-1",
+   "label": "Chest (Back room)",
+   "rect": [
+    15.43,
+    11.18,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "townhouse-9-back-room-2",
+   "label": "Hearth (Back room)",
+   "rect": [
+    14.18,
+    13.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "townhouse-9-back-room-f2",
+   "label": "Cupboard (Back room)",
+   "rect": [
+    15.32,
+    14.07,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "townhouse-9-shop-1",
+   "label": "Crates (Shop)",
+   "rect": [
+    19.82,
+    13.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "townhouse-9-shop-2",
+   "label": "Crates (Shop)",
+   "rect": [
+    17.18,
+    13.82,
     1.0,
     1.0
    ],
@@ -2264,8 +3612,8 @@
    "id": "townhouse-14-back-room-0",
    "label": "Bed (Back room)",
    "rect": [
-    28.68,
-    24.32,
+    35.68,
+    25.32,
     2.0,
     2.0
    ],
@@ -2279,8 +3627,8 @@
    "id": "townhouse-14-back-room-1",
    "label": "Chest (Back room)",
    "rect": [
-    28.68,
-    23.32,
+    37.68,
+    26.32,
     1.0,
     1.0
    ],
@@ -2296,8 +3644,8 @@
    "id": "townhouse-14-back-room-2",
    "label": "Hearth (Back room)",
    "rect": [
-    30.32,
-    20.68,
+    40.32,
+    26.32,
     1.0,
     1.0
    ],
@@ -2314,11 +3662,28 @@
    }
   },
   {
+   "id": "townhouse-14-back-room-f2",
+   "label": "Cupboard (Back room)",
+   "rect": [
+    40.57,
+    24.82,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
    "id": "townhouse-14-shop-1",
    "label": "Crates (Shop)",
    "rect": [
-    24.68,
-    25.32,
+    40.32,
+    23.32,
     1.0,
     1.0
    ],
@@ -2333,8 +3698,229 @@
    "id": "townhouse-14-shop-2",
    "label": "Crates (Shop)",
    "rect": [
-    24.68,
+    40.32,
     20.68,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "townhouse-17-back-room-0",
+   "label": "Bed (Back room)",
+   "rect": [
+    51.68,
+    23.82,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the bed"
+   }
+  },
+  {
+   "id": "townhouse-17-back-room-1",
+   "label": "Chest (Back room)",
+   "rect": [
+    52.18,
+    22.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "townhouse-17-back-room-2",
+   "label": "Hearth (Back room)",
+   "rect": [
+    53.32,
+    20.18,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "townhouse-17-back-room-f2",
+   "label": "Cupboard (Back room)",
+   "rect": [
+    51.82,
+    20.18,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "townhouse-17-shop-1",
+   "label": "Crates (Shop)",
+   "rect": [
+    47.68,
+    20.18,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "townhouse-17-shop-2",
+   "label": "Crates (Shop)",
+   "rect": [
+    50.32,
+    20.18,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "townhouse-20-back-room-0",
+   "label": "Bed (Back room)",
+   "rect": [
+    56.18,
+    20.18,
+    2.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the bed"
+   }
+  },
+  {
+   "id": "townhouse-20-back-room-1",
+   "label": "Chest (Back room)",
+   "rect": [
+    56.68,
+    22.18,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "townhouse-20-back-room-2",
+   "label": "Hearth (Back room)",
+   "rect": [
+    56.18,
+    24.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "townhouse-20-back-room-f0",
+   "label": "Cupboard (Back room)",
+   "rect": [
+    57.18,
+    25.07,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "townhouse-20-back-room-f2",
+   "label": "Chest (Back room)",
+   "rect": [
+    57.82,
+    22.18,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "townhouse-20-shop-1",
+   "label": "Crates (Shop)",
+   "rect": [
+    61.82,
+    24.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "townhouse-20-shop-2",
+   "label": "Crates (Shop)",
+   "rect": [
+    59.18,
+    24.82,
     1.0,
     1.0
    ],
@@ -2349,8 +3935,8 @@
    "id": "townhouse-21-back-room-0",
    "label": "Bed (Back room)",
    "rect": [
-    33.18,
-    25.32,
+    31.32,
+    23.82,
     2.0,
     2.0
    ],
@@ -2364,8 +3950,8 @@
    "id": "townhouse-21-back-room-1",
    "label": "Chest (Back room)",
    "rect": [
-    35.18,
-    26.32,
+    31.93,
+    22.82,
     1.0,
     1.0
    ],
@@ -2381,8 +3967,8 @@
    "id": "townhouse-21-back-room-2",
    "label": "Hearth (Back room)",
    "rect": [
-    36.18,
-    26.32,
+    32.32,
+    20.18,
     1.0,
     1.0
    ],
@@ -2399,11 +3985,28 @@
    }
   },
   {
+   "id": "townhouse-21-back-room-f0",
+   "label": "Cupboard (Back room)",
+   "rect": [
+    30.68,
+    20.18,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
    "id": "townhouse-21-shop-1",
    "label": "Crates (Shop)",
    "rect": [
-    33.18,
-    20.68,
+    26.68,
+    20.18,
     1.0,
     1.0
    ],
@@ -2418,8 +4021,8 @@
    "id": "townhouse-21-shop-2",
    "label": "Crates (Shop)",
    "rect": [
-    37.82,
-    20.68,
+    29.32,
+    20.18,
     1.0,
     1.0
    ],
@@ -2431,11 +4034,11 @@
    }
   },
   {
-   "id": "townhouse-22-back-room-0",
+   "id": "townhouse-23-back-room-0",
    "label": "Bed (Back room)",
    "rect": [
-    7.68,
-    24.32,
+    7.18,
+    6.82,
     2.0,
     2.0
    ],
@@ -2446,11 +4049,11 @@
    }
   },
   {
-   "id": "townhouse-22-back-room-1",
+   "id": "townhouse-23-back-room-1",
    "label": "Chest (Back room)",
    "rect": [
-    7.68,
-    23.32,
+    9.18,
+    7.82,
     1.0,
     1.0
    ],
@@ -2463,10 +4066,909 @@
    }
   },
   {
-   "id": "townhouse-22-back-room-2",
+   "id": "townhouse-23-back-room-2",
    "label": "Hearth (Back room)",
    "rect": [
+    11.82,
+    7.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "townhouse-23-back-room-f0",
+   "label": "Cupboard (Back room)",
+   "rect": [
+    10.32,
+    8.07,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "townhouse-23-back-room-f2",
+   "label": "Chest (Back room)",
+   "rect": [
     9.32,
+    6.18,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "townhouse-23-shop-1",
+   "label": "Crates (Shop)",
+   "rect": [
+    11.82,
+    4.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "townhouse-23-shop-2",
+   "label": "Crates (Shop)",
+   "rect": [
+    7.18,
+    4.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "workshop-4-workshop-3",
+   "label": "Crates (Workshop)",
+   "rect": [
+    6.18,
+    14.32,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "workshop-4-workshop-4",
+   "label": "Crates (Workshop)",
+   "rect": [
+    11.82,
+    14.32,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "workshop-4-workshop-6",
+   "label": "Box bed (Workshop)",
+   "rect": [
+    11.82,
+    12.32,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "workshop-4-workshop-7",
+   "label": "Chest (Workshop)",
+   "rect": [
+    10.82,
+    13.18,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-4-workshop-8",
+   "label": "Hearth (Workshop)",
+   "rect": [
+    6.18,
+    12.18,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "workshop-4-workshop-f1",
+   "label": "Chest (Workshop)",
+   "rect": [
+    7.18,
+    14.57,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-5-workshop-3",
+   "label": "Crates (Workshop)",
+   "rect": [
+    19.82,
+    25.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "workshop-5-workshop-4",
+   "label": "Crates (Workshop)",
+   "rect": [
+    19.82,
+    20.18,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "workshop-5-workshop-6",
+   "label": "Box bed (Workshop)",
+   "rect": [
+    17.18,
+    20.18,
+    2.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "workshop-5-workshop-7",
+   "label": "Chest (Workshop)",
+   "rect": [
+    17.68,
+    21.18,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-5-workshop-8",
+   "label": "Hearth (Workshop)",
+   "rect": [
+    18.43,
+    25.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "workshop-5-workshop-f1",
+   "label": "Chest (Workshop)",
+   "rect": [
+    19.82,
+    22.68,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-5-workshop-f3",
+   "label": "Chest (Workshop)",
+   "rect": [
+    17.18,
+    26.07,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-7-workshop-3",
+   "label": "Crates (Workshop)",
+   "rect": [
+    1.18,
+    1.68,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "workshop-7-workshop-4",
+   "label": "Crates (Workshop)",
+   "rect": [
+    1.18,
+    7.32,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "workshop-7-workshop-6",
+   "label": "Box bed (Workshop)",
+   "rect": [
+    2.82,
+    7.32,
+    2.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "workshop-7-workshop-7",
+   "label": "Chest (Workshop)",
+   "rect": [
+    2.68,
+    6.32,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-7-workshop-8",
+   "label": "Hearth (Workshop)",
+   "rect": [
+    2.93,
+    1.68,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "workshop-7-workshop-f1",
+   "label": "Chest (Workshop)",
+   "rect": [
+    1.18,
+    4.5,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-7-workshop-f4",
+   "label": "Chest (Workshop)",
+   "rect": [
+    4.07,
+    1.68,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-10-workshop-3",
+   "label": "Crates (Workshop)",
+   "rect": [
+    46.68,
+    33.32,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "workshop-10-workshop-4",
+   "label": "Crates (Workshop)",
+   "rect": [
+    46.68,
+    27.68,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "workshop-10-workshop-6",
+   "label": "Box bed (Workshop)",
+   "rect": [
+    47.68,
+    33.32,
+    2.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "workshop-10-workshop-7",
+   "label": "Chest (Workshop)",
+   "rect": [
+    49.18,
+    32.32,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-10-workshop-8",
+   "label": "Hearth (Workshop)",
+   "rect": [
+    47.68,
+    27.7,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "workshop-10-workshop-f1",
+   "label": "Chest (Workshop)",
+   "rect": [
+    50.57,
+    31.57,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-11-workshop-3",
+   "label": "Crates (Workshop)",
+   "rect": [
+    41.32,
+    34.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "workshop-11-workshop-4",
+   "label": "Crates (Workshop)",
+   "rect": [
+    41.32,
+    29.18,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "workshop-11-workshop-6",
+   "label": "Box bed (Workshop)",
+   "rect": [
+    38.68,
+    29.18,
+    2.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "workshop-11-workshop-7",
+   "label": "Chest (Workshop)",
+   "rect": [
+    39.57,
+    30.18,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-11-workshop-8",
+   "label": "Hearth (Workshop)",
+   "rect": [
+    38.93,
+    34.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "workshop-11-workshop-f1",
+   "label": "Chest (Workshop)",
+   "rect": [
+    41.57,
+    34.07,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-12-workshop-3",
+   "label": "Crates (Workshop)",
+   "rect": [
+    35.32,
+    33.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "workshop-12-workshop-4",
+   "label": "Crates (Workshop)",
+   "rect": [
+    29.68,
+    33.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "workshop-12-workshop-6",
+   "label": "Box bed (Workshop)",
+   "rect": [
+    35.32,
+    31.18,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "workshop-12-workshop-7",
+   "label": "Chest (Workshop)",
+   "rect": [
+    34.32,
+    31.18,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-12-workshop-8",
+   "label": "Hearth (Workshop)",
+   "rect": [
+    29.68,
+    32.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "workshop-12-workshop-f1",
+   "label": "Chest (Workshop)",
+   "rect": [
+    33.57,
+    30.18,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-14-workshop-3",
+   "label": "Crates (Workshop)",
+   "rect": [
+    58.32,
+    33.32,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "workshop-14-workshop-4",
+   "label": "Crates (Workshop)",
+   "rect": [
+    52.68,
+    33.32,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "workshop-14-workshop-6",
+   "label": "Box bed (Workshop)",
+   "rect": [
+    58.32,
+    31.32,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "workshop-14-workshop-7",
+   "label": "Chest (Workshop)",
+   "rect": [
+    57.32,
+    32.18,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-14-workshop-8",
+   "label": "Hearth (Workshop)",
+   "rect": [
+    52.68,
+    30.7,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "workshop-14-workshop-f1",
+   "label": "Chest (Workshop)",
+   "rect": [
+    55.68,
+    33.32,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-16-workshop-3",
+   "label": "Crates (Workshop)",
+   "rect": [
+    13.82,
+    20.68,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "workshop-16-workshop-4",
+   "label": "Crates (Workshop)",
+   "rect": [
+    8.18,
+    20.68,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "workshop-16-workshop-6",
+   "label": "Box bed (Workshop)",
+   "rect": [
+    8.18,
+    21.68,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "workshop-16-workshop-7",
+   "label": "Chest (Workshop)",
+   "rect": [
+    9.18,
+    22.68,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-16-workshop-8",
+   "label": "Hearth (Workshop)",
+   "rect": [
+    13.82,
     22.32,
     1.0,
     1.0
@@ -2484,92 +4986,30 @@
    }
   },
   {
-   "id": "townhouse-22-shop-1",
-   "label": "Crates (Shop)",
+   "id": "workshop-16-workshop-f1",
+   "label": "Chest (Workshop)",
    "rect": [
-    6.32,
-    25.32,
-    1.0,
-    1.0
+    12.07,
+    24.57,
+    0.75,
+    0.75
    ],
    "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
    }
   },
   {
-   "id": "townhouse-22-shop-2",
-   "label": "Crates (Shop)",
+   "id": "workshop-16-workshop-f4",
+   "label": "Chest (Workshop)",
    "rect": [
-    3.68,
+    11.18,
     20.68,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
-   }
-  },
-  {
-   "id": "workshop-10-workshop-3",
-   "label": "Crates (Workshop)",
-   "rect": [
-    18.82,
-    28.68,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
-   }
-  },
-  {
-   "id": "workshop-10-workshop-4",
-   "label": "Crates (Workshop)",
-   "rect": [
-    18.82,
-    34.32,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
-   }
-  },
-  {
-   "id": "workshop-10-workshop-6",
-   "label": "Box bed (Workshop)",
-   "rect": [
-    16.82,
-    28.68,
-    2.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
-   }
-  },
-  {
-   "id": "workshop-10-workshop-7",
-   "label": "Chest (Workshop)",
-   "rect": [
-    17.93,
-    29.68,
-    1.0,
-    1.0
+    0.75,
+    0.75
    ],
    "flags": {
     "container": true,
@@ -2580,11 +5020,11 @@
    }
   },
   {
-   "id": "workshop-10-workshop-8",
-   "label": "Hearth (Workshop)",
+   "id": "cottage-9-cottage-0",
+   "label": "Hearth (Cottage)",
    "rect": [
-    16.93,
-    34.32,
+    16.18,
+    29.68,
     1.0,
     1.0
    ],
@@ -2601,128 +5041,11 @@
    }
   },
   {
-   "id": "workshop-11-workshop-3",
-   "label": "Crates (Workshop)",
+   "id": "cottage-9-cottage-2",
+   "label": "Box bed (Cottage)",
    "rect": [
-    25.68,
-    27.68,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
-   }
-  },
-  {
-   "id": "workshop-11-workshop-4",
-   "label": "Crates (Workshop)",
-   "rect": [
-    25.68,
-    33.32,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
-   }
-  },
-  {
-   "id": "workshop-11-workshop-6",
-   "label": "Box bed (Workshop)",
-   "rect": [
-    26.68,
-    33.32,
-    2.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
-   }
-  },
-  {
-   "id": "workshop-11-workshop-7",
-   "label": "Chest (Workshop)",
-   "rect": [
-    25.68,
-    32.32,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "workshop"
-   }
-  },
-  {
-   "id": "workshop-11-workshop-8",
-   "label": "Hearth (Workshop)",
-   "rect": [
-    28.32,
-    27.68,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "light": true,
-    "lightKind": "torch",
-    "title": "The hearth"
-   },
-   "light": {
-    "dim": 3,
-    "bright": 1,
-    "color": "#ff9a3c",
-    "on": true
-   }
-  },
-  {
-   "id": "workshop-15-workshop-3",
-   "label": "Crates (Workshop)",
-   "rect": [
-    5.68,
-    33.32,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
-   }
-  },
-  {
-   "id": "workshop-15-workshop-4",
-   "label": "Crates (Workshop)",
-   "rect": [
-    5.68,
+    20.82,
     29.68,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
-   }
-  },
-  {
-   "id": "workshop-15-workshop-6",
-   "label": "Box bed (Workshop)",
-   "rect": [
-    11.32,
-    31.32,
     1.0,
     2.0
    ],
@@ -2733,11 +5056,26 @@
    }
   },
   {
-   "id": "workshop-15-workshop-7",
-   "label": "Chest (Workshop)",
+   "id": "cottage-9-cottage-3",
+   "label": "Box bed (Cottage)",
    "rect": [
-    11.32,
-    33.32,
+    20.82,
+    32.32,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "cottage-9-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    19.82,
+    29.68,
     1.0,
     1.0
    ],
@@ -2746,14 +5084,116 @@
     "kind": "chest",
     "lock": "cheap",
     "items": "",
-    "fillPlace": "workshop"
+    "fillPlace": "home"
    }
   },
   {
-   "id": "workshop-15-workshop-8",
-   "label": "Hearth (Workshop)",
+   "id": "cottage-9-cottage-f0",
+   "label": "Cupboard (Cottage)",
    "rect": [
-    5.68,
+    16.18,
+    31.57,
+    1,
+    2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-10-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    4.82,
+    20.18,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "cottage-10-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    1.18,
+    24.82,
+    2.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "cottage-10-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    3.82,
+    24.82,
+    2.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "cottage-10-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    4.82,
+    23.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-10-cottage-f2",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    1.18,
+    23.32,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-17-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    7.18,
     30.68,
     1.0,
     1.0
@@ -2771,117 +5211,11 @@
    }
   },
   {
-   "id": "workshop-17-workshop-3",
-   "label": "Crates (Workshop)",
-   "rect": [
-    32.18,
-    34.32,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
-   }
-  },
-  {
-   "id": "workshop-17-workshop-4",
-   "label": "Crates (Workshop)",
-   "rect": [
-    37.82,
-    34.32,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
-   }
-  },
-  {
-   "id": "workshop-17-workshop-6",
-   "label": "Box bed (Workshop)",
-   "rect": [
-    37.82,
-    31.93,
-    1.0,
-    2.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
-   }
-  },
-  {
-   "id": "workshop-17-workshop-7",
-   "label": "Chest (Workshop)",
-   "rect": [
-    36.82,
-    33.4,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "workshop"
-   }
-  },
-  {
-   "id": "workshop-17-workshop-8",
-   "label": "Hearth (Workshop)",
-   "rect": [
-    32.18,
-    32.4,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "light": true,
-    "lightKind": "torch",
-    "title": "The hearth"
-   },
-   "light": {
-    "dim": 3,
-    "bright": 1,
-    "color": "#ff9a3c",
-    "on": true
-   }
-  },
-  {
-   "id": "cottage-22-cottage-0",
-   "label": "Hearth (Cottage)",
-   "rect": [
-    31.32,
-    43.32,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "light": true,
-    "lightKind": "torch",
-    "title": "The hearth"
-   },
-   "light": {
-    "dim": 3,
-    "bright": 1,
-    "color": "#ff9a3c",
-    "on": true
-   }
-  },
-  {
-   "id": "cottage-22-cottage-2",
+   "id": "cottage-17-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    26.68,
-    39.68,
+    11.82,
+    30.7,
     1.0,
     2.0
    ],
@@ -2892,11 +5226,11 @@
    }
   },
   {
-   "id": "cottage-22-cottage-3",
+   "id": "cottage-17-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    26.68,
-    42.32,
+    11.82,
+    33.32,
     1.0,
     2.0
    ],
@@ -2907,11 +5241,11 @@
    }
   },
   {
-   "id": "cottage-22-cottage-4",
+   "id": "cottage-17-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    27.68,
-    39.68,
+    10.8,
+    30.68,
     1.0,
     1.0
    ],
@@ -2924,10 +5258,27 @@
    }
   },
   {
-   "id": "cottage-29-cottage-0",
+   "id": "cottage-17-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    9.3,
+    30.68,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-21-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
-    17.32,
+    51.82,
     43.82,
     1.0,
     1.0
@@ -2945,10 +5296,25 @@
    }
   },
   {
-   "id": "cottage-29-cottage-2",
+   "id": "cottage-21-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    12.68,
+    47.18,
+    42.82,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "cottage-21-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    47.18,
     40.18,
     1.0,
     2.0
@@ -2960,26 +5326,11 @@
    }
   },
   {
-   "id": "cottage-29-cottage-3",
-   "label": "Box bed (Cottage)",
-   "rect": [
-    12.68,
-    42.18,
-    1.0,
-    2.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
-   }
-  },
-  {
-   "id": "cottage-29-cottage-4",
+   "id": "cottage-21-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    13.68,
-    40.18,
+    48.18,
+    43.82,
     1.0,
     1.0
    ],
@@ -2992,7 +5343,41 @@
    }
   },
   {
-   "id": "cottage-34-cottage-0",
+   "id": "cottage-21-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    48.43,
+    40.18,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-21-cottage-f3",
+   "label": "Chest (Cottage)",
+   "rect": [
+    51.93,
+    40.18,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-25-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
     38.32,
@@ -3013,11 +5398,266 @@
    }
   },
   {
-   "id": "cottage-34-cottage-2",
+   "id": "cottage-25-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    33.68,
+    39.7,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "cottage-25-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
     33.68,
     42.32,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "cottage-25-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    34.68,
+    43.32,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-25-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    35.68,
+    43.57,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-32-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    4.32,
+    27.18,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "cottage-32-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    0.68,
+    31.82,
+    2.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "cottage-32-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    3.32,
+    31.82,
+    2.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "cottage-32-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    4.32,
+    30.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-32-cottage-f1",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    4.57,
+    28.98,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-33-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    59.32,
+    43.32,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "cottage-33-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    54.68,
+    39.68,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "cottage-33-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    54.68,
+    42.32,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "cottage-33-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    55.68,
+    43.32,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-33-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    58.82,
+    39.68,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-34-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    29.32,
+    43.32,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "cottage-34-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    24.68,
+    39.68,
     1.0,
     2.0
    ],
@@ -3031,8 +5671,8 @@
    "id": "cottage-34-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    33.68,
-    39.7,
+    24.68,
+    42.32,
     1.0,
     2.0
    ],
@@ -3046,8 +5686,8 @@
    "id": "cottage-34-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    34.68,
-    39.68,
+    25.68,
+    43.32,
     1.0,
     1.0
    ],
@@ -3060,78 +5700,27 @@
    }
   },
   {
-   "id": "cottage-35-cottage-0",
-   "label": "Hearth (Cottage)",
+   "id": "cottage-34-cottage-f0",
+   "label": "Cupboard (Cottage)",
    "rect": [
-    7.32,
-    44.32,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "light": true,
-    "lightKind": "torch",
-    "title": "The hearth"
-   },
-   "light": {
-    "dim": 3,
-    "bright": 1,
-    "color": "#ff9a3c",
-    "on": true
-   }
-  },
-  {
-   "id": "cottage-35-cottage-2",
-   "label": "Box bed (Cottage)",
-   "rect": [
-    2.68,
-    40.7,
-    1.0,
-    2.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
-   }
-  },
-  {
-   "id": "cottage-35-cottage-3",
-   "label": "Box bed (Cottage)",
-   "rect": [
-    2.68,
-    42.7,
-    1.0,
-    2.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
-   }
-  },
-  {
-   "id": "cottage-35-cottage-4",
-   "label": "Chest (Cottage)",
-   "rect": [
-    3.68,
-    44.32,
-    1.0,
-    1.0
+    26.68,
+    43.57,
+    1.5,
+    0.75
    ],
    "flags": {
     "container": true,
-    "kind": "chest",
-    "lock": "cheap",
+    "kind": "cabinet",
+    "lock": "none",
     "items": "",
     "fillPlace": "home"
    }
   },
   {
-   "id": "cottage-39-cottage-0",
+   "id": "cottage-47-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
-    45.32,
+    21.32,
     43.32,
     1.0,
     1.0
@@ -3149,11 +5738,11 @@
    }
   },
   {
-   "id": "cottage-39-cottage-2",
+   "id": "cottage-47-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    40.68,
-    39.7,
+    16.68,
+    39.68,
     1.0,
     2.0
    ],
@@ -3164,10 +5753,10 @@
    }
   },
   {
-   "id": "cottage-39-cottage-3",
+   "id": "cottage-47-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    40.68,
+    16.68,
     42.32,
     1.0,
     2.0
@@ -3179,10 +5768,10 @@
    }
   },
   {
-   "id": "cottage-39-cottage-4",
+   "id": "cottage-47-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    41.68,
+    17.7,
     43.32,
     1.0,
     1.0
@@ -3196,11 +5785,198 @@
    }
   },
   {
+   "id": "cottage-47-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    21.32,
+    40.52,
+    1,
+    2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-56-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    14.32,
+    43.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "cottage-56-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    9.68,
+    42.82,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "cottage-56-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    9.68,
+    40.18,
+    1.0,
+    2.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "cottage-56-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    10.68,
+    43.82,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-56-cottage-f2",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    13.82,
+    40.18,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-62-cottage-0",
+   "label": "Hearth (Cottage)",
+   "rect": [
+    50.82,
+    47.68,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The hearth"
+   },
+   "light": {
+    "dim": 3,
+    "bright": 1,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  },
+  {
+   "id": "cottage-62-cottage-2",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    49.82,
+    52.32,
+    2.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "cottage-62-cottage-3",
+   "label": "Box bed (Cottage)",
+   "rect": [
+    47.18,
+    52.32,
+    2.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "bed",
+    "title": "Under the box bed"
+   }
+  },
+  {
+   "id": "cottage-62-cottage-4",
+   "label": "Chest (Cottage)",
+   "rect": [
+    50.82,
+    51.32,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-62-cottage-f2",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    47.18,
+    50.82,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
    "id": "cottage-63-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
-    14.68,
-    50.82,
+    36.68,
+    50.32,
     1.0,
     1.0
    ],
@@ -3220,8 +5996,8 @@
    "id": "cottage-63-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    14.68,
-    46.18,
+    39.32,
+    45.68,
     2.0,
     1.0
    ],
@@ -3235,8 +6011,8 @@
    "id": "cottage-63-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    16.68,
-    46.18,
+    36.68,
+    45.68,
     2.0,
     1.0
    ],
@@ -3250,8 +6026,8 @@
    "id": "cottage-63-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    14.68,
-    47.18,
+    36.68,
+    46.68,
     1.0,
     1.0
    ],
@@ -3264,11 +6040,28 @@
    }
   },
   {
-   "id": "cottage-65-cottage-0",
+   "id": "cottage-63-cottage-f2",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    40.57,
+    47.0,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-68-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
-    29.32,
-    46.18,
+    7.32,
+    43.82,
     1.0,
     1.0
    ],
@@ -3285,13 +6078,13 @@
    }
   },
   {
-   "id": "cottage-65-cottage-2",
+   "id": "cottage-68-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    25.7,
-    50.82,
-    2.0,
-    1.0
+    2.68,
+    42.82,
+    1.0,
+    2.0
    ],
    "flags": {
     "hide": true,
@@ -3300,13 +6093,13 @@
    }
   },
   {
-   "id": "cottage-65-cottage-3",
+   "id": "cottage-68-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    27.7,
-    50.82,
-    2.0,
-    1.0
+    2.68,
+    40.2,
+    1.0,
+    2.0
    ],
    "flags": {
     "hide": true,
@@ -3315,11 +6108,11 @@
    }
   },
   {
-   "id": "cottage-65-cottage-4",
+   "id": "cottage-68-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    29.32,
-    49.82,
+    3.68,
+    43.82,
     1.0,
     1.0
    ],
@@ -3332,69 +6125,18 @@
    }
   },
   {
-   "id": "cottage-81-cottage-0",
-   "label": "Hearth (Cottage)",
+   "id": "cottage-68-cottage-f0",
+   "label": "Cupboard (Cottage)",
    "rect": [
-    14.68,
-    57.82,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "light": true,
-    "lightKind": "torch",
-    "title": "The hearth"
-   },
-   "light": {
-    "dim": 3,
-    "bright": 1,
-    "color": "#ff9a3c",
-    "on": true
-   }
-  },
-  {
-   "id": "cottage-81-cottage-2",
-   "label": "Box bed (Cottage)",
-   "rect": [
-    17.32,
-    53.18,
-    2.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
-   }
-  },
-  {
-   "id": "cottage-81-cottage-3",
-   "label": "Box bed (Cottage)",
-   "rect": [
-    14.7,
-    53.18,
-    2.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "bed",
-    "title": "Under the box bed"
-   }
-  },
-  {
-   "id": "cottage-81-cottage-4",
-   "label": "Chest (Cottage)",
-   "rect": [
-    14.68,
-    54.18,
-    1.0,
-    1.0
+    5.02,
+    44.07,
+    1.5,
+    0.75
    ],
    "flags": {
     "container": true,
-    "kind": "chest",
-    "lock": "cheap",
+    "kind": "cabinet",
+    "lock": "none",
     "items": "",
     "fillPlace": "home"
    }
@@ -3405,7 +6147,7 @@
    "id": "tavern-1",
    "label": "Tavern",
    "rect": [
-    10.5,
+    32.5,
     7.0,
     10.0,
     8.0
@@ -3415,38 +6157,12 @@
    }
   },
   {
-   "id": "chapel-1",
-   "label": "Chapel",
+   "id": "cottage-1",
+   "label": "Priest's house",
    "rect": [
-    28.5,
-    2.0,
-    10.0,
-    6.0
-   ],
-   "place": {
-    "kind": "church"
-   }
-  },
-  {
-   "id": "bakehouse-3",
-   "label": "Bakehouse",
-   "rect": [
-    25.5,
-    9.0,
+    50.5,
+    1.5,
     5.0,
-    6.0
-   ],
-   "place": {
-    "kind": "workplace"
-   }
-  },
-  {
-   "id": "townhouse-2",
-   "label": "House and shop (spicer)",
-   "rect": [
-    33.5,
-    9.5,
-    7.0,
     6.0
    ],
    "place": {
@@ -3454,11 +6170,37 @@
    }
   },
   {
+   "id": "bakehouse-2",
+   "label": "Bakehouse",
+   "rect": [
+    57.5,
+    2.5,
+    6.0,
+    5.0
+   ],
+   "place": {
+    "kind": "workplace"
+   }
+  },
+  {
+   "id": "bakehouse-3",
+   "label": "Bakehouse",
+   "rect": [
+    47.0,
+    10.5,
+    6.0,
+    5.0
+   ],
+   "place": {
+    "kind": "workplace"
+   }
+  },
+  {
    "id": "townhouse-3",
    "label": "House and shop (cutler)",
    "rect": [
-    3.5,
-    7.5,
+    54.0,
+    9.0,
     6.0,
     7.0
    ],
@@ -3467,11 +6209,37 @@
    }
   },
   {
-   "id": "townhouse-11",
-   "label": "House and shop (draper)",
+   "id": "townhouse-4",
+   "label": "House and shop (saddler)",
    "rect": [
-    13.0,
-    20.0,
+    25.5,
+    7.0,
+    6.0,
+    7.0
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "townhouse-7",
+   "label": "House and shop (fishmonger)",
+   "rect": [
+    14.0,
+    2.0,
+    7.0,
+    6.0
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "townhouse-9",
+   "label": "House and shop (mercer)",
+   "rect": [
+    14.0,
+    9.0,
     7.0,
     6.0
    ],
@@ -3483,8 +6251,34 @@
    "id": "townhouse-14",
    "label": "House and shop (saddler)",
    "rect": [
-    24.5,
+    35.5,
     20.5,
+    6.0,
+    7.0
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "townhouse-17",
+   "label": "House and shop (fishmonger)",
+   "rect": [
+    47.5,
+    20.0,
+    7.0,
+    6.0
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "townhouse-20",
+   "label": "House and shop (salter)",
+   "rect": [
+    56.0,
+    20.0,
     7.0,
     6.0
    ],
@@ -3496,21 +6290,8 @@
    "id": "townhouse-21",
    "label": "House and shop (draper)",
    "rect": [
-    33.0,
-    20.5,
-    6.0,
-    7.0
-   ],
-   "place": {
-    "kind": "home"
-   }
-  },
-  {
-   "id": "townhouse-22",
-   "label": "House and shop (spicer)",
-   "rect": [
-    3.5,
-    20.5,
+    26.5,
+    20.0,
     7.0,
     6.0
    ],
@@ -3519,11 +6300,63 @@
    }
   },
   {
+   "id": "townhouse-23",
+   "label": "House and shop (cutler)",
+   "rect": [
+    7.0,
+    2.0,
+    6.0,
+    7.0
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "workshop-4",
+   "label": "Workshop (potter)",
+   "rect": [
+    6.0,
+    10.5,
+    7.0,
+    5.0
+   ],
+   "place": {
+    "kind": "workplace"
+   }
+  },
+  {
+   "id": "workshop-5",
+   "label": "Workshop (tanner)",
+   "rect": [
+    16.0,
+    20.0,
+    5.0,
+    7.0
+   ],
+   "place": {
+    "kind": "workplace"
+   }
+  },
+  {
+   "id": "workshop-7",
+   "label": "Workshop (chandler)",
+   "rect": [
+    1.0,
+    1.5,
+    5.0,
+    7.0
+   ],
+   "place": {
+    "kind": "workplace"
+   }
+  },
+  {
    "id": "workshop-10",
    "label": "Workshop (dyer)",
    "rect": [
-    15.0,
-    28.5,
+    46.5,
+    27.5,
     5.0,
     7.0
    ],
@@ -3535,8 +6368,8 @@
    "id": "workshop-11",
    "label": "Workshop (carpenter)",
    "rect": [
-    25.5,
-    27.5,
+    37.5,
+    29.0,
     5.0,
     7.0
    ],
@@ -3545,10 +6378,23 @@
    }
   },
   {
-   "id": "workshop-15",
-   "label": "Workshop (tanner)",
+   "id": "workshop-12",
+   "label": "Workshop (cooper)",
    "rect": [
-    5.5,
+    29.5,
+    30.0,
+    7.0,
+    5.0
+   ],
+   "place": {
+    "kind": "workplace"
+   }
+  },
+  {
+   "id": "workshop-14",
+   "label": "Workshop (potter)",
+   "rect": [
+    52.5,
     29.5,
     7.0,
     5.0
@@ -3558,11 +6404,11 @@
    }
   },
   {
-   "id": "workshop-17",
-   "label": "Workshop (chandler)",
+   "id": "workshop-16",
+   "label": "Workshop (cobbler)",
    "rect": [
-    32.0,
-    30.5,
+    8.0,
+    20.5,
     7.0,
     5.0
    ],
@@ -3571,11 +6417,11 @@
    }
   },
   {
-   "id": "cottage-22",
+   "id": "cottage-9",
    "label": "Cottage",
    "rect": [
-    26.5,
-    39.5,
+    16.0,
+    29.5,
     6.0,
     5.0
    ],
@@ -3584,10 +6430,36 @@
    }
   },
   {
-   "id": "cottage-29",
+   "id": "cottage-10",
    "label": "Cottage",
    "rect": [
-    12.5,
+    1.0,
+    20.0,
+    5.0,
+    6.0
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-17",
+   "label": "Cottage",
+   "rect": [
+    7.0,
+    30.5,
+    6.0,
+    5.0
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-21",
+   "label": "Cottage",
+   "rect": [
+    47.0,
     40.0,
     6.0,
     5.0
@@ -3597,7 +6469,7 @@
    }
   },
   {
-   "id": "cottage-34",
+   "id": "cottage-25",
    "label": "Cottage",
    "rect": [
     33.5,
@@ -3610,23 +6482,23 @@
    }
   },
   {
-   "id": "cottage-35",
+   "id": "cottage-32",
    "label": "Cottage",
    "rect": [
-    2.5,
-    40.5,
-    6.0,
-    5.0
+    0.5,
+    27.0,
+    5.0,
+    6.0
    ],
    "place": {
     "kind": "home"
    }
   },
   {
-   "id": "cottage-39",
+   "id": "cottage-33",
    "label": "Cottage",
    "rect": [
-    40.5,
+    54.5,
     39.5,
     6.0,
     5.0
@@ -3636,11 +6508,63 @@
    }
   },
   {
+   "id": "cottage-34",
+   "label": "Cottage",
+   "rect": [
+    24.5,
+    39.5,
+    6.0,
+    5.0
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-47",
+   "label": "Cottage",
+   "rect": [
+    16.5,
+    39.5,
+    6.0,
+    5.0
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-56",
+   "label": "Cottage",
+   "rect": [
+    9.5,
+    40.0,
+    6.0,
+    5.0
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
+   "id": "cottage-62",
+   "label": "Cottage",
+   "rect": [
+    47.0,
+    47.5,
+    5.0,
+    6.0
+   ],
+   "place": {
+    "kind": "home"
+   }
+  },
+  {
    "id": "cottage-63",
    "label": "Cottage",
    "rect": [
-    14.5,
-    46.0,
+    36.5,
+    45.5,
     5.0,
     6.0
    ],
@@ -3649,26 +6573,13 @@
    }
   },
   {
-   "id": "cottage-65",
+   "id": "cottage-68",
    "label": "Cottage",
    "rect": [
-    25.5,
-    46.0,
-    5.0,
-    6.0
-   ],
-   "place": {
-    "kind": "home"
-   }
-  },
-  {
-   "id": "cottage-81",
-   "label": "Cottage",
-   "rect": [
-    14.5,
-    53.0,
-    5.0,
-    6.0
+    2.5,
+    40.0,
+    6.0,
+    5.0
    ],
    "place": {
     "kind": "home"
@@ -3678,7 +6589,7 @@
    "id": "market",
    "label": "Market",
    "rect": [
-    6.75,
+    28.75,
     0,
     21.0,
     6.0
@@ -3693,7 +6604,7 @@
    "rect": [
     0,
     0,
-    47,
+    64,
     0.7
    ],
    "place": {
@@ -3704,7 +6615,7 @@
    "id": "street-lane",
    "label": "Lane",
    "rect": [
-    21.3,
+    43.3,
     0,
     2.4,
     62
@@ -3719,7 +6630,7 @@
    "rect": [
     0,
     17.54,
-    47,
+    64,
     1.92
    ],
    "place": {
@@ -3732,7 +6643,7 @@
    "rect": [
     0,
     36.54,
-    47,
+    64,
     1.92
    ],
    "place": {
@@ -3743,20 +6654,7 @@
    "id": "street-cross-west",
    "label": "Back street",
    "rect": [
-    0.644,
-    0,
-    1.92,
-    37.5
-   ],
-   "place": {
-    "kind": "alley"
-   }
-  },
-  {
-   "id": "street-cross-east",
-   "label": "Back street",
-   "rect": [
-    42.536,
+    22.644,
     0,
     1.92,
     37.5
@@ -3769,7 +6667,7 @@
    "id": "road-south-lane",
    "label": "Road in from the south",
    "rect": [
-    21.0,
+    43.0,
     60,
     3.0,
     2
@@ -3791,7 +6689,7 @@
    "rect": [
     0,
     0,
-    47,
+    64,
     1
    ],
    "behaviors": [
@@ -3829,7 +6727,7 @@
    "id": "edge-east",
    "label": "To Rotheim B3",
    "rect": [
-    46,
+    63,
     0,
     1,
     62
@@ -3869,7 +6767,41 @@
      "role": "child"
     },
     {
+     "role": "child"
+    },
+    {
+     "role": "lodger"
+    }
+   ]
+  },
+  {
+   "id": "cottage-1-household",
+   "building": "cottage-1",
+   "label": "Priest's house household",
+   "trade": "priest",
+   "people": [
+    {
+     "role": "priest"
+    },
+    {
      "role": "servant"
+    }
+   ]
+  },
+  {
+   "id": "bakehouse-2-household",
+   "building": "bakehouse-2",
+   "label": "Bakehouse household",
+   "trade": "baker",
+   "people": [
+    {
+     "role": "baker"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
     }
    ]
   },
@@ -3883,39 +6815,7 @@
      "role": "baker"
     },
     {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "elder"
-    },
-    {
-     "role": "apprentice"
-    }
-   ]
-  },
-  {
-   "id": "townhouse-2-household",
-   "building": "townhouse-2",
-   "label": "House and shop (spicer) household",
-   "trade": "spicer",
-   "people": [
-    {
-     "role": "spicer"
-    },
-    {
      "role": "partner"
-    },
-    {
-     "role": "servant"
     }
    ]
   },
@@ -3936,26 +6836,18 @@
     },
     {
      "role": "child"
-    }
-   ]
-  },
-  {
-   "id": "townhouse-11-household",
-   "building": "townhouse-11",
-   "label": "House and shop (draper) household",
-   "trade": "draper",
-   "people": [
-    {
-     "role": "draper"
     },
     {
-     "role": "partner"
+     "role": "elder"
+    },
+    {
+     "role": "servant"
     }
    ]
   },
   {
-   "id": "townhouse-14-household",
-   "building": "townhouse-14",
+   "id": "townhouse-4-household",
+   "building": "townhouse-4",
    "label": "House and shop (saddler) household",
    "trade": "saddler",
    "people": [
@@ -3977,6 +6869,106 @@
    ]
   },
   {
+   "id": "townhouse-7-household",
+   "building": "townhouse-7",
+   "label": "House and shop (fishmonger) household",
+   "trade": "fishmonger",
+   "people": [
+    {
+     "role": "fishmonger"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "townhouse-9-household",
+   "building": "townhouse-9",
+   "label": "House and shop (mercer) household",
+   "trade": "mercer",
+   "people": [
+    {
+     "role": "mercer"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "servant"
+    }
+   ]
+  },
+  {
+   "id": "townhouse-14-household",
+   "building": "townhouse-14",
+   "label": "House and shop (saddler) household",
+   "trade": "saddler",
+   "people": [
+    {
+     "role": "saddler"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "servant"
+    }
+   ]
+  },
+  {
+   "id": "townhouse-17-household",
+   "building": "townhouse-17",
+   "label": "House and shop (fishmonger) household",
+   "trade": "fishmonger",
+   "people": [
+    {
+     "role": "fishmonger"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "elder"
+    },
+    {
+     "role": "servant"
+    }
+   ]
+  },
+  {
+   "id": "townhouse-20-household",
+   "building": "townhouse-20",
+   "label": "House and shop (salter) household",
+   "trade": "salter",
+   "people": [
+    {
+     "role": "salter"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "elder"
+    }
+   ]
+  },
+  {
    "id": "townhouse-21-household",
    "building": "townhouse-21",
    "label": "House and shop (draper) household",
@@ -3984,6 +6976,46 @@
    "people": [
     {
      "role": "draper"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "servant"
+    }
+   ]
+  },
+  {
+   "id": "townhouse-23-household",
+   "building": "townhouse-23",
+   "label": "House and shop (cutler) household",
+   "trade": "cutler",
+   "people": [
+    {
+     "role": "cutler"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "servant"
+    }
+   ]
+  },
+  {
+   "id": "workshop-4-household",
+   "building": "workshop-4",
+   "label": "Workshop (potter) household",
+   "trade": "potter",
+   "people": [
+    {
+     "role": "potter"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -3997,16 +7029,27 @@
    ]
   },
   {
-   "id": "townhouse-22-household",
-   "building": "townhouse-22",
-   "label": "House and shop (spicer) household",
-   "trade": "spicer",
+   "id": "workshop-5-household",
+   "building": "workshop-5",
+   "label": "Workshop (tanner) household",
+   "trade": "tanner",
    "people": [
     {
-     "role": "spicer"
+     "role": "tanner"
+    }
+   ]
+  },
+  {
+   "id": "workshop-7-household",
+   "building": "workshop-7",
+   "label": "Workshop (chandler) household",
+   "trade": "chandler",
+   "people": [
+    {
+     "role": "chandler"
     },
     {
-     "role": "servant"
+     "role": "child"
     }
    ]
   },
@@ -4020,13 +7063,10 @@
      "role": "dyer"
     },
     {
-     "role": "partner"
-    },
-    {
      "role": "child"
     },
     {
-     "role": "apprentice"
+     "role": "child"
     }
    ]
   },
@@ -4060,30 +7100,85 @@
    ]
   },
   {
-   "id": "workshop-15-household",
-   "building": "workshop-15",
-   "label": "Workshop (tanner) household",
-   "trade": "tanner",
+   "id": "workshop-12-household",
+   "building": "workshop-12",
+   "label": "Workshop (cooper) household",
+   "trade": "cooper",
    "people": [
     {
-     "role": "tanner"
+     "role": "cooper"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
     }
    ]
   },
   {
-   "id": "workshop-17-household",
-   "building": "workshop-17",
-   "label": "Workshop (chandler) household",
-   "trade": "chandler",
+   "id": "workshop-14-household",
+   "building": "workshop-14",
+   "label": "Workshop (potter) household",
+   "trade": "potter",
    "people": [
     {
-     "role": "chandler"
+     "role": "potter"
     },
     {
      "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "workshop-16-household",
+   "building": "workshop-16",
+   "label": "Workshop (cobbler) household",
+   "trade": "cobbler",
+   "people": [
+    {
+     "role": "cobbler"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "apprentice"
+    }
+   ]
+  },
+  {
+   "id": "cottage-9-household",
+   "building": "cottage-9",
+   "label": "Cottage household",
+   "trade": "herder",
+   "people": [
+    {
+     "role": "herder"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
     },
     {
      "role": "child"
@@ -4094,13 +7189,53 @@
    ]
   },
   {
-   "id": "cottage-22-household",
-   "building": "cottage-22",
+   "id": "cottage-10-household",
+   "building": "cottage-10",
    "label": "Cottage household",
-   "trade": "cottager",
+   "trade": "widowed spinner",
    "people": [
     {
-     "role": "cottager"
+     "role": "widowed spinner"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-17-household",
+   "building": "cottage-17",
+   "label": "Cottage household",
+   "trade": "widowed spinner",
+   "people": [
+    {
+     "role": "widowed spinner"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-21-household",
+   "building": "cottage-21",
+   "label": "Cottage household",
+   "trade": "widowed spinner",
+   "people": [
+    {
+     "role": "widowed spinner"
     },
     {
      "role": "partner"
@@ -4111,8 +7246,45 @@
    ]
   },
   {
-   "id": "cottage-29-household",
-   "building": "cottage-29",
+   "id": "cottage-25-household",
+   "building": "cottage-25",
+   "label": "Cottage household",
+   "trade": "widowed spinner",
+   "people": [
+    {
+     "role": "widowed spinner"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-32-household",
+   "building": "cottage-32",
+   "label": "Cottage household",
+   "trade": "herder",
+   "people": [
+    {
+     "role": "herder"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "elder"
+    }
+   ]
+  },
+  {
+   "id": "cottage-33-household",
+   "building": "cottage-33",
    "label": "Cottage household",
    "trade": "labourer",
    "people": [
@@ -4140,10 +7312,44 @@
    "id": "cottage-34-household",
    "building": "cottage-34",
    "label": "Cottage household",
-   "trade": "widowed spinner",
+   "trade": "cottager",
    "people": [
     {
-     "role": "widowed spinner"
+     "role": "cottager"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-47-household",
+   "building": "cottage-47",
+   "label": "Cottage household",
+   "trade": "carter",
+   "people": [
+    {
+     "role": "carter"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "elder"
+    }
+   ]
+  },
+  {
+   "id": "cottage-56-household",
+   "building": "cottage-56",
+   "label": "Cottage household",
+   "trade": "cottager",
+   "people": [
+    {
+     "role": "cottager"
     },
     {
      "role": "partner"
@@ -4153,40 +7359,17 @@
     },
     {
      "role": "child"
-    },
-    {
-     "role": "elder"
     }
    ]
   },
   {
-   "id": "cottage-35-household",
-   "building": "cottage-35",
+   "id": "cottage-62-household",
+   "building": "cottage-62",
    "label": "Cottage household",
    "trade": "herder",
    "people": [
     {
      "role": "herder"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    },
-    {
-     "role": "elder"
-    }
-   ]
-  },
-  {
-   "id": "cottage-39-household",
-   "building": "cottage-39",
-   "label": "Cottage household",
-   "trade": "labourer",
-   "people": [
-    {
-     "role": "labourer"
     },
     {
      "role": "partner"
@@ -4199,6 +7382,26 @@
   {
    "id": "cottage-63-household",
    "building": "cottage-63",
+   "label": "Cottage household",
+   "trade": "cottager",
+   "people": [
+    {
+     "role": "cottager"
+    },
+    {
+     "role": "partner"
+    },
+    {
+     "role": "child"
+    },
+    {
+     "role": "child"
+    }
+   ]
+  },
+  {
+   "id": "cottage-68-household",
+   "building": "cottage-68",
    "label": "Cottage household",
    "trade": "carter",
    "people": [
@@ -4215,44 +7418,13 @@
      "role": "elder"
     }
    ]
-  },
-  {
-   "id": "cottage-65-household",
-   "building": "cottage-65",
-   "label": "Cottage household",
-   "trade": "widowed spinner",
-   "people": [
-    {
-     "role": "widowed spinner"
-    },
-    {
-     "role": "partner"
-    },
-    {
-     "role": "child"
-    }
-   ]
-  },
-  {
-   "id": "cottage-81-household",
-   "building": "cottage-81",
-   "label": "Cottage household",
-   "trade": "widowed spinner",
-   "people": [
-    {
-     "role": "widowed spinner"
-    },
-    {
-     "role": "partner"
-    }
-   ]
   }
  ],
  "part": {
   "of": "Rotheim",
   "id": "B2",
   "origin": [
-   64,
+   42,
    62
   ],
   "whole": [

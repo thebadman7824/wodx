@@ -16,6 +16,10 @@ import * as conditions from "./conditions.mjs";
 import * as timed from "./timed.mjs";
 import * as theme from "./theme.mjs";
 import * as playerTools from "./player-tools.mjs";
+import * as playerView from "./player-view.mjs";
+import * as playerViewRules from "./player-view-rules.mjs";
+import * as playerHelp from "./player-help.mjs";
+import * as playerGuide from "./player-guide.mjs";
 import * as gen from "./gen.mjs";
 import * as events from "./events.mjs";
 import * as migrations from "./migrations.mjs";
@@ -23,17 +27,36 @@ import * as languages from "./languages.mjs";
 import * as tours from "./tours.mjs";
 import * as effects from "./effects.mjs";
 import * as church from "./church.mjs";
+import * as law from "./law.mjs";
+import * as lawHeat from "./law-heat.mjs";
+import * as lawTrial from "./law-trial.mjs";
+import * as lawPunish from "./law-punish.mjs";
+import * as lawPapers from "./law-papers.mjs";
+import * as lawStanding from "./law-standing.mjs";
+import * as lawTax from "./law-tax.mjs";
+import * as lawRegime from "./law-regime.mjs";
 import * as release from "./release.mjs";
 import * as when from "./when.mjs";
 import * as referee from "./referee.mjs";
+import * as ticket from "./ticket.mjs";
+import * as ticketRules from "./ticket-rules.mjs";
+import * as roster from "./roster.mjs";
+import * as rosterRules from "./roster-rules.mjs";
 import * as refereeRules from "./referee-rules.mjs";
 import * as traits from "./traits.mjs";
 import * as signatures from "./signatures.mjs";
 import * as place from "./place.mjs";
 import * as placeRules from "./place-rules.mjs";
+import * as worldRules from "./world-rules.mjs";
 import * as pace from "./pace.mjs";
 import * as pod from "./pod.mjs";
 import * as legends from "./legends.mjs";
+import * as automation from "./automation.mjs";
+import * as automationRules from "./automation-rules.mjs";
+import * as waiting from "./waiting.mjs";
+import * as age from "./age.mjs";
+import * as gender from "./gender.mjs";
+import * as waitingRules from "./waiting-rules.mjs";
 
 /** WoDX worlds carry flags.wodx in world.json; anywhere else this module stays idle. */
 const isWoDXWorld = () => !!game.world?.flags?.wodx;
@@ -55,14 +78,18 @@ Hooks.once("init", () => {
     HouseRulesApp,
     onClockChange: () => ClockApp.refresh(),
     onEraInputsChange: () => { eras.checkEra(); ClockApp.refresh(); },
+    onHomelandChange: value => { if ( !homelandQuiet ) applyHomeland(value); },
     onActiveEraChange: async () => { await eras.onActiveEraChange(); ClockApp.refresh(); },
     onHoldChange: async () => {
       ClockApp.refresh();
       if ( isActiveGM() && !skip.isHeld() ) { await eras.checkEra(); await events.checkEvents(); await eras.refreshRulesJournal(); }
     },
-    onApprovalsChange: () => { approvals.ApprovalsApp.refresh(); ClockApp.refresh(); },
+    onApprovalsChange: () => { approvals.ApprovalsApp.refresh(); ClockApp.refresh(); waiting.WaitingApp.soon(); },
     onRuleChange: async () => { await eras.checkEra(); await events.checkEvents(); await eras.refreshRulesJournal(); ClockApp.refresh(); }
   });
+  // 0.46.0: how much runs by itself, and the Waiting tray (B2450-B2452)
+  automation.registerAutomationSettings();
+  waiting.registerWaitingSettings();
   // 0.35.0: the clock that runs with the table (off by default)
   pace.registerPaceSettings(() => ClockApp.refresh());
   // The WoDX look (6e): each player's own look, text size and motion
@@ -72,8 +99,29 @@ Hooks.once("init", () => {
   effects.registerEffectSettings();
   // B60: the WoDX buttons each player sees
   playerTools.registerPlayerToolSettings();
+  // B2810: Beginner and Full views, Find anything
+  playerView.registerPlayerViewSettings();
+  playerHelp.registerPlayerHelpSettings();
+  playerGuide.registerGuideSettings();
   // Feast and fast days: the chronicle's own feasts
   church.registerChurchSettings();
+  // B3490: the law of the land
+  law.registerLawSettings();
+  // B3606: the law's heat on criminals
+  lawHeat.registerHeatSettings();
+  lawHeat.registerHeatHooks();
+  // B3608: trials after an arrest
+  lawTrial.registerTrialHooks();
+  // B3610: sentences and their marks
+  lawPunish.registerPunishHooks();
+  // B3612: papers and the undying
+  lawPapers.registerPapersHooks();
+  // B3614: standing before the law
+  lawStanding.registerStandingSettings();
+  // B3616: taxes on the month's upkeep
+  lawTax.registerTaxHooks();
+  // B3618: regime change
+  lawRegime.registerRegimeHooks();
   // Phase 7a: the generator core
   gen.registerGenSettings();
   // Dated events
@@ -126,6 +174,7 @@ Hooks.once("init", () => {
     onDown: () => { ClockApp.open(); return true; }
   });
   referee.registerRefereeKey();
+  roster.registerRosterKey();
 
   log(`Chronicle initialised; world time 0 is 1 January ${EPOCH_YEAR}`);
 });
@@ -145,6 +194,15 @@ Hooks.once("ready", async () => {
   contentFixes.registerContentFixes();
   eras.applyProfile(eras.activeEra().profile);
   playerTools.installToolFilter();
+  playerView.installViewFilter();
+  playerView.installHudGroups();
+  playerView.installQuietChat();
+  playerHelp.installPlayerHelp();
+  playerGuide.installGuide();
+  automation.initAutomation();
+  ticket.registerTicket();
+  roster.registerRoster();
+  waiting.initWaiting();
   await gen.ensureSeed();
 
   game.socket.on(SOCKET, onSocket);
@@ -152,13 +210,21 @@ Hooks.once("ready", async () => {
   Hooks.on("updateScene", (sc, ch) => { if ( ch?.flags?.[MODULE_ID] ) ClockApp.refresh(); });
   Hooks.on("canvasReady", () => ClockApp.refresh());
 
+  age.listen();
   const api = {
+    // B3210: the age floor of 18 for anything romantic or sexual
+    age: {minor: age.minor, romance: age.romance, allow: age.allowRomance, rules: age.rules},
+    // B3500: one gender for every module; forRules is "" for every player character
+    gender: {of: gender.of, forRules: gender.forRules, isPlayer: gender.isPlayer, set: gender.set, rules: gender.rules},
     openClock: () => ClockApp.open(),
     refreshClock: () => ClockApp.refresh(),
+    world: {regions: worldRules.WORLD_REGIONS, regionOf: worldRules.regionOf, homeland: place.homeland, setHomeland, here: place.regionHere, isAbroad: place.isAbroad, rules: worldRules},
     place: {of: place.placeOf, describeAt: place.describeAt, latitudeFor: place.latitudeFor, set: place.setPlace, dialog: place.placeDialog, rules: placeRules},
     pace: {line: pace.paceLine},
     setDate: setDateDialog,
     eras, approvals, safety,
+    automation: {level: automation.level, setLevel: automation.setLevel, preview: automation.preview, rules: automationRules},
+    waiting: {open: () => waiting.WaitingApp.open(), rows: waiting.rows, count: waiting.count, take: waiting.take, wrapLine: waiting.wrapLine, rules: waitingRules},
     know: {render: know.render, traitsOf: know.traitsOf, passages: knowRules.passages, rules: knowRules},
     propose: approvals.propose,
     registerApprovalHandler: approvals.registerHandler,
@@ -177,16 +243,22 @@ Hooks.once("ready", async () => {
     effects: {hiding: effects.hiding, applyAll: effects.applyAll, isVideoSrc: effects.isVideoSrc},
     release: {check: release.check, current: release.current},
     when: {check: when.check, run: when.run, context: when.contextFor, checker: when.checker, parse: when.rules.parseWhen, parseThen: when.rules.parseThen, help: when.rules.helpText, rules: when.rules},
+    // B3520-B3523: a player's freeform action as one ruling ticket in the queue
+    ticket: {ask: ticket.askRuling, build: ticket.build, rules: ticketRules},
+    // B3534-B3536: a roster of characters for each player
+    roster: {open: roster.openRoster, of: roster.rosterOf, play: roster.play, askToAdd: roster.askToAdd, setAway: roster.setAway, rules: rosterRules},
     referee: {open: opts => referee.RefereeApp.open(opts), ask: referee.ask, roll: referee.rollFor, sheetOf: referee.sheetOf,
       cases: refereeRules.CASES, profileOf: refereeRules.profileOf, rules: refereeRules},
-    church: {on: church.on, today: church.today, at: church.at, extra: church.extra, rules: church.rules},
+    law: {regime: {turn: lawRegime.turn, check: lawRegime.checkTurns, elections: lawRegime.checkElections, rules: lawRegime.rules}, tax: {here: lawTax.taxHere, month: lawTax.onMonth, dodging: lawTax.dodging, rules: lawTax.rules}, standing: {of: lawStanding.standingFor, officeCap: lawStanding.officeCap, mode: lawStanding.mode, rules: lawStanding.rules}, papers: {project: lawPapers.project, selvesOf: lawPapers.selvesOf, addSelf: lawPapers.addSelf, check: lawPapers.checkSelves, rules: lawPapers.rules}, sentence: {card: lawPunish.sentenceCard, pass: lawPunish.sentence, pardon: lawPunish.pardon, marksOf: lawPunish.marksOf, rules: lawPunish.rules}, trial: {card: lawTrial.trialCard, hold: lawTrial.hold, rules: lawTrial.rules}, heat: {of: lawHeat.of, add: lawHeat.addDeed, arrest: lawHeat.arrest, lower: lawHeat.lowerHeat, amnesty: lawHeat.amnesty, state: lawHeat.state, rules: lawHeat.rules}, here: law.here, card: law.card, cardHTML: law.cardHTML, checkYear: law.checkYear, lawDots: law.lawDots, of: law.rules.lawOf, changes: law.rules.changesBetween, rules: law.rules},
+    church: {on: church.on, today: church.today, at: church.at, extra: church.extra, faithOf: church.faithOf, rules: church.rules, faiths: church.faiths},
     events: {list: events.list, fired: events.fired, has: events.has, check: events.checkEvents, open: () => events.EventsApp.open()},
     playerTools, openPlayerTools: playerTools.openPlayerTools,
+    playerView: {current: playerView.currentView, preview: playerView.previewView, find: () => playerView.FindApp.open(), FindApp: playerView.FindApp, now: () => playerView.NowApp.open(), NowApp: playerView.NowApp, prefs: () => playerHelp.PrefsApp.open(), help: playerHelp.openHelp, glossary: playerHelp.openGlossary, windows: playerHelp.WINDOWS, tour: (o = {}) => playerGuide.GuideApp.open(o), openDrawer: playerView.openDrawer, drawers: playerView.drawerTools, rules: playerViewRules},
     tours: {start: tours.startTour},
     traits: traits.traitsApi,
     signatures: signatures.signaturesApi,
     pod: pod.podApi,
-    legends: {open: () => legends.LegendsApp.open(), build: legends.build, book: legends.book, visible: legends.visible, setShown: legends.setShown, gather: legends.gather},
+    legends: {open: () => legends.LegendsApp.open(), build: legends.build, book: legends.book, visible: legends.visible, setShown: legends.setShown, gather: legends.gather, addDeed: legends.addDeed},
     languages: {open: () => languages.LanguagesApp.open(), of: languages.languagesOf, set: languages.setLanguages, canRead: languages.canRead},
     migrations: {status: migrations.status, run: migrations.runMigrations, register: migrations.register, backup: migrations.backupModule},
     gen: {seed: gen.seed, context: gen.context, random: gen.random, draw: gen.draw, expand: gen.expand, lookup: gen.lookup,
@@ -230,6 +302,7 @@ Hooks.on("updateWorldTime", () => {
   if ( skip.isSkipping() ) return;
   ClockApp.refresh();
   eras.checkEra();
+  law.checkYear().catch(err => console.error("WoDX | Law", err));
   events.checkEvents().then(r => { if ( r?.fired.length || r?.undone.length ) eras.refreshRulesJournal(); });
 });
 
@@ -241,6 +314,7 @@ Hooks.on("wodxSkipEnd", info => {
   if ( !active || skip.isHeld() ) return;
   ClockApp.refresh();
   if ( !info?.eraHandled ) eras.checkEra();
+  law.checkYear().catch(err => console.error("WoDX | Law", err));
   events.checkEvents({label: info?.label || "the time skip"}).then(r => { if ( r?.fired.length || r?.undone.length ) eras.refreshRulesJournal(); });
 });
 
@@ -271,6 +345,10 @@ Hooks.on("getSceneControlButtons", controls => {
     name: "wodxApprovals", title: "Approval queue", icon: "fa-solid fa-inbox", order: base + 2,
     button: true, visible: game.user.isGM, onChange: () => approvals.ApprovalsApp.open()
   };
+  tokens.tools.wodxWaiting = {
+    name: "wodxWaiting", title: "Waiting for you (cards and queue entries)", icon: "fa-solid fa-hourglass-half", order: base + 6,
+    button: true, visible: game.user.isGM, onChange: () => waiting.WaitingApp.open()
+  };
   tokens.tools.wodxPlayerTools = {
     name: "wodxPlayerTools", title: "Player toolbar buttons", icon: "fa-solid fa-user-gear", order: base + 3,
     button: true, visible: game.user.isGM, onChange: () => playerTools.openPlayerTools()
@@ -293,6 +371,18 @@ async function onSocket(message) {
     case "player.findMeNone":
       await playerTools.onFindMeSocket(type, payload);
       break;
+    case "ticket.propose":
+      // The Storyteller's client reads the sheets itself; the player sends only what they chose
+      if ( payload && isActiveGM() ) await ticket.build({actorId: String(payload.actorId ?? ""), targetId: payload.targetId ? String(payload.targetId) : null,
+        text: String(payload.text ?? ""), attr: String(payload.attr ?? ""), ability: String(payload.ability ?? ""), difficulty: Number(payload.difficulty) || 6,
+        power: String(payload.power ?? ""), witnesses: !!payload.witnesses, from: String(payload.from ?? "")});
+      break;
+    case "roster.add":
+      if ( payload && isActiveGM() ) await roster.build({user: String(payload.user ?? ""), name: String(payload.name ?? ""), why: String(payload.why ?? "")});
+      break;
+    case "roster.play":
+      await roster.onPlaySocket(payload ?? {});
+      break;
     case "approval.propose":
       // Players may only send free-form requests; automation proposals come from the GM's own client
       if ( payload ) await approvals.addToQueue({...payload, type: "request", data: {}});
@@ -307,3 +397,30 @@ Hooks.on("updateSetting", s => {
   approvals.resetSession();
   if ( active && isActiveGM() ) legends.build().catch(err => console.error("WoDX | Legends", err));
 });
+
+/**
+ * A new homeland (0.48.0): the active GM's client sets what follows from it (the part of the world, the latitude and
+ * the people's culture) and says what it left alone. Money stays as it is: purses hold sums in the old money.
+ */
+let homelandQuiet = false;
+/** GM: set the homeland and what follows from it in one go, with a latitude of the caller's own if given. */
+async function setHomeland(id, {latitude = null} = {}) {
+  const r = worldRules.regionOf(id);
+  if ( !r || !game.user.isGM ) return null;
+  homelandQuiet = true;
+  try {
+    await game.settings.set(MODULE_ID, "homeland", r.id);
+    await applyHomeland(r.id, {latitude, force: true});
+  } finally { homelandQuiet = false; }
+  return r;
+}
+async function applyHomeland(id, {latitude = null, force = false} = {}) {
+  const r = worldRules.regionOf(id);
+  if ( !r || !(force || isActiveGM()) ) return;
+  await game.settings.set(MODULE_ID, "region", r.part);
+  await game.settings.set(MODULE_ID, "latitude", Number.isFinite(Number(latitude)) && latitude !== null ? Number(latitude) : r.lat);
+  await game.settings.set(MODULE_ID, "peopleCulture", worldRules.cultureOf(id));
+  const year = eras.currentYear?.();
+  const gap = worldRules.hasPeopleIn(id, year) ? "" : ` WoDX has no names for the people here before ${r.from}; until then the people generator borrows later names, so name them yourself.`;
+  ui.notifications.info(`Homeland: ${r.label}. Latitude, people's names and weather now follow it. Money is unchanged; set the money region in WoDX Storyteller if this chronicle should pay in another.${gap}`, {permanent: !!gap});
+}

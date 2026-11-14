@@ -1,0 +1,18 @@
+# fail2ban jails for wodx.online. Installed on Live as /etc/fail2ban/jail.d/wodx.local.
+[DEFAULT]
+ignoreip = 127.0.0.1/8 ::1
+bantime = 1h
+bantime.increment = true
+bantime.maxtime = 1w
+
+[sshd]
+enabled = true
+
+[wodx-foundry]
+enabled = true
+port = http,https
+filter = wodx-foundry
+logpath = /var/log/caddy/wodx-access.log
+backend = auto
+maxretry = 20
+findtime = 10m

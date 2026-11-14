@@ -10,6 +10,8 @@
  *   event   a dated event's id (WoDX Chronicle), with eventWhen "after" (it has happened) or "before"
  *   from/to years, both inclusive; either may be empty
  *   art     the picture for mode "art"
+ * 0.33.0: the condition "a caravan in town" holds on the scenes of a market where a caravan stands (WoDX Storyteller
+ * 0.49.0), so wagons in the square or lorries at the depot show only while one is there.
  */
 
 /** The conditions a Storyteller can tick. Fixed list. */
@@ -17,9 +19,17 @@ export const CONDITIONS = {
   winter: "Winter (December to February)", spring: "Spring (March to May)", summer: "Summer (June to August)", autumn: "Autumn (September to November)",
   night: "At night", day: "By day",
   snow: "Snow on the ground", rain: "Rain falling", fog: "Fog or mist",
-  feast: "A feast day", revel: "A night of revel", fast: "A fast day or Lent"
+  feast: "A feast day", revel: "A night of revel", fast: "A fast day or Lent",
+  caravan: "A caravan in town (WoDX Storyteller's markets)"
 };
 export const MODES = {off: "Off", show: "Shows only while it holds", hide: "Hidden while it holds", art: "Changes picture while it holds"};
+/**
+ * 0.38.0 (B2904): what else the rule switches inside the tile's own square, while it holds. "block": walls there
+ * stop movement and sight (market stalls close a lane by day); "lock": doors there are locked (the church shut on a
+ * fast day); "light": the lights there are on (lanterns on a night of revel). When the rule stops holding they open,
+ * unlock or go out again; a door WoDX did not lock stays as it was.
+ */
+export const ALSO = {none: "Nothing else", block: "Walls inside it block the way", lock: "Doors inside it are locked", light: "Lights inside it are on"};
 
 /** The season of a month, in the north. */
 export function seasonOfMonth(month) {
@@ -34,13 +44,15 @@ export function cleanRule(r = {}) {
     : String(r.when ?? "").split(/[\s,]+/);
   const when = raw.filter(k => CONDITIONS[k]);
   return {mode: MODES[r.mode] ? r.mode : "off", when: [...new Set(when)], event: r.event ? String(r.event).replace(/[^a-z0-9-]/gi, "").slice(0, 60) || null : null,
-    eventWhen: r.eventWhen === "before" ? "before" : "after", from: yr(r.from), to: yr(r.to), art: String(r.art ?? "").trim().replace(/["'<>]/g, "").slice(0, 400) || null};
+    eventWhen: r.eventWhen === "before" ? "before" : "after", from: yr(r.from), to: yr(r.to), art: String(r.art ?? "").trim().replace(/["'<>]/g, "").slice(0, 400) || null,
+    also: ALSO[r.also] ? r.also : "none"};
 }
 /** Whether the rule asks anything at all. */
 export const hasTest = r => !!(r.when.length || r.event || r.from !== null || r.to !== null);
 
 /**
- * Whether a rule holds now. ctx: {month, year, isNight, church: {feast, revel, fast, season}, weather: [tags], fired: Set or [ids]}
+ * Whether a rule holds now. ctx: {month, year, isNight, church: {feast, revel, fast, season}, weather: [tags], fired: Set or [ids],
+ * caravan: a caravan stands in this tile's scene (0.33.0)}
  * A rule that asks nothing never holds.
  */
 export function holds(rule, ctx = {}) {
@@ -53,7 +65,8 @@ export function holds(rule, ctx = {}) {
     winter: season === "winter", spring: season === "spring", summer: season === "summer", autumn: season === "autumn",
     night: !!ctx.isNight, day: !ctx.isNight,
     snow: tags.has("snow-lying") || tags.has("snow"), rain: tags.has("rain"), fog: tags.has("fog") || tags.has("mist"),
-    feast: !!ch.feast, revel: !!ch.revel, fast: !!ch.fast && !String(ch.fast).startsWith("Friday")
+    feast: !!ch.feast, revel: !!ch.revel, fast: !!ch.fast && !String(ch.fast).startsWith("Friday"),
+    caravan: !!ctx.caravan
   };
   if ( !r.when.every(k => test[k]) ) return false;
   if ( r.event ) {
@@ -83,6 +96,29 @@ export function changeFor(rule, on, tile = {}) {
   return out;
 }
 
+/** 0.38.0: is a point inside a tile's square? rect {x, y, width, height}. */
+export const inside = (pt, rect) => !!pt && !!rect && pt.x >= rect.x && pt.x <= rect.x + rect.width && pt.y >= rect.y && pt.y <= rect.y + rect.height;
+/** 0.38.0: a wall lies in the square when both its ends do. c: [x0, y0, x1, y1]. */
+export const wallInside = (c, rect) => Array.isArray(c) && inside({x: c[0], y: c[1]}, rect) && inside({x: c[2], y: c[3]}, rect);
+/**
+ * 0.38.0: what the "also" switch asks of each thing in the square. Returns null when nothing.
+ *   wall {door, move, sight}, light {hidden}, wodx {locked: WoDX locked this door}; senses NORMAL = 20, NONE = 0;
+ *   door states CLOSED 0, LOCKED 2 (Foundry's numbers, passed in so no Foundry is needed here).
+ */
+export function linkedChange(also, on, kind, doc = {}, {NORMAL = 20, NONE = 0, CLOSED = 0, LOCKED = 2} = {}) {
+  if ( also === "block" && kind === "wall" && !doc.door ) {
+    const want = on ? NORMAL : NONE;
+    return doc.move === want && doc.sight === want ? null : {move: want, sight: want};
+  }
+  if ( also === "lock" && kind === "wall" && doc.door ) {
+    if ( on && doc.ds !== LOCKED ) return {ds: LOCKED, wodxLocked: true};
+    if ( !on && doc.ds === LOCKED && doc.wodxLocked ) return {ds: CLOSED, wodxLocked: false};
+    return null;
+  }
+  if ( also === "light" && kind === "light" ) return !!doc.hidden === !on ? null : {hidden: !on};
+  return null;
+}
+
 /** One line for the tile config and the Storyteller's card: what the rule says, in words. */
 export function ruleWords(rule, eventName = id => id) {
   const r = cleanRule(rule);
@@ -92,9 +128,9 @@ export function ruleWords(rule, eventName = id => id) {
   if ( r.from !== null && r.to !== null ) parts.push(`from ${r.from} to ${r.to}`);
   else if ( r.from !== null ) parts.push(`from ${r.from}`);
   else if ( r.to !== null ) parts.push(`until ${r.to}`);
-  return `${MODES[r.mode]}: ${parts.length ? parts.join(", ") : "nothing set"}`;
+  return `${MODES[r.mode]}: ${parts.length ? parts.join(", ") : "nothing set"}${r.also !== "none" ? `; ${ALSO[r.also].toLowerCase()} while it holds` : ""}`;
 }
 
 /** The key of the moment: a tile needs a fresh look only when this changes. */
 export const momentKey = ctx => [ctx.year, ctx.month, ctx.day, ctx.isNight ? 1 : 0, (ctx.weather ?? []).slice().sort().join("+"),
-  ctx.church?.feast ?? "", ctx.church?.revel ? 1 : 0, ctx.church?.fast ?? "", [...(ctx.fired ?? [])].sort().join("+")].join("|");
+  ctx.church?.feast ?? "", ctx.church?.revel ? 1 : 0, ctx.church?.fast ?? "", [...(ctx.fired ?? [])].sort().join("+"), [...(ctx.caravans ?? [])].sort().join("+")].join("|");

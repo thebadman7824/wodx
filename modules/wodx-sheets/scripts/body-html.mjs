@@ -5,6 +5,9 @@
  * a tree with what each hand holds and the natural weapons, parts added or lost, what the body can do (hold, wear
  * armor, speak, move), where blows land, and the lasting changes from WoDX Storyteller. The Storyteller also gets
  * controls to set the shape by hand and to add a lasting change.
+ *
+ * 0.16.0: the damage doll at the top (B2690): opts.doll = {spec (doll-draw specOf), wounds: [{label, text}], gm}. The
+ * canvas is drawn by extras.mjs once the tab is on the page.
  */
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
 
@@ -12,8 +15,21 @@ const MOVE_LABEL = {fly: "flies", swimfast: "swims fast", waterbreath: "breathes
 
 /**
  * body: from bodyOf. opts: {held: {partId: itemName}, changes: [{what, part, shows}], shapes: {key: label},
- * shapeFlag, gm, hitTable: [{label, chance}], outline: [{id, label, depth, added, lost, stops, holds, weapon}]}.
+ * shapeFlag, gm, hitTable: [{label, chance}], outline: [{id, label, depth, added, lost, stops, holds, weapon}], doll}.
  */
+export function dollHtml(doll) {
+  if ( !doll?.spec ) return "";
+  const rows = (doll.wounds ?? []).map(w => `<li><b>${esc(w.label)}</b> ${esc(w.text)}</li>`).join("");
+  return `<div class="wodx-doll-wrap">
+    <canvas class="wodx-doll" width="64" height="80" data-spec="${esc(JSON.stringify(doll.spec))}" role="img" aria-label="${esc(doll.wounds?.length ? `Wounds: ${doll.wounds.map(w => `${w.label} ${w.text}`).join("; ")}` : "Unhurt")}"></canvas>
+    <div class="wodx-doll-side">
+      <p class="wodx-doll-tip">${doll.gm ? "Point at a part to name it. Click a part to place or clear a wound." : "Point at a part to name it."}</p>
+      ${rows ? `<ul class="wodx-doll-wounds">${rows}</ul>` : `<p class="wodx-hint">Unhurt.</p>`}
+      <p class="wodx-doll-key"><span class="k b"></span>bashing <span class="k l"></span>lethal <span class="k a"></span>aggravated <span class="k x"></span>lost</p>
+    </div>
+  </div>`;
+}
+
 export function bodyHtml(body, opts = {}) {
   if ( !body ) return `<div class="wodx-body"><p class="wodx-hint">The body plan needs WoDX Combat 3.13.0 or later.</p></div>`;
   const o = opts.outline ?? [];
@@ -29,6 +45,7 @@ export function bodyHtml(body, opts = {}) {
       <option value="">From the sheet and powers</option>${Object.entries(opts.shapes ?? {}).map(([k, v]) => `<option value="${esc(k)}"${k === opts.shapeFlag ? " selected" : ""}>${esc(v)}</option>`).join("")}</select></div>` : "";
   return `<div class="wodx-body">
     <h3>Shape: ${esc(body.label)}${body.why && body.why !== "form" ? ` <small>(${esc(body.why)})</small>` : ""}</h3>
+    ${dollHtml(opts.doll)}
     ${shapeSel}
     ${body.notes?.length ? `<ul class="wodx-body-notes">${body.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul>` : ""}
     <div class="wodx-body-cols">

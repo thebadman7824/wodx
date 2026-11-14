@@ -151,7 +151,9 @@ export function normFaction(f = {}) {
     risesOn: f.risesOn ? String(f.risesOn).slice(0, 60) : null, endsOn: f.endsOn ? String(f.endsOn).slice(0, 60) : null,
     fromEvent: f.fromEvent ? String(f.fromEvent).slice(0, 60) : null, parent: f.parent ? String(f.parent) : null, absorbedBy: f.absorbedBy ? String(f.absorbedBy) : null,
     // NPC 0.25.0: politics inside the faction (politics-rules.mjs)
-    polity: f.polity === "none" || POLITIES[f.polity] ? f.polity : "", politics: normPolitics(f.politics)
+    polity: f.polity === "none" || POLITIES[f.polity] ? f.polity : "", politics: normPolitics(f.politics),
+    // NPC 0.62.0: the world region it stands in ("" = the chronicle's homeland), for the courts of its land (B2960)
+    region: typeof f.region === "string" && /^[a-z][a-z-]{0,39}$/.test(f.region) ? f.region : ""
   };
 }
 const yearOrNull = v => (v === null || v === undefined || String(v).trim() === "" || !Number.isFinite(Number(v)) ? null : Math.round(Number(v)));
@@ -751,9 +753,11 @@ export function runTurn(state, {streamFor, seedKey, leaders = {}, places = [], p
  *   own places). In a domain another faction holds, the intruder's difficulty rises by that domain's security (V20
  *   p. 113) and the intrusion is a trespass the holder may answer (the Tradition of Domain).
  *   churchStep: the night's step from WoDX Chronicle's feast and fast days (-1, 0 or +1), for places in town only.
+ *   calendar: the faith calendar's changes (hunt-calendar-rules.mjs huntCalendar, NPC 0.54.0, B2710); when given it
+ *     replaces churchStep, and its named changes come back as calendar for the card.
  *   hunter: {factions: [faction ids], herd (own dots), domain (own dots), fame}
  */
-export function huntingAt(state, place, hunter = {}, morality = "roads", {churchStep = 0} = {}) {
+export function huntingAt(state, place, hunter = {}, morality = "roads", {churchStep = 0, calendar = null} = {}) {
   const area = areaOf(place, morality);
   const holder = holderOf(state, place?.id);
   const mine = holder && (hunter.factions ?? []).includes(holder.id);
@@ -764,11 +768,13 @@ export function huntingAt(state, place, hunter = {}, morality = "roads", {church
   const herdDice = Math.max(Number(hunter.herd) || 0, herdFac);
   let difficulty = Math.max(3, area.difficulty - domainDots - fame);
   // Feast and fast days (WoDX Chronicle): a night of revel is 1 easier in town, a strict fast 1 harder; not in the wilds
-  const church = ["wilds", "caern"].includes(place?.kind) ? 0 : Math.sign(Number(churchStep) || 0);
+  const wild = ["wilds", "caern"].includes(place?.kind);
+  const church = wild ? 0 : calendar ? Math.max(-2, Math.min(2, Math.round(Number(calendar.n) || 0))) : Math.sign(Number(churchStep) || 0);
   if ( church ) difficulty = Math.min(10, Math.max(3, difficulty + church));
+  const named = wild || !calendar ? [] : (calendar.changes ?? []);
   const trespass = holder && !mine ? {faction: holder.id, name: holder.name, security: holder.assets.security, secret: holder.secret} : null;
   if ( trespass ) difficulty = Math.min(10, difficulty + trespass.security);
-  return {area, holder: holder?.id ?? null, domainDots, fame, herdDice, church, difficulty, trespass};
+  return {area, holder: holder?.id ?? null, domainDots, fame, herdDice, church, calendar: named, difficulty, trespass};
 }
 
 /* ------------------------------------------------------------------ */
@@ -793,7 +799,7 @@ export function normBreach(b = {}) {
 }
 
 /** Public places hear a rumour first: these kinds lead, in this order (WoDX reading). */
-const PUBLIC_FIRST = ["tavern", "market", "church", "street", "workplace", "gate", "castle", "home", "wilds", "caern", "haven", "other"];
+const PUBLIC_FIRST = ["tavern", "market", "church", "mosque", "synagogue", "temple", "street", "workplace", "gate", "castle", "home", "wilds", "caern", "haven", "other"];
 
 /**
  * One day of a rumour: it reaches as many new places as its severity (or perDay: the age's reach, from WoDX
@@ -1077,6 +1083,46 @@ export function battleChanges(state, battle) {
     if ( w && w.id !== l.id ) out.push({op: "standing", faction: l.id, other: w.id, delta: -1});
     if ( o.how !== "withdraw" && o.how !== "lifted" && (l.assets.retainers ?? 0) > 0 ) out.push({op: "bg", faction: l.id, key: "retainers", delta: -1});
     if ( broke && (l.assets.status ?? 0) > 0 ) out.push({op: "bg", faction: l.id, key: "status", delta: -1});
+  }
+  return out;
+}
+
+/* ------------------------------------------------------------------ */
+/*  A town rises (B3330, WoDX Storyteller's towns)                     */
+/* ------------------------------------------------------------------ */
+
+/** The factions that hold a place in a town: a place on one of its scenes, or the scene itself. */
+export function holdersInTown(state, sceneIds = []) {
+  const pre = sceneIds.map(id => `Scene.${id}`);
+  return (state?.factions ?? []).filter(f => !f.dormant && (f.places ?? []).some(p => pre.some(s => p === s || String(p).startsWith(`${s}.`))));
+}
+
+/**
+ * What a rising in a town does to the factions there: each that holds a place in it loses a dot of Status and one
+ * of Retainers (the town has turned on its masters and their men are beaten or gone over); a faction that laid a tax
+ * on the town's market loses a dot of Status too, and every holder thinks worse of it. A sack costs a holder a dot of
+ * Resources. Hidden factions keep their dots: the town rose against its mortal masters, not against what it cannot
+ * see. Returns the changes for the approval queue.
+ */
+export function townChanges(state, {sceneIds = [], taxers = [], kind = "rising"} = {}) {
+  const out = [], seen = new Set();
+  const add = c => { const k = JSON.stringify(c); if ( !seen.has(k) ) { seen.add(k); out.push(c); } };
+  const holders = holdersInTown(state, sceneIds).filter(f => !HIDDEN_KINDS.has(f.kind));
+  const byId = id => (state?.factions ?? []).find(f => f.id === id && !f.dormant) ?? null;
+  for ( const f of holders ) {
+    if ( kind === "rising" ) {
+      if ( (f.assets?.status ?? 0) > 0 ) add({op: "bg", faction: f.id, key: "status", delta: -1});
+      if ( (f.assets?.retainers ?? 0) > 0 ) add({op: "bg", faction: f.id, key: "retainers", delta: -1});
+    }
+    if ( kind === "sack" && (f.assets?.resources ?? 0) > 0 ) add({op: "bg", faction: f.id, key: "resources", delta: -1});
+  }
+  if ( kind === "rising" ) {
+    for ( const id of taxers ) {
+      const t = byId(id);
+      if ( !t || HIDDEN_KINDS.has(t.kind) ) continue;
+      if ( (t.assets?.status ?? 0) > 0 ) add({op: "bg", faction: t.id, key: "status", delta: -1});
+      for ( const h of holders ) if ( h.id !== t.id && standingOf(h, t.id) > STANDING.min ) add({op: "standing", faction: h.id, other: t.id, delta: -1});
+    }
   }
   return out;
 }

@@ -7,6 +7,9 @@
  * person's sex, which the generator records.
  */
 
+import {WORLD_PEOPLE_TABLES} from "./people-world.mjs";
+import {worldTradeTables} from "./people-trades-world.mjs";
+
 const t = (id, name, list, opts = {}) => ({id, name, results: list.map(x => (typeof x === "string" ? {text: x} : x)), ...opts});
 const w = (text, weight) => ({text, weight});
 const MED = ["medieval"], EM = ["early-modern"], IND = ["industrial"], MOD = ["modern"];
@@ -18,9 +21,7 @@ const origins = [
   t("people.origin", "People: origin (Bohemia, medieval)", [w("czech", 62), w("german", 30), w("jewish", 8)], {era: MED, culture: BOH}),
   t("people.origin", "People: origin (Bohemia, early modern)", [w("czech", 60), w("german", 32), w("jewish", 8)], {era: EM, culture: BOH}),
   t("people.origin", "People: origin (Bohemia, industrial)", [w("czech", 63), w("german", 31), w("jewish", 6)], {era: IND, culture: BOH}),
-  t("people.origin", "People: origin (Czechia, modern)", [w("czech", 88), w("slovak", 12)], {era: MOD, culture: BOH}),
-  t("people.origin", "People: origin (the Americas, 19th century)", [w("anglo", 80), w("hispanic", 20)], {era: IND, culture: AM}),
-  t("people.origin", "People: origin (the Americas, modern)", [w("anglo", 78), w("hispanic", 22)], {era: MOD, culture: AM})
+  t("people.origin", "People: origin (Czechia, modern)", [w("czech", 88), w("slovak", 12)], {era: MOD, culture: BOH})
 ];
 
 /* ---------------- Given names ---------------- */
@@ -279,12 +280,15 @@ const TRADES = {
 const AM_ONLY = new Set(["cowhand", "prospector", "gambler"]);
 const trades = [
   ...Object.entries(TRADES).filter(([g]) => g !== "industrial").map(([g, list]) => t("people.trade", `People: trades (${g})`, list, {era: [g]})),
-  t("people.trade", "People: trades (industrial, Bohemia)", TRADES.industrial.filter(x => !AM_ONLY.has(x.text)), {era: IND, culture: BOH}),
-  t("people.trade", "People: trades (industrial, the Americas)", TRADES.industrial, {era: IND, culture: AM})
+  // Written for no one land, so every region of the world draws them (0.16.0); the Americas keep their own below
+  t("people.trade", "People: trades (industrial)", TRADES.industrial.filter(x => !AM_ONLY.has(x.text)), {era: IND}),
+  t("people.trade", "People: trades (industrial, the Americas)", TRADES.industrial, {era: IND, culture: AM}),
+  // 0.23.0 (B2673): lands that follow another way of life have their own trades (people-trades-world.mjs)
+  ...worldTradeTables(TRADES, t)
 ];
 /** The sheet for a trade (looked up by its name, so a Storyteller's new trade gets a plain sheet). */
-export const TRADE_SHEETS = Object.fromEntries(Object.values(TRADES).flat().map(x => [x.text, {a: x.a, k: x.k}]));
+export const TRADE_SHEETS = Object.fromEntries([...Object.values(TRADES).flat(), ...trades.flatMap(tb => tb.results)].filter(x => x.a).map(x => [x.text, {a: x.a, k: x.k}]));
 
 /** Every table, as the generator core takes them. */
 export const PEOPLE_TABLES = [...origins, ...given, ...family, ...bynames, archetypes, motives, secrets, looks,
-  ...trades.map(tb => ({...tb, results: tb.results.map(({text, weight}) => ({text, weight}))}))];
+  ...trades.map(tb => ({...tb, results: tb.results.map(({text, weight}) => ({text, weight}))})), ...WORLD_PEOPLE_TABLES];

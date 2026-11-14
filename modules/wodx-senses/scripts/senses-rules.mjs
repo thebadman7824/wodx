@@ -29,7 +29,9 @@ export function eraBand(year) {
 }
 
 /** Place kinds (as WoDX NPC tags them) that are indoors unless the Storyteller says otherwise. */
-export const INDOOR_KINDS = ["home", "workplace", "church", "tavern", "haven", "castle"];
+export const INDOOR_KINDS = ["home", "workplace", "church", "mosque", "synagogue", "temple", "tavern", "haven", "castle"];
+/** The houses of worship of every faith (WoDX NPC 0.50.0 gave each its own kind of place). */
+export const WORSHIP = ["church", "mosque", "synagogue", "temple"];
 export function isIndoor(place = {}) {
   if ( place.io === "in" ) return true;
   if ( place.io === "out" ) return false;
@@ -108,7 +110,7 @@ export function difficulty(sense, ctx = {}, powers = {}) {
   // merits and flaws keep their own sign: Acute Sense -2, Bad Sight +2
   for ( const m of powers.traitMods ?? [] ) if ( !m.senses || m.senses.includes(sense) ) add(m.label, Number(m.n) || 0);
   const lost = (powers.cannot ?? []).find(c => c.sense === sense);
-  if ( lost ) return {diff: BASE_DIFFICULTY, parts: [], blind: true, lost: lost.label};
+  if ( lost ) return {diff: BASE_DIFFICULTY, parts: [], blind: true, lost: lost.label, lostLine: lost.line ?? null};
   const floored = Math.max(FLOOR, Math.min(10, diff));
   if ( floored !== diff ) parts.push(`no lower than ${FLOOR}`);
   return {diff: floored, parts, blind};
@@ -117,7 +119,7 @@ export function difficulty(sense, ctx = {}, powers = {}) {
 /**
  * What a character's powers do to the senses. traits: {auspex, heightened (Gift), form, eyesOfCat, senseWyrm,
  * senseUnnatural, trueForm, body (the body plan's senses: wolf, bat), awareness, kenning, primalUrge, spheres: {life, spirit, entropy, prime}, kind, layer,
- * secondSight, fae}. Returns {mods: [{label, n, senses?}], darkSight, channels: [ids], smellFirst, reach: {sound, smell}}.
+ * secondSight, fae, gear (installed cyberware)}. Returns {mods: [{label, n, senses?}], darkSight, channels: [ids], smellFirst, reach: {sound, smell}}.
  */
 export function powersFor(t = {}) {
   const mods = [], channels = [];
@@ -131,6 +133,9 @@ export function powersFor(t = {}) {
   if ( t.body === "bat" ) mods.push({label: "Bat's hearing (Shape of the Beast)", n: 3, senses: ["sound"]});
   if ( t.heightened ) mods.push({label: "Heightened Senses (Gift)", n: wolf ? 3 : 2});
   if ( t.eyesOfCat ) darkSight = "Eyes of the Cat";
+  // B3799: cyberware (WoDX Library api.cyber.installedFx): {dark, mods: [{label, n, senses}]}
+  if ( t.gear?.dark && !darkSight ) darkSight = t.gear.dark;
+  for ( const m of t.gear?.mods ?? [] ) mods.push({label: m.label, n: Number(m.n) || 0, senses: m.senses});
   if ( wolfish ) { smellFirst = true; reach.smell += 1; }
   if ( t.senseWyrm ) channels.push("taint");
   if ( t.senseUnnatural || t.secondSight ) channels.push("unnatural");
@@ -146,6 +151,51 @@ export function powersFor(t = {}) {
   const cannot = (ts.cannot ?? []).map(sense => ({sense, label: sense === "sight" ? "Blind" : sense === "sound" ? "Deaf" : "Lost"}));
   for ( const c of ts.channels ?? [] ) channels.push(c);
   return {mods, traitMods, cannot, darkSight, channels: [...new Set(channels)], smellFirst, reach};
+}
+
+/**
+ * 0.8.0: where the character is when they look, listen or smell (WoDX Combat's stances: flying, prone, swimming,
+ * under the water, wading, climbing, in the saddle, aboard a vehicle, in the earth). mods: difficulty changes by
+ * sense (the sight numbers are WoDX Combat's own, so a look and a Perception check agree); cannot: senses that give
+ * nothing there, with the line said in their place; sightFar: how far the eye reaches, times the usual; sightCap:
+ * the most yards it reaches at all; lines: one authored line a sense, said first. House rules (B2444); the books
+ * give no figures for any of it.
+ */
+export const STANCE_SENSES = {
+  flying: {label: "From the air", mods: [{senses: ["sight"], n: -1}, {senses: ["sound", "smell"], n: 1}], sightFar: 2,
+    lines: {sight: "From up here the ground lies open below, roofs and ways and all.", sound: "The wind takes most sounds before they reach this high.", smell: "The air up here is clean and tells little."}},
+  prone: {label: "Low to the ground", mods: [], sightFar: 0.5,
+    lines: {sight: "From down here there is little to see past the nearest things.", smell: "The ground's own smell is close.", touch: "The ground is close under hands and belly."}},
+  swimming: {label: "In the water", mods: [{senses: ["sound"], n: 1}, {senses: ["smell"], n: 2}], sightFar: 0.5,
+    lines: {sight: "With only the head above the water, the view is low and broken.", sound: "Water laps at the ears.", smell: "The water smells stronger than anything else.", touch: "The water is all around, cold and pulling."}},
+  under: {label: "Under the water", mods: [{senses: ["sight"], n: 2}, {senses: ["sound"], n: 2}], sightCap: 8,
+    cannot: [{sense: "smell", line: "Under the water there is nothing to smell."}],
+    lines: {sight: "Under the water everything is dim and close.", sound: "Sounds come dull, and from no direction.", touch: "The water presses in on every side."}},
+  wading: {label: "In shallow water", mods: [{senses: ["sound"], n: 1}], lines: {sound: "Each step splashes.", touch: "Cold water drags at the legs."}},
+  climbing: {label: "On a climb", mods: [], lines: {touch: "Hands and feet are busy holding on."}},
+  mounted: {label: "In the saddle", mods: [{senses: ["sound"], n: 1}], sightFar: 1.5,
+    lines: {sight: "The saddle gives a view over heads and hedges.", sound: "The mount under the saddle is loud this close.", smell: "The mount's own smell is the nearest."}},
+  aboard: {label: "Aboard a vehicle", mods: [{senses: ["sound", "smell"], n: 1}],
+    lines: {sound: "Wheels, boards or an engine fill the ears."}},
+  melded: {label: "In the earth", mods: [{senses: ["sound"], n: 3}],
+    cannot: [{sense: "sight", line: "Inside the earth there is nothing to see."}, {sense: "smell", line: "Inside the earth there is nothing to smell but soil."}],
+    lines: {sound: "Sounds come down through the soil, dull and far off.", touch: "Earth on every side, close and still."}}
+};
+/** powersFor()'s answer with a stance laid over it: its difficulty changes, lost senses, reach of the eye and lines. */
+export function withStance(pw = {}, stance = "standing") {
+  const S = STANCE_SENSES[stance];
+  if ( !S ) return {...pw, stance: "standing", sightFar: 1, sightCap: null, stanceLines: {}};
+  const had = new Set((pw.cannot ?? []).map(c => c.sense));
+  return {...pw, stance, stanceLabel: S.label, sightFar: S.sightFar ?? 1, sightCap: S.sightCap ?? null, stanceLines: S.lines ?? {},
+    traitMods: [...(pw.traitMods ?? []), ...S.mods.map(m => ({label: S.label, n: m.n, senses: m.senses}))],
+    cannot: [...(pw.cannot ?? []), ...(S.cannot ?? []).filter(c => !had.has(c.sense)).map(c => ({sense: c.sense, label: S.label, line: c.line}))]};
+}
+/** Someone hard to pick out for where they are (WoDX Combat's spot change: prone 1, under the water 2): the line and its need. */
+export function lowFigure(stance, spot = 0) {
+  const n = Math.max(0, Math.round(Number(spot) || 0));
+  if ( !n ) return null;
+  const t = stance === "under" ? "A shape moves under the water {{dir}}." : stance === "swimming" ? "A head shows above the water {{dir}}." : "Someone keeps low to the ground {{dir}}.";
+  return {t, n};
 }
 
 /** The line for a sense a character does not have. */
@@ -209,12 +259,14 @@ export function layerLines(tables, layer, place = {}, sense, ctx) {
  * Reach of one source for one sense. s: {walls (sound walls between), yards, sightBlocked, loud: quiet|normal|loud}.
  * Returns the extra need (0 clear, 1 muffled) or null when it can't be perceived from here.
  */
-export function reachOf(sense, s = {}, {light = "bright", darkSight = false, extra = {sound: 0, smell: 0}} = {}) {
+export function reachOf(sense, s = {}, {light = "bright", darkSight = false, extra = {sound: 0, smell: 0}, sightFar = 1, sightCap = null} = {}) {
   const walls = Number(s.walls) || 0, yards = Number(s.yards) || 0;
   if ( sense === "sight" ) {
     if ( s.sightBlocked ) return null;
     if ( light === "pitch" && !darkSight && !s.glows ) return null;
-    const far = light === "bright" || s.glows ? 60 : light === "dim" ? 20 : 8;
+    // 0.8.0: where the looker is stretches or shortens the view (withStance)
+    let far = (light === "bright" || s.glows ? 60 : light === "dim" ? 20 : 8) * (Number(sightFar) || 1);
+    if ( Number(sightCap) > 0 ) far = Math.min(far, Number(sightCap));
     return yards <= far ? 0 : null;
   }
   if ( sense === "sound" ) {

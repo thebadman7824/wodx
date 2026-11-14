@@ -9,6 +9,7 @@
  */
 import {GROUPS, KITS, KIT_WORKSHOP, FAMILIES, BOOKS, METHODS, WORDS, RAW, FACTORY, FACTORY_PRINTER, PART_CHOICES, SALVAGE, NOT_APART, APART_TOOLS, APART_QUALITIES} from "../data/recipes.mjs";
 import {substanceOf} from "./use-rules.mjs";
+import {inUseAt} from "../data/goods-ways.mjs";
 
 export {GROUPS, KITS, FAMILIES, METHODS, PART_CHOICES, SALVAGE};
 
@@ -47,7 +48,7 @@ export function inScope(good) {
 }
 
 /** Things a drug is taken with, not drugs themselves. */
-const PARAPHERNALIA = /\b(pipe|syringe|hookah|lighter)\b/i;
+const PARAPHERNALIA = /\b(pipe|syringe|hookah|lighter|betel box)\b/i;
 
 const fam = m => ({...FAMILIES[m.family], ...Object.fromEntries(Object.entries(m).filter(([, v]) => v !== undefined))});
 const kindsOf = m => m.kinds ?? FAMILIES[m.family]?.kinds ?? ["food"];
@@ -82,10 +83,20 @@ export function needsFor(method, good) {
   return [...out].map(([group, n]) => ({group, label: GROUPS[group]?.label ?? group, n}));
 }
 
-/** Goods that belong to a group in a year. */
-export function membersOf(group, goods = [], year = 0) {
+/**
+ * Is a good to be had in a year, and in a place when where ({way, region}) is given? Goods with a place rule
+ * (data/goods-ways.mjs) are then found only where they are at home (B3100). No year: always.
+ */
+export function inUse(g, year = 0, where = null) {
   const y = Number(year) || 0;
-  return goods.filter(g => meets(group, g.name) && (!y || (y >= g.from && y <= g.to)));
+  if ( !y || !g ) return !!g;
+  if ( where?.way || where?.region ) return inUseAt(g, y, {way: where.way ?? null, region: where.region ?? null});
+  return y >= g.from && y <= g.to;
+}
+
+/** Goods that belong to a group in a year (and a place, when where is given). */
+export function membersOf(group, goods = [], year = 0, where = null) {
+  return goods.filter(g => meets(group, g.name) && inUse(g, year, where));
 }
 
 /** Does a kit stand ready? carried: names; sceneKits: kit keys marked on the scene. Returns {ok, how, why}. */
@@ -194,10 +205,10 @@ export function leftLine(seconds) {
 }
 
 /** Recipes that use a thing ("Cook with it" on an ingredient): method keys whose needs it meets. */
-export function usesOf(name, goods = [], year = 0) {
+export function usesOf(name, goods = [], year = 0, where = null) {
   const out = [];
   for ( const g of goods ) {
-    if ( year && (year < g.from || year > g.to) ) continue;
+    if ( !inUse(g, year, where) ) continue;
     const r = recipeOf(g, year);
     if ( r.ok && r.recipe.needs.some(n => meets(n.group, name)) ) out.push(g);
   }
@@ -210,17 +221,17 @@ export function usesOf(name, goods = [], year = 0) {
  * The parts a good gives when taken apart in a year: {ok, why, parts: [{name, n}], ab, diff, tool, quick}.
  * goods: the goods list (for the parts' years); valueAt: (good, year) => tier.
  */
-export function salvageOf(good, year = 0, {goods = [], valueAt = g => Number(g?.value) || 0} = {}) {
+export function salvageOf(good, year = 0, {goods = [], valueAt = g => Number(g?.value) || 0, where = null} = {}) {
   if ( !good?.name ) return {ok: false, why: "No such thing."};
   if ( NOT_APART.has(good.kind) || inScope(good) ) return {ok: false, why: `${cap(good.name)} is not something to take apart.`};
   const rule = SALVAGE.find(r => r.kinds.includes(good.kind) && r.re.test(good.name));
   if ( !rule ) return {ok: false, why: `${cap(good.name)} gives nothing worth keeping when taken apart.`};
   const y = Number(year) || 0;
   const tier = Math.max(0, Math.min(5, Math.round(valueAt(good, y) || 0)));
-  const inUse = name => goods.find(g => g.name === name && (!y || (y >= g.from && y <= g.to)));
+  const had = name => goods.find(g => g.name === name && inUse(g, y, where));
   const parts = [];
   for ( const [choice, n] of rule.parts ) {
-    const g = (PART_CHOICES[choice] ?? []).map(inUse).find(Boolean);
+    const g = (PART_CHOICES[choice] ?? []).map(had).find(Boolean);
     if ( g ) parts.push({name: g.name, id: g.id, n: n + (tier >= 3 ? 1 : 0)});
   }
   if ( !parts.length ) return {ok: false, why: `${cap(good.name)} gives nothing worth keeping in ${y || "this year"}.`};

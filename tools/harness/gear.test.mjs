@@ -57,3 +57,56 @@ test("cyberware soak: implants are worn armor that Combat always counts", () => 
   assert.equal(sub.flags["wodx-library"].surgery, "CR"); assert.equal(sub.flags["wodx-library"].humanity, "2D6");
   assert.match(combat, /i\.flags\?\.\["wodx-library"\]\?\.implant/);
 });
+
+// WoDX Library 0.21.0 (B3070 to B3073): gear by region.
+const W = await import(join(root, "modules/wodx-library/data/gear-ways.mjs"));
+const names = (era, where) => new Set(G.forEra(data.items, era, where).map(i => i.name));
+test("gear by region: the Americas before the settlers carry no steel, crossbow or plate", () => {
+  const mex = names("dark-ages", {year: 1400, way: "mesoamerican", region: "mexico"});
+  for ( const n of ["Macuahuitl", "Tepoztopilli", "Atlatl dart", "Ichcahuipilli", "Spear", "Club", "Shortbow", "Sling"] ) assert.ok(mex.has(n), n);
+  for ( const n of ["Broadsword", "Crossbow", "Longbow", "Lance", "Class Four", "Halberd", "Katana", "Jian"] ) assert.ok(!mex.has(n), n);
+  const fr = names("dark-ages", {year: 1300, way: "latin", region: "france"});
+  for ( const n of ["Broadsword", "Crossbow", "Lance", "Class Five"] ) assert.ok(fr.has(n), n);
+  for ( const n of ["Macuahuitl", "Katana", "Scimitar", "Assegai"] ) assert.ok(!fr.has(n), n);
+});
+
+test("gear by region: the swords of Asia and Africa at home, guns by the year each land took them up", () => {
+  const jp = y => names("renaissance", {year: y, way: "japanese", region: "japan"});
+  assert.ok(jp(1600).has("Katana") && jp(1600).has("Naginata") && jp(1600).has("Yumi"));
+  assert.ok(!jp(1520).has("Arquebus") && jp(1550).has("Arquebus"), "the arquebus reaches Japan in 1543");
+  assert.ok(!jp(1600).has("Rapier") && !jp(1600).has("Full Plate"));
+  assert.ok(names("dark-ages", {year: 1300, way: "sinic", region: "china"}).has("Jian"));
+  assert.ok(names("dark-ages", {year: 1300, way: "islamic", region: "egypt"}).has("Scimitar"));
+  assert.ok(names("dark-ages", {year: 1300, way: "islamic", region: "egypt"}).has("Kilij"));
+  assert.ok(names("dark-ages", {year: 1300, way: "bantu", region: "southern-africa"}).has("Assegai"));
+  assert.ok(names("dark-ages", {year: 1300, way: "polynesian", region: "pacific-islands"}).has("Patu"));
+  assert.ok(names("modern", {year: 2000, way: "japanese", region: "japan"}).has("Katana"));
+  assert.ok(!names("modern", {year: 2000, way: "latin", region: "france"}).has("Katana"));
+  const all = names("dark-ages");
+  assert.ok(all.has("Katana") && all.has("Broadsword"), "with no place given, every land's gear");
+});
+
+test("gear by region: each weapon of another land fights as a book weapon and keeps its page", () => {
+  const local = data.items.filter(i => i.flags["wodx-library"].local);
+  assert.ok(local.length >= 50);
+  for ( const i of local ) {
+    const f = i.flags["wodx-library"], base = data.items.find(b => !b.flags["wodx-library"].local && b.flags["wodx-library"].source === f.source && b.name === f.like);
+    assert.ok(base, `${i.name} fights as ${f.like}`);
+    assert.deepEqual(i.system.damage ?? null, base.system.damage ?? null, i.name);
+    assert.equal(i.system.difficulty, base.system.difficulty, i.name);
+    assert.match(i.system.reference, /house rule/, i.name);
+    assert.ok(!/—/.test(JSON.stringify(i)) && !/\b(he|she|him|her|his|hers)\b/i.test(i.system.description), i.name);
+  }
+  const keys = local.map(i => `${i.flags["wodx-library"].source}|${i.name}`);
+  assert.equal(new Set(keys).size, keys.length, "one local piece per name and book");
+  for ( const [name, , like] of W.LOCAL_GEAR ) for ( const src of Object.keys(like) ) assert.ok(G.SOURCES[src], `${name}: ${src}`);
+});
+
+test("gear by region: every region and way of life named is one WoDX Chronicle knows", async () => {
+  const Wr = await import(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs"));
+  const known = new Set([...Object.keys(Wr.WORLD_REGIONS), ...Object.keys(Wr.SPHERES), "*"]);
+  const keysOf = w => Object.keys(w ?? {});
+  for ( const [n, w] of Object.entries(W.GEAR_WAYS) ) for ( const k of keysOf(w) ) assert.ok(known.has(k), `${n}: ${k}`);
+  for ( const [n, w] of W.LOCAL_GEAR ) for ( const k of keysOf(w) ) assert.ok(known.has(k), `${n}: ${k}`);
+  for ( const n of Object.keys(W.GEAR_WAYS) ) assert.ok(data.items.some(i => i.name === n), `rule for a gear name that exists: ${n}`);
+});

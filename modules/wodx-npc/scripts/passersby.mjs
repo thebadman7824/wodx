@@ -100,6 +100,10 @@ export function build({MOD, esc, isActiveGM, chron}) {
     try { here = game.modules.get("wodx-storyteller")?.api?.upkeep?.huntHere?.(scene) ?? null; } catch (e) { here = null; }
     return {area: PR.AREA_CROWD[here?.area] ? here.area : "market", sick: !!here?.outbreak};
   }
+  /** 0.51.0 (B2671): the region the scene stands in (its own, else the homeland), for its way of life. */
+  function regionOfScene(scene) {
+    try { return chron()?.world?.here?.(scene)?.id ?? null; } catch (e) { return null; }
+  }
   const rectOf = () => canvas.dimensions?.sceneRect ?? {x: 0, y: 0, width: canvas.dimensions?.width ?? 1000, height: canvas.dimensions?.height ?? 1000};
   const gridPx = scene => Number(scene?.grid?.size) || 100;
   const centerOf = (doc, g) => ({x: doc.x + (doc.width ?? 1) * g / 2, y: doc.y + (doc.height ?? 1) * g / 2});
@@ -111,7 +115,7 @@ export function build({MOD, esc, isActiveGM, chron}) {
 
   async function spawn(scene, {animal = false, time, street, place = "street"}) {
     const who = animal ? PR.makeAnimal({year: time.year || year(), hour: time.hour, area: street.area, place})
-      : PR.makePasserby({year: time.year || year(), hour: time.hour, area: street.area, sick: street.sick, place});
+      : PR.makePasserby({year: time.year || year(), hour: time.hour, area: street.area, sick: street.sick, place, region: regionOfScene(scene)});
     if ( !who ) return null;
     const base = await baseActor(animal ? "animal" : "person");
     const g = gridPx(scene), rect = rectOf();
@@ -229,7 +233,10 @@ export function build({MOD, esc, isActiveGM, chron}) {
       const time = await now(), street = streetOf(scene), max = num(setting("passersbyMax"));
       const left = mine.filter(t => !deletes.includes(t.id) && !flagOf(t).kept && !flagOf(t).fleeing);
       const place = crowd.place;
-      const people = PR.crowdSize({year: time.year || year(), hour: time.hour, area: street.area, density: crowd.density, max, place});
+      // B3321: the town's condition thins or fills the street
+      let town = null;
+      try { town = game.modules.get("wodx-storyteller")?.api?.upkeep?.towns?.ofScene?.(scene) ?? null; } catch (e) { town = null; }
+      const people = Math.min(num(max) > 0 ? num(max) : PR.MAX_CAP, Math.round(PR.crowdSize({year: time.year || year(), hour: time.hour, area: street.area, density: crowd.density, max, place}) * PR.townCrowd(town)));
       const beasts = crowd.animals ? PR.animalCount({year: time.year || year(), hour: time.hour, area: street.area, density: crowd.density, max, people, place}) : 0;
       const nP = left.filter(t => !flagOf(t).animal).length, nA = left.filter(t => flagOf(t).animal).length;
       const make = [];

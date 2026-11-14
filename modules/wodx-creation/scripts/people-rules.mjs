@@ -4,6 +4,7 @@
  */
 import {draw, between, pick, shuffled} from "../../wodx-chronicle/scripts/gen-core.mjs";
 import {TRADE_SHEETS} from "../data/people.mjs";
+import {FAMILY_FIRST} from "../data/people-world.mjs";
 
 export const ATTRS = {physical: ["strength", "dexterity", "stamina"], social: ["charisma", "manipulation", "appearance"], mental: ["perception", "intelligence", "wits"]};
 const GROUP = {p: "physical", s: "social", m: "mental"};
@@ -28,7 +29,8 @@ export function nameOf({rand, tables, origin, sex}) {
   const vars = {child: sex === "female" ? "bat" : "ben"};
   const given = text(tables, `names.${sex}.${origin}`, rand, vars);
   const family = text(tables, `names.family.${sex}.${origin}`, rand, vars) ?? text(tables, `names.byname.${sex}.${origin}`, rand, vars);
-  return {given, family, name: [given, family].filter(Boolean).join(" ")};
+  // Chinese, Japanese, Korean, Vietnamese and Hungarian names put the family first
+  return {given, family, name: (FAMILY_FIRST.has(origin) ? [family, given] : [given, family]).filter(Boolean).join(" ")};
 }
 
 /** The sheet's dots for a trade: Attributes by its priority, its Abilities, and a few everyday ones. */
@@ -52,14 +54,25 @@ export function sheetFor({rand, trade, era}) {
   return {attributes, abilities, secondary};
 }
 
+/** Half the share of people the generator makes nonbinary when asked for anyone: 1 in 100 in all. */
+export const NONBINARY_HALF = 0.005;
+
 /**
- * One person. opts: era (group), culture, kind ("mortal" or "ghoul"), sex ("female", "male" or "any"), trade (or "any").
+ * One person. opts: era (group), culture, kind ("mortal" or "ghoul"), sex ("female", "male", "nonbinary" or "any"), trade (or "any"),
+ * origin (asked for, e.g. a household's own; used when the era's tables name it).
  * Returns everything the sheet needs and the cards show.
  */
-export function person({rand, tables, era, culture, kind = "mortal", sex = "any", trade = "any"}) {
-  const s = sex === "any" ? (rand() < 0.5 ? "female" : "male") : sex;
-  const origin = text(tables, "people.origin", rand) ?? (culture === "american" ? "anglo" : "czech");
-  const n = nameOf({rand, tables, origin, sex: s});
+export function person({rand, tables, era, culture, kind = "mortal", sex = "any", trade = "any", origin: asked = null}) {
+  // "any": one in a hundred is nonbinary (Ben, 2026-11-13; B3503), read from the same draw so that every person
+  // generated before keeps their name and the rest of their draws. Names follow the lists of the draw's side.
+  let s = sex, nameSex = sex;
+  if ( sex === "any" ) { const r = rand(); nameSex = r < 0.5 ? "female" : "male"; s = Math.abs(r - 0.5) < NONBINARY_HALF ? "nonbinary" : nameSex; }
+  else if ( sex === "nonbinary" ) nameSex = rand() < 0.5 ? "female" : "male";
+  const drawn = text(tables, "people.origin", rand) ?? (culture === "american" ? "anglo" : "czech");
+  // An asked origin (kin of a household) is kept when the era's tables have names for it; else the drawn one stands
+  let origin = drawn, n = null;
+  if ( asked && asked !== drawn ) { n = nameOf({rand, tables, origin: asked, sex: nameSex}); if ( n.given ) origin = asked; else n = null; }
+  n ??= nameOf({rand, tables, origin, sex: nameSex});
   const job = trade && trade !== "any" ? trade : (text(tables, "people.trade", rand) ?? "labourer");
   const nature = text(tables, "people.archetype", rand), demeanorRaw = text(tables, "people.archetype", rand);
   const demeanor = rand() < 0.3 ? nature : demeanorRaw;
@@ -67,7 +80,7 @@ export function person({rand, tables, era, culture, kind = "mortal", sex = "any"
   const sheet = sheetFor({rand, trade: job, era});
   const willpower = Math.min(7, 3 + between(rand, 0, 2) + (STRONG_WILLED.has(nature) ? 1 : 0));
   const virtues = {conscience: 1 + between(rand, 0, 2), selfcontrol: 1 + between(rand, 0, 2), courage: 1 + between(rand, 0, 2)};
-  return {kind, sex: s, origin, ...n, trade: job, nature, demeanor, motive, secret, look, willpower, virtues, era, culture, ...sheet};
+  return {kind, sex: s, nameForm: nameSex, origin, ...n, trade: job, nature, demeanor, motive, secret, look, willpower, virtues, era, culture, ...sheet};
 }
 
 /** The Storyteller's note on the sheet: concept, wants, hides, manner. Gender-neutral (B48). */

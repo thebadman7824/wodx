@@ -16,7 +16,7 @@ import * as T from "./target-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-targeting";
-const VERSION = "0.3.0";
+const VERSION = "0.4.0";
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const C = () => game.wodxCombat;
@@ -35,8 +35,8 @@ let lastTargetId = null;
 function registerSettings() {
   game.settings.register(MOD, "mode", {
     name: "Targeting", scope: "world", config: true, type: String, default: "suggest",
-    hint: "Suggest: an action window names a likely target and the next few, and the player may switch. Automatic (the Storyteller only; players keep Suggest): the target is set as the window opens. A target set by hand is always kept.",
-    choices: {off: "Off", suggest: "Suggest", auto: "Automatic (Storyteller only)"}
+    hint: "Suggest: an action window names a likely target and the next few, and the player may switch. Automatic (the Storyteller only; players keep Suggest): the target is set as the window opens. Automatic for everyone: players too, for play with nobody in the Storyteller's chair. A target set by hand is always kept.",
+    choices: {off: "Off", suggest: "Suggest", auto: "Automatic (Storyteller only)", everyone: "Automatic for everyone"}
   });
   game.settings.register(MOD, "mine", {
     name: "Targeting for me", scope: "client", config: true, type: String, default: "world",

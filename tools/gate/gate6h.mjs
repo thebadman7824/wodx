@@ -47,10 +47,20 @@ async function makePooka() {
     const name = "Jamilah (6h, pooka wilder)";
     const pw = (nm, type, v) => ({ name: nm, type: "Power", system: { type: `wod.types.${type}`, value: v } });
     // The system keeps Realms as Trait items whose label is a key such as "wod.realms.actor"
-    const rl = (k, v) => ({ name: k[0].toUpperCase() + k.slice(1), type: "Trait", system: { type: "wod.types.realms", label: `wod.realms.${k}`, value: v, max: 5 } });
+    const rl = (k, v) => ({ name: k, type: "Trait", system: { type: "wod.types.realms", label: `wod.realms.${k}`, value: v, max: 5 } });
     let a = game.actors.find(x => x.folder?.id === folder.id && x.name === name);
     if (!a) a = await Actor.create({ name, type: "Changeling", folder: folder.id, items: [pw("Metamorphosis", "art", 3), pw("Primal", "art", 3), pw("Wayfare", "art", 2),
         rl("actor", 3), rl("fae", 2), rl("nature", 1)] });
+    // The system adds its own six Realm items at value 0 (named by key, lower case) and the actor is kept between runs,
+    // so set every Realm to the value this gate expects, on whichever item carries it (B3462)
+    const want = { actor: 3, fae: 2, nature: 1, prop: 0, scene: 0, time: 0 };
+    const ups = [];
+    for (const [k, v] of Object.entries(want)) {
+        const have = a.items.filter(i => i.system?.type === "wod.types.realms" && String(i.system?.label ?? "").endsWith(`.${k}`));
+        if (!have.length) { if (v) await a.createEmbeddedDocuments("Item", [rl(k, v)]); continue; }
+        for (const i of have) if (Number(i.system?.value ?? 0) !== v) ups.push({ _id: i.id, "system.value": v });
+    }
+    if (ups.length) await a.updateEmbeddedDocuments("Item", ups);
     await a.update({ ...base, "system.seeming": "Wilder", "system.kith": "Pooka" });
     await a.setFlag(MOD, "daFae", { system: "c20" });
     if (a.getFlag(MOD, "c20") !== undefined) await a.unsetFlag(MOD, "c20");
@@ -68,7 +78,8 @@ export async function run() {
             pk = await makePooka();
             const i = A().c20Info(pk);
             ok("versions; the sheet's Arts, Realms and Tempers are read", !foundry.utils.isNewerVersion("3.9.0", A().version) && i.arts.metamorphosis === 3 && i.realms.actor === 3 && i.realms.fae === 2 && i.glamour.perm === 5 && i.seeming === "wilder",
-                { actions: A().version, arts: i.arts, realms: i.realms, glamour: i.glamour, seeming: i.seeming });
+                { actions: A().version, arts: i.arts, realms: i.realms, glamour: i.glamour, seeming: i.seeming,
+                  items: pk.items.filter(x => /realm|art/.test(x.system?.type ?? "")).map(x => `${x.type}|${x.name}|${x.system?.type}|${x.system?.label ?? ""}|${x.system?.value}`) });
         });
         await step("the menu follows the sheet's choice: Changeling 20th", async () => {
             let seen = null;

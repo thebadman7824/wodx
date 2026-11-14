@@ -160,24 +160,24 @@ export const REALMS = {
   enoch: {label: "Enoch", line: "vampire", world: "underworld", shape: "city", layout: "first-city", keys: ["towers", "ruins", "tombs"], palette: P("#1a1618", "#a09080", "#0a0808", "#0c0a10", "#a02020", "#241e20", "#e0c0a0", "#020102"),
     landmarks: ["the first spire", "the second spire", "the third spire", "the fourth spire", "the fifth spire", "the bronze gate", "the re-made First City", "the Aralu tombs"], hazards: ["enslaved ghost stars", "no fire allowed"],
     map: {centre: "the re-made First City", arc: ["the first spire", "the second spire", "the third spire", "the fourth spire", "the fifth spire"], on: "The gate straight down to the Labyrinth"},
-    ways: ["The Tal'Mahe'Ra's own routes"], refs: ["The Black Hand: A Guide to the Tal'Mahe'Ra pdf 121 / p. 120", "Dirty Secrets of the Black Hand pdf 92 / p. 93", "Sins of the Blood pdf 181 / p. 180"],
+    ways: ["The Tal'Mahe'Ra's own routes"], refs: ["The Black Hand: A Guide to the Tal'Mahe'Ra pdf 121 / p. 120", "Dirty Secrets of the Black Hand pdf 92 / p. 93"],
     eras: [{note: "In the Tempest, opening straight onto the Labyrinth."}]},
 
   // ---------------------------------------------------------------- Changeling: past the Near Dreaming
   "far-dreaming": {label: "The Far Dreaming", line: "changeling", world: "dreaming", shape: "wilds", layout: "storyland", keys: ["shifting", "forest", "stars"], palette: P("#2a2440", "#ffd8a0", "#160f24", "#1a2850", "#a03070", "#3a3a70", "#ffe8ff", "#06040c"),
     landmarks: ["a chimerical castle", "a road of moonlight", "a sea of dreams' shore", "a lost freehold"], hazards: ["a Nightmare", "Bedlam's pull"],
-    ways: ["A trod", "A gateway at the right time"], refs: ["Changeling: The Dreaming 20th pdf 29 / p. 28"],
+    ways: ["A trod", "A gateway at the right time"], refs: ["Changeling: The Dreaming 20th pdf 55 / p. 54", "Changeling: The Dreaming 20th pdf 307 / p. 306"],
     eras: [{to: 1348, note: "Open and bright (house rule)."}, {to: 1968, note: "Since the Shattering the trods to it are mostly closed (house rule).", mods: {closed: 1, ruin: 0.2}}, {to: 2025, note: "Reopened since the Resurgence of 1969."}, {note: "In the World of Future Darkness Banality floods it and the Endless Winter closes in (house rule).", mods: {frost: 0.5, ruin: 0.3}}]},
   "deep-dreaming": {label: "The Deep Dreaming", line: "changeling", world: "dreaming", shape: "islands", layout: "inward-spiral", keys: ["shifting:2", "stars", "chasm"], palette: P("#2a2048", "#ffe8b0", "#140c28", "#120c30", "#c040a0", "#40306a", "#fff0ff", "#04020a"),
     landmarks: ["the last gate", "a dream older than people", "a road toward Arcadia"], hazards: ["Bedlam", "losing the way back"],
-    ways: ["Only past the Far Dreaming"], refs: ["Changeling: The Dreaming 20th pdf 29 / p. 28", "Changeling: The Dreaming 20th pdf 37 / p. 36"],
+    ways: ["Only past the Far Dreaming"], refs: ["Changeling: The Dreaming 20th pdf 55 / p. 54", "Changeling: The Dreaming 20th pdf 308 / p. 307"],
     eras: [{to: 1348, note: "Arcadia lies somewhere within (house rule for the openness)."}, {to: 1968, note: "The gates to Arcadia are shut; the sidhe are gone into it.", mods: {closed: 1}}, {to: 2025, note: "The gates opened again in 1969."}, {note: "In the World of Future Darkness the Dreaming is all but gone (house rule).", mods: {frost: 0.7, ruin: 0.4}}]},
 
   // ---------------------------------------------------------------- Kuei-jin, Mummy, Demon
   yomi: {label: "Yomi, the Thousand Hells", line: "kuei-jin", world: "underworld", shape: "spiral", layout: "hell-courts", keys: ["fire:2", "bones"], palette: P("#2a1818", "#d0a070", "#140808", "#200a0a", "#ff3010", "#301a14", "#ffb080", "#060202"),
     landmarks: ["Ti Yu, the Earth Prison", "a Yama King's court", "a hell of the wicked", "the gate the Second Breath returns by"], hazards: ["a demon of the court", "endless punishment"], map: {centre: "Ti Yu, the Earth Prison"},
     ways: ["Every Kuei-jin passed through it before the Second Breath", "A Yomi gate"], refs: ["The Thousand Hells pdf 7 / p. 9", "Dark Kingdom of Jade pdf 90 / p. 89"],
-    eras: [{note: "The hells ring Ti Yu, the Earth Prison, a walled city with broad streets and a Hall of Justice; the Yama Kings wait here in every age."}]},
+    eras: [{note: "The hells ring Ti Yu, the Earth Prison, a walled city with broad streets and a Hall of Justice; the Yama Kings wait here in every age. The Kuei-jin hold that this Ti Yu is a copy made for the Yellow Springs and that Yomi's own hells are the real ones (The Thousand Hells pdf 6 to 10)."}]},
   "yellow-springs": {label: "The Yellow Springs", line: "kuei-jin", world: "underworld", shape: "city", layout: "imperial-grid", keys: ["towers", "gardens"], palette: P("#2a2418", "#e0c060", "#14100a", "#1a1a10", "#a04020", "#302a18", "#fff0a0", "#060502"),
     landmarks: ["the Jade Emperor's court", "a magistrate's hall", "a Chinatown trading hall", "the Kowloon station's twin"], map: {centre: "the Jade Emperor's court", on: "The Imperial Highway to the Jade Palace"}, hazards: ["loss of face", "a Castigator's notice"],
     ways: ["Death in the Middle Kingdom", "A long, dangerous voyage through the Tempest", "The Midnight Express to Hong Kong"], refs: ["Wraith 20th pdf 498 / p. 433", "Wraith: The Great War pdf 16 / p. 16", "World of Darkness: Hong Kong pdf 33 / p. 31", "Dark Kingdom of Jade pdf 45 / p. 44"],

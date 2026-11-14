@@ -10,8 +10,8 @@
  *   3. a quick order from the window: Wait here sets the order
  *   4. the sheet: the Relationships tab has a Followers button
  *   5. a description is written from the look, on a Storyteller-only card, heard here and not yet elsewhere
- *   6. NPCs who have heard it and see the culprit test it: a card with the roll (three sharp-eyed watchers, so the
- *      noticing roll is all but sure)
+ *   6. NPCs who have heard it and see the culprit test it: a card with the roll (three sharp-eyed watchers two squares
+ *      away in the open, so the noticing roll is all but sure)
  *   7. the whole town hears it at once from the list; dropping it ends it
  *   8. clean up
  * Result: Data/wodx-gate/gatefollowers3-result.json.
@@ -55,14 +55,15 @@ export async function run() {
     const sharp = {attributes: {perception: {value: 5}}, abilities: {alertness: {value: 5}, awareness: {value: 3}}};
     const watchers = [];
     for ( let i = 1; i <= 3; i++ ) { const w = await Actor.create({name: `WoDX gate: watcher ${i}`, type: "Mortal", ownership: {default: 0}, system: sharp}); actors.push(w); watchers.push(w); }
-    scene = await Scene.create({name: "WoDX gate: the market", width: 2000, height: 1400, grid: {size: 100}, tokenVision: false});
+    // padding 0: with the default padding the tokens stood outside the scene rectangle, whose edge blocks sight
+    scene = await Scene.create({name: "WoDX gate: the market", width: 2000, height: 1400, padding: 0, grid: {size: 100}, tokenVision: false});
     other = await Scene.create({name: "WoDX gate: the far gate", width: 1000, height: 1000, grid: {size: 100}, tokenVision: false});
     await scene.view();
     await sleep(800);
     const made = await scene.createEmbeddedDocuments("Token", [
       {name: pc.name, actorId: pc.id, x: 200, y: 200, actorLink: true}, {name: ghoul.name, actorId: ghoul.id, x: 300, y: 200, actorLink: true},
       {name: fol.name, actorId: fol.id, x: 400, y: 200, actorLink: true},
-      ...watchers.map((w, i) => ({name: w.name, actorId: w.id, x: 900 + i * 100, y: 600, actorLink: true}))]);
+      ...watchers.map((w, i) => ({name: w.name, actorId: w.id, x: 300 + i * 100, y: 400, actorLink: true}))]);
     const tk = a => made.find(k => k.actorId === a.id);
     await sleep(500);
 

@@ -215,7 +215,7 @@ export function drawAura(token, draw, {seconds = 20} = {}) {
   // The colour's name under the aura, for eyes that cannot tell the colours apart
   const word = draw.word ?? (draw.shade === "pale" ? "pale" : "bright");
   try {
-    const style = {fontFamily: "Signika, sans-serif", fontSize: Math.max(12, Math.round(h / 6)), fill: "#ffffff", stroke: {color: "#000000", width: 3}, strokeThickness: 3};
+    const style = {fontFamily: "Signika, sans-serif", fontSize: Math.max(12, Math.round(h / 6)), fill: "#ffffff", stroke: 0x000000, strokeThickness: 3};
     const label = v8 ? new PIXI.Text({text: word, style}) : new PIXI.Text(word, style);
     label.anchor?.set?.(0.5, 0);
     label.x = cx; label.y = cy + r * 1.5;
@@ -288,6 +288,8 @@ export async function readTheSoul({reader, target} = {}) {
       content: `<div class="wodx-card"><h3>${esc(target.name)}'s soul</h3><ul>${r.lines.map(l => `<li>${esc(l)}</li>`).join("")}</ul></div>`
     });
   }
+  // WoDX Senses keeps the reading for the Aura Perception rings (Otherworlds 0.24.1, B2900)
+  Hooks.callAll("wodxAuraRead", {reader: actor, token: target.id, actorId: target.actor.id, successes: result.success ? result.net : 0, botch: !!result.botch});
   r.ms = drawAura(target.object ?? target, r.draw);
   if ( r.ms !== null ) console.debug(`WoDX | aura drawn in ${r.ms.toFixed(2)} ms`);
   return {...r, faces, result};

@@ -1,0 +1,4 @@
+{
+ "about": "Gates written before the gate rules (B3731) that still break one. The list may only shrink: move a gate to tools/gate/kit.mjs, then run node tools/harness/gate-rules.mjs --baseline.",
+ "gates": {}
+}

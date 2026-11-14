@@ -1,0 +1,75 @@
+# WoDX Storyteller
+
+The Storyteller's module: the open world, the hand of table aids, the night's draw, travel and the maps, money, markets and war. Release notes are in [CHANGELOG.md](CHANGELOG.md); the version is in module.json.
+
+This page is a map of where each part lives. Most parts come as a pair: a `*-rules.mjs` file with no Foundry calls, which the harness tests, and a file of the same name without `-rules` that holds the windows, the settings and the hooks. `scripts/main.mjs` starts every part and builds `game.modules.get("wodx-storyteller").api`. Settings below are world settings under `wodx-storyteller`; hidden ones hold state and have no place in the settings window.
+
+## The open world
+
+- Files: `core.mjs`, `world-rules.mjs`, `apps.mjs` (the tracker and its windows), `setup.mjs` and `setup-rules.mjs` (Start a chronicle), `builder.mjs`, `recipe-rules.mjs` and `data/recipe-rothenstein.mjs` (Build this chronicle).
+- Settings: `log`, `personal`, `beats`, `convened`, `session`, `travelMinutes`, `encounters`, `encounterChance`, `encounterTable`, `soloLimit`, `dawnLead`, `beatsOn`, `setup`, `builder`.
+- API: `openTracker`, `travel`, `planTrip`, `convene`, `beats`, `endSession`, `report`, `setup`.
+
+## The hand and the table
+
+- Files: `hand.mjs` (the hand itself and its tools), `glance-rules.mjs` (rules at a glance), `callroll-rules.mjs` (call for a roll), `preflight-rules.mjs` (before the players arrive), `wrapup-rules.mjs` (the end of the night and the timer), `teleport.mjs` and `teleport-rules.mjs`, `pass-time.mjs` (players ask for time to pass), `dashboard.mjs` and `dashboard-rules.mjs`.
+- Settings: `timer`, `timerWarn`.
+- API: `hand`, `dashboard`.
+
+## Between sessions
+
+- Files: `between.mjs`, `prep-rules.mjs` (the next session sheet, last time, absent players, the hooks board), `kits-rules.mjs` (scene kits and quick extras by era), `prelude.mjs` and `prelude-rules.mjs`, `codex.mjs` and `codex-rules.mjs` (each player character's own journal), `dreams.mjs` and `dreams-rules.mjs`.
+- Settings: `kits`, `absent`, `dreams`.
+
+## The night's draw, rumours and letters
+
+- Files: `night.mjs`, `night-rules.mjs`, `pacing-rules.mjs`, `data/night-tables.mjs`, `rumours.mjs` and `rumour-rules.mjs`, `letters.mjs` and `letters-rules.mjs`.
+- Settings: `nightDraw`, `nightDrawn`, `aidCount`, `rumours`, `rumourNetwork`, `rumourGarble`, `letters`.
+- API: `night`; `letters` (open, send, set, deliver, list, delay, read, plan).
+- Letters between lands (0.59.0): `letters-rules.mjs` REGION_LINES (post, telegraph, telephone years for each world region), CROSSINGS (cables and calls between land masses), RELAYS, worldPlan, lostChance, letterTimes. The window loads the world map rules only when the two ends are in different lands.
+
+## The ledger and the clocks
+
+- Files: `ledger.mjs` and `ledger-rules.mjs` (oaths, debts, boons, the Veil track, heirs), `wills.mjs` and `will-rules.mjs` (wills, inheritance law by place and year, false heirs), `inherit.mjs` and `inherit-rules.mjs` (the Inheritance step: heir, items, places, money left, Ledger, rivals, ties), `levers.mjs` and `levers-rules.mjs` (crisis levers for a region, with a dated log and undo), `clocks.mjs` and `clock-rules.mjs`.
+- Settings: `ledger`, `veilOn`, `ledgerTraits`, `clocks`, `leverState`.
+- API: `ledger`, `clocks`, `levers`, `inheritance`.
+
+## Travel and the maps
+
+- Files: `road-rules.mjs` (travel by era and by region), `country-rules.mjs` and `data/country.mjs` (the country map behind a trip), `world-map.mjs`, `world-map-rules.mjs`, `go-rules.mjs` (Go on the world map: the days, the meetings on the way), `discovery-rules.mjs` and `data/world.mjs` (the world map and the known world), `hardship.mjs` and `hardship-rules.mjs` (hardship on the road).
+- Settings: `hardship`, `discovered`.
+- API: `roads`, `country`, `worldMap`.
+- The world map's rules and its grid (about 200 KB) load the first time the window opens, not at start-up. A script that needs them calls `await api.worldMap.load()`; until then `api.worldMap.rules` is null.
+
+## Upkeep, havens, bodies and long tasks
+
+- Files: `upkeep.mjs` and `upkeep-rules.mjs` (between nights, ties, hunting grounds and heat), `havens.mjs` and `haven-rules.mjs`, `patronage.mjs` and `patronage-rules.mjs` (artists, commissions, the fashion of each age, salons), `omens.mjs` and `omen-rules.mjs` (dreams and signs of what the world is about to do, and reading them), `haven-works.mjs` and `haven-works-rules.mjs` (upgrades by era and place, staff, the traces works leave, and rivals who probe), `body.mjs` and `body-rules.mjs` (lasting changes to a body), `remains.mjs` and `remains-rules.mjs` (bodies left behind), `hunters.mjs` and `hunters-rules.mjs` (hunters across a region: pressure, files on culprits, word that follows them), `tasks.mjs` and `tasks-rules.mjs` (long tasks over the clock), `institutions.mjs` and `institution-rules.mjs` (each town's church, guild, council, watch, press, university, bank and company, their seats and levers), `tale-rules.mjs` (tales made from deeds, retold by each teller's leaning), `projects-rules.mjs` (downtime projects: the weekly budget of nights, complications, what a finished project leaves), `spend.mjs` and `spend-rules.mjs` (time spent on long actions).
+- Settings: `betweenNights`, `ties`, `heat`, `plague`, `tieDay`, `remains`, `hunterPressure`, `hunterState`, `longTasks`, `timeApart`.
+- API: `upkeep`.
+
+## Threads of Fate
+
+Procedural storylines woven from what has happened in the world (B3650-B3656). Every system posts a short signal to one shared board when something notable happens: a fight, a sickness, hunters closing in, a cult, an arrest or trial, a dated event, a town change, a grudge, a battle, a tale. The weave picks the freshest signals, a player's own hooks first, and makes a storyline from an anchor card that answers one, a twist card that shares a place or a cast slot with it, and an echo from the past. Three storylines are open at most, plus one for each player's own hook; when one ends, the next can open. Each storyline is only a proposal until the Storyteller approves it, and the Storyteller's lines always win. An opened storyline gets a page in the journal folder Threads of Fate, a progress clock and an opening rumour; its steps come due by their days, the night's draw gives its next beat one time in three, and its ending goes to the Legends of the chronicle. The Threads of Fate window (Storyteller toolbar) ends, locks or refuses storylines and takes a player's own hook. Dreams and omens read the same board.
+
+- Files: `signals.mjs` and `signals-rules.mjs` (the shared signal board and the hooks that fill it), `threads.mjs` and `threads-rules.mjs` (the weave, storylines, their steps and endings, and the Threads of Fate window), `data/threads-cards.mjs` (the hook cards: Rothenstein, two for each of the 44 world regions, doors for each line, and a player's own threads).
+- Settings: `threads` (Off, Suggest or Open by itself; off by default), `threadsState` and `signalBoard` (hidden).
+- API: `signals`, `threads`.
+
+## Money, holdings and making things
+
+- Files: `money.mjs` and `money-rules.mjs` (money by era and by region, money changers, coin of the place), `owners.mjs` and `owner-rules.mjs` (who owns what, holdings and upkeep), `craft-rules.mjs`, `build-rules.mjs`, `cookery.mjs`, `wonders.mjs` (making each line's supernatural items: fetishes, klaives and talens, with the Storyteller's go-ahead).
+- Settings: `money`, `changers`, `moneyRegion`, `moneyMonth`.
+
+## Markets and trade
+
+- Files: `markets.mjs` and `market-rules.mjs`, `market-news.mjs` and `market-news-rules.mjs`, `market-turn.mjs` and `market-turn-rules.mjs` (the weekly turn), `market-moves.mjs` and `market-moves-rules.mjs` (factions and traders who go broke), `caravans.mjs` and `caravan-rules.mjs`, `ventures.mjs` and `venture-rules.mjs` (money put into a caravan, a workshop or a trading house), `towns.mjs` and `town-rules.mjs` (each market's town: its people, prosperity and unrest week by week, with plague, fire, flood, storm, earthquake, famine, riots and risings), `contagion.mjs` and `contagion-rules.mjs` (sickness that moves through each town week by week, spreads along trade links and caravans, and reaches living characters and the Hunt), `power.mjs`, `power-rules.mjs` and `caern-rules.mjs` (caerns, B3470-B3476; Nodes, chantries and freeholds), `herds.mjs` and `herd-rules.mjs` (herd pools by district, B3570-B3573), `sites.mjs` and `site-rules.mjs` (holy ground shared by several claims, B3580-B3585).
+- Settings: `markets`, `tradeTally`, `marketTurn`, `marketTurnState`, `marketMoves`, `tradersBroke`, `caravans`, `caravanState`, `ventures`, `ventureState`, `townTurn`, `townState`, `contagion`, `contagionPeople`, `contagionState`, `placesOfPower`, `powerState`.
+
+## Battles, sieges and ships
+
+- Files: `battles.mjs` and `battle-rules.mjs`, `battle-deeds.mjs`, `battle-aftermath.mjs` and `battle-extras.mjs` (deeds and what a field leaves behind), `siege-works.mjs` and `siege-works-rules.mjs` (the campaign around a siege), `naval.mjs` and `naval-rules.mjs` (ships at sea).
+- API: `battles`, `siegeWorks`, `naval`.
+
+## When to look again
+
+Storyteller holds every part that runs the world, in one module, so that saved setting and flag names stay as they are. If it passes 100 scripts, look again at moving a group (the maps, or markets and trade) into a module of its own. A harness test (`tools/harness/storyteller-readme.test.mjs`) fails when a script is missing from this page.

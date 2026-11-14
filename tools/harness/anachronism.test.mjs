@@ -66,3 +66,98 @@ test("automatic is on everywhere but the Live world", () => {
   assert.equal(A.isOn("on", true), true);
   assert.equal(A.isOn("off", false), false);
 });
+
+/* Things on the maps (WoDX Sheets 0.14.0, Interactables 0.34.0) */
+
+const IR = await import(pathToFileURL(join(root, "modules/wodx-interactables/scripts/interact-rules.mjs")).href);
+const thing = (id, f, extra = {}) => ({scene: "s1", sceneName: "Market square", id, wall: !!extra.wall, ...IR.datedParts(f, {wall: !!extra.wall}), kept: !!extra.kept, keptGoods: extra.keptGoods ?? []});
+const GOODS_INFO = {"flintlock pistol": {firstYear: 1600, lastYear: 1850}, "mobile phone": {firstYear: 1985}, "bread": null};
+const lookLine = line => { const ref = A.lineOf(line).ref; return {name: ref, eraInfo: GOODS_INFO[ref.toLowerCase()] ? {order: ORDER, eras: [], ...GOODS_INFO[ref.toLowerCase()]} : null}; };
+
+test("what on a tile or door belongs to a span of years", () => {
+  assert.deepEqual(IR.datedParts({mount: true, mountKind: "car"}).parts, [{key: "mount", label: "Motor car", from: 1900, until: null}]);
+  assert.deepEqual(IR.datedParts({mount: true, mountKind: "carriage"}).parts, [{key: "mount", label: "Carriage or coach", from: null, until: IR.ANTIQUE_AFTER.mount.carriage}]);
+  assert.equal(IR.datedParts({mount: true, mountKind: "horse"}).parts.length, 0, "a horse belongs to every year");
+  assert.equal(IR.datedParts({watch: true, watchKind: "radio"}).parts[0].from, 1930);
+  assert.equal(IR.datedParts({watch: true, watchKind: "mirror"}).parts.length, 0);
+  assert.equal(IR.datedParts({light: true, lightKind: "switch"}).parts[0].from, IR.ELECTRIC_FROM);
+  assert.equal(IR.datedParts({light: true, lightKind: "torch"}).parts.length, 0);
+  assert.equal(IR.datedParts({hazard: true, hazardKind: "shock"}).parts[0].from, IR.ELECTRIC_FROM);
+  assert.equal(IR.datedParts({hazard: true, hazardKind: "fire"}).parts.length, 0);
+  assert.equal(IR.datedParts({electronic: "good"}, {wall: true}).parts[0].from, IR.ELECTRONIC_FROM);
+  assert.equal(IR.datedParts({lock: "good"}, {wall: true}).parts.length, 0);
+  const safe = IR.datedParts({container: true, kind: "safe", electronic: "excellent", items: "Flintlock pistol\nBread (3)"});
+  assert.equal(safe.parts[0].key, "electronic");
+  assert.deepEqual(safe.goods, ["Flintlock pistol", "Bread (3)"]);
+  assert.equal(IR.datedParts({mount: true, mountKind: "car", title: "The Baron's Daimler"}).name, "The Baron's Daimler");
+  // Every kind in the tables with a year is read, so a new dated kind cannot be missed
+  for ( const [k, M] of Object.entries(IR.MOUNTS) ) assert.equal(IR.datedParts({mount: true, mountKind: k}).parts.length > 0, Number.isFinite(M.from) || k in IR.ANTIQUE_AFTER.mount, k);
+  for ( const [k, W] of Object.entries(IR.WATCHES) ) assert.equal(IR.datedParts({watch: true, watchKind: k}).parts.length > 0, Number.isFinite(W.from), k);
+});
+
+test("a span of years: early, late, inside, and silence with no year", () => {
+  assert.equal(A.spanStatus({from: 1900, until: null}, 1850), "early");
+  assert.equal(A.spanStatus({from: 1900, until: null}, 1900), "ok");
+  assert.equal(A.spanStatus({from: null, until: 1930}, 2020), "late");
+  assert.equal(A.spanStatus({from: 1900}, 0), null);
+  assert.equal(A.spanStatus({}, 1850), null);
+  assert.deepEqual(A.lineOf("silver pennies (7)"), {ref: "silver pennies", count: 7});
+  assert.deepEqual(A.lineOf(" Rope "), {ref: "Rope", count: 1});
+});
+
+test("back from 2020 to 1850: the car, the radio, the keypad and the phone in the safe are not made yet", () => {
+  const things = [
+    thing("t1", {mount: true, mountKind: "car"}),
+    thing("t2", {watch: true, watchKind: "radio", title: "Guard room set"}),
+    thing("t3", {mount: true, mountKind: "horse"}),
+    thing("w1", {electronic: "good"}, {wall: true}),
+    thing("t4", {container: true, kind: "safe", items: "Mobile phone\nBread\nFlintlock pistol (2)"}),
+    thing("t5", {mount: true, mountKind: "carriage"})
+  ];
+  const out = A.mapNewlyOut(things, lookLine, {era: "modern", year: 2020}, {era: "victorian", year: 1850});
+  assert.deepEqual(out.map(o => `${o.id} ${o.key} ${o.status}`).sort(), ["t1 mount early", "t2 watch early", "t4 goods:mobile phone early", "w1 electronic early"]);
+  assert.deepEqual(out.map(o => o.name), [...out.map(o => o.name)].sort((x, y) => x.localeCompare(y)), "by name within a scene");
+  assert.match(out.find(o => o.id === "t2").name, /Guard room set \(radio or walkie-talkie\)/);
+  assert.match(out.find(o => o.id === "t4").name, /Mobile phone, in safe/);
+  assert.match(out.find(o => o.id === "t1").note, /not made yet in 1850/);
+  // The flintlock was an antique in 2020 and is in its time in 1850: nothing to say. The carriage is at home in 1850.
+  assert.ok(!out.some(o => /flintlock/i.test(o.name) || o.id === "t5"));
+});
+
+test("forward from 1850 to 2020: the carriage and the flintlock are antiques; what was already wrong stays quiet", () => {
+  const things = [thing("t1", {mount: true, mountKind: "car"}), thing("t5", {mount: true, mountKind: "carriage"}),
+    thing("t4", {container: true, kind: "chest", items: "Flintlock pistol\nflintlock pistol\nMobile phone"}), thing("t6", {light: true, lightKind: "lamp"})];
+  const out = A.mapNewlyOut(things, lookLine, {year: 1850}, {year: 2020});
+  assert.deepEqual(out.map(o => `${o.id} ${o.status}`).sort(), ["t4 late", "t5 late", "t6 late"]);
+  assert.equal(out.filter(o => o.id === "t4").length, 1, "the same line twice is raised once");
+  // The same side of the span before and after: the car was not made yet in 1850 and still is not in 1880
+  assert.equal(A.mapNewlyOut(things.slice(0, 2), lookLine, {year: 1850}, {year: 1880}).length, 0);
+});
+
+test("kept things and kept lines are never raised; an empty before lists everything out now", () => {
+  const things = [thing("t1", {mount: true, mountKind: "car"}, {kept: true}),
+    thing("t4", {container: true, kind: "chest", electronic: "good", items: "Mobile phone\nFlintlock pistol"}, {keptGoods: ["mobile phone"]})];
+  const out = A.mapNewlyOut(things, lookLine, {}, {era: "dark-ages", year: 1230});
+  assert.deepEqual(out.map(o => o.key).sort(), ["electronic", "goods:flintlock pistol"]);
+  assert.equal(A.mapNewlyOut(things, lookLine, null, {year: 1230}).length, 2);
+  assert.equal(A.mapNewlyOut([], lookLine, {}, {year: 1230}).length, 0);
+  assert.equal(A.mapNewlyOut(things, lookLine, {}, {year: 0}).length, 0, "no year, nothing said");
+});
+
+test("a kept thing works in any year: the car drives in 1850, the keypad can be worked, the phone rings", () => {
+  const ch = {actorId: "a", year: 1850, eraId: "victorian", dexterity: 3, perception: 2, abilities: {drive: 2, security: 2}};
+  const car = IR.describeMount({mount: true, mountKind: "car"});
+  assert.equal(IR.optionsFor(car, ch)[0].id, "eraNote");
+  assert.ok(!IR.optionsFor(car, {...ch, kept: true}).some(o => o.id === "eraNote"));
+  const phone = IR.describeWatch({watch: true, watchKind: "phone"});
+  assert.equal(IR.optionsFor(phone, ch)[0].id, "eraNote");
+  assert.ok(IR.optionsFor(phone, {...ch, kept: true}).some(o => o.id === "callHelp"));
+  const lamp = IR.describeLight({light: true, lightKind: "switch"}, {on: false, count: 1});
+  assert.equal(IR.optionsFor(lamp, ch)[0].id, "eraNote");
+  assert.ok(IR.optionsFor(lamp, {...ch, kept: true}).some(o => o.id === "lightOn"));
+  assert.equal(IR.isModern({year: 1850}), false);
+  assert.equal(IR.isModern({year: 1850, kept: true}), true);
+  const door = IR.describe({door: true, ds: "locked", flags: {electronic: "good"}});
+  assert.ok(!IR.optionsFor(door, ch).some(o => o.id === "hack"));
+  assert.ok(IR.optionsFor(door, {...ch, kept: true}).some(o => o.id === "hack"));
+});

@@ -6,6 +6,7 @@
  * has no list here; Book of Secrets would be the source.
  */
 import { KEYWORDS, ritualFrom } from "./effects-rules.js";
+import { powerOutcomes } from "./power-effects.js";
 
 export const BOOK_RITUALS = {
   v20: {book: "V20", list: [
@@ -354,3 +355,30 @@ export function bookRitual(set, i) {
 /** How many book rituals there are, by set (for the test). */
 export const bookRitualCounts = () => Object.fromEntries(Object.entries(BOOK_RITUALS).map(([k, v]) => [k, v.list.length]));
 export const knownKeyword = k => !!KEYWORDS[k];
+
+const norm = s => String(s ?? "").toLowerCase().replace(/[’']/g, "").replace(/^(the|rite of the|rite of)\s+/, "").replace(/[^a-z0-9]+/g, " ").trim();
+/** A book ritual by name in the first of these sets that has it: {set, i, r} or null (B3753). */
+export function findRitual(sets, name) {
+  const want = norm(name);
+  if ( !want ) return null;
+  for ( const set of sets ) {
+    const list = BOOK_RITUALS[set]?.list ?? [];
+    const i = list.findIndex(r => norm(r.n) === want);
+    if ( i >= 0 ) return {set, i, r: list[i]};
+  }
+  return null;
+}
+/** The book rituals of these sets as select options, value "set:index" (B3753). */
+export const ritualOptions = (sets, esc = s => s) => sets.flatMap(set => (BOOK_RITUALS[set]?.list ?? []).map((r, i) => `<option value="${set}:${i}">${esc(`${r.n} (${r.g}, ${r.lvl})`)}</option>`)).join("");
+/** A ritual's level as a number (Accord 2, Level 3, 4). */
+export const ritualLevel = r => lvlOf(r?.lvl);
+/**
+ * What a book ritual cast by its caster does on the effects card: its keywords at the caster's successes (B3753).
+ * Results in planOf's shape; an empty list when it failed or has no keywords the card knows.
+ */
+export function ritualResults(r, successes, {source = "", hasTarget = false} = {}) {
+  if ( !r ) return [];
+  return powerOutcomes({keywords: (r.k ?? []).filter(k => KEYWORDS[k])}, successes, {label: r.n, source, hasTarget}).results;
+}
+/** The note a ritual card shows: what it does, what resists it, the page. */
+export const ritualNote = (set, r) => `${r.does.charAt(0).toUpperCase()}${r.does.slice(1)}.${r.resist && !/^(none|n\/a)$/i.test(r.resist) ? ` Resisted by ${r.resist}.` : ""} ${BOOK_RITUALS[set]?.book ?? ""} ${r.page}.`.replace(/\.\./g, ".");

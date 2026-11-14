@@ -71,6 +71,8 @@ def furnish_safely(b):
             except SystemExit:
                 if not r.furnish_list: raise
                 r.furnish_list.pop()
+    import furnishing as F
+    if F.DEFAULT: F.apply(b, **F.DEFAULT)
     return b
 
 
@@ -94,16 +96,16 @@ class Site:
         bx = b.outline
         for q in self.taken:
             if G.separation(bx, q) < -.01: raise SystemExit(f"{b.label} ({b.key}) stands on another building or a way")
-        self.walls.append(wall_with_portals(bx, b.t["wall"], b.openings, True))
-        for a, c in b.partitions: self.walls.append(wall_with_portals([a, c], b.t["wall"], b.openings, False))
+        self.walls.append(wall_with_portals(bx, getattr(b, "wall_tex", None) or b.t["wall"], b.openings, True, textures=getattr(b, "portal_tex", None)))
+        for a, c in b.partitions: self.walls.append(wall_with_portals([a, c], getattr(b, "wall_tex", None) or b.t["wall"], b.openings, False, textures=getattr(b, "portal_tex", None)))
         for r in b.rooms:
-            if B.FLOORS.get(r.floor) or r.floor in (MARBLE, SQUARE):
-                tex = B.FLOORS.get(r.floor) or r.floor
+            if B.floor_tex(r.floor):
+                tex = B.floor_tex(r.floor)
                 self.patterns.append(pattern([(r.x, r.y), (r.x + r.w, r.y), (r.x + r.w, r.y + r.h), (r.x, r.y + r.h)], tex))
             self.objects.extend(C.dressing_objects(r, True))
             for it in r.items:
                 rot = it.get("angle", math.pi / 2 if it["rot"] else 0.0)
-                self.objects.append(obj(it["asset"], *C.centre(it), rot, it["scale"], 100))
+                self.objects.append(obj(C.drawn(it)[0], *C.centre(it), rot, C.drawn(it)[1], 100))
             self.objects.extend(C.dressing_objects(r, False))
             self.features += C.feature_entries(f"{b.key}-", r, b.t["fill"])
         self.openings += C.opening_entries(b.key, b.label, b.openings, (b.x + b.w / 2, b.y + b.h / 2))
@@ -608,8 +610,15 @@ def main():
     ap.add_argument("--assets", default="/mnt/project-files/maps/farmstead-dd/fa-asset-paths.txt")
     ap.add_argument("--out", default=".")
     ap.add_argument("--day", action="store_true")
+    ap.add_argument("--year", type=int, help="furnish by purpose, era palette and room value for this year (1197-2099)")
+    ap.add_argument("--wealth", choices=("poor", "middling", "rich", "noble"), help="with --year: the owner's wealth (else the type's usual)")
+    ap.add_argument("--region", default="moravia", help="with --year: the world region (WORLD_REGIONS id)")
+    ap.add_argument("--trade", help="with --year: the owner's trade, e.g. 'cloth merchant'")
     a = ap.parse_args()
     C.init(a.seed, a.assets)
+    if a.year:
+        import furnishing as F
+        F.DEFAULT.update(year=a.year, region=a.region, wealth=a.wealth, trade=a.trade, seed=a.seed)
     if a.kind == "floors":
         return floors_site(a.seed, a.name, a.type or "burgher-palace", a.out, "ffffffff" if a.day else "ff6a7aa8")
     if a.kind == "building": st, terrain, weights, era = building_site(a.seed, a.name, a.type or "cdda-hospital")

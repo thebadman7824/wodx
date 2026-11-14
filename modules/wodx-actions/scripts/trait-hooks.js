@@ -88,7 +88,9 @@ export function ticksFor(actor) {
             const own = String(m.name ?? "").toLowerCase();
             for (const t of e.tags ?? []) if (!e.nameTags || own.includes(t)) tags.add(t);
         }
-        return TICKS.filter(t => tags.has(t.key));
+        // B3780: situations the merits and flaws name themselves (Introspection: the other side shares the Nature)
+        const own = typeof T.ticks === "function" ? T.ticks(actor).filter(t => !TICKS.some(x => x.key === t.key)) : [];
+        return [...TICKS.filter(t => tags.has(t.key)), ...own];
     } catch (e) { return []; }
 }
 

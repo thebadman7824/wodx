@@ -168,3 +168,31 @@ test("reflection is wired: a Storyteller toolbar button and the api", () => {
   const dlg = readFileSync(new URL("../../modules/wodx-otherworlds/scripts/reflect.mjs", import.meta.url), "utf8");
   assert.ok(!dlg.includes("—"));
 });
+
+test("under the ground (0.17.0): a warren and sewers are read piece by piece, and the two dresses of no year their own way", () => {
+  const reg = (id, area) => ({id, label: id, rect: [0, 0, 4, 4], place: {kind: "sewer"}, area});
+  const under = (dress, year, areas) => ({format: "wodx-map", version: 1, cells: [40, 30], underground: true, dress, umbral: {year, places: {}, gone: []}, regions: areas.map((a, i) => reg(`${a}-${i}`, a))});
+  const kinds = (sc, layer) => RF.reflect(sc, layer).map(m => `${m.kind}:${m.id.split(":")[1].replace(/-\d+$/, "")}`);
+  const sew = under("sewers", 1930, ["main-sewer", "side-sewer", "outfall", "culvert", "cesspit", "junction"]);
+  const pen = kinds(sew, "penumbra");
+  for ( const k of ["web:main-sewer", "blight:main-sewer", "blight:outfall", "wyld:culvert", "blight:cesspit", "web:junction"] ) assert.ok(pen.includes(k), k);
+  assert.ok(kinds(sew, "shadowlands").includes("rot:cesspit"));
+  // the webbing over a sewer thickens with the age, like the town above
+  const webAt = y => RF.reflect(under("sewers", y, ["main-sewer"]), "penumbra").find(m => m.kind === "web").strength;
+  assert.ok(webAt(1900) < webAt(1990));
+  const war = under("cellars", 1300, ["passage", "chamber", "den", "flooded", "collapse", "cap", "way-up", "vault"]);
+  assert.ok(kinds(war, "penumbra").includes("blight:den") && kinds(war, "penumbra").includes("wyld:flooded") && kinds(war, "penumbra").includes("faint:passage"));
+  const dead = RF.reflect(war, "shadowlands");
+  assert.ok(dead.some(m => m.kind === "relic" && /before the fall/.test(m.label)) && dead.some(m => m.kind === "nihil") && dead.some(m => m.kind === "relic" && /closed/.test(m.label)));
+  assert.ok(!RF.reflect(war, "penumbra").some(m => /way-up/.test(m.id)), "a stair means nothing by itself");
+  // the Labyrinth has no Penumbra; a Black Spiral cavern is a Blight all through
+  const lab = under("labyrinth", 1300, ["passage", "den", "collapse"]);
+  assert.deepEqual(RF.reflect(lab, "penumbra"), []);
+  assert.ok(RF.reflect(lab, "shadowlands").every(m => m.kind === "rot" || m.kind === "nihil"));
+  const hive = under("spiral", 1300, ["passage", "den", "flooded"]);
+  assert.ok(RF.reflect(hive, "penumbra").every(m => m.kind === "blight") && RF.reflect(hive, "penumbra").length === 3);
+  assert.match(RF.reflect(hive, "penumbra").find(m => /flooded/.test(m.id)).note, /Balefire/);
+  // a town map is read as before
+  assert.ok(RF.reflect(grown, "penumbra").some(m => m.kind === "loom"));
+  assert.deepEqual(RF.underMarks("nothing", "cellars"), []);
+});

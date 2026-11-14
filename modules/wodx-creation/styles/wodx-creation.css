@@ -47,3 +47,28 @@
 .wodx-fn-forecast { margin: 0.2rem 0 0.5rem; padding-left: 1.2rem; }
 .wodx-fn-forecast li.wodx-fn-hidden { font-style: italic; }
 .wodx-fn-costs { margin: 0.2rem 0; padding-left: 1.2rem; }
+
+/* The character wizard (0.24.0) */
+.wodx-wizard .wodx-wz-nav { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+.wodx-wizard .wodx-wz-nav button { flex: 0 1 auto; width: auto; min-width: 0; padding: 2px 8px; font-size: 0.85em; line-height: 1.6; white-space: nowrap; }
+.wodx-wizard .wodx-wz-nav button.wodx-wz-here { font-weight: bold; border-width: 2px; }
+.wodx-wizard .wodx-wz-count { margin: 4px 0; }
+.wodx-wizard h4 select { width: auto; margin-left: 6px; font-weight: normal; }
+.wodx-wizard .wodx-wz-add { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin: 6px 0 10px; }
+.wodx-wizard .wodx-wz-add select, .wodx-wizard .wodx-wz-add input[type=text] { flex: 1 1 160px; min-width: 0; }
+.wodx-wizard .wodx-wz-add input[type=number] { flex: 0 0 72px; }
+.wodx-wizard .wodx-wz-add button { flex: 0 0 auto; width: auto; }
+.wodx-wizard td button { width: auto; min-width: 26px; }
+.wodx-wizard .wodx-wz-warn { color: var(--color-level-warning, #c9593f); }
+.wodx-wizard .wodx-buttons { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.wodx-wizard .wodx-buttons button { flex: 0 0 auto; width: auto; }
+
+/* Creation 0.30.0: the hub as a checklist (B2829), the quick start (B2827), the short lifepath (B2828) */
+.application.wodx-first-night .wodx-fn-done { padding: 0.2rem 0.6rem; }
+.application.wodx-first-night .wodx-fn-done > details > summary { cursor: pointer; }
+.application.wodx-first-night .wodx-fn-next { border-width: 2px; border-color: var(--color-warm-2, #c9593f); background: color-mix(in srgb, var(--color-warm-2, #c9593f) 8%, transparent); }
+.application.wodx-first-night .wodx-tag { font-size: 0.75rem; padding: 0 0.35rem; border-radius: 3px; border: 1px solid currentColor; }
+.wodx-lifepath .wodx-lp-paragraph { line-height: 1.45; }
+.wodx-wizard .wodx-wz-notes { margin: 0.5em 0; }
+.wodx-wizard .wodx-wz-notes dt { font-weight: bold; margin-top: 0.3em; }
+.wodx-wizard .wodx-wz-notes dd { margin: 0 0 0 1em; }

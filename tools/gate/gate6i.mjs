@@ -63,7 +63,7 @@ export async function run() {
         await step("versions; the House, lores and visage are read from the sheet", async () => {
             dv = await makeDevil();
             const i = A().demonInfo(dv);
-            ok("versions; the House, lores and visage are read from the sheet", /^3\.1\d\./.test(A().version) && i.house === "devil" && i.lores.flame === 2 && i.lores.radiance === 1 && i.lores.humanity === 1
+            ok("versions; the House, lores and visage are read from the sheet", !foundry.utils.isNewerVersion("3.9.0", A().version) && i.house === "devil" && i.lores.flame === 2 && i.lores.radiance === 1 && i.lores.humanity === 1
                 && i.primary === "flame" && /Nusku/.test(i.visage) && i.faith.perm === 5 && i.torment.perm === 4 && i.virtues.conviction === 2,
                 { actions: A().version, house: i.house, lores: i.lores, primary: i.primary, visage: i.visage, faith: i.faith, torment: i.torment });
         });
@@ -82,11 +82,13 @@ export async function run() {
                 { card: text(m).slice(0, 320), faith: F(dv) });
         });
         await step("a level not known is refused (Radiance 2)", async () => {
-            const n0 = game.messages.size;
+            // the Evoke before may still post a follow-up card: wait for the chat to settle before counting
+            for (let last = -1, t = Date.now(); Date.now() - t < 6000 && last !== game.messages.size; ) { last = game.messages.size; await sleep(1000); }
+            const n0 = game.messages.size, ids0 = new Set(game.messages.map(m => m.id));
             let opts = [];
             answer(root => { opts = [...root.querySelectorAll("select[name=evo] option")].map(x => x.value); return "cancel"; });
             A().demonEvoke({ actor: dv }); await sleep(1500);
-            ok("a level not known is refused (Radiance 2)", game.messages.size === n0 && opts.includes("radiance:1") && !opts.includes("radiance:2") && opts.length === 4, { opts });
+            ok("a level not known is refused (Radiance 2)", game.messages.size === n0 && opts.includes("radiance:1") && !opts.includes("radiance:2") && opts.length === 4, { opts, posted: game.messages.filter(m => !ids0.has(m.id)).map(m => text(m).slice(0, 200)) });
         });
         await step("choosing the dark effect costs a temporary Torment point", async () => {
             const n0 = game.messages.size, t0 = T(dv);
@@ -103,6 +105,8 @@ export async function run() {
             const fl = dv.getFlag(MOD, "demon");
             ok("the apocalyptic form: a Faith point, Nusku's powers, the look for Torment 4 and Willpower 5", F(dv) === f0 - 1 && /Shroud of Flames/.test(text(m)) && /awe or terror/.test(text(m)) && (fl?.form ?? []).length === 4,
                 { card: text(m).slice(0, 320), faith: F(dv), form: fl?.form });
+            // The form's bonuses come off at the scene's end (B3743): end it so the kept test actor starts clean next run
+            await game.modules.get("wodx-chronicle")?.api?.timed?.endFor?.(dv, { kind: "scene", why: "gate" });
         });
         await step("Faith heals all bashing for a point", async () => {
             await dv.update({ "system.health.damage.bashing": 3 });

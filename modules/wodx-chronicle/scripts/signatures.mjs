@@ -20,7 +20,7 @@ import * as POD from "./pod.mjs";
  * (another actor's flags) go to the approval queue, which the Storyteller can set to approve by itself.
  */
 
-const FLAG = "sig", CFLAG = "corruption";
+const FLAG = "sig", CFLAG = "corruption", FIRED = "sigFired", OFF = "sigOff";
 const T_FAMILY = `${MODULE_ID}.sigFamily`;
 const T_CORRUPT = `${MODULE_ID}.sigCorrupt`, T_CAUSE = `${MODULE_ID}.sigCause`, T_VICE = `${MODULE_ID}.sigVice`;
 const lineOn = k => { try { return !!game.settings.get(MODULE_ID, k); } catch (e) { return false; } };
@@ -99,7 +99,7 @@ function garouNames(actor) {
     breed: [i?.breed, s.breed].filter(Boolean), fera: String(s.changingbreed ?? i?.feraKey ?? "")};
 }
 /** Every signature row an actor has now, with each line's setting applied: a Garou stacks tribe, auspice and breed. */
-export function rowsOf(actor) {
+export function allRowsOf(actor) {
   if ( !actor ) return [];
   const small = smallLineOf(actor);
   if ( small ) return lineOn(S.SMALL_LINES[small].setting) ? S.smallRows(small, smallNames(actor, small)) : [];
@@ -114,6 +114,12 @@ export function rowsOf(actor) {
   if ( !/kindred|vampire/.test(kind) && !clanNames(actor).length ) return [];
   const r = S.vampireRow(clanNames(actor));
   return r ? [r] : [];
+}
+/** The rows in force: those the Storyteller set aside for this story (the features card) are left out. */
+const offOf = a => { const o = a?.flags?.[MODULE_ID]?.[OFF]; return Array.isArray(o) ? o : []; };
+export function rowsOf(actor) {
+  const rows = allRowsOf(actor), off = offOf(actor);
+  return off.length ? rows.filter(r => !off.includes(r.key)) : rows;
 }
 /** The first (main) signature row for an actor, or null. */
 export const rowOf = actor => rowsOf(actor)[0] ?? null;
@@ -132,6 +138,14 @@ async function card(title, body, {whisper = gmIds(), undo = null, act = null} = 
   return ChatMessage.create({content: `<div class="wodx-card wct-sig"><h3>${esc(title)}</h3>${body}${btn}</div>`,
     speaker: {alias: "Chronicle"}, whisper, flags: Object.keys(flags).length ? {[MODULE_ID]: flags} : {}});
 }
+/** Note when a feature last fired for an actor, for the features card on the sheet. Never throws. */
+export async function fired(a, f) {
+  if ( !a?.update || !f || !(game.user.isGM || a.isOwner) ) return;
+  try { await a.update({[`flags.${MODULE_ID}.${FIRED}.${f}`]: now()}, {wodxQuiet: true, render: false}); }
+  catch (e) { console.warn(`${MODULE_ID} | feature fired`, e); }
+}
+/** A feature's card, noting that the feature fired. */
+function cardFor(a, f, ...args) { fired(a, f); return card(...args); }
 /** Card buttons other than Undo: {key, label, who: "gm"|"owner", uuid (the actor whose owner may press), data}. */
 const ACTS = {};
 async function runAct(message) {
@@ -169,7 +183,7 @@ export async function museSeen(actorOrId, museId, how = "see") {
   const before = foundry.utils.deepClone(sig);
   sig.muses[i] = S.museSeen(sig.muses[i], now(), how);
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
-  await card(`${a.name}: ${sig.muses[i].name}`, `<p>Obsession now ${sig.muses[i].obsession} of ${S.OBSESSION_MAX}.</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
+  await cardFor(a, "muse", `${a.name}: ${sig.muses[i].name}`, `<p>Obsession now ${sig.muses[i].obsession} of ${S.OBSESSION_MAX}.</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
   return sig.muses[i];
 }
 
@@ -191,7 +205,7 @@ export async function tick({force = false} = {}) {
     if ( healed.length ) { next.marks = S.activeMarks(next.marks, t); lines.push(`Healed: ${healed.map(m => esc(S.markByKey(m.key)?.label ?? m.key)).join(", ")}.`); }
     if ( !lines.length && JSON.stringify(next.muses) === JSON.stringify(sig.muses ?? []) ) continue;
     await a.update({[`flags.${MODULE_ID}.${FLAG}`]: next});
-    if ( lines.length ) await card(a.name, `<p>${lines.join("</p><p>")}</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
+    if ( lines.length ) await cardFor(a, "muse", a.name, `<p>${lines.join("</p><p>")}</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
   }
 }
 
@@ -206,7 +220,7 @@ async function onDamage(target) {
     const r = S.museHarmed(next.muses[i]);
     next.muses[i] = r.muse;
     await a.update({[`flags.${MODULE_ID}.${FLAG}`]: next});
-    await card(`${a.name}: the Muse is hurt`, `<p>${esc(r.muse.name)} was harmed. Obsession ${r.muse.obsession}.${r.frenzy ? " A frenzy check is called for." : ""}</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
+    await cardFor(a, "muse", `${a.name}: the Muse is hurt`, `<p>${esc(r.muse.name)} was harmed. Obsession ${r.muse.obsession}.${r.frenzy ? " A frenzy check is called for." : ""}</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
     if ( r.frenzy ) actorsApi("wodx-actions")?.frenzy?.({actor: a, provocation: "physical"});
   }
 }
@@ -226,7 +240,7 @@ export async function keptTemper(actorOrId) {
   if ( !sig.cause ) return null;
   const r = S.causeKept(sig.cause); sig.cause = r.cause;
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
-  if ( r.ready ) await card(`${a.name}: a Rant is ready`, `<p>${esc(sig.cause.label)}: the Brujah can call a Rant. Passers-by and townsfolk in the scene may turn into a mob.</p>`, {whisper: ownerIds(a)});
+  if ( r.ready ) await cardFor(a, "cause", `${a.name}: a Rant is ready`, `<p>${esc(sig.cause.label)}: the Brujah can call a Rant. Passers-by and townsfolk in the scene may turn into a mob.</p>`, {whisper: ownerIds(a)});
   return r;
 }
 export async function spendRant(actorOrId) {
@@ -234,7 +248,7 @@ export async function spendRant(actorOrId) {
   if ( !sig.cause || sig.cause.rant < S.RANT_POINTS ) return false;
   sig.cause = S.rantSpent(sig.cause);
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
-  await card(`${a.name} calls a Rant`, `<p>${esc(sig.cause.label)}. The crowd's morale decides who joins.</p>`, {whisper: []});
+  await cardFor(a, "cause", `${a.name} calls a Rant`, `<p>${esc(sig.cause.label)}. The crowd's morale decides who joins.</p>`, {whisper: []});
   return true;
 }
 
@@ -249,7 +263,7 @@ export async function addMark(actorOrId, key = null) {
   sig.marks = [...held, m];
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
   const row = S.markByKey(m.key);
-  await card(`${a.name}: a mark of the Beast`, `<p><b>${esc(row.label)}.</b> ${esc(row.edge)}; ${esc(row.cost)}. Heals in a month.</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
+  await cardFor(a, "marks", `${a.name}: a mark of the Beast`, `<p><b>${esc(row.label)}.</b> ${esc(row.edge)}; ${esc(row.cost)}. Heals in a month.</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
   return m;
 }
 export async function healMark(actorOrId, key) {
@@ -351,7 +365,7 @@ async function giveGlimpse(a, sig, {field, title, quiet}) {
   sig[field] = now();
   if ( nx ) sig.glimpses = [...(sig.glimpses ?? []).filter(x => x.event !== nx.ev.id), {event: nx.ev.id, at: now(), text: g.text}].slice(-10);
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
-  await card(`${a.name}: ${title}`, `<p><i>${esc(g.text)}</i></p>${game.user.isGM && nx ? `<p class="vta-note">Storyteller: ${esc(nx.ev.name)}.</p>` : ""}`, {whisper: ownerIds(a)});
+  await cardFor(a, "glimpse", `${a.name}: ${title}`, `<p><i>${esc(g.text)}</i></p>${game.user.isGM && nx ? `<p class="vta-note">Storyteller: ${esc(nx.ev.name)}.</p>` : ""}`, {whisper: ownerIds(a)});
   if ( nx && !game.user.isGM ) await card(`${a.name}: ${title} (Storyteller's note)`, `<p>The riddle points at ${esc(nx.ev.name)}.</p>`);
   return g;
 }
@@ -361,7 +375,7 @@ async function onEventFired(ev) {
   if ( !on() || !isActiveGM() || !ev?.id ) return;
   for ( const a of game.actors ) {
     const hit = (a.flags?.[MODULE_ID]?.[FLAG]?.glimpses ?? []).find(x => x.event === ev.id);
-    if ( hit ) await card(`${a.name} saw it coming`, `<p>${esc(ev.name)}: the glimpse was <i>${esc(hit.text)}</i>. If ${esc(a.name)} acted on it, give back a Willpower point.</p>`);
+    if ( hit ) await cardFor(a, "glimpse", `${a.name} saw it coming`, `<p>${esc(ev.name)}: the glimpse was <i>${esc(hit.text)}</i>. If ${esc(a.name)} acted on it, give back a Willpower point.</p>`);
   }
 }
 
@@ -383,7 +397,7 @@ async function soilTick(a, t) {
   const before = foundry.utils.deepClone(sig);
   sig.soil = r.soil;
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
-  if ( r.halved ) await card(`${a.name}: no native soil`, `<p>${esc(a.name)} rested without their native soil. Every dice pool is halved tonight (rounded down) until they rest on it again.${r.soil.short > 1 ? ` Nights in a row: ${r.soil.short}.` : ""}</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
+  if ( r.halved ) await cardFor(a, "soil", `${a.name}: no native soil`, `<p>${esc(a.name)} rested without their native soil. Every dice pool is halved tonight (rounded down) until they rest on it again.${r.soil.short > 1 ? ` Nights in a row: ${r.soil.short}.` : ""}</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
 }
 /** Put two handfuls of native soil in a Tzimisce's pack. */
 export async function giveSoil(actorOrId, where = "") {
@@ -412,7 +426,7 @@ export async function emptyFrame(actorOrId, scene = canvas?.scene) {
   if ( seen[scene.id] === tonight ) return null;
   sig.frames = {...seen, [scene.id]: tonight};
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
-  await card(`${a.name}: an empty frame`, `<p>${esc(cam.label)} watches ${esc(scene.name)}, and holds no image of ${esc(a.name)}. Whoever studies it later sees a person who is not there: a breach of the Masquerade, found later.</p>`);
+  await cardFor(a, "camera", `${a.name}: an empty frame`, `<p>${esc(cam.label)} watches ${esc(scene.name)}, and holds no image of ${esc(a.name)}. Whoever studies it later sees a person who is not there: a breach of the Masquerade, found later.</p>`);
   return cam;
 }
 function onToken(token, change) {
@@ -448,7 +462,7 @@ async function ravnosChance(a, act, npc) {
   if ( !S.mayAskRavnos(r, now()) ) return;
   const v = S.ravnosVice(r.vice), dc = S.ravnosDifficulty(r, now());
   await ravnosSet(a, {askedAt: now()});
-  await card(`${a.name}: the vice calls`, `<p>${esc(npc?.name ?? "This one")} is a chance for ${esc(v.label.toLowerCase())}. Roll Self-Control, difficulty ${dc}. On a failure, ${esc(a.name)} gives in before the scene ends.</p>`, {whisper: ownerIds(a)});
+  await cardFor(a, "vice", `${a.name}: the vice calls`, `<p>${esc(npc?.name ?? "This one")} is a chance for ${esc(v.label.toLowerCase())}. Roll Self-Control, difficulty ${dc}. On a failure, ${esc(a.name)} gives in before the scene ends.</p>`, {whisper: ownerIds(a)});
 }
 function onTaken(p) {
   const a = toActor(p?.actor);
@@ -466,7 +480,7 @@ async function oddTick(a) {
   const before = foundry.utils.deepClone(sig);
   sig.odd = r.gift ? {...r.odd, gifts: [...(r.odd.gifts ?? []), r.gift.key]} : r.odd;
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
-  if ( r.gift ) await card(`${a.name}: an odd gift`, `<p>This year ${esc(a.name)} may wake with a gift of thin blood: <b>${esc(r.gift.label)}</b>. ${esc(r.gift.text)} Keep it or take it back.</p>`, {undo: {uuid: a.uuid, path: FLAG, before}});
+  if ( r.gift ) await cardFor(a, "oddity", `${a.name}: an odd gift`, `<p>This year ${esc(a.name)} may wake with a gift of thin blood: <b>${esc(r.gift.label)}</b>. ${esc(r.gift.text)} Keep it or take it back.</p>`, {undo: {uuid: a.uuid, path: FLAG, before}});
 }
 
 /* ---------------- Nosferatu ---------------- */
@@ -481,7 +495,7 @@ async function trueFace(a, npc) {
   sig.faces = {...seen, [npc.id]: tonightKey()};
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
   const row = rowsOf(a).find(r => r.feature === "secrets" || r.face), saw = row?.faceText ?? "saw the true face of a Nosferatu";
-  return card(`${a.name}: ${row?.face ? "a sign of what they are" : "the true face"}`, `<p>${esc(npc.name)} dealt with ${esc(a.name)} face to face. Unless Obfuscate or a disguise held, ${esc(npc.name)} ${esc(saw)}: a breach of the Masquerade.</p>`,
+  return cardFor(a, row?.feature ?? "line", `${a.name}: ${row?.face ? "a sign of what they are" : "the true face"}`, `<p>${esc(npc.name)} dealt with ${esc(a.name)} face to face. Unless Obfuscate or a disguise held, ${esc(npc.name)} ${esc(saw)}: a breach of the Masquerade.</p>`,
     {act: {key: "breach", label: "Record the breach", who: "gm", data: {by: a.uuid, npc: npc.uuid, event: saw}}});
 }
 ACTS.breach = async ({by, npc, event}) => {
@@ -501,7 +515,7 @@ async function secretSold(a, npc, name) {
   const item = npc.items?.find?.(i => i.name === name) ?? a.items?.find?.(i => i.name === name);
   const f = item?.flags?.[MODULE_ID]?.secret ?? {at: now(), year: currentYear()};
   const size = S.secretPrice(f.at, now(), f.year ?? currentYear());
-  return card(`${a.name} sells a secret`, `<p>${esc(npc.name)} takes ${esc(name)}. ${size === "minor" ? "It is fresh: a minor boon." : "It is stale: a trivial boon."}</p>`,
+  return cardFor(a, "secrets", `${a.name} sells a secret`, `<p>${esc(npc.name)} takes ${esc(name)}. ${size === "minor" ? "It is fresh: a minor boon." : "It is stale: a trivial boon."}</p>`,
     {act: {key: "boon", label: "Log the boon", who: "gm", data: {from: {id: npc.id, name: npc.name}, to: {id: a.id, name: a.name}, size, what: name}}});
 }
 ACTS.boon = async ({from, to, size, what}) => {
@@ -523,7 +537,7 @@ export async function order(fromActor, toActor_, text = "") {
   const f = toActor(fromActor), t = toActor(toActor_);
   if ( !f || !t || !S.mayOrder(rankOf(f), rankOf(t)) ) return null;
   const cost = S.refuseCost(rankOf(f), rankOf(t));
-  return card(`${f.name} (${S.rankLabel(rankOf(f))}) gives an order`, `<p>To ${esc(t.name)}: ${esc(text)}</p><p class="vta-note">Obey, or refuse at the cost of ${cost} Willpower.</p>`,
+  return cardFor(f, "pyramid", `${f.name} (${S.rankLabel(rankOf(f))}) gives an order`, `<p>To ${esc(t.name)}: ${esc(text)}</p><p class="vta-note">Obey, or refuse at the cost of ${cost} Willpower.</p>`,
     {whisper: ownerIds(t), act: {key: "refuse", label: `Refuse (${cost} Willpower)`, who: "owner", uuid: t.uuid, data: {to: t.uuid, from: f.name, cost, text}}});
 }
 ACTS.refuse = async ({to, from, cost, text}) => {
@@ -546,7 +560,7 @@ export async function influence(actorOrId, institution = "") {
   const inst = institution || S.institutionsAt(currentYear())[0];
   sig.influenceKey = key;
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
-  await card(`${a.name}: influence`, `<p>${esc(a.name)} takes a favour from ${esc(inst)} in place of this month's income. Skip their holdings income this month.</p>`,
+  await cardFor(a, "domain", `${a.name}: influence`, `<p>${esc(a.name)} takes a favour from ${esc(inst)} in place of this month's income. Skip their holdings income this month.</p>`,
     {act: {key: "boon", label: "Log the boon", who: "gm", data: {from: {id: null, name: inst}, to: {id: a.id, name: a.name}, size: "minor", what: "influence in place of a month's income"}}});
   return inst;
 }
@@ -554,7 +568,7 @@ export async function influence(actorOrId, institution = "") {
 export async function lostHolding(actorOrId, name = "a holding") {
   const a = toActor(actorOrId);
   if ( !a || !isFeature(a, "domain") ) return null;
-  return card(`${a.name} answers to the clan`, `<p>${esc(a.name)} lost ${esc(name)}. The clan's elders call them to account at the next gathering.</p>`);
+  return cardFor(a, "domain", `${a.name} answers to the clan`, `<p>${esc(a.name)} lost ${esc(name)}. The clan's elders call them to account at the next gathering.</p>`);
 }
 
 /* ---------------- Assamite ---------------- */
@@ -566,7 +580,7 @@ export async function contract(actorOrId, {target = "", price = 0, days = 30} = 
   sig.contracts = [...(sig.contracts ?? []), c];
   sig.standing ??= 1;
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
-  await card(`${a.name} takes a contract`, `<p>${esc(c.target)}, for ${c.price}. Due in ${days} days.</p>`, {whisper: ownerIds(a)});
+  await cardFor(a, "contracts", `${a.name} takes a contract`, `<p>${esc(c.target)}, for ${c.price}. Due in ${days} days.</p>`, {whisper: ownerIds(a)});
   return c;
 }
 export async function settle(actorOrId, id, done = true) {
@@ -576,7 +590,7 @@ export async function settle(actorOrId, id, done = true) {
   const before = foundry.utils.deepClone(sig), r = S.settleContract(sig.contracts[i], sig.standing, done);
   sig.contracts[i] = r.contract; sig.standing = r.standing;
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
-  await card(`${a.name}: ${done ? "a contract kept" : "a contract failed"}`, `<p>${esc(r.contract.target)}. Standing at Alamut ${r.standing} of ${S.STANDING_MAX}.${r.tithe ? ` Tithe to the clan: ${r.tithe}.` : ""}</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
+  await cardFor(a, "contracts", `${a.name}: ${done ? "a contract kept" : "a contract failed"}`, `<p>${esc(r.contract.target)}. Standing at Alamut ${r.standing} of ${S.STANDING_MAX}.${r.tithe ? ` Tithe to the clan: ${r.tithe}.` : ""}</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
   return r;
 }
 async function contractTick(a, t) {
@@ -597,7 +611,7 @@ export async function bindWraith(actorOrId, {name = "a wraith", fetter = ""} = {
 export async function callWraith(actorOrId, id) {
   const a = toActor(actorOrId), w = (sigOf(a).servants ?? []).find(x => x.id === id);
   if ( !a || !w ) return null;
-  await card(`${a.name} calls ${w.name}`, `<p>${esc(a.name)} calls a bound wraith${w.fetter ? `, held by ${esc(w.fetter)}` : ""}. It comes across from the Shadowlands.</p>`);
+  await cardFor(a, "family", `${a.name} calls ${w.name}`, `<p>${esc(a.name)} calls a bound wraith${w.fetter ? `, held by ${esc(w.fetter)}` : ""}. It comes across from the Shadowlands.</p>`);
   return w;
 }
 export async function releaseWraith(actorOrId, id) {
@@ -629,7 +643,7 @@ async function ghoulTick(a, t) {
   sig.ghoul = {...g, warned: m};
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
   Hooks.callAll("wodxGhoulFix", {actor: a, drank: false, months: m});
-  await card(`${a.name}: no vitae`, `<p>${m} month${m === 1 ? "" : "s"} without a drink from the domitor: take away ${m === 1 ? "a blood point" : "another blood point"}. With none left, the years held off begin to come back.</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
+  await cardFor(a, "ghoul", `${a.name}: no vitae`, `<p>${m} month${m === 1 ? "" : "s"} without a drink from the domitor: take away ${m === 1 ? "a blood point" : "another blood point"}. With none left, the years held off begin to come back.</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
 }
 /** Found a revenant family in play: the Storyteller's is kept at once, a player's goes to the queue. */
 export async function foundFamily(data = {}) {
@@ -681,7 +695,7 @@ export async function luck(actorOrId) {
   if ( !S.mayLuck(sig.luckAt, now()) ) { ui.notifications?.info?.(`Once in ${S.LUCK_DAYS} days.`); return null; }
   sig.luckAt = now();
   await putSig(a, sig);
-  return card(`${a.name}: the Emerald luck`, `<p>${esc(a.name)} rolls a roll of chance again and keeps the better.</p>`, {whisper: []});
+  return cardFor(a, "luck", `${a.name}: the Emerald luck`, `<p>${esc(a.name)} rolls a roll of chance again and keeps the better.</p>`, {whisper: []});
 }
 
 /* ---------------- Changeling: kiths, seemings, courts, Houses ---------------- */
@@ -691,7 +705,7 @@ export async function revel(actorOrId, scene = canvas?.scene) {
   const a = toActor(actorOrId);
   if ( !a || !isFeature(a, "revel") ) return null;
   const there = [...new Set([a.id, ...(scene?.tokens ?? []).map(t => t.actor?.id).filter(Boolean)])];
-  return card(`${a.name} holds a revel`, `<p>Drink, music and dancing${scene ? ` at ${esc(scene.name)}` : ""}. Every changeling there gains a point of Glamour; a Satyr gains two. Passers-by may be drawn in.</p>`,
+  return cardFor(a, "revel", `${a.name} holds a revel`, `<p>Drink, music and dancing${scene ? ` at ${esc(scene.name)}` : ""}. Every changeling there gains a point of Glamour; a Satyr gains two. Passers-by may be drawn in.</p>`,
     {whisper: [], act: {key: "glamour", label: "Give the Glamour", who: "gm", data: {ids: there}}});
 }
 ACTS.glamour = async ({ids = []}) => {
@@ -706,7 +720,7 @@ ACTS.glamour = async ({ids = []}) => {
 export async function toldTruth(actorOrId) {
   const a = toActor(actorOrId);
   if ( !a || !isFeature(a, "truth") ) return null;
-  return willpower(a, -1, "The plain truth, told");
+  return willpower(a, -1, "The plain truth, told", "truth");
 }
 /** Selkies: the seal coat, an item in the pack. */
 const carriesCoat = a => (a?.items ?? []).some(i => S.isCoat({name: i.name, coat: i.flags?.[MODULE_ID]?.coat}));
@@ -720,17 +734,17 @@ export async function giveCoat(actorOrId) {
 function onItemGone(item) {
   const a = item?.parent;
   if ( !a || !isActiveGM() || !on() || !isFeature(a, "coat") || !S.isCoat({name: item.name, coat: item.flags?.[MODULE_ID]?.coat}) ) return;
-  card(`${a.name}: the coat is gone`, `<p>Without the seal coat ${esc(a.name)} cannot change, and must win it back.</p>`, {whisper: [...new Set([...ownerIds(a), ...gmIds()])]}).catch(e => console.error(`${MODULE_ID} | seal coat`, e));
+  cardFor(a, "coat", `${a.name}: the coat is gone`, `<p>Without the seal coat ${esc(a.name)} cannot change, and must win it back.</p>`, {whisper: [...new Set([...ownerIds(a), ...gmIds()])]}).catch(e => console.error(`${MODULE_ID} | seal coat`, e));
 }
 
 /* ---------------- Mage: Traditions, Crafts, Conventions, Houses ---------------- */
 
 const wpOf = a => a?.system?.advantages?.willpower ?? {};
-async function willpower(a, d, why) {
+async function willpower(a, d, why, f = null) {
   const before = Number(wpOf(a).temporary) || 0, to = S.willpowerStep(wpOf(a), d);
   if ( to === before ) return before;
   await a.update({"system.advantages.willpower.temporary": to});
-  await card(`${a.name}: Willpower ${before} to ${to}`, `<p>${esc(why)}.</p>`, {whisper: ownerIds(a)});
+  await cardFor(a, f, `${a.name}: Willpower ${before} to ${to}`, `<p>${esc(why)}.</p>`, {whisper: ownerIds(a)});
   return to;
 }
 /** Akashic Brotherhood: a Willpower point for meditation at dawn, once a day. */
@@ -741,24 +755,24 @@ export async function meditate(actorOrId) {
   if ( !S.mayMeditate(sig.dawnAt, now()) ) { ui.notifications?.info?.("Once a day, at dawn."); return null; }
   sig.dawnAt = now();
   await putSig(a, sig);
-  return willpower(a, 1, "Meditation at dawn");
+  return willpower(a, 1, "Meditation at dawn", "dawn");
 }
 /** Euthanatos: a Good Death gives back a Willpower point; a death in anger adds Jhor. */
 export async function death(actorOrId, mercy = true) {
   const a = toActor(actorOrId);
   if ( !a || !isFeature(a, "mercy") ) return null;
-  if ( mercy ) return willpower(a, 1, "A Good Death given in mercy");
+  if ( mercy ) return willpower(a, 1, "A Good Death given in mercy", "mercy");
   const sig = sigOf(a), before = foundry.utils.deepClone(sig);
   sig.jhor = (sig.jhor ?? 0) + 1;
   await putSig(a, sig);
-  await card(`${a.name}: Jhor ${sig.jhor}`, `<p>A death given in anger leaves its stain.</p>`, {whisper: [...new Set([...ownerIds(a), ...gmIds()])], undo: {uuid: a.uuid, path: FLAG, before}});
+  await cardFor(a, "mercy", `${a.name}: Jhor ${sig.jhor}`, `<p>A death given in anger leaves its stain.</p>`, {whisper: [...new Set([...ownerIds(a), ...gmIds()])], undo: {uuid: a.uuid, path: FLAG, before}});
   return sig.jhor;
 }
 /** Order of Hermes and House Flambeau: a certámen for a stake, which the loser owes as a favour. */
 export async function certamen(actorOrId, {foe = "", stake = ""} = {}) {
   const a = toActor(actorOrId);
   if ( !a || !isFeature(a, "certamen") || !foe ) return null;
-  return card(`${a.name} calls a certámen`, `<p>${esc(a.name)} challenges ${esc(foe)}${stake ? ` for ${esc(stake)}` : ""}. A duel of magick, not to the death: the loser owes the stake.</p>`,
+  return cardFor(a, "certamen", `${a.name} calls a certámen`, `<p>${esc(a.name)} challenges ${esc(foe)}${stake ? ` for ${esc(stake)}` : ""}. A duel of magick, not to the death: the loser owes the stake.</p>`,
     {whisper: [], act: {key: "boon", label: `${a.name} won: log the stake`, who: "gm", data: {from: {id: "", name: foe}, to: {id: a.id, name: a.name}, size: "minor", what: `certámen: ${stake || "the stake"}`}}});
 }
 /** Sisters of Hippolyta: an oath kept as a promise; breaking it costs a Willpower point. */
@@ -768,7 +782,7 @@ export async function oath(actorOrId, {to = "", what = ""} = {}) {
   const sig = sigOf(a);
   sig.oaths = [...(sig.oaths ?? []), {to: String(to || (rowWith(a, "oath")?.key === "hippolyta" ? "the sisterhood" : "their word")), what: String(what), at: now(), broken: false}].slice(-12);
   await putSig(a, sig);
-  await card(`${a.name} swears an oath`, `<p>To ${esc(sig.oaths.at(-1).to)}: ${esc(what)}.</p>`, {whisper: [...new Set([...ownerIds(a), ...gmIds()])]});
+  await cardFor(a, "oath", `${a.name} swears an oath`, `<p>To ${esc(sig.oaths.at(-1).to)}: ${esc(what)}.</p>`, {whisper: [...new Set([...ownerIds(a), ...gmIds()])]});
   return sig.oaths.length;
 }
 export async function breakOath(actorOrId) {
@@ -776,7 +790,7 @@ export async function breakOath(actorOrId) {
   if ( !a || !o ) return null;
   o.broken = true;
   await putSig(a, sig);
-  return willpower(a, -1, `The oath to ${o.to} is broken`);
+  return willpower(a, -1, `The oath to ${o.to} is broken`, "oath");
 }
 /** New World Order: a breach of the Masquerade reaches the Watchers first, through the records of the age. */
 async function onBreach(p) {
@@ -784,6 +798,7 @@ async function onBreach(p) {
   const watchers = game.actors.filter(x => isFeature(x, "watchers"));
   if ( !watchers.length ) return;
   const yr = currentYear(), groups = [...new Set(watchers.map(w => rowWith(w, "watchers")?.label).filter(Boolean))];
+  watchers.forEach(w => fired(w, "watchers"));
   await card("The Watchers hear of it", `<p>${esc(p?.by?.name ?? "Someone")} broke the Masquerade. ${esc(groups.join(" and "))} read ${esc(S.recordsAt(yr))} and hear of it first: ${watchers.slice(0, 3).map(w => esc(w.name)).join(", ")} can send agents.</p>`);
 }
 
@@ -799,7 +814,7 @@ export async function guardPlace(actorOrId, scene = canvas?.scene) {
   const sig = sigOf(a), before = foundry.utils.deepClone(sig);
   sig.guard = {scene: scene.id, name: scene.name, at: now()};
   await putSig(a, sig);
-  await card(`${a.name} guards ${scene.name}`, `<p>${esc(a.name)} will know when harm is done here.</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
+  await cardFor(a, "guard", `${a.name} guards ${scene.name}`, `<p>${esc(a.name)} will know when harm is done here.</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
   return sig.guard;
 }
 /** Harm or theft at a place in a Fury's care: a card for each Fury who guards it, wherever they are. */
@@ -809,7 +824,7 @@ export async function desecrated(scene, what = "Harm was done", except = null) {
   for ( const a of game.actors ) {
     if ( a.id === except || !isFeature(a, "guard") || sigOf(a).guard?.scene !== scene.id ) continue;
     n += 1;
-    await card(`${a.name}: ${scene.name}`, `<p>${esc(what)} at ${esc(scene.name)}, ${esc(hourNow())}. ${esc(a.name)} feels it, wherever they are.</p>`,
+    await cardFor(a, "guard", `${a.name}: ${scene.name}`, `<p>${esc(what)} at ${esc(scene.name)}, ${esc(hourNow())}. ${esc(a.name)} feels it, wherever they are.</p>`,
       {whisper: [...new Set([...ownerIds(a), ...gmIds()])], act: {key: "rage", label: "Give a Rage point for the hunt (once)", who: "gm", data: {uuid: a.uuid}}});
   }
   return n;
@@ -823,7 +838,7 @@ ACTS.rage = async ({uuid}) => {
 export async function offerTruce(actorOrId, combat = game.combat) {
   const a = toActor(actorOrId);
   if ( !a || !combat || !isFeature(a, "truce") ) return null;
-  return card(`${a.name} offers a truce`, `<p>${esc(a.name)} spends the turn calling for peace. Roll Charisma + Empathy (a house reading); the NPCs who are not set on killing, or whose nerve is going, take it and leave the fight.</p>`,
+  return cardFor(a, "truce", `${a.name} offers a truce`, `<p>${esc(a.name)} spends the turn calling for peace. Roll Charisma + Empathy (a house reading); the NPCs who are not set on killing, or whose nerve is going, take it and leave the fight.</p>`,
     {whisper: [], act: {key: "truce", label: "They take the truce", who: "gm", data: {combat: combat.id}}});
 }
 ACTS.truce = async ({combat}) => {
@@ -846,7 +861,7 @@ export async function spendLeverage(actorOrId, index = 0) {
   if ( !a || !l ) return null;
   sig.leverage.splice(index, 1);
   await putSig(a, sig);
-  return card(`${a.name} uses leverage`, `<p>${esc(a.name)} reminds ${esc(l.who)} of ${esc(l.what || "a failure")}. ${esc(l.who)} owes a minor favour.</p>`,
+  return cardFor(a, "leverage", `${a.name} uses leverage`, `<p>${esc(a.name)} reminds ${esc(l.who)} of ${esc(l.what || "a failure")}. ${esc(l.who)} owes a minor favour.</p>`,
     {act: {key: "boon", label: "Log the favour", who: "gm", data: {from: {id: "", name: l.who}, to: {id: a.id, name: a.name}, size: "minor", what: `leverage: ${l.what || "a failure"}`}}});
 }
 
@@ -872,7 +887,7 @@ export async function tale(actorOrId, {hero = "", what = ""} = {}) {
   const scar = isScarOnly(a), heroName = scar ? a.name : (hero || a.name);
   const heroActor = game.actors.getName?.(heroName) ?? null;
   const deltas = rows.some(r => r.key === "galliard") ? {wisdom: 1} : {};
-  return card(scar ? `${a.name}: a scar won in battle` : `${a.name} tells a tale`, `<p>${scar ? `${esc(a.name)} shows ${esc(what || "a lasting scar")} as a trophy.` : `${esc(a.name)} tells of ${esc(heroName)}${what ? `: ${esc(what)}` : ""}.`} Award Glory to ${esc(heroName)} if it moved the moot${deltas.wisdom ? `, and Wisdom to ${esc(a.name)} for telling it` : ""}.</p>`,
+  return cardFor(a, "renown", scar ? `${a.name}: a scar won in battle` : `${a.name} tells a tale`, `<p>${scar ? `${esc(a.name)} shows ${esc(what || "a lasting scar")} as a trophy.` : `${esc(a.name)} tells of ${esc(heroName)}${what ? `: ${esc(what)}` : ""}.`} Award Glory to ${esc(heroName)} if it moved the moot${deltas.wisdom ? `, and Wisdom to ${esc(a.name)} for telling it` : ""}.</p>`,
     {act: {key: "renown", label: "Award the Renown", who: "gm", data: {hero: heroActor?.uuid ?? (scar ? a.uuid : null), teller: a.uuid, wisdom: !!deltas.wisdom, why: scar ? "a scar won in battle" : "a tale at the moot"}}});
 }
 ACTS.renown = async ({hero, teller, wisdom, why}) => {
@@ -889,7 +904,7 @@ export async function ruling(actorOrId, {between = "", verdict = ""} = {}) {
   const sig = sigOf(a);
   sig.rulings = [...(sig.rulings ?? []), {between: String(between), verdict: String(verdict), at: now()}].slice(-12);
   await putSig(a, sig);
-  return card(secret ? `${a.name}: a hidden verdict` : `${a.name} rules`, `<p>${between ? `${esc(between)}: ` : ""}${esc(verdict)}</p><p class="vta-note">${secret ? "Carried out in secret." : "Both sides abide by it or lose Honour; the loser cannot raise the matter again for a month."}</p>`, {whisper: secret ? gmIds() : []});
+  return cardFor(a, "ruling", secret ? `${a.name}: a hidden verdict` : `${a.name} rules`, `<p>${between ? `${esc(between)}: ` : ""}${esc(verdict)}</p><p class="vta-note">${secret ? "Carried out in secret." : "Both sides abide by it or lose Honour; the loser cannot raise the matter again for a month."}</p>`, {whisper: secret ? gmIds() : []});
 }
 
 /** Metis: the deformity, picked once (the Storyteller can change it). */
@@ -899,7 +914,7 @@ export async function setDeformity(actorOrId, key) {
   const sig = sigOf(a), before = foundry.utils.deepClone(sig);
   sig.deformity = d.key;
   await putSig(a, sig);
-  await card(`${a.name}: ${d.label}`, `<p>The metis deformity is set.</p>`, {whisper: [...new Set([...ownerIds(a), ...gmIds()])], undo: {uuid: a.uuid, path: FLAG, before}});
+  await cardFor(a, "deformity", `${a.name}: ${d.label}`, `<p>The metis deformity is set.</p>`, {whisper: [...new Set([...ownerIds(a), ...gmIds()])], undo: {uuid: a.uuid, path: FLAG, before}});
   return d;
 }
 
@@ -914,6 +929,7 @@ async function onCombatStart(combat) {
   if ( !ahrouns.length ) return;
   const top = S.firstInit(cs.map(c => c.initiative));
   await combat.updateEmbeddedDocuments("Combatant", ahrouns.map((c, i) => ({_id: c.id, initiative: top + ahrouns.length - i})));
+  ahrouns.forEach(c => fired(c.actor, "first"));
   await card("First into battle", `<p>${ahrouns.map(c => esc(c.name)).join(", ")} ${ahrouns.length === 1 ? "goes" : "go"} first against the Wyrm. In Crinos this scene, one more soak die.</p>`, {whisper: []});
 }
 
@@ -928,7 +944,7 @@ async function kinHarmed(target) {
   kinSeen.set(target.id, day);
   const tribe = S.rowIn(S.TRIBES, k);
   const garou = game.actors.filter(x => x.hasPlayerOwner && isShifter(x) && (!tribe || rowsOf(x).includes(tribe)));
-  for ( const g of garou ) await card(`${g.name}: Kinfolk harmed`, `<p>${esc(target.name)}, Kinfolk${tribe ? ` to the ${esc(tribe.label)}` : ""}, was harmed (${esc(hourNow())}).</p>`, {whisper: [...new Set([...ownerIds(g), ...gmIds()])]});
+  for ( const g of garou ) await cardFor(g, "kin", `${g.name}: Kinfolk harmed`, `<p>${esc(target.name)}, Kinfolk${tribe ? ` to the ${esc(tribe.label)}` : ""}, was harmed (${esc(hourNow())}).</p>`, {whisper: [...new Set([...ownerIds(g), ...gmIds()])]});
 }
 
 async function ask(title, fields) {
@@ -1145,7 +1161,23 @@ export function registerSignatureHooks() {
   });
 }
 
-export const signaturesApi = {rowOf, open, glimpse, hearAs, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work,
+/** The features card on the character sheet: every feature this character has, in force or set aside. */
+export function summary(actorOrId) {
+  const a = toActor(actorOrId);
+  if ( !a ) return [];
+  const dateOf = t => { try { return describeTime(t, 49.5).dateLabel; } catch (e) { return ""; } };
+  return S.featureSummary(allRowsOf(a), {fired: a.flags?.[MODULE_ID]?.[FIRED] ?? {}, off: offOf(a), year: currentYear(), dateOf});
+}
+/** The Storyteller sets a feature aside for a story (off) or puts it back. */
+export async function setOff(actorOrId, key, off = true) {
+  const a = toActor(actorOrId);
+  if ( !a || !key || !game.user.isGM ) return null;
+  const now0 = offOf(a), next = off ? [...new Set([...now0, key])] : now0.filter(k => k !== key);
+  await a.update({[`flags.${MODULE_ID}.${OFF}`]: next});
+  return next;
+}
+
+export const signaturesApi = {rowOf, allRowsOf, summary, setOff, fired, open, glimpse, hearAs, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work,
   giveSoil, setCamera, emptyFrame, setRavnosVice, ravnosFed, movedOn, secret, setRank, order, influence, lostHolding, contract, settle,
   bindWraith, callWraith, releaseWraith, ghoulFed, foundFamily, effects, rollEffects, tick, rowsOf,
   setSplat, setWraith, luck,

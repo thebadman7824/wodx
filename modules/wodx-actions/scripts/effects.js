@@ -10,7 +10,7 @@ import * as DAE from "./mage-da-effects.js";
 import * as PE from "./path-effects.js";
 import * as PW from "./power-effects.js";
 import { ask } from "./profiles.js";
-import { BOOK_RITUALS, bookRitual } from "./book-rituals.js";
+import { BOOK_RITUALS, bookRitual, ritualResults } from "./book-rituals.js";
 export { E };
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -239,14 +239,20 @@ export function numinaPlan(actor, key, level, successes, def) {
  * Any other power with keywords (a Discipline, a Gift): its keywords on the effects card (Traits With Teeth step 4).
  * set and id name the power in power-keywords.js; line is the line list to try by name. Off when the world setting is off.
  */
-export function powerPlan(actor, {set, id, name, line = null, successes, source = ""} = {}) {
+export function powerPlan(actor, {set, id, name, line = null, successes, source = "", noRoll = false} = {}) {
   if ( !isOn() || !powerEffectsOn() ) return {items: [], html: "", skipped: []};
   const kw = PW.powerKeywords(set, id, name, line);
   const t = targetsOf(actor);
-  const {results, skipped} = PW.powerOutcomes(kw, successes, {label: name, source, hasTarget: !t.self && t.docs.length > 0});
+  const {results, skipped} = PW.powerOutcomes(kw, successes, {label: name, source, hasTarget: !t.self && t.docs.length > 0, noRoll});
   const plan = planOf(actor, results, successes);
   if ( skipped.length ) plan.html += `<p class="wodx-quiet">Needs a target: ${esc(skipped.join(", "))}.</p>`;
   return {...plan, skipped};
+}
+/** A book ritual its caster worked, with these successes, on the effects card (B3753): {items, html}. */
+export function ritualPlan(actor, r, successes, source = "") {
+  if ( !isOn() || !powerEffectsOn() ) return {items: [], html: ""};
+  const t = targetsOf(actor);
+  return planOf(actor, ritualResults(r, successes, {source, hasTarget: !t.self && t.docs.length > 0}), successes);
 }
 export const powerEffectsOn = () => { try { return game.settings.get(MOD, "powerEffects") !== false; } catch (e) { return true; } };
 
@@ -321,12 +327,28 @@ const tokenOf = d => (d?.documentName === "Token" ? d : actorOf(d)?.getActiveTok
 /** Apply one item. Returns an undo record, or {note} when nothing could change. */
 export async function applyItem(item, casterName = "the caster") {
   const rec = await applyCore(item, casterName);
+  // B3528: a mind or body binding on a player character gets the player a binding card (no hold on the token)
+  try { await bindingCard(item, casterName); } catch (e) { console.warn("WoDX | binding card", e); }
   // Traits With Teeth step 5: Sway and Fear move an NPC's regard for the caster (WoDX NPC), undone with the rest
   try {
     const mood = await moodAfter(item, casterName);
     if ( mood && rec && typeof rec === "object" ) rec.attitude = mood;
   } catch (e) { console.warn("WoDX | effect attitude", e); }
   return rec;
+}
+
+/** B3528: tell a bound player character's players what binds them, how long, and the resist roll. */
+export async function bindingCard(item, casterName = "the caster", {actor = null} = {}) {
+  const a = actor ?? actorOf(docOf(item?.target));
+  if ( !a?.hasPlayerOwner || !game.user.isGM ) return null;
+  const b = E.bindingOf(item, {caster: casterName});
+  if ( !b ) return null;
+  const users = game.users.filter(u => u.isGM || a.testUserPermission?.(u, "OWNER")).map(u => u.id);
+  return ChatMessage.create({speaker: {alias: b.by}, whisper: users, flags: {[MOD]: {binding: {actor: a.id, key: b.key}}},
+    content: `<div class="wodx-card wodx-binding"><h3><i class="fa-solid fa-link"></i> ${esc(a.name)} is bound</h3>
+      <p><b>${esc(b.label)}</b>, from ${esc(b.by)}: ${esc(b.command)}.</p>
+      <p>It lasts ${esc(b.lasts)}. Resisting: ${esc(b.resist)}.</p>
+      <p class="wodx-quiet">Play the character as bound until it ends or the Storyteller lifts it. Nothing holds your token; the Storyteller rules on what you try.</p></div>`});
 }
 
 /** Sway (not Awe) on an NPC: one step warmer toward the caster; Fear (Afraid): one step colder. Returns the undo record. */
@@ -354,7 +376,8 @@ async function applyCore(item, casterName = "the caster") {
   switch ( o.kind ) {
     case "damage":
       if ( !C ) return {note: "WoDX Combat is off: apply the damage by hand"};
-      await C.soakAndApply(tokenOf(d)?.object ?? a, {mode: "levels", amount: o.levels, type: o.type, soak: o.soak});
+      // A pool rolls its damage dice first (C20 Holly-Strike, Lord of Levin), levels go on as they are
+      await C.soakAndApply(tokenOf(d)?.object ?? a, {mode: o.pool ? "pool" : "levels", amount: o.pool || o.levels, type: o.type, soak: o.soak});
       return {uuid: a.uuid, health};
     case "heal": {
       if ( !C ) return {note: "WoDX Combat is off: heal by hand"};
@@ -752,7 +775,9 @@ export function setup() {
 
 /** The approval queue's handler for queued keyword results (called once WoDX Chronicle is ready). */
 export function registerHandler(api) {
-  api?.registerApprovalHandler?.(TYPE, {label: "Magic that applies itself", approve: async entry => {
+  // Small (Chronicle 0.46.0, B2453): never. Only what is already past the effect rules' own Auto reaches the queue
+  // (witnessed vulgar magic, a mind effect, another player's character, more than three targets)
+  api?.registerApprovalHandler?.(TYPE, {label: "Magic that applies itself", small: () => false, approve: async entry => {
     const item = entry.data?.item, caster = entry.data?.caster ?? "the caster";
     const rec = await applyItem(item, caster);
     // 3.38.0: the approved result gets its own card, with Undo for what changed

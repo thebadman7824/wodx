@@ -7,6 +7,7 @@
  * tracking them), Chantry and Sanctum in M20, Holdings in C20, a Haunt in Wraith 20th. The Storyteller sets how many
  * dots go to security. Who knows where it is is kept as a list, so a rumour or a faction can expose it.
  */
+import {normWorks} from "./haven-works-rules.mjs";
 
 /** Backgrounds that rate a home, by line, with the page that says what they do. */
 export const BACKGROUNDS = [
@@ -27,7 +28,9 @@ export function normHaven(h = {}) {
     name: String(h.name ?? "").trim().slice(0, 80), owners: ids(h.owners), guests: ids(h.guests),
     security: Math.max(0, Math.min(5, Math.round(n(h.security)))),
     known: (Array.isArray(h.known) ? h.known : []).map(k => ({who: String(k?.who ?? "").slice(0, 80), how: String(k?.how ?? "").slice(0, 200), at: n(k?.at)})).filter(k => k.who).slice(-30),
-    note: String(h.note ?? "").slice(0, 500)
+    note: String(h.note ?? "").slice(0, 500),
+    // B3359-B3363: works, staff, traces and probes (haven-works-rules.mjs)
+    ...normWorks(h)
   };
 }
 

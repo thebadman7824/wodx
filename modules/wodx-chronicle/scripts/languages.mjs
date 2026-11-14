@@ -1,6 +1,6 @@
 import {MODULE_ID, esc, setting} from "./util.mjs";
 import {searchBox} from "./search.mjs";
-import {LANGUAGES, linguisticsAllows, languagesFromMerits, understands, scramble, parseInCommand, norm} from "./languages-rules.mjs";
+import {LANGUAGES, linguisticsAllows, languagesFromMerits, understands, scramble, parseInCommand, norm, allowance, listAllowed, kinOf, GIST} from "./languages-rules.mjs";
 
 /**
  * Languages in chat. Each character keeps the languages it speaks (flags["wodx-chronicle"].languages, the first one
@@ -30,8 +30,19 @@ export function languagesOf(actor) {
 export async function setLanguages(actor, list) {
   const clean = [];
   for ( const x of list ?? [] ) { const s = String(x).trim(); if ( s && !clean.some(c => norm(c) === norm(s)) ) clean.push(s); }
+  // B3162: a player cannot list more languages than Linguistics or the Language Merits give
+  if ( !game.user.isGM ) {
+    const allow = allowanceOf(actor);
+    if ( !listAllowed(languagesOf(actor), clean, allow) ) {
+      ui.notifications.warn(`${actor.name} can list ${allow} language${allow === 1 ? "" : "s"}: the native one and those from Linguistics or Language Merits. The Storyteller can add more.`);
+      return null;
+    }
+  }
   return actor.update({[`flags.${MODULE_ID}.languages`]: clean});
 }
+
+/** How many languages the character may list (B3162). */
+export const allowanceOf = actor => allowance({linguistics: linguisticsOf(actor), merits: meritLanguagesOf(actor)});
 
 /** Linguistics dots, from the sheet's ability or a Trait item of that name. */
 export function linguisticsOf(actor) {
@@ -61,9 +72,12 @@ export function speakable(user = game.user) {
   return [...seen.values()];
 }
 
+/** Messages this client caught the gist of (B3163), for this session. */
+const gistRead = new Set();
 /** Can this user read speech in this language? */
-export function canRead(user, language, authorId) {
+export function canRead(user, language, authorId, messageId = null) {
   if ( !language || user?.isGM || user?.id === authorId ) return true;
+  if ( messageId && user?.id === game.user?.id && gistRead.has(messageId) ) return true;
   return understands(charactersOf(user).map(languagesOf), language);
 }
 
@@ -102,7 +116,7 @@ export function renderLanguage(message, el) {
   const body = el.querySelector(".message-content");
   if ( !body ) return;
   const authorId = message.author?.id ?? message.author ?? message.user?.id;
-  const read = canRead(game.user, lang, authorId);
+  const read = canRead(game.user, lang, authorId, message.id);
   if ( !read ) {
     const walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT);
     const nodes = [];
@@ -112,7 +126,36 @@ export function renderLanguage(message, el) {
   const tag = document.createElement("div");
   tag.className = `wodx-language ${read ? "is-known" : "is-unknown"}`;
   tag.textContent = read ? `In ${lang}` : `In ${lang}, which your character does not speak`;
+  // B3163: a kindred language gives a roll for the gist
+  if ( !read ) {
+    const who = charactersOf(game.user).find(a => kinOf([languagesOf(a)], lang));
+    const kin = who ? kinOf([languagesOf(who)], lang) : null;
+    if ( kin && !gistTried.has(`${message.id}:${who.id}`) ) {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "wodx-gist";
+      b.textContent = `Try for the gist (${who.name} knows ${kin})`;
+      b.addEventListener("click", () => tryGist(message, who, lang, kin));
+      tag.append(" ", b);
+    }
+  }
   body.prepend(tag);
+}
+
+const gistTried = new Set();
+/** Intelligence + Linguistics (or Academics), difficulty 7: a success shows the message to this reader. */
+async function tryGist(message, actor, lang, kin) {
+  gistTried.add(`${message.id}:${actor.id}`);
+  const sys = actor.system ?? {};
+  const int = Number(sys.attributes?.intelligence?.total ?? sys.attributes?.intelligence?.value) || 1;
+  const ling = linguisticsOf(actor), acad = Number(sys.abilities?.academics?.value) || 0;
+  const dice = Math.max(1, int + (ling || acad));
+  const roll = await new Roll(`${dice}d10`).evaluate();
+  const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
+  const net = faces.filter(f => f >= GIST.difficulty).length - faces.filter(f => f === 1).length;
+  if ( net > 0 ) gistRead.add(message.id);
+  await ChatMessage.create({whisper: [game.user.id, ...game.users.filter(u => u.isGM).map(u => u.id)], speaker: ChatMessage.getSpeaker({actor}),
+    content: `<div class="wodx-card"><p>${esc(actor.name)} listens for the ${esc(lang)} through ${esc(kin)}: Intelligence + ${ling ? "Linguistics" : "Academics"} (difficulty ${GIST.difficulty}): ${faces.join(", ")}.</p><p>${net > 0 ? "The gist comes through." : "Too far from the tongue they know."}</p></div>`});
+  ui.chat?.updateMessage?.(message);
 }
 
 function installPicker(root) {

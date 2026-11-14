@@ -337,3 +337,116 @@
 1822|W|mum|ME|Egypt|learning|The names can be read|Champollion reads the hieroglyphs; the mummies' names can be read again.
 1830|W|vam|EU|Paris|revolution|The Kindred of the July Revolution|Barricades go up in Paris; anarchs join the crowds.
 1831|W|wra|EU|Europe|plague|The cholera dead|Cholera kills hundreds of thousands; the Shadowlands of Europe's cities fill.
+# The Americas, Africa and Oceania (the global rule, 2026-11-12)
+1607|H|mor|AM|Jamestown|founding,famine|Jamestown|English settlers build a fort on the James River; most die of hunger and fever within three years.
+1608|H|mor|AM|Quebec|founding,trade|Quebec founded|Samuel de Champlain builds a trading post where the Saint Lawrence narrows.
+1610|H|mor|AM|Santa Fe|founding,empire|Santa Fe|The Spanish make Santa Fe the capital of New Mexico, among the Pueblo towns.
+1616|H|mor|AM|Massachusetts Bay|plague,death|The great dying on the coast|A sickness brought by ships empties the Wampanoag and Massachusett villages of the New England coast in three years.
+1619|H|mor|AM|Jamestown|trade,persecution,law|Africans and an assembly in Virginia|A privateer sells some twenty captive Angolans at Point Comfort in the same summer that Virginia's first assembly meets.
+1620|H|mor|AM|Plymouth|founding,faith|Plymouth colony|Separatists from the Mayflower settle in an emptied Wampanoag village.
+1626|H|mor|AM|Manhattan|founding,trade|New Amsterdam|The Dutch West India Company builds a fort and a town at the tip of Manhattan.
+1630|H|mor|AM|Recife|war,trade,empire|The Dutch in Brazil|The Dutch take Pernambuco and its sugar mills and hold them for twenty-four years.
+1636|H|mor|AM|Cambridge, Massachusetts|learning,founding,faith|A college in the wilderness|The colony of Massachusetts Bay founds a college to train ministers.
+1637|H|mor|AM|Mystic|war,massacre|The Pequot War|Colonists and their Narragansett and Mohegan allies burn a Pequot fort at Mystic with several hundred people inside.
+1642|H|mor|AM|Montreal|founding,faith|Ville-Marie|French missionaries found a settlement on the island of Montreal.
+1649|H|mor|AM|Huronia|war,migration,plague|Huronia destroyed|The Haudenosaunee, armed with Dutch guns, break the Wendat towns already thinned by smallpox.
+1655|H|mor|AM|Jamaica|war,empire,sea|Jamaica taken|An English fleet takes Jamaica from Spain; freed and escaped Africans hold the mountains as the Maroons.
+1664|H|mor|AM|Manhattan|empire,treaty|New Amsterdam becomes New York|The Dutch governor surrenders the town to an English fleet without a shot.
+1675|H|mor|AM|Rhode Island|war,massacre|King Philip's War|Metacom of the Wampanoag leads the last great rising of New England's peoples; a dozen towns burn and the survivors are sold to the Caribbean.
+1680|H|mor|AM|Santa Fe|uprising,faith|The Pueblo Revolt|The Pueblo towns rise on one day under Popé, kill the friars and drive the Spanish out of New Mexico for twelve years.
+1682|H|mor|AM|Mississippi River|exploration,empire|La Salle at the river's mouth|La Salle reaches the Gulf by the Mississippi and claims the whole valley for France.
+1692|H|mor|AM|Salem|persecution,occult,law|The Salem trials|Nineteen people are hanged for witchcraft in Massachusetts on the word of afflicted girls.
+1692|W|hun,mag|AM|Salem|persecution,occult|What was at Salem|The house reading has almost none of the accused hold any power; the hunters' and mages' books both treat Salem as a warning about fear, and each blames the other's kind.
+1692|H|mor|AM|Port Royal|quake,disaster,sea|Port Royal sinks|An earthquake drops most of the pirate port of Jamaica into the harbour.
+1693|H|mor|AM|Minas Gerais|industry,money,migration|Gold in Brazil|Gold is found in the hills behind Rio, and half a million people cross the ocean in the rush that follows.
+1695|H|mor|AM|Palmares|war,uprising,death|Palmares falls|The last leader of the great settlement of escaped slaves in Brazil, Zumbi, is hunted down and killed.
+1697|H|mor|AM|Tayasal|war,empire|The last Maya kingdom|The Spanish take Tayasal on its lake in the Peten, the last independent Maya city.
+1712|H|mor|AM|New York|uprising,persecution|The New York rising|Enslaved Africans set fires and kill nine colonists; twenty-one are executed.
+1718|H|mor|AM|New Orleans|founding|New Orleans|The French found a town in a bend of the Mississippi.
+1718|H|mor|AM|Ocracoke|sea,crime,death|Blackbeard killed|A naval party kills the pirate Edward Teach off the Carolina coast.
+1739|H|mor|AM|Stono River|uprising,persecution|The Stono rebellion|Enslaved Kongolese soldiers in South Carolina march for Spanish Florida under a banner and are cut down.
+1746|H|mor|AM|Lima|quake,disaster,sea|Lima and Callao destroyed|An earthquake wrecks Lima, and the wave that follows wipes out its port.
+1759|H|mor|AM|Quebec|battle,empire|The Plains of Abraham|A British army climbs the cliffs and takes Quebec; both generals die.
+1763|H|mor|AM|Detroit|war,uprising|Pontiac's war|The peoples of the Great Lakes rise against the British forts, and the crown forbids settlement beyond the mountains.
+1767|H|mor|AM|Paraguay|faith,persecution|The Jesuits expelled|Spain expels the Jesuits from its empire, and the Guarani missions fall apart.
+1769|H|mor|AM|San Diego|founding,faith,empire|The California missions|Franciscans and soldiers found the first of twenty-one missions on the coast of Upper California.
+1773|H|mor|AM|Boston|uprising,trade|The tea in the harbour|Colonists dressed as Mohawks throw a cargo of East India tea into Boston harbour.
+1775|H|mor|AM|Lexington|war,battle,revolution|Lexington and Concord|Militia and British regulars exchange fire in Massachusetts.
+1776|H|mor|AM|Philadelphia|revolution,founding,law|Independence declared|Thirteen colonies declare themselves free of the British crown.
+1780|H|mor|AM|Cuzco|uprising,war,death|Tupac Amaru's rising|A descendant of the Incas leads the greatest revolt Spain's empire has seen and is pulled apart by horses in Cuzco the next year.
+1781|H|mor|AM|Yorktown|siege,war|Yorktown|A British army surrenders to American and French forces in Virginia.
+1787|H|mor|AM|Philadelphia|law,founding|A constitution|Delegates in Philadelphia write a federal constitution that counts an enslaved person as three fifths of a free one.
+1791|H|mor|AM|Saint-Domingue|uprising,revolution,faith|The night at Bois Caiman|After a ceremony in the woods the enslaved of the northern plain of Saint-Domingue rise and burn the sugar estates.
+1791|W|wra,mag|AM|Saint-Domingue|occult,revolution|The dead walk with the living|The house reading has the lwa and the dead of the plantations counted among the rebels by both sides; the island's Shadowlands stay restless for two centuries.
+1803|H|mor|AM|New Orleans|treaty,empire,money|The Louisiana Purchase|France, having lost an army in Saint-Domingue, sells the Mississippi valley to the United States.
+1804|H|mor|AM|Haiti|founding,revolution,massacre|Haiti|Dessalines declares the independence of Haiti, the first state founded by people who freed themselves from slavery.
+1804|H|mor|AM|Saint Louis|exploration,travel|Lewis and Clark|An army expedition sets out up the Missouri to find a way to the Pacific.
+1808|H|mor|AM|Rio de Janeiro|crown,migration|A court in the tropics|The Portuguese court, fleeing Napoleon, lands in Brazil and rules its empire from Rio.
+1810|H|mor|AM|Dolores|uprising,revolution,faith|The cry of Dolores|The priest Miguel Hidalgo rings the church bell and calls his parish to rise against Spanish rule.
+1811|H|mor|AM|New Madrid|quake,disaster|The New Madrid earthquakes|Three great earthquakes shake the Mississippi valley; the river runs backward and church bells ring in Boston.
+1811|H|mor|AM|Tippecanoe|battle,war,faith|Tippecanoe|An American army burns Prophetstown, the centre of Tecumseh's league of nations.
+1814|H|mor|AM|Washington|war,fire|Washington burned|British troops burn the Capitol and the President's house.
+1819|H|mor|AM|Boyaca|battle,revolution|Boyaca|Bolivar crosses the Andes and frees New Granada in one battle.
+1821|H|mor|AM|Mexico City|revolution,founding|Mexico independent|A royalist general changes sides, and the army of the Three Guarantees enters Mexico City.
+1822|H|mor|AM|Sao Paulo|revolution,crown,founding|The cry of Ipiranga|The Portuguese prince Pedro declares Brazil independent and is crowned its emperor.
+1823|H|mor|AM|Washington|treaty,empire|The Monroe Doctrine|The United States warns Europe against new colonies in the Americas.
+1824|H|mor|AM|Ayacucho|battle,revolution|Ayacucho|Sucre defeats the last Spanish army in South America.
+1825|H|mor|AM|Buffalo|building,trade,travel|The Erie Canal|A canal joins the Hudson to the Great Lakes and makes New York the port of a continent.
+1830|H|mor|AM|Washington|law,persecution,migration|The Indian Removal Act|Congress empowers the president to move the nations of the south-east beyond the Mississippi.
+1831|H|mor|AM|Southampton County|uprising,persecution,death|Nat Turner's rising|An enslaved preacher leads a rising in Virginia; about sixty white people are killed, and far more black people in the reprisals.
+1835|H|mor|AM|Salvador|uprising,faith|The Male revolt|Muslim Africans, enslaved and free, rise in Bahia at the end of Ramadan.
+1836|H|mor|AM|San Antonio|siege,battle,war|The Alamo|Mexican troops storm a mission held by Texan rebels; six weeks later the rebels win at San Jacinto.
+1624|H|mor|AF|Ndongo|crown,war|Queen Njinga|Njinga takes the throne of Ndongo and fights the Portuguese for forty years, by turns as their ally and their enemy.
+1632|H|mor|AF|Ethiopia|faith,crown|The Jesuits expelled from Ethiopia|Emperor Fasilides restores the Ethiopian church and drives out the Catholic mission.
+1636|H|mor|AF|Gondar|founding,building,crown|Gondar|Fasilides founds a capital at Gondar and builds a stone castle there.
+1652|H|mor|AF|Cape Town|founding,trade,empire|The Cape station|Jan van Riebeeck lands at Table Bay to grow food for the Dutch East India Company's ships.
+1659|H|mor|AF|Saint-Louis|founding,trade|Saint-Louis|The French build a fort on an island in the mouth of the Senegal.
+1665|H|mor|AF|Mbwila|battle,death,crown|Mbwila|A Portuguese army kills the king of Kongo in battle and carries his head to Luanda; the kingdom breaks into civil war.
+1672|H|mor|AF|Cape Coast|trade,persecution,sea|The Royal African Company|An English company with a royal charter takes over the forts of the Gold Coast and brands its captives with its initials.
+1693|H|mor|AF|Zambezi|war,empire|Changamire|The Rozvi ruler Changamire Dombo drives the Portuguese from the plateau south of the Zambezi.
+1698|H|mor|AF|Mombasa|siege,empire,sea|Fort Jesus falls|After a siege of nearly three years the Omanis take Fort Jesus, and the Swahili coast north of Mozambique passes from Portugal to Oman.
+1701|H|mor|AF|Kumasi|battle,founding,crown|The Golden Stool|Osei Tutu defeats Denkyira at Feyiase, and the Asante union takes the Golden Stool as the seat of its soul.
+1706|H|mor|AF|Mbanza Kongo|faith,heresy,death|Kimpa Vita burned|A young Kongo noblewoman who preached that Saint Anthony spoke through the dead and that Christ was Kongolese is burned as a heretic.
+1727|H|mor|AF|Ouidah|war,trade,empire|Dahomey reaches the sea|King Agaja of Dahomey conquers Ouidah and takes the slave trade of the coast into the crown's hands.
+1725|H|mor|AF|Futa Jallon|faith,war,founding|The jihad of Futa Jallon|Fulani clerics found a Muslim state in the highlands of Guinea.
+1769|H|mor|AF|Gondar|crown,war|The age of the princes|A warlord has the Ethiopian emperor strangled, and for eighty years the emperors are puppets of regional lords.
+1779|H|mor|AF|Great Fish River|war,migration|The first frontier war|Dutch farmers and the Xhosa fight over cattle and pasture, the first of nine wars in a century.
+1787|H|mor|AF|Freetown|founding,migration|A province of freedom|Poor black Londoners are settled on the coast of Sierra Leone; freed loyalists from Nova Scotia follow and found Freetown.
+1795|H|mor|AF|Cape Town|war,empire|The British take the Cape|A British fleet takes the Cape from the Dutch to keep it from France.
+1796|H|mor|AF|Segou|exploration,travel|Mungo Park at the Niger|A Scottish surgeon reaches the Niger at Segou and sees that it flows east.
+1804|H|mor|AF|Gobir|faith,war,founding|The jihad of Usman dan Fodio|A Fulani scholar raises the Hausa lands against their kings and founds the Sokoto caliphate.
+1816|H|mor|AF|Zululand|crown,war|Shaka|Shaka takes the Zulu chieftaincy and remakes its regiments; the wars and migrations that follow empty and remake southern Africa.
+1822|H|mor|AF|Monrovia|founding,migration|Liberia|Freed black Americans sent by a colonisation society land at Cape Mesurado.
+1824|H|mor|AF|Nsamankow|battle,war,death|The Asante defeat the British|The governor of the Gold Coast is killed fighting the Asante, and his skull is kept in Kumasi.
+1828|H|mor|AF|KwaDukuza|death,crown|Shaka killed|Shaka's half-brothers stab him to death, and Dingane takes the kingship.
+1828|H|mor|AF|Antananarivo|crown,persecution,faith|Ranavalona of Madagascar|The queen of the Merina takes the throne, closes the island to Europeans and persecutes its Christians.
+1830|H|mor|AF|Algiers|war,empire|The French take Algiers|A French army lands and takes Algiers, the beginning of a hundred and thirty years of rule.
+1832|H|mor|AF|Zanzibar|crown,trade|The sultan moves to Zanzibar|Said of Oman moves the court to Zanzibar, plants cloves and makes it the market for the ivory and slaves of the interior.
+1835|H|mor|AF|Cape Colony|migration,war|The Great Trek|Dutch-speaking farmers leave the British Cape with their wagons and servants for the interior.
+1606|H|mor|OC|Cape York|exploration,sea|The first landing in Australia|Willem Janszoon of the Dutch company charts the west of Cape York, and Torres sails the strait to its north the same year.
+1606|H|mor|OC|Espiritu Santo|exploration,faith|Quiros's southern land|The Spanish navigator Quiros lands in Vanuatu and believes that the great southern continent has been found.
+1616|H|mor|OC|Shark Bay|exploration,sea|Hartog's plate|Dirk Hartog lands on the west coast of Australia and nails an inscribed pewter plate to a post.
+1629|H|mor|OC|Houtman Abrolhos|sea,massacre,crime|The Batavia|A Dutch ship is wrecked on reefs off western Australia, and mutineers murder more than a hundred of the survivors.
+1642|H|mor|OC|Tasmania|exploration,sea|Tasman's voyage|Abel Tasman sights Tasmania and then Aotearoa, where Maori canoes kill four of the crew.
+1688|H|mor|OC|King Sound|exploration,travel|Dampier in New Holland|An English buccaneer careens a ship on the north-west coast of Australia and later writes a book about it.
+1722|H|mor|OC|Rapa Nui|exploration,sea,massacre|Easter Island|Jacob Roggeveen lands on Easter Day; the visit ends with a dozen islanders shot.
+1767|H|mor|OC|Tahiti|exploration,sea|Tahiti|Samuel Wallis's ship is the first from Europe to reach Tahiti.
+1769|H|mor|OC|Tahiti|science,exploration|The transit of Venus|James Cook observes the transit of Venus from Tahiti, then charts Aotearoa with the help of the Tahitian navigator Tupaia.
+1770|H|mor|OC|Botany Bay|exploration,empire|Cook on the east coast|Cook lands at Botany Bay, sails north and claims the east of Australia for Britain.
+1778|H|mor|OC|Hawaii|exploration,sea|Cook in Hawaii|Cook's ships reach the Hawaiian islands in the season of the god Lono.
+1779|H|mor|OC|Kealakekua Bay|death,sea|Cook killed|Cook is killed on the beach at Kealakekua in a quarrel over a stolen boat.
+1788|H|mor|OC|Sydney|founding,crime,empire|The First Fleet|Eleven ships land more than seven hundred convicts at Sydney Cove on the country of the Eora.
+1789|H|mor|OC|Sydney|plague,death|Smallpox at Sydney|Smallpox kills perhaps half of the Aboriginal people around the harbour.
+1789|H|mor|OC|Tofua|sea,uprising,crime|The Bounty|Mutineers put Captain Bligh in an open boat; nine of them later hide on Pitcairn Island with Tahitian companions.
+1795|H|mor|OC|Oahu|battle,war,crown|Nuuanu|Kamehameha's army drives the defenders of Oahu over the cliffs at Nuuanu.
+1797|H|mor|OC|Tahiti|faith,travel|Missionaries in the South Seas|The first party of the London Missionary Society lands at Tahiti.
+1804|H|mor|OC|Castle Hill|uprising,crime|The Castle Hill rising|Irish convicts rise near Sydney under the cry of death or liberty and are cut down.
+1808|H|mor|OC|Sydney|uprising,crime,money|The Rum Rebellion|Officers of the New South Wales Corps arrest Governor Bligh.
+1810|H|mor|OC|Hawaii|crown,founding,treaty|One kingdom in Hawaii|The last independent island submits, and Kamehameha rules all Hawaii.
+1818|H|mor|OC|Aotearoa|war,massacre,migration|The Musket Wars|Northern Maori armed with muskets raid the length of Aotearoa; tens of thousands die or are enslaved in twenty years.
+1819|H|mor|OC|Hawaii|faith,law,crown|The kapu broken|After Kamehameha's death the royal women eat with the young king in public, and the old religious law ends.
+1830|H|mor|OC|Tasmania|war,persecution,migration|The Black Line|Two thousand settlers and soldiers sweep across Tasmania to drive its Aboriginal people into a peninsula; the survivors are later exiled to an island.
+1830|W|wer|OC|Australia|occult,war,massacre|The War of Tears begins|The house reading puts in these decades the first killings of the Bunyip by Garou who came with the settlers, the war that the tribes later mourn.
+1835|H|mor|OC|Melbourne|founding,treaty|Batman's treaty|A grazier from Tasmania claims to buy the land where Melbourne stands from Kulin elders; the governor voids the deal.
+1835|H|mor|OC|Waitangi|founding,law|The United Tribes|Northern Maori chiefs sign a declaration of the independence of New Zealand.
+1836|H|mor|OC|Adelaide|founding|South Australia|A colony without convicts is proclaimed at Adelaide.

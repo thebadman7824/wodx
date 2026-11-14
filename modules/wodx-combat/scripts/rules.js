@@ -175,6 +175,24 @@ export function woundState(damage, levelTotals, levelPenalties, levelLabels = {}
 }
 
 /**
+ * B3793: the wound penalty after the character's body traits (WoDX Chronicle api.traits.toughness): shift makes each
+ * wound level count as the one above it (C20 Increased Pain Threshold), ease gives dice back (Mummy High Pain
+ * Tolerance, Defiled), and ease 99 removes the penalty until Incapacitated (M20 Book of Secrets Insensate to Pain).
+ */
+export function bodyPenalty(ws, levelPenalties = {}, body = null) {
+    let p = ws?.penalty ?? 0;
+    const key = ws?.key ?? "";
+    if (!body || !key || key === "incapacitated") return p;
+    const shift = Math.max(0, Number(body.shift) || 0), ease = Math.max(0, Number(body.ease) || 0);
+    if (shift) {
+        const i = WOUND_LEVELS.indexOf(key);
+        if (i >= 0) p = levelPenalties[WOUND_LEVELS[Math.max(0, i - shift)]] ?? p;
+    }
+    if (ease >= 99) return 0;
+    return Math.min(0, p + ease);
+}
+
+/**
  * Narrative condition after damage (VtDA20 p. 345, 351). kind = actor profile key (see profiles.js).
  */
 export function condition(damage, maxLevels, kind) {
@@ -267,6 +285,7 @@ export function attackPool(p) {
     if (p.flank === "flank") add("Flank", 1);
     if (p.flank === "rear") add("Rear", 2);
     add("Extra dice", p.extraDice || 0);
+    add("Nightmares", -(p.nightmareDice || 0));
     if (p.woundPenalty) add("Wounds", p.woundPenalty); // negative number
     if (p.multiIndex > 0) {
         add("Multiple actions", -p.multiIndex);
@@ -277,10 +296,19 @@ export function attackPool(p) {
     addD("Targeting", p.targetingDiff || 0);
     addD("Range", p.rangeDiff || 0);
     addD("Below minimum Strength", p.minStrDiff || 0);
+    addD("Crippled limb", p.crippledDiff || 0);
     if (p.bypassArmor) addD("Bypass armor", 2);
     if (p.opponents > 1) addD("Multiple opponents", Math.min(4, p.opponents - 1));
     if (p.blind) addD("Blind", 2);
     addD("Other", p.extraDiff || 0);
+    // B3800, B3801: the sheet's own attack rows, and a shield in the target's hands
+    add("Sheet bonuses", p.sheetDice || 0);
+    addD("Sheet bonuses", p.sheetDiff || 0);
+    addD("Shield", p.shieldDiff || 0);
+    // B3806: a scope, laser sight or smartgun cable fitted to this weapon; an unwaxed bowstring in the rain
+    add("Fittings", p.fitDice || 0);
+    addD("Fittings", p.fitDiff || 0);
+    addD("Wet bowstring", p.wetString || 0);
     return { dice: Math.max(0, dice), difficulty: diff, parts };
 }
 
@@ -431,10 +459,194 @@ const BLAST = /\b(grenade|dynamite|bomb|explosive|petard|molotov|rocket|c-?4|sem
 const HUSH = /\b(silenc\w*|suppress\w*)\b/i;
 export function fightNoise(w = {}) {
     const name = String(w?.name ?? "");
+    if (w?.silenced) return "quiet";
     if (BLAST.test(name)) return "loud";
     const gun = GUN.test(name) || (!!w?.ranged && !!w?.shots?.counted && !isCrossbow(name) && !/\b(bow|sling|dart|javelin|spear)\b/i.test(name));
     if (gun) return HUSH.test(name) ? "quiet" : "loud";
     return "quiet";
 }
 
+/**
+ * B3806: what the fittings on one weapon do to this attack. fit: WoDX Library's fitFor(); range: the range band;
+ * smartLink: a Smartgun Link is installed; wet: it is raining on the shooter; bow: the weapon is a bow.
+ * {fitDice, fitDiff, wetString, blindCancelled, silenced, noMinStr, notes}
+ */
+export function fittingsPlan(fit, { range = "short", smartLink = false, wet = false, bow = false, blind = false } = {}) {
+    const f = fit ?? {};
+    const notes = [];
+    const far = range === "double" || range === "triple";
+    const fitDice = far ? (Number(f.far) || 0) : 0;
+    const fitDiff = (Number(f.diff) || 0) + (smartLink ? (Number(f.smart) || 0) : 0);
+    if (fitDice) notes.push(`Scope: +${fitDice} dice beyond the listed range`);
+    if (fitDiff) notes.push(`Fittings: ${fitDiff} difficulty`);
+    const wetString = bow && wet && !f.wax ? 1 : 0;
+    if (wetString) notes.push("Rain slackens the unwaxed bowstring: +1 difficulty");
+    else if (bow && wet && f.wax) notes.push("The waxed bowstring holds in the rain");
+    const blindCancelled = !!(blind && f.light);
+    if (blindCancelled) notes.push("The weapon light shows the target: darkness does not count");
+    if (f.silenced) notes.push("Silenced: the shot is quiet");
+    if (f.noMinStr) notes.push("Spanned with a cranequin: no Strength needed");
+    return { fitDice, fitDiff, wetString, blindCancelled, silenced: !!f.silenced, noMinStr: !!f.noMinStr, notes };
+}
+
 export const isCrossbow = name => /crossbow|arbalest|arbalète|armbrust/i.test(String(name ?? ""));
+
+/* ------------------------------------------------------------------ */
+/*  Gear in the fight (B3800 to B3803)                                  */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The system's own bonus list, summed: active rows of this type (and setting, when given) on the actor's items and
+ * active Bonus items. items: [{type, system: {isactive, type, settingtype, value, bonuslist}}].
+ */
+export function sheetBonus(items, type, setting = null) {
+    let n = 0;
+    const hit = (t, s) => t === type && (setting === null || s === setting || (type === "soak_buff" && (s === "all" || s === "")));
+    for (const i of items ?? []) {
+        const s = i?.system ?? {};
+        if (i?.type === "Bonus" && s.isactive && hit(s.type, s.settingtype)) n += Number(s.value) || 0;
+        for (const b of Array.isArray(s.bonuslist) ? s.bonuslist : []) if (b?.isactive && hit(b.type, b.settingtype)) n += Number(b.value) || 0;
+    }
+    return n;
+}
+
+/** Parrying weapons (V20 Dark Ages p. 350): a dagger parries at 5, a sword at 6 and adds 1 to close attacks. */
+export const PARRY_WEAPONS = [
+    { re: /\b(dagger|knife|dirk|stiletto|main-gauche|poniard|kris|tanto)\b/i, parry: 5, attack: 0, closeOnly: false, label: "parrying dagger" },
+    { re: /\b(sword|sabre|saber|rapier|falchion|scimitar|katana|cutlass|broadsword|longsword|greatsword|shamshir|tulwar|jian|dao)\b/i, parry: 6, attack: 1, closeOnly: true, label: "parrying sword" }
+];
+
+/**
+ * What a defender's shields and parrying weapon do: shields [{name, parry, attack, closeOnly}] (equipped only),
+ * weapon: the name of the defender's equipped melee weapon, close: the attack is close combat.
+ * Returns {parryDiff (null: the usual 6), attackDiff, names}. The best of each counts, not the sum.
+ */
+export function shieldFor({ shields = [], weapon = "", close = true } = {}) {
+    let parryDiff = null, attackDiff = 0;
+    const names = [];
+    const pw = weapon ? PARRY_WEAPONS.find(p => p.re.test(weapon)) : null;
+    const all = [...shields, ...(pw ? [{ name: `${weapon} (${pw.label})`, parry: pw.parry, attack: pw.attack, closeOnly: pw.closeOnly }] : [])];
+    for (const s of all) {
+        let used = false;
+        if (s.parry && (parryDiff === null || s.parry < parryDiff)) { parryDiff = s.parry; used = true; }
+        if (s.attack && (!s.closeOnly || close) && s.attack > attackDiff) { attackDiff = s.attack; used = true; }
+        if (used) names.push(s.name);
+    }
+    return { parryDiff, attackDiff, names };
+}
+
+/** Bases of a cyber limb: the strongest counts; Reinforced Joints and limb Armor add to it (World of Future Darkness p. 24). */
+const LIMB_OPTIONS = /^(Reinforced Joints|Armor)$/;
+/**
+ * A cyber limb's or plate's own soak against a blow aimed at it. limbs: [{name, soak, part}]; aim: the part type aimed
+ * at (hit locations: arm, leg, hand, head, face, eye, mouth) or, without hit locations, the targeting size
+ * (medium = a limb, small = the head).
+ */
+const AIM_PART = { arm: "limb", leg: "limb", hand: "limb", head: "head", face: "head", eye: "head", mouth: "head", medium: "limb", small: "head" };
+export function limbSoak(limbs = [], aim = "none") {
+    const part = AIM_PART[aim] ?? null;
+    if (!part) return { dice: 0, names: [] };
+    const mine = limbs.filter(l => (l.part ?? "limb") === part);
+    const bases = mine.filter(l => !LIMB_OPTIONS.test(l.name)), opts = part === "limb" ? mine.filter(l => LIMB_OPTIONS.test(l.name)) : [];
+    if (!bases.length) return { dice: 0, names: [] };
+    const base = bases.reduce((a, b) => (b.soak > a.soak ? b : a));
+    return { dice: base.soak + opts.reduce((a, b) => a + b.soak, 0), names: [base.name, ...opts.map(o => o.name)] };
+}
+
+/**
+ * The Great War's heavy fire (pp. 73 to 77). pen: roll the gun's penetration dice against the armour's difficulty
+ * (a still target −2, firing on the move +2): 1 success harms the crew or kit, 3 stop the vehicle, 5 destroy it.
+ * naval: the gun's damage rating plus the crew's successes, rolled against the ship's armour as difficulty.
+ * blast: dice of damage on each person in the blast, plus one per success on the crew's roll.
+ */
+export function heavyPlan({ heavy = {}, armour = {}, still = false, moving = false, crew = 0 } = {}) {
+    if (heavy.naval) {
+        const diff = Math.min(10, Math.max(2, armour.ship || 6));
+        return { kind: "naval", dice: heavy.naval + Math.max(0, crew), diff, note: `damage rating ${heavy.naval} + ${Math.max(0, crew)} crew successes against the ship's armour ${diff}` };
+    }
+    if (heavy.pen) {
+        const parts = [];
+        let diff = armour.pen || 6;
+        if (still) { diff -= 2; parts.push("still target −2"); }
+        if (moving) { diff += 2; parts.push("firing on the move +2"); }
+        diff = Math.min(10, Math.max(2, diff));
+        return { kind: "pen", dice: heavy.pen, diff, note: `${heavy.pen} penetration dice at difficulty ${diff}${parts.length ? ` (${parts.join(", ")})` : ""}` };
+    }
+    if (heavy.blast) return { kind: "blast", dice: heavy.blast + Math.max(0, crew), diff: 6, note: `${heavy.blast} dice + ${Math.max(0, crew)} on each person in the blast${heavy.radius ? ` (${heavy.radius} feet)` : ""}` };
+    return { kind: "none", dice: 0, diff: 6, note: "no heavy-fire figures" };
+}
+
+/** What penetration successes do to a vehicle or emplacement. */
+export function penetrationResult(successes) {
+    if (successes >= 5) return "destroyed";
+    if (successes >= 3) return "disabled";
+    if (successes >= 1) return "crew or kit harmed";
+    return "no effect";
+}
+
+/**
+ * B3804: lay the body's toughness over the system's freshly computed totals (data: the actor's data being written).
+ * Extra Bruised levels go into the stored total, marked wodxBody so the health track does not add them twice; the
+ * wound level, penalty and health-level counts are worked out again from those totals.
+ */
+export function applyBodyTotals(data, body) {
+    const h = data?.system?.health;
+    if (!h?.bruised) return data;
+    const n = v => Number(v) || 0;
+    delete h.bruised.wodxBody;
+    if (!body) return data;
+    if (n(body.bruised)) { h.bruised.total = n(h.bruised.total ?? h.bruised.value) + n(body.bruised); h.bruised.wodxBody = n(body.bruised); }
+    const totals = {}, penalties = {}, labels = {};
+    for (const k of WOUND_LEVELS) { totals[k] = n(h[k]?.total ?? h[k]?.value ?? 1); penalties[k] = n(h[k]?.penalty); labels[k] = h[k]?.label ?? `wod.health.${k}`; }
+    const d = h.damage ?? (h.damage = {});
+    const ws = woundState({ bashing: n(d.bashing), lethal: n(d.lethal), aggravated: n(d.aggravated) }, totals, penalties, labels);
+    d.woundlevel = ws.label;
+    d.woundpenalty = bodyPenalty(ws, penalties, body);
+    const max = WOUND_LEVELS.reduce((s, k) => s + totals[k], 0);
+    const th = data.system.traits?.health?.totalhealthlevels;
+    if (th) { th.max = max; th.value = Math.max(0, max - ws.filled); }
+    return data;
+}
+
+/**
+ * B3808: the same at prepare time. The system works out the wound level and penalty again every time it prepares an
+ * actor (prepareDerivedData), from the stored totals, so the body's ease and shift are laid over that too. The stored
+ * Bruised total is raised to its value plus the body's extra levels when the totals hook has not already done it, and
+ * marked (in memory only: the data model drops unknown keys) so the health track does not add them again. Idempotent.
+ */
+export function applyBodyDerived(data, body) {
+    const h = data?.system?.health;
+    if (!h?.bruised || !body) return data;
+    const n = v => Number(v) || 0;
+    const extra = n(body.bruised);
+    if (extra) {
+        h.bruised.total = Math.max(n(h.bruised.total ?? h.bruised.value), n(h.bruised.value) + extra);
+        h.bruised.wodxBody = extra;
+    }
+    if (!extra && !n(body.shift) && !n(body.ease)) return data;
+    const totals = {}, penalties = {}, labels = {};
+    for (const k of WOUND_LEVELS) { totals[k] = n(h[k]?.total ?? h[k]?.value ?? 1); penalties[k] = n(h[k]?.penalty); labels[k] = h[k]?.label ?? `wod.health.${k}`; }
+    const d = h.damage ?? (h.damage = {});
+    const ws = woundState({ bashing: n(d.bashing), lethal: n(d.lethal), aggravated: n(d.aggravated) }, totals, penalties, labels);
+    d.woundlevel = ws.label;
+    d.woundpenalty = bodyPenalty(ws, penalties, body);
+    const max = WOUND_LEVELS.reduce((s, k) => s + totals[k], 0);
+    const th = data.system.traits?.health?.totalhealthlevels;
+    if (th) { th.max = max; th.value = Math.max(0, max - ws.filled); }
+    return data;
+}
+
+/**
+ * The state a maneuver leaves on its target after a hit (B3754): Sweep and Tackle knock down (V20 Dark Ages pp. 347-348),
+ * Hold and Grapple hold until the victim's next action, and a Stake or Impale with three damage successes stakes a
+ * vampire (V20 Dark Ages p. 347). [{condition, name, lasts: "turn" | "staked"}]; empty on a miss.
+ */
+export function followOn(key, { hit = false, damageSuccesses = 0, profile = "" } = {}) {
+    if (!hit) return [];
+    if (key === "sweep" || key === "tackle") return [{ condition: "knockdown", name: "Knocked down", lasts: "turn" }];
+    if (key === "hold" || key === "c_grapple") return [{ condition: "held", name: "Held", lasts: "turn" }];
+    if ((key === "stake" || key === "impale") && Number(damageSuccesses) >= 3 && profile === "vampire") return [{ condition: "staked", name: "Staked", lasts: "staked" }];
+    return [];
+}
+/** The maneuver's key in MANEUVERS or CLASSIC ("normal" when it is neither). */
+export const maneuverKey = m => Object.entries({ ...MANEUVERS, ...CLASSIC }).find(([, v]) => v === m)?.[0] ?? "normal";

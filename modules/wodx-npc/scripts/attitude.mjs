@@ -18,6 +18,18 @@ export function build({MOD, chron, savedProfile, factions, rivalry = null, profi
       return (st?.factions ?? []).filter(f => (f.members ?? []).includes(actor.id) || f.leader === actor.id).flatMap(f => [f.key, f.name]).filter(Boolean);
     } catch (e) { return []; }
   }
+  /** B3783: the seats an NPC holds, as words ("sheriff", "prince", "leader"), for the traits that care about rank. */
+  function officeWordsOf(actor) {
+    try {
+      const st = factions?.state?.();
+      const out = [];
+      for ( const f of st?.factions ?? [] ) {
+        if ( f.leader === actor.id ) out.push("leader");
+        for ( const [k, list] of Object.entries(f.politics?.offices ?? {}) ) if ( (list ?? []).includes(actor.id) ) out.push(k);
+      }
+      return out.join(" ");
+    } catch (e) { return ""; }
+  }
   const lookApi = () => game.modules.get("wodx-library")?.api?.look ?? null;
   /** What the NPC is for the look: their station, mortal or not, their Status kind, their abilities (NPC 0.32.0). */
   function npcForLook(npc, ch) {
@@ -53,14 +65,20 @@ export function build({MOD, chron, savedProfile, factions, rivalry = null, profi
     const ch = game.actors.get(charId);
     // Chronicle 0.20.0 (Traits With Teeth step 5): the character's merits and flaws move the first look (Friendly Face, Monstrous)
     let t = null;
-    try { t = ch ? chron()?.traits?.attitudeSeed?.(ch, npc) : null; } catch (e) { t = null; }
+    try { t = ch ? chron()?.traits?.attitudeSeed?.(ch, npc, {groups: factionNamesOf(npc), office: officeWordsOf(npc)}) : null; } catch (e) { t = null; }
     // NPC 0.32.0: what they wear and how they are (WoDX Library's look); traits and look each to two steps, together to three
     const lk = lookFor(npc, ch);
     const tD = Number(t?.delta) || 0, lD = Number(lk?.delta) || 0;
-    if ( !tD && !lD ) return seed;
+    // B3352: the version of a tale they heard about the character, one step at most
+    let hD = 0;
+    try { hD = ch ? Number(game.modules.get("wodx-storyteller")?.api?.rumours?.toneFor?.(npc.id, ch.id)) || 0 : 0; } catch (e) { hD = 0; }
+    if ( !tD && !lD && !hD ) return seed;
     const L = lookApi();
     const delta = L ? L.rules.combine(tD, lD) : tD + lD;
-    return AT.withTraits(seed, {delta, names: [...(tD ? t.names ?? [] : []), ...(lD ? lk.names ?? [] : [])]});
+    const looked = (tD || lD) ? AT.withTraits(seed, {delta, names: [...(tD ? t.names ?? [] : []), ...(lD ? lk.names ?? [] : [])]}) : seed;
+    if ( !hD ) return looked;
+    const heard = AT.withTraits(looked, {delta: hD});
+    return {...heard, from: looked.from ? `${looked.from}, and a tale they heard` : "a tale they heard"};
   }
   function baseSeed(npc, charId) {
     let standing = {};
@@ -112,6 +130,13 @@ export function build({MOD, chron, savedProfile, factions, rivalry = null, profi
   function registerHandler() {
     chron()?.registerApprovalHandler?.(TYPE, {
       label: "NPC attitude",
+      // Small (Chronicle 0.46.0, B2453): one step, and not down to Hostile or Hunted, which can start a fight
+      small: entry => {
+        const d = entry.data ?? {};
+        const npc = game.actors.get(d.npc), ch = game.actors.get(d.char);
+        if ( !npc || !ch || (d.to !== null && d.to !== undefined) || Math.abs(Number(d.delta) || 0) !== 1 ) return false;
+        return of(npc, ch).step + Number(d.delta) > -2;
+      },
       approve: async entry => {
         const d = entry.data ?? {};
         const npc = game.actors.get(d.npc), ch = game.actors.get(d.char);

@@ -229,10 +229,18 @@ export async function run() {
     R.removed = {messages: msgs.length};
   } catch (e) { R.errors.push(`clean up: ${e.message}`); }
   await sleep(500);
+  // Which part is not back, so a failure says where to look
+  const back = () => {
+    const pend = game.settings.get("wodx-chronicle", "approvals")?.pending ?? [], kept = keep.approvals?.pending ?? [];
+    const ids = new Set(kept.map(p => p.id));
+    return {factions: JSON.stringify(game.settings.get(MOD, "factions")) === JSON.stringify(keep.factions), mode: game.settings.get(MOD, "factionMode") === keep.mode,
+      queue: JSON.stringify(pend) === JSON.stringify(kept), newInQueue: pend.filter(p => !ids.has(p.id)).map(p => `${p.type}: ${p.title}`).slice(0, 8),
+      masq: !keep.masq || JSON.stringify(masqJournal()?.flags["wodx-actions"].entries ?? []) === JSON.stringify(keep.masq.entries), clock: game.time.worldTime === t0};
+  };
   ok("10. everything is back: the factions record, the settings, the queue, the Masquerade ledger; the copy and the cards are gone",
     JSON.stringify(game.settings.get(MOD, "factions")) === JSON.stringify(keep.factions) && game.settings.get(MOD, "factionMode") === keep.mode
     && JSON.stringify(game.settings.get("wodx-chronicle", "approvals")?.pending ?? []) === JSON.stringify(keep.approvals?.pending ?? [])
     && (!keep.masq || JSON.stringify(masqJournal()?.flags["wodx-actions"].entries ?? []) === JSON.stringify(keep.masq.entries))
-    && !game.actors.some(a => a.flags?.[MOD]?.gateRole === "konrad7d") && game.time.worldTime === t0, R.removed);
+    && !game.actors.some(a => a.flags?.[MOD]?.gateRole === "konrad7d") && game.time.worldTime === t0, {...R.removed, ...back()});
   return save(R, "gate7d-result.json");
 }

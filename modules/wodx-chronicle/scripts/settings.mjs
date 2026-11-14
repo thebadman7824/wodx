@@ -1,6 +1,7 @@
 import {MODULE_ID} from "./util.mjs";
 import HOUSE_RULE_DATA from "../data/house-rules.mjs";
 import {REFORMS} from "./calendar-math.mjs";
+import {WORLD_REGIONS, DEFAULT_REGION} from "./world-rules.mjs";
 
 /** House-rule definitions. */
 export const HOUSE_RULES = HOUSE_RULE_DATA;
@@ -19,16 +20,24 @@ export function registerSettings(hooks) {
     requiresReload: true
   });
 
+  game.settings.register(MODULE_ID, "homeland", {
+    name: "Homeland",
+    hint: "Where in the world the chronicle is set. Choosing one sets the latitude, the part of the world and the people's names below, and the weather follows it. Money keeps its own setting in WoDX Storyteller, because purses are not converted.",
+    scope: "world", config: true, type: String, default: DEFAULT_REGION,
+    choices: Object.fromEntries(Object.entries(WORLD_REGIONS).map(([k, v]) => [k, v.label])),
+    onChange: value => hooks.onHomelandChange?.(value)
+  });
+
   game.settings.register(MODULE_ID, "latitude", {
     name: "Latitude for sunrise and sunset",
-    hint: "Degrees north. Prague is 50.1; most of Bohemia lies between 48.6 and 51.0.",
+    hint: "Degrees north; south of the equator is negative. Prague is 50.1, Cairo 30.0, Delhi 28.6, Mexico City 19.4, Sydney -33.9.",
     scope: "world", config: true, type: Number, default: 50.1,
     onChange: () => hooks.onClockChange()
   });
 
   game.settings.register(MODULE_ID, "region", {
     name: "Chronicle region",
-    hint: "Some era profiles apply only to one region, such as the Wild West in the Americas.",
+    hint: "Some era profiles apply only to one part of the world, such as the Wild West in the Americas. The homeland sets this.",
     scope: "world", config: true, type: String,
     choices: {europe: "Europe", americas: "The Americas", other: "Elsewhere"}, default: "europe",
     onChange: () => hooks.onEraInputsChange()

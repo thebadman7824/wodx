@@ -7,8 +7,8 @@ public parks, a railway cut through to a station, wide boulevards, an embankment
 bomb damage and its rebuilding, and old docks turned to offices. The dates are a house rule taken from London's
 history and are rough: one year per layer, the same for every town.
 
-Only the plan changes. Every building type is still a medieval one (later building packs are not in the asset
-list yet), so a Victorian street is drawn with medieval houses on a Victorian plan.
+Each age also rebuilds a share of the houses, shops and inns in its own building types (eratypes.py, latertypes.py)
+and puts up its public buildings; from 1781 the households follow the year too (settle.py).
 """
 import json, math, os
 import geom as G
@@ -451,7 +451,8 @@ def layer_docklands(t):
 # a house now and then taking in its neighbour's plot. The shares are a house rule, rough rates of renewal.
 REBUILDS = [(1450, "renaissance", .30), (1601, "age-of-reason", .30), (1837, "victorian", .25), (1919, "mid-century", .12),
             (1990, "modern", .08), (2010, "future-darkness", .15)]
-KEEP = {"chapel", "town-hall", "tenement", "mill", "panel-block", "dept-store", "culture-house", "hypermarket", "capsule-tower", "vertical-farm", "school"}
+KEEP = {"chapel", "town-hall", "tenement", "mill", "panel-block", "dept-store", "culture-house", "hypermarket", "capsule-tower", "vertical-farm", "school",
+        "prayer-house", "bus-station", "distribution-shed", "street-clinic", "security-post", "data-hall", "pod-station"}
 KEEP |= set(FG.TYPES) | set(CD.CDDA_TYPES)                  # public buildings stay up once built
 
 
@@ -508,6 +509,13 @@ def in_quarter(t, b):
     return t.quarter is not None and math.dist(b.centre, t.quarter) < 12
 
 
+def quarter_ok(t, tk="ghetto-house"):
+    """A Jewish quarter (or another building of tk's kind) only where the town's way of life has one
+    (regiontrades.first_group_ok, B3460)."""
+    import settle as S
+    return S.RT.first_group_ok(tk, S.REGION, S.sphere_for(S.REGION, t.year), t.year)
+
+
 def rebuild(t, y0, era, share):
     """One era's renewal of the town's houses and shops."""
     R = t.R
@@ -522,7 +530,9 @@ def rebuild(t, y0, era, share):
         role = next((r for r, ks in E.REPLACES.items() if b.type in ks), None) or B.TYPES[b.type].get("role", "home")
         if role in ("block", "civic", "industry", "farm"): continue
         cands = types_for(y0, upto, role) or types_for(y0, upto, "home")
-        if "ghetto-house" in cands and not in_quarter(t, b): cands.remove("ghetto-house")
+        fit = [c for c in cands if getattr(b, "wealth", None) in B.TYPES[c].get("wealth", (getattr(b, "wealth", None),))]
+        cands = fit or cands                                  # a colony house for a poor plot, a villa for a rich one
+        if "ghetto-house" in cands and not (in_quarter(t, b) and quarter_ok(t)): cands.remove("ghetto-house")
         if not cands: continue
         if replace(t, [b], R.choice(cands)): n += 1
     return n
@@ -639,6 +649,8 @@ def older_forms(t, y0, k):
         if tk in t.older or FG.TYPES[tk]["built"][0] > upto: continue
         t.older.add(tk)
         if tk == "old-synagogue" and t.blds and not in_quarter(t, t.blds[0]): continue
+        import settle as S                                   # the older buildings by where they belong (B3460)
+        if not S.RT.first_group_ok(tk, S.REGION, S.sphere_for(S.REGION, t.year), t.year): continue
         n = int(per * k) + (t.R.random() < per * k % 1)
         if n: place_blocks(t, tk, n, where)
 
@@ -650,19 +662,36 @@ def layer_era(t, y0, era, share):
     if k: older_forms(t, y0, k)
     if era == "renaissance" and k and not any(b.type == "town-hall" for b in t.blds): place_blocks(t, "town-hall", 1, "core")
     if era == "age-of-reason" and y >= 1700 and k: place_blocks(t, "manufactory", k, "edge")
+    if era == "age-of-reason" and y >= 1781 and k and t.R.random() < .5 and quarter_ok(t, "prayer-house"): place_blocks(t, "prayer-house", 1, "edge")
     if era == "victorian":
         if y >= 1840 and k: place_blocks(t, "mill", k, "edge")
         if y >= 1860 and k: place_blocks(t, "tenement", 2 * k, "core")
         if y >= 1870: place_blocks(t, "school", max(1, k), "edge")
     if era == "mid-century":
         if y >= 1930 and k: place_blocks(t, "dept-store", max(1, k // 2), "core")
-        if y >= 1950 and k: place_blocks(t, "culture-house", 1, "edge")
+        if y >= 1930 and k: place_blocks(t, "bus-station", 1, "edge")
+        # Outside the one-party lands (regiontrades.YEARS, B3294) there is no house of culture, and the estate's
+        # blocks are the tower blocks of a market town's housing estate.
+        import settle as S
+        one_party = S.one_party()
+        if y >= 1950 and k and one_party: place_blocks(t, "culture-house", 1, "edge")
         if y >= 1958: place_blocks(t, "panel-block", 2 + 3 * k, "estate", fallback=False)
+        if not one_party:
+            blocks = {b.key for b in t.blds if b.type == "panel-block"}
+            for b in t.blds:
+                if b.key in blocks: b.label = b.label.replace("Panel block", "Tower block")
+            for h in t.households:
+                if h["building"] in blocks: h["label"] = h["label"].replace("Panel block", "Tower block")
     if era == "modern" and y >= 1995 and k: place_blocks(t, "hypermarket", max(1, k // 2), "estate", fallback=False)
+    if era == "modern" and y >= 2000 and k: place_blocks(t, "distribution-shed", max(1, k // 2), "estate", fallback=False)
     if era in ("mid-century", "modern", "future-darkness") and y >= 1960 and k: civic_set(t, k)
     if era == "future-darkness":
         if y >= 2030 and k: place_blocks(t, "capsule-tower", k, "core")
         if y >= 2035 and k: place_blocks(t, "vertical-farm", k, "edge")
+        if y >= 2030 and k: place_blocks(t, "street-clinic", k, "core")
+        if y >= 2030 and k: place_blocks(t, "data-hall", max(1, k // 2), "edge")
+        if y >= 2035 and k: place_blocks(t, "security-post", k, "edge")
+        if y >= 2040 and k: place_blocks(t, "pod-station", 1, "edge")
 
 
 # Present-day public buildings, from the layouts adapted from Cataclysm (cddatypes.py): (kind, how many per town scale, where)

@@ -67,13 +67,16 @@ export async function run() {
     let shapeFx = null;
     await step("Shape of the Beast drops the sword, keeps the armor", async () => {
       [shapeFx] = await A.createEmbeddedDocuments("ActiveEffect", [{name: "Shape of the Beast", img: "icons/svg/pawprint.svg"}]);
-      await until(() => !A.items.get(sword.id)?.system?.isequipped, 4000);
+      // the sword comes off first and the Undo card is posted after it, so wait for both
+      await until(() => !A.items.get(sword.id)?.system?.isequipped && newMsgs().some(m => m.flags?.["wodx-combat"]?.bodyGear), 6000);
       const card = newMsgs().find(m => m.flags?.["wodx-combat"]?.bodyGear);
       ok("Shape of the Beast drops the sword, keeps the armor", B().of(A).shape === "wolf" && B().of(A).carries === true && !A.items.get(sword.id).system.isequipped && A.items.get(mail.id).system.isequipped && !!card,
         {sword: A.items.get(sword.id).system.isequipped, mail: A.items.get(mail.id).system.isequipped, card: !!card});
     });
     await step("Undo puts it back", async () => {
       const card = newMsgs().find(m => m.flags?.["wodx-combat"]?.bodyGear);
+      ui.chat?.activate?.();
+      await until(() => document.querySelector(`[data-message-id="${card?.id}"] [data-action='wodx-body-undo']`), 3000);
       const el = document.querySelector(`#chat-log [data-message-id="${card?.id}"] [data-action='wodx-body-undo']`) ?? document.querySelector(`[data-message-id="${card?.id}"] [data-action='wodx-body-undo']`);
       el?.click();
       await until(() => A.items.get(sword.id)?.system?.isequipped, 4000);

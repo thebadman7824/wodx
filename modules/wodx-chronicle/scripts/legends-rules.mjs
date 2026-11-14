@@ -28,7 +28,8 @@ export const KINDS = {
   office: "Offices won and lost",
   holding: "Havens and holdings",
   ledger: "Boons, oaths and debts",
-  battle: "Battles and sieges"
+  battle: "Battles and sieges",
+  deed: "Deeds in a fight"
 };
 
 /**
@@ -36,7 +37,7 @@ export const KINDS = {
  * are public among Kindred, so they show; oaths and debts are often private, and so are Embraces, so they wait.
  * Seats in a secret faction wait too (see officeLines).
  */
-export const SHOWN_BY_DEFAULT = {event: true, death: true, embrace: false, office: true, holding: true, ledger: true, battle: true};
+export const SHOWN_BY_DEFAULT = {event: true, death: true, embrace: false, office: true, holding: true, ledger: true, battle: true, deed: true};
 
 const str = (v, n = 200) => String(v ?? "").trim().slice(0, n);
 const int = v => (Number.isFinite(Number(v)) && v !== null && v !== "" ? Math.trunc(Number(v)) : null);
@@ -58,7 +59,8 @@ export function normEntry(e = {}) {
     people: (Array.isArray(e.people) ? e.people : []).map(person).filter(p => p.name).slice(0, 8),
     place: str(e.place, 160),
     faction: str(e.faction, 120),
-    shown: e.shown === undefined ? SHOWN_BY_DEFAULT[kind] !== false : !!e.shown
+    shown: e.shown === undefined ? SHOWN_BY_DEFAULT[kind] !== false : !!e.shown,
+    ...(kind === "deed" ? {won: !!e.won} : {})
   };
 }
 
@@ -148,6 +150,15 @@ export function actorLines(actors = [], archived = {}, dateOf = () => ({})) {
 const LEDGER_WORDS = {boon: "boon", oath: "oath", debt: "debt", consequence: "consequence", objective: "objective"};
 const BOON_SIZE = {trivial: "a trivial", minor: "a minor", major: "a major", blood: "a blood", life: "a life"};
 /**
+ * Deeds in a fight (B3161), sent by WoDX Combat's after-action card through api.legends.addDeed:
+ * [{id, at, text, people: [{id, name}], won}].
+ */
+export function deedLines(deeds = [], dateOf = () => ({})) {
+  return (Array.isArray(deeds) ? deeds : []).filter(d => d?.id).map(d => normEntry({id: `deed:${str(d.id, 120)}`, kind: "deed", ...dated(d.at, dateOf),
+    people: d.people, text: str(d.text, 480), won: !!d.won, place: d.place ?? ""}));
+}
+
+/**
  * Ledger entries kept or broken. The date is the time the Ledger marked it (the last "Marked" line of its history),
  * else when it was made. Consequences and objectives are left out: they are the Storyteller's plans, not deeds.
  */
@@ -177,7 +188,9 @@ export function battleLines(battles = [], dateOf = () => ({})) {
   for ( const b of battles ) {
     if ( !b?.id || !b.over || b.legend === false ) continue;
     const where = str(b.place, 160);
-    const text = `${str(b.name, 120)}${where ? ` at ${where}` : ""}: ${str(b.over.text, 360).replace(/[.\s]+$/, "")}.`;
+    // What the field left behind, sent to the book from the battle's aftermath (Chronicle 0.45.1, B2358)
+    const extra = (Array.isArray(b.aftermath?.sent) ? b.aftermath.sent : []).filter(x => x?.to === "legend" && x.legend).map(x => str(x.legend, 300)).slice(0, 6);
+    const text = `${str(b.name, 120)}${where ? ` at ${where}` : ""}: ${str(b.over.text, 360).replace(/[.\s]+$/, "")}.${extra.length ? ` ${extra.join(" ")}` : ""}`;
     out.push(normEntry({id: `battle:${b.id}`, kind: "battle", ...dated(b.over.at, dateOf), place: where,
       faction: str(b.sides?.find?.((s, i) => i === b.over.winner)?.faction ?? "", 120), text}));
   }

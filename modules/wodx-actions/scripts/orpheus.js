@@ -14,6 +14,8 @@
 import * as O from "./orpheus-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
+import * as OH from "./orpheus-horrors.js";
+import * as EF from "./effects.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -70,7 +72,24 @@ export function build(ctx) {
           <div class="form-group"><label>Attribute</label><select name="a" data-fixed><option value="">none</option>${ATTRS.map(k => `<option value="${k}">${cap(k)}</option>`).join("")}</select></div>
           <div class="form-group"><label>Ability</label>${searchBox("select[name=b]", "Search Abilities…", "Search Abilities")}<select name="b"><option value="">none</option>${traits.filter(t => !ATTRS.includes(t.key)).map(t => `<option value="${esc(t.key)}">${esc(t.label)} ${t.value}</option>`).join("")}</select></div>
           <div class="form-group"><label>Difficulty</label><input type="number" name="d" min="2" max="10" value="6"/></div>
-          <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div></form>`;
+          <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div>
+          <div class="wodx-horror-info vta-note"></div></form>`;
+        const keyOf = it => O.horrorOf(it?.name);
+        const targetWp = () => { const t = [...(game.user.targets ?? [])][0]?.actor; return t ? n(t.system?.willpower?.permanent ?? t.system?.advantages?.willpower?.permanent) : 0; };
+        // Choosing a Horror fills its usual pool and difficulty; the Vitality box shows what that much does.
+        const describe = (root, fill) => {
+            const it = i.horrors.find(x => x.id === root.querySelector("[name=h]")?.value);
+            const key = keyOf(it), h = OH.HORROR_FX[key];
+            const box = root.querySelector(".wodx-horror-info");
+            if (!h) { if (box) box.textContent = ""; return; }
+            if (fill) {
+                root.querySelector("[name=a]").value = h.attr;
+                const b = root.querySelector("[name=b]"); if (b && [...b.options].some(o => o.value === h.ability)) b.value = h.ability;
+                const d = h.diff === "t" ? targetWp() : h.diff; if (d) root.querySelector("[name=d]").value = d;
+            }
+            const k = Math.max(0, Math.min(5, n(root.querySelector("[name=v]")?.value)));
+            if (box) box.innerHTML = `<b>${esc(it.name)} at ${k} Vitality:</b> ${esc(OH.horrorLevel(key, k))}${h.diff === "t" ? " Difficulty: the target's Willpower." : ""} <span class="wodx-quiet">(${REF} ${h.page})</span>`;
+        };
         return dialog(`A Horror: ${actor.name}`, content, "Use", async fd => {
             const it = i.horrors.find(x => x.id === fd.h);
             const k = Math.max(0, Math.min(5, n(fd.v)));
@@ -81,19 +100,31 @@ export function build(ctx) {
             const pool = (fd.a ? ctx.attr(actor, fd.a) : 0) + (fd.b ? n(ctx.findAbility?.(actor, fd.b)?.value) : 0);
             const diff = n(fd.d) + i.state.penalty;
             const name = it ? esc(it.name) : "A Horror";
+            let got = 0;
             if (pool) {
                 const wp = !!fd.wp && await spendWillpower(actor, 1);
                 const r = await rollPool(pool, diff, { willpower: wp }); rolls.push(r.roll);
                 body += rollBlock(`${fd.a ? cap(fd.a) : ""}${fd.a && fd.b ? " + " : ""}${fd.b ? esc(traits.find(t => t.key === fd.b)?.label ?? fd.b) : ""}`, r, [`${k} Vitality`, ...(i.state.penalty ? ["+1 difficulty: Spite"] : []), ...(wp ? ["Willpower"] : [])]);
                 body += `<div class="vta-big ${r.botch ? "bad" : r.successes ? "good" : ""}">${name} at ${k} Vitality: ${r.botch ? "a botch" : r.successes ? `${r.successes} success${r.successes === 1 ? "" : "es"}` : "it fails"}.</div>`;
-            } else body += `<div class="vta-big good">${name} at ${k} Vitality (the effect for that much, as the Horror describes).</div>`;
+                got = r.botch ? 0 : r.successes;
+            } else { body += `<div class="vta-big good">${name} at ${k} Vitality.</div>`; got = 1; }
+            const hk = keyOf(it), hfx = OH.HORROR_FX[hk];
+            let fxItems = [];
+            if (hfx) {
+                body += `<div class="vta-sec">${esc(OH.horrorLevel(hk, k))}</div>`;
+                if (got > 0 && EF.isOn()) {
+                    const pp = EF.planOf(actor, OH.horrorResults(hk, k, got, { name: it.name, source: `${REF} ${hfx.page}` }), got);
+                    body += pp.html;
+                    fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+                }
+            }
             if (i.state.level >= 1) body += `<div class="vta-note">Spite at or above the starting Vitality: only the violent effects are safe.</div>`;
             const sym = O.symmetry(total);
             if (sym) body += `<div class="vta-note">Fearful symmetry: ${total} Vitality this turn ${esc(sym.text)}.</div>`;
             if (note) body += `<div class="vta-note">${esc(note)}</div>`;
-            body += `<div class="wodx-quiet">${REF} pp. 124, 190–193</div>`;
-            return post(actor, `${actor.name}: ${it?.name ?? "a Horror"}`, body, rolls.filter(Boolean));
-        }, { width: 520, render: root => aim(root, { actor, lib: "horror", power: r => { const it = i.horrors.find(x => x.id === r.querySelector("[name=h]")?.value); if (!it) return null; const key = String(it.name ?? "").toLowerCase().replace(/[^a-z]/g, ""); return { id: key, n: it.name }; } }) });
+            body += `<div class="wodx-quiet">${REF} ${hfx ? `${hfx.page}; ` : ""}pp. 124, 190–193</div>`;
+            return post(actor, `${actor.name}: ${it?.name ?? "a Horror"}`, body, rolls.filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
+        }, { width: 520, render: root => { describe(root, true); root.querySelector("[name=h]")?.addEventListener("change", () => describe(root, true)); root.querySelector("[name=v]")?.addEventListener("input", () => describe(root, false)); return aim(root, { actor, lib: "horror", power: r => { const it = i.horrors.find(x => x.id === r.querySelector("[name=h]")?.value); if (!it) return null; const key = String(it.name ?? "").toLowerCase().replace(/[^a-z]/g, ""); return { id: key, n: it.name }; }, onPick: () => describe(root, true) }); } });
     }
 
     /* -- Vitality ----------------------------------------------------------- */

@@ -44,7 +44,8 @@ export function registerBetweenTools() {
 }
 
 export function registerBetweenHandlers() {
-  C.chron()?.approvals?.registerHandler?.(T_DOWNTIME, {label: "A downtime request", approve: approveDowntime, reject: rejectDowntime});
+  // Small (B2453): one of the listed kinds of downtime, a week or less
+  C.chron()?.approvals?.registerHandler?.(T_DOWNTIME, {label: "A downtime request", small: e => K.smallDowntime(e.data), approve: approveDowntime, reject: rejectDowntime});
 }
 
 async function journal(name, {players = false} = {}) {

@@ -1,4 +1,9 @@
 import * as D from "./doll-rules.mjs";
+import {registerSpriteSettings, startSprites, spriteApi, ageOf, markChild} from "./sprites.mjs";
+import {registerFaceSettings, startFaces, faceApi} from "./face64.mjs";
+import {makeFigureApp} from "./figure.mjs";
+import * as FG from "./figure-rules.mjs";
+import {SKIN_LIST, HAIR} from "./face-rules.mjs";
 import {measure, findEyes, checkFeatures, SIZE} from "./fit-rules.mjs";
 
 /**
@@ -9,20 +14,26 @@ import {measure, findEyes, checkFeatures, SIZE} from "./fit-rules.mjs";
  */
 
 const MOD = D.MOD;
-export const VERSION = "0.6.4";
+export const VERSION = "0.26.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let active = false;
 
 /* ---- Settings ---- */
 function registerSettings() {
-  game.settings.register(MOD, "on", {scope: "world", config: true, name: "Paperdoll tokens",
-    hint: "Players build a look for their characters, and the token shows it. Off: tokens keep their own pictures.", type: Boolean, default: true});
-  game.settings.register(MOD, "followHealth", {scope: "world", config: true, name: "Faces show the health track",
+  game.settings.register(MOD, "on", {scope: "world", config: true, name: "Figure builder",
+    hint: "A Figure button on each character's sheet builds the walking figure its sprite token is drawn from. Off: no Figure button.", type: Boolean, default: true});
+  game.settings.register(MOD, "followHealth", {scope: "world", config: false, name: "Faces show the health track",
     hint: "Bruises, cuts and a pained look as the character goes down the health track, and a snarl in frenzy. Each player can turn it off for one character.", type: Boolean, default: true});
 }
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return undefined; } };
 const enabled = () => active && setting("on") !== false;
+/**
+ * The drawn paperdoll portrait faces are retired for good (Ben, 13 November 2026, B2990): the pixel faces replace them.
+ * Their code and every baked picture stay as they are; nothing is deleted. The Figure builder for sprite tokens stays on.
+ */
+export const DRAWN_FACES_RETIRED = true;
+const drawnOn = () => enabled() && !DRAWN_FACES_RETIRED;
 
 /* ---- Lorelei, loaded only when a picture is drawn ---- */
 let DB = null;
@@ -75,9 +86,13 @@ export async function featuresFor(look, mood = "own") {
 }
 
 /* ---- What a character shows now ---- */
-// The sex WoDX Creation rolled for a person it made, read straight from the flags (the module may be off)
+// The gender WoDX Chronicle holds for every module (B3500); the sex WoDX Creation rolled when that module is off
+export const faceGender = actor => {
+  const g = game.modules.get("wodx-chronicle")?.api?.gender?.of?.(actor) ?? actor?.flags?.["wodx-creation"]?.people?.sex ?? "";
+  return {female: "woman", male: "man", nonbinary: "nonbinary"}[g] ?? "";
+};
 const whoOf = actor => ({type: actor?.type ?? "", variant: actor?.system?.settings?.variant ?? "",
-  gender: {female: "woman", male: "man"}[actor?.flags?.["wodx-creation"]?.people?.sex] ?? ""});
+  gender: faceGender(actor)});
 const lookOf = actor => actor?.flags?.[MOD]?.look ? D.normalize(actor.flags[MOD].look) : null;
 function atmosphere() { const m = game.modules.get("wodx-atmosphere"); return m?.active ? m : null; }
 /** The ring: the era kit's frame. When WoDX Atmosphere draws frames round this token, the picture leaves it out. */
@@ -153,7 +168,7 @@ export async function bake(actor, {force = false} = {}) {
   const byScene = new Map();
   const add = raw => {
     const t = raw?.document ?? raw, sc = t?.parent;
-    if ( t?.documentName !== "Token" || !t.id || sc?.documentName !== "Scene" || !t.actorLink || t.texture?.src === path ) return;
+    if ( t?.documentName !== "Token" || !t.id || sc?.documentName !== "Scene" || !t.actorLink || t.texture?.src === path || t.flags?.[MOD]?.sprite ) return;
     if ( !byScene.has(sc.id) ) byScene.set(sc.id, {scene: sc, ids: new Set()});
     byScene.get(sc.id).ids.add(t.id);
   };
@@ -195,7 +210,7 @@ const timers = new Map();
 let chain = Promise.resolve();
 /** Bake soon, once, after a burst of changes. */
 export function schedule(actor, ms = 400) {
-  if ( !enabled() || !isBaker() || !lookOf(actor) ) return;
+  if ( !drawnOn() || !isBaker() || !lookOf(actor) ) return;
   clearTimeout(timers.get(actor.id));
   timers.set(actor.id, setTimeout(() => {
     timers.delete(actor.id);
@@ -326,24 +341,40 @@ export class PaperdollApp extends ApplicationV2 {
 
 /* ---- Hooks ---- */
 const canBuild = actor => !!actor?.isOwner && !!actor.system?.health;
+/* The figure menu (B2587): the whole figure a token walks as, put together by the character's player. */
+let FigureApp = null;
+const figureApp = () => (FigureApp ??= makeFigureApp({skin: SKIN_LIST.slice(0, 38), hair: Object.entries(HAIR),
+  year: () => { const y = game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.(); return Number.isFinite(y) ? {year: y, label: String(y)} : null; }, ageOf, markChild}));
+// a figure belongs to the character, not to one token of it: a token's sheet opens the character's own figure, which is what a batch draws
+const openFigure = actor => figureApp().open(actor?.isToken ? (game.actors.get(actor.id) ?? actor) : actor);
 Hooks.on("getActorSheetHeaderButtons", (sheet, buttons) => {
-  if ( !enabled() || !canBuild(sheet.actor) || buttons.some(b => b.class === "wodx-paperdoll") ) return;
+  if ( enabled() && canBuild(sheet.actor) && !buttons.some(b => b.class === "wodx-figure") )
+    buttons.unshift({label: "Figure", class: "wodx-figure", icon: "fa-solid fa-person", onclick: () => openFigure(sheet.actor)});
+});
+Hooks.on("getHeaderControlsActorSheetV2", (app, controls) => {
+  if ( !enabled() || !canBuild(app.document) || controls.some(c => c.action === "wodxFigure") ) return;
+  const go = () => openFigure(app.document);
+  if ( app.options?.actions ) app.options.actions.wodxFigure = go;
+  controls.push({icon: "fa-solid fa-person", label: "Figure", action: "wodxFigure", onClick: go});
+});
+Hooks.on("getActorSheetHeaderButtons", (sheet, buttons) => {
+  if ( !drawnOn() || !canBuild(sheet.actor) || buttons.some(b => b.class === "wodx-paperdoll") ) return;
   buttons.unshift({label: "Paperdoll", class: "wodx-paperdoll", icon: "fa-solid fa-user-pen", onclick: () => PaperdollApp.open(sheet.actor)});
 });
 Hooks.on("getHeaderControlsActorSheetV2", (app, controls) => {
-  if ( !enabled() || !canBuild(app.document) || controls.some(c => c.action === "wodxPaperdoll") ) return;
+  if ( !drawnOn() || !canBuild(app.document) || controls.some(c => c.action === "wodxPaperdoll") ) return;
   const go = () => PaperdollApp.open(app.document);
   if ( app.options?.actions ) app.options.actions.wodxPaperdoll = go;
   controls.push({icon: "fa-solid fa-user-pen", label: "Paperdoll", action: "wodxPaperdoll", onClick: go});
 });
 Hooks.on("getActorContextOptions", (app, options) => {
-  if ( !enabled() ) return;
+  if ( !drawnOn() ) return;
   options.push({name: "Paperdoll", icon: '<i class="fa-solid fa-user-pen"></i>',
     condition: li => canBuild(game.actors.get(li?.dataset?.entryId ?? li?.[0]?.dataset?.entryId)),
     callback: li => PaperdollApp.open(game.actors.get(li?.dataset?.entryId ?? li?.[0]?.dataset?.entryId))});
 });
 Hooks.on("updateActor", (actor, changes) => {
-  if ( !enabled() ) return;
+  if ( !drawnOn() ) return;
   const fl = changes.flags?.[MOD];
   if ( fl?.look !== undefined || changes.system?.health || changes.system?.conditions || changes.flags?.["wodx-storyteller"]?.body !== undefined ) schedule(actor);
 });
@@ -352,9 +383,13 @@ Hooks.once("init", () => {
   if ( !game.world?.flags?.wodx ) return;
   active = true;
   registerSettings();
+  registerSpriteSettings();
+  registerFaceSettings();
+  startFaces();
 });
 Hooks.once("ready", () => {
   if ( !active ) return;
-  game.modules.get(MOD).api = {version: VERSION, last: () => lastBake, open: a => PaperdollApp.open(a), bake, bakeAll, schedule, settled, save: saveLook, draw, anchorsFor, state: stateOf, rules: D};
-  if ( enabled() && isBaker() ) setTimeout(bakeAll, 1500);
+  game.modules.get(MOD).api = {version: VERSION, last: () => lastBake, open: a => PaperdollApp.open(a), figure: {open: openFigure, of: a => a?.flags?.[MOD]?.figure ?? null, rules: FG}, bake, bakeAll, schedule, settled, save: saveLook, draw, anchorsFor, state: stateOf, rules: D, sprites: spriteApi, faces: faceApi};
+  startSprites();
+  if ( drawnOn() && isBaker() ) setTimeout(bakeAll, 1500);
 });

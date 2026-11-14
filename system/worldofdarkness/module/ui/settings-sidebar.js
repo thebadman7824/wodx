@@ -31,6 +31,7 @@ function renderSettings(html) {
         <h2>Licensed Dark Pack Agreement</h2>
         <div id='license-information'>
             Portions of the materials are the copyrights and trademarks of Paradox Interactive AB, and are used with permission. All rights reserved. For more information please visit <a href="https://www.worldofdarkness.com/">worldofdarkness.com</a>.<br /><br />
+            World of Darkness Expanded is an unofficial fan work. It is not official World of Darkness material and is not made or endorsed by Paradox Interactive AB.<br /><br />
             <a href="https://www.paradoxinteractive.com/games/world-of-darkness/community/dark-pack-agreement"><img src="https://raw.githubusercontent.com/JohanFalt/Foundry_WoD20/main/doc/darkpack_logo2.png" /></a>
         </div>`;
 
@@ -64,6 +65,7 @@ function renderSettings12(html) {
         <h2>Licensed Dark Pack Agreement</h2>
         <div id='license-information'>
             Portions of the materials are the copyrights and trademarks of Paradox Interactive AB, and are used with permission. All rights reserved. For more information please visit <a href="https://www.worldofdarkness.com/">worldofdarkness.com</a>.<br /><br />
+            World of Darkness Expanded is an unofficial fan work. It is not official World of Darkness material and is not made or endorsed by Paradox Interactive AB.<br /><br />
             <a href="https://www.paradoxinteractive.com/games/world-of-darkness/community/dark-pack-agreement"><img src="https://raw.githubusercontent.com/JohanFalt/Foundry_WoD20/main/doc/darkpack_logo2.png" /></a>
         </div>`;
     $(licenseInformation).insertAfter(settingsAccess)

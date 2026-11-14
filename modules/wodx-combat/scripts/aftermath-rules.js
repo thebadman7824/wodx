@@ -90,3 +90,18 @@ export function rowText(r) {
   if ( r.spent.length ) bits.push(`spent ${r.spent.map(s => `${s.amount} ${s.label}`).join(", ")}`);
   return bits.join("; ");
 }
+
+/**
+ * B3171: did the player characters' side win? fighters: [{id, pc, down}]. A fight is won when at least one player
+ * character is still up and every other fighter is down. No player character in it: never won.
+ */
+export function fightWon(fighters = []) {
+    const pcs = fighters.filter(f => f?.pc), others = fighters.filter(f => f && !f.pc);
+    return pcs.some(f => !f.down) && others.length > 0 && others.every(f => f.down);
+}
+/** The deed's words for the Legends book. */
+export function deedText({won = false, place = "", pcs = [], foes = []} = {}) {
+    const who = pcs.length ? pcs.join(", ") : "Someone";
+    const against = foes.length ? ` against ${foes.slice(0, 4).join(", ")}${foes.length > 4 ? " and others" : ""}` : "";
+    return `${who} fought${against}${place ? ` at ${place}` : ""}${won ? " and won" : ""}.`;
+}

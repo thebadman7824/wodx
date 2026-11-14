@@ -1,0 +1,2294 @@
+{
+ "format": "wodx-settlement",
+ "version": 1,
+ "id": "steinfeld-1995-7",
+ "name": "Steinfeld",
+ "seed": 7,
+ "kind": "village",
+ "label": "village",
+ "year": 1995,
+ "era": "modern",
+ "age": "modern",
+ "band": "modern",
+ "region": "moravia",
+ "tradeAge": "modern",
+ "walled": false,
+ "country": null,
+ "population": 282,
+ "whole": [
+  132,
+  139
+ ],
+ "maps": [
+  {
+   "id": "",
+   "name": "Steinfeld",
+   "map": "steinfeld.dungeondraft_map",
+   "sidecar": "steinfeld.wodx.json",
+   "households": 114
+  }
+ ],
+ "layers": [
+  "rebuild-renaissance",
+  "rebuild-age-of-reason",
+  "brick",
+  "quays",
+  "courts",
+  "wall-down",
+  "cemetery",
+  "rebuild-victorian",
+  "railway",
+  "park",
+  "boulevards",
+  "embankment",
+  "rebuild-mid-century",
+  "suburbs",
+  "blitz",
+  "docklands",
+  "rebuild-modern"
+ ],
+ "buildings": {
+  "Chapel": 1,
+  "Colony house": 2,
+  "Cottage": 1,
+  "Entrepreneur's house": 1,
+  "Family house": 1,
+  "Functionalist villa": 1,
+  "Gate-passage house": 1,
+  "Panel block": 2,
+  "Priest's house": 1,
+  "School": 1,
+  "Sgraffito house": 3,
+  "Suburban house": 4,
+  "Tavern": 1,
+  "Villa": 1
+ },
+ "trades": {
+  "office worker": 25,
+  "factory worker": 16,
+  "pensioner": 13,
+  "builder": 12,
+  "nurse": 11,
+  "driver": 9,
+  "shop assistant": 9,
+  "teacher": 6,
+  "programmer": 4,
+  "student": 3,
+  "mayor": 1,
+  "priest": 1,
+  "publican": 1,
+  "school caretaker": 1,
+  "schoolteacher": 1,
+  "unemployed": 1
+ },
+ "notables": [
+  {
+   "role": "mayor",
+   "household": "steinfeld-1995-7.suburban-house-1-household"
+  },
+  {
+   "role": "schoolteacher",
+   "household": "steinfeld-1995-7.cottage-12-household"
+  }
+ ],
+ "households": [
+  {
+   "id": "steinfeld-1995-7.tavern-1-household",
+   "building": "tavern-1",
+   "label": "Tavern household",
+   "type": "tavern",
+   "trade": "publican",
+   "wealth": "middling",
+   "people": [
+    "publican"
+   ],
+   "map": "",
+   "at": [
+    80.5,
+    60.5
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.cottage-1-household",
+   "building": "cottage-1",
+   "label": "Priest's house household",
+   "type": "cottage",
+   "trade": "priest",
+   "wealth": "middling",
+   "people": [
+    "priest",
+    "housekeeper"
+   ],
+   "map": "",
+   "at": [
+    83.7,
+    84.2
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.cottage-12-household",
+   "building": "cottage-12",
+   "label": "Cottage household",
+   "type": "cottage",
+   "trade": "schoolteacher",
+   "wealth": "middling",
+   "people": [
+    "schoolteacher",
+    "partner",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    65.9,
+    42.3
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.sgraffito-house-1-household",
+   "building": "sgraffito-house-1",
+   "label": "Sgraffito house household",
+   "type": "sgraffito-house",
+   "trade": "nurse",
+   "wealth": "middling",
+   "people": [
+    "nurse",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    48.7,
+    87.2
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.sgraffito-house-3-household",
+   "building": "sgraffito-house-3",
+   "label": "Sgraffito house household",
+   "type": "sgraffito-house",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "partner"
+   ],
+   "map": "",
+   "at": [
+    43.1,
+    70.0
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.passage-house-1-household",
+   "building": "passage-house-1",
+   "label": "Gate-passage house household",
+   "type": "passage-house",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker"
+   ],
+   "map": "",
+   "at": [
+    46.8,
+    78.4
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.sgraffito-house-5-household",
+   "building": "sgraffito-house-5",
+   "label": "Sgraffito house household",
+   "type": "sgraffito-house",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "partner"
+   ],
+   "map": "",
+   "at": [
+    50.7,
+    52.9
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.villa-1-household",
+   "building": "villa-1",
+   "label": "Villa household",
+   "type": "villa",
+   "trade": "builder",
+   "wealth": "middling",
+   "people": [
+    "builder",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    59.0,
+    48.8
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.colony-house-1-household",
+   "building": "colony-house-1",
+   "label": "Colony house household",
+   "type": "colony-house",
+   "trade": "factory worker",
+   "wealth": "middling",
+   "people": [
+    "factory worker"
+   ],
+   "map": "",
+   "at": [
+    75.1,
+    53.1
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.school-1-household",
+   "building": "school-1",
+   "label": "School household",
+   "type": "school",
+   "trade": "school caretaker",
+   "wealth": "middling",
+   "people": [
+    "school caretaker",
+    "staff",
+    "staff",
+    "staff",
+    "staff"
+   ],
+   "map": "",
+   "at": [
+    72.9,
+    91.4
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.colony-house-2-household",
+   "building": "colony-house-2",
+   "label": "Colony house household",
+   "type": "colony-house",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "partner"
+   ],
+   "map": "",
+   "at": [
+    39.7,
+    54.6
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.func-villa-1-household",
+   "building": "func-villa-1",
+   "label": "Functionalist villa household",
+   "type": "func-villa",
+   "trade": "unemployed",
+   "wealth": "poor",
+   "people": [
+    "unemployed"
+   ],
+   "map": "",
+   "at": [
+    85.9,
+    127.2
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-1",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "nurse",
+   "wealth": "middling",
+   "people": [
+    "nurse"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-2",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "teacher",
+   "wealth": "middling",
+   "people": [
+    "teacher"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-3",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-4",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-5",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "teacher",
+   "wealth": "middling",
+   "people": [
+    "teacher"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-6",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "teacher",
+   "wealth": "middling",
+   "people": [
+    "teacher"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-7",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "shop assistant",
+   "wealth": "middling",
+   "people": [
+    "shop assistant",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-8",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "builder",
+   "wealth": "middling",
+   "people": [
+    "builder",
+    "child",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-9",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "partner"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-10",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "driver",
+   "wealth": "middling",
+   "people": [
+    "driver",
+    "partner",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-11",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "factory worker",
+   "wealth": "middling",
+   "people": [
+    "factory worker",
+    "partner",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-12",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "partner"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-13",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "pensioner",
+   "wealth": "middling",
+   "people": [
+    "pensioner"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-14",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "factory worker",
+   "wealth": "middling",
+   "people": [
+    "factory worker"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-15",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "pensioner",
+   "wealth": "middling",
+   "people": [
+    "pensioner",
+    "partner"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-16",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "nurse",
+   "wealth": "middling",
+   "people": [
+    "nurse"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-17",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-18",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "pensioner",
+   "wealth": "middling",
+   "people": [
+    "pensioner"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-19",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "shop assistant",
+   "wealth": "middling",
+   "people": [
+    "shop assistant",
+    "partner"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-20",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "factory worker",
+   "wealth": "middling",
+   "people": [
+    "factory worker",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-21",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "partner",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-22",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "pensioner",
+   "wealth": "middling",
+   "people": [
+    "pensioner"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-23",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "factory worker",
+   "wealth": "middling",
+   "people": [
+    "factory worker"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-24",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "pensioner",
+   "wealth": "middling",
+   "people": [
+    "pensioner",
+    "partner",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-25",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "driver",
+   "wealth": "middling",
+   "people": [
+    "driver",
+    "partner",
+    "child",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-26",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "programmer",
+   "wealth": "middling",
+   "people": [
+    "programmer"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-27",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "shop assistant",
+   "wealth": "middling",
+   "people": [
+    "shop assistant",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-28",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "nurse",
+   "wealth": "middling",
+   "people": [
+    "nurse",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-29",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "nurse",
+   "wealth": "middling",
+   "people": [
+    "nurse",
+    "partner",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-30",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "driver",
+   "wealth": "middling",
+   "people": [
+    "driver",
+    "child",
+    "child",
+    "child",
+    "elder"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-31",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "partner"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-32",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "pensioner",
+   "wealth": "middling",
+   "people": [
+    "pensioner"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-33",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "factory worker",
+   "wealth": "middling",
+   "people": [
+    "factory worker",
+    "partner"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-34",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-35",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "teacher",
+   "wealth": "middling",
+   "people": [
+    "teacher",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-36",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "shop assistant",
+   "wealth": "middling",
+   "people": [
+    "shop assistant",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-37",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "nurse",
+   "wealth": "middling",
+   "people": [
+    "nurse",
+    "partner",
+    "child",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-38",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "shop assistant",
+   "wealth": "middling",
+   "people": [
+    "shop assistant",
+    "partner",
+    "child",
+    "child",
+    "child",
+    "elder"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-39",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "partner"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-40",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "nurse",
+   "wealth": "middling",
+   "people": [
+    "nurse",
+    "partner",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-41",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "nurse",
+   "wealth": "middling",
+   "people": [
+    "nurse"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-42",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "partner",
+    "child",
+    "child",
+    "lodger"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-43",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "child",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-44",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "shop assistant",
+   "wealth": "middling",
+   "people": [
+    "shop assistant",
+    "partner",
+    "child",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-45",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "shop assistant",
+   "wealth": "middling",
+   "people": [
+    "shop assistant",
+    "partner",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-46",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "factory worker",
+   "wealth": "middling",
+   "people": [
+    "factory worker",
+    "elder"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-47",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "factory worker",
+   "wealth": "middling",
+   "people": [
+    "factory worker"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-1-household-48",
+   "building": "panel-block-1",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "student",
+   "wealth": "middling",
+   "people": [
+    "student"
+   ],
+   "map": "",
+   "at": [
+    100,
+    85
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-1",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "factory worker",
+   "wealth": "middling",
+   "people": [
+    "factory worker",
+    "partner",
+    "child",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-2",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "teacher",
+   "wealth": "middling",
+   "people": [
+    "teacher",
+    "partner",
+    "lodger"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-3",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "factory worker",
+   "wealth": "middling",
+   "people": [
+    "factory worker",
+    "partner",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-4",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "builder",
+   "wealth": "middling",
+   "people": [
+    "builder",
+    "partner",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-5",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "pensioner",
+   "wealth": "middling",
+   "people": [
+    "pensioner",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-6",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "teacher",
+   "wealth": "middling",
+   "people": [
+    "teacher",
+    "partner",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-7",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "partner"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-8",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "programmer",
+   "wealth": "middling",
+   "people": [
+    "programmer",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-9",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "factory worker",
+   "wealth": "middling",
+   "people": [
+    "factory worker",
+    "partner",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-10",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "driver",
+   "wealth": "middling",
+   "people": [
+    "driver",
+    "partner"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-11",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "factory worker",
+   "wealth": "middling",
+   "people": [
+    "factory worker",
+    "partner"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-12",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "driver",
+   "wealth": "middling",
+   "people": [
+    "driver",
+    "partner",
+    "child",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-13",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "partner",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-14",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "factory worker",
+   "wealth": "middling",
+   "people": [
+    "factory worker"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-15",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "builder",
+   "wealth": "middling",
+   "people": [
+    "builder",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-16",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "student",
+   "wealth": "middling",
+   "people": [
+    "student"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-17",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "partner",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-18",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "shop assistant",
+   "wealth": "middling",
+   "people": [
+    "shop assistant",
+    "child",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-19",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "driver",
+   "wealth": "middling",
+   "people": [
+    "driver"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-20",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "builder",
+   "wealth": "middling",
+   "people": [
+    "builder"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-21",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "pensioner",
+   "wealth": "middling",
+   "people": [
+    "pensioner",
+    "partner",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-22",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "builder",
+   "wealth": "middling",
+   "people": [
+    "builder"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-23",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "builder",
+   "wealth": "middling",
+   "people": [
+    "builder"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-24",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "factory worker",
+   "wealth": "middling",
+   "people": [
+    "factory worker",
+    "partner",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-25",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "partner",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-26",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "builder",
+   "wealth": "middling",
+   "people": [
+    "builder"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-27",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "pensioner",
+   "wealth": "middling",
+   "people": [
+    "pensioner"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-28",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "factory worker",
+   "wealth": "middling",
+   "people": [
+    "factory worker",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-29",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "partner",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-30",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "programmer",
+   "wealth": "middling",
+   "people": [
+    "programmer"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-31",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "pensioner",
+   "wealth": "middling",
+   "people": [
+    "pensioner",
+    "partner",
+    "child",
+    "lodger"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-32",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "nurse",
+   "wealth": "middling",
+   "people": [
+    "nurse",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-33",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "partner"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-34",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "partner",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-35",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "nurse",
+   "wealth": "middling",
+   "people": [
+    "nurse",
+    "partner",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-36",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "builder",
+   "wealth": "middling",
+   "people": [
+    "builder",
+    "partner",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-37",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-38",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "driver",
+   "wealth": "middling",
+   "people": [
+    "driver",
+    "partner",
+    "elder"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-39",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "builder",
+   "wealth": "middling",
+   "people": [
+    "builder",
+    "partner"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-40",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "factory worker",
+   "wealth": "middling",
+   "people": [
+    "factory worker",
+    "partner",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-41",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker",
+    "partner",
+    "child",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-42",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "builder",
+   "wealth": "middling",
+   "people": [
+    "builder",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-43",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "shop assistant",
+   "wealth": "middling",
+   "people": [
+    "shop assistant",
+    "partner",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-44",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "driver",
+   "wealth": "middling",
+   "people": [
+    "driver",
+    "partner",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-45",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "driver",
+   "wealth": "middling",
+   "people": [
+    "driver",
+    "partner",
+    "child",
+    "child"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-46",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "builder",
+   "wealth": "middling",
+   "people": [
+    "builder"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-47",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "student",
+   "wealth": "middling",
+   "people": [
+    "student"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.panel-block-2-household-48",
+   "building": "panel-block-2",
+   "label": "Panel block household",
+   "type": "panel-block",
+   "trade": "nurse",
+   "wealth": "middling",
+   "people": [
+    "nurse"
+   ],
+   "map": "",
+   "at": [
+    43,
+    103
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.cottage-13-household",
+   "building": "cottage-13",
+   "label": "Suburban house household",
+   "type": "cottage",
+   "trade": "pensioner",
+   "wealth": "middling",
+   "people": [
+    "pensioner"
+   ],
+   "map": "",
+   "at": [
+    117.2,
+    23.8
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.cottage-14-household",
+   "building": "cottage-14",
+   "label": "Suburban house household",
+   "type": "cottage",
+   "trade": "office worker",
+   "wealth": "middling",
+   "people": [
+    "office worker"
+   ],
+   "map": "",
+   "at": [
+    117.6,
+    34.6
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.cottage-15-household",
+   "building": "cottage-15",
+   "label": "Suburban house household",
+   "type": "cottage",
+   "trade": "programmer",
+   "wealth": "middling",
+   "people": [
+    "programmer",
+    "partner",
+    "elder"
+   ],
+   "map": "",
+   "at": [
+    105.6,
+    25.5
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.cottage-18-household",
+   "building": "cottage-18",
+   "label": "Suburban house household",
+   "type": "cottage",
+   "trade": "pensioner",
+   "wealth": "middling",
+   "people": [
+    "pensioner"
+   ],
+   "map": "",
+   "at": [
+    97.1,
+    37.0
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.family-house-1-household",
+   "building": "family-house-1",
+   "label": "Family house household",
+   "type": "family-house",
+   "trade": "pensioner",
+   "wealth": "middling",
+   "people": [
+    "pensioner"
+   ],
+   "map": "",
+   "at": [
+    106.1,
+    38.2
+   ]
+  },
+  {
+   "id": "steinfeld-1995-7.suburban-house-1-household",
+   "building": "suburban-house-1",
+   "label": "Entrepreneur's house household",
+   "type": "suburban-house",
+   "trade": "mayor",
+   "wealth": "middling",
+   "people": [
+    "mayor",
+    "partner",
+    "child",
+    "child",
+    "child",
+    "elder"
+   ],
+   "map": "",
+   "at": [
+    96.6,
+    24.8
+   ]
+  }
+ ],
+ "ties": [
+  {
+   "a": "steinfeld-1995-7.tavern-1-household",
+   "b": "steinfeld-1995-7.panel-block-2-household-13",
+   "kind": "sibling",
+   "note": "brothers or sisters"
+  },
+  {
+   "a": "steinfeld-1995-7.sgraffito-house-1-household",
+   "b": "steinfeld-1995-7.passage-house-1-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1995-7.colony-house-1-household",
+   "b": "steinfeld-1995-7.villa-1-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1995-7.colony-house-2-household",
+   "b": "steinfeld-1995-7.passage-house-1-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-1-household-12",
+   "b": "steinfeld-1995-7.sgraffito-house-5-household",
+   "kind": "sibling",
+   "note": "brothers or sisters"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-1-household-15",
+   "b": "steinfeld-1995-7.panel-block-1-household-5",
+   "kind": "child",
+   "note": "a grown child with a house of their own"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-1-household-16",
+   "b": "steinfeld-1995-7.panel-block-1-household-47",
+   "kind": "sibling",
+   "note": "brothers or sisters"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-1-household-23",
+   "b": "steinfeld-1995-7.school-1-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-1-household-29",
+   "b": "steinfeld-1995-7.panel-block-1-household-15",
+   "kind": "child",
+   "note": "a grown child with a house of their own"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-1-household-33",
+   "b": "steinfeld-1995-7.tavern-1-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-1-household-34",
+   "b": "steinfeld-1995-7.panel-block-2-household-10",
+   "kind": "child",
+   "note": "a grown child with a house of their own"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-1-household-34",
+   "b": "steinfeld-1995-7.colony-house-1-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-1-household-42",
+   "b": "steinfeld-1995-7.panel-block-1-household-45",
+   "kind": "child",
+   "note": "a grown child with a house of their own"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-2-household-3",
+   "b": "steinfeld-1995-7.sgraffito-house-1-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-2-household-5",
+   "b": "steinfeld-1995-7.school-1-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-2-household-11",
+   "b": "steinfeld-1995-7.sgraffito-house-5-household",
+   "kind": "sibling",
+   "note": "brothers or sisters"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-2-household-12",
+   "b": "steinfeld-1995-7.passage-house-1-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-2-household-14",
+   "b": "steinfeld-1995-7.sgraffito-house-1-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-2-household-17",
+   "b": "steinfeld-1995-7.panel-block-2-household-44",
+   "kind": "sibling",
+   "note": "brothers or sisters"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-2-household-18",
+   "b": "steinfeld-1995-7.sgraffito-house-1-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-2-household-24",
+   "b": "steinfeld-1995-7.sgraffito-house-1-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-2-household-34",
+   "b": "steinfeld-1995-7.passage-house-1-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-2-household-42",
+   "b": "steinfeld-1995-7.panel-block-1-household-47",
+   "kind": "sibling",
+   "note": "brothers or sisters"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-2-household-43",
+   "b": "steinfeld-1995-7.school-1-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-2-household-46",
+   "b": "steinfeld-1995-7.passage-house-1-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1995-7.family-house-1-household",
+   "b": "steinfeld-1995-7.cottage-15-household",
+   "kind": "friend",
+   "note": "neighbours who help each other"
+  },
+  {
+   "a": "steinfeld-1995-7.suburban-house-1-household",
+   "b": "steinfeld-1995-7.family-house-1-household",
+   "kind": "rival",
+   "note": "an old insult"
+  },
+  {
+   "a": "steinfeld-1995-7.cottage-12-household",
+   "place": "school-1",
+   "kind": "works-at",
+   "note": "School"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-1-household-2",
+   "place": "school-1",
+   "kind": "works-at",
+   "note": "School"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-1-household-5",
+   "place": "school-1",
+   "kind": "works-at",
+   "note": "School"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-1-household-6",
+   "place": "school-1",
+   "kind": "works-at",
+   "note": "School"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-1-household-35",
+   "place": "school-1",
+   "kind": "works-at",
+   "note": "School"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-2-household-2",
+   "place": "school-1",
+   "kind": "works-at",
+   "note": "School"
+  },
+  {
+   "a": "steinfeld-1995-7.panel-block-2-household-6",
+   "place": "school-1",
+   "kind": "works-at",
+   "note": "School"
+  }
+ ]
+}

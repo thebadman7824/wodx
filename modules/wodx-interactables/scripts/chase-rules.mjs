@@ -139,6 +139,20 @@ export function speedOf(r, ground, year) {
 /** Whether a way can go on that ground. */
 export const canGo = (way, ground) => !GROUNDS[groundKind(ground)].shuts.includes(way);
 
+/**
+ * 0.35.0: a mount or vehicle in a fight, outside any chase (for WoDX Combat's movement). kind: the Interactables mount
+ * kind; ground: a GROUNDS key (a boat is always on the water). The same full pace a chase gives it, held by the
+ * ground's caps; 0 where it cannot go at all. saddle: sat astride (a fall is a throw); skill: the Ability that
+ * keeps control. Null for a kind with no way to run.
+ */
+export function rideInFight(kind, year, ground = "streets") {
+  const way = Object.keys(WAYS).find(k => WAYS[k].mount && WAYS[k].mount === kind);
+  if ( !way ) return null;
+  const W = WAYS[way], g = W.water ? "water" : groundKind(ground);
+  const sp = canGo(way, g) ? speedOf({way}, g, year) : {yards: 0, capped: true};
+  return {way, ground: g, yards: sp.yards, capped: sp.capped, saddle: !!W.thrown, hooves: !!W.hooves, motor: !!W.motor, water: !!W.water, skill: W.pool[1]};
+}
+
 /** Free successes for the faster of two racers: one per 10 yards a turn, three at most. Returns {to: "a"|"b"|null, n}. */
 export function edge(aYards, bYards) {
   const d = (Number(aYards) || 0) - (Number(bYards) || 0);
@@ -167,6 +181,21 @@ export function rollFor(r, ground, {night = false, year = 0} = {}) {
   if ( dark ) { diff += 1; parts.push("unlit at night +1"); }
   const ch = chartOf(r.way, year);
   return {attr: W.pool[0], ability: W.pool[1], diff: Math.min(10, diff), parts, cap: ch ? ch.maneuver : null};
+}
+
+/**
+ * B3907: tack on horseback or a mule (house rule). kit: WoDX Library's roadKit for the rider, or null when the Library
+ * is off (then nothing changes). With no saddle or no bridle the ride is +1 (bareback or a rope halter); spurs or a
+ * riding crop make a flat-out ride one easier. {diff, parts}
+ */
+export function tackMods(r, kit) {
+  const W = WAYS[r?.way];
+  if ( !kit || !W?.hooves || !W.mounted || !["horse", "mule"].includes(r.way) ) return {diff: 0, parts: []};
+  let diff = 0;
+  const parts = [];
+  if ( !kit.saddle || !kit.bridle ) { diff += 1; parts.push(`${!kit.saddle ? "no saddle" : "no bridle"} +1`); }
+  if ( r.flatOut && kit.urge ) { diff -= 1; parts.push(`${kit.names?.urge ?? "spurs"} -1`); }
+  return {diff, parts};
 }
 
 /**

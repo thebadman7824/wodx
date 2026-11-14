@@ -28,7 +28,7 @@ async function save(R, name) {
 }
 const newer = (a, b) => !foundry.utils.isNewerVersion(b, a);
 
-export async function run() {
+async function runGate(K) {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   if ( game.world.id !== "rothenstein-wodx" ) {
@@ -63,13 +63,15 @@ export async function run() {
     ok("4. clock row", /Church year/.test(text) && /Lent/.test(text), {found: !!clock});
     await clock?.close();
 
-    const actor = game.actors.find(a => a.type === "Vampire") ?? game.actors.contents[0];
+    const actor = await K.make(Actor, {name: "WoDX gate: church Kindred", type: "Vampire"});
     const place = "gate-church-place";
     const hunt = () => npc.api.huntingFor(actor, place);
+    // At 20:00, before the curfew bell (from NPC 0.54.0 the curfew adds its own named step at night, B2711)
+    await game.time.set(at(1300, 3, 15, 20)); await sleep(400);
     const inLent = hunt();
-    await game.time.set(at(1300, 7, 6)); await sleep(400); // a plain weekday in ordinary time
+    await game.time.set(at(1300, 7, 6, 20)); await sleep(400); // a plain weekday in ordinary time
     const plain = hunt();
-    await game.time.set(at(1300, 12, 24)); await sleep(400);
+    await game.time.set(at(1300, 12, 24, 20)); await sleep(400);
     const revel = hunt();
     ok("5. hunting", !!actor && revel.difficulty === plain.difficulty - 1 && inLent.difficulty === plain.difficulty + 1,
       {actor: actor?.name, plain: plain.difficulty, revel: revel.difficulty, lent: inLent.difficulty});
@@ -95,3 +97,7 @@ export async function run() {
   }
   return save(R, "gatechurch-result.json");
 }
+
+// The gate kit (B3733): its own scratch scene, cleaned up after.
+import {kitRun} from "./kit.mjs";
+export const run = kitRun("gatechurch", runGate);

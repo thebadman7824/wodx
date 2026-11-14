@@ -126,8 +126,8 @@ test("era time: reckon puts the date as the character would have it", () => {
 });
 
 test("letters: carriers by year, times by reach", () => {
-  assert.deepEqual(L.carriersFor(1197).map(c => c.id), ["messenger"]);
-  assert.deepEqual(L.carriersFor(1600).map(c => c.id), ["messenger", "post"]);
+  assert.deepEqual(L.carriersFor(1197).map(c => c.id), ["messenger", "traveller"]);
+  assert.deepEqual(L.carriersFor(1600).map(c => c.id), ["messenger", "traveller", "post"]);
   assert.ok(L.carriersFor(1900).some(c => c.id === "telegraph" && true));
   assert.ok(!L.carriersFor(2000).some(c => c.id === "telegraph"));
   assert.ok(L.carriersFor(2000).some(c => c.id === "email"));

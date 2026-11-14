@@ -304,3 +304,100 @@
 1989-12|H|mor|EU|Prague|crown|Havel president|The playwright Vaclav Havel, jailed a year before, is elected president by the old parliament.
 1989-12|W|vam|EU|Prague|revolution,occult|The Kindred after the fall|The house reading has the Camarilla rush into the old bloc as the Sabbat and the old bloc's princes scramble.
 1989|W|cha|EU|Prague|revolution,occult|The velvet Dreaming|The house reading has the Velvet Revolution light the Dreaming of Prague, and the Kithain of Brno dance on Freedom Square.
+# The Americas, Africa and Oceania (the global rule, 2026-11-12)
+1919|H|mor|AM|Chicago|massacre,persecution,uprising|The Red Summer|White mobs attack black neighbourhoods in some two dozen American cities; in Chicago and Washington the residents fight back.
+1920|H|mor|AM|Washington|law,crime|Prohibition|The making and sale of alcohol is forbidden across the United States, and a generation of gangsters gets rich.
+1921|H|mor|AM|Tulsa|massacre,fire,persecution|Tulsa|A white mob burns the prosperous black district of Greenwood and kills perhaps three hundred.
+1927|H|mor|AM|Mississippi River|flood,disaster,migration|The great Mississippi flood|The river breaks its levees from Illinois to the Gulf and drives hundreds of thousands from their homes, many of them north for good.
+1930|H|mor|AM|Rio de Janeiro|revolution,crown|Vargas takes Brazil|An armed revolt puts Getulio Vargas in power for fifteen years.
+1932|H|mor|AM|Chaco|war,death|The Chaco War|Bolivia and Paraguay fight three years for a thorn wilderness wrongly believed to hold oil.
+1935|H|mor|AM|Oklahoma|weather,disaster,migration|Black Sunday|A wall of dust turns day to night on the southern plains; farm families by the hundred thousand take the road west.
+1937|H|mor|AM|Dajabon|massacre,persecution|The Parsley massacre|Trujillo's soldiers kill thousands of Haitians along the Dominican border in under a week.
+1938|H|mor|AM|Mexico City|law,industry,money|Mexico takes its oil|President Cardenas expropriates the foreign oil companies.
+1942|H|mor|AM|California|persecution,law,migration|The camps|More than a hundred thousand Japanese Americans and Japanese Canadians are removed from the Pacific coast to inland camps.
+1945-7|H|mor|AM|Alamogordo|science,war|Trinity|The first atomic bomb is set off in the New Mexico desert.
+1946|H|mor|AM|Buenos Aires|crown,law,industry|Peron|Juan Peron is elected president of Argentina with the votes of the unions.
+1948|H|mor|AM|Bogota|uprising,death,terror|The Bogotazo|The murder of a popular leader sets Bogota on fire and opens ten years of killing in the countryside.
+1954|H|mor|AM|Guatemala City|war,empire,crown|The coup in Guatemala|An invasion arranged by American intelligence overthrows a president who had taken idle land from a fruit company.
+1954|H|mor|AM|Topeka|law|Separate is not equal|The Supreme Court rules that segregated public schools are unlawful.
+1955|H|mor|AM|Montgomery|uprising,law|The bus boycott|Rosa Parks keeps a seat, and the black citizens of Montgomery walk to work for a year.
+1959|H|mor|AM|Havana|revolution,war|The Cuban Revolution|The dictator flies out on New Year's Day, and Fidel Castro's rebels enter Havana a week later.
+1960|H|mor|AM|Valdivia|quake,disaster,sea|The Valdivia earthquake|The strongest earthquake ever measured strikes southern Chile, and its wave kills people in Hawaii and Japan.
+1960|H|mor|AM|Brasilia|founding,building|Brasilia|Brazil moves its capital to a new city built in four years on the empty plateau.
+1961|H|mor|AM|Bay of Pigs|war,empire|The Bay of Pigs|Cuban exiles trained by American intelligence land in Cuba and are beaten in three days.
+1962-10|H|mor|AM|Havana|war,terror,sea|The missiles in Cuba|American aircraft photograph Soviet missiles in Cuba, and for thirteen days the navies face each other at a quarantine line.
+1963|H|mor|AM|Dallas|death,crime,media|Kennedy shot|The American president is shot dead in an open car in Dallas, three months after a quarter of a million people marched on Washington for civil rights.
+1964|H|mor|AM|Rio de Janeiro|war,crown,persecution|The generals take Brazil|A coup begins twenty-one years of military rule.
+1967|H|mor|AM|La Higuera|death,war,revolution|Guevara shot|Bolivian soldiers with American advisers capture Che Guevara and shoot him.
+1968-4|H|mor|AM|Memphis|death,uprising,fire|King shot|Martin Luther King is shot dead in Memphis, and more than a hundred American cities burn.
+1968-10|H|mor|AM|Mexico City|massacre,uprising,sport|Tlatelolco|Soldiers fire on a student meeting in the Plaza of the Three Cultures ten days before the Olympic Games open.
+1969-6|H|mor|AM|New York|uprising,law|Stonewall|The patrons of a Greenwich Village bar fight back against a police raid for several nights.
+1969-7|H|mor|AM|Cape Canaveral|science,exploration,travel|The Moon|Two men from a ship launched in Florida walk on the Moon.
+1970|H|mor|AM|Yungay|quake,disaster,death|The Ancash earthquake|An earthquake shakes loose part of a glacier in Peru, and the town of Yungay is buried with nearly everyone in it.
+1973-2|H|mor|AM|Wounded Knee|uprising,siege,law|Wounded Knee occupied|Oglala Lakota and the American Indian Movement hold the village of Wounded Knee against federal marshals for seventy-one days.
+1973-9|H|mor|AM|Santiago|war,death,persecution|The coup in Chile|The armed forces bomb the presidential palace; President Allende dies inside, and thousands are tortured or disappear.
+1976|H|mor|AM|Buenos Aires|war,persecution,terror|The dirty war|A junta takes Argentina and makes some thirty thousand people disappear; their mothers begin to walk each week in the Plaza de Mayo.
+1978|H|mor|AM|Jonestown|faith,death,massacre|Jonestown|More than nine hundred members of an American church die by poison at their settlement in Guyana.
+1979|H|mor|AM|Managua|revolution,war|The Sandinistas|Rebels overthrow the Somoza dynasty in Nicaragua, and a decade of war with American-backed forces follows.
+1980-3|H|mor|AM|San Salvador|death,faith,war|Romero shot|The archbishop of San Salvador is shot at the altar a day after telling soldiers to stop the repression.
+1980-5|H|mor|AM|Mount St. Helens|disaster|Mount St. Helens|The north face of the volcano slides away and the blast flattens the forest for miles.
+1980|H|mor|AM|Ayacucho|war,terror,revolution|The Shining Path|A Maoist party in the Peruvian highlands burns ballot boxes on election eve and begins a war that kills some seventy thousand.
+1982|H|mor|AM|Falkland Islands|war,sea,empire|The Falklands war|Argentina's junta seizes the islands, Britain retakes them in ten weeks, and the junta falls the next year.
+1985-9|H|mor|AM|Mexico City|quake,disaster,death|The Mexico City earthquake|An earthquake brings down hundreds of buildings in the capital; neighbours dig out the living while the state hesitates.
+1985-11|H|mor|AM|Armero|disaster,flood,death|Armero|Mud from the eruption of Nevado del Ruiz buries the Colombian town of Armero and more than twenty thousand people.
+1989-2|H|mor|AM|Caracas|uprising,massacre,money|The Caracazo|Price rises set off riots in Caracas, and the army kills hundreds, perhaps thousands.
+1989-12|H|mor|AM|Panama City|war,empire|Panama invaded|American troops invade Panama to seize its ruler.
+1921|H|mor|AF|Annual|battle,war,uprising|Annual|The Rif fighters of Abd el-Krim destroy a Spanish army in northern Morocco.
+1929|H|mor|AF|Aba|uprising,law,trade|The Women's War|Tens of thousands of Igbo and Ibibio women rise against the warrant chiefs and a rumoured tax; troops shoot more than fifty.
+1930|H|mor|AF|Addis Ababa|crown,faith|Haile Selassie crowned|Ras Tafari is crowned emperor of Ethiopia; in Jamaica some see the event as prophecy fulfilled.
+1935|H|mor|AF|Ethiopia|war,empire,massacre|Italy invades Ethiopia|Italian armies invade with aircraft and poison gas, and the emperor pleads in vain before the League of Nations.
+1941|H|mor|AF|Addis Ababa|war,crown|The emperor returns|British, African and Ethiopian forces drive out the Italians, and Haile Selassie re-enters the capital five years to the day after it fell.
+1944|H|mor|AF|Thiaroye|massacre,war,money|Thiaroye|French troops shoot West African soldiers, freed prisoners of war, who were demanding their back pay near Dakar.
+1945|H|mor|AF|Setif|massacre,uprising|Setif|A victory parade in Algeria turns into a rising, and the reprisals kill thousands.
+1947|H|mor|AF|Madagascar|uprising,massacre,war|The Malagasy rising|A revolt against French rule is crushed over two years at a cost of tens of thousands of lives.
+1948|H|mor|AF|Pretoria|law,persecution|Apartheid|The National Party wins South Africa's whites-only election and begins to write separation into law.
+1952|H|mor|AF|Nairobi|uprising,war,persecution|The emergency in Kenya|Britain declares an emergency against the Mau Mau and holds more than a hundred thousand Kikuyu in camps.
+1954|H|mor|AF|Algiers|war,terror,revolution|The Algerian war|The National Liberation Front opens a war for independence with attacks across Algeria on All Saints' Day.
+1957|H|mor|AF|Accra|founding,revolution|Ghana|The Gold Coast becomes independent as Ghana under Kwame Nkrumah.
+1958|H|mor|AF|Conakry|law,founding|Guinea says no|Guinea alone votes against de Gaulle's French community; the French leave at once and take even the light bulbs.
+1960-3|H|mor|AF|Sharpeville|massacre,law,persecution|Sharpeville|South African police fire on a crowd protesting the pass laws and kill sixty-nine.
+1960|H|mor|AF|Leopoldville|founding,war,revolution|The year of Africa|Seventeen African states become independent; the Congo's army mutinies within a week and its richest province breaks away.
+1961|H|mor|AF|Katanga|death,crime,war|Lumumba killed|The Congo's deposed first prime minister is handed to his enemies in Katanga and shot.
+1962|H|mor|AF|Algiers|founding,migration,war|Algeria independent|After eight years of war Algeria is independent, and nearly a million settlers leave within months.
+1963|H|mor|AF|Addis Ababa|treaty,founding|The Organisation of African Unity|Thirty-two states found a union in Addis Ababa and agree to keep the colonial borders.
+1964|H|mor|AF|Zanzibar|revolution,massacre|The Zanzibar revolution|A rising overthrows the sultan a month after independence, and thousands of Arabs and Indians are killed.
+1964|H|mor|AF|Pretoria|law,persecution|The Rivonia trial|Nelson Mandela and seven others are sentenced to prison for life.
+1965|H|mor|AF|Salisbury|law,war,uprising|Rhodesia breaks away|The white government of Rhodesia declares independence rather than accept majority rule.
+1966|H|mor|AF|Accra|war,crown|Nkrumah overthrown|The army takes power in Ghana while the president is abroad, weeks after the first of Nigeria's coups.
+1967|H|mor|AF|Enugu|war,famine,death|Biafra|Eastern Nigeria secedes as Biafra after massacres of Igbo in the north; war and blockade kill more than a million in thirty months.
+1971|H|mor|AF|Kampala|war,crown,massacre|Amin|Idi Amin takes power in Uganda; some three hundred thousand are killed in eight years, and the Asians are expelled.
+1974|H|mor|AF|Addis Ababa|revolution,crown,famine|The emperor deposed|Soldiers depose Haile Selassie after a hidden famine, and the Derg rules by terror.
+1975|H|mor|AF|Luanda|founding,war|Portugal's empire ends|Angola and Mozambique become independent, and both go straight into civil war.
+1976|H|mor|AF|Soweto|uprising,massacre,learning|Soweto|Police fire on schoolchildren marching against lessons in Afrikaans, and the townships rise.
+1977|H|mor|AF|Pretoria|death,persecution,crime|Biko|Steve Biko dies of head injuries in police custody.
+1980|H|mor|AF|Harare|founding,war|Zimbabwe|After a long bush war Rhodesia becomes Zimbabwe under Robert Mugabe.
+1984|H|mor|AF|Korem|famine,war,media|The Ethiopian famine|Drought and war starve the Ethiopian highlands; a television report from Korem moves the world, and perhaps a million die.
+1986|H|mor|AF|Lake Nyos|disaster,death|Lake Nyos|A crater lake in Cameroon releases a cloud of carbon dioxide in the night and suffocates seventeen hundred people.
+1987|H|mor|AF|Ouagadougou|death,crown,revolution|Sankara killed|The young revolutionary president of Burkina Faso is shot in a coup led by a close comrade.
+1928|H|mor|OC|Coniston|massacre,persecution|Coniston|A police party in central Australia kills at least thirty-one Warlpiri, Anmatyerre and Kaytetye people; an inquiry clears it.
+1929|H|mor|OC|Apia|massacre,uprising|Black Saturday in Apia|New Zealand police fire on a peaceful march of the Samoan independence movement and kill a high chief and ten others.
+1931|H|mor|OC|Napier|quake,fire,disaster|The Hawke's Bay earthquake|An earthquake and fire destroy Napier and Hastings; Napier is rebuilt in the style of the day.
+1932|H|mor|OC|Sydney|building|The harbour bridge|The Sydney Harbour Bridge opens in the depth of the depression.
+1941-12|H|mor|OC|Pearl Harbor|war,sea|Pearl Harbor|Japanese carrier aircraft sink much of the American Pacific fleet at its moorings in Hawaii.
+1942-2|H|mor|OC|Darwin|war|Darwin bombed|The carriers that struck Pearl Harbor bomb Darwin, the first of about a hundred raids on northern Australia.
+1942-7|H|mor|OC|Kokoda|war,battle|The Kokoda track|Australian militia and Papuan carriers stop a Japanese army in the mountains within sight of Port Moresby.
+1942-8|H|mor|OC|Guadalcanal|war,battle,sea|Guadalcanal|American marines land in the Solomon Islands and hold an airfield through six months of fighting.
+1946|H|mor|OC|Bikini|science,war,migration|The tests at Bikini|The people of Bikini are moved away so that atomic bombs can be tested on their atoll; they are still waiting to go home.
+1954|H|mor|OC|Bikini|science,disaster,plague|Castle Bravo|A hydrogen bomb far stronger than planned drops fallout on Rongelap and on a Japanese fishing boat.
+1956|H|mor|OC|Maralinga|science,persecution|Maralinga|Britain tests atomic bombs on Anangu land in South Australia.
+1959|H|mor|OC|Antarctica|treaty,science|The Antarctic Treaty|Twelve states agree to keep Antarctica for science and to freeze their claims.
+1962|H|mor|OC|Apia|founding|Samoa independent|Western Samoa is the first Pacific island state to regain independence.
+1967|H|mor|OC|Canberra|law|The referendum|Nine in ten Australians vote to count Aboriginal people in the census and let the Commonwealth make laws for them.
+1974|H|mor|OC|Darwin|storm,disaster|Cyclone Tracy|A cyclone flattens Darwin on Christmas morning.
+1975|H|mor|OC|Port Moresby|founding|Papua New Guinea|Papua New Guinea becomes independent of Australia.
+1975|H|mor|OC|Wellington|uprising,law,travel|The land march|Whina Cooper, nearly eighty, leads a Maori march the length of the North Island under the words not one more acre.
+1979|H|mor|OC|Mount Erebus|disaster,travel,death|Erebus|A sightseeing airliner from Auckland flies into Mount Erebus in Antarctica with the loss of all 257 aboard.
+1985|H|mor|OC|Auckland|terror,sea,death|The Rainbow Warrior|French agents sink a protest ship in Auckland harbour and kill a photographer.
+1985|H|mor|OC|Uluru|law,treaty|Uluru handed back|The title to Uluru is returned to the Anangu, who lease it back as a park.
+1987|H|mor|OC|Suva|war,crown,persecution|The coups in Fiji|A colonel twice seizes power in Fiji in the name of the indigenous Fijians.
+1988|H|mor|OC|Bougainville|war,uprising,industry|Bougainville|Landowners sabotage a giant copper mine, and ten years of war and blockade follow.

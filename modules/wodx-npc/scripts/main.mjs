@@ -25,19 +25,34 @@ import {build as buildOrders} from "./orders.mjs";
 import * as Faces from "./faces.mjs";
 import {build as buildTalk} from "./talk.mjs";
 import {VOICES} from "../data/stock-talk-more.mjs";
+import {MOODS as TALK_MOODS} from "../data/grammar/groups.mjs";
 import {build as buildAttitude} from "./attitude.mjs";
 import {build as buildRivalry} from "./rivalry.mjs";
 import {build as buildPassersby} from "./passersby.mjs";
+import {build as buildOverheard} from "./overheard.mjs";
 import {build as buildPeople} from "./people.mjs";
 import {build as buildWanted} from "./wanted.mjs";
 import {build as buildFollowers} from "./followers.mjs";
+import {build as buildDayJobs} from "./day-jobs.mjs";
+import {build as buildResidents} from "./residents.mjs";
+import {build as buildSettlements} from "./settlement.mjs";
+import {build as buildCults} from "./cults.mjs";
 import * as RV from "./rivalry-rules.mjs";
+import * as KIN from "./kin.mjs";
+import * as FATES from "./fates.mjs";
+import * as BONDS from "./bonds.mjs";
+import * as TRUST from "./trust.mjs";
+import * as MEMORY from "./memory.mjs";
+import * as HEARTS from "./hearts.mjs";
+import * as FAMILY from "./family.mjs";
+import * as STANDING from "./standing.mjs";
+import * as LEGACY from "./legacy.mjs";
 import * as PO from "./politics-rules.mjs";
 import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.41.1";
+const VERSION = "0.78.2";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -436,12 +451,22 @@ function snapshot(tokens) {
   };
 }
 
+/**
+ * 0.45.4: put a token straight back on its spot. In Foundry 14 a plain x/y update is a move that stops at walls, so the
+ * Undo of a walk round a wall left the token short. A "displace" move ignores walls; the plain update is the fallback.
+ */
+async function putBack(doc, pos) {
+  if ( typeof doc.move === "function" && CONFIG.Token?.movement?.actions?.displace ) {
+    try { await doc.move([{x: pos.x, y: pos.y, action: "displace"}], {animate: false, wodxMove: false}); } catch (e) { /* the update below */ }
+  }
+  if ( doc.x !== pos.x || doc.y !== pos.y ) await doc.update(pos, {animate: false, teleport: true, wodxMove: false});
+}
+
 async function undo(snap) {
   for ( const s of snap.tokens ?? [] ) {
     const doc = await fromUuid(s.uuid);
     if ( !doc ) continue;
-    const upd = {x: s.x, y: s.y};
-    await doc.update(upd, {animate: false, wodxMove: false});
+    await putBack(doc, {x: s.x, y: s.y});
     if ( s.moved ) await doc.setFlag("wodx-combat", "moved", s.moved); else await doc.unsetFlag("wodx-combat", "moved");
     if ( s.surrendered ) await doc.setFlag(MOD, "surrendered", s.surrendered); else if ( doc.getFlag(MOD, "surrendered") ) await doc.unsetFlag(MOD, "surrendered");
   }
@@ -696,11 +721,12 @@ export async function editBehavior(actor) {
     <fieldset><legend>Fears</legend>${Object.entries(FEARS).map(([k, l]) => `<label class="wnpc-check"><input type="checkbox" name="fear-${k}"${p.fears.includes(k) ? " checked" : ""}/> ${l}</label>`).join("")}</fieldset>
     <fieldset><legend>Talk sheet (only you see it)</legend>
     <textarea name="talk" rows="4" style="width:100%" placeholder="[the abbot] carries bishop's seal => Opens the archive and names the night porter. | teach the night porter">${esc(saved.talk ?? "")}</textarea>
-    <p class="wodx-quiet">One a line. Put WoDX Chronicle tests about the character they talk to before =&gt; to use a line only when it fits. A line that starts with a [topic] is their answer when a player asks about it from Talk; [greet], [none] and [offer] topic, topic are the greeting, the answer when nothing fits, and topics they bring up. After " | ": teach a topic; codex a page; aloud; or a WoDX Chronicle outcome. Lines with no [topic] are your notes only. The HUD's speech button shows the lines for the targeted character.</p>
+    <p class="wodx-quiet">One a line. Put WoDX Chronicle tests about the character they talk to before =&gt; to use a line only when it fits. A line that starts with a [topic] is their answer when a player asks about it from Talk; [greet], [none] and [offer] topic, topic are the greeting, the answer when nothing fits, and topics they bring up. After " | ": teach a topic; codex a page; aloud; lie (the line is a lie: a character who reads the face may see it); or a WoDX Chronicle outcome. Lines with no [topic] are your notes only. The HUD's speech button shows the lines for the targeted character.</p>
     <label class="wnpc-check"><input type="checkbox" name="talkAsk"${saved.talkAsk ? " checked" : ""}/> Ask me first: when a player asks them something, you pick the answer</label>
     <label class="wnpc-check"><input type="checkbox" name="noStock"${saved.noStock ? " checked" : ""}/> No stock talk: only the lines you write</label>
     <label class="wnpc-check"><input type="checkbox" name="noBarks"${saved.noBarks ? " checked" : ""}/> Quiet: no cries or remarks while about their routine</label>
-    <div class="wodx-field"><label>Voice</label><select name="voice" data-fixed>${opt({"": "From their factions and household", ...Object.fromEntries(Object.entries(VOICES).map(([k, v]) => [k, v.label]))}, saved.voice ?? "")}</select></div></fieldset>
+    <div class="wodx-field"><label>Voice</label><select name="voice" data-fixed>${opt({"": "From their factions and household", ...Object.fromEntries(Object.entries(VOICES).map(([k, v]) => [k, v.label]))}, saved.voice ?? "")}</select></div>
+    <div class="wodx-field"><label>Mood</label><select name="mood" data-fixed>${opt({"": "From what is happening", ...Object.fromEntries(TALK_MOODS.map(k => [k, k[0].toUpperCase() + k.slice(1)]))}, saved.mood ?? "")}</select></div></fieldset>
     <fieldset><legend>Phases (first that fits is used)</legend>
     <textarea name="phases" rows="3" style="width:100%" placeholder="Cornered: wounds >= mauled => aggression 2, caution 0, fleeAt 8">${esc(saved.phases ?? "")}</textarea>
     <p class="wodx-quiet">One a line: a name, a colon, WoDX Chronicle tests (; between them), =&gt;, then changes: template, ${Object.keys(TRAITS).join(", ")}, fleeAt, tactics, fears.</p></fieldset>
@@ -716,7 +742,7 @@ export async function editBehavior(actor) {
   if ( data === "reset" ) return actor.unsetFlag(MOD, "behavior");
   const out = {template: data.template || null, mode: data.mode || null, phases: String(data.phases ?? "").trim() || null,
     household: String(data.household ?? "").trim().slice(0, 60) || null, talk: String(data.talk ?? "").trim().slice(0, 8000) || null, talkAsk: data.talkAsk ? true : null, noStock: data.noStock ? true : null,
-    noBarks: data.noBarks ? true : null, voice: VOICES[data.voice] ? data.voice : null,
+    noBarks: data.noBarks ? true : null, voice: VOICES[data.voice] ? data.voice : null, mood: TALK_MOODS.includes(data.mood) ? data.mood : null,
     sides: String(data.sides ?? "").trim().toLowerCase().slice(0, 300) || null, openSides: String(data.openSides ?? "").trim().toLowerCase().slice(0, 200) || null,
     rivals: String(data.rivals ?? "").trim().slice(0, 2000) || null};
   const tacs = String(data.tactics ?? "").split(",").map(x => x.trim().toLowerCase()).filter(Boolean);
@@ -816,8 +842,11 @@ rivalry.hooks();
 /* 0.27.0: passers-by and animals */
 const passersby = buildPassersby({MOD, esc, isActiveGM, chron});
 passersby.hooks();
+/* 0.53.0: NPCs who talk among themselves where a character can overhear (B2750 to B2753) */
+const overheard = buildOverheard({MOD, esc, isActiveGM, chron, savedProfile, talk, nameFor: (t, u) => Faces.nameFor(t, u), sidesOf: a => rivalry.sidesOf(a)});
+overheard.hooks();
 const attitude = buildAttitude({MOD, chron, savedProfile, factions, rivalry, profileFor});
-Hooks.on("wodxChronicleReady", () => attitude.registerHandler());
+Hooks.on("wodxChronicleReady", () => { attitude.registerHandler(); MEMORY.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); FATES.registerHandlers(); });
 /* 0.30.0: relationships, the family and lineage tree, secrets and hooks, why an NPC feels as they do */
 const people = buildPeople({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry});
 people.hooks();
@@ -825,25 +854,74 @@ people.hooks();
 const wanted = buildWanted({MOD, esc, gmIds, isActiveGM, chron, routines, profileFor, attitude: () => attitude, servesOf: a => orders.servesOf(a), isPasserby: doc => passersby.isPasserby(doc), isAnimal: AN.isAnimal});
 wanted.hooks();
 const followers = buildFollowers({MOD, esc, orders, attitude: () => attitude, wanted});
+/* B3590-B3596: day jobs for a character's mortal agents, as long tasks on the clock */
+const dayJobs = buildDayJobs({MOD, esc, gmIds, isActiveGM, chron, factions, followers});
+dayJobs.hooks();
+/* 0.46.0: the residents of a generated town, from the households kept on its buildings */
+/* 0.48.0: settlements, the record of a whole generated place, reviewed before it enters the world */
+const settlements = buildSettlements({MOD, esc, chron});
+const residents = buildResidents({MOD, esc, chron, settle: () => settlements});
+residents.hooks();
+settlements.hooks();
+/* B3240-B3249: cults and congregations that gather around a character */
+const cults = buildCults({MOD, esc, gmIds, isActiveGM, chron});
+cults.hooks();
+Hooks.on("wodxChronicleReady", () => cults.registerHandler());
 
 Hooks.once("init", () => {
   registerSettings();
   routines.registerSettings();
+  MEMORY.registerSettings();
   factions.registerSettings();
   orders.registerSettings();
   Faces.registerFaceSettings();
   talk.registerSettings();
   rivalry.registerSettings();
   passersby.registerSettings();
+  overheard.registerSettings();
   wanted.registerSettings();
+  KIN.registerSettings();
+  KIN.listen();
+  FATES.registerSettings();
+  FATES.listen();
+  BONDS.registerSettings();
+  BONDS.listen();
+  TRUST.listen();
+  MEMORY.listen();
+  HEARTS.registerSettings();
+  HEARTS.listen();
+  FAMILY.listen();
+  STANDING.registerSettings();
+  cults.registerSettings();
+  LEGACY.registerSettings();
+  LEGACY.listen();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
-  const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
+  const api = {version: VERSION, rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
-    faces: {open: Faces.openFaces, apply: Faces.applyName}, nameFor: Faces.nameFor, knowledgeOf: a => rivalry.knowledgeOf(a), orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd,
+    faces: {open: Faces.openFaces, apply: Faces.applyName}, nameFor: Faces.nameFor, knowledgeOf: a => rivalry.knowledgeOf(a), orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd, overheard, openOverheard: overheard.open,
     politics: {rules: PO, polities: PO.POLITIES, polityFor: PO.polityFor},
     ties: people.ties, openTree: people.openTree, secrets: people.secrets, openSecrets: people.secrets.open, opinion: people.opinion,
-    wanted, openWanted: wanted.openList, followers, openFollowers: followers.openFollowers};
+    wanted, openWanted: wanted.openList, followers, openFollowers: followers.openFollowers, dayJobs, openDayJobs: dayJobs.openDayJobs, residents, openResidents: residents.open,
+    settlements, openSettlements: settlements.open,
+    fates: {plan: FATES.planFor, apply: FATES.apply, brood: FATES.brood, bring: FATES.bring, cast: FATES.cast, personOf: FATES.personOf, wakeDue: FATES.wakeDue, onSkipEnd: FATES.onSkipEnd, rules: FATES.rules},
+    cults, openCults: cults.open,
+    kin: {lines: KIN.lines, lineOf: KIN.lineOf, start: KIN.startLine, grow: KIN.growLines, descendants: KIN.descendants, bring: KIN.bring, reportFor: KIN.reportFor, rules: KIN.rules},
+    bonds: {stepToward: BONDS.stepToward, socialShift: BONDS.socialShift, vinculum: BONDS.vinculum, rules: BONDS.rules},
+    memory: {remember: MEMORY.remember, balance: MEMORY.balanceOf, known: MEMORY.knownBy, turn: MEMORY.turn, open: MEMORY.rememberedDialog, fromTrust: MEMORY.fromTrust, rules: MEMORY.rules},
+    trust: {of: TRUST.trustOf, move: TRUST.moveTrust, betray: TRUST.betray, debtWord: TRUST.debtWord, tradeBoon: TRUST.tradeBoon, blackmail: TRUST.blackmail,
+      answerBlackmail: TRUST.answerBlackmail, sideOf: TRUST.sideOf, setSide: TRUST.setSide, howToFind: TRUST.howToFind, foundSide: TRUST.foundSide, rules: TRUST.rules},
+    family: {conceive: FAMILY.conceive, birth: FAMILY.birth, end: FAMILY.endPregnancy, expecting: FAMILY.expectingOf, check: FAMILY.checkBirths, lines: FAMILY.lines, askChild: FAMILY.askChild,
+      makeChild: FAMILY.makeChild, childSheet: FAMILY.childSheetOf, ageOf: FAMILY.ageOf, growthPlan: FAMILY.growthPlan, grow: FAMILY.applyGrowth, planLines: FAMILY.planLines,
+      propose: FAMILY.propose, answer: FAMILY.answer, checkWeddings: FAMILY.checkWeddings, rules: FAMILY.rules},
+    hearts: {warmth: HEARTS.warmthOf, court: HEARTS.court, adopt: HEARTS.adopt, adoptionLaw: HEARTS.adoptionLawHere, hindrance: HEARTS.hindranceFor, courtship: HEARTS.courtship, law: HEARTS.lawHere, marry: HEARTS.marry, divorce: HEARTS.divorce,
+      haveChild: HEARTS.haveChild, childAge: HEARTS.childAge, household: HEARTS.householdOf, setHousehold: HEARTS.setHousehold, upkeep: HEARTS.upkeepOf,
+      takeHostage: HEARTS.takeHostage, release: HEARTS.release, lineOf: HEARTS.lineOf, rules: HEARTS.rules},
+    standing: {deed: STANDING.deed, of: STANDING.standingOf, all: STANDING.standingAll, newsDelay: STANDING.newsDelay, rank: STANDING.rankOf, setRank: STANDING.setRank, moveRank: STANDING.moveRank,
+      rankShift: STANDING.rankShift, feuds: STANDING.feuds, startFeud: STANDING.startFeud, endFeud: STANDING.endFeud, feudKilling: STANDING.feudKilling, feudLaw: STANDING.feudLawHere,
+      feudsOf: STANDING.feudsOf, feudSidesOf: STANDING.feudSidesOf, feudRows: STANDING.feudRows, rules: STANDING.rules},
+    legacy: {pastLives: LEGACY.pastLives, addPastLife: LEGACY.addPastLife, recall: LEGACY.recall, teach: LEGACY.teach, taughtBy: LEGACY.taughtBy, teachingLine: LEGACY.teachingLine,
+      web: LEGACY.web, openWeb: LEGACY.openWeb, ideas: LEGACY.ideasNow, rules: LEGACY.rules}, openWeb: LEGACY.openWeb};
   game.modules.get(MOD).api = api;
 });
 /* Obfuscate and sneaking as token statuses, for the noticing roll (V20 Dark Ages pp. 169, 195, 224-226) */
@@ -857,7 +935,7 @@ Hooks.once("setup", () => {
 });
 Hooks.once("ready", () => {
   if ( !C() ) console.warn(`${MOD} | WoDX Combat is missing: NPCs cannot act.`);
-  if ( chron()?.registerApprovalHandler ) { factions.registerHandler(); attitude.registerHandler(); } // else on wodxChronicleReady
+  if ( chron()?.registerApprovalHandler ) { factions.registerHandler(); attitude.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); cults.registerHandler(); } // else on wodxChronicleReady
   ensureStyles();
 });
 /**
@@ -933,14 +1011,24 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: true, onChange: () => orders.openOrders()};
   tokens.tools.wodxFollowers = {name: "wodxFollowers", title: "Followers (everyone who serves your character)", icon: "fa-solid fa-users", order: 109.5,
     button: true, visible: true, onChange: () => followers.openFollowers()};
+  tokens.tools.wodxRemembered = {name: "wodxRemembered", title: "Who remembers you (people who have not forgotten what you did)", icon: "fa-solid fa-brain", order: 109.6,
+    button: true, visible: !game.user.isGM, onChange: () => MEMORY.rememberedDialog()};
   tokens.tools.wodxNpcs = {name: "wodxNpcs", title: "WoDX NPCs (how NPCs act in combat)", icon: "fa-solid fa-chess-knight", order: 110,
     button: true, visible: game.user.isGM, onChange: () => openNpcPanel()};
   tokens.tools.wodxPlaces = {name: "wodxPlaces", title: "WoDX places (where routines send NPCs)", icon: "fa-solid fa-map-location-dot", order: 111,
     button: true, visible: game.user.isGM, onChange: () => routines.openPlaces()};
   tokens.tools.wodxFactions = {name: "wodxFactions", title: game.user.isGM ? "WoDX factions (faction turns, hunting grounds, rumours)" : "Your factions (found one, or give orders to one you run)", icon: "fa-solid fa-chess-rook", order: 112,
     button: true, visible: true, onChange: () => factions.openFactions()};
+  // B3246: the character's following (awe by place, its cults, preach and gather)
+  tokens.tools.wodxCults = {name: "wodxCults", title: game.user.isGM ? "Cults and followings (awe by place, cults, preach)" : "Your following (where people speak of you, your cults, preach)", icon: "fa-solid fa-hands-praying", order: 112.5,
+    button: true, visible: game.user.isGM || game.settings.get(MOD, "cultsOn") === true, onChange: () => cults.open()};
   tokens.tools.wodxWanted = {name: "wodxWanted", title: "Descriptions abroad (word going round of a culprit)", icon: "fa-solid fa-person-circle-question", order: 114,
     button: true, visible: game.user.isGM, onChange: () => wanted.openList()};
+  // NPC 0.61.0 (B2914): dress the selected characters for a part of the world
+  tokens.tools.wodxDress = {name: "wodxDress", title: "Dress for a part of the world (a stranger's clothes are noticed)", icon: "fa-solid fa-shirt", order: 114.5,
+    button: true, visible: true, onChange: () => wanted.dress.dialog()};
+  tokens.tools.wodxOverheard = {name: "wodxOverheard", title: "Overheard talk (NPCs who talk among themselves on this scene)", icon: "fa-solid fa-ear-listen", order: 113.5,
+    button: true, visible: game.user.isGM, onChange: () => overheard.open()};
   tokens.tools.wodxCrowd = {name: "wodxCrowd", title: "Passers-by (people and animals walking through this scene)", icon: "fa-solid fa-people-group", order: 113,
     button: true, visible: game.user.isGM, onChange: () => passersby.openCrowd()};
 });

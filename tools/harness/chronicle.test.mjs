@@ -92,7 +92,7 @@ test("crossing into 1347 proposes an era change; approving applies it", async ()
   await api.approvals.decide(pending[0].id, "approve");
   await mock.settle();
   assert.equal(set("activeEra"), "long-night");
-  assert.ok(mock.log.chat.some(c => /Plague and Long Night/.test(c.content)));
+  assert.ok(mock.log.chat.some(c => /The Long Night/.test(c.content)));
 });
 
 test("rejecting keeps the era and is not asked again", async () => {
@@ -111,15 +111,23 @@ test("with proposals off the era follows the date at once; the lock overrides", 
   await game.time.advance(86400);
   await mock.settle();
   assert.equal(set("activeEra"), "renaissance");
+  // A lock saved under the old prologue id opens the era that replaced it
   await game.settings.set(M, "eraLock", "classical");
   await mock.settle();
-  assert.equal(set("activeEra"), "classical");
+  assert.equal(set("activeEra"), "roman-empire");
   assert.equal(CONFIG.worldofdarkness.defaultMortalEra, "classical");
   assert.equal(CONFIG.worldofdarkness.defaultWerewolfEra, "darkages");
   await game.settings.set(M, "eraLock", "");
   await mock.settle();
   assert.equal(set("activeEra"), "renaissance");
   await game.settings.set(M, "rule.eraProposals", true);
+  // With proposals on, lifting a lock from a prologue goes straight back to the date's era
+  await game.settings.set(M, "eraLock", "iron-dawn");
+  await mock.settle();
+  assert.equal(set("activeEra"), "iron-dawn");
+  await game.settings.set(M, "eraLock", "");
+  await mock.settle();
+  assert.equal(set("activeEra"), "renaissance");
 });
 
 test("a player's request reaches the queue as a plain request, even if it claims another type", async () => {
@@ -199,7 +207,7 @@ test("era test: a character per line in every era, all pass", async () => {
   const api = game.modules.get(M).api;
   mock.DialogV2.queue(() => true);
   const result = await api.runEraTest();
-  assert.equal(result.rows.length, 14 * 4);
+  assert.equal(result.rows.length, 19 * 4); // 12 eras and 7 prologue eras
   assert.equal(result.failures, 0, JSON.stringify(result.rows.filter(r => !r.pass)));
   const j = game.journal.find(x => x.getFlag(M, "kind") === "era-test");
   assert.match(j.pages.getName("Results").text.content, /All passed/);

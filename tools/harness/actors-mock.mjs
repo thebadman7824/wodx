@@ -43,6 +43,7 @@ export async function installActors(root) {
   class Item {
     constructor(data, parent) { Object.assign(this, structuredClone(data)); this.id = data._id ?? newId(); this.parent = parent; this.flags ??= {}; this.system ??= {}; this._stats = {createdTime: ++ids}; }
     async update(changes) { for ( const [k, v] of Object.entries(changes) ) setPath(this, k, v); return this; }
+    async delete() { this.parent?.items?.delete(this.id); return this; }
     getFlag(s, k) { return this.flags?.[s]?.[k]; }
   }
   class Actor {

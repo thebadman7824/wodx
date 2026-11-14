@@ -24,7 +24,7 @@ async function check(label, a, id, words) {
   await step(label, async () => {
     if (!a) return ok(label, false, { error: "test character missing" });
     const had = a.getFlag(MOD, "sheet");
-    const made = (await a.createEmbeddedDocuments("Item", ITEMS)).map(i => i.id);
+    const made = inOrder(await a.createEmbeddedDocuments("Item", ITEMS), ITEMS).map(i => i.id);
     try {
       await a.setFlag(MOD, "sheet", id);
       const e0 = R.errors.length;
@@ -80,3 +80,5 @@ export async function run() {
   await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, { notify: false });
   return R.summary;
 }
+
+import {inOrder} from "./kit.mjs";

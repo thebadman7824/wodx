@@ -4,14 +4,14 @@ import {getEngine, describeTime} from "./calendar.mjs";
 import {writeChronicleRules} from "./journals.mjs";
 import * as approvals from "./approvals.mjs";
 
-const state = {profiles: [], rejected: [], loaded: false};
+const state = {profiles: [], rejected: [], loaded: false, legacy: {}};
 
 export function profiles() {
   return state.profiles;
 }
 
 export function getProfile(id) {
-  return state.profiles.find(p => p.id === id) ?? null;
+  return state.profiles.find(p => p.id === id) ?? state.profiles.find(p => p.id === state.legacy[id]) ?? null;
 }
 
 /**
@@ -24,6 +24,7 @@ export async function loadProfiles() {
   if ( !mod ) ui.notifications.error("WoDX could not load its era profiles (data/eras.json).");
   const merged = mergeProfiles(mod?.profiles ?? [], world?.profiles ?? []);
   state.profiles = merged.profiles;
+  state.legacy = mod?.legacy ?? {};
   state.rejected = merged.rejected;
   state.loaded = true;
   if ( merged.rejected.length && game.user.isGM ) {
@@ -137,8 +138,8 @@ export async function checkEra() {
   }
   if ( target.profile.id === activeId ) return;
 
-  // The Storyteller's lock is a decision already made
-  if ( target.locked || !rule("eraProposals") ) {
+  // The Storyteller's lock is a decision already made, and so is lifting it from a prologue, which no date reaches
+  if ( target.locked || !rule("eraProposals") || getProfile(activeId)?.prologue ) {
     await setSetting("activeEra", target.profile.id);
     return;
   }

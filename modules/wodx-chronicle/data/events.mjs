@@ -54,11 +54,11 @@ export default {
       source: "V20 Lore of the Clans pdf 251"
     },
     {
-      id: "croatan", year: 1590, branch: "both", lines: ["werewolf"],
+      id: "croatan", year: 1589, branch: "both", lines: ["werewolf"],
       name: "The Croatan give themselves at Roanoke",
       summary: "The whole tribe dies to stop a great servant of the Wyrm. No living Croatan remains.",
-      source: "W20 p. 40",
-      dateNote: "W20 gives Roanoke, not a year; 1590 matches the lost-tribe year in era advancement."
+      source: "W20 p. 40; Past Lives pdf 66 to 70",
+      dateNote: "W20 gives Roanoke, not a year; Past Lives, Werewolf: The Wild West (pdf 60) and Croatan Song (pdf 30) put the rite in 1589."
     },
     {
       id: "third-great-maelstrom", year: 1600, branch: "both", lines: ["wraith"],

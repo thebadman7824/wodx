@@ -46,7 +46,7 @@ test("the card's own routing keeps mind keywords and player characters in the qu
 });
 
 test("Disciplines and Gifts call the power plan, behind a world setting", () => {
-  assert.match(src("modules/wodx-actions/scripts/kindred.js"), /EF\.powerPlan\(actor, \{ set: "disc"/);
+  assert.match(src("modules/wodx-actions/scripts/kindred.js"), /EF\.powerPlan\(actor, \{ set: (p\.book === "V20" \? "v20" : )?"disc"/);
   assert.match(src("modules/wodx-actions/scripts/garou.js"), /EF\.powerPlan\(actor, \{ set: "gift"/);
   assert.match(src("modules/wodx-actions/scripts/effects.js"), /export function powerPlan/);
   assert.match(src("modules/wodx-actions/scripts/main.js"), /"powerEffects"/);

@@ -143,11 +143,50 @@ function describeItem(row, notes) {
   return bits.length ? `<p>${bits.join("<br>")}</p>` : "";
 }
 
-/** The gear an era's characters can carry, by kind and then name. */
-export function forEra(items, eraId) {
+/**
+ * Library 0.21.0 (B3071): the weapons of other lands, each a copy of the book weapon it fights as, under its own name,
+ * with that weapon's figures and page. local: [name, ways, {source: base name}, what it is] (data/gear-ways.mjs).
+ */
+export function localGear(items, local) {
+  const out = [];
+  const have = new Set(items.map(i => `${i.flags?.[MOD]?.source}|${i.name}`));
+  for ( const [name, ways, like, what] of local ?? [] ) {
+    for ( const [source, baseName] of Object.entries(like) ) {
+      const base = items.find(i => i.flags?.[MOD]?.source === source && i.name === baseName);
+      if ( !base || have.has(`${source}|${name}`) ) continue;
+      have.add(`${source}|${name}`);
+      const it = JSON.parse(JSON.stringify(base));
+      it.name = name;
+      const f = it.flags[MOD];
+      f.ways = ways; f.local = true; f.like = baseName;
+      f.notes = [what, ...(f.notes ?? []).filter(n => !/^Rate|^Clip/.test(n))];
+      it.system.reference = `${base.system.reference}; fights as the ${baseName.replace(/, thrown$/, "")} (house rule)`;
+      it.system.description = `<p>${what[0].toUpperCase()}${what.slice(1)}. Fights as the ${baseName.replace(/, thrown$/, "")}.</p>${base.system.description ?? ""}`;
+      out.push(it);
+    }
+  }
+  return out;
+}
+
+/** Library 0.21.0 (B3070): is a piece of gear found in a year and place? ({year, way, region}; no place: yes) */
+export function gearAt(item, where = {}) {
+  const {year = null, way = null, region = null} = where ?? {};
+  if ( !way && !region ) return true;
+  const ways = item?.flags?.[MOD]?.ways;
+  if ( !ways ) return true;
+  const r = region && region in ways ? ways[region] : way && way in ways ? ways[way] : "*" in ways ? ways["*"] : false;
+  if ( r === false ) return false;
+  const y = Number(year);
+  if ( r === null || r === undefined || year === null || !Number.isFinite(y) ) return true;
+  if ( Array.isArray(r) ) return y >= r[0] && y <= r[1];
+  return y >= Number(r);
+}
+
+/** The gear an era's characters can carry, by kind and then name; with where ({year, way, region}), only what is at home there. */
+export function forEra(items, eraId, where = null) {
   const order = {"Melee Weapon": 0, "Ranged Weapon": 1, Armor: 2, Item: 3};
   const id = ERA_LIKE[eraId] ?? eraId;
-  return items.filter(i => !eraId || (i.flags?.[MOD]?.eras ?? []).some(e => e === eraId || e === id))
+  return items.filter(i => !eraId || (i.flags?.[MOD]?.eras ?? []).some(e => e === eraId || e === id)).filter(i => !where || gearAt(i, where))
     .sort((a, b) => (order[a.type] - order[b.type]) || a.name.localeCompare(b.name));
 }
 
@@ -161,4 +200,94 @@ export function summary(i) {
     return [`diff ${s.difficulty}`, dmg, i.type === "Ranged Weapon" && s.range ? `range ${s.range}` : ""].filter(Boolean).join(", ");
   }
   return "";
+}
+
+/* ---------------------------------------------------------------------------------------------------------------
+ * Cyberware in the body (B3795 to B3797): the bonus list a piece turns on, and the Humanity it costs going in.
+ * ------------------------------------------------------------------------------------------------------------- */
+
+const BONUS_TYPE = {attr: "attribute_buff", fixed: "attribute_fixed_value", dice: "attribute_dice_buff", ab: "ability_buff",
+  abd: "ability_diff", atk: "attack_buff", atkd: "attack_diff", soak: "soak_buff", init: "initiative_buff"};
+
+/** The system's bonus list rows for a piece's fx (off until it is installed). */
+export function fxBonusList(name, fx = {}, on = false) {
+  return (fx.bonus ?? []).map(([t, setting, value]) => ({
+    name: `${name}: ${t === "init" ? "initiative" : setting}`,
+    settingtype: t === "atk" || t === "atkd" ? `TYPES.Item.${setting}` : String(setting ?? ""),
+    type: BONUS_TYPE[t] ?? t, value: Number(value) || 0, isactive: !!on, wodxGear: true}));
+}
+
+/** Turn a piece's own rows on or off and keep anything else on its list as it is. */
+export function gearBonusList(list = [], on = false) {
+  return (Array.isArray(list) ? list : []).map(b => b?.wodxGear ? {...b, isactive: !!on} : b);
+}
+
+const LABEL = {attr: "", fixed: "", dice: "dice on", ab: "dice on", abd: "difficulty on", atk: "attack dice with", atkd: "attack difficulty with",
+  soak: "soak dice", init: "initiative"};
+const sign = n => `${n > 0 ? "+" : n < 0 ? "−" : "±"}${Math.abs(n)}`;
+const word = s => String(s).replace(/^\w/, c => c.toUpperCase());
+
+/** One line saying what a piece does once installed. */
+export function fxSummary(fx = {}) {
+  const bits = [];
+  for ( const [t, s, v] of fx.bonus ?? [] ) {
+    if ( t === "fixed" ) bits.push(`${word(s)} becomes ${v}`);
+    else if ( t === "attr" ) bits.push(`${sign(v)} ${word(s)}`);
+    else if ( t === "init" ) bits.push(`${sign(v)} initiative`);
+    else if ( t === "soak" ) bits.push(`${sign(v)} soak dice${s && s !== "all" ? ` against ${s}` : ""}`);
+    else if ( t === "atkd" || t === "abd" ) bits.push(`${sign(v)} ${LABEL[t]} ${t === "abd" ? word(s) : s.toLowerCase().replace(" weapon", " weapons")}`);
+    else bits.push(`${sign(v)} ${LABEL[t]} ${t === "atk" ? s.toLowerCase() : word(s)} rolls`);
+  }
+  if ( fx.senses?.dark ) bits.push("sees in the dark (no darkness step for sight)");
+  for ( const [n, senses] of fx.senses?.mods ?? [] ) bits.push(`${senses.join(" and ")} ${n} easier`);
+  if ( fx.body?.ease ) bits.push(fx.body.ease >= 5 ? "no wound penalties" : `wound penalties ${fx.body.ease} less`);
+  if ( fx.body?.potence ) bits.push(`${sign(fx.body.potence)} unarmed damage dice, as Potence`);
+  if ( fx.limb?.soak ) bits.push(`${fx.limb.soak} soak dice of its own against blows aimed at the ${fx.limb.part ?? "limb"}`);
+  if ( fx.weapon ) bits.push(`a ${fx.weapon.type === "Ranged Weapon" ? "ranged" : "close"} weapon: ${fx.weapon.dmg} ${fx.weapon.kind}${fx.weapon.attribute ? " + Strength" : ""}`);
+  if ( fx.humanityLess ) bits.push(`takes back ${fx.humanityLess} of the Humanity cost`);
+  return bits.join("; ");
+}
+
+/**
+ * A Humanity cost as printed ("2D6", "1D6/2", "3D6+1", "0.5", "2pts", "1D6/pair", "1D6/2D6 (as printed)") as
+ * {dice, sides, div, plus, fixed}; null when the text holds no cost.
+ */
+export function parseHumanity(text) {
+  const s = String(text ?? "").replace(/,/g, " ").trim();
+  const d = s.match(/(\d+)\s*d\s*6(?:\s*\/\s*(\d+)(?!\s*d))?(?:\s*\+\s*(\d+))?/i);
+  if ( d ) return {dice: Number(d[1]), sides: 6, div: Number(d[2]) || 1, plus: Number(d[3]) || 0, fixed: 0};
+  const f = s.match(/(\d*\.?\d+)/);
+  return f ? {dice: 0, sides: 6, div: 1, plus: 0, fixed: Number(f[1])} : null;
+}
+
+/** Roll a cost: rng gives 0 to 1. Halves round up, as the book's dice do. */
+export function humanityCost(text, rng = Math.random) {
+  const c = parseHumanity(text);
+  if ( !c ) return {points: 0, faces: [], text: ""};
+  const faces = Array.from({length: c.dice}, () => 1 + Math.floor(rng() * c.sides));
+  const sum = faces.reduce((a, b) => a + b, 0);
+  const points = c.dice ? Math.ceil(sum / c.div) + c.plus : c.fixed;
+  return {points, faces, text: String(text)};
+}
+
+/**
+ * Humanity Index (the article's ten points to a dot): lost points so far, points added, current dots.
+ * Returns {lost: points after, dots: dots to take off, left: dots after}.
+ */
+export function dotsLost(before = 0, add = 0, dots = 0) {
+  const lost = Math.max(0, Number(before) + Number(add));
+  const taken = Math.max(0, Math.floor(lost / 10) - Math.floor(Math.max(0, Number(before)) / 10));
+  return {lost, dots: Math.min(Number(dots) || 0, taken), left: Math.max(0, (Number(dots) || 0) - taken)};
+}
+
+/** A weapon item from a piece's weapon fx (keeps the piece's flags and reference). */
+export function fxWeapon(item, w) {
+  const melee = w.type === "Melee Weapon";
+  const system = {...item.system, isequipped: false, difficulty: w.diff ?? 6,
+    damage: {attribute: w.attribute ?? (melee ? "strength" : ""), bonus: w.dmg, type: w.kind, isrollable: true},
+    attack: {attribute: "dexterity", ability: w.ability ?? (melee ? "brawl" : "firearms"), accuracy: 0, isrollable: true},
+    minstrength: 0, conceal: "P"};
+  if ( !melee ) Object.assign(system, {range: w.range ?? 10, rate: w.rate ?? 1, clip: {value: w.clip ?? 1, max: w.clip ?? 1},
+    mode: {hasreload: true, hasburst: false, hasfullauto: false, hasspray: false}});
+  return {...item, type: w.type, img: melee ? "icons/svg/sword.svg" : "icons/svg/target.svg", system};
 }

@@ -11,10 +11,15 @@ import * as realms from "./realms.mjs";
 import * as ways from "./ways.mjs";
 import * as drift from "./drift.mjs";
 import * as driftRules from "./drift-rules.mjs";
+import * as corruption from "./corruption.mjs";
+import * as corruptionRules from "./corruption-rules.mjs";
 import * as waysRules from "./ways-rules.mjs";
 import * as realmsRules from "./realms-rules.mjs";
 import * as realmMaps from "./realm-maps.mjs";
 import * as realmMapsRules from "./realm-maps-rules.mjs";
+import * as worldsChartRules from "./worlds-chart-rules.mjs";
+import * as realmWorlds from "./realm-worlds.mjs";
+import * as wildRules from "./wild-rules.mjs";
 import * as reflect from "./reflect.mjs";
 import * as reflectRules from "./reflect-rules.mjs";
 import * as spirits from "./spirits.mjs";
@@ -39,6 +44,8 @@ Hooks.once("init", () => {
   registerStatuses();
   journey.registerJourneySettings();
   realms.registerRealmSettings();
+  realmWorlds.registerRealmWorldSettings();
+  corruption.registerCorruptionSettings();
   realms.setupRealms();
 });
 
@@ -59,10 +66,17 @@ Hooks.once("ready", () => {
     realms: {rules: realmsRules, storm: realms.storm, shreddingWinds: realms.shreddingWinds, addDreamingLevel: realms.addDreamingLevel, makeTrod: realms.makeTrod,
       dreamingGate: realms.dreamingGate, dreamingDialog: realms.dreamingDialog, checkDisembodiment: realms.checkDisembodiment, jack: realms.jack, netOpen: realms.netOpen,
       netContest: realms.netContest, rollsDialog: realms.rollsDialog, applyLayerSound: realms.applyLayerSound, wantedLayerSound: realms.wantedLayerSound, layerSoundNow: realms.layerSoundNow},
-    drift: {of: drift.driftOf, step: drift.stepDrift, undo: drift.undoStep, dialog: drift.driftDialog, onMapEvent: drift.onMapEvent, rules: driftRules},
+    // B3270-B3276: Wyrm corruption that spreads between places and into people
+    corruption: {of: corruption.placeOf, set: corruption.setPlace, taintOf: corruption.taintOf, setTaint: corruption.setTaint, senseWyrm: corruption.senseWyrm,
+      plan: corruption.planTurn, apply: corruption.applyTurn, rates: corruption.rates, rateOf: corruption.rateOf, setRate: corruption.setRate, regionOf: corruption.regionOfScene, undo: corruption.undoTurn, run: corruption.run, dialog: corruption.corruptionDialog, rules: corruptionRules},
+    drift: {of: drift.driftOf, step: drift.stepDrift, lever: drift.leverStep, undo: drift.undoStep, dialog: drift.driftDialog, onMapEvent: drift.onMapEvent, rules: driftRules},
     ways: {make: ways.makeWay, realm: ways.makeRealm, dialog: ways.waysDialog, isRealm: ways.isRealm, rules: waysRules},
+    worldsChart: {rules: worldsChartRules, svg: (o = {}) => worldsChartRules.svg(realmMapsRules.REALMS, o), layout: () => worldsChartRules.layout(realmMapsRules.REALMS)},
+    realmWorlds: {open: realmWorlds.realmWorldsDialog, view: realmWorlds.view, closer: realmWorlds.closerDialog, places: realmWorlds.foundDialog, mapOf: realmWorlds.mapOf,
+      found: realmWorlds.found, setFound: realmWorlds.setFound, visits: realmWorlds.visits, newVisit: realmWorlds.newVisit, load: realmWorlds.load, get rules() { return realmWorlds.loaded(); }},
     realmMaps: {draw: realmMaps.drawRealm, redraw: realmMaps.redrawRealm, send: realmMaps.sendToRealm, bringBack: realmMaps.bringBack,
-      dialog: realmMaps.realmMapsDialog, isRealmMap: realmMaps.isRealmMap, artOf: realmMaps.artOf, modelOf: realmMaps.modelOf, rules: realmMapsRules},
+      dialog: realmMaps.realmMapsDialog, isRealmMap: realmMaps.isRealmMap, artOf: realmMaps.artOf, modelOf: realmMaps.modelOf, rules: realmMapsRules,
+      drawWild: realmMaps.drawWild, walkOn: realmMaps.walkOn, isWild: realmMaps.isWild, wildRules},
     spirits: {of: spirits.of, standing: spirits.standing, effect: spirits.effect, move: spirits.move, setTotem: spirits.setTotem, dialog: spirits.spiritsDialog,
       courtOptions: spirits.courtOptions, rules: spiritRules},
     reflect: {scene: reflect.reflectScene, undo: reflect.undoReflection, dialog: reflect.reflectDialog, guessPath: reflect.guessPath, rules: reflectRules}
@@ -72,8 +86,9 @@ Hooks.once("ready", () => {
   // Record the charts in Chronicle Rules once WoDX Chronicle has written that journal
   if ( game.users.activeGM?.isSelf ) setTimeout(() => writeChartsPage().catch(err => console.error("WoDX |", err)), 3000);
   // The year-and-a-day proposals go to WoDX Chronicle's approval queue
-  if ( game.modules.get("wodx-chronicle")?.api ) { registerYearHandler(); drift.registerDriftHandler(); }
-  else Hooks.once("wodxChronicleReady", () => { registerYearHandler(); drift.registerDriftHandler(); });
+  if ( game.modules.get("wodx-chronicle")?.api ) { registerYearHandler(); drift.registerDriftHandler(); corruption.registerCorruptionHandlers(); }
+  else Hooks.once("wodxChronicleReady", () => { registerYearHandler(); drift.registerDriftHandler(); corruption.registerCorruptionHandlers(); });
+  corruption.setupCorruption();
   journey.registerJourneys();
   journey.applyDecay();
 });
@@ -145,6 +160,10 @@ Hooks.on("getSceneControlButtons", controls => {
   tokens.tools.wodxRealmMaps = {
     name: "wodxRealmMaps", title: "Realm maps: draw a realm past the near worlds, send the selected tokens there, bring them back (Storyteller)", icon: "fa-solid fa-map", order: 133,
     button: true, visible: game.user.isGM, onChange: () => realmMaps.realmMapsDialog()
+  };
+  tokens.tools.wodxRealmWorlds = {
+    name: "wodxRealmWorlds", title: "Realm world maps: the whole of a realm, its places, journeys and what is found (Storyteller)", icon: "fa-solid fa-map-location-dot", order: 134,
+    button: true, visible: game.user.isGM, onChange: () => realmWorlds.realmWorldsDialog()
   };
   tokens.tools.wodxReflect = {
     name: "wodxReflect", title: "Reflect a generated town map in the Penumbra and Shadowlands (Storyteller)", icon: "fa-solid fa-ghost", order: 115,

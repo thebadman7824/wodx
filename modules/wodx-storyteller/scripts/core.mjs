@@ -11,15 +11,32 @@
  */
 import * as W from "./world-rules.mjs";
 import * as Road from "./road-rules.mjs";
+import * as Country from "./country-rules.mjs";
+import * as MoneyRules from "./money-rules.mjs";
 import {secondsToNextDawn, secondsToNextDusk, describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 
 export const MOD = "wodx-storyteller";
 export const SOCKET = `module.${MOD}`;
-export const VERSION = "0.43.3";
+export const VERSION = "0.90.1";
 export const T = {travel: `${MOD}.travel`, encounter: `${MOD}.encounter`, solo: `${MOD}.solo`, beat: `${MOD}.beat`};
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 export const chron = () => game.modules?.get?.("wodx-chronicle")?.api ?? null;
+/**
+ * Where a scene is in the chronicle: {year, region, regionLabel, way, wayLabel}, or null when the scene has no region
+ * or Chronicle is off. Cook, brew or mix and Make something keep to the goods of this place (B3100).
+ */
+export function whereNow(scene = globalThis.canvas?.scene) {
+  try {
+    const c = chron();
+    const year = Number(c?.eras?.currentYear?.()) || null;
+    const r = c?.world?.here?.(scene);
+    const rules = c?.world?.rules;
+    if ( !r?.id || year === null || typeof rules?.sphereFor !== "function" ) return null;
+    const way = rules.sphereFor(r.id, year);
+    return {year, region: r.id, regionLabel: r.label ?? r.id, way, wayLabel: rules.SPHERES?.[way] ?? way};
+  } catch (e) { return null; }
+}
 export const npc = () => game.modules?.get?.("wodx-npc")?.api ?? null;
 export const isActiveGM = () => !!game.user?.isGM && (game.users?.activeGM ? game.users.activeGM.id === game.user.id : true);
 export const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
@@ -125,6 +142,7 @@ export async function advancePersonal(actorId, seconds) {
 }
 /** The next dawn after a time, as a world time. */
 export const dawnAfter = t => t + secondsToNextDawn(t, latitude());
+export const duskAfter = t => t + secondsToNextDusk(t, latitude());
 /** The latest dawn at or before a time. */
 export function dawnBefore(t) {
   const at = dawnAfter(t - 86400);
@@ -208,36 +226,59 @@ export async function setTravel(scene, data) {
 }
 
 /** What a trip would be: minutes, arrival, dawn, and whether it waits for the Storyteller. */
-export function planTrip(actor, destId, {mode = null} = {}) {
+export function planTrip(actor, destId, {mode = null, pace = null, lodging = null} = {}) {
   const dest = travelPlaces().find(p => p.id === destId);
   if ( !dest ) return null;
   const from = whereIs(actor);
-  const fromPlace = from ? {id: from.id, travel: from.flags?.[MOD]?.travel ?? {}} : null;
+  const fromPlace = from ? {id: from.id, name: sceneName(from), travel: from.flags?.[MOD]?.travel ?? {}} : null;
   const start = personalTime(actor.id);
-  const at = tripContext(start);
+  const at = tripContext(start, from ?? null);
+  const wage = wageNow(at.year);
+  const burns = sunBurns(actor);
   const trip = from?.id === dest.id ? {minutes: 0, by: "here", mode: null, modeLabel: null, road: null, why: []}
-    : W.tripPlan(fromPlace, dest, {fallback: setting("travelMinutes") ?? 30, want: mode, ...at});
-  const minutes = trip.minutes;
+    : W.tripPlan(fromPlace, dest, {fallback: setting("travelMinutes") ?? 30, want: mode, ...at, night: at.night || burns, wage});
+  // A trip across the country map is laid over the nights and days: rests, day shelter, inns and fares.
+  const sched = trip.by === "map" ? Country.schedule(trip, {start, nextDawn: dawnAfter, nextDusk: duskAfter, sunBurns: burns, pace: pace ?? "steady", lodging: lodging ?? "inn", wage}) : null;
+  const minutes = sched ? sched.minutes : trip.minutes;
   const arrive = start + (minutes * 60);
   const dawnAt = dawnAfter(start);
-  const ask = W.travelNeedsAsk({place: dest, arrive, dawnAt, sunBurns: sunBurns(actor)});
-  return {dest, from, minutes, start, arrive, dawnAt, ask, trip, year: at.year, night: at.night};
+  const ask = W.travelNeedsAsk({place: dest, arrive, dawnAt, sunBurns: burns, plan: sched});
+  return {dest, from, minutes, start, arrive, dawnAt, ask, trip, sched, year: at.year, night: at.night, region: at.region};
+}
+/** A month's plain wage in the year's money, in its smallest unit: fares and inn nights are shares of it. */
+export function wageNow(year) {
+  let region = "moravian";
+  try { region = setting("moneyRegion") || "moravian"; } catch (e) { region = "moravian"; }
+  try { return MoneyRules.wageAt(year, region); } catch (e) { return 0; }
+}
+/** An amount in the year's money, in words. */
+export function moneyWords(amount, year) {
+  let region = "moravian";
+  try { region = setting("moneyRegion") || "moravian"; } catch (e) { region = "moravian"; }
+  try { return MoneyRules.formatMoney(amount, MoneyRules.moneyFor(year, region)); } catch (e) { return String(amount); }
 }
 
 /** The year, the dark, the weather and the branch at a time, for a trip (WoDX Atmosphere's weather when it is on). */
-export function tripContext(t) {
-  let year = 0, night = false, weather = null, future = false;
+export function tripContext(t, scene = null) {
+  let year = 0, night = false, weather = null, future = false, region = null;
   try { const d = describeTime(t, latitude()); year = d.year; night = !!d.isNight; } catch (e) { /* no calendar */ }
   try { weather = game.modules.get("wodx-atmosphere")?.active ? (game.modules.get("wodx-atmosphere").api?.weather?.now?.() ?? null) : null; } catch (e) { weather = null; }
   try { future = !!game.settings.get("wodx-chronicle", "rule.futureBranch"); } catch (e) { future = false; }
-  return {year, night, weather, future};
+  // 0.57.0 (B2571): the roads and ways of the region the trip starts in (the scene's own, else the homeland)
+  try { const w = chron()?.world; const r = scene && w?.here ? w.here(scene) : null; region = r?.id ?? (typeof w?.homeland?.() === "string" ? w.homeland() : null); } catch (e) { region = null; }
+  return {year, night, weather, future, region};
 }
 /** Words for how a trip goes: "on foot, 2 hours (mud, the dark)". */
 export function tripWords(plan) {
   const t = plan?.trip;
   if ( !plan || !plan.minutes ) return "already there";
   const how = t?.modeLabel ? `${t.modeLabel.toLowerCase()}, ` : "";
-  return `${how}${W.spanLabel(plan.minutes * 60)}${t?.why?.length ? ` (${t.why.join(", ")})` : ""}`;
+  const s = plan.sched, extra = [];
+  if ( t?.km ) extra.push(`${Math.round(t.km)} km`);
+  if ( s?.nights ) extra.push(`${s.nights} ${s.nights === 1 ? "stop" : "stops"} on the way`);
+  if ( s && (s.cost + s.fare) > 0 ) extra.push(`costs ${moneyWords(s.cost + s.fare, plan.year)}`);
+  if ( s?.exposed ) extra.push("no shelter by day");
+  return `${how}${W.spanLabel(plan.minutes * 60)}${extra.length ? `, ${extra.join(", ")}` : ""}${t?.why?.length ? ` (${t.why.join(", ")})` : ""}`;
 }
 
 /** Where a token lands on a scene: the place's own spot, else the middle of the scene. */
@@ -292,6 +333,9 @@ async function findTable(ref) {
   try { const t = await fromUuid(ref); if ( t ) return t; } catch (e) { /* a name, not a uuid */ }
   return all(game.tables).find(t => t.name === ref || t.id === ref) ?? null;
 }
+/** A meeting on the road for a scene (0.64.0: also the world map's "Go"). {text, table}. */
+export const roadEncounter = (scene = globalThis.canvas?.scene ?? null) => drawEncounter({scene, uuid: scene?.uuid, name: scene?.name ?? "the road"});
+
 async function drawEncounter(dest) {
   const table = await findTable(travelOf(dest.scene).table ?? setting("encounterTable"));
   if ( !table?.draw ) {
@@ -314,35 +358,54 @@ async function drawEncounter(dest) {
  * A trip, on the active Storyteller's client. A place that asks first, or a trip into the dawn for a character the sun
  * burns, goes to the approval queue unless approved is set.
  */
-export async function travel({actorId, destId, userId = null, approved = false, mode = null} = {}) {
+export async function travel({actorId, destId, userId = null, approved = false, mode = null, pace = null, lodging = null} = {}) {
   if ( !isActiveGM() ) return {ok: false, why: "Only the Storyteller's client moves tokens."};
   const actor = game.actors.get(actorId);
   if ( !actor ) return {ok: false, why: "That character is gone."};
   if ( convenedMap()[actorId] && !approved ) return {ok: false, why: "This character is in a scene the Storyteller called. Travel waits until it ends."};
-  const plan = planTrip(actor, destId, {mode});
+  const plan = planTrip(actor, destId, {mode, pace, lodging});
   if ( !plan ) return {ok: false, why: "That place is not open for travel."};
+  const sched = plan.sched, owed = sched ? sched.cost + sched.fare : 0;
   const user = userId ?? ownerOf(actor)?.id ?? null;
   if ( plan.ask && !approved ) {
     await chron()?.propose?.({type: T.travel, key: `travel:${actorId}:${destId}`, title: `${actor.name} wants to go to ${plan.dest.name}`,
-      detail: `${plan.ask} The trip takes ${W.spanLabel(plan.minutes * 60)} and would arrive at ${timeLabel(plan.arrive)}.`, data: {actorId, destId, userId: user, mode}});
+      detail: `${plan.ask} The trip takes ${W.spanLabel(plan.minutes * 60)} and would arrive at ${timeLabel(plan.arrive)}.`, data: {actorId, destId, userId: user, mode, pace, lodging}});
     await log({kind: "ask", actor: actorId, name: actor.name, user, scene: plan.dest.uuid, place: plan.dest.name, text: `Asked to go to ${plan.dest.name}: ${plan.ask}`});
     return {ok: true, waiting: true, why: plan.ask};
   }
+  // Fares and inn nights come out of the purse. A trip the Storyteller approved goes ahead unpaid, and says so.
+  let paid = "";
+  if ( owed > 0 ) {
+    const money = game.modules.get(MOD)?.api?.upkeep?.money;
+    let r = null;
+    try { r = await money?.pay?.(actor, owed, {note: `Travel to ${plan.dest.name}`}); } catch (e) { r = null; }
+    if ( r?.ok ) paid = ` Paid ${moneyWords(owed, plan.year)} for ${[sched.fare ? "the fare" : "", sched.cost ? "lodging" : ""].filter(Boolean).join(" and ")}.`;
+    else if ( !approved ) return {ok: false, why: `This trip costs ${moneyWords(owed, plan.year)}${r?.text ? `, and the purse is short by ${r.text}` : ""}. Go by your own means, camp by the road, or ask the Storyteller.`};
+    else paid = ` ${moneyWords(owed, plan.year)} for the trip was not paid.`;
+  }
   const tok = await moveToScene(actor, plan.dest.scene, {from: plan.from});
   if ( plan.minutes ) await advancePersonal(actorId, plan.minutes * 60);
+  const way = plan.trip?.by === "map" ? ` The way: ${Country.legLines(plan.trip, x => W.spanLabel(x)).join("; ")}.` : "";
+  const halts = sched?.stops?.length ? ` Stops: ${sched.stops.map(x => `${x.why} at ${x.at}`).join("; ")}.` : "";
   await log({kind: "travel", actor: actorId, name: actor.name, user, scene: plan.dest.uuid, place: plan.dest.name, hours: plan.minutes / 60,
-    text: `${plan.from ? `From ${sceneName(plan.from)} to` : "To"} ${plan.dest.name}, ${plan.trip?.modeLabel ? `${plan.trip.modeLabel.toLowerCase()}, ` : ""}${W.spanLabel(plan.minutes * 60)} on the way${plan.trip?.why?.length ? ` (slowed by ${plan.trip.why.join(", ")})` : ""}.`});
+    text: `${plan.from ? `From ${sceneName(plan.from)} to` : "To"} ${plan.dest.name}, ${plan.trip?.modeLabel ? `${plan.trip.modeLabel.toLowerCase()}, ` : ""}${W.spanLabel(plan.minutes * 60)} on the way${plan.trip?.why?.length ? ` (slowed by ${plan.trip.why.join(", ")})` : ""}.${way}${halts}${paid}`,
+    ...(sched?.toll ? {attention: `Forced pace: a Stamina roll (difficulty 7) for each of ${sched.toll} ${sched.toll === 1 ? "day" : "days"}, or a level of bashing harm each, for mounts too`} : {})});
   pull(user, plan.dest.id);
+  // 0.49.0: a caravan out on the same road is noted for the Storyteller
+  try { await game.modules.get(MOD)?.api?.upkeep?.caravans?.onTrip?.({actor, fromScene: plan.from?.id ?? null, destScene: plan.dest.id, start: plan.start, arrive: plan.arrive}); }
+  catch (e) { console.error(`${MOD} | caravans`, e); }
   // The road
   if ( setting("encounters") !== false && plan.minutes > 0 ) {
     const base = setting("encounterChance") ?? 10;
-    const chance = plan.trip?.road ? Road.encounterChance(base, plan.trip.road, plan.year, plan.night) : base;
-    const hit = W.rollRoad(plan.minutes, chance, roadRand(`${actorId}:${plan.start}`));
+    const byRoad = plan.trip?.road ? Road.encounterChance(base, plan.trip.road, plan.year, plan.night, plan.region) : base;
+    const chance = Math.max(0, Math.min(100, byRoad * (sched?.enc ?? 1)));
+    const hit = W.rollRoad(sched ? sched.travel : plan.minutes, chance, roadRand(`${actorId}:${plan.start}`));
+    const spot = hit >= 0 && sched ? Country.spotAt(plan.trip, hit) : null;
     if ( hit >= 0 ) {
       const {text, table} = await drawEncounter(plan.dest);
       await chron()?.propose?.({type: T.encounter, key: `encounter:${actorId}:${plan.start}`, title: `On the road: ${actor.name} meets something`,
-        detail: `Between ${plan.from ? sceneName(plan.from) : "the last place"} and ${plan.dest.name}, in hour ${hit + 1} of the trip${table ? ` (${table})` : ""}: ${text}`,
-        data: {actorId, destId, userId: user, text}});
+        detail: `${spot ? `${spot.words[0].toUpperCase()}${spot.words.slice(1)}` : `Between ${plan.from ? sceneName(plan.from) : "the last place"} and ${plan.dest.name}`}, in hour ${hit + 1} of the trip${table ? ` (${table})` : ""}: ${text}`,
+        data: {actorId, destId, userId: user, text, land: spot?.leg?.land ?? null, road: spot?.leg?.road ?? null}});
       await log({kind: "encounter", actor: actorId, name: actor.name, user, scene: plan.dest.uuid, place: plan.dest.name, attention: "An encounter on the road", text});
     }
   }
@@ -505,7 +568,9 @@ export async function checkBeats(ev) {
 export function registerHandlers() {
   const c = chron();
   if ( !c?.registerApprovalHandler ) return;
-  c.registerApprovalHandler(T.travel, {label: "Travel",
+  // Small (B2453): never. A trip on the year's roads already goes by itself; only a place marked "ask first" or a
+  // trip into the daylight for one the sun burns reaches the queue, and neither is small
+  c.registerApprovalHandler(T.travel, {label: "Travel", small: () => false,
     approve: async e => { const r = await travel({...e.data, approved: true}); if ( !r.ok ) ui.notifications.warn(r.why); },
     reject: async e => { const a = game.actors.get(e.data?.actorId); await log({kind: "note", actor: e.data?.actorId, name: a?.name, user: e.data?.userId, text: "The Storyteller turned down a trip."}); }});
   c.registerApprovalHandler(T.encounter, {label: "Encounter",

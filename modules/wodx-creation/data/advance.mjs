@@ -89,7 +89,7 @@ export const LINE_YEARS = {
 /** Garou tribes lost by era (W20 pp. 39–41, pdf 41–43). `goneBy` is the first year a living member is impossible. */
 export const LOST_TRIBES = [
   {tribe: "White Howlers", goneBy: 100, became: "Black Spiral Dancers", why: "Fell to the Wyrm in the 1st century (W20 p. 39)"},
-  {tribe: "Croatan", goneBy: 1591, why: "Gave themselves at Roanoke (W20 p. 40)"},
+  {tribe: "Croatan", goneBy: 1590, why: "Gave themselves at Roanoke (W20 p. 40)"},
   {tribe: "Bunyip", goneBy: 1900, why: "Hunted out in the War of Tears as Europeans settled Australia (W20 pp. 40–41)"}
 ];
 

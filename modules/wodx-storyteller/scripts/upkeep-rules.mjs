@@ -24,13 +24,17 @@ export const TIE_KINDS = {
   kinfolk: {label: "Kinfolk", days: 30, lapse: "Kin who are not visited forget, or fall to the Wyrm's servants.", act: "A visit"},
   mentor: {label: "Mentor", days: 60, lapse: "A mentor who is not visited stops answering.", act: "A visit"},
   caern: {label: "A caern", days: 30, lapse: "A caern whose rites are not kept weakens: the Gauntlet there thickens (The Gauntlet over time, +1).", act: "A rite at the caern"},
+  node: {label: "A Node", days: 30, lapse: "A Node nobody watches draws visitors: rival mages, spirits or werewolves may claim it, and its Quintessence and Tass go to whoever comes (M20 p. 320).", act: "Places of power: take Quintessence or Tass"},
+  chantry: {label: "Chantry or Construct", days: 30, lapse: "A member who skips the errands and chores owed loses standing; a member who quits takes their pool points away (M20 p. 309).", act: "Duties at the chantry"},
+  freehold: {label: "A freehold (Holdings)", days: 30, lapse: "An untended balefire in a dull place fades a rank each season (Places of power).", act: "Places of power: dream by the balefire"},
   custom: {label: "Other", days: 30, lapse: "The Storyteller decides.", act: ""}
 };
 
 /** Background names that make a tie, lower case, to the kind of tie. */
 export const BACKGROUND_TIES = [
   [/^herd/, "herd"], [/^domain|^hunting grounds/, "domain"], [/^retainer/, "people"], [/^allies|^ally/, "people"],
-  [/^contacts?/, "people"], [/^kinfolk/, "kinfolk"], [/^mentor/, "mentor"], [/^dependents?/, "people"]
+  [/^contacts?/, "people"], [/^kinfolk/, "kinfolk"], [/^mentor/, "mentor"], [/^dependents?/, "people"],
+  [/^node\b/, "node"], [/^chantry|^construct\b/, "chantry"], [/^holdings?\b|^freehold/, "freehold"]
 ];
 
 export function tieKindOfBackground(name) {

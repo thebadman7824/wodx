@@ -8,6 +8,15 @@ old = json.load(open('../desk-data-2026-11-12h2.json'))
 STOP = {'the','of','a','and','in','at','to','on','is','first','great','war','battle'}
 def words(t): return {w for w in re.findall(r"[a-z]+", t.lower()) if w not in STOP and len(w) > 2}
 eras, dropped = [], 0
+import importlib.util
+_b = importlib.util.spec_from_file_location('r3build', 'build.py'); _m = importlib.util.module_from_spec(_b); _b.loader.exec_module(_m)
+def _yr(y): return f'{-y:,} BCE' if y < 0 else f'{y} CE'
+PRO = [(pid, name, f'{_yr(lo)} to {_yr(hi)}, prologue ({"Living Gods" if hi < -800 else "Classical"})') for pid, name, lo, hi in _m.PERIODS]
+def card(x): return {'id': x['id'], 'y': x['year'], 'm': x['month'], 'k': x['kind'], 'ln': ', '.join(x['lines']), 'rg': x['region'], 'pl': x['place'],
+                     'tg': x['tags'], 't': x['title'], 'x': x['text'], 'lk': [l['title'] for l in x['links']], 'src': 'r3'}
+for pid, name, span in PRO:
+    mine = sorted([card(x) for x in r3 if x.get('period') == pid], key=lambda i: (i['y'], i['m'] or 13))
+    if mine: eras.append({'id': pid, 'name': name, 'span': span, 'items': mine, 'appr': []})
 for e in old:
     mine = [x for x in r3 if x['era'] == e['id']]
     items = [{'id': x['id'], 'y': x['year'], 'm': x['month'], 'k': x['kind'], 'ln': ', '.join(x['lines']), 'rg': x['region'], 'pl': x['place'],
@@ -29,6 +38,9 @@ if fe:
               'tg': x['tags'], 't': x['title'], 'x': x['text'], 'lk': [l['title'] for l in x['links']], 'src': 'r3'} for x in mine]
     appr = [{'y': e['year'], 't': e['name'], 'x': e['summary'], 's': 'Approved, Future Darkness'} for e in json.load(open(fe))]
     eras.append({'id': 'future-darkness', 'name': 'Future Darkness', 'span': '1990 to 2099, future branch only', 'items': items, 'appr': appr})
+# Tab names follow the era names in Chronicle (Ben asked for World of Darkness names, 2026-11-12; naming desk XZE9pqoyZxuy7n54ky8beV).
+NAMES = {p['id']: p['name'].replace(' (prologue)', '') for p in json.load(open('../../../../modules/wodx-chronicle/data/eras.json'))['profiles']}
+for e in eras: e['name'] = NAMES.get(e['id'], e['name'])
 data = json.dumps(eras, ensure_ascii=False, separators=(',', ':'))
 open('../desk-data-2026-11-12h3.json', 'w').write(data)
 print({e['id']: len(e['items']) for e in eras}, 'round 2 repeats left out', dropped, 'bytes', len(data))

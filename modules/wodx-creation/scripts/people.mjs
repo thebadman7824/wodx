@@ -26,16 +26,22 @@ export function registerPeople() {
 }
 
 /** One person, seeded: batch and row name the stream; nonce counts re-rolls of that row. */
-export function generate({batch, row, nonce = 0, kind = "mortal", sex = "any", trade = "any"}) {
+export function generate({batch, row, nonce = 0, kind = "mortal", sex = "any", trade = "any", origin = null, culture = null}) {
   const g = chron().gen;
-  const ctx = fitContext(g, g.context());
+  const here = g.context();
+  // culture: a person from another land (a lifepath lived abroad) is named as that land names its people
+  const ctx = fitContext(g, culture ? {...here, culture} : here);
   const rand = g.random(`people:${batch}:${row}`, nonce);
-  return {...person({rand, tables: g.lookup(ctx), era: ctx.era, culture: ctx.culture, kind, sex, trade}), batch, row, nonce, eraId: ctx.eraId};
+  return {...person({rand, tables: g.lookup(ctx), era: ctx.era, culture: ctx.culture, kind, sex, trade, origin}), batch, row, nonce, eraId: ctx.eraId};
 }
 
-/** The nearest context that has people tables: the homeland's, else Bohemia's, else the medieval ones. */
+/**
+ * The nearest context that has people tables: the homeland's, else the same land in a later age (a region WoDX has
+ * no names for yet in this age, such as Australia before 1788), else Bohemia's, else the medieval ones.
+ */
 export function fitContext(g, ctx) {
-  for ( const c of [ctx, {...ctx, culture: "bohemia"}, {...ctx, culture: "bohemia", era: "medieval"}] ) if ( g.lookup(c)("people.origin") ) return c;
+  const later = ["early-modern", "industrial", "modern"].map(era => ({...ctx, era}));
+  for ( const c of [ctx, ...later, {...ctx, culture: "bohemia"}, {...ctx, culture: "bohemia", era: "medieval"}] ) if ( g.lookup(c)("people.origin") ) return c;
   return ctx;
 }
 
@@ -123,7 +129,7 @@ export class PeopleApp extends ApplicationV2 {
         <form class="wodx-people-form">
           <div class="wodx-field"><label>How many</label><input type="number" name="count" min="1" max="12" value="${o.count}"></div>
           <div class="wodx-field"><label>What</label>${sel("kind", [["mortal", "Mortals"], ["ghoul", "Ghouls"]], o.kind)}</div>
-          <div class="wodx-field"><label>Sex</label>${sel("sex", [["any", "Any"], ["female", "Female"], ["male", "Male"]], o.sex)}</div>
+          <div class="wodx-field"><label>Sex</label>${sel("sex", [["any", "Any"], ["female", "Female"], ["male", "Male"], ["nonbinary", "Nonbinary"]], o.sex)}</div>
           <div class="wodx-field wide"><label>Trade</label>${searchBox("select[name=trade]", "Search trades…", "Search trades")}${sel("trade", [["any", "Any trade"], ...trades.map(t => [t, t])], o.trade, false)}</div>
           ${o.kind === "ghoul" ? `<div class="wodx-field wide"><label>Domitor</label>${searchBox("select[name=domitorId]", "Search Kindred…", "Search Kindred")}${sel("domitorId", [["", "None: independent ghouls"], ...kindred.map(a => [a.id, a.name])], o.domitorId, false)}</div>` : ""}
         </form>

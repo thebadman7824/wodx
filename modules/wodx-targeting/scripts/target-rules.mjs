@@ -25,7 +25,7 @@ export const RANGES = {
 };
 /** Voice range in yards (house rule, Ben 2026-11-08). */
 export const VOICE_YARDS = 30;
-export const MODES = ["off", "suggest", "auto"];
+export const MODES = ["off", "suggest", "auto", "everyone"];
 /** How many other candidates the window lists. */
 export const OTHERS = 3;
 
@@ -234,6 +234,8 @@ export function rank(tag, state, {voiceYards = VOICE_YARDS, others = OTHERS} = {
 /** The mode in force for this user. Automatic is for the Storyteller and NPCs only (house rule, Ben 2026-11-08). */
 export function modeFor(setting, {isGM = false} = {}) {
   const m = MODES.includes(setting) ? setting : "suggest";
+  // Automatic for players too (Targeting 0.4.0, B2458): the Hands off level, where nobody may be in the chair
+  if ( m === "everyone" ) return "auto";
   if ( m === "auto" && !isGM ) return "suggest";
   return m;
 }

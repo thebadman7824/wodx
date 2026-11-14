@@ -9,6 +9,8 @@
  * or tells the table what the character does. What a substance does to each line is in EFFECTS; a cell marked
  * sure: false waits for Ben on the Item Uses desk and asks the Storyteller until then.
  */
+import * as AR from "./arms-rules.mjs";
+import * as HY from "./hygiene-rules.mjs";
 
 /** The lines, in the chronicle's order. */
 export const LINES = ["mortal", "ghoul", "vampire", "werewolf", "mage", "changeling", "wraith", "hunter", "mummy", "demon", "revenant"];
@@ -52,11 +54,11 @@ export const ABILITIES = {
   sleep: {label: "Sleep in it", effect: "sleep", verb: "sleeps in"},
   search: {label: "Look through it", effect: "check", check: "search", verb: "looks through"},
   fix: {label: "Make or fix", effect: "check", check: "buildfix", verb: "works with"},
-  pray: {label: "Pray with it", effect: "note", verb: "prays with"},
-  ward: {label: "Set it as a ward", effect: "note", verb: "sets up"},
-  divine: {label: "Divine with it", effect: "note", verb: "reads the signs with"},
-  wash: {label: "Wash or groom", effect: "note", verb: "uses", uses: true},
-  disguise: {label: "Change the look", effect: "note", verb: "changes the look with", uses: true},
+  pray: {label: "Pray with it", effect: "pray", verb: "prays with"},
+  ward: {label: "Set it as a ward or take it down", effect: "ward", verb: "sets up"},
+  divine: {label: "Divine with it", effect: "divine", verb: "reads the signs with"},
+  wash: {label: "Wash or groom", effect: "wash", verb: "uses", uses: true},
+  disguise: {label: "Change the look", effect: "wash", verb: "changes the look with", uses: true},
   cook: {label: "Cook with it", effect: "cook", verb: "cooks with"},
   salvage: {label: "Take apart for parts", effect: "salvage", verb: "takes apart"},
   plant: {label: "Plant it", effect: "note", verb: "plants", uses: true},
@@ -65,7 +67,15 @@ export const ABILITIES = {
   burn: {label: "Burn it", effect: "note", verb: "burns", uses: true},
   throw: {label: "Throw or sprinkle it", effect: "take", verb: "throws"},
   letter: {label: "Write a letter or note", effect: "letter", verb: "writes a letter with"},
-  seal: {label: "Seal a letter", effect: "note", verb: "seals a letter with", uses: true}
+  seal: {label: "Seal a letter", effect: "note", verb: "seals a letter with", uses: true},
+  // B3805 to B3807: everyday arms, fittings and traps (arms-rules.mjs, arms-use.mjs)
+  ready: {label: "Ready it as a weapon", effect: "ready", verb: "readies"},
+  fit: {label: "Fit it or take it off", effect: "fit", verb: "fits"},
+  settrap: {label: "Set the trap", effect: "settrap", verb: "sets"},
+  springtrap: {label: "Someone walks into it", effect: "springtrap", verb: "springs"},
+  disarm: {label: "Disarm it", effect: "disarm", verb: "disarms"},
+  clean: {label: "Clean a gun", effect: "clean", verb: "cleans a gun with"},
+  load: {label: "Load a weapon with it", effect: "load", verb: "loads a weapon with"}
 };
 
 const R = (...parts) => new RegExp(`\\b(?:${parts.join("|")})(?:e?s)?\\b`, "i");
@@ -230,9 +240,17 @@ export function abilitiesOf(good) {
   if ( k === "toys" && !out.size && /doll|horse|soldier|bear|figure|plush|figurine|balloon|pom poms|toy/i.test(n) ) out.add("game");
   if ( k === "light" && /glow ?stick/i.test(n) ) out.add("switchon");
   if ( k === "accessories" && /scope|laser sight|flashlight/i.test(n) ) out.add("search");
+  // B3805 to B3807: arms fight, fittings fit, traps catch (arms-rules.mjs)
+  if ( k === "arms" && AR.armOf(n) ) out.add("ready");
+  if ( (k === "accessories" || k === "arms") && (AR.fittingOf(n) || AR.carrierOf(n) || AR.wardOf(n)) ) { out.delete("wear"); out.add("fit"); }
+  if ( k === "traps" && AR.trapOf(n) ) { out.add("settrap"); out.add("springtrap"); out.add("disarm"); }
+  if ( AR.kitOf(n) ) out.add("clean");
+  if ( AR.ammoOf(n) || AR.isAmmoNeed(n) ) out.add("load");
   if ( k === "medicine" && /sunscreen/i.test(n) ) out.add("wash");
   if ( k === "house" && /tin bath|washboard/i.test(n) ) out.add("wash");
   if ( k === "house" && /mirror/i.test(n) ) out.add("disguise");
+  // B3909: a plunger or a bathroom scale does not wash anyone
+  if ( HY.hasNoUse(n) ) out.delete("wash");
   return [...out].filter(a => ABILITIES[a]);
 }
 

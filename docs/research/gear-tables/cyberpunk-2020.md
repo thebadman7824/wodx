@@ -1,6 +1,6 @@
 # Cyberpunk 2020 core rulebook: cyberware (names, Humanity Cost, surgery code, SP)
 
-Source file: `F:\TheTrove\The Ultimate Trove - Books (C-D)\Cyberpunk\Cyberpunk 2020\Cyberpunk 2020.-.CP3002 CyberPunk Core Rulebook 2E.pdf`. This is a scan with a text layer. The "v2.01 (new art)" copy in the same folder has no text layer, so I used this one; it's the same 2nd edition rules. The Cyberware List is on four image-only pages, which I read from page images.
+Source: Cyberpunk 2020, 2nd edition core rulebook (R. Talsorian Games, CP3002), the PDF edition with a text layer; the "v2.01 (new art)" printing has no text layer. Same 2nd edition rules either way. The Cyberware List is on four image-only pages, read from page images.
 **Page numbering:** printed page = pdf page − 3 (pdf 85 is printed 82). The four chart pages carry no page number, so their printed numbers come from that offset: pdf 79–82 = printed 76–79.
 Only the names, the Surg. code, the H.Loss (Humanity Cost) column and SP figures are given here. Prices, ID codes and descriptions are left out as asked.
 

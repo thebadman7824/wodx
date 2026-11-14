@@ -71,6 +71,12 @@ export function slipWords(a) {
   return `${a.slip === "fast" ? "quicker" : "slower"} than planned, ${a.hours} hours`;
 }
 
+/** A journey small enough to pass the queue on its own (B2453): no storm, not great, and no leg with a hazard or the Maelstrom. */
+export function smallJourney(j = {}) {
+  const legs = Array.isArray(j?.legs) ? j.legs : [];
+  return legs.length > 0 && !j.storm && !j.great && legs.every(l => !l?.hazard && !l?.maelstrom);
+}
+
 /** Decay strength from the Shroud (4 to 10; 7 when unknown): 1 at Shroud 4, 0.6 at 7, 0.2 at 10. House figures. */
 export function decayStrength(shroud) {
   const n = shroud === null || shroud === undefined || shroud === "" ? NaN : Number(shroud);

@@ -12,7 +12,7 @@ import {readFileSync} from "node:fs";
 const tables = {PULLS: TR.PULLS, LEDGER: TR.LEDGER, PROMPTS: TR.PROMPTS, TRIGGERS: TR.TRIGGERS, BG_WORLD: TR.BG_WORLD};
 
 test("the steps: every desk step, sign-off last, keys unique", () => {
-  assert.deepEqual(R.STEP_KEYS, ["sessionZero", "ties", "concept", "lifepath", "build", "meritsFlaws", "fit", "prelude", "forecast", "signoff"]);
+  assert.deepEqual(R.STEP_KEYS, ["sessionZero", "ties", "concept", "lifepath", "build", "meritsFlaws", "fit", "prelude", "recheck", "forecast", "signoff"]);
   assert.equal(R.STEPS.at(-1).last, true);
   assert.equal(new Set(R.STEP_KEYS).size, R.STEP_KEYS.length);
 });
@@ -26,7 +26,7 @@ test("the record is cleaned: unknown steps, a bad dial and a bad hook are droppe
 });
 
 test("steps tick themselves from the sheet; sign-off waits for the rest but not the lifepath", () => {
-  const view = {concept: "Smith", nature: "Survivor", demeanor: "Loner", lifepath: false, build: {ok: true}, flawPoints: 3, flawsApproved: true, sessionZero: true};
+  const view = {concept: "Smith", nature: "Survivor", demeanor: "Loner", lifepath: false, build: {ok: true}, flawPoints: 3, flawsApproved: true, sessionZero: true, recheck: {ok: true}};
   const st = R.stepStates({steps: {ties: {done: true}, fit: {done: true}, prelude: {done: true}}}, view, ["forecast"]);
   const by = Object.fromEntries(st.map(s => [s.key, s.state]));
   assert.equal(by.concept, "done");

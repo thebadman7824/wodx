@@ -111,8 +111,50 @@ export const PRIMERS = {
     storyteller: ["The Future Darkness branch ends here. Pick one Cascade in Dated events: a chain of endings, each one the cause of the next, with most of every line's endings inside it.",
       "Let the characters change where the chain breaks or holds. The Cascade's last event says how the world ends if nobody does."]
   },
+  "mythic-age": {
+    players: ["Before writing: herders, the first farms, painted caves and great stone rings. Spirits and beasts are near, and the night belongs to things older than any king.",
+      "Every village has its own gods, its own dead under the floor, and its own fear of what walks outside the firelight."],
+    storyteller: ["The age of Enoch and the Second City, the Impergium and the War of Rage. Almost nothing here has a firm year: legend is the history, and the characters cannot check it.",
+      "Rules are the Dark Ages rules. Farming begins in the Fertile Crescent, the Yellow River valley, New Guinea and Mesoamerica; Jericho and Catalhoyuk are the first towns, and the painted caves are already old."]
+  },
+  "bronze-kings": {
+    players: ["The god-kings: pyramids and ziggurats, bronze and chariots, writing on clay and papyrus, temples that own the land and the people on it.",
+      "Kings are gods or speak for them, and the dead are honoured with great care."],
+    storyteller: ["Set rules in Egypt and the Reborn are made; the Antediluvians' childer hide behind thrones from Ur to Knossos. The age ends in fire about 1177 BCE.",
+      "Rules are the Dark Ages rules. Cities stand on the Nile, the Tigris, the Indus and the Yellow River; Kush trades gold, Caral builds pyramids in Peru, and bronze and amber travel the length of Europe."]
+  },
+  "iron-dawn": {
+    players: ["After the great collapse: iron in every village, new peoples, the alphabet, Assyria's armies and the first prophets.",
+      "Old cities are ruins with ghosts in them; new ones grow on the trade routes."],
+    storyteller: ["Iron spreads and the fae begin to lose the waking world. Horus drives Set from Egypt; Carthage is founded at the end of the age.",
+      "Rules are the Dark Ages rules. The Zhou rule China, the Olmec carve their great heads, Nubian Kush grows strong, and Phoenician ships cross the whole sea."]
+  },
+  "greece-republic": {
+    players: ["City-states and empires: Greek philosophers, Persian kings, Alexander, Carthage and the Roman Republic. Coins, roads and written law.",
+      "Omens, oracles and sacrifice are part of daily life."],
+    storyteller: ["Brujah Carthage rises and falls to Ventrue Rome in 146 BCE. The Hermes cults feud, the Ahl-i-Batin begin and the dead of Rome build a republic of their own.",
+      "Rules are the Dark Ages rules. The Buddha and Confucius teach, the Mauryas unite India, Qin and Han unite China, Meroe smelts iron and the Maya build their first cities."]
+  },
+  "roman-empire": {
+    players: ["The Roman Empire at its height and in its long fall: legions on the Danube, roads, baths, slaves and citizens, and a new faith spreading through the cities.",
+      "Han China, Parthia, Kushan India and Aksum trade along the silk and spice roads, and the Maya and Teotihuacan rule the Americas."],
+    storyteller: ["Christ and the first seeds of the Cainite Heresy; Michael's Dream begins in Constantinople in 330; the White Howlers fall; the First Great Maelstrom comes with Rome's end in 476.",
+      "Rules are the Dark Ages rules. The Kuei-jin hold the courts of Han China; Rome, Persia and China are the great powers, and the frontiers are where most stories happen."]
+  },
+  "migration-age": {
+    players: ["Peoples on the move: Huns, Goths, Avars, Slavs and Turks. Rome falls in the west, the Guptas and the Sassanids fall in the east, and kingdoms rise and vanish in a lifetime.",
+      "Islam sweeps from Arabia to Spain and the Indus, Tang China is the greatest state on earth, and Charlemagne is crowned emperor in 800."],
+    storyteller: ["Justinian's plague and the Second Great Maelstrom (541), the Order of Hermes (767), the Heresy at Ostia (754). Stygia is ordered into the Hierarchy and its Guilds.",
+      "Rules are the Dark Ages rules. Baghdad is the city of learning, Teotihuacan and the great Maya cities are abandoned, the Vikings sail, and Great Moravia rises and falls in central Europe."]
+  },
+  "premyslid-duchy": {
+    players: ["Princes everywhere: the Holy Roman Empire and the Fatimids, Song China and the Khmer of Angkor, Ghana's gold and the Toltecs of Tula. The crusades call knights east.",
+      "Castles, monasteries and caravan cities grow, and the first universities open."],
+    storyteller: ["The Tremere Become (1022) and war on the Tzimisce; Saulot dies in 1133; a Ventrue holds Prague. The Oath-Truce of the fae is sworn about 1130.",
+      "Rules are the Dark Ages rules. The Dark Ages era opens in 1197, so this is the time just before most Dark Ages books."]
+  },
   "classical": {
-    players: ["The ancient world: city-states and empires, temples to many gods, slaves and citizens, roads and legions.",
+    players: ["The ancient world: city-states and empires from Rome to the Han, temples to many gods, slaves and citizens, roads and caravans.",
       "Omens, oracles and sacrifice are part of daily life."],
     storyteller: ["The Kindred of the ancient cities live openly among cults and patrons. The rules are the Dark Ages rules with the period's setting; decide early which books' lore applies."]
   },
@@ -132,7 +174,8 @@ export function playerPrimer(profile) {
 /** The era page of the Storyteller screen. */
 export function eraPage(profile, {lines = [], date = "", region = "", climate = ""} = {}) {
   const p = PRIMERS[profile?.id] ?? PRIMERS["dark-ages"];
-  const years = Number.isFinite(profile?.start) ? `${profile.start} to ${profile.end}` : "years set by the Storyteller";
+  const yr = y => (y < 0 ? `${-y} BCE` : profile.start < 0 ? `${y} CE` : `${y}`);
+  const years = Number.isFinite(profile?.start) ? `${yr(profile.start)} to ${yr(profile.end)}` : "years set by the Storyteller";
   const ours = (profile?.ourCall ?? []).map(x => `<li>${esc(x)}</li>`).join("");
   return `<h2>${esc(profile?.name ?? "The era")} (${esc(years)})</h2>
     ${date ? `<p><b>Opening date:</b> ${esc(date)}${region ? `. <b>Region:</b> ${esc(region)}` : ""}${climate ? `. <b>Climate:</b> ${esc(climate)}` : ""}.</p>` : ""}

@@ -31,7 +31,9 @@ test("quality scales a trader's price, and plain work is untouched", () => {
   assert.equal(TR.qualityFactor({flags: {}}), 1);
   assert.equal(TR.qualityFactor({flags: {"wodx-storyteller": {priceFactor: "x"}}}), 1);
   const t = src("modules/wodx-actions/scripts/trade.js");
-  assert.equal((t.match(/TR\.withQuality\(priceOf\(it\.name, shop\), TR\.qualityFactor\(it\)\)/g) ?? []).length, 2);
+  // 3.54.0: both lists go through qualityPrice, which also redoes the words in money
+  assert.equal((t.match(/qualityPrice\(priceOf\(it\.name, shop\), it\)/g) ?? []).length, 2);
+  assert.match(t, /const qualityPrice = \(p, it\) => \{ const q = TR\.withQuality\(p, TR\.qualityFactor\(it\)\); return q && q !== p \? \{ \.\.\.q, text: fmt\(q\.total\) \} : q; \};/);
 });
 
 test("Examine fills in a made thing's quality and maker, the Storyteller's notes win", () => {

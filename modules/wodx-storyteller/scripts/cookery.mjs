@@ -13,7 +13,7 @@
  * task (an extended action, V20 pp. 251-252) that rolls as game time passes. Ingredients are used up at the start.
  */
 import * as CR from "./craft-rules.mjs";
-import {MOD, esc, isActiveGM, chron} from "./core.mjs";
+import {MOD, esc, isActiveGM, chron, whereNow} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const LIB = "wodx-library";
@@ -58,13 +58,21 @@ export const knownOf = a => (Array.isArray(a?.flags?.[MOD]?.recipes) ? a.flags[M
 export const sceneKits = (scene = canvas?.scene) => (Array.isArray(scene?.flags?.[MOD]?.kits) ? scene.flags[MOD].kits : []);
 const sceneOf = a => a?.getActiveTokens?.()?.[0]?.document?.parent ?? canvas?.scene ?? null;
 
-/** Everything the character could make in the year, with what stands in the way. */
-export async function listFor(a, {using = "", year = yearNow()} = {}) {
+/** The place the character is in: the land of their token's scene (B3100). */
+export const whereOf = a => whereNow(sceneOf(a));
+
+/**
+ * Everything the character could make in the year, with what stands in the way. here: the dish or drink is at home
+ * in the land of the character's scene (B3100); the window shows those first and hides the rest until asked.
+ * where: {way, region}, else the scene's; null with no region keeps every land.
+ */
+export async function listFor(a, {using = "", year = yearNow(), where} = {}) {
   const l = await lib();
   if ( !l || !a ) return [];
   const {R, G} = l;
+  const at = where === undefined ? whereOf(a) : where;
   const carried = carriedOf(a), names = carried.map(c => c.name), abilities = abilitiesMap(a), known = knownOf(a), kits = sceneKits(sceneOf(a));
-  const goods = using ? R.usesOf(using, G.GOODS, year) : G.GOODS.filter(g => R.inScope(g) && (!year || (year >= g.from && year <= g.to)));
+  const goods = using ? R.usesOf(using, G.GOODS, year) : G.GOODS.filter(g => R.inScope(g) && R.inUse(g, year));
   const out = [];
   for ( const good of goods ) {
     const r = R.recipeOf(good, year);
@@ -73,9 +81,10 @@ export async function listFor(a, {using = "", year = yearNow()} = {}) {
     const know = R.knows({key: rec.key, family: rec.family, ...rec}, {abilities, known, carried: names});
     const kit = R.kitReady(rec.kit, {carried: names, sceneKits: kits, year});
     const plan = R.planBatch(rec, carried, 1);
-    out.push({good, recipe: rec, know, kit, plan, ready: know.ok && kit.ok && !plan.missing.length});
+    const here = !at || R.inUse(good, year, at);
+    out.push({good, recipe: rec, know, kit, plan, here, ready: know.ok && kit.ok && !plan.missing.length});
   }
-  return out.sort((x, y) => (y.ready - x.ready) || x.good.name.localeCompare(y.good.name));
+  return out.sort((x, y) => (y.here - x.here) || (y.ready - x.ready) || x.good.name.localeCompare(y.good.name));
 }
 
 /* ---------------------------------------------------------------- doing it */
@@ -100,9 +109,11 @@ export async function start(a, goodId, {batch = 1, buy = false} = {}) {
   if ( plan.missing.length ) {
     if ( !buy ) return {ok: false, why: `Missing: ${plan.missing.map(m => `${m.n} × ${m.label}`).join(", ")}.`};
     let cost = 0;
+    const at = whereOf(a);
     for ( const m of plan.missing ) {
-      const g = R.membersOf(m.group, G.GOODS, y)[0];
-      if ( !g ) return {ok: false, why: `No one sells ${m.label} in ${y || "this year"}.`};
+      // B3101: what is bought comes from this land's goods
+      const g = R.membersOf(m.group, G.GOODS, y, at)[0];
+      if ( !g ) return {ok: false, why: `No one ${at ? `in ${at.regionLabel} ` : ""}sells ${m.label} in ${y || "this year"}.`};
       const p = await money()?.price?.(g, {count: m.n});
       cost += num(p?.total);
       bought.push(`${m.n} ${g.name}`);
@@ -261,29 +272,33 @@ export async function cookDialog(actor = null, {using = ""} = {}) {
   const {R} = l, y = yearNow();
   const rows = await listFor(a, {using, year: y});
   const kitsHere = sceneKits(sceneOf(a));
+  const at = whereOf(a), away = rows.filter(x => !x.here).length;
   const row = x => {
     const r = x.recipe;
     const why = [!x.know.ok ? x.know.why : "", !x.kit.ok ? x.kit.why : "", x.plan.missing.length ? `missing ${x.plan.missing.map(m => `${m.n} × ${m.label}`).join(", ")}` : ""].filter(Boolean).join("; ");
     const uses = r.needs.length ? r.needs.map(n => `${n.n} × ${n.label}`).join(", ") : "nothing but the kit";
     const time = r.everyday ? "everyday work" : `${r.goal} success${r.goal === 1 ? "" : "es"}, a roll ${r.interval === "hour" ? "an hour" : r.interval === "day" ? "a day" : "a week"}`;
-    return `<tr data-kind="${esc(x.good.kind)}" data-search-text="${esc(`${x.good.name} ${r.label} ${uses}`)}" class="${x.ready ? "" : "wodx-quiet"}">
+    return `<tr data-kind="${esc(x.good.kind)}" data-search-text="${esc(`${x.good.name} ${r.label} ${uses}`)}" class="${[x.ready ? "" : "wodx-quiet", x.here ? "" : "wst-away"].filter(Boolean).join(" ")}">
       <td><input type="radio" name="good" value="${esc(x.good.id)}" data-batch="${r.batch}"></td>
-      <td><b>${esc(cap(x.good.name))}</b><br><small>${esc(r.label)}; ${esc(R.abLabel(r.ab[0]))}, ${esc(time)}${r.wait ? `; stands ${esc(R.leftLine(r.wait * 86400))} ${esc(r.waitWord)}` : ""}</small></td>
+      <td><b>${esc(cap(x.good.name))}</b>${x.here ? "" : ` <small class="wodx-quiet">(from another land)</small>`}<br><small>${esc(r.label)}; ${esc(R.abLabel(r.ab[0]))}, ${esc(time)}${r.wait ? `; stands ${esc(R.leftLine(r.wait * 86400))} ${esc(r.waitWord)}` : ""}</small></td>
       <td><small>Uses ${esc(uses)}. ${esc(cap(R.kitForm(r.kit, y)))}.</small>${why ? `<br><small class="wst-cook-why">${esc(cap(why))}.</small>` : ""}</td></tr>`;
   };
   const kitBoxes = game.user.isGM ? `<details><summary>Kits on this scene (Storyteller)</summary><div class="wst-cook-kits">${Object.entries(R.KITS).filter(([k]) => k !== "none")
     .map(([k, v]) => `<label><input type="checkbox" name="kit" value="${esc(k)}"${kitsHere.includes(k) ? " checked" : ""}> ${esc(v.label)}</label>`).join("<br>")}</div></details>` : "";
   const teachBox = game.user.isGM ? `<details><summary>Teach ${esc(a.name)} a recipe (Storyteller)</summary><select name="teach" data-fixed>${opt("", "Nothing", true)}${R.METHODS.map(m => opt(m.key, `${m.label}${knownOf(a).includes(m.key) ? " (known)" : ""}`, false)).join("")}</select></details>` : "";
-  const content = `<p>What ${esc(a.name)} can make in ${y || "this year"}${using ? ` with ${esc(using)}` : ""}. Ingredients are used up when the work starts. Everyday dishes need no roll when the dice are at least the difficulty; the rest is an extended action that rolls as time passes (house rules). Greyed recipes say what is missing.</p>
+  const lands = at && away ? `<div class="form-group"><label>Lands</label><select name="lands" data-fixed>${opt("here", `What is made in ${at.regionLabel}`, true)}${opt("all", "Every land", false)}</select></div>` : "";
+  const content = `<style>table.wst-only-here tr.wst-away { display: none; }</style><p>What ${esc(a.name)} can make in ${y || "this year"}${at ? ` in ${esc(at.regionLabel)}` : ""}${using ? ` with ${esc(using)}` : ""}. Ingredients are used up when the work starts. Everyday dishes need no roll when the dice are at least the difficulty; the rest is an extended action that rolls as time passes (house rules). Greyed recipes say what is missing.</p>
     <div class="form-group"><label>Show</label><select name="tab" data-fixed>${FAMILY_TABS.map(([k, label]) => opt(k, label, !k)).join("")}</select></div>
-    ${searchBox("table.wst-cook-t", "Search recipes…", "Search recipes")}
-    <div class="wst-scroll" style="max-height: 420px; overflow-y: auto;"><table class="wst-cook-t"><tbody>${rows.map(row).join("") || `<tr><td class="wodx-quiet">Nothing ${using ? "uses that" : "can be made"} in this year.</td></tr>`}</tbody></table></div>
+    ${lands}${searchBox("table.wst-cook-t", "Search recipes…", "Search recipes")}
+    <div class="wst-scroll" style="max-height: 420px; overflow-y: auto;"><table class="wst-cook-t${lands ? " wst-only-here" : ""}"><tbody>${rows.map(row).join("") || `<tr><td class="wodx-quiet">Nothing ${using ? "uses that" : "can be made"} in this year.</td></tr>`}</tbody></table></div>
     <div class="form-group"><label>How many</label><input type="number" name="batch" value="1" min="1" max="100"></div>
     <div class="form-group"><label>Buy what is missing</label><input type="checkbox" name="buy"></div>
     ${kitBoxes}${teachBox}`;
   const render = (ev, dlg) => {
     const el = dlg?.element ?? ev?.target?.element;
     const tab = el?.querySelector?.("[name=tab]");
+    const lands = el?.querySelector?.("[name=lands]");
+    lands?.addEventListener("change", () => el.querySelector("table.wst-cook-t")?.classList.toggle("wst-only-here", lands.value !== "all"));
     tab?.addEventListener("change", () => { for ( const tr of el.querySelectorAll("tr[data-kind]") ) tr.style.display = !tab.value || tr.dataset.kind === tab.value ? "" : "none"; });
     for ( const r of el?.querySelectorAll?.("input[name=good]") ?? [] ) r.addEventListener("change", () => { const b = el.querySelector("[name=batch]"); if ( b ) b.max = r.dataset.batch; });
   };

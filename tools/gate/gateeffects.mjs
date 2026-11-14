@@ -14,7 +14,7 @@
  *   9. an area works on a token inside it once, on one standing outside only when it walks in, and Undo removes it
  *  10. a rote is saved as a Rote item on the caster, replaced by name, and forgotten
  *  12. a held card waits; countermagick cuts its successes, then a reflected counter turns it on the caster
- *  13. a Dark Ages rote's card: Verdant Slumber hurts, Self Possession is a timed effect, a summoning stays the Storyteller's
+ *  13. a Dark Ages rote's card: Verdant Slumber hurts, Self Possession is a timed effect, a summoning stays the Storyteller's, the golem does not (B3752)
  *  15. the shared roster (3.30.0): Drain on a Willpower pool, Boost as a timed effect, both undone; power labels
  *  16. the Storyteller's effect (3.31.0): Ward, Make into an inventory and Summon on the map, all undone
  *  11. a Rote item opens the WoDX Cast window filled in (a Mage 20th era), or is left to the system's dialog (Dark Ages)
@@ -28,7 +28,7 @@ async function save(R, name) {
   return R.summary;
 }
 
-export async function run() {
+async function runGate(K) {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ")}); } };
@@ -95,12 +95,16 @@ export async function run() {
 
     await step("6 queued item", async () => {
       const T = game.modules.get("wodx-chronicle").api;
+      // Items an earlier run left in the queue are cleared first, and only the item this run makes is counted.
+      const mine = e => e.type === "wodx-actions.effect" && String(e.title ?? "").includes("WoDX gate");
+      const pending = () => { const l = T.approvals.pending(); return Array.isArray(l) ? l : []; };
+      for ( const e of pending().filter(mine) ) { try { await T.approvals.decide?.(e.id, "reject", "gate clean-up (earlier run)"); } catch {} }
+      const before = new Set(pending().map(e => e.id));
       const m = await ChatMessage.create({content: "<div class='wodx-effects'>WoDX gate queued keyword</div>", whisper: [game.user.id],
         flags: {[MOD]: {kind: "effects", caster: caster.name, items: [item("fear", E.spend(2, 2, {}), {}, "queue")]}}});
       msgs.push(m);
       for ( let i = 0; i < 20 && !m.flags?.[MOD]?.done; i++ ) await new Promise(r => setTimeout(r, 150));
-      const list = T.approvals.pending();
-      queued = (Array.isArray(list) ? list : []).filter(e => e.type === "wodx-actions.effect" && String(e.title ?? "").includes("WoDX gate"));
+      queued = pending().filter(e => mine(e) && !before.has(e.id));
       ok("6 queued item", !!m.flags?.[MOD]?.done && queued.length === 1, {queued: queued.length});
     });
 
@@ -120,7 +124,7 @@ export async function run() {
         {name: "WoDX gate: keyword token in", actorId: target.id, x: x0, y: y0, actorLink: false, hidden: true},
         {name: "WoDX gate: keyword token out", actorId: target.id, x: x0 + g * 8, y: y0, actorLink: false, hidden: true}]);
       // Foundry 14 may hand back the batch out of order: find the token by name
-      const t = toks.find(x => x.name.endsWith("token in")) ?? toks[0];
+      const t = toks.find(x => x.name.endsWith("token in")) ;
       const out = E.outcome("move", E.spend(2, 2, {}));
       const rec = await fx().apply({key: "move", out, target: t.uuid, name: t.name, route: "pick", at: {x: x0 + g * 3.5, y: y0 + g * 0.5}}, caster.name);
       const moved = t.x === x0 + g * 3;
@@ -203,7 +207,9 @@ export async function run() {
       const ward = game.modules.get(MOD).api.effects.daPlan(caster, rote("g-selfpossess"), 2);
       const wr = ward.items[0]?.route === "auto" ? await fx().apply(ward.items[0], caster.name) : null;
       const timed = !!(wr?.effect && fromUuidSync(wr.effect));
-      const st = game.modules.get(MOD).api.effects.daPlan(caster, rote("g-72names"), 4).items.every(i => i.route === "st");
+      // A summoning stays the Storyteller's call; since B3752 the Golem of the 72 Names shows on the token, not with the Storyteller.
+      const st = game.modules.get(MOD).api.effects.daPlan(caster, rote("g-summoning"), 4).items.every(i => i.route === "st")
+        && game.modules.get(MOD).api.effects.daPlan(caster, rote("g-72names"), 4).items.some(i => i.route !== "st");
       await fx().undo([...recs, wr].filter(Boolean));
       ok("13 a Dark Ages rote", hurt && timed && st && sum(dmg(caster)) === sum(before), {hurt, timed, st, routes: harm?.items?.map(i => i.route)});
     });
@@ -277,3 +283,7 @@ export async function run() {
   }
   return save(R, "gateeffects-result.json");
 }
+
+// The gate kit (B3733): its own scratch scene, cleaned up after.
+import {kitRun} from "./kit.mjs";
+export const run = kitRun("gateeffects", runGate);

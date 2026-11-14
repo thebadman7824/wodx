@@ -66,7 +66,7 @@ import {setupCase, registerCaseSettings, pinClue} from "./case.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.32.0";
+const VERSION = "0.44.0";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -261,6 +261,8 @@ export function characterFor(actor, center, doc) {
   const key = String(o.keyName ?? "").trim().toLowerCase();
   return {
     actorId: actor?.id ?? "", kind: game.wodxActions?.getKind?.(actor) ?? "mortal", ...eraNow(), sunUp: SUN_UP,
+    // 0.34.0: the Storyteller kept this thing out of its time (the anachronism check in WoDX Sheets): it works in any year
+    kept: !!doc?.flags?.["wodx-sheets"]?.keepOutOfEra,
     strength: attrOf(actor, "strength"), dexterity: attrOf(actor, "dexterity"), perception: attrOf(actor, "perception"), intelligence: attrOf(actor, "intelligence"), wits: attrOf(actor, "wits"),
     potence: powerDots(actor, "potence"), abilities, meta,
     side: center && Array.isArray(doc?.c) ? R.sideOf(doc.c, center) : null,
@@ -652,7 +654,7 @@ export async function applyAsk(msg) {
       return countSuccesses(faces, clampDifficulty(num(ask.diff) || 6), {specialty: !!ask.specialty, willpower: !!ask.willpower && k === 0, autoSuccesses: num(op.roll?.auto)});
     });
     if ( op.roll && !rolls.length ) return fail("The card has no roll.");
-    const out = R.resolve(o, op, rolls, {actorId: actor.id, actorName: actor.name, ...eraNow(), sunUp: SUN_UP});
+    const out = R.resolve(o, op, rolls, {actorId: actor.id, actorName: actor.name, ...eraNow(), sunUp: SUN_UP, kept: ch.kept});
     const tile = isTile(doc);
     const snap = {ds: tile ? null : doc.ds, flags: foundry.utils.deepClone(doc.flags?.[MOD] ?? {}), ...(tile ? {hidden: !!doc.hidden} : {})};
     const lines = [];
@@ -1567,7 +1569,8 @@ export async function carryAboard(tokDoc, scene, from, to, pos = {x: num(tokDoc.
         if ( !td || td.parent?.id !== scene.id ) continue;
         const go = fixed(r) ? {x: at.x + r.dx, y: at.y + r.dy} : {x: num(td.x) + step.x, y: num(td.y) + step.y};
         carrying.set(td.uuid, go);
-        try { await td.update(go); } catch (e) { carrying.delete(td.uuid); }
+        // 0.35.0: a passenger is carried: WoDX Combat does not count it against their own movement this turn
+        try { await td.update(go, {wodxMove: false}); } catch (e) { carrying.delete(td.uuid); }
       }
       what = "drove";
     } else if ( moved && riders.some(r => r.t === tokDoc.uuid) ) {
@@ -1870,7 +1873,8 @@ Hooks.once("init", () => {
   Stock.setupStock();
   game.modules.get(MOD).api.stock = {draw: Stock.drawStock, all: Stock.restockAll};
   game.modules.get(MOD).api.chase = setupChase({describeObj, yardsOn, centerOf, noiseAt});
-  game.modules.get(MOD).api.caseBoard = setupCase();
+  game.modules.get(MOD).api.rideOf = game.modules.get(MOD).api.chase.rideOf;
+  game.modules.get(MOD).api.caseBoard = setupCase({characterFor});
 });
 Hooks.once("ready", () => {
   if ( chron()?.registerApprovalHandler ) registerBreach(); else Hooks.once("wodxChronicleReady", registerBreach);

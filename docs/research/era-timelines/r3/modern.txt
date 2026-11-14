@@ -302,3 +302,70 @@
 2009|H|mor|EU|Lisbon|treaty|The Lisbon Treaty|The Czech president signs the Lisbon Treaty last of all.
 2009|W|mag|EU|Europe|occult|The Ascension War's end|The house reading has the Traditions and the Technocracy count the costs of the Avatar Storm.
 2009|W|wra|EU|Europe|occult|Stygia in ruins|The house reading has Europe's wraiths gather in the Shadowlands, Stygia still in ruins.
+# The Americas, Africa and Oceania (the global rule, 2026-11-12)
+1990-7|H|mor|AM|Oka|uprising,siege,law|The Oka crisis|Mohawks of Kanesatake block a road to stop a golf course from being built over a burial ground, and the army is sent in.
+1992-4|H|mor|AM|Los Angeles|uprising,fire,law|The Los Angeles riots|The acquittal of police officers filmed beating a black motorist sets off six days of riots.
+1992-6|H|mor|AM|Rio de Janeiro|treaty,science,weather|The Earth Summit|More than a hundred heads of state meet in Rio and sign conventions on climate and living species.
+1992-9|H|mor|AM|Lima|war,terror,crime|Guzman captured|Police find the leader of the Shining Path in a flat above a dance studio in Lima.
+1993-2|H|mor|AM|Waco|faith,siege,death|Waco|Federal agents besiege a religious community in Texas for fifty-one days; it ends in a fire that kills seventy-six.
+1993-12|H|mor|AM|Medellin|crime,death|Escobar killed|Colombian police shoot the cocaine lord Pablo Escobar on a rooftop.
+1994-1|H|mor|AM|Chiapas|uprising,treaty,trade|The Zapatistas|Masked Maya rebels take towns in Chiapas on the day a free trade pact with the north takes effect.
+1995-4|H|mor|AM|Oklahoma City|terror,death|Oklahoma City|A truck bomb set by an army veteran destroys a federal building and kills a hundred and sixty-eight.
+1995-10|H|mor|AM|Quebec|law|The Quebec referendum|Quebec votes to stay in Canada by barely one percent.
+1996-12|H|mor|AM|Guatemala City|treaty,war|Peace in Guatemala|A peace accord ends thirty-six years of civil war in which some two hundred thousand died, most of them Maya.
+1998-10|H|mor|AM|Tegucigalpa|storm,flood,disaster|Hurricane Mitch|A hurricane stalls over Honduras and Nicaragua, and floods and mudslides kill more than eleven thousand.
+1998-12|H|mor|AM|Caracas|crown,revolution|Chavez elected|A former paratrooper who once led a failed coup is elected president of Venezuela.
+1999-4|H|mor|AM|Iqaluit|founding,law|Nunavut|Canada creates a territory governed by its Inuit majority.
+1999-4|H|mor|AM|Littleton|crime,death,media|Columbine|Two students kill thirteen people at a high school in Colorado.
+1999-12|H|mor|AM|Vargas|flood,disaster,death|The Vargas mudslides|Days of rain bring down the mountainside on the Venezuelan coast and bury whole towns.
+2000-7|H|mor|AM|Mexico City|law,crown|The end of one-party rule|An opposition candidate wins Mexico's presidency after seventy-one years of rule by one party.
+2001-9|H|mor|AM|New York|terror,death,war|The towers fall|Hijacked airliners destroy the World Trade Center and strike the Pentagon; nearly three thousand people die.
+2001-12|H|mor|AM|Buenos Aires|money,uprising|Argentina's collapse|The banks freeze deposits, crowds bang pots in the streets, and the country has five presidents in two weeks.
+2002-4|H|mor|AM|Caracas|uprising,crown|Two days without Chavez|A coup removes Venezuela's president and collapses within forty-eight hours.
+2003-1|H|mor|AM|Brasilia|crown,industry|Lula|A former lathe operator and union leader becomes president of Brazil.
+2005-8|H|mor|AM|New Orleans|storm,flood,disaster|Hurricane Katrina|The levees of New Orleans fail, most of the city floods, and more than eighteen hundred people die.
+2005-12|H|mor|AM|La Paz|crown,law|Morales elected|Bolivia elects an Aymara coca growers' leader as its president.
+2006-12|H|mor|AM|Michoacan|war,crime|Mexico's drug war|A new president sends the army against the cartels, and the killing rises year after year.
+2008-11|H|mor|AM|Chicago|crown,law|Obama elected|The United States elects its first black president.
+2009-6|H|mor|AM|Tegucigalpa|war,crown,law|The coup in Honduras|Soldiers take the president of Honduras from bed and fly the president out of the country.
+1990-2|H|mor|AF|Cape Town|law,revolution|Mandela walks free|Nelson Mandela leaves prison after twenty-seven years, a month before Namibia becomes independent.
+1991-1|H|mor|AF|Mogadishu|war,famine,crown|Somalia falls apart|Rebels drive out Siad Barre, and the state dissolves into clan war and famine.
+1991-3|H|mor|AF|Sierra Leone|war,crime,massacre|The war in Sierra Leone|Rebels cross from Liberia and begin an eleven-year war paid for with diamonds.
+1991-5|H|mor|AF|Addis Ababa|war,revolution|The Derg falls|Rebel armies enter Addis Ababa, and Eritrea goes its own way.
+1993-10|H|mor|AF|Mogadishu|battle,war|The battle of Mogadishu|Two American helicopters are shot down in a raid, and a day of street fighting kills eighteen Americans and hundreds of Somalis.
+1994-4|H|mor|AF|Kigali|massacre,war,media|The genocide in Rwanda|After the president's plane is shot down, soldiers, militias and neighbours kill some eight hundred thousand Tutsi and moderate Hutu in a hundred days.
+1994-4|W|wra|AF|Kigali|massacre,occult|The Shadowlands of Rwanda|The house reading has the hundred days drown the African lands of the dead in new wraiths faster than any power there can gather them.
+1994-4|H|mor|AF|Pretoria|law,founding,revolution|South Africa votes|South Africans of every colour queue for days to vote, and Mandela becomes president.
+1995-5|H|mor|AF|Kikwit|plague,death|Ebola in Kikwit|Ebola kills about two hundred and fifty people in a town in Zaire.
+1995-11|H|mor|AF|Port Harcourt|death,law,industry|Saro-Wiwa hanged|Nigeria's military government hangs the writer Ken Saro-Wiwa and eight other Ogoni who campaigned against the oil companies.
+1996-4|H|mor|AF|Cape Town|law,persecution|Truth and reconciliation|South Africa's commission begins to hear the victims and the killers of apartheid in public.
+1997-5|H|mor|AF|Kinshasa|war,crown|Mobutu falls|Rebels backed by Rwanda and Uganda cross Zaire in seven months and rename it the Democratic Republic of the Congo.
+1998-8|H|mor|AF|Nairobi|terror,death|The embassy bombings|Truck bombs at the American embassies in Nairobi and Dar es Salaam kill more than two hundred people.
+1998-8|H|mor|AF|Goma|war,famine,death|Africa's great war|A second war begins in the Congo and draws in nine countries; several million die, most of hunger and disease.
+1999-5|H|mor|AF|Abuja|law,crown|Nigeria's generals step down|Nigeria returns to elected government after sixteen years of military rule.
+2000-2|H|mor|AF|Mozambique|flood,disaster|The Mozambique floods|The Limpopo floods for weeks; a woman gives birth in a tree before a helicopter reaches her.
+2000|H|mor|AF|Zimbabwe|law,uprising,famine|The farm seizures|War veterans occupy Zimbabwe's white-owned farms, and the country's harvests and currency collapse over the next years.
+2002-2|H|mor|AF|Moxico|death,war,treaty|Savimbi killed|The death of the rebel leader in an ambush ends twenty-seven years of civil war in Angola.
+2002-7|H|mor|AF|Durban|treaty,founding|The African Union|The Organisation of African Unity is replaced by the African Union.
+2003-2|H|mor|AF|Darfur|war,massacre,migration|Darfur|Rebellion in western Sudan is answered with mounted militias and bombing; hundreds of thousands die and millions flee.
+2003-8|H|mor|AF|Monrovia|war,treaty|Taylor leaves Liberia|Besieged in the capital, Liberia's warlord president flies into exile, and fourteen years of war end.
+2005-1|H|mor|AF|Naivasha|treaty,war|Peace in southern Sudan|A peace agreement ends twenty-two years of war between north and south Sudan.
+2005-11|H|mor|AF|Monrovia|crown,law|Sirleaf elected|Liberia elects Africa's first woman head of state.
+2007-12|H|mor|AF|Nairobi|uprising,massacre,law|Kenya after the vote|A disputed election sets off weeks of killing in which more than a thousand people die.
+2008|H|mor|AF|Harare|money,plague,famine|Zimbabwe's ruin|Prices in Zimbabwe double every day, a hundred-trillion-dollar note is printed, and cholera kills four thousand.
+2009-7|H|mor|AF|Maiduguri|uprising,faith,terror|Boko Haram rises|A sect in north-east Nigeria rises against the state; its founder dies in police hands, and the survivors go underground.
+1992-6|H|mor|OC|Canberra|law|Mabo|Australia's High Court rules that the land was not empty when the British came, and that native title survives.
+1994-9|H|mor|OC|Rabaul|disaster|Rabaul buried|Two volcanoes erupt together and bury the town of Rabaul in ash.
+1995-9|H|mor|OC|Moruroa|science,uprising|The last French tests|France resumes nuclear tests at Moruroa, and Tahiti's capital burns in the riots.
+1996-4|H|mor|OC|Port Arthur|crime,death,law|Port Arthur|A gunman kills thirty-five people at a historic site in Tasmania, and Australia bans rapid-fire weapons within weeks.
+1997-3|H|mor|OC|Port Moresby|war,uprising,crime|The Sandline affair|Papua New Guinea's army expels mercenaries its own government had hired to retake Bougainville.
+1998-7|H|mor|OC|Aitape|quake,flood,disaster|The Aitape wave|A wave thrown up by an undersea landslide destroys villages on New Guinea's north coast and kills more than two thousand.
+2000-5|H|mor|OC|Suva|war,crown,persecution|Hostages in parliament|A failed businessman and gunmen hold Fiji's first Indo-Fijian prime minister hostage for fifty-six days.
+2000-9|H|mor|OC|Sydney|sport|The Sydney games|An Aboriginal runner lights the Olympic flame and wins the four hundred metres.
+2001-8|H|mor|OC|Christmas Island|migration,law,sea|The Tampa|Australia refuses to let a Norwegian freighter land the asylum seekers it rescued and begins sending such arrivals to Nauru.
+2003-7|H|mor|OC|Honiara|war,treaty|Helping a friend|A Pacific force led by Australia lands in the Solomon Islands to end five years of fighting.
+2006-11|H|mor|OC|Nuku'alofa|uprising,fire,crown|The Tonga riots|Crowds demanding democracy burn most of the Tongan capital's business district.
+2006-12|H|mor|OC|Suva|war,crown|Fiji's fourth coup|The commander of Fiji's forces removes the government.
+2008-2|H|mor|OC|Canberra|law,persecution|The apology|The Australian parliament apologises to the Aboriginal children taken from their families.
+2009-2|H|mor|OC|Kinglake|fire,disaster,weather|Black Saturday|Bushfires in Victoria on a day of record heat kill a hundred and seventy-three people.
+2009-9|H|mor|OC|Apia|quake,flood,disaster|The Samoa tsunami|An earthquake sends a wave over the south coast of Samoa, American Samoa and Tonga and kills nearly two hundred.

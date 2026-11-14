@@ -16,18 +16,22 @@ PACKS = {   # id: (name, version)
     "H37W5Oj8": ("FA_Artificial_Floors_A_v2.02", "2.02"),
 }
 R = random.Random(0)
+SEED = 0
 ASSETS = []
 
 def init(seed, asset_list):
     """Set the seed and read the asset list (every asset path in the packs, one a line). Returns the generator."""
-    global R, ASSETS
-    R = random.Random(seed)
+    global R, ASSETS, SEED
+    R, SEED = random.Random(seed), seed
     ASSETS = list(dict.fromkeys(l.strip() for f in str(asset_list).split(",") if f for l in open(f, encoding="utf-8-sig") if "/textures/" in l))
     USED.clear()
     LIGHTS.clear()
     return R
 
 def asset(name, kind="objects"):
+    if "/textures/" in name:                       # a full path (the furnishing catalogue gives these)
+        USED.add(name.split("/")[0])
+        return "res://packs/" + name
     hits = [a for a in ASSETS if a.endswith("/" + name) and f"/textures/{kind}/" in a]
     if len(hits) > 1 and len({h.split("/")[0] for h in hits}) > 1:   # the same file in two packs: Forgotten Adventures first
         fa = [h for h in hits if h.split("/")[0] in PACKS]
@@ -57,6 +61,46 @@ USED = set()                  # pack ids the map refers to, for its asset manife
 LIGHTS = []                   # Dungeondraft lights made with the dressing since the last level(); level() takes them
 PACK_TABLE = "/mnt/project-files/dd-pack-ids.tsv"   # id, name, version, author, file (read off each pack on the PC)
 
+# A wall light's picture has its bracket on one edge: Forgotten Adventures' wall torches on the right (east),
+# Skront's sconces and other upright pictures at the top (north). bracket_turn() is the extra turn, in radians, that
+# puts the bracket against the given wall (N, E, S, W) so the light faces into the room; None for a free-standing light.
+BRACKET_EAST = re.compile(r"Wall_?Torch|Wall_?Lamp|Wall_?Light", re.I)
+BRACKET_NORTH = re.compile(r"Sconce|Bracket", re.I)
+
+def bracket_edge(name):
+    """The bracket's direction at rotation 0, in radians (0 = east, -pi/2 = north); None when it has no bracket."""
+    if BRACKET_EAST.search(name): return 0.0
+    if BRACKET_NORTH.search(name): return -math.pi / 2
+    return None
+
+def bracket_turn(name, side):
+    e = bracket_edge(name)
+    if e is None: return None
+    want = {"E": 0.0, "S": math.pi / 2, "W": math.pi, "N": -math.pi / 2}[side]
+    return want - e
+
+STORE_PIECE = re.compile(r"Chest|Barrel|Keg|Crate|Box_|Sack|Coffer", re.I)   # kept from under windows
+DOOR_CLEAR = 1.5                    # clear floor inside a door, in squares (Ben 2026-11-14)
+DOOR_CLEAR_SMALL = 1.1              # in a room less than SMALL_ROOM squares across the door, which 1.5 would leave unusable
+SMALL_ROOM = 4
+BED = re.compile(r"Bed(?!ding)|Cot_|Bunk|Pallet_Straw", re.I)
+FIRE = re.compile(r"Cooking_Pit|Fire_?Pit|Brazier|Oven|Fireplace|Hearth|Campfire", re.I)
+BED_FIRE_GAP = 2.0                  # a bed stands at least this far from an open fire pit or cooking pit (Ben 2026-11-14)
+OPEN_FIRE = re.compile(r"Cooking_Pit|Fire_?Pit|Campfire|Hearth|Fireplace", re.I)
+BED_STOVE_GAP = 1.5                 # and this far from an enclosed oven or stove, or a brazier
+def bed_fire_gap(fire_name):
+    return BED_FIRE_GAP if OPEN_FIRE.search(fire_name) else BED_STOVE_GAP
+CHEST = re.compile(r"Chest|Coffer|Trunk", re.I)
+DINING = re.compile(r"Table(?!_?(Side|End|Coffee|Night|Bedside))", re.I)   # a table people sit round (not a side table)
+SEAT = re.compile(r"Chair|Stool", re.I)
+BAR = re.compile(r"(^|/)Bar_", re.I)
+
+def under_any(blocked, r):
+    """True when rect r overlaps a door clear zone or walkway (the strip behind a bar must not be one)."""
+    return any(b[4] in ("door clear zone", "walkway") and overlaps(r, b[:4]) and
+               not (r[0] >= b[0] + b[2] - 1e-6 or b[0] >= r[0] + r[2] - 1e-6 or r[1] >= b[1] + b[3] - 1e-6 or b[1] >= r[1] + r[3] - 1e-6) for b in blocked)
+MINOR = re.compile(r"Basket|Bucket|Broom|Firewood|Plant_Pot|Pot_Clay|Jug_|Vase", re.I)   # small things a room can do without
+
 def cells_of(name):
     if name in SIZES: return SIZES[name]
     if name.rsplit("/", 1)[-1] in SIZES: return SIZES[name.rsplit("/", 1)[-1]]      # a name given with its folder
@@ -70,6 +114,10 @@ def seg_pts(poly, step=.1):
 
 def rdist(px, py, x, y, w, h):
     return math.hypot(max(x - px, 0, px - (x + w)), max(y - py, 0, py - (y + h)))
+
+def gap_between(a, b):
+    """The clear distance between two rects (x, y, w, h); 0 when they touch or overlap."""
+    return math.hypot(max(a[0] - (b[0] + b[2]), 0, b[0] - (a[0] + a[2])), max(a[1] - (b[1] + b[3]), 0, b[1] - (a[1] + a[3])))
 
 def overlaps(a, b, gap=0.0):
     """Two rects (x, y, w, h) closer than gap on both axes."""
@@ -86,6 +134,17 @@ BESIDE = {"bed": "Bed", "table": "Table", "anvil": "Anvil", "altar": "Altar", "b
 HEARTH = re.compile(r"Oven|Cooking_Pit|Brazier")
 
 # ------------------------------------------------------------------ rooms and their furnishing
+def fire_clash(items, asset, rect):
+    """True when a bed at rect would stand too near a fire among items, or a fire at rect too near a bed."""
+    if BED.search(asset): other, mine = FIRE, None
+    elif FIRE.search(asset): other, mine = BED, asset
+    else: return False
+    for i in items:
+        if not other.search(i["asset"]): continue
+        g = bed_fire_gap(mine or i["asset"])
+        if gap_between(rect, (i["x"], i["y"], i["w"], i["h"])) < g: return True
+    return False
+
 class Room:
     """A room in map cells. openings: (kind, x, y, along) in map cells; furnish: [(asset, rule, count[, scale])].
     Rules: wall[:sides], corner[:sides], end[:sides] (touches those walls, never turned; endt: always turned),
@@ -94,25 +153,31 @@ class Room:
     def __init__(self, name, x, y, w, h, floor, openings, furnish=()):
         self.name, self.x, self.y, self.w, self.h, self.floor = name, x, y, w, h, floor
         self.furnish_list = list(furnish)
+        self.ctx = None               # a furnishing context (furnishing.context_for): palette, role, wealth...
         self.items, self.blocked = [], []
         inset = .18   # wall half-thickness plus a little air
         self.ix, self.iy, self.iw, self.ih = x + inset, y + inset, w - 2 * inset, h - 2 * inset
         # clear zones: one cell inside each door, and a walkway joining the doors
-        self.doors = []
+        self.doors, self.window_zones = [], []
         for kind, ox, oy, along in openings:
             on_edge = (abs(ox - x) < .01 or abs(ox - (x + w)) < .01) and y <= oy <= y + h or \
                       (abs(oy - y) < .01 or abs(oy - (y + h)) < .01) and x <= ox <= x + w
             if not on_edge: continue
             half = PORTALS[kind][1] / 2
-            if kind == "window":
-                self.windows = getattr(self, "windows", []) + [(ox, oy, along)]
+            if kind == "window":                                       # no chest, barrel or crate pushed up under a
+                self.windows = getattr(self, "windows", []) + [(ox, oy, along)]   # window (see candidates(keep_windows))
+                d, wz = .9, half
+                if along == "h":
+                    self.window_zones.append((ox - wz, oy if abs(oy - y) < .01 else oy - d, 2 * wz, d, "window clear zone"))
+                else:
+                    self.window_zones.append((ox if abs(ox - x) < .01 else ox - d, oy - wz, d, 2 * wz, "window clear zone"))
                 continue
-            if along == "h":
-                zy = oy if abs(oy - y) < .01 else oy - 1.1
-                self.blocked.append((ox - half, zy, 2 * half, 1.1, "door clear zone"))
-            else:
-                zx = ox if abs(ox - x) < .01 else ox - 1.1
-                self.blocked.append((zx, oy - half, 1.1, 2 * half, "door clear zone"))
+            deep = DOOR_CLEAR if (h if along == "h" else w) >= SMALL_ROOM else DOOR_CLEAR_SMALL
+            def zone(d):
+                if along == "h": return (ox - half, oy if abs(oy - y) < .01 else oy - d, 2 * half, d, "door clear zone")
+                return (ox if abs(ox - x) < .01 else ox - d, oy - half, d, 2 * half, "door clear zone")
+            self.blocked.append(zone(deep))
+            if deep > DOOR_CLEAR_SMALL: self.wide_zones = getattr(self, "wide_zones", []) + [(zone(deep), zone(DOOR_CLEAR_SMALL))]
             self.doors.append((ox, oy, along))
         if not hasattr(self, "windows"): self.windows = []
         ow, oh = w - 4.4, h - 4.4                                        # keep the middle of a big room open
@@ -134,12 +199,18 @@ class Room:
             if x < bx + bw - 1e-6 and bx < x + w - 1e-6 and y < by + bh - 1e-6 and by < y + h - 1e-6: return False
         return True
 
-    def candidates(self, fw, fh, rule):
+    def under_window(self, r):
+        """True when rect r reaches into the clear space in front of a window."""
+        x, y, w, h = r
+        return any(x < zx + zw and zx < x + w and y < zy + zh and zy < y + h for zx, zy, zw, zh, _ in getattr(self, "window_zones", []))
+
+    def candidates(self, fw, fh, rule, keep_windows=False):
         """Spots on a quarter-cell grid, plus spots flush with each wall and with each placed item or clear zone,
         for both turns of the item. Wall and corner rules are hard: the item must touch a wall."""
         out = []
-        edges = self.blocked + [(i["x"], i["y"], i["w"], i["h"]) for i in self.items]
+        edges = self.blocked + (getattr(self, "window_zones", []) if keep_windows else []) + [(i["x"], i["y"], i["w"], i["h"]) for i in self.items]
         kind, _, arg = rule.partition(":")
+        obstacles = [tuple(e[:4]) for e in edges]                    # what fits() tests against, with open floor kept
         turns = ((fw, fh, 0),) if kind == "end" else ((fh, fw, 1),) if kind == "endt" else ((fw, fh, 0), (fh, fw, 1))
         for (w, h, rot) in turns:
             xs = {round(self.ix + k * .25, 4) for k in range(int((self.iw - w) / .25) + 1)} | {self.ix, round(self.ix + self.iw - w, 4)}
@@ -147,13 +218,17 @@ class Room:
             for bx, by, bw, bh, *_ in edges:
                 xs |= {round(bx + bw, 4), round(bx - w, 4)}; ys |= {round(by + bh, 4), round(by - h, 4)}
             for x in xs:
+                if x < self.ix - 1e-6 or x + w > self.ix + self.iw + 1e-6: continue
+                col = [b for b in obstacles if x < b[0] + b[2] - 1e-6 and b[0] < x + w - 1e-6]   # what this column could hit
                 for y in ys:
-                    if not self.fits((x, y, w, h)): continue
+                    # the cheap wall tests first, then the overlap test (same result as fits(), much faster in big rooms)
                     t = self.touching(x, y, w, h)
                     if kind in ("wall", "corner", "window", "end", "endt") and not (all(t[c] for c in arg) if arg else any(t.values())): continue
                     if kind == "corner" and sum(t.values()) < 2: continue
                     if kind in ("wall", "window") and w != h and sum(t.values()) == 1 and ((t["N"] or t["S"]) != (w > h)): continue
                     if kind == "wall" and len(arg) == 1 and w != h and ((arg in "NS") != (w > h)): continue
+                    if y < self.iy - 1e-6 or y + h > self.iy + self.ih + 1e-6: continue
+                    if any(y < by + bh - 1e-6 and by < y + h - 1e-6 for _, by, _, bh in col): continue
                     out.append((self.score(x, y, w, h, rule, rot), x, y, w, h, rot))
         out.sort(key=lambda c: -c[0])
         return out
@@ -174,9 +249,24 @@ class Room:
             s += 10 + 1.5 * (walls >= 2)
             s += 1.5 * any(abs(x - (i["x"] + i["w"])) < .02 or abs(x + w - i["x"]) < .02 or abs(y - (i["y"] + i["h"])) < .02 or abs(y + h - i["y"]) < .02 for i in self.items)
         if kind == "corner": s += 6 * (walls >= 2) + 3 * (walls == 1)
+        placing = "" if getattr(self, "no_foot", False) else getattr(self, "placing", "")   # a crowded room drops the niceties
+        if kind in ("wall", "corner") and STORE_PIECE.search(placing):
+            # stored goods go in touching clusters, corner first (Ben's reference maps)
+            stores = [i for i in self.items if STORE_PIECE.search(i["asset"])]
+            if stores: s += 5 * any(gap_between((x, y, w, h), (i["x"], i["y"], i["w"], i["h"])) < .05 for i in stores)
+            else: s += 3 * (walls >= 2)
+        if kind in ("wall", "end", "endt", "corner") and BED.search(placing):
+            # beds in a row along their wall with an even half-square gap
+            beds = [i for i in self.items if BED.search(i["asset"])]
+            if beds and any(.35 <= gap_between((x, y, w, h), (i["x"], i["y"], i["w"], i["h"])) <= .65 and
+                            (abs(i["y"] - y) < .05 or abs(i["x"] - x) < .05) for i in beds): s += 6
         if kind == "centre": s -= abs(cx - (self.ix + self.iw / 2)) + abs(cy - (self.iy + self.ih / 2))
         if kind == "window" and self.windows:
             s += 8 * (walls >= 1) - min(math.hypot(cx - wx, cy - wy) for wx, wy, _ in self.windows)
+        if kind == "foot":                                         # a chest at the foot of a bed, square to its end
+            for fx, fy, along in self.bed_feet():
+                d = math.hypot(cx - fx, cy - fy)
+                s = max(s, 30 - 6 * d + 2 * ((w > h) == (along == "h")))
         if kind in ("hearth", "beside"):
             ref = [i for i in self.items if (HEARTH.search(i["asset"]) if kind == "hearth" else BESIDE[arg].lower() in i["asset"].lower())]
             if ref:
@@ -187,11 +277,112 @@ class Room:
         if walls == 1 and max(w, h) > min(w, h) and ((touch["N"] or touch["S"]) != (w > h)) and kind not in ("end", "endt"): s -= 3
         return s
 
+    def bed_feet(self):
+        """The foot of each bed placed so far: the middle of the short end farther from the walls, and which way that
+        end runs ("h" when it runs east to west)."""
+        out = []
+        for i in self.items:
+            if not BED.search(i["asset"]): continue
+            x, y, w, h = i["x"], i["y"], i["w"], i["h"]
+            if h >= w: ends = [((x + w / 2, y), "h"), ((x + w / 2, y + h), "h")]
+            else: ends = [((x, y + h / 2), "v"), ((x + w, y + h / 2), "v")]
+            def room_from_wall(p): return min(p[0] - self.ix, self.ix + self.iw - p[0], p[1] - self.iy, self.iy + self.ih - p[1])
+            (px, py), along = max(ends, key=lambda e: room_from_wall(e[0]))
+            # the chest's middle, half a square out past the foot
+            if along == "h": py += .5 if py > y + h / 2 - 1e-6 else -.5
+            else: px += .5 if px > x + w / 2 - 1e-6 else -.5
+            out.append((px, py, along))
+        return out
+
+    def table_slots(self, fw, fh):
+        """Where a seat of fw by fh goes round each dining table: one per free side of a small table, and facing pairs
+        down both long sides of a long one (one pair a square), then its ends. In the order they should fill: by table,
+        the table with fewest seats first. Each slot is the seat's top-left corner (x, y, w, h)."""
+        out = []
+        seats = [i for i in self.items if SEAT.search(i["asset"])]
+        for t in self.items:
+            if not DINING.search(t["asset"]) or SEAT.search(t["asset"]): continue
+            x, y, w, h = t["x"], t["y"], t["w"], t["h"]
+            cx, cy = x + w / 2, y + h / 2
+            s = max(fw, fh)
+            n, slots = sum(1 for c in seats if gap_between((c["x"], c["y"], c["w"], c["h"]), (x, y, w, h)) < .2), []
+            if max(w, h) >= 1.9 * min(w, h) and max(w, h) >= 1.9:          # a long table: pairs down the long sides
+                k = max(1, int(max(w, h) + .01))
+                for j in range(k):
+                    a = (j + .5) * max(w, h) / k
+                    if w >= h: slots += [(x + a - s / 2, y - s, s, s), (x + a - s / 2, y + h, s, s)]
+                    else: slots += [(x - s, y + a - s / 2, s, s), (x + w, y + a - s / 2, s, s)]
+                if w >= h: slots += [(x - s, cy - s / 2, s, s), (x + w, cy - s / 2, s, s)]
+                else: slots += [(cx - s / 2, y - s, s, s), (cx - s / 2, y + h, s, s)]
+            else:                                                           # a small or round table: one each side
+                slots = [(cx - s / 2, y - s, s, s), (cx - s / 2, y + h, s, s), (x - s, cy - s / 2, s, s), (x + w, cy - s / 2, s, s)]
+            out += [(n, j, r) for j, r in enumerate(slots)]
+        out.sort(key=lambda e: (e[0], e[1]))
+        return [r for _, _, r in out]
+
+    def seat_at_table(self, fw, fh):
+        """The first free slot round a dining table that a seat fits in (inside the room, clear of everything), or None."""
+        for r in self.table_slots(fw, fh):
+            x, y, w, h = r
+            if x < self.ix - 1e-6 or y < self.iy - 1e-6 or x + w > self.ix + self.iw + 1e-6 or y + h > self.iy + self.ih + 1e-6: continue
+            keep = [b for b in self.blocked if b[4] != "open floor"]       # a table in the open middle takes its seats there
+            if not any(overlaps(r, b[:4]) and not (r[0] >= b[0] + b[2] - 1e-6 or b[0] >= r[0] + r[2] - 1e-6 or r[1] >= b[1] + b[3] - 1e-6 or b[1] >= r[1] + r[3] - 1e-6)
+                       for b in keep + [(i["x"], i["y"], i["w"], i["h"]) for i in self.items]): return r
+        return None
+
+    def bar_slots(self, fw, fh, where):
+        """Spots behind a bar (between it and its wall, leaving the last square open to walk in) or in front of it
+        (one stool a square along its front), each (x, y, w, h)."""
+        if not getattr(self, "bar", None): return []
+        (x, y, w, h), side = self.bar
+        s = max(fw, fh)
+        n = int(max(w, h) + .01)
+        out = []
+        for k in range(n - 1 if where == "behind" else n):
+            a = k + .5 - s / 2
+            if side == "N": out.append((x + a, y - 1 + (1 - s) / 2, s, s) if where == "behind" else (x + a, y + h, s, s))
+            elif side == "S": out.append((x + a, y + h + (1 - s) / 2, s, s) if where == "behind" else (x + a, y - s, s, s))
+            elif side == "W": out.append((x - 1 + (1 - s) / 2, y + a, s, s) if where == "behind" else (x + w, y + a, s, s))
+            else: out.append((x + w + (1 - s) / 2, y + a, s, s) if where == "behind" else (x - s, y + a, s, s))
+        return out
+
+    def free_slot(self, slots):
+        for r in slots:
+            x, y, w, h = r
+            if x < self.ix - 1e-6 or y < self.iy - 1e-6 or x + w > self.ix + self.iw + 1e-6 or y + h > self.iy + self.ih + 1e-6: continue
+            if self.fits(r, open_floor=False): return r
+        return None
+
+    def at_foot(self, k):
+        """A candidate spot (x, y, w, h) that touches the foot end of some bed."""
+        x, y, w, h = k
+        for i in self.items:
+            if not BED.search(i["asset"]): continue
+            if gap_between((x, y, w, h), (i["x"], i["y"], i["w"], i["h"])) > .05: continue
+            cx, cy = x + w / 2, y + h / 2
+            if any(math.hypot(cx - fx, cy - fy) < .8 for fx, fy, _ in self.bed_feet()): return True
+        return False
+
     def furnish(self, tries=80):
         """Greedy placement by rule; if an item cannot be placed, start the room again with more shuffle.
-        Only when every try fails does the script stop. Then the room is dressed (see dress())."""
+        Only when every try fails does the script stop. Then the room is dressed (see dress()).
+        The room draws its noise from its own random stream (by name and place), so moving one chest never shifts
+        the layout of the rest of the map."""
+        global R
+        keep, R = R, random.Random(f"{self.name}|{self.x:.2f}|{self.y:.2f}|{SEED}")
+        try:
+            return self._furnish(tries)
+        finally:
+            R = keep
+
+    def _furnish(self, tries):
         for t in range(tries):
-            self.items, self.noise = [], .1 + t * .08
+            if t == tries // 2:
+                # half the tries gone: a crowded room keeps the smaller clear floor at its doors, and its chests go where
+                # their own rule puts them rather than at the beds' feet
+                self.blocked = [next((small for wide, small in getattr(self, "wide_zones", []) if b == wide), b) for b in self.blocked]
+                self.no_foot = True
+            self.items, self.noise, self.bar = [], .1 + t * .08, None
             if self.try_furnish():
                 dress(self)
                 orient(self)
@@ -201,6 +392,7 @@ class Room:
     def try_furnish(self):
         for entry in self.furnish_list:
             name, rule, count = entry[:3]; sc = entry[3] if len(entry) > 3 else 1.0
+            self.placing = name
             fw, fh = (round(v * sc, 3) for v in cells_of(name))
             if rule.startswith("at:"):                         # a fixed spot: aisles of shelves, rows of seats
                 _, ax, ay, *turn = rule.split(":")
@@ -216,7 +408,50 @@ class Room:
                         break
                 continue                                       # a spot that will not take it is left empty
             for _ in range(count):
+                if rule == "beside:table" and SEAT.search(name) and not getattr(self, "no_foot", False):
+                    # chairs go all round a table, one to a side, facing pairs down a long one (Ben 2026-11-14)
+                    r = self.seat_at_table(fw, fh)
+                    if r:
+                        self.items.append({"asset": name, "x": r[0], "y": r[1], "w": r[2], "h": r[3], "rot": 0, "scale": sc})
+                        continue
+                if (rule == "beside:bar" or rule == "front:bar") and getattr(self, "bar", None):
+                    # kegs and shelves behind the bar, stools in a row in front of it (Ben 2026-11-14)
+                    slots = self.bar_slots(fw, fh, "behind" if rule == "beside:bar" else "front")
+                    if STORE_PIECE.search(name): slots = [k for k in slots if not self.under_window(k)]
+                    r = self.free_slot(slots)
+                    if r:
+                        self.items.append({"asset": name, "x": r[0], "y": r[1], "w": r[2], "h": r[3], "rot": 0, "scale": sc})
+                        continue
+                if rule == "front:bar": continue                   # no bar, or no room in front: no stools
                 c = self.candidates(fw, fh, rule)
+                if c and BAR.search(name) and rule.startswith("wall") and not getattr(self, "no_foot", False):
+                    # a bar stands a square off its wall, so there is room to serve from behind it
+                    for k in c[:40]:
+                        _, x, y, w, h, rot = k
+                        t = self.touching(x, y, w, h)
+                        side = next((d for d in "NSWE" if t[d] and ((d in "NS") == (w > h))), None)
+                        if not side: continue
+                        dx, dy = {"N": (0, 1), "S": (0, -1), "W": (1, 0), "E": (-1, 0)}[side]
+                        r = (x + dx, y + dy, w, h)
+                        if self.fits(r, open_floor=False) and not under_any(self.blocked, (x, y, w, h)):
+                            self.items.append({"asset": name, "x": r[0], "y": r[1], "w": w, "h": h, "rot": rot, "scale": sc})
+                            self.bar = (r, side)
+                            break
+                    if getattr(self, "bar", None) and self.items and self.items[-1]["asset"] == name: continue
+                if CHEST.search(name) and not getattr(self, "no_foot", False) and any(BED.search(i["asset"]) for i in self.items):
+                    # a chest goes at the foot of a bed while a bed's foot is free (Ben 2026-11-14), else by its own rule
+                    foot = [k for k in self.candidates(fw, fh, "foot") if self.at_foot(k[1:5])]
+                    if foot: c = foot
+                if c and (BED.search(name) or FIRE.search(name)):
+                    # beds kept well away from a fire pit, oven or brazier, whichever is placed first
+                    other = FIRE if BED.search(name) else BED
+                    if any(other.search(i["asset"]) for i in self.items):
+                        c = [k for k in c if not fire_clash(self.items, name, k[1:5])]
+                        if not c: self.last_fail = f"{name} (kept from the fire)"; return False
+                if not c and MINOR.search(name): continue      # a basket or broom with no room is left out
+                if c and STORE_PIECE.search(name):             # a chest or barrel never pushed up under a window: with no
+                    c = [k for k in c if not self.under_window(k[1:5])]
+                    if not c: continue                         # other spot, the room does without it
                 if not c: self.last_fail = name; return False
                 _, x, y, w, h, rot = c[0]
                 self.items.append({"asset": name, "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": sc})
@@ -252,7 +487,7 @@ MOD_DRESS = {
     "wall_sleep": ["TableEndB01.png", "Hutch01.png"], "wall_store": ["Box_Crate_Wood_Ashen_A1_1x1.webp"],
     "corner": ["Plant_Pot_Clay_Brown_A_1x1.webp", "TableEndC01.png"], "centre": ["TableCoffeeA01.png"],
 }
-TABLES = re.compile(r"Table|Desk|Counter|Bench_|Workbench", re.I)
+TABLES = re.compile(r"Table|Desk|Counter|Bench_|Workbench|Bar_", re.I)
 
 def have(name): return any(a.endswith("/" + name) for a in ASSETS)
 
@@ -268,6 +503,10 @@ def kind_of(room):
 
 def dress(room):
     global R
+    if getattr(room, "ctx", None):                 # furnished by purpose, palette and room value (furnishing.py)
+        import furnishing
+        furnishing.fill_room(room)
+        return
     room.dressing, room.lights = [], []
     kind = kind_of(room)
     if room.iw < 1.5 or room.ih < 1.5: return
@@ -300,7 +539,8 @@ def dress(room):
             if not choice: continue
             a = R.choice(choice)
             fw, fh = cells_of(a)
-            c = room.candidates(fw, fh, "corner" if k % 3 == 0 else "wall")
+            room.placing = a
+            c = room.candidates(fw, fh, "corner" if k % 3 == 0 else "wall", keep_windows=bool(STORE_PIECE.search(a)))   # nothing stored under a window
             if c:
                 _, x, y, w, h, rot = c[0]
                 room.items.append({"asset": a, "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": 1.0})
@@ -359,6 +599,10 @@ SEATS = re.compile(r"Chair|Stool|Armchair|Couch|Sofa|Throne", re.I)
 INSET = re.compile(r"Brick_Oven_.*_2x2")     # drawn 2 squares wide and 1 deep in a 2 by 2 square
 NO_FACE = re.compile(r"Table|Desk|Counter|Rug_|Stairs|Stair|Barrel|Keg|Sack|Crate|Basket|Plant|Pot_|Tree|Bush|Hay|Bucket|Firewood|Lift|StairUp", re.I)
 
+def drawn(it):
+    """(asset, scale) to draw a room item with: the palette's piece when furnishing chose one, else its own."""
+    return it.get("draw", it["asset"]), it.get("draw_scale", it["scale"])
+
 def centre(it):
     """Where a piece's picture goes: the middle of its square, moved to its wall when the picture is shallower."""
     nx, ny = it.get("nudge", (0, 0))
@@ -373,6 +617,7 @@ def orient(room):
     mx, my = room.ix + room.iw / 2, room.iy + room.ih / 2
     for it in room.items + getattr(room, "dressing", []):
         if it.get("layer", 100) != 100 or "spin" in it: continue
+        it.pop("nudge", None)                                        # worked out again: the picture may have changed
         a = it["asset"]
         cx, cy = it["x"] + it["w"] / 2, it["y"] + it["h"] / 2
         if SEATS.search(a) and it["w"] == it["h"] or re.search(r"Chair|Stool", a, re.I):
@@ -393,7 +638,7 @@ def orient(room):
         side = next((d for d in order if t[d] and (it["w"] == it["h"] or (d in "NS") == (not it["rot"]))), None)
         if side:
             it["angle"] = {"N": 0.0, "S": math.pi, "W": -math.pi / 2, "E": math.pi / 2}[side]
-            if INSET.search(a):                                      # the picture is half its square deep: move it to the wall
+            if INSET.search(drawn(it)[0]):                           # the picture is half its square deep: move it to the wall
                 it["nudge"] = {"N": (0, -.5), "S": (0, .5), "W": (-.5, 0), "E": (.5, 0)}[side]
 
 def snap(angle, rot):
@@ -444,8 +689,9 @@ def light(cx, cy, rng, colour="ffeccd8b", intensity=.7):
     LIGHTS.append({"position": v2(*at(cx, cy)), "range": rng, "intensity": intensity, "color": colour,
                    "texture": "res://textures/lights/fragments.png", "shadows": True, "node_id": NID()})
 
-def wall_with_portals(points, texture, openings, loop, kinds=None):
-    """points in cells; openings (kind, x, y) that lie on this wall become portals with wall_distance = segment + t."""
+def wall_with_portals(points, texture, openings, loop, kinds=None, textures=None):
+    """points in cells; openings (kind, x, y) that lie on this wall become portals with wall_distance = segment + t.
+    textures: {opening kind: asset} from the building's palette (the age's doors and windows), else PORTALS."""
     nid = NID()
     pts = points + ([points[0]] if loop else [])
     portals = []
@@ -456,7 +702,9 @@ def wall_with_portals(points, texture, openings, loop, kinds=None):
             t = ((ox - ax) * (bx - ax) + (oy - ay) * (by - ay)) / (L * L)
             px_, py_ = ax + t * (bx - ax), ay + t * (by - ay)
             if 0 < t < 1 and math.hypot(px_ - ox, py_ - oy) < .01:
-                tex, width = PORTALS[(kinds or {}).get(kind, kind)]
+                k = (kinds or {}).get(kind, kind)
+                tex, width = PORTALS[k]
+                tex = (textures or {}).get(k) or tex
                 d = ((bx - ax) / L, (by - ay) / L)
                 portals.append({"position": v2(*at(ox, oy)), "rotation": math.atan2(d[1], d[0]), "scale": v2(1, 1),
                                 "direction": v2(*d), "texture": asset(tex, "portals"), "radius": CELL * width / 2,
@@ -537,6 +785,12 @@ TILE_RULES = [   # (asset prefix, label, flags); a container's fill place comes 
     ("Box_Crate", "Crates", {"hide": True, "hideKind": "crawl", "room": 1, "title": "Behind the crates"}),
 ]
 
+DRESSED = {   # furnishing pieces that become WoDX Interactables things on Adopt: (label, flags)
+    "chest": ("Chest", {"container": True, "kind": "chest", "lock": "cheap", "items": "", "fillPlace": "home"}),
+    "cupboard": ("Cupboard", {"container": True, "kind": "cabinet", "lock": "none", "items": "", "fillPlace": "home"}),   # one kind of thing each
+    "bed": ("Bed", {"hide": True, "hideKind": "bed", "title": "Under the bed"}),
+}
+
 def opening_entries(key, name, openings, inside):
     """Sidecar openings for one building. openings: (kind, x, y, along) in map cells; inside: a point inside."""
     out = []
@@ -560,6 +814,15 @@ def feature_entries(prefix, room, fill="home"):
              "rect": [round(it["x"], 3), round(it["y"], 3), round(it["w"], 3), round(it["h"], 3)], "flags": flags}
         if flags.get("light"): f["light"] = {"dim": 3, "bright": 1, "color": "#ff9a3c", "on": True}
         out.append(f)
+    # the furnishing's own pieces (furnishing.py): every chest, cupboard, wardrobe and bed it set down can be searched,
+    # opened or hidden in like the building type's own (ids "<room>-f<n>", so the type's own ids never move)
+    for i, it in enumerate(d for d in getattr(room, "dressing", []) if d.get("layer", 100) == 100):
+        rule = DRESSED.get(it.get("piece"))
+        if not rule: continue
+        label, flags = rule[0], dict(rule[1])
+        if flags.get("container"): flags["fillPlace"] = fill
+        out.append({"id": f"{prefix}{room.name.lower().replace(' ', '-').replace(chr(39), '')}-f{i}", "label": f"{label} ({room.name})",
+                    "rect": [round(it["x"], 3), round(it["y"], 3), round(it["w"], 3), round(it["h"], 3)], "flags": flags})
     return out
 
 # ------------------------------------------------------------------ plan view, to check the logic by eye

@@ -24,10 +24,12 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {registerPerceptionSettings, setupPerception, refreshScreen} from "./perception.mjs";
 import {registerQuiet, applyQuiet, quietCard} from "./quiet.mjs";
 import {registerSight, setupSight, cycleSight, colourSafe} from "./sight.mjs";
+import * as OW from "./otherworld-sight.mjs";
+import * as OR from "./otherworld-sight-rules.mjs";
 
 
 const MOD = "wodx-senses";
-const VERSION = "0.7.1";
+const VERSION = "0.12.0";
 const SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -36,7 +38,7 @@ const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { ret
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
 const isActiveGM = () => game.user.isGM && (game.users.activeGM ? game.users.activeGM.id === game.user.id : true);
 const modOn = id => !!game.modules.get(id)?.active;
-const cap = s => s ? s[0].toUpperCase() + s.slice(1) : "";
+const cap = s => { s = String(s ?? ""); return s ? s[0].toUpperCase() + s.slice(1) : ""; };
 const TABLES = {places: null, conditions: null, sources: null, otherworlds: null, channels: null};
 const NOISES = [];
 
@@ -130,7 +132,8 @@ function placeAt(scene, p) {
   return {...o, kind: o.kind || guessKind(scene?.navName || scene?.name) || "other", name: scene?.navName || scene?.name || "", id: `s.${scene?.id}`};
 }
 let guessPlace = null;
-const guessKind = name => { try { return guessPlace?.(name) || ""; } catch (e) { return ""; } };
+// guessPlace answers {kind, owner}; only the kind is wanted here (0.8.1: the whole answer used to come back and broke the Storyteller's card)
+const guessKind = name => { try { const g = guessPlace?.(name); return String((g && typeof g === "object" ? g.kind : g) || ""); } catch (e) { return ""; } };
 
 function timeNow() {
   try {
@@ -230,7 +233,9 @@ export function traitsOf(actor, {scene = null, layer = "physical", useAuspex = t
     spheres: {life: num(sp.life?.value), spirit: num(sp.spirit?.value), entropy: num(sp.entropy?.value), prime: num(sp.prime?.value)},
     woundPenalty: actor?.system?.conditions?.isignoringpain ? 0 : num(actor?.system?.health?.damage?.woundpenalty),
     // merits and flaws from WoDX Chronicle's trait table: Acute Sense, Bad Sight, Blind, Deaf, Medium, Deathsight
-    traitSenses: (() => { try { return chron()?.traits?.senses?.(actor) ?? null; } catch (e) { return null; } })()
+    traitSenses: (() => { try { return chron()?.traits?.senses?.(actor) ?? null; } catch (e) { return null; } })(),
+    // B3799: installed cyberware (WoDX Library): low-light and thermal optics, sharper hearing and smell
+    gear: (() => { try { return game.modules.get("wodx-library")?.api?.cyber?.installedFx?.(actor)?.senses ?? null; } catch (e) { return null; } })()
   };
 }
 
@@ -302,7 +307,11 @@ export function gatherSources(scene, td, actor) {
       if ( obfuscated(t) ) out.push({id: `obf.${t.id}`, key: "obfuscated", at, secret: true, name: t.name, obf: powerDots(t.actor, /^obfuscate$/i) || 1, kind: kindOf(t.actor)});
       continue;
     }
-    seen.push({t, at});
+    // 0.8.0: someone prone or under the water is not one of the crowd at a glance: a closer look picks them out
+    let low = null;
+    try { const st = stanceOf(t.actor, t); low = R.lowFigure(st, game.wodxCombat?.movement?.rules?.spotStance?.(st) ?? 0); } catch (e) { low = null; }
+    if ( low ) out.push({id: `low.${t.id}`, key: "low", at, secret: true, name: t.name, person: true, loud: "quiet", lines: {sight: [low]}});
+    else seen.push({t, at});
     // what others can sense about this one: Smell of the Grave, Glowing Eyes, Cold Breeze and the like (WoDX Chronicle)
     try {
       for ( const sh of chron()?.traits?.shows?.(t.actor) ?? [] ) {
@@ -360,13 +369,17 @@ async function rollPool(dice, diff) {
   return {roll, faces, successes: Math.max(0, hits - ones), botch: hits === 0 && ones > 0, dice, diff};
 }
 
+/** WoDX Combat's stance for a token (standing when Combat or its ways of moving are off). */
+function stanceOf(actor, td) {
+  try { return game.wodxCombat?.movement?.stanceOf?.(actor, td) ?? "standing"; } catch (e) { return "standing"; }
+}
 function sourceLines(sense, src, ctx, pw, gathered) {
   const out = [];
   const t = ctx.traits;
   for ( const s of src ) {
     if ( s.key === "people" ) {
       if ( sense !== "sight" ) continue;
-      const visible = (s.people ?? []).filter(at => R.reachOf("sight", {yards: yardsBetween(gathered.me, at, ctx.scene), sightBlocked: sightBlocked(gathered.me, at, ctx.scene)}, {light: ctx.light, darkSight: !!pw.darkSight}) !== null).length;
+      const visible = (s.people ?? []).filter(at => R.reachOf("sight", {yards: yardsBetween(gathered.me, at, ctx.scene), sightBlocked: sightBlocked(gathered.me, at, ctx.scene)}, {light: ctx.light, darkSight: !!pw.darkSight, sightFar: pw.sightFar, sightCap: pw.sightCap}) !== null).length;
       if ( !visible ) continue;
       for ( const l of linesFor("people", sense) ) out.push({...l, id: s.id, vars: {people: R.peopleWord(visible)}});
       continue;
@@ -388,7 +401,7 @@ function sourceLines(sense, src, ctx, pw, gathered) {
     const yards = yardsBetween(gathered.me, s.at ?? gathered.me, ctx.scene);
     const walls = wallsBetween(gathered.me, s.at ?? gathered.me, ctx.scene);
     const extra = R.reachOf(sense, {yards, walls, sightBlocked: sense === "sight" ? sightBlocked(gathered.me, s.at ?? gathered.me, ctx.scene) : false, loud: s.loud, strong: s.strong, glows: s.glows},
-      {light: ctx.light, darkSight: !!pw.darkSight, extra: pw.reach});
+      {light: ctx.light, darkSight: !!pw.darkSight, extra: pw.reach, sightFar: pw.sightFar, sightCap: pw.sightCap});
     if ( extra === null ) { if ( s.secret ) out.push({t: "", n: 99, id: s.id, name: s.name, why: `out of reach for ${sense}`, held: true}); continue; }
     for ( const l of base ) out.push({...l, n: Math.max(num(l.n), num(s.need)) + extra, id: s.id, name: s.name, secret: !!s.secret,
       vars: {...(s.vars ?? {}), dir: R.directionWord(gathered.me, s.at ?? gathered.me)}});
@@ -422,11 +435,11 @@ function channelLines(sense, pw, ctx, gathered) {
     }
     if ( ch === "unnatural" ) { if ( superN.length ) add("any", superN); continue; }
     if ( ch === "sphere-life" ) { if ( living.length ) add("living", living); const k = near.filter(p => p.kind === "kindred"); if ( k.length ) add("kindred", k); continue; }
-    if ( ch === "sphere-spirit" ) { const s = near.filter(p => ["spirit", "wraith"].includes(p.kind)); if ( s.length ) add("spirit", s); if ( ["caern", "church"].includes(ctx.place.kind) ) add("place", []); continue; }
+    if ( ch === "sphere-spirit" ) { const s = near.filter(p => ["spirit", "wraith"].includes(p.kind)); if ( s.length ) add("spirit", s); if ( ctx.place.kind === "caern" || R.WORSHIP.includes(ctx.place.kind) ) add("place", []); continue; }
     if ( ch === "sphere-entropy" ) { add("any", []); const k = near.filter(p => p.kind === "kindred"); if ( k.length ) add("kindred", k); continue; }
     if ( ch === "sphere-prime" ) { const m = near.filter(p => p.kind === "mage"); if ( m.length ) add("mage", m); if ( ctx.place.kind === "caern" ) add("place", []); continue; }
     if ( ch === "chimerical" ) { const f = near.filter(p => p.kind === "fae"); if ( f.length ) add("fae", f); if ( ctx.place.chimerical ) add("place", []); continue; }
-    if ( ch === "restless" ) { const g = near.filter(p => ["wraith", "spirit"].includes(p.kind)); if ( g.length ) add("dead", g); if ( ["graveyard", "church"].includes(ctx.place.kind) ) add("place", []); continue; }
+    if ( ch === "restless" ) { const g = near.filter(p => ["wraith", "spirit"].includes(p.kind)); if ( g.length ) add("dead", g); if ( ctx.place.kind === "graveyard" || R.WORSHIP.includes(ctx.place.kind) ) add("place", []); continue; }
     if ( ch === "deathsight" ) { const h = near.filter(p => p.hurt && !["wraith", "spirit"].includes(p.kind)); if ( h.length ) add("hurt", h); continue; }
     if ( ch === "lifesight" ) { if ( living.length ) add("living", living); if ( living.some(p => p.hurt) ) add("hurt", living.filter(p => p.hurt)); continue; }
   }
@@ -447,7 +460,8 @@ export async function answer(req) {
   const ctx = {...moment(scene, me), scene};
   ctx.layer = layerOf(td);
   ctx.traits = traitsOf(actor, {scene, layer: ctx.layer, useAuspex: req.useAuspex !== false});
-  const pw = R.powersFor(ctx.traits);
+  // 0.8.0: where they are when they look: flying, prone, in or under the water, in the saddle (WoDX Combat's stances)
+  const pw = R.withStance(R.powersFor(ctx.traits), stanceOf(actor, td));
   const gathered = gatherSources(scene, td, actor);
   let senses = req.sense === "all" ? [...R.SENSE_KEYS] : [req.sense].filter(s => R.SENSES[s]);
   if ( pw.smellFirst && senses.length > 1 ) senses = ["smell", ...senses.filter(s => s !== "smell")];
@@ -503,7 +517,8 @@ export async function answer(req) {
     const ordered = c => R.byFocus(c, req.focus);
     const res = R.compose({place: ordered(placeL), cond: condL, sources: ordered(usable.filter(l => l.t)), channel: chanL, successes, botch, rand});
     const lines = R.render(res.lines, rand, {place: ctx.place.name});
-    if ( D.blind ) lines.unshift(D.lost ? R.lostLine(sense) : "It is pitch dark. Nothing can be seen.");
+    if ( D.blind ) lines.unshift(D.lost ? (D.lostLine ?? R.lostLine(sense)) : "It is pitch dark. Nothing can be seen.");
+    else if ( pw.stanceLines?.[sense] ) lines.unshift(pw.stanceLines[sense]);
     const held = [...heldOut, ...res.held.filter(l => l.secret || l.channel), ...live.filter(l => l.held)];
     memory[key] = {fp, best: Math.max(successes, sameAsBefore ? num(memo.best) : 0), botch: rolled ? botch : !!memo?.botch, closer: !!(req.closer || (sameAsBefore && memo.closer)), at: Date.now(),
       obfSeen: usable.filter(l => l.obfDiff && l.n === 0).map(l => l.id)};
@@ -632,6 +647,7 @@ export async function describePlace({scene = canvas?.scene, point = null} = {}) 
 /* ------------------------------------------------------------------ */
 
 async function onButton(msg, action) {
+  if ( action === "ties" ) return OW.tiesDialog();
   const a = msg.flags?.[MOD]?.answer;
   if ( !a ) return;
   const lines = a.sections.flatMap(s => s.lines);
@@ -719,7 +735,7 @@ Hooks.once("init", () => {
   registerSight();
   setupSight({powerDots});
   const perception = setupPerception({attrOf, abilityOf, powerDots, formOf, sightBlocked, esc, gmIds});
-  const api = {perception, sight: {cycle: cycleSight, colourSafe}, version: VERSION, rules: R, tables: TABLES, ask, openAsk, answer, describePlace, openPlaceLines, gatherSources, traitsOf, noises: NOISES};
+  const api = {perception, sight: {cycle: cycleSight, colourSafe, ties: OW.tiesDialog, enchant: OW.enchant, tieFetter: OW.tieFetter, traits: OW.traitsOf, rollFor: OW.rollFor, now: OW.sightNow, draw: OW.drawOther, filter: OW.filterFor, rules: OR}, version: VERSION, rules: R, tables: TABLES, ask, openAsk, answer, describePlace, openPlaceLines, gatherSources, traitsOf, noises: NOISES};
   game.modules.get(MOD).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {senses: api});
 });
@@ -734,6 +750,7 @@ Hooks.once("ready", async () => {
     if ( msg?.type === "ask" && isActiveGM() ) {
       try { await answer(msg.payload); } catch (e) { console.error(`${MOD} |`, e); }
     }
+    if ( msg?.type === "keep" ) await OW.onKeep(msg.payload ?? {});
   });
 });
 

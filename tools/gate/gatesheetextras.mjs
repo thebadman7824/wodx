@@ -21,7 +21,7 @@ export async function run() {
   const hadNotes = !!game.journal.find(j => j.getFlag(MOD, "stNotes")), hadFolder = !!game.folders.find(f => f.type === "Item" && f.getFlag(MOD, "left"));
   let scene = null, purse, coins, sword, watch, el;
   R.actors = { a: a?.name, b: b?.name };
-  const open = async () => { await a.sheet.render(true); await until(() => a.sheet.rendered && a.sheet.element?.[0]?.querySelector(".wodx-strip")); el = a.sheet.element[0]; };
+  const open = async () => { await a.sheet.render(true); await until(() => a.sheet.rendered && a.sheet.element?.[0]?.querySelector(".wodx-strip")); el = (a.sheet.element?.[0] ?? a.sheet.element); };
   const tagged = act => act.items.filter(i => i.flags?.[MOD]?.gate === "sheetextras");
 
   try {
@@ -29,7 +29,7 @@ export async function run() {
 
     await step("the sheet shows the strip, Possessions, Ties, the Storyteller's notes and the header buttons", async () => {
       await open();
-      const hdr = a.sheet.element[0].closest(".app")?.querySelector(".window-header") ?? a.sheet.element[0].querySelector(".window-header");
+      const hdr = (a.sheet.element?.[0] ?? a.sheet.element).closest(".app")?.querySelector(".window-header") ?? (a.sheet.element?.[0] ?? a.sheet.element).querySelector(".window-header");
       const r = { strip: !!el.querySelector(".wodx-strip .wodx-strip-cell[data-key='health']"), poss: !!el.querySelector(".tab.gear .wodx-possessions"),
         tiesNav: !!el.querySelector("[data-tab='wodxties']"), ties: !!el.querySelector(".tab.wodxties .wodx-ties"), notes: !!el.querySelector(".tab.note .wodx-st-notes"),
         history: !!hdr?.querySelector(".wodx-history-btn"), print: !!hdr?.querySelector(".wodx-print"), search: !!el.querySelector(".wodx-possessions input.wodx-search") };

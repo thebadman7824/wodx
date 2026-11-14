@@ -204,9 +204,9 @@ export class PreludeRunApp extends ApplicationV2 {
     if ( !P.canReward(kind, rec.spent, costs) ) return;
     const a = this.actor, undo = {kind};
     if ( kind === "willpower" ) {
-      const wp = a.system?.willpower?.permanent;
+      const wp = a.system?.advantages?.willpower?.permanent;
       if ( !Number.isFinite(Number(wp)) ) return ui.notifications.warn("This sheet has no Willpower to raise.");
-      undo.path = "system.willpower.permanent"; undo.was = Number(wp);
+      undo.path = "system.advantages.willpower.permanent"; undo.was = Number(wp);
       await a.update({[undo.path]: Math.min(10, Number(wp) + 1)});
     } else {
       const list = kind === "ability"

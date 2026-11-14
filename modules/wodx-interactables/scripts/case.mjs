@@ -12,6 +12,7 @@
  * browser's tools. Keep anything truly secret in the Storyteller's own notes.
  */
 import * as C from "./case-rules.mjs";
+import * as Inv from "./investigation.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-interactables";
@@ -44,7 +45,7 @@ export async function newBoard(name) {
   if ( !game.user.isGM ) return null;
   const f = await folder();
   const j = await JournalEntry.create({name: C.boardName(name), folder: f?.id ?? null,
-    ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER}, flags: {[MOD]: {[FLAG]: C.emptyBoard()}}});
+    ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER}, flags: {[MOD]: {[FLAG]: C.starterBoard()}}});
   if ( j && !openBoard() ) await game.settings.set(MOD, "caseBoard", j.id);
   return j;
 }
@@ -80,7 +81,8 @@ export class CaseBoardApp extends ApplicationV2 {
     window: {title: "Case board", icon: "fa-solid fa-diagram-project", resizable: true},
     position: {width: 900, height: 680},
     actions: {note: CaseBoardApp.#onNote, newBoard: CaseBoardApp.#onNew, makeOpen: CaseBoardApp.#onMakeOpen,
-      card: CaseBoardApp.#onCard, line: CaseBoardApp.#onLine}
+      card: CaseBoardApp.#onCard, line: CaseBoardApp.#onLine, starter: CaseBoardApp.#onStarter,
+      theories: CaseBoardApp.#onTheories, search: CaseBoardApp.#onSearch, evidence: CaseBoardApp.#onEvidence}
   };
   static #instance;
   boardId = null;
@@ -120,8 +122,8 @@ export class CaseBoardApp extends ApplicationV2 {
       const lx = (p.x + q.x) / 2, ly = (p.y + q.y) / 2;
       return `<g class="wix-case-link" data-action="line" data-id="${l.id}"><line x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/><line class="wix-case-hit" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/>${l.label ? `<text x="${lx}" y="${ly - 4}" text-anchor="middle">${esc(l.label)}</text>` : ""}</g>`;
     }).join("");
-    const cards = b.cards.map(c => `<div class="wix-case-card wix-case-${c.kind}${c.hidden ? " wix-case-hidden" : ""}${this.linking === c.id ? " wix-case-linking" : ""}" data-id="${c.id}" data-search-item data-search-text="${esc(`${c.title} ${c.text} ${C.KINDS[c.kind]}`)}" style="left:${c.x}px;top:${c.y}px;width:${C.CARD_W}px;min-height:${C.CARD_H}px">
-        <header class="wix-case-grip" title="Drag to move"><i class="fa-solid ${ICON[c.kind]}" aria-hidden="true"></i> <b>${esc(c.title)}</b>${c.hidden ? ` <i class="fa-solid fa-eye-slash" title="Hidden from the players"></i>` : ""}</header>
+    const cards = b.cards.map(c => `<div class="wix-case-card wix-case-${c.kind}${c.hidden ? " wix-case-hidden" : ""}${this.linking === c.id ? " wix-case-linking" : ""}" data-id="${c.id}" data-search-item data-search-text="${esc(`${c.title} ${c.text} ${C.KINDS[c.kind]}`)}" style="left:${c.x}px;top:${c.y}px;width:${C.CARD_W}px;height:${C.CARD_H}px">
+        <header class="wix-case-grip" title="${esc(c.title)}: drag to move"><i class="fa-solid ${ICON[c.kind]}" aria-hidden="true"></i> <b>${esc(c.title)}</b>${c.hidden ? ` <i class="fa-solid fa-eye-slash" title="Hidden from the players"></i>` : ""}</header>
         ${c.text ? `<p>${esc(c.text).replace(/\n/g, "<br>")}</p>` : ""}
         <div class="wix-case-tools">${c.ref ? `<button type="button" data-action="card" data-op="open" data-id="${c.id}" title="Open it" aria-label="Open it"><i class="fa-solid fa-up-right-from-square"></i></button>` : ""}
           <button type="button" data-action="card" data-op="link" data-id="${c.id}" title="Join to another card: press here, then on the other card" aria-label="Join"><i class="fa-solid fa-link"></i></button>
@@ -133,8 +135,11 @@ export class CaseBoardApp extends ApplicationV2 {
         <p class="hint">${esc(look.hint)} Drop people, places, journal pages, Encyclopaedia entries or items here to pin them. ${this.linking ? "<b>Now press the join button on the other card.</b>" : ""}</p></div>
       <div class="wix-case-scroll"><div class="wix-case-area" style="width:${C.BOARD_W}px;height:${C.BOARD_H}px">
         <svg class="wix-case-lines" width="${C.BOARD_W}" height="${C.BOARD_H}" aria-hidden="true">${lines}</svg>${cards}
-        ${b.cards.length ? "" : `<p class="wodx-quiet wix-case-empty">Nothing pinned yet.</p>`}</div></div>
+        ${b.cards.length ? "" : `<p class="wodx-quiet wix-case-empty">Nothing pinned yet. <button type="button" data-action="starter"><i class="fa-solid fa-table-columns"></i> Lay out Who, Where and What we know</button></p>`}</div></div>
       <footer class="form-footer wodx-footer"><button type="button" data-action="note"><i class="fa-solid fa-note-sticky"></i> Add a note</button>
+        <button type="button" data-action="theories"><i class="fa-solid fa-lightbulb"></i> Theories</button>
+        <button type="button" data-action="search"><i class="fa-solid fa-magnifying-glass"></i> Search here for traces</button>
+        ${gm ? `<button type="button" data-action="evidence"><i class="fa-solid fa-droplet"></i> Evidence here</button>` : ""}
         ${gm ? `<button type="button" data-action="newBoard"><i class="fa-solid fa-plus"></i> Start another board</button>${j.id !== openBoard()?.id ? `<button type="button" data-action="makeOpen"><i class="fa-solid fa-thumbtack"></i> Make this the open case</button>` : ""}` : ""}</footer>`;
     div.querySelector("select[name=board]")?.addEventListener("change", ev => { this.boardId = ev.target.value; this.linking = null; this.render(); });
     this.#wireDrag(div, j);
@@ -176,6 +181,11 @@ export class CaseBoardApp extends ApplicationV2 {
     await change(j, b => C.addCard(b, {...card, x, y, by: game.user.name, hidden: game.user.isGM && !!ev.altKey}).board);
   }
 
+  /** An empty board: the three column heads (B2832). */
+  static async #onStarter() {
+    const j = this.journal;
+    if ( j ) await change(j, b => (C.normalize(b).cards.length ? b : C.starterBoard(b)));
+  }
   static async #onNote() {
     const j = this.journal;
     if ( !j ) return;
@@ -237,6 +247,10 @@ export class CaseBoardApp extends ApplicationV2 {
     }
   }
 
+  static async #onTheories() { if ( this.journal ) await Inv.theoriesDialog(this.journal); }
+  static async #onSearch() { await Inv.searchScene(); }
+  static async #onEvidence() { await Inv.evidenceDialog(); }
+
   static async #onLine(ev, target) {
     const j = this.journal, id = target.closest("[data-id]")?.dataset.id;
     const l = boardOf(j).links.find(k => k.id === id);
@@ -250,6 +264,7 @@ export class CaseBoardApp extends ApplicationV2 {
 }
 
 export function registerCaseSettings() {
+  Inv.registerInvestigationSettings();
   game.settings.register(MOD, "caseBoard", {scope: "world", config: false, type: String, default: ""});
   game.settings.register(MOD, "caseClues", {
     name: "Found clues go on the case board", hint: "A clue looked at or examined through Interact is pinned to the open case board, with what the finder learned.",
@@ -258,7 +273,10 @@ export function registerCaseSettings() {
 }
 
 /** Wire it up: the token tool for everyone, the Storyteller's hand, and redraws when the board changes. */
-export function setupCase() {
+export function setupCase({characterFor = null} = {}) {
+  const inquiry = Inv.setupInvestigation({characterFor, change, openBoard, boardOf});
+  Inv.registerInvestigationHooks();
+  Hooks.once("ready", () => game.socket?.on?.(`module.${MOD}`, msg => { if ( msg?.action === "judgeTheory" || msg?.action === "evidenceFound" ) Inv.onSocket(msg)?.catch?.(e => console.error(`${MOD} | investigation`, e)); }));
   Hooks.on("getSceneControlButtons", controls => {
     const tokens = controls.tokens ?? controls.find?.(c => c.name === "token");
     if ( !tokens?.tools ) return;
@@ -277,5 +295,5 @@ export function setupCase() {
     };
     if ( game.user.isGM && !add() ) setTimeout(add, 2000);
   });
-  return {open: id => CaseBoardApp.open(id), openBoard, newBoard, change, pinClue, boards, rules: C};
+  return {open: id => CaseBoardApp.open(id), openBoard, newBoard, change, pinClue, boards, rules: C, inquiry};
 }

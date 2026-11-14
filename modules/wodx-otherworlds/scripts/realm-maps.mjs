@@ -5,6 +5,7 @@
  * or a road carries them, and brought back to where they stood. The rules are in realm-maps-rules.mjs.
  */
 import * as RM from "./realm-maps-rules.mjs";
+import * as WR from "./wild-rules.mjs";
 import {MODULE_ID} from "./ratings.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -40,7 +41,7 @@ async function setArt(scene, src) {
 /** Write the map's art to Data/wodx-assets/realms. Returns the path. */
 export async function writeArt(model) {
   const FP = await ensureDir(ASSET_DIR);
-  const name = `${model.realm}-${model.year}-${model.seed}-${model.size}.svg`;
+  const name = `${model.art ?? model.realm}-${model.year}-${model.seed}-${model.size}.svg`;
   const file = new File([RM.svg(model)], name, {type: "image/svg+xml"});
   const result = await FP.upload("data", ASSET_DIR, file, {}, {notify: false});
   if ( result === false || result?.status === "error" ) throw new Error(`The map for ${model.label} could not be written.`);
@@ -76,6 +77,7 @@ export async function drawRealm({realm = "tempest", seed = null, year: y = null,
 export async function redrawRealm(scene, {seed = null, year: y = null} = {}) {
   const f = scene?.flags?.[MODULE_ID]?.realmMap;
   if ( !f ) throw new Error("That scene is not a drawn realm.");
+  if ( f.wild ) throw new Error("Wild land is fixed by its seed and its place. Draw another wild with a new seed instead.");
   const s = seed ?? Math.floor(Math.random() * 1e6);
   const model = RM.generate({realm: f.realm, seed: s, year: y ?? f.year, size: f.size, future: future(), keys: f.keys ?? []});
   const src = await writeArt(model);
@@ -96,7 +98,69 @@ export async function redrawRealm(scene, {seed = null, year: y = null} = {}) {
 /** The model a drawn realm scene was made from, made again from its flags. */
 export function modelOf(scene) {
   const f = scene?.flags?.[MODULE_ID]?.realmMap;
+  if ( f?.wild ) return WR.wildTile({wild: f.wild, seed: f.seed, x: f.x, y: f.y, year: f.year, size: f.size, future: future()});
   return f ? RM.generate({realm: f.realm, seed: f.seed, year: f.year, size: f.size, future: future(), keys: f.keys ?? []}) : null;
+}
+
+/* ------------------------------------------------------------------ endless wild land (0.17.0) */
+export const isWild = scene => !!scene?.flags?.[MODULE_ID]?.realmMap?.wild;
+/** The scene already drawn for a piece of a wild, if any. */
+export function wildScene({wild, seed, x, y, size = "medium"}) {
+  return [...game.scenes].find(s => { const f = s.flags?.[MODULE_ID]?.realmMap; return f?.wild === wild && f.seed === seed && f.x === x && f.y === y && f.size === size; }) ?? null;
+}
+
+/**
+ * Draw one piece of a wild: the open Umbra ("umbra") or the Tempest's storm sea ("tempest"), at a place (x, y) in it.
+ * The same seed and place always give the same piece, and a piece already drawn is found again, not drawn twice.
+ * Returns the scene.
+ */
+export async function drawWild({wild = "umbra", seed = null, x = 0, y = 0, year: yr = null, size = "medium"} = {}) {
+  if ( !game.user.isGM ) throw new Error("Only the Storyteller draws realm maps.");
+  const s = Number.isFinite(Number(seed)) && seed !== null && seed !== "" ? Math.trunc(Number(seed)) : Math.floor(Math.random() * 1e6);
+  const model = WR.wildTile({wild, seed: s, x, y, year: yr ?? year(), size, future: future()});
+  const had = wildScene({wild, seed: s, x: model.wild.x, y: model.wild.y, size: model.size});
+  if ( had ) return had;
+  const src = await writeArt(model);
+  const {walls, regions} = RM.sceneParts(model, GRID);
+  const folder = game.folders.find(f => f.type === "Scene" && f.name === FOLDER) ?? await Folder.create({name: FOLDER, type: "Scene", color: "#2a3340"});
+  const scene = await Scene.create({
+    name: String(model.label).slice(0, 120), folder: folder?.id ?? null, navigation: false,
+    width: model.cols * GRID, height: model.rows * GRID, padding: 0, backgroundColor: model.palette.void, grid: {size: GRID},
+    background: {src}, environment: {darknessLevel: 0.55, globalLight: {enabled: true, darkness: {max: 1}}},
+    flags: {[MODULE_ID]: {realm: model.realm, note: RM.realmNote(model),
+      realmMap: {version: model.version, realm: model.realm, wild, x: model.wild.x, y: model.wild.y, seed: model.seed, year: model.year, size: model.size, shape: model.shape, world: model.world, keys: []}}}
+  });
+  await setArt(scene, src);
+  if ( walls.length ) await scene.createEmbeddedDocuments("Wall", walls);
+  if ( regions.length ) await scene.createEmbeddedDocuments("Region", regions);
+  return scene;
+}
+
+/**
+ * Walk on off the side of a piece of wild ("n", "e", "s", "w"): the piece beside it is drawn (or found), and the
+ * selected tokens are set down where they would walk in. They still remember where they first came from, so Bring
+ * them back returns them to the living world however far they have gone. Returns {scene, tokens}.
+ */
+export async function walkOn(scene = canvas?.scene, side = "n", tokenDocs = canvas?.tokens?.controlled?.map(t => t.document) ?? [], {follow = true} = {}) {
+  if ( !game.user.isGM ) throw new Error("The Storyteller moves travellers on.");
+  const f = scene?.flags?.[MODULE_ID]?.realmMap;
+  if ( !f?.wild ) throw new Error("Walking on works from a piece of wild land. Open one first.");
+  if ( !WR.SIDES[side] ) throw new Error("Pick north, east, south or west.");
+  const here = modelOf(scene);
+  if ( !WR.waysOn(here).includes(side) ) throw new Error(`Nothing can be walked to the ${WR.SIDES[side][2]} from here.`);
+  const to = WR.beside(f.x, f.y, side);
+  const next = await drawWild({wild: f.wild, seed: f.seed, x: to.x, y: to.y, year: f.year, size: f.size});
+  const movers = tokenDocs.filter(t => t.parent?.id === scene.id);
+  let made = [];
+  if ( movers.length ) {
+    const spots = WR.entrySpots(modelOf(next), side, movers.length).map(c => ({x: c.x * GRID, y: c.y * GRID}));
+    made = await carry(movers, next, spots, t => ({cameFrom: t.flags?.[MODULE_ID]?.cameFrom ?? {scene: t.parent.id, x: t.x, y: t.y, level: t._source?.level ?? null, elevation: t.elevation ?? 0}}));
+    pull(next, made);
+  }
+  if ( follow ) await next.view();
+  ChatMessage.create({whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: {alias: "Otherworlds"},
+    content: `<div class="wodx-card wodx-crossing"><h3>On to the ${WR.SIDES[side][2]}</h3><p>${made.length ? `${made.map(t => esc(t.name)).join(", ")} walk on into ${esc(next.name)}.` : `${esc(next.name)} is ready.`}</p></div>`});
+  return {scene: next, tokens: made};
 }
 
 /** Where tokens arrive on a realm scene, in pixels: the arrival cells, or the scene's middle. */
@@ -202,11 +266,18 @@ export async function realmMapsDialog() {
       <div class="form-group"><label>Extra keywords</label><input type="text" name="keys" maxlength="200" placeholder="Added to the realm's own, as forest:2, ruins" list="wodx-realm-keys"><datalist id="wodx-realm-keys">${Object.entries(RM.KEYWORDS).map(([k, v]) => `<option value="${k}">${v.label}: ${v.about}</option>`).join("")}</datalist></div>
       <p class="wodx-quiet">Keywords: ${Object.keys(RM.KEYWORDS).join(", ")}. Add :2 or :3 for more. The realm's own: shown on the scene's note.</p>
       <div class="form-group"><label>Name</label><input type="text" name="name" maxlength="120" placeholder="As the realm is called"></div>
+      <h3>Wild land with no edge</h3>
+      <p class="wodx-quiet">The open Umbra and the Tempest's storm sea go on for ever. Draw a piece by its place; walking on off a side draws the piece beside it, and the same seed always gives the same land.${isWild(canvas?.scene) ? "" : " Open a piece of wild land to walk on from it."}</p>
+      <div class="form-group"><label>Wild</label><select name="wild" data-fixed>${WR.WILD_ORDER.map(id => `<option value="${id}">${esc(WR.WILDS[id].label)}</option>`).join("")}</select></div>
+      <div class="form-group"><label>Place (east, south)</label><div class="form-fields"><input type="number" name="wx" value="${canvas?.scene?.flags?.[MODULE_ID]?.realmMap?.x ?? 0}" step="1"><input type="number" name="wy" value="${canvas?.scene?.flags?.[MODULE_ID]?.realmMap?.y ?? 0}" step="1"></div></div>
+      <div class="form-group"><label>Walk on to the</label><select name="side" data-fixed>${Object.entries(WR.SIDES).map(([k, v]) => `<option value="${k}">${v[2][0].toUpperCase() + v[2].slice(1)}</option>`).join("")}</select></div>
       <h3>Send or bring back (${sel} token${sel === 1 ? "" : "s"} selected)</h3>
       <div class="form-group"><label>Into</label>${searchBox("select[name=scene]", "Find a drawn realm…", "Search drawn realms")}<select name="scene">${sceneOpts || `<option value="">No realm drawn yet</option>`}</select></div>
       <div class="form-group"><label>Go there too</label><input type="checkbox" name="follow"></div>`,
     buttons: [
       {action: "draw", label: "Draw the realm", default: true, callback: (e, b) => ({do: "draw", ...Object.fromEntries(["realm", "size", "seed", "year", "name", "keys"].map(k => [k, b.form.elements[k].value]))})},
+      {action: "wild", label: "Draw wild land", callback: (e, b) => ({do: "wild", ...Object.fromEntries(["wild", "size", "seed", "year", "wx", "wy"].map(k => [k, b.form.elements[k].value]))})},
+      {action: "walk", label: "Walk on", callback: (e, b) => ({do: "walk", side: b.form.elements.side.value})},
       {action: "send", label: "Send the selected tokens", callback: (e, b) => ({do: "send", scene: b.form.elements.scene.value, follow: b.form.elements.follow.checked})},
       {action: "back", label: "Bring them back", callback: (e, b) => ({do: "back", follow: b.form.elements.follow.checked})},
       {action: "close", label: "Close"}]});
@@ -217,6 +288,12 @@ export async function realmMapsDialog() {
       ui.notifications.info(`${s.name} is drawn, in ${FOLDER}.`);
       return s;
     }
+    if ( pick.do === "wild" ) {
+      const s = await drawWild({wild: pick.wild, size: pick.size, seed: pick.seed === "" ? null : pick.seed, year: pick.year === "" ? null : Number(pick.year), x: Number(pick.wx) || 0, y: Number(pick.wy) || 0});
+      ui.notifications.info(`${s.name} is drawn, in ${FOLDER}. Its seed is ${s.flags[MODULE_ID].realmMap.seed}.`);
+      return s;
+    }
+    if ( pick.do === "walk" ) return (await walkOn(canvas?.scene, pick.side)).scene;
     if ( pick.do === "send" ) return await sendToRealm(game.scenes.get(pick.scene), undefined, {follow: pick.follow});
     return await bringBack(undefined, {follow: pick.follow});
   } catch (err) { ui.notifications.warn(err.message); return null; }

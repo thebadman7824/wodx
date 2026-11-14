@@ -40,7 +40,7 @@ export async function run() {
     await sleep(300);
     A.ApprovalsApp.open(); await sleep(800);
     const ticks = [...(win()?.querySelectorAll("input.wodx-tick") ?? [])];
-    const autoBoxes = [...(win()?.querySelectorAll("input.wodx-auto") ?? [])];
+    const autoBoxes = [...(win()?.querySelectorAll(".wodx-auto[data-type]") ?? [])];
     ok("2. the window", ticks.length >= 3 && !!win()?.querySelector("[data-action=approveTicked]") && autoBoxes.some(b => b.dataset.type === "wodx-gate.queue")
       && !autoBoxes.some(b => b.dataset.type === "request"), {ticks: ticks.length, kinds: autoBoxes.length});
 

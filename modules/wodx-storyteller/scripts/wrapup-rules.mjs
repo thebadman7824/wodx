@@ -131,3 +131,21 @@ export function clockWords(ms) {
   const words = h ? `${h} h ${String(r).padStart(2, "0")} min` : `${r} min`;
   return over ? `${words} over` : words;
 }
+
+/* ------------------------------------------------------------------ */
+/*  Fights since the last wrap-up (B3170)                              */
+/* ------------------------------------------------------------------ */
+
+/** The newest fights kept, and the harm that counts as real danger: three levels taken, or ending the fight down. */
+export const FIGHT_KEEP = 40, DANGER_LEVELS = 3;
+/** A fight as WoDX Combat's after-action card reports it: {id, at, text, won, rows: [{id, pc, taken, down}]}. */
+export function normFight(f = {}) {
+  const rows = (Array.isArray(f.rows) ? f.rows : []).filter(r => r?.id).map(r => ({id: String(r.id), pc: !!r.pc, taken: Math.max(0, Number(r.taken) || 0), down: !!r.down}));
+  return {id: String(f.id ?? ""), at: Number(f.at) || 0, text: String(f.text ?? "").slice(0, 300), won: !!f.won, rows};
+}
+/** Player characters who came through real danger in these fights. */
+export function dangerFrom(fights = []) {
+  const out = new Set();
+  for ( const f of fights.map(normFight) ) for ( const r of f.rows ) if ( r.pc && (r.taken >= DANGER_LEVELS || r.down) ) out.add(r.id);
+  return out;
+}

@@ -13,7 +13,9 @@ const HISTORY_LIMIT = 50;
 /**
  * Register what happens when a type of proposal is approved or rejected.
  * @param {string} type
- * @param {{label: string, approve?: Function, reject?: Function}} handler
+ * @param {{label: string, approve?: Function, reject?: Function, small?: Function, undo?: Function}} handler
+ *   small(entry) true when this one is small enough to pass under a "small" standing rule (Chronicle 0.46.0);
+ *   undo(entry) takes back an approval made on its own, from the Undo button on its card
  */
 export function registerHandler(type, handler) {
   handlers.set(type, handler);
@@ -70,7 +72,12 @@ export async function addToQueue(entry) {
   const q = foundry.utils.deepClone(setting("approvals") ?? {pending: [], history: []});
   q.held ??= [];
   if ( entry.key && (q.pending.some(p => p.key === entry.key) || q.held.some(p => p.key === entry.key)) ) return;
-  const route = QR.routeProposal(entry.type, {auto: autoRules(), cap: npcCap(), used: npcUsed, lightTouch: lightTouch()});
+  const rules = autoRules();
+  let small = false;
+  if ( rules[entry.type] === "small" ) {
+    try { small = (await handlers.get(entry.type)?.small?.(entry)) === true; } catch (e) { console.warn("WoDX | small rule", entry.type, e); }
+  }
+  const route = QR.routeProposal(entry.type, {auto: rules, cap: npcCap(), used: npcUsed, lightTouch: lightTouch(), small});
   if ( route === "hold" ) {
     q.held.push(entry);
     await setSetting("approvals", q);
@@ -81,6 +88,7 @@ export async function addToQueue(entry) {
   await setSetting("approvals", q);
   if ( route === "auto" ) {
     await decide(entry.id, "approve", "", {auto: true});
+    await autoCard(entry, small);
     return "auto";
   }
   ui.notifications.info(`For your approval: ${entry.title}`);
@@ -109,10 +117,41 @@ export async function releaseHeld() {
 }
 export const held = () => setting("approvals")?.held ?? [];
 
-/** Turn a standing rule on or off for a type. */
+/**
+ * The Storyteller's card for a proposal approved on its own: what passed and why, with Undo where its kind can take it
+ * back. Posted when a "small" rule let it through or its kind has an undo; the entry is in "Recently decided" either way.
+ */
+async function autoCard(entry, small) {
+  const h = handlers.get(entry.type);
+  const gms = game.users.filter(u => u.isGM).map(u => u.id);
+  // A kind let through wholesale with no undo stays as quiet as before: it is in "Recently decided"
+  if ( !gms.length || (!small && typeof h?.undo !== "function") ) return;
+  const why = small ? "small enough to pass on its own" : "a kind you let through on its own";
+  const undo = typeof h?.undo === "function"
+    ? `<button type="button" class="wodx-approval-undo" data-id="${esc(entry.id)}">Undo</button>`
+    : `<p class="wodx-quiet">This kind has no undo; change it by hand if it was wrong.</p>`;
+  await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gms, flags: {"wodx-chronicle": {autoApproved: entry.id}},
+    content: `<div class="wodx-card"><p><b>Approved on its own:</b> ${esc(entry.title)}</p><p class="wodx-quiet">${esc(h?.label ?? entry.type)}, ${why}.</p>${undo}</div>`});
+}
+
+/** The Undo button on an "approved on its own" card. GM only; each entry is taken back once. */
+export async function undoAuto(id) {
+  if ( !game.user.isGM ) return false;
+  const q = foundry.utils.deepClone(setting("approvals") ?? {pending: [], history: []});
+  const entry = q.history.find(h => h.id === id);
+  const h = entry ? handlers.get(entry.type) : null;
+  if ( !entry || !entry.auto || entry.undone || typeof h?.undo !== "function" ) return false;
+  await h.undo(entry);
+  entry.undone = true;
+  await setSetting("approvals", q);
+  ui.notifications.info(`Taken back: ${entry.title}`);
+  return true;
+}
+
+/** Turn a standing rule on or off for a type: true approves on sight, "small" only small ones, false none. */
 export async function setAuto(type, on) {
   const a = {...autoRules()};
-  if ( on ) a[type] = true; else delete a[type];
+  if ( on === "small" ) a[type] = "small"; else if ( on ) a[type] = true; else delete a[type];
   await setSetting("autoApprove", QR.cleanAuto(a));
 }
 
@@ -155,6 +194,25 @@ export async function decide(id, verdict, note = "", {auto = false} = {}) {
   }
 }
 
+/** A kind's own controls on its queue card (B3521), as HTML: elements with data-control call handler.control(). */
+function controlsOf(p) {
+  try { return handlers.get(p.type)?.controls?.(p) ?? ""; } catch (e) { return ""; }
+}
+
+/** Change a waiting proposal's data, title or detail (GM only), and redraw the queue (B3521). */
+export async function updatePending(id, patch = {}) {
+  if ( !game.user.isGM ) return null;
+  const q = foundry.utils.deepClone(setting("approvals") ?? {pending: [], history: []});
+  const e = q.pending.find(p => p.id === id);
+  if ( !e ) return null;
+  if ( patch.data ) e.data = patch.data;
+  if ( typeof patch.title === "string" ) e.title = patch.title.slice(0, 200);
+  if ( typeof patch.detail === "string" ) e.detail = patch.detail.slice(0, 2000);
+  await setSetting("approvals", q);
+  ApprovalsApp.refresh();
+  return e;
+}
+
 /** A player's free-form request ("Ask the Storyteller"). */
 registerHandler("request", {label: "Player request"});
 
@@ -163,6 +221,10 @@ registerHandler("request", {label: "Player request"});
 /* -------------------------------------------- */
 
 const {ApplicationV2} = foundry.applications.api;
+
+/* The level picker lives in automation.mjs; it is handed in at start so this file has no import loop. */
+let levelPicker = () => "", chooseLevel = () => {};
+export function setLevelUI(picker, choose) { levelPicker = picker; chooseLevel = choose; }
 
 export class ApprovalsApp extends ApplicationV2 {
   static DEFAULT_OPTIONS = {
@@ -198,6 +260,7 @@ export class ApprovalsApp extends ApplicationV2 {
       <li class="wodx-approval" data-id="${p.id}">
         <header><input type="checkbox" class="wodx-tick" data-id="${p.id}" checked aria-label="Include in the ticked decision"> <span class="wodx-tag">${esc(label(p.type))}</span> <strong>${esc(p.title)}</strong></header>
         ${p.detail ? `<p>${esc(p.detail)}</p>` : ""}
+        ${controlsOf(p)}
         <p class="wodx-quiet">From ${esc(who(p.from))}</p>
         <textarea name="note" rows="2" placeholder="Optional reply"></textarea>
         <div class="wodx-buttons">
@@ -216,9 +279,14 @@ export class ApprovalsApp extends ApplicationV2 {
     const why = lightTouch() ? "Light-touch mode is on" : `past this session's cap of ${cap} NPC proposals`;
     const heldNote = kept ? `<p class="wodx-held">${kept} proposal${kept === 1 ? " is" : "s are"} held back: ${why}. <button type="button" data-action="release">Put them in the queue</button></p>` : "";
     const ts = types().filter(t => !QR.NEVER_AUTO.includes(t.type));
-    const rules = ts.map(t => `<li><label><input type="checkbox" class="wodx-auto" data-type="${esc(t.type)}"${auto[t.type] ? " checked" : ""}> ${esc(t.label)}</label></li>`).join("");
+    const rules = ts.map(t => {
+      const v = auto[t.type] === true ? "on" : auto[t.type] === "small" ? "small" : "off";
+      const opt = (val, words) => `<option value="${val}"${v === val ? " selected" : ""}>${words}</option>`;
+      const smallOk = typeof handlers.get(t.type)?.small === "function" || v === "small";
+      return `<li class="wodx-autorow"><label for="wodx-auto-${esc(t.type)}">${esc(t.label)}</label> <select id="wodx-auto-${esc(t.type)}" class="wodx-auto" data-type="${esc(t.type)}" data-fixed>${opt("off", "Waits")}${smallOk ? opt("small", "On its own when small") : ""}${opt("on", "On its own")}</select></li>`;
+    }).join("");
     const standing = `<section class="wodx-standing"><h3>Approve on its own${Object.keys(auto).length ? ` (${Object.keys(auto).length})` : ""}</h3>
-        <p class="wodx-quiet">A ticked kind is approved the moment it is proposed, and listed as approved on its own. A player's own request always waits. The cap on NPC proposals a session is in Configure Settings${cap ? ` (now ${cap})` : " (now none)"}.</p>
+        ${levelPicker()}<p class="wodx-quiet">A kind set to "On its own" is approved the moment it is proposed; "when small" only when that kind's own rule calls it small, and listed as approved on its own. A player's own request always waits. The cap on NPC proposals a session is in Configure Settings${cap ? ` (now ${cap})` : " (now none)"}.</p>
         ${ts.length > 8 ? searchBox("ul.wodx-autolist", "Search kinds…", "Search kinds of proposal") : ""}<ul class="wodx-list wodx-autolist"${ts.length > 8 ? "" : " data-fixed"}>${rules}</ul></section>`;
     const div = document.createElement("div");
     div.className = "wodx-body wodx-scroll";
@@ -235,7 +303,22 @@ export class ApprovalsApp extends ApplicationV2 {
   }
 
   _onRender() {
-    this.element.querySelectorAll("input.wodx-auto").forEach(b => b.addEventListener("change", ev => setAuto(ev.target.dataset.type, ev.target.checked)));
+    // B3521: a kind's own controls on its card (the referee ticket's difficulty and complication)
+    this.element.querySelectorAll("[data-control]").forEach(el => el.addEventListener(el.tagName === "SELECT" ? "change" : "click", async ev => {
+      const id = el.closest(".wodx-approval")?.dataset.id, entry = pending().find(p => p.id === id);
+      const h = entry ? handlers.get(entry.type) : null;
+      if ( !h?.control || !game.user.isGM ) return;
+      ev.preventDefault();
+      try { await h.control(entry, el.dataset.control, el.value); } catch (e) { console.error("WoDX | approval control", e); }
+    }));
+    this.element.querySelectorAll("select.wodx-auto").forEach(b => b.addEventListener("change", ev => {
+      const v = ev.target.value;
+      setAuto(ev.target.dataset.type, v === "on" ? true : v === "small" ? "small" : false);
+    }));
+    this.element.querySelector("button.wodx-level-go")?.addEventListener("click", ev => {
+      const sel = this.element.querySelector("select.wodx-level");
+      if ( sel ) chooseLevel(sel.value);
+    });
   }
 
   static #except(target) {
@@ -274,7 +357,7 @@ export class ApprovalsApp extends ApplicationV2 {
   }
 }
 
-/** A player asks the Storyteller for something. */
+/** A player asks the Storyteller for something; an action that needs a ruling goes to the referee ticket (B3520). */
 export async function askStoryteller() {
   const {DialogV2} = foundry.applications.api;
   const result = await DialogV2.prompt({
@@ -282,14 +365,16 @@ export async function askStoryteller() {
     window: {title: "Ask the Storyteller"},
     content: `
       <div class="form-group"><label>What are you asking for?</label><input type="text" name="title" maxlength="200" required></div>
-      <div class="form-group"><label>Details</label><textarea name="detail" rows="4" maxlength="2000"></textarea></div>`,
+      <div class="form-group"><label>Details</label><textarea name="detail" rows="4" maxlength="2000"></textarea></div>
+      <div class="form-group"><label>It is something my character tries that the rules do not settle: ask for a ruling</label><input type="checkbox" name="ruling"></div>`,
     ok: {
       label: "Send",
-      callback: (event, button) => ({title: button.form.elements.title.value.trim(), detail: button.form.elements.detail.value.trim()})
+      callback: (event, button) => ({title: button.form.elements.title.value.trim(), detail: button.form.elements.detail.value.trim(), ruling: !!button.form.elements.ruling?.checked})
     },
     rejectClose: false
   });
   if ( !result?.title ) return;
+  if ( result.ruling ) return game.modules.get("wodx-chronicle")?.api?.ticket?.ask?.({text: [result.title, result.detail].filter(Boolean).join(". ")});
   const sent = await propose({type: "request", title: result.title, detail: result.detail});
   if ( sent !== false ) ui.notifications.info("Sent to the Storyteller.");
 }

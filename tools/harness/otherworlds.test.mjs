@@ -317,6 +317,55 @@ test("saving ratings keeps an existing report up to date", async () => {
   game.scenes = saved;
 });
 
+test("Wyrm corruption: a week deepens a fed place, spreads, taints a resident, asks for drift, and undoes (B3270-B3276)", async () => {
+  const api = game.modules.get(M).api.corruption;
+  const saved = game.scenes;
+  const mk = (id, name, place) => ({id, name, flags: place ? {[M]: {corruption: place}} : {}, tokens: {contents: []},
+    async update(ch) { for ( const [k, v] of Object.entries(ch) ) { const parts = k.split("."); let o = this; for ( const q of parts.slice(0, -1) ) o = (o[q] ??= {}); o[parts.at(-1)] = structuredClone(v); } return this; },
+    async unsetFlag(s, k) { delete this.flags?.[s]?.[k]; }});
+  const works = mk("cw", "Tannery Lane", {level: 6, banes: 3, sources: [{kind: "works"}], links: ["cv"]});
+  const village = mk("cv", "Mill Village", {level: 0, links: ["cw"]});
+  const meadow = mk("cm", "Meadow", null);
+  const smith = {id: "csmith", name: "Ondra the tanner", type: "Mortal", flags: {}, system: {}, hasPlayerOwner: false,
+    async update(ch) { for ( const [k, v] of Object.entries(ch) ) { const parts = k.split("."); let o = this; for ( const q of parts.slice(0, -1) ) o = (o[q] ??= {}); o[parts.at(-1)] = structuredClone(v); } return this; },
+    async unsetFlag(s, k) { delete this.flags?.[s]?.[k]; }};
+  smith.flags[M] = {taint: {level: 0, weeks: 11}};
+  works.tokens.contents.push({actorLink: true, actor: smith});
+  game.actors.set(smith.id, smith);
+  game.scenes = new Map([[works.id, works], [village.id, village], [meadow.id, meadow]]);
+  game.scenes.filter = fn => [...game.scenes.values()].filter(fn);
+  try {
+    assert.equal(await api.run(), null, "off by default");
+    await game.settings.set(M, "wyrmCorruption", "auto");
+    const now = game.time.worldTime;
+    await game.settings.set(M, "corruptionState", {last: now - api.rules.WEEK});
+    const realRandom = Math.random;
+    Math.random = () => 0;
+    let plan;
+    try { plan = await api.run(); } finally { Math.random = realRandom; }
+    assert.ok(plan, "a week ran");
+    assert.equal(api.of(works).level, 7, "the works deepened to foul");
+    assert.equal(api.of(village).level, 1, "taint crept to the linked village");
+    assert.equal(meadow.flags[M]?.corruption, undefined, "an untracked place stays out");
+    assert.equal(api.taintOf(smith).level, 1, "the tanner took on taint");
+    assert.equal(api.senseWyrm(smith), true);
+    const card = mock.log.chat.at(-1);
+    assert.match(card.content, /Wyrm corruption after 1 week/);
+    assert.ok(card.whisper?.length, "only the Storyteller sees it");
+    const ap = game.modules.get("wodx-chronicle").api.approvals;
+    const queue = [...(ap.pending?.() ?? []), ...(ap.history?.() ?? []), ...(ap.held?.() ?? [])];
+    assert.ok(JSON.stringify(queue).includes("corrupt-drift:cw"), "the band change asked for Gauntlet drift");
+    await api.undo(card.flags[M].corruptionTurn.snap);
+    assert.equal(api.of(works).level, 6);
+    assert.equal(api.of(village).level, 0);
+    assert.equal(api.taintOf(smith).level, 0);
+  } finally {
+    game.scenes = saved;
+    game.actors.delete(smith.id);
+    await game.settings.set(M, "wyrmCorruption", "off");
+  }
+});
+
 test("no error notifications", () => {
   assert.deepEqual(mock.log.notifications.filter(([l]) => l === "error"), []);
 });

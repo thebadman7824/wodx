@@ -23,14 +23,22 @@ export function powerKeywords(set, id, name = "", line = null) {
 
 /**
  * Results in planOf's shape: [{key, who, out}]. hasTarget: the user aims at someone. A keyword the user cannot aim
- * (needs a target, none given) is listed in skipped.
+ * (needs a target, none given) is listed in skipped. noRoll: the power is used with no roll and counts one success;
+ * its Harm is left out.
  */
-export function powerOutcomes(kw, successes, {label = "", source = "", hasTarget = false} = {}) {
+export function powerOutcomes(kw, successes, {label = "", source = "", hasTarget = false, noRoll = false} = {}) {
   const s = Number(successes) || 0;
   if ( !kw || kw.passive || s < 1 ) return {results: [], skipped: []};
   const results = [], skipped = [];
   for ( const key of kw.keywords ?? [] ) {
     if ( !KEYWORDS[key] ) continue;
+    // A power with no roll (claws grown, a weapon readied) gives no damage of its own: it readies the user for the
+    // scene and the attack roll deals the damage (B3751)
+    if ( noRoll && key === "harm" ) {
+      if ( !(kw.keywords ?? []).includes("boost") ) results.push({ key: "boost", who: "self", out: { key: "boost", label: label ? `${label}: ready` : "Ready", kind: "timed", name: label || "Ready",
+        timed: { kind: "scene" }, duration: "the scene", source, text: "ready to strike for the scene: the attack roll deals the power's damage (see the page)" } });
+      continue;
+    }
     if ( !hasTarget && NEEDS_TARGET.includes(key) ) { skipped.push(KEYWORDS[key].label); continue; }
     const [r] = stOutcomes([key], { strength: s, step: 2 });
     if ( !r?.out ) continue;

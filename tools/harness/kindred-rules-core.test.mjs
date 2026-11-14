@@ -70,7 +70,7 @@ test("falling, waking by day, lifting, the blood oath and diablerie", () => {
   assert.equal(R.awakeningResult(roll(2)).turns, 2);
   assert.equal(R.awakeningResult(roll(5)).turns, Infinity);
   assert.equal(R.liftingFeat(0), null); assert.equal(R.liftingFeat(20).level, 15);
-  assert.equal(R.liftingFeat(3).feat, "Break down a wooden door");
+  assert.equal(R.liftingFeat(3).feat, "Kick in a plank door");
   assert.equal(R.oathResistDifficulty({timesFed: 4}).difficulty, 10);
   assert.equal(R.oathResistDifficulty({natureMod: -8}).difficulty, 2);
   assert.equal(R.oathDecayMonths(5), 7); assert.equal(R.oathDecayMonths(14), 1);

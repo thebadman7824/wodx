@@ -10,6 +10,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs"));
 const {PEOPLE_TABLES, TRADE_SHEETS} = await import(join(root, "modules/wodx-creation/data/people.mjs"));
 const PR = await import(join(root, "modules/wodx-creation/scripts/people-rules.mjs"));
+const {GIVEN_ONLY} = await import(join(root, "modules/wodx-creation/data/people-world.mjs"));
 const tablesFor = ctx => id => G.resolveTable(PEOPLE_TABLES, id, ctx);
 
 test("seeded: the same seed and key give the same numbers; a nonce or a key changes them", () => {
@@ -49,7 +50,7 @@ test("every origin has names in every era and homeland the tables cover", () => 
       const tb = tablesFor({era, culture});
       for ( const {text: origin} of o.results ) for ( const sex of ["male", "female"] ) {
         assert.ok(tb(`names.${sex}.${origin}`), `given names: ${origin} ${sex} ${era} ${culture}`);
-        assert.ok(tb(`names.family.${sex}.${origin}`) || tb(`names.byname.${sex}.${origin}`), `family names: ${origin} ${sex} ${era} ${culture}`);
+        assert.ok(GIVEN_ONLY.has(origin) || tb(`names.family.${sex}.${origin}`) || tb(`names.byname.${sex}.${origin}`), `family names: ${origin} ${sex} ${era} ${culture}`);
       }
       assert.ok(tb("people.trade"), `trades: ${era} ${culture}`);
     }
@@ -79,6 +80,15 @@ test("a person: seeded, named for the era, with a sheet that fits the system", (
   const many = Array.from({length: 300}, (_, i) => mk(`people:3:${i}`));
   assert.ok(many.some(p => p.origin === "czech" && p.sex === "female" && /(á|ka|ová|ice|ena)$|^z /.test(p.family)));
   assert.ok(many.filter(p => p.origin === "jewish").every(p => /^(ben|bat) /.test(p.family) && (p.sex === "female") === p.family.startsWith("bat")));
+  // An asked origin is kept when the era names it (kin of a Jewish household); a missing one falls back to the draw
+  for ( let i = 0; i < 40; i++ ) {
+    const k = PR.person({rand: G.stream("rothenstein", `people:4:${i}`), tables: tablesFor(ctx), ...ctx, origin: "jewish"});
+    assert.equal(k.origin, "jewish", k.name);
+    assert.ok(/^(ben|bat) /.test(k.family), k.name);
+  }
+  const odd = PR.person({rand: G.stream("rothenstein", "people:5:0"), tables: tablesFor(ctx), ...ctx, origin: "nowhere"});
+  assert.ok(odd.given && odd.origin !== "nowhere");
+  assert.deepEqual(PR.person({rand: G.stream("rothenstein", "people:1:0"), tables: tablesFor(ctx), ...ctx, origin: null}), a, "no origin asked: the same person as before");
   // Modern Czech surnames by sex
   const mod = {era: "modern", culture: "bohemia"};
   const m = Array.from({length: 80}, (_, i) => PR.person({rand: G.stream("s", `m:${i}`), tables: tablesFor(mod), ...mod}));

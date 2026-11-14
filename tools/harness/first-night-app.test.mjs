@@ -22,7 +22,7 @@ test("the hub renders every step, ticks concept from the sheet, and shows the fo
   const app = new M.FirstNightApp({id: "wodx-first-night", actor: a});
   await app.render({force: true});
   const steps = app.element.querySelectorAll(".wodx-fn-step");
-  assert.equal(steps.length, 10);
+  assert.equal(steps.length, 11);
   assert.ok(app.element.querySelector(".wodx-fn-done"), "concept is done from the sheet");
   assert.match(app.element.textContent, /Trouble ahead/);
   assert.ok(app.element.querySelector("select[name=dial]"));

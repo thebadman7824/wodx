@@ -36,7 +36,9 @@ export class ClockApp extends ApplicationV2 {
       sessionZero: () => safety.openSessionZero(),
       firstNight: () => (game.modules.get("wodx-creation")?.api?.firstNight?.() ?? ui.notifications.warn("Before the First Night needs WoDX Creation 0.12.0 or later.")),
       ask: () => approvals.askStoryteller(),
+      roster: () => game.modules.get("wodx-chronicle")?.api?.roster?.open?.(),
       approvals: () => approvals.ApprovalsApp.open(),
+      waitingTray: () => game.modules.get("wodx-chronicle")?.api?.waiting?.open?.(),
       rules: ClockApp.#onRules,
       houseRules: () => HouseRulesApp.open(),
       eraTest: () => runEraTest(),
@@ -65,6 +67,8 @@ export class ClockApp extends ApplicationV2 {
     const target = eras.targetEra();
     const p = a.profile;
     const waiting = approvals.pending().length;
+    let waitingAll = 0;
+    try { waitingAll = gm ? (game.modules.get("wodx-chronicle")?.api?.waiting?.count?.() ?? 0) : 0; } catch (e) { waitingAll = 0; }
     const lockId = setting("eraLock");
     const held = !!setting("hold");
     let here = null;
@@ -75,7 +79,7 @@ export class ClockApp extends ApplicationV2 {
       .join("");
 
     const moon = now.moon;
-    const ch = church.on(now);
+    const ch = church.on(now, {scene: globalThis.canvas?.scene ?? null, others: gm});
     const night = now.isNight ? "Night" : "Day";
     // A player sees the date and hour the way the character would hear them told
     const told = (!gm && rule("eraReckoning")) ? reckon(now, {church: ch, eraId: p?.id ?? ""}) : null;
@@ -92,9 +96,10 @@ export class ClockApp extends ApplicationV2 {
           <dt>Dark hours</dt><dd>${now.darkHours.toFixed(1)}</dd>
           <dt>Moon</dt><dd>${esc(moon.name)}, ${Math.round(moon.illumination * 100)}% lit</dd>
           <dt>Auspice moon</dt><dd>${esc(moon.auspice)}</dd>
-          <dt>Church year</dt><dd>${esc(ch.label)}</dd>
+          <dt>${esc(ch.calendar ?? "Church year")}</dt><dd>${esc(ch.label)}</dd>
         </dl>
         ${gm && ch.active && ch.lines.length ? `<p class="wodx-quiet wodx-church">${ch.lines.map(esc).join(" ")}</p>` : ""}
+        ${gm && ch.others?.length ? `<p class="wodx-quiet wodx-church-others">Also today: ${ch.others.map(o => esc(`${o.day} (${o.label})`)).join("; ")}.</p>` : ""}
       </section>
       <section class="wodx-era">
         <h3>${esc(p?.name ?? "No era")} ${a.interlude ? `<span class="wodx-tag">between eras</span>` : ""} ${lockId ? `<span class="wodx-tag">locked</span>` : ""}</h3>
@@ -134,12 +139,14 @@ export class ClockApp extends ApplicationV2 {
           <button type="button" data-action="tour" title="A short guided tour of the WoDX tools"><i class="fa-solid fa-circle-question"></i> Tour</button>
           ${gm ? `
           <button type="button" data-action="approvals"><i class="fa-solid fa-inbox"></i> Approvals${waiting ? ` (${waiting})` : ""}</button>
+          <button type="button" data-action="waitingTray"><i class="fa-solid fa-hourglass-half"></i> Waiting${waitingAll ? ` (${waitingAll})` : ""}</button>
           <button type="button" data-action="houseRules"><i class="fa-solid fa-scale-balanced"></i> House rules</button>
           <button type="button" data-action="manageLinesVeils"><i class="fa-solid fa-eraser"></i> Remove a line or veil</button>
           <button type="button" data-action="eraTest"><i class="fa-solid fa-flask"></i> Era test</button>
-          <button type="button" data-action="placeHere" title="Latitude and hour for a scene far from home"><i class="fa-solid fa-earth-europe"></i> The sun on this scene</button>
+          <button type="button" data-action="placeHere" title="Region, latitude and hour for a scene far from home"><i class="fa-solid fa-globe"></i> Where this scene stands</button>
           <button type="button" data-action="hold" title="Move the clock without the world reacting: no routines, faction turns, dated events or expiring effects"><i class="fa-solid fa-${held ? "play" : "pause"}"></i> ${held ? "Release the world" : "Hold the world"}</button>`
-          : `<button type="button" data-action="ask"><i class="fa-solid fa-hand"></i> Ask the Storyteller</button>`}
+          : `<button type="button" data-action="ask"><i class="fa-solid fa-hand"></i> Ask the Storyteller</button>
+          <button type="button" data-action="roster" title="Every character you own, and which one you play"><i class="fa-solid fa-users"></i> My characters</button>`}
         </div>
       </section>`;
     return div;

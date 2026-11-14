@@ -35,13 +35,27 @@ async function pickFile(scene) {
   });
 }
 
+/** The faith a scene keeps (B3200): its own, else its region's in the chronicle's year; null without Chronicle. */
+export async function faithOf(scene) {
+  try {
+    const own = scene?.flags?.["wodx-chronicle"]?.place?.faith;
+    if ( own ) return own;
+    const c = game.modules.get("wodx-chronicle");
+    if ( !c?.active ) return null;
+    const region = c.api?.world?.here?.(scene)?.id, year = Number(c.api?.eras?.currentYear?.()) || 1197;
+    if ( !region ) return null;
+    const F = await import("../../wodx-chronicle/scripts/faith-rules.mjs");
+    return F.faithFor(region, year);
+  } catch (e) { return null; }
+}
+
 /** Read a sidecar and work out the plan for a scene. Returns {sc, p, errors} or throws a plain message. */
 export async function planFor(scene, text) {
   const parsed = A.parseSidecar(text);
   if ( !parsed.ok ) throw new Error(parsed.errors.join(" "));
   const types = new Set(Object.keys(CONFIG.RegionBehavior?.dataModels ?? {}));
   const fr = A.frameOf(scene);
-  const p = A.plan(parsed.data, {walls: arr(scene.walls).map(plainOf), tiles: arr(scene.tiles).map(plainOf), lights: arr(scene.lights).map(plainOf), regions: arr(scene.regions).map(plainOf), placeKind: scene.flags?.["wodx-npc"]?.place?.kind ?? null}, fr, types);
+  const p = A.plan(parsed.data, {walls: arr(scene.walls).map(plainOf), tiles: arr(scene.tiles).map(plainOf), lights: arr(scene.lights).map(plainOf), regions: arr(scene.regions).map(plainOf), placeKind: scene.flags?.["wodx-npc"]?.place?.kind ?? null, faith: await faithOf(scene)}, fr, types);
   return {sc: parsed.data, p, errors: parsed.errors};
 }
 

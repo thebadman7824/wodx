@@ -1,8 +1,36 @@
-# Live server Caddyfile with a one-day browser cache for map, token, sound and font files.
-# Script and style files keep Foundry's own headers, so module updates reach players at once.
+# Live server Caddyfile (wodx.online), security settings from the Security Desk (Ben approved 2026-11-13).
+# Copied to /etc/caddy/Caddyfile on Live by the maintenance block in tools/security/README.md.
+#
+# Not applied on Live (Ben 2026-11-10: skip Live tuning): a one-day browser cache for media files.
+# To add it later, put these two lines inside the site block:
+#   @media path_regexp media (?i)\.(webp|png|jpe?g|gif|svg|webm|mp4|m4v|ogg|oga|mp3|m4a|wav|flac|woff2?|ttf|otf)$
+#   header @media >Cache-Control "public, max-age=86400"
 wodx.online {
 	encode zstd gzip
-	@media path_regexp media (?i)\.(webp|png|jpe?g|gif|svg|webm|mp4|m4v|ogg|oga|mp3|m4a|wav|flac|woff2?|ttf|otf)$
-	header @media >Cache-Control "public, max-age=86400"
+
+	# Access log in JSON, read by the fail2ban jail wodx-foundry. Two weeks kept.
+	log {
+		output file /var/log/caddy/wodx-access.log {
+			roll_size 20MiB
+			roll_keep 10
+			roll_keep_for 336h
+		}
+		format json
+	}
+
+	# Security headers. No content security policy: Foundry and its modules use inline scripts.
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Frame-Options "SAMEORIGIN"
+		-Server
+	}
+
+	# The Setup screen and the status page are not public. Reach Setup through an SSH tunnel:
+	#   ssh -L 30000:localhost:30000 root@wodx.online   then open http://localhost:30000/setup
+	@private path /setup /setup/* /api/status /api/status/*
+	respond @private "Not available here." 403
+
 	reverse_proxy localhost:30000
 }

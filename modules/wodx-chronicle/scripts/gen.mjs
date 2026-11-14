@@ -5,18 +5,20 @@
  */
 import {MODULE_ID, isActiveGM, log} from "./util.mjs";
 import * as G from "./gen-core.mjs";
+import * as WR from "./world-rules.mjs";
 
 const SOURCES = new Map(); // source -> [table definitions]
 let cache = null;          // {defs: [...]} built from the world's Roll Tables and the shipped data
 const FOLDER = "WoDX tables";
 
-export const CULTURES = {bohemia: "Bohemia and its neighbours (Czech, German and Jewish names)", american: "The Americas (English-speaking)"};
+/** Every culture the people generator knows: one for each of the world's regions (world-rules.mjs). */
+export const CULTURES = {...WR.CULTURE_LABELS, bohemia: "Moravia and Bohemia (Czech, German and Jewish names)", american: "Eastern North America (English-speaking)"};
 
 export function registerGenSettings() {
   game.settings.register(MODULE_ID, "genSeed", {scope: "world", config: false, type: String, default: ""});
   game.settings.register(MODULE_ID, "peopleCulture", {
     name: "Where the chronicle's people come from",
-    hint: "Names and people the generators make. Each era gives its own names (medieval, early modern, industrial, mid-century, modern, future).",
+    hint: "Names and people the generators make, anywhere in the world. Each era gives its own names. A scene given its own region (the sun on a scene) uses that region's people instead.",
     scope: "world", config: true, type: String, choices: CULTURES, default: "bohemia", onChange: () => { cache = null; }
   });
   for ( const h of ["createRollTable", "updateRollTable", "deleteRollTable", "createTableResult", "updateTableResult", "deleteTableResult"] ) Hooks.on(h, () => { cache = null; });
@@ -49,6 +51,9 @@ export function context() {
   const region = (() => { try { return game.settings.get(MODULE_ID, "region"); } catch { return "europe"; } })();
   let culture = game.settings.get(MODULE_ID, "peopleCulture");
   if ( region === "americas" && culture === "bohemia" ) culture = "american";
+  // A scene far from home with its own region draws that region's people
+  const here = globalThis.canvas?.scene?.flags?.[MODULE_ID]?.place?.region;
+  if ( WR.cultureOf(here) ) culture = WR.cultureOf(here);
   const year = eras?.currentYear?.() ?? null;
   return {eraId: profile?.id ?? null, era: G.eraGroupFor(profile?.id, profile?.prologue || active?.locked ? null : year), culture, year};
 }

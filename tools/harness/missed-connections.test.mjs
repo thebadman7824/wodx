@@ -30,7 +30,7 @@ test("x2: guns and blasts are loud, a silenced gun, blades, fists and bows quiet
 
 test("x2: the attack card carries the noise, and Combat hands it to Interactables on the Storyteller's client", () => {
   const m = src("modules/wodx-combat/scripts/main.js");
-  assert.match(m, /noise: R\.fightNoise\(w\)/);
+  assert.match(m, /noise: R\.fightNoise\(\{ \.\.\.w, silenced: fitNow\.silenced \}\)/);
   assert.match(m, /api\.noiseAt\(\{ token: tokDoc\.object, noise: d\.noise, kind: "fight"/);
   assert.match(m, /if \(!d\?\.noise \|\| !isActiveGM\(\)\) return;/);
   assert.ok(SR.EVENT_KINDS.fight && SR.EVENT_KINDS.chase, "fight and chase are map event kinds");

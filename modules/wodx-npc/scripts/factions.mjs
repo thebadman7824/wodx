@@ -18,6 +18,8 @@
  * Player characters are never changed by a faction turn: anything that touches one waits for the Storyteller.
  */
 import * as F from "./faction-rules.mjs";
+import {calendarFor} from "./hunt-calendar.mjs";
+import * as WR from "./war-rules.mjs";
 import * as PO from "./politics-rules.mjs";
 import * as SX from "./secrets-rules.mjs";
 import * as Media from "../../wodx-chronicle/scripts/media-rules.mjs";
@@ -54,6 +56,10 @@ export function build(ctx) {
       name: "Players may found factions", hint: "Players can ask to found a faction from their characters' own Backgrounds, and give orders to a faction they run. Every founding waits in the approval queue.",
       scope: "world", config: true, type: Boolean, default: true
     });
+    game.settings.register(MOD, "factionWars", {
+      name: "Factions go to war by themselves", hint: "At a faction turn, a faction Hostile or worse toward a rival may take up arms for a place the rival holds. The war is fought off the screen with WoDX Storyteller's battles (a battle that turn, a siege a week a turn); what it changes waits in the approval queue. A war where a player character stands waits for the Storyteller. Needs WoDX Storyteller.",
+      scope: "world", config: true, type: Boolean, default: true
+    });
     game.settings.register(MOD, "factionPolitics", {
       name: "Politics inside factions", hint: "Factions that keep a court, a diocese or a barony run their own politics each faction turn: seats, standing, charges and favours. Off by default; changes that touch a player character or the top seat wait in the approval queue.",
       scope: "world", config: true, type: Boolean, default: false
@@ -88,7 +94,12 @@ export function build(ctx) {
   /* ------------------------------------------------------------------ */
 
   const futureOn = () => { try { return !!game.settings.get("wodx-chronicle", "rule.futureBranch"); } catch (e) { return false; } };
+  // 0.49.0: a breach spreads by the homeland's years for the papers, the wireless and the rest
+  const homeNow = () => { try { const h = game.modules.get("wodx-chronicle")?.api?.world?.homeland?.(); return (typeof h === "string" ? h : h?.id) ?? null; } catch (e) { return null; } };
+  // 0.62.0: the homeland tells a Kindred faction with no region of its own which court it keeps (B2960)
+  const worldRegions = () => { try { return game.modules.get("wodx-chronicle")?.api?.world?.regions ?? {}; } catch (e) { return {}; } };
   function eraInfo() {
+    PO.setHomeRegion(homeNow());
     let morality = "roads", year = 1197, name = "Dark Ages";
     try {
       const e = chron()?.eras?.activeEra?.();
@@ -239,6 +250,8 @@ export function build(ctx) {
   function registerHandler() {
     chron()?.registerApprovalHandler?.(TYPE, {
       label: "Factions",
+      // Small (Chronicle 0.46.0, B2453): what the Auto mode already lets through (F.sizeOf, B86)
+      small: entry => { const ch = entry.data?.changes ?? []; return ch.length > 0 && F.sizeOf(ch, {pcActors: pcActors(), state: state()}) === "small"; },
       approve: async entry => {
         const changes = entry.data?.changes ?? [];
         await applyNow(changes);
@@ -316,6 +329,7 @@ export function build(ctx) {
           return {state: st}; });
         reports.push({turn, lines});
         await turnCard(turn, reason, lines, undoAll, m);
+        if ( setting("factionWars") !== false ) await warTurn(turn, {now, places: list, year: era.year}).catch(e => console.error(`${MOD} | wars`, e));
       }
       return reports;
     })();
@@ -396,6 +410,22 @@ export function build(ctx) {
     if ( offer && mode() !== "off" ) await proposeChanges(`A new power: ${offer.name}`, `${ev.name ?? "A dated event"} (${year}). ${offer.notes} Approve to add it as a faction with no dots; set its leader, members and Backgrounds in the Factions window.`,
       [{op: "faction-add", faction: offer}], {key: `event:${ev.id}`, kind: "event"});
     return {card, offer};
+  }
+  /**
+   * B3330: a town rises or is sacked (wodxTown, WoDX Storyteller's towns): the factions that hold places there, and
+   * one that taxed its market, pay for it. Waits in the approval queue, as a faction turn's changes do.
+   */
+  async function onTown(p) {
+    if ( !isActiveGM() || mode() === "off" || !["rising", "sack"].includes(p?.kind) ) return null;
+    let market = null;
+    try { market = game.modules.get("wodx-storyteller")?.api?.upkeep?.markets?.state?.()?.markets?.find(m => m.id === p.town) ?? null; } catch (e) { market = null; }
+    if ( !market ) return null;
+    const taxers = (market.moves ?? []).filter(v => v.type === "tax").map(v => v.faction);
+    const changes = F.townChanges(state(), {sceneIds: market.scenes ?? [], taxers, kind: p.kind});
+    if ( !changes.length ) return null;
+    const n = names(state());
+    return proposeChanges(`${market.name}: ${p.kind === "rising" ? "the town rises" : "the town is sacked"}`,
+      `${p.text ?? ""} ${changes.map(c => F.describeChange(c, n)).join(". ")}.`.trim(), changes, {key: `town:${p.town}:${p.kind}:${Math.floor(game.time.worldTime)}`, kind: "town"});
   }
   /** NPC 0.26.0: a Great Maelstrom empties seats in each necropolis (B1112), with an Undo card. */
   async function onMaelstrom(ev, year) {
@@ -489,7 +519,7 @@ export function build(ctx) {
           else { await proposeChanges(`A rumour fades: ${b.event}`, "A week with nothing new to feed it.", ch, {key: `breach:${b.id}`, kind: "breach"}); break; }
           continue;
         }
-        const step = F.spreadDay(s, b, placeList(), streamFor(`breach:${b.id}:${Math.floor(t)}`), {now: t, perDay: Media.breachReach(b.severity, eraInfo().year, {future: futureOn()})});
+        const step = F.spreadDay(s, b, placeList(), streamFor(`breach:${b.id}:${Math.floor(t)}`), {now: t, perDay: Media.breachReach(b.severity, eraInfo().year, {future: futureOn(), region: homeNow()})});
         const small = step.changes.filter(c => c.op !== "stage");
         const n = names(s);
         if ( m === "auto" ) { const r = await applyNow(small); undo = [...r.inverse, ...undo]; const w = small.map(c => F.describeChange(c, n)).filter(x => x !== "The rumour lingers"); if ( w.length ) lines.push(`${b.event}: ${w.join("; ")}.`); }
@@ -536,7 +566,14 @@ export function build(ctx) {
   function huntingFor(actor, placeId) {
     const s = state(), era = eraInfo();
     const place = placeList().find(p => p.id === placeId) ?? {id: placeId, kind: "other"};
-    return F.huntingAt(s, place, {factions: factionsOf(s, actor?.id).map(f => f.id), herd: bgValue(actor, "herd"), domain: bgValue(actor, "domain"), fame: bgValue(actor, "fame")}, era.morality, {churchStep: churchStep()});
+    // The faith calendar of the town (0.54.0, B2710): each feast, fast, curfew or blackout named; the old single step as a fallback
+    let scene = null;
+    try { scene = fromUuidSync(placeId); } catch (e) { scene = null; }
+    if ( scene && scene.documentName !== "Scene" ) scene = scene.parent?.documentName === "Scene" ? scene.parent : null;
+    scene ??= canvas?.scene ?? null;
+    const calendar = calendarFor(scene, {area: place.kind ?? "market"});
+    return F.huntingAt(s, place, {factions: factionsOf(s, actor?.id).map(f => f.id), herd: bgValue(actor, "herd"), domain: bgValue(actor, "domain"), fame: bgValue(actor, "fame")}, era.morality,
+      calendar.active ? {calendar} : {churchStep: churchStep()});
   }
   async function huntDialog(actor = canvas?.tokens?.controlled?.[0]?.actor ?? null) {
     if ( !game.user.isGM ) return null;
@@ -576,7 +613,8 @@ export function build(ctx) {
     const tres = h.trespass ? `<p>This is ${esc(h.trespass.name)}'s domain: a trespass, at +${h.trespass.security} for its security (V20 p. 113).</p>` : "";
     const msg = await ChatMessage.create({speaker: ChatMessage.getSpeaker({actor}), whisper: actor.hasPlayerOwner ? undefined : gmIds(), rolls: rolls.map(r => r.roll),
       content: `<div class="wodx-card wnpc wnpc-faction"><h3>${esc(actor.name)} hunts at ${esc(n.place(placeId))}</h3>
-        <p class="wodx-quiet">${esc(METHODS[method] ?? method)}${h.herdDice ? ` + Herd ${h.herdDice}` : ""}: ${pool} dice at ${h.difficulty} (${esc(h.area.label)} ${h.area.difficulty}${h.domainDots ? `, Domain −${h.domainDots}` : ""}${h.fame ? `, Fame −${h.fame}` : ""}${h.church ? `, ${h.church < 0 ? "a night of revel −1" : "a fast +1"}` : ""}${h.trespass ? `, trespass +${h.trespass.security}` : ""}).</p>
+        <p class="wodx-quiet">${esc(METHODS[method] ?? method)}${h.herdDice ? ` + Herd ${h.herdDice}` : ""}: ${pool} dice at ${h.difficulty} (${esc(h.area.label)} ${h.area.difficulty}${h.domainDots ? `, Domain −${h.domainDots}` : ""}${h.fame ? `, Fame −${h.fame}` : ""}${h.church && !h.calendar?.length ? `, ${h.church < 0 ? "a night of revel −1" : "a fast +1"}` : h.calendar?.length ? `, the calendar ${h.church > 0 ? "+" : h.church < 0 ? "−" : "±"}${Math.abs(h.church)}` : ""}${h.trespass ? `, trespass +${h.trespass.security}` : ""}).</p>
+        ${h.calendar?.length ? `<p class="wodx-quiet">The calendar: ${h.calendar.map(c => esc(`${c.n > 0 ? "+" : c.n < 0 ? "−" : "±"}${Math.abs(c.n)} ${c.why}`)).join("; ")}.</p>` : ""}
         <p>${rolls.map(r => `[${r.dice.join(" ")}]`).join(" ")}</p><p><b>${esc(verdict)}</b></p>${tres}</div>`});
     // A trespass the holder notices (a botch, or a holder with Domain security watching) sours its standing: queued
     if ( h.trespass && (botch || (last && h.trespass.security > 0 && last.net <= h.trespass.security)) ) {
@@ -686,9 +724,13 @@ export function build(ctx) {
     const mActors = f.members.map(id => game.actors?.get(id)).filter(Boolean).sort((a, b) => a.name.localeCompare(b.name));
     const polityOpts = {"": "By its kind and age (a Kindred, Garou, Fae, Mage or Hunter faction of three or more keeps the polity of its age)", none: "No politics",
       ...Object.fromEntries(Object.entries(PO.POLITIES).map(([k, v]) => [k, `${v.label}${v.from ? `, from ${v.from}` : ""}`]))};
+    const regs = worldRegions(), home = PO.homeRegion();
+    const regionOpts = Object.keys(regs).length ? {"": `The chronicle's homeland${home && regs[home] ? ` (${regs[home].label})` : ""}`,
+      ...Object.fromEntries(Object.entries(regs).map(([k, v]) => [k, v.label ?? k]))} : null;
     const seatOpts = cur => `<option value="">Empty</option>${mActors.map(a => `<option value="${a.id}"${a.id === cur ? " selected" : ""}>${esc(a.name)}</option>`).join("")}`;
     const politicsHtml = `<fieldset><legend>Politics inside the faction</legend>
       <div class="wodx-field"><label>Polity</label><select name="polity" data-fixed>${opt(polityOpts, f.polity ?? "")}</select></div>
+      ${regionOpts ? `<div class="wodx-field"><label>Where it stands</label><select name="region" data-fixed>${opt(regionOpts, f.region ?? "")}</select></div>` : ""}
       ${P ? `<p class="wodx-quiet">In ${era.year}: ${esc(P.label)}. ${esc(P.notes)}${f.polity && f.polity !== polKey ? " Its chosen polity does not exist yet in this year, so the polity of its age stands in." : ""}</p>
         ${P.titles?.[PO.topOffice(polKey)?.key] ? `<div class="wodx-field"><label>The top seat is called</label><input type="text" name="poltitle" value="${esc(pol.title ?? "")}" maxlength="40" placeholder="${esc(PO.topOffice(polKey)?.title ?? "")}" list="wnpc-pol-titles"><datalist id="wnpc-pol-titles">${P.titles[PO.topOffice(polKey).key].map(t => `<option value="${esc(t)}">`).join("")}</datalist></div>` : ""}
         ${mActors.length ? `<table class="wodx-table" data-fixed><thead><tr><th>Seat</th><th>Held by</th></tr></thead><tbody>
@@ -697,7 +739,7 @@ export function build(ctx) {
           ${mActors.map(a => `<label>${esc(a.name)} <input type="number" name="rk.${a.id}" value="${pol.ranks[a.id] ?? ""}" min="0" max="5" placeholder="${PO.baseRank(polInfo, a.id, polKey)}"></label>`).join("")}</div></fieldset>`
         : `<p class="wodx-quiet">Add members and save, then open the faction again to seat them.</p>`}
         ${pol.docket.length ? `<p><b>Charges to be heard:</b> ${pol.docket.map(d => esc(`${game.actors?.get(d.by)?.name ?? "someone"} against ${game.actors?.get(d.against)?.name ?? "someone"}: ${d.law}`)).join("; ")}.</p>` : ""}`
-      : `<p class="wodx-quiet">No politics run inside this faction. A Kindred, Garou, Fae, Mage or Hunter faction of three or more members keeps the polity of its age unless set to No politics; a Wraith necropolis, the Shemsu-heru, the Fallen and a Kuei-jin court are picked by hand.</p>`}
+      : `<p class="wodx-quiet">No politics run inside this faction. A Kindred, Garou, Fae, Mage or Hunter faction of three or more members keeps the polity of its age unless set to No politics; a Kindred faction in Africa keeps a council of the Laibon, in the lands of Islam and Central Asia a court of the Ashirra, in India a court of the Ravnos until 1999 and in East Asia and Tibet a court of the Kuei-jin; a Garou faction in Asia keeps a Beast Court and in Africa a land of the Bastet; a mages' faction keeps the Wu Lung in China and Korea, the Akashic Brotherhood elsewhere in Asia and the Ahl-i-Batin in the lands of Islam; in the Americas, the Pacific and the far north before the settlers Kindred keep no court, fae keep a council of the Nunnehi in the Americas, and Garou keep a gathering of the Mokolé in Australia and a land of the Bastet in Mesoamerica; a faction named for the Nagah, the Mokolé, the Ananasi, the Corax, the Gurahl, the Ratkin or the Rokea keeps a body of its own; fae keep a court of the Hsien in East and Southeast Asia, and a circle of the land's own fae in the Pacific islands, Aotearoa and Siberia before the settlers; a Wraith necropolis, the Shemsu-heru and the Fallen are picked by hand.</p>`}
       <p class="wodx-quiet">Turn on Politics inside factions in the module settings for courts to move each faction turn.</p></fieldset>`;
     const eventOpts = evs.length ? cur => evs.map(e => `<option value="${esc(e.id)}"${e.id === cur ? " selected" : ""}>${esc(`${e.year} ${e.name}`)}</option>`).join("") : null;
     const content = `<div class="wnpc-faction-form">
@@ -750,7 +792,7 @@ export function build(ctx) {
       owners: pcs.length ? pcs.filter(a => data[`o.${a.id}`]).map(a => a.id) : f.owners, run: data.run ?? f.run, orders: f.orders,
       founded: data.founded, ended: data.ended, risesOn: data.risesOn ?? f.risesOn, endsOn: data.endsOn ?? f.endsOn,
       dormantBy: data.dormant ? (f.dormant ? f.dormantBy : null) : null, fromEvent: f.fromEvent, parent: f.parent, absorbedBy: data.dormant ? f.absorbedBy : null,
-      polity: data.polity ?? f.polity, politics: foundry.utils.deepClone(pol)};
+      polity: data.polity ?? f.polity, politics: foundry.utils.deepClone(pol), region: data.region ?? f.region ?? ""};
     if ( P && mActors.length ) {
       const offices = {...next.politics.offices};
       for ( const o of P.offices ) {
@@ -1021,17 +1063,103 @@ export function build(ctx) {
   }
 
   /** NPC 0.39.0: an ended WoDX Storyteller battle between factions goes to the approval queue (B2206). */
+  /* ---- Wars between factions, fought off the screen (B2211-B2216) ---- */
+
+  const battlesApi = () => game.wodx?.storyteller?.battles ?? game.modules.get("wodx-storyteller")?.api?.battles ?? null;
+  /** A place where a player character's token stands (its scene, or the scene its region is on). */
+  function charactersAt(placeId) {
+    const doc = sceneOf(placeId);
+    const scene = doc?.documentName === "Scene" ? doc : doc?.parent?.documentName === "Scene" ? doc.parent : null;
+    if ( !scene ) return false;
+    const pcs = pcActors();
+    return (scene.tokens?.contents ?? [...(scene.tokens ?? [])]).some(t => pcs.has(t.actorId));
+  }
+  /** Roll a hidden leader's powers into a phase: the successes at 6. */
+  /**
+   * A hidden leader's deed for a phase: from WoDX Storyteller's battle deeds (its table by post, age and kind of
+   * being, B2350s) when it is there, else Status + 3 dice at 6. Returns {name, successes, seen}.
+   */
+  async function powerDeed(f, battle, sideIdx, api) {
+    const leaderName = game.actors?.get(f.leader)?.name || `${f.name}'s leader`;
+    const D = game.wodx?.storyteller?.battleDeeds?.rules ?? game.modules.get("wodx-storyteller")?.api?.battleDeeds?.rules;
+    const leader = f.leader ? game.actors?.get(f.leader) : null;
+    const kind = (leader && game.wodxCombat?.getKind?.(leader)) || WR.COMBAT_KIND[f.kind] || null;
+    if ( D?.leaderDeed && D?.deedSuccessesFor ) {
+      const age = api.rules.ageFor(battle.year, {branch: battle.branch, realm: battle.realm});
+      const pick = D.leaderDeed(battle.sides[sideIdx], age.id, {kind, seed: `${battle.id}:${battle.phases.length}:${sideIdx}`, pool: WR.powerPool(f)});
+      if ( pick?.deed ) {
+        const r = D.deedSuccessesFor(pick.pool, pick.difficulty);
+        return {name: `${leaderName}: ${pick.deed.name}`, successes: r.successes, seen: !!pick.seen};
+      }
+    }
+    const r = new Roll(`${WR.powerPool(f)}d10`);
+    await r.evaluate();
+    const faces = r.dice[0]?.results?.map(x => x.result) ?? [];
+    return {name: `${leaderName}'s powers`, successes: Math.max(0, faces.filter(x => x >= 6).length - faces.filter(x => x === 1).length), seen: true};
+  }
+  async function fightOut(api, b, s) {
+    const facs = [b.war.attacker, b.war.defender].map(id => s.factions.find(f => f.id === id));
+    let x = b, k = 0;
+    while ( x && !x.over && x.kind === "field" && k < 30 ) {
+      const deeds = [];
+      for ( const [i, f] of facs.entries() ) deeds.push(WR.usesPowers(f, b.war.kind) ? [await powerDeed(f, x, i, api)] : []);
+      const actions = x.book && api.rules?.chooseActions ? api.rules.chooseActions(x, api.rules.ageFor(x.year, {branch: x.branch, realm: x.realm})) : undefined;
+      x = await api.fight(x.id, {deeds, quiet: true, ...(actions ? {actions} : {})});
+      k++;
+    }
+    if ( x && !x.over && x.kind === "field" ) x = await api.draw(x.id, {quiet: true});
+    return x;
+  }
+  /** Advance every war fought off the screen, then perhaps start a new one. */
+  async function warTurn(turn, {now = game.time.worldTime, places = placeList(), year = eraInfo().year, only = null} = {}) {
+    const api = battlesApi();
+    if ( !api?.start || !game.user.isGM ) return null;
+    const s = state();
+    const wars = api.list().filter(b => b.war && !b.over && (!only || only.has(b.war.attacker)));
+    const done = [];
+    for ( const b of wars.filter(x => x.war.auto) ) {
+      let x = b;
+      if ( x.kind === "siege" ) {
+        x = await api.week(x.id, {quiet: true});
+        if ( x && !x.over && x.breached ) { x = await api.storm(x.id, {quiet: true}); x = await fightOut(api, x, s); }
+      } else x = await fightOut(api, x, s);
+      if ( x?.over ) done.push(x);
+    }
+    const busy = new Set(api.list().filter(b => b.war && !b.over).flatMap(b => [b.war.attacker, b.war.defender]));
+    const pick = WR.pickWar(s, {rand: streamFor(`war:${turn}:${Math.floor(now)}`), year, busy, places, only});
+    let started = null;
+    if ( pick ) {
+      const att = s.factions.find(f => f.id === pick.attacker), def = s.factions.find(f => f.id === pick.defender);
+      const lead = f => { const a = f.leader ? game.actors?.get(f.leader) : null; return a && !routines.downState?.(a) ? {actorId: a.id, name: a.name} : null; };
+      const near = charactersAt(pick.place);
+      const raw = {name: WR.warName(att, def, pick.placeName, pick.siege), place: pick.placeName, kind: pick.siege ? "siege" : "field", year,
+        war: {attacker: att.id, defender: def.id, place: pick.place, kind: pick.kind, auto: !near, turn},
+        sides: [WR.forcesFor(att, pick.kind, {year, leader: lead(att)}), WR.forcesFor(def, pick.kind, {year, defends: true, siege: pick.siege, leader: lead(def)})]};
+      started = await api.start(raw);
+      if ( started && !near ) {
+        let x = started.kind === "siege" ? await api.week(started.id, {quiet: true}) : await fightOut(api, started, s);
+        if ( x?.over ) done.push(x);
+      }
+      await ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX factions"}, content: `<div class="wodx-card wnpc wnpc-faction"><h3>${esc(raw.name)}</h3>
+        <p>${esc(att.name)} take${/s$/.test(att.name) ? "" : "s"} up arms against ${esc(def.name)}${pick.placeName ? ` for ${esc(pick.placeName)}` : ""}: ${pick.kind === "supernatural" ? "a war of the hidden world, fought with their powers" : "a war fought by mortal hands"}.</p>
+        <p class="wodx-quiet">${near ? "A player character is there, so it waits for you: open Battles and sieges in the Storyteller's hand to fight it with them, or remove it." : started?.kind === "siege" ? "The siege goes a week each faction turn, off the screen." : "Fought off the screen this turn."}</p></div>`});
+    }
+    for ( const x of done ) await ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX factions"}, content: `<div class="wodx-card wnpc wnpc-faction"><h3>${esc(x.name)}</h3>
+      <p>${esc(x.over.text)}</p><p class="wodx-quiet">What it changes waits in the approval queue. Players hear of it as news when word reaches them.</p></div>`});
+    return {started, done};
+  }
+
   async function onBattle({battle} = {}) {
     if ( !isActiveGM() || mode() === "off" || !battle?.over ) return;
     const s = state();
-    const changes = F.battleChanges(s, battle);
+    const changes = [...F.battleChanges(s, battle), ...WR.warChanges(s, battle)];
     if ( !changes.length ) return;
     const n = names(s);
     await proposeChanges(`After ${battle.name}`, changes.map(c => F.describeChange(c, n)).join("; ") + ".", changes, {key: `battle:${battle.id}:${battle.over.at ?? ""}`});
   }
 
   function hooks() {
-    Hooks.on("wodxChronicleReady", () => registerHandler());
+    Hooks.on("wodxChronicleReady", () => { registerHandler(); PO.setHomeRegion(homeNow()); });
     Hooks.on("wodxSkipEnd", () => { if ( isActiveGM() ) onClock("skip").catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxEraApplied", () => { if ( isActiveGM() ) yearSweep({force: true}).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxEventFired", ev => { onEventFired(ev).catch(e => console.error(`${MOD} |`, e)); });
@@ -1044,6 +1172,7 @@ export function build(ctx) {
       onClock("clock").catch(e => console.error(`${MOD} |`, e));
     });
     Hooks.on("wodxBreach", p => { onActionsBreach(p).catch(e => console.error(`${MOD} |`, e)); });
+    Hooks.on("wodxTown", p => { onTown(p).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxBoonSettled", p => { onBoonSettled(p).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxBattle", p => { onBattle(p).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("wodxMapEvent", ev => { onMapEvent(ev).catch(e => console.error(`${MOD} |`, e)); });
@@ -1088,7 +1217,7 @@ export function build(ctx) {
     return proposeChanges(`Word spreads: ${src} ${moved > 0 ? "thinks better" : "thinks worse"} of ${who}`, `${words.join("; ")}.`, changes, {key: `spill:${factionId}:${actorId}:${game.time.worldTime}`, kind: "spill"});
   }
   const peopleOf = actorId => F.peopleStandingOf(state(), actorId);
-  return {adjustPeople, peopleOf, onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, hunt, huntDialog,
+  return {warTurn, adjustPeople, peopleOf, onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, hunt, huntDialog,
     setupRothenstein, editFaction, deleteFaction, reportDialog, setBreach, deleteBreach, setArea, undoCard, eraInfo, placeList, names, leaders, masqEntries, findActor,
     FactionsAppClass, openFactions: () => (game.user.isGM ? FactionsAppClass().open() : founding?.openPlayer?.()), rules: F, ROTHENSTEIN,
     applyNow, proposeChanges, bgValue, allActors, yearSweep, onEventFired, endFaction, absorbFaction, setFounding: f => { founding = f; }, politicsInfo, openBoons, onBoonSettled, stageFight, onMaelstrom};

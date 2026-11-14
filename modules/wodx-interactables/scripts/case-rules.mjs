@@ -11,10 +11,12 @@
  *   by      who put it there (a user's name), shown small
  */
 
+import {normInquiry} from "./investigation-rules.mjs";
+
 export const BOARD_V = 1;
 export const BOARD_FOLDER = "WoDX case boards";
 export const KINDS = {clue: "Clue", person: "Person", place: "Place", entry: "Lore", note: "Note"};
-export const CARD_W = 180, CARD_H = 96, BOARD_W = 1600, BOARD_H = 1000;
+export const CARD_W = 180, CARD_H = 130, BOARD_W = 1600, BOARD_H = 1000;
 const MAX_TEXT = 600, MAX_TITLE = 80, MAX_LABEL = 60, MAX_CARDS = 200;
 
 const str = (v, n) => String(v ?? "").trim().slice(0, n);
@@ -28,7 +30,7 @@ export function nextId(used = [], prefix = "c") {
   return `${prefix}${Date.now()}`;
 }
 
-export function emptyBoard() { return {v: BOARD_V, cards: [], links: []}; }
+export function emptyBoard() { return {v: BOARD_V, cards: [], links: [], theories: [], truth: []}; }
 
 /** A board as stored, made safe: unknown kinds become notes, positions stay on the board, links to missing cards go. */
 export function normalize(b) {
@@ -49,6 +51,8 @@ export function normalize(b) {
     pairs.add(key);
     out.links.push({id: str(l.id, 20) || nextId(out.links.map(x => x.id), "l"), a, b: bb, label: str(l.label, MAX_LABEL)});
   }
+  // B3364: theories and the Storyteller's truth (investigation-rules.mjs), kept to the lines still on the board
+  Object.assign(out, normInquiry({...b, links: out.links}));
   return out;
 }
 
@@ -132,7 +136,8 @@ export function visibleTo(board, isGM = false) {
   const b = normalize(board);
   if ( isGM ) return b;
   const shown = new Set(b.cards.filter(c => !c.hidden).map(c => c.id));
-  return {...b, cards: b.cards.filter(c => shown.has(c.id)), links: b.links.filter(l => shown.has(l.a) && shown.has(l.b))};
+  const links = b.links.filter(l => shown.has(l.a) && shown.has(l.b)), ids = new Set(links.map(l => l.id));
+  return {...b, cards: b.cards.filter(c => shown.has(c.id)), links, truth: [], theories: b.theories.map(t => ({...t, rests: t.rests.filter(id => ids.has(id))}))};
 }
 
 /** The card for something dropped on the board, from Foundry's drag data ({type, uuid}) and the document's name. */
@@ -171,4 +176,20 @@ export function lookFor(year) {
   const y = Number(year);
   if ( !Number.isFinite(y) || y <= 0 ) return LOOKS[3];
   return LOOKS.find(l => y <= l.until) ?? LOOKS[LOOKS.length - 1];
+}
+
+/**
+ * The starter layout (Interactables 0.41.0, B2832): three note cards across the top as column heads, Who, Where and
+ * What we know, so a new board shows where things go. They are ordinary notes; move, change or take them off.
+ */
+export const STARTER = [
+  {title: "Who", text: "The people in this: drop them below."},
+  {title: "Where", text: "The places: drop scenes and maps below."},
+  {title: "What we know", text: "Clues and what they tell us."}
+];
+export function starterBoard(board = emptyBoard()) {
+  let b = normalize(board);
+  const gap = Math.floor((BOARD_W - 3 * CARD_W) / 4);
+  STARTER.forEach((s, i) => { b = addCard(b, {kind: "note", title: s.title, text: s.text, x: gap + i * (CARD_W + gap), y: 20}).board; });
+  return b;
 }

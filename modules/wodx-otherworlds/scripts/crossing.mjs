@@ -344,7 +344,7 @@ export async function checkYearAndDay(now = game.time.worldTime) {
     await chronicle.propose({
       type: YEAR_TYPE, key: `${YEAR_TYPE}:${actor.id}:${w.since}`,
       title: `${actor.name}: a year and a day in the Umbra`,
-      detail: `${actor.name} has not left the spirit world for ${Math.floor(d.days)} days. After a year and a day in the Penumbra a shapechanger gradually becomes a creature of spirit (W20 p. 319). Approve to mark the change as begun on the sheet's WoDX record; reject to leave it.`,
+      detail: `${actor.name} has not left the spirit world for ${Math.floor(d.days)} days. A shapechanger who stays past a year and a day starts turning into a spirit, a little at a time (W20 p. 319). Approve to mark the change as begun on the sheet's WoDX record; reject to leave it.`,
       data: {actorId: actor.id, since: w.since}
     });
     n++;

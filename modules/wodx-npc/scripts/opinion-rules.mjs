@@ -61,7 +61,7 @@ export function reasonsFor({att = null, entry = null, seed = {step: 0, from: ""}
     else if ( st === "open" ) weigh.push({tone: "", why: pcOwes ? `They owe this NPC ${what}${e.what ? `: ${String(e.what).slice(0, 80)}` : ""}` : `This NPC owes them ${what}${e.what ? `: ${String(e.what).slice(0, 80)}` : ""}`});
   }
   if ( fought ) weigh.push({tone: "cold", why: `Fought them${date(fought) ? ` (${date(fought)})` : ""}`});
-  const WARM = new Set(["sire", "childe", "domitor", "ghoul", "parent", "child", "sibling", "spouse", "kin", "kinfolk", "garou", "heirOf", "heir", "mentor", "apprentice", "patron", "retainer", "ally", "lover", "friend"]);
+  const WARM = new Set(["sire", "childe", "domitor", "ghoul", "parent", "child", "guardian", "ward", "sibling", "spouse", "kin", "kinfolk", "garou", "heirOf", "heir", "mentor", "apprentice", "patron", "retainer", "ally", "lover", "friend"]);
   const COLD = new Set(["rival", "enemy"]);
   for ( const l of links ?? [] ) {
     const tone = l.kind === "bondTo" ? "warm" : WARM.has(l.kind) ? "warm" : COLD.has(l.kind) ? "cold" : "";

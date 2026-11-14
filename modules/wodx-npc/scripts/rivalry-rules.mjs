@@ -188,6 +188,8 @@ export function sidesOf(info = {}) {
 
 /** Does one matcher alternative ("key:word" or a bare word) fit one side? */
 function fits(alt, side) {
+  // Fix: a side is compared in lower case like the matcher (feud sides carry ids with capitals)
+  side = String(side ?? "").toLowerCase();
   const i = alt.indexOf(":");
   if ( i < 0 ) return side.slice(side.indexOf(":") + 1).includes(alt);
   const k = alt.slice(0, i), w = alt.slice(i + 1), sk = side.slice(0, side.indexOf(":")), sv = side.slice(side.indexOf(":") + 1);

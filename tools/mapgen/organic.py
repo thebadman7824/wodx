@@ -734,6 +734,24 @@ class OrganicTown(T.Town):
                 t += .5
         return best[1] if best else None
 
+    def put_first(self, type_key, label, edge_lists):
+        """One special building at the nearest spot to the market that will take it, when the best spot would not: the
+        plain type, each spot in turn. A spot on a part line, or one whose rooms will not furnish, is passed over."""
+        tdef = B.TYPES[type_key]
+        for edges in edge_lists:
+            cands = []
+            for e, blk, ward in edges or []:
+                sb, gap = SPACING.get(ward, (.6, .8))
+                t = .3
+                while t < e["len"] - 2:
+                    s = self.try_at(type_key, e["A"], e["u"], e["in"], t, sb, gap, blk, tdef)
+                    if s: cands.append((math.hypot(s[0] - self.xc, s[1] - self.yc), s))
+                    t += .5
+            for _, s in sorted(cands, key=lambda c: c[0])[:40]:
+                b = self.put(type_key, label, s)
+                if b: return b
+        return None
+
     def lay_out(self):
         R = self.R
         blocks = {}
@@ -748,6 +766,8 @@ class OrganicTown(T.Town):
         s = self.best_spot("tavern", facing, None)
         if not s: raise SystemExit("no room for the tavern on the market")
         tavern = self.put("tavern", "Tavern", s) or self.put("tavern", "Tavern", self.best_spot("tavern", facing, None, plain=True))
+        if not tavern: tavern = self.put_first("tavern", "Tavern", [facing])
+        if not tavern: raise SystemExit("no room for the tavern on the market")
         church = [(e, blk, p["ward"]) for p, blk, kinds in blocks.values() if p["ward"] == "church" for e in self.edges_of(blk, kinds)]
         s = self.best_spot("chapel", church, None) or self.best_spot("chapel", facing, None)
         if not s:
@@ -755,6 +775,10 @@ class OrganicTown(T.Town):
             s = self.best_spot("chapel", any_e, None)
         if not s: raise SystemExit("no room for the chapel")
         chapel = self.put("chapel", "Chapel", s) or self.put("chapel", "Chapel", self.best_spot("chapel", church or facing, None, plain=True))
+        if not chapel:                                        # the best spot lay on a part line or would not furnish
+            inner = [(e, blk, p["ward"]) for p, blk, kinds in blocks.values() if p["inner"] for e in self.edges_of(blk, kinds)]
+            chapel = self.put_first("chapel", "Chapel", [church, facing, inner])
+        if not chapel: raise SystemExit("no room for the chapel")
         near = [(e, blk, p["ward"]) for p, blk, kinds in blocks.values() if p["inner"] for e in self.edges_of(blk, kinds)
                 if math.dist(e["mid"], chapel.centre) < 30]
         s = self.best_spot("cottage", sorted(near, key=lambda x: math.dist(x[0]["mid"], chapel.centre))[:4], None)
@@ -1238,16 +1262,19 @@ class OrganicTown(T.Town):
         bw = (win[0] - 2, win[1] - 2, win[2] + 4, win[3] + 4)
         for b in self.blds:                                    # each building whole, on its own part only
             if not overlaps(b.rect, win) or not (self.mine(b, pt) or T.inside(b.rect[0], b.rect[1], win, .01) and T.inside(b.rect[0] + b.rect[2], b.rect[1] + b.rect[3], win, .01)): continue
+            if getattr(b, "palette", None) is None:            # furnished by purpose, era palette and room value
+                import furnishing as F
+                F.apply(b, self.year or 1197, getattr(self, "region", None) or "moravia", getattr(b, "wealth", None), getattr(b, "trade", None), self.seed)
             ops = [(k, x, y, None) for k, x, y, _ in b.openings_world()]
             wt = getattr(b, "wall_tex", None) or b.t["wall"]
             pk = b.t.get("portals")                            # a later era's doors and windows
-            walls.append(wall_with_portals(b.outline, wt, ops, True, pk))
-            for a, c in b.partitions_world(): walls.append(wall_with_portals([a, c], wt, ops, False, pk))
+            walls.append(wall_with_portals(b.outline, wt, ops, True, pk, getattr(b, "portal_tex", None)))
+            for a, c in b.partitions_world(): walls.append(wall_with_portals([a, c], wt, ops, False, pk, getattr(b, "portal_tex", None)))
             for r in b.rooms:
-                if B.FLOORS.get(r.floor): patterns.append(pattern(b.room_poly(r), B.FLOORS[r.floor], b.theta))
+                if B.floor_tex(r.floor): patterns.append(pattern(b.room_poly(r), B.floor_tex(r.floor), b.theta))
                 objects.extend(b.dressing_world(r, True))
                 for it, cx, cy, rot in b.items_world(r, picture=True):
-                    objects.append(obj(it["asset"], cx, cy, rot, it["scale"], 100))
+                    objects.append(obj(C.drawn(it)[0], cx, cy, rot, C.drawn(it)[1], 100))
                 objects.extend(b.dressing_world(r, False))
         for pl in self.plots:                                  # plot fences: the sides and back, open to the street
             if not overlaps(pl["rect"], win, 2): continue
@@ -1365,7 +1392,10 @@ class OrganicTown(T.Town):
                                  "inside": loc(b.centre), "barInside": kind in C.BARRED_INSIDE, "flags": dict(C.OPENING_FLAGS[kind])})
             for r in b.rooms:
                 ents = C.feature_entries(f"{b.key}-", r, b.t["fill"])
-                byid = {f"{b.key}-{r.name.lower().replace(' ', '-').replace(chr(39), '')}-{i}": (it, cx, cy, rot) for i, (it, cx, cy, rot) in enumerate(b.items_world(r))}
+                stem = f"{b.key}-{r.name.lower().replace(' ', '-').replace(chr(39), '')}"
+                byid = {f"{stem}-{i}": (it, cx, cy, rot) for i, (it, cx, cy, rot) in enumerate(b.items_world(r))}
+                for i, it in enumerate(d for d in getattr(r, "dressing", []) if d.get("layer", 100) == 100):   # the furnishing's pieces
+                    byid[f"{stem}-f{i}"] = (it, *b.world(it["x"] + it["w"] / 2, it["y"] + it["h"] / 2), None)
                 for f in ents:
                     it, cx, cy, rot = byid[f["id"]]
                     w, h = it["w"], it["h"]
@@ -1589,6 +1619,8 @@ class OrganicTown(T.Town):
         if self.year:
             import eras
             eras.grow(self, self.year)
+            import settle
+            settle.repeople(self, B.TYPES)                    # from 1781 the households follow the year (settle.py)
         self.washing = self.washing_spot() if self.river_line and (self.year or 0) < 1900 else None
         self.well = self.well_spot()
         self.cross = self.cross_spot()

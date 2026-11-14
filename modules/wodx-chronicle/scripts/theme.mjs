@@ -16,6 +16,7 @@ export const LOOK_VERSION = "0.4.0";
 /** The paper each era kit is printed on. */
 export const KIT_TONE = {
   "dark-ages": "light", "long-night": "light", "renaissance": "light", "age-of-reason": "light", "classical": "light", "living-gods": "light",
+  "mythic-age": "light", "bronze-kings": "light", "iron-dawn": "light", "greece-republic": "light", "roman-empire": "light", "migration-age": "light", "premyslid-duchy": "light",
   "victorian": "light", "wild-west": "light", "great-war": "light", "mid-century": "light",
   "modern": "dark", "time-of-judgment": "dark", "future-darkness": "dark", "time-of-future-judgement": "dark"
 };
