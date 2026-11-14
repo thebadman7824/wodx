@@ -2956,6 +2956,7 @@ Hooks.once("ready", async () => {
     // WoDX Chronicle's API may come after this module's ready: Foundry does not wait for async ready hooks
     const withChronicle = () => {
         chronicle()?.timed?.registerReverter?.("wodx-actions.quickening", revertQuickening);
+        chronicle()?.timed?.registerReverter?.("wodx-actions.demonForm", (a, d) => DXD.revertForm(a, d));
         // The inner voice's proposals (6d): approved in the queue, answered from a card
         (chronicle()?.registerApprovalHandler ?? game.modules.get("wodx-chronicle")?.api?.registerApprovalHandler)?.("wodx-voice", { label: "Inner voice", approve: entry => vx().onApproved(entry) });
         // Mage keyword results that wait for a yes (3.22.0)

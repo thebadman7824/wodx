@@ -103,6 +103,8 @@ export async function run() {
             const fl = dv.getFlag(MOD, "demon");
             ok("the apocalyptic form: a Faith point, Nusku's powers, the look for Torment 4 and Willpower 5", F(dv) === f0 - 1 && /Shroud of Flames/.test(text(m)) && /awe or terror/.test(text(m)) && (fl?.form ?? []).length === 4,
                 { card: text(m).slice(0, 320), faith: F(dv), form: fl?.form });
+            // The form's bonuses come off at the scene's end (B3743): end it so the kept test actor starts clean next run
+            await game.modules.get("wodx-chronicle")?.api?.timed?.endFor?.(dv, { kind: "scene", why: "gate" });
         });
         await step("Faith heals all bashing for a point", async () => {
             await dv.update({ "system.health.damage.bashing": 3 });

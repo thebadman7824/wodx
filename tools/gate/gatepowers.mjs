@@ -5,6 +5,9 @@
  * power does and that its effect reaches the effects card. Makes its own actors in the folder "WoDX powers gate" and
  * deletes them at the end. Steps are added line by line as the pass builds them.
  *   1. Wraith: Phantom Wings (Argos 2) through Use an Arcanos puts Rise on the effects card for the wraith (B3740)
+ *   2. Demon: Water Form (Storms 2) through Evoke shows its card and puts Shape on the effects card; at permanent Faith 1 a
+ *      second lasting evocation is refused (B3741, B3742)
+ *   3. Demon: Kishar's form through the apocalyptic form adds Strength +2 and lethal soak, taken back at the scene's end (B3743)
  * Result: Data/wodx-gate/gatepowers-result.json.
  */
 const R = { started: new Date().toISOString(), steps: [], errors: [], notes: [] };
@@ -60,6 +63,44 @@ export async function run() {
       const m = await untilMsg(n);
       const items = fx(m);
       ok("1 Wraith Arcanos keywords", !!m && /What it does/.test(m.content) && items.some(i => i.key === "rise"), { card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`) });
+    });
+    await step("2 Demon evocation card and running limit", async () => {
+      const lore = (nm, v) => ({ name: nm, type: "Power", system: { game: "demon", type: "wod.types.lore", value: v } });
+      const dv = await mk("Defiler", "Demon", { house: "wod.bio.demon.defiler" }, [lore("Lore of Storms", 2)]);
+      await dv.update({ "system.advantages.faith.permanent": 1, "system.advantages.faith.temporary": 9, "system.advantages.torment.permanent": 3,
+        "system.attributes.stamina.value": 3, "system.attributes.stamina.total": 3, "system.abilities.medicine.value": 2 });
+      await game.user.updateTokenTargets?.([]);
+      let n = game.messages.size;
+      answer(root => { set(root, "evo", "storms:2"); set(root, "fs", 3); });
+      A().demonEvoke({ actor: dv });
+      const m = await untilMsg(n);
+      const items = fx(m);
+      const run1 = (dv.getFlag("wodx-actions", "demon")?.running ?? []).length;
+      // Faith 1: a second lasting evocation is refused unless the first is ended
+      n = game.messages.size;
+      answer(root => { set(root, "evo", "storms:2"); set(root, "fs", 1); set(root, "endOld", false); });
+      A().demonEvoke({ actor: dv });
+      await sleep(2500);
+      const refused = !(await untilMsg(n, 500));
+      ok("2 Demon evocation card and running limit", !!m && /What it does/.test(m.content) && /High Torment/.test(m.content) && items.some(i => i.key === "shape") && run1 === 1 && refused,
+        { card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`), run1, refused });
+    });
+    await step("3 Demon apocalyptic form on the sheet", async () => {
+      const lore = (nm, v) => ({ name: nm, type: "Power", system: { game: "demon", type: "wod.types.lore", value: v } });
+      const dv = await mk("Malefactor", "Demon", { house: "wod.bio.demon.malefactor" }, [lore("Lore of Earth", 1)]);
+      await dv.update({ "system.advantages.faith.permanent": 3, "system.advantages.faith.temporary": 5, "system.advantages.torment.permanent": 3 });
+      await sleep(500);
+      const s0 = Number(dv.system.attributes.strength.bonus) || 0;
+      const n = game.messages.size;
+      answer(root => { set(root, "spend", true); });
+      A().demonForm({ actor: dv });
+      const m = await untilMsg(n);
+      await sleep(1000);
+      const s1 = Number(dv.system.attributes.strength.bonus) || 0, lethal = !!dv.system.settings?.soak?.lethal?.isrollable;
+      await game.modules.get("wodx-chronicle")?.api?.timed?.endFor?.(dv, { kind: "scene", why: "gate" });
+      await sleep(1000);
+      const s2 = Number(dv.system.attributes.strength.bonus) || 0;
+      ok("3 Demon apocalyptic form on the sheet", !!m && /Increased Size:/.test(text(m)) && s1 === s0 + 2 && lethal && s2 === s0, { card: text(m).slice(0, 300), s0, s1, s2, lethal });
     });
   } finally {
     for (const [h, id] of hooks) Hooks.off(h, id);

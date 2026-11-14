@@ -16,6 +16,8 @@
 import * as D from "./demon-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
+import * as DE from "./demon-evocations.js";
+import * as EF from "./effects.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -33,12 +35,38 @@ export function isDemon(actor) {
     return !!(actor.system?.settings?.hastorment && D.houseOf(actor.system?.house));
 }
 
+/**
+ * Take back what the apocalyptic form put on the sheet (its reverter, run when the scene's timed effect ends): the Attribute
+ * and initiative bonuses still recorded, Stamina's lethal soak as it was, and the hide's soak.
+ */
+export async function revertForm(actor, { attrs = {}, init = 0, lethalWas = null, armorId = null } = {}) {
+    if (!actor?.isOwner) return;
+    const upd = {};
+    for (const [k, v] of Object.entries(attrs)) {
+        const at = actor.system?.attributes?.[k];
+        if (!at || !v) continue;
+        upd[`system.attributes.${k}.bonus`] = n(at.bonus) - v;
+        upd[`system.attributes.${k}.total`] = n(at.total ?? at.value) - v;
+    }
+    if (init && actor.system?.initiative) {
+        upd["system.initiative.bonus"] = n(actor.system.initiative.bonus) - init;
+        upd["system.initiative.total"] = n(actor.system.initiative.total) - init;
+    }
+    if (lethalWas !== null && actor.system?.settings?.soak?.lethal) upd["system.settings.soak.lethal.isrollable"] = !!lethalWas;
+    if (Object.keys(upd).length) await actor.update(upd);
+    if (armorId && actor.items?.get?.(armorId)) await actor.deleteEmbeddedDocuments("Item", [armorId]);
+    const f = actor.getFlag?.(MOD, "demon");
+    if (f?.formApplied) await actor.setFlag(MOD, "demon", { ...f, formApplied: null });
+}
+
 export function build(ctx) {
     const { post, rollPool, rollBlock, dialog, updateActor, spendWillpower, notify } = ctx;
     const sceneKey = () => `${game.scenes?.viewed?.id ?? ""}:${Math.floor(game.time.worldTime / 3600)}`;
     const flag = a => a.getFlag(MOD, "demon") ?? {};
     const dawnDay = () => Math.floor(((game.time?.worldTime ?? 0) - 6 * 3600) / 86400);
     const saveFlag = (a, patch) => ctx.setFlag(a, "demon", { ...flag(a), ...patch });
+    // Evocations still running (p. 171: as many at once as the permanent Faith); each ends at its time
+    const running = a => (flag(a).running ?? []).filter(x => n(x.until) > (game.time?.worldTime ?? 0));
 
     function loresFrom(actor) {
         const out = {};
@@ -107,6 +135,7 @@ export function build(ctx) {
         if (!known.length) notify(`${actor.name} has no lore on the sheet: add Lore powers named for their paths (for example "Lore of Flame"), or set them in the WoDX box.`);
         const opt = e => `${e.lore}:${e.level}`;
         const thralls = i.thralls.filter(t => !t.broken);
+        const run = running(actor);
         const content = `<form>
           <p><b>${esc(actor.name)}</b>: Faith ${i.faith.temp}/${i.faith.perm}, Torment ${i.torment.perm} (${i.torment.temp})${i.spent ? `, Faith used this scene ${i.spent}` : ""}.</p>
           <div class="form-group"><label>Evocation</label>${known.length > 5 ? searchBox("select[name=evo]", "Search evocations…", "Search evocations") : ""}<select name="evo">${known.map(e => `<option value="${opt(e)}"${evocation === opt(e) ? " selected" : ""}>Lore of ${esc(D.LORES[e.lore].label.replace(/^the /, ""))} ${"•".repeat(e.level)} ${esc(e.name)} (${e.attr ? cap(e.attr) : "?"} + ${e.ability ? abil(e.ability) : "?"}${e.faith ? ", 1 Faith" : ""})</option>`).join("")}</select></div>
@@ -119,6 +148,8 @@ export function build(ctx) {
           <div class="form-group"><label>Storyteller's modifier</label><input type="number" name="mod" min="-3" max="3" value="0"/></div>
           <div class="form-group"><label><input type="checkbox" name="dark"/> Choose the high-Torment effect (a temporary Torment point)</label></div>
           <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div>
+          ${run.length ? `<p class="vta-note">Running (${run.length} of ${i.faith.perm}): ${run.map(x => esc(x.name)).join(", ")}.</p>
+          <div class="form-group"><label><input type="checkbox" name="endOld"${run.length >= i.faith.perm ? " checked" : ""}/> End the oldest running evocation first</label></div>` : ""}
         </form>`;
         return dialog(`Evoke: ${actor.name}`, content, "Evoke", async fd => {
             const [lore, lvl] = String(fd.evo || "").split(":");
@@ -126,9 +157,14 @@ export function build(ctx) {
             if (!e) { notify(`${actor.name}: choose an evocation.`); return null; }
             const ak = fd.attr || e.attr, bk = fd.abil || e.ability;
             if (!ak || !bk) { notify(`${e.name}: the book names no clear pool; choose the Attribute and Ability.`); return null; }
+            let live = running(actor);
+            if (fd.endOld && live.length) live = live.slice(1);
+            const lingers = DE.lingers(lore, e.level);
+            if (lingers && i.faith.perm && live.length >= i.faith.perm) { notify(`${actor.name} already keeps ${live.length} evocations running, the permanent Faith's limit (p. 171): end one first.`); return null; }
             const plan = D.evocationPlan({ attr: traitVal(actor, ak), ability: traitVal(actor, bk), level: e.level, loreRating: i.lores[lore], faithCost: e.faith, faithSpent: n(fd.fs),
                 ravage: thralls.length ? n(fd.rav) : 0, permFaith: i.faith.perm, faithPool: i.faith.temp, unbelievers: n(fd.unb), mod: n(fd.mod) });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
+            if (fd.endOld && run.length) await saveFlag(actor, { running: live });
             // An empty pool: ravaged thralls stand in for the Faith the evocation needs (p. 169)
             const fromPool = plan.ravaged ? Math.min(plan.cost, i.faith.temp) : plan.cost;
             if (fromPool && !(await faith(actor, -fromPool))) return null;
@@ -152,14 +188,71 @@ export function build(ctx) {
                 : out.effect === "none" ? `<div class="vta-big">${head}: nothing happens.</div>`
                 : out.effect === "high" ? `<div class="vta-big bad">${head}: the high-Torment effect${out.chosen ? ", chosen" : "; Torment twists it"} (${r.successes} success${r.successes === 1 ? "" : "es"}).</div>`
                 : `<div class="vta-big good">${head}: ${r.successes} success${r.successes === 1 ? "" : "es"}, as intended.</div>`;
+            // What it does (powers pass): the book's effect in WoDX's words, and the parts the effects card can apply
+            let fxItems = [];
+            const card = DE.evocationCard(lore, e.level);
+            const works = out.effect === "normal" || out.effect === "high";
+            if (card) {
+                const high = out.effect === "high";
+                body += `<div class="vta-sec"><b>What it does${works ? "" : " (had it worked)"}:</b> ${esc(card.fx)}</div>`;
+                body += `<div class="vta-note">Lasts ${esc(card.lasts)}; range ${esc(card.range)}.</div>`;
+                body += `<div class="vta-note${high ? " bad" : ""}"><b>High Torment:</b> ${esc(card.high)}</div>`;
+                if (works && EF.isOn()) {
+                    const pp = EF.planOf(actor, DE.evocationResults(lore, e.level, r.successes, { high, faith: i.faith.perm, name: e.name, source: `${REF} p. ${D.LORES[lore].page}` }), r.successes);
+                    body += pp.html;
+                    fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+                }
+            }
+            if (works && lingers) {
+                const until = (game.time?.worldTime ?? 0) + DE.lingerSeconds(lore, e.level, i.faith.perm);
+                await saveFlag(actor, { running: [...running(actor), { id: `${lore}:${e.level}`, name: e.name, until }] });
+                notes.push(`Running evocations: ${running(actor).length} of ${i.faith.perm}.`);
+            }
             for (const x of notes.filter(Boolean)) body += `<div class="vta-note">${esc(x)}</div>`;
             body += `<div class="vta-res">${esc(revealLine(info(actor).spent))}</div>`;
             body += `<div class="wodx-quiet">${REF} pp. 161, 169–171, ${D.LORES[lore].page}</div>`;
-            return post(actor, `${actor.name} evokes ${e.name}`, body, [r.roll].filter(Boolean));
+            return post(actor, `${actor.name} evokes ${e.name}`, body, [r.roll].filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 560, render: root => aim(root, { actor, lib: "evo", power: r => { const v = r.querySelector("[name=evo]")?.value; const e = known.find(x => opt(x) === v); return e ? { id: v, n: e.name } : null; } }) });
     }
 
     /* -- the apocalyptic form ---------------------------------------- */
+    /** Put the form's numbers on the sheet for the scene (Attributes, initiative, Stamina soaking lethal, a hide's soak). */
+    async function applyForm(actor, tot) {
+        const api = game.modules.get("wodx-chronicle")?.api ?? game.wodx?.chronicle ?? null;
+        if (!actor?.isOwner || !api?.applyTimed) return "WoDX Chronicle is off: apply the form's bonuses by hand.";
+        const old = flag(actor).formApplied;
+        if (old) await revertForm(actor, old);
+        const upd = {}, bits = [];
+        for (const [k, v] of Object.entries(tot.attrs)) {
+            const at = actor.system?.attributes?.[k];
+            if (!at || !v) continue;
+            upd[`system.attributes.${k}.bonus`] = n(at.bonus) + v;
+            upd[`system.attributes.${k}.total`] = n(at.total ?? at.value) + v;
+            bits.push(`${cap(k)} +${v}`);
+        }
+        if (tot.init && actor.system?.initiative) {
+            upd["system.initiative.bonus"] = n(actor.system.initiative.bonus) + tot.init;
+            upd["system.initiative.total"] = n(actor.system.initiative.total) + tot.init;
+            bits.push(`initiative +${tot.init}`);
+        }
+        const lethal = actor.system?.settings?.soak?.lethal;
+        const lethalWas = lethal ? !!lethal.isrollable : null;
+        if (lethal && !lethal.isrollable) { upd["system.settings.soak.lethal.isrollable"] = true; bits.push("Stamina soaks lethal"); }
+        if (Object.keys(upd).length) await updateActor(actor, upd);
+        let armorId = null;
+        if (tot.armor) {
+            const [it] = await actor.createEmbeddedDocuments("Item", [{ name: "Apocalyptic hide", type: "Armor", img: "icons/svg/shield.svg",
+                system: { isequipped: true, soak: { bashing: tot.armor, lethal: tot.armor, aggravated: tot.armor } }, flags: { "wodx-library": { implant: true }, [MOD]: { demonHide: true } } }]);
+            armorId = it?.id ?? null;
+            bits.push(`${tot.armor} soak dice from the hide`);
+        }
+        const data = { attrs: tot.attrs, init: tot.init, lethalWas, armorId };
+        await saveFlag(actor, { formApplied: data });
+        await api.applyTimed(actor, { name: "Apocalyptic form", img: "icons/svg/fire.svg", description: bits.join(", ") || "The true form", duration: { kind: "scene" },
+            revert: { key: "wodx-actions.demonForm", data }, source: `${REF} pp. 170-171`, key: "wodx-demon-form" });
+        return bits.length ? `On the sheet for the scene: ${bits.join(", ")}.` : "";
+    }
+
     async function form(actor) {
         const i = info(actor);
         const slots = D.highSlots(i.torment.perm);
@@ -187,8 +280,11 @@ export function build(ctx) {
             if (out.ok) {
                 await saveFlag(actor, { formScene: sceneKey(), form: [...chosen, ...peril] });
                 body += `<div class="vta-big good">${esc(i.visage || "The apocalyptic form")} rises for the scene.</div>`;
-                if (chosen.length || peril.length) body += `<div class="vta-res">${esc([...chosen, ...peril].join(", "))}.</div>`;
-                body += `<div class="vta-note">${look === "glorious" ? "Witnesses see a glorious, awe-inspiring being." : look === "nightmarish" ? "Witnesses see a living nightmare." : "Witnesses see awe or terror, as their own minds take it."} Every mortal present suffers Revelation (Willpower against Faith ${i.faith.perm}). Stamina now soaks lethal damage.</div>`;
+                const tot = DE.formTotals([...chosen, ...peril], i.visage);
+                if (tot.lines.length) body += `<div class="vta-sec">${tot.lines.map(x => `<div><b>${esc(x.name)}:</b> ${esc(x.fx)}</div>`).join("")}</div>`;
+                const applied = await applyForm(actor, tot);
+                if (applied) body += `<div class="vta-note">${esc(applied)}</div>`;
+                body += `<div class="vta-note">${look === "glorious" ? "Witnesses see a glorious, awe-inspiring being." : look === "nightmarish" ? "Witnesses see a living nightmare." : "Witnesses see awe or terror, as their own minds take it."} Every mortal present suffers Revelation (Willpower against Faith ${i.faith.perm}).</div>`;
                 // Who sees it (3.42.0): mortals breach, other kinds are startled
                 ctx.revealed?.(actor, { secret: "demon", event: "the apocalyptic form" })?.catch?.(e => console.error("WoDX |", e));
             } else body += `<div class="vta-big">The mortal shell holds; no change.</div>`;
