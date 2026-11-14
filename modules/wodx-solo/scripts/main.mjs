@@ -17,12 +17,15 @@
  *
  *   the pause    a world opens paused; the seat starts it, since NPCs never act while it is paused
  *   the panel    the player's own buttons: time, travel, pause, I am stuck, the curtain (panel.mjs, 0.2.0)
+ *   the tools    Storyteller tools the lone player may switch on from the panel, answered by the seat (st-tools.mjs, B4800)
  *
  * It never acts in the Live world. Everything here runs on the active Storyteller's client, except the notice a
  * player gets when the seat is empty.
  */
 import * as R from "./solo-rules.mjs";
+import {NEVER_AUTO} from "../../wodx-chronicle/scripts/approvals-rules.mjs";
 import {registerPanelSettings, installPanel, panelApi} from "./panel.mjs";
+import {registerStSettings, installStTools, stApi} from "./st-tools.mjs";
 
 const MOD = "wodx-solo";
 const CHRON = "wodx-chronicle";
@@ -69,7 +72,8 @@ async function apply() {
   for ( const c of plan.changes ) await game.settings.set(c.mod, c.key, c.to);
   const ap = chron()?.approvals;
   const autoNow = foundry.utils.deepClone(read(CHRON, "autoApprove") ?? {});
-  const turnOn = R.autoPlan(ap?.types?.() ?? [], autoNow);
+  // A player's own ruling always waits, as Chronicle says (B3521)
+  const turnOn = R.autoPlan(ap?.types?.() ?? [], autoNow, NEVER_AUTO);
   for ( const t of turnOn ) await ap.setAuto(t, true);
   if ( fresh ) {
     await game.settings.set(MOD, "before", {at: Date.now(), settings: plan.changes.map(({mod, key, from, to}) => ({mod, key, from, to})), auto: autoNow});
@@ -247,11 +251,12 @@ Hooks.once("init", () => {
   game.settings.register(MOD, "before", {scope: "world", config: false, type: Object, default: {}});
   game.settings.register(MOD, "log", {scope: "world", config: false, type: Object, default: R.blankLog()});
   registerPanelSettings();
+  registerStSettings();
 });
 
 Hooks.once("ready", () => {
   const api = {
-    rules: R, isOn, isSeat, apply, restore, panel: panelApi,
+    rules: R, isOn, isSeat, apply, restore, panel: panelApi, st: stApi,
     log: {entries: () => (game.user.isGM ? entries() : []), add: log,
       stalls: (since = 0) => (game.user.isGM ? R.stallReport(entries(), since) : R.stallReport([], since)),
       clear: () => (game.user.isGM ? game.settings.set(MOD, "log", R.blankLog()) : null)}
@@ -266,6 +271,7 @@ Hooks.once("ready", () => {
   Hooks.on("createSetting", s => { if ( s?.key === `${CHRON}.approvals` ) onQueue(); });
   Hooks.on("updateUser", (u, ch) => { if ( "viewedScene" in (ch ?? {}) || ch?.active ) follow(u); });
   Hooks.on("userConnected", (u, on) => { if ( on && !u.isGM ) setTimeout(() => { unpause(`${u.name} arrived`).catch(() => {}); follow(u); }, 1500); });
+  installStTools({isOn, isSeat, blocked, log, entries, get, read, findButton});
 
   if ( game.user.isGM ) watchPlayer();
   if ( !isOn() ) return;
