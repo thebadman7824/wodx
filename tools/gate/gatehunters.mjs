@@ -42,11 +42,16 @@ export async function run() {
     s.lastTurn = t; s.trail = [];
     await game.settings.set(S, "hunterState", s);
   };
+  // A scene to hunt in: the viewed one, or (when nothing is viewed) a scratch scene of the gate's own. With no scene the
+  // Hunt has no ground, and huntHere rightly answers 0.
+  let scratch = null;
+  const sc = canvas?.scene ?? (scratch = await Scene.create({name: "WoDX gate: hunters", width: 1000, height: 1000, navigation: false}));
+  R.notes.push(scratch ? "No scene was viewed: the gate used a scratch scene of its own" : `scene ${sc.name}`);
   try {
     if ( was.held ) await Ch.hold(false);
     if ( !was.on ) await game.settings.set(S, "hunterPressure", true);
     await game.settings.set(S, "hunterState", {});
-    region = Hu?.regionAt(canvas.scene);
+    region = Hu?.regionAt(sc);
 
     await step("api and settings", async () => {
       const types = Ch.approvals.types().map(x => x.type);
@@ -75,15 +80,15 @@ export async function run() {
       await sleep(300);
       const lv1 = Hu.state().regions[region].files[culprit.id]?.level;
       const inv = fresh().find(p => p.data?.kind === "investigator");
-      ok("a file grows; an investigator", lv0 === 1 && lv1 === 2 && !!inv, {lv0, lv1, investigator: !!inv, stage: Hu.here(canvas.scene).stage.key});
+      ok("a file grows; an investigator", lv0 === 1 && lv1 === 2 && !!inv, {lv0, lv1, investigator: !!inv, stage: Hu.here(sc).stage.key});
     });
 
     await step("the Hunt is harder", async () => {
-      const h0 = st.upkeep.huntHere(canvas.scene);
+      const h0 = st.upkeep.huntHere(sc);
       await setP(8, true);
-      const h1 = st.upkeep.huntHere(canvas.scene);
+      const h1 = st.upkeep.huntHere(sc);
       const heatOn = game.settings.get(S, "heat");
-      ok("the Hunt is harder", !heatOn || (h1.extra === Math.min(3, h0.extra + 1)), {before: h0.extra, after: h1.extra, heatOn, stage: Hu.here(canvas.scene).stage.key});
+      ok("the Hunt is harder", !heatOn || (h1.extra === Math.min(3, h0.extra + 1)), {before: h0.extra, after: h1.extra, heatOn, stage: Hu.here(sc).stage.key});
     });
 
     await step("a raid, once", async () => {
@@ -120,6 +125,7 @@ export async function run() {
     try { if ( !was.on ) await game.settings.set(S, "hunterPressure", false); } catch (e) { /* kept */ }
     try { const ids = game.messages.contents.filter(m => m.timestamp >= t0 && /wst-hunters/.test(m.content)).map(m => m.id); if ( ids.length ) await ChatMessage.deleteDocuments(ids); } catch (e) { R.errors.push(`cards: ${e.message}`); }
     try { if ( was.held ) await Ch.hold(true); } catch (e) { /* kept */ }
+    try { if ( scratch ) await scratch.delete(); } catch (e) { R.errors.push(`scene: ${e.message}`); }
   }
   return save(R, "gatehunters-result.json");
 }
