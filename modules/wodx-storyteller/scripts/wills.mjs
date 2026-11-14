@@ -38,11 +38,21 @@ export function willHeir(deadId) {
   return best ? game.actors.get(best.id) : null;
 }
 
+/**
+ * The sex the law of inheritance sees (B3500, B3502): WoDX Chronicle's one gender. A player character's gender has no
+ * bearing on play, so the law gives them the share it gives a son, whatever is written ("any").
+ */
+function sexForWill(a) {
+  const g = game.modules.get("wodx-chronicle")?.api?.gender;
+  if ( a?.hasPlayerOwner ) return "any";
+  if ( g?.forRules ) return g.forRules(a) || null;
+  return a.flags?.["wodx-creation"]?.chronology?.sex ?? a.flags?.["wodx-creation"]?.sex ?? a.flags?.["wodx-creation"]?.people?.sex ?? a.system?.sex ?? null;
+}
 /** The living kin the law looks at, from the Relationships tab. */
 export function kinOf(dead) {
   const ties = npc()?.ties?.of?.(dead) ?? [];
   const pick = kind => ties.filter(t => t.kind === kind && aliveActor(t.to?.id)).map(t => { const a = game.actors.get(t.to.id);
-    return {id: a.id, name: a.name, sex: a.flags?.["wodx-creation"]?.chronology?.sex ?? a.system?.sex ?? null, born: a.flags?.["wodx-creation"]?.chronology?.bornYear ?? null}; });
+    return {id: a.id, name: a.name, sex: sexForWill(a), born: a.flags?.["wodx-creation"]?.chronology?.bornYear ?? null}; });
   return {spouse: pick("spouse")[0] ?? null, children: [...pick("child"), ...pick("heir")], parents: pick("parent"), siblings: pick("sibling")};
 }
 

@@ -41,7 +41,8 @@ export function specOf(actor, tokDoc = null) {
   const line = own.line && P.LINES[own.line] ? own.line : P.lineOf({type: actor.type ?? "", variant: `${s.settings?.variant ?? ""} ${s.settings?.variantsheet ?? ""}`,
     clan: `${s.clan ?? ""} ${s.custom?.clan ?? ""}`, kind: kindText(actor)});
   const seed = own.seed ?? (tokDoc && !tokDoc.actorLink ? tokDoc.id : (actor.isToken ? (game.actors.get(actor.id)?.id ?? actor.id) : actor.id));
-  const sex = actor.flags?.[MOD]?.look?.face?.gender || {female: "woman", male: "man"}[actor.flags?.["wodx-creation"]?.people?.sex] || "";
+  const g = game.modules.get("wodx-chronicle")?.api?.gender?.of?.(actor) ?? actor.flags?.["wodx-creation"]?.people?.sex ?? "";
+  const sex = actor.flags?.[MOD]?.look?.face?.gender || {female: "woman", male: "man"}[g] || "";
   const kith = s.kith === "custom" ? s.custom?.kith : s.kith;
   const S = P.roll(seed, line, {sex, fangs: !!own.fangs, kith: kith ?? ""});
   S.net = own.net ?? "";

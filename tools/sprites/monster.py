@@ -231,12 +231,20 @@ def book_look(name):
         p=_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),'bestiary-looks.json'); _TABLE=_json.load(open(p)) if _os.path.exists(p) else {}
     n=_norm(name); hit=_TABLE.get(n) or (_TABLE.get(n.rstrip('s')) if n.endswith('s') else None)
     if not hit: return None
-    key,sc=hit; rig,rest=key.split(':',1)
+    key,sc=hit[0],hit[1]; rig,rest=key.split(':',1)
     if rig=='person': return ('person',rest,sc)
     return (rig,rest,{'scale':sc} if sc!=1 else {})
+MUL=1.0   # set by the batch to draw a look larger or smaller for its true size (B2618)
+def book_size(name):
+    """the size word the books give a creature (tiny, small, man, large, huge, vast), or '' (B2618)"""
+    book_look(name); n=_norm(name); hit=_TABLE.get(n) or (_TABLE.get(n.rstrip('s')) if n.endswith('s') else None)
+    return hit[2] if hit and len(hit)>2 else ''
 def walk(what):
     """the walk sheet of a monster that is not a person"""
     k,key,p=what
-    sh=B.sheet(B.KINDS[key]) if k=='beast' else Cr.sheet(Cr.KINDS[key]) if k=='critter' else _own(OWN[key])
-    if p.get('scale') and p['scale']>1.0 and k!='own': p=dict(p,scale=min(p['scale'],1.25))   # a big beast stays inside its frame
+    if k=='beast': return post(B.sheet(B.KINDS[key]),**{q:v for q,v in p.items() if q!='scale'})   # a beast's size is set in its kind (B.MUL)
+    if k=='critter' and MUL!=1: return post(Cr.sheet(dict(Cr.KINDS[key],big=Cr.KINDS[key].get('big',1)*MUL)),**{q:v for q,v in p.items() if q!='scale'})   # grown about its own feet
+    sh=Cr.sheet(Cr.KINDS[key]) if k=='critter' else _own(OWN[key])
+    if MUL!=1: p=dict(p,scale=p.get('scale',1)*MUL)
+    elif p.get('scale') and p['scale']>1.0 and k!='own': p=dict(p,scale=min(p['scale'],1.25))   # a big beast stays inside its frame
     return post(sh,**p)

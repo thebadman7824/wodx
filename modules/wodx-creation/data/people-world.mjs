@@ -12,6 +12,7 @@
  */
 import {WORLD_REGIONS, ERA_GROUPS, mixFor, cultureOf} from "../../wodx-chronicle/scripts/world-rules.mjs";
 import {haudenosauneeTables} from "./people-haudenosaunee.mjs";
+import {algonquianTables} from "./people-algonquian.mjs";
 
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
 const OLD = ["medieval", "early-modern"], NEW = ["industrial", "modern"], MOD = ["modern"], PRE = ["medieval", "early-modern", "industrial"];
@@ -99,11 +100,15 @@ const P = {
     m: "Ioannes, Georgios, Konstantinos, Michael, Nikolaos, Demetrios, Theodoros, Andronikos, Manuel, Alexios, Basileios, Leon, Nikephoros, Petros, Stephanos, Christos, Panagiotis, Vasilis",
     f: "Maria, Eirene, Anna, Theodora, Helene, Zoe, Eudokia, Sophia, Euphrosyne, Katerina, Kalliope, Vasiliki, Georgia, Despina, Angeliki, Kyriaki",
     fam: "Papadopoulos/Papadopoulou, Georgiou, Nikolaidis/Nikolaidou, Dimitriou, Konstantinou, Ioannidis/Ioannidou, Makris/Makri, Doukas/Doukaina, Komnenos/Komnene, Palaiologos/Palaiologina, Vlachos/Vlachou, Karagiannis/Karagianni, Economou"},
+  // Raised to 300 names (B3312): older and newer given names; nisbas of city, tribe and trade before family names
   arabic: {
-    m: "Muhammad, Ahmad, Ali, Hasan, Husayn, Umar, Uthman, Ibrahim, Yusuf, Khalid, Abd Allah, Abd al-Rahman, Mahmud, Sulayman, Ismail, Mustafa, Salih, Hamza, Tariq, Zayd",
-    f: "Fatima, Aisha, Khadija, Zaynab, Maryam, Layla, Amina, Safiyya, Ruqayya, Hafsa, Sumayya, Asma, Halima, Salma, Nur, Yasmin, Huda, Rabia",
+    m: {old: "Muhammad, Ahmad, Ali, Hasan, Husayn, Umar, Uthman, Ibrahim, Yusuf, Khalid, Abd Allah, Abd al-Rahman, Mahmud, Sulayman, Ismail, Mustafa, Salih, Hamza, Tariq, Zayd, Abd al-Aziz, Abd al-Malik, Abd al-Qadir, Abd al-Karim, Abd al-Latif, Abd al-Hamid, Abd al-Wahhab, Abd al-Majid, Abd al-Ghani, Abd al-Salam, Jafar, Musa, Isa, Harun, Yahya, Zakariyya, Dawud, Idris, Ayyub, Yaqub, Ishaq, Nuh, Yunus, Bilal, Ammar, Miqdad, Ubayda, Saad, Said, Talha, Zubayr, Muawiya, Walid, Hisham, Marwan, Mansur, Mahdi, Rashid, Mamun, Mutasim, Nasir, Qasim, Hashim, Abbas, Fadl, Rabi, Shams al-Din, Nur al-Din, Salah al-Din, Imad al-Din, Fakhr al-Din, Jamal al-Din, Kamal al-Din, Badr al-Din, Taqi al-Din, Izz al-Din, Sayf al-Din, Ziyad, Abu Bakr, Usama, Anas, Habib",
+      new: "Muhammad, Ahmad, Ali, Hasan, Husayn, Umar, Ibrahim, Yusuf, Khalid, Abdullah, Abdulrahman, Mahmud, Mustafa, Hamza, Tariq, Karim, Samir, Nabil, Walid, Faisal, Fahd, Sultan, Saud, Nasser, Jamal, Adel, Amr, Ayman, Bassam, Fadi, Ghassan, Hani, Hisham, Ihab, Imad, Issam, Kamal, Majid, Marwan, Mazen, Munir, Nadim, Omar, Osama, Rami, Riyad, Sami, Sharif, Tamer, Wael, Yasser, Ziad, Zaki, Amin, Anwar, Fuad, Hafez, Husni, Jalal, Latif, Mounir, Nizar, Qais, Raed, Saleh, Talal, Tawfiq, Younes, Hassan, Mohamed"},
+    f: {old: "Fatima, Aisha, Khadija, Zaynab, Maryam, Layla, Amina, Safiyya, Ruqayya, Hafsa, Sumayya, Asma, Halima, Salma, Nur, Yasmin, Huda, Rabia, Umm Kulthum, Sawda, Juwayriya, Maymuna, Ramla, Hind, Khawla, Nusayba, Barira, Sukayna, Ulayya, Zubayda, Buran, Qatr al-Nada, Shajar al-Durr, Dayfa, Karima, Sitt al-Mulk, Sitt al-Sham, Shuhda, Tajal, Jamila, Labiba, Nafisa, Wallada, Hamda, Mahbuba, Arwa, Lubna, Muna, Suad, Aziza, Badia, Dalal, Ghaliya, Hanan, Jumana, Lamya, Naila, Rahma, Sakina, Wafa, Zahra, Bushra, Thurayya, Malak, Yamina, Zulaykha, Sara, Hajar, Hawwa, Raihana",
+      new: "Fatima, Aisha, Khadija, Zaynab, Maryam, Layla, Amina, Salma, Nour, Yasmin, Huda, Rania, Dina, Hala, Hiba, Lina, Maha, Mona, Nadia, Noha, Reem, Rasha, Samar, Sana, Sawsan, Suha, Wafaa, Ghada, Hanan, Iman, Jamila, Laila, Lamia, Majida, Manal, Mariam, Najla, Nawal, Rana, Randa, Rima, Sabah, Safa, Sahar, Samira, Shereen, Souad, Wedad, Fairuz, Asmahan, Umayma, Basma, Doaa, Farah, Ghalia, Hayat, Ibtisam, Inas, Jana, Lujain, Malak, Nada, Ruba, Sarah, Tala, Zeina, Haya, Shahd, Joud, Leen"},
     child: ["ibn", "bint", 6],
-    fam: "al-Baghdadi, al-Dimashqi, al-Misri, al-Halabi, al-Maghribi, al-Andalusi, al-Basri, al-Makki, al-Yamani, al-Tunisi, al-Mawsili, al-Qurashi, al-Haddad, al-Najjar, al-Khayyat, al-Attar, al-Hakim, al-Tajir"},
+    fam: {old: "al-Baghdadi, al-Dimashqi, al-Misri, al-Halabi, al-Maghribi, al-Andalusi, al-Basri, al-Makki, al-Yamani, al-Tunisi, al-Mawsili, al-Qurashi, al-Haddad, al-Najjar, al-Khayyat, al-Attar, al-Hakim, al-Tajir, al-Kufi, al-Madani, al-Iskandarani, al-Qudsi, al-Hijazi, al-Shami, al-Hamawi, al-Himsi, al-Tarabulsi, al-Sayyid, al-Hashimi, al-Tamimi, al-Kindi, al-Azdi, al-Ansari, al-Zahrani, al-Shammari, al-Harbi, al-Utaybi, al-Qahtani, al-Dosari, al-Ghamdi",
+      new: "Haddad, Najjar, Khoury, Saad, Mansour, Nasser, Hijazi, Shami, Masri, Halabi, Darwish, Khalil, Hamdan, Jaber, Saleh, Qasim, Abbas, Ibrahim, Hussein, Hassan, Bakr, Rashid, Aziz, Fakhoury, Sabbagh, Tahhan, Lahham, Zayyat, Bitar, Hallaq, Shaheen, Barakat, Sharif, Farouk, Kassab, Sabbah, Ayoub, Yassin, Khatib, Imam, Qadi, Mufti, Hakim, Tannous, Sarraf, Jazairi, Tunsi, Fassi, Marrakchi, Oudghiri, Benjelloun, Bennani, Boukhari, al-Sayyid, al-Hashimi, al-Tamimi, al-Ansari, al-Zahrani, al-Shammari, al-Harbi, al-Utaybi, al-Qahtani, al-Dosari, al-Ghamdi"}},
   persian: {
     m: "Rostam, Bahram, Farhad, Dariush, Khosrow, Jamshid, Kaveh, Siavash, Ardeshir, Hossein, Reza, Mahmud, Ali, Hasan, Mehdi, Abbas, Karim, Jafar",
     f: "Shirin, Roxana, Parisa, Golnar, Mahin, Soraya, Laleh, Nasrin, Farah, Zahra, Fatemeh, Maryam, Leila, Simin, Homa, Azar, Mina, Shahrzad",
@@ -212,13 +217,13 @@ for ( const [origin, p] of Object.entries(P) ) {
     for ( const [era, s] of lists(p[key] ?? {}) ) names.push(tbl(`names.${sex}.${origin}`, `Names: ${origin}, ${sex}${tag(era)}`, split(s), era));
   }
   // "son of" and "daughter of" the father's name, weighted against the family names
-  const child = sex => p.child ? [{text: `${p.child[sex === "male" ? 0 : 1]} {names.male.${origin}}`.trim(), weight: p.child[2] * Math.max(1, split(typeof p.fam === "string" ? p.fam : "").length)}] : [];
+  const child = (sex, n = typeof p.fam === "string" ? split(p.fam).length : 0) => p.child ? [{text: `${p.child[sex === "male" ? 0 : 1]} {names.male.${origin}}`.trim(), weight: p.child[2] * Math.max(1, n)}] : [];
   if ( !p.fam && p.child ) for ( const sex of ["male", "female"] ) names.push(tbl(`names.family.${sex}.${origin}`, `Family names: ${origin}, ${sex}`, child(sex), null));
   for ( const [era, s] of lists(p.fam ?? {}) ) {
     const pairs = split(s).map(x => x.split("/"));
     for ( const [m, f] of pairs ) if ( f ) (FEM[origin] ??= {})[m] = f;
-    names.push(tbl(`names.family.male.${origin}`, `Family names: ${origin}, male${tag(era)}`, [...child("male"), ...pairs.map(x => x[0])], era));
-    names.push(tbl(`names.family.female.${origin}`, `Family names: ${origin}, female${tag(era)}`, [...child("female"), ...pairs.map(x => x[1] ?? x[0])], era));
+    names.push(tbl(`names.family.male.${origin}`, `Family names: ${origin}, male${tag(era)}`, [...child("male", pairs.length), ...pairs.map(x => x[0])], era));
+    names.push(tbl(`names.family.female.${origin}`, `Family names: ${origin}, female${tag(era)}`, [...child("female", pairs.length), ...pairs.map(x => x[1] ?? x[0])], era));
   }
 }
 /** The feminine form of a family name, by people: {russian: {Ivanov: "Ivanova"}}. */
@@ -239,13 +244,13 @@ for ( const id of Object.keys(WORLD_REGIONS) ) {
 }
 
 // Peoples with hand-built tables of their own (clans, names staged by age): the Haudenosaunee (B3120)
-const BUILT = {haudenosaunee: haudenosauneeTables()};
+const BUILT = {haudenosaunee: haudenosauneeTables(), ...Object.groupBy(algonquianTables(), t => t.id.split(".").at(-1))};
 export const WORLD_PEOPLE_TABLES = [...origins, ...names, ...Object.values(BUILT).flat()];
 /** Peoples who bear a given name alone in some or all ages. */
-export const GIVEN_ONLY = new Set(Object.entries(P).filter(([, p]) => !p.child && (!p.fam || (typeof p.fam !== "string" && !Object.keys(p.fam).some(k => k === "old" || k.includes("medieval"))))).map(([o]) => o));
+export const GIVEN_ONLY = new Set(["new-england-algonquian", "powhatan", ...Object.entries(P).filter(([, p]) => !p.child && (!p.fam || (typeof p.fam !== "string" && !Object.keys(p.fam).some(k => k === "old" || k.includes("medieval"))))).map(([o]) => o)]);
 /** Every people named here. */
 export const WORLD_PEOPLES = [...Object.keys(P), ...Object.keys(BUILT)];
 /** Peoples raised to at least 300 distinct names (Ben 2026-11-13, B3310 on): one at a time, the biggest homelands first. */
-export const RAISED = ["chinese", "hindi"];
+export const RAISED = ["chinese", "hindi", "arabic"];
 /** Every distinct name a people of P has, given and family, all ages. */
 export const namesOf = origin => new Set(["m", "f", "fam"].flatMap(k => lists(P[origin]?.[k] ?? {}).flatMap(([, s]) => split(s).flatMap(x => x.split("/")))));

@@ -62,6 +62,7 @@ export function build(ctx) {
     const list = rows.map(rowHtml).join("");
     return `<div class="wnpc-followers-wrap">${rows.length > 5 ? searchBox(".wnpc-followers-rows", "Search followers…", "Search followers") : ""}
       <div class="wnpc-followers-rows">${list || `<p>No one serves ${esc(master.name)} yet. Ghouls, retainers, allies and herd made in Creation or from the sheet's Backgrounds show here, and the Storyteller can mark anyone else in the order window.</p>`}</div>
+      <p><button type="button" data-dayjobs="${esc(master.id)}"><i class="fa-solid fa-briefcase"></i> Day jobs…</button></p>
       <p class="wodx-quiet">Orders from here reach followers on the scene you are looking at. A hard order still waits for the Storyteller.${game.user.isGM ? "" : " A follower shows here once the Storyteller lets you see its sheet."}</p></div>`;
   }
 
@@ -80,9 +81,11 @@ export function build(ctx) {
     const hook2 = Hooks.on("canvasReady", () => redraw());
     Hooks.once("closeDialogV2", app => { if ( app === dlg ) { Hooks.off("updateActor", hook); Hooks.off("canvasReady", hook2); } });
     dlg.element?.addEventListener("click", async ev => {
-      const o = ev.target.closest("[data-open]"), p = ev.target.closest("[data-pan]"), q = ev.target.closest("[data-order]"), m = ev.target.closest("[data-more]");
-      if ( !o && !p && !q && !m ) return;
+      const o = ev.target.closest("[data-open]"), p = ev.target.closest("[data-pan]"), q = ev.target.closest("[data-order]"), m = ev.target.closest("[data-more]"), j = ev.target.closest("[data-dayjobs]");
+      if ( !o && !p && !q && !m && !j ) return;
       ev.preventDefault();
+      // B3590: send an agent or a dot of Influence on a job by day
+      if ( j ) return game.modules.get(MOD)?.api?.openDayJobs?.(master);
       if ( o ) return game.actors.get(o.dataset.open)?.sheet?.render(true);
       if ( p ) { const t = canvas?.tokens?.get(p.dataset.pan); if ( t ) { canvas.animatePan({x: t.center.x, y: t.center.y}); t.control?.({releaseOthers: true}); } return; }
       if ( m ) return orders.openOrders({tokenId: m.dataset.more, leader: master.id});

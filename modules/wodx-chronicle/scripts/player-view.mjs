@@ -10,6 +10,7 @@ import {currentYear} from "./eras.mjs";
 import {PrefsApp, openGlossary} from "./player-help.mjs";
 import {toolShown} from "./player-tools.mjs";
 import {GuideApp} from "./player-guide.mjs";
+import * as law from "./law.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 
@@ -88,6 +89,9 @@ export function installViewFilter() {
       icon: "fa-solid fa-sliders", order: 106, button: true, visible: game.user.isGM || toolShown(get("playerTools", {}), game.user.id, "wodxPrefs"), onChange: () => PrefsApp.open()};
     tokens.tools.wodxGlossary = {name: "wodxGlossary", title: "Glossary: the game's words in plain words",
       icon: "fa-solid fa-spell-check", order: 107, button: true, visible: game.user.isGM || toolShown(get("playerTools", {}), game.user.id, "wodxGlossary"), onChange: () => openGlossary()};
+    // B3492: the law where the scene stands
+    tokens.tools.wodxLaw = {name: "wodxLaw", title: "Law here: who rules, who keeps order, what a stranger should know",
+      icon: "fa-solid fa-scale-balanced", order: 107, button: true, visible: game.user.isGM || toolShown(get("playerTools", {}), game.user.id, "wodxLaw"), onChange: () => law.card()};
     tokens.tools.wodxNow = {name: "wodxNow", title: "What can I do now? The few things that fit this moment, one click each",
       icon: "fa-solid fa-circle-question", order: 108, button: true, visible: true, onChange: () => NowApp.open()};
     barTools = Object.values(tokens.tools).filter(t => t?.button && t.visible !== false && t.name !== "wodxFind" && t.name !== "wodxNow")

@@ -84,8 +84,9 @@ export async function monthly({force = false} = {}) {
     if ( r.paid?.months ) { try { r.held = await Own.payHoldings(r.a, r.paid.months); } catch (e) { console.error(`${MOD} | holdings`, e); } }
   }
   try { await Own.workshopsMonth(); await Own.factionBuildsMonth(); } catch (e) { console.error(`${MOD} | workshops`, e); }
-  // 0.61.1: other modules charge their own monthly costs (WoDX NPC households) for the months each character was paid
-  Hooks.callAll("wodxMonthPaid", {month, months: Object.fromEntries(rows.map(r => [r.a.id, Number(r.paid?.months) || 0]))});
+  // 0.61.1: other modules charge their own monthly costs (WoDX NPC households) for the months each character was paid;
+  // paid carries each allowance so WoDX Chronicle can reckon taxes on it (B3616)
+  Hooks.callAll("wodxMonthPaid", {month, months: Object.fromEntries(rows.map(r => [r.a.id, Number(r.paid?.months) || 0])), paid: Object.fromEntries(rows.map(r => [r.a.id, Number(r.paid?.total) || 0]))});
   const li = rows.map(({a, m, paid, held}) => `<li><b>${esc(a.name)}</b>: Resources ${m.dots}, living as ${esc(m.living.name.toLowerCase())}${m.living.level !== m.dots ? ` (${esc(m.living.why.toLowerCase())})` : ""}.${paid ? ` Allowance ${esc(paid.text)}${paid.toDebt ? " (some went to pay a debt)" : ""}.` : ""}${held ? ` ${esc(held.text.replace(/^./, c => c.toUpperCase()))}.` : ""}${m.drop !== null && m.drop <= 30 ? ` <i>That drops in ${m.drop} day${m.drop === 1 ? "" : "s"}.</i>` : ""}</li>`).join("");
   await ChatMessage.create({content: `<div class="wodx-card wst-money"><h3>The month's allowance</h3><p>${esc(c.label)}: people pay in ${esc(c.coin)}; sums are reckoned in ${esc(c.account)}.</p><ul>${li}</ul>
     <p class="wodx-quiet">V20 Dark Ages (p. 181) pays Resources as a monthly allowance; the sums follow V20 The Wild West's pay by dot (pdf page 86), raised by half, in the money of the place (a house rule).</p></div>`,

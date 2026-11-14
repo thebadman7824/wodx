@@ -11,6 +11,8 @@
  *   by      who put it there (a user's name), shown small
  */
 
+import {normInquiry} from "./investigation-rules.mjs";
+
 export const BOARD_V = 1;
 export const BOARD_FOLDER = "WoDX case boards";
 export const KINDS = {clue: "Clue", person: "Person", place: "Place", entry: "Lore", note: "Note"};
@@ -28,7 +30,7 @@ export function nextId(used = [], prefix = "c") {
   return `${prefix}${Date.now()}`;
 }
 
-export function emptyBoard() { return {v: BOARD_V, cards: [], links: []}; }
+export function emptyBoard() { return {v: BOARD_V, cards: [], links: [], theories: [], truth: []}; }
 
 /** A board as stored, made safe: unknown kinds become notes, positions stay on the board, links to missing cards go. */
 export function normalize(b) {
@@ -49,6 +51,8 @@ export function normalize(b) {
     pairs.add(key);
     out.links.push({id: str(l.id, 20) || nextId(out.links.map(x => x.id), "l"), a, b: bb, label: str(l.label, MAX_LABEL)});
   }
+  // B3364: theories and the Storyteller's truth (investigation-rules.mjs), kept to the lines still on the board
+  Object.assign(out, normInquiry({...b, links: out.links}));
   return out;
 }
 
@@ -132,7 +136,8 @@ export function visibleTo(board, isGM = false) {
   const b = normalize(board);
   if ( isGM ) return b;
   const shown = new Set(b.cards.filter(c => !c.hidden).map(c => c.id));
-  return {...b, cards: b.cards.filter(c => shown.has(c.id)), links: b.links.filter(l => shown.has(l.a) && shown.has(l.b))};
+  const links = b.links.filter(l => shown.has(l.a) && shown.has(l.b)), ids = new Set(links.map(l => l.id));
+  return {...b, cards: b.cards.filter(c => shown.has(c.id)), links, truth: [], theories: b.theories.map(t => ({...t, rests: t.rests.filter(id => ids.has(id))}))};
 }
 
 /** The card for something dropped on the board, from Foundry's drag data ({type, uuid}) and the document's name. */

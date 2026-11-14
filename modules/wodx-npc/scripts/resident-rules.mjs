@@ -202,13 +202,13 @@ export function kinFamily(house, p) {
   // A clan passes from the mother (the Haudenosaunee, B3120): grown people keep their own, children take the mother's
   if ( CLAN.test(String(house.family ?? "")) || CLAN.test(String(p.family ?? "")) ) return house.motherClan ?? p.family;
   if ( CHILD.test(String(house.family ?? "")) || CHILD.test(String(p.family ?? "")) ) {
-    return house.masterSex === "male" && house.masterGiven ? `${childWord(CHILD.test(String(house.family ?? "")) ? house.family : p.family, p.sex)} ${house.masterGiven}` : p.family;
+    return house.masterSex === "male" && house.masterGiven ? `${childWord(CHILD.test(String(house.family ?? "")) ? house.family : p.family, p.nameForm ?? p.sex)} ${house.masterGiven}` : p.family;
   }
   if ( !house.family ) return p.family;
-  if ( ["czech", "slovak"].includes(origin) ) return p.sex === "female" ? czechFeminine(house.family) : house.family;
-  if ( origin === "german" ) return p.sex === "female" ? germanFeminine(house.family) : house.family;
+  if ( ["czech", "slovak"].includes(origin) ) return (p.nameForm ?? p.sex) === "female" ? czechFeminine(house.family) : house.family;
+  if ( origin === "german" ) return (p.nameForm ?? p.sex) === "female" ? germanFeminine(house.family) : house.family;
   // Other peoples whose family names follow sex (Russian, Polish, Greek, Irish, old Norse): the listed feminine form
-  if ( p.sex === "female" && FEMININE[origin]?.[house.family] ) return FEMININE[origin][house.family];
+  if ( (p.nameForm ?? p.sex) === "female" && FEMININE[origin]?.[house.family] ) return FEMININE[origin][house.family];
   return house.family;
 }
 

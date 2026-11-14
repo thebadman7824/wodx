@@ -37,7 +37,17 @@ const newer = (a, b) => {
 export async function run() {
   const R = {started: new Date().toISOString(), steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
-  const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 4).join(" | ")}); } };
+  // A step that waits on a window or a roll for more than 30 seconds fails instead of holding the lane; windows it opened are closed
+  const step = async (name, fn) => {
+    const before = new Set([...Object.keys(ui.windows), ...(foundry.applications.instances?.keys?.() ?? [])].map(String));
+    let timer;
+    const late = new Promise((_, no) => { timer = setTimeout(() => no(new Error("timed out after 30 s")), 30000); });
+    try { await Promise.race([fn(), late]); }
+    catch (e) {
+      ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 4).join(" | ")});
+      for ( const [id, w] of [...Object.entries(ui.windows), ...(foundry.applications.instances?.entries?.() ?? [])] ) if ( !before.has(String(id)) ) await w?.close?.().catch?.(() => null);
+    } finally { clearTimeout(timer); }
+  };
   const t0 = game.time.worldTime;
   const msgs = new Set(game.messages.map(m => m.id));
   const made = [];
@@ -50,7 +60,7 @@ export async function run() {
     await step("2. who is a minor", async () => {
       const now = (await import("/modules/wodx-chronicle/scripts/calendar.mjs")).getEngine().timeToDate(t0).year;
       R.notes.push({year: now});
-      [adultA, adultB, teen, oldChilde, resChild, marked, plain] = await Actor.createDocuments([
+      const docs = await Actor.createDocuments([
         {name: "Gate Age Adult Ana", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: now - 30}, sex: "female"}}},
         {name: "Gate Age Adult Bo", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: now - 32}, sex: "male"}}},
         {name: "Gate Age Teen", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: now - 15}}}},
@@ -58,6 +68,10 @@ export async function run() {
         {name: "Gate Age Resident Child", type: "Mortal", flags: {"wodx-npc": {resident: {role: "child"}}}},
         {name: "Gate Age Marked", type: "Mortal", flags: {"wodx-chronicle": {minor: true}}},
         {name: "Gate Age Plain", type: "Mortal"}]);
+      // Created documents are found by name: the order they come back in is not relied on
+      const by = n => docs.find(d => d.name === n);
+      [adultA, adultB, teen, oldChilde, resChild, marked, plain] = ["Gate Age Adult Ana", "Gate Age Adult Bo", "Gate Age Teen", "Gate Age Old Childe", "Gate Age Resident Child", "Gate Age Marked", "Gate Age Plain"].map(by);
+      R.notes.push({created: docs.map(d => ({name: d.name, born: d.flags?.["wodx-creation"]?.chronology?.bornYear ?? null, role: d.flags?.["wodx-npc"]?.resident?.role ?? null, mark: d.flags?.["wodx-chronicle"]?.minor ?? null}))});
       made.push(adultA, adultB, teen, oldChilde, resChild, marked, plain);
       // Embraced 300 years ago at 15: the body stopped at 15
       const engine = (await import("/modules/wodx-chronicle/scripts/calendar.mjs")).getEngine();

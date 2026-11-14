@@ -5,7 +5,7 @@
  * It makes a scratch board, scene, tile and actor and deletes them; it does not move the clock. The open-case and
  * clue settings are put back.
  *   1. the modules, versions and APIs
- *   2. a new board is owned by every player and becomes the open case when there is none
+ *   2. a new board is owned by every player, becomes the open case when there is none and starts with the starter layout
  *   3. cards: a person and a note pinned, joined by a line; a hidden card is left out of the player's view
  *   4. the window opens, draws the cards and the line, and closes
  *   5. a clue examined through Interact goes on the open case with what was learned
@@ -47,7 +47,9 @@ export async function run() {
     await game.settings.set(MOD, "caseBoard", "");
     board = await CB.newBoard("WoDX gate: the missing courier");
     ok("2. new board", !!board && board.ownership.default === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER && CB.openBoard()?.id === board.id
-      && board.folder?.name === C.BOARD_FOLDER, {open: CB.openBoard()?.name});
+      && board.folder?.name === C.BOARD_FOLDER && C.normalize(board.flags[MOD].board).cards.length === (C.STARTER?.length ?? 0), {open: CB.openBoard()?.name});
+    // A new board comes with the starter layout (Who, Where, What we know); clear it so the steps below count from nothing
+    await CB.change(board, () => C.emptyBoard());
 
     // 3. Cards and a line
     actor = await Actor.create({name: "WoDX gate: the courier", type: "Mortal", ownership: {default: 0}, system: {attributes: {intelligence: {value: 3}}}});

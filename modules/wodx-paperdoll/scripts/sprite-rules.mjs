@@ -218,9 +218,13 @@ export function fxFor(info = {}) {
  * The game writes a roster of its characters (rosterOf for each), tools/sprites/batch.py draws them outside the game,
  * and the game learns the sheets from the manifest that the batch leaves beside them.
  */
+/** How many squares a drawn creature's token takes, so it stands at its true size beside a person (B2618). Absent means 1. */
+export const SQUARES = {};
+/** The token size a sprite asks for: {width, height} in squares, or null when it fits one square. */
+export const squaresOf = name => SQUARES[name] ? {width: SQUARES[name], height: SQUARES[name]} : null;
 /** Take in a batch's manifest: every sprite in it becomes "own-<actor id>". Returns how many were learned. */
 export function learn(folder, manifest) {
-  for ( const k of Object.keys(OWN) ) { delete OWN[k]; delete SHEETS[k]; delete ACTS[k]; delete GAIT[k]; }
+  for ( const k of Object.keys(OWN) ) { delete OWN[k]; delete SHEETS[k]; delete ACTS[k]; delete GAIT[k]; delete SQUARES[k]; }
   let n = 0;
   for ( const [id, e] of Object.entries(manifest?.sprites ?? {}) ) {
     if ( !/^[A-Za-z0-9]+$/.test(id) ) continue;
@@ -229,6 +233,7 @@ export function learn(folder, manifest) {
     SHEETS[name] = String(e?.name ?? id);
     ACTS[name] = (Array.isArray(e?.acts) ? e.acts : []).filter(a => Object.hasOwn(ACT_LABELS, a));
     GAIT[name] = (Array.isArray(e?.gaits) ? e.gaits : []).filter(g => GAITS.includes(g));
+    const sq = Number(e?.squares); if ( Number.isInteger(sq) && sq > 1 && sq <= 8 ) SQUARES[name] = sq;
     n++;
   }
   return n;
@@ -251,6 +256,8 @@ export function rosterOf(c = {}) {
   if ( out.kind === "person" ) {
     // what it is, for the looks of the fae and of ghosts (B2614): the sheet's line and, for a changeling, its kith
     if ( c.type ) out.line = String(c.type);
+    // a child is drawn shorter, with a larger head (B3480); the band comes from figure-rules growthOf
+    if ( ["youth", "young", "child", "small"].includes(c.growth) ) out.growth = c.growth;
     const kith = String(c.kith ?? "").split(".").pop().trim();
     if ( kith && kith !== "custom" ) out.kith = kith.toLowerCase();
     out.look = {skin: hex(c.skin), hair: hex(c.hair), ...(c.beard ? {beard: true} : {})};

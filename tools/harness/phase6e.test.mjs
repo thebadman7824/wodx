@@ -194,7 +194,8 @@ test("player toolbar buttons: players only lose buttons, the X-card always stays
     "wodx-storyteller/scripts/main.mjs", "wodx-library/scripts/main.mjs", "wodx-senses/scripts/main.mjs", "wodx-senses/scripts/sight.mjs", "wodx-npc/scripts/main.mjs",
     "wodx-solo/scripts/panel.mjs"];
   const src = files.map(f => readFileSync(join(root, `modules/${f}`), "utf8")).join("\n");
-  const playerVisible = [...src.matchAll(/tools\.(wodx\w+) = \{[\s\S]*?visible: (true|!game\.user\.isGM|game\.user\.isGM \|\| toolShown|game\.user\.isGM)/g)].filter(x => x[2] !== "game.user.isGM").map(x => x[1]);
+  const playerVisible = [...src.matchAll(/tools\.(wodx\w+) = \{[\s\S]*?visible: (true|!game\.user\.isGM|game\.user\.isGM \|\| toolShown|game\.user\.isGM \|\| game\.settings\.get|game\.user\.isGM)/g)].filter(x => x[2] !== "game.user.isGM").map(x => x[1]);
+  // A button shown to players once a world setting is on (the cults window, B3246) counts as theirs
   // The case board adds its button by name (Interactables case.mjs); the Beginner view's drawer buttons are not player buttons of their own
   playerVisible.push("wodxCaseBoard");
   assert.deepEqual([...playerVisible].sort(), PT.PLAYER_TOOLS.map(t => t.name).sort());

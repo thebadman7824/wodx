@@ -18,6 +18,7 @@ import {MOD, SOCKET, esc, isActiveGM, setting, isPC, chron, log} from "./core.mj
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Hunters from "./hunters.mjs";
+import * as Herds from "./herds.mjs";
 
 export const T_BETWEEN = `${MOD}.between`;
 export const T_HEAT = `${MOD}.heat`;
@@ -255,12 +256,15 @@ export function outbreakHere(scene = canvas?.scene) {
 /** What WoDX Actions' Hunt asks: the ground set for the scene and the heat's extra difficulty. */
 export function huntHere(scene = canvas?.scene) {
   const outbreak = outbreakHere(scene);
-  if ( !setting("heat") || !scene ) return {area: null, heat: 0, extra: 0, band: U.heatBand(0), outbreak};
+  // B3572: a district fed past its month's herd is harder to hunt, on top of the heat (shown in the same field)
+  const herd = scene ? Herds.huntDiff(scene) : 0, herdStage = herd ? Herds.hereOf(scene)?.stage ?? null : null;
+  const withHerd = band => (herdStage ? {...band, name: `${band.name}; the herd ${herdStage.name.toLowerCase()}`} : band);
+  if ( !setting("heat") || !scene ) return {area: null, heat: 0, extra: herd, band: withHerd(U.heatBand(0)), outbreak, herd};
   const h = huntOf(scene), heat = U.cooled(h.heat, h.since, now());
   // B3303: the hunters of the region add their stage's difficulty (at most +3 with the heat)
   let extra = U.heatDifficulty(heat);
   try { extra = Hunters.rulesHuntExtra(extra, scene); } catch (e) { /* hunters off */ }
-  return {area: h.area, heat, extra, band: U.heatBand(heat), outbreak};
+  return {area: h.area, heat, extra: extra + herd, band: withHerd(U.heatBand(heat)), outbreak, herd};
 }
 
 export async function addHeat(scene, kind, {who = null} = {}) {
@@ -316,20 +320,26 @@ export async function groundsDialog() {
 export async function upkeepChooser() {
   if ( !game.user.isGM ) return;
   const pick = await foundry.applications.api.DialogV2.wait({rejectClose: false, window: {title: "Upkeep"}, classes: ["wodx-dialog"],
-    content: "<p>Ties a character has to keep up, the hunting grounds and how hot each one is, how each character lives on their Resources and what they have, the markets and their prices, the long tasks under way, the havens and who knows where they are, hardship on the road, or the bodies left behind.</p>",
-    buttons: [{action: "ties", label: "Ties that need tending"}, {action: "grounds", label: "Hunting grounds"},
+    content: "<p>Ties a character has to keep up, the hunting grounds and how hot each one is, how each character lives on their Resources and what they have, the Nodes, chantries, freeholds and caerns, the markets and their prices, the long tasks under way, the havens and who knows where they are, hardship on the road, or the bodies left behind.</p>",
+    buttons: [{action: "ties", label: "Ties that need tending"}, {action: "grounds", label: "Hunting grounds"}, {action: "herds", label: "Herds by district"},
       ...(game.modules.get("wodx-otherworlds")?.api?.drift ? [{action: "drift", label: "The Gauntlet over time"}] : []),
-      {action: "money", label: "Money"}, {action: "markets", label: "Markets"}, {action: "tasks", label: "Long tasks"}, {action: "havens", label: "Havens"}, {action: "hardship", label: "Hardship on the road"}, {action: "remains", label: "Bodies left behind"}, {action: "hunters", label: "Hunters across the region"}, {action: "check", label: "Check ties now"}, {action: "cancel", label: "Close"}]});
+      // B3277: the Wyrm corruption window sits beside the Gauntlet's
+      ...(game.modules.get("wodx-otherworlds")?.api?.corruption ? [{action: "corruption", label: "Wyrm corruption"}] : []),
+      {action: "money", label: "Money"}, {action: "power", label: "Places of power"}, {action: "sites", label: "Holy ground (shared)"}, {action: "markets", label: "Markets"}, {action: "tasks", label: "Long tasks"}, {action: "havens", label: "Havens"}, {action: "hardship", label: "Hardship on the road"}, {action: "remains", label: "Bodies left behind"}, {action: "hunters", label: "Hunters across the region"}, {action: "check", label: "Check ties now"}, {action: "cancel", label: "Close"}]});
   if ( pick === "drift" ) return game.modules.get("wodx-otherworlds")?.api?.drift?.dialog?.();
+  if ( pick === "corruption" ) return game.modules.get("wodx-otherworlds")?.api?.corruption?.dialog?.();
   if ( pick === "hardship" ) return game.modules.get(MOD)?.api?.hardship?.open?.();
   if ( pick === "hunters" ) return Hunters.open();
   if ( pick === "remains" ) return game.modules.get(MOD)?.api?.remains?.open?.();
   if ( pick === "havens" ) return game.modules.get(MOD)?.api?.havens?.open?.();
   if ( pick === "tasks" ) return game.modules.get(MOD)?.api?.tasks?.open?.();
+  if ( pick === "sites" ) return game.modules.get(MOD)?.api?.upkeep?.sites?.open?.();
+  if ( pick === "power" ) return game.modules.get(MOD)?.api?.upkeep?.power?.open?.();
   if ( pick === "markets" ) return game.modules.get(MOD)?.api?.upkeep?.markets?.open?.();
   if ( pick === "money" ) return game.modules.get(MOD)?.api?.upkeep?.money?.dialog?.();
   if ( pick === "ties" ) return tiesDialog();
   if ( pick === "grounds" ) return groundsDialog();
+  if ( pick === "herds" ) return Herds.herdsDialog();
   if ( pick === "check" ) { const n = await checkTies({force: true}); if ( !n.length ) ui.notifications.info("No ties have come due."); }
 }
 
@@ -346,6 +356,8 @@ export function onHunted(p, {userId = null} = {}) {
   const user = userId ? game.users.get(userId) : null, actor = p?.actorId ? game.actors.get(p.actorId) : null;
   if ( userId && !(user && actor?.testUserPermission?.(user, "OWNER")) ) return null;
   const scene = game.scenes.get(p?.sceneId) ?? canvas?.scene;
+  // B3570: prey caught on a hunt is a feeding from the district's herd
+  if ( p?.caught ) Herds.onFeeding({scene, cls: null, who: actor?.name ?? ""}).catch(e => console.error(`${MOD} | herds`, e));
   return addHeat(scene, p?.botch ? "botch" : "hunt", {who: p?.actorId ?? null}).catch(e => console.error(`${MOD} |`, e));
 }
 
@@ -354,7 +366,7 @@ export function registerUpkeepHooks() {
   Hooks.on("updateWorldTime", () => { try { if ( chron()?.isSkipping?.() ) return; } catch (e) { /* no Chronicle */ } checkTies().catch(e => console.error(`${MOD} |`, e)); });
   Hooks.on("wodxHunted", p => {
     // A player's hunt is heard on the player's client: send it to the active Storyteller
-    if ( !isActiveGM() ) { if ( !game.user.isGM ) game.socket.emit(SOCKET, {type: "req.hunted", payload: {userId: game.user.id, actorId: p?.actorId ?? null, sceneId: p?.sceneId ?? null, botch: !!p?.botch}}); return; }
+    if ( !isActiveGM() ) { if ( !game.user.isGM ) game.socket.emit(SOCKET, {type: "req.hunted", payload: {userId: game.user.id, actorId: p?.actorId ?? null, sceneId: p?.sceneId ?? null, botch: !!p?.botch, caught: !!p?.caught}}); return; }
     onHunted(p);
   });
   Hooks.on("wodxBreach", p => {

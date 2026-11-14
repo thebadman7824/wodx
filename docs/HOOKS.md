@@ -6,17 +6,22 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 
 | Hook | Sent by | Heard by |
 |---|---|---|
+| wodxCrimeSeen | npc | chronicle (a crime with witnesses raises the law's heat on the culprit in that land, B3606) |
+| wodxRegimeTurn | chronicle | storyteller (a turn of rule sweeps holders out of the institutions of its kinds, in its region or town, or only one character's seats after an election, B3618) |
+| wodxArrest | chronicle | chronicle (an arrest puts the accused before the court of the land: the forms of trial it allows, B3608) |
+| wodxVerdict | chronicle | chronicle (a guilty verdict brings the sentencing card: the sentences the land allows for deeds that grave, B3610) |
 | wodxAttitude | npc | npc (a fight when an NPC turns hostile; the NPC remembers the change, B3346) |
 | wodxBoonSettled | storyteller | npc (a boon kept or broken moves the debtor's standing in a court, and the holder's trust in the debtor) |
-| wodxMonthPaid | storyteller | npc (a household's keep is charged for the months each character was paid) |
+| wodxMonthPaid | storyteller | npc (a household's keep is charged for the months each character was paid); chronicle (taxes kept back or a levy owed on each allowance, B3616) |
 | wodxSessionEnded | storyteller | creation (a story hook counts the sessions since it was agreed) |
 | wodxBreach | actions | npc, storyteller, chronicle (the Watchers of the New World Order; the city's Masquerade exposure) |
 | wodxCultNoticed | npc | storyteller (a cult watched or moved against raises the hunters' pressure in its region and opens a file on its founder, B3306) |
 | wodxChronicleReady | chronicle | actions, creation, interactables, npc, otherworlds, storyteller |
 | wodxCrossing | otherworlds | storyteller |
 | wodxAttackRolled | combat | paperdoll (a sprite token plays the move that fits the weapon, hit or miss; the one attacked blocks, parries or ducks as the defence says), senses (a gun fired near a character with Heightened Senses in use asks for Willpower) |
+| wodxMagickWorked | actions | senses (vulgar magick strains the place for Prime sight; every working leaves an echo for Time sight) |
 | wodxAuraRead | otherworlds | senses (Aura Perception rings show what this Read the Soul showed) |
-| wodxDamageApplied | combat | actions, chronicle (harm to a Toreador's Muse, or to Kinfolk; a Golconda seeker's killing), npc, paperdoll (a sprite token plays its attack when no attack roll came just before) |
+| wodxDamageApplied | combat | interactables (a lethal or worse wound leaves blood and traces, B3368), actions, chronicle (harm to a Toreador's Muse, or to Kinfolk; a Golconda seeker's killing), npc, paperdoll (a sprite token plays its attack when no attack roll came just before) |
 | wodxPowerShown | actions (a power rolled from its window, with the actor, a target, the power's name, its group, its kind and the character's line) | paperdoll (a sprite token plays its casting move with the effect that fits the power) |
 | wodxEndScene | chronicle | actions, storyteller |
 | wodxEraApplied | chronicle | atmosphere, chronicle, otherworlds |
@@ -25,7 +30,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxDreamingGate | otherworlds | storyteller (the crossing log) |
 | wodxFightStarted | combat | chronicle (flaws that bite when a fight starts; a fight at a Black Fury's guarded place), npc (passers-by scatter), storyteller (a fight goes in the log for the pacing note) |
 | wodxFirstNightSigned | creation | chronicle (the owner gets the opening goals to pick) |
-| wodxFed | actions | paperdoll (a sprite token leans in to feed), npc (the vessel remembers it was fed on; a follower fed on by its master trusts it less), chronicle (harmful feeding sets a Golconda seeker back) |
+| wodxFed | actions | interactables (blood and a witness left at the scene, B3368), paperdoll (a sprite token leans in to feed), npc (the vessel remembers it was fed on; a follower fed on by its master trusts it less), chronicle (harmful feeding sets a Golconda seeker back) |
 | wodxInteractableWorked | interactables | paperdoll (a sprite token stoops to the lock, strikes the door or looks about) |
 | wodxFormChanged | actions | actions, paperdoll (a sprite token blurs as it changes) |
 | wodxHunted | actions | storyteller |
@@ -45,14 +50,17 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxTradeDone | actions | storyteller (a week of player trade gluts or empties a market) |
 | wodxTrade | actions | chronicle (a Ravnos vice fed or called; a Nosferatu's page of secrets sold; a Setite's gift that feeds the victim's vice moves their Corruption) |
 | wodxXCard | chronicle | actions |
-| wodxTaskDone | storyteller | npc |
+| wodxTaskDone | storyteller | npc; chronicle (a finished "Make a new self on paper" puts the new self on the character, B3612) |
 | wodxBattle | storyteller | npc (an ended battle between factions proposes Status, Retainers and standing changes) |
 | wodxChase | interactables | npc (followers join a chase with their master) |
 | wodxGhoulFix | chronicle | npc |
-| wodxTown | storyteller | npc (a rising costs the factions that hold the town, and one that taxed it, a dot of Status; a sack costs a dot of Resources); passers-by and talk read the town by api instead |
+| wodxTown | storyteller | npc (a rising costs the factions that hold the town, and one that taxed it, a dot of Status; a sack costs a dot of Resources); passers-by and talk read the town by api instead; chronicle (a rising asks the Storyteller whether it wins, and a win sweeps the town's officers, B3618) |
 | wodxCaravan | storyteller | storyteller (a caravan lost on the road costs the caravan ventures of its markets) |
 | wodxMarketMove | storyteller | storyteller (a raid costs the workshops and trading houses characters have put money into) |
 | wodxTraderBroke | storyteller | storyteller (a trader going broke costs the trading house ventures that back the trader) |
+| wodxHavenProbe | storyteller | interactables (the probe leaves tracks, a witness, or ash at the haven, B3368); sent with {scene, rival, probe} (B3362) |
+| wodxGrudgeMove | npc | interactables (harm done leaves blood, a witness and traces, B3368); sent with {npc, character, move} (B3348) |
+| wodxWeather | atmosphere | interactables (rain and snow wash evidence outdoors, B3366); Senses reads `api.weather.now()` instead |
 
 ## Extension points (sent, nobody listens yet)
 
@@ -60,8 +68,14 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
+| wodxInheritance | storyteller | the Inheritance step passed things from the dead to the heir: {dead, heir, done} (B3530) |
+| wodxLever | storyteller | a lever of an institution was pulled, approved by the Storyteller: {actor, institution, key, target} (B3356) |
 | wodxProjectComplication | storyteller | a downtime project met trouble: {actor, task, complication} (B3342) |
 | wodxHunterStage | storyteller (the hunters of a region change stage, B3300) | {region, stage, before, pressure} |
+| wodxHerdStage | storyteller (a district's herd changes stage, B3572) | {sceneId, stage, before, feeds, total} |
+| wodxSiteDraw | storyteller (a draw on shared holy ground, B3582) | {site, role, points, by, strength, max} |
+| wodxSiteQuarrel | storyteller (two claims on shared holy ground quarrel, B3585) | {site, roles, claims} |
+| wodxDayJobDone | npc (a day job ended, B3590) | {master, agent, job, status, faction} |
 | wodxContagion | storyteller (sickness in a town, B3430) | {phase (start, over or end), market, disease} |
 | wodxVenture | storyteller | money put into a venture or taken out, or a seat given: {phase (opened, added, taken, closed or seat), venture} |
 | wodxCultFormed | npc | a following gathered around a character (B3242): {cult, founder} |
@@ -79,4 +93,4 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxInteractablesHazard | interactables | a hazard went off |
 | wodxInteractablesTrap | interactables | a trap went off |
 | wodxColourSafe | senses | the colour-blind setting changed: true or false (Senses redraws its own rings) |
-| wodxWeather | atmosphere | the new night's weather (Senses reads `api.weather.now()` instead) |
+| wodxSentence | chronicle | a sentence passed: {actor, region, mark} with the mark {id, kind, punish, words, region, year, until, record} |

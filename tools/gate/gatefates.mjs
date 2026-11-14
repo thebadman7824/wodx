@@ -9,7 +9,7 @@
  *   5. applying: torpor sets the condition and chronology; Generation drops; Rank and Arete rise
  *   6. applying: waking clears torpor; death files the NPC in WoDX · The Dead
  *   7. a brood record is kept and Bring into play makes a Vampire tied to the sire
- *   8. the approval type is registered and the skip hook is quiet with the setting off
+ *   8. the approval type is registered and the skip handler is quiet with the setting off
  *   9. clean up
  * Result: Data/wodx-gate/gatefates-result.json.
  */
@@ -49,9 +49,13 @@ export async function run() {
       [mage] = await Actor.createDocuments([{name: "Gate Kaspar Fates", type: "Mage", system: {advantages: {arete: {permanent: 2}}}, flags: {"wodx-creation": {chronology: {bornYear: 1170}}}}]);
       [kept] = await Actor.createDocuments([{name: "Gate Kept Fates", type: "Vampire", system: {generation: 8}, flags: {"wodx-npc": {fates: {keep: true}}}}]);
       made.push(vamp, wolf, mage, kept);
+      // A new Mage sheet starts at Arete 1 whatever the create data says, so set it after
+      await mage.update({"system.advantages.arete.permanent": 2});
       const pv = npc().fates.personOf(vamp, 1200), pw = npc().fates.personOf(wolf, 1200), pm = npc().fates.personOf(mage, 1200);
-      ok("2. sheets read as the rules see them: line, Generation, sect, Rank, Arete", pv.line === "vampire" && pv.generation === 9 && /sabbat/i.test(pv.sectText)
-        && pw.line === "garou" && pw.rise === 1 && pm.line === "mage" && pm.rise === 2, {pv, pw, pm});
+      const checks = {vampLine: pv.line === "vampire", vampGeneration: pv.generation === 9, vampSect: /sabbat/i.test(pv.sectText), vampRoad: pv.road === 7,
+        wolfLine: pw.line === "garou", wolfRank: pw.rise === 1, mageLine: pm.line === "mage", mageArete: pm.rise === 2};
+      ok("2. sheets read as the rules see them: line, Generation, sect, Path, Rank, Arete", Object.values(checks).every(Boolean),
+        {failed: Object.keys(checks).filter(k => !checks[k]), pv, pw, pm, raw: {gen: vamp.system.generation, genmod: vamp.system.generationmod, rank: wolf.system.renown?.rank, arete: mage.system.advantages?.arete}});
     });
 
     await step("3. plan", async () => {
@@ -90,13 +94,14 @@ export async function run() {
     });
 
     await step("8. approval and hook", async () => {
+      // Call this module's own skip handler, not the wodxSkipEnd hook: the hook would wake every module's jump work
       await game.settings.set("wodx-npc", "npcFates", false);
-      const before = (chron().approvals?.pending?.() ?? []).length;
-      Hooks.callAll("wodxSkipEnd", {from: t0, to: t0 + 50 * YEAR, label: "gate"});
-      await new Promise(r => setTimeout(r, 500));
-      const after = (chron().approvals?.pending?.() ?? []).length;
-      const types = (chron().approvals?.types?.() ?? null)?.map?.(t => t?.type ?? t) ?? null;
-      ok("8. the approval type is registered and the skip hook is quiet with the setting off", after === before && (types === null || types.includes("wodx-npc.npc-fates")), {before, after, types: types ? "listed" : "not listed"});
+      const mine = () => (chron().approvals?.pending?.() ?? []).filter(e => e?.type === "wodx-npc.npc-fates").length;
+      const before = mine();
+      await npc().fates.onSkipEnd({from: t0, to: t0 + 50 * YEAR, label: "gate"});
+      const after = mine();
+      const types = (chron().approvals?.types?.() ?? []).map(t => t?.type ?? t);
+      ok("8. the approval type is registered and the skip handler is quiet with the setting off", after === before && types.includes("wodx-npc.npc-fates"), {before, after, registered: types.includes("wodx-npc.npc-fates")});
     });
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }
   finally {

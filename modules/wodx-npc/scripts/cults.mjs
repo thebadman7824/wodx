@@ -98,6 +98,9 @@ export function build(ctx) {
 
   /* ---- Awe ---- */
   const aweOf = a => C.normAwe(a?.flags?.[MOD]?.awe ?? {});
+  // Places are keyed by scene uuid ("Scene.abc"); a flag update would split such keys at the dot, so the flag keeps
+  // the places as a list and normAwe keys them again on reading (B3241)
+  const saveAwe = (a, awe) => a.setFlag(MOD, "awe", {v: awe.v, places: Object.values(awe.places ?? {})});
   /**
    * Active Storyteller: add a deed to an actor's awe. deed: {kind, place?, heard?, themes?, pts?, text?, token?}.
    * Without a place, the actor's token's scene; without heard, the NPCs near it.
@@ -113,7 +116,7 @@ export function build(ctx) {
     const t = now();
     const res = C.addAwe(aweOf(a), {...deed, place, heard}, t);
     if ( !res.place ) return null;
-    await a.setFlag(MOD, "awe", res.awe);
+    await saveAwe(a, res.awe);
     // A cult the actor already leads here takes it as attention
     const mine = byFounder(a.id).find(c => c.place?.key === place.key);
     if ( mine && res.added > 0 ) await mutate(cur => cur.map(c => (c.id === mine.id ? {...c, attention: c.attention + res.added, themes: mergeThemes(c.themes, deed.themes)} : c)));
@@ -133,7 +136,7 @@ export function build(ctx) {
       detail: `${C.creedText(doctrine, a.name)} Awe ${place.pts} from ${place.touched} people.${asked ? " The founder asked for it." : ""}`,
       data: {actorId: a.id, place: {key: place.key, name: place.name}, kind}});
     const awe = aweOf(a);
-    if ( awe.places[place.key] ) { awe.places[place.key].asked = now(); await a.setFlag(MOD, "awe", awe); }
+    if ( awe.places[place.key] ) { awe.places[place.key].asked = now(); await saveAwe(a, awe); }
     return true;
   }
 
@@ -144,7 +147,7 @@ export function build(ctx) {
     const p = awe.places[place.key] ?? C.normPlace({key: place.key, name: place.name, pts: C.FORM_AT, touched: 5, themes: Object.fromEntries((C.CULT_KINDS[kind]?.favours ?? []).map((t, i) => [t, 3 - i]))});
     const cult = C.newCult({id: foundry.utils.randomID(), founder: {id: a.id, name: a.name, npc}, kind, place, awePlace: p, now: now(), year: yearNow(), name});
     await mutate(cur => [...cur, cult]);
-    if ( awe.places[place.key] ) { awe.places[place.key] = {...awe.places[place.key], pts: 0}; await a.setFlag(MOD, "awe", awe); }
+    if ( awe.places[place.key] ) { awe.places[place.key] = {...awe.places[place.key], pts: 0}; await saveAwe(a, awe); }
     await card(`<p><b>${esc(cult.name)}</b>: ${esc(cult.log.at(-1)?.text ?? "")}</p>`);
     Hooks.callAll("wodxCultFormed", {cult, founder: a});
     return cult;

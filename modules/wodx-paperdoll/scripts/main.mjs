@@ -1,5 +1,5 @@
 import * as D from "./doll-rules.mjs";
-import {registerSpriteSettings, startSprites, spriteApi} from "./sprites.mjs";
+import {registerSpriteSettings, startSprites, spriteApi, ageOf, markChild} from "./sprites.mjs";
 import {registerFaceSettings, startFaces, faceApi} from "./face64.mjs";
 import {makeFigureApp} from "./figure.mjs";
 import * as FG from "./figure-rules.mjs";
@@ -14,7 +14,11 @@ import {measure, findEyes, checkFeatures, SIZE} from "./fit-rules.mjs";
  */
 
 const MOD = D.MOD;
+<<<<<<< HEAD
 export const VERSION = "0.24.0";
+=======
+export const VERSION = "0.25.2";
+>>>>>>> origin/main
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 let active = false;
@@ -86,9 +90,13 @@ export async function featuresFor(look, mood = "own") {
 }
 
 /* ---- What a character shows now ---- */
-// The sex WoDX Creation rolled for a person it made, read straight from the flags (the module may be off)
+// The gender WoDX Chronicle holds for every module (B3500); the sex WoDX Creation rolled when that module is off
+export const faceGender = actor => {
+  const g = game.modules.get("wodx-chronicle")?.api?.gender?.of?.(actor) ?? actor?.flags?.["wodx-creation"]?.people?.sex ?? "";
+  return {female: "woman", male: "man", nonbinary: "nonbinary"}[g] ?? "";
+};
 const whoOf = actor => ({type: actor?.type ?? "", variant: actor?.system?.settings?.variant ?? "",
-  gender: {female: "woman", male: "man"}[actor?.flags?.["wodx-creation"]?.people?.sex] ?? ""});
+  gender: faceGender(actor)});
 const lookOf = actor => actor?.flags?.[MOD]?.look ? D.normalize(actor.flags[MOD].look) : null;
 function atmosphere() { const m = game.modules.get("wodx-atmosphere"); return m?.active ? m : null; }
 /** The ring: the era kit's frame. When WoDX Atmosphere draws frames round this token, the picture leaves it out. */
@@ -340,7 +348,7 @@ const canBuild = actor => !!actor?.isOwner && !!actor.system?.health;
 /* The figure menu (B2587): the whole figure a token walks as, put together by the character's player. */
 let FigureApp = null;
 const figureApp = () => (FigureApp ??= makeFigureApp({skin: SKIN_LIST.slice(0, 38), hair: Object.entries(HAIR),
-  year: () => { const y = game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.(); return Number.isFinite(y) ? {year: y, label: String(y)} : null; }}));
+  year: () => { const y = game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.(); return Number.isFinite(y) ? {year: y, label: String(y)} : null; }, ageOf, markChild}));
 // a figure belongs to the character, not to one token of it: a token's sheet opens the character's own figure, which is what a batch draws
 const openFigure = actor => figureApp().open(actor?.isToken ? (game.actors.get(actor.id) ?? actor) : actor);
 Hooks.on("getActorSheetHeaderButtons", (sheet, buttons) => {

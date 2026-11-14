@@ -168,8 +168,8 @@ def build():
             walls.append(wall_with_portals([a, c], getattr(b, "wall_tex", None) or b.t["wall"], b.openings, False, textures=getattr(b, "portal_tex", None)))
     for b in blds:
         for r in b.rooms:
-            if B.FLOORS.get(r.floor):
-                patterns.append(pattern([(r.x, r.y), (r.x + r.w, r.y), (r.x + r.w, r.y + r.h), (r.x, r.y + r.h)], B.FLOORS[r.floor]))
+            if B.floor_tex(r.floor):                           # a named floor or the age's palette floor (furnishing.apply)
+                patterns.append(pattern([(r.x, r.y), (r.x + r.w, r.y), (r.x + r.w, r.y + r.h), (r.x, r.y + r.h)], B.floor_tex(r.floor)))
             objects.extend(C.dressing_objects(r, True))
             for it in r.items:
                 # a turned item: the asset's own size turned a quarter

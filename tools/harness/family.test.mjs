@@ -67,7 +67,7 @@ test("supernatural pregnancies are story hooks only, never rules", () => {
 test("family is wired: the age floor, the approval, the clock, the hooks and the sheet", () => {
   const f = src("modules/wodx-npc/scripts/family.mjs");
   assert.match(f, /age\?\.romance\?\.\(a, b\)/, "both parents must be adults");
-  assert.match(f, /registerApprovalHandler\?\.\(ASK_CHILD/);
+  assert.match(f, /reg\(ASK_CHILD/); assert.match(f, /Hooks\.on\("wodxChronicleReady", registerHandlers\)/);
   assert.match(f, /Hooks\.on\("updateWorldTime"/);
   assert.match(f, /Hooks\.callAll\("wodxExpecting"/); assert.match(f, /Hooks\.callAll\("wodxBirth"/);
   const hooks = src("docs/HOOKS.md");
@@ -128,7 +128,7 @@ test("child sheets, growing up and the players' setting are wired", () => {
   assert.match(f, /"flags\.wodx-chronicle\.minor": true/, "a child sheet carries the mark");
   assert.match(f, /unsetFlag\("wodx-chronicle", "minor"\)/, "the mark comes off at 18");
   assert.match(f, /Hooks\.on\("wodxSkipEnd"/);
-  assert.match(f, /registerApprovalHandler\?\.\(GROW/);
+  assert.match(f, /reg\(GROW/);
   assert.match(f, /register\(MOD, "childCharacters", \{scope: "world", config: true, type: Boolean, default: false/);
   assert.match(f, /Hooks\.on\("preCreateActor"/); assert.match(f, /Hooks\.on\("preUpdateActor"/);
   assert.match(f, /F\.childSafe\(e\)/);
@@ -157,7 +157,7 @@ test("the proposal chain is wired: the age floor, the law, the feud, the clock a
   assert.match(p.slice(0, 800), /adults\(a, b\)/, "both must be adults");
   assert.match(p.slice(0, 1200), /H\.canMarry\(/);
   assert.match(f, /feudBetween\(a, b\)/);
-  assert.match(f, /registerApprovalHandler\?\.\(WEDDING/);
+  assert.match(f, /reg\(WEDDING/);
   assert.match(f, /HEARTS\.marry\(a, b\)/);
   assert.match(f, /checkWeddings\(\)/);
   assert.match(f, /Hooks\.callAll\("wodxProposal"/);

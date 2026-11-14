@@ -35,8 +35,10 @@ export async function run() {
   let scene = null;
   try {
     ok("1. module", M?.active && !foundry.utils.isNewerVersion("0.19.0", M.version) && typeof X?.apply === "function", {version: M?.version});
-    const text = await (await fetch(`/wodx-gate/kessler-steading.wodx.json?${Date.now()}`, {cache: "no-store"})).text();
+    const res = await fetch(`/wodx-gate/kessler-steading.wodx.json?${Date.now()}`, {cache: "no-store"});
+    const text = res.ok ? await res.text() : "";
     const sc = X.rules.parseSidecar(text).data;
+    if ( !sc ) throw new Error(`Data/wodx-gate/kessler-steading.wodx.json is ${res.ok ? "not a map sidecar" : "missing"}: copy it from tools/mapgen/samples (run-gate.mjs does this, B3462)`);
     scene = await Scene.create({name: "WoDX gate: Steading", width: sc.cells[0] * 100, height: sc.cells[1] * 100, padding: 0.25, grid: {size: 100, distance: 5}});
     const fr = X.rules.frameOf(scene);
     const walls = sc.openings.map(o => ({c: [...X.rules.px(fr, o.c[0], o.c[1]), ...X.rules.px(fr, o.c[2], o.c[3])].map(v => Math.round(v) + 4), door: 1}));
