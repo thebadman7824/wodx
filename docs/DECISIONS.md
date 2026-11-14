@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4730
+Next free block: B4740
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -222,6 +222,7 @@ Next free block: B4730
 | B4700-B4709 | A heartbeat from GitHub for the PC runner (used B4700) | tools (no module) |
 | B4710-B4719 | Amazigh (Berber) names (used B4710-B4712) | Creation, Chronicle |
 | B4720-B4729 | Old installed tables stand aside for their replacements (used B4720) | Chronicle |
+| B4730-B4739 | Sephardi and Mizrahi Jewish names (used B4730-B4732) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7178,3 +7179,18 @@ Reverse: change fam or child in the amazigh entry.
 WoDX Chronicle. When a region's mix is split by era (the Arctic's one table for every age became four), the table installed in the world under the old key was never updated, and as a world table it won every draw: the testbed's Arctic stayed all Norse. Now a world table whose module still registers but no longer ships its key, and which still holds the results it was installed with, is passed over in draws. Nothing is deleted; a table the Storyteller edited still wins.
 
 Reverse: drop the retired() check in allTables in gen.mjs.
+
+## B4730. Sephardi Jews where they lived (2026-11-14)
+WoDX Creation and Chronicle. Iberia's Jews to 1492 and the Jews of Constantinople, Anatolia and Thessaloniki, the Maghreb after 1492 and Amsterdam's Portuguese Nation now take Sephardi names instead of the Bohemian (Ashkenazi) list: Iberia medieval 7 in 100, Greece and Constantinople 5 and Anatolia 3 in the early-modern age, the Low Countries 3 beside 2 Ashkenazi. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put "jewish" back in those mixes in world-rules.mjs.
+
+## B4731. Mizrahi Jews from Baghdad to the Maghreb (2026-11-14)
+WoDX Creation and Chronicle. The Jews of the Levant and Mesopotamia, Egypt, Arabia (Yemen), Persia and the Maghreb, 2 to 4 in 100 before the modern age. The modern mixes of the Levant are left as they stood (all Arab); a desk for the modern Levant waits for Ben.
+
+Reverse: drop mizrahi from those mixes.
+
+## B4732. Names and families (2026-11-14)
+WoDX Creation. Sephardi names from the aljama and notarial records of Sefarad, then the Ladino communities and the Portuguese Nation, with family names in every age (Abravanel, Benveniste; later Modiano, Carasso, Curiel). Mizrahi names from the Cairo Geniza, Baghdad, Persia, Yemen and the Maghreb, carrying "ben" or "bat" or a place before 1800 and a family name after. Fewer than 300 names each.
+
+Reverse: edit the sephardi and mizrahi entries in data/people-world.mjs.
