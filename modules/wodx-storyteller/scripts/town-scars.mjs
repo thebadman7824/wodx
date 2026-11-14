@@ -1,6 +1,6 @@
 /**
  * Town scars (B3759): a town's fire, flood, storm, quake, battle, sack or riot leaves lasting damage on that town's
- * scenes (WoDX Chronicle api.scars): burnt or flooded buildings, burst doors and broken walls, lights out, rubble.
+ * scenes (WoDX Chronicle api.scars; this module's api.upkeep.townScars): burnt or flooded buildings, burst doors and broken walls, lights out, rubble.
  * Each week of the town turn rebuilds a share of it, faster in a thriving town; the town card's Undo takes it back.
  */
 import * as MK from "./market-rules.mjs";

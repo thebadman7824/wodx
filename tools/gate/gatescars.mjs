@@ -22,7 +22,7 @@ export async function run() {
   const keep = [];
   try {
     const S = game.modules.get(CH)?.api?.scars;
-    const U = game.modules.get(ST)?.api;
+    const U = game.modules.get(ST)?.api?.upkeep; // the town and market apis live under upkeep
     const scene = await G.scene({name: "WoDX gate: scars"});
     let art = {};
     await G.step("1. the scars layer", async () => {
