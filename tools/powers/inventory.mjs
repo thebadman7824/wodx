@@ -189,7 +189,11 @@ for ( const b of IB.BLESSINGS ) {
   add("Hunter (Inquisitor)", `Blessings: ${b.kind}`, `${b.use}: ${b.name}`, { status: st, kw: [b.spec.kw], page: `DA:Inquisitor p. ${b.p}`,
     how: `Blessing window: the book list sets the roll, difficulty and Conviction${st === "applies" ? `; effects card ${b.spec.kind}` : "; the card says what it does"}` });
 }
-add("Werewolf (Changing Breeds)", "Fera Gifts (whole list)", "Gifts of the Changing Breeds", { status: "roll", page: "W20 Changing Breeds", how: "breed traits are known; their own Gifts are not listed (W20 Gifts by name catch the shared ones)" });
+for ( const g of J("gifts-fera.json").gifts ) {
+  const st = applyingSpec(g.spec) && !INFO.has(g.spec.kw) && E.KEYWORDS[g.spec.kw]?.tier !== "st" && g.spec.kw !== "free" ? "applies" : "card";
+  add("Werewolf (Changing Breeds)", `Gifts: ${g.breed}${g.sub ? ` (${g.sub})` : ""}`, `${"•".repeat(g.l)} ${g.n}`, { status: st, kw: [g.spec.kw], page: `W20 CB p. ${g.p}`,
+    how: `Use a Gift: the breed's own library entry sets the pool, cost and difficulty${st === "applies" ? `; effects card ${g.spec.kind}` : "; the card says what it does"}` });
+}
 const out = { made: new Date().toISOString(), counts: {}, byLine: {}, rows };
 for ( const r of rows ) {
   out.counts[r.status] = (out.counts[r.status] ?? 0) + 1;
