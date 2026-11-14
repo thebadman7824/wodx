@@ -35,6 +35,7 @@ import * as AA from "./aftermath.js";
 import * as FTime from "./fight-time.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import * as PW from "./powder-rules.js";
+import * as MTD from "./mounted.js";
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const chronicle = () => game.modules?.get?.("wodx-chronicle")?.api ?? null;
 
@@ -673,7 +674,7 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
     <div class="form-group"><label>Defense</label><select name="defense" data-fixed>
       <option value="auto" selected>Automatic: best for this character</option>
       <option value="none">None / cannot defend</option><option value="dodge">Dodge (Dex + Athletics)</option>
-      <option value="block">Block (Dex + Brawl)</option><option value="parry">Parry (Dex + Melee)</option></select></div>
+      <option value="block">Block (Dex + Brawl)</option><option value="parry">Parry (Dex + Melee)</option>${target && MTD.rideFor(target) && MTD.rules.inSaddle(MTD.rideFor(target)) ? `<option value="mount">The mount dodges for the rider (its Dex + Athletics, free)</option>` : ""}</select></div>
     <div class="form-group"><label>Defender: defense # this turn (full defense)</label><select name="defIndex" data-fixed>
       <option value="auto" selected>Automatic: count this turn's defenses</option><option value="0">First (full pool)</option><option value="1">Second (-1 die)</option><option value="2">Third (-2)</option><option value="3">Fourth (-3)</option></select></div>
     <div class="form-group"><label>Defender extra dice / difficulty</label>
@@ -873,6 +874,16 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     const cov = w?.ranged ? coverOnShot(attackerTok, targetTok) : null;
     fd.coverDiff = cov?.diff ?? 0;
     if (cov?.note) log.push(esc(cov.note));
+    // B4774: a bow shot from a moving horse (Dark Ages: Vampire p. 244)
+    fd.mountShotDiff = 0;
+    if (w?.ranged) {
+        try {
+            const bow = !w.crossbow && (armsLib()?.rules?.kindsOf?.(w)?.has?.("bow") || /\bbow\b|longbow|shortbow|yumi/i.test(w.name ?? ""));
+            const ms = MTD.mountedShotOf(attacker, { bow, specialty: ab.specialty, attackerTok, targetTok, target });
+            fd.mountShotDiff = ms.diff;
+            if (ms.note) log.push(esc(ms.note));
+        } catch (e) { /* on foot */ }
+    }
     const pool = attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice, target);
     const fitNow = fitPlan(attacker, w, fd);
     if (fitNow.notes.length) log.push(esc(`${fitNow.notes.join(". ")}.`));
@@ -991,7 +1002,8 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     const rk = roundKey();
     const data = {
         attacker: attacker.uuid, target: target?.uuid ?? null, targetToken: targetTok?.document?.uuid ?? null,
-        combatId: rk?.combatId ?? null, round: rk?.round ?? null, defended: !!(def && !def.invalid),
+        combatId: rk?.combatId ?? null, round: rk?.round ?? null, defended: !!(def && !def.invalid && def.type !== "mount"),
+        mountDodge: !!(def && !def.invalid && def.type === "mount"),
         type: outcome?.type, levels: outcome?.levels ?? 0, applied: false, fireSun: !!fd.fireSun,
         counter: counter ? { uuid: attacker.uuid, type: counter.type, levels: counter.levels } : null,
         location: location ? { id: location.id, label: location.label } : null,
@@ -1002,6 +1014,16 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     // What the maneuver leaves on the target, shown on its token (B3754)
     const follow = target && setting("statusEffects") ? R.followOn(R.maneuverKey(maneuver), { hit: !!hit && !atk.botch, damageSuccesses: dmg?.successes ?? 0, profile }) : [];
     for (const f of follow) log.push(`${f.name}: ${target.name} is marked on the token${f.lasts === "staked" ? " until the stake is pulled out" : " until their next action"} (V20 Dark Ages pp. 347–348).`);
+    // B4772, B4773: the lance and keeping the saddle when struck
+    let saddle = { lines: [], rolls: [], apply: async () => {} };
+    try {
+        let charge = 0;
+        try { charge = MVJ.chargeOf(attacker, { ranged: !!w.ranged, attackerTok }).dice; } catch (e) { charge = 0; }
+        saddle = await MTD.afterBlow({ attacker, attackerTok, target, targetTok, w, hit: !!hit, botch: !!atk.botch,
+            damageSuccesses: dmg?.successes ?? 0, charge, knockedDown: follow.some(f => f.condition === "knockdown") });
+    } catch (e) { console.warn(`${MOD} | saddle`, e); }
+    log.push(...saddle.lines);
+    rolls.push(...saddle.rolls);
     let html = attackCard({ attacker, target, w, ab, attrKey, pool, atk, def, defNote, autoNote, net, hit, dmg, dmgPool, soak, outcome, profile, armorBroken, counter, spendNotes, fd, maneuver, log });
     const fkey = F.attackKey({ hit, botch: atk.botch, noDamage: !!maneuver.noDamage, levels: soak ? (outcome?.levels ?? 0) : (dmg?.successes ?? 0),
         type: outcome?.type ?? w.type, soaked: !!(soak && hit && !maneuver.noDamage && !outcome?.levels) });
@@ -1017,6 +1039,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         if (target && outcome?.levels > 0) await applyFromMessage(msg, "main");
         if (counter?.levels > 0) await applyFromMessage(msg, "counter");
     }
+    await saddle.apply();
     if (target && outcome?.dazed && setting("statusEffects")) await markDazed(target);
     for (const f of follow) await markFollow(target, f);
     if (special || (atk.botch && fitNow && w?.ranged && armsLib()?.rules?.kindsOf?.(w)?.has?.("bow"))) await armsAftermath({ attacker, target, w, hit, outcome, special, botch: atk.botch });
@@ -1106,8 +1129,11 @@ function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0, targ
     // 3.20.1: in the saddle no Ability counts past the rider's Ride (V20 Dark Ages p. 399)
     let held = { value: ab.value, label: ab.name };
     try { held = MVJ.rideCapOf(attacker, ab.value, ab.name); } catch (e) { /* on foot */ }
+    // B4770: a blow from the saddle may use the mount's Strength or Dexterity (V20 Dark Ages p. 399)
+    let at = { value: attr(attacker, attrKey), mount: false };
+    if (!w.ranged) { try { at = MTD.strikeAttrOf(attacker, attrKey, at.value, { close: true }); } catch (e) { /* on foot */ } }
     return R.attackPool({
-        attribute: attr(attacker, attrKey), attributeLabel: cap(attrKey),
+        attribute: at.value, attributeLabel: `${cap(attrKey)}${at.mount ? " (the mount's)" : ""}`,
         ability: held.value, abilityLabel: held.label,
         accuracy: w.accuracy, maneuverDice: maneuver.dice || 0,
         celerityDice: (fd.celDice && attrKey === "dexterity") ? cel : 0,
@@ -1118,7 +1144,7 @@ function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0, targ
         crippledDiff: BodyRules.crippledAttackDiff(crippledParts(attacker), w),
         // Storyteller 0.64.0 (B2911): a night after bad dreams (the Nightmares Flaw) costs a die
         nightmareDice: Math.max(0, ...[...(attacker?.effects ?? [])].filter(e => !e.disabled).map(e => Number(e.flags?.["wodx-storyteller"]?.diceLess) || 0)),
-        bypassArmor: fd.bypass, opponents: fd.opponents, blind: fd.blind && !fp.blindCancelled, extraDiff: (fd.extraDiff || 0) + (w.ranged ? num(fd.coverDiff) : 0),
+        bypassArmor: fd.bypass, opponents: fd.opponents, blind: fd.blind && !fp.blindCancelled, extraDiff: (fd.extraDiff || 0) + (w.ranged ? num(fd.coverDiff) + num(fd.mountShotDiff) : 0),
         sheetDice, sheetDiff, shieldDiff: sh.attackDiff, fitDice: fp.fitDice, fitDiff: fp.fitDiff, wetString: fp.wetString
     });
 }
@@ -1260,6 +1286,15 @@ function planAttacks(attacker, target, fd, distance, reachD = distance) {
  * Fortitude or armor; dodging missiles is +2 difficulty unless Celerity is in play.
  */
 function planDefense(target, type, fd, w, maneuver) {
+    // B4771: the mount dodges for its rider, once a turn, at no cost to the rider (V20 Dark Ages p. 399)
+    if (type === "mount") {
+        let m = null;
+        try { m = MTD.mountDodgeOf(target, { ranged: !!w.ranged, used: mountDodgedThisRound(target), celerity: false }); } catch (e) { m = null; }
+        if (!m) return { type, valid: false, invalid: "No mount under the rider to dodge for them: no defense.", expected: 0 };
+        if (!m.valid) return { type, valid: false, invalid: `${cap(m.why)}: no defense.`, expected: 0 };
+        const diff = Math.min(10, m.diff + (maneuver.defDiff || 0));
+        return { type, valid: true, dice: m.dice, diff, abKey: "athletics", notes: m.notes, weapon: null, abilityName: m.abilityName, expected: R.expectedSuccesses(m.dice, diff) };
+    }
     const close = isCloseCombat(w);
     const dmgType = fd.fireSun ? "aggravated" : (w.type || "lethal");
     const hasFort = discipline(target, "Fortitude") > 0;
@@ -1308,7 +1343,14 @@ export function bestDefense(target, fd, w, maneuver = {}) {
     const plans = ["parry", "block", "dodge"].map(t => planDefense(target, t, fd, w, maneuver));
     // A parry needs a weapon in hand to count as the best choice; otherwise it is Dexterity + Melee with bare hands
     const usable = plans.filter(p => p.valid && p.dice > 0 && (p.type !== "parry" || p.weapon));
-    return { best: R.pickDefense(usable), plans };
+    let best = R.pickDefense(usable);
+    // B4771: a mount's dodge costs the rider nothing, so it goes first unless the rider's own is clearly better
+    const mount = planDefense(target, "mount", fd, w, maneuver);
+    if (mount.valid) {
+        plans.push(mount);
+        if (MTD.rules.preferMount(mount.expected, best?.expected ?? 0)) best = mount;
+    }
+    return { best, plans };
 }
 
 async function rollDefense(target, fd, w, maneuver) {
@@ -1325,7 +1367,12 @@ function damagePool(attacker, w, net, maneuver, targeting, fd, pot) {
     let charge = 0;
     try { charge = MVJ.chargeOf(attacker, { ranged: !!w.ranged }).dice; } catch (e) { charge = 0; }
     const add = (l, n) => { if (n) { dice += n; parts.push(`${l} ${n}`); } };
-    if (w.dmgAttr) add(cap(w.dmgAttr), attr(attacker, w.dmgAttr));
+    if (w.dmgAttr) {
+        // B4770: the mount's Strength behind a blow from the saddle (V20 Dark Ages p. 399)
+        let v = { value: attr(attacker, w.dmgAttr), mount: false };
+        if (!w.ranged) { try { v = MTD.strikeAttrOf(attacker, w.dmgAttr, v.value, { close: true }); } catch (e) { /* on foot */ } }
+        add(`${cap(w.dmgAttr)}${v.mount ? " (the mount's)" : ""}`, v.value);
+    }
     const strBased = w.dmgAttr === "strength";
     if (strBased && pot) {
         if (fd.potBlood) { auto = pot; parts.push(`Potence ${pot} auto successes`); }
@@ -1340,6 +1387,22 @@ function damagePool(attacker, w, net, maneuver, targeting, fd, pot) {
     add("Extra", fd.extraDmg || 0);
     add("Mounted charge", charge);
     return { dice: Math.max(0, dice), auto, parts };
+}
+
+/**
+ * B4772: dice of harm from no weapon (a fall from the saddle, the jolt of a lance): rolled at 6, soaked with the body
+ * and worn armor as any blow of that type. -> {rolls, damage, soaked, levels}
+ */
+async function soakFall(actor, type, dice) {
+    const rolls = [];
+    const dmg = await rollPool(dice, 6, { canBotch: false });
+    if (dmg.roll) rolls.push(dmg.roll);
+    const profile = P.profileSoak(getKind(actor));
+    const sp = soakPoolFor(actor, profile, { piercing: 0 }, {}, { dmgType: type, bane: false });
+    const soak = await rollPool(sp.dice, 6, { canBotch: false, autoSuccesses: sp.autoSoak });
+    if (soak.roll) rolls.push(soak.roll);
+    const left = R.damageAfterSoak(dmg.successes, soak.successes, type, profile, { elder: isElder(actor) });
+    return { rolls, damage: dmg.successes, soaked: soak.successes, levels: left.levels };
 }
 
 /** Parry vs unarmed: excess parry successes become an attack the attacker may only soak. */
@@ -1769,8 +1832,9 @@ Hooks.once("init", () => {
     const body = BD.setupBody();
     const movement = MVJ.setupMovement({ MOD, off: () => false, attr, ability: (a, k) => ability(a, k)?.value ?? 0, getKind, variant: P.variantText, applyDamage, movementFor, esc, discipline, armorPenalty, ask: P.ask });
     const aftermath = AA.setupAftermath({ corpusTrack });
+    const mounted = MTD.setupMounted({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall, markFollow });
     FTime.setupFightTime();
-    const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
+    const api = { body, movement, mounted, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
         getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.34.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, followOn: R.followOn, markFollow, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
@@ -1950,6 +2014,10 @@ function roundKey() {
 /** The data of this module's recent attack cards (the last 300 messages). */
 function recentCards() {
     return (game.messages?.contents ?? []).slice(-300).map(m => m.getFlag?.(MOD, "data")).filter(Boolean);
+}
+/** B4771: whether this rider's mount has already dodged for them this turn. */
+function mountDodgedThisRound(target) {
+    return target ? AU.countThisRound(recentCards(), roundKey(), d => d.mountDodge && d.target === target.uuid) > 0 : false;
 }
 /** How many times this defender has already defended this turn (each further defense is −1 die, VtDA20 p. 344). */
 export function defensesThisRound(target) {
