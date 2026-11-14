@@ -8,6 +8,8 @@
  *   2. Demon: Water Form (Storms 2) through Evoke shows its card and puts Shape on the effects card; at permanent Faith 1 a
  *      second lasting evocation is refused (B3741, B3742)
  *   3. Demon: Kishar's form through the apocalyptic form adds Strength +2 and lethal soak, taken back at the scene's end (B3743)
+ *   4. C20: Quicksilver picked by name in Cast a cantrip (Wayfare 2, Fae) shows its card and puts Hasten on the effects
+ *      card; only the levels the Art reaches are offered (B3744)
  * Result: Data/wodx-gate/gatepowers-result.json.
  */
 const R = { started: new Date().toISOString(), steps: [], errors: [], notes: [] };
@@ -101,6 +103,23 @@ export async function run() {
       await sleep(1000);
       const s2 = Number(dv.system.attributes.strength.bonus) || 0;
       ok("3 Demon apocalyptic form on the sheet", !!m && /Increased Size:/.test(text(m)) && s1 === s0 + 2 && lethal && s2 === s0, { card: text(m).slice(0, 300), s0, s1, s2, lethal });
+    });
+    await step("4 C20 named cantrip", async () => {
+      const pw = (nm, v) => ({ name: nm, type: "Power", system: { type: "wod.types.art", value: v } });
+      const cg = await mk("Pooka", "Changeling", {}, [pw("Wayfare", 2)]);
+      await sleep(800);
+      const fae = cg.items.find(i => i.system?.type === "wod.types.realms" && String(i.system?.label ?? "").endsWith(".fae"));
+      if (fae) await fae.update({ "system.value": 3 }); else await cg.createEmbeddedDocuments("Item", [{ name: "fae", type: "Trait", system: { type: "wod.types.realms", label: "wod.realms.fae", value: 3, max: 5 } }]);
+      await cg.update({ "system.advantages.glamour.permanent": 5, "system.advantages.glamour.temporary": 5, "system.advantages.willpower.permanent": 5, "system.advantages.willpower.temporary": 5 });
+      await game.user.updateTokenTargets?.([]);
+      const n = game.messages.size;
+      let listed = [];
+      answer(root => { listed = [...root.querySelectorAll("select[name=power] option")].map(o => o.value); set(root, "power", "quicksilver"); set(root, "art", "wayfare"); set(root, "lvl", 2); set(root, "r-fae", 1); set(root, "wyrd", true); set(root, "bunk", 5); set(root, "wp", true); });
+      A().c20Cantrip({ actor: cg });
+      const m = await untilMsg(n);
+      const items = fx(m);
+      ok("4 C20 named cantrip", !!m && /Quicksilver/.test(text(m)) && /extra action/.test(text(m)) && items.some(i => i.key === "hasten") && listed.includes("hopscotch") && !listed.includes("portal-passage"),
+        { card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`), listed });
     });
   } finally {
     for (const [h, id] of hooks) Hooks.off(h, id);

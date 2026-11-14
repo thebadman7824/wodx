@@ -37,6 +37,7 @@ const MD = await import(A("scripts/mage-da-rules.js"));
 const M20 = await import(A("scripts/m20-rules.js"));
 const MU = await import(A("scripts/mummy-rules.js"));
 const C20 = await import(A("scripts/c20-rules.js"));
+const CA = await import(A("scripts/c20-arts.js"));
 const CB = await import(pathToFileURL(path.join(ROOT, "modules/wodx-combat/scripts/rules.js")).href);
 
 /** Keywords that only tell the user something; they do not change the game. */
@@ -93,8 +94,11 @@ for ( const r of MD.ROTES ) {
   add("Mage (Dark Ages)", r.f, r.name, { status: applyingSpec(s) ? "applies" : "card", kw: s?.kw ? [s.kw] : [], page: `p. ${r.page}`, how: s ? `rote effect spec (${s.kind})` : "rote text only" });
 }
 /* -- Changeling: C20 Arts (cantrip roll by Art and level; no power names, no effect text) */
-for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.c20) )
-  add("Changeling (C20)", "Arts", e.n, { status: "roll", kw: e.k, passive: !!e.p, page: "C20", how: "cantrip roll by Art level and Realm; the power itself is not named" });
+for ( const [id, c] of Object.entries(CA.CANTRIPS) ) {
+  const st = c.dice || (applyingSpec(c.spec) && !INFO.has(c.spec.kw) && E.KEYWORDS[c.spec.kw]?.tier !== "st") ? "applies" : "card";
+  add("Changeling (C20)", C20.ARTS[c.art].label, `${"•".repeat(c.level)} ${c.name}`, { status: st, kw: c.spec?.kw ? [c.spec.kw] : [], page: `C20 p. ${C20.ARTS[c.art].page}`,
+    how: `named in Cast a cantrip: card (effect, duration, type)${st === "applies" ? `; effects card ${c.dice ? "damage dice" : c.spec.kind}` : ""}` });
+}
 /* -- Changeling: Dark Ages Fae (cantrips by Dominion and level) */
 for ( const [id, d] of Object.entries(F.DOMINIONS) ) for ( let l = 1; l <= 5; l++ )
   add("Fae (Dark Ages)", `Dominion of ${d.label}`, `${d.label} ${l}`, { status: "roll", page: `DA:Fae p. ${d.page ?? "?"}`, how: "cantrip roll and reach; the cantrip's effect is the player's text" });
