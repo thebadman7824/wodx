@@ -132,3 +132,11 @@ test("tasks: perRoll costs are paid each roll, or the work waits (B3689)", () =>
   assert.match(src2, /R\.payRoll\(/);
   assert.match(src2, /f\.paid/);
 });
+
+test("tasks: Crafts tasks read the system's craft key", () => {
+  const tpl = JSON.parse(src("system/worldofdarkness/template.json"));
+  const keys = Object.keys(tpl.Actor.templates.ability.abilities);
+  for ( const k of Object.values(R.KINDS).map(x => x.ability).filter(Boolean) ) assert.ok(keys.includes(R.abilityKey(k)), `${k} is not a system ability key`);
+  assert.equal(R.abilityKey("crafts"), "craft");
+  assert.match(src("modules/wodx-storyteller/scripts/tasks.mjs"), /R\.abilityKey\(t\.ability\)/);
+});
