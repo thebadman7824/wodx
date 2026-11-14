@@ -2,7 +2,7 @@
   "id": "wodx-actions",
   "title": "WoDX Actions",
   "description": "World of Darkness Expanded: non-combat actions with a menu for every line (Kindred hunting, feeding, blood, frenzy, Road, torpor, diablerie; ghouls, mortals, hunters, Garou, mages, changelings, wraiths, spirits, creatures, demons, mummies, Exalted), powers as timed effects. Private use only; not for distribution or sale. Feeding reads what is in the vessel's blood: drink, drugs or a blood-borne disease, which a vampire can spot, resist or come to carry (V20 pp. 295, 301-302).",
-  "version": "3.78.0",
+  "version": "3.79.0",
   "authors": [
     {
       "name": "thebadman7824"
