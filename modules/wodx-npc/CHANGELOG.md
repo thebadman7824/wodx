@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.82.0 (Who holds a place, and a thinned herd, on the map (B4630, B4631): faction banners follow who holds what, and the night streets of an over-fed district empty before the Hunt gets harder. World setting "Show who holds a place on the map", on by default)
 - 0.81.0 (Wants met (B3926): talk.mjs wantAsked, wantMet (api talk.wantMet), the talk card's want button; wanted-rules normMarks keeps features)
 - 0.80.0 (Event powers for the classic events and Future Darkness (B3922): EVENT_POWERS gains nine entries, EVENT_ENDS ends factions by name, test event-effects)
 - 0.79.1 (Book check fixes (ported from PR 655): the quieter war after the Avatar Storm starts in 1999 (M20 pdf 480), the Ascension War row ends in 1998; the Kin-jin are Tense (-1) toward the Cathayans (Kindred of the East pdf 32); the shared Backgrounds pool cites W20 pdf 142 and M20 pdf 302)
