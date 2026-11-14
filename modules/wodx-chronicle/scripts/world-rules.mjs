@@ -84,8 +84,9 @@ export const WORLD_REGIONS = {
     medieval: "khmer 45, vietnamese 30, thai 25", "early-modern": "thai 40, vietnamese 38, khmer 22",
     industrial: "vietnamese 40, thai 40, khmer 12, chinese 8"}),
   "nusantara": R("The Malay world (Java, Malacca, the Spice Islands)", "other", -6.2, 106.8, "tropical-wet", "malay", {
-    medieval: "javanese 60, malay 40", "early-modern": "javanese 57, malay 38, dutch 3, chinese 2",
-    industrial: "javanese 55, malay 35, chinese 6, dutch 4", modern: "javanese 58, malay 36, chinese 6"}),
+    // The Philippine islands in the same mix: the Tagalog, Visayan and Ilocano peoples (B4750)
+    medieval: "javanese 52, malay 34, filipino 14", "early-modern": "javanese 50, malay 33, filipino 12, dutch 3, chinese 2",
+    industrial: "javanese 48, malay 31, filipino 12, chinese 5, dutch 4", modern: "javanese 50, malay 32, filipino 12, chinese 6"}),
   // Africa south of the Sahara
   "west-africa": R("West Africa (Mali, Songhai, the Akan and Yoruba kingdoms)", "other", 12.6, -8.0, "savanna", "west-african", {
     medieval: "mande 60, yoruba 20, akan 15, arabic 5", "early-modern": "mande 40, yoruba 32, akan 25, arabic 3",
