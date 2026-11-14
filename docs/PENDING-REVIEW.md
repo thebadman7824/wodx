@@ -1398,9 +1398,9 @@ Ben approved everything that was waiting for review ("Approved on all pending re
 | 2026-11-14 | Swerving and sitting inside (B4794) | The one at the wheel swerves (Dex + Drive held to the Maneuver, +2 vs shots) in place of a dodge; others sat inside cannot dodge; motorcyclists still dodge | Remove the swerve branch and seated check in planDefense |
 | 2026-11-14 | The fuel tank (B4796) | Any hit on a motor vehicle with 3 successes and 6 levels sets the fuel off: 12 aggravated dice to all aboard, burnt out, a fire on the map; no separate aim at the tank | Have fuelGoes return false, or ask for an aimed shot at the tank |
 | 2026-11-14 | NPCs taking vehicles (B4797) | A free vehicle within a run that the NPC can drive: just above flight when fleeing, or above the best attack when every foe is beyond a run; at the reins it moves at the vehicle's pace | Have boardOption in npc-rules.mjs return null, or change its scores |
-| 2026-11-14 | How much experience the Storyteller tools give at once (B4806) | A whole number from 1 to 100 per press, as a normal award through WoDX Creation | Change XP_MAX in solo-rules.mjs |
 
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-14 | How much experience the Storyteller tools give at once (B4806) | A whole number from 1 to 100 per press, as a normal award through WoDX Creation | Change XP_MAX in solo-rules.mjs |
