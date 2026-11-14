@@ -364,7 +364,7 @@ function rollBlock(title, r, parts = [], specialty = false) {
     return `<div class="vta-sec"><b>${title}</b>: ${r.dice} dice, diff ${r.difficulty}${parts.length ? `<div class="vta-parts">${parts.join(" · ")}</div>` : ""}${diceHtml(r, specialty)}${resultLine(r)}</div>`;
 }
 /**
- * 3.66.0 (B3444): read the face of someone speaking to the character. Perception + Empathy against their Manipulation +
+ * 3.67.0 (B3444): read the face of someone speaking to the character. Perception + Empathy against their Manipulation +
  * Subterfuge, difficulty 6 each. The reader's roll goes to the player and the Storyteller; the speaker's to the
  * Storyteller only. lie: the talk line was marked a lie. Returns {won, lines, face} (deeper-rules.js faceRead).
  */
@@ -2808,11 +2808,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-<<<<<<< HEAD
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.66.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
-=======
     getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.67.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
->>>>>>> origin/main
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Place: () => zx().placeDialog(), consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
@@ -3018,7 +3014,7 @@ function kindredHooks() {
     });
     // A new scene: the Delirium can strike the same witnesses again
     Hooks.on("wodxEndScene", () => { if (game.user.isGM && canvas.scene?.getFlag?.(MOD, "delirium")) canvas.scene.unsetFlag(MOD, "delirium").catch(() => {}); });
-    // and a Kindred's marks can be seen again (3.66.0)
+    // and a Kindred's marks can be seen again (3.67.0)
     Hooks.on("wodxEndScene", () => { if (game.user.isGM && canvas.scene?.getFlag?.(MOD, "marksSeen")) canvas.scene.unsetFlag(MOD, "marksSeen").catch(() => {}); });
     Hooks.on("wodxDamageApplied", (actor, info) => kx().onDamage(actor, { ...info, source: "combat" }).catch(e => console.error("WoDX |", e)));
     // A blow from a vampire marks the target as fought, for the bloodlines whose blood must be taken by force (3.41.0)
@@ -3052,10 +3048,10 @@ function kindredHooks() {
         const redrawn = foundry.utils.hasProperty(changes, "flags.wodx-paperdoll.sprite");
         if (!game.user.isGM || !("x" in changes || "y" in changes || redrawn)) return;
         clearTimeout(movePending);
-        // After the move animates: any Crinos on the scene may now be in a mortal's sight (3.66.0: or a token drawn as a war form)
+        // After the move animates: any Crinos on the scene may now be in a mortal's sight (3.67.0: or a token drawn as a war form)
         movePending = setTimeout(() => {
             for (const t of canvas.tokens?.placeables ?? []) if (t.actor && (GX.isShifter(t.actor) || GX.bringsDelirium({ sprite: t.document?.flags?.["wodx-paperdoll"]?.sprite }))) kx().crinosSeen(t).catch(e => console.error("WoDX |", e));
-            // 3.66.0 (B3443): a Kindred's face that no mortal has, in a mortal's sight
+            // 3.67.0 (B3443): a Kindred's face that no mortal has, in a mortal's sight
             for (const t of canvas.tokens?.placeables ?? []) if (t.actor && P.detectProfile(t.actor) === "kindred") kx().marksSeen(t).catch(e => console.error("WoDX |", e));
         }, 600);
         if (!("x" in changes || "y" in changes)) return;

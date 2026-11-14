@@ -1,5 +1,5 @@
 /**
- * WoDX Paperdoll 0.24.0 (B3443): the marks on a Kindred's face that a mortal who sees it cannot explain away. Pure
+ * WoDX Paperdoll 0.26.0 (B3443): the marks on a Kindred's face that a mortal who sees it cannot explain away. Pure
  * rules, no Foundry.
  *
  * The talking faces draw clan marks, but the art changed nothing. Now the marks a mortal can see, and that no

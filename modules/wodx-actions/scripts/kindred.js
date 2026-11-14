@@ -759,7 +759,7 @@ export function build(ctx) {
         const tok = tokenLike?.object ?? tokenLike;
         const a = tok?.actor;
         if (!a) return null;
-        // 3.66.0 (B3440): a sheet in Crinos, or a token drawn as a war form (WoDX Paperdoll's sprites)
+        // 3.67.0 (B3440): a sheet in Crinos, or a token drawn as a war form (WoDX Paperdoll's sprites)
         const form = GX.isShifter(a) ? GX.info(a).form : null;
         if (!GX.bringsDelirium({ form, sprite: tok.document?.flags?.["wodx-paperdoll"]?.sprite })) return null;
         const seen = new Set(canvas.scene?.getFlag?.(MOD, `delirium.${a.id}`) ?? []);
@@ -773,7 +773,7 @@ export function build(ctx) {
             whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
     }
 
-    /* ---------------- Marks a mortal cannot explain away (3.66.0, B3443) ---------------- */
+    /* ---------------- Marks a mortal cannot explain away (3.67.0, B3443) ---------------- */
 
     /**
      * A Kindred whose face bears marks no mortal has (WoDX Paperdoll's talking faces: a Nosferatu's face, a Gangrel's

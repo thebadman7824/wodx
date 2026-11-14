@@ -188,7 +188,7 @@ function onRender(msg, el) {
   t.play(talk?.said ?? body.textContent ?? "");
 }
 
-/* ---- Paperdoll 0.24.0 (B3444): reading the face ---- */
+/* ---- Paperdoll 0.26.0 (B3444): reading the face ---- */
 const READS = "faceReads";
 /**
  * Under a talk line's face, for the player of the character spoken to: "Read their face", once for each line (WoDX
@@ -287,7 +287,7 @@ export function startFaces() {
 
 /** api.faces: draw a face, read its look, or play one in a canvas of your own. */
 /**
- * Paperdoll 0.24.0 (B3443): the marks on this face a mortal sees and cannot explain away, as labels. A mask over the
+ * Paperdoll 0.26.0 (B3443): the marks on this face a mortal sees and cannot explain away, as labels. A mask over the
  * face (the figure's face or head piece) or Obfuscate hides them.
  */
 export function uncanny(actor, tokDoc = null) {
