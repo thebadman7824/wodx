@@ -149,7 +149,8 @@ try {
       if ( !fs.existsSync(path.join(cfg.knownGood, cfg.world)) ) die(`No known-good copy at ${cfg.knownGood}. Stop lane 1 and run: lanes.mjs snapshot --from 1`);
       for ( const d of ["Data/modules", "Data/systems", "Data/worlds", "Config", "Logs"] ) fs.mkdirSync(path.join(lane.dataPath, d), {recursive: true});
       // Config: everything from lane 1 (licence, certificate), then options.json with this lane's port and UPnP off.
-      for ( const f of fs.readdirSync(path.join(src.dataPath, "Config")) ) if ( f !== "options.json" ) fs.cpSync(path.join(src.dataPath, "Config", f), path.join(lane.dataPath, "Config", f), {recursive: true});
+      // Not lane 1's lock files: a copied options.json.lock keeps the new lane from starting (B4103).
+      for ( const f of fs.readdirSync(path.join(src.dataPath, "Config")) ) if ( f !== "options.json" && !f.endsWith(".lock") ) fs.cpSync(path.join(src.dataPath, "Config", f), path.join(lane.dataPath, "Config", f), {recursive: true});
       const o = readJson(path.join(src.dataPath, "Config", "options.json"), {});
       Object.assign(o, {port: lane.port, upnp: false, dataPath: lane.dataPath, updateChannel: o.updateChannel ?? "stable"});
       delete o.upnpLeaseDuration;
