@@ -104,11 +104,11 @@ filled on 14 November 2026 (31,400 map furniture pictures and 11,600 book pages)
 2. **Books are one file per book, never one per page.** `<batch>/<id>.txt` with `=== pNNNN` page markers, made by
    `node tools/books/books.mjs pack <batch folder>`. Page refs stay exact. OCR keeps writing page files on the PC; only
    the joined files are copied (tools/books/README.md).
-3. **Gate reports and finished jobs are swept each week.** Every Sunday at 03:30 UTC
+3. **Gate reports and finished jobs are swept each week.** Every Sunday at 03:41 UTC
    `node tools/storage/files.mjs sweep --apply` puts every file in `gates/` and `jobs/` unchanged for 7 days into one
    `archive/sweep-<date>.zip`, checks the zip, then removes the originals. A job still open says `Status: open` (or
    `KEEP`) in its first lines and is left alone. To get a file back: `unzip archive/sweep-<date>.zip <path>`.
-4. **A daily count warns at 45,000.** Every day at 01:30 UTC `node tools/storage/files.mjs count` writes
+4. **A daily count warns at 45,000.** Every day at 01:27 UTC `node tools/storage/files.mjs count` writes
    `registry/file-count.md` and tells the coordinator when the folder is at 45,000 or more, with the largest folders,
    picture sets and page-per-file books to clear.
 
