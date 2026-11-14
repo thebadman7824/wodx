@@ -195,7 +195,7 @@ Next free block: B3820
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
 | B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3754) | Combat |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
-| B3780-B3809 | The no-effect audit: gear in the fight (used B3780-B3803) | Combat |
+| B3780-B3809 | The no-effect audit: body effects survive the sheet's recompute (used B3780-B3804) | Combat, system |
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 <!-- decision-index:end -->
 
@@ -6546,6 +6546,11 @@ Reverse: drop the cyber() reads in toughness, damagePool and soakPoolFor.
 WoDX Combat. api.heavyFire and the "WoDX: Heavy Fire" macro roll the Great War's heavy guns (Wraith: The Great War pp. 70 to 77) from their Library figures: penetration dice against the armour's difficulty, −2 for a still target and +2 when firing on the move, where 1 success harms the crew or kit, 3 stop the vehicle and 5 destroy it; a naval gun's damage rating plus the crew's successes against the ship's armour, each success one level of hull damage; a blast's dice (plus crew successes) on each targeted token, soaked through Soak & Apply. The armour comes from an item on the targeted token or from the chart. The crew's own aiming roll stays with the player; there are no vehicle sheets.
 
 Reverse: remove heavyFire, heavyFireDialog and the macro.
+
+## B3804. Combat lays the body over the system's own totals (2026-11-14)
+WoDX Combat and the worldofdarkness fork. The system recomputes health totals and the wound penalty after every actor update (and after an item change) and wrote over what Combat's healthUpdate set, so B3793's extra Bruised levels and eased penalties and B3802's Pain Editor showed nothing on the testbed (gatetraits step 29, gatecyber step 8). The fork now calls Hooks.callAll("wodxActorTotals", actor, data) after calculateTotals in both places; Combat's handler (R.applyBodyTotals) adds the body's Bruised levels to the stored total, marks them (health.bruised.wodxBody) so the health track does not add them twice, and works out the wound level, penalty and health-level counts again from those totals. With no body traits the system's own figures stand.
+
+Reverse: remove the two hook calls in wod-actor-base.js and the handler in Combat's init.
 
 ## B3810. Hedge magic Enchantment makes real talismans (2026-11-14)
 WoDX Library (scripts/wonders-hedge.mjs). Ben picked the full build on the Item Crafting Desk (m4). Anyone with the Path of Enchantment as a hedge path (a numina Power item, as WoDX Actions reads it) can make talismans up to the level of the path: hedge sorcerers, hunters of the Hunters Hunted era, Kinfolk and ghouls alike. The book is Sorcerer (Revised), pdf 72-75, read from the PC's text pull. The talisman levels follow its five tiers, in WoDX's own words. A world setting (craftHedge, on) turns the line off.
