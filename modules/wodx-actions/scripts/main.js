@@ -3030,7 +3030,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     debtsRules: DR_DEBTS, beastRules: DR_BEAST, debtsMarks: () => dm(),
     healing: withActor(a => kx().healing(a)), boons: (o = {}) => kx().boons(o.actor ? resolveActor(o.actor) : resolveActor()),
     masquerade: (o = {}) => kx().masquerade(o.actor ? resolveActor(o.actor) : resolveActor()), endStory,
-    recordBreach: o => kx().recordBreach(o), witnessStep: (o = {}) => kx().witnessStep(resolveActor(o.actor), o.tokens ?? [], o), autoHunts: () => dm().autoHunts(), liftHunt: id => dm().endHunt(id, "lifted"), setWitnessState: (a, st, note) => kx().setWitnessState(a, st, note), witnessesOf: (t, o) => kx().witnessesOf(t, o),
+    recordBreach: o => kx().recordBreach(o), masqEntries: () => kx().masqEntries(), witnessStep: (o = {}) => kx().witnessStep(resolveActor(o.actor), o.tokens ?? [], o), autoHunts: () => dm().autoHunts(), liftHunt: id => dm().endHunt(id, "lifted"), setWitnessState: (a, st, note) => kx().setWitnessState(a, st, note), witnessesOf: (t, o) => kx().witnessesOf(t, o),
     crowdNear: a => crowdNear(resolveActor(a)), crowdRules,
     observersOf: (t, o) => kx().observersOf(t, o), revealed: (a, o) => kx().revealed(resolveActor(a), o), placeOf: t => kx().placeOf(t), witnessRules: WRR,
     history: (a, text, kind) => kx().logEvent(a, text, kind), roadOf: a => KX.roadOf(a), healPlan: (a, seconds) => kx().healPlan(a, seconds),

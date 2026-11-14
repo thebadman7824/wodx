@@ -975,7 +975,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         } else if (target) {
             const arm = armor(target);
             const armorRating = Math.max(arm.bashing, arm.lethal, arm.aggravated);
-            const sp = soakPoolFor(target, profile, w, fd, dp);
+            const sp = soakPoolFor(target, profile, w, fd, dp, attacker);
             if (fd.fortBlood && sp.autoSoak) spendNotes.push(...await spend(target, 0, 1));
             soak = await rollPool(sp.dice, soakDiff, { canBotch: false, autoSuccesses: sp.autoSoak });
             soak.pool = sp;
@@ -1186,7 +1186,11 @@ function damageProfile(target, tKind, w, fd) {
     return { dmgType, bane, soakDiff, minLevels, sb, note };
 }
 
-function soakPoolFor(target, profile, w, fd, dp) {
+/** B4874: soak dice a character's feature gives in this fight (an Ahroun in Crinos against the Wyrm, a troll's oath, a Defender's shield). */
+function sigSoak(target, attacker) {
+    try { return chronicle()?.signatures?.soakFor?.(target, { attacker }) ?? { dice: 0, names: [] }; } catch (e) { return { dice: 0, names: [] }; }
+}
+function soakPoolFor(target, profile, w, fd, dp, attacker = null) {
     const arm = armor(target);
     // B3802: a cyber limb or plate soaks a blow aimed at it with its own dice; B3800: the sheet's soak rows
     const limb = R.limbSoak(cyber(target)?.limbs ?? [], fd.aimType ?? fd.targeting);
@@ -1195,7 +1199,7 @@ function soakPoolFor(target, profile, w, fd, dp) {
         profile, damageType: dp.dmgType,
         stamina: attr(target, "stamina"), fortitude: discipline(target, "Fortitude"),
         armor: (arm[dp.dmgType] ?? 0) + limb.dice, armorPiercing: w.piercing, bypassArmor: fd.bypass,
-        fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: num(fd.soakBonus) + sheetSoak,
+        fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: num(fd.soakBonus) + sheetSoak + num(sigSoak(target, attacker).dice),
         aggSoak: garouRules()?.isShifter?.(target) ? garouRules().aggSoak(target) : true,
         ...soakOpts(target, profile)
     });
@@ -1287,7 +1291,7 @@ function planAttacks(attacker, target, fd, distance, reachD = distance) {
         const dp = target ? damageProfile(target, tKind, w, f) : { dmgType: w.type || "lethal", minLevels: 0 };
         if (target) f.fortBlood = resolveFortitude(target, fd.fortBlood, dp, f);
         const dmg = damagePool(attacker, w, 0, maneuver, targeting, f, pot);
-        const sp = target ? soakPoolFor(target, profile, w, f, dp) : { dice: 0, autoSoak: 0 };
+        const sp = target ? soakPoolFor(target, profile, w, f, dp, attacker) : { dice: 0, autoSoak: 0 };
         const harm = R.expectedHarm({ atkDice: pool.dice, atkDiff: Math.min(10, pool.difficulty), atkAuto: f.willpower ? 1 : 0, defDice, defDiff,
             dmgBase: dmg.dice, dmgAuto: dmg.auto, soakDice: target ? sp.dice : 0, soakDiff: dp.soakDiff ?? 6, soakAuto: sp.autoSoak ?? 0,
             halveBashing: dp.dmgType === "bashing" && (profile === "vampire" || (profile === "ghoul" && isElder(target))),
