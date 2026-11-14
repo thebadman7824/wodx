@@ -230,6 +230,7 @@ Next free block: B4860
 | B4780-B4789 | Rothenstein Rebuilt: Ways, the open world's doorways (used B4780-B4783) | Storyteller |
 | B4800-B4809 | Storyteller tools for the lone player in The Lone Chronicle (used B4800-B4805) | Solo |
 | B4810-B4819 | Rothenstein Rebuilt: Ways laid by the builder, old exits and doors to the places inside (used B4810-B4813) | Storyteller |
+| B4820-B4849 | Summoning rules and power effect bounds (used B4820-B4837) | Actions |
 | B4850-B4859 | Rothenstein Rebuilt: book one's twist web (six chains, locks, one twist a week) (used B4850-B4853) | Chronicle |
 <!-- decision-index:end -->
 
@@ -7364,6 +7365,61 @@ Reverse: none needed; the check only reads.
 WoDX Storyteller. builder.layWays(recipe, made, {only}) and builder.takeBackWays(made) are on the api, so a gate tests the step in scenes of its own in any testbed world without running the earlier steps or touching the lane's maps.
 
 Reverse: drop the two api entries; the step keeps working.
+
+## B4820. Summoned beings carry their books' rules (2026-11-14)
+WoDX Actions. Ben asked (20:39Z) for summoning built out properly: the summoner controls the creature, it lasts a set time, it joins combat and it can be dismissed, and for every power's effects to be bound by rules. Each summoning power has a spec in summon-specs.js read from its page; summon-rules.js resolves it against the casting. A summons by a player's character waits for the Storyteller's yes; an NPC's runs by itself (B4837). When no actor is named, a plain being of the book's kind answers with the book's numbers on its token.
+
+Reverse: drop the summonResult call in effects.js planOf and plan.
+
+## B4821. Control (2026-11-14)
+A servant is owned by the summoner's players and moved by them. A called being serves the summoner through WoDX NPC's orders, hard orders weighed by the Storyteller. A wild one is hostile and is given an attack order on the nearest living thing. A Bind keyword on the same Mage casting makes a called being a servant (M20: summoning alone does not bind). An NPC's summons serve that NPC and WoDX NPC plays them.
+
+Reverse: summon-rules.js resolve().
+
+## B4822. Lasting, fights and dismissal (2026-11-14)
+Each token gets a "Summoned" timed effect from WoDX Chronicle (rounds, scene, dawn or clock); when it runs out the being fades away in its look. A being with no timer lasts until dismissed, destroyed, its task done or its upkeep unpaid, and resolve() turns any spec with none of these into the scene. A started fight on the scene adds the tokens with an initiative roll. The Storyteller, the token's owners or the summoner's owners dismiss it from the token HUD or the card.
+
+Reverse: summons.js bring(), dismiss().
+
+## B4823. Keeping rolls (2026-11-14)
+Where a book asks for a roll to keep a summons in hand, WoDX rolls it: on arrival (with a ladder by successes, as V20's Summon Elemental), on each of the being's turns (a Demon's Torment rolls), or each turn it is more than 20 yards from the summoner (house rule for "away from them"). A failure makes it hostile, free or gone as the book says; a botch on a ladder turns it on the summoner.
+
+Reverse: summons.js onTurn(), keepingRoll().
+
+## B4824. Upkeep and familiars (2026-11-14)
+A lasting servant with upkeep (Mummy effigies' Sekhem a day, week or month) is fed from the master's pool when it falls due; unfed it falls still (a token HUD button wakes it once paid) or leaves. The M20 Familiar/Companion Background (pp. 315-317) costs its rating in Quintessence each week; unfed it leaves; its death costs the mage a permanent Willpower and two Quintessence a dot, the rest as Paradox.
+
+Reverse: summons.js sweepUpkeep(), onFamiliarDeath().
+
+## B4830. Lights end and made things fade (2026-11-14)
+The powers review found two effects with no end. A Light or Dark keyword now puts a timed effect on its bearer whose end puts the token's own light back. A thing made by a power now fades from its holder's things when the power's duration ends; a Mage creation with Prime in it stays (house reading, PENDING-REVIEW).
+
+Reverse: effects.js light and give cases, expireMade().
+
+## B4831. Resistance and break-free rolls (2026-11-14)
+Effect cards named a resistance roll that nobody rolled. Each applied item with a resistance now has a button for the target's owners and the Storyteller; any success throws the effect off (house reading, PENDING-REVIEW); a hold can be tried each turn. An NPC's roll goes to the Storyteller only.
+
+Reverse: effects.js addResistButtons(), resistItem().
+
+## B4832. Each-turn rules are worked (2026-11-14)
+Harm that lasts and the powers whose books act each turn (Silver Claws, Claws of the Glassblower, Heart Claw, Combat Healing, Lost in the Mists, the Demon's Scry, Animal Form) carry an everyTurn record on their timed effect; on the bearer's turn WoDX applies the damage, healing or pool point, or rolls the book's roll and does what a failure or win does. The others the bounds check finds go on the review desk.
+
+Reverse: turns.js, turn-rules.js.
+
+## B4835. The bounds check (2026-11-14)
+tools/powers/bounds.mjs lists, for every applying power, what ends each keyword's effect and who controls it; the harness holds unbound keywords and summonings with no spec at none, and each-turn text with nothing working it to a ceiling.
+
+Reverse: delete tools/powers/bounds.mjs and its test.
+
+## B4836. Powers tagged as summonings that call nothing (2026-11-14)
+The book read of all 105 summoning powers found 22 that call no being (Night Cry, Summon Talisman, Fetish Fetch, the Hunts and Great Hunts, Rousing Apophis, Call the Stars, Shivers, Infest, the Rites of Spirit Awakening and of the Totem, King of the Beasts, Command Animals, Mind of the Swarm and others). summon-specs.js NOT_SUMMON gives each the keywords it works through instead: a curse as a Bind written on the sheet, a thing fetched to hand as a Make, command of animals already present as a Sway (house reading, on the review desk).
+
+Reverse: drop the notSummon branch in effects.js planOf.
+
+## B4837. An NPC's summoning runs by itself (2026-11-14)
+A summoning by an NPC with no player owner goes on the card as automatic: a plain being of the book's kind comes one square beside the NPC with its spec's rules, joins the fight and serves the NPC. The Storyteller can dismiss it or Undo the card (house reading, on the review desk).
+
+Reverse: route "pick" for an NPC's summon in planOf.
 
 ## B4850. The twist web keeps the shape, not the words (2026-11-14)
 WoDX Chronicle. data/twists-rothenstein.mjs holds the twenty-four twists by number with a short handle in our own words, the six chains with their twists and pay-off chapters, the pairs that cannot both stand as written, and the quick order. The twists' own words stay in the Storyteller's third volume, which is kept privately and never in the repo.
