@@ -5,7 +5,7 @@
  * Makes its own scratch scene (a road), car, plane and horse tiles, five actors and their tokens, and removes them;
  * never moves the clock.
  *   1. the api, the setting and the new kinds (lorry to jet) on the tile menu
- *   2. nobody flies an aeroplane without Pilot: the menu says so
+ *   2. nobody flies an aeroplane without Pilot: the menu says so (the tile kept out of its era, whatever the year)
  *   3. shelter: a passenger in a closed car is shielded under 4 successes, reached at 4
  *   4. damage on the tile: a level past its Durability comes off the car's Structure; the tile darkens
  *   5. wrecked: the car at its Structure goes nowhere; its driver who moves has climbed out
@@ -44,7 +44,7 @@ export async function run() {
     const [car, car2, plane, horse] = await scene.createEmbeddedDocuments("Tile", [
       {x: 200, y: 200, width: 200, height: 100, texture: {src: "icons/svg/wing.svg"}, flags: {[IX]: {mount: true, mountKind: "car", title: "Gate motor car"}}},
       {x: 500, y: 200, width: 200, height: 100, texture: {src: "icons/svg/wing.svg"}, flags: {[IX]: {mount: true, mountKind: "car", title: "Gate second car"}}},
-      {x: 1000, y: 1000, width: 200, height: 200, texture: {src: "icons/svg/wing.svg"}, flags: {[IX]: {mount: true, mountKind: "plane", title: "Gate aeroplane"}}},
+      {x: 1000, y: 1000, width: 200, height: 200, texture: {src: "icons/svg/wing.svg"}, flags: {[IX]: {mount: true, mountKind: "plane", title: "Gate aeroplane"}, "wodx-sheets": {keepOutOfEra: true}}},
       {x: 1600, y: 400, width: 100, height: 100, texture: {src: "icons/svg/horse.svg"}, flags: {[IX]: {mount: true, mountKind: "horse", title: "Gate horse"}}}]);
     await car.update({[`flags.${IX}.driver`]: seat(td, car), [`flags.${IX}.riders`]: [rider(tp, car)]});
     await car2.update({[`flags.${IX}.driver`]: seat(tf, car2)});
