@@ -44,6 +44,7 @@ import * as roster from "./roster.mjs";
 import * as rosterRules from "./roster-rules.mjs";
 import * as refereeRules from "./referee-rules.mjs";
 import * as traits from "./traits.mjs";
+import * as derangements from "./derangements.mjs";
 import * as signatures from "./signatures.mjs";
 import * as place from "./place.mjs";
 import * as placeRules from "./place-rules.mjs";
@@ -132,6 +133,8 @@ Hooks.once("init", () => {
   languages.registerLanguageSettings();
   languages.registerLanguageHooks();
   traits.registerTraitHooks();
+  // B3913: derangements in play (a bout for the scene, a new one from a Virtue loss)
+  derangements.setupDerangements();
   // Splat Features Desk: each clan's own feature (Vampire first)
   signatures.registerSignatureSettings();
   signatures.registerSignatureHooks();
@@ -256,6 +259,7 @@ Hooks.once("ready", async () => {
     playerView: {current: playerView.currentView, preview: playerView.previewView, find: () => playerView.FindApp.open(), FindApp: playerView.FindApp, now: () => playerView.NowApp.open(), NowApp: playerView.NowApp, prefs: () => playerHelp.PrefsApp.open(), help: playerHelp.openHelp, glossary: playerHelp.openGlossary, windows: playerHelp.WINDOWS, tour: (o = {}) => playerGuide.GuideApp.open(o), openDrawer: playerView.openDrawer, drawers: playerView.drawerTools, rules: playerViewRules},
     tours: {start: tours.startTour},
     traits: traits.traitsApi,
+    derangements: derangements.derangementsApi,
     signatures: signatures.signaturesApi,
     pod: pod.podApi,
     legends: {open: () => legends.LegendsApp.open(), build: legends.build, book: legends.book, visible: legends.visible, setShown: legends.setShown, gather: legends.gather, addDeed: legends.addDeed},
