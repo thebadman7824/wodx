@@ -7,7 +7,11 @@
  *
  * books.json maps a book id to its OCR text and, where the Encyclopaedia doesn't already give it, the offset
  * (pdf page minus printed page): {"v20": {"file": "v20/v20.txt"}, "cb": {"file": "cb.txt", "offset": 2}}.
+ * An entry may also list "aliases", the short names code and docs use for that book ({"cp2020": {"file": "...",
+ * "aliases": ["CP2020"]}}); they join the built-in list in ref-rules.mjs, so a ref is not read as another book.
  * Paths are relative to --text. Pages are split on form feeds, or on "page N" marker lines.
+ * A cited page whose OCR is blank (under 200 letters, one page either side) is listed apart as "blank OCR", not as
+ * a low score: the text can't judge it, and it needs reading from the page image.
  *
  * Every Encyclopaedia claim is checked, and every "p. N" in module code, data and docs. A ref scores the share
  * of its keywords found on the cited page (one page either side). Bare refs are tried as printed and as pdf
@@ -24,6 +28,9 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const arg = k => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
 const ency = join(root, "modules/wodx-library/data/encyclopedia");
 const idx = JSON.parse(readFileSync(join(ency, "index.json"), "utf8"));
+const mapFile = arg("--map");
+const map = mapFile ? JSON.parse(readFileSync(mapFile, "utf8")) : {};
+R.useAliases(R.withAliases(map));
 
 // 1. Encyclopaedia claims
 const refs = [];
@@ -69,9 +76,8 @@ if ( process.argv.includes("--list") ) {
   process.exit(0);
 }
 
-const textDir = arg("--text"), mapFile = arg("--map");
+const textDir = arg("--text");
 if ( !textDir || !mapFile ) { console.error("Give --text <dir> and --map <books.json>, or --list."); process.exit(2); }
-const map = JSON.parse(readFileSync(mapFile, "utf8"));
 const min = Number(arg("--min") ?? 0.34);
 const out = [], skipped = {}, summary = [];
 for ( const [b, rs] of Object.entries(byBook) ) {
@@ -81,12 +87,13 @@ for ( const [b, rs] of Object.entries(byBook) ) {
   const pages = R.splitPages(readFileSync(file, "utf8"));
   if ( !pages ) { skipped[b] = `${rs.length} refs, text has no page breaks`; continue; }
   const offset = m.offset ?? offsets[b] ?? null;
-  let low = 0, nopage = 0, pdfReads = 0, printedReads = 0;
+  let low = 0, nopage = 0, blank = 0, pdfReads = 0, printedReads = 0;
   for ( const r of rs ) {
     const words = R.keywords(r.text);
     if ( words.length < 3 ) continue;
     const j = R.judge(r, words, pages, offset);
-    if ( j.score == null ) nopage++;
+    if ( j.blank ) blank++;
+    else if ( j.score == null ) nopage++;
     else { if ( j.score < min ) low++; if ( r.pdf == null ) j.reading === "pdf" ? pdfReads++ : printedReads++; }
     // A named figure, place or faction: its name should be on the cited page.
     if ( r.title && ["character", "place", "faction"].includes(r.kind) ) {
@@ -96,20 +103,22 @@ for ( const [b, rs] of Object.entries(byBook) ) {
     }
     out.push({...r, ...j, nwords: words.length});
   }
-  summary.push(`| ${b} | ${rs.length} | ${offset ?? "?"} | ${low} | ${nopage} | ${printedReads} | ${pdfReads} |`);
+  summary.push(`| ${b} | ${rs.length} | ${offset ?? "?"} | ${low} | ${nopage} | ${blank} | ${printedReads} | ${pdfReads} |`);
 }
 out.sort((a, b) => (a.score ?? -1) - (b.score ?? -1));
 const fmt = r => `| ${r.score == null ? "no page" : r.score.toFixed(2)} | ${r.book} ${r.page}${r.to !== r.page ? `-${r.to}` : ""}${r.pdf ? ` (pdf ${r.pdf})` : ""} | ${r.reading ?? ""}${r.nameMissing ? ", name not on page" : ""} | ${r.where} | ${r.text.replace(/\|/g, "/").slice(0, 160)} |`;
 const md = [
   `# Page-reference audit (${new Date().toISOString().slice(0, 10)})`, "",
   `Score: share of a ref's keywords found on the cited page, one page either side. Under ${min} means read it by hand. "Reading" is which page numbering fits a bare ref best.`, "",
-  "| Book | Refs | Offset | Under min | Page missing | Best read as printed | Best read as pdf |", "|---|---|---|---|---|---|---|", ...summary, "",
+  "| Book | Refs | Offset | Under min | Page missing | Blank OCR | Best read as printed | Best read as pdf |", "|---|---|---|---|---|---|---|---|", ...summary, "",
   "Skipped: " + (Object.entries(skipped).map(([b, w]) => `${b} (${w})`).join(", ") || "none"), "",
   `Refs with no book named on the line: ${unresolved.length} (first 20 below).`, "",
   "## Lowest first", "", "| Score | Ref | Reading | Where | Text |", "|---|---|---|---|---|",
-  ...out.filter(r => r.score == null || r.score < min).map(fmt), "",
+  ...out.filter(r => !r.blank && (r.score == null || r.score < min)).map(fmt), "",
+  "## Blank OCR on the cited page (read from the page image)", "", "| Score | Ref | Reading | Where | Text |", "|---|---|---|---|---|",
+  ...out.filter(r => r.blank).map(fmt), "",
   "## No book named", "", ...unresolved.slice(0, 20).map(r => `- ${r.where}: ${r.text.slice(0, 160)}`)
 ].join("\n");
 const dest = arg("--out");
 if ( dest ) writeFileSync(dest, md); else console.log(md);
-console.log(`${out.length} refs scored, ${out.filter(r => r.score == null || r.score < min).length} to read by hand; skipped ${Object.keys(skipped).length} books.`);
+console.log(`${out.length} refs scored, ${out.filter(r => !r.blank && (r.score == null || r.score < min)).length} to read by hand, ${out.filter(r => r.blank).length} on blank OCR pages; skipped ${Object.keys(skipped).length} books.`);
