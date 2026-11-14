@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.114.0 (The Tuareg in West Africa's and the Maghreb's mixes (B4950))
 - 0.113.0 (The Sami in Scandinavia's mix (B4900))
 - 0.112.0 (Book one's twist web (B4850-B4853): the shape of the Storyteller's third volume (twenty-four twists, six chains with their pay-off chapters, the pairs that cannot both stand as written, the quick order) as data, with rules for what can be revealed now. One twist a week of game time; a twist waits for its chapter; none after the choosing is played; a twist with two hearts asks for one. "Reveal anyway" covers a twist the company dug out by its own hand. The api gains pod.saga.twists and the hook wodxTwist)
 - 0.111.0 (Rothenstein saga, book one rebuilt on the Storyteller volumes (B4760-B4762): the first book opens in the autumn of 1200 and runs to Martinmas and the first snow, with its ten chapters named as the sessions are. Each chapter waits until the Storyteller marks it played, so a slow company carries the book on into later years. A fourth ending, Left alone, joins Sealed, Severed and Taken)

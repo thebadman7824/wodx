@@ -247,6 +247,12 @@ const P = {
     child: ["ben", "bat", 3],
     fam: {old: "ha-Kohen, ha-Levi, al-Baghdadi, al-Fasi, al-Tustari, al-Maghribi, al-Halabi, al-Ammani, al-Iskandarani, ha-Bavli, al-Sanaani, al-Dimashqi, al-Qabisi, al-Tahiri",
       new: "Sassoon, Kadoorie, Shasha, Somekh, Shamash, Dangoor, Twena, Basri, Moallem, Shohet, Elias, Gabbay, Zilkha, Hakim, Sehayek, Kohen, Levi, Mizrahi, Hakimian, Elghanayan, Nazarian, Kashani, Sharabi, Tzadok, Damari, Nahari, Kafih, Hamami, Abergel, Ohayon, Azoulay, Bitton, Elbaz, Dahan, Amsalem, Benchetrit, Ohana, Assaraf"}},
+  // The Tuareg (Kel Tamasheq) of the Ahaggar, the Aïr and the Niger bend (B4950): the amenokals and chiefs of the
+  // French and Arabic records and the given names since, with "ag" (son of) and "welet" (daughter of) the father
+  tuareg: {
+    m: "Moussa, Amastan, Attici, Ahitaghel, Akhamouk, Kaocen, Firhoun, Mano, Intalla, Iyad, Alla, Bay, Hama, Mohammed, Ibrahim, Aghali, Ahmed, Abdallah, Ghali, Rissa, Alhassane, Amoumine, Elmehdi, Ilyas, Mohamed Ali, Effad, Assalat, Koudede, Abdoulahi, Ousmane",
+    f: "Tin Hinan, Dassine, Fadimata, Takamat, Tahenkot, Aïchatou, Mariama, Tamou, Fatimata, Khadija, Zeinabou, Aminatou, Raichatou, Tina, Assia, Hadiza, Mina, Tanina",
+    child: ["ag", "welet", 1]},
   zulu: {
     m: "Sipho, Themba, Bongani, Mandla, Sibusiso, Nkosana, Mthunzi, Dumisani, Jabulani, Vusumuzi, Zwelakhe, Mzwandile, Lungile, Siyabonga, Senzo, Bheki",
     f: "Nomvula, Thandiwe, Nomsa, Zanele, Lindiwe, Busisiwe, Nokuthula, Sibongile, Ntombi, Thandeka, Nonhlanhla, Zodwa, Khanyisile, Nomusa, Ayanda, Hlengiwe",

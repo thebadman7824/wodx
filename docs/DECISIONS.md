@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4910
+Next free block: B4960
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -233,6 +233,7 @@ Next free block: B4910
 | B4810-B4819 | Rothenstein Rebuilt: Ways laid by the builder, old exits and doors to the places inside (used B4810-B4813) | Storyteller |
 | B4850-B4859 | Rothenstein Rebuilt: book one's twist web (six chains, locks, one twist a week) (used B4850-B4853) | Chronicle |
 | B4900-B4909 | Sami names (used B4900-B4902) | Creation, Chronicle |
+| B4950-B4959 | Tuareg names (used B4950-B4952) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7446,3 +7447,18 @@ Reverse: edit the sami entry in data/people-world.mjs.
 WoDX Creation. Family names (Somby, Hætta, Turi, Valkeapää) came with the Norwegian, Swedish and Finnish rolls in the 18th and 19th centuries; WoDX gives them from 1800.
 
 Reverse: give the sami entry an old family list.
+
+## B4950. The Tuareg at the desert edge (2026-11-14)
+WoDX Creation and Chronicle. The Tuareg of the Aïr and the Niger bend are 3 or 4 in 100 in West Africa's mix in every age, and 2 in the Maghreb's (the Ahaggar) before the industrial age. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: drop tuareg from those mixes in world-rules.mjs and the tuareg entry in people-world.mjs.
+
+## B4951. The names (2026-11-14)
+WoDX Creation. The amenokals and chiefs of the Kel Ahaggar, Kel Ajjer and Kel Aïr in the French and Arabic records and the given names since, one list for every age (Islamic names are old among them). Fewer than 300 names.
+
+Reverse: edit the tuareg entry in data/people-world.mjs.
+
+## B4952. Ag and welet in every age (2026-11-14)
+WoDX Creation. A Tuareg is "ag" (son of) or "welet" (daughter of) the father's name, then and now; no family names.
+
+Reverse: give the tuareg entry a fam list.
