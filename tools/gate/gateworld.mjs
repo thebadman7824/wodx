@@ -7,7 +7,7 @@
  *   1. the api and settings are there (api.world, the Homeland setting, 44 regions, each whole)
  *   2. at home nothing has changed: the homeland is Moravia, people are Bohemia's, the climate Central Europe's
  *   3. a scene given Egypt: region, latitude, an hour ahead, Arabic names, the hot desert's weather
- *   4. a scene given Japan: the family name comes first; a scene given Mexico: no family name in 1197
+ *   4. a scene given Japan: the family name comes first; a scene given Mexico in 1197: a Nahua has no family name, a Maya has the lineage name last
  *   5. clearing the scene's place brings home back
  *   6. the homeland set to India and back: latitude, part of the world, culture and climate follow, money does not
  *   7. the Clock draws "Where this scene stands", and its window lists every region
@@ -92,7 +92,9 @@ export async function run() {
       const mx = people(8, "mexico");
       const year = chron.eras?.currentYear?.() ?? null;
       const group = chron.gen.context().era;
-      const plain = ["medieval", "ancient"].includes(group) ? mx.every(p => p.origin === "nahua" && !p.family) : mx.every(p => p.name);
+      // Before 1500: a Nahua has one name; a Maya (B3830, about 3 in 10) has the own name, then the lineage name
+      const own = p => p.origin === "nahua" ? !p.family : p.origin === "maya" && !!p.family && p.name.endsWith(` ${p.family}`);
+      const plain = ["medieval", "ancient"].includes(group) ? mx.every(own) : mx.every(p => p.name);
       ok("names in their own order", first === jp.length && plain, {year, group, japan: jp.slice(0, 3).map(p => p.name), mexico: mx.slice(0, 3).map(p => p.name)});
     });
 

@@ -6,7 +6,7 @@
  * It makes a scratch scene and actors and deletes them; it does not move the clock. Settings it touches are put back.
  *   1. the modules, versions and APIs
  *   2. a long task comes due, rolls, posts a card; Undo puts it back
- *   3. shots: an empty crossbow is refused by the rules; Reload fills it and names the turns
+ *   3. shots: an empty crossbow is refused by the rules; Reload fills it from the bolt in Possessions and names the turns
  *   4. orders: the Storyteller tells a follower to wait (routine paused, card posted), then clears it
  *   5. havens: owners and security saved, security capped by Domain; exposing logs it; strangers break in harder
  *   6. vessels: the states and the disease rule are there
@@ -57,7 +57,8 @@ export async function run() {
     // 3. Shots and reloading
     await game.settings.set("wodx-combat", "countShots", true);
     gunner = await Actor.create({name: "WoDX gate: the crossbowman", type: "Mortal", ownership: {default: 3},
-      items: [{name: "Heavy Crossbow", type: "Ranged Weapon", system: {clip: {value: 0, max: 1}, mode: {hasreload: true}}}]});
+      items: [{name: "Heavy Crossbow", type: "Ranged Weapon", system: {clip: {value: 0, max: 1}, mode: {hasreload: true}}},
+        {name: "a crossbow bolt", type: "Item"}]}); // B3900: the bolt comes out of Possessions
     const bow = gunner.items.getName("Heavy Crossbow");
     const empty = CB.rules.shotsOf(bow.system.clip).empty;
     const rl = await CB.reload({actor: gunner, weaponId: bow.id});
