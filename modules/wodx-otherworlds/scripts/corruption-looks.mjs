@@ -39,12 +39,19 @@ export function marksOn(scene) {
 async function clear(scene) {
   const S = layer();
   if ( S?.endAll ) { try { await S.endAll({scene, source: SOURCE(scene)}); } catch (e) { console.warn(`${MODULE_ID} | looks layer`, e); } }
-  const ids = ownDrawings(scene).map(d => d.id);
-  if ( ids.length ) await scene.deleteEmbeddedDocuments("Drawing", ids);
+  const ids = ownDrawings(scene).map(d => d.id).filter(id => scene.drawings.has(id));
+  if ( ids.length ) await scene.deleteEmbeddedDocuments("Drawing", ids).catch(() => []);
 }
 
-/** Draw a scene's corruption marks again to match its state. Returns the number of marks it now has. */
-export async function sync(scene) {
+/** Draw a scene's corruption marks again to match its state, one draw at a time per scene. Returns how many it has. */
+const queue = new Map();
+export function sync(scene) {
+  if ( !scene ) return Promise.resolve(0);
+  const next = (queue.get(scene.id) ?? Promise.resolve()).catch(() => 0).then(() => syncNow(scene));
+  queue.set(scene.id, next);
+  return next;
+}
+async function syncNow(scene) {
   if ( !game.user.isGM || !scene ) return 0;
   const tracked = !!scene.flags?.[MODULE_ID]?.corruption;
   const place = tracked ? placeOf(scene) : null;
