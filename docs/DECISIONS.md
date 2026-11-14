@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4610
+Next free block: B4620
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -212,6 +212,7 @@ Next free block: B4610
 | B4150-B4159 | Shoshone and Ute names in the People generator (used B4150-B4152) | Creation, Chronicle |
 | B4160-B4169 | Canada first nations names in the People generator (used B4160-B4162) | Creation, Chronicle |
 | B4600-B4609 | Show, don't tell: a visible: line on every feature's release note (used B4600) | tools (no module) |
+| B4610-B4619 | The PC runner rechecks every failing gate before it reports (used B4610) | tools (no module) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6992,3 +6993,15 @@ Ben's standing rule: whatever happens in the game world must show on the map or 
 told in text (a demon's flood shows rain forming and the town flooding, not a card saying it flooded). Like the
 effect: rule (B3734), every minor or major release note in changes/ carries a visible: line, or visible: none and why,
 and merge-stamp.mjs refuses to stamp (so the branch cannot merge) while it is missing. Written into docs/WORKFLOW.md and changes/README.md.
+
+## B4610. A failing gate is rerun alone and on main before the result goes back (2026-11-14)
+PC runner (tools/pcq). Five gates failed on main for hours (gatehuntpowder, gatesurvival, gateworld, gatetraits,
+gatearms) and each thread read them as "already failing, not mine", so nobody fixed them. The changes that broke them
+(B3900, B3830) did run them in their touched sets: the failures were seen and waved through. Now a gates job that
+fails reruns each failing gate (up to 12) on a freshly reset lane, first alone on the same commit, then on main, and
+the result lists a verdict for each: NEW with this change, fails on main too, or passes alone (it fails only after
+other gates, so leftovers or order are at fault). A thread can then tell its own fault from an old one at a glance,
+and an old one names a gate to fix rather than a reason to merge past it. A job can turn this off with
+"recheck": false.
+
+Reverse: drop recheck() from tools/pcq/runner.mjs.

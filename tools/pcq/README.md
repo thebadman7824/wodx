@@ -38,6 +38,11 @@ nightly), a health probe of each idle lane every 5 minutes with one restart, a t
 tree is ended past it), one retry after a lane reset on a lane fault (no free lane, drift, watchdog, failed deploy or
 start; a failing gate is a result and is not retried), and jobs that were running when it stopped are run again.
 
+Recheck (B4610): when a gates job fails, each failing gate (up to 12) is rerun on a freshly reset lane, alone on the
+same commit and then on main, and the result ends with a verdict per gate: NEW with this change, fails on main too,
+or passes alone (it fails only after other gates). A "fails on main too" gate is still a fault to fix, not a reason to
+merge past it. "recheck": false in the job turns this off.
+
     powershell -ExecutionPolicy Bypass -File tools\pcq\start-runner.ps1     start it if it is not running
     D:\WoDX\pcq\runner-off                                                  a file there stops it once idle
     D:\WoDX\pcq\logs                                                        its logs (14 days kept)

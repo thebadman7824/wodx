@@ -102,9 +102,12 @@ export async function run() {
       const [rev, ammo] = await m.createEmbeddedDocuments("Item", [{name: "Gate Arms cartridge revolver", type: "Ranged Weapon", system: {isequipped: true, difficulty: 6, range: 12,
         damage: {attribute: "", bonus: 4, type: "lethal"}, attack: {attribute: "dexterity", ability: "firearms"}, clip: {value: 0, max: 6}}},
         {name: "a cartridge", type: "Item", flags: {"wodx-sheets": {qty: 2}}}]);
-      const r = await C.reload({actor: m, weaponId: rev.id});
-      await settle(() => Number(rev.system.clip.value) === 2 && !m.items.get(ammo.id));
-      G.ok("7. reloading from Possessions", Number(rev.system.clip.value) === 2 && !m.items.get(ammo.id), {clip: rev.system.clip.value, left: !!m.items.get(ammo.id), r});
+      const r = await C.reload({actor: m, weaponId: rev?.id});
+      // Read the items back from the sheet each time: a long run once caught the revolver mid-update with no clip yet
+      const clip = () => Number(m.items.get(rev?.id)?.system?.clip?.value);
+      const gone = () => !m.items.get(ammo?.id);
+      await settle(() => clip() === 2 && gone());
+      G.ok("7. reloading from Possessions", clip() === 2 && gone(), {clip: clip(), left: !gone(), types: [rev?.type, ammo?.type], r});
     });
   } finally { return G.finish(); }
 }
