@@ -200,6 +200,24 @@ export async function run() {
       const items = fx(m);
       ok("9 Hunter edge on the effects card", !!m && /Surge/.test(text(m)) && /p\. 163/.test(text(m)) && items.some(i => i.key === "boost"), { card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`) });
     });
+    await step("10 Kuei-jin named power on the effects card", async () => {
+      const kj = await mk("Kuei-jin", "Vampire", { settings: { variant: "kindredeast" }, advantages: { yin: { permanent: 3 }, yang: { permanent: 4 }, yinchi: { temporary: 3 }, yangchi: { temporary: 4 },
+        hun: { permanent: 4 }, po: { permanent: 3 }, dharma: { permanent: 3 }, willpower: { permanent: 5, temporary: 5 } } }, [{ name: "Yang Prana", type: "Power", system: { type: "wod.types.discipline", value: 3 } }]);
+      await sleep(800);
+      await game.user.updateTokenTargets?.([]);
+      const art = kj.items.find(i => i.name === "Yang Prana")?.id;
+      const n = game.messages.size;
+      answer(root => {
+        set(root, "art", art); root.querySelector("[name=art]").dispatchEvent(new Event("change"));
+        set(root, "pw", "yangprana-3-dragon-dance"); root.querySelector("[name=pw]").dispatchEvent(new Event("change"));
+      });
+      A().kotSpend(kj);
+      const m = await untilMsg(n);
+      const items = fx(m);
+      const yang = kj.system?.advantages?.yangchi?.temporary;
+      ok("10 Kuei-jin named power on the effects card", !!m && /Dragon Dance/.test(text(m)) && /p\. 105/.test(text(m)) && items.some(i => i.key === "boost") && yang === 3,
+        { card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`), yang });
+    });
   } finally {
     for (const [h, id] of hooks) Hooks.off(h, id);
     for (const a of made) await a.delete().catch(() => {});
