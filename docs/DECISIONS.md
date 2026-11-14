@@ -200,7 +200,7 @@ Next free block: B4160
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Standing up from a knockdown (used B3900-B3921) | Combat |
+| B3900-B3929 | Chronicle events change the factions (used B3900-B3922) | NPC |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
@@ -6787,6 +6787,9 @@ No-effect audit t3. Four backgrounds seed a +1 first attitude with their own kin
 
 ## B3921. Combat reads Knocked down (2026-11-14)
 No-effect audit t4. The Knocked down status showed on the token, but standing cost nothing unless the sweep or tackle card was followed by hand. WoDX Combat now rolls, on the Storyteller's client, at the start of the turn of any combatant with the status. The roll is Dexterity + Athletics, with wound penalties, at difficulty 6 (V20 Dark Ages p. 348). A success takes the status off and takes 2 off that character's Initiative when it is rolled for the next turn. A failure or a botch keeps them down, and the card says the action is lost. A world setting (on by default) turns it off, and api.standUp(actor) runs the roll by hand. Reverse: turn the setting off.
+
+## B3922. More events move the factions (2026-11-14)
+No-effect audit w1. Several dated events in the chronicle passed with only a line in the history. WoDX NPC now offers a new power for each of them when the clock reaches it: changelings in hiding at the Shattering, the Giovanni at the fall of the Cappadocians, a Justicar's archons at the First Conclave, a freehold at the Resurgence, Kuei-jin envoys after the Week of Nightmares, a Fallen and their faithful at the escape from the Abyss, the Children of Carthage at the Venice Conclave, a Cyberpunks crew and a corporate hunter team in Future Darkness. Events that wipe out a line also put to sleep any faction named for it: Croatan, Bunyip, Ravnos, Cappadocian and Doissetep. A test checks that every classic event, except the Time of Judgment (the Storyteller sets up the ending) and the Avatar Storm (WoDX Otherworlds already reads it for the Umbra storm), has at least one effect. Reverse: remove the entries.
 
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
