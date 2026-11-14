@@ -23,7 +23,8 @@
  *  15. Aboriginal Australians (B4680): Australia named from 1197, women of a nation, family names later
  *  16. central Africa (B4690): the Kongo, Luba and Ganda from 1197, Kongo church names from 1491
  *  17. the Amazigh (B4710): the Maghreb's Berbers beside the Arabs, tribes and Aït family names
- *  18. clean up
+ *  18. Sephardi and Mizrahi Jews (B4730): Sefarad to 1492, then the Ottoman lands; Baghdad to the Maghreb
+ *  19. clean up
  * Result: Data/wodx-gate/gateplains-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -200,6 +201,15 @@ export async function run() {
       for ( const era of ["medieval", "modern"] ) for ( const p of am(era, 12) ) if ( !p.family || p.name.includes("{") ) bad.push(`${era}: ${p.name}`);
       G.ok("17. the Amazigh in the Maghreb; tribes and son-of names, then family names",
         med.includes("amazigh") && med.includes("arabic") && !bad.length, {medieval: med, bad: bad.slice(0, 6), sample: am("medieval", 4).map(p => p.name)});
+    });
+    await G.step("18. Sephardi and Mizrahi Jews", async () => {
+      const ib = results({era: "medieval", culture: "iberia"}, "people.origin"), lv = results({era: "medieval", culture: "levant"}, "people.origin"), bad = [];
+      const jw = (o, culture, era, n) => Array.from({length: n}, (_, i) => R.nameOf({rand: gen().random(`gateplains:jw:${o}:${era}`, i),
+        tables: gen().lookup({...gen().context(), era, culture}), origin: o, sex: i % 2 ? "female" : "male"}));
+      for ( const [o, c] of [["sephardi", "iberia"], ["mizrahi", "levant"]] ) for ( const era of ["medieval", "modern"] )
+        for ( const p of jw(o, c, era, 8) ) if ( !p.family || p.name.includes("{") ) bad.push(`${o} ${era}: ${p.name}`);
+      G.ok("18. Sephardi Jews in Iberia, Mizrahi Jews in the Levant; each with family or son-of names",
+        ib.includes("sephardi") && lv.includes("mizrahi") && !bad.length, {iberia: ib, levant: lv, bad: bad.slice(0, 6), sample: jw("sephardi", "iberia", "medieval", 4).map(p => p.name)});
     });
   } catch (e) {
     G.ok("error", false, {error: e.message});

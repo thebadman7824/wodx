@@ -30,12 +30,14 @@ export const WORLD_REGIONS = {
     industrial: "english 82, irish 15, jewish 3", modern: "english 82, irish 10, hindi 4, arabic 2, polish 2"}, EU),
   "france": R("France (Paris, Normandy, Burgundy, the Languedoc)", "europe", 48.9, 2.3, "maritime-europe", "french", {
     medieval: "french 96, jewish 4", "early-modern": "french 100", industrial: "french 97, jewish 3", modern: "french 88, arabic 8, portuguese 4"}, EU),
+  // Sephardi Jews in Sefarad to 1492, then in the Ottoman lands, the Maghreb and Amsterdam; Mizrahi Jews from Baghdad
+  // to the Maghreb (B4730)
   "iberia": R("Iberia (Castile, Aragon, Portugal, al-Andalus)", "europe", 40.4, -3.7, "mediterranean", "spanish", {
-    medieval: "spanish 62, portuguese 13, arabic 18, jewish 7", "early-modern": "spanish 80, portuguese 20", modern: "spanish 78, portuguese 18, arabic 4"}, EU),
+    medieval: "spanish 62, portuguese 13, arabic 18, sephardi 7", "early-modern": "spanish 80, portuguese 20", modern: "spanish 78, portuguese 18, arabic 4"}, EU),
   "italy": R("Italy (Venice, Florence, Rome, Naples, Sicily)", "europe", 43.8, 11.3, "mediterranean", "italian", {
     medieval: "italian 95, greek 2, jewish 3", "early-modern": "italian 97, jewish 3", modern: "italian 100"}, EU),
   "low-countries": R("The Low Countries (Flanders, Brabant, Holland)", "europe", 52.4, 4.9, "maritime-europe", "dutch", {
-    medieval: "dutch 88, french 10, german 2", "early-modern": "dutch 85, french 10, jewish 5", modern: "dutch 90, french 6, turkish 2, arabic 2"}, EU),
+    medieval: "dutch 88, french 10, german 2", "early-modern": "dutch 85, french 10, sephardi 3, jewish 2", modern: "dutch 90, french 6, turkish 2, arabic 2"}, EU),
   "scandinavia": R("Scandinavia (Denmark, Norway, Sweden, Iceland)", "europe", 59.3, 18.1, "northern-europe", "nordic", {medieval: "norse 100"}, EU),
   "poland-baltic": R("Poland and the Baltic (Kraków, Danzig, Vilnius, Riga)", "europe", 52.2, 21.0, "central-europe", "polish", {
     medieval: "polish 75, german 15, jewish 10", "early-modern": "polish 72, german 10, jewish 14, russian 4",
@@ -45,22 +47,23 @@ export const WORLD_REGIONS = {
   "russia": R("The Rus and Russia (Novgorod, Kiev, Moscow)", "europe", 55.8, 37.6, "steppe", "russian", {
     medieval: "russian 100", industrial: "russian 88, jewish 5, turkish 4, armenian 3", modern: "russian 93, turkish 4, armenian 3"}, EU),
   "aegean": R("Greece and Constantinople (the Byzantine lands)", "europe", 41.0, 29.0, "mediterranean", "greek", {
-    medieval: "greek 88, italian 8, jewish 4", "early-modern": "greek 52, turkish 34, armenian 6, jewish 5, italian 3", modern: "greek 90, turkish 10"}, EU),
+    medieval: "greek 88, italian 8, jewish 4", "early-modern": "greek 52, turkish 34, armenian 6, sephardi 5, italian 3", modern: "greek 90, turkish 10"}, EU),
   // The Middle East and inner Asia
   // Armenians in Anatolia, Persia, Constantinople, the Levant and Russia (B3940); few in Turkey after 1915
   "anatolia": R("Anatolia (Rum, the Ottoman heartland, Turkey)", "other", 39.9, 32.9, "mediterranean", "ottoman", {
-    medieval: "turkish 45, greek 38, armenian 12, arabic 5", "early-modern": "turkish 70, greek 18, armenian 12",
+    medieval: "turkish 45, greek 38, armenian 12, arabic 5", "early-modern": "turkish 68, greek 18, armenian 11, sephardi 3",
     industrial: "turkish 72, greek 16, armenian 12", modern: "turkish 99, armenian 1"}),
   "levant": R("The Levant and Mesopotamia (Damascus, Jerusalem, Baghdad)", "other", 33.5, 36.3, "mediterranean", "arab", {
-    medieval: "arabic 84, french 6, greek 5, turkish 3, armenian 2", "early-modern": "arabic 88, turkish 10, armenian 2", modern: "arabic 100"}),
+    medieval: "arabic 82, french 6, greek 5, turkish 3, armenian 2, mizrahi 2", "early-modern": "arabic 86, turkish 10, armenian 2, sephardi 1, mizrahi 1", modern: "arabic 100"}),
   "egypt": R("Egypt and the Nile (Cairo, Alexandria, Thebes)", "other", 30.0, 31.2, "hot-desert", "arab", {
-    medieval: "arabic 100", "early-modern": "arabic 92, turkish 8", industrial: "arabic 90, turkish 5, greek 3, italian 2", modern: "arabic 100"}),
-  "arabia": R("Arabia (Mecca, Medina, Sanaa, the Gulf)", "other", 21.4, 39.8, "hot-desert", "arab", {medieval: "arabic 100"}),
+    medieval: "arabic 96, mizrahi 4", "early-modern": "arabic 90, turkish 7, mizrahi 3", industrial: "arabic 88, turkish 5, greek 3, italian 2, mizrahi 2", modern: "arabic 100"}),
+  "arabia": R("Arabia (Mecca, Medina, Sanaa, the Gulf)", "other", 21.4, 39.8, "hot-desert", "arab", {medieval: "arabic 97, mizrahi 3"}),
   // The Amazigh of the mountains and the desert edge beside the Arab towns (B4710)
   "maghreb": R("The Maghreb (Fez, Tunis, Tripoli)", "other", 34.0, -5.0, "mediterranean", "arab", {
-    medieval: "arabic 58, amazigh 42", industrial: "arabic 56, amazigh 34, french 10", modern: "arabic 62, amazigh 38"}),
+    medieval: "arabic 56, amazigh 40, mizrahi 4", "early-modern": "arabic 55, amazigh 39, sephardi 3, mizrahi 3",
+    industrial: "arabic 54, amazigh 32, french 10, mizrahi 2, sephardi 2", modern: "arabic 62, amazigh 38"}),
   "persia": R("Persia (Isfahan, Shiraz, Tabriz)", "other", 32.7, 51.7, "inner-asia", "persian", {
-    medieval: "persian 80, steppe 8, turkish 8, arabic 4", "early-modern": "persian 82, turkish 14, armenian 4"}),
+    medieval: "persian 78, steppe 8, turkish 8, arabic 4, mizrahi 2", "early-modern": "persian 80, turkish 14, armenian 4, mizrahi 2"}),
   "central-asia": R("The steppe and the Silk Road (Samarkand, Karakorum, Kashgar)", "other", 39.7, 67.0, "inner-asia", "persian", {
     medieval: "steppe 45, persian 35, turkish 20", "early-modern": "turkish 45, persian 35, steppe 20",
     industrial: "turkish 50, persian 25, russian 15, steppe 10", modern: "turkish 45, russian 30, persian 25"}),
