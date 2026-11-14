@@ -169,8 +169,9 @@ TYPES = {
         "rooms": [("Guardroom", 0, 0, 5, 5, "stone")],
         "openings": [("door", 2.5, 5, "h"), ("window", 0, 2.5, "v"), ("window", 5, 2.5, "v"), ("window", 2.5, 0, "h")],
         "partitions": [],
-        "furnish": {"Guardroom": [("Weapon_Rack_Metal_Gray_A1_1x2.webp", "wall:W", 2), (TABLE, "wall:N", 1), (STOOL, "beside:table", 2, .8),
-                                  ("Brazier_A_1x1.webp", "corner", 1), (BED, "wall:E", 1), (CHEST, "beside:bed", 1)]},
+        # the bed before the brazier, so the brazier finds a corner well away from it
+        "furnish": {"Guardroom": [("Weapon_Rack_Metal_Gray_A1_1x2.webp", "wall:W", 1), (TABLE, "wall:N", 1), (STOOL, "beside:table", 2, .8),
+                                  (BED, "wall:E", 1), (CHEST, "beside:bed", 1), ("Brazier_A_1x1.webp", "corner", 1)]},
     },
 }
 

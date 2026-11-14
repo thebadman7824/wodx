@@ -33,7 +33,7 @@ const set = (root, name, value) => {
     if (el.type === "checkbox") el.checked = !!value; else el.value = String(value);
     el.dispatchEvent(new Event("change", { bubbles: true }));
 };
-const lastMsg = () => game.messages.contents.at(-1);
+const lastMsg = () => newestMessage();
 const text = m => String(m?.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 const tot = (a, k) => Number(a.system.attributes[k].total ?? a.system.attributes[k].value);
 const form = a => ["homid", "glabro", "crinos", "hispo", "lupus"].find(k => a.system.shapes?.[k]?.isactive) ?? "homid";
@@ -48,7 +48,7 @@ async function step(name, fn) {
     try { await fn(); } catch (e) { ok(name, false, { error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ") }); }
 }
 
-export async function run() {
+async function runGate(K) {
     const origErr = console.error;
     console.error = (...a) => { R.errors.push(a.map(x => x?.message ?? String(x)).join(" ").slice(0, 300)); origErr(...a); };
     window.addEventListener("error", e => R.errors.push(`window: ${e.message}`));
@@ -79,7 +79,7 @@ export async function run() {
         await step("tokens", async () => {
             // The pack's own scene: an earlier gate's clean-up can leave the canvas on no scene
             let sc = canvas.scene;
-            if (!sc) { sc = game.scenes.find(x => x.tokens.some(t => t.actorId === W?.id)) ?? game.scenes.active ?? game.scenes.contents[0]; await sc.view(); await sleep(1500); sc = canvas.scene; }
+            if (!sc) { sc = game.scenes.find(x => x.tokens.some(t => t.actorId === W?.id)) ?? (await K.scene()); await sc.view(); await sleep(1500); sc = canvas.scene; }
             const cx = sc.dimensions.sceneX + 200, cy = sc.dimensions.sceneY + 200, g = sc.grid.size;
             const want = [W, T, M, F, H].filter(a => !sc.tokens.some(t => t.actorId === a.id));
             const docs = [];
@@ -325,3 +325,7 @@ export async function run() {
     }
     return R.summary;
 }
+
+// The gate kit (B3733): its own scratch scene, cleaned up after.
+import {kitRun, newestMessage} from "./kit.mjs";
+export const run = kitRun("gate6b", runGate);

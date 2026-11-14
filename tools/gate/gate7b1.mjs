@@ -21,7 +21,7 @@ async function save(R) {
 }
 async function waitFor(test, ms = 15000) { const t0 = Date.now(); while ( Date.now() - t0 < ms ) { if ( await test() ) return true; await sleep(250); } return false; }
 
-export async function run() {
+async function runGate(K) {
   const R = {started: new Date().toISOString(), steps: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ")}); } };
@@ -219,3 +219,7 @@ export async function run() {
   if ( before.scene && before.scene.id !== canvas.scene?.id ) await before.scene.view();
   return save(R);
 }
+
+// The gate kit (B3733): its own scratch scene, cleaned up after.
+import {kitRun} from "./kit.mjs";
+export const run = kitRun("gate7b1", runGate);

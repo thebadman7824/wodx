@@ -27,7 +27,7 @@ async function save(R) {
   await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, {notify: false});
   return R.summary;
 }
-export async function run() {
+async function runGate(K) {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   if ( game.world.id !== "rothenstein-wodx" ) { ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"}); return save(R); }
@@ -40,9 +40,7 @@ export async function run() {
     ok("2. sheets", names.length >= 6 && Object.values(answers).every(s => s === 200), {answers});
 
     // the test tokens live on one scene: go there if another scene is showing
-    const home = game.scenes.find(s => s.tokens.some(t => t.name?.startsWith("Sprite test: Kindred elder")));
-    if ( home && home.id !== canvas.scene?.id ) { await home.view(); await sleep(2500); }
-    const scene = canvas.scene, g = canvas.grid.size, actor = game.actors.find(a => a.type !== "Group") ?? game.actors.contents[0];
+    const scene = canvas.scene, g = canvas.grid.size, actor = await K.make(Actor, {name: "WoDX gate: sprite stand-in", type: "Mortal"});
     const cx = Math.round(canvas.dimensions.sceneX + canvas.dimensions.sceneWidth / 2), cy = Math.round(canvas.dimensions.sceneY + canvas.dimensions.sceneHeight / 2);
     const docs = [];
     for ( const [i, n] of names.entries() ) {
@@ -204,3 +202,7 @@ export async function run() {
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }
   return save(R);
 }
+
+// The gate kit (B3733): its own scratch scene, cleaned up after.
+import {kitRun} from "./kit.mjs";
+export const run = kitRun("gatesprites", runGate);

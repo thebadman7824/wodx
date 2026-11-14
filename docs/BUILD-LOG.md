@@ -1806,6 +1806,8 @@ First look with the preview (Kessler): grass showed through inside the barn, byr
 
 Second look (Ben found a torch hung behind the big oven and a chest pushed under a window). Chests, barrels, kegs, crates, boxes and sacks now stay out of the 0.9 squares in front of a window. Wall lights hang on open wall only: never within a square of a door or window or behind an oven, stove, cupboard or shelves, and each picture is turned so its bracket is on the wall. Each room draws its own random numbers, so a change in one room no longer moves the rest of the map. check_map.py now reports a light off the wall, a light behind furniture, and a store piece in front of a window. The rules are written out for Ben in the doc Housing furnishing rules, which he edits.
 
+Ben's answers (14 November). The floor inside a door is kept clear for 1.5 squares; a room under 4 squares across the door, or one too crowded to take its pieces after half its tries, keeps 1.1. A chest goes at the foot of a bed while a foot is free, and the hospital ward set piece puts its chests at the beds' feet. A bed stands at least 2 squares from an open fire (cooking pit, fire pit, hearth) and 1.5 from an oven, stove or brazier, in a building's own list and in set pieces; check_map.py reports a bed by the fire, measured on the pieces' real outlines. The guardroom keeps one weapon rack so its bed and brazier fit apart. Small things (a basket, a bucket, a broom) are left out of a room with no space for them rather than stopping it. Lean-tos, coal, flour and beer stores and the vestry now count as stores, and the smith's room as a living room. Town tests read Rotheim part A2, which holds the chapel.
+
 
 ## 2026-11-13: the Traits that follow from the others (Creation 0.26.0, B3000-B3004)
 

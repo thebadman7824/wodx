@@ -126,9 +126,11 @@ try {
     case "deploy": {
       if ( flag("if-changed") ) {
         const cache = path.join(laneDir(lane), "cache"), expected = expectedCode(repo, cache);
-        const gateSame = fs.readdirSync(path.join(repo, "tools", "gate")).every(f => {
-          const dst = path.join(lane.dataPath, "Data", "wodx-gate", f);
-          return fs.existsSync(dst) && fs.readFileSync(dst).equals(fs.readFileSync(path.join(repo, "tools", "gate", f)));
+        // Gate files and their fixtures folder (B3730) must match too.
+        const gateSame = fs.readdirSync(path.join(repo, "tools", "gate"), {recursive: true}).map(String).every(f => {
+          const src = path.join(repo, "tools", "gate", f), dst = path.join(lane.dataPath, "Data", "wodx-gate", f);
+          if ( fs.statSync(src).isDirectory() ) return true;
+          return fs.existsSync(dst) && fs.readFileSync(dst).equals(fs.readFileSync(src));
         });
         if ( !diffCode(expected, codeFingerprint(lane.dataPath, {only: new Set(Object.keys(expected)), cacheDir: cache})).length && gateSame ) {
           console.log(`Lane ${lane.id} already runs this checkout; no deploy needed.`);

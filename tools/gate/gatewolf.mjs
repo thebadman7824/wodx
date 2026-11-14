@@ -30,7 +30,7 @@ async function save(R, name) {
 }
 async function until(fn, ms = 5000) { const t = Date.now(); while ( Date.now() - t < ms ) { if ( fn() ) return true; await sleep(100); } return !!fn(); }
 
-export async function run() {
+async function runGate(K) {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ")}); } };
@@ -154,3 +154,7 @@ export async function run() {
   }
   return save(R, "gatewolf-result.json");
 }
+
+// The gate kit (B3733): its own scratch scene, cleaned up after.
+import {kitRun} from "./kit.mjs";
+export const run = kitRun("gatewolf", runGate);

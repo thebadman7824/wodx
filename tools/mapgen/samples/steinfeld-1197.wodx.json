@@ -1819,8 +1819,8 @@
    "id": "chapel-1-nave-f6",
    "label": "Chest (Nave)",
    "rect": [
-    77.285,
-    41.029,
+    72.606,
+    39.852,
     1.0,
     1.0
    ],
@@ -1831,32 +1831,32 @@
     "items": "",
     "fillPlace": "church"
    },
-   "rotation": 300.0
+   "rotation": 210.0
   },
   {
-   "id": "chapel-1-vestry-f2",
-   "label": "Cupboard (Vestry)",
+   "id": "chapel-1-nave-f7",
+   "label": "Chest (Nave)",
    "rect": [
-    69.448,
-    49.764,
-    1.5,
-    0.75
+    77.068,
+    42.109,
+    0.93,
+    0.57
    ],
    "flags": {
     "container": true,
-    "kind": "cabinet",
-    "lock": "none",
+    "kind": "chest",
+    "lock": "cheap",
     "items": "",
     "fillPlace": "church"
    },
    "rotation": 300.0
   },
   {
-   "id": "chapel-1-vestry-f4",
+   "id": "chapel-1-vestry-f1",
    "label": "Chest (Vestry)",
    "rect": [
-    71.272,
-    51.034,
+    71.647,
+    50.384,
     0.75,
     0.75
    ],
@@ -1867,7 +1867,7 @@
     "items": "",
     "fillPlace": "church"
    },
-   "rotation": 300.0
+   "rotation": 210.0
   },
   {
    "id": "cottage-1-cottage-0",
@@ -1889,14 +1889,14 @@
     "color": "#ff9a3c",
     "on": true
    },
-   "rotation": 240.0
+   "rotation": 330.0
   },
   {
    "id": "cottage-1-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    62.632,
-    63.435,
+    64.918,
+    62.115,
     1.0,
     2.0
    ],
@@ -1911,8 +1911,8 @@
    "id": "cottage-1-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    64.364,
-    62.435,
+    62.632,
+    63.435,
     1.0,
     2.0
    ],
@@ -1939,7 +1939,25 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 240.0
+   "rotation": 330.0
+  },
+  {
+   "id": "cottage-1-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    66.372,
+    68.0,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 330.0
   },
   {
    "id": "cottage-2-cottage-0",
@@ -2011,14 +2029,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 240.0
+   "rotation": 150.0
   },
   {
    "id": "cottage-2-cottage-f2",
    "label": "Cupboard (Cottage)",
    "rect": [
-    46.76,
-    75.627,
+    44.07,
+    72.688,
     1.5,
     0.75
    ],
@@ -2035,8 +2053,25 @@
    "id": "storehouse-1-store-0",
    "label": "Crates (Store)",
    "rect": [
-    55.082,
-    67.499,
+    49.332,
+    70.819,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 240.0
+  },
+  {
+   "id": "storehouse-1-store-1",
+   "label": "Crates (Store)",
+   "rect": [
+    49.832,
+    71.685,
     1.0,
     1.0
    ],
@@ -2049,7 +2084,24 @@
    "rotation": 150.0
   },
   {
-   "id": "storehouse-1-store-1",
+   "id": "storehouse-1-store-2",
+   "label": "Crates (Store)",
+   "rect": [
+    55.082,
+    67.499,
+    1.0,
+    1.0
+   ],
+   "flags": {
+    "hide": true,
+    "hideKind": "crawl",
+    "room": 1,
+    "title": "Behind the crates"
+   },
+   "rotation": 240.0
+  },
+  {
+   "id": "storehouse-1-store-3",
    "label": "Crates (Store)",
    "rect": [
     55.582,
@@ -2066,45 +2118,29 @@
    "rotation": 150.0
   },
   {
-   "id": "storehouse-1-store-2",
-   "label": "Crates (Store)",
+   "id": "storehouse-1-store-f4",
+   "label": "Chest (Store)",
    "rect": [
-    49.332,
-    70.819,
-    1.0,
-    1.0
+    54.094,
+    73.428,
+    1,
+    1
    ],
    "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
-   },
-   "rotation": 240.0
-  },
-  {
-   "id": "storehouse-1-store-3",
-   "label": "Crates (Store)",
-   "rect": [
-    50.215,
-    70.309,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "hide": true,
-    "hideKind": "crawl",
-    "room": 1,
-    "title": "Behind the crates"
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
    },
    "rotation": 150.0
   },
   {
-   "id": "storehouse-1-store-f4",
+   "id": "storehouse-1-store-f6",
    "label": "Chest (Store)",
    "rect": [
-    51.402,
-    69.624,
+    53.228,
+    73.928,
     1,
     1
    ],
@@ -2118,11 +2154,11 @@
    "rotation": 240.0
   },
   {
-   "id": "storehouse-1-store-f6",
+   "id": "storehouse-1-store-f7",
    "label": "Chest (Store)",
    "rect": [
-    51.231,
-    74.267,
+    54.387,
+    67.954,
     0.75,
     0.75
    ],
@@ -2134,6 +2170,24 @@
     "fillPlace": "workshop"
    },
    "rotation": 240.0
+  },
+  {
+   "id": "storehouse-1-store-f9",
+   "label": "Chest (Store)",
+   "rect": [
+    50.195,
+    70.374,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   },
+   "rotation": 150.0
   },
   {
    "id": "cottage-3-cottage-0",
@@ -2177,8 +2231,8 @@
    "id": "cottage-3-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    50.655,
-    84.451,
+    50.101,
+    84.771,
     1.0,
     2.0
    ],
@@ -2205,7 +2259,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 60.0
+   "rotation": 150.0
   },
   {
    "id": "cottage-3-cottage-f3",
@@ -2223,25 +2277,25 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 150.0
+   "rotation": 60.0
   },
   {
-   "id": "cottage-3-lean-to-f4",
-   "label": "Cupboard (Lean-to)",
+   "id": "cottage-3-lean-to-f1",
+   "label": "Chest (Lean-to)",
    "rect": [
-    53.569,
-    80.056,
-    1.5,
-    0.75
+    53.998,
+    83.021,
+    1,
+    1
    ],
    "flags": {
     "container": true,
-    "kind": "cabinet",
-    "lock": "none",
+    "kind": "chest",
+    "lock": "cheap",
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 150.0
+   "rotation": 60.0
   },
   {
    "id": "cottage-4-cottage-0",
@@ -2269,8 +2323,8 @@
    "id": "cottage-4-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    55.272,
-    37.505,
+    57.558,
+    36.185,
     1.0,
     2.0
    ],
@@ -2285,8 +2339,8 @@
    "id": "cottage-4-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    57.004,
-    36.505,
+    55.826,
+    37.185,
     1.0,
     2.0
    ],
@@ -2316,18 +2370,18 @@
    "rotation": 150.0
   },
   {
-   "id": "cottage-4-lean-to-f2",
-   "label": "Cupboard (Lean-to)",
+   "id": "cottage-4-lean-to-f1",
+   "label": "Chest (Lean-to)",
    "rect": [
-    56.874,
-    31.559,
-    1.5,
-    0.75
+    56.849,
+    31.737,
+    1,
+    1
    ],
    "flags": {
     "container": true,
-    "kind": "cabinet",
-    "lock": "none",
+    "kind": "chest",
+    "lock": "cheap",
     "items": "",
     "fillPlace": "home"
    },
@@ -2337,8 +2391,8 @@
    "id": "cottage-5-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
-    23.384,
-    48.421,
+    25.103,
+    54.835,
     1.0,
     1.0
    ],
@@ -2353,7 +2407,7 @@
     "color": "#ff9a3c",
     "on": true
    },
-   "rotation": 255.0
+   "rotation": 345.0
   },
   {
    "id": "cottage-5-cottage-2",
@@ -2375,8 +2429,8 @@
    "id": "cottage-5-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    25.074,
-    47.468,
+    24.833,
+    47.533,
     1.0,
     2.0
    ],
@@ -2391,8 +2445,8 @@
    "id": "cottage-5-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    28.125,
-    48.186,
+    23.384,
+    48.421,
     1.0,
     1.0
    ],
@@ -2403,32 +2457,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 345.0
+   "rotation": 255.0
   },
   {
    "id": "cottage-5-cottage-f0",
    "label": "Cupboard (Cottage)",
    "rect": [
-    27.636,
-    54.022,
-    2,
-    1
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 345.0
-  },
-  {
-   "id": "cottage-5-cottage-f10",
-   "label": "Cupboard (Cottage)",
-   "rect": [
-    23.479,
-    50.643,
+    24.085,
+    52.903,
     2,
     1
    ],
@@ -2483,8 +2519,8 @@
    "id": "cottage-6-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    30.445,
-    56.474,
+    30.464,
+    56.469,
     1.0,
     2.0
    ],
@@ -2499,8 +2535,8 @@
    "id": "cottage-6-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    26.501,
-    58.176,
+    26.465,
+    58.041,
     1.0,
     1.0
    ],
@@ -2511,16 +2547,16 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 345.0
+   "rotation": 255.0
   },
   {
-   "id": "cottage-6-cottage-f0",
+   "id": "cottage-6-cottage-f1",
    "label": "Cupboard (Cottage)",
    "rect": [
-    30.199,
-    61.71,
-    2,
-    1
+    31.954,
+    61.173,
+    1.5,
+    0.75
    ],
    "flags": {
     "container": true,
@@ -2529,7 +2565,25 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 345.0
+   "rotation": 255.0
+  },
+  {
+   "id": "cottage-6-cottage-f5",
+   "label": "Chest (Cottage)",
+   "rect": [
+    26.696,
+    59.043,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 255.0
   },
   {
    "id": "cottage-7-cottage-0",
@@ -2607,8 +2661,26 @@
    "id": "cottage-7-cottage-f5",
    "label": "Chest (Cottage)",
    "rect": [
-    30.273,
-    66.339,
+    35.296,
+    70.055,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 345.0
+  },
+  {
+   "id": "cottage-7-cottage-f9",
+   "label": "Chest (Cottage)",
+   "rect": [
+    34.03,
+    65.332,
     0.75,
     0.75
    ],
@@ -2663,8 +2735,8 @@
    "id": "cottage-8-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    24.968,
-    68.439,
+    25.227,
+    69.405,
     1.0,
     2.0
    ],
@@ -2679,8 +2751,8 @@
    "id": "cottage-8-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    25.517,
-    70.987,
+    24.839,
+    68.456,
     1.0,
     1.0
    ],
@@ -2691,14 +2763,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 75.0
+   "rotation": 345.0
   },
   {
    "id": "cottage-8-cottage-f3",
    "label": "Chest (Cottage)",
    "rect": [
-    21.632,
-    69.316,
+    23.564,
+    68.798,
     1,
     1
    ],
@@ -2781,7 +2853,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 270.0
+   "rotation": 180.0
   },
   {
    "id": "cottage-10-cottage-0",
@@ -2825,8 +2897,8 @@
    "id": "cottage-10-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    43.959,
-    29.169,
+    44.279,
+    29.723,
     1.0,
     2.0
    ],
@@ -2841,8 +2913,8 @@
    "id": "cottage-10-cottage-4",
    "label": "Chest (Cottage)",
    "rect": [
-    42.843,
-    29.736,
+    44.663,
+    32.888,
     1.0,
     1.0
    ],
@@ -2853,32 +2925,32 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 60.0
+   "rotation": 330.0
   },
   {
-   "id": "cottage-10-cottage-f0",
-   "label": "Cupboard (Cottage)",
+   "id": "cottage-10-cottage-f5",
+   "label": "Chest (Cottage)",
    "rect": [
-    38.529,
-    34.409,
-    2,
-    1
+    40.724,
+    35.504,
+    0.75,
+    0.75
    ],
    "flags": {
     "container": true,
-    "kind": "cabinet",
-    "lock": "none",
+    "kind": "chest",
+    "lock": "cheap",
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 60.0
+   "rotation": 330.0
   },
   {
-   "id": "cottage-10-lean-to-f1",
+   "id": "cottage-10-lean-to-f0",
    "label": "Chest (Lean-to)",
    "rect": [
-    40.389,
-    29.924,
+    42.026,
+    28.979,
     0.75,
     0.75
    ],
@@ -2961,7 +3033,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 60.0
+   "rotation": 330.0
   },
   {
    "id": "cottage-12-cottage-0",
@@ -3033,14 +3105,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 15.0
+   "rotation": 285.0
   },
   {
-   "id": "cottage-12-cottage-f0",
+   "id": "cottage-12-cottage-f2",
    "label": "Cupboard (Cottage)",
    "rect": [
-    45.215,
-    23.709,
+    49.319,
+    23.421,
     1.5,
     0.75
    ],
@@ -3096,7 +3168,7 @@
    "label": "Box bed (Living room)",
    "rect": [
     15.389,
-    35.417,
+    34.777,
     1.0,
     2.0
    ],
@@ -3111,8 +3183,8 @@
    "id": "byre-house-1-living-room-4",
    "label": "Chest (Living room)",
    "rect": [
-    16.389,
-    36.027,
+    16.139,
+    36.777,
     1.0,
     1.0
    ],
@@ -3123,7 +3195,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 90.0
+   "rotation": 0.0
   },
   {
    "id": "byre-house-1-living-room-f0",
@@ -3141,34 +3213,16 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 0.0
+   "rotation": 90.0
   },
   {
    "id": "byre-house-1-byre-f1",
    "label": "Chest (Byre)",
    "rect": [
-    25.929,
-    39.667,
-    0.75,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 0.0
-  },
-  {
-   "id": "byre-house-1-byre-f5",
-   "label": "Chest (Byre)",
-   "rect": [
-    25.709,
+    26.029,
     34.777,
-    0.42,
-    0.398
+    1,
+    1
    ],
    "flags": {
     "container": true,
@@ -3184,7 +3238,7 @@
    "label": "Oven (Living room)",
    "rect": [
     74.386,
-    17.916,
+    17.936,
     2.0,
     2.0
    ],
@@ -3206,7 +3260,7 @@
    "label": "Box bed (Living room)",
    "rect": [
     78.006,
-    19.916,
+    17.916,
     1.0,
     2.0
    ],
@@ -3222,7 +3276,7 @@
    "label": "Box bed (Living room)",
    "rect": [
     78.006,
-    17.916,
+    20.556,
     1.0,
     2.0
    ],
@@ -3238,7 +3292,7 @@
    "label": "Chest (Living room)",
    "rect": [
     77.006,
-    20.536,
+    19.056,
     1.0,
     1.0
    ],
@@ -3249,32 +3303,14 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 180.0
-  },
-  {
-   "id": "byre-house-2-byre-f0",
-   "label": "Chest (Byre)",
-   "rect": [
-    69.843,
-    22.286,
-    0.413,
-    0.27
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 180.0
+   "rotation": 270.0
   },
   {
    "id": "byre-house-3-living-room-0",
    "label": "Oven (Living room)",
    "rect": [
     81.448,
-    7.443,
+    7.423,
     2.0,
     2.0
    ],
@@ -3296,7 +3332,7 @@
    "label": "Box bed (Living room)",
    "rect": [
     78.828,
-    5.443,
+    7.443,
     1.0,
     2.0
    ],
@@ -3312,7 +3348,7 @@
    "label": "Box bed (Living room)",
    "rect": [
     78.828,
-    7.443,
+    4.803,
     1.0,
     2.0
    ],
@@ -3328,7 +3364,7 @@
    "label": "Chest (Living room)",
    "rect": [
     79.828,
-    5.823,
+    7.303,
     1.0,
     1.0
    ],
@@ -3339,7 +3375,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 0.0
+   "rotation": 90.0
   },
   {
    "id": "well",

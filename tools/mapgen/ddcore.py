@@ -80,6 +80,18 @@ def bracket_turn(name, side):
     return want - e
 
 STORE_PIECE = re.compile(r"Chest|Barrel|Keg|Crate|Box_|Sack|Coffer", re.I)   # kept from under windows
+DOOR_CLEAR = 1.5                    # clear floor inside a door, in squares (Ben 2026-11-14)
+DOOR_CLEAR_SMALL = 1.1              # in a room less than SMALL_ROOM squares across the door, which 1.5 would leave unusable
+SMALL_ROOM = 4
+BED = re.compile(r"Bed(?!ding)|Cot_|Bunk|Pallet_Straw", re.I)
+FIRE = re.compile(r"Cooking_Pit|Fire_?Pit|Brazier|Oven|Fireplace|Hearth|Campfire", re.I)
+BED_FIRE_GAP = 2.0                  # a bed stands at least this far from an open fire pit or cooking pit (Ben 2026-11-14)
+OPEN_FIRE = re.compile(r"Cooking_Pit|Fire_?Pit|Campfire|Hearth|Fireplace", re.I)
+BED_STOVE_GAP = 1.5                 # and this far from an enclosed oven or stove, or a brazier
+def bed_fire_gap(fire_name):
+    return BED_FIRE_GAP if OPEN_FIRE.search(fire_name) else BED_STOVE_GAP
+CHEST = re.compile(r"Chest|Coffer|Trunk", re.I)
+MINOR = re.compile(r"Basket|Bucket|Broom|Firewood|Plant_Pot|Pot_Clay|Jug_|Vase", re.I)   # small things a room can do without
 
 def cells_of(name):
     if name in SIZES: return SIZES[name]
@@ -94,6 +106,10 @@ def seg_pts(poly, step=.1):
 
 def rdist(px, py, x, y, w, h):
     return math.hypot(max(x - px, 0, px - (x + w)), max(y - py, 0, py - (y + h)))
+
+def gap_between(a, b):
+    """The clear distance between two rects (x, y, w, h); 0 when they touch or overlap."""
+    return math.hypot(max(a[0] - (b[0] + b[2]), 0, b[0] - (a[0] + a[2])), max(a[1] - (b[1] + b[3]), 0, b[1] - (a[1] + a[3])))
 
 def overlaps(a, b, gap=0.0):
     """Two rects (x, y, w, h) closer than gap on both axes."""
@@ -110,6 +126,17 @@ BESIDE = {"bed": "Bed", "table": "Table", "anvil": "Anvil", "altar": "Altar", "b
 HEARTH = re.compile(r"Oven|Cooking_Pit|Brazier")
 
 # ------------------------------------------------------------------ rooms and their furnishing
+def fire_clash(items, asset, rect):
+    """True when a bed at rect would stand too near a fire among items, or a fire at rect too near a bed."""
+    if BED.search(asset): other, mine = FIRE, None
+    elif FIRE.search(asset): other, mine = BED, asset
+    else: return False
+    for i in items:
+        if not other.search(i["asset"]): continue
+        g = bed_fire_gap(mine or i["asset"])
+        if gap_between(rect, (i["x"], i["y"], i["w"], i["h"])) < g: return True
+    return False
+
 class Room:
     """A room in map cells. openings: (kind, x, y, along) in map cells; furnish: [(asset, rule, count[, scale])].
     Rules: wall[:sides], corner[:sides], end[:sides] (touches those walls, never turned; endt: always turned),
@@ -137,12 +164,12 @@ class Room:
                 else:
                     self.window_zones.append((ox if abs(ox - x) < .01 else ox - d, oy - half, d, 2 * half, "window clear zone"))
                 continue
-            if along == "h":
-                zy = oy if abs(oy - y) < .01 else oy - 1.1
-                self.blocked.append((ox - half, zy, 2 * half, 1.1, "door clear zone"))
-            else:
-                zx = ox if abs(ox - x) < .01 else ox - 1.1
-                self.blocked.append((zx, oy - half, 1.1, 2 * half, "door clear zone"))
+            deep = DOOR_CLEAR if (h if along == "h" else w) >= SMALL_ROOM else DOOR_CLEAR_SMALL
+            def zone(d):
+                if along == "h": return (ox - half, oy if abs(oy - y) < .01 else oy - d, 2 * half, d, "door clear zone")
+                return (ox if abs(ox - x) < .01 else ox - d, oy - half, d, 2 * half, "door clear zone")
+            self.blocked.append(zone(deep))
+            if deep > DOOR_CLEAR_SMALL: self.wide_zones = getattr(self, "wide_zones", []) + [(zone(deep), zone(DOOR_CLEAR_SMALL))]
             self.doors.append((ox, oy, along))
         if not hasattr(self, "windows"): self.windows = []
         ow, oh = w - 4.4, h - 4.4                                        # keep the middle of a big room open
@@ -217,6 +244,10 @@ class Room:
         if kind == "centre": s -= abs(cx - (self.ix + self.iw / 2)) + abs(cy - (self.iy + self.ih / 2))
         if kind == "window" and self.windows:
             s += 8 * (walls >= 1) - min(math.hypot(cx - wx, cy - wy) for wx, wy, _ in self.windows)
+        if kind == "foot":                                         # a chest at the foot of a bed, square to its end
+            for fx, fy, along in self.bed_feet():
+                d = math.hypot(cx - fx, cy - fy)
+                s = max(s, 30 - 6 * d + 2 * ((w > h) == (along == "h")))
         if kind in ("hearth", "beside"):
             ref = [i for i in self.items if (HEARTH.search(i["asset"]) if kind == "hearth" else BESIDE[arg].lower() in i["asset"].lower())]
             if ref:
@@ -226,6 +257,33 @@ class Room:
         # a long item lies along the wall it touches
         if walls == 1 and max(w, h) > min(w, h) and ((touch["N"] or touch["S"]) != (w > h)) and kind not in ("end", "endt"): s -= 3
         return s
+
+    def bed_feet(self):
+        """The foot of each bed placed so far: the middle of the short end farther from the walls, and which way that
+        end runs ("h" when it runs east to west)."""
+        out = []
+        for i in self.items:
+            if not BED.search(i["asset"]): continue
+            x, y, w, h = i["x"], i["y"], i["w"], i["h"]
+            if h >= w: ends = [((x + w / 2, y), "h"), ((x + w / 2, y + h), "h")]
+            else: ends = [((x, y + h / 2), "v"), ((x + w, y + h / 2), "v")]
+            def room_from_wall(p): return min(p[0] - self.ix, self.ix + self.iw - p[0], p[1] - self.iy, self.iy + self.ih - p[1])
+            (px, py), along = max(ends, key=lambda e: room_from_wall(e[0]))
+            # the chest's middle, half a square out past the foot
+            if along == "h": py += .5 if py > y + h / 2 - 1e-6 else -.5
+            else: px += .5 if px > x + w / 2 - 1e-6 else -.5
+            out.append((px, py, along))
+        return out
+
+    def at_foot(self, k):
+        """A candidate spot (x, y, w, h) that touches the foot end of some bed."""
+        x, y, w, h = k
+        for i in self.items:
+            if not BED.search(i["asset"]): continue
+            if gap_between((x, y, w, h), (i["x"], i["y"], i["w"], i["h"])) > .05: continue
+            cx, cy = x + w / 2, y + h / 2
+            if any(math.hypot(cx - fx, cy - fy) < .8 for fx, fy, _ in self.bed_feet()): return True
+        return False
 
     def furnish(self, tries=80):
         """Greedy placement by rule; if an item cannot be placed, start the room again with more shuffle.
@@ -241,6 +299,11 @@ class Room:
 
     def _furnish(self, tries):
         for t in range(tries):
+            if t == tries // 2:
+                # half the tries gone: a crowded room keeps the smaller clear floor at its doors, and its chests go where
+                # their own rule puts them rather than at the beds' feet
+                self.blocked = [next((small for wide, small in getattr(self, "wide_zones", []) if b == wide), b) for b in self.blocked]
+                self.no_foot = True
             self.items, self.noise = [], .1 + t * .08
             if self.try_furnish():
                 dress(self)
@@ -267,6 +330,17 @@ class Room:
                 continue                                       # a spot that will not take it is left empty
             for _ in range(count):
                 c = self.candidates(fw, fh, rule)
+                if CHEST.search(name) and not getattr(self, "no_foot", False) and any(BED.search(i["asset"]) for i in self.items):
+                    # a chest goes at the foot of a bed while a bed's foot is free (Ben 2026-11-14), else by its own rule
+                    foot = [k for k in self.candidates(fw, fh, "foot") if self.at_foot(k[1:5])]
+                    if foot: c = foot
+                if c and (BED.search(name) or FIRE.search(name)):
+                    # beds kept well away from a fire pit, oven or brazier, whichever is placed first
+                    other = FIRE if BED.search(name) else BED
+                    if any(other.search(i["asset"]) for i in self.items):
+                        c = [k for k in c if not fire_clash(self.items, name, k[1:5])]
+                        if not c: self.last_fail = f"{name} (kept from the fire)"; return False
+                if not c and MINOR.search(name): continue      # a basket or broom with no room is left out
                 if c and STORE_PIECE.search(name):             # a chest or barrel never pushed up under a window: with no
                     c = [k for k in c if not self.under_window(k[1:5])]
                     if not c: continue                         # other spot, the room does without it

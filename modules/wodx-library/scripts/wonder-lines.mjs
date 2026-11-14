@@ -6,4 +6,8 @@
 import "./wonders-garou.mjs";
 import "./wonders-mage.mjs";
 import "./wonders-wraith.mjs";
+import "./wonders-changeling.mjs";
+import "./wonders-mummy.mjs";
+import "./wonders-demon.mjs";
+import "./wonders-hunter.mjs";
 import "./wonders-kindred.mjs";

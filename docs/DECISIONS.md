@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3730
+Next free block: B3740
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -190,8 +190,9 @@ Next free block: B3730
 | B3660-B3669 | The Rothenstein saga: the running step for other systems (used B3660-B3669) | Chronicle |
 | B3670-B3679 | The Rothenstein saga keeps its calendar on long skips (used B3670-B3672) | Chronicle |
 | B3680-B3689 | Mage Wonders, charms, periapts, trinkets and mage fetishes (used B3680-B3689) | Library, Storyteller |
-| B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3699) | Library, Storyteller |
+| B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3719) | Library |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
+| B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6191,6 +6192,106 @@ WoDX Library. Flaming Weapon's aggravated strikes and the Candle of Haunting's b
 
 Reverse: change flagFor in the kit.
 
+## B3700. Changeling dreamstuff, crafting and Treasures on the shared engine (2026-11-14)
+WoDX Library, data/wonders-changeling.mjs and scripts/wonders-changeling.mjs. Ben's Item Crafting Desk c1 and c2 (both full). Rows: gathering dreamstuff, voile, everyday chimerical things, weapons, shields, armor, a unique weapon, a forged chimera, a masterwork, an imbued Treasure and a crafted Treasure.
+
+Reverse: drop the import in wonder-lines.mjs.
+
+## B3701. C20 for every era (2026-11-14)
+WoDX Library. Dark Ages: Fae was searched and has no rule for making chimerical things or Treasures, so C20 serves every era.
+
+Reverse: add Dark Ages rows with an era filter in listFor.
+
+## B3702. Gathering dreamstuff is one roll (2026-11-14)
+WoDX Library. The book makes gathering a story (quarried in the Dreaming, bought at a market, fetched by hirelings). WoDX rolls Perception + Gremayre at 6 once, a measure of material a success, and crafting uses the measures up. A house reading, logged for review.
+
+Reverse: change the dreamstuff row's roll, or make the gathering a Storyteller grant.
+
+## B3703. Chimerical crafting is mortal crafting with dream materials (2026-11-14)
+WoDX Library. Dexterity + Crafts once a week at the scope's difficulty (6 to 10) with the place, tools, planning and experience, never under 3, until the scope's successes (C20 pdf 318 to 319). Everything made carries the chimerical flag. Weapons are Strength + 2 lethal (+3 unique); armor soaks 3 chimerical bashing and lethal with one Dexterity off (house numbers).
+
+Reverse: change SCOPES, PLACES, TOOLS or itemsFor.
+
+## B3704. Treasures hold an Art and a store of Glamour (2026-11-14)
+WoDX Library. Imbuing: Intelligence + Gremayre each hour, five successes a level, a Glamour a level given, on a mundane thing the maker carries; the maker must know the Art. Crafted: components the Storyteller grants, then crafting; the maker need not know the Art. The Treasure's Use buttons call its Art (an imbued one from its own Glamour, else the user's) and take Glamour fed to it, up to ten (C20 pdf 325).
+
+Reverse: change flagFor in the kit.
+
+## B3705. A forged chimera is a companion actor (2026-11-14)
+WoDX Library. When a forged chimera is finished, a Creature actor is made with its chimera points (20 for complex work) spread over plain traits, owned by the maker's owners; the Storyteller adds Redes (C20 pdf 321 to 322).
+
+Reverse: remove the chimera block in after(); a token item stays.
+
+## B3706. Mummy amulets and effigies on the shared engine (2026-11-14)
+WoDX Library, data/wonders-mummy.mjs and scripts/wonders-mummy.mjs. Ben's desk mu1 (full). Mummy: The Resurrection for every era (Revised; no 20th edition for the line). Rows: the wards, the talismans, Cloud Walking, the scarabs, the Veil of Amaunet, Geb's Blessing, the Buckle of Isis; the ushabti (Simple Servitor), creature figures, the Overseer and the Sekhem Vessel.
+
+Reverse: drop the import in wonder-lines.mjs.
+
+## B3707. The inscription roll and its Sekhem (2026-11-14)
+WoDX Library. The thing is made or bought, then inscribed: the ritual's trait + the Hekau path, successes equal to its Sekhem (pdf 85 to 86, 102), a roll an hour. The book has the whole Sekhem put in over the work with rest between; WoDX takes a point a roll and waits when the pool is dry. House readings, logged.
+
+Reverse: change taskFor (interval, perRoll).
+
+## B3708. Thanatology from an Ability item (2026-11-14)
+WoDX Library. The system sheet has no Thanatology; an Ability item of that name counts, added to the task's dice.
+
+Reverse: drop the extra dice in factsFrom.
+
+## B3709. A talisman's Attribute while worn; an amulet's months (2026-11-14)
+WoDX Library. Talismans give +1, +2 or +3 to the chosen Attribute while worn through the system's bonus list; the item records Amulets + Balance months and a Renew button. Wards are Storyteller buttons. Item powers gained a transfer of a point a success, capped by an actor trait, for the Sekhem Vessel's draw (Balance at 4, never past the Sekhem rating).
+
+Reverse: change flagFor; the cap and successes options in wonder-powers.mjs are harmless unused.
+
+## B3710. Servitors and creatures are companions with upkeep (2026-11-14)
+WoDX Library. A finished ushabti or creature figure makes a Creature actor with plain traits by size (the Storyteller can set them from the book's beasts) and a token item with its upkeep and mend buttons.
+
+Reverse: remove the servant block in after().
+
+## B3711. The limit on active works (2026-11-14)
+WoDX Library. A maker cannot start a new amulet or effigy while keeping Balance + the higher of Amulets and Effigy works active (pdf 73).
+
+Reverse: drop the limit blocker.
+
+## B3712. Demon Enchant and Imbue Object on the shared engine (2026-11-14)
+WoDX Library, data/wonders-demon.mjs and scripts/wonders-demon.mjs. Ben's desk d1 (full). Demon: The Fallen pdf 192, every era.
+
+Reverse: drop the import in wonder-lines.mjs.
+
+## B3713. Enchanting: a roll a day, the evocation picked from the maker's lores (2026-11-14)
+WoDX Library. Forge 4 and a known evocation for the object to hold; extended Dexterity + Crafts at 6 (own work) or 8 (a carried thing), successes by scope 1, 5, 10 or 15; a Faith point whether it holds or not; a botch destroys the thing; nothing electronic. A roll a day is a house pace. Item powers gained a cost on a botch and a power that waits for another (use after attuning).
+
+Reverse: change taskFor and flagFor.
+
+## B3714. A demon user pays an evocation's Faith (2026-11-14)
+WoDX Library. When the held evocation costs a Faith point, a demon using the item pays it; mortals use their Willpower roll alone. A house reading, logged.
+
+Reverse: drop demonPays in flagFor.
+
+## B3715. Monstrous makers make cursed things (2026-11-14)
+WoDX Library. The maker's permanent Torment 7 or more, or the maker's choice, makes the high-Torment version: cursed objects (no roll; a mortal loses a Willpower, a demon gains a temporary Torment) and twisted souls (a derangement, or Torment equal to the binding's net successes).
+
+Reverse: change MONSTROUS in the kit.
+
+## B3716. Imbue Object is one roll against the soul (2026-11-14)
+WoDX Library. Forge 5; Stamina + Crafts at 6 or 8 once, a Faith point; when it is done the soul's Willpower is rolled at 6 against it and only net successes bind. The vessel's Break button frees the soul.
+
+Reverse: change after() in the kit.
+
+## B3717. Inquisitors' blessings and relics are a house rule (2026-11-14)
+WoDX Library, data/wonders-hunter.mjs and scripts/wonders-hunter.mjs. Ben's desk h1 (full). V20 Dark Ages says Holy Artifacts arise on their own (pdf 396) and Dark Ages: Inquisitor has relics only as a Background (p. 156), so both pieces are Ben's house rule, approved by the Storyteller each time. A blessing carries the inquisitor's True Faith equivalent by stage (p. 158) for a scene.
+
+Reverse: turn off craftHunter or drop the import.
+
+## B3718. Only inquisitors, before 1500 (2026-11-14)
+WoDX Library. Hunters before 1500 with an order or Conviction bless; only order members enshrine. Later mortal hunters and the imbued make nothing (the desk's finding).
+
+Reverse: widen makerOf.
+
+## B3719. The numbers for blessing and enshrining (2026-11-14)
+WoDX Library. A blessing: Charisma + Religion at 6 once and a Willpower; water and salt a vial or line a success, a weapon marked; each lasts the scene. A relic: Intelligence + Religion at 7, ten successes, a roll a week, a rating of a success in five from 1 to 3, raised by the Storyteller at will. House numbers, logged.
+
+Reverse: change taskFor and flagFor.
+
 ## B3720. Soulforged Artifacts and relics are a line on the crafting table (2026-11-14)
 WoDX Library. Ben's pick on the Item Crafting Desk: soulforged relics and Artifacts stay with the soulforging build but are made through the shared crafting engine. The wonders registry (B3683) gains a Wraith kit, scripts/wonders-wraith.mjs (world setting craftWraith, on by default like the other kits), with two rows, a soulforged Artifact and a reworked relic (Wraith 20th book p. 44, pdf 109). Arms, armour and oboli stay in the WoDX Actions forge window, since they are gear and money, not Artifacts.
 
@@ -6210,3 +6311,28 @@ Reverse: make a plain Item from the row.
 WoDX Actions, WoDX Storyteller. Picking an Artifact or a relic in the forge window starts the table's task; a new long task of the soulforge kind opens the forge window.
 
 Reverse: remove the hand-offs; each window makes only its own things.
+
+## B3730. Every gate follows four rules, with a shared kit (2026-11-14)
+Ben approved standard test rules to cut gate failures. A gate finds the documents it made by name or by its flag, never by their place in a list. It makes its own scratch scene and actors and removes them afterwards, never leaning on what an earlier gate or the lane left. It checks what a feature does, not a count, an exact version or an old window's markup. It brings its own fixtures from tools/gate/fixtures. tools/gate/kit.mjs does this work: gate() with make (documents back in the order asked), scene, tokens, fixture, fixtureScene, step (30 second limit, closes the windows it opened), cleanup and finish, plus inOrder, byFlag, byName and newestMessage. The rules are in docs/WORKFLOW.md.
+
+Reverse: Gates may go back to their own helpers; the kit and the rules section can be removed.
+
+## B3731. A guard test holds every gate to the rules (2026-11-14)
+tools/harness/gate-rules.test.mjs reads every gate's source. It fails one that picks a document it made by position, uses the canvas or the viewed scene without a scene of its own, looks up a scene, actor or journal by a name it never makes, or checks for one exact version number. Gates from before the rules that still break one are listed in tools/harness/gate-rules-baseline.json, which may only shrink. At first it is empty, because every gate was moved over (B3733).
+
+Reverse: Delete gate-rules.test.mjs, gate-rules.mjs and the baseline.
+
+## B3732. A feature change updates its gate (2026-11-14)
+A PR that changes a feature updates the gate that covers it in the same PR. node tools/release/merge-stamp.mjs --check warns when a branch changes a module's scripts but none of the gates covering that module. It is a warning, not a stop, since a pure refactor needs no gate change.
+
+Reverse: Remove the warning block from merge-stamp.mjs and the paragraph from docs/WORKFLOW.md.
+
+## B3733. The older gates moved to the kit (2026-11-14)
+Seventeen gates that used the viewed scene now run inside kitRun, which gives each one a scratch scene of its own, viewed for the whole gate and removed after: gate6b, gate6c, gate7b1, gateanachronism, gatecrowd, gategroup6, gatepaperdoll, gateperf, gateplayerview, gatepod, gatequiet, gatesigs, gatesprites, gatewhen, gatewolf, gatechurch and gatecookways. gatechurch, gatecookways and gatesprites make their own actor instead of borrowing the first one in the world. gate6b, gate6c, gatelaw, gatepassing and gatepolitics read the newest message by its time. gateadopt, gateanachronism, gateeffects and gatesheet5 find their walls, tiles, tokens and items by what they are.
+
+Reverse: Each gate's own commit can be reverted on its own.
+
+## B3734. Everything added to the game has an effect in play (2026-11-14)
+Ben's standing rule: whenever something is added to the game, it must have some kind of tangible effect, unless it would be impossible to render. A minor or major release note in changes/ now carries an effect: line that says what a player or the Storyteller sees change (a roll, a card, a sheet row, a map or token change, a sound, a line an NPC says), or effect: none with the reason. node tools/release/merge-stamp.mjs --check warns when the line is missing. The rule is in docs/WORKFLOW.md and changes/README.md, and the gate for the feature checks that the effect happens.
+
+Reverse: Remove effectWarnings from merge-stamp.mjs and the paragraphs from docs/WORKFLOW.md and changes/README.md.

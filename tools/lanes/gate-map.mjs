@@ -56,7 +56,7 @@ export function gateMap(root = ROOT) {
     const name = f.replace(/\.mjs$/, "");
     if ( !/^gate[\w-]*\.mjs$/.test(f) || not.has(name) ) continue;
     const src = fs.readFileSync(path.join(root, "tools/gate", f), "utf8");
-    if ( !/export\s+(async\s+)?function\s+run\b/.test(src) ) continue;
+    if ( !/export\s+(?:(?:async\s+)?function\s+run\b|const\s+run\s*=)/.test(src) ) continue;
     const set = coveredBy(src, ids);
     for ( const m of extra.add?.[name] ?? [] ) set.add(m);
     for ( const m of extra.remove?.[name] ?? [] ) set.delete(m);
