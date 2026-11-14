@@ -160,7 +160,7 @@ export function build(ctx) {
             let live = running(actor);
             if (fd.endOld && live.length) live = live.slice(1);
             const lingers = DE.lingers(lore, e.level);
-            if (lingers && i.faith.perm && live.length >= i.faith.perm) { notify(`${actor.name} already keeps ${live.length} evocations running, the permanent Faith's limit (p. 171): end one first.`); return null; }
+            if (lingers && i.faith.perm && live.length >= i.faith.perm) { notify(`${actor.name} already keeps ${live.length} evocations running, the permanent Faith's limit (Demon: The Fallen p. 171): end one first.`); return null; }
             const plan = D.evocationPlan({ attr: traitVal(actor, ak), ability: traitVal(actor, bk), level: e.level, loreRating: i.lores[lore], faithCost: e.faith, faithSpent: n(fd.fs),
                 ravage: thralls.length ? n(fd.rav) : 0, permFaith: i.faith.perm, faithPool: i.faith.temp, unbelievers: n(fd.unb), mod: n(fd.mod) });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
