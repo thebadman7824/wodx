@@ -176,6 +176,19 @@ test("hurt in the day's sleep: the Awakening roll by itself; a botch sleeps unti
   assert.equal(rolls.length, 1, "no roll for a deep sleeper");
 });
 
+test("a Kuei-jin rolls Hun or Dharma, the higher, to stay awake (Kindred of the East p. 139)", async () => {
+  reset();
+  const k = vampire("Jade", {road: 0});
+  k.system.settings = {variant: "kindredeast"};
+  k.system.advantages.hun = {permanent: 4}; k.system.advantages.dharma = {permanent: 6};
+  await k.setFlag("wodx-actions", "dawnVigil", true);
+  actors.push(k);
+  await game.time.set(findTime(false) + 86400 * 5);
+  rolls.push(1);
+  await E.tick();
+  assert.match(posts.at(-1).body, /Hun or Dharma 6: 1 at 8/);
+});
+
 test("a long jump of the clock lands right, and the setting turns it all off", async () => {
   reset();
   const v = vampire("Jumper");

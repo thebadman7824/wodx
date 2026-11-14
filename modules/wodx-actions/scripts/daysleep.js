@@ -39,7 +39,12 @@ export function floatLocal({ tokens = [], word = "", color = "#ffffff" } = {}) {
 export function build(ctx) {
     const { rollPool, rollBlock, setting, setFlag } = ctx;
     const on = () => { try { return setting("daySleep") !== false; } catch (e) { return true; } };
-    const rating = a => n(a?.system?.advantages?.path?.permanent);
+    // Kuei-jin roll Hun or Dharma, whichever is higher, in place of Humanity (Kindred of the East p. 139)
+    const rating = a => {
+        const adv = a?.system?.advantages ?? {};
+        if (a?.system?.settings?.variant === "kindredeast") return Math.max(n(adv.hun?.permanent), n(adv.dharma?.permanent), n(adv.path?.permanent));
+        return n(adv.path?.permanent);
+    };
     const isKindred = a => !!a && P.detectProfile(a) === "kindred";
     const asleep = a => a?.getFlag?.(MOD, "daySleep") ?? null;
 
@@ -95,7 +100,8 @@ export function build(ctx) {
         const rd = rating(a);
         const r = await rollPool(rd, Math.min(10, 8 + sm.diff));
         const res = DS.awakening(r);
-        return { res, html: rollBlock(`Road ${rd}${sm.diff ? " (Deep Sleeper +2)" : ""}`, r), rolls: [r.roll].filter(Boolean), uncapped: false };
+        const what = a?.system?.settings?.variant === "kindredeast" ? "Hun or Dharma" : "Road";
+        return { res, html: rollBlock(`${what} ${rd}${sm.diff ? " (Deep Sleeper +2)" : ""}`, r), rolls: [r.roll].filter(Boolean), uncapped: false };
     }
 
     /** A card with a roll: public for a player's character, the Storyteller's only for theirs (standing rule 19). */
