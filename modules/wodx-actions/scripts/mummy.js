@@ -15,6 +15,7 @@ import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as MH from "./mummy-hekau.js";
 import * as EF from "./effects.js";
+import * as BR from "./book-rituals.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -124,6 +125,15 @@ export function build(ctx) {
                     const pp = EF.planOf(actor, MH.hekauResults(fd.named, got, { name: ns.name, source: `${REF} p. ${MH.PATH_PAGE[ns.path]}` }), got);
                     body += pp.html;
                     fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+                }
+            }
+            // A spell or ritual from the book list by its sheet name, when the named library has none (B3753)
+            const found = !ns && sp ? BR.findRitual(["mummy"], sp.name) : null;
+            if (found) {
+                body += `<div class="vta-note"><b>${esc(found.r.n)}</b>: ${esc(BR.ritualNote(found.set, found.r))}</div>`;
+                if (got && EF.isOn()) {
+                    const pp = EF.ritualPlan(actor, found.r, got, `${REF} ${found.r.page}`);
+                    body += pp.html; fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
                 }
             }
             body += `<div class="wodx-quiet">${REF} p. 78${ns ? `, ${MH.PATH_PAGE[ns.path]}` : ""}</div>`;

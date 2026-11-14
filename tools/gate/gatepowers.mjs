@@ -17,6 +17,7 @@
  *  10. Kuei-jin: Spend Chi with Dragon Dance spends a Yang and puts a boost on the effects card (B3750)
  *  11. A Discipline with no roll (Protean 2) readies the user and harms no one (B3751)
  *  12. A Dark Ages cantrip with [veil] on its sheet line puts Veil on the card when it takes (B3752)
+ *  13. Cast a ritual: a self ward from the era's ritual list puts Ward on the card when it takes (B3753)
  * Result: Data/wodx-gate/gatepowers-result.json.
  */
 const R = { started: new Date().toISOString(), steps: [], errors: [], notes: [] };
@@ -248,6 +249,21 @@ export async function run() {
       const m = await untilMsg(n);
       const items = fx(m), took = /success/.test(text(m)) && !/does not take|twists/.test(text(m));
       ok("12 Dark Ages cantrip keywords on the effects card", !!m && /Hush/.test(text(m)) && (took ? items.some(i => i.key === "veil") : items.length === 0), { era, took, card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`) });
+    });
+    await step("13 Cast a ritual puts its keywords on the card", async () => {
+      const era = game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null;
+      const set = era === "dark-ages" || era === "long-night" ? "v20da" : "v20";
+      const list = A().effects.bookRituals[set].list;
+      const i = list.findIndex(r => (r.k ?? []).includes("ward") && /self/.test(r.who));
+      const th = await mk("Thaumaturge", "Vampire", { attributes: { intelligence: { value: 5, total: 5 } } }, []);
+      await sleep(800);
+      await game.user.updateTokenTargets?.([]);
+      const n = game.messages.size;
+      answer(root => { set(root, "rit", `${set}:${i}`); set(root, "blood", 0); set(root, "diff", 4); });
+      A().castRitual({ actor: th });
+      const m = await untilMsg(n);
+      const items = fx(m), took = /it takes/.test(text(m));
+      ok("13 Cast a ritual puts its keywords on the card", !!m && i >= 0 && text(m).includes(list[i].n) && (took ? items.some(x => x.key === "ward") : items.length === 0), { era, ritual: list[i]?.n, took, card: text(m).slice(0, 300), items: items.map(x => `${x.key}:${x.route}`) });
     });
   } finally {
     for (const [h, id] of hooks) Hooks.off(h, id);
