@@ -52,8 +52,15 @@ export function groupsOf(actor) {
 
 export const of = actor => T.traitsOf(view(actor));
 export const has = (actor, keyOrName) => T.has(view(actor), keyOrName);
-/** The traits' effects on one roll, and the signature features' (clan, tribe, auspice, breed) when their line is on. */
-export const effects = (actor, ctx = {}) => [...T.effectsFor(view(actor), ctx), ...sigRollEffects(actor, ctx)];
+/**
+ * B3902: other modules add effects of their own on the same channels (WoDX Library: a ward carried, a holy symbol
+ * held). Each source is fn(actor, ctx) -> [{key, name, dice, diff, note}].
+ */
+const SOURCES = [];
+export function addSource(fn) { if ( typeof fn === "function" && !SOURCES.includes(fn) ) SOURCES.push(fn); return () => SOURCES.splice(SOURCES.indexOf(fn), 1); }
+const fromSources = (actor, ctx) => SOURCES.flatMap(fn => { try { return fn(actor, ctx) ?? []; } catch (e) { console.warn("WoDX Chronicle | trait effect source", e); return []; } });
+/** The traits' effects on one roll, the signature features' (clan, tribe, auspice, breed) when their line is on, and other modules'. */
+export const effects = (actor, ctx = {}) => [...T.effectsFor(view(actor), ctx), ...sigRollEffects(actor, ctx), ...fromSources(actor, ctx)];
 /** For WoDX Senses: what the character's traits do to their own senses, and what others sense about them. */
 export const senses = actor => T.senseEffects(view(actor));
 export const shows = actor => T.showsOf(view(actor));
@@ -182,4 +189,4 @@ export function registerTraitHooks() {
   });
 }
 
-export const traitsApi = {view, of, has, effects, senses, shows, ticks, toughness, attitudeSeed, groupsOf, triggers, pulls, ledgerFor, prompt, worldPlan, makeReal, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};
+export const traitsApi = {view, of, has, effects, addSource, senses, shows, ticks, toughness, attitudeSeed, groupsOf, triggers, pulls, ledgerFor, prompt, worldPlan, makeReal, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};

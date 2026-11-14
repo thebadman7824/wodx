@@ -199,7 +199,7 @@ Next free block: B3940
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | The no-effect audit, part 2: ammunition, everyday goods, character traits, the world (used B3900-B3901) | Library, Combat |
+| B3900-B3929 | Faith and occult goods in play (used B3900-B3902) | Chronicle, Library |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 <!-- decision-index:end -->
 
@@ -6659,6 +6659,11 @@ Reverse: drop the reloadPlan lines in Combat's reload.
 WoDX Combat. Bows and slings have no capacity on the sheet, so Count shots never counted them. With Count shots on, a bow or sling now needs an arrow or a stone in Possessions to shoot, and each shot spends one. The automatic attack skips a bow with no arrows. With Count shots off, nothing changes.
 
 Reverse: remove shotAmmo from the attack and attackUsable.
+
+## B3902. Trait effects from other modules (2026-11-14)
+WoDX Chronicle. The no-effect audit found faith and occult goods with only a note behind Pray, Set it as a ward and Divine (desk i1, approved by Ben). A ward has to reach the rolls WoDX Actions already makes against a character's mind and magic, and those read Chronicle's trait effects, so Chronicle now takes extra effect sources from other modules (api.traits.addSource). A source that throws is skipped with a warning, so a broken module never stops a roll.
+
+Reverse: drop SOURCES, addSource and fromSources from traits.mjs.
 
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
