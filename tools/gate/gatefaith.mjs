@@ -33,6 +33,9 @@ export async function run() {
     });
 
     await G.step("2. a prayer", async () => {
+      // set the rating after the sheet is made: a new mortal sheet works its Willpower out on creation
+      await a.update({"system.advantages.willpower.permanent": 6, "system.advantages.willpower.temporary": 2});
+      const start = {permanent: a.system.advantages.willpower.permanent, temporary: a.system.advantages.willpower.temporary};
       const wp = () => Number(a.system.advantages.willpower.temporary);
       let tries = 0;
       while ( wp() <= 2 && tries < 8 ) { await a.unsetFlag(LIB, "prayedNight"); await lib.faith.pray(a, beads); tries++; }
@@ -42,7 +45,7 @@ export async function run() {
       await lib.faith.pray(a, beads);
       await wait(400);
       const again = [...game.messages].slice(-2).some(m => /prayed already tonight/i.test(m.content));
-      G.ok("2. a prayer", gained && Number.isFinite(night) && wp() === before && again, {gained, tries, night, again, wp: wp()});
+      G.ok("2. a prayer", gained && Number.isFinite(night) && wp() === before && again, {start, gained, tries, night, again, wp: wp()});
     });
 
     await G.step("3. a ward", async () => {
