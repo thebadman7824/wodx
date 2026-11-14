@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4720
+Next free block: B4730
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -220,6 +220,7 @@ Next free block: B4720
 | B4690-B4699 | Central Africa names (Kongo, Luba, Ganda) (used B4690-B4692) | Creation, Chronicle |
 | B4700-B4709 | A heartbeat from GitHub for the PC runner (used B4700) | tools (no module) |
 | B4710-B4719 | Amazigh (Berber) names (used B4710-B4712) | Creation, Chronicle |
+| B4720-B4729 | Old installed tables stand aside for their replacements (used B4720) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7151,3 +7152,8 @@ Reverse: edit the amazigh entry in data/people-world.mjs.
 WoDX Creation. Before 1800 a person carries "ibn" or "bint" and the father's name, or the tribe (al-Sanhaji, al-Masmudi); from 1800 a Kabyle or Moroccan family name, many with Aït.
 
 Reverse: change fam or child in the amazigh entry.
+
+## B4720. An installed table no longer shipped stands aside (2026-11-14)
+WoDX Chronicle. When a region's mix is split by era (the Arctic's one table for every age became four), the table installed in the world under the old key was never updated, and as a world table it won every draw: the testbed's Arctic stayed all Norse. Now a world table whose module still registers but no longer ships its key, and which still holds the results it was installed with, is passed over in draws. Nothing is deleted; a table the Storyteller edited still wins.
+
+Reverse: drop the retired() check in allTables in gen.mjs.

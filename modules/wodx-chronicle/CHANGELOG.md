@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.106.1 (Old installed Roll Tables the module no longer ships, left as installed, stand aside for their replacements; tables the Storyteller edited still win (B4720))
 - 0.106.0 (The Maghreb holds the Amazigh beside the Arabs (B4710))
 - 0.105.0 (Looks on the map: api.looks shows fire, floods, smoke, broken ground, taint, storms, fog, snow and quakes on a scene with Token Magic FX, Sequencer and JB2A, and FXMaster weather where those modules are on, and plain shapes and Foundry weather where they are not; each player picks Full, Light or Off for moving effects (B3758))
 - 0.104.0 (Central Africa has the Kongo, the Luba and Lunda and the Baganda from 1197 (B4690))

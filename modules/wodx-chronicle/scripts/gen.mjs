@@ -74,16 +74,24 @@ const tableKey = d => `${d.id}|${(d.era ?? []).join(",")}|${(d.culture ?? []).jo
 const contentHash = results => G.hash128(JSON.stringify(results.map(r => [r.text, r.weight ?? 1]))).join("-");
 const textOf = r => String(r.description || r.name || r.text || "").replace(/<[^>]+>/g, "").trim();
 
+/** An installed table its module no longer ships under that key, with the results it was installed with. */
+export const retired = (f, d, shippedKeys) => Boolean(f.source && SOURCES.has(f.source) && !shippedKeys.has(tableKey(d))
+  && f.shipped && contentHash(d.results) === f.shipped);
+
 /** Every table, the world's own Roll Tables (as the Storyteller edited them) before the shipped data. */
 function allTables() {
   if ( cache ) return cache;
   const defs = [];
   const seen = new Set();
+  const shippedKeys = new Set([...SOURCES.values()].flatMap(list => list.map(tableKey)));
   for ( const t of game.tables ?? [] ) {
     const f = t.getFlag?.(MODULE_ID, "table");
     if ( !f?.id ) continue;
     const d = {id: f.id, era: f.era ?? null, culture: f.culture ?? null, name: t.name,
       results: [...t.results].map(r => ({text: textOf(r), weight: r.weight, range: r.range}))};
+    // A table its module no longer ships (its eras or cultures were split), left as installed: it would shadow the
+    // shipped tables that replaced it, so it stands aside. A table the Storyteller edited still wins.
+    if ( retired(f, d, shippedKeys) ) continue;
     seen.add(tableKey(d));
     defs.push(d);
   }
