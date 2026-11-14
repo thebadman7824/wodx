@@ -171,11 +171,11 @@ async function finish(issue, ok, text) {
 /** The failing steps of the gates in a report, from each lane's result files. */
 function failDetail(lane, report) {
   const out = [];
-  for ( const m of report.matchAll(/^(\w[\w-]*): (?!\d+\/\d+ passed)(.*)$/gm) ) {
+  for ( const m of report.matchAll(/^(\w[\w-]*): (?!(\d+)\/\2 passed$)(.*)$/gm) ) {
     const f = path.join(laneOf(lane).dataPath, "Data", "wodx-gate", `${m[1]}-result.json`);
     const j = readJson(f);
     const bad = (j?.steps ?? []).filter(s => !s.pass).slice(0, 8).map(s => `  FAIL ${JSON.stringify(s).slice(0, 700)}`);
-    out.push(`${m[1]}: ${m[2]}`, ...bad, ...(j?.errors ?? []).slice(0, 4).map(e => `  ERR ${String(e).slice(0, 400)}`));
+    out.push(`${m[1]}: ${m[3]}`, ...bad, ...(j?.errors ?? []).slice(0, 4).map(e => `  ERR ${String(e).slice(0, 400)}`));
   }
   return out.join("\n");
 }
@@ -209,10 +209,12 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
     const f = path.join(laneOf(lane).dataPath, "Data", "wodx-gate", `${job.gate}-result.json`);
     fs.rmSync(f, {force: true});
     const r = await node("tools/harness/gate-two.mjs", [job.gate, "--url", `https://localhost:${laneOf(lane).port}`], {logTo: L, minutes: 30});
+    // The failing steps are read before the reset, which may put the lane's data back
+    const line = r.out.split("\n").filter(x => x.startsWith(`${job.gate}:`)).pop() ?? r.out.trim().split("\n").slice(-3).join("\n");
+    const detail = failDetail(lane, line);
     await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L});
     if ( r.code === null ) return faultRetry("gate-two ran past its time limit", r.out);
-    const line = r.out.split("\n").filter(x => x.startsWith(`${job.gate}:`)).pop() ?? r.out.trim().split("\n").slice(-3).join("\n");
-    return {code: r.code, text: `${line}\n${failDetail(lane, line)}`.trim()};
+    return {code: r.code, text: `${line}\n${detail}`.trim()};
   }
   const report = path.join(LOGS, `${tag}-l${lane}-report.txt`);
   fs.rmSync(report, {force: true});
