@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3680
+Next free block: B3690
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -188,6 +188,7 @@ Next free block: B3680
 | B3650-B3659 | Threads of Fate: procedural storylines and encounters from story hooks (used B3650-B3656) | Storyteller |
 | B3660-B3669 | The Rothenstein saga: the running step for other systems (used B3660-B3669) | Chronicle |
 | B3670-B3679 | The Rothenstein saga keeps its calendar on long skips (used B3670-B3672) | Chronicle |
+| B3680-B3689 | Baneklaives and Bane fetishes; the Kinfolk book check (used B3680-B3682) | Library, Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6051,3 +6052,18 @@ Reverse: remove spine.saga from the recipe, or turn the switch off in the built 
 WoDX Chronicle. The testbed gate found that a saga run counted each gap from the moment a step was dealt, so a skip of months dealt one step and pushed the rest later. A saga run now sets `last` to the step's due time, so the book holds its dates and a long skip deals every step it passes over, in order. Plain story chains keep the old way.
 
 Reverse: in dealChains (pod.mjs), set run.last = t for saga runs too.
+
+## B3680. Kinfolk do not make fetishes unless the world says so (2026-11-14)
+WoDX Library and Storyteller. Ben picked "Kinfolk as a house reading" until W20 Kinfolk was read (B3634). The book check found that W20 Kinfolk gives Kinfolk no Rites Background, only Kinfolk Rites, and says a Kin holds a fetish only through the story (pdf 61, 75). Hammer and Klaive says plainly that Kinfolk cannot create fetishes (pdf 45). So Kinfolk making is off by default and the Library world setting craftKinfolk (off) keeps the house reading for a world that wants it.
+
+Reverse: turn craftKinfolk on in the world, or set its default to true.
+
+## B3681. Black Spiral Dancers bind Banes and make only the Bane fetishes (2026-11-14)
+WoDX Library. W20 Book of the Wyrm lists the Bane fetishes (book p. 183-184, pdf 184-185) but gives no rite of its own for making them. WoDX reads it as the Rite of the Fetish with a Bane bound (court "wyrm" in WoDX Otherworlds). A Garou whose tribe is the Black Spiral Dancers is a "spiral" maker and sees only the rows marked wyrm; a Gaian Garou sees none of them. Making Wyrmflesh shows the Storyteller a caution, since it means a month of torture.
+
+Reverse: drop the `!!w.wyrm === spiral` filter in wonder-rules.mjs listFor to give every Garou every list.
+
+## B3682. The baneklaive and the Devilwhip as weapons (2026-11-14)
+WoDX Library. The baneklaive is level 5, Gnosis 7, a two-handed silver sword at Strength +3 aggravated, difficulty 7, and costs a carrier 2 effective Gnosis as silver, like a grand klaive (silver 2). Its extra Melee die when woken and its Gnosis drawn from spirits stay in its text for the Storyteller. The book gives the Devilwhip's damage (Strength +1 aggravated) but no difficulty: WoDX uses 6, marked as a house figure.
+
+Reverse: edit the weapon fields of the two rows in data/wonders.mjs.

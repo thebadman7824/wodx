@@ -7,7 +7,8 @@
  * other lines add rows here with their own `line` and `make` keys.
  *
  * Row: {key, name, line, kind, level, gnosis, spirit (what must be bound, in words), court (spirit court key in
- *   WoDX Otherworlds), does, book, pdf, page?, weapon?, silver?, breeds?, tribe?, onlyFemale?, house?}
+ *   WoDX Otherworlds), does, book, pdf, page?, weapon?, silver?, breeds?, tribe?, onlyFemale?, house?, wyrm?, atrocity?}
+ *   wyrm: a Bane fetish, made only by servants of the Wyrm; atrocity: making it is a crime the Storyteller must see
  *   kind: "fetish" (lasting, attuned, activated at its Gnosis) or "talen" (one use; the binding makes several)
  *   weapon: {attr, bonus, type, diff, ability, hands, note}; silver: points off the carrier's effective Gnosis
  *   breeds: which Changing Breeds make it (default ["garou"]); a Fera breed's own fetishes name only that breed
@@ -30,13 +31,20 @@ export const MAKES = {
 /** Extra talens from a stronger spirit (W20 pdf 229 says two or three; which is which is a house reading, B3633). */
 export const TALEN_EXTRA = {gaffling: 0, jaggling: 2, greater: 3};
 
-/** Who may use these rites (W20 core; W20 Kinfolk is still to be read: the Kinfolk row is a house reading, B3634). */
+/**
+ * Who may use these rites (W20 core). Kinfolk: the book check (B3680) found W20 Kinfolk (pdf 61: no Rites Background,
+ * only Kinfolk Rites; pdf 75: Kin hold fetishes only by story) and Hammer and Klaive (pdf 45: Kinfolk cannot create
+ * fetishes at all), so Kinfolk making is off unless the world setting craftKinfolk keeps Ben's house reading (B3634).
+ * Black Spiral Dancers bind Banes and see only the Bane fetishes (B3681).
+ */
 export const MAKERS = {
   garou: {label: "Garou and the other Changing Breeds", needs: "the rite known, Rituals at least the rite's level"},
-  kinfolk: {label: "Kinfolk with Gnosis", needs: "the rite known, at least 1 permanent Gnosis, Rituals at least the rite's level", house: true}
+  spiral: {label: "Black Spiral Dancers and other servants of the Wyrm", needs: "the rite known, Rituals at least the rite's level; a Bane bound", house: true},
+  kinfolk: {label: "Kinfolk with Gnosis", needs: "the world setting craftKinfolk, the rite known, at least 1 permanent Gnosis, Rituals at least the rite's level", house: true}
 };
 
 const W20 = "W20 core";
+const BOW = "W20 Book of the Wyrm";
 export const WONDERS = [
   // ---------------- Level One ----------------
   {key: "apeskin", name: "Apeskin", line: "garou", kind: "fetish", level: 1, gnosis: 6, spirit: "an ancestor-spirit of the homid line", court: "totem",
@@ -155,7 +163,22 @@ export const WONDERS = [
   {key: "pipes-of-the-swarm", name: "Pipes of the Swarm", line: "garou", kind: "fetish", level: 1, gnosis: 4, spirit: "an angry young Rat-spirit", court: "beast", breeds: ["ratkin"],
     does: "Played with a Gnosis roll, calls a swarm of rats with a health level a success.", book: "Breedbook: Ratkin", pdf: 73},
   {key: "net-of-vengeance", name: "Net of Vengeance", line: "garou", kind: "fetish", level: 4, gnosis: 7, spirit: "a sea-spirit (house reading), in a net stolen from a fishing boat", court: "elemental", breeds: ["rokea"], house: true,
-    does: "Anyone caught in it starts to drown, whatever they breathe, until they tear or work free.", book: "Breedbook: Rokea", pdf: 82}
+    does: "Anyone caught in it starts to drown, whatever they breathe, until they tear or work free.", book: "Breedbook: Rokea", pdf: 82},
+  // ---------------- Bane fetishes: Black Spiral Dancers (W20 Book of the Wyrm, Rotten Baubles, book p. 183-184) ----------------
+  {key: "brush-of-the-ancients", name: "Brush of the Ancients", line: "garou", kind: "fetish", level: 1, gnosis: 8, spirit: "a Bane", court: "wyrm", wyrm: true,
+    does: "A silver-bound wolf-fur brush that lets the painter call on ancestors to paint true scenes of the past and of what is coming. Working out what a painting means takes half an hour and Intelligence + Enigmas at difficulty 7.", book: BOW, pdf: 184},
+  {key: "stolen-eye", name: "Stolen Eye", line: "garou", kind: "fetish", level: 1, gnosis: 2, spirit: "a Bane", court: "wyrm", wyrm: true,
+    does: "An eye taken from a living person. Laid wet with salt water on a flat surface, it squirms round to look toward the nearest Corax. It rots within about a month and turns to sludge if its first owner dies.", book: BOW, pdf: 184},
+  {key: "bane-lantern", name: "Bane Lantern", line: "garou", kind: "fetish", level: 2, gnosis: 5, spirit: "a Bane", court: "wyrm", wyrm: true,
+    does: "A glyph-painted steel lantern lit by a word in the Wyrm's tongues. Its purple light makes spirits plainly visible in the physical world and shows a possessed creature's rider in its shadow; spirits nearby are drawn to it.", book: BOW, pdf: 184},
+  {key: "devilwhip", name: "Devilwhip", line: "garou", kind: "fetish", level: 2, gnosis: 6, spirit: "a living Bane, whose severed tentacle is the lash", court: "wyrm", wyrm: true,
+    does: "A barbed lash five yards long, cut from a living Bane and smoke-cured so it stays in the physical world; the Bane can move it as if the wielder did. Cracked before a foe's face it orders them to bow down (Willpower at difficulty 6 resists). The handle rots away and must be remade each month.", book: BOW, pdf: 185,
+    weapon: {attr: "strength", bonus: 1, type: "aggravated", diff: 6, ability: "melee", hands: 1, note: "The difficulty is a house figure; the book gives only the damage.", house: true}},
+  {key: "wyrmflesh", name: "Wyrmflesh", line: "garou", kind: "fetish", level: 3, gnosis: 6, spirit: "a Bane", court: "wyrm", wyrm: true, atrocity: true,
+    does: "A tunic of tattooed, tanned human skin taken over a lunar month from a living victim. It adds three dice to soak against all damage, silver included, changes with the wearer's form, and shrieks and bleeds when anything gets through.", book: BOW, pdf: 185},
+  {key: "baneklaive", name: "Baneklaive", line: "garou", kind: "fetish", level: 5, gnosis: 7, spirit: "a Bane", court: "wyrm", wyrm: true, silver: 2,
+    does: "The Black Spiral Dancers' answer to the grand klaive: a sword-length silver blade with twisted runes and threads of balefire, so it wounds as both silver and a thing of the Wyrm. Woken, it adds a die to the wielder's Melee pool. Against a spirit, every two levels of damage give the wielder back a point of Gnosis, from one spirit a scene.", book: BOW, pdf: 185,
+    weapon: {attr: "strength", bonus: 3, type: "aggravated", diff: 7, ability: "melee", hands: 2, note: "Silver and a Wyrm-emanation: werewolves soak it only in breed form. Woken, one more Melee die."}}
 ];
 
 export const byKey = Object.fromEntries(WONDERS.map(w => [w.key, w]));
