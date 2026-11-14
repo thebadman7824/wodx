@@ -184,6 +184,21 @@ export function rollFor(r, ground, {night = false, year = 0} = {}) {
 }
 
 /**
+ * B3907: tack on horseback or a mule (house rule). kit: WoDX Library's roadKit for the rider, or null when the Library
+ * is off (then nothing changes). With no saddle or no bridle the ride is +1 (bareback or a rope halter); spurs or a
+ * riding crop make a flat-out ride one easier. {diff, parts}
+ */
+export function tackMods(r, kit) {
+  const W = WAYS[r?.way];
+  if ( !kit || !W?.hooves || !W.mounted || !["horse", "mule"].includes(r.way) ) return {diff: 0, parts: []};
+  let diff = 0;
+  const parts = [];
+  if ( !kit.saddle || !kit.bridle ) { diff += 1; parts.push(`${!kit.saddle ? "no saddle" : "no bridle"} +1`); }
+  if ( r.flatOut && kit.urge ) { diff -= 1; parts.push(`${kit.names?.urge ?? "spurs"} -1`); }
+  return {diff, parts};
+}
+
+/**
  * A new chase. quarry: {id, name, way, run, lead (yards)}; pursuers: [{id, name, way, run}]. Each racer keeps a total.
  * The quarry's head start goes into its total.
  */
