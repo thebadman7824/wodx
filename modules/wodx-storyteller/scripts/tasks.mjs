@@ -239,6 +239,8 @@ export async function tick({force = false} = {}) {
         if ( l.status === "done" && after[l.id]?.nights ) {
           const o = P.outcomeOf(after[l.id], after[l.id].target?.name ?? "");
           await log({kind: "task", actor: isPC(a) ? a.id : null, name: a.name, attention: o.background ? `A dot of ${o.background} to award` : null, text: `${a.name}: ${l.name}. ${o.text}`});
+          // B4867: a language, a trail and research end by themselves (reach.mjs projectDone)
+          try { await game.modules.get(MOD)?.api?.reach?.projectDone?.(a, after[l.id]); } catch (e) { console.error(`${MOD} | project done`, e); }
         }
         if ( l.status === "done" || l.status === "ruined" ) await log({kind: "task", actor: isPC(a) ? a.id : null, name: a.name,
           attention: l.status === "ruined" ? "A long task was ruined" : null, text: `${a.name}: ${l.name} ${l.status === "done" ? "is finished" : `was ${R.ruinWord(after[l.id])}`}.`});

@@ -119,6 +119,43 @@ export function build(ctx) {
         return ChatMessage.create({ content: card(`${plan.label[0].toUpperCase()}${plan.label.slice(1)}: ${target.name}`, `<p>${esc(D.HUNT_FORMS[form].note)}</p><p>${esc(plan.groundText)}${plan.bounty ? `. Bounty: ${esc(plan.bounty)}` : ""}${plan.pardon ? ". Diablerie on the outcast is pardoned." : "."}</p><ul>${lines.map(l => `<li>${l}</li>`).join("")}</ul><p>It ends at the target's Final Death or when lifted. Whoever brings the target in gains a dot of Status (house rule).</p>${btn("liftHunt", target, "Lift the hunt", h.id)}<p class="wodx-quiet">${esc(plan.page)}</p>`),
             whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
     }
+    /* ---- x4 (B4873): the court calls a hunt on its own at a faction turn ----
+     * A non-player Kindred is hunted at once, with Lift it on the Storyteller's card; a player character's hunt waits in the
+     * approval queue and is called when approved. The Storyteller's own tools stay. */
+    const T_HUNT = "wodx-actions.bloodHunt";
+    async function autoHunts() {
+        if (!isActiveGM() || setting("autoBloodHunt") === false) return [];
+        const list = hunts(), out = [];
+        const breaches = kx().masqEntries?.() ?? [];
+        for (const a of game.actors ?? []) {
+            if (P.detectProfile(a) !== "kindred" || list.some(h => h.active && h.targetId === a.id)) continue;
+            const since = n(a.getFlag(MOD, "huntLooked"));
+            const mine = breaches.filter(e => e.byUuid === a.uuid || (!e.byUuid && e.by === a.name));
+            const due = D.huntDue({ marks: a.getFlag(MOD, "diablerieMarks") ?? [], breaches: mine, since });
+            await a.setFlag(MOD, "huntLooked", game.time.worldTime);
+            if (!due) continue;
+            if (due.entry) { try { await kx().markHuntSeen?.(due.entry); } catch (e) { /* older records */ } }
+            if (a.hasPlayerOwner) {
+                await api("wodx-chronicle")?.approvals?.propose?.({ type: T_HUNT, key: `bloodHunt:${a.id}`, title: `The court calls a hunt on ${a.name}`,
+                    detail: `For ${due.why}. Approved, the hunt is called: the court's Kindred hunt them, word goes out and their Status is taken.`, data: { target: a.id, ground: due.ground } });
+                out.push({ target: a.id, waits: true });
+                continue;
+            }
+            await callHunt(a, { ground: due.ground });
+            const h = hunts().find(x => x.active && x.targetId === a.id);
+            if (h) await ChatMessage.create({ whisper: gmIds(), speaker: { alias: "WoDX" }, content: card(`The court acts: ${a.name}`, `<p>At the faction turn the court calls a hunt for ${esc(due.why)}.</p>${btn("liftHunt", a, "Lift it", h.id)}`) });
+            out.push({ target: a.id, hunt: h?.id ?? null });
+        }
+        return out;
+    }
+    function registerAutoHunts() {
+        api("wodx-chronicle")?.approvals?.registerHandler?.(T_HUNT, { label: "The court calls a Blood Hunt", approve: async entry => {
+            const a = game.actors.get(entry.data?.target);
+            if (a && !hunts().some(h => h.active && h.targetId === a.id)) await callHunt(a, { ground: entry.data?.ground ?? "other" });
+        } });
+        Hooks.on("wodxFactionTurn", () => { autoHunts().catch(e => console.error("WoDX | hunts", e)); });
+    }
+
     async function endHunt(id, how = "lifted") {
         if (!game.user.isGM) return null;
         const list = hunts(), i = list.findIndex(h => h.id === id && h.active);
@@ -393,12 +430,14 @@ export function build(ctx) {
         return null;
     }
 
-    return { bloodHunt, callHunt, endHunt, onFinalDeath, checkDeath, oaths, breakOath, onTurn, holdBeast, bearingMods, markImitating, riseLines, humanityOf, wake, markDiablerie, auraNote, marks, soulCards, onChatButton };
+    return { bloodHunt, callHunt, endHunt, autoHunts, registerAutoHunts, onFinalDeath, checkDeath, oaths, breakOath, onTurn, holdBeast, bearingMods, markImitating, riseLines, humanityOf, wake, markDiablerie, auraNote, marks, soulCards, onChatButton };
 }
 
 /** Settings this part adds. */
 export function registerSettings() {
     game.settings.register(MOD, "bloodHunts", { scope: "world", config: false, type: Array, default: [] });
+    game.settings.register(MOD, "autoBloodHunt", { name: "The court calls Blood Hunts", hint: "At each faction turn (WoDX NPC), a Kindred with fresh marks of diablerie or a severe breach of the Masquerade (three or more witnesses who remember, where word spreads) is hunted: at once for a Storyteller's character, with Lift it on the card; through the approval queue for a player's.",
+        scope: "world", config: true, type: Boolean, default: true });
     game.settings.register(MOD, "beastToken", { name: "The Beast in a fight", hint: "When a player's vampire is in frenzy or Rötschreck during a fight: a card each turn of what the Beast wants, or the NPC planner moves the token for the Beast (WoDX NPC; every move can be undone). A Willpower point takes a turn back (V20 p. 310).",
         scope: "world", config: true, type: String, default: "card", choices: B.BEAST_MODES });
     game.settings.register(MOD, "diablerieSoul", { name: "A diablerized soul can push through", hint: "Optional (V20 p. 295 gives it as a rumour): a victim with Willpower 10 and much stronger blood may push through. At nightfall the diablerist rolls Willpower; a failure lets the victim's habits and wants through (house rule).",

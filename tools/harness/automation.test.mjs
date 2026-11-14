@@ -174,3 +174,14 @@ test("wiring: handlers carry their small rules, and the tray and levels are reac
   has("wodx-combat", /FEnd\.installFightEnd\(\)/);
   has("wodx-npc", /"talkAskWait"/);
 });
+
+test("B4860: a new world starts at Balanced once, never the Live world, never over a pick or the solo switch", () => {
+  assert.equal(AR.seedPlan({worldId: "rothenstein-wodx"}), "balanced");
+  assert.equal(AR.seedPlan({worldId: "rothenstein-solo"}), "balanced");
+  assert.equal(AR.seedPlan({worldId: "rothenstein-live"}), null);
+  assert.equal(AR.seedPlan({worldId: "w", seeded: true}), null);
+  assert.equal(AR.seedPlan({worldId: "w", solo: true}), null);
+  assert.equal(AR.seedPlan({worldId: "w", level: "handsOff"}), null);
+  assert.equal(AR.seedPlan({worldId: "w", base: {at: 5}}), null);
+  assert.ok(AR.LEVELS.includes(AR.START_LEVEL));
+});

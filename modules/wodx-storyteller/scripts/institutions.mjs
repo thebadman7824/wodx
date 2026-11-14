@@ -21,6 +21,7 @@ import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
 import {lawOf} from "../../wodx-chronicle/scripts/law-rules.mjs";
 import {sweepSeats} from "../../wodx-chronicle/scripts/law-regime-rules.mjs";
 import {influenceOf} from "./ventures.mjs";
+import * as Reach from "./reach.mjs";
 
 const T_CLIMB = `${MOD}.climb`, T_LEVER = `${MOD}.lever`;
 const MONTH = 30 * 86400;
@@ -141,11 +142,10 @@ async function approveLever(e) {
   const {actor, inst: id, key, target, words} = e?.data ?? {};
   const a = game.actors.get(actor), inst = byId(id), tgt = target ? game.actors.get(target) : null;
   if ( !a || !inst ) return;
-  try {
-    if ( tgt && inst.kind === "press" && (key === "print" || key === "campaign") ) await Rumours.startTale({about: tgt.id, did: words || "is in the paper", tone: -1, big: true, truth: "half", where: ""});
-    if ( tgt && inst.kind === "worship" && key === "denounce" ) await Rumours.startTale({about: tgt.id, did: words || "was denounced from the pulpit", tone: -2, big: true, truth: "half", where: ""});
-  } catch (er) { console.error(`${MOD} | lever`, er); }
-  await log({kind: "institution", actor: a.id, name: a.name, attention: "A lever was pulled", text: `${a.name}, ${inst.name}: ${(I.leversFor(inst.kind, I.RANKS).find(l => l.key === key)?.words ?? key).toLowerCase()}${tgt ? ` (${tgt.name})` : ""}. ${words}`.trim()});
+  // B4863: every lever now does what it says, to its target and its town (reach-rules.mjs LEVERS)
+  let done = [];
+  try { done = await Reach.lever({actor: a, inst, key, target: tgt, words}); } catch (er) { console.error(`${MOD} | lever`, er); }
+  await log({kind: "institution", actor: a.id, name: a.name, attention: "A lever was pulled", text: `${a.name}, ${inst.name}: ${(I.leversFor(inst.kind, I.RANKS).find(l => l.key === key)?.words ?? key).toLowerCase()}${tgt ? ` (${tgt.name})` : ""}. ${words}${done.length ? ` Then: ${done.join("; ")}.` : ""}`.trim()});
   Hooks.callAll("wodxLever", {actor: a, institution: inst, key, target: tgt});
 }
 
@@ -179,17 +179,58 @@ export async function monthRun({force = false} = {}) {
   });
   await save(s);
   for ( const e of out ) {
-    if ( e.pc ) await chron()?.propose?.({type: `${MOD}.institutionEvent`, title: `${e.name}: ${e.text}`, detail: "A player character's seat. Approve to note it; the Storyteller plays what comes of it.", data: {inst: e.inst, seat: e.seat, kind: e.kind}});
+    if ( e.pc ) await chron()?.propose?.({type: `${MOD}.institutionEvent`, title: `${e.name}: ${e.text}`, detail: "A player character's seat. Approve and it lands: a scandal costs the seat and starts talk, a contest drops the holder a rank.", data: {inst: e.inst, seat: e.seat, kind: e.kind}});
     else if ( e.kind !== "filled" ) await log({kind: "institution", text: `${e.name}: ${e.text}`});
   }
   return out;
+}
+
+/* ---- B4863: seats given and taken by a lever, and trouble on a player character's seat ---- */
+
+/** Give someone the lowest seat, or one rank up if they hold one. */
+export async function seat(instId, who) {
+  const s = state(), k = s.list.findIndex(i => i.id === instId);
+  if ( k < 0 || !who ) return null;
+  const r = I.promote(s.list[k], {id: who.id, name: who.name}, {at: now()});
+  if ( r.why ) return null;
+  s.list[k] = r.inst;
+  await save(s);
+  return r;
+}
+/** Take every seat someone holds in one institution. */
+export async function unseat(instId, id) {
+  const s = state(), k = s.list.findIndex(i => i.id === instId);
+  if ( k < 0 ) return 0;
+  const r = I.unseat(s.list[k], id);
+  s.list[k] = r.inst;
+  await save(s);
+  return r.removed;
+}
+async function approveTrouble(e) {
+  const {inst: id, seat: i, kind} = e?.data ?? {};
+  const s = state(), k = s.list.findIndex(x => x.id === id);
+  const inst = s.list[k], seatNow = inst?.seats?.[i];
+  if ( !seatNow?.holder ) return;
+  const holder = seatNow.holder, a = game.actors.get(holder.pawnOf || holder.id);
+  if ( kind === "scandal" ) {
+    inst.seats[i] = {rank: seatNow.rank, holder: null, since: 0};
+    if ( a ) await Rumours.startTale({about: a.id, did: `was caught up in a scandal in ${inst.name}`, tone: -1, big: true, truth: "half", where: ""});
+  } else if ( kind === "contest" ) {
+    const down = inst.seats.findIndex(x => x.rank === seatNow.rank - 1 && !x.holder);
+    inst.seats[i] = {rank: seatNow.rank, holder: null, since: 0};
+    if ( down >= 0 ) inst.seats[down] = {rank: seatNow.rank - 1, holder, since: now()};
+    if ( a ) await Rumours.startTale({about: a.id, did: `lost a contest for a seat in ${inst.name}`, tone: -1, big: false, truth: "true", where: ""});
+  }
+  s.list[k] = inst;
+  await save(s);
+  await log({kind: "institution", actor: a?.id, name: holder.name, attention: "Trouble in an institution", text: `${inst.name}: ${holder.name} ${kind === "scandal" ? "loses the seat in a scandal" : "drops a rank after a contest"}.`});
 }
 
 export function registerApproval() {
   const ap = chron()?.approvals;
   ap?.registerHandler?.(T_CLIMB, {label: "A climb in an institution", approve: approveClimb, reject: async () => {}});
   ap?.registerHandler?.(T_LEVER, {label: "A lever in an institution", approve: approveLever, reject: async () => {}});
-  ap?.registerHandler?.(`${MOD}.institutionEvent`, {label: "Trouble in an institution", approve: async () => {}, reject: async () => {}});
+  ap?.registerHandler?.(`${MOD}.institutionEvent`, {label: "Trouble in an institution", approve: approveTrouble, reject: async () => {}});
 }
 
 export function registerInstitutionHooks() {
@@ -233,4 +274,4 @@ export async function institutionsDialog() {
     buttons: [{action: "close", label: "Close", default: true}]});
 }
 
-export const api = () => ({open: institutionsDialog, state, ofTown, byId, seatsOf, sweep: onRegimeTurn, reconcile: reconcileAll, month: monthRun, askLever, rules: I});
+export const api = () => ({open: institutionsDialog, state, ofTown, byId, seatsOf, sweep: onRegimeTurn, reconcile: reconcileAll, month: monthRun, askLever, seat, unseat, rules: I});
