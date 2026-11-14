@@ -195,7 +195,7 @@ Next free block: B3810
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
 | B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3745) | Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
-| B3780-B3809 | No-effect audit: items, gear, traits, settings, tables, world data (used B3780-B3787) | Chronicle |
+| B3780-B3809 | No-effect audit: items, gear, traits, settings, tables, world data (used B3780-B3790) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6434,3 +6434,18 @@ Reverse: empty MORE_EFFECTS_3.
 WoDX Chronicle. 26 more get a card at their moment, as B3781 (Bad Taste, Untamable, Danger Sense, Pierced Veil, Forced Transformation and more).
 
 Reverse: empty MORE_PROMPTS_3.
+
+## B3788. The rest of the social and Mental traits change rolls (2026-11-14)
+WoDX Chronicle. Ten more merits and flaws change dice or difficulty: Rotten Liar, Cloaked in Shadow, Dogmatic, Recognize Garou, Scholar of Others, Higher Purpose, Loyal Heart, Art Affinity, Technophobic and Deceptive Eating, most behind a tick box. Read against V20 core pp. 480-495, V20 Dark Ages pp. 420-428, W20 p. 382, W20 Changing Breeds pp. 207-240, M20 Book of Secrets pp. 38-95, C20 pp. 177-189, Hunters Hunted II pp. 43-151, Mummy: the Resurrection pp. 68-70, Mummy 2nd p. 68 and Kindred of the East p. 97.
+
+Reverse: empty MORE_EFFECTS_4.
+
+## B3789. Four more traits move a first meeting (2026-11-14)
+WoDX Chronicle. Probationary Member (own group, two steps colder), Calming Presence (animals, two steps warmer), Bizarre Quality (mortals, warmer) and Slipped Seeming (mortals, colder), as B3783.
+
+Reverse: empty MORE_ATTITUDE_2.
+
+## B3790. Traits whose effect is a rule of play become cards (2026-11-14)
+WoDX Chronicle. 120 merits and flaws whose effect is a standing rule of play (a blood pool, an immunity, an experience cost, a form, an aging rule) or a matter the Storyteller settles send a card at the moment they matter (feed, fight, social, night), as B3781. The sheet's own numbers are not changed by these cards; the player and Storyteller apply them.
+
+Reverse: empty MORE_PROMPTS_4.

@@ -27,6 +27,8 @@
  *      read from its sheet and not with a Ventrue, Sanctity warms anyone, and Red Tape offers its own tick box
  *  26. the no-effect audit, part 3 (B3786-B3787): a mage's Gullible takes 3 dice from a lie, Pack Mentality offers
  *      its two boxes, and Jack-Of-All-Trades is a card when a fight starts
+ *  27. the no-effect audit, part 4 (B3788-B3790): a vampire's Dulled Bite is a card at feeding, and Cloaked in Shadow
+ *      adds 1 to Social rolls against a vampire
  * Result: Data/wodx-gate/gatetraits-result.json.
  */
 async function save(R, name) {
@@ -261,6 +263,12 @@ export async function run() {
         boxes = /tag-with-pack/.test(html) && /tag-without-pack/.test(html);
       }
       ok("26 no-effect audit, part 3", lie.dice === -3 && cards.includes("jack-of-all-trades") && boxes !== false, {lie, cards, boxes});
+    });
+    await step("27 no-effect audit, part 4", async () => {
+      const gloom = await mk("Trait gloom", "Vampire", [feat("Dulled Bite", "flaw", 2), feat("Cloaked in Shadow", "flaw", 3)]);
+      const feedCards = T().rules.promptsOn(T().view(gloom), "feed").map(c => c.key);
+      const social = T().rules.sumEffects(T().rules.effectsFor(T().view(gloom), {channel: "roll", tags: ["social"], against: "kindred"})).diff;
+      ok("27 no-effect audit, part 4", feedCards.includes("dulled-bite") && social === 1, {feedCards, social});
     });
   } catch (e) {
     R.errors.push(e.message);

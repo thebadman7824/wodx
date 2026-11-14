@@ -128,3 +128,18 @@ test("part 3: the count of merits and flaws with no effect falls again", () => {
   const none = D.MERITS_FLAWS.filter(e => T.describe({entry: e}).includes("no automatic effect yet")).length;
   assert.ok(none <= 234, `${none} merits and flaws with no automatic effect`);
 });
+
+/* Part 4 (B3788-B3790): the rest outside combat */
+
+test("part 4: keys exist, rolls change, cards come, first meetings move", () => {
+  const keys = new Set(D.MERITS_FLAWS.map(e => e.key));
+  for ( const o of [M.MORE_EFFECTS_4, M.MORE_ATTITUDE_2, M.MORE_PROMPTS_4] ) for ( const k of Object.keys(o) ) assert.ok(keys.has(k), k);
+  const liar = view("mage", feat("Rotten Liar", "flaw"));
+  assert.equal(T.sumEffects(T.effectsFor(liar, {channel: "roll", tags: T.rollTags("manipulation", "subterfuge")})).diff, 2);
+  const shade = view("kindred", feat("Cloaked in Shadow", "flaw"));
+  assert.equal(T.sumEffects(T.effectsFor(shade, {channel: "roll", tags: ["social"], against: "kindred"})).diff, 1);
+  assert.equal(T.attitudeSeed(view("fae", feat("Calming Presence")), "beast").delta, 2);
+  assert.ok(T.promptsOn(view("kindred", feat("Dulled Bite", "flaw")), "feed").some(c => c.key === "dulled-bite"));
+  const none = D.MERITS_FLAWS.filter(e => T.describe({entry: e}).includes("no automatic effect yet")).length;
+  assert.ok(none <= 103, `${none} merits and flaws with no automatic effect`);
+});
