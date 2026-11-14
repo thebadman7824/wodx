@@ -188,7 +188,8 @@ test("3.26.0: every Dark Ages rote says what it does on the table, or leaves it 
   assert.deepEqual(D.daOutcomes(by("g-antics"), 3)[0].out.timed, {kind: "rounds", rounds: 6});
   assert.equal(D.daOutcomes(by("g-skogarmathur"), 2)[0].out.timed.seconds, 14 * 86400);
   assert.equal(D.daOutcomes(by("g-battlesmite"), 2)[0].out.condition, "blinded");
-  assert.equal(D.daOutcomes(by("g-72names"), 4)[0].st, true);
+  assert.equal(D.daOutcomes(by("g-summoning"), 4)[0].st, true);
+  assert.equal(D.daOutcomes(by("g-72names"), 4)[0].out.kind, "timed", "the golem shows on the token (B3752)");
   assert.deepEqual(D.daOutcomes(by("verdantslumber"), 0), []);
   assert.deepEqual([D.targetCount("self", 3, 2), D.targetCount("one", 3, 2), D.targetCount("each", 3, 5), D.targetCount("each", 3, 2), D.targetCount("all", 1, 4)], [0, 1, 3, 2, 4]);
   const da = src("modules/wodx-actions/scripts/mage-da.js");

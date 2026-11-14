@@ -14,6 +14,9 @@
  *      shows its card and puts Mend on the effects card; spells above the path's rating are not offered (B3745)
  *   6. V20: Use a Discipline with Animalism 2 offers Feral Whispers and Beckoning outside the Dark Ages (the Dark Ages
  *      names in the Dark Ages), and Beckoning's card names V20 and its roll (B3746)
+ *  10. Kuei-jin: Spend Chi with Dragon Dance spends a Yang and puts a boost on the effects card (B3750)
+ *  11. A Discipline with no roll (Protean 2) readies the user and harms no one (B3751)
+ *  12. A Dark Ages cantrip with [veil] on its sheet line puts Veil on the card when it takes (B3752)
  * Result: Data/wodx-gate/gatepowers-result.json.
  */
 const R = { started: new Date().toISOString(), steps: [], errors: [], notes: [] };
@@ -230,6 +233,21 @@ export async function run() {
       const m = await untilMsg(n);
       const items = fx(m);
       ok("11 Discipline with no roll readies the user", !!m && items.some(i => i.key === "boost") && !items.some(i => i.key === "harm"), { era, card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`) });
+    });
+    await step("12 Dark Ages cantrip keywords on the effects card", async () => {
+      const era = game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null;
+      if (era !== "dark-ages" && era !== "long-night") return ok("12 Dark Ages cantrip keywords on the effects card", true, { era, note: "Dark Ages Fae only: skipped in this era" });
+      const fae = await mk("Hush-weaver", "Changeling", { attributes: { manipulation: { value: 5, total: 5 } }, advantages: { willpower: { permanent: 4, temporary: 4 } } }, []);
+      await fae.setFlag("wodx-actions", "daFae", { origin: "firstborn", court: "winter", mists: { perm: 5, temp: 5 }, weaving: { perm: 3, temp: 3 }, dominions: { night: 5, dusk: 0, day: 0, dawn: 0 },
+        cantrips: [{ dominion: "night", level: 1, name: "Hush", trait: "manipulation", kw: ["veil"] }], lesser: [], greater: [], echoes: [], oaths: [], mien: true, hiddenSince: null, system: null });
+      await sleep(800);
+      await game.user.updateTokenTargets?.([]);
+      const n = game.messages.size;
+      answer(root => { set(root, "c", 0); set(root, "clock", false); });
+      A().daCantrip({ actor: fae });
+      const m = await untilMsg(n);
+      const items = fx(m), took = /success/.test(text(m)) && !/does not take|twists/.test(text(m));
+      ok("12 Dark Ages cantrip keywords on the effects card", !!m && /Hush/.test(text(m)) && (took ? items.some(i => i.key === "veil") : items.length === 0), { era, took, card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`) });
     });
   } finally {
     for (const [h, id] of hooks) Hooks.off(h, id);

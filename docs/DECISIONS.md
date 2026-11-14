@@ -193,7 +193,7 @@ Next free block: B3820
 | B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3719) | Library |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
-| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3751) | Actions |
+| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3752) | Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
 | B3780-B3809 | The no-effect audit: gear in the fight (used B3780-B3803) | Combat |
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
@@ -6389,6 +6389,10 @@ How to reverse: drop the Power select and the EF call in kote.js spend; delete k
 ## B3751. Dark Ages Disciplines and Gifts with no roll take effect (2026-11-14)
 WoDX Actions. A Dark Ages Discipline or Gift used with no roll (most of them: a blood or Gnosis point and it works) showed its card but put nothing on the effects card, because only rolled powers did. Now a power with no roll counts one success and its keywords go on the effects card the way a rolled power's do: a ward, a veil, a boost, a move. A power whose effect is damage with no roll (claws grown, a blade of shadow) readies the user for the scene instead, and the attack roll deals the damage, so nothing is hurt without a blow. Celerity, Fortitude and Potence, always on, were already read by WoDX Combat (soak, damage dice, actions and speed) and are now counted as working. Card-only Dark Ages powers fall from 301 to 118; what is left gives information (Auspex, Heightened Senses), stays the Storyteller's call, or is always on.
 How to reverse: put back `p.r &&` in kindred.js and `code &&` in garou.js before EF.powerPlan; drop noRoll in power-effects.js.
+
+## B3752. More Dark Ages rotes act, and cantrips say what they do (2026-11-14)
+WoDX Actions. Fifty-one Dark Ages rotes were left to the Storyteller. Thirty-four now have a result from their own system: Wrath of Apollo burns everything in the blast (three aggravated levels a success, after approval), the summoning and raising rotes (Summon the Pack, Spirit Army, Unsleeping Swords, the Giant's Dance) put the creatures on the caster's token for their time, the love, summoning and war-banishing rotes sway their targets, Circe's Enchantment changes shape, Frostbite holds, the warding elixirs and Fylgja ward. Seventeen stay the Storyteller's: the week-long djinn rites, journeys, harvests and curses moved from one to another. A Dark Ages cantrip, the player's own words by Dominion and level, can now say what it does: a sheet line ends in brackets ("Night 1: Hush (manipulation) [veil]"), or the cast window's "What it does" picks a keyword, and a cantrip that takes puts it on the effects card.
+How to reverse: put back S() on those rotes in mage-da-effects.js; drop the kw select and EF call in fae-da.js cast.
 
 ## B3770. Kuei-jin make stone weapons and true jade (2026-11-14)
 WoDX Library, data/wonders-kuei-jin.mjs and scripts/wonders-kuei-jin.mjs. The Item Crafting Desk pick kj2 (full). Kindred of the East has jade talismans only as a Background (pp. 86-87), but the Companion (p. 67) gives the masters of Jade Shintai two powers that make things, Blade of Stone and Taste of Jade. Both are a Kuei-jin kit on the shared wonders registry (B3683), world setting craftKueiJin, on by default like the other kits.
