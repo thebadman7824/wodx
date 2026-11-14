@@ -19,6 +19,8 @@ import * as W from "./world-rules.mjs";
 import * as Led from "./ledger.mjs";
 import * as Setup from "./setup.mjs";
 import * as Builder from "./builder.mjs";
+import * as Ways from "./ways.mjs";
+import * as WayRules from "./way-rules.mjs";
 import * as Night from "./night.mjs";
 import * as Dreams from "./dreams.mjs";
 import * as Codex from "./codex.mjs";
@@ -109,6 +111,8 @@ Hooks.once("init", () => {
   Wills.listen();
   Setup.registerSetupSettings();
   Builder.registerBuilderSettings();
+  Ways.registerWaySettings();
+  Ways.registerWayBehavior();
   Night.registerNightSettings();
   Dreams.registerDreamSettings();
   Dreams.registerDreamHooks();
@@ -283,6 +287,7 @@ Hooks.once("ready", () => {
     // B3631: fetishes, talens and the other lines' supernatural items (WoDX Library api.wonders)
     wonders: Wonders.wondersApi(),
     teleport: {arm: Teleport.arm, to: Teleport.teleport, cursor: Teleport.cursorPoint, armed: Teleport.isArmed},
+    ways: {open: Ways.waysDialog, make: Ways.makeWay, walk: Ways.walk, network: Ways.network, check: Ways.check, region: Ways.wayRegion, rules: WayRules},
     draw: Night.drawChooser, nightRules: Night.N
   };
   const mod = game.modules.get(C.MOD);
@@ -390,6 +395,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: game.user.isGM, onChange: () => Hand.handDialog()};
   tokens.tools.wodxDowntime = {name: "wodxDowntime", title: "Downtime request (what your character does between sessions)", icon: "fa-solid fa-bed", order: 124,
     button: true, visible: true, onChange: () => Between.downtimeDialog()};
+  tokens.tools.wodxWays = {name: "wodxWays", title: "Ways (doors, gates and roads between places; check that every place can be reached)", icon: "fa-solid fa-door-open", order: 135,
+    button: true, visible: game.user.isGM, onChange: () => Ways.waysDialog()};
   tokens.tools.wodxTeleport = {name: "wodxTeleport", title: "Teleport the selected tokens (then click the map; Alt+Shift+P sends them to the cursor)", icon: "fa-solid fa-person-through-window", order: 125,
     button: true, visible: game.user.isGM, onChange: () => Teleport.arm()};
   tokens.tools.wodxDraw = {name: "wodxDraw", title: "Draw for the story (tonight, a story aid, an Otherworld journey)", icon: "fa-solid fa-dice-d20", order: 119,
@@ -417,6 +424,7 @@ async function onSocket(message) {
   if ( type === "req.hunted" ) { await Up.onHunted(payload, {userId: payload.userId}); return; }
   if ( type === "req.fed" ) { await Herds.feedFrom(payload, {userId: payload.userId}); return; }
   if ( type === "req.venture" ) { await Ventures.onRequest(payload); return; }
+  if ( type === "req.way" ) { await Ways.onRequest(payload); return; }
   if ( type !== "req.travel" && type !== "req.solo" ) return;
   // A player may only act for a character they own
   const user = game.users.get(payload.userId);
