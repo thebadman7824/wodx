@@ -92,8 +92,11 @@ export const WORLD_REGIONS = {
     industrial: "swahili 55, french 30, portuguese 15", modern: "swahili 60, french 40"}, {from: 1880}),
   // The Americas
   "canada": R("Canada (Québec, the Great Lakes, the prairies, the north)", "americas", 45.5, -73.6, "boreal", "canadian", {
-    medieval: "haudenosaunee 100", "early-modern": "french 75, haudenosaunee 25", industrial: "english 52, french 34, irish 9, haudenosaunee 5",
-    modern: "english 59, french 27, chinese 6, hindi 6, haudenosaunee 2"}),
+    // and the Cree, the Anishinaabe and the Haida and Tlingit of the Northwest coast (B4160)
+    medieval: "haudenosaunee 35, cree 30, anishinaabe 25, haida 5, tlingit 5",
+    "early-modern": "french 55, haudenosaunee 12, cree 13, anishinaabe 12, haida 4, tlingit 4",
+    industrial: "english 52, french 34, irish 9, haudenosaunee 5, cree 3, anishinaabe 3, haida 1, tlingit 1",
+    modern: "english 59, french 27, chinese 6, hindi 6, haudenosaunee 2, cree 2, anishinaabe 2"}),
   // The Haudenosaunee and the Algonquian coast before the colonies, then a share (Ben's desks, B3120, B3510); the West borrows none of it (lend: false)
   "north-america-east": R("Eastern North America (New England, New York, the Ohio valley)", "americas", 40.7, -74.0, "american-east", "american", {
     medieval: "haudenosaunee 40, lenape 25, new-england-algonquian 25, powhatan 10",
