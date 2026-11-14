@@ -175,8 +175,9 @@ for ( const [set, b] of Object.entries(BR.BOOK_RITUALS) ) for ( const r of b.lis
 /* -- Combat maneuvers (wodx-combat) */
 for ( const [id, m] of Object.entries({ ...CB.MANEUVERS, ...CB.CLASSIC }) ) {
   const mods = m.diff || m.dmg || m.dice || m.defDiff || m.noDamage || m.noDefense;
-  add("Combat", id.startsWith("c_") ? "WoD: Combat maneuvers" : "Close combat maneuvers", m.label.replace(/ \(.*$/, ""), { status: mods ? (m.note ? "applies" : "applies") : "card", page: "VtDA20 pp. 346-349",
-    how: m.note ? `roll modifiers applied; the extra effect is a note: ${m.note.slice(0, 120)}` : "roll modifiers applied" });
+  const fo = CB.followOn?.(id, { hit: true, damageSuccesses: 3, profile: "vampire" }) ?? [];
+  add("Combat", id.startsWith("c_") ? "WoD: Combat maneuvers" : "Close combat maneuvers", m.label.replace(/ \(.*$/, ""), { status: mods || fo.length ? "applies" : "card", page: "VtDA20 pp. 346-349",
+    how: fo.length ? `roll modifiers applied; a hit marks ${fo.map(f => f.name).join(", ")} on the target's token (B3754)` : m.note ? `roll modifiers applied; the extra effect is a note: ${m.note.slice(0, 120)}` : "roll modifiers applied" });
 }
 for ( const [id, u] of Object.entries(CB.UNARMED) ) add("Combat", "Unarmed attacks", u.name, { status: "applies", page: "VtDA20 pp. 346-347", how: "attack and damage pools" });
 
