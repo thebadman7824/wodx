@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.100.0 (The Inuit in the Arctic's mix from 1197 and in Canada's (B4650))
 - 0.99.0 (Canada's mix before the colonies holds the Cree, the Anishinaabe and the Northwest coast beside the Haudenosaunee, with a share after (B4160))
 - 0.98.1 (Book check fix (ported from PR 655): the Chantry background cites M20 printed page 301, not 139)
 - 0.98.0 (Backgrounds nothing read (B3920): MORE_ATTITUDE_3, MORE_PROMPTS_7, refOf for background page refs, Alternate Identity in law-heat addDeed)

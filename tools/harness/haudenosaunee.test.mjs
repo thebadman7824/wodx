@@ -46,7 +46,7 @@ test("haudenosaunee: own names and a clan before the colonies, a church name bes
 test("haudenosaunee: in eastern North America and Canada by age, not borrowed by the West", () => {
   const origin = (era, culture) => G.resolveTable(PEOPLE_TABLES, "people.origin", {era, culture})?.results.map(r => r.text) ?? [];
   assert.deepEqual(origin("medieval", "american"), ["haudenosaunee", "lenape", "new-england-algonquian", "powhatan"]);
-  assert.deepEqual(origin("medieval", "canada"), ["haudenosaunee", "cree", "anishinaabe", "haida", "tlingit"]);
+  assert.deepEqual(origin("medieval", "canada"), ["haudenosaunee", "cree", "anishinaabe", "haida", "tlingit", "inuit"]);
   assert.ok(origin("early-modern", "american").includes("english") && origin("early-modern", "american").includes("haudenosaunee"));
   assert.ok(origin("modern", "american").includes("anglo"));
   assert.ok(!origin("medieval", W.cultureOf("north-america-west")).includes("haudenosaunee"), "the West keeps its own peoples (B3820)");
