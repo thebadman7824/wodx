@@ -329,6 +329,8 @@ export function build(ctx) {
           return {state: st}; });
         reports.push({turn, lines});
         await turnCard(turn, reason, lines, undoAll, m);
+        // B4873: others act on the turn too (the court's Blood Hunts in WoDX Actions)
+        Hooks.callAll("wodxFactionTurn", {turn, now, mode: m});
         if ( setting("factionWars") !== false ) await warTurn(turn, {now, places: list, year: era.year}).catch(e => console.error(`${MOD} | wars`, e));
       }
       return reports;

@@ -2,6 +2,7 @@
  * WoDX Chronicle: the law's heat in the world (B3606-B3607). The rules are in law-heat-rules.mjs.
  *   Fed      by WoDX NPC's descriptions (hook wodxCrimeSeen): a crime with witnesses adds heat where it happened
  *   Stored   world setting lawHeat: {regions: {regionId: {actorId: entry}}}
+ *   Sent     wodxLawStage {actor, region, stage, crossed}: WoDX Storyteller sends the watch (B4865)
  *   Told     the Storyteller gets a card when a culprit reaches Asked after, Wanted or Manhunt, with what it means to
  *            that kind of character and buttons to make the arrest or let it go
  *   Arrest   clears the heat and calls wodxArrest {actor, region, deeds}, which the trial picks up (B3608)
@@ -16,7 +17,7 @@ const traitHas = (a, k) => Number(game.modules.get(MODULE_ID)?.api?.traits?.has?
 
 export function registerHeatSettings() {
   game.settings.register(MODULE_ID, "lawHeat", {scope: "world", config: false, type: Object, default: {regions: {}}});
-  game.settings.register(MODULE_ID, "lawHeatOn", {name: "The law looks for criminals", hint: "Crimes that witnesses see raise the law's heat on the culprit in that land. A warrant and then a manhunt follow; the Storyteller decides on any arrest.",
+  game.settings.register(MODULE_ID, "lawHeatOn", {name: "The law looks for criminals", hint: "Crimes that witnesses see raise the law's heat on the culprit in that land. A warrant and then a manhunt follow, and the watch come for the culprit (with WoDX Storyteller on).",
     scope: "world", config: true, type: Boolean, default: true});
 }
 const on = () => setting("lawHeatOn") !== false;
@@ -57,7 +58,11 @@ export async function addDeed(actor, deed, {scene = globalThis.canvas?.scene, na
   const res = H.addDeed(s.regions[region][actor.id] ?? {}, {deed, law, now: now(), named, witnesses, where: scene?.name ?? "", id: actor.id, name: actor.name, line: actorLine(actor)});
   s.regions[region][actor.id] = res.entry;
   await save(s);
-  if ( res.crossed ) await stageCard(actor, region, res, law);
+  if ( res.crossed ) {
+    await stageCard(actor, region, res, law);
+    // B4865: WoDX Storyteller sends the watch at Wanted and a manhunt (reach.mjs); the card's buttons stay
+    Hooks.callAll("wodxLawStage", {actor: actor.id, region, stage: res.crossed.key, crossed: true, deed});
+  }
   return other ? {...res, otherSelf: true} : res;
 }
 

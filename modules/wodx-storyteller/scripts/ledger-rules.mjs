@@ -20,8 +20,8 @@ export const VEIL_BANDS = [
   {min: 8, name: "Sound", note: "Mortals explain away what they glimpse."},
   {min: 5, name: "Talk", note: "Rumours run among mortals; the curious start asking."},
   {min: 3, name: "Hunted", note: "Hunters of the era act openly; the courts punish the careless."},
-  {min: 1, name: "Failing", note: "Authorities take notice; every breach has witnesses who will not forget."},
-  {min: 0, name: "Torn", note: "The secret is out in this place and time; the Storyteller decides what that means."}
+  {min: 1, name: "Failing", note: "Authorities take notice: every breach raises the law's heat on the culprit and brings more hunters."},
+  {min: 0, name: "Torn", note: "The secret is out in this place and time: the hunters stay on alarm every week and big talk runs twice as fast."}
 ];
 
 const id = () => Math.random().toString(36).slice(2, 10) + Math.random().toString(36).slice(2, 10);

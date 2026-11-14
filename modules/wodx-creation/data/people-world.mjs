@@ -197,6 +197,15 @@ const P = {
     m: "Ahmad, Ismail, Hassan, Ibrahim, Osman, Yusof, Abdullah, Rahman, Hamzah, Zainal, Razak, Kassim",
     f: "Aminah, Fatimah, Zainab, Halimah, Salmah, Rokiah, Noraini, Siti, Aishah, Mariam, Rohani, Zaleha",
     child: ["bin", "binti", 1]},
+  // The Moro of Mindanao and Sulu: the Maguindanao, Maranao, Tausug and their sultanates (B5000), from the court
+  // genealogies (tarsila) and the Spanish and American records, then the family names of the Bangsamoro since
+  moro: {
+    m: {old: "Kudarat, Kabungsuwan, Dipatuan, Bayan, Barahaman, Jamalul, Azim ud-Din, Badar ud-Din, Muizz ud-Din, Israel, Alimud Din, Bantilan, Pulalun, Mahakuttah, Uto, Piang, Ali, Amai Pakpak, Kalun, Abu Bakr, Makaalang, Malinug, Ampuan, Raja Bongsu, Salibad, Tambilawan",
+      new: "Hashim, Nur, Salamat, Abdulmari, Ahmad, Ibrahim, Murad, Ghazali, Jaafar, Mohagher, Esmael, Zaldy, Andal, Abdullah, Khalid, Nurhan, Sharif, Mujiv, Ismael"},
+    f: {old: "Tarhata, Piandao, Inda, Sitti, Nur, Fatima, Salima, Mayang, Bolawan, Sakinah, Jamila",
+      new: "Tarhata, Sitti, Nur, Fatima, Salima, Amina, Bainon, Johaira, Sittie, Noraida, Jalilah, Rohaida, Samira, Normina"},
+    child: ["bin", "binti", 1],
+    fam: {new: "Kiram, Piang, Alonto, Lucman, Dimaporo, Misuari, Ampatuan, Mangudadatu, Sinsuat, Pendatun, Abubakar, Sema, Jaafar, Lidasan, Matalam, Tan, Adiong, Macarambon, Dimakuta, Pangarungan, Dumarpa, Balindong, Sangki, Paglas, Masturah, Arbison, Jikiri, Tulawie, Sahali, Hataman, Ututalum"}},
   mande: {
     m: "Sundiata, Mamadou, Moussa, Bakary, Seydou, Modibo, Amadou, Ibrahima, Lassana, Boubacar, Souleymane, Fodé, Sékou, Tiémoko, Drissa, Oumar",
     f: "Fatoumata, Aminata, Mariam, Kadiatou, Oumou, Awa, Sogolon, Djénéba, Rokia, Bintou, Salimata, Nana, Assetou, Korotoumou, Hawa, Ramata",
@@ -316,7 +325,7 @@ for ( const id of Object.keys(WORLD_REGIONS) ) {
 const BUILT = {haudenosaunee: haudenosauneeTables(), ...Object.groupBy([...algonquianTables(), ...plainsTables(), ...southwestTables(), ...missouriTables(), ...plainsNorthTables(), ...basinTables(), ...canadaTables(), ...inuitTables(), ...tainoTables(), ...aboriginalTables(), ...centralAfricaTables(), ...filipinoTables()], t => t.id.split(".").at(-1))};
 export const WORLD_PEOPLE_TABLES = [...origins, ...names, ...Object.values(BUILT).flat()];
 /** Peoples who bear a given name alone in some or all ages. */
-export const GIVEN_ONLY = new Set(["new-england-algonquian", "powhatan", "lakota", "cheyenne", "comanche", "kiowa", "apache", "arikara", "pawnee", "mandan", "hidatsa", "blackfoot", "arapaho", "shoshone", "ute", "cree", "anishinaabe", "inuit", "taino", "aboriginal", "luba", "filipino", ...Object.entries(P).filter(([, p]) => !p.child && (!p.fam || (typeof p.fam !== "string" && !Object.keys(p.fam).some(k => k === "old" || k.includes("medieval"))))).map(([o]) => o)]);
+export const GIVEN_ONLY = new Set(["new-england-algonquian", "powhatan", "lakota", "cheyenne", "comanche", "kiowa", "apache", "arikara", "pawnee", "mandan", "hidatsa", "blackfoot", "arapaho", "shoshone", "ute", "cree", "anishinaabe", "inuit", "taino", "aboriginal", "luba", "filipino", "moro", ...Object.entries(P).filter(([, p]) => !p.child && (!p.fam || (typeof p.fam !== "string" && !Object.keys(p.fam).some(k => k === "old" || k.includes("medieval"))))).map(([o]) => o)]);
 /** Every people named here. */
 export const WORLD_PEOPLES = [...Object.keys(P), ...Object.keys(BUILT)];
 /** Peoples raised to at least 300 distinct names (Ben 2026-11-13, B3310 on): one at a time, the biggest homelands first. */

@@ -232,7 +232,7 @@ Hooks.once("ready", async () => {
     pace: {line: pace.paceLine},
     setDate: setDateDialog,
     eras, approvals, safety,
-    automation: {level: automation.level, setLevel: automation.setLevel, preview: automation.preview, rules: automationRules},
+    automation: {level: automation.level, setLevel: automation.setLevel, seed: automation.seedLevel, preview: automation.preview, rules: automationRules},
     waiting: {open: () => waiting.WaitingApp.open(), rows: waiting.rows, count: waiting.count, take: waiting.take, wrapLine: waiting.wrapLine, rules: waitingRules},
     know: {render: know.render, traitsOf: know.traitsOf, passages: knowRules.passages, rules: knowRules},
     propose: approvals.propose,

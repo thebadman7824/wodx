@@ -193,6 +193,13 @@ export function build(ctx) {
         }
         const move = SR.attitudeMove(act, res.result);
         if (move) await npcApi()?.attitude?.propose?.(npc, actor, { delta: move, why: why || `${actor.name}: ${act.key}, ${res.result}` });
+        // B4873: a favour won from another Kindred is owed back, in the Ledger
+        const kin = a => { try { return game.modules.get("wodx-actions")?.api?.getKind?.(a) === "kindred"; } catch (e) { return false; } };
+        const size = SR.favourBoon(act.key, res.result, res.margin, kin(actor) && kin(npc));
+        if (size) {
+            try { await game.modules.get("wodx-storyteller")?.api?.ledger?.save?.({ kind: "boon", size, from: { id: actor.id, name: actor.name }, to: { id: npc.id, name: npcNameOf(npc, name) }, what: `A favour asked and given (${act.label.toLowerCase()})` }); }
+            catch (e) { console.warn("WoDX | favour boon", e); }
+        }
         Hooks.callAll("wodxSocial", { actor, npc, act: act.key, result: res.result });
         return res;
     }
