@@ -254,6 +254,10 @@ async function runLight(job, tag) {
   return {code: 2, text: `No light runner for ${job.kind}.`};
 }
 const active = new Set();
+// Issues this runner finished in the last hour. GitHub's issue list can still show a just-closed issue as open for a
+// while, which ran finished jobs a second time; these are skipped.
+const finished = new Map();
+const recentlyFinished = n => { for ( const [k, t] of finished ) if ( Date.now() - t > 3600e3 ) finished.delete(k); return finished.has(n); };
 async function start(issue, job, lanes) {
   active.add(issue.number);
   const tag = `job${issue.number}`, t0 = Date.now();
@@ -272,7 +276,7 @@ async function start(issue, job, lanes) {
   } catch (e) {
     log(`#${issue.number} runner error: ${e.stack ?? e.message}`);
     await finish(issue, false, `Runner error: ${e.message}`).catch(() => {});
-  } finally { for ( const l of lanes ) state[l].busy = null; active.delete(issue.number); }
+  } finally { for ( const l of lanes ) state[l].busy = null; finished.set(issue.number, Date.now()); active.delete(issue.number); }
 }
 
 // ---- status issue ----
@@ -301,11 +305,16 @@ async function status(queue) {
 
 // ---- self update: exit 75 when main changed the runner or lane tools and nothing is running ----
 const MY_SHA = spawnSync("git", ["rev-parse", "HEAD"], {cwd: ROOT, encoding: "utf8"}).stdout.trim();
+// A busy runner stops taking new jobs once an update is due ("draining") and exits when the last job ends, so an update
+// never waits for a quiet moment that may not come.
+let draining = false;
 async function updateDue() {
   if ( args.includes("--no-update") ) return false;
-  if ( LANES.some(l => state[l].busy) || light > 0 ) return false;
   const d = await git(["diff", "--quiet", MY_SHA, "origin/main", "--", "tools/pcq", "tools/lanes", "tools/harness/gate-two.mjs"]);
-  return d.status === 1;
+  if ( d.status !== 1 ) return false;
+  if ( !draining ) log("main changed the runner; taking no new jobs until the running ones end");
+  draining = true;
+  return !active.size;
 }
 
 // ---- main loop ----
@@ -320,7 +329,8 @@ for ( const i of await openIssues(LABEL.running) ) {
 let light = 0, lastFetch = 0, lastSweep = 0, sweeping = false;
 for ( ;; ) {
   try {
-    if ( Date.now() - lastFetch > 5 * 60000 ) { await git(["fetch", "-q", "origin"]); lastFetch = Date.now(); if ( await updateDue() ) { log("main changed the runner; exiting for an update"); process.exit(75); } }
+    if ( draining && !active.size ) { log("exiting for an update"); process.exit(75); }
+    if ( !draining && Date.now() - lastFetch > 5 * 60000 ) { await git(["fetch", "-q", "origin"]); lastFetch = Date.now(); if ( await updateDue() ) { log("main changed the runner; exiting for an update"); process.exit(75); } }
     if ( fs.existsSync(path.join(HOME, "runner-off")) ) {
       if ( !active.size ) { log("runner-off found and nothing running; stopping"); process.exit(0); }
       await sleep(30000); continue;
@@ -337,7 +347,7 @@ for ( ;; ) {
     const openNums = new Set(issues.map(i => i.number));
     const queue = [];
     for ( const i of issues ) {
-      if ( active.has(i.number) || i.labels.some(l => l.name === LABEL.running) ) continue;
+      if ( active.has(i.number) || recentlyFinished(i.number) || i.labels.some(l => l.name === LABEL.running) ) continue;
       const p = parseBody(i.body), v = p.error ? p : validate(p.job, LANES);
       if ( v.error ) { await finish(i, false, `Not run: ${v.error}\n\nFormat: tools/pcq/README.md.`); continue; }
       queue.push({number: i.number, issue: i, job: v.job});
@@ -348,7 +358,7 @@ for ( ;; ) {
       heldSince ??= Date.now();
       if ( Date.now() - heldSince > 30 * 60000 ) await alert("resources", "jobs held for low disk or memory", res.low.join("\n"));
     } else { heldSince = null; await recovered("resources"); }
-    for ( const q of ready ) {
+    for ( const q of draining ? [] : ready ) {
       if ( LANE_KINDS.has(q.job.kind) ) {
         if ( res.low.length ) continue;
         // A setup-lane job runs on a lane that is not set up yet; every other job needs a healthy free lane.
