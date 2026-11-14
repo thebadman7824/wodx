@@ -94,6 +94,10 @@ test("oboli are the Underworld's money in every era; a scene there pays in them"
   assert.match(src("modules/wodx-chronicle/scripts/place.mjs"), /p\.money === "underworld"/);
   assert.match(src("modules/wodx-storyteller/scripts/money.mjs"), /export async function receiveForeign/);
   assert.match(src("modules/wodx-storyteller/scripts/main.mjs"), /receiveForeign: Money\.receiveForeign/);
+  // the Storyteller money api sits under api.upkeep.money (lane 3 gate, 2026-11-14)
+  assert.match(src("modules/wodx-storyteller/scripts/main.mjs"), /upkeep: \{[^]*?money: \{of: Money\.moneyOf/);
+  assert.match(src("modules/wodx-actions/scripts/soulforge.js"), /st\(\)\?\.upkeep\?\.money\?\.receiveForeign/);
+  assert.doesNotMatch(src("tools/gate/gatemwc.mjs"), /ST\(\)\??\.money\b/);
 });
 
 test("everyday Banality: banal places, Autumn People, long tasks; heavier with the era (C20 p. 269)", () => {

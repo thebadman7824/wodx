@@ -14,7 +14,7 @@
  *   used: {powerId: n}                 how often a power with its own `uses` has run
  *   worn: [{attr, value, label}]       Attribute bonuses while the item is equipped (the system's bonuslist)
  *   expires: worldTime                 after it nothing runs (true jade for some nights, B3773)
- *   nights: {powerId: night}           the night a `perNight` power last ran
+ *   nightRun: {powerId: night}         the night a `perNight` power last ran
  *   powers: [power]
  * A power: {id, label, text,
  *   roll?: {attr, ability, diff} | {dice, diff} | {path: "actor:<dot path>", diff, label},
@@ -99,7 +99,7 @@ export function blockersOf(power, {flag = {}, values = {}, isGM = false, now = n
   if ( !power ) return ["no such power"];
   if ( flag?.spent ) out.push("it has nothing left in it");
   if ( flag?.expires && now !== null && n(now) > n(flag.expires) ) out.push(flag.expiredText ?? "its time has run out");
-  if ( power.perNight && now !== null && flag?.nights?.[power.id] != null && n(flag.nights[power.id]) === nightOf(now) ) out.push("already tried tonight");
+  if ( power.perNight && now !== null && flag?.nightRun?.[power.id] != null && n(flag.nightRun[power.id]) === nightOf(now) ) out.push("already tried tonight");
   if ( power.gain ) { const p = poolOf(flag); if ( p && p.value >= p.max ) out.push(`the ${p.label} is full`); }
   if ( power.gm && !isGM ) out.push("only the Storyteller sets this off");
   const req = [power.requires ?? []].flat();
@@ -173,8 +173,8 @@ export function plan(power, {flag = {}, values = {}, roll = null, max = {}, now 
     else lines.push("Nothing taken in.");
   }
   if ( power.perNight && now !== null ) {
-    const p = `flags.wodx-library.wonder.nights.${power.id}`;
-    undoItem[p] = flag?.nights?.[power.id] ?? null; item[p] = nightOf(now);
+    const p = `flags.wodx-library.wonder.nightRun.${power.id}`;
+    undoItem[p] = flag?.nightRun?.[power.id] ?? null; item[p] = nightOf(now);
   }
   if ( power.drawback && n(power.drawback.amount) ) {
     const d = power.drawback, cap = n(d.max) || 20;

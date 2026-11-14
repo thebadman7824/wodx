@@ -579,3 +579,18 @@ export function applyBodyTotals(data, body) {
     if (th) { th.max = max; th.value = Math.max(0, max - ws.filled); }
     return data;
 }
+
+/**
+ * The state a maneuver leaves on its target after a hit (B3754): Sweep and Tackle knock down (V20 Dark Ages pp. 347-348),
+ * Hold and Grapple hold until the victim's next action, and a Stake or Impale with three damage successes stakes a
+ * vampire (V20 Dark Ages p. 347). [{condition, name, lasts: "turn" | "staked"}]; empty on a miss.
+ */
+export function followOn(key, { hit = false, damageSuccesses = 0, profile = "" } = {}) {
+    if (!hit) return [];
+    if (key === "sweep" || key === "tackle") return [{ condition: "knockdown", name: "Knocked down", lasts: "turn" }];
+    if (key === "hold" || key === "c_grapple") return [{ condition: "held", name: "Held", lasts: "turn" }];
+    if ((key === "stake" || key === "impale") && Number(damageSuccesses) >= 3 && profile === "vampire") return [{ condition: "staked", name: "Staked", lasts: "staked" }];
+    return [];
+}
+/** The maneuver's key in MANEUVERS or CLASSIC ("normal" when it is neither). */
+export const maneuverKey = m => Object.entries({ ...MANEUVERS, ...CLASSIC }).find(([, v]) => v === m)?.[0] ?? "normal";

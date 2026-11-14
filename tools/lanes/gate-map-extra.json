@@ -9,7 +9,8 @@
   ],
   "add": {
     "gatepowers": [
-      "wodx-actions"
+      "wodx-actions",
+      "wodx-combat"
     ]
   },
   "remove": {},

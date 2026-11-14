@@ -45,7 +45,7 @@ export async function run() {
     await step("1 api", async () => {
       const a = A();
       ok("1 api", typeof a?.m20Quiet === "function" && typeof a?.quiet?.act === "function" && typeof a?.soulforge === "function" && typeof a?.everydayBanality?.endScene === "function"
-        && typeof ST()?.money?.receiveForeign === "function" && !!ST()?.tasks?.rules?.KINDS?.soulforge && ST()?.money?.rules?.moneyFor?.(1600, "underworld")?.id === "oboli", {version: game.modules.get(MOD)?.version});
+        && typeof ST()?.upkeep?.money?.receiveForeign === "function" && !!ST()?.tasks?.rules?.KINDS?.soulforge && ST()?.upkeep?.money?.rules?.moneyFor?.(1600, "underworld")?.id === "oboli", {version: game.modules.get(MOD)?.version});
     });
     await step("2 Quiet on", async () => {
       await A().quiet.act(mage, {mode: "fall", type: "madness", cause: "backlash"});
@@ -85,9 +85,9 @@ export async function run() {
       const w = game.actors.get(wraith.id);
       await w.setFlag(MOD, "soulforge", {gate2: {product: "obolus", source: "soul", year: 1600}});
       Hooks.callAll("wodxTaskDone", {actor: w, task: {id: "gate2", kind: "soulforge", status: "done", name: "Soulforge: obolus"}});
-      const has = () => (ST().money.foreign?.(game.actors.get(wraith.id)) ?? []).some(f => f.id === "oboli" && f.amount === 32) || game.actors.get(wraith.id).items.some(i => /obolus/.test(i.name));
+      const has = () => (ST().upkeep.money.foreign?.(game.actors.get(wraith.id)) ?? []).some(f => f.id === "oboli" && f.amount === 32) || game.actors.get(wraith.id).items.some(i => /obolus/.test(i.name));
       await until(has);
-      ok("6 obolus to the purse", has(), {foreign: ST().money.foreign?.(game.actors.get(wraith.id))});
+      ok("6 obolus to the purse", has(), {foreign: ST().upkeep.money.foreign?.(game.actors.get(wraith.id))});
     });
     await step("7 everyday Banality", async () => {
       [scene] = await Scene.create([{name: "WoDX gate: counting house", flags: {"wodx-npc": {place: {kind: "office"}}}}]);
