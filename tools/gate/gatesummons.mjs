@@ -117,20 +117,23 @@ export async function run() {
       G.ok("7. upkeep feeds an effigy weekly, unfed it falls still", after1 === 1 && after2 === 0 && still === true, {after1, after2, still});
     });
     await G.step("8. a familiar's death costs its mage", async () => {
+      const wp0 = Number(mage.system.advantages?.willpower?.permanent) || 0;
       const rec = await S.callFamiliar(mage, {at: {x: 850, y: 850}});
       await wait(500);
       const t = tokOf(scene, rec)[0];
       await t.update({[`flags.${MOD}.summon.familiar`]: 2});
       await t.actor.update({"system.health.damage": {bashing: 0, lethal: 7, aggravated: 0}, "system.traits.health.totalhealthlevels": {value: 7, max: 7}});
-      await waitFor(() => mage.system.advantages.willpower.permanent === 4, 6000).catch(() => null);
-      G.ok("8. a familiar's death costs its mage", mage.system.advantages.willpower.permanent === 4 && mage.system.quintessence.temporary === 0,
-        {willpower: mage.system.advantages.willpower.permanent, quint: mage.system.quintessence.temporary, paradox: mage.system.paradox?.temporary ?? null});
+      await waitFor(() => mage.system.advantages.willpower.permanent === wp0 - 1, 6000).catch(() => null);
+      await wait(800);
+      G.ok("8. a familiar's death costs its mage", wp0 > 0 && mage.system.advantages.willpower.permanent === wp0 - 1 && mage.system.quintessence.temporary === 0,
+        {wp0, willpower: mage.system.advantages.willpower.permanent, quint: mage.system.quintessence.temporary, paradox: mage.system.paradox?.temporary ?? null});
     });
     await G.step("9. a Light's timer puts the light back", async () => {
       const before = lt.light.dim;
       const rec = await EF.apply({key: "light", out: {kind: "light", label: "Light", text: "light", timed: {kind: "scene"}}, target: lt.uuid, name: lit.name}, "Gate");
       const on = scene.tokens.get(lt.id).light.dim;
-      await CH.timed.endFor(lit, {key: "wodx-effect-light"});
+      // the gate's tokens are unlinked: the timer sits on the token's own actor
+      await CH.timed.endFor(scene.tokens.get(lt.id)?.actor ?? lit, {key: "wodx-effect-light"});
       await wait(400);
       G.ok("9. a Light's timer puts the light back", on === 30 && scene.tokens.get(lt.id).light.dim === before && !!rec?.effect, {before, on, after: scene.tokens.get(lt.id).light.dim});
     });
@@ -146,62 +149,69 @@ export async function run() {
       const since = Date.now();
       await ChatMessage.create({speaker: {alias: "Gate"}, content: `<div class="vta-res wodx-effects"></div>`, flags: {[MOD]: {kind: "effects", caster: "Gate", items: [
         {key: "hold", out: {kind: "condition", condition: "held", label: "Hold", text: "held", timed: {kind: "scene"}, resist: {pool: "strength", diff: 6}}, target: vt.uuid, name: victim.name, route: "auto"}]}}});
-      const msg = await waitFor(() => game.messages.contents.find(m => m.timestamp >= since && m.flags?.[MOD]?.kind === "effects" && m.flags[MOD].done), 8000);
-      const held = !!victim.effects.find(e => e.name === "held" || e.statuses?.has?.("wodx-held"));
+      const found = () => game.messages.contents.find(m => m.timestamp >= since && m.flags?.[MOD]?.kind === "effects" && m.flags[MOD].done);
+      await waitFor(() => !!found(), 8000);
+      const msg = found();
+      const va = () => scene.tokens.get(vt.id)?.actor ?? victim;
+      const held = !!va().effects.find(e => e.name === "held" || e.statuses?.has?.("wodx-held"));
       await EF.resolveResist(msg, 0, true);
       await wait(300);
-      const free = !victim.effects.find(e => e.statuses?.has?.("wodx-held"));
-      G.ok("11. a won resistance breaks a hold", free && (game.messages.get(msg.id)?.flags?.[MOD]?.resisted ?? []).includes(0), {held, free});
+      const free = !va().effects.find(e => e.statuses?.has?.("wodx-held"));
+      G.ok("11. a won resistance breaks a hold", !!msg && held && free && (game.messages.get(msg.id)?.flags?.[MOD]?.resisted ?? []).includes(0), {msg: !!msg, held, free});
     });
+    const vA = () => scene.tokens.get(vt.id)?.actor ?? victim, dA = () => scene.tokens.get(dt.id)?.actor ?? demon;
     await G.step("12. lasting harm hurts again on the victim's turn", async () => {
-      const before = dmg(victim);
+      const before = dmg(vA());
       await EF.apply({key: "harm", out: {kind: "damage", label: "Gate rot", levels: 1, type: "lethal", soak: false, lasting: 3}, target: vt.uuid, name: victim.name}, "Gate");
-      const mid = dmg(victim);
+      const mid = dmg(vA());
       const idx = fight.turns.findIndex(x => x.tokenId === vt.id);
       if ( fight.turn === idx ) await fight.update({turn: (idx + 1) % fight.turns.length});
       await fight.update({turn: idx});
-      await waitFor(() => dmg(victim) > mid, 8000).catch(() => null);
-      G.ok("12. lasting harm hurts again on the victim's turn", mid === before + 1 && dmg(victim) === mid + 1, {before, mid, after: dmg(victim)});
+      await waitFor(() => dmg(vA()) > mid, 8000).catch(() => null);
+      G.ok("12. lasting harm hurts again on the victim's turn", mid === before + 1 && dmg(vA()) === mid + 1, {before, mid, after: dmg(vA())});
     });
     await G.step("13. a whirlwind hurts everyone inside on the demon's turn, one weaker each turn", async () => {
       const TR = A.turnRules;
       const rec = TR.resolveRec(TR.EVERY_TURN.cyclone, {successes: 3, faith: 10, by: dt.uuid});
-      const before = dmg(victim);
-      const uuid = await A.turns.attach(demon, rec, {label: "Cyclone", by: demon.name});
+      const before = dmg(vA());
+      const uuid = await A.turns.attach(dA(), rec, {label: "Cyclone", by: demon.name});
       const idx = fight.turns.findIndex(x => x.tokenId === dt.id);
       if ( fight.turn === idx ) await fight.update({turn: (idx + 1) % fight.turns.length});
       await fight.update({turn: idx});
       await waitFor(() => fromUuidSync(uuid)?.getFlag(MOD, "everyTurn")?.counter?.value === 2, 8000).catch(() => null);
       const left = fromUuidSync(uuid)?.getFlag(MOD, "everyTurn")?.counter?.value;
-      G.ok("13. a whirlwind hurts everyone inside on the demon's turn, one weaker each turn", left === 2 && dmg(victim) >= before, {left, before, after: dmg(victim)});
+      G.ok("13. a whirlwind hurts everyone inside on the demon's turn, one weaker each turn", left === 2 && dmg(vA()) >= before, {left, before, after: dmg(vA()), uuid: !!uuid});
       await fromUuidSync(uuid)?.delete();
     });
     await G.step("14. a burning nimbus burns whoever lands a close blow", async () => {
-      const e = await (game.modules.get("wodx-chronicle").api.timed.applyTimed(victim, {name: "Gate nimbus", duration: {kind: "scene"}, key: "gate-nimbus"}));
+      const e = await (game.modules.get("wodx-chronicle").api.timed.applyTimed(vA(), {name: "Gate nimbus", duration: {kind: "scene"}, key: "gate-nimbus"}));
       await e.setFlag(MOD, "touchHarm", {levels: 2, type: "lethal"});
-      const before = dmg(demon);
+      const before = dmg(dA());
       await A.turns.onBlow(demon, {hit: true, ranged: false, targetToken: vt.uuid, attackerToken: dt.uuid});
       await wait(400);
-      G.ok("14. a burning nimbus burns whoever lands a close blow", dmg(demon) >= before + 1, {before, after: dmg(demon)});
+      G.ok("14. a burning nimbus burns whoever lands a close blow", dmg(dA()) >= before + 1, {before, after: dmg(dA())});
       await e.delete();
     });
     await G.step("15. One Fights as Many: paid in Quintessence, the mage takes only the worst harm", async () => {
       await mage.update({"system.quintessence.temporary": 2});
       const spec = S.specFor("One Fights as Many", "Mage (Dark Ages)");
       const r = S.rules.resolve(spec, {successes: 4});
-      const out = await EF.apply({key: "summon", out: {kind: "summon", label: "One Fights as Many", summon: r}, target: null, caster: mage.uuid, name: "a spot", at: {x: 950, y: 950}}, mage.name);
+      // each stage has its own time limit, so a stall names where it stalled
+      const stage = [];
+      const lim = (p, ms, label) => Promise.race([p.then(v => { stage.push(label); return v; }), wait(ms).then(() => { stage.push(`${label} (stalled)`); return null; })]);
+      await lim(EF.apply({key: "summon", out: {kind: "summon", label: "One Fights as Many", summon: r}, target: null, caster: mage.uuid, name: "a spot", at: {x: 950, y: 950}}, mage.name), 8000, "apply");
       await wait(900);
       const copies = scene.tokens.filter(t => t.flags?.[MOD]?.summon?.byId === mage.id && t.flags[MOD].summon.shareWounds);
       const quint = mage.system?.quintessence?.temporary;
       const C = game.modules.get("wodx-combat").api;
-      if ( copies[0] ) await C.soakAndApply(copies[0].object ?? copies[0], {mode: "levels", amount: 2, type: "lethal", soak: false});
-      if ( copies[1] ) await C.soakAndApply(copies[1].object ?? copies[1], {mode: "levels", amount: 1, type: "lethal", soak: false});
+      if ( copies[0] ) await lim(C.soakAndApply(copies[0].object ?? copies[0], {mode: "levels", amount: 2, type: "lethal", soak: false}), 5000, "harm 1");
+      if ( copies[1] ) await lim(C.soakAndApply(copies[1].object ?? copies[1], {mode: "levels", amount: 1, type: "lethal", soak: false}), 5000, "harm 2");
       const before = dmg(mage);
-      await S.shareWounds(scene);
+      await lim(S.shareWounds(scene), 5000, "share");
       await wait(400);
       G.ok("15. One Fights as Many: paid in Quintessence, the mage takes only the worst harm", copies.length === 2 && quint === 0 && dmg(mage) === before + 2 && copies.every(t => dmg(t.actor) === 0),
-        {copies: copies.length, quint, before, after: dmg(mage)});
-      for ( const t of copies ) await S.dismiss(t).catch(() => null);
+        {copies: copies.length, quint, before, after: dmg(mage), stage});
+      for ( const t of copies ) await lim(S.dismiss(t).catch(() => null), 3000, "dismiss");
     });
   } catch (e) {
     G.R.errors.push(String(e?.message ?? e));

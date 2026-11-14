@@ -374,18 +374,22 @@ export async function wake(tok) {
 }
 
 /** A familiar dies (M20 p. 316): its mage loses a permanent Willpower and two Quintessence a dot, the rest as Paradox. */
+const dying = new Set();
 async function onFamiliarDeath(tok) {
   const rec = flagOf(tok);
-  if ( rec?.what === undefined || !rec?.familiar || rec.dead ) return;
+  if ( rec?.what === undefined || !rec?.familiar || rec.dead || dying.has(tok.uuid) ) return;
   const mage = actorOf(docOf(rec.by));
   if ( !mage ) return;
+  // Several updates in a row (damage, then health levels) each see the familiar dead: the cost is paid once
+  dying.add(tok.uuid);
+  await tok.update({[`flags.${MOD}.summon.dead`]: true});
   const q = n(mage.system?.quintessence?.temporary);
   const cost = SR.familiarDeath(rec.familiar, q);
   const wp = n(mage.system?.advantages?.willpower?.permanent);
   const upd = {"system.advantages.willpower.permanent": Math.max(0, wp - cost.willpower), "system.quintessence.temporary": q - cost.quintessence};
   if ( cost.paradox ) upd["system.paradox.temporary"] = n(mage.system?.paradox?.temporary) + cost.paradox;
   await mage.update(upd);
-  await tok.update({[`flags.${MOD}.summon.dead`]: true});
+  dying.delete(tok.uuid);
   await ChatMessage.create({speaker: {alias: "WoDX"}, content: `<div class="wodx-card wodx-summon"><p>${esc(mage.name)}'s familiar ${esc(tok.name)} is dead. ${esc(mage.name)} loses a dot of Willpower and ${cost.quintessence} Quintessence${cost.paradox ? `, and gains ${cost.paradox} Paradox` : ""} (Mage 20th p. 316).</p></div>`});
 }
 

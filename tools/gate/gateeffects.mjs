@@ -209,7 +209,7 @@ async function runGate(K) {
       const timed = !!(wr?.effect && fromUuidSync(wr.effect));
       // A summoning stays the Storyteller's call; since B3752 the Golem of the 72 Names shows on the token, not with the Storyteller.
       // B4820: a summoning rote now calls its being by the book's spec (the Storyteller's hand before that)
-      const st = game.modules.get(MOD).api.effects.daPlan(caster, rote("g-summoning"), 4).items.some(i => i.kind === "summon" || i.route === "st")
+      const st = game.modules.get(MOD).api.effects.daPlan(caster, rote("g-summoning"), 4).items.some(i => i.key === "summon" || i.out?.kind === "summon" || i.route === "st")
         && game.modules.get(MOD).api.effects.daPlan(caster, rote("g-72names"), 4).items.some(i => i.route !== "st");
       await fx().undo([...recs, wr].filter(Boolean));
       ok("13 a Dark Ages rote", hurt && timed && st && sum(dmg(caster)) === sum(before), {hurt, timed, st, routes: harm?.items?.map(i => i.route)});
@@ -227,7 +227,7 @@ async function runGate(K) {
       const wr = ward.items[0]?.route === "auto" ? await fx().apply(ward.items[0], caster.name) : null;
       const timed = !!(wr?.effect && fromUuidSync(wr.effect));
       // B4820: Summon Elemental now calls the elemental by its spec (the Storyteller's hand before that)
-      const st = api.effects.pathPlan(caster, pw("thaumaturgy-potestas-elementorum-summon-elemental"), 3).items.some(i => i.kind === "summon" || i.route === "st");
+      const st = api.effects.pathPlan(caster, pw("thaumaturgy-potestas-elementorum-summon-elemental"), 3).items.some(i => i.key === "summon" || i.out?.kind === "summon" || i.route === "st");
       const H = api.hunterRules ?? (await import(`/modules/${MOD}/scripts/hunter-rules.js?${Date.now()}`));
       const fire = api.effects.numinaPlan(caster, "pyrokinesis", 3, 2, H.NUMINA.pyrokinesis);
       const asks = fire.items.every(i => i.route === "queue" && i.out.levels === 2);
