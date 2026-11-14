@@ -204,7 +204,7 @@ export function build(ctx) {
     const n = asked.get(key) ?? 0;
     if ( kind !== "greet" ) asked.set(key, n + 1);
     const day = Math.floor((game.time?.worldTime ?? 0) / 86400);
-    return {era: TK.eraBand(year, branch), regard: TK.regardOf(step), step, seed: TK.hashSeed(npc?.id, pc?.id, kind, day) + n, year, wc, voice: voiceOf(npc, year)};
+    return {era: TK.eraBand(year, branch), regard: TK.toneRegard(step, npc?.system?.demeanor), step, seed: TK.hashSeed(npc?.id, pc?.id, kind, day) + n, year, wc, voice: voiceOf(npc, year)};
   }
   /** The kind of person they speak as (the Storyteller's choice, else their factions and household), with its lines. */
   function voiceOf(npc, year) {
