@@ -29,7 +29,7 @@ import * as OR from "./otherworld-sight-rules.mjs";
 
 
 const MOD = "wodx-senses";
-const VERSION = "0.11.1";
+const VERSION = "0.12.0";
 const SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
