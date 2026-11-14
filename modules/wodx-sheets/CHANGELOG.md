@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.22.0 (Nature button on every sheet and Set off on the Derangements panel (B3917))
 - 0.21.0 (An optional Gender line under the name on every character sheet, in the player's own words. For a player character it describes and changes nothing in play (B3501))
 - 0.20.2 (On dark sheets the Show all button under the Abilities takes the same clear background as the sheet's other buttons)
 - 0.20.1 (In Beginner view the Show all button under the Abilities has the same frame and colours as the other WoDX buttons, so it reads on every line's sheet, light or dark (it was too faint on most dark sheets))
