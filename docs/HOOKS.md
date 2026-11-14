@@ -55,6 +55,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxChase | interactables | npc (followers join a chase with their master) |
 | wodxGhoulFix | chronicle | npc |
 | wodxTown | storyteller | npc (a rising costs the factions that hold the town, and one that taxed it, a dot of Status; a sack costs a dot of Resources); passers-by and talk read the town by api instead; chronicle (a rising asks the Storyteller whether it wins, and a win sweeps the town's officers, B3618) |
+| wodxSignal | storyteller | storyteller (Threads of Fate weaves at once for a weight 3 signal, B3650); every post to the shared signal board sends it with the clean signal {key, kind, about, region, weight, what, who, where} |
 | wodxCaravan | storyteller | storyteller (a caravan lost on the road costs the caravan ventures of its markets) |
 | wodxMarketMove | storyteller | storyteller (a raid costs the workshops and trading houses characters have put money into) |
 | wodxTraderBroke | storyteller | storyteller (a trader going broke costs the trading house ventures that back the trader) |
@@ -64,10 +65,12 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 
 ## Extension points (sent, nobody listens yet)
 
-Kept on purpose, so a later module or a world macro can listen without changing the sender.
+Kept on purpose, so a later module or a world macro can listen without changing the sender. The Storyteller's signal board (signals.mjs, B3651) also hears many hooks in these tables through one loop, to post a short signal for each; it changes nothing in the sender.
 
 | Hook | Sent by | Carries |
 |---|---|---|
+| wodxThreadOpened | storyteller | a Threads of Fate storyline opened: {story} (B3650) |
+| wodxThreadEnded | storyteller | a Threads of Fate storyline ended: {story, ending} (B3654) |
 | wodxInheritance | storyteller | the Inheritance step passed things from the dead to the heir: {dead, heir, done} (B3530) |
 | wodxLever | storyteller | a lever of an institution was pulled, approved by the Storyteller: {actor, institution, key, target} (B3356) |
 | wodxProjectComplication | storyteller | a downtime project met trouble: {actor, task, complication} (B3342) |
