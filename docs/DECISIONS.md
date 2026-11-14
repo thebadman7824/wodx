@@ -182,6 +182,7 @@ Next free block: B3680
 | B3510-B3519 | Algonquian coast names (Lenape, New England, Powhatan) (used B3510-B3512) | Creation, Chronicle |
 | B3520-B3539 | Gaps from Ben's design notes: referee ticket, crisis levers, binding card, roster, inheritance, the 2022 cap (used B3520-B3536) | Chronicle, Storyteller, Otherworlds, NPC, Actions |
 | B3540-B3549 | Supernatural sight: the Penumbra, a mage's sight, chimerical sight, the Shadowlands view (notes gaps g8 to g11) (used B3540-B3547) | Senses, Actions |
+| B3550-B3559 | Notes gaps g21-g23: the Quiet as a state, soulforging and oboli, Banality from everyday life (used B3550-B3556) | Actions, Storyteller, Chronicle, NPC |
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
 | B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3621) | Chronicle |
 | B3630-B3649 | Supernatural item crafting by line: the shared table and Werewolf fetishes, klaives and talens (used B3630-B3636) | Library, Storyteller, Actions |
@@ -5734,6 +5735,41 @@ Reverse: shroud in OTHER and its branch in drawOther.
 WoDX Senses. Without choosing a sight, a peeker sees the Penumbra, a wraith the Shadowlands view and a changeling or enchanted mortal the chimerical world. A client setting ("My character's own eyes") turns this off for those who want only the sights they pick.
 
 Reverse: autoSight and the otherAuto setting.
+
+## B3550. The Quiet is a state with the M20 forms, from 1450 (2026-11-13)
+WoDX Actions (quiet-rules.js, quiet.js). Ben approved notes-gaps item g21 as suggested. The actor flag wodx-actions.quiet holds the form (Denial, Madness, Morbidity), the cause and the tokens shown; the level is read from the current Paradox pool by the Levels of Quiet chart (M20 pp. 555-556). Before 1450 a mage follows Dark Ages: Mage and the window says so. Level 6 is Marauder and passes to the Storyteller.
+
+Reverse: drop the menu entry api:m20Quiet; the flag does nothing on its own.
+
+## B3551. What the player sees, and how the Quiet ends (2026-11-13)
+WoDX Actions. The Storyteller can send a vision card whispered to the mage's players, mark selected tokens as seen only by them (token flag wodx-actions.quietSeen, hidden on refreshToken for everyone else), and whisper a false line under any speaker's name; the Storyteller's copy of each card says what it is. It ends by the book's means (pp. 556-559): rising out of it (a Willpower point, three successes in one roll at 7, or the optional level + 5; one or two make it seem more real; a botch makes a hobgoblin lasting a day a dot of Arete), a mindscape (a day a Paradox point, a week a point past 10; coming out clears the pool), another mage's cure (two or three Quintessence a point), an empty pool, or the Storyteller. The old Countermagick "dispel a Quiet delusion" now uses the same three-success roll.
+
+Reverse: set the counter branch in m20.js back to one success.
+
+## B3552. Oboli are the Underworld's money (2026-11-13)
+WoDX Storyteller, WoDX Chronicle. A money region "underworld" with one money, oboli, of 32 slivers (prices go as low as a thirty-second of an obolus, Wraith 20th p. 44), no banking, a house wage of half an obolus a month (most trade runs on ledgers, p. 45). The coins of the day change wording after Stygia's fall in 1999. A scene names it in Where this scene stands and counts as abroad for money. money.receiveForeign adds coin of another money to a purse.
+
+Reverse: remove MONIES.underworld, COINS.underworld and PLACE_MONIES.underworld.
+
+## B3553. Soulforging as a long task (2026-11-13)
+WoDX Actions (soulforge-rules.js), WoDX Storyteller (task kind soulforge, workshop soulforge). Products: an obolus, a soulsteel knife, sword, axe or mace (V20 Melee Weapons Chart, pdf p. 288), soulsteel mail or plate (armor class 3 or 4), an Artifact, or a relic reworked. Sources: a soul (the Storyteller's), an Artificer's own plasm (a Corpus level lost for good), an obolus forged again (half the mass lost, a quarter for an Artificer, and a harder task), or a relic. Dexterity + Crafts, a roll a week, delicate; difficulty 6 for an Artificer, 7 otherwise, +1 for an outsider under Stygia's law. Soulfire costs half the goal in Pathos, one more after 1999. House rules: the setting chapter gives no dice for it.
+
+Reverse: change PRODUCTS, plan() and soulfireCost in soulforge-rules.js.
+
+## B3554. What a finished forging makes (2026-11-13)
+WoDX Actions. On wodxTaskDone the plan kept in wodx-actions.soulforge[task id] makes the item: weapons and armor as system gear with their soak and damage, an Artifact as an Item, oboli into the purse as foreign coin of the Underworld (an item if WoDX Storyteller is older). A ruined task loses the Corpus. Forging outside the Guild before 1999 whispers the Storyteller.
+
+Reverse: remove the wodxTaskDone hook's soulforge call in main.js.
+
+## B3555. Banal places and the Autumn People (2026-11-13)
+WoDX NPC (place tags office, courthouse, technocracy with their crowds), WoDX Actions (banal-life-rules.js). A scene in such a place, a scene with Autumn People present (actor flag wodx-actions.autumn, set from the Storyteller's panel) and each full week of a long task on such a scene count as exposure (C20 p. 269). Grumps are spared. Weight by era, a house rule: three exposures make a point before 1450, two to 1699, one from 1700.
+
+Reverse: change NEED or weightOf in banal-life-rules.js; untag the places.
+
+## B3556. The card suggests, the Storyteller decides (2026-11-13)
+WoDX Actions (banal-life.js). The count runs at the end of each scene (wodxEndScene) and when a long task ends. When it reaches a point, the Storyteller gets a card with Give it and Not this time; one short of it, the player and Storyteller hear that the grey is close, as C20 asks the Storyteller to say.
+
+Reverse: remove the wodxEndScene and wodxTaskDone hooks for blx() in main.js.
 
 ## B3570. Herd pools by district (2026-11-13)
 WoDX Storyteller. Ben approved notes gap g12 as suggested (Notes Gaps Desk, 13 November 2026). A district is a scene with a hunting ground; its month's pool of vessels is split into the classes of the age (five ages, the same breaks as the spheres of Influence) with local names for clergy and the early nobility by the land's faith. A feeding on a vessel (wodxFed) or prey caught on a hunt (wodxHunted) takes one; animals do not count. The pool fills again every 30 days of world time. Rules in herd-rules.mjs.
