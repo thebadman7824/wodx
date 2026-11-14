@@ -14,6 +14,7 @@ import {WORLD_REGIONS, ERA_GROUPS, mixFor, cultureOf} from "../../wodx-chronicle
 import {haudenosauneeTables} from "./people-haudenosaunee.mjs";
 import {algonquianTables} from "./people-algonquian.mjs";
 import {plainsTables} from "./people-plains.mjs";
+import {MAYA} from "./people-maya.mjs";
 
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
 const OLD = ["medieval", "early-modern"], NEW = ["industrial", "modern"], MOD = ["modern"], PRE = ["medieval", "early-modern", "industrial"];
@@ -195,6 +196,8 @@ const P = {
   nahua: {
     m: "Cuauhtli, Ocelotl, Coatl, Tochtli, Mazatl, Cipactli, Ehecatl, Tecpatl, Itzcoatl, Chimalli, Yaotl, Tlacaelel, Cuauhtemoc, Acamapichtli, Xolotl, Tezozomoc",
     f: "Xochitl, Citlalli, Papalotl, Teicuih, Tlaco, Xoco, Teyacapan, Atototl, Chalchiuhnenetzin, Malinalli, Quetzalli, Tecuichpo"},
+  // the Maya of Yucatán, the Petén and the highlands (B3830)
+  maya: MAYA,
   quechua: {
     m: "Manco, Túpac, Amaru, Yupanqui, Titu, Cusi, Sayri, Huallpa, Sinchi, Rumi, Quispe, Inti, Kuntur, Wayra",
     f: "Ocllo, Chimpu, Cori, Cusi, Killa, Urpi, Chaska, Sumaq, T'ika, Illari, Asiri, Anahuarque"},

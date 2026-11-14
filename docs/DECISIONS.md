@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3830
+Next free block: B3840
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -198,6 +198,7 @@ Next free block: B3830
 | B3780-B3809 | The no-effect audit: a harmless hit makes its card (used B3780-B3809) | Combat |
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
+| B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6626,3 +6627,23 @@ Reverse: add names to the women's lists in data/people-plains.mjs.
 WoDX Creation and Chronicle. The region also covers the Rockies and the Southwest. The Pueblo peoples, the Diné and Apache, the village peoples of the Missouri (Mandan, Hidatsa, Arikara, Pawnee), the Crow, the Blackfoot and the Arapaho are not named yet and stay on the open list in docs/GLOBAL.md. The West's Threads of Fate hooks still start in 1598; hooks for the Plains before the Spanish are open too. Before about 1700 the Lakota and Cheyenne lived east of the Plains and the Comanche had not parted from the Shoshone; the medieval mix uses these peoples' names as the region's sound until the Southwest and the village peoples are built.
 
 Reverse: none needed; this records scope.
+
+## B3830. The Maya beside the Nahua (2026-11-14)
+WoDX Creation and Chronicle. The next people on the global open list after the Plains. The Maya live in the Mexico and Central America region, which held only the Nahua and the Spanish: Nahua 70 and Maya 30 before 1500, Nahua 38, Maya 17 and Spanish 45 to 1800, Spanish 80, Nahua 12 and Maya 8 after. One people stands for the Yucatec lowlands, the Itza and the highlands. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
+
+Reverse: put back the old mexico mixes in world-rules.mjs and drop the maya entry from people-world.mjs.
+
+## B3831. Recorded names, fewer than 300 (2026-11-14)
+WoDX Creation. Lords of Mayapan, Mani, Sotuta, Nojpetén and the K'iche' and Kaqchikel houses, a few Classic names that lived on, highland day names, and the patronyms of the colonial parish and tribute rolls: about 230 names, since the records reached hold no more (house reading, as B3511).
+
+Reverse: edit data/people-maya.mjs.
+
+## B3832. A patronym in every age (2026-11-14)
+WoDX Creation. A Maya bore a lineage name after the own name before the conquest (Napot Xiu), and the same names became family names after it, so every Maya NPC has one. Church given names replace own names from 1500, the first year of the early modern group, though Yucatán fell in the 1540s and the Itza in 1697.
+
+Reverse: give MAYA an era key for the early modern own names in data/people-maya.mjs.
+
+## B3833. Women's names (2026-11-14)
+WoDX Creation. Before the conquest a woman is named by the first mothers of the K'iche', a lady of the inscriptions, or Ix with a lineage name (Ix Pech), since the records give few women's own names.
+
+Reverse: edit WOMEN_OLD in data/people-maya.mjs.
