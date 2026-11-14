@@ -113,10 +113,10 @@ CANTRIPS["lord-of-levin"].dice = (c, s) => 5 + Math.max(0, s - 1);
 /** The cantrips of an Art at or below a level, in order. */
 export const cantripsOf = (art, upTo = 5) => Object.entries(CANTRIPS).filter(([, c]) => c.art === art && c.level <= upTo).map(([id, c]) => ({ id, ...c }));
 
-const CODE = { t: { rounds: 1 }, m: 60, "2m": 120, "3m": 180, "4m": 240, "5m": 300, "10m": 600, h: 3600, s: "scene", d: 86400, w: 7 * 86400, mo: 30 * 86400,
+const CODE = { t: { rounds: 1 }, m: 60, "2m": 120, "3m": 180, "4m": 240, "5m": 300, "10m": 600, h: 3600, s: "scene", d: 86400, w: 7 * 86400, mo: 30 * 86400, "6mo": 182 * 86400,
     y: 365 * 86400, yd: 366 * 86400, dec: 3650 * 86400 };
 const LABEL = { t: "a turn", m: "a minute", "2m": "two minutes", "3m": "three minutes", "4m": "four minutes", "5m": "five minutes", "10m": "ten minutes", h: "an hour",
-    s: "the scene", d: "a day", w: "a week", mo: "a month", y: "a year", yd: "a year and a day", dec: "a decade" };
+    s: "the scene", d: "a day", w: "a week", mo: "a month", "6mo": "six months", y: "a year", yd: "a year and a day", dec: "a decade" };
 /** A table duration for these successes and this Glamour: {label, timed}. */
 export function tableLasts(lasts, successes, glamour = 1) {
     const codes = String(lasts).replace(/^TABLE:/, "").split(",");

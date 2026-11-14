@@ -38,6 +38,7 @@ const M20 = await import(A("scripts/m20-rules.js"));
 const MU = await import(A("scripts/mummy-rules.js"));
 const C20 = await import(A("scripts/c20-rules.js"));
 const CA = await import(A("scripts/c20-arts.js"));
+const MH = await import(A("scripts/mummy-hekau.js"));
 const CB = await import(pathToFileURL(path.join(ROOT, "modules/wodx-combat/scripts/rules.js")).href);
 
 /** Keywords that only tell the user something; they do not change the game. */
@@ -135,9 +136,13 @@ for ( const [key, d] of Object.entries(H.SORCERY) )
   add("Hunter (HH2/DA)", "Hedge sorcery", d.label, { status: "roll", page: `p. ${d.p}`, how: "hedge magic roll and casting time; no effect" });
 for ( const [book, list] of Object.entries(H.FAITH_POWERS) ) for ( const [lvl, t] of list )
   add("Hunter (True Faith)", book === "da20" ? "True Faith (V20 Dark Ages)" : "True Faith (HH2)", `Faith ${lvl}`, { status: "card", page: book, how: "True Faith window shows the line; Repel is not applied" });
-/* -- Mummy: Hekau spells (mummy.js cast: roll, no effect) and rituals */
-for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.mummy) )
-  add("Mummy (2nd)", "Hekau spells", e.n, { status: "roll", kw: e.k, page: "MtR", how: "Hekau roll and Sekhem; the spell's effect is not shown" });
+/* -- Mummy: Hekau spells and rituals, named in the Hekau window (mummy.js cast, mummy-hekau.js) */
+for ( const [id, sp] of Object.entries(MH.SPELLS) ) {
+  const pk = PK.LINE_KEYWORDS.mummy[id];
+  const st = (sp.spec?.pool || applyingSpec(sp.spec)) && !INFO.has(sp.spec.kw) && E.KEYWORDS[sp.spec.kw]?.tier !== "st" ? "applies" : "card";
+  add("Mummy (2nd)", `Hekau: ${MU.HEKAU[sp.path].label}`, `${"•".repeat(sp.level)} ${sp.name}`, { status: st, kw: pk?.k ?? (sp.spec?.kw ? [sp.spec.kw] : []), page: `MtR p. ${MH.PATH_PAGE[sp.path]}`,
+    how: `named in the Hekau window: card (effect, pool, difficulty, Sekhem, duration)${st === "applies" ? `; effects card ${sp.spec.kind}` : ""}` });
+}
 /* -- Orpheus: Horrors */
 for ( const [id, h] of Object.entries(O.HORRORS) ) {
   const kw = PK.keywordsOf("orpheus", slug(h.label));
