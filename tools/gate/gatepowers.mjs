@@ -1,0 +1,74 @@
+/**
+ * Powers gate (powers pass, B3740 on), in rothenstein-wodx (the testing world), as Gamemaster Test:
+ *   await (await import(`/wodx-gate/gatepowers.mjs?${Date.now()}`)).run()
+ * Each step uses a power through its own WoDX window, the way a player would, and checks that the card says what the
+ * power does and that its effect reaches the effects card. Makes its own actors in the folder "WoDX powers gate" and
+ * deletes them at the end. Steps are added line by line as the pass builds them.
+ *   1. Wraith: Phantom Wings (Argos 2) through Use an Arcanos puts Rise on the effects card for the wraith (B3740)
+ * Result: Data/wodx-gate/gatepowers-result.json.
+ */
+const R = { started: new Date().toISOString(), steps: [], errors: [], notes: [] };
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const A = () => game.wodxActions;
+const ok = (name, pass, detail = {}) => R.steps.push({ name, pass: !!pass, ...detail });
+const queue = [];
+const answer = fill => queue.push(fill);
+async function onRender(app, el) {
+  const f = queue.shift();
+  if (!f) return;
+  const root = el instanceof HTMLElement ? el : el?.[0];
+  await sleep(250);
+  let res;
+  try { res = await f(root, app); } catch (e) { R.errors.push(`answer: ${e.message}`); }
+  if (res === "cancel") { app.close(); return; }
+  root.querySelector(`button[data-action="${res ?? "ok"}"]`)?.click();
+}
+const set = (root, name, value) => {
+  const el = root.querySelector(`[name="${name}"]`);
+  if (!el) throw new Error(`no field ${name}`);
+  if (el.type === "checkbox") el.checked = !!value; else el.value = String(value);
+  el.dispatchEvent(new Event("change", { bubbles: true }));
+};
+const text = m => String(m?.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+async function untilMsg(after, ms = 8000) {
+  const t = Date.now();
+  while (Date.now() - t < ms) {
+    const m = game.messages.contents.slice(after).find(x => /vta-card/.test(x.content ?? ""));
+    if (m) return m;
+    await sleep(100);
+  }
+  return null;
+}
+async function step(name, fn) { queue.length = 0; try { await fn(); } catch (e) { ok(name, false, { error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ") }); } }
+const fx = m => m?.flags?.["wodx-actions"]?.kind === "effects" ? (m.flags["wodx-actions"].items ?? []) : [];
+
+export async function run() {
+  if (game.world.id === "rothenstein-live") return "Not on the Live world.";
+  const hooks = [["renderDialogV2", Hooks.on("renderDialogV2", onRender)]];
+  const folder = await Folder.create({ name: "WoDX powers gate", type: "Actor" });
+  const made = [];
+  const mk = async (name, type, system, items) => { const a = await Actor.create({ name: `WoDX gate: ${name}`, type, folder: folder.id, system, items }); made.push(a); return a; };
+  try {
+    await step("1 Wraith Arcanos keywords", async () => {
+      const w = await mk("Arcanos wraith", "Wraith", {
+        advantages: { pathos: { temporary: 8, max: 10 }, angst: { temporary: 2, permanent: 3, max: 10 }, corpus: { temporary: 10, permanent: 10, max: 10 }, willpower: { permanent: 5, temporary: 5 } }
+      }, [{ name: "Argos", type: "Power", system: { type: "wod.types.arcanoi", value: 3 } }]);
+      await game.user.updateTokenTargets?.([]);
+      const n = game.messages.size;
+      answer(root => { set(root, "art", "argos-phantom-wings"); set(root, "onSelf", true); set(root, "diff", 4); set(root, "bonus", 10); set(root, "pathos", 1); set(root, "corpus", 0); set(root, "wp", 0); });
+      A().useArcanos({ actor: w });
+      const m = await untilMsg(n);
+      const items = fx(m);
+      ok("1 Wraith Arcanos keywords", !!m && /What it does/.test(m.content) && items.some(i => i.key === "rise"), { card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`) });
+    });
+  } finally {
+    for (const [h, id] of hooks) Hooks.off(h, id);
+    for (const a of made) await a.delete().catch(() => {});
+    await folder.delete().catch(() => {});
+    R.finished = new Date().toISOString();
+    R.summary = `${R.steps.filter(s => s.pass).length}/${R.steps.length} passed`;
+    const file = new File([JSON.stringify(R, null, 1)], "gatepowers-result.json", { type: "application/json" });
+    await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, { notify: false });
+  }
+  return R.summary;
+}

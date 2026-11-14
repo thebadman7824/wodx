@@ -20,6 +20,7 @@ import * as W from "./wraith-rules.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
+import * as EF from "./effects.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -159,11 +160,12 @@ export function build(ctx) {
             let body = notes.length ? `<div class="vta-parts">${notes.map(esc).join(" · ")}</div>` : "";
             const rolls = [];
             let faces = [];
+            let successes = 1;
             if (a.r) {
                 const [at, sec] = a.r.split("+");
                 const dice = Math.max(0, attr(actor, at) + second(a, sec) + n(fd.bonus));
                 const r = await rollPool(dice, fd.diff);
-                rolls.push(r.roll); faces = r.faces ?? [];
+                rolls.push(r.roll); faces = r.faces ?? []; successes = r.botch ? 0 : r.successes;
                 body += rollBlock(`${cap(at)} + ${sec && sec !== "arc" ? cap(sec) : a.d}`, r, n(fd.bonus) ? [`bonus ${fd.bonus}`] : []);
                 if (r.botch) body += `<div class="vta-warn">Botch: the art turns on the user (see the page); a gift to the Shadow.</div>`;
             }
@@ -171,8 +173,15 @@ export function build(ctx) {
             if (angst) { await gain(actor, "angst", angst); body += `<div class="vta-warn">The Shadow takes ${angst} temporary Angst (${a.d === "Outrage" ? "Outrage in the Labyrinth, p. 199" : "each 1 rolled outside the Shadowlands, p. 204"}).</div>`; }
             body += `<div class="vta-note">${esc(a.e)} <span class="wodx-quiet">(${bookOf(lib)} p. ${a.p})</span></div>`;
             if (a.angst) body += `<div class="vta-note">This art can feed the Shadow: the Shadowguide decides how much (see the page).</div>${wbtn("angst", actor, "Shadow takes 1 Angst", "1")}`;
+            // The art's keywords on the effects card, as Disciplines and Gifts do (B3740): W20 or The Great War set by id
+            let fxItems = [];
+            if (a.r && successes > 0 && EF.isOn()) {
+                const pp = EF.powerPlan(actor, { set: String(a.id).startsWith("gw-") ? "greatwar" : "wraith", id: a.id, name: a.n, successes, source: `${bookOf(lib)} p. ${a.p}` });
+                body += pp.html;
+                fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+            }
             if (n(fd.wp)) await afterSpend(actor);
-            return post(actor, `${actor.name}: ${esc(a.n)}`, body, rolls);
+            return post(actor, `${actor.name}: ${esc(a.n)}`, body, rolls, fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 560, render: root => { describe(root); for (const k of ["art", "realm", "onSelf"]) root.querySelector(`[name=${k}]`)?.addEventListener("change", () => describe(root));
             const artNow = r => (r.querySelector("[name=onSelf]")?.checked ? null : list.find(x => x.id === r.querySelector("[name=art]")?.value));
             aim(root, { actor, lib: String(list[0]?.id ?? "").startsWith("gw-") ? "gw" : "w20", power: artNow, onPick: a => { tgt = a; describe(root); } }); } });
