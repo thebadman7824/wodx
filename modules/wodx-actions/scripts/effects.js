@@ -631,6 +631,8 @@ async function worldLook(scene, world, why) {
   try { return await chron()?.looks?.weather?.({scene, kind, until: {seconds: LOOK_SECONDS[world] ?? 3600}, source: why}) ?? null; }
   catch (e) { console.warn("WoDX | world look", e); return null; }
 }
+/** The lasting damage each ground leaves (B3759, scars-rules.mjs in WoDX Chronicle). */
+const SCAR_KIND = {water: "flood", blaze: "fire", rubble: "quake"};
 const GROUND_LOOK = {water: {fill: "#2f6f9f", edge: "#9fd0f0", alpha: 0.5}, blaze: {fill: "#c8501e", edge: "#ffb347", alpha: 0.45},
   rubble: {fill: "#6b5536", edge: "#b89b6a", alpha: 0.5}};
 /** A ground area's drawing goes with its region, however the region ends (Undo, its time, the end of the scene). */
@@ -665,11 +667,22 @@ export async function placeArea(item, at, {caster = "the caster", scene = canvas
         id: `area-${region.id}`, source: item.out?.power ?? item.out?.label ?? ""});
     } catch (e) { console.warn("WoDX | ground look", e); }
   }
+  // Lasting damage (B3759): flood water, fire and broken ground, or a great blast, wreck what stands there until it
+  // is rebuilt or the card's Undo takes it back; the area running out does not mend it
+  let scar = null;
+  const sq = Number(scene.grid?.size) || 100, label = String(item.out?.label ?? item.out?.power ?? "");
+  const scarKind = ground ? SCAR_KIND[ground] : (item.key === "harm" && radius >= 3 * sq) ? (/fire|flame|burn|blaze|inferno|lava/i.test(label) ? "fire" : "blast") : null;
+  if ( scarKind ) {
+    try {
+      scar = await chron()?.scars?.scar?.({scene, kind: scarKind, severity: radius >= 6 * sq ? 3 : radius >= 3 * sq ? 2 : 1, at: {x: Math.round(at.x), y: Math.round(at.y), radius},
+        source: `area-${region.id}`, label: item.out?.label ?? ""}) ?? null;
+    } catch (e) { console.warn("WoDX | ground scar", e); }
+  }
   for ( const tok of scene.tokens ) {
     const area = areaOf(region);
     if ( touches(area, tok) ) await areaOn(region, tok);
   }
-  return {region: region.uuid};
+  return scar ? {region: region.uuid, scar, scene: scene.id} : {region: region.uuid};
 }
 
 /** A token moved: any area it now stands in works on it, once. */
@@ -702,6 +715,7 @@ export async function undo(records = []) {
   for ( const r of [...records].reverse() ) {
     try {
       if ( r.region ) {
+        if ( r.scar ) await chron()?.scars?.undo?.(r.scar, r.scene ?? null);
         const region = fromUuidSync(r.region);
         if ( region ) { await undo(areaOf(region)?.undo ?? []); await region.delete(); }
         continue;
