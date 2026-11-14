@@ -81,7 +81,8 @@ export async function run() {
 
     let combat = null;
     await G.step("6. a bow at a trot", async () => {
-      [combat] = await G.make(Combat, [{scene: scene.id}]);
+      // G.make matches documents by name, and a combat has none
+      combat = await Combat.create({scene: scene.id, active: true});
       await combat.createEmbeddedDocuments("Combatant", [{tokenId: ta.id, sceneId: scene.id, actorId: rider.id}, {tokenId: tb.id, sceneId: scene.id, actorId: foe.id}]);
       await combat.startCombat();
       await ta.setFlag("wodx-combat", "moved", {tag: `${combat.id}:${combat.round}`, yards: 30});
@@ -105,8 +106,10 @@ export async function run() {
       await horse.update({[`flags.${IX}.driver`]: null});
       await horse.update({x: tb.x, y: tb.y, [`flags.${IX}.driver`]: seat(tb, {x: tb.x, y: tb.y})});
       await waitFor(() => M().rideFor(foe, tb)?.role === "reins", 4000);
+      // a sure hand on the lance, so that a blow lands within the tries
+      await rider.update({"system.abilities.melee.value": 5, "system.attributes.dexterity.value": 5});
       let card = "";
-      for ( let i = 0; i < 6 && !/Keeping the saddle|knocked out of the saddle|unhorsed/.test(card); i++ ) {
+      for ( let i = 0; i < 15 && !/Keeping the saddle|knocked out of the saddle|unhorsed/.test(card); i++ ) {
         const [res] = await C.quickAttack({attacker: ta.object, target: tb.object}).catch(() => []);
         card = text(res?.message?.content ?? "");
         if ( !M().rideFor(foe, tb) ) break;
