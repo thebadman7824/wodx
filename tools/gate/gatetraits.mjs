@@ -134,11 +134,15 @@ export async function run() {
     await step("12 window", async () => {
       const p = T().open(human);
       // the window may take more than a moment to draw on a busy lane: wait for its rows, up to 5 seconds
-      let el = null;
-      for ( let i = 0; i < 25 && !(el?.querySelector(".wct-traits-list li")); i++ ) { await new Promise(r => setTimeout(r, 200)); el = document.querySelector(".wct-traits"); }
+      // In a long run another gate's Trait effects window can still be open, so take this actor's own window, not the
+      // first one in the page
+      const mine = () => [...foundry.applications.instances.values()].filter(a => a.rendered && a.element?.querySelector?.(".wct-traits-list")
+        && String(a.title ?? a.options?.window?.title ?? "") === `Trait effects: ${human.name}`).pop() ?? null;
+      let app = null;
+      for ( let i = 0; i < 25 && !(app?.element?.querySelector(".wct-traits-list li")); i++ ) { await new Promise(r => setTimeout(r, 200)); app = mine(); }
+      const el = app?.element ?? null;
       const rows = el?.querySelectorAll(".wct-traits-list li").length ?? 0;
       const picks = el?.querySelectorAll("select[data-wct-item]").length ?? 0;
-      const app = [...foundry.applications.instances.values()].find(a => a.element === el || a.element?.contains?.(el));
       await app?.close();
       await p;
       // only merit, flaw and background items are listed (the system may add other items of its own)

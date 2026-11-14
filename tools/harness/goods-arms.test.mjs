@@ -93,3 +93,10 @@ test("ammunition: each weapon takes its own, reloads come out of Possessions, ar
   assert.equal(A.shotPlan([], "bow").ok, false);
   for ( const n of D.AMMUNITION ) assert.ok(U.abilitiesOf(G.GOODS.find(g => g.name === n)).includes("load"), `${n} has no Load`);
 });
+
+test("a gun with no ability on its sheet is never taken for a bow", () => {
+  assert.equal(A.ammoKindOf({name: "Matchlock arquebus", ranged: true, ability: "archery"}, "matchlock"), "muzzle");
+  assert.equal(A.ammoKindOf({name: "Colt revolver", ranged: true, ability: "archery"}, "cartridge"), "cartridge");
+  assert.equal(A.ammoKindOf({name: "Hunting bow", ranged: true, ability: "archery"}), "bow");
+  assert.equal(A.ammoKindOf({name: "an elven weapon", ranged: true, ability: "archery"}), "bow");
+});

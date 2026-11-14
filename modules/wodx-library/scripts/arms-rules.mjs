@@ -177,7 +177,9 @@ export function ammoKindOf(w = {}, lock = null) {
   if ( !w.ranged ) return null;
   if ( CROSSBOW.test(n) ) return "crossbow";
   if ( SLING.test(n) && !/gun sling/i.test(n) ) return "sling";
-  if ( BOW.test(n) || (w.ability === "archery" && !/javelin|dart|spear|throw/i.test(n)) ) return "bow";
+  // A sheet that names no ability reads as Archery to WoDX Combat, so a gun by name or lock is never taken for a bow
+  const gun = (lock && lock !== "none") || PISTOL.test(n) || LONGGUN.test(n) || SHOTGUN.test(n);
+  if ( BOW.test(n) || (w.ability === "archery" && !gun && !/javelin|dart|spear|throw/i.test(n)) ) return "bow";
   if ( lock && MUZZLE_LOCKS.has(lock) ) return "muzzle";
   if ( SHOTGUN.test(n) ) return "shotgun";
   if ( PISTOL.test(n) && SEMI.test(n) && !/revolver/i.test(n) ) return "magazine";
