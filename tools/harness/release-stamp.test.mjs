@@ -112,3 +112,14 @@ test("Chronicle reads the stamps over fetch and shows the line to the GM in Sett
     for ( const k of ["HTMLElement", "document", "foundry", "fetch", "ui", "game"] ) delete globalThis[k];
   }
 });
+
+test("show, don't tell: a minor or major note says what players see (B4600)", async () => {
+  const {visibleWarnings, effectWarnings} = await import("../release/merge-stamp.mjs");
+  const note = meta => ({meta: {bump: "minor", effect: "the town floods on the map", ...meta}});
+  assert.match(visibleWarnings(note({}))[0], /no visible: line/);
+  assert.deepEqual(visibleWarnings(note({visible: "rain falls on the scene and water spreads over the town's streets"})), []);
+  assert.match(visibleWarnings(note({visible: "none"}))[0], /needs the reason/);
+  assert.deepEqual(visibleWarnings(note({visible: "none, a rule inside a roll that the dice already show"})), []);
+  assert.deepEqual(visibleWarnings({meta: {bump: "patch"}}), [], "a fix needs no visible: line");
+  assert.deepEqual(effectWarnings(note({})), [], "the effect check is unchanged");
+});

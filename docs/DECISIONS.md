@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4160
+Next free block: B4610
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -200,7 +200,7 @@ Next free block: B4160
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Backgrounds nothing read (used B3900-B3920) | Chronicle |
+| B3900-B3929 | Future Darkness disasters move the markets (used B3900-B3923) | Storyteller |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
@@ -210,6 +210,7 @@ Next free block: B4160
 | B4130-B4139 | Missouri village peoples in the People generator (used B4130-B4132) | Creation, Chronicle |
 | B4140-B4149 | Crow, Blackfoot and Arapaho names in the People generator (used B4140-B4142) | Creation, Chronicle |
 | B4150-B4159 | Shoshone and Ute names in the People generator (used B4150-B4152) | Creation, Chronicle |
+| B4600-B4609 | Show, don't tell: a visible: line on every feature's release note (used B4600) | tools (no module) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6785,6 +6786,15 @@ No-effect audit t3, first part. Destiny (M20, Mummy) and Fate (W20) were marked 
 ## B3920. Backgrounds nothing read get an effect (2026-11-14)
 No-effect audit t3. Four backgrounds seed a +1 first attitude with their own kind: Eminence with demons, Notoriety with wraiths, Pure Breed with Garou and Changing Breeds, Spirit Heritage with spirits. With Alternate Identity, a deed a witness can name counts as unnamed for the law's heat, because the name they know belongs to the other self. Nineteen backgrounds that were marked Storyteller-only get a card to the Storyteller in WoDX's own words at the moments they matter (social, fight, night): Alternate Identity, Arcane, Backing, Backup, Black Hand Membership, Blessing, Certification, Cypher, Dream, Eidolon, Enhancement, Familiar, Horde, Memento, Paragon, Requisitions, Secret Weapons, Spies and Vessels. Their hook in the Trait effects window changes from Storyteller only to a card. Cards now name a background's first book and page (they read "undefined" before). A test keeps every background off the plain Storyteller-only list. The sizes on the cards are the Storyteller's call. Destiny and Fate are B3919. Reverse: drop MORE_ATTITUDE_3, MORE_PROMPTS_7 and the law-heat lines.
 
+## B3921. Combat reads Knocked down (2026-11-14)
+No-effect audit t4. The Knocked down status showed on the token, but standing cost nothing unless the sweep or tackle card was followed by hand. WoDX Combat now rolls, on the Storyteller's client, at the start of the turn of any combatant with the status. The roll is Dexterity + Athletics, with wound penalties, at difficulty 6 (V20 Dark Ages p. 348). A success takes the status off and takes 2 off that character's Initiative when it is rolled for the next turn. A failure or a botch keeps them down, and the card says the action is lost. A world setting (on by default) turns it off, and api.standUp(actor) runs the roll by hand. Reverse: turn the setting off.
+
+## B3922. More events move the factions (2026-11-14)
+No-effect audit w1. Several dated events in the chronicle passed with only a line in the history. WoDX NPC now offers a new power for each of them when the clock reaches it: changelings in hiding at the Shattering, the Giovanni at the fall of the Cappadocians, a Justicar's archons at the First Conclave, a freehold at the Resurgence, Kuei-jin envoys after the Week of Nightmares, a Fallen and their faithful at the escape from the Abyss, the Children of Carthage at the Venice Conclave, a Cyberpunks crew and a corporate hunter team in Future Darkness. Events that wipe out a line also put to sleep any faction named for it: Croatan, Bunyip, Ravnos, Cappadocian and Doissetep. A test checks that every classic event, except the Time of Judgment (the Storyteller sets up the ending) and the Avatar Storm (WoDX Otherworlds already reads it for the Umbra storm), has at least one effect. Reverse: remove the entries.
+
+## B3923. Future Darkness disasters reach the markets (2026-11-14)
+No-effect audit w1. Only four Future Darkness events (the 1994 crash, the 1996 Collapse and two plagues) brought market news; the branch's wars, famines and its last Maelstrom changed nothing a player could buy. WoDX Storyteller now gives them the presets that already exist: war for the Mideast Meltdown, the First and Second Corporate Wars and the orbital war; famine for the Midwest drought and the food crash; a crash for the Third Corporate War in the Net; and a collapse for the Seventh Maelstrom over Moravia in both cascades that have it. Several lines describe the same happening, so only one event id per happening carries the news, and a test checks that no year gets the same card twice. The towns read the same news, as before. Reverse: remove the entries.
+
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
 
@@ -6944,3 +6954,9 @@ Reverse: edit the lists in data/people-basin.mjs.
 WoDX Creation. Before 1800 an own name alone; from 1800 a church given name and a family name from the rolls. No church names before 1800: no mission held the Basin.
 
 Reverse: change towns or earlyChurch in data/people-basin.mjs.
+
+## B4600. Show, don't tell (Ben, 2026-11-14)
+Ben's standing rule: whatever happens in the game world must show on the map or screen wherever it can, not only be
+told in text (a demon's flood shows rain forming and the town flooding, not a card saying it flooded). Like the
+effect: rule (B3734), every minor or major release note in changes/ carries a visible: line, or visible: none and why,
+and merge-stamp.mjs refuses to stamp (so the branch cannot merge) while it is missing. Written into docs/WORKFLOW.md and changes/README.md.

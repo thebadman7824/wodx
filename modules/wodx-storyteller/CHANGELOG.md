@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.91.0 (Future Darkness market news (B3923): EVENT_NEWS gains nine branch events, one id per happening; test event-effects)
 - 0.90.1 (book check: the hardship weather roll cites M20 p. 435 only; Sorcerers Crusade p. 208 has no weather rule)
 - 0.90.0 (Bedding and shade in hardship (B3906): the weather roll reads WoDX Library's road kit)
 - 0.89.2 (Crafting kits see each item's id, so a ritual can be laid on an object the character already holds, and a kit that marked an object is no longer told "Nothing came of it" (B3697))
