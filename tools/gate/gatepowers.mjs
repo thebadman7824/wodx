@@ -287,6 +287,18 @@ export async function run() {
       const items = fx(m);
       ok("15 An inquisitor's Blessing from the book list lands on the card", !!m && /Fiat Lux/.test(text(m)) && items.some(i => i.key === "light"), { card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`) });
     });
+    await step("16 A Fera breed's own Gift lands on the card", async () => {
+      const cat = await mk("Bastet", "Changing Breed", { changingbreed: "Bastet", advantages: { willpower: { permanent: 5, temporary: 5 }, gnosis: { permanent: 3, temporary: 3 }, rage: { permanent: 3, temporary: 3 } } },
+        [{ name: "Skin of Jade", type: "Power", system: { type: "wod.types.gift", value: 1 } }]);
+      await sleep(800);
+      await game.user.updateTokenTargets?.([]);
+      const n = game.messages.size;
+      answer(() => {});
+      A().useGift({ actor: cat });
+      const m = await untilMsg(n);
+      const items = fx(m);
+      ok("16 A Fera breed's own Gift lands on the card", !!m && /W20 CB p\. 90/.test(text(m)) && items.some(i => i.key === "boost"), { card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`) });
+    });
   } finally {
     for (const [h, id] of hooks) Hooks.off(h, id);
     for (const a of made) await a.delete().catch(() => {});
