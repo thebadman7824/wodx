@@ -44,7 +44,7 @@ export async function run() {
 
     const pc = await Actor.create({name: "WoDX gate: the master", type: "Mortal", ownership: {default: 3}}); actors.push(pc);
     const fol = await Actor.create({name: "WoDX gate: the servant", type: "Mortal", ownership: {default: 0},
-      flags: {"wodx-npc": {serves: [pc.id]}}, system: {attributes: {manipulation: {value: 3}}, abilities: {subterfuge: {value: 2}, crafts: {value: 2}}}}); actors.push(fol);
+      flags: {"wodx-npc": {serves: [pc.id]}}, system: {attributes: {manipulation: {value: 3}}, abilities: {subterfuge: {value: 2}, craft: {value: 2}}}}); actors.push(fol);
     const wit = await Actor.create({name: "WoDX gate: a witness", type: "Mortal", ownership: {default: 0}}); actors.push(wit);
     scene = await Scene.create({name: "WoDX gate: the lane", width: 2000, height: 1400, grid: {size: 100}, tokenVision: false});
     await scene.view();

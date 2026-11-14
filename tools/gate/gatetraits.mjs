@@ -133,8 +133,9 @@ export async function run() {
 
     await step("12 window", async () => {
       const p = T().open(human);
-      await new Promise(r => setTimeout(r, 600));
-      const el = document.querySelector(".wct-traits");
+      // the window may take more than a moment to draw on a busy lane: wait for its rows, up to 5 seconds
+      let el = null;
+      for ( let i = 0; i < 25 && !(el?.querySelector(".wct-traits-list li")); i++ ) { await new Promise(r => setTimeout(r, 200)); el = document.querySelector(".wct-traits"); }
       const rows = el?.querySelectorAll(".wct-traits-list li").length ?? 0;
       const picks = el?.querySelectorAll("select[data-wct-item]").length ?? 0;
       const app = [...foundry.applications.instances.values()].find(a => a.element === el || a.element?.contains?.(el));
