@@ -189,7 +189,7 @@ Next free block: B3730
 | B3650-B3659 | Threads of Fate: procedural storylines and encounters from story hooks (used B3650-B3656) | Storyteller |
 | B3660-B3669 | The Rothenstein saga: the running step for other systems (used B3660-B3669) | Chronicle |
 | B3670-B3679 | The Rothenstein saga keeps its calendar on long skips (used B3670-B3672) | Chronicle |
-| B3680-B3689 | Mage Wonders, charms, periapts, trinkets and mage fetishes (used B3680-B3688) | Library, Storyteller |
+| B3680-B3689 | Mage Wonders, charms, periapts, trinkets and mage fetishes (used B3680-B3689) | Library, Storyteller |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
 <!-- decision-index:end -->
 
@@ -6134,6 +6134,11 @@ Reverse: itemsFor() in wonders-mage.mjs.
 WoDX Library. A mage binds a spirit into any Garou fetish (not the Bane fetishes or a breed's own) with Spirit 4 to force an unwilling spirit, which makes an unreliable fetish, or Prime 4 and a bargain with a willing one (M20 pdf 509; Book of Secrets pdf 161). The work is extended Arete at difficulty 8, three successes a level. A forced spirit's court remembers, as for a Garou. Using it is Willpower at difficulty 7, with the fetish's Gnosis as the pool (M20 pdf 653).
 
 Reverse: drop FETISH_ROWS from ROWS in wonders-mage.mjs.
+
+## B3689. A long task can have a set number of rolls and a cost on every roll (2026-11-14)
+WoDX Storyteller (tasks-rules.mjs, tasks.mjs). Some making rules give the work a fixed number of rolls and a price each night or week: V20's Enchant Talisman wants 20 net successes from four weekly Intelligence + Occult rolls, or the talisman is ruined (V20 pdf 247), and takes a blood point a night. A task seed may now carry maxRolls (the task is ruined, not left open, when that many rolls leave it short) and perRoll costs, paid from the actor before each roll; when one can't be paid, the work pauses and says why. An entry's adds puts automatic successes on the roll it pays for (Dark Ages' Willpower for a success). Undo on the card gives back what the rolls cost.
+
+Reverse: drop maxRolls, perRoll and ruinedBy from normTask and the payRoll step in tick().
 
 ## B3720. Soulforged Artifacts and relics are a line on the crafting table (2026-11-14)
 WoDX Library. Ben's pick on the Item Crafting Desk: soulforged relics and Artifacts stay with the soulforging build but are made through the shared crafting engine. The wonders registry (B3683) gains a Wraith kit, scripts/wonders-wraith.mjs (world setting craftWraith, on by default like the other kits), with two rows, a soulforged Artifact and a reworked relic (Wraith 20th book p. 44, pdf 109). Arms, armour and oboli stay in the WoDX Actions forge window, since they are gear and money, not Artifacts.

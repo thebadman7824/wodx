@@ -78,7 +78,6 @@ const stagesOf = v => (Array.isArray(v) ? v.slice(0, 8).map(x => ({name: String(
   goal: Math.max(1, Math.round(n(x?.goal) || 1)), cost: Math.max(0, Math.round(n(x?.cost)))})) : []);
 const clampDiff = d => Math.max(2, Math.min(10, Math.round(n(d) || 6)));
 
-/** A task as stored on the actor flag wodx-storyteller.tasks[id]. */
 /** A kit's options on a task: up to 16 keys of numbers, booleans, short text or short lists of text (B3684). */
 export function smallOpts(o) {
   if ( !o || typeof o !== "object" || Array.isArray(o) ) return {};
@@ -92,6 +91,31 @@ export function smallOpts(o) {
   return out;
 }
 
+/** Costs paid on every roll (B3689): up to 4 of {path (a system. dot path), amount, label, floor, adds}. */
+export function perRollOf(v) {
+  if ( !Array.isArray(v) ) return [];
+  return v.slice(0, 4).filter(c => /^system\.[A-Za-z0-9_.]{1,80}$/.test(String(c?.path ?? "")) && n(c?.amount) > 0)
+    .map(c => ({path: String(c.path), amount: Math.min(10, Math.round(n(c.amount))), label: String(c.label ?? "").slice(0, 80),
+      floor: Math.max(0, Math.round(n(c.floor))), adds: Math.max(0, Math.min(3, Math.round(n(c.adds))))}));
+}
+
+/**
+ * Pay one roll's costs from plain values ({path: number}). Returns {ok, updates, adds, why}; nothing is paid when any
+ * entry would go under its floor.
+ */
+export function payRoll(perRoll = [], values = {}) {
+  const updates = {};
+  let adds = 0;
+  for ( const c of perRollOf(perRoll) ) {
+    const from = n(updates[c.path] ?? values[c.path]);
+    if ( from - c.amount < c.floor ) return {ok: false, updates: {}, adds: 0, why: `not enough for ${c.label || c.path.split(".").slice(-2).join(" ")}`};
+    updates[c.path] = from - c.amount;
+    adds += c.adds;
+  }
+  return {ok: true, updates, adds, why: ""};
+}
+
+/** A task as stored on the actor flag wodx-storyteller.tasks[id]. */
 export function normTask(t = {}) {
   const kind = KINDS[t.kind] ? t.kind : t.kind === "talen" ? "fetish" : "other";
   const k = KINDS[kind];
@@ -144,7 +168,12 @@ export function normTask(t = {}) {
     forced: !!t.forced, delay: Math.max(0, Math.min(30, Math.round(n(t.delay)))), approved: t.approved !== false,
     spirit: String(t.spirit ?? "").slice(0, 160),
     // B3684: a line kit's own choices (Effects sealed in, dots, count...): plain values only, kept small
-    opts: smallOpts(t.opts)
+    opts: smallOpts(t.opts),
+    // B3689: maxRolls ends the work as ruined when that many rolls leave it short of the goal (V20 Enchant Talisman,
+    // pdf 247); perRoll is paid before each roll (a blood point a night), and the work waits when it can't be paid;
+    // an entry's adds puts that many automatic successes on the roll it pays for; ruinedBy: "botch" or "rolls"
+    maxRolls: Math.max(0, Math.min(MAX_ROLLS, Math.round(n(t.maxRolls)))), perRoll: perRollOf(t.perRoll),
+    ruinedBy: ["botch", "rolls"].includes(t.ruinedBy) ? t.ruinedBy : ""
   };
 }
 
@@ -217,7 +246,7 @@ export function stepTask(task, roll, at) {
   t.next += intervalS(t);
   if ( roll.botch ) {
     t.total = 0;
-    if ( t.delicate ) t.status = "ruined";
+    if ( t.delicate ) { t.status = "ruined"; t.ruinedBy = "botch"; }
     t.log.push({at, s: 0, botch: true});
   } else {
     t.total += Math.max(0, n(roll.successes));
@@ -228,6 +257,7 @@ export function stepTask(task, roll, at) {
       else t.status = "done";
     }
   }
+  if ( t.status === "open" && t.maxRolls && t.rolls >= t.maxRolls && t.total < t.goal ) { t.status = "ruined"; t.ruinedBy = "rolls"; }
   t.log = t.log.slice(-20);
   return t;
 }
@@ -248,12 +278,15 @@ export function pauseTask(task) {
   return t;
 }
 
+/** Why a task was ruined, in a few words. */
+export const ruinWord = t => (t?.ruinedBy === "rolls" ? `ruined: ${t.total} of ${t.goal} after the ${t.rolls} rolls it had` : "ruined by a botch");
+
 /** A short line for a card or the window. */
 export function describe(task) {
   const t = normTask(task);
   const state = {open: `${t.total} of ${t.goal} successes after ${t.rolls} roll${t.rolls === 1 ? "" : "s"}`,
     paused: `paused at ${t.total} of ${t.goal}`, done: `finished after ${t.rolls} roll${t.rolls === 1 ? "" : "s"}`,
-    ruined: "ruined by a botch"}[t.status];
+    ruined: ruinWord(t)}[t.status];
   return `${t.name}: ${state}`;
 }
 
