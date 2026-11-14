@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4140
+Next free block: B4150
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -208,6 +208,7 @@ Next free block: B4140
 | B4110-B4119 | Stale pull request sweeper in the PC runner (used B4110) | tools (no module) |
 | B4120-B4129 | Player interface: the Storyteller hides parts of Foundry's screen for each player (used B4120-B4123) | Chronicle |
 | B4130-B4139 | Missouri village peoples in the People generator (used B4130-B4132) | Creation, Chronicle |
+| B4140-B4149 | Crow, Blackfoot and Arapaho names in the People generator (used B4140-B4142) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6894,3 +6895,18 @@ Reverse: edit the lists in data/people-missouri.mjs.
 WoDX Creation. Before 1800 a person bears an own name alone, and a woman not named in the records is "a woman of" her village (On-a-Slant, Big Hidatsa, Star Village) or Pawnee band (the Skidi, the Chawi). From 1800 a church given name and a family name from the rolls. No church names before 1800: no mission reached the upper Missouri or the Platte before then.
 
 Reverse: change earlyChurch or towns for the four peoples in data/people-missouri.mjs.
+
+## B4140. The northern Plains join the West (2026-11-14)
+WoDX Creation and Chronicle. The Blackfoot, the Arapaho and the Crow join the American West's mix from 1197: 10 in 100 before 1500 and 1800, then 1 each after the reservations (the Blackfoot and the Crow 1 each today). The Crow stand in the West before they parted from the Hidatsa, as their ancestors. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
+
+Reverse: put back the old north-america-west mixes in world-rules.mjs and drop plainsNorthTables from people-world.mjs.
+
+## B4141. Names from the treaties and rolls, fewer than 300 (2026-11-14)
+WoDX Creation. The lists come from the Fort Laramie treaties, the Lame Bull treaty, Treaty 7, the Medicine Lodge treaty, the agency records and the rolls since. Each people has fewer than 300 names, as with the other Plains peoples. Names that hold a gendered pronoun (White Man Runs Him) stay out of the lists under the house rule on in-game text.
+
+Reverse: edit the lists in data/people-plains-north.mjs.
+
+## B4142. Crow clans, Blackfoot and Arapaho divisions (2026-11-14)
+WoDX Creation. Before 1800 a Crow bears the clan of the mother (of the Whistling Water clan); a Blackfoot or Arapaho bears an own name alone, and a woman not named in the records is "a woman of" the division (the Kainai, the Southern Arapaho). From 1800 a church given name and a family name from the rolls.
+
+Reverse: change clans or towns for the three peoples in data/people-plains-north.mjs.
