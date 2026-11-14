@@ -100,9 +100,9 @@ export async function run() {
         power("Sekhem Vessel", "wod.types.hekaupower")]);
     const tal = (await work(m, "mummy", "greater-talisman", {attr: "strength"}, 30)).items[0];
     await tal?.update({"system.isequipped": true});
-    const on = (tal?.system?.bonuslist ?? []).filter(b => b.type === "attribute_buff" && b.settingtype === "strength").map(b => b.value);
+    const on = (tal?.system?.bonuslist ?? []).filter(b => b.type === "attribute_buff" && b.settingtype === "strength" && b.isactive).map(b => b.value);
     await tal?.update({"system.isequipped": false});
-    const off = (tal?.system?.bonuslist ?? []).filter(b => b.type === "attribute_buff" && b.settingtype === "strength");
+    const off = (tal?.system?.bonuslist ?? []).filter(b => b.type === "attribute_buff" && b.settingtype === "strength" && b.isactive);
     ok("6. Mummy talisman worn", on.includes(2) && !off.length && wonderOf(tal)?.lasts?.months === 7, {on, off: off.length, lasts: wonderOf(tal)?.lasts});
     const actorsMid = new Set(game.actors.map(a => a.id));
     await work(m, "mummy", "simple-servitor", {}, 1);
