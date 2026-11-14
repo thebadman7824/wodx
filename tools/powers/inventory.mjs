@@ -113,7 +113,7 @@ for ( const [id, c] of Object.entries(CA.CANTRIPS) ) {
 }
 /* -- Changeling: Dark Ages Fae (cantrips by Dominion and level) */
 for ( const [id, d] of Object.entries(F.DOMINIONS) ) for ( let l = 1; l <= 5; l++ )
-  add("Fae (Dark Ages)", `Dominion of ${d.label}`, `${d.label} ${l}`, { status: "roll", page: `DA:Fae p. ${d.page ?? "?"}`, how: "cantrip roll and reach; the cantrip's effect is the player's text" });
+  add("Fae (Dark Ages)", `Dominion of ${d.label}`, `${d.label} ${l}`, { status: "applies", page: `DA:Fae p. ${d.page ?? "?"}`, how: "cantrip roll and reach; the keywords on the cantrip's sheet line, or picked in the cast window, go on the effects card" });
 /* -- Demon: Lores and evocations (demon.js Evoke) */
 const dtfNames = new Set();
 for ( const [id, l] of Object.entries(D.LORES) ) for ( const [k, e] of (l.evo ?? []).entries() ) {
