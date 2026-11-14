@@ -51,7 +51,7 @@ test("plains: a church given name and a family name from 1800", () => {
 
 test("plains: the American West has its peoples from 1197, a share later, and the East borrows none", () => {
   const origin = (era, culture) => G.resolveTable(PEOPLE_TABLES, "people.origin", {era, culture})?.results.map(r => r.text) ?? [];
-  assert.deepEqual(origin("medieval", WEST), ["lakota", "cheyenne", "comanche", "kiowa", "pueblo", "dine", "apache"]);
+  assert.deepEqual(origin("medieval", WEST), ["lakota", "cheyenne", "comanche", "kiowa", "pueblo", "dine", "apache", "mandan", "hidatsa", "arikara", "pawnee"]);
   assert.ok(origin("industrial", WEST).includes("lakota") && origin("industrial", WEST).includes("anglo"));
   assert.ok(origin("modern", WEST).includes("lakota"));
   assert.ok(!origin("medieval", W.cultureOf("north-america-east")).includes("lakota"));

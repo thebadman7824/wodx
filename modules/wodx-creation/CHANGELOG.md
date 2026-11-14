@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.42.0 (The village peoples of the Missouri join the People generator: the Mandan, the Hidatsa, the Arikara and the Pawnee, with own names from the records, their villages and bands, and the family names of the Fort Berthold and Pawnee rolls (B4130 to B4132))
 - 0.41.2 (book check: voluntary torpor by Road is V20 Dark Ages p. 351, not p. 350)
 - 0.41.1 (An elder's Lifepath years before 1197 now always offer one mark of their homeland on the first draw (B3180). Before this fix, the clan's own ways could fill all five places)
 - 0.41.0 (The Armenians join the People generator with over 300 names: given names of Greater Armenia and Cilicia, bynames of the home town before 1800 and family names in -ian or -yan after (B3940 to B3942))
