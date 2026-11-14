@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3930
+Next free block: B3940
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -200,6 +200,7 @@ Next free block: B3930
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
 | B3900-B3929 | The no-effect audit, part 2: ammunition, everyday goods, character traits, the world (used B3900-B3901) | Library, Combat |
+| B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6658,3 +6659,18 @@ Reverse: drop the reloadPlan lines in Combat's reload.
 WoDX Combat. Bows and slings have no capacity on the sheet, so Count shots never counted them. With Count shots on, a bow or sling now needs an arrow or a stone in Possessions to shoot, and each shot spends one. The automatic attack skips a bow with no arrows. With Count shots off, nothing changes.
 
 Reverse: remove shotAmmo from the attack and attackUsable.
+
+## B3930. Three Southwest peoples in the West's mix (2026-11-14)
+WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
+
+Reverse: put back the B3820 mixes on north-america-west in world-rules.mjs and drop southwestTables from people-world.mjs.
+
+## B3931. Recorded names, fewer than 300 (2026-11-14)
+WoDX Creation. Pueblo Revolt leaders, Hopi and Zuni leaders, the Diné headmen of 1849 to 1868 (most known by Spanish bynames, kept as the clerks wrote them), the Apache leaders, and the family names on the rolls since. Fewer than 300 for each (house reading, as B3511). Where a name was uncertain it was left out.
+
+Reverse: edit data/people-southwest.mjs.
+
+## B3932. Clans and church names (2026-11-14)
+WoDX Creation. The Hopi and Diné reckon clans from the mother, so before 1800 they carry "of the Bear clan" or "of the Bitter Water clan" in the family slot, as the Haudenosaunee do; Diné clans are given in English. The Apache carry no clan, and a woman without a recorded name is "A woman of the Chihenne" or of another band. The Pueblos had missions from 1598, so a third of men carry a church name in 1500 to 1799; the Diné and Apache do not (earlyChurch: false).
+
+Reverse: change the options in southwestTables.

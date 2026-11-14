@@ -7,7 +7,8 @@
  * removes it.
  *   1. WoDX Creation and WoDX Chronicle with the Plains peoples (the West has a medieval mix)
  *   2. the West before 1500 is the four peoples; eastern North America has none of them
- *   3. before 1800: own names from the records and women named by band, no church names, no family name
+ *   3. before 1800: own names from the records and women named by band, no church names, no family name but a clan
+ *      for the Pueblos and the Diné (the Southwest, B3930)
  *   4. from 1800: a church given name and a family name from the rolls
  *   5. the People generator for the West makes a person of one of the West's peoples, whatever the clock's age
  *   6. the generated person becomes a sheet with that name
@@ -19,7 +20,8 @@ import {gate} from "./kit.mjs";
 
 const CR = "wodx-creation", CH = "wodx-chronicle";
 const WEST = "north-america-west", EAST = "american";
-const PEOPLES = ["lakota", "cheyenne", "comanche", "kiowa"];
+const PEOPLES = ["lakota", "cheyenne", "comanche", "kiowa", "pueblo", "dine", "apache"];
+const CLANS = ["pueblo", "dine"];
 const gen = () => game.modules.get(CH).api.gen;
 const results = (ctx, id) => (gen().lookup({...gen().context(), ...ctx})(id)?.results ?? []).map(r => r.text);
 
@@ -44,14 +46,14 @@ export async function run() {
       const med = results({era: "medieval", culture: WEST}, "people.origin"), east = results({era: "medieval", culture: EAST}, "people.origin");
       const ind = results({era: "industrial", culture: WEST}, "people.origin");
       G.ok("2. the West before 1500 is the four peoples, a share later; the East borrows none",
-        PEOPLES.every(p => med.includes(p)) && med.length === 4 && ind.includes("lakota") && ind.includes("anglo") && !east.some(p => PEOPLES.includes(p)),
+        PEOPLES.every(p => med.includes(p)) && med.length === PEOPLES.length && ind.includes("lakota") && ind.includes("anglo") && !east.some(p => PEOPLES.includes(p)),
         {medieval: med, industrial: ind, east});
     });
 
     await G.step("3. before 1800", async () => {
       const bad = [];
       for ( const o of PEOPLES ) for ( const era of ["medieval", "early-modern"] ) for ( const p of draw(era, o, 40, "old") ) {
-        if ( !p.name || p.name.includes("{") || p.family || /^(John|Joseph|Mary|Peter|Paul|Catherine) /.test(p.name) ) bad.push(`${o} ${era}: ${p.name} / ${p.family}`);
+        if ( !p.name || p.name.includes("{") || (p.family && !(CLANS.includes(o) && /^of the .+ clan$/.test(p.family))) || /^(John|Joseph|Mary|Peter|Paul|Catherine) /.test(p.name) ) bad.push(`${o} ${era}: ${p.name} / ${p.family}`);
       }
       const women = draw("medieval", "kiowa", 20, "band").filter((p, i) => i % 2).map(p => p.name);
       G.ok("3. own names and women of a band, no church name or family name", !bad.length && women.every(n => /^A woman of the /.test(n)),

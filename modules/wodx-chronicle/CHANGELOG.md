@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.90.0 (The American West holds the Southwest's peoples beside the Plains: Pueblo 22, Diné 10 and Apache 8 in 100 before 1500, a share after (B3930))
 - 0.89.0 (Mexico and Central America hold the Maya beside the Nahua: 30 in 100 before 1500, 17 beside the Spanish to 1800, 8 after (B3830))
 - 0.88.0 (The American West has people of its own from 1197: the Lakota, Dakota and Nakota, the Cheyenne, the Comanche and the Kiowa before the Spanish, beside them until 1800 and a share after (B3820))
 - 0.87.0 (B3793: the BODY table and api.traits.toughness(actor) = {bruised, shift, ease, silver, names}. Cards for Ambidextrous, Short, Lame, Odd Gait, Permanent Wound, Slow Healing, Flesh of the Corpse, Berserker, Too Tough to Die, Legendary Attributes, Regeneration, Iron Allergy, Detached, Poisonous Blood)
