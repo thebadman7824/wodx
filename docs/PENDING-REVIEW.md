@@ -1262,6 +1262,15 @@ Ben approved everything that was waiting for review ("I approve everything pendi
 | 2026-11-13 | Peoples without names, second desk: the Algonquian coast (desk https://claude.ai/artifact/MiX1eYZE8JxsSjGqiiWswt, picks in its `verdicts` collection) | Ben picked all recommended (22:20 UTC), built as the next row; recommended: three peoples (Lenape, New England Algonquian, Powhatan) from recorded names, the Lenape clan from the mother, names staged as for the Haudenosaunee, shared with the Haudenosaunee before contact and a share after, women as for the Haudenosaunee | Pick on the desk |
 | 2026-11-13 | Algonquian coast names as built from Ben's desk picks (all recommended, 22:20 UTC; B3510 to B3512) | Lenape 91 men's names with clans from the mother; New England 114 men's and 17 women's; Powhatan 54 and 6; fewer than 300 each since the records reached hold no more; women without a recorded name as "A woman of the Turtle clan" or "A woman of Pokanoket"; later family names from the reserve rolls (house reading); eastern North America before contact Haudenosaunee 40, Lenape 25, New England 25, Powhatan 10 | Edit data/people-algonquian.mjs or the mixes in world-rules.mjs |
 
+## Approved by Ben, 14 November 2026, 01:42 UTC (Rothenstein Saga desk, every recommendation)
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-14 | Rothenstein saga: how long the first book runs (B3661) | Five years, October 1197 to 1202, one chapter per old session with an interlude between each | Change the red-stone dates in modules/wodx-chronicle/data/saga-rothenstein.mjs |
+| 2026-11-14 | Rothenstein saga: keep the old ten-night pages (B3662) | Kept unchanged; each chapter links to its page | Write new pages and point the chapters at them |
+| 2026-11-14 | Rothenstein saga: books after the four stories (B3663) | Fifteen more books from the prologue (880) to 2030, plus one on the future branch | Edit or remove books in saga-rothenstein.mjs |
+| 2026-11-14 | Rothenstein saga: the long clocks and endings (B3664, B3665) | Four clocks (Husbandman, Ashfield, Church's eye, Charter); the first book's ending (sealed, severed, taken) changes later words | Edit SAGA_CLOCKS, SAGA_ENDINGS and the steps' by |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |

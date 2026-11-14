@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3630
+Next free block: B3680
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -172,6 +172,7 @@ Next free block: B3630
 | B3340-B3419 | Player world systems: downtime projects, NPC memory, rumours, institutions, havens, investigation, dreams, patronage (used B3340-B3378) | Storyteller |
 | B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
 | B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3438) | Storyteller, Actions |
+| B3440-B3449 | Display-only desk batch D: face tell, uncanny marks, war-form Delirium, figure dress (used B3440-B3444) | Actions, Library, Paperdoll, NPC |
 | B3450-B3459 | Places of power: Mage Nodes and Tass, chantries, Changeling freeholds and balefires (used B3450-B3456) | Storyteller |
 | B3460-B3469 | Town generator buildings by region (used B3460-B3462) | tools |
 | B3470-B3479 | Living caerns: level, sept and offices, moots, raids, caern wars, a caern dying or taken (used B3470-B3476) | Storyteller |
@@ -183,6 +184,8 @@ Next free block: B3630
 | B3540-B3549 | Supernatural sight: the Penumbra, a mage's sight, chimerical sight, the Shadowlands view (notes gaps g8 to g11) (used B3540-B3547) | Senses, Actions |
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
 | B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3621) | Chronicle |
+| B3660-B3669 | The Rothenstein saga: the running step for other systems (used B3660-B3669) | Chronicle |
+| B3670-B3679 | The Rothenstein saga keeps its calendar on long skips (used B3670-B3672) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5395,6 +5398,31 @@ Reverse: pass no sickFor from towns.mjs.
 WoDX Actions, the Hunt and feeding (main.js). When upkeep.huntHere(scene).outbreak carries a diff (WoDX Storyteller's contagion: -1 while the town's sickness spreads or stands at its height, B3432), the Hunt shows "The sick are everywhere" with that number, added to the difficulty after the Fame and Domain floor, and named in the roll's parts. A vampire who becomes a carrier on a diseased vessel (V20 p. 303) gets flags.wodx-actions.carrier.disease and .what from the scene's outbreak when that sickness rides in the blood, so WoDX Storyteller's weekly run can offer it to a clean town the carrier stands in (B3433); otherwise the flag stays "a blood-borne disease" with no disease.
 Reverse: remove the sickDiff field and the named carrier in main.js.
 
+## B3440. A war-form sprite brings the Delirium; Hispo does not (2026-11-13)
+Desk item f4. The automatic Delirium prompt (Actions 3.42.0) only looked at a shifter's sheet in Crinos. It now also fires for a token that WoDX Paperdoll draws as a war form, such as an NPC with no Garou sheet, and again when a token's sprite changes. The desk said Crinos or Hispo, but the book check found the Delirium comes from Crinos only (W20 p. 45); Hispo brings it only through a Gift (W20 p. 186), so Hispo stays out. The shift card no longer sends the Storyteller to the Garou tools when the prompt is on.
+
+Reverse: Restore the shifter-only test in crinosSeen and the old note.
+
+## B3441. Dress against the other's station on Etiquette and Subterfuge (2026-11-13)
+Desk item f5. WoDX Library's dressedVs ("fine", "even", "poor") against the first targeted person's station now gives +1 die ("fine") or -1 die ("poor") on Etiquette and Subterfuge rolls. V20 leaves dress to the Storyteller in its Etiquette notes; the one die is WoDX's figure. The desk said "a scene's station"; scenes have no station yet, so it is the station of the one dealt with.
+
+Reverse: Drop dressed from deeperMods.
+
+## B3442. The figure's clothes are worn dress (2026-11-13)
+Desk item f5. The wardrobe pieces of WoDX Paperdoll's figure already match WoDX Library goods by name (277 of 297 worn pieces, each with its value by era and its years). When the sheet has no clothes worn, the look reads the figure's worn places (not what is held), so station, strange dress, the first meeting and the witness description follow what the player dressed the figure in. Clothes worn on the sheet still win.
+
+Reverse: Remove figurePieces from viewOf.
+
+## B3443. A Kindred's uncanny face marks are seen (2026-11-13)
+Desk item f2. face64-seen.mjs lists the face features no mortal has: every Nosferatu, Gargoyle and Samedi mark, and named marks of the other clans, such as a Gangrel's beast eyes and whiskers, a Tzimisce's shaped bone, a Setite's scales, a Baali's horn buds, and long fangs or eyes black from lid to lid. Pallor, scars, paint, jewellery and glows of mood pass for mortal, and form marks count only while their state is on. A mask over the face (the figure's face or head piece) or the Obfuscated status hides them. The witness description names up to three of them, and a mortal who does not know and sees the Kindred brings the Masquerade card, once for each witness in a scene, with the button to record them. Which marks count is WoDX's reading of each clan's look.
+
+Reverse: Remove the uncanny call from Library describe and marksSeen from the move hook.
+
+## B3444. Reading a face (2026-11-13)
+Desk item f1. Under a talk line's face, the player of the character spoken to can read the face once for that line: Perception + Empathy against the speaker's Manipulation + Subterfuge, difficulty 6 each (V20 resisted rolls). The speaker's roll goes to the Storyteller only. Won, the reader learns the true feeling (the attitude step, or a mood the Storyteller set), the face shows it for a moment, and a line the Storyteller marked "lie" on the talk sheet shows a flicker. A tie or a loss shows nothing; a botch misreads them as sincere.
+
+Reverse: Remove readButton and readFace, and the lie tag from parseThen.
+
 ## B3450. Places of power live in one register in WoDX Storyteller (2026-11-13)
 WoDX Storyteller. Nodes, chantries and freeholds are kept in a hidden world setting (powerState), each tied to a scene and to the characters who keep it, and run on the clock once a game hour and after a skip (power.mjs, power-rules.mjs). The window opens from Upkeep, Places of power. Setting placesOfPower switches the clock off.
 
@@ -5886,3 +5914,68 @@ Reverse: remove the rows from FUTURE_ROWS; off the branch nothing changes.
 LINE_FUTURE, on the Storyteller's Law here card when a record is speculation: cameras and the Masquerade, a ghoul's corporate papers, the corporate districts as the Wyrm's cities, the Technocracy and the corporate courts, Banality, the dead with no score, an erased hunter, a mummy's new identities, a demon's data trail, revenant families' shares.
 
 Reverse: empty LINE_FUTURE.
+
+## B3660. The saga runs on the story chain runner (2026-11-14)
+WoDX Chronicle. Ben asked (Threads of Fate desk, item 16) to spread the Rothenstein story over a longer time than ten nights. Each book of the saga is a story chain whose steps are dated; the gap on the clock is the gap between dates, so the chain runner deals the steps as time passes. A saga run carries `saga: {book, endings}`. The switch is podSaga, off by default like the other pod switches; the chronicle builder's spine step should turn it on in rothenstein-x.
+
+Reverse: turn podSaga off; remove the saga lines in pod.mjs and chainOf/chainByKey in pod-rules.mjs.
+
+## B3661. The first book runs five years (2026-11-14)
+WoDX Chronicle. What Sleeps Beneath Rothenstein becomes ten chapters (the old ten sessions) from 1 October 1197 to Saint John's Eve 1202, with an interlude between each: the pass closing, the thaw, harvests, the hungry winter, the bishop's decree. Interludes name encounters that suit the season, move the long clocks and give downtime. The book ends with "The years after" in November 1202, a year before the Patriarch's envoy (late 1203).
+
+Reverse: change the `at` dates of the red-stone book in data/saga-rothenstein.mjs.
+
+## B3662. The old journal pages stay as they are (2026-11-14)
+WoDX Chronicle. The session pages are not rewritten. Each chapter links to its page by name ("Session 1" for the sequels' "Session 1: The Envoy"), or names it when the world does not have it.
+
+Reverse: none needed; new text could be written and linked instead.
+
+## B3663. Nineteen books, one at a time (2026-11-14)
+WoDX Chronicle. A prologue (880 to 906, the binding at the fall of Great Moravia), the four existing stories, then a book for each age: the Inquisition (1231), the Mongols (1241), the silver rush (1290), the plague that passed (1348 and 1380), the Hussite wars, the Thirty Years War, the witch trials of the 1680s, Joseph II's patents, 1848 to 1866, the Great War, 1938 to 1948, the uranium shaft to 1989, the 1997 flood and the red star, the Time of Judgment to 2030. Books never overlap, so only one runs at a time; The Lantern and the Flame ends in 1216 and the 1231 Inquisition is its own book. Real people stay offstage; invented ones are named as invented.
+
+Reverse: edit or remove books in data/saga-rothenstein.mjs (the harness checks they stay apart).
+
+## B3664. Four long clocks (2026-11-14)
+WoDX Chronicle. The Red Husbandman stirs (10), the Ashfield spreads (8), the Church's eye (8), the Charter holds (6). Steps move them; the card says when one fills. The Storyteller can set them in the window.
+
+Reverse: edit SAGA_CLOCKS and the steps' `clocks`.
+
+## B3665. The first book's ending answers later (2026-11-14)
+WoDX Chronicle. Sealed, severed or taken, picked in the window. Later steps with `by` add the words for that ending. The last book offers the ending choice again.
+
+Reverse: clear the ending in the window.
+
+## B3666. Books the clock passes still move the world (2026-11-14)
+WoDX Chronicle. A book whose years go by without anyone starting it is marked passed, and its world steps' clock moves apply, with one card. It can still be started from the window.
+
+Reverse: set the clocks back in the window; remove passedBooks from sagaTick.
+
+## B3667. Steps post a signal (2026-11-14)
+WoDX Chronicle. Each step fires hook wodxSaga {book, step, kind, clocks, signal, ending}; signal is in the omens shape {kind: "saga", region: "moravia", about: "", weight, words} so Threads of Fate and the dreams system can read it.
+
+Reverse: drop the Hooks.callAll line in sagaStep.
+
+## B3668. The future book needs the branch (2026-11-14)
+WoDX Chronicle. The Valley Under Glass (2031 on) is offered only when the house rule futureBranch is on.
+
+Reverse: remove `branch: "future"` from the arcology book.
+
+## B3669. The running saga step is readable (2026-11-14)
+WoDX Chronicle. api.pod.saga.current() returns {book, title, step, dealt, next} for the running book, or null, so the Storyteller's night draw (Threads of Fate) can use the saga's step when no storyline of its own is open. It reads only; nothing moves.
+
+Reverse: remove sagaCurrent from pod.mjs.
+
+## B3670. Saga steps change the town through towns over time (2026-11-14)
+WoDX Chronicle and WoDX Storyteller. Ben's pick on the Rothenstein Saga desk (d-world). A saga step may name a town change; Storyteller's towns over time applies it to the market named by the saga's place (Rothenstein) at once, like a dated event's news, once per step (kept in the town's seen list). The changes are SAGA_TOWN in town-rules.mjs: boom, war, famine and plague follow the news presets (plague takes 12 in 100 over its weeks), a siege also kills 1 in 100, exile drives out 1 in 10, the 1946 expulsion 35 in 100, a flood wrecks the riverside. Seventeen steps carry one, from the Mongols in 1241 to the 1997 flood.
+
+Reverse: remove `town` from the steps in data/saga-rothenstein.mjs, or the wodxSaga listener in towns.mjs; a card's Undo takes one back.
+
+## B3671. The rebuild turns the saga on (2026-11-14)
+WoDX Storyteller. Ben's pick (d-switch): the saga stays off by default, and the chronicle builder's settings step turns WoDX Chronicle's podSaga on when the recipe's spine names the saga (recipe-rothenstein.mjs spine.saga = "rothenstein").
+
+Reverse: remove spine.saga from the recipe, or turn the switch off in the built world.
+
+## B3672. Saga gaps count from the due time (2026-11-14)
+WoDX Chronicle. The testbed gate found that a saga run counted each gap from the moment a step was dealt, so a skip of months dealt one step and pushed the rest later. A saga run now sets `last` to the step's due time, so the book holds its dates and a long skip deals every step it passes over, in order. Plain story chains keep the old way.
+
+Reverse: in dealChains (pod.mjs), set run.last = t for saga runs too.

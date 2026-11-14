@@ -5,6 +5,8 @@
 import * as D from "../data/pod.mjs";
 export * from "../data/pod.mjs";
 import * as LPD from "../data/pod-lifepath.mjs";
+import * as S from "./saga-rules.mjs";
+export * as saga from "./saga-rules.mjs";
 export {LP_CHAINS, LP_DAYS, meansFor} from "../data/pod-lifepath.mjs";
 
 const DAY = 86400;
@@ -79,7 +81,7 @@ export const mentorTerms = (since, now) => since && now > since ? Math.floor((no
 
 /* ---------------- story chains and goals ---------------- */
 
-export const chainByKey = k => D.CHAINS.find(c => c.key === k) ?? null;
+export const chainByKey = k => S.isSagaKey(k) ? S.bookChain(S.bookOfKey(k)) : D.CHAINS.find(c => c.key === k) ?? null;
 /** Chains that fit a year and the lines in play ("all" fits every line). */
 export function chainsFor(year, lines = []) {
   return D.CHAINS.filter(c => year >= c.from && year <= c.to && (c.lines.includes("all") || !lines.length || c.lines.some(l => lines.includes(l))));
@@ -121,7 +123,8 @@ export function lpChain(run = {}, year = null) {
 }
 
 /** Any running chain, a preset or a lifepath one. */
-export const chainOf = (run = {}, year = null) => run.lp ? lpChain(run, year) : chainByKey(run.key);
+export const chainOf = (run = {}, year = null) => run.lp ? lpChain(run, year)
+  : run.saga ? S.bookChain(run.saga.book, run.saga.endings ?? {}) : chainByKey(run.key);
 
 /**
  * The next thread to put to the Storyteller, or null. st = {since, last, seen: {id: status}}; threads from
