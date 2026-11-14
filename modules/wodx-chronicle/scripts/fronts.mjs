@@ -20,7 +20,7 @@ import * as S from "./saga-rules.mjs";
 
 const BOOK = S.FIRST_BOOK;
 const now = () => game.time?.worldTime ?? 0;
-const api = id => game.modules.get(id)?.active ? game.modules.get(id).api : null;
+const mod = id => game.modules.get(id)?.active ? game.modules.get(id).api : null;
 const pod = () => foundry.utils.deepClone(game.settings.get(MODULE_ID, "podState") ?? {}) ?? {};
 const savePod = s => game.settings.set(MODULE_ID, "podState", s);
 const sagaOf = s => { const x = s.saga ??= {}; x.endings ??= {}; x.clocks ??= {}; x.books ??= {}; return x; };
@@ -77,7 +77,7 @@ function rectOf(scene) {
  * (one key per front, so the last step's marks give way). Returns the scene's name, or "" when nothing could be drawn.
  */
 export async function showSight(key, sight, seed = key) {
-  const TL = api("wodx-storyteller")?.townLooks;
+  const TL = mod("wodx-storyteller")?.townLooks;
   const sc = sight ? sceneFor(sight.scene) : null;
   const k = `front:${key}`;
   // Take this front's marks off every other scene first
@@ -86,12 +86,12 @@ export async function showSight(key, sight, seed = key) {
   const looks = F.sightLooks(sight, rectOf(sc), seed);
   const shake = looks.some(l => l.kind === "quake");
   await TL.setLooks(sc, k, looks.filter(l => l.kind !== "quake" || l.at));
-  if ( shake && game.scenes.viewed === sc ) api("wodx-chronicle")?.looks?.shake?.({ms: 1600, px: 14});
+  if ( shake && game.scenes.viewed === sc ) mod("wodx-chronicle")?.looks?.shake?.({ms: 1600, px: 14});
   return sc.name;
 }
 async function talk(words, key) {
   if ( !words ) return;
-  try { await api("wodx-storyteller")?.signals?.post?.({key: `front:${key}`, kind: "saga", region: "moravia", weight: 2, what: words, from: "saga"}); }
+  try { await mod("wodx-storyteller")?.signals?.post?.({key: `front:${key}`, kind: "saga", region: "moravia", weight: 2, what: words, from: "saga"}); }
   catch (e) { console.warn(`${MODULE_ID} | front talk`, e); }
 }
 
@@ -190,7 +190,7 @@ export async function findCarrier(key, i) {
   if ( !game.user.isGM ) return null;
   const r = await change(st => F.find(st, key, Number(i)));
   if ( !r?.fresh ) return r;
-  const CB = api("wodx-interactables")?.caseBoard;
+  const CB = mod("wodx-interactables")?.caseBoard;
   const j = CB?.openBoard?.() ?? null;
   let pinned = false;
   if ( j && CB.change ) {
