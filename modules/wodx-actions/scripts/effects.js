@@ -524,21 +524,21 @@ async function applyWorld(item, casterName, a) {
     const prev = K.of(scene), step = o.world === "cleanse" ? -n(o.scale) : n(o.scale);
     const level = Math.max(0, n(prev.level) + step);
     await K.set(scene, {...prev, level, log: [...(prev.log ?? []), {at: game.time?.worldTime ?? 0, what: `${why}: ${o.world === "cleanse" ? "cleansed" : "fouled"} (${prev.level} to ${level})`}]});
-    return {taint: {scene: scene.uuid, prev}};
+    return {taint: {scene: scene.uuid, prev}, look: await worldLook(scene, o.world, why)};
   }
   const U = upkeep();
   if ( o.world === "plague" ) {
     const CG = U?.contagion;
     if ( !CG?.power ) return {note: "WoDX Storyteller's sickness is off: describe the sickness by hand"};
     const r = await CG.power({scene, scale: o.scale, source: why});
-    return r?.market ? {sick: r.market} : {note: r?.why ?? "No town on this scene for the sickness to take"};
+    return r?.market ? {sick: r.market, look: await worldLook(scene, "plague", why)} : {note: r?.why ?? "No town on this scene for the sickness to take"};
   }
   const TW = U?.towns;
   const kind = W.townKindOf(o);
   if ( !TW?.power || !kind ) return {note: "WoDX Storyteller's towns are off: describe what befalls the town by hand"};
   const r = await TW.power({kind, scale: o.scale, scene, label: why});
   // The town card carries its own Undo; nothing to keep here
-  return r ? {note: `${o.label}: the town card has its own Undo`} : {note: "No town on this scene for it to reach"};
+  return r ? {note: `${o.label}: the town card has its own Undo`, look: await worldLook(scene, o.world, why)} : {note: "No town on this scene for it to reach"};
 }
 
 async function choose(title, list, map = v => v) {
@@ -620,11 +620,23 @@ async function areaOn(region, tok) {
 }
 
 /** How a ground area looks to everyone: flood water, fire, broken ground (B3757). */
+/** The look on the map for each world kind (B3758): looks-rules.mjs in WoDX Chronicle. */
+const LOOK_KIND = {water: "water", blaze: "fire", rubble: "rubble", flood: "flood", fire: "fire", quake: "quake", storm: "storm", plague: "plague",
+  calm: "calm", dread: "fog", taint: "taint", cleanse: "calm"};
+/** How long a town-wide look stays on the scene, in seconds of world time; a quake shakes once and is gone. */
+const LOOK_SECONDS = {quake: 60, storm: 3 * 3600, flood: 6 * 3600, fire: 3 * 3600, plague: 24 * 3600, taint: 24 * 3600, calm: 3600, dread: 3600, cleanse: 600};
+async function worldLook(scene, world, why) {
+  const kind = LOOK_KIND[world];
+  if ( !kind || !scene ) return null;
+  try { return await chron()?.looks?.weather?.({scene, kind, until: {seconds: LOOK_SECONDS[world] ?? 3600}, source: why}) ?? null; }
+  catch (e) { console.warn("WoDX | world look", e); return null; }
+}
 const GROUND_LOOK = {water: {fill: "#2f6f9f", edge: "#9fd0f0", alpha: 0.5}, blaze: {fill: "#c8501e", edge: "#ffb347", alpha: 0.45},
   rubble: {fill: "#6b5536", edge: "#b89b6a", alpha: 0.5}};
 /** A ground area's drawing goes with its region, however the region ends (Undo, its time, the end of the scene). */
 async function dropGroundDrawing(region) {
   const id = region?.flags?.[MOD]?.effectArea?.drawing;
+  if ( isActiveGM() ) await chron()?.looks?.end?.(`area-${region?.id}`, region?.parent)?.catch?.(() => null);
   if ( id && isActiveGM() ) await region.parent?.drawings?.get(id)?.delete?.().catch(() => null);
 }
 
@@ -647,6 +659,11 @@ export async function placeArea(item, at, {caster = "the caster", scene = canvas
       shape: {type: "e", width: radius * 2, height: radius * 2}, fillType: 1, fillColor: look.fill, fillAlpha: look.alpha,
       strokeColor: look.edge, strokeAlpha: 0.8, strokeWidth: 6, locked: true, hidden: false, flags: {[MOD]: {groundOf: region.id}}}]).catch(() => []);
     if ( drawing ) await region.update({[`flags.${MOD}.effectArea.drawing`]: drawing.id});
+    // The moving look on top (B3758): water ripples, flames, cracked ground, at each player's own level
+    try {
+      await chron()?.looks?.show?.({scene, kind: LOOK_KIND[ground], at: {x: Math.round(at.x), y: Math.round(at.y), radius}, drawing: drawing?.id ?? null,
+        id: `area-${region.id}`, source: item.out?.power ?? item.out?.label ?? ""});
+    } catch (e) { console.warn("WoDX | ground look", e); }
   }
   for ( const tok of scene.tokens ) {
     const area = areaOf(region);
@@ -703,6 +720,7 @@ export async function undo(records = []) {
       if ( r.weather ) await game.modules.get("wodx-atmosphere")?.api?.weather?.set?.(r.weather.jdn, r.weather.prev ?? null);
       if ( r.taint ) { const sc = fromUuidSync(r.taint.scene); if ( sc ) await corruption()?.set?.(sc, r.taint.prev); }
       if ( r.sick ) await upkeep()?.contagion?.end?.(r.sick, {immune: false});
+      if ( r.look ) await chron()?.looks?.end?.(r.look);
       if ( r.token ) {
         const tok = fromUuidSync(r.token.uuid);
         const back = {};
