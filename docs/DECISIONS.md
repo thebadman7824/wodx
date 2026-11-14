@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4110
+Next free block: B4120
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -183,6 +183,7 @@ Next free block: B4110
 | B3520-B3539 | Gaps from Ben's design notes: referee ticket, crisis levers, binding card, roster, inheritance, the 2022 cap (used B3520-B3536) | Chronicle, Storyteller, Otherworlds, NPC, Actions |
 | B3540-B3549 | Supernatural sight: the Penumbra, a mage's sight, chimerical sight, the Shadowlands view (notes gaps g8 to g11) (used B3540-B3547) | Senses, Actions |
 | B3550-B3559 | Notes gaps g21-g23: the Quiet as a state, soulforging and oboli, Banality from everyday life (used B3550-B3556) | Actions, Storyteller, Chronicle, NPC |
+| B3560-B3569 | Notes gaps g15 to g20: the Blood Hunt, broken fae oaths, the Beast at the wheel, low Humanity, long torpor, diablerie's marks (used B3560-B3566) | Actions, Paperdoll |
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
 | B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3621) | Chronicle |
 | B3630-B3649 | Supernatural item crafting by line: the shared table and Werewolf fetishes, klaives and talens (used B3630-B3636) | Library, Storyteller, Actions |
@@ -199,11 +200,12 @@ Next free block: B4110
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Washing, grooming and cosmetics (used B3900-B3909) | Library |
+| B3900-B3929 | Games and gambling (used B3900-B3910) | Library |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
 | B4100-B4109 | PC job queue and runner: threads queue PC work as GitHub issues, five testbed lanes run it side by side (used B4100-B4104) | tools (no module) |
+| B4110-B4119 | Stale pull request sweeper in the PC runner (used B4110) | tools (no module) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -237,7 +239,7 @@ Next free block: B4110
 | B25 | 2026-11-07 | Allies: the Storyteller can make any NPC the ally of a player character (ghouls, retainers, followers). The patron's owners may then spend experience on it, from the ally's own pool or from the patron's, and can see its sheet (Observer, put back when the alliance ends). Requests still go through the approval queue. | Ben's request: players level up their ghouls and retainers. |
 | B26 | 2026-11-07 | Pass the Years lives in WoDX Creation (it reads lineage and chronology); the time skip itself is Chronicle's (`timeSkip`, with the `wodxSkipStart` and `wodxSkipEnd` hooks, and per-tick work paused while it runs). The wizard sets the era itself, so no separate era proposal is made for a skip. | The plan puts the wizard in Chronicle; the data it needs is Creation's, and Chronicle keeps the clock. |
 | B27 | 2026-11-07 | WoDX choices in Pass the Years: a mortal is asked about at 70 and dies at 100; with no birth year, a character is taken as 20 when the skip starts; an heir is a copy of the sheet without experience, 25 years old. Backgrounds are listed for review after 10 years, not changed. | The books give no lifespan or heir rules. |
-| B28 | 2026-11-07 | Book rules in Pass the Years: a fed ghoul does not age and gains a blood point a century; without vitae it reverts to its real age and turns to dust far past a lifespan (V20 Dark Ages p. 399); a bond fades one step per (12 − Willpower) months without a drink (p. 341); voluntary torpor lasts by Road (p. 350). Give vitae now also applies p. 341's full oath: lesser bonds vanish and no new one forms. | From the book, with pages. |
+| B28 | 2026-11-07 | Book rules in Pass the Years: a fed ghoul does not age and gains a blood point a century; without vitae it reverts to its real age and turns to dust far past a lifespan (V20 Dark Ages p. 399); a bond fades one step per (12 − Willpower) months without a drink (p. 341); voluntary torpor lasts by Road (p. 351). Give vitae now also applies p. 341's full oath: lesser bonds vanish and no new one forms. | From the book, with pages. |
 | B29 | 2026-11-07 | Ability translation never removes anything: the new era's abilities become visible, learned ones stay, and the era's secondary Abilities are added at 0. Folding medieval Abilities into modern ones (Legerdemain into Larceny) is not done, since no book gives the equivalents. | Ben's gate: nothing lost from 1197 to 2025. |
 | B30 | 2026-11-07 | rothenstein-wodx is the project's testbed for now, because so much content is already built in it. The WoDX version of the Rothenstein chronicle will be rebuilt later; the archive world stays the playable original. | Ben's call. |
 | B31 | 2026-11-07 | One Umbra, in order of precedence: where the lines' rules or concepts of the spirit world conflict, follow Wraith: the Oblivion first, then Werewolf: the Apocalypse, then Mage: the Ascension. Each conflict decided this way is recorded as a WoDX choice in Chronicle Rules, with the books on each side. | Ben's rule, in the Master Plan under "Rules shared across lines". |
@@ -5786,6 +5788,41 @@ WoDX Actions (banal-life.js). The count runs at the end of each scene (wodxEndSc
 
 Reverse: remove the wodxEndScene and wodxTaskDone hooks for blx() in main.js.
 
+## B3560. The Blood Hunt in the form of its age and sect (2026-11-13)
+WoDX Actions. A lord's hunt before the Camarilla (the dated camarilla event, 1435), the Prince's Blood Hunt after, the Sabbat's Wild Hunt and the barons' hunt from 1493, a hunt by whoever rules where no sect holds the city (V20 pp. 24, 28, 510; V20 Dark Ages p. 37). The hunt is written to the Prestation journal, sets WoDX NPC's Kindred to Hunted toward the target, starts a big rumour, and takes the target's Status (V20 p. 493). Final Death ends it; lifting it puts the attitudes and Status back. House figures in docs/PENDING-REVIEW.md.
+
+Reverse: remove the Blood Hunt menu entry and debts-marks.js's hunt functions.
+
+## B3561. Broken oaths pay the oath's own price (2026-11-13)
+WoDX Actions. Changeling oaths are kept on the character (flag c20oaths) with the C20 sample oath's cost (pp. 264-267), Done Deal's botches or bane (p. 204), the oathbreaker rule (p. 188) and the Banality trigger (p. 174). Dark Ages fae oaths break with the punishment the oath names (Dark Ages: Fae pp. 109-110). The card goes to everyone bound.
+
+Reverse: remove the Oaths menu entries.
+
+## B3562. The Beast takes the token (2026-11-13)
+WoDX Actions. Setting beastToken: off, a card each turn (default), or WoDX NPC's planner on auto for a player's frenzied vampire, undoable from the plan card. A Willpower point takes the turn back (V20 p. 310).
+
+Reverse: set beastToken to off.
+
+## B3563. Low Humanity: bearing, seeming alive, the hour of rising (2026-11-13)
+WoDX Actions. A Social roll on a mortal takes the bearing (V20 p. 310) when its aura box was left off, and notes the blood to seem alive (8 − Humanity, V20 p. 269). The Nightfall card gives each vampire's rising, earlier at higher ratings (V20 p. 311; V20 Dark Ages p. 113), with WoDX's steps between.
+
+Reverse: drop the bearingMods call in buildPool and the rising line in dusk().
+
+## B3564. Waking from a long torpor (2026-11-13)
+WoDX Actions. After a sleep longer than 70 years: a card of the dated events slept through, tongues kept as old forms after 100 years, and Abilities of the age behind until caught up (house). V20 torpor (p. 283) only; fifth edition's Fog of Ages is left out.
+
+Reverse: drop the wake calls in torpor().
+
+## B3565. Diablerie's marks (2026-11-13)
+WoDX Actions. Black veins for the Generation gap in years (at least one), shown to Aura Perception; a taint for a month per Generation, felt on Perception at 12 − Humanity, not by Path followers (V20 pp. 294-295). Optional setting diablerieSoul, off: a victim of Willpower 10 and much stronger blood (V20 p. 295, V20 Dark Ages p. 356, given there as a rumour) may push through; the nightly Willpower roll is a house rule.
+
+Reverse: leave diablerieSoul off; the veins note returns to the plain line in diablerieStep.
+
+## B3566. Low Humanity on the pixel face (2026-11-13)
+WoDX Paperdoll. stateOf adds lowHumanity from the Humanity rating; drawFace pales and sinks the face at 3-2 and gives it an angry set at 1-0 (V20 p. 311). Humanity only.
+
+Reverse: remove lowHumanity from stateOf.
+
 ## B3570. Herd pools by district (2026-11-13)
 WoDX Storyteller. Ben approved notes gap g12 as suggested (Notes Gaps Desk, 13 November 2026). A district is a scene with a hunting ground; its month's pool of vessels is split into the classes of the age (five ages, the same breaks as the spheres of Influence) with local names for clergy and the early nobility by the land's faith. A feeding on a vessel (wodxFed) or prey caught on a hunt (wodxHunted) takes one; animals do not count. The pool fills again every 30 days of world time. Rules in herd-rules.mjs.
 
@@ -6703,6 +6740,11 @@ WoDX Library. The no-effect audit found washing and grooming goods that only pos
 
 Reverse: set wash and disguise back to effect "note" in use-rules.mjs, and drop hygiene-rules.mjs, hygiene-use.mjs and the groomed lines in look.mjs and look-rules.mjs.
 
+## B3910. Gambling for a stake (2026-11-14)
+WoDX Library. The no-effect audit found dice, cards and gaming boards that only posted a line (desk i4, the smaller build Ben approved). Gamble rolls Wits + Streetwise (or a Gambling ability, if better) at difficulty 6. Against a targeted character both roll and the higher takes the stake; a tie moves nothing. Against the house, two successes win the stake, one breaks even, none loses it, and a botch loses twice the stake. The stake is a share of what the gambler carries (a twentieth, a fifth or a half), so it fits any era's coin without asking for a number. Money moves through WoDX Storyteller's purse; the Storyteller's client moves it when a player does not own both purses. House rules. Toys with no stakes (a doll, a ball) and record players are left to the gadgets pass or stay narration; instruments already roll Performance.
+
+Reverse: set gamble back to effect "note" in use-rules.mjs and drop gamble-rules.mjs and gamble-use.mjs.
+
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
 
@@ -6790,3 +6832,10 @@ job when memory runs short.
 ## B4104. submit.mjs checks a job before it is queued (2026-11-14)
 A missing gate file, a two-browser gate in a plain gates job (or the reverse), a gate that does not parse or breaks
 the gate rules: each used to cost a PC run. They are refused in the cloud now.
+
+## B4110. The PC runner sweeps stale pull requests every hour (2026-11-14)
+Pull requests 655 and 701 sat open for two days with no CI run. Every hour the runner merges main into an owner's
+pull request that is behind main and has had no commit for 2 hours (update-branch, a merge, never a rebase), starts CI
+(workflow_dispatch, added to checks.yml) on one that is up to date but never got a run, and lists the rest (merge
+conflicts, CI that cannot start, CI that failed) in one pc-alert issue that it closes when the list is empty. It uses
+Ben's sign-in on the PC because a push made with the workflow token starts no CI.

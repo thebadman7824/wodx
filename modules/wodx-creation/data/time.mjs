@@ -25,7 +25,7 @@ export const GHOUL_AGING = {source: "V20 Dark Ages p. 399", dustAt: 100};
 /** The blood oath fades by one step for every (12 − Willpower) months without a drink (V20DA p. 341). */
 export const BOND_FADE = {source: "V20 Dark Ages printed p. 342", base: 12, minMonths: 1};
 
-/** How long a vampire sleeps in torpor, by Road rating (V20DA p. 350), in years. */
+/** How long a vampire sleeps in torpor, by Road rating (V20DA p. 351), in years. */
 export const TORPOR = {
   source: "V20 Dark Ages p. 350",
   years: {10: 1 / 365, 9: 3 / 365, 8: 7 / 365, 7: 14 / 365, 6: 1 / 12, 5: 1, 4: 10, 3: 50, 2: 100, 1: 500, 0: 1000},
