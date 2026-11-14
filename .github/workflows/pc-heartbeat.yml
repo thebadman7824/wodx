@@ -1,0 +1,36 @@
+# B4700: the PC runner went silent once (14 November 2026, about 17:25Z) with no crash logged and no alert, because
+# its alerts come from the runner itself. This checks from outside: every 15 minutes, if the PC runner status issue
+# (label pc-status, updated every 2 minutes while the runner lives) is more than 15 minutes old, an issue labelled
+# pc-alert says so; it is closed again once the status moves. The coordinator watches pc-alert issues.
+# Restart on the PC: powershell -ExecutionPolicy Bypass -File D:\WoDX\pcq\repo\tools\pcq\start-runner.ps1
+name: PC runner heartbeat
+on:
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch:
+permissions:
+  issues: write
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the status issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          TITLE="PC runner alert: the runner is silent"
+          updated=$(gh api "repos/$REPO/issues?labels=pc-status&state=open&per_page=1" --jq '.[0].updated_at // empty')
+          alert=$(gh api "repos/$REPO/issues?labels=pc-alert&state=open&per_page=100" --jq ".[] | select(.title == \"$TITLE\") | .number" | head -1)
+          if [ -z "$updated" ]; then echo "No status issue."; exit 0; fi
+          age=$(( $(date -u +%s) - $(date -u -d "$updated" +%s) ))
+          echo "Status issue last updated $updated ($age s ago)."
+          if [ "$age" -gt 900 ]; then
+            if [ -z "$alert" ]; then
+              gh api "repos/$REPO/issues" -f title="$TITLE" -f "labels[]=pc-alert" \
+                -f body="The PC runner status issue has not moved since $updated (over 15 minutes). The runner is probably not running, so no PC jobs are being taken. Restart it on the PC with: powershell -ExecutionPolicy Bypass -File D:\\WoDX\\pcq\\repo\\tools\\pcq\\start-runner.ps1 (this heartbeat closes the issue once the status moves again)."
+            fi
+          elif [ -n "$alert" ]; then
+            gh api -X PATCH "repos/$REPO/issues/$alert" -f state=closed -f body="The runner is back: the status issue moved at $updated."
+          fi
