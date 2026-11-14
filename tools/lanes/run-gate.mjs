@@ -184,6 +184,8 @@ try {
         }
         catch (e) { error = e?.message ?? String(e); }
         finally { clearTimeout(timer); clearInterval(sweep); }
+        // Writes a gate set off just before it ended (an approval queued by a hook) land first, then are put back.
+        await new Promise(r => setTimeout(r, 1500));
         const moved = game.time.worldTime - t0;
         if ( moved ) await game.time.advance(-moved);
         let settingsBack = 0, docsGone = 0;
