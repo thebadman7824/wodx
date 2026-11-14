@@ -200,7 +200,7 @@ Next free block: B4610
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Night encounters on the scene, story aids as items (used B3900-B3924) | Storyteller |
+| B3900-B3929 | A person's look in witness descriptions (used B3900-B3927) | Library |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
@@ -6797,6 +6797,9 @@ No-effect audit w1. Only four Future Darkness events (the 1994 crash, the 1996 C
 
 ## B3924. The night's people and things become real (2026-11-14)
 No-effect audit w2. The night's encounters went to a journal page and the story aids named relics, fetishes and talismans that nothing could use. Now, when the Storyteller approves a night, a card lists each encounter in the physical world with a "Put it on the scene" button. It reads who the line brings (the watch, a friar, soldiers, a merchant, a beggar, and so on, with any number word), makes them with WoDX Creation's people generator in the era's own trades, at most six, and puts their tokens hidden at the middle of the scene in view. A line that names nobody brings one person; children are never made this way (the Storyteller plays them). Penumbra and Shadowlands encounters keep no button, since they are spirits and the dead. A relic, fetish or talisman aid is made, when approved, by WoDX Library's crafting kits: a relic is an enshrined inquisitors' relic of True Faith equal to the rating (at most 3), a talisman is a hedge magic talisman of the rating's level with that many charges, and a fetish is a Werewolf fetish of the rating's level holding the aid's own spirit. Each goes to the Items folder "WoDX story aids" and the journal page links it; nothing lands on a sheet until the Storyteller hands it over. These are house rules. Reverse: remove the card and the item step.
+
+## B3927. Witnesses remember a person's own look (2026-11-14)
+No-effect audit w3, Library part. A made person's look (a scar through one eyebrow, a heavy limp) sat in the sheet's note and nothing read it. WoDX Library's witness description now adds up to two of the person's features, kept in flags["wodx-library"].features, after the dress and size. Looks a passing witness would not see or remember as a mark (quick to offer help, uneasy in the dark, stutters when lying, counts coins, old or young for the work, prays under the breath) are left out. A disguise does not hide a scar, so features stay under one. House rule. Reverse: remove the features step.
 
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
