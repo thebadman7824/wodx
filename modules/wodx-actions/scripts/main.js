@@ -2322,7 +2322,8 @@ export async function newNight({ actors } = {}) {
             await nagarajaPenalty(actor, ns.debt);
             if (ns.debt) bits.push(`no flesh: ${ns.debt} di${ns.debt === 1 ? "e" : "ce"} off Physical pools`);
         }
-        if (!inTorpor) {
+        if (!inTorpor && untrainedBeast(actor)) bits.push("untrained: wins back no Willpower");
+        else if (!inTorpor) {
             const w = willpower(actor);
             const to = KR.willpowerAfter(setting("willpowerRecovery"), w.temp, w.perm, "night");
             if (to > w.temp) { upd["system.advantages.willpower.temporary"] = to; bits.push(`Willpower ${w.temp} → ${to}`); }
@@ -2347,12 +2348,16 @@ export async function newNight({ actors } = {}) {
     return post(null, "A new night", `<ul>${lines.join("")}</ul>${setting("willpowerRecovery") === "off" ? "" : `<p class="wodx-quiet">Willpower: ${setting("willpowerRecovery") === "night" ? "one a night (VtDA20 printed p. 340)" : "all at the end of a story"}.</p>`}`);
 }
 
+/** B5059: an animal recorded as untrained keeps no Willpower it spends (V20 Dark Ages p. 396). */
+const untrainedBeast = actor => actor?.flags?.["wodx-creation"]?.animal?.training === "untrained";
+
 /** The end of a story: Willpower returns in full (unless the setting is off). */
 export async function endStory({ actors } = {}) {
     if (!game.user.isGM) return ui.notifications.warn("End of story is for the GM.");
     const list = actors ?? game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner);
     const lines = [];
     for (const actor of list) {
+        if (untrainedBeast(actor)) { lines.push(`<li><b>${esc(actor.name)}</b>: untrained, so it wins back no Willpower (V20 Dark Ages p. 396)</li>`); continue; }
         const w = willpower(actor);
         const to = KR.willpowerAfter(setting("willpowerRecovery"), w.temp, w.perm, "story");
         if (to > w.temp) { await actor.update({ "system.advantages.willpower.temporary": to }); lines.push(`<li><b>${esc(actor.name)}</b>: Willpower ${w.temp} → ${to}</li>`); }

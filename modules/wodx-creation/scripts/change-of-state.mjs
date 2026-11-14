@@ -142,6 +142,8 @@ export async function makeGhoul(mortal, {domitor = null, points = 1, time = game
   const kind = isAnimal(mortal) ? animalKindOf(mortal) : null;
   const max = kind ? AG.animalBloodMax(kind, 0) : ghoulBloodMax(0);
   const creature = mortal.type === (CONFIG.worldofdarkness?.sheettype?.creature ?? "Creature");
+  // Keep what the sheet already knows of the beast (its breed and training, B5059, B5061)
+  const mark = {...(mortal.getFlag?.(MODULE_ID, "animal") || {}), kind};
   const pool = {
     "system.settings.hasbloodpool": true,
     "system.settings.powers.hasdisciplines": true,
@@ -150,7 +152,7 @@ export async function makeGhoul(mortal, {domitor = null, points = 1, time = game
     "system.advantages.bloodpool.temporary": Math.min(max, Math.max(0, Number(points) || 0))
   };
   if ( creature ) await mortal.update({...pool, "system.settings.powers.haspowers": true,
-    [`flags.${MODULE_ID}.animalGhoul`]: true, [`flags.${MODULE_ID}.animal`]: {kind}});
+    [`flags.${MODULE_ID}.animalGhoul`]: true, [`flags.${MODULE_ID}.animal`]: mark});
   else await mortal.update({
     ...pool,
     "system.settings.variant": "ghoul",
@@ -158,7 +160,7 @@ export async function makeGhoul(mortal, {domitor = null, points = 1, time = game
     "system.settings.haspath": !kind,
     "system.settings.hasvirtue": !kind,
     "system.settings.variantsheet": CONFIG.worldofdarkness?.sheettype?.vampire ?? "Vampire",
-    ...(kind ? {[`flags.${MODULE_ID}.animal`]: {kind}} : {})
+    ...(kind ? {[`flags.${MODULE_ID}.animal`]: mark} : {})
   });
   const potence = disciplinesOf(mortal).find(d => d.name.toLowerCase() === "potence");
   if ( !potence ) await mortal.createEmbeddedDocuments("Item", [disciplineItem("Potence", GHOUL.firstDrinkPotence)]);

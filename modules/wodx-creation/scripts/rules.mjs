@@ -70,7 +70,8 @@ export const KINDS = {
   newDiscipline: "New Discipline",
   virtue: "Virtue",
   road: "Road or Humanity",
-  willpower: "Willpower"
+  willpower: "Willpower",
+  training: "Animal training"
 };
 
 /**

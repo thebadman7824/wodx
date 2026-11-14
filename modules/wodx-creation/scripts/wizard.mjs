@@ -17,6 +17,7 @@ import * as D from "./derived-rules.mjs";
 import {traitNote} from "../data/trait-notes.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {MERITS_FLAWS, BACKGROUNDS} from "../../wodx-chronicle/data/trait-effects.mjs";
+import * as Beasts from "./animal-stock.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 const FLAG = "wizard";
@@ -73,7 +74,7 @@ export class WizardApp extends ApplicationV2 {
     position: {width: 680, height: "auto"},
     actions: {go: WizardApp.#onGo, step: WizardApp.#onStep, extra: WizardApp.#onExtra, other: WizardApp.#onOther, addItem: WizardApp.#onAddItem,
       removeItem: WizardApp.#onRemoveItem, addFeature: WizardApp.#onAddFeature, sheet: WizardApp.#onSheet, check: WizardApp.#onCheck, hub: WizardApp.#onHub,
-      derive: WizardApp.#onDerive, quick: WizardApp.#onQuick, blood: WizardApp.#onBlood, wilder: WizardApp.#onWilder}
+      derive: WizardApp.#onDerive, quick: WizardApp.#onQuick, blood: WizardApp.#onBlood, wilder: WizardApp.#onWilder, animal: WizardApp.#onAnimal}
   };
 
   static openFor(actor, page = null) {
@@ -130,6 +131,7 @@ export class WizardApp extends ApplicationV2 {
   _replaceHTML(result, content) { content.replaceChildren(result); }
 
   _onRender() {
+    Beasts.wirePanel(this.element);
     this.element.querySelector("select[name=line]")?.addEventListener("change", async ev => {
       const w = wizardOf(this.actor);
       w.line = ev.target.value;
@@ -302,7 +304,8 @@ export class WizardApp extends ApplicationV2 {
       <div class="wodx-wz-add">${searchBox("select[name=pick-bg]", "Search Backgrounds…", "Search Backgrounds")}
         <select name="pick-bg"><option value="">Choose…</option>${list.map(b => `<option value="${esc(b.name)}">${esc(b.name)}${b.page ? ` (${esc(b.book)} p. ${b.page})` : ""}</option>`).join("")}</select>
         <input type="text" name="name-bg" placeholder="Or write a name" aria-label="Another Background">
-        <button type="button" data-action="addFeature" data-type="background"><i class="fa-solid fa-plus"></i> Add</button></div>`;
+        <button type="button" data-action="addFeature" data-type="background"><i class="fa-solid fa-plus"></i> Add</button></div>
+      ${Beasts.wizardPanel(this.actor, lineId)}`;
   }
 
   #virtueRows(ctx, page) {
@@ -552,6 +555,12 @@ export class WizardApp extends ApplicationV2 {
     if ( type === FLAW && points(a, FLAW) + cost > cap ) return ui.notifications.info(`That would pass the book's ${cap} points of Flaws.`);
     await a.createEmbeddedDocuments("Item", [{name: t.name, type: "Feature", system: {type, value: cost, level: String(cost)}, flags: {[MODULE_ID]: {wizard: true}}}]);
     this.render();
+  }
+
+  /** B5062: a Retainers dot made into a ghouled animal. */
+  static async #onAnimal() {
+    await Beasts.fromPanel(this.actor, this.element);
+    setTimeout(() => this.render(), 1500);
   }
 
   static #onSheet() { this.actor.sheet?.render(true); }
