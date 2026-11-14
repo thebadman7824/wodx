@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.27.0 (One engine for every line's supernatural items: each game line registers a kit (its table, who may make what, the dialog inputs, the task, the items, the costs) with registerLine, and each kit names its own world switch. Werewolf is now the first kit; nothing changes in play (B3683))
 - 0.26.0 (Bane fetishes: the six Black Spiral Dancer fetishes of W20 Book of the Wyrm (pdf 184-185), the baneklaive among them (Gnosis 7, Strength +3 aggravated, difficulty 7, silver). A Black Spiral Dancer binds Banes and sees only these; a Gaian Garou sees none of them. After the book check, Kinfolk no longer make fetishes unless the new world setting "Kinfolk with Gnosis may make fetishes and talens" is on (off by default) (B3680-B3682))
 - 0.25.0 (Supernatural items by line, Werewolf first: data/wonders.mjs holds the W20 fetishes and talens with the spirit each needs, their Gnosis and level, klaives and other war fetishes as weapons, and fetishes of the other Changing Breeds; scripts/wonder-rules.mjs says who can make them, the difficulty, the long task and the items made (api.wonders). New world setting for making fetishes and talens (B3630-B3636))
 - 0.24.0 (A character with no clothes worn on the sheet wears the clothes of WoDX Paperdoll's figure: station, strange dress and the witness description read them (B3442). What a witness remembers now names a Kindred's uncanny face marks ("with weeping boils") (B3443))
