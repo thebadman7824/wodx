@@ -1711,6 +1711,8 @@ async function createMacros() {
 Hooks.once("init", () => {
     // B3804: body traits and cyberware survive the system's own recompute
     Hooks.on("wodxActorTotals", (actor, data) => { try { bodyTotals(actor, data); } catch (e) { console.error(`${MOD} | body totals`, e); } });
+    // B3808: and over the wound level the system works out again whenever it prepares the actor
+    Hooks.on("wodxActorDerived", (actor) => { try { R.applyBodyDerived(actor, toughness(actor)); } catch (e) { console.error(`${MOD} | body derived`, e); } });
     registerSettings();
     CD.registerConductorSettings();
     ST.registerStartSettings();
