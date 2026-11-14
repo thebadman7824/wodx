@@ -105,3 +105,47 @@ test("the runner and the submit helper parse", () => {
     assert.equal(r.status, 0, r.stderr);
   }
 });
+
+test("the stale pull request sweep moves on what it can and lists what is stuck (B4105)", async () => {
+  const {classify, HOUR} = await import("../pcq/sweep.mjs");
+  const base = {mergeable: true, behind: 0, checks: 8, running: false, failed: "", headAge: 5 * HOUR, tried: false};
+  assert.equal(classify(base).action, "ok");
+  assert.equal(classify({...base, mergeable: false}).action, "stuck");
+  assert.equal(classify({...base, behind: 1368}).action, "update");
+  assert.equal(classify({...base, behind: 3, headAge: HOUR}).action, "wait", "a branch a thread pushed to in the last 2 hours is left alone");
+  assert.equal(classify({...base, checks: 0}).action, "dispatch");
+  assert.equal(classify({...base, checks: 0, headAge: 10 * 60e3}).action, "wait");
+  assert.equal(classify({...base, checks: 0, tried: true}).action, "stuck");
+  assert.equal(classify({...base, checks: 0, running: true}).action, "wait");
+  assert.equal(classify({...base, failed: "harness 2"}).action, "red");
+});
+
+test("the sweep runs on a mock GitHub: updates the one behind, starts CI on the one with none, files one alert", async () => {
+  const {sweep, HOUR} = await import("../pcq/sweep.mjs");
+  const old = new Date(Date.now() - 5 * HOUR).toISOString(), calls = [];
+  const prs = {
+    1: {number: 1, title: "behind", user: {login: "thebadman7824"}, mergeable: true, head: {sha: "a1", ref: "claude/a"}, base: {ref: "main"}},
+    2: {number: 2, title: "no ci", user: {login: "thebadman7824"}, mergeable: true, head: {sha: "b2", ref: "claude/b"}, base: {ref: "main"}},
+    3: {number: 3, title: "conflict", user: {login: "thebadman7824"}, mergeable: false, head: {sha: "c3", ref: "claude/c"}, base: {ref: "main"}},
+    4: {number: 4, title: "outside", user: {login: "someone"}, mergeable: true, head: {sha: "d4", ref: "x"}, base: {ref: "main"}},
+  };
+  const gh = async (method, url, body) => {
+    calls.push(`${method} ${url}`);
+    if ( url.startsWith("/pulls?") ) return Object.values(prs);
+    let m;
+    if ( (m = /^\/pulls\/(\d+)$/.exec(url)) ) return prs[m[1]];
+    if ( (m = /^\/compare\/main\.\.\.(\w+)$/.exec(url)) ) return {behind_by: m[1] === "a1" ? 40 : 0};
+    if ( (m = /^\/commits\/(\w+)\/check-runs/.exec(url)) ) return m[1] === "b2" ? {total_count: 0, check_runs: []} : {total_count: 1, check_runs: [{status: "completed", conclusion: "success", name: "checks"}]};
+    if ( /^\/commits\/\w+$/.test(url) ) return {commit: {committer: {date: old}}};
+    if ( url.startsWith("/actions/runs") ) return {workflow_runs: []};
+    if ( url.startsWith("/issues?") ) return [];
+    return {};
+  };
+  const r = await sweep(gh, {apply: true, log: () => {}});
+  assert.equal(r.rows.length, 3, "only the owner's pull requests");
+  assert.deepEqual(r.rows.map(x => x.action), ["update", "dispatch", "stuck"]);
+  assert.ok(calls.includes("PUT /pulls/1/update-branch"));
+  assert.ok(calls.includes("POST /actions/workflows/checks.yml/dispatches"));
+  assert.ok(calls.includes("POST /issues"), "one alert issue for the stuck one");
+  assert.ok(!calls.some(c => /pulls\/4|update-branch.*3/.test(c)));
+});

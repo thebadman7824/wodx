@@ -13,6 +13,8 @@ on:
   pull_request:
   push:
     branches: [main]
+  # The PC runner's stale pull request sweep starts CI on a branch whose head never got a run (B4105).
+  workflow_dispatch:
 
 concurrency:
   group: checks-${{ github.ref }}
