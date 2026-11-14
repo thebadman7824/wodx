@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.39.0 (Household things and tack on the road (B3905): api.house.roadKit says what a character carries against the cold, against the heat, and for riding)
 - 0.38.0 (Faith and occult goods in play (B3903, B3904): Pray, Set it as a ward and Divine roll and change things instead of only posting a note)
 - 0.37.0 (Ammunition does something (B3900, B3901): the eight ammunition goods say which weapons they load, and api.arms gives WoDX Combat the plan for a reload or a shot)
 - 0.36.0 (Everyday arms, weapon fittings and traps do something (B3805, B3807): the 19 everyday weapons get WoDX house figures and a Ready it use, the 9 fittings, 4 holsters, slings and scabbards and the gas mask a Fit it use, the 12 traps Set the trap, Someone walks into it and Disarm it, and the gun cleaning kit dries wet powder. api.arms gives WoDX Combat what they do. Ammunition is left to its own pass)
