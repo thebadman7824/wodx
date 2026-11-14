@@ -12,6 +12,9 @@
  *   6. the cyber weapons that were plain items arrive as weapons (Popup Gun is a Ranged Weapon with damage 4)
  *   7. WoDX Senses: a mortal with Low Lite optics installed sees in the dark (traitsOf gives the gear's dark sight,
  *      powersFor names it) and Amplified Hearing makes hearing one step easier
+ *   8. WoDX Combat: a Pain Editor keeps the wound penalty at 0 after 3 bashing levels (a plain mortal's is not)
+ *   9. WoDX Combat: a Small Shield, carried, makes the bearer parry at 4 (6 without it)
+ *  10. WoDX Combat: heavy fire: a 5-inch gun against penetration difficulty 4 rolls 5 dice at 4 and says what the hit did
  * Result: Data/wodx-gate/gatecyber-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -86,6 +89,31 @@ export async function run() {
       const t = S.traitsOf(m), pw = S.rules.powersFor(t);
       const base = S.rules.difficulty("sound", {}, S.rules.powersFor({})).diff, now = S.rules.difficulty("sound", {}, pw).diff;
       G.ok("7. senses read the optics", pw.darkSight === "Low-light optics" && now === base - 1, {dark: pw.darkSight, base, now});
+    });
+    const C = game.modules.get("wodx-combat")?.api ?? game.wodxCombat;
+    await G.step("8. a Pain Editor in a fight", async () => {
+      const [numb, plain] = await G.make(Actor, [{name: "Gate Cyber Numb", type: "Mortal"}, {name: "Gate Cyber Plain", type: "Mortal"}]);
+      const [pe] = await numb.createEmbeddedDocuments("Item", [piece("Pain Editor")]);
+      await pe.update({"system.isequipped": true});
+      await C.applyDamage(numb, "bashing", 3, {status: false});
+      await C.applyDamage(plain, "bashing", 3, {status: false});
+      const a = Number(numb.system.health.damage.woundpenalty), b = Number(plain.system.health.damage.woundpenalty);
+      G.ok("8. a Pain Editor in a fight", a === 0 && b < 0, {numb: a, plain: b});
+    });
+
+    await G.step("9. a shield sets the parry", async () => {
+      const [d0, d1] = await G.make(Actor, [{name: "Gate Cyber Swordless", type: "Mortal"}, {name: "Gate Cyber Shielded", type: "Mortal"}]);
+      const club = {name: "Club", type: "Melee Weapon", system: {isequipped: true, damage: {attribute: "strength", bonus: 1, type: "bashing"}, attack: {attribute: "dexterity", ability: "melee"}}};
+      await d0.createEmbeddedDocuments("Item", [club]);
+      await d1.createEmbeddedDocuments("Item", [club, {...piece("Small Shield"), system: {...piece("Small Shield").system, isequipped: true}}]);
+      const w = {name: "Mace", ranged: false, type: "bashing", ability: "melee"};
+      const p0 = C.bestDefense(d0, {}, w).plans.find(x => x.type === "parry"), p1 = C.bestDefense(d1, {}, w).plans.find(x => x.type === "parry");
+      G.ok("9. a shield sets the parry", p0?.diff === 6 && p1?.diff === 4, {without: p0?.diff, with: p1?.diff, notes: p1?.notes});
+    });
+
+    await G.step("10. heavy fire", async () => {
+      const r = await C.heavyFire({gun: piece("5-inch gun firing high explosive"), armour: piece("Wooden barricade"), card: false});
+      G.ok("10. heavy fire", r.plan.kind === "pen" && r.plan.dice === 5 && r.plan.diff === 4 && typeof r.result === "string" && r.result.length > 0, {plan: r.plan, result: r.result});
     });
   } finally { return G.finish(); }
 }
