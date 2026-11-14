@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4760
+Next free block: B4790
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -225,6 +225,8 @@ Next free block: B4760
 | B4730-B4739 | Sephardi and Mizrahi Jewish names (used B4730-B4732) | Creation, Chronicle |
 | B4740-B4749 | Khmer names (used B4740-B4742) | Creation, Chronicle |
 | B4750-B4759 | Filipino names (used B4750-B4752) | Creation, Chronicle |
+| B4760-B4769 | Rothenstein Rebuilt: book one opens in autumn 1200, chapters wait to be played, a fourth ending (used B4760-B4762) | Chronicle, Storyteller |
+| B4780-B4789 | Rothenstein Rebuilt: Ways, the open world's doorways (used B4780-B4783) | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7238,3 +7240,38 @@ Reverse: edit the lists in data/people-filipino.mjs.
 WoDX Creation. Baptism brings church names from the Spanish settlement of 1565, sometimes before the own name; family names from the Clavería catalogue of 1849 and the native names kept, from 1800 (the era groups are coarser than 1849).
 
 Reverse: change church, family or earlyChurch in data/people-filipino.mjs.
+
+## B4760. The rebuilt Rothenstein opens on 1 September 1200 (2026-11-14)
+WoDX Storyteller recipe and WoDX Chronicle saga. Ben's three Storyteller volumes open in the autumn of 1200 and run to the first snow; the saga built on 14 November spread book one over 1197 to 1202. Ben picked (Rothenstein Rebuilt desk, pl9): open in the autumn of 1200 as the volumes say, and let book one run into later years if the players go slowly. The recipe's opening night, town seed and first age move to 1200; book one's ten chapters fall weekly from 1 September to Martinmas (11 November), with five short interludes carrying the old clock moves and seasonal encounters, and the years after in spring 1201.
+
+Reverse: set the recipe opening and book one's dates back to 1197.
+
+## B4761. A chapter waits until it is played (2026-11-14)
+WoDX Chronicle. A saga step marked `wait` (every chapter of book one) holds its book: nothing after it falls due until the Storyteller presses Played in the saga window (api.pod.saga.played(book)), and the next gap counts from then. The chapter card says the book waits. A long time skip no longer deals the whole book past an unplayed night.
+
+Reverse: drop `wait` from the chapters.
+
+## B4762. A fourth ending: Left alone (2026-11-14)
+WoDX Chronicle. Ben picked (desk pl6) a fourth ending for a company that walks away: nobody keeps, cuts or takes the binding and the long clocks decide what follows. It is offered at Chapter X with the other three; later steps without words for it keep their plain text.
+
+Reverse: remove `alone` from SAGA_ENDINGS and Chapter X.
+
+## B4780. A Way is a region behaviour that calls the trip rules (2026-11-14)
+WoDX Storyteller. Ben's point 3 for the rebuilt chronicle: players travel from scene to scene without the Storyteller teleporting them (desk ow1). A Way is a region with the behaviour "WoDX: Way to" (to: a scene, arrive: the region at the far end, kind, shut, locked, minutes, from and until years). Walking in calls core.mjs travel() with a `way` option, so the time, the dark, road encounters, approvals, fares and the pull of each player's screen all work as for any trip. No confirm by default; the world setting "Ways ask before they move a character" adds a Go button on the walker's own client (desk ow2).
+
+Reverse: delete the behaviour type; the regions stay as plain regions.
+
+## B4781. A Way leads to its scene even when the scene is not set out for travel (2026-11-14)
+WoDX Storyteller. planTrip takes `way: {minutes, at, ask}`: a Way's minutes replace the trip plan (a road's end and the edge of the land have none and use the trip rules), its arrival point replaces the landing spot, and a Way that asks first goes to the approval queue with that reason.
+
+Reverse: drop the way option from planTrip and travel.
+
+## B4782. Who goes along, and no walking straight back (2026-11-14)
+WoDX Storyteller. The company's tokens within three squares of the walker, and any follower whose order is Follow me with the walker as leader, go together (desk ow3); anyone else stays. Characters just carried through land on the far end and are ignored there for five seconds, so they are not sent back.
+
+Reverse: companions() returns the walker alone.
+
+## B4783. Shut Ways and the network check (2026-11-14)
+WoDX Storyteller. A Way can be shut from dusk to dawn (a town gate, by the walker's own time), locked until the Storyteller unticks Locked, shut for now, or ask first; a Way outside its from and until years is not there. Each refusal tells the player why and what can be done. The Ways window names every place with no way in, no way out, a way to a missing scene, or no route from the first place (desk ow6).
+
+Reverse: wayBlocked() returns null.

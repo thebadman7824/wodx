@@ -43,12 +43,18 @@ export function bookChain(book, endings = {}) {
     days: i ? Math.max(0, daysBetween(b.steps[i - 1].at, x.at)) : 0, at: x.at, date: dateText(x.at),
     journal: x.journal && b.journal ? {entry: b.journal, page: x.journal} : null,
     clocks: x.clocks ?? null, signal: x.signal ? {region: SAGA.region, about: "", ...x.signal} : null,
-    ending: x.ending ?? null, encounters: x.encounters ?? [], town: x.town ?? null}));
+    ending: x.ending ?? null, encounters: x.encounters ?? [], town: x.town ?? null, wait: !!x.wait}));
   return {key: chainKey(b.key), label: `${SAGA.title}, book ${b.n}: ${b.title}`, lines: b.lines, from: b.from, to: b.to,
     page: "The Rothenstein saga (WoDX's own story)", saga: b.key, steps};
 }
 
 /** Every book's state for the window: running, done, skipped, offered, ready (fits the year) or ahead/past. */
+/** The chapter a running book waits on (marked `wait` and not yet played), or null. */
+export function waitingOn(run = {}, chain = null) {
+  const i = Number(run.at) || 0, prev = i ? chain?.steps?.[i - 1] : null;
+  return prev?.wait && !(run.played ?? []).includes(prev.key) ? prev : null;
+}
+
 export function bookStates(st = {}, year = 1197, {future = false} = {}) {
   return SAGA.books.filter(b => future || b.branch !== "future").map(b => {
     const s = st.books?.[b.key];
@@ -129,6 +135,7 @@ export function validate(saga = SAGA, {eras = null} = {}) {
       for ( const k of x.ending ?? [] ) if ( !SAGA_ENDINGS[k] ) out.push(`The step ${id} offers an unknown ending (${k}).`);
       if ( x.town && !TOWN_KINDS.includes(x.town) ) out.push(`The step ${id} names an unknown town change (${x.town}).`);
       if ( x.journal && !b.journal ) out.push(`The step ${id} points at a page, but its book has no journal.`);
+      if ( x.wait && x.kind !== "chapter" ) out.push(`The step ${id} waits to be played, but only a chapter is played.`);
     });
   }
   return out;
