@@ -2758,24 +2758,6 @@
    "rotation": 300.0
   },
   {
-   "id": "chapel-1-vestry-f4",
-   "label": "Cupboard (Vestry)",
-   "rect": [
-    87.448,
-    67.764,
-    1.5,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "church"
-   },
-   "rotation": 300.0
-  },
-  {
    "id": "cottage-1-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -2795,14 +2777,14 @@
     "color": "#ff9a3c",
     "on": true
    },
-   "rotation": 240.0
+   "rotation": 330.0
   },
   {
    "id": "cottage-1-cottage-2",
    "label": "Box bed (Cottage)",
    "rect": [
-    80.632,
-    81.435,
+    82.918,
+    80.115,
     1.0,
     2.0
    ],
@@ -2817,8 +2799,8 @@
    "id": "cottage-1-cottage-3",
    "label": "Box bed (Cottage)",
    "rect": [
-    82.364,
-    80.435,
+    80.632,
+    81.435,
     1.0,
     2.0
    ],
@@ -2845,7 +2827,25 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 240.0
+   "rotation": 330.0
+  },
+  {
+   "id": "cottage-1-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    84.372,
+    86.0,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 330.0
   },
   {
    "id": "cottage-12-cottage-0",
@@ -2917,16 +2917,16 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 15.0
+   "rotation": 285.0
   },
   {
    "id": "cottage-12-cottage-f2",
    "label": "Cupboard (Cottage)",
    "rect": [
-    67.319,
-    41.421,
-    1.5,
-    0.75
+    67.694,
+    41.046,
+    0.75,
+    1.5
    ],
    "flags": {
     "container": true,
@@ -2935,7 +2935,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 285.0
+   "rotation": 15.0
   },
   {
    "id": "sgraffito-house-1-back-room-0",
@@ -2952,24 +2952,6 @@
     "title": "Under the bed"
    },
    "rotation": 345.0
-  },
-  {
-   "id": "sgraffito-house-1-back-room-1",
-   "label": "Chest (Back room)",
-   "rect": [
-    45.197,
-    87.205,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 255.0
   },
   {
    "id": "sgraffito-house-1-back-room-f0",
@@ -3030,11 +3012,11 @@
    "rotation": 255.0
   },
   {
-   "id": "sgraffito-house-1-hall-f2",
+   "id": "sgraffito-house-1-hall-f0",
    "label": "Cupboard (Hall)",
    "rect": [
-    48.417,
-    86.917,
+    51.668,
+    83.054,
     0.75,
     1.5
    ],
@@ -3082,24 +3064,6 @@
    "rotation": 345.0
   },
   {
-   "id": "sgraffito-house-3-back-room-1",
-   "label": "Chest (Back room)",
-   "rect": [
-    39.504,
-    70.031,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 255.0
-  },
-  {
    "id": "sgraffito-house-3-back-room-f0",
    "label": "Cupboard (Back room)",
    "rect": [
@@ -3118,13 +3082,13 @@
    "rotation": 345.0
   },
   {
-   "id": "sgraffito-house-3-back-room-f2",
+   "id": "sgraffito-house-3-back-room-f6",
    "label": "Cupboard (Back room)",
    "rect": [
-    40.642,
-    70.772,
-    2,
-    1
+    39.805,
+    67.808,
+    1.5,
+    0.75
    ],
    "flags": {
     "container": true,
@@ -3133,7 +3097,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 255.0
+   "rotation": 345.0
   },
   {
    "id": "sgraffito-house-3-black-kitchen-0",
@@ -3158,13 +3122,13 @@
    "rotation": 255.0
   },
   {
-   "id": "sgraffito-house-3-hall-f2",
+   "id": "sgraffito-house-3-hall-f0",
    "label": "Cupboard (Hall)",
    "rect": [
-    42.725,
-    69.743,
-    0.75,
-    1.5
+    45.601,
+    66.255,
+    1.5,
+    0.75
    ],
    "flags": {
     "container": true,
@@ -3173,7 +3137,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 255.0
+   "rotation": 345.0
   },
   {
    "id": "sgraffito-house-3-front-room-0",
@@ -3235,8 +3199,8 @@
    "id": "passage-house-1-chamber-1",
    "label": "Chest (Chamber)",
    "rect": [
-    45.007,
-    79.146,
+    44.621,
+    79.25,
     1.0,
     1.0
    ],
@@ -3253,8 +3217,8 @@
    "id": "passage-house-1-chamber-f0",
    "label": "Cupboard (Chamber)",
    "rect": [
-    43.745,
-    79.397,
+    45.187,
+    77.054,
     0.75,
     1.5
    ],
@@ -3289,8 +3253,8 @@
    "id": "passage-house-1-passage-0",
    "label": "Crates (Passage)",
    "rect": [
-    46.748,
-    76.15,
+    46.265,
+    76.279,
     0.5,
     0.5
    ],
@@ -3319,24 +3283,6 @@
    "rotation": 60.0
   },
   {
-   "id": "sgraffito-house-5-back-room-1",
-   "label": "Chest (Back room)",
-   "rect": [
-    48.984,
-    49.56,
-    1.0,
-    1.0
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 330.0
-  },
-  {
    "id": "sgraffito-house-5-back-room-f0",
    "label": "Cupboard (Back room)",
    "rect": [
@@ -3353,24 +3299,6 @@
     "fillPlace": "home"
    },
    "rotation": 60.0
-  },
-  {
-   "id": "sgraffito-house-5-back-room-f4",
-   "label": "Cupboard (Back room)",
-   "rect": [
-    48.191,
-    51.334,
-    2,
-    1
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 330.0
   },
   {
    "id": "sgraffito-house-5-black-kitchen-0",
@@ -3393,6 +3321,24 @@
     "on": true
    },
    "rotation": 330.0
+  },
+  {
+   "id": "sgraffito-house-5-hall-f2",
+   "label": "Cupboard (Hall)",
+   "rect": [
+    50.981,
+    55.108,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 60.0
   },
   {
    "id": "sgraffito-house-5-front-room-0",
@@ -3510,8 +3456,8 @@
    "id": "villa-1-kitchen-f1",
    "label": "Cupboard (Kitchen)",
    "rect": [
-    60.244,
-    46.636,
+    59.425,
+    42.617,
     1.5,
     0.75
    ],
@@ -3528,8 +3474,8 @@
    "id": "colony-house-1-kitchen-0",
    "label": "Hearth (Kitchen)",
    "rect": [
-    72.589,
-    55.822,
+    74.875,
+    54.502,
     1.0,
     1.0
    ],
@@ -3544,7 +3490,7 @@
     "color": "#ff9a3c",
     "on": true
    },
-   "rotation": 150.0
+   "rotation": 60.0
   },
   {
    "id": "colony-house-1-room-0",
@@ -3582,8 +3528,8 @@
    "id": "colony-house-1-room-2",
    "label": "Chest (Room)",
    "rect": [
-    74.787,
-    50.35,
+    75.037,
+    50.783,
     1.0,
     1.0
    ],
@@ -3600,8 +3546,8 @@
    "id": "school-1-classroom-f5",
    "label": "Cupboard (Classroom)",
    "rect": [
-    76.804,
-    91.226,
+    81.698,
+    88.423,
     1,
     1
    ],
@@ -3612,14 +3558,14 @@
     "items": "",
     "fillPlace": "office"
    },
-   "rotation": 240.0
+   "rotation": 150.0
   },
   {
    "id": "school-1-classroom-f6",
    "label": "Cupboard (Classroom)",
    "rect": [
-    76.304,
-    90.36,
+    81.198,
+    87.557,
     1,
     1
    ],
@@ -3636,8 +3582,8 @@
    "id": "school-1-classroom-f7",
    "label": "Cupboard (Classroom)",
    "rect": [
-    75.804,
-    89.494,
+    80.698,
+    86.691,
     1,
     1
    ],
@@ -3648,7 +3594,7 @@
     "items": "",
     "fillPlace": "office"
    },
-   "rotation": 240.0
+   "rotation": 150.0
   },
   {
    "id": "school-1-second-classroom-f0",
@@ -3658,6 +3604,24 @@
     93.275,
     1,
     2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "office"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "school-1-second-classroom-f11",
+   "label": "Cupboard (Second classroom)",
+   "rect": [
+    72.547,
+    95.91,
+    1.5,
+    0.75
    ],
    "flags": {
     "container": true,
@@ -3687,11 +3651,29 @@
    "rotation": 240.0
   },
   {
+   "id": "school-1-third-classroom-f10",
+   "label": "Cupboard (Third classroom)",
+   "rect": [
+    68.953,
+    92.656,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "office"
+   },
+   "rotation": 240.0
+  },
+  {
    "id": "colony-house-2-kitchen-0",
    "label": "Hearth (Kitchen)",
    "rect": [
     41.029,
-    57.417,
+    54.777,
     1.0,
     1.0
    ],
@@ -3706,7 +3688,7 @@
     "color": "#ff9a3c",
     "on": true
    },
-   "rotation": 90.0
+   "rotation": 0.0
   },
   {
    "id": "colony-house-2-room-0",
@@ -3744,7 +3726,7 @@
    "id": "colony-house-2-room-2",
    "label": "Chest (Room)",
    "rect": [
-    37.389,
+    37.889,
     52.777,
     1.0,
     1.0
@@ -3762,8 +3744,8 @@
    "id": "func-villa-1-living-space-f0",
    "label": "Cupboard (Living space)",
    "rect": [
-    81.45,
-    128.636,
+    80.312,
+    122.35,
     2,
     1
    ],
@@ -3774,7 +3756,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 45.0
+   "rotation": 135.0
   },
   {
    "id": "panel-block-1-flat-f0",
@@ -3798,8 +3780,8 @@
    "id": "panel-block-1-second-flat-f0",
    "label": "Cupboard (Second flat)",
    "rect": [
-    95.68,
-    83.32,
+    100.57,
+    83.82,
     2,
     1
    ],
@@ -3810,13 +3792,13 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 90.0
+   "rotation": 180.0
   },
   {
    "id": "panel-block-1-third-flat-f0",
    "label": "Cupboard (Third flat)",
    "rect": [
-    99.43,
+    97.93,
     84.68,
     1,
     2
@@ -3852,7 +3834,7 @@
    "id": "panel-block-1-fourth-flat-f0",
    "label": "Cupboard (Fourth flat)",
    "rect": [
-    99.82,
+    99.2,
     92.68,
     1,
     2
@@ -3885,7 +3867,7 @@
    "rotation": 270.0
   },
   {
-   "id": "panel-block-2-flat-f7",
+   "id": "panel-block-2-flat-f9",
    "label": "Cupboard (Flat)",
    "rect": [
     57.07,
@@ -3906,8 +3888,8 @@
    "id": "panel-block-2-second-flat-f0",
    "label": "Cupboard (Second flat)",
    "rect": [
-    43.68,
-    98.68,
+    43.18,
+    103.57,
     1,
     2
    ],
@@ -3918,14 +3900,32 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 270.0
+   "rotation": 180.0
+  },
+  {
+   "id": "panel-block-2-second-flat-f7",
+   "label": "Cupboard (Second flat)",
+   "rect": [
+    43.93,
+    105.82,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 180.0
   },
   {
    "id": "panel-block-2-third-flat-f0",
    "label": "Cupboard (Third flat)",
    "rect": [
     41.82,
-    101.93,
+    100.43,
     1,
     2
    ],
@@ -3961,7 +3961,7 @@
    "label": "Cupboard (Fourth flat)",
    "rect": [
     33.32,
-    102.82,
+    102.2,
     2,
     1
    ],
@@ -3975,11 +3975,11 @@
    "rotation": 270.0
   },
   {
-   "id": "panel-block-2-fourth-flat-f10",
+   "id": "panel-block-2-fourth-flat-f9",
    "label": "Cupboard (Fourth flat)",
    "rect": [
     28.18,
-    103.32,
+    101.7,
     1,
     2
    ],
@@ -4062,6 +4062,24 @@
     "items": "",
     "fillPlace": "home"
    },
+   "rotation": 345.0
+  },
+  {
+   "id": "cottage-13-cottage-f1",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    118.386,
+    24.633,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
    "rotation": 75.0
   },
   {
@@ -4134,16 +4152,16 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 255.0
+   "rotation": 165.0
   },
   {
    "id": "cottage-14-cottage-f1",
    "label": "Cupboard (Cottage)",
    "rect": [
-    115.639,
-    32.233,
-    0.75,
-    1.5
+    115.264,
+    32.608,
+    1.5,
+    0.75
    ],
    "flags": {
     "container": true,
@@ -4152,7 +4170,7 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 255.0
+   "rotation": 165.0
   },
   {
    "id": "cottage-15-cottage-0",
@@ -4224,7 +4242,25 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 90.0
+   "rotation": 0.0
+  },
+  {
+   "id": "cottage-15-cottage-f2",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    105.91,
+    27.099,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 0.0
   },
   {
    "id": "cottage-18-cottage-0",
@@ -4296,13 +4332,13 @@
     "items": "",
     "fillPlace": "home"
    },
-   "rotation": 270.0
+   "rotation": 180.0
   },
   {
    "id": "family-house-1-garage-1",
    "label": "Crates (Garage)",
    "rect": [
-    107.279,
+    109.219,
     36.359,
     0.7,
     0.7
@@ -4337,26 +4373,8 @@
    "id": "family-house-1-living-room-f4",
    "label": "Cupboard (Living room)",
    "rect": [
-    105.569,
-    41.809,
-    1.5,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "cabinet",
-    "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   },
-   "rotation": 180.0
-  },
-  {
-   "id": "family-house-1-kitchen-f1",
-   "label": "Cupboard (Kitchen)",
-   "rect": [
-    103.794,
-    41.434,
+    104.904,
+    41.184,
     1.5,
     0.75
    ],
@@ -4370,13 +4388,31 @@
    "rotation": 270.0
   },
   {
-   "id": "suburban-house-1-living-room-f4",
+   "id": "family-house-1-kitchen-f1",
+   "label": "Cupboard (Kitchen)",
+   "rect": [
+    101.904,
+    40.544,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "suburban-house-1-living-room-f5",
    "label": "Cupboard (Living room)",
    "rect": [
-    97.196,
-    24.258,
-    0.75,
-    1.5
+    95.946,
+    27.898,
+    1.5,
+    0.75
    ],
    "flags": {
     "container": true,

@@ -22,9 +22,9 @@
 <rect x="1014.0" y="314.4" width="60.0" height="42.0" fill="#b9d3a0" stroke="#6b4f2a"/>
 <rect x="440.4" y="780.0" width="30.0" height="60.0" fill="#b9d3a0" stroke="#6b4f2a"/>
 <rect x="594.0" y="276.0" width="84" height="96" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="624.0" y="358.79999999999995" width="24.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
-<rect x="664.8" y="294.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
-<rect x="664.8" y="342.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="624.0" y="354.0" width="24.0" height="18.0" fill="#fb6" opacity=".35"/>
+<rect x="660.0" y="294.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="660.0" y="342.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="620.4000000000001" y="302.4" width="31.199999999999996" height="43.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="630.0" y="294.0" width="48.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="630.0" y="294.0" width="12.0" height="78.0" fill="#f6c" opacity=".35"/>
@@ -36,16 +36,16 @@
 <text x="621.1200000000001" y="282.96" font-size="7">Keg</text>
 <rect x="666.24" y="306.0" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="666.96" y="310.79999999999995" font-size="7">Keg</text>
-<rect x="596.16" y="278.15999999999997" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="596.88" y="282.96" font-size="7">Table Round</text>
-<rect x="596.16" y="345.6" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="596.88" y="350.4" font-size="7">Table Round</text>
-<rect x="596.16" y="302.15999999999997" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="596.88" y="306.96" font-size="7">Stool</text>
-<rect x="596.16" y="336.0" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="596.88" y="340.79999999999995" font-size="7">Stool</text>
-<rect x="610.8" y="336.0" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="611.52" y="340.79999999999995" font-size="7">Stool</text>
+<rect x="596.16" y="278.4" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="596.88" y="283.2" font-size="7">Table Round</text>
+<rect x="596.16" y="345.84000000000003" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="596.88" y="350.64" font-size="7">Table Round</text>
+<rect x="596.16" y="302.4" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="596.88" y="307.2" font-size="7">Stool</text>
+<rect x="596.16" y="336.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="596.88" y="341.03999999999996" font-size="7">Stool</text>
+<rect x="608.16" y="302.4" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="608.88" y="307.2" font-size="7">Stool</text>
 <rect x="651.84" y="357.84000000000003" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="652.5600000000001" y="362.64" font-size="7">Bench</text>
 <text x="597.0" y="368.0" font-weight="bold">Taproom</text>
@@ -97,8 +97,8 @@
 <text x="392.88" y="405.84000000000003" font-size="7">Chest</text>
 <text x="393.0" y="410.0" font-weight="bold">Chancel</text>
 <rect x="426.0" y="342.0" width="84" height="72" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="496.79999999999995" y="366.0" width="13.200000000000001" height="24.0" fill="#fb6" opacity=".35"/>
-<rect x="426.0" y="366.0" width="13.200000000000001" height="24.0" fill="#fb6" opacity=".35"/>
+<rect x="492.0" y="366.0" width="18.0" height="24.0" fill="#fb6" opacity=".35"/>
+<rect x="426.0" y="366.0" width="18.0" height="24.0" fill="#fb6" opacity=".35"/>
 <rect x="452.40000000000003" y="368.4" width="31.199999999999996" height="19.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="426.0" y="372.0" width="84.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="504.0" y="372.0" width="6.0" height="12.0" fill="#f6c" opacity=".35"/>
@@ -112,8 +112,8 @@
 <text x="497.76000000000005" y="349.2" font-size="7">Pew</text>
 <rect x="475.43999999999994" y="344.4" width="10.8" height="21.6" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="476.15999999999997" y="349.2" font-size="7">Pew</text>
-<rect x="428.15999999999997" y="344.15999999999997" width="10.8" height="21.6" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="428.88" y="348.96" font-size="7">Pew</text>
+<rect x="438.96" y="344.4" width="10.8" height="21.6" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="439.68" y="349.2" font-size="7">Pew</text>
 <text x="429.0" y="410.0" font-weight="bold">Nave</text>
 <line x1="510.0" y1="366.0" x2="510.0" y2="390.0" stroke="#a30" stroke-width="6"/>
 <line x1="426.0" y1="366.0" x2="426.0" y2="390.0" stroke="#c60" stroke-width="6"/>
@@ -124,24 +124,24 @@
 <line x1="390.0" y1="372.0" x2="390.0" y2="384.0" stroke="#39f" stroke-width="6"/>
 <text x="392.0" y="350.0" font-size="7" fill="#123">Chapel</text>
 <rect x="450.0" y="486.0" width="60" height="72" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="496.79999999999995" y="522.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="492.0" y="522.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="476.40000000000003" y="512.4000000000001" width="7.199999999999996" height="19.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="452.15999999999997" y="543.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="452.88" y="548.64" font-size="7">Brick Cooking </text>
 <rect x="452.15999999999997" y="534.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="452.88" y="539.04" font-size="7">Firewood Pile</text>
-<rect x="483.84000000000003" y="488.15999999999997" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="484.56000000000006" y="492.96" font-size="7">Single Bed</text>
 <rect x="452.15999999999997" y="488.15999999999997" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="452.88" y="492.96" font-size="7">Single Bed</text>
+<rect x="476.15999999999997" y="488.15999999999997" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="476.88" y="492.96" font-size="7">Single Bed</text>
 <rect x="452.15999999999997" y="500.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="452.88" y="504.96" font-size="7">Chest</text>
-<rect x="464.15999999999997" y="543.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="464.88" y="548.64" font-size="7">Table Rectangl</text>
-<rect x="467.15999999999997" y="531.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="467.88" y="536.64" font-size="7">Bench</text>
-<rect x="498.84000000000003" y="512.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="499.56000000000006" y="516.96" font-size="7">Barrel</text>
+<rect x="467.15999999999997" y="543.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="467.88" y="548.64" font-size="7">Table Rectangl</text>
+<rect x="461.76" y="531.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="462.48" y="536.64" font-size="7">Bench</text>
+<rect x="498.84000000000003" y="534.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="499.56000000000006" y="539.64" font-size="7">Barrel</text>
 <text x="453.0" y="554.0" font-weight="bold">Cottage</text>
 <line x1="510.0" y1="522.0" x2="510.0" y2="534.0" stroke="#a30" stroke-width="6"/>
 <line x1="510.0" y1="498.0" x2="510.0" y2="510.0" stroke="#39f" stroke-width="6"/>
@@ -149,23 +149,23 @@
 <line x1="450.0" y1="516.0" x2="450.0" y2="528.0" stroke="#39f" stroke-width="6"/>
 <text x="452.0" y="494.0" font-size="7" fill="#123">Priest's house</text>
 <rect x="972.0" y="714.0" width="60" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="990.0" y="714.0" width="24.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
-<rect x="972.0" y="726.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="990.0" y="714.0" width="24.0" height="18.0" fill="#fb6" opacity=".35"/>
+<rect x="972.0" y="726.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="998.4000000000001" y="740.4000000000001" width="7.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="972.0" y="726.0" width="36.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="996.0" y="714.0" width="12.0" height="24.0" fill="#f6c" opacity=".35"/>
-<rect x="974.1600000000001" y="759.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="974.8800000000001" y="764.64" font-size="7">Brick Cooking </text>
+<rect x="974.4000000000001" y="759.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="975.1200000000001" y="764.64" font-size="7">Brick Cooking </text>
 <rect x="974.1600000000001" y="747.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="974.8800000000001" y="752.64" font-size="7">Anvil Metal</text>
-<rect x="998.1600000000001" y="762.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="998.8800000000001" y="767.04" font-size="7">Bellows</text>
+<rect x="998.4000000000001" y="762.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="999.1200000000001" y="767.04" font-size="7">Bellows</text>
 <rect x="1017.8399999999999" y="738.24" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="1018.56" y="743.04" font-size="7">Weapon Rack Me</text>
-<rect x="974.1600000000001" y="738.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="974.8800000000001" y="743.64" font-size="7">Sack E Coals</text>
-<rect x="1008.0" y="762.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="1008.72" y="767.64" font-size="7">Barrel</text>
+<rect x="1020.8399999999999" y="762.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="1021.56" y="767.64" font-size="7">Sack E Coals</text>
+<rect x="1011.8399999999999" y="762.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="1012.56" y="767.64" font-size="7">Barrel</text>
 <rect x="1017.8399999999999" y="716.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="1018.56" y="720.96" font-size="7">Chest</text>
 <text x="975.0" y="770.0" font-weight="bold">Forge</text>
@@ -182,24 +182,24 @@
 <line x1="936.0" y1="738.0" x2="936.0" y2="750.0" stroke="#39f" stroke-width="6"/>
 <text x="938.0" y="722.0" font-size="7" fill="#123">Smithy</text>
 <rect x="612.0" y="540.0" width="72" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="654.0" y="540.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="654.0" y="540.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="638.4000000000001" y="566.4000000000001" width="19.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
-<rect x="657.84" y="573.84" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="658.5600000000001" y="578.64" font-size="7">Brick Oven A</text>
-<rect x="648.24" y="588.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="648.96" y="593.04" font-size="7">Firewood Pile</text>
-<rect x="639.24" y="542.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="639.96" y="546.96" font-size="7">Firewood Stack</text>
-<rect x="630.24" y="588.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="630.96" y="593.64" font-size="7">Sack E Wheat</text>
-<rect x="614.16" y="579.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="614.88" y="584.64" font-size="7">Sack E Wheat</text>
-<rect x="615.24" y="542.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="615.96" y="546.96" font-size="7">Table Rectangl</text>
-<rect x="669.84" y="542.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="670.5600000000001" y="546.96" font-size="7">Single Bed</text>
-<rect x="657.84" y="554.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="658.5600000000001" y="558.96" font-size="7">Chest</text>
+<rect x="614.16" y="573.84" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="614.88" y="578.64" font-size="7">Brick Oven A</text>
+<rect x="638.16" y="588.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="638.88" y="593.04" font-size="7">Firewood Pile</text>
+<rect x="638.16" y="542.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="638.88" y="546.96" font-size="7">Firewood Stack</text>
+<rect x="672.84" y="579.24" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="673.5600000000001" y="584.04" font-size="7">Sack E Wheat</text>
+<rect x="614.16" y="551.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="614.88" y="555.96" font-size="7">Sack E Wheat</text>
+<rect x="647.76" y="585.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="648.48" y="590.64" font-size="7">Table Rectangl</text>
+<rect x="669.84" y="549.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="670.5600000000001" y="554.64" font-size="7">Single Bed</text>
+<rect x="657.84" y="560.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="658.5600000000001" y="564.96" font-size="7">Chest</text>
 <text x="615.0" y="596.0" font-weight="bold">Bakehouse</text>
 <line x1="654.0" y1="540.0" x2="666.0" y2="540.0" stroke="#a30" stroke-width="6"/>
 <line x1="624.0" y1="540.0" x2="636.0" y2="540.0" stroke="#39f" stroke-width="6"/>
@@ -215,18 +215,18 @@
 <text x="418.56000000000006" y="554.64" font-size="7">Brick Cooking </text>
 <text x="363.0" y="560.0" font-weight="bold">Back room</text>
 <rect x="360.0" y="480.0" width="72" height="48" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="402.0" y="480.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
-<rect x="402.0" y="514.8" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="402.0" y="480.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
+<rect x="402.0" y="510.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="402.0" y="480.0" width="12.0" height="48.0" fill="#f6c" opacity=".35"/>
 <rect x="402.0" y="480.0" width="12.0" height="6.0" fill="#f6c" opacity=".35"/>
 <rect x="362.15999999999997" y="501.84000000000003" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="362.88" y="506.64" font-size="7">Table Rectangl</text>
-<rect x="417.84000000000003" y="513.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="418.56000000000006" y="518.64" font-size="7">Box Crate</text>
 <rect x="417.84000000000003" y="482.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="418.56000000000006" y="486.96" font-size="7">Box Crate</text>
-<rect x="362.15999999999997" y="482.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="362.88" y="486.96" font-size="7">Barrel</text>
+<rect x="417.84000000000003" y="513.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="418.56000000000006" y="518.64" font-size="7">Box Crate</text>
+<rect x="420.84000000000003" y="494.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="421.56000000000006" y="498.96" font-size="7">Barrel</text>
 <rect x="374.15999999999997" y="516.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="374.88" y="521.64" font-size="7">Sack</text>
 <text x="363.0" y="524.0" font-weight="bold">Shop</text>
@@ -241,26 +241,26 @@
 <rect x="472.79999999999995" y="294.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="452.15999999999997" y="254.16" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="452.88" y="258.96" font-size="7">Double Bed Fra</text>
-<rect x="452.15999999999997" y="278.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="452.88" y="282.96" font-size="7">Chest</text>
+<rect x="458.15999999999997" y="278.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="458.88" y="282.96" font-size="7">Chest</text>
 <rect x="452.15999999999997" y="309.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="452.88" y="314.64" font-size="7">Brick Cooking </text>
 <text x="453.0" y="320.0" font-weight="bold">Back room</text>
 <rect x="486.0" y="252.0" width="48" height="72" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="520.8" y="294.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
-<rect x="486.0" y="294.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="516.0" y="294.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="486.0" y="294.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="486.0" y="294.0" width="48.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="528.0" y="294.0" width="6.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="507.84000000000003" y="254.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="508.56000000000006" y="258.96" font-size="7">Table Rectangl</text>
-<rect x="488.15999999999997" y="254.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="488.88" y="258.96" font-size="7">Box Crate</text>
 <rect x="519.84" y="309.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="520.5600000000001" y="314.64" font-size="7">Box Crate</text>
+<rect x="488.15999999999997" y="254.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="488.88" y="258.96" font-size="7">Box Crate</text>
 <rect x="488.15999999999997" y="312.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="488.88" y="317.64" font-size="7">Barrel</text>
-<rect x="510.84000000000003" y="312.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="511.56000000000006" y="317.64" font-size="7">Sack</text>
+<rect x="498.84000000000003" y="312.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="499.56000000000006" y="317.64" font-size="7">Sack</text>
 <text x="489.0" y="320.0" font-weight="bold">Shop</text>
 <line x1="534.0" y1="294.0" x2="534.0" y2="306.0" stroke="#a30" stroke-width="6"/>
 <line x1="534.0" y1="264.0" x2="534.0" y2="276.0" stroke="#39f" stroke-width="6"/>
@@ -273,26 +273,26 @@
 <rect x="724.8" y="576.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="711.84" y="536.16" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="712.5600000000001" y="540.96" font-size="7">Double Bed Fra</text>
-<rect x="723.84" y="560.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="724.5600000000001" y="564.96" font-size="7">Chest</text>
-<rect x="704.16" y="560.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="704.88" y="564.96" font-size="7">Brick Cooking </text>
+<rect x="719.16" y="560.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="719.88" y="564.96" font-size="7">Chest</text>
+<rect x="704.16" y="591.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="704.88" y="596.64" font-size="7">Brick Cooking </text>
 <text x="705.0" y="602.0" font-weight="bold">Back room</text>
 <rect x="738.0" y="534.0" width="48" height="72" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="772.8000000000001" y="576.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
-<rect x="738.0" y="576.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="768.0" y="576.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="738.0" y="576.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="738.0" y="576.0" width="48.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="780.0" y="576.0" width="6.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="759.84" y="536.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="760.5600000000001" y="540.96" font-size="7">Table Rectangl</text>
+<rect x="740.16" y="591.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="740.88" y="596.64" font-size="7">Box Crate</text>
 <rect x="740.16" y="536.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="740.88" y="540.96" font-size="7">Box Crate</text>
-<rect x="771.8399999999999" y="591.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="772.56" y="596.64" font-size="7">Box Crate</text>
-<rect x="750.84" y="594.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="751.5600000000001" y="599.64" font-size="7">Barrel</text>
-<rect x="762.84" y="594.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="763.5600000000001" y="599.64" font-size="7">Sack</text>
+<rect x="740.16" y="548.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="740.88" y="552.96" font-size="7">Barrel</text>
+<rect x="752.16" y="594.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="752.88" y="599.64" font-size="7">Sack</text>
 <text x="741.0" y="602.0" font-weight="bold">Shop</text>
 <line x1="786.0" y1="576.0" x2="786.0" y2="588.0" stroke="#a30" stroke-width="6"/>
 <line x1="786.0" y1="546.0" x2="786.0" y2="558.0" stroke="#39f" stroke-width="6"/>
@@ -305,26 +305,26 @@
 <rect x="472.79999999999995" y="612.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="452.15999999999997" y="572.16" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="452.88" y="576.96" font-size="7">Double Bed Fra</text>
-<rect x="452.15999999999997" y="596.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="452.88" y="600.96" font-size="7">Chest</text>
+<rect x="458.15999999999997" y="596.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="458.88" y="600.96" font-size="7">Chest</text>
 <rect x="452.15999999999997" y="627.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="452.88" y="632.64" font-size="7">Brick Cooking </text>
 <text x="453.0" y="638.0" font-weight="bold">Back room</text>
 <rect x="486.0" y="570.0" width="48" height="72" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="520.8" y="612.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
-<rect x="486.0" y="612.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="516.0" y="612.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="486.0" y="612.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="486.0" y="612.0" width="48.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="528.0" y="612.0" width="6.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="488.15999999999997" y="572.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="488.88" y="576.96" font-size="7">Table Rectangl</text>
-<rect x="519.84" y="627.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="520.5600000000001" y="632.64" font-size="7">Box Crate</text>
 <rect x="488.15999999999997" y="627.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="488.88" y="632.64" font-size="7">Box Crate</text>
-<rect x="500.15999999999997" y="630.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="500.88" y="635.64" font-size="7">Barrel</text>
-<rect x="522.84" y="572.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="523.5600000000001" y="576.96" font-size="7">Sack</text>
+<rect x="519.84" y="627.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="520.5600000000001" y="632.64" font-size="7">Box Crate</text>
+<rect x="510.84000000000003" y="630.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="511.56000000000006" y="635.64" font-size="7">Barrel</text>
+<rect x="519.84" y="572.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="520.5600000000001" y="576.96" font-size="7">Sack</text>
 <text x="489.0" y="638.0" font-weight="bold">Shop</text>
 <line x1="534.0" y1="612.0" x2="534.0" y2="624.0" stroke="#a30" stroke-width="6"/>
 <line x1="534.0" y1="582.0" x2="534.0" y2="594.0" stroke="#39f" stroke-width="6"/>
@@ -343,8 +343,8 @@
 <text x="406.56000000000006" y="320.64" font-size="7">Brick Cooking </text>
 <text x="351.0" y="326.0" font-weight="bold">Back room</text>
 <rect x="348.0" y="246.0" width="72" height="48" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="390.0" y="246.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
-<rect x="390.0" y="280.79999999999995" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="390.0" y="246.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
+<rect x="390.0" y="276.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="390.0" y="246.0" width="12.0" height="48.0" fill="#f6c" opacity=".35"/>
 <rect x="390.0" y="246.0" width="12.0" height="6.0" fill="#f6c" opacity=".35"/>
 <rect x="350.15999999999997" y="267.84000000000003" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
@@ -371,24 +371,24 @@
 <text x="728.88" y="320.64" font-size="7">Double Bed Fra</text>
 <rect x="752.16" y="327.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="752.88" y="332.64" font-size="7">Chest</text>
-<rect x="764.16" y="327.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="764.88" y="332.64" font-size="7">Brick Cooking </text>
+<rect x="783.8399999999999" y="327.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="784.56" y="332.64" font-size="7">Brick Cooking </text>
 <text x="729.0" y="338.0" font-weight="bold">Back room</text>
 <rect x="726.0" y="258.0" width="72" height="48" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="768.0" y="258.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
-<rect x="768.0" y="292.79999999999995" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="768.0" y="258.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
+<rect x="768.0" y="288.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="768.0" y="258.0" width="12.0" height="48.0" fill="#f6c" opacity=".35"/>
 <rect x="768.0" y="258.0" width="12.0" height="6.0" fill="#f6c" opacity=".35"/>
 <rect x="728.16" y="260.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="728.88" y="264.96" font-size="7">Table Rectangl</text>
+<rect x="783.8399999999999" y="260.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="784.56" y="264.96" font-size="7">Box Crate</text>
 <rect x="783.8399999999999" y="291.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="784.56" y="296.64" font-size="7">Box Crate</text>
-<rect x="728.16" y="291.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="728.88" y="296.64" font-size="7">Box Crate</text>
-<rect x="786.8399999999999" y="282.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="787.56" y="287.64" font-size="7">Barrel</text>
-<rect x="786.8399999999999" y="260.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="787.56" y="264.96" font-size="7">Sack</text>
+<rect x="740.16" y="294.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="740.88" y="299.64" font-size="7">Barrel</text>
+<rect x="749.16" y="294.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="749.88" y="299.64" font-size="7">Sack</text>
 <text x="729.0" y="302.0" font-weight="bold">Shop</text>
 <line x1="768.0" y1="258.0" x2="780.0" y2="258.0" stroke="#a30" stroke-width="6"/>
 <line x1="738.0" y1="258.0" x2="750.0" y2="258.0" stroke="#39f" stroke-width="6"/>
@@ -401,26 +401,26 @@
 <rect x="378.0" y="600.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="387.84000000000003" y="627.84" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="388.56000000000006" y="632.64" font-size="7">Double Bed Fra</text>
-<rect x="399.84000000000003" y="615.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="400.56000000000006" y="620.64" font-size="7">Chest</text>
+<rect x="395.15999999999997" y="615.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="395.88" y="620.64" font-size="7">Chest</text>
 <rect x="399.84000000000003" y="584.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="400.56000000000006" y="588.96" font-size="7">Brick Cooking </text>
 <text x="381.0" y="650.0" font-weight="bold">Back room</text>
 <rect x="330.0" y="582.0" width="48" height="72" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="330.0" y="600.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
-<rect x="364.79999999999995" y="600.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="330.0" y="600.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="360.0" y="600.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="330.0" y="600.0" width="48.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="330.0" y="600.0" width="6.0" height="12.0" fill="#f6c" opacity=".35"/>
-<rect x="332.15999999999997" y="639.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="332.88" y="644.64" font-size="7">Table Rectangl</text>
-<rect x="363.84000000000003" y="639.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="364.56" y="644.64" font-size="7">Box Crate</text>
+<rect x="351.84000000000003" y="639.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="352.56" y="644.64" font-size="7">Table Rectangl</text>
+<rect x="363.84000000000003" y="584.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="364.56" y="588.96" font-size="7">Box Crate</text>
 <rect x="332.15999999999997" y="584.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="332.88" y="588.96" font-size="7">Box Crate</text>
-<rect x="366.84000000000003" y="630.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="367.56" y="635.64" font-size="7">Barrel</text>
-<rect x="356.15999999999997" y="584.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="356.88" y="588.96" font-size="7">Sack</text>
+<rect x="354.84000000000003" y="584.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="355.56" y="588.96" font-size="7">Barrel</text>
+<rect x="344.15999999999997" y="584.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="344.88" y="588.96" font-size="7">Sack</text>
 <text x="333.0" y="650.0" font-weight="bold">Shop</text>
 <line x1="330.0" y1="600.0" x2="330.0" y2="612.0" stroke="#a30" stroke-width="6"/>
 <line x1="330.0" y1="630.0" x2="330.0" y2="642.0" stroke="#39f" stroke-width="6"/>
@@ -439,8 +439,8 @@
 <text x="836.8800000000001" y="342.96" font-size="7">Brick Cooking </text>
 <text x="837.0" y="368.0" font-weight="bold">Back room</text>
 <rect x="834.0" y="372.0" width="72" height="48" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="852.0" y="406.79999999999995" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
-<rect x="852.0" y="372.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="852.0" y="402.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
+<rect x="852.0" y="372.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="852.0" y="372.0" width="12.0" height="48.0" fill="#f6c" opacity=".35"/>
 <rect x="852.0" y="414.0" width="12.0" height="6.0" fill="#f6c" opacity=".35"/>
 <rect x="891.8399999999999" y="374.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
@@ -451,8 +451,8 @@
 <text x="836.8800000000001" y="378.96" font-size="7">Box Crate</text>
 <rect x="836.1600000000001" y="396.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="836.8800000000001" y="401.64" font-size="7">Barrel</text>
-<rect x="836.1600000000001" y="387.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="836.8800000000001" y="392.64" font-size="7">Sack</text>
+<rect x="894.8399999999999" y="405.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="895.56" y="410.64" font-size="7">Sack</text>
 <text x="837.0" y="416.0" font-weight="bold">Shop</text>
 <line x1="852.0" y1="420.0" x2="864.0" y2="420.0" stroke="#a30" stroke-width="6"/>
 <line x1="882.0" y1="420.0" x2="894.0" y2="420.0" stroke="#39f" stroke-width="6"/>
@@ -465,26 +465,26 @@
 <rect x="888.0" y="498.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="897.8399999999999" y="525.84" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="898.56" y="530.64" font-size="7">Double Bed Fra</text>
-<rect x="909.8399999999999" y="513.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="910.56" y="518.64" font-size="7">Chest</text>
-<rect x="909.8399999999999" y="501.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="910.56" y="506.64" font-size="7">Brick Cooking </text>
+<rect x="905.1600000000001" y="513.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="905.8800000000001" y="518.64" font-size="7">Chest</text>
+<rect x="909.8399999999999" y="482.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="910.56" y="486.96" font-size="7">Brick Cooking </text>
 <text x="891.0" y="548.0" font-weight="bold">Back room</text>
 <rect x="840.0" y="480.0" width="48" height="72" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="840.0" y="498.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
-<rect x="874.8000000000001" y="498.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="840.0" y="498.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="870.0" y="498.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="840.0" y="498.0" width="48.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="840.0" y="498.0" width="6.0" height="12.0" fill="#f6c" opacity=".35"/>
-<rect x="861.8399999999999" y="537.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="862.56" y="542.64" font-size="7">Table Rectangl</text>
+<rect x="842.1600000000001" y="537.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="842.8800000000001" y="542.64" font-size="7">Table Rectangl</text>
 <rect x="842.1600000000001" y="482.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="842.8800000000001" y="486.96" font-size="7">Box Crate</text>
 <rect x="873.8399999999999" y="482.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="874.56" y="486.96" font-size="7">Box Crate</text>
+<rect x="854.1600000000001" y="482.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="854.8800000000001" y="486.96" font-size="7">Barrel</text>
 <rect x="864.8399999999999" y="482.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="865.56" y="486.96" font-size="7">Barrel</text>
-<rect x="855.8399999999999" y="482.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="856.56" y="486.96" font-size="7">Sack</text>
+<text x="865.56" y="486.96" font-size="7">Sack</text>
 <text x="843.0" y="548.0" font-weight="bold">Shop</text>
 <line x1="840.0" y1="498.0" x2="840.0" y2="510.0" stroke="#a30" stroke-width="6"/>
 <line x1="840.0" y1="528.0" x2="840.0" y2="540.0" stroke="#39f" stroke-width="6"/>
@@ -494,7 +494,7 @@
 <line x1="924.0" y1="498.0" x2="924.0" y2="510.0" stroke="#39f" stroke-width="6"/>
 <text x="842.0" y="488.0" font-size="7" fill="#123">House and shop (mercer)</text>
 <rect x="192.0" y="360.0" width="84" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="216.0" y="406.79999999999995" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="216.0" y="402.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="218.39999999999998" y="386.40000000000003" width="31.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="249.84" y="362.15999999999997" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="250.56" y="366.96" font-size="7">Table Rectangl</text>
@@ -510,10 +510,10 @@
 <text x="206.88" y="413.64" font-size="7">Sack</text>
 <rect x="261.84000000000003" y="374.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="262.56" y="378.96" font-size="7">Single Bed</text>
-<rect x="249.84" y="377.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="250.56" y="381.96" font-size="7">Chest</text>
-<rect x="194.16" y="386.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="194.88" y="390.96" font-size="7">Brick Cooking </text>
+<rect x="249.84" y="390.0" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="250.56" y="394.79999999999995" font-size="7">Chest</text>
+<rect x="194.16" y="390.0" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="194.88" y="394.79999999999995" font-size="7">Brick Cooking </text>
 <text x="195.0" y="416.0" font-weight="bold">Workshop</text>
 <line x1="216.0" y1="420.0" x2="228.0" y2="420.0" stroke="#a30" stroke-width="6"/>
 <line x1="246.0" y1="420.0" x2="258.0" y2="420.0" stroke="#39f" stroke-width="6"/>
@@ -521,26 +521,26 @@
 <line x1="228.0" y1="360.0" x2="240.0" y2="360.0" stroke="#39f" stroke-width="6"/>
 <text x="194.0" y="368.0" font-size="7" fill="#123">Workshop (carpenter)</text>
 <rect x="318.0" y="342.0" width="60" height="84" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="318.0" y="366.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="318.0" y="366.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="344.4" y="368.4" width="7.199999999999996" height="31.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="363.84000000000003" y="344.4" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="364.56" y="349.2" font-size="7">Table Rectangl</text>
 <rect x="363.84000000000003" y="368.4" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="364.56" y="373.2" font-size="7">Table Rectangl</text>
-<rect x="351.84000000000003" y="344.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="352.56" y="348.96" font-size="7">Stool</text>
-<rect x="320.15999999999997" y="411.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="320.88" y="416.64" font-size="7">Box Crate</text>
+<rect x="363.84000000000003" y="392.40000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="364.56" y="397.20000000000005" font-size="7">Stool</text>
 <rect x="320.15999999999997" y="344.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="320.88" y="348.96" font-size="7">Box Crate</text>
-<rect x="342.84000000000003" y="414.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="343.56" y="419.64" font-size="7">Sack</text>
+<rect x="320.15999999999997" y="411.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="320.88" y="416.64" font-size="7">Box Crate</text>
+<rect x="332.15999999999997" y="414.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="332.88" y="419.64" font-size="7">Sack</text>
 <rect x="351.84000000000003" y="411.84000000000003" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="352.56" y="416.64" font-size="7">Single Bed</text>
-<rect x="363.84000000000003" y="399.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="364.56" y="404.64" font-size="7">Chest</text>
-<rect x="339.84000000000003" y="344.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="340.56" y="348.96" font-size="7">Brick Cooking </text>
+<rect x="339.84000000000003" y="402.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="340.56" y="407.64" font-size="7">Chest</text>
+<rect x="351.6" y="344.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="352.32" y="348.96" font-size="7">Brick Cooking </text>
 <text x="321.0" y="422.0" font-weight="bold">Workshop</text>
 <line x1="318.0" y1="366.0" x2="318.0" y2="378.0" stroke="#a30" stroke-width="6"/>
 <line x1="318.0" y1="396.0" x2="318.0" y2="408.0" stroke="#39f" stroke-width="6"/>
@@ -548,26 +548,26 @@
 <line x1="378.0" y1="378.0" x2="378.0" y2="390.0" stroke="#39f" stroke-width="6"/>
 <text x="320.0" y="350.0" font-size="7" fill="#123">Workshop (cooper)</text>
 <rect x="210.0" y="474.0" width="60" height="84" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="256.79999999999995" y="522.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="252.0" y="522.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="236.39999999999998" y="500.40000000000003" width="7.199999999999996" height="31.199999999999996" fill="#fb6" opacity=".35"/>
-<rect x="212.16" y="476.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="212.88" y="480.96" font-size="7">Table Rectangl</text>
-<rect x="212.16" y="500.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="212.88" y="504.96" font-size="7">Table Rectangl</text>
-<rect x="212.16" y="524.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="212.88" y="528.96" font-size="7">Stool</text>
-<rect x="212.16" y="543.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="212.88" y="548.64" font-size="7">Box Crate</text>
-<rect x="255.84" y="476.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="256.56" y="480.96" font-size="7">Box Crate</text>
-<rect x="258.84000000000003" y="546.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="259.56" y="551.64" font-size="7">Sack</text>
-<rect x="231.84" y="476.15999999999997" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="232.56" y="480.96" font-size="7">Single Bed</text>
-<rect x="227.16" y="488.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="227.88" y="492.96" font-size="7">Chest</text>
-<rect x="246.84" y="543.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="247.56" y="548.64" font-size="7">Brick Cooking </text>
+<rect x="212.16" y="531.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="212.88" y="536.64" font-size="7">Table Rectangl</text>
+<rect x="212.16" y="507.84000000000003" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="212.88" y="512.64" font-size="7">Table Rectangl</text>
+<rect x="212.16" y="495.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="212.88" y="500.64" font-size="7">Stool</text>
+<rect x="212.16" y="476.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="212.88" y="480.96" font-size="7">Box Crate</text>
+<rect x="255.84" y="543.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="256.56" y="548.64" font-size="7">Box Crate</text>
+<rect x="258.84000000000003" y="507.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="259.56" y="512.64" font-size="7">Sack</text>
+<rect x="224.16" y="476.15999999999997" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="224.88" y="480.96" font-size="7">Single Bed</text>
+<rect x="248.16" y="476.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="248.88" y="480.96" font-size="7">Chest</text>
+<rect x="243.84" y="543.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="244.56" y="548.64" font-size="7">Brick Cooking </text>
 <text x="213.0" y="554.0" font-weight="bold">Workshop</text>
 <line x1="270.0" y1="522.0" x2="270.0" y2="534.0" stroke="#a30" stroke-width="6"/>
 <line x1="270.0" y1="492.0" x2="270.0" y2="504.0" stroke="#39f" stroke-width="6"/>
@@ -575,7 +575,7 @@
 <line x1="210.0" y1="510.0" x2="210.0" y2="522.0" stroke="#39f" stroke-width="6"/>
 <text x="212.0" y="482.0" font-size="7" fill="#123">Workshop (weaver)</text>
 <rect x="450.0" y="702.0" width="84" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="498.0" y="702.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="498.0" y="702.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="476.40000000000003" y="728.4000000000001" width="31.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="507.84000000000003" y="747.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="508.56000000000006" y="752.64" font-size="7">Table Rectangl</text>
@@ -583,16 +583,16 @@
 <text x="484.56000000000006" y="752.64" font-size="7">Table Rectangl</text>
 <rect x="519.84" y="735.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="520.5600000000001" y="740.64" font-size="7">Stool</text>
-<rect x="519.84" y="704.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="520.5600000000001" y="708.96" font-size="7">Box Crate</text>
 <rect x="452.15999999999997" y="704.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="452.88" y="708.96" font-size="7">Box Crate</text>
-<rect x="464.15999999999997" y="750.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="464.88" y="755.64" font-size="7">Sack</text>
-<rect x="452.15999999999997" y="735.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="452.88" y="740.64" font-size="7">Single Bed</text>
-<rect x="452.15999999999997" y="723.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="452.88" y="728.64" font-size="7">Chest</text>
+<rect x="452.15999999999997" y="747.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="452.88" y="752.64" font-size="7">Box Crate</text>
+<rect x="522.84" y="704.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="523.5600000000001" y="708.96" font-size="7">Sack</text>
+<rect x="452.15999999999997" y="723.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="452.88" y="728.64" font-size="7">Single Bed</text>
+<rect x="464.15999999999997" y="747.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="464.88" y="752.64" font-size="7">Chest</text>
 <rect x="519.84" y="716.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="520.5600000000001" y="720.96" font-size="7">Brick Cooking </text>
 <text x="453.0" y="758.0" font-weight="bold">Workshop</text>
@@ -602,26 +602,26 @@
 <line x1="486.0" y1="762.0" x2="498.0" y2="762.0" stroke="#39f" stroke-width="6"/>
 <text x="452.0" y="710.0" font-size="7" fill="#123">Workshop (potter)</text>
 <rect x="840.0" y="588.0" width="84" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="864.0" y="634.8" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="864.0" y="630.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="866.4000000000001" y="614.4000000000001" width="31.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="897.8399999999999" y="590.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="898.56" y="594.96" font-size="7">Table Rectangl</text>
 <rect x="842.1600000000001" y="590.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="842.8800000000001" y="594.96" font-size="7">Table Rectangl</text>
-<rect x="842.1600000000001" y="602.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="842.8800000000001" y="606.96" font-size="7">Stool</text>
+<rect x="885.8399999999999" y="590.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="886.56" y="594.96" font-size="7">Stool</text>
 <rect x="842.1600000000001" y="633.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="842.8800000000001" y="638.64" font-size="7">Box Crate</text>
 <rect x="909.8399999999999" y="633.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="910.56" y="638.64" font-size="7">Box Crate</text>
-<rect x="866.1600000000001" y="590.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="866.8800000000001" y="594.96" font-size="7">Sack</text>
-<rect x="909.8399999999999" y="602.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="910.56" y="606.96" font-size="7">Single Bed</text>
-<rect x="897.8399999999999" y="602.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="898.56" y="606.96" font-size="7">Chest</text>
-<rect x="842.1600000000001" y="614.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="842.8800000000001" y="618.96" font-size="7">Brick Cooking </text>
+<rect x="842.1600000000001" y="624.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="842.8800000000001" y="629.64" font-size="7">Sack</text>
+<rect x="909.8399999999999" y="609.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="910.56" y="614.64" font-size="7">Single Bed</text>
+<rect x="897.8399999999999" y="618.0" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="898.56" y="622.8" font-size="7">Chest</text>
+<rect x="842.1600000000001" y="602.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="842.8800000000001" y="606.96" font-size="7">Brick Cooking </text>
 <text x="843.0" y="644.0" font-weight="bold">Workshop</text>
 <line x1="864.0" y1="648.0" x2="876.0" y2="648.0" stroke="#a30" stroke-width="6"/>
 <line x1="894.0" y1="648.0" x2="906.0" y2="648.0" stroke="#39f" stroke-width="6"/>
@@ -629,7 +629,7 @@
 <line x1="876.0" y1="588.0" x2="888.0" y2="588.0" stroke="#39f" stroke-width="6"/>
 <text x="842.0" y="596.0" font-size="7" fill="#123">Workshop (tanner)</text>
 <rect x="210.0" y="264.0" width="60" height="84" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="256.79999999999995" y="312.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="252.0" y="312.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="236.39999999999998" y="290.4" width="7.199999999999996" height="31.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="212.16" y="266.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="212.88" y="270.96" font-size="7">Table Rectangl</text>
@@ -637,18 +637,18 @@
 <text x="212.88" y="294.96" font-size="7">Table Rectangl</text>
 <rect x="212.16" y="314.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="212.88" y="318.96" font-size="7">Stool</text>
-<rect x="212.16" y="333.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="212.88" y="338.64" font-size="7">Box Crate</text>
+<rect x="255.84" y="266.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="256.56" y="270.96" font-size="7">Box Crate</text>
 <rect x="255.84" y="333.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="256.56" y="338.64" font-size="7">Box Crate</text>
-<rect x="224.16" y="336.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="224.88" y="341.64" font-size="7">Sack</text>
-<rect x="243.84" y="266.15999999999997" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="244.56" y="270.96" font-size="7">Single Bed</text>
-<rect x="231.84" y="266.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="232.56" y="270.96" font-size="7">Chest</text>
-<rect x="233.16" y="333.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="233.88" y="338.64" font-size="7">Brick Cooking </text>
+<rect x="212.16" y="326.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="212.88" y="330.96" font-size="7">Sack</text>
+<rect x="224.16" y="266.15999999999997" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="224.88" y="270.96" font-size="7">Single Bed</text>
+<rect x="224.39999999999998" y="278.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="225.11999999999998" y="282.96" font-size="7">Chest</text>
+<rect x="236.16" y="333.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="236.88" y="338.64" font-size="7">Brick Cooking </text>
 <text x="213.0" y="344.0" font-weight="bold">Workshop</text>
 <line x1="270.0" y1="312.0" x2="270.0" y2="324.0" stroke="#a30" stroke-width="6"/>
 <line x1="270.0" y1="282.0" x2="270.0" y2="294.0" stroke="#39f" stroke-width="6"/>
@@ -656,26 +656,26 @@
 <line x1="210.0" y1="300.0" x2="210.0" y2="312.0" stroke="#39f" stroke-width="6"/>
 <text x="212.0" y="272.0" font-size="7" fill="#123">Workshop (cobbler)</text>
 <rect x="444.0" y="138.0" width="84" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="468.0" y="184.8" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="468.0" y="180.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="470.40000000000003" y="164.39999999999998" width="31.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="446.15999999999997" y="140.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="446.88" y="144.96" font-size="7">Table Rectangl</text>
 <rect x="470.15999999999997" y="140.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="470.88" y="144.96" font-size="7">Table Rectangl</text>
-<rect x="494.15999999999997" y="140.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="494.88" y="144.96" font-size="7">Stool</text>
+<rect x="446.15999999999997" y="152.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="446.88" y="156.96" font-size="7">Stool</text>
 <rect x="513.84" y="140.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="514.5600000000001" y="144.96" font-size="7">Box Crate</text>
 <rect x="446.15999999999997" y="183.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="446.88" y="188.64000000000001" font-size="7">Box Crate</text>
-<rect x="516.84" y="186.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="517.5600000000001" y="191.64000000000001" font-size="7">Sack</text>
-<rect x="513.84" y="162.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="514.5600000000001" y="167.64000000000001" font-size="7">Single Bed</text>
-<rect x="501.84000000000003" y="161.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="502.56000000000006" y="165.96" font-size="7">Chest</text>
-<rect x="446.15999999999997" y="171.60000000000002" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="446.88" y="176.4" font-size="7">Brick Cooking </text>
+<rect x="504.84000000000003" y="140.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="505.56000000000006" y="144.96" font-size="7">Sack</text>
+<rect x="513.84" y="171.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="514.5600000000001" y="176.64000000000001" font-size="7">Single Bed</text>
+<rect x="513.84" y="159.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="514.5600000000001" y="164.64000000000001" font-size="7">Chest</text>
+<rect x="446.15999999999997" y="171.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="446.88" y="176.64000000000001" font-size="7">Brick Cooking </text>
 <text x="447.0" y="194.0" font-weight="bold">Workshop</text>
 <line x1="468.0" y1="198.0" x2="480.0" y2="198.0" stroke="#a30" stroke-width="6"/>
 <line x1="498.0" y1="198.0" x2="510.0" y2="198.0" stroke="#39f" stroke-width="6"/>
@@ -683,53 +683,51 @@
 <line x1="480.0" y1="138.0" x2="492.0" y2="138.0" stroke="#39f" stroke-width="6"/>
 <text x="446.0" y="146.0" font-size="7" fill="#123">Workshop (chandler)</text>
 <rect x="738.0" y="354.0" width="60" height="72" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="738.0" y="378.0" width="13.200000000000001" height="24.0" fill="#fb6" opacity=".35"/>
+<rect x="738.0" y="378.0" width="18.0" height="24.0" fill="#fb6" opacity=".35"/>
 <rect x="764.4000000000001" y="380.4" width="7.199999999999996" height="19.199999999999996" fill="#fb6" opacity=".35"/>
-<rect x="740.16" y="356.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="740.88" y="360.96" font-size="7">Box Crate</text>
-<rect x="740.16" y="411.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="740.88" y="416.64" font-size="7">Box Crate</text>
-<rect x="752.16" y="356.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="752.88" y="360.96" font-size="7">Box Crate</text>
+<rect x="783.8399999999999" y="411.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="784.56" y="416.64" font-size="7">Box Crate</text>
+<rect x="771.8399999999999" y="411.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="772.56" y="416.64" font-size="7">Box Crate</text>
+<rect x="783.8399999999999" y="356.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="784.56" y="360.96" font-size="7">Box Crate</text>
 <rect x="783.8399999999999" y="368.4" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="784.56" y="373.2" font-size="7">Box Crate</text>
-<rect x="774.24" y="414.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="774.96" y="419.04" font-size="7">Sack</text>
-<rect x="774.24" y="356.15999999999997" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="774.96" y="360.96" font-size="7">Sack</text>
-<rect x="764.16" y="356.15999999999997" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="764.88" y="360.96" font-size="7">Sack</text>
-<rect x="786.24" y="414.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="786.96" y="419.04" font-size="7">Barrel</text>
-<rect x="786.24" y="356.15999999999997" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="786.96" y="360.96" font-size="7">Barrel</text>
-<rect x="754.5600000000001" y="414.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="755.2800000000001" y="419.04" font-size="7">Keg</text>
-<rect x="786.24" y="404.64" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="786.96" y="409.43999999999994" font-size="7">Keg</text>
+<rect x="762.24" y="414.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="762.96" y="419.04" font-size="7">Sack</text>
+<rect x="786.24" y="402.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="786.96" y="407.04" font-size="7">Sack</text>
+<rect x="740.16" y="368.4" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="740.88" y="373.2" font-size="7">Sack</text>
+<rect x="740.16" y="414.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="740.88" y="419.04" font-size="7">Barrel</text>
+<rect x="740.16" y="356.15999999999997" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="740.88" y="360.96" font-size="7">Barrel</text>
+<rect x="762.24" y="356.15999999999997" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="762.96" y="360.96" font-size="7">Keg</text>
+<rect x="752.64" y="356.15999999999997" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="753.36" y="360.96" font-size="7">Keg</text>
 <text x="741.0" y="422.0" font-weight="bold">Store</text>
 <line x1="738.0" y1="378.0" x2="738.0" y2="402.0" stroke="#a30" stroke-width="6"/>
 <line x1="798.0" y1="384.0" x2="798.0" y2="396.0" stroke="#39f" stroke-width="6"/>
 <text x="740.0" y="362.0" font-size="7" fill="#123">Storehouse</text>
 <rect x="1074.0" y="474.0" width="60" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="1098.0" y="474.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="1098.0" y="474.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="1100.4" y="500.40000000000003" width="7.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="1119.84" y="507.84000000000003" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="1120.56" y="512.64" font-size="7">Weapon Rack Me</text>
-<rect x="1119.84" y="476.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="1120.56" y="480.96" font-size="7">Weapon Rack Me</text>
-<rect x="1095.84" y="519.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="1096.56" y="524.64" font-size="7">Table Rectangl</text>
-<rect x="1086.24" y="522.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="1086.96" y="527.04" font-size="7">Stool</text>
-<rect x="1090.8000000000002" y="510.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="1091.52" y="515.04" font-size="7">Stool</text>
-<rect x="1076.16" y="476.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="1076.88" y="480.96" font-size="7">Brazier</text>
-<rect x="1076.16" y="495.84000000000003" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="1076.88" y="500.64" font-size="7">Single Bed</text>
-<rect x="1088.16" y="491.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="1088.88" y="495.96" font-size="7">Chest</text>
+<rect x="1076.16" y="519.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="1076.88" y="524.64" font-size="7">Table Rectangl</text>
+<rect x="1076.16" y="510.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="1076.88" y="515.04" font-size="7">Stool</text>
+<rect x="1100.16" y="522.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="1100.88" y="527.04" font-size="7">Stool</text>
+<rect x="1076.16" y="486.24" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="1076.88" y="491.04" font-size="7">Single Bed</text>
+<rect x="1088.16" y="494.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="1088.88" y="498.96" font-size="7">Chest</text>
+<rect x="1119.84" y="476.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="1120.56" y="480.96" font-size="7">Brazier</text>
 <text x="1077.0" y="530.0" font-weight="bold">Guardroom</text>
 <line x1="1098.0" y1="474.0" x2="1110.0" y2="474.0" stroke="#a30" stroke-width="6"/>
 <line x1="1134.0" y1="498.0" x2="1134.0" y2="510.0" stroke="#39f" stroke-width="6"/>
@@ -737,24 +735,24 @@
 <line x1="1098.0" y1="534.0" x2="1110.0" y2="534.0" stroke="#39f" stroke-width="6"/>
 <text x="1076.0" y="482.0" font-size="7" fill="#123">Guardhouse</text>
 <rect x="834.0" y="258.0" width="72" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="870.0" y="258.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="870.0" y="258.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="860.4000000000001" y="284.4" width="19.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="891.8399999999999" y="303.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="892.56" y="308.64" font-size="7">Brick Cooking </text>
-<rect x="894.24" y="294.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="894.96" y="299.03999999999996" font-size="7">Firewood Pile</text>
+<rect x="882.24" y="306.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="882.96" y="311.03999999999996" font-size="7">Firewood Pile</text>
+<rect x="836.1600000000001" y="260.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="836.8800000000001" y="264.96" font-size="7">Single Bed</text>
 <rect x="836.1600000000001" y="291.6" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="836.8800000000001" y="296.4" font-size="7">Single Bed</text>
-<rect x="836.1600000000001" y="267.6" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="836.8800000000001" y="272.4" font-size="7">Single Bed</text>
 <rect x="848.1600000000001" y="303.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="848.8800000000001" y="308.64" font-size="7">Chest</text>
-<rect x="860.1600000000001" y="303.84000000000003" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="860.8800000000001" y="308.64" font-size="7">Table Rectangl</text>
-<rect x="866.1600000000001" y="291.84000000000003" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="866.8800000000001" y="296.64" font-size="7">Bench</text>
-<rect x="860.1600000000001" y="260.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="860.8800000000001" y="264.96" font-size="7">Barrel</text>
+<rect x="891.8399999999999" y="275.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="892.56" y="279.96" font-size="7">Table Rectangl</text>
+<rect x="879.8399999999999" y="282.24" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="880.56" y="287.03999999999996" font-size="7">Bench</text>
+<rect x="891.8399999999999" y="260.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="892.56" y="264.96" font-size="7">Barrel</text>
 <text x="837.0" y="314.0" font-weight="bold">Cottage</text>
 <line x1="870.0" y1="258.0" x2="882.0" y2="258.0" stroke="#a30" stroke-width="6"/>
 <line x1="846.0" y1="258.0" x2="858.0" y2="258.0" stroke="#39f" stroke-width="6"/>
@@ -762,24 +760,24 @@
 <line x1="864.0" y1="318.0" x2="876.0" y2="318.0" stroke="#39f" stroke-width="6"/>
 <text x="836.0" y="266.0" font-size="7" fill="#123">Cottage</text>
 <rect x="624.0" y="138.0" width="72" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="648.0" y="184.8" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="648.0" y="180.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="650.4000000000001" y="164.39999999999998" width="19.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="626.16" y="140.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="626.88" y="144.96" font-size="7">Brick Cooking </text>
-<rect x="638.16" y="140.16" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="638.88" y="144.96" font-size="7">Firewood Pile</text>
+<rect x="626.16" y="152.16" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="626.88" y="156.96" font-size="7">Firewood Pile</text>
 <rect x="681.84" y="171.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="682.5600000000001" y="176.64000000000001" font-size="7">Single Bed</text>
-<rect x="681.84" y="140.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="682.5600000000001" y="144.96" font-size="7">Single Bed</text>
+<rect x="681.84" y="147.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="682.5600000000001" y="152.64000000000001" font-size="7">Single Bed</text>
 <rect x="669.84" y="140.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="670.5600000000001" y="144.96" font-size="7">Chest</text>
-<rect x="626.16" y="158.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="626.88" y="162.96" font-size="7">Table Rectangl</text>
-<rect x="638.16" y="160.8" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="638.88" y="165.60000000000002" font-size="7">Bench</text>
-<rect x="626.16" y="182.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="626.88" y="186.96" font-size="7">Barrel</text>
+<rect x="645.84" y="140.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="646.5600000000001" y="144.96" font-size="7">Table Rectangl</text>
+<rect x="653.16" y="152.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="653.88" y="156.96" font-size="7">Bench</text>
+<rect x="636.84" y="186.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="637.5600000000001" y="191.64000000000001" font-size="7">Barrel</text>
 <text x="627.0" y="194.0" font-weight="bold">Cottage</text>
 <line x1="648.0" y1="198.0" x2="660.0" y2="198.0" stroke="#a30" stroke-width="6"/>
 <line x1="672.0" y1="198.0" x2="684.0" y2="198.0" stroke="#39f" stroke-width="6"/>
@@ -787,7 +785,7 @@
 <line x1="654.0" y1="138.0" x2="666.0" y2="138.0" stroke="#39f" stroke-width="6"/>
 <text x="626.0" y="146.0" font-size="7" fill="#123">Cottage</text>
 <rect x="210.0" y="708.0" width="60" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="210.0" y="750.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="210.0" y="750.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="236.39999999999998" y="734.4000000000001" width="7.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="212.16" y="710.16" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="212.88" y="714.96" font-size="7">Brick Oven A</text>
@@ -795,24 +793,22 @@
 <text x="212.88" y="738.96" font-size="7">Firewood Pile</text>
 <rect x="255.84" y="710.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="256.56" y="714.96" font-size="7">Single Bed</text>
-<rect x="255.84" y="734.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="256.56" y="738.96" font-size="7">Single Bed</text>
+<rect x="255.84" y="741.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="256.56" y="746.64" font-size="7">Single Bed</text>
 <rect x="243.84" y="725.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="244.56" y="729.96" font-size="7">Chest</text>
-<rect x="231.84" y="753.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="232.56" y="758.64" font-size="7">Table Rectangl</text>
-<rect x="224.16" y="741.5999999999999" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="224.88" y="746.4" font-size="7">Bench</text>
+<rect x="228.0" y="753.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="228.71999999999997" y="758.64" font-size="7">Table Rectangl</text>
+<rect x="230.16" y="741.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="230.88" y="746.64" font-size="7">Bench</text>
 <rect x="242.16" y="710.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="242.88" y="714.96" font-size="7">Stool</text>
-<rect x="223.44" y="757.4399999999999" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="224.16" y="762.24" font-size="7">Basket</text>
 <rect x="236.16" y="725.16" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="236.88" y="729.96" font-size="7">Bucket</text>
 <text x="213.0" y="764.0" font-weight="bold">Living room</text>
 <rect x="174.0" y="708.0" width="36" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="186.0" y="708.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
-<rect x="186.0" y="754.8" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="186.0" y="708.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
+<rect x="186.0" y="750.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="196.79999999999998" y="750.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="174.0" y="750.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="186.0" y="708.0" width="12.0" height="60.0" fill="#f6c" opacity=".35"/>
@@ -821,38 +817,34 @@
 <rect x="186.0" y="708.0" width="12.0" height="54.0" fill="#f6c" opacity=".35"/>
 <rect x="174.0" y="750.0" width="24.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="186.0" y="708.0" width="12.0" height="54.0" fill="#f6c" opacity=".35"/>
-<rect x="198.84" y="710.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="199.56" y="714.96" font-size="7">Barrel</text>
-<rect x="198.84" y="719.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="199.56" y="723.96" font-size="7">Barrel</text>
+<rect x="176.16" y="710.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="176.88" y="714.96" font-size="7">Barrel</text>
 <rect x="176.16" y="719.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="176.88" y="723.96" font-size="7">Sack</text>
-<rect x="176.16" y="710.16" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="176.88" y="714.96" font-size="7">Broom</text>
-<rect x="176.16" y="728.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="176.88" y="732.96" font-size="7">Firewood Stack</text>
-<rect x="199.44" y="728.16" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="200.16" y="732.96" font-size="7">Basket Lid</text>
+<text x="176.88" y="723.96" font-size="7">Barrel</text>
+<rect x="198.84" y="710.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="199.56" y="714.96" font-size="7">Sack</text>
+<rect x="198.84" y="728.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="199.56" y="732.96" font-size="7">Firewood Stack</text>
+<rect x="199.44" y="719.76" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="200.16" y="724.56" font-size="7">Basket Lid</text>
 <text x="177.0" y="764.0" font-weight="bold">Passage</text>
 <rect x="126.0" y="708.0" width="48" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="160.8" y="750.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
-<rect x="144.0" y="708.0" width="24.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="156.0" y="750.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="144.0" y="708.0" width="24.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="150.0" y="708.0" width="12.0" height="54.0" fill="#f6c" opacity=".35"/>
 <rect x="150.0" y="750.0" width="24.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="128.16" y="710.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="128.88" y="714.96" font-size="7">Trough Grain</text>
-<rect x="128.16" y="741.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="128.88" y="746.64" font-size="7">Trough Grain</text>
-<rect x="162.84" y="732.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="163.56" y="737.64" font-size="7">Hay Bale A 01</text>
+<rect x="128.16" y="734.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="128.88" y="738.96" font-size="7">Trough Grain</text>
+<rect x="162.84" y="734.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="163.56" y="738.96" font-size="7">Hay Bale A 01</text>
 <rect x="140.16" y="756.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="140.88" y="761.64" font-size="7">Hay Bale A 01</text>
-<rect x="163.44" y="724.4399999999999" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="164.16" y="729.24" font-size="7">Bucket</text>
-<rect x="164.64000000000001" y="741.84" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="165.36" y="746.64" font-size="7">Rope 01</text>
-<rect x="128.16" y="734.64" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="128.88" y="739.4399999999999" font-size="7">Basket</text>
+<rect x="132.96" y="758.64" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="133.68" y="763.4399999999999" font-size="7">Rope 01</text>
+<rect x="164.64000000000001" y="726.96" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="165.36" y="731.76" font-size="7">Basket</text>
 <text x="129.0" y="764.0" font-weight="bold">Byre</text>
 <line x1="186.0" y1="708.0" x2="198.0" y2="708.0" stroke="#a30" stroke-width="6"/>
 <line x1="186.0" y1="768.0" x2="198.0" y2="768.0" stroke="#a30" stroke-width="6"/>
@@ -865,32 +857,30 @@
 <line x1="144.0" y1="768.0" x2="156.0" y2="768.0" stroke="#39f" stroke-width="6"/>
 <text x="128.0" y="716.0" font-size="7" fill="#123">Farmhouse</text>
 <rect x="864.0" y="132.0" width="60" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="910.8000000000001" y="138.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="906.0" y="138.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="890.4000000000001" y="158.39999999999998" width="7.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
-<rect x="897.8399999999999" y="165.84" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="898.56" y="170.64000000000001" font-size="7">Brick Oven A</text>
-<rect x="909.8399999999999" y="153.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="910.56" y="158.64000000000001" font-size="7">Firewood Pile</text>
+<rect x="897.8399999999999" y="165.60000000000002" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="898.56" y="170.4" font-size="7">Brick Oven A</text>
+<rect x="909.8399999999999" y="153.60000000000002" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="910.56" y="158.4" font-size="7">Firewood Pile</text>
 <rect x="866.1600000000001" y="165.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="866.8800000000001" y="170.64000000000001" font-size="7">Single Bed</text>
-<rect x="866.1600000000001" y="134.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="866.8800000000001" y="138.96" font-size="7">Single Bed</text>
-<rect x="878.1600000000001" y="165.60000000000002" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="878.8800000000001" y="170.4" font-size="7">Chest</text>
-<rect x="878.1600000000001" y="134.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="878.8800000000001" y="138.96" font-size="7">Table Rectangl</text>
-<rect x="885.8399999999999" y="146.39999999999998" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="886.56" y="151.2" font-size="7">Bench</text>
-<rect x="881.1600000000001" y="177.60000000000002" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="881.8800000000001" y="182.4" font-size="7">Stool</text>
-<rect x="902.1600000000001" y="134.16" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="902.8800000000001" y="138.96" font-size="7">Basket</text>
-<rect x="890.64" y="165.60000000000002" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="891.36" y="170.4" font-size="7">Bucket</text>
+<rect x="866.1600000000001" y="134.39999999999998" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="866.8800000000001" y="139.2" font-size="7">Single Bed</text>
+<rect x="878.1600000000001" y="149.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="878.8800000000001" y="153.96" font-size="7">Chest</text>
+<rect x="882.0" y="134.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="882.72" y="138.96" font-size="7">Table Rectangl</text>
+<rect x="878.1600000000001" y="161.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="878.8800000000001" y="165.96" font-size="7">Bench</text>
+<rect x="890.1600000000001" y="146.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="890.8800000000001" y="150.96" font-size="7">Stool</text>
+<rect x="890.64" y="182.64000000000001" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="891.36" y="187.44" font-size="7">Bucket</text>
 <text x="867.0" y="188.0" font-weight="bold">Living room</text>
 <rect x="924.0" y="132.0" width="36" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="936.0" y="178.8" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
-<rect x="936.0" y="132.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="936.0" y="174.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
+<rect x="936.0" y="132.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="924.0" y="138.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="946.8000000000001" y="138.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="936.0" y="132.0" width="12.0" height="60.0" fill="#f6c" opacity=".35"/>
@@ -899,38 +889,34 @@
 <rect x="936.0" y="138.0" width="12.0" height="54.0" fill="#f6c" opacity=".35"/>
 <rect x="936.0" y="138.0" width="24.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="936.0" y="138.0" width="12.0" height="54.0" fill="#f6c" opacity=".35"/>
-<rect x="926.1600000000001" y="180.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="926.8800000000001" y="185.64000000000001" font-size="7">Barrel</text>
+<rect x="948.8399999999999" y="180.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="949.56" y="185.64000000000001" font-size="7">Barrel</text>
 <rect x="948.8399999999999" y="171.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="949.56" y="176.64000000000001" font-size="7">Barrel</text>
+<rect x="926.1600000000001" y="180.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="926.8800000000001" y="185.64000000000001" font-size="7">Sack</text>
 <rect x="948.8399999999999" y="162.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="949.56" y="167.64000000000001" font-size="7">Sack</text>
-<rect x="949.44" y="181.44" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="950.1600000000001" y="186.24" font-size="7">Broom</text>
-<rect x="926.1600000000001" y="162.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="926.8800000000001" y="167.64000000000001" font-size="7">Firewood Stack</text>
-<rect x="926.1600000000001" y="171.84" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="926.8800000000001" y="176.64000000000001" font-size="7">Basket Lid</text>
+<text x="949.56" y="167.64000000000001" font-size="7">Firewood Stack</text>
+<rect x="926.1600000000001" y="163.44" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="926.8800000000001" y="168.24" font-size="7">Basket Lid</text>
 <text x="927.0" y="188.0" font-weight="bold">Passage</text>
 <rect x="960.0" y="132.0" width="48" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="960.0" y="138.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
-<rect x="966.0" y="178.8" width="24.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="960.0" y="138.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="966.0" y="174.0" width="24.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="972.0" y="138.0" width="12.0" height="54.0" fill="#f6c" opacity=".35"/>
 <rect x="960.0" y="138.0" width="24.0" height="12.0" fill="#f6c" opacity=".35"/>
+<rect x="993.8399999999999" y="165.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="994.56" y="170.64000000000001" font-size="7">Trough Grain</text>
 <rect x="993.8399999999999" y="134.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="994.56" y="138.96" font-size="7">Trough Grain</text>
-<rect x="993.8399999999999" y="158.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="994.56" y="162.96" font-size="7">Trough Grain</text>
+<rect x="984.8399999999999" y="134.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="985.56" y="138.96" font-size="7">Hay Bale A 01</text>
 <rect x="962.1600000000001" y="158.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="962.8800000000001" y="162.96" font-size="7">Hay Bale A 01</text>
-<rect x="962.1600000000001" y="167.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="962.8800000000001" y="171.96" font-size="7">Hay Bale A 01</text>
-<rect x="985.44" y="134.16" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="986.1600000000001" y="138.96" font-size="7">Bucket</text>
 <rect x="962.1600000000001" y="150.96" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="962.8800000000001" y="155.76" font-size="7">Rope 01</text>
-<rect x="998.64" y="182.64000000000001" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="999.36" y="187.44" font-size="7">Basket</text>
+<rect x="998.64" y="158.64000000000001" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="999.36" y="163.44" font-size="7">Basket</text>
 <text x="963.0" y="188.0" font-weight="bold">Byre</text>
 <line x1="936.0" y1="192.0" x2="948.0" y2="192.0" stroke="#a30" stroke-width="6"/>
 <line x1="936.0" y1="132.0" x2="948.0" y2="132.0" stroke="#a30" stroke-width="6"/>
@@ -943,7 +929,7 @@
 <line x1="978.0" y1="132.0" x2="990.0" y2="132.0" stroke="#39f" stroke-width="6"/>
 <text x="866.0" y="140.0" font-size="7" fill="#123">Farmhouse</text>
 <rect x="594.0" y="702.0" width="72" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="630.0" y="702.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="630.0" y="702.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="620.4000000000001" y="728.4000000000001" width="19.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="651.84" y="747.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="652.5600000000001" y="752.64" font-size="7">Brick Cooking </text>
@@ -955,12 +941,12 @@
 <text x="596.88" y="732.96" font-size="7">Single Bed</text>
 <rect x="608.16" y="747.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="608.88" y="752.64" font-size="7">Chest</text>
-<rect x="651.84" y="722.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="652.5600000000001" y="726.96" font-size="7">Table Rectangl</text>
-<rect x="639.5999999999999" y="723.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="640.3199999999999" y="728.64" font-size="7">Bench</text>
-<rect x="651.5999999999999" y="704.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="652.3199999999999" y="708.96" font-size="7">Barrel</text>
+<rect x="651.84" y="713.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="652.5600000000001" y="717.96" font-size="7">Table Rectangl</text>
+<rect x="639.84" y="723.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="640.5600000000001" y="728.64" font-size="7">Bench</text>
+<rect x="654.84" y="704.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="655.5600000000001" y="708.96" font-size="7">Barrel</text>
 <text x="597.0" y="758.0" font-weight="bold">Cottage</text>
 <line x1="630.0" y1="702.0" x2="642.0" y2="702.0" stroke="#a30" stroke-width="6"/>
 <line x1="606.0" y1="702.0" x2="618.0" y2="702.0" stroke="#39f" stroke-width="6"/>
@@ -968,22 +954,22 @@
 <line x1="624.0" y1="762.0" x2="636.0" y2="762.0" stroke="#39f" stroke-width="6"/>
 <text x="596.0" y="710.0" font-size="7" fill="#123">Cottage</text>
 <rect x="942.0" y="480.0" width="72" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="978.0" y="480.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="978.0" y="480.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="968.4000000000001" y="506.40000000000003" width="19.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="999.8399999999999" y="525.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="1000.56" y="530.64" font-size="7">Brick Cooking </text>
-<rect x="990.24" y="528.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="990.96" y="533.04" font-size="7">Firewood Pile</text>
+<rect x="1002.24" y="516.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="1002.96" y="521.04" font-size="7">Firewood Pile</text>
+<rect x="944.1600000000001" y="513.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="944.8800000000001" y="518.64" font-size="7">Single Bed</text>
 <rect x="944.1600000000001" y="482.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="944.8800000000001" y="486.96" font-size="7">Single Bed</text>
-<rect x="944.1600000000001" y="506.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="944.8800000000001" y="510.96" font-size="7">Single Bed</text>
 <rect x="956.1600000000001" y="525.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="956.8800000000001" y="530.64" font-size="7">Chest</text>
-<rect x="999.8399999999999" y="501.84000000000003" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="1000.56" y="506.64" font-size="7">Table Rectangl</text>
-<rect x="987.8399999999999" y="493.20000000000005" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="988.56" y="498.0" font-size="7">Bench</text>
+<rect x="971.1600000000001" y="525.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="971.8800000000001" y="530.64" font-size="7">Table Rectangl</text>
+<rect x="971.1600000000001" y="513.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="971.8800000000001" y="518.64" font-size="7">Bench</text>
 <rect x="990.8399999999999" y="482.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="991.56" y="486.96" font-size="7">Barrel</text>
 <text x="945.0" y="536.0" font-weight="bold">Cottage</text>
@@ -993,32 +979,30 @@
 <line x1="972.0" y1="540.0" x2="984.0" y2="540.0" stroke="#39f" stroke-width="6"/>
 <text x="944.0" y="488.0" font-size="7" fill="#123">Cottage</text>
 <rect x="120.0" y="138.0" width="60" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="166.8" y="144.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="162.0" y="144.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="146.39999999999998" y="164.39999999999998" width="7.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
-<rect x="153.60000000000002" y="171.84" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="154.32000000000002" y="176.64000000000001" font-size="7">Brick Oven A</text>
-<rect x="165.84" y="159.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="166.56" y="164.64000000000001" font-size="7">Firewood Pile</text>
+<rect x="153.84" y="171.60000000000002" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="154.56" y="176.4" font-size="7">Brick Oven A</text>
+<rect x="165.84" y="159.60000000000002" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="166.56" y="164.4" font-size="7">Firewood Pile</text>
 <rect x="122.16" y="171.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="122.88" y="176.64000000000001" font-size="7">Single Bed</text>
-<rect x="122.16" y="147.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="122.88" y="152.64000000000001" font-size="7">Single Bed</text>
-<rect x="134.16" y="170.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="134.88" y="174.96" font-size="7">Chest</text>
-<rect x="134.16" y="140.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="134.88" y="144.96" font-size="7">Table Rectangl</text>
-<rect x="141.84" y="152.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="142.56" y="156.96" font-size="7">Bench</text>
-<rect x="137.16" y="183.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="137.88" y="188.64000000000001" font-size="7">Stool</text>
-<rect x="158.39999999999998" y="140.16" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="159.12" y="144.96" font-size="7">Basket</text>
-<rect x="146.39999999999998" y="176.16" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="147.12" y="180.96" font-size="7">Bucket</text>
+<rect x="122.16" y="140.39999999999998" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="122.88" y="145.2" font-size="7">Single Bed</text>
+<rect x="134.16" y="171.60000000000002" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="134.88" y="176.4" font-size="7">Chest</text>
+<rect x="137.16" y="140.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="137.88" y="144.96" font-size="7">Table Rectangl</text>
+<rect x="138.0" y="152.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="138.72" y="156.96" font-size="7">Bench</text>
+<rect x="134.16" y="183.60000000000002" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="134.88" y="188.4" font-size="7">Stool</text>
+<rect x="146.64000000000001" y="188.64000000000001" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="147.36" y="193.44" font-size="7">Bucket</text>
 <text x="123.0" y="194.0" font-weight="bold">Living room</text>
 <rect x="180.0" y="138.0" width="36" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="192.0" y="184.8" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
-<rect x="192.0" y="138.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="192.0" y="180.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
+<rect x="192.0" y="138.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="180.0" y="144.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="202.79999999999998" y="144.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="192.0" y="138.0" width="12.0" height="60.0" fill="#f6c" opacity=".35"/>
@@ -1027,38 +1011,34 @@
 <rect x="192.0" y="144.0" width="12.0" height="54.0" fill="#f6c" opacity=".35"/>
 <rect x="192.0" y="144.0" width="24.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="192.0" y="144.0" width="12.0" height="54.0" fill="#f6c" opacity=".35"/>
-<rect x="182.16" y="167.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="182.88" y="171.96" font-size="7">Barrel</text>
-<rect x="182.16" y="176.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="182.88" y="180.96" font-size="7">Barrel</text>
-<rect x="182.16" y="158.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="182.88" y="162.96" font-size="7">Sack</text>
-<rect x="205.44" y="187.44" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="206.16" y="192.24" font-size="7">Broom</text>
+<rect x="204.84" y="186.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="205.56" y="191.64000000000001" font-size="7">Barrel</text>
+<rect x="182.16" y="177.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="182.88" y="182.64000000000001" font-size="7">Barrel</text>
 <rect x="182.16" y="186.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="182.88" y="191.64000000000001" font-size="7">Firewood Stack</text>
-<rect x="205.44" y="176.16" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="206.16" y="180.96" font-size="7">Basket Lid</text>
+<text x="182.88" y="191.64000000000001" font-size="7">Sack</text>
+<rect x="204.84" y="168.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="205.56" y="173.64000000000001" font-size="7">Firewood Stack</text>
+<rect x="182.16" y="169.44" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="182.88" y="174.24" font-size="7">Basket Lid</text>
 <text x="183.0" y="194.0" font-weight="bold">Passage</text>
 <rect x="216.0" y="138.0" width="48" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="216.0" y="144.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
-<rect x="222.0" y="184.8" width="24.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="216.0" y="144.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="222.0" y="180.0" width="24.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="228.0" y="144.0" width="12.0" height="54.0" fill="#f6c" opacity=".35"/>
 <rect x="216.0" y="144.0" width="24.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="249.84" y="171.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="250.56" y="176.64000000000001" font-size="7">Trough Grain</text>
-<rect x="249.84" y="140.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="250.56" y="144.96" font-size="7">Trough Grain</text>
-<rect x="218.16" y="164.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="218.88" y="168.96" font-size="7">Hay Bale A 01</text>
-<rect x="218.16" y="173.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="218.88" y="177.96" font-size="7">Hay Bale A 01</text>
-<rect x="241.44" y="140.16" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="242.16" y="144.96" font-size="7">Bucket</text>
-<rect x="254.64" y="164.64000000000001" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="255.35999999999996" y="169.44" font-size="7">Rope 01</text>
-<rect x="218.16" y="156.96" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="218.88" y="161.76" font-size="7">Basket</text>
+<rect x="249.84" y="147.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="250.56" y="152.64000000000001" font-size="7">Trough Grain</text>
+<rect x="240.84" y="140.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="241.56" y="144.96" font-size="7">Hay Bale A 01</text>
+<rect x="218.16" y="162.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="218.88" y="167.64000000000001" font-size="7">Hay Bale A 01</text>
+<rect x="254.64" y="140.64000000000001" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="255.35999999999996" y="145.44" font-size="7">Rope 01</text>
+<rect x="218.16" y="171.84" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="218.88" y="176.64000000000001" font-size="7">Basket</text>
 <text x="219.0" y="194.0" font-weight="bold">Byre</text>
 <line x1="192.0" y1="198.0" x2="204.0" y2="198.0" stroke="#a30" stroke-width="6"/>
 <line x1="192.0" y1="138.0" x2="204.0" y2="138.0" stroke="#a30" stroke-width="6"/>
@@ -1071,24 +1051,24 @@
 <line x1="234.0" y1="138.0" x2="246.0" y2="138.0" stroke="#39f" stroke-width="6"/>
 <text x="122.0" y="146.0" font-size="7" fill="#123">Farmhouse</text>
 <rect x="678.0" y="702.0" width="72" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="714.0" y="702.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="714.0" y="702.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="704.4000000000001" y="728.4000000000001" width="19.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="735.84" y="747.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="736.5600000000001" y="752.64" font-size="7">Brick Cooking </text>
-<rect x="738.24" y="738.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="738.96" y="743.04" font-size="7">Firewood Pile</text>
+<rect x="726.24" y="750.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="726.96" y="755.04" font-size="7">Firewood Pile</text>
 <rect x="680.16" y="704.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="680.88" y="708.96" font-size="7">Single Bed</text>
-<rect x="680.16" y="728.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="680.88" y="732.96" font-size="7">Single Bed</text>
+<rect x="680.16" y="735.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="680.88" y="740.64" font-size="7">Single Bed</text>
 <rect x="692.16" y="747.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="692.88" y="752.64" font-size="7">Chest</text>
-<rect x="704.16" y="747.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="704.88" y="752.64" font-size="7">Table Rectangl</text>
-<rect x="701.16" y="735.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="701.88" y="740.64" font-size="7">Bench</text>
-<rect x="738.84" y="704.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="739.5600000000001" y="708.96" font-size="7">Barrel</text>
+<rect x="735.84" y="720.0" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="736.5600000000001" y="724.8" font-size="7">Table Rectangl</text>
+<rect x="723.84" y="720.0" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="724.5600000000001" y="724.8" font-size="7">Bench</text>
+<rect x="726.84" y="704.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="727.5600000000001" y="708.96" font-size="7">Barrel</text>
 <text x="681.0" y="758.0" font-weight="bold">Cottage</text>
 <line x1="714.0" y1="702.0" x2="726.0" y2="702.0" stroke="#a30" stroke-width="6"/>
 <line x1="690.0" y1="702.0" x2="702.0" y2="702.0" stroke="#39f" stroke-width="6"/>
@@ -1096,24 +1076,24 @@
 <line x1="708.0" y1="762.0" x2="720.0" y2="762.0" stroke="#39f" stroke-width="6"/>
 <text x="680.0" y="710.0" font-size="7" fill="#123">Cottage</text>
 <rect x="924.0" y="366.0" width="72" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="948.0" y="412.79999999999995" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="948.0" y="408.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="950.4000000000001" y="392.40000000000003" width="19.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="926.1600000000001" y="368.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="926.8800000000001" y="372.96" font-size="7">Brick Cooking </text>
-<rect x="926.1600000000001" y="380.15999999999997" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="926.8800000000001" y="384.96" font-size="7">Firewood Pile</text>
+<rect x="938.1600000000001" y="368.15999999999997" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="938.8800000000001" y="372.96" font-size="7">Firewood Pile</text>
 <rect x="981.8399999999999" y="399.84000000000003" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="982.56" y="404.64" font-size="7">Single Bed</text>
-<rect x="981.8399999999999" y="375.84000000000003" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="982.56" y="380.64" font-size="7">Single Bed</text>
-<rect x="969.5999999999999" y="368.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="970.3199999999999" y="372.96" font-size="7">Chest</text>
-<rect x="945.5999999999999" y="368.15999999999997" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="946.3199999999999" y="372.96" font-size="7">Table Rectangl</text>
-<rect x="957.8399999999999" y="380.15999999999997" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="958.56" y="384.96" font-size="7">Bench</text>
-<rect x="935.76" y="414.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="936.48" y="419.64" font-size="7">Barrel</text>
+<rect x="981.8399999999999" y="368.4" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="982.56" y="373.2" font-size="7">Single Bed</text>
+<rect x="969.8399999999999" y="368.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="970.56" y="372.96" font-size="7">Chest</text>
+<rect x="926.1600000000001" y="384.0" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="926.8800000000001" y="388.79999999999995" font-size="7">Table Rectangl</text>
+<rect x="938.1600000000001" y="383.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="938.8800000000001" y="387.96" font-size="7">Bench</text>
+<rect x="926.1600000000001" y="408.0" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="926.8800000000001" y="412.79999999999995" font-size="7">Barrel</text>
 <text x="927.0" y="422.0" font-weight="bold">Cottage</text>
 <line x1="948.0" y1="426.0" x2="960.0" y2="426.0" stroke="#a30" stroke-width="6"/>
 <line x1="972.0" y1="426.0" x2="984.0" y2="426.0" stroke="#39f" stroke-width="6"/>
@@ -1121,24 +1101,24 @@
 <line x1="954.0" y1="366.0" x2="966.0" y2="366.0" stroke="#39f" stroke-width="6"/>
 <text x="926.0" y="374.0" font-size="7" fill="#123">Cottage</text>
 <rect x="192.0" y="582.0" width="72" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="216.0" y="628.8" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="216.0" y="624.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="218.39999999999998" y="608.4000000000001" width="19.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="194.16" y="584.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="194.88" y="588.96" font-size="7">Brick Cooking </text>
-<rect x="206.39999999999998" y="584.16" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="207.11999999999998" y="588.96" font-size="7">Firewood Pile</text>
-<rect x="249.84" y="584.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="250.56" y="588.96" font-size="7">Single Bed</text>
-<rect x="249.84" y="608.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="250.56" y="612.96" font-size="7">Single Bed</text>
+<rect x="194.16" y="596.16" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="194.88" y="600.96" font-size="7">Firewood Pile</text>
+<rect x="249.84" y="615.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="250.56" y="620.64" font-size="7">Single Bed</text>
+<rect x="249.84" y="591.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="250.56" y="596.64" font-size="7">Single Bed</text>
 <rect x="237.84" y="584.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="238.56" y="588.96" font-size="7">Chest</text>
-<rect x="194.39999999999998" y="602.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="195.11999999999998" y="606.96" font-size="7">Table Rectangl</text>
-<rect x="206.39999999999998" y="593.76" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="207.11999999999998" y="598.56" font-size="7">Bench</text>
-<rect x="206.39999999999998" y="630.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="207.11999999999998" y="635.64" font-size="7">Barrel</text>
+<rect x="213.84" y="584.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="214.56" y="588.96" font-size="7">Table Rectangl</text>
+<rect x="225.84" y="596.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="226.56" y="600.96" font-size="7">Bench</text>
+<rect x="206.16" y="630.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="206.88" y="635.64" font-size="7">Barrel</text>
 <text x="195.0" y="638.0" font-weight="bold">Cottage</text>
 <line x1="216.0" y1="642.0" x2="228.0" y2="642.0" stroke="#a30" stroke-width="6"/>
 <line x1="240.0" y1="642.0" x2="252.0" y2="642.0" stroke="#39f" stroke-width="6"/>
@@ -1146,24 +1126,24 @@
 <line x1="222.0" y1="582.0" x2="234.0" y2="582.0" stroke="#39f" stroke-width="6"/>
 <text x="194.0" y="590.0" font-size="7" fill="#123">Cottage</text>
 <rect x="726.0" y="138.0" width="72" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="750.0" y="184.8" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="750.0" y="180.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="752.4000000000001" y="164.39999999999998" width="19.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="728.16" y="140.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="728.88" y="144.96" font-size="7">Brick Cooking </text>
 <rect x="740.16" y="140.16" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="740.88" y="144.96" font-size="7">Firewood Pile</text>
-<rect x="783.8399999999999" y="140.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="784.56" y="144.96" font-size="7">Single Bed</text>
 <rect x="783.8399999999999" y="171.60000000000002" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="784.56" y="176.4" font-size="7">Single Bed</text>
+<rect x="783.8399999999999" y="140.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="784.56" y="144.96" font-size="7">Single Bed</text>
 <rect x="771.8399999999999" y="140.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="772.56" y="144.96" font-size="7">Chest</text>
-<rect x="728.16" y="158.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="728.88" y="162.96" font-size="7">Table Rectangl</text>
-<rect x="740.16" y="158.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="740.88" y="162.96" font-size="7">Bench</text>
-<rect x="762.84" y="186.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="763.5600000000001" y="191.64000000000001" font-size="7">Barrel</text>
+<rect x="728.16" y="156.0" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="728.88" y="160.8" font-size="7">Table Rectangl</text>
+<rect x="740.16" y="155.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="740.88" y="159.96" font-size="7">Bench</text>
+<rect x="728.16" y="180.0" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="728.88" y="184.8" font-size="7">Barrel</text>
 <text x="729.0" y="194.0" font-weight="bold">Cottage</text>
 <line x1="750.0" y1="198.0" x2="762.0" y2="198.0" stroke="#a30" stroke-width="6"/>
 <line x1="774.0" y1="198.0" x2="786.0" y2="198.0" stroke="#39f" stroke-width="6"/>
@@ -1171,32 +1151,30 @@
 <line x1="756.0" y1="138.0" x2="768.0" y2="138.0" stroke="#39f" stroke-width="6"/>
 <text x="728.0" y="146.0" font-size="7" fill="#123">Cottage</text>
 <rect x="108.0" y="480.0" width="60" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="108.0" y="522.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="108.0" y="522.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="134.39999999999998" y="506.40000000000003" width="7.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
-<rect x="110.16" y="482.15999999999997" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="110.88" y="486.96" font-size="7">Brick Oven A</text>
-<rect x="110.16" y="506.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="110.88" y="510.96" font-size="7">Firewood Pile</text>
+<rect x="110.39999999999999" y="482.15999999999997" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="111.12" y="486.96" font-size="7">Brick Oven A</text>
+<rect x="134.39999999999998" y="482.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="135.12" y="486.96" font-size="7">Firewood Pile</text>
 <rect x="153.84" y="482.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="154.56" y="486.96" font-size="7">Single Bed</text>
-<rect x="153.84" y="506.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="154.56" y="510.96" font-size="7">Single Bed</text>
-<rect x="141.84" y="494.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="142.56" y="498.96" font-size="7">Chest</text>
-<rect x="129.84" y="525.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="130.56" y="530.64" font-size="7">Table Rectangl</text>
+<rect x="153.84" y="513.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="154.56" y="518.64" font-size="7">Single Bed</text>
+<rect x="141.84" y="494.40000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="142.56" y="499.20000000000005" font-size="7">Chest</text>
+<rect x="126.0" y="525.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="126.72" y="530.64" font-size="7">Table Rectangl</text>
 <rect x="128.16" y="513.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="128.88" y="518.64" font-size="7">Bench</text>
-<rect x="137.16" y="482.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="137.88" y="486.96" font-size="7">Stool</text>
-<rect x="121.44" y="529.4399999999999" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="122.16" y="534.24" font-size="7">Basket</text>
-<rect x="122.64000000000001" y="506.15999999999997" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="123.36000000000001" y="510.96" font-size="7">Bucket</text>
+<rect x="110.16" y="510.0" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="110.88" y="514.8" font-size="7">Stool</text>
+<rect x="125.16" y="506.15999999999997" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="125.88" y="510.96" font-size="7">Bucket</text>
 <text x="111.0" y="536.0" font-weight="bold">Living room</text>
 <rect x="72.0" y="480.0" width="36" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="84.0" y="480.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
-<rect x="84.0" y="526.8" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="84.0" y="480.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
+<rect x="84.0" y="522.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="94.80000000000001" y="522.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="72.0" y="522.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="84.0" y="480.0" width="12.0" height="60.0" fill="#f6c" opacity=".35"/>
@@ -1207,36 +1185,32 @@
 <rect x="84.0" y="480.0" width="12.0" height="54.0" fill="#f6c" opacity=".35"/>
 <rect x="74.16" y="482.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="74.88" y="486.96" font-size="7">Barrel</text>
-<rect x="74.16" y="491.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="74.88" y="495.96" font-size="7">Barrel</text>
 <rect x="96.84" y="491.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="97.56" y="495.96" font-size="7">Sack</text>
-<rect x="97.44" y="482.15999999999997" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="98.16" y="486.96" font-size="7">Broom</text>
-<rect x="74.16" y="500.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="74.88" y="504.96" font-size="7">Firewood Stack</text>
+<text x="97.56" y="495.96" font-size="7">Barrel</text>
+<rect x="96.84" y="482.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="97.56" y="486.96" font-size="7">Sack</text>
+<rect x="96.84" y="500.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="97.56" y="504.96" font-size="7">Firewood Stack</text>
 <rect x="97.44" y="509.15999999999997" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="98.16" y="513.96" font-size="7">Basket Lid</text>
 <text x="75.0" y="536.0" font-weight="bold">Passage</text>
 <rect x="24.0" y="480.0" width="48" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="58.800000000000004" y="522.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
-<rect x="42.0" y="480.0" width="24.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="54.0" y="522.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="42.0" y="480.0" width="24.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="48.0" y="480.0" width="12.0" height="54.0" fill="#f6c" opacity=".35"/>
 <rect x="48.0" y="522.0" width="24.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="26.160000000000004" y="482.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="26.880000000000003" y="486.96" font-size="7">Trough Grain</text>
-<rect x="26.160000000000004" y="513.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="26.880000000000003" y="518.64" font-size="7">Trough Grain</text>
+<rect x="26.160000000000004" y="506.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="26.880000000000003" y="510.96" font-size="7">Trough Grain</text>
+<rect x="60.84" y="506.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="61.56" y="510.96" font-size="7">Hay Bale A 01</text>
 <rect x="38.160000000000004" y="528.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="38.88" y="533.64" font-size="7">Hay Bale A 01</text>
-<rect x="60.84" y="504.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="61.56" y="509.64" font-size="7">Hay Bale A 01</text>
-<rect x="61.44" y="496.43999999999994" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="62.16" y="501.23999999999995" font-size="7">Bucket</text>
-<rect x="26.160000000000004" y="506.15999999999997" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="26.880000000000003" y="510.96" font-size="7">Rope 01</text>
-<rect x="62.64" y="513.84" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="63.35999999999999" y="518.64" font-size="7">Basket</text>
+<rect x="26.160000000000004" y="530.16" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="26.880000000000003" y="534.96" font-size="7">Rope 01</text>
+<rect x="62.64" y="498.96" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="63.35999999999999" y="503.76" font-size="7">Basket</text>
 <text x="27.0" y="536.0" font-weight="bold">Byre</text>
 <line x1="84.0" y1="480.0" x2="96.0" y2="480.0" stroke="#a30" stroke-width="6"/>
 <line x1="84.0" y1="540.0" x2="96.0" y2="540.0" stroke="#a30" stroke-width="6"/>
@@ -1249,22 +1223,22 @@
 <line x1="42.0" y1="540.0" x2="54.0" y2="540.0" stroke="#39f" stroke-width="6"/>
 <text x="26.0" y="488.0" font-size="7" fill="#123">Farmhouse</text>
 <rect x="354.0" y="132.0" width="72" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="378.0" y="178.8" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="378.0" y="174.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="380.4" y="158.39999999999998" width="19.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="356.15999999999997" y="134.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="356.88" y="138.96" font-size="7">Brick Cooking </text>
 <rect x="368.15999999999997" y="134.16" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="368.88" y="138.96" font-size="7">Firewood Pile</text>
-<rect x="411.84000000000003" y="134.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="412.56000000000006" y="138.96" font-size="7">Single Bed</text>
+<rect x="411.84000000000003" y="134.39999999999998" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="412.56000000000006" y="139.2" font-size="7">Single Bed</text>
 <rect x="411.84000000000003" y="165.60000000000002" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="412.56000000000006" y="170.4" font-size="7">Single Bed</text>
 <rect x="399.84000000000003" y="134.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="400.56000000000006" y="138.96" font-size="7">Chest</text>
-<rect x="356.15999999999997" y="149.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="356.88" y="153.96" font-size="7">Table Rectangl</text>
-<rect x="368.4" y="146.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="369.12" y="150.96" font-size="7">Bench</text>
+<rect x="356.15999999999997" y="150.0" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="356.88" y="154.8" font-size="7">Table Rectangl</text>
+<rect x="368.15999999999997" y="146.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="368.88" y="150.96" font-size="7">Bench</text>
 <rect x="390.84000000000003" y="180.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="391.56000000000006" y="185.64000000000001" font-size="7">Barrel</text>
 <text x="357.0" y="188.0" font-weight="bold">Cottage</text>
@@ -1274,7 +1248,7 @@
 <line x1="384.0" y1="132.0" x2="396.0" y2="132.0" stroke="#39f" stroke-width="6"/>
 <text x="356.0" y="140.0" font-size="7" fill="#123">Cottage</text>
 <rect x="18.0" y="366.0" width="60" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="64.80000000000001" y="372.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="60.0" y="372.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="44.400000000000006" y="392.40000000000003" width="7.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="51.84" y="399.84000000000003" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="52.56" y="404.64" font-size="7">Brick Oven A</text>
@@ -1282,24 +1256,22 @@
 <text x="64.56" y="392.64" font-size="7">Firewood Pile</text>
 <rect x="20.16" y="399.84000000000003" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="20.88" y="404.64" font-size="7">Single Bed</text>
-<rect x="20.16" y="368.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="20.88" y="372.96" font-size="7">Single Bed</text>
-<rect x="32.160000000000004" y="383.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="32.88" y="387.96" font-size="7">Chest</text>
-<rect x="32.160000000000004" y="368.15999999999997" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="32.88" y="372.96" font-size="7">Table Rectangl</text>
-<rect x="32.400000000000006" y="395.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="33.120000000000005" y="399.96" font-size="7">Bench</text>
-<rect x="44.160000000000004" y="380.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="44.88" y="384.96" font-size="7">Stool</text>
-<rect x="56.16" y="368.15999999999997" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="56.879999999999995" y="372.96" font-size="7">Basket</text>
-<rect x="44.400000000000006" y="416.64" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="45.120000000000005" y="421.43999999999994" font-size="7">Bucket</text>
+<rect x="20.16" y="368.4" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="20.88" y="373.2" font-size="7">Single Bed</text>
+<rect x="32.160000000000004" y="380.4" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="32.88" y="385.20000000000005" font-size="7">Chest</text>
+<rect x="35.160000000000004" y="368.15999999999997" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="35.88" y="372.96" font-size="7">Table Rectangl</text>
+<rect x="32.400000000000006" y="392.40000000000003" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="33.120000000000005" y="397.20000000000005" font-size="7">Bench</text>
+<rect x="48.0" y="380.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="48.72" y="384.96" font-size="7">Stool</text>
+<rect x="44.64" y="416.40000000000003" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="45.36" y="421.20000000000005" font-size="7">Bucket</text>
 <text x="21.0" y="422.0" font-weight="bold">Living room</text>
 <rect x="78.0" y="366.0" width="36" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="90.0" y="412.79999999999995" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
-<rect x="90.0" y="366.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="90.0" y="408.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
+<rect x="90.0" y="366.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="78.0" y="372.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="100.80000000000001" y="372.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="90.0" y="366.0" width="12.0" height="60.0" fill="#f6c" opacity=".35"/>
@@ -1310,20 +1282,18 @@
 <rect x="90.0" y="372.0" width="12.0" height="54.0" fill="#f6c" opacity=".35"/>
 <rect x="80.16" y="414.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="80.88" y="419.64" font-size="7">Barrel</text>
-<rect x="102.84" y="405.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="103.56" y="410.64" font-size="7">Barrel</text>
-<rect x="80.16" y="396.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="80.88" y="401.64" font-size="7">Sack</text>
-<rect x="103.44" y="415.43999999999994" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="104.16" y="420.23999999999995" font-size="7">Broom</text>
 <rect x="80.16" y="405.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="80.88" y="410.64" font-size="7">Firewood Stack</text>
-<rect x="103.44" y="397.43999999999994" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="104.16" y="402.23999999999995" font-size="7">Basket Lid</text>
+<text x="80.88" y="410.64" font-size="7">Barrel</text>
+<rect x="102.84" y="414.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="103.56" y="419.64" font-size="7">Sack</text>
+<rect x="102.84" y="396.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="103.56" y="401.64" font-size="7">Firewood Stack</text>
+<rect x="80.16" y="397.43999999999994" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="80.88" y="402.23999999999995" font-size="7">Basket Lid</text>
 <text x="81.0" y="422.0" font-weight="bold">Passage</text>
 <rect x="114.0" y="366.0" width="48" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="114.0" y="372.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
-<rect x="120.0" y="412.79999999999995" width="24.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="114.0" y="372.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="120.0" y="408.0" width="24.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="126.0" y="372.0" width="12.0" height="54.0" fill="#f6c" opacity=".35"/>
 <rect x="114.0" y="372.0" width="24.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="147.84" y="368.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
@@ -1334,12 +1304,10 @@
 <text x="139.56" y="372.96" font-size="7">Hay Bale A 01</text>
 <rect x="116.16" y="392.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="116.88" y="396.96" font-size="7">Hay Bale A 01</text>
-<rect x="116.16" y="401.15999999999997" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="116.88" y="405.96" font-size="7">Bucket</text>
-<rect x="152.64000000000001" y="416.64" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="153.36" y="421.43999999999994" font-size="7">Rope 01</text>
-<rect x="145.44" y="416.64" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="146.16" y="421.43999999999994" font-size="7">Basket</text>
+<rect x="152.64000000000001" y="416.15999999999997" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="153.36" y="420.96" font-size="7">Rope 01</text>
+<rect x="116.16" y="384.96" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="116.88" y="389.76" font-size="7">Basket</text>
 <text x="117.0" y="422.0" font-weight="bold">Byre</text>
 <line x1="90.0" y1="426.0" x2="102.0" y2="426.0" stroke="#a30" stroke-width="6"/>
 <line x1="90.0" y1="366.0" x2="102.0" y2="366.0" stroke="#a30" stroke-width="6"/>
@@ -1352,7 +1320,7 @@
 <line x1="132.0" y1="366.0" x2="144.0" y2="366.0" stroke="#39f" stroke-width="6"/>
 <text x="20.0" y="374.0" font-size="7" fill="#123">Farmhouse</text>
 <rect x="846.0" y="702.0" width="60" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="846.0" y="744.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="846.0" y="744.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="872.4000000000001" y="728.4000000000001" width="7.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="848.1600000000001" y="704.16" width="24.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="848.8800000000001" y="708.96" font-size="7">Brick Oven A</text>
@@ -1360,24 +1328,22 @@
 <text x="848.8800000000001" y="732.96" font-size="7">Firewood Pile</text>
 <rect x="891.8399999999999" y="704.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="892.56" y="708.96" font-size="7">Single Bed</text>
-<rect x="891.8399999999999" y="728.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="892.56" y="732.96" font-size="7">Single Bed</text>
-<rect x="879.8399999999999" y="734.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="880.56" y="738.96" font-size="7">Chest</text>
-<rect x="867.8399999999999" y="747.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="868.56" y="752.64" font-size="7">Table Rectangl</text>
-<rect x="879.5999999999999" y="710.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="880.3199999999999" y="714.96" font-size="7">Bench</text>
-<rect x="867.5999999999999" y="735.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="868.3199999999999" y="740.64" font-size="7">Stool</text>
-<rect x="859.1999999999999" y="751.4399999999999" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="859.92" y="756.24" font-size="7">Basket</text>
+<rect x="891.8399999999999" y="735.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="892.56" y="740.64" font-size="7">Single Bed</text>
+<rect x="879.8399999999999" y="732.0" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="880.56" y="736.8" font-size="7">Chest</text>
+<rect x="864.0" y="747.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="864.72" y="752.64" font-size="7">Table Rectangl</text>
+<rect x="879.5999999999999" y="708.0" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="880.3199999999999" y="712.8" font-size="7">Bench</text>
+<rect x="867.8399999999999" y="735.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="868.56" y="740.64" font-size="7">Stool</text>
 <rect x="872.1600000000001" y="704.16" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="872.8800000000001" y="708.96" font-size="7">Bucket</text>
 <text x="849.0" y="758.0" font-weight="bold">Living room</text>
 <rect x="810.0" y="702.0" width="36" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="822.0" y="702.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
-<rect x="822.0" y="748.8" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="822.0" y="702.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
+<rect x="822.0" y="744.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="832.8000000000001" y="744.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="810.0" y="744.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="822.0" y="702.0" width="12.0" height="60.0" fill="#f6c" opacity=".35"/>
@@ -1386,38 +1352,34 @@
 <rect x="822.0" y="702.0" width="12.0" height="54.0" fill="#f6c" opacity=".35"/>
 <rect x="810.0" y="744.0" width="24.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="822.0" y="702.0" width="12.0" height="54.0" fill="#f6c" opacity=".35"/>
-<rect x="812.1600000000001" y="722.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="812.8800000000001" y="726.96" font-size="7">Barrel</text>
-<rect x="834.8399999999999" y="713.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="835.56" y="717.96" font-size="7">Barrel</text>
 <rect x="812.1600000000001" y="704.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="812.8800000000001" y="708.96" font-size="7">Sack</text>
-<rect x="835.44" y="704.16" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="836.1600000000001" y="708.96" font-size="7">Broom</text>
-<rect x="834.8399999999999" y="722.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="835.56" y="726.96" font-size="7">Firewood Stack</text>
-<rect x="835.44" y="731.16" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="836.1600000000001" y="735.96" font-size="7">Basket Lid</text>
+<text x="812.8800000000001" y="708.96" font-size="7">Barrel</text>
+<rect x="834.8399999999999" y="704.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="835.56" y="708.96" font-size="7">Barrel</text>
+<rect x="834.8399999999999" y="713.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="835.56" y="717.96" font-size="7">Sack</text>
+<rect x="812.1600000000001" y="722.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="812.8800000000001" y="726.96" font-size="7">Firewood Stack</text>
+<rect x="812.1600000000001" y="713.76" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="812.8800000000001" y="718.56" font-size="7">Basket Lid</text>
 <text x="813.0" y="758.0" font-weight="bold">Passage</text>
 <rect x="762.0" y="702.0" width="48" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="796.8000000000001" y="744.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
-<rect x="780.0" y="702.0" width="24.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="792.0" y="744.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="780.0" y="702.0" width="24.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="786.0" y="702.0" width="12.0" height="54.0" fill="#f6c" opacity=".35"/>
 <rect x="786.0" y="744.0" width="24.0" height="12.0" fill="#f6c" opacity=".35"/>
 <rect x="764.16" y="735.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="764.88" y="740.64" font-size="7">Trough Grain</text>
-<rect x="764.16" y="711.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="764.88" y="716.64" font-size="7">Trough Grain</text>
-<rect x="776.1600000000001" y="750.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="776.8800000000001" y="755.64" font-size="7">Hay Bale A 01</text>
+<rect x="764.16" y="704.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="764.88" y="708.96" font-size="7">Trough Grain</text>
 <rect x="798.8399999999999" y="726.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="799.56" y="731.64" font-size="7">Hay Bale A 01</text>
-<rect x="799.44" y="718.4399999999999" width="8.399999999999999" height="8.399999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="800.1600000000001" y="723.24" font-size="7">Bucket</text>
-<rect x="764.16" y="704.64" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="764.88" y="709.4399999999999" font-size="7">Rope 01</text>
+<rect x="776.1600000000001" y="750.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="776.8800000000001" y="755.64" font-size="7">Hay Bale A 01</text>
 <rect x="800.64" y="735.84" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="801.36" y="740.64" font-size="7">Basket</text>
+<text x="801.36" y="740.64" font-size="7">Rope 01</text>
+<rect x="764.16" y="728.64" width="7.199999999999999" height="7.199999999999999" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="764.88" y="733.4399999999999" font-size="7">Basket</text>
 <text x="765.0" y="758.0" font-weight="bold">Byre</text>
 <line x1="822.0" y1="702.0" x2="834.0" y2="702.0" stroke="#a30" stroke-width="6"/>
 <line x1="822.0" y1="762.0" x2="834.0" y2="762.0" stroke="#a30" stroke-width="6"/>
@@ -1430,24 +1392,24 @@
 <line x1="780.0" y1="762.0" x2="792.0" y2="762.0" stroke="#39f" stroke-width="6"/>
 <text x="764.0" y="710.0" font-size="7" fill="#123">Farmhouse</text>
 <rect x="354.0" y="702.0" width="72" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="390.0" y="702.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="390.0" y="702.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="380.4" y="728.4000000000001" width="19.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="411.84000000000003" y="747.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="412.56000000000006" y="752.64" font-size="7">Brick Cooking </text>
-<rect x="414.24" y="738.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="414.96000000000004" y="743.04" font-size="7">Firewood Pile</text>
+<rect x="402.24" y="750.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="402.96000000000004" y="755.04" font-size="7">Firewood Pile</text>
 <rect x="356.15999999999997" y="704.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="356.88" y="708.96" font-size="7">Single Bed</text>
-<rect x="356.15999999999997" y="728.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="356.88" y="732.96" font-size="7">Single Bed</text>
+<rect x="356.15999999999997" y="735.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="356.88" y="740.64" font-size="7">Single Bed</text>
 <rect x="368.15999999999997" y="747.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="368.88" y="752.64" font-size="7">Chest</text>
-<rect x="411.84000000000003" y="713.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="412.56000000000006" y="717.96" font-size="7">Table Rectangl</text>
-<rect x="399.84000000000003" y="715.2" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="400.56000000000006" y="720.0" font-size="7">Bench</text>
-<rect x="414.84000000000003" y="704.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="415.56000000000006" y="708.96" font-size="7">Barrel</text>
+<rect x="411.84000000000003" y="720.0" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="412.56000000000006" y="724.8" font-size="7">Table Rectangl</text>
+<rect x="399.84000000000003" y="723.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="400.56000000000006" y="728.64" font-size="7">Bench</text>
+<rect x="402.84000000000003" y="704.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="403.56000000000006" y="708.96" font-size="7">Barrel</text>
 <text x="357.0" y="758.0" font-weight="bold">Cottage</text>
 <line x1="390.0" y1="702.0" x2="402.0" y2="702.0" stroke="#a30" stroke-width="6"/>
 <line x1="366.0" y1="702.0" x2="378.0" y2="702.0" stroke="#39f" stroke-width="6"/>
@@ -1455,7 +1417,7 @@
 <line x1="384.0" y1="762.0" x2="396.0" y2="762.0" stroke="#39f" stroke-width="6"/>
 <text x="356.0" y="710.0" font-size="7" fill="#123">Cottage</text>
 <rect x="918.0" y="246.0" width="72" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="954.0" y="246.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="954.0" y="246.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="944.4000000000001" y="272.4" width="19.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="975.8399999999999" y="291.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="976.56" y="296.64" font-size="7">Brick Cooking </text>
@@ -1463,16 +1425,16 @@
 <text x="978.96" y="287.03999999999996" font-size="7">Firewood Pile</text>
 <rect x="920.1600000000001" y="279.6" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="920.8800000000001" y="284.4" font-size="7">Single Bed</text>
-<rect x="920.1600000000001" y="255.60000000000002" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="920.8800000000001" y="260.4" font-size="7">Single Bed</text>
+<rect x="920.1600000000001" y="248.39999999999998" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="920.8800000000001" y="253.2" font-size="7">Single Bed</text>
 <rect x="932.1600000000001" y="291.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="932.8800000000001" y="296.64" font-size="7">Chest</text>
 <rect x="944.1600000000001" y="291.84000000000003" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="944.8800000000001" y="296.64" font-size="7">Table Rectangl</text>
-<rect x="941.1600000000001" y="279.84000000000003" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="941.8800000000001" y="284.64" font-size="7">Bench</text>
-<rect x="968.1600000000001" y="248.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="968.8800000000001" y="252.95999999999998" font-size="7">Barrel</text>
+<rect x="944.1600000000001" y="279.84000000000003" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="944.8800000000001" y="284.64" font-size="7">Bench</text>
+<rect x="978.8399999999999" y="248.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="979.56" y="252.95999999999998" font-size="7">Barrel</text>
 <text x="921.0" y="302.0" font-weight="bold">Cottage</text>
 <line x1="954.0" y1="246.0" x2="966.0" y2="246.0" stroke="#a30" stroke-width="6"/>
 <line x1="930.0" y1="246.0" x2="942.0" y2="246.0" stroke="#39f" stroke-width="6"/>
@@ -1480,24 +1442,24 @@
 <line x1="948.0" y1="306.0" x2="960.0" y2="306.0" stroke="#39f" stroke-width="6"/>
 <text x="920.0" y="254.0" font-size="7" fill="#123">Cottage</text>
 <rect x="936.0" y="588.0" width="72" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="960.0" y="634.8" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="960.0" y="630.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="962.4000000000001" y="614.4000000000001" width="19.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="938.1600000000001" y="590.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="938.8800000000001" y="594.96" font-size="7">Brick Cooking </text>
-<rect x="950.1600000000001" y="590.16" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="950.8800000000001" y="594.96" font-size="7">Firewood Pile</text>
+<rect x="938.1600000000001" y="602.16" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="938.8800000000001" y="606.96" font-size="7">Firewood Pile</text>
 <rect x="993.8399999999999" y="590.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="994.56" y="594.96" font-size="7">Single Bed</text>
 <rect x="993.8399999999999" y="621.84" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="994.56" y="626.64" font-size="7">Single Bed</text>
-<rect x="981.8399999999999" y="590.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="982.56" y="594.96" font-size="7">Chest</text>
-<rect x="938.1600000000001" y="605.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="938.8800000000001" y="609.96" font-size="7">Table Rectangl</text>
-<rect x="950.1600000000001" y="599.76" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="950.8800000000001" y="604.56" font-size="7">Bench</text>
-<rect x="938.1600000000001" y="629.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="938.8800000000001" y="633.96" font-size="7">Barrel</text>
+<rect x="981.5999999999999" y="590.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="982.3199999999999" y="594.96" font-size="7">Chest</text>
+<rect x="957.5999999999999" y="590.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="958.3199999999999" y="594.96" font-size="7">Table Rectangl</text>
+<rect x="969.8399999999999" y="602.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="970.56" y="606.96" font-size="7">Bench</text>
+<rect x="938.1600000000001" y="636.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="938.8800000000001" y="641.64" font-size="7">Barrel</text>
 <text x="939.0" y="644.0" font-weight="bold">Cottage</text>
 <line x1="960.0" y1="648.0" x2="972.0" y2="648.0" stroke="#a30" stroke-width="6"/>
 <line x1="984.0" y1="648.0" x2="996.0" y2="648.0" stroke="#39f" stroke-width="6"/>
@@ -1505,24 +1467,24 @@
 <line x1="966.0" y1="588.0" x2="978.0" y2="588.0" stroke="#39f" stroke-width="6"/>
 <text x="938.0" y="596.0" font-size="7" fill="#123">Cottage</text>
 <rect x="126.0" y="258.0" width="72" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="162.0" y="258.0" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="162.0" y="258.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="152.39999999999998" y="284.4" width="19.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="183.84" y="303.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="184.56" y="308.64" font-size="7">Brick Cooking </text>
-<rect x="174.24" y="306.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="174.96" y="311.03999999999996" font-size="7">Firewood Pile</text>
-<rect x="128.16" y="291.6" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="128.88" y="296.4" font-size="7">Single Bed</text>
-<rect x="128.16" y="267.6" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="128.88" y="272.4" font-size="7">Single Bed</text>
+<rect x="186.24" y="294.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="186.96" y="299.03999999999996" font-size="7">Firewood Pile</text>
+<rect x="128.16" y="260.4" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="128.88" y="265.2" font-size="7">Single Bed</text>
+<rect x="128.16" y="291.84000000000003" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="128.88" y="296.64" font-size="7">Single Bed</text>
 <rect x="140.16" y="303.84000000000003" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="140.88" y="308.64" font-size="7">Chest</text>
-<rect x="183.84" y="275.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="184.56" y="279.96" font-size="7">Table Rectangl</text>
-<rect x="171.84" y="279.84000000000003" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="172.56" y="284.64" font-size="7">Bench</text>
-<rect x="186.84" y="260.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="187.56" y="264.96" font-size="7">Barrel</text>
+<rect x="152.16" y="303.84000000000003" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="152.88" y="308.64" font-size="7">Table Rectangl</text>
+<rect x="159.84" y="291.84000000000003" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="160.56" y="296.64" font-size="7">Bench</text>
+<rect x="150.84" y="260.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="151.56" y="264.96" font-size="7">Barrel</text>
 <text x="129.0" y="314.0" font-weight="bold">Cottage</text>
 <line x1="162.0" y1="258.0" x2="174.0" y2="258.0" stroke="#a30" stroke-width="6"/>
 <line x1="138.0" y1="258.0" x2="150.0" y2="258.0" stroke="#39f" stroke-width="6"/>
@@ -1530,24 +1492,24 @@
 <line x1="156.0" y1="318.0" x2="168.0" y2="318.0" stroke="#39f" stroke-width="6"/>
 <text x="128.0" y="266.0" font-size="7" fill="#123">Cottage</text>
 <rect x="600.0" y="48.0" width="60" height="72" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="600.0" y="72.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="600.0" y="72.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="626.4000000000001" y="74.4" width="7.199999999999996" height="19.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="645.84" y="50.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="646.5600000000001" y="54.96" font-size="7">Brick Cooking </text>
-<rect x="648.24" y="62.16" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="648.96" y="66.96000000000001" font-size="7">Firewood Pile</text>
-<rect x="602.16" y="105.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="602.88" y="110.64000000000001" font-size="7">Single Bed</text>
+<rect x="636.24" y="50.16" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="636.96" y="54.96" font-size="7">Firewood Pile</text>
 <rect x="633.84" y="105.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="634.5600000000001" y="110.64000000000001" font-size="7">Single Bed</text>
-<rect x="645.84" y="93.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="646.5600000000001" y="98.64000000000001" font-size="7">Chest</text>
-<rect x="617.16" y="50.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="617.88" y="54.96" font-size="7">Table Rectangl</text>
-<rect x="623.16" y="62.16" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="623.88" y="66.96000000000001" font-size="7">Bench</text>
-<rect x="602.16" y="53.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="602.88" y="57.96" font-size="7">Barrel</text>
+<rect x="609.84" y="105.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="610.5600000000001" y="110.64000000000001" font-size="7">Single Bed</text>
+<rect x="645.84" y="93.6" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="646.5600000000001" y="98.39999999999999" font-size="7">Chest</text>
+<rect x="645.84" y="69.6" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="646.5600000000001" y="74.4" font-size="7">Table Rectangl</text>
+<rect x="633.84" y="65.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="634.5600000000001" y="69.96000000000001" font-size="7">Bench</text>
+<rect x="602.16" y="56.16" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="602.88" y="60.96" font-size="7">Barrel</text>
 <text x="603.0" y="116.0" font-weight="bold">Cottage</text>
 <line x1="600.0" y1="72.0" x2="600.0" y2="84.0" stroke="#a30" stroke-width="6"/>
 <line x1="600.0" y1="96.0" x2="600.0" y2="108.0" stroke="#39f" stroke-width="6"/>
@@ -1555,7 +1517,7 @@
 <line x1="660.0" y1="78.0" x2="660.0" y2="90.0" stroke="#39f" stroke-width="6"/>
 <text x="602.0" y="56.0" font-size="7" fill="#123">Cottage</text>
 <rect x="1008.0" y="366.0" width="72" height="60" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="1032.0" y="412.79999999999995" width="12.0" height="13.200000000000001" fill="#fb6" opacity=".35"/>
+<rect x="1032.0" y="408.0" width="12.0" height="18.0" fill="#fb6" opacity=".35"/>
 <rect x="1034.4" y="392.40000000000003" width="19.199999999999996" height="7.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="1010.1600000000001" y="368.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="1010.8800000000001" y="372.96" font-size="7">Brick Cooking </text>
@@ -1567,12 +1529,12 @@
 <text x="1066.56" y="404.64" font-size="7">Single Bed</text>
 <rect x="1053.84" y="368.15999999999997" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="1054.56" y="372.96" font-size="7">Chest</text>
-<rect x="1010.1600000000001" y="386.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="1010.8800000000001" y="390.96" font-size="7">Table Rectangl</text>
+<rect x="1010.1600000000001" y="383.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="1010.8800000000001" y="387.96" font-size="7">Table Rectangl</text>
 <rect x="1022.1600000000001" y="383.15999999999997" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="1022.8800000000001" y="387.96" font-size="7">Bench</text>
-<rect x="1010.1600000000001" y="410.15999999999997" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="1010.8800000000001" y="414.96" font-size="7">Barrel</text>
+<rect x="1010.1600000000001" y="414.84000000000003" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="1010.8800000000001" y="419.64" font-size="7">Barrel</text>
 <text x="1011.0" y="422.0" font-weight="bold">Cottage</text>
 <line x1="1032.0" y1="426.0" x2="1044.0" y2="426.0" stroke="#a30" stroke-width="6"/>
 <line x1="1056.0" y1="426.0" x2="1068.0" y2="426.0" stroke="#39f" stroke-width="6"/>
@@ -1580,24 +1542,24 @@
 <line x1="1038.0" y1="366.0" x2="1050.0" y2="366.0" stroke="#39f" stroke-width="6"/>
 <text x="1010.0" y="374.0" font-size="7" fill="#123">Cottage</text>
 <rect x="486.0" y="42.0" width="60" height="72" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="532.8" y="78.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="528.0" y="78.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="512.4000000000001" y="68.4" width="7.199999999999996" height="19.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="488.15999999999997" y="99.84" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="488.88" y="104.64000000000001" font-size="7">Brick Cooking </text>
-<rect x="500.15999999999997" y="102.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="500.88" y="107.03999999999999" font-size="7">Firewood Pile</text>
-<rect x="519.84" y="44.160000000000004" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="520.5600000000001" y="48.96" font-size="7">Single Bed</text>
-<rect x="495.84000000000003" y="44.160000000000004" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="496.56000000000006" y="48.96" font-size="7">Single Bed</text>
+<rect x="488.15999999999997" y="90.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="488.88" y="95.03999999999999" font-size="7">Firewood Pile</text>
+<rect x="488.15999999999997" y="44.160000000000004" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="488.88" y="48.96" font-size="7">Single Bed</text>
+<rect x="512.16" y="44.160000000000004" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="512.88" y="48.96" font-size="7">Single Bed</text>
 <rect x="488.15999999999997" y="56.16" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="488.88" y="60.96" font-size="7">Chest</text>
-<rect x="488.15999999999997" y="68.16" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="488.88" y="72.96000000000001" font-size="7">Table Rectangl</text>
-<rect x="500.15999999999997" y="78.24" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="500.88" y="83.03999999999999" font-size="7">Bench</text>
-<rect x="534.84" y="102.24" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="535.5600000000001" y="107.03999999999999" font-size="7">Barrel</text>
+<rect x="503.15999999999997" y="99.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="503.88" y="104.64000000000001" font-size="7">Table Rectangl</text>
+<rect x="503.15999999999997" y="87.84" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="503.88" y="92.64000000000001" font-size="7">Bench</text>
+<rect x="534.84" y="90.84" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="535.5600000000001" y="95.64000000000001" font-size="7">Barrel</text>
 <text x="489.0" y="110.0" font-weight="bold">Cottage</text>
 <line x1="546.0" y1="78.0" x2="546.0" y2="90.0" stroke="#a30" stroke-width="6"/>
 <line x1="546.0" y1="54.0" x2="546.0" y2="66.0" stroke="#39f" stroke-width="6"/>
@@ -1605,24 +1567,24 @@
 <line x1="486.0" y1="72.0" x2="486.0" y2="84.0" stroke="#39f" stroke-width="6"/>
 <text x="488.0" y="50.0" font-size="7" fill="#123">Cottage</text>
 <rect x="480.0" y="774.0" width="60" height="72" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="526.8" y="810.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="522.0" y="810.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="506.40000000000003" y="800.4000000000001" width="7.199999999999996" height="19.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="482.15999999999997" y="831.8399999999999" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="482.88" y="836.64" font-size="7">Brick Cooking </text>
 <rect x="494.15999999999997" y="834.24" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="494.88" y="839.04" font-size="7">Firewood Pile</text>
-<rect x="513.84" y="776.1600000000001" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="514.5600000000001" y="780.9600000000002" font-size="7">Single Bed</text>
 <rect x="482.15999999999997" y="776.1600000000001" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="482.88" y="780.9600000000002" font-size="7">Single Bed</text>
-<rect x="482.15999999999997" y="788.1600000000001" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="482.88" y="792.9600000000002" font-size="7">Chest</text>
-<rect x="482.15999999999997" y="800.1600000000001" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="482.88" y="804.9600000000002" font-size="7">Table Rectangl</text>
-<rect x="494.15999999999997" y="788.1600000000001" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="494.88" y="792.9600000000002" font-size="7">Bench</text>
-<rect x="528.84" y="834.8399999999999" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="529.5600000000001" y="839.64" font-size="7">Barrel</text>
+<rect x="513.84" y="776.1600000000001" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="514.5600000000001" y="780.9600000000002" font-size="7">Single Bed</text>
+<rect x="482.15999999999997" y="788.4000000000001" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="482.88" y="793.2" font-size="7">Chest</text>
+<rect x="482.15999999999997" y="803.1600000000001" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="482.88" y="807.9600000000002" font-size="7">Table Rectangl</text>
+<rect x="494.15999999999997" y="800.4000000000001" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="494.88" y="805.2" font-size="7">Bench</text>
+<rect x="528.84" y="822.8399999999999" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="529.5600000000001" y="827.64" font-size="7">Barrel</text>
 <text x="483.0" y="842.0" font-weight="bold">Cottage</text>
 <line x1="540.0" y1="810.0" x2="540.0" y2="822.0" stroke="#a30" stroke-width="6"/>
 <line x1="540.0" y1="786.0" x2="540.0" y2="798.0" stroke="#39f" stroke-width="6"/>
@@ -1630,24 +1592,24 @@
 <line x1="480.0" y1="804.0" x2="480.0" y2="816.0" stroke="#39f" stroke-width="6"/>
 <text x="482.0" y="782.0" font-size="7" fill="#123">Cottage</text>
 <rect x="606.0" y="774.0" width="60" height="72" fill="#fffdf8" stroke="#333" stroke-width="3"/>
-<rect x="606.0" y="798.0" width="13.200000000000001" height="12.0" fill="#fb6" opacity=".35"/>
+<rect x="606.0" y="798.0" width="18.0" height="12.0" fill="#fb6" opacity=".35"/>
 <rect x="632.4000000000001" y="800.4000000000001" width="7.199999999999996" height="19.199999999999996" fill="#fb6" opacity=".35"/>
 <rect x="651.84" y="776.1600000000001" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="652.5600000000001" y="780.9600000000002" font-size="7">Brick Cooking </text>
-<rect x="642.24" y="776.1600000000001" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="642.96" y="780.9600000000002" font-size="7">Firewood Pile</text>
+<rect x="654.24" y="788.1600000000001" width="9.600000000000001" height="9.600000000000001" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="654.96" y="792.9600000000002" font-size="7">Firewood Pile</text>
 <rect x="608.16" y="831.8399999999999" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="608.88" y="836.64" font-size="7">Single Bed</text>
 <rect x="632.16" y="831.8399999999999" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="632.88" y="836.64" font-size="7">Single Bed</text>
 <rect x="651.84" y="819.8399999999999" width="12.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
 <text x="652.5600000000001" y="824.64" font-size="7">Chest</text>
-<rect x="651.84" y="795.8399999999999" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="652.5600000000001" y="800.64" font-size="7">Table Rectangl</text>
-<rect x="639.84" y="794.1600000000001" width="12.0" height="24.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="640.5600000000001" y="798.9600000000002" font-size="7">Bench</text>
-<rect x="608.16" y="785.1600000000001" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
-<text x="608.88" y="789.9600000000002" font-size="7">Barrel</text>
+<rect x="626.16" y="776.1600000000001" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="626.88" y="780.9600000000002" font-size="7">Table Rectangl</text>
+<rect x="626.16" y="788.1600000000001" width="24.0" height="12.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="626.88" y="792.9600000000002" font-size="7">Bench</text>
+<rect x="608.16" y="810.8399999999999" width="9.0" height="9.0" fill="#9cc79a" stroke="#2c5a2a"/>
+<text x="608.88" y="815.64" font-size="7">Barrel</text>
 <text x="609.0" y="842.0" font-weight="bold">Cottage</text>
 <line x1="606.0" y1="798.0" x2="606.0" y2="810.0" stroke="#a30" stroke-width="6"/>
 <line x1="606.0" y1="822.0" x2="606.0" y2="834.0" stroke="#39f" stroke-width="6"/>

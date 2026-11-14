@@ -52,7 +52,7 @@ SET_PIECES = [
     SP("bed-and-chest", ["sleep", "ward"], "wall", (2, 3), [("bed", 0, 0, 2, 2, "base"), ("chest", .5, 2, 1, 1, "beside")]),
     SP("bed-and-side", ["sleep"], "wall", (3, 2), [("bed", 0, 0, 2, 2, "base"), ("table", 2, 0, 1, 1, "back"), *on("light")]),
     SP("wardrobe-wall", ["sleep"], "wall", (2, 1), [("cupboard", 0, 0, 2, 1, "base")]),
-    SP("ward-beds", ["ward"], "wall", (4, 2), [("bed", 0, 0, 1, 2, "base"), ("chest", 1, 0, 1, 1, "back"), ("bed", 2, 0, 1, 2, "back"), ("chest", 3, 0, 1, 1, "back")]),
+    SP("ward-beds", ["ward"], "wall", (3, 3), [("bed", 0, 0, 1, 2, "base"), ("chest", 0, 2, 1, 1, "beside"), ("bed", 2, 0, 1, 2, "back"), ("chest", 2, 2, 1, 1, "beside")]),   # chests at the beds' feet
     SP("washstand", ["sleep", "bath"], "wall", (1, 1), [("bath", 0, 0, 1, 1, "base")]),
     SP("bath-tub", ["bath"], "wall", (2, 1), [("bath", 0, 0, 2, 1, "base")]),
     # kitchens and stores

@@ -11,6 +11,7 @@ import re
 KINDS = [
     ("outdoor", r"Yard|Court|Garden|Gateway|Porch|Carriage way|Arcade|Loading|Pen\b|Paddock|Lot\b|Field"),
     ("bath", r"Bath|Toilet|Wash|Wet room|Shower"),
+    ("store", r"\b[Ss]tore\b|Lean-to|Vestry"),           # a beer, coal or flour store is a store, not a bar or a hall
     ("kitchen", r"Kitchen|Bakehouse|Bakery|Brewhouse|Scullery|Cook"),
     ("store", r"Store|Cellar|Barn|Byre|Stable|Granary|Loft|Shed|Vault|Warehouse|Larder|Pantry|Crypt|Coffin|Bone|Coop|"
               r"Garage|Stock|Plant room|Boiler|Server hall|Water plant|Engine|Packing"),
@@ -20,7 +21,7 @@ KINDS = [
     ("shop", r"Shop|Sales|Counter|Banking hall|Ticket|Market"),
     ("study", r"Study|Office|Counting|Library|Clerk|Chancery|Archive|Scriptorium|Desk|Reading|Stacks|Librarian|Classroom|"
               r"Control|Council|Court room|Director"),
-    ("work", r"Workshop|Forge|Smithy|Weaving|Spinning|Mill|Press|Growing|Surgery|Treatment|Mortuary|Recovery|Stage|Smith"),
+    ("work", r"Workshop|Forge|Smithy|Weaving|Spinning|Mill|Press|Growing|Surgery|Treatment|Mortuary|Recovery|Stage|Smith(?!'s room)"),
     ("ward", r"Ward|Dormitory|Capsule|Quarters|Locker|Porter|Lodge|Post\b|Guard"),
     ("sleep", r"Bed|Chamber|Guest|Sleeping|Solar|Dressing"),
     ("passage", r"Corridor|Passage|Stair|Entry|Entrance|Vestibule|Lift|Core|Concourse|Platform"),
