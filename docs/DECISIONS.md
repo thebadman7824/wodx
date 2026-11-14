@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3940
+Next free block: B3950
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -201,6 +201,7 @@ Next free block: B3940
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
 | B3900-B3929 | Faith and occult goods in play (used B3900-B3902) | Chronicle, Library |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
+| B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6679,3 +6680,18 @@ Reverse: edit data/people-southwest.mjs.
 WoDX Creation. The Hopi and Diné reckon clans from the mother, so before 1800 they carry "of the Bear clan" or "of the Bitter Water clan" in the family slot, as the Haudenosaunee do; Diné clans are given in English. The Apache carry no clan, and a woman without a recorded name is "A woman of the Chihenne" or of another band. The Pueblos had missions from 1598, so a third of men carry a church name in 1500 to 1799; the Diné and Apache do not (earlyChurch: false).
 
 Reverse: change the options in southwestTables.
+
+## B3940. Where Armenians live (2026-11-14)
+WoDX Creation and Chronicle. Armenians are on the global list of peoples WoDX had no names for. They join the mixes: Anatolia 12 in 100 from 1197 (Greater Armenia and Cilicia stand under Anatolia) until the industrial age ends, then 1 (the genocide of 1915 and the exodus after); Persia 4 from 1500 (New Julfa, 1605); Constantinople 6 from 1500; the Levant 2; Russia 3 from 1800 (the Caucasus). Taken as recommended while Ben was away; logged in PENDING-REVIEW.
+
+Reverse: put back the old mixes for anatolia, persia, aegean, levant and russia in world-rules.mjs and drop the armenian entry from people-world.mjs.
+
+## B3941. Town bynames, then -ian (2026-11-14)
+WoDX Creation. Before 1800 an Armenian is named with the byname of the home town (Grigor Narekatsi, Hovhannes Erznkatsi), as the scribes and chroniclers signed; family names in -ian and -yan became fixed in the 19th century, so they start with the industrial group. Over 300 names, so Armenians join the raised peoples.
+
+Reverse: change the fam keys of ARMENIAN in data/people-armenian.mjs.
+
+## B3942. Older and newer given names (2026-11-14)
+WoDX Creation. The older lists hold the names of the Bagratid, Artsruni, Rubenid and Hetumid ages and the scribes; the newer ones the Western Armenian spellings of the Ottoman cities (Garabed, Krikor) beside the Eastern ones (Karapet, Grigor).
+
+Reverse: edit the lists in data/people-armenian.mjs.

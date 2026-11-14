@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.92.0 (Armenians in the world's mixes: 12 in 100 in Anatolia until 1915 and 1 after, a share in New Julfa's Persia, Constantinople, the Levant and Russia (B3940))
 - 0.91.0 (Trait effects from other modules (B3902): api.traits.addSource lets another module add effects to a character's rolls and resistance, read with the rest by WoDX Actions)
 - 0.90.0 (The American West holds the Southwest's peoples beside the Plains: Pueblo 22, Diné 10 and Apache 8 in 100 before 1500, a share after (B3930))
 - 0.89.0 (Mexico and Central America hold the Maya beside the Nahua: 30 in 100 before 1500, 17 beside the Spanish to 1800, 8 after (B3830))
