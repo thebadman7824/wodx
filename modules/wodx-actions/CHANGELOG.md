@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.81.1 (Reading a face (B3444): when a player reads a face, the speaker's Manipulation + Subterfuge roll is now written by the Storyteller's own client. A whisper a player writes stays readable to that player, so the player could see the speaker's roll)
 - 3.81.0 (Inquisitor Blessings: the Blessing window lists the 94 Blessings of Dark Ages: Inquisitor with their roll, cost and effect, and posts their effects card (B3755))
 - 3.80.1 (Fix: soulforged oboli now go into the purse as the Underworld's money. The forge was looking for the Storyteller money api in the wrong place, so it made an obolus item instead (B3554))
 - 3.80.0 (Powers pass, rites and rituals: the caster's own roll puts the book ritual's effect on the effects card (B3753))

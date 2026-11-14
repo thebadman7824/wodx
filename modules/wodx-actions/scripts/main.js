@@ -276,6 +276,8 @@ async function onSocket(p) {
     if (!isResponsibleGM()) return;
     if (p.action === "kx" && !p.uuid) return kx().onSocket(p);
     // B3133: a player's codex entry spent on research (the codex journal is the Storyteller's)
+    // B3444: a speaker's hidden roll against a player reading their face
+    if (p.action === "straightFace") { const d = p.data ?? {}; await ChatMessage.create({ ...d, whisper: game.users.filter(u => u.isGM).map(u => u.id), blind: true, speaker: { alias: "WoDX" } }); return; }
     if (p.action === "research") { const pg = await fromUuid(p.uuid); if (pg?.documentName === "JournalEntryPage") await pg.setFlag(MOD, "researchUsed", true); return; }
     const doc = await fromUuid(p.uuid);
     const actor = doc?.actor ?? doc;
@@ -384,9 +386,12 @@ async function readFace({ actor, npc, lie = false } = {}) {
     const owners = game.users.filter(u => actor.testUserPermission?.(u, "OWNER")).map(u => u.id);
     await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), whisper: [...new Set([...owners, ...gms])], rolls: me.roll ? [me.roll] : [],
         content: `<div class="vta-card wodx-x"><div class="vta-title">${esc(actor.name)} reads ${esc(npc.name)}'s face</div><div class="vta-body">${rollBlock("Perception + Empathy", me)}<ul>${res.lines.map(l => `<li>${esc(l)}</li>`).join("")}</ul></div></div>` });
-    // blind: a player's client writes it, and still may not read it
-    await ChatMessage.create({ speaker: { alias: "WoDX" }, whisper: gms, blind: !game.user.isGM, rolls: hide.roll ? [hide.roll] : [],
-        content: `<div class="vta-card wodx-x"><div class="vta-title">${esc(npc.name)} keeps a straight face (Storyteller only)</div><div class="vta-body">${rollBlock("Manipulation + Subterfuge", hide)}${lie ? `<p class="vta-note">The line was marked a lie.</p>` : ""}</div></div>` });
+    // The speaker's roll is the Storyteller's alone: a player's own whisper stays readable to its author, so the
+    // active Storyteller writes it (B3444)
+    const hidden = { speaker: { alias: "WoDX" }, whisper: gms, blind: true, rolls: hide.roll ? [hide.roll.toJSON()] : [],
+        content: `<div class="vta-card wodx-x"><div class="vta-title">${esc(npc.name)} keeps a straight face (Storyteller only)</div><div class="vta-body">${rollBlock("Manipulation + Subterfuge", hide)}${lie ? `<p class="vta-note">The line was marked a lie.</p>` : ""}</div></div>` };
+    if (game.user.isGM) await ChatMessage.create(hidden);
+    else game.socket.emit(SOCKET, { action: "straightFace", data: hidden });
     return res;
 }
 async function post(actor, title, body, rolls = [], data = null) {
@@ -2829,7 +2834,7 @@ async function createMacros() {
 
 const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.81.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.81.1", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Place: () => zx().placeDialog(), m20Quiet: withActor(a => qtx().panel(a)), quiet: { state: a => qtx().state(resolveActor(a)), act: (a, fd) => qtx().act(resolveActor(a), fd), rules: QR, onRefreshToken: QX.onRefreshToken }, consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },

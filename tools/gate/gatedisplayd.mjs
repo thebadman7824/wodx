@@ -94,7 +94,7 @@ async function setup() {
   await step("a. Delirium", async () => {
     const t = tok(beast.id);
     await t.setFlag("wodx-paperdoll", "sprite", "garou-crinos");
-    const seen = await until(() => fresh(/The Delirium/).some(m => m.content.includes(seer1.name)), 6000);
+    const seen = await until(() => fresh(/The Delirium/).some(m => m.content.includes(tok(seer1.id).name)), 6000);
     const card = fresh(/The Delirium/).at(-1);
     await t.unsetFlag("wodx-paperdoll", "sprite");
     ok("a. Delirium", seen && card?.whisper?.length > 0 && card.whisper.every(id => game.users.get(id)?.isGM) && /Run the Delirium/.test(card.content),
@@ -121,7 +121,7 @@ async function setup() {
     const desc = L().look.describe(nosf);
     const t = tok(nosf.id);
     await t.update({x: G * 46, y: G * 15});
-    const seen = await until(() => fresh(/Record the witnesses/).some(m => m.content.includes(seer2.name)), 6000);
+    const seen = await until(() => fresh(/Record the witnesses/).some(m => m.content.includes(tok(seer2.id).name)), 6000);
     const card = fresh(/Record the witnesses/).at(-1);
     await nosf.createEmbeddedDocuments("ActiveEffect", [{name: "Obfuscated", img: "icons/svg/invisible.svg", statuses: ["wodx-obfuscated"]}]);
     await until(() => nosf.statuses?.has?.("wodx-obfuscated"), 3000);
