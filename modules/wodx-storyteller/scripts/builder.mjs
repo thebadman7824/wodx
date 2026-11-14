@@ -74,7 +74,12 @@ async function stepSettings(r) {
   const res = await Setup.runSetup({name: r.title, year: o.year, month: o.month, day: o.day, hour: o.hour, homeland: r.homeland,
     climate: r.climate, lines: r.lines, setDate: true});
   if ( !res || res.error ) return {error: res?.error === "date" ? "The opening date could not be set." : "Start a chronicle did not run."};
-  return {note: `Done: ${res.done.join(", ")}.`};
+  // The saga over the years (B3671): the recipe's spine names it, and Chronicle's switch goes on in this world
+  let saga = "";
+  if ( r.spine?.saga ) {
+    try { await game.settings.set("wodx-chronicle", "podSaga", true); saga = ", the Rothenstein saga on"; } catch (e) { saga = ", the saga switch was not found (WoDX Chronicle is too old)"; }
+  }
+  return {note: `Done: ${res.done.join(", ")}${saga}.`};
 }
 
 /** The carry file: {version, source, made, docs: {Folder: [...], Actor: [...], ...}} from tools/gate/carryexport.mjs. */

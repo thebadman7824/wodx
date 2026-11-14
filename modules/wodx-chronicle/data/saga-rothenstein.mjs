@@ -8,6 +8,7 @@
  * day]; the gap between two steps on the clock is the gap between their dates.
  *
  * `by` gives a step other words after an earlier book's ending (key = ending). `clocks` moves the saga's long clocks.
+ * `town` names what the step does to the valley's town (WoDX Storyteller's towns over time; B3670).
  * `signal` is a note in the omens shape {kind, region, weight, words} for systems that read the world's signals.
  * `ending` lists the endings the Storyteller picks from when the step comes. Real people stay offstage.
  */
@@ -136,14 +137,14 @@ export const SAGA = {
       text: "The Mongol host comes through Moravia. The sleeper wakes to the smell of so much death.",
       steps: [
         s("news", "world", [1240, 12, 1], "News from Kyiv", "Refugees say a great city in the east has fallen to riders who do not stop.", {signal: {kind: "saga", weight: 2, words: "riders from the steppe are coming west"}}),
-        s("host", "world", [1241, 4, 9], "The host in Moravia", "After the battle in Silesia, the riders turn south through Moravia. Villages burn on the plain.", {clocks: {sleeper: 1}}),
+        s("host", "world", [1241, 4, 9], "The host in Moravia", "After the battle in Silesia, the riders turn south through Moravia. Villages burn on the plain.", {town: "war", clocks: {sleeper: 1}}),
         s("refuge", "chapter", [1241, 5, 1], "The caves under the ridge", "The valley's people hide in the caves, as their ancestors did in 902, and the thing in the rock wakes to them.", {by: {seal: "The binding must be kept with a full valley of frightened people sleeping on top of it.", sever: "The caves are empty of it, but something has been living there since it left.", take: "Whoever holds the door could close the caves to the riders, for a price."}}),
         s("gone", "chapter", [1242, 3, 1], "The riders turn back", "News comes that the Great Khan is dead, and the host goes home. The valley counts who did not come out of the caves.")
       ]},
     {key: "silver", n: 7, title: "Silver Under the Hill", from: 1290, to: 1305, era: "dark-ages", lines: ["all"],
       text: "A silver rush in Bohemia and the king's new mining law bring miners, money and greed back to the Adit.",
       steps: [
-        s("rush", "world", [1290, 5, 1], "The rush", "Word of rich silver in Bohemia brings German miners east again. The council reopens the old Adit.", {clocks: {ashfield: 1}}),
+        s("rush", "world", [1290, 5, 1], "The rush", "Word of rich silver in Bohemia brings German miners east again. The council reopens the old Adit.", {town: "boom", clocks: {ashfield: 1}}),
         s("law", "world", [1300, 6, 1], "The king's mining law", "A new royal mining code makes the silver the crown's. A royal mint-master comes to count the Adit.", {clocks: {church: 1}}),
         s("deep", "chapter", [1301, 9, 1], "The new galleries", "The miners break into galleries from 1198. Some of the names scratched on the walls belong to people still living."),
         s("strike", "chapter", [1303, 4, 1], "The strike", "The miners down tools. The mint-master wants it settled by force, and the Kindred want it settled quietly."),
@@ -156,7 +157,7 @@ export const SAGA = {
         s("pass", "chapter", [1349, 5, 1], "The plague goes round", "The sickness takes the towns on the plain and passes the valley by. A child in Dolany says the hill asked for one thing instead.", {clocks: {sleeper: 1},
           by: {seal: "The keeper of the binding is the one asked. The price is a life, as the old promise said.", sever: "The thing is not here to bargain. The mercy came from somewhere else, and that is worse.", take: "The one who holds the door made the bargain without asking anyone."}}),
         s("blame", "chapter", [1350, 3, 1], "Who paid", "Flagellants come through and ask why Rothenstein was spared. Their answer is a scapegoat.", {clocks: {church: 1}}),
-        s("return", "world", [1380, 8, 1], "The plague comes back", "A new wave of the pestilence reaches Moravia. This time the hill does not turn it aside.", {clocks: {sleeper: 1}}),
+        s("return", "world", [1380, 8, 1], "The plague comes back", "A new wave of the pestilence reaches Moravia. This time the hill does not turn it aside.", {town: "plague", clocks: {sleeper: 1}}),
         s("after", "chapter", [1381, 5, 1], "Fewer and bolder", "Half the Lower Town is gone. Wages rise, fields lie empty, and the Ashfield takes what nobody ploughs.", {clocks: {ashfield: 1}})
       ]},
     {key: "chalice", n: 9, title: "The Chalice and the Sword", from: 1415, to: 1436, era: "long-night", lines: ["all"],
@@ -164,7 +165,7 @@ export const SAGA = {
       steps: [
         s("fire", "world", [1415, 7, 6], "A preacher burned", "Jan Hus is burned at Constance. The Czech villages of the valley grieve, and the German town is afraid.", {signal: {kind: "saga", weight: 2, words: "a Bohemian preacher is burned and the land rises"}}),
         s("split", "chapter", [1420, 6, 1], "Two churches", "Dolany takes the chalice; the Lower Town keeps the Pope. St. Aegidius is shut, and the Kindred who hid in the Church lose their cover.", {clocks: {charter: -1}}),
-        s("raid", "chapter", [1423, 9, 1], "The wagon-fort", "A Hussite field army comes up the valley road. Kranzfels is besieged by people who do not fear priests.", {clocks: {sleeper: 1}}),
+        s("raid", "chapter", [1423, 9, 1], "The wagon-fort", "A Hussite field army comes up the valley road. Kranzfels is besieged by people who do not fear priests.", {town: "siege", clocks: {sleeper: 1}}),
         s("grove", "chapter", [1428, 4, 30], "Night at the Grove", "The radicals burn shrines and idols. Someone marches on the Old Grove to break the stones.", {
           by: {seal: "Breaking the stones would break the binding. The company must stop people who think they are doing God's work.", sever: "The stones mean nothing now, but the radicals find what lives in the caves.", take: "The holder of the door could let the radicals break the stones, and finish the binding for good."}}),
         s("peace", "world", [1436, 7, 5], "The Compacts", "The council's peace is read at Jihlava. The wars end, the valley's two churches live side by side, and old debts are settled in the dark.")
@@ -174,9 +175,9 @@ export const SAGA = {
       steps: [
         s("window", "world", [1618, 5, 23], "Out of the window", "The Bohemian estates throw the emperor's men from a Prague window. Moravia joins the revolt in 1619.", {signal: {kind: "saga", weight: 2, words: "Bohemia is in revolt and war is coming"}}),
         s("white", "world", [1620, 11, 8], "The White Mountain", "The rebels are broken near Prague. Protestant lords lose their lands, and the valley gets a new Catholic master from Vienna.", {clocks: {church: 1}}),
-        s("convert", "chapter", [1624, 3, 1], "Convert or leave", "The new lord's Jesuits come with a list. Families of the valley go into exile or kneel. The Herd is broken up.", {clocks: {charter: -1}}),
-        s("swedes", "chapter", [1645, 5, 1], "The Swedes at the pass", "A Swedish army besieges Brno and forages through the hills. Soldiers dig into the ridge for treasure.", {clocks: {sleeper: 1}}),
-        s("hunger", "chapter", [1647, 2, 1], "The hungry years", "Plague, famine and wolves after the armies. The Ashfield spreads into fields nobody is alive to plough.", {clocks: {ashfield: 1}}),
+        s("convert", "chapter", [1624, 3, 1], "Convert or leave", "The new lord's Jesuits come with a list. Families of the valley go into exile or kneel. The Herd is broken up.", {town: "exile", clocks: {charter: -1}}),
+        s("swedes", "chapter", [1645, 5, 1], "The Swedes at the pass", "A Swedish army besieges Brno and forages through the hills. Soldiers dig into the ridge for treasure.", {town: "siege", clocks: {sleeper: 1}}),
+        s("hunger", "chapter", [1647, 2, 1], "The hungry years", "Plague, famine and wolves after the armies. The Ashfield spreads into fields nobody is alive to plough.", {town: "famine", clocks: {ashfield: 1}}),
         s("peace", "world", [1648, 10, 24], "Peace", "The peace is signed in Westphalia. Half the villages of the valley are empty.")
       ]},
     {key: "commissioner", n: 11, title: "The Witch-Commissioner", from: 1678, to: 1696, era: "age-of-reason", lines: ["all"],
@@ -184,7 +185,7 @@ export const SAGA = {
       steps: [
         s("arrive", "chapter", [1679, 3, 1], "The commissioner comes", "A lawyer with a warrant for witches arrives from the north, where the fires have already been lit.", {clocks: {church: 1}}),
         s("names", "chapter", [1680, 6, 1], "Names under question", "A herbwife of Dolany names others under torture. Some of the names are true.", {signal: {kind: "saga", weight: 2, words: "witch-trials spread through Moravian valleys"}}),
-        s("plague", "world", [1680, 9, 1], "The plague of 1680", "Plague comes through the crown lands. The commissioner blames the witches."),
+        s("plague", "world", [1680, 9, 1], "The plague of 1680", "Plague comes through the crown lands. The commissioner blames the witches.", {town: "plague"}),
         s("grove", "chapter", [1684, 4, 30], "Walpurgis night", "The commissioner wants the Old Grove's stones as evidence.", {by: {seal: "Moving the stones would break the binding.", sever: "The stones are only stones, but the commissioner believes otherwise.", take: "The holder of the door has been feeding the commissioner names."}}),
         s("end", "chapter", [1696, 1, 1], "The fires go out", "A complaint reaches Vienna and the trials stop. The valley remembers who named whom for three hundred years.")
       ]},
@@ -204,17 +205,17 @@ export const SAGA = {
         s("rising", "world", [1848, 3, 13], "The revolution", "Vienna rises. Labour dues on the land end that summer. The valley's Czech and German halves argue in two languages about what they are.", {signal: {kind: "saga", weight: 2, words: "revolution spreads through the Austrian lands"}}),
         s("rail", "chapter", [1852, 5, 1], "The railway survey", "Engineers want a line through the valley and a cutting through the red ridge.", {clocks: {sleeper: 1}, by: {seal: "A cutting through the ridge would cut through the binding.", sever: "The cutting opens caves that something has been living in since 1202.", take: "The holder of the door has shares in the railway."}}),
         s("schools", "chapter", [1860, 9, 1], "Two schools", "The town splits into a Czech school and a German one. Old families take sides, and so do the Kindred who feed on them.", {clocks: {charter: -1}}),
-        s("war", "world", [1866, 7, 3], "The Prussians", "After the battle at Hradec Králové, Prussian troops march through Moravia with cholera in their wagons.", {clocks: {ashfield: 1}}),
-        s("cholera", "chapter", [1866, 8, 1], "The cholera summer", "The Lower Town buries a tenth of its people in a month. The Shroud is thin over the new cemetery.")
+        s("war", "world", [1866, 7, 3], "The Prussians", "After the battle at Hradec Králové, Prussian troops march through Moravia with cholera in their wagons.", {town: "war", clocks: {ashfield: 1}}),
+        s("cholera", "chapter", [1866, 8, 1], "The cholera summer", "The Lower Town buries a tenth of its people in a month. The Shroud is thin over the new cemetery.", {town: "plague"})
       ]},
     {key: "iron-harvest", n: 14, title: "The Iron Harvest", from: 1914, to: 1921, era: "great-war", lines: ["all"],
       text: "The Great War takes the valley's men to Galicia and the Isonzo, and brings back the influenza and a new state.",
       steps: [
-        s("call", "world", [1914, 7, 31], "Mobilisation", "Posters go up in two languages. The valley's young men go east.", {signal: {kind: "saga", weight: 2, words: "the Great War takes a Moravian valley's young men"}}),
+        s("call", "world", [1914, 7, 31], "Mobilisation", "Posters go up in two languages. The valley's young men go east.", {town: "war", signal: {kind: "saga", weight: 2, words: "the Great War takes a Moravian valley's young men"}}),
         s("letters", "chapter", [1916, 3, 1], "Letters from the front", "A soldier in a trench in Galicia writes home about a dream of the red ridge, and says something there knew their name.", {clocks: {sleeper: 1}}),
-        s("hunger", "chapter", [1917, 1, 15], "The hungry winter", "Hunger in the towns. The Ashfield is ploughed for the first time in centuries, by desperate people.", {clocks: {ashfield: 1}}),
+        s("hunger", "chapter", [1917, 1, 15], "The hungry winter", "Hunger in the towns. The Ashfield is ploughed for the first time in centuries, by desperate people.", {town: "famine", clocks: {ashfield: 1}}),
         s("republic", "world", [1918, 10, 28], "The republic", "Czechoslovakia is declared. The German town wakes up in a Czech state.", {clocks: {charter: -1}}),
-        s("flu", "chapter", [1918, 11, 1], "The influenza", "The flu kills more of the valley than the war did. Wraiths crowd the Shadowlands of the new cemetery."),
+        s("flu", "chapter", [1918, 11, 1], "The influenza", "The flu kills more of the valley than the war did. Wraiths crowd the Shadowlands of the new cemetery.", {town: "plague"}),
         s("land", "chapter", [1921, 5, 1], "The land reform", "The new state breaks up the great estates. Kranzfels and its forests go to auction.")
       ]},
     {key: "ash-years", n: 15, title: "The Ash Years", from: 1938, to: 1948, era: "mid-century", lines: ["all"],
@@ -223,14 +224,14 @@ export const SAGA = {
         s("munich", "world", [1938, 10, 1], "The border moves", "The borderlands are given to Germany. Rothenstein is just inside the line, or just outside it, and everyone is counted.", {signal: {kind: "saga", weight: 3, words: "the border moves and a Moravian valley is counted"}}),
         s("occupation", "chapter", [1940, 2, 1], "The Protectorate", "German officials take over the town hall. An SS archaeologist asks about the Old Grove.", {clocks: {church: 1, sleeper: 1}}),
         s("resistance", "chapter", [1942, 6, 1], "After Heydrich", "Reprisals after the assassination in Prague. A village is chosen for punishment, and the valley fears it will be one of theirs."),
-        s("front", "world", [1945, 4, 1], "The front", "The Red Army comes through the White Carpathians. Kranzfels is shelled.", {clocks: {charter: -1}}),
-        s("expulsion", "chapter", [1946, 3, 1], "The trains west", "The valley's Germans, seven hundred and fifty years in Rothenstein, are put on trains with one suitcase each. Their Kindred and their Herd go with them, or stay and hide.", {clocks: {ashfield: 1}}),
+        s("front", "world", [1945, 4, 1], "The front", "The Red Army comes through the White Carpathians. Kranzfels is shelled.", {town: "siege", clocks: {charter: -1}}),
+        s("expulsion", "chapter", [1946, 3, 1], "The trains west", "The valley's Germans, seven hundred and fifty years in Rothenstein, are put on trains with one suitcase each. Their Kindred and their Herd go with them, or stay and hide.", {town: "expulsion", clocks: {ashfield: 1}}),
         s("coup", "world", [1948, 2, 25], "February", "The Communist Party takes power. The church lands, the mines and the people's secrets belong to the state now.", {clocks: {church: 1}})
       ]},
     {key: "grey-shaft", n: 16, title: "The Grey Shaft", from: 1951, to: 1989, era: "mid-century", lines: ["all"],
       text: "Uranium mining under the ridge, the secret police, the Prague Spring and its end, and the slow fall of the regime.",
       steps: [
-        s("survey", "chapter", [1951, 6, 1], "The prospectors", "State geologists with Soviet advisers find uranium under the red ridge. The Adit becomes a numbered shaft behind wire.", {clocks: {sleeper: 2}, by: {seal: "The binding lies in the path of the new shaft.", sever: "The shaft opens the caves the thing lived in; the geologists find its bed.", take: "The holder of the door goes to work for the ministry."}}),
+        s("survey", "chapter", [1951, 6, 1], "The prospectors", "State geologists with Soviet advisers find uranium under the red ridge. The Adit becomes a numbered shaft behind wire.", {town: "boom", clocks: {sleeper: 2}, by: {seal: "The binding lies in the path of the new shaft.", sever: "The shaft opens the caves the thing lived in; the geologists find its bed.", take: "The holder of the door goes to work for the ministry."}}),
         s("camp", "chapter", [1953, 1, 1], "The labour camp", "Political prisoners dig the shaft. The dead are many, and the guards find their ghosts do not rest.", {clocks: {ashfield: 1}}),
         s("spring", "world", [1968, 8, 21], "The tanks", "The Warsaw Pact ends the Prague Spring. The valley's informers go back to work.", {signal: {kind: "saga", weight: 2, words: "the tanks come into Czechoslovakia"}}),
         s("file", "chapter", [1977, 1, 1], "The file", "The secret police open a file on a family of the valley whose members do not age.", {clocks: {church: 2}}),
@@ -239,7 +240,7 @@ export const SAGA = {
     {key: "red-star", n: 17, title: "The Flood and the Red Star", from: 1997, to: 1999, era: "modern", lines: ["all"],
       text: "The great Moravian flood of 1997 washes open the old galleries, and two years later a red star hangs in the sky.",
       steps: [
-        s("flood", "world", [1997, 7, 7], "The flood", "A week of rain and the river takes the Lower Town. The water goes down into the old shafts and comes up somewhere else.", {clocks: {sleeper: 1, ashfield: 1}, signal: {kind: "saga", weight: 3, words: "flood waters open old shafts under a Moravian ridge"}}),
+        s("flood", "world", [1997, 7, 7], "The flood", "A week of rain and the river takes the Lower Town. The water goes down into the old shafts and comes up somewhere else.", {town: "flood", clocks: {sleeper: 1, ashfield: 1}, signal: {kind: "saga", weight: 3, words: "flood waters open old shafts under a Moravian ridge"}}),
         s("mud", "chapter", [1997, 8, 1], "What the mud left", "Volunteers clearing the Lower Town find bones that are older than the town, and some that are not."),
         s("tourists", "chapter", [1998, 6, 1], "The heritage trail", "A European grant turns the old mine into a museum. Visitors go down every day."),
         s("dreams", "chapter", [1999, 7, 1], "Red dreams", "In the summer of 1999 everyone touched by the valley dreams of a red star and a waking giant. The Husbandman dreams too, and it is not afraid.", {clocks: {sleeper: 1}, signal: {kind: "saga", weight: 3, words: "a sleeper under the red ridge dreams the red star's dream"}})

@@ -114,3 +114,19 @@ test("the saga's words: no gendered pronouns, no long dashes, real people offsta
     assert.doesNotMatch(w, /\bB\d{3,4}\b/, w);
   }
 });
+
+test("saga steps that change the town name a change the towns know (B3670)", async () => {
+  const TR = await import("../../modules/wodx-storyteller/scripts/town-rules.mjs");
+  assert.deepEqual([...S.TOWN_KINDS].sort(), Object.keys(TR.SAGA_TOWN).sort());
+  const kinds = S.SAGA.books.flatMap(b => b.steps.map(x => x.town).filter(Boolean));
+  assert.ok(kinds.length >= 15 && kinds.includes("flood") && kinds.includes("expulsion"));
+  assert.equal(S.bookChain("red-star").steps.find(x => x.key === "flood").town, "flood");
+  const e = TR.sagaEvent("expulsion", "m1", "The trains west");
+  assert.equal(e.town, "m1");
+  assert.ok(e.fled > 0.3 && /^The trains west: a whole people/.test(e.text));
+  assert.equal(TR.sagaEvent("nothing", "m1"), null);
+  const st = TR.normState({towns: {m1: TR.newTown({id: "m1", name: "Rothenstein"}, {people: 2000})}});
+  const r = TR.applyNow(st, [TR.sagaEvent("flood", "m1", "The flood")], {year: 1997, month: 7});
+  assert.equal(r.events.length, 1);
+  assert.ok(r.state.towns.m1.scars.some(s => s.kind === "flood"));
+});

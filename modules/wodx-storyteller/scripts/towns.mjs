@@ -260,6 +260,21 @@ async function onBattle({battle, step} = {}) {
   return r;
 }
 
+/** A Rothenstein saga step that changes its town (hook wodxSaga with `town`; B3670). Once per step. */
+async function onSaga(p = {}) {
+  if ( !isActiveGM() || !p.town || !p.where ) return null;
+  const m = TR.townOfPlace(p.where, Markets.state().markets, sceneName);
+  if ( !m ) return null;
+  const key = `saga:${p.book}:${p.step}`;
+  if ( state().towns[m.id]?.seen?.includes(key) ) return null;
+  const n = TR.sagaEvent(p.town, m.id, p.title ?? "");
+  if ( !n ) return null;
+  const r = await landNow([n], p.title ? `the saga (${p.title})` : "the saga");
+  const s2 = state();
+  if ( s2.towns[m.id] ) { s2.towns[m.id].seen = [...s2.towns[m.id].seen, key].slice(-40); await save(s2); }
+  return r;
+}
+
 /* ------------------------------------------------------------------ */
 /*  The Towns window                                                   */
 /* ------------------------------------------------------------------ */
@@ -349,6 +364,7 @@ export async function setupTowns() {
   Hooks.on("wodxSkipEnd", () => { if ( isActiveGM() ) run().catch(e => console.error(`${MOD} | towns`, e)); });
   Hooks.on("wodxEventFired", e => { onEventFired(e).catch(err => console.error(`${MOD} | towns`, err)); });
   Hooks.on("wodxBattle", p => { onBattle(p).catch(err => console.error(`${MOD} | towns`, err)); });
+  Hooks.on("wodxSaga", p => { onSaga(p).catch(err => console.error(`${MOD} | towns`, err)); });
   Hooks.on("renderChatMessageHTML", (message, el) => {
     const html = el?.[0] ?? el;
     const f = message.flags?.[MOD]?.townTurn;
@@ -362,4 +378,4 @@ export async function setupTowns() {
 
 /** B3420: the town at each settlement age, for the chronicle rebuild's ages step (recipe ages). */
 export const atAges = (id, ages = []) => TR.townAtAges(state().towns[id] ?? null, ages);
-export const api = () => ({open: townsDialog, edit: editTown, state, of, ofScene, run, undo, atAges, rules: TR});
+export const api = () => ({open: townsDialog, edit: editTown, state, of, ofScene, run, undo, atAges, saga: onSaga, rules: TR});
