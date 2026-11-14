@@ -163,7 +163,8 @@ export async function run() {
       const [steed] = await G.make(Actor, [{...body("Gate Warhorse", {str: 6, dex: 4, sta: 5, athletics: 3}), type: "Mortal"}]);
       const [ts] = await G.tokens(scene, [{actor: steed, x: 14, y: 8, actorLink: true}]);
       await tr.update({x: ts.x + (scene.grid?.size ?? 100), y: ts.y});
-      await waitFor(() => ts?.object && tr?.object, 4000);
+      // the token slides there: wait until it has arrived on the canvas
+      await waitFor(() => ts?.object && tr?.object && Math.abs(tr.object.center.x - (tr.x + (scene.grid?.size ?? 100) / 2)) < 2, 6000);
       const listed = ix.interactablesFor(tr.object).some(x => x.doc?.id === ts.id);
       await ix.attempt(tr.object, ts.id, "mount", {fd: {bonus: 0}});
       const on = await waitFor(() => scene.tokens.get(ts.id)?.flags?.[IX]?.driver?.t === tr.uuid, 10000);
@@ -184,7 +185,7 @@ export async function run() {
         damage: {attribute: "", bonus: 7, type: "lethal", isrollable: true}, attack: {attribute: "dexterity", ability: "firearms"}}}]);
       const [tv] = await G.tokens(scene, [{actor: van, x: 10, y: 12, actorLink: true}]);
       await tn.update({x: tv.x, y: tv.y + (scene.grid?.size ?? 100)});
-      await waitFor(() => tv?.object && tn?.object, 4000);
+      await waitFor(() => tv?.object && tn?.object && Math.abs(tn.object.center.y - (tn.y + (scene.grid?.size ?? 100) / 2)) < 2, 6000);
       await van.sheet.render(true);
       const opened = await waitFor(() => !!van.sheet.element?.querySelector?.(".wvx-track .wvx-box"), 6000);
       await van.sheet.close();
