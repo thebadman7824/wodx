@@ -100,10 +100,11 @@ export const WORLD_REGIONS = {
     modern: "anglo 375, hispanic 110, haudenosaunee 10, lenape 2, new-england-algonquian 2, powhatan 1"}, {culture: "american", lend: false}),
   // The Plains peoples before the Spanish, then beside them, then a share (B3820); the East borrows none of it (lend: false)
   "north-america-west": R("The American West (the Plains, the Rockies, the Southwest)", "americas", 39.0, -105.0, "great-plains", "american", {
-    medieval: "lakota 45, cheyenne 20, comanche 20, kiowa 15",
-    "early-modern": "spanish 30, lakota 30, comanche 18, cheyenne 12, kiowa 10",
-    industrial: "anglo 60, hispanic 20, chinese 5, irish 5, lakota 6, cheyenne 2, comanche 1, kiowa 1",
-    modern: "anglo 66, hispanic 28, lakota 4, cheyenne 1, comanche 1"}, {...AM, lend: false}),
+    // and the Southwest: the Pueblos, the Diné and the Apache (B3930)
+    medieval: "lakota 28, cheyenne 12, comanche 12, kiowa 8, pueblo 22, dine 10, apache 8",
+    "early-modern": "spanish 30, lakota 20, comanche 12, cheyenne 8, kiowa 6, pueblo 12, dine 7, apache 5",
+    industrial: "anglo 60, hispanic 20, chinese 5, irish 5, lakota 6, cheyenne 2, comanche 1, kiowa 1, dine 3, pueblo 2, apache 1",
+    modern: "anglo 66, hispanic 28, lakota 4, cheyenne 1, comanche 1, dine 3, pueblo 1, apache 1"}, {...AM, lend: false}),
   "mexico": R("Mexico and Central America (Tenochtitlan, New Spain)", "americas", 19.4, -99.1, "highland-tropics", "mexican", {
     // the Maya of Yucatán, the Petén and the Guatemalan highlands beside the Nahua (B3830)
     medieval: "nahua 70, maya 30", "early-modern": "nahua 38, maya 17, spanish 45", industrial: "spanish 80, nahua 12, maya 8"}),
