@@ -36,7 +36,11 @@ export function makerFacts(a) {
   try { profile = game.wodx?.profiles?.detectProfile?.(a) ?? profile; } catch (e) { /* Actions off */ }
   let gender = "";
   try { gender = game.modules.get("wodx-chronicle")?.api?.gender?.forRules?.(a) ?? ""; } catch (e) { gender = ""; }
-  return {profile, kinfolk: a?.flags?.world?.wodx?.kinfolk ?? null, breed: a?.system?.changingbreed ?? "",
+  const sys = a?.system ?? {};
+  const tribe = [sys.tribe, sys.custom?.tribe, sys.bio?.tribe].filter(x => typeof x === "string").join(" ");
+  let kinfolkMay = false;
+  try { kinfolkMay = !!W()?.kinfolkMay?.(); } catch (e) { kinfolkMay = false; }
+  return {profile, kinfolk: a?.flags?.world?.wodx?.kinfolk ?? null, kinfolkMay, tribe, breed: a?.system?.changingbreed ?? "",
     gnosis: num(adv.gnosis?.permanent), willpower: num(adv.willpower?.permanent), rituals: ritualsOf(a),
     rites: [...(a?.items ?? [])].filter(i => i.type === "Power" && i.system?.type === "wod.types.rite").map(i => i.name), gender};
 }

@@ -13,7 +13,7 @@ export {WONDERS, MAKES, MAKERS, TALEN_EXTRA, byKey};
 
 /** The lines that can make things, each with its world setting (g6: on in the testbed, off on Live until Ben says). */
 export const LINES = {
-  garou: {label: "Werewolf and the Changing Breeds", setting: "craftGarou", makers: ["garou", "kinfolk"]}
+  garou: {label: "Werewolf and the Changing Breeds", setting: "craftGarou", makers: ["garou", "spiral", "kinfolk"]}
 };
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -27,13 +27,15 @@ export const breedOf = s => {
 
 /**
  * Who is making it, from what the caller reads off the sheet.
- * m: {profile ("lupine", "mortal", ...), kinfolk (tribe or true), breed, gnosis (permanent), willpower, rituals,
- *     rites: [names known], gender}
- * Returns {kind: "garou"|"kinfolk"|null, breed, ...m}.
+ * m: {profile ("lupine", "mortal", ...), kinfolk (tribe or true), kinfolkMay (the world setting craftKinfolk), tribe,
+ *     breed, gnosis (permanent), willpower, rituals, rites: [names known], gender}
+ * Returns {kind: "garou"|"spiral"|"kinfolk"|null, breed, ...m}. Kinfolk make nothing unless kinfolkMay (B3680).
  */
+export const isSpiral = tribe => /black\s*spiral|blackspiral|spiral\s*dancer/i.test(String(tribe ?? ""));
+
 export function makerOf(m = {}) {
   const lupine = low(m.profile) === "lupine";
-  const kind = lupine ? "garou" : (m.kinfolk && n(m.gnosis) >= 1 ? "kinfolk" : null);
+  const kind = lupine ? (isSpiral(m.tribe) ? "spiral" : "garou") : (m.kinfolk && m.kinfolkMay && n(m.gnosis) >= 1 ? "kinfolk" : null);
   return {...m, kind, breed: lupine ? breedOf(m.breed) : "garou", gnosis: n(m.gnosis), willpower: n(m.willpower), rituals: n(m.rituals),
     rites: (m.rites ?? []).map(String)};
 }
@@ -43,12 +45,14 @@ export const inYear = (w, year = 0) => !w.from || !year || year >= w.from;
 
 /**
  * The rows a maker may choose, by line. A Garou sees the Garou list; another Changing Breed sees the Garou list and its
- * own breed's fetishes; Kinfolk see the Garou list (B3634, house reading until W20 Kinfolk is read).
+ * own breed's fetishes; Kinfolk (only with craftKinfolk) see the Garou list (B3634, B3680). The Bane fetishes are for
+ * Black Spiral Dancers alone, who bind Banes and see nothing else (B3681).
  */
 export function listFor(maker, {line = "garou", year = 0} = {}) {
   const mk = maker?.kind ? maker : makerOf(maker);
   if ( !mk.kind || !LINES[line]?.makers.includes(mk.kind) ) return [];
-  return WONDERS.filter(w => w.line === line && inYear(w, year) && (!w.breeds || w.breeds.includes(mk.breed)));
+  const spiral = mk.kind === "spiral";
+  return WONDERS.filter(w => w.line === line && inYear(w, year) && !!w.wyrm === spiral && (!w.breeds || w.breeds.includes(mk.breed)));
 }
 
 /** The level of the rite a row needs. */
@@ -62,7 +66,8 @@ export function blockers(w, maker, {spend = 0} = {}) {
   const mk = maker?.kind !== undefined ? maker : makerOf(maker);
   const out = [];
   if ( !w ) return ["no such item"];
-  if ( !mk.kind ) out.push("only Garou, the other Changing Breeds and Kinfolk with Gnosis make fetishes and talens");
+  if ( !mk.kind ) out.push("only Garou and the other Changing Breeds make fetishes and talens");
+  if ( mk.kind && !!w.wyrm !== (mk.kind === "spiral") ) out.push(w.wyrm ? "only servants of the Wyrm bind Banes into fetishes" : "a servant of the Wyrm binds Banes, not Gaian spirits");
   const make = MAKES[w.kind];
   const knows = mk.rites.some(r => make.rite.test(r));
   if ( !knows ) out.push(`needs the ${make.label} (level ${make.riteLevel})`);
@@ -79,6 +84,8 @@ export function cautions(w, maker) {
   if ( w?.onlyFemale && low(maker?.gender) && !/^(f|female|woman)$/.test(low(maker.gender)) ) out.push(`${w.name} will not work for a male Garou (W20 pdf ${w.pdf}).`);
   if ( w?.tribe ) out.push(`A signature fetish of the ${w.tribe}; others making one may need the tribe's teaching.`);
   if ( w?.silver ) out.push(`Silver: carrying it costs ${w.silver} from the bearer's effective Gnosis.`);
+  if ( w?.atrocity ) out.push(`Making ${w.name} means torturing a living victim for a month: the Storyteller decides what follows (W20 Book of the Wyrm pdf ${w.pdf}).`);
+  if ( w?.wyrm ) out.push("A Bane fetish: a Gaian who carries or uses it risks the Wyrm's taint.");
   if ( w?.house ) out.push("Part of this entry is a house reading (logged for review).");
   return out;
 }
