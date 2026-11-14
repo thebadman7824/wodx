@@ -82,19 +82,19 @@ export async function run() {
         "system.attributes.stamina.value": 3, "system.attributes.stamina.total": 3, "system.abilities.medicine.value": 2 });
       await game.user.updateTokenTargets?.([]);
       let n = game.messages.size;
-      answer(root => { set(root, "evo", "storms:2"); set(root, "fs", 3); });
+      answer(root => { set(root, "evo", "storms:2"); set(root, "fs", 1); }); // the sheet holds temporary Faith at the permanent rating (1): more would fail the field's max
       A().demonEvoke({ actor: dv });
       const m = await untilMsg(n);
       const items = fx(m);
       const run1 = (dv.getFlag("wodx-actions", "demon")?.running ?? []).length;
       // Faith 1: a second lasting evocation is refused unless the first is ended
       n = game.messages.size;
-      answer(root => { set(root, "evo", "storms:2"); set(root, "fs", 1); set(root, "endOld", false); });
+      answer(root => { set(root, "evo", "storms:2"); set(root, "fs", 0); set(root, "endOld", false); });
       A().demonEvoke({ actor: dv });
       await sleep(2500);
       const refused = !(await untilMsg(n, 500));
       ok("2 Demon evocation card and running limit", !!m && /What it does/.test(m.content) && /High Torment/.test(m.content) && items.some(i => i.key === "shape") && run1 === 1 && refused,
-        { card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`), run1, refused });
+        { card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`), run1, refused, faith: dv.system?.advantages?.faith, errors: [...R.errors] });
     });
     await step("3 Demon apocalyptic form on the sheet", async () => {
       const lore = (nm, v) => ({ name: nm, type: "Power", system: { game: "demon", type: "wod.types.lore", value: v } });
@@ -216,7 +216,7 @@ export async function run() {
         set(root, "art", art); root.querySelector("[name=art]").dispatchEvent(new Event("change"));
         set(root, "pw", "yangprana-3-dragon-dance"); root.querySelector("[name=pw]").dispatchEvent(new Event("change"));
       });
-      A().kotSpend(kj);
+      A().kotSpend({ actor: kj });
       const m = await untilMsg(n);
       const items = fx(m);
       const yang = kj.system?.advantages?.yangchi?.temporary;
