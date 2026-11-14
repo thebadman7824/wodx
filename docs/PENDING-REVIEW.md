@@ -1403,3 +1403,8 @@ Ben approved everything that was waiting for review ("Approved on all pending re
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-14 | Move existing worlds from the dawn/dusk and sunlight buttons to automatic (B4895) | Yes, once per world on the first load: "Dawn and dusk" from buttons to New Night at dusk, "Sunlight damage" from a button to roll and apply, with a note to the Storyteller. Off stays off | Set either setting back in WoDX Actions' settings |
+| 2026-11-14 | How long "the whole scene" awake by day lasts on the clock (B4891) | An hour of the clock, or until the scene is ended | SCENE_SECONDS in daysleep-rules.js |
+| 2026-11-14 | Does a sleeper hurt by day roll Perception before the Awakening roll? (B4892) | No: being hurt counts as noticed, so only the Road roll is made | onHurt in daysleep.js; the Awaken by day dialog still offers Perception |
+| 2026-11-14 | Heal on rising by itself, or keep the button? (B4893) | By itself, spending only blood above the hunger line, as the button did | Turn off "Heal on rising" |
+| 2026-11-14 | Rötschreck after a sun burn: roll it by itself too? (B4895) | No, it stays a button, because the player chooses whether to spend Willpower | Call api.rotschreck after applySun in sunlight.js |

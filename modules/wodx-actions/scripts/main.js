@@ -68,6 +68,7 @@ import * as SOR from "./social-rules.js";
 import * as TRR from "./trade-rules.js";
 import * as SOD from "./social.js";
 import * as TH from "./trait-hooks.js";
+import * as DSL from "./daysleep.js";
 import * as DH from "./deeper-hooks.js";
 import * as DPR from "./deeper-rules.js";
 import * as KF from "./feeding-rules.js";
@@ -278,6 +279,8 @@ function isResponsibleGM() {
     return gm?.id === game.user.id;
 }
 async function onSocket(p) {
+    // B4896: a word over a token (falls asleep, rises, burns) on every client
+    if (p?.action === "float") return DSL.floatLocal(p);
     if (!isResponsibleGM()) return;
     if (p.action === "kx" && !p.uuid) return kx().onSocket(p);
     // B3133: a player's codex entry spent on research (the codex journal is the Storyteller's)
@@ -647,6 +650,8 @@ function pickPool(actor, pools) {
 export async function action({ actor: a, preset = "" } = {}) {
     const actor = needActor(a);
     if (!actor) return;
+    // B4890: asleep for the day, a Cainite does nothing until woken (Awaken by day) or the sun sets
+    if (flag(actor, "daySleep") && !game.user.isGM) return ui.notifications.warn(`${actor.name} is asleep for the day. Use Awaken by day if something rouses them.`);
     const target = targetActor();
     const rd = road(actor);
     const day = !!flag(actor, "daytime") && !flag(actor, "daytime")?.uncapped;
@@ -2043,8 +2048,10 @@ export async function daytime({ actor: a } = {}) {
         html += `<div class="vta-big ${res.awake ? "good" : "bad"}">${res.text}</div>`;
         if (res.awake) {
             if (!sm.light) html += `<div class="vta-note">While active by day, no dice pool may exceed the Road rating (${rd.value}). Enabled on the Action dialog.</div>`;
-            await setFlag(actor, "daytime", { turns: res.turns === Infinity ? "scene" : res.turns, ...(sm.light ? { uncapped: true } : {}) });
+            await setFlag(actor, "daytime", { turns: res.turns === Infinity ? "scene" : res.turns, until: game.time.worldTime + (res.turns === Infinity ? 3600 : res.turns * 3), ...(sm.light ? { uncapped: true } : {}) });
         }
+        // B4892: the day's sleep follows the roll (awake: the marker comes off; a botch: deep sleep until sundown)
+        try { await kx().daySleep().afterAwakening(actor, { awake: res.awake, botch: !!r?.botch }); } catch (e) { console.warn("WoDX | day sleep", e); }
         return post(actor, `${actor.name} stirs by day`, html, rolls);
     });
 }
@@ -2603,7 +2610,7 @@ const withActor = f => async (o = {}) => {
 let SXE = null;
 /** The sunlight system (3.3.0). */
 function sx() {
-    return SXE ??= SX.build({ post, rollPool, rollBlock, dialog, setting, setFlag, attr, discipline, applyDamage, healthText,
+    return SXE ??= SX.build({ post, rollPool, rollBlock, dialog, setting, setFlag, attr, discipline, applyDamage, healthText, statusEffect,
         logEvent: (a, t, k) => kx().logEvent(a, t, k), notify: m => ui.notifications.warn(m),
         clockActors: () => { const on = new Set((game.scenes?.active?.tokens ?? []).map(t => t.actor).filter(Boolean)); return [...new Set([...on, ...game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner)])]; } });
 }
@@ -2967,7 +2974,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     crowdNear: a => crowdNear(resolveActor(a)), crowdRules,
     observersOf: (t, o) => kx().observersOf(t, o), revealed: (a, o) => kx().revealed(resolveActor(a), o), placeOf: t => kx().placeOf(t), witnessRules: WRR,
     history: (a, text, kind) => kx().logEvent(a, text, kind), roadOf: a => KX.roadOf(a), healPlan: (a, seconds) => kx().healPlan(a, seconds),
-    healAll: seconds => kx().healAll(seconds), clock: () => kx().onClock(), enterTorpor: (a, o) => kx().enterTorpor(a, o),
+    healAll: seconds => kx().healAll(seconds), clock: () => kx().onClock(), daySleep: () => kx().daySleep(), enterTorpor: (a, o) => kx().enterTorpor(a, o),
     sunlit: t => kx().sunlit(t), setSceneLight: (scene, light) => (scene ?? canvas.scene)?.setFlag(MOD, "light", light),
     kindredRules: KR, disciplines: () => KX.DATA.disc, roads: () => KX.DATA.roads,
     // The sunlight system (3.3.0)
@@ -3064,6 +3071,7 @@ Hooks.once("ready", async () => {
     await WX.loadData();
     garouHooks();
     kindredHooks();
+    autoDayOnce().catch(e => console.warn("WoDX | day and night by themselves", e));
     await createMacros();
 });
 
@@ -3093,6 +3101,20 @@ function garouHooks() {
     });
 }
 
+/**
+ * B4895: once per world, dawn and dusk and the sun's burns move from buttons to happening by themselves (Ben,
+ * 14 November 2026). A world that chose "Off" keeps it; the Storyteller can set the buttons back in the settings.
+ */
+async function autoDayOnce() {
+    if (!isResponsibleGM() || setting("autoDayV1")) return;
+    const moved = [];
+    if (setting("dawnDusk") === "prompt") { await game.settings.set(MOD, "dawnDusk", "auto"); moved.push("New Night runs by itself at dusk"); }
+    if (setting("sunDamage") === "prompt") { await game.settings.set(MOD, "sunDamage", "apply"); moved.push("the sun's burns are rolled and applied"); }
+    await game.settings.set(MOD, "autoDayV1", true);
+    if (moved.length) await ChatMessage.create({ content: `<div class="vta-card"><h3>Day and night by themselves</h3><p>From now on ${moved.join(", and ")}. Cainites also sleep by day and rise at their own hour. Each can be set back to buttons in WoDX Actions' settings.</p></div>`,
+        whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: { alias: "WoDX" } });
+}
+
 /** Kindred and general hooks (3.2.0): the clock (healing, dawn, dusk, torpor), wounds, blood, Combat's damage, the Delirium. */
 function kindredHooks() {
     let busy = false;
@@ -3119,6 +3141,7 @@ function kindredHooks() {
         if (combat.round <= (sunRound.get(combat.id) ?? 0)) return;
         sunRound.set(combat.id, combat.round);
         sx().onRound(combat).catch(e => console.error("WoDX |", e));
+        kx().daySleep().onRound(combat).catch(e => console.error("WoDX |", e));
     });
     // B3562: the Beast takes a frenzied player character's turn (setting beastToken)
     Hooks.on("updateCombat", (combat, changed) => {

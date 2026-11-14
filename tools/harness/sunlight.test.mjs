@@ -180,7 +180,10 @@ test("burning: Fortitude soaks each turn at the light's difficulty, the rest agg
   assert.doesNotMatch(posts.at(-1).body, /rotschreck/);
 });
 
-test("a fight's new round burns every Cainite in the sun (a card with a button by default); stepping into it too", async () => {
+test("a fight's new round burns every Cainite in the sun (a card with a button when set to prompt); stepping into it too", async () => {
+  // B4895: rolling and applying is the default now; this test checks the button mode
+  assert.equal(game.settings.get("wodx-actions", "sunDamage"), "apply");
+  await game.settings.set("wodx-actions", "sunDamage", "prompt");
   mock.log.chat.length = 0;
   const E2 = SX.build({...ctx, sunNow: async () => DAY});
   const t = token(vampire("Caught"), [region("Yard", "direct")]);
@@ -198,6 +201,7 @@ test("a fight's new round burns every Cainite in the sun (a card with a button b
   assert.equal(mock.log.chat.length, 1, "no second card while she stays in the sun");
   const E3 = SX.build({...ctx, sunNow: async () => NIGHT});
   assert.deepEqual(await E3.onRound({round: 3, combatants: [{token: t}]}), []);
+  await game.settings.set("wodx-actions", "sunDamage", "apply");
 });
 
 test("havens: set by scene or region; dawn warns who is away", async () => {

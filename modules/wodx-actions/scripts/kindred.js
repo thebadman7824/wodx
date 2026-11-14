@@ -27,6 +27,8 @@ import * as PK from "./power-keywords.js";
 import * as TH from "./trait-hooks.js";
 import * as WR from "./witness-rules.js";
 import * as BR from "./book-rituals.js";
+import * as DSX from "./daysleep.js";
+import * as DSR from "./daysleep-rules.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -82,6 +84,9 @@ export function roadOf(actor) {
 
 export function build(ctx) {
     const { post, rollPool, rollBlock, dialog, updateActor, attr, findAbility, abilityList, setting, spendWillpower } = ctx;
+    // B4890: the day's sleep and rising, built once with this part's clock and healing
+    let DSE = null;
+    const ds = () => DSE ??= DSX.build({ ...ctx, clockActors, riseHeal });
 
     /* ---------------- History log ---------------- */
 
@@ -603,7 +608,11 @@ export function build(ctx) {
      * source "combat" (WoDX Combat applied a card): fire or sunlight → Rötschreck; a mortal killed by a Cainite → sin.
      */
     async function onDamage(actor, { before, after, fireSun = false, attacker = null, source = "sheet" } = {}) {
-        if (!isActiveGM() || !actor || !setting("eventPrompts")) return null;
+        if (!isActiveGM() || !actor) return null;
+        // B4892: a Cainite hurt in the day's sleep rolls to wake by itself
+        const sum = d => n(d?.bashing) + n(d?.lethal) + n(d?.aggravated);
+        if (source === "sheet" && sum(after) > sum(before) && actor.getFlag?.(MOD, "daySleep")) await ds().onHurt(actor).catch(e => console.warn("WoDX | day sleep", e));
+        if (!setting("eventPrompts")) return null;
         const kind = P.detectProfile(actor);
         const bits = [];
         const total = d => n(d?.bashing) + n(d?.lethal) + n(d?.aggravated);
@@ -690,6 +699,8 @@ export function build(ctx) {
                 const ch = K.sunChange(was === "" ? null : was === "night", t.isNight);
                 if (ch || was === "") await game.settings.set(MOD, "sunState", t.isNight ? "night" : "day");
                 if (ch && setting("dawnDusk") !== "off") await (ch === "dawn" ? dawn(t) : dusk(t));
+                // B4890: sleep by day, rise at each one's hour; state-based, so a long jump of the clock lands right
+                await ds().tick({ edge: ch });
             }
         } catch (e) { console.error("WoDX | clock", e); }
         finally { clockBusy = false; }
@@ -754,12 +765,18 @@ export function build(ctx) {
         const rows = [];
         const api = ctx.api();
         const sunInfo = await api.sunNow?.();
+        // B4890: with the day's sleep on, sleep and the vigil happen by themselves (their own card); this card only
+        // names who stands in the open, and the sun burns them by itself unless Sunlight damage asks for a button
+        const auto = setting("daySleep") !== false;
+        const burnBtn = (() => { try { return game.settings.get(MOD, "sunDamage") === "prompt"; } catch (e) { return true; } })();
         for (const a of vamps) {
             const toks = a.getActiveTokens?.() ?? [];
             // The sunlight system (3.3) decides; without it, regions named sunlit or a scene marked outdoors
             const sun = toks.some(tk => api.sunExposure ? api.sunExposure(tk, sunInfo)?.exposed : sunlit(tk));
-            rows.push(`<li><b>${esc(a.name)}</b>${sun ? ": <b>in the open, where the sun will burn them</b>" : ""} ${kbtn("stayAwake", a, "Stay awake (Road, 8)")}${sun ? kbtn("sun", a, "Sunlight") : ""}</li>`);
+            if (auto && !sun) continue;
+            rows.push(`<li><b>${esc(a.name)}</b>${sun ? ": <b>in the open, where the sun will burn them</b>" : ""} ${auto ? "" : kbtn("stayAwake", a, "Stay awake (Road, 8)")}${sun && (!auto || burnBtn) ? kbtn("sun", a, "Sunlight") : ""}</li>`);
         }
+        if (!rows.length) return null;
         return ChatMessage.create({ content: `<div class="vta-card"><h3>Dawn: ${esc(t.timeLabel ?? "")}</h3><p>Sunrise. Cainites sleep unless the Road holds them up (each success a turn, five the scene; VtDA20 pp. 336, 359).</p><ul>${rows.join("")}</ul></div>`,
             whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
     }
@@ -773,17 +790,24 @@ export function build(ctx) {
         const dmk = ctx.api().debtsMarks?.();
         if (risers.length && dmk) html.push(`<p>Rising: ${dmk.riseLines(risers).join("; ")}.</p>`);
         try { await dmk?.soulCards?.(); } catch (e) { console.warn("WoDX | diablerie", e); }
-        const heal = clockActors().filter(a => P.detectProfile(a) === "kindred" && !a.getFlag(MOD, "torpor") && (n(a.system?.health?.damage?.bashing) + n(a.system?.health?.damage?.lethal)));
+        // B4893: with the day's sleep on, each one heals as they rise (riseHeal setting); the buttons are for the rest
+        const autoHeal = setting("daySleep") !== false && setting("riseHeal") !== false;
+        const heal = clockActors().filter(a => P.detectProfile(a) === "kindred" && !a.getFlag(MOD, "torpor") && !(autoHeal && a.getFlag(MOD, "daySleep")) && (n(a.system?.health?.damage?.bashing) + n(a.system?.health?.damage?.lethal)));
         if (heal.length) html.push(`<p>Wounded on rising:</p><ul>${heal.map(a => `<li>${esc(a.name)} ${kbtn("riseHeal", a, "Heal with blood")}</li>`).join("")}</ul>`);
         return ChatMessage.create({ content: `<div class="vta-card"><h3>Nightfall</h3>${html.join("")}</div>`, whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
     }
     /** Heal bashing and lethal with blood on rising, keeping blood at the hunger line. */
-    async function riseHeal(actor) {
+    async function riseHeal(actor, { quiet = false } = {}) {
         const b = ctx.blood(actor), dmg = ctx.healthTrack(actor).damage;
         const plan = K.risingHeal(dmg, b.value, n(actor.system?.advantages?.virtues?.selfcontrol?.permanent), ctx.R.planHealing);
-        if (!plan.spent) return post(actor, `${actor.name} rises`, `<div class="vta-note">No blood to spare above the hunger line: ${esc(actor.name)} rises hurt.</div>`);
+        if (!plan.spent) {
+            if (quiet) return { text: "no blood to spare above the hunger line, so rises hurt" };
+            return post(actor, `${actor.name} rises`, `<div class="vta-note">No blood to spare above the hunger line: ${esc(actor.name)} rises hurt.</div>`);
+        }
         await ctx.setDamage(actor, { ...plan.after });
         const ch = await ctx.changeBlood(actor, -plan.spent);
+        const text = `heals ${plan.healed.lethal} lethal and ${plan.healed.bashing} bashing with blood (${ch.before} to ${ch.after})`;
+        if (quiet) return { text, plan, blood: ch };
         return post(actor, `${actor.name} heals on rising`, `<div class="vta-sec">Heals ${plan.healed.lethal} lethal and ${plan.healed.bashing} bashing: blood ${ch.before} → ${ch.after}. Now ${ctx.healthText(actor, plan.after)}.</div>`);
     }
 
@@ -802,7 +826,8 @@ export function build(ctx) {
         const r = await rollPool(rd, 8);
         const res = ctx.R.awakeningResult(r);
         let body = rollBlock(`Road ${rd}`, r) + `<div class="vta-big ${res.awake ? "good" : "bad"}">${esc(res.text)}</div>`;
-        if (res.awake) { await ctx.setFlag(actor, "daytime", { turns: res.turns === Infinity ? "scene" : res.turns }); body += `<div class="vta-note">By day no pool may exceed the Road rating (${rd}).</div>`; }
+        if (res.awake) { await ctx.setFlag(actor, "daytime", DSR.daytimeFlag(game.time.worldTime, res.turns)); body += `<div class="vta-note">By day no pool may exceed the Road rating (${rd}).</div>`; }
+        await ds().afterAwakening(actor, { awake: res.awake, botch: !!r.botch });
         return post(actor, `${actor.name} fights the dawn`, body, [r.roll]);
     }
 
@@ -923,22 +948,25 @@ export function build(ctx) {
     }
 
     return { prestationJournal: () => BOONJ.ensure(), useDiscipline, castRitual, setRoad, roadOf, boons, downtime, masquerade, recordBreach, setWitnessState, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt,
-        enterTorpor, onDamage, onBlood, onClock, healAll, healPlan, healing, riseHeal, stayAwake, crinosSeen, marksSeen, sunlit, onChatButton, onSocket, targetTraits, poolOf, hierarchyTable };
+        daySleep: () => ds(), enterTorpor, onDamage, onBlood, onClock, healAll, healPlan, healing, riseHeal, stayAwake, crinosSeen, marksSeen, sunlit, onChatButton, onSocket, targetTraits, poolOf, hierarchyTable };
 }
 
 /** Settings this part adds (registered by main.js). */
 export function registerSettings(register) {
     register("naturalHealing", "Heal with the clock", "As the Chronicle clock advances, mortals and ghouls heal by the chart (VtDA20 p. 352) and shapechangers regenerate; a whispered card lists it.", Boolean, true);
     register("eventPrompts", "Prompts from what happens", "Whispered cards with a button when a wound, fire, sunlight or hunger provokes the Beast, a killing may be a sin, or a shapechanger falls below Incapacitated.", Boolean, true);
+    register("daySleep", "The day's sleep", "Cainites fall asleep by themselves when the sun rises and rise at their own hour after sunset (Humanity or Road sets it), with the sleep marker on the token; one marked to stay awake rolls the Road at dawn, and a sleeper who is hurt rolls to wake (V20 pp. 262-263, 311).", Boolean, true);
+    register("riseHeal", "Heal on rising", "As a Cainite rises from the day's sleep, blood above the hunger line heals bashing and lethal wounds by itself.", Boolean, true);
     register("autoTorpor", "Torpor from wounds", "A Cainite whose health track fills with lethal damage sinks into torpor for as long as their Road sets, with a reminder on the date they may rise (VtDA20 p. 350).", Boolean, true);
     register("autoDelirium", "The Delirium when a Crinos is seen", "When a shapechanger in Crinos moves or changes where mortal tokens can see it, the GM gets a card to run the Delirium for them.", Boolean, true);
     register("historyLog", "History journal", "Write sins, frenzies, oaths, diablerie, torpor, Renown, boons and downtime to a page per character in \"WoDX History\".", Boolean, true);
     register("witnessAsk", "Ask who saw a Discipline", "After a Discipline is used where mortals or other kinds can see, the Storyteller gets a card asking whether it showed, with a button to record who saw.", Boolean, true);
     register("witnessRange", "Witness range (feet)", "How far a mortal token can see a feeding, a Discipline or a Crinos for the witness checks (walls block sight).", Number, 60);
-    game.settings.register(MOD, "dawnDusk", { name: "Dawn and dusk", hint: "At sunrise and sunset on the Chronicle clock: a card with buttons (stay awake, sunlight, New Night, heal on rising), New Night run automatically at dusk, or nothing.",
-        scope: "world", config: true, type: String, default: "prompt", choices: { prompt: "Cards with buttons", auto: "New Night automatically at dusk", off: "Off" } });
+    game.settings.register(MOD, "dawnDusk", { name: "Dawn and dusk", hint: "At sunrise and sunset on the Chronicle clock: New Night run automatically at dusk (the default), a card with a New Night button, or nothing. The day's sleep and rising are their own setting.",
+        scope: "world", config: true, type: String, default: "auto", choices: { prompt: "Cards with buttons", auto: "New Night automatically at dusk", off: "Off" } });
     game.settings.register(MOD, "willpowerRecovery", { name: "Willpower recovery", hint: "One point a night (New Night), or all of it at the end of a story (End of story), or no automatic recovery.",
         scope: "world", config: true, type: String, default: "night", choices: { night: "One a night (and all at a story's end)", story: "All at the end of a story only", off: "Off" } });
     game.settings.register(MOD, "healClock", { scope: "world", config: false, type: Number, default: -1 });
+    game.settings.register(MOD, "autoDayV1", { scope: "world", config: false, type: Boolean, default: false });
     game.settings.register(MOD, "sunState", { scope: "world", config: false, type: String, default: "" });
 }
