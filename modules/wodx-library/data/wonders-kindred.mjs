@@ -133,7 +133,7 @@ export const RITUALS = [
     item: {label: "Hand of Glory", powers: [
       {id: "light", label: "Light the fingers", text: "Every mortal in the household sleeps for the scene; supernatural beings are untouched, one unlit finger for each."}]}},
   {key: "baleful-doll", name: "Baleful Doll", path: "necromancy", level: 4, blood: 1, time: 5, mark: "",
-    roll: {attr: "stamina", ability: "crafts", diff: 8},
+    roll: {attr: "stamina", ability: "craft", diff: 8},
     needs: "a handmade doll like the victim, painted with the necromancer's blood and dressed in the victim's unwashed clothing", book: V20, pdf: 189,
     does: "Hurting the doll hurts the victim: six dice of bashing; destroying it, six dice of lethal. A doll that does not look like its victim is worthless.",
     item: {label: "Baleful doll", powers: [
