@@ -12,6 +12,9 @@
  *   7. the Overheard talk window opens with its record and a search box, and the token tool is there
  * Result: Data/wodx-gate/gateoverheard-result.json.
  */
+// a batch create need not hand the documents back in the order asked: put them back in that order by name
+const inOrder = (docs, data) => data.map(d => docs.find(x => x.name === d.name));
+
 const N = 7;
 const MOD = "wodx-npc";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -37,11 +40,13 @@ export async function run() {
   const fresh = before => game.messages.contents.filter(m => !before.has(m.id) && m.flags?.[MOD]?.overheard);
   try {
     const OR = await import(`/modules/wodx-npc/scripts/overheard-rules.mjs?${Date.now()}`);
-    const made = await Scene.create(["Brno", "Cairo", "earshot", "street"].map(n => ({name: `WoDX gate: Overheard ${n}`, width: 2000, height: 1200, padding: 0.1, grid: {size: G, distance: 5}})));
+    const sceneData = ["Brno", "Cairo", "earshot", "street"].map(n => ({name: `WoDX gate: Overheard ${n}`, width: 2000, height: 1200, padding: 0.1, grid: {size: G, distance: 5}}));
+    const made = inOrder(await Scene.createDocuments(sceneData), sceneData);
     scenes.push(...made);
     const [brno, cairo, ear, street] = made;
     await cairo.update({"flags.wodx-chronicle.place.region": "egypt"});
-    const mk = await Actor.create([1, 2, 3, 4].map(i => ({name: `WoDX gate: Overheard speaker ${i}`, type: "Mortal"})).concat([{name: "WoDX gate: Overheard listener", type: "Mortal"}]));
+    const actorData = [1, 2, 3, 4].map(i => ({name: `WoDX gate: Overheard speaker ${i}`, type: "Mortal"})).concat([{name: "WoDX gate: Overheard listener", type: "Mortal"}]);
+    const mk = inOrder(await Actor.createDocuments(actorData), actorData);
     actors.push(...mk);
     const listener = mk.at(-1);
     const player = game.users.find(u => !u.isGM);
@@ -81,17 +86,27 @@ export async function run() {
     await step("4. earshot", async () => {
       await game.settings.set(MOD, "overheard", true);
       await game.settings.set(MOD, "overheardChance", 1);
-      const [, , me] = await place(ear, [[mk[2], 5, 5], [mk[3], 6, 5], [listener, 18, 5]]);
+      // the tokens need not come back in the order asked: the listener's is found by its actor
+      const me = (await place(ear, [[mk[2], 5, 5], [mk[3], 6, 5], [listener, 18, 5]])).find(t => t.actorId === listener.id);
       const wasPaused = game.paused;
       if ( wasPaused ) await game.togglePause(false, {broadcast: true});
       await sleep(200);
       const far = await npc().overheard.run(ear);
-      await me.update({x: 9 * G, y: 5 * G}, {animate: false});
+      // Foundry 14: a jump, not a walked move, so nothing on the way can stop or shorten it
+      if ( typeof me.move === "function" ) await me.move([{x: 9 * G, y: 5 * G, action: "displace"}]);
+      else await me.update({x: 9 * G, y: 5 * G}, {animate: false});
       await sleep(1800); // the move itself may trigger a look; either way one exchange is enough
       const near = npc().overheard.log(ear).length ? {ok: true, by: "move"} : await npc().overheard.run(ear);
       if ( wasPaused ) await game.togglePause(true, {broadcast: true});
       if ( !pcOK ) ok("4. earshot", true, {skipped: "no player user owns the listener, so nobody can be in earshot"});
-      else ok("4. earshot", !far.ok && near.ok && npc().overheard.log(ear).length >= 1, {far: far.why, near: near.ok ? (near.by ?? near.topic) : near.why, paused: wasPaused});
+      else {
+        // what the earshot test saw, so a failure says why
+        const read = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
+        const where = t => t ? `${Math.round(t.x / G)},${Math.round(t.y / G)}` : null;
+        const seen = {listener: where(me), speakers: ear.tokens.contents.filter(t => t.actorId !== listener.id).map(where),
+          earshot: read("overheardEarshot"), reach: read("talkReach"), listenerOwned: listener.hasPlayerOwner};
+        ok("4. earshot", !far.ok && near.ok && npc().overheard.log(ear).length >= 1, {far: far.why, near: near.ok ? (near.by ?? near.topic) : near.why, paused: wasPaused, seen});
+      }
     });
 
     await step("5. the scene's own switch", async () => {

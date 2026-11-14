@@ -60,6 +60,13 @@ export function outOfTime(item = {}, year = null) {
 export const seen = item => !!item && (item.worn ? true : String(item.conceal ?? "").toUpperCase() === "N");
 
 /** Station 0 to 5 from what is worn: the best dress tier, a step for fine valuables worn, held to 5. */
+/** The figure's places that hold clothes (WoDX Paperdoll's figure menu); what is held in the hands is not dress. */
+export const FIGURE_WORN = ["body", "legs", "feet", "over", "head", "face", "neck", "hands", "belt", "extra"];
+/** The names of the pieces worn in a figure's slots ({slot: {n}}), in that order. */
+export function figureNames(slots = {}) {
+  return FIGURE_WORN.map(k => slots?.[k]?.n).filter(n => typeof n === "string" && n.trim()).map(n => n.slice(0, 120));
+}
+
 export function stationOf(items = []) {
   const worn = (items ?? []).filter(i => i?.worn);
   const dress = worn.filter(i => DRESS_KINDS.has(i.kind)).map(i => num(i.tier));
@@ -70,7 +77,7 @@ export function stationOf(items = []) {
 
 /** Condition words a stranger sees. */
 export const CONDITIONS = {
-  bloody: "blood on them", wounded: "wounds showing", filthy: "filthy", soaked: "soaked through", torn: "torn clothes", weapon: "a weapon drawn"
+  bloody: "blood on them", wounded: "wounds showing", filthy: "filthy", soaked: "soaked through", torn: "torn clothes", weapon: "a weapon drawn", groomed: "well groomed"
 };
 
 /**
@@ -87,6 +94,7 @@ export function lookOf(view = {}) {
   if ( num(view.wounds) >= 2 ) condition.push("wounded");
   if ( conds.has("filthy") || conds.has("dirty") ) condition.push("filthy");
   if ( conds.has("soaked") || conds.has("wet") ) condition.push("soaked");
+  if ( conds.has("groomed") && !condition.includes("filthy") && !condition.includes("bloody") ) condition.push("groomed");
   if ( items.some(i => i.worn && DRESS_KINDS.has(i.kind) && i.examine?.worn) ) condition.push("torn");
   if ( view.weaponOut ) condition.push("weapon");
   const sides = [];
@@ -139,6 +147,7 @@ export function lookSeed(look, npc = {}, year = null) {
   if ( mortal && look.strange?.length ) add(-1, "strange dress");
   if ( look.condition?.includes("bloody") || look.condition?.includes("wounded") ) add(mortal ? -1 : 0, look.condition.includes("bloody") ? "blood on them" : "wounds showing");
   if ( mortal && num(npc.station) >= 3 && (look.condition?.includes("filthy") || look.condition?.includes("soaked")) ) add(-1, look.condition.includes("filthy") ? "filth" : "soaked through");
+  if ( mortal && num(npc.station) >= 3 && look.condition?.includes("groomed") ) add(1, "well groomed");
   if ( look.appearance !== null && look.appearance !== undefined ) {
     if ( look.appearance >= 4 ) add(1, "good looks");
     else if ( look.appearance === 0 && !look.monstrous && mortal ) add(-1, "an ugly face");
@@ -223,7 +232,9 @@ export function describeMarks(m) {
   if ( side ) line += ` ${side}`;
   const bits = [];
   if ( m.size ) bits.push(SIZE_WORDS[m.size]);
-  if ( m.face === "monstrous" ) bits.push("with a face out of a nightmare");
+  const odd = (m.uncanny ?? []).map(u => String(u).toLowerCase());
+  if ( odd.length ) bits.push(`with ${odd.length > 1 ? `${odd.slice(0, -1).join(", ")} and ${odd.at(-1)}` : odd[0]}`);
+  else if ( m.face === "monstrous" ) bits.push("with a face out of a nightmare");
   else if ( m.face === "striking" ) bits.push("with a face people remember");
   else if ( m.face === "ugly" ) bits.push("with an ugly face");
   const dress = (m.dress ?? []).map(d => String(d).toLowerCase());

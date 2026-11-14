@@ -18,6 +18,11 @@
 import * as U from "./use-rules.mjs";
 import * as L from "./link-rules.mjs";
 import * as X from "./examine-rules.mjs";
+import * as WU from "./wonder-use.mjs";
+import * as AU from "./arms-use.mjs";
+import * as AR from "./arms-rules.mjs";
+import * as FU from "./faith-use.mjs";
+import * as HU from "./hygiene-use.mjs";
 
 const MOD = "wodx-library";
 const SOCKET = `module.${MOD}`;
@@ -59,7 +64,8 @@ export async function abilitiesOfItem(item) {
   if ( U.normPages(item?.flags?.[MOD]?.pages).length && !list.includes("read") ) list.push("read");
   // 0.13.0: things with parts in them can be taken apart (Storyteller's recipes, data/recipes.mjs SALVAGE)
   try { if ( !list.includes("salvage") && (await st()?.cookery?.salvageOf?.(item))?.ok ) list.push("salvage"); } catch (e) { /* no Storyteller */ }
-  return list;
+  // B3690: a made supernatural item's powers come first (wonder-use.mjs)
+  return [...WU.powerKeys(item), ...list];
 }
 
 /* ---------------------------------------------------------------- chat */
@@ -276,6 +282,7 @@ export async function run(item, ability, actor = holderOf(item)) {
   await load();
   const good = goodOfItem(item);
   if ( ability === "_empty" || ability === "_refill" ) return actor ? supplyAct(actor, item, ability.slice(1)) : null;
+  if ( String(ability).startsWith("wonder:") ) return WU.runPower(item, ability, actor);
   const a = U.ABILITIES[ability];
   if ( !a || !actor ) return ui.notifications.warn("Pick the character who uses it first.");
   const why = whatIsMissing(actor, item, good, ability);
@@ -311,6 +318,17 @@ export async function run(item, ability, actor = holderOf(item)) {
       return null;
     }
     case "dressas": return dressAs(actor, item);
+    case "ready": return AU.ready(actor, item);
+    case "fit": return AU.fit(actor, item);
+    case "settrap": return AU.setTrap(actor, item);
+    case "springtrap": return AU.springTrap(actor, item);
+    case "disarm": return AU.disarmTrap(actor, item);
+    case "clean": return AU.clean(actor, item);
+    case "load": return AU.load(actor, item);
+    case "pray": return FU.pray(actor, item);
+    case "ward": return FU.ward(actor, item);
+    case "divine": return FU.divine(actor, item);
+    case "wash": { const r = await HU.wash(actor, item); if ( U.spends(good, ability) ) await spendOne(item); return r; }
     case "wear": {
       const on = !(item.system?.isequipped);
       await item.update({"system.isequipped": on});
@@ -349,11 +367,13 @@ export async function openUse(item, actor = holderOf(item)) {
   if ( !list.length && !extra.length ) return ui.notifications.info("Nothing to do with it but keep it.");
   if ( list.length === 1 && !extra.length ) return run(item, list[0], actor);
   const can = L.qualitiesOf(good ?? item.name).map(k => L.QUALITIES[k].label);
+  const holds = WU.isWonder(item) ? WU.wonderUseApi().rules.summary(item.flags?.[MOD]?.wonder) : "";
+  const armsLine = AR.summaryOf(item.name) + (item.flags?.[MOD]?.trap?.set ? ` Set by ${item.flags[MOD].trap.by}: difficulty ${item.flags[MOD].trap.diff} to see it.` : "");
   const state = sup ? (isEmpty(item) ? `Empty: it needs ${sup.charge ? "charging" : `more ${sup.label}`}.` : `It has ${sup.label}.`) : "";
   const res = await foundry.applications.api.DialogV2.wait({rejectClose: false, position: {width: 360}, window: {title: `Use: ${item.name}`}, classes: ["wodx-dialog", "wlib-use"],
-    content: `<p class="hint">${esc(actor?.name ?? "")}${targetActor() ? `, with ${esc(targetActor().name)} targeted` : ""}</p>${can.length ? `<p class="hint">It ${esc(can.join(", "))}.</p>` : ""}${state ? `<p class="hint">${esc(state)}</p>` : ""}`,
-    buttons: [...list.map((k, i) => ({action: k, label: U.ABILITIES[k].label, default: i === 0})), ...extra, {action: "cancel", label: "Cancel"}]});
-  if ( res && (U.ABILITIES[res] || res === "_empty" || res === "_refill") ) return run(item, res, actor);
+    content: `<p class="hint">${esc(actor?.name ?? "")}${targetActor() ? `, with ${esc(targetActor().name)} targeted` : ""}</p>${can.length ? `<p class="hint">It ${esc(can.join(", "))}.</p>` : ""}${state ? `<p class="hint">${esc(state)}</p>` : ""}${holds ? `<p class="hint">${esc(holds)}</p>` : ""}${armsLine ? `<p class="hint">${esc(armsLine)}</p>` : ""}`,
+    buttons: [...list.map((k, i) => ({action: k, label: k.startsWith("wonder:") ? WU.powerLabel(item, k) : U.ABILITIES[k].label, default: i === 0})), ...extra, {action: "cancel", label: "Cancel"}]});
+  if ( res && (U.ABILITIES[res] || String(res).startsWith("wonder:") || res === "_empty" || res === "_refill") ) return run(item, res, actor);
 }
 
 /** A liquid needs something to carry it in (0.11.0): a soft check when one comes into Possessions. */
@@ -370,6 +390,7 @@ async function onCreateItem(item, opts, userId) {
 export async function setupUse() {
   await load();
   game.socket?.on(SOCKET, onSocket);
+  game.socket?.on(SOCKET, AU.onArmsSocket);
   Hooks.on("createItem", onCreateItem);
   const can = it => !!it && it.isOwner;
   Hooks.on("getHeaderControlsItemSheetV2", (app, controls) => {

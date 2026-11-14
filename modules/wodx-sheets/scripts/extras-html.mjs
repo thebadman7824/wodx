@@ -109,7 +109,7 @@ export function tiesHtml(rows, { editable = true } = {}) {
  * bond does in play, a line under the tie;
  * roles: [[key, label]] for a hand-made tie; known: secrets this character found [{holder, text}]; own: this
  * character's own secrets [{text}]; regard: the Storyteller's "how they regard the characters" markup (NPCs only);
- * family (B3220): plain lines from WoDX NPC's family news, such as a pregnancy's due season, shown to the owner;
+ * family (B3440): plain lines from WoDX NPC's family news, such as a pregnancy's due season, shown to the owner;
  * couples: a lover, spouse or troth tie to a character gets a button to start a pregnancy (the Storyteller) or ask for one,
  * and a lover, friend, ally, contact, patron or other tie a button to propose marriage (B3229).
  */

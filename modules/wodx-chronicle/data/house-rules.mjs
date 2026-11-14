@@ -33,6 +33,14 @@ export default {
       "source": "WoDX plan: Light-touch mode"
     },
     {
+      "id": "ticketPause",
+      "group": "automation",
+      "name": "Pause the game while a ruling waits",
+      "hint": "When a player asks for a ruling on an unclear action, the game pauses until you decide the ticket.",
+      "default": false,
+      "source": "WoDX plan: referee ticket (B3522)"
+    },
+    {
       "id": "eraProposals",
       "group": "automation",
       "name": "Propose an era change at era boundaries",

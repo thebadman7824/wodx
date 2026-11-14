@@ -26,7 +26,7 @@ function fakeDraw(i, {sex}) {
 }
 
 test("residents: every household of the sample towns is read, with its building as the place", () => {
-  for ( const n of ["hohenhausen", "birbach", "rotheim-b2", "schondorf"] ) {
+  for ( const n of ["hohenhausen", "birbach", "rotheim-a2", "schondorf"] ) {
     const regs = regionsOf(n);
     const list = RS.householdsOn(regs);
     assert.ok(list.length >= 10, n);
@@ -40,7 +40,7 @@ test("residents: every household of the sample towns is read, with its building 
 });
 
 test("residents: each role gets a routine that exists and a home; trades kept at home work there", () => {
-  for ( const n of ["hohenhausen", "schondorf", "rotheim-b2"] ) for ( const h of RS.householdsOn(regionsOf(n)) ) {
+  for ( const n of ["hohenhausen", "schondorf", "rotheim-a2"] ) for ( const h of RS.householdsOn(regionsOf(n)) ) {
     for ( const year of [1197, 1600, 1890, 1995, 2040] ) {
       const plans = RS.planHousehold(h, {year});
       assert.equal(plans.length, h.household.people.length);

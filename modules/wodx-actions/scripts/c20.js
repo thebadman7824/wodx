@@ -16,6 +16,8 @@
 import * as C from "./c20-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim, castIntent } from "./aim.js";
+import * as CA from "./c20-arts.js";
+import * as EF from "./effects.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -95,11 +97,26 @@ export function build(ctx) {
     const artOpts = (i, sel) => Object.entries(C.ARTS).map(([k, a]) => `<option value="${k}"${k === sel ? " selected" : ""}${!n(i.arts[k]) ? " disabled" : ""}>${esc(a.label)} ${n(i.arts[k])}</option>`).join("");
     const realmRow = (i, r) => `<div class="form-group"><label>${esc(C.REALMS[r].label)} <small>knows ${n(i.realms[r])}</small></label><select name="r-${r}" data-fixed><option value="0">not used</option>${C.REALMS[r].levels.map((l, k) => `<option value="${k + 1}">${k + 1}: ${esc(l)}${k + 1 > n(i.realms[r]) ? " (cheated)" : ""}</option>`).join("")}</select></div>`;
 
+    const cantripName = id => CA.CANTRIPS[id]?.name ?? String(id);
+    /** Choosing a named cantrip fills in its Art and level. */
+    function pickCantrip(root) {
+        const sel = root?.querySelector?.("select[name=power]");
+        sel?.addEventListener("change", () => {
+            const o = sel.selectedOptions[0];
+            if (!o?.dataset.art) return;
+            const art = root.querySelector("select[name=art]"), lvl = root.querySelector("[name=lvl]");
+            if (art) art.value = o.dataset.art;
+            if (lvl) lvl.value = o.dataset.lvl;
+        });
+    }
+
     async function cantrip(actor) {
         const i = info(actor);
         if (!Object.values(i.arts).some(v => v > 0)) notify(`${actor.name} has no Arts on the sheet: add them as Powers (Art).`);
+        const known = Object.keys(C.ARTS).flatMap(a => CA.cantripsOf(a, n(i.arts[a])));
         const content = `<form>
           <p><b>${esc(actor.name)}</b>: Glamour ${i.glamour.temp}/${i.glamour.perm}, Banality ${i.banality.perm} (${i.banality.temp}), Nightmare ${i.nightmare}${i.imbalances ? `, Imbalances ${i.imbalances}` : ""}${i.wyrd ? "; <b>the Wyrd is invoked</b>" : ""}.</p>
+          <div class="form-group"><label>Cantrip</label>${known.length > 5 ? searchBox("select[name=power]", "Search cantrips…", "Search cantrips") : ""}<select name="power"><option value="">(choose the Art and level by hand)</option>${known.map(k => `<option value="${k.id}" data-art="${k.art}" data-lvl="${k.level}">${esc(C.ARTS[k.art].label)} ${"•".repeat(k.level)} ${esc(cantripName(k.id))}</option>`).join("")}</select></div>
           <div class="form-group"><label>Art</label><select name="art" data-fixed>${artOpts(i)}</select></div>
           <div class="form-group"><label>The power's level</label><input type="number" name="lvl" min="1" max="5" value="1"/></div>
           <fieldset><legend>Realms</legend>${Object.keys(C.REALMS).map(r => realmRow(i, r)).join("")}</fieldset>
@@ -134,9 +151,21 @@ export function build(ctx) {
             body += r.botch ? `<div class="vta-big bad">The cantrip twists.</div>` : r.successes ? `<div class="vta-big good">${esc(art.label)} ${n(fd.lvl)}: ${r.successes} success${r.successes === 1 ? "" : "es"}.</div>` : `<div class="vta-big">The cantrip does not take.</div>`;
             if (used.length) body += `<div class="vta-res">Reaches ${used.map(u => `${esc(C.REALMS[u.realm].label)} ${u.level} (${esc(C.REALMS[u.realm].levels[u.level - 1])})`).join("; ")}.</div>`;
             if (nmNote) body += `<div class="vta-note">${esc(nmNote)}</div>`;
+            // What the named cantrip does (powers pass): its card, and what the effects card can apply
+            let fxItems = [];
+            const cp = CA.CANTRIPS[fd.power];
+            if (cp && cp.art === fd.art && cp.level === n(fd.lvl)) {
+                body += `<div class="vta-sec"><b>${esc(cantripName(fd.power))}${r.successes && !r.botch ? "" : " (had it taken)"}:</b> ${esc(cp.fx)}</div>`;
+                body += `<div class="vta-note">Lasts ${esc(cp.lasts)}; ${esc(cp.type)}.</div>`;
+                if (r.successes && !r.botch && EF.isOn()) {
+                    const pp = EF.planOf(actor, CA.cantripResults(fd.power, r.successes, { willpower: i.willpower.perm, glamour: i.glamour.perm }, { name: cantripName(fd.power), source: `${REF} p. ${art.page}` }), r.successes);
+                    body += pp.html;
+                    fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+                }
+            }
             body += `<div class="wodx-quiet">${REF} pp. 193–196, ${art.page}, 274</div>`;
-            return post(actor, `${actor.name} weaves a cantrip`, body, [r.roll].filter(Boolean));
-        }, { width: 540, render: root => aim(root, { actor, cast: { from: r => castIntent({ arts: [r.querySelector("[name=art]")?.value ?? ""], realms: Object.keys(C.REALMS).filter(k => Number(r.querySelector(`[name=r-${k}]`)?.value) > 0) }) } }) });
+            return post(actor, `${actor.name} weaves a cantrip`, body, [r.roll].filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
+        }, { width: 540, render: root => { pickCantrip(root); return aim(root, { actor, cast: { from: r => castIntent({ arts: [r.querySelector("[name=art]")?.value ?? ""], realms: Object.keys(C.REALMS).filter(k => Number(r.querySelector(`[name=r-${k}]`)?.value) > 0) }) } }); } });
     }
 
     async function unleash(actor) {

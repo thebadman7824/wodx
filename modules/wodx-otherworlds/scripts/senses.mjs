@@ -215,7 +215,7 @@ export function drawAura(token, draw, {seconds = 20} = {}) {
   // The colour's name under the aura, for eyes that cannot tell the colours apart
   const word = draw.word ?? (draw.shade === "pale" ? "pale" : "bright");
   try {
-    const style = {fontFamily: "Signika, sans-serif", fontSize: Math.max(12, Math.round(h / 6)), fill: "#ffffff", stroke: {color: "#000000", width: 3}, strokeThickness: 3};
+    const style = {fontFamily: "Signika, sans-serif", fontSize: Math.max(12, Math.round(h / 6)), fill: "#ffffff", stroke: 0x000000, strokeThickness: 3};
     const label = v8 ? new PIXI.Text({text: word, style}) : new PIXI.Text(word, style);
     label.anchor?.set?.(0.5, 0);
     label.x = cx; label.y = cy + r * 1.5;

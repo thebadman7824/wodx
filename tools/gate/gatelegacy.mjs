@@ -13,6 +13,9 @@
  *   8. clean up
  * Result: Data/wodx-gate/gatelegacy-result.json.
  */
+// a batch create need not hand the documents back in the order asked: put them back in that order by name
+const inOrder = (docs, data) => data.map(d => docs.find(x => x.name === d.name));
+
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const npc = () => game.modules.get("wodx-npc").api;
 const st = () => game.modules.get("wodx-storyteller").api;
@@ -45,7 +48,8 @@ export async function run() {
       ok("1. NPC 0.60.0+, the API and the setting", newer(v, "0.60.0") && typeof npc().legacy?.openWeb === "function" && game.settings.get("wodx-npc", "sceneIdeas") === true, {v});
     });
     await step("2. past life", async () => {
-      [mage, count] = await Actor.createDocuments([{name: "Gate Legacy Mira", type: "Mage"}, {name: "Gate Legacy Count", type: "Vampire"}]);
+      const two = [{name: "Gate Legacy Mira", type: "Mage"}, {name: "Gate Legacy Count", type: "Vampire"}];
+      [mage, count] = inOrder(await Actor.createDocuments(two), two);
       made.push(mage, count);
       const p = await npc().legacy.addPastLife(mage, {name: "Agnes of Brno", year: 1340, ties: [{id: count.id, name: count.name, kind: "lover"}]});
       const hiddenBefore = npc().ties.of(mage).find(t => t.kind === "pastLife")?.hidden === true;
@@ -55,7 +59,8 @@ export async function run() {
       ok("2. hidden until recalled, then recorded", hiddenBefore && r?.ok && recalled, {tries: r});
     });
     await step("3. teaching", async () => {
-      [teacher, student] = await Actor.createDocuments([{name: "Gate Legacy Teacher", type: "Vampire"}, {name: "Gate Legacy Student", type: "Vampire"}]);
+      const pair = [{name: "Gate Legacy Teacher", type: "Vampire"}, {name: "Gate Legacy Student", type: "Vampire"}];
+      [teacher, student] = inOrder(await Actor.createDocuments(pair), pair);
       made.push(teacher, student);
       const row = await npc().legacy.teach(teacher, student, {what: "Auspex", dots: 1, months: 3, owed: "a minor boon"});
       const tie = npc().ties.of(student).some(t => t.kind === "mentor" && t.to.id === teacher.id);

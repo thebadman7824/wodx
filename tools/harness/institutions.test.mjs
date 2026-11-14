@@ -90,3 +90,34 @@ test("institutions: climbing is a downtime project, and the press and pulpit sta
   assert.match(src("modules/wodx-storyteller/scripts/main.mjs"), /institutions: Inst\.api\(\)/);
   assert.match(src("modules/wodx-npc/scripts/memory.mjs"), /institutions\?\.seatsOf\?\.\(/);
 });
+
+test("institutions: offices of the law and the state follow the law of the land (B3604)", async () => {
+  const L = await imp("modules/wodx-chronicle/scripts/law-rules.mjs");
+  const ctx = (region, year, people = 20000) => { const l = L.lawOf(region, year); return {year, people, law: l.family, order: l.order}; };
+  const k = (region, year, people) => { const c = ctx(region, year, people); return I.kindsFor(c.year, c.people, c.order); };
+  assert.ok(k("moravia", 1300).includes("court") && k("moravia", 1300).includes("ruler") && k("moravia", 1300).includes("tax"));
+  assert.ok(k("moravia", 1600).includes("inquisition") && !k("moravia", 1900).includes("inquisition"));
+  assert.ok(k("russia", 1950).includes("secret") && !k("russia", 1300).includes("secret"));
+  assert.ok(!k("moravia", 1300, 500).includes("court"), "a village has no court of its own");
+  assert.deepEqual(I.kindsFor(1200, 500).sort(), ["council", "watch", "worship"], "no law given: as before");
+  assert.equal(I.ranksOf("court", 1300, "western", "islamic")[3], "Qadi");
+  assert.equal(I.ranksOf("court", 1300, "western", "chinese")[3], "Magistrate");
+  assert.equal(I.ranksOf("court", 1950, "western", "chinese")[3], "Judge");
+  assert.equal(I.ranksOf("ruler", 1950, "western", "orthodox")[3], "First secretary");
+  assert.equal(I.ranksOf("court", 1300, "western", "nowhere")[3], "Judge", "unknown law: the fallback");
+  assert.equal(I.labelOf("court", 1300, "western", "islamic"), "Qadi's court");
+  assert.equal(I.labelOf("court", 1300, "western", "chinese"), "Yamen");
+  for ( const kind of ["court", "ruler", "tax", "army", "inquisition", "secret"] ) {
+    assert.ok(I.KINDS[kind].hook, kind);
+    for ( const law of Object.keys(L.FAMILIES) ) for ( const y of [1200, 1700, 1950] ) assert.equal(I.ranksOf(kind, y, "western", law).length, I.RANKS, `${kind} ${law} ${y}`);
+  }
+  // The secret police closes when the law no longer keeps it, and opens again under a new id.
+  let r = I.reconcile([], {town: "ath", name: "Athens", ...ctx("aegean", 1970)});
+  assert.ok(r.list.some(i => i.kind === "secret" && !i.closed));
+  assert.equal(r.list.find(i => i.kind === "court").law, "orthodox");
+  r = I.reconcile(r.list, {town: "ath", name: "Athens", ...ctx("aegean", 1980)});
+  assert.ok(r.list.find(i => i.kind === "secret").closed === 1980);
+  r = I.reconcile(r.list, {town: "ath", name: "Athens", year: 1990, people: 20000, law: "orthodox", order: ["police", "secret-police"]});
+  assert.equal(r.list.filter(i => i.kind === "secret").length, 2);
+  assert.equal(new Set(r.list.map(i => i.id)).size, r.list.length, "ids stay unique");
+});

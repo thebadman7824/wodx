@@ -139,6 +139,8 @@ test("the wiring: settings, clock, upkeep chooser, api; plain words players may 
   assert.match(p, /searchBox\(/);
   assert.match(p, /system\.quintessence\.temporary/);
   assert.match(p, /system\.advantages\.glamour\.temporary/);
+  // A place written back must keep its id, name and scene: every update spreads the stored place first
+  for ( const m of p.matchAll(/await update\(placeId, x => ([^,]+?)[,)]/g) ) assert.match(m[1], /^\(\{\.\.\.x\b|^x$/, `update keeps the place: ${m[1]}`);
   const shown = (p + src("modules/wodx-storyteller/scripts/power-rules.mjs")).replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
   assert.doesNotMatch(shown, /B3[24]\d\d|house rule/i);
   assert.doesNotMatch(shown, /—/);

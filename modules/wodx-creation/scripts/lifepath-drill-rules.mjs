@@ -465,9 +465,13 @@ export function sinceSteps(since) {
   return sinceSpans(since.turnYear, since.nowYear).map(sp => {
     const free = o => !Object.entries(since.picks ?? {}).some(([k, v]) => k !== sp.id && v?.id === slug(o[0]));
     // B3180: the dated marks of the land the character came from, for that age (before 1197 too)
-    const own = [...sinceOwn(since.line, sp.from, sp.to), ...(since.region ? datedMarks(since.region, sp.from, sp.to) : [])].filter(free);
-    const ids = new Set(own.map(o => slug(o[0]))), turn = since.rerolls?.[sp.id] ?? 0;
-    const options = fiveOf(list.filter(free), sp.to, "trade", `${since.seed}:${sp.id}:${turn}`, {extra: own, front: turn === 0})
+    const land = (since.region ? datedMarks(since.region, sp.from, sp.to) : []).filter(free);
+    const turn = since.rerolls?.[sp.id] ?? 0;
+    // A line's own ways could fill all five places: on the first draw one mark of the land always has a place
+    const lead = turn === 0 && land.length ? land[Math.floor(rng(`${since.seed}:${sp.id}:land`)() * land.length)] : null;
+    const own = [...sinceOwn(since.line, sp.from, sp.to).filter(free), ...land.filter(o => o !== lead)];
+    const ids = new Set([...own, ...(lead ? [lead] : [])].map(o => slug(o[0])));
+    const options = fiveOf(list.filter(free), sp.to, "trade", `${since.seed}:${sp.id}:${turn}`, {extra: own, front: turn === 0, lead})
       .map(({local, ...o}) => ids.has(o.id) ? {...o, line: true} : o);
     return {id: sp.id, kind: "since", five: true, year: sp.from, from: sp.from, to: sp.to, title: `${sp.from} to ${sp.to}: how you spent those years`, options};
   });

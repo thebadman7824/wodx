@@ -1,5 +1,5 @@
 /**
- * Family systems at play (B3220-B3239; the rules are in family-rules.mjs). Pregnancy and birth: the Storyteller starts
+ * Family systems at play (B3440-B3239; the rules are in family-rules.mjs). Pregnancy and birth: the Storyteller starts
  * a pregnancy (or approves a player's ask in the approval queue), the clock counts the months, and the birth comes as
  * a roll and a card. Supernatural pregnancies add story hooks to the Storyteller's card only. Nothing is ever shown
  * of conception, and nothing sexual is ever described. Both parents must be adults (Chronicle's age floor, B3210).
@@ -177,7 +177,7 @@ async function onAsk(m) {
     detail: "Approving starts a pregnancy; the birth comes about nine months later on the clock.", data: {a: a.id, b: b.id, from: m.userId ?? null}});
 }
 
-/* ---- Child sheets and growing up (B3223-B3227) ---- */
+/* ---- Child sheets and growing up (B3443-B3227) ---- */
 const bornOf = a => { const v = a?.flags?.["wodx-creation"]?.chronology?.bornYear; return v === null || v === undefined || v === "" ? null : Number(v); };
 export const childSheetOf = aLike => actorOf(aLike)?.flags?.[MOD]?.childSheet ?? null;
 export const ageOf = (aLike, year = yearNow()) => { const b = bornOf(actorOf(aLike)); return b === null ? null : Math.max(0, Number(year) - b); };
@@ -441,15 +441,25 @@ async function onAnswer(m) {
 }
 
 let timer = null;
+/** The approval cards this file answers: growing up, a child asked for, a wedding after a proposal. */
+export function registerHandlers() {
+  const reg = chron()?.registerApprovalHandler;
+  if ( !reg ) return false;
+  reg(GROW, {label: "A child grows up", approve: e => applyGrowth(e.data?.plan), reject: async () => "Left as it was"});
+  reg(ASK_CHILD, {label: "A child asked for by players", approve: e => conceive(e.data?.a, e.data?.b)});
+  reg(WEDDING, {label: "A wedding after a proposal", approve: wed, reject: unwed});
+  return true;
+}
+
 export function listen() {
   bindProposalCards();
   registerSettings();
   guardChildCharacters();
   Hooks.on("wodxSkipEnd", info => { onSkipEnd(info).catch(e => console.error(`${MOD} | growing up`, e)); });
+  // Chronicle's API may come after this module's ready, so the handlers are also registered on wodxChronicleReady
+  Hooks.on("wodxChronicleReady", registerHandlers);
   Hooks.once("ready", () => {
-    chron()?.registerApprovalHandler?.(GROW, {label: "A child grows up", approve: e => applyGrowth(e.data?.plan), reject: async () => "Left as it was"});
-    chron()?.registerApprovalHandler?.(ASK_CHILD, {label: "A child asked for by players", approve: e => conceive(e.data?.a, e.data?.b)});
-    chron()?.registerApprovalHandler?.(WEDDING, {label: "A wedding after a proposal", approve: wed, reject: unwed});
+    registerHandlers();
     game.socket.on(SOCKET, m => { if ( !isActiveGM() ) return;
       const run = m?.type === "family.child" ? onAsk : m?.type === "family.propose" ? onPropose : m?.type === "family.answer" ? onAnswer : null;
       if ( run ) run(m).catch(e => console.error(`${MOD} | family`, e));

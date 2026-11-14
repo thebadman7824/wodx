@@ -1,5 +1,5 @@
 /**
- * Family systems (B3220-B3239): pregnancy and birth by century and place, with the supernatural kinds of pregnancy
+ * Family systems (B3440-B3239): pregnancy and birth by century and place, with the supernatural kinds of pregnancy
  * kept as story hooks for the Storyteller. Pure: no Foundry.
  *
  * Nothing here ever describes anything sexual. A pregnancy is a state with a due date, and a birth is a roll and a card.
@@ -73,7 +73,7 @@ export function carrierIndex(sexes = []) {
 }
 
 /**
- * Story hooks for the Storyteller when one or both parents are not plain mortals (B3221). These are never rules and
+ * Story hooks for the Storyteller when one or both parents are not plain mortals (B3441). These are never rules and
  * never roll anything: they are ideas on the Storyteller's card only.
  */
 export const STORY_HOOKS = {
@@ -98,7 +98,7 @@ export function storyHooks(lines = [], kid = null) {
 export const expectingLine = (season, year) => `Expecting, due in ${season}${year ? ` ${year}` : ""}.`;
 
 /* ------------------------------------------------------------------ */
-/*  Child sheets and growing up (B3223-B3226)                          */
+/*  Child sheets and growing up (B3443-B3226)                          */
 /* ------------------------------------------------------------------ */
 
 export const ATTRIBUTES = ["strength", "dexterity", "stamina", "charisma", "manipulation", "appearance", "perception", "intelligence", "wits"];

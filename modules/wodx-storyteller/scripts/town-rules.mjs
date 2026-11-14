@@ -378,6 +378,28 @@ export function newsEvent(preset, {name = ""} = {}) {
 }
 
 /**
+ * What a step of the Rothenstein saga does to the town it happens in (B3670). Keys match WoDX Chronicle's saga
+ * TOWN_KINDS. The figures follow the news presets; exile and expulsion empty houses, a flood wrecks the riverside.
+ */
+export const SAGA_TOWN = {
+  boom: {...NEWS_EFFECT.boom, text: "Money comes up the valley road, and the town grows on it."},
+  war: {...NEWS_EFFECT.war},
+  siege: {...NEWS_EFFECT.siege, dead: 0.01, text: "Soldiers at the walls; the town is besieged."},
+  famine: {...NEWS_EFFECT.famine},
+  plague: {...NEWS_EFFECT.plague, share: 0.12},
+  exile: {kind: "exile", prosperity: -0.5, unrest: 0.5, fled: 0.1, text: "Families who will not bend to the new order are driven into exile.", big: true},
+  expulsion: {kind: "expulsion", prosperity: -1, unrest: 0.6, fled: 0.35, text: "A whole people is put on the road with what they can carry; their houses stand empty.", big: true},
+  flood: {kind: "flood", prosperity: -0.6, unrest: 0.2, dead: 0.003, fled: 0.01, text: "The river floods the low streets and the old workings.", big: true}
+};
+/** A saga step's change as news for one town; name is the step's title. */
+export function sagaEvent(kind, townId, name = "") {
+  const e = SAGA_TOWN[kind];
+  if ( !e || !townId ) return null;
+  const text = name ? `${name}: ${e.text.charAt(0).toLowerCase()}${e.text.slice(1)}` : e.text;
+  return {...e, town: townId, name: e.kind === "plague" ? (name || "Plague") : undefined, text};
+}
+
+/**
  * News that lands at once (a dated event, a sack): applied to the towns it names ("*" for all) outside the week.
  * Returns {state, events} like weekTowns.
  */

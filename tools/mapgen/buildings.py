@@ -112,8 +112,8 @@ TYPES = {
                      ("window", 3.5, 0, "h"), ("doorway", 7, 2, "v"), ("door", 7, 6, "v"), ("door", 10, 3, "v")],
         "partitions": [((7, 0), (7, 8)), ((7, 4), (10, 4))],
         "furnish": {
-            "Taproom": [("Bar_Wood_Ashen_A2_3x1.webp", "wall:N", 1), (KEG, "beside:bar", 2, .8), (ROUND, "corner:W", 2),
-                        (STOOL, "beside:table", 3, .8), (BENCH, "wall:S", 1)],
+            "Taproom": [("Bar_Wood_Ashen_A2_3x1.webp", "wall:N", 1), (KEG, "beside:bar", 2, .8), (STOOL, "front:bar", 3, .8),
+                        (ROUND, "corner:W", 2), (STOOL, "beside:table", 3, .8), (BENCH, "wall:S", 1)],
             "Kitchen": [(OVEN, "corner:NE", 1, .8), (WOOD, "hearth", 1, .7), (BARREL, "wall", 1, .7)],
             "Cellar store": [(KEG, "wall", 3, .8), (BARREL, "wall", 2, .8), (CHEST, "corner", 1, .9)],
         },
@@ -169,8 +169,9 @@ TYPES = {
         "rooms": [("Guardroom", 0, 0, 5, 5, "stone")],
         "openings": [("door", 2.5, 5, "h"), ("window", 0, 2.5, "v"), ("window", 5, 2.5, "v"), ("window", 2.5, 0, "h")],
         "partitions": [],
-        "furnish": {"Guardroom": [("Weapon_Rack_Metal_Gray_A1_1x2.webp", "wall:W", 2), (TABLE, "wall:N", 1), (STOOL, "beside:table", 2, .8),
-                                  ("Brazier_A_1x1.webp", "corner", 1), (BED, "wall:E", 1), (CHEST, "beside:bed", 1)]},
+        # the bed before the brazier, so the brazier finds a corner well away from it
+        "furnish": {"Guardroom": [("Weapon_Rack_Metal_Gray_A1_1x2.webp", "wall:W", 1), (TABLE, "wall:N", 1), (STOOL, "beside:table", 2, .8),
+                                  (BED, "wall:E", 1), (CHEST, "beside:bed", 1), ("Brazier_A_1x1.webp", "corner", 1)]},
     },
 }
 

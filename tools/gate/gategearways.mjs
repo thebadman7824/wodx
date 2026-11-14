@@ -28,7 +28,7 @@ const newer = (a, b) => {
   return true;
 };
 
-export async function run() {
+async function runGate(K) {
   const R = {started: new Date().toISOString(), steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 4).join(" | ")}); } };
@@ -96,3 +96,7 @@ export async function run() {
   ok("6. nothing changed: the clock is where it was", game.time.worldTime === t0);
   return save(R, "gategearways-result.json");
 }
+
+// The gate kit (B3733): its own scratch scene, cleaned up after.
+import {kitRun} from "./kit.mjs";
+export const run = kitRun("gategearways", runGate);

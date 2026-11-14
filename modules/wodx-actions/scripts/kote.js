@@ -14,6 +14,8 @@
  * Built by main.js with its helpers (ctx). Pure rules: kote-rules.js.
  */
 import * as K from "./kote-rules.js";
+import * as KA from "./kote-arts.js";
+import * as EF from "./effects.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 
 const MOD = "wodx-actions";
@@ -115,13 +117,30 @@ export function build(ctx) {
         const arts = (actor.items ?? []).filter(x => x.type === "Power" && /types\.discipline$/.test(String(x.system?.type ?? "")));
         const content = `<form><p>${state(i)}. Dharma ${i.dharma.rating}: ${i.perTurn} Chi a turn, one kind a turn.</p>
           <div class="form-group"><label>Discipline</label>${arts.length > 5 ? searchBox("select[name=art]", "Search Disciplines…", "Search Disciplines") : ""}<select name="art"><option value="">(another use)</option>${arts.map(x => `<option value="${x.id}">${esc(x.name)} ${n(x.system?.value)}</option>`).join("")}</select></div>
+          <div class="form-group"><label>Power</label><select name="pw" data-fixed><option value="">(no named power)</option></select></div>
+          <div class="wodx-art-info wodx-quiet"></div>
           <div class="form-group"><label>Chi</label><select name="kind" data-fixed><option value="">as the Discipline</option><option value="yin">Yin</option><option value="yang">Yang</option><option value="demon">Demon</option></select></div>
           <div class="form-group"><label>Points</label><input type="number" name="k" min="1" max="10" value="1"/></div>
           <div class="form-group"><label>Roll (dice, 0 for none)</label><input type="number" name="dice" min="0" max="20" value="0"/></div>
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" min="2" max="10" value="6"/></div>
+          <div class="form-group"><label>The local Wall</label><input type="number" name="wall" min="1" max="10" value="6"/></div>
           <div class="form-group"><label><input type="checkbox" name="eq"/> Equilibrium lets both kinds flow</label></div></form>`;
+        const trait = (kind, key) => kind === "attr" ? ctx.attr(actor, key) : kind === "virtue" ? (key === "dharma" ? i.dharma.rating : key === "willpower" ? i.willpower.perm : i.v[key])
+            : kind === "art" ? n(arts.find(x => KA.artKeyOf(x.name) === key)?.system?.value) : n(ctx.findAbility?.(actor, key)?.value);
+        const powersFor = it => it ? KA.powersOf(KA.artKeyOf(it.name), n(it.system?.value)) : [];
+        const fill = (root, pick) => {
+            const it = arts.find(x => x.id === root.querySelector("[name=art]")?.value), sel = root.querySelector("[name=pw]");
+            if (!sel) return;
+            if (pick) sel.innerHTML = `<option value="">(no named power)</option>` + powersFor(it).map(p => `<option value="${p.id}">${"•".repeat(p.l)} ${esc(p.name)}</option>`).join("");
+            const p = KA.powerById(sel.value), box = root.querySelector(".wodx-art-info");
+            if (!p) { if (box) box.textContent = ""; return; }
+            const c = KA.chiOf(p.cost), set = (k, v) => { const el = root.querySelector(`[name=${k}]`); if (el) el.value = v; };
+            set("kind", c.kind); set("k", Math.max(1, c.k)); set("dice", KA.poolOf(p.roll, trait)); set("diff", KA.diffOf(p, root.querySelector("[name=wall]")?.value));
+            if (box) box.textContent = `${p.fx} Cost: ${KA.costText(p.cost)}.${p.diff === "t" ? " Difficulty: the target's Willpower." : p.diff === "var" ? " The Storyteller sets the difficulty." : ""} ${REF} p. ${p.p}${p.chk ? " (check the page for the name)" : ""}.`;
+        };
         return dialog(`Spend Chi: ${actor.name}`, content, "Spend", async fd => {
             const it = arts.find(x => x.id === fd.art);
+            const pw = KA.powerById(fd.pw);
             const def = K.artOf(it?.name);
             const kind = fd.kind || (def?.chi && def.chi !== "either" ? def.chi : "yang");
             const plan = K.spendPlan({ dharma: i.dharma.rating, yinChi: i.chi.yin, yangChi: i.chi.yang, demonChi: i.chi.demon, stamina: i.stamina }, kind, n(fd.k), { equilibrium: !!fd.eq });
@@ -133,9 +152,11 @@ export function build(ctx) {
                 const h = await rollPool(i.v.hun, Math.max(2, i.v.po || 6)); rolls.push(h.roll);
                 body += rollBlock("Hun harnesses the P'o", h) + `<div class="vta-res ${h.successes ? "good" : "bad"}">${h.successes ? "A controlled frenzy: the Hun keeps the body." : "The P'o takes the body while the Demon Art is used."}</div>`;
             }
+            let got = 1;
             if (n(fd.dice)) {
                 const r = await rollPool(n(fd.dice), n(fd.diff)); rolls.push(r.roll);
-                body += rollBlock(it ? esc(it.name) : "The roll", r);
+                body += rollBlock(pw ? esc(pw.name) : it ? esc(it.name) : "The roll", r);
+                got = r.botch ? 0 : r.successes;
                 if (r.botch && i.temp.length) {
                     const ex = K.chiExplosion({ yin: i.v.yin, yang: i.v.yang, yinChi: i.chi.yin - (kind === "yin" ? n(fd.k) : 0), yangChi: i.chi.yang - (kind === "yang" ? n(fd.k) : 0) });
                     if (ex.aggravated) {
@@ -149,9 +170,18 @@ export function build(ctx) {
             if (plan.note) body += `<div class="vta-note">${esc(plan.note)}</div>`;
             const note = after(actor);
             if (note) body += `<div class="vta-note">${esc(note)}</div>`;
-            body += `<div class="wodx-quiet">${REF} pp. 54, 90, 139–140</div>`;
-            return post(actor, `${actor.name} spends Chi`, body, rolls.filter(Boolean));
-        });
+            let fxItems = [];
+            if (pw) {
+                body += `<div class="vta-sec"><b>${esc(pw.name)}</b>: ${esc(pw.fx)}${pw.cost.wp ? ` (${pw.cost.wp} Willpower as well)` : ""}</div>`;
+                if (got > 0 && EF.isOn()) {
+                    const pp = EF.planOf(actor, KA.artResults(pw.id, got, { source: `${REF} p. ${pw.p}` }), got);
+                    body += pp.html;
+                    fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+                }
+            }
+            body += `<div class="wodx-quiet">${REF} ${pw ? `p. ${pw.p}; ` : ""}pp. 54, 90, 139–140</div>`;
+            return post(actor, `${actor.name}${pw ? `: ${pw.name}` : " spends Chi"}`, body, rolls.filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
+        }, { width: 520, render: root => { fill(root, true); root.querySelector("[name=art]")?.addEventListener("change", () => fill(root, true)); root.querySelector("[name=pw]")?.addEventListener("change", () => fill(root, false)); root.querySelector("[name=wall]")?.addEventListener("input", () => fill(root, false)); } });
     }
 
     /* -- the soul's states ------------------------------------------------ */

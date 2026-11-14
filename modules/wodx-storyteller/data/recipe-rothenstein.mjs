@@ -64,7 +64,7 @@ export const ROTHENSTEIN = {
   // Phase 5: the settlement ages the town is rebuilt at, with households carried forward by heirs (desk w1).
   ages: [1197, 1420, 1620, 1781, 1851, 1919, 1948, 1990, 2030],
   // Phase 5: the sleeper's origin is dated in the Classical age, in Great Moravia (desk s2); the details go on a desk.
-  spine: {origin: {era: "classical", place: "great-moravia"}, opening: "Sessio I to X and the encounters (desk s3)"},
+  spine: {origin: {era: "classical", place: "great-moravia"}, opening: "Sessio I to X and the encounters (desk s3)", saga: "rothenstein"},
   // Phase 5 and 6: one away hub per era on another continent, tied in by letters, trade and events (desk w2). Each
   // waits for settlement tables of its own region before it is built (desk w3).
   reach: [

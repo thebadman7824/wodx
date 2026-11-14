@@ -12,7 +12,7 @@ const ids = G.moduleIds();
 
 test("every gate with a run() is mapped to real modules", () => {
   const files = fs.readdirSync(path.join(G.ROOT, "tools/gate")).filter(f => /^gate[\w-]*\.mjs$/.test(f)
-    && /export\s+(async\s+)?function\s+run\b/.test(fs.readFileSync(path.join(G.ROOT, "tools/gate", f), "utf8")));
+    && /export\s+(?:(?:async\s+)?function\s+run\b|const\s+run\s*=)/.test(fs.readFileSync(path.join(G.ROOT, "tools/gate", f), "utf8")));
   const not = new Set(G.loadExtra().notGates ?? []);
   assert.deepEqual(Object.keys(map).sort(), files.map(f => f.replace(/\.mjs$/, "")).filter(g => !not.has(g)).sort());
   for ( const [g, mods] of Object.entries(map) ) {

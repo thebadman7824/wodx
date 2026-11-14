@@ -47,7 +47,10 @@ export async function run() {
       ok("1. NPC 0.57.0+, Sheets 0.18.1+, the API", newer(v, "0.57.0") && newer(sv, "0.18.1") && typeof npc().trust?.betray === "function", {v, sv});
     });
     await step("2. boon paid", async () => {
-      [pc, ana, bo, leader] = await Actor.createDocuments([{name: "Gate Trust PC", type: "Vampire"}, {name: "Gate Trust Ana", type: "Vampire"}, {name: "Gate Trust Bo", type: "Mortal"}, {name: "Gate Trust Bishop", type: "Vampire"}]);
+      // a batch create need not hand the documents back in the order asked: take each by name
+      const four = [{name: "Gate Trust PC", type: "Vampire"}, {name: "Gate Trust Ana", type: "Vampire"}, {name: "Gate Trust Bo", type: "Mortal"}, {name: "Gate Trust Bishop", type: "Vampire"}];
+      const got = await Actor.createDocuments(four);
+      [pc, ana, bo, leader] = four.map(d => got.find(a => a.name === d.name));
       made.push(pc, ana, bo, leader);
       const e = await st().ledger.save({kind: "boon", size: "minor", what: "Gate boon", from: {id: ana.id, name: ana.name}, to: {id: pc.id, name: pc.name}});
       await st().ledger.status(e.id, "kept");

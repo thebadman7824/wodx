@@ -10,7 +10,7 @@
  * kind that cannot hold it is matched but marked wrongKind: it does nothing until fixed. Mixed kinds count as both
  * where the books say so: a ghoul is also a mortal, a revenant is a ghoul, a Kinfolk is a mortal.
  */
-import {BACKGROUND_HOOKS as BACKGROUND_HOOKS_TEXT, MERITS_FLAWS, BACKGROUNDS, PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED, TRIGGERS, PULLS, LEDGER, PROMPTS, BG_WORLD} from "../data/trait-effects.mjs";
+import {BACKGROUND_HOOKS as BACKGROUND_HOOKS_TEXT, MERITS_FLAWS, BACKGROUNDS, PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED, TRIGGERS, PULLS, LEDGER, PROMPTS, BG_WORLD, BODY} from "../data/trait-effects.mjs";
 
 export {PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED, TRIGGERS, PULLS, LEDGER, PROMPTS, BG_WORLD};
 
@@ -67,11 +67,12 @@ export function isMechanical(key, idx = index()) {
 }
 
 /** The entry for one feature: {name, kind, flagKey}. The flag wins; then the name within its kind; then any kind. */
-export function matchFeature({name, kind = null, flagKey = null} = {}, idx = index()) {
+export function matchFeature({name, kind = null, flagKey = null, holder = null} = {}, idx = index()) {
   if ( flagKey === "none" ) return null;
   if ( flagKey && idx.byKey.has(flagKey) ) return idx.byKey.get(flagKey);
-  const list = idx.byName.get(normName(name)) ?? [];
-  return list.find(e => !kind || e.kind === kind || (kind !== "background" && e.kind !== "background")) ?? null;
+  const list = (idx.byName.get(normName(name)) ?? []).filter(e => !kind || e.kind === kind || (kind !== "background" && e.kind !== "background"));
+  // B3782: two lines' books may share a name (Boon, Unbondable): the one the character's kind can hold comes first
+  return (holder ? list.find(e => kindFits(e.holders, holder)) : null) ?? list[0] ?? null;
 }
 
 /**
@@ -83,7 +84,7 @@ export function traitsOf(view = {}, idx = index()) {
   for ( const f of view.features ?? [] ) {
     const kind = f.kind ?? null;
     if ( !kind ) continue;
-    const entry = matchFeature(f, idx);
+    const entry = matchFeature({...f, holder: view.kind ?? null}, idx);
     if ( !entry ) { unmatched.push({id: f.id, name: f.name, kind, value: f.value ?? 0, skipped: f.flagKey === "none"}); continue; }
     const wrongKind = !kindFits(entry.holders, view.kind);
     matched.push({id: f.id, name: f.name, kind: entry.kind, value: Number(f.value) || 0, key: entry.key, entry, wrongKind,
@@ -116,6 +117,8 @@ export function effectsFor(view, ctx = {}, idx = index()) {
       // nameTags: only the tags named on the item count ("Acute Sense (hearing)"); none named, no effect
       const own = e.nameTags ? (e.tags ?? []).filter(t => String(m.name ?? "").toLowerCase().replace(/[^a-z0-9]/g, "").includes(t)) : (e.tags ?? []);
       if ( e.tags?.length && !own.some(t => tags.includes(t)) ) continue;
+      // need (B3780): the roll must also be one of these kinds (a ticked situation counts only on a Perception roll)
+      if ( e.need?.length && !e.need.some(t => tags.includes(t)) ) continue;
       // againstKinds needs the other side's kind: an effect only on mortals does nothing when it is not known
       if ( e.againstKinds?.length && !(ctx.against && kindFits(e.againstKinds, ctx.against)) ) continue;
       let diff = Number(e.diff) || 0;
@@ -129,6 +132,20 @@ export function effectsFor(view, ctx = {}, idx = index()) {
     }
   }
   return out;
+}
+
+/**
+ * B3780: the situations a character's roll effects ask the player to tick. An effect with `tick` (a label) offers a
+ * box for its first tag: the roll cannot tell on its own that the other side shares the character's Nature, or that the
+ * character is invoking a title. Returns [{key, label}], one per tag.
+ */
+export function ticksOf(view, idx = index()) {
+  const out = new Map();
+  for ( const m of traitsOf(view, idx).matched ) {
+    if ( m.wrongKind ) continue;
+    for ( const e of m.entry.effects ?? [] ) if ( e.ch === "roll" && e.tick && e.tags?.[0] && !out.has(e.tags[0]) ) out.set(e.tags[0], {key: e.tags[0], label: e.tick});
+  }
+  return [...out.values()];
 }
 
 /** The sum of some effects, with one part per trait for the roll card: {dice, diff, parts: ["Iron Will +3 diff"]}. */
@@ -156,13 +173,15 @@ const TAG_MAP = {
   "check-persuade": ["social", "voice"], "check-etiquette": ["social"], "check-computer": ["computer"], "check-hide": ["stealth"], "check-agility": ["balance", "dexterity"],
   "check-staycalm": ["frenzy"], "check-selfcontrol": ["frenzy"], "check-readperson": ["perception"], "check-uncanny": ["awareness"],
   "social-persuade": ["social", "voice"], "social-intimidate": ["intimidation", "social"],
-  "social-threaten": ["intimidation", "social"], "social-question": ["social"], "social-bribe": ["social"], "social-charm": ["social", "voice"], "social-seduce": ["social", "voice"],
+  "social-threaten": ["intimidation", "social"], "social-question": ["social"], "social-bribe": ["social"], "social-charm": ["social", "voice"], "social-seduce": ["social", "voice", "seduce"],
   "social-lift": ["dexterity", "lift"], "social-plant": ["dexterity", "lift"], "social-con": ["social", "voice", "con"], "social-fasttalk": ["social", "voice", "fasttalk"],
   frenzy: ["frenzy"], instinct: ["frenzy"]
 };
 /** Ability keys that are also tags of their own, for the signature features (Survival, Medicine and the rest). */
 const RAW_TAGS = new Set(["survival", "empathy", "ride", "medicine", "larceny", "animalken", "athletics", "brawl", "melee", "dodge", "subterfuge",
-  "streetwise", "occult", "crafts", "finance", "academics", "drive", "etiquette", "performance", "intimidation", "computer", "science", "banality", "investigation", "angst", "harrowing"]);
+  "streetwise", "occult", "crafts", "finance", "academics", "drive", "etiquette", "performance", "intimidation", "computer", "science", "banality", "investigation", "angst", "harrowing",
+  // B3780: the Attributes and a few more Abilities, for merits and flaws that name them (Charisma rolls, the Art Talent)
+  "strength", "stamina", "charisma", "manipulation", "appearance", "intelligence", "wits", "art", "firearms", "archery", "kenning", "awareness", "willpower"]);
 export function rollTags(...keys) {
   const out = new Set();
   for ( const k of keys.flat() ) {
@@ -217,16 +236,47 @@ export function showsOf(view, idx = index()) {
  * againstKinds needs it). The sum is held to two steps either way, so traits never make a first meeting hunted on sight.
  */
 export function attitudeSeed(view, npcKind = null, idx = index()) {
+  // B3783: the NPC may come as {kind, groups, words, office}: groups are its sect, faction, tribe or kith; words also
+  // hold its title; office says it holds a seat. A plain kind still works as before.
+  const npc = npcKind && typeof npcKind === "object" ? npcKind : {kind: npcKind};
+  const kind = npc.kind ?? null;
+  const npcWords = [...(npc.groups ?? []), ...(npc.words ?? [])].filter(Boolean);
+  const mine = (view.groups ?? []).filter(Boolean);
+  const same = npc.groups?.length && mine.length ? npc.groups.some(g => mine.some(c => plain(c) && plain(c) === plain(g))) : false;
   let delta = 0;
   const names = [];
   for ( const m of traitsOf(view, idx).matched ) {
     const A = ATTITUDE[m.key];
     if ( !A || m.wrongKind ) continue;
-    if ( A.againstKinds?.length && !(npcKind && kindFits(A.againstKinds, npcKind)) ) continue;
+    if ( A.againstKinds?.length && !(kind && kindFits(A.againstKinds, kind)) ) continue;
+    if ( A.group === "same" && !same ) continue;
+    if ( A.office && !npc.office ) continue;
+    if ( A.words?.length && !A.words.some(w => npcWords.some(n => hasWord(n, w))) ) continue;
+    if ( A.fromName ) {
+      const ws = bracketWords(m.name);
+      if ( !ws.length || !ws.some(w => npcWords.some(n => hasWord(n, w))) ) continue;
+    }
     delta += A.delta;
     names.push(m.entry.name);
   }
   return {delta: Math.max(-2, Math.min(2, delta)), names};
+}
+
+/**
+ * B3793: what a character's traits do to the body in a fight, for WoDX Combat: {bruised, shift, ease, silver, names}.
+ */
+export function bodyOf(view, idx = index()) {
+  const out = {bruised: 0, shift: 0, ease: 0, silver: false, names: []};
+  for ( const m of working(view, idx) ) {
+    const B = BODY[m.key];
+    if ( !B ) continue;
+    out.bruised += B.bruised ?? 0;
+    out.shift = Math.max(out.shift, B.shift ?? 0);
+    out.ease = Math.max(out.ease, B.ease ?? 0);
+    out.silver ||= !!B.silver;
+    out.names.push(m.entry.name);
+  }
+  return out;
 }
 
 /* ---- Step 7 (Chronicle 0.22.0): triggers on the map, the night's draw, the Ledger, prompts ---- */
@@ -348,7 +398,8 @@ export function describe(m) {
     ...(TRIGGERS[k] ? [`goes off on the map (${TRIGGERS[k].fromName ? "what the name says in brackets" : TRIGGERS[k].words.slice(0, 3).join(", ")})${TRIGGERS[k].stop ? ", and holds a player's move" : ""}`] : []),
     ...(PULLS[k] ? [`turns up in the night's draw about one night in ${Math.round(1 / PULLS[k].chance)}`] : []),
     ...(LEDGER[k] ? [`a ${LEDGER[k].kind} in the Ledger`] : []),
-    ...(PROMPTS[k] ? [`a card to the Storyteller (${PROMPTS[k].on.join(", ")})`] : [])];
+    ...(PROMPTS[k] ? [`a card to the Storyteller (${PROMPTS[k].on.join(", ")})`] : []),
+    ...(BODY[k] ? [`in a fight: ${BODY[k].note}`] : [])];
   const live = ways.length ? ways.join("; ") : "no automatic effect yet";
   return `${pats}. ${live}. ${e.book} p. ${e.page}`;
 }

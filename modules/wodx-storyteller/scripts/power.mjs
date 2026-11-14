@@ -19,6 +19,7 @@
 import * as P from "./power-rules.mjs";
 import * as C from "./caern-rules.mjs";
 import * as U from "./upkeep-rules.mjs";
+import * as Sites from "./sites.mjs";
 import {MOD, esc, chron, isActiveGM, gmIds, setting} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -121,25 +122,38 @@ async function say(lines, title = "Places of power") {
 export async function meditate(placeId, actorId, {turns = 1, want = Infinity} = {}) {
   const p = P.placeById(state(), placeId), a = game.actors.get(actorId);
   if ( !p || p.kind !== "node" || !a ) return null;
-  const r = P.meditate(p, {...mageOf(a), turns, want});
+  let r = P.meditate(p, {...mageOf(a), turns, want});
   if ( !r.ok ) { ui.notifications.warn(`${a.name}: ${r.why}`); return r; }
+  // B3582: holy ground shared with other claims lets through no more than it holds, half when weak
+  const g = Sites.gate(placeId, r.take);
+  if ( g && g.take < r.take ) {
+    if ( !g.take ) { ui.notifications.warn(`${g.name} is ${g.state.key === "spent" ? "spent" : "too weak"}: the Node gives nothing until the site fills again.`); return {...r, ok: false, why: "spent"}; }
+    r = P.meditate(p, {...mageOf(a), turns, want: g.take});
+  }
   await a.update({"system.quintessence.temporary": r.held});
   await update(placeId, x => ({...x, store: r.node.store}), `${a.name} drew ${r.take} Quintessence.`);
   await tendTie(a, "node");
-  await say([`${a.name} meditates at ${p.name} and takes ${r.take} Quintessence (now ${r.held}).`, ...r.notes]);
+  await say([`${a.name} meditates at ${p.name} and takes ${r.take} Quintessence (now ${r.held}).`, ...r.notes, ...(g && g.factor < 1 ? [`${g.name} is weakened: the Node gives half.`] : [])]);
+  await Sites.onDraw(placeId, "node", r.take, {by: a});
   return r;
 }
 
 export async function gatherTass(placeId, actorId, want = Infinity) {
   const p = P.placeById(state(), placeId), a = game.actors.get(actorId);
   if ( !p || p.kind !== "node" || !a ) return null;
-  const r = P.gatherTass(p, want);
+  let r = P.gatherTass(p, want);
   if ( !r.take ) { ui.notifications.warn(`${p.name} has no Tass to gather yet.`); return r; }
+  const g = Sites.gate(placeId, r.take); // B3582
+  if ( g && g.take < r.take ) {
+    if ( !g.take ) { ui.notifications.warn(`${g.name} is ${g.state.key === "spent" ? "spent" : "too weak"}: no Tass forms until the site fills again.`); return {...r, take: 0}; }
+    r = P.gatherTass(p, g.take);
+  }
   const carried = [...(a.flags?.[MOD]?.tass ?? []), {points: r.take, form: r.form, resonance: r.resonance, from: p.name, t: now()}].slice(-40);
   await a.update({[`flags.${MOD}.tass`]: carried});
   await update(placeId, x => ({...x, store: r.node.store}), `${a.name} gathered ${r.take} Tass.`);
   await tendTie(a, "node");
   await say([`${a.name} gathers ${r.take} Tass at ${p.name}${r.form ? `: ${r.form}` : ""}${r.resonance ? `, its Resonance ${r.resonance}` : ""}.`]);
+  await Sites.onDraw(placeId, "node", r.take, {by: a});
   return r;
 }
 
@@ -165,6 +179,13 @@ export async function dream(placeId, actorIds = []) {
   const r = P.harvest(p, actors.map(a => ({id: a.id, ...faeOf(a)})));
   if ( !r.ok ) { ui.notifications.warn(`${p.name}: ${r.why}`); return r; }
   const lines = [];
+  // B3582: a shared site cuts the balefire's Glamour to what it holds, half when weak
+  const total = r.gains.reduce((n, g) => n + num(g.gain), 0), site = Sites.gate(placeId, total);
+  if ( site && site.take < total ) {
+    let left = site.take;
+    for ( const g of r.gains ) { const k = Math.min(left, Math.floor(num(g.gain) * site.factor)); g.gain = k; left -= k; }
+    lines.push(site.take ? `${site.name} is weakened: the balefire gives less.` : `${site.name} is spent: the balefire gives no Glamour tonight.`);
+  }
   for ( const g of r.gains ) {
     const a = game.actors.get(g.id), f = faeOf(a);
     if ( g.gain ) await a.update({"system.advantages.glamour.temporary": f.glamour + g.gain});
@@ -172,8 +193,9 @@ export async function dream(placeId, actorIds = []) {
     if ( p.keepers.includes(a.id) ) await tendTie(a, "freehold");
   }
   if ( actors.length && !actors.some(a => p.keepers.includes(a.id)) ) lines.push("No keeper slept here: only the keeper, or someone the keeper allows, may harvest the balefire.");
-  await update(placeId, x => P.noteHarvest(x, now()), `Dreamed by the balefire: ${actors.map(a => a.name).join(", ")}.`);
+  await update(placeId, x => ({...x, ...P.noteHarvest(x, now())}), `Dreamed by the balefire: ${actors.map(a => a.name).join(", ")}.`);
   await say([`A night by the balefire of ${p.name}:`, ...lines]);
+  await Sites.onDraw(placeId, "freehold", r.gains.reduce((n, g) => n + num(g.gain), 0), {by: actors.find(a => p.keepers.includes(a.id)) ?? actors[0] ?? null});
   return r;
 }
 
@@ -217,7 +239,7 @@ export async function destroy(placeId) {
     await a.update(upd);
     lines.push(`${a.name} takes ${r.banality} Banality${r.glamourBack ? ` and has ${r.glamourBack} Glamour back` : ""}.`);
   }
-  await update(placeId, x => P.destroyFreehold(x).freehold, "Destroyed.");
+  await update(placeId, x => ({...x, ...P.destroyFreehold(x).freehold}), "Destroyed.");
   await say([`${p.name} is lost.`, ...lines]);
   return true;
 }
@@ -258,6 +280,7 @@ export async function holdMoot(placeId, actorIds = [], {extra = 0} = {}) {
   }
   await update(placeId, x => ({...x, ...r.caern}), `Moot: ${r.given} of ${r.need} Gnosis.`);
   if ( r.wasLapsed ) await stepDrift(p.scene, "rite", "the Moot Rite is kept again");
+  await Sites.onMoot(placeId, r.given); // B3584
   await say([`The moot at ${p.name}:`, ...lines], "A moot");
   return r;
 }
@@ -270,10 +293,14 @@ export async function openCaern(placeId, actorId) {
   if ( !r.ok ) { ui.notifications.warn(`${p.name}: ${r.why}`); return r; }
   const lines = [`${a.name} performs the Rite of the Opened Caern at ${p.name} (Wits + Rituals at 7, ${r.turns} ${r.turns === 1 ? "turn" : "turns"}).`, r.line];
   if ( r.won && r.trait ) {
+    // B3582: the gain of the Opened Caern comes out of a shared site
+    const site = Sites.gate(placeId, r.gain);
+    if ( site && site.take < r.gain ) { r.gain = site.take; lines.push(site.take ? `${site.name} is weakened: the caern gives less.` : `${site.name} is spent: the caern gives nothing.`); }
     const path = `system.advantages.${r.trait}.temporary`, cur = num(foundry.utils.getProperty(a, path)), perm = num(foundry.utils.getProperty(a, `system.advantages.${r.trait}.permanent`));
     const to = Math.min(Math.max(perm, 10), cur + r.gain);
     await a.update({[path]: to});
     lines.push(`${a.name} now has ${to}.`);
+    await Sites.onDraw(placeId, "caern", r.gain, {by: a});
   }
   if ( r.botch ) lines.push("A botch at the Opened Caern can harm the ritemaster: the Storyteller decides how (W20 p. 206).");
   await update(placeId, x => x, `${a.name} opened the caern: ${r.won ? "it gave" : "it held"}.`);

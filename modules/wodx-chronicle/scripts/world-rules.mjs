@@ -43,21 +43,23 @@ export const WORLD_REGIONS = {
   "carpathians-balkans": R("Hungary, Transylvania and the Balkans", "europe", 47.5, 19.0, "central-europe", "hungarian", {
     medieval: "hungarian 45, romanian 20, serbian 20, german 10, jewish 5", modern: "hungarian 40, romanian 30, serbian 30"}, EU),
   "russia": R("The Rus and Russia (Novgorod, Kiev, Moscow)", "europe", 55.8, 37.6, "steppe", "russian", {
-    medieval: "russian 100", industrial: "russian 90, jewish 5, turkish 5", modern: "russian 95, turkish 5"}, EU),
+    medieval: "russian 100", industrial: "russian 88, jewish 5, turkish 4, armenian 3", modern: "russian 93, turkish 4, armenian 3"}, EU),
   "aegean": R("Greece and Constantinople (the Byzantine lands)", "europe", 41.0, 29.0, "mediterranean", "greek", {
-    medieval: "greek 88, italian 8, jewish 4", "early-modern": "greek 56, turkish 36, jewish 5, italian 3", modern: "greek 90, turkish 10"}, EU),
+    medieval: "greek 88, italian 8, jewish 4", "early-modern": "greek 52, turkish 34, armenian 6, jewish 5, italian 3", modern: "greek 90, turkish 10"}, EU),
   // The Middle East and inner Asia
+  // Armenians in Anatolia, Persia, Constantinople, the Levant and Russia (B3940); few in Turkey after 1915
   "anatolia": R("Anatolia (Rum, the Ottoman heartland, Turkey)", "other", 39.9, 32.9, "mediterranean", "ottoman", {
-    medieval: "turkish 50, greek 45, arabic 5", "early-modern": "turkish 78, greek 22", modern: "turkish 100"}),
+    medieval: "turkish 45, greek 38, armenian 12, arabic 5", "early-modern": "turkish 70, greek 18, armenian 12",
+    industrial: "turkish 72, greek 16, armenian 12", modern: "turkish 99, armenian 1"}),
   "levant": R("The Levant and Mesopotamia (Damascus, Jerusalem, Baghdad)", "other", 33.5, 36.3, "mediterranean", "arab", {
-    medieval: "arabic 86, french 6, greek 5, turkish 3", "early-modern": "arabic 90, turkish 10", modern: "arabic 100"}),
+    medieval: "arabic 84, french 6, greek 5, turkish 3, armenian 2", "early-modern": "arabic 88, turkish 10, armenian 2", modern: "arabic 100"}),
   "egypt": R("Egypt and the Nile (Cairo, Alexandria, Thebes)", "other", 30.0, 31.2, "hot-desert", "arab", {
     medieval: "arabic 100", "early-modern": "arabic 92, turkish 8", industrial: "arabic 90, turkish 5, greek 3, italian 2", modern: "arabic 100"}),
   "arabia": R("Arabia (Mecca, Medina, Sanaa, the Gulf)", "other", 21.4, 39.8, "hot-desert", "arab", {medieval: "arabic 100"}),
   "maghreb": R("The Maghreb (Fez, Tunis, Tripoli)", "other", 34.0, -5.0, "mediterranean", "arab", {
     medieval: "arabic 100", industrial: "arabic 90, french 10", modern: "arabic 100"}),
   "persia": R("Persia (Isfahan, Shiraz, Tabriz)", "other", 32.7, 51.7, "inner-asia", "persian", {
-    medieval: "persian 80, steppe 8, turkish 8, arabic 4", "early-modern": "persian 85, turkish 15"}),
+    medieval: "persian 80, steppe 8, turkish 8, arabic 4", "early-modern": "persian 82, turkish 14, armenian 4"}),
   "central-asia": R("The steppe and the Silk Road (Samarkand, Karakorum, Kashgar)", "other", 39.7, 67.0, "inner-asia", "persian", {
     medieval: "steppe 45, persian 35, turkish 20", "early-modern": "turkish 45, persian 35, steppe 20",
     industrial: "turkish 50, persian 25, russian 15, steppe 10", modern: "turkish 45, russian 30, persian 25"}),
@@ -98,10 +100,16 @@ export const WORLD_REGIONS = {
     "early-modern": "english 48, haudenosaunee 20, lenape 8, new-england-algonquian 8, powhatan 4, dutch 8, french 4",
     industrial: "anglo 148, hispanic 37, haudenosaunee 10, lenape 2, new-england-algonquian 2, powhatan 1",
     modern: "anglo 375, hispanic 110, haudenosaunee 10, lenape 2, new-england-algonquian 2, powhatan 1"}, {culture: "american", lend: false}),
+  // The Plains peoples before the Spanish, then beside them, then a share (B3820); the East borrows none of it (lend: false)
   "north-america-west": R("The American West (the Plains, the Rockies, the Southwest)", "americas", 39.0, -105.0, "great-plains", "american", {
-    "early-modern": "spanish 100", industrial: "anglo 68, hispanic 22, chinese 5, irish 5", modern: "anglo 70, hispanic 30"}, {...AM, from: 1598}),
+    // and the Southwest: the Pueblos, the Diné and the Apache (B3930)
+    medieval: "lakota 28, cheyenne 12, comanche 12, kiowa 8, pueblo 22, dine 10, apache 8",
+    "early-modern": "spanish 30, lakota 20, comanche 12, cheyenne 8, kiowa 6, pueblo 12, dine 7, apache 5",
+    industrial: "anglo 60, hispanic 20, chinese 5, irish 5, lakota 6, cheyenne 2, comanche 1, kiowa 1, dine 3, pueblo 2, apache 1",
+    modern: "anglo 66, hispanic 28, lakota 4, cheyenne 1, comanche 1, dine 3, pueblo 1, apache 1"}, {...AM, lend: false}),
   "mexico": R("Mexico and Central America (Tenochtitlan, New Spain)", "americas", 19.4, -99.1, "highland-tropics", "mexican", {
-    medieval: "nahua 100", "early-modern": "nahua 55, spanish 45", industrial: "spanish 85, nahua 15"}),
+    // the Maya of Yucatán, the Petén and the Guatemalan highlands beside the Nahua (B3830)
+    medieval: "nahua 70, maya 30", "early-modern": "nahua 38, maya 17, spanish 45", industrial: "spanish 80, nahua 12, maya 8"}),
   "caribbean": R("The Caribbean (Havana, Kingston, Santo Domingo)", "americas", 23.1, -82.4, "caribbean", "caribbean", {
     "early-modern": "spanish 55, english 25, french 15, dutch 5", industrial: "spanish 50, english 30, french 20"}, {from: 1492}),
   "andes": R("The Andes (Cuzco, Lima, Potosí)", "americas", -13.5, -72.0, "andes", "andean", {

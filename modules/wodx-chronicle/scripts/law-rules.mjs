@@ -7,11 +7,19 @@
  * how is guilt found, what is a crime, what is the punishment, who keeps order, what is owed": every other system
  * reads it through api.law.
  *
- * The content is legal history in WoDX's own words. Game figures (bribe, catch) are house figures (B3492). A family
+ * The content is legal history in WoDX's own words. Game figures (bribe, catch) are house figures (B3492); bribe runs from
+ * 1 (cheap) to 5 (dangerous even to try), as BRIBE_WORDS says. A family
  * whose rows are not written yet stands in with the general "custom" family, marked as a guess.
  */
 
 /** Crimes a row can put on or take off the books. Evergreen ones are on every record from the first row. */
+import {futureRowsFor, FUTURE_FROM} from "./law-future-rules.mjs";
+
+/** The Future Darkness branch (B3620): set by WoDX Chronicle from the house rule futureBranch; off by default. */
+let FUTURE = false;
+export const setFuture = on => { FUTURE = !!on; };
+export const futureOn = () => FUTURE;
+
 export const CRIMES = {
   murder: "Murder", theft: "Theft", arson: "Arson", treason: "Treason against the ruler", violence: "Wounding or beating",
   forgery: "Forgery and false coin", rebellion: "Rising against the lord",
@@ -24,7 +32,11 @@ export const CRIMES = {
   unfilial: "Failing in duty to parents and elders",
   "caste-breach": "Breaking the rules of caste in food, touch or marriage", "cow-killing": "Killing a cow",
   "pass-law": "Being found without a pass where the pass laws apply",
-  "commoner-arms": "A commoner carrying a sword", "leaving-country": "Leaving the country, or coming back from abroad"
+  "commoner-arms": "A commoner carrying a sword", "leaving-country": "Leaving the country, or coming back from abroad",
+  "alcohol": "Making or selling alcohol",
+  // B3620: the Future Darkness only
+  "low-score": "Falling below the citizen's score the state requires", unregistered: "Living without a registered identity",
+  "unlicensed-cyberware": "Fitting or carrying unlicensed cyberware"
 };
 export const EVERGREEN_CRIMES = ["murder", "theft", "arson", "treason", "violence", "forgery"];
 
@@ -50,7 +62,9 @@ export const PUNISH = {
   prison: "Prison", "hard-labour": "Hard labour", camp: "A labour camp", "death-state": "Death by the state's own method",
   confiscation: "Loss of land and goods", flogging: "Flogging", bamboo: "Beating with the light or the heavy bamboo",
   "outcaste": "Being put out of one's caste", "transportation": "Transportation to a penal colony overseas",
-  "enslave": "Being sold into slavery"
+  "enslave": "Being sold into slavery",
+  // B3620: the Future Darkness only
+  erasure: "Erasure: name, accounts and rights deleted"
 };
 
 /** Keepers of order. */
@@ -66,12 +80,15 @@ export const ORDER = {
   "societies": "Masked societies and age sets that keep order",
   "sheriff": "The sheriff of the shire, who can raise the posse",
   "jito": "The shogun's land stewards and constables",
-  "clan-elders": "The elders and fighters of each clan"
+  "clan-elders": "The elders and fighters of each clan",
+  "marshals": "Federal marshals and town marshals",
+  // B3620: the Future Darkness only
+  algorithm: "Predictive policing: the machine names who to watch", corporate: "Corporate security with the powers of police"
 };
 
 /** A record with nothing in it. Lists hold ids; rule is words. */
 export const blank = () => ({rule: {form: "", ruler: "", council: ""}, courts: [], proof: [], crimes: [...EVERGREEN_CRIMES],
-  punish: [], order: [], taxes: [], warn: [], bribe: 2, catch: 0.3, guess: false});
+  punish: [], order: [], taxes: [], warn: [], bribe: 2, catch: 0.3, guess: false, spec: false});
 
 /**
  * A row: {from, to?, note, set?: {...}, add?: {list: [ids]}, drop?: {list: [ids]}}.
@@ -281,6 +298,41 @@ export const FAMILIES = {
       add: {order: ["police", "secret-police"], punish: ["prison", "camp"], proof: ["evidence"], courts: ["The state's courts"]},
       drop: {courts: ["The khan's judges under the Great Yassa", "The khan's court"], warn: ["The law of the khans forbids fouling running water"]}},
     {from: 1992, note: "Independent republics and the Russian Federation", drop: {punish: ["camp"]}, add: {order: ["cameras"], crimes: ["computer-crime", "drug-trade"]}}
+  ]},
+
+  // The Americas: the peoples' own councils and empires, then Spanish, Portuguese, French and English colonial law, then the republics (B3601)
+  americas: {label: "The Americas", rows: [
+    {from: 0, note: "The peoples of the land under their own councils and custom", set: {
+      rule: {form: "Nations, chiefdoms and city-states under their own councils", ruler: "The chiefs and councils of each nation", council: "The councils of elders and clans"},
+      courts: ["The council of the nation, town or clan", "Elders who settle quarrels by custom"], proof: ["witnesses", "oath"], punish: ["fine", "banishment", "hanging"],
+      order: ["clan-elders"], taxes: ["Gifts and shares to the chiefs, or tribute where an empire rules"], bribe: 2, catch: 0.3},
+      add: {warn: ["Kin answer for kin: a killing is covered by gifts to the dead one's family, or by revenge"]}},
+    {from: 1900, note: "Modern courts, police and prisons", add: {order: ["police", "detectives"], punish: ["prison"], proof: ["evidence", "forensic"], crimes: ["drug-trade", "sedition"]}, drop: {order: ["clan-elders"]}, set: {catch: 0.45}},
+    {from: 1990, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime"]}, set: {catch: 0.55}}
+  ]},
+
+  // The Pacific and Australia: chiefs and tapu, the custom of the land's first peoples, then colonial and national law (B3602)
+  pacific: {label: "The Pacific and Australia", rows: [
+    {from: 0, note: "Chiefs and elders; sacred restrictions and their keepers", set: {
+      rule: {form: "Chiefdoms and the custom of the first peoples", ruler: "The chiefs or the elders", council: "The elders and the priests"},
+      courts: ["The chief's judgment", "Elders keeping the custom of the people"], proof: ["oath", "witnesses"], punish: ["fine", "banishment", "hanging"],
+      order: ["clan-elders"], taxes: ["Gifts and shares to the chiefs"], bribe: 3, catch: 0.35},
+      add: {warn: ["Breaking a sacred restriction (tapu) can bring death"]}},
+    {from: 1900, note: "Colonial and then national courts, police and prisons", set: {rule: {form: "Colonies, dominions and new nations"}, catch: 0.45},
+      add: {courts: ["The state's courts"], order: ["police", "detectives"], punish: ["prison"], proof: ["evidence", "forensic"], crimes: ["drug-trade"]}, drop: {order: ["clan-elders"]}},
+    {from: 1990, note: "Cameras and computer crime", add: {order: ["cameras"], crimes: ["computer-crime"]}}
+  ]},
+
+  // The far north: the custom of the Inuit and the Sámi, Norse Greenland, then Danish, Norwegian, Russian and Canadian law (B3603)
+  north: {label: "The far north", rows: [
+    {from: 0, note: "The Inuit and the Sámi keep their own custom", set: {
+      rule: {form: "Bands and families under their own custom", ruler: "The elders and the best hunters", council: "The gathering of families"},
+      courts: ["The community's judgment: song duels, shaming, and in the end exile"], proof: ["witnesses"], punish: ["banishment", "fine"],
+      order: ["clan-elders"], taxes: ["Shares of the hunt"], bribe: 4, catch: 0.4},
+      add: {warn: ["One who will not share in hard times may be left behind"]}},
+    {from: 1721, note: "Danish mission and trade in Greenland; Norwegian, Swedish and Russian law over the Sámi", set: {rule: {form: "Colonies and northern provinces", ruler: "The Danish, Norwegian, Swedish or Russian crown"}}, add: {courts: ["The crown's courts in the trading posts"]}},
+    {from: 1920, note: "The Svalbard treaty; the state's police reach the north", add: {order: ["police"], punish: ["prison"]}},
+    {from: 1979, note: "Home rule in Greenland", set: {rule: {form: "Self-governing lands under the crown", ruler: "The home government in Nuuk"}}}
   ]}
 };
 
@@ -299,6 +351,105 @@ export const REGION_FAMILY = {
 
 /** A region's own rows, laid after its family's for the same year. Moravia and Bohemia first (B3491). */
 export const REGION_ROWS = {
+  australia: [
+    {from: 0, note: "The peoples of the land keep their own law, carried in story and ceremony", set: {rule: {ruler: "The elders of each people"}}, drop: {warn: ["Breaking a sacred restriction (tapu) can bring death"]},
+      add: {warn: ["Each people's law, carried in story and ceremony, binds who may go where and know what"]}},
+    {from: 1788, note: "New South Wales: a penal colony under British law", set: {rule: {form: "British colonies", ruler: "The colonial governor"}}, add: {courts: ["Colonial courts under British law"], order: ["police"], punish: ["flogging", "hard-labour"],
+      warn: ["Convicts serve their sentences in chains or assigned to free settlers"]}},
+    {from: 1868, note: "The last convict ship", drop: {warn: ["Convicts serve their sentences in chains or assigned to free settlers"], punish: ["flogging"]}},
+    {from: 1901, note: "The Commonwealth of Australia", set: {rule: {form: "A federal dominion under the crown", ruler: "The Prime Minister", council: "Parliament"}}},
+    {from: 1985, note: "The death penalty abolished", drop: {punish: ["hanging"]}},
+    {from: 1910, to: 1970, note: "Children of the first peoples taken from their families", add: {warn: ["Aboriginal children are taken from their families by law"]}}
+  ],
+  aotearoa: [
+    {from: 1300, note: "The Māori: chiefs, tapu and the balancing of wrongs (utu)", set: {rule: {ruler: "The rangatira, the chiefs of each tribe"}}},
+    {from: 1840, note: "The Treaty of Waitangi and British rule", set: {rule: {form: "A British colony, later a dominion", ruler: "The governor, later the Prime Minister", council: "Parliament in Wellington"}}, add: {courts: ["Colonial courts under British law", "The Native Land Court (1865)"], order: ["police"]}, drop: {warn: ["Breaking a sacred restriction (tapu) can bring death"]}},
+    {from: 1961, note: "Hanging for murder abolished", drop: {punish: ["hanging"]}},
+    {from: 1975, note: "The Waitangi Tribunal hears the treaty's breaches", add: {courts: ["The Waitangi Tribunal"]}}
+  ],
+  "pacific-islands": [
+    {from: 0, note: "Chiefs and priests; the kapu system in Hawaiʻi", set: {rule: {ruler: "The high chiefs of each island"}}},
+    {from: 1810, note: "The Kingdom of Hawaiʻi; the kapu system ends (1819)", set: {rule: {ruler: "The King of Hawaiʻi, and the high chiefs elsewhere"}}},
+    {from: 1819, note: "The kapu system ends in Hawaiʻi", drop: {warn: ["Breaking a sacred restriction (tapu) can bring death"]}},
+    {from: 1880, note: "Colonial rule: France in Tahiti (1880), the United States in Hawaiʻi (1898), Germany and later New Zealand in Samoa", set: {rule: {form: "Colonies and territories", ruler: "The colonial governor"}}, add: {courts: ["Colonial courts"]}},
+    {from: 1962, note: "Independence for Samoa (1962), Fiji (1970) and others", set: {rule: {form: "Independent states and territories", ruler: "Each state's head"}}}
+  ],
+  mexico: [
+    {from: 1428, note: "The Triple Alliance of the Mexica: the tlatoani's judges and strict sentences", set: {rule: {form: "An empire of tribute", ruler: "The Huey Tlatoani of Tenochtitlan", council: "The council of nobles"}},
+      add: {courts: ["The tlatoani's judges in Tenochtitlan"], warn: ["Drunkenness in public is punished by death, save for the old"]}},
+    {from: 1521, note: "New Spain: the Audiencia, a viceroy from 1535, the Holy Office from 1571", set: {rule: {form: "A viceroyalty of the Spanish crown", ruler: "The Viceroy of New Spain", council: "The Audiencia of Mexico"}, bribe: 3},
+      add: {courts: ["The Audiencia of Mexico", "The Holy Office of the Inquisition, for heresy and sorcery", "The General Court of the Indians"], crimes: ["heresy", "sorcery", "wrong-faith", "blasphemy"], punish: ["burning", "galleys", "flogging"], order: ["bailiff", "inquisitors"], taxes: ["The tribute of the Indian towns", "The tithe"]},
+      drop: {order: ["clan-elders"], courts: ["The tlatoani's judges in Tenochtitlan"], warn: ["Kin answer for kin: a killing is covered by gifts to the dead one's family, or by revenge", "Drunkenness in public is punished by death, save for the old"]}},
+    {from: 1821, note: "Independent Mexico; the Inquisition ended (1820)", set: {rule: {form: "An independent republic, often under strongmen", ruler: "The President", council: "Congress"}},
+      drop: {courts: ["The Audiencia of Mexico", "The Holy Office of the Inquisition, for heresy and sorcery", "The General Court of the Indians"], crimes: ["heresy", "sorcery", "wrong-faith"], punish: ["burning", "galleys"], order: ["inquisitors"], taxes: ["The tribute of the Indian towns", "The tithe"]}, add: {courts: ["The republic's courts"]}},
+    {from: 1910, to: 1920, note: "The Revolution", add: {warn: ["Revolutionary armies are the only law in much of the land"]}},
+    {from: 1929, to: 1999, note: "One party holds power", add: {warn: ["The ruling party decides who wins and who is charged"]}, set: {bribe: 2}},
+    {from: 2000, note: "Contested elections; the drug wars", set: {bribe: 2}}
+  ],
+  andes: [
+    {from: 1438, note: "Tawantinsuyu, the Inca state: labour owed to the state, harsh law for idleness and theft", set: {rule: {form: "An empire of labour service", ruler: "The Sapa Inca", council: "The Inca nobility"}},
+      add: {courts: ["The Inca's governors and inspectors"], taxes: ["The mit'a, labour owed to the state"], warn: ["Theft, lies and idleness are crimes against the Inca"]}},
+    {from: 1533, note: "Spanish Peru: the viceroy (1542), the Audiencia of Lima, the Holy Office (1570), the silver mines", set: {rule: {form: "A viceroyalty of the Spanish crown", ruler: "The Viceroy of Peru", council: "The Audiencia of Lima"}, bribe: 3},
+      add: {courts: ["The Audiencia of Lima", "The Holy Office of the Inquisition, for heresy and sorcery"], crimes: ["heresy", "sorcery", "wrong-faith", "blasphemy"], punish: ["burning", "flogging"], order: ["bailiff", "inquisitors"], warn: ["Indian towns must send their share of men to the silver mines of Potosí"]},
+      drop: {order: ["clan-elders"], courts: ["The Inca's governors and inspectors"], warn: ["Kin answer for kin: a killing is covered by gifts to the dead one's family, or by revenge", "Theft, lies and idleness are crimes against the Inca"]}},
+    {from: 1825, note: "Independent republics", set: {rule: {form: "Independent republics", ruler: "The President", council: "Congress"}},
+      drop: {courts: ["The Audiencia of Lima", "The Holy Office of the Inquisition, for heresy and sorcery"], crimes: ["heresy", "sorcery", "wrong-faith"], punish: ["burning"], order: ["inquisitors"], taxes: ["The mit'a, labour owed to the state"], warn: ["Indian towns must send their share of men to the silver mines of Potosí"]},
+      add: {courts: ["The republics' courts"]}}
+  ],
+  caribbean: [
+    {from: 0, note: "The Taíno and Kalinago under their caciques", set: {rule: {ruler: "The caciques"}}},
+    {from: 1492, note: "Spanish rule, then English, French and Dutch colonies", set: {rule: {form: "Colonies of European crowns", ruler: "The colonial governor", council: "The governor's council and the planters' assembly"}},
+      add: {courts: ["Colonial courts under each crown's law"], crimes: ["heresy", "wrong-faith"], order: ["bailiff"], punish: ["flogging"]}, drop: {order: ["clan-elders"], warn: ["Kin answer for kin: a killing is covered by gifts to the dead one's family, or by revenge"]}},
+    {from: 1520, to: 1885, note: "Plantation slavery and the slave codes (the French Code Noir of 1685)", add: {warn: ["The enslaved are property in law, and a master's punishment is lawful"]}},
+    {from: 1804, note: "Haiti, the first free republic of the region", add: {courts: ["Haiti's own courts"]}},
+    {from: 1898, note: "Cuba free of Spain; later independence for many islands (Jamaica 1962)", set: {rule: {form: "Independent republics and remaining colonies", ruler: "Each state's head or governor"}}, drop: {crimes: ["heresy", "wrong-faith"]}},
+    {from: 1959, note: "Revolutionary Cuba: one Party", add: {warn: ["In Cuba, the Committees for the Defence of the Revolution watch every street"]}}
+  ],
+  brazil: [
+    {from: 0, note: "The Tupi and other peoples of the forest", set: {rule: {ruler: "The chiefs of each people"}}},
+    {from: 1532, note: "Portuguese captaincies, a governor-general from 1549, the Ordinances of the Philippine kings (1603)", set: {rule: {form: "A colony of the Portuguese crown", ruler: "The governor-general, later the viceroy", council: "The Relação, the high court of Bahia"}},
+      add: {courts: ["The Relação of Bahia, and the captains' own justice"], crimes: ["heresy", "wrong-faith"], order: ["bailiff"], punish: ["flogging", "galleys"]}, drop: {order: ["clan-elders"], warn: ["Kin answer for kin: a killing is covered by gifts to the dead one's family, or by revenge"]}},
+    {from: 1550, to: 1887, note: "Slavery, until the Golden Law of 1888", add: {warn: ["The enslaved are property in law, and a master's punishment is lawful"]}},
+    {from: 1822, note: "The Empire of Brazil", set: {rule: {form: "A constitutional empire", ruler: "The Emperor of Brazil", council: "The General Assembly"}}, drop: {crimes: ["heresy", "wrong-faith"], punish: ["galleys"]}},
+    {from: 1889, note: "The Republic", set: {rule: {form: "A federal republic", ruler: "The President", council: "Congress"}}},
+    {from: 1964, to: 1984, note: "The military dictatorship", add: {order: ["secret-police"], warn: ["The military regime tortures and disappears its opponents"]}}
+  ],
+  "southern-cone": [
+    {from: 0, note: "The Mapuche and the peoples of the pampas", set: {rule: {ruler: "The lonkos and chiefs"}}},
+    {from: 1541, note: "Spanish Santiago (1541) and Buenos Aires (1580); the Mapuche stay free south of the Biobío", set: {rule: {form: "Spanish provinces, and free Mapuche lands to the south", ruler: "The Spanish governor", council: "The Audiencia"}},
+      add: {courts: ["The Audiencia and the colonial courts"], crimes: ["heresy", "wrong-faith"], order: ["bailiff"], punish: ["flogging"]}, drop: {order: ["clan-elders"], warn: ["Kin answer for kin: a killing is covered by gifts to the dead one's family, or by revenge"]}},
+    {from: 1818, note: "Independent Chile and Argentina", set: {rule: {form: "Independent republics", ruler: "The President", council: "Congress"}}, drop: {crimes: ["heresy", "wrong-faith"], courts: ["The Audiencia and the colonial courts"]}, add: {courts: ["The republics' courts"]}},
+    {from: 1973, to: 1990, note: "Military juntas in Chile (1973 to 1990) and Argentina (1976 to 1983)", add: {order: ["secret-police"], warn: ["The junta's men take people in the night, and many are never seen again"]}}
+  ],
+  "north-america-east": [
+    {from: 0, note: "The nations of the eastern woodlands; the Great Law of the Haudenosaunee", add: {courts: ["The Haudenosaunee Grand Council under the Great Law, and the clan mothers"]}},
+    {from: 1607, note: "English colonies under the common law", set: {rule: {form: "English colonies with their own assemblies", ruler: "The royal governor", council: "The colonial assembly"}},
+      add: {courts: ["County courts under the common law", "The colony's general court"], crimes: ["heresy", "sorcery", "blasphemy", "wrong-faith"], proof: ["jury"], order: ["sheriff", "town-watch"], punish: ["pillory", "flogging"]}, drop: {order: ["clan-elders"], warn: ["Kin answer for kin: a killing is covered by gifts to the dead one's family, or by revenge"]}},
+    {from: 1692, to: 1692, note: "The Salem witch trials", add: {warn: ["Witch trials hang the accused at Salem"]}},
+    {from: 1700, to: 1864, note: "Slavery, in the south until 1865", add: {warn: ["The enslaved are property in law, and a master's punishment is lawful"]}},
+    {from: 1776, note: "The United States; the Constitution and the Bill of Rights (1789 to 1791)", set: {rule: {form: "A federal republic", ruler: "The President", council: "Congress, and the state legislatures"}},
+      drop: {crimes: ["heresy", "sorcery", "blasphemy", "wrong-faith"], punish: ["pillory"]}, add: {courts: ["State and federal courts", "The Supreme Court"]}},
+    {from: 1920, to: 1933, note: "Prohibition", add: {crimes: ["alcohol"], warn: ["Making or selling liquor is a federal crime"]}},
+    {from: 1935, note: "The FBI", add: {warn: ["Federal agents chase kidnappers, bank robbers and spies across state lines"]}},
+    {from: 1966, note: "Civil rights law (1964) and the Miranda warning (1966)", add: {warn: ["The police must tell the arrested of their rights"]}}
+  ],
+  "north-america-west": [
+    {from: 0, note: "The Plains, Pueblo and Pacific nations"},
+    {from: 1598, note: "Spanish New Mexico and later California", set: {rule: {form: "Spanish, later Mexican, frontier provinces", ruler: "The governor in Santa Fe or Monterey"}}, add: {courts: ["The governor's and the missions' justice"], crimes: ["heresy", "wrong-faith"]}},
+    {from: 1848, note: "The United States takes the West", set: {rule: {form: "Territories and states of the United States", ruler: "The territorial governor, later the state governor", council: "Congress, and the territorial or state legislature"}},
+      drop: {courts: ["The governor's and the missions' justice"], crimes: ["heresy", "wrong-faith"]}, add: {courts: ["Territorial and federal courts"], order: ["sheriff", "marshals"]}},
+    {from: 1850, to: 1899, note: "The Wild West: marshals, posses, vigilance committees", add: {warn: ["Out past the railhead, the marshal's gun and the posse are the law; vigilance committees hang without trial"]}, set: {catch: 0.25}},
+    {from: 1920, to: 1933, note: "Prohibition", add: {crimes: ["alcohol"]}}
+  ],
+  canada: [
+    {from: 0, note: "The nations of the north woods and the plains"},
+    {from: 1608, note: "New France under the Custom of Paris", set: {rule: {form: "A colony of the French crown", ruler: "The Governor of New France", council: "The Sovereign Council"}}, add: {courts: ["The courts of New France under the Custom of Paris"], crimes: ["heresy", "wrong-faith"], order: ["bailiff"]}, drop: {order: ["clan-elders"], warn: ["Kin answer for kin: a killing is covered by gifts to the dead one's family, or by revenge"]}},
+    {from: 1763, note: "British rule; Quebec keeps French civil law (1774)", set: {rule: {ruler: "The British governor"}}, add: {courts: ["British criminal courts, with French civil law in Quebec"], proof: ["jury"]}, drop: {crimes: ["heresy", "wrong-faith"]}},
+    {from: 1867, note: "Confederation; the North-West Mounted Police from 1873", set: {rule: {form: "A federal dominion under the crown", ruler: "The Prime Minister, and the Governor General", council: "Parliament in Ottawa"}}, add: {order: ["police"]}},
+    {from: 1883, to: 1996, note: "The residential schools", add: {warn: ["Children of the First Nations are taken from their families to residential schools"]}},
+    {from: 1976, note: "The death penalty abolished", drop: {punish: ["hanging"]}},
+    {from: 1982, note: "The Charter of Rights and Freedoms", add: {courts: ["Courts under the Charter of Rights and Freedoms"]}}
+  ],
   "central-asia": [
     {from: 0, note: "The Qara Khitai and the Khwarazmian shahs", set: {rule: {ruler: "The Gurkhan of the Qara Khitai and the Shah of Khwarazm"}}, add: {courts: ["The qadi's court in Samarkand, Bukhara and the oasis towns"]}},
     {from: 1219, note: "The Mongol conquest; the Chagatai khans", set: {rule: {ruler: "The Chagatai Khan"}}},
@@ -386,7 +537,7 @@ export const REGION_ROWS = {
     {from: 0, note: "The Kongo kingdom and the kingdoms of the great lakes", set: {rule: {ruler: "The Manikongo, and the kings of the lakes"}}},
     {from: 1491, note: "Kongo's kings take the Christian faith", add: {courts: ["Church courts at the Kongo royal capital"]}},
     {from: 1885, to: 1908, note: "The Congo Free State: rubber quotas, hostages and severed hands", add: {warn: ["The Free State's soldiers maim those who fall short of the rubber quota"]}},
-    {from: 1965, to: 1997, note: "Mobutu's rule in Zaire", add: {warn: ["In Zaire every official must be bought, and the President's men can do anything"]}, set: {bribe: 4}},
+    {from: 1965, to: 1997, note: "Mobutu's rule in Zaire", add: {warn: ["In Zaire every official must be bought, and the President's men can do anything"]}, set: {bribe: 1}},
     {from: 1998, note: "War in the Congo", set: {bribe: 3}}
   ],
   india: [
@@ -576,10 +727,13 @@ export function familyOf(region) {
 }
 
 /** Every row that applies to a region, in year order (family rows before the region's own for the same year). */
-export function rowsFor(region) {
-  const fam = familyOf(region).family.rows.map(r => ({...r, own: false}));
+export function rowsFor(region, {future = FUTURE} = {}) {
+  const f = familyOf(region);
+  const fam = f.family.rows.map(r => ({...r, own: false}));
   const own = (REGION_ROWS[region] ?? []).map(r => ({...r, own: true}));
-  return [...fam, ...own].sort((a, b) => a.from - b.from || (a.own - b.own));
+  // B3620: on the Future Darkness branch, the guesses from 2023 on, after the land's own rows
+  const fut = future ? futureRowsFor(f.id, region).filter(r => r.from >= FUTURE_FROM).map(r => ({...r, own: true, spec: true})) : [];
+  return [...fam, ...own, ...fut].sort((a, b) => a.from - b.from || (a.own - b.own) || ((a.spec ? 1 : 0) - (b.spec ? 1 : 0)));
 }
 
 /**
@@ -587,24 +741,24 @@ export function rowsFor(region) {
  * @returns {{region, year, family, familyLabel, guess, planned?, rule, courts, proof, crimes, punish, order, taxes, warn, bribe, catch, since}}
  *   since: the year and note of the newest row in force
  */
-export function lawOf(region = "moravia", year = 1197) {
+export function lawOf(region = "moravia", year = 1197, {future = FUTURE} = {}) {
   const y = Math.round(Number(year) || 0);
   const f = familyOf(region);
   const rec = blank(); let since = null;
-  for ( const row of rowsFor(region) ) {
+  for ( const row of rowsFor(region, {future}) ) {
     if ( row.from > y ) break;
     apply(rec, row, y);
-    if ( !(row.to != null && y > row.to) ) since = {year: row.from, note: row.note};
+    if ( !(row.to != null && y > row.to) ) { since = {year: row.from, note: row.note}; if ( row.spec ) rec.spec = true; }
   }
   for ( const k of ROW_LISTS ) rec[k] = uniq(rec[k]);
   return {region, year: y, family: f.id, familyLabel: f.family.label, ...rec, guess: f.guess, ...(f.planned ? {planned: f.planned} : {}), since};
 }
 
 /** The rows crossed going from one year to another (either way), for the Storyteller's note when the clock jumps. */
-export function changesBetween(region, from, to) {
+export function changesBetween(region, from, to, {future = FUTURE} = {}) {
   const a = Math.min(from, to), b = Math.max(from, to);
   const out = [];
-  for ( const row of rowsFor(region) ) {
+  for ( const row of rowsFor(region, {future}) ) {
     if ( row.from > a && row.from <= b ) out.push({year: row.from, note: row.note});
     if ( row.to != null && row.to + 1 > a && row.to + 1 <= b ) out.push({year: row.to + 1, note: `No longer: ${row.note.charAt(0).toLowerCase()}${row.note.slice(1)}`});
   }

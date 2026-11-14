@@ -2,6 +2,12 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.41.1 (An elder's Lifepath years before 1197 now always offer one mark of their homeland on the first draw (B3180). Before this fix, the clan's own ways could fill all five places)
+- 0.41.0 (The Armenians join the People generator with over 300 names: given names of Greater Armenia and Cilicia, bynames of the home town before 1800 and family names in -ian or -yan after (B3940 to B3942))
+- 0.40.0 (The Southwest: the Pueblos (the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the People generator with recorded names, staged by age (B3930 to B3934))
+- 0.39.0 (The Maya join the People generator: lords and day names of Yucatán, the Petén and the K'iche' and Kaqchikel highlands before the conquest, church given names after, and the old lineage names as patronyms throughout (B3830 to B3833))
+- 0.38.0 (The Plains peoples: the Oceti Sakowin (Lakota, Dakota and Nakota), the Cheyenne, the Comanche and the Kiowa join the People generator with names from the treaty signers and agency rolls, staged by age as for the Haudenosaunee, with no church names before 1800 (B3820 to B3824))
+- 0.37.1 (The Croatan lifepath ends in 1589 and era advancement counts the tribe gone from 1590, matching the books' year for Roanoke (timeline check, 14 November))
 - 0.37.0 (The Algonquian peoples of the east coast in the People generator (B3510 to B3512): the Lenape (91 recorded men's names, the Turtle, Turkey and Wolf clans from the mother), the New England Algonquian (114 men's and 17 women's names) and the Powhatan towns (54 men's and 6 women's names), with church names in the early modern age and family names from the 19th century. data/people-algonquian.mjs; the staged builder in people-haudenosaunee.mjs now serves every such people)
 - 0.36.0 (The People generator makes 1 person in 100 nonbinary when asked for anyone, and can be asked for nonbinary people; everyone it made before keeps the same sex and name (B3503))
 - 0.35.0 (Arab world names raised to over 300 (B3312): 82 older and 70 newer men's names, 70 older and 70 newer women's names, 40 older bynames of city, tribe and trade and 64 newer family names. "ibn" and "bint" keep the same share in each age)

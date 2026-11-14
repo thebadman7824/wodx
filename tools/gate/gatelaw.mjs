@@ -52,7 +52,7 @@ export async function run() {
     await step("the Law here card is whispered", async () => {
       const before = game.messages.size;
       await ch().law.card({scene: brno, full: true});
-      const m = game.messages.contents.at(-1);
+      const m = newestMessage();
       ok("the Law here card is whispered", game.messages.size === before + 1 && /Law here/.test(m?.content ?? "") && m?.whisper?.includes(game.user.id), {});
     });
     await step("a clock jump note lists what changed", async () => {
@@ -83,3 +83,5 @@ export async function run() {
   }
   return save(R, "gatelaw-result.json");
 }
+
+import {newestMessage} from "./kit.mjs";

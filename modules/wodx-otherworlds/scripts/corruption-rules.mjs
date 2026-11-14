@@ -103,13 +103,20 @@ export function pressure(place, {now = 0, year = 1197} = {}) {
 }
 
 /** The chance a place rises one step this week. */
-export const riseChance = (w, year) => (w > 0 ? Math.min(0.9, 0.1 * w * eraFactor(year)) : 0);
+export const riseChance = (w, year, rate = 1) => (w > 0 ? Math.min(0.9, 0.1 * w * eraFactor(year) * normRate(rate)) : 0);
+
+/**
+ * B3525: the Storyteller's lever for a region's Wyrm spread, 0 (held) to 3 (three times as fast); 1 is the house
+ * rule as written. It multiplies the chance to deepen and to spread, nothing else.
+ */
+export const RATE = {min: 0, max: 3};
+export function normRate(r) { const x = Number(r); return Number.isFinite(x) ? Math.max(RATE.min, Math.min(RATE.max, x)) : 1; }
 
 /** The chance a blighted place with Banes spreads a step down one link this week. */
-export function spreadChance(level, banes, year) {
+export function spreadChance(level, banes, year, rate = 1) {
   const b = bandIndex(level);
   if ( b < BAND_INDEX.blighted || num(banes) <= 0 ) return 0;
-  return Math.min(0.6, 0.05 * (b - 1) * eraFactor(year));
+  return Math.min(0.6, 0.05 * (b - 1) * eraFactor(year) * normRate(rate));
 }
 
 const log = (p, at, what) => [...p.log, {at, what: str(what, 200)}].slice(-20);
@@ -129,7 +136,8 @@ export function weekTurn(places, {now = 0, year = 1197, rng = Math.random} = {})
     const live = p.sources.filter(s => !(s.until && now >= s.until));
     if ( live.length !== p.sources.length ) p = {...p, sources: live, log: log(p, now, "A place of suffering is no longer fresh")};
     const w = pressure(p, {now, year});
-    if ( w > 0 && p.level < MAX && rng() < riseChance(w, year) ) {
+    const rate = places[id].rate ?? 1;
+    if ( w > 0 && p.level < MAX && rng() < riseChance(w, year, rate) ) {
       p = {...p, level: p.level + 1, quiet: 0, log: log(p, now, "The corruption deepens")};
       events.push({id, kind: "rise"});
     } else if ( w === 0 && p.banes === 0 && p.level > p.floor ) {
@@ -154,7 +162,7 @@ export function weekTurn(places, {now = 0, year = 1197, rng = Math.random} = {})
   const snapshot = Object.fromEntries(ids.map(id => [id, out[id]]));
   for ( const id of ids ) {
     const src = snapshot[id];
-    const chance = spreadChance(src.level, src.banes, year);
+    const chance = spreadChance(src.level, src.banes, year, places[id].rate ?? 1);
     if ( !chance ) continue;
     for ( const to of src.links ) {
       const t = out[to];

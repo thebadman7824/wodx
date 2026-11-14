@@ -48,12 +48,14 @@ export async function run() {
         && typeof npc().hearts?.marry === "function" && game.settings.get("wodx-npc", "heartCards") === true, {v, sv, hv});
     });
     await step("2. court", async () => {
-      [a, b, c, garou, kindred] = await Actor.createDocuments([
+      const docs = await Actor.createDocuments([
         {name: "Gate Heart Ana", type: "Mortal", system: {nature: "Bon Vivant"}, flags: {"wodx-creation": {sex: "female"}}},
         {name: "Gate Heart Bo", type: "Mortal", flags: {"wodx-creation": {sex: "male"}}},
         {name: "Gate Heart Cy", type: "Mortal", flags: {"wodx-creation": {sex: "female"}}},
         {name: "Gate Heart Wolf", type: "Werewolf"},
         {name: "Gate Heart Night", type: "Vampire", system: {advantages: {path: {custom: "Path of Night", permanent: 5}}}}]);
+      // Found by name: the order the documents come back in is not relied on
+      [a, b, c, garou, kindred] = ["Gate Heart Ana", "Gate Heart Bo", "Gate Heart Cy", "Gate Heart Wolf", "Gate Heart Night"].map(n => docs.find(d => d.name === n));
       made.push(a, b, c, garou, kindred);
       // The system fills in a new sheet on create, so Nature and the Path are set afterwards
       await a.update({"system.nature": "Bon Vivant"});

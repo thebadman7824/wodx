@@ -16,6 +16,22 @@ export function crowdStep(actor) {
 export function fireStep(actor) {
     try { const t = tokenOf(actor); return t ? Math.max(0, Number(api("wodx-atmosphere")?.mood?.ruleAt?.(t)?.fire) || 0) : 0; } catch (e) { return 0; }
 }
+/**
+ * How the actor is dressed against the one they deal with (the first targeted token): WoDX Library's "fine", "poor"
+ * or "even", or null with no target or no Library.
+ */
+export function dressedFor(actor) {
+    try {
+        const L = api("wodx-library")?.look;
+        const target = [...(globalThis.game?.user?.targets ?? [])].map(t => t.actor).find(a => a && a.id !== actor?.id);
+        if (!L || !target) return null;
+        const template = (target.isToken ? target.token?.baseActor : target)?.flags?.["wodx-npc"]?.behavior?.template ?? null;
+        const station = L.station(target, template);
+        let year = null;
+        try { year = Number(api("wodx-chronicle")?.eras?.currentYear?.()) || null; } catch (e) { year = null; }
+        return L.dressedVs(L.of(actor), station, year);
+    } catch (e) { return null; }
+}
 /** The codex pages not yet spent on research: [{id, name}]. */
 export function researchPages(actor) {
     const j = actor ? game.journal?.find?.(x => x.flags?.["wodx-storyteller"]?.codex === actor.id) : null;
@@ -36,7 +52,8 @@ export function ticksHtml(actor, esc = s => s) {
 /** The modifiers for a roll from its window's fields. */
 export function modsFor(actor, fd = {}, pool = {}) {
     const research = !!fd.research && DR.researchHelps(pool.abilityKey, pool.abilityLabel) && researchPages(actor).some(p => p.id === fd.research);
-    return DR.deeperMods({ nightmares: nightmareDice(actor), crowd: fd["tag-crowd"] ? crowdStep(actor) : 0, research });
+    const dressed = DR.dressCounts(pool.abilityKey, pool.abilityLabel) ? dressedFor(actor) : null;
+    return DR.deeperMods({ nightmares: nightmareDice(actor), crowd: fd["tag-crowd"] ? crowdStep(actor) : 0, research, dressed });
 }
 
 /** After the roll: the codex entry is spent. */

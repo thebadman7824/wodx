@@ -69,6 +69,16 @@ export function checkModuleFragment(f) {
   return out;
 }
 
+/** Ben's standing rule (2026-11-14, B3734): anything added to the game has a tangible effect in play, unless that is
+ * impossible to render. A minor or major release note names it in an effect: line (or effect: none, and why). */
+export function effectWarnings(f) {
+  if ( !f || !["minor", "major"].includes(f.meta.bump) ) return [];
+  const e = String(f.meta.effect ?? "").trim();
+  if ( !e ) return ["no effect: line; say what a player or the Storyteller sees change in play (or effect: none, and why it cannot be rendered)"];
+  if ( /^none\b/i.test(e) && e.replace(/^none\W*/i, "").length < 12 ) return ["effect: none needs the reason it cannot be rendered"];
+  return [];
+}
+
 export const blockRange = s => { const m = /^B(\d+)(?:-B(\d+))?$/.exec(String(s ?? "").trim()); return m ? {lo: +m[1], hi: +(m[2] ?? m[1])} : null; };
 export const sectionNumbers = body => [...String(body).matchAll(/^## B(\d+)[a-z]?\b/gm)].map(m => +m[1]);
 
@@ -183,7 +193,7 @@ function versionAt(ref, mod) {
   try { return s ? JSON.parse(s).version : null; } catch { return null; }
 }
 
-function main() {
+async function main() {
   const args = new Set(process.argv.slice(2));
   const check = args.has("--check"), dry = args.has("--dry");
   if ( !args.has("--no-fetch") ) {
@@ -213,6 +223,18 @@ function main() {
   }
 
   if ( check ) {
+    for ( const x of mf ) for ( const w of effectWarnings(x.frag) ) console.log(`  warning: ${x.file}: ${w}`);
+    // B3732: a branch that changes a module's scripts should change a gate covering that module too (a warning only).
+    try {
+      const {gateMap} = await import("../lanes/gate-map.mjs");
+      const changed = (tryGit("diff", "--name-only", base ?? "origin/main", "HEAD") ?? "").split("\n").filter(Boolean);
+      const map = gateMap(), gatesTouched = new Set(changed.map(f => /^tools\/gate\/(gate[\w-]*)\.mjs$/.exec(f)?.[1]).filter(Boolean));
+      const scripted = new Set(changed.map(f => /^modules\/(wodx-[a-z]+)\/scripts\//.exec(f)?.[1]).filter(Boolean));
+      for ( const mod of scripted ) {
+        const cover = Object.keys(map).filter(g => map[g].includes(mod));
+        if ( cover.length && !cover.some(g => gatesTouched.has(g)) ) console.log(`  warning: ${mod} scripts changed but none of its ${cover.length} gates did; update the gate for the feature (docs/WORKFLOW.md, Gate rules)`);
+      }
+    } catch {}
     if ( mf.length || df.length ) problems.push(`${mf.length + df.length} fragment(s) wait to be stamped: run node tools/release/merge-stamp.mjs`);
     for ( const p of problems ) console.log(`  ${p}`);
     console.log(problems.length ? `Not ready to merge: ${problems.length} problem(s).` : "Ready to merge: nothing waits to be stamped.");

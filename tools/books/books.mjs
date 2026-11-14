@@ -16,8 +16,14 @@
  *                                                               with a book; exit 1 when there is one
  *   --text <folder>      default $WODX_BOOK_TEXT, else /mnt/project-files/book-text
  *
- * Layout read: <folder>/**\/<book id>/pNNNN.txt (one file per pdf page, as tools-env\text keeps them), or
- * <folder>/**\/<book id>.txt with pages split by form feeds. Words are squashed the way the Encyclopaedia check does
+ *   node tools/books/books.mjs pack <folder> [--force]          join each <book id>/pNNNN.txt folder under <folder> into
+ *                                                               one <book id>.txt with "=== pNNNN" page markers (the
+ *                                                               shared folder keeps one file per book, never one per page)
+ *
+ * Layout read (B3950): <folder>/**\/<book id>.txt, one file per book, its pages marked by "=== pNNNN" lines (as the PC's
+ * join step writes them) or split by form feeds. <book id>.toc.txt files are contents lists, not books. The old
+ * <book id>/pNNNN.txt page folders (as tools-env\text keeps them on the PC) are still read where no joined file stands
+ * beside them. Words are squashed the way the Encyclopaedia check does
  * it (ency-rules.mjs): lower case, apostrophes dropped, everything else not a letter or digit a space.
  */
 import fs from "node:fs";
@@ -27,31 +33,80 @@ import {fileURLToPath} from "node:url";
 export const SHINGLE = 8;
 export const words = t => String(t ?? "").toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, " ").trim().split(" ").filter(Boolean);
 
-/** Every book under a folder: {id, pages: [{n, file}] or {id, file} for one form-feed file}. */
+/** Every book under a folder: {id, file} for one file per book, or {id, pages: [{n, file}]} for a page folder. */
 export function findBooks(root) {
-  const books = new Map();
+  const books = new Map(), folders = [];
   const walk = d => {
-    let pageFiles = [];
+    const pageFiles = [];
     for ( const e of fs.readdirSync(d, {withFileTypes: true}) ) {
       const p = path.join(d, e.name);
       if ( e.isDirectory() ) walk(p);
       else if ( /^p\d+\.txt$/i.test(e.name) ) pageFiles.push({n: +/\d+/.exec(e.name)[0], file: p});
-      else if ( /\.txt$/i.test(e.name) ) { const id = e.name.replace(/\.txt$/i, ""); if ( !books.has(id) ) books.set(id, {id, file: p}); }
+      else if ( /\.txt$/i.test(e.name) && !/\.toc\.txt$/i.test(e.name) ) {
+        const id = e.name.replace(/\.txt$/i, "");
+        const key = books.has(id) ? `${path.basename(d)}/${id}` : id;
+        books.set(key, {id: key, file: p});
+      }
     }
-    if ( pageFiles.length ) {
-      const id = path.basename(d);
-      const key = books.has(id) ? `${path.basename(path.dirname(d))}/${id}` : id;
-      books.set(key, {id: key, pages: pageFiles.sort((a, b) => a.n - b.n)});
-    }
+    if ( pageFiles.length ) folders.push({dir: d, pages: pageFiles.sort((a, b) => a.n - b.n)});
   };
   if ( fs.existsSync(root) ) walk(root);
+  // A page folder counts only where its joined file is missing, so a book is never read twice.
+  const joined = new Set([...books.values()].map(b => b.file.replace(/\.txt$/i, "").toLowerCase()));
+  for ( const f of folders ) {
+    if ( joined.has(f.dir.toLowerCase()) ) continue;
+    const id = path.basename(f.dir), key = books.has(id) ? `${path.basename(path.dirname(f.dir))}/${id}` : id;
+    books.set(key, {id: key, pages: f.pages});
+  }
   return [...books.values()].sort((a, b) => a.id.localeCompare(b.id));
+}
+
+export const PAGE_MARK = /^=== p(\d+)\s*$/m;
+
+/** Split one book file into pages: "=== pNNNN" marker lines, else form feeds. */
+export function splitPages(text) {
+  const t = String(text).replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n");
+  if ( PAGE_MARK.test(t) ) {
+    const out = [], re = /^=== p(\d+)\s*$/gm;
+    let m, last = null;
+    while ( (m = re.exec(t)) ) {
+      if ( last ) out.push({n: last.n, text: t.slice(last.end, m.index)});
+      last = {n: +m[1], end: m.index + m[0].length};
+    }
+    if ( last ) out.push({n: last.n, text: t.slice(last.end)});
+    return out.map(p => ({n: p.n, text: p.text.replace(/^\n/, "")}));
+  }
+  return t.split("\f").map((text, i) => ({n: i + 1, text}));
+}
+
+/** Join a page folder into the one-file layout. Returns the text. */
+export function joinPages(pages) {
+  return pages.map(p => `=== p${String(p.n).padStart(4, "0")}\n${fs.readFileSync(p.file, "utf8").replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n").replace(/\n*$/, "\n")}`).join("");
+}
+
+/** pack: write <book id>.txt beside each page folder under root that has none (or all, with force). */
+export function pack(root, {force = false} = {}) {
+  const done = [];
+  const walk = d => {
+    const ents = fs.readdirSync(d, {withFileTypes: true});
+    const pages = ents.filter(e => e.isFile() && /^p\d+\.txt$/i.test(e.name)).map(e => ({n: +/\d+/.exec(e.name)[0], file: path.join(d, e.name)})).sort((a, b) => a.n - b.n);
+    for ( const e of ents ) if ( e.isDirectory() ) walk(path.join(d, e.name));
+    if ( !pages.length ) return;
+    const out = `${d}.txt`;
+    if ( fs.existsSync(out) && !force ) { done.push({book: out, pages: pages.length, skipped: true}); return; }
+    fs.writeFileSync(out, joinPages(pages));
+    const back = splitPages(fs.readFileSync(out, "utf8"));
+    if ( back.length !== pages.length ) throw new Error(`${out}: wrote ${pages.length} pages but read back ${back.length}`);
+    done.push({book: out, pages: pages.length});
+  };
+  walk(root);
+  return done;
 }
 
 /** The pages of one book as [{n, text}], pdf page numbers. */
 export function pagesOf(book) {
   if ( book.pages ) return book.pages.map(p => ({n: p.n, get text() { return fs.readFileSync(p.file, "utf8"); }}));
-  return fs.readFileSync(book.file, "utf8").split("\f").map((text, i) => ({n: i + 1, text}));
+  return splitPages(fs.readFileSync(book.file, "utf8"));
 }
 
 function fnv(s) {
@@ -127,6 +182,12 @@ function main() {
   const valued = new Set(["text", "around", "offset", "book", "max", "n", "grep"]);
   const pos = args.filter((a, i) => !a.startsWith("--") && !(i > 0 && valued.has(args[i - 1].slice(2))));
   const root = opt("text") ?? process.env.WODX_BOOK_TEXT ?? "/mnt/project-files/book-text";
+  if ( pos[0] === "pack" ) {
+    const dir = pos[1] ?? root, done = pack(dir, {force: args.includes("--force")});
+    for ( const d of done ) console.log(`${d.skipped ? "kept " : "wrote"} ${d.book} (${d.pages} pages)`);
+    console.log(`${done.filter(d => !d.skipped).length} book file(s) written under ${dir}. The page folders can now be left off the shared folder.`);
+    return;
+  }
   let books = findBooks(root);
   if ( !books.length ) { console.error(`No book texts under ${root}. The PC job in tools/books/README.md copies them there.`); process.exit(2); }
   const only = opt("book");
@@ -153,7 +214,7 @@ function main() {
     console.log(`Overlap: ${files.length} file(s) against ${books.length} book(s), ${hits.length} shared run(s) of ${opt("n") ?? SHINGLE} words, ${((Date.now() - t0) / 1000).toFixed(1)} s.`);
     process.exit(hits.length ? 1 : 0);
   } else {
-    console.error("Commands: list, page, find, overlap (see the header of tools/books/books.mjs)");
+    console.error("Commands: list, page, find, overlap, pack (see the header of tools/books/books.mjs)");
     process.exit(2);
   }
 }

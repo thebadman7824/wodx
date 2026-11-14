@@ -1394,7 +1394,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "V20 Dark Ages, pdf 351 / printed 350",
-    "description": "<p><b>Difficulty:</b> parry diff 4<br><b>Effect:</b> attack ±0</p>",
+    "description": "<p><b>Difficulty:</b> parry diff 4<br><b>Effect:</b> attack ±0</p><p><b>Carried (equipped):</b> parry at difficulty 4.</p>",
     "isequipped": false
    },
    "flags": {
@@ -1406,7 +1406,12 @@
       "long-night"
      ],
      "kind": "armor (shield)",
-     "notes": []
+     "notes": [],
+     "shield": {
+      "parry": 4,
+      "attack": 0,
+      "closeOnly": false
+     }
     }
    }
   },
@@ -1416,7 +1421,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "V20 Dark Ages, pdf 351 / printed 350",
-    "description": "<p><b>Difficulty:</b> parry diff 6<br><b>Effect:</b> attack +1</p>",
+    "description": "<p><b>Difficulty:</b> parry diff 6<br><b>Effect:</b> attack +1</p><p><b>Carried (equipped):</b> parry at difficulty 6; +1 to the difficulty of attacks against the bearer.</p>",
     "isequipped": false
    },
    "flags": {
@@ -1428,7 +1433,12 @@
       "long-night"
      ],
      "kind": "armor (shield)",
-     "notes": []
+     "notes": [],
+     "shield": {
+      "parry": 6,
+      "attack": 1,
+      "closeOnly": false
+     }
     }
    }
   },
@@ -1438,7 +1448,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "V20 Dark Ages, pdf 351 / printed 350",
-    "description": "<p><b>Difficulty:</b> parry diff 5<br><b>Effect:</b> attack ±0</p>",
+    "description": "<p><b>Difficulty:</b> parry diff 5<br><b>Effect:</b> attack ±0</p><p><b>With that weapon in hand:</b> parry at difficulty 5.</p>",
     "isequipped": false
    },
    "flags": {
@@ -1450,7 +1460,13 @@
       "long-night"
      ],
      "kind": "(parry)",
-     "notes": []
+     "notes": [],
+     "parryWith": {
+      "weapon": "dagger",
+      "parry": 5,
+      "attack": 0,
+      "closeOnly": false
+     }
     }
    }
   },
@@ -1460,7 +1476,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "V20 Dark Ages, pdf 351 / printed 350",
-    "description": "<p><b>Difficulty:</b> parry diff 6<br><b>Effect:</b> attack +1, hand-to-hand only</p>",
+    "description": "<p><b>Difficulty:</b> parry diff 6<br><b>Effect:</b> attack +1, hand-to-hand only</p><p><b>With that weapon in hand:</b> parry at difficulty 6; +1 to the difficulty of attacks against the bearer in close combat.</p>",
     "isequipped": false
    },
    "flags": {
@@ -1479,6 +1495,12 @@
       "andean": false,
       "polynesian": false,
       "northern": false
+     },
+     "parryWith": {
+      "weapon": "sword",
+      "parry": 6,
+      "attack": 1,
+      "closeOnly": true
      }
     }
    }
@@ -4635,7 +4657,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Sorcerers Crusade, pdf 219 / printed 202; spiked buckler hits as a knife at difficulty 7 (pdf 212)",
-    "description": "<p><b>Difficulty:</b> +1 to attacker's difficulty<br>pdf 212</p>",
+    "description": "<p><b>Difficulty:</b> +1 to attacker's difficulty<br>pdf 212</p><p><b>Carried (equipped):</b> +1 to the difficulty of attacks against the bearer.</p>",
     "isequipped": false
    },
    "flags": {
@@ -4655,6 +4677,11 @@
       "andean": false,
       "polynesian": false,
       "northern": false
+     },
+     "shield": {
+      "parry": null,
+      "attack": 1,
+      "closeOnly": false
      }
     }
    }
@@ -4665,7 +4692,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Sorcerers Crusade, pdf 219 / printed 202",
-    "description": "<p><b>Difficulty:</b> +2 to attacker's difficulty</p>",
+    "description": "<p><b>Difficulty:</b> +2 to attacker's difficulty</p><p><b>Carried (equipped):</b> +2 to the difficulty of attacks against the bearer.</p>",
     "isequipped": false
    },
    "flags": {
@@ -4683,6 +4710,11 @@
       "andean": false,
       "polynesian": false,
       "northern": false
+     },
+     "shield": {
+      "parry": null,
+      "attack": 2,
+      "closeOnly": false
      }
     }
    }
@@ -5563,7 +5595,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 70",
-    "description": "<p><b>Difficulty:</b> 6 (Int + Heavy Weapons)<br><b>Damage:</b> 6 dice + 1 per success, 15-foot radius<br><b>Rate:</b> 3 crew actions to load, lay and fire</p>",
+    "description": "<p><b>Difficulty:</b> 6 (Int + Heavy Weapons)<br><b>Damage:</b> 6 dice + 1 per success, 15-foot radius<br><b>Rate:</b> 3 crew actions to load, lay and fire</p><p><b>Heavy fire (WoDX Combat):</b> 6 dice of damage on each person in the blast.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5574,7 +5606,14 @@
       "great-war"
      ],
      "kind": "ranged (crew-served) (heavy)",
-     "notes": []
+     "notes": [],
+     "heavy": {
+      "pen": null,
+      "blast": 6,
+      "naval": null,
+      "diff": 6,
+      "radius": 15
+     }
     }
    }
   },
@@ -5584,7 +5623,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 71",
-    "description": "<p><b>Difficulty:</b> 4<br><b>Damage:</b> 8 dice + 1 per success, full damage to 30 ft, half at 60 ft<br><b>Range:</b> 30 ft / 60 ft<br><b>Rate:</b> as above</p>",
+    "description": "<p><b>Difficulty:</b> 4<br><b>Damage:</b> 8 dice + 1 per success, full damage to 30 ft, half at 60 ft<br><b>Range:</b> 30 ft / 60 ft<br><b>Rate:</b> as above</p><p><b>Heavy fire (WoDX Combat):</b> 8 dice of damage on each person in the blast.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5595,7 +5634,14 @@
       "great-war"
      ],
      "kind": "ranged (crew-served) (heavy)",
-     "notes": []
+     "notes": [],
+     "heavy": {
+      "pen": null,
+      "blast": 8,
+      "naval": null,
+      "diff": 4,
+      "radius": 30
+     }
     }
    }
   },
@@ -5605,7 +5651,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 71",
-    "description": "<p><b>Difficulty:</b> 8<br><b>Damage:</b> 3 armor-penetration dice<br><b>Rate:</b> as above</p>",
+    "description": "<p><b>Difficulty:</b> 8<br><b>Damage:</b> 3 armor-penetration dice<br><b>Rate:</b> as above</p><p><b>Heavy fire (WoDX Combat):</b> 3 penetration dice against armour.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5616,7 +5662,14 @@
       "great-war"
      ],
      "kind": "ranged (crew-served) (heavy)",
-     "notes": []
+     "notes": [],
+     "heavy": {
+      "pen": 3,
+      "blast": null,
+      "naval": null,
+      "diff": 8,
+      "radius": null
+     }
     }
    }
   },
@@ -5626,7 +5679,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 71",
-    "description": "<p><b>Difficulty:</b> 8<br><b>Damage:</b> treat as light artillery, high explosive only, fixed point targets</p>",
+    "description": "<p><b>Difficulty:</b> 8<br><b>Damage:</b> treat as light artillery, high explosive only, fixed point targets</p><p><b>Heavy fire (WoDX Combat):</b> 3 penetration dice against armour.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5637,7 +5690,14 @@
       "great-war"
      ],
      "kind": "ranged (crew-served) (heavy)",
-     "notes": []
+     "notes": [],
+     "heavy": {
+      "pen": 3,
+      "blast": null,
+      "naval": null,
+      "diff": 8,
+      "radius": null
+     }
     }
    }
   },
@@ -5647,7 +5707,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 71",
-    "description": "<p><b>Difficulty:</b> 6<br><b>Damage:</b> 10 dice + successes<br><b>Rate:</b> 5 actions per principal crew member<br>4–6 in</p>",
+    "description": "<p><b>Difficulty:</b> 6<br><b>Damage:</b> 10 dice + successes<br><b>Rate:</b> 5 actions per principal crew member<br>4–6 in</p><p><b>Heavy fire (WoDX Combat):</b> 10 dice of damage on each person in the blast.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5660,7 +5720,14 @@
      "kind": "ranged (crew-served) (heavy)",
      "notes": [
       "4–6 in"
-     ]
+     ],
+     "heavy": {
+      "pen": null,
+      "blast": 10,
+      "naval": null,
+      "diff": 6,
+      "radius": null
+     }
     }
    }
   },
@@ -5670,7 +5737,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 71",
-    "description": "<p><b>Damage:</b> 8 dice + successes to 50 ft, halved 50–100 ft<br><b>Range:</b> 50 ft / 100 ft</p>",
+    "description": "<p><b>Damage:</b> 8 dice + successes to 50 ft, halved 50–100 ft<br><b>Range:</b> 50 ft / 100 ft</p><p><b>Heavy fire (WoDX Combat):</b> 8 dice of damage on each person in the blast.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5681,7 +5748,14 @@
       "great-war"
      ],
      "kind": "ranged (crew-served) (heavy)",
-     "notes": []
+     "notes": [],
+     "heavy": {
+      "pen": null,
+      "blast": 8,
+      "naval": null,
+      "diff": 6,
+      "radius": 50
+     }
     }
    }
   },
@@ -5691,7 +5765,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 71",
-    "description": "<p><b>Damage:</b> 5 armor-penetration dice</p>",
+    "description": "<p><b>Damage:</b> 5 armor-penetration dice</p><p><b>Heavy fire (WoDX Combat):</b> 5 penetration dice against armour.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5702,7 +5776,14 @@
       "great-war"
      ],
      "kind": "ranged (crew-served) (heavy)",
-     "notes": []
+     "notes": [],
+     "heavy": {
+      "pen": 5,
+      "blast": null,
+      "naval": null,
+      "diff": 6,
+      "radius": null
+     }
     }
    }
   },
@@ -5712,7 +5793,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 74 (Weapons Chart)",
-    "description": "<p><b>Damage:</b> 1 penetration die<br>Weapons Chart</p>",
+    "description": "<p><b>Damage:</b> 1 penetration die<br>Weapons Chart</p><p><b>Heavy fire (WoDX Combat):</b> 1 penetration dice against armour.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5725,7 +5806,14 @@
      "kind": "ranged (heavy)",
      "notes": [
       "Weapons Chart"
-     ]
+     ],
+     "heavy": {
+      "pen": 1,
+      "blast": null,
+      "naval": null,
+      "diff": 6,
+      "radius": null
+     }
     }
    }
   },
@@ -5735,7 +5823,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 74 (Weapons Chart)",
-    "description": "<p><b>Damage:</b> 2 penetration dice<br>Weapons Chart</p>",
+    "description": "<p><b>Damage:</b> 2 penetration dice<br>Weapons Chart</p><p><b>Heavy fire (WoDX Combat):</b> 2 penetration dice against armour.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5748,7 +5836,14 @@
      "kind": "ranged (heavy)",
      "notes": [
       "Weapons Chart"
-     ]
+     ],
+     "heavy": {
+      "pen": 2,
+      "blast": null,
+      "naval": null,
+      "diff": 6,
+      "radius": null
+     }
     }
    }
   },
@@ -5758,7 +5853,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 74 (Weapons Chart)",
-    "description": "<p><b>Damage:</b> 3 penetration dice<br>Weapons Chart</p>",
+    "description": "<p><b>Damage:</b> 3 penetration dice<br>Weapons Chart</p><p><b>Heavy fire (WoDX Combat):</b> 3 penetration dice against armour.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5771,7 +5866,14 @@
      "kind": "ranged (heavy)",
      "notes": [
       "Weapons Chart"
-     ]
+     ],
+     "heavy": {
+      "pen": 3,
+      "blast": null,
+      "naval": null,
+      "diff": 6,
+      "radius": null
+     }
     }
    }
   },
@@ -5781,7 +5883,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 74 (Weapons Chart)",
-    "description": "<p><b>Damage:</b> 5 penetration dice<br>Weapons Chart</p>",
+    "description": "<p><b>Damage:</b> 5 penetration dice<br>Weapons Chart</p><p><b>Heavy fire (WoDX Combat):</b> 5 penetration dice against armour.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5794,7 +5896,14 @@
      "kind": "ranged (heavy)",
      "notes": [
       "Weapons Chart"
-     ]
+     ],
+     "heavy": {
+      "pen": 5,
+      "blast": null,
+      "naval": null,
+      "diff": 6,
+      "radius": null
+     }
     }
    }
   },
@@ -5804,7 +5913,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 73 (Armor Chart)",
-    "description": "<p><b>Difficulty:</b> penetration diff 4<br>Armor Chart</p>",
+    "description": "<p><b>Difficulty:</b> penetration diff 4<br>Armor Chart</p><p><b>Heavy fire (WoDX Combat):</b> a heavy gun needs successes at difficulty 4 to get through.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5817,7 +5926,10 @@
      "kind": "armor (heavy)",
      "notes": [
       "Armor Chart"
-     ]
+     ],
+     "hardArmor": {
+      "pen": 4
+     }
     }
    }
   },
@@ -5827,7 +5939,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 73",
-    "description": "<p><b>Difficulty:</b> penetration diff 5</p>",
+    "description": "<p><b>Difficulty:</b> penetration diff 5</p><p><b>Heavy fire (WoDX Combat):</b> a heavy gun needs successes at difficulty 5 to get through.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5838,7 +5950,10 @@
       "great-war"
      ],
      "kind": "armor (heavy)",
-     "notes": []
+     "notes": [],
+     "hardArmor": {
+      "pen": 5
+     }
     }
    }
   },
@@ -5848,7 +5963,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 73",
-    "description": "<p><b>Difficulty:</b> penetration diff 6</p>",
+    "description": "<p><b>Difficulty:</b> penetration diff 6</p><p><b>Heavy fire (WoDX Combat):</b> a heavy gun needs successes at difficulty 6 to get through.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5859,7 +5974,10 @@
       "great-war"
      ],
      "kind": "armor (heavy)",
-     "notes": []
+     "notes": [],
+     "hardArmor": {
+      "pen": 6
+     }
     }
    }
   },
@@ -5869,7 +5987,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 73",
-    "description": "<p><b>Difficulty:</b> penetration diff 7</p>",
+    "description": "<p><b>Difficulty:</b> penetration diff 7</p><p><b>Heavy fire (WoDX Combat):</b> a heavy gun needs successes at difficulty 7 to get through.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5880,7 +5998,10 @@
       "great-war"
      ],
      "kind": "armor (heavy)",
-     "notes": []
+     "notes": [],
+     "hardArmor": {
+      "pen": 7
+     }
     }
    }
   },
@@ -5890,7 +6011,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 73",
-    "description": "<p><b>Difficulty:</b> penetration diff 8 (OCR garbled; inferred from the sequence)</p>",
+    "description": "<p><b>Difficulty:</b> penetration diff 8 (OCR garbled; inferred from the sequence)</p><p><b>Heavy fire (WoDX Combat):</b> a heavy gun needs successes at difficulty 8 to get through.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5901,7 +6022,10 @@
       "great-war"
      ],
      "kind": "armor (heavy)",
-     "notes": []
+     "notes": [],
+     "hardArmor": {
+      "pen": 8
+     }
     }
    }
   },
@@ -5911,7 +6035,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 73",
-    "description": "<p><b>Difficulty:</b> penetration diff 9</p>",
+    "description": "<p><b>Difficulty:</b> penetration diff 9</p><p><b>Heavy fire (WoDX Combat):</b> a heavy gun needs successes at difficulty 9 to get through.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5922,7 +6046,10 @@
       "great-war"
      ],
      "kind": "armor (heavy)",
-     "notes": []
+     "notes": [],
+     "hardArmor": {
+      "pen": 9
+     }
     }
    }
   },
@@ -5932,7 +6059,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 73",
-    "description": "<p><b>Difficulty:</b> penetration diff 10</p>",
+    "description": "<p><b>Difficulty:</b> penetration diff 10</p><p><b>Heavy fire (WoDX Combat):</b> a heavy gun needs successes at difficulty 10 to get through.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5943,7 +6070,10 @@
       "great-war"
      ],
      "kind": "armor (heavy)",
-     "notes": []
+     "notes": [],
+     "hardArmor": {
+      "pen": 10
+     }
     }
    }
   },
@@ -5953,7 +6083,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 77",
-    "description": "<p><b>Difficulty:</b> 6/7/8 by range<br><b>Damage:</b> damage rating 3<br><b>Rate:</b> breechloaders once per turn<br>3–4 in</p>",
+    "description": "<p><b>Difficulty:</b> 6/7/8 by range<br><b>Damage:</b> damage rating 3<br><b>Rate:</b> breechloaders once per turn<br>3–4 in</p><p><b>Heavy fire (WoDX Combat):</b> damage rating 3 against a ship.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5966,7 +6096,14 @@
      "kind": "ranged (ship) (heavy)",
      "notes": [
       "3–4 in"
-     ]
+     ],
+     "heavy": {
+      "pen": null,
+      "blast": null,
+      "naval": 3,
+      "diff": 6,
+      "radius": null
+     }
     }
    }
   },
@@ -5976,7 +6113,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 77",
-    "description": "<p><b>Difficulty:</b> 6/7/8<br><b>Damage:</b> 5<br>5–6 in</p>",
+    "description": "<p><b>Difficulty:</b> 6/7/8<br><b>Damage:</b> 5<br>5–6 in</p><p><b>Heavy fire (WoDX Combat):</b> damage rating 5 against a ship.</p>",
     "isequipped": false
    },
    "flags": {
@@ -5989,7 +6126,14 @@
      "kind": "ranged (ship) (heavy)",
      "notes": [
       "5–6 in"
-     ]
+     ],
+     "heavy": {
+      "pen": null,
+      "blast": null,
+      "naval": 5,
+      "diff": 6,
+      "radius": null
+     }
     }
    }
   },
@@ -5999,7 +6143,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 77",
-    "description": "<p><b>Difficulty:</b> 6/7/8<br><b>Damage:</b> 7<br>8–10 in</p>",
+    "description": "<p><b>Difficulty:</b> 6/7/8<br><b>Damage:</b> 7<br>8–10 in</p><p><b>Heavy fire (WoDX Combat):</b> damage rating 7 against a ship.</p>",
     "isequipped": false
    },
    "flags": {
@@ -6012,7 +6156,14 @@
      "kind": "ranged (ship) (heavy)",
      "notes": [
       "8–10 in"
-     ]
+     ],
+     "heavy": {
+      "pen": null,
+      "blast": null,
+      "naval": 7,
+      "diff": 6,
+      "radius": null
+     }
     }
    }
   },
@@ -6022,7 +6173,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 77",
-    "description": "<p><b>Difficulty:</b> 6/7/8<br><b>Damage:</b> 10<br>11–13 in</p>",
+    "description": "<p><b>Difficulty:</b> 6/7/8<br><b>Damage:</b> 10<br>11–13 in</p><p><b>Heavy fire (WoDX Combat):</b> damage rating 10 against a ship.</p>",
     "isequipped": false
    },
    "flags": {
@@ -6035,7 +6186,14 @@
      "kind": "ranged (ship) (heavy)",
      "notes": [
       "11–13 in"
-     ]
+     ],
+     "heavy": {
+      "pen": null,
+      "blast": null,
+      "naval": 10,
+      "diff": 6,
+      "radius": null
+     }
     }
    }
   },
@@ -6045,7 +6203,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 77",
-    "description": "<p><b>Difficulty:</b> 6/7/8<br><b>Damage:</b> 13<br>14–15 in</p>",
+    "description": "<p><b>Difficulty:</b> 6/7/8<br><b>Damage:</b> 13<br>14–15 in</p><p><b>Heavy fire (WoDX Combat):</b> damage rating 13 against a ship.</p>",
     "isequipped": false
    },
    "flags": {
@@ -6058,7 +6216,14 @@
      "kind": "ranged (ship) (heavy)",
      "notes": [
       "14–15 in"
-     ]
+     ],
+     "heavy": {
+      "pen": null,
+      "blast": null,
+      "naval": 13,
+      "diff": 6,
+      "radius": null
+     }
     }
    }
   },
@@ -6068,7 +6233,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 77",
-    "description": "<p><b>Difficulty:</b> 6/7/8<br><b>Damage:</b> 4<br><b>Rate:</b> one turn swabbing and loading<br>5–6 pound</p>",
+    "description": "<p><b>Difficulty:</b> 6/7/8<br><b>Damage:</b> 4<br><b>Rate:</b> one turn swabbing and loading<br>5–6 pound</p><p><b>Heavy fire (WoDX Combat):</b> damage rating 4 against a ship.</p>",
     "isequipped": false
    },
    "flags": {
@@ -6081,7 +6246,14 @@
      "kind": "ranged (ship) (heavy)",
      "notes": [
       "5–6 pound"
-     ]
+     ],
+     "heavy": {
+      "pen": null,
+      "blast": null,
+      "naval": 4,
+      "diff": 6,
+      "radius": null
+     }
     }
    }
   },
@@ -6091,7 +6263,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 77",
-    "description": "<p><b>Difficulty:</b> 6/7/8<br><b>Damage:</b> 8<br>5–6 pound</p>",
+    "description": "<p><b>Difficulty:</b> 6/7/8<br><b>Damage:</b> 8<br>5–6 pound</p><p><b>Heavy fire (WoDX Combat):</b> damage rating 8 against a ship.</p>",
     "isequipped": false
    },
    "flags": {
@@ -6104,7 +6276,14 @@
      "kind": "ranged (ship) (heavy)",
      "notes": [
       "5–6 pound"
-     ]
+     ],
+     "heavy": {
+      "pen": null,
+      "blast": null,
+      "naval": 8,
+      "diff": 6,
+      "radius": null
+     }
     }
    }
   },
@@ -6114,7 +6293,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 77",
-    "description": "<p><b>Difficulty:</b> 6/7/8<br><b>Damage:</b> 6<br>10–12 pound</p>",
+    "description": "<p><b>Difficulty:</b> 6/7/8<br><b>Damage:</b> 6<br>10–12 pound</p><p><b>Heavy fire (WoDX Combat):</b> damage rating 6 against a ship.</p>",
     "isequipped": false
    },
    "flags": {
@@ -6127,7 +6306,14 @@
      "kind": "ranged (ship) (heavy)",
      "notes": [
       "10–12 pound"
-     ]
+     ],
+     "heavy": {
+      "pen": null,
+      "blast": null,
+      "naval": 6,
+      "diff": 6,
+      "radius": null
+     }
     }
    }
   },
@@ -6137,7 +6323,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 77",
-    "description": "<p><b>Difficulty:</b> 6/7/8<br><b>Damage:</b> 12<br>10–12 pound</p>",
+    "description": "<p><b>Difficulty:</b> 6/7/8<br><b>Damage:</b> 12<br>10–12 pound</p><p><b>Heavy fire (WoDX Combat):</b> damage rating 12 against a ship.</p>",
     "isequipped": false
    },
    "flags": {
@@ -6150,7 +6336,14 @@
      "kind": "ranged (ship) (heavy)",
      "notes": [
       "10–12 pound"
-     ]
+     ],
+     "heavy": {
+      "pen": null,
+      "blast": null,
+      "naval": 12,
+      "diff": 6,
+      "radius": null
+     }
     }
    }
   },
@@ -6160,7 +6353,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 77",
-    "description": "<p><b>Protection:</b> 5</p>",
+    "description": "<p><b>Protection:</b> 5</p><p><b>Heavy fire (WoDX Combat):</b> a ship's guns roll against difficulty 5.</p>",
     "isequipped": false
    },
    "flags": {
@@ -6171,7 +6364,10 @@
       "great-war"
      ],
      "kind": "armor (ship) (heavy)",
-     "notes": []
+     "notes": [],
+     "hardArmor": {
+      "ship": 5
+     }
     }
    }
   },
@@ -6181,7 +6377,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 77",
-    "description": "<p><b>Protection:</b> 6</p>",
+    "description": "<p><b>Protection:</b> 6</p><p><b>Heavy fire (WoDX Combat):</b> a ship's guns roll against difficulty 6.</p>",
     "isequipped": false
    },
    "flags": {
@@ -6192,7 +6388,10 @@
       "great-war"
      ],
      "kind": "armor (ship) (heavy)",
-     "notes": []
+     "notes": [],
+     "hardArmor": {
+      "ship": 6
+     }
     }
    }
   },
@@ -6202,7 +6401,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 77",
-    "description": "<p><b>Protection:</b> 7</p>",
+    "description": "<p><b>Protection:</b> 7</p><p><b>Heavy fire (WoDX Combat):</b> a ship's guns roll against difficulty 7.</p>",
     "isequipped": false
    },
    "flags": {
@@ -6213,7 +6412,10 @@
       "great-war"
      ],
      "kind": "armor (ship) (heavy)",
-     "notes": []
+     "notes": [],
+     "hardArmor": {
+      "ship": 7
+     }
     }
    }
   },
@@ -6223,7 +6425,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 77",
-    "description": "<p><b>Protection:</b> 8</p>",
+    "description": "<p><b>Protection:</b> 8</p><p><b>Heavy fire (WoDX Combat):</b> a ship's guns roll against difficulty 8.</p>",
     "isequipped": false
    },
    "flags": {
@@ -6234,7 +6436,10 @@
       "great-war"
      ],
      "kind": "armor (ship) (heavy)",
-     "notes": []
+     "notes": [],
+     "hardArmor": {
+      "ship": 8
+     }
     }
    }
   },
@@ -6244,7 +6449,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 77",
-    "description": "<p><b>Protection:</b> 9</p>",
+    "description": "<p><b>Protection:</b> 9</p><p><b>Heavy fire (WoDX Combat):</b> a ship's guns roll against difficulty 9.</p>",
     "isequipped": false
    },
    "flags": {
@@ -6255,7 +6460,10 @@
       "great-war"
      ],
      "kind": "armor (ship) (heavy)",
-     "notes": []
+     "notes": [],
+     "hardArmor": {
+      "ship": 9
+     }
     }
    }
   },
@@ -6265,7 +6473,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Great War, 77",
-    "description": "<p><b>Protection:</b> 10</p>",
+    "description": "<p><b>Protection:</b> 10</p><p><b>Heavy fire (WoDX Combat):</b> a ship's guns roll against difficulty 10.</p>",
     "isequipped": false
    },
    "flags": {
@@ -6276,7 +6484,10 @@
       "great-war"
      ],
      "kind": "armor (ship) (heavy)",
-     "notes": []
+     "notes": [],
+     "hardArmor": {
+      "ship": 10
+     }
     }
    }
   },
@@ -7274,8 +7485,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 9 / printed 22",
-    "description": "<p><b>Difficulty:</b> −2 TN with the linked weapon<br><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p>",
-    "isequipped": false
+    "description": "<p><b>Difficulty:</b> −2 TN with the linked weapon<br><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p><p><b>Installed:</b> −2 attack difficulty with ranged weapons<br><b>Storyteller:</b> Only with a smartgun wired to it.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Smartgun Link: Ranged Weapon",
+      "settingtype": "TYPES.Item.Ranged Weapon",
+      "type": "attack_diff",
+      "value": -2,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -7288,7 +7509,17 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {
+      "bonus": [
+       [
+        "atkd",
+        "Ranged Weapon",
+        -2
+       ]
+      ],
+      "story": "Only with a smartgun wired to it."
+     }
     }
    }
   },
@@ -7298,8 +7529,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 11 / printed 24",
-    "description": "<p><b>Difficulty:</b> −1 TN to smartgun attacks<br><b>Surgery:</b> N<br><b>Humanity cost:</b> 2<br>cyberoptic</p>",
-    "isequipped": false
+    "description": "<p><b>Difficulty:</b> −1 TN to smartgun attacks<br><b>Surgery:</b> N<br><b>Humanity cost:</b> 2<br>cyberoptic</p><p><b>Installed:</b> −1 attack difficulty with ranged weapons<br><b>Storyteller:</b> Only with a smartgun and a Smartgun Link.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Targeting Scope: Ranged Weapon",
+      "settingtype": "TYPES.Item.Ranged Weapon",
+      "type": "attack_diff",
+      "value": -1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -7314,7 +7555,17 @@
      ],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {
+      "bonus": [
+       [
+        "atkd",
+        "Ranged Weapon",
+        -1
+       ]
+      ],
+      "story": "Only with a smartgun and a Smartgun Link."
+     }
     }
    }
   },
@@ -7324,8 +7575,26 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 9 / printed 22",
-    "description": "<p><b>Rate:</b> +1 Celerity per level<br><b>Effect:</b> +1 Dex at level 2<br><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6/2D6 (as printed)</p>",
-    "isequipped": false
+    "description": "<p><b>Rate:</b> +1 Celerity per level<br><b>Effect:</b> +1 Dex at level 2<br><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6/2D6 (as printed)</p><p><b>Installed:</b> +1 Dexterity; +2 initiative</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Kerenzikov: dexterity",
+      "settingtype": "dexterity",
+      "type": "attribute_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     },
+     {
+      "name": "Kerenzikov: initiative",
+      "settingtype": "",
+      "type": "initiative_buff",
+      "value": 2,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -7338,7 +7607,21 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1D6/2D6 (as printed)"
+     "humanity": "1D6/2D6 (as printed)",
+     "fx": {
+      "bonus": [
+       [
+        "attr",
+        "dexterity",
+        1
+       ],
+       [
+        "init",
+        "",
+        2
+       ]
+      ]
+     }
     }
    }
   },
@@ -7348,8 +7631,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 9 / printed 22",
-    "description": "<p><b>Rate:</b> +3 Celerity<br><b>Effect:</b> +2 Dex for 5 rounds<br><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6/2</p>",
-    "isequipped": false
+    "description": "<p><b>Rate:</b> +3 Celerity<br><b>Effect:</b> +2 Dex for 5 rounds<br><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6/2</p><p><b>Installed:</b> +3 initiative<br><b>Storyteller:</b> Switched on, +2 Dexterity for five turns; then it needs a rest.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Speedware: initiative",
+      "settingtype": "",
+      "type": "initiative_buff",
+      "value": 3,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -7362,7 +7655,17 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1D6/2"
+     "humanity": "1D6/2",
+     "fx": {
+      "bonus": [
+       [
+        "init",
+        "",
+        3
+       ]
+      ],
+      "story": "Switched on, +2 Dexterity for five turns; then it needs a rest."
+     }
     }
    }
   },
@@ -7372,8 +7675,26 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 9 / printed 22",
-    "description": "<p><b>Rate:</b> +1 Celerity to boosterware<br><b>Effect:</b> +1 Dex</p>",
-    "isequipped": false
+    "description": "<p><b>Rate:</b> +1 Celerity to boosterware<br><b>Effect:</b> +1 Dex</p><p><b>Installed:</b> +1 Dexterity; +1 initiative</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Boostmaster: dexterity",
+      "settingtype": "dexterity",
+      "type": "attribute_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     },
+     {
+      "name": "Boostmaster: initiative",
+      "settingtype": "",
+      "type": "initiative_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -7384,7 +7705,21 @@
      ],
      "kind": "cyberware (neural)",
      "notes": [],
-     "cyber": true
+     "cyber": true,
+     "fx": {
+      "bonus": [
+       [
+        "attr",
+        "dexterity",
+        1
+       ],
+       [
+        "init",
+        "",
+        1
+       ]
+      ]
+     }
     }
    }
   },
@@ -7394,8 +7729,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 9 / printed 22",
-    "description": "<p><b>Rate:</b> +1 Celerity<br><b>Effect:</b> +1 Dex for 1d10/2+2 rounds, 3/day<br><b>Surgery:</b> M<br><b>Humanity cost:</b> 2D6</p>",
-    "isequipped": false
+    "description": "<p><b>Rate:</b> +1 Celerity<br><b>Effect:</b> +1 Dex for 1d10/2+2 rounds, 3/day<br><b>Surgery:</b> M<br><b>Humanity cost:</b> 2D6</p><p><b>Installed:</b> +1 initiative<br><b>Storyteller:</b> Switched on, +1 Dexterity for a few turns, three times a day. Dead flesh gives it nothing to work on if it went in before the Embrace.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Adrenal Booster: initiative",
+      "settingtype": "",
+      "type": "initiative_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -7408,7 +7753,17 @@
      "notes": [],
      "cyber": true,
      "surgery": "M",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {
+      "bonus": [
+       [
+        "init",
+        "",
+        1
+       ]
+      ],
+      "story": "Switched on, +1 Dexterity for a few turns, three times a day. Dead flesh gives it nothing to work on if it went in before the Embrace."
+     }
     }
    }
   },
@@ -7439,7 +7794,8 @@
      "cyber": true,
      "surgery": "CR",
      "humanity": "2D6",
-     "implant": true
+     "implant": true,
+     "fx": {}
     }
    }
   },
@@ -7468,7 +7824,8 @@
      "kind": "implant",
      "notes": [],
      "cyber": true,
-     "implant": true
+     "implant": true,
+     "fx": {}
     }
    }
   },
@@ -7478,8 +7835,34 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 9 / printed 22",
-    "description": "<p><b>Strength:</b> +1 Str<br><b>Protection:</b> −1 soak die (+1 Stamina, not for soak)<br>pre-Embrace only</p>",
-    "isequipped": false
+    "description": "<p><b>Strength:</b> +1 Str<br><b>Protection:</b> −1 soak die (+1 Stamina, not for soak)<br>pre-Embrace only</p><p><b>Installed:</b> +1 Strength; +1 Stamina; −1 soak dice<br><b>Storyteller:</b> Works only in a living body.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Sport Heart: strength",
+      "settingtype": "strength",
+      "type": "attribute_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     },
+     {
+      "name": "Sport Heart: stamina",
+      "settingtype": "stamina",
+      "type": "attribute_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     },
+     {
+      "name": "Sport Heart: all",
+      "settingtype": "all",
+      "type": "soak_buff",
+      "value": -1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -7492,7 +7875,27 @@
      "notes": [
       "pre-Embrace only"
      ],
-     "cyber": true
+     "cyber": true,
+     "fx": {
+      "bonus": [
+       [
+        "attr",
+        "strength",
+        1
+       ],
+       [
+        "attr",
+        "stamina",
+        1
+       ],
+       [
+        "soak",
+        "all",
+        -1
+       ]
+      ],
+      "story": "Works only in a living body."
+     }
     }
    }
   },
@@ -7502,8 +7905,34 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 10 / printed 23",
-    "description": "<p><b>Strength:</b> +2 Str<br><b>Protection:</b> −2 soak dice (+2 Stamina, not for soak)<br>pre-Embrace only</p>",
-    "isequipped": false
+    "description": "<p><b>Strength:</b> +2 Str<br><b>Protection:</b> −2 soak dice (+2 Stamina, not for soak)<br>pre-Embrace only</p><p><b>Installed:</b> +2 Strength; +2 Stamina; −2 soak dice<br><b>Storyteller:</b> Works only in a living body.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Overdrive Heart: strength",
+      "settingtype": "strength",
+      "type": "attribute_buff",
+      "value": 2,
+      "isactive": false,
+      "wodxGear": true
+     },
+     {
+      "name": "Overdrive Heart: stamina",
+      "settingtype": "stamina",
+      "type": "attribute_buff",
+      "value": 2,
+      "isactive": false,
+      "wodxGear": true
+     },
+     {
+      "name": "Overdrive Heart: all",
+      "settingtype": "all",
+      "type": "soak_buff",
+      "value": -2,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -7516,18 +7945,53 @@
      "notes": [
       "pre-Embrace only"
      ],
-     "cyber": true
+     "cyber": true,
+     "fx": {
+      "bonus": [
+       [
+        "attr",
+        "strength",
+        2
+       ],
+       [
+        "attr",
+        "stamina",
+        2
+       ],
+       [
+        "soak",
+        "all",
+        -2
+       ]
+      ],
+      "story": "Works only in a living body."
+     }
     }
    }
   },
   {
    "name": "Gang Jazzler",
-   "type": "Item",
-   "img": "icons/svg/item-bag.svg",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 10 / printed 23",
-    "description": "<p><b>Difficulty:</b> target resists with Stamina + Fortitude at 8<br><b>Damage:</b> Kindred take 1 aggravated</p>",
-    "isequipped": false
+    "description": "<p><b>Difficulty:</b> target resists with Stamina + Fortitude at 8<br><b>Damage:</b> Kindred take 1 aggravated</p><p><b>Installed:</b> a close weapon: 1 aggravated<br><b>Storyteller:</b> The target resists with Stamina + Fortitude at difficulty 8; Kindred take the damage aggravated, others are stunned.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "",
+     "bonus": 1,
+     "type": "aggravated",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "brawl",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 0,
+    "conceal": "P"
    },
    "flags": {
     "wodx-library": {
@@ -7538,7 +8002,17 @@
      ],
      "kind": "implant (weapon)",
      "notes": [],
-     "cyber": true
+     "cyber": true,
+     "fx": {
+      "weapon": {
+       "type": "Melee Weapon",
+       "dmg": 1,
+       "kind": "aggravated",
+       "ability": "brawl",
+       "attribute": ""
+      },
+      "story": "The target resists with Stamina + Fortitude at difficulty 8; Kindred take the damage aggravated, others are stunned."
+     }
     }
    }
   },
@@ -7548,8 +8022,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 10 / printed 23",
-    "description": "<p><b>Strength:</b> +1 Str (level 1)<br><b>Protection:</b> +1 Stamina (level 2)<br><b>Surgery:</b> MA<br><b>Humanity cost:</b> 2D6</p>",
-    "isequipped": false
+    "description": "<p><b>Strength:</b> +1 Str (level 1)<br><b>Protection:</b> +1 Stamina (level 2)<br><b>Surgery:</b> MA<br><b>Humanity cost:</b> 2D6</p><p><b>Installed:</b> +1 Strength<br><b>Storyteller:</b> The second level adds +1 Stamina as well.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Grafted Muscle: strength",
+      "settingtype": "strength",
+      "type": "attribute_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -7562,7 +8046,17 @@
      "notes": [],
      "cyber": true,
      "surgery": "MA",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {
+      "bonus": [
+       [
+        "attr",
+        "strength",
+        1
+       ]
+      ],
+      "story": "The second level adds +1 Stamina as well."
+     }
     }
    }
   },
@@ -7572,8 +8066,26 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 10 / printed 23",
-    "description": "<p><b>Strength:</b> +1 Str<br><b>Protection:</b> +1 Stamina</p>",
-    "isequipped": false
+    "description": "<p><b>Strength:</b> +1 Str<br><b>Protection:</b> +1 Stamina</p><p><b>Installed:</b> +1 Strength; +1 Stamina</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Muscle & Bone Lace: strength",
+      "settingtype": "strength",
+      "type": "attribute_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     },
+     {
+      "name": "Muscle & Bone Lace: stamina",
+      "settingtype": "stamina",
+      "type": "attribute_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -7584,7 +8096,21 @@
      ],
      "kind": "bioware",
      "notes": [],
-     "cyber": true
+     "cyber": true,
+     "fx": {
+      "bonus": [
+       [
+        "attr",
+        "strength",
+        1
+       ],
+       [
+        "attr",
+        "stamina",
+        1
+       ]
+      ]
+     }
     }
    }
   },
@@ -7615,7 +8141,8 @@
      "cyber": true,
      "surgery": "N",
      "humanity": "2D6",
-     "implant": true
+     "implant": true,
+     "fx": {}
     }
    }
   },
@@ -7625,8 +8152,26 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 10 / printed 23",
-    "description": "<p><b>Strength:</b> +1 Str<br><b>Protection:</b> +1 Stamina</p>",
-    "isequipped": false
+    "description": "<p><b>Strength:</b> +1 Str<br><b>Protection:</b> +1 Stamina</p><p><b>Installed:</b> +1 Strength; +1 Stamina</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "European Biotech Body: strength",
+      "settingtype": "strength",
+      "type": "attribute_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     },
+     {
+      "name": "European Biotech Body: stamina",
+      "settingtype": "stamina",
+      "type": "attribute_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -7637,7 +8182,21 @@
      ],
      "kind": "bioware",
      "notes": [],
-     "cyber": true
+     "cyber": true,
+     "fx": {
+      "bonus": [
+       [
+        "attr",
+        "strength",
+        1
+       ],
+       [
+        "attr",
+        "stamina",
+        1
+       ]
+      ]
+     }
     }
    }
   },
@@ -7647,8 +8206,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 10 / printed 23",
-    "description": "<p><b>Effect:</b> +1 Dex (not Celerity)<br>biotech</p>",
-    "isequipped": false
+    "description": "<p><b>Effect:</b> +1 Dex (not Celerity)<br>biotech</p><p><b>Installed:</b> +1 Dexterity</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Reflex: dexterity",
+      "settingtype": "dexterity",
+      "type": "attribute_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -7661,7 +8230,16 @@
      "notes": [
       "biotech"
      ],
-     "cyber": true
+     "cyber": true,
+     "fx": {
+      "bonus": [
+       [
+        "attr",
+        "dexterity",
+        1
+       ]
+      ]
+     }
     }
    }
   },
@@ -7671,8 +8249,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 10 / printed 23",
-    "description": "<p><b>Strength:</b> +2 Str for leaping<br><b>Effect:</b> +2 Dex for running<br>biotech</p>",
-    "isequipped": false
+    "description": "<p><b>Strength:</b> +2 Str for leaping<br><b>Effect:</b> +2 Dex for running<br>biotech</p><p><b>Installed:</b> +2 dice on Athletics rolls<br><b>Storyteller:</b> Only for leaping and running.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "MA: athletics",
+      "settingtype": "athletics",
+      "type": "ability_buff",
+      "value": 2,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -7685,7 +8273,17 @@
      "notes": [
       "biotech"
      ],
-     "cyber": true
+     "cyber": true,
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "athletics",
+        2
+       ]
+      ],
+      "story": "Only for leaping and running."
+     }
     }
    }
   },
@@ -7725,7 +8323,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {}
     }
    }
   },
@@ -7765,7 +8364,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "3D6"
+     "humanity": "3D6",
+     "fx": {}
     }
    }
   },
@@ -7805,7 +8405,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "M",
-     "humanity": "3D6"
+     "humanity": "3D6",
+     "fx": {}
     }
    }
   },
@@ -7845,7 +8446,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "M",
-     "humanity": "3D6+1"
+     "humanity": "3D6+1",
+     "fx": {}
     }
    }
   },
@@ -7883,7 +8485,8 @@
      ],
      "kind": "cyberweapon",
      "notes": [],
-     "cyber": true
+     "cyber": true,
+     "fx": {}
     }
    }
   },
@@ -7923,18 +8526,34 @@
      "notes": [],
      "cyber": true,
      "surgery": "M",
-     "humanity": "3D6"
+     "humanity": "3D6",
+     "fx": {}
     }
    }
   },
   {
    "name": "Slice N' Dice",
-   "type": "Item",
-   "img": "icons/svg/item-bag.svg",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 10 / printed 23",
-    "description": "<p><b>Damage:</b> 8 (armor gives only 1 soak die)<br><b>Surgery:</b> M<br><b>Humanity cost:</b> 3D6</p>",
-    "isequipped": false
+    "description": "<p><b>Damage:</b> 8 (armor gives only 1 soak die)<br><b>Surgery:</b> M<br><b>Humanity cost:</b> 3D6</p><p><b>Installed:</b> a close weapon: 8 lethal<br><b>Storyteller:</b> Armor gives only one soak die against the wire.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "",
+     "bonus": 8,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "brawl",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 0,
+    "conceal": "P"
    },
    "flags": {
     "wodx-library": {
@@ -7947,18 +8566,43 @@
      "notes": [],
      "cyber": true,
      "surgery": "M",
-     "humanity": "3D6"
+     "humanity": "3D6",
+     "fx": {
+      "weapon": {
+       "type": "Melee Weapon",
+       "dmg": 8,
+       "kind": "lethal",
+       "ability": "brawl",
+       "attribute": ""
+      },
+      "story": "Armor gives only one soak die against the wire."
+     }
     }
    }
   },
   {
    "name": "Cybersnake",
-   "type": "Item",
-   "img": "icons/svg/item-bag.svg",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 10 / printed 23",
-    "description": "<p><b>Damage:</b> 4<br><b>Surgery:</b> MA<br><b>Humanity cost:</b> 4D6</p>",
-    "isequipped": false
+    "description": "<p><b>Damage:</b> 4<br><b>Surgery:</b> MA<br><b>Humanity cost:</b> 4D6</p><p><b>Installed:</b> a close weapon: 4 lethal</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "",
+     "bonus": 4,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "brawl",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 0,
+    "conceal": "P"
    },
    "flags": {
     "wodx-library": {
@@ -7971,7 +8615,16 @@
      "notes": [],
      "cyber": true,
      "surgery": "MA",
-     "humanity": "4D6"
+     "humanity": "4D6",
+     "fx": {
+      "weapon": {
+       "type": "Melee Weapon",
+       "dmg": 4,
+       "kind": "lethal",
+       "ability": "brawl",
+       "attribute": ""
+      }
+     }
     }
    }
   },
@@ -7981,7 +8634,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 11 / printed 24",
-    "description": "<p><b>Damage:</b> Potence 1 punching, 2 crushing<br><b>Strength:</b> bought at a set Strength<br><b>Protection:</b> 4 damage boxes, 4 soak dice<br><b>Surgery:</b> CR<br><b>Humanity cost:</b> 2D6</p>",
+    "description": "<p><b>Damage:</b> Potence 1 punching, 2 crushing<br><b>Strength:</b> bought at a set Strength<br><b>Protection:</b> 4 damage boxes, 4 soak dice<br><b>Surgery:</b> CR<br><b>Humanity cost:</b> 2D6</p><p><b>Installed:</b> +1 unarmed damage dice, as Potence; 4 soak dice of its own against blows aimed at the limb<br><b>Storyteller:</b> Bought at a set Strength; crushing grips count double.</p>",
     "isequipped": false
    },
    "flags": {
@@ -7995,7 +8648,16 @@
      "notes": [],
      "cyber": true,
      "surgery": "CR",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {
+      "body": {
+       "potence": 1
+      },
+      "limb": {
+       "soak": 4
+      },
+      "story": "Bought at a set Strength; crushing grips count double."
+     }
     }
    }
   },
@@ -8005,7 +8667,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 11 / printed 24",
-    "description": "<p><b>Protection:</b> 4 damage boxes, 4 soak dice<br><b>Surgery:</b> CR<br><b>Humanity cost:</b> 2D6</p>",
+    "description": "<p><b>Protection:</b> 4 damage boxes, 4 soak dice<br><b>Surgery:</b> CR<br><b>Humanity cost:</b> 2D6</p><p><b>Installed:</b> 4 soak dice of its own against blows aimed at the limb</p>",
     "isequipped": false
    },
    "flags": {
@@ -8019,7 +8681,12 @@
      "notes": [],
      "cyber": true,
      "surgery": "CR",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {
+      "limb": {
+       "soak": 4
+      }
+     }
     }
    }
   },
@@ -8029,7 +8696,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 11 / printed 24",
-    "description": "<p><b>Damage:</b> Triple Potence<br><b>Protection:</b> 6 damage boxes, 6 soak dice<br><b>Surgery:</b> N<br><b>Humanity cost:</b> 3<br>limb option</p>",
+    "description": "<p><b>Damage:</b> Triple Potence<br><b>Protection:</b> 6 damage boxes, 6 soak dice<br><b>Surgery:</b> N<br><b>Humanity cost:</b> 3<br>limb option</p><p><b>Installed:</b> +3 unarmed damage dice, as Potence; 6 soak dice of its own against blows aimed at the limb</p>",
     "isequipped": false
    },
    "flags": {
@@ -8045,7 +8712,15 @@
      ],
      "cyber": true,
      "surgery": "N",
-     "humanity": "3"
+     "humanity": "3",
+     "fx": {
+      "body": {
+       "potence": 3
+      },
+      "limb": {
+       "soak": 6
+      }
+     }
     }
    }
   },
@@ -8055,7 +8730,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 11 / printed 24",
-    "description": "<p><b>Damage:</b> Double Potence<br><b>Protection:</b> 5 damage boxes, 5 soak dice<br><b>Surgery:</b> N<br><b>Humanity cost:</b> 2<br>limb option</p>",
+    "description": "<p><b>Damage:</b> Double Potence<br><b>Protection:</b> 5 damage boxes, 5 soak dice<br><b>Surgery:</b> N<br><b>Humanity cost:</b> 2<br>limb option</p><p><b>Installed:</b> +2 unarmed damage dice, as Potence; 5 soak dice of its own against blows aimed at the limb</p>",
     "isequipped": false
    },
    "flags": {
@@ -8071,7 +8746,15 @@
      ],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {
+      "body": {
+       "potence": 2
+      },
+      "limb": {
+       "soak": 5
+      }
+     }
     }
    }
   },
@@ -8081,7 +8764,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 11 / printed 24",
-    "description": "<p><b>Protection:</b> +1 damage box, +1 soak die<br><b>Surgery:</b> N<br><b>Humanity cost:</b> 1<br>limb option</p>",
+    "description": "<p><b>Protection:</b> +1 damage box, +1 soak die<br><b>Surgery:</b> N<br><b>Humanity cost:</b> 1<br>limb option</p><p><b>Installed:</b> 1 soak dice of its own against blows aimed at the limb</p>",
     "isequipped": false
    },
    "flags": {
@@ -8097,7 +8780,12 @@
      ],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {
+      "limb": {
+       "soak": 1
+      }
+     }
     }
    }
   },
@@ -8107,7 +8795,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 11 / printed 24",
-    "description": "<p><b>Protection:</b> +4 soak dice<br><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6<br>limb option</p>",
+    "description": "<p><b>Protection:</b> +4 soak dice<br><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6<br>limb option</p><p><b>Installed:</b> 4 soak dice of its own against blows aimed at the limb</p>",
     "isequipped": false
    },
    "flags": {
@@ -8123,7 +8811,12 @@
      ],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1D6"
+     "humanity": "1D6",
+     "fx": {
+      "limb": {
+       "soak": 4
+      }
+     }
     }
    }
   },
@@ -8133,7 +8826,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 11 / printed 24",
-    "description": "<p><b>Protection:</b> 12 damage boxes, 12 soak dice</p>",
+    "description": "<p><b>Protection:</b> 12 damage boxes, 12 soak dice</p><p><b>Installed:</b> 12 soak dice of its own against blows aimed at the limb</p>",
     "isequipped": false
    },
    "flags": {
@@ -8145,7 +8838,12 @@
      ],
      "kind": "cyber limb",
      "notes": [],
-     "cyber": true
+     "cyber": true,
+     "fx": {
+      "limb": {
+       "soak": 12
+      }
+     }
     }
    }
   },
@@ -8185,7 +8883,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {}
     }
    }
   },
@@ -8225,7 +8924,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {}
     }
    }
   },
@@ -8265,7 +8965,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {}
     }
    }
   },
@@ -8305,7 +9006,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {}
     }
    }
   },
@@ -8345,18 +9047,34 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {}
     }
    }
   },
   {
    "name": "Cutting Torch",
-   "type": "Item",
-   "img": "icons/svg/item-bag.svg",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 11 / printed 24",
-    "description": "<p><b>Difficulty:</b> resist TN 9<br><b>Damage:</b> 2 aggravated per turn</p>",
-    "isequipped": false
+    "description": "<p><b>Difficulty:</b> resist TN 9<br><b>Damage:</b> 2 aggravated per turn</p><p><b>Installed:</b> a close weapon: 2 aggravated<br><b>Storyteller:</b> The target resists at difficulty 9; two aggravated levels each turn it stays on.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "",
+     "bonus": 2,
+     "type": "aggravated",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "brawl",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 0,
+    "conceal": "P"
    },
    "flags": {
     "wodx-library": {
@@ -8367,18 +9085,55 @@
      ],
      "kind": "cyber hand",
      "notes": [],
-     "cyber": true
+     "cyber": true,
+     "fx": {
+      "weapon": {
+       "type": "Melee Weapon",
+       "dmg": 2,
+       "kind": "aggravated",
+       "ability": "brawl",
+       "attribute": ""
+      },
+      "story": "The target resists at difficulty 9; two aggravated levels each turn it stays on."
+     }
     }
    }
   },
   {
    "name": "MM Launcher",
-   "type": "Item",
-   "img": "icons/svg/item-bag.svg",
+   "type": "Ranged Weapon",
+   "img": "icons/svg/target.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 11 / printed 24",
-    "description": "<p><b>Damage:</b> 8<br>in cyberlimb</p>",
-    "isequipped": false
+    "description": "<p><b>Damage:</b> 8<br>in cyberlimb</p><p><b>Installed:</b> a ranged weapon: 8 lethal</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "",
+     "bonus": 8,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "firearms",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 0,
+    "conceal": "P",
+    "range": 50,
+    "rate": 1,
+    "clip": {
+     "value": 1,
+     "max": 1
+    },
+    "mode": {
+     "hasreload": true,
+     "hasburst": false,
+     "hasfullauto": false,
+     "hasspray": false
+    }
    },
    "flags": {
     "wodx-library": {
@@ -8391,18 +9146,56 @@
      "notes": [
       "in cyberlimb"
      ],
-     "cyber": true
+     "cyber": true,
+     "fx": {
+      "weapon": {
+       "type": "Ranged Weapon",
+       "dmg": 8,
+       "kind": "lethal",
+       "ability": "firearms",
+       "range": 50,
+       "rate": 1,
+       "clip": 1
+      }
+     }
     }
    }
   },
   {
    "name": "2 Shot Laser",
-   "type": "Item",
-   "img": "icons/svg/item-bag.svg",
+   "type": "Ranged Weapon",
+   "img": "icons/svg/target.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 11 / printed 24",
-    "description": "<p><b>Damage:</b> 6<br>in cyberlimb</p>",
-    "isequipped": false
+    "description": "<p><b>Damage:</b> 6<br>in cyberlimb</p><p><b>Installed:</b> a ranged weapon: 6 lethal</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "",
+     "bonus": 6,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "firearms",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 0,
+    "conceal": "P",
+    "range": 100,
+    "rate": 1,
+    "clip": {
+     "value": 2,
+     "max": 2
+    },
+    "mode": {
+     "hasreload": true,
+     "hasburst": false,
+     "hasfullauto": false,
+     "hasspray": false
+    }
    },
    "flags": {
     "wodx-library": {
@@ -8415,7 +9208,18 @@
      "notes": [
       "in cyberlimb"
      ],
-     "cyber": true
+     "cyber": true,
+     "fx": {
+      "weapon": {
+       "type": "Ranged Weapon",
+       "dmg": 6,
+       "kind": "lethal",
+       "ability": "firearms",
+       "range": 100,
+       "rate": 1,
+       "clip": 2
+      }
+     }
     }
    }
   },
@@ -8425,8 +9229,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 11 / printed 24",
-    "description": "<p><b>Strength:</b> Strength becomes 6<br><b>Surgery:</b> MA<br><b>Humanity cost:</b> 2D6</p>",
-    "isequipped": false
+    "description": "<p><b>Strength:</b> Strength becomes 6<br><b>Surgery:</b> MA<br><b>Humanity cost:</b> 2D6</p><p><b>Installed:</b> Strength becomes 6</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Linear Frame Sigma: strength",
+      "settingtype": "strength",
+      "type": "attribute_fixed_value",
+      "value": 6,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -8439,7 +9253,16 @@
      "notes": [],
      "cyber": true,
      "surgery": "MA",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {
+      "bonus": [
+       [
+        "fixed",
+        "strength",
+        6
+       ]
+      ]
+     }
     }
    }
   },
@@ -8449,8 +9272,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 11 / printed 24",
-    "description": "<p><b>Strength:</b> Strength becomes 7<br><b>Surgery:</b> MA<br><b>Humanity cost:</b> 2D6</p>",
-    "isequipped": false
+    "description": "<p><b>Strength:</b> Strength becomes 7<br><b>Surgery:</b> MA<br><b>Humanity cost:</b> 2D6</p><p><b>Installed:</b> Strength becomes 7</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Linear Frame Beta: strength",
+      "settingtype": "strength",
+      "type": "attribute_fixed_value",
+      "value": 7,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -8463,7 +9296,16 @@
      "notes": [],
      "cyber": true,
      "surgery": "MA",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {
+      "bonus": [
+       [
+        "fixed",
+        "strength",
+        7
+       ]
+      ]
+     }
     }
    }
   },
@@ -8473,8 +9315,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "World of Future Darkness, pdf 11 / printed 24",
-    "description": "<p><b>Strength:</b> Strength becomes 8<br><b>Surgery:</b> MA<br><b>Humanity cost:</b> 3D6</p>",
-    "isequipped": false
+    "description": "<p><b>Strength:</b> Strength becomes 8<br><b>Surgery:</b> MA<br><b>Humanity cost:</b> 3D6</p><p><b>Installed:</b> Strength becomes 8</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Linear Frame Omega: strength",
+      "settingtype": "strength",
+      "type": "attribute_fixed_value",
+      "value": 8,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -8487,7 +9339,16 @@
      "notes": [],
      "cyber": true,
      "surgery": "MA",
-     "humanity": "3D6"
+     "humanity": "3D6",
+     "fx": {
+      "bonus": [
+       [
+        "fixed",
+        "strength",
+        8
+       ]
+      ]
+     }
     }
    }
   },
@@ -8520,7 +9381,8 @@
      "cyber": true,
      "surgery": "",
      "humanity": "",
-     "implant": true
+     "implant": true,
+     "fx": {}
     }
    }
   },
@@ -8530,8 +9392,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p><p><b>Installed:</b> +1 dice on Medicine rolls<br><b>Storyteller:</b> Reads the body's own signs: pulse, blood sugar, poisons.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Biomonitor: medicine",
+      "settingtype": "medicine",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -8544,7 +9416,17 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "medicine",
+        1
+       ]
+      ],
+      "story": "Reads the body's own signs: pulse, blood sugar, poisons."
+     }
     }
    }
   },
@@ -8554,7 +9436,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -8568,7 +9450,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {}
     }
    }
   },
@@ -8578,7 +9461,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -8592,7 +9475,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0.5"
+     "humanity": "0.5",
+     "fx": {}
     }
    }
   },
@@ -8602,7 +9486,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -8616,7 +9500,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0.5"
+     "humanity": "0.5",
+     "fx": {}
     }
    }
   },
@@ -8626,7 +9511,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6/2</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6/2</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -8640,7 +9525,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1D6/2"
+     "humanity": "1D6/2",
+     "fx": {}
     }
    }
   },
@@ -8650,7 +9536,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -8664,7 +9550,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1D6"
+     "humanity": "1D6",
+     "fx": {}
     }
    }
   },
@@ -8674,7 +9561,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2</p>",
+    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -8688,7 +9575,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "M",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {}
     }
    }
   },
@@ -8698,7 +9586,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 1D6<br>needed for all neuralware</p>",
+    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 1D6<br>needed for all neuralware</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -8714,7 +9602,8 @@
      ],
      "cyber": true,
      "surgery": "M",
-     "humanity": "1D6"
+     "humanity": "1D6",
+     "fx": {}
     }
    }
   },
@@ -8724,7 +9613,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p><p><b>Installed:</b> touch 1 easier</p>",
     "isequipped": false
    },
    "flags": {
@@ -8738,7 +9627,19 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {
+      "senses": {
+       "mods": [
+        [
+         1,
+         [
+          "touch"
+         ]
+        ]
+       ]
+      }
+     }
     }
    }
   },
@@ -8748,7 +9649,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p><p><b>Installed:</b> smell 1 easier</p>",
     "isequipped": false
    },
    "flags": {
@@ -8762,7 +9663,19 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {
+      "senses": {
+       "mods": [
+        [
+         1,
+         [
+          "smell"
+         ]
+        ]
+       ]
+      }
+     }
     }
    }
   },
@@ -8772,7 +9685,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2D6</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2D6</p><p><b>Installed:</b> no wound penalties<br><b>Storyteller:</b> No wound penalties while it runs; the body still breaks.</p>",
     "isequipped": false
    },
    "flags": {
@@ -8786,7 +9699,13 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {
+      "body": {
+       "ease": 5
+      },
+      "story": "No wound penalties while it runs; the body still breaks."
+     }
     }
    }
   },
@@ -8796,8 +9715,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1pt</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1pt</p><p><b>Installed:</b> +1 dice on Computer rolls</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Cybermodem Link: computer",
+      "settingtype": "computer",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -8810,7 +9739,16 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1pt"
+     "humanity": "1pt",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "computer",
+        1
+       ]
+      ]
+     }
     }
    }
   },
@@ -8820,8 +9758,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 3</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 3</p><p><b>Installed:</b> +1 dice on Drive rolls<br><b>Storyteller:</b> Only with a vehicle wired for it.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Vehicle Link: drive",
+      "settingtype": "drive",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -8834,7 +9782,17 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "3"
+     "humanity": "3",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "drive",
+        1
+       ]
+      ],
+      "story": "Only with a vehicle wired for it."
+     }
     }
    }
   },
@@ -8844,8 +9802,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p><p><b>Installed:</b> +1 dice on Technology rolls<br><b>Storyteller:</b> Only with a machine wired for it.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Machine/Tech Link: technology",
+      "settingtype": "technology",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -8858,7 +9826,17 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "technology",
+        1
+       ]
+      ],
+      "story": "Only with a machine wired for it."
+     }
     }
    }
   },
@@ -8868,8 +9846,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p><p><b>Installed:</b> +1 dice on Computer rolls<br><b>Storyteller:</b> Only at a public data terminal.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "DataTerm Link: computer",
+      "settingtype": "computer",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -8882,7 +9870,17 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "computer",
+        1
+       ]
+      ],
+      "story": "Only at a public data terminal."
+     }
     }
    }
   },
@@ -8892,8 +9890,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 1D6/pair</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 1D6/pair</p><p><b>Installed:</b> +1 dice on Computer rolls</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Interface plugs: computer",
+      "settingtype": "computer",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -8906,7 +9914,16 @@
      "notes": [],
      "cyber": true,
      "surgery": "M",
-     "humanity": "1D6/pair"
+     "humanity": "1D6/pair",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "computer",
+        1
+       ]
+      ]
+     }
     }
    }
   },
@@ -8916,8 +9933,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Humanity cost:</b> 0<br>APTR</p>",
-    "isequipped": false
+    "description": "<p><b>Humanity cost:</b> 0<br>APTR</p><p><b>Installed:</b> +1 dice on Brawl rolls<br><b>Storyteller:</b> A chip holds one combat skill; change the Ability on its bonus list to the one it carries.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Reflex Chips: brawl",
+      "settingtype": "brawl",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -8932,7 +9959,17 @@
      ],
      "cyber": true,
      "surgery": "",
-     "humanity": "0"
+     "humanity": "0",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "brawl",
+        1
+       ]
+      ],
+      "story": "A chip holds one combat skill; change the Ability on its bonus list to the one it carries."
+     }
     }
    }
   },
@@ -8942,8 +9979,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Humanity cost:</b> 0<br>MRAM</p>",
-    "isequipped": false
+    "description": "<p><b>Humanity cost:</b> 0<br>MRAM</p><p><b>Installed:</b> +1 dice on Linguistics rolls<br><b>Storyteller:</b> A chip holds one body of knowledge; change the Ability on its bonus list to the one it carries.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Memory Chips: linguistics",
+      "settingtype": "linguistics",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -8958,7 +10005,17 @@
      ],
      "cyber": true,
      "surgery": "",
-     "humanity": "0"
+     "humanity": "0",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "linguistics",
+        1
+       ]
+      ],
+      "story": "A chip holds one body of knowledge; change the Ability on its bonus list to the one it carries."
+     }
     }
    }
   },
@@ -8968,7 +10025,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6/2</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6/2</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -8982,7 +10039,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1D6/2"
+     "humanity": "1D6/2",
+     "fx": {}
     }
    }
   },
@@ -8992,8 +10050,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2</p><p><b>Installed:</b> +2 dice on Stamina rolls<br><b>Storyteller:</b> Against gas and smoke only.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Nasal Filters: stamina",
+      "settingtype": "stamina",
+      "type": "attribute_dice_buff",
+      "value": 2,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -9006,7 +10074,17 @@
      "notes": [],
      "cyber": true,
      "surgery": "M",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {
+      "bonus": [
+       [
+        "dice",
+        "stamina",
+        2
+       ]
+      ],
+      "story": "Against gas and smoke only."
+     }
     }
    }
   },
@@ -9016,7 +10094,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> MA<br><b>Humanity cost:</b> 3D6</p>",
+    "description": "<p><b>Surgery:</b> MA<br><b>Humanity cost:</b> 3D6</p><p><b>Storyteller:</b> Breathes water as air.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9030,7 +10108,10 @@
      "notes": [],
      "cyber": true,
      "surgery": "MA",
-     "humanity": "3D6"
+     "humanity": "3D6",
+     "fx": {
+      "story": "Breathes water as air."
+     }
     }
    }
   },
@@ -9040,7 +10121,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> MA<br><b>Humanity cost:</b> 2D6</p>",
+    "description": "<p><b>Surgery:</b> MA<br><b>Humanity cost:</b> 2D6</p><p><b>Storyteller:</b> Half an hour of air in smoke, gas or water.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9054,7 +10135,10 @@
      "notes": [],
      "cyber": true,
      "surgery": "MA",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {
+      "story": "Half an hour of air in smoke, gas or water."
+     }
     }
    }
   },
@@ -9064,7 +10148,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> MA<br><b>Humanity cost:</b> 2D6</p>",
+    "description": "<p><b>Surgery:</b> MA<br><b>Humanity cost:</b> 2D6</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9078,7 +10162,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "MA",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {}
     }
    }
   },
@@ -9088,7 +10173,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9102,7 +10187,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0.5"
+     "humanity": "0.5",
+     "fx": {}
     }
    }
   },
@@ -9112,7 +10198,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2D6</p>",
+    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2D6</p><p><b>Storyteller:</b> A strip search finds what it holds at +3 difficulty.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9126,7 +10212,10 @@
      "notes": [],
      "cyber": true,
      "surgery": "M",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {
+      "story": "A strip search finds what it holds at +3 difficulty."
+     }
     }
    }
   },
@@ -9136,7 +10225,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2D6</p>",
+    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2D6</p><p><b>Installed:</b> sight and sound 1 easier</p>",
     "isequipped": false
    },
    "flags": {
@@ -9150,7 +10239,20 @@
      "notes": [],
      "cyber": true,
      "surgery": "M",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {
+      "senses": {
+       "mods": [
+        [
+         1,
+         [
+          "sight",
+          "sound"
+         ]
+        ]
+       ]
+      }
+     }
     }
    }
   },
@@ -9160,7 +10262,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 79 / printed 76",
-    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2pts</p>",
+    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2pts</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9174,7 +10276,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "M",
-     "humanity": "2pts"
+     "humanity": "2pts",
+     "fx": {}
     }
    }
   },
@@ -9184,7 +10287,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2</p>",
+    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9198,7 +10301,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "M",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {}
     }
    }
   },
@@ -9208,7 +10312,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2</p>",
+    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2</p><p><b>Installed:</b> sees in the dark (no darkness step for sight); sight 1 easier</p>",
     "isequipped": false
    },
    "flags": {
@@ -9222,7 +10326,20 @@
      "notes": [],
      "cyber": true,
      "surgery": "M",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {
+      "senses": {
+       "dark": "Radar sensor",
+       "mods": [
+        [
+         1,
+         [
+          "sight"
+         ]
+        ]
+       ]
+      }
+     }
     }
    }
   },
@@ -9232,7 +10349,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2</p>",
+    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2</p><p><b>Installed:</b> sees in the dark (no darkness step for sight); sound 1 easier</p>",
     "isequipped": false
    },
    "flags": {
@@ -9246,7 +10363,20 @@
      "notes": [],
      "cyber": true,
      "surgery": "M",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {
+      "senses": {
+       "dark": "Sonar implant",
+       "mods": [
+        [
+         1,
+         [
+          "sound"
+         ]
+        ]
+       ]
+      }
+     }
     }
    }
   },
@@ -9256,8 +10386,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2</p><p><b>Installed:</b> +1 dice on Science rolls</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Radiation Detector: science",
+      "settingtype": "science",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -9270,7 +10410,16 @@
      "notes": [],
      "cyber": true,
      "surgery": "M",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "science",
+        1
+       ]
+      ]
+     }
     }
    }
   },
@@ -9280,8 +10429,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2</p><p><b>Installed:</b> +1 dice on Medicine rolls<br><b>Storyteller:</b> Names a poison or drug from a taste or a sniff.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Chemical Analyser: medicine",
+      "settingtype": "medicine",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -9294,7 +10453,17 @@
      "notes": [],
      "cyber": true,
      "surgery": "M",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "medicine",
+        1
+       ]
+      ],
+      "story": "Names a poison or drug from a taste or a sniff."
+     }
     }
    }
   },
@@ -9304,8 +10473,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 1D6</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 1D6</p><p><b>Installed:</b> +1 dice on Performance rolls<br><b>Storyteller:</b> Can mimic a voice it has heard.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Voice Synthesizer: performance",
+      "settingtype": "performance",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -9318,7 +10497,17 @@
      "notes": [],
      "cyber": true,
      "surgery": "M",
-     "humanity": "1D6"
+     "humanity": "1D6",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "performance",
+        1
+       ]
+      ],
+      "story": "Can mimic a voice it has heard."
+     }
     }
    }
   },
@@ -9328,8 +10517,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2D6</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2D6</p><p><b>Installed:</b> +2 dice on Performance rolls</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "AudioVox: performance",
+      "settingtype": "performance",
+      "type": "ability_buff",
+      "value": 2,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -9342,7 +10541,16 @@
      "notes": [],
      "cyber": true,
      "surgery": "M",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "performance",
+        2
+       ]
+      ]
+     }
     }
    }
   },
@@ -9352,8 +10560,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6/2</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6/2</p><p><b>Installed:</b> +1 Strength</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Muscle and Bone Lace: strength",
+      "settingtype": "strength",
+      "type": "attribute_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -9366,7 +10584,16 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1D6/2"
+     "humanity": "1D6/2",
+     "fx": {
+      "bonus": [
+       [
+        "attr",
+        "strength",
+        1
+       ]
+      ]
+     }
     }
    }
   },
@@ -9376,8 +10603,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6/2</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6/2</p><p><b>Installed:</b> +1 dice on Stamina rolls<br><b>Storyteller:</b> Against sickness; wounds heal a little faster.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Enhanced Antibodies: stamina",
+      "settingtype": "stamina",
+      "type": "attribute_dice_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -9390,7 +10627,17 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1D6/2"
+     "humanity": "1D6/2",
+     "fx": {
+      "bonus": [
+       [
+        "dice",
+        "stamina",
+        1
+       ]
+      ],
+      "story": "Against sickness; wounds heal a little faster."
+     }
     }
    }
   },
@@ -9400,8 +10647,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6/2</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6/2</p><p><b>Installed:</b> +2 dice on Stamina rolls<br><b>Storyteller:</b> Against poison and drugs only.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Toxin Binders: stamina",
+      "settingtype": "stamina",
+      "type": "attribute_dice_buff",
+      "value": 2,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -9414,7 +10671,17 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1D6/2"
+     "humanity": "1D6/2",
+     "fx": {
+      "bonus": [
+       [
+        "dice",
+        "stamina",
+        2
+       ]
+      ],
+      "story": "Against poison and drugs only."
+     }
     }
    }
   },
@@ -9424,7 +10691,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6/2</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1D6/2</p><p><b>Storyteller:</b> Wounds heal in half the time.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9438,7 +10705,10 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1D6/2"
+     "humanity": "1D6/2",
+     "fx": {
+      "story": "Wounds heal in half the time."
+     }
     }
    }
   },
@@ -9448,7 +10718,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> MA<br><b>Humanity cost:</b> 2D6 each<br>basic eye module, up to 4 options per eye</p>",
+    "description": "<p><b>Surgery:</b> MA<br><b>Humanity cost:</b> 2D6 each<br>basic eye module, up to 4 options per eye</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9464,7 +10734,8 @@
      ],
      "cyber": true,
      "surgery": "MA",
-     "humanity": "2D6 each"
+     "humanity": "2D6 each",
+     "fx": {}
     }
    }
   },
@@ -9474,7 +10745,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9488,7 +10759,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0.5"
+     "humanity": "0.5",
+     "fx": {}
     }
    }
   },
@@ -9498,7 +10770,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p><p><b>Installed:</b> sight 1 easier</p>",
     "isequipped": false
    },
    "flags": {
@@ -9512,7 +10784,19 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {
+      "senses": {
+       "mods": [
+        [
+         1,
+         [
+          "sight"
+         ]
+        ]
+       ]
+      }
+     }
     }
    }
   },
@@ -9522,7 +10806,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9536,7 +10820,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {}
     }
    }
   },
@@ -9546,7 +10831,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p><p><b>Installed:</b> sight 1 easier<br><b>Storyteller:</b> Sees far: only beyond a stone's throw.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9560,7 +10845,20 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0.5"
+     "humanity": "0.5",
+     "fx": {
+      "senses": {
+       "mods": [
+        [
+         1,
+         [
+          "sight"
+         ]
+        ]
+       ]
+      },
+      "story": "Sees far: only beyond a stone's throw."
+     }
     }
    }
   },
@@ -9570,8 +10868,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p><p><b>Installed:</b> +1 dice on Investigation rolls</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Micro-optics: investigation",
+      "settingtype": "investigation",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -9584,7 +10892,16 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0.5"
+     "humanity": "0.5",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "investigation",
+        1
+       ]
+      ]
+     }
     }
    }
   },
@@ -9594,7 +10911,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p><p><b>Storyteller:</b> Flashes and glare do not blind.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9608,7 +10925,10 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0.5"
+     "humanity": "0.5",
+     "fx": {
+      "story": "Flashes and glare do not blind."
+     }
     }
    }
   },
@@ -9618,7 +10938,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p><p><b>Installed:</b> sees in the dark (no darkness step for sight)</p>",
     "isequipped": false
    },
    "flags": {
@@ -9632,7 +10952,12 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0.5"
+     "humanity": "0.5",
+     "fx": {
+      "senses": {
+       "dark": "Low-light optics"
+      }
+     }
     }
    }
   },
@@ -9642,7 +10967,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p><p><b>Installed:</b> sees in the dark (no darkness step for sight)</p>",
     "isequipped": false
    },
    "flags": {
@@ -9656,7 +10981,12 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {
+      "senses": {
+       "dark": "Thermograph"
+      }
+     }
     }
    }
   },
@@ -9666,7 +10996,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p><p><b>Installed:</b> sees in the dark (no darkness step for sight)</p>",
     "isequipped": false
    },
    "flags": {
@@ -9680,7 +11010,12 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {
+      "senses": {
+       "dark": "Infrared optics"
+      }
+     }
     }
    }
   },
@@ -9690,7 +11025,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p><p><b>Installed:</b> sight 1 easier</p>",
     "isequipped": false
    },
    "flags": {
@@ -9704,7 +11039,19 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {
+      "senses": {
+       "mods": [
+        [
+         1,
+         [
+          "sight"
+         ]
+        ]
+       ]
+      }
+     }
     }
    }
   },
@@ -9714,7 +11061,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9728,7 +11075,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0.5"
+     "humanity": "0.5",
+     "fx": {}
     }
    }
   },
@@ -9738,7 +11086,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9752,18 +11100,46 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0.5"
+     "humanity": "0.5",
+     "fx": {}
     }
    }
   },
   {
    "name": "Dartgun",
-   "type": "Item",
-   "img": "icons/svg/item-bag.svg",
+   "type": "Ranged Weapon",
+   "img": "icons/svg/target.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 80 / printed 77",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p><p><b>Installed:</b> a ranged weapon: 1 lethal<br><b>Storyteller:</b> The dart carries whatever drug or poison it is loaded with.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "",
+     "bonus": 1,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "firearms",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 0,
+    "conceal": "P",
+    "range": 10,
+    "rate": 1,
+    "clip": {
+     "value": 1,
+     "max": 1
+    },
+    "mode": {
+     "hasreload": true,
+     "hasburst": false,
+     "hasfullauto": false,
+     "hasspray": false
+    }
    },
    "flags": {
     "wodx-library": {
@@ -9776,7 +11152,19 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {
+      "weapon": {
+       "type": "Ranged Weapon",
+       "dmg": 1,
+       "kind": "lethal",
+       "ability": "firearms",
+       "range": 10,
+       "rate": 1,
+       "clip": 1
+      },
+      "story": "The dart carries whatever drug or poison it is loaded with."
+     }
     }
    }
   },
@@ -9786,7 +11174,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2D6<br>basic hearing module</p>",
+    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 2D6<br>basic hearing module</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9802,7 +11190,8 @@
      ],
      "cyber": true,
      "surgery": "M",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {}
     }
    }
   },
@@ -9812,7 +11201,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p><p><b>Installed:</b> sound 1 easier</p>",
     "isequipped": false
    },
    "flags": {
@@ -9826,7 +11215,19 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {
+      "senses": {
+       "mods": [
+        [
+         1,
+         [
+          "sound"
+         ]
+        ]
+       ]
+      }
+     }
     }
    }
   },
@@ -9836,7 +11237,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9850,7 +11251,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {}
     }
    }
   },
@@ -9860,7 +11262,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9874,7 +11276,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {}
     }
    }
   },
@@ -9884,7 +11287,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9898,7 +11301,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0.5"
+     "humanity": "0.5",
+     "fx": {}
     }
    }
   },
@@ -9908,8 +11312,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p><p><b>Installed:</b> +1 dice on Security rolls</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Bug Detector: security",
+      "settingtype": "security",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -9922,7 +11336,16 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0.5"
+     "humanity": "0.5",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "security",
+        1
+       ]
+      ]
+     }
     }
    }
   },
@@ -9932,8 +11355,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p><p><b>Installed:</b> +1 dice on Empathy rolls<br><b>Storyteller:</b> Only to tell whether someone lies.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Voice Stress Analyser: empathy",
+      "settingtype": "empathy",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -9946,7 +11379,17 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "empathy",
+        1
+       ]
+      ],
+      "story": "Only to tell whether someone lies."
+     }
     }
    }
   },
@@ -9956,7 +11399,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p><p><b>Installed:</b> sound 1 easier<br><b>Storyteller:</b> Only in a noisy place.</p>",
     "isequipped": false
    },
    "flags": {
@@ -9970,7 +11413,20 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0.5"
+     "humanity": "0.5",
+     "fx": {
+      "senses": {
+       "mods": [
+        [
+         1,
+         [
+          "sound"
+         ]
+        ]
+       ]
+      },
+      "story": "Only in a noisy place."
+     }
     }
    }
   },
@@ -9980,7 +11436,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p><p><b>Installed:</b> sound 1 easier</p>",
     "isequipped": false
    },
    "flags": {
@@ -9994,7 +11450,19 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {
+      "senses": {
+       "mods": [
+        [
+         1,
+         [
+          "sound"
+         ]
+        ]
+       ]
+      }
+     }
     }
    }
   },
@@ -10004,7 +11472,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10018,7 +11486,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0.5"
+     "humanity": "0.5",
+     "fx": {}
     }
    }
   },
@@ -10028,8 +11497,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p><p><b>Installed:</b> +1 dice on Security rolls</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Radar Detector: security",
+      "settingtype": "security",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -10042,7 +11521,16 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0.5"
+     "humanity": "0.5",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "security",
+        1
+       ]
+      ]
+     }
     }
    }
   },
@@ -10052,7 +11540,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10066,7 +11554,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0.5"
+     "humanity": "0.5",
+     "fx": {}
     }
    }
   },
@@ -10076,7 +11565,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10090,7 +11579,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {}
     }
    }
   },
@@ -10100,8 +11590,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p><p><b>Installed:</b> +1 dice on Investigation rolls<br><b>Storyteller:</b> Only listening in on the air.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Wide Band Radio Scanner: investigation",
+      "settingtype": "investigation",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -10114,7 +11614,17 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "investigation",
+        1
+       ]
+      ],
+      "story": "Only listening in on the air."
+     }
     }
    }
   },
@@ -10124,7 +11634,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10138,7 +11648,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0.5"
+     "humanity": "0.5",
+     "fx": {}
     }
    }
   },
@@ -10148,7 +11659,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10162,7 +11673,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0.5"
+     "humanity": "0.5",
+     "fx": {}
     }
    }
   },
@@ -10172,7 +11684,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0.5</p><p><b>Storyteller:</b> Loud noise and sound attacks do not stun.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10186,7 +11698,10 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0.5"
+     "humanity": "0.5",
+     "fx": {
+      "story": "Loud noise and sound attacks do not stun."
+     }
     }
    }
   },
@@ -10196,7 +11711,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10210,7 +11725,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {}
     }
    }
   },
@@ -10220,7 +11736,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> CR<br><b>Humanity cost:</b> 2D6</p>",
+    "description": "<p><b>Surgery:</b> CR<br><b>Humanity cost:</b> 2D6</p><p><b>Storyteller:</b> A second pair of arms: one more action a turn with them, at the usual split.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10234,7 +11750,10 @@
      "notes": [],
      "cyber": true,
      "surgery": "CR",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {
+      "story": "A second pair of arms: one more action a turn with them, at the usual split."
+     }
     }
    }
   },
@@ -10244,7 +11763,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10258,7 +11777,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {}
     }
    }
   },
@@ -10268,7 +11788,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10282,7 +11802,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {}
     }
    }
   },
@@ -10292,7 +11813,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> , (lowers HC by 1D6/2)</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> , (lowers HC by 1D6/2)</p><p><b>Installed:</b> takes back 1D6/2 of the Humanity cost<br><b>Storyteller:</b> Covers chrome with skin: people do not see the machine.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10306,7 +11827,11 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": ", (lowers HC by 1D6/2)"
+     "humanity": ", (lowers HC by 1D6/2)",
+     "fx": {
+      "humanityLess": "1D6/2",
+      "story": "Covers chrome with skin: people do not see the machine."
+     }
     }
    }
   },
@@ -10316,7 +11841,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 3</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 3</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10330,7 +11855,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "3"
+     "humanity": "3",
+     "fx": {}
     }
    }
   },
@@ -10340,7 +11866,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10354,18 +11880,34 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0"
+     "humanity": "0",
+     "fx": {}
     }
    }
   },
   {
    "name": "Ripper Hand",
-   "type": "Item",
-   "img": "icons/svg/item-bag.svg",
+   "type": "Melee Weapon",
+   "img": "icons/svg/sword.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2D6</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2D6</p><p><b>Installed:</b> a close weapon: 2 lethal + Strength</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "strength",
+     "bonus": 2,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "brawl",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 0,
+    "conceal": "P"
    },
    "flags": {
     "wodx-library": {
@@ -10378,7 +11920,16 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {
+      "weapon": {
+       "type": "Melee Weapon",
+       "dmg": 2,
+       "kind": "lethal",
+       "ability": "brawl",
+       "attribute": "strength"
+      }
+     }
     }
    }
   },
@@ -10388,8 +11939,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p><p><b>Installed:</b> +1 dice on Technology rolls</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Tool Hand: technology",
+      "settingtype": "technology",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -10402,7 +11963,16 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "technology",
+        1
+       ]
+      ]
+     }
     }
    }
   },
@@ -10412,8 +11982,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 3</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 3</p><p><b>Installed:</b> +1 dice on Athletics rolls<br><b>Storyteller:</b> Only climbing.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Grapple Hand: athletics",
+      "settingtype": "athletics",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -10426,7 +12006,17 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "3"
+     "humanity": "3",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "athletics",
+        1
+       ]
+      ],
+      "story": "Only climbing."
+     }
     }
    }
   },
@@ -10436,7 +12026,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 81 / printed 78",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10450,7 +12040,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {}
     }
    }
   },
@@ -10460,7 +12051,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10474,7 +12065,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {}
     }
    }
   },
@@ -10484,7 +12076,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 0</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10498,7 +12090,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "0"
+     "humanity": "0",
+     "fx": {}
     }
    }
   },
@@ -10508,8 +12101,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p><p><b>Installed:</b> +1 dice on Technology rolls</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Tool Foot: technology",
+      "settingtype": "technology",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -10522,7 +12125,16 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "technology",
+        1
+       ]
+      ]
+     }
     }
    }
   },
@@ -10532,8 +12144,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p><p><b>Installed:</b> +1 dice on Athletics rolls<br><b>Storyteller:</b> Only swimming.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Web Foot: athletics",
+      "settingtype": "athletics",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -10546,7 +12168,17 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "athletics",
+        1
+       ]
+      ],
+      "story": "Only swimming."
+     }
     }
    }
   },
@@ -10556,8 +12188,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p><p><b>Installed:</b> +1 dice on Athletics rolls<br><b>Storyteller:</b> Only climbing.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Grip Foot: athletics",
+      "settingtype": "athletics",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -10570,7 +12212,17 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "athletics",
+        1
+       ]
+      ],
+      "story": "Only climbing."
+     }
     }
    }
   },
@@ -10580,7 +12232,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10594,7 +12246,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {}
     }
    }
   },
@@ -10604,7 +12257,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1<br>built in</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1<br>built in</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10620,7 +12273,8 @@
      ],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {}
     }
    }
   },
@@ -10630,7 +12284,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1<br>built in</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1<br>built in</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10646,7 +12300,8 @@
      ],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {}
     }
    }
   },
@@ -10656,7 +12311,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> .5</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> .5</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10670,7 +12325,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": ".5"
+     "humanity": ".5",
+     "fx": {}
     }
    }
   },
@@ -10680,7 +12336,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10694,7 +12350,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {}
     }
    }
   },
@@ -10704,7 +12361,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10718,7 +12375,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2"
+     "humanity": "2",
+     "fx": {}
     }
    }
   },
@@ -10728,7 +12386,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p><p><b>Storyteller:</b> A strip search finds the pistol inside at +3 difficulty.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10742,7 +12400,10 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {
+      "story": "A strip search finds the pistol inside at +3 difficulty."
+     }
     }
    }
   },
@@ -10752,7 +12413,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p>",
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 1</p><p><b>Storyteller:</b> No roll changes; its price is the Humanity it costs.</p>",
     "isequipped": false
    },
    "flags": {
@@ -10766,7 +12427,8 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "1"
+     "humanity": "1",
+     "fx": {}
     }
    }
   },
@@ -10776,8 +12438,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 3</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 3</p><p><b>Installed:</b> +1 dice on Technology rolls<br><b>Storyteller:</b> Only to find what is wrong with a machine.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Techscanner: technology",
+      "settingtype": "technology",
+      "type": "ability_buff",
+      "value": 1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -10790,18 +12462,55 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "3"
+     "humanity": "3",
+     "fx": {
+      "bonus": [
+       [
+        "ab",
+        "technology",
+        1
+       ]
+      ],
+      "story": "Only to find what is wrong with a machine."
+     }
     }
    }
   },
   {
    "name": "Grenade Launcher",
-   "type": "Item",
-   "img": "icons/svg/item-bag.svg",
+   "type": "Ranged Weapon",
+   "img": "icons/svg/target.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2D6</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2D6</p><p><b>Installed:</b> a ranged weapon: 10 lethal</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "",
+     "bonus": 10,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "firearms",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 0,
+    "conceal": "P",
+    "range": 100,
+    "rate": 1,
+    "clip": {
+     "value": 1,
+     "max": 1
+    },
+    "mode": {
+     "hasreload": true,
+     "hasburst": false,
+     "hasfullauto": false,
+     "hasspray": false
+    }
    },
    "flags": {
     "wodx-library": {
@@ -10814,18 +12523,56 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {
+      "weapon": {
+       "type": "Ranged Weapon",
+       "dmg": 10,
+       "kind": "lethal",
+       "ability": "firearms",
+       "range": 100,
+       "rate": 1,
+       "clip": 1
+      }
+     }
     }
    }
   },
   {
    "name": "Micro-Missile Launcher",
-   "type": "Item",
-   "img": "icons/svg/item-bag.svg",
+   "type": "Ranged Weapon",
+   "img": "icons/svg/target.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2D6</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2D6</p><p><b>Installed:</b> a ranged weapon: 7 lethal</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "",
+     "bonus": 7,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "firearms",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 0,
+    "conceal": "P",
+    "range": 200,
+    "rate": 1,
+    "clip": {
+     "value": 4,
+     "max": 4
+    },
+    "mode": {
+     "hasreload": true,
+     "hasburst": false,
+     "hasfullauto": false,
+     "hasspray": false
+    }
    },
    "flags": {
     "wodx-library": {
@@ -10838,18 +12585,56 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {
+      "weapon": {
+       "type": "Ranged Weapon",
+       "dmg": 7,
+       "kind": "lethal",
+       "ability": "firearms",
+       "range": 200,
+       "rate": 1,
+       "clip": 4
+      }
+     }
     }
    }
   },
   {
    "name": "Popup Gun",
-   "type": "Item",
-   "img": "icons/svg/item-bag.svg",
+   "type": "Ranged Weapon",
+   "img": "icons/svg/target.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2D6</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2D6</p><p><b>Installed:</b> a ranged weapon: 4 lethal</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "",
+     "bonus": 4,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "firearms",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 0,
+    "conceal": "P",
+    "range": 20,
+    "rate": 3,
+    "clip": {
+     "value": 15,
+     "max": 15
+    },
+    "mode": {
+     "hasreload": true,
+     "hasburst": false,
+     "hasfullauto": false,
+     "hasspray": false
+    }
    },
    "flags": {
     "wodx-library": {
@@ -10862,18 +12647,56 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {
+      "weapon": {
+       "type": "Ranged Weapon",
+       "dmg": 4,
+       "kind": "lethal",
+       "ability": "firearms",
+       "range": 20,
+       "rate": 3,
+       "clip": 15
+      }
+     }
     }
    }
   },
   {
    "name": "Flame Thrower",
-   "type": "Item",
-   "img": "icons/svg/item-bag.svg",
+   "type": "Ranged Weapon",
+   "img": "icons/svg/target.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2D6</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2D6</p><p><b>Installed:</b> a ranged weapon: 6 aggravated<br><b>Storyteller:</b> Fire: Kindred soak it only with Fortitude.</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "",
+     "bonus": 6,
+     "type": "aggravated",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "firearms",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 0,
+    "conceal": "P",
+    "range": 10,
+    "rate": 1,
+    "clip": {
+     "value": 2,
+     "max": 2
+    },
+    "mode": {
+     "hasreload": true,
+     "hasburst": false,
+     "hasfullauto": false,
+     "hasspray": false
+    }
    },
    "flags": {
     "wodx-library": {
@@ -10886,7 +12709,19 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {
+      "weapon": {
+       "type": "Ranged Weapon",
+       "dmg": 6,
+       "kind": "aggravated",
+       "ability": "firearms",
+       "range": 10,
+       "rate": 1,
+       "clip": 2
+      },
+      "story": "Fire: Kindred soak it only with Fortitude."
+     }
     }
    }
   },
@@ -10896,8 +12731,18 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 3</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 3</p><p><b>Installed:</b> −1 attack difficulty with ranged weapons<br><b>Storyteller:</b> Only with the mounted weapon.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Weapon Mount & Link: Ranged Weapon",
+      "settingtype": "TYPES.Item.Ranged Weapon",
+      "type": "attack_diff",
+      "value": -1,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -10910,18 +12755,55 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "3"
+     "humanity": "3",
+     "fx": {
+      "bonus": [
+       [
+        "atkd",
+        "Ranged Weapon",
+        -1
+       ]
+      ],
+      "story": "Only with the mounted weapon."
+     }
     }
    }
   },
   {
    "name": "2 shot Capacitor Laser",
-   "type": "Item",
-   "img": "icons/svg/item-bag.svg",
+   "type": "Ranged Weapon",
+   "img": "icons/svg/target.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2D6</p>",
-    "isequipped": false
+    "description": "<p><b>Surgery:</b> N<br><b>Humanity cost:</b> 2D6</p><p><b>Installed:</b> a ranged weapon: 6 lethal</p>",
+    "isequipped": false,
+    "difficulty": 6,
+    "damage": {
+     "attribute": "",
+     "bonus": 6,
+     "type": "lethal",
+     "isrollable": true
+    },
+    "attack": {
+     "attribute": "dexterity",
+     "ability": "firearms",
+     "accuracy": 0,
+     "isrollable": true
+    },
+    "minstrength": 0,
+    "conceal": "P",
+    "range": 100,
+    "rate": 1,
+    "clip": {
+     "value": 2,
+     "max": 2
+    },
+    "mode": {
+     "hasreload": true,
+     "hasburst": false,
+     "hasfullauto": false,
+     "hasspray": false
+    }
    },
    "flags": {
     "wodx-library": {
@@ -10934,7 +12816,18 @@
      "notes": [],
      "cyber": true,
      "surgery": "N",
-     "humanity": "2D6"
+     "humanity": "2D6",
+     "fx": {
+      "weapon": {
+       "type": "Ranged Weapon",
+       "dmg": 6,
+       "kind": "lethal",
+       "ability": "firearms",
+       "range": 100,
+       "rate": 1,
+       "clip": 2
+      }
+     }
     }
    }
   },
@@ -10944,7 +12837,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Protection:</b> head SP 25<br><b>Surgery:</b> MA<br><b>Humanity cost:</b> 1D6</p>",
+    "description": "<p><b>Protection:</b> head SP 25<br><b>Surgery:</b> MA<br><b>Humanity cost:</b> 1D6</p><p><b>Installed:</b> 3 soak dice of its own against blows aimed at the head</p>",
     "isequipped": false
    },
    "flags": {
@@ -10958,7 +12851,13 @@
      "notes": [],
      "cyber": true,
      "surgery": "MA",
-     "humanity": "1D6"
+     "humanity": "1D6",
+     "fx": {
+      "limb": {
+       "soak": 3,
+       "part": "head"
+      }
+     }
     }
    }
   },
@@ -10968,7 +12867,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Protection:</b> face SP 25<br><b>Surgery:</b> CR<br><b>Humanity cost:</b> 4D6</p>",
+    "description": "<p><b>Protection:</b> face SP 25<br><b>Surgery:</b> CR<br><b>Humanity cost:</b> 4D6</p><p><b>Installed:</b> 3 soak dice of its own against blows aimed at the head</p>",
     "isequipped": false
    },
    "flags": {
@@ -10982,7 +12881,13 @@
      "notes": [],
      "cyber": true,
      "surgery": "CR",
-     "humanity": "4D6"
+     "humanity": "4D6",
+     "fx": {
+      "limb": {
+       "soak": 3,
+       "part": "head"
+      }
+     }
     }
    }
   },
@@ -10992,8 +12897,26 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Protection:</b> torso SP 25<br><b>Surgery:</b> MA<br><b>Humanity cost:</b> 3D6</p>",
-    "isequipped": false
+    "description": "<p><b>Protection:</b> torso SP 25<br><b>Surgery:</b> MA<br><b>Humanity cost:</b> 3D6</p><p><b>Installed:</b> +3 soak dice against lethal; +3 soak dice against bashing<br><b>Storyteller:</b> Covers the trunk only: a blow aimed at a limb or the head goes past it.</p>",
+    "isequipped": false,
+    "bonuslist": [
+     {
+      "name": "Torso Plate: lethal",
+      "settingtype": "lethal",
+      "type": "soak_buff",
+      "value": 3,
+      "isactive": false,
+      "wodxGear": true
+     },
+     {
+      "name": "Torso Plate: bashing",
+      "settingtype": "bashing",
+      "type": "soak_buff",
+      "value": 3,
+      "isactive": false,
+      "wodxGear": true
+     }
+    ]
    },
    "flags": {
     "wodx-library": {
@@ -11006,7 +12929,22 @@
      "notes": [],
      "cyber": true,
      "surgery": "MA",
-     "humanity": "3D6"
+     "humanity": "3D6",
+     "fx": {
+      "bonus": [
+       [
+        "soak",
+        "lethal",
+        3
+       ],
+       [
+        "soak",
+        "bashing",
+        3
+       ]
+      ],
+      "story": "Covers the trunk only: a blow aimed at a limb or the head goes past it."
+     }
     }
    }
   },
@@ -11016,7 +12954,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> MA<br><b>Humanity cost:</b> 4D6</p>",
+    "description": "<p><b>Surgery:</b> MA<br><b>Humanity cost:</b> 4D6</p><p><b>Installed:</b> sight 1 easier</p>",
     "isequipped": false
    },
    "flags": {
@@ -11030,7 +12968,19 @@
      "notes": [],
      "cyber": true,
      "surgery": "MA",
-     "humanity": "4D6"
+     "humanity": "4D6",
+     "fx": {
+      "senses": {
+       "mods": [
+        [
+         1,
+         [
+          "sight"
+         ]
+        ]
+       ]
+      }
+     }
     }
    }
   },
@@ -11040,7 +12990,7 @@
    "img": "icons/svg/item-bag.svg",
    "system": {
     "reference": "Cyberpunk 2020, pdf 82 / printed 79",
-    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 3D6<br>\"Rabbit Ears\"</p>",
+    "description": "<p><b>Surgery:</b> M<br><b>Humanity cost:</b> 3D6<br>\"Rabbit Ears\"</p><p><b>Installed:</b> sound 1 easier</p>",
     "isequipped": false
    },
    "flags": {
@@ -11056,7 +13006,19 @@
      ],
      "cyber": true,
      "surgery": "M",
-     "humanity": "3D6"
+     "humanity": "3D6",
+     "fx": {
+      "senses": {
+       "mods": [
+        [
+         1,
+         [
+          "sound"
+         ]
+        ]
+       ]
+      }
+     }
     }
    }
   },

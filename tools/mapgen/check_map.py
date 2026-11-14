@@ -7,6 +7,9 @@ picture sizes, else the size in its file name, else one square), turned and scal
   overlap         two pieces of furniture covering each other by more than a fifth of the smaller one
   askew           furniture inside a building that is not square to the walls
   in a doorway    furniture standing in the square inside a door
+  in front of a window  a chest, barrel, crate or sack set right under a window
+  light off the wall    a wall torch or lamp whose bracket does not touch a wall
+  light behind furniture  a wall light behind an oven, cupboard or shelves
   outside         a piece whose middle is off the map
   tree over a building  a tree whose crown is drawn over a room (it hides what is inside)
   bare            a room whose furniture covers less than its share of the floor (see BARE), or that has too few
@@ -158,7 +161,10 @@ PASSAGE = re.compile(r"corridor|passage|stair|entry|entrance|vestibule|lift|conc
 EARTH_OK = re.compile(r"byre|barn|stable|coop|sty|pen|kennel|mews|shed|cellar|hut|lean to|smithy|forge", re.I)   # earth floors are right here
 OPEN_AIR = re.compile(r"court|yard|garden|cloister|terrace|courtyard", re.I)
 
-RUG = re.compile(r"Rug_|Carpet", re.I)
+RUG = re.compile(r"Rug_|Carpet|Hay_Bedding", re.I)
+STORE = re.compile(r"Chest|Barrel|Keg|Crate|Box_|Sack|Coffer", re.I)
+DOOR_DEEP = C.DOOR_CLEAR_SMALL - .1                    # the generator keeps at least this free (DOOR_CLEAR in rooms 4 or more across); a touch at the edge is not in the way
+TALL = re.compile(r"Oven|Stove|Hearth|Fireplace|Shel|Bookcase|Wardrobe|Cupboard|Cabinet|Dresser|Armoire|Hutch", re.I)
 
 
 def seg_dist(x, y, a, b):
@@ -218,6 +224,25 @@ def check(path, sizes_path=None):
                 hit = seg_hits_poly(a, b, o["pts"])
                 if hit and not any(math.hypot(hit[0] - g[0], hit[1] - g[1]) <= g[2] + .05 for g in gaps):
                     found.append(("across a wall", o, "a lamp at %.1f, %.1f" % hit)); break
+        for o in objs:                                         # a wall light hangs on a wall, bracket to the wall, nothing in front
+            if o["layer"] != 400 or o["room"] is None or C.bracket_edge(o["name"]) is None: continue
+            a = o["rot"] + C.bracket_edge(o["name"]); half = (o["w"] if C.bracket_edge(o["name"]) == 0 else o["h"]) / 2
+            bx, by = o["cx"] + math.cos(a) * half, o["cy"] + math.sin(a) * half   # the bracket edge
+            if min(seg_dist(bx, by, a, b) for a, b in segs) > .2:
+                found.append(("light off the wall", o, "its bracket is %.1f from the nearest wall" % min(seg_dist(bx, by, a, b) for a, b in segs))); continue
+            fx, fy = o["cx"] - math.cos(a) * .6, o["cy"] - math.sin(a) * .6   # the floor in front of it
+            if any(inside(fx, fy, f["pts"]) for f in furn if TALL.search(f["name"])):
+                found.append(("light behind furniture", o, ""))
+        def poly_gap(a, b):                                    # the clear distance between two pieces' outlines (they may be turned)
+            if any(inside(p[0], p[1], b["pts"]) for p in a["pts"]): return 0.0
+            eb = list(zip(b["pts"], b["pts"][1:] + b["pts"][:1]))
+            return min(seg_dist(p[0], p[1], q, r) for p in a["pts"] for q, r in eb)
+        def gap2(a, b): return min(poly_gap(a, b), poly_gap(b, a))
+        fires = [f for f in furn if C.FIRE.search(f["name"])]
+        for o in furn:                                         # a bed kept well away from a fire pit, oven or brazier
+            if not C.BED.search(o["name"]): continue
+            near = [f for f in fires if f["room"] == o["room"] and gap2(o, f) < C.bed_fire_gap(f["name"]) - .1]
+            if near: found.append(("bed by the fire", o, near[0]["name"]))
         for o in objs:
             if not (0 <= o["cx"] <= W and 0 <= o["cy"] <= H) and not re.search(r"Tree|Pine|Bush|Stone|Rock|Stump|Pebble|Grass|Leaves|Twig", o["name"]): found.append(("outside", o, ""))
         for o in objs:                                         # a tree's crown drawn over a room hides what is in it
@@ -235,13 +260,20 @@ def check(path, sizes_path=None):
             if min(q, 1 - q) > .02 and not re.search(C.SEATS.pattern + "|Rug|Plant|Pot_", o["name"], re.I):
                 found.append(("askew", o, "turned %.0f degrees" % math.degrees(o["rot"])))
             if RUG.search(o["name"]): continue                  # a rug lies on the floor: under furniture and doors is where it belongs
-            for g in gaps:                                     # the generator's clear zone: the door's width, 1.1 deep each side
+            for g in gaps:                                     # the generator's clear zone: the door's width, DOOR_CLEAR deep
+                if g[3] == "window" and STORE.search(o["name"]):   # a chest, barrel or crate pushed up under a window reads as
+                    c, sn = math.cos(g[4]), math.sin(g[4])      # blocking it
+                    us = [(p[0] - g[0]) * c + (p[1] - g[1]) * sn for p in o["pts"]]
+                    vs = [-(p[0] - g[0]) * sn + (p[1] - g[1]) * c for p in o["pts"]]
+                    if min(us) < g[2] - .05 and max(us) > -(g[2] - .05) and min(vs) < .8 and max(vs) > -.8:
+                        found.append(("in front of a window", o, "")); break
+                    continue
                 if g[3] != "door": continue
                 c, sn = math.cos(g[4]), math.sin(g[4])          # in the door's own frame: u along its wall, v across it
                 us = [(p[0] - g[0]) * c + (p[1] - g[1]) * sn for p in o["pts"]]
                 vs = [-(p[0] - g[0]) * sn + (p[1] - g[1]) * c for p in o["pts"]]
                 hw = g[2] - .05                                 # a touch at the edge is not in the way
-                if min(us) < hw and max(us) > -hw and min(vs) < 1.0 and max(vs) > -1.0:
+                if min(us) < hw and max(us) > -hw and min(vs) < DOOR_DEEP and max(vs) > -DOOR_DEEP:
                     found.append(("in a doorway", o, "")); break
         solid = [o for o in furn if not RUG.search(o["name"])]
         for i, o in enumerate(solid):

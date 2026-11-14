@@ -154,7 +154,7 @@ export async function haveChild(aLike, bLike, {name = "", sex = "", lines = null
     flags: {"wodx-creation": {chronology: {bornYear: year}, ...(sex ? {sex} : {}), ...(kid.line === "kinfolk" ? {lineage: {kinfolk: true}} : {})},
       [MOD]: {child: {kind: kid.kind, note: kid.note, parents: [a.id, b.id]}, ...(kid.line === "kinfolk" ? {kinfolk: true} : {})}}}]);
   await addHandTie(c, a, "parent"); if ( b.id !== a.id ) await addHandTie(c, b, "parent");
-  // B3223: a newborn is a child sheet, marked so the age floor always knows
+  // B3443: a newborn is a child sheet, marked so the age floor always knows
   try { await api()?.family?.makeChild?.(c); } catch (e) { console.error(`${MOD} | child sheet`, e); }
   await ChatMessage.create({whisper: [...new Set([...ownersOf(a), ...ownersOf(b)])], speaker: {alias: "WoDX"}, content: card(`${a.name} and ${b.name} have a child`, [nm + ".", ...(kid.note ? [kid.note] : [])])});
   return {ok: true, child: c, kind: kid};

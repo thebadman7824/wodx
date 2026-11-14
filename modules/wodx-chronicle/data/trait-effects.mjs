@@ -6,6 +6,7 @@
  * `against`: the kinds it works on or reacts to.
  */
 import {LINE_BOOKS, WIDEN, LINE_MERITS_FLAWS} from "./trait-lines.mjs";
+import {MORE_EFFECTS, MORE_PROMPTS, RENAMES, MORE_EFFECTS_2, MORE_ATTITUDE, MORE_PROMPTS_2, MORE_EFFECTS_3, MORE_PROMPTS_3, MORE_EFFECTS_4, MORE_ATTITUDE_2, MORE_PROMPTS_4, MORE_EFFECTS_5, MORE_PROMPTS_5, BODY, MORE_PROMPTS_6} from "./trait-effects-more.mjs";
 
 export const PATTERNS = {
  "P1": "Roll modifier",
@@ -295,6 +296,16 @@ export const BOOKS_DONE = ["V20", ...LINE_BOOKS];
 for ( const e of MERITS_FLAWS ) if ( WIDEN[e.key] && !e.holders.includes("any") ) e.holders = [...new Set([...e.holders, ...WIDEN[e.key]])];
 MERITS_FLAWS.push(...LINE_MERITS_FLAWS);
 
+// The no-effect audit (B3780-B3782): more effects, and the book's spelling for names the OCR spoiled (old kept as alias)
+for ( const e of MERITS_FLAWS ) {
+  if ( MORE_EFFECTS[e.key] ) e.effects = [...(e.effects ?? []), ...MORE_EFFECTS[e.key]];
+  if ( MORE_EFFECTS_2[e.key] ) e.effects = [...(e.effects ?? []), ...MORE_EFFECTS_2[e.key]];
+  if ( MORE_EFFECTS_3[e.key] ) e.effects = [...(e.effects ?? []), ...MORE_EFFECTS_3[e.key]];
+  if ( MORE_EFFECTS_4[e.key] ) e.effects = [...(e.effects ?? []), ...MORE_EFFECTS_4[e.key]];
+  if ( MORE_EFFECTS_5[e.key] ) e.effects = [...(e.effects ?? []), ...MORE_EFFECTS_5[e.key]];
+  if ( RENAMES[e.key] && RENAMES[e.key] !== e.name ) { e.aliases = [...new Set([...(e.aliases ?? []), e.name])]; e.name = RENAMES[e.key]; }
+}
+
 /**
  * Step 3 (Chronicle 0.19.0): what others can sense about a character (pattern P15), for WoDX Senses. Lines are WoDX's own
  * words; {{dir}} is where the character stands from the one sensing. need: successes needed (0 shows to a plain look).
@@ -335,6 +346,7 @@ export const ATTITUDE = {
   "lord-of-the-flies": {delta: -1, againstKinds: ["mortal"]},
   "cold-breeze": {delta: -1, againstKinds: ["mortal"]}
 };
+for ( const [k, v] of Object.entries({...MORE_ATTITUDE, ...MORE_ATTITUDE_2}) ) ATTITUDE[k] ??= v;
 
 /** Step 6 (Chronicle 0.21.0): traits WoDX Actions carries out in its own windows, for the Trait effects window. */
 export const HANDLED = {
@@ -422,6 +434,8 @@ export const PROMPTS = {
   "cursed": {on: ["night"], text: "the curse may show itself tonight"},
   "dark-fate": {on: ["night"], text: "the dark fate draws a little closer"}
 };
+// B3781: the no-effect audit's cards, for traits that are a Storyteller's call at a known moment
+for ( const [k, v] of Object.entries({...MORE_PROMPTS, ...MORE_PROMPTS_2, ...MORE_PROMPTS_3, ...MORE_PROMPTS_4, ...MORE_PROMPTS_5, ...MORE_PROMPTS_6}) ) PROMPTS[k] ??= v;
 
 /**
  * Step 8 (Chronicle 0.23.0): backgrounds made into things in the world. People backgrounds become NPC sheets tied to the
@@ -448,3 +462,6 @@ export const BG_WORLD = {
   "chantry": {place: true, word: "chantry"},
   "tomb": {place: true, word: "tomb"}
 };
+
+/** B3793: traits WoDX Combat reads for the body in a fight (health levels, wound penalties, silver). */
+export {BODY};

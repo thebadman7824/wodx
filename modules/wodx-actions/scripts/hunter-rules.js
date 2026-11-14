@@ -264,3 +264,39 @@ export function overfeed(pool, max, stamina, drink) {
     return { after, excess: after - cap, crammed: n(stamina), check: true, difficulty: 8 };
 }
 export const WITHDRAWAL = { difficulty: 7, weeks: stamina => Math.max(1, 6 - n(stamina)) };
+
+/**
+ * What a hedge spell does once it works (Sorcerer pp. 64-86), for the effects card: the keyword and outcome by path,
+ * from the highest aspect level, the successes and the Path rating. s below need: nothing.
+ */
+const sx = (key, who, out) => ({ key, who, out });
+export const SORCERY_FX = {
+    alchemy: (lv, s, rt, b) => [sx("make", "self", { ...b, kind: "note", text: `A brew of level ${lv} is ready: drunk or used, it works as the formula says` })],
+    conjuration: (lv, s, rt, b) => [sx("work", "one", { ...b, kind: "note", text: `Moves or calls an object of weight level ${lv}` })],
+    conveyance: (lv, s, rt, b) => [sx("move", "self", { ...b, kind: "move", text: `Carried by the spell (level ${lv}${lv >= 4 ? ", teleporting" : ""})` })],
+    divination: (lv, s, rt, b) => [sx("know", "self", { ...b, kind: "note", text: `A glimpse reaching back or ahead by level ${lv}; the Storyteller judges how true it is` })],
+    enchantment: (lv, s, rt, b) => [sx("imbue", "one", { ...b, kind: "note", text: `An item is enchanted at level ${lv}` })],
+    fascination: (lv, s, rt, b) => [sx("boost", "self", { ...b, kind: "timed", name: "Fascination", timed: { kind: "scene" }, duration: "the scene", successes: lv, text: `+${lv} to a Social Attribute for the scene` })],
+    fortune: (lv, s, rt, b) => [sx("fortune", "one", { ...b, kind: "timed", name: "Fortune", timed: { kind: "scene" }, duration: "the scene", successes: lv, text: `A blessing or curse of level ${lv} settles on the target for the scene` })],
+    healing: (lv, s, rt, b) => [sx("mend", "one", { ...b, kind: "heal", levels: lv, aggravated: false, text: `heals ${lv} lethal or bashing level${lv === 1 ? "" : "s"}, for good` })],
+    hellfire: (lv, s, rt, b) => { const d = 2 * Math.max(1, Math.min(s, n(rt))); return [sx("harm", "one", { ...b, kind: "damage", pool: d, levels: d, type: "lethal", soak: true, text: `${d} lethal damage dice, soaked as usual` })]; },
+    mana: (lv, s, rt, b) => [sx("charge", "self", { ...b, kind: "note", text: `Gathers or shifts mystic energy at level ${lv}` })],
+    oneiromancy: (lv, s, rt, b) => [sx("sense", "one", { ...b, kind: "note", text: `Reads or shapes a dream at level ${lv}` })],
+    shadowcasting: (lv, s, rt, b) => [sx("light", "self", { ...b, kind: "timed", name: "Shadowcasting", timed: { kind: "scene" }, duration: "the scene", successes: lv, text: `Shadows gather and obey at level ${lv} for the scene` })],
+    shapeshifting: (lv, s, rt, b) => [sx("shape", "self", { ...b, kind: "timed", name: "Shapeshifting", timed: { kind: "scene" }, duration: "the scene", successes: lv, text: `A change of shape at level ${lv}, for the scene` })],
+    binding: (lv, s, rt, b) => [sx("ward", "one", { ...b, kind: "timed", name: "Ward", timed: { kind: "scene" }, duration: "the scene", successes: lv, text: `A ward of level ${lv} holds the place or being` })],
+    weather: (lv, s, rt, b) => [sx("weather", "self", { ...b, kind: "note", text: `Weather of intensity ${lv} builds over the area` })]
+};
+export function sorceryResults(key, { top = 1, successes = 0, need = 1, rating = 1, name = "", source = "" } = {}) {
+    const f = SORCERY_FX[key];
+    if (!f || n(successes) < n(need) || n(successes) < 1) return [];
+    return f(Math.max(1, n(top)), n(successes), n(rating), { key, label: name || SORCERY[key]?.label || key, source: source || `Sorcerer p. ${SORCERY[key]?.p}` });
+}
+
+/** Repel on the effects card: the creature is barred from coming at the faithful (Dark Ages: it flees a turn a success). */
+export function repelResults(rules, successes, { source = "" } = {}) {
+    const s = Math.max(0, n(successes)), flee = rules === "da20" && s > 0;
+    const timed = flee ? { kind: "rounds", rounds: s } : { kind: "scene" }, label = flee ? `${s} turn${s === 1 ? "" : "s"}` : "the scene";
+    return [{ key: "banish", who: "one", out: { key: "repel", label: "Repelled by faith", source, kind: "timed", name: "Repelled", timed, duration: label, successes: Math.max(1, s),
+        text: flee ? `Flees for ${label}; if touched by the faithful, ${s} aggravated level${s === 1 ? "" : "s"}` : "Cannot come at the faithful with ill intent or draw nearer" } }];
+}

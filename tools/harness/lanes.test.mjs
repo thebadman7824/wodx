@@ -145,6 +145,38 @@ test("locks: one holder at a time; a dead or old lock is stale", () => {
   assert.equal(L.lockState(lane, cfg).held, false);
 });
 
+test("a gate run's lock has a deadline it moves on; past it the lane is free (B3089)", () => {
+  const cfg = {lockMaxMinutes: 600};
+  const lane = {id: 8, dataPath: tmp()};
+  assert.ok(L.acquireLock(lane, cfg, {gates: ["g"], runner: "run-gate", until: new Date(Date.now() + 60000).toISOString()}));
+  assert.equal(L.lockState(lane, cfg).held, true);
+  const late = L.lockState(lane, cfg, Date.now() + 2 * 60000);
+  assert.equal(late.held, false);
+  assert.equal(late.overdue, true);
+  L.extendLock(lane, Date.now() + 10 * 60000);
+  assert.equal(L.lockState(lane, cfg, Date.now() + 2 * 60000).held, true, "a moved deadline holds the lane again");
+  assert.equal(L.lockState(lane, {lockMaxMinutes: 1}, Date.now() + 2 * 60000).held, true, "a long run inside its deadline is not taken over");
+  L.releaseLock(lane);
+});
+
+test("only a hung gate run that is still a node process is ended (B3089)", () => {
+  const calls = [];
+  const exec = (cmd, a) => { calls.push([cmd, ...a].join(" ")); return cmd === "tasklist" ? '"node.exe","4242","Console","1","50,000 K"\n' : ""; };
+  assert.equal(L.endOverdue({runner: "run-gate", pid: 4242}, {platform: "win32", exec}), true);
+  assert.ok(calls.some(c => c === "taskkill /PID 4242 /T /F"), "the process and its browser are ended together");
+  calls.length = 0;
+  const other = (cmd, a) => { calls.push(cmd); return '"msedge.exe","4242"\n'; };
+  assert.equal(L.endOverdue({runner: "run-gate", pid: 4242}, {platform: "win32", exec: other}), false, "a reused process id is left alone");
+  assert.ok(!calls.includes("taskkill"));
+  assert.equal(L.endOverdue({pid: 4242, gates: ["lanes.mjs deploy"]}, {platform: "win32", exec}), false, "a deploy lock is never ended");
+  assert.equal(L.endOverdue({pid: 4242, gates: ["gatefaces", "gateage"]}, {platform: "win32", exec}), true, "an older gate run's lock (no runner) is ended too");
+});
+
+test("run-gate has a gate limit, a window sweep, a whole-run watchdog and moves the lock deadline (B3089)", () => {
+  const src = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "../lanes/run-gate.mjs"), "utf8");
+  for ( const s of ["extendLock(lane", "clearInterval(sweep)", "bail(5,", "within(run, limit", "await closeBrowser()", 'runner: "run-gate"'] ) assert.ok(src.includes(s), s);
+});
+
 test("the picker takes the first lane that is up and free", async () => {
   const lanes = [{id: 1}, {id: 2}, {id: 3}, {id: 4, disabled: true}];
   const cfg = {lanes, lockMaxMinutes: 60};

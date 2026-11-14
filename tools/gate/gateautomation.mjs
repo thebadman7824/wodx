@@ -71,9 +71,12 @@ export async function run() {
     await C.automation.setLevel("handsOff");
     await sleep(300);
     const a2 = get(CH, "autoApprove") ?? {};
-    const kinds = C.approvals.types().filter(t => t.type !== "request");
+    // B3521: a player's own request, ticket or roster addition always waits, even Hands off
+    const {NEVER_AUTO} = await import("/modules/wodx-chronicle/scripts/approvals-rules.mjs");
+    const kinds = C.approvals.types().filter(t => !NEVER_AUTO.includes(t.type));
     ok("4. Hands off", get("wodx-combat", "turnConductor") === "everyone" && get("wodx-targeting", "mode") === "everyone"
-      && kinds.every(t => a2[t.type] === true) && !("request" in a2), {kinds: kinds.length, notOn: kinds.filter(t => a2[t.type] !== true).map(t => t.type)});
+      && kinds.every(t => a2[t.type] === true) && NEVER_AUTO.every(t => a2[t] !== true),
+      {kinds: kinds.length, notOn: kinds.filter(t => a2[t.type] !== true).map(t => t.type), neverAuto: NEVER_AUTO.filter(t => t in a2)});
 
     // 5. Hands on
     await C.automation.setLevel("handsOn");

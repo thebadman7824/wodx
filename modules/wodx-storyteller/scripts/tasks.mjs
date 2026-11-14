@@ -12,6 +12,7 @@ import {MOD, esc, isActiveGM, setting, isPC, chron, log, npc} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Own from "./owners.mjs";
 import * as Cook from "./cookery.mjs";
+import * as W from "./wonders.mjs";
 
 const now = () => game.time?.worldTime ?? 0;
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -48,11 +49,16 @@ export function abilitiesOf(a) {
 export function poolFor(a, task) {
   const t = R.normTask(task);
   const at = a?.system?.attributes?.[t.attr];
-  const ab = t.ability ? a?.system?.abilities?.[t.ability] : null;
+  const abKey = R.abilityKey(t.ability);
+  const ab = abKey ? a?.system?.abilities?.[abKey] : null;
   // 0.27.0: a faction's building rolls its Resources + Retainers; workers add a die each
   if ( t.faction ) return Math.max(1, Own.factionPool(t.faction) + t.workers + t.dice);
+  // B3632: the Rite of Binding rolls permanent Willpower alone
+  if ( t.pool === "willpower" ) { const w = a?.system?.willpower ?? a?.system?.advantages?.willpower; return Math.max(1, num(w?.permanent) + t.dice); }
+  // B3683: a kit may roll one trait alone (Arete, say): a number, or {permanent} / {value} / {total}
+  if ( t.pool.startsWith("path:") ) { const v = foundry.utils.getProperty(a, t.pool.slice(5)); return Math.max(1, num(typeof v === "object" ? (v?.permanent ?? v?.total ?? v?.value) : v) + t.dice); }
   // 0.42.0: followers helping add their own dots in the Ability
-  const help = R.helperDice(t.helpers.map(id => game.actors?.get?.(id)).filter(Boolean).map(h => ({dots: t.ability ? num(h.system?.abilities?.[t.ability]?.value) : 0})));
+  const help = R.helperDice(t.helpers.map(id => game.actors?.get?.(id)).filter(Boolean).map(h => ({dots: abKey ? num(h.system?.abilities?.[abKey]?.value) : 0})));
   return Math.max(1, num(at?.total ?? at?.value) + num(ab?.value) + t.dice + t.workers + help);
 }
 
@@ -83,7 +89,7 @@ export async function saveTask(a, data) {
   const id = data.id && rawTasks(a)[data.id] ? data.id : R.newId(rawTasks(a));
   const old = rawTasks(a)[id];
   const t = R.normTask({...(old ?? {started: now()}), ...data, id});
-  if ( !old ) { t.started = now(); t.next = now() + R.intervalS(t); }
+  if ( !old ) { t.started = now(); t.next = now() + R.intervalS(t) + t.delay * R.DAY; }
   // B3357: a new climb needs the successes for the rank it climbs to
   if ( !old && t.kind === "climb" && t.institution ) {
     try { const I = game.modules.get(MOD).api.upkeep.institutions; const inst = I.byId(t.institution); const b = inst ? I.rules.bestSeat(inst, t.target?.id || a.id) : null; t.goal = I.rules.climbGoal(b ? b.rank + 1 : 0); } catch (e) { /* institutions off */ }
@@ -91,6 +97,10 @@ export async function saveTask(a, data) {
   // B3374: a commission needs the successes its form asks
   if ( !old && t.kind === "commission" && t.form ) {
     try { const f = game.modules.get(MOD).api.patronage.rules.form(t.form); if ( f ) t.goal = f.goal; } catch (e) { /* patronage off */ }
+  }
+  // B3612: a new self needs what the age's records ask (WoDX Chronicle's papers)
+  if ( !old && t.kind === "identity" ) {
+    try { const p = game.modules.get("wodx-chronicle").api.law.papers.project(); t.goal = p.goal; t.diff = p.diff; } catch (e) { /* papers off */ }
   }
   // B3359: works on a haven need the successes the upgrade asks
   if ( !old && t.kind === "upgrade" && t.upgrade ) {
@@ -107,6 +117,8 @@ export async function removeTask(a, id) {
 
 export async function setPaused(a, id, paused) {
   if ( !canEdit(a) || !rawTasks(a)[id] ) return;
+  // B3631: a player's fetish waits for the Storyteller's go-ahead, not for a Resume
+  if ( !paused && !game.user.isGM && rawTasks(a)[id].wonder && rawTasks(a)[id].approved === false ) return ui.notifications.warn("This one waits for the Storyteller's go-ahead.");
   const t = paused ? R.pauseTask({...rawTasks(a)[id], id}) : R.resumeTask({...rawTasks(a)[id], id}, now());
   await a.update({[`flags.${MOD}.tasks.${id}`]: t});
 }
@@ -131,6 +143,7 @@ export async function tick({force = false} = {}) {
       const before = {}, after = {}, lines = [], built = [];
       const pursePrev = a.flags?.[MOD]?.money?.purse ? foundry.utils.deepClone(a.flags[MOD].money.purse) : null;
       let paidAny = false;
+      const paidBefore = {}, paidNow = {};
       // B3341: projects past the weekly budget pause, newest first
       const over = new Set(P.overBudget(tasksOf(a), budgetOf(a)));
       for ( const task of tasksOf(a) ) {
@@ -163,7 +176,17 @@ export async function tick({force = false} = {}) {
         };
         const dice = poolFor(a, t);
         if ( await payNow() ) while ( due-- > 0 && t.status === "open" ) {
-          const r = await rollOnce(dice, t.diff, t.specialty);
+          // B3689: costs paid on each roll; without them the work waits
+          let adds = 0;
+          if ( t.perRoll.length ) {
+            const vals = Object.fromEntries(t.perRoll.map(c => [c.path, paidNow[c.path] ?? foundry.utils.getProperty(a, c.path)]));
+            const p = R.payRoll(t.perRoll, vals);
+            if ( !p.ok ) { waits = p.why; t = {...R.pauseTask(t), waits: p.why}; break; }
+            for ( const [k, v] of Object.entries(p.updates) ) { if ( !(k in paidBefore) ) paidBefore[k] = foundry.utils.getProperty(a, k); paidNow[k] = v; }
+            adds = p.adds;
+          }
+          const r0 = await rollOnce(dice, t.diff, t.specialty);
+          const r = adds ? {...r0, successes: Math.max(0, r0.successes) + adds, botch: false} : r0;
           const at = t.next;
           t = R.stepTask(t, r, at);
           // B3342, B3343: trouble, and a courting roll's warmth
@@ -204,13 +227,13 @@ export async function tick({force = false} = {}) {
         after[task.id] = t;
         const more = R.dueRolls(t, t0);
         lines.push({id: t.id, name: t.name, status: t.status, rolled, sum, botches, total: t.total, goal: t.goal, dice, diff: t.diff, more, waits,
-          stage: t.stages.length ? `${t.stages[t.stage]?.name ?? ""} (stage ${t.stage + 1} of ${t.stages.length})` : "", quality: t.quality});
+          stage: t.stages.length ? `${t.stages[t.stage]?.name ?? ""} (stage ${t.stage + 1} of ${t.stages.length})` : "", quality: t.quality, ruin: t.ruinedBy});
       }
       if ( !lines.length ) continue;
-      await a.update(Object.fromEntries(Object.entries(after).map(([id, t]) => [`flags.${MOD}.tasks.${id}`, t])));
+      await a.update({...Object.fromEntries(Object.entries(after).map(([id, t]) => [`flags.${MOD}.tasks.${id}`, t])), ...paidNow});
       // 0.42.0: a task that has just ended, for WoDX NPC's errands
       for ( const [id, t] of Object.entries(after) ) if ( ["done", "ruined"].includes(t.status) && !["done", "ruined"].includes(before[id]?.status) ) Hooks.callAll("wodxTaskDone", {actor: a, task: t});
-      await postCard(a, lines, before, {built, purse: paidAny ? pursePrev : undefined});
+      await postCard(a, lines, before, {built, purse: paidAny ? pursePrev : undefined, paid: paidBefore});
       for ( const l of lines ) {
         // B3343: what a finished project leaves, for the Storyteller to award
         if ( l.status === "done" && after[l.id]?.nights ) {
@@ -218,7 +241,7 @@ export async function tick({force = false} = {}) {
           await log({kind: "task", actor: isPC(a) ? a.id : null, name: a.name, attention: o.background ? `A dot of ${o.background} to award` : null, text: `${a.name}: ${l.name}. ${o.text}`});
         }
         if ( l.status === "done" || l.status === "ruined" ) await log({kind: "task", actor: isPC(a) ? a.id : null, name: a.name,
-          attention: l.status === "ruined" ? "A long task was ruined" : null, text: `${a.name}: ${l.name} ${l.status === "done" ? "is finished" : "was ruined by a botch"}.`});
+          attention: l.status === "ruined" ? "A long task was ruined" : null, text: `${a.name}: ${l.name} ${l.status === "done" ? "is finished" : `was ${R.ruinWord(after[l.id])}`}.`});
       }
       out.push({actor: a.id, lines});
     }
@@ -230,18 +253,18 @@ function lineHtml(l) {
   if ( l.waits && !l.rolled ) return `<li><b>${esc(l.name)}</b> waits: ${esc(l.waits)}. It is paused; resume it in Long tasks when that is put right.</li>`;
   const head = `<b>${esc(l.name)}</b> (${l.dice} dice, difficulty ${l.diff}): ${l.rolled} roll${l.rolled === 1 ? "" : "s"}, ${l.sum} success${l.sum === 1 ? "" : "es"}${l.botches ? `, ${l.botches} botch${l.botches === 1 ? "" : "es"}` : ""}.`;
   const tail = l.waits ? ` Now ${l.total} of ${l.goal}${l.stage ? ` on the ${esc(l.stage.toLowerCase())}` : ""}. It waits: ${esc(l.waits)}.`
-    : l.status === "done" ? ` <b>Finished${l.quality && l.quality !== "plain" ? `: ${esc(l.quality === "master" ? "a masterwork" : `${l.quality} work`)}` : ""}.</b>` : l.status === "ruined" ? " <b>A botch ruined the work.</b>"
+    : l.status === "done" ? ` <b>Finished${l.quality && l.quality !== "plain" ? `: ${esc(l.quality === "master" ? "a masterwork" : `${l.quality} work`)}` : ""}.</b>` : l.status === "ruined" ? ` <b>${l.ruin === "rolls" ? `Out of rolls short of the goal (${l.total} of ${l.goal}): the work is ruined.` : "A botch ruined the work."}</b>`
     : ` Now ${l.total} of ${l.goal}${l.stage ? ` on the ${esc(l.stage.toLowerCase())}` : ""}.${l.botches ? " A botch lost the successes so far." : ""}${l.more ? ` ${l.more} more roll${l.more === 1 ? "" : "s"} wait for the clock.` : ""}`;
   return `<li>${head}${tail}</li>`;
 }
 
-async function postCard(a, lines, before, {built = [], purse} = {}) {
+async function postCard(a, lines, before, {built = [], purse, paid = {}} = {}) {
   const done = lines.some(l => l.status === "done" || l.status === "ruined");
   await ChatMessage.create({content: `<div class="wodx-card wst-tasks"><h3>${esc(a.name)}: long tasks</h3><ul data-fixed>${lines.map(lineHtml).join("")}</ul>
     <p class="wodx-quiet">An extended action: successes add up roll by roll; a botch loses them, and ruins delicate work (V20 p. 252, V20 Dark Ages p. 324).</p>
     <button type="button" data-action="wst-task-undo">Undo</button></div>`,
     whisper: [...new Set([...gmIds(), ...ownerIds(a)])], speaker: {alias: done ? "A long task ends" : "Long tasks"},
-    flags: {[MOD]: {tasks: {actor: a.id, before, built, ...(purse !== undefined ? {purse} : {})}}}});
+    flags: {[MOD]: {tasks: {actor: a.id, before, built, ...(purse !== undefined ? {purse} : {}), ...(Object.keys(paid).length ? {paid} : {})}}}});
 }
 
 export async function undoTick(message) {
@@ -256,6 +279,8 @@ export async function undoTick(message) {
   // 0.27.0: a building's place goes again, and what its stages cost comes back
   if ( f.built?.length ) for ( const b of f.built ) await Own.unbuild(b);
   if ( f.purse !== undefined && f.purse !== null ) await a.update({[`flags.${MOD}.money.purse`]: f.purse});
+  // B3689: what each roll cost comes back
+  if ( f.paid && Object.keys(f.paid).length ) await a.update(f.paid);
   await message.update({[`flags.${MOD}.tasks.undone`]: true, content: message.content.replace(/<button type="button" data-action="wst-task-undo">Undo<\/button>/, "<p><i>Undone.</i></p>")});
 }
 
@@ -275,6 +300,10 @@ export async function editTask(actorId = null, taskId = null) {
       content: "<p>What kind of work is it? The kind fills in a starting pool, difficulty and goal, which you can change.</p>",
       buttons: [...Object.entries(R.KINDS).map(([k, v]) => ({action: k, label: v.label})), {action: "cancel", label: "Cancel"}]});
     if ( !kind || kind === "cancel" ) return null;
+    // B3631: a fetish or talen from the book lists, when the line's crafting is on
+    if ( (kind === "fetish" || kind === "wonder") && W.available(a) ) return W.makeDialog(a.id);
+    // B3723: soulforging opens WoDX Actions' forge window (arms, armour, oboli; Artifacts and relics go on to the table)
+    if ( kind === "soulforge" && game.modules.get("wodx-actions")?.api?.soulforge ) return game.modules.get("wodx-actions").api.soulforge({actor: a});
   }
   const t = taskId ? R.normTask({...rawTasks(a)[taskId], id: taskId}) : R.normTask({kind});
   const abil = abilitiesOf(a);

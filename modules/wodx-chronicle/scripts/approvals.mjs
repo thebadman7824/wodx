@@ -194,6 +194,25 @@ export async function decide(id, verdict, note = "", {auto = false} = {}) {
   }
 }
 
+/** A kind's own controls on its queue card (B3521), as HTML: elements with data-control call handler.control(). */
+function controlsOf(p) {
+  try { return handlers.get(p.type)?.controls?.(p) ?? ""; } catch (e) { return ""; }
+}
+
+/** Change a waiting proposal's data, title or detail (GM only), and redraw the queue (B3521). */
+export async function updatePending(id, patch = {}) {
+  if ( !game.user.isGM ) return null;
+  const q = foundry.utils.deepClone(setting("approvals") ?? {pending: [], history: []});
+  const e = q.pending.find(p => p.id === id);
+  if ( !e ) return null;
+  if ( patch.data ) e.data = patch.data;
+  if ( typeof patch.title === "string" ) e.title = patch.title.slice(0, 200);
+  if ( typeof patch.detail === "string" ) e.detail = patch.detail.slice(0, 2000);
+  await setSetting("approvals", q);
+  ApprovalsApp.refresh();
+  return e;
+}
+
 /** A player's free-form request ("Ask the Storyteller"). */
 registerHandler("request", {label: "Player request"});
 
@@ -241,6 +260,7 @@ export class ApprovalsApp extends ApplicationV2 {
       <li class="wodx-approval" data-id="${p.id}">
         <header><input type="checkbox" class="wodx-tick" data-id="${p.id}" checked aria-label="Include in the ticked decision"> <span class="wodx-tag">${esc(label(p.type))}</span> <strong>${esc(p.title)}</strong></header>
         ${p.detail ? `<p>${esc(p.detail)}</p>` : ""}
+        ${controlsOf(p)}
         <p class="wodx-quiet">From ${esc(who(p.from))}</p>
         <textarea name="note" rows="2" placeholder="Optional reply"></textarea>
         <div class="wodx-buttons">
@@ -283,6 +303,14 @@ export class ApprovalsApp extends ApplicationV2 {
   }
 
   _onRender() {
+    // B3521: a kind's own controls on its card (the referee ticket's difficulty and complication)
+    this.element.querySelectorAll("[data-control]").forEach(el => el.addEventListener(el.tagName === "SELECT" ? "change" : "click", async ev => {
+      const id = el.closest(".wodx-approval")?.dataset.id, entry = pending().find(p => p.id === id);
+      const h = entry ? handlers.get(entry.type) : null;
+      if ( !h?.control || !game.user.isGM ) return;
+      ev.preventDefault();
+      try { await h.control(entry, el.dataset.control, el.value); } catch (e) { console.error("WoDX | approval control", e); }
+    }));
     this.element.querySelectorAll("select.wodx-auto").forEach(b => b.addEventListener("change", ev => {
       const v = ev.target.value;
       setAuto(ev.target.dataset.type, v === "on" ? true : v === "small" ? "small" : false);
@@ -329,7 +357,7 @@ export class ApprovalsApp extends ApplicationV2 {
   }
 }
 
-/** A player asks the Storyteller for something. */
+/** A player asks the Storyteller for something; an action that needs a ruling goes to the referee ticket (B3520). */
 export async function askStoryteller() {
   const {DialogV2} = foundry.applications.api;
   const result = await DialogV2.prompt({
@@ -337,14 +365,16 @@ export async function askStoryteller() {
     window: {title: "Ask the Storyteller"},
     content: `
       <div class="form-group"><label>What are you asking for?</label><input type="text" name="title" maxlength="200" required></div>
-      <div class="form-group"><label>Details</label><textarea name="detail" rows="4" maxlength="2000"></textarea></div>`,
+      <div class="form-group"><label>Details</label><textarea name="detail" rows="4" maxlength="2000"></textarea></div>
+      <div class="form-group"><label>It is something my character tries that the rules do not settle: ask for a ruling</label><input type="checkbox" name="ruling"></div>`,
     ok: {
       label: "Send",
-      callback: (event, button) => ({title: button.form.elements.title.value.trim(), detail: button.form.elements.detail.value.trim()})
+      callback: (event, button) => ({title: button.form.elements.title.value.trim(), detail: button.form.elements.detail.value.trim(), ruling: !!button.form.elements.ruling?.checked})
     },
     rejectClose: false
   });
   if ( !result?.title ) return;
+  if ( result.ruling ) return game.modules.get("wodx-chronicle")?.api?.ticket?.ask?.({text: [result.title, result.detail].filter(Boolean).join(". ")});
   const sent = await propose({type: "request", title: result.title, detail: result.detail});
   if ( sent !== false ) ui.notifications.info("Sent to the Storyteller.");
 }

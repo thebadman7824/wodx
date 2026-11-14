@@ -119,7 +119,7 @@ export function difficulty(sense, ctx = {}, powers = {}) {
 /**
  * What a character's powers do to the senses. traits: {auspex, heightened (Gift), form, eyesOfCat, senseWyrm,
  * senseUnnatural, trueForm, body (the body plan's senses: wolf, bat), awareness, kenning, primalUrge, spheres: {life, spirit, entropy, prime}, kind, layer,
- * secondSight, fae}. Returns {mods: [{label, n, senses?}], darkSight, channels: [ids], smellFirst, reach: {sound, smell}}.
+ * secondSight, fae, gear (installed cyberware)}. Returns {mods: [{label, n, senses?}], darkSight, channels: [ids], smellFirst, reach: {sound, smell}}.
  */
 export function powersFor(t = {}) {
   const mods = [], channels = [];
@@ -133,6 +133,9 @@ export function powersFor(t = {}) {
   if ( t.body === "bat" ) mods.push({label: "Bat's hearing (Shape of the Beast)", n: 3, senses: ["sound"]});
   if ( t.heightened ) mods.push({label: "Heightened Senses (Gift)", n: wolf ? 3 : 2});
   if ( t.eyesOfCat ) darkSight = "Eyes of the Cat";
+  // B3799: cyberware (WoDX Library api.cyber.installedFx): {dark, mods: [{label, n, senses}]}
+  if ( t.gear?.dark && !darkSight ) darkSight = t.gear.dark;
+  for ( const m of t.gear?.mods ?? [] ) mods.push({label: m.label, n: Number(m.n) || 0, senses: m.senses});
   if ( wolfish ) { smellFirst = true; reach.smell += 1; }
   if ( t.senseWyrm ) channels.push("taint");
   if ( t.senseUnnatural || t.secondSight ) channels.push("unnatural");

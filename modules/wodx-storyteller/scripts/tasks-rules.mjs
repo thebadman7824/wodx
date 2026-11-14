@@ -37,7 +37,7 @@ export const KINDS = {
   train: {label: "Learn from a teacher", attr: "intelligence", ability: "", diff: 6, interval: "week", goal: 5, delicate: false, house: true, week: 3,
     ref: "A new trait needs a teacher and study as well as the experience, from a short course to years for a first dot of Thaumaturgy; no time is fixed (V20 p. 123)."},
   fetish: {label: "Make a fetish or talen", attr: "wits", ability: "rituals", diff: 10, interval: "day", goal: 1, delicate: true, house: false, week: 1,
-    ref: "The Rite of the Fetish: Wits + Rituals at difficulty 10, 2 less for each permanent Gnosis spent; talens come from the Rite of Binding, one more for each extra success (W20 pp. 213, 227-228)."},
+    ref: "The Rite of the Fetish: three nights of cleansing, then Wits + Rituals at difficulty 10, 2 less for each permanent Gnosis spent; talens come from the Rite of Binding, Willpower against the spirit's Gnosis, one talen a success (W20 pp. 210, 213, 228)."},
   wonder: {label: "Make a wonder or talisman", attr: "intelligence", ability: "occult", diff: 7, interval: "week", goal: 10, delicate: true, house: true, week: 4,
     ref: "Dark Ages: Mage gives no general rule for making a wonder; a creature part lowers the difficulty by 2 (p. 191)."},
   build: {label: "Put up a building", attr: "dexterity", ability: "crafts", diff: 6, interval: "week", goal: 6, delicate: false, house: true, week: 0,
@@ -62,6 +62,12 @@ export const KINDS = {
   // B3374: a work of art from an artist (patronage-rules.mjs); the goal is set by the form
   commission: {label: "Commission a work of art", attr: "charisma", ability: "expression", diff: 6, interval: "week", goal: 8, delicate: false, house: true, week: 1,
     ref: "The patron's eye and the artist's hand: the quality comes from the artist's skill, the money and the fashion of the day."},
+  // B3612: a new self on paper (WoDX Chronicle law-papers-rules.mjs); the difficulty and goal are set by the age's records
+  identity: {label: "Make a new self on paper", attr: "intelligence", ability: "streetwise", diff: 6, interval: "week", goal: 3, delicate: true, house: true, week: 2,
+    ref: "Forged or bought papers for a new name; the more records the age keeps, the harder it is. Name the task after the new self."},
+  // B3553: soulforging (WoDX Actions soulforge-rules.js sets the goal and difficulty by what is made)
+  soulforge: {label: "Soulforge an item (wraiths)", attr: "dexterity", ability: "crafts", diff: 7, interval: "week", goal: 6, delicate: true, house: true, week: 4,
+    ref: "Corpus heated over soulfire and hammered into shape; one soul makes one item (Wraith 20th pp. 42-44). The pool and the time are WoDX's own."},
   other: {label: "Something else", attr: "intelligence", ability: "", diff: 6, interval: "day", goal: 5, delicate: false, house: true, week: 3,
     ref: "The Storyteller sets the pool, the interval, the difficulty and the goal (V20 p. 251; V20 Dark Ages p. 324)."}
 };
@@ -71,6 +77,47 @@ const strs = v => (Array.isArray(v) ? v.map(x => String(x).slice(0, 120)).filter
 const stagesOf = v => (Array.isArray(v) ? v.slice(0, 8).map(x => ({name: String(x?.name ?? "").slice(0, 60) || "Work",
   goal: Math.max(1, Math.round(n(x?.goal) || 1)), cost: Math.max(0, Math.round(n(x?.cost)))})) : []);
 const clampDiff = d => Math.max(2, Math.min(10, Math.round(n(d) || 6)));
+
+/** The system's key for an Ability a task names: tasks say "crafts", the system keeps Crafts as "craft" (B3683). */
+export const ABILITY_ALIAS = {crafts: "craft"};
+export const abilityKey = k => ABILITY_ALIAS[k] ?? k;
+
+/** A kit's options on a task: up to 16 keys of numbers, booleans, short text or short lists of text (B3684). */
+export function smallOpts(o) {
+  if ( !o || typeof o !== "object" || Array.isArray(o) ) return {};
+  const out = {};
+  for ( const [k, v] of Object.entries(o).slice(0, 16) ) {
+    if ( !/^[A-Za-z][A-Za-z0-9_]{0,30}$/.test(k) ) continue;
+    if ( typeof v === "boolean" || (typeof v === "number" && Number.isFinite(v)) ) out[k] = v;
+    else if ( typeof v === "string" ) out[k] = v.slice(0, 80);
+    else if ( Array.isArray(v) ) out[k] = v.filter(x => typeof x === "string").slice(0, 6).map(x => x.slice(0, 40));
+  }
+  return out;
+}
+
+/** Costs paid on every roll (B3689): up to 4 of {path (a system. dot path), amount, label, floor, adds}. */
+export function perRollOf(v) {
+  if ( !Array.isArray(v) ) return [];
+  return v.slice(0, 4).filter(c => /^system\.[A-Za-z0-9_.]{1,80}$/.test(String(c?.path ?? "")) && n(c?.amount) > 0)
+    .map(c => ({path: String(c.path), amount: Math.min(10, Math.round(n(c.amount))), label: String(c.label ?? "").slice(0, 80),
+      floor: Math.max(0, Math.round(n(c.floor))), adds: Math.max(0, Math.min(3, Math.round(n(c.adds))))}));
+}
+
+/**
+ * Pay one roll's costs from plain values ({path: number}). Returns {ok, updates, adds, why}; nothing is paid when any
+ * entry would go under its floor.
+ */
+export function payRoll(perRoll = [], values = {}) {
+  const updates = {};
+  let adds = 0;
+  for ( const c of perRollOf(perRoll) ) {
+    const from = n(updates[c.path] ?? values[c.path]);
+    if ( from - c.amount < c.floor ) return {ok: false, updates: {}, adds: 0, why: `not enough for ${c.label || c.path.split(".").slice(-2).join(" ")}`};
+    updates[c.path] = from - c.amount;
+    adds += c.adds;
+  }
+  return {ok: true, updates, adds, why: ""};
+}
 
 /** A task as stored on the actor flag wodx-storyteller.tasks[id]. */
 export function normTask(t = {}) {
@@ -113,7 +160,24 @@ export function normTask(t = {}) {
     haven: String(t.haven ?? "").slice(0, 40), upgrade: String(t.upgrade ?? "").slice(0, 30),
     // B3374: a commission's artist, form, money spent (0-5) and, for the fae, how the artist is handled
     artist: String(t.artist ?? "").slice(0, 40), form: String(t.form ?? "").slice(0, 20), money: Math.max(0, Math.min(5, Math.round(n(t.money)))),
-    handling: t.handling === "harsh" ? "harsh" : "kind"
+    handling: t.handling === "harsh" ? "harsh" : "kind",
+    // B3630-B3636: a supernatural item from WoDX Library's wonders table (wonder: its key). pool "willpower" rolls
+    // permanent Willpower alone (the Rite of Binding); spend: Gnosis spent at the rite; power: the bound spirit's
+    // strength (gaffling, jaggling, greater); forced: beaten into the vessel; delay: days of preparation before the
+    // first roll (three nights of cleansing for a fetish); approved: the Storyteller's go-ahead for a player's work
+    // B3683: line is the WoDX Library kit that made the seed; pool may also be "path:<dot path>" to roll one trait
+    wonder: String(t.wonder ?? "").slice(0, 60), line: /^[a-z][a-z0-9-]{1,30}$/.test(String(t.line ?? "")) ? String(t.line) : "",
+    pool: t.pool === "willpower" || /^path:[A-Za-z0-9_.]{1,80}$/.test(String(t.pool ?? "")) ? String(t.pool) : "",
+    spend: Math.max(0, Math.min(10, Math.round(n(t.spend)))), power: ["gaffling", "jaggling", "greater"].includes(t.power) ? t.power : "gaffling",
+    forced: !!t.forced, delay: Math.max(0, Math.min(30, Math.round(n(t.delay)))), approved: t.approved !== false,
+    spirit: String(t.spirit ?? "").slice(0, 160),
+    // B3684: a line kit's own choices (Effects sealed in, dots, count...): plain values only, kept small
+    opts: smallOpts(t.opts),
+    // B3689: maxRolls ends the work as ruined when that many rolls leave it short of the goal (V20 Enchant Talisman,
+    // pdf 247); perRoll is paid before each roll (a blood point a night), and the work waits when it can't be paid;
+    // an entry's adds puts that many automatic successes on the roll it pays for; ruinedBy: "botch" or "rolls"
+    maxRolls: Math.max(0, Math.min(MAX_ROLLS, Math.round(n(t.maxRolls)))), perRoll: perRollOf(t.perRoll),
+    ruinedBy: ["botch", "rolls"].includes(t.ruinedBy) ? t.ruinedBy : ""
   };
 }
 
@@ -129,6 +193,7 @@ export function normTask(t = {}) {
 export const WORKSHOPS = {
   "": {label: "Anywhere", from: null},
   forge: {label: "A forge or smithy", from: null},
+  soulforge: {label: "A soulforge with soulfire crystals (the Underworld)", from: null},
   bench: {label: "A craftsman's bench (wood, leather, cloth)", from: null},
   still: {label: "A still or an alchemist's furnace", from: null},
   scriptorium: {label: "A scribe's desk, ink and parchment", from: null},
@@ -185,7 +250,7 @@ export function stepTask(task, roll, at) {
   t.next += intervalS(t);
   if ( roll.botch ) {
     t.total = 0;
-    if ( t.delicate ) t.status = "ruined";
+    if ( t.delicate ) { t.status = "ruined"; t.ruinedBy = "botch"; }
     t.log.push({at, s: 0, botch: true});
   } else {
     t.total += Math.max(0, n(roll.successes));
@@ -196,6 +261,7 @@ export function stepTask(task, roll, at) {
       else t.status = "done";
     }
   }
+  if ( t.status === "open" && t.maxRolls && t.rolls >= t.maxRolls && t.total < t.goal ) { t.status = "ruined"; t.ruinedBy = "rolls"; }
   t.log = t.log.slice(-20);
   return t;
 }
@@ -216,12 +282,15 @@ export function pauseTask(task) {
   return t;
 }
 
+/** Why a task was ruined, in a few words. */
+export const ruinWord = t => (t?.ruinedBy === "rolls" ? `ruined: ${t.total} of ${t.goal} after the ${t.rolls} rolls it had` : "ruined by a botch");
+
 /** A short line for a card or the window. */
 export function describe(task) {
   const t = normTask(task);
   const state = {open: `${t.total} of ${t.goal} successes after ${t.rolls} roll${t.rolls === 1 ? "" : "s"}`,
     paused: `paused at ${t.total} of ${t.goal}`, done: `finished after ${t.rolls} roll${t.rolls === 1 ? "" : "s"}`,
-    ruined: "ruined by a botch"}[t.status];
+    ruined: ruinWord(t)}[t.status];
   return `${t.name}: ${state}`;
 }
 

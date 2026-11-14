@@ -42,6 +42,18 @@ export function registerCorruptionSettings() {
 }
 
 export const placeOf = scene => R.normPlace(scene?.flags?.[MODULE_ID]?.[FLAG] ?? {});
+
+/** B3525: the region a place lies in, and the Storyteller's spread rate for each region (1 when unset). */
+export const regionOfScene = scene => { try { return chron()?.world?.here?.(scene)?.id ?? null; } catch (e) { return null; } };
+export const rates = () => ({...(turnState().rates ?? {})});
+export const rateOf = regionId => (regionId && regionId in rates() ? R.normRate(rates()[regionId]) : 1);
+export async function setRate(regionId, rate) {
+  if ( !game.user.isGM || !regionId ) return null;
+  const r = rates(), v = R.normRate(rate);
+  if ( v === 1 ) delete r[regionId]; else r[regionId] = v;
+  await saveTurn({rates: r});
+  return v;
+}
 export const tracked = () => game.scenes.filter(s => s.flags?.[MODULE_ID]?.[FLAG]);
 export const taintOf = actor => R.normTaint(actor?.flags?.[MODULE_ID]?.[TAINT] ?? {});
 const strip = p => { const {changed, ...rest} = p; return rest; };
@@ -75,7 +87,7 @@ export function planTurn({now = game.time.worldTime, last = turnState().last, rn
   const weeks = Math.floor((now - last) / R.WEEK);
   if ( !(weeks > 0) ) return null;
   const scenes = tracked();
-  const places = Object.fromEntries(scenes.map(s => [s.id, {name: nameOf(s), place: placeOf(s)}]));
+  const places = Object.fromEntries(scenes.map(s => [s.id, {name: nameOf(s), place: placeOf(s), rate: rateOf(regionOfScene(s))}]));
   const r = R.runWeeks(places, weeks, {start: last, yearAt, rng});
   // People: each week a resident spends in a blighted place, counted on the new levels (a fair middle for a skip)
   const people = [];

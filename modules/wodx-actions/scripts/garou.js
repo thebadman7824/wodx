@@ -8,9 +8,11 @@
 import { spendTime } from "./spend-time.js";
 import * as P from "./profiles.js";
 import * as G from "./garou-rules.js";
+export { bringsDelirium } from "./garou-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as EF from "./effects.js";
+import * as BR from "./book-rituals.js";
 
 const MOD = "wodx-actions";
 const DATA = {};
@@ -35,7 +37,7 @@ async function fetchData(name) {
     try { const r = await fetch(url); return r.ok ? await r.json() : null; } catch (e) { return null; }
 }
 export async function loadData() {
-    for (const k of ["garou", "fera", "gifts-daw"]) if (!DATA[k]) DATA[k] = await fetchData(k);
+    for (const k of ["garou", "fera", "gifts-daw", "gifts-w20"]) if (!DATA[k]) DATA[k] = await fetchData(k);
     if (!DATA.garou) console.error("WoDX | WoDX Actions could not load data/garou.json");
     return DATA;
 }
@@ -45,6 +47,14 @@ export function findGift(name) {
     const key = String(name ?? "").toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, " ").trim();
     return gifts().find(g => g.n.toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, " ").trim() === key) ?? null;
 }
+/** The W20 Gifts the Dark Ages library does not hold (data/gifts-w20.json): pool, cost, duration, effect and page. */
+export function w20Gifts() { return DATA["gifts-w20"]?.gifts ?? []; }
+export function findW20Gift(name) {
+    const key = String(name ?? "").toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+    return w20Gifts().find(g => g.n.toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, " ").trim() === key || g.kw.replace(/-/g, " ") === key) ?? null;
+}
+/** Where a library Gift is printed: "DA:W p. N" or "W20 p. N". */
+export const giftRef = g => g ? `${g.book ?? "DA:W"} p. ${g.p}` : "";
 
 /** Item data for a Gift from the library: a system Power of type Gift, linked back to the library entry. */
 export function giftItem(g) {
@@ -233,7 +243,7 @@ export function build(ctx) {
             }
             await setForm(actor, reached, i);
             body += `<div class="vta-big good">${esc(formLabel(actor, reached))}</div>`;
-            if (reached === "crinos") body += `<div class="vta-note">Humans who see the Crinos suffer the Delirium (Storyteller: Garou tools → The Delirium).</div>`;
+            if (reached === "crinos") body += `<div class="vta-note">Humans who see the Crinos suffer the Delirium${setting("autoDelirium") ? ": the Storyteller is told who can see it" : " (Storyteller: Garou tools → The Delirium)"}.</div>`;
             body += `<div class="vta-note">The sheet's form table applies the Attribute changes.${basis() === "daw" ? " Dark Ages: Glabro bites lethal, no claws; Crinos and Hispo teeth and claws aggravated; Lupus bite lethal (DA:W pp. 106–107)." : ""}</div>`;
             return post(actor, `${actor.name} becomes ${formLabel(actor, reached)}`, body, rolls.filter(Boolean));
         });
@@ -395,7 +405,7 @@ export function build(ctx) {
     }
     function giftData(item) {
         const id = item.getFlag?.(MOD, "gift");
-        return (id && gifts().find(g => g.id === id)) || findGift(item.name);
+        return (id && gifts().find(g => g.id === id)) || findGift(item.name) || findW20Gift(item.name);
     }
 
     async function useGift(actor) {
@@ -425,7 +435,7 @@ export function build(ctx) {
             const costTxt = [c.gnosis && `${c.gnosis} Gnosis`, c.rage && `${c.rage} Rage`, c.willpower && `${c.willpower} Willpower`].filter(Boolean).join(", ") || (c.variable ? "variable" : "none");
             const d = G.giftDifficulty(g.d, { t: targetTraits(tgt), own: { willpower: i.willpower.perm, rage: i.rage.perm }, gauntlet });
             if (d !== null) root.querySelector("[name=diff]").value = d;
-            box.innerHTML = `<b>Level ${g.l}</b> · cost ${esc(costTxt)}${c.per ? ` (${esc(c.per)})` : ""} · ${g.r ? `roll ${esc(poolOf(actor, g.r, i).label)}` : "no roll"} · ${esc(g.t ?? "")} · DA:W p. ${g.p}<br>${esc(g.e)}${g.chk ? "<br><i>Partly read from a damaged scan: check the page.</i>" : ""}${d === null && g.d ? `<br><i>Difficulty from ${esc(g.d)}: target a token or set it.</i>` : ""}`;
+            box.innerHTML = `<b>Level ${g.l}</b> · cost ${esc(costTxt)}${c.per ? ` (${esc(c.per)})` : ""} · ${g.r ? `roll ${esc(poolOf(actor, g.r, i).label)}` : "no roll"} · ${esc(g.t ?? "")} · ${giftRef(g)}<br>${esc(g.e)}${g.chk ? "<br><i>Partly read from a damaged scan: check the page.</i>" : ""}${d === null && g.d ? `<br><i>Difficulty from ${esc(g.d)}: target a token or set it.</i>` : ""}`;
         };
         return dialog(`Use a Gift: ${actor.name}`, content, "Use", async fd => {
             const it = actor.items.get(fd.gift); if (!it) return null;
@@ -449,17 +459,18 @@ export function build(ctx) {
                 successes = rr.botch ? 0 : rr.successes;
                 body += rollBlock(pool.label, rr, [n(fd.bonus) ? `bonus ${fd.bonus}` : ""].filter(Boolean));
             }
-            if (g) body += `<div class="vta-note">${esc(g.e)} <span class="wodx-quiet">(DA:W p. ${g.p})</span></div>`;
+            if (g) body += `<div class="vta-note">${esc(g.e)} <span class="wodx-quiet">(${giftRef(g)})</span></div>`;
             const dur = successes > 0 ? G.giftDuration(g?.t, successes) : null;
             if (dur && chronicle()?.applyTimed && actor.isOwner) {
                 await chronicle().applyTimed(actor, { name: it.name, img: it.img || "icons/svg/aura.svg", description: g?.e ?? "", duration: dur,
-                    source: g ? `DA:W p. ${g.p}` : "", key: `gift-${it.id}` });
+                    source: giftRef(g), key: `gift-${it.id}` });
                 body += `<div class="vta-note">Shown on the token until it ends (${esc(dur.kind === "rounds" ? `${dur.rounds} turn${dur.rounds === 1 ? "" : "s"}` : dur.kind === "scene" ? "the scene" : "its time")}).</div>`;
             }
             // The Gift's keywords on the effects card (Traits With Teeth step 4): the Dark Ages library, else the W20 list by name
             let fxItems = [];
-            if (code && successes > 0 && EF.isOn()) {
-                const pp = EF.powerPlan(actor, { set: "gift", id: g?.id ?? "", name: it.name, line: "w20", successes, source: g ? `DA:W p. ${g.p}` : "W20" });
+            // A library Gift with no roll counts one success (B3751)
+            if ((code || g) && successes > 0 && EF.isOn()) {
+                const pp = EF.powerPlan(actor, { set: "gift", id: g?.book === "W20" ? "" : (g?.id ?? ""), name: it.name, line: "w20", successes, source: g ? giftRef(g) : "W20", noRoll: !code });
                 body += pp.html;
                 fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             }
@@ -503,12 +514,14 @@ export function build(ctx) {
 
     /* ---------------- Rites ---------------- */
 
+    const riteSets = () => basis() === "daw" ? ["daw", "w20"] : ["w20", "daw"];
     async function performRite(actor) {
         const i = info(actor), D = DATA.garou ?? {};
         const rites = (actor.items ?? []).filter(it => it.type === "Power" && it.system?.type === "wod.types.rite");
         const types = Object.entries(D.rites ?? {}).filter(([k]) => k !== "page");
         const content = `<form><p><b>${esc(actor.name)}</b>: Rituals ${abilityDots(actor, "rituals")}, Rank ${i.rank}.</p>
           ${rites.length ? `<div class="form-group"><label>Rite known</label>${rites.length > 5 ? searchBox("select[name=rite]", "Search rites…", "Search rites") : ""}<select name="rite"><option value="">(another rite)</option>${rites.map(r => `<option value="${r.id}">${esc(r.name)} (level ${n(r.system?.level)})</option>`).join("")}</select></div>` : ""}
+          <div class="form-group"><label>From the book (what it does)</label>${searchBox("select[name=book]", "Search rites…", "Search rites")}<select name="book"><option value="">(the known rite, by its name)</option>${BR.ritualOptions(riteSets(), esc)}</select></div>
           <div class="form-group"><label>Kind of rite</label><select name="type" data-fixed>${types.map(([k, v]) => `<option value="${k}">${esc(v.label)}</option>`).join("")}</select></div>
           <div class="form-group"><label>Level</label><input type="number" name="level" value="1" min="0" max="5"/></div>
           <div class="form-group"><label>Garou taking part (ritemaster included)</label><input type="number" name="people" value="1" min="1"/></div>
@@ -522,7 +535,7 @@ export function build(ctx) {
             if (lvl > abilityDots(actor, "rituals") && fd.type !== "minor") ctx.notify("A rite's level can't exceed Rituals (DA:W p. 144).");
             const rr0 = G.riteRoll(fd.type, { rank: i.rank, caern: fd.caern, participants: fd.people, table: D.rites });
             const ce = courtEffect(actor, fd.court);
-            let body = "", rolls = [];
+            let body = "", rolls = [], got = 0;
             if (rr0?.pool && rr0.pool !== "var") {
                 const pool = poolOf(actor, rr0.pool, i);
                 const diff = clampDiff(rr0.diff + ce.diff);
@@ -530,9 +543,21 @@ export function build(ctx) {
                 rolls.push(rr.roll);
                 body += rollBlock(pool.label, rr, [`${rr0.label} rite`, `difficulty ${diff}`, ...(ce.note ? [ce.note] : [])]);
                 body += rr.successes > 0 ? `<div class="vta-big good">The rite takes.</div>` : `<div class="vta-note">The rite fails${rr.botch ? ", badly" : ""}.</div>`;
-            } else body += `<div class="vta-note">${rr0?.pool === "var" ? "Caern rites roll as each rite says (capped by Gnosis)." : "Minor rites need no roll."}</div>`;
+                got = rr.botch ? 0 : rr.successes;
+            } else { body += `<div class="vta-note">${rr0?.pool === "var" ? "Caern rites roll as each rite says (capped by Gnosis)." : "Minor rites need no roll."}</div>`; got = rr0?.pool === "var" ? 0 : 1; }
+            // The book's rite: what it does on the effects card when it takes (B3753)
+            const [bs, bi] = String(fd.book ?? "").split(":");
+            const found = fd.book ? { set: bs, r: BR.BOOK_RITUALS[bs]?.list?.[n(bi)] } : BR.findRitual(riteSets(), it?.name);
+            let fxItems = [];
+            if (found?.r) {
+                body += `<div class="vta-note"><b>${esc(found.r.n)}</b>: ${esc(BR.ritualNote(found.set, found.r))}</div>`;
+                if (got > 0 && EF.isOn()) {
+                    const pp = EF.ritualPlan(actor, found.r, got, `${BR.BOOK_RITUALS[found.set].book} ${found.r.page}`);
+                    body += pp.html; fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+                }
+            }
             if (fd.advance) body += await spendTime(actor, 600 * Math.max(1, lvl), "a rite");
-            return post(actor, `${actor.name}: ${esc(it?.name ?? `${rr0?.label ?? ""} rite`)}`, body, rolls.filter(Boolean));
+            return post(actor, `${actor.name}: ${esc(it?.name ?? (fd.book ? BR.BOOK_RITUALS[bs]?.list?.[n(bi)]?.n : null) ?? `${rr0?.label ?? ""} rite`)}`, body, rolls.filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         });
     }
 
@@ -555,7 +580,7 @@ export function build(ctx) {
             const rr = await rollPool(pool.dice, diff);
             let body = rollBlock(pool.label, rr, [`${fd.type}: difficulty ${diff}`, ...(ce.note ? [ce.note] : [])]), rolls = [rr.roll];
             if (rr.successes > 0) {
-                const gr = await rollPool(info(actor).gnosis.perm, 6);
+                const gr = await rollPool(effectiveGnosis(actor), 6);
                 rolls.push(gr.roll);
                 body += rollBlock("Gnosis", gr, ["the spirit's attitude"]) + `<div class="vta-big">${esc(G.summonAttitude(gr.successes, D.summoning))}</div>`;
                 if (["Incarna", "Celestine avatar"].includes(fd.type)) body += `<div class="vta-note">Summoning an Incarna or Celestine earns Wisdom.</div>`;
@@ -585,9 +610,10 @@ export function build(ctx) {
                 woke = true;
                 body += `<div class="vta-parts">${esc(note)}</div><div class="vta-big good">It wakes.</div>`;
             } else {
-                const rr = await rollPool(info(actor).gnosis.perm, gn);
+                const sp = silverPenalty(actor);
+                const rr = await rollPool(effectiveGnosis(actor), gn);
                 rolls.push(rr.roll);
-                body += rollBlock("Gnosis", rr, [`difficulty ${gn}`]);
+                body += rollBlock("Gnosis", rr, [`difficulty ${gn}`, ...(sp ? [`${sp} less for silver carried`] : [])]);
                 if (rr.successes > 0) {
                     if (fd.how === "attune") { await it.setFlag?.(MOD, "attuned", true); body += `<div class="vta-big good">Attuned (and dedicated).</div>`; }
                     else { woke = true; body += `<div class="vta-big good">It wakes.</div>`; }
@@ -858,6 +884,23 @@ export function registerSettings(register) {
 /*  For WoDX Combat                                                    */
 /* ------------------------------------------------------------------ */
 
+/**
+ * B3636: Gnosis the bearer loses to silver fetishes WoDX made (klaive 1, grand klaive 2; W20 pdf 227 to 228), for any
+ * shapechanger that fears silver. A made fetish and its weapon are one thing (flags.wodx-library.wonder).
+ */
+export function silverPenalty(actor) {
+    if (!banesOf(actor).includes("silver")) return 0;
+    const seen = new Set(); let klaive = 0, grand = 0;
+    for (const it of actor?.items ?? []) {
+        const f = it?.flags?.["wodx-library"]?.wonder;
+        if (!f?.silver || seen.has(`${f.key}|${f.at ?? ""}`)) continue;
+        seen.add(`${f.key}|${f.at ?? ""}`);
+        if (f.silver >= 2) grand++; else klaive++;
+    }
+    return G.silverGnosisPenalty({ klaive, grand });
+}
+/** Gnosis as dice, less carried silver. */
+export const effectiveGnosis = actor => Math.max(0, info(actor).gnosis.perm - silverPenalty(actor));
 /** The bane metals this shapechanger fears (Garou: silver; Corax: gold; Mokole: both). */
 export function banesOf(actor) {
     return info(actor).fera?.bane ?? ["silver"];

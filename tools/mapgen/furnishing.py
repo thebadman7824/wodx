@@ -115,12 +115,20 @@ def _place(room, sp, pal, R):
     if not entry: return []
     if W > room.iw + 1e-6 and W > room.ih + 1e-6: return []
     rules = {"wall": ["wall"], "corner": ["corner", "wall"], "centre": ["centre"]}[sp["place"]]
+    room.placing = entry["path"]
     sizes = [1, .75] if W * H <= 2 else [1]                     # a small piece may shrink to fit between walkways
     cands, k = [], 1
     for k in sizes:
-        cands = next((c for c in (room.candidates(W * k, H * k, r) for r in rules) if c), [])
+        cands = next((c for c in (room.candidates(W * k, H * k, r, keep_windows=base[0] in ("chest", "store")) for r in rules) if c), [])
         if cands: break
     if not cands: return []
+    if C.BED.search(entry["path"]) or C.FIRE.search(entry["path"]):   # a bed kept well away from a fire, and a fire from a bed
+        bx, by, bw, bh = base[1:5]
+        def base_rect(c):
+            _, x, y, w, h, rot = c
+            return _frame(x, y, W * k, H * k, _side(room, x, y, w, h, sp["place"], rot), (bx * k, by * k, bw * k, bh * k))
+        cands = [c for c in cands if not C.fire_clash(room.items, entry["path"], base_rect(c))]
+        if not cands: return []
     if k != 1:
         W, H = W * k, H * k
         sp = dict(sp, parts=[(p, dx * k, dy * k, pw * k, ph * k, r) for p, dx, dy, pw, ph, r in sp["parts"]])
@@ -144,7 +152,7 @@ def _place(room, sp, pal, R):
             continue
         rect = _frame(x, y, W, H, side, (dx, dy, pw, ph))
         layer = 50 if piece == "rug" else 100
-        if layer == 100 and not room.fits(rect):
+        if layer == 100 and (not room.fits(rect) or piece in ("chest", "store") and room.under_window(rect) or C.fire_clash(room.items, e["path"], rect)):
             if prule == "base": return []
             continue
         it = _drawn(e, rect, piece, layer)
@@ -168,7 +176,9 @@ def _reskin(room, pal, R):
         opts = list(pal.sets.get(piece) or [])
         R.shuffle(opts)
         best = None
+        under = room.under_window((it["x"], it["y"], it["w"], it["h"]))
         for e in opts:
+            if under and C.STORE_PIECE.search(e["path"]): continue       # a basket under a window is not redrawn as a crate
             aw, ah = e["cells"]
             fw, fh = (ah, aw) if r else (aw, ah)
             if aw != ah and abs(w - h) > 1e-6 and (fw > fh) != (w > h): continue
@@ -211,6 +221,28 @@ def _things_on(room, pal, R, added):
     return out
 
 
+def _laid_tables(room, pal, R, added, each=2):
+    """In a taproom or a kitchen every table, counter and bar has at least `each` things on it: mugs, plates,
+    bread, a jug (Ben's reference maps)."""
+    out = []
+    hosts = [it for it in room.items if (it.get("piece") or K.piece_of(it["asset"])) in ("table", "counter") or C.BAR.search(it["asset"])]
+    for b in hosts:
+        have = sum(1 for o in added + out if o.get("layer") == 150 and b["x"] <= o["x"] <= b["x"] + b["w"] and b["y"] <= o["y"] <= b["y"] + b["h"])
+        for _ in range(max(0, each - have)):
+            e = None
+            for _try in range(10):
+                e = pal.pick("tableware", R) or pal.pick("clutter", R)
+                if e and TABLEWARE.search(e["name"]) and not ((room.ctx["wealth"] == "poor" or room.ctx["band"] == "medieval")
+                                                             and LETTERED.search(e["name"]) and room.ctx["wealth"] != "noble"): break
+                e = None
+            if not e: break
+            sz = min(.45, b["w"] * .45, b["h"] * .45)
+            out.append({"asset": e["path"], "x": b["x"] + R.uniform(.08, max(.08, b["w"] - sz - .08)),
+                        "y": b["y"] + R.uniform(.08, max(.08, b["h"] - sz - .08)), "w": sz, "h": sz, "rot": 0,
+                        "scale": round(sz / max(e["cells"]), 3), "layer": 150, "spin": R.uniform(0, 6.28), "piece": "tableware"})
+    return out
+
+
 TABLEWARE = PAL.TABLEWARE
 FITS_ON = {"table": TABLEWARE, "counter": TABLEWARE, "desk": re.compile(r"Book|Paper|Quill|Ink|Pen|Candle|Scroll|Letter|Map", re.I),
            "bed": re.compile(r"Blanket|Cloth|Pillow|Fur|Pelt", re.I), "shelf": TABLEWARE, "cupboard": TABLEWARE,
@@ -239,9 +271,11 @@ def _along_walls(room, pal, R, dense):
         if max(aw, ah) > (3 if room.iw * room.ih >= 40 else 2): continue      # a big hall or shed takes bigger pieces
         sc = .75 if max(aw, ah) <= 1 and room.iw * room.ih < 40 else 1.0
         fw, fh = aw * sc, ah * sc
-        spots = room.candidates(fw, fh, "wall")
+        kw = order[k % len(order)] in ("chest", "store")       # nothing stored pushed up under a window
+        room.placing = e["path"]                               # stored goods score best touching other stored goods
+        spots = room.candidates(fw, fh, "wall", keep_windows=kw)
         if not spots and STACKED.search(room.name):           # a shed's stacks go on across the floor, each by another
-            spots = [c for c in room.candidates(fw, fh, "free") if _beside_any(room, c[1:5])]
+            spots = [c for c in room.candidates(fw, fh, "free", keep_windows=kw) if _beside_any(room, c[1:5])]
         if not spots: continue
         _, x, y, w, h, rot = spots[R.randrange(min(4, len(spots)))]
         room.items.append({"asset": e["path"], "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": sc, "layer": 100,
@@ -250,7 +284,7 @@ def _along_walls(room, pal, R, dense):
         if dense() or len(room.items) >= max(2, int(room.iw * room.ih / DENSE)): break   # bucket, a basket) by the walls
         e = pal.pick(("store", "clutter")[k % 2], R)
         if not e or max(e["cells"]) > 1: continue
-        spots = room.candidates(.5, .5, "wall") or [c for c in room.candidates(.5, .5, "free") if _beside_any(room, c[1:5])]
+        spots = room.candidates(.5, .5, "wall", keep_windows=True) or [c for c in room.candidates(.5, .5, "free", keep_windows=True) if _beside_any(room, c[1:5])]
         if not spots: break
         _, x, y, w, h, rot = spots[R.randrange(min(4, len(spots)))]
         room.items.append({"asset": e["path"], "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": round(.5 / max(e["cells"]), 3),
@@ -275,17 +309,103 @@ def _wall_lights(room, pal, tier, R):
         e = None
     n = 1 + TIERS.index(tier) // 2
     rng = LIGHT_RANGE.get(pal.lights, 3)
-    for k in range(n):
-        for _try in range(8):                                  # spread out: no two lights within two squares
-            side = R.choice("NSEW")
-            cx = room.ix + room.iw * R.uniform(.25, .75) if side in "NS" else (room.ix + .25 if side == "W" else room.ix + room.iw - .25)
-            cy = room.iy + room.ih * R.uniform(.25, .75) if side in "EW" else (room.iy + .25 if side == "N" else room.iy + room.ih - .25)
-            if all(math.hypot(cx - x, cy - y) >= 2 for x, y, _ in room.lights): break
-        else:
-            continue
-        if e: room.dressing.append({"asset": e["path"], "x": cx - .3, "y": cy - .3, "w": .6, "h": .6, "rot": 0,
-                                    "scale": round(min(1.0, .6 / max(e["cells"])), 3), "layer": 400, "piece": "light"})   # drawn .6 across
+    for cx, cy, side in _light_spots(room, R):
+        if len(room.lights) >= n: break
+        if any(math.hypot(cx - x, cy - y) < 2 for x, y, _ in room.lights): continue      # spread out
+        if e:
+            # a wall light's picture has its bracket on one edge (ddcore.bracket_turn): turned so it is against its wall
+            angle = C.bracket_turn(e["name"], side) or 0.0
+            room.dressing.append({"asset": e["path"], "x": cx - .3, "y": cy - .3, "w": .6, "h": .6, "rot": 0, "angle": angle,
+                                  "scale": round(min(1.0, .6 / max(e["cells"])), 3), "layer": 400, "piece": "light"})
         room.lights.append((cx, cy, rng))
+
+
+TALL = re.compile(r"Oven|Stove|Hearth|Fireplace|Shel|Bookcase|Wardrobe|Cupboard|Cabinet|Dresser|Armoire|Hutch", re.I)   # a light is not hung behind these
+
+def _light_spots(room, R):
+    """Spots for a wall light: on the wall line itself (the light's centre a little in from the inner face), never at a
+    door or window, and never behind a tall piece (an oven, a cupboard, shelves in the square in front of it). Shuffled."""
+    x0, y0, x1, y1 = room.x, room.y, room.x + room.w, room.y + room.h
+    openings = [(ox, oy) for ox, oy, _ in room.doors] + [(ox, oy) for ox, oy, _ in room.windows]
+    solid = [i for i in room.items + getattr(room, "dressing", []) if i.get("layer", 100) == 100 and TALL.search(i["asset"])]
+    out = []
+    for side in "NSEW":
+        length = room.w if side in "NS" else room.h
+        k = .75
+        while k <= length - .75:
+            if side == "N": cx, cy, front = x0 + k, room.iy + .2, (x0 + k - .5, room.iy, 1, 1)
+            elif side == "S": cx, cy, front = x0 + k, room.iy + room.ih - .2, (x0 + k - .5, room.iy + room.ih - 1, 1, 1)
+            elif side == "W": cx, cy, front = room.ix + .2, y0 + k, (room.ix, y0 + k - .5, 1, 1)
+            else: cx, cy, front = room.ix + room.iw - .2, y0 + k, (room.ix + room.iw - 1, y0 + k - .5, 1, 1)
+            k += .5
+            wx = cx if side in "NS" else (x0 if side == "W" else x1)
+            wy = cy if side in "EW" else (y0 if side == "N" else y1)
+            if any(math.hypot(wx - ox, wy - oy) < 1.0 for ox, oy in openings): continue
+            fx, fy, fw, fh = front
+            if any(fx < i["x"] + i["w"] and i["x"] < fx + fw and fy < i["y"] + i["h"] and i["y"] < fy + fh for i in solid): continue
+            out.append((cx, cy, side))
+    R.shuffle(out)
+    return out
+
+
+BEDDED = re.compile(r"Byre|Stable|Sty|Barn|Kennel", re.I)
+STRAW = ["Hay_Bedding_B_2x3.webp", "Hay_Bedding_A_1x2.webp"]
+
+def _straw(room, R):
+    """Straw strewn on a beasts' floor, under everything else (layer 50, like a rug): about a third of the floor."""
+    if not BEDDED.search(room.name) or room.iw < 1.5 or room.ih < 1.5: return []
+    kinds = [a for a in STRAW if C.have(a)]
+    if not kinds: return []
+    out, cover, goal = [], 0.0, room.iw * room.ih / 3
+    for _ in range(40):
+        if cover >= goal: break
+        a = R.choice(kinds); aw, ah = C.cells_of(a)
+        rot = R.random() < .5
+        w, h = (ah, aw) if rot else (aw, ah)
+        if w > room.iw or h > room.ih: continue
+        x = room.ix + R.random() * (room.iw - w); y = room.iy + R.random() * (room.ih - h)
+        if any(x < o["x"] + o["w"] - .5 and o["x"] < x + w - .5 and y < o["y"] + o["h"] - .5 and o["y"] < y + h - .5 for o in out): continue
+        out.append({"asset": a, "x": x, "y": y, "w": w, "h": h, "rot": int(rot), "scale": 1.0, "layer": 50, "piece": "rug"})
+        cover += w * h
+    return out
+
+
+FIRESIDE = re.compile(r"Fireplace|Hearth|Cooking_Pit|Fire_?Pit|Stove|Oven", re.I)
+
+def _fireside(room, pal, R):
+    """A rug on the floor in front of the room's fire and a seat on it facing the fire (Ben's reference maps: the
+    fire anchors a living room, a taproom or a hall). Only where nothing stands there already."""
+    if room.kind not in ("hall", "tavern"): return []
+    fires = [i for i in room.items if i.get("layer", 100) == 100 and FIRESIDE.search(i["asset"])]
+    out = []
+    for f in fires[:1]:
+        t = room.touching(f["x"], f["y"], f["w"], f["h"], .1)
+        side = next((d for d in "NSWE" if t[d]), None)
+        if not side: continue
+        x, y, w, h = f["x"], f["y"], f["w"], f["h"]
+        rw = max(w, h) if side in "NS" else 1.0
+        rh = 1.0 if side in "NS" else max(w, h)
+        if side == "N": rug = (x + w / 2 - rw / 2, y + h, rw, rh)
+        elif side == "S": rug = (x + w / 2 - rw / 2, y - rh, rw, rh)
+        elif side == "W": rug = (x + w, y + h / 2 - rh / 2, rw, rh)
+        else: rug = (x - rw, y + h / 2 - rh / 2, rw, rh)
+        if not room.fits(rug, open_floor=False): continue
+        e = pal.pick("rug", R)
+        it = _drawn(e, rug, "rug", 50) if e else None
+        if it: out.append(it)
+        # the seat stands on the far edge of the rug, facing the fire
+        s = .8
+        cx, cy = rug[0] + rug[2] / 2, rug[1] + rug[3] / 2
+        seat = {"N": (cx - s / 2, rug[1] + rug[3] - s / 2), "S": (cx - s / 2, rug[1] - s / 2),
+                "W": (rug[0] + rug[2] - s / 2, cy - s / 2), "E": (rug[0] - s / 2, cy - s / 2)}[side]
+        r = (seat[0], seat[1], s, s)
+        e = pal.pick("seat", R)
+        if e and room.fits(r) and not C.fire_clash(room.items, e["path"], r):
+            it = _drawn(e, r, "seat", 100)
+            if it:
+                it["angle"] = it["spin"] = {"N": math.pi, "S": 0.0, "W": math.pi / 2, "E": -math.pi / 2}[side]   # its back to the room
+                room.items.append(it)
+    return out
 
 
 def fill_room(room):
@@ -310,7 +430,9 @@ def fill_room(room):
                                                                # walkways (a barn keeps its threshing floor open)
             room.blocked = [b for b in room.blocked if b[4] != "open floor"]
         limit = FULL.get(kind, FULL_DEFAULT) * room.iw * room.ih
-        options = SP.fitting(kind, ctx["role"], ctx["trade"], ctx["band"], ctx["prefers"])
+        # a kitchen always tries for a work table in the middle and a shelf of pots and plates (Ben's reference maps)
+        prefers = ctx["prefers"] + (["kitchen-table", "shelf-store"] if kind == "kitchen" else [])
+        options = SP.fitting(kind, ctx["role"], ctx["trade"], ctx["band"], prefers)
         used, added = {}, []
         def dense():                                           # lived in, however poor: enough pieces for the floor
             if kind == "passage": return True                  # a gateway or stair hall stays open
@@ -335,11 +457,13 @@ def fill_room(room):
                     placed_any = True
             if done: break
             if not placed_any: room.full = True; break
+        added += _fireside(room, pal, R)
+        if kind in ("tavern", "kitchen"): added += _laid_tables(room, pal, R, added)
         if not dense(): added += _things_on(room, pal, R, added)
         if not dense(): _along_walls(room, pal, R, dense)
         mine = room.items[n0:]
         del room.items[n0:]
-        room.dressing += mine + added
+        room.dressing += _straw(room, R) + mine + added
         room.tier = tier_of(room_value(room, pal), kind, ctx["band"])
         if kind != "outdoor": _wall_lights(room, pal, room.tier, R)    # no chandelier hung in a court
     finally:

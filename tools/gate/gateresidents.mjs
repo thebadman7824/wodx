@@ -54,7 +54,11 @@ export async function run() {
 
     const list = X.plan(scene);
     const people = list.flatMap(h => h.people);
+    // Bynames (ben or bat, ibn or bint) and clans that pass from the mother are not shared family names: a Jewish
+    // household with a woman at its head keeps each member's own byname (resident-rules kinFamily), so it is not tested
+    const byname = /^(ben|bat|ibn|bint|bin|binti) |clan/i;
     const sameFamily = list.every(h => {
+      if ( h.people.some(p => byname.test(String(p.family ?? ""))) ) return true;
       const kin = h.people.filter(p => p.plan.kin || p.plan.master);
       const bySex = s => new Set(kin.filter(p => p.sex === s).map(p => p.family));
       return bySex("male").size <= 1 && bySex("female").size <= 1;

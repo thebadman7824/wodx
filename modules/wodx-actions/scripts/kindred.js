@@ -23,8 +23,10 @@ import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as EF from "./effects.js";
 import * as PE from "./path-effects.js";
+import * as PK from "./power-keywords.js";
 import * as TH from "./trait-hooks.js";
 import * as WR from "./witness-rules.js";
+import * as BR from "./book-rituals.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -39,12 +41,12 @@ const LABEL = { strength: "Strength", dexterity: "Dexterity", stamina: "Stamina"
     selfcontrol: "Self-Control", bodycrafts: "Body Crafts", willpower: "Willpower", road: "Road" };
 const lab = k => LABEL[k] ?? cap(k);
 
-export const DATA = { disc: null, roads: null };
+export const DATA = { disc: null, roads: null, v20: null };
 /** The place line for a card (3.42.0), from the witness rules. */
 export const placeNoteOf = (mode, event = "", secret = "kindred") => WR.placeNote(mode, secret, event);
 export async function loadData() {
     const get = async f => { try { const r = await fetch(`modules/${MOD}/data/${f}`); return r.ok ? r.json() : null; } catch (e) { console.warn("WoDX |", f, e); return null; } };
-    [DATA.disc, DATA.roads] = await Promise.all([get("disciplines-daw.json"), get("roads-daw.json")]);
+    [DATA.disc, DATA.roads, DATA.v20] = await Promise.all([get("disciplines-daw.json"), get("roads-daw.json"), get("disciplines-v20.json")]);
     return DATA;
 }
 
@@ -142,7 +144,9 @@ export function build(ctx) {
     async function useDiscipline(actor) {
         if (!DATA.disc) return ctx.notify("The Discipline library didn't load.");
         const sheet = sheetDisciplines(actor);
-        const list = K.powersFor(DATA.disc.powers, sheet);
+        const era = (() => { try { return game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { return null; } })();
+        const lib = K.librarySet(DATA.disc.powers, DATA.v20?.powers, { darkAges: era === "dark-ages" || era === "long-night", v20Names: new Set(Object.keys(PK.LINE_KEYWORDS.v20 ?? {})) });
+        const list = K.powersFor(lib, sheet);
         if (!list.length) return ctx.notify(`${actor.name} has no Discipline dots the library knows (${sheet.map(s => s.name).join(", ") || "none on the sheet"}).`);
         let tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
         const rows = list.map(p => [p.id, `${p.d} ${"•".repeat(Math.min(5, p.l))}${p.l > 5 ? ` (${p.l})` : ""}: ${p.n}${p.elder ? " (elder)" : p.passive ? " (passive)" : ""}`]);
@@ -167,7 +171,7 @@ export function build(ctx) {
             root.querySelector(".wodx-disc-attr").style.display = /attr/.test(p.r ?? "") ? "" : "none";
             const costTxt = [c.blood && `${c.blood} blood${c.optional ? " (optional)" : ""}`, c.willpower && `${c.willpower} Willpower`, c.variable && "blood as needed"].filter(Boolean).join(", ") || "none";
             const roll = p.r ? `roll ${esc(poolOf(actor, p.r, root.querySelector("[name=attr]").value).label)}` : "no roll";
-            box.innerHTML = `<b>${esc(p.n)}</b> (${esc(p.d)} ${p.l}) · cost ${esc(costTxt)} · ${roll} · ${esc(K.DURATION_TEXT[p.t] ?? p.t ?? "")} · VtDA20 p. ${p.p ?? "?"}<br>${esc(p.e)}`
+            box.innerHTML = `<b>${esc(p.n)}</b> (${esc(p.d)} ${p.l}) · cost ${esc(costTxt)} · ${roll} · ${esc(K.DURATION_TEXT[p.t] ?? p.t ?? "")} · ${p.book ?? "VtDA20"} p. ${p.p ?? "?"}<br>${esc(p.e)}`
                 + (d === null && p.diff && p.diff !== "var" ? `<br><i>Difficulty from the target (${esc(String(p.diff).replace("t:", ""))}): target a token or set it.</i>` : "")
                 + (p.diff === "var" ? "<br><i>The difficulty depends on the situation (see the page).</i>" : "");
         };
@@ -196,13 +200,13 @@ export function build(ctx) {
                 body += rollBlock(pool.label, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...rm.parts], fd.specialty);
                 if (r.botch) body += `<div class="vta-warn">Botch: the power turns on its user or fails badly (see the page).</div>`;
             }
-            body += `<div class="vta-note">${esc(p.e)} <span class="wodx-quiet">(VtDA20 p. ${p.p ?? "?"})</span></div>`;
+            body += `<div class="vta-note">${esc(p.e)} <span class="wodx-quiet">(${p.book ?? "VtDA20"} p. ${p.p ?? "?"})</span></div>`;
             // Path magic: what the successes do goes on the effects card (V20 Dark Ages pp. 275-302)
             let fx = null;
             if (PE.isPath(p.d) && successes > 0 && p.r && EF.isOn()) { fx = EF.pathPlan(actor, p, successes); body += fx.html; }
             const dur = successes > 0 && !PE.PATH_EFFECTS[p.id] ? K.discDuration(p.t, successes) : null;
             if (dur && chronicle()?.applyTimed && actor.isOwner) {
-                await chronicle().applyTimed(actor, { name: p.n, img: "icons/svg/aura.svg", description: p.e, duration: dur, source: `VtDA20 p. ${p.p}`, key: `disc-${p.id}` });
+                await chronicle().applyTimed(actor, { name: p.n, img: "icons/svg/aura.svg", description: p.e, duration: dur, source: `${p.book ?? "VtDA20"} p. ${p.p}`, key: `disc-${p.id}` });
                 body += `<div class="vta-note">Shown on the token until it ends (${esc(K.DURATION_TEXT[p.t] ?? "")}).</div>`;
             }
             // The Forgetful Mind on a witness: the Masquerade ledger marks them as made to forget
@@ -213,8 +217,9 @@ export function build(ctx) {
             // B3565: Aura Perception shows the black veins of a diablerist (V20 p. 294)
             if (/aura perception/i.test(p.n) && tgt && successes > 0) body += ctx.api().debtsMarks?.()?.auraNote?.(tgt) ?? "";
             // Any other Discipline: its keywords on the effects card (Traits With Teeth step 4)
-            if (!fx && p.r && !p.passive && successes > 0 && EF.isOn()) {
-                const pp = EF.powerPlan(actor, { set: "disc", id: p.id, name: p.n, line: "v20", successes, source: `VtDA20 p. ${p.p ?? "?"}` });
+            // A power with no roll counts one success (B3751)
+            if (!fx && !p.passive && successes > 0 && EF.isOn()) {
+                const pp = EF.powerPlan(actor, { set: p.book === "V20" ? "v20" : "disc", id: p.book === "V20" ? p.kw : p.id, name: p.n, line: "v20", successes, source: `${p.book ?? "VtDA20"} p. ${p.p ?? "?"}`, noRoll: !p.r });
                 if (pp.items.length || pp.skipped.length) { fx = pp; body += pp.html; }
             }
             const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");
@@ -223,6 +228,48 @@ export function build(ctx) {
             return post(actor, `${actor.name}: ${esc(p.n)}`, body, rolls, fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 540, render: root => { describe(root); root.querySelector("[name=power]")?.addEventListener("change", () => describe(root)); root.querySelector("[name=attr]")?.addEventListener("change", () => describe(root));
             aim(root, { actor, lib: "disc", power: r => list.find(x => x.id === r.querySelector("[name=power]")?.value), onPick: a => { tgt = a; describe(root); } }); } });
+    }
+
+    /* ---------------- Thaumaturgy and Necromancy rituals (B3753) ---------------- */
+    // Intelligence + Occult at the ritual's level + 3, at most 9 (V20 p. 230; V20 Dark Ages p. 302); five minutes a level.
+    async function castRitual(actor) {
+        const era = (() => { try { return game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { return null; } })();
+        const set = era === "dark-ages" || era === "long-night" ? "v20da" : "v20";
+        const list = BR.BOOK_RITUALS[set].list;
+        const dice = ctx.attr(actor, "intelligence") + n(ctx.findAbility?.(actor, "occult")?.value);
+        const content = `<form><p><b>${esc(actor.name)}</b>: Intelligence + Occult, ${dice} dice. The difficulty is the ritual's level + 3 (at most 9).</p>
+          <div class="form-group"><label>Ritual</label>${searchBox("select[name=rit]", "Search rituals…", "Search rituals")}<select name="rit">${BR.ritualOptions([set], esc)}</select></div>
+          <div class="wodx-ritual-info wodx-quiet"></div>
+          <div class="form-group"><label>Difficulty</label><input type="number" name="diff" min="2" max="10" value="4"/></div>
+          <div class="form-group"><label>Blood to spend</label><input type="number" name="blood" min="0" value="0"/></div>
+          <div class="form-group"><label><input type="checkbox" name="advance"/> Move the clock (five minutes a level)</label></div></form>`;
+        const pick = root => { const [s, i] = String(root.querySelector("[name=rit]")?.value ?? "").split(":"); return { s, r: BR.BOOK_RITUALS[s]?.list?.[n(i)] }; };
+        const describe = root => {
+            const { s, r } = pick(root); if (!r) return;
+            root.querySelector("[name=diff]").value = Math.min(9, BR.ritualLevel(r) + 3);
+            const b = /(\d+) blood/.exec(r.takes ?? ""); root.querySelector("[name=blood]").value = b ? b[1] : 0;
+            root.querySelector(".wodx-ritual-info").textContent = `${r.g}, level ${r.lvl}; takes ${r.takes}; on ${r.who}. ${BR.ritualNote(s, r)}`;
+        };
+        return dialog(`Cast a ritual: ${actor.name}`, content, "Cast", async fd => {
+            const [s, i] = String(fd.rit ?? "").split(":"); const r = BR.BOOK_RITUALS[s]?.list?.[n(i)];
+            if (!r) return null;
+            const spendB = Math.max(0, n(fd.blood)), bb = ctx.blood(actor);
+            if (spendB > bb.value) return ctx.notify(`${actor.name} has only ${bb.value} blood.`);
+            let body = "";
+            if (spendB) { const ch = await ctx.changeBlood(actor, -spendB); body += `<div class="vta-parts">blood ${ch.before} → ${ch.after}</div>`; }
+            const rr = await rollPool(dice, Math.max(2, Math.min(10, n(fd.diff))));
+            body += rollBlock("Intelligence + Occult", rr, [`level ${r.lvl}`]);
+            const got = rr.botch ? 0 : rr.successes;
+            body += rr.botch ? `<div class="vta-big bad">${esc(r.n)}: a botch; the Storyteller says what goes wrong.</div>` : got ? `<div class="vta-big good">${esc(r.n)}: it takes (${got} success${got === 1 ? "" : "es"}).</div>` : `<div class="vta-big">${esc(r.n)} fails.</div>`;
+            body += `<div class="vta-note">${esc(BR.ritualNote(s, r))}</div>`;
+            let fxItems = [];
+            if (got && EF.isOn()) {
+                const pp = EF.ritualPlan(actor, r, got, `${BR.BOOK_RITUALS[s].book} ${r.page}`);
+                body += pp.html; fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+            }
+            if (fd.advance) body += await spendTime(actor, 300 * BR.ritualLevel(r), "a ritual");
+            return post(actor, `${actor.name}: ${esc(r.n)}`, body, [rr.roll].filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
+        }, { width: 540, render: root => { describe(root); root.querySelector("[name=rit]")?.addEventListener("change", () => describe(root)); aim(root, { actor }); } });
     }
 
     /* ---------------- Roads ---------------- */
@@ -765,9 +812,10 @@ export function build(ctx) {
         if (!isActiveGM() || !setting("autoDelirium")) return null;
         const tok = tokenLike?.object ?? tokenLike;
         const a = tok?.actor;
-        if (!a || !GX.isShifter(a)) return null;
-        const form = GX.info(a).form;
-        if (form !== "crinos") return null;
+        if (!a) return null;
+        // 3.67.0 (B3440): a sheet in Crinos, or a token drawn as a war form (WoDX Paperdoll's sprites)
+        const form = GX.isShifter(a) ? GX.info(a).form : null;
+        if (!GX.bringsDelirium({ form, sprite: tok.document?.flags?.["wodx-paperdoll"]?.sprite })) return null;
         const seen = new Set(canvas.scene?.getFlag?.(MOD, `delirium.${a.id}`) ?? []);
         // Creatures of another kind who see the Crinos are startled (3.42.0); the Delirium below is for the mortals
         await revealed(a, { secret: "lupine", event: "in Crinos", startledOnly: true });
@@ -776,6 +824,34 @@ export function build(ctx) {
         await canvas.scene.setFlag(MOD, `delirium.${a.id}`, [...seen, ...w.map(t => (t.actor.isToken ? t.document.id : t.actor.id))]);
         const ids = w.map(t => t.document.uuid).join(",");
         return ChatMessage.create({ content: `<div class="vta-card"><h3>The Delirium</h3><p>${w.map(t => esc(t.name)).join(", ")} can see ${esc(a.name)} in Crinos.</p>${kbtn("delirium", a, "Run the Delirium for them", ids)}</div>`,
+            whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
+    }
+
+    /* ---------------- Marks a mortal cannot explain away (3.67.0, B3443) ---------------- */
+
+    /**
+     * A Kindred whose face bears marks no mortal has (WoDX Paperdoll's talking faces: a Nosferatu's face, a Gangrel's
+     * beast eyes) is seen by mortals who do not know: the Storyteller gets the Masquerade card, once for each witness in
+     * a scene. A mask over the face or Obfuscate hides the marks.
+     */
+    async function marksSeen(tokenLike) {
+        if (!isActiveGM() || !setting("eventPrompts")) return null;
+        const tok = tokenLike?.object ?? tokenLike;
+        const a = tok?.actor;
+        if (!a || tok.document?.hidden || P.detectProfile(a) !== "kindred") return null;
+        let marks = [];
+        try { marks = game.modules.get("wodx-paperdoll")?.active ? game.modules.get("wodx-paperdoll").api?.faces?.uncanny?.(a, tok.document) ?? [] : []; } catch (e) { marks = []; }
+        if (!marks.length) return null;
+        const o = observersOf(tok, { secret: "kindred", exclude: [a.isToken ? tok.document.id : a.id] });
+        const key = `marksSeen.${a.isToken ? tok.document.id : a.id}`;
+        const seen = new Set(canvas.scene?.getFlag?.(MOD, key) ?? []);
+        const fresh = o.breach.filter(t => !seen.has(t.document.id));
+        if (!fresh.length) return null;
+        await canvas.scene.setFlag(MOD, key, [...seen, ...fresh.map(t => t.document.id)]);
+        const ev = `seen with ${marks.map(m => String(m).toLowerCase()).join(", ")}`.replace(/\|/g, "/");
+        const note = WR.placeNote(o.mode, "kindred", ev);
+        return ChatMessage.create({ content: `<div class="vta-card"><h3>${esc(a.name)}: ${esc(ev)}</h3><p class="vta-warn">Masquerade: ${fresh.map(t => esc(t.name)).join(", ")} can see a face no living person has.</p>${note ? `<p>${esc(note)}</p>` : ""}
+            ${kbtn("seen", a, "Record the witnesses", `kindred|${ev}|${fresh.map(t => t.actor.uuid).join(",")}`)}</div>`,
             whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
     }
 
@@ -846,8 +922,8 @@ export function build(ctx) {
         });
     }
 
-    return { prestationJournal: () => BOONJ.ensure(), useDiscipline, setRoad, roadOf, boons, downtime, masquerade, recordBreach, setWitnessState, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt,
-        enterTorpor, onDamage, onBlood, onClock, healAll, healPlan, healing, riseHeal, stayAwake, crinosSeen, sunlit, onChatButton, onSocket, targetTraits, poolOf, hierarchyTable };
+    return { prestationJournal: () => BOONJ.ensure(), useDiscipline, castRitual, setRoad, roadOf, boons, downtime, masquerade, recordBreach, setWitnessState, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt,
+        enterTorpor, onDamage, onBlood, onClock, healAll, healPlan, healing, riseHeal, stayAwake, crinosSeen, marksSeen, sunlit, onChatButton, onSocket, targetTraits, poolOf, hierarchyTable };
 }
 
 /** Settings this part adds (registered by main.js). */

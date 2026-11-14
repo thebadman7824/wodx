@@ -32,18 +32,49 @@ export function view(actor) {
     if ( kind ) features.push({id: i.id, name: i.name ?? "", kind, value: Number(i.system?.value) || 0, flagKey: i.flags?.[MODULE_ID]?.trait?.key ?? null});
     else if ( i.type === "Power" ) powers.push(i.name ?? "");
   }
-  return {kind: kindOf(actor), pc: !!actor?.hasPlayerOwner, features, powers};
+  return {kind: kindOf(actor), pc: !!actor?.hasPlayerOwner, features, powers, groups: groupsOf(actor)};
+}
+
+/** B3783: the sect, clan, tribe, affiliation, kith and the like on a sheet, wherever the line keeps them. */
+const GROUP_KEYS = new Set(["sect", "clan", "tribe", "affiliation", "kith", "house", "court", "camp", "faction", "conspiracy", "creed", "lineage", "dynasty", "legacy", "guild"]);
+export function groupsOf(actor) {
+  const out = new Set();
+  const walk = (o, depth) => {
+    if ( !o || typeof o !== "object" || depth > 3 ) return;
+    for ( const [k, v] of Object.entries(o) ) {
+      if ( typeof v === "string" ) { if ( GROUP_KEYS.has(k.toLowerCase()) && v.trim() && !v.includes(".") ) out.add(v.trim()); }
+      else if ( v && typeof v === "object" && !Array.isArray(v) ) walk(v, depth + 1);
+    }
+  };
+  try { walk(actor?.system ?? {}, 0); } catch (e) { /* no sheet */ }
+  return [...out];
 }
 
 export const of = actor => T.traitsOf(view(actor));
 export const has = (actor, keyOrName) => T.has(view(actor), keyOrName);
-/** The traits' effects on one roll, and the signature features' (clan, tribe, auspice, breed) when their line is on. */
-export const effects = (actor, ctx = {}) => [...T.effectsFor(view(actor), ctx), ...sigRollEffects(actor, ctx)];
+/**
+ * B3902: other modules add effects of their own on the same channels (WoDX Library: a ward carried, a holy symbol
+ * held). Each source is fn(actor, ctx) -> [{key, name, dice, diff, note}].
+ */
+const SOURCES = [];
+export function addSource(fn) { if ( typeof fn === "function" && !SOURCES.includes(fn) ) SOURCES.push(fn); return () => SOURCES.splice(SOURCES.indexOf(fn), 1); }
+const fromSources = (actor, ctx) => SOURCES.flatMap(fn => { try { return fn(actor, ctx) ?? []; } catch (e) { console.warn("WoDX Chronicle | trait effect source", e); return []; } });
+/** The traits' effects on one roll, the signature features' (clan, tribe, auspice, breed) when their line is on, and other modules'. */
+export const effects = (actor, ctx = {}) => [...T.effectsFor(view(actor), ctx), ...sigRollEffects(actor, ctx), ...fromSources(actor, ctx)];
 /** For WoDX Senses: what the character's traits do to their own senses, and what others sense about them. */
 export const senses = actor => T.senseEffects(view(actor));
 export const shows = actor => T.showsOf(view(actor));
+/** For WoDX Actions (B3780): the situations the character's merits and flaws ask the player to tick on a roll. */
+export const ticks = actor => T.ticksOf(view(actor));
+/** For WoDX Combat (B3793): extra health levels, softer wound penalties, silver. */
+export const toughness = actor => T.bodyOf(view(actor));
 /** For WoDX NPC: how the character's traits move a first meeting with this NPC: {delta, names}. */
-export const attitudeSeed = (actor, npc) => T.attitudeSeed(view(actor), npc ? kindOf(npc) : null);
+export const attitudeSeed = (actor, npc, extra = {}) => T.attitudeSeed(view(actor), npc ? {
+  kind: kindOf(npc),
+  groups: [...groupsOf(npc), ...(extra.groups ?? [])],
+  words: [...(extra.words ?? []), ...(extra.office ? [extra.office] : [])],
+  office: !!extra.office
+} : null);
 
 /** For "Only when": the working traits as {name, key, kind, value, aliases}, and the power names. */
 export function whenFeats(actor) {
@@ -158,4 +189,4 @@ export function registerTraitHooks() {
   });
 }
 
-export const traitsApi = {view, of, has, effects, senses, shows, attitudeSeed, triggers, pulls, ledgerFor, prompt, worldPlan, makeReal, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};
+export const traitsApi = {view, of, has, effects, addSource, senses, shows, ticks, toughness, attitudeSeed, groupsOf, triggers, pulls, ledgerFor, prompt, worldPlan, makeReal, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};

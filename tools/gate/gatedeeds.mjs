@@ -82,12 +82,13 @@ export async function run() {
 
     await step("window", async () => {
       const app = await st().battles.open(b.id);
-      await wait(400);
-      const before = /Offer deeds for the next phase/.test(app.element?.innerHTML ?? "");
+      // the window may take longer than a moment to draw on a busy lane: wait for its text, up to 5 seconds
+      const shows = async re => { for ( let i = 0; i < 25; i++ ) { if ( re.test(app.element?.innerHTML ?? "") ) return true; await wait(200); } return false; };
+      const over = !!st().battles.get(b.id)?.over;
+      const before = await shows(/Offer deeds for the next phase/);
       await st().battles.draw(b.id);
-      await wait(800);
-      const after = /What the field leaves behind/.test(app.element?.innerHTML ?? "");
-      ok("window", before && after, {before, after});
+      const after = await shows(/What the field leaves behind/);
+      ok("window", before && after, {before, after, overBeforeDraw: over, rendered: !!app.element});
     });
 
     await step("aftermath to Legends and the Ledger", async () => {

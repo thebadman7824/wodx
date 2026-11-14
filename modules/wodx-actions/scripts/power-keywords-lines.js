@@ -855,12 +855,12 @@ export const LINE_KEYWORDS = {
     "wail": {"n": "Wail", "k": ["harm"]},
     "forebode": {"n": "Forebode", "k": ["know"]},
     "inhabit": {"n": "Inhabit", "k": ["possess", "work"]},
-    "witchs-nimbus": {"n": "Witch's Nimbus", "k": ["fear"]},
-    "helter-skelter": {"n": "Helter-Skelter", "k": ["work"]},
-    "congeal": {"n": "Congeal", "k": ["manifest"]},
+    "witchs-nimbus": {"n": "Witch's Nimbus", "k": ["harm", "light"]},
+    "helter-skelter": {"n": "Helter-Skelter", "k": ["work", "harm"]},
+    "congeal": {"n": "Congeal", "k": ["make", "harm"]},
     "puppetry": {"n": "Puppetry", "k": ["possess"]},
-    "juggernaut": {"n": "Juggernaut", "k": ["boost"]},
-    "unearthly-repose": {"n": "Unearthly Repose", "k": ["mend"]},
-    "storm-wending": {"n": "Storm-Wending", "k": ["weather"]}
+    "juggernaut": {"n": "Juggernaut", "k": ["boost", "ward"]},
+    "unearthly-repose": {"n": "Unearthly Repose", "k": ["sway"]},
+    "storm-wending": {"n": "Storm-Wending", "k": ["move"]}
   }
 };

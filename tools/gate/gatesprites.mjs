@@ -15,6 +15,9 @@
  *      mark away again. Step 15 makes two actors named "Sprite test child: ..." and deletes them.
  * Result: Data/wodx-gate/gatesprites-result.json.
  */
+// a batch create need not hand the documents back in the order asked: put them back in that order by name
+const inOrder = (docs, data) => data.map(d => docs.find(x => x.name === d.name));
+
 const N = 15;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function save(R) {
@@ -24,7 +27,7 @@ async function save(R) {
   await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, {notify: false});
   return R.summary;
 }
-export async function run() {
+async function runGate(K) {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   if ( game.world.id !== "rothenstein-wodx" ) { ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"}); return save(R); }
@@ -37,9 +40,7 @@ export async function run() {
     ok("2. sheets", names.length >= 6 && Object.values(answers).every(s => s === 200), {answers});
 
     // the test tokens live on one scene: go there if another scene is showing
-    const home = game.scenes.find(s => s.tokens.some(t => t.name?.startsWith("Sprite test: Kindred elder")));
-    if ( home && home.id !== canvas.scene?.id ) { await home.view(); await sleep(2500); }
-    const scene = canvas.scene, g = canvas.grid.size, actor = game.actors.find(a => a.type !== "Group") ?? game.actors.contents[0];
+    const scene = canvas.scene, g = canvas.grid.size, actor = await K.make(Actor, {name: "WoDX gate: sprite stand-in", type: "Mortal"});
     const cx = Math.round(canvas.dimensions.sceneX + canvas.dimensions.sceneWidth / 2), cy = Math.round(canvas.dimensions.sceneY + canvas.dimensions.sceneHeight / 2);
     const docs = [];
     for ( const [i, n] of names.entries() ) {
@@ -178,10 +179,11 @@ export async function run() {
     {
       const PD = game.modules.get("wodx-paperdoll").api, ch = game.modules.get("wodx-chronicle")?.api, now = ch?.eras?.currentYear?.() ?? 1200, made = [];
       try {
-        const [kid, grown, other] = await Actor.createDocuments([
+        const three = [
           {name: "Sprite test child: Kid", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: now - 9}}}},
           {name: "Sprite test child: Grown", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: now - 30}}}},
-          {name: "Sprite test child: Other", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: now - 31}}}}]);
+          {name: "Sprite test child: Other", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: now - 31}}}}];
+        const [kid, grown, other] = inOrder(await Actor.createDocuments(three), three);
         made.push(kid, grown, other);
         const kidEntry = A.roster().actors.find(a => a.id === kid.id), kidAge = PD.sprites.ageOf?.(kid);
         const app = await PD.figure.open(kid); await sleep(600);
@@ -200,3 +202,7 @@ export async function run() {
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }
   return save(R);
 }
+
+// The gate kit (B3733): its own scratch scene, cleaned up after.
+import {kitRun} from "./kit.mjs";
+export const run = kitRun("gatesprites", runGate);

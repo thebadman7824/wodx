@@ -424,7 +424,7 @@ export const TRIBES = [
     text: "Fetishes and talens are made as recipes with a spirit among the ingredients. A bane bound in an item can get loose on a botched use, as an NPC. Occult gains a die.", effects: [{tags: ["occult"], dice: 1}]},
   {key: "wendigo", label: "Wendigo", match: ["wendigo"], feature: "line", title: "The cold wind", page: "W20, the tribe's pages",
     text: "Cold weather never troubles a Wendigo, and in it their Survival and their attacks gain a die. In the Americas their feud with the newcomer tribes starts in 1492 and grows with each dated colonial event.", effects: [{tags: ["survival", "brawl", "melee"], dice: 1, when: "cold"}]},
-  {key: "croatan", label: "Croatan", match: ["croatan"], feature: "line", until: 1590, house: true, title: "The last sacrifice", page: "W20, the lost tribes; the year is a house reading",
+  {key: "croatan", label: "Croatan", match: ["croatan"], feature: "line", until: 1589, house: true, title: "The last sacrifice", page: "W20, the lost tribes; the year is a house reading",
     text: "For stories in the Americas before the tribe gave itself up (1590 here). Their rites strengthen a caern. After that year the tribe is gone and lives only in Galliard tales."},
   {key: "bunyip", label: "Bunyip", match: ["bunyip"], feature: "line", until: 1890, house: true, title: "The War of Tears", page: "W20, the lost tribes; the year is a house reading",
     text: "For stories in Australia before the War of Tears ended the tribe (1890 here). A Garou who meets a Bunyip spirit or relic feels the old shame: the Storyteller can call for a Harano test."},

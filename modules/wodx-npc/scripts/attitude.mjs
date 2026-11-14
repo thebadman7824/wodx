@@ -18,6 +18,18 @@ export function build({MOD, chron, savedProfile, factions, rivalry = null, profi
       return (st?.factions ?? []).filter(f => (f.members ?? []).includes(actor.id) || f.leader === actor.id).flatMap(f => [f.key, f.name]).filter(Boolean);
     } catch (e) { return []; }
   }
+  /** B3783: the seats an NPC holds, as words ("sheriff", "prince", "leader"), for the traits that care about rank. */
+  function officeWordsOf(actor) {
+    try {
+      const st = factions?.state?.();
+      const out = [];
+      for ( const f of st?.factions ?? [] ) {
+        if ( f.leader === actor.id ) out.push("leader");
+        for ( const [k, list] of Object.entries(f.politics?.offices ?? {}) ) if ( (list ?? []).includes(actor.id) ) out.push(k);
+      }
+      return out.join(" ");
+    } catch (e) { return ""; }
+  }
   const lookApi = () => game.modules.get("wodx-library")?.api?.look ?? null;
   /** What the NPC is for the look: their station, mortal or not, their Status kind, their abilities (NPC 0.32.0). */
   function npcForLook(npc, ch) {
@@ -53,7 +65,7 @@ export function build({MOD, chron, savedProfile, factions, rivalry = null, profi
     const ch = game.actors.get(charId);
     // Chronicle 0.20.0 (Traits With Teeth step 5): the character's merits and flaws move the first look (Friendly Face, Monstrous)
     let t = null;
-    try { t = ch ? chron()?.traits?.attitudeSeed?.(ch, npc) : null; } catch (e) { t = null; }
+    try { t = ch ? chron()?.traits?.attitudeSeed?.(ch, npc, {groups: factionNamesOf(npc), office: officeWordsOf(npc)}) : null; } catch (e) { t = null; }
     // NPC 0.32.0: what they wear and how they are (WoDX Library's look); traits and look each to two steps, together to three
     const lk = lookFor(npc, ch);
     const tD = Number(t?.delta) || 0, lD = Number(lk?.delta) || 0;

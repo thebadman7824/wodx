@@ -19,7 +19,7 @@
     0
    ],
    "cells": [
-    43,
+    44,
     62
    ],
    "cut": [
@@ -33,7 +33,7 @@
     "east": "A2"
    },
    "households": 14,
-   "population": 50
+   "population": 61
   },
   {
    "id": "A2",
@@ -58,19 +58,19 @@
     "west": "A1",
     "east": "A3"
    },
-   "households": 32,
-   "population": 136
+   "households": 30,
+   "population": 128
   },
   {
    "id": "A3",
    "map": "rotheim-a3.dungeondraft_map",
    "sidecar": "rotheim-a3.wodx.json",
    "origin": [
-    103,
+    102,
     0
    ],
    "cells": [
-    65,
+    66,
     62
    ],
    "cut": [
@@ -83,8 +83,8 @@
     "south": "B3",
     "west": "A2"
    },
-   "households": 26,
-   "population": 101
+   "households": 27,
+   "population": 118
   },
   {
    "id": "B1",
@@ -95,7 +95,7 @@
     62
    ],
    "cells": [
-    45,
+    43,
     62
    ],
    "cut": [
@@ -108,8 +108,8 @@
     "north": "A1",
     "east": "B2"
    },
-   "households": 14,
-   "population": 56
+   "households": 13,
+   "population": 53
   },
   {
    "id": "B2",
@@ -134,19 +134,19 @@
     "west": "B1",
     "east": "B3"
    },
-   "households": 32,
-   "population": 149
+   "households": 34,
+   "population": 134
   },
   {
    "id": "B3",
    "map": "rotheim-b3.dungeondraft_map",
    "sidecar": "rotheim-b3.wodx.json",
    "origin": [
-    106,
+    104,
     62
    ],
    "cells": [
-    62,
+    64,
     62
    ],
    "cut": [
@@ -160,7 +160,7 @@
     "west": "B2"
    },
    "households": 26,
-   "population": 102
+   "population": 100
   }
  ]
 }

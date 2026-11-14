@@ -139,13 +139,29 @@ export async function run() {
 
     // Downtime: a request reaches the queue; rejecting it changes nothing but tells the player
     const Q = game.modules.get("wodx-chronicle").api.approvals;
+    // A standing rule ("small" downtime) or light touch left on by the lane would approve or hold the request before it
+    // reaches the queue, so both are off for this step and put back after
+    const CH = "wodx-chronicle", autoWas = foundry.utils.deepClone(game.settings.get(CH, "autoApprove") ?? {});
+    let lightWas = null;
+    try { lightWas = game.settings.get(CH, "rule.lightTouch"); } catch (e) { lightWas = null; }
     const n0 = Q.pending().length;
-    await B.downtime({actorId: a1.id, kind: "study", nights: 2, what: "Gate: reads the old books"});
-    await sleep(800);
+    try {
+      const auto = foundry.utils.deepClone(autoWas); delete auto[`${MOD}.downtime`];
+      await game.settings.set(CH, "autoApprove", auto);
+      if ( lightWas ) await game.settings.set(CH, "rule.lightTouch", false);
+      await B.downtime({actorId: a1.id, kind: "study", nights: 2, what: "Gate: reads the old books"});
+      await sleep(800);
+    } finally {
+      await game.settings.set(CH, "autoApprove", autoWas);
+      if ( lightWas ) await game.settings.set(CH, "rule.lightTouch", lightWas);
+    }
     const q = Q.pending().find(e => e.type === `${MOD}.downtime` && /Gate: reads/.test(e.detail));
     if ( q ) await Q.decide(q.id, "reject");
     await sleep(800);
-    ok("11. downtime", !!q && Q.pending().length === n0, {queued: !!q});
+    // the request itself is gone and was turned down; other proposals may reach a busy queue meanwhile, so the
+    // count alone is not the test
+    const was = q ? Q.history().find(h => h.id === q.id) : null;
+    ok("11. downtime", !!q && !Q.pending().some(e => e.id === q.id) && was?.verdict === "reject", {queued: !!q, verdict: was?.verdict ?? null, pending: [n0, Q.pending().length]});
   } catch (e) {
     R.errors.push(String(e?.stack ?? e));
   } finally {

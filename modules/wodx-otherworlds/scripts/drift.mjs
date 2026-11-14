@@ -22,6 +22,14 @@ export async function stepDrift(scene, kind, why = "") {
   return r;
 }
 
+/** B3526: the Storyteller's lever moves a track at a place by a step; returns the step actually taken. */
+export async function leverStep(scene, track, step, why = "") {
+  if ( !game.user.isGM || !scene ) return 0;
+  const r = D.leverDrift(driftOf(scene), track, step, {at: game.time.worldTime, why});
+  if ( r.changed ) await scene.update({[`flags.${MODULE_ID}.drift`]: {value: r.value, banality: r.banality, shroud: r.shroud, log: r.log}});
+  return r.taken;
+}
+
 export async function undoStep(scene) {
   if ( !game.user.isGM || !scene ) return null;
   const r = D.undoDrift(driftOf(scene));

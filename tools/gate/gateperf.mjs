@@ -34,7 +34,7 @@ async function fps(ms = 5000) {
   return Math.round(samples.reduce((a, b) => a + b, 0) / samples.length * 10) / 10;
 }
 
-export async function run() {
+async function runGate(K) {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], ua: navigator.userAgent};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   if ( game.world.id !== "rothenstein-wodx" ) { ok("0. world", false, {error: "Run this check in rothenstein-wodx only"}); return save(R); }
@@ -62,3 +62,7 @@ export async function run() {
   }
   return save(R);
 }
+
+// The gate kit (B3733): its own scratch scene, cleaned up after.
+import {kitRun} from "./kit.mjs";
+export const run = kitRun("gateperf", runGate);
