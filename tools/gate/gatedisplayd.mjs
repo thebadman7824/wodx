@@ -32,6 +32,9 @@ const SHEET = `[greet] Looks up at the sky.
 async function save(R) {
   R.finished = new Date().toISOString();
   R.summary = `${R.steps.filter(s => s.pass).length}/${R.steps.length} passed${R.errors?.length ? `, ${R.errors.length} error(s)` : ""}`;
+  // The runner's comment carries only this line: name what failed, with its detail
+  const bad = R.steps.filter(s => !s.pass);
+  if ( bad.length ) R.summary += `; failed: ${bad.map(s => JSON.stringify(s).slice(0, 400)).join(" ; ")}`;
   const file = new File([JSON.stringify(R, null, 1)], "gatedisplayd-result.json", {type: "application/json"});
   await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, {notify: false});
   return R.summary;
