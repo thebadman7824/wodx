@@ -39,6 +39,7 @@ const MU = await import(A("scripts/mummy-rules.js"));
 const C20 = await import(A("scripts/c20-rules.js"));
 const CA = await import(A("scripts/c20-arts.js"));
 const MH = await import(A("scripts/mummy-hekau.js"));
+const OH = await import(A("scripts/orpheus-horrors.js"));
 const CB = await import(pathToFileURL(path.join(ROOT, "modules/wodx-combat/scripts/rules.js")).href);
 
 /** Keywords that only tell the user something; they do not change the game. */
@@ -74,10 +75,13 @@ for ( const g of J("gifts-daw.json").gifts ) {
   add("Werewolf (Dark Ages)", "Gifts", g.n, { status: kw && !kw.passive && applyingKw(kw.keywords) && g.r ? "applies" : "card", kw: kw?.keywords ?? [], passive: !!kw?.passive, page: `DA:W p. ${g.p}`, how: "Gift roll, keywords, timed effect" });
 }
 const daGift = new Set(J("gifts-daw.json").gifts.map(g => slug(g.n)));
-/* -- Werewolf: W20 Gifts (garou.js reads the w20 list by name; no effect text, cost or page) */
+/* -- Werewolf: W20 Gifts (garou.js reads data/gifts-w20.json by name: pool, cost, duration, effect and page) */
+const w20Lib = new Map(J("gifts-w20.json").gifts.map(g => [g.kw, g]));
 for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.w20) ) {
   if ( daGift.has(id) ) continue;
-  add("Werewolf (W20)", "Gifts", e.n, { status: applyingKw(e.k) && !e.p ? "applies" : "roll", kw: e.k, passive: !!e.p, page: "W20", how: "Gift roll from the item's dice; keywords by name; no effect text" });
+  const g = w20Lib.get(id);
+  add("Werewolf (W20)", "Gifts", e.n, { status: applyingKw(e.k) && !e.p ? "applies" : g ? "card" : "roll", kw: e.k, passive: !!e.p, page: g ? `W20 p. ${g.p}` : "W20",
+    how: g ? "W20 library entry (data/gifts-w20.json): Use a Gift card, pool, cost, duration and keywords" : "Gift roll from the item's dice; keywords by name; no effect text" });
 }
 /* -- Wraith: W20 and The Great War Arcanoi (wraith.js shows the effect line; keywords not wired) */
 for ( const [file, set, line] of [["arcanoi-w20.json", "wraith", "Wraith (W20)"], ["arcanoi-gw.json", "greatwar", "Wraith (Great War)"]] ) {
@@ -147,7 +151,9 @@ for ( const [id, sp] of Object.entries(MH.SPELLS) ) {
 /* -- Orpheus: Horrors */
 for ( const [id, h] of Object.entries(O.HORRORS) ) {
   const kw = PK.keywordsOf("orpheus", slug(h.label));
-  add("Orpheus", `Horrors (${h.shade})`, h.label, { status: "roll", kw: kw?.keywords ?? [], page: "Orpheus pp. 124, 190-193", how: "Vitality spend and roll; no effect" });
+  const fx = OH.HORROR_FX[id], res = fx ? OH.horrorResults(id, 3, 2, { name: h.label }) : [];
+  add("Orpheus", `Horrors (${h.shade})`, h.label, { status: res.some(r => !["note", "st"].includes(r.out?.kind) && !r.st) ? "applies" : fx ? "card" : "roll", kw: kw?.keywords ?? [],
+    page: fx ? `Orpheus ${fx.page}` : "Orpheus pp. 124, 190-193", how: fx ? "Horror window: the line for the Vitality put in, the usual pool, and the effects card" : "Vitality spend and roll; no effect" });
 }
 /* -- Kindred of the East: Chi arts (no power list) */
 for ( const [id, a] of Object.entries(K.ARTS) )

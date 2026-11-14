@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.75.0 (Powers pass, Orpheus: each Horror says what every level of Vitality does and puts it on the effects card (B3748); Powers pass, Werewolf: Use a Gift knows the 239 W20 Gifts the Dark Ages library lacks, each with its pool, difficulty, cost, duration, effect text and W20 page (B3747))
 - 3.74.0 (Powers pass, Vampire: Use a Discipline knows the V20 powers too. After the Dark Ages, the modern powers replace the Dark Ages ones at the same level, each with its card, roll, cost, duration and effects (B3746))
 - 3.73.0 (Powers pass, Mummy: the Hekau window lists every spell and ritual of the six paths the character reaches; picking one fills in its pool, difficulty and Sekhem, the card says what it does and for how long, and what it can apply goes on the effects card (B3745))
 - 3.72.0 (Merits and flaws' own tick boxes (B3780): the roll window offers the situations WoDX Chronicle's trait table names, beside the fixed ones (by voice, a first meeting, a sense), and the roll counts the ticked ones)
