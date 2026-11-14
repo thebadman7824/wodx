@@ -200,7 +200,7 @@ Next free block: B4140
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Virtue-loss botches gain a derangement (used B3900-B3915) | Actions, Sheets |
+| B3900-B3929 | Nature gives Willpower back (used B3900-B3916) | Actions |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
@@ -6767,6 +6767,9 @@ B3910's gambling read WoDX Storyteller's money api at api.money, which does not 
 
 ## B3915. A Virtue-loss botch writes a derangement (2026-11-14)
 No-effect audit t1, second half. WoDX Actions' frenzy (riding the wave or resisting) and sin rolls used to say a Derangement "may follow". A botch now calls WoDX Chronicle's derangements.gain (B3913) with the cause: frenzy, fear for Rötschreck, or sin with the sin's words, which writes a new one into the box and posts a card; the Storyteller may change it. The Actions API gains derangement({actor}), and WoDX Sheets' Derangements panel gets a "Set off" link that opens Chronicle's dialog (roll Willpower, spend a point, give in, or end the bout). With Chronicle off, nothing changes. Reverse: drop gainDerangement and its three calls in Actions main.js, and the panel's roll link.
+
+## B3916. Acting to one's Nature gives a Willpower point back (2026-11-14)
+No-effect audit t2. V20 gives back a point of Willpower when a character acts to their Nature in a way that matters; WoDX only showed the Nature on the sheet. WoDX Actions now has a short cue for each of the 30 V20 archetypes (WoDX's own wording), read from the sheet's Nature line; an unknown Nature gets a plain cue. game.wodxActions.nature({actor}) shows the cue and gives the point on a yes. The end-of-scene card is followed by a Nature card listing each player character with a Nature and a "A point back" button for the Storyteller. A point given posts a card with Undo, which puts the old value back if nothing else changed it. Never above the permanent rating; no limit per scene (the Storyteller decides). Reverse: drop nature-rules.js, natureRegain, nature, natureCard and the two button cases.
 
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
