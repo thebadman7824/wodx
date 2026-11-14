@@ -195,7 +195,7 @@ Next free block: B3810
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
 | B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3748) | Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
-| B3780-B3809 | No-effect audit: items, gear, traits, settings, tables, world data (used B3780-B3793) | Chronicle, Combat |
+| B3780-B3809 | The no-effect audit: cyberware in the body (used B3780-B3798) | Library |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6476,3 +6476,23 @@ Reverse: empty MORE_PROMPTS_5.
 WoDX Chronicle, WoDX Combat. Chronicle's BODY table (api.traits.toughness) gives extra Bruised levels (Huge Size, V20 p. 480; Sturdy, V20 Dark Ages p. 421), a wound-level shift (Increased Pain Threshold, C20 p. 179), dice back from the wound penalty (High Pain Tolerance, Mummy: the Resurrection p. 69; Defiled, Kindred of the East p. 97), no wound penalty until Incapacitated (Insensate to Pain, M20 Book of Secrets p. 39) and aggravated silver (Vulnerability to Silver, V20 p. 482). Combat adds the levels to the health track, writes the eased penalty, and makes a silver weapon aggravated against the character. The other 14 body traits (movement, healing, regeneration, off hand) get a card at the fight, as B3790. Extreme Kink alone stays without an effect.
 
 Reverse: empty BODY and MORE_PROMPTS_6; remove toughness() from Combat's healthTrack, healthUpdate and damageProfile.
+
+## B3795. Cyberware turns on the system's own bonus rows while installed (2026-11-14)
+WoDX Library. A piece of cyberware is installed when its equipped box is ticked on a character. Its effect is written as rows on the system's bonus list (attribute_buff, attribute_fixed_value, attribute_dice_buff, ability_buff, attack_diff, soak_buff, initiative_buff), so the sheet's totals and the system's roll windows already apply it; the rows turn on and off with the box. Figures: World of Future Darkness pdf 9 to 11 where it gives them; for Cyberpunk 2020's pieces a house reading on the article's scale (one die for a sense or a link, the book's own Celerity and Strength figures halved as the article says). A piece whose only effect is its look keeps only its Humanity cost, and says so on the item.
+
+Reverse: delete data/gear-effects.mjs and the withFx step of tools/library/build-gear.mjs, and rebuild gear.json.
+
+## B3796. Humanity cost is taken once, into a Humanity Index (2026-11-14)
+WoDX Library. The first time a piece goes in, its printed cost is rolled as printed (d6, halves round up) and added to the actor's flags.wodx-library.humanityLoss. Each ten points take a dot of Humanity (system.advantages.path.permanent), or of Gnosis for a Werewolf or Changing Breed sheet (the article: ten Index points to a dot; Gnosis for Garou). The piece is marked installed, so taking it out and putting it back costs nothing more. A whispered card to the Storyteller and the owner says what it took. RealSkinn takes back 1D6/2 points. A sheet with no Humanity track keeps the points for the Storyteller.
+
+Reverse: remove scripts/gear-install.mjs and its line in main.mjs.
+
+## B3797. Cyber weapons that were plain items become weapons (2026-11-14)
+WoDX Library. The Gang Jazzler, Slice N' Dice, Cybersnake, Cutting Torch, Ripper Hand and the launchers, guns and lasers built into limbs become Melee or Ranged Weapons with the book's damage where World of Future Darkness gives it and a house figure from the nearest V20 weapon where only Cyberpunk 2020 names them. The senses (low-light and thermal sight, sharper hearing), the Pain Editor's ease, a cyberarm's Potence and a limb's own soak dice are kept on each piece (flags.wodx-library.fx) for WoDX Senses and WoDX Combat to read in their own changes.
+
+Reverse: drop the weapon entries in data/gear-effects.mjs.
+
+## B3798. Shields, parrying weapons and the Great War's heavy arms as data (2026-11-14)
+WoDX Library. The shields of V20 Dark Ages (p. 350: parry difficulty and the attacker's added difficulty) and Sorcerers Crusade (p. 202: Buckler +1, War Shield +2 to the attacker), the two parrying weapons (dagger 5, sword 6 with +1 against close attacks only), the Great War's heavy guns (penetration dice, blast dice, naval damage rating, from pp. 70 to 77) and its armour (penetration difficulty 4 to 10, ship protection 5 to 10) carry those figures as flags (shield, parryWith, heavy, hardArmor), with a line on each item saying what they do. The trench mortar fires as light artillery's high explosive (3 dice), as the book says. WoDX Combat reads them in its own change.
+
+Reverse: drop withArms from tools/library/build-gear.mjs and rebuild gear.json.
