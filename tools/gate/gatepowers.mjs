@@ -10,6 +10,8 @@
  *   3. Demon: Kishar's form through the apocalyptic form adds Strength +2 and lethal soak, taken back at the scene's end (B3743)
  *   4. C20: Quicksilver picked by name in Cast a cantrip (Wayfare 2, Fae) shows its card and puts Hasten on the effects
  *      card; only the levels the Art reaches are offered (B3744)
+ *   5. Mummy: Mend Flesh picked by name in the Hekau window (Nomenclature 2) fills in its path, level, difficulty and cost,
+ *      shows its card and puts Mend on the effects card; spells above the path's rating are not offered (B3745)
  * Result: Data/wodx-gate/gatepowers-result.json.
  */
 const R = { started: new Date().toISOString(), steps: [], errors: [], notes: [] };
@@ -120,6 +122,26 @@ export async function run() {
       const items = fx(m);
       ok("4 C20 named cantrip", !!m && /Quicksilver/.test(text(m)) && /extra action/.test(text(m)) && items.some(i => i.key === "hasten") && listed.includes("hopscotch") && !listed.includes("portal-passage"),
         { card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`), listed });
+    });
+    await step("5 Mummy named Hekau", async () => {
+      const pw = (nm, v) => ({ name: nm, type: "Power", system: { type: "wod.types.hekau", value: v } });
+      const mu = await mk("Scribe", "Mummy", {}, [pw("Nomenclature", 2)]);
+      await sleep(800);
+      await mu.update({ "system.advantages.sekhem.permanent": 5, "system.advantages.sekhem.temporary": 5, "system.advantages.balance.permanent": 5, "system.advantages.willpower.permanent": 5, "system.advantages.willpower.temporary": 5 });
+      await game.user.updateTokenTargets?.([]);
+      const n = game.messages.size;
+      let listed = [], filled = {};
+      answer(root => {
+        listed = [...root.querySelectorAll("select[name=named] option")].map(o => o.value);
+        set(root, "named", "mend-flesh");
+        filled = { path: root.querySelector("[name=path]")?.value, lvl: root.querySelector("[name=lvl]")?.value, d: root.querySelector("[name=d]")?.value, c: root.querySelector("[name=c]")?.value };
+        set(root, "wp", true);
+      });
+      A().mummyCast({ actor: mu });
+      const m = await untilMsg(n);
+      const items = fx(m);
+      ok("5 Mummy named Hekau", !!m && /Mend Flesh/.test(text(m)) && /living in sight/.test(text(m)) && items.some(i => i.key === "mend") && filled.path === "nomenclature" && String(filled.lvl) === "2" && String(filled.d) === "5" && listed.includes("asking-the-trees") && !listed.includes("become-animal"),
+        { card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`), filled, listed: listed.length });
     });
   } finally {
     for (const [h, id] of hooks) Hooks.off(h, id);

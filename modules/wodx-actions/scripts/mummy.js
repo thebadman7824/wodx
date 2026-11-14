@@ -13,6 +13,8 @@
 import * as M from "./mummy-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
+import * as MH from "./mummy-hekau.js";
+import * as EF from "./effects.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -54,12 +56,27 @@ export function build(ctx) {
     }
 
     /* -- Hekau ---------------------------------------------------------- */
+    // A named spell fills in its path, Trait, level, difficulty, cost and kind (powers pass)
+    function pickSpell(root) {
+        const sel = root?.querySelector?.("select[name=named]");
+        sel?.addEventListener("change", () => {
+            const s = MH.SPELLS[sel.value];
+            if (!s) return;
+            const set = (k, v) => { const el = root.querySelector(`[name=${k}]`); if (el) { if (el.type === "checkbox") el.checked = !!v; else el.value = v; } };
+            set("path", s.path); set("lvl", s.level); set("d", s.difficulty); set("c", s.cost); set("rit", s.type === "ritual");
+            const key = s.trait.replace(/\s+/g, "");
+            if (root.querySelector(`select[name=tr] option[value="${key}"]`)) set("tr", key);
+        });
+    }
+
     async function cast(actor) {
         const i = info(actor);
+        const named = Object.keys(M.HEKAU).flatMap(p => MH.spellsOf(p, n(i.hekau[p])));
         const spells = (actor.items ?? []).filter(x => x.type === "Power" && /types\.hekaupower$/.test(String(x.system?.type ?? "")));
         const traits = (ctx.traits?.(actor) ?? []);
         const content = `<form><p>${state(i)}.</p>
           <div class="form-group"><label>Path</label><select name="path" data-fixed>${Object.entries(M.HEKAU).map(([k, h]) => `<option value="${k}"${!i.hekau[k] ? " disabled" : ""}${k === i.primary ? " selected" : ""}>${esc(h.label)} ${n(i.hekau[k])}${k === i.primary ? " (the Amenti's path)" : ""}</option>`).join("")}</select></div>
+          <div class="form-group"><label>Named spell</label>${named.length > 5 ? searchBox("select[name=named]", "Search Hekau…", "Search Hekau") : ""}<select name="named"><option value="">(set the path and level by hand)</option>${named.map(k => `<option value="${k}">${esc(M.HEKAU[MH.SPELLS[k].path].label)} ${MH.SPELLS[k].level}: ${esc(MH.SPELLS[k].name)}</option>`).join("")}</select></div>
           <div class="form-group"><label>Spell or ritual</label>${spells.length > 5 ? searchBox("select[name=sp]", "Search spells…", "Search spells") : ""}<select name="sp"><option value="">(as set below)</option>${spells.map(x => `<option value="${x.id}">${esc(x.name)} (level ${n(x.system?.level)})</option>`).join("")}</select></div>
           <div class="form-group"><label>Trait the spell names</label>${searchBox("select[name=tr]", "Search Traits…", "Search Traits")}<select name="tr">${traits.map(t => `<option value="${esc(t.key)}">${esc(t.label)} ${t.value}</option>`).join("")}</select></div>
           <div class="form-group"><label>Level</label><input type="number" name="lvl" min="1" max="5" value="1"/></div>
@@ -71,19 +88,22 @@ export function build(ctx) {
         return dialog(`Hekau: ${actor.name}`, content, "Cast", async fd => {
             if (!i.inWeb && i.sekhem.pool === 0) { notify(`${actor.name} is in semektet: no Hekau.`); return null; }
             const sp = spells.find(x => x.id === fd.sp);
-            const level = sp ? n(sp.system?.level) || n(fd.lvl) : n(fd.lvl);
+            const ns = MH.SPELLS[fd.named] ?? null;
+            if (ns) { fd.path = ns.path; fd.rit = ns.type === "ritual"; }
+            const level = ns ? ns.level : sp ? n(sp.system?.level) || n(fd.lvl) : n(fd.lvl);
             const tv = ATTRS.includes(fd.tr) ? ctx.attr(actor, fd.tr) : n(ctx.findAbility?.(actor, fd.tr)?.value);
             const plan = M.spellPlan({ path: i.hekau[fd.path], trait: tv, level, cost: n(fd.c), extra: n(fd.x), pool: i.sekhem.pool, difficulty: n(fd.d) });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
             if (plan.spend && !(await sekhem(actor, -plan.spend))) return null;
             const wp = !!fd.wp && await spendWillpower(actor, 1);
             const label = `${M.HEKAU[fd.path].label} ${n(i.hekau[fd.path])} + ${esc(traits.find(t => t.key === fd.tr)?.label ?? fd.tr)}`;
-            const title = sp ? esc(sp.name) : `a ${M.HEKAU[fd.path].label} ${fd.rit ? "ritual" : "spell"} of level ${level}`;
+            const title = ns ? esc(ns.name) : sp ? esc(sp.name) : `a ${M.HEKAU[fd.path].label} ${fd.rit ? "ritual" : "spell"} of level ${level}`;
             const rolls = [];
-            let body = "";
+            let body = "", got = 0;
             if (!fd.rit) {
                 const r = await rollPool(plan.dice, plan.difficulty, { willpower: wp, autoSuccesses: plan.autoSuccesses }); rolls.push(r.roll);
                 body = rollBlock(label, r, [`${plan.spend} Sekhem`, ...(plan.autoSuccesses ? [`${plan.autoSuccesses} bought successes`] : []), ...(plan.capped ? ["bought successes capped at the path's rating"] : []), ...(wp ? ["Willpower"] : [])]);
+                got = r.botch ? 0 : r.successes;
                 body += r.botch ? `<div class="vta-big bad">${title}: a calamity, and the Storyteller decides its shape.</div>` : r.successes ? `<div class="vta-big good">${title}: ${r.successes} success${r.successes === 1 ? "" : "es"}.</div>` : `<div class="vta-big">${title}: it fails (the Sekhem is spent).</div>`;
             } else {
                 let st = { got: 0, done: false }, k = 0;
@@ -94,11 +114,21 @@ export function build(ctx) {
                     rows.push(`Roll ${k}: ${r.botch ? "botch" : `${r.successes} (total ${st.got})`}`);
                 }
                 body = `<div class="vta-sec"><b>${label}</b>: ${plan.dice} dice, diff ${plan.difficulty}<br>${rows.join("<br>")}</div>`;
+                got = st.done && !st.failed ? Math.min(5, st.got) : 0;
                 body += st.failed ? `<div class="vta-big bad">${title}: botched: all the Sekhem put in is lost; it must start over.</div>` : st.done ? `<div class="vta-big good">${title}: complete in ${k} ${k === 1 ? "stretch" : "stretches"} of the path's ritual time.</div>` : `<div class="vta-big">${title}: unfinished after ten tries.</div>`;
             }
-            body += `<div class="wodx-quiet">${REF} p. 78</div>`;
-            return post(actor, `${actor.name} works Hekau`, body, rolls.filter(Boolean));
-        }, { width: 540, render: root => aim(root, { actor, lib: "hekau", power: r => { const sp = spells.find(x => x.id === r.querySelector("[name=sp]")?.value); const path = r.querySelector("[name=path]")?.value; return sp ? { id: sp.id, n: sp.name, e: String(sp.system?.description ?? "").replace(/<[^>]+>/g, " ") } : path ? { id: path, n: M.HEKAU[path]?.label ?? path } : null; } }) });
+            let fxItems = [];
+            if (ns) {
+                body += `<div class="vta-sec"><b>${esc(ns.name)}${got ? "" : " (had it worked)"}:</b> ${esc(ns.fx)}</div><div class="vta-note">${esc(MH.spellLine(fd.named))}.</div>`;
+                if (got && EF.isOn()) {
+                    const pp = EF.planOf(actor, MH.hekauResults(fd.named, got, { name: ns.name, source: `${REF} p. ${MH.PATH_PAGE[ns.path]}` }), got);
+                    body += pp.html;
+                    fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+                }
+            }
+            body += `<div class="wodx-quiet">${REF} p. 78${ns ? `, ${MH.PATH_PAGE[ns.path]}` : ""}</div>`;
+            return post(actor, `${actor.name} works Hekau`, body, rolls.filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
+        }, { width: 540, render: root => { pickSpell(root); return aim(root, { actor, lib: "hekau", power: r => { const sp = spells.find(x => x.id === r.querySelector("[name=sp]")?.value); const path = r.querySelector("[name=path]")?.value; return sp ? { id: sp.id, n: sp.name, e: String(sp.system?.description ?? "").replace(/<[^>]+>/g, " ") } : path ? { id: path, n: M.HEKAU[path]?.label ?? path } : null; } }); } });
     }
 
     /* -- Sekhem --------------------------------------------------------- */
