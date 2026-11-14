@@ -98,7 +98,7 @@ export function drawSight() {
         layer.lineStyle(Math.max(safe ? 4 : 3, t.w / (safe ? 10 : 14)), ring.colour, ring.alpha);
         layer.drawCircle(t.center.x, t.center.y, rad);
         if ( words && ring.words ) {
-          const style = {fontFamily: "Signika, sans-serif", fontSize: Math.max(12, Math.round(t.h / 6)), fill: S.css(ring.colour), stroke: {color: "#000000", width: 3}, strokeThickness: 3};
+          const style = {fontFamily: "Signika, sans-serif", fontSize: Math.max(12, Math.round(t.h / 6)), fill: S.css(ring.colour), stroke: 0x000000, strokeThickness: 3};
           const label = typeof layer.circle === "function" ? new PIXI.Text({text: ring.words, style}) : new PIXI.Text(ring.words, style);
           label.anchor?.set?.(0.5, 0);
           label.x = t.center.x; label.y = t.center.y + rad + 2;
