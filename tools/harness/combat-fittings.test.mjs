@@ -35,3 +35,9 @@ test("Combat lists the Library's everyday arms and carries out what they do", ()
 test("a hit that does no harm of its own still makes a card (B3809)", () => {
   assert.match(combat, /\} else if \(!dmgPool\) \{/);
 });
+
+test("Combat reloads from Possessions and spends an arrow a shot (B3900, B3901)", () => {
+  assert.match(combat, /rules\.reloadPlan\(/);
+  assert.match(combat, /const perShot = shotAmmo\(attacker, w\)/);
+  assert.match(combat, /async function spendRows/);
+});
