@@ -182,7 +182,7 @@ Next free block: B3630
 | B3520-B3539 | Gaps from Ben's design notes: referee ticket, crisis levers, binding card, roster, inheritance, the 2022 cap (used B3520-B3536) | Chronicle, Storyteller, Otherworlds, NPC, Actions |
 | B3540-B3549 | Supernatural sight: the Penumbra, a mage's sight, chimerical sight, the Shadowlands view (notes gaps g8 to g11) (used B3540-B3547) | Senses, Actions |
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
-| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3619) | Chronicle, Storyteller |
+| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3621) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5871,3 +5871,13 @@ Reverse: remove registerRegimeHooks from main.mjs and checkTurns from law.mjs.
 LINE_REGIME, shown on each turn card for the lines at the table: the Prince's pawns falling with the old order, a ghoul in office, the wild lands opened or closed, the Technocracy's love of order, Banality or Glamour from upheaval, the newly dead, the new secret police, a mummy's missing treasures, a demon feeding on revolution, revenant families serving the next regime.
 
 Reverse: empty LINE_REGIME.
+
+## B3620. The law of the Future Darkness (2026-11-13)
+Ben's pick: marked as speculation. Seven rows in law-future-rules.mjs, from 2026 to 2075, laid on the law records only when the house rule futureBranch is on; every record that uses one carries spec and the card says it is a guess about the future, not history. Corporate policing first in the latin, common-law, American, Japanese and Pacific families; citizens' scores in the Chinese, Orthodox, Islamic and steppe families. New ids: crimes low-score, unregistered and unlicensed-cyberware; the sentence erasure (an outlaw mark, among the grave sentences); keepers of order algorithm and corporate. No real person, company or dated real event after 2022. The Time of Future Judgement adds nothing: its endings are the Cascades in Dated events.
+
+Reverse: remove the rows from FUTURE_ROWS; off the branch nothing changes.
+
+## B3621. Splat hooks for the Future Darkness's law (2026-11-13)
+LINE_FUTURE, on the Storyteller's Law here card when a record is speculation: cameras and the Masquerade, a ghoul's corporate papers, the corporate districts as the Wyrm's cities, the Technocracy and the corporate courts, Banality, the dead with no score, an erased hunter, a mummy's new identities, a demon's data trail, revenant families' shares.
+
+Reverse: empty LINE_FUTURE.
