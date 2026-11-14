@@ -200,7 +200,7 @@ Next free block: B4140
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Gambling moves money (used B3900-B3914) | Library |
+| B3900-B3929 | Derangements in play (used B3900-B3914) | Chronicle |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
@@ -6758,6 +6758,9 @@ Reverse: set plant and strike back to effect "note" in use-rules.mjs, drop the t
 
 ## B3912. A failing gate's summary names its failed steps (2026-11-14)
 The gate kit's summary line, which the PC job queue posts on the issue, now ends with each failed step's name and what it saw (cut short), plus any errors, so a failed run is understood without fetching the result file from the PC. A passing run's line is unchanged ("n/n passed"). The lane runner keeps up to 600 characters of the line instead of 300. Reverse: drop the two added lines in tools/gate/kit.mjs save().
+
+## B3913. Derangements do something in play (2026-11-14)
+No-effect audit t1. WoDX Chronicle reads the sheet's Derangements box against a table of fourteen derangements: the V20 core list (Bulimia, Fugue, Hysteria, Manic-depression, Multiple personalities, Obsession, Paranoia, Perfection, Regression, Sanguinary animism, Schizophrenia) plus Synesthesia, and Phobia from the Revised Storyteller list. Each names what sets it off, the Willpower difficulty to hold it off (6 to 8), and the rolls a bout makes harder. When it is set off, the character rolls Willpower (permanent rating) at that difficulty, or spends a temporary point to hold it off with no roll (V20); a success holds it off for the scene. A failure starts a bout: the Deranged status, and the entry's difficulty changes on every matching roll through the trait effect channel for one scene, read as an hour of game time; the Storyteller's client clears a stale status. Phobia adds a held move: flee or freeze unless a Courage roll at 7 succeeds. gain(actor, cause) writes a new one into the box for a Virtue loss, picked from a short list for the cause (frenzy, sin, fear) and never one already held. The difficulties, the roll effects and the hour are house readings. Reverse: drop derangements.mjs and derangement-rules.mjs and their two lines in main.mjs.
 
 ## B3914. Gambling reaches the purses at api.upkeep.money (2026-11-14)
 B3910's gambling read WoDX Storyteller's money api at api.money, which does not exist; the purse api is api.upkeep.money. Every game rolled and posted its card, but the stake never moved and the stake offered was always nothing. Fixed in gamble-use.mjs; gategamble now fails when the api is missing or the stake is nothing, and a harness test checks the path. Found by the gate summary change (B3912). Reverse: none needed.
