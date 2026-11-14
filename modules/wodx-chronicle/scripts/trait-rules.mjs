@@ -334,7 +334,13 @@ export function ledgerOf(view, {id = "", name = "", now = 0, day = 86400} = {}, 
 /** The prompts a moment calls for (P11): [{key, name, text}] for on = feed, social, fight or night. */
 export function promptsOn(view, on, idx = index()) {
   return working(view, idx).filter(m => PROMPTS[m.key]?.on?.includes(on))
-    .map(m => ({key: m.key, name: m.entry.name, text: `${PROMPTS[m.key].text} (${m.entry.book} p. ${m.entry.page})`}));
+    .map(m => ({key: m.key, name: m.entry.name, text: `${PROMPTS[m.key].text} (${refOf(m.entry)})`}));
+}
+/** "V20 p. 493" for a merit or flaw; a background names its first book, and its page when the table has one. */
+export function refOf(e = {}) {
+  if ( e.book ) return `${e.book} p. ${e.page}`;
+  const b = e.books?.[0] ?? "", p = b ? e.page?.[b] : null;
+  return p ? `${b} p. ${p}` : b || "WoDX";
 }
 
 /* ---- Step 8 (Chronicle 0.23.0): backgrounds as things in the world ---- */

@@ -6,7 +6,7 @@
  * `against`: the kinds it works on or reacts to.
  */
 import {LINE_BOOKS, WIDEN, LINE_MERITS_FLAWS} from "./trait-lines.mjs";
-import {MORE_EFFECTS, MORE_PROMPTS, RENAMES, MORE_EFFECTS_2, MORE_ATTITUDE, MORE_PROMPTS_2, MORE_EFFECTS_3, MORE_PROMPTS_3, MORE_EFFECTS_4, MORE_ATTITUDE_2, MORE_PROMPTS_4, MORE_EFFECTS_5, MORE_PROMPTS_5, BODY, MORE_PROMPTS_6} from "./trait-effects-more.mjs";
+import {MORE_EFFECTS, MORE_PROMPTS, RENAMES, MORE_EFFECTS_2, MORE_ATTITUDE, MORE_PROMPTS_2, MORE_EFFECTS_3, MORE_PROMPTS_3, MORE_EFFECTS_4, MORE_ATTITUDE_2, MORE_PROMPTS_4, MORE_EFFECTS_5, MORE_PROMPTS_5, BODY, MORE_PROMPTS_6, MORE_ATTITUDE_3, MORE_PROMPTS_7} from "./trait-effects-more.mjs";
 
 export const PATTERNS = {
  "P1": "Roll modifier",
@@ -346,7 +346,7 @@ export const ATTITUDE = {
   "lord-of-the-flies": {delta: -1, againstKinds: ["mortal"]},
   "cold-breeze": {delta: -1, againstKinds: ["mortal"]}
 };
-for ( const [k, v] of Object.entries({...MORE_ATTITUDE, ...MORE_ATTITUDE_2}) ) ATTITUDE[k] ??= v;
+for ( const [k, v] of Object.entries({...MORE_ATTITUDE, ...MORE_ATTITUDE_2, ...MORE_ATTITUDE_3}) ) ATTITUDE[k] ??= v;
 
 /** Step 6 (Chronicle 0.21.0): traits WoDX Actions carries out in its own windows, for the Trait effects window. */
 export const HANDLED = {
@@ -435,7 +435,12 @@ export const PROMPTS = {
   "dark-fate": {on: ["night"], text: "the dark fate draws a little closer"}
 };
 // B3781: the no-effect audit's cards, for traits that are a Storyteller's call at a known moment
-for ( const [k, v] of Object.entries({...MORE_PROMPTS, ...MORE_PROMPTS_2, ...MORE_PROMPTS_3, ...MORE_PROMPTS_4, ...MORE_PROMPTS_5, ...MORE_PROMPTS_6}) ) PROMPTS[k] ??= v;
+for ( const [k, v] of Object.entries({...MORE_PROMPTS, ...MORE_PROMPTS_2, ...MORE_PROMPTS_3, ...MORE_PROMPTS_4, ...MORE_PROMPTS_5, ...MORE_PROMPTS_6, ...MORE_PROMPTS_7}) ) PROMPTS[k] ??= v;
+// B3920: the backgrounds that now have a card or an attitude seed say so in the Trait effects window
+for ( const b of BACKGROUNDS ) {
+  if ( b.hook === "story" && MORE_PROMPTS_7[b.key] ) b.hook = "prompt";
+  if ( b.hook === "story" && MORE_ATTITUDE_3[b.key] ) b.hook = "attitude";
+}
 
 /**
  * Step 8 (Chronicle 0.23.0): backgrounds made into things in the world. People backgrounds become NPC sheets tied to the
