@@ -30,7 +30,7 @@ const BY = Object.fromEntries(WRAITH_WONDERS.map(w => [w.key, w]));
 export const artificerOf = (a = {}) => (a.items ?? []).some(i => /artificer/i.test(String(i?.name ?? ""))) || /artificer/i.test(String(a.system?.bio?.guild ?? a.system?.guild ?? ""));
 
 function craftsOf(a = {}) {
-  const v = a.system?.abilities?.crafts?.value;
+  const v = (a.system?.abilities?.craft ?? a.system?.abilities?.crafts)?.value;
   if ( v !== undefined ) return n(v);
   return n((a.items ?? []).find(i => i?.type === "Ability" && /^crafts?$/i.test(String(i?.name)))?.system?.value);
 }

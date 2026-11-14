@@ -78,6 +78,10 @@ const stagesOf = v => (Array.isArray(v) ? v.slice(0, 8).map(x => ({name: String(
   goal: Math.max(1, Math.round(n(x?.goal) || 1)), cost: Math.max(0, Math.round(n(x?.cost)))})) : []);
 const clampDiff = d => Math.max(2, Math.min(10, Math.round(n(d) || 6)));
 
+/** The system's key for an Ability a task names: tasks say "crafts", the system keeps Crafts as "craft" (B3683). */
+export const ABILITY_ALIAS = {crafts: "craft"};
+export const abilityKey = k => ABILITY_ALIAS[k] ?? k;
+
 /** A kit's options on a task: up to 16 keys of numbers, booleans, short text or short lists of text (B3684). */
 export function smallOpts(o) {
   if ( !o || typeof o !== "object" || Array.isArray(o) ) return {};
