@@ -184,6 +184,7 @@ Next free block: B3680
 | B3540-B3549 | Supernatural sight: the Penumbra, a mage's sight, chimerical sight, the Shadowlands view (notes gaps g8 to g11) (used B3540-B3547) | Senses, Actions |
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
 | B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3621) | Chronicle |
+| B3650-B3659 | Threads of Fate: procedural storylines and encounters from story hooks (used B3650-B3656) | Storyteller |
 | B3660-B3669 | The Rothenstein saga: the running step for other systems (used B3660-B3669) | Chronicle |
 | B3670-B3679 | The Rothenstein saga keeps its calendar on long skips (used B3670-B3672) | Chronicle |
 <!-- decision-index:end -->
@@ -5914,6 +5915,41 @@ Reverse: remove the rows from FUTURE_ROWS; off the branch nothing changes.
 LINE_FUTURE, on the Storyteller's Law here card when a record is speculation: cameras and the Masquerade, a ghoul's corporate papers, the corporate districts as the Wyrm's cities, the Technocracy and the corporate courts, Banality, the dead with no score, an erased hunter, a mummy's new identities, a demon's data trail, revenant families' shares.
 
 Reverse: empty LINE_FUTURE.
+
+## B3650. Threads of Fate lives in WoDX Storyteller and only proposes (2026-11-14)
+WoDX Storyteller. Ben picked every recommendation on the Threads of Fate Desk (https://claude.ai/artifact/23g3uDGrq1XeAe66PUsP7t) on 2026-11-14, except card depth (B3655). Story hooks are cards; storylines are woven from them on the weekly upkeep turn, when a session ends, and at once on a weight 3 signal. Suggest by default (an approval card), Auto as a choice, off in a world until switched on. The Storyteller's own lines win: authored journals, scenes and chains are anchors the weave fills around, a Storyteller hook journal overrides any card, and any storyline can be refused, locked or rewritten. Rules in scripts/threads-rules.mjs.
+
+Reverse: leave the setting off; nothing else reads the threads state.
+
+## B3651. One signal board for every system (2026-11-14)
+WoDX Storyteller. Systems post {key, kind, about, region, weight 1-3, what} to one list (scripts/signals-rules.mjs), the shape the omens system already reads, so dreams can foreshadow any storyline and no system reads another's insides. A repost of a key updates it; signals last 14, 28 or 56 days by weight; at most 200 kept. House figures.
+
+Reverse: omens can go back to gathering its own four sources only.
+
+## B3652. A storyline is an anchor, a twist and an echo (2026-11-14)
+WoDX Storyteller. The freshest signal (a player's own hook or lifepath thread first, then by weight and age) picks an anchor card that answers it; a twist card sharing a kind of place or a cast slot with it goes in the middle of its steps, preferring one that answers another live signal; a grudge, tale, debt, fate or lifepath signal about the same character is the echo. The signals used are marked so they feed no second storyline, and freed when it ends or is refused. Drawn from V20 p. 356 (pdf 364), M20 p. 360 (pdf 361), C20 p. 333 (pdf 334) and the Rothenstein journals' own shape.
+
+Reverse: weave from the anchor alone.
+
+## B3653. Three open storylines, plus one per player's hook (2026-11-14)
+WoDX Storyteller. Desk item 7, with Ben's note that more open as storylines end: the cap counts open storylines only, and an ending frees its slot for the next turn. Hunter: The Hunted 2nd p. 98 (pdf 99) on running a few threads as a season.
+
+Reverse: change CAP in threads-rules.mjs.
+
+## B3654. It fits what exists and writes only through each system's controls (2026-11-14)
+WoDX Storyteller. The six story chains stay in Chronicle; while one runs, no storyline repeats its kind (CHAIN_KINDS). One night draw in three gives an open storyline's next beat (NIGHT_SHARE). Endings write through rumours, clocks, the hooks board, omens, fight starter, cults, hunters and factions, never a simulation of its own. Finished storylines go to the Legends book and start a tale.
+
+Reverse: set NIGHT_SHARE to 0; empty CHAIN_KINDS.
+
+## B3655. About 150 cards to start, one kind of storyline per region (2026-11-14)
+WoDX Storyteller. Ben picked about 150 cards to start, more later (desk item 17), and every region's drafted kind (44 items). Each card opens doors only for lines with a beneath; Demon doors from 1999 on the classic timeline only, none in the Future Darkness branch; future variants only while the branch is on. History in WoDX's own words; WoD lore only with a page ref.
+
+Reverse: cards are data in data/threads-cards.mjs.
+
+## B3656. Safety and words (2026-11-14)
+WoDX Storyteller. No card puts anyone under 18 in a romantic beat (ageSafe with Chronicle api.age.romance); cards use slots, so a player character's gender never changes one; a Session Zero line cuts a card by its content tags and a veil plays the beat off screen; every card in WoDX's own words, checked with tools/books overlap and the guard test.
+
+Reverse: none needed; these follow standing rules.
 
 ## B3660. The saga runs on the story chain runner (2026-11-14)
 WoDX Chronicle. Ben asked (Threads of Fate desk, item 16) to spread the Rothenstein story over a longer time than ten nights. Each book of the saga is a story chain whose steps are dated; the gap on the clock is the gap between dates, so the chain runner deals the steps as time passes. A saga run carries `saga: {book, endings}`. The switch is podSaga, off by default like the other pod switches; the chronicle builder's spine step should turn it on in rothenstein-x.
