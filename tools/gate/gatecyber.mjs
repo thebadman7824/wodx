@@ -42,10 +42,12 @@ export async function run() {
       const msgs0 = game.messages.size;
       [ker] = await m.createEmbeddedDocuments("Item", [piece("Kerenzikov")]);
       await ker.update({"system.isequipped": true});
-      await settle(() => ker.flags?.[LIB]?.installed && Number(m.flags?.[LIB]?.humanityLoss) > 0);
+      // the card comes after the Humanity is written: wait for it too
+      const carded = () => [...game.messages].slice(msgs0).some(x => /Kerenzikov/.test(x.content) && /Humanity cost/.test(x.content));
+      await settle(() => ker.flags?.[LIB]?.installed && Number(m.flags?.[LIB]?.humanityLoss) > 0 && carded());
       const dex1 = Number(m.system.attributes.dexterity.total);
       const rows = ker.system.bonuslist.filter(b => b.wodxGear);
-      const card = [...game.messages].slice(msgs0).some(x => /Kerenzikov/.test(x.content) && /Humanity cost/.test(x.content));
+      const card = carded();
       G.ok("2. a Kerenzikov goes in", rows.every(b => b.isactive) && dex1 === dex0 + 1 && ker.flags[LIB].installed && Number(m.flags[LIB].humanityLoss) > 0 && card,
         {dex0, dex1, loss: m.flags[LIB]?.humanityLoss, card});
     });

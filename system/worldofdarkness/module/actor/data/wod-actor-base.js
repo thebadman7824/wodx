@@ -918,6 +918,8 @@ export class WoDActor extends Actor {
                 await this._setItems(actor, updateData);
                 updateData = await this._handleWoundLevelCalculations(updateData);
                 updateData = await calculateTotals(updateData);
+                // WoDX fork: modules adjust the computed totals (WoDX Combat: extra health levels, eased wound penalty)
+                Hooks.callAll("wodxActorTotals", actor, updateData);
 
                 // movement needs the total dexterity and all active items to work correctly.
                 updateData.system.movement = await CombatHelper.CalculateMovement(updateData);
@@ -952,6 +954,7 @@ export class WoDActor extends Actor {
             try {
                 let actorData = foundry.utils.duplicate(this);
                 actorData = await calculateTotals(actorData);
+                Hooks.callAll("wodxActorTotals", this, actorData); // WoDX fork: see above
                 actorData.system.settings.isupdated = true;
                 const changes = systemChanges(this.toObject().system, actorData.system); // WoDX fork: changed values only
                 if (Object.keys(changes).length) await this.update(changes);
