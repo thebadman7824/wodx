@@ -64,6 +64,14 @@ older gates that still do are listed in `tools/harness/gate-rules-baseline.json`
 A PR that changes a feature updates the gate that covers it in the same PR. `node tools/release/merge-stamp.mjs
 --check` warns when a branch changes a module's scripts and no gate covering that module.
 
+### Everything added has an effect in play (Ben, 14 November 2026)
+
+Whenever something is added to the game (an item, a power, a trait, a setting, a rule, a place), it must have a
+tangible effect in play: a roll it changes, a card, a sheet row, a map or token change, a sound, a line an NPC says.
+Data that only sits in a list is not done. The one exception is something that is impossible to render; say so and
+why. Each new feature's release note carries an `effect:` line (changes/README.md), and its gate checks that effect
+happens (rule 3 above). `merge-stamp.mjs --check` warns when a minor or major note has no `effect:` line.
+
 ## 5. Book checks: in the cloud where the text is there
 
     node tools/books/books.mjs page v20 266 --around 1

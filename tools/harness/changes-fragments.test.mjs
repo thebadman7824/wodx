@@ -84,3 +84,12 @@ test("the stamp writes a decision block in order", () => {
   assert.match(more, /\| B110-B119 \| Two \(used B110-B114\) \| Tools only \|/, "a later fragment for the same block widens its used range");
   assert.match(more, /## B112\. b2\nw\n\n## B114\. more\nm\n\n## B130\. c/);
 });
+
+test("a new feature's release note names its effect in play (Ben's standing rule, B3734)", async () => {
+  const {parseFragment, effectWarnings} = await import("../release/merge-stamp.mjs");
+  assert.equal(effectWarnings(parseFragment("---\nbump: minor\n---\nNote.")).length, 1);
+  assert.equal(effectWarnings(parseFragment("---\nbump: minor\neffect: a card offers the trade\n---\nNote.")).length, 0);
+  assert.equal(effectWarnings(parseFragment("---\nbump: minor\neffect: none\n---\nNote.")).length, 1, "none needs a reason");
+  assert.equal(effectWarnings(parseFragment("---\nbump: minor\neffect: none, a calendar date the server keeps only\n---\nNote.")).length, 0);
+  assert.equal(effectWarnings(parseFragment("---\nbump: patch\n---\nFix.")).length, 0, "fixes need none");
+});

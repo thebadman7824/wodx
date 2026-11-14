@@ -192,7 +192,7 @@ Next free block: B3740
 | B3680-B3689 | Mage Wonders, charms, periapts, trinkets and mage fetishes (used B3680-B3689) | Library, Storyteller |
 | B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3719) | Library |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
-| B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3733) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
+| B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6331,3 +6331,8 @@ Reverse: Remove the warning block from merge-stamp.mjs and the paragraph from do
 Seventeen gates that used the viewed scene now run inside kitRun, which gives each one a scratch scene of its own, viewed for the whole gate and removed after: gate6b, gate6c, gate7b1, gateanachronism, gatecrowd, gategroup6, gatepaperdoll, gateperf, gateplayerview, gatepod, gatequiet, gatesigs, gatesprites, gatewhen, gatewolf, gatechurch and gatecookways. gatechurch, gatecookways and gatesprites make their own actor instead of borrowing the first one in the world. gate6b, gate6c, gatelaw, gatepassing and gatepolitics read the newest message by its time. gateadopt, gateanachronism, gateeffects and gatesheet5 find their walls, tiles, tokens and items by what they are.
 
 Reverse: Each gate's own commit can be reverted on its own.
+
+## B3734. Everything added to the game has an effect in play (2026-11-14)
+Ben's standing rule: whenever something is added to the game, it must have some kind of tangible effect, unless it would be impossible to render. A minor or major release note in changes/ now carries an effect: line that says what a player or the Storyteller sees change (a roll, a card, a sheet row, a map or token change, a sound, a line an NPC says), or effect: none with the reason. node tools/release/merge-stamp.mjs --check warns when the line is missing. The rule is in docs/WORKFLOW.md and changes/README.md, and the gate for the feature checks that the effect happens.
+
+Reverse: Remove effectWarnings from merge-stamp.mjs and the paragraphs from docs/WORKFLOW.md and changes/README.md.

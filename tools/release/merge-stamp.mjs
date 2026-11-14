@@ -69,6 +69,16 @@ export function checkModuleFragment(f) {
   return out;
 }
 
+/** Ben's standing rule (2026-11-14, B3734): anything added to the game has a tangible effect in play, unless that is
+ * impossible to render. A minor or major release note names it in an effect: line (or effect: none, and why). */
+export function effectWarnings(f) {
+  if ( !f || !["minor", "major"].includes(f.meta.bump) ) return [];
+  const e = String(f.meta.effect ?? "").trim();
+  if ( !e ) return ["no effect: line; say what a player or the Storyteller sees change in play (or effect: none, and why it cannot be rendered)"];
+  if ( /^none\b/i.test(e) && e.replace(/^none\W*/i, "").length < 12 ) return ["effect: none needs the reason it cannot be rendered"];
+  return [];
+}
+
 export const blockRange = s => { const m = /^B(\d+)(?:-B(\d+))?$/.exec(String(s ?? "").trim()); return m ? {lo: +m[1], hi: +(m[2] ?? m[1])} : null; };
 export const sectionNumbers = body => [...String(body).matchAll(/^## B(\d+)[a-z]?\b/gm)].map(m => +m[1]);
 
@@ -213,6 +223,7 @@ async function main() {
   }
 
   if ( check ) {
+    for ( const x of mf ) for ( const w of effectWarnings(x.frag) ) console.log(`  warning: ${x.file}: ${w}`);
     // B3732: a branch that changes a module's scripts should change a gate covering that module too (a warning only).
     try {
       const {gateMap} = await import("../lanes/gate-map.mjs");
