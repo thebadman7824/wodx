@@ -14,6 +14,8 @@
  *   8. a real ram into a car: the card says the car takes it, and the rammer's own car feels it
  *   9. at the wheel the driver swerves; a passenger sat inside cannot dodge
  *  10. an NPC gets onto a horse by itself: the horse is on its list, and its turn takes the reins
+ *  11. B4960-B4964: a bicycle is a tile; a mortal is refused a chimerical steed, a gryphon wants Ride 3, and a
+ *      ghouled horse dodges shots for its rider with no +2
  * Result: Data/wodx-gate/gatevehicles-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -137,6 +139,19 @@ export async function run() {
       await npc.execute(tr.object, {action: "board", vehicle: horse.id});
       const on = await waitFor(() => scene.tiles.get(horse.id)?.flags?.[IX]?.driver?.t === tr.uuid, 10000);
       G.ok("10. an NPC takes a horse", !!h?.canDrive && on, {listed: h ?? null, list, driver: scene.tiles.get(horse.id)?.flags?.[IX]?.driver ?? null});
+    });
+
+    await G.step("11. bicycles and beasts", async () => {
+      const [bike, fae, gry, gh] = await scene.createEmbeddedDocuments("Tile", ["bicycle", "chimera", "gryphon", "ghoulhorse"].map((k, i) => ({x: 2000 + i * 150, y: 1500, width: 100, height: 100,
+        texture: {src: "icons/svg/horse.svg"}, flags: {[IX]: {mount: true, mountKind: k, title: `Gate ${k}`}, "wodx-sheets": {keepOutOfEra: k === "bicycle"}}})));
+      const c = ix.characterFor(nopilot, tn.object.center, bike);
+      const o = t => ix.rules.optionsFor(ix.describeObj(t), {...c, kept: false});
+      const bikeOk = ix.rules.optionsFor(ix.describeObj(bike), c).some(x => x.id === "mount");
+      const faeNo = o(fae)[0]?.id === "onlyNote", gryNo = !!o(gry).find(x => x.id === "skillNote")?.disabled;
+      const ride = {...(await import("/modules/wodx-interactables/scripts/chase-rules.mjs")).rideInFight("ghoulhorse", 1200, "open"), kind: "ghoulhorse", role: "reins"};
+      const MT = await import("/modules/wodx-combat/scripts/mounted-rules.js");
+      const dodge = MT.mountDodge(ride, {rideDots: 3, ranged: true});
+      G.ok("11. bicycles and beasts", bikeOk && faeNo && gryNo && dodge.valid && dodge.diff === 6, {bikeOk, faeNo, gryNo, dodge, kind: c.kind});
     });
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }
   finally { return G.finish(); }
