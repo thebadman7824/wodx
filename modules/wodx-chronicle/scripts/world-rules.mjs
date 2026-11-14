@@ -131,7 +131,8 @@ export const WORLD_REGIONS = {
     "early-modern": "spanish 100", industrial: "spanish 65, italian 35", modern: "spanish 68, italian 32"}, {from: 1536}),
   // Oceania
   "australia": R("Australia (Sydney, Melbourne, the outback)", "other", -33.9, 151.2, "australia-southeast", "australian", {
-    industrial: "english 75, irish 25", modern: "english 78, irish 12, italian 4, greek 3, chinese 3"}, {from: 1788}),
+    // The Aboriginal nations on their country from 1197; the colonies from 1788, the nations a share after (B4680)
+    medieval: "aboriginal 100", industrial: "english 66, irish 22, aboriginal 12", modern: "english 74, irish 11, italian 4, greek 3, chinese 3, aboriginal 5"}),
   "aotearoa": R("Aotearoa New Zealand", "other", -41.3, 174.8, "aotearoa", "australian", {
     medieval: "maori 100", industrial: "english 55, maori 30, irish 15", modern: "english 70, maori 18, irish 12"}),
   "pacific-islands": R("The Pacific islands (Hawaiʻi, Tahiti, Samoa)", "other", 21.3, -157.9, "pacific-islands", "pacific", {

@@ -20,7 +20,8 @@
  *  12. Canada (B4160): the Cree and Anishinaabe by division and town, the Haida and Tlingit by clan
  *  13. the Inuit (B4650): in the Arctic beside the Norse and in Canada, own names for anyone, family names later
  *  14. the Taíno (B4660): the Caribbean named before 1492, church names after, the Akan and Yoruba beside them
- *  15. clean up
+ *  15. Aboriginal Australians (B4680): Australia named from 1197, women of a nation, family names later
+ *  16. clean up
  * Result: Data/wodx-gate/gateplains-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -170,6 +171,15 @@ export async function run() {
       for ( const p of cb("modern", 10) ) if ( !p.family || p.name.includes("{") ) bad.push(`modern: ${p.name}`);
       G.ok("14. the Taíno in the Caribbean; own names, then church and family names",
         med.includes("taino") && em.includes("akan") && em.includes("taino") && !bad.length, {medieval: med, earlyModern: em, bad: bad.slice(0, 6), sample: cb("medieval", 4).map(p => p.name)});
+    });
+    await G.step("15. Aboriginal Australians", async () => {
+      const med = results({era: "medieval", culture: "australia"}, "people.origin"), bad = [];
+      const au = (era, n) => Array.from({length: n}, (_, i) => R.nameOf({rand: gen().random(`gateplains:ab:${era}`, i),
+        tables: gen().lookup({...gen().context(), era, culture: "australia"}), origin: "aboriginal", sex: i % 2 ? "female" : "male"}));
+      for ( const p of au("medieval", 20) ) if ( p.family || p.name.includes("{") ) bad.push(`medieval: ${p.name}`);
+      for ( const p of au("modern", 10) ) if ( !p.family || p.name.includes("{") ) bad.push(`modern: ${p.name}`);
+      G.ok("15. Aboriginal Australians on their country; own names, then family names", med.includes("aboriginal") && !bad.length,
+        {medieval: med, bad: bad.slice(0, 6), sample: au("medieval", 4).map(p => p.name)});
     });
   } catch (e) {
     G.ok("error", false, {error: e.message});
