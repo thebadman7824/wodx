@@ -213,7 +213,7 @@ Next free block: B4700
 | B4160-B4169 | Canada first nations names in the People generator (used B4160-B4162) | Creation, Chronicle |
 | B4600-B4609 | Show, don't tell: a visible: line on every feature's release note (used B4600) | tools (no module) |
 | B4610-B4619 | The PC runner rechecks every failing gate before it reports (used B4610) | tools (no module) |
-| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4635) | Otherworlds |
+| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4636) | Otherworlds |
 | B4650-B4659 | Inuit names in the People generator (used B4650-B4652) | Creation, Chronicle |
 | B4660-B4669 | Taino names in the People generator (used B4660-B4662) | Creation, Chronicle |
 | B4680-B4689 | Aboriginal Australian names in the People generator (used B4680-B4682) | Creation, Chronicle |

@@ -288,3 +288,11 @@ export const FALLBACK = {
 
 /** Is a look over at this world time? */
 export const isOver = (look, now) => Number.isFinite(Number(look?.until?.worldTime)) && Number(now) >= Number(look.until.worldTime);
+
+/**
+ * Which looks go to WoDX Chronicle's shared looks layer (B4636). The layer draws its own kinds (fire, flood, plague
+ * weather and so on) but has no labels and no colours of a caller's own, so a look with a mark (a torch, a notice, a
+ * bird) or its own colour on a spot stays a drawing of this module's own; a whole-scene look goes to the layer, whose
+ * weather is the richer sight.
+ */
+export const forLayer = look => !!look && !look.mark && (!look.at || (look.color === undefined || look.color === null));

@@ -41,7 +41,7 @@ function rectOf(scene) {
 /** One look on a scene: the shared layer when it is there, else a plain drawing for a spot (a whole-scene look is a faint wash). */
 export async function show(scene, look, source) {
   const S = layer();
-  if ( S?.show ) {
+  if ( S?.show && L.forLayer(look) ) {
     try { return await S.show({scene, kind: look.kind, at: look.at, until: look.until, source}); } catch (e) { console.warn(`${MOD} | looks layer`, e); }
   }
   const c = L.FALLBACK[look.kind] ?? L.FALLBACK.smoke;
@@ -154,7 +154,7 @@ async function setLooksNow(scene, key, looks) {
   const drawings = [];
   let n = 0;
   for ( const look of looks ) {
-    if ( S?.show ) {
+    if ( S?.show && L.forLayer(look) ) {
       try { if ( await S.show({scene, kind: look.kind, at: look.at, until: look.until ?? undefined, source: key}) ) { n++; continue; } } catch (e) { console.warn(`${MOD} | looks layer`, e); }
     }
     drawings.push(drawingFor(scene, look, {kind: look.kind, source: key, made: now(), until: look.until?.worldTime ?? null, note: look.note ?? "", mark: look.mark ?? null}));
