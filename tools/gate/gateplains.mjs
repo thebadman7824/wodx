@@ -32,6 +32,9 @@ export async function run() {
       tables: gen().lookup({...gen().context(), era, culture: WEST}), origin, sex: i % 2 ? "female" : "male"}));
 
     await G.step("1. modules", async () => {
+      // The world's copies of the shipped tables catch up a moment after start-up; bring them up to date first, so an
+      // older installed mix (the West's industrial one before B3820) does not stand in for the new one
+      await gen().installTables?.();
       const med = results({era: "medieval", culture: WEST}, "people.origin");
       G.ok("1. Creation and Chronicle with the Plains peoples", game.modules.get(CR)?.active && game.modules.get(CH)?.active && med.includes("lakota"),
         {creation: game.modules.get(CR)?.version, chronicle: game.modules.get(CH)?.version, medieval: med});
