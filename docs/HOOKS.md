@@ -7,11 +7,12 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | Hook | Sent by | Heard by |
 |---|---|---|
 | wodxCrimeSeen | npc | chronicle (a crime with witnesses raises the law's heat on the culprit in that land, B3606) |
+| wodxRegimeTurn | chronicle | storyteller (a turn of rule sweeps holders out of the institutions of its kinds, in its region or town, or only one character's seats after an election, B3618) |
 | wodxArrest | chronicle | chronicle (an arrest puts the accused before the court of the land: the forms of trial it allows, B3608) |
 | wodxVerdict | chronicle | chronicle (a guilty verdict brings the sentencing card: the sentences the land allows for deeds that grave, B3610) |
 | wodxAttitude | npc | npc (a fight when an NPC turns hostile; the NPC remembers the change, B3346) |
 | wodxBoonSettled | storyteller | npc (a boon kept or broken moves the debtor's standing in a court, and the holder's trust in the debtor) |
-| wodxMonthPaid | storyteller | npc (a household's keep is charged for the months each character was paid) |
+| wodxMonthPaid | storyteller | npc (a household's keep is charged for the months each character was paid); chronicle (taxes kept back or a levy owed on each allowance, B3616) |
 | wodxSessionEnded | storyteller | creation (a story hook counts the sessions since it was agreed) |
 | wodxBreach | actions | npc, storyteller, chronicle (the Watchers of the New World Order; the city's Masquerade exposure) |
 | wodxCultNoticed | npc | storyteller (a cult watched or moved against raises the hunters' pressure in its region and opens a file on its founder, B3306) |
@@ -53,7 +54,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxBattle | storyteller | npc (an ended battle between factions proposes Status, Retainers and standing changes) |
 | wodxChase | interactables | npc (followers join a chase with their master) |
 | wodxGhoulFix | chronicle | npc |
-| wodxTown | storyteller | npc (a rising costs the factions that hold the town, and one that taxed it, a dot of Status; a sack costs a dot of Resources); passers-by and talk read the town by api instead |
+| wodxTown | storyteller | npc (a rising costs the factions that hold the town, and one that taxed it, a dot of Status; a sack costs a dot of Resources); passers-by and talk read the town by api instead; chronicle (a rising asks the Storyteller whether it wins, and a win sweeps the town's officers, B3618) |
 | wodxCaravan | storyteller | storyteller (a caravan lost on the road costs the caravan ventures of its markets) |
 | wodxMarketMove | storyteller | storyteller (a raid costs the workshops and trading houses characters have put money into) |
 | wodxTraderBroke | storyteller | storyteller (a trader going broke costs the trading house ventures that back the trader) |

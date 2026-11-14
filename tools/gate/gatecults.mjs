@@ -1,9 +1,10 @@
 /**
  * WoDX NPC gate: cults that gather around characters (B3240-B3246), in Foundry, in rothenstein-wodx, as Gamemaster
- * Test, with a scene open:
+ * Test:
  *   await (await import(`/wodx-gate/gatecults.mjs?${Date.now()}`)).run()
- * The gate never moves the clock. It turns cultsOn on for its run, makes a preacher NPC and three listeners on the
- * scene being viewed, and removes all of it, restoring the cult settings.
+ * The gate never moves the clock. It turns cultsOn on for its run, makes an empty scene of its own (never viewed, so no
+ * NPC already on a map can overhear), a preacher NPC and three listeners on it, and removes all of it, restoring the
+ * cult settings.
  *   1. the API and the settings
  *   2. words in character with three NPCs in earshot add awe with themes; words with nobody near add none
  *   3. powers seen push the awe to 10: "A following gathers" waits in the approval queue
@@ -35,12 +36,13 @@ export async function run() {
   const keep = {on: game.settings.get(MOD, "cultsOn"), words: game.settings.get(MOD, "cultWords"), npcs: game.settings.get(MOD, "npcCults"),
     cults: foundry.utils.duplicate(game.settings.get(MOD, "cults")), state: foundry.utils.duplicate(game.settings.get(MOD, "cultState"))};
   const msgs = new Set(game.messages.map(m => m.id));
-  const scene = canvas.scene;
+  let scene = null;
   const actors = [], tokens = [];
   let cultId = null, founder = null;
   try {
     await step("1. API and settings", async () => {
       const api = npc()?.cults;
+      scene = await Scene.create({name: "Gate cults (empty)", width: 3000, height: 3000, grid: {size: 100}});
       ok("1. API and settings", !!api?.open && !!api.rules?.CULT_KINDS?.netaru && keep.on !== undefined && !!scene,
         {kinds: Object.keys(api?.rules?.CULT_KINDS ?? {}).length, scene: scene?.name ?? null});
       await game.settings.set(MOD, "cultsOn", true);
@@ -124,8 +126,9 @@ export async function run() {
     R.errors.push(e.message);
   } finally {
     await step("8. clean up", async () => {
+      const sceneId = scene?.id;
       for ( const p of chron().approvals.pending().filter(x => String(x.type).startsWith(`${MOD}.cult`)) ) await chron().approvals.decide(p.id, "reject", "Gate cults clean up");
-      if ( tokens.length ) await scene.deleteEmbeddedDocuments("Token", tokens.filter(id => scene.tokens.get(id)));
+      if ( sceneId ) await game.scenes.get(sceneId)?.delete();
       for ( const a of actors ) await game.actors.get(a.id)?.delete();
       await game.settings.set(MOD, "cults", keep.cults);
       await game.settings.set(MOD, "cultState", keep.state);
@@ -134,7 +137,7 @@ export async function run() {
       await game.settings.set(MOD, "cultsOn", keep.on);
       const extra = game.messages.filter(m => !msgs.has(m.id)).map(m => m.id);
       if ( extra.length ) await ChatMessage.deleteDocuments(extra);
-      ok("8. clean up", game.time.worldTime === t0 && !actors.some(a => game.actors.get(a.id)) && game.settings.get(MOD, "cultsOn") === keep.on, {clock: game.time.worldTime === t0});
+      ok("8. clean up", game.time.worldTime === t0 && !actors.some(a => game.actors.get(a.id)) && !game.scenes.get(sceneId) && game.settings.get(MOD, "cultsOn") === keep.on, {clock: game.time.worldTime === t0});
     });
   }
   return save(R, "gatecults-result.json");

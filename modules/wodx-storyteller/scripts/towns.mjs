@@ -57,9 +57,11 @@ function besiegedIds(markets) {
   try { for ( const b of Battles.list() ) if ( b.kind === "siege" && !b.over ) { const m = TR.townOfPlace(b.place || b.war?.place, markets, sceneName); if ( m ) out.add(m.id); } } catch (e) { /* no battles */ }
   return out;
 }
-function ctxFor(m, sieges) {
+function ctxFor(m, sieges, {town = null, year = 0} = {}) {
   const shut = m.traders.length ? m.traders.filter(t => t.shut).length / m.traders.length : 0;
-  const taxes = (m.moves ?? []).filter(v => v.type === "tax").reduce((s, v) => s + v.rate, 0);
+  let taxes = (m.moves ?? []).filter(v => v.type === "tax").reduce((s, v) => s + v.rate, 0);
+  // B3616: a levy of the land (WoDX Chronicle's taxes) weighs on the town too; a crushing one most of all
+  try { const law = chron()?.law?.tax; if ( law ) taxes += law.rules.townTaxFrom(law.here(regionOfMarket(m, town), year || undefined)); } catch (e) { /* no taxes of the land */ }
   return {foodSupply: MK.supplyOf(m, "food"), foodIndex: MK.indexOf(m, "food") * (1 + MV.taxOn(m, "food")), fuelIndex: MK.indexOf(m, "fuel"),
     taxes, closedRoads: Object.keys(m.unsafe ?? {}).length, shutShare: shut, besieged: sieges.has(m.id)};
 }
@@ -135,7 +137,7 @@ export async function run({force = false, reason = ""} = {}) {
   const events = [], food = new Set();
   for ( let i = 0; i < due.due; i++ ) {
     const at = base + (i + 1) * MT.WEEK, d = dateAt(at);
-    const r = TR.weekTowns(st, mst.markets, {year: d.year, month: d.month, ctxFor: m => ctxFor(m, sieges),
+    const r = TR.weekTowns(st, mst.markets, {year: d.year, month: d.month, ctxFor: m => ctxFor(m, sieges, {town: st.towns?.[m.id] ?? null, year: d.year}),
       regionOf: t => regionOfMarket(MK.marketById(mst, t.id), t), latOf: (t, region) => WORLD_REGIONS[region]?.lat ?? latitude(),
       randFor: id => seeded(`${id}:${at}:${st.turns}`), sickFor: sickFor()});
     st.turns = (st.turns ?? 0) + 1;
@@ -188,7 +190,10 @@ async function shortBread(id) {
 
 /** A big event: rumours from the town's traders, a line in the log, and the hook for other modules. */
 async function tell(e) {
-  Hooks.callAll("wodxTown", {town: e.town, kind: e.kind, text: e.text, big: e.big});
+  // B3618: with the town's name and region, so WoDX Chronicle can ask whether a rising wins
+  let name = "", region = "";
+  try { const m = MK.marketById(Markets.state(), e.town); name = m?.name ?? ""; region = regionOfMarket(m, state().towns?.[e.town]); } catch (err) { /* name and region are optional */ }
+  Hooks.callAll("wodxTown", {town: e.town, kind: e.kind, text: e.text, big: e.big, name, region});
   if ( !e.big ) return;
   try { await log({kind: "note", text: ev(e)}); } catch (err) { /* log is optional */ }
   if ( setting("rumourNetwork") === false ) return;
