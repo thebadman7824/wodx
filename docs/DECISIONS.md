@@ -173,7 +173,7 @@ Next free block: B3630
 | B3420-B3429 | The town at each settlement age, for the chronicle rebuild (used B3420) | Storyteller |
 | B3430-B3439 | Sickness that spreads between towns and people, by era and region (used B3430-B3438) | Storyteller, Actions |
 | B3450-B3459 | Places of power: Mage Nodes and Tass, chantries, Changeling freeholds and balefires (used B3450-B3456) | Storyteller |
-| B3460-B3469 | Town generator buildings by region (used B3460-B3461) | tools |
+| B3460-B3469 | Town generator buildings by region (used B3460-B3462) | tools |
 | B3470-B3479 | Living caerns: level, sept and offices, moots, raids, caern wars, a caern dying or taken (used B3470-B3476) | Storyteller |
 | B3480-B3489 | Child pixel sprites (used B3480-B3483) | Paperdoll |
 | B3490-B3499 | Law and rule by era: mortal law and government by region and year (used B3490-B3499) | Chronicle |
@@ -5439,6 +5439,11 @@ Reverse: let first_group_ok return true everywhere.
 tools/mapgen/samples. The steinfeld 1197 and 1995 records are made again so they carry the record's new band and tradeAge fields; the households, ties and maps are unchanged.
 
 Reverse: nothing to reverse; the samples follow the generator.
+
+## B3462. Gates set up their own sheets and fixtures again on a kept lane (2026-11-14)
+tools/lanes and tools/gate. run-gate.mjs copies the map sidecars and settlement records in tools/mapgen/samples into the lane's Data/wodx-gate before the gates run, so gateadopt finds kessler-steading.wodx.json; gateadopt says plainly when the file is missing. Gate 6c puts back any item a kept test sheet has lost (Argos on Ada Brandt, Kinesis on Tommy Atkins) and clears its queue of dialog answers at each step, so one dialog that never opens no longer feeds the wrong answers to every later step. Gate 6h sets each Realm to the value it expects on whichever item carries it, because the system adds its own six Realm items at 0. Gates 6i and 6m read the actions version as 3.9 or newer, like 6h, instead of 3.1x only.
+
+Reverse: revert the commit; the gates then need the fixture copied and fresh test sheets by hand.
 
 ## B3470. Caerns join the register of places of power (2026-11-13)
 WoDX Storyteller. A caern is a fourth kind on the places-of-power register (caern-rules.mjs, power.mjs): level 0 to 5, its kind from the W20 Caerns chart (p. 310), a totem, the sept with its Garou, tribes and offices (sept leader, Master of the Rite, Warder, Gatekeeper, Master of the Howl, Talesinger, Truthcatcher, den parent; W20 pp. 55-56, 252), and its Gnosis from the last Moot Rite (5 a level, p. 206). Gauntlet and Moon Bridge reach follow the level (p. 311). The window holds the moot, opens the caern (Wits + Rituals at 7 against the caern spirit, p. 206), meets raids, fights caern wars, raises the caern and takes it back.

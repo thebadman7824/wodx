@@ -61,7 +61,7 @@ export async function run() {
         await step("versions; Arete, the Spheres, Quintessence, Paradox and the Avatar are read", async () => {
             mg = await makeMage();
             const i = A().m20Info(mg);
-            ok("versions; Arete, the Spheres, Quintessence, Paradox and the Avatar are read", /^3\.1\d\./.test(A().version) && i.arete === 3 && i.spheres.forces === 3 && i.quint === 4 && i.avatar === 3 && i.dice === 3,
+            ok("versions; Arete, the Spheres, Quintessence, Paradox and the Avatar are read", !foundry.utils.isNewerVersion("3.9.0", A().version) && i.arete === 3 && i.spheres.forces === 3 && i.quint === 4 && i.avatar === 3 && i.dice === 3,
                 { actions: A().version, arete: i.arete, spheres: i.spheres, quint: i.quint, avatar: i.avatar });
         });
         await step("a vulgar, witnessed Forces 2 Effect with a Quintessence point: Arete 3 at 6, Paradox gained", async () => {
