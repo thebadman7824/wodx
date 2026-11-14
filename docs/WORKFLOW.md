@@ -48,6 +48,22 @@ still runs nearly every gate. The full run happens every night on lanes 2 and 3 
 (`tools/lanes/nightly.mjs`), so anything `--touched` misses shows up by morning in nightly-gates.log. If a gate covers
 a module the map misses, add it in `tools/lanes/gate-map-extra.json` (`"add": {"gatex": ["wodx-npc"]}`).
 
+### Gate rules (Ben, 14 November 2026)
+
+Every gate follows these, and the guard test `tools/harness/gate-rules.test.mjs` fails a gate that breaks one. The
+older gates that still do are listed in `tools/harness/gate-rules-baseline.json`, and that list may only shrink.
+`tools/gate/kit.mjs` does the work for all four:
+
+1. Find documents a gate made by name or by the gate's flag (`G.make` returns them in the order asked, and `inOrder`,
+   `named` and `byFlag` do the rest), never by their place in a list (`made[0]`, `game.actors.contents[0]`).
+2. Make your own scratch scene and actors (`G.scene()`, `G.make`, `G.tokens`) and clean them up (`G.finish()`). Never
+   lean on what an earlier gate or the lane left: the viewed scene, a named actor, a setting.
+3. Check what the feature does, not a count of rows, an exact version or an old window's markup.
+4. Bring your own fixtures (a small map, a sample journal) in `tools/gate/fixtures/` (`G.fixture`, `G.fixtureScene`).
+
+A PR that changes a feature updates the gate that covers it in the same PR. `node tools/release/merge-stamp.mjs
+--check` warns when a branch changes a module's scripts and no gate covering that module.
+
 ## 5. Book checks: in the cloud where the text is there
 
     node tools/books/books.mjs page v20 266 --around 1

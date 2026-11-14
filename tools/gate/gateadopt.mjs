@@ -44,7 +44,7 @@ export async function run() {
     const walls = sc.openings.map(o => ({c: [...X.rules.px(fr, o.c[0], o.c[1]), ...X.rules.px(fr, o.c[2], o.c[3])].map(v => Math.round(v) + 4), door: 1}));
     walls.push({c: [...X.rules.px(fr, 13, 15), ...X.rules.px(fr, 25, 15)].map(Math.round), door: 0});
     const made = await scene.createEmbeddedDocuments("Wall", walls);
-    const firstDoor = made[0];
+    const firstDoor = made.find(w => w.door);
     await firstDoor.update({[`flags.${MOD}.material`]: "glass"});
 
     const got = await X.plan(scene, text);

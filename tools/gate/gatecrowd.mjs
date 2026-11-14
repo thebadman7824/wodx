@@ -23,7 +23,7 @@ async function save(R, name) {
 const ver = (v, min) => { const a = String(v ?? "0").split(".").map(Number), b = min.split(".").map(Number); for ( let i = 0; i < 3; i++ ) { if ( (a[i] || 0) !== b[i] ) return (a[i] || 0) > b[i]; } return true; };
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
-export async function run() {
+async function runGate(K) {
   const R = {started: new Date().toISOString(), world: game.world.id, steps: [], errors: [], notes: []};
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ")}); } };
@@ -128,3 +128,7 @@ export async function run() {
   }
   return save(R, "gatecrowd-result.json");
 }
+
+// The gate kit (B3733): its own scratch scene, cleaned up after.
+import {kitRun} from "./kit.mjs";
+export const run = kitRun("gatecrowd", runGate);
