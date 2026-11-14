@@ -65,6 +65,7 @@ import * as TRR from "./trade-rules.js";
 import * as SOD from "./social.js";
 import * as TH from "./trait-hooks.js";
 import * as DH from "./deeper-hooks.js";
+import * as DPR from "./deeper-rules.js";
 import * as KF from "./feeding-rules.js";
 import * as HN from "./hunt-night-rules.js";
 import { calendarFor } from "../../wodx-npc/scripts/hunt-calendar.mjs";
@@ -361,6 +362,28 @@ function resultLine(r, { degreeText = true } = {}) {
 }
 function rollBlock(title, r, parts = [], specialty = false) {
     return `<div class="vta-sec"><b>${title}</b>: ${r.dice} dice, diff ${r.difficulty}${parts.length ? `<div class="vta-parts">${parts.join(" · ")}</div>` : ""}${diceHtml(r, specialty)}${resultLine(r)}</div>`;
+}
+/**
+ * 3.67.0 (B3444): read the face of someone speaking to the character. Perception + Empathy against their Manipulation +
+ * Subterfuge, difficulty 6 each. The reader's roll goes to the player and the Storyteller; the speaker's to the
+ * Storyteller only. lie: the talk line was marked a lie. Returns {won, lines, face} (deeper-rules.js faceRead).
+ */
+async function readFace({ actor, npc, lie = false } = {}) {
+    if (!actor || !npc) return null;
+    const pc = Math.max(0, attr(actor, "perception") + num(findAbility(actor, "empathy")?.value) - woundPenalty(actor));
+    const them = attr(npc, "manipulation") + num(findAbility(npc, "subterfuge")?.value);
+    const me = await rollPool(pc, 6), hide = await rollPool(them, 6);
+    const base = (npc.isToken ? npc.token?.baseActor : null) ?? game.actors?.get?.(npc.id) ?? npc;
+    const at = base?.flags?.["wodx-npc"]?.attitude?.[actor.id] ?? {};
+    const res = DPR.faceRead(me, hide, { lie: !!lie, step: at.step ?? 0, mood: base?.flags?.["wodx-npc"]?.behavior?.mood ?? "" });
+    const gms = game.users.filter(u => u.isGM).map(u => u.id);
+    const owners = game.users.filter(u => actor.testUserPermission?.(u, "OWNER")).map(u => u.id);
+    await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), whisper: [...new Set([...owners, ...gms])], rolls: me.roll ? [me.roll] : [],
+        content: `<div class="vta-card wodx-x"><div class="vta-title">${esc(actor.name)} reads ${esc(npc.name)}'s face</div><div class="vta-body">${rollBlock("Perception + Empathy", me)}<ul>${res.lines.map(l => `<li>${esc(l)}</li>`).join("")}</ul></div></div>` });
+    // blind: a player's client writes it, and still may not read it
+    await ChatMessage.create({ speaker: { alias: "WoDX" }, whisper: gms, blind: !game.user.isGM, rolls: hide.roll ? [hide.roll] : [],
+        content: `<div class="vta-card wodx-x"><div class="vta-title">${esc(npc.name)} keeps a straight face (Storyteller only)</div><div class="vta-body">${rollBlock("Manipulation + Subterfuge", hide)}${lie ? `<p class="vta-note">The line was marked a lie.</p>` : ""}</div></div>` });
+    return res;
 }
 async function post(actor, title, body, rolls = [], data = null) {
     let flav = "", mode = "off";
@@ -2783,9 +2806,9 @@ async function createMacros() {
     }
 }
 
-const API = { menu, action, quickCheck, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
+const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.66.1", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.67.0", effects: { powerPlan: EFX.powerPlan, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Place: () => zx().placeDialog(), consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
@@ -2991,6 +3014,8 @@ function kindredHooks() {
     });
     // A new scene: the Delirium can strike the same witnesses again
     Hooks.on("wodxEndScene", () => { if (game.user.isGM && canvas.scene?.getFlag?.(MOD, "delirium")) canvas.scene.unsetFlag(MOD, "delirium").catch(() => {}); });
+    // and a Kindred's marks can be seen again (3.67.0)
+    Hooks.on("wodxEndScene", () => { if (game.user.isGM && canvas.scene?.getFlag?.(MOD, "marksSeen")) canvas.scene.unsetFlag(MOD, "marksSeen").catch(() => {}); });
     Hooks.on("wodxDamageApplied", (actor, info) => kx().onDamage(actor, { ...info, source: "combat" }).catch(e => console.error("WoDX |", e)));
     // A blow from a vampire marks the target as fought, for the bloodlines whose blood must be taken by force (3.41.0)
     Hooks.on("wodxDamageApplied", async (actor, info) => {
@@ -3020,12 +3045,16 @@ function kindredHooks() {
 
     let movePending = null;
     Hooks.on("updateToken", (doc, changes) => {
-        if (!game.user.isGM || !("x" in changes || "y" in changes)) return;
+        const redrawn = foundry.utils.hasProperty(changes, "flags.wodx-paperdoll.sprite");
+        if (!game.user.isGM || !("x" in changes || "y" in changes || redrawn)) return;
         clearTimeout(movePending);
-        // After the move animates: any Crinos on the scene may now be in a mortal's sight
+        // After the move animates: any Crinos on the scene may now be in a mortal's sight (3.67.0: or a token drawn as a war form)
         movePending = setTimeout(() => {
-            for (const t of canvas.tokens?.placeables ?? []) if (t.actor && GX.isShifter(t.actor)) kx().crinosSeen(t).catch(e => console.error("WoDX |", e));
+            for (const t of canvas.tokens?.placeables ?? []) if (t.actor && (GX.isShifter(t.actor) || GX.bringsDelirium({ sprite: t.document?.flags?.["wodx-paperdoll"]?.sprite }))) kx().crinosSeen(t).catch(e => console.error("WoDX |", e));
+            // 3.67.0 (B3443): a Kindred's face that no mortal has, in a mortal's sight
+            for (const t of canvas.tokens?.placeables ?? []) if (t.actor && P.detectProfile(t.actor) === "kindred") kx().marksSeen(t).catch(e => console.error("WoDX |", e));
         }, 600);
+        if (!("x" in changes || "y" in changes)) return;
         // Into or out of the sun (after the move animates, so the token's regions are current)
         setTimeout(() => sx().onMove(doc).catch(e => console.error("WoDX |", e)), 700);
     });

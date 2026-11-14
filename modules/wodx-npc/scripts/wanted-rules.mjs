@@ -53,7 +53,7 @@ export function normMarks(m = {}) {
   const f = m ?? {};
   return {station: Math.max(0, Math.min(5, Math.round(num(f.station)))), sides: strs(f.sides, 40), dress: strs(f.dress, 80, 4), condition: strs(f.condition, 20),
     size: ["small", "big", "huge"].includes(f.size) ? f.size : null, face: ["monstrous", "striking", "ugly"].includes(f.face) ? f.face : null,
-    monstrous: !!f.monstrous, disguised: !!f.disguised, foreign: !!f.foreign};
+    monstrous: !!f.monstrous, disguised: !!f.disguised, foreign: !!f.foreign, uncanny: strs(f.uncanny, 80, 3)};
 }
 
 /** Blending into a crowd while dressed as a stranger to these parts: this much more difficulty. */

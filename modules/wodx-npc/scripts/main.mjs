@@ -52,7 +52,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.77.3";
+const VERSION = "0.78.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -721,7 +721,7 @@ export async function editBehavior(actor) {
     <fieldset><legend>Fears</legend>${Object.entries(FEARS).map(([k, l]) => `<label class="wnpc-check"><input type="checkbox" name="fear-${k}"${p.fears.includes(k) ? " checked" : ""}/> ${l}</label>`).join("")}</fieldset>
     <fieldset><legend>Talk sheet (only you see it)</legend>
     <textarea name="talk" rows="4" style="width:100%" placeholder="[the abbot] carries bishop's seal => Opens the archive and names the night porter. | teach the night porter">${esc(saved.talk ?? "")}</textarea>
-    <p class="wodx-quiet">One a line. Put WoDX Chronicle tests about the character they talk to before =&gt; to use a line only when it fits. A line that starts with a [topic] is their answer when a player asks about it from Talk; [greet], [none] and [offer] topic, topic are the greeting, the answer when nothing fits, and topics they bring up. After " | ": teach a topic; codex a page; aloud; or a WoDX Chronicle outcome. Lines with no [topic] are your notes only. The HUD's speech button shows the lines for the targeted character.</p>
+    <p class="wodx-quiet">One a line. Put WoDX Chronicle tests about the character they talk to before =&gt; to use a line only when it fits. A line that starts with a [topic] is their answer when a player asks about it from Talk; [greet], [none] and [offer] topic, topic are the greeting, the answer when nothing fits, and topics they bring up. After " | ": teach a topic; codex a page; aloud; lie (the line is a lie: a character who reads the face may see it); or a WoDX Chronicle outcome. Lines with no [topic] are your notes only. The HUD's speech button shows the lines for the targeted character.</p>
     <label class="wnpc-check"><input type="checkbox" name="talkAsk"${saved.talkAsk ? " checked" : ""}/> Ask me first: when a player asks them something, you pick the answer</label>
     <label class="wnpc-check"><input type="checkbox" name="noStock"${saved.noStock ? " checked" : ""}/> No stock talk: only the lines you write</label>
     <label class="wnpc-check"><input type="checkbox" name="noBarks"${saved.noBarks ? " checked" : ""}/> Quiet: no cries or remarks while about their routine</label>

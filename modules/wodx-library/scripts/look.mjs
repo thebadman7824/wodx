@@ -1,6 +1,7 @@
 /**
  * WoDX Library 0.14.0: the look of a character, read off their sheet (look-rules.mjs has the rules).
  * 0.16.0: api.look.describe(actor) -> what a witness remembers ({marks, text}), for WoDX NPC's culprit descriptions.
+ * 0.24.0 (B3442): a character with no clothes on the sheet wears the clothes of WoDX Paperdoll's figure.
  * api.look.of(actor) -> the reading; api.look.station(actor) -> an NPC's own station; api.look.rules.
  * Nothing is stored here: WoDX NPC reads it at a meeting, WoDX Chronicle's "Only when" tests read it for talk lines.
  */
@@ -36,6 +37,12 @@ function itemView(i, era, year) {
     dressedAs: look.dressedAs ?? null};
 }
 
+/** The pieces a character's Paperdoll figure wears (not what is held), as items the rules can read. */
+export function figurePieces(actor) {
+  const slots = actor?.flags?.["wodx-paperdoll"]?.figure?.slots ?? {};
+  return L.figureNames(slots).map(name => ({name, type: "Item", system: {isequipped: true}, flags: {}}));
+}
+
 /** The view the rules take for one actor. */
 export function viewOf(actor) {
   const a = actor?.actor ?? actor;
@@ -56,7 +63,10 @@ export function viewOf(actor) {
   const weaponOut = [...(a.items ?? [])].some(i => (i.type === "Melee Weapon" || i.type === "Ranged Weapon") && i.system?.isequipped && !i.system?.isnatural);
   let monstrous = false;
   try { monstrous = !!chron()?.traits?.has?.(a, "monstrous"); } catch (e) { monstrous = false; }
-  return {items: [...(a.items ?? [])].map(i => itemView(i, era, year)), year: Number.isFinite(year) ? year : null, appearance, status,
+  const items = [...(a.items ?? [])].map(i => itemView(i, era, year));
+  // Library 0.24.0 (B3442): with no clothes worn on the sheet, the clothes of WoDX Paperdoll's figure are what they wear
+  if ( !items.some(i => i.worn && L.DRESS_KINDS.has(i.kind)) ) items.push(...figurePieces(a).map(p => itemView(p, era, year)));
+  return {items, year: Number.isFinite(year) ? year : null, appearance, status,
     conditions: conds, wounds, weaponOut, monstrous};
 }
 
@@ -82,6 +92,10 @@ export function describe(actor, {token = null} = {}) {
   if ( !look ) return null;
   const tok = token?.document ?? token ?? (actor?.getActiveTokens?.()[0]?.document ?? null);
   const marks = L.marksOf(look.disguise ? L.asSeen(look, true) : look, {size: L.sizeOf(tok?.width)});
+  // Library 0.24.0 (B3443): the marks on a Kindred's face no mortal has (WoDX Paperdoll's talking faces)
+  let uncanny = [];
+  try { uncanny = game.modules.get("wodx-paperdoll")?.active ? game.modules.get("wodx-paperdoll").api?.faces?.uncanny?.(actor?.actor ?? actor, tok) ?? [] : []; } catch (e) { uncanny = []; }
+  if ( uncanny.length ) { marks.uncanny = uncanny.slice(0, 3); marks.face = "monstrous"; }
   return {marks, text: L.describeMarks(marks)};
 }
 

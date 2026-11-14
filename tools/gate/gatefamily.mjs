@@ -1,5 +1,5 @@
 /**
- * Family systems gate (B3220-B3222: pregnancy and birth, supernatural story hooks), in Foundry, in rothenstein-wodx,
+ * Family systems gate (B3440-B3442: pregnancy and birth, supernatural story hooks), in Foundry, in rothenstein-wodx,
  * as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatefamily.mjs?${Date.now()}`)).run()
  * The gate never moves the clock. It makes actors and deletes them, deletes its chat cards and its approval entries.
