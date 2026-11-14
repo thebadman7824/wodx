@@ -187,7 +187,17 @@ export async function tickSteps() {
 /** For the night's draw (night.mjs): an open storyline's beat one time in three, else null. */
 export function nightBeat(rand = Math.random) {
   if ( !on() ) return null;
-  return T.nightBeat(state(), rand);
+  const r = rand();
+  if ( !(r < T.NIGHT_SHARE) ) return null;
+  let first = true;
+  const b = T.nightBeat(state(), () => (first ? ((first = false), r) : rand()));
+  if ( b ) return b;
+  // No storyline open: the running step of a Rothenstein saga book (WoDX Chronicle), if one runs
+  try {
+    const c = chron()?.pod?.saga?.current?.();
+    if ( c?.step ) return {key: `saga:${c.book}`, title: c.title ?? "", step: {key: c.step.key ?? "", title: c.step.title ?? "", text: c.step.text ?? ""}};
+  } catch (e) { /* no saga */ }
+  return null;
 }
 
 /* ---- The Storyteller's controls ---- */
