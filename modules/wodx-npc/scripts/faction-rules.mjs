@@ -999,7 +999,25 @@ export const EVENT_POWERS = {
   "grand-convocation": {kind: "mages", name: "A Tradition cabal", secret: true, note: "Willworkers who answer to the new Council of Nine."},
   technocracy: {kind: "mages", name: "Technocratic agents", secret: true, note: "The Order of Reason, now the Technocratic Union, sets a watch on the domain."},
   "second-anarch-revolt": {kind: "kindred", name: "An Anarch gang", secret: true, note: "Young Kindred who will not bow to the elders."},
-  reckoning: {kind: "hunters", name: "A cell of the imbued", secret: false, note: "Mortals who woke to see the monsters and hunt them."}
+  reckoning: {kind: "hunters", name: "A cell of the imbued", secret: false, note: "Mortals who woke to see the monsters and hunt them."},
+  // B3922 (no-effect audit w1): the other classic events and the Future Darkness branch's first ones
+  shattering: {kind: "fae", name: "Changelings in hiding", secret: true, note: "Fae who stayed when the ways to Arcadia closed, hiding in mortal bodies."},
+  cappadocians: {kind: "kindred", name: "The Giovanni family", secret: true, note: "The Necromancers who took the founder's blood, and hunt what is left of the clan."},
+  "first-conclave": {kind: "kindred", name: "A Justicar's archons", secret: true, note: "The Camarilla's new Justicars send their archons to see the domain keeps the Traditions."},
+  resurgence: {kind: "fae", name: "A freehold of the returned", secret: true, note: "Fae who came back when the Dreaming flooded in, and need a freehold."},
+  "week-of-nightmares": {kind: "kindred", name: "Kuei-jin envoys", secret: true, note: "With the Ravnos all but gone, the Cathayans push west."},
+  "fallen-escape": {kind: "other", name: "A Fallen and their faithful", secret: true, note: "A demon out of the Abyss in a dying body, gathering mortal worshippers."},
+  "venice-conclave": {kind: "kindred", name: "The Children of Carthage", secret: true, note: "Anarchs and neonates who answer the Inner Circle's grip with a dream of their own."},
+  "cyberpunks-bloodline": {kind: "kindred", name: "A Cyberpunks crew", secret: true, note: "Kindred of the new bloodline, who live in the Net and the chrome."},
+  "masquerade-frays": {kind: "hunters", name: "A corporate hunter team", secret: false, note: "A megacorp's team that has seen too much on its sensors and comes for the monsters."}
+};
+/** B3922: events that end a line, by the words in a faction's name. */
+export const EVENT_ENDS = {
+  croatan: /\bcroatan/i,
+  "war-of-tears": /\bbunyip/i,
+  "week-of-nightmares": /\bravnos/i,
+  cappadocians: /\bcappadoci/i,
+  doissetep: /\bdoissetep/i
 };
 /**
  * What a dated event does to the factions: those set to rise on it wake (founded that year), those set to end on it
@@ -1012,6 +1030,11 @@ export function eventChanges(state, eventId, year = null, {newId = () => Math.ra
   for ( const f of state.factions ) {
     if ( f.risesOn === eventId && f.dormant ) changes.push({op: "faction-set", faction: f.id, set: {dormant: false, dormantBy: null, founded: y ?? f.founded}});
     if ( f.endsOn === eventId && !f.dormant ) changes.push({op: "faction-set", faction: f.id, set: {dormant: true, dormantBy: "event", ended: y ?? f.ended}});
+  }
+  // B3922: a line wiped out by the event takes its factions with it (named for it), and the Ravnos fall in 1999
+  const ends = EVENT_ENDS[eventId];
+  if ( ends ) for ( const f of state.factions ) {
+    if ( !f.dormant && ends.test(String(f.name ?? "")) && !changes.some(c => c.faction === f.id) ) changes.push({op: "faction-set", faction: f.id, set: {dormant: true, dormantBy: "event", ended: y ?? f.ended}});
   }
   const p = EVENT_POWERS[eventId];
   const offer = p && !state.factions.some(f => f.fromEvent === eventId) ? normFaction({id: newId(), name: p.name, kind: p.kind, secret: p.secret, founded: y, fromEvent: eventId, notes: p.note}) : null;
