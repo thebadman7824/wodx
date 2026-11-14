@@ -84,7 +84,7 @@ happens (rule 3 above). `merge-stamp.mjs --check` warns when a minor or major no
     node tools/books/books.mjs find "words in order" --book v20
     node tools/books/books.mjs overlap modules/wodx-npc
 
-The texts are in `/mnt/project-files/book-text` (see [tools/books/README.md](../tools/books/README.md)). A book not
+The texts are in `/mnt/project-files/book-text`, one file per book (see [tools/books/README.md](../tools/books/README.md)). A book not
 there yet (no OCR, or not copied) goes to the PC job queue as a `books-find` job (book and page back, no text),
 and Trove file name searches as `trove-find`.
 
@@ -97,3 +97,27 @@ and Trove file name searches as `trove-find`.
 Wait for the GitHub check, then merge with the head you pushed (`expectedHeadSha`). If main moved first, repeat from
 the top. `node tools/release/merge-stamp.mjs --check` says whether a branch is ready: nothing left in changes/, the
 newest main held, any hand-made version above main's. On a push to main the harness fails if a fragment was left.
+
+## 7. The shared folder holds at most 50,000 files (Ben, 14 November 2026)
+
+`/mnt/project-files` refuses every new file once it holds 50,000, and a refused write looks saved but is not kept. It
+filled on 14 November 2026 (31,400 map furniture pictures and 11,600 book pages). Four rules keep it clear
+(B3950-B3953):
+
+1. **Large picture sets stay on the PC.** A set of more than 200 images (map packs, sprite sheets cut into frames,
+   portrait runs) is never copied whole. Copy a sample of a dozen or so, or one contact sheet:
+   `python tools/storage/contact-sheet.py <folder> --out <sheet.png> --max 120` (on the PC, below-normal priority).
+   Review desks link the sheet and name the PC folder.
+2. **Books are one file per book, never one per page.** `<batch>/<id>.txt` with `=== pNNNN` page markers, made by
+   `node tools/books/books.mjs pack <batch folder>`. Page refs stay exact. OCR keeps writing page files on the PC; only
+   the joined files are copied (tools/books/README.md).
+3. **Gate reports and finished jobs are swept each week.** Every Sunday at 03:41 UTC
+   `node tools/storage/files.mjs sweep --apply` puts every file in `gates/` and `jobs/` unchanged for 7 days into one
+   `archive/sweep-<date>.zip`, checks the zip, then removes the originals. A job still open says `Status: open` (or
+   `KEEP`) in its first lines and is left alone. To get a file back: `unzip archive/sweep-<date>.zip <path>`.
+4. **A daily count warns at 45,000.** Every day at 01:27 UTC `node tools/storage/files.mjs count` writes
+   `registry/file-count.md` and tells the coordinator when the folder is at 45,000 or more, with the largest folders,
+   picture sets and page-per-file books to clear.
+
+Before a job that writes many files (more than 1,000), check `registry/file-count.md`, write to a zip instead, or keep
+the output on the PC.

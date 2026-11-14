@@ -66,9 +66,13 @@ async function checkOne(a, t) {
   if ( due ) {
     let hurt = 0;
     const dice = H.weatherDice(stamina(a), survival(a));
-    for ( let i = 0; i < due; i++ ) if ( !(await rollStamina(a, H.WEATHER_DIFF, dice)).successes ) hurt++;
+    // B3906: bedding against the cold, shade against the heat (WoDX Library's road kit)
+    let kit = null;
+    try { kit = game.modules.get("wodx-library")?.api?.house?.roadKit?.([...(a.items ?? [])]) ?? null; } catch (e) { kit = null; }
+    const wd = H.weatherDiffFor(H.weatherCause(skyFor(tok?.s)), kit ?? {});
+    for ( let i = 0; i < due; i++ ) if ( !(await rollStamina(a, wd.diff, dice)).successes ) hurt++;
     bashing += hurt;
-    lines.push(`The weather (${esc(H.WEATHER[sev].label.split(":")[0].toLowerCase())}): ${due} roll${due === 1 ? "" : "s"} of Stamina${survival(a) ? " + Survival" : ""}, ${hurt ? `${hurt} bashing` : "no harm"}.`);
+    lines.push(`The weather (${esc(H.WEATHER[sev].label.split(":")[0].toLowerCase())}): ${due} roll${due === 1 ? "" : "s"} of Stamina${survival(a) ? " + Survival" : ""}${wd.part ? ` (${esc(wd.part)})` : ""}, ${hurt ? `${hurt} bashing` : "no harm"}.`);
   }
   x.exposed = sev === "none" ? t : x.exposed + due * (H.WEATHER[sev].every || 0);
   // Thirst and hunger

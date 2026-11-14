@@ -30,6 +30,7 @@ test("a prayer without True Faith: once a night, a success gives back one Willpo
   assert.equal(F.prayResult({successes: 1}, {temporary: 3, permanent: 5, night: n}).willpower, 4);
   assert.equal(F.prayResult({successes: 2}, {temporary: 5, permanent: 5, night: n}).willpower, 5);
   assert.equal(F.prayResult({successes: 0}, {temporary: 3, permanent: 5, night: n}).willpower, 3);
+  assert.equal(F.prayResult({successes: 2}, {temporary: 3, permanent: 0, night: n}).willpower, 3, "never lowers Willpower");
   assert.ok(F.prayResult({botch: true}, {temporary: 3, permanent: 5, night: n}).doubt);
   const again = F.prayResult({successes: 3}, {temporary: 3, permanent: 5, prayedNight: n, night: n});
   assert.equal(again.ok, false); assert.equal(again.willpower, 3);
