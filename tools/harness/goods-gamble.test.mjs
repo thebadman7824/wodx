@@ -39,3 +39,9 @@ test("against the house and against another player", () => {
   assert.equal(B.gambleResult({successes: 1}, {successes: 2}, 10).delta, -10);
   assert.equal(B.gambleResult({successes: 2}, {successes: 2}, 10).delta, 0);
 });
+
+test("gamble: money moves through Storyteller's purse api (api.upkeep.money)", () => {
+  const f = src("modules/wodx-library/scripts/gamble-use.mjs"), st = src("modules/wodx-storyteller/scripts/main.mjs");
+  assert.match(f, /api\?\.upkeep\?\.money/);
+  assert.match(st, /upkeep: \{[\s\S]*?money: \{of: Money\.moneyOf[\s\S]*?transfer: Money\.transfer/);
+});
