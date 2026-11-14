@@ -82,6 +82,21 @@ export const TRAPS = {
   "a laser tripwire": {set: ["wits", "security", 6], find: 9, dice: 0, kind: "bashing", alarm: "a silent alert to the setter", note: "An invisible beam across a doorway."}
 };
 
-/** The names, for the coverage test: every arms, accessories and traps good is in one table or left to ammunition. */
+/** The names, for the coverage test: every arms, accessories and traps good is in one table or is ammunition. */
 export const AMMUNITION = ["a sling stone", "an arrow", "a crossbow bolt", "a powder horn", "a lead musket ball", "a cartridge", "a shotgun shell", "a spare pistol magazine"];
+
+/**
+ * B3900: what each kind of ammunition feeds. kind: the weapons it loads (see ammoKindOf). rounds: rounds one of it
+ * gives (a magazine fills the pistol); needs: something else that must be in Possessions, not spent (a powder horn
+ * for a muzzle-loader's ball); spentPerShot: used up by each shot rather than at reloading (an arrow, a stone).
+ */
+export const AMMO = {
+  "an arrow": {kind: "bow", rounds: 1, spentPerShot: true},
+  "a sling stone": {kind: "sling", rounds: 1, spentPerShot: true},
+  "a crossbow bolt": {kind: "crossbow", rounds: 1},
+  "a lead musket ball": {kind: "muzzle", rounds: 1, needs: "a powder horn"},
+  "a cartridge": {kind: "cartridge", rounds: 1},
+  "a shotgun shell": {kind: "shotgun", rounds: 1},
+  "a spare pistol magazine": {kind: "magazine", rounds: "full"}
+};
 export const KIT = {"a gun cleaning kit": {note: "Cleaning a black-powder gun dries wet powder out of it; any gun cleaned is ready to fire."}};

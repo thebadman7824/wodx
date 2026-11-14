@@ -5,9 +5,9 @@
  * what the fittings the character has on do to one weapon, and atHand for the initiative a worn holster or scabbard
  * gives. The Use window sets, springs and disarms traps with the trap functions here.
  */
-import {ARMS, FITTINGS, CARRIERS, WARDS, TRAPS, KIT} from "../data/goods-arms.mjs";
+import {ARMS, FITTINGS, CARRIERS, WARDS, TRAPS, KIT, AMMO} from "../data/goods-arms.mjs";
 
-export {ARMS, FITTINGS, CARRIERS, WARDS, TRAPS, KIT};
+export {ARMS, FITTINGS, CARRIERS, WARDS, TRAPS, KIT, AMMO};
 
 /** A thing's plain good name: no count, no quality tag, any case. */
 export function bare(name) {
@@ -23,6 +23,9 @@ export const carrierOf = lookup(CARRIERS);
 export const wardOf = lookup(WARDS);
 export const trapOf = lookup(TRAPS);
 export const kitOf = lookup(KIT);
+export const ammoOf = lookup(AMMO);
+/** Something a load needs besides the round (a powder horn). */
+export const isAmmoNeed = name => Object.values(AMMO).some(a => a.needs && a.needs === bare(name));
 
 const BOW = /\b(long|short|composite|recurve|self|hunting|war)?bow\b/i;
 const CROSSBOW = /crossbow|arbalest|arbalète|armbrust/i;
@@ -156,3 +159,80 @@ export function countSuccesses(faces = [], diff = 6) {
   const successes = Math.max(0, hits - ones);
   return {successes, botch: hits === 0 && ones > 0};
 }
+
+/* ---------------------------------------------------------------- ammunition (B3900, B3901) */
+
+const SHOTGUN = /\b(shotgun|scattergun|coach gun|blunderbuss)\b/i;
+const SLING = /\bsling\b(?! ?shot)/i;
+const MUZZLE_LOCKS = new Set(["handgonne", "matchlock", "wheellock", "flintlock", "snaphance", "percussion"]);
+const SEMI = /\b(glock|beretta|automatic|semi-?auto|luger|mauser c96|browning|m1911|1911|sig|walther|makarov|tokarev|desert eagle)\b/i;
+
+/**
+ * Which ammunition a weapon takes: bow, crossbow, sling, muzzle (ball and powder), shotgun, magazine (a box-fed
+ * pistol: a magazine, or loose cartridges), cartridge, or null (no ammunition the goods know of).
+ * lock: WoDX Combat's lock for a gun (matchlock, flintlock, cartridge ...), when it knows one.
+ */
+export function ammoKindOf(w = {}, lock = null) {
+  const n = String(w.name ?? "");
+  if ( !w.ranged ) return null;
+  if ( CROSSBOW.test(n) ) return "crossbow";
+  if ( SLING.test(n) && !/gun sling/i.test(n) ) return "sling";
+  if ( BOW.test(n) || (w.ability === "archery" && !/javelin|dart|spear|throw/i.test(n)) ) return "bow";
+  if ( lock && MUZZLE_LOCKS.has(lock) ) return "muzzle";
+  if ( SHOTGUN.test(n) ) return "shotgun";
+  if ( PISTOL.test(n) && SEMI.test(n) && !/revolver/i.test(n) ) return "magazine";
+  if ( w.ability === "firearms" || PISTOL.test(n) || LONGGUN.test(n) || lock ) return "cartridge";
+  return null;
+}
+
+/** How many of a thing a sheet row holds: the sheet's count, a "(7)" in the name, else 1. */
+export function countOf(item) {
+  const q = Math.floor(Number(item?.flags?.["wodx-sheets"]?.qty) || 0);
+  if ( q > 0 ) return q;
+  const m = /\((\d+)\)\s*$/.exec(String(item?.name ?? ""));
+  return m ? Math.max(1, Number(m[1])) : 1;
+}
+
+/** The ammunition a character holds for this kind: [{item, ammo, count}], magazines before loose rounds. */
+export function ammoIn(items = [], kind) {
+  const out = [];
+  for ( const i of items ?? [] ) {
+    const a = ammoOf(i?.name);
+    if ( !a ) continue;
+    const fits = a.kind === kind || (kind === "magazine" && a.kind === "cartridge");
+    if ( fits ) out.push({item: i, ammo: a, count: countOf(i)});
+  }
+  return out.sort((x, y) => (y.ammo.rounds === "full") - (x.ammo.rounds === "full"));
+}
+
+/**
+ * A reload from what the character holds. kind: ammoKindOf; need: rounds the weapon lacks; max: its capacity.
+ * Returns {ok, rounds, spend: [{item, n}], why}: rounds loaded (at most need), and how many of each row it takes.
+ */
+export function reloadPlan(items = [], kind, need, max) {
+  if ( !kind ) return {ok: true, rounds: need, spend: [], why: ""};
+  if ( need <= 0 ) return {ok: false, rounds: 0, spend: [], why: "it is already loaded"};
+  const have = ammoIn(items, kind);
+  if ( !have.length ) return {ok: false, rounds: 0, spend: [], why: `no ${AMMO_LABEL[kind]} in Possessions`};
+  const lacks = have.find(h => h.ammo.needs && !(items ?? []).some(i => bare(i?.name) === h.ammo.needs));
+  if ( lacks && have.every(h => h.ammo.needs) ) return {ok: false, rounds: 0, spend: [], why: `no ${lacks.ammo.needs.replace(/^an? /, "")} to load it with`};
+  const mag = have.find(h => h.ammo.rounds === "full");
+  if ( mag ) return {ok: true, rounds: need, spend: [{item: mag.item, n: 1}], why: ""};
+  let left = need; const spend = [];
+  for ( const h of have ) {
+    if ( left <= 0 ) break;
+    const n = Math.min(left, h.count);
+    spend.push({item: h.item, n}); left -= n;
+  }
+  return {ok: true, rounds: need - left, spend, why: left > 0 ? `only ${need - left} of ${max}` : ""};
+}
+
+/** An arrow or a stone for one shot: {ok, spend: {item, n}, why}. */
+export function shotPlan(items = [], kind) {
+  const h = ammoIn(items, kind).find(x => x.ammo.spentPerShot);
+  if ( !h ) return {ok: false, spend: null, why: `no ${AMMO_LABEL[kind]} left`};
+  return {ok: true, spend: {item: h.item, n: 1}, why: ""};
+}
+
+export const AMMO_LABEL = {bow: "arrows", sling: "sling stones", crossbow: "crossbow bolts", muzzle: "musket balls", shotgun: "shotgun shells",
+  magazine: "magazines or cartridges", cartridge: "cartridges"};

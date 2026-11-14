@@ -322,6 +322,7 @@ export async function run(item, ability, actor = holderOf(item)) {
     case "springtrap": return AU.springTrap(actor, item);
     case "disarm": return AU.disarmTrap(actor, item);
     case "clean": return AU.clean(actor, item);
+    case "load": return AU.load(actor, item);
     case "wear": {
       const on = !(item.system?.isequipped);
       await item.update({"system.isequipped": on});

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.37.0 (Ammunition does something (B3900, B3901): the eight ammunition goods say which weapons they load, and api.arms gives WoDX Combat the plan for a reload or a shot)
 - 0.36.0 (Everyday arms, weapon fittings and traps do something (B3805, B3807): the 19 everyday weapons get WoDX house figures and a Ready it use, the 9 fittings, 4 holsters, slings and scabbards and the gas mask a Fit it use, the 12 traps Set the trap, Someone walks into it and Disarm it, and the gun cleaning kit dries wet powder. api.arms gives WoDX Combat what they do. Ammunition is left to its own pass)
 - 0.35.1 (True jade's once-a-night record no longer shares a name with its count of nights, so taking in Chi cannot overwrite how long the jade lasts (B3774))
 - 0.35.0 (Hedge magic: sorcerers with the Path of Enchantment make talismans of levels 1 to 5 (Sorcerer Revised). The work takes days, then one roll and a point of Willpower, and the finished talisman carries its power, its uses and any Attribute bonus while carried (B3810-B3813))
