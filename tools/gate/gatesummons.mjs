@@ -117,6 +117,8 @@ export async function run() {
       G.ok("7. upkeep feeds an effigy weekly, unfed it falls still", after1 === 1 && after2 === 0 && still === true, {after1, after2, still});
     });
     await G.step("8. a familiar's death costs its mage", async () => {
+      // the sheet's own data preparation can leave a new Mage at 0 Willpower: set it before the count
+      await mage.update({"system.advantages.willpower.permanent": 5, "system.advantages.willpower.temporary": 5});
       const wp0 = Number(mage.system.advantages?.willpower?.permanent) || 0;
       const rec = await S.callFamiliar(mage, {at: {x: 850, y: 850}});
       await wait(500);
@@ -199,7 +201,7 @@ export async function run() {
       // each stage has its own time limit, so a stall names where it stalled
       const stage = [];
       const lim = (p, ms, label) => Promise.race([p.then(v => { stage.push(label); return v; }), wait(ms).then(() => { stage.push(`${label} (stalled)`); return null; })]);
-      await lim(EF.apply({key: "summon", out: {kind: "summon", label: "One Fights as Many", summon: r}, target: null, caster: mage.uuid, name: "a spot", at: {x: 950, y: 950}}, mage.name), 8000, "apply");
+      await lim(EF.apply({key: "summon", out: {kind: "summon", label: "One Fights as Many", summon: r}, target: null, caster: mage.uuid, name: "a spot", at: {x: 950, y: 950}, route: "auto"}, mage.name), 8000, "apply");
       await wait(900);
       const copies = scene.tokens.filter(t => t.flags?.[MOD]?.summon?.byId === mage.id && t.flags[MOD].summon.shareWounds);
       const quint = mage.system?.quintessence?.temporary;

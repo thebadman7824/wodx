@@ -554,7 +554,8 @@ async function applyCore(item, casterName = "the caster") {
     case "light": {
       const tok = tokenOf(d);
       if ( !tok ) return {note: "no token on the scene for the light"};
-      const was = foundry.utils.deepClone(tok.light ?? {});
+      // B4830: the plain data of the token's light (the light field is a data model), to put back when it ends
+      const was = tok.toObject?.()?.light ?? foundry.utils.deepClone(tok.light ?? {});
       await tok.update(o.dark ? {"light.negative": true, "light.dim": 20, "light.bright": 10} : {"light.negative": false, "light.dim": 30, "light.bright": 15, "light.color": "#ffd9a0"});
       // B4830: the light or darkness ends with its duration; WoDX Chronicle's timer puts the token's own light back
       let effect = null;
