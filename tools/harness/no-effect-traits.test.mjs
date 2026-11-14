@@ -143,3 +143,17 @@ test("part 4: keys exist, rolls change, cards come, first meetings move", () => 
   const none = D.MERITS_FLAWS.filter(e => T.describe({entry: e}).includes("no automatic effect yet")).length;
   assert.ok(none <= 103, `${none} merits and flaws with no automatic effect`);
 });
+
+/* Part 5 (B3791-B3792): the last outside combat */
+
+test("part 5: keys exist, rolls change, and only combat and body traits are left", () => {
+  const keys = new Set(D.MERITS_FLAWS.map(e => e.key));
+  for ( const o of [M.MORE_EFFECTS_5, M.MORE_PROMPTS_5] ) for ( const k of Object.keys(o) ) assert.ok(keys.has(k), k);
+  const pious = view("hunter", feat("Holy Aura"));
+  assert.equal(T.sumEffects(T.effectsFor(pious, {channel: "roll", tags: ["social"]})).diff, -1);
+  const fan = view("mortal", feat("True Faith"));
+  assert.equal(T.sumEffects(T.effectsFor(fan, {channel: "roll", tags: ["willpower"]})).dice, 1);
+  assert.ok(T.promptsOn(view("kindred", feat("Territorial", "flaw")), "night").some(c => c.key === "territorial"));
+  const none = D.MERITS_FLAWS.filter(e => T.describe({entry: e}).includes("no automatic effect yet")).length;
+  assert.ok(none <= 22, `${none} merits and flaws with no automatic effect`);
+});

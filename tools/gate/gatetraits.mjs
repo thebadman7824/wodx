@@ -29,6 +29,8 @@
  *      its two boxes, and Jack-Of-All-Trades is a card when a fight starts
  *  27. the no-effect audit, part 4 (B3788-B3790): a vampire's Dulled Bite is a card at feeding, and Cloaked in Shadow
  *      adds 1 to Social rolls against a vampire
+ *  28. the no-effect audit, part 5 (B3791-B3792): a hunter's Holy Aura takes 1 from Social difficulty, and a vampire's
+ *      Territorial is a card when the night starts
  * Result: Data/wodx-gate/gatetraits-result.json.
  */
 async function save(R, name) {
@@ -269,6 +271,13 @@ export async function run() {
       const feedCards = T().rules.promptsOn(T().view(gloom), "feed").map(c => c.key);
       const social = T().rules.sumEffects(T().rules.effectsFor(T().view(gloom), {channel: "roll", tags: ["social"], against: "kindred"})).diff;
       ok("27 no-effect audit, part 4", feedCards.includes("dulled-bite") && social === 1, {feedCards, social});
+    });
+    await step("28 no-effect audit, part 5", async () => {
+      const saint = await mk("Trait aura", "Hunter", [feat("Holy Aura", "merit", 2)]).catch(() => mk("Trait aura", "Mortal", [feat("Holy Aura", "merit", 2)]));
+      const keeper = await mk("Trait keeper", "Vampire", [feat("Territorial", "flaw", 2)]);
+      const social = T().rules.sumEffects(T().rules.effectsFor(T().view(saint), {channel: "roll", tags: ["social"]})).diff;
+      const nightCards = T().rules.promptsOn(T().view(keeper), "night").map(c => c.key);
+      ok("28 no-effect audit, part 5", social === -1 && nightCards.includes("territorial"), {social, nightCards});
     });
   } catch (e) {
     R.errors.push(e.message);
