@@ -78,6 +78,15 @@ Data that only sits in a list is not done. The one exception is something that i
 why. Each new feature's release note carries an `effect:` line (changes/README.md), and its gate checks that effect
 happens (rule 3 above). `merge-stamp.mjs --check` warns when a minor or major note has no `effect:` line.
 
+### Show, don't tell (Ben, 14 November 2026)
+
+Whatever happens in the game world must show, wherever it can, not just be told. It is not enough for a card to say a
+demon flooded a town: the rain forms over the scene and the water rises through the town on the map. This holds for
+everything with a tangible effect on the world, not only powers: weather, fire, a building going up or coming down, a
+crowd gathering, a ward taking hold. Each new feature's release note carries a `visible:` line saying what players see
+on the map or screen (changes/README.md), and its gate checks that it shows. `merge-stamp.mjs` refuses to stamp, and
+`--check` reports not ready, while a minor or major note has no `visible:` line. Where nothing can be shown, say `visible: none,` and why.
+
 ## 5. Book checks: in the cloud where the text is there
 
     node tools/books/books.mjs page v20 266 --around 1

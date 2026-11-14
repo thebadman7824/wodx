@@ -14,6 +14,7 @@ Ben read the digest of the entries below and approved all of them at 17:05 UTC, 
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-14 | Show, don't tell: block or warn at merge when a note has no visible: line | Block: merge-stamp refuses to stamp a minor or major note without a visible: line (or visible: none and why) (B4120); block taken by hand while the registry was full | Move visibleWarnings from problems to the warning loop in merge-stamp.mjs |
 | 2026-11-12 | When the quieter war after the Avatar Storm begins (book check) | 1999, from M20 pdf 480; the Ascension War row now ends in 1998 | after-the-storm and ascension-war in rivalry-rules.mjs |
 | 2026-11-12 | How the Kin-jin regard the Cathayans (book check) | Tense (-1), since Kindred of the East pdf 32 says open hostility is rare; the Cathayans stay Hostile (-2) | ba on the cathayan row in rivalry-rules.mjs |
 | 2026-11-12 | Chantry background page (book check) | M20 printed page 301 (Chantry as a Background, pdf 302); pooled Backgrounds cite W20 pdf 142 and M20 pdf 302 | chantry in trait-effects.mjs; the foundFaction comment in faction-rules.mjs |

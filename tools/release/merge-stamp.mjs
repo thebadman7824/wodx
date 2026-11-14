@@ -79,6 +79,18 @@ export function effectWarnings(f) {
   return [];
 }
 
+/** Ben's standing rule (2026-11-14, B4120), show, don't tell: whatever happens in the game world shows on the map or
+ * screen, not only in a line of text (a demon's flood brings rain on the scene and water over the town, not a card
+ * that says the town floods). A minor or major release note says what players see in a visible: line (or
+ * visible: none, and why nothing can be shown). Unlike effect:, a missing visible: line blocks the stamp and the merge. */
+export function visibleWarnings(f) {
+  if ( !f || !["minor", "major"].includes(f.meta.bump) ) return [];
+  const v = String(f.meta.visible ?? "").trim();
+  if ( !v ) return ["no visible: line; say what players see happen on the map or screen (show, don't tell), or visible: none, and why nothing can be shown"];
+  if ( /^none\b/i.test(v) && v.replace(/^none\W*/i, "").length < 12 ) return ["visible: none needs the reason nothing can be shown"];
+  return [];
+}
+
 export const blockRange = s => { const m = /^B(\d+)(?:-B(\d+))?$/.exec(String(s ?? "").trim()); return m ? {lo: +m[1], hi: +(m[2] ?? m[1])} : null; };
 export const sectionNumbers = body => [...String(body).matchAll(/^## B(\d+)[a-z]?\b/gm)].map(m => +m[1]);
 
@@ -208,6 +220,7 @@ async function main() {
   for ( const x of mf ) {
     if ( !fs.existsSync(path.join(ROOT, "modules", x.module, "module.json")) ) problems.push(`${x.file}: no module ${x.module}`);
     for ( const p of checkModuleFragment(x.frag) ) problems.push(`${x.file}: ${p}`);
+    for ( const p of visibleWarnings(x.frag) ) problems.push(`${x.file}: ${p}`); // B4120: show, don't tell blocks the merge
   }
   for ( const x of df ) for ( const p of checkDecisionFragment(x.frag) ) problems.push(`${x.file}: ${p}`);
 
