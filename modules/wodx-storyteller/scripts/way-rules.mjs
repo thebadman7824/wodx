@@ -99,3 +99,72 @@ export function wayLine(way = {}, destName = "", minutes = null) {
   const time = minutes === null ? "" : minutes < 1 ? ", a moment" : `, ${minutes} ${minutes === 1 ? "minute" : "minutes"}`;
   return `${destName}, ${k.words}${time}.`;
 }
+
+/* ---- Laying Ways in a built world (B4810-B4813) ---- */
+
+/** The kind of Way an old exit becomes, from the names of the two places. */
+export function exitKind(fromName = "", toName = "") {
+  const a = String(fromName), b = String(toName), both = `${a} | ${b}`;
+  if ( /Upper Floor|Cellar|Undercroft/i.test(both) ) return "stair";
+  if ( /Ferry|Ford/i.test(b) && !/Ferry|Ford/i.test(a) ) return "ferry";
+  if ( /Bailey|Inner Ward|West Gate/i.test(a) && /Bailey|Inner Ward|West Gate/i.test(b) ) return "gate";
+  if ( /^Kranzfels/i.test(a) !== /^Kranzfels/i.test(b) ) return "gate";
+  if ( /^Lower Town/i.test(a) && /^Lower Town/i.test(b) ) return "street";
+  return "road";
+}
+
+/**
+ * The old world's exits that become Ways. scenes: [{id, name, regions: [{id, name, behaviors: [{id, type, disabled,
+ * system}]}]}]. An exit is a region with a Teleport Token behaviour whose destination is a region in another scene of
+ * the list; a crossing inside one map is left as it is. Returns [{sceneId, regionId, behaviorId, to, arrive, kind, name}]; exits that point nowhere are left out
+ * and listed in `lost`.
+ */
+export function exitsToWays(scenes = []) {
+  const byId = new Map(scenes.map(s => [s.id, s]));
+  const out = [], lost = [];
+  for ( const s of scenes ) {
+    for ( const r of s.regions ?? [] ) {
+      // A region's Penumbra and Shadowlands twins follow it (wodx-otherworlds); only the region itself becomes a Way
+      if ( r.flags?.["wodx-otherworlds"]?.twinOf ) continue;
+      for ( const b of r.behaviors ?? [] ) {
+        if ( b.type !== "teleportToken" || b.disabled ) continue;
+        const dest = (b.system?.destinations ?? [])[0] ?? b.system?.destination ?? "";
+        const m = /^Scene\.([^.]+)\.Region\.([^.]+)$/.exec(String(dest));
+        // A crossing inside one map (a ferry over the river) stays a plain teleport
+        if ( m && m[1] === s.id ) continue;
+        const to = m && byId.get(m[1]);
+        if ( !to || !(to.regions ?? []).some(x => x.id === m[2]) ) { lost.push(`${s.name}: ${r.name}`); continue; }
+        out.push({sceneId: s.id, regionId: r.id, behaviorId: b.id, to: to.id, arrive: m[2], kind: exitKind(s.name, to.name), name: `Way to ${to.name}`});
+      }
+    }
+  }
+  return {ways: out, lost};
+}
+
+/**
+ * The doors the recipe lays from a street to a place inside. doors: [{inside, street, kind?, shut?}] by scene name.
+ * names: [{id, name}]. Returns {doors: [{inside, street, kind, shut}], missing: [names]} with scene ids.
+ */
+export function planDoors(doors = [], names = []) {
+  const find = n => names.find(s => s.name === n) ?? null;
+  const out = [], missing = [];
+  for ( const d of doors ) {
+    const i = find(d.inside), s = find(d.street);
+    if ( !i ) missing.push(d.inside);
+    if ( !s ) missing.push(d.street);
+    if ( !i || !s || i.id === s.id ) continue;
+    out.push({inside: i.id, street: s.id, kind: WAY_KINDS[d.kind] ? d.kind : "door", shut: SHUT_KINDS[d.shut] ? d.shut : ""});
+  }
+  return {doors: out, missing: [...new Set(missing)]};
+}
+
+/**
+ * Where the nth door on a street map sits until the Storyteller moves it: along the south edge, one square in from the
+ * corner and three squares apart, then a row further in. box: {x, y, w, h, g} of the scene's drawn area.
+ */
+export function doorSpot(n = 0, box = {}) {
+  const g = box.g || 100, x0 = box.x ?? 0, y0 = box.y ?? 0, w = box.w || 2000, h = box.h || 2000;
+  const per = Math.max(1, Math.floor((w - 2 * g) / (3 * g)));
+  const col = n % per, row = Math.floor(n / per);
+  return {x: x0 + g + col * 3 * g, y: Math.max(y0, y0 + h - g - row * 2 * g), w: 2 * g, h: g};
+}
