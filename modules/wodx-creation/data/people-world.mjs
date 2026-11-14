@@ -32,7 +32,7 @@ const tbl = (id, name, list, era) => ({id, name, results: list.map(x => (typeof 
 const tag = era => era ? ` (${era[0]})` : "";
 
 /** Peoples whose family name comes before the given name. */
-export const FAMILY_FIRST = new Set(["chinese", "japanese", "korean", "vietnamese", "hungarian"]);
+export const FAMILY_FIRST = new Set(["chinese", "japanese", "korean", "vietnamese", "hungarian", "khmer"]);
 
 /**
  * Each people: m and f given names, fam family names ("male/female" where the form follows sex). A value is one list
@@ -173,6 +173,14 @@ const P = {
   thai: {
     m: "Somchai, Somsak, Prasert, Sombat, Boonmee, Wichai, Suchart, Chaiya, Thongchai, Anan, Kiet, Niran",
     f: "Somying, Malee, Siriporn, Ratana, Kanya, Pensri, Sunee, Wanida, Nok, Dao, Mali, Busaba"},
+  // The Khmer of Kambuja (B4740): the kings, queens, priests and officials of the Angkor inscriptions and the
+  // chronicles of Longvek and Oudong, then the given and family names of modern Cambodia (family name first)
+  khmer: {
+    m: {old: "Jayavarman, Suryavarman, Yasovarman, Indravarman, Rajendravarman, Udayadityavarman, Harshavarman, Dharanindravarman, Srindravarman, Jayaviravarman, Narapatindra, Divakara, Yogisvara, Kavindrarimathana, Sangrama, Prithivindra, Kirtipandita, Bhupatindra, Sivacarya, Ponhea Yat, Ang Chan, Ang Duong, Ang Eng, Chey Chettha, Barom Reachea, Satha, Soryopor, Thommo Reachea, Ponhea Nou, Srei Saukonthor",
+      new: "Sophal, Sokha, Vannak, Rithy, Sovann, Dara, Vuthy, Kosal, Sambath, Visal, Piseth, Bunthoeun, Sokun, Samnang, Chhay, Narith, Vibol, Rathanak, Sarin, Veasna, Chantha, Ponleu, Vireak, Sothy"},
+    f: {old: "Indradevi, Jayarajadevi, Rajendradevi, Kambujalakshmi, Vijayendralakshmi, Tribhuvanadevi, Prana, Narendralakshmi, Jayadevi, Kulaprabhavati, Chakravartirajadevi, Ang Mey, Ang Pen, Ang Snguon, Ang Em, Tep, Pou, Pen, Mau, Neang Kong Rei",
+      new: "Sreymom, Sophea, Chanthy, Bopha, Sokunthea, Srey Pov, Channary, Kunthea, Sothea, Davy, Leakhena, Malis, Sopheap, Rachana, Pisey, Thida, Phalla, Chenda, Kolab, Neary"},
+    fam: {new: "Sok, Chea, Kim, Heng, Ly, Lim, Seng, Keo, Chan, Pich, Meas, Ouk, Prak, Sam, Sun, Mao, Nhem, Yim, Tep, Long, Chhim, Khiev, Nuon, Ieng, Vann, Hang, Touch, Chhun, Pen, Nou, Om, Sar, Ros, Thach, Phan"}},
   javanese: {
     m: "Slamet, Joko, Bambang, Agus, Sutrisno, Wahyu, Budi, Hadi, Sugeng, Teguh, Wiranto, Purnomo, Suparman, Harjo, Darmo, Kusno",
     f: "Sri, Siti, Wati, Endang, Sulastri, Ningsih, Lestari, Dewi, Kartini, Rukmini, Sumiati, Tuti, Yanti, Ratna, Wulan, Ayu"},

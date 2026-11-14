@@ -80,7 +80,9 @@ export const WORLD_REGIONS = {
   "japan": R("Japan (Kyoto, Edo, the provinces)", "other", 35.0, 135.8, "east-asia-humid", "japanese", {medieval: "japanese 100"}),
   "korea": R("Korea (Goryeo, Joseon)", "other", 37.6, 127.0, "north-east-asia", "korean", {medieval: "korean 100"}),
   "southeast-asia": R("Mainland Southeast Asia (Angkor, Ayutthaya, Đại Việt)", "other", 13.8, 100.5, "tropical-seasonal", "southeast-asian", {
-    medieval: "vietnamese 50, thai 50", industrial: "vietnamese 45, thai 45, chinese 10"}),
+    // Angkor holds the mainland at 1197; Ayutthaya and Đại Việt press in after its fall (B4740)
+    medieval: "khmer 45, vietnamese 30, thai 25", "early-modern": "thai 40, vietnamese 38, khmer 22",
+    industrial: "vietnamese 40, thai 40, khmer 12, chinese 8"}),
   "nusantara": R("The Malay world (Java, Malacca, the Spice Islands)", "other", -6.2, 106.8, "tropical-wet", "malay", {
     medieval: "javanese 60, malay 40", "early-modern": "javanese 57, malay 38, dutch 3, chinese 2",
     industrial: "javanese 55, malay 35, chinese 6, dutch 4", modern: "javanese 58, malay 36, chinese 6"}),
