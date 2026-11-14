@@ -11,6 +11,7 @@ import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
 import {currentYear} from "./eras.mjs";
 import * as L from "./law-rules.mjs";
 import * as P from "./law-punish-rules.mjs";
+import {standingFor} from "./law-standing.mjs";
 
 const yearNow = () => { try { return currentYear(); } catch (e) { return 1197; } };
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
@@ -26,7 +27,9 @@ export const marksOf = actor => (actor?.getFlag?.(MODULE_ID, "lawMarks") ?? []).
 /** The sentencing card after a guilty verdict. */
 export async function sentenceCard({actor: actorId, name, region, deeds = [], year = yearNow()} = {}) {
   if ( !isActiveGM() ) return null;
-  const law = L.lawOf(region, year), {tier, list} = P.sentencesFor(law, deeds), {weight} = P.tierOf(deeds);
+  let shift = 0;
+  try { shift = standingFor(game.actors.get(actorId), region, year).tierShift; } catch (e) { shift = 0; }
+  const law = L.lawOf(region, year), {tier, list} = P.sentencesFor(law, deeds, {shift}), {weight} = P.tierOf(deeds);
   const hook = P.LINE_PUNISH[actorLine(game.actors.get(actorId))] ?? "";
   const btn = p => `<button type="button" data-action="wodx-law-sentence" data-punish="${esc(p)}">${esc(L.PUNISH[p] ?? p)}</button>`;
   return ChatMessage.create({speaker: {alias: "The court"}, whisper: gmIds(), flags: {[MODULE_ID]: {lawSentence: {actorId, name, region, year, weight}}},

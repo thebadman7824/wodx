@@ -76,8 +76,11 @@ export async function onClimbDone(a, t) {
   const who = pawn ? {id: pawn.id, name: pawn.name, pawnOf: a.id} : {id: a.id, name: a.name};
   const have = I.bestSeat(inst, a.id);
   const next = I.ranksOf(inst.kind, yearNow(), inst.faith, inst.law)[have ? have.rank + 1 : 0] ?? "the top";
+  // B3614: standing before the law can bar the higher offices (WoDX Chronicle)
+  let barred = I.RANKS - 1;
+  try { barred = chron()?.law?.standing?.officeCap?.(pawn ?? a, inst.kind) ?? barred; } catch (e) { /* no standing */ }
   await chron()?.propose?.({type: T_CLIMB, key: `climb:${inst.id}:${who.id}`, title: `${who.name} rises in ${inst.name}: ${next}`,
-    detail: pawn ? `${pawn.name} climbs for ${a.name}, no higher than ${a.name}'s Influence.` : `${a.name}'s climb is done.`, data: {inst: inst.id, who, cap: pawn ? I.pawnCap(influenceOf(a)) : I.RANKS - 1}});
+    detail: pawn ? `${pawn.name} climbs for ${a.name}, no higher than ${a.name}'s Influence.` : `${a.name}'s climb is done.`, data: {inst: inst.id, who, cap: Math.min(barred, pawn ? I.pawnCap(influenceOf(a)) : I.RANKS - 1)}});
 }
 async function approveClimb(e) {
   const {inst: id, who, cap} = e?.data ?? {};
