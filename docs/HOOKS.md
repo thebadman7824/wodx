@@ -68,6 +68,7 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
+| wodxSaga | chronicle | a Rothenstein saga step was dealt: {book, step, kind, clocks, signal, ending}; signal is omen-shaped for Threads of Fate and dreams (B3667) |
 | wodxInheritance | storyteller | the Inheritance step passed things from the dead to the heir: {dead, heir, done} (B3530) |
 | wodxLever | storyteller | a lever of an institution was pulled, approved by the Storyteller: {actor, institution, key, target} (B3356) |
 | wodxProjectComplication | storyteller | a downtime project met trouble: {actor, task, complication} (B3342) |
