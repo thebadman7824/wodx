@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.97.1 (Rothenstein recipe: the rebuilt world opens on 1 September 1200, as the Storyteller volumes do (B4760))
 - 0.97.0 (Town disasters leave lasting damage on the town's scenes, rebuilt over the weekly town turns, with Undo on the town card (B3759))
 - 0.96.1 (Town looks through the shared looks layer (B4636): labelled and own-coloured marks stay this module's drawings)
 - 0.96.0 (The sick and places of power shown (B4633, B4635): a sick character's token shows it to the party, and places of power glow for the eyes that could see them, drawn on each client)

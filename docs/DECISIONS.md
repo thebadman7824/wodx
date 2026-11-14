@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4760
+Next free block: B4770
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -225,6 +225,7 @@ Next free block: B4760
 | B4730-B4739 | Sephardi and Mizrahi Jewish names (used B4730-B4732) | Creation, Chronicle |
 | B4740-B4749 | Khmer names (used B4740-B4742) | Creation, Chronicle |
 | B4750-B4759 | Filipino names (used B4750-B4752) | Creation, Chronicle |
+| B4760-B4769 | Rothenstein Rebuilt: book one opens in autumn 1200, chapters wait to be played, a fourth ending (used B4760-B4762) | Chronicle, Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7238,3 +7239,18 @@ Reverse: edit the lists in data/people-filipino.mjs.
 WoDX Creation. Baptism brings church names from the Spanish settlement of 1565, sometimes before the own name; family names from the Clavería catalogue of 1849 and the native names kept, from 1800 (the era groups are coarser than 1849).
 
 Reverse: change church, family or earlyChurch in data/people-filipino.mjs.
+
+## B4760. The rebuilt Rothenstein opens on 1 September 1200 (2026-11-14)
+WoDX Storyteller recipe and WoDX Chronicle saga. Ben's three Storyteller volumes open in the autumn of 1200 and run to the first snow; the saga built on 14 November spread book one over 1197 to 1202. Ben picked (Rothenstein Rebuilt desk, pl9): open in the autumn of 1200 as the volumes say, and let book one run into later years if the players go slowly. The recipe's opening night, town seed and first age move to 1200; book one's ten chapters fall weekly from 1 September to Martinmas (11 November), with five short interludes carrying the old clock moves and seasonal encounters, and the years after in spring 1201.
+
+Reverse: set the recipe opening and book one's dates back to 1197.
+
+## B4761. A chapter waits until it is played (2026-11-14)
+WoDX Chronicle. A saga step marked `wait` (every chapter of book one) holds its book: nothing after it falls due until the Storyteller presses Played in the saga window (api.pod.saga.played(book)), and the next gap counts from then. The chapter card says the book waits. A long time skip no longer deals the whole book past an unplayed night.
+
+Reverse: drop `wait` from the chapters.
+
+## B4762. A fourth ending: Left alone (2026-11-14)
+WoDX Chronicle. Ben picked (desk pl6) a fourth ending for a company that walks away: nobody keeps, cuts or takes the binding and the long clocks decide what follows. It is offered at Chapter X with the other three; later steps without words for it keep their plain text.
+
+Reverse: remove `alone` from SAGA_ENDINGS and Chapter X.
