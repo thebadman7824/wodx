@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.89.0 (Long tasks can have a set number of rolls, after which work left short of its goal is ruined, and a cost paid before each roll, such as a blood point a night; the work waits when it can't be paid, and Undo gives the cost back (B3689))
 - 0.88.2 (A new long task of the soulforge kind opens the WoDX Actions forge window, which makes arms, armour and oboli itself and sends Artifacts and relics on to the crafting table's Wraith line (B3723))
 - 0.88.1 (A long task keeps a line's own small choices (such as the Effects sealed into a Wonder) so the finished work makes the right item (B3684))
 - 0.88.0 (The making window lists every line a character can make things in, with the inputs each line asks for; a finished work pays that line's costs and makes its items. A long task of kind "wonder" now opens the same window, and a kit may roll a single trait such as Arete (B3683))
