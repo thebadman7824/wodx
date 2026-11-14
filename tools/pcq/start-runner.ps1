@@ -3,7 +3,7 @@
 # The runner is started through WMI so it does not belong to whatever started this script, at below-normal priority.
 $base = 'D:\WoDX\pcq'; $repo = "$base\repo"
 New-Item -ItemType Directory -Force "$base\logs" | Out-Null
-$running = Get-CimInstance Win32_Process -Filter "Name='powershell.exe'" | ? { $_.CommandLine -like '*pcq*run-runner.ps1*' }
+$running = Get-CimInstance Win32_Process -Filter "Name='powershell.exe'" | ? { $_.CommandLine -like '*-File D:\WoDX\pcq\run-runner.ps1*' }
 if ($running) { "PC runner already running (process $($running[0].ProcessId))."; exit 0 }
 if (-not (Test-Path "$repo\.git")) {
   git clone -q https://github.com/thebadman7824/wodx.git $repo
