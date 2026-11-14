@@ -594,8 +594,31 @@ def apply(b, year, region="moravia", wealth=None, trade=None, seed=0):
 
 SIGNED = re.compile(r"tavern|inn\b|inn-|alehouse|pub\b|beer|wine|hostel|hotel|cafe|coffee|shop|store|market|bakery|bakehouse|butcher|"
                     r"smith|forge|apothec|pharmac|chemist|draper|mercer|tailor|cobbler|saddler|cooper|barber|bank|pawn|grocer", re.I)
-SIGN_ART = re.compile(r"Tavern|Inn|Shop|Wooden|Metal|Blank|Clear|Food|Sign_?0\d|Sign\d|signs_1|Standing", re.I)
-NOT_SIGN = re.compile(r"Street|Hazmat|Wet|Sale|Notice|Paper|Writing|Cyber|Neon", re.I)
+SIGN_ART = re.compile(r"Tavern|Inn|Shop|Wooden|Metal|Blank|Clear|Food|Sign_?0\d|Sign\d|signs_\d|Standing", re.I)
+NOT_SIGN = re.compile(r"Street|Hazmat|Wet|Sale|Notice|Paper|Writing|Cyber|Neon|crosswalk|traffic|stop_|parking", re.I)
+
+
+def _sign_pool(pal):
+    """The sign pictures for a palette: in East Asia a paper lantern by the door (no pack draws a hanging board there);
+    else the palette's own signs, else those of the nearest age that has some (the 1920s and 1930s have none of their
+    own, and kept the old hanging boards)."""
+    band, reg = pal.key[0], pal.key[1]
+    ok = lambda e: SIGN_ART.search(e["name"]) and not NOT_SIGN.search(e["name"])
+    if reg in PAL.REGION_GROUPS:
+        lantern = sorted((e for e in catalogue() if LANTERN_SIGN.search(e["name"]) and band in e["bands"]
+                          and reg in (e.get("regions") or [])), key=lambda e: e["path"])
+        if lantern: return lantern
+    pool = [e for e in pal.sets.get("sign", []) if ok(e)]
+    if pool: return pool
+    order = sorted(K.BANDS, key=lambda x: (abs(K.BANDS.index(x) - K.BANDS.index(band)), -K.BANDS.index(x)))
+    for near in order[1:3]:
+        pool = sorted((e for e in catalogue() if e.get("piece") == "sign" and near in e["bands"] and ok(e)
+                       and not e.get("regions")), key=lambda e: e["path"])
+        if pool: return pool
+    return []
+
+
+LANTERN_SIGN = re.compile(r"Paper Lantern", re.I)
 
 
 def _hang_sign(b, pal, trade, R):
@@ -603,7 +626,7 @@ def _hang_sign(b, pal, trade, R):
     is the age's and region's own; a house or a workshop with no trade at the door has none."""
     if not SIGNED.search(f"{b.type or ''} {b.label or ''} {trade or ''}"): return
     tavern = re.search(r"tavern|inn|alehouse|pub|beer|wine|hostel|hotel", f"{b.type} {b.label}", re.I)
-    pool = [e for e in pal.sets.get("sign", []) if SIGN_ART.search(e["name"]) and not NOT_SIGN.search(e["name"])]
+    pool = _sign_pool(pal)
     if not pool: return
     pool = [e for e in pool if ("Tavern" in e["name"]) == bool(tavern)] or [e for e in pool if "Tavern" not in e["name"]] or pool
     e = R.choice(pool)
