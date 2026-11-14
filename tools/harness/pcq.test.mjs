@@ -156,3 +156,14 @@ test("a named gate list is never split over more lanes than it has gates", () =>
   assert.equal(validate({kind: "gates", gates: ["a", "b", "c"], lanes: 5}, LANES).job.lanes, 3);
   assert.equal(validate({kind: "gates", touched: true, lanes: 3}, LANES).job.lanes, 3);
 });
+
+test("failing gates and recheck verdicts", async () => {
+  const {failingGates, recheckVerdicts} = await import("../pcq/jobs.mjs");
+  const rep = "==== x\ngatea: 7/8 passed [1 setting(s) put back]\ngateb: 5/5 passed\ngatec: ERROR could not sign in\ngated: 2/3 passed\nexit 1 on lane 2\ngatea: 7/8 passed";
+  assert.deepEqual(failingGates(rep), ["gatea", "gatec", "gated"]);
+  const v = recheckVerdicts(["gatea", "gatec", "gated"], "gatea: 7/8 passed\ngatec: 4/4 passed\ngated: 2/3 passed", "gatea: 7/8 passed\ngated: 3/3 passed");
+  assert.match(v[0].verdict, /fails on main too/);
+  assert.match(v[1].verdict, /passes alone/);
+  assert.match(v[2].verdict, /NEW/);
+  assert.match(recheckVerdicts(["gatea"], "gatea: 1/2 passed", null)[0].verdict, /fails alone too/);
+});

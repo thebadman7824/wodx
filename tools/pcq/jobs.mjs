@@ -14,7 +14,8 @@
  *   gate-two    a two-browser gate (gate-two.mjs) on one lane, reset before and after: "gate"
  *   deploy      deploy the ref to "lanes" lanes (or "lane": N), nothing else
  *   reset       reset "lane" N (a runner lane, never 1) to the known-good world
- *   setup-lane  set up "lane" N from lane 1's Config and the known-good world (only lanes listed in lanes.json)
+ *   setup-lane  set up "lane" N from lane 1's Config and the known-good world (only lanes listed in lanes.json);
+ *               "again": true sets up a lane that has a world already, taking lane 1's installed modules afresh
  *   books-find  tools/books/books.mjs find over the PC's book texts: "terms" (up to 40), optional "book";
  *               the result lists book and page only, never the text (the repository is public)
  *   trove-find  names of files under F:\TheTrove whose name holds "pattern" (letters, digits, spaces, - _ . ( ) &),
@@ -114,6 +115,30 @@ export function gateArgs(job, lane, i, n, report) {
   if ( n > 1 ) a.push("--shard", `${i + 1}/${n}`);
   a.push("--wait", "10", "--report", report);
   return a;
+}
+
+/** The gates a run-gate report lists as failing (x/y passed with x < y, or ERROR), each once, in order. */
+export function failingGates(report = "") {
+  const out = [];
+  for ( const m of String(report).matchAll(/^(gate[\w-]*): (?:(\d+)\/(\d+) passed|ERROR)/gm) )
+    if ( (m[2] === undefined || Number(m[2]) < Number(m[3])) && !out.includes(m[1]) ) out.push(m[1]);
+  return out;
+}
+
+/**
+ * What a recheck says about each failing gate (B4610). first: the job's report; alone: the same gates rerun alone on
+ * a fresh lane on the same commit; main: rerun on main (null when the job ran main). Returns [{gate, verdict}]:
+ * "fails on main too" (not this change's: the gate or main is at fault), "new with this change", "passes alone"
+ * (it fails only after other gates: leftovers or order), or "fails" on main jobs.
+ */
+export function recheckVerdicts(gates, alone, main) {
+  const bad = r => new Set(failingGates(r));
+  const a = bad(alone), m = main === null ? null : bad(main);
+  return gates.map(gate => {
+    if ( !a.has(gate) ) return {gate, verdict: "passes alone: it fails only after other gates (leftovers or order)"};
+    if ( m === null ) return {gate, verdict: "fails alone too"};
+    return {gate, verdict: m.has(gate) ? "fails on main too: not this change's fault" : "NEW with this change: passes on main"};
+  });
 }
 
 /** Exit codes of run-gate.mjs that mean the lane, not the code, went wrong: worth one retry after a reset. */

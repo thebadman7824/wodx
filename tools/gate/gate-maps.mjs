@@ -110,8 +110,11 @@ export async function run() {
     await step("5. fade", async () => {
       const n = game.messages.size;
       await game.time.advance(3700);
-      const wary = await until(() => scene.flags?.[NPC]?.alert?.shown === "wary", 6000);
-      const note = game.messages.contents.slice(-5).some(m => /dies down/.test(m.content));
+      const dies = () => game.messages.contents.slice(-5).some(m => /dies down/.test(m.content));
+      // The level is written first, then the zone's lamp and the card: wait for all three (a busy lane once read
+      // the lamp and the card a moment too soon)
+      const wary = await until(() => scene.flags?.[NPC]?.alert?.shown === "wary" && lamp.hidden === true && dies(), 8000);
+      const note = dies();
       ok("5. an hour later the alarm dies down: wary, the lamp out, a note for the Storyteller", !!wary && lamp.hidden === true && note && game.messages.size > n,
         {alert: scene.flags?.[NPC]?.alert, hidden: lamp.hidden, note});
     });
