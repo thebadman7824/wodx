@@ -10,7 +10,7 @@
  *   5. the next book that fits the year goes to the approval queue, once
  *   6. a sequel's chapter links to its own session page in the world
  *   7. skipping a book stops its run
- *   8. every other WoDX module still answers
+ *   8. every other WoDX module still answers (and current() names the running step)
  * Result: Data/wodx-gate/gatesaga-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -73,7 +73,8 @@ export async function run() {
       await saga().ending("red-stone", "take");
       const run = game.settings.get(C, "podState").chains.find(r => r.saga?.book === "red-stone");
       const ch = pod().rules.chainOf(run, 1200), e1 = ch.steps.find(x => x.key === "e1");
-      ok("4 ending", run?.saga?.endings?.["red-stone"] === "take" && /dirt under their nails/.test(e1?.text), {endings: run?.saga?.endings});
+      const cur = saga().current?.();
+      ok("4 ending", run?.saga?.endings?.["red-stone"] === "take" && /dirt under their nails/.test(e1?.text) && (!saga().current || cur?.book === "red-stone"), {endings: run?.saga?.endings, current: cur?.step?.key});
     });
 
     await step("5 next book offered", async () => {

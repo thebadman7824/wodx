@@ -184,7 +184,7 @@ Next free block: B3670
 | B3540-B3549 | Supernatural sight: the Penumbra, a mage's sight, chimerical sight, the Shadowlands view (notes gaps g8 to g11) (used B3540-B3547) | Senses, Actions |
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
 | B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3621) | Chronicle |
-| B3660-B3669 | The Rothenstein saga: the storyline told over years and ages (used B3660-B3668) | Chronicle |
+| B3660-B3669 | The Rothenstein saga: the running step for other systems (used B3660-B3669) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5958,3 +5958,8 @@ Reverse: drop the Hooks.callAll line in sagaStep.
 WoDX Chronicle. The Valley Under Glass (2031 on) is offered only when the house rule futureBranch is on.
 
 Reverse: remove `branch: "future"` from the arcology book.
+
+## B3669. The running saga step is readable (2026-11-14)
+WoDX Chronicle. api.pod.saga.current() returns {book, title, step, dealt, next} for the running book, or null, so the Storyteller's night draw (Threads of Fate) can use the saga's step when no storyline of its own is open. It reads only; nothing moves.
+
+Reverse: remove sagaCurrent from pod.mjs.

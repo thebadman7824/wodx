@@ -278,6 +278,20 @@ async function sagaStep(s, run, c, n) {
   Hooks.callAll("wodxSaga", {book: run.saga.book, step: n.key, kind: n.kind, clocks: {...x.clocks}, signal: n.signal ?? null, ending: n.ending ?? null});
 }
 export function sagaState() { return foundry.utils.deepClone(sagaOf(state())); }
+/**
+ * The running book's step for other systems (the night draw): the step dealt last, or the first one when none has
+ * come yet, and the next one with when it falls due. Null when no book runs (B3669).
+ */
+export function sagaCurrent() {
+  const s = state(), run = (s.chains ?? []).find(r => r.saga && lineOn("podSaga"));
+  if ( !run ) return null;
+  const c = P.chainOf(run, currentYear());
+  if ( !c ) return null;
+  const pick = x => x ? {key: x.key, kind: x.kind, title: x.title, text: x.text, date: x.date} : null;
+  const at = Number(run.at) || 0, n = P.nextStep(run, currentYear());
+  return {book: run.saga.book, title: c.label, step: pick(c.steps[Math.max(0, at - 1)]), dealt: at > 0,
+    next: n ? {...pick(n), due: n.due} : null};
+}
 /** Start a book of the saga now (approval, or the window). */
 export async function startSaga(book, where = "") {
   const b = P.saga.bookByKey(book);
@@ -535,4 +549,4 @@ export function registerPodHooks() {
 
 export const podApi = {exposure, expose, setSect, cityOf, cityState, raiseBuilding, golconda, seek, golcondaStep, setback, setMentor,
   startChain, stopChain, dealChains, lifepathTick, startThread, threads: threadsOf, goals, setGoal,
-  saga: {state: sagaState, start: startSaga, skip: skipSaga, ending: setEnding, clock: setSagaClock, tick: sagaTick, rules: P.saga}, open: () => new PodApp().render(true), rules: P};
+  saga: {state: sagaState, current: sagaCurrent, start: startSaga, skip: skipSaga, ending: setEnding, clock: setSagaClock, tick: sagaTick, rules: P.saga}, open: () => new PodApp().render(true), rules: P};
