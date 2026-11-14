@@ -47,9 +47,10 @@ test("wonders: who may make them, and what stops them", () => {
   assert.ok(W.blockers(w, garou({rituals: 2})).some(x => /Rituals 3/.test(x)));
   assert.ok(W.blockers(w, garou(), {spend: 9}).some(x => /has 5/.test(x)));
   assert.ok(W.blockers(W.byKey["bane-arrow"], garou(), {spend: 0}).some(x => /at least 1 Gnosis/.test(x)));
-  // a mortal can't; Kinfolk with Gnosis can (house reading); Kinfolk without Gnosis can't
+  // a mortal can't; Kinfolk can't by the books (B3680) unless craftKinfolk keeps the house reading; never without Gnosis
   assert.equal(W.makerOf({profile: "mortal", gnosis: 2}).kind, null);
-  assert.equal(W.makerOf({profile: "mortal", kinfolk: "Fianna", gnosis: 1}).kind, "kinfolk");
+  assert.equal(W.makerOf({profile: "mortal", kinfolk: "Fianna", gnosis: 1}).kind, null);
+  assert.equal(W.makerOf({profile: "mortal", kinfolk: "Fianna", kinfolkMay: true, gnosis: 1}).kind, "kinfolk");
   assert.equal(W.makerOf({profile: "mortal", kinfolk: "Fianna", gnosis: 0}).kind, null);
   assert.ok(W.MAKERS.kinfolk.house);
 });
@@ -126,4 +127,33 @@ test("wonders: carried silver lowers a shapechanger's Gnosis dice for fetishes a
   assert.match(g, /export function silverPenalty\(actor\)/);
   assert.match(g, /banesOf\(actor\)\.includes\("silver"\)/);
   assert.match(g, /rollPool\(effectiveGnosis\(actor\), gn\)/);
+});
+
+test("wonders: Bane fetishes and the baneklaive (W20 Book of the Wyrm pdf 184-185) are for Black Spiral Dancers alone", () => {
+  const b = W.byKey.baneklaive;
+  assert.equal(b.level, 5); assert.equal(b.gnosis, 7); assert.equal(b.silver, 2); assert.equal(b.court, "wyrm"); assert.ok(b.wyrm);
+  assert.deepEqual([b.weapon.bonus, b.weapon.type, b.weapon.diff], [3, "aggravated", 7]);
+  assert.equal(W.byKey.devilwhip.weapon.bonus, 1);
+  const bane = ["brush-of-the-ancients", "stolen-eye", "bane-lantern", "devilwhip", "wyrmflesh", "baneklaive"];
+  for ( const k of bane ) assert.ok(W.byKey[k]?.wyrm, k);
+  const bsd = garou({tribe: "Black Spiral Dancers"});
+  assert.equal(bsd.kind, "spiral");
+  const sl = W.listFor(bsd).map(w => w.key);
+  assert.deepEqual([...sl].sort(), [...bane].sort(), "a Spiral sees only the Bane fetishes");
+  assert.ok(!W.listFor(garou()).some(w => w.wyrm), "a Gaian sees none of them");
+  assert.ok(W.blockers(b, garou()).some(x => /Wyrm/.test(x)));
+  assert.ok(W.blockers(W.byKey.klaive, bsd).some(x => /Banes/.test(x)));
+  assert.deepEqual(W.blockers(b, bsd, {spend: 1}), []);
+  assert.ok(W.cautions(W.byKey.wyrmflesh, bsd).some(c => /living victim/.test(c)));
+  const [f, wpn] = W.itemsFor(b, {at: 5});
+  assert.equal(f.system.gnosis, 7); assert.equal(wpn.system.damage.bonus, 3);
+  assert.deepEqual(W.silverCarried([f, wpn]), {klaive: 0, grand: 1});
+  assert.equal(W.isSpiral("wod.tribes.blackspiraldancers"), true);
+  assert.equal(W.isSpiral("Silver Fangs"), false);
+});
+
+test("wonders: Kinfolk making is a world setting, off by default (WoDX Library, B3680)", () => {
+  const lib = src("modules/wodx-library/scripts/main.mjs");
+  assert.match(lib, /"craftKinfolk"[\s\S]*?default: false/);
+  assert.match(src("modules/wodx-storyteller/scripts/wonders.mjs"), /kinfolkMay/);
 });
