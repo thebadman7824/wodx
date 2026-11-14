@@ -1328,7 +1328,9 @@ Ben checked the overnight peoples work ("Checked. Everything looks good.").
 | 2026-11-14 | Armenian names, built while Ben was away (B3940 to B3942) | Over 300 names; a home-town byname (Narekatsi) before 1800 and -ian or -yan after; Anatolia 12 in 100 until the modern group and 1 after, Persia 4 and Constantinople 6 from 1500, the Levant 2, Russia 3 from 1800 | Edit data/people-armenian.mjs or the mixes in world-rules.mjs |
 | 2026-11-14 | Missouri village names, built while Ben was away (B4130 to B4132) | The WoD books hold no names for them, so the lists come from the treaties, Catlin and Bodmer, Lewis and Clark and the agency rolls, under 300 a people; own names and women of a village or band before 1800, family names after; the four peoples are 14 in 100 of the West before 1500 | Edit data/people-missouri.mjs or the West mix in world-rules.mjs |
 
-## Waiting for review
+## Approved by Ben, 14 November 2026, 22:05 UTC (all pending items)
+
+Ben approved everything that was waiting for review ("Approved on all pending review").
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
@@ -1397,3 +1399,8 @@ Ben checked the overnight peoples work ("Checked. Everything looks good.").
 | 2026-11-14 | The fuel tank (B4796) | Any hit on a motor vehicle with 3 successes and 6 levels sets the fuel off: 12 aggravated dice to all aboard, burnt out, a fire on the map; no separate aim at the tank | Have fuelGoes return false, or ask for an aimed shot at the tank |
 | 2026-11-14 | NPCs taking vehicles (B4797) | A free vehicle within a run that the NPC can drive: just above flight when fleeing, or above the best attack when every foe is beyond a run; at the reins it moves at the vehicle's pace | Have boardOption in npc-rules.mjs return null, or change its scores |
 | 2026-11-14 | How much experience the Storyteller tools give at once (B4806) | A whole number from 1 to 100 per press, as a normal award through WoDX Creation | Change XP_MAX in solo-rules.mjs |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
