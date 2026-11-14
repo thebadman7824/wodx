@@ -12,6 +12,7 @@ import {currentYear} from "./eras.mjs";
 import * as L from "./law-rules.mjs";
 import * as H from "./law-heat-rules.mjs";
 import * as place from "./place.mjs";
+const traitHas = (a, k) => Number(game.modules.get(MODULE_ID)?.api?.traits?.has?.(a, k)) || 0;
 
 export function registerHeatSettings() {
   game.settings.register(MODULE_ID, "lawHeat", {scope: "world", config: false, type: Object, default: {regions: {}}});
@@ -47,13 +48,17 @@ export function of(actorId, region = regionOf(globalThis.canvas?.scene)) {
 export async function addDeed(actor, deed, {scene = globalThis.canvas?.scene, named = false, witnesses = 1} = {}) {
   if ( !isActiveGM() || !on() || !actor?.id ) return null;
   const region = regionOf(scene), law = L.lawOf(region, yearNow());
+  // B3920: with an Alternate Identity, the name a witness knows is the other self's, so the deed counts as unnamed
+  let other = false;
+  try { other = named && traitHas(actor, "alternate-identity") > 0; } catch (e) { other = false; }
+  if ( other ) named = false;
   const s = state();
   s.regions[region] ??= {};
   const res = H.addDeed(s.regions[region][actor.id] ?? {}, {deed, law, now: now(), named, witnesses, where: scene?.name ?? "", id: actor.id, name: actor.name, line: actorLine(actor)});
   s.regions[region][actor.id] = res.entry;
   await save(s);
   if ( res.crossed ) await stageCard(actor, region, res, law);
-  return res;
+  return other ? {...res, otherSelf: true} : res;
 }
 
 async function stageCard(actor, region, res, law) {

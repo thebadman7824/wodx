@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.98.0 (Backgrounds nothing read (B3920): MORE_ATTITUDE_3, MORE_PROMPTS_7, refOf for background page refs, Alternate Identity in law-heat addDeed)
 - 0.97.0 (The Shoshone and the Ute in the American West's mix from 1197 (B4150))
 - 0.96.0 (The Blackfoot, Arapaho and Crow in the American West's mix from 1197 (B4140))
 - 0.95.0 (Derangements in play (B3913): api.derangements {of, hold, gain, end, boutOf}, a table of fourteen derangements (the V20 list plus Phobia and Perfection) with what sets each off, the Willpower difficulty and the rolls it makes harder, and the Deranged status)
