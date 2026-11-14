@@ -49,8 +49,8 @@ test("haudenosaunee: in eastern North America and Canada by age, not borrowed by
   assert.deepEqual(origin("medieval", "canada"), ["haudenosaunee"]);
   assert.ok(origin("early-modern", "american").includes("english") && origin("early-modern", "american").includes("haudenosaunee"));
   assert.ok(origin("modern", "american").includes("anglo"));
-  assert.ok(!origin("medieval", W.cultureOf("north-america-west")).includes("haudenosaunee"), "the West has no medieval mix of its own");
-  assert.deepEqual(origin("early-modern", W.cultureOf("north-america-west")), ["spanish"]);
+  assert.ok(!origin("medieval", W.cultureOf("north-america-west")).includes("haudenosaunee"), "the West keeps its own peoples (B3820)");
+  assert.deepEqual(origin("early-modern", W.cultureOf("north-america-west")), ["spanish", "lakota", "comanche", "cheyenne", "kiowa"]);
   assert.ok(W.hasPeopleIn("north-america-east", 1300) && W.hasPeopleIn("canada", 1300));
 });
 
