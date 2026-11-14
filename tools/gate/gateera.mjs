@@ -17,11 +17,11 @@ const chron = () => game.modules.get(CH).api;
 export async function run() {
   if ( game.world.id !== "rothenstein-wodx" ) {
     ui.notifications.error("The era advancement gate runs in rothenstein-wodx only.");
-    return {refused: game.world.id};
+    return {refused: game.world.id, summary: `0/1 passed: refused in ${game.world.id}`};
   }
   if ( typeof chron()?.hold !== "function" ) {
     ui.notifications.error("The era advancement gate needs WoDX Chronicle 0.5.0 or later (Hold the world).");
-    return {refused: "chronicle too old"};
+    return {refused: "chronicle too old", summary: "0/1 passed: WoDX Chronicle too old"};
   }
   const origErr = console.error;
   console.error = (...a) => { R.errors.push(a.map(x => x?.stack ? String(x.stack).split("\n").slice(0, 4).join(" | ") : String(x)).join(" ")); origErr.apply(console, a); };
@@ -129,6 +129,8 @@ export async function run() {
   }
   R.passed = R.steps.filter(s => s.pass).length;
   R.total = R.steps.length;
+  // the lane runner reads "n/m passed" from summary; without it the whole result was printed and counted as unknown
+  R.summary = `${R.passed}/${R.total} passed`;
   const f = new File([JSON.stringify(R, null, 1)], "gateera-result.json", {type: "application/json"});
   await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", f, {}, {notify: false});
   console.log("GATE ERA", R);
