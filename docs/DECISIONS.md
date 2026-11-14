@@ -182,7 +182,7 @@ Next free block: B3630
 | B3520-B3539 | Gaps from Ben's design notes: referee ticket, crisis levers, binding card, roster, inheritance, the 2022 cap (used B3520-B3536) | Chronicle, Storyteller, Otherworlds, NPC, Actions |
 | B3540-B3549 | Supernatural sight: the Penumbra, a mage's sight, chimerical sight, the Shadowlands view (notes gaps g8 to g11) (used B3540-B3547) | Senses, Actions |
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
-| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3611) | Chronicle |
+| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3613) | Chronicle, Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5831,3 +5831,13 @@ Reverse: drop the wodxVerdict hook in law-punish.mjs.
 The sentencing card carries a line for the kind of character: a hanged Kindred wakes, and a cell with a window is a sentence of its own; a ghoul starves of the domitor's blood; years in a cell for a Garou or a mage; iron bars and Glamour; Fetters in the gallows yard; hunters meet others in the cells; an executed mummy rises; a demon's host; a revenant's family buys the pardon.
 
 Reverse: empty LINE_PUNISH.
+
+## B3612. Papers and the undying (2026-11-13)
+Records by law family and year: rolls always; registers from 1538 (common), 1563 (latin), 1722 (orthodox), else 1900; household registers in China always and Japan from 1638; censuses from 1790 to 1950 by family; passports 1914; fingerprints 1901; identity cards 1932 to 1985 by family and never in common-law lands; citizen's numbers 1935 to 1960; computers 1965; biometrics 2005. The weights add to a paper weight. A new self: difficulty 5 plus a third of the weight (5 to 9), goal 2 plus the weight, 1 to 3 Resources. Notice each decade kept: 3 percent plus 2.5 per weight point, less 2 per quality above 3. Selves live on the actor flag selves. House figures.
+
+Reverse: drop the wodxTaskDone hook and the checkSelves call; the project kind stays as a plain project.
+
+## B3613. Splat hooks for papers (2026-11-13)
+The noticed card carries a line for the kind of character (Kindred selves that must die on paper, a ghoul who stops ageing, the Technocracy reading records, a changeling's real mortal papers, a wraith's death certificate, a hunter's arrest record, a mummy's museum archives, a demon's host, a revenant family's own records). Only the undying lines are checked for notice.
+
+Reverse: empty LINE_PAPERS.
