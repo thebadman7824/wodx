@@ -114,7 +114,8 @@ TYPES = {
         "furnish": {
             "Taproom": [("Bar_Wood_Ashen_A2_3x1.webp", "wall:N", 1), (KEG, "beside:bar", 2, .8), (STOOL, "front:bar", 3, .8),
                         (ROUND, "corner:W", 2), (STOOL, "beside:table", 3, .8), (BENCH, "wall:S", 1)],
-            "Kitchen": [(OVEN, "corner:NE", 1, .8), (WOOD, "hearth", 1, .7), (BARREL, "wall", 1, .7)],
+            "Kitchen": [(OVEN, "corner:NE", 1, .8), (WOOD, "hearth", 1, .7), (BARREL, "wall", 1, .7),
+                        ("Bucket_Wood_Ashen_A_1x1.webp", "wall", 1, .6), ("Basket_Lid_Wood_Ashen_A_1x1.webp", "wall", 1, .6)],
             "Cellar store": [(KEG, "wall", 3, .8), (BARREL, "wall", 2, .8), (CHEST, "corner", 1, .9)],
         },
     },
@@ -218,7 +219,7 @@ class Building:
         for rname, rx, ry, rw, rh, floor in t["rooms"]:
             ax, ay, aw, ah = _rect(k, w, h, rx, ry, rw, rh)
             furn = [(e[0], _rule(k, e[1]), *e[2:]) for e in t["furnish"].get(rname, [])]
-            self.rooms.append(Room(rname, x + ax, y + ay, aw, ah, floor, self.openings, furn))
+            self.rooms.append(Room(rname, x + ax, y + ay, aw, ah, floor, self.openings, furn, t.get("portals")))
 
     @property
     def rect(self): return (self.x, self.y, self.w, self.h)

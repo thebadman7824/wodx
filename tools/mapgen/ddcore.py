@@ -150,7 +150,7 @@ class Room:
     Rules: wall[:sides], corner[:sides], end[:sides] (touches those walls, never turned; endt: always turned),
     window, centre, at:x:y[:1] (that spot, from the room's corner, turned if :1; left empty if it will not fit),
     hearth (by an oven, cooking pit or brazier), beside:<tag> (see BESIDE)."""
-    def __init__(self, name, x, y, w, h, floor, openings, furnish=()):
+    def __init__(self, name, x, y, w, h, floor, openings, furnish=(), portals=None):
         self.name, self.x, self.y, self.w, self.h, self.floor = name, x, y, w, h, floor
         self.furnish_list = list(furnish)
         self.ctx = None               # a furnishing context (furnishing.context_for): palette, role, wealth...
@@ -163,8 +163,9 @@ class Room:
             on_edge = (abs(ox - x) < .01 or abs(ox - (x + w)) < .01) and y <= oy <= y + h or \
                       (abs(oy - y) < .01 or abs(oy - (y + h)) < .01) and x <= ox <= x + w
             if not on_edge: continue
-            half = PORTALS[kind][1] / 2
-            if kind == "window":                                       # no chest, barrel or crate pushed up under a
+            drawn = (portals or {}).get(kind, kind)                     # a later era's door or window may be drawn wider
+            half = max(PORTALS[kind][1], PORTALS.get(drawn, PORTALS[kind])[1]) / 2
+            if kind.endswith("window"):                                    # no chest, barrel or crate pushed up under a
                 self.windows = getattr(self, "windows", []) + [(ox, oy, along)]   # window (see candidates(keep_windows))
                 d, wz = .9, half
                 if along == "h":
@@ -587,8 +588,21 @@ def dress(room):
                 room.lights.append((cx, cy, 4))
         elif kind != "store" or area >= 9:
             room.lights.append((room.ix + room.iw / 2, room.iy + room.ih / 2, 5))
+        if kind == "kitchen" and not modern:                   # pots, pans and herbs hung on the wall, off the floor
+            import furnishing as F                              # (Ben's interior packs, 14 November 2026)
+            hung = [a for a in WALL_HUNG if have(a)]
+            for cx, cy, side in F._light_spots(room, R):
+                if not hung or sum(1 for d in room.dressing if d.get("piece") == "hanging") >= 2: break
+                if any(math.hypot(cx - x, cy - y) < 1.2 for x, y, *_ in room.lights) or \
+                   any(d.get("piece") == "hanging" and math.hypot(cx - d["x"] - .3, cy - d["y"] - .3) < 1.2 for d in room.dressing): continue
+                room.dressing.append({"asset": R.choice(hung), "x": cx - .3, "y": cy - .3, "w": .6, "h": .6, "rot": 0, "scale": .6,
+                                      "layer": 400, "piece": "hanging"})
     finally:
         R = keep
+
+
+WALL_HUNG = ["Cooking_Pot_Hanging_01_A.webp", "Frying_Pan_Hanging_01_A.webp", "Sauce_Pan_Hanging_01_A.webp", "Metal_Pot_Hanging_01_A.webp",
+             "Hanging_Herbs_Wall_01_A.webp", "Hanging_Herbs_Wall_02_A.webp", "Sausage_String_Hanging_01_A.webp"]
 
 # ------------------------------------------------------------------ which way things face
 # Forgotten Adventures draws furniture facing down the page (south): a bed's head, a shelf's back, a chair's back

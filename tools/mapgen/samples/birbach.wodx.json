@@ -4444,11 +4444,11 @@
    }
   },
   {
-   "id": "chapel-1-nave-f4",
+   "id": "chapel-1-nave-f3",
    "label": "Chest (Nave)",
    "rect": [
-    38.93,
-    33.57,
+    38.68,
+    28.68,
     0.75,
     0.75
    ],
@@ -5079,10 +5079,10 @@
    }
   },
   {
-   "id": "townhouse-4-back-room-f2",
+   "id": "townhouse-4-back-room-f0",
    "label": "Cupboard (Back room)",
    "rect": [
-    38.82,
+    38.68,
     52.57,
     1.5,
     0.75
@@ -5091,6 +5091,23 @@
     "container": true,
     "kind": "cabinet",
     "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "townhouse-4-back-room-f2",
+   "label": "Chest (Back room)",
+   "rect": [
+    39.32,
+    49.68,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
     "items": "",
     "fillPlace": "home"
    }
@@ -5181,18 +5198,35 @@
    }
   },
   {
-   "id": "townhouse-5-back-room-f2",
+   "id": "townhouse-5-back-room-f0",
    "label": "Cupboard (Back room)",
    "rect": [
-    32.32,
-    26.57,
-    1.5,
-    0.75
+    34.07,
+    24.82,
+    0.75,
+    1.5
    ],
    "flags": {
     "container": true,
     "kind": "cabinet",
     "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "townhouse-5-back-room-f2",
+   "label": "Chest (Back room)",
+   "rect": [
+    31.18,
+    24.68,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
     "items": "",
     "fillPlace": "home"
    }
@@ -5487,13 +5521,13 @@
    }
   },
   {
-   "id": "townhouse-8-back-room-f2",
+   "id": "townhouse-8-back-room-f0",
    "label": "Cupboard (Back room)",
    "rect": [
-    69.68,
-    29.18,
-    0.75,
-    1.5
+    71.32,
+    28.18,
+    2,
+    1
    ],
    "flags": {
     "container": true,
@@ -5589,13 +5623,13 @@
    }
   },
   {
-   "id": "townhouse-9-back-room-f1",
+   "id": "townhouse-9-back-room-f0",
    "label": "Cupboard (Back room)",
    "rect": [
-    74.18,
-    40.18,
-    1.5,
-    0.75
+    76.07,
+    41.32,
+    0.75,
+    1.5
    ],
    "flags": {
     "container": true,
@@ -5743,7 +5777,7 @@
    "id": "workshop-1-workshop-f3",
    "label": "Chest (Workshop)",
    "rect": [
-    17.18,
+    17.2,
     34.07,
     0.75,
     0.75
@@ -5862,8 +5896,8 @@
    "id": "workshop-2-workshop-f3",
    "label": "Chest (Workshop)",
    "rect": [
-    26.68,
-    29.68,
+    28.43,
+    34.57,
     0.75,
     0.75
    ],
@@ -5978,6 +6012,23 @@
    }
   },
   {
+   "id": "workshop-3-workshop-f3",
+   "label": "Chest (Workshop)",
+   "rect": [
+    21.57,
+    42.68,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "workshop"
+   }
+  },
+  {
    "id": "workshop-4-workshop-3",
    "label": "Crates (Workshop)",
    "rect": [
@@ -6066,7 +6117,7 @@
    "id": "workshop-4-workshop-f1",
    "label": "Chest (Workshop)",
    "rect": [
-    39.18,
+    38.68,
     62.32,
     1,
     1
@@ -6287,8 +6338,8 @@
    "id": "workshop-6-workshop-f3",
    "label": "Chest (Workshop)",
    "rect": [
-    18.68,
-    28.07,
+    21.57,
+    25.18,
     0.75,
     0.75
    ],
@@ -6389,7 +6440,7 @@
    "id": "workshop-7-workshop-f1",
    "label": "Chest (Workshop)",
    "rect": [
-    38.18,
+    38.82,
     11.68,
     1,
     1
@@ -6707,18 +6758,35 @@
    }
   },
   {
-   "id": "cottage-3-cottage-f2",
+   "id": "cottage-3-cottage-f0",
    "label": "Cupboard (Cottage)",
    "rect": [
-    55.32,
-    15.57,
-    1.5,
-    0.75
+    52.18,
+    14.32,
+    1,
+    2
    ],
    "flags": {
     "container": true,
     "kind": "cabinet",
     "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-3-cottage-f2",
+   "label": "Chest (Cottage)",
+   "rect": [
+    55.07,
+    15.57,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
     "items": "",
     "fillPlace": "home"
    }
@@ -6928,11 +6996,11 @@
    }
   },
   {
-   "id": "cottage-4-cottage-f0",
+   "id": "cottage-4-cottage-f2",
    "label": "Cupboard (Cottage)",
    "rect": [
-    53.82,
-    58.68,
+    51.68,
+    62.57,
     1.5,
     0.75
    ],
@@ -7013,13 +7081,13 @@
    }
   },
   {
-   "id": "cottage-5-cottage-f0",
+   "id": "cottage-5-cottage-f2",
    "label": "Cupboard (Cottage)",
    "rect": [
-    83.32,
+    79.68,
     40.18,
-    1,
-    2
+    1.5,
+    0.75
    ],
    "flags": {
     "container": true,
@@ -7421,7 +7489,7 @@
    }
   },
   {
-   "id": "cottage-9-cottage-f1",
+   "id": "cottage-9-cottage-f0",
    "label": "Cupboard (Cottage)",
    "rect": [
     63.82,
@@ -7574,11 +7642,11 @@
    }
   },
   {
-   "id": "cottage-10-cottage-f0",
+   "id": "cottage-10-cottage-f1",
    "label": "Cupboard (Cottage)",
    "rect": [
-    31.48,
-    11.18,
+    29.68,
+    15.07,
     1.5,
     0.75
    ],
@@ -7795,11 +7863,11 @@
    }
   },
   {
-   "id": "cottage-11-cottage-f1",
+   "id": "cottage-11-cottage-f0",
    "label": "Cupboard (Cottage)",
    "rect": [
-    30.93,
-    58.68,
+    31.68,
+    62.57,
     1.5,
     0.75
    ],
@@ -8050,18 +8118,18 @@
    }
   },
   {
-   "id": "cottage-14-cottage-f1",
-   "label": "Cupboard (Cottage)",
+   "id": "cottage-14-cottage-f3",
+   "label": "Chest (Cottage)",
    "rect": [
-    15.57,
-    23.02,
+    14.57,
+    21.68,
     0.75,
-    1.5
+    0.75
    ],
    "flags": {
     "container": true,
-    "kind": "cabinet",
-    "lock": "none",
+    "kind": "chest",
+    "lock": "cheap",
     "items": "",
     "fillPlace": "home"
    }
@@ -8135,7 +8203,7 @@
    }
   },
   {
-   "id": "cottage-15-cottage-f1",
+   "id": "cottage-15-cottage-f2",
    "label": "Cupboard (Cottage)",
    "rect": [
     50.18,
@@ -8475,7 +8543,7 @@
    }
   },
   {
-   "id": "cottage-19-cottage-f2",
+   "id": "cottage-19-cottage-f1",
    "label": "Cupboard (Cottage)",
    "rect": [
     50.68,

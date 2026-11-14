@@ -161,7 +161,7 @@ PASSAGE = re.compile(r"corridor|passage|stair|entry|entrance|vestibule|lift|conc
 EARTH_OK = re.compile(r"byre|barn|stable|coop|sty|pen|kennel|mews|shed|cellar|hut|lean to|smithy|forge", re.I)   # earth floors are right here
 OPEN_AIR = re.compile(r"court|yard|garden|cloister|terrace|courtyard", re.I)
 
-RUG = re.compile(r"Rug_|Carpet|Hay_Bedding", re.I)
+RUG = re.compile(r"Rug_|Carpet|Hay_Bedding|skins\d|Pelt|Fur_Rug", re.I)   # what lies flat on the floor, under furniture
 STORE = re.compile(r"Chest|Barrel|Keg|Crate|Box_|Sack|Coffer", re.I)
 DOOR_DEEP = C.DOOR_CLEAR_SMALL - .1                    # the generator keeps at least this free (DOOR_CLEAR in rooms 4 or more across); a touch at the edge is not in the way
 TALL = re.compile(r"Oven|Stove|Hearth|Fireplace|Shel|Bookcase|Wardrobe|Cupboard|Cabinet|Dresser|Armoire|Hutch", re.I)
@@ -171,6 +171,9 @@ def seg_dist(x, y, a, b):
     dx, dy = b[0] - a[0], b[1] - a[1]
     t = max(0, min(1, ((x - a[0]) * dx + (y - a[1]) * dy) / (dx * dx + dy * dy or 1)))
     return math.hypot(x - a[0] - t * dx, y - a[1] - t * dy)
+
+
+HUNG = re.compile(r"Hanging|Meat_Hook|Sausage_String", re.I)    # kitchenware hung on a wall (a piece, not a light)
 
 
 def walled_off(g, o, segs):
@@ -296,7 +299,7 @@ def check(path, sizes_path=None):
                 if sh > .2 * min(o["w"] * o["h"], p["w"] * p["h"]): found.append(("overlap", o, "with " + p["name"]))
         for n, r in enumerate(rooms):
             area = len(r) * STEP * STEP
-            mine = [o for o in objs if o["room"] == n and o["layer"] in (50, 100, 300)]
+            mine = [o for o in objs if o["room"] == n and (o["layer"] in (50, 100, 300) or o["layer"] == 400 and HUNG.search(o["name"]))]   # a pot hung on the wall counts
             cover = sum(min(o["w"] * o["h"], area) for o in mine if o["layer"] == 100)
             xs = [c[0] for c in r]; ys = [c[1] for c in r]
             named = [nm for x, y, nm in names if room_at(x, y) == n]
