@@ -186,7 +186,7 @@ test("your people: asked where more than one people lives, and open where no nam
   assert.equal(regs.find(r => r.id === "north-america-east").named, true);
   assert.equal(regs.find(r => r.id === "north-america-west").named, true);
   const west = D.stepsOf(start("north-america-west", 1300, 25)).steps.find(x => x.kind === "people");
-  assert.deepEqual(west.options.map(o => o.label), ["Lakota, Dakota and Nakota", "Cheyenne", "Comanche", "Kiowa", "Pueblo (the Hopi, Zuni and the Rio Grande)", "Diné (Navajo)", "Apache", "Mandan", "Hidatsa", "Arikara", "Pawnee"]);
+  assert.deepEqual(west.options.map(o => o.label), ["Lakota, Dakota and Nakota", "Cheyenne", "Comanche", "Kiowa", "Pueblo (the Hopi, Zuni and the Rio Grande)", "Diné (Navajo)", "Apache", "Mandan", "Hidatsa", "Arikara", "Pawnee", "Blackfoot (Niitsitapi)", "Arapaho", "Crow (Apsáalooke)"]);
   assert.equal(D.continents(1300).find(c => c.id === "south-america").regions.find(r => r.id === "brazil").named, false);
   let d = start("brazil", 1300, 25);
   assert.equal(D.current(d).kind, "people");
