@@ -23,7 +23,7 @@ export function registerPlayerViewSettings() {
   });
   game.settings.register(MODULE_ID, "playerViewDefault", {
     name: "Players' view when nobody has picked one",
-    hint: "Beginner puts each player's WoDX buttons in a few labelled drawers and groups the token menu. Full shows every button as before. Each player can change their own view, and you can pick for each player in Player toolbar buttons.",
+    hint: "Beginner puts each player's WoDX buttons in a few labelled drawers and groups the token menu. Full shows every button as before. Each player can change their own view, and you can pick for each player in Player interface.",
     scope: "world", config: true, type: String, choices: R.VIEWS, default: "full", onChange: () => { redraw(); applyBodyClass(); }
   });
   game.settings.register(MODULE_ID, "myView", {

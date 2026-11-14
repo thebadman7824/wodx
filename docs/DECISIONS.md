@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4120
+Next free block: B4140
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -194,18 +194,20 @@ Next free block: B4120
 | B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3719) | Library |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
-| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3755) | Actions |
+| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3756) | Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
 | B3780-B3809 | The no-effect audit: a harmless hit makes its card (used B3780-B3809) | Combat |
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Games and gambling (used B3900-B3910) | Library |
+| B3900-B3929 | Gambling moves money (used B3900-B3914) | Library |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
 | B4100-B4109 | PC job queue and runner: threads queue PC work as GitHub issues, five testbed lanes run it side by side (used B4100-B4104) | tools (no module) |
 | B4110-B4119 | Stale pull request sweeper in the PC runner (used B4110) | tools (no module) |
+| B4120-B4129 | Player interface: the Storyteller hides parts of Foundry's screen for each player (used B4120-B4123) | Chronicle |
+| B4130-B4139 | Missouri village peoples in the People generator (used B4130-B4132) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6450,6 +6452,10 @@ How to reverse: drop followOn and markFollow in wodx-combat main.js.
 WoDX Actions. The Blessing window took a typed name and rolled what the player set, with no effect. It now carries the Blessings of Dark Ages: Inquisitor Chapter Five (Orisons, Benedictions, Investitures, Legacies, Psalms, the three Holy Art paths and the Ritae, 94 entries) as short summaries in our own words with the printed page. Picking one sets the Attribute, the Superior Virtue or Virtue, the difficulty, the Conviction cost and the no-roll box, and shows the effect. A roll that takes puts its keywords on the effects card: damage (Fiat Lux, Wrath of God, Water to Wine), healing (Water to Wine, Resurrection, Restoration), wards (Rod and Staff, Aura of Sanctity, Mirror of Evil), holds (Tears of the Martyr, Oratorio), boosts, pools (Divine Liturgy, Hosanna, Arcana) and regained Conviction (Divine Liturgy, Resurrection), each with Undo. Reading powers (Moral Compass, Sophia Patris) show their answer on the card. The Superior Virtue rolls stay in the Virtue roll window. Pages follow the book's printed numbers (the scan runs one page ahead).
 How to reverse: drop inq-blessings.js and the "From the book" select in hunter.js blessing().
 
+## B3756. The Fera's own Gifts, breed by breed, with effects (2026-11-14)
+WoDX Actions. A Changing Breed's sheet could hold a Gift only by typing its name: the shared Gifts matched the W20 list, and the breeds' own Gifts rolled bare. data/gifts-fera.json now holds 359 Gifts of W20 Changing Breeds for the thirteen Fera with their own lists (Ajaba, Ananasi, Bastet, Corax, Gurahl, Kitsune, Mokole, Nagah, Nuwisha, Ratkin, Rokea, Apis, Grondr, Camazotz), each with the level, cost, pool, difficulty, duration, a short summary in our own words and the printed page. Learn a Gift offers a Fera its own breed's Gifts beside the shared list; Use a Gift reads the pool and cost from the entry, a breed's own Gift wins over a Garou Gift of the same name, and a use that takes puts its keywords on the effects card (damage, healing, holds, blindness, fear, wards, boosts, shapes, movement and the rest). Gifts the book sends to the Garou list stay on the W20 list. Fourteen Gifts the Storyteller must rule (a fertility blessing, a stored item) show their card only.
+How to reverse: drop gifts-fera.json from loadData and the feraGifts lookups in garou.js.
+
 ## B3770. Kuei-jin make stone weapons and true jade (2026-11-14)
 WoDX Library, data/wonders-kuei-jin.mjs and scripts/wonders-kuei-jin.mjs. The Item Crafting Desk pick kj2 (full). Kindred of the East has jade talismans only as a Background (pp. 86-87), but the Companion (p. 67) gives the masters of Jade Shintai two powers that make things, Blade of Stone and Taste of Jade. Both are a Kuei-jin kit on the shared wonders registry (B3683), world setting craftKueiJin, on by default like the other kits.
 
@@ -6745,6 +6751,17 @@ WoDX Library. The no-effect audit found dice, cards and gaming boards that only 
 
 Reverse: set gamble back to effect "note" in use-rules.mjs and drop gamble-rules.mjs and gamble-use.mjs.
 
+## B3911. Seeds, fire-lighters and timepieces (2026-11-14)
+WoDX Library. The no-effect audit found seeds, fire-lighters and timepieces that only posted a line (desk i5, the smaller build Ben approved). Plant it puts a seed in the ground. Used again, it says how many days are left, and once they are past it harvests the crop into Possessions (seed potatoes give 8 potatoes after 100 days; house figures, data/goods-crops.mjs). A vine only bears after three years and gives nothing to eat. Strike a light lights the first unlit light the character carries, through WoDX Interactables' carried light. A clock or a watch tells the hour on a card to its owner. A sundial does so only while the sun is up, and an hourglass gives the minutes since it was last turned. Fuel for a fire (petrol, firewood, coal) and switched-on gadgets stay a line, since there is no fire to feed nor a gadget rule to read; lamp oil and kerosene already refill a lamp.
+
+Reverse: set plant and strike back to effect "note" in use-rules.mjs, drop the time ability, gadget-rules.mjs, gadget-use.mjs and data/goods-crops.mjs.
+
+## B3912. A failing gate's summary names its failed steps (2026-11-14)
+The gate kit's summary line, which the PC job queue posts on the issue, now ends with each failed step's name and what it saw (cut short), plus any errors, so a failed run is understood without fetching the result file from the PC. A passing run's line is unchanged ("n/n passed"). The lane runner keeps up to 600 characters of the line instead of 300. Reverse: drop the two added lines in tools/gate/kit.mjs save().
+
+## B3914. Gambling reaches the purses at api.upkeep.money (2026-11-14)
+B3910's gambling read WoDX Storyteller's money api at api.money, which does not exist; the purse api is api.upkeep.money. Every game rolled and posted its card, but the stake never moved and the stake offered was always nothing. Fixed in gamble-use.mjs; gategamble now fails when the api is missing or the stake is nothing, and a harness test checks the path. Found by the gate summary change (B3912). Reverse: none needed.
+
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.
 
@@ -6839,3 +6856,38 @@ pull request that is behind main and has had no commit for 2 hours (update-branc
 (workflow_dispatch, added to checks.yml) on one that is up to date but never got a run, and lists the rest (merge
 conflicts, CI that cannot start, CI that failed) in one pc-alert issue that it closes when the list is empty. It uses
 Ben's sign-in on the PC because a push made with the workflow token starts no CI.
+
+## B4120. Player interface window (2026-11-14)
+WoDX Chronicle. The Player toolbar buttons window (B60) becomes Player interface. Below the WoDX buttons it lists Screen parts with a tick for each player: scene navigation, the player list, the macro bar, camera and voice, and the sidebar tabs Combat, Actors, Items, Journal, Roll tables, Cards, Playlists and Compendium packs. World setting playerUi keeps only the unticked parts. The approved study of 2026-11-10 (priority 6) planned this.
+
+Reverse: tick every part again, or clear the playerUi setting.
+
+## B4121. What always stays (2026-11-14)
+WoDX Chronicle. Chat, Settings, notifications, the scene controls and the X-card are never listed, so a player can always talk, reach their own settings, read warnings, use the WoDX buttons and stop a scene. The Storyteller never loses a part.
+
+Reverse: none planned.
+
+## B4122. Cosmetic only (2026-11-14)
+WoDX Chronicle. A hidden part is hidden with a body class and a fixed style sheet on that player's screen. It does not change what the player may open or edit; that stays with Foundry's user roles and ownership. When a hidden sidebar tab was open, the sidebar goes back to chat. The Senses quiet interface (Alt+Q) may tuck more away but never shows what the Storyteller hid.
+
+Reverse: none planned.
+
+## B4123. Preview on the Storyteller's screen (2026-11-14)
+WoDX Chronicle. api.playerTools.previewUi(keys) shows the Storyteller a player's screen parts hidden on their own screen for this session; previewUi(null) puts it back. The gate gateplayerui uses it.
+
+Reverse: drop the preview.
+
+## B4130. The village peoples of the Missouri join the West (2026-11-14)
+WoDX Creation and Chronicle. The Mandan, the Hidatsa, the Arikara and the Pawnee join the American West's mix from 1197: together 14 in 100 before 1500 and 8 in 100 before 1800, then 1 each after the smallpox of 1837 and the reservations (the Pawnee and the Hidatsa still 1 each today). Taken as recommended while Ben was away; logged in PENDING-REVIEW.
+
+Reverse: put back the old north-america-west mixes in world-rules.mjs and drop missouriTables from people-world.mjs.
+
+## B4131. Names from the historical record, fewer than 300 (2026-11-14)
+WoDX Creation. The WoD books on the PC hold no names for these peoples (a search of the OCR text found one Mandan chief, Four Bears, and people-level mentions in Croatan Song and the Wendigo tribebook). The lists come from the treaties of 1825 to 1857, Catlin and Bodmer's sitters, Lewis and Clark, the agency rolls of Fort Berthold and the Pawnee agency, and the family names on the rolls since. Each people has fewer than 300 names, as with the Plains and Southwest peoples; the lists grow when more records are checked.
+
+Reverse: edit the lists in data/people-missouri.mjs.
+
+## B4132. Villages and bands before 1800, family names after (2026-11-14)
+WoDX Creation. Before 1800 a person bears an own name alone, and a woman not named in the records is "a woman of" her village (On-a-Slant, Big Hidatsa, Star Village) or Pawnee band (the Skidi, the Chawi). From 1800 a church given name and a family name from the rolls. No church names before 1800: no mission reached the upper Missouri or the Platte before then.
+
+Reverse: change earlyChurch or towns for the four peoples in data/people-missouri.mjs.
