@@ -12,7 +12,7 @@ Needs WoDX Chronicle 0.1.7 or later. Werewolf, Mage and the other lines get thei
 ## Phase 4: Pass the Years
 
 - **Allies.** Any NPC can be made the ally of a player character; the patron's owners may then spend experience on it, from its own pool or the patron's.
-- **Pass the Years** (Clock or droplet button). Pick a number of years and press "Show what happens". Each character's changes are listed: ageing and death checks, an heir, ghoul feeding or lapse (V20 Dark Ages p. 399), bonds fading (p. 342), voluntary torpor (p. 350), the new era's ability list, and Backgrounds to review. Tick what to accept, then "Pass the years". A plan can be written to the "WoDX Time Skips" journal without changing anything. Nothing is deleted: the dead go to "WoDX · The Dead".
+- **Pass the Years** (Clock or droplet button). Pick a number of years and press "Show what happens". Each character's changes are listed: ageing and death checks, an heir, ghoul feeding or lapse (V20 Dark Ages p. 399), bonds fading (p. 342), voluntary torpor (p. 351), the new era's ability list, and Backgrounds to review. Tick what to accept, then "Pass the years". A plan can be written to the "WoDX Time Skips" journal without changing anything. Nothing is deleted: the dead go to "WoDX · The Dead".
 - **Time-skip test.** The Phase 4 gate: it makes test characters and passes the years from 1200 to 2025. It moves the clock, so use it in wodx-template.
 
 ## 0.11.0: Lifepaths

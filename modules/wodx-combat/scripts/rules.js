@@ -38,7 +38,7 @@ export function clampDifficulty(d) {
  * profile = soak model:
  *   vampire  – Stamina + Fortitude + armor vs bashing/lethal; Fortitude + armor vs aggravated.
  *   ghoul    – Stamina + Fortitude vs bashing and lethal (revenants, and ghouls after the third sip);
- *              aggravated: armor only, as a mortal (Ghouls & Revenants p. 262).
+ *              aggravated: armor only, as a mortal (Ghouls & Revenants; the page is still to find, p. 262 does not exist).
  *   mortal   – Stamina + armor vs bashing; armor only vs lethal/aggravated (mortals treat aggravated as lethal).
  *              Also used for mages, hunters and animals (Mage 20 p. 334: mages cannot soak lethal without protection).
  *   lupine   – Stamina vs everything, silver ("bane") leaves no natural soak (W20 p. 148). Also the generic
