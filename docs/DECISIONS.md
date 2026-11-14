@@ -182,7 +182,7 @@ Next free block: B3630
 | B3520-B3539 | Gaps from Ben's design notes: referee ticket, crisis levers, binding card, roster, inheritance, the 2022 cap (used B3520-B3536) | Chronicle, Storyteller, Otherworlds, NPC, Actions |
 | B3540-B3549 | Supernatural sight: the Penumbra, a mage's sight, chimerical sight, the Shadowlands view (notes gaps g8 to g11) (used B3540-B3547) | Senses, Actions |
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
-| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3609) | Chronicle |
+| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3611) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5821,3 +5821,13 @@ Reverse: drop the wodxArrest hook in law-trial.mjs; arrests then end at the arre
 Kindred defendants roll at +1 difficulty (courts sit by day), and hot iron and fire are death to them at the ordeal; a revenant's family lawyers take 1 off. Other lines get a Storyteller line: Rage in the dock, vulgar magic before sleepers, cold iron in the cells, a wraith's whisper to a juror, no court hearing that the dead were monsters, a mummy's old names, a demon host's past.
 
 Reverse: zero the diff figures in LINE_TRIAL.
+
+## B3610. Sentences and their marks (2026-11-13)
+Deeds weigh by the law heat's gravity: up to 2 light, up to 5 middle, more grave. The court offers the tier's sentences the land allows, else the nearest tier's. Time: prison 1 to 5 years, hard labour 2 to 10, galleys 3 to 10, camp 5 to 25, transportation 7 to 14, slavery 5 to 40, longer for graver deeds. Records are a register before 1880, a file to 1969, a database from 1970. Outlawry, banishment and a death sentence hold in the land that passed them until pardoned; a brand is for good. Marks are a flag on the actor (lawMarks). Fines are taken by hand through the money window. House figures.
+
+Reverse: drop the wodxVerdict hook in law-punish.mjs.
+
+## B3611. Splat hooks for sentences (2026-11-13)
+The sentencing card carries a line for the kind of character: a hanged Kindred wakes, and a cell with a window is a sentence of its own; a ghoul starves of the domitor's blood; years in a cell for a Garou or a mage; iron bars and Glamour; Fetters in the gallows yard; hunters meet others in the cells; an executed mummy rises; a demon's host; a revenant's family buys the pardon.
+
+Reverse: empty LINE_PUNISH.
