@@ -1,5 +1,6 @@
 import {MODULE_ID, SOCKET, isActiveGM, rule, setting, log} from "./util.mjs";
 import {registerSettings} from "./settings.mjs";
+import * as tokenLooks from "./token-looks.mjs";
 import {makeCalendarClass, makeCalendarConfig, setReform, EPOCH_YEAR} from "./calendar.mjs";
 import * as eras from "./eras.mjs";
 import * as approvals from "./approvals.mjs";
@@ -26,6 +27,7 @@ import * as migrations from "./migrations.mjs";
 import * as languages from "./languages.mjs";
 import * as tours from "./tours.mjs";
 import * as effects from "./effects.mjs";
+import * as looks from "./looks.mjs";
 import * as church from "./church.mjs";
 import * as law from "./law.mjs";
 import * as lawHeat from "./law-heat.mjs";
@@ -98,6 +100,7 @@ Hooks.once("init", () => {
   theme.applyLook();
   // Each player can hide looping video tiles on a slow computer
   effects.registerEffectSettings();
+  looks.registerLooks();
   // B60: the WoDX buttons each player sees
   playerTools.registerPlayerToolSettings();
   // B2810: Beginner and Full views, Find anything
@@ -198,6 +201,7 @@ Hooks.once("ready", async () => {
   eras.applyProfile(eras.activeEra().profile);
   playerTools.installToolFilter();
   playerTools.applyUi();
+  tokenLooks.setupTokenLooks(); // B4632: frenzy, Rotschreck and derangement bouts show
   playerView.installViewFilter();
   playerView.installHudGroups();
   playerView.installQuietChat();
@@ -245,6 +249,8 @@ Hooks.once("ready", async () => {
     endScene: timed.endScene,
     theme,
     effects: {hiding: effects.hiding, applyAll: effects.applyAll, isVideoSrc: effects.isVideoSrc},
+    // B3758: looks on the map that show players what happens to a place (show, don't tell)
+    looks: looks.api(),
     release: {check: release.check, current: release.current},
     when: {check: when.check, run: when.run, context: when.contextFor, checker: when.checker, parse: when.rules.parseWhen, parseThen: when.rules.parseThen, help: when.rules.helpText, rules: when.rules},
     // B3520-B3523: a player's freeform action as one ruling ticket in the queue
@@ -261,6 +267,7 @@ Hooks.once("ready", async () => {
     tours: {start: tours.startTour},
     traits: traits.traitsApi,
     derangements: derangements.derangementsApi,
+    tokenLooks: tokenLooks.api(),
     signatures: signatures.signaturesApi,
     pod: pod.podApi,
     legends: {open: () => legends.LegendsApp.open(), build: legends.build, book: legends.book, visible: legends.visible, setShown: legends.setShown, gather: legends.gather, addDeed: legends.addDeed},

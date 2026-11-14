@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.88.0 (Powers that reach the world show it: ground areas, town-wide blows, plague and taint put WoDX Chronicle's looks on the map (B3758))
 - 3.87.0 (Powers that reach the world: 48 powers by name flood, burn or shake a town, sicken it, foul or cleanse a place, sway its mood, or leave deep water, fire or broken ground on the scene; the Cast and Storyteller effect windows get a "Reaches the world" choice (B3757))
 - 3.86.0 (Destiny and Fate bank rerolls (B3919): trait-hooks rerollsPerStory, fortuneName)
 - 3.85.0 (Nature gives a Willpower point back (B3916): nature-rules.js NATURES (the 30 V20 archetypes, WoDX wording), API nature({actor}), the end-of-scene Nature card)

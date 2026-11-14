@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4660
+Next free block: B4730
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -194,7 +194,7 @@ Next free block: B4660
 | B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3719) | Library |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
-| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3757) | Actions, Storyteller |
+| B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3758) | Chronicle, Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
 | B3780-B3809 | The no-effect audit: a harmless hit makes its card (used B3780-B3809) | Combat |
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
@@ -213,8 +213,14 @@ Next free block: B4660
 | B4160-B4169 | Canada first nations names in the People generator (used B4160-B4162) | Creation, Chronicle |
 | B4600-B4609 | Show, don't tell: a visible: line on every feature's release note (used B4600) | tools (no module) |
 | B4610-B4619 | The PC runner rechecks every failing gate before it reports (used B4610) | tools (no module) |
-| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4629) | Storyteller, Otherworlds |
+| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4636) | Storyteller |
 | B4650-B4659 | Inuit names in the People generator (used B4650-B4652) | Creation, Chronicle |
+| B4660-B4669 | Taino names in the People generator (used B4660-B4662) | Creation, Chronicle |
+| B4680-B4689 | Aboriginal Australian names in the People generator (used B4680-B4682) | Creation, Chronicle |
+| B4690-B4699 | Central Africa names (Kongo, Luba, Ganda) (used B4690-B4692) | Creation, Chronicle |
+| B4700-B4709 | A heartbeat from GitHub for the PC runner (used B4700) | tools (no module) |
+| B4710-B4719 | Amazigh (Berber) names (used B4710-B4712) | Creation, Chronicle |
+| B4720-B4729 | Old installed tables stand aside for their replacements (used B4720) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6467,6 +6473,10 @@ How to reverse: drop gifts-fera.json from loadData and the feraGifts lookups in 
 WoDX Actions and WoDX Storyteller. A power that floods, burns or shakes a town, sickens it, fouls or cleanses a place, or turns a whole town's mood changed nothing past the people it touched. tools/powers/world-sweep.mjs reads every power WoDX lists for those effects; 48 of 2,853 reach the world, listed by name in world-effects.js WORLD_POWERS (a "Line|name" key keeps a name to one line, since Wraith Intimation's Ignite stirs a passion). The sweep also lists the powers whose words flag but were read and left out (sensing or hiding taint, one burning weapon, a drink); the harness fails when a new one appears. When a listed power takes, its effects card carries a world result next to its usual ones. Town-wide results (flood, fire, quake, storm damage, blight, a good harvest, riot, dread, calm) wait in the approval queue; once the Storyteller says yes, the scene's market town takes the blow as a town event with its own card and Undo (town-rules POWER_TOWN, beside the saga's flood: one power is one blow, scaled 1, 1.5 or 2 by 3, 5 or 7 successes). A sickness starts plague in the town (the bioplague after 2022) through contagion.power. Taint and cleansing move the place's Wyrm corruption a step a scale, with Undo. Ground results (deep water, fire, broken ground) are areas the Storyteller places, sized from the power where the book gives a reach (Summon Water: Faith yards) and drawn on the map for everyone (blue water, orange fire, brown rubble) under the tokens, gone with the area: deep water carries WoDX Combat's water flag so swimming and drowning hold there, fire deals two dice of lethal damage (more with more successes), broken ground knocks down. Thresholds (house rule): 3 successes for a town result, 2 for taint, 1 for ground, 3 for deep water. The Mage Cast window and the Storyteller's effect window get a "Reaches the world" choice for powers with no list.
 How to reverse: drop the world results from effects.js planOf, plan and stItems, and the power functions from the towns and contagion apis.
 
+## B3758. Looks on the map: one layer that shows players what happens to a place (2026-11-14)
+WoDX Chronicle and WoDX Actions. Show, don't tell: a flood, a fire, a storm or a quake should be seen on the map, not only named on a card. WoDX Chronicle gets one layer every module calls, api.looks: show({scene, kind, at, until, fade, source}) puts a look on a scene (a spot with a radius, a region, or the whole scene), weather({scene, kind}) a scene-wide one, and end, endAll and list take them off. Kinds: water, flood, fire, smoke, rubble, taint, plague, storm, rain, fog, snow, quake and calm (looks-rules.mjs). Each look is kept on its scene, so it survives a reload, and ends by the world clock or the combat round. The Storyteller's computer places what everyone shares: a coloured shape at the spot (the old fallback), a Token Magic FX filter on it (flames, flood water, smoke) and the weather (FXMaster's rain, clouds, lightning, embers, fog or tint, or Foundry's own scene weather when FXMaster is off, put back when the look ends). Each player's computer draws the rest itself (Sequencer animations from the JB2A pack, picked by name from Sequencer's database, and a short screen shake for a quake) at that player's own level, a new client setting: Full, Light (fainter, one animation an area, weather at half strength, no shake) or Off (the plain shape and still weather), for slow computers. Every module is optional: with none on, a look is its shape and Foundry's own weather. Ben chose FXMaster, Token Magic FX, Sequencer and JB2A on 2026-11-14 (installed on the testbed). WoDX Actions' world results (B3757) now use it: a ground area gets its look on its drawing, gone with the area; a town-wide power that lands, a plague or a taint puts a look over the scene for a while (a quake a minute, a storm three hours, a plague a day), and its Undo takes the look off. Other modules (town turns, Wyrm corruption, havens, sieges) can call the same layer.
+How to reverse: drop looks.mjs and looks-rules.mjs from WoDX Chronicle and api.looks from its main.mjs, and the LOOK_KIND calls from WoDX Actions' effects.js.
+
 ## B3770. Kuei-jin make stone weapons and true jade (2026-11-14)
 WoDX Library, data/wonders-kuei-jin.mjs and scripts/wonders-kuei-jin.mjs. The Item Crafting Desk pick kj2 (full). Kindred of the East has jade talismans only as a Background (pp. 86-87), but the Companion (p. 67) gives the masters of Jade Shintai two powers that make things, Blade of Stone and Taste of Jade. Both are a Kuei-jin kit on the shared wonders registry (B3683), world setting craftKueiJin, on by default like the other kits.
 
@@ -7038,6 +7048,27 @@ Show-don't-tell desk v10. WoDX Storyteller (OMEN_LOOKS, EVENT_LOOKS, showOmen, s
 ## B4629. A town's prosperity and unrest show (2026-11-14)
 Show-don't-tell desk v11. WoDX Storyteller (prosperityLooksFor, syncProsperity). A rich town (prosperity 4 or 5) shows six or ten lit windows; a poor one (0 or 1) three or six beggars at the corners; an angry one (unrest 3, 4, 5) two, four or six words daubed on the walls. Getting by and grumbling show nothing, and small moves inside a band draw nothing new. House rules. Reverse: remove syncProsperity from setupTownLooks.
 
+## B4630. A district fed on too much empties at night (2026-11-14)
+Show-don't-tell desk v12, approved by Ben 2026-11-14. WoDX NPC (passerby-rules.mjs herdCrowd, herdStageAt; passersby.mjs). The passers-by on a scene read WoDX Storyteller's herd stage there for this month: after dark (7 PM to 6 AM) a Thinning district has three quarters of its people out, an Over-hunted one half, a Stripped one a quarter. By day the streets are as the town makes them, and a new month fills the herd again. House rule. Reverse: drop the herdCrowd factor in passersby.mjs.
+
+## B4631. A held place shows its holder's banner (2026-11-14)
+Show-don't-tell desk v5. WoDX NPC (faction-look-rules.mjs, faction-looks.mjs). A place a faction holds shows the faction's banner, a flag and its name in a colour that comes from the faction itself: two at the gates of a held scene, one at the middle of a held place inside a scene. A secret or dormant faction shows none. Whenever the factions change, every scene's banners are drawn again to match, through WoDX Storyteller's townLooks.setLooks, so a place changing hands swaps its banner. Guards in the holder's colours among the passers-by are left for later. World setting factionBanners, on by default. Reverse: turn factionBanners off, or remove setupFactionLooks from main.mjs.
+
+## B4632. Tokens show frenzy, Rotschreck and a derangement bout (2026-11-14)
+Show-don't-tell desk c1 and c3, approved by Ben 2026-11-14. WoDX Chronicle (token-look-rules.mjs, token-looks.mjs). A token whose actor has the Frenzy condition gets a red glow under it, a reddish tint and a slight shake, for everyone; Rotschreck a cold blue glow that flickers. A derangement bout (the Deranged condition) darkens, blurs, reddens, greys, brightens or greens the edges of the screen by the derangement, for the character's own player only (their assigned character or the tokens they control), since it happens inside the head; the Storyteller's screen stays clear. Drawn on each client from statuses and flags, never saved. Each player's effects level (wodx-chronicle.fxLevel, when the shared looks set it up) is obeyed: Light drops the shake, the flicker and the swim, Off shows nothing. api.tokenLooks.register(key, fn) lets other modules add looks (fn(token) returns {tint, aura, shake, flicker} or null), which may depend on who watches. Colours and strengths are house rules. Reverse: remove setupTokenLooks from main.mjs.
+
+## B4633. A sick character shows it (2026-11-14)
+Show-don't-tell desk c2, approved by Ben 2026-11-14. WoDX Storyteller (sick-looks.mjs). A character in the contagion state's people (caught a town's sickness) carries the Sick status, a WoDX Chronicle condition with no roll effect of its own, and a pale cast on the token through WoDX Chronicle's token looks, both for everyone. Getting better or being cured takes both away. The weekly Stamina rolls are as before. Reverse: remove setupSickLooks from main.mjs.
+
+## B4634. The thin Gauntlet, the thin Shroud and the Wyrm's haze, for the right eyes (2026-11-14)
+Show-don't-tell desk v14 and c4 (the smaller fix), approved by Ben 2026-11-14. WoDX Otherworlds (veil-look-rules.mjs, veil-looks.mjs). Where the Gauntlet is 3 or less where a viewer's character stands, a faint shimmer lies over the scene for werebeasts and mages; where the Shroud is 5 or less, a faint grey mist for the dead. A person with Wyrm taint carries a dark haze, through WoDX Chronicle's token looks, seen by werebeasts and anyone with a power named Sense Wyrm. The Storyteller sees them all; everyone else sees nothing. Drawn on each client, never saved, and Off in the effects level hides them. Thresholds and strengths are house rules. Reverse: remove setupVeilLooks from main.mjs.
+
+## B4635. Places of power glow for those who could see them (2026-11-14)
+Show-don't-tell desk v13 (the smaller fix). WoDX Storyteller (power-look-rules.mjs, power-looks.mjs). On the scene of a Node, a soft blue glow at its heart for mages, sized by its rating and dimmed to less than half when drained; a caern a green glow for werebeasts and mages, by its level, none once dead; a freehold's balefire a flickering amber flame for changelings, its size following the ranks, gone when out. The Storyteller sees them all. Drawn on each client, never saved; Light stops the flicker, Off hides them. Sizes and strengths are house rules. Reverse: remove setupPowerLooks from main.mjs.
+
+## B4636. Town looks go through the shared looks layer, labels and own colours stay drawings (2026-11-14)
+Now that WoDX Chronicle's shared looks layer is on main (B3758), the town looks (B4620-B4629) hand it every look it can draw well: fire, smoke, rubble, flood and the other kinds it knows, and every whole-scene look, whose weather is the richer sight. A look with a mark (a torch, a notice, a bird, a banner) or a colour of its own on a spot stays one of this module's drawings, because the layer has no labels and draws each kind in its own colour. Rule: forLayer in town-look-rules.mjs. Reverse: make forLayer return false.
+
 ## B4650. The Inuit in the Arctic and Canada (2026-11-14)
 WoDX Creation and Chronicle. The Arctic was Norse alone in every age; it now holds the Inuit 70 and the Norse 30 before 1500 (the Thule crossing and the Greenland farms), the Inuit 92 before 1800 and about 85 after, beside the Danes under the norse names. Canada gains the Inuit of the north at 3 before 1500, 2 before 1800 and 1 after. Taken as recommended; logged in PENDING-REVIEW.
 
@@ -7052,3 +7083,77 @@ Reverse: edit the lists in data/people-inuit.mjs.
 WoDX Creation. Before 1800 an own name alone; from 1800 a church given name and a family name, from the Danish church names of Greenland and the Project Surname names of Canada (which came in 1968 to 1971; the family groups stand in for the industrial age too, for want of a finer split).
 
 Reverse: change family or earlyChurch in data/people-inuit.mjs.
+
+## B4660. The Caribbean has people from 1197 (2026-11-14)
+WoDX Creation and Chronicle. The Caribbean had no people before 1492; it now holds the Taíno alone before the Spanish. From 1500 the mix holds the Spanish, English, French and Dutch, the Akan and Yoruba (the people brought in chains; their names are the ones WoDX already has for West Africa) and the Taíno at 13, falling to 1 in the hill towns after 1800. Hindi names arrive with the indentured workers after 1838. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old caribbean mixes and {from: 1492} in world-rules.mjs and drop tainoTables from people-world.mjs.
+
+## B4661. Names from the chroniclers, fewer than 300 (2026-11-14)
+WoDX Creation. The caciques and cacicas in Columbus, Pané, Las Casas, Oviedo and Peter Martyr, with the cacicazgos for women not named in the records. Fewer than 300 names. The Kalinago (Island Carib) wait for a better record.
+
+Reverse: edit the lists in data/people-taino.mjs.
+
+## B4662. Baptism from 1493 (2026-11-14)
+WoDX Creation. A Spanish church given name comes before the own name from 1493, as the encomienda rolls give them; Spanish family names after 1800.
+
+Reverse: change church or family in data/people-taino.mjs.
+
+## B4680. Australia has people from 1197 (2026-11-14)
+WoDX Creation and Chronicle. Australia had no people before 1788; the Aboriginal nations now hold it alone before the colonies, then 12 in 100 beside the English and Irish in the industrial age and 5 today. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old australia mixes and {from: 1788} in world-rules.mjs and drop aboriginalTables from people-world.mjs.
+
+## B4681. One list for the many nations, fewer than 300 (2026-11-14)
+WoDX Creation. The hundreds of nations had their own languages and names; WoDX holds one list from the colonial journals of Sydney and the frontier records, with the nation (the Eora, the Wiradjuri, the Noongar) for a woman not named in the records. Fewer than 300 names; a list per nation waits for a better record.
+
+Reverse: edit the lists in data/people-aboriginal.mjs.
+
+## B4682. Family names after 1800 (2026-11-14)
+WoDX Creation. Before 1800 an own name alone; from 1800 an English given name and a family name of the missions, stations and the central desert.
+
+Reverse: change family or earlyChurch in data/people-aboriginal.mjs.
+
+## B4690. Central Africa has people from 1197 (2026-11-14)
+WoDX Creation and Chronicle. Central Africa had no people before 1880; the Kongo, the Luba and Lunda and the Baganda now hold it from 1197, with a few Portuguese at the Kongo court after 1491 and the Swahili and French with the trade and the colony. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old central-africa mixes and {from: 1880} in world-rules.mjs and drop centralAfricaTables from people-world.mjs.
+
+## B4691. Three peoples for the region, fewer than 300 names each (2026-11-14)
+WoDX Creation. The Bakongo of the lower Congo, the Luba and Lunda of the Katanga and Kasai, and the Baganda of Lake Victoria stand for the region; the rainforest peoples, Rwanda and Burundi wait for a later list. Lists from the Kongo court letters, the king lists and the Buganda court and mission records; fewer than 300 names each.
+
+Reverse: edit the lists in data/people-central-africa.mjs.
+
+## B4692. Clans and church names (2026-11-14)
+WoDX Creation. Kongo kanda from the mother and Ganda ebika from the father stand as the family before 1800; Luba women unnamed in the records are "A woman of" a chiefdom. The Kongo court took Portuguese church names from 1491; the Luba and Baganda take church names after 1800 (the missions of the 1870s), then family names.
+
+Reverse: change clans, towns or earlyChurch in data/people-central-africa.mjs.
+
+## B4700. GitHub checks the PC runner is alive every 15 minutes (2026-11-14)
+PC runner (tools/pcq). The runner stopped once without a trace (14 November, about 17:25Z): no crash in its log or in
+Windows, and no alert, because the runner raises its own alerts. Jobs sat for minutes before anyone noticed. A
+scheduled GitHub workflow (pc-heartbeat.yml) now reads the runner's status issue, which the runner updates every 2
+minutes. When the status is more than 15 minutes old, it opens a pc-alert issue with the restart command, and it closes
+that issue once the status moves again. The coordinator already watches pc-alert issues.
+
+Reverse: delete .github/workflows/pc-heartbeat.yml.
+
+## B4710. The Maghreb holds the Amazigh beside the Arabs (2026-11-14)
+WoDX Creation and Chronicle. The Maghreb was all Arab; the Amazigh now hold 42 in 100 in the medieval mix, 34 in the industrial age beside the French, and 38 today. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old maghreb mixes in world-rules.mjs and drop amazigh from people-world.mjs.
+
+## B4711. One list for the Kabylie, the Rif, the Atlas and the Sous (2026-11-14)
+WoDX Creation. One Amazigh list from the Almoravid, Almohad, Zirid and Marinid records and the Kabyle and Moroccan names since; the Tuareg of the desert wait for a list of their own. Fewer than 300 names.
+
+Reverse: edit the amazigh entry in data/people-world.mjs.
+
+## B4712. Tribes and son-of names, then family names (2026-11-14)
+WoDX Creation. Before 1800 a person carries "ibn" or "bint" and the father's name, or the tribe (al-Sanhaji, al-Masmudi); from 1800 a Kabyle or Moroccan family name, many with Aït.
+
+Reverse: change fam or child in the amazigh entry.
+
+## B4720. An installed table no longer shipped stands aside (2026-11-14)
+WoDX Chronicle. When a region's mix is split by era (the Arctic's one table for every age became four), the table installed in the world under the old key was never updated, and as a world table it won every draw: the testbed's Arctic stayed all Norse. Now a world table whose module still registers but no longer ships its key, and which still holds the results it was installed with, is passed over in draws. Nothing is deleted; a table the Storyteller edited still wins.
+
+Reverse: drop the retired() check in allTables in gen.mjs.

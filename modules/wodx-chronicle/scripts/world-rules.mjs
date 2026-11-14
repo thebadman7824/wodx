@@ -56,8 +56,9 @@ export const WORLD_REGIONS = {
   "egypt": R("Egypt and the Nile (Cairo, Alexandria, Thebes)", "other", 30.0, 31.2, "hot-desert", "arab", {
     medieval: "arabic 100", "early-modern": "arabic 92, turkish 8", industrial: "arabic 90, turkish 5, greek 3, italian 2", modern: "arabic 100"}),
   "arabia": R("Arabia (Mecca, Medina, Sanaa, the Gulf)", "other", 21.4, 39.8, "hot-desert", "arab", {medieval: "arabic 100"}),
+  // The Amazigh of the mountains and the desert edge beside the Arab towns (B4710)
   "maghreb": R("The Maghreb (Fez, Tunis, Tripoli)", "other", 34.0, -5.0, "mediterranean", "arab", {
-    medieval: "arabic 100", industrial: "arabic 90, french 10", modern: "arabic 100"}),
+    medieval: "arabic 58, amazigh 42", industrial: "arabic 56, amazigh 34, french 10", modern: "arabic 62, amazigh 38"}),
   "persia": R("Persia (Isfahan, Shiraz, Tabriz)", "other", 32.7, 51.7, "inner-asia", "persian", {
     medieval: "persian 80, steppe 8, turkish 8, arabic 4", "early-modern": "persian 82, turkish 14, armenian 4"}),
   "central-asia": R("The steppe and the Silk Road (Samarkand, Karakorum, Kashgar)", "other", 39.7, 67.0, "inner-asia", "persian", {
@@ -88,8 +89,11 @@ export const WORLD_REGIONS = {
     medieval: "swahili 55, amharic 30, arabic 15", industrial: "swahili 55, amharic 30, arabic 10, hindi 5"}),
   "southern-africa": R("Southern Africa (the Cape, the Highveld, Great Zimbabwe's heirs)", "other", -26.2, 28.0, "southern-africa", "southern-african", {
     medieval: "zulu 100", "early-modern": "zulu 90, dutch 10", industrial: "zulu 65, dutch 18, english 14, hindi 3"}),
+  // The Kongo, Luba and Lunda, and Buganda from 1197; the Portuguese at the Kongo court from 1491, the Swahili and
+  // French with the trade and the colony (B4690)
   "central-africa": R("Central Africa (Kongo, the great lakes, the rainforest)", "other", -4.3, 15.3, "tropical-wet", "kongo", {
-    industrial: "swahili 55, french 30, portuguese 15", modern: "swahili 60, french 40"}, {from: 1880}),
+    medieval: "kongo 45, luba 35, ganda 20", "early-modern": "kongo 46, luba 34, ganda 18, portuguese 2",
+    industrial: "kongo 36, luba 30, ganda 14, swahili 10, french 6, portuguese 4", modern: "kongo 38, luba 34, ganda 12, swahili 8, french 8"}),
   // The Americas
   "canada": R("Canada (Québec, the Great Lakes, the prairies, the north)", "americas", 45.5, -73.6, "boreal", "canadian", {
     // and the Cree, the Anishinaabe and the Haida and Tlingit of the Northwest coast (B4160)
@@ -118,7 +122,11 @@ export const WORLD_REGIONS = {
     // the Maya of Yucatán, the Petén and the Guatemalan highlands beside the Nahua (B3830)
     medieval: "nahua 70, maya 30", "early-modern": "nahua 38, maya 17, spanish 45", industrial: "spanish 80, nahua 12, maya 8"}),
   "caribbean": R("The Caribbean (Havana, Kingston, Santo Domingo)", "americas", 23.1, -82.4, "caribbean", "caribbean", {
-    "early-modern": "spanish 55, english 25, french 15, dutch 5", industrial: "spanish 50, english 30, french 20"}, {from: 1492}),
+    // The Taíno of the islands from 1197; after 1492 the Spanish, English, French and Dutch, and the Akan and Yoruba
+    // brought in chains, while the Taíno dwindle to a share in the hill towns (B4660)
+    medieval: "taino 100", "early-modern": "spanish 34, english 16, french 10, dutch 3, akan 16, yoruba 8, taino 13",
+    industrial: "spanish 38, english 20, french 14, akan 15, yoruba 8, hindi 4, taino 1",
+    modern: "spanish 40, english 18, french 12, akan 16, yoruba 8, hindi 5, taino 1"}),
   "andes": R("The Andes (Cuzco, Lima, Potosí)", "americas", -13.5, -72.0, "andes", "andean", {
     medieval: "quechua 100", "early-modern": "quechua 65, spanish 35", industrial: "spanish 60, quechua 40"}),
   "brazil": R("Brazil (Salvador, Rio de Janeiro, the Amazon)", "americas", -13.0, -38.5, "brazil-coast", "brazilian", {
@@ -127,7 +135,8 @@ export const WORLD_REGIONS = {
     "early-modern": "spanish 100", industrial: "spanish 65, italian 35", modern: "spanish 68, italian 32"}, {from: 1536}),
   // Oceania
   "australia": R("Australia (Sydney, Melbourne, the outback)", "other", -33.9, 151.2, "australia-southeast", "australian", {
-    industrial: "english 75, irish 25", modern: "english 78, irish 12, italian 4, greek 3, chinese 3"}, {from: 1788}),
+    // The Aboriginal nations on their country from 1197; the colonies from 1788, the nations a share after (B4680)
+    medieval: "aboriginal 100", industrial: "english 66, irish 22, aboriginal 12", modern: "english 74, irish 11, italian 4, greek 3, chinese 3, aboriginal 5"}),
   "aotearoa": R("Aotearoa New Zealand", "other", -41.3, 174.8, "aotearoa", "australian", {
     medieval: "maori 100", industrial: "english 55, maori 30, irish 15", modern: "english 70, maori 18, irish 12"}),
   "pacific-islands": R("The Pacific islands (Hawaiʻi, Tahiti, Samoa)", "other", 21.3, -157.9, "pacific-islands", "pacific", {

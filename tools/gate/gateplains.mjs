@@ -19,7 +19,11 @@
  *  11. the Great Basin (B4150): the Shoshone and the Ute by division and band
  *  12. Canada (B4160): the Cree and Anishinaabe by division and town, the Haida and Tlingit by clan
  *  13. the Inuit (B4650): in the Arctic beside the Norse and in Canada, own names for anyone, family names later
- *  14. clean up
+ *  14. the Taíno (B4660): the Caribbean named before 1492, church names after, the Akan and Yoruba beside them
+ *  15. Aboriginal Australians (B4680): Australia named from 1197, women of a nation, family names later
+ *  16. central Africa (B4690): the Kongo, Luba and Ganda from 1197, Kongo church names from 1491
+ *  17. the Amazigh (B4710): the Maghreb's Berbers beside the Arabs, tribes and Aït family names
+ *  18. clean up
  * Result: Data/wodx-gate/gateplains-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -160,6 +164,42 @@ export async function run() {
       G.ok("13. the Inuit in the Arctic and Canada; own names, then family names",
         med.includes("inuit") && med.includes("norse") && results({era: "medieval", culture: "canada"}, "people.origin").includes("inuit") && !bad.length,
         {medieval: med, bad: bad.slice(0, 6), sample: ar("medieval", 4).map(p => p.name)});
+    });
+    await G.step("14. the Taíno", async () => {
+      const med = results({era: "medieval", culture: "caribbean"}, "people.origin"), em = results({era: "early-modern", culture: "caribbean"}, "people.origin"), bad = [];
+      const cb = (era, n) => Array.from({length: n}, (_, i) => R.nameOf({rand: gen().random(`gateplains:ta:${era}`, i),
+        tables: gen().lookup({...gen().context(), era, culture: "caribbean"}), origin: "taino", sex: i % 2 ? "female" : "male"}));
+      for ( const p of cb("medieval", 20) ) if ( p.family || p.name.includes("{") ) bad.push(`medieval: ${p.name}`);
+      for ( const p of cb("modern", 10) ) if ( !p.family || p.name.includes("{") ) bad.push(`modern: ${p.name}`);
+      G.ok("14. the Taíno in the Caribbean; own names, then church and family names",
+        med.includes("taino") && em.includes("akan") && em.includes("taino") && !bad.length, {medieval: med, earlyModern: em, bad: bad.slice(0, 6), sample: cb("medieval", 4).map(p => p.name)});
+    });
+    await G.step("15. Aboriginal Australians", async () => {
+      const med = results({era: "medieval", culture: "australia"}, "people.origin"), bad = [];
+      const au = (era, n) => Array.from({length: n}, (_, i) => R.nameOf({rand: gen().random(`gateplains:ab:${era}`, i),
+        tables: gen().lookup({...gen().context(), era, culture: "australia"}), origin: "aboriginal", sex: i % 2 ? "female" : "male"}));
+      for ( const p of au("medieval", 20) ) if ( p.family || p.name.includes("{") ) bad.push(`medieval: ${p.name}`);
+      for ( const p of au("modern", 10) ) if ( !p.family || p.name.includes("{") ) bad.push(`modern: ${p.name}`);
+      G.ok("15. Aboriginal Australians on their country; own names, then family names", med.includes("aboriginal") && !bad.length,
+        {medieval: med, bad: bad.slice(0, 6), sample: au("medieval", 4).map(p => p.name)});
+    });
+    await G.step("16. central Africa", async () => {
+      const med = results({era: "medieval", culture: "central-africa"}, "people.origin"), bad = [];
+      const ca = (o, era, n) => Array.from({length: n}, (_, i) => R.nameOf({rand: gen().random(`gateplains:ca:${o}:${era}`, i),
+        tables: gen().lookup({...gen().context(), era, culture: "central-africa"}), origin: o, sex: i % 2 ? "female" : "male"}));
+      for ( const o of ["kongo", "ganda"] ) for ( const p of ca(o, "medieval", 10) ) if ( !/^of the .+ clan$/.test(p.family ?? "") ) bad.push(`${o} medieval: ${p.name}`);
+      for ( const p of ca("luba", "medieval", 10) ) if ( p.family || p.name.includes("{") ) bad.push(`luba medieval: ${p.name}`);
+      for ( const o of ["kongo", "luba", "ganda"] ) for ( const p of ca(o, "modern", 6) ) if ( !p.family || p.name.includes("{") ) bad.push(`${o} modern: ${p.name}`);
+      G.ok("16. central Africa named from 1197; clans, then church and family names",
+        ["kongo", "luba", "ganda"].every(o => med.includes(o)) && !bad.length, {medieval: med, bad: bad.slice(0, 6), sample: ca("kongo", "early-modern", 4).map(p => p.name)});
+    });
+    await G.step("17. the Amazigh", async () => {
+      const med = results({era: "medieval", culture: "maghreb"}, "people.origin"), bad = [];
+      const am = (era, n) => Array.from({length: n}, (_, i) => R.nameOf({rand: gen().random(`gateplains:am:${era}`, i),
+        tables: gen().lookup({...gen().context(), era, culture: "maghreb"}), origin: "amazigh", sex: i % 2 ? "female" : "male"}));
+      for ( const era of ["medieval", "modern"] ) for ( const p of am(era, 12) ) if ( !p.family || p.name.includes("{") ) bad.push(`${era}: ${p.name}`);
+      G.ok("17. the Amazigh in the Maghreb; tribes and son-of names, then family names",
+        med.includes("amazigh") && med.includes("arabic") && !bad.length, {medieval: med, bad: bad.slice(0, 6), sample: am("medieval", 4).map(p => p.name)});
     });
   } catch (e) {
     G.ok("error", false, {error: e.message});

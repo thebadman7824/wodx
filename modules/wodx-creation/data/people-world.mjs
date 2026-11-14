@@ -21,6 +21,9 @@ import {plainsNorthTables} from "./people-plains-north.mjs";
 import {basinTables} from "./people-basin.mjs";
 import {canadaTables} from "./people-canada.mjs";
 import {inuitTables} from "./people-inuit.mjs";
+import {tainoTables} from "./people-taino.mjs";
+import {aboriginalTables} from "./people-aboriginal.mjs";
+import {centralAfricaTables} from "./people-central-africa.mjs";
 import {ARMENIAN} from "./people-armenian.mjs";
 
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
@@ -198,6 +201,16 @@ const P = {
     f: "Taytu, Zewditu, Mentewab, Aster, Almaz, Tigist, Genet, Hirut, Meseret, Selamawit, Tsehay, Worknesh, Abebech, Bethlehem, Marta, Saba",
     // The second name is the father's given name
     child: ["", "", 1]},
+  // The Amazigh (Berbers) of the Kabylie, the Rif, the Atlas and the Sous (B4710): the dynasts and saints of the
+  // Almoravid, Almohad, Zirid and Marinid records, then the Kabyle and Moroccan given and family names since
+  amazigh: {
+    m: {old: "Yusuf, Tashfin, Ali, Ibrahim, Yahya, Abu Bakr, Tumart, Abd al-Mumin, Yaqub, Muhammad, Idris, Ziri, Buluggin, Hammad, Badis, Yaghmurasan, Abd al-Haqq, Abu Yusuf, Tariq, Kusayla, Hassan, Umar, Musa, Isa, Daud, Mansur, Wattas, Zayyan, Tamim, Muizz, Mazigh, Yidir, Mennad, Amghar, Ishaq, Abd Allah, Uthman, Ismail",
+      new: "Idir, Massinissa, Yuba, Aksil, Amastan, Mouloud, Lounes, Arezki, Ferhat, Saïd, Mokrane, Ameziane, Hocine, Mohand, Akli, Ali, Ahmed, Moha, Brahim, Lahcen, Hammou, Mbark, Lhoussaine, Omar, Youssef, Mustapha, Rachid, Kamel, Slimane, Belaïd, Mehdi, Karim"},
+    f: {old: "Zaynab, Tinhinan, Dihya, Fatima, Aisha, Kanza, Khadija, Tamima, Hawwa, Mariam, Tanina, Tafsut, Taous, Zahra, Safiyya, Mimuna, Itto, Yamina, Fadhma",
+      new: "Tiziri, Tanina, Dihya, Tafsut, Taous, Fadhma, Tassadit, Ouardia, Djamila, Tinhinane, Kahina, Itto, Tamazight, Lynda, Nadia, Fatima, Zahra, Aïcha, Malika, Yamina, Ouiza, Dahbia, Tounsia, Fadma, Khadija, Hayat, Amina"},
+    child: ["ibn", "bint", 3],
+    fam: {old: "al-Lamtuni, al-Masmudi, al-Sanhaji, al-Zanati, al-Kutami, al-Hawwari, al-Nafusi, al-Ghumari, al-Hintati, al-Jazuli, al-Lamti, al-Miknasi, al-Awrabi, al-Maghrawi, al-Ifrani, al-Matghari, al-Kumi, al-Masufi, al-Guddali, al-Tinmalli, al-Zayyani, al-Wattasi, al-Marini",
+      new: "Aït Ahmed, Feraoun, Mammeri, Amrouche, Matoub, Aït Menguellet, Ouyahia, Aït Ali, Amellal, Belaïd, Haddadi, Aït Hamouda, Ouali, Mokrani, Sadi, Mehenni, Lounès, Tighilt, Akhannouch, Oufkir, Aherdane, Oubaha, Chafik, Azaykou, Boukous, Ouzzine, Aït Baha, Ouhadi, Aït Lahcen, Bouzid, Ihaddaden, Oussedik, Aït Saada"}},
   zulu: {
     m: "Sipho, Themba, Bongani, Mandla, Sibusiso, Nkosana, Mthunzi, Dumisani, Jabulani, Vusumuzi, Zwelakhe, Mzwandile, Lungile, Siyabonga, Senzo, Bheki",
     f: "Nomvula, Thandiwe, Nomsa, Zanele, Lindiwe, Busisiwe, Nokuthula, Sibongile, Ntombi, Thandeka, Nonhlanhla, Zodwa, Khanyisile, Nomusa, Ayanda, Hlengiwe",
@@ -258,10 +271,10 @@ for ( const id of Object.keys(WORLD_REGIONS) ) {
 
 // Peoples with hand-built tables of their own (clans, names staged by age): the Haudenosaunee (B3120), the Algonquian
 // coast (B3510), the Plains (B3820) and the Southwest (B3930)
-const BUILT = {haudenosaunee: haudenosauneeTables(), ...Object.groupBy([...algonquianTables(), ...plainsTables(), ...southwestTables(), ...missouriTables(), ...plainsNorthTables(), ...basinTables(), ...canadaTables(), ...inuitTables()], t => t.id.split(".").at(-1))};
+const BUILT = {haudenosaunee: haudenosauneeTables(), ...Object.groupBy([...algonquianTables(), ...plainsTables(), ...southwestTables(), ...missouriTables(), ...plainsNorthTables(), ...basinTables(), ...canadaTables(), ...inuitTables(), ...tainoTables(), ...aboriginalTables(), ...centralAfricaTables()], t => t.id.split(".").at(-1))};
 export const WORLD_PEOPLE_TABLES = [...origins, ...names, ...Object.values(BUILT).flat()];
 /** Peoples who bear a given name alone in some or all ages. */
-export const GIVEN_ONLY = new Set(["new-england-algonquian", "powhatan", "lakota", "cheyenne", "comanche", "kiowa", "apache", "arikara", "pawnee", "mandan", "hidatsa", "blackfoot", "arapaho", "shoshone", "ute", "cree", "anishinaabe", "inuit", ...Object.entries(P).filter(([, p]) => !p.child && (!p.fam || (typeof p.fam !== "string" && !Object.keys(p.fam).some(k => k === "old" || k.includes("medieval"))))).map(([o]) => o)]);
+export const GIVEN_ONLY = new Set(["new-england-algonquian", "powhatan", "lakota", "cheyenne", "comanche", "kiowa", "apache", "arikara", "pawnee", "mandan", "hidatsa", "blackfoot", "arapaho", "shoshone", "ute", "cree", "anishinaabe", "inuit", "taino", "aboriginal", "luba", ...Object.entries(P).filter(([, p]) => !p.child && (!p.fam || (typeof p.fam !== "string" && !Object.keys(p.fam).some(k => k === "old" || k.includes("medieval"))))).map(([o]) => o)]);
 /** Every people named here. */
 export const WORLD_PEOPLES = [...Object.keys(P), ...Object.keys(BUILT)];
 /** Peoples raised to at least 300 distinct names (Ben 2026-11-13, B3310 on): one at a time, the biggest homelands first. */

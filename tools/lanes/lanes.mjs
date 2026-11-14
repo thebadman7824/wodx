@@ -66,10 +66,21 @@ async function start(lane) {
   for ( let i = 0; i < 60; i++ ) { await sleep(3000); if ( await isUp(lane) ) { console.log(`Lane ${lane.id} up at ${laneUrl(lane)} (pid ${child.pid}).`); return; } }
   throw new Error(`Lane ${lane.id} did not come up within 3 minutes; see ${path.join(lane.dataPath, "Logs", "lane-server.log")}`);
 }
+/** True when process pid is a node process started for this lane (its command line holds the lane's data folder). */
+function pidIsLane(pid, lane) {
+  if ( process.platform !== "win32" ) return true;
+  const r = spawnSync("powershell.exe", ["-NoProfile", "-Command", `(Get-CimInstance Win32_Process -Filter "ProcessId=${Number(pid)}").CommandLine`], {encoding: "utf8", windowsHide: true});
+  const cmd = String(r.stdout ?? "").toLowerCase().replace(/\\/g, "/");
+  const data = String(lane.dataPath).toLowerCase().replace(/\\/g, "/").replace(/\/+$/, "");
+  return /node(\.exe)?/.test(cmd) && cmd.includes(data) && cmd.includes(`--port=${lane.port}`);
+}
 async function stop(lane) {
   const pid = Number(readJson(path.join(laneDir(lane), "server.pid")) ?? 0);
   if ( !(await isUp(lane)) ) return false;
   if ( !pid || !pidAlive(pid) ) throw new Error(`Lane ${lane.id} is up, but not by a server this tool started. Stop it by hand first.`);
+  // server.pid can be stale and Windows reuses process ids: kill only a node process whose command line names this
+  // lane's data folder (twice today a stale id took down the PC runner instead of the lane)
+  if ( !pidIsLane(pid, lane) ) throw new Error(`Lane ${lane.id}: process ${pid} in server.pid is not this lane's Foundry (stale id); nothing was killed. Stop the lane by hand.`);
   process.kill(pid);
   for ( let i = 0; i < 20 && await isUp(lane); i++ ) await sleep(1000);
   fs.rmSync(path.join(laneDir(lane), "server.pid"), {force: true});
@@ -147,6 +158,8 @@ try {
       const src = getLane(cfg, 1);
       if ( fs.existsSync(worldDir(lane)) && !flag("again") ) die(`Lane ${lane.id} already has a world at ${worldDir(lane)}. Use reset, or --again.`);
       if ( !fs.existsSync(path.join(cfg.knownGood, cfg.world)) ) die(`No known-good copy at ${cfg.knownGood}. Stop lane 1 and run: lanes.mjs snapshot --from 1`);
+      // --again on a lane in use: stop its Foundry first, or the world copy lands on an open database
+      if ( flag("again") && await isUp(lane) ) await stop(lane);
       for ( const d of ["Data/modules", "Data/systems", "Data/worlds", "Config", "Logs"] ) fs.mkdirSync(path.join(lane.dataPath, d), {recursive: true});
       // Config: everything from lane 1 (licence, certificate), then options.json with this lane's port and UPnP off.
       // Not lane 1's lock files: a copied options.json.lock keeps the new lane from starting (B4103).
