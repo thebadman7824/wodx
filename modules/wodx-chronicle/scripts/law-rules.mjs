@@ -13,6 +13,13 @@
  */
 
 /** Crimes a row can put on or take off the books. Evergreen ones are on every record from the first row. */
+import {futureRowsFor, FUTURE_FROM} from "./law-future-rules.mjs";
+
+/** The Future Darkness branch (B3620): set by WoDX Chronicle from the house rule futureBranch; off by default. */
+let FUTURE = false;
+export const setFuture = on => { FUTURE = !!on; };
+export const futureOn = () => FUTURE;
+
 export const CRIMES = {
   murder: "Murder", theft: "Theft", arson: "Arson", treason: "Treason against the ruler", violence: "Wounding or beating",
   forgery: "Forgery and false coin", rebellion: "Rising against the lord",
@@ -26,7 +33,10 @@ export const CRIMES = {
   "caste-breach": "Breaking the rules of caste in food, touch or marriage", "cow-killing": "Killing a cow",
   "pass-law": "Being found without a pass where the pass laws apply",
   "commoner-arms": "A commoner carrying a sword", "leaving-country": "Leaving the country, or coming back from abroad",
-  "alcohol": "Making or selling alcohol"
+  "alcohol": "Making or selling alcohol",
+  // B3620: the Future Darkness only
+  "low-score": "Falling below the citizen's score the state requires", unregistered: "Living without a registered identity",
+  "unlicensed-cyberware": "Fitting or carrying unlicensed cyberware"
 };
 export const EVERGREEN_CRIMES = ["murder", "theft", "arson", "treason", "violence", "forgery"];
 
@@ -52,7 +62,9 @@ export const PUNISH = {
   prison: "Prison", "hard-labour": "Hard labour", camp: "A labour camp", "death-state": "Death by the state's own method",
   confiscation: "Loss of land and goods", flogging: "Flogging", bamboo: "Beating with the light or the heavy bamboo",
   "outcaste": "Being put out of one's caste", "transportation": "Transportation to a penal colony overseas",
-  "enslave": "Being sold into slavery"
+  "enslave": "Being sold into slavery",
+  // B3620: the Future Darkness only
+  erasure: "Erasure: name, accounts and rights deleted"
 };
 
 /** Keepers of order. */
@@ -69,12 +81,14 @@ export const ORDER = {
   "sheriff": "The sheriff of the shire, who can raise the posse",
   "jito": "The shogun's land stewards and constables",
   "clan-elders": "The elders and fighters of each clan",
-  "marshals": "Federal marshals and town marshals"
+  "marshals": "Federal marshals and town marshals",
+  // B3620: the Future Darkness only
+  algorithm: "Predictive policing: the machine names who to watch", corporate: "Corporate security with the powers of police"
 };
 
 /** A record with nothing in it. Lists hold ids; rule is words. */
 export const blank = () => ({rule: {form: "", ruler: "", council: ""}, courts: [], proof: [], crimes: [...EVERGREEN_CRIMES],
-  punish: [], order: [], taxes: [], warn: [], bribe: 2, catch: 0.3, guess: false});
+  punish: [], order: [], taxes: [], warn: [], bribe: 2, catch: 0.3, guess: false, spec: false});
 
 /**
  * A row: {from, to?, note, set?: {...}, add?: {list: [ids]}, drop?: {list: [ids]}}.
@@ -713,10 +727,13 @@ export function familyOf(region) {
 }
 
 /** Every row that applies to a region, in year order (family rows before the region's own for the same year). */
-export function rowsFor(region) {
-  const fam = familyOf(region).family.rows.map(r => ({...r, own: false}));
+export function rowsFor(region, {future = FUTURE} = {}) {
+  const f = familyOf(region);
+  const fam = f.family.rows.map(r => ({...r, own: false}));
   const own = (REGION_ROWS[region] ?? []).map(r => ({...r, own: true}));
-  return [...fam, ...own].sort((a, b) => a.from - b.from || (a.own - b.own));
+  // B3620: on the Future Darkness branch, the guesses from 2023 on, after the land's own rows
+  const fut = future ? futureRowsFor(f.id, region).filter(r => r.from >= FUTURE_FROM).map(r => ({...r, own: true, spec: true})) : [];
+  return [...fam, ...own, ...fut].sort((a, b) => a.from - b.from || (a.own - b.own) || ((a.spec ? 1 : 0) - (b.spec ? 1 : 0)));
 }
 
 /**
@@ -724,24 +741,24 @@ export function rowsFor(region) {
  * @returns {{region, year, family, familyLabel, guess, planned?, rule, courts, proof, crimes, punish, order, taxes, warn, bribe, catch, since}}
  *   since: the year and note of the newest row in force
  */
-export function lawOf(region = "moravia", year = 1197) {
+export function lawOf(region = "moravia", year = 1197, {future = FUTURE} = {}) {
   const y = Math.round(Number(year) || 0);
   const f = familyOf(region);
   const rec = blank(); let since = null;
-  for ( const row of rowsFor(region) ) {
+  for ( const row of rowsFor(region, {future}) ) {
     if ( row.from > y ) break;
     apply(rec, row, y);
-    if ( !(row.to != null && y > row.to) ) since = {year: row.from, note: row.note};
+    if ( !(row.to != null && y > row.to) ) { since = {year: row.from, note: row.note}; if ( row.spec ) rec.spec = true; }
   }
   for ( const k of ROW_LISTS ) rec[k] = uniq(rec[k]);
   return {region, year: y, family: f.id, familyLabel: f.family.label, ...rec, guess: f.guess, ...(f.planned ? {planned: f.planned} : {}), since};
 }
 
 /** The rows crossed going from one year to another (either way), for the Storyteller's note when the clock jumps. */
-export function changesBetween(region, from, to) {
+export function changesBetween(region, from, to, {future = FUTURE} = {}) {
   const a = Math.min(from, to), b = Math.max(from, to);
   const out = [];
-  for ( const row of rowsFor(region) ) {
+  for ( const row of rowsFor(region, {future}) ) {
     if ( row.from > a && row.from <= b ) out.push({year: row.from, note: row.note});
     if ( row.to != null && row.to + 1 > a && row.to + 1 <= b ) out.push({year: row.to + 1, note: `No longer: ${row.note.charAt(0).toLowerCase()}${row.note.slice(1)}`});
   }
