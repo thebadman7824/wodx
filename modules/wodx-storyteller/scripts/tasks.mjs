@@ -142,6 +142,7 @@ export async function tick({force = false} = {}) {
       const before = {}, after = {}, lines = [], built = [];
       const pursePrev = a.flags?.[MOD]?.money?.purse ? foundry.utils.deepClone(a.flags[MOD].money.purse) : null;
       let paidAny = false;
+      const paidBefore = {}, paidNow = {};
       // B3341: projects past the weekly budget pause, newest first
       const over = new Set(P.overBudget(tasksOf(a), budgetOf(a)));
       for ( const task of tasksOf(a) ) {
@@ -174,7 +175,17 @@ export async function tick({force = false} = {}) {
         };
         const dice = poolFor(a, t);
         if ( await payNow() ) while ( due-- > 0 && t.status === "open" ) {
-          const r = await rollOnce(dice, t.diff, t.specialty);
+          // B3689: costs paid on each roll; without them the work waits
+          let adds = 0;
+          if ( t.perRoll.length ) {
+            const vals = Object.fromEntries(t.perRoll.map(c => [c.path, paidNow[c.path] ?? foundry.utils.getProperty(a, c.path)]));
+            const p = R.payRoll(t.perRoll, vals);
+            if ( !p.ok ) { waits = p.why; t = {...R.pauseTask(t), waits: p.why}; break; }
+            for ( const [k, v] of Object.entries(p.updates) ) { if ( !(k in paidBefore) ) paidBefore[k] = foundry.utils.getProperty(a, k); paidNow[k] = v; }
+            adds = p.adds;
+          }
+          const r0 = await rollOnce(dice, t.diff, t.specialty);
+          const r = adds ? {...r0, successes: Math.max(0, r0.successes) + adds, botch: false} : r0;
           const at = t.next;
           t = R.stepTask(t, r, at);
           // B3342, B3343: trouble, and a courting roll's warmth
@@ -215,13 +226,13 @@ export async function tick({force = false} = {}) {
         after[task.id] = t;
         const more = R.dueRolls(t, t0);
         lines.push({id: t.id, name: t.name, status: t.status, rolled, sum, botches, total: t.total, goal: t.goal, dice, diff: t.diff, more, waits,
-          stage: t.stages.length ? `${t.stages[t.stage]?.name ?? ""} (stage ${t.stage + 1} of ${t.stages.length})` : "", quality: t.quality});
+          stage: t.stages.length ? `${t.stages[t.stage]?.name ?? ""} (stage ${t.stage + 1} of ${t.stages.length})` : "", quality: t.quality, ruin: t.ruinedBy});
       }
       if ( !lines.length ) continue;
-      await a.update(Object.fromEntries(Object.entries(after).map(([id, t]) => [`flags.${MOD}.tasks.${id}`, t])));
+      await a.update({...Object.fromEntries(Object.entries(after).map(([id, t]) => [`flags.${MOD}.tasks.${id}`, t])), ...paidNow});
       // 0.42.0: a task that has just ended, for WoDX NPC's errands
       for ( const [id, t] of Object.entries(after) ) if ( ["done", "ruined"].includes(t.status) && !["done", "ruined"].includes(before[id]?.status) ) Hooks.callAll("wodxTaskDone", {actor: a, task: t});
-      await postCard(a, lines, before, {built, purse: paidAny ? pursePrev : undefined});
+      await postCard(a, lines, before, {built, purse: paidAny ? pursePrev : undefined, paid: paidBefore});
       for ( const l of lines ) {
         // B3343: what a finished project leaves, for the Storyteller to award
         if ( l.status === "done" && after[l.id]?.nights ) {
@@ -229,7 +240,7 @@ export async function tick({force = false} = {}) {
           await log({kind: "task", actor: isPC(a) ? a.id : null, name: a.name, attention: o.background ? `A dot of ${o.background} to award` : null, text: `${a.name}: ${l.name}. ${o.text}`});
         }
         if ( l.status === "done" || l.status === "ruined" ) await log({kind: "task", actor: isPC(a) ? a.id : null, name: a.name,
-          attention: l.status === "ruined" ? "A long task was ruined" : null, text: `${a.name}: ${l.name} ${l.status === "done" ? "is finished" : "was ruined by a botch"}.`});
+          attention: l.status === "ruined" ? "A long task was ruined" : null, text: `${a.name}: ${l.name} ${l.status === "done" ? "is finished" : `was ${R.ruinWord(after[l.id])}`}.`});
       }
       out.push({actor: a.id, lines});
     }
@@ -241,18 +252,18 @@ function lineHtml(l) {
   if ( l.waits && !l.rolled ) return `<li><b>${esc(l.name)}</b> waits: ${esc(l.waits)}. It is paused; resume it in Long tasks when that is put right.</li>`;
   const head = `<b>${esc(l.name)}</b> (${l.dice} dice, difficulty ${l.diff}): ${l.rolled} roll${l.rolled === 1 ? "" : "s"}, ${l.sum} success${l.sum === 1 ? "" : "es"}${l.botches ? `, ${l.botches} botch${l.botches === 1 ? "" : "es"}` : ""}.`;
   const tail = l.waits ? ` Now ${l.total} of ${l.goal}${l.stage ? ` on the ${esc(l.stage.toLowerCase())}` : ""}. It waits: ${esc(l.waits)}.`
-    : l.status === "done" ? ` <b>Finished${l.quality && l.quality !== "plain" ? `: ${esc(l.quality === "master" ? "a masterwork" : `${l.quality} work`)}` : ""}.</b>` : l.status === "ruined" ? " <b>A botch ruined the work.</b>"
+    : l.status === "done" ? ` <b>Finished${l.quality && l.quality !== "plain" ? `: ${esc(l.quality === "master" ? "a masterwork" : `${l.quality} work`)}` : ""}.</b>` : l.status === "ruined" ? ` <b>${l.ruin === "rolls" ? `Out of rolls short of the goal (${l.total} of ${l.goal}): the work is ruined.` : "A botch ruined the work."}</b>`
     : ` Now ${l.total} of ${l.goal}${l.stage ? ` on the ${esc(l.stage.toLowerCase())}` : ""}.${l.botches ? " A botch lost the successes so far." : ""}${l.more ? ` ${l.more} more roll${l.more === 1 ? "" : "s"} wait for the clock.` : ""}`;
   return `<li>${head}${tail}</li>`;
 }
 
-async function postCard(a, lines, before, {built = [], purse} = {}) {
+async function postCard(a, lines, before, {built = [], purse, paid = {}} = {}) {
   const done = lines.some(l => l.status === "done" || l.status === "ruined");
   await ChatMessage.create({content: `<div class="wodx-card wst-tasks"><h3>${esc(a.name)}: long tasks</h3><ul data-fixed>${lines.map(lineHtml).join("")}</ul>
     <p class="wodx-quiet">An extended action: successes add up roll by roll; a botch loses them, and ruins delicate work (V20 p. 252, V20 Dark Ages p. 324).</p>
     <button type="button" data-action="wst-task-undo">Undo</button></div>`,
     whisper: [...new Set([...gmIds(), ...ownerIds(a)])], speaker: {alias: done ? "A long task ends" : "Long tasks"},
-    flags: {[MOD]: {tasks: {actor: a.id, before, built, ...(purse !== undefined ? {purse} : {})}}}});
+    flags: {[MOD]: {tasks: {actor: a.id, before, built, ...(purse !== undefined ? {purse} : {}), ...(Object.keys(paid).length ? {paid} : {})}}}});
 }
 
 export async function undoTick(message) {
@@ -267,6 +278,8 @@ export async function undoTick(message) {
   // 0.27.0: a building's place goes again, and what its stages cost comes back
   if ( f.built?.length ) for ( const b of f.built ) await Own.unbuild(b);
   if ( f.purse !== undefined && f.purse !== null ) await a.update({[`flags.${MOD}.money.purse`]: f.purse});
+  // B3689: what each roll cost comes back
+  if ( f.paid && Object.keys(f.paid).length ) await a.update(f.paid);
   await message.update({[`flags.${MOD}.tasks.undone`]: true, content: message.content.replace(/<button type="button" data-action="wst-task-undo">Undo<\/button>/, "<p><i>Undone.</i></p>")});
 }
 
