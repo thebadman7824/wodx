@@ -129,8 +129,8 @@ for ( const l of Object.values(D.LORES) ) for ( const nm of [...(l.form ?? []), 
 }
 /* -- Hunter: the Reckoning edges (reckoning.js) */
 for ( const e of R.EDGES ) {
-  const kw = PK.keywordsOf("htr", slug(e.name));
-  add("Hunter (HtR)", `${R.PATHS?.[e.path]?.label ?? e.path}`, e.name, { status: e.e ? "card" : "roll", kw: kw?.keywords ?? [], page: `HtR p. ${e.p}`, how: "edge roll and Conviction, effect line shown" });
+  const kw = PK.keywordsOf("htr", `${e.path}-${e.id}`);
+  add("Hunter (HtR)", `${R.PATHS?.[e.path]?.label ?? e.path}`, e.name, { status: kw && !kw.passive && applyingKw(kw.keywords) ? "applies" : e.e ? "card" : "roll", kw: kw?.keywords ?? [], page: `HtR p. ${e.p}`, how: "edge roll and Conviction, effect line, and its keywords on the effects card" });
 }
 /* -- Hunters Hunted II Numina and hedge sorcery, True Faith (hunter.js) */
 for ( const [key, d] of Object.entries(H.NUMINA) ) for ( let l = 1; l <= (d.levels?.length ?? 5); l++ ) {
@@ -138,9 +138,10 @@ for ( const [key, d] of Object.entries(H.NUMINA) ) for ( let l = 1; l <= (d.leve
   add("Hunter (HH2)", `Numina: ${d.label}`, `${d.label} ${l}`, { status: applyingSpec(s) ? "applies" : "card", kw: s?.kw ? [s.kw] : [], page: `HH2 p. ${d.p}`, how: s ? `Numen effect spec (${s.kind})` : "level text shown" });
 }
 for ( const [key, d] of Object.entries(H.SORCERY) )
-  add("Hunter (HH2/DA)", "Hedge sorcery", d.label, { status: "roll", page: `p. ${d.p}`, how: "hedge magic roll and casting time; no effect" });
+  add("Hunter (HH2/DA)", "Hedge sorcery", d.label, { status: H.sorceryResults(key, { top: 2, successes: 2, need: 1, rating: 2 }).some(r => r.out.kind !== "note") ? "applies" : "card", kw: H.sorceryResults(key, { successes: 1 }).map(r => r.key), page: `Sorcerer p. ${d.p}`, how: "hedge magic roll and casting time; a working spell puts its effect on the card" });
 for ( const [book, list] of Object.entries(H.FAITH_POWERS) ) for ( const [lvl, t] of list )
-  add("Hunter (True Faith)", book === "da20" ? "True Faith (V20 Dark Ages)" : "True Faith (HH2)", `Faith ${lvl}`, { status: "card", page: book, how: "True Faith window shows the line; Repel is not applied" });
+  add("Hunter (True Faith)", book === "da20" ? "True Faith (V20 Dark Ages)" : "True Faith (HH2)", `Faith ${lvl}`, { status: lvl === 1 && H.repelResults(book, 2).length ? "applies" : "card", kw: lvl === 1 ? ["banish"] : [], page: book,
+    how: lvl === 1 ? "True Faith window: Repel puts Repelled on the creature's token" : "True Faith window shows the line" });
 /* -- Mummy: Hekau spells and rituals, named in the Hekau window (mummy.js cast, mummy-hekau.js) */
 for ( const [id, sp] of Object.entries(MH.SPELLS) ) {
   const pk = PK.LINE_KEYWORDS.mummy[id];
