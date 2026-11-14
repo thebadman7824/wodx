@@ -84,7 +84,7 @@ export function cautions(w, maker) {
   if ( w?.onlyFemale && low(maker?.gender) && !/^(f|female|woman)$/.test(low(maker.gender)) ) out.push(`${w.name} will not work for a male Garou (W20 pdf ${w.pdf}).`);
   if ( w?.tribe ) out.push(`A signature fetish of the ${w.tribe}; others making one may need the tribe's teaching.`);
   if ( w?.silver ) out.push(`Silver: carrying it costs ${w.silver} from the bearer's effective Gnosis.`);
-  if ( w?.atrocity ) out.push(`Making ${w.name} means torturing a living victim for a month: the Storyteller decides what follows (W20 Book of the Wyrm pdf ${w.pdf}).`);
+  if ( w?.atrocity ) out.push(`Making ${w.name} means torturing a living victim for a month, and the maker's Wyrm taint deepens a step when it is done (W20 Book of the Wyrm pdf ${w.pdf}; the taint is a house reading).`);
   if ( w?.wyrm ) out.push("A Bane fetish: a Gaian who carries or uses it risks the Wyrm's taint.");
   if ( w?.house ) out.push("Part of this entry is a house reading (logged for review).");
   return out;

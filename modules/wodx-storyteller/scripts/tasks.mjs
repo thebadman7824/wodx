@@ -175,7 +175,7 @@ export async function tick({force = false} = {}) {
           t = {...t, paidStage: t.stage};
           return true;
         };
-        const dice = poolFor(a, t);
+        let dice = poolFor(a, R.rollingAs(t));
         const iron = ironLegion(a);
         if ( await payNow() ) while ( due-- > 0 && t.status === "open" ) {
           // B3689: costs paid on each roll; without them the work waits
@@ -187,7 +187,9 @@ export async function tick({force = false} = {}) {
             for ( const [k, v] of Object.entries(p.updates) ) { if ( !(k in paidBefore) ) paidBefore[k] = foundry.utils.getProperty(a, k); paidNow[k] = v; }
             adds = p.adds;
           }
-          const r1 = await rollOnce(dice, t.diff, t.specialty);
+          const as = R.rollingAs(t);
+          dice = poolFor(a, as);
+          const r1 = await rollOnce(dice, as.diff, t.specialty);
           // B4877: the Iron Legion's patience: a success more on each roll that is not a botch
           const r0 = iron && !r1.botch ? {...r1, successes: Math.max(0, r1.successes) + 1} : r1;
           const r = adds ? {...r0, successes: Math.max(0, r0.successes) + adds, botch: false} : r0;

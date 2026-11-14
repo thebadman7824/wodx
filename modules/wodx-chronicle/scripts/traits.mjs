@@ -206,6 +206,15 @@ async function timedBite(a, x, f, said) {
     key: `${BITE_KEY}:${x.key}`, data: {name: f.name, tags: f.tags, diff: f.diff ?? 0, dice: f.dice ?? 0}, source: "WoDX trait"});
   return `${said}${f.name}: ${f.diff ? `+${f.diff} difficulty` : `${f.dice} dice`} on ${f.tags.includes("all") ? "every roll" : `${f.tags.join(", ")} rolls`} for the ${f.lasts === "night" ? "night" : "scene"}.`;
 }
+/**
+ * B5012: a timed roll effect another module puts on a character (WoDX Library's drink and drugs): dice or difficulty
+ * on rolls with any of the tags ("all" for every roll), for a duration applyTimed reads. key keeps one per cause.
+ */
+export async function addBite(a, {key, name, tags = ["all"], dice = 0, diff = 0, duration = {kind: "scene"}, source = ""} = {}) {
+  if ( !a?.createEmbeddedDocuments || !key || (!Number(dice) && !Number(diff)) ) return null;
+  return applyTimed(a, {name, description: `${Number(diff) ? `${diff > 0 ? "+" : ""}${diff} difficulty` : `${dice > 0 ? "+" : ""}${dice} dice`} on ${tags.includes("all") ? "every roll" : `${tags.join(", ")} rolls`}`,
+    duration, key: `${BITE_KEY}:${key}`, data: {name, tags, diff: Number(diff) || 0, dice: Number(dice) || 0}, source});
+}
 /** The bites in force on a character, as roll effects. */
 function biteSource(actor, ctx = {}) {
   const list = (actor?.effects ?? []).filter(e => !e.disabled && String(e.flags?.[MODULE_ID]?.timed?.key ?? "").startsWith(BITE_KEY)).map(e => e.flags[MODULE_ID].timed.data ?? {});
@@ -250,4 +259,4 @@ export function registerTraitHooks() {
   });
 }
 
-export const traitsApi = {view, of, has, effects, addSource, senses, shows, ticks, toughness, attitudeSeed, groupsOf, triggers, pulls, ledgerFor, prompt, worldPlan, makeReal, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};
+export const traitsApi = {addBite, view, of, has, effects, addSource, senses, shows, ticks, toughness, attitudeSeed, groupsOf, triggers, pulls, ledgerFor, prompt, worldPlan, makeReal, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};

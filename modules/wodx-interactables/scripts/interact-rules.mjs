@@ -786,6 +786,18 @@ export function clueTexts(o, successes = 0) {
   const n = Math.max(0, Math.min(CLUE_TIERS, Number(successes) || 0));
   return o.texts.slice(0, n + 1).filter(Boolean);
 }
+/**
+ * B5016: a botched look at a clue reads a false lead into it: a deeper line of another clue on the same map, or,
+ * with none, one of the stock wrong turns. others: the other clues' interactable data. House reading.
+ */
+export const FALSE_LEADS = ["Marks here point the wrong way, toward the door nobody used.", "Someone has been here recently; the signs say a stranger, not anyone known.",
+  "It looks older than it is, and whatever happened here seems long over.", "It seems to have nothing to do with the matter at hand."];
+export function falseClue(o, others = [], rand = Math.random) {
+  const own = new Set((o?.texts ?? []).map(t => String(t).trim()));
+  const pool = others.flatMap(x => (x?.texts ?? []).slice(1)).map(t => String(t ?? "").trim()).filter(t => t && !own.has(t));
+  const from = pool.length ? pool : FALSE_LEADS;
+  return from[Math.floor(rand() * from.length)];
+}
 /** What a container holds: one item a line (a UUID, or the name of an item in the world), at most MAX_ITEMS. */
 export function parseItems(text) {
   const lines = Array.isArray(text) ? text : String(text ?? "").split(/\r?\n/);

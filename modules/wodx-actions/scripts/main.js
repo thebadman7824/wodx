@@ -1699,7 +1699,12 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     }
     if (taint && taint !== "disease" && drunk > 0 && isVampire(actor)) {
         const pen = taint === "drunk" ? R.drinkPenalty(drinks) : 0;
-        html += `<div class="vta-note"><b>${esc(R.VESSEL_STATES[taint].label)}.</b> ${esc(R.VESSEL_STATES[taint].note)}${taint === "drunk" ? ` Now: −${pen} di${pen === 1 ? "e" : "ce"}.` : ""}</div>`;
+        // B5012: the drug in the blood reaches the vampire's rolls (WoDX Chronicle timed roll effects)
+        const bites = R.vesselBites(taint, pen);
+        const addBite = game.modules.get("wodx-chronicle")?.api?.traits?.addBite;
+        if (addBite && actor.isOwner) for (const b of bites) await addBite(actor, { ...b, source: "V20 pp. 301-302" });
+        const hall = bites.find(b => b.key === "vessel:hallucinogen");
+        html += `<div class="vta-note"><b>${esc(R.VESSEL_STATES[taint].label)}.</b> ${esc(R.VESSEL_STATES[taint].note)}${taint === "drunk" ? ` Now: −${pen} di${pen === 1 ? "e" : "ce"}.` : ""}${hall ? ` Now: ${hall.dice} dice.` : ""}</div>`;
     }
     // Prey Exclusion (V20 printed p. 485): the group on the item; tags make it certain, otherwise a reminder
     const pex = (actor.items ?? []).find(i => /prey exclusion/i.test(i.name ?? ""));

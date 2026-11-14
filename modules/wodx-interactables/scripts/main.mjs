@@ -768,7 +768,7 @@ export async function applyAsk(msg) {
     // Examining a clue: what the character learns goes to that player and the Storyteller only
     let whisper = null;
     if ( (op.id === "examine" || op.id === "look") && o.clue ) {
-      whisper = await clueReport(o, out, author, actor);
+      whisper = await clueReport(o, out, author, actor, doc);
       await clueCodex(o, doc, out, actor).catch(e => console.error(`${MOD} | clue codex`, e));
       // 0.32.0: what was found goes on the open case board
       if ( out.examine === undefined || out.examine >= 0 ) await pinClue({label: R.nameOf(o)}, doc, R.clueTexts(o, Math.max(0, out.examine ?? 0, Number(o.seen?.[actor.id]) || 0)), actor).catch(e => console.error(`${MOD} | case board`, e));
@@ -1088,13 +1088,16 @@ async function clueCodex(o, doc, out, actor) {
   return true;
 }
 /** Whisper what a character learns from a clue: the texts its successes reach (all it has learned so far). */
-async function clueReport(o, out, author, actor) {
+async function clueReport(o, out, author, actor, doc = null) {
   const best = out.examine === undefined ? 0 : Math.max(0, out.examine);
   const texts = R.clueTexts(o, best);
   const whisper = [...new Set([author?.id, ...gmIds()].filter(Boolean))];
   const para = t => `<p>${esc(t).replace(/\r?\n/g, "<br>")}</p>`;
-  const body = (texts.length ? texts.map(para).join("") : "<p>Nothing the Storyteller has written down.</p>")
-    + (out.examine < 0 ? `<p class="wodx-quiet">A botch: the Storyteller may add something misleading.</p>` : "");
+  // B5016: a botch reads a false lead into it, shown as if true; the Storyteller is told which line is false
+  const others = out.examine < 0 ? (doc?.parent?.tiles ?? []).filter(t => t.id !== doc?.id).map(t => describeTile(t)).filter(x => x?.clue) : [];
+  const lie = out.examine < 0 ? R.falseClue(o, others) : "";
+  const body = (texts.length ? texts.map(para).join("") : "<p>Nothing the Storyteller has written down.</p>") + (lie ? para(lie) : "");
+  if ( lie ) await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), content: cardHtml({title: `${esc(actor.name)} botched a look`, body: `<p>The last line shown is false: ${esc(lie)}</p>`})});
   return ChatMessage.create({speaker: {alias: actor.name}, whisper, content: cardHtml({title: `${esc(actor.name)}: ${esc(R.nameOf(o))}`, body})});
 }
 /**
@@ -1334,11 +1337,12 @@ export async function hazardOn(tokDoc, actor, o) {
   return {text: hit.text, lines, damageMsg, faces, diff: cr?.diff ?? 6};
 }
 const burning = new Set();
-// B5010: once a scene for each fire and each vampire (cleared when the scene changes)
+// B5010: once a scene for each fire and each vampire (cleared when play moves to another scene)
 const feared = new Set();
-Hooks.on("canvasReady", () => feared.clear());
+let fearedScene = null;
 async function fearOfFire(scene, tokDoc, actor, p) {
   if ( (game.wodxCombat?.getProfile?.(actor) ?? "") !== "vampire" ) return;
+  if ( fearedScene !== scene.id ) { feared.clear(); fearedScene = scene.id; }
   const g = scene.grid?.size ?? 100, yards = Number(scene.grid?.distance) || 1;
   for ( const doc of tilesOf(scene) ) {
     const o = describeTile(doc);
