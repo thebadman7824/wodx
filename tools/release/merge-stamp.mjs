@@ -79,7 +79,7 @@ export function effectWarnings(f) {
   return [];
 }
 
-/** Ben's standing rule (2026-11-14, B4120), show, don't tell: whatever happens in the game world shows on the map or
+/** Ben's standing rule (2026-11-14, B4600), show, don't tell: whatever happens in the game world shows on the map or
  * screen, not only in a line of text (a demon's flood brings rain on the scene and water over the town, not a card
  * that says the town floods). A minor or major release note says what players see in a visible: line (or
  * visible: none, and why nothing can be shown). Unlike effect:, a missing visible: line blocks the stamp and the merge. */
