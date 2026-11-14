@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.34.0 (Cover on shots (B4671): a shot or a throw reads WoDX Interactables' cover between the two tokens (a table, a counter, a barricade, a low wall, a table tipped over) and adds it to the difficulty, by the V20 cover table (pdf p. 286), with a line on the card)
 - 3.33.0 (Standing up from a knockdown (B3921): setting standUpRoll (on), api standUp, R.standResult and R.stoodPenalty)
 - 3.32.1 (The after-action card's fight now reaches the experience draft (B3170). It was calling WoDX Storyteller's fight note in the wrong place, so End of the night never listed the fight)
 - 3.32.0 (Ammunition in the fight (B3900, B3901): Reload loads only what the character carries (magazines first, then loose rounds; a muzzle-loader's ball needs a powder horn), and with Count shots on, bows and slings spend an arrow or a stone a shot)
