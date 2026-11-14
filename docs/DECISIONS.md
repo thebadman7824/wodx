@@ -213,7 +213,7 @@ Next free block: B4660
 | B4160-B4169 | Canada first nations names in the People generator (used B4160-B4162) | Creation, Chronicle |
 | B4600-B4609 | Show, don't tell: a visible: line on every feature's release note (used B4600) | tools (no module) |
 | B4610-B4619 | The PC runner rechecks every failing gate before it reports (used B4610) | tools (no module) |
-| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4635) | NPC |
+| B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4635) | Otherworlds |
 | B4650-B4659 | Inuit names in the People generator (used B4650-B4652) | Creation, Chronicle |
 <!-- decision-index:end -->
 
@@ -7049,6 +7049,9 @@ Show-don't-tell desk c1 and c3, approved by Ben 2026-11-14. WoDX Chronicle (toke
 
 ## B4633. A sick character shows it (2026-11-14)
 Show-don't-tell desk c2, approved by Ben 2026-11-14. WoDX Storyteller (sick-looks.mjs). A character in the contagion state's people (caught a town's sickness) carries the Sick status, a WoDX Chronicle condition with no roll effect of its own, and a pale cast on the token through WoDX Chronicle's token looks, both for everyone. Getting better or being cured takes both away. The weekly Stamina rolls are as before. Reverse: remove setupSickLooks from main.mjs.
+
+## B4634. The thin Gauntlet, the thin Shroud and the Wyrm's haze, for the right eyes (2026-11-14)
+Show-don't-tell desk v14 and c4 (the smaller fix), approved by Ben 2026-11-14. WoDX Otherworlds (veil-look-rules.mjs, veil-looks.mjs). Where the Gauntlet is 3 or less where a viewer's character stands, a faint shimmer lies over the scene for werebeasts and mages; where the Shroud is 5 or less, a faint grey mist for the dead. A person with Wyrm taint carries a dark haze, through WoDX Chronicle's token looks, seen by werebeasts and anyone with a power named Sense Wyrm. The Storyteller sees them all; everyone else sees nothing. Drawn on each client, never saved, and Off in the effects level hides them. Thresholds and strengths are house rules. Reverse: remove setupVeilLooks from main.mjs.
 
 ## B4635. Places of power glow for those who could see them (2026-11-14)
 Show-don't-tell desk v13 (the smaller fix). WoDX Storyteller (power-look-rules.mjs, power-looks.mjs). On the scene of a Node, a soft blue glow at its heart for mages, sized by its rating and dimmed to less than half when drained; a caern a green glow for werebeasts and mages, by its level, none once dead; a freehold's balefire a flickering amber flame for changelings, its size following the ranks, gone when out. The Storyteller sees them all. Drawn on each client, never saved; Light stops the flicker, Off hides them. Sizes and strengths are house rules. Reverse: remove setupPowerLooks from main.mjs.
