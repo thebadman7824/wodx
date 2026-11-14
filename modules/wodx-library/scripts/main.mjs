@@ -4,6 +4,8 @@ import * as SR from "./shelf-rules.mjs";
 import {setupExamine, examineApi} from "./examine.mjs";
 import {setupUse, useApi} from "./use.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as Reg from "./wonder-registry.mjs";
+import "./wonder-lines.mjs";
 
 /**
  * WoDX Library: gear by era. The weapons, armor and cyberware of each era's books (with their pages), in a world
@@ -14,7 +16,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 const MOD = G.MOD;
 const PACK_NAME = "wodx-gear";
 const PACK_LABEL = "WoDX · Gear by era";
-export const VERSION = "0.25.0";
+export const VERSION = "0.27.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 
@@ -161,9 +163,12 @@ Hooks.once("init", () => {
   game.settings.register(MOD, "installed", {scope: "world", config: false, type: Number, default: 0});
   game.settings.register(MOD, "shelves", {scope: "world", config: false, type: Number, default: 0});
   // B3635: making each line's supernatural items, one switch per line (on in the testbed; Live waits for Ben)
-  game.settings.register(MOD, "craftGarou", {name: "Making fetishes and talens (Werewolf and the Changing Breeds)",
-    hint: "Garou, the other Changing Breeds and Kinfolk with Gnosis pick a fetish or talen from the book lists, bind the spirit it needs, and the finished work makes the real item: a klaive also becomes a weapon and costs Gnosis for its silver.",
-    scope: "world", config: true, type: Boolean, default: true});
+  // B3683: each registered line's kit names its own switch (wonder-lines.mjs)
+  for ( const k of Reg.lines() ) if ( k.setting ) game.settings.register(MOD, k.setting, {name: k.settingName || `Making items (${k.title})`,
+    hint: k.settingHint || "", scope: "world", config: true, type: Boolean, default: k.settingDefault !== false});
+  game.settings.register(MOD, "craftKinfolk", {name: "Kinfolk with Gnosis may make fetishes and talens (house rule)",
+    hint: "The books say Kinfolk cannot make fetishes (W20 Kinfolk; Hammer and Klaive). Turn this on to let Kinfolk with Gnosis who know the rite make them anyway.",
+    scope: "world", config: true, type: Boolean, default: false});
   game.settings.registerMenu(MOD, "gearMenu", {
     name: "Gear by era", label: "Open gear by era",
     hint: "Weapons, armor and cyberware from each era's books, with their pages. Give them to characters, or browse the compendium.",
@@ -182,7 +187,8 @@ Hooks.once("ready", async () => {
   // 0.10.0: recipes for food, drink, medicine and drugs (the window is Storyteller's Cook, brew or mix)
   try { const Kn = await import("./know.mjs"); game.modules.get(MOD).api.know = Kn.setupKnow(); } catch (err) { console.warn("WoDX Library | What they could know could not start", err); }
   // B3630: the supernatural items each line can make (Storyteller's long tasks run the work)
-  try { const Wr = await import("./wonder-rules.mjs"); game.modules.get(MOD).api.wonders = {...Wr, enabled: line => { const k = Wr.LINES[line]?.setting; try { return !!k && !!game.settings.get(MOD, k); } catch (e) { return false; } }}; } catch (err) { console.warn("WoDX Library | supernatural items could not load", err); }
+  try { const Wr = await import("./wonder-rules.mjs"); game.modules.get(MOD).api.wonders = {...Wr, registerLine: Reg.registerLine, kitFor: Reg.kitFor, lines: Reg.lines, rowOf: Reg.rowOf, applyCosts: Reg.applyCosts,
+    settingOf: key => { try { return game.settings.get(MOD, key); } catch (e) { return undefined; } }, kinfolkMay: () => { try { return !!game.settings.get(MOD, "craftKinfolk"); } catch (e) { return false; } }, enabled: line => { const k = Reg.kitFor(line)?.setting ?? Wr.LINES[line]?.setting; try { return !!k && !!game.settings.get(MOD, k); } catch (e) { return false; } }}; } catch (err) { console.warn("WoDX Library | supernatural items could not load", err); }
   try { game.modules.get(MOD).api.recipes = await import("./recipe-rules.mjs"); } catch (err) { console.warn("WoDX Library | recipes could not load", err); }
   if ( game.user.isGM && game.users.activeGM?.isSelf ) {
     const data = await gear();

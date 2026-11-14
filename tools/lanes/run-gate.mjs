@@ -138,19 +138,22 @@ try {
     report(`DRIFT on lane ${lane.id}: no gate was run (see ${path.join(laneDir(lane), "drift.json")})`);
   } else {
     console.log(`Lane ${lane.id} matches the repo and its clean fingerprint.`);
+    // Gates that draw on the canvas need a viewed scene; a fresh sign-in may view none (B3089).
+    await within(page.evaluate(async () => { if ( !canvas?.scene && game.scenes.active ) await game.scenes.active.view(); }), 60000, "viewing the scene").catch(() => {});
     const copied = copyFixtures(repo, lane.dataPath);
     if ( copied.length ) console.log(`Copied ${copied.length} gate fixture(s) into Data/wodx-gate: ${copied.join(", ")}`);
     for ( const gate of gates ) {
       const limit = limitOf(gate);
       extendLock(lane, Date.now() + limit + 5 * 60000);
       if ( !page ) {
-        try { await signIn(); }
+        try { await signIn(); await within(page.evaluate(async () => { if ( !canvas?.scene && game.scenes.active ) await game.scenes.active.view(); }), 60000, "viewing the scene").catch(() => {}); }
         catch (e) { report(`${gate}: ERROR could not sign in again: ${e.message}`); code = 1; break; }
       }
       // B3086: each gate starts from the world as it was before it. World settings it changed are put back, settings
       // it added are removed, and on a lane that is reset every night (autoReset) the documents it left are deleted.
       const run = page.evaluate(async ({gate, ignore, cleanDocs, limit, stepMs}) => {
         const t0 = game.time.worldTime, paused = game.paused;
+        const activeId = game.scenes.active?.id ?? null, viewedId = canvas?.scene?.id ?? null;
         const skip = k => ignore.some(p => p.endsWith("*") ? k.startsWith(p.slice(0, -1)) : k === p);
         const store = () => [...(game.settings.storage.get("world")?.contents ?? game.settings.storage.get("world")?.values?.() ?? [])];
         const before = new Map(store().map(s => [s.key, s._source?.value ?? s.value]));
@@ -158,10 +161,10 @@ try {
         const ids = Object.fromEntries(COLS.filter(c => game[c]).map(c => [c, new Set([...game[c]].map(d => d.id))]));
         if ( paused ) await game.togglePause(false, {broadcast: true});
         let summary, error = null;
-        // B3089: a window the gate opened (a dialog, a roll prompt) that waits longer than stepMs is closed, so the
-        // step waiting on it goes on; document sheets the gate looks at are left open.
-        const isSheet = a => (foundry.applications.api?.DocumentSheetV2 && a instanceof foundry.applications.api.DocumentSheetV2) || (foundry.appv1?.sheets?.DocumentSheet && a instanceof foundry.appv1.sheets.DocumentSheet) || !!a.document?.documentName;
-        const windows = () => [...new Set([...(foundry.applications.instances?.values?.() ?? []), ...Object.values(ui.windows)])].filter(a => a?.rendered !== false && !isSheet(a));
+        // B3089: a dialog the gate opened (a confirm, a prompt, a roll dialog) that waits longer than stepMs is closed,
+        // so the step waiting on it goes on. Only dialogs: other windows a gate opens it may be reading.
+        const isDialog = a => (foundry.applications.api?.DialogV2 && a instanceof foundry.applications.api.DialogV2) || (foundry.appv1?.api?.Dialog && a instanceof foundry.appv1.api.Dialog) || /Dialog|Prompt/.test(a?.constructor?.name ?? "");
+        const windows = () => [...new Set([...(foundry.applications.instances?.values?.() ?? []), ...Object.values(ui.windows)])].filter(a => a?.rendered !== false && isDialog(a));
         const had = new Set(windows()), seen = new Map(), shut = [];
         const sweep = setInterval(() => {
           const t = Date.now();
@@ -199,6 +202,13 @@ try {
           if ( !extra.length ) continue;
           try { await game[c].documentClass.deleteDocuments(extra); docsGone += extra.length; } catch {}
         }
+        // The scene that was active and the one viewed come back too: a gate's own scene deleted above must not leave
+        // the next gate with no scene to view.
+        try {
+          const act = activeId && game.scenes.get(activeId), view = viewedId && game.scenes.get(viewedId);
+          if ( act && game.scenes.active?.id !== activeId ) await act.activate();
+          if ( view && canvas?.scene?.id !== viewedId ) await view.view();
+        } catch (e) { error ??= `putting the scene back: ${e?.message ?? e}`; }
         if ( game.paused !== paused ) await game.togglePause(paused, {broadcast: true});
         const text = typeof summary === "string" ? summary : summary?.summary ?? JSON.stringify(summary ?? null);
         return {summary: String(text).slice(0, 300), error, moved, back: game.time.worldTime === t0, settingsBack, docsGone, shut};

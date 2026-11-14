@@ -19,7 +19,9 @@ export const OFFSET_MIN = -12, OFFSET_MAX = 14;
  * Money of a land that stands under a wider region (B3191): a scene in Manila pays in pesos though the Philippines are
  * filed under the Malay world. The ids are WoDX Storyteller's money lists; the label is shown in Where this scene stands.
  */
-export const PLACE_MONIES = {philippine: "The Philippines", indochinese: "Indochina (Vietnam, Cambodia, Laos)", balkan: "The Balkans (Serbia, Bulgaria, Romania, Bosnia)"};
+export const PLACE_MONIES = {philippine: "The Philippines", indochinese: "Indochina (Vietnam, Cambodia, Laos)", balkan: "The Balkans (Serbia, Bulgaria, Romania, Bosnia)",
+  // B3552: a scene in the Shadowlands or Stygia pays in oboli
+  underworld: "The Underworld (oboli)"};
 export const PLACE_FAITHS = ["western", "orthodox", "islamic", "jewish", "hindu", "theravada", "tibetan", "chinese", "own"];
 
 /** A stored place kept clean: {latitude: number|null, offset: number}. */

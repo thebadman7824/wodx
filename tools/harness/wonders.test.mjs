@@ -47,9 +47,10 @@ test("wonders: who may make them, and what stops them", () => {
   assert.ok(W.blockers(w, garou({rituals: 2})).some(x => /Rituals 3/.test(x)));
   assert.ok(W.blockers(w, garou(), {spend: 9}).some(x => /has 5/.test(x)));
   assert.ok(W.blockers(W.byKey["bane-arrow"], garou(), {spend: 0}).some(x => /at least 1 Gnosis/.test(x)));
-  // a mortal can't; Kinfolk with Gnosis can (house reading); Kinfolk without Gnosis can't
+  // a mortal can't; Kinfolk can't by the books (B3680) unless craftKinfolk keeps the house reading; never without Gnosis
   assert.equal(W.makerOf({profile: "mortal", gnosis: 2}).kind, null);
-  assert.equal(W.makerOf({profile: "mortal", kinfolk: "Fianna", gnosis: 1}).kind, "kinfolk");
+  assert.equal(W.makerOf({profile: "mortal", kinfolk: "Fianna", gnosis: 1}).kind, null);
+  assert.equal(W.makerOf({profile: "mortal", kinfolk: "Fianna", kinfolkMay: true, gnosis: 1}).kind, "kinfolk");
   assert.equal(W.makerOf({profile: "mortal", kinfolk: "Fianna", gnosis: 0}).kind, null);
   assert.ok(W.MAKERS.kinfolk.house);
 });
@@ -107,18 +108,20 @@ test("wonders: player characters' gender never blocks the labrys", () => {
 
 test("wonders: Storyteller wiring (fetish kind opens the picker, approval, finish on task end)", () => {
   const t = src("modules/wodx-storyteller/scripts/tasks.mjs");
-  assert.match(t, /kind === "fetish" && W\.available\(a\)/);
+  assert.match(t, /kind === "fetish" \|\| kind === "wonder"\) && W\.available\(a\)/);
   assert.match(t, /t\.pool === "willpower"/);
   assert.match(t, /t\.delay \* R\.DAY/);
   const w = src("modules/wodx-storyteller/scripts/wonders.mjs");
   assert.match(w, /wodxTaskDone/);
   assert.match(w, /registerHandler\?\.\(T_WONDER/);
+  assert.match(w, /kit\.costs\(/); assert.match(w, /kit\.after\?\.\(/);
   const m = src("modules/wodx-storyteller/scripts/main.mjs");
   assert.match(m, /Wonders\.registerWonderApproval\(\)/);
   assert.match(m, /Wonders\.registerWonderHooks\(\)/);
   const lib = src("modules/wodx-library/scripts/main.mjs");
-  assert.match(lib, /"craftGarou"/);
+  assert.match(src("modules/wodx-library/scripts/wonders-garou.mjs"), /setting: "craftGarou"/);
   assert.match(lib, /api\.wonders/);
+  assert.match(lib, /Reg\.lines\(\)/);
 });
 
 test("wonders: carried silver lowers a shapechanger's Gnosis dice for fetishes and spirits (WoDX Actions)", () => {
@@ -126,4 +129,72 @@ test("wonders: carried silver lowers a shapechanger's Gnosis dice for fetishes a
   assert.match(g, /export function silverPenalty\(actor\)/);
   assert.match(g, /banesOf\(actor\)\.includes\("silver"\)/);
   assert.match(g, /rollPool\(effectiveGnosis\(actor\), gn\)/);
+});
+
+test("wonders: Bane fetishes and the baneklaive (W20 Book of the Wyrm pdf 184-185) are for Black Spiral Dancers alone", () => {
+  const b = W.byKey.baneklaive;
+  assert.equal(b.level, 5); assert.equal(b.gnosis, 7); assert.equal(b.silver, 2); assert.equal(b.court, "wyrm"); assert.ok(b.wyrm);
+  assert.deepEqual([b.weapon.bonus, b.weapon.type, b.weapon.diff], [3, "aggravated", 7]);
+  assert.equal(W.byKey.devilwhip.weapon.bonus, 1);
+  const bane = ["brush-of-the-ancients", "stolen-eye", "bane-lantern", "devilwhip", "wyrmflesh", "baneklaive"];
+  for ( const k of bane ) assert.ok(W.byKey[k]?.wyrm, k);
+  const bsd = garou({tribe: "Black Spiral Dancers"});
+  assert.equal(bsd.kind, "spiral");
+  const sl = W.listFor(bsd).map(w => w.key);
+  assert.deepEqual([...sl].sort(), [...bane].sort(), "a Spiral sees only the Bane fetishes");
+  assert.ok(!W.listFor(garou()).some(w => w.wyrm), "a Gaian sees none of them");
+  assert.ok(W.blockers(b, garou()).some(x => /Wyrm/.test(x)));
+  assert.ok(W.blockers(W.byKey.klaive, bsd).some(x => /Banes/.test(x)));
+  assert.deepEqual(W.blockers(b, bsd, {spend: 1}), []);
+  assert.ok(W.cautions(W.byKey.wyrmflesh, bsd).some(c => /living victim/.test(c)));
+  const [f, wpn] = W.itemsFor(b, {at: 5});
+  assert.equal(f.system.gnosis, 7); assert.equal(wpn.system.damage.bonus, 3);
+  assert.deepEqual(W.silverCarried([f, wpn]), {klaive: 0, grand: 1});
+  assert.equal(W.isSpiral("wod.tribes.blackspiraldancers"), true);
+  assert.equal(W.isSpiral("Silver Fangs"), false);
+});
+
+test("wonders: Kinfolk making is a world setting, off by default (WoDX Library, B3680)", () => {
+  const lib = src("modules/wodx-library/scripts/main.mjs");
+  assert.match(lib, /"craftKinfolk"[\s\S]*?default: false/);
+  assert.match(src("modules/wodx-storyteller/scripts/wonders.mjs"), /"craftKinfolk"/);
+  assert.match(src("modules/wodx-library/scripts/wonders-garou.mjs"), /kinfolkMay: !!ctx\.settings\?\.craftKinfolk/);
+});
+
+const Reg = await imp("modules/wodx-library/scripts/wonder-registry.mjs");
+await imp("modules/wodx-library/scripts/wonder-lines.mjs");
+
+test("wonders registry: the Garou kit is registered and works through the kit calls (B3683)", () => {
+  const kit = Reg.kitFor("garou");
+  assert.ok(kit); assert.equal(kit.setting, "craftGarou");
+  assert.ok(Reg.lines().some(k => k.line === "garou"));
+  const facts = kit.factsFrom({system: {advantages: {gnosis: {permanent: 5}, willpower: {permanent: 6}}, abilities: {rituals: {value: 3}}, tribe: "Fianna"},
+    items: [{type: "Power", name: "Rite of the Fetish", system: {type: "wod.types.rite"}}]}, {profile: "lupine"});
+  const m = kit.makerOf(facts);
+  assert.equal(m.kind, "garou"); assert.equal(m.gnosis, 5); assert.equal(m.rituals, 3);
+  assert.ok(kit.listFor(m, {year: 1300}).some(w => w.key === "klaive"));
+  assert.ok(kit.fields(m, {isGM: false}).every(f => !f.gm));
+  assert.ok(kit.fields(m, {isGM: true}).some(f => f.name === "persuasion"));
+  const seed = kit.taskFor(kit.row("klaive"), m, {spend: 2, power: "gaffling"});
+  assert.equal(seed.line, "garou"); assert.equal(seed.diff, 6);
+  const costs = kit.costs(kit.row("klaive"), {spend: 2});
+  const paid = Reg.applyCosts(costs, {"system.advantages.gnosis.permanent": 5, "system.advantages.gnosis.temporary": 5});
+  assert.deepEqual(paid.updates, {"system.advantages.gnosis.permanent": 3, "system.advantages.gnosis.temporary": 3});
+  const tal = Reg.applyCosts(kit.costs(kit.row("bane-arrow"), {spend: 9}), {"system.advantages.gnosis.temporary": 4});
+  assert.equal(tal.updates["system.advantages.gnosis.temporary"], 0);
+  assert.equal(kit.itemsFor(kit.row("bane-arrow"), {successes: 2, task: {power: "jaggling"}}).length, 4);
+  assert.equal(T.normTask(seed).line, "garou");
+  assert.equal(T.normTask({pool: "path:system.arete"}).pool, "path:system.arete");
+  assert.equal(T.normTask({pool: "rm -rf"}).pool, "");
+});
+
+test("wonders registry: a kit missing a part is refused, a good one is added and listed", () => {
+  assert.throws(() => Reg.registerLine("test-line", {title: "Test"}), /lacks/);
+  assert.throws(() => Reg.registerLine("Bad Key", {}), /bad line key/);
+  const f = () => [];
+  const kit = {title: "Test", rows: f, row: () => null, factsFrom: () => ({}), makerOf: () => ({kind: null}), listFor: f, blockers: f, cautions: f,
+    fields: f, taskFor: () => ({}), itemsFor: f, costs: f, label: () => ""};
+  Reg.registerLine("test-line", kit);
+  assert.ok(Reg.kitFor("test-line"));
+  assert.ok(Reg.lines().some(k => k.line === "test-line"));
 });

@@ -16,12 +16,13 @@ PACKS = {   # id: (name, version)
     "H37W5Oj8": ("FA_Artificial_Floors_A_v2.02", "2.02"),
 }
 R = random.Random(0)
+SEED = 0
 ASSETS = []
 
 def init(seed, asset_list):
     """Set the seed and read the asset list (every asset path in the packs, one a line). Returns the generator."""
-    global R, ASSETS
-    R = random.Random(seed)
+    global R, ASSETS, SEED
+    R, SEED = random.Random(seed), seed
     ASSETS = list(dict.fromkeys(l.strip() for f in str(asset_list).split(",") if f for l in open(f, encoding="utf-8-sig") if "/textures/" in l))
     USED.clear()
     LIGHTS.clear()
@@ -59,6 +60,26 @@ SIZES = {}                    # cells of assets whose names carry no size (eraty
 USED = set()                  # pack ids the map refers to, for its asset manifest
 LIGHTS = []                   # Dungeondraft lights made with the dressing since the last level(); level() takes them
 PACK_TABLE = "/mnt/project-files/dd-pack-ids.tsv"   # id, name, version, author, file (read off each pack on the PC)
+
+# A wall light's picture has its bracket on one edge: Forgotten Adventures' wall torches on the right (east),
+# Skront's sconces and other upright pictures at the top (north). bracket_turn() is the extra turn, in radians, that
+# puts the bracket against the given wall (N, E, S, W) so the light faces into the room; None for a free-standing light.
+BRACKET_EAST = re.compile(r"Wall_?Torch|Wall_?Lamp|Wall_?Light", re.I)
+BRACKET_NORTH = re.compile(r"Sconce|Bracket", re.I)
+
+def bracket_edge(name):
+    """The bracket's direction at rotation 0, in radians (0 = east, -pi/2 = north); None when it has no bracket."""
+    if BRACKET_EAST.search(name): return 0.0
+    if BRACKET_NORTH.search(name): return -math.pi / 2
+    return None
+
+def bracket_turn(name, side):
+    e = bracket_edge(name)
+    if e is None: return None
+    want = {"E": 0.0, "S": math.pi / 2, "W": math.pi, "N": -math.pi / 2}[side]
+    return want - e
+
+STORE_PIECE = re.compile(r"Chest|Barrel|Keg|Crate|Box_|Sack|Coffer", re.I)   # kept from under windows
 
 def cells_of(name):
     if name in SIZES: return SIZES[name]
@@ -102,14 +123,19 @@ class Room:
         inset = .18   # wall half-thickness plus a little air
         self.ix, self.iy, self.iw, self.ih = x + inset, y + inset, w - 2 * inset, h - 2 * inset
         # clear zones: one cell inside each door, and a walkway joining the doors
-        self.doors = []
+        self.doors, self.window_zones = [], []
         for kind, ox, oy, along in openings:
             on_edge = (abs(ox - x) < .01 or abs(ox - (x + w)) < .01) and y <= oy <= y + h or \
                       (abs(oy - y) < .01 or abs(oy - (y + h)) < .01) and x <= ox <= x + w
             if not on_edge: continue
             half = PORTALS[kind][1] / 2
-            if kind == "window":
-                self.windows = getattr(self, "windows", []) + [(ox, oy, along)]
+            if kind == "window":                                       # no chest, barrel or crate pushed up under a
+                self.windows = getattr(self, "windows", []) + [(ox, oy, along)]   # window (see candidates(keep_windows))
+                d = .9
+                if along == "h":
+                    self.window_zones.append((ox - half, oy if abs(oy - y) < .01 else oy - d, 2 * half, d, "window clear zone"))
+                else:
+                    self.window_zones.append((ox if abs(ox - x) < .01 else ox - d, oy - half, d, 2 * half, "window clear zone"))
                 continue
             if along == "h":
                 zy = oy if abs(oy - y) < .01 else oy - 1.1
@@ -138,13 +164,18 @@ class Room:
             if x < bx + bw - 1e-6 and bx < x + w - 1e-6 and y < by + bh - 1e-6 and by < y + h - 1e-6: return False
         return True
 
-    def candidates(self, fw, fh, rule):
+    def under_window(self, r):
+        """True when rect r reaches into the clear space in front of a window."""
+        x, y, w, h = r
+        return any(x < zx + zw and zx < x + w and y < zy + zh and zy < y + h for zx, zy, zw, zh, _ in getattr(self, "window_zones", []))
+
+    def candidates(self, fw, fh, rule, keep_windows=False):
         """Spots on a quarter-cell grid, plus spots flush with each wall and with each placed item or clear zone,
         for both turns of the item. Wall and corner rules are hard: the item must touch a wall."""
         out = []
-        edges = self.blocked + [(i["x"], i["y"], i["w"], i["h"]) for i in self.items]
-        obstacles = [tuple(e[:4]) for e in edges]                    # what fits() tests against, with open floor kept
+        edges = self.blocked + (getattr(self, "window_zones", []) if keep_windows else []) + [(i["x"], i["y"], i["w"], i["h"]) for i in self.items]
         kind, _, arg = rule.partition(":")
+        obstacles = [tuple(e[:4]) for e in edges]                    # what fits() tests against, with open floor kept
         turns = ((fw, fh, 0),) if kind == "end" else ((fh, fw, 1),) if kind == "endt" else ((fw, fh, 0), (fh, fw, 1))
         for (w, h, rot) in turns:
             xs = {round(self.ix + k * .25, 4) for k in range(int((self.iw - w) / .25) + 1)} | {self.ix, round(self.ix + self.iw - w, 4)}
@@ -198,7 +229,17 @@ class Room:
 
     def furnish(self, tries=80):
         """Greedy placement by rule; if an item cannot be placed, start the room again with more shuffle.
-        Only when every try fails does the script stop. Then the room is dressed (see dress())."""
+        Only when every try fails does the script stop. Then the room is dressed (see dress()).
+        The room draws its noise from its own random stream (by name and place), so moving one chest never shifts
+        the layout of the rest of the map."""
+        global R
+        keep, R = R, random.Random(f"{self.name}|{self.x:.2f}|{self.y:.2f}|{SEED}")
+        try:
+            return self._furnish(tries)
+        finally:
+            R = keep
+
+    def _furnish(self, tries):
         for t in range(tries):
             self.items, self.noise = [], .1 + t * .08
             if self.try_furnish():
@@ -226,6 +267,9 @@ class Room:
                 continue                                       # a spot that will not take it is left empty
             for _ in range(count):
                 c = self.candidates(fw, fh, rule)
+                if c and STORE_PIECE.search(name):             # a chest or barrel never pushed up under a window: with no
+                    c = [k for k in c if not self.under_window(k[1:5])]
+                    if not c: continue                         # other spot, the room does without it
                 if not c: self.last_fail = name; return False
                 _, x, y, w, h, rot = c[0]
                 self.items.append({"asset": name, "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": sc})
