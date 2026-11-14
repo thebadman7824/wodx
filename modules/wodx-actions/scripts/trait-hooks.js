@@ -113,10 +113,21 @@ export function holds(actor, key) {
 /** Lucky: three rerolls of a failed roll in a story. The count is kept on the actor against the story's id. */
 export const LUCKY_PER_STORY = 3;
 const storyNow = () => { try { return game.settings.get("wodx-actions", "storyId") || "first"; } catch (e) { return "first"; } };
+/** B3919: Destiny and Fate (backgrounds) bank rerolls too: one a story for each dot, on the same count as Lucky. */
+export const FORTUNE_BACKGROUNDS = ["destiny", "fate"];
+const rating = (actor, key) => { const T = traits(); try { return Math.max(0, Number(T?.has?.(actor, key)) || 0); } catch (e) { return 0; } };
+export function rerollsPerStory(actor) {
+    return (holds(actor, "lucky") ? LUCKY_PER_STORY : 0) + FORTUNE_BACKGROUNDS.reduce((n, k) => n + rating(actor, k), 0);
+}
+export function fortuneName(actor) {
+    const names = [holds(actor, "lucky") ? "Lucky" : "", ...FORTUNE_BACKGROUNDS.filter(k => rating(actor, k)).map(k => k[0].toUpperCase() + k.slice(1))].filter(Boolean);
+    return names.join(" and ") || "Lucky";
+}
 export function luckyLeft(actor) {
-    if (!holds(actor, "lucky")) return 0;
+    const per = rerollsPerStory(actor);
+    if (!per) return 0;
     const f = actor.flags?.["wodx-actions"]?.lucky ?? {};
-    return Math.max(0, LUCKY_PER_STORY - (f.story === storyNow() ? Number(f.used) || 0 : 0));
+    return Math.max(0, per - (f.story === storyNow() ? Number(f.used) || 0 : 0));
 }
 export async function useLucky(actor) {
     const left = luckyLeft(actor);
@@ -129,7 +140,7 @@ export async function useLucky(actor) {
 export function luckyHtml(actor, esc = s => s) {
     const left = luckyLeft(actor);
     if (!left) return "";
-    return `<div class="form-group"><label><input type="checkbox" name="lucky" checked/> ${esc(`Lucky: roll again if it fails (${left} left this story)`)}</label></div>`;
+    return `<div class="form-group"><label><input type="checkbox" name="lucky" checked/> ${esc(`${fortuneName(actor)}: roll again if it fails (${left} left this story)`)}</label></div>`;
 }
 
 /** Feeding: Efficient Digestion gives one more point for every two drunk (never past the pool's room). */

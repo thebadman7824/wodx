@@ -961,7 +961,7 @@ async function resolveAction(actor, target, fd) {
     if (fd.lucky && (r.botch || !r.successes) && fd.mode !== "extended") {
         const lk = await TH.useLucky(actor);
         if (lk) {
-            body += rollBlock(`${label || "Pool"} (first roll)`, r, [], fd.specialty) + `<div class="vta-note">Lucky: rolled again (${lk.left} left this story).</div>`;
+            body += rollBlock(`${label || "Pool"} (first roll)`, r, [], fd.specialty) + `<div class="vta-note">${TH.fortuneName(actor)}: rolled again (${lk.left} left this story).</div>`;
             r = await rollPool(built.dice, built.difficulty, { specialty: fd.specialty, willpower: fd.wp });
             rolls.push(r.roll);
         }
