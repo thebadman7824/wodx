@@ -50,7 +50,7 @@ export const ABILITIES = {
   dressas: {label: "Dress as someone else", effect: "dressas", verb: "dresses as someone else in"},
   play: {label: "Play it", effect: "system", preset: "performance", verb: "plays"},
   game: {label: "Play a game", effect: "note", verb: "plays a game with"},
-  gamble: {label: "Gamble", effect: "note", verb: "gambles with"},
+  gamble: {label: "Gamble", effect: "gamble", verb: "gambles with"},
   sleep: {label: "Sleep in it", effect: "sleep", verb: "sleeps in"},
   search: {label: "Look through it", effect: "check", check: "search", verb: "looks through"},
   fix: {label: "Make or fix", effect: "check", check: "buildfix", verb: "works with"},
@@ -213,7 +213,8 @@ export function abilitiesOf(good) {
   if ( k === "cloth" && out.has("wear") ) out.add("dressas");
   if ( (k === "toys" || k === "faith") && INSTRUMENTS.test(n) ) out.add("play");
   if ( k === "toys" && PLAYERS.test(n) ) out.add("switchon");
-  if ( (k === "toys" || k === "vice") && GAMES.test(n) && !out.has("play") ) out.add(k === "vice" ? "gamble" : "game");
+  // B3910: dice, cards and board games are played for a stake too
+  if ( (k === "toys" || k === "vice") && GAMES.test(n) && !out.has("play") ) { out.add("gamble"); if ( k === "toys" ) out.add("game"); }
   if ( k === "vice" ) out.add("gamble");
   if ( k === "tech" ) {
     if ( PHONES.test(n) ) out.add("call");
