@@ -23,6 +23,7 @@ import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as EF from "./effects.js";
 import * as PE from "./path-effects.js";
+import * as PK from "./power-keywords.js";
 import * as TH from "./trait-hooks.js";
 import * as WR from "./witness-rules.js";
 
@@ -39,12 +40,12 @@ const LABEL = { strength: "Strength", dexterity: "Dexterity", stamina: "Stamina"
     selfcontrol: "Self-Control", bodycrafts: "Body Crafts", willpower: "Willpower", road: "Road" };
 const lab = k => LABEL[k] ?? cap(k);
 
-export const DATA = { disc: null, roads: null };
+export const DATA = { disc: null, roads: null, v20: null };
 /** The place line for a card (3.42.0), from the witness rules. */
 export const placeNoteOf = (mode, event = "", secret = "kindred") => WR.placeNote(mode, secret, event);
 export async function loadData() {
     const get = async f => { try { const r = await fetch(`modules/${MOD}/data/${f}`); return r.ok ? r.json() : null; } catch (e) { console.warn("WoDX |", f, e); return null; } };
-    [DATA.disc, DATA.roads] = await Promise.all([get("disciplines-daw.json"), get("roads-daw.json")]);
+    [DATA.disc, DATA.roads, DATA.v20] = await Promise.all([get("disciplines-daw.json"), get("roads-daw.json"), get("disciplines-v20.json")]);
     return DATA;
 }
 
@@ -142,7 +143,9 @@ export function build(ctx) {
     async function useDiscipline(actor) {
         if (!DATA.disc) return ctx.notify("The Discipline library didn't load.");
         const sheet = sheetDisciplines(actor);
-        const list = K.powersFor(DATA.disc.powers, sheet);
+        const era = (() => { try { return game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { return null; } })();
+        const lib = K.librarySet(DATA.disc.powers, DATA.v20?.powers, { darkAges: era === "dark-ages" || era === "long-night", v20Names: new Set(Object.keys(PK.LINE_KEYWORDS.v20 ?? {})) });
+        const list = K.powersFor(lib, sheet);
         if (!list.length) return ctx.notify(`${actor.name} has no Discipline dots the library knows (${sheet.map(s => s.name).join(", ") || "none on the sheet"}).`);
         let tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
         const rows = list.map(p => [p.id, `${p.d} ${"•".repeat(Math.min(5, p.l))}${p.l > 5 ? ` (${p.l})` : ""}: ${p.n}${p.elder ? " (elder)" : p.passive ? " (passive)" : ""}`]);
@@ -167,7 +170,7 @@ export function build(ctx) {
             root.querySelector(".wodx-disc-attr").style.display = /attr/.test(p.r ?? "") ? "" : "none";
             const costTxt = [c.blood && `${c.blood} blood${c.optional ? " (optional)" : ""}`, c.willpower && `${c.willpower} Willpower`, c.variable && "blood as needed"].filter(Boolean).join(", ") || "none";
             const roll = p.r ? `roll ${esc(poolOf(actor, p.r, root.querySelector("[name=attr]").value).label)}` : "no roll";
-            box.innerHTML = `<b>${esc(p.n)}</b> (${esc(p.d)} ${p.l}) · cost ${esc(costTxt)} · ${roll} · ${esc(K.DURATION_TEXT[p.t] ?? p.t ?? "")} · VtDA20 p. ${p.p ?? "?"}<br>${esc(p.e)}`
+            box.innerHTML = `<b>${esc(p.n)}</b> (${esc(p.d)} ${p.l}) · cost ${esc(costTxt)} · ${roll} · ${esc(K.DURATION_TEXT[p.t] ?? p.t ?? "")} · ${p.book ?? "VtDA20"} p. ${p.p ?? "?"}<br>${esc(p.e)}`
                 + (d === null && p.diff && p.diff !== "var" ? `<br><i>Difficulty from the target (${esc(String(p.diff).replace("t:", ""))}): target a token or set it.</i>` : "")
                 + (p.diff === "var" ? "<br><i>The difficulty depends on the situation (see the page).</i>" : "");
         };
@@ -196,13 +199,13 @@ export function build(ctx) {
                 body += rollBlock(pool.label, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...rm.parts], fd.specialty);
                 if (r.botch) body += `<div class="vta-warn">Botch: the power turns on its user or fails badly (see the page).</div>`;
             }
-            body += `<div class="vta-note">${esc(p.e)} <span class="wodx-quiet">(VtDA20 p. ${p.p ?? "?"})</span></div>`;
+            body += `<div class="vta-note">${esc(p.e)} <span class="wodx-quiet">(${p.book ?? "VtDA20"} p. ${p.p ?? "?"})</span></div>`;
             // Path magic: what the successes do goes on the effects card (V20 Dark Ages pp. 275-302)
             let fx = null;
             if (PE.isPath(p.d) && successes > 0 && p.r && EF.isOn()) { fx = EF.pathPlan(actor, p, successes); body += fx.html; }
             const dur = successes > 0 && !PE.PATH_EFFECTS[p.id] ? K.discDuration(p.t, successes) : null;
             if (dur && chronicle()?.applyTimed && actor.isOwner) {
-                await chronicle().applyTimed(actor, { name: p.n, img: "icons/svg/aura.svg", description: p.e, duration: dur, source: `VtDA20 p. ${p.p}`, key: `disc-${p.id}` });
+                await chronicle().applyTimed(actor, { name: p.n, img: "icons/svg/aura.svg", description: p.e, duration: dur, source: `${p.book ?? "VtDA20"} p. ${p.p}`, key: `disc-${p.id}` });
                 body += `<div class="vta-note">Shown on the token until it ends (${esc(K.DURATION_TEXT[p.t] ?? "")}).</div>`;
             }
             // The Forgetful Mind on a witness: the Masquerade ledger marks them as made to forget
@@ -212,7 +215,7 @@ export function build(ctx) {
             }
             // Any other Discipline: its keywords on the effects card (Traits With Teeth step 4)
             if (!fx && p.r && !p.passive && successes > 0 && EF.isOn()) {
-                const pp = EF.powerPlan(actor, { set: "disc", id: p.id, name: p.n, line: "v20", successes, source: `VtDA20 p. ${p.p ?? "?"}` });
+                const pp = EF.powerPlan(actor, { set: p.book === "V20" ? "v20" : "disc", id: p.book === "V20" ? p.kw : p.id, name: p.n, line: "v20", successes, source: `${p.book ?? "VtDA20"} p. ${p.p ?? "?"}` });
                 if (pp.items.length || pp.skipped.length) { fx = pp; body += pp.html; }
             }
             const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");

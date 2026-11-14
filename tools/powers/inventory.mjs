@@ -52,7 +52,8 @@ const add = (line, group, name, o = {}) => rows.push({ line, group, name, status
 
 /* -- Vampire: V20 Dark Ages Disciplines (kindred.js Use a Discipline) */
 const disc = J("disciplines-daw.json").powers;
-const daNames = new Map(disc.map(p => [slug(p.n), p]));
+const daNames = new Map(disc.map(p => [slug(String(p.n).replace(/[’']/g, "")), p]));
+const v20Lib = new Map(J("disciplines-v20.json").powers.map(p => [p.kw, p]));
 for ( const p of disc ) {
   const kw = PK.keywordsOf("disc", p.id);
   const path = PE.PATH_EFFECTS[p.id];
@@ -62,10 +63,10 @@ for ( const p of disc ) {
 }
 /* -- Vampire: V20 (modern) Disciplines: the same window when a Dark Ages power has the name, else the system roll */
 for ( const [id, e] of Object.entries(PK.LINE_KEYWORDS.v20) ) {
-  const da = daNames.get(id);
+  const da = daNames.get(id), v = v20Lib.get(id);
   const kwA = applyingKw(e.k) && !e.p;
-  add("Vampire (V20)", "Disciplines", e.n, { status: da ? (kwA ? "applies" : "card") : "roll", kw: e.k, passive: !!e.p, page: "V20",
-    how: da ? "matches a Dark Ages power by name: same window" : "system roll only: no V20 entry in the Discipline library" });
+  add("Vampire (V20)", v ? v.d : "Disciplines", e.n, { status: da || v ? (kwA ? "applies" : "card") : "roll", kw: e.k, passive: !!e.p, page: v ? `V20 p. ${v.p}` : "V20",
+    how: v ? "V20 library entry (data/disciplines-v20.json): Use a Discipline card, roll and keywords" : da ? "matches a Dark Ages power by name: same window" : "system roll only: no V20 entry in the Discipline library" });
 }
 /* -- Werewolf: Dark Ages Gifts (garou.js) */
 for ( const g of J("gifts-daw.json").gifts ) {

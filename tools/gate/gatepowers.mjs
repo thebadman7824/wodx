@@ -12,6 +12,8 @@
  *      card; only the levels the Art reaches are offered (B3744)
  *   5. Mummy: Mend Flesh picked by name in the Hekau window (Nomenclature 2) fills in its path, level, difficulty and cost,
  *      shows its card and puts Mend on the effects card; spells above the path's rating are not offered (B3745)
+ *   6. V20: Use a Discipline with Animalism 2 offers Feral Whispers and Beckoning outside the Dark Ages (the Dark Ages
+ *      names in the Dark Ages), and Beckoning's card names V20 and its roll (B3746)
  * Result: Data/wodx-gate/gatepowers-result.json.
  */
 const R = { started: new Date().toISOString(), steps: [], errors: [], notes: [] };
@@ -142,6 +144,21 @@ export async function run() {
       const items = fx(m);
       ok("5 Mummy named Hekau", !!m && /Mend Flesh/.test(text(m)) && /living in sight/.test(text(m)) && items.some(i => i.key === "mend") && filled.path === "nomenclature" && String(filled.lvl) === "2" && String(filled.d) === "5" && listed.includes("asking-the-trees") && !listed.includes("become-animal"),
         { card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`), filled, listed: listed.length });
+    });
+    await step("6 V20 Discipline library", async () => {
+      const era = game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null;
+      const da = era === "dark-ages" || era === "long-night";
+      const vp = await mk("Neonate", "Vampire", {}, [{ name: "Animalism", type: "Power", system: { type: "wod.types.discipline", value: 2 } }]);
+      await sleep(800);
+      await game.user.updateTokenTargets?.([]);
+      const n = game.messages.size;
+      let listed = [];
+      answer(root => { listed = [...root.querySelectorAll("select[name=power] option")].map(o => o.value); if (!da) set(root, "power", "v20-beckoning"); });
+      A().useDiscipline({ actor: vp });
+      const m = await untilMsg(n);
+      const pass = da ? !listed.includes("v20-feral-whispers") && listed.some(v => v.startsWith("animalism-"))
+        : listed.includes("v20-feral-whispers") && listed.includes("v20-beckoning") && !!m && /Beckoning/.test(text(m)) && /V20 p\. 131/.test(text(m));
+      ok("6 V20 Discipline library", pass, { era, listed, card: text(m).slice(0, 300) });
     });
   } finally {
     for (const [h, id] of hooks) Hooks.off(h, id);
