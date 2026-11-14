@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4670
+Next free block: B4690
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -216,6 +216,7 @@ Next free block: B4670
 | B4620-B4649 | Show, don't tell: world changes shown on the map and tokens (used B4620-B4635) | Otherworlds |
 | B4650-B4659 | Inuit names in the People generator (used B4650-B4652) | Creation, Chronicle |
 | B4660-B4669 | Taino names in the People generator (used B4660-B4662) | Creation, Chronicle |
+| B4680-B4689 | Aboriginal Australian names in the People generator (used B4680-B4682) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7086,3 +7087,18 @@ Reverse: edit the lists in data/people-taino.mjs.
 WoDX Creation. A Spanish church given name comes before the own name from 1493, as the encomienda rolls give them; Spanish family names after 1800.
 
 Reverse: change church or family in data/people-taino.mjs.
+
+## B4680. Australia has people from 1197 (2026-11-14)
+WoDX Creation and Chronicle. Australia had no people before 1788; the Aboriginal nations now hold it alone before the colonies, then 12 in 100 beside the English and Irish in the industrial age and 5 today. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old australia mixes and {from: 1788} in world-rules.mjs and drop aboriginalTables from people-world.mjs.
+
+## B4681. One list for the many nations, fewer than 300 (2026-11-14)
+WoDX Creation. The hundreds of nations had their own languages and names; WoDX holds one list from the colonial journals of Sydney and the frontier records, with the nation (the Eora, the Wiradjuri, the Noongar) for a woman not named in the records. Fewer than 300 names; a list per nation waits for a better record.
+
+Reverse: edit the lists in data/people-aboriginal.mjs.
+
+## B4682. Family names after 1800 (2026-11-14)
+WoDX Creation. Before 1800 an own name alone; from 1800 an English given name and a family name of the missions, stations and the central desert.
+
+Reverse: change family or earlyChurch in data/people-aboriginal.mjs.

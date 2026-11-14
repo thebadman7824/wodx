@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.49.0 (Aboriginal Australians join the People generator with names from the colonial journals, the nations for women not named in the records and family names after 1800 (B4680 to B4682))
 - 0.48.0 (The Taíno join the People generator with the caciques' names from the chronicles, the cacicazgos, church names from 1493 and Spanish family names after (B4660 to B4662))
 - 0.47.0 (The Inuit join the People generator with one list of own names for anyone, church given names from the missions and family names from Greenland and Canada (B4650 to B4652))
 - 0.46.0 (People flags (B3925): people-rules peopleFlags, secretKind, WANT_TOPIC; createPeople writes them)

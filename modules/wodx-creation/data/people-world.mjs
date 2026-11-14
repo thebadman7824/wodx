@@ -22,6 +22,7 @@ import {basinTables} from "./people-basin.mjs";
 import {canadaTables} from "./people-canada.mjs";
 import {inuitTables} from "./people-inuit.mjs";
 import {tainoTables} from "./people-taino.mjs";
+import {aboriginalTables} from "./people-aboriginal.mjs";
 import {ARMENIAN} from "./people-armenian.mjs";
 
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
@@ -259,10 +260,10 @@ for ( const id of Object.keys(WORLD_REGIONS) ) {
 
 // Peoples with hand-built tables of their own (clans, names staged by age): the Haudenosaunee (B3120), the Algonquian
 // coast (B3510), the Plains (B3820) and the Southwest (B3930)
-const BUILT = {haudenosaunee: haudenosauneeTables(), ...Object.groupBy([...algonquianTables(), ...plainsTables(), ...southwestTables(), ...missouriTables(), ...plainsNorthTables(), ...basinTables(), ...canadaTables(), ...inuitTables(), ...tainoTables()], t => t.id.split(".").at(-1))};
+const BUILT = {haudenosaunee: haudenosauneeTables(), ...Object.groupBy([...algonquianTables(), ...plainsTables(), ...southwestTables(), ...missouriTables(), ...plainsNorthTables(), ...basinTables(), ...canadaTables(), ...inuitTables(), ...tainoTables(), ...aboriginalTables()], t => t.id.split(".").at(-1))};
 export const WORLD_PEOPLE_TABLES = [...origins, ...names, ...Object.values(BUILT).flat()];
 /** Peoples who bear a given name alone in some or all ages. */
-export const GIVEN_ONLY = new Set(["new-england-algonquian", "powhatan", "lakota", "cheyenne", "comanche", "kiowa", "apache", "arikara", "pawnee", "mandan", "hidatsa", "blackfoot", "arapaho", "shoshone", "ute", "cree", "anishinaabe", "inuit", "taino", ...Object.entries(P).filter(([, p]) => !p.child && (!p.fam || (typeof p.fam !== "string" && !Object.keys(p.fam).some(k => k === "old" || k.includes("medieval"))))).map(([o]) => o)]);
+export const GIVEN_ONLY = new Set(["new-england-algonquian", "powhatan", "lakota", "cheyenne", "comanche", "kiowa", "apache", "arikara", "pawnee", "mandan", "hidatsa", "blackfoot", "arapaho", "shoshone", "ute", "cree", "anishinaabe", "inuit", "taino", "aboriginal", ...Object.entries(P).filter(([, p]) => !p.child && (!p.fam || (typeof p.fam !== "string" && !Object.keys(p.fam).some(k => k === "old" || k.includes("medieval"))))).map(([o]) => o)]);
 /** Every people named here. */
 export const WORLD_PEOPLES = [...Object.keys(P), ...Object.keys(BUILT)];
 /** Peoples raised to at least 300 distinct names (Ben 2026-11-13, B3310 on): one at a time, the biggest homelands first. */

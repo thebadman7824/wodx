@@ -112,10 +112,10 @@ test("the world: names follow their people's own order and forms", () => {
 test("the world: a mix stands until the next one, and regions without early names say from when", () => {
   assert.deepEqual(WR.mixFor("japan", "modern"), [["japanese", 100]]);
   assert.deepEqual(WR.mixFor("iberia", "industrial"), WR.mixFor("iberia", "early-modern"));
-  assert.equal(WR.mixFor("australia", "medieval"), null);
+  assert.equal(WR.mixFor("antarctica", "medieval"), null);
   assert.equal(WR.mixFor("moravia", "medieval"), null);
-  assert.equal(WR.hasPeopleIn("australia", 1500), false);
-  assert.equal(WR.hasPeopleIn("australia", 1900), true);
+  assert.equal(WR.hasPeopleIn("antarctica", 1500), false);
+  assert.equal(WR.hasPeopleIn("antarctica", 1950), true);
   assert.equal(WR.hasPeopleIn("japan", 1197), true);
   for ( const id of ids ) for ( const g of WR.ERA_GROUPS ) for ( const [o, w] of WR.mixFor(id, g) ?? [] ) assert.ok(o && w > 0, `${id} ${g}`);
 });
