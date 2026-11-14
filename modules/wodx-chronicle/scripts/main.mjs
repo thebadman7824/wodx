@@ -1,5 +1,6 @@
 import {MODULE_ID, SOCKET, isActiveGM, rule, setting, log} from "./util.mjs";
 import {registerSettings} from "./settings.mjs";
+import * as tokenLooks from "./token-looks.mjs";
 import {makeCalendarClass, makeCalendarConfig, setReform, EPOCH_YEAR} from "./calendar.mjs";
 import * as eras from "./eras.mjs";
 import * as approvals from "./approvals.mjs";
@@ -198,6 +199,7 @@ Hooks.once("ready", async () => {
   eras.applyProfile(eras.activeEra().profile);
   playerTools.installToolFilter();
   playerTools.applyUi();
+  tokenLooks.setupTokenLooks(); // B4632: frenzy, Rotschreck and derangement bouts show
   playerView.installViewFilter();
   playerView.installHudGroups();
   playerView.installQuietChat();
@@ -261,6 +263,7 @@ Hooks.once("ready", async () => {
     tours: {start: tours.startTour},
     traits: traits.traitsApi,
     derangements: derangements.derangementsApi,
+    tokenLooks: tokenLooks.api(),
     signatures: signatures.signaturesApi,
     pod: pod.podApi,
     legends: {open: () => legends.LegendsApp.open(), build: legends.build, book: legends.book, visible: legends.visible, setShown: legends.setShown, gather: legends.gather, addDeed: legends.addDeed},
