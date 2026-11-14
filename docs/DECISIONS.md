@@ -195,7 +195,7 @@ Next free block: B3830
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
 | B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3755) | Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
-| B3780-B3809 | The no-effect audit: body effects survive the prepare-time wound level (used B3780-B3808) | Combat, system |
+| B3780-B3809 | The no-effect audit: a harmless hit makes its card (used B3780-B3809) | Combat |
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 <!-- decision-index:end -->
@@ -6576,6 +6576,11 @@ Reverse: drop settrap, springtrap and disarm from abilitiesOf.
 WoDX Combat and the worldofdarkness fork. After B3804 the testbed still showed no body effect (gatetraits step 29: Huge Size, Insensate to Pain; gatecyber step 8: the Pain Editor). The cause is a second writer: the system's prepareDerivedData runs _handleWoundLevelCalculations on every prepare and sets the wound level and penalty from the stored totals in memory, after any stored value. The fork now calls Hooks.callAll("wodxActorDerived", actor) right after it in both branches. Combat's handler (R.applyBodyDerived) raises the Bruised total to its value plus the body's extra levels when the totals hook has not already done so (never twice), marks it in memory so the health track does not add it again, and works out the level, penalty and health-level counts with the body's shift and ease.
 
 Reverse: remove the two wodxActorDerived calls in wod-actor-base.js and the handler in Combat's init.
+
+## B3809. A harmless hit makes its card (2026-11-14)
+WoDX Combat. B3805 skips the damage roll for an everyday weapon that does no harm of its own (pepper spray, a flashbang, a firecracker), but the attack card still read the damage pool on every hit, so the attack failed with an error before the spray could blind anyone (gatearms step 4 on the testbed). The card now has a line for such a hit, and armsAftermath runs as planned.
+
+Reverse: remove the !dmgPool branch in attackCard (and the harmless skip with it).
 
 ## B3810. Hedge magic Enchantment makes real talismans (2026-11-14)
 WoDX Library (scripts/wonders-hedge.mjs). Ben picked the full build on the Item Crafting Desk (m4). Anyone with the Path of Enchantment as a hedge path (a numina Power item, as WoDX Actions reads it) can make talismans up to the level of the path: hedge sorcerers, hunters of the Hunters Hunted era, Kinfolk and ghouls alike. The book is Sorcerer (Revised), pdf 72-75, read from the PC's text pull. The talisman levels follow its five tiers, in WoDX's own words. A world setting (craftHedge, on) turns the line off.

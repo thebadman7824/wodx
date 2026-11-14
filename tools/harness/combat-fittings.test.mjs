@@ -31,3 +31,7 @@ test("Combat lists the Library's everyday arms and carries out what they do", ()
   assert.match(combat, /fitDice: fp\.fitDice/);
   assert.match(combat, /atHand/);
 });
+
+test("a hit that does no harm of its own still makes a card (B3809)", () => {
+  assert.match(combat, /\} else if \(!dmgPool\) \{/);
+});

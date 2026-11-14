@@ -1368,6 +1368,9 @@ function attackCard(c) {
         L.push(`<div class="vtc-big miss">${atk.botch ? "Botched attack" : "Miss"}</div>`);
     } else if (maneuver.noDamage) {
         L.push(`<div class="vtc-big hit">${maneuver.label.split(" (")[0]} succeeds (${net} net success${net === 1 ? "" : "es"}): no damage</div>`);
+    } else if (!dmgPool) {
+        // B3809: a spray, flash or bang does no harm of its own: what it leaves follows on its own card
+        L.push(`<div class="vtc-big hit">Hit (${net} net success${net === 1 ? "" : "es"}): ${esc(w.name)} does no damage of its own</div>`);
     } else {
         L.push(`<div class="vtc-sec"><b>Damage</b> ${dmgPool.dice} dice${dmgPool.auto ? ` + ${dmgPool.auto} auto` : ""}, diff 6: <i>${TYPE_LABEL[outcome?.type ?? (fd.fireSun ? "aggravated" : w.type)] ?? w.type}</i>`);
         L.push(`<div class="vtc-parts">${dmgPool.parts.join(" · ")}</div>`);
@@ -1725,7 +1728,7 @@ Hooks.once("init", () => {
     const aftermath = AA.setupAftermath({ corpusTrack });
     FTime.setupFightTime();
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.31.1", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.31.2", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, followOn: R.followOn, markFollow, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
