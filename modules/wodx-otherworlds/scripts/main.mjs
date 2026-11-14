@@ -14,6 +14,7 @@ import * as driftRules from "./drift-rules.mjs";
 import * as corruption from "./corruption.mjs";
 import * as corruptionRules from "./corruption-rules.mjs";
 import * as corruptionLooks from "./corruption-looks.mjs";
+import * as veilLooks from "./veil-looks.mjs";
 import * as waysRules from "./ways-rules.mjs";
 import * as realmsRules from "./realms-rules.mjs";
 import * as realmMaps from "./realm-maps.mjs";
@@ -72,6 +73,7 @@ Hooks.once("ready", () => {
     corruption: {of: corruption.placeOf, set: corruption.setPlace, taintOf: corruption.taintOf, setTaint: corruption.setTaint, senseWyrm: corruption.senseWyrm,
       plan: corruption.planTurn, apply: corruption.applyTurn, rates: corruption.rates, rateOf: corruption.rateOf, setRate: corruption.setRate, regionOf: corruption.regionOfScene, undo: corruption.undoTurn, run: corruption.run, dialog: corruption.corruptionDialog, rules: corruptionRules,
       looks: corruptionLooks.api()},
+    veil: veilLooks.api(),
     drift: {of: drift.driftOf, step: drift.stepDrift, lever: drift.leverStep, undo: drift.undoStep, dialog: drift.driftDialog, onMapEvent: drift.onMapEvent, rules: driftRules},
     ways: {make: ways.makeWay, realm: ways.makeRealm, dialog: ways.waysDialog, isRealm: ways.isRealm, rules: waysRules},
     worldsChart: {rules: worldsChartRules, svg: (o = {}) => worldsChartRules.svg(realmMapsRules.REALMS, o), layout: () => worldsChartRules.layout(realmMapsRules.REALMS)},
@@ -93,6 +95,7 @@ Hooks.once("ready", () => {
   else Hooks.once("wodxChronicleReady", () => { registerYearHandler(); drift.registerDriftHandler(); corruption.registerCorruptionHandlers(); });
   corruption.setupCorruption();
   corruptionLooks.setupCorruptionLooks();
+  veilLooks.setupVeilLooks(); // B4634: the thin Gauntlet and Shroud, and the Wyrm's haze, for the right eyes
   journey.registerJourneys();
   journey.applyDecay();
 });
