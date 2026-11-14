@@ -220,7 +220,7 @@ async function main() {
   for ( const x of mf ) {
     if ( !fs.existsSync(path.join(ROOT, "modules", x.module, "module.json")) ) problems.push(`${x.file}: no module ${x.module}`);
     for ( const p of checkModuleFragment(x.frag) ) problems.push(`${x.file}: ${p}`);
-    for ( const p of visibleWarnings(x.frag) ) problems.push(`${x.file}: ${p}`); // B4120: show, don't tell blocks the merge
+    for ( const p of visibleWarnings(x.frag) ) problems.push(`${x.file}: ${p}`); // B4600: show, don't tell blocks the merge
   }
   for ( const x of df ) for ( const p of checkDecisionFragment(x.frag) ) problems.push(`${x.file}: ${p}`);
 

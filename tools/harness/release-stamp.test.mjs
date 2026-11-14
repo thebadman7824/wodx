@@ -113,7 +113,7 @@ test("Chronicle reads the stamps over fetch and shows the line to the GM in Sett
   }
 });
 
-test("show, don't tell: a minor or major note says what players see (B4120)", async () => {
+test("show, don't tell: a minor or major note says what players see (B4600)", async () => {
   const {visibleWarnings, effectWarnings} = await import("../release/merge-stamp.mjs");
   const note = meta => ({meta: {bump: "minor", effect: "the town floods on the map", ...meta}});
   assert.match(visibleWarnings(note({}))[0], /no visible: line/);
