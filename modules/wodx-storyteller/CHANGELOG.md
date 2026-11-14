@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.83.1 (Places of power: dreaming by a balefire or marking a freehold destroyed no longer drops the freehold from the register (it lost its id and name when the change was written back))
 - 0.83.0 (Institutions hear a turn of rule from WoDX Chronicle (wodxRegimeTurn) and sweep holders out of the offices it names, in its region or town; a player character who loses a seat gets a line in the log. A town's riot or rising now tells other modules the town's name and region)
 - 0.82.2 (The month's pay (wodxMonthPaid) now carries each character's allowance, so WoDX Chronicle can reckon taxes on it, and each town feels the levy of the land (WoDX Chronicle) beside the factions' taxes)
 - 0.82.1 (Climbing the court, the ruler's officers, the tax office, the garrison or the council can be capped by the climber's standing before the law (WoDX Chronicle))
