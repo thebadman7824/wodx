@@ -15,6 +15,9 @@
  *      mark away again. Step 15 makes two actors named "Sprite test child: ..." and deletes them.
  * Result: Data/wodx-gate/gatesprites-result.json.
  */
+// a batch create need not hand the documents back in the order asked: put them back in that order by name
+const inOrder = (docs, data) => data.map(d => docs.find(x => x.name === d.name));
+
 const N = 15;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function save(R) {
@@ -178,10 +181,11 @@ export async function run() {
     {
       const PD = game.modules.get("wodx-paperdoll").api, ch = game.modules.get("wodx-chronicle")?.api, now = ch?.eras?.currentYear?.() ?? 1200, made = [];
       try {
-        const [kid, grown, other] = await Actor.createDocuments([
+        const three = [
           {name: "Sprite test child: Kid", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: now - 9}}}},
           {name: "Sprite test child: Grown", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: now - 30}}}},
-          {name: "Sprite test child: Other", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: now - 31}}}}]);
+          {name: "Sprite test child: Other", type: "Mortal", flags: {"wodx-creation": {chronology: {bornYear: now - 31}}}}];
+        const [kid, grown, other] = inOrder(await Actor.createDocuments(three), three);
         made.push(kid, grown, other);
         const kidEntry = A.roster().actors.find(a => a.id === kid.id), kidAge = PD.sprites.ageOf?.(kid);
         const app = await PD.figure.open(kid); await sleep(600);
