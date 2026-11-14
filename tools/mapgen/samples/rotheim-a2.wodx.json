@@ -2832,6 +2832,23 @@
    }
   },
   {
+   "id": "chapel-1-chancel-f2",
+   "label": "Chest (Chancel)",
+   "rect": [
+    59.67,
+    58.07,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
+    "items": "",
+    "fillPlace": "church"
+   }
+  },
+  {
    "id": "chapel-1-nave-f0",
    "label": "Chest (Nave)",
    "rect": [
@@ -2849,11 +2866,11 @@
    }
   },
   {
-   "id": "chapel-1-nave-f4",
+   "id": "chapel-1-nave-f3",
    "label": "Chest (Nave)",
    "rect": [
-    57.57,
-    57.32,
+    55.13,
+    53.18,
     0.75,
     0.75
    ],
@@ -2866,11 +2883,11 @@
    }
   },
   {
-   "id": "chapel-1-nave-f6",
+   "id": "chapel-1-nave-f5",
    "label": "Chest (Nave)",
    "rect": [
     57.57,
-    53.43,
+    53.93,
     0.75,
     0.75
    ],
@@ -3027,7 +3044,7 @@
    }
   },
   {
-   "id": "townhouse-1-back-room-f1",
+   "id": "townhouse-1-back-room-f0",
    "label": "Cupboard (Back room)",
    "rect": [
     50.18,
@@ -3554,13 +3571,13 @@
    }
   },
   {
-   "id": "townhouse-15-back-room-f0",
+   "id": "townhouse-15-back-room-f2",
    "label": "Cupboard (Back room)",
    "rect": [
-    50.82,
-    33.18,
-    2,
-    1
+    49.18,
+    34.18,
+    0.75,
+    1.5
    ],
    "flags": {
     "container": true,
@@ -4028,23 +4045,6 @@
    }
   },
   {
-   "id": "workshop-2-workshop-f2",
-   "label": "Chest (Workshop)",
-   "rect": [
-    11.07,
-    44.68,
-    0.75,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
-    "items": "",
-    "fillPlace": "workshop"
-   }
-  },
-  {
    "id": "workshop-3-workshop-3",
    "label": "Crates (Workshop)",
    "rect": [
@@ -4133,7 +4133,7 @@
    "id": "workshop-3-workshop-f1",
    "label": "Chest (Workshop)",
    "rect": [
-    15.18,
+    14.68,
     35.68,
     1,
     1
@@ -4235,8 +4235,8 @@
    "id": "workshop-9-workshop-f1",
    "label": "Chest (Workshop)",
    "rect": [
-    37.18,
-    30.82,
+    41.07,
+    31.57,
     0.75,
     0.75
    ],
@@ -4252,8 +4252,8 @@
    "id": "workshop-9-workshop-f3",
    "label": "Chest (Workshop)",
    "rect": [
-    41.07,
-    31.57,
+    37.18,
+    30.82,
     0.75,
     0.75
    ],
@@ -4456,10 +4456,10 @@
    "id": "workshop-17-workshop-f1",
    "label": "Chest (Workshop)",
    "rect": [
-    35.07,
-    28.57,
-    0.75,
-    0.75
+    31.93,
+    25.68,
+    1,
+    1
    ],
    "flags": {
     "container": true,
@@ -4619,13 +4619,13 @@
    }
   },
   {
-   "id": "cottage-2-cottage-f0",
+   "id": "cottage-2-cottage-f2",
    "label": "Cupboard (Cottage)",
    "rect": [
-    60.18,
-    30.32,
-    2,
-    1
+    62.07,
+    29.82,
+    0.75,
+    1.5
    ],
    "flags": {
     "container": true,
@@ -4789,11 +4789,11 @@
    }
   },
   {
-   "id": "cottage-14-cottage-f1",
+   "id": "cottage-14-cottage-f0",
    "label": "Cupboard (Cottage)",
    "rect": [
-    4.57,
-    36.98,
+    0.68,
+    38.32,
     0.75,
     1.5
    ],
@@ -4869,6 +4869,23 @@
     "container": true,
     "kind": "chest",
     "lock": "cheap",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-15-cottage-f0",
+   "label": "Cupboard (Cottage)",
+   "rect": [
+    14.32,
+    27.32,
+    1,
+    2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
     "items": "",
     "fillPlace": "home"
    }
@@ -5027,7 +5044,7 @@
    }
   },
   {
-   "id": "cottage-24-cottage-f2",
+   "id": "cottage-24-cottage-f1",
    "label": "Cupboard (Cottage)",
    "rect": [
     41.07,
@@ -5197,11 +5214,11 @@
    }
   },
   {
-   "id": "cottage-30-cottage-f0",
+   "id": "cottage-30-cottage-f2",
    "label": "Cupboard (Cottage)",
    "rect": [
-    56.82,
-    20.57,
+    55.68,
+    16.68,
     1.5,
     0.75
    ],
@@ -5350,35 +5367,18 @@
    }
   },
   {
-   "id": "cottage-42-cottage-f0",
+   "id": "cottage-42-cottage-f2",
    "label": "Cupboard (Cottage)",
    "rect": [
-    20.68,
-    18.57,
-    1,
-    2
+    23.82,
+    20.57,
+    1.5,
+    0.75
    ],
    "flags": {
     "container": true,
     "kind": "cabinet",
     "lock": "none",
-    "items": "",
-    "fillPlace": "home"
-   }
-  },
-  {
-   "id": "cottage-42-cottage-f2",
-   "label": "Chest (Cottage)",
-   "rect": [
-    20.68,
-    20.57,
-    0.75,
-    0.75
-   ],
-   "flags": {
-    "container": true,
-    "kind": "chest",
-    "lock": "cheap",
     "items": "",
     "fillPlace": "home"
    }
@@ -5605,13 +5605,13 @@
    }
   },
   {
-   "id": "cottage-64-cottage-f0",
+   "id": "cottage-64-cottage-f2",
    "label": "Cupboard (Cottage)",
    "rect": [
-    38.98,
-    12.82,
-    2,
-    1
+    41.07,
+    9.18,
+    0.75,
+    1.5
    ],
    "flags": {
     "container": true,
