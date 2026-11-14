@@ -182,7 +182,7 @@ Next free block: B3630
 | B3520-B3539 | Gaps from Ben's design notes: referee ticket, crisis levers, binding card, roster, inheritance, the 2022 cap (used B3520-B3536) | Chronicle, Storyteller, Otherworlds, NPC, Actions |
 | B3540-B3549 | Supernatural sight: the Penumbra, a mage's sight, chimerical sight, the Shadowlands view (notes gaps g8 to g11) (used B3540-B3547) | Senses, Actions |
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
-| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3617) | Chronicle, Storyteller |
+| B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3619) | Chronicle, Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -5861,3 +5861,13 @@ Reverse: remove registerTaxHooks from main.mjs; the paid field on wodxMonthPaid 
 LINE_TAX: Kindred money passing through mortal hands, a ghoul keeping the books, a caern on taxed land, the Syndicate and the tax codes, a freehold lost to an unpaid bill, the dead's homes sold, a hunter off the books, a mummy's treasure, a demon's host's debts, revenant families' two sets of books.
 
 Reverse: empty LINE_TAX.
+
+## B3618. Regime change (2026-11-13)
+Speculation where the books are silent, marked as a house rule on the card. Dated turns come from the law records: a row that sets a new form of government sweeps the ruler's officers, the court, the garrison, the secret police, the tax office and the council, each holder going at half chance (a little likelier the higher the seat), and lets heat, outlawry and banishment in that land lapse; a row that only sets a new ruler sweeps the ruler's officers at a quarter. Up to six turns are sent on one clock jump. A town's rising (WoDX Storyteller's towns) asks the Storyteller whether it wins; a win sweeps that town's ruler's officers, court, tax office and garrison at 60 in the hundred, with no amnesty. Elections: where the council is a parliament, assembly, congress, diet or the like and no one party, army, occupier or absolute monarch stands over it, from 1832 (common law), 1848 (latin), 1824 (Americas) and so on, every 4 years (5 under common law). Each player character on a council rolls Manipulation + Politics at difficulty 6, 7 at the top three ranks, one more from 1950; a failure or botch costs the seat. Levies (B3616) feed the towns' anger, so a crushing levy can bring a rising and a turn.
+
+Reverse: remove registerRegimeHooks from main.mjs and checkTurns from law.mjs.
+
+## B3619. Splat hooks for regime change (2026-11-13)
+LINE_REGIME, shown on each turn card for the lines at the table: the Prince's pawns falling with the old order, a ghoul in office, the wild lands opened or closed, the Technocracy's love of order, Banality or Glamour from upheaval, the newly dead, the new secret police, a mummy's missing treasures, a demon feeding on revolution, revenant families serving the next regime.
+
+Reverse: empty LINE_REGIME.
