@@ -183,6 +183,7 @@ Next free block: B4110
 | B3520-B3539 | Gaps from Ben's design notes: referee ticket, crisis levers, binding card, roster, inheritance, the 2022 cap (used B3520-B3536) | Chronicle, Storyteller, Otherworlds, NPC, Actions |
 | B3540-B3549 | Supernatural sight: the Penumbra, a mage's sight, chimerical sight, the Shadowlands view (notes gaps g8 to g11) (used B3540-B3547) | Senses, Actions |
 | B3550-B3559 | Notes gaps g21-g23: the Quiet as a state, soulforging and oboli, Banality from everyday life (used B3550-B3556) | Actions, Storyteller, Chronicle, NPC |
+| B3560-B3569 | Notes gaps g15 to g20: the Blood Hunt, broken fae oaths, the Beast at the wheel, low Humanity, long torpor, diablerie's marks (used B3560-B3566) | Actions, Paperdoll |
 | B3570-B3599 | Notes gaps g12-g14: herd pools by district, holy ground shared by several claims, day jobs for mortal agents (used B3570-B3593) | Storyteller, NPC |
 | B3600-B3629 | Law and rule by era: mortal law and government by region and year (used B3600-B3621) | Chronicle |
 | B3630-B3649 | Supernatural item crafting by line: the shared table and Werewolf fetishes, klaives and talens (used B3630-B3636) | Library, Storyteller, Actions |
@@ -237,7 +238,7 @@ Next free block: B4110
 | B25 | 2026-11-07 | Allies: the Storyteller can make any NPC the ally of a player character (ghouls, retainers, followers). The patron's owners may then spend experience on it, from the ally's own pool or from the patron's, and can see its sheet (Observer, put back when the alliance ends). Requests still go through the approval queue. | Ben's request: players level up their ghouls and retainers. |
 | B26 | 2026-11-07 | Pass the Years lives in WoDX Creation (it reads lineage and chronology); the time skip itself is Chronicle's (`timeSkip`, with the `wodxSkipStart` and `wodxSkipEnd` hooks, and per-tick work paused while it runs). The wizard sets the era itself, so no separate era proposal is made for a skip. | The plan puts the wizard in Chronicle; the data it needs is Creation's, and Chronicle keeps the clock. |
 | B27 | 2026-11-07 | WoDX choices in Pass the Years: a mortal is asked about at 70 and dies at 100; with no birth year, a character is taken as 20 when the skip starts; an heir is a copy of the sheet without experience, 25 years old. Backgrounds are listed for review after 10 years, not changed. | The books give no lifespan or heir rules. |
-| B28 | 2026-11-07 | Book rules in Pass the Years: a fed ghoul does not age and gains a blood point a century; without vitae it reverts to its real age and turns to dust far past a lifespan (V20 Dark Ages p. 399); a bond fades one step per (12 − Willpower) months without a drink (p. 341); voluntary torpor lasts by Road (p. 350). Give vitae now also applies p. 341's full oath: lesser bonds vanish and no new one forms. | From the book, with pages. |
+| B28 | 2026-11-07 | Book rules in Pass the Years: a fed ghoul does not age and gains a blood point a century; without vitae it reverts to its real age and turns to dust far past a lifespan (V20 Dark Ages p. 399); a bond fades one step per (12 − Willpower) months without a drink (p. 341); voluntary torpor lasts by Road (p. 351). Give vitae now also applies p. 341's full oath: lesser bonds vanish and no new one forms. | From the book, with pages. |
 | B29 | 2026-11-07 | Ability translation never removes anything: the new era's abilities become visible, learned ones stay, and the era's secondary Abilities are added at 0. Folding medieval Abilities into modern ones (Legerdemain into Larceny) is not done, since no book gives the equivalents. | Ben's gate: nothing lost from 1197 to 2025. |
 | B30 | 2026-11-07 | rothenstein-wodx is the project's testbed for now, because so much content is already built in it. The WoDX version of the Rothenstein chronicle will be rebuilt later; the archive world stays the playable original. | Ben's call. |
 | B31 | 2026-11-07 | One Umbra, in order of precedence: where the lines' rules or concepts of the spirit world conflict, follow Wraith: the Oblivion first, then Werewolf: the Apocalypse, then Mage: the Ascension. Each conflict decided this way is recorded as a WoDX choice in Chronicle Rules, with the books on each side. | Ben's rule, in the Master Plan under "Rules shared across lines". |
@@ -5785,6 +5786,41 @@ Reverse: change NEED or weightOf in banal-life-rules.js; untag the places.
 WoDX Actions (banal-life.js). The count runs at the end of each scene (wodxEndScene) and when a long task ends. When it reaches a point, the Storyteller gets a card with Give it and Not this time; one short of it, the player and Storyteller hear that the grey is close, as C20 asks the Storyteller to say.
 
 Reverse: remove the wodxEndScene and wodxTaskDone hooks for blx() in main.js.
+
+## B3560. The Blood Hunt in the form of its age and sect (2026-11-13)
+WoDX Actions. A lord's hunt before the Camarilla (the dated camarilla event, 1435), the Prince's Blood Hunt after, the Sabbat's Wild Hunt and the barons' hunt from 1493, a hunt by whoever rules where no sect holds the city (V20 pp. 24, 28, 510; V20 Dark Ages p. 37). The hunt is written to the Prestation journal, sets WoDX NPC's Kindred to Hunted toward the target, starts a big rumour, and takes the target's Status (V20 p. 493). Final Death ends it; lifting it puts the attitudes and Status back. House figures in docs/PENDING-REVIEW.md.
+
+Reverse: remove the Blood Hunt menu entry and debts-marks.js's hunt functions.
+
+## B3561. Broken oaths pay the oath's own price (2026-11-13)
+WoDX Actions. Changeling oaths are kept on the character (flag c20oaths) with the C20 sample oath's cost (pp. 264-267), Done Deal's botches or bane (p. 204), the oathbreaker rule (p. 188) and the Banality trigger (p. 174). Dark Ages fae oaths break with the punishment the oath names (Dark Ages: Fae pp. 109-110). The card goes to everyone bound.
+
+Reverse: remove the Oaths menu entries.
+
+## B3562. The Beast takes the token (2026-11-13)
+WoDX Actions. Setting beastToken: off, a card each turn (default), or WoDX NPC's planner on auto for a player's frenzied vampire, undoable from the plan card. A Willpower point takes the turn back (V20 p. 310).
+
+Reverse: set beastToken to off.
+
+## B3563. Low Humanity: bearing, seeming alive, the hour of rising (2026-11-13)
+WoDX Actions. A Social roll on a mortal takes the bearing (V20 p. 310) when its aura box was left off, and notes the blood to seem alive (8 − Humanity, V20 p. 269). The Nightfall card gives each vampire's rising, earlier at higher ratings (V20 p. 311; V20 Dark Ages p. 113), with WoDX's steps between.
+
+Reverse: drop the bearingMods call in buildPool and the rising line in dusk().
+
+## B3564. Waking from a long torpor (2026-11-13)
+WoDX Actions. After a sleep longer than 70 years: a card of the dated events slept through, tongues kept as old forms after 100 years, and Abilities of the age behind until caught up (house). V20 torpor (p. 283) only; fifth edition's Fog of Ages is left out.
+
+Reverse: drop the wake calls in torpor().
+
+## B3565. Diablerie's marks (2026-11-13)
+WoDX Actions. Black veins for the Generation gap in years (at least one), shown to Aura Perception; a taint for a month per Generation, felt on Perception at 12 − Humanity, not by Path followers (V20 pp. 294-295). Optional setting diablerieSoul, off: a victim of Willpower 10 and much stronger blood (V20 p. 295, V20 Dark Ages p. 356, given there as a rumour) may push through; the nightly Willpower roll is a house rule.
+
+Reverse: leave diablerieSoul off; the veins note returns to the plain line in diablerieStep.
+
+## B3566. Low Humanity on the pixel face (2026-11-13)
+WoDX Paperdoll. stateOf adds lowHumanity from the Humanity rating; drawFace pales and sinks the face at 3-2 and gives it an angry set at 1-0 (V20 p. 311). Humanity only.
+
+Reverse: remove lowHumanity from stateOf.
 
 ## B3570. Herd pools by district (2026-11-13)
 WoDX Storyteller. Ben approved notes gap g12 as suggested (Notes Gaps Desk, 13 November 2026). A district is a scene with a hunting ground; its month's pool of vessels is split into the classes of the age (five ages, the same breaks as the spheres of Influence) with local names for clergy and the early nobility by the land's faith. A feeding on a vessel (wodxFed) or prey caught on a hunt (wodxHunted) takes one; animals do not count. The pool fills again every 30 days of world time. Rules in herd-rules.mjs.

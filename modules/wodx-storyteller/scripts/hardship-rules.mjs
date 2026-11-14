@@ -2,7 +2,7 @@
  * WoDX Storyteller 0.17.0: hardship on the road for the living. No Foundry calls here.
  *
  *   Weather: harsh weather deals 1 bashing at intervals the Storyteller sets, from once an hour to four times an
- *     hour; a Stamina roll resists each one (M20 p. 435; Sorcerers Crusade p. 208).
+ *     hour; a Stamina roll resists each one (M20 p. 435).
  *   Thirst and hunger: each day without, a Stamina roll puts the harm off a day, difficulty 6 and +1 a day; after 1
  *     day per Stamina dot without water, or 3 days per dot without food, the damage comes without a roll (M20
  *     pp. 435-436). Willpower can hold off hunger a day per point, never thirst.
@@ -43,7 +43,7 @@ export function severityFromDay(d) {
 }
 export const MAX_TIRED = 3;
 export const MAX_ROLLS = 24;
-export const REFS = {weather: "M20 p. 435; Sorcerers Crusade p. 208", thirst: "M20 pp. 435-436", hunger: "M20 pp. 435-436", sleep: "HH2 p. 90; Wraith 20th pdf p. 355"};
+export const REFS = {weather: "M20 p. 435", thirst: "M20 pp. 435-436", hunger: "M20 pp. 435-436", sleep: "HH2 p. 90; Wraith 20th pdf p. 355"};
 
 /** Who has these needs: the living. Vampires, wraiths and groups don't; a "PC" sheet with a clan is a vampire. */
 export function isLiving(type, clan = "") {

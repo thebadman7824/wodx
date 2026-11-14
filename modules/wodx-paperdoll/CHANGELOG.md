@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.27.0 (A vampire's pixel face shows low Humanity (B3566): pale and sunken at Humanity 3 and 2, a beast's angry look as well at 1 and 0 (V20 p. 311). Roads and Paths other than Humanity keep their own looks)
 - 0.26.0 (Talking faces: the player of the character spoken to gets "Read their face" under the face, once a line; won, the face shows its true feeling for a moment (B3444). The faces now say which of a Kindred's marks no mortal face has (a Nosferatu's face, a Gargoyle's stone, a Gangrel's beast eyes), hidden by a mask over the face or Obfuscate, for the witness description and the Masquerade (B3443))
 - 0.25.2 (Dressing a scene also mends a token that already wears its own sprite but not its true size, so a dragon placed again, or made from an actor that kept the sprite, takes its six squares; found on the testbed (B2618))
 - 0.25.1 (Portraits and talking faces read the one gender WoDX Chronicle keeps, so a gender written on the sheet or a nonbinary person from the People generator shows as such (B3500))
