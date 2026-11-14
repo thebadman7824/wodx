@@ -6,7 +6,8 @@
 - How work reaches main (decision blocks, fragments, small PRs, touched gates, book checks): docs/WORKFLOW.md.
 - `release/merge-stamp.mjs`: stamps module versions, changelogs, the module table and decisions from changes/ just before a merge.
 - `decisions/claim.mjs`: claims a thread's block of decision numbers in the shared registry.
-- `books/books.mjs`: book pages, word search and the 8-word overlap check against the book texts in the project files folder.
+- `books/books.mjs`: book pages, word search and the 8-word overlap check against the book texts in the project files folder; `pack` joins page folders into one file per book.
+- `storage/files.mjs`: the shared folder's daily file count (warns at 45,000) and the weekly sweep of gates/ and jobs/ into one zip. `storage/contact-sheet.py`: one PNG of thumbnails for a picture set that stays on the PC.
 - `release/`: release checks for the Linux live server: the letter-case path test and the build stamp (see release/README.md).
 - `harness/`: the mock-Foundry tests. `cd tools/harness`, `npm install`, then `node --test *.test.mjs`. The UI fit check is `node ui-fit.mjs <foundry2.css> [screenshot folder]`.
 
