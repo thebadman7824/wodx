@@ -111,13 +111,13 @@ export async function run() {
     });
     await G.step("9. the Missouri villages", async () => {
       const med = results({era: "medieval", culture: WEST}, "people.origin"), bad = [];
-      for ( const o of ["mandan", "hidatsa", "arikara", "pawnee", "blackfoot", "arapaho", "crow", "shoshone", "ute"] ) {
+      for ( const o of ["mandan", "hidatsa", "arikara", "pawnee"] ) {
         for ( const p of draw("medieval", o, 20, "mo") ) if ( !p.name || p.name.includes("{") || p.family ) bad.push(`${o}: ${p.name} / ${p.family}`);
         for ( const p of draw("modern", o, 10, "mo") ) if ( !p.family || p.name.includes("{") ) bad.push(`${o} modern: ${p.name}`);
       }
       const women = draw("medieval", "pawnee", 20, "mo-w").filter((p, i) => i % 2).map(p => p.name);
       G.ok("9. the Missouri villages in the West; own names, women of a village, then family names",
-        ["mandan", "hidatsa", "arikara", "pawnee", "blackfoot", "arapaho", "crow", "shoshone", "ute"].every(o => med.includes(o)) && !bad.length && women.every(n => /^A woman of the /.test(n)),
+        ["mandan", "hidatsa", "arikara", "pawnee"].every(o => med.includes(o)) && !bad.length && women.every(n => /^A woman of the /.test(n)),
         {medieval: med, bad: bad.slice(0, 6), sample: draw("medieval", "mandan", 4, "show").map(p => p.name), women: women.slice(0, 3)});
     });
     await G.step("10. the northern Plains", async () => {
