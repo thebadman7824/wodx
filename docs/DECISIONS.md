@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B3960
+Next free block: B4110
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -203,6 +203,7 @@ Next free block: B3960
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
+| B4100-B4109 | PC job queue and runner: threads queue PC work as GitHub issues, five testbed lanes run it side by side (used B4100-B4104) | tools (no module) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6756,3 +6757,31 @@ Tools only. `tools/storage/files.mjs count`, scheduled daily at 01:27 UTC, write
 at 45,000 files or more; the scheduled run then messages the coordinator with the largest folders to clear.
 
 Reverse: delete the scheduled task.
+
+## B4100. PC jobs are GitHub issues the PC runner takes itself (2026-11-14)
+Every PC job went through one helper thread, passed along by the coordinator, so finished code waited hours for a
+gate. A job is now an issue labelled pc-job, opened by the owner's account, with one json block (tools/pcq/jobs.mjs).
+A runner on the PC (tools/pcq/runner.mjs) polls every 30 seconds, runs the job and comments the result on the issue.
+Issues were chosen over the shared folder because the PC cannot read the shared folder and the folder is at its file
+limit; the PC already pushes to GitHub through Git Credential Manager. Results never quote book text (public repo).
+
+## B4101. Only fixed job kinds run, spawned without a shell (2026-11-14)
+gates, gate-two, deploy, reset, setup-lane, books-find, trove-find. Names, refs, terms and patterns are checked by
+pattern; lane 1 and any Live world are refused. Free-form PC work stays with the PC helper thread.
+
+## B4102. Error checking in the runner (2026-11-14)
+Lane clash check before starting, idle-lane health probe every 5 minutes with one restart and an alert issue
+(pc-alert) when a lane stays down, a time limit on every step that ends the process tree, one retry after a lane reset
+on a lane fault (exit 3, 4, 5 or a time limit; a failing gate is not retried), holds below 15 GB on C:, 50 GB on D: or
+3 GB of memory, and jobs that were running when the runner stopped are run again. A status issue (pc-status) shows
+the lanes and the queue.
+
+## B4103. Lanes 4, 5 and 6 (ports 30040, 30050, 30060) (2026-11-14)
+Ben asked for at least three more lanes. Same setup as lanes 2 and 3 (D:\WoDX\FoundryData-laneN, local only, UPnP
+off, reset nightly). lane-reset.cmd and nightly.mjs now take every autoReset lane from lanes.json, so the nightly full
+run splits over five lanes. The PC has 24 threads and 32 GB; the runner's memory hold keeps it from starting a lane
+job when memory runs short.
+
+## B4104. submit.mjs checks a job before it is queued (2026-11-14)
+A missing gate file, a two-browser gate in a plain gates job (or the reverse), a gate that does not parse or breaks
+the gate rules: each used to cost a PC run. They are refused in the cloud now.
