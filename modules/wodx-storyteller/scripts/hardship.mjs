@@ -148,11 +148,39 @@ export async function setWeather(scene, severity) {
   if ( !game.user.isGM || !scene ) return null;
   const sev = H.WEATHER[severity] || severity === H.AUTO ? severity : H.AUTO;
   await scene.update({[`flags.${MOD}.weather`]: sev});
+  await showWeather(scene, sev);
   // Weather counts from now, not from whenever the characters last met some
   if ( sev !== "none" ) for ( const a of game.actors.filter(living) ) if ( scene.tokens.some(k => k.actorId === a.id) ) {
     const x = needsOf(a); x.exposed = now(); await a.update({[`flags.${MOD}.needs`]: x});
   }
   return sev;
+}
+
+/**
+ * B4627: the hardship weather on the map. A hand-set harsh, severe or deadly weather sets the scene's own weather
+ * (snow, a blizzard, rain, a storm) or a glare for heat; WoDX Atmosphere leaves a scene's weather alone once someone
+ * else has set it. "No hardship" or "From the sky" takes it off and hands the scene back to Atmosphere.
+ */
+export async function showWeather(scene, sev = weatherSetOn(scene)) {
+  if ( !game.user.isGM || !scene ) return null;
+  const ATMO = "wodx-atmosphere";
+  let indoor = false;
+  try { indoor = game.modules.get(ATMO)?.api?.weather?.isOutdoor?.(scene) === false; } catch (e) { indoor = false; }
+  const look = setting("townLooks") === false || indoor ? null : H.hardshipLook(sev, H.weatherCause(skyFor(scene)) ?? (Number(skyFor(scene)?.tempDay) < 3 ? "cold" : null));
+  const had = scene.flags?.[MOD]?.hardshipSky ?? null;
+  const TL = await import("./town-looks.mjs");
+  if ( !look ) {
+    if ( had !== null ) {
+      await scene.update({weather: scene.weather === had ? "" : scene.weather, [`flags.${MOD}.-=hardshipSky`]: null});
+      try { await game.modules.get(ATMO)?.api?.weather?.apply?.({force: true, quiet: true}); } catch (e) { /* no Atmosphere */ }
+    }
+    await TL.setLooks(scene, `hardship:${scene.id}`, []);
+    return null;
+  }
+  const want = look.weather && CONFIG.weatherEffects?.[look.weather] ? look.weather : "";
+  await scene.update({weather: want, [`flags.${MOD}.hardshipSky`]: want, [`flags.${ATMO}.effectSet`]: ""});
+  await TL.setLooks(scene, `hardship:${scene.id}`, look.glare ? [{kind: "calm", at: null, until: null, note: "a glare of heat", color: "#e8b04a", alpha: 0.12}] : []);
+  return want || (look.glare ? "glare" : "");
 }
 
 /** The Storyteller's window: who has gone without what, and the weather here. */

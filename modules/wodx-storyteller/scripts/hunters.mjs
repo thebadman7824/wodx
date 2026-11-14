@@ -250,6 +250,8 @@ async function approve(entry) {
   const text = d.kind === "investigator" ? `A stranger from ${d.lead} is asking questions in ${place}.` : d.kind === "raid" ? `${cap(d.lead)} are hunting someone in ${place}${d.file?.name ? `, and the name ${d.file.name} is whispered` : ""}.` : `${cap(d.lead)} purge ${place}.`;
   try { await game.modules.get(MOD)?.api?.rumours?.start?.({text}); } catch (err) { console.error(`${MOD} |`, err); }
   await log({kind: "hunters", attention: "The hunters move", text: `${place}: ${d.text ?? text}`});
+  // B4623: a raid or purge brings a crowd with torches onto the region's town scenes for the night
+  if ( d.kind === "raid" || d.kind === "purge" ) { try { await (await import("./town-looks.mjs")).torchesIn(d.region); } catch (err) { console.warn(`${MOD} | torches`, err); } }
   if ( d.kind === "investigator" ) {
     const files = Object.keys(state().regions[d.region]?.files ?? {});
     const w = npc()?.wanted;
