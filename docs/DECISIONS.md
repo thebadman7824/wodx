@@ -200,7 +200,7 @@ Next free block: B4610
 | B3810-B3819 | Hedge magic Enchantment makes talismans (used B3810-B3813) | Library |
 | B3820-B3829 | Plains peoples names (Lakota, Dakota and Nakota, Cheyenne, Comanche, Kiowa) (used B3820-B3824) | Creation, Chronicle |
 | B3830-B3839 | Maya names in the People generator (used B3830-B3833) | Creation, Chronicle |
-| B3900-B3929 | Chronicle events change the factions (used B3900-B3922) | NPC |
+| B3900-B3929 | Future Darkness disasters move the markets (used B3900-B3923) | Storyteller |
 | B3930-B3939 | Southwest peoples names (Pueblo, Diné, Apache) (used B3930-B3932) | Creation, Chronicle |
 | B3940-B3949 | Armenian names in the People generator (used B3940-B3942) | Creation, Chronicle |
 | B3950-B3959 | Shared folder limits: one file per book, picture sets on the PC, weekly sweep, daily file count (used B3950-B3953) | Tools only (tools/books, tools/storage) |
@@ -6791,6 +6791,9 @@ No-effect audit t4. The Knocked down status showed on the token, but standing co
 
 ## B3922. More events move the factions (2026-11-14)
 No-effect audit w1. Several dated events in the chronicle passed with only a line in the history. WoDX NPC now offers a new power for each of them when the clock reaches it: changelings in hiding at the Shattering, the Giovanni at the fall of the Cappadocians, a Justicar's archons at the First Conclave, a freehold at the Resurgence, Kuei-jin envoys after the Week of Nightmares, a Fallen and their faithful at the escape from the Abyss, the Children of Carthage at the Venice Conclave, a Cyberpunks crew and a corporate hunter team in Future Darkness. Events that wipe out a line also put to sleep any faction named for it: Croatan, Bunyip, Ravnos, Cappadocian and Doissetep. A test checks that every classic event, except the Time of Judgment (the Storyteller sets up the ending) and the Avatar Storm (WoDX Otherworlds already reads it for the Umbra storm), has at least one effect. Reverse: remove the entries.
+
+## B3923. Future Darkness disasters reach the markets (2026-11-14)
+No-effect audit w1. Only four Future Darkness events (the 1994 crash, the 1996 Collapse and two plagues) brought market news; the branch's wars, famines and its last Maelstrom changed nothing a player could buy. WoDX Storyteller now gives them the presets that already exist: war for the Mideast Meltdown, the First and Second Corporate Wars and the orbital war; famine for the Midwest drought and the food crash; a crash for the Third Corporate War in the Net; and a collapse for the Seventh Maelstrom over Moravia in both cascades that have it. Several lines describe the same happening, so only one event id per happening carries the news, and a test checks that no year gets the same card twice. The towns read the same news, as before. Reverse: remove the entries.
 
 ## B3930. Three Southwest peoples in the West's mix (2026-11-14)
 WoDX Creation and Chronicle. Next on the global open list after the Maya. The American West covers the Plains, the Rockies and the Southwest, so the Pueblos (one people for the Hopi, Zuni and the Rio Grande towns), the Diné and the Apache join the Plains peoples: before 1500 Lakota 28, Cheyenne 12, Comanche 12, Kiowa 8, Pueblo 22, Diné 10, Apache 8; beside the Spanish to 1800; a share after. The Diné and Apache reached the Southwest about 1400 to 1500, so their medieval share is a house reading. Taken as recommended while Ben was away; logged in PENDING-REVIEW.

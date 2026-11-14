@@ -25,3 +25,20 @@ test("events: a line wiped out ends the factions named for it, with the new powe
   assert.equal(offer?.name, "Kuei-jin envoys");
   assert.equal(F.eventChanges({factions: [fac({id: "c", name: "Croatan war party", kind: "garou"})]}, "croatan", 1589).changes.length, 1);
 });
+
+test("events: Future Darkness disasters move the markets once each", async () => {
+  const FUT = (await import("../../modules/wodx-chronicle/data/future-events.mjs")).default.events;
+  const all = new Map([...EV.events, ...FUT].map(e => [e.id, e]));
+  for ( const [id, key] of Object.entries(MN.EVENT_NEWS) ) {
+    assert.ok(all.has(id), `${id} is a real event`);
+    assert.ok(MN.PRESETS[key], `${id} names a preset`);
+  }
+  // one card per happening: no year gets the same preset twice from the branch (cascades counted apart)
+  const seen = new Set();
+  for ( const [id, key] of Object.entries(MN.EVENT_NEWS) ) {
+    const e = all.get(id), k = `${e.year}:${e.cascade ?? ""}:${key}`;
+    assert.ok(!seen.has(k), `${id} repeats ${k}`);
+    seen.add(k);
+  }
+  for ( const id of ["wofd-1997-1", "wofd-1998-1", "wofd-2002-1", "wofd-2004-2", "wofd-2008-4"] ) assert.ok(MN.newsFor(all.get(id)), id);
+});
