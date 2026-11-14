@@ -239,6 +239,10 @@ export function scoreOptions(profile, state) {
   // Nobody to fight
   if ( !enemies.length ) out.push({action: unseen ? "search" : "wait", score: 1, why: unseen ? `${unseen} foe(s) unseen (Obfuscate, darkness or hiding)` : "no foe in sight"});
 
+  // B4797: a mount or vehicle near enough to reach this turn: get away faster at the wheel, or give chase in it
+  const ride = boardOption(state, out, p);
+  if ( ride ) out.push(ride);
+
   return out.sort((a, b) => b.score - a.score).map(o => ({...o, score: Math.round(o.score * 10) / 10}));
 }
 
@@ -361,11 +365,38 @@ export function harmLog(cards, combatId) {
   return out;
 }
 
+/**
+ * B4797 (house rule): an NPC gets into a mount or vehicle by itself. vehicles: [{id, label, distance (yards), canDrive}]
+ * for the free ones on the scene in the year; self.run: yards a turn on foot; self.atWheel: already at the reins.
+ *   - fleeing: the nearest it can drive and reach this turn, a little above the flight itself (faster away);
+ *   - a foe out of reach for every attack it has, and further than a turn's run: get in and give chase, a little
+ *     above the best attack (only an NPC who wants the fight: aggression a half or more).
+ * -> an option {action: "board", vehicle, score, why}, or null
+ */
+export function boardOption(state = {}, options = [], p = {}) {
+  const s = state.self ?? {};
+  if ( s.atWheel || s.surrendered ) return null;
+  const run = Math.max(1, Number(s.run) || 0);
+  const v = (state.vehicles ?? []).filter(x => x && x.canDrive && Number.isFinite(Number(x.distance)) && Number(x.distance) <= run)
+    .sort((a, b) => a.distance - b.distance)[0];
+  if ( !v ) return null;
+  const where = `the ${String(v.label).toLowerCase()} is ${Math.round(v.distance)} yards off`;
+  const flee = options.find(o => o.action === "flee");
+  const top = options[0] ? [...options].sort((a, b) => b.score - a.score)[0] : null;
+  if ( flee && top && top.action === "flee" ) return {action: "board", vehicle: v.id, score: flee.score + 0.5, why: `${flee.why}; ${where}: faster away at the wheel`};
+  const enemies = (state.enemies ?? []).filter(e => e.visible !== false);
+  const far = enemies.length && enemies.every(e => !e.reach && !e.ranged && (Number(e.distance) || 0) > run);
+  const attack = options.filter(o => o.action === "attack").sort((a, b) => b.score - a.score)[0];
+  if ( far && attack && Number(p.aggression ?? 1) >= TIMID_BELOW && top === attack ) return {action: "board", vehicle: v.id, score: attack.score + 0.5, why: `every foe is beyond a run; ${where}: gives chase at the wheel`};
+  return null;
+}
+const TIMID_BELOW = 0.5;
+
 /** The actions WoDX can carry out by itself; the rest need the Storyteller's roll or choice. */
-export const SELF_ACTING = ["attack", "shoot", "flee", "defend", "wait", "search", "surrender"];
+export const SELF_ACTING = ["attack", "shoot", "flee", "defend", "wait", "search", "surrender", "board"];
 export const ACTION_LABEL = {attack: "Attack", shoot: "Shoot", flee: "Flee", defend: "Full defence", willpower: "Attack, spending Willpower",
   frenzy: "Frenzy check", power: "Use a power", call: "Call for help", wait: "Wait", search: "Search for the unseen",
-  surrender: "Surrender", hostage: "Take a hostage"};
+  surrender: "Surrender", hostage: "Take a hostage", board: "Get into a vehicle"};
 
 /** Auto mode acts on the best option it can carry out itself; a better one that needs the Storyteller stops it. */
 export function autoChoice(options) {

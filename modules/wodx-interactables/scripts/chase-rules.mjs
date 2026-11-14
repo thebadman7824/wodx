@@ -57,8 +57,58 @@ export const WAYS = {
   motorbike: {label: "By motorcycle", pool: ["dexterity", "drive"], wheels: true, light: true, motor: true, mounted: true, mount: "motorbike", from: 1910, thrown: true,
     chart: [[1910, 25, 45, 5], [1930, 45, 80, 6], [1960, 65, 110, 7], [1990, 75, 130, 7], [2040, 90, 160, 8]]},
   motorboat: {label: "By motorboat", pool: ["dexterity", "drive"], water: true, motor: true, mounted: true, mount: "motorboat", from: 1910,
-    speed: y => band(y, [[1910, 20], [1950, 35], [2040, 45]])}
+    speed: y => band(y, [[1910, 20], [1950, 35], [2040, 45]])},
+  // B4790 (Mage 20th pp. 461-463 for the modern rows, house figures before): lorries, armoured vehicles, aircraft
+  truck:     {label: "By lorry or truck", pool: ["dexterity", "drive"], wheels: true, motor: true, mounted: true, mount: "truck", from: 1900,
+    chart: [[1900, 10, 15, 3], [1920, 25, 35, 3], [1940, 40, 55, 4], [1960, 55, 80, 4], [1990, 60, 110, 4], [2040, 70, 120, 5]]},
+  armoured:  {label: "By armoured car or carrier", pool: ["dexterity", "drive"], wheels: true, motor: true, mounted: true, mount: "armoured", from: 1914,
+    chart: [[1914, 15, 30, 3], [1940, 30, 50, 4], [1960, 30, 60, 4], [2040, 40, 70, 5]]},
+  tank:      {label: "By tank", pool: ["dexterity", "drive"], wheels: true, tracks: true, motor: true, mounted: true, mount: "tank", from: 1916,
+    chart: [[1916, 3, 4, 1], [1930, 10, 20, 2], [1940, 20, 30, 2], [1980, 30, 50, 2], [2040, 35, 55, 3]]},
+  balloon:   {label: "By balloon or airship", pool: ["dexterity", "pilot"], air: true, mounted: true, mount: "balloon", from: 1783,
+    // a balloon goes with the wind (the book's Maneuver 0); an airship from 1900 can be steered a little
+    chart: [[1783, 7, 10, 0], [1900, 35, 50, 1], [1930, 70, 85, 1]]},
+  plane:     {label: "By aeroplane", pool: ["dexterity", "pilot"], air: true, motor: true, mounted: true, mount: "plane", from: 1909,
+    chart: [[1909, 35, 45, 3], [1918, 80, 120, 4], [1935, 110, 170, 5]]},
+  helicopter: {label: "By helicopter", pool: ["dexterity", "pilot"], air: true, motor: true, mounted: true, mount: "helicopter", from: 1945,
+    chart: [[1945, 60, 90, 5], [1960, 140, 220, 6], [2000, 150, 250, 6], [2040, 180, 280, 7]]},
+  jet:       {label: "By jet", pool: ["dexterity", "pilot"], air: true, motor: true, mounted: true, mount: "jet", from: 1944,
+    chart: [[1944, 350, 500, 5], [1960, 350, 450, 4], [2040, 450, 600, 5]]}
 };
+
+/**
+ * B4791: a vehicle's body (Mage 20th pp. 459-463). durability: health levels of damage it takes to get through the body
+ * (less bounces off); structure: damage it takes before it is wrecked; mass: extra dice when it rams (cars +1, lorries
+ * +3, military +5); guard: extra protection for those inside in a crash (lorries +3); shelter: a closed body that
+ * protects those inside from shots that do not find a window (4 or more successes); full: those inside are never
+ * reached through it (military vehicles and aircraft). Rows: [from year, durability, structure]. Carts, carriages,
+ * rowing boats, early cars and aeroplanes and the bicycle are house figures; the beasts have no body here.
+ */
+export const BODIES = {
+  cart:       {rows: [[0, 2, 4]]},
+  carriage:   {rows: [[0, 2, 5]], shelter: true},
+  boat:       {rows: [[0, 1, 3]]},
+  bicycle:    {rows: [[0, 2, 4]]},
+  car:        {rows: [[1900, 2, 3], [1930, 3, 4]], mass: 1, shelter: true},
+  motorbike:  {rows: [[1910, 2, 3], [1960, 4, 4]]},
+  motorboat:  {rows: [[1910, 3, 5]], mass: 1},
+  truck:      {rows: [[1900, 3, 5], [1940, 4, 6], [1980, 5, 8]], mass: 3, guard: 3, shelter: true},
+  armoured:   {rows: [[1914, 6, 8], [1940, 10, 10], [1960, 12, 15]], mass: 5, shelter: true, full: true},
+  tank:       {rows: [[1916, 8, 10], [1940, 15, 15], [1960, 18, 18], [1980, 20, 25]], mass: 5, shelter: true, full: true},
+  balloon:    {rows: [[1783, 4, 4], [1900, 4, 8]], shelter: true, full: true},
+  plane:      {rows: [[1909, 2, 3], [1935, 5, 6]], mass: 1, shelter: true, full: true},
+  helicopter: {rows: [[1945, 3, 4], [1960, 4, 6]], mass: 1, shelter: true, full: true},
+  jet:        {rows: [[1944, 8, 15]], mass: 1, shelter: true, full: true}
+};
+/** A way's body in a year: {durability, structure, mass, guard, shelter, full}, or null (on foot, a beast). */
+export function bodyOf(way, year) {
+  const B = BODIES[way];
+  if ( !B ) return null;
+  const y = Number(year) || 2000;
+  let row = B.rows[0];
+  for ( const r of B.rows ) if ( y >= r[0] ) row = r;
+  return {durability: row[1], structure: row[2], mass: B.mass ?? 0, guard: B.guard ?? 0, shelter: !!B.shelter, full: !!B.full};
+}
 
 /**
  * Kinds of ground. diff: added to every roll (vehicles take wheelDiff instead when set); cap: the most yards a turn for
@@ -70,9 +120,9 @@ export const GROUNDS = {
   road:    {label: "A road", diff: 0, cap: {}, shuts: ["boat", "motorboat"], cover: false},
   streets: {label: "Town streets", diff: 0, cap: {hooves: 30, wheels: 40}, shuts: ["boat", "motorboat"], cover: true},
   crowd:   {label: "A crowd or a market", diff: 1, wheelDiff: 2, cap: {hooves: 10, wheels: 10}, shuts: ["boat", "motorboat"], cover: true},
-  rough:   {label: "Rough ground or woods", diff: 1, cap: {hooves: 25, light: 15}, shuts: ["cart", "carriage", "car", "boat", "motorboat"], cover: true},
-  indoors: {label: "Indoors, alleys or rooftops", diff: 1, cap: {}, shuts: ["horse", "mule", "cart", "carriage", "car", "boat", "motorboat", "bicycle", "motorbike"], cover: true},
-  water:   {label: "A river or a lake", diff: 0, cap: {}, shuts: ["foot", "horse", "mule", "cart", "carriage", "bicycle", "car", "motorbike"], cover: false}
+  rough:   {label: "Rough ground or woods", diff: 1, cap: {hooves: 25, light: 15, wheels: 20}, shuts: ["cart", "carriage", "car", "truck", "boat", "motorboat"], cover: true},
+  indoors: {label: "Indoors, alleys or rooftops", diff: 1, cap: {}, shuts: ["horse", "mule", "cart", "carriage", "car", "boat", "motorboat", "bicycle", "motorbike", "truck", "armoured", "tank", "balloon", "plane", "helicopter", "jet"], cover: true},
+  water:   {label: "A river or a lake", diff: 0, cap: {}, shuts: ["foot", "horse", "mule", "cart", "carriage", "bicycle", "car", "motorbike", "truck", "armoured", "tank"], cover: false}
 };
 export const groundKind = k => (GROUNDS[k] ? k : "streets");
 
@@ -129,6 +179,7 @@ export function speedOf(r, ground, year) {
     if ( r.flatOut ) yards = Math.round(yards * 1.5);
   }
   let cap = null;
+  if ( W.air ) return {yards, capped: false};
   if ( W.hooves && G.cap.hooves ) cap = G.cap.hooves;
   if ( W.wheels && W.light && (G.cap.light ?? G.cap.wheels) ) cap = G.cap.light ?? G.cap.wheels;
   else if ( W.wheels && G.cap.wheels ) cap = G.cap.wheels;
@@ -150,7 +201,9 @@ export function rideInFight(kind, year, ground = "streets") {
   if ( !way ) return null;
   const W = WAYS[way], g = W.water ? "water" : groundKind(ground);
   const sp = canGo(way, g) ? speedOf({way}, g, year) : {yards: 0, capped: true};
-  return {way, ground: g, yards: sp.yards, capped: sp.capped, saddle: !!W.thrown, hooves: !!W.hooves, motor: !!W.motor, water: !!W.water, skill: W.pool[1]};
+  const ch = chartOf(way, year), body = bodyOf(way, year);
+  return {way, ground: g, yards: sp.yards, capped: sp.capped, saddle: !!W.thrown, hooves: !!W.hooves, motor: !!W.motor, water: !!W.water, air: !!W.air,
+    skill: W.pool[1], maneuver: ch ? ch.maneuver : null, body};
 }
 
 /** Free successes for the faster of two racers: one per 10 yards a turn, three at most. Returns {to: "a"|"b"|null, n}. */
@@ -174,7 +227,8 @@ export function rollFor(r, ground, {night = false, year = 0} = {}) {
   const W = WAYS[r.way] ?? WAYS.foot, G = GROUNDS[groundKind(ground)];
   const parts = [];
   let diff = 6;
-  const g = (W.wheels || W.motor) && G.wheelDiff !== undefined ? G.wheelDiff : G.diff;
+  // B4790: aircraft are above the ground: it adds nothing to their rolls
+  const g = W.air ? 0 : (W.wheels || W.motor) && G.wheelDiff !== undefined ? G.wheelDiff : G.diff;
   if ( g ) { diff += g; parts.push(`${G.label.toLowerCase()} +${g}`); }
   if ( r.flatOut ) { diff += FLAT_OUT; parts.push(`flat out +${FLAT_OUT}`); }
   const dark = night && (W.hooves || W.wheels) && (Number(year) || 0) < LIT_FROM;
