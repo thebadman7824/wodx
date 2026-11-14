@@ -81,6 +81,7 @@ export const WAYS = {
   szlachta:   {label: "On a fleshcrafted steed", pool: ["dexterity", "ride"], hooves: true, mounted: true, mount: "szlachta", thrown: true, speed: () => 45},
   chimera:    {label: "On a chimerical steed", pool: ["dexterity", "ride"], hooves: true, mounted: true, mount: "chimera", thrown: true, speed: () => 55},
   stygian:    {label: "On a Stygian steed", pool: ["dexterity", "ride"], hooves: true, mounted: true, mount: "stygian", thrown: true, speed: () => 75},
+  camel:      {label: "On a camel", pool: ["dexterity", "ride"], hooves: true, mounted: true, mount: "camel", thrown: true, speed: () => 40},
   gryphon:    {label: "On a gryphon", pool: ["dexterity", "ride"], hooves: true, air: true, mounted: true, mount: "gryphon", thrown: true, speed: () => 65}
 };
 
@@ -129,8 +130,8 @@ export const GROUNDS = {
   streets: {label: "Town streets", diff: 0, cap: {hooves: 30, wheels: 40}, shuts: ["boat", "motorboat"], cover: true},
   crowd:   {label: "A crowd or a market", diff: 1, wheelDiff: 2, cap: {hooves: 10, wheels: 10}, shuts: ["boat", "motorboat"], cover: true},
   rough:   {label: "Rough ground or woods", diff: 1, cap: {hooves: 25, light: 15, wheels: 20}, shuts: ["cart", "carriage", "car", "truck", "boat", "motorboat"], cover: true},
-  indoors: {label: "Indoors, alleys or rooftops", diff: 1, cap: {}, shuts: ["horse", "mule", "cart", "carriage", "car", "boat", "motorboat", "bicycle", "motorbike", "truck", "armoured", "tank", "balloon", "plane", "helicopter", "jet", "ghoulhorse", "szlachta", "chimera", "stygian", "gryphon"], cover: true},
-  water:   {label: "A river or a lake", diff: 0, cap: {}, shuts: ["foot", "horse", "mule", "cart", "carriage", "bicycle", "car", "motorbike", "truck", "armoured", "tank", "ghoulhorse", "szlachta", "chimera", "stygian"], cover: false}
+  indoors: {label: "Indoors, alleys or rooftops", diff: 1, cap: {}, shuts: ["horse", "mule", "cart", "carriage", "car", "boat", "motorboat", "bicycle", "motorbike", "truck", "armoured", "tank", "balloon", "plane", "helicopter", "jet", "ghoulhorse", "szlachta", "chimera", "stygian", "gryphon", "camel"], cover: true},
+  water:   {label: "A river or a lake", diff: 0, cap: {}, shuts: ["foot", "horse", "mule", "cart", "carriage", "bicycle", "car", "motorbike", "truck", "armoured", "tank", "ghoulhorse", "szlachta", "chimera", "stygian", "camel"], cover: false}
 };
 export const groundKind = k => (GROUNDS[k] ? k : "streets");
 

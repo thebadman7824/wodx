@@ -142,7 +142,25 @@ export function describeWall(doc) {
 }
 
 /** A container on a tile, or null. */
+/**
+ * B4966: a creature that can be ridden, on its own token (interact-rules beastKind): the kind, by its sheet's flag or
+ * its name. Someone's own character is never guessed by name: only by the flag set on it.
+ */
+export function beastOf(doc) {
+  if ( doc?.documentName !== "Token" || !doc.actor ) return null;
+  const flag = R.mountableFlag(doc.flags?.[MOD]?.mountable) ?? R.mountableFlag(doc.actor.flags?.[MOD]?.mountable);
+  if ( flag === undefined && doc.actor.hasPlayerOwner && String(doc.actor.type ?? "") !== "Creature" ) return null;
+  return R.beastKind(doc.actor.name ?? doc.name, flag);
+}
+/** A ridden beast's mount flags, as a tile's would be: who rides it, kept on its token. */
+const beastFlags = (doc, kind) => {
+  const f = doc.flags?.[MOD] ?? {}, m = f.mountable ?? doc.actor?.flags?.[MOD]?.mountable;
+  return {mount: true, mountKind: kind, seats: m && typeof m === "object" && m.seats ? m.seats : "", title: doc.name, driver: f.driver ?? null, riders: f.riders ?? [], beast: true};
+};
 export function describeTile(doc) {
+  const kind = beastOf(doc);
+  if ( kind ) return {...R.describeMount(beastFlags(doc, kind)), beast: true};
+  if ( doc?.documentName === "Token" ) return null;
   const f = doc?.flags?.[MOD] ?? {};
   if ( !doc || !(f.container || f.trap || f.clue || f.light || f.hide || f.hazard || f.sacred || f.watch || f.mount || f.climb || f.isTarget || f.cover) ) return null;
   if ( f.container ) return R.describeContainer(f);
@@ -162,9 +180,11 @@ const isTile = doc => doc?.documentName === "Tile" || (!!doc && !Array.isArray(d
 /** Whatever interactable a wall or tile is. */
 export const describeObj = doc => (isTile(doc) ? describeTile(doc) : describeWall(doc));
 /** A wall or a tile on a scene, by id. */
-const objectIn = (scene, id) => scene?.walls?.get?.(id) ?? scene?.tiles?.get?.(id) ?? null;
+const objectIn = (scene, id) => scene?.walls?.get?.(id) ?? scene?.tiles?.get?.(id) ?? (beastOf(scene?.tokens?.get?.(id)) ? scene.tokens.get(id) : null);
 /** The tiles of a scene, as an array. */
 const tilesOf = scene => scene?.tiles?.contents ?? [...(scene?.tiles?.values?.() ?? [])];
+/** B4966: what can be ridden or driven on a scene: mount tiles and the tokens of creatures that can be ridden. */
+const mountsOf = scene => [...tilesOf(scene).filter(t => t.flags?.[MOD]?.mount), ...(scene?.tokens?.contents ?? []).filter(t => beastOf(t))];
 /**
  * The scene lights a light-source tile works: the ids set on it, or else every light inside the tile or within a
  * square of it; with the copies WoDX Otherworlds makes of them on the Penumbra and Shadowlands levels.
@@ -204,7 +224,11 @@ export function coverOnShot(fromTok, toTok) {
   return {...c, note: words.length ? `Cover: ${words.join("; ")} difficulty (V20 p. 286).` : ""};
 }
 /** A tile's rectangle and centre. */
-const rectOf = doc => ({x: num(doc.x), y: num(doc.y), w: num(doc.width), h: num(doc.height)});
+const rectOf = doc => {
+  // a token's size is in squares (B4966: a beast to ride)
+  const g = doc?.documentName === "Token" ? (doc.parent?.grid?.size ?? 100) : 1;
+  return {x: num(doc.x), y: num(doc.y), w: num(doc.width) * g, h: num(doc.height) * g};
+};
 const tileCenter = doc => { const r = rectOf(doc); return {x: r.x + r.w / 2, y: r.y + r.h / 2}; };
 /** The point of a tile nearest to p, pulled a little toward the tile's centre. */
 function nearOnTile(doc, p, by = 4) {
@@ -348,6 +372,14 @@ export function interactablesFor(tok) {
     if ( blocked("move", tok.center, near) ) continue;
     if ( !game.user.isGM && blocked("sight", tok.center, near) ) continue;
     out.push({wall: tile, doc, o, distance: d});
+  }
+  // B4966: a creature that can be ridden, beside the token
+  for ( const beast of canvas.tokens?.placeables ?? [] ) {
+    const doc = beast.document;
+    if ( doc.id === tok.document?.id || !beastOf(doc) || (!game.user.isGM && (doc.hidden || !beast.visible)) ) continue;
+    const d = distanceToTile(doc, tok.center);
+    if ( d > reach ) continue;
+    out.push({wall: beast, doc, o: describeTile(doc), distance: d});
   }
   return out.sort((a, b) => a.distance - b.distance);
 }
@@ -1489,8 +1521,15 @@ async function mountReport(o, doc, out, op, actor, tokDoc) {
   let driver = f.driver?.a ? f.driver : null;
   const riders = (Array.isArray(f.riders) ? f.riders : []).filter(r => r?.a && r.a !== actor.id);
   // Where each one sits, kept as an offset: the driver's from the vehicle, a passenger's from the vehicle
-  if ( out.boards === "driver" ) { driver = {...me, dx: num(doc.x) - num(tokDoc.x), dy: num(doc.y) - num(tokDoc.y)}; lines.push(`${actor.name} is ${M.reins}: moving that token moves it and everyone aboard.`); }
-  else if ( out.boards === "rider" ) riders.push({...me, dx: num(tokDoc.x) - num(doc.x), dy: num(tokDoc.y) - num(doc.y)});
+  // B4966: on a beast the rider sits on it: the token goes onto the animal's, drawn above it
+  if ( out.boards && doc.documentName === "Token" ) {
+    lastSeen.set(tokDoc.uuid, centerAt(tokDoc, {x: num(doc.x), y: num(doc.y)}));
+    carrying.set(tokDoc.uuid, {x: num(doc.x), y: num(doc.y)});
+    try { await tokDoc.update({x: num(doc.x), y: num(doc.y), sort: num(doc.sort) + 1 + riders.length}, STRAIGHT(tokDoc)); } catch (e) { carrying.delete(tokDoc.uuid); }
+  }
+  const at = doc.documentName === "Token" ? {x: num(doc.x), y: num(doc.y)} : {x: num(tokDoc.x), y: num(tokDoc.y)};
+  if ( out.boards === "driver" ) { driver = {...me, dx: num(doc.x) - at.x, dy: num(doc.y) - at.y}; lines.push(`${actor.name} is ${M.reins}: moving that token moves it and everyone aboard.`); }
+  else if ( out.boards === "rider" ) riders.push({...me, dx: at.x - num(doc.x), dy: at.y - num(doc.y)});
   if ( out.leaves && driver?.a === actor.id ) driver = null;
   if ( out.boards || out.leaves ) {
     await doc.update({[`flags.${MOD}.driver`]: driver, [`flags.${MOD}.riders`]: riders});
@@ -1525,6 +1564,49 @@ function targetReport(o, doc, out, actor) {
 const STRAIGHT = td => ({animate: false, teleport: true, movement: {[td.id]: {method: "api", constrainOptions: {ignoreWalls: true, ignoreCost: true}}}});
 /** Where a token's centre would be with its corner at {x, y}. */
 const centerAt = (td, {x, y}) => { const g = td.parent?.grid?.size ?? canvas?.grid?.size ?? 100; return {x: num(x) + num(td.width || 1) * g / 2, y: num(y) + num(td.height || 1) * g / 2}; };
+/**
+ * B4967: a beast that is ridden goes down (Incapacitated, seven levels marked, V20 p. 282): whoever was on it is
+ * thrown, two dice of bashing to soak (Changeling 20th p. 280, a fall from a trotting horse), and lies where it fell.
+ */
+export async function beastDown(actor) {
+  if ( !game.user.isGM || game.users.activeGM?.id !== game.user.id || !actor ) return [];
+  const d = actor.system?.health?.damage ?? {};
+  if ( num(d.bashing) + num(d.lethal) + num(d.aggravated) < 7 ) return [];
+  const out = [];
+  for ( const scene of game.scenes.filter(s => s.active || s.id === canvas?.scene?.id) ) {
+    for ( const doc of (scene.tokens?.contents ?? []).filter(t => t.actor?.id === actor.id || t.actorId === actor.id) ) {
+      const f = doc.flags?.[MOD] ?? {}, on = [f.driver, ...(Array.isArray(f.riders) ? f.riders : [])].filter(x => x?.t);
+      if ( !on.length || !beastOf(doc) ) continue;
+      await doc.update({[`flags.${MOD}.driver`]: null, [`flags.${MOD}.riders`]: []});
+      const lines = [`${esc(doc.name)} goes down.`];
+      for ( const r of on ) {
+        const td = await fromUuid(r.t).catch(() => null);
+        if ( !td ) continue;
+        const g = scene.grid?.size ?? 100;
+        carrying.set(td.uuid, {x: num(td.x) + g, y: num(td.y)});
+        try { await td.update({x: num(td.x) + g, y: num(td.y)}, STRAIGHT(td)); } catch (e) { carrying.delete(td.uuid); }
+        try { await td.toggleStatusEffect?.("prone", {active: true}); } catch (e) { /* no such status */ }
+        let line = `${esc(td.name)} is thrown: two dice of bashing.`;
+        if ( game.wodxCombat?.soakAndApply ) {
+          try { await game.wodxCombat.soakAndApply(td.object ?? td.actor, {mode: "pool", amount: 2, type: "bashing", fireSun: false, soakDiff: 6, soak: true, fortBlood: "auto", soakBonus: 0}); line += " Soak and the result are on the WoDX Combat card."; }
+          catch (e) { line += " Roll soak and apply it by hand."; }
+        } else line += " WoDX Combat is off: roll soak and apply it by hand.";
+        lines.push(line);
+        mapEvent("crash", {doc, tokDoc: td, noise: "loud", object: beastOf(doc), extra: {how: "thrown"}});
+      }
+      await ChatMessage.create({speaker: {alias: doc.name}, content: `<div class="wodx-ix-card"><p>${lines.join("</p><p>")}</p></div>`});
+      out.push(doc.id);
+    }
+  }
+  return out;
+}
+/** B4966: who rides a beast's token (its rider at the reins, then the rest), for WoDX NPC: a ridden beast goes with its rider. */
+export function riddenBy(tokDoc) {
+  const doc = tokDoc?.document ?? tokDoc, f = doc?.flags?.[MOD] ?? {};
+  if ( !beastOf(doc) ) return null;
+  const on = [f.driver, ...(Array.isArray(f.riders) ? f.riders : [])].filter(x => x?.t);
+  return on.length ? {driver: f.driver ?? null, riders: f.riders ?? []} : null;
+}
 /** Active GM: a fall of so many feet, through WoDX Combat's soak. Returns {lines, damageMsg}. */
 export async function fallOn(tokDoc, actor, feet) {
   const dice = R.fallDice(feet), lines = [];
@@ -1576,9 +1658,9 @@ export async function carryAboard(tokDoc, scene, from, to, pos = {x: num(tokDoc.
   const dx = to.x - from.x, dy = to.y - from.y, moved = !!(dx || dy);
   const fixed = p => Number.isFinite(p?.dx) && Number.isFinite(p?.dy);
   let what = null;
-  for ( const doc of tilesOf(scene) ) {
-    const f = doc.flags?.[MOD];
-    if ( !f?.mount ) continue;
+  for ( const doc of mountsOf(scene) ) {
+    const f = doc.flags?.[MOD] ?? {};
+    if ( doc.id === tokDoc.id ) continue;
     const riders = Array.isArray(f.riders) ? f.riders : [];
     if ( f.driver?.t === tokDoc.uuid && R.hullState(f.hull, f.hull?.structure).state === "wrecked" ) {
       // B4791: a wrecked vehicle goes nowhere: the one at the wheel who moves has climbed out
@@ -1589,7 +1671,9 @@ export async function carryAboard(tokDoc, scene, from, to, pos = {x: num(tokDoc.
       const at = fixed(f.driver) ? {x: pos.x + f.driver.dx, y: pos.y + f.driver.dy} : {x: num(doc.x) + dx, y: num(doc.y) + dy};
       const step = {x: at.x - num(doc.x), y: at.y - num(doc.y)};
       if ( !step.x && !step.y ) continue;
-      await doc.update(at);
+      // B4966: a beast's token is carried the same way, and its steps are not its own movement this turn
+      if ( doc.documentName === "Token" ) { carrying.set(doc.uuid, at); try { await doc.update(at, {wodxMove: false}); } catch (e) { carrying.delete(doc.uuid); } }
+      else await doc.update(at);
       for ( const r of riders ) {
         const td = await fromUuid(r.t).catch(() => null);
         if ( !td || td.parent?.id !== scene.id ) continue;
@@ -1908,7 +1992,7 @@ Hooks.once("init", () => {
     editable: [{key: "KeyI"}], onDown: () => { openInteract().catch(e => console.error(`${MOD} |`, e)); return true; }
   });
   if ( !installDoorClick() ) console.warn(`${MOD} | the door-click shortcut is off: this Foundry has no door control class to extend.`);
-  game.modules.get(MOD).api = {version: VERSION, rules: R, coverOnShot, fill: {open: Fill.fillDialog, draw: Fill.drawFor, index: Fill.gearIndex, guess: Fill.guessFor, rules: FillRules}, describeWall, describeTile, lightsOf, useRoom, sunUp, _roomEffects: roomEffects, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, labelsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, noiseAt, optionSummary, configHtml};
+  game.modules.get(MOD).api = {version: VERSION, rules: R, coverOnShot, fill: {open: Fill.fillDialog, draw: Fill.drawFor, index: Fill.gearIndex, guess: Fill.guessFor, rules: FillRules}, describeWall, describeTile, lightsOf, useRoom, sunUp, _roomEffects: roomEffects, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, labelsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, beastOf, beastDown, riddenBy, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, noiseAt, optionSummary, configHtml};
   game.modules.get(MOD).api.states = setupStates({describeObj, describeWall, describeTile, objectIn, rules: R});
   game.modules.get(MOD).api.living = setupLiving();
   game.modules.get(MOD).api.carry = setupCarry();
@@ -1940,6 +2024,27 @@ Hooks.on("createToken", doc => lastSeen.set(doc.uuid, centerOf(doc, doc.parent))
 Hooks.on("renderWallConfig", onRenderWallConfig);
 Hooks.on("preUpdateWall", onPreUpdateWall);
 Hooks.on("renderTileConfig", onRenderTileConfig);
+// B4966: a token's config window says whether it can be ridden (an actor's prototype token passes it on to new tokens)
+Hooks.on("renderTokenConfig", (app, html) => {
+  if ( !game.user.isGM ) return;
+  const root = html instanceof HTMLElement ? html : html?.[0];
+  const form = root?.tagName === "FORM" ? root : root?.querySelector("form") ?? app.form;
+  if ( !form || form.querySelector(".wix-ride") ) return;
+  const doc = app.document ?? app.token ?? app.object, v = doc?.flags?.[MOD]?.mountable;
+  const cur = typeof v === "string" ? v : v === false ? "no" : v && typeof v === "object" ? (v.kind ?? "") : "";
+  const kinds = Object.fromEntries(Object.entries(R.MOUNTS).filter(([, m]) => m.beast || m.skill === "ride").filter(([k]) => !["cart", "carriage"].includes(k)));
+  const guess = R.beastKind(doc?.actor?.name ?? doc?.name ?? "");
+  const wrap = document.createElement("div");
+  wrap.innerHTML = `<fieldset class="wix-ride"><legend>WoDX: riding</legend><div class="form-group"><label>Can be ridden</label><div class="form-fields">
+    <select name="flags.${MOD}.mountable" data-fixed><option value=""${cur === "" ? " selected" : ""}>By its name (${esc(guess ? R.MOUNTS[guess].label : "no")})</option><option value="no"${cur === "no" ? " selected" : ""}>No</option>${opt(kinds, cur)}</select></div>
+    <p class="hint">Someone can mount this creature from the Interact window and ride it; its own sheet gives its traits in a fight, and its wounds slow it. Gone down, it throws its rider.</p></div></fieldset>`;
+  const footer = form.querySelector("footer, .form-footer, .sheet-footer");
+  const box = wrap.firstElementChild;
+  const tab = form.querySelector('.tab[data-tab="identity"], .tab[data-tab="character"]');
+  if ( tab ) tab.appendChild(box); else if ( footer ) footer.before(box); else form.appendChild(box);
+});
+// B4967: a ridden beast that goes down throws whoever is on it
+Hooks.on("updateActor", (actor, change) => { if ( change?.system?.health ) beastDown(actor).catch(e => console.error(`${MOD} | beastDown`, e)); });
 Hooks.on("preUpdateTile", onPreUpdateTile);
 Hooks.on("renderTokenHUD", (hud, html) => {
   const root = html instanceof HTMLElement ? html : html?.[0];

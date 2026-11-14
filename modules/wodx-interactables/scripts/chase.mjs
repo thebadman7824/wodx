@@ -62,26 +62,45 @@ function mountOf(tokDoc) {
 export function rideOf(tokDoc) {
   const scene = tokDoc?.parent;
   if ( !scene || !tokDoc.uuid ) return null;
-  for ( const t of scene.tiles ?? [] ) {
+  // B4966: mount tiles, and the tokens of beasts that can be ridden (their riders are kept on the beast's token)
+  const beasts = (scene.tokens?.contents ?? []).filter(t => t.id !== tokDoc.id && (t.flags?.[MOD]?.driver || t.flags?.[MOD]?.riders?.length));
+  for ( const t of [...(scene.tiles ?? []), ...beasts] ) {
     const f = t.flags?.[MOD];
-    if ( !f?.mount ) continue;
+    const isBeast = t.documentName === "Token";
+    if ( !f?.mount && !isBeast ) continue;
     const reins = f.driver?.t === tokDoc.uuid;
     if ( !reins && !(Array.isArray(f.riders) ? f.riders : []).some(r => r?.t === tokDoc.uuid) ) continue;
     const o = deps.describeObj?.(t);
+    if ( isBeast && !o?.beast ) continue;
     const kind = o?.kind ?? f.mountKind ?? "horse";
     const sf = scene.flags?.[MOD] ?? {};
     const r = C.rideInFight(kind, yearNow(), sf[FLAG]?.ground ?? sf.ground ?? "streets");
     if ( !r ) return null;
     // B4791: the damage it has taken (Structure lost), and whether that wrecked it
     const lost = Math.max(0, Number(f.hull?.lost) || 0);
-    return {...r, kind, tile: t.id, tileUuid: t.uuid, role: reins ? "reins" : "passenger", label: o?.title || MOUNT_LABELS[kind] || "Mount",
+    const ride = {...r, kind, tile: t.id, tileUuid: t.uuid, role: reins ? "reins" : "passenger", label: o?.title || MOUNT_LABELS[kind] || "Mount",
       lost, wrecked: !!(r.body && lost >= r.body.structure), year: yearNow()};
+    // B4966: the beast's own sheet gives its traits in a fight, and its own running pace
+    if ( isBeast && t.actor ) {
+      ride.beast = beastTraits(t.actor);
+      ride.beastUuid = t.uuid;
+      const run = runOf(t.actor);
+      if ( Number.isFinite(run) && run > 0 && !r.capped ) ride.yards = Math.max(ride.yards, run);
+    }
+    return ride;
   }
   return null;
 }
 const MOUNT_LABELS = {horse: "Riding horse", mule: "Mule", cart: "Cart", carriage: "Carriage", boat: "Rowing boat", car: "Motor car", motorbike: "Motorcycle", motorboat: "Motorboat",
-  truck: "Lorry", armoured: "Armoured car", tank: "Tank", balloon: "Balloon", plane: "Aeroplane", helicopter: "Helicopter", jet: "Jet", bicycle: "Bicycle", ghoulhorse: "Ghouled horse", szlachta: "Fleshcrafted steed", chimera: "Chimerical steed", stygian: "Stygian steed", gryphon: "Gryphon"};
+  truck: "Lorry", armoured: "Armoured car", tank: "Tank", balloon: "Balloon", plane: "Aeroplane", helicopter: "Helicopter", jet: "Jet", bicycle: "Bicycle", ghoulhorse: "Ghouled horse", szlachta: "Fleshcrafted steed", chimera: "Chimerical steed", stygian: "Stygian steed", gryphon: "Gryphon", camel: "Camel"};
 
+/** B4966: a beast's traits for WoDX Combat's mounted rules, off its own sheet. */
+function beastTraits(actor) {
+  const ab = k => Number(actor?.system?.abilities?.[k]?.value) || 0;
+  const disc = n => [...(actor?.items ?? [])].some(i => new RegExp(`^${n}\\b`, "i").test(i.name ?? "") && (Number(i.system?.value) || 1) > 0);
+  return {label: `the ${String(actor?.name ?? "mount").replace(/\s*\(.*\)\s*$/, "").toLowerCase()}`, strength: attrOf(actor, "strength"), dexterity: attrOf(actor, "dexterity"),
+    stamina: attrOf(actor, "stamina"), athletics: ab("athletics"), brawl: ab("brawl"), celerity: disc("Celerity"), ref: "its own sheet"};
+}
 /** The Garou form a sheet is in (the system's shapes), or "homid". */
 const formOf = actor => { const sh = actor?.system?.shapes ?? {}; return ["glabro", "crinos", "hispo", "lupus"].find(k => sh[k]?.isactive) ?? "homid"; };
 const runOf = actor => {

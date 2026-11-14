@@ -49,3 +49,26 @@ test("the beasts run, fly and fight", () => {
   assert.equal(MT.mountDodge(ride("ghoulhorse"), {rideDots: 3, ranged: true}).diff, 6, "Celerity: no +2 against shots");
   assert.equal(MT.mountDodge(ride("horse"), {rideDots: 3, ranged: true}).diff, 8);
 });
+
+test("B4966: the beasts on the sheets can be ridden, by their names or their flag", () => {
+  assert.equal(IR.beastKind("Ghoul Warhorse"), "ghoulhorse");
+  assert.equal(IR.beastKind("Horse, Large [Trained]"), "horse");
+  assert.equal(IR.beastKind("Mule"), "mule");
+  assert.equal(IR.beastKind("Camel"), "camel");
+  assert.equal(IR.beastKind("Gryphon"), "gryphon");
+  assert.equal(IR.beastKind("Wolf"), null, "a wolf is not ridden");
+  assert.equal(IR.beastKind("Wolf", "horse"), "horse", "the config's pick wins");
+  assert.equal(IR.beastKind("Horse", "no"), null, "nor a horse marked No");
+  assert.equal(IR.beastKind("Old Tusk", true), "horse", "ticked with no kind: as a horse");
+  assert.equal(IR.mountableFlag(""), undefined);
+});
+
+test("B4966: a beast ridden as itself fights with its own sheet", () => {
+  const ride = {...C.rideInFight("horse", 1200, "open"), kind: "horse", role: "reins",
+    beast: {label: "the warhorse", strength: 6, dexterity: 3, stamina: 6, athletics: 4, brawl: 3, celerity: false, ref: "its own sheet"}};
+  assert.equal(MT.traitsOf(ride).label, "the warhorse");
+  assert.equal(MT.strikeAttr(ride, "dexterity", 2).value, 3);
+  assert.equal(MT.mountDodge(ride, {rideDots: 4}).dice, 7, "its Dexterity 3 + Athletics 4");
+  const ghoul = {...ride, beast: {...ride.beast, celerity: true}};
+  assert.equal(MT.mountDodge(ghoul, {rideDots: 4, ranged: true}).diff, 6, "its own Celerity against shots");
+});

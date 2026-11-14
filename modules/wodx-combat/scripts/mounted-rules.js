@@ -38,6 +38,8 @@ export const astride = ride => !!(ride && ride.saddle);
 
 export function traitsOf(ride) {
   if ( !inSaddle(ride) ) return null;
+  // B4966: a beast ridden as itself brings its own sheet's traits (WoDX Interactables rideOf)
+  if ( ride.beast && Number(ride.beast.strength) > 0 ) return ride.beast;
   return MOUNT_TRAITS[ride.kind] ?? MOUNT_TRAITS.horse;
 }
 

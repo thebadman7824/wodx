@@ -16,6 +16,8 @@
  *  10. an NPC gets onto a horse by itself: the horse is on its list, and its turn takes the reins
  *  11. B4960-B4964: a bicycle is a tile; a mortal is refused a chimerical steed, a gryphon wants Ride 3, and a
  *      ghouled horse dodges shots for its rider with no +2
+ *  12. B4966-B4967: a horse on its own sheet: mounted from its token, it carries its rider, fights with its own
+ *      Dexterity, and throws the rider when it goes down
  * Result: Data/wodx-gate/gatevehicles-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -152,6 +154,25 @@ export async function run() {
       const MT = await import("/modules/wodx-combat/scripts/mounted-rules.js");
       const dodge = MT.mountDodge(ride, {rideDots: 3, ranged: true});
       G.ok("11. bicycles and beasts", bikeOk && faeNo && gryNo && dodge.valid && dodge.diff === 6, {bikeOk, faeNo, gryNo, dodge, kind: c.kind});
+    });
+
+    await G.step("12. riding the beast itself", async () => {
+      await scene.tiles.get(horse.id).update({[`flags.${IX}.driver`]: null});
+      const [steed] = await G.make(Actor, [{...body("Gate Warhorse", {str: 6, dex: 4, sta: 5, athletics: 3}), type: "Mortal"}]);
+      const [ts] = await G.tokens(scene, [{actor: steed, x: 14, y: 8, actorLink: true}]);
+      await tr.update({x: ts.x + (scene.grid?.size ?? 100), y: ts.y});
+      await waitFor(() => ts?.object && tr?.object, 4000);
+      const listed = ix.interactablesFor(tr.object).some(x => x.doc?.id === ts.id);
+      await ix.attempt(tr.object, ts.id, "mount", {fd: {bonus: 0}});
+      const on = await waitFor(() => scene.tokens.get(ts.id)?.flags?.[IX]?.driver?.t === tr.uuid, 10000);
+      const g = scene.grid?.size ?? 100, x0 = scene.tokens.get(ts.id).x;
+      await tr.update({x: tr.x + g * 2, y: tr.y});
+      const carried = await waitFor(() => scene.tokens.get(ts.id).x === x0 + g * 2, 8000);
+      const ride = ix.rideOf(tr);
+      const own = ride?.beast?.dexterity === 4;
+      await steed.update({"system.health.damage.lethal": 7});
+      const thrown = await waitFor(() => !scene.tokens.get(ts.id)?.flags?.[IX]?.driver, 10000);
+      G.ok("12. riding the beast itself", listed && on && carried && own && thrown, {listed, on, carried, own, thrown, beast: ride?.beast ?? null});
     });
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }
   finally { return G.finish(); }

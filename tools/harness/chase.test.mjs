@@ -15,7 +15,7 @@ const chase = (o = {}) => C.newChase({quarry: {id: "q", name: "Quarry", way: "fo
 
 test("ways follow the year: no cars in 1197, bicycles from 1885, cars from 1900, carriages gone after 1945", () => {
   const ids = y => C.waysIn(y).map(w => w.id);
-  assert.deepEqual(ids(1197).sort(), ["boat", "cart", "carriage", "foot", "horse", "mule", "ghoulhorse", "szlachta", "chimera", "stygian", "gryphon"].sort());
+  assert.deepEqual(ids(1197).sort(), ["boat", "cart", "carriage", "foot", "horse", "mule", "ghoulhorse", "szlachta", "chimera", "stygian", "gryphon", "camel"].sort());
   assert.ok(ids(1890).includes("bicycle") && !ids(1890).includes("car"));
   assert.ok(ids(1905).includes("car") && !ids(1905).includes("motorbike"));
   assert.ok(ids(2050).includes("car") && !ids(2050).includes("carriage") && !ids(2050).includes("cart"));

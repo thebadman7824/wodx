@@ -278,8 +278,40 @@ export const MOUNTS = {
     only: ["fae"], onlyNote: "Only the fae (and those they have enchanted) can see a chimerical steed, let alone ride one (Changeling 20th p. 280)."},
   stygian: {label: "Stygian steed", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 1, thrown: true, noise: "quiet", beast: true,
     only: ["wraith", "spirit"], onlyNote: "One of Charon's horses of the dead: only the dead ride it (Wraith 20th p. 31)."},
+  camel: {label: "Camel", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 2, thrown: true, noise: "quiet", beast: true},
   gryphon: {label: "Gryphon or hippogryph", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 1, min: 3, thrown: true, air: true, noise: "loud", beast: true}
 };
+/**
+ * B4966: riding the animal itself. A creature's sheet can be ridden when its actor (or its token) carries
+ * flags.wodx-interactables.mountable: true or {kind, seats}, false to say no; left unset, WoDX goes by its name, so
+ * the book's horses, mules, camels, ghoul warhorses, gryphons and the like can be ridden from the start. -> kind or null
+ */
+const BEAST_NAMES = [
+  [/\b(ghoul(ed)?\s+(war)?horse|(war)?horse\s*\(?ghoul)/i, "ghoulhorse"],
+  [/fleshcraft(ed)?\s+steed|szlachta\s+steed|war[- ]?ghoul\s+steed/i, "szlachta"],
+  [/gryph|griffin|hippogr/i, "gryphon"],
+  [/chimer(ical|a)\s+(steed|horse|mount)/i, "chimera"],
+  [/stygian\s+(steed|horse)|horse of the dead|charon'?s horse/i, "stygian"],
+  [/\b(mule|donkey|burro)\b/i, "mule"],
+  [/\b(camel|dromedary)\b/i, "camel"],
+  [/\b(horse|warhorse|pony|stallion|mare|destrier|palfrey|courser|charger)\b/i, "horse"]
+];
+/** The flag as the token's config window saves it: "" or nothing (by its name), "no", or a kind. */
+export function mountableFlag(v) {
+  if ( v === "" || v === null || v === undefined ) return undefined;
+  if ( v === "no" || v === false ) return false;
+  if ( typeof v === "string" ) return MOUNTS[v] ? {kind: v} : undefined;
+  return v;
+}
+export function beastKind(name = "", flag = undefined) {
+  flag = mountableFlag(flag);
+  if ( flag === false ) return null;
+  if ( flag && typeof flag === "object" && MOUNTS[flag.kind] ) return flag.kind;
+  const n = String(name ?? "");
+  for ( const [re, k] of BEAST_NAMES ) if ( re.test(n) ) return k;
+  return flag ? "horse" : null;
+}
+
 /** B4961: whether a rider of this kind (WoDX Actions' profile) can get on at all. The Storyteller's kept tiles aside. */
 export const riderMay = (kind, riderKind) => !MOUNTS[kind]?.only || MOUNTS[kind].only.includes(riderKind ?? "mortal");
 /** Dots in the Ability needed to work a kind without a roll; aircraft and military vehicles cannot be worked below it. */
