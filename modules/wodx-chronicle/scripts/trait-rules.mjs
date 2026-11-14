@@ -67,11 +67,12 @@ export function isMechanical(key, idx = index()) {
 }
 
 /** The entry for one feature: {name, kind, flagKey}. The flag wins; then the name within its kind; then any kind. */
-export function matchFeature({name, kind = null, flagKey = null} = {}, idx = index()) {
+export function matchFeature({name, kind = null, flagKey = null, holder = null} = {}, idx = index()) {
   if ( flagKey === "none" ) return null;
   if ( flagKey && idx.byKey.has(flagKey) ) return idx.byKey.get(flagKey);
-  const list = idx.byName.get(normName(name)) ?? [];
-  return list.find(e => !kind || e.kind === kind || (kind !== "background" && e.kind !== "background")) ?? null;
+  const list = (idx.byName.get(normName(name)) ?? []).filter(e => !kind || e.kind === kind || (kind !== "background" && e.kind !== "background"));
+  // B3782: two lines' books may share a name (Boon, Unbondable): the one the character's kind can hold comes first
+  return (holder ? list.find(e => kindFits(e.holders, holder)) : null) ?? list[0] ?? null;
 }
 
 /**
@@ -83,7 +84,7 @@ export function traitsOf(view = {}, idx = index()) {
   for ( const f of view.features ?? [] ) {
     const kind = f.kind ?? null;
     if ( !kind ) continue;
-    const entry = matchFeature(f, idx);
+    const entry = matchFeature({...f, holder: view.kind ?? null}, idx);
     if ( !entry ) { unmatched.push({id: f.id, name: f.name, kind, value: f.value ?? 0, skipped: f.flagKey === "none"}); continue; }
     const wrongKind = !kindFits(entry.holders, view.kind);
     matched.push({id: f.id, name: f.name, kind: entry.kind, value: Number(f.value) || 0, key: entry.key, entry, wrongKind,
@@ -116,6 +117,8 @@ export function effectsFor(view, ctx = {}, idx = index()) {
       // nameTags: only the tags named on the item count ("Acute Sense (hearing)"); none named, no effect
       const own = e.nameTags ? (e.tags ?? []).filter(t => String(m.name ?? "").toLowerCase().replace(/[^a-z0-9]/g, "").includes(t)) : (e.tags ?? []);
       if ( e.tags?.length && !own.some(t => tags.includes(t)) ) continue;
+      // need (B3780): the roll must also be one of these kinds (a ticked situation counts only on a Perception roll)
+      if ( e.need?.length && !e.need.some(t => tags.includes(t)) ) continue;
       // againstKinds needs the other side's kind: an effect only on mortals does nothing when it is not known
       if ( e.againstKinds?.length && !(ctx.against && kindFits(e.againstKinds, ctx.against)) ) continue;
       let diff = Number(e.diff) || 0;
@@ -129,6 +132,20 @@ export function effectsFor(view, ctx = {}, idx = index()) {
     }
   }
   return out;
+}
+
+/**
+ * B3780: the situations a character's roll effects ask the player to tick. An effect with `tick` (a label) offers a
+ * box for its first tag: the roll cannot tell on its own that the other side shares the character's Nature, or that the
+ * character is invoking a title. Returns [{key, label}], one per tag.
+ */
+export function ticksOf(view, idx = index()) {
+  const out = new Map();
+  for ( const m of traitsOf(view, idx).matched ) {
+    if ( m.wrongKind ) continue;
+    for ( const e of m.entry.effects ?? [] ) if ( e.ch === "roll" && e.tick && e.tags?.[0] && !out.has(e.tags[0]) ) out.set(e.tags[0], {key: e.tags[0], label: e.tick});
+  }
+  return [...out.values()];
 }
 
 /** The sum of some effects, with one part per trait for the roll card: {dice, diff, parts: ["Iron Will +3 diff"]}. */
@@ -156,13 +173,15 @@ const TAG_MAP = {
   "check-persuade": ["social", "voice"], "check-etiquette": ["social"], "check-computer": ["computer"], "check-hide": ["stealth"], "check-agility": ["balance", "dexterity"],
   "check-staycalm": ["frenzy"], "check-selfcontrol": ["frenzy"], "check-readperson": ["perception"], "check-uncanny": ["awareness"],
   "social-persuade": ["social", "voice"], "social-intimidate": ["intimidation", "social"],
-  "social-threaten": ["intimidation", "social"], "social-question": ["social"], "social-bribe": ["social"], "social-charm": ["social", "voice"], "social-seduce": ["social", "voice"],
+  "social-threaten": ["intimidation", "social"], "social-question": ["social"], "social-bribe": ["social"], "social-charm": ["social", "voice"], "social-seduce": ["social", "voice", "seduce"],
   "social-lift": ["dexterity", "lift"], "social-plant": ["dexterity", "lift"], "social-con": ["social", "voice", "con"], "social-fasttalk": ["social", "voice", "fasttalk"],
   frenzy: ["frenzy"], instinct: ["frenzy"]
 };
 /** Ability keys that are also tags of their own, for the signature features (Survival, Medicine and the rest). */
 const RAW_TAGS = new Set(["survival", "empathy", "ride", "medicine", "larceny", "animalken", "athletics", "brawl", "melee", "dodge", "subterfuge",
-  "streetwise", "occult", "crafts", "finance", "academics", "drive", "etiquette", "performance", "intimidation", "computer", "science", "banality", "investigation", "angst", "harrowing"]);
+  "streetwise", "occult", "crafts", "finance", "academics", "drive", "etiquette", "performance", "intimidation", "computer", "science", "banality", "investigation", "angst", "harrowing",
+  // B3780: the Attributes and a few more Abilities, for merits and flaws that name them (Charisma rolls, the Art Talent)
+  "strength", "stamina", "charisma", "manipulation", "appearance", "intelligence", "wits", "art", "firearms", "archery", "kenning", "awareness", "willpower"]);
 export function rollTags(...keys) {
   const out = new Set();
   for ( const k of keys.flat() ) {
