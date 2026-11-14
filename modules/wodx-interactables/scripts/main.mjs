@@ -144,7 +144,7 @@ export function describeWall(doc) {
 /** A container on a tile, or null. */
 export function describeTile(doc) {
   const f = doc?.flags?.[MOD] ?? {};
-  if ( !doc || !(f.container || f.trap || f.clue || f.light || f.hide || f.hazard || f.sacred || f.watch || f.mount || f.climb || f.isTarget) ) return null;
+  if ( !doc || !(f.container || f.trap || f.clue || f.light || f.hide || f.hazard || f.sacred || f.watch || f.mount || f.climb || f.isTarget || f.cover) ) return null;
   if ( f.container ) return R.describeContainer(f);
   if ( f.trap ) return R.describeTrap(f);
   if ( f.clue ) return R.describeClue(f);
@@ -155,9 +155,10 @@ export function describeTile(doc) {
   if ( f.watch ) return R.describeWatch(f);
   if ( f.mount ) return R.describeMount(f);
   if ( f.climb ) return R.describeClimb(f);
+  if ( f.cover && !f.isTarget ) return R.describeCover(f);
   return R.describeTarget(f);
 }
-const isTile = doc => doc?.documentName === "Tile" || (!!doc && !Array.isArray(doc.c) && "texture" in doc) || (!!doc && !Array.isArray(doc.c) && ["container", "trap", "clue", "light", "hide", "hazard", "sacred", "watch", "mount", "climb", "isTarget"].some(k => doc.flags?.[MOD]?.[k] === true));
+const isTile = doc => doc?.documentName === "Tile" || (!!doc && !Array.isArray(doc.c) && "texture" in doc) || (!!doc && !Array.isArray(doc.c) && ["container", "trap", "clue", "light", "hide", "hazard", "sacred", "watch", "mount", "climb", "isTarget", "cover"].some(k => doc.flags?.[MOD]?.[k] === true));
 /** Whatever interactable a wall or tile is. */
 export const describeObj = doc => (isTile(doc) ? describeTile(doc) : describeWall(doc));
 /** A wall or a tile on a scene, by id. */
@@ -179,6 +180,28 @@ export function lightsOf(doc, {onlySet = false} = {}) {
   const base = all.filter(l => !twinOf(l) && (set.length ? set.includes(l.id) : near(l)));
   const ids = new Set(base.map(l => l.id));
   return [...base, ...all.filter(l => ids.has(twinOf(l)))];
+}
+/**
+ * B4671: the cover on a shot from one token at another, for WoDX Combat. Returns {diff, target, shooter, note}:
+ * diff is what the shot's difficulty goes up by; note says why, in plain words, or is "" when there is none.
+ */
+export function coverOnShot(fromTok, toTok) {
+  const a = fromTok?.document ?? fromTok, b = toTok?.document ?? toTok;
+  const scene = b?.parent ?? a?.parent;
+  if ( !a || !b || !scene || a.parent !== b.parent ) return {diff: 0, target: null, shooter: null, note: ""};
+  const grid = scene.grid?.size ?? 100;
+  const mid = d => [num(d.x) + num(d.width || 1) * grid / 2, num(d.y) + num(d.height || 1) * grid / 2];
+  const tiles = [];
+  for ( const doc of tilesOf(scene) ) {
+    const o = describeTile(doc);
+    if ( !o?.cover ) continue;
+    tiles.push({x: num(doc.x), y: num(doc.y), width: num(doc.width), height: num(doc.height), rotation: num(doc.rotation), level: o.level, name: R.nameOf(o)});
+  }
+  const c = R.coverOnShot(mid(a), mid(b), tiles, grid);
+  const words = [];
+  if ( c.target ) words.push(`${b.name ?? "The target"} is behind ${c.target.name.replace(/^(A|The) /, m => m.toLowerCase())}: +${c.target.level}`);
+  if ( c.shooter && c.shooter.level > 1 ) words.push(`shooting from behind ${c.shooter.name.replace(/^(A|The) /, m => m.toLowerCase())}: +${c.shooter.level - 1}`);
+  return {...c, note: words.length ? `Cover: ${words.join("; ")} difficulty (V20 p. 286).` : ""};
 }
 /** A tile's rectangle and centre. */
 const rectOf = doc => ({x: num(doc.x), y: num(doc.y), w: num(doc.width), h: num(doc.height)});
@@ -1653,6 +1676,7 @@ export function tileConfigHtml(doc) {
   const onNow = R.aboard(R.describeMount(doc?.flags?.[MOD] ?? {}));
   const clb = R.cleanClimb(doc?.flags?.[MOD] ?? {});
   const tgt = R.cleanTarget(doc?.flags?.[MOD] ?? {});
+  const cov = R.cleanCover(doc?.flags?.[MOD] ?? {});
   const board = R.describeTarget(doc?.flags?.[MOD] ?? {});
   return `<fieldset class="wix-config wix-tile"><legend>WoDX</legend>
     <h4 class="wix-sub">Container</h4>
@@ -1755,6 +1779,11 @@ export function tileConfigHtml(doc) {
     ${field("Broken", `<input type="checkbox" name="${p}.smashed"${tgt.smashed ? " checked" : ""}>`, "Something to break only. Untick to mend it.")}
     ${tgt.isTarget && Object.keys(board.scores).length ? `<p class="hint">Scoreboard: ${esc(R.scoreLines(board).join("; "))}.</p>` : ""}
     ${field("Clear the scoreboard", `<input type="checkbox" name="${p}.clearScores">`, "Tick and save to clear it and set the bottles up again.")}
+    <h4 class="wix-sub">Cover</h4>
+    <p class="hint">A table, a counter or a bar, a barricade or a low wall. Shots at someone crouched behind it are harder (WoDX Combat reads it on every shot); a table can be tipped over in a turn for better cover.</p>
+    ${field("Cover", `<input type="checkbox" name="${p}.cover"${cov.cover ? " checked" : ""}>`, "Any other kind ticked on the same tile wins.")}
+    ${field("Kind of cover", `<select name="${p}.coverKind" data-fixed>${opt(R.COVERS, cov.coverKind)}</select>`, "Light cover +1, good +2, superior +3 to shots at someone behind it (V20 p. 286).")}
+    ${field("Tipped over", `<input type="checkbox" name="${p}.tipped"${cov.tipped ? " checked" : ""}>`, "A table only. Untick to set it on its legs again.")}
   </fieldset>`;
 }
 function onRenderTileConfig(app, html) {
@@ -1865,7 +1894,7 @@ Hooks.once("init", () => {
     editable: [{key: "KeyI"}], onDown: () => { openInteract().catch(e => console.error(`${MOD} |`, e)); return true; }
   });
   if ( !installDoorClick() ) console.warn(`${MOD} | the door-click shortcut is off: this Foundry has no door control class to extend.`);
-  game.modules.get(MOD).api = {version: VERSION, rules: R, fill: {open: Fill.fillDialog, draw: Fill.drawFor, index: Fill.gearIndex, guess: Fill.guessFor, rules: FillRules}, describeWall, describeTile, lightsOf, useRoom, sunUp, _roomEffects: roomEffects, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, labelsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, noiseAt, optionSummary, configHtml};
+  game.modules.get(MOD).api = {version: VERSION, rules: R, coverOnShot, fill: {open: Fill.fillDialog, draw: Fill.drawFor, index: Fill.gearIndex, guess: Fill.guessFor, rules: FillRules}, describeWall, describeTile, lightsOf, useRoom, sunUp, _roomEffects: roomEffects, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, labelsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, noiseAt, optionSummary, configHtml};
   game.modules.get(MOD).api.states = setupStates({describeObj, describeWall, describeTile, objectIn, rules: R});
   game.modules.get(MOD).api.living = setupLiving();
   game.modules.get(MOD).api.carry = setupCarry();

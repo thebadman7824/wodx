@@ -10,6 +10,8 @@
  */
 import {FIRE_HEAT as ACTIONS_FIRE_HEAT} from "../../wodx-actions/scripts/rules.js";
 import {holy as demonHoly} from "../../wodx-actions/scripts/demon-rules.js";
+import * as Cover from "./cover-rules.mjs";
+export {COVERS, COVER_LEVELS, describeCover, cleanCover, coverOnShot} from "./cover-rules.mjs";
 
 export const TURN = 3; // seconds in a turn (V20 Dark Ages printed p. 324)
 export const MINUTE = 60;
@@ -189,7 +191,7 @@ export const dropDice = feet => Math.max(1, Math.floor((Math.max(0, Number(feet)
 /** What a dodge leaves of a falling chandelier: dice less successes, none on a botch's luck. */
 export const dropLeft = (dice, dodge = {successes: 0, botch: false}) => Math.max(0, (Number(dice) || 0) - (dodge?.botch ? 0 : Math.max(0, Number(dodge?.successes) || 0)));
 /** The options the Use the room window lists in a fight. */
-export const FIGHT_OPS = new Set(["spillLight", "dropChandelier", "tearCurtain", "letSun", "setSprinklers", "knockOver", "breakLight", "lightOff", "lightOn", "smash", "ringAlarm", "trigger", "alight"]);
+export const FIGHT_OPS = new Set(["spillLight", "dropChandelier", "tearCurtain", "letSun", "setSprinklers", "knockOver", "tipOver", "breakLight", "lightOff", "lightOn", "smash", "ringAlarm", "trigger", "alight"]);
 /** A fire's place doused by sprinklers? */
 export const douses = h => !!h?.hazard && (h.kind === "fire" || h.kind === "brazier") && h.burning && h.size !== "inferno";
 
@@ -759,6 +761,7 @@ export function parseItems(text) {
 
 /** A short name for an interactable: "Locked iron-bound door", "Open window". */
 export function nameOf(o, era = {}) {
+  if ( o.cover ) return Cover.coverTitle(o);
   if ( o.isTarget ) {
     const T = TARGETS[o.kind];
     let t = o.title || T.label;
@@ -821,6 +824,7 @@ export function nameOf(o, era = {}) {
  *               seconds, noise: {success, fail, botch}, note, waits (true: the Storyteller decides)}
  */
 export function optionsFor(o, ch = {}) {
+  if ( o.cover ) return Cover.coverOptions(o, TURN);
   if ( o.container ) return containerOptions(o, ch);
   if ( o.trap ) return trapOptions(o, ch);
   if ( o.clue ) return clueOptions(o, ch);
@@ -1284,6 +1288,7 @@ function resolveCore(o, option, rolls, {actorId = "", actorName = "", sunUp = fa
       case "lock": return done(/key/.test(option.label ?? "key") ? "locks it with the key." : "locks it.", {ds: "locked"});
       case "unbar": flags.barred = false; return done("lifts the bar.");
       case "knock": return done("knocks.");
+      case "tipOver": case "setUpright": return done(Cover.resolveCover(id, flags));
       case "take": flags.taken = true; return done("takes what is inside.");
       case "trigger": Object.assign(flags, {armed: false, sprung: true}); return done("sets it off from a safe distance.");
       case "look": return done("looks it over.");

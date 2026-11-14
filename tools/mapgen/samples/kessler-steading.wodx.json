@@ -283,6 +283,46 @@
    }
   },
   {
+   "id": "byre-f0",
+   "label": "Barrel (Byre)",
+   "rect": [
+    21.18,
+    11.5,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "material": "heavy",
+    "stock": "always: a sack of grain\n1 in 2: a sickle\n1 in 2: a bale of hay\n1 in 3: a pitchfork\n1 in 3: a bucket of feed",
+    "restock": "month"
+   }
+  },
+  {
+   "id": "byre-f2",
+   "label": "Barrel (Byre)",
+   "rect": [
+    23.32,
+    12.0,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "material": "heavy",
+    "stock": "always: a sack of grain\n1 in 2: a sickle\n1 in 2: a bale of hay\n1 in 3: a pitchfork\n1 in 3: a bucket of feed",
+    "restock": "month"
+   }
+  },
+  {
    "id": "barn-floor-0",
    "label": "Hay pile (Barn floor)",
    "rect": [
@@ -312,6 +352,66 @@
     "hideKind": "crawl",
     "room": 2,
     "title": "Down in the hay"
+   }
+  },
+  {
+   "id": "barn-floor-f0",
+   "label": "Barrel (Barn floor)",
+   "rect": [
+    27.68,
+    13.18,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "material": "heavy",
+    "stock": "always: a sack of grain\n1 in 2: a sickle\n1 in 2: a bale of hay\n1 in 3: a pitchfork\n1 in 3: a bucket of feed",
+    "restock": "month"
+   }
+  },
+  {
+   "id": "barn-floor-f2",
+   "label": "Sack (Barn floor)",
+   "rect": [
+    28.18,
+    13.2,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "ds": "open",
+    "stock": "always: a sack of grain\n1 in 2: a sickle\n1 in 2: a bale of hay\n1 in 3: a pitchfork\n1 in 3: a bucket of feed",
+    "restock": "month"
+   }
+  },
+  {
+   "id": "barn-floor-f4",
+   "label": "Sack (Barn floor)",
+   "rect": [
+    28.93,
+    12.8,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "ds": "open",
+    "stock": "always: a sack of grain\n1 in 2: a sickle\n1 in 2: a bale of hay\n1 in 3: a pitchfork\n1 in 3: a bucket of feed",
+    "restock": "month"
    }
   },
   {

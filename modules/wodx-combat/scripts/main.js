@@ -869,6 +869,10 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         if (use) boostSpend.push([bo.res, use]);
     }
     if (rageAction) fd.multi = 0;
+    // B4671: cover on the map (WoDX Interactables): a table, a counter, a barricade between the shooter and the target
+    const cov = w?.ranged ? coverOnShot(attackerTok, targetTok) : null;
+    fd.coverDiff = cov?.diff ?? 0;
+    if (cov?.note) log.push(esc(cov.note));
     const pool = attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice, target);
     const fitNow = fitPlan(attacker, w, fd);
     if (fitNow.notes.length) log.push(esc(`${fitNow.notes.join(". ")}.`));
@@ -1114,7 +1118,7 @@ function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0, targ
         crippledDiff: BodyRules.crippledAttackDiff(crippledParts(attacker), w),
         // Storyteller 0.64.0 (B2911): a night after bad dreams (the Nightmares Flaw) costs a die
         nightmareDice: Math.max(0, ...[...(attacker?.effects ?? [])].filter(e => !e.disabled).map(e => Number(e.flags?.["wodx-storyteller"]?.diceLess) || 0)),
-        bypassArmor: fd.bypass, opponents: fd.opponents, blind: fd.blind && !fp.blindCancelled, extraDiff: fd.extraDiff,
+        bypassArmor: fd.bypass, opponents: fd.opponents, blind: fd.blind && !fp.blindCancelled, extraDiff: (fd.extraDiff || 0) + (w.ranged ? num(fd.coverDiff) : 0),
         sheetDice, sheetDiff, shieldDiff: sh.attackDiff, fitDice: fp.fitDice, fitDiff: fp.fitDiff, wetString: fp.wetString
     });
 }
@@ -2270,6 +2274,11 @@ Hooks.on("renderTokenHUD", (hud, html) => {
         col.appendChild(rb);
     }
 });
+/** B4671: the cover on a shot, from WoDX Interactables (none when it is off or a token is missing). */
+export function coverOnShot(fromTok, toTok) {
+    if (!fromTok || !toTok) return null;
+    try { return game.modules.get("wodx-interactables")?.api?.coverOnShot?.(fromTok, toTok) ?? null; } catch (e) { return null; }
+}
 export function useRoom(tok) { return game.modules.get("wodx-interactables")?.api?.useRoom?.(tok); }
 
 /* ------------------------------------------------------------------ */

@@ -2938,6 +2938,101 @@
  ],
  "features": [
   {
+   "id": "tavern-1-taproom-f0",
+   "label": "Sack (Taproom)",
+   "rect": [
+    35.68,
+    11.02,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "ds": "open",
+    "stock": "always: a cask of ale\n1 in 2: 1-3 jugs of wine\n1 in 2: 6-12 tankards\n1 in 3: a round of cheese\n1 in 3: a tally of who owes what",
+    "restock": "week"
+   }
+  },
+  {
+   "id": "tavern-1-taproom-f1",
+   "label": "Sack (Taproom)",
+   "rect": [
+    36.68,
+    11.02,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "ds": "open",
+    "stock": "always: a cask of ale\n1 in 2: 1-3 jugs of wine\n1 in 2: 6-12 tankards\n1 in 3: a round of cheese\n1 in 3: a tally of who owes what",
+    "restock": "week"
+   }
+  },
+  {
+   "id": "tavern-1-taproom-f2",
+   "label": "Sack (Taproom)",
+   "rect": [
+    35.68,
+    10.02,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "ds": "open",
+    "stock": "always: a cask of ale\n1 in 2: 1-3 jugs of wine\n1 in 2: 6-12 tankards\n1 in 3: a round of cheese\n1 in 3: a tally of who owes what",
+    "restock": "week"
+   }
+  },
+  {
+   "id": "tavern-1-taproom-f3",
+   "label": "Table (Taproom)",
+   "rect": [
+    39.5,
+    10.98,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
+   "id": "tavern-1-taproom-f7",
+   "label": "Sack (Taproom)",
+   "rect": [
+    35.68,
+    14.07,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "ds": "open",
+    "stock": "always: a cask of ale\n1 in 2: 1-3 jugs of wine\n1 in 2: 6-12 tankards\n1 in 3: a round of cheese\n1 in 3: a tally of who owes what",
+    "restock": "week"
+   }
+  },
+  {
    "id": "tavern-1-kitchen-0",
    "label": "Oven (Kitchen)",
    "rect": [
@@ -2956,6 +3051,26 @@
     "bright": 1,
     "color": "#ff9a3c",
     "on": true
+   }
+  },
+  {
+   "id": "tavern-1-kitchen-f0",
+   "label": "Sack (Kitchen)",
+   "rect": [
+    33.43,
+    12.5,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "ds": "open",
+    "stock": "always: a cask of ale\n1 in 2: 1-3 jugs of wine\n1 in 2: 6-12 tankards\n1 in 3: a round of cheese\n1 in 3: a tally of who owes what",
+    "restock": "week"
    }
   },
   {
@@ -3044,6 +3159,36 @@
    }
   },
   {
+   "id": "cottage-1-cottage-f0",
+   "label": "Table (Cottage)",
+   "rect": [
+    50.68,
+    1.68,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
+   "id": "cottage-1-cottage-f3",
+   "label": "Table (Cottage)",
+   "rect": [
+    52.32,
+    4.68,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
    "id": "bakehouse-2-bakehouse-0",
    "label": "Oven (Bakehouse)",
    "rect": [
@@ -3094,6 +3239,66 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "bakehouse-2-bakehouse-f0",
+   "label": "Shelves (Bakehouse)",
+   "rect": [
+    60.43,
+    6.32,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "workshop",
+    "stock": "always: 4-12 loaves of bread\nalways: a sack of flour\n1 in 2: 6-20 bread rolls\n1 in 3: a crock of lard\n1 in 3: a twist of salt",
+    "restock": "dawn"
+   }
+  },
+  {
+   "id": "bakehouse-2-bakehouse-f1",
+   "label": "Sack (Bakehouse)",
+   "rect": [
+    60.0,
+    2.68,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "ds": "open",
+    "stock": "always: 4-12 loaves of bread\nalways: a sack of flour\n1 in 2: 6-20 bread rolls\n1 in 3: a crock of lard\n1 in 3: a twist of salt",
+    "restock": "dawn"
+   }
+  },
+  {
+   "id": "bakehouse-2-bakehouse-f2",
+   "label": "Sack (Bakehouse)",
+   "rect": [
+    57.68,
+    3.68,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "ds": "open",
+    "stock": "always: 4-12 loaves of bread\nalways: a sack of flour\n1 in 2: 6-20 bread rolls\n1 in 3: a crock of lard\n1 in 3: a twist of salt",
+    "restock": "dawn"
    }
   },
   {
@@ -3150,6 +3355,26 @@
    }
   },
   {
+   "id": "bakehouse-3-bakehouse-f0",
+   "label": "Shelves (Bakehouse)",
+   "rect": [
+    49.68,
+    14.57,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "workshop",
+    "stock": "always: 4-12 loaves of bread\nalways: a sack of flour\n1 in 2: 6-20 bread rolls\n1 in 3: a crock of lard\n1 in 3: a twist of salt",
+    "restock": "dawn"
+   }
+  },
+  {
    "id": "bakehouse-3-bakehouse-f1",
    "label": "Cupboard (Bakehouse)",
    "rect": [
@@ -3164,6 +3389,46 @@
     "lock": "none",
     "items": "",
     "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "bakehouse-3-bakehouse-f2",
+   "label": "Sack (Bakehouse)",
+   "rect": [
+    47.18,
+    14.57,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "ds": "open",
+    "stock": "always: 4-12 loaves of bread\nalways: a sack of flour\n1 in 2: 6-20 bread rolls\n1 in 3: a crock of lard\n1 in 3: a twist of salt",
+    "restock": "dawn"
+   }
+  },
+  {
+   "id": "bakehouse-3-bakehouse-f3",
+   "label": "Sack (Bakehouse)",
+   "rect": [
+    47.93,
+    10.68,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "ds": "open",
+    "stock": "always: 4-12 loaves of bread\nalways: a sack of flour\n1 in 2: 6-20 bread rolls\n1 in 3: a crock of lard\n1 in 3: a twist of salt",
+    "restock": "dawn"
    }
   },
   {
@@ -3220,6 +3485,21 @@
    }
   },
   {
+   "id": "townhouse-3-back-room-f0",
+   "label": "Table (Back room)",
+   "rect": [
+    54.18,
+    10.18,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
    "id": "townhouse-3-back-room-f1",
    "label": "Cupboard (Back room)",
    "rect": [
@@ -3266,6 +3546,26 @@
     "hideKind": "crawl",
     "room": 1,
     "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "townhouse-3-shop-f0",
+   "label": "Shelves (Shop)",
+   "rect": [
+    57.82,
+    14.82,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: 10-40 iron nails\n1 in 2: 2-6 horseshoes\n1 in 2: a bar of iron stock\n1 in 3: a pair of tongs\n1 in 3: a sack of charcoal\n1 in 4: a knife blade, unhandled",
+    "restock": "week"
    }
   },
   {
@@ -3322,6 +3622,21 @@
    }
   },
   {
+   "id": "townhouse-4-back-room-f0",
+   "label": "Table (Back room)",
+   "rect": [
+    28.68,
+    12.82,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
    "id": "townhouse-4-back-room-f2",
    "label": "Cupboard (Back room)",
    "rect": [
@@ -3368,6 +3683,26 @@
     "hideKind": "crawl",
     "room": 1,
     "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "townhouse-4-shop-f0",
+   "label": "Shelves (Shop)",
+   "rect": [
+    25.68,
+    7.18,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
    }
   },
   {
@@ -3424,6 +3759,21 @@
    }
   },
   {
+   "id": "townhouse-7-back-room-f0",
+   "label": "Table (Back room)",
+   "rect": [
+    15.93,
+    7.07,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
    "id": "townhouse-7-back-room-f2",
    "label": "Cupboard (Back room)",
    "rect": [
@@ -3470,6 +3820,46 @@
     "hideKind": "crawl",
     "room": 1,
     "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "townhouse-7-shop-f0",
+   "label": "Shelves (Shop)",
+   "rect": [
+    19.82,
+    2.18,
+    1,
+    2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
+   }
+  },
+  {
+   "id": "townhouse-7-shop-f2",
+   "label": "Shelves (Shop)",
+   "rect": [
+    17.18,
+    3.5,
+    1,
+    2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
    }
   },
   {
@@ -3526,6 +3916,21 @@
    }
   },
   {
+   "id": "townhouse-9-back-room-f0",
+   "label": "Table (Back room)",
+   "rect": [
+    14.18,
+    11.82,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
    "id": "townhouse-9-back-room-f2",
    "label": "Cupboard (Back room)",
    "rect": [
@@ -3572,6 +3977,26 @@
     "hideKind": "crawl",
     "room": 1,
     "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "townhouse-9-shop-f0",
+   "label": "Shelves (Shop)",
+   "rect": [
+    19.82,
+    9.18,
+    1,
+    2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
    }
   },
   {
@@ -3694,6 +4119,26 @@
    }
   },
   {
+   "id": "townhouse-14-shop-f0",
+   "label": "Shelves (Shop)",
+   "rect": [
+    35.68,
+    20.68,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
+   }
+  },
+  {
    "id": "townhouse-17-back-room-0",
    "label": "Bed (Back room)",
    "rect": [
@@ -3747,6 +4192,21 @@
    }
   },
   {
+   "id": "townhouse-17-back-room-f0",
+   "label": "Table (Back room)",
+   "rect": [
+    53.32,
+    21.82,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
    "id": "townhouse-17-back-room-f2",
    "label": "Cupboard (Back room)",
    "rect": [
@@ -3793,6 +4253,46 @@
     "hideKind": "crawl",
     "room": 1,
     "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "townhouse-17-shop-f0",
+   "label": "Shelves (Shop)",
+   "rect": [
+    47.68,
+    22.82,
+    1,
+    2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
+   }
+  },
+  {
+   "id": "townhouse-17-shop-f2",
+   "label": "Shelves (Shop)",
+   "rect": [
+    50.32,
+    22.82,
+    1,
+    2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
    }
   },
   {
@@ -3849,6 +4349,21 @@
    }
   },
   {
+   "id": "townhouse-20-back-room-f0",
+   "label": "Table (Back room)",
+   "rect": [
+    57.93,
+    25.07,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
    "id": "townhouse-20-back-room-f1",
    "label": "Cupboard (Back room)",
    "rect": [
@@ -3895,6 +4410,46 @@
     "hideKind": "crawl",
     "room": 1,
     "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "townhouse-20-shop-f0",
+   "label": "Shelves (Shop)",
+   "rect": [
+    61.82,
+    20.18,
+    1,
+    2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
+   }
+  },
+  {
+   "id": "townhouse-20-shop-f2",
+   "label": "Shelves (Shop)",
+   "rect": [
+    59.18,
+    21.18,
+    1,
+    2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
    }
   },
   {
@@ -3954,15 +4509,32 @@
    "id": "townhouse-21-back-room-f0",
    "label": "Cupboard (Back room)",
    "rect": [
-    30.68,
-    20.18,
-    1.5,
-    0.75
+    32.57,
+    21.18,
+    0.75,
+    1.5
    ],
    "flags": {
     "container": true,
     "kind": "cabinet",
     "lock": "none",
+    "items": "",
+    "fillPlace": "home"
+   }
+  },
+  {
+   "id": "townhouse-21-back-room-f2",
+   "label": "Chest (Back room)",
+   "rect": [
+    30.68,
+    22.68,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "chest",
+    "lock": "cheap",
     "items": "",
     "fillPlace": "home"
    }
@@ -3997,6 +4569,46 @@
     "hideKind": "crawl",
     "room": 1,
     "title": "Behind the crates"
+   }
+  },
+  {
+   "id": "townhouse-21-shop-f0",
+   "label": "Shelves (Shop)",
+   "rect": [
+    26.68,
+    22.82,
+    1,
+    2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
+   }
+  },
+  {
+   "id": "townhouse-21-shop-f2",
+   "label": "Shelves (Shop)",
+   "rect": [
+    29.32,
+    22.5,
+    1,
+    2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
    }
   },
   {
@@ -4119,6 +4731,26 @@
    }
   },
   {
+   "id": "townhouse-23-shop-f1",
+   "label": "Shelves (Shop)",
+   "rect": [
+    8.5,
+    4.82,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: 10-40 iron nails\n1 in 2: 2-6 horseshoes\n1 in 2: a bar of iron stock\n1 in 3: a pair of tongs\n1 in 3: a sack of charcoal\n1 in 4: a knife blade, unhandled",
+    "restock": "week"
+   }
+  },
+  {
    "id": "workshop-4-workshop-3",
    "label": "Crates (Workshop)",
    "rect": [
@@ -4218,6 +4850,26 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-4-workshop-f2",
+   "label": "Sack (Workshop)",
+   "rect": [
+    7.18,
+    14.57,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "ds": "open",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
    }
   },
   {
@@ -4323,6 +4975,26 @@
    }
   },
   {
+   "id": "workshop-5-workshop-f2",
+   "label": "Sack (Workshop)",
+   "rect": [
+    17.18,
+    26.07,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "ds": "open",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
+   }
+  },
+  {
    "id": "workshop-7-workshop-3",
    "label": "Crates (Workshop)",
    "rect": [
@@ -4422,6 +5094,41 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-7-workshop-f2",
+   "label": "Table (Workshop)",
+   "rect": [
+    1.18,
+    5.5,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
+   "id": "workshop-7-workshop-f3",
+   "label": "Sack (Workshop)",
+   "rect": [
+    1.18,
+    2.68,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "ds": "open",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
    }
   },
   {
@@ -4544,6 +5251,26 @@
    }
   },
   {
+   "id": "workshop-10-workshop-f2",
+   "label": "Sack (Workshop)",
+   "rect": [
+    50.57,
+    31.57,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "ds": "open",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
+   }
+  },
+  {
    "id": "workshop-11-workshop-3",
    "label": "Crates (Workshop)",
    "rect": [
@@ -4643,6 +5370,21 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-11-workshop-f2",
+   "label": "Table (Workshop)",
+   "rect": [
+    37.68,
+    31.68,
+    1,
+    2
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
    }
   },
   {
@@ -4748,6 +5490,21 @@
    }
   },
   {
+   "id": "workshop-12-workshop-f2",
+   "label": "Table (Workshop)",
+   "rect": [
+    31.68,
+    30.18,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
    "id": "workshop-14-workshop-3",
    "label": "Crates (Workshop)",
    "rect": [
@@ -4847,6 +5604,26 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "workshop"
+   }
+  },
+  {
+   "id": "workshop-14-workshop-f2",
+   "label": "Sack (Workshop)",
+   "rect": [
+    53.68,
+    33.57,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "ds": "open",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
    }
   },
   {
@@ -4952,8 +5729,8 @@
    }
   },
   {
-   "id": "workshop-16-workshop-f3",
-   "label": "Chest (Workshop)",
+   "id": "workshop-16-workshop-f2",
+   "label": "Sack (Workshop)",
    "rect": [
     14.07,
     23.57,
@@ -4962,10 +5739,13 @@
    ],
    "flags": {
     "container": true,
-    "kind": "chest",
-    "lock": "cheap",
+    "kind": "box",
+    "lock": "none",
     "items": "",
-    "fillPlace": "workshop"
+    "fillPlace": "workshop",
+    "ds": "open",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
    }
   },
   {
@@ -5054,6 +5834,21 @@
    }
   },
   {
+   "id": "cottage-9-cottage-f2",
+   "label": "Table (Cottage)",
+   "rect": [
+    18.93,
+    31.68,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
    "id": "cottage-10-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -5139,6 +5934,21 @@
    }
   },
   {
+   "id": "cottage-10-cottage-f2",
+   "label": "Table (Cottage)",
+   "rect": [
+    2.82,
+    22.93,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
    "id": "cottage-17-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -5207,6 +6017,21 @@
    }
   },
   {
+   "id": "cottage-17-cottage-f0",
+   "label": "Table (Cottage)",
+   "rect": [
+    8.98,
+    30.68,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
    "id": "cottage-17-cottage-f1",
    "label": "Cupboard (Cottage)",
    "rect": [
@@ -5221,6 +6046,21 @@
     "lock": "none",
     "items": "",
     "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-17-cottage-f3",
+   "label": "Table (Cottage)",
+   "rect": [
+    10.18,
+    32.43,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
    }
   },
   {
@@ -5292,6 +6132,21 @@
    }
   },
   {
+   "id": "cottage-21-cottage-f0",
+   "label": "Table (Cottage)",
+   "rect": [
+    52.07,
+    41.32,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
    "id": "cottage-21-cottage-f1",
    "label": "Cupboard (Cottage)",
    "rect": [
@@ -5306,6 +6161,21 @@
     "lock": "none",
     "items": "",
     "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-21-cottage-f2",
+   "label": "Table (Cottage)",
+   "rect": [
+    50.18,
+    41.82,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
    }
   },
   {
@@ -5374,6 +6244,21 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-25-cottage-f0",
+   "label": "Table (Cottage)",
+   "rect": [
+    34.68,
+    39.68,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
    }
   },
   {
@@ -5581,6 +6466,21 @@
    }
   },
   {
+   "id": "cottage-33-cottage-f2",
+   "label": "Table (Cottage)",
+   "rect": [
+    57.18,
+    42.0,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
    "id": "cottage-34-cottage-0",
    "label": "Hearth (Cottage)",
    "rect": [
@@ -5649,6 +6549,21 @@
    }
   },
   {
+   "id": "cottage-34-cottage-f0",
+   "label": "Table (Cottage)",
+   "rect": [
+    27.55,
+    43.57,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
    "id": "cottage-34-cottage-f1",
    "label": "Cupboard (Cottage)",
    "rect": [
@@ -5663,6 +6578,21 @@
     "lock": "none",
     "items": "",
     "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-34-cottage-f3",
+   "label": "Table (Cottage)",
+   "rect": [
+    26.93,
+    42.0,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
    }
   },
   {
@@ -5731,6 +6661,21 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-47-cottage-f0",
+   "label": "Table (Cottage)",
+   "rect": [
+    21.32,
+    40.43,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
    }
   },
   {
@@ -5819,6 +6764,21 @@
    }
   },
   {
+   "id": "cottage-56-cottage-f0",
+   "label": "Table (Cottage)",
+   "rect": [
+    14.32,
+    41.02,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
    "id": "cottage-56-cottage-f2",
    "label": "Cupboard (Cottage)",
    "rect": [
@@ -5901,6 +6861,21 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-62-cottage-f0",
+   "label": "Table (Cottage)",
+   "rect": [
+    48.02,
+    47.68,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
    }
   },
   {
@@ -5989,6 +6964,21 @@
    }
   },
   {
+   "id": "cottage-63-cottage-f0",
+   "label": "Table (Cottage)",
+   "rect": [
+    39.57,
+    50.32,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
    "id": "cottage-63-cottage-f2",
    "label": "Cupboard (Cottage)",
    "rect": [
@@ -6074,6 +7064,21 @@
    }
   },
   {
+   "id": "cottage-68-cottage-f0",
+   "label": "Table (Cottage)",
+   "rect": [
+    5.77,
+    44.07,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   }
+  },
+  {
    "id": "cottage-68-cottage-f1",
    "label": "Cupboard (Cottage)",
    "rect": [
@@ -6088,6 +7093,21 @@
     "lock": "none",
     "items": "",
     "fillPlace": "home"
+   }
+  },
+  {
+   "id": "cottage-68-cottage-f3",
+   "label": "Table (Cottage)",
+   "rect": [
+    5.18,
+    42.5,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
    }
   }
  ],
