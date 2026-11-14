@@ -11,6 +11,7 @@
  */
 import * as AR from "./arms-rules.mjs";
 import * as HY from "./hygiene-rules.mjs";
+import * as DG from "./gadget-rules.mjs";
 
 /** The lines, in the chronicle's order. */
 export const LINES = ["mortal", "ghoul", "vampire", "werewolf", "mage", "changeling", "wraith", "hunter", "mummy", "demon", "revenant"];
@@ -39,7 +40,7 @@ export const ABILITIES = {
   treat: {label: "Treat someone", effect: "treat", verb: "treats a wound with"},
   light: {label: "Light it", effect: "light", verb: "lights"},
   refuel: {label: "Refill a light", effect: "refuel", verb: "refills a light with"},
-  strike: {label: "Strike a light", effect: "note", verb: "strikes a light with", uses: true},
+  strike: {label: "Strike a light", effect: "strike", verb: "strikes a light with", uses: true},
   write: {label: "Write in it", effect: "pages", page: "writing", verb: "writes in"},
   draw: {label: "Draw in it", effect: "pages", page: "drawing", verb: "draws in"},
   mark: {label: "Mark it", effect: "pages", page: "mark", verb: "marks"},
@@ -61,7 +62,8 @@ export const ABILITIES = {
   disguise: {label: "Change the look", effect: "wash", verb: "changes the look with", uses: true},
   cook: {label: "Cook with it", effect: "cook", verb: "cooks with"},
   salvage: {label: "Take apart for parts", effect: "salvage", verb: "takes apart"},
-  plant: {label: "Plant it", effect: "note", verb: "plants", uses: true},
+  plant: {label: "Plant it, or see how it grows", effect: "plant", verb: "plants"},
+  time: {label: "Tell the time", effect: "time", verb: "looks at"},
   call: {label: "Call someone", effect: "note", verb: "makes a call on"},
   switchon: {label: "Switch on or off", effect: "note", verb: "switches on"},
   burn: {label: "Burn it", effect: "note", verb: "burns", uses: true},
@@ -250,6 +252,8 @@ export function abilitiesOf(good) {
   if ( k === "medicine" && /sunscreen/i.test(n) ) out.add("wash");
   if ( k === "house" && /tin bath|washboard/i.test(n) ) out.add("wash");
   if ( k === "house" && /mirror/i.test(n) ) out.add("disguise");
+  // B3911: clocks, watches, a sundial and an hourglass tell the time (an hourglass is not switched on)
+  if ( DG.timepieceOf(n) ) { out.add("time"); if ( k === "tech" ) out.delete("switchon"); }
   // B3909: a plunger or a bathroom scale does not wash anyone
   if ( HY.hasNoUse(n) ) out.delete("wash");
   return [...out].filter(a => ABILITIES[a]);
