@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4960
+Next free block: B5010
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -234,6 +234,7 @@ Next free block: B4960
 | B4850-B4859 | Rothenstein Rebuilt: book one's twist web (six chains, locks, one twist a week) (used B4850-B4853) | Chronicle |
 | B4900-B4909 | Sami names (used B4900-B4902) | Creation, Chronicle |
 | B4950-B4959 | Tuareg names (used B4950-B4952) | Creation, Chronicle |
+| B5000-B5009 | Moro names (used B5000-B5002) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7462,3 +7463,18 @@ Reverse: edit the tuareg entry in data/people-world.mjs.
 WoDX Creation. A Tuareg is "ag" (son of) or "welet" (daughter of) the father's name, then and now; no family names.
 
 Reverse: give the tuareg entry a fam list.
+
+## B5000. The Moro in the Malay world's mix (2026-11-14)
+WoDX Creation and Chronicle. The Maguindanao, Maranao and Tausug of Mindanao and Sulu are 4 in 100 in the Malay world's mix before the industrial age and 3 after, beside the Filipinos (B4750). Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: drop moro from the nusantara mixes in world-rules.mjs and the moro entry in people-world.mjs.
+
+## B5001. The names (2026-11-14)
+WoDX Creation. The sultans, datus and royal women of the tarsila and the Spanish and American records before 1800, given alone; the given names of the Bangsamoro since. Titles (datu, bai, hadji) are left out of the name lists. Fewer than 300 names.
+
+Reverse: edit the moro entry in data/people-world.mjs.
+
+## B5002. Bin, binti or a family name after 1800 (2026-11-14)
+WoDX Creation. From 1800 a Moro is bin or binti the father or carries a family name (Kiram, Alonto, Misuari).
+
+Reverse: change child or fam in the moro entry.

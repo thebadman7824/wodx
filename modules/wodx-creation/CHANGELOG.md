@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.57.0 (The Moro join the People generator (B5000 to B5002))
 - 0.56.0 (The Tuareg join the People generator (B4950 to B4952))
 - 0.55.0 (The Sami join the People generator (B4900 to B4902))
 - 0.54.0 (Filipinos join the People generator with names from Pigafetta, Legazpi and the Clavería catalogue (B4750 to B4752))
