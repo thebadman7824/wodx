@@ -190,6 +190,7 @@ Next free block: B3730
 | B3660-B3669 | The Rothenstein saga: the running step for other systems (used B3660-B3669) | Chronicle |
 | B3670-B3679 | The Rothenstein saga keeps its calendar on long skips (used B3670-B3672) | Chronicle |
 | B3680-B3689 | Mage Wonders, charms, periapts, trinkets and mage fetishes (used B3680-B3688) | Library, Storyteller |
+| B3690-B3719 | Item crafting for Kindred, Changeling, Mummy, Demon, Hunter and Kuei-jin, and what made items do (used B3690-B3692) | Library |
 | B3720-B3729 | Soulforged Artifacts and relics through the shared crafting table (used B3720-B3723) | Library, Storyteller, Actions |
 <!-- decision-index:end -->
 
@@ -6134,6 +6135,21 @@ Reverse: itemsFor() in wonders-mage.mjs.
 WoDX Library. A mage binds a spirit into any Garou fetish (not the Bane fetishes or a breed's own) with Spirit 4 to force an unwilling spirit, which makes an unreliable fetish, or Prime 4 and a bargain with a willing one (M20 pdf 509; Book of Secrets pdf 161). The work is extended Arete at difficulty 8, three successes a level. A forced spirit's court remembers, as for a Garou. Using it is Willpower at difficulty 7, with the fetish's Gnosis as the pool (M20 pdf 653).
 
 Reverse: drop FETISH_ROWS from ROWS in wonders-mage.mjs.
+
+## B3690. One shared way for made items to work (2026-11-14)
+WoDX Library, scripts/wonder-powers.mjs and wonder-use.mjs. Ben's Item Crafting Desk (2026-11-13, g2) asked that a made item's powers become Use buttons, its charges and pools be counted, drawbacks apply on their own, and each use leave a card with Undo. Rather than each line building its own, every line's kit writes the same flag (flags.wodx-library.wonder: pool, uses, oneUse, worn, powers) and the Use window reads it. Agreed with the Mage thread, which fills the same flag for Wonders.
+
+Reverse: remove the two files and the four wonder lines in use.mjs; made items keep their flags and become plain items again.
+
+## B3691. Rolls follow V20 dice (2026-11-14)
+WoDX Library. A power's roll counts dice at or above the difficulty, each 1 cancels one, and no successes with a 1 is a botch (V20 core, book p. 250, pdf 258). A failed or botched roll still pays what the power spends; a transfer only happens on a success.
+
+Reverse: change countSuccesses and the failed check in plan().
+
+## B3692. Worn bonuses use the system's bonus list (2026-11-14)
+WoDX Library. An amulet's or talisman's Attribute bonus while worn is an attribute_buff entry in the item's own system.bonuslist, switched with the equipped box in the same update, so the worldofdarkness system's totals pick it up with nothing else to keep in step. A spent item's bonus goes off.
+
+Reverse: drop the preUpdateItem hook in wonder-use.mjs; bonuses then stay as the item was made.
 
 ## B3720. Soulforged Artifacts and relics are a line on the crafting table (2026-11-14)
 WoDX Library. Ben's pick on the Item Crafting Desk: soulforged relics and Artifacts stay with the soulforging build but are made through the shared crafting engine. The wonders registry (B3683) gains a Wraith kit, scripts/wonders-wraith.mjs (world setting craftWraith, on by default like the other kits), with two rows, a soulforged Artifact and a reworked relic (Wraith 20th book p. 44, pdf 109). Arms, armour and oboli stay in the WoDX Actions forge window, since they are gear and money, not Artifacts.
