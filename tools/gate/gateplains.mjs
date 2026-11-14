@@ -13,7 +13,8 @@
  *   5. the People generator for the West makes a person of one of the West's peoples, whatever the clock's age
  *   6. the generated person becomes a sheet with that name
  *   7. the Maya (B3830): beside the Nahua in Mexico before the conquest, an own name and a patronym, a church name after
- *   8. clean up
+ *   8. the Armenians (B3940): in Anatolia's mix, a town byname before 1800 and -ian or -yan after
+ *   9. clean up
  * Result: Data/wodx-gate/gateplains-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -95,6 +96,15 @@ export async function run() {
       G.ok("7. the Maya beside the Nahua; own names and a patronym, then church names", med.includes("maya") && med.includes("nahua")
         && old.every(p => p.family && !p.name.includes("{") && !church.test(p.given)) && now.every(p => p.family && !p.name.includes("{")),
         {medieval: med, old: old.slice(0, 4).map(p => p.name), now: now.slice(0, 4).map(p => p.name)});
+    });
+
+    await G.step("8. the Armenians", async () => {
+      const mix = results({era: "medieval", culture: "anatolia"}, "people.origin");
+      const ctx = era => gen().lookup({...gen().context(), era, culture: "anatolia"});
+      const draw2 = era => Array.from({length: 20}, (_, i) => R.nameOf({rand: gen().random(`gateplains:hy:${era}`, i), tables: ctx(era), origin: "armenian", sex: i % 2 ? "female" : "male"}));
+      const old = draw2("medieval"), now = draw2("modern");
+      G.ok("8. Armenians in Anatolia; a town byname, then -ian or -yan", mix.includes("armenian") && old.every(p => /tsi$/.test(p.family ?? ""))
+        && now.every(p => /(ian|yan)$/.test(p.family ?? "")), {mix, old: old.slice(0, 4).map(p => p.name), now: now.slice(0, 4).map(p => p.name)});
     });
   } catch (e) {
     G.ok("error", false, {error: e.message});

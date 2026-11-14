@@ -16,6 +16,7 @@ import {algonquianTables} from "./people-algonquian.mjs";
 import {plainsTables} from "./people-plains.mjs";
 import {MAYA} from "./people-maya.mjs";
 import {southwestTables} from "./people-southwest.mjs";
+import {ARMENIAN} from "./people-armenian.mjs";
 
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
 const OLD = ["medieval", "early-modern"], NEW = ["industrial", "modern"], MOD = ["modern"], PRE = ["medieval", "early-modern", "industrial"];
@@ -99,6 +100,8 @@ const P = {
     f: {old: "Olga, Anna, Maria, Evdokia, Feodosia, Marfa, Praskovia, Agafia, Xenia, Anastasia, Yelena, Sofia, Vasilisa, Ulyana, Irina, Natalia",
       new: "Maria, Anna, Yelena, Olga, Tatiana, Natalia, Irina, Svetlana, Yekaterina, Lyudmila, Galina, Nina, Vera, Nadezhda, Anastasia, Oksana, Yulia, Darya"},
     fam: "Ivanov/Ivanova, Smirnov/Smirnova, Kuznetsov/Kuznetsova, Popov/Popova, Vasiliev/Vasilieva, Petrov/Petrova, Sokolov/Sokolova, Mikhailov/Mikhailova, Novikov/Novikova, Fyodorov/Fyodorova, Morozov/Morozova, Volkov/Volkova, Alekseev/Alekseeva, Lebedev/Lebedeva, Semyonov/Semyonova, Yegorov/Yegorova, Pavlov/Pavlova, Kozlov/Kozlova"},
+  // Armenians of Greater Armenia, Cilicia and the cities of the Ottoman and Safavid lands (B3940)
+  armenian: ARMENIAN,
   greek: {
     m: "Ioannes, Georgios, Konstantinos, Michael, Nikolaos, Demetrios, Theodoros, Andronikos, Manuel, Alexios, Basileios, Leon, Nikephoros, Petros, Stephanos, Christos, Panagiotis, Vasilis",
     f: "Maria, Eirene, Anna, Theodora, Helene, Zoe, Eudokia, Sophia, Euphrosyne, Katerina, Kalliope, Vasiliki, Georgia, Despina, Angeliki, Kyriaki",
@@ -257,6 +260,6 @@ export const GIVEN_ONLY = new Set(["new-england-algonquian", "powhatan", "lakota
 /** Every people named here. */
 export const WORLD_PEOPLES = [...Object.keys(P), ...Object.keys(BUILT)];
 /** Peoples raised to at least 300 distinct names (Ben 2026-11-13, B3310 on): one at a time, the biggest homelands first. */
-export const RAISED = ["chinese", "hindi", "arabic"];
+export const RAISED = ["chinese", "hindi", "arabic", "armenian"];
 /** Every distinct name a people of P has, given and family, all ages. */
 export const namesOf = origin => new Set(["m", "f", "fam"].flatMap(k => lists(P[origin]?.[k] ?? {}).flatMap(([, s]) => split(s).flatMap(x => x.split("/")))));
