@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4740
+Next free block: B4750
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -223,6 +223,7 @@ Next free block: B4740
 | B4710-B4719 | Amazigh (Berber) names (used B4710-B4712) | Creation, Chronicle |
 | B4720-B4729 | Old installed tables stand aside for their replacements (used B4720) | Chronicle |
 | B4730-B4739 | Sephardi and Mizrahi Jewish names (used B4730-B4732) | Creation, Chronicle |
+| B4740-B4749 | Khmer names (used B4740-B4742) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7194,3 +7195,18 @@ Reverse: drop mizrahi from those mixes.
 WoDX Creation. Sephardi names from the aljama and notarial records of Sefarad, then the Ladino communities and the Portuguese Nation, with family names in every age (Abravanel, Benveniste; later Modiano, Carasso, Curiel). Mizrahi names from the Cairo Geniza, Baghdad, Persia, Yemen and the Maghreb, carrying "ben" or "bat" or a place before 1800 and a family name after. Fewer than 300 names each.
 
 Reverse: edit the sephardi and mizrahi entries in data/people-world.mjs.
+
+## B4740. The Khmer on the mainland (2026-11-14)
+WoDX Creation and Chronicle. Mainland Southeast Asia was Vietnamese and Thai only; at 1197 Angkor holds most of it, so the Khmer are 45 in 100 in the medieval mix, 22 after Angkor's fall, and 12 in the industrial age and after. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old southeast-asia mixes in world-rules.mjs and drop khmer from people-world.mjs.
+
+## B4741. The names (2026-11-14)
+WoDX Creation. Before 1800 the kings, queens, priests and officials of the Angkor inscriptions and of the Longvek and Oudong chronicles, given names alone (the common people of the inscriptions are not named well enough to list); from 1800 the given names of modern Cambodia. Fewer than 300 names.
+
+Reverse: edit the khmer entry in data/people-world.mjs.
+
+## B4742. Family name first, from 1800 (2026-11-14)
+WoDX Creation. Modern Khmer names put the family name first, as Chinese and Vietnamese names do in WoDX.
+
+Reverse: drop khmer from FAMILY_FIRST in data/people-world.mjs.
