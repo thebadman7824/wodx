@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.109.0 (Filipinos in the Malay world's mix (B4750))
 - 0.108.0 (The Khmer in mainland Southeast Asia (B4740))
 - 0.107.0 (Sephardi and Mizrahi Jews in the world's mixes (B4730, B4731))
 - 0.106.1 (Old installed Roll Tables the module no longer ships, left as installed, stand aside for their replacements; tables the Storyteller edited still win (B4720))
