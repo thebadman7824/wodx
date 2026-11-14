@@ -183,7 +183,12 @@ for ( const [id, u] of Object.entries(CB.UNARMED) ) add("Combat", "Unarmed attac
 
 /* -- Lists WoDX does not hold yet: one row each, so the gap shows */
 for ( const g of D.GIFTS ) add("Demon (DtF)", "Pact gifts to thralls", g.label, { status: "card", page: "DtF", how: "Thralls window lists the gift and its Faith; nothing is applied" });
-add("Hunter (Inquisitor)", "Blessings (whole list)", "Benedictions, Investitures, Legacies, Psalms, Orisons, Holy Arts", { status: "roll", page: "DA:Inquisitor ch. 5", how: "the Blessing is typed in; roll and Conviction only; no list, no effect" });
+const IB = await import(A("scripts/inq-blessings.js"));
+for ( const b of IB.BLESSINGS ) {
+  const st = applyingSpec(b.spec) && !INFO.has(b.spec.kw) && E.KEYWORDS[b.spec.kw]?.tier !== "st" && b.spec.kw !== "free" ? "applies" : "card";
+  add("Hunter (Inquisitor)", `Blessings: ${b.kind}`, `${b.use}: ${b.name}`, { status: st, kw: [b.spec.kw], page: `DA:Inquisitor p. ${b.p}`,
+    how: `Blessing window: the book list sets the roll, difficulty and Conviction${st === "applies" ? `; effects card ${b.spec.kind}` : "; the card says what it does"}` });
+}
 add("Werewolf (Changing Breeds)", "Fera Gifts (whole list)", "Gifts of the Changing Breeds", { status: "roll", page: "W20 Changing Breeds", how: "breed traits are known; their own Gifts are not listed (W20 Gifts by name catch the shared ones)" });
 const out = { made: new Date().toISOString(), counts: {}, byLine: {}, rows };
 for ( const r of rows ) {

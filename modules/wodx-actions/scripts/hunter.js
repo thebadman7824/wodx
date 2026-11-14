@@ -17,6 +17,7 @@ import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as EF from "./effects.js";
+import * as IB from "./inq-blessings.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -108,6 +109,8 @@ export function build(ctx) {
         const list = blessingsOn(actor);
         const risked = actor.getFlag(MOD, "riskScene") === sceneKey();
         const content = `<form><p><b>${esc(actor.name)}</b>: Conviction ${i.conviction}, Piety ${i.piety}${H.callous(i.conviction, i.piety) ? " (<b>Callous</b>)" : ""}; Faith ${i.faith}, Wisdom ${i.wisdom}, Zeal ${i.zeal}.</p>
+          <div class="form-group"><label>From the book</label>${searchBox("select[name=bk]", "Search the book's Blessings…", "Search the book's Blessings")}<select name="bk" data-fixed><option value="">(none: set the roll by hand)</option>${IB.BLESSINGS.map(b => `<option value="${b.id}">${esc(b.kind)} · ${esc(b.use)}: ${esc(b.name)}</option>`).join("")}</select></div>
+          <div class="wodx-bless-info wodx-quiet"></div>
           <div class="form-group"><label>Blessing</label>${list.length > 5 ? searchBox("select[name=b]", "Search Blessings…", "Search Blessings") : ""}<select name="b" data-fixed><option value="">— another (type its name) —</option>${list.map(b => `<option value="${esc(b.name)}">${esc(b.name)}</option>`).join("")}</select> <input type="text" name="other" placeholder="Name"/></div>
           <div class="form-group"><label>Kind</label><select name="kind" data-fixed>${H.ENDOWMENT_KINDS.map(k => `<option>${k}</option>`).join("")}</select></div>
           <div class="form-group"><label>Application</label><select name="sv" data-fixed>${Object.entries(H.SUPERIOR_LABEL).map(([k, l]) => `<option value="${k}">${l} (${i[k]})</option>`).join("")}<option value="path">A Holy Art path (rating below)</option><option value="virtue">A basic Virtue (Orisons)</option></select></div>
@@ -115,13 +118,43 @@ export function build(ctx) {
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="6" min="2" max="10"/> <label>Conviction to spend</label> <input type="number" name="cost" value="1" min="0" max="3" style="width:4em"/></div>
           <div class="form-group"><label>Conviction to risk (1–3, once a scene)</label><input type="number" name="risk" value="0" min="0" max="3" ${risked ? "disabled" : ""}/> ${risked ? "<i>already risked this scene</i>" : ""}</div>
           <div class="form-group"><label><input type="checkbox" name="noroll"/> No roll (the page says so)</label></div></form>`;
+        const fillBk = root => {
+            const b = IB.blessingById(root.querySelector("[name=bk]")?.value), box = root.querySelector(".wodx-bless-info");
+            if (!b) { if (box) box.textContent = ""; return; }
+            const set = (k, v) => { const el = root.querySelector(`[name=${k}]`); if (el) { if (el.type === "checkbox") el.checked = !!v; else el.value = v; } };
+            const rp = IB.rollParts(b);
+            set("kind", b.kind); set("noroll", !b.roll); set("cost", Math.min(3, b.cost));
+            if (rp.attr) set("attr", rp.attr);
+            set("sv", rp.sv || "faith");
+            if (rp.sv === "virtue") set("rating", i.v[rp.trait] ?? n(findAbility(actor, rp.trait)?.value));
+            set("diff", typeof b.diff === "number" ? b.diff : b.diff === "piety" ? Math.max(2, Math.min(10, i.piety)) : 6);
+            if (box) box.textContent = `${b.fx} Cost: ${b.cost} Conviction${b.wp ? " and a Willpower point" : ""}.${b.diff === "t" ? " Difficulty: the target's Willpower, or the roll is opposed." : b.diff === "var" ? " The Storyteller sets the difficulty." : ""}${b.stage ? ` Needs the ${b.stage} stage.` : ""} ${IB.REF} p. ${b.p}.`;
+        };
         return dialog(`A Blessing: ${actor.name}`, content, "Invoke", async fd => {
-            const name = fd.other?.trim() || fd.b || "A Blessing";
+            const bk = IB.blessingById(fd.bk) ?? IB.blessingByName(fd.other?.trim() || fd.b);
+            const name = fd.other?.trim() || fd.b || bk?.name || "A Blessing";
+            const effectsOf = got => {
+                if (!bk) return { html: "", items: [] };
+                let html = `<div class="vta-sec"><b>${esc(bk.name)}</b>: ${esc(bk.fx)}</div>`, items = [];
+                if (got > 0 && EF.isOn()) {
+                    const pp = EF.planOf(actor, IB.blessingResults(bk, got, { source: `${IB.REF} p. ${bk.p}` }), got);
+                    html += pp.html; items = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+                }
+                return { html, items };
+            };
+            const fxCard = items => items.length ? { kind: "effects", caster: actor.name, items } : undefined;
+            const gain = async got => {
+                const g = IB.convictionGain(bk, got, { piety: i.piety, zeal: i.zeal });
+                if (!g) return "";
+                const now = inq(actor).conviction, to = bk.spec?.kind === "conv" ? Math.max(now, Math.min(i.piety, now + g)) : now + g;
+                await setConviction(actor, to);
+                return `<div class="vta-res good">+${to - now} Conviction (now ${to}).</div>`;
+            };
             const cost = n(fd.cost), risk = risked ? 0 : Math.min(3, n(fd.risk));
             if (cost + risk > i.conviction) return ctx.notify(`Not enough Conviction (${i.conviction}).`);
             let after = i.conviction - cost;
             await setConviction(actor, after);
-            if (fd.noroll) return post(actor, `${actor.name}: ${esc(name)}`, `<div class="vta-note">${cost} Conviction. See Dark Ages: Inquisitor, Chapter Five, for its effect.</div>`);
+            if (fd.noroll) { const E = effectsOf(1); return post(actor, `${actor.name}: ${esc(name)}`, `<div class="vta-note">${cost} Conviction.${bk ? "" : " See Dark Ages: Inquisitor, Chapter Five, for its effect."}</div>${E.html}${await gain(1)}${bk ? `<div class="wodx-quiet">${IB.REF} p. ${bk.p}</div>` : ""}`, [], fxCard(E.items)); }
             const rating = fd.sv === "path" || fd.sv === "virtue" ? n(fd.rating) : i[fd.sv];
             const dice = attr(actor, fd.attr) + rating + risk;
             const r = await rollPool(dice, fd.diff);
@@ -132,8 +165,10 @@ export function build(ctx) {
                 await setConviction(actor, R.after);
                 body += `<div class="vta-res ${r.successes > 0 && !r.botch ? "good" : "bad"}">Risked ${risk}: Conviction ${after} → ${R.after}${R.lostAll ? " (a botch: all of it lost)" : ""} (Dark Ages: Inquisitor p. 160).</div>`;
             }
-            return post(actor, `${actor.name}: ${esc(name)}`, body + `<div class="wodx-quiet">${esc(fd.kind)} · Dark Ages: Inquisitor, Chapter Five</div>`, [r.roll]);
-        }, { width: 540, render: root => aim(root, { actor, power: r => { const nm = r.querySelector("[name=other]")?.value?.trim() || r.querySelector("[name=b]")?.value; return nm ? { id: nm, n: nm } : null; } }) });
+            const got = r.botch ? 0 : r.successes, E = effectsOf(got);
+            body += E.html + (got > 0 ? await gain(got) : "");
+            return post(actor, `${actor.name}: ${esc(name)}`, body + `<div class="wodx-quiet">${esc(fd.kind)} · Dark Ages: Inquisitor, ${bk ? `p. ${bk.p}` : "Chapter Five"}</div>`, [r.roll], fxCard(E.items));
+        }, { width: 540, render: root => { fillBk(root); root.querySelector("[name=bk]")?.addEventListener("change", () => fillBk(root)); return aim(root, { actor, power: r => { const nm = r.querySelector("[name=other]")?.value?.trim() || r.querySelector("[name=b]")?.value; return nm ? { id: nm, n: nm } : null; } }); } });
     }
 
     /* ---------------- Virtue rolls ---------------- */
