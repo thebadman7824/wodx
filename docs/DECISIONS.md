@@ -229,7 +229,7 @@ Next free block: B4860
 | B4770-B4779 | Fighting from the saddle after the books: the mount's Attributes and dodge, keeping the saddle, the lance, the bow from a moving horse (used B4770-B4776) | Combat |
 | B4780-B4789 | Rothenstein Rebuilt: Ways, the open world's doorways (used B4780-B4783) | Storyteller |
 | B4790-B4799 | Vehicles in a fight: aircraft, armoured vehicles, Durability, ramming, NPC drivers (used B4790-B4797) | Interactables, Combat, NPC |
-| B4800-B4809 | Storyteller tools for the lone player in The Lone Chronicle (used B4800-B4805) | Solo |
+| B4800-B4809 | Storyteller tools for the lone player: add experience (used B4800-B4806) | Solo |
 | B4810-B4819 | Rothenstein Rebuilt: Ways laid by the builder, old exits and doors to the places inside (used B4810-B4813) | Storyteller |
 | B4850-B4859 | Rothenstein Rebuilt: book one's twist web (six chains, locks, one twist a week) (used B4850-B4853) | Chronicle |
 <!-- decision-index:end -->
@@ -7385,6 +7385,11 @@ Reverse: drop the check tool from ST_TOOLS.
 WoDX Solo. The hidden tokens on the player's scene with kind, stance and grid square, so the player can see what the Storyteller hid without revealing it on the map.
 
 Reverse: drop the hidden tool from ST_TOOLS.
+
+## B4806. Add experience from the Storyteller tools (2026-11-14)
+WoDX Solo. Ben asked for an add XP button in the Storyteller tools. The player gives points and a reason; the seat calls WoDX Creation's award (api.award), so the award is an Experience item with the date and log page like any other. A whole number from 1 to 100 at once (solo-rules.mjs XP_MAX); a blank reason reads Given with the Storyteller tools. Without WoDX Creation the tool says so.
+
+Reverse: drop the xp tool from ST_TOOLS, or change XP_MAX.
 
 ## B4810. The old exits become Ways in place (2026-11-14)
 WoDX Storyteller. The testbed's walkable maps (the Lower Town, Kranzfels, the roads, woods, river and mine) already link to each other with Teleport Token regions paired with arrival regions. The builder's Ways step adds a WoDX Way to each such region, pointing at the same arrival, and switches the teleport off, so walking through runs the trip rules (personal time, the company, encounters) instead of a bare jump. The kind of Way comes from the two names: a stair for floors and cellars, a gate into or within Kranzfels and at the West Gate, a ferry to the ferry or the ford, a street inside the Lower Town, else a road. Penumbra and Shadowlands twin regions are left to wodx-otherworlds, and a crossing inside one map (the ferry over the river) stays a teleport.

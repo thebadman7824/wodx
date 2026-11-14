@@ -1403,3 +1403,4 @@ Ben approved everything that was waiting for review ("Approved on all pending re
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-14 | How much experience the Storyteller tools give at once (B4806) | A whole number from 1 to 100 per press, as a normal award through WoDX Creation | Change XP_MAX in solo-rules.mjs |
