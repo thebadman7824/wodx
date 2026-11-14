@@ -135,6 +135,7 @@ async function healthCheck(id, force = false) {
   if ( s.busy || (!force && Date.now() - s.checked < 5 * 60000) ) return;
   s.checked = Date.now();
   if ( lockState(laneOf(id), cfg).held ) return; // someone else is using it (a helper, the nightly run)
+  if ( !fs.existsSync(path.join(laneOf(id).dataPath, "Data", "worlds", cfg.world)) ) { s.down = true; s.why = "not set up (queue a setup-lane job)"; return; }
   if ( await isUp(laneOf(id)) ) { if ( s.down ) await recovered(id); return; }
   log(`lane ${id} is down; starting it`);
   const r = await lanesCmd(["start", "--lane", id], {minutes: 6});
@@ -153,7 +154,7 @@ async function alert(key, title, detail = "") {
 }
 async function recovered(key) {
   const s = state[key] ?? state[`_${key}`]; if ( !s ) return;
-  s.down = false;
+  s.down = false; s.why = null;
   if ( s.alert ) { await comment(s.alert, "Cleared.").catch(() => {}); await close(s.alert).catch(() => {}); log(`alert #${s.alert} cleared`); s.alert = null; }
 }
 
@@ -188,12 +189,16 @@ async function laneWork(job, lane, i, n, tag, retried = false) {
     await lanesCmd(["reset", "--lane", lane], {logTo: L});
     return laneWork(job, lane, i, n, tag, true);
   };
+  if ( job.kind === "setup-lane" ) {
+    const r = await lanesCmd(["setup", "--lane", lane, ...repo], {logTo: L, minutes: 90});
+    if ( r.code === 0 ) { state[lane].down = false; state[lane].why = null; }
+    return {code: r.code, text: r.out.trim().split("\n").slice(-10).join("\n")};
+  }
   if ( !(await isUp(laneOf(lane))) ) {
     const s = await lanesCmd(["start", "--lane", lane], {logTo: L, minutes: 6});
     if ( s.code !== 0 ) return faultRetry(`lane ${lane} would not start`, s.out);
   }
   if ( job.kind === "reset" ) { const r = await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L}); return {code: r.code, text: r.out.trim().split("\n").slice(-6).join("\n")}; }
-  if ( job.kind === "setup-lane" ) { const r = await lanesCmd(["setup", "--lane", lane, ...repo], {logTo: L, minutes: 90}); return {code: r.code, text: r.out.trim().split("\n").slice(-10).join("\n")}; }
   if ( job.reset || job.kind === "gate-two" ) await lanesCmd(["reset", "--lane", lane, ...repo], {logTo: L});
   const d = await lanesCmd(["deploy", "--lane", lane, "--if-changed", ...repo], {logTo: L});
   if ( d.code !== 0 ) return faultRetry(`deploy to lane ${lane} failed (exit ${d.code})`, d.out);
@@ -274,7 +279,7 @@ async function status(queue) {
   const res = resources();
   const lanes = await Promise.all(LANES.map(async id => {
     const l = laneOf(id), s = state[id], lk = lockState(l, cfg);
-    const what = s.busy ? `job #${s.busy}` : s.down ? "DOWN" : lk.held ? `in use outside the runner (${(lk.lock?.gates ?? []).join(" ").slice(0, 60)})` : "free";
+    const what = s.busy ? `job #${s.busy}` : s.down ? `DOWN${s.why ? `: ${s.why}` : ""}` : lk.held ? `in use outside the runner (${(lk.lock?.gates ?? []).join(" ").slice(0, 60)})` : "free";
     return `| ${id} | ${l.port} | ${what} |`;
   }));
   const body = [`Updated ${new Date().toISOString().slice(0, 16)}Z by the PC runner at ${short(spawnSync("git", ["rev-parse", "HEAD"], {cwd: ROOT, encoding: "utf8"}).stdout)}.`,
@@ -337,9 +342,11 @@ for ( ;; ) {
     for ( const q of ready ) {
       if ( LANE_KINDS.has(q.job.kind) ) {
         if ( res.low.length ) continue;
+        // A setup-lane job runs on a lane that is not set up yet; every other job needs a healthy free lane.
+        const free = q.job.kind === "setup-lane" ? l => !state[l].busy && !lockState(laneOf(l), cfg).held : laneFree;
         const want = q.job.lane !== undefined ? [String(q.job.lane)] : LANES.filter(laneFree).slice(0, q.job.lanes);
         // A job that asked for several lanes takes what is free now rather than waiting for all of them.
-        if ( !want.length || want.some(l => !laneFree(l)) ) continue;
+        if ( !want.length || want.some(l => !free(l)) ) continue;
         for ( const l of want ) state[l].busy = q.number;
         start(q.issue, q.job, want);
       } else if ( light < conf.light ) {
