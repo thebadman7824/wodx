@@ -49,7 +49,7 @@ export async function run() {
       {name: "Gate Summons Wolf", type: "Creature", prototypeToken: {actorLink: false}}]);
     const [dt, vt, mt, gt, lt] = await G.tokens(scene, [{actor: demon, x: 2, y: 2}, {actor: victim, x: 8, y: 2}, {actor: mummy, x: 2, y: 8}, {actor: mage, x: 8, y: 8}, {actor: lit, x: 12, y: 2}]);
     let first = null, toks = [];
-    await G.step("2. Summon Animals by an NPC: placed, timed, shown, serving", async () => {
+    await G.step("2. Summon Animals by an NPC: runs by itself, timed, shown, serving", async () => {
       const pl = EF.planOf(demon, [{key: "summon", who: "self", out: {kind: "st", label: "Summon Animals"}}], 3, {name: "Summon Animals", line: "Demon (DtF)"});
       const item = pl.items.find(i => i.key === "summon");
       // the Storyteller's pick of who answers is the gate's wolf, so no window opens
@@ -59,7 +59,7 @@ export async function run() {
       const rec = toks[0]?.flags?.[MOD]?.summon;
       const timed = toks[0]?.actor?.effects?.some(e => e.flags?.["wodx-chronicle"]?.timed?.revert?.key === "wodx-actions.summonEnd");
       const serves = toks[0]?.actor?.flags?.["wodx-npc"]?.serves ?? [];
-      G.ok("2. Summon Animals by an NPC: placed, timed, shown, serving", item?.route === "pick" && toks.length >= 1 && !!rec?.roll && rec.byId === demon.id && serves.includes(demon.id)
+      G.ok("2. Summon Animals by an NPC: runs by itself, timed, shown, serving", item?.route === "auto" && toks.length >= 1 && !!rec?.roll && rec.byId === demon.id && serves.includes(demon.id)
         && (timed || rec.lastsKind !== "scene") && toks.every(t => t.alpha > 0.9), {route: item?.route, n: toks.length, control: rec?.control, roll: rec?.roll, lasts: rec?.lasts, timed, serves});
     });
     await G.step("3. a fight takes the summons in with initiative", async () => {

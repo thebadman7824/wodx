@@ -117,3 +117,52 @@ test("the effects card gives a Summon its rules and the Foundry side places, tim
   assert.match(main, /SUM\.connect\(/);
   assert.match(main, /summonDismiss/);
 });
+
+test("each-turn rules: lasting harm, the books' every-turn powers, and the steps one turn runs (B4832)", async () => {
+  const TR = await import(join(root, "modules/wodx-actions/scripts/turn-rules.js"));
+  assert.equal(TR.lastingHarm({lasting: 1}), null);
+  const h = TR.lastingHarm({lasting: 3, type: "aggravated"});
+  assert.equal(h.rounds, 2);
+  assert.deepEqual(TR.stepOf(h), [{kind: "damage", levels: 1, type: "aggravated", soak: true}]);
+  assert.ok(TR.everyTurnOf("Silver Claws"));
+  assert.ok(TR.everyTurnOf("••• Scry", "Demon (DtF)"));
+  assert.equal(TR.everyTurnOf("Scry", "Werewolf (W20)"), null);
+  const af = TR.everyTurnOf("Animal Form");
+  assert.deepEqual(TR.stepOf(af, {successes: 0}), [{kind: "condition", condition: "frenzy"}]);
+  assert.deepEqual(TR.stepOf(af, {successes: 2}), []);
+  assert.deepEqual(TR.stepOf(TR.everyTurnOf("Lost in the Mists"), {successes: 1}), [{kind: "end"}]);
+  assert.equal(TR.rollDiff("torment", {torment: 8}), 8);
+});
+
+test("the bounds check: no applying power has an unbound keyword or a summoning with no spec (B4835)", async () => {
+  const {execFileSync} = await import("node:child_process");
+  const out = execFileSync(process.execPath, [join(root, "tools/powers/bounds.mjs")], {encoding: "utf8"});
+  const m = out.match(/unbound (\d+), summons with no spec (\d+), each-turn text not worked (\d+)/);
+  assert.ok(m, out);
+  assert.equal(+m[1], 0, "unbound keywords");
+  assert.equal(+m[2], 0, "summonings with no spec");
+  assert.ok(+m[3] <= 14, `each-turn text not worked rose to ${m[3]}`);
+});
+
+test("lights end, made things fade, resistance is rolled (B4830, B4831)", () => {
+  const fx = src("modules/wodx-actions/scripts/effects.js");
+  assert.match(fx, /wodx-actions\.lightEnd/);
+  assert.match(fx, /export async function expireMade/);
+  assert.match(fx, /export async function resistItem/);
+  assert.match(fx, /blind: true/);
+});
+
+test("powers tagged as summonings that call nothing work through their own keywords; an NPC's summoning runs by itself (B4836, B4837)", () => {
+  const keys = Object.keys(SS.NOT_SUMMON);
+  assert.ok(keys.length >= 20, `${keys.length} not-summon powers`);
+  for ( const [k, v] of Object.entries(SS.NOT_SUMMON) ) {
+    assert.ok(v.kw.length >= 1, `${k}: no keywords`);
+    assert.ok(!SS.SPECS[k], `${k}: both a spec and not a summoning`);
+  }
+  const fx = src("modules/wodx-actions/scripts/effects.js");
+  assert.match(fx, /SUM\.notSummonOf\(/);
+  assert.match(fx, /hasPlayerOwner \? "queue" : "auto"/);
+  assert.match(src("modules/wodx-actions/scripts/summons.js"), /export function notSummonOf/);
+  assert.equal(SR.diffOf("spirit-rank", {spiritRank: "incarna"}), 8);
+  assert.equal(SR.diffOf("faith", {faith: 4}), 4);
+});

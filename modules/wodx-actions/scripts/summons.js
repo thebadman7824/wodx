@@ -18,9 +18,11 @@
  * An NPC's summons serve that NPC: WoDX NPC runs their turns like any of its fighters.
  */
 import * as SR from "./summon-rules.js";
-import { SPECS, specKey } from "./summon-specs.js";
+import { SPECS, NOT_SUMMON, specKey } from "./summon-specs.js";
 import { countSuccesses } from "./core-rules.js";
 
+/** Past this many yards, a being bound to stay near rolls to stay in hand (B4823, house reading). */
+export const AWAY_YARDS = 20;
 const MOD = "wodx-actions";
 const NPC = "wodx-npc";
 const FOLDER = "WoDX summoned beings";
@@ -45,6 +47,15 @@ export function specFor(name, line = "") {
   const bare = specKey("", name);
   const hit = Object.keys(SPECS).find(key => key.endsWith(`|${bare.slice(1)}`));
   return hit ? SPECS[hit] : null;
+}
+
+/** A power the inventory tagged as a summoning that calls nothing: the keywords it works through instead (B4836). */
+export function notSummonOf(name, line = "") {
+  const k = specKey(line, name);
+  if ( NOT_SUMMON[k] ) return NOT_SUMMON[k];
+  const bare = specKey("", name).slice(1);
+  const hit = Object.keys(NOT_SUMMON).find(key => key.endsWith(`|${bare}`));
+  return hit ? NOT_SUMMON[hit] : null;
 }
 
 /** The dice a pool gives: "willpower", "manipulation+occult" and the like, read from the sheet. */
@@ -298,7 +309,7 @@ async function onTurn(combat) {
   if ( rec.roll.when === "away" ) {
     const ct = tok.parent?.tokens?.find(t => t.actor?.uuid === rec.by || t.actorId === rec.byId);
     const yards = ct ? Math.hypot(centerOf(ct).x - centerOf(tok).x, centerOf(ct).y - centerOf(tok).y) / (tok.parent.grid?.size ?? 100) * (n(tok.parent.grid?.distance) || 1) / 3 : Infinity;
-    if ( yards <= 20 ) return;
+    if ( yards <= AWAY_YARDS ) return;
   }
   await keepingRoll([tok], rec, caster, {why: `on its turn (round ${combat.round})`});
 }

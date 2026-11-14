@@ -116,12 +116,17 @@ export function lastsText(lasts = {}, ctx = {}) {
 }
 
 /** The difficulty of a keeping roll: a number, the summoner's Torment, the casting's successes + 4, or the being's Willpower. */
+export const SPIRIT_RANK = {gaffling: 4, jaggling: 5, avatar: 7, incarna: 8, celestine: 10};
+
 export function diffOf(diff, ctx = {}) {
   let d;
   if ( typeof diff === "number" ) d = diff;
   else if ( diff === "torment" ) d = n(ctx.torment) || 6;
   else if ( diff === "successes+4" ) d = n(ctx.successes) + 4;
   else if ( diff === "creature-willpower" ) d = n(ctx.creatureWillpower) || 6;
+  else if ( diff === "faith" ) d = n(ctx.faith) || 6;
+  // A spirit's rank sets it (W20 p. 212): Gaffling 4, Jaggling 5, a totem's avatar 7, Incarna 8, Celestine 10
+  else if ( diff === "spirit-rank" ) d = SPIRIT_RANK[ctx.spiritRank] ?? 5;
   else d = n(diff) || 6;
   return Math.max(3, Math.min(10, d));
 }

@@ -54,7 +54,8 @@ export function audit(rows) {
       if ( BOUNDS[k]?.storyteller ) out.storyteller++;
     }
     if ( (r.kw ?? []).includes("summon") && !SS.SPECS[SS.specKey(r.line, r.name)] && !SS.NOT_SUMMON?.[SS.specKey(r.line, r.name)] ) out.summonNoSpec.push(`${r.line}|${r.name}`);
-    if ( TURN_TEXT.test(r.text ?? "") && !TR.everyTurnOf(r.name, r.line) && !TR.TURN_DESK?.[String(r.name).replace(/^[•\s]+/, "").toLowerCase()] ) out.turnText.push(`${r.line}|${r.name}`);
+    const spec = SS.SPECS[SS.specKey(r.line, r.name)];
+    if ( TURN_TEXT.test(r.text ?? "") && spec?.roll?.when !== "each-turn" && !TR.everyTurnOf(r.name, r.line) && !TR.TURN_DESK?.[String(r.name).replace(/^[•\s]+/, "").toLowerCase()] ) out.turnText.push(`${r.line}|${r.name}`);
   }
   return out;
 }

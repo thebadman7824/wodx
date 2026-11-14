@@ -308,6 +308,14 @@ export function planOf(actor, results, successes, power = null) {
     items.push({key: "world", out: r.out, target: null, name: r.out.scope === "ground" ? "an area" : r.out.scope === "taint" ? "this place" : "the town",
       caster: own?.uuid ?? null, scene: canvas?.scene?.id ?? null, route});
   }
+  // B4836: a power tagged as a summoning that calls nothing works through its own keywords instead
+  const notSum = power?.name && results.some(r => r.key === "summon") ? SUM.notSummonOf(power.name, power.line ?? "") : null;
+  if ( notSum ) {
+    const have = new Set(results.map(r => r.key));
+    const extra = PW.powerOutcomes({keywords: notSum.kw.filter(k => !have.has(k))}, successes, {label: power.name, source: notSum.page || power.source || "", hasTarget: !targetsOf(actor).self}).results;
+    results = [...results.filter(r => r.key !== "summon"), ...extra];
+    if ( !results.length && !world.length ) return {items: [], html: ""};
+  }
   const bound = results.some(r => r.key === "bind");
   // B4832: a power whose book acts each turn rides that rule on its first matching result
   const et = power?.name ? TR.everyTurnOf(power.name, power.line ?? "") : null;
@@ -326,8 +334,9 @@ export function planOf(actor, results, successes, power = null) {
       let route = !isOn() ? "off" : r.st ? "st" : E.route(r.key, {self, playerCharacter: !!a?.hasPlayerOwner, count: docs.length, need: 0}, r.out);
       if ( r.ask && route === "auto" ) route = "queue";
       if ( route === "auto" && r.out.kind === "move" ) route = "pick";
-      // B4820: a summoning by a player's character waits for the Storyteller's yes; an NPC's goes where the Storyteller clicks
-      if ( r.key === "summon" && isOn() ) route = actor?.hasPlayerOwner ? "queue" : "pick";
+      // B4820: a summoning by a player's character waits for the Storyteller's yes; an NPC's runs by itself (B4837): a
+      // plain being of the book's kind comes beside the NPC, and the Storyteller can dismiss it or Undo the card
+      if ( r.key === "summon" && isOn() ) route = actor?.hasPlayerOwner ? "queue" : "auto";
       const rs = !self && r.key !== "summon" ? (r.out?.resist === null ? null : E.resistOf(r.key, r.out?.resist ? {resist: r.out.resist} : null)) : null;
       const out = rs && !r.out?.resist ? {...r.out, resist: {pool: rs.pool, diff: rs.diff}} : r.out;
       items.push({key: r.key, out, target: d?.uuid ?? null, name: d?.name ?? a?.name ?? "", route, ...(r.key === "summon" ? {caster: actor?.uuid ?? null} : {})});
@@ -488,11 +497,19 @@ async function applyCore(item, casterName = "the caster") {
       // it stays, who commands it, its keeping roll) ride on the tokens, and a plain being of the book's kind can answer
       const r = o.summon ?? null;
       const plain = r ? `A plain ${SR.WHAT[r.what] ?? "being"} (the book's numbers)` : null;
-      const pick = o.actor ? o.actor : await choose("Who answers the summons?", [...(plain ? [["", plain]] : []), ...[...game.actors].filter(x => !x.getFlag(MOD, "summonBase"))
+      const auto = item.route === "auto" && !o.actor;
+      const pick = o.actor ? o.actor : auto ? "plain" : await choose("Who answers the summons?", [...(plain ? [["", plain]] : []), ...[...game.actors].filter(x => !x.getFlag(MOD, "summonBase"))
         .sort((x, y) => x.name.localeCompare(y.name)).map(x => [x.uuid, x.name])], v => v || "plain");
       if ( !pick ) return {note: `${o.label}: no one answers`};
       const src = pick === "plain" ? null : fromUuidSync(pick);
       if ( pick !== "plain" && !src ) return {note: `${o.label}: that actor is gone`};
+      if ( !item.at && auto ) {
+        // B4837: an NPC's summoning comes beside the NPC, one square off
+        const who = item.caster ? fromUuidSync(item.caster) : null;
+        const tok = who?.token?.object ?? who?.getActiveTokens?.()?.[0] ?? null;
+        const g = canvas?.grid?.size ?? 100;
+        if ( tok?.center ) item = {...item, at: {x: tok.center.x + g, y: tok.center.y}};
+      }
       if ( !item.at ) item = {...item, at: await pickPoint(`Click where ${src?.name ?? plain ?? "it"} appears.`)};
       const scene = canvas?.scene;
       if ( !scene || !item.at ) return {note: `${o.label}: no spot to place it`};
