@@ -305,6 +305,10 @@ export function attackPool(p) {
     add("Sheet bonuses", p.sheetDice || 0);
     addD("Sheet bonuses", p.sheetDiff || 0);
     addD("Shield", p.shieldDiff || 0);
+    // B3806: a scope, laser sight or smartgun cable fitted to this weapon; an unwaxed bowstring in the rain
+    add("Fittings", p.fitDice || 0);
+    addD("Fittings", p.fitDiff || 0);
+    addD("Wet bowstring", p.wetString || 0);
     return { dice: Math.max(0, dice), difficulty: diff, parts };
 }
 
@@ -455,10 +459,34 @@ const BLAST = /\b(grenade|dynamite|bomb|explosive|petard|molotov|rocket|c-?4|sem
 const HUSH = /\b(silenc\w*|suppress\w*)\b/i;
 export function fightNoise(w = {}) {
     const name = String(w?.name ?? "");
+    if (w?.silenced) return "quiet";
     if (BLAST.test(name)) return "loud";
     const gun = GUN.test(name) || (!!w?.ranged && !!w?.shots?.counted && !isCrossbow(name) && !/\b(bow|sling|dart|javelin|spear)\b/i.test(name));
     if (gun) return HUSH.test(name) ? "quiet" : "loud";
     return "quiet";
+}
+
+/**
+ * B3806: what the fittings on one weapon do to this attack. fit: WoDX Library's fitFor(); range: the range band;
+ * smartLink: a Smartgun Link is installed; wet: it is raining on the shooter; bow: the weapon is a bow.
+ * {fitDice, fitDiff, wetString, blindCancelled, silenced, noMinStr, notes}
+ */
+export function fittingsPlan(fit, { range = "short", smartLink = false, wet = false, bow = false, blind = false } = {}) {
+    const f = fit ?? {};
+    const notes = [];
+    const far = range === "double" || range === "triple";
+    const fitDice = far ? (Number(f.far) || 0) : 0;
+    const fitDiff = (Number(f.diff) || 0) + (smartLink ? (Number(f.smart) || 0) : 0);
+    if (fitDice) notes.push(`Scope: +${fitDice} dice beyond the listed range`);
+    if (fitDiff) notes.push(`Fittings: ${fitDiff} difficulty`);
+    const wetString = bow && wet && !f.wax ? 1 : 0;
+    if (wetString) notes.push("Rain slackens the unwaxed bowstring: +1 difficulty");
+    else if (bow && wet && f.wax) notes.push("The waxed bowstring holds in the rain");
+    const blindCancelled = !!(blind && f.light);
+    if (blindCancelled) notes.push("The weapon light shows the target: darkness does not count");
+    if (f.silenced) notes.push("Silenced: the shot is quiet");
+    if (f.noMinStr) notes.push("Spanned with a cranequin: no Strength needed");
+    return { fitDice, fitDiff, wetString, blindCancelled, silenced: !!f.silenced, noMinStr: !!f.noMinStr, notes };
 }
 
 export const isCrossbow = name => /crossbow|arbalest|arbalète|armbrust/i.test(String(name ?? ""));
