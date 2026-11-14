@@ -86,6 +86,10 @@ const unsetKey = path => {
 /* ------------------------------------------------------------------ */
 
 function registerSettings() {
+  game.settings.register(MOD, "chaseAuto", {
+    name: "Chases run by themselves", hint: "A chase rolls a turn every few seconds on its own, and ends by itself: a catch opens a fight through WoDX Combat, and a quarry who gets away is gone. An NPC who flees a fight with foes close behind starts one. The Storyteller's window can still roll, undo and end it.",
+    scope: "world", config: true, type: Boolean, default: true
+  });
   game.settings.register(MOD, "doorClick", {
     name: "Clicking a locked door opens Interact", hint: "A player who clicks a locked door with a token selected gets the Interact window for that door. The Storyteller does the same with Shift held.",
     scope: "world", config: true, type: Boolean, default: true
@@ -1186,6 +1190,7 @@ export async function onTokenMoved(tokDoc, changes = {}, {userId = null, held = 
   const cards = tr?.msg ? [tr.msg] : [];
   if ( setting("hazards") !== false ) {
     for ( const {doc, o} of hazardsOnPath(scene, from, to, {npc: !actor.hasPlayerOwner}) ) cards.push(await hazardCard(tokDoc, actor, doc, o, "enters"));
+    await fearOfFire(scene, tokDoc, actor, to).catch(e => console.warn(`${MOD} | red fear`, e));
   }
   if ( isDemonActor(actor) ) {
     for ( const doc of tilesOf(scene) ) {
@@ -1324,9 +1329,28 @@ export async function hazardOn(tokDoc, actor, o) {
     } else lines.push(`${cap(what)}: WoDX Combat is off, so soak and apply it by hand.`);
   }
   lines.push(...hit.notes);
+  // B4890: a vampire burned faces the Red Fear at once
+  if ( hit.fireSun && ch.profile === "vampire" ) { try { await game.modules.get("wodx-actions")?.api?.rotschreckAuto?.({actor, provocation: "burned"}); } catch (e) { console.warn(`${MOD} | red fear`, e); } }
   return {text: hit.text, lines, damageMsg, faces, diff: cr?.diff ?? 6};
 }
 const burning = new Set();
+// B4890: once a scene for each fire and each vampire (cleared when the scene changes)
+const feared = new Set();
+Hooks.on("canvasReady", () => feared.clear());
+async function fearOfFire(scene, tokDoc, actor, p) {
+  if ( (game.wodxCombat?.getProfile?.(actor) ?? "") !== "vampire" ) return;
+  const g = scene.grid?.size ?? 100, yards = Number(scene.grid?.distance) || 1;
+  for ( const doc of tilesOf(scene) ) {
+    const o = describeTile(doc);
+    if ( !o?.hazard || !o.live || !["fire", "brazier"].includes(o.kind) ) continue;
+    const r = rectOf(doc), dx = Math.max(r.x - p.x, 0, p.x - (r.x + r.w)), dy = Math.max(r.y - p.y, 0, p.y - (r.y + r.h));
+    if ( Math.hypot(dx, dy) / g * yards > R.FEAR_YARDS ) continue;
+    const key = `${scene.id}:${doc.id}:${actor.id}`;
+    if ( feared.has(key) ) continue;
+    feared.add(key);
+    await game.modules.get("wodx-actions")?.api?.rotschreckAuto?.({actor, provocation: R.FEAR_OF_FIRE[o.size] ?? "torch", why: `Close to ${o.title || "a fire"}`});
+  }
+}
 /** Active GM: a card for a hazard hurting a character, with Undo. why: "enters" or "turn". */
 export async function hazardCard(tokDoc, actor, doc, o, why = "enters") {
   const key = `${doc.id}:${tokDoc.uuid}`;
@@ -1432,6 +1456,18 @@ export function peopleIn(target) {
   return (scene?.tokens?.contents ?? [...(scene?.tokens?.values?.() ?? [])]).filter(t => !t.hidden && !hasStatus(t.actor, "invisible") && inRect(centerOf(t, scene), r))
     .map(t => ({name: t.name ?? t.actor?.name ?? "Someone", uuid: t.uuid, lasombra: /lasombra/i.test(String(t.actor?.system?.clan ?? ""))}));
 }
+/** B4889: with no area tied, a look shows who can be seen from the tile's own spot, out to thirty squares. */
+export function inView(doc, tokDoc = null) {
+  const scene = doc?.parent;
+  if ( !scene ) return [];
+  const g = scene.grid?.size ?? 100, r = rectOf(doc), c = {x: r.x + r.w / 2, y: r.y + r.h / 2};
+  const sight = CONFIG.Canvas?.polygonBackends?.sight;
+  return (scene.tokens?.contents ?? []).filter(t => t.id !== tokDoc?.id && !t.hidden && !hasStatus(t.actor, "invisible")).filter(t => {
+    const p = centerOf(t, scene);
+    if ( Math.hypot(p.x - c.x, p.y - c.y) > 30 * g ) return false;
+    try { return !sight?.testCollision?.(c, p, {type: "sight", mode: "any"}); } catch (e) { return true; }
+  }).map(t => ({name: t.name ?? t.actor?.name ?? "Someone", uuid: t.uuid, lasombra: /lasombra/i.test(String(t.actor?.system?.clan ?? ""))}));
+}
 /** A map event for other modules: the same shape as a card's (states.mjs), with what this result adds. */
 /** Map events held while a result is applied: doc id -> the calls waiting for who heard. */
 const heldEvents = new Map();
@@ -1451,6 +1487,17 @@ export function mapEvent(kind, {scene, doc, tokDoc, noise = "silent", object = "
   try { objectName = doc ? R.nameOf(describeTile(doc) ?? {}) || null : null; } catch (e) { objectName = null; }
   return publish(kind, {scene, doc, tokDoc, noise, heard, supernatural, objectName, objectKind: object || null, extra});
 }
+/** B4883: who picks up a call at a tied place: someone the Storyteller plays standing in it, else the nearest within eight squares. */
+function answerer(target) {
+  const scene = target?.parent;
+  if ( !scene ) return null;
+  const r = rectOf(target), g = scene.grid?.size ?? 100, c = {x: r.x + r.w / 2, y: r.y + r.h / 2};
+  const npcs = (scene.tokens?.contents ?? []).filter(t => t.actor && !t.actor.hasPlayerOwner && !t.hidden && !hasStatus(t.actor, "dead"));
+  const inside = npcs.find(t => inRect(centerOf(t, scene), r));
+  if ( inside ) return inside;
+  const d = t => { const p = centerOf(t, scene); return Math.hypot(p.x - c.x, p.y - c.y) / g; };
+  return npcs.filter(t => d(t) <= 8).sort((a, b) => d(a) - d(b))[0] ?? null;
+}
 /** Active GM: a watch point's result. Whispers what a look shows; tells the Storyteller who a call reaches. */
 async function watchReport(o, doc, out, op, author, actor, tokDoc) {
   const lines = [];
@@ -1458,10 +1505,9 @@ async function watchReport(o, doc, out, op, author, actor, tokDoc) {
   const target = await watchTarget(o, doc);
   const to = [...new Set([author?.id, ...gmIds()].filter(Boolean))];
   if ( op.id === "watch" ) {
-    const people = peopleIn(target);
+    const people = target ? peopleIn(target) : inView(doc, tokDoc);
     const seen = R.watchSees(o, people, out.watch ?? {successes: 0, botch: false});
-    const body = !target ? "<p>The Storyteller describes the view.</p>"
-      : out.watch?.botch ? "<p>Nothing stirs (the Storyteller may say otherwise).</p>"
+    const body = out.watch?.botch ? "<p>Nothing stirs.</p>"
       : seen.names.length ? `<p>${esc(listWords(seen.names))}.</p>` : `<p>${seen.count ? `${seen.count} ${seen.count === 1 ? "person" : "people"}, too far or too dim to make out.` : "Nobody."}</p>`;
     whisper = await ChatMessage.create({speaker: {alias: actor.name}, whisper: to, content: cardHtml({title: `${esc(actor.name)}: ${esc(R.nameOf(o))}`, body})});
     if ( seen.unreflected.length ) await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), content: cardHtml({title: "No reflection",
@@ -1469,10 +1515,15 @@ async function watchReport(o, doc, out, op, author, actor, tokDoc) {
     mapEvent("watch", {doc, tokDoc, object: o.kind, extra: {target: target?.uuid ?? "", seen: seen.count}});
   } else if ( out.calls ) {
     const where = target ? `${R.nameOf(describeTile(target) ?? {watch: true, kind: o.kind, title: ""})}${target.parent?.id !== doc.parent?.id ? ` on ${target.parent?.name ?? "another scene"}` : ""}` : "nobody";
-    lines.push(`The call reaches ${where}: the Storyteller plays the other end.`);
+    const pick = target ? answerer(target) : null;
+    const talked = pick && actor.hasPlayerOwner ? !!game.modules.get("wodx-npc")?.api?.talk?.openLine?.(tokDoc, pick, author?.isGM ? game.user.id : author?.id ?? game.user.id) : false;
+    lines.push(pick ? `The call reaches ${where}: ${pick.name} picks up.${talked ? "" : " The Storyteller plays the other end."}` : `The call reaches ${where}, and it rings with nobody to answer.`);
     mapEvent("call", {doc, tokDoc, noise: "quiet", object: o.kind, extra: {target: target?.uuid ?? ""}});
   } else if ( out.raises ) {
-    lines.push(out.raises === "help" ? "Help is called: the Storyteller decides who comes, and how soon." : "The alarm is raised.");
+    if ( out.raises === "help" ) {
+      const p = await game.modules.get("wodx-storyteller")?.api?.reach?.callHelp?.({scene: doc.parent, near: tokDoc, how: o.kind === "radio" ? "radio" : o.kind === "phone" || o.kind === "telephone" ? "phone" : "shout", who: actor.name}).catch(() => null);
+      lines.push(p ? `Help is called: ${p.words} come in about ${p.minutes} minutes.` : "Help is called: the Storyteller decides who comes, and how soon.");
+    } else lines.push("The alarm is raised.");
     mapEvent("alarm", {doc, tokDoc, noise: out.noise ?? "loud", object: o.kind, extra: {how: out.raises, target: target?.uuid ?? ""}});
   }
   return {whisper, lines};

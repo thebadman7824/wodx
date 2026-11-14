@@ -1131,6 +1131,20 @@ export async function rotschreck({ actor: a, provocation = "torch" } = {}) {
     });
 }
 
+/**
+ * B4890: the Red Fear rolled with no window, when a vampire is burned or comes near a fire (WoDX Interactables).
+ * provocation: an ROTSCHRECK_PROVOCATIONS key. Golconda and a frenzy already running hold it off, as in the window.
+ */
+export async function rotschreckAuto({ actor: a, provocation = "torch", why = "" } = {}) {
+    const actor = needActor(a);
+    if (!actor || !isVampire(actor) || flag(actor, "golconda") || actor.system?.conditions?.isfrenzy) return null;
+    let dawn = 0;
+    try { const at = game.modules.get("wodx-atmosphere"); dawn = at?.active ? Number(at.api?.dread?.rotschreck?.()) || 0 : 0; } catch (e) { dawn = 0; }
+    const p = R.ROTSCHRECK_PROVOCATIONS[provocation] ?? R.ROTSCHRECK_PROVOCATIONS.torch;
+    const diff = R.clampDifficulty(p.diff + dawn + DH.fireStep(actor));
+    return beastRoll(actor, { kind: "fear", diff, prov: why || p.label, wp: false, total: 0 });
+}
+
 async function beastRoll(actor, d, msg = null) {
     const v = virtues(actor), rd = road(actor), b = blood(actor);
     const fear = d.kind === "fear";
@@ -2976,7 +2990,7 @@ async function createMacros() {
 async function gainDerangement(actor, cause, why) {
     try { return await game.modules.get("wodx-chronicle")?.api?.derangements?.gain?.(actor, cause, why); } catch (e) { console.warn("WoDX Actions | derangement", e); return null; }
 }
-const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, endFrenzy, sin, daytime, torpor, hazard,
+const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, rotschreckAuto, endFrenzy, sin, daytime, torpor, hazard,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
     getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.90.0", effects: { powerPlan: EFX.powerPlan, planOf: EFX.planOf, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },

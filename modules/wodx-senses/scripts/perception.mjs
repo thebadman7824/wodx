@@ -23,8 +23,12 @@ export function registerPerceptionSettings() {
     name: "Scent trails for a wolf's nose", hint: "While my character is in Crinos, Hispo or Lupus, faint trails show where others walked in the last hour, as far as smell reaches.",
     scope: "client", config: true, type: Boolean, default: true, onChange: () => drawTrails()
   });
+  game.settings.register(MOD, "unseenAuto", {
+    name: "Noticing rolls itself", hint: "With the unseen on: when a player's character comes within sight of a hidden character, after either moves five squares, and at each turn of a fight, the noticing roll is made on its own. The token's HUD button still rolls it by hand.",
+    scope: "world", config: true, type: Boolean, default: true
+  });
   game.settings.register(MOD, "unseen", {
-    name: "The unseen show only to those who find them", hint: "A character hidden by Obfuscate, sneaking or the Invisible status, with no player of its own, shows only to the players whose characters found it. The Storyteller rolls for them from the token's HUD (Who sees through it?).",
+    name: "The unseen show only to those who find them", hint: "A character hidden by Obfuscate, sneaking or the Invisible status, with no player of its own, shows only to the players whose characters found it. The roll is made on its own as they come near (Noticing rolls itself), or from the token's HUD (Who sees through it?).",
     scope: "world", config: true, type: Boolean, default: true, onChange: () => refreshVisibility()
   });
 }
@@ -181,7 +185,7 @@ export function refreshVisibility() {
 }
 
 /** The Storyteller: roll for each player character on the scene to find a hidden token (WoDX NPC's notice()). */
-export async function whoSees(token) {
+export async function whoSees(token, {quiet = false, only = null} = {}) {
   if ( !game.user.isGM || !token?.actor ) return null;
   let RR = null;
   try { RR = await import("../../wodx-npc/scripts/routine-rules.mjs"); } catch (e) { RR = null; }
@@ -192,7 +196,7 @@ export async function whoSees(token) {
     sneaking: !!t.statuses?.has?.("wodx-sneaking") || !!token.document.flags?.["wodx-npc"]?.sneaking || t.statuses?.has?.(INVISIBLE()),
     obfuscate: t.statuses?.has?.("wodx-obfuscated") ? Math.max(1, H.powerDots(t, /^obfuscate$/i)) : 0};
   const book = (() => { try { return ["dark-ages", "long-night"].includes(game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id) ? "v20da" : "v20"; } catch (e) { return "v20da"; } })();
-  const watchers = (canvas.tokens?.placeables ?? []).filter(w => w.actor?.hasPlayerOwner && w.id !== token.id && !w.document.hidden);
+  const watchers = (canvas.tokens?.placeables ?? []).filter(w => w.actor?.hasPlayerOwner && w.id !== token.id && !w.document.hidden && (!only || only.includes(w.id)));
   // 0.8.0: how each one moves counts (WoDX Combat's stances): a watcher in the air sees better, one under the water
   // worse; a hider who crawls is quieter and harder to pick out
   const mv = (() => { try { return game.wodxCombat?.movement ?? null; } catch (e) { return null; } })();
@@ -212,7 +216,8 @@ export async function whoSees(token) {
   const after = P.seenAfter(before, results);
   await token.document.update({[`flags.${MOD}.seenBy`]: after});
   const lines = results.map(r => `<li><b>${H.esc(r.name)}</b>: ${r.noticed ? "finds them" : "does not"} (${H.esc(r.why)})</li>`).join("") || "<li>No player character on the scene.</li>";
-  await ChatMessage.create({whisper: H.gmIds(), speaker: {alias: "Senses"},
+  const fresh = results.some(x => x.noticed && !before.includes(x.actorId));
+  if ( !quiet || fresh ) await ChatMessage.create({whisper: H.gmIds(), speaker: {alias: "Senses"},
     content: `<div class="vta-card wsn"><h3>Who sees ${H.esc(token.name)}?</h3><ul>${lines}</ul><p class="wodx-quiet">Only those who found them see the token. Clear the list from the token's HUD.</p></div>`});
   for ( const r of results.filter(x => x.noticed && !before.includes(x.actorId)) ) {
     const users = game.users.filter(u => !u.isGM && game.actors.get(r.actorId)?.testUserPermission?.(u, "OWNER")).map(u => u.id);
@@ -220,6 +225,46 @@ export async function whoSees(token) {
   }
   return {results, seenBy: after};
 }
+/*
+ * B4891: the noticing rolls itself. When a player character comes within sight range of a hidden token, again after
+ * either moves five squares since the last roll for the pair, and once at each turn of a fight. Only someone who
+ * finds the token is told; the Storyteller's card comes only when someone new does.
+ */
+const SIGHT_SQUARES = 30, MOVE_SQUARES = 5;
+const lastRoll = new Map(); // "hider|watcher" -> {hx, hy, wx, wy}
+const isActiveGM = () => game.user?.isGM && game.users.activeGM?.id === game.user.id;
+const autoOn = () => setting("unseen") !== false && setting("unseenAuto") !== false;
+function pairsDue(movedTok) {
+  const scene = canvas?.scene, g = scene?.grid?.size ?? 100;
+  if ( !scene || movedTok?.document?.parent?.id !== scene.id ) return [];
+  const all = canvas.tokens?.placeables ?? [];
+  const hiders = concealed(movedTok) ? [movedTok] : all.filter(t => concealed(t));
+  const watchers = movedTok.actor?.hasPlayerOwner ? [movedTok] : all.filter(t => t.actor?.hasPlayerOwner && !t.document.hidden);
+  const out = new Map();
+  for ( const h of hiders ) for ( const w of watchers ) {
+    if ( h.id === w.id || seenBy(h).includes(w.actor?.id) ) continue;
+    if ( Math.hypot(h.center.x - w.center.x, h.center.y - w.center.y) > SIGHT_SQUARES * g ) continue;
+    const k = `${h.id}|${w.id}`, prev = lastRoll.get(k);
+    const far = (a, b) => Math.hypot(a.x - b.x, a.y - b.y) >= MOVE_SQUARES * g;
+    if ( prev && !far({x: prev.hx, y: prev.hy}, h.center) && !far({x: prev.wx, y: prev.wy}, w.center) ) continue;
+    lastRoll.set(k, {hx: h.center.x, hy: h.center.y, wx: w.center.x, wy: w.center.y});
+    if ( !out.has(h.id) ) out.set(h.id, {h, only: []});
+    out.get(h.id).only.push(w.id);
+  }
+  return [...out.values()];
+}
+let busy = false;
+async function autoNotice(doc, {all = false} = {}) {
+  if ( busy || !isActiveGM() || !autoOn() ) return;
+  busy = true;
+  try {
+    if ( all ) { for ( const h of (canvas.tokens?.placeables ?? []).filter(t => concealed(t)) ) await whoSees(h, {quiet: true}); return; }
+    const tok = canvas.tokens?.get(doc?.id);
+    if ( !tok ) return;
+    for ( const p of pairsDue(tok) ) await whoSees(p.h, {quiet: true, only: p.only});
+  } finally { busy = false; }
+}
+
 export async function forget(token) {
   if ( !game.user.isGM || !token ) return null;
   return token.document.update({[`flags.${MOD}.seenBy`]: []});
@@ -253,6 +298,7 @@ export function setupPerception(helpers) {
   for ( const h of ["updateActor", "updateItem", "createActiveEffect", "deleteActiveEffect", "updateActiveEffect", "controlToken", "canvasReady"] )
     Hooks.on(h, () => { refreshScreen(); if ( h === "controlToken" || h === "canvasReady" ) drawTrails(); });
   Hooks.on("updateToken", (doc, changes) => {
+    if ( "x" in (changes ?? {}) || "y" in (changes ?? {}) ) setTimeout(() => autoNotice(doc).catch(e => console.warn(`${MOD} | noticing`, e)), 300);
     record(doc, changes);
     drawTrails();
     if ( changes?.flags?.[MOD] ) refreshVisibility();
@@ -261,5 +307,7 @@ export function setupPerception(helpers) {
   Hooks.on("canvasReady", () => { layer = null; drawTrails(); });
   for ( const h of ["createActiveEffect", "deleteActiveEffect"] ) Hooks.on(h, () => refreshVisibility());
   Hooks.on("renderTokenHUD", onTokenHUD);
+  Hooks.on("updateCombat", (c, ch) => { if ( "turn" in (ch ?? {}) || "round" in (ch ?? {}) ) autoNotice(null, {all: true}).catch(e => console.warn(`${MOD} | noticing`, e)); });
+  Hooks.on("canvasReady", () => lastRoll.clear());
   return {refreshScreen, stateOf, drawTrails, trailSteps, trails, whoSees, forget, concealed, refreshVisibility, rules: P};
 }
