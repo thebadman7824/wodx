@@ -331,10 +331,13 @@ export function installStTools(helpers) {
   addAsks({"ask.st.toggle": toggle, "ask.st.eyes": eyes, "ask.st.press": press, "ask.st.items": items, "ask.st.give": give,
     "ask.st.check": check, "ask.st.hidden": hidden}, CLIENT);
   setStUi({toggleHtml, toolsHtml, open: openTool, toggle: onToggle});
-  Hooks.on("updateSetting", s => {
+  // A world setting saved for the first time is created, not updated, so both hooks count
+  const onSetting = s => {
     if ( s?.key === `${MOD}.st` ) refreshPanel();
     if ( s?.key === `${MOD}.on` || s?.key === `${MOD}.stOffer` ) { refreshPanel(); guard("The Lone Chronicle is off").catch(() => {}); }
-  });
+  };
+  Hooks.on("updateSetting", onSetting);
+  Hooks.on("createSetting", onSetting);
   if ( !game.user.isGM ) return;
   catchErrors();
   sat = Date.now();

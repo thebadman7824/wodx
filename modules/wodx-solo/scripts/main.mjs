@@ -23,6 +23,7 @@
  * player gets when the seat is empty.
  */
 import * as R from "./solo-rules.mjs";
+import {NEVER_AUTO} from "../../wodx-chronicle/scripts/approvals-rules.mjs";
 import {registerPanelSettings, installPanel, panelApi} from "./panel.mjs";
 import {registerStSettings, installStTools, stApi} from "./st-tools.mjs";
 
@@ -71,7 +72,8 @@ async function apply() {
   for ( const c of plan.changes ) await game.settings.set(c.mod, c.key, c.to);
   const ap = chron()?.approvals;
   const autoNow = foundry.utils.deepClone(read(CHRON, "autoApprove") ?? {});
-  const turnOn = R.autoPlan(ap?.types?.() ?? [], autoNow);
+  // A player's own ruling always waits, as Chronicle says (B3521)
+  const turnOn = R.autoPlan(ap?.types?.() ?? [], autoNow, NEVER_AUTO);
   for ( const t of turnOn ) await ap.setAuto(t, true);
   if ( fresh ) {
     await game.settings.set(MOD, "before", {at: Date.now(), settings: plan.changes.map(({mod, key, from, to}) => ({mod, key, from, to})), auto: autoNow});

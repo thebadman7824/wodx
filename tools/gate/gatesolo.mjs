@@ -116,7 +116,9 @@ async function setup() {
     const now = R.PRESET.map(p => ({key: `${p.mod}.${p.key}`, value: read(p.mod, p.key), to: p.to}));
     const wrong = now.filter(n => n.value !== undefined && n.value !== n.to), missing = now.filter(n => n.value === undefined).map(n => n.key);
     const auto = read(CHRON, "autoApprove") ?? {};
-    const notAuto = Q().types().map(t => t.type).filter(t => t !== "request" && auto[t] !== true);
+    // A player's own ruling always waits (Chronicle's NEVER_AUTO, B3521), so those are not expected on sight
+    const never = (await import("/modules/wodx-chronicle/scripts/approvals-rules.mjs").catch(() => ({}))).NEVER_AUTO ?? ["request"];
+    const notAuto = Q().types().map(t => t.type).filter(t => !never.includes(t) && auto[t] !== true);
     ok("2. the switch", S().isOn() && S().isSeat() && !wrong.length && !notAuto.length && !game.paused, {wrong, missing, notAuto, kinds: Q().types().length, paused: game.paused});
   });
 
@@ -191,7 +193,9 @@ async function player(ids) {
     if ( !opened ) { await S()?.panel?.open?.(); opened = await until(() => foundry.applications.instances?.get?.("wodx-solo-panel")?.rendered, 3000); }
     const el = foundry.applications.instances?.get?.("wodx-solo-panel")?.element;
     const buttons = [...(el?.querySelectorAll?.("button[data-action=act]") ?? [])].map(b => b.dataset.id);
-    ok("9b. the panel", opened && byItself && buttons.length === 5, {byItself, buttons, minVersion: atLeast(MOD, "0.2.0")});
+    // The main button (B2831) and the five under More
+    const want = ["next", ...(S()?.rules?.PANEL ?? []).map(b => b.id)];
+    ok("9b. the panel", opened && byItself && want.every(id => buttons.includes(id)) && buttons.length === want.length, {byItself, buttons, want, minVersion: atLeast(MOD, "0.2.0")});
   });
   await step("9c. pause from the panel", async () => {
     const was = game.paused;
