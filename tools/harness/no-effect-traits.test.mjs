@@ -108,3 +108,23 @@ test("part 2: the count of merits and flaws with no effect falls again", () => {
   const none = D.MERITS_FLAWS.filter(e => T.describe({entry: e}).includes("no automatic effect yet")).length;
   assert.ok(none <= 278, `${none} merits and flaws with no automatic effect`);
 });
+
+/* Part 3 (B3786-B3787): W20 core, printed pp. 472-485 */
+
+test("part 3: the W20 core traits are in the table and change rolls", () => {
+  const keys = new Set(D.MERITS_FLAWS.map(e => e.key));
+  for ( const o of [M.MORE_EFFECTS_3, M.MORE_PROMPTS_3] ) for ( const k of Object.keys(o) ) assert.ok(keys.has(k), k);
+  const dupe = view("mage", feat("Gullible", "flaw"));
+  assert.equal(T.sumEffects(T.effectsFor(dupe, {channel: "roll", tags: T.rollTags("manipulation", "subterfuge")})).dice, -3);
+  const wolf = view("lupine", feat("Moon-Bound"));
+  assert.deepEqual(T.ticksOf(wolf).map(t => t.key), ["own-moon-waxing", "own-moon-waning"]);
+  assert.equal(T.sumEffects(T.effectsFor(wolf, {channel: "roll", tags: ["melee", "own-moon-waxing"]})).dice, 1);
+  const pack = view("lupine", feat("Pack Mentality", "flaw"));
+  assert.equal(T.sumEffects(T.effectsFor(pack, {channel: "roll", tags: ["athletics", "without-pack"]})).diff, 2);
+  assert.ok(T.promptsOn(view("lupine", feat("Pierced Veil", "flaw")), "fight").some(c => c.key === "pierced-veil"));
+});
+
+test("part 3: the count of merits and flaws with no effect falls again", () => {
+  const none = D.MERITS_FLAWS.filter(e => T.describe({entry: e}).includes("no automatic effect yet")).length;
+  assert.ok(none <= 234, `${none} merits and flaws with no automatic effect`);
+});

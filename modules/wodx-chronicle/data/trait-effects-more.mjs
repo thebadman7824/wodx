@@ -209,3 +209,59 @@ export const MORE_PROMPTS_2 = {
   "character-creation-and-traits-boon": {on: ["social"], text: "someone owes the character a single favour"},
   "animalistic-favor": {on: ["fight"], text: "the animal feature's attack uses the standard pool"}
 };
+
+/* Part 3 (B3786-B3787): W20 core merits and flaws, printed pp. 472-485, read from the pages the PC pulled. */
+export const MORE_EFFECTS_3 = {
+  "alcohol-tolerance": [tick("drunk", "Shaking off drink or a natural drug (Stamina at 7)", {need: ["stamina"], diff: -1, note: "a Stamina roll at 7 throws off drink and natural drugs, not poisons or lab-made ones"})],
+  "double-jointed": [tick("flexible", "Wriggling free or squeezing through", {diff: -2, note: "-2 difficulty where suppleness matters"})],
+  "wolf-sight": [tick("night-or-motion", "Seeing at night, or spotting movement", {need: ["perception"], dice: 1, note: "+1 die on sight at night or for movement"})],
+  "physically-impressive": [{ch: "roll", tags: ["intimidation"], dice: 1, note: "+1 die to intimidate"}],
+  "animal-musk": [tick("indoors-crowd", "Indoors or in a crowd", {need: ["social"], diff: 2, note: "+2 difficulty on Social rolls indoors or in a crowd (wolves do not mind)"})],
+  "expert-driver": [{ch: "roll", tags: ["drive"], diff: -2, note: "-2 difficulty on driving"}],
+  "lightning-calculator": [tick("mental-math", "Mental arithmetic, odds or figures", {diff: -2, note: "-2 difficulty where reckoning in the head matters"})],
+  "mechanical-aptitude": [tick("machine-work", "Making, mending or changing a machine (not software)", {diff: -2, note: "-2 difficulty with moving-parts machines, not driving"})],
+  "intolerance": [tick("intolerance-focus", "The roll involves what the character cannot stand", {diff: 2, note: "+2 difficulty on rolls involving it"})],
+  "pack-mentality": [
+    tick("with-pack", "A group effort with the pack", {diff: -1, note: "-1 difficulty on group efforts with the pack"}),
+    tick("without-pack", "No packmate is with the character", {diff: 2, note: "+2 difficulty on everything without the pack"})],
+  "pitiable": [tick("playing-pity", "Playing on pity to win help (not to threaten)", {need: ["social"], dice: 1, note: "+1 die on Social rolls that work on pity"})],
+  "animal-magnetism": [tick("own-breed", "Charming, persuading or seducing one of the character's own breed", {need: ["social"], diff: -2, note: "-2 difficulty to attract or persuade the breed, not to threaten"})],
+  "camp-enmity": [tick("hostile-camp", "With the camp that dislikes the character", {need: ["social"], diff: 1, note: "+1 difficulty on Social rolls with that camp"})],
+  "gullible": [{ch: "roll", tags: ["subterfuge"], dice: -3, note: "-3 dice on guile, whether lying or seeing through lies"}],
+  "notoriety": [tick("own-sept", "With Garou of the character's sept, not their pack", {need: ["social"], dice: -2, note: "-2 dice on Social rolls with the sept"})],
+  "metis-child": [tick("knows-of-cub", "With Garou who know of the metis cub", {need: ["social"], dice: -2, note: "-2 dice on Social rolls with those who know"})],
+  "moon-bound": [
+    tick("own-moon-waxing", "Luna waxes in the character's auspice", {dice: 1, note: "+1 die on every roll while the auspice moon waxes"}),
+    tick("own-moon-waning", "Luna wanes in the character's auspice", {dice: -1, note: "-1 die on every roll while it wanes"})],
+  "natural-channel": [tick("stepping-sideways", "Stepping sideways", {diff: -1, note: "-1 difficulty to cross the Gauntlet"})],
+  "slip-sideways": [tick("stepping-sideways", "Stepping sideways", {diff: -1, note: "-1 difficulty on the Gnosis roll to cross"})]
+};
+
+export const MORE_PROMPTS_3 = {
+  "bad-taste": {on: ["feed", "fight"], text: "whoever bites the character spends a Willpower point or retches for the scene"},
+  "fair-glabro": {on: ["social"], text: "no Social penalty in Glabro form"},
+  "anosmia": {on: ["night"], text: "rolls on taste and smell fail outright, tracking by scent too; the Lupus Perception bonus is gone"},
+  "monochrome-vision": {on: ["night"], text: "sees no colour, only shades of grey"},
+  "no-partial-transformation": {on: ["fight"], text: "cannot take a partial form, only a whole one"},
+  "strict-carnivore": {on: ["feed", "night"], text: "only meat feeds the character"},
+  "double-jeopardy": {on: ["social"], text: "two metis deformities, not one"},
+  "seldom-sleeps": {on: ["night"], text: "an hour of sleep a night is enough, with no penalty for staying awake"},
+  "jack-of-all-trades": {on: ["social", "fight"], text: "no penalty for a Skill the character lacks; a missing Knowledge can be tried at +2 difficulty"},
+  "untamable": {on: ["social"], text: "immune to Dominate and to Roll Over, Obedience and Mastery"},
+  "absent-minded": {on: ["night"], text: "remembering any detail needs an Intelligence roll"},
+  "driving-goal": {on: ["night"], text: "the character must work toward the goal, or spend Willpower to set it aside a while"},
+  "ability-deficit": {on: ["night"], text: "five fewer points in one Ability group at creation, nothing at three dots or more"},
+  "spirit-magnet": {on: ["night"], text: "crossing into the Umbra draws curious spirits, and sometimes Banes"},
+  "danger-sense": {on: ["fight", "night"], text: "the Storyteller rolls Perception + Alertness in secret when danger is near and unseen"},
+  "immune-to-wyrm-emanations": {on: ["fight"], text: "Wyrm toxins still harm, but take no dice away; Banes cannot possess the character"},
+  "silver-tolerance": {on: ["fight"], text: "silver damage can be soaked, at difficulty 8"},
+  "banned-transformation": {on: ["fight"], text: "where the ban holds, changing form takes a Willpower point and a Willpower roll at 8"},
+  "foe-from-the-past": {on: ["night"], text: "the ancestor's enemy may come for the character"},
+  "forced-transformation": {on: ["fight", "night"], text: "the trigger forces the change unless a Willpower point is spent"},
+  "insane-ancestor": {on: ["night"], text: "calling on the ancestors may let the mad one take over: Ancestors at 6, any success and it rules the scene"},
+  "slip-sideways": {on: ["fight", "night"], text: "under stress near a mirror or water, Wits + Occult at 7 or slip into the Umbra"},
+  "mark-of-the-predator": {on: ["night"], text: "animals flee or challenge the character; no Animal Ken"},
+  "sign-of-the-wolf": {on: ["social"], text: "hunters who know the old signs may see what the character is"},
+  "pierced-veil": {on: ["fight"], text: "the Crinos form raises no Delirium in mortals"},
+  "lack-of-scent": {on: ["night"], text: "anyone tracking the character by scent rolls at +2 difficulty"}
+};
