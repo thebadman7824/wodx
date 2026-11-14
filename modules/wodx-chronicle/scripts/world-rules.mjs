@@ -105,7 +105,8 @@ export const WORLD_REGIONS = {
     industrial: "anglo 60, hispanic 20, chinese 5, irish 5, lakota 6, cheyenne 2, comanche 1, kiowa 1",
     modern: "anglo 66, hispanic 28, lakota 4, cheyenne 1, comanche 1"}, {...AM, lend: false}),
   "mexico": R("Mexico and Central America (Tenochtitlan, New Spain)", "americas", 19.4, -99.1, "highland-tropics", "mexican", {
-    medieval: "nahua 100", "early-modern": "nahua 55, spanish 45", industrial: "spanish 85, nahua 15"}),
+    // the Maya of Yucatán, the Petén and the Guatemalan highlands beside the Nahua (B3830)
+    medieval: "nahua 70, maya 30", "early-modern": "nahua 38, maya 17, spanish 45", industrial: "spanish 80, nahua 12, maya 8"}),
   "caribbean": R("The Caribbean (Havana, Kingston, Santo Domingo)", "americas", 23.1, -82.4, "caribbean", "caribbean", {
     "early-modern": "spanish 55, english 25, french 15, dutch 5", industrial: "spanish 50, english 30, french 20"}, {from: 1492}),
   "andes": R("The Andes (Cuzco, Lima, Potosí)", "americas", -13.5, -72.0, "andes", "andean", {
