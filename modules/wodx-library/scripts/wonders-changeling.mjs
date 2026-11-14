@@ -110,7 +110,7 @@ export const changelingKit = {
   },
   cautions(r) {
     const out = [];
-    if ( r.house ) out.push("Gathering is a story in the books; the roll here is a house reading (logged for review).");
+    if ( r.house ) out.push("Gathering is a story in the books; here it is one roll.");
     if ( r.kind === "craft" ) out.push("Failure loses a week; a botch can break a tool, spoil materials, cost the work done so far, or hurt someone.");
     if ( r.key === "forged-chimera" ) out.push("The chimera is made with simple traits from its points; the Storyteller can rework them and add Redes.");
     if ( r.kind === "treasure" ) out.push("The Storyteller decides when the components are found: one for each level of the Art. The Treasure manifests the Art even if its maker does not know it.");

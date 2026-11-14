@@ -28,7 +28,7 @@ export const hunterKit = {
   noun: "a blessing or a relic",
   setting: "craftHunter",
   settingName: "Blessings and relics (inquisitors)",
-  settingHint: "Inquisitors of the Dark Ages bless water, salt and weapons for a scene, and their orders enshrine relics. The books have no such rules; this is a house rule, always approved by the Storyteller.",
+  settingHint: "Inquisitors of the Dark Ages bless water, salt and weapons for a scene, and their orders enshrine relics. The books have no such rules, so the Storyteller approves each one.",
   settingDefault: true,
   ref: "Dark Ages: Inquisitor pp. 156 and 158; V20 Dark Ages True Faith pdf 393 to 396.",
   rows: () => H.ROWS,
@@ -61,7 +61,7 @@ export const hunterKit = {
     return out;
   },
   cautions(r) {
-    const out = ["The books give no rule for this; it is WoDX's house rule from Ben's pick, and the Storyteller approves each one."];
+    const out = ["The books give no rule for this, so the Storyteller approves each one."];
     if ( r.kind === "relic" ) out.push("V20 Dark Ages holds that Holy Artifacts arise on their own: the Storyteller judges whether the remains are truly holy before the rites begin.");
     return out;
   },
