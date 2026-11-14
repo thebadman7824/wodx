@@ -1740,6 +1740,22 @@
  ],
  "features": [
   {
+   "id": "tavern-1-taproom-f3",
+   "label": "Table (Taproom)",
+   "rect": [
+    60.324,
+    40.026,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 150.0
+  },
+  {
    "id": "tavern-1-kitchen-0",
    "label": "Oven (Kitchen)",
    "rect": [
@@ -1758,6 +1774,48 @@
     "bright": 1,
     "color": "#ff9a3c",
     "on": true
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "tavern-1-kitchen-f0",
+   "label": "Shelves (Kitchen)",
+   "rect": [
+    65.163,
+    46.348,
+    0.083,
+    0.27
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a cask of ale\n1 in 2: 1-3 jugs of wine\n1 in 2: 6-12 tankards\n1 in 3: a round of cheese\n1 in 3: a tally of who owes what",
+    "restock": "week"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "tavern-1-kitchen-f1",
+   "label": "Barrel (Kitchen)",
+   "rect": [
+    64.126,
+    44.787,
+    0.083,
+    0.173
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "material": "heavy",
+    "stock": "always: a cask of ale\n1 in 2: 1-3 jugs of wine\n1 in 2: 6-12 tankards\n1 in 3: a round of cheese\n1 in 3: a tally of who owes what",
+    "restock": "week"
    },
    "rotation": 150.0
   },
@@ -1816,6 +1874,27 @@
    "rotation": 210.0
   },
   {
+   "id": "chapel-1-chancel-f1",
+   "label": "Barrel (Chancel)",
+   "rect": [
+    69.039,
+    46.096,
+    0.585,
+    0.383
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "material": "heavy",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 300.0
+  },
+  {
    "id": "chapel-1-nave-f6",
    "label": "Chest (Nave)",
    "rect": [
@@ -1834,6 +1913,174 @@
    "rotation": 210.0
   },
   {
+   "id": "chapel-1-nave-f7",
+   "label": "Barrel (Nave)",
+   "rect": [
+    77.0,
+    41.852,
+    0.86,
+    0.86
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "material": "heavy",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 210.0
+  },
+  {
+   "id": "chapel-1-nave-f8",
+   "label": "Shelves (Nave)",
+   "rect": [
+    72.904,
+    39.438,
+    0.41,
+    0.18
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "church",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 300.0
+  },
+  {
+   "id": "chapel-1-nave-f9",
+   "label": "Barrel (Nave)",
+   "rect": [
+    75.565,
+    43.19,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "material": "heavy",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 300.0
+  },
+  {
+   "id": "chapel-1-nave-f11",
+   "label": "Barrel (Nave)",
+   "rect": [
+    72.467,
+    42.556,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "material": "heavy",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 300.0
+  },
+  {
+   "id": "chapel-1-nave-f13",
+   "label": "Barrel (Nave)",
+   "rect": [
+    74.84,
+    44.446,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "material": "heavy",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 210.0
+  },
+  {
+   "id": "chapel-1-nave-f15",
+   "label": "Barrel (Nave)",
+   "rect": [
+    75.382,
+    42.507,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "material": "heavy",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 210.0
+  },
+  {
+   "id": "chapel-1-nave-f17",
+   "label": "Barrel (Nave)",
+   "rect": [
+    75.315,
+    43.623,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "material": "heavy",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 210.0
+  },
+  {
+   "id": "chapel-1-vestry-f0",
+   "label": "Shelves (Vestry)",
+   "rect": [
+    70.099,
+    50.975,
+    1,
+    2
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "church",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 300.0
+  },
+  {
    "id": "chapel-1-vestry-f1",
    "label": "Chest (Vestry)",
    "rect": [
@@ -1848,6 +2095,48 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "church"
+   },
+   "rotation": 210.0
+  },
+  {
+   "id": "chapel-1-vestry-f2",
+   "label": "Barrel (Vestry)",
+   "rect": [
+    69.636,
+    50.089,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "material": "heavy",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 5: an alms box",
+    "restock": "month"
+   },
+   "rotation": 210.0
+  },
+  {
+   "id": "chapel-1-vestry-f3",
+   "label": "Barrel (Vestry)",
+   "rect": [
+    70.011,
+    49.439,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "church",
+    "material": "heavy",
+    "stock": "always: 4-12 candles\n1 in 2: a book of prayers\n1 in 3: a vestment\n1 in 3: a flask of oil\n1 in 5: an alms box",
+    "restock": "month"
    },
    "rotation": 210.0
   },
@@ -2118,6 +2407,147 @@
    "rotation": 150.0
   },
   {
+   "id": "storehouse-1-store-f0",
+   "label": "Crate (Store)",
+   "rect": [
+    53.037,
+    74.038,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "storehouse-1-store-f1",
+   "label": "Crate (Store)",
+   "rect": [
+    53.903,
+    73.538,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
+   },
+   "rotation": 240.0
+  },
+  {
+   "id": "storehouse-1-store-f2",
+   "label": "Crate (Store)",
+   "rect": [
+    52.537,
+    73.172,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
+   },
+   "rotation": 240.0
+  },
+  {
+   "id": "storehouse-1-store-f3",
+   "label": "Crate (Store)",
+   "rect": [
+    56.582,
+    70.097,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
+   },
+   "rotation": 240.0
+  },
+  {
+   "id": "storehouse-1-store-f4",
+   "label": "Crate (Store)",
+   "rect": [
+    56.082,
+    69.231,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
+   },
+   "rotation": 240.0
+  },
+  {
+   "id": "storehouse-1-store-f5",
+   "label": "Crate (Store)",
+   "rect": [
+    55.582,
+    68.365,
+    1,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
+   },
+   "rotation": 240.0
+  },
+  {
+   "id": "storehouse-1-store-f6",
+   "label": "Shelves (Store)",
+   "rect": [
+    50.841,
+    69.659,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "workshop",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
+   },
+   "rotation": 150.0
+  },
+  {
    "id": "storehouse-1-store-f7",
    "label": "Chest (Store)",
    "rect": [
@@ -2132,6 +2562,47 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "workshop"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "storehouse-1-store-f8",
+   "label": "Crate (Store)",
+   "rect": [
+    50.152,
+    70.399,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "workshop",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
+   },
+   "rotation": 240.0
+  },
+  {
+   "id": "storehouse-1-store-f9",
+   "label": "Shelves (Store)",
+   "rect": [
+    54.954,
+    72.643,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "workshop",
+    "stock": "always: 2-6 candles\nalways: a sack of dried peas\n1 in 2: 1-3 bars of soap\n1 in 3: a bolt of plain cloth\n1 in 4: a coil of rope",
+    "restock": "week"
    },
    "rotation": 150.0
   },
@@ -2208,6 +2679,43 @@
    "rotation": 150.0
   },
   {
+   "id": "cottage-3-cottage-f2",
+   "label": "Table (Cottage)",
+   "rect": [
+    49.651,
+    82.852,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-3-lean-to-f0",
+   "label": "Shelves (Lean-to)",
+   "rect": [
+    53.848,
+    80.347,
+    2,
+    1
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a loaf of bread\n1 in 2: a crock of salt\n1 in 2: 2-4 onions\n1 in 3: a candle stub\n1 in 3: a jar of honey",
+    "restock": "month"
+   },
+   "rotation": 60.0
+  },
+  {
    "id": "cottage-3-lean-to-f1",
    "label": "Chest (Lean-to)",
    "rect": [
@@ -2224,6 +2732,26 @@
     "fillPlace": "home"
    },
    "rotation": 150.0
+  },
+  {
+   "id": "cottage-3-lean-to-f2",
+   "label": "Crate (Lean-to)",
+   "rect": [
+    54.943,
+    82.817,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a sack of flour\n1 in 2: a barrel of salted cabbage\n1 in 2: 2-6 turnips\n1 in 3: a cask of small beer\n1 in 4: a coil of rope",
+    "restock": "month"
+   },
+   "rotation": 60.0
   },
   {
    "id": "cottage-3-lean-to-f3",
@@ -2334,6 +2862,59 @@
    "rotation": 150.0
   },
   {
+   "id": "cottage-4-cottage-f2",
+   "label": "Table (Cottage)",
+   "rect": [
+    55.582,
+    36.302,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-4-cottage-f4",
+   "label": "Table (Cottage)",
+   "rect": [
+    55.011,
+    36.973,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-4-lean-to-f0",
+   "label": "Shelves (Lean-to)",
+   "rect": [
+    57.466,
+    31.059,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a loaf of bread\n1 in 2: a crock of salt\n1 in 2: 2-4 onions\n1 in 3: a candle stub\n1 in 3: a jar of honey",
+    "restock": "month"
+   },
+   "rotation": 60.0
+  },
+  {
    "id": "cottage-4-lean-to-f1",
    "label": "Chest (Lean-to)",
    "rect": [
@@ -2350,6 +2931,47 @@
     "fillPlace": "home"
    },
    "rotation": 150.0
+  },
+  {
+   "id": "cottage-4-lean-to-f2",
+   "label": "Basket (Lean-to)",
+   "rect": [
+    58.941,
+    33.919,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a sack of flour\n1 in 2: a barrel of salted cabbage\n1 in 2: 2-6 turnips\n1 in 3: a cask of small beer\n1 in 4: a coil of rope",
+    "restock": "month"
+   },
+   "rotation": 150.0
+  },
+  {
+   "id": "cottage-4-lean-to-f3",
+   "label": "Shelves (Lean-to)",
+   "rect": [
+    58.627,
+    31.845,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a loaf of bread\n1 in 2: a crock of salt\n1 in 2: 2-4 onions\n1 in 3: a candle stub\n1 in 3: a jar of honey",
+    "restock": "month"
+   },
+   "rotation": 60.0
   },
   {
    "id": "cottage-5-cottage-0",
@@ -2438,6 +3060,22 @@
     "lock": "none",
     "items": "",
     "fillPlace": "home"
+   },
+   "rotation": 255.0
+  },
+  {
+   "id": "cottage-5-cottage-f12",
+   "label": "Table (Cottage)",
+   "rect": [
+    26.275,
+    49.086,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
    },
    "rotation": 255.0
   },
@@ -2622,6 +3260,22 @@
    "rotation": 345.0
   },
   {
+   "id": "cottage-7-cottage-f3",
+   "label": "Table (Cottage)",
+   "rect": [
+    33.096,
+    67.769,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 255.0
+  },
+  {
    "id": "cottage-7-cottage-f5",
    "label": "Chest (Cottage)",
    "rect": [
@@ -2640,6 +3294,22 @@
    "rotation": 345.0
   },
   {
+   "id": "cottage-7-cottage-f7",
+   "label": "Table (Cottage)",
+   "rect": [
+    33.979,
+    67.201,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 255.0
+  },
+  {
    "id": "cottage-7-cottage-f9",
    "label": "Chest (Cottage)",
    "rect": [
@@ -2654,6 +3324,27 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "home"
+   },
+   "rotation": 255.0
+  },
+  {
+   "id": "cottage-7-lean-to-f0",
+   "label": "Shelves (Lean-to)",
+   "rect": [
+    28.839,
+    66.348,
+    0.75,
+    1.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a loaf of bread\n1 in 2: a crock of salt\n1 in 2: 2-4 onions\n1 in 3: a candle stub\n1 in 3: a jar of honey",
+    "restock": "month"
    },
    "rotation": 255.0
   },
@@ -2730,6 +3421,22 @@
    "rotation": 345.0
   },
   {
+   "id": "cottage-8-cottage-f3",
+   "label": "Table (Cottage)",
+   "rect": [
+    24.276,
+    71.454,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 75.0
+  },
+  {
    "id": "cottage-8-cottage-f5",
    "label": "Chest (Cottage)",
    "rect": [
@@ -2744,6 +3451,43 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "home"
+   },
+   "rotation": 345.0
+  },
+  {
+   "id": "cottage-8-cottage-f6",
+   "label": "Table (Cottage)",
+   "rect": [
+    22.333,
+    73.039,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 75.0
+  },
+  {
+   "id": "cottage-8-lean-to-f0",
+   "label": "Shelves (Lean-to)",
+   "rect": [
+    21.842,
+    66.6,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a loaf of bread\n1 in 2: a crock of salt\n1 in 2: 2-4 onions\n1 in 3: a candle stub\n1 in 3: a jar of honey",
+    "restock": "month"
    },
    "rotation": 345.0
   },
@@ -2910,6 +3654,22 @@
    "rotation": 330.0
   },
   {
+   "id": "cottage-10-cottage-f3",
+   "label": "Table (Cottage)",
+   "rect": [
+    41.773,
+    32.663,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 330.0
+  },
+  {
    "id": "cottage-10-cottage-f5",
    "label": "Chest (Cottage)",
    "rect": [
@@ -2924,6 +3684,22 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "home"
+   },
+   "rotation": 60.0
+  },
+  {
+   "id": "cottage-10-cottage-f7",
+   "label": "Table (Cottage)",
+   "rect": [
+    43.726,
+    31.905,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
    },
    "rotation": 60.0
   },
@@ -3016,6 +3792,38 @@
     "fillPlace": "home"
    },
    "rotation": 330.0
+  },
+  {
+   "id": "cottage-11-cottage-f2",
+   "label": "Table (Cottage)",
+   "rect": [
+    35.719,
+    37.701,
+    0.75,
+    0.75
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 330.0
+  },
+  {
+   "id": "cottage-11-cottage-f4",
+   "label": "Table (Cottage)",
+   "rect": [
+    33.954,
+    36.485,
+    1,
+    1
+   ],
+   "flags": {
+    "cover": true,
+    "coverKind": "table",
+    "title": "The table"
+   },
+   "rotation": 60.0
   },
   {
    "id": "cottage-12-cottage-0",
@@ -3180,6 +3988,27 @@
    "rotation": 0.0
   },
   {
+   "id": "byre-house-1-byre-f0",
+   "label": "Shelves (Byre)",
+   "rect": [
+    23.014,
+    37.752,
+    1.5,
+    0.75
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a sack of grain\n1 in 2: a sickle\n1 in 2: a bale of hay\n1 in 3: a pitchfork\n1 in 3: a bucket of feed",
+    "restock": "month"
+   },
+   "rotation": 90.0
+  },
+  {
    "id": "byre-house-1-byre-f1",
    "label": "Chest (Byre)",
    "rect": [
@@ -3194,6 +4023,111 @@
     "lock": "cheap",
     "items": "",
     "fillPlace": "home"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "byre-house-1-byre-f2",
+   "label": "Barrel (Byre)",
+   "rect": [
+    25.836,
+    40.05,
+    0.443,
+    0.367
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "material": "heavy",
+    "stock": "always: a sack of grain\n1 in 2: a sickle\n1 in 2: a bale of hay\n1 in 3: a pitchfork\n1 in 3: a bucket of feed",
+    "restock": "month"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "byre-house-1-byre-f3",
+   "label": "Shelves (Byre)",
+   "rect": [
+    24.139,
+    34.777,
+    0.75,
+    0.27
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a sack of grain\n1 in 2: a sickle\n1 in 2: a bale of hay\n1 in 3: a pitchfork\n1 in 3: a bucket of feed",
+    "restock": "month"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "byre-house-1-byre-f4",
+   "label": "Shelves (Byre)",
+   "rect": [
+    23.149,
+    39.207,
+    0.75,
+    0.27
+   ],
+   "flags": {
+    "container": true,
+    "kind": "cabinet",
+    "lock": "none",
+    "ds": "open",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a sack of grain\n1 in 2: a sickle\n1 in 2: a bale of hay\n1 in 3: a pitchfork\n1 in 3: a bucket of feed",
+    "restock": "month"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "byre-house-1-byre-f5",
+   "label": "Sack (Byre)",
+   "rect": [
+    25.713,
+    34.773,
+    0.285,
+    0.292
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "ds": "open",
+    "stock": "always: a sack of grain\n1 in 2: a sickle\n1 in 2: a bale of hay\n1 in 3: a pitchfork\n1 in 3: a bucket of feed",
+    "restock": "month"
+   },
+   "rotation": 90.0
+  },
+  {
+   "id": "byre-house-1-byre-f6",
+   "label": "Sack (Byre)",
+   "rect": [
+    27.733,
+    40.128,
+    0.285,
+    0.292
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "ds": "open",
+    "stock": "always: a sack of grain\n1 in 2: a sickle\n1 in 2: a bale of hay\n1 in 3: a pitchfork\n1 in 3: a bucket of feed",
+    "restock": "month"
    },
    "rotation": 90.0
   },
@@ -3268,6 +4202,67 @@
     "fillPlace": "home"
    },
    "rotation": 270.0
+  },
+  {
+   "id": "byre-house-2-byre-f0",
+   "label": "Crate (Byre)",
+   "rect": [
+    70.578,
+    20.666,
+    0.427,
+    0.427
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a sack of grain\n1 in 2: a sickle\n1 in 2: a bale of hay\n1 in 3: a pitchfork\n1 in 3: a bucket of feed",
+    "restock": "month"
+   },
+   "rotation": 180.0
+  },
+  {
+   "id": "byre-house-2-byre-f1",
+   "label": "Barrel (Byre)",
+   "rect": [
+    68.366,
+    20.556,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "material": "heavy",
+    "stock": "always: a sack of grain\n1 in 2: a sickle\n1 in 2: a bale of hay\n1 in 3: a pitchfork\n1 in 3: a bucket of feed",
+    "restock": "month"
+   },
+   "rotation": 270.0
+  },
+  {
+   "id": "byre-house-2-byre-f3",
+   "label": "Crate (Byre)",
+   "rect": [
+    68.366,
+    19.416,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "stock": "always: a sack of grain\n1 in 2: a sickle\n1 in 2: a bale of hay\n1 in 3: a pitchfork\n1 in 3: a bucket of feed",
+    "restock": "month"
+   },
+   "rotation": 180.0
   },
   {
    "id": "byre-house-3-living-room-0",
@@ -3358,6 +4353,48 @@
     "fillPlace": "home"
    },
    "rotation": 0.0
+  },
+  {
+   "id": "byre-house-3-byre-f1",
+   "label": "Sack (Byre)",
+   "rect": [
+    86.828,
+    6.193,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "ds": "open",
+    "stock": "always: a sack of grain\n1 in 2: a sickle\n1 in 2: a bale of hay\n1 in 3: a pitchfork\n1 in 3: a bucket of feed",
+    "restock": "month"
+   },
+   "rotation": 0.0
+  },
+  {
+   "id": "byre-house-3-byre-f3",
+   "label": "Sack (Byre)",
+   "rect": [
+    88.968,
+    6.303,
+    0.5,
+    0.5
+   ],
+   "flags": {
+    "container": true,
+    "kind": "box",
+    "lock": "none",
+    "items": "",
+    "fillPlace": "home",
+    "ds": "open",
+    "stock": "always: a sack of grain\n1 in 2: a sickle\n1 in 2: a bale of hay\n1 in 3: a pitchfork\n1 in 3: a bucket of feed",
+    "restock": "month"
+   },
+   "rotation": 90.0
   },
   {
    "id": "well",

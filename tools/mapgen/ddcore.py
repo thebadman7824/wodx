@@ -6,6 +6,7 @@ Call init(seed, asset list) first: it sets the one random generator every step d
 the same map.
 """
 import json, math, random, re
+import stock as STOCK
 
 CELL = 256                    # Dungeondraft pixels per grid square
 SAMPLE = "/mnt/project-files/maps-ref/scripts/sample-walls-cottage inside.dungeondraft_map"
@@ -803,7 +804,16 @@ DRESSED = {   # furnishing pieces that become WoDX Interactables things on Adopt
     "chest": ("Chest", {"container": True, "kind": "chest", "lock": "cheap", "items": "", "fillPlace": "home"}),
     "cupboard": ("Cupboard", {"container": True, "kind": "cabinet", "lock": "none", "items": "", "fillPlace": "home"}),   # one kind of thing each
     "bed": ("Bed", {"hide": True, "hideKind": "bed", "title": "Under the bed"}),
+    # B4670: shelves, desks and barrels hold the building's goods (stock.py); open shelves and a sack have no lid
+    "shelf": ("Shelves", {"container": True, "kind": "cabinet", "lock": "none", "ds": "open", "items": "", "fillPlace": "home"}),
+    "desk": ("Desk", {"container": True, "kind": "drawers", "lock": "none", "items": "", "fillPlace": "home"}),
+    "store": ("Barrel", {"container": True, "kind": "box", "lock": "none", "items": "", "fillPlace": "home"}),
+    # B4671: tables and counters are cover against shots; a table can be tipped over for better cover
+    "table": ("Table", {"cover": True, "coverKind": "table", "title": "The table"}),
+    "counter": ("Counter", {"cover": True, "coverKind": "counter", "title": "The counter"}),
 }
+STORE_LABEL = [(r"Barrel|Keg|Cask", "Barrel", "heavy"), (r"Crate|Box|Pallet", "Crate", None), (r"Sack|Bag", "Sack", None),
+               (r"Basket", "Basket", None)]
 
 def opening_entries(key, name, openings, inside):
     """Sidecar openings for one building. openings: (kind, x, y, along) in map cells; inside: a point inside."""
@@ -816,6 +826,14 @@ def opening_entries(key, name, openings, inside):
                     "barInside": kind in BARRED_INSIDE, "flags": dict(OPENING_FLAGS[kind])})
     return out
 
+STOCKED = {"shelf", "desk", "store"}
+
+def _slug(name):
+    """A room's name as an id part: plain letters only (a café's id must still be a WoDX id)."""
+    import unicodedata
+    plain = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
+    return re.sub(r"[^a-z0-9._-]", "", plain.lower().replace(" ", "-"))
+
 def feature_entries(prefix, room, fill="home"):
     """Sidecar features (chests, beds, hay, ovens...) for one furnished room. prefix: an id prefix, "" for none."""
     out = []
@@ -824,18 +842,30 @@ def feature_entries(prefix, room, fill="home"):
         if not rule: continue
         flags = dict(rule[2])
         if flags.get("container"): flags["fillPlace"] = fill
-        f = {"id": f"{prefix}{room.name.lower().replace(' ', '-').replace(chr(39), '')}-{i}", "label": f"{rule[1]} ({room.name})",
+        f = {"id": f"{prefix}{_slug(room.name)}-{i}", "label": f"{rule[1]} ({room.name})",
              "rect": [round(it["x"], 3), round(it["y"], 3), round(it["w"], 3), round(it["h"], 3)], "flags": flags}
         if flags.get("light"): f["light"] = {"dim": 3, "bright": 1, "color": "#ff9a3c", "on": True}
         out.append(f)
     # the furnishing's own pieces (furnishing.py): every chest, cupboard, wardrobe and bed it set down can be searched,
     # opened or hidden in like the building type's own (ids "<room>-f<n>", so the type's own ids never move)
     for i, it in enumerate(d for d in getattr(room, "dressing", []) if d.get("layer", 100) == 100):
-        rule = DRESSED.get(it.get("piece"))
+        piece = it.get("piece")
+        rule = DRESSED.get(piece)
         if not rule: continue
         label, flags = rule[0], dict(rule[1])
+        if piece == "store":
+            hit = next((t for t in STORE_LABEL if re.search(t[0], it["asset"], re.I)), None)
+            if not hit: continue                       # a bucket or a pot is no store
+            label = hit[1]
+            if hit[2]: flags["material"] = hit[2]
+            if label == "Sack": flags["ds"] = "open"
+        if piece == "table" and re.search(r"Bar|Counter|Altar", it["asset"], re.I): continue
         if flags.get("container"): flags["fillPlace"] = fill
-        out.append({"id": f"{prefix}{room.name.lower().replace(' ', '-').replace(chr(39), '')}-f{i}", "label": f"{label} ({room.name})",
+        if piece in STOCKED:
+            ctx = getattr(room, "ctx", None) or {}
+            restock, text = STOCK.stock_for(piece, ctx.get("trade", ""), ctx.get("year"), ctx.get("region", ""))
+            if text: flags.update(stock=text, restock=restock)
+        out.append({"id": f"{prefix}{_slug(room.name)}-f{i}", "label": f"{label} ({room.name})",
                     "rect": [round(it["x"], 3), round(it["y"], 3), round(it["w"], 3), round(it["h"], 3)], "flags": flags})
     return out
 
