@@ -119,3 +119,28 @@ test("threads: the age floor keeps romance away from anyone under 18", () => {
   assert.equal(T.ageSafe(card, ["a", "b"], a => a !== "b"), false);
   assert.equal(T.ageSafe({tags: []}, ["b"], () => false), true);
 });
+
+test("threads: the deck has about 150 cards, a unique hook for every world region, and doors for every line", async () => {
+  const {CARDS} = await import(pathToFileURL(join(root, "modules/wodx-storyteller/data/threads-cards.mjs")));
+  const W = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs")));
+  const deck = CARDS.map(T.normCard);
+  assert.ok(deck.length >= 150, `${deck.length} cards`);
+  assert.equal(new Set(deck.map(c => c.key)).size, deck.length, "keys are unique");
+  for ( const c of deck ) {
+    assert.ok(c.needs.length && c.needs.every(k => S.KINDS.includes(k)), `${c.key} answers known signals`);
+    assert.ok(Object.keys(c.beneath).length && c.steps.length && c.endings.length, `${c.key} has doors, steps and endings`);
+  }
+  for ( const [rid, r] of Object.entries(W.WORLD_REGIONS) ) {
+    const own = deck.filter(c => c.role === "anchor" && c.regions.includes(rid) && !c.regions.includes("*"));
+    assert.ok(own.length, `${rid} has its own hook`);
+    const year = Math.max(1197, Number(r.from) || 0);
+    const sig = {key: `t:${rid}`, kind: own[0].needs[0], region: rid, weight: 3, at: 0};
+    const st = T.weave({board: [sig], cards: CARDS, state: {}, ctx: {year, region: rid, lines: []}, now: 0, rand: () => 0});
+    assert.ok(st, `${rid} weaves a storyline in ${year}`);
+  }
+  for ( const l of T.LINES ) assert.ok(deck.some(c => c.role === "twist" && c.beneath[l]), `${l} has a door`);
+  const demon = deck.filter(c => c.key.startsWith("door-demon"));
+  assert.ok(demon.every(c => !T.fits(c, {year: 1500, lines: ["demon"]}).ok), "no Demon door before 1999");
+  const anchors = deck.filter(c => c.role === "anchor");
+  assert.ok(anchors.every(a => deck.some(t => t.role === "twist" && T.shares(a, t))), "every anchor has a twist that can join it");
+});
