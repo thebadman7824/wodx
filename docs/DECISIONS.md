@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4860
+Next free block: B4910
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -232,6 +232,7 @@ Next free block: B4860
 | B4800-B4809 | Storyteller tools for the lone player: add experience (used B4800-B4806) | Solo |
 | B4810-B4819 | Rothenstein Rebuilt: Ways laid by the builder, old exits and doors to the places inside (used B4810-B4813) | Storyteller |
 | B4850-B4859 | Rothenstein Rebuilt: book one's twist web (six chains, locks, one twist a week) (used B4850-B4853) | Chronicle |
+| B4900-B4909 | Sami names (used B4900-B4902) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7430,3 +7431,18 @@ Reverse: drop the chapter check in whyNot.
 WoDX Chronicle. Desk pick pl10: when one twist of a pair is revealed, its partner can still be used but keeps a different heart, and the card and the table say which. A twist with two hearts (22, 24) asks which one at the reveal. Taking a reveal back clears it, and the week then counts from the reveal before.
 
 Reverse: none needed; the notes only advise.
+
+## B4900. Scandinavia holds the Sami beside the Norse (2026-11-14)
+WoDX Creation and Chronicle. Scandinavia was all Norse; the Sami of the north are now 6 in 100 in the medieval and early-modern mix, 4 in the industrial age and 3 today. The Kola Sami in the Russian mix wait. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back {medieval: "norse 100"} for scandinavia in world-rules.mjs and drop sami from people-world.mjs.
+
+## B4901. The names (2026-11-14)
+WoDX Creation. Before 1800 the Sami forms of the church names in the mission and tax rolls from the 16th century (the older own names are not recorded well enough to list), given alone; from 1800 the given names of the 19th and 20th centuries. Fewer than 300 names.
+
+Reverse: edit the sami entry in data/people-world.mjs.
+
+## B4902. Family names from 1800 (2026-11-14)
+WoDX Creation. Family names (Somby, Hætta, Turi, Valkeapää) came with the Norwegian, Swedish and Finnish rolls in the 18th and 19th centuries; WoDX gives them from 1800.
+
+Reverse: give the sami entry an old family list.

@@ -38,7 +38,9 @@ export const WORLD_REGIONS = {
     medieval: "italian 95, greek 2, jewish 3", "early-modern": "italian 97, jewish 3", modern: "italian 100"}, EU),
   "low-countries": R("The Low Countries (Flanders, Brabant, Holland)", "europe", 52.4, 4.9, "maritime-europe", "dutch", {
     medieval: "dutch 88, french 10, german 2", "early-modern": "dutch 85, french 10, sephardi 3, jewish 2", modern: "dutch 90, french 6, turkish 2, arabic 2"}, EU),
-  "scandinavia": R("Scandinavia (Denmark, Norway, Sweden, Iceland)", "europe", 59.3, 18.1, "northern-europe", "nordic", {medieval: "norse 100"}, EU),
+  "scandinavia": R("Scandinavia (Denmark, Norway, Sweden, Iceland)", "europe", 59.3, 18.1, "northern-europe", "nordic", {
+    // The Sami of the north beside the Norse (B4900)
+    medieval: "norse 94, sami 6", industrial: "norse 96, sami 4", modern: "norse 97, sami 3"}, EU),
   "poland-baltic": R("Poland and the Baltic (Kraków, Danzig, Vilnius, Riga)", "europe", 52.2, 21.0, "central-europe", "polish", {
     medieval: "polish 75, german 15, jewish 10", "early-modern": "polish 72, german 10, jewish 14, russian 4",
     industrial: "polish 72, jewish 14, german 8, russian 6", modern: "polish 100"}, EU),

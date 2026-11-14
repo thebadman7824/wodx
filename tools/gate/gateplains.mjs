@@ -26,7 +26,8 @@
  *  18. Sephardi and Mizrahi Jews (B4730): Sefarad to 1492, then the Ottoman lands; Baghdad to the Maghreb
  *  19. the Khmer (B4740): Angkor at 1197, family name first in modern Cambodia
  *  20. Filipinos (B4750): the islands in the Malay world's mix, church names from 1565
- *  21. clean up
+ *  21. the Sami (B4900): Scandinavia's north, given names alone, family names after 1800
+ *  22. clean up
  * Result: Data/wodx-gate/gateplains-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -230,6 +231,15 @@ export async function run() {
       for ( const p of fi("modern", 8) ) if ( !p.family || p.name.includes("{") ) bad.push(`modern: ${p.name}`);
       G.ok("20. Filipinos in the islands; own names, then church and family names",
         med.includes("filipino") && !bad.length, {medieval: med, bad: bad.slice(0, 6), sample: fi("medieval", 4).map(p => p.name)});
+    });
+    await G.step("21. the Sami", async () => {
+      const med = results({era: "medieval", culture: "scandinavia"}, "people.origin"), bad = [];
+      const sa = (era, n) => Array.from({length: n}, (_, i) => R.nameOf({rand: gen().random(`gateplains:sa:${era}`, i),
+        tables: gen().lookup({...gen().context(), era, culture: "scandinavia"}), origin: "sami", sex: i % 2 ? "female" : "male"}));
+      for ( const p of sa("medieval", 12) ) if ( p.family || p.name.includes("{") ) bad.push(`medieval: ${p.name}`);
+      for ( const p of sa("modern", 8) ) if ( !p.family || p.name.includes("{") ) bad.push(`modern: ${p.name}`);
+      G.ok("21. the Sami beside the Norse; given names, then family names",
+        med.includes("sami") && med.includes("norse") && !bad.length, {medieval: med, bad: bad.slice(0, 6), sample: sa("medieval", 4).map(p => p.name)});
     });
   } catch (e) {
     G.ok("error", false, {error: e.message});

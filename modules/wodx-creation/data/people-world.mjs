@@ -76,6 +76,14 @@ const P = {
     m: "Jan, Pieter, Willem, Dirk, Hendrik, Cornelis, Gerrit, Jacob, Klaas, Adriaan, Floris, Arnout, Johannes, Maarten, Bram, Joost, Ruben, Thijs",
     f: "Maria, Anna, Johanna, Cornelia, Elisabeth, Geertruida, Margaretha, Aleid, Machteld, Katrijn, Neeltje, Trijntje, Hendrika, Wilhelmina, Sanne, Lotte",
     fam: "de Jong, Jansen, de Vries, van den Berg, van Dijk, Bakker, Janssen, Visser, Smit, Meijer, de Boer, Mulder, de Groot, Bos, Vos, Peters, Hendriks, van Leeuwen, Dekker, Brouwer"},
+  // The Sami of Sápmi, the north of Norway, Sweden and Finland and the Kola (B4900): Sami forms of the church names the
+  // missions and the tax rolls recorded from the 16th century, then the given and family names of the 19th and 20th
+  sami: {
+    m: {old: "Ánde, Ánte, Áslat, Biehtar, Máhtte, Niillas, Jovnna, Heaika, Mihkkal, Ovllá, Isak, Piera, Juhán, Lásse, Sámmol, Jon, Ole, Mihkkel, Ivvár, Ádjá, Oula",
+      new: "Nils, Per, Aslak, Johan, Mikkel, Anders, Isak, Ole, Lars, Jon, Mattis, Ante, Niillas, Áilu, Sven, Mons, Nils-Aslak, Hans, Thomas, Jovnna, Máhtte, Ánde"},
+    f: {old: "Elle, Biret, Risten, Ingá, Máret, Gáren, Ánne, Sára, Márjá, Káddja, Siri, Ellen, Kirsten, Elsá, Bigge, Gunnel",
+      new: "Elle, Sara, Inga, Karen, Maret, Biret, Ellen, Anna, Kristina, Elsa, Ristin, Ánná, Sofia, Marja, Máret, Risten, Mari, Áile"},
+    fam: {new: "Somby, Hætta, Gaup, Eira, Sara, Utsi, Valkeapää, Kuoljok, Labba, Turi, Bals, Buljo, Bongo, Kemi, Mienna, Partapuoli, Sarri, Siri, Skum, Tuolja, Aikio, Magga, Oskal, Balto, Logje, Marainen, Nutti, Pittja, Kitti, Lukkari, Näkkäläjärvi, Länsman, Persen, Gaino, Triumf, Renberg, Laula, Bær"}},
   norse: {
     m: {old: "Erik, Olaf, Harald, Sigurd, Knut, Magnus, Håkon, Sven, Gunnar, Bjørn, Ragnvald, Torstein, Eystein, Ivar, Halvdan, Arne, Leif, Ulf",
       new: "Erik, Karl, Lars, Anders, Johan, Nils, Per, Olof, Gustav, Sven, Axel, Oskar, Henrik, Mikael, Stefan, Jonas, Magnus, Fredrik"},

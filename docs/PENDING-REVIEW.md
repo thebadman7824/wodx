@@ -1404,3 +1404,4 @@ Ben approved everything that was waiting for review ("Approved on all pending re
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
 | 2026-11-14 | How much experience the Storyteller tools give at once (B4806) | A whole number from 1 to 100 per press, as a normal award through WoDX Creation | Change XP_MAX in solo-rules.mjs |
+| 2026-11-14 | Sami names (B4900 to B4902) | Scandinavia holds the Sami beside the Norse: 6 in 100 medieval, 4 industrial, 3 today; Sami church-name forms given alone before 1800, family names after; the Kola Sami in Russia later | Edit the sami entry in data/people-world.mjs or the scandinavia mix in world-rules.mjs |
