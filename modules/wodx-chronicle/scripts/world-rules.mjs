@@ -62,7 +62,7 @@ export const WORLD_REGIONS = {
   "arabia": R("Arabia (Mecca, Medina, Sanaa, the Gulf)", "other", 21.4, 39.8, "hot-desert", "arab", {medieval: "arabic 97, mizrahi 3"}),
   // The Amazigh of the mountains and the desert edge beside the Arab towns (B4710)
   "maghreb": R("The Maghreb (Fez, Tunis, Tripoli)", "other", 34.0, -5.0, "mediterranean", "arab", {
-    medieval: "arabic 56, amazigh 40, mizrahi 4", "early-modern": "arabic 55, amazigh 39, sephardi 3, mizrahi 3",
+    medieval: "arabic 55, amazigh 39, mizrahi 4, tuareg 2", "early-modern": "arabic 54, amazigh 38, sephardi 3, mizrahi 3, tuareg 2",
     industrial: "arabic 54, amazigh 32, french 10, mizrahi 2, sephardi 2", modern: "arabic 62, amazigh 38"}),
   "persia": R("Persia (Isfahan, Shiraz, Tabriz)", "other", 32.7, 51.7, "inner-asia", "persian", {
     medieval: "persian 78, steppe 8, turkish 8, arabic 4, mizrahi 2", "early-modern": "persian 80, turkish 14, armenian 4, mizrahi 2"}),
@@ -91,8 +91,9 @@ export const WORLD_REGIONS = {
     industrial: "javanese 48, malay 31, filipino 12, chinese 5, dutch 4", modern: "javanese 50, malay 32, filipino 12, chinese 6"}),
   // Africa south of the Sahara
   "west-africa": R("West Africa (Mali, Songhai, the Akan and Yoruba kingdoms)", "other", 12.6, -8.0, "savanna", "west-african", {
-    medieval: "mande 60, yoruba 20, akan 15, arabic 5", "early-modern": "mande 40, yoruba 32, akan 25, arabic 3",
-    industrial: "mande 35, yoruba 35, akan 25, arabic 3, english 2", modern: "mande 35, yoruba 38, akan 25, arabic 2"}),
+    // The Tuareg of the Aïr and the Niger bend at the desert edge (B4950)
+    medieval: "mande 57, yoruba 20, akan 15, arabic 4, tuareg 4", "early-modern": "mande 38, yoruba 32, akan 25, arabic 2, tuareg 3",
+    industrial: "mande 33, yoruba 35, akan 25, arabic 2, english 2, tuareg 3", modern: "mande 33, yoruba 38, akan 25, arabic 1, tuareg 3"}),
   "east-africa": R("East Africa (the Swahili coast and Ethiopia)", "other", -6.2, 39.2, "east-african-coast", "east-african", {
     medieval: "swahili 55, amharic 30, arabic 15", industrial: "swahili 55, amharic 30, arabic 10, hindi 5"}),
   "southern-africa": R("Southern Africa (the Cape, the Highveld, Great Zimbabwe's heirs)", "other", -26.2, 28.0, "southern-africa", "southern-african", {

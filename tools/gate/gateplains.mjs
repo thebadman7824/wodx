@@ -27,7 +27,8 @@
  *  19. the Khmer (B4740): Angkor at 1197, family name first in modern Cambodia
  *  20. Filipinos (B4750): the islands in the Malay world's mix, church names from 1565
  *  21. the Sami (B4900): Scandinavia's north, given names alone, family names after 1800
- *  22. clean up
+ *  22. the Tuareg (B4950): the desert edge of West Africa and the Maghreb, ag and welet the father
+ *  23. clean up
  * Result: Data/wodx-gate/gateplains-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -240,6 +241,14 @@ export async function run() {
       for ( const p of sa("modern", 8) ) if ( !p.family || p.name.includes("{") ) bad.push(`modern: ${p.name}`);
       G.ok("21. the Sami beside the Norse; given names, then family names",
         med.includes("sami") && med.includes("norse") && !bad.length, {medieval: med, bad: bad.slice(0, 6), sample: sa("medieval", 4).map(p => p.name)});
+    });
+    await G.step("22. the Tuareg", async () => {
+      const wa = results({era: "medieval", culture: "west-africa"}, "people.origin"), bad = [];
+      const tu = (era, n) => Array.from({length: n}, (_, i) => R.nameOf({rand: gen().random(`gateplains:tu:${era}`, i),
+        tables: gen().lookup({...gen().context(), era, culture: "west-africa"}), origin: "tuareg", sex: i % 2 ? "female" : "male"}));
+      for ( const era of ["medieval", "modern"] ) for ( const p of tu(era, 10) ) if ( !/^(ag|welet) /.test(p.family ?? "") || p.name.includes("{") ) bad.push(`${era}: ${p.name}`);
+      G.ok("22. the Tuareg in West Africa; ag and welet the father's name",
+        wa.includes("tuareg") && !bad.length, {medieval: wa, bad: bad.slice(0, 6), sample: tu("medieval", 4).map(p => p.name)});
     });
   } catch (e) {
     G.ok("error", false, {error: e.message});
