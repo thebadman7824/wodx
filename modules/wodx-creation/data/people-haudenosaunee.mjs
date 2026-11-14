@@ -78,9 +78,10 @@ export const CLAN = /^of the (.+) clan$/;
  * The tables for a people named this way (B3122, and the Algonquian coast, B3510). Medieval: own names and the clan
  * (none where clans are not recorded). Early modern (1500 to 1799): about a third of men also carry a church name
  * before the own name, women by church name or as "A woman" of a clan or town (era groups are coarser than 1700).
- * Industrial and modern: a church given name and a family name. spec: {men, women, clans, towns, church, modern, family}.
+ * Industrial and modern: a church given name and a family name. spec: {men, women, clans, towns, church, modern, family,
+ * earlyChurch}. earlyChurch false (the Plains peoples, B3822): no church names before 1800, where the missions came late.
  */
-export function stagedTables(O, {men: menS, women: womenS, clans: clanS = null, towns = null, church = HN_CHURCH, modern = HN_MODERN, family}) {
+export function stagedTables(O, {men: menS, women: womenS, clans: clanS = null, towns = null, church = HN_CHURCH, modern = HN_MODERN, family, earlyChurch = true}) {
   const OLD = ["medieval"], EM = ["early-modern"], NEW = ["industrial"], MOD = ["modern"];
   const men = split(menS), women = split(womenS ?? "");
   const nativeM = tbl(`names.native.male.${O}`, `Names: ${O} own names, male`, men.map(text => ({text})));
@@ -90,15 +91,15 @@ export function stagedTables(O, {men: menS, women: womenS, clans: clanS = null, 
   const share = Math.max(3, women.length * 3);
   const woman = clanS ? [{text: "A woman", weight: share}]
     : split(towns ?? "").map((t, i, all) => ({text: `A woman of ${t}`, weight: Math.max(1, Math.round(share / all.length))}));
-  const churchM = split(church.male);
+  const churchM = earlyChurch ? split(church.male) : [];
   const out = [
     nativeM, nativeF,
     tbl(`names.male.${O}`, `Names: ${O}, male (medieval)`, men.map(text => ({text})), OLD),
     tbl(`names.female.${O}`, `Names: ${O}, female (medieval)`, [...women.map(text => ({text})), ...woman], OLD),
     tbl(`names.male.${O}`, `Names: ${O}, male (early modern)`,
-      [{text: `{names.native.male.${O}}`, weight: 2 * churchM.length}, ...churchM.map(c => ({text: `${c} {names.native.male.${O}}`}))], EM),
+      [{text: `{names.native.male.${O}}`, weight: Math.max(1, 2 * churchM.length)}, ...churchM.map(c => ({text: `${c} {names.native.male.${O}}`}))], EM),
     tbl(`names.female.${O}`, `Names: ${O}, female (early modern)`,
-      [...(women.length ? [{text: `{names.native.female.${O}}`, weight: women.length}] : []), ...woman, ...plain(church.female, 2)], EM),
+      [...(women.length ? [{text: `{names.native.female.${O}}`, weight: women.length}] : []), ...woman, ...(earlyChurch ? plain(church.female, 2) : [])], EM),
     tbl(`names.male.${O}`, `Names: ${O}, male (industrial)`, plain(church.male), NEW),
     tbl(`names.female.${O}`, `Names: ${O}, female (industrial)`, plain(church.female), NEW),
     tbl(`names.male.${O}`, `Names: ${O}, male (modern)`, plain(modern.male), MOD),

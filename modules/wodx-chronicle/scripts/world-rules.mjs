@@ -98,8 +98,12 @@ export const WORLD_REGIONS = {
     "early-modern": "english 48, haudenosaunee 20, lenape 8, new-england-algonquian 8, powhatan 4, dutch 8, french 4",
     industrial: "anglo 148, hispanic 37, haudenosaunee 10, lenape 2, new-england-algonquian 2, powhatan 1",
     modern: "anglo 375, hispanic 110, haudenosaunee 10, lenape 2, new-england-algonquian 2, powhatan 1"}, {culture: "american", lend: false}),
+  // The Plains peoples before the Spanish, then beside them, then a share (B3820); the East borrows none of it (lend: false)
   "north-america-west": R("The American West (the Plains, the Rockies, the Southwest)", "americas", 39.0, -105.0, "great-plains", "american", {
-    "early-modern": "spanish 100", industrial: "anglo 68, hispanic 22, chinese 5, irish 5", modern: "anglo 70, hispanic 30"}, {...AM, from: 1598}),
+    medieval: "lakota 45, cheyenne 20, comanche 20, kiowa 15",
+    "early-modern": "spanish 30, lakota 30, comanche 18, cheyenne 12, kiowa 10",
+    industrial: "anglo 60, hispanic 20, chinese 5, irish 5, lakota 6, cheyenne 2, comanche 1, kiowa 1",
+    modern: "anglo 66, hispanic 28, lakota 4, cheyenne 1, comanche 1"}, {...AM, lend: false}),
   "mexico": R("Mexico and Central America (Tenochtitlan, New Spain)", "americas", 19.4, -99.1, "highland-tropics", "mexican", {
     medieval: "nahua 100", "early-modern": "nahua 55, spanish 45", industrial: "spanish 85, nahua 15"}),
   "caribbean": R("The Caribbean (Havana, Kingston, Santo Domingo)", "americas", 23.1, -82.4, "caribbean", "caribbean", {
