@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.81.2 (The Croatan give themselves at Roanoke in 1589, not 1590, as Past Lives, Werewolf: The Wild West and Croatan Song date it; the tribe's signature features end the same year (timeline check, 14 November))
 - 0.81.1 (The Rothenstein saga keeps its calendar: each gap counts from when the step before fell due, not from when it was dealt, so a skip of several years deals every saga step it passes over, in order (B3672). Other story chains are unchanged)
 - 0.81.0 (The Rothenstein saga's steps can change the town: seventeen steps name a town change (a boom, war, siege, famine, plague, exile, expulsion or flood), and hook wodxSaga now carries it with the step's title, place and year (B3670))
 - 0.80.1 (The Rothenstein saga: api.pod.saga.current() gives the running book's step (the step dealt last, or the first one) and the next one with when it falls due, for the Storyteller's night draw (B3669))
