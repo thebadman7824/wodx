@@ -137,7 +137,7 @@ export function build(ctx) {
                 if (!bk) return { html: "", items: [] };
                 let html = `<div class="vta-sec"><b>${esc(bk.name)}</b>: ${esc(bk.fx)}</div>`, items = [];
                 if (got > 0 && EF.isOn()) {
-                    const pp = EF.planOf(actor, IB.blessingResults(bk, got, { source: `${IB.REF} p. ${bk.p}` }), got);
+                    const pp = EF.planOf(actor, IB.blessingResults(bk, got, { source: `${IB.REF} p. ${bk.p}` }), got, { name: bk.name, line: "Hunter (Inquisitor)" });
                     html += pp.html; items = pp.items.filter(x => x.route !== "off" && x.route !== "st");
                 }
                 return { html, items };
@@ -439,7 +439,7 @@ export function build(ctx) {
             body += `<div class="vta-note">${fd.mode === "ritual" ? `${esc(ritual?.name ?? "A ritual")}: at least 10 minutes, usually longer.` : `Casting time ${S.turns} turn${S.turns === 1 ? "" : "s"}.`}${S.overLimit ? " <b>An aspect is above the Path rating.</b>" : ""}</div><div class="wodx-quiet">Sorcerer (Revised) pp. 60–63, ${def.p}</div>`;
             let fxItems = [];
             if (ok && EF.isOn()) {
-                const pp = EF.planOf(actor, H.sorceryResults(key, { top: Math.max(...aspects), successes: s, need: S.need, rating, name: def.label, source: `Sorcerer p. ${def.p}` }), s);
+                const pp = EF.planOf(actor, H.sorceryResults(key, { top: Math.max(...aspects), successes: s, need: S.need, rating, name: def.label, source: `Sorcerer p. ${def.p}` }), s, { name: def.label, line: "Hunter (HH2/DA)" });
                 body += pp.html;
                 fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             }

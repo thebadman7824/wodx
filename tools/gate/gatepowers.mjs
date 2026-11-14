@@ -19,6 +19,13 @@
  *  12. A Dark Ages cantrip with [veil] on its sheet line puts Veil on the card when it takes (B3752)
  *  13. Cast a ritual: a self ward from the era's ritual list puts Ward on the card when it takes (B3753)
  *  14. WoDX Combat: a Sweep that hits marks Knocked down on the target (B3754)
+ *  15. An inquisitor's Blessing picked from the book list (Fiat Lux) puts Light on the card (B3755)
+ *  16. A Bastet's own Gift (Skin of Jade) through Use a Gift names W20 CB and puts a boost on the card (B3756)
+ *  17. Summon Water (Storms 1) at 4 successes and Faith 4 puts a 12-foot Deep water area on the card; placed, its region
+ *      carries WoDX Combat's deep water flag and a water drawing everyone sees, both gone on Undo; at 2 successes there
+ *      is none (B3757)
+ *  18. Command the Storm (Storms 4) queues storm damage for the town; approved, the town card lands, and its Undo puts
+ *      the town back (B3757)
  * Result: Data/wodx-gate/gatepowers-result.json.
  */
 const R = { started: new Date().toISOString(), steps: [], errors: [], notes: [] };
@@ -60,7 +67,7 @@ export async function run() {
   if (game.world.id === "rothenstein-live") return "Not on the Live world.";
   const hooks = [["renderDialogV2", Hooks.on("renderDialogV2", onRender)]];
   const folder = await Folder.create({ name: "WoDX powers gate", type: "Actor" });
-  const made = [];
+  const made = [], scenes = [];
   const mk = async (name, type, system, items) => { const a = await Actor.create({ name: `WoDX gate: ${name}`, type, folder: folder.id, system, items }); made.push(a); return a; };
   try {
     await step("1 Wraith Arcanos keywords", async () => {
@@ -291,6 +298,9 @@ export async function run() {
       const cat = await mk("Bastet", "Changing Breed", { changingbreed: "Bastet", advantages: { willpower: { permanent: 5, temporary: 5 }, gnosis: { permanent: 3, temporary: 3 }, rage: { permanent: 3, temporary: 3 } } },
         [{ name: "Skin of Jade", type: "Power", system: { type: "wod.types.gift", value: 1 } }]);
       await sleep(800);
+      // The sheet's creation sets its own starting traits, so the breed and the Willpower the Gift costs are set after
+      await cat.update({ "system.changingbreed": "Bastet", "system.advantages.willpower.permanent": 5, "system.advantages.willpower.temporary": 5,
+        "system.advantages.gnosis.permanent": 3, "system.advantages.gnosis.temporary": 3 });
       await game.user.updateTokenTargets?.([]);
       const n = game.messages.size;
       answer(() => {});
@@ -299,12 +309,70 @@ export async function run() {
       const items = fx(m);
       ok("16 A Fera breed's own Gift lands on the card", !!m && /W20 CB p\. 90/.test(text(m)) && items.some(i => i.key === "boost"), { card: text(m).slice(0, 300), items: items.map(i => `${i.key}:${i.route}`) });
     });
+    await step("17 Summon Water leaves deep water WoDX Combat swims in", async () => {
+      // A scratch scene of its own to place the area on (gate rules)
+      const was = game.scenes.get(canvas?.scene?.id ?? "") ?? null;
+      const sc = await Scene.create({ name: "WoDX gate: powers world", width: 2000, height: 1500, grid: { size: 100, type: 1 }, padding: 0, tokenVision: false });
+      scenes.push([sc, was]);
+      await sc.view();
+      for (let t = 0; t < 100 && canvas?.scene?.id !== sc.id; t++) await sleep(200);
+      const dv = await mk("Defiler", "Demon", {}, []);
+      await sleep(600);
+      await game.user.updateTokenTargets?.([]);
+      const pl = A().effects.planOf(dv, [], 4, { name: "Summon Water", line: "Demon (DtF)", faith: 4 });
+      const i = pl.items.findIndex(x => x.key === "world" && x.out?.world === "water");
+      const msg = await ChatMessage.create({ content: `<div class="wodx-card">Gate: Summon Water</div>${pl.html}`, whisper: [game.user.id], flags: { "wodx-actions": { kind: "effects", caster: "Gate", items: pl.items, done: true } } });
+      const rec = i >= 0 ? await A().effects.placeItem(msg, i, { x: 500, y: 500 }) : null;
+      const region = rec?.region ? fromUuidSync(rec.region) : null;
+      const deep = region?.flags?.["wodx-combat"]?.water === "deep";
+      const did = region?.flags?.["wodx-actions"]?.effectArea?.drawing ?? null;
+      const drawn = !!(did && sc?.drawings?.get(did));
+      const feet = pl.items[i]?.out?.area ?? null;
+      const few = A().effects.planOf(dv, [], 2, { name: "Summon Water", line: "Demon (DtF)", faith: 4 }).items.some(x => x.key === "world");
+      if (region) await A().effects.undo([rec]);
+      await sleep(800);
+      const gone = !fromUuidSync(rec?.region ?? "") && !(did && sc?.drawings?.get(did));
+      ok("17 Summon Water leaves deep water WoDX Combat swims in", i >= 0 && pl.items[i].route === "area" && deep && drawn && feet === 12 && !few && gone,
+        { items: pl.items.map(x => `${x.key}:${x.out?.world ?? ""}:${x.route}`), deep, drawn, feet, few, gone, region: rec?.region ?? null });
+    });
+    await step("18 Command the Storm waits for the Storyteller, then strikes the town", async () => {
+      const U = game.modules.get("wodx-storyteller")?.api?.upkeep;
+      // A town of its own on a scratch scene, so a lane reset to no markets still has one (gate rules); put back after
+      const ST = "wodx-storyteller", keep = ["markets", "townState"].filter(k => game.settings.settings.has(`${ST}.${k}`)).map(k => [k, foundry.utils.deepClone(game.settings.get(ST, k))]);
+      const was = game.scenes.get(canvas?.scene?.id ?? "") ?? null;
+      const sc = await Scene.create({ name: "WoDX gate: powers town", width: 2000, height: 1500, grid: { size: 100, type: 1 }, padding: 0, tokenVision: false });
+      scenes.push([sc, was]);
+      try {
+      const ms = U?.markets?.state?.() ?? { markets: [] };
+      await game.settings.set(ST, "markets", { ...ms, markets: [...(ms.markets ?? []), { id: "gate-powers", name: "WoDX gate town", scenes: [sc.id], links: [] }] });
+      await sleep(400);
+      const mkt = U?.markets?.state?.()?.markets?.find(m => m.id === "gate-powers") ?? null;
+      const dv = await mk("Stormcaller", "Demon", {}, []);
+      await sleep(600);
+      const pl = A().effects.planOf(dv, [], 5, { name: "Command the Storm", line: "Demon (DtF)" });
+      const item = pl.items.find(x => x.key === "world" && x.out?.world === "storm");
+      const before = mkt ? U.towns.of(mkt.id) : null;
+      const n = game.messages.size;
+      const rec = item && mkt ? await A().effects.apply({ ...item, scene: mkt.scenes[0] }, "Gate") : null;
+      await sleep(800);
+      const card = game.messages.contents.slice(n).find(m => m.flags?.["wodx-storyteller"]?.townTurn);
+      const after = mkt ? U.towns.of(mkt.id) : null;
+      if (card) await U.towns.undo(card);
+      const back = mkt ? U.towns.of(mkt.id) : null;
+      ok("18 Command the Storm waits for the Storyteller, then strikes the town", !!item && item.route === "queue" && !!card && !!after && JSON.stringify(after) !== JSON.stringify(before) && JSON.stringify(back) === JSON.stringify(before),
+        { route: item?.route ?? null, market: mkt?.name ?? null, note: rec?.note ?? null, card: card ? text(card).slice(0, 200) : null, before, after });
+      } finally { for (const [k, v] of keep) await game.settings.set(ST, k, v).catch(() => {}); }
+    });
   } finally {
     for (const [h, id] of hooks) Hooks.off(h, id);
     for (const a of made) await a.delete().catch(() => {});
+    for (const [sc, was] of [...scenes].reverse()) { await was?.view?.().catch(() => {}); await sc.delete().catch(() => {}); }
     await folder.delete().catch(() => {});
     R.finished = new Date().toISOString();
     R.summary = `${R.steps.filter(s => s.pass).length}/${R.steps.length} passed`;
+    // name the failed steps and what they saw, so the queue's comment shows why without the PC file
+    const bad = R.steps.filter(s => !s.pass).map(({ name: n, pass, ...d }) => `${n} ${JSON.stringify(d).slice(0, 160)}`);
+    if (bad.length) R.summary += `; failed: ${bad.join("; ")}`.slice(0, 280);
     const file = new File([JSON.stringify(R, null, 1)], "gatepowers-result.json", { type: "application/json" });
     await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, { notify: false });
   }

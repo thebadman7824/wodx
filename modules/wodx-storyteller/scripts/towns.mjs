@@ -275,6 +275,18 @@ async function onSaga(p = {}) {
   return r;
 }
 
+/**
+ * A power that reaches the town (WoDX Actions, B3757), once the Storyteller approved it: kind one of TR.POWER_TOWN,
+ * scene the scene it was used on (its market's town). Lands at once with the town card and its Undo.
+ */
+async function onPower({kind, scale = 1, scene = null, label = ""} = {}) {
+  if ( !game.user.isGM ) return null;
+  const m = MK.marketOfScene(Markets.state(), typeof scene === "string" ? scene : scene?.id ?? globalThis.canvas?.scene?.id);
+  if ( !m ) return null;
+  const n = TR.powerEvent(kind, m.id, {scale, label});
+  return n ? landNow([n], label || "a power") : null;
+}
+
 /* ------------------------------------------------------------------ */
 /*  The Towns window                                                   */
 /* ------------------------------------------------------------------ */
@@ -378,4 +390,4 @@ export async function setupTowns() {
 
 /** B3420: the town at each settlement age, for the chronicle rebuild's ages step (recipe ages). */
 export const atAges = (id, ages = []) => TR.townAtAges(state().towns[id] ?? null, ages);
-export const api = () => ({open: townsDialog, edit: editTown, state, of, ofScene, run, undo, atAges, saga: onSaga, rules: TR});
+export const api = () => ({open: townsDialog, edit: editTown, state, of, ofScene, run, undo, atAges, saga: onSaga, power: onPower, rules: TR});
