@@ -92,12 +92,21 @@ export async function run() {
       if ( wasPaused ) await game.togglePause(false, {broadcast: true});
       await sleep(200);
       const far = await npc().overheard.run(ear);
-      await me.update({x: 9 * G, y: 5 * G}, {animate: false});
+      // Foundry 14: a jump, not a walked move, so nothing on the way can stop or shorten it
+      if ( typeof me.move === "function" ) await me.move([{x: 9 * G, y: 5 * G, action: "displace"}]);
+      else await me.update({x: 9 * G, y: 5 * G}, {animate: false});
       await sleep(1800); // the move itself may trigger a look; either way one exchange is enough
       const near = npc().overheard.log(ear).length ? {ok: true, by: "move"} : await npc().overheard.run(ear);
       if ( wasPaused ) await game.togglePause(true, {broadcast: true});
       if ( !pcOK ) ok("4. earshot", true, {skipped: "no player user owns the listener, so nobody can be in earshot"});
-      else ok("4. earshot", !far.ok && near.ok && npc().overheard.log(ear).length >= 1, {far: far.why, near: near.ok ? (near.by ?? near.topic) : near.why, paused: wasPaused});
+      else {
+        // what the earshot test saw, so a failure says why
+        const read = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
+        const where = t => t ? `${Math.round(t.x / G)},${Math.round(t.y / G)}` : null;
+        const seen = {listener: where(me), speakers: ear.tokens.contents.filter(t => t.actorId !== listener.id).map(where),
+          earshot: read("overheardEarshot"), reach: read("talkReach"), listenerOwned: listener.hasPlayerOwner};
+        ok("4. earshot", !far.ok && near.ok && npc().overheard.log(ear).length >= 1, {far: far.why, near: near.ok ? (near.by ?? near.topic) : near.why, paused: wasPaused, seen});
+      }
     });
 
     await step("5. the scene's own switch", async () => {
