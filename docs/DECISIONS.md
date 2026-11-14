@@ -195,7 +195,7 @@ Next free block: B3810
 | B3730-B3739 | Standard gate rules: shared gate kit, scratch scenes and fixtures, guard test (used B3730-B3734) | Tools only (tools/gate, tools/harness, tools/lanes, tools/release) |
 | B3740-B3769 | Powers pass: every power gets a real effect (used B3740-B3745) | Actions |
 | B3770-B3779 | Kuei-jin stone weapons and true jade (Jade Shintai wonders kit) (used B3770-B3775) | Library |
-| B3780-B3809 | No-effect audit: items, gear, traits, settings, tables, world data (used B3780-B3785) | Chronicle, NPC |
+| B3780-B3809 | No-effect audit: items, gear, traits, settings, tables, world data (used B3780-B3787) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6424,3 +6424,13 @@ Reverse: empty MORE_EFFECTS_2.
 WoDX Chronicle. 34 more traits whose effect the books leave to the Storyteller get a card at their moment, as B3781.
 
 Reverse: empty MORE_PROMPTS_2.
+
+## B3786. W20 core merits and flaws past p. 470 get their effects (2026-11-14)
+WoDX Chronicle. The cloud copy of the W20 text stopped at pdf page 403; the PC pulled pdf pages 474 to 500 into the private book-text folder on 14 November 2026, and the merits and flaws on printed pp. 472-485 were read from it. 19 change the rolls they name (Gullible, Expert Driver, Pack Mentality, Moon-Bound, Notoriety, Natural Channel and more), most behind a tick box; Moon-Bound's two boxes are ticked by the player while the auspice moon waxes or wanes.
+
+Reverse: empty MORE_EFFECTS_3.
+
+## B3787. W20 core Storyteller's-call traits send a card (2026-11-14)
+WoDX Chronicle. 26 more get a card at their moment, as B3781 (Bad Taste, Untamable, Danger Sense, Pierced Veil, Forced Transformation and more).
+
+Reverse: empty MORE_PROMPTS_3.

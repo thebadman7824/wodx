@@ -25,6 +25,8 @@
  *      roll, Combat Novice is a card when a fight starts, and a mage's "Unbondable" is the Book of Secrets merit
  *  25. the no-effect audit, part 2 (B3783-B3785): a mage's "Bigot (Tremere)" sours a first meeting with a Tremere NPC
  *      read from its sheet and not with a Ventrue, Sanctity warms anyone, and Red Tape offers its own tick box
+ *  26. the no-effect audit, part 3 (B3786-B3787): a mage's Gullible takes 3 dice from a lie, Pack Mentality offers
+ *      its two boxes, and Jack-Of-All-Trades is a card when a fight starts
  * Result: Data/wodx-gate/gatetraits-result.json.
  */
 async function save(R, name) {
@@ -247,6 +249,18 @@ export async function run() {
       const box = /tag-bureaucracy/.test(TH.ticksHtml(bigot));
       ok("25 no-effect audit, part 2", groups.includes("Tremere") && onTremere === -1 && onVentrue === 0 && warm === 1 && box,
         {groups, onTremere, onVentrue, warm, box});
+    });
+    await step("26 no-effect audit, part 3", async () => {
+      const dupe = await mk("Trait dupe", "Mage", [feat("Gullible", "flaw", 2), feat("Jack-Of-All-Trades", "merit", 3)]);
+      const lie = TH.traitMods(dupe, T().rules.rollTags("manipulation", "subterfuge"));
+      const cards = T().rules.promptsOn(T().view(dupe), "fight").map(c => c.key);
+      let boxes = null;
+      if ( wolf ) {
+        const packer = await mk("Trait packer", "Werewolf", [feat("Pack Mentality", "flaw", 2)]);
+        const html = TH.ticksHtml(packer);
+        boxes = /tag-with-pack/.test(html) && /tag-without-pack/.test(html);
+      }
+      ok("26 no-effect audit, part 3", lie.dice === -3 && cards.includes("jack-of-all-trades") && boxes !== false, {lie, cards, boxes});
     });
   } catch (e) {
     R.errors.push(e.message);
