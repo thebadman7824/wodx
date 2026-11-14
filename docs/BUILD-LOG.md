@@ -1804,6 +1804,8 @@ The map preview (tools/mapgen/render_preview.py) draws a map with the slim packs
 
 First look with the preview (Kessler): grass showed through inside the barn, byre, coop and sty, a rum barrel stood in a 1197 house, and the stalls looked bare. Now the farm's terrain is beaten earth under every building, beasts' rooms get straw bedding on the floor (layer 50, counted as floor like a rug), and rum, whisky, tobacco, coffee, tea, potatoes, tomatoes and maize wait for the early modern age. The preview also showed the village and town maps use 47 packs that are not in Ben's slim Dungeondraft folder; Ben agreed to add them. Big maps are previewed at a smaller scale so they fit in memory.
 
+Second look (Ben found a torch hung behind the big oven and a chest pushed under a window). Chests, barrels, kegs, crates, boxes and sacks now stay out of the 0.9 squares in front of a window. Wall lights hang on open wall only: never within a square of a door or window or behind an oven, stove, cupboard or shelves, and each picture is turned so its bracket is on the wall. Each room draws its own random numbers, so a change in one room no longer moves the rest of the map. check_map.py now reports a light off the wall, a light behind furniture, and a store piece in front of a window. The rules are written out for Ben in the doc Housing furnishing rules, which he edits.
+
 
 ## 2026-11-13: the Traits that follow from the others (Creation 0.26.0, B3000-B3004)
 
