@@ -11,3 +11,4 @@ import "./wonders-mummy.mjs";
 import "./wonders-demon.mjs";
 import "./wonders-hunter.mjs";
 import "./wonders-kindred.mjs";
+import "./wonders-kuei-jin.mjs";

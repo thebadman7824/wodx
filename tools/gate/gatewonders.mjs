@@ -1,5 +1,6 @@
 /**
- * Items made by Kindred, changelings, mummies, demons and inquisitors (WoDX Library wonders kits B3693-B3719, Storyteller
+ * Items made by Kindred, changelings, mummies, demons, inquisitors and Kuei-jin (WoDX Library wonders kits B3693-B3719 and
+ * B3770-B3779, Storyteller
  * wonders.mjs, item powers wonder-use.mjs), in Foundry, in rothenstein-wodx only, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatewonders.mjs?${Date.now()}`)).run()
  * It makes its own actors, starts each work as the Storyteller (no approval wait), finishes it through the
@@ -16,12 +17,14 @@
  *   9. Demon: an enchanted object holds the evocation; its demon Use button rolls Faith with a card
  *  10. Hunter: holy water for an inquisitor before 1500, or refused after
  *  11. one actor sees only its own line in the picker
- *  12. clean up
+ *  12. Kuei-jin: Blade of Stone makes an aggravated stone weapon
+ *  13. Kuei-jin: true jade takes in Chi (the Wall answered), gives a point back, and is tried once a night
+ *  14. clean up
  * Result: Data/wodx-gate/gatewonders-result.json.
  */
 const LIB = "wodx-library", ST = "wodx-storyteller";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const STEPS = 12;
+const STEPS = 14;
 
 async function save(R) {
   R.finished = new Date().toISOString();
@@ -36,7 +39,7 @@ export async function run() {
   const ok = (name, pass, detail = {}) => R.steps.push({name, pass: !!pass, ...detail});
   if ( game.world.id !== "rothenstein-wodx" ) { ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"}); return save(R); }
   const W = game.modules.get(LIB)?.api?.wonders, WU = game.modules.get(LIB)?.api?.wonderUse, S = game.modules.get(ST)?.api?.wonders;
-  const SETS = ["craftKindred", "craftChangeling", "craftMummy", "craftDemon", "craftHunter"];
+  const SETS = ["craftKindred", "craftChangeling", "craftMummy", "craftDemon", "craftHunter", "craftKueiJin"];
   const keep = Object.fromEntries(SETS.map(k => { try { return [k, game.settings.get(LIB, k)]; } catch (e) { return [k, undefined]; } }));
   const msgsBefore = new Set(game.messages.map(m => m.id));
   const actorsBefore = new Set(game.actors.map(a => a.id));
@@ -63,7 +66,7 @@ export async function run() {
   try {
     for ( const k of SETS ) if ( keep[k] !== undefined ) await game.settings.set(LIB, k, true);
     const lines = (W?.lines?.() ?? []).map(k => k.line);
-    ok("1. modules", ["kindred", "changeling", "mummy", "demon", "hunter"].every(l => lines.includes(l)) && typeof S?.start === "function" && typeof WU?.run === "function", {lines});
+    ok("1. modules", ["kindred", "changeling", "mummy", "demon", "hunter", "kuei-jin"].every(l => lines.includes(l)) && typeof S?.start === "function" && typeof WU?.run === "function", {lines});
 
     // Kindred
     const v = await mk("Vampire", "Tremere", {"advantages.bloodpool.temporary": 10, "advantages.willpower.temporary": 5, "attributes.intelligence.value": 3, "abilities.occult.value": 3},
@@ -130,6 +133,22 @@ export async function run() {
 
     const ls = S.linesFor(c).map(x => x.kit.line);
     ok("11. picker lines", ls.length === 1 && ls[0] === "changeling", {lines: ls});
+
+    // Kuei-jin
+    const k = await mk("Vampire", "Wangyu", {"settings.variant": "kindredeast", "advantages.willpower.temporary": 5, "advantages.yangchi.temporary": 1,
+      "attributes.manipulation.value": 3, "attributes.perception.value": 3, "abilities.craft.value": 2, "abilities.meditation.value": 3},
+      [power("Jade Shintai", "wod.types.discipline", 6)]);
+    const bl = (await work(k, "kuei-jin", "blade-of-stone", {shape: "sword"}, 1)).items.find(i => i.type === "Melee Weapon");
+    ok("12. Kuei-jin stone weapon", bl?.system?.damage?.type === "aggravated" && Number(bl?.system?.damage?.bonus) === 4 && wonderOf(bl)?.key === "blade-of-stone",
+      {name: bl?.name, damage: bl?.system?.damage});
+    const jd = (await work(k, "kuei-jin", "taste-of-jade", {attune: "yang"}, 3)).items.find(i => wonderOf(i)?.key === "taste-of-jade");
+    const ab = jd ? await WU.run(jd, "wonder:absorb", k, {answer: 2}) : null;
+    const again = jd ? await WU.run(jd, "wonder:absorb", k, {answer: 2}) : "no jade";
+    await jd?.update({"flags.wodx-library.wonder.pool.value": 1});
+    const chi0 = Number(k.system.advantages.yangchi.temporary);
+    const dr = jd ? await WU.run(jd, "wonder:draw", k) : null;
+    ok("13. Kuei-jin true jade", !!ab && again === null && !!dr && Number(k.system.advantages.yangchi.temporary) === chi0 + 1 && wonderOf(jd)?.expires > (game.time?.worldTime ?? 0),
+      {pool: wonderOf(jd)?.pool, nights: wonderOf(jd)?.nights, chi: [chi0, k.system.advantages.yangchi.temporary], absorb: ab?.lines});
   } catch (e) { R.errors.push(String(e?.stack ?? e)); }
   try {
     for ( const k of SETS ) if ( keep[k] !== undefined ) await game.settings.set(LIB, k, keep[k]);
@@ -138,7 +157,7 @@ export async function run() {
     if ( ids.length ) await Actor.deleteDocuments(ids);
     const mids = game.messages.filter(x => !msgsBefore.has(x.id)).map(x => x.id);
     if ( mids.length ) await ChatMessage.deleteDocuments(mids);
-    ok("12. clean up", !ids.some(id => game.actors.get(id)), {actors: ids.length, messages: mids.length});
-  } catch (e) { R.errors.push(String(e?.stack ?? e)); ok("12. clean up", false); }
+    ok("14. clean up", !ids.some(id => game.actors.get(id)), {actors: ids.length, messages: mids.length});
+  } catch (e) { R.errors.push(String(e?.stack ?? e)); ok("14. clean up", false); }
   return save(R);
 }
