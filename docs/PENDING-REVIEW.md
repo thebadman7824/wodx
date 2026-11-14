@@ -1271,7 +1271,9 @@ Ben approved everything that was waiting for review ("I approve everything pendi
 | 2026-11-14 | Rothenstein saga: books after the four stories (B3663) | Fifteen more books from the prologue (880) to 2030, plus one on the future branch | Edit or remove books in saga-rothenstein.mjs |
 | 2026-11-14 | Rothenstein saga: the long clocks and endings (B3664, B3665) | Four clocks (Husbandman, Ashfield, Church's eye, Charter); the first book's ending (sealed, severed, taken) changes later words | Edit SAGA_CLOCKS, SAGA_ENDINGS and the steps' by |
 
-## Waiting for review
+## Approved by Ben, 14 November 2026, 03:41 UTC (all pending items)
+
+Ben approved everything that was waiting for review ("Approve all pending review items").
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
@@ -1307,3 +1309,8 @@ Ben approved everything that was waiting for review ("I approve everything pendi
 | 2026-11-14 | When a Talisman's Quintessence and Willpower are paid (B3686) | Checked at the start, paid on success; M20's extra Quintessence per crafting roll left out | costs() in wonders-mage.mjs |
 | 2026-11-14 | A finished Wonder's dice and a periapt's first charge (B3687) | Wonder Arete = its dots, each Effect at its Sphere + 3 (+ 4 vulgar), 1 Paradox per vulgar use; a periapt starts with the 10 Tass fused in | itemsFor() in wonders-mage.mjs |
 | 2026-11-14 | Soulforged Artifacts and relics made from the crafting table pay the soulfire's Pathos (and an Artificer's pledged Corpus level) when the work ends, as fetishes pay their Gnosis; the forge window's arms and armour still pay at the start (B3721). Should they match? | Pay at the end for table work, so a request the Storyteller turns down costs nothing | Change costs() in wodx-library/scripts/wonders-wraith.mjs and pay in the forge window instead |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
