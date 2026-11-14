@@ -2,7 +2,6 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 0.81.3 (A scene can name the Underworld as its money in Where this scene stands, and then counts as abroad for money, so people there pay in oboli though it stands over home (B3552))
 - 0.81.2 (The Croatan give themselves at Roanoke in 1589, not 1590, as Past Lives, Werewolf: The Wild West and Croatan Song date it; the tribe's signature features end the same year (timeline check, 14 November))
 - 0.81.1 (The Rothenstein saga keeps its calendar: each gap counts from when the step before fell due, not from when it was dealt, so a skip of several years deals every saga step it passes over, in order (B3672). Other story chains are unchanged)
 - 0.81.0 (The Rothenstein saga's steps can change the town: seventeen steps name a town change (a boom, war, siege, famine, plague, exile, expulsion or flood), and hook wodxSaga now carries it with the step's title, place and year (B3670))
