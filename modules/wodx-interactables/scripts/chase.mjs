@@ -72,11 +72,15 @@ export function rideOf(tokDoc) {
     const sf = scene.flags?.[MOD] ?? {};
     const r = C.rideInFight(kind, yearNow(), sf[FLAG]?.ground ?? sf.ground ?? "streets");
     if ( !r ) return null;
-    return {...r, kind, tile: t.id, role: reins ? "reins" : "passenger", label: o?.title || MOUNT_LABELS[kind] || "Mount"};
+    // B4791: the damage it has taken (Structure lost), and whether that wrecked it
+    const lost = Math.max(0, Number(f.hull?.lost) || 0);
+    return {...r, kind, tile: t.id, tileUuid: t.uuid, role: reins ? "reins" : "passenger", label: o?.title || MOUNT_LABELS[kind] || "Mount",
+      lost, wrecked: !!(r.body && lost >= r.body.structure), year: yearNow()};
   }
   return null;
 }
-const MOUNT_LABELS = {horse: "Riding horse", mule: "Mule", cart: "Cart", carriage: "Carriage", boat: "Rowing boat", car: "Motor car", motorbike: "Motorcycle", motorboat: "Motorboat"};
+const MOUNT_LABELS = {horse: "Riding horse", mule: "Mule", cart: "Cart", carriage: "Carriage", boat: "Rowing boat", car: "Motor car", motorbike: "Motorcycle", motorboat: "Motorboat",
+  truck: "Lorry", armoured: "Armoured car", tank: "Tank", balloon: "Balloon", plane: "Aeroplane", helicopter: "Helicopter", jet: "Jet"};
 
 /** The Garou form a sheet is in (the system's shapes), or "homid". */
 const formOf = actor => { const sh = actor?.system?.shapes ?? {}; return ["glabro", "crinos", "hispo", "lupus"].find(k => sh[k]?.isactive) ?? "homid"; };

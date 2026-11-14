@@ -110,7 +110,7 @@ test("the wiring: the attack pool, damage, defense, the saddle after the blow, t
   assert.match(main, /await MTD\.afterBlow\(/);
   assert.match(main, /await saddle\.apply\(\)/);
   assert.match(main, /MTD\.setupMounted\(/);
-  assert.match(main, /mounted, aftermath/);
+  assert.match(main, /mounted, (vehicles, )?aftermath/);
   assert.match(glue, /"mountedCombat"/);
   assert.match(glue, /createScrollingText/, "a thrown rider shows on the map");
   assert.match(glue, /condition: "knockdown"/, "and lies knocked down");

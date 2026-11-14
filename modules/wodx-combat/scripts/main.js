@@ -36,6 +36,7 @@ import * as FTime from "./fight-time.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import * as PW from "./powder-rules.js";
 import * as MTD from "./mounted.js";
+import * as VH from "./vehicles.js";
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const chronicle = () => game.modules?.get?.("wodx-chronicle")?.api ?? null;
 
@@ -346,6 +347,8 @@ function weaponList(actor) {
     const A = armsLib();
     if (A) for (const i of actor.items) { const e = i.type === "Item" ? A.weaponEntry(i) : null; if (e) list.push(e); }
     list.sort((a, b) => (b.equipped - a.equipped) || a.name.localeCompare(b.name));
+    // B4792: at the wheel, the vehicle itself is a weapon (ramming, Mage 20th p. 459)
+    try { const rw = VH.ramWeapon(actor); if (rw) list.push(rw); } catch (e) { /* no vehicle */ }
     const GXR = garouRules();
     const nat = GXR?.isShifter?.(actor) ? GXR.naturalWeapons(actor) : null;
     for (const [k, u] of Object.entries(R.UNARMED)) {
@@ -674,7 +677,7 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
     <div class="form-group"><label>Defense</label><select name="defense" data-fixed>
       <option value="auto" selected>Automatic: best for this character</option>
       <option value="none">None / cannot defend</option><option value="dodge">Dodge (Dex + Athletics)</option>
-      <option value="block">Block (Dex + Brawl)</option><option value="parry">Parry (Dex + Melee)</option>${target && MTD.rideFor(target) && MTD.rules.inSaddle(MTD.rideFor(target)) ? `<option value="mount">The mount dodges for the rider (its Dex + Athletics, free)</option>` : ""}</select></div>
+      <option value="block">Block (Dex + Brawl)</option><option value="parry">Parry (Dex + Melee)</option>${target && MTD.rideFor(target) && MTD.rules.inSaddle(MTD.rideFor(target)) ? `<option value="mount">The mount dodges for the rider (its Dex + Athletics, free)</option>` : ""}${target && VH.swerveOf(target) ? `<option value="swerve">Swerve (Dex + the driving Ability, held to the Maneuver)</option>` : ""}</select></div>
     <div class="form-group"><label>Defender: defense # this turn (full defense)</label><select name="defIndex" data-fixed>
       <option value="auto" selected>Automatic: count this turn's defenses</option><option value="0">First (full pool)</option><option value="1">Second (-1 die)</option><option value="2">Third (-2)</option><option value="3">Fourth (-3)</option></select></div>
     <div class="form-group"><label>Defender extra dice / difficulty</label>
@@ -959,12 +962,17 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     const fortChoice = fd.fortBlood;
     fd.fortBlood = resolveFortitude(target, fortChoice, dp, fd);
     if (target && fortChoice === "auto" && fd.fortBlood && hit) autoNotes.push(`${target.name} spends blood for Fortitude (${AU.SOAK_POLICIES[soakPolicy(target)].toLowerCase()})`);
+    let shelter = null;
     if (hit && !maneuver.noDamage && !harmless) {
         dmgPool = damagePool(attacker, w, net, maneuver, targeting, fd, pot);
         dmg = await rollPool(dmgPool.dice, 6, { canBotch: false, autoSuccesses: dmgPool.auto });
         if (dmg.roll) rolls.push(dmg.roll);
-
-        if (target) {
+        // B4791: someone inside a vehicle: the body may take the blow (Mage 20th p. 459)
+        try { shelter = VH.shelterFor({ attacker, attackerTok, target, targetTok, w, attackSuccesses: atk.successes }); } catch (e) { shelter = null; }
+        if (target && shelter?.shielded) {
+            outcome = { levels: 0, halved: false, type: dmgType, vehicle: true };
+            log.push(esc(shelter.note));
+        } else if (target) {
             const arm = armor(target);
             const armorRating = Math.max(arm.bashing, arm.lethal, arm.aggravated);
             const sp = soakPoolFor(target, profile, w, fd, dp);
@@ -1024,6 +1032,14 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     } catch (e) { console.warn(`${MOD} | saddle`, e); }
     log.push(...saddle.lines);
     rolls.push(...saddle.rolls);
+    // B4791-B4793: the vehicle's body, the crash inside, the fuel
+    let wreck = { lines: [], rolls: [], apply: async () => {} };
+    try {
+        wreck = await VH.afterHit({ attacker, attackerTok, target, targetTok, w, hit: !!hit && !maneuver.noDamage && !harmless, shelter,
+            attackSuccesses: atk.successes, levels: dmg?.successes ?? 0, dmgDice: dmgPool?.dice ?? 0 });
+    } catch (e) { console.warn(`${MOD} | vehicle`, e); }
+    log.push(...wreck.lines);
+    rolls.push(...wreck.rolls);
     let html = attackCard({ attacker, target, w, ab, attrKey, pool, atk, def, defNote, autoNote, net, hit, dmg, dmgPool, soak, outcome, profile, armorBroken, counter, spendNotes, fd, maneuver, log });
     const fkey = F.attackKey({ hit, botch: atk.botch, noDamage: !!maneuver.noDamage, levels: soak ? (outcome?.levels ?? 0) : (dmg?.successes ?? 0),
         type: outcome?.type ?? w.type, soaked: !!(soak && hit && !maneuver.noDamage && !outcome?.levels) });
@@ -1040,6 +1056,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         if (counter?.levels > 0) await applyFromMessage(msg, "counter");
     }
     await saddle.apply();
+    await wreck.apply();
     if (target && outcome?.dazed && setting("statusEffects")) await markDazed(target);
     for (const f of follow) await markFollow(target, f);
     if (special || (atk.botch && fitNow && w?.ranged && armsLib()?.rules?.kindsOf?.(w)?.has?.("bow"))) await armsAftermath({ attacker, target, w, hit, outcome, special, botch: atk.botch });
@@ -1132,7 +1149,7 @@ function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0, targ
     // B4770: a blow from the saddle may use the mount's Strength or Dexterity (V20 Dark Ages p. 399)
     let at = { value: attr(attacker, attrKey), mount: false };
     if (!w.ranged) { try { at = MTD.strikeAttrOf(attacker, attrKey, at.value, { close: true }); } catch (e) { /* on foot */ } }
-    return R.attackPool({
+    const pool = R.attackPool({
         attribute: at.value, attributeLabel: `${cap(attrKey)}${at.mount ? " (the mount's)" : ""}`,
         ability: held.value, abilityLabel: held.label,
         accuracy: w.accuracy, maneuverDice: maneuver.dice || 0,
@@ -1147,6 +1164,9 @@ function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0, targ
         bypassArmor: fd.bypass, opponents: fd.opponents, blind: fd.blind && !fp.blindCancelled, extraDiff: (fd.extraDiff || 0) + (w.ranged ? num(fd.coverDiff) + num(fd.mountShotDiff) : 0),
         sheetDice, sheetDiff, shieldDiff: sh.attackDiff, fitDice: fp.fitDice, fitDiff: fp.fitDiff, wetString: fp.wetString
     });
+    // B4792: a ram's pool is the driving pool, held to the vehicle's Maneuver
+    if (w.vehicle) { try { const c = VH.capPool(attacker, w, pool.dice); if (c.note) { pool.dice = c.dice; pool.parts.push(c.note); } } catch (e) { /* no vehicle */ } }
+    return pool;
 }
 
 /** Damage type, bane and soak difficulty for this weapon against this target. */
@@ -1215,7 +1235,7 @@ function attackUsable(attacker, w, distance, reachD = distance) {
     }
     const unit = globalThis.canvas?.scene?.grid?.distance ?? 5;
     if (distance != null) {
-        if (!w.ranged && !AU.inReach(reachD ?? distance, unit)) return "out of reach";
+        if (!w.ranged && !AU.inReach(Math.max(0, (reachD ?? distance) - num(w.reachBonus)), unit)) return "out of reach";
         if (w.ranged && w.range > 0 && distance > w.range * 3) return "beyond three times its range";
     }
     return "";
@@ -1295,6 +1315,20 @@ function planDefense(target, type, fd, w, maneuver) {
         const diff = Math.min(10, m.diff + (maneuver.defDiff || 0));
         return { type, valid: true, dice: m.dice, diff, abKey: "athletics", notes: m.notes, weapon: null, abilityName: m.abilityName, expected: R.expectedSuccesses(m.dice, diff) };
     }
+    // B4794: at the wheel, the vehicle swerves; anyone else sat inside does not dodge
+    if (type === "swerve") {
+        let s = null;
+        try { s = VH.swerveOf(target, { ranged: !!w.ranged, wounds: woundPenalty(target) }); } catch (e) { s = null; }
+        if (!s) return { type, valid: false, invalid: "Not at the wheel of a vehicle: no swerve.", expected: 0 };
+        if (!s.valid) return { type, valid: false, invalid: `Cannot swerve (${s.why}): no defense.`, expected: 0 };
+        const diff = Math.min(10, s.diff + (fd.defDiff || 0) + (maneuver.defDiff || 0));
+        return { type, valid: true, dice: Math.max(0, s.dice + (fd.defDice || 0) - num(fd.defIndex)), diff, abKey: "drive", notes: s.notes, weapon: null, abilityName: s.abilityName, expected: R.expectedSuccesses(s.dice, diff) };
+    }
+    if (type === "dodge") {
+        let seat = null;
+        try { seat = VH.seatedIn(target); } catch (e) { seat = null; }
+        if (seat) return { type, valid: false, invalid: `Sat in the ${String(seat.label).toLowerCase()}: no room to dodge${seat.role === "reins" ? " (swerve instead)" : ""}.`, expected: 0 };
+    }
     const close = isCloseCombat(w);
     const dmgType = fd.fireSun ? "aggravated" : (w.type || "lethal");
     const hasFort = discipline(target, "Fortitude") > 0;
@@ -1345,6 +1379,12 @@ export function bestDefense(target, fd, w, maneuver = {}) {
     const usable = plans.filter(p => p.valid && p.dice > 0 && (p.type !== "parry" || p.weapon));
     let best = R.pickDefense(usable);
     // B4771: a mount's dodge costs the rider nothing, so it goes first unless the rider's own is clearly better
+    // B4794: the swerve at the wheel is a dodge by another name
+    const sw = planDefense(target, "swerve", fd, w, maneuver);
+    if (sw.valid) {
+        plans.push(sw);
+        if (sw.dice > 0 && (!best || sw.expected > (best.expected ?? 0))) best = sw;
+    }
     const mount = planDefense(target, "mount", fd, w, maneuver);
     if (mount.valid) {
         plans.push(mount);
@@ -1380,7 +1420,7 @@ function damagePool(attacker, w, net, maneuver, targeting, fd, pot) {
     }
     // B3802: a cyberarm's own strength (Potence of its level, World of Future Darkness p. 24) on bare-handed blows
     if (strBased && (w.natural || w.ability === "brawl")) add("Cyber arm", num(cyber(attacker)?.body?.potence));
-    add("Weapon", w.dmgBonus);
+    add(w.ram ? "Ram" : "Weapon", w.dmgBonus);
     add("Net successes", net);
     add("Maneuver", maneuver.dmg);
     add("Targeting", targeting.dmg);
@@ -1833,8 +1873,9 @@ Hooks.once("init", () => {
     const movement = MVJ.setupMovement({ MOD, off: () => false, attr, ability: (a, k) => ability(a, k)?.value ?? 0, getKind, variant: P.variantText, applyDamage, movementFor, esc, discipline, armorPenalty, ask: P.ask });
     const aftermath = AA.setupAftermath({ corpusTrack });
     const mounted = MTD.setupMounted({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall, markFollow });
+    const vehicles = VH.setupVehicles({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall });
     FTime.setupFightTime();
-    const api = { body, movement, mounted, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
+    const api = { body, movement, mounted, vehicles, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
         getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.35.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, followOn: R.followOn, markFollow, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
@@ -2286,7 +2327,7 @@ export async function reload({ actor: a = null, weaponId = null } = {}) {
  * dice and difficulty. With several tokens selected, each attacks the target in turn. Spends no Willpower or blood
  * of its own accord.
  */
-export async function quickAttack({ attacker: a = null, target: t = null } = {}) {
+export async function quickAttack({ attacker: a = null, target: t = null, weaponId = null } = {}) {
     const attackers = a ? [a] : (canvas.tokens?.controlled?.length ? [...canvas.tokens.controlled] : [null]);
     const results = [];
     for (const one of attackers) {
@@ -2299,7 +2340,9 @@ export async function quickAttack({ attacker: a = null, target: t = null } = {})
             defDiff: defenseDiffOf(target), defCel: discipline(target, "Celerity") > 0,
             celDice: setting("celerityDice"), fortBlood: "auto", soakBonus: 0, atkKind: "auto", profile: "auto" };
         try {
-            if (await ambushFirst({ attacker, attackerTok, target, targetTok, fd })) results.push(await resolveAttack({ attacker, attackerTok, target, targetTok, weapon: { id: "auto" }, fd }));
+            // B4792: a named weapon (a ram) in place of the automatic choice
+            const weapon = weaponId ? (weaponList(attacker).find(w => w.id === weaponId) ?? { id: "auto" }) : { id: "auto" };
+            if (await ambushFirst({ attacker, attackerTok, target, targetTok, fd })) results.push(await resolveAttack({ attacker, attackerTok, target, targetTok, weapon, fd }));
             openFight(attackerTok, targetTok);
         }
         catch (e) { console.error(e); ui.notifications.error(`WoDX Combat: ${attacker.name}: ${e.message}`); }
