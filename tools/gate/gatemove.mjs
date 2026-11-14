@@ -81,7 +81,8 @@ export async function run() {
     });
     await step("into deep water", async () => {
       await a.update({x: G * 12, y: G * 4}, {animate: false});
-      await until(() => !!a.getFlag("wodx-combat", "water"));
+      // the water flag is set first and the card follows it: wait for both
+      await until(() => !!a.getFlag("wodx-combat", "water") && cards().some(m => /deep water/.test(m.content)));
       ok("into deep water", a.getFlag("wodx-combat", "water")?.kind === "deep" && cards().some(m => /deep water/.test(m.content)), {flag: a.getFlag("wodx-combat", "water")});
     });
     await step("drowning in a fight", async () => {
