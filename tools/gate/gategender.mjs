@@ -25,17 +25,19 @@ export async function run() {
   const t0 = game.time.worldTime, msgs = new Set(game.messages.map(m => m.id)), made = [];
   const G = game.modules.get("wodx-chronicle")?.api?.gender, npc = game.modules.get("wodx-npc")?.api;
   const player = game.users.find(u => !u.isGM);
+  // adults in the world's own year, so the age floor never stands in the way of step 5
+  const now = game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.() ?? 1300;
   try {
     ok("1. api.gender", typeof G?.forRules === "function" && typeof G?.of === "function", {player: player?.name ?? null});
     const own = player ? {default: 0, [player.id]: 3} : {default: 0};
     const [gen, baby, written, pc, npcB] = await Actor.createDocuments([
-      {name: "Gate Gender Generated", type: "Mortal", flags: {"wodx-creation": {people: {sex: "male"}}}},
+      {name: "Gate Gender Generated", type: "Mortal", flags: {"wodx-creation": {people: {sex: "male"}, chronology: {bornYear: now - 26}}}},
       {name: "Gate Gender Baby", type: "Mortal", flags: {"wodx-creation": {sex: "female"}}},
       {name: "Gate Gender Written", type: "Mortal", flags: {"wodx-chronicle": {gender: "nonbinary"}, "wodx-creation": {people: {sex: "male"}}}},
-      {name: "Gate Gender Player", type: "Mortal", ownership: own, flags: {"wodx-chronicle": {gender: "male"}, "wodx-creation": {chronology: {bornYear: 1270}}}},
-      {name: "Gate Gender Storyteller Man", type: "Mortal", flags: {"wodx-creation": {people: {sex: "male"}, chronology: {bornYear: 1270}}}}]);
+      {name: "Gate Gender Player", type: "Mortal", ownership: own, flags: {"wodx-chronicle": {gender: "male"}, "wodx-creation": {chronology: {bornYear: now - 30}}}},
+      {name: "Gate Gender Storyteller Man", type: "Mortal", flags: {"wodx-creation": {people: {sex: "male"}, chronology: {bornYear: now - 30}}}}]);
     made.push(gen, baby, written, pc, npcB);
-    const [npcA] = await Actor.createDocuments([{name: "Gate Gender Storyteller Man 2", type: "Mortal", flags: {"wodx-creation": {people: {sex: "male"}, chronology: {bornYear: 1272}}}}]);
+    const [npcA] = await Actor.createDocuments([{name: "Gate Gender Storyteller Man 2", type: "Mortal", flags: {"wodx-creation": {people: {sex: "male"}, chronology: {bornYear: now - 28}}}}]);
     made.push(npcA);
     ok("2. every record read", G.of(gen) === "male" && G.of(baby) === "female" && G.of(written) === "nonbinary", {gen: G.of(gen), baby: G.of(baby), written: G.of(written)});
     ok("3. rules: player none, Storyteller's kept", !!player && pc.hasPlayerOwner && G.forRules(pc) === "" && G.of(pc) === "male" && G.forRules(gen) === "male" && G.forRules(written) === "",
