@@ -13,8 +13,8 @@ export const ROTHENSTEIN = {
   // The world the builder works in. It refuses rothenstein-live always, and any other world unless forced.
   world: "rothenstein-x",
   homeland: "moravia",
-  // 1197 as now (desk s4); a later start is a change of this line.
-  opening: {year: 1197, month: 10, day: 1, hour: 21},
+  // The autumn of 1200, as the Storyteller volumes open (B4760).
+  opening: {year: 1200, month: 9, day: 1, hour: 21},
   climate: "auto",
   // Every line has a door into the valley from the first night (desk w4), Vampire in front.
   lines: ["vampire", "werewolf", "mage", "changeling", "wraith", "hunter", "mortal"],
@@ -60,9 +60,9 @@ export const ROTHENSTEIN = {
     ]
   },
   // Phase 2: the town from one fixed seed (desk w1); anchors take their plots first.
-  town: {name: "Rothenstein", seed: 1197, size: "town", region: "moravia", sewers: false},
+  town: {name: "Rothenstein", seed: 1200, size: "town", region: "moravia", sewers: false},
   // Phase 5: the settlement ages the town is rebuilt at, with households carried forward by heirs (desk w1).
-  ages: [1197, 1420, 1620, 1781, 1851, 1919, 1948, 1990, 2030],
+  ages: [1200, 1420, 1620, 1781, 1851, 1919, 1948, 1990, 2030],
   // Phase 5: the sleeper's origin is dated in the Classical age, in Great Moravia (desk s2); the details go on a desk.
   spine: {origin: {era: "classical", place: "great-moravia"}, opening: "Sessio I to X and the encounters (desk s3)", saga: "rothenstein"},
   // Phase 5 and 6: one away hub per era on another continent, tied in by letters, trade and events (desk w2). Each
