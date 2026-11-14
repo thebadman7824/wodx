@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4150
+Next free block: B4160
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -209,6 +209,7 @@ Next free block: B4150
 | B4120-B4129 | Player interface: the Storyteller hides parts of Foundry's screen for each player (used B4120-B4123) | Chronicle |
 | B4130-B4139 | Missouri village peoples in the People generator (used B4130-B4132) | Creation, Chronicle |
 | B4140-B4149 | Crow, Blackfoot and Arapaho names in the People generator (used B4140-B4142) | Creation, Chronicle |
+| B4150-B4159 | Shoshone and Ute names in the People generator (used B4150-B4152) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -6925,3 +6926,18 @@ Reverse: edit the lists in data/people-plains-north.mjs.
 WoDX Creation. Before 1800 a Crow bears the clan of the mother (of the Whistling Water clan); a Blackfoot or Arapaho bears an own name alone, and a woman not named in the records is "a woman of" the division (the Kainai, the Southern Arapaho). From 1800 a church given name and a family name from the rolls.
 
 Reverse: change clans or towns for the three peoples in data/people-plains-north.mjs.
+
+## B4150. The Shoshone and the Ute join the West (2026-11-14)
+WoDX Creation and Chronicle. The Shoshone and the Ute join the American West's mix from 1197 (the Numic peoples had spread across the Basin by then): 9 in 100 before 1500, 8 before 1800, then 1 each, and the Ute 1 today. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: put back the old north-america-west mixes in world-rules.mjs and drop basinTables from people-world.mjs.
+
+## B4151. Names from the treaties and rolls, fewer than 300 (2026-11-14)
+WoDX Creation. The lists come from the Fort Bridger, Box Elder and Ruby Valley treaties, the Ute treaties and the Brunot agreement, the agency records and the rolls since. Each people has fewer than 300 names; women are seldom named (Sacagawea, Chipeta), so most women before 1800 are "a woman of" a division or band.
+
+Reverse: edit the lists in data/people-basin.mjs.
+
+## B4152. Divisions and bands before 1800, family names after (2026-11-14)
+WoDX Creation. Before 1800 an own name alone; from 1800 a church given name and a family name from the rolls. No church names before 1800: no mission held the Basin.
+
+Reverse: change towns or earlyChurch in data/people-basin.mjs.

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.44.0 (The Shoshone and the Ute join the People generator, with own names from the treaties, their divisions and bands, and the family names of the rolls (B4150 to B4152))
 - 0.43.0 (The northern Plains join the People generator: the Crow with clans from the mother, the Blackfoot and the Arapaho by division, with own names from the treaties and family names from the rolls (B4140 to B4142))
 - 0.42.0 (The village peoples of the Missouri join the People generator: the Mandan, the Hidatsa, the Arikara and the Pawnee, with own names from the records, their villages and bands, and the family names of the Fort Berthold and Pawnee rolls (B4130 to B4132))
 - 0.41.2 (book check: voluntary torpor by Road is V20 Dark Ages p. 351, not p. 350)
