@@ -118,7 +118,7 @@ def _place(room, sp, pal, R):
     sizes = [1, .75] if W * H <= 2 else [1]                     # a small piece may shrink to fit between walkways
     cands, k = [], 1
     for k in sizes:
-        cands = next((c for c in (room.candidates(W * k, H * k, r) for r in rules) if c), [])
+        cands = next((c for c in (room.candidates(W * k, H * k, r, keep_windows=base[0] in ("chest", "store")) for r in rules) if c), [])
         if cands: break
     if not cands: return []
     if k != 1:
@@ -144,7 +144,7 @@ def _place(room, sp, pal, R):
             continue
         rect = _frame(x, y, W, H, side, (dx, dy, pw, ph))
         layer = 50 if piece == "rug" else 100
-        if layer == 100 and not room.fits(rect):
+        if layer == 100 and (not room.fits(rect) or piece in ("chest", "store") and room.under_window(rect)):
             if prule == "base": return []
             continue
         it = _drawn(e, rect, piece, layer)
@@ -239,9 +239,10 @@ def _along_walls(room, pal, R, dense):
         if max(aw, ah) > (3 if room.iw * room.ih >= 40 else 2): continue      # a big hall or shed takes bigger pieces
         sc = .75 if max(aw, ah) <= 1 and room.iw * room.ih < 40 else 1.0
         fw, fh = aw * sc, ah * sc
-        spots = room.candidates(fw, fh, "wall")
+        kw = order[k % len(order)] in ("chest", "store")       # nothing stored pushed up under a window
+        spots = room.candidates(fw, fh, "wall", keep_windows=kw)
         if not spots and STACKED.search(room.name):           # a shed's stacks go on across the floor, each by another
-            spots = [c for c in room.candidates(fw, fh, "free") if _beside_any(room, c[1:5])]
+            spots = [c for c in room.candidates(fw, fh, "free", keep_windows=kw) if _beside_any(room, c[1:5])]
         if not spots: continue
         _, x, y, w, h, rot = spots[R.randrange(min(4, len(spots)))]
         room.items.append({"asset": e["path"], "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": sc, "layer": 100,
@@ -250,7 +251,7 @@ def _along_walls(room, pal, R, dense):
         if dense() or len(room.items) >= max(2, int(room.iw * room.ih / DENSE)): break   # bucket, a basket) by the walls
         e = pal.pick(("store", "clutter")[k % 2], R)
         if not e or max(e["cells"]) > 1: continue
-        spots = room.candidates(.5, .5, "wall") or [c for c in room.candidates(.5, .5, "free") if _beside_any(room, c[1:5])]
+        spots = room.candidates(.5, .5, "wall", keep_windows=True) or [c for c in room.candidates(.5, .5, "free", keep_windows=True) if _beside_any(room, c[1:5])]
         if not spots: break
         _, x, y, w, h, rot = spots[R.randrange(min(4, len(spots)))]
         room.items.append({"asset": e["path"], "x": x, "y": y, "w": w, "h": h, "rot": rot, "scale": round(.5 / max(e["cells"]), 3),
@@ -275,17 +276,43 @@ def _wall_lights(room, pal, tier, R):
         e = None
     n = 1 + TIERS.index(tier) // 2
     rng = LIGHT_RANGE.get(pal.lights, 3)
-    for k in range(n):
-        for _try in range(8):                                  # spread out: no two lights within two squares
-            side = R.choice("NSEW")
-            cx = room.ix + room.iw * R.uniform(.25, .75) if side in "NS" else (room.ix + .25 if side == "W" else room.ix + room.iw - .25)
-            cy = room.iy + room.ih * R.uniform(.25, .75) if side in "EW" else (room.iy + .25 if side == "N" else room.iy + room.ih - .25)
-            if all(math.hypot(cx - x, cy - y) >= 2 for x, y, _ in room.lights): break
-        else:
-            continue
-        if e: room.dressing.append({"asset": e["path"], "x": cx - .3, "y": cy - .3, "w": .6, "h": .6, "rot": 0,
-                                    "scale": round(min(1.0, .6 / max(e["cells"])), 3), "layer": 400, "piece": "light"})   # drawn .6 across
+    for cx, cy, side in _light_spots(room, R):
+        if len(room.lights) >= n: break
+        if any(math.hypot(cx - x, cy - y) < 2 for x, y, _ in room.lights): continue      # spread out
+        if e:
+            # a wall light's picture has its bracket on one edge (ddcore.bracket_turn): turned so it is against its wall
+            angle = C.bracket_turn(e["name"], side) or 0.0
+            room.dressing.append({"asset": e["path"], "x": cx - .3, "y": cy - .3, "w": .6, "h": .6, "rot": 0, "angle": angle,
+                                  "scale": round(min(1.0, .6 / max(e["cells"])), 3), "layer": 400, "piece": "light"})
         room.lights.append((cx, cy, rng))
+
+
+TALL = re.compile(r"Oven|Stove|Hearth|Fireplace|Shel|Bookcase|Wardrobe|Cupboard|Cabinet|Dresser|Armoire|Hutch", re.I)   # a light is not hung behind these
+
+def _light_spots(room, R):
+    """Spots for a wall light: on the wall line itself (the light's centre a little in from the inner face), never at a
+    door or window, and never behind a tall piece (an oven, a cupboard, shelves in the square in front of it). Shuffled."""
+    x0, y0, x1, y1 = room.x, room.y, room.x + room.w, room.y + room.h
+    openings = [(ox, oy) for ox, oy, _ in room.doors] + [(ox, oy) for ox, oy, _ in room.windows]
+    solid = [i for i in room.items + getattr(room, "dressing", []) if i.get("layer", 100) == 100 and TALL.search(i["asset"])]
+    out = []
+    for side in "NSEW":
+        length = room.w if side in "NS" else room.h
+        k = .75
+        while k <= length - .75:
+            if side == "N": cx, cy, front = x0 + k, room.iy + .2, (x0 + k - .5, room.iy, 1, 1)
+            elif side == "S": cx, cy, front = x0 + k, room.iy + room.ih - .2, (x0 + k - .5, room.iy + room.ih - 1, 1, 1)
+            elif side == "W": cx, cy, front = room.ix + .2, y0 + k, (room.ix, y0 + k - .5, 1, 1)
+            else: cx, cy, front = room.ix + room.iw - .2, y0 + k, (room.ix + room.iw - 1, y0 + k - .5, 1, 1)
+            k += .5
+            wx = cx if side in "NS" else (x0 if side == "W" else x1)
+            wy = cy if side in "EW" else (y0 if side == "N" else y1)
+            if any(math.hypot(wx - ox, wy - oy) < 1.0 for ox, oy in openings): continue
+            fx, fy, fw, fh = front
+            if any(fx < i["x"] + i["w"] and i["x"] < fx + fw and fy < i["y"] + i["h"] and i["y"] < fy + fh for i in solid): continue
+            out.append((cx, cy, side))
+    R.shuffle(out)
+    return out
 
 
 BEDDED = re.compile(r"Byre|Stable|Sty|Barn|Kennel", re.I)

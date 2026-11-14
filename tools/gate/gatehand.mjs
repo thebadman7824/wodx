@@ -145,7 +145,10 @@ export async function run() {
     const q = Q.pending().find(e => e.type === `${MOD}.downtime` && /Gate: reads/.test(e.detail));
     if ( q ) await Q.decide(q.id, "reject");
     await sleep(800);
-    ok("11. downtime", !!q && Q.pending().length === n0, {queued: !!q});
+    // the request itself is gone and was turned down; other proposals may reach a busy queue meanwhile, so the
+    // count alone is not the test
+    const was = q ? Q.history().find(h => h.id === q.id) : null;
+    ok("11. downtime", !!q && !Q.pending().some(e => e.id === q.id) && was?.verdict === "reject", {queued: !!q, verdict: was?.verdict ?? null, pending: [n0, Q.pending().length]});
   } catch (e) {
     R.errors.push(String(e?.stack ?? e));
   } finally {

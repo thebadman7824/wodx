@@ -17,6 +17,10 @@
  *   9. Undo on the anchors takes the marks off; running it again puts them back
  *  10. Undo on the carry removes only what the builder made; running it again brings everything back
  * Result: Data/wodx-gate/gatebuilder-result.json.
+ *
+ * On a testbed world (rothenstein-wodx and the lanes) the build itself is not wanted, so the gate checks only what
+ * holds in any world: the module and its api, that the builder refuses Live even when forced, and that running every
+ * step here refuses and makes nothing. The full ten steps run only in the recipe's own world.
  */
 const MOD = "wodx-storyteller";
 const B = () => game.modules.get(MOD).api.builder;
@@ -37,6 +41,30 @@ export async function run() {
   const Rules = await import(`/modules/${MOD}/scripts/recipe-rules.mjs?${Date.now()}`);
   const recipe = B()?.recipe?.();
   let carry = null;
+  const home = recipe && game.world.flags?.wodx?.recipe === "rothenstein" && Rules.canBuildHere(game.world.id, recipe).ok;
+  R.mode = home ? "build" : "testbed";
+
+  if ( !home ) {
+    await step("1 module", async () => {
+      const m = game.modules.get(MOD);
+      ok("1 module", m?.active && Rules.versionAtLeast(m.version, "0.61.0") && !!B() && !!recipe, {version: m?.version});
+    });
+    await step("2 refuses Live", async () => {
+      const live = Rules.canBuildHere("rothenstein-live", recipe, {force: true});
+      const here = Rules.canBuildHere(game.world.id, recipe);
+      ok("2 refuses Live", !live.ok && !here.ok && Rules.FORBIDDEN_WORLDS.includes("rothenstein-live"), {live: live.reason, here: here.reason});
+    });
+    await step("3 nothing built here", async () => {
+      const count = () => game.scenes.size + game.journal.size + game.actors.size + game.items.size;
+      const t0 = game.time.worldTime, n0 = count();
+      const out = await B().runAll();
+      const made = ["Scene", "JournalEntry", "Actor", "Item"].flatMap(t => [...game.collections.get(t)]).filter(d => d.flags?.[MOD]?.built).length;
+      ok("3 nothing built here", count() === n0 && game.time.worldTime === t0 && !made && !out.some(o => o.ok && o.id !== "check"),
+        {out: out.map(o => ({id: o.id, ok: o.ok, note: o.note ?? o.wait ?? o.error})), made});
+    });
+    R.notes.push(`Testbed mode in ${game.world.id}: the build steps run only in ${recipe?.world ?? "the recipe's world"}.`);
+    return save(R);
+  }
 
   await step("1 module", async () => {
     const m = game.modules.get(MOD);

@@ -43,13 +43,17 @@ export async function run() {
     ok("2. setting", setting?.default === "off", {now: game.settings.get(M, "wyrmCorruption")});
 
     const W = C.rules.WEEK;
-    const [works, village] = await Scene.createDocuments([
+    // a batch create need not hand the documents back in the order asked: take each by name
+    const byName = (list, name) => list.find(d => d.name === name);
+    const scs = await Scene.createDocuments([
       {name: "Gate corruption works", width: 1000, height: 1000, navigation: false},
       {name: "Gate corruption village", width: 1000, height: 1000, navigation: false}]);
+    const works = byName(scs, "Gate corruption works"), village = byName(scs, "Gate corruption village");
     made.scenes.push(works.id, village.id);
-    const [tanner, vamp] = await Actor.createDocuments([
+    const acs = await Actor.createDocuments([
       {name: "Gate tanner", type: "Mortal", prototypeToken: {actorLink: true}},
       {name: "Gate vampire", type: "Vampire", prototypeToken: {actorLink: true}}]);
+    const tanner = byName(acs, "Gate tanner"), vamp = byName(acs, "Gate vampire");
     made.actors.push(tanner.id, vamp.id);
     await works.createEmbeddedDocuments("Token", [{name: tanner.name, actorId: tanner.id, actorLink: true, x: 100, y: 100}]);
     await C.set(works, {level: 6, banes: 3, sources: [{kind: "works", since: t0}], links: [village.id]});
@@ -75,7 +79,8 @@ export async function run() {
     for ( let i = 0; i < 5; i++ ) h = C.rules.cleanse(h, {successes: 1, now: t0});
     ok("6. cleansing", c1.level === 4 && c1.ward === t0 + 4 * W && h.level === 7);
 
-    ok("7. Sense Wyrm", C.senseWyrm(game.actors.get(vamp.id)) === true && C.senseWyrm(game.actors.get(tanner.id)) === false);
+    const sv = C.senseWyrm(game.actors.get(vamp.id)), stn = C.senseWyrm(game.actors.get(tanner.id));
+    ok("7. Sense Wyrm", sv === true && stn === false, {vampire: sv, tanner: stn});
 
     const open = C.dialog();
     await sleep(800);
