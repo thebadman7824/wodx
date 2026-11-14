@@ -557,6 +557,30 @@ export function penetrationResult(successes) {
 }
 
 /**
+ * B3804: lay the body's toughness over the system's freshly computed totals (data: the actor's data being written).
+ * Extra Bruised levels go into the stored total, marked wodxBody so the health track does not add them twice; the
+ * wound level, penalty and health-level counts are worked out again from those totals.
+ */
+export function applyBodyTotals(data, body) {
+    const h = data?.system?.health;
+    if (!h?.bruised) return data;
+    const n = v => Number(v) || 0;
+    delete h.bruised.wodxBody;
+    if (!body) return data;
+    if (n(body.bruised)) { h.bruised.total = n(h.bruised.total ?? h.bruised.value) + n(body.bruised); h.bruised.wodxBody = n(body.bruised); }
+    const totals = {}, penalties = {}, labels = {};
+    for (const k of WOUND_LEVELS) { totals[k] = n(h[k]?.total ?? h[k]?.value ?? 1); penalties[k] = n(h[k]?.penalty); labels[k] = h[k]?.label ?? `wod.health.${k}`; }
+    const d = h.damage ?? (h.damage = {});
+    const ws = woundState({ bashing: n(d.bashing), lethal: n(d.lethal), aggravated: n(d.aggravated) }, totals, penalties, labels);
+    d.woundlevel = ws.label;
+    d.woundpenalty = bodyPenalty(ws, penalties, body);
+    const max = WOUND_LEVELS.reduce((s, k) => s + totals[k], 0);
+    const th = data.system.traits?.health?.totalhealthlevels;
+    if (th) { th.max = max; th.value = Math.max(0, max - ws.filled); }
+    return data;
+}
+
+/**
  * The state a maneuver leaves on its target after a hit (B3754): Sweep and Tackle knock down (V20 Dark Ages pp. 347-348),
  * Hold and Grapple hold until the victim's next action, and a Stake or Impale with three damage successes stakes a
  * vampire (V20 Dark Ages p. 347). [{condition, name, lasts: "turn" | "staked"}]; empty on a miss.

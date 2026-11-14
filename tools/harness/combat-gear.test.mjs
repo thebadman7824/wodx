@@ -63,3 +63,19 @@ test("Combat reads the installed cyberware: Pain Editor, cyberarm Potence, limb 
   assert.match(src, /sheetBonus\(a\.items, "initiative_buff"\)/);
   assert.match(src, /cyber\(actor\)\?\.body\?\.ease/);
 });
+
+test("body traits and a Pain Editor survive the system's recompute (B3804)", () => {
+  const level = (total, penalty) => ({value: total, total, penalty, label: "x"});
+  const fresh = (dmg) => ({system: {health: {bruised: level(1, 0), hurt: level(1, -1), injured: level(1, -1), wounded: level(1, -2), mauled: level(1, -2), crippled: level(1, -5), incapacitated: level(1, 0),
+    damage: {bashing: dmg, lethal: 0, aggravated: 0, woundpenalty: -9}}, traits: {health: {totalhealthlevels: {max: 7, value: 7}}}}});
+  const numb = R.applyBodyTotals(fresh(3), {ease: 5});
+  assert.equal(numb.system.health.damage.woundpenalty, 0);
+  const big = R.applyBodyTotals(fresh(2), {bruised: 1});
+  assert.equal(big.system.health.bruised.total, 2);
+  assert.equal(big.system.health.damage.woundpenalty, 0, "two bruised levels: still no penalty");
+  assert.equal(big.system.traits.health.totalhealthlevels.max, 8);
+  const plain = R.applyBodyTotals(fresh(2), null);
+  assert.equal(plain.system.health.damage.woundpenalty, -9, "no body traits: the system's own figure stands");
+  assert.match(readFileSync(join(root, "system/worldofdarkness/module/actor/data/wod-actor-base.js"), "utf8"), /Hooks\.callAll\("wodxActorTotals"/);
+  assert.match(src, /Hooks\.on\("wodxActorTotals"/);
+});

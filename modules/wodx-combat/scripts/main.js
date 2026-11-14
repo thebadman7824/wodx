@@ -220,9 +220,10 @@ function healthTrack(actor) {
         penalties[k] = num(h[k]?.penalty);
         labels[k] = h[k]?.label ?? `wod.health.${k}`;
     }
-    // B3793: Huge Size and Sturdy give one more Bruised level
+    // B3793: Huge Size and Sturdy give one more Bruised level (already in the stored total once the system's
+    // recompute has run through bodyTotals; added here only when it has not)
     const body = toughness(actor);
-    if (body?.bruised) totals.bruised += num(body.bruised);
+    if (body?.bruised && !h.bruised?.wodxBody) totals.bruised += num(body.bruised);
     const d = h.damage ?? {};
     const damage = { bashing: num(d.bashing), lethal: num(d.lethal), aggravated: num(d.aggravated) };
     const max = R.WOUND_LEVELS.reduce((s, k) => s + totals[k], 0);
@@ -393,6 +394,15 @@ async function spend(actor, wp, bp) {
 /* ------------------------------------------------------------------ */
 /*  Health                                                             */
 /* ------------------------------------------------------------------ */
+
+/**
+ * B3804: the system recomputes health totals and the wound penalty after every actor update and wrote over what
+ * healthUpdate set. Its "wodxActorTotals" hook lets the body traits and cyberware stay: the extra Bruised levels go
+ * into the stored total (marked wodxBody), and the wound level and penalty are worked out again from them.
+ */
+export function bodyTotals(actor, data) {
+    R.applyBodyTotals(data, toughness(actor));
+}
 
 function healthUpdate(actor, damage) {
     const t = healthTrack(actor);
@@ -1619,6 +1629,8 @@ async function createMacros() {
 /* ------------------------------------------------------------------ */
 
 Hooks.once("init", () => {
+    // B3804: body traits and cyberware survive the system's own recompute
+    Hooks.on("wodxActorTotals", (actor, data) => { try { bodyTotals(actor, data); } catch (e) { console.error(`${MOD} | body totals`, e); } });
     registerSettings();
     CD.registerConductorSettings();
     ST.registerStartSettings();
@@ -1631,7 +1643,7 @@ Hooks.once("init", () => {
     const aftermath = AA.setupAftermath({ corpusTrack });
     FTime.setupFightTime();
     const api = { body, movement, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.30.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.30.1", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, followOn: R.followOn, markFollow, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
