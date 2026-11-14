@@ -73,13 +73,14 @@ test("kuei-jin: the jade takes in Chi once a night at the Wall plus three, two a
   const now = 20 * 3600;
   const out = P.plan(ab, {flag: f, values: {"item:flags.wodx-library.wonder.pool.value": 1}, roll: {successes: 3, botch: false}, now});
   assert.equal(out.item["flags.wodx-library.wonder.pool.value"], 2, "capped at two");
-  assert.equal(out.item["flags.wodx-library.wonder.nights.absorb"], P.nightOf(now));
-  const tried = {...f, nights: {absorb: P.nightOf(now)}};
+  assert.equal(out.item["flags.wodx-library.wonder.nightRun.absorb"], P.nightOf(now));
+  assert.equal(typeof f.nights, "number", "the count of nights is not the night-run map");
+  const tried = {...f, nightRun: {absorb: P.nightOf(now)}};
   assert.match(P.blockersOf(ab, {flag: tried, values: {}, now: now + 3600}).join(), /tonight/);
   assert.deepEqual(P.blockersOf(ab, {flag: tried, values: {}, now: now + DAY}), []);
   assert.match(P.blockersOf(P.powerOf(f, "draw"), {flag: f, values: {"item:flags.wodx-library.wonder.pool.value": 1}, now: 3 * DAY}).join(), /ordinary jade/);
   const failed = P.plan(ab, {flag: f, values: {}, roll: {successes: 0, botch: false}, now});
-  assert.equal(failed.item["flags.wodx-library.wonder.nights.absorb"], P.nightOf(now), "a failed try still uses the night");
+  assert.equal(failed.item["flags.wodx-library.wonder.nightRun.absorb"], P.nightOf(now), "a failed try still uses the night");
 });
 
 test("kuei-jin: drawing moves a point into the body's Chi; a botch spending it bursts the jade", () => {
