@@ -365,9 +365,27 @@ class FillTest(unittest.TestCase):
         own = [f for f in feats if f["id"].rsplit("-", 1)[1].startswith("f")]
         self.assertTrue(any(f["flags"].get("container") for f in own), [f["id"] for f in feats])
         for f in own:
-            self.assertIn(f["flags"].get("kind", "chest") if f["flags"].get("container") else "bed", ("chest", "cabinet", "bed"))
+            fl = f["flags"]
+            what = fl.get("kind", "chest") if fl.get("container") else "cover" if fl.get("cover") else "bed"
+            self.assertIn(what, ("chest", "cabinet", "drawers", "box", "bed", "cover"))
             self.assertEqual(len(f["rect"]), 4)
         self.assertEqual(len({f["id"] for f in feats}), len(feats))
+
+    def test_shelves_desks_and_barrels_hold_the_trade(self):
+        # B4670: stocked by the building's trade and the year; B4671: tables and counters are cover
+        import ddcore as C, stock as ST
+        b = _furnished("burgher-palace", 1600)
+        feats = [f for r in b.rooms for f in C.feature_entries("t-", r, b.t["fill"])]
+        stocked = [f for f in feats if f["flags"].get("stock")]
+        self.assertTrue(stocked, [f["label"] for f in feats])
+        for f in stocked: self.assertIn(f["flags"]["restock"], ("dawn", "week", "month"))
+        self.assertTrue(any(f["flags"].get("cover") and f["flags"]["coverKind"] == "table" for f in feats))
+        smith = ST.stock_for("shelf", "smithy Smithy", 1300)[1]
+        self.assertIn("iron nails", smith); self.assertIn("charcoal", smith); self.assertNotIn("coke", smith)
+        self.assertIn("coke", ST.stock_for("shelf", "smithy", 1900)[1])
+        self.assertIn("rice", ST.stock_for("shelf", "", 1600, "east-asia")[1])
+        self.assertNotIn("beer", ST.stock_for("store", "tavern", 1900, "egypt")[1])
+        self.assertNotIn("floppy", ST.stock_for("desk", "office", 1850)[1])
 
     def test_rooms_look_lived_in(self):
         b = _furnished("burgher-palace", 1197)

@@ -70,6 +70,7 @@ def context_for(b, year, region, wealth, trade, catalogue, seed=0):
         lifts = sum(s["steps"] for s in purpose["side"] if re.search(s["lifts"], r.name))
         prefers = [p for s in purpose["side"] if re.search(s["lifts"], r.name) for p in s["prefers"]]
         out[r.name] = {"palette": pal, "role": roles[r.name], "wealth": wealth, "band": pal.key[0], "lifts": lifts,
+                       "year": year, "region": PAL.region_key(region, catalogue),
                        "trade": trade or f"{t or ''} {getattr(b, 'label', '') or ''}".strip(),   # a smithy's own name is its trade
                        "show_off": purpose["show_off"], "prefers": prefers,
                        "open_floor": bool(purpose["open_floor"] and re.search(purpose["open_floor"], r.name))}
