@@ -129,7 +129,11 @@ export async function run() {
       const entry = q.pending.find(p => p.key === key);
       if ( entry ) await chron().approvals.decide(entry.id, "approve");
       await sleep(500);
-      ok("8. a player's ask goes to the approval queue, and approving it starts the pregnancy", !!exp(ana) || !!q.history?.find?.(h => h.key === key), {queued: !!entry, expecting: !!exp(ana)});
+      const handler = chron().approvals.types?.().some(t => t.type === "wodx-npc.family-child");
+      const started = !!exp(ana);
+      // When the approval did not start it, ask conceive directly to learn why
+      const direct = started ? null : await fam().conceive(ana, bo);
+      ok("8. a player's ask goes to the approval queue, and approving it starts the pregnancy", !!entry && started, {queued: !!entry, expecting: started, handler, direct: direct ? {ok: direct.ok, why: direct.why} : null});
       await fam().end(ana);
     });
     await step("9. hook", async () => {
@@ -187,8 +191,10 @@ export async function run() {
       if ( entry ) await chron().approvals.decide(entry.id, "approve");
       await sleep(400);
       const wed = (game.actors.get(ana.id).flags?.["wodx-npc"]?.marriages ?? []).some(m => m.with?.id === bo.id && !m.ended);
+      const handler = chron().approvals.types?.().some(t => t.type === "wodx-npc.family-wedding");
+      const direct = wed ? null : await npc().hearts.marry(ana, bo);
       ok("14. a proposal to a Devoted NPC: yes, the waiting on the clock, the wedding card, and approving it marries them", r?.answer === "yes" && rec?.stage === "waiting" && !!entry && wed && !game.actors.get(ana.id).flags?.["wodx-npc"]?.proposal,
-        {answer: r?.answer, wait: rec?.wait, card: !!entry, married: wed});
+        {answer: r?.answer, wait: rec?.wait, card: !!entry, married: wed, handler, direct: direct ? {ok: direct.ok, why: direct.why} : null});
     });
     await step("15. minor", async () => {
       const r = await fam().propose(bo, teen);
