@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.59.0 (Creation acts without the Storyteller's hand (B5022-B5024))
 - 0.58.0 (The Banyarwanda and Barundi join the People generator (B5030 to B5032))
 - 0.57.0 (The Moro join the People generator (B5000 to B5002))
 - 0.56.0 (The Tuareg join the People generator (B4950 to B4952))
