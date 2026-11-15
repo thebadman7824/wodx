@@ -1,6 +1,7 @@
 import * as RV from "./rivalry-rules.mjs";
 import * as F from "./faction-rules.mjs";
 import * as FR from "./fight-rules.mjs";
+import * as AC from "./aftercare-rules.mjs";
 import * as Faces from "./faces-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
@@ -184,11 +185,14 @@ export function build({MOD, esc, isActiveGM, chron, C, profileFor, savedProfile,
       return {tok, other, r, helpers, timid, ...RV.flashpoint(sit), sit};
     };
     const va = view(aTok, ra, bTok), vb = view(bTok, rb, aTok);
+    // B5802 (n3): two who faced each other down lately are likelier to come to blows
+    const bonus = AC.standoffBonus(baseOf(aTok.actor)?.flags?.[MOD]?.standoffs?.[baseOf(bTok.actor)?.id], now);
+    for ( const v of [va, vb] ) if ( bonus && v.odds > 0 ) { v.odds += bonus; v.why = [...v.why, "faced each other down before"]; }
     const first = [va, vb].filter(v => !v.timid).sort((x, y) => y.odds - x.odds)[0] ?? null;
-    if ( !first || first.odds <= 0 ) return standoff(va.r.step <= vb.r.step ? va : vb, "glare");
+    if ( !first || first.odds <= 0 ) return standoff(va.r.step <= vb.r.step ? va : vb, "glare", null, [va, vb]);
     if ( first.sit.parley && !first.sit.parleyed ) parleyed.add(`${first.tok.id}:${first.other.id}`);
     const roll = RV.rollFlashpoint(first.odds, rng);
-    if ( !roll.fight ) return standoff(first, "hold", roll);
+    if ( !roll.fight ) return standoff(first, "hold", roll, [va, vb]);
     const other = first.tok.id === aTok.id ? vb : va;
     const sides = RV.sidesForFight(first.tok.id, first.other.id, first.helpers.map(t => t.id), other.helpers.map(t => t.id));
     const why = `${first.tok.name} ${RV.stepWord(first.r.step) === "Hunts" ? "hunts" : "is hostile to"} ${first.other.name}: ${first.r.why}. Flashpoint ${roll.roll} against ${first.odds}% (${first.why.join(", ")})`;
@@ -196,11 +200,21 @@ export function build({MOD, esc, isActiveGM, chron, C, profileFor, savedProfile,
       source: "rivalry", why, sides});
   }
   /** No blows: the Storyteller hears of a stand-off, and the NPC says something if it speaks. */
-  async function standoff(v, how, roll = null) {
+  async function standoff(v, how, roll = null, both = []) {
     if ( !v || v.r.step > -1 ) return null;
-    const text = how === "glare" ? `${v.tok.name} and ${v.other.name} know each other for rivals (${v.r.why.toLowerCase()}), but nobody moves: ${v.why.join(", ")}.`
+    let text = how === "glare" ? `${v.tok.name} and ${v.other.name} know each other for rivals (${v.r.why.toLowerCase()}), but nobody moves: ${v.why.join(", ")}.`
       : `${v.tok.name} squares up to ${v.other.name} but holds back (flashpoint ${roll?.roll} against ${v.odds}%: ${v.why.join(", ")}).`;
     try { game.modules.get(MOD)?.api?.talk?.bark?.(v.tok.document, "cry:threat", {gap: 60000}); } catch (e) { /* no barks */ }
+    // B5802 (n3): the one with less to lose gives way and remembers it; both remember the meeting
+    if ( both.length === 2 ) {
+      const giver = AC.givesWay(both.map(x => ({id: x.tok.id, us: x.sit.us, them: x.sit.them, ownGround: x.sit.ownGround, aggression: x.sit.aggression})));
+      const g = both.find(x => x.tok.id === giver), o = both.find(x => x.tok.id !== giver);
+      const at = game.time.worldTime;
+      for ( const [x, y] of [[g, o], [o, g]] ) { const a = baseOf(x.tok.actor), b = baseOf(y.tok.actor); if ( a?.update && b?.id ) await a.update({[`flags.${MOD}.standoffs.${b.id}`]: at}).catch(() => null); }
+      try { await game.modules.get(MOD)?.api?.memory?.remember?.(baseOf(g.tok.actor), baseOf(o.tok.actor), {kind: "shamed", text: "Backed down before them", seen: true}); } catch (e) { /* memory off */ }
+      try { await routines?.goAway?.(g.tok, o.tok, null); } catch (e) { /* no way */ }
+      text += ` ${g.tok.name} gives way.`;
+    }
     return ChatMessage.create({speaker: {alias: "WoDX NPC"}, whisper: game.users.filter(u => u.isGM).map(u => u.id),
       content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p>${esc(text)}</p></div></div>`});
   }

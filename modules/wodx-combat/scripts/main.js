@@ -222,6 +222,9 @@ function shieldsOf(actor) {
     }
     const mw = (actor?.items ?? []).filter(i => i.type === "Melee Weapon" && !i.system?.isnatural);
     const weapon = (mw.find(i => i.system?.isequipped) ?? null)?.name ?? "";
+    // B5073: a shield needs a hand of its own; a burden may leave none for it
+    const hb = MVJ.haulOfActor(actor), HR = game.modules.get("wodx-interactables")?.api?.haul?.rules;
+    if (hb && !hb.carried && HR && !HR.shieldHeld({ free: hb.free, weaponHands: weapon ? 1 : 0 })) return { shields: [], weapon: hb.free ? weapon : "" };
     return { shields, weapon };
 }
 
@@ -334,7 +337,7 @@ function weaponList(actor) {
         if (i.type !== "Melee Weapon" && i.type !== "Ranged Weapon") continue;
         const s = i.system;
         list.push({
-            id: i.id, name: i.name, ranged: i.type === "Ranged Weapon", natural: !!s.isnatural,
+            id: i.id, name: i.name, ranged: i.type === "Ranged Weapon", natural: !!s.isnatural, twoHanded: !!s.istwohanded,
             attribute: s.attack?.attribute || "dexterity",
             ability: s.attack?.ability || (i.type === "Ranged Weapon" ? "archery" : "melee"),
             secondaryId: s.attack?.secondaryabilityid || "",
@@ -419,6 +422,11 @@ function soakOpts(actor, profile) {
     // B5619: a fomor's Armored Skin soaks lethal harm as bashing (W20 p. 430)
     if (profile === "mortal") {
         try { const f = game.wodxActions?.fomor?.soakOf?.(actor); return f?.lethalSoak ? { lethalSoak: true, lethalWhy: f.why } : {}; } catch (e) { return {}; }
+    }
+    // B5650: a spirit soaks with its Willpower (W20 p. 366, Spirits in Combat); a Creature spirit has no real Stamina
+    if (profile === "spirit" && actor?.type === "Creature") {
+        const wp = Number(actor.system?.advantages?.willpower?.permanent ?? actor.system?.willpower?.permanent) || 0;
+        return wp ? { stamina: wp } : {};
     }
     if (profile !== "fae") return {};
     try {
@@ -869,6 +877,10 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         autoAtkNote = `Automatic attack: ${w.name} (expected health levels: ${shown})${out ? `. Not used: ${out}` : ""}`
             + (ignoredDistance ? `. Nothing reaches at the tokens' distance (${Math.round(distance)}): chosen as if in reach` : distance != null ? `. Distance ${Math.round(distance)}` : "") + ".";
     }
+    // ---- B5073: hands full with a burden
+    const handsNow = handsCheck(attacker, w);
+    if (handsNow.blocked) throw new Error(`${attacker.name} cannot use ${w.name}: ${handsNow.blocked}. Letting go is free.`);
+    if (handsNow.diff) { fd.extraDiff = (Number(fd.extraDiff) || 0) + handsNow.diff; log.push(`${handsNow.note} (house rule).`); }
     // ---- Shots (house rule): an empty weapon cannot fire
     if (w?.ranged && w.shots?.empty && countShots()) {
         const t = R.reloadTurns({ crossbow: w.crossbow, darkAges: darkAgesNow(), archery: archeryOf(attacker) });
@@ -1269,6 +1281,9 @@ function attackUsable(attacker, w, distance, reachD = distance) {
     if (w.id === "unarmed:claw" && !w.natural && !w.grow && !shifter)
         return discipline(attacker, "Vicissitude") >= 3 ? "no claws grown (sculpt bone talons first)" : "no claws (Protean 2, a shape with claws, or bone talons)";
     if (w.ranged && w.shots?.empty && countShots()) return "empty: reload first";
+    // B5073: a character carrying or dragging something has the hands it leaves free
+    const hands = handsCheck(attacker, w);
+    if (hands.blocked) return hands.blocked;
     const perShot = shotAmmo(attacker, w);
     if (perShot && !perShot.ok) return perShot.why;
     // 3.24.0: wet powder, or a match out in heavy rain
@@ -1282,6 +1297,21 @@ function attackUsable(attacker, w, distance, reachD = distance) {
         if (w.ranged && w.range > 0 && distance > w.range * 3) return "beyond three times its range";
     }
     return "";
+}
+
+/**
+ * B5073: what the hands a burden leaves free allow with a weapon: {blocked, diff, note}. A weapon from the sheet (not a
+ * natural one, not a punch or kick) needs a hand, two for a two-handed one; with two hands and one dragging, the
+ * other is the off hand (+1). A body with more hands keeps the rest (WoDX Interactables haul rules).
+ */
+function handsCheck(attacker, w) {
+    const none = { blocked: "", diff: 0, note: "" };
+    if (!w || w.natural || String(w.id ?? "").startsWith("unarmed:") || String(w.id ?? "").startsWith("vehicle:")) return none;
+    const hb = MVJ.haulOfActor(attacker);
+    const HR = game.modules.get("wodx-interactables")?.api?.haul?.rules;
+    if (!hb || hb.carried || !HR) return none;
+    const amb = (attacker?.items ?? []).some(i => /^ambidextrous/i.test(i.name ?? ""));
+    return HR.attackWith({ free: hb.free, hands: hb.hands, weapon: { twoHanded: !!w.twoHanded }, ambidextrous: amb, mode: hb.mode === "none" ? "strain" : hb.mode });
 }
 
 /**
@@ -1731,7 +1761,9 @@ export async function soakAndApply(tok, fd) {
     if (fd.soak) {
         const arm = armor(actor);
         sp = R.soakPool({ profile, damageType: type, stamina: attr(actor, "stamina"), fortitude: discipline(actor, "Fortitude"),
-            armor: fd.noArmor ? 0 : (arm[type] ?? 0), fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane, bonus: fd.soakBonus,
+            armor: fd.noArmor ? 0 : (arm[type] ?? 0), fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane,
+            // B5650: the sheet's soak rows count here too, as they do for a blow (B3800): Armor, Armored Hide
+            bonus: num(fd.soakBonus) + R.sheetBonus(actor?.items, "soak_buff", type),
             aggSoak: garouRules()?.isShifter?.(actor) ? garouRules().aggSoak(actor) : true, ...soakOpts(actor, profile) });
         if (sb) sp.notes.push(sb.note);
         if (fd.fortBlood && sp.autoSoak) await spend(actor, 0, 1);
@@ -1759,7 +1791,8 @@ export async function soakAndApply(tok, fd) {
     html += `</div>`;
     const data = { target: actor.uuid, targetToken: tok.document?.uuid ?? null, type, levels: left.levels, applied: false, fireSun: !!fd.fireSun };
     const msg = await postCard(tok.document ? tok : null, actor, html, rolls, data);
-    if (setting("autoApply") && left.levels) await applyFromMessage(msg, "main");
+    // B5650: a power whose harm the book applies outright (a spirit's Blast, a fomor's splash) asks for it with apply: true
+    if ((setting("autoApply") || fd.apply) && left.levels) await applyFromMessage(msg, "main");
     if (dazed && setting("statusEffects")) await markDazed(actor);
     return { levels: left.levels, dazed, message: msg };
 }
@@ -1919,7 +1952,7 @@ Hooks.once("init", () => {
     const vehicles = VH.setupVehicles({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall });
     FTime.setupFightTime();
     const api = { body, movement, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.39.1", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.41.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, followOn: R.followOn, markFollow, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -1943,7 +1976,7 @@ Hooks.once("ready", async () => {
 /*  Movement in yards, any grid (3.5.0)                                */
 /* ------------------------------------------------------------------ */
 
-const MV_LABEL = m => ({ ride: "Riding", fly: "Flying", swim: "Swimming", climb: "Climbing", crawl: "Crawling", jump: "Jumping", burrow: "In the ground", phase: "Through walls" }[m] ?? "Moving");
+const MV_LABEL = m => ({ haul: "Carrying or hauling", ride: "Riding", fly: "Flying", swim: "Swimming", climb: "Climbing", crawl: "Crawling", jump: "Jumping", burrow: "In the ground", phase: "Through walls" }[m] ?? "Moving");
 
 /** A token's movement allowance this turn (VtDA20 pp. 202, 241, 333, 351). */
 export function movementFor(actor) {

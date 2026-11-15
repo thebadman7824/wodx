@@ -133,3 +133,8 @@ test("each layer's look: decay in the Shadowlands, a swaying shimmer in the Drea
   assert.match(src, /register\(MODULE_ID, "looks"/);
   assert.match(src, /keepSway\(\)/);
 });
+
+test("B5821: Net damage and soak count successes at 6, ones do not cancel", () => {
+  assert.equal(RR.netSuccesses([6, 7, 1, 1, 3]), 2);
+  assert.equal(RR.netSuccesses([]), 0);
+});

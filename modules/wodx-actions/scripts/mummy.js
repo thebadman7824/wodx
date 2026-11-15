@@ -10,6 +10,7 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: mummy-rules.js.
  */
+import * as NPW from "./npc-power-rules.js";
 import * as LIM from "./limits.js";
 import * as M from "./mummy-rules.js";
 import { floatOver } from "./daysleep.js";
@@ -210,6 +211,18 @@ export function build(ctx) {
             else {
                 const o = await rollPool(n(fd.o), 6); rolls.push(o.roll);
                 res = r.successes > o.successes ? "The malign being cannot attack and must leave as soon as it can." : r.successes === o.successes ? "A tie: nothing happens." : "It stands its ground.";
+                // B5756: a won Forbiddance takes hold of the targeted being: Afraid for the scene, so WoDX NPC keeps it
+                // away and runs it off, and a Forbidden mark on its token that the Storyteller and players see
+                const being = [...(game.user.targets ?? [])].map(t => t.actor).find(x => x && x !== actor) ?? null;
+                if (being && r.successes > o.successes) {
+                    const C = game.modules.get("wodx-chronicle")?.api;
+                    try {
+                        C?.registerCondition?.({ id: "forbidden", name: "Forbidden", img: "icons/svg/cancel.svg", source: `${REF} pp. 141–142`,
+                            summary: "Forbidden by a mummy's Balance: it cannot attack the mummy and must leave as soon as it can.", mods: {} });
+                        await C?.applyTimed?.(being, { name: "Afraid", description: `Forbidden by ${actor.name}: cannot attack and must leave.`, duration: { kind: "scene" }, key: "wodx-effect-fear", condition: "forbidden", source: `${REF} pp. 141–142` });
+                        res += ` ${being.name} turns to go.`;
+                    } catch (e) { console.warn("WoDX | Forbiddance", e); }
+                } else if (!being && r.successes > o.successes) res += " (Target the being for it to act on the map.)";
                 return post(actor, `${actor.name}: Forbiddance`, rollBlock("Balance", r) + rollBlock("Its Willpower", o) + `<div class="vta-res">${res}</div><div class="vta-note">${esc(u.note)}</div><div class="wodx-quiet">${REF} p. 142</div>`, rolls.filter(Boolean));
             }
             return post(actor, `${actor.name}: Balance`, rollBlock("Balance", r) + `<div class="vta-res">${esc(res)}</div><div class="vta-note">${esc(u.note)}</div><div class="wodx-quiet">${REF} pp. 141–142</div>`, rolls.filter(Boolean));
@@ -297,5 +310,16 @@ export function build(ctx) {
         }
     }
 
-    return { info, cast, regain, balance, offense, resurrect, veil, setup, daily, isMummy, rules: M };
+    /** B5671: the named Hekau an NPC mummy may cast by itself (main.js npcPowers). */
+    function powersFor(actor) {
+        const i = info(actor);
+        if (!i.inWeb && i.sekhem.pool === 0) return [];
+        return Object.keys(M.HEKAU).flatMap(p => MH.spellsOf(p, n(i.hekau[p]))).filter(k => MH.SPELLS[k].type === "spell" && n(MH.SPELLS[k].cost) <= i.sekhem.pool).map(k => {
+            const s = MH.SPELLS[k];
+            return { use: "useHekau", field: "named", value: k, name: s.name, disc: M.HEKAU[s.path]?.label ?? s.path, level: s.level, set: "hekau", id: k,
+                keywords: NPW.keysOf(MH.hekauResults(k, 3, { name: s.name })) };
+        }).filter(p => p.keywords.length);
+    }
+
+    return { powersFor, info, cast, regain, balance, offense, resurrect, veil, setup, daily, isMummy, rules: M };
 }

@@ -247,6 +247,11 @@ export const KINDS = ["any", "fire", "sunlight", "silver", "faith", "spirits", "
  * the token (Ben's pick on the Notes Gaps Desk, g3: the binding card only).
  */
 export const BINDING_KEYS = ["fear", "sway", "possess", "bind", "hold"];
+/** B5793: what each binding does to the bound character's token (binds.js), for the binding card. */
+export const BIND_HOLDS = {
+  hold: "Your token does not move while it holds.", possess: "Your token does not move for you: the one who possesses the body moves it.",
+  fear: "Your token cannot go nearer the one you fear.", sway: "Each move you make goes to the Storyteller, who allows it or not.",
+  bind: "Each move you make goes to the Storyteller, who allows it or not."};
 export function bindingOf(item = {}, {caster = "", power = ""} = {}) {
   const key = item?.key, o = item?.out ?? {};
   if ( !BINDING_KEYS.includes(key) || !KEYWORDS[key] ) return null;
@@ -339,7 +344,8 @@ export function outcome(key, got, ctx = {}) {
       if ( ctx.frenzy ) return {...base, kind: "timed", name: "Roused", difficulty: clampDiff(6 + str), text: `a frenzy roll at ${clampDiff(6 + str)} now (Self-Control or Instinct, or Rage), roused for ${dur.label}`};
       return {...base, kind: "timed", name: "Afraid", text: `afraid of the caster for ${dur.label}`};
     case "sense":
-      return {...base, kind: "note", text: `the caster senses it for ${dur.label}`};
+      // B5788: Sense works: a detection sense on the caster's token, and what the sheet and scene show, whispered
+      return {...base, kind: "detect", range: 30 * step, text: `the caster senses the hidden within ${30 * step} feet for ${dur.label}, and learns what the sheet shows`};
     case "move":
       return {...base, kind: "move", text: "moves to where the caster means to go, in this scene"};
     case "sway":
@@ -356,7 +362,8 @@ export function outcome(key, got, ctx = {}) {
     case "speak":
       return {...base, kind: "timed", name: "Speaks with", text: `can talk with animals, spirits, ghosts or machines for ${dur.label}`};
     case "know":
-      return {...base, kind: "note", text: "the Storyteller answers one question"};
+      // B5789: Know works: a secret the target keeps is found out (a hook in the Ledger), else what the sheet shows is pinned as a clue
+      return {...base, kind: "question", text: "one thing the target hides is found out; the Storyteller may add to the answer"};
     case "possess":
       return {...base, kind: "timed", name: "Possessed", text: `possessed for ${dur.label}; the possessor plays this body and their own lies empty`};
     case "bind":

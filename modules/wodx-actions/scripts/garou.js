@@ -5,6 +5,8 @@
  * chiminage. Rules basis by era (B41): Dark Ages: Werewolf in the Dark Ages profiles, W20 elsewhere.
  * Every card carries its page reference. Nothing here copies book text.
  */
+import * as SUM from "./summons.js";
+import * as SR from "./summon-rules.js";
 import * as LIM from "./limits.js";
 import { spendTime } from "./spend-time.js";
 import { floatOver } from "./daysleep.js";
@@ -669,14 +671,31 @@ export function build(ctx) {
             const diff = clampDiff(G.summonDifficulty(fd.type, fd.hours, D.summoning) + ce.diff);
             const pool = poolOf(actor, "wits+rituals", info(actor));
             const rr = await rollPool(pool.dice, diff);
-            let body = rollBlock(pool.label, rr, [`${fd.type}: difficulty ${diff}`, ...(ce.note ? [ce.note] : [])]), rolls = [rr.roll];
+            let body = rollBlock(pool.label, rr, [`${fd.type}: difficulty ${diff}`, ...(ce.note ? [ce.note] : [])]), rolls = [rr.roll], gnosisHits = 0;
             if (rr.successes > 0) {
                 const gr = await rollPool(effectiveGnosis(actor), 6);
+                gnosisHits = Math.max(0, n(gr.successes));
                 rolls.push(gr.roll);
                 body += rollBlock("Gnosis", gr, ["the spirit's attitude"]) + `<div class="vta-big">${esc(G.summonAttitude(gr.successes, D.summoning))}</div>`;
                 if (["Incarna", "Celestine avatar"].includes(fd.type)) body += `<div class="vta-note">Summoning an Incarna or Celestine earns Wisdom.</div>`;
             } else if (rr.botch) body += `<div class="vta-note bad">A botch: the wrong spirit answers, perhaps a Bane.</div>`;
-            return post(actor, `${actor.name} summons a ${esc(fd.type)}`, body, rolls.filter(Boolean));
+            const msg = await post(actor, `${actor.name} summons a ${esc(fd.type)}`, body, rolls.filter(Boolean));
+            // B5753: the spirit comes onto the map through the summons system (it answers by its attitude: hostile ones
+            // go for whoever is nearest, the rest take requests); a botch brings a Bane, out of hand
+            const came = rr.botch ? "bane" : rr.successes > 0 ? (gnosisHits >= 1 ? "spirit" : null) : null;
+            if (came) {
+                const tok = actor.getActiveTokens?.()[0] ?? null, scene = tok?.document?.parent ?? canvas?.scene;
+                const size = scene?.grid?.size ?? 100;
+                const at = tok ? { x: tok.document.x + size * 1.5 + (tok.document.width ?? 1) * size / 2, y: tok.document.y + (tok.document.height ?? 1) * size / 2 } : null;
+                const hostile = came === "bane" || gnosisHits <= 2;
+                const label = came === "bane" ? "A Bane" : fd.type;
+                try {
+                    const summon = SR.resolve({ what: "spirit", profile: hostile ? "wild" : "called", count: 1, lasts: { kind: "scene" }, page: D.summoning?.page ?? "DA:W p. 150",
+                        note: came === "bane" ? "The wrong spirit answered." : G.summonAttitude(gnosisHits, D.summoning) }, {});
+                    if (at) await SUM.bring({ caster: actor.uuid, out: { label, summon } }, { at, casterName: actor.name, scene });
+                } catch (e) { console.warn("WoDX | summon spirit", e); }
+            }
+            return msg;
         });
     }
 
@@ -824,7 +843,7 @@ export function build(ctx) {
           <div class="form-group"><label>Witnesses who know the occult roll Wits + Occult (9) for extra Willpower</label><input type="checkbox" name="occult"/></div>
           <div class="form-group"><label>The shifter is a Ratkin (milder: +2)</label><input type="checkbox" name="ratkin"/></div></form>`;
         return dialog("The Delirium", content, "Check", async fd => {
-            const rows = [], rolls = [];
+            const rows = [], rolls = [], acted = [], given = {};
             for (const tok of tokens) {
                 const a = tok.actor; if (!a) continue;
                 const k = P.detectProfile(a);
@@ -839,8 +858,16 @@ export function build(ctx) {
                 }
                 const d = G.delirium(w, b, T);
                 rows.push(`<li><b>${esc(a.name)}</b> (Willpower ${d.willpower}${esc(extra)}): ${esc(d.reaction)}; ${esc(d.memory)}.</li>`);
+                acted.push(tok); given[tok.document?.id ?? tok.id] = { reaction: d.reaction, memory: d.memory };
             }
-            return ChatMessage.create({ content: `<div class="vta-card"><h3>The Delirium</h3><ul>${rows.join("")}</ul></div>`, whisper: gmIds(), speaker: { alias: "WoDX" }, rolls: rolls.filter(Boolean) });
+            const msg = await ChatMessage.create({ content: `<div class="vta-card"><h3>The Delirium</h3><ul>${rows.join("")}</ul></div>`, whisper: gmIds(), speaker: { alias: "WoDX" }, rolls: rolls.filter(Boolean) });
+            // B5750: the reactions happen on the map (fall still, flee, attack) and the memory column decides who keeps it,
+            // through the same witness step a Crinos in plain sight uses
+            if (acted.length) {
+                const shifter = (canvas.tokens?.controlled ?? []).map(t => t.actor).find(x => x && P.detectProfile(x) === "lupine") ?? null;
+                try { await ctx.api?.()?.witnessStep?.({ actor: shifter, tokens: acted, secret: "lupine", event: "in Crinos", given }); } catch (e) { console.warn("WoDX | Delirium", e); }
+            }
+            return msg;
         });
     }
 

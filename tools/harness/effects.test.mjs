@@ -386,7 +386,7 @@ test("Actions 3.32.0: the books' rituals and rites fill the Storyteller's window
   assert.deepEqual(Object.keys(c), ["v20", "v20da", "w20", "daw", "mummy"]);
   assert.ok(Object.values(c).reduce((a, b) => a + b, 0) >= 300);
   for ( const [set, b] of Object.entries(BR.BOOK_RITUALS) ) b.list.forEach((r, i) => {
-    assert.ok(r.n && r.page && r.k.length && r.k.every(k => KEYWORDS[k]), `${set} ${i} ${r.n}`);
+    assert.ok(r.n && r.page && r.k.length && r.k.every(k => KEYWORDS[String(k).split(":")[0]]), `${set} ${i} ${r.n}`);
     const x = BR.bookRitual(set, i);
     assert.ok(x && x.name && x.keywords.length && x.note.length <= 300 && x.takes.length <= 60, `${set} ${i} fills in`);
     assert.doesNotMatch(r.does, /\b(he|she|his|her|him)\b/i);

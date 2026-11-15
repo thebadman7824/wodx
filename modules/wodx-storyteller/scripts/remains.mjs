@@ -94,11 +94,14 @@ function squares(a, b, scene) {
 export async function onMoved(tok, changes) {
   if ( !isActiveGM() || !setting("remains") || !("x" in (changes ?? {}) || "y" in (changes ?? {})) ) return [];
   const pc = tok.actor;
-  if ( !pc?.hasPlayerOwner || tok.hidden ) return [];
+  if ( !pc || tok.hidden ) return [];
+  // B5703 (h5): townsfolk find bodies too: a mortal NPC (not a passer-by or the hunters' own) is the first to come upon one
+  const townsfolk = !pc.hasPlayerOwner && pc.type === "Mortal" && !tok.flags?.["wodx-npc"]?.passerby && !tok.flags?.[MOD]?.reach;
+  if ( !pc.hasPlayerOwner && !townsfolk ) return [];
   const out = [];
   for ( const body of tok.parent?.tokens ?? [] ) {
     const r = remainsOf(body);
-    if ( !r || body.hidden || body.id === tok.id || r.found.includes(pc.id) || squares(tok, body, tok.parent) > reach() ) continue;
+    if ( !r || body.hidden || body.id === tok.id || r.found.includes(pc.id) || (townsfolk && r.found.length) || squares(tok, body, tok.parent) > reach() ) continue;
     out.push(await found(body, pc));
   }
   return out;
@@ -112,11 +115,14 @@ export async function found(body, pc) {
   await body.update({[`flags.${MOD}.remains`]: {...r, found: [...r.found, pc.id].slice(-50), heated: r.heated || heat}});
   if ( heat ) await addHeat(body.parent, "body", {who: pc.id}).catch(e => console.error(`${MOD} | remains`, e));
   const first = !r.found.length;
+  // B5703 (h5): a body drained or savaged feeds the hunters, and from the age of the coroner goes to the morgue
+  const hf = first ? await (game.modules.get(MOD)?.api?.hunters?.follow?.bodyFound?.(body, r.cause) ?? null)?.catch?.(e => { console.error(`${MOD} | remains`, e); return null; }) : null;
+  const after = hf?.pressure ? `<p class="wodx-quiet">Word of it reaches those who hunt the night (pressure +${hf.pressure}).${hf.morgue ? " The body is taken to the morgue, where they can claim it." : ""}</p>` : "";
   return ChatMessage.create({whisper: gmIds(), speaker: {alias: "Bodies left behind"}, flags: {[MOD]: {remains: {token: body.uuid}}},
     content: `<div class="wodx-card wst-remains"><h3>${esc(pc.name)} comes upon ${esc(body.name)}</h3>
       <p><strong>${esc(st.label)}.</strong> ${esc(st.note)} ${esc(R.PLACES[r.place].label)}.</p>
       ${first ? `<p>If it is reported, ${esc(f.who)} look into it. ${esc(f.identity)} ${esc(f.cause)} ${esc(f.when)}</p>` : `<p>Others have found it already.</p>`}
-      ${f.drained && first ? `<p>${esc(f.drained)}</p>` : ""}<p class="wodx-quiet">${esc(R.EXAMINE)}</p>${heat ? `<p class="wodx-quiet">The hunting ground here grows hotter.</p>` : ""}${r.note ? `<p class="wodx-quiet">${esc(r.note)}</p>` : ""}</div>`});
+      ${f.drained && first ? `<p>${esc(f.drained)}</p>` : ""}<p class="wodx-quiet">${esc(R.EXAMINE)}</p>${heat ? `<p class="wodx-quiet">The hunting ground here grows hotter.</p>` : ""}${r.note ? `<p class="wodx-quiet">${esc(r.note)}</p>` : ""}${after}</div>`});
 }
 
 /** An NPC token marked dead becomes a body (when the setting is on). */

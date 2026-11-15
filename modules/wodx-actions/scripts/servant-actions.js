@@ -14,6 +14,9 @@
  * Every change that needs the Storyteller goes through Chronicle's approvals, and approving does it.
  */
 import * as R from "./servant-actions-rules.js";
+import * as EF from "./effects.js";
+import * as DE from "./demon-evocations.js";
+import { stOutcomes } from "./effects-rules.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -160,20 +163,59 @@ export function build(ctx) {
     const i = linked.findIndex(x => x.actorId === t.id);
     if ( i >= 0 ) linked[i] = {...linked[i], ...entry}; else linked.push(entry);
     await demon.setFlag(MOD, "demon", {...f, thralls: linked, lastDawn: f.lastDawn ?? Math.floor(((game.time?.worldTime ?? 0) - 6 * 3600) / 86400)});
-    const items = R.giftItems(d.picks, {demon: demon.name});
+    const items = R.giftItems(d.picks, {demon: demon.name, demonId: demon.id});
     if ( items.length ) await t.createEmbeddedDocuments("Item", items);
     await t.setFlag(MOD, "faithPotential", d.potential);
     await S()?.bind?.(t, demon, "pact", {step: 2, data: {potential: d.potential}});
     return post(demon, `A pact sealed: ${t.name}`, `<div class="vta-res good">${esc(t.name)} is ${esc(demon.name)}'s thrall: potential ${d.potential}, ${entry.offered} Faith each dawn${items.length ? `; ${items.length} gift${items.length === 1 ? "" : "s"} on the sheet` : ""}.</div><div class="wodx-quiet">Demon: The Fallen pp. 251 to 253</div>`);
   }
+  /** B5795 (say-or-do audit d12): a pact gift does what it gives. A lesser evocation runs as the demon's own (its
+   * effects card applies it), an innate power or an apocalyptic enhancement lends dice for the scene. */
+  const LORE_NAME = id => dx()?.rules?.LORES?.[id]?.name ?? id;
+  function giftEvocations(g) {
+    const d = game.actors.get(g?.flags?.[MOD]?.pactGift?.demonId ?? "") ?? game.actors.getName?.(g?.flags?.[MOD]?.pactGift?.demon ?? "");
+    const lv = Math.max(1, Math.min(5, n(g?.flags?.[MOD]?.pactGift?.level) || 1));
+    let lores = {};
+    try { lores = d ? dx().info(d)?.lores ?? {} : {}; } catch (e) { lores = {}; }
+    const out = [];
+    for ( const [lore, rating] of Object.entries(lores) ) for ( let k = 1; k <= Math.min(lv, n(rating)); k++ ) {
+      const c = DE.evocationCard?.(lore, k);
+      const nm = dx()?.rules?.LORES?.[lore]?.evo?.[k - 1]?.name ?? c?.name ?? `${LORE_NAME(lore)} ${k}`;
+      out.push({lore, level: k, name: nm});
+    }
+    return out;
+  }
   async function useGift(actor) {
     const gifts = actor.items.filter(i => i.flags?.[MOD]?.pactGift?.diff);
     if ( !gifts.length ) return notify(`${actor.name} has no pact gift to use.`);
-    const content = `<form><div class="form-group"><label>Gift</label><select name="g" data-fixed>${gifts.map(g => `<option value="${g.id}">${esc(g.name)}</option>`).join("")}</select></div></form>`;
+    const evoRows = gifts.filter(g => g.flags[MOD].pactGift.k === "evocation").flatMap(g => giftEvocations(g).map(e => ({g, e})));
+    const content = `<form><div class="form-group"><label>Gift</label><select name="g" data-fixed>${gifts.map(g => `<option value="${g.id}">${esc(g.name)}</option>`).join("")}</select></div>
+      ${evoRows.length ? `<div class="form-group"><label>Evocation (a lesser evocation gift)</label><select name="e" data-fixed>${evoRows.map((x, k) => `<option value="${k}">${esc(x.e.name)} (${esc(LORE_NAME(x.e.lore))} ${x.e.level})</option>`).join("")}</select></div>` : ""}</form>`;
     return dialog(`A pact gift: ${actor.name}`, content, "Use", async fd => {
-      const g = actor.items.get(fd.g), diff = n(g?.flags?.[MOD]?.pactGift?.diff) || 7;
+      const g = actor.items.get(fd.g), pg = g?.flags?.[MOD]?.pactGift ?? {}, diff = n(pg.diff) || 7;
       const r = await rollPool(n(wp(actor).temporary ?? wp(actor).permanent) || n(wp(actor).permanent), diff);
-      return post(actor, `${actor.name} calls on a pact gift`, rollBlock(`Willpower at ${diff}`, r) + `<div class="vta-res ${r.successes > 0 ? "good" : ""}">${esc(g.name)}: ${r.successes > 0 ? "it answers" : "nothing comes"}.</div><div class="wodx-quiet">Demon: The Fallen p. 253</div>`, [r.roll].filter(Boolean));
+      const s = n(r.successes);
+      let body = rollBlock(`Willpower at ${diff}`, r), data = null;
+      if ( s < 1 ) body += `<div class="vta-res">${esc(g?.name ?? "The gift")}: nothing comes.</div>`;
+      else if ( pg.k === "evocation" ) {
+        const pick = evoRows.filter(x => x.g.id === g.id)[n(fd.e)] ?? evoRows.find(x => x.g.id === g.id);
+        if ( !pick ) body += `<div class="vta-res">${esc(g.name)}: the demon who gave it knows no evocation at that level.</div>`;
+        else {
+          const res = DE.evocationResults(pick.e.lore, pick.e.level, s, {faith: 1, name: pick.e.name, source: "Demon: The Fallen p. 253"});
+          const pp = EF.planOf(actor, res, s, {name: pick.e.name, line: "Demon (DtF)", faith: 1});
+          body += `<div class="vta-res good">${esc(pick.e.name)}, lent by ${esc(pg.demon || "the demon")}:</div>${pp.html}`;
+          const items = pp.items.filter(x => x.route !== "off" && x.route !== "st");
+          if ( items.length ) data = {kind: "effects", caster: actor.name, items};
+        }
+      } else {
+        const on = pg.k === "enhancement" ? "physical" : "social";
+        const [o] = stOutcomes(["boost"], {strength: s, ctx: {boost: on}});
+        const pp = o ? EF.planOf(actor, [{key: "boost", who: "self", out: {...o.out, label: g.name, name: g.name, source: "Demon: The Fallen p. 253"}}], s, {name: g.name, line: "Demon (DtF)"}) : null;
+        const items = pp?.items?.filter(x => x.route !== "off" && x.route !== "st") ?? [];
+        if ( items.length ) data = {kind: "effects", caster: actor.name, items};
+        body += `<div class="vta-res good">${esc(g.name)}: ${esc(o?.out?.text ?? "it answers")}.</div>${pp?.html ?? ""}`;
+      }
+      return post(actor, `${actor.name} calls on a pact gift`, body + `<div class="wodx-quiet">Demon: The Fallen p. 253</div>`, [r.roll].filter(Boolean), data);
     });
   }
 

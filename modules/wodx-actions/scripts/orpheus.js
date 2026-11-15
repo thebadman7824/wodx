@@ -11,6 +11,7 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: orpheus-rules.js.
  */
+import * as NPW from "./npc-power-rules.js";
 import * as LIM from "./limits.js";
 import * as O from "./orpheus-rules.js";
 import { floatOver } from "./daysleep.js";
@@ -286,5 +287,15 @@ export function build(ctx) {
         if (lines.length) await ChatMessage.create({ content: `<div class="vta-card"><h3>Rest</h3><ul>${lines.map(l => `<li>${l}</li>`).join("")}</ul><p class="wodx-quiet">${REF} pp. 191–192</p></div>`, whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: { alias: "WoDX" }, flags: { [MOD]: { info: true } } });
         return lines;
     }
-    return { restAll, info, horror, vitality, harm, spite, project, setup, isOrpheus, rules: O };
+    /** B5678: the Horrors an NPC projector or spook may use by itself (main.js npcPowers), with one Vitality put in. */
+    function powersFor(actor) {
+        if (!isOrpheus(actor)) return [];
+        const i = info(actor);
+        const v = Math.min(1, i.vitality.now);
+        return i.horrors.map(it => ({ it, key: O.horrorOf(it.name) })).filter(x => OH.HORROR_FX[x.key]).map(({ it, key }) => ({
+            use: "useHorror", field: "h", value: it.id, fill: { v: String(v) }, name: it.name, level: n(it.system?.value), set: "horror", id: key,
+            keywords: NPW.keysOf(OH.horrorResults(key, v, 3, { name: it.name })) })).filter(p => p.keywords.length);
+    }
+
+    return { powersFor, restAll, info, horror, vitality, harm, spite, project, setup, isOrpheus, rules: O };
 }
