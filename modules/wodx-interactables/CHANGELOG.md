@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.53.0 (Loose gear and real weights (B6083 to B6089): a chest weighs what is in it, a fallen knight weighs their mail, Set gear down here (Carry and drag menu) leaves things on the ground as a heap on the map, picked up from the Interact menu or hauled like a sack)
 - 0.52.0 (Snow and rail (B6070 to B6072): sleds and sleighs, snow machines, trains and trams as mounts and vehicles, with the snow and railway grounds for chases and fights)
 - 0.51.1 (B5089: the yielded are captives too)
 - 0.51.0 (Pictures for each state from a map's sidecar (B5733): a feature or opening may carry `art` and `artRect`; adopting lays a tile with the shut picture over each container and a tile that follows each door and window's wall, so the map shows what is open and what is shut)
