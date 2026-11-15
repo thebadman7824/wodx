@@ -157,7 +157,7 @@ export async function run() {
       const ride = {...(await import("/modules/wodx-interactables/scripts/chase-rules.mjs")).rideInFight("ghoulhorse", 1200, "open"), kind: "ghoulhorse", role: "reins"};
       const MT = await import("/modules/wodx-combat/scripts/mounted-rules.js");
       const dodge = MT.mountDodge(ride, {rideDots: 3, ranged: true});
-      G.ok("11. bicycles and beasts", bikeOk && faeNo && gryNo && dodge.valid && dodge.diff === 6, {bikeOk, faeNo, gryNo, dodge, kind: c.kind});
+      G.ok("11. bicycles and beasts", bikeOk && faeNo && gryNo && dodge.valid && dodge.diff === 6, {faeOpts: o(fae).map(x => x.id).slice(0, 4), gryOpts: o(gry).map(x => `${x.id}${x.disabled ? "(off)" : ""}`).slice(0, 4), bikeOk, faeNo, gryNo, kind: c.kind, year: c.year, dodge});
     });
 
     await G.step("12. riding the beast itself", async () => {
