@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5960
+Next free block: B5970
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -323,6 +323,7 @@ Next free block: B5960
 | B5930-B5939 | Market goods by region (the Market Goods Desk) (used B5930-B5936) | Storyteller |
 | B5940-B5949 | Primers for a scene far from home (used B5940-B5942) | Storyteller |
 | B5950-B5959 | Weather history by part of the world (used B5950-B5955) | Atmosphere |
+| B5960-B5969 | Cults that give what they promise (used B5960-B5964) | NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9845,3 +9846,28 @@ Reverse: drop the watmo-era lines.
 WoDX Atmosphere api.weather.post(day, {gm}) posts a weather card for a day, and api.weather.history(year, month, place) gives eraShift, for gates and other modules.
 
 Reverse: drop the two calls.
+
+## B5960. A player founder's cult stands on the sheet (2026-11-15)
+WoDX NPC cults.mjs serve. The cult's Background (Herd for a blood or Kuei-jin cult, Cult for a mage's cult, the Netaru and a Wyrm cult, Followers, Dreamers and Memoriam) is written on the founder's sheet for player founders too, as it was for NPCs, since the Storyteller approved the cult. A Background set by hand at or above the cult's dots is left alone. So the hunt reads a blood cult's Herd dots (V20 p. 114). Binding the inner circle, taint and faction Influence stay for NPC founders.
+
+Reverse: return before the Background for founders that are not NPCs.
+
+## B5961. A gathering gives Faith, Glamour or Pathos (2026-11-15)
+WoDX NPC cult-rules gatheringGift. Hold a gathering gives the founder: Faith equal to the Followers dots from a Demon's devotees (Demon: The Fallen p. 155), Glamour equal to the Dreamers dots as Reverie's automatic successes (C20 p. 169), or Pathos from rolling the Memoriam dots at difficulty 8 (Wraith 20th p. 144), each capped by the permanent rating. A house reading of how often and how much.
+
+Reverse: gather skips giveGift.
+
+## B5962. Once a week (2026-11-15)
+WoDX NPC. The gift comes once in a week of world time (cult field lastGift); a gathering sooner still adds attention and says the gift comes once a week.
+
+Reverse: GIFT_EVERY = 0.
+
+## B5963. Shown on the card and the sheet (2026-11-15)
+The gathering card gets a line (class wnpc-cult-gift) with the points gained, the dice for remembrance and the new total, or why none came.
+
+Reverse: drop the line.
+
+## B5964. Kinds that give at the hunt or the rite (2026-11-15)
+Blood and Kuei-jin cults feed through Herd at the hunt, and the mage's cult, the Netaru and a Wyrm cult add their dots to rites, so their gatherings add no pool.
+
+Reverse: give them a gatheringGift row.

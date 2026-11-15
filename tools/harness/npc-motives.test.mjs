@@ -212,7 +212,8 @@ test("part three is wired to the world", () => {
   const r = src("modules/wodx-npc/scripts/routines.mjs"), c = src("modules/wodx-npc/scripts/cults.mjs");
   assert.match(r, /DU\.withDuties\(R\.blocksOf/, "duties reach the routine");
   assert.match(c, /await serve\(c\)/, "the weekly turn serves the founder");
-  assert.match(c, /syncBackground\(a, "Herd"/, "a blood cult is Herd on the sheet");
+  assert.match(c, /syncBackground\(a, bg, dots, cult.id\)/, "a cult is its Background on the sheet");
+  assert.match(readFileSync(new URL("../../modules/wodx-npc/scripts/cult-rules.mjs", import.meta.url), "utf8"), /blood: "Herd"/, "a blood cult is Herd on the sheet");
   assert.match(c, /raidPlace\(c0\)/, "a raid goes to the meeting place");
   assert.match(src("modules/wodx-npc/scripts/servant-world.mjs"), /attendAll\(masters\)/, "servants attend");
   assert.match(src("modules/wodx-npc/scripts/orders.mjs"), /DU\.fetchAnswer/, "a fetch brings back");
