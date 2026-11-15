@@ -5,7 +5,7 @@
  * Durations "FT" and "FD" run the demon's permanent Faith in turns or days; "T1" is a single turn.
  * Pure: no Foundry calls. Also the apocalyptic form's powers by name (FORM_POWERS).
  */
-import { H, T, C, N, S, MV, HL, outcomesOf } from "./mage-da-effects.js";
+import { H, T, C, N, S, MV, HL, A, outcomesOf } from "./mage-da-effects.js";
 
 const E = (fx, lasts, range, high, spec = null, highSpec = null) => ({ fx, lasts, range, high, spec, highSpec });
 
@@ -15,7 +15,7 @@ export const EVOCATIONS = {
     "fundament:2": E("Cling to slopes, walls and ceilings: 3 yards of travel a success (slope 6, wall 7, ceiling 8).", "one turn", "self",
       "Surfaces touched are seared: anyone touching them that turn takes 1 lethal.", T("rise", "Manipulate Adhesion", "T1", "self")),
     "fundament:3": E("Throw anything 30 yards a success whatever the Strength; catch a seen missile with successes at least its damage dice; on a thrown hit each extra success is a damage level.", "one turn", "touch",
-      "The item botches on any 1, 2 or 3 for Torment turns.", null),
+      "The item botches on any 1, 2 or 3 for Torment turns.", [H("harm", 1, "bashing"), T("ward", "Catches missiles", "T1", "self")]),
     "fundament:4": E("Supernatural speed: walk 10, jog 20 or run 40 yards a success; in a fight the successes become extra damage levels on close or thrown attacks, split as wished.", "one turn", "self",
       "A heat aura: every living being within Torment yards takes 1 bashing.", T("hasten", "Manipulate Acceleration", "T1", "self")),
     "fundament:5": E("Change touched matter's state, a cubic foot a success: water to ice or steam (6), water or air firm enough to stand on (7), vaporise cloth or wood (8), stone or metal (9). A living target takes a lethal level a success.", "one turn", "touch",
@@ -29,23 +29,23 @@ export const EVOCATIONS = {
     "humanity:4": E("A mortal in conversation answers every question truthfully (Willpower 7 resists) and later forgets the details unless asked directly.", "Faith turns", "one in conversation",
       "Draws out only the target's dark side: hidden hatreds, lusts and ambitions.", T("sway", "Confess", "FT", "one")),
     "humanity:5": E("Edit, erase (7) or plant (8) a mortal's memories, resisted by Willpower 7; a brief meeting needs one net success, days or weeks need two or more. Permanent.", "permanent", "one mortal",
-      "Torment nights of nightmares: each night Willpower at Torment or lose a Willpower point; at none, a derangement.", null),
+      "Torment nights of nightmares: each night Willpower at Torment or lose a Willpower point; at none, a derangement.", A("bind", "memory", { who: "one", lasts: "scene", resist: null, diff: 7 })),
     "celestials:1": E("Every living being within Faith yards glows with its Faith; extra successes see through doors (1), brick (2), vault metal (3+). Aware demons resist with Willpower 8.", "one turn", "Faith yards",
       "Sees only the hollow souls: those with no Faith or Willpower left, and demons of Torment 9 or more.", T("sight", "Lamp of Faith", "T1", "self")),
     "celestials:2": E("Plant a vision in the minds of up to Faith people in sight: one turn of instructions or scene a success.", "instant", "Faith people in sight",
-      "Terrifying visions: a bashing level a success, not soaked, to up to Faith people in sight; more than Wits levels means Willpower 8 or a derangement.", null, H("harm", 1, "bashing", {soak: false, who: "each"})),
+      "Terrifying visions: a bashing level a success, not soaked, to up to Faith people in sight; more than Wits levels means Willpower 8 or a derangement.", A("illusion", "vision", { who: "each", lasts: "scene", resist: null }), H("harm", 1, "bashing", {soak: false, who: "each"})),
     "celestials:3": E("Lend Faith to a demon whose name is known and who is in sight: a bonus die a success (up to permanent Faith) on that demon's next evocation. Repeats do not stack.", "next evocation", "one demon in sight",
       "Only blocks: the Devil's successes cancel the named demon's on a resisted roll.", T("boost", "Pillar of Faith", "T1", "one")),
     "celestials:4": E("A bolt of white fire at a target within Faith yards: an aggravated level a success (lethal against those who do not deal aggravated).", "instant", "Faith yards",
       "The fire bursts out in every direction: an aggravated level a success to everything within permanent Faith yards.", H("harm", 1, "aggravated"), H("harm", 1, "aggravated", {who: "all"})),
     "celestials:5": E("Seize another demon's evocation as it is used (more successes than its user, its name known, higher initiative): the Devil picks its target and effect.", "that evocation", "one demon",
-      "Cannot steer others' evocations, but can throw one aimed at the Devil back at its user.", null),
+      "Cannot steer others' evocations, but can throw one aimed at the Devil back at its user.", A("banish", "seize", { who: "self", lasts: "scene" })),
     "flame:1": E("Feed a fire within Faith yards: a square foot larger a success.", "instant", "Faith yards",
       "The fire grows fiercer instead: +1 to its lethal damage a success.", null),
     "flame:2": E("Set alight anything burnable within Faith yards: successes must beat its resistance (fuel 1, dry wood or paper 2, inert metal 5). Water cannot burn.", "instant", "Faith yards",
-      "Everything flammable within Faith yards may catch, from one roll.", null),
+      "Everything flammable within Faith yards may catch, from one roll.", H("harm", 1, "lethal")),
     "flame:3": E("Successes make a pool (no more than permanent Faith) spent over later turns at difficulty 8 to grow or shrink a fire a square foot, or move it a yard, a success. No successes: it burns wild that turn; a botch loses it.", "while the pool lasts", "a fire in sight",
-      "The control pool is halved; the rest is added to the fire's damage.", null),
+      "The control pool is halved; the rest is added to the fire's damage.", H("harm", 1, "lethal")),
     "flame:4": E("Touch to burn with holy fire: an aggravated level and a point of the target's Faith a success (pool capped at the target's Faith). Objects burn to ash when their Faith is gone.", "instant", "touch",
       "Roll the full pool; damage past the target's Faith is paid from the Devil's own, and damage beyond what the target can take burns the Devil.", H("harm", 1, "aggravated")),
     "flame:5": E("Become living fire, or merge with a blaze; each turn a Willpower success must feed it or it shrinks a square foot. Below a square foot, or on a botch, the body returns.", "while fed", "self",
@@ -57,13 +57,13 @@ export const EVOCATIONS = {
     "radiance:3": E("Up to Faith mortals in sight and hearing: successes above a target's Wits make them loyal (they defend the Devil and follow reasonable orders); otherwise Willpower 8 resists. Once a scene a person.", "the scene", "Faith mortals",
       "Victims fall into murderous frenzy and attack whoever is nearest.", T("sway", "Aura of Legend", "scene", "each"), C("fear", "frenzy", "Murderous frenzy", "scene", "each")),
     "radiance:4": E("A spoken mark on someone touched and named: lasts a day (1), week (2), month (3) or year (4+). Anyone meeting the bearer with Wits below the successes acts as the mark says; others resist with Willpower 7.", "a day to a year", "touch",
-      "Marks can only bring violence and bad luck; resisting is at the Devil's Torment.", null),
+      "Marks can only bring violence and bad luck; resisting is at the Devil's Torment.", A("sway", "mark", { who: "one", lasts: "scene", resist: null })),
     "radiance:5": E("Resisted against Willpower: the Devil sees the target's true Nature and beliefs and the target cannot lie or evade. At scene's end Willpower 7: success +1 permanent Willpower, failure -1, botch -3 and a derangement. Not demons.", "the scene", "one being",
       "The target's worst impulses take over for the scene if they fail to resist.", T("know", "Revelation", "scene", "one")),
     "awakening:1": E("Home in on a named person within permanent Faith miles (mundane name 8, Celestial 7, True Name 6). A demon who senses the search may slip it with Willpower 8.", "instant", "Faith miles",
       "Finds only the spiritually rotten: those with no Faith or Willpower left.", T("know", "Find the Faithful", "T1", "self")),
     "awakening:2": E("Touch to purge poison, drink or disease (alcohol 6, grave disease 8+): all or nothing, one try per ailment.", "instant", "touch",
-      "Spreads sickness: a bashing level a success, then a bashing level and a Willpower point each day for Faith days. Medicine cannot cure it.", null, H("harm", 1, "bashing")),
+      "Spreads sickness: a bashing level a success, then a bashing level and a Willpower point each day for Faith days. Medicine cannot cure it.", A("mend", "cleanse", { who: "one", lasts: "scene", resist: null }), H("harm", 1, "bashing")),
     "awakening:3": E("Touch to heal all bashing damage, or one lethal or aggravated level a success.", "instant", "touch",
       "Poisons: each success takes a Stamina dot for Faith days; at zero Stamina a coma and an aggravated level an hour.", HL(1, {aggravated: true})),
     "awakening:4": E("Touched objects come alive as extensions of the demon's will, up to permanent Faith at once; the successes are their dice pool each turn. Controlled at a distance while seen.", "the scene", "touch, then sight",
@@ -77,7 +77,7 @@ export const EVOCATIONS = {
     "firmament:3": E("Act and speak through a thrall at any distance: successes are the dice used for the thrall's actions (no more than the thrall's own pool).", "permanent Faith turns", "a thrall",
       "Each action through the thrall risks a permanent Attribute dot (Stamina roll); evocations through them risk a lethal level.", S("possess")),
     "firmament:4": E("Aim another evocation at someone out of sight within 10 miles x current Faith, by name or a keepsake (9 mundane, 8 Celestial, 7 True Name, 6 own thrall). Area effects centre on them.", "that evocation", "10 miles x Faith",
-      "The target also rolls Willpower at Torment or gains a derangement (permanent on a botch).", null),
+      "The target also rolls Willpower at Torment or gains a derangement (permanent on a botch).", A("sense", "remote", { who: "self", lasts: "scene" })),
     "firmament:5": E("Control up to Wits thralls at once (the body sleeps unless fewer are used); successes are each thrall's pool, and one evocation a turn can go through one of them.", "permanent Faith turns", "thralls",
       "Thralls roll Stamina at Torment when released or go blind for days, or for good on a botch.", S("possess")),
     "winds:1": E("A sudden wind: its successes add to a leap, raise the difficulty of shots at the demon, or push as a dice pool against a door or a person, anywhere in sight.", "one turn", "sight",
@@ -103,13 +103,13 @@ export const EVOCATIONS = {
     "paths:1": E("Find a route that meets set terms (through a swamp 1 success, unseen across open ground 2, unharmed through a burning house 3+), shown as a faint silver line to the demon and those the demon touches.", "instant", "self and those touched",
       "The difficulty is their Torment.", N("know")),
     "paths:2": E("Lay a hidden path to set terms: successes equal to its length in hundreds of yards, over successive turns, difficulty by complexity up to 9-10. Lasts Faith days, or for good for a Willpower point.", "Faith days", "the path",
-      "Travel rolls on it botch on 1 or 2, dropping the traveller out somewhere along it.", null),
+      "Travel rolls on it botch on 1 or 2, dropping the traveller out somewhere along it.", A("place", "path", { who: "self", op: "lay", lasts: "FD" })),
     "paths:3": E("Hide a path: a searcher needs more successes than the demon rolled. Faith days, or for good for a Willpower point.", "Faith days", "a path",
-      "A trap instead: its successes are bashing levels on anyone else who steps on it, for Torment days.", null),
+      "A trap instead: its successes are bashing levels on anyone else who steps on it, for Torment days.", A("place", "path", { who: "self", op: "conceal", lasts: "FD" })),
     "paths:4": E("Seal a path at both ends (successes equal to its length in hundreds of yards); travellers on it are trapped. A Willpower point sets a keyword that opens it for chosen people.", "until opened", "a path",
-      "Collapses the path; anyone on it rolls Dexterity + Survival 8 or is lost between worlds and suffocates.", null),
+      "Collapses the path; anyone on it rolls Dexterity + Survival 8 or is lost between worlds and suffocates.", A("place", "path", { who: "self", op: "close", lasts: "FD" })),
     "paths:5": E("Change a path: travel time multiplied or divided by the successes, or a new destination or an endless loop (successes equal to its length in hundreds of yards). Faith days, or for good for a Willpower point.", "Faith days", "a path",
-      "Travellers also roll Willpower on arrival or gain a derangement.", null),
+      "Travellers also roll Willpower on arrival or gain a derangement.", A("place", "path", { who: "self", op: "warp", lasts: "FD" })),
     "forge:1": E("Understand, repair or improve a handled object (hammer 5, car 8, computer 10): each success lowers the difficulty of using it, once an item, for the scene or for good for a Willpower point.", "the scene", "touch",
       "The item botches on a 1 or 2, and a weapon then strikes its user or someone near.", T("boost", "Enhance Object", "scene", "self")),
     "forge:2": E("Work a simple mechanism by will within Faith yards: open a door (5), fire a pistol (8).", "instant", "Faith yards",
@@ -264,6 +264,12 @@ export function evocationResults(lore, level, successes, { high = false, faith =
     const spec = high && c.highSpec ? c.highSpec : c.spec;
     if (!spec) return [];
     const text = high ? c.high : c.fx;
+    // B5780: a chain of specs: each part is worked out on its own, with its own Faith duration
+    if (Array.isArray(spec)) return spec.flatMap(part => partResults(part, text, successes, { high, faith, name, source }));
+    return partResults(spec, text, successes, { high, faith, name, source });
+}
+
+function partResults(spec, text, successes, { high = false, faith = 1, name = "", source = "" } = {}) {
     const base = { key: spec.kw, label: name, source };
     const fl = faithLasts(spec.lasts, faith);
     const fixed = fl ? { ...spec, lasts: "scene" } : spec;
@@ -271,7 +277,7 @@ export function evocationResults(lore, level, successes, { high = false, faith =
         // B4845: the high-Torment form is marked, so its own each-turn rules go on it alone
         const r = high ? { ...r0, out: { ...r0.out, high: true } } : r0;
         if (!fl || !r.out?.timed) return r;
-        const t = r.out.kind === "timed" ? `${successes} success${successes === 1 ? "" : "es"} for ${fl.label}: ${text}` : `${r.out.name}, for ${fl.label}: ${text}`;
+        const t = r.out.kind === "timed" ? `${successes} success${successes === 1 ? "" : "es"} for ${fl.label}: ${text}` : `${r.out.name ?? r.out.label}, for ${fl.label}: ${text}`;
         return { ...r, out: { ...r.out, timed: fl.timed, duration: fl.label, text: t } };
     });
 }

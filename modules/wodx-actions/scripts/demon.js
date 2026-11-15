@@ -20,6 +20,7 @@ import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as DE from "./demon-evocations.js";
 import * as EF from "./effects.js";
+import * as P from "./profiles.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -132,6 +133,53 @@ export function build(ctx) {
     }
     const traitVal = (actor, k) => ATTRS.includes(k) ? ctx.attr(actor, k) : n(ctx.findAbility?.(actor, k)?.value);
 
+    /* -- B5780-B5786: the acts that need words or a name -------------- */
+    const ACT_ASK = {
+        "humanity:5": { kind: "memory", title: "Alter Memory", fields: `<div class="form-group"><label>The change</label><select name="mode" data-fixed><option value="erase">Erase</option><option value="edit">Edit</option><option value="plant">Plant</option></select></div>
+            <div class="form-group"><label>What they now remember</label><input type="text" name="say" placeholder="forgets meeting the demon"/></div>` },
+        "celestials:2": { kind: "vision", title: "Send Vision", fields: `<div class="form-group"><label>The vision</label><input type="text" name="say" placeholder="what they see"/></div>` },
+        "radiance:4": { kind: "mark", title: "The Mark of the Celestials", fields: `<div class="form-group"><label>The mark says</label><input type="text" name="say" placeholder="Shun this one"/></div>
+            <div class="form-group"><label>Those who meet the bearer</label><select name="tone" data-fixed><option value="shun">turn against them</option><option value="honour">honour them</option></select></div>` }
+    };
+    async function askWords(title, fields) {
+        try {
+            return await foundry.applications.api.DialogV2.prompt({ window: { title }, classes: ["wodx-dialog"], content: `<form>${fields}</form>`,
+                ok: { label: "Done", callback: (ev, b) => Object.fromEntries(new FormData(b.form)) }, rejectClose: false });
+        } catch (err) { return null; }
+    }
+    /** Fill in the words of an act from the demon's player; an NPC demon, or a cancelled window, takes the plain reading. */
+    async function actWords(actor, e, results) {
+        const key = `${e.lore}:${e.level}`, ask = ACT_ASK[key];
+        if (key === "firmament:4") {
+            const far = actor.hasPlayerOwner ? await pickFar(actor) : [...(game.user.targets ?? [])][0]?.document ?? null;
+            return results.map(r => r.out?.kind === "remote" ? { ...r, out: { ...r.out, far: far ? { uuid: far.uuid, name: far.name } : null } } : r);
+        }
+        if (!ask || !results.some(r => r.out?.kind === ask.kind)) return results;
+        const got = actor.hasPlayerOwner && !P.autoPending?.() ? await askWords(`${ask.title}: ${actor.name}`, ask.fields) : null;
+        const say = String(got?.say ?? "").trim();
+        return results.map(r => r.out?.kind === ask.kind ? { ...r, out: { ...r.out, ...(say ? { say } : {}), ...(got?.mode ? { mode: got.mode } : {}), ...(got?.tone ? { tone: got.tone } : {}) } } : r);
+    }
+    /** Touch from Afar: someone the demon knows of, on any scene. */
+    async function pickFar(actor) {
+        const list = game.scenes.contents.flatMap(sc => sc.tokens.contents.filter(t => t.actor && t.actorId !== actor.id).map(t => ({ uuid: t.uuid, name: `${t.name} (${sc.name})` })));
+        if (!list.length) return null;
+        const got = await askWords(`Touch from Afar: ${actor.name}`, `<div class="form-group"><label>Reach</label>${list.length > 5 ? searchBox("select[name=far]", "Search people…", "Search people") : ""}<select name="far">${list.map(x => `<option value="${x.uuid}">${esc(x.name)}</option>`).join("")}</select></div>`);
+        const t = got?.far ? fromUuidSync(got.far) : null;
+        return t ? { uuid: t.uuid, name: t.name } : null;
+    }
+    const farTokenOf = uuid => { try { const d = fromUuidSync(uuid); return d?.documentName === "Token" ? d : d?.getActiveTokens?.()?.[0]?.document ?? null; } catch (err) { return null; } };
+    /** A demon on this scene ready with Hand of Faith whose successes beat the user's. */
+    function seizerOf(actor, successes) {
+        for (const t of canvas?.scene?.tokens ?? []) {
+            const a = t.actor;
+            if (!a || a.id === actor.id) continue;
+            const eff = a.effects?.find?.(x => x.getFlag?.("wodx-chronicle", "timed")?.key === "wodx-act-seize");
+            const s = n(eff?.getFlag?.("wodx-chronicle", "timed")?.data?.seize);
+            if (eff && s > n(successes)) return { actor: a, effect: eff };
+        }
+        return null;
+    }
+
     async function evoke(actor, { evocation = null } = {}) {
         const i = info(actor);
         const known = D.evocationsKnown(i.lores);
@@ -211,7 +259,19 @@ export function build(ctx) {
                 body += `<div class="vta-note">Lasts ${esc(card.lasts)}; range ${esc(card.range)}.</div>`;
                 body += `<div class="vta-note${high ? " bad" : ""}"><b>High Torment:</b> ${esc(card.high)}</div>`;
                 if (works && EF.isOn()) {
-                    const pp = EF.planOf(actor, DE.evocationResults(lore, e.level, r.successes, { high, faith: i.faith.perm, name: e.name, source: `${REF} p. ${D.LORES[lore].page}` }), r.successes, { name: e.name, line: "Demon (DtF)", faith: i.faith.perm });
+                    let results = DE.evocationResults(lore, e.level, r.successes, { high, faith: i.faith.perm, name: e.name, source: `${REF} p. ${D.LORES[lore].page}` });
+                    // B5780-B5786: what the demon's player says the act does (an NPC's takes the plain reading)
+                    results = await actWords(actor, e, results);
+                    // B5786: Touch from Afar: this evocation reaches the one named, wherever they are
+                    const far = actor.getFlag?.(MOD, "farTarget");
+                    const farTok = far?.uuid && !(lore === "firmament" && e.level === 4) ? farTokenOf(far.uuid) : null;
+                    // B5784: Hand of Faith: another demon here who is ready, with more successes, seizes it and turns it on its user
+                    const seizer = seizerOf(actor, r.successes);
+                    const own = actor.getActiveTokens?.()?.[0]?.document ?? null;
+                    const targets = seizer && own ? [own.uuid] : farTok ? [farTok.uuid] : null;
+                    const pp = EF.planOf(actor, results, r.successes, { name: e.name, line: "Demon (DtF)", faith: i.faith.perm, ...(targets ? { targets } : {}) });
+                    if (farTok) { notes.push(`It reaches ${far.name || farTok.name}, far away.`); await actor.unsetFlag(MOD, "farTarget"); }
+                    if (seizer) { notes.push(`${seizer.actor.name} seizes it with Hand of Faith and turns it on ${actor.name}.`); await seizer.effect.delete(); }
                     body += pp.html;
                     fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
                 }

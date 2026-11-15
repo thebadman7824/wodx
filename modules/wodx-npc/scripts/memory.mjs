@@ -49,6 +49,25 @@ export async function remember(npcLike, charLike, note = {}) {
   return m[ch.id].at(-1);
 }
 
+/** B5782: an NPC forgets one character (Alter Memory): their notes go; returns the notes, for Undo. */
+export async function forget(npcLike, charLike) {
+  const npc = actorOf(npcLike), ch = actorOf(charLike);
+  if ( !game.user.isGM || !isNpc(npc) || !ch ) return null;
+  const notes = memOf(npc)[ch.id] ?? [];
+  await npc.update({[`flags.${MOD}.memory.-=${ch.id}`]: null});
+  await mirror(npc, ch);
+  return notes;
+}
+
+/** Put an NPC's notes about a character back (Undo of a forgetting). */
+export async function restore(npcLike, charLike, notes = []) {
+  const npc = actorOf(npcLike), ch = actorOf(charLike);
+  if ( !game.user.isGM || !npc || !ch ) return null;
+  await npc.update({[`flags.${MOD}.memory.${ch.id}`]: notes ?? []});
+  await mirror(npc, ch);
+  return true;
+}
+
 /** {grudge, favour, net, temper} of one NPC toward one character. */
 export function balanceOf(npcLike, charLike) {
   const npc = actorOf(npcLike), ch = actorOf(charLike);

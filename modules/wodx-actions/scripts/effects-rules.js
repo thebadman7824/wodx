@@ -339,7 +339,8 @@ export function outcome(key, got, ctx = {}) {
       if ( ctx.frenzy ) return {...base, kind: "timed", name: "Roused", difficulty: clampDiff(6 + str), text: `a frenzy roll at ${clampDiff(6 + str)} now (Self-Control or Instinct, or Rage), roused for ${dur.label}`};
       return {...base, kind: "timed", name: "Afraid", text: `afraid of the caster for ${dur.label}`};
     case "sense":
-      return {...base, kind: "note", text: `the caster senses it for ${dur.label}`};
+      // B5788: Sense works: a detection sense on the caster's token, and what the sheet and scene show, whispered
+      return {...base, kind: "detect", range: 30 * step, text: `the caster senses the hidden within ${30 * step} feet for ${dur.label}, and learns what the sheet shows`};
     case "move":
       return {...base, kind: "move", text: "moves to where the caster means to go, in this scene"};
     case "sway":
@@ -356,7 +357,8 @@ export function outcome(key, got, ctx = {}) {
     case "speak":
       return {...base, kind: "timed", name: "Speaks with", text: `can talk with animals, spirits, ghosts or machines for ${dur.label}`};
     case "know":
-      return {...base, kind: "note", text: "the Storyteller answers one question"};
+      // B5789: Know works: a secret the target keeps is found out (a hook in the Ledger), else what the sheet shows is pinned as a clue
+      return {...base, kind: "question", text: "one thing the target hides is found out; the Storyteller may add to the answer"};
     case "possess":
       return {...base, kind: "timed", name: "Possessed", text: `possessed for ${dur.label}; the possessor plays this body and their own lies empty`};
     case "bind":
