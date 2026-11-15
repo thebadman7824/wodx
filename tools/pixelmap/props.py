@@ -549,9 +549,11 @@ def hay(m, x, y, r=26):
 
 
 @openable
-def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True, glass=True):
+def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True, glass=True, look=None):
     """A window one can name from above: the wall cut through to a pale sill between two jambs, a lattice of bars
-    across the opening, two plank shutters swung open against the outside of the wall, and daylight on the floor within."""
+    across the opening, two plank shutters swung open against the outside of the wall, and daylight on the floor within.
+    look: None draws the plain glazed or unglazed window above; a dict (era, wealth, style, condition, kind) draws the
+    window of that age, means and land (window_kind and _window_look below)."""
     from PIL import Image, ImageDraw
     d = m.d; ax, ay, bx, by = P(x0), P(y0), P(x1), P(y1); horiz = ay == by; t = th // 2; L = (bx - ax) if horiz else (by - ay)
     out = (-1 if ay < centre[1] * T else 1) if horiz else (-1 if ax < centre[0] * T else 1)        # which way is outdoors
@@ -575,6 +577,8 @@ def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True, glass=True):
         a = np.array(m.img.crop((X0, Y0, X1, Y1)), np.float32); k = (np.array(msk, np.float32) / 255)[..., None]
         a = a * (1 + k * np.array([.30, .30, .22], np.float32)) + k * np.array([8, 9, 6], np.float32)
         m.img.paste(Image.fromarray(a.clip(0, 255).astype(np.uint8)), (X0, Y0))
+    if look is not None and not _legacy_window(look, glass):
+        return _window_look(m, pt, rect, poly, L, t, state, look, glass, ax, ay, horiz, out)
     G = [(34, 52, 72), (62, 94, 118), (104, 144, 164), (160, 196, 204), (226, 240, 240)]              # glass, dark to glint
     if not glass:                                                                # before glass reached a house: the dark of the room through the hole
         G = [(14, 10, 14), (24, 18, 22), (30, 22, 26), (36, 28, 30), (44, 34, 34)]
@@ -592,6 +596,13 @@ def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True, glass=True):
             (xa, ya), (xb, yb) = pt(u0 + 3, v1 - 5), pt(u0 + 3 + (v1 - v0) - 8, v0 + 3); d.line([xa, ya, xb, yb], fill=G[4], width=2)
             (xa, ya), (xb, yb) = pt(u0 + 10, v1 - 4), pt(u0 + 10 + (v1 - v0) - 12, v0 + 8); d.line([xa, ya, xb, yb], fill=G[3])
         if i: rect(u0 - 3, -t + 4, u0 - 1, t - 4, fill=W_[3], outline=OUT)       # a wooden mullion between panes
+    _shutters(m, pt, rect, L, t, n, pw, state, Sh, G, ax, ay, horiz, out)
+
+
+def _shutters(m, pt, rect, L, t, n, pw, state, Sh, G, ax, ay, horiz, out, glass_dark=True, bar=True, louvred=False):
+    """Two shutter leaves on the outside face of the wall: shut across the window and barred (the glass behind goes
+    dark), or thrown open flat along the outside wall (square to it where there is no room). Always wholly outdoors."""
+    d = m.d; I = R["iron"]; half = L // 2 - 1
     SH = 12                                                                      # a shutter's depth as drawn, out from the wall face
     if state == "closed":                                                        # both leaves swung shut against the outside face of the wall, barred
         o0, o1 = t + 1, t + 1 + SH - 4
@@ -599,9 +610,12 @@ def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True, glass=True):
         for k_ in range(1, 10): u = -2 + (L + 4) * k_ // 10; rect(u, o0 + 2, u, o1 - 1, fill=Sh[0])            # their planks
         rect(L // 2 - 1, o0, L // 2 + 1, o1, fill=OUT)                                                          # where the two leaves meet
         for hinge in (-2, L + 2): rect(hinge - 2, o0, hinge + 2, o0 + 4, fill=I[3], outline=OUT)                # the hinges at the frame
-        rect(L // 2 - 14, o1 - 4, L // 2 + 14, o1 - 2, fill=I[3], outline=OUT); rect(L // 2 - 13, o1 - 4, L // 2 + 13, o1 - 4, fill=I[4])   # the iron bar across
-        for i in range(n):                                                                                      # the glass behind goes dark: no daylight comes in
-            u0, u1 = int(5 + i * pw) + 1, int(5 + (i + 1) * pw) - 1; rect(u0, -t + 5, u1, t - 5, fill=G[0])
+        if bar: rect(L // 2 - 14, o1 - 4, L // 2 + 14, o1 - 2, fill=I[3], outline=OUT); rect(L // 2 - 13, o1 - 4, L // 2 + 13, o1 - 4, fill=I[4])   # the iron bar across
+        if louvred:
+            for k_ in range(o0 + 2, o1 - 1, 2): rect(-1, k_, L + 1, k_, fill=Sh[3] if k_ % 4 else Sh[1])            # the slats of persiennes
+        if glass_dark:
+            for i in range(n):                                                                                  # the glass behind goes dark: no daylight comes in
+                u0, u1 = int(5 + i * pw) + 1, int(5 + (i + 1) * pw) - 1; rect(u0, -t + 5, u1, t - 5, fill=G[0])
         return
     room = _face_room(ax, ay, L, horiz, out, t, SH)
     for (hinge, sgn), free in zip(((1, -1), (L - 1, 1)), room):
@@ -672,9 +686,12 @@ def _face_room(ax, ay, L, horiz, out, t, depth):
 
 
 @openable
-def door(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), swing=-1, hinge="a", exterior=False, ang=38):
+def door(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), swing=-1, hinge="a", exterior=False, ang=38, look=None):
     """A door one can name from above: two jambs, a worn threshold, the plank leaf standing ajar on iron hinges with a
-    ring handle, and the scrape its foot has worn in an arc on the floor. swing -1 opens toward the house centre."""
+    ring handle, and the scrape its foot has worn in an arc on the floor. swing -1 opens toward the house centre.
+    look: None draws that plank door; a dict (era, wealth, style, condition, kind) draws the door of that age, means
+    and land: plank, iron-bound, panelled, glazed, flush, steel, sliding paper or a sealed door (door_kind below)."""
+    if look is not None and _legacy_door(look, exterior): look = None
     d = m.d; ax, ay, bx, by = P(x0), P(y0), P(x1), P(y1); horiz = ay == by; t = th // 2; L = (bx - ax) if horiz else (by - ay)
     out = (-1 if ay < centre[1] * T else 1) if horiz else (-1 if ax < centre[0] * T else 1)
     def pt(u, v): return (ax + u, ay + v * out) if horiz else (ax + v * out, ay + u)
@@ -685,15 +702,20 @@ def door(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), swing=-1, hinge="a", exteri
     c_ = [pt(-L, -L - t), pt(2 * L, L + t)]
     box = (min(c_[0][0], c_[1][0]), min(c_[0][1], c_[1][1]), max(c_[0][0], c_[1][0]), max(c_[0][1], c_[1][1]))
     hu = 7 if hinge == "a" else L - 7; dirn = 1 if hinge == "a" else -1; ln = L - 15; hv = swing * (t - 2)
-    if not CUTTING: _door_frame(m, pt, rect, L, t, exterior, hu, hv, dirn, ln, swing)
+    if not CUTTING: _door_frame(m, pt, rect, L, t, exterior, hu, hv, dirn, ln, swing, look=look)
     state = _state("door", box, auto="closed")
     if state is None: return
-    _door_leaf(m, pt, rect, L, t, hinge, hu, hv, dirn, ln, swing, state, ang)
+    if look is None: _door_leaf(m, pt, rect, L, t, hinge, hu, hv, dirn, ln, swing, state, ang)
+    else: _door_look(m, pt, rect, L, t, hinge, hu, hv, dirn, ln, swing, state, ang, look, exterior)
 
 
-def _door_frame(m, pt, rect, L, t, exterior, hu, hv, dirn, ln, swing):
+def _door_frame(m, pt, rect, L, t, exterior, hu, hv, dirn, ln, swing, look=None):
     """The doorway that stays when the leaf moves: threshold, jambs, and the arc its foot has scraped on the floor."""
     d = m.d; W_, Dk, S = R["wood"], R["dwood"], R["stone"]
+    if look is not None:
+        lp = _look_pal(look); Dk = lp["jamb"]; S = lp["sill"]
+        if door_kind(look, exterior) in ("sliding", "sealed"):
+            hu, hv = 0, 0                                                     # nothing swings: no arc on the floor
     # the threshold: stone for an outer door (with a step outside), a worn board for an inner one
     if exterior:
         rect(-4, t + 1, L + 4, t + 13, fill=S[2], outline=OUT); rect(-3, t + 2, L + 3, t + 3, fill=S[4]); rect(L // 2 - 14, t + 5, L // 2 + 14, t + 9, fill=S[3])   # the step, dished by feet
@@ -702,7 +724,7 @@ def _door_frame(m, pt, rect, L, t, exterior, hu, hv, dirn, ln, swing):
         rect(0, -t, L, t, fill=W_[1], outline=OUT); rect(1, -t + 1, L - 1, -t + 2, fill=W_[3]); rect(L // 2 - 16, -5, L // 2 + 16, 5, fill=W_[2])
         for v in (-6, 1, 7): rect(3, v, L - 3, v, fill=W_[0])
     for u in (0, L - 7): rect(u, -t - 2, u + 7, t + 2, fill=Dk[3], outline=OUT); rect(u + 1, -t - 1, u + 2, t + 1, fill=Dk[4])        # the jambs
-    for k in range(4, 76, 5):                                                   # the arc its foot has scraped on the floor
+    for k in (range(4, 76, 5) if (look is None or hu or hv) else ()):         # the arc its foot has scraped on the floor
         b = math.radians(k); x_, y_ = pt(hu + dirn * math.cos(b) * ln, hv + swing * math.sin(b) * ln)
         px_ = m.img.getpixel((int(max(0, min(m.img.size[0] - 1, x_))), int(max(0, min(m.img.size[1] - 1, y_)))))
         d.point((x_, y_), fill=tone(px_, 22)); d.point((x_ + 1, y_), fill=tone(px_, 22))
@@ -864,3 +886,277 @@ def sack(m, x, y, r=24):
     for _ in range(30):                                                          # a little spilled grain on the floor
         a, t = rng.uniform(.2, 1.6), rng.uniform(br + 2, br + 14); d.point((cx + math.cos(a) * t, cy + math.sin(a) * t), fill=G[int(rng.integers(2, 5))])
     d.line([(cx - br - 2, cy + br - 6), (cx - br + 6, cy + br + 4), (cx - br + 16, cy + br + 2)], fill=R["dwood"][1], width=2)   # the untied cord
+
+
+# ---------------------------------------------------------------- doors and windows by age, means and land
+# A look is a dict: era (a census era key, or year), wealth (0 destitute to 5 princely), style (a census style family),
+# condition (new, worn, broken) and, to choose one outright, kind. Without a look a door is the plank door and a
+# window the glazed or unglazed casement above, as every map drew them before.
+ERAS_ = ["dark-ages", "long-night", "renaissance", "age-of-reason", "victorian", "great-war", "mid-century", "modern", "future-darkness"]
+DOOR_KINDS = ("plank", "ironbound", "panelled", "glazed", "flush", "steel", "sliding", "sealed")
+WINDOW_KINDS = ("open", "cloth", "horn", "leaded", "glazed", "sash", "steel", "plate", "paper", "jali", "sealed")
+# each land's door and shutter paint, and the stone of its door frames (base colours, toned to the map's palette)
+_PAINT = {"central": (54, 92, 60), "atlantic": (36, 48, 92), "northern": (118, 36, 30), "mediterranean": (40, 98, 104), "islamic": (34, 108, 112),
+          "steppe": (176, 84, 34), "southasia": (116, 74, 40), "eastasia": (154, 34, 28), "seasia": (122, 86, 50), "africa": (70, 44, 30),
+          "americas": (48, 112, 130), "oceania": (98, 64, 40), "polar": (122, 118, 110)}
+_FRAME = {"central": (138, 134, 126), "atlantic": (112, 108, 104), "northern": (94, 96, 108), "mediterranean": (200, 190, 168), "islamic": (192, 160, 112),
+          "steppe": (140, 120, 100), "southasia": (172, 100, 76), "eastasia": (106, 112, 110), "seasia": (138, 128, 106), "africa": (160, 90, 56),
+          "americas": (184, 134, 102), "oceania": (100, 94, 88), "polar": (138, 140, 148)}
+
+
+def _era_i(look):
+    e = look.get("era", "dark-ages")
+    if isinstance(e, int):
+        for k, y in enumerate((1197, 1347, 1450, 1601, 1837, 1902, 1919, 1990, 2010)):
+            if e >= y: i = k
+        return i
+    return ERAS_.index(e) if e in ERAS_ else 0
+
+
+def _rmp(base, step=16):
+    """Five tones of a colour, dark to light (cool darks, warm lights), dimmed to the World of Darkness palette."""
+    from px import WOD
+    k = .72 if WOD else 1.0; base = tuple(c * k for c in base)
+    return [tuple(int(max(0, min(255, base[i] + j * step + (6, 2, -6)[i] * j * (1 if j > 0 else .5)))) for i in range(3)) for j in (-2, -1, 0, 1, 2)]
+
+
+STEEL_DOOR_PAINT = ((62, 92, 70), (52, 72, 108), (110, 52, 40), (44, 44, 48), (150, 152, 150))   # green, blue, oxide red, black, grey
+
+
+def _look_pal(look):
+    """The colours of a door or window of this look: wood, paint, iron or brass, the jambs, the sill, the shutters."""
+    st = look.get("style") or "central"; w = look.get("wealth"); w = 2 if w is None else w; e = _era_i(look); cond = look.get("condition") or "new"
+    f = {"worn": .25, "broken": .35}.get(cond, 0)
+    fade = lambda c: tuple(int(c[i] + ((120, 112, 104)[i] - c[i]) * f) for i in range(3))
+    paint = _PAINT.get(st, _PAINT["central"]); wood = (140, 104, 64) if st not in ("africa", "southasia", "seasia", "oceania") else (112, 72, 44)
+    if w <= 1: paint = tuple(int(paint[i] * .5 + (110, 100, 88)[i] * .5) for i in range(3)); wood = (118, 100, 80)
+    stone = _FRAME.get(st, _FRAME["central"])
+    leaf = _rmp(fade(paint if (w >= 2 and e >= 2) or w >= 4 else wood), 18)
+    jamb = _rmp(fade(stone), 14) if (w >= 3 or e >= 4) else R["dwood"]
+    sh = _rmp(fade(paint if w >= 1 else wood), 18)
+    return {"leaf": leaf, "wood": _rmp(fade(wood), 16), "jamb": jamb, "sill": _rmp(fade(stone), 14), "shut": sh,
+            "metal": _rmp((190, 150, 70), 20) if w >= 4 else R["iron"], "w": w, "e": e, "st": st, "cond": cond}
+
+
+def door_kind(look, exterior=False):
+    """The door a household of this age, means and land hangs: plank and iron-bound doors to the Renaissance, panelled
+    doors from the Renaissance for the comfortable and from the Victorian age for most, glazed doors for the
+    comfortable from the Great War, flush doors inside and steel doors outside from the Mid-Century, sliding paper
+    doors in East Asia, sealed doors in Future Darkness."""
+    if look.get("kind"): return look["kind"]
+    e = _era_i(look); w = look.get("wealth"); w = 2 if w is None else w; st = look.get("style")
+    if e >= 8: return "sealed" if w >= 2 else "steel"
+    if st == "eastasia" and not exterior and e <= 7: return "sliding"
+    if e <= 1: return "ironbound" if (w >= 4 or (exterior and e == 1 and w >= 3)) else "plank"
+    if e <= 3: return "panelled" if w >= 3 else ("ironbound" if exterior and w >= 2 else "plank")
+    if e <= 5: return ("glazed" if (e == 5 and exterior and w >= 4) else "panelled") if w >= 2 else "plank"
+    if e == 6: return ("glazed" if w >= 3 else "panelled") if exterior else ("flush" if w >= 1 else "plank")
+    return ("steel" if w <= 2 else "glazed") if exterior else "flush"
+
+
+def window_kind(look, glass=True):
+    """The window of this age, means and land: an open hole with shutters, oiled cloth or horn, leaded quarries,
+    glazed casements, sashes, steel frames, plate glass, a paper lattice in East Asia, a pierced jali or mashrabiya
+    screen in the Islamic lands and South Asia, a sealed pane in Future Darkness."""
+    if look.get("kind"): return look["kind"]
+    e = _era_i(look); w = look.get("wealth"); w = 2 if w is None else w; st = look.get("style")
+    if e >= 8: return "sealed"
+    if st == "eastasia" and e <= 6: return "paper"
+    if st in ("islamic", "southasia") and e <= 5: return "jali" if w >= 2 else "open"
+    if e <= 1: return ("leaded" if w >= 5 else "horn" if w >= 4 else "cloth" if w >= 2 else "open") if look.get("wealth") is not None else ("glazed" if glass else "open")
+    if e == 2: return "leaded" if w >= 3 else ("cloth" if w >= 1 else "open")
+    if e == 3: return ("sash" if st in ("atlantic", "americas", "oceania") else "glazed") if w >= 3 else ("leaded" if w >= 1 else "cloth")
+    if e <= 5: return ("plate" if (e == 5 and w >= 5) else "sash" if st in ("atlantic", "americas", "oceania", "africa") else "glazed") if w >= 1 else "glazed"
+    if e == 6: return "plate" if w >= 4 else ("steel" if st in ("atlantic", "central", "northern", "americas") else "glazed")
+    return "plate" if w >= 2 else "glazed"
+
+
+def _legacy_door(look, exterior):
+    return door_kind(look, exterior) == "plank" and not look.get("style") and look.get("wealth") is None and (look.get("condition") or "new") == "new"
+
+
+def _legacy_window(look, glass):
+    return window_kind(look, glass) == ("glazed" if glass else "open") and not look.get("style") and look.get("wealth") is None and (look.get("condition") or "new") == "new"
+
+
+def _door_look(m, pt, rect, L, t, hinge, hu, hv, dirn, ln, swing, state, ang, look, exterior):
+    """The leaf of a door of this look, shut across the gap or swung back on its hinges (a sliding door slides along
+    the inner face; a sealed door draws back into the wall). Seen from above a leaf is its top edge: the kind shows in
+    its colour and thickness, its joints, its straps, studs, glass or paper, and its handle."""
+    d = m.d; P_ = _look_pal(look); kind = door_kind(look, exterior); I = R["iron"]; M = P_["metal"]
+    C = {"plank": P_["wood"], "ironbound": _rmp((96, 70, 50), 14), "flush": P_["leaf"], "steel": _rmp((120, 126, 132), 14),
+         "sealed": _rmp((60, 66, 78), 12), "sliding": _rmp((130, 96, 60), 14)}.get(kind, P_["leaf"])
+    if kind == "steel" and P_["w"] >= 2: C = _rmp(STEEL_DOOR_PAINT[(P_["w"] + _era_i(look)) % len(STEEL_DOOR_PAINT)], 14)   # factory paint, the same the world over
+    G = [(34, 52, 72), (62, 94, 118), (104, 144, 164), (160, 196, 204), (226, 240, 240)]
+    PAPER = [(150, 146, 136), (184, 180, 168), (214, 210, 196), (230, 228, 216), (244, 242, 232)]
+    LIT = [(40, 120, 140), (70, 190, 210), (150, 240, 250)]
+    broken = P_["cond"] == "broken"; worn = P_["cond"] == "worn"
+    lo, hi = 7, L - 7; th_ = {"ironbound": 6, "panelled": 5, "glazed": 5, "flush": 4, "steel": 4, "sliding": 3, "sealed": 5}.get(kind, 5)
+    if kind in ("sliding", "sealed"):
+        if state == "open" and kind == "sealed":                                   # drawn back into the wall: only its lit edge at the jamb
+            rect(lo - 2, -th_, lo, th_, fill=C[2], outline=OUT); rect(lo, -1, lo, 1, fill=LIT[2])
+            for u in (lo, hi): rect(u - 1, -t + 2, u, t - 2, fill=LIT[1])
+            return
+        if state == "open": a0, a1, v0 = -(hi - lo) + 4, 4, -t - 1 - 2 * th_      # slid along the inner face of the wall beside the opening
+        else: a0, a1, v0 = lo, hi, -th_
+        rect(a0, v0, a1, v0 + 2 * th_, fill=C[2], outline=OUT)
+        if kind == "sliding":
+            rect(a0 + 2, v0 + 1, a1 - 2, v0 + 2 * th_ - 1, fill=PAPER[3])
+            for u in range(a0 + 8, a1 - 2, 8): rect(u, v0 + 1, u, v0 + 2 * th_ - 1, fill=C[1])   # the lattice over the paper
+            rect(a1 - 8, v0 + 1, a1 - 6, v0 + 2 * th_ - 1, fill=C[0])                            # the finger pull
+            if broken: rect((a0 + a1) // 2 - 4, v0 + 1, (a0 + a1) // 2 + 3, v0 + 2 * th_ - 1, fill=(20, 16, 18))
+        else:
+            rect(a0 + 2, -1, a1 - 2, 1, fill=LIT[1]); rect((a0 + a1) // 2 - 2, -th_ + 1, (a0 + a1) // 2 + 2, th_ - 1, fill=LIT[2] if not broken else (150, 30, 30))
+        return
+    if state == "closed":
+        rect(lo, -th_, hi, th_, fill=C[2], outline=OUT); rect(lo + 1, -th_ + 1, hi - 1, -th_ + 2, fill=C[4]); rect(lo + 1, th_ - 2, hi - 1, th_ - 1, fill=C[1])
+        if kind in ("plank", "ironbound"):
+            for k_ in range(1, 5 if kind == "plank" else 6): u = lo + (hi - lo) * k_ // (5 if kind == "plank" else 6); rect(u, -th_ + 1, u, th_ - 1, fill=C[0])
+            for f in ((.15, .85) if kind == "plank" else (.12, .5, .88)):
+                u = int(hu + dirn * (hi - lo) * f); rect(u - 1, -th_ - 1, u + 1, th_ + 1, fill=I[2]); rect(u, -th_ - 1, u, -th_, fill=I[4])
+            if kind == "ironbound":
+                for u in range(lo + 4, hi - 2, 6): rect(u, -th_ + 2, u + 1, -th_ + 3, fill=I[4]); rect(u, th_ - 3, u + 1, th_ - 2, fill=I[4])   # the nail heads
+        elif kind == "panelled":
+            for u0_, u1_ in ((lo + 4, (lo + hi) // 2 - 2), ((lo + hi) // 2 + 2, hi - 4)): rect(u0_, -2, u1_, 1, fill=C[3]); rect(u0_, 1, u1_, 1, fill=C[0])   # the fielded panels
+        elif kind == "glazed":
+            rect(lo + 6, -2, hi - 6, 2, fill=G[1]); rect(lo + 8, -1, lo + 16, -1, fill=G[4])
+            for u in range(lo + 6 + (hi - lo - 12) // 3, hi - 6, (hi - lo - 12) // 3 or 1): rect(u, -2, u, 2, fill=C[3])
+            if broken: rect((lo + hi) // 2 - 6, -2, (lo + hi) // 2 + 4, 2, fill=(14, 12, 16))
+        elif kind == "steel":
+            for u in (lo + 3, hi - 3): rect(u, -th_ + 2, u, th_ - 2, fill=C[4])
+            rect((lo + hi) // 2, -1, (lo + hi) // 2 + 1, 0, fill=OUT)                                 # the spy hole
+        lu = hi - 9 if hinge == "a" else lo + 9
+        if kind in ("plank", "ironbound"):
+            for sg in (-1, 1):
+                (rx, ry) = pt(lu, sg * (th_ + 4)); d.ellipse([rx - 3, ry - 3, rx + 3, ry + 3], outline=OUT); d.ellipse([rx - 2, ry - 2, rx + 2, ry + 2], outline=I[4] if P_["w"] < 4 else M[3])
+            rect(lu - 1, -th_ - 1, lu + 1, th_ + 1, fill=I[3])
+        else:                                                                       # a knob or a lever each side
+            H = M if kind in ("panelled", "glazed") else _rmp((180, 184, 190), 14)
+            for sg in (-1, 1):
+                if kind in ("panelled", "glazed"): rect(lu - 2, sg * (th_ + 1) - 1, lu + 2, sg * (th_ + 1) + 2 * sg, fill=H[3], outline=OUT)
+                else: rect(lu - 6 * (1 if hinge == "a" else -1), sg * (th_ + 1), lu, sg * (th_ + 2), fill=H[3], outline=OUT)
+        (hx_, hy_) = pt(hu, 0); d.rectangle([hx_ - 3, hy_ - 3, hx_ + 3, hy_ + 3], fill=I[3] if kind in ("plank", "ironbound") else M[2], outline=OUT)
+        if worn: rect(lo + 3, th_ - 2, lo + 12, th_ - 1, fill=C[4]); rect(hi - 14, -th_ + 1, hi - 6, -th_ + 1, fill=C[0])
+        if broken and kind != "glazed": rect((lo + hi) // 2 - 3, -th_, (lo + hi) // 2 + 2, th_, fill=(18, 14, 16))   # a panel stove in
+        return
+    if state == "open": ang = 86
+    if broken: ang = min(ang, 60)                                                   # hanging off one hinge, stuck part open
+    a = math.radians(ang)
+    def lp(s_): return pt(hu + dirn * math.cos(a) * s_, hv + swing * math.sin(a) * s_)
+    (xa, ya), (xb, yb) = lp(0), lp(ln)
+    w_ = 2 * th_ - 1
+    d.line([xa + 2, ya + 4, xb + 2, yb + 4], fill=tone(R["dwood"][0], -6), width=w_ - 2)
+    d.line([xa, ya, xb, yb], fill=OUT, width=w_ + 2); d.line([xa, ya, xb, yb], fill=C[3], width=w_)
+    nx, ny = -(yb - ya) / ln, (xb - xa) / ln
+    if nx + ny > 0: nx, ny = -nx, -ny
+    q = th_ - 2
+    d.line([xa + nx * q, ya + ny * q, xb + nx * q, yb + ny * q], fill=C[4]); d.line([xa - nx * q, ya - ny * q, xb - nx * q, yb - ny * q], fill=C[1])
+    def at(f): return xa + (xb - xa) * f, ya + (yb - ya) * f
+    if kind in ("plank", "ironbound"):
+        for f in (.25, .5, .75): x_, y_ = at(f); d.line([x_ - nx * q, y_ - ny * q, x_ + nx * q, y_ + ny * q], fill=C[1])
+        for f in ((.12, .88) if kind == "plank" else (.1, .5, .9)):
+            x_, y_ = at(f); d.line([x_ - nx * (q + 1), y_ - ny * (q + 1), x_ + nx * (q + 1), y_ + ny * (q + 1)], fill=I[2], width=3)
+        if kind == "ironbound":
+            for f in np.linspace(.15, .85, 8): x_, y_ = at(f); d.point((x_ + nx * (q - 1), y_ + ny * (q - 1)), fill=I[4])
+    elif kind == "panelled":
+        for f0, f1 in ((.12, .46), (.54, .88)): (p0, p1), (p2, p3) = at(f0), at(f1); d.line([p0, p1, p2, p3], fill=C[1], width=2)
+    elif kind == "glazed":
+        (p0, p1), (p2, p3) = at(.15), at(.85); d.line([p0, p1, p2, p3], fill=G[1], width=3); d.line([p0 + nx, p1 + ny, p0 + (p2 - p0) * .3 + nx, p1 + (p3 - p1) * .3 + ny], fill=G[4])
+    elif kind == "steel":
+        for f in (.06, .94): x_, y_ = at(f); d.point((x_, y_), fill=C[4])
+    hx_, hy_ = at(.8)
+    for sg in (-1, 1):
+        rx, ry = hx_ + nx * (th_ + 3) * sg, hy_ + ny * (th_ + 3) * sg
+        if kind in ("plank", "ironbound"): d.ellipse([rx - 3, ry - 3, rx + 3, ry + 3], outline=OUT); d.ellipse([rx - 2, ry - 2, rx + 2, ry + 2], outline=I[4] if P_["w"] < 4 else M[3])
+        else: d.rectangle([rx - 2, ry - 2, rx + 2, ry + 2], fill=(M if kind in ("panelled", "glazed") else _rmp((180, 184, 190), 14))[3], outline=OUT)
+    d.rectangle([xa - 3, ya - 3, xa + 3, ya + 3], fill=I[3], outline=OUT)
+    if broken and kind in ("panelled", "plank", "flush"): x_, y_ = at(.5); d.line([x_ - nx * q, y_ - ny * q, x_ + nx * q, y_ + ny * q], fill=(18, 14, 16), width=3)
+
+
+def _window_look(m, pt, rect, poly, L, t, state, look, glass, ax, ay, horiz, out):
+    """A window of this look in its wall: the frame at the wall's thickness, what fills the opening (oiled cloth, horn
+    leaves, leaded quarries, casement panes, sashes, a steel grid, one sheet of plate glass, a paper lattice, a pierced
+    screen, a sealed pane) and how it shuts: shutters folded back on the outside wall or barred across it (louvred in
+    the Mediterranean), or, for windows without shutters, a blind or curtain drawn across inside the glass."""
+    d = m.d; P_ = _look_pal(look); kind = window_kind(look, glass); e = P_["e"]
+    G = [(34, 52, 72), (62, 94, 118), (104, 144, 164), (160, 196, 204), (226, 240, 240)]
+    DARK = [(14, 10, 14), (24, 18, 22), (30, 22, 26), (36, 28, 30), (44, 34, 34)]
+    broken = P_["cond"] == "broken"; worn = P_["cond"] == "worn"
+    Fr = {"sash": _rmp((206, 202, 190), 12), "plate": _rmp((200, 200, 196), 10) if e >= 7 else P_["leaf"], "steel": _rmp((58, 60, 66), 12),
+          "sealed": _rmp((60, 66, 78), 12), "paper": _rmp((130, 96, 60), 14), "jali": P_["sill"] if P_["w"] >= 4 else P_["wood"]}.get(kind, P_["wood"] if P_["w"] < 3 else P_["leaf"])
+    if worn: Fr = [tuple(int(c * .85 + 20) for c in x) for x in Fr]
+    rect(0, -t, L, t, fill=Fr[2], outline=OUT)                                    # the frame, set through the wall
+    rect(1, -t + 1, L - 1, -t + 2, fill=Fr[4]); rect(1, t - 2, L - 1, t - 1, fill=Fr[1])
+    v0, v1 = -t + 4, t - 4; u0, u1 = 4, L - 4
+    rect(u0, v0, u1, v1, fill=G[0] if kind not in ("open", "jali") else DARK[1], outline=OUT)
+    shut = kind in ("open", "cloth", "horn", "leaded", "glazed", "jali", "paper") or (kind == "sash" and P_["st"] not in ("atlantic", "americas", "oceania", "africa"))
+    if kind == "steel" and P_["st"] in ("central", "mediterranean"): shut = True
+    n = 3 if L > 70 else 2; pw = (L - 10) / n
+    def panes(fill_fn):
+        for i in range(n):
+            a0, a1 = int(5 + i * pw) + 1, int(5 + (i + 1) * pw) - 1; fill_fn(i, a0, a1)
+            if i: rect(a0 - 3, v0, a0 - 1, v1, fill=Fr[3], outline=OUT)
+    if kind == "open":
+        panes(lambda i, a0, a1: rect(a0, v0 + 1, a1, v1 - 1, fill=DARK[2 + i % 2]))
+        for u in range(u0 + 6, u1, 10): rect(u, v0, u + 1, v1, fill=P_["wood"][1])            # the bars across the hole
+    elif kind == "cloth":
+        CL = _rmp((206, 186, 130), 12)
+        panes(lambda i, a0, a1: (rect(a0, v0 + 1, a1, v1 - 1, fill=CL[2 + (i % 2)]), rect(a0, (v0 + v1) // 2, a1, (v0 + v1) // 2, fill=CL[1])))
+    elif kind == "horn":
+        HN = _rmp((196, 150, 76), 14)
+        def hp(i, a0, a1):
+            rect(a0, v0 + 1, a1, v1 - 1, fill=HN[2])
+            for u in range(a0 + 6, a1, 6): rect(u, v0 + 1, u, v1 - 1, fill=HN[0])
+            rect(a0 + 1, v0 + 1, a0 + 3, v0 + 2, fill=HN[4])
+        panes(hp)
+    elif kind == "leaded":
+        LG = [(56, 82, 74), (80, 114, 100), (120, 152, 134), (170, 196, 176), (226, 236, 220)]
+        def lq(i, a0, a1):
+            rect(a0, v0 + 1, a1, v1 - 1, fill=LG[1 + (i % 2)])
+            for u in range(a0 - 6, a1, 6):                                            # the diamond quarries in their leads
+                (xa, ya), (xb, yb) = pt(max(a0, u), v0 + 1 + max(0, a0 - u)), pt(min(a1, u + (v1 - v0) - 2), min(v1 - 1, v0 + 1 + (min(a1, u + v1 - v0 - 2) - u)))
+                d.line([xa, ya, xb, yb], fill=(40, 40, 46))
+            rect(a0 + 2, v0 + 2, a0 + 4, v0 + 2, fill=LG[4])
+        panes(lq)
+    elif kind in ("glazed", "sash", "steel", "plate", "sealed"):
+        def gp(i, a0, a1):
+            rect(a0, v0 + 1, a1, v1 - 1, fill=G[1] if kind != "sealed" else (24, 34, 46))
+            poly([(a0, v0 + 1), (a1 - 4, v0 + 1), (a0, v1 - 3)], fill=G[2] if kind != "sealed" else (40, 56, 70))
+            (xa, ya), (xb, yb) = pt(a0 + 3, v1 - 3), pt(a0 + 3 + (v1 - v0) - 6, v0 + 3); d.line([xa, ya, xb, yb], fill=G[4], width=2)
+            if kind == "sash": rect(a0, (v0 + v1) // 2, a1, (v0 + v1) // 2 + 1, fill=Fr[3]); rect((a0 + a1) // 2, v0 + 1, (a0 + a1) // 2, v1 - 1, fill=Fr[3])   # meeting rail and glazing bars
+            if kind == "steel":
+                for u in range(a0 + 5, a1, 6): rect(u, v0 + 1, u, v1 - 1, fill=Fr[3])
+        if kind in ("plate", "sealed"):
+            n_, pw_ = 1, L - 10
+            rect(5, v0 + 1, L - 5, v1 - 1, fill=G[1] if kind == "plate" else (24, 34, 46))
+            poly([(5, v0 + 1), (L * .6, v0 + 1), (5, v1 - 2)], fill=G[2] if kind == "plate" else (40, 56, 70))
+            (xa, ya), (xb, yb) = pt(10, v1 - 3), pt(10 + (v1 - v0) - 6, v0 + 3); d.line([xa, ya, xb, yb], fill=G[4], width=2)
+            (xa, ya), (xb, yb) = pt(20, v1 - 2), pt(20 + (v1 - v0) - 8, v0 + 4); d.line([xa, ya, xb, yb], fill=G[3])
+            if kind == "sealed": rect(2, -t + 2, L - 2, -t + 2, fill=(70, 190, 210)); rect(2, t - 2, L - 2, t - 2, fill=(70, 190, 210))
+        else: panes(gp)
+    elif kind == "paper":
+        PAPER = [(150, 146, 136), (184, 180, 168), (214, 210, 196), (230, 228, 216), (244, 242, 232)]
+        rect(u0, v0, u1, v1, fill=PAPER[3], outline=OUT)
+        for u in range(u0 + 7, u1, 7): rect(u, v0, u, v1, fill=Fr[1])
+        rect(u0, (v0 + v1) // 2, u1, (v0 + v1) // 2, fill=Fr[1])
+    elif kind == "jali":                                                              # a pierced screen: a lattice of small openings
+        S = Fr
+        rect(u0, v0, u1, v1, fill=S[2], outline=OUT)
+        for u in range(u0 + 3, u1 - 2, 5):
+            for v in range(v0 + 2, v1 - 1, 4): rect(u, v, u + 2, v + 1, fill=DARK[1])
+    if broken:                                                                        # a pane out, the cracks round it
+        a0 = int(5 + pw) + 2 if kind not in ("plate", "sealed") else L // 3
+        rect(a0, v0 + 1, a0 + 9, v1 - 1, fill=DARK[0])
+        (xa, ya), (xb, yb) = pt(a0 + 9, v0 + 2), pt(a0 + 16, v1 - 2); d.line([xa, ya, xb, yb], fill=G[4])
+    if shut:
+        Sh = P_["shut"]
+        _shutters(m, pt, rect, L, t, n, pw, state, Sh, G, ax, ay, horiz, out, glass_dark=kind not in ("open", "jali"), bar=e <= 4, louvred=P_["st"] == "mediterranean" and e >= 3)
+        if state == "closed" and kind in ("open", "jali", "paper", "cloth", "horn"): rect(u0 + 1, v0 + 1, u1 - 1, v1 - 1, fill=DARK[1])
+        return
+    if state == "closed":                                                             # no shutters: a blind or curtain drawn inside the glass
+        B = _rmp({"sealed": (50, 56, 66)}.get(kind, _PAINT.get(P_["st"], (120, 100, 80))), 14) if kind != "sash" else _rmp((170, 156, 120), 12)
+        rect(u0 + 1, v0 + 1, u1 - 1, -1, fill=B[2])
+        for u in range(u0 + 3, u1 - 1, 4): rect(u, v0 + 1, u, -1, fill=B[0] if kind != "plate" or e < 7 else B[3])
+        if kind == "sealed": rect(u0 + 1, -1, u1 - 1, -1, fill=(70, 190, 210))
+    elif kind == "sash":                                                              # the lower sash run up: an open gap
+        rect(u0 + 2, v0 + 1, u1 - 2, v0 + 2, fill=DARK[0])
