@@ -59,6 +59,8 @@ export async function run() {
     const byname = /^(ben|bat|ibn|bint|bin|binti) |clan/i;
     const sameFamily = list.every(h => {
       if ( h.people.some(p => byname.test(String(p.family ?? ""))) ) return true;
+      // B6252: in a year when the name is a byname of the person's own, kin keep their own names
+      if ( h.people[0]?.nameCustom?.hereditary === false ) return true;
       const kin = h.people.filter(p => p.plan.kin || p.plan.master);
       const bySex = s => new Set(kin.filter(p => p.sex === s).map(p => p.family));
       return bySex("male").size <= 1 && bySex("female").size <= 1;
@@ -66,8 +68,17 @@ export async function run() {
     const presets = M.api.routineRules.PRESETS;
     const priest = list.find(h => h.household.trade === "priest")?.people?.[0];
     const priestOk = priest?.sex === "male" && priest?.origin !== "jewish";
-    ok("2. plan", priestOk && list.length === 3 && people.length === 9 && people.every(p => p.name && p.name.trim().includes(" ")) && sameFamily && people.every(p => presets[p.plan.preset]),
-      {priest: priest ? `${priest.name}, ${priest.sex}, ${priest.origin}` : null, households: list.map(h => ({label: h.household.label, people: h.people.map(p => `${p.name} (${p.plan.label}, ${p.plan.preset})`)}))});
+    // A person of a year and people who bore one name alone has a one-word name (B6250)
+    const named = p => p.name && (p.name.trim().includes(" ") || p.nameCustom?.form === "given" || (p.nameCustom?.unset === "given" && !p.nameCustom?.hereditary));
+    ok("2. plan", priestOk && list.length === 3 && people.length === 9 && people.every(named) && sameFamily && people.every(p => presets[p.plan.preset]),
+      {priest: priest ? `${priest.name}, ${priest.sex}, ${priest.origin}` : null, customs: list.map(h => h.people[0]?.nameCustom?.form ?? "tables"), households: list.map(h => ({label: h.household.label, people: h.people.map(p => `${p.name} (${p.plan.label}, ${p.plan.preset})`)}))});
+
+    // B6250-B6252: each person's name carries the year's custom where the people has one (the harness checks the
+    // household side, name-customs.test.mjs)
+    const yr = game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.() ?? null;
+    const dated = people.filter(p => ["czech", "german", "jewish"].includes(p.origin));
+    ok("2b. names follow the year's custom", yr === null || (dated.every(p => p.nameCustom && ["given", "byname", "settling", "family"].includes(p.nameCustom.form)) ),
+      {year: yr, forms: dated.slice(0, 6).map(p => `${p.name}: ${p.nameCustom?.form}${p.nameCustom?.hereditary ? ", passed down" : ""}`)});
 
     const made = await X.seed(scene, list, list.map(h => ({index: h.index, ghoulOf: null})));
     await sleep(300);
