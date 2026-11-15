@@ -179,9 +179,17 @@ export async function strikeBacks() {
         did = !!(await S?.hunters?.add?.(reg, "description", {why: `${of.name} told them about ${by.name}`, who: by, gain: 1}));
       } else did = !!(await S?.rumours?.start?.({text: `${by.name} is a blackmailer, and worse`, tellers: [of.id], about: by.id, source: of.id, truth: "true"}));
     } catch (e) { console.error(`${MOD} | strike back`, e); }
+    // B5177: a mortal who strikes back by word also tells the law, so the blackmail becomes a named deed in the law's heat
+    let heat = null;
+    if ( means !== "attack" ) {
+      try {
+        const scene = S?.reach?.whereIs?.(by.id)?.scene ?? null;
+        heat = await game.modules.get("wodx-chronicle")?.api?.law?.heat?.add?.(by, "extortion", {scene: scene ?? canvas?.scene, named: true, witnesses: 1});
+      } catch (e) { console.error(`${MOD} | strike back heat`, e); }
+    }
     const users = game.users.filter(u => u.isGM || by.testUserPermission?.(u, "OWNER")).map(u => u.id);
-    await ChatMessage.create({whisper: users, speaker: {alias: of.name}, content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p><b>${esc(of.name)} strikes back</b></p><p>Over the blackmail, ${esc(of.name)} ${TRR.STRIKE_WORDS[means]}.</p></div></div>`});
-    out.push({of: of.id, by: by.id, means, did});
+    await ChatMessage.create({whisper: users, speaker: {alias: of.name}, content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p><b>${esc(of.name)} strikes back</b></p><p>Over the blackmail, ${esc(of.name)} ${TRR.STRIKE_WORDS[means]}.</p>${heat ? `<p>${esc(of.name)} also goes to the law: ${esc(by.name)} the law now looks into the blackmail.</p>` : ""}</div></div>`});
+    out.push({of: of.id, by: by.id, means, did, heat: !!heat});
   }
   return out;
 }
