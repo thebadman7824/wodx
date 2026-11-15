@@ -2578,6 +2578,8 @@ export async function endStory({ actors } = {}) {
         if (to > w.temp) { await actor.update({ "system.advantages.willpower.temporary": to }); lines.push(`<li><b>${esc(actor.name)}</b>: Willpower ${w.temp} → ${to}</li>`); }
         const c = await hx().newStory(actor);
         if (c) lines.push(`<li>${esc(c)} (a new story, Dark Ages: Inquisitor p. 160)</li>`);
+        // B6303: shapechangers roll their Rage afresh for the new story
+        try { const g = await gx().newStory(actor); if (g) lines.push(`<li>${esc(g)}</li>`); } catch (e) { console.warn("WoDX Actions | new story Rage", e); }
         // B4997: any imbued with a creed (a Hunter sheet or another type marked in Hunter traits) goes back to the creed's level
         if ((actor.type === "Hunter" || rx().info(actor).creed) && HX.lineNow() === "reckoning") {
             const ri = rx().info(actor), start = ri.creedDef?.conviction;

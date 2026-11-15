@@ -200,6 +200,51 @@ for (const [k, res] of [
         ["Danger", [["api:hazard", "Fire / fall", "fa-burn"]]], ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]] };
 }
 
+/*
+ * B6300: what every line shares with the Kindred (15 November 2026: every line has the same access to the line-agnostic
+ * tools). Downtime on Backgrounds, healing with time, seduction, and the Storyteller's tools for the night, the story,
+ * the witnesses and the sky. Each button runs the same function as on the Kindred menu; those functions already read
+ * the actor's line (witness secrets, Rage at a new story, Willpower by night or story).
+ */
+export const SHARED_TOOLS = {
+    downtime: ["api:downtime", "Downtime and Backgrounds", "fa-hourglass-half"],
+    healing: ["api:healing", "Healing with time", "fa-band-aid"],
+    seduction: ["api:seduction", "Seduction", "fa-heart"],
+    newNight: ["api:newNight", "New night (GM)", "fa-moon"],
+    endStory: ["api:endStory", "End of story (GM)", "fa-book"],
+    witnesses: ["api:masquerade", "Witnesses (GM)", "fa-mask"],
+    sky: ["api:skyAndSun", "Sky and sun (GM)", "fa-cloud-sun"]
+};
+/** Which shared tools each line gets: the living and the bodied get all; spirits, beasts and ghosts get what fits. */
+export const SHARED_FOR = {
+    ghoul: ["downtime", "newNight", "endStory", "witnesses", "sky"],
+    mortal: ["downtime", "newNight", "endStory", "witnesses", "sky"],
+    hunter: ["downtime", "newNight", "endStory", "witnesses", "sky"],
+    lupine: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky"],
+    mage: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky"],
+    mageDA: ["downtime", "seduction", "newNight", "endStory", "witnesses", "sky"],
+    fae: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
+    faeDA: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
+    wraith: ["downtime", "newNight", "endStory", "witnesses", "sky"],
+    demon: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
+    kote: ["downtime", "newNight", "endStory", "witnesses", "sky"],
+    mummy: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
+    orpheus: ["downtime", "healing", "newNight", "endStory", "witnesses", "sky"],
+    exalted: ["downtime", "newNight", "endStory", "witnesses", "sky"],
+    spirit: ["newNight", "endStory", "witnesses", "sky"],
+    beast: ["newNight", "endStory", "witnesses", "sky"]
+};
+for (const [k, keys] of Object.entries(SHARED_FOR)) {
+    const m = MENUS[k];
+    if (!m) continue;
+    const have = new Set(m.sections.flatMap(([, b]) => b.map(([spec]) => spec)));
+    const add = keys.map(x => SHARED_TOOLS[x]).filter(b => b && !have.has(b[0]));
+    if (!add.length) continue;
+    const gm = add.filter(b => /\(GM\)/.test(b[1])), own = add.filter(b => !/\(GM\)/.test(b[1]));
+    if (own.length) m.sections.splice(Math.max(0, m.sections.findIndex(([t]) => t === "Scene")), 0, ["Between stories", own]);
+    if (gm.length) m.sections.splice(Math.max(0, m.sections.findIndex(([t]) => t === "Scene")), 0, ["Chronicle (GM)", gm]);
+}
+
 /* The inner voice (Phase 6d): the voiced lines get its panel; everyone gets the list of voices they play. */
 for (const [k, m] of Object.entries(MENUS)) {
     const scene = m.sections.find(([t]) => t === "Scene");

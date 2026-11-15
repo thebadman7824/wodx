@@ -1079,7 +1079,13 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     if (autoAtkNote) log.unshift(esc(autoAtkNote));
     if (autoNotes.length) log.unshift(esc(`Automatic: ${autoNotes.join("; ")}.`));
     // What the maneuver leaves on the target, shown on its token (B3754)
-    const follow = target && setting("statusEffects") ? R.followOn(R.maneuverKey(maneuver), { hit: !!hit && !atk.botch, damageSuccesses: dmg?.successes ?? 0, profile }) : [];
+    // B6302: a Kuei-jin's Chi aspect decides what a stake does (wood for Yin, a long metal blade for Yang)
+    const kotE = target?.type === "Vampire" && target.system?.settings?.variant === "kindredeast";
+    const chi = kotE ? String(target.getFlag?.("wodx-actions", "kote")?.aspect ?? "") : null;
+    const metal = !w?.ranged && R.LONG_METAL.test(String(w?.name ?? ""));
+    const follow = target && setting("statusEffects") ? R.followOn(R.maneuverKey(maneuver), { hit: !!hit && !atk.botch, damageSuccesses: dmg?.successes ?? 0, profile, chi, metal }) : [];
+    if (kotE && chi && ["stake", "impale"].includes(R.maneuverKey(maneuver)) && hit && !atk.botch && (dmg?.successes ?? 0) >= 3 && !follow.some(f => f.condition === "staked"))
+        log.push(`${target.name} is a Kuei-jin aspected to ${chi === "yin" ? "Yin: only wood holds them" : chi === "yang" ? "Yang: only a long metal blade through the heart holds them" : "Balance: no stake holds them"} (Kindred of the East).`);
     for (const f of follow) log.push(`${f.name}: ${target.name} is marked on the token${f.lasts === "staked" ? " until the stake is pulled out" : " until their next action"} (V20 Dark Ages pp. 347–348).`);
     // B4772, B4773: the lance and keeping the saddle when struck
     let saddle = { lines: [], rolls: [], apply: async () => {} };

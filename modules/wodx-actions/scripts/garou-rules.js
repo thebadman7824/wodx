@@ -67,6 +67,12 @@ export function auspiceMoonMatches(auspice, phaseIndex) {
     return (AUSPICE_PHASES[auspice] ?? []).includes(phaseIndex);
 }
 
+/** B6303: Rage at the start of a new story: the die's face (a 10 counts as 10), no higher than permanent Rage (DA:W p. 91; W20 p. 145). */
+export function newStoryRage(face, perm) {
+    const f = Math.max(1, Math.min(10, Math.trunc(Number(face) || 1)));
+    return Math.max(0, Math.min(f, Math.trunc(Number(perm) || 0)));
+}
+
 /** Rage on first seeing the moon each night: a number, or "all" when the phase is the auspice's (DA:W p. 91; W20 p. 145). */
 export function moonRage(phaseIndex, auspice, b, table) {
     if (auspiceMoonMatches(auspice, phaseIndex)) return "all";
