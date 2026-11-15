@@ -15,6 +15,7 @@ import * as SUM from "./summons.js";
 import * as SR from "./summon-rules.js";
 import * as TR from "./turn-rules.js";
 import * as TURN from "./turns.js";
+import * as LIM from "./limits.js";
 import { ask } from "./profiles.js";
 import { BOOK_RITUALS, bookRitual, ritualResults } from "./book-rituals.js";
 export { E, W };
@@ -355,7 +356,9 @@ export function planOf(actor, results, successes, power = null) {
       if ( r.key === "summon" && isOn() ) route = actor?.hasPlayerOwner ? "queue" : "auto";
       const rs = !self && r.key !== "summon" ? (r.out?.resist === null ? null : E.resistOf(r.key, r.out?.resist ? {resist: r.out.resist} : null)) : null;
       const out = rs && !r.out?.resist ? {...r.out, resist: {pool: rs.pool, diff: rs.diff}} : r.out;
-      items.push({key: r.key, out, target: d?.uuid ?? null, name: d?.name ?? a?.name ?? "", route, ...(r.key === "summon" ? {caster: actor?.uuid ?? null} : {})});
+      items.push({key: r.key, out, target: d?.uuid ?? null, name: d?.name ?? a?.name ?? "", route, ...(r.key === "summon" ? {caster: actor?.uuid ?? null} : {}),
+        // B4925, B4928: the power and its user, for a won resistance's bar (Compel Soul) and the resist card's breakdown
+        ...(power?.name ? {power: power.name, by: actor?.uuid ?? null, successes: n(successes)} : {})});
       if ( r.key === "summon" ) break; // one summoning, however many targets the caster has picked
     }
   }
@@ -412,6 +415,10 @@ const tokenOf = d => (d?.documentName === "Token" ? d : actorOf(d)?.getActiveTok
 
 /** Apply one item. Returns an undo record, or {note} when nothing could change. */
 export async function applyItem(item, casterName = "the caster") {
+  // B5174: an Untamable target shrugs off Domination and the Gifts that command (W20 p. 476)
+  const ta = actorOf(docOf(item?.target));
+  if ( ta && E.untamableStops(item?.out?.label ?? item?.out?.name) && (chron()?.traits?.has?.(ta, "untamable") ?? 0) > 0 )
+    return {note: `${ta.name} is Untamable: ${item.out.label ?? "the power"} finds no hold.`};
   const rec = await applyCore(item, casterName);
   // B4838: an each-turn rule on any other kind of result (a thing made, a hold, a boost) gets a timed effect of its own
   const et = item?.out?.everyTurn;
@@ -1073,8 +1080,12 @@ export async function resistItem(msg, i) {
   const res = countSuccesses(faces, n(R.diff));
   const won = res.successes > 0;
   const what = item.key === "hold" ? (won ? "breaks free" : "cannot break free this turn") : won ? `throws off ${item.out.label}` : `cannot throw off ${item.out.label}`;
+  // B4928: the whole roll shows: the pool's parts, each die, the ones that cancel, and the power's own successes.
+  // An NPC's resisting roll goes to the Storyteller alone (standing rule 19).
+  const bd = SR.breakdown({parts: SUM.poolParts(a, pool), dice, diff: n(R.diff), faces, successes: res.successes, botch: res.botch, against: item.successes ?? null});
   await ChatMessage.create({speaker: {alias: a.name}, rolls: [roll], ...(a.hasPlayerOwner ? {} : {whisper: game.users.filter(u => u.isGM).map(u => u.id), blind: true}),
-    content: `<div class="wodx-card"><p><b>${esc(a.name)}</b> rolls ${dice} dice at ${n(R.diff)} against ${esc(data.caster ?? "the caster")}'s ${esc(item.out.label)}: ${res.botch ? "a botch" : `${res.successes} success${res.successes === 1 ? "" : "es"}`}, and ${esc(what)}.</p></div>`});
+    content: `<div class="wodx-card"><p><b>${esc(a.name)}</b> rolls against ${esc(data.caster ?? "the caster")}'s ${esc(item.out.label)}, and ${esc(what)}.</p>
+      <p class="wodx-quiet">${esc(bd.pool)}</p><p>${bd.faces.map(f => `<span class="vta-die ${f.mark}">${f.v}</span>`).join(" ")}</p><p>${esc(bd.result)}</p></div>`});
   if ( game.user.isGM ) return resolveResist(msg, i, won);
   game.socket.emit(`module.${MOD}`, {action: "effectResisted", msg: msg.id, i, won, user: game.user.id});
   return won;
@@ -1086,6 +1097,11 @@ export async function resolveResist(msg, i, won) {
   const data = msg.flags?.[MOD];
   const item = data?.items?.[i];
   if ( !item ) return null;
+  // B4925: a ghost that beats Compel Soul is safe from all of that vampire's Necromancy tonight (VtDA p. 287)
+  if ( won && /compel soul/i.test(item.power ?? item.out?.label ?? "") && item.by ) {
+    const by = actorOf(docOf(item.by)), tgt = actorOf(docOf(item.target));
+    if ( by && tgt ) await LIM.lostTo(by, {name: "Compel Soul", disc: "Necromancy"}, tgt).catch(e => console.warn("WoDX | Compel Soul", e));
+  }
   if ( won && ENDS_ON_RESIST.has(item.key) ) {
     // B4839: tearing free of a bite costs the one who tears loose (Clenched Jaw)
     const brk = item.out?.everyTurn?.onBreak?.damage;

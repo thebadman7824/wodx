@@ -515,3 +515,10 @@ export function ritualFrom(name, {keywords = [], strength = 1, step = 2, ctx = {
 }
 /** Keep a ritual: one per name, sorted, at most RITUALS_MAX. */
 export const keepRitual = (list = [], r) => (r ? keepRote(list, r).slice(0, RITUALS_MAX) : list);
+
+/**
+ * B5174: the powers an Untamable Garou or Kinfolk shrugs off (W20 p. 476): vampiric Domination, and the Gifts Roll Over,
+ * Obedience and Mastery. Read from the power's name on the effects card; Presence still works.
+ */
+export const UNTAMABLE_POWERS = /^(command|mesmerize|(the )?forgetful mind|conditioning|possession|chain the psyche|loyalty|mass manipulation|still the mortal flesh|speak through the blood|obedience|roll over|mastery)\b/i;
+export const untamableStops = name => UNTAMABLE_POWERS.test(String(name ?? "").trim());

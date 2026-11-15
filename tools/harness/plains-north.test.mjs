@@ -13,6 +13,8 @@ const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-creation/data/peop
 const PR = await import(join(root, "modules/wodx-creation/scripts/people-rules.mjs"));
 const NP = await import(join(root, "modules/wodx-creation/data/people-plains-north.mjs"));
 const HN = await import(join(root, "modules/wodx-creation/data/people-haudenosaunee.mjs"));
+// Names made by pattern from the same people's recorded parts (B5600) count as the people's own
+const {PATTERNED} = await import(join(root, "modules/wodx-creation/data/people-patterned.mjs"));
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
 const WEST = W.cultureOf("north-america-west");
 const people = (era, origin, n = 200) => Array.from({length: n}, (_, i) => PR.nameOf({rand: G.stream("np", origin + era, i),
@@ -30,7 +32,7 @@ test("plains north: a Crow clan from the mother, Blackfoot and Arapaho women by 
   for ( const era of ["medieval", "early-modern"] ) {
     const cr = people(era, "crow");
     assert.ok(cr.every(p => split(NP.CR_CLANS).map(HN.clanName).includes(p.family) && !p.name.includes("{")), `crow ${era}`);
-    assert.ok(cr.every((p, i) => i % 2 || split(NP.CR_MEN).includes(p.given)), "no church names for the Crow before 1800");
+    assert.ok(cr.every((p, i) => i % 2 || (split(NP.CR_MEN).includes(p.given) || PATTERNED.crow.male.includes(p.given))), "no church names for the Crow before 1800");
     for ( const [o, bands] of [["blackfoot", NP.BF_BANDS], ["arapaho", NP.AH_BANDS]] ) {
       const ps = people(era, o);
       assert.ok(ps.every(p => !p.family && !p.name.includes("{")), `${o} ${era}`);

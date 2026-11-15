@@ -70,6 +70,56 @@ export function poolDice(actor, pool = "willpower") {
   }, 0);
 }
 
+/** The rating of a Background on the sheet (an item named for it, or the system's own field). */
+function backgroundOf(actor, name) {
+  const re = new RegExp(`^${name}`, "i");
+  const it = (actor?.items ?? []).find(i => re.test(i.name ?? "") && /background/i.test(`${i.type} ${i.system?.type ?? ""}`)) ?? (actor?.items ?? []).find(i => re.test(i.name ?? ""));
+  return {item: it ?? null, rating: n(it?.system?.value ?? it?.system?.rating ?? actor?.system?.backgrounds?.[name.toLowerCase()]?.value)};
+}
+
+/** The lasting servants a master already has, on every scene. */
+function servantsOf(actor, {familiar = false} = {}) {
+  let k = 0;
+  for ( const s of game.scenes ?? [] ) for ( const t of s.tokens ?? [] ) {
+    const f = t.flags?.[MOD]?.summon;
+    if ( f && f.byId === actor.id && f.persist && !f.dead && !!f.familiar === familiar ) k++;
+  }
+  return k;
+}
+
+/**
+ * B4929: over the cap, the Storyteller may raise the Background (the character's experience pays) or allow it once.
+ * Players are refused with the reason.
+ */
+async function withinCap(actor, r, {familiar = false} = {}) {
+  const bg = backgroundOf(actor, familiar ? "Familiar" : "Retainers");
+  const adding = familiar ? 1 : Math.max(1, n(r.tokens));
+  const cap = SR.servantCap({rating: bg.rating, have: servantsOf(actor, {familiar}), adding, familiar});
+  if ( !cap.over ) return true;
+  const why = `${actor.name} keeps ${cap.have} lasting ${familiar ? "familiar" : "servant"}${cap.have === 1 ? "" : "s"} and ${cap.bg} ${bg.rating} allows ${cap.cap}.`;
+  if ( !game.user.isGM ) { ui.notifications?.warn?.(`${why} Raise ${cap.bg} with experience first.`); return false; }
+  const cost = SR.backgroundCost(bg.rating);
+  const C = game.modules.get("wodx-creation")?.api;
+  const avail = n(C?.data?.xpTotals?.(actor)?.available ?? NaN);
+  const pick = await foundry.applications.api.DialogV2.wait({window: {title: `Over the ${cap.bg} rating`},
+    content: `<p>${esc(why)}</p><p>Raising ${esc(cap.bg)} to ${bg.rating + 1} costs ${cost} experience (WoDX house cost)${Number.isFinite(avail) ? `; ${avail} available` : ""}.</p>`,
+    buttons: [{action: "buy", label: `Raise ${cap.bg} (${cost} XP)`, default: true}, {action: "allow", label: "Allow it this once"}, {action: "no", label: "Cancel"}], rejectClose: false}).catch(() => "no");
+  if ( pick === "allow" ) return true;
+  if ( pick !== "buy" ) return false;
+  if ( Number.isFinite(avail) && avail < cost ) { ui.notifications?.warn?.(`${actor.name} has ${avail} experience; ${cost} is needed.`); return false; }
+  if ( bg.item ) await bg.item.update({"system.value": bg.rating + 1});
+  else await actor.createEmbeddedDocuments("Item", [{name: cap.bg, type: "Feature", system: {type: "wod.types.background", value: 1}}]);
+  await actor.createEmbeddedDocuments("Item", [{name: `${cap.bg} ${bg.rating + 1}`, type: "Experience", system: {amount: cost, isspent: true},
+    flags: {"wodx-creation": {time: game.time?.worldTime ?? 0, kind: "background", key: cap.bg.toLowerCase(), from: bg.rating, to: bg.rating + 1, by: game.user.name, for: actor.id}}}]);
+  await ChatMessage.create({speaker: ChatMessage.getSpeaker({actor}), content: `<div class="wodx-card"><p>${esc(actor.name)} raises ${esc(cap.bg)} to ${bg.rating + 1} for ${cost} experience, to keep the new ${familiar ? "familiar" : "servant"}.</p></div>`});
+  return true;
+}
+
+/** B4928: the traits behind a pool, for the roll breakdown: [{name, value}]. */
+export function poolParts(actor, pool = "willpower") {
+  return String(pool).split("+").map(p => p.trim().toLowerCase()).filter(Boolean).map(k => ({name: k[0].toUpperCase() + k.slice(1), value: poolDice(actor, k)}));
+}
+
 async function rollDice(dice, diff) {
   let faces = [], roll = null;
   if ( dice > 0 ) { roll = new Roll(`${dice}d10`); await roll.evaluate(); faces = roll.dice[0]?.results?.map(r => r.result) ?? []; }
@@ -137,6 +187,8 @@ export async function bring(item, {src = null, at, casterName = "the summoner", 
   const caster = actorOf(docOf(item.caster)) ?? null;
   const casterTok = caster?.getActiveTokens?.()?.[0]?.document ?? null;
   if ( !scene || !at ) return {note: `${o.label ?? "Summon"}: no spot to place it`};
+  // B4929: a player's lasting servants count against Retainers (a familiar against Familiar)
+  if ( r.persist && caster?.hasPlayerOwner && !(await withinCap(caster, r, {familiar: !!item.familiar})) ) return {note: `${o.label ?? "Summon"}: over the ${item.familiar ? "Familiar" : "Retainers"} rating`};
   // B4841: a summoning with a price per being pays it from the caster's pool, and only what is paid for comes
   if ( r.cost && caster ) {
     const P = E.poolOf(r.cost.pool);
@@ -404,7 +456,7 @@ export async function callFamiliar(mage, {src = null, at = null} = {}) {
   const r = SR.resolve(spec, {successes: 1});
   const own = mage.getActiveTokens?.()?.[0]?.document;
   const spot = at ?? (own ? centerOf(own) : null) ?? await game.modules.get(MOD)?.api?.effects?.pickPoint?.("Click where the familiar appears.");
-  const rec = await bring({out: {summon: r, label: "Familiar"}, caster: mage.uuid}, {src, at: spot ? {x: spot.x + (canvas.grid?.size ?? 100), y: spot.y} : null, casterName: mage.name});
+  const rec = await bring({out: {summon: r, label: "Familiar"}, caster: mage.uuid, familiar: true}, {src, at: spot ? {x: spot.x + (canvas.grid?.size ?? 100), y: spot.y} : null, casterName: mage.name});
   for ( const u of rec?.made ?? [] ) { const t = docOf(u); if ( t ) await t.update({[`flags.${MOD}.summon.familiar`]: rating, [`flags.${MOD}.summon.paidAt`]: game.time?.worldTime ?? 0}); }
   return rec;
 }

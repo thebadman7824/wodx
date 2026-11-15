@@ -218,9 +218,13 @@ async function runGate(K) {
     await step("20 ghouls", async () => {
       const gh = by("Ghoul"), gr = by("Grimaldi"), fams = game.settings.get(C, "sigFamilies");
       const kind = api().rowOf(gh)?.feature;
+      // B5050: the monthly need runs by itself (ghoul-need.mjs); the Clan card checked here stands in only with it off
+      const needWas = game.settings.get(C, "ghoulNeed");
+      await game.settings.set(C, "ghoulNeed", false);
       await gh.update({[`flags.${C}.sig`]: {ghoul: {fedAt: game.time.worldTime - 61 * 86400, warned: 0}}});
       await api().tick({force: true});
       await until(() => sig(gh).ghoul?.warned === 2);
+      await game.settings.set(C, "ghoulNeed", needWas);
       const fam = api().rowOf(gr)?.key;
       const made = await api().foundFamily({name: "Gatewardens", trait: "war", disciplines: "Potence, Fortitude", year: 1197});
       const kept = game.settings.get(C, "sigFamilies").some(f => f.key === "gatewardens");

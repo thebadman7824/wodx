@@ -10,6 +10,7 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: mummy-rules.js.
  */
+import * as LIM from "./limits.js";
 import * as M from "./mummy-rules.js";
 import { floatOver } from "./daysleep.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -96,6 +97,10 @@ export function build(ctx) {
             const tv = ATTRS.includes(fd.tr) ? ctx.attr(actor, fd.tr) : n(ctx.findAbility?.(actor, fd.tr)?.value);
             const plan = M.spellPlan({ path: i.hekau[fd.path], trait: tv, level, cost: n(fd.c), extra: n(fd.x), pool: i.sekhem.pool, difficulty: n(fd.d) });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
+            // B4921: a spell the book (or the house rule) says is used up is refused before Sekhem is spent
+            const lim = await LIM.gate(actor, { name: ns?.name ?? sp?.name ?? `${M.HEKAU[fd.path]?.label ?? fd.path} ${level}`, disc: M.HEKAU[fd.path]?.label ?? fd.path, level });
+            if (!lim) return null;
+            plan.difficulty += lim.diff;
             if (plan.spend && !(await sekhem(actor, -plan.spend))) return null;
             const wp = !!fd.wp && await spendWillpower(actor, 1);
             const label = `${M.HEKAU[fd.path].label} ${n(i.hekau[fd.path])} + ${esc(traits.find(t => t.key === fd.tr)?.label ?? fd.tr)}`;
@@ -138,6 +143,8 @@ export function build(ctx) {
                 }
             }
             body += `<div class="wodx-quiet">${REF} p. 78${ns ? `, ${MH.PATH_PAGE[ns.path]}` : ""}</div>`;
+            if (lim.diff) body += `<div class="vta-note">Drained: +${lim.diff} difficulty.</div>`;
+            await lim.done({ successes: got });
             return post(actor, `${actor.name} works Hekau`, body, rolls.filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 540, render: root => { pickSpell(root); return aim(root, { actor, lib: "hekau", power: r => { const sp = spells.find(x => x.id === r.querySelector("[name=sp]")?.value); const path = r.querySelector("[name=path]")?.value; return sp ? { id: sp.id, n: sp.name, e: String(sp.system?.description ?? "").replace(/<[^>]+>/g, " ") } : path ? { id: path, n: M.HEKAU[path]?.label ?? path } : null; } }); } });
     }

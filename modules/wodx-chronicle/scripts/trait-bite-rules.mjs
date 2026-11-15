@@ -14,6 +14,9 @@
  *         {banality: 1}  a point of temporary Banality
  *         {frenzy}       four or more successes on the roll set off a frenzy (Hatred)
  *         {hint}         a word of warning whispered to the player (Common Sense)
+ *         {infect}       (B5175) the chance the vessel just fed on falls sick: it carries the disease, and is weak for a week
+ *         {consume}      (B5175) the vessel is eaten as well as drunk: a mortal vessel dies
+ *         {berserk}      (B5175) the player gets a button to go berserk: a frenzy, which ignores wound penalties
  */
 export const BITES = {
   "eat-food": {fail: {diff: 1, tags: ["strength", "dexterity", "stamina"], lasts: "night", name: "Food sits heavy"}},
@@ -38,9 +41,17 @@ export const BITES = {
   "poetic-heart": {roll: ["banality", 0], fail: {banality: 1}},
   "bizarre-quality": {fail: {diff: 1, tags: ["stealth", "subterfuge"], lasts: "scene", name: "Stared at"}},
   "anachronism": {roll: ["intelligence", 7], fail: {diff: 1, tags: ["computer", "science", "drive", "academics"], lasts: "scene", name: "Out of time"}},
+  // B5175: the feeding flaws and the Garou's berserk rage, from the books' wording (V20 pp. 481, 487; W20 p. 476)
+  "infectious-bite": {fail: {infect: 0.2}},
+  "conspicuous-consumption": {fail: {consume: true}},
+  "berserker": {fail: {berserk: true}},
   "newflaws-anachronism": {roll: ["intelligence", 7], fail: {diff: 1, tags: ["computer", "science", "drive", "academics"], lasts: "scene", name: "Out of time"}}
 };
 export const biteOf = key => BITES[key] ?? null;
+/** The sickness an infected bite leaves on a mortal vessel: a die off every roll for a week (house reading). */
+export const FEVER = {name: "A fevered bite", dice: -1, tags: ["all"], seconds: 7 * 86400};
+/** Does the bite infect? one in five (V20 p. 481). */
+export const infects = (chance, d10) => Number(d10) <= Math.round((Number(chance) || 0) * 10);
 
 /** Count a roll: successes less ones, and a botch. */
 export function count(faces = [], diff = 6) {
