@@ -236,7 +236,6 @@ Next free block: B5040
 | B4860-B4889 | The Storyteller's Hand: what is approved happens, the world acts on its own (Ben's desk picks, 14 November 2026) (used B4860-B4873) | Chronicle, Storyteller, NPC |
 | B4900-B4909 | Sami names (used B4900-B4902) | Creation, Chronicle |
 | B4910-B4919 | Rothenstein Rebuilt: book one fronts, roles and clue carriers (spine part two) (used B4910-B4917) | Chronicle |
-| B4920-B4949 | Power limits after Princes of Darkness: one scene count, use limits, Drained, after-costs, NPC power choice (used B4920-B4929) | Actions, NPC |
 | B4950-B4959 | Tuareg names (used B4950-B4952) | Creation, Chronicle |
 | B5000-B5009 | Moro names (used B5000-B5002) | Creation, Chronicle |
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
@@ -7678,46 +7677,6 @@ Reverse: none needed.
 WoDX Chronicle. Desk c1-c7: six facts of the plot, each with a person, a place and a thing that carry it. Each carrier found pins a card on the open case board with a hint; the third pins the whole fact. Found carriers can be taken back.
 
 Reverse: none needed.
-
-## B4920. One scene count for every line (2026-11-14)
-WoDX Actions. Ben's Power Limits Desk pick a1 (22:44Z). A scene ends when the Storyteller presses End the scene or another map becomes active. WoDX Actions keeps one count (the world setting sceneTally) and fires the hook wodxNewScene; the werewolf and wraith once-a-scene counts and every line's scene key now read it.
-
-Reverse: limits.js newScene and setup, and sceneKey in the line files back to their own counts.
-
-## B4921. The books' use limits, checked before the roll (2026-11-14)
-WoDX Actions. Picks b1 and b2. limit-rules.js lists the powers whose own page sets how often they work (once a turn, scene, night or lunar month, per target, or after a failure only), with the page. Every line's power window greys a used power out for players, names the reason and the page, and refuses it at submit. A per-target limit refuses only the barred targets. The Storyteller is asked "Allow it this once?" instead of being refused.
-
-Reverse: limits.js gate and decorate calls in the line files.
-
-## B4922. House rule: a power of the fifth level or higher works once a scene (2026-11-14)
-WoDX Actions. Pick b1. A level 5+ power with no limit of its own counts as once a scene, marked "WoDX house rule".
-
-Reverse: HOUSE in limit-rules.js limitOf.
-
-## B4923. Drained after a great power (2026-11-14)
-WoDX Actions. Pick c1. After a successful power of the fifth level or higher its user is Drained: +1 difficulty on their own rolls until the scene ends, a WoDX Chronicle condition with a status icon and a chat card. A power that leaves a lasting effect on its user drains when that effect ends. The new scene clears it.
-
-Reverse: limits.js drainAfter, setDrained and the Drained condition.
-
-## B4924. The books' after-costs, paid when the power ends (2026-11-14)
-WoDX Actions. Ben's After-Cost Desk (22:59Z): every item "Build it". When a power's lasting effect ends (or the scene ends, for a power that left none), its page's cost is paid by itself, with a card: Survivor (W20 p. 177) sleeps eight hours and wakes Ravenous; Messenger's Fortitude (Werewolf: The Wild West p. 160) sleeps a week; Blood of Potency (V20 p. 214) loses the blood over the normal pool; Strengthening the Demon (Kindred of the East Companion p. 74, the desk's unnamed Demon Chi power) rolls Hun against P'o or gains a Derangement; Subsume the Spirit (VtDA p. 192) leaves Animal habits for nights equal to the successes, +1 difficulty on Social rolls (house reading), shaken off for a Willpower; Inspire (Demon: The Fallen p. 199) takes a permanent Willpower from the mortal; Blinding Spittle (W20 Changing Breeds p. 241) leaves Blurred sight (+2 on sight-based rolls) for the scene; Pietrosu's Hospitality (VtDA p. 275) leaves each one caught Numbed for a turn (Dexterity -1); a fomor's Numbing (W20 p. 436) takes the three extra levels back and kills a fomor left past Incapacitated.
-
-Reverse: after-cost-rules.js and after-costs.js.
-
-## B4925. A ghost that beats Compel Soul is safe from that vampire's Necromancy tonight (2026-11-14)
-WoDX Actions. Pick b1 (VtDA p. 287). When the target wins its resistance roll against Compel Soul, the use is filed as a failure on that target for the night, and every Necromancy power of that vampire is refused on that target until the next night.
-
-Reverse: the lostTo call in effects.js resolveResist.
-
-## B4928. Resisted rolls show in full (2026-11-14)
-WoDX Actions. Pick d1. A resistance roll's card names the pool's traits and their dots, shows each die marked hit, miss or one, the ones taken off, the net successes and the power's own successes. An NPC's resisting roll goes to the Storyteller only (standing rule 19); a player's character's goes to everyone. Social contests already showed both rolls this way.
-
-Reverse: breakdown in summon-rules.js and the card in effects.js resistItem.
-
-## B4929. Lasting servants count against Retainers, a familiar against Familiar (2026-11-14)
-WoDX Actions. Pick f1. A player's character who calls a lasting servant past their Retainers rating (or a second familiar) is stopped. The Storyteller gets a choice: raise the Background a dot for the current rating times three experience (a WoDX house cost, since V20 leaves Background experience to the Storyteller), allow it this once, or cancel. Players see the reason. NPC masters have no cap.
-
-Reverse: withinCap in summons.js bring.
 
 ## B4950. The Tuareg at the desert edge (2026-11-14)
 WoDX Creation and Chronicle. The Tuareg of the Aïr and the Niger bend are 3 or 4 in 100 in West Africa's mix in every age, and 2 in the Maghreb's (the Ahaggar) before the industrial age. Taken as recommended; logged in PENDING-REVIEW.
