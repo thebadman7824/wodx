@@ -11,6 +11,8 @@
  *   4. a real door action: listening at a door (Interactables' own roll and card) plays the listening move
  *   5. a drawn sprite of its own is put on a token by itself, also on one made later (B6140)
  *   6. the world's own drawn sprites: how many characters have one, and how many tokens of the scenes wear it
+ *   7. drawing from inside the game (B6144): the button writes the roster and a request; a status from the drawer is read
+ *      back and the sprites learnt (the status is written here at once, so no real drawing is started)
  * Result: Data/wodx-gate/gatespritecheck-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -180,6 +182,21 @@ export async function run() {
       let tokens = 0, wearing = 0;
       for ( const s of game.scenes ) for ( const t of s.tokens ) if ( SR.isOwn(SR.ownName(t.actorId)) ) { tokens++; if ( t.flags?.[PD]?.sprite ) wearing++; }
       G.ok("6. counted", true, {ownSprites: own.length, actorsWithOne: actors.length, actorsInWorld: game.actors.size, tokensOfThem: tokens, wearingIt: wearing, sample: actors.slice(0, 8).map(a => `${a.name} (${a.type})`)});
+    });
+
+    await G.step("7. drawing from inside the game", async () => {
+      const folder = `worlds/${game.world.id}/wodx-sprites`, FP = foundry.applications.apps.FilePicker.implementation;
+      const read = async f => { const r = await fetch(`${folder}/${f}?t=${Date.now()}`, {cache: "no-store"}); return r.ok ? r.json() : null; };
+      const id = await A.requestDraw();
+      // answered at once, before the runner looks (it polls every 30 seconds), so the gate starts no real drawing
+      await FP.upload("data", folder, new File([JSON.stringify({id, state: "done", started: new Date().toISOString(), finished: new Date().toISOString(), drawn: 0, unchanged: 0, text: "gate"})], "status.json", {type: "application/json"}), {}, {notify: false});
+      const req = await read("request.json"), roster = await read("roster.json");
+      A.watchDraw(id, {every: 500});
+      const answered = await waitFor(() => !A.drawWatched(), 8000).then(() => true, () => false);
+      G.ok("7. the button writes the roster and the request", req?.id === id && req.world === game.world.id && roster?.actors?.length === game.actors.size, {req, actors: roster?.actors?.length});
+      G.ok("7. the drawer's answer is read and the sprites learnt", answered, {watched: A.drawWatched()});
+      // the gate's answer stays: putting an older status back would leave the gate's request open and start a real drawing
+      G.ok("7. the setting menu is there", !!game.settings.menus.get(`${PD}.spriteDraw`));
     });
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }
   finally {

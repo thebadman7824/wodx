@@ -19,6 +19,9 @@ export function registerSpriteSettings() {
     hint: "Tokens given a sprite face the way they move and step as they go. Off: they show the still figure.", type: Boolean, default: true});
   game.settings.register(MOD, "spriteLife", {scope: "world", config: true, name: "Figures live their routine on the map",
     hint: "A character with a routine (WoDX NPC) sleeps lying down, sits at rest, works with the hands, kneels at prayer, drinks seated and carries a load on errands; beasts graze and lie down. They get up when they walk. Off: everyone stands.", type: Boolean, default: true});
+  // B6144: the Storyteller asks the PC to draw everyone's sprite, from inside the game
+  game.settings.registerMenu(MOD, "spriteDraw", {name: "Draw sprites", label: "Draw sprites now", icon: "fa-solid fa-person-walking",
+    hint: "Writes every character of the world for the sprite batch and asks the PC sprite drawer to draw the ones that are new or changed. Tokens put the new sprites on by themselves when it is done.", type: DrawMenu, restricted: true});
   game.settings.register(MOD, "spriteDress", {scope: "world", config: true, name: "Tokens wear their character's drawn sprite",
     hint: "When a character has a sprite of its own (drawn by the sprite batch), every token of it on a map wears that sprite at once, also the ones a routine brings in. Off: the Storyteller gives sprites from the token's buttons.", type: Boolean, default: true});
 }
@@ -578,7 +581,7 @@ export function startSprites() {
   Hooks.on("wodxInteractableWorked", onWorked);
   Hooks.on("createChatMessage", onSpoken);
   Hooks.on("createToken", onTokenMade);
-  loadOwn();
+  loadOwn().then(() => resumeDraw()).catch(() => null);
   const every = globalThis.setInterval?.(() => { settle().catch(e => console.warn(`${MOD} | routine poses`, e)); }, 2500);
   every?.unref?.();   // under Node (the test stand-in) the timer must not keep the process alive
   Hooks.on("canvasReady", () => { states.clear(); glows.clear(); strides.clear(); acts.clear();
@@ -696,6 +699,55 @@ export async function markChild(actor, growth) {
   }
 }
 
+/* ---- drawing from inside the game (B6144): roster and request out, the PC runner draws, status.json back ---- */
+class DrawMenu { render() { drawDialog().catch(e => console.warn(`${MOD} | draw sprites`, e)); return this; } close() { return this; } }
+const readOwn = async file => { try { const r = await fetch(`${ownFolder()}/${file}?t=${Date.now()}`, {cache: "no-store"}); return r.ok ? r.json() : null; } catch (e) { return null; } };
+let watching = null;
+/** The window: how many characters there are and how many already have a sprite, and the button that asks. */
+export async function drawDialog() {
+  if ( !game.user?.isGM ) return null;
+  const all = game.actors?.size ?? 0, drawn = (game.actors ?? []).filter(a => SR.isOwn(SR.ownName(a.id))).length;
+  const st = await readOwn("status.json"), req = await readOwn("request.json");
+  const last = st?.state === "done" ? `Last drawn ${new Date(st.finished).toLocaleString()}: ${st.drawn} drawn, ${st.unchanged} unchanged.` : st?.state === "failed" ? `The last drawing failed: ${st.text}` : "";
+  const busy = req?.id && (st?.id !== req.id || st.state === "drawing");
+  const ok = await foundry.applications.api.DialogV2.confirm({window: {title: "Draw sprites"}, classes: ["wodx-dialog"], rejectClose: false,
+    content: `<p>${all} characters in the world; ${drawn} have a drawn sprite.</p><p>The PC sprite drawer draws the ones that are new or changed (clothes, gear, figure, age, the year) and leaves the rest. It takes a few seconds a character. Tokens put the new sprites on by themselves.</p>${last ? `<p class="wodx-quiet">${last}</p>` : ""}${busy ? `<p class="wodx-quiet">A drawing was asked for already and has not finished; asking again replaces it.</p>` : ""}`,
+    yes: {label: "Draw now"}, no: {label: "Cancel"}});
+  return ok ? requestDraw() : null;
+}
+/** Write the roster and a request; the PC runner draws. Returns the request id. */
+export async function requestDraw() {
+  if ( !game.user?.isGM ) return null;
+  const saved = await saveRoster(), id = `${Date.now().toString(36)}-${foundry.utils.randomID(6)}`;
+  const FP = foundry.applications?.apps?.FilePicker?.implementation ?? globalThis.FilePicker;
+  await FP.upload("data", ownFolder(), new File([JSON.stringify({id, world: game.world.id, at: new Date().toISOString(), by: game.user.name})], "request.json", {type: "application/json"}), {}, {notify: false});
+  ui.notifications?.info(`Asked for ${saved?.actors ?? 0} characters' sprites. They appear on the map when the PC has drawn them.`);
+  watchDraw(id);
+  return id;
+}
+/** Read status.json every 20 seconds until the request is answered (an hour at most); then learn the sprites and dress the scene. */
+export function watchDraw(id, {every = 20000, limit = 3600000} = {}) {
+  if ( watching ) clearInterval(watching.timer);
+  const t0 = Date.now();
+  let told = false;
+  const look = async () => {
+    const st = await readOwn("status.json");
+    if ( st?.id === id && st.state === "done" ) { clearInterval(watching?.timer); watching = null; const n = await loadOwn(); ui.notifications?.info(`Sprites drawn: ${st.drawn} new or changed, ${st.unchanged} as they were; ${n} characters have one.`); return; }
+    if ( st?.id === id && st.state === "failed" ) { clearInterval(watching?.timer); watching = null; ui.notifications?.warn(`The sprite drawing failed: ${st.text}`); return; }
+    if ( !told && Date.now() - t0 > 180000 && st?.id !== id ) { told = true; ui.notifications?.warn("No sprite drawer has answered yet. It runs on the PC with the job runner; the request waits for it."); }
+    if ( Date.now() - t0 > limit ) { clearInterval(watching?.timer); watching = null; }
+  };
+  watching = {id, timer: setInterval(() => { look().catch(() => null); }, every)};
+  watching.timer?.unref?.();
+  return watching;
+}
+/** On the Storyteller's computer at start: a request still waiting is watched again. */
+async function resumeDraw() {
+  if ( !mine() ) return;
+  const req = await readOwn("request.json"), st = await readOwn("status.json");
+  if ( req?.id && (st?.id !== req.id || st.state === "drawing") ) watchDraw(req.id);
+}
+
 /** Every character of the world as the batch needs it. */
 export function roster() {
   const actors = [], y = game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.();
@@ -746,4 +798,4 @@ export async function dress(scene = canvas.scene) {
   return n;
 }
 
-export const spriteApi = {flash, veil, lineWanted, faded: t => fades.get(t?.id ?? t)?.alpha ?? 1, looksOn: t => [...(looks.get(t?.id ?? t) ?? [])].map(l => l.kind), marked: t => !!marked.get(t?.id ?? t), seemingFor, shiftByStages, covered: t => { const c = covers.get(typeof t === "string" ? t : (t?.object?.id ?? t?.id)); return c && !c.destroyed ? {tint: c.tint, visible: c.visible, width: c.width} : null; }, ageOf, markChild, give, clear, pick, play, pose, rise, settle, lifeOf, roster, saveRoster, loadOwn, dress, own: id => SR.isOwn(SR.ownName(id)) ? SR.ownName(id) : null, squares: name => SR.squaresOf(name), fxFor: SR.fxFor, glowing: id => { const g = glows.get(id); return g && !g.destroyed ? {visible: g.visible, width: g.width, height: g.height, x: g.position.x, y: g.position.y} : null; }, acts: name => [...(SR.ACTS[name] ?? [])], playing: id => acts.get(typeof id === "string" ? id : (id?.document?.id ?? id?.id)), names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};
+export const spriteApi = {drawDialog, requestDraw, watchDraw, drawWatched: () => watching?.id ?? null, flash, veil, lineWanted, faded: t => fades.get(t?.id ?? t)?.alpha ?? 1, looksOn: t => [...(looks.get(t?.id ?? t) ?? [])].map(l => l.kind), marked: t => !!marked.get(t?.id ?? t), seemingFor, shiftByStages, covered: t => { const c = covers.get(typeof t === "string" ? t : (t?.object?.id ?? t?.id)); return c && !c.destroyed ? {tint: c.tint, visible: c.visible, width: c.width} : null; }, ageOf, markChild, give, clear, pick, play, pose, rise, settle, lifeOf, roster, saveRoster, loadOwn, dress, own: id => SR.isOwn(SR.ownName(id)) ? SR.ownName(id) : null, squares: name => SR.squaresOf(name), fxFor: SR.fxFor, glowing: id => { const g = glows.get(id); return g && !g.destroyed ? {visible: g.visible, width: g.width, height: g.height, x: g.position.x, y: g.position.y} : null; }, acts: name => [...(SR.ACTS[name] ?? [])], playing: id => acts.get(typeof id === "string" ? id : (id?.document?.id ?? id?.id)), names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};
