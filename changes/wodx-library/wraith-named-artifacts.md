@@ -1,6 +1,0 @@
----
-bump: minor
-effect: a wraith (or a Spectre) can soulforge 22 named Artifacts from Wraith 20th at the crafting table; each finished one has Use buttons that move Pathos, Willpower, Corpus and Angst, roll its pool, keep a pool of its own and run out, and Living Chains, Shroudripper gloves and Stygian steel armor arrive as a real weapon and armor
-visible: using one plays the wraith's casting move with its own effect sheet; the Soulfire Lantern fades the bearer's token to a dim red glow until it is set down, the Soulfire Mask's aura lights the token with fire, and Redeyes and the Candelabra of Souls leave a light burning on the map where they were used
----
-Wraith Artifacts on the crafting table (B6100-B6103): the named Artifacts of Wraith 20th pp. 425-431 (thirteen of the forges, five Skin Artifacts, three Spectre Artifacts and the souled relic) join the soulforged Artifact and reworked relic. The forge's goal follows the level (2 + 2 a level), Skin Artifacts must be fed 2 Pathos a day and add Angst on a botch, Spectre Artifacts are made only by Spectres, who pay the soulfire in Angst, and the eMap is made only from 1970. Item powers gain extra costs, a botch that adds, the figure's look, the token's look and a light the Storyteller's computer places.
