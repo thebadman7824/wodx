@@ -42,7 +42,9 @@ const cardFor = (actor, t0, ms = 8000) => waitFor(() => game.messages.contents.f
 export async function run() {
   const G = gate("gatetruthholy", {stepTimeout: 45000});
   if ( G.notLive() ) return "Not on the Live world.";
-  const touched = [["wodx-chronicle", "sigHunter", true], ["wodx-interactables", "hazards", true]];
+  // B6480: Initiative rolled by itself at the start of the fight reorders the turns after step 4 has picked the
+  // demon's place in them, so the turn it sets can land on the believer: the gate rolls none and sets the turn by id
+  const touched = [["wodx-chronicle", "sigHunter", true], ["wodx-interactables", "hazards", true], ["wodx-combat", "autoInitiative", "off"]];
   const was = [];
   const hook = Hooks.on("renderDialogV2", onRender);
   try {
@@ -115,13 +117,16 @@ export async function run() {
       await combat.createEmbeddedDocuments("Combatant", [tH, tD].map(t => ({tokenId: t.id, sceneId: scene.id, actorId: t.actorId})));
       await combat.startCombat();
       const t0 = Date.now();
-      const idx = combat.turns.findIndex(c => c.tokenId === tD.id);
-      if ( combat.turn === idx ) await combat.update({turn: (idx + 1) % combat.turns.length});
-      await combat.update({turn: idx});
+      // the turn order read now, after the start, and the demon's turn found by its token each time
+      const idx = () => combat.turns.findIndex(c => c.tokenId === tD.id);
+      if ( combat.turn === idx() ) await combat.update({turn: (idx() + 1) % combat.turns.length});
+      await combat.update({turn: idx()});
+      const onDemon = combat.combatant?.tokenId === tD.id;
       const seared = await waitFor(() => n(demon.system?.health?.damage?.lethal) >= l0 + 1, 8000);
       const card = game.messages.contents.filter(m => m.timestamp >= t0 && /holy ground/i.test(text(m))).pop();
       G.ok("4. a demon starting its turn in the mosque is seared", seared && n(demon.system?.health?.damage?.lethal) === l0 + 1 && /Gate mosque, kept for Islam/.test(text(card)),
-        {lethal: [l0, demon.system?.health?.damage?.lethal], card: text(card).slice(0, 260)});
+        {lethal: [l0, demon.system?.health?.damage?.lethal], card: text(card).slice(0, 260), onDemon, turn: combat.turn,
+          order: combat.turns.map(c => c.name), inMosque: !!ix?.holyUnder?.(tD), kind: A?.getKind?.(demon) ?? null});
     });
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }
   finally {

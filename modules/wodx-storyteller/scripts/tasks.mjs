@@ -24,7 +24,7 @@ const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
 const ownerIds = a => game.users.filter(u => !u.isGM && a?.testUserPermission?.(u, "OWNER")).map(u => u.id);
 const cap = s => String(s ?? "").replace(/^./, c => c.toUpperCase());
 const unset = path => { const Del = globalThis.foundry?.data?.operators?.ForcedDeletion; return Del ? {[path]: new Del()} : {[path.replace(/\.([^.]+)$/, ".-=$1")]: null}; };
-let busy = false;
+let busy = false, running = null;
 
 export function registerTaskSettings() {
   game.settings.register(MOD, "longTasks", {name: "Long tasks over the clock", hint: "Extended actions that take days or weeks (making things, research, training, talens, wonders) roll on their own as game time passes.",
@@ -157,10 +157,23 @@ async function rollOnce(dice, diff, specialty) {
 /** The active Storyteller: roll every task that has come due and post one card per character. */
 const ironLegion = a => { try { return (game.modules.get("wodx-chronicle")?.api?.signatures?.rowsOf?.(a) ?? []).some(r => r.key === "iron"); } catch (e) { return false; } };
 export async function tick({force = false} = {}) {
-  if ( busy || !isActiveGM() || !setting("longTasks") || (held() && !force) ) return [];
+  if ( !isActiveGM() || !setting("longTasks") || (held() && !force) ) return [];
+  // B6481: a forced tick ("Roll what is due", a gate) while the clock's own tick still runs (a long catch-up after a
+  // time skip) waits for it and then rolls, instead of answering that nothing is due; never more than a minute
+  if ( busy ) {
+    if ( !force ) return [];
+    let timer = null;
+    const ended = await Promise.race([Promise.resolve(running).then(() => true, () => true), new Promise(r => { timer = setTimeout(() => r(false), 60000); })]);
+    clearTimeout(timer);
+    return ended ? tick({force}) : [];
+  }
   busy = true;
+  running = rollDue();
+  try { return await running; } finally { busy = false; running = null; }
+}
+async function rollDue() {
   const out = [];
-  try {
+  {
     const t0 = now();
     for ( const a of game.actors ) {
       const raw = rawTasks(a);
@@ -280,7 +293,7 @@ export async function tick({force = false} = {}) {
       }
       out.push({actor: a.id, lines});
     }
-  } finally { busy = false; }
+  }
   return out;
 }
 

@@ -252,6 +252,10 @@ export async function run() {
       // held, so no tick of the clock's own runs beside the forced one
       await set(CH, "hold", true);
       await set(ST, "longTasks", true);
+      // B6481: the clock's own tick after step 8's years can still be rolling the lane's other work; a forced tick
+      // waits for it, so this one settles it before the maker's work is set behind (its cards are undone below)
+      const since = Date.now();
+      await S.tasks.tick({force: true});
       const [m] = await G.make(Actor, [{name: "WoDX gate: truthst maker", type: "Mortal"}]);
       const t0 = game.time.worldTime;
       const task = await S.tasks.save(m, {kind: "craft", name: "WoDX gate: truthst chest", dice: 0, goal: 100, interval: "hour", nights: 0});
@@ -259,16 +263,17 @@ export async function run() {
       await m.update({[`flags.${ST}.tasks.${task.id}.next`]: t0 - 10 * 3600});
       const due = S.tasks.rules.dueRolls(S.tasks.of(m).find(x => x.id === task.id), t0);
       // the first roll meets trouble, and the trouble is the craft's first (a material goes missing: the work waits two days)
-      const real = Math.random, since = Date.now();
+      const real = Math.random;
       Math.random = () => (/drawTrouble/.test(new Error().stack ?? "") ? 0 : real());
-      let ticked = [];
+      let ticked = [], tries = 0;
       try {
-        for ( let i = 0; i < 10 && !ticked.some(x => x.actor === m.id); i++ ) { ticked = await S.tasks.tick({force: true}) ?? []; if ( !ticked.length ) await sleep(500); }
+        for ( ; tries < 10 && !ticked.some(x => x.actor === m.id); tries++ ) { ticked = await S.tasks.tick({force: true}) ?? []; if ( !ticked.length ) await sleep(500); }
       } finally { Math.random = real; }
       const after = S.tasks.of(m).find(x => x.id === task.id);
       const keys = (after?.complications ?? []).map(c => c.key);
       G.ok("11. a complication's delay holds in a catch-up tick", due >= 10 && after?.rolls === 1 && keys.length === 1 && after.next > game.time.worldTime + 86400,
-        {due, rolls: after?.rolls, complications: keys, waitsHours: after ? Math.round((after.next - game.time.worldTime) / 3600) : null});
+        {due, rolls: after?.rolls, complications: keys, waitsHours: after ? Math.round((after.next - game.time.worldTime) / 3600) : null,
+          status: after?.status ?? null, waits: after?.waits || null, tries, ticked: ticked.length});
       // the forced tick rolled any other character's work too: undo those cards
       for ( const c of game.messages.filter(x => (x.timestamp ?? 0) >= since && x.flags?.[ST]?.tasks?.actor && x.flags[ST].tasks.actor !== m.id) ) {
         try { await S.tasks.undo(c); } catch (e) { G.R.notes.push(`undo tasks: ${e?.message ?? e}`); }
