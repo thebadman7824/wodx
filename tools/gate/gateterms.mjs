@@ -62,7 +62,7 @@ export async function run() {
       const eff = await chron().applyTimed(pc, {name: "WoDX gate: for the scene", duration: {kind: "scene"}, source: "gate"});
       const before = tally(), n0 = ends.length;
       await actions()?.endScene?.();
-      await waitFor(() => !pc.effects.get(eff.id), 8000).catch(() => null);
+      await waitFor(() => !pc.effects.get(eff.id) && tally() > before, 8000).catch(() => null);
       G.ok("3. Actions' End scene ends the scene once for every module", ends.length - n0 === 1 && tally() === before + 1 && !pc.effects.get(eff.id)
         && ends.at(-1)?.map === false, {hooks: ends.length - n0, tally: [before, tally()], effectLeft: !!pc.effects.get(eff.id), last: ends.at(-1)});
     });
@@ -96,8 +96,8 @@ export async function run() {
 
     await G.step("6. a ghoul and a Kuei-jin read the same in WoDX NPC", async () => {
       const lineOf = game.modules.get("wodx-npc")?.api?.hearts?.lineOf ?? (await import(`/modules/wodx-npc/scripts/hearts.mjs?${Date.now()}`)).lineOf;
-      const ghoul = {type: "Mortal", system: {settings: {variant: "ghoul"}}, flags: {}};
-      const kj = {type: "Vampire", system: {settings: {variant: "kindredeast"}}, flags: {}};
+      const ghoul = {id: "gateTermsGhoul", type: "Mortal", system: {settings: {variant: "ghoul"}}, flags: {}};
+      const kj = {id: "gateTermsKuei", type: "Vampire", system: {settings: {variant: "kindredeast"}}, flags: {}};
       G.ok("6. a ghoul and a Kuei-jin read the same in WoDX NPC", lineOf(ghoul) === "ghoul" && lineOf(kj) === "kueijin" && T.lineOf(ghoul) === "ghoul",
         {ghoul: lineOf(ghoul), kueijin: lineOf(kj)});
     });
