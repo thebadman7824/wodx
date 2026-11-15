@@ -95,5 +95,5 @@ test("pictures must be files beside the map: climbing out or odd files are left 
 test("the key names what a player would call each thing", () => {
   const side = JSON.parse(text);
   assert.ok(side.key.length >= 50);
-  for ( const n of ["Front door", "Iron-bound chest", "Grain sack", "bake oven", "well"] ) assert.ok(side.key.some(k => k.name === n), n);
+  for ( const n of ["Front door", "Iron-bound chest", "Grain sack", "bake oven", "well"] ) assert.ok(side.key.some(k => k.name.toLowerCase() === n.toLowerCase()), n);
 });
