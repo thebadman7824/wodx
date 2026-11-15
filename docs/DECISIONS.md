@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5340
+Next free block: B5390
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -258,6 +258,11 @@ Next free block: B5340
 | B5310-B5319 | Names raised to 300, Akan (used B5310) | Creation |
 | B5320-B5329 | Names raised to 300, Vietnamese (used B5320) | Creation |
 | B5330-B5339 | Names raised to 300, Serbian (used B5330) | Creation |
+| B5340-B5349 | Table install speed-up and gate step timeout (used B5340) | Chronicle |
+| B5350-B5359 | Names raised to 300, Turkish (used B5350) | Creation |
+| B5360-B5369 | Names raised to 300, Korean (used B5360) | Creation |
+| B5370-B5379 | Names raised to 300, Mande (used B5370) | Creation |
+| B5380-B5389 | Names raised to 300, Zulu (used B5380) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8063,3 +8068,28 @@ Reverse: restore the vietnamese entry in data/people-world.mjs and drop vietname
 WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Serbian list grows from 47 names to 307: old names from Nemanjić charters and monastery records, later given names and -ić family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: restore the serbian entry in data/people-world.mjs and drop serbian from RAISED.
+
+## B5340. Shipped tables written eight at a time (2026-11-15)
+WoDX Chronicle. With the name lists raised to 300, a world that had not yet seen the new data spent over half a minute bringing its shipped Roll Tables up to date one by one, and the names gate timed out at its first step on a reset testbed lane. The install now writes eight tables at a time; what it writes, and the rule that a table the Storyteller edited is never overwritten, are unchanged. The gate kit's step also takes its own timeout, and the names gate gives its start-up step three minutes. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the one-at-a-time loop in scripts/gen.mjs doInstall.
+
+## B5350. Turkish names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Turkish list grows from 47 names to 420: old names of beys, sultans, viziers, poets, valide sultans and townsfolk from Seljuk and Ottoman records, later names of the Republic, and a longer list of family names taken after the law of 1934. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the turkish entry in data/people-world.mjs and drop turkish from RAISED.
+
+## B5360. Korean names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Korean list grows from 48 names to 424: old names of scholars, generals, painters, clerks, gisaeng and household registers of Goryeo and Joseon, later names since the colonial years, and close to a hundred family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the korean entry in data/people-world.mjs and drop korean from RAISED.
+
+## B5370. Mande names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Mande list grows from 48 names to 340: old names of the mansas, griots, captains and royal women of Mali, Kaabu, Segou and the Wassoulou, later names from Mali to the Gambia, and a longer list of clan names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the mande entry in data/people-world.mjs and drop mande from RAISED.
+
+## B5380. Zulu names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Zulu list grows from 48 names to 402: old names of the kings, royal women, councillors and captains of the Zulu kingdom and its neighbours, later names of KwaZulu-Natal, and over a hundred clan names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the zulu entry in data/people-world.mjs and drop zulu from RAISED.
