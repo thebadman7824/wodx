@@ -434,6 +434,8 @@ export async function applyItem(item, casterName = "the caster") {
     const mood = await moodAfter(item, casterName);
     if ( mood && rec && typeof rec === "object" ) rec.attitude = mood;
   } catch (e) { console.warn("WoDX | effect attitude", e); }
+  // B5119: others can follow what was applied (a Puppeteer's rides make a consort)
+  try { Hooks.callAll("wodxEffectApplied", item, rec, casterName); } catch (e) { console.warn("WoDX | effect hook", e); }
   return rec;
 }
 

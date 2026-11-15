@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5640
+Next free block: B5650
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -240,14 +240,14 @@ Next free block: B5640
 | B4920-B4949 | Power limits after Princes of Darkness: one scene count, use limits, Drained, after-costs, NPC power choice (used B4920-B4929) | Actions, NPC |
 | B4950-B4959 | Tuareg names (used B4950-B4952) | Creation, Chronicle |
 | B4960-B4969 | Bicycles, supernatural mounts, mount and vehicle sprites with riders (used B4960-B4969) | Interactables, Combat, NPC |
-| B4970-B4979 | Mount and vehicle sprites with riders, by era, shape and colour (used B4970-B4976) | Paperdoll |
+| B4970-B4979 | Mount and vehicle sprites with riders, by era, shape and colour (used B4970-B4977) | Paperdoll |
 | B4980-B4999 | The Automation Desk: player actions that follow the rules by themselves, every line (used B4980-B4999) | Actions, Chronicle |
 | B5000-B5009 | Moro names (used B5000-B5002) | Creation, Chronicle |
 | B5010-B5029 | The Storyteller's Hand, part three: fire, noticing, and the rest of the desk acts by itself (Ben's desk picks, 14 November 2026) (used B5010-B5024) | Interactables, Actions, Senses, Library, Chronicle, Storyteller, Otherworlds, Creation |
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5064) | Creation, NPC, Actions |
 | B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
-| B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5111) | NPC, Combat |
+| B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5119) | NPC, Combat, Actions |
 | B5130-B5139 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5130-B5137) | Creation, Actions, NPC |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 | B5160-B5169 | Playable Strengthening the Demon and fomor Numbing (used B5160-B5162) | Combat, Actions |
@@ -297,6 +297,7 @@ Next free block: B5640
 | B5600-B5609 | Names made by pattern for the short lists (used B5600) | Creation |
 | B5620-B5629 | Gates failing on main: court hunts batch write, gate-interact steps (used B5620-B5621) | Actions, gates |
 | B5630-B5639 | Blood hunts: court Kindred turn in batches (used B5630) | Actions |
+| B5640-B5649 | German names before 1900, and refilling emptied tables (used B5640-B5641) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8010,6 +8011,11 @@ WoDX Paperdoll. Nine looks from 2023, the first year past the main timeline, so 
 
 Reverse: remove the looks marked adds in tools/sprites/mount_*.py and run mounts.py.
 
+## B4977. A vehicle sheet's style picks among the shapes (2026-11-15)
+WoDX Paperdoll. A vehicle on its own sheet (WoDX Interactables) carries a style: fine, rugged, sporting, working, official, luxury, hearse, cab, up-armoured or custom. Among the shapes drawn for the vehicle's year, the ones that suit that style are used (a rugged car of 1995 is the four-by-four, a sporting car of 1925 the roadster); where none suits, the year's shapes stand as they are. Worn has no shape of its own: it takes rusted paint where the sheet names no colour. A shape or colours the Storyteller picks on the palette button still win. House table (mount-rules FINISH), since the books give vehicles no looks.
+
+Reverse: drop `finish` from mountOf in mounts.mjs; the sheet's style then changes nothing drawn.
+
 ## B4980. The Beast's checks roll by themselves (2026-11-14)
 WoDX Actions. When a wound, hunger, the sight of blood, fire or the sun provokes the Beast, the frenzy or Rötschreck check is rolled by itself with the same difficulty the dialog would use (dawn dread, fire steps, Merits and Flaws). It repeats each turn while the result holds, up to eight turns. Willpower is spent to hold only when the character is marked to in the check's dialog. Characters on Golconda, in torpor or already in frenzy are skipped. Setting "Frenzy and Rötschreck by themselves", on by default (Ben's v2 pick).
 
@@ -8374,6 +8380,46 @@ Reverse: remove socialRoll.
 WoDX NPC. The rules list what each kind of NPC master keeps in each era (ghouls for Kindred, revenants for Tzimisce, Social Conditioning for the Union and so on) so step three can stock them. Desk item x4 (the table).
 
 Reverse: drop KEEPERS.
+
+## B5112. A Dominate Conditioning action (2026-11-15)
+WoDX Actions. The Kindred menu gains Dominate Conditioning: it works on the targeted token through WoDX NPC's condition() (B5104), with the subject's nature picked as ordinary, yielding or wilful. Desk item v1.
+
+Reverse: remove the menu entry.
+
+## B5113. Enchantment runs down and ends as a dream (2026-11-15)
+WoDX Actions. A changeling's Enchant action spends Glamour into the targeted mortal and makes an enchant bond. The bond loses a point a day on the world clock. When it runs out, the bond ends, any Masquerade witness record for that mortal reads "remembers it as a dream" and the mortal's players get a card. The Parted Mists take Glamour from two or more changelings on the scene and, once the Storyteller approves, make the Enchantment lasting (C20 Appendix II, pdf p. 461). Desk item c1.
+
+Reverse: remove enchant, partedMists and enchantDaily.
+
+## B5114. Oaths broken by an attack (2026-11-15)
+WoDX Actions. When a character attacks someone named in one of their unbroken oaths of loyalty, fealty, brotherhood, love or guardianship, the Storyteller gets an approval. Approving breaks the oath and its book price applies, as the Oaths window already does. A willing oathbreaker's token wears a dark ring (C20 pp. 188, 204 to 205, 265 to 267). Desk item c2.
+
+Reverse: drop the wodxAttackRolled hook.
+
+## B5115. Demon pacts with real thralls (2026-11-15)
+WoDX Actions. A demon seals a pact with the targeted mortal. The Faith potential starts from the mortal's True Faith, or 2, and the Storyteller can change it. The gifts the potential buys go on the thrall's sheet as items, each with the Willpower difficulty the book gives, and "A pact gift" on the mortal menu rolls them. The thrall's entry on the demon is linked to the actor, so the dawn Faith arrives as before. Old typed thralls are linked where the name matches one actor. A player's pact waits for approval (Demon: The Fallen pp. 251 to 253). Desk item d1.
+
+Reverse: remove pact, applyPact and useGift; the typed list still works.
+
+## B5116. Celestial and True Names (2026-11-15)
+WoDX Actions. Every character keeps a list of the demons' names they know. An evocation whose card gives difficulties by name reads them for the targeted demon: the True Name, then the Celestial Name, then a mundane name, or the demon's own thrall where the card lists it. "Call by a True Name" brings the demon onto the caller's scene and rolls Willpower against Willpower at 6 to press a command. The command roll is a house reading, and the Storyteller approves the call (Demon: The Fallen pp. 132, 171 to 176). Desk item d2.
+
+Reverse: drop nameDifficulty from the Demon context.
+
+## B5117. Wraith Thralls (2026-11-15)
+WoDX Actions. A wraith can hold the targeted wraith as a Thrall, chained in Stygian steel (step 3: cannot flee or refuse an ordinary order) or unchained (step 1: serves from fear and can strike). The chain shows as the Thrall ring on the map (Wraith 20th, pdf p. 88). Desk item r1 (the Thrall markets and NPC keepers are step three).
+
+Reverse: remove chainThrall.
+
+## B5118. Puppeteer consorts (2026-11-15)
+WoDX Actions. Every possession by a wraith on a living person is counted. The third ride on the same mortal makes them the Puppeteer's consort, who then shows in the followers window; from the fourth ride, the ride is one easier (a house reading). Desk item r2.
+
+Reverse: drop the wodxEffectApplied hook.
+
+## B5119. A hook when an effect applies (2026-11-15)
+WoDX Actions. Applying an effect now calls the `wodxEffectApplied` hook with the effect, its undo record and the caster's name, so other systems can follow what powers do.
+
+Reverse: remove the hook call.
 
 ## B5130. The domitor's clan weakness in the beast (2026-11-14)
 WoDX Creation, WoDX NPC. With five or more points of its domitor's blood an animal ghoul shows the clan's weakness, only where it fits a beast (V20 Dark Ages p. 401): Nosferatu hideous, Lasombra no reflection, Followers of Set shun the sun, Brujah and Gangrel quick to rage (frenzy one harder), Malkavian odd ways, Ventrue picky, Toreador entranced. Shown as an effect on the token. Desk item 8.
@@ -8760,3 +8806,13 @@ separate actor update, so with a big court calling and lifting one hunt took mor
 still timed out after B5620). They now run twenty at a time; each update is to a different actor.
 
 Reverse: go back to the plain for loops.
+
+## B5640. German names before 1900 raised to 50 a list (2026-11-15)
+WoDX Creation. The testbed gate found the German lists for Bohemia before 1900 still short (12 to 28 names a list) after the modern German list was raised to 300 (B5540). Each list now holds 49 to 62 recorded German names of its age: Hohenstaufen and later medieval nobles, clergy and townsfolk; Reformation and Baroque church books; nineteenth century parish records. All recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the six German lists in data/people.mjs.
+
+## B5641. An emptied table is refilled (2026-11-15)
+WoDX Chronicle. A Roll Table whose update was cut off between clearing and refilling was left with no results, then kept for good as if the Storyteller had edited it, so every Japanese name draw on one testbed lane came up empty. Now a table with no results is refilled at start-up, and until then the shipped names are drawn in its place. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: drop the two empty-table checks in scripts/gen.mjs.

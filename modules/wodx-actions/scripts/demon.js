@@ -169,6 +169,12 @@ export function build(ctx) {
             // B4921: an evocation the book (or the house rule) says is used up is refused before Faith is spent
             const lim = await LIM.gate(actor, { name: e.name, disc: lore, level: e.level });
             if (!lim) return null;
+            // B5116: reached by a name, the card's own difficulty for the best name known (or the demon's own thrall)
+            try {
+                const nc = DE.evocationCard(lore, e.level), tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
+                const nd = nc ? ctx.nameDifficulty?.(actor, nc.fx, tgt) : null;
+                if (nd) { plan.difficulty = Math.max(2, Math.min(10, plan.difficulty + nd.difficulty - 6)); plan.notes.push(`reached by ${nd.by} (difficulty ${nd.difficulty})`); }
+            } catch (err) { console.warn("WoDX | names", err); }
             if (fd.endOld && run.length) await saveFlag(actor, { running: live });
             // An empty pool: ravaged thralls stand in for the Faith the evocation needs (p. 169)
             const fromPool = plan.ravaged ? Math.min(plan.cost, i.faith.temp) : plan.cost;

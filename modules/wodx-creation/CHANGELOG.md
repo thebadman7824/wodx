@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.77.0 (German names before 1900 raised to 50 a list (B5640))
 - 0.76.0 (Ghouled animals, step four (B5130 to B5137). Clan marks after V20 Dark Ages p. 401, only the weaknesses a beast can show. The szlachta and vozhd after V20 pp. 502 to 503; a vozhd is immune to Animalism, Dominate and Presence and its making goes to the Masquerade ledger. Kennels breed in each kind's season, once a year, from two or more ghouls of the kind; the young is born trained and its first drink fills it. Households: Gangrel, Tzimisce, Nosferatu and any vampire with Animalism keep one to three animal ghouls, more in the Dark Ages and the countryside, of the kinds the age and the clan fit; they live at the haven on the animal routines. An animal ghoul's tokens are linked to its sheet, so its blood, bond and mark are the ones on the map)
 - 0.75.0 (Names made by pattern for the short lists (B5600))
 - 0.74.0 (Mizrahi names raised to 300 (B5580); Sephardi names raised to 300 (B5570))

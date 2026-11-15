@@ -24,18 +24,18 @@ export function registerMountSettings() {
 export function mountOf(doc) {
   if ( !doc ) return null;
   const pick = doc.flags?.[MOD]?.mount ?? {}, f = doc.flags?.[IX] ?? {};
-  let kind = null, year = 0, colour = "";
+  let kind = null, year = 0, colour = "", finish = "";
   if ( doc.documentName === "Tile" ) { if ( !f.mount ) return null; kind = f.mountKind || "horse"; year = Number(f.built) || 0; }
   else if ( doc.documentName === "Token" ) {
     const a = doc.actor;
-    if ( a?.type === VEHICLE ) { kind = a.system?.kind || "car"; year = Number(a.system?.built) || 0; colour = a.system?.colour ?? ""; }
+    if ( a?.type === VEHICLE ) { kind = a.system?.kind || "car"; year = Number(a.system?.built) || 0; colour = a.system?.colour ?? ""; finish = a.system?.style ?? ""; }
     else {
       try { kind = game.modules.get(IX)?.api?.beastOf?.(doc) ?? null; } catch (e) { kind = null; }
       if ( !kind && typeof f.mountable === "string" && MR.kindOf(f.mountable) ) kind = f.mountable;
     }
   }
   if ( !kind || !MR.kindOf(kind) ) return null;
-  return {kind, year: year || yearNow(), own: !!doc.flags?.[MOD]?.sprite, pick, colour};
+  return {kind, year: year || yearNow(), own: !!doc.flags?.[MOD]?.sprite, pick, colour, finish};
 }
 
 /** The look and colours a thing shows: {kind, look, scheme} or null. */
@@ -43,8 +43,8 @@ export function lookOf(doc) {
   const m = mountOf(doc);
   if ( !m ) return null;
   const seed = doc.actor?.id && doc.documentName === "Token" && doc.actorLink ? doc.actor.id : doc.id;
-  const look = MR.lookFor(m.kind, m.year, {look: m.pick.look, style: m.pick.style, seed});
-  return look ? {...m, look, scheme: MR.schemeFor(look, {scheme: m.pick.scheme, colour: m.colour, seed})} : null;
+  const look = MR.lookFor(m.kind, m.year, {look: m.pick.look, style: m.pick.style, finish: m.finish, seed});
+  return look ? {...m, look, scheme: MR.schemeFor(look, {scheme: m.pick.scheme, colour: m.colour, finish: m.finish, seed})} : null;
 }
 
 /* A look's sheet in a scheme's colours: read once, recoloured on a canvas, kept. */
