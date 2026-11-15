@@ -39,10 +39,12 @@ pr.bench(m, 3.6, 5.5, .34, 1.4); pr.stool(m, 4.6, 6.8); note("bench", 3.77, 6.2)
 pr.shelf(m, 7.8, 4.9, .44, 1.5, ["jug", "bowl", "pot"]); note("shelf", 8.0, 5.6)
 for lx, ly in ((4.2, 7.2), (7.4, 7.1), (6.9, 4.8)):                                  # dead leaves blown in under the door
     for k in range(14): m.d.rectangle([lx * T + (k * 37) % 60 - 30, ly * T + (k * 23) % 30 - 15, lx * T + (k * 37) % 60 - 27, ly * T + (k * 23) % 30 - 13], fill=R["red"][2] if k % 3 else R["straw"][2])
+rec.roof("burners-hut-roof", "Roof (abandoned burner's hut)", (2.88, 2.88, 6.0625, 5.25), "thatch", smoke=(5.9, 5.5))
 rec.light("Burner's hearth", "Hearth in the burner's hut", (5.42, 5.03, 1, 1), dim=4, bright=1, color="#ff9a40", kind="fire", on=False)
 fin()
 
 # ---- the woodcutters' hut, south-west: eight bunks, a lamp burning ----
+rec.roof("woodcutters-hut-roof", "Roof (woodcutters' hut)", (7.48, 29.48, 8.0625, 6.05), "shingle")
 fin = B.hut(rec, 8.0, 30.0, 7.0, 5.0, doors=[("e", 2.0)], windows=[("n", 3.1), ("s", 3.1), ("w", 2.1)], floor="planks", name="Woodcutters' hut")
 for k, bx in enumerate((9.0, 12.15, 13.4)): pr.bed(m, bx, 30.2, .85, 1.35, head="n", cloth=("blue", "red", "green")[k])
 for k, bx in enumerate((8.6, 9.75, 10.9, 12.05)): pr.bed(m, bx, 33.5, .85, 1.35, head="s", cloth=("green", "blue", "red", "blue")[k])

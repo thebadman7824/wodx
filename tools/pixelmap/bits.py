@@ -3,15 +3,21 @@ import numpy as np
 from px import T, Q
 
 
-def dist(pts, w, h):
-    """Distance (in 94ths of a square) from every art pixel to a polyline given in squares."""
-    yy, xx = np.mgrid[0:h // Q, 0:w // Q].astype(np.float32) * Q + Q / 2
-    best = np.full(yy.shape, 1e9, np.float32)
+def dist(pts, w, h, reach=900):
+    """Distance (in 94ths of a square) from every art pixel to a polyline given in squares. Worked out only within
+    reach pixels of each piece of the line (beyond that every caller only needs "far"), which keeps a long road on a
+    big map to seconds; pixels farther than reach from the whole line read 1e9."""
+    H_, W_ = h // Q, w // Q
+    best = np.full((H_, W_), 1e9, np.float32)
     for (ax, ay), (bx, by) in zip(pts, pts[1:]):
         ax, ay, bx, by = ax * T, ay * T, bx * T, by * T
+        x0, x1 = max(0, int((min(ax, bx) - reach) // Q)), min(W_, int((max(ax, bx) + reach) // Q) + 1)
+        y0, y1 = max(0, int((min(ay, by) - reach) // Q)), min(H_, int((max(ay, by) + reach) // Q) + 1)
+        if x1 <= x0 or y1 <= y0: continue
+        yy, xx = np.mgrid[y0:y1, x0:x1].astype(np.float32) * Q + Q / 2
         dx, dy = bx - ax, by - ay; L2 = dx * dx + dy * dy + 1e-6
         t = np.clip(((xx - ax) * dx + (yy - ay) * dy) / L2, 0, 1)
-        best = np.minimum(best, np.hypot(xx - ax - t * dx, yy - ay - t * dy))
+        win = best[y0:y1, x0:x1]; np.minimum(win, np.hypot(xx - ax - t * dx, yy - ay - t * dy), out=win)
     return best
 
 

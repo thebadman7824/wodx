@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6060
+Next free block: B6220
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -306,7 +306,7 @@ Next free block: B6060
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5680-B5709 | NPC Motives Desk: every NPC action has a reason and a follow-through (used B5680-B5703) | NPC, Storyteller |
 | B5710-B5729 | Aftercare of the carried (Aftercare Desk a1-a12) (used B5710-B5721) | NPC |
-| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5739) | tools |
+| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5745) | tools |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 | B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
 | B5800-B5809 | NPC Aftercare Desk: what comes after each NPC action (used B5800-B5806) | NPC, Chronicle |
@@ -331,6 +331,9 @@ Next free block: B6060
 | B6000-B6019 | Rituals and powers that really work: every effect read by a roll, soak, token or map system (used B6000-B6018) | Actions, Combat |
 | B6040-B6049 | Lone Chronicle step 4: the director, experience from the night's log, the recap (used B6040-B6049) | Solo |
 | B6050-B6059 | gate7b fresh arena each run (used B6050-B6051) | tools (gates) |
+| B6070-B6079 | Snow vehicles, trains and trams (rules and sprites), and a quality pass on the vehicle sprites (used B6070-B6076) | Interactables, Paperdoll, Combat |
+| B6130-B6139 | The eight held-back world timeline readings after the book check (used B6130-B6132) | Chronicle |
+| B6210-B6219 | gatevehicles plays in a year with cars (used B6210) | tools (gates) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9397,6 +9400,36 @@ Tools. tools/pixelmap/wilds.py draws what a wood needs, each one recognisable fr
 
 Reverse: remove the files; the old map picture stays on the scene until the new one is put on.
 
+## B5740. The High Woods redrawn on its old scene (2026-11-15)
+Tools. maps/high_woods.py redraws The High Woods (66 by 48) with every wall, door, window, light and exit on the old scene's own squares. wilds.py gains what it needs, each drawn to be named by sight: an open hearth on a slab, gnawed bones, a warning rope with a cow-bell, a pit trap drawn to be hard but not impossible to spot (its note asks for Perception), animal pelts by kind, drying racks hung with skins, a wolf den under heaped boulders, a blackthorn thicket, a boar's mud wallow and a hunting bow. The old map's paired dashed lines by both lodges are drawn as hide-drying racks.
+
+Reverse: remove the map file and the new pieces; nothing else uses them.
+
+## B5741. A whole map draws in about 2 minutes (2026-11-15)
+Tools. Laying one road took about 3 minutes on a 66 by 48 map because its distance field was worked out over the whole picture for every piece of the line. bits.dist now works only within 900 px of each piece (everything farther reads as far, which is all any caller asks), and polygon shadows work over their own shape's box. The Forest Road went from 12 minutes to about 2; the pictures come out the same.
+
+Reverse: none needed.
+
+## B5742. The Ruins of Altenhof redrawn on its old scene (2026-11-15)
+Tools. maps/altenhof.py redraws The Ruins of Altenhof (58 by 46) on the old scene's walls, door, windows, lights and exit. The broken curtain wall and the roofless hall stand where the old walls stood, with fallen stone at every broken end and grass up through the hall's flags; Lady Adelheid's chamber is whole, with the curtained bed made up and three fresh candles burning; the dry well shows a glint at the bottom; the fallen tower is a broken ring of footing heaped with its stones, with steps going down between them. The old map's table with two candles in the roofless south-west room is drawn as a chapel's altar.
+
+Reverse: remove the map file.
+
+## B5743. Every redrawn building gets its own roof picture (2026-11-15)
+Tools. The old scenes lay a roof tile over each roofed building, so putting a new map under an old roof would leave old art showing. The recorder now takes rec.roof(id, label, rect, kind, smoke): roofs.py draws it (split oak shingles weathered silver-brown, combed thatch with a turf ridge, or stone slates), seen from above with the sunny slope lit, the ridge, the eaves and a smoke hole over a hearth. Each is written to roofs/<id>.png and listed under "roofs" in the sidecar with its rect, which matches the old tile's rect, so the swap only changes the picture. The five roofs on the three maps so far are done.
+
+Reverse: drop the roofs; the old roof tiles stay.
+
+## B5744. Lower Town, the Market Square, redrawn on its old scene (2026-11-15)
+Tools. maps/lt_market.py redraws the Lower Town market (64 by 44) with all 141 walls, 32 doors, 36 windows and 8 fences on the old scene's own squares, and a new roof picture for each of its 13 roof tiles. Every building is furnished for its trade, so a player can name it by sight: the inn's tables and hearth, the bakery's oven, horse stalls with mangers, the chandler's candles, the butcher's block, hams hanging in the smokehouse, the surgeon's table, the apothecary's jars on shelves, the hatter's hats, the general store's sacks and crates. town.py adds the town's own pieces: cobbles with straw and puddles, market stalls under striped awnings with their goods along the front, lantern posts that cast real light, the market cross on its steps, horse stalls, and woven hurdle fences. The old map's narrow building with a hearth is drawn as a smokehouse and its small fenced square as a sheep pen.
+
+Reverse: remove the map file and town.py; nothing else uses them.
+
+## B5745. Lower Town, Craftsmen's Lane, redrawn on its old scene (2026-11-15)
+Tools. maps/lt_crafts.py redraws Craftsmen's Lane (66 by 40) with all 110 walls, 20 doors, 37 windows and 4 fences on the old scene's own squares, and a new roof picture for each of its 10 roof tiles. Each workshop is furnished so a player can name it by sight: horse stalls in the stables; the forge with its bellows, the anvil, the quench trough and horseshoes in the smithy; staves, hoops, new casks and the bending fire in the cooperage; four looms with cloth on them and bolts of cloth in the Weavers' Hall; dye vats in four colours, a kettle on the fire and lines of dyed cloth in the dyers' yard; the mash tun, the cooling tun and the furnace with its copper in the Brewhouse. The Shuttered House's day-rest room has no window and a bar on its door, as the scene's note says. town.py gains the forge, anvil, loom, vat, staves, hoops, handcart, dye line, brew furnace and horseshoes. The town ditch runs down the east side under a plank bridge.
+
+Reverse: remove the map file and the new pieces; nothing else uses them.
+
 ## B5750. Witness reactions given by a window act on the map (2026-11-15)
 WoDX Actions. The witness step takes results already rolled (the Delirium check, a demon's Revelation) and acts them out: a frozen witness is Immobilized for the scene, a fleeing one runs, a fighting one starts a fight; those who keep it go on the Masquerade record. With no revealed actor on the map, nothing is recorded against anyone.
 
@@ -10145,3 +10178,59 @@ suggestion for that step. The runner's flight from a far foe has nowhere to go, 
 first, which walks it round the wall to the hero.
 
 Reverse: keep the arena between runs again, drop the scene's mode and take the first attack or flight.
+
+## B6070. Sleds, snow machines, trains and trams are mounts (2026-11-15)
+WoDX Interactables. Four new MOUNTS kinds, so they can be tiles and Vehicle sheets: sled (Sled or sleigh, Ride, any year, 4 seats), snowmobile (Snow machine, Drive, from 1910, 2 seats), train (Railway train, Drive, from 1825, 40 seats, cannot be worked below Drive 2) and tram (Tram or streetcar, Drive, from 1860, 40 seats, Drive 2). House rules; logged in PENDING-REVIEW.
+
+Reverse: remove the four entries from MOUNTS.
+
+## B6071. Deep snow or ice (2026-11-15)
+WoDX Interactables chase-rules. A new ground "snow": +1 difficulty, +2 for wheels and motors, hooves capped at 20 yards a turn, wheels 15, bicycles shut out. Sleds and snow machines go only on snow (ONLY_ON) and take no difficulty from it. Sled speed 20 yards a turn; the snow machines' chart by year (1910 to 2040). In a fight (rideInFight) a sled or a snow machine always stands on snow. A fall onto snow is 1 die (WoDX Combat FALL_DICE).
+
+Reverse: remove snow from GROUNDS and ONLY_ON, and from FALL_DICE.
+
+## B6072. A railway line (2026-11-15)
+WoDX Interactables chase-rules. A new ground "rails"; trains go only there, trams on rails or town streets. Charts by year with Maneuver 1 (they cannot swerve). Bodies: trains durability 6 to 12, structure 10 to 25, ram mass 8; trams 3 to 6, 6 to 12, mass 5. Headlights from 1900 as other motor vehicles, the big cone. A fall onto the line is 4 dice.
+
+Reverse: remove rails from GROUNDS, ONLY_ON, BODIES and WAYS.
+
+## B6073. Train and tram sprites at true length (2026-11-15)
+WoDX Paperdoll, tools/sprites/mount_rail.py. A train's look is its engine (with tender) and its first coach or wagon laid end to end at 37 pixels to the metre, so a train is up to 30 squares long and a tram up to 22; every sheet stays within 4096 pixels a side. Looks: 1825 pioneer, coal train, horse wagonway; 1850 American, European passenger, goods; 1900 express, tank engine, heavy goods; 1935 streamlined express, diesel railcar, electric engine; 1960 diesel, electric train, diesel freight; 1990 high-speed, regional, container freight; 2040 magnetic train, driverless shuttle, freight pod. Trams 1860 to 2040 (horse trams, electric with trolley poles, double-deck, streamlined, articulated, low-floor, driverless). Drawn side on with four facings like every mount, so the riders' own figures show.
+
+Reverse: drop the train and tram kinds from tools/sprites/mounts.py and rewrite the sheets.
+
+## B6074. Sled and sleigh sprites (2026-11-15)
+tools/sprites/mount_snow.py. Dog sleds (six or eight dogs in pairs, the musher standing on the runners), reindeer sledges, horse sledges with logs, hay or crates, painted sleighs with scrolls and bells, troikas with the arch over the shaft horse, cutters, bob sleighs; the team drawn from the beast rig with collars, traces and reins to the bit.
+
+Reverse: drop the sled kind.
+
+## B6075. Snow machine sprites (2026-11-15)
+tools/sprites/mount_snow.py. Motor sledges and propeller sledges from 1910, snow coaches and snowcats from 1935, snowmobiles from 1960, sport and touring snowmobiles from 1990, electric ones from 2040.
+
+Reverse: drop the snowmobile kind.
+
+## B6076. Quality pass on the vehicle sprites (2026-11-15)
+tools/sprites. Every ramp shifts hue (shadows cooler, lights warmer), as the pixel art rules ask; tanks and armoured cars get plate seams, a lit top edge, a stowage box, a tow cable, return rollers on the track's top run, and the 1916 tanks their sponson with its gun or machine gun in plain sight.
+
+Reverse: restore ramp() in mountkit.py and drop _plates and the sponson in mount_motor.py.
+## B6130. The held readings go in, worded as the books back them (2026-11-15)
+WoDX Chronicle, tools/timeline/build-world-history.mjs. WAITING is empty. The book check (project files global-world/book-check-readings.md, finished in the cloud from the OCR text) settled each card. 1521: Wraith 20th (pdf 101, 512 to 517) breaks the Dark Kingdom of Obsidian through the heretics' Flaying and the storm after it, so the card names the Flaying, with the plague and siege dead as the background, and the survivors' Mictlan. 1692: Verbena Revised (pdf 43) keeps the Verbena out of the trials; no book has hunters and mages blaming each other, so that part is gone. 1791: Wraith 20th (pdf 521) has Les Invisibles fan the slave revolts and the Mirrorlands battered by storms and Baka; the lwa among the rebels "by both sides" had no book and is gone. 1885: Wraith 20th (pdf 517 to 518, the Bush of Ghosts behind a false Ivory Queen) and Kindred of the Ebony Kingdom (pdf 16, Laibon fighting the Portuguese around 1540) back a continent already held. 1890: the Wendigo tribebook (pdf 28, 50 to 51) backs Garou among the Ghost Dancers. 1994: Kindred of the Ebony Kingdom (pdf 168) keeps the genocide mortal with elders using the chaos, and A World of Rage (pdf 94 to 95) has the Wyrm feed on it; no book ties it to the lands of the dead, so the card no longer says so and is renamed The killing in Rwanda.
+
+Reverse: put the eight year|title keys back in WAITING and rebuild.
+
+## B6131. The Croatan card stays out: the book event tells it (2026-11-15)
+WoDX Chronicle. The 1589 card agrees with the books (Past Lives pdf 66 to 70 gives the year), but the book event croatan already fires on that date with the same story, so the card joins TOLD_BY_BOOK and nothing fires twice.
+
+Reverse: remove "1589|The Croatan" from TOLD_BY_BOOK.
+
+## B6132. The 1830 card is the Squattocracy, not the start of the War of Tears (2026-11-15)
+WoDX Chronicle. Rage Across Australia (pdf 20 to 21) has the Wyrm's agents hold much of the colony's economy by 1830 and form the Squatters' Council, while the Bunyip withdraw inland; its War of Tears (pdf 23 to 24) is a single year of killing, told later in the book, and Past Lives (pdf 70) sets the Bunyip's last stand in 1937. The card no longer starts the war in 1830. It tells the Squattocracy instead, and the war stays the book event war-of-tears at 1899 (W20, era advancement's lost-tribe year), whose date note now names Rage Across Australia and Past Lives so the Storyteller can move it to 1937.
+
+Reverse: restore the 1830 line "The War of Tears begins" in r3/age-of-reason.txt; move war-of-tears to 1937 in data/events.mjs to follow Past Lives.
+
+## B6210. gatevehicles plays in a year that has cars (2026-11-15)
+Gates. gatevehicles read the year from the clock. After other gates the clock could stand before the motor car, so
+the aeroplane step read "No motor car yet" and the ram missed. When the year is before 1950 the run now moves the
+clock to 1995 and notes the move. The kit puts the clock back after.
+
+Reverse: drop the move and play in whatever year the clock shows.

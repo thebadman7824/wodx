@@ -281,7 +281,14 @@ export const MOUNTS = {
   stygian: {label: "Stygian steed", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 1, thrown: true, noise: "quiet", beast: true,
     only: ["wraith", "spirit"], onlyNote: "One of Charon's horses of the dead: only the dead ride it (Wraith 20th p. 31)."},
   camel: {label: "Camel", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 2, thrown: true, noise: "quiet", beast: true},
-  gryphon: {label: "Gryphon or hippogryph", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 1, min: 3, thrown: true, air: true, noise: "loud", beast: true}
+  gryphon: {label: "Gryphon or hippogryph", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 1, min: 3, thrown: true, air: true, noise: "loud", beast: true},
+  // B6070 to B6072: snow and rail (house rules). A sled or a sleigh is driven as a cart is, with Ride (Animal Ken would
+  // fit a dog team too, but the carts set the rule); snow machines and trains take Drive. A train or a tram cannot be
+  // worked at all without two dots of Drive: a footplate is learned, not guessed (min, as the lorries have it).
+  sled: {label: "Sled or sleigh", verb: "Take the reins", reins: "at the reins", skill: "ride", attr: "dexterity", seats: 4, noise: "quiet", snow: true},
+  snowmobile: {label: "Snow machine", verb: "Drive it", reins: "at the controls", skill: "drive", attr: "dexterity", seats: 2, from: 1910, min: 1, noise: "loud", snow: true},
+  train: {label: "Railway train", verb: "Take the controls", reins: "on the footplate", skill: "drive", attr: "dexterity", seats: 40, from: 1825, min: 2, noise: "loud", rails: true},
+  tram: {label: "Tram or streetcar", verb: "Take the controls", reins: "at the controls", skill: "drive", attr: "dexterity", seats: 40, from: 1860, min: 2, noise: "loud", rails: true}
 };
 /**
  * B4966: riding the animal itself. A creature's sheet can be ridden when its actor (or its token) carries
