@@ -1,5 +1,7 @@
 import {findClan, clanDisciplines, generationRow, ghoulDisciplineCap, ghoulCanLearn, xpCost, traitMax, KINDS} from "./rules.mjs";
 import {XP} from "../data/vampire.mjs";
+import * as AG from "./animal-ghoul-rules.mjs";
+import * as AS from "./animal-stock-rules.mjs";
 
 export const MODULE_ID = "wodx-creation";
 export const DISCIPLINE = "wod.types.discipline";
@@ -32,8 +34,46 @@ export function lineOf(actor) {
   const types = CONFIG.worldofdarkness?.sheettype ?? {};
   if ( actor?.type === (types.vampire ?? "Vampire") ) return "vampire";
   if ( actor?.type === (types.mortal ?? "Mortal") ) return actor.system?.settings?.variant === "ghoul" ? "ghoul" : "mortal";
+  // B5040: an animal on a Creature sheet that has drunk vitae is a ghoul; one that has not is no line of ours
+  if ( actor?.type === (types.creature ?? "Creature") && actor.getFlag?.(MODULE_ID, "animalGhoul") ) return "ghoul";
   return null;
 }
+
+/* -------------------------------------------- */
+/*  Animals (B5040 to B5049)                    */
+/* -------------------------------------------- */
+
+/** Creature variants that are plain beasts; the rest (chimera, spirit, construct, Fera kin...) are not animals. */
+const BEAST_VARIANTS = new Set(["", "general", "animal", "mortal"]);
+
+/**
+ * Is this actor an animal? A Creature sheet of the plain variant, or marked flags["wodx-creation"].animal; a Mortal
+ * sheet whose WoDX NPC template is an animal (passers-by, household beasts) or that is marked the same way.
+ */
+export function isAnimal(actor) {
+  if ( !actor ) return false;
+  const types = CONFIG.worldofdarkness?.sheettype ?? {};
+  const mark = actor.getFlag?.(MODULE_ID, "animal");
+  if ( mark === false ) return false;
+  if ( mark ) return true;
+  if ( actor.type === (types.creature ?? "Creature") ) return BEAST_VARIANTS.has(String(actor.system?.settings?.variant ?? ""));
+  if ( actor.type === (types.mortal ?? "Mortal") ) {
+    if ( actor.getFlag?.("wodx-npc", "passerbyBase") === "animal" ) return true;
+    const t = actor.getFlag?.("wodx-npc", "behavior")?.template;
+    return !!t && (t === "beast" || !!AG.KINDS[t]);
+  }
+  return false;
+}
+
+/** The kind of animal (an animal-ghoul-rules KINDS key), or null when it is not an animal. */
+export function animalKindOf(actor) {
+  if ( !isAnimal(actor) ) return null;
+  const mark = actor.getFlag?.(MODULE_ID, "animal");
+  return AG.kindOf({kind: mark?.kind ?? null, template: actor.getFlag?.("wodx-npc", "behavior")?.template ?? null, name: actor.name})
+    ?? "stray-dog";
+}
+
+export const isAnimalGhoul = actor => lineOf(actor) === "ghoul" && isAnimal(actor);
 
 export function lineage(actor) {
   return foundry.utils.deepClone(actor?.getFlag?.(MODULE_ID, "lineage") ?? {});
@@ -153,7 +193,7 @@ export function purchaseOptions(actor) {
   const {available} = xpTotals(payerOf(actor));
   const out = [];
   const add = (kind, key, label, current, extra = {}) => {
-    const max = traitMax({line, kind, generation: gen, domitorGeneration: domitorGen});
+    const max = traitMax({line, kind, generation: gen, domitorGeneration: domitorGen, golconda: !!actor?.flags?.["wodx-actions"]?.golconda});
     const cost = xpCost({line, kind, current, discipline: extra.discipline});
     let reason = "";
     if ( cost === null ) reason = "Not available to this character";
@@ -163,8 +203,11 @@ export function purchaseOptions(actor) {
     out.push({kind, key, label, current, next: current + 1, cost, max, ok: !reason, reason, ...extra});
   };
 
+  const beast = line === "ghoul" && isAnimal(actor);
   for ( const [k, a] of Object.entries(sys.attributes ?? {}) ) {
     if ( a?.isvisible === false ) continue;
+    // B5047: an animal has only Physical and Mental Attributes (V20 Dark Ages p. 396)
+    if ( beast && !AG.ANIMAL_ATTRIBUTES.includes(k) ) continue;
     add("attribute", k, loc(a.label) || k, Number(a.value) || 0);
   }
   for ( const [k, a] of Object.entries(sys.abilities ?? {}) ) {
@@ -177,22 +220,44 @@ export function purchaseOptions(actor) {
   if ( line !== "mortal" ) {
     for ( const d of disciplinesOf(actor) ) {
       const inClan = clanList.includes(d.name.toLowerCase());
-      const blocked = (line === "ghoul" && !ghoulCanLearn(d.name, domitorDisciplines))
-        ? "The domitor does not know this Discipline" : "";
+      const blocked = beast && !AG.animalCanLearn(d.name) ? "An animal can only learn Celerity, Fortitude and Potence"
+        : (line === "ghoul" && !ghoulCanLearn(d.name, domitorDisciplines)) ? "The domitor does not know this Discipline" : "";
       add("discipline", `item:${d.id}`, d.name, d.value, {discipline: caitiff ? "caitiff" : (inClan ? "clan" : "other"), blocked});
     }
   }
-  for ( const [k, v] of Object.entries(sys.advantages?.virtues ?? {}) ) {
+  for ( const [k, v] of Object.entries(beast ? {} : (sys.advantages?.virtues ?? {})) ) {
     if ( !v ) continue;
     add("virtue", k, loc(v.label) || k, Number(v.permanent) || 0);
   }
-  if ( sys.advantages?.path ) {
+  if ( sys.advantages?.path && !beast ) {
     const p = sys.advantages.path;
     const label = p.label === "custom" ? (p.custom || "Road") : loc(p.label) || "Humanity";
     add("road", "path", label, Number(p.permanent) || 0);
   }
   if ( sys.advantages?.willpower ) add("willpower", "willpower", "Willpower", Number(sys.advantages.willpower.permanent) || 0);
+  // B5060: an animal ghoul's next step of training, at the house costs
+  if ( beast ) { const t = trainingOption(actor, available); if ( t ) out.push(t); }
   return out;
+}
+
+/** The next step of training for an animal ghoul, as a purchase (B5060). */
+export function trainingOption(actor, available = xpTotals(payerOf(actor)).available) {
+  const kind = animalKindOf(actor);
+  const now = AS.trainingOf(actor.getFlag?.(MODULE_ID, "animal"));
+  const next = AS.nextTraining(kind, now);
+  if ( !next ) return null;
+  const cost = AS.TRAINING[next].xp;
+  const reason = cost > available ? `Needs ${cost} experience; ${available} available` : "";
+  return {kind: "training", key: next, label: `Training: ${AS.TRAINING[next].label.toLowerCase()}`, current: AS.TRAINING[now].rank, next: AS.TRAINING[next].rank,
+    cost, max: 2, ok: !reason, reason};
+}
+
+/** Train an animal one step: the bracket traits, war's Brawl, and the mark on the sheet (B5059). */
+export async function applyTraining(actor, level) {
+  const kind = animalKindOf(actor);
+  if ( !kind || !AS.TRAINING[level] ) return null;
+  const mark = actor.getFlag?.(MODULE_ID, "animal") ?? {};
+  return actor.update({...AS.trainingPatch(actor.system ?? {}, kind, level), [`flags.${MODULE_ID}.animal`]: {...mark, kind, training: level}});
 }
 
 /** Cost and checks for a Discipline the character does not have yet. */
@@ -206,6 +271,7 @@ export function newDisciplineOption(actor, name) {
   const cost = XP[line].newDiscipline;
   let reason = "";
   if ( disciplinesOf(actor).some(d => d.name.toLowerCase() === clean.toLowerCase()) ) reason = "Already known; raise it instead";
+  else if ( line === "ghoul" && isAnimal(actor) && !AG.animalCanLearn(clean) ) reason = "An animal can only learn Celerity, Fortitude and Potence";
   else if ( line === "ghoul" && !ghoulCanLearn(clean, domitorDisciplines) ) reason = "The domitor does not know this Discipline";
   else if ( cost > available ) reason = `Needs ${cost} experience; ${available} available`;
   return {kind: "newDiscipline", key: `new:${clean}`, label: clean, current: 0, next: 1, cost, max: 1, ok: !reason, reason};
@@ -228,6 +294,7 @@ export function newAbilityOption(actor, name, group = "skill") {
 
 /** Re-check a purchase against the actor as it is now. Returns the option or null. */
 export function recheck(actor, purchase) {
+  if ( purchase.kind === "training" ) { const t = trainingOption(actor); return t && t.key === purchase.key ? t : null; }
   if ( purchase.kind === "newDiscipline" ) return newDisciplineOption(actor, purchase.label);
   if ( purchase.kind === "newAbility" ) return newAbilityOption(actor, purchase.label, purchase.group);
   return purchaseOptions(actor).find(o => o.kind === purchase.kind && o.key === purchase.key) ?? null;
@@ -253,6 +320,8 @@ export async function applyPurchase(actor, option) {
         [`system.advantages.virtues.${option.key}.temporary`]: next});
     case "road":
       return actor.update({"system.advantages.path.permanent": next, "system.advantages.path.value": next});
+    case "training":
+      return applyTraining(actor, option.key);
     case "willpower":
       return actor.update({"system.advantages.willpower.permanent": next,
         "system.advantages.willpower.temporary": Math.min(next, (Number(actor.system.advantages.willpower.temporary) || 0) + 1)});

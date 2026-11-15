@@ -267,11 +267,56 @@ export const MOUNTS = {
   balloon: {label: "Balloon or airship", verb: "Take the helm", reins: "at the helm", skill: "pilot", attr: "dexterity", seats: 4, from: 1783, min: 1, air: true, noise: "quiet"},
   plane: {label: "Propeller aeroplane", verb: "Fly it", reins: "at the controls", skill: "pilot", attr: "dexterity", seats: 4, from: 1909, min: 1, air: true, noise: "loud"},
   helicopter: {label: "Helicopter", verb: "Fly it", reins: "at the controls", skill: "pilot", attr: "dexterity", seats: 5, from: 1945, min: 1, air: true, noise: "loud"},
-  jet: {label: "Jet aircraft", verb: "Fly it", reins: "at the controls", skill: "pilot", attr: "dexterity", seats: 2, from: 1944, min: 1, air: true, noise: "loud"}
+  jet: {label: "Jet aircraft", verb: "Fly it", reins: "at the controls", skill: "pilot", attr: "dexterity", seats: 2, from: 1944, min: 1, air: true, noise: "loud"},
+  // B4960: the bicycle as a tile (it was a way to run in a chase only), Athletics as the chase has it, from 1885
+  bicycle: {label: "Bicycle", verb: "Ride it", reins: "on it", skill: "athletics", attr: "dexterity", seats: 1, from: 1885, thrown: true, noise: "quiet"},
+  // B4961 to B4965: beasts out of the books. only: the kinds of rider (WoDX Actions' profiles) who can ride it at all;
+  // min: the Ride it takes to stay on an exotic mount (Mage 20th p. 298: griffins and the like need Riding 3).
+  ghoulhorse: {label: "Ghouled horse", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 2, thrown: true, noise: "quiet", beast: true},
+  szlachta: {label: "Fleshcrafted steed", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 2, min: 3, thrown: true, noise: "loud", beast: true},
+  chimera: {label: "Chimerical steed", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 2, thrown: true, noise: "quiet", beast: true,
+    only: ["fae"], onlyNote: "Only the fae (and those they have enchanted) can see a chimerical steed, let alone ride one (Changeling 20th p. 280)."},
+  stygian: {label: "Stygian steed", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 1, thrown: true, noise: "quiet", beast: true,
+    only: ["wraith", "spirit"], onlyNote: "One of Charon's horses of the dead: only the dead ride it (Wraith 20th p. 31)."},
+  camel: {label: "Camel", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 2, thrown: true, noise: "quiet", beast: true},
+  gryphon: {label: "Gryphon or hippogryph", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 1, min: 3, thrown: true, air: true, noise: "loud", beast: true}
 };
+/**
+ * B4966: riding the animal itself. A creature's sheet can be ridden when its actor (or its token) carries
+ * flags.wodx-interactables.mountable: true or {kind, seats}, false to say no; left unset, WoDX goes by its name, so
+ * the book's horses, mules, camels, ghoul warhorses, gryphons and the like can be ridden from the start. -> kind or null
+ */
+const BEAST_NAMES = [
+  [/\b(ghoul(ed)?\s+(war)?horse|(war)?horse\s*\(?ghoul)/i, "ghoulhorse"],
+  [/fleshcraft(ed)?\s+steed|szlachta\s+steed|war[- ]?ghoul\s+steed/i, "szlachta"],
+  [/gryph|griffin|hippogr/i, "gryphon"],
+  [/chimer(ical|a)\s+(steed|horse|mount)/i, "chimera"],
+  [/stygian\s+(steed|horse)|horse of the dead|charon'?s horse/i, "stygian"],
+  [/\b(mule|donkey|burro)\b/i, "mule"],
+  [/\b(camel|dromedary)\b/i, "camel"],
+  [/\b(horse|warhorse|pony|stallion|mare|destrier|palfrey|courser|charger)\b/i, "horse"]
+];
+/** The flag as the token's config window saves it: "" or nothing (by its name), "no", or a kind. */
+export function mountableFlag(v) {
+  if ( v === "" || v === null || v === undefined ) return undefined;
+  if ( v === "no" || v === false ) return false;
+  if ( typeof v === "string" ) return MOUNTS[v] ? {kind: v} : undefined;
+  return v;
+}
+export function beastKind(name = "", flag = undefined) {
+  flag = mountableFlag(flag);
+  if ( flag === false ) return null;
+  if ( flag && typeof flag === "object" && MOUNTS[flag.kind] ) return flag.kind;
+  const n = String(name ?? "");
+  for ( const [re, k] of BEAST_NAMES ) if ( re.test(n) ) return k;
+  return flag ? "horse" : null;
+}
+
+/** B4961: whether a rider of this kind (WoDX Actions' profile) can get on at all. The Storyteller's kept tiles aside. */
+export const riderMay = (kind, riderKind) => !MOUNTS[kind]?.only || MOUNTS[kind].only.includes(riderKind ?? "mortal");
 /** Dots in the Ability needed to work a kind without a roll; aircraft and military vehicles cannot be worked below it. */
 export const minSkill = kind => MOUNTS[kind]?.min ?? 1;
-export const cannotWithout = kind => !!(MOUNTS[kind]?.air || MOUNTS[kind]?.military);
+export const cannotWithout = kind => !!(MOUNTS[kind]?.air || MOUNTS[kind]?.military || (MOUNTS[kind]?.beast && MOUNTS[kind]?.min));
 
 /**
  * B4791: the damage a vehicle has taken, kept on its tile as flags.wodx-interactables.hull = {lost, burning}. lost:
@@ -641,6 +686,9 @@ export function describeHazard(f = {}) {
     title: String(f.title ?? "").trim().slice(0, 80), electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
   };
 }
+/** B5010: the Rötschreck provocation a fire is to a vampire near it, by its size (WoDX Actions' table). */
+export const FEAR_OF_FIRE = {small: "torch", large: "bonfire", inferno: "trapped"};
+export const FEAR_YARDS = 6;
 /**
  * What a live hazard does to one character. ch.profile: the WoDX Combat soak profile ("vampire", "mortal" ...).
  * careful: {successes, botch} on stepping through glass carefully, or null.
@@ -650,7 +698,7 @@ export function hazardHit(o, ch = {}, careful = null) {
   if ( !o?.live ) return null;
   if ( o.kind === "fire" || o.kind === "brazier" ) {
     const vampire = ch.profile === "vampire";
-    const notes = vampire ? ["Fire: the Storyteller may call for a Courage roll to resist the Red Fear."] : [];
+    const notes = vampire ? ["Fire: the Red Fear is rolled (Courage, being burned)."] : [];
     const type = vampire ? "aggravated" : o.type ?? (["mortal", "ghoul"].includes(ch.profile) ? "lethal" : "aggravated");
     return {mode: "levels", amount: FIRE_SIZES[o.size].levels, type, fireSun: vampire, soakDiff: FIRE_HEAT[o.heat].diff,
       text: `is burned (${FIRE_SIZES[o.size].levels} level${FIRE_SIZES[o.size].levels === 1 ? "" : "s"}, soaked at ${FIRE_HEAT[o.heat].diff}).`, notes};
@@ -782,6 +830,18 @@ export function findHidden(o, roll = {successes: 0, botch: false}, {bonus = 0} =
 export function clueTexts(o, successes = 0) {
   const n = Math.max(0, Math.min(CLUE_TIERS, Number(successes) || 0));
   return o.texts.slice(0, n + 1).filter(Boolean);
+}
+/**
+ * B5016: a botched look at a clue reads a false lead into it: a deeper line of another clue on the same map, or,
+ * with none, one of the stock wrong turns. others: the other clues' interactable data. House reading.
+ */
+export const FALSE_LEADS = ["Marks here point the wrong way, toward the door nobody used.", "Someone has been here recently; the signs say a stranger, not anyone known.",
+  "It looks older than it is, and whatever happened here seems long over.", "It seems to have nothing to do with the matter at hand."];
+export function falseClue(o, others = [], rand = Math.random) {
+  const own = new Set((o?.texts ?? []).map(t => String(t).trim()));
+  const pool = others.flatMap(x => (x?.texts ?? []).slice(1)).map(t => String(t ?? "").trim()).filter(t => t && !own.has(t));
+  const from = pool.length ? pool : FALSE_LEADS;
+  return from[Math.floor(rand() * from.length)];
 }
 /** What a container holds: one item a line (a UUID, or the name of an item in the world), at most MAX_ITEMS. */
 export function parseItems(text) {
@@ -1082,9 +1142,9 @@ function watchOptions(o, ch) {
   if ( W.calls ) {
     const year = Number(ch.year) || 0;
     if ( !ch.kept && year && year < W.from ) return [{id: "eraNote", label: `No ${W.label.toLowerCase()} yet`, roll: null, disabled: true, note: `Not before about ${W.from}.`}];
-    out.push(o.target ? {id: "call", label: o.kind === "radio" ? "Call on the radio" : "Make a call", roll: null, seconds: TURN, noise: {success: "quiet"}, note: "Reaches the one it is tied to; the Storyteller plays the other end."}
+    out.push(o.target ? {id: "call", label: o.kind === "radio" ? "Call on the radio" : "Make a call", roll: null, seconds: TURN, noise: {success: "quiet"}, note: "Reaches the one it is tied to: whoever is there picks up and talks (WoDX NPC Talk)."}
       : {id: "callNote", label: "Not tied to another phone", roll: null, disabled: true, note: "The Storyteller ties it to another tile in its config."});
-    out.push({id: "callHelp", label: "Call for help", roll: null, seconds: TURN, noise: {success: "quiet"}, note: "The police, the watch or the household: the Storyteller decides who comes."});
+    out.push({id: "callHelp", label: "Call for help", roll: null, seconds: TURN, noise: {success: "quiet"}, note: "The watch or the police come, after the era's delay (WoDX Storyteller)."});
   }
   if ( W.alarm ) out.push({id: "ringAlarm", label: "Raise the alarm", roll: null, seconds: TURN, noise: {success: "loud"}, note: "Loud: everyone in earshot hears it.", fight: true});
   if ( W.sprinkler ) {
@@ -1241,7 +1301,8 @@ function targetOptions(o, ch) {
  */
 function mountOptions(o, ch) {
   const M = MOUNTS[o.kind], me = ch.actorId ?? "", year = Number(ch.year) || 0;
-  if ( M.from && !ch.kept && year && year < M.from ) return [{id: "eraNote", label: `No ${M.label.toLowerCase()} yet`, roll: null, disabled: true, note: `Not before about ${M.from}.`}];
+  // B4968: a vehicle on its own sheet was put there by the Storyteller, built when its sheet says: no era note
+  if ( M.from && !ch.kept && !o.vehicle && year && year < M.from ) return [{id: "eraNote", label: `No ${M.label.toLowerCase()} yet`, roll: null, disabled: true, note: `Not before about ${M.from}.`}];
   const sk = bestOf(ch.abilities ?? {}, [M.skill]), trained = sk.value >= minSkill(o.kind);
   const wrecked = hullState(o.hull, o.hull?.structure).state === "wrecked";
   const attrDots = Number(ch[M.attr]) || 0, attrLabel = cap(M.attr), skillLabel = cap(M.skill);
@@ -1265,9 +1326,11 @@ function mountOptions(o, ch) {
   }
   if ( o.riders.some(r => r.a === me) ) return [{id: "dismount", label: "Get off", roll: null, seconds: TURN, noise: {success: "quiet"}}];
   const out = [], n = aboard(o).length, full = n >= o.seats;
+  if ( !ch.kept && !riderMay(o.kind, ch.kind) ) return [{id: "onlyNote", label: `Not for ${ch.kind === "mortal" ? "the living" : "you"}`, roll: null, disabled: true, note: M.onlyNote ?? ""}];
   if ( !o.driver && !full && !trained && cannotWithout(o.kind) ) {
     out.push({id: "skillNote", label: `${M.verb}: needs ${skillLabel} ${minSkill(o.kind)}`, roll: null, disabled: true,
-      note: M.air ? `Nobody flies one without ${skillLabel} (Mage 20th p. 462).` : `A military vehicle needs ${skillLabel} ${minSkill(o.kind)} to work at all (Mage 20th p. 461).`});
+      note: M.beast ? `A dangerous or exotic mount: ${skillLabel} ${minSkill(o.kind)} or better to stay on it at all (Mage 20th p. 298).`
+        : M.air ? `Nobody flies one without ${skillLabel} (Mage 20th p. 462).` : `A military vehicle needs ${skillLabel} ${minSkill(o.kind)} to work at all (Mage 20th p. 461).`});
   } else if ( !o.driver && !full ) {
     out.push(trained ? {id: "mount", label: M.verb, roll: null, seconds: TURN, noise: {success: M.noise}, note: `${skillLabel} ${sk.value}: no roll at an ordinary pace. Whoever is at the reins moves it by moving their token.`}
       : {id: "mount", label: M.verb, roll: pool(6), seconds: TURN, noise: {success: M.noise, fail: "quiet", botch: "loud"},
@@ -1613,7 +1676,21 @@ export function cleanSettings(s = {}) {
 
 /** Clean a tile's container settings from the config form. */
 /** How often a container's stock list is drawn again (Interactables 0.23.0). */
-export const RESTOCK = {"": "Never (draw it by hand)", dawn: "Every dawn", week: "Every week", month: "Every month", season: "Every season (three months)"};
+export const RESTOCK = {"": "By the place (a shop weekly, a larder monthly, a store or armoury each season, a home never)", never: "Never (draw it by hand)", dawn: "Every dawn", week: "Every week", month: "Every month", season: "Every season (three months)"};
+/**
+ * B4888: the restock a container gets when none is set, from its own name first (a shop shelf, a larder, a store) and
+ * then from WoDX NPC's place kinds around it, the smallest first. House figures. Returns a RESTOCK_SECONDS key or "".
+ */
+export const RESTOCK_WORDS = [[/\b(shop|stall|counter|shelf|shelves|booth|wares)\b/i, "week"], [/\b(larder|pantry|kitchen|buttery|cupboard)\b/i, "month"],
+  [/\b(store|storeroom|armou?ry|granary|warehouse|cellar|magazine|stores)\b/i, "season"]];
+export const RESTOCK_BY_PLACE = {market: "week", workplace: "week", tavern: "month", castle: "season", gate: "season", docks: "season", chantry: "month"};
+export function restockFor(f = {}, {title = "", kinds = []} = {}) {
+  if ( f.restock === "never" ) return "";
+  if ( RESTOCK_SECONDS[f.restock] ) return f.restock;
+  for ( const [re, k] of RESTOCK_WORDS ) if ( re.test(String(title ?? "")) ) return k;
+  for ( const k of kinds ?? [] ) if ( RESTOCK_BY_PLACE[k] ) return RESTOCK_BY_PLACE[k];
+  return "";
+}
 export const RESTOCK_SECONDS = {dawn: 86400, week: 7 * 86400, month: 30 * 86400, season: 91 * 86400};
 
 /**

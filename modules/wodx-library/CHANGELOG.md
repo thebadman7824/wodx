@@ -2,6 +2,9 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.46.0 (Whether remains are truly holy is rolled once, Faith against 8, when they are picked (B5390); A stimulant now crashes about an hour after it is taken: one die off every roll until the character sleeps, at most a day (B5178))
+- 0.45.0 (The Philippines in the goods by place (B5152))
+- 0.44.0 (Goods and makings act without the Storyteller's hand (B5012-B5016))
 - 0.43.2 (A soul twisted by the binder's Torment gains a named derangement, drawn from the binding list of WoDX Chronicle's derangement table, instead of the Storyteller's choice (B4871))
 - 0.43.1 (A gun whose sheet names no attack ability (WoDX Combat reads that as Archery) is no longer taken for a bow when it reloads: a matchlock arquebus loads a musket ball and powder from Possessions, not arrows. A gun is known by its lock or by its name (pistol, revolver, rifle, musket, arquebus, shotgun and the like))
 - 0.43.0 (Witness features (B3927): look-rules noticedFeatures, featureWords, describeMarks reads marks.features; look describe reads flags["wodx-library"].features)

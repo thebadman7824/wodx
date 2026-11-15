@@ -3,6 +3,8 @@ import {propose, registerHandler} from "./approvals.mjs";
 import * as BW from "./bg-world.mjs";
 import {searchBox} from "./search.mjs";
 import * as T from "./trait-rules.mjs";
+import * as TB from "./trait-bite-rules.mjs";
+import {applyTimed} from "./timed.mjs";
 import {rollEffects as sigRollEffects} from "./signatures.mjs";
 import {MERITS_FLAWS, BACKGROUNDS} from "../data/trait-effects.mjs";
 
@@ -141,7 +143,7 @@ const MOMENTS = {feed: "feeding", social: "a social act", fight: "a fight", nigh
  * A moment where traits should bite (P11): one queue card a character, keyed so the same moment is not asked twice.
  * on: feed, social, fight or night. at: what makes the moment its own (a night's date, a fight id). Returns how many.
  */
-export async function prompt(actors, on, {at = "", where = ""} = {}) {
+export async function prompt(actors, on, {at = "", where = "", vessel = null} = {}) {
   if ( !MOMENTS[on] ) return 0;
   let n = 0;
   for ( const a of [actors].flat().filter(Boolean) ) {
@@ -150,16 +152,110 @@ export async function prompt(actors, on, {at = "", where = ""} = {}) {
     n++;
     await propose({type: PROMPT_TYPE, key: `trait:${on}:${a.id}:${at || Math.floor(game.time?.worldTime ?? 0)}`,
       title: `${a.name}: ${list.map(x => x.name).join(", ")} (${MOMENTS[on]})`,
-      detail: list.map(x => `${x.name}: ${x.text}.`).join(" "), data: {actor: a.id, on, where, list}});
+      detail: list.map(x => `${x.name}: ${x.text}.`).join(" "), data: {actor: a.id, on, where, list, vessel}});
   }
   return n;
 }
+const BITE_KEY = "wodx-trait-bite";
+const traitVal = (a, k) => { const s = a?.system ?? {}; return Number(s.attributes?.[k]?.value ?? s.abilities?.[k]?.value ?? s.advantages?.virtues?.[k]?.permanent ?? s.advantages?.virtues?.[k]?.value) || 0; };
+/** Roll and land one trait's bite. Returns the line for the card, or null when the trait has no rule. */
+async function bite(a, x, d) {
+  const b = TB.biteOf(x.key);
+  if ( !b ) return null;
+  const f = b.fail ?? {};
+  let r = null, faces = [], roll = null, held = false, frenzy = false;
+  if ( b.roll ) {
+    const [pool, diff0] = b.roll;
+    const wp = a.system?.advantages?.willpower ?? {};
+    const dice = pool === "willpower" || pool === "banality" ? Number(wp.permanent) || 3 : pool === "rage" ? Number(a.system?.advantages?.rage?.permanent) || 1 : Math.max(1, traitVal(a, pool));
+    const diff = pool === "banality" ? Math.max(3, Math.min(10, Number(a.system?.banality?.permanent ?? a.system?.advantages?.banality?.permanent) || 6)) : diff0;
+    roll = await new Roll(`${Math.max(1, dice)}d10`).evaluate();
+    faces = roll.dice[0]?.results?.map(q => q.result) ?? [];
+    r = TB.count(faces, diff);
+    ({held, frenzy} = TB.outcome(b, r));
+    if ( held ) return `rolled ${faces.join(", ")} at ${diff}: held.`;
+  }
+  const said = r ? `rolled ${faces.join(", ")}: ` : "";
+  if ( f.hint ) {
+    await ChatMessage.create({content: `<div class="wodx-card"><p><b>Common Sense</b>: before ${esc(d.on === "fight" ? "this fight" : "this step")}, ${esc(a.name)} has a feeling it may be a mistake. Think it over once more.</p></div>`, speaker: {alias: a.name}, whisper: game.users.filter(u => !u.isGM && a.testUserPermission(u, "OWNER")).map(u => u.id).concat(game.users.filter(u => u.isGM).map(u => u.id))});
+    return "a word of warning went to the player.";
+  }
+  if ( f.wp ) { const wp = a.system?.advantages?.willpower ?? {}; await a.update({"system.advantages.willpower.temporary": Math.max(0, (Number(wp.temporary) || 0) + f.wp)}); return `${said}a Willpower point goes.`; }
+  if ( f.spendWp ) {
+    const wp = Number(a.system?.advantages?.willpower?.temporary) || 0;
+    if ( wp > 0 ) { await a.update({"system.advantages.willpower.temporary": wp - 1}); return `${said}a Willpower point spent to set it aside.`; }
+    return timedBite(a, x, f.else, said);
+  }
+  if ( f.banality ) { const p = a.system?.banality ? "system.banality.temporary" : "system.advantages.banality.temporary"; await a.update({[p]: (Number(foundry.utils.getProperty(a, p)) || 0) + f.banality}); return `${said}a point of Banality.`; }
+  if ( "bout" in f ) {
+    const D = game.modules.get(MODULE_ID)?.api?.derangements;
+    if ( f.bout ) await D?.startBout?.(a, f.bout); else await D?.hold?.(a);
+    return `${said}a derangement takes hold for the scene.`;
+  }
+  if ( f.infect ) {
+    const v = d.vessel ? await fromUuid(d.vessel) : null, va = v?.actor ?? v;
+    if ( !va ) return "no vessel to infect.";
+    const die = (await new Roll("1d10").evaluate()).total;
+    if ( !TB.infects(f.infect, die) ) return `rolled ${die}: the bite stays clean.`;
+    await va.update({"flags.wodx-actions.vesselState": "disease"});
+    try { await va.toggleStatusEffect?.("disease", {active: true}); } catch (e) { /* no such status */ }
+    await applyTimed(va, {name: TB.FEVER.name, description: "−1 die on every roll while the fever runs", duration: {kind: "time", seconds: TB.FEVER.seconds},
+      key: `${BITE_KEY}:fever`, data: {name: TB.FEVER.name, tags: TB.FEVER.tags, dice: TB.FEVER.dice, diff: 0}, source: "V20 p. 481"});
+    return `rolled ${die}: the bite festers. ${va.name} falls sick (a die off every roll for a week) and carries it in the blood.`;
+  }
+  if ( f.consume ) {
+    const v = d.vessel ? await fromUuid(d.vessel) : null, va = v?.actor ?? v;
+    if ( !va ) return "no vessel.";
+    const mortal = !/vampire|kindred|cainite|wraith|spirit/i.test(`${va.type} ${va.system?.kind ?? ""}`);
+    if ( !mortal ) return `${va.name} is no mortal: there is nothing to eat.`;
+    try { await va.toggleStatusEffect?.("dead", {active: true, overlay: true}); } catch (e) { /* no status */ }
+    await va.update({"flags.wodx-actions.fleshTaken": true});
+    return `the heart and liver are eaten too: ${va.name} is dead.`;
+  }
+  if ( f.berserk ) {
+    const to = game.users.filter(u => u.isGM || a.testUserPermission(u, "OWNER")).map(u => u.id);
+    await ChatMessage.create({content: `<div class="wodx-card"><p><b>Berserker</b>: ${esc(a.name)} can go berserk at will, ignoring wound penalties (W20 p. 476).</p><button type="button" data-wct-berserk="${esc(a.uuid)}">Go berserk</button></div>`,
+      speaker: {alias: a.name}, whisper: to});
+    return "the player has a button to go berserk.";
+  }
+  if ( f.frenzy ) {
+    if ( !frenzy ) return `${said}no frenzy.`;
+    await a.update({"system.conditions.isfrenzy": true});
+    await game.modules.get(MODULE_ID)?.api?.conditions?.setCondition?.(a, "frenzy", true);
+    return `${said}frenzy.`;
+  }
+  return timedBite(a, x, f, said);
+}
+async function timedBite(a, x, f, said) {
+  if ( !f?.tags ) return null;
+  await applyTimed(a, {name: f.name, description: `${x.name}: ${f.diff ? `+${f.diff} difficulty` : `${f.dice} dice`} on ${f.tags.join(", ")} rolls`, duration: {kind: f.lasts === "night" ? "night" : "scene"},
+    key: `${BITE_KEY}:${x.key}`, data: {name: f.name, tags: f.tags, diff: f.diff ?? 0, dice: f.dice ?? 0}, source: "WoDX trait"});
+  return `${said}${f.name}: ${f.diff ? `+${f.diff} difficulty` : `${f.dice} dice`} on ${f.tags.includes("all") ? "every roll" : `${f.tags.join(", ")} rolls`} for the ${f.lasts === "night" ? "night" : "scene"}.`;
+}
+/**
+ * B5012: a timed roll effect another module puts on a character (WoDX Library's drink and drugs): dice or difficulty
+ * on rolls with any of the tags ("all" for every roll), for a duration applyTimed reads. key keeps one per cause.
+ */
+export async function addBite(a, {key, name, tags = ["all"], dice = 0, diff = 0, duration = {kind: "scene"}, source = ""} = {}) {
+  if ( !a?.createEmbeddedDocuments || !key || (!Number(dice) && !Number(diff)) ) return null;
+  return applyTimed(a, {name, description: `${Number(diff) ? `${diff > 0 ? "+" : ""}${diff} difficulty` : `${dice > 0 ? "+" : ""}${dice} dice`} on ${tags.includes("all") ? "every roll" : `${tags.join(", ")} rolls`}`,
+    duration, key: `${BITE_KEY}:${key}`, data: {name, tags, diff: Number(diff) || 0, dice: Number(dice) || 0}, source});
+}
+/** The bites in force on a character, as roll effects. */
+function biteSource(actor, ctx = {}) {
+  const list = (actor?.effects ?? []).filter(e => !e.disabled && String(e.flags?.[MODULE_ID]?.timed?.key ?? "").startsWith(BITE_KEY)).map(e => e.flags[MODULE_ID].timed.data ?? {});
+  return list.length && (ctx.channel ?? "roll") === "roll" ? TB.biteEffects(list, ctx.tags ?? []) : [];
+}
 function registerPromptHandler() {
+  addSource(biteSource);
   registerHandler(PROMPT_TYPE, {label: "A merit or flaw comes into play",
-    small: entry => { const l = entry.data?.list ?? []; return l.length > 0 && l.every(x => T.isMechanical(x.key)); },
+    small: entry => { const l = entry.data?.list ?? []; return l.length > 0 && l.every(x => T.isMechanical(x.key) || !!TB.biteOf(x.key)); },
     approve: async entry => {
     const d = entry.data ?? {}, a = game.actors.get(d.actor);
-    const items = (d.list ?? []).map(x => `<li><b>${esc(x.name)}</b>: ${esc(x.text)}.</li>`).join("");
+    // B4879: each trait with a rule rolls and lands its effect; the rest keep the card
+    const done = [];
+    for ( const x of d.list ?? [] ) { const line = a ? await bite(a, x, d).catch(e => { console.error("WoDX Chronicle | trait", e); return null; }) : null; if ( line ) done.push(x.key), x.result = line; }
+    const items = (d.list ?? []).map(x => `<li><b>${esc(x.name)}</b>: ${esc(x.result ?? `${x.text}.`)}</li>`).join("");
     await ChatMessage.create({content: `<div class="wodx-card"><h3>${esc(a?.name ?? "A character")}: ${esc(MOMENTS[d.on] ?? "now")}</h3><ul>${items}</ul></div>`,
       speaker: {alias: "Chronicle"}, whisper: game.users.filter(u => u.isGM).map(u => u.id)});
   }});
@@ -176,6 +272,20 @@ export function registerTraitHooks() {
     if ( pcs.length ) prompt(pcs, "fight", {at: p?.combat?.id ?? ""});
   });
   const can = a => !!a && (game.user.isGM || a.isOwner);
+  // B5175: Berserker's button: the player sends the character into a berserk frenzy (frenzy ignores wound penalties)
+  Hooks.on("renderChatMessageHTML", (msg, el) => {
+    const b = el?.querySelector?.("[data-wct-berserk]");
+    if ( !b ) return;
+    b.addEventListener("click", async ev => {
+      ev.preventDefault();
+      const d = await fromUuid(b.dataset.wctBerserk), a = d?.actor ?? d;
+      if ( !can(a) || b.disabled ) return;
+      b.disabled = true;
+      await a.update({"system.conditions.isfrenzy": true});
+      await game.modules.get(MODULE_ID)?.api?.conditions?.setCondition?.(a, "frenzy", true);
+      await ChatMessage.create({content: `<div class="wodx-card"><p><b>${esc(a.name)}</b> goes berserk: frenzy, and no wound penalties while it lasts.</p></div>`, speaker: {alias: a.name}});
+    });
+  });
   Hooks.on("getHeaderControlsActorSheetV2", (app, controls) => {
     const a = app.document;
     if ( !can(a) || controls.some(c => c.action === "wctTraits") ) return;
@@ -189,4 +299,4 @@ export function registerTraitHooks() {
   });
 }
 
-export const traitsApi = {view, of, has, effects, addSource, senses, shows, ticks, toughness, attitudeSeed, groupsOf, triggers, pulls, ledgerFor, prompt, worldPlan, makeReal, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};
+export const traitsApi = {addBite, view, of, has, effects, addSource, senses, shows, ticks, toughness, attitudeSeed, groupsOf, triggers, pulls, ledgerFor, prompt, worldPlan, makeReal, open, whenFeats, kindOf, table: {merits: MERITS_FLAWS, backgrounds: BACKGROUNDS, patterns: T.PATTERNS}, rules: T};

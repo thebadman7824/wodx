@@ -56,7 +56,7 @@ export const VAMPIRE = [
     text: "The Brujah holds a Cause, picked from the list or written by the player and approved by the Storyteller. When a scene goes against it, the Brujah rolls to keep their temper with the clan's +2 frenzy difficulty. Each success adds a point toward a Rant (three points): a gathering the Brujah can call that can turn a crowd into a mob."},
   {key: "malkavian", label: "Malkavian", match: ["malkavian", "malkavians"], feature: "glimpse",
     title: "Glimpses through the Cobweb", page: "V20 pdf 69 (p. 61); V20 Dark Ages pdf 54 (p. 53)", house: true,
-    text: "Once a night the Malkavian may ask for a glimpse: a riddle about the next dated event, for that player only. If it comes true and they acted on it, the Storyteller may give back a Willpower point. Their derangement colours what they hear when NPCs answer them, with the true reply always shown beneath."},
+    text: "Once a night the Malkavian may ask for a glimpse: a riddle about the next dated event, for that player only. If it comes true, a Willpower point comes back. Their derangement colours what they hear when NPCs answer them, with the true reply always shown beneath."},
   {key: "gangrel", label: "Gangrel", match: ["gangrel"], feature: "marks",
     title: "Marks of the Beast", page: "V20 pdf 63 (p. 55); V20 Dark Ages pdf 50 (p. 49)", house: true,
     text: "Each frenzy leaves an animal mark with an edge and a cost. House rule: a mark lasts a month and then heals as a wound would. Wild animals treat a Gangrel as one of their own, and out of town Survival rolls to find earth to sleep in or to read tracks are one easier."},
@@ -74,19 +74,19 @@ export const VAMPIRE = [
     text: "No clan weakness and no clan to speak for them: in a Camarilla court their Status needs a sponsor, while Anarch and Sabbat company takes them as they are. House rule: a thin-blooded Caitiff has a one in ten chance each year to wake with an odd gift (walking at dusk, keeping down a little food, passing for mortal at a glance), offered to the Storyteller as a card."},
   {key: "nosferatu", label: "Nosferatu", match: ["nosferatu"], feature: "secrets",
     title: "The trade in secrets", page: "V20 pdf 71 (p. 63), secrets pdf 28 (p. 20); V20 Dark Ages pdf 56 (p. 55)",
-    text: "A Nosferatu's true face is a breach of the Masquerade to any mortal who sees it, unless Obfuscate holds: the Storyteller gets a card to record it. What the Nosferatu learns can be written down as a page of secrets, an item that can be kept, sold or traded. A fresh secret buys a minor boon; a stale one only a trivial boon. A secret goes stale as fast as word travels in the age: slowly by word of mouth, overnight once the internet is here."},
+    text: "A Nosferatu's true face is a breach of the Masquerade to any mortal who sees it, unless Obfuscate holds, and the breach goes on the record. What the Nosferatu learns can be written down as a page of secrets, an item that can be kept, sold or traded. A fresh secret buys a minor boon; a stale one only a trivial boon. A secret goes stale as fast as word travels in the age: slowly by word of mouth, overnight once the internet is here."},
   {key: "tremere", label: "Tremere", match: ["tremere"], feature: "pyramid",
     title: "Rank in the Pyramid", page: "V20 pdf 77 (p. 69); V20 Dark Ages pdf 64 (p. 63); the ranks are a house reading", house: true,
-    text: "Every Tremere holds a rank in the Pyramid, from an apprentice of the first circle up to the Inner Council. An order from someone of higher rank arrives as a card: obey it, or refuse at the cost of a Willpower point, which the Storyteller hears about. The clan's first-drink bond to the elders is built already."},
+    text: "Every Tremere holds a rank in the Pyramid, from an apprentice of the first circle up to the Inner Council. An order from someone of higher rank arrives as a card: obey it, or refuse at the cost of a Willpower point. The order stands in the Ledger as an oath until it is done. The clan's first-drink bond to the elders is built already."},
   {key: "ventrue", label: "Ventrue", match: ["ventrue"], feature: "domain",
     title: "Domain and duty", page: "V20 pdf 81 (p. 73); V20 Dark Ages pdf 68 (p. 67)",
-    text: "Once a month a Ventrue may turn their holdings' income into influence instead: a minor boon owed by a mortal institution of the age (a bishop's court, a guild, a bank, a ministry, a corporation), kept in the Ledger. Losing a holding means answering to the clan, which the Storyteller gets as a card. The palate is built already."},
+    text: "Once a month a Ventrue may turn their holdings' income into influence instead: a minor boon owed by a mortal institution of the age (a bishop's court, a guild, a bank, a ministry, a corporation), kept in the Ledger. Losing a holding means answering to the clan, which thinks less of them. The palate is built already."},
   {key: "assamite", label: "Assamite", match: ["assamite", "assamites", "banu haqim"], feature: "contracts",
     title: "Contracts and the tithe", page: "V20 pdf 57 (p. 49); V20 Dark Ages pdf 42 (p. 41)",
     text: "A contract names a target, a price and a deadline on the clock. Finishing it raises the Assamite's standing at Alamut and sends a tenth of the fee to the clan as a tithe; missing the deadline lowers that standing."},
   {key: "giovanni", label: "Giovanni", match: ["giovanni", "cappadocian", "cappadocians"], feature: "family",
     title: "The Family and its dead", page: "V20 pdf 65 (p. 57); V20 Dark Ages pdf 48 (p. 47); 1444 is a house reading", house: true,
-    text: "The Giovanni keep a ledger of the wraiths they have bound, each held by a fetter item. Calling one sends a card to the Storyteller. Before 1444 (a house reading of the date) the line is the Cappadocians, whose deathly look is a Masquerade sign up close. The double-damage Kiss is built already."},
+    text: "The Giovanni keep a ledger of the wraiths they have bound, each held by a fetter item. Calling one brings it to stand, unseen, beside them. Before 1444 (a house reading of the date) the line is the Cappadocians, whose deathly look is a Masquerade sign up close. The double-damage Kiss is built already."},
 ];
 
 /** Tremere ranks, lowest first (house reading: V20 core gives no ladder). */
@@ -111,7 +111,7 @@ export const TITHE = 0.1;
 
 /** Ghouls (V20 Dark Ages ghoul rules in every era, Ben's standing rule). */
 export const GHOUL = {key: "ghoul", label: "Ghoul", match: [], feature: "ghoul", title: "The fix", page: "V20 Dark Ages pdf 38",
-  text: "A ghoul lives on a domitor's vitae. A month without a drink drains a blood point; with none left, the years they have held off begin to come back. The craving pulls at them near Kindred blood, a Self-Control roll the Storyteller can call for."};
+  text: "A ghoul lives on a domitor's vitae. A month without a drink drains a blood point; with none left, the years they have held off begin to come back. The craving pulls at them when Kindred blood is spilled close by: a Self-Control roll, made for them, or a Willpower point goes."};
 
 /** Revenant family traits (Ben 2026-11-12: new families pick one). effects: roll effects; also: a borrowed engine. */
 export const FAMILY_TRAITS = {
@@ -399,15 +399,15 @@ export const GLIMPSE_THEMES = [
  */
 export const TRIBES = [
   {key: "blackfuries", label: "Black Furies", match: ["black furies", "black fury", "furies"], feature: "guard", title: "Sacred places remember", page: "W20, the tribe's pages",
-    text: "A Fury can take a place into their care (a grove, a spring, a shrine, a women's house): the scene they stand in. When a fight breaks out there or something is taken from it, the Fury hears of it wherever they are, with the hour. The Storyteller can give a Rage point once for hunting the wrongdoer."},
+    text: "A Fury can take a place into their care (a grove, a spring, a shrine, a women's house): the scene they stand in. When a fight breaks out there or something is taken from it, the Fury hears of it wherever they are, with the hour. They gain a Rage point for the hunt."},
   {key: "bonegnawers", label: "Bone Gnawers", match: ["bone gnawers", "bone gnawer", "gnawers"], feature: "line", title: "The Grapevine and the trash heap", page: "W20, the tribe's pages",
     text: "The poor talk freely to a Bone Gnawer: beggars, tramps and street children give real rumours when asked for news or directions. Scavenging an alley or a yard turns up something cheap from the era's goods. Streetwise and Survival in towns gain a die.", effects: [{tags: ["streetwise"], dice: 1}]},
   {key: "childrengaia", label: "Children of Gaia", match: ["children of gaia", "child of gaia"], feature: "truce", title: "Calling a truce", page: "W20, the tribe's pages",
     text: "In a fight, a Child of Gaia can spend a turn to offer a truce. The Storyteller hears the offer on a card; the NPCs who take it leave the fight. In sept politics they can broker a month's peace between two rivals."},
   {key: "fianna", label: "Fianna", match: ["fianna"], feature: "renown", title: "Tales and drink", page: "W20, the tribe's pages",
-    text: "A tale told at a moot can earn Renown: the Fianna tells it, the Storyteller hears it on a card and can award Glory to its hero. They hold their drink longer than most, and meetings with the fae come easier. Performance gains a die.", effects: [{tags: ["performance"], dice: 1}]},
+    text: "A tale told at a moot can earn Renown: the Fianna tells it, and its hero gains Glory. They hold their drink longer than most, and meetings with the fae come easier. Performance gains a die.", effects: [{tags: ["performance"], dice: 1}]},
   {key: "fenris", label: "Get of Fenris", match: ["get of fenris", "fenrir", "fenris"], feature: "renown", title: "Trials and scars", page: "W20, the tribe's pages",
-    text: "A challenge in the sept is settled as a duel, through the fight starter. A lasting scar won in battle counts as a trophy: the Storyteller can award Glory for it on a card."},
+    text: "A challenge in the sept is settled as a duel, through the fight starter. A lasting scar won in battle counts as a trophy and earns Glory."},
   {key: "glasswalkers", label: "Glass Walkers", match: ["glass walkers", "glass walker", "warders of men", "warder of men", "iron riders"], feature: "line", title: "City spirits and holdings", page: "W20, the tribe's pages; Werewolf: the Dark Ages pdf 75 for the old name",
     text: "Glass Walkers own holdings and businesses that pay a monthly income. Machines they carry keep working in the Umbra. In the Dark Ages they are the Warders of Men; in the World of Future Darkness the net and the arcologies are their home ground. Computer and Finance gain a die.", effects: [{tags: ["computer", "finance"], dice: 1}]},
   {key: "redtalons", label: "Red Talons", match: ["red talons", "red talon"], feature: "line", title: "Wolf ways", page: "W20, the tribe's pages",
@@ -427,7 +427,7 @@ export const TRIBES = [
   {key: "croatan", label: "Croatan", match: ["croatan"], feature: "line", until: 1589, house: true, title: "The last sacrifice", page: "W20, the lost tribes; the year is a house reading",
     text: "For stories in the Americas before the tribe gave itself up (1590 here). Their rites strengthen a caern. After that year the tribe is gone and lives only in Galliard tales."},
   {key: "bunyip", label: "Bunyip", match: ["bunyip"], feature: "line", until: 1890, house: true, title: "The War of Tears", page: "W20, the lost tribes; the year is a house reading",
-    text: "For stories in Australia before the War of Tears ended the tribe (1890 here). A Garou who meets a Bunyip spirit or relic feels the old shame: the Storyteller can call for a Harano test."},
+    text: "For stories in Australia before the War of Tears ended the tribe (1890 here). A Garou who meets a Bunyip spirit or relic feels the old shame: a Willpower roll is made for them, and a failure costs a point."},
   {key: "whitehowlers", label: "White Howlers", match: ["white howlers", "white howler"], feature: "line", until: 0, title: "Fallen kin", page: "W20, the fall of the White Howlers",
     text: "Gone long before 1197: they walked the Spiral and became the Black Spiral Dancers. They appear only in old stories and dreams. A Garou who learns the story gains a lore page that opens Spiral lore."},
   {key: "bsd", label: "Black Spiral Dancers", match: ["black spiral dancers", "black spiral dancer", "black spiral", "spiral dancer", "spiral dancers"], feature: "line", wyrm: true, title: "Hive and taint", page: "W20 pdf 42",
@@ -447,9 +447,9 @@ export const AUSPICES = [
   {key: "philodox", label: "Philodox", match: ["philodox"], feature: "ruling", title: "The judge's word", page: "W20, the auspices",
     text: "A Philodox can settle a challenge or an accusation with a ruling, posted for all to see. Both sides abide by it or lose Honour, and the loser cannot raise the matter again for a month."},
   {key: "galliard", label: "Galliard", match: ["galliard"], feature: "renown", title: "Telling the tale", page: "W20, the auspices",
-    text: "A tale at a moot earns Renown for its hero and Wisdom for the teller: the Storyteller hears it on a card. The form follows the age: chant and saga, songbook, radio and the recorded song. Performance gains a die.", effects: [{tags: ["performance"], dice: 1}]},
+    text: "A tale at a moot earns Renown for its hero and Wisdom for the teller. The form follows the age: chant and saga, songbook, radio and the recorded song. Performance gains a die.", effects: [{tags: ["performance"], dice: 1}]},
   {key: "ahroun", label: "Ahroun", match: ["ahroun"], feature: "first", title: "First into battle", page: "W20, the auspices; the soak die is a house reading", house: true,
-    text: "When a fight starts against a creature of the Wyrm, the Ahroun goes first in the first turn. In Crinos that scene the Ahroun soaks with one more die, which the Storyteller adds."},
+    text: "When a fight starts against a creature of the Wyrm, the Ahroun goes first in the first turn. In Crinos against the Wyrm the Ahroun soaks with one more die."},
 ];
 
 /** Breeds. A breed row stacks with the tribe and auspice rows. */
@@ -478,7 +478,7 @@ export const DEFORMITIES = [
  */
 export const FERA = [
   {key: "ajaba", label: "Ajaba", match: ["ajaba"], feature: "line", title: "Pack scavenging", page: "W20 Changing Breeds",
-    text: "Ajaba hunt as a pack: each one beside another adds a die to attack (the Storyteller counts them). They find food on the plains and in towns as Bone Gnawers do. Survival gains a die.", effects: [{tags: ["survival"], dice: 1}]},
+    text: "Ajaba hunt as a pack: each other Ajaba beside them adds a die to attack, three at most. They find food on the plains and in towns as Bone Gnawers do. Survival gains a die.", effects: [{tags: ["survival"], dice: 1}]},
   {key: "ananasi", label: "Ananasi", match: ["ananasi"], feature: "line", title: "Webs and blood", page: "W20 Changing Breeds",
     text: "Ananasi live on blood, so the feeding rules apply to them. Their webs make a place slow or closed to movement, and they can break into a swarm of spiders."},
   {key: "bastet", label: "Bastet", match: ["bastet"], feature: "line", also: ["secrets"], title: "Curiosity and secrets", page: "W20 Changing Breeds",
@@ -500,7 +500,7 @@ export const FERA = [
   {key: "rokea", label: "Rokea", match: ["rokea"], feature: "line", title: "Deep water", page: "W20 Changing Breeds",
     text: "In deep water they move and breathe without limit. On land they are slow and wary: Etiquette among humans is one harder.", effects: [{tags: ["etiquette"], difficulty: 1}]},
   {key: "hakken", label: "Hakken", match: ["hakken"], feature: "line", courts: true, title: "Honour and the master", page: "Hengeyokai pdf 8-11, 32",
-    text: "A Hakken who serves a lord gains a die on loyal deeds, and shame before the lord costs a Willpower point (the Storyteller calls it)."},
+    text: "A Hakken who serves a lord gains a die on loyal deeds, and the lord thinking less of them costs a Willpower point."},
   {key: "khan", label: "Khan", match: ["khan"], feature: "line", courts: true, title: "The tiger's hunt", page: "Hengeyokai pdf 8-11, 32",
     text: "A die on an ambush. A Khan alone in its own land is never lost. Stealth gains a die.", effects: [{tags: ["stealth"], dice: 1}]},
   {key: "nezumi", label: "Nezumi", match: ["nezumi"], feature: "line", courts: true, title: "The city's underside", page: "Hengeyokai pdf 8-11, 32",
@@ -543,7 +543,7 @@ export const MAGE = [
   {key: "akashic", label: "Akashic Brotherhood", match: ["akashic", "akashic brotherhood", "akashayana"], feature: "dawn", title: "Do and the still mind", page: "M20, the Tradition's pages",
     text: "Meditation at dawn gives back a Willpower point once a day. Do lets an Akashic trade soak for dice or defence each turn when fighting unarmed, and body magick that looks like skill passes as coincidence. Brawl gains a die.", effects: [{tags: ["brawl"], dice: 1}]},
   {key: "chorus", label: "Celestial Chorus", match: ["chorus", "celestial chorus", "messianic voices"], feature: "line", names: [{until: 1465, label: "Messianic Voices"}], title: "The choir", page: "M20, the Tradition's pages; Dark Ages Mage pdf 15-36",
-    text: "When three or more of the faithful sing together in a church, magick there is one easier (the Storyteller counts the voices). Faithful passers-by notice the Chorus and help. Churches and monasteries are their sites."},
+    text: "When three or more of the faithful sing together in a church, magick there is one easier. Faithful passers-by notice the Chorus and help. Churches and monasteries are their sites."},
   {key: "ecstasy", label: "Cult of Ecstasy", match: ["ecstasy", "cult of ecstasy", "ecstatics", "ecstatic"], feature: "line", names: [{until: 1465, label: "the Ecstatics"}], title: "Sacred highs", page: "M20, the Tradition's pages",
     text: "Drink and drugs made as recipes or used from the pack can be foci: the substance works as it always does, and its strength makes the effect one easier. Time magick lets them glimpse a few minutes ahead."},
   {key: "dreamspeakers", label: "Dreamspeakers", match: ["speakers", "dreamspeakers", "dreamspeaker", "spirit talkers"], feature: "line", names: [{until: 1465, label: "Spirit-Talkers"}], title: "Spirit allies", page: "M20, the Tradition's pages; Dark Ages Mage pdf 15-36",
@@ -589,7 +589,7 @@ export const MAGE = [
   {key: "itx", label: "Iteration X", match: ["iterationx", "iteration x", "artificers", "artificer"], feature: "line", names: [{until: 1896, label: "the Artificers of the Order of Reason"}], title: "Cybernetics", page: "M20, the Convention's pages; Sorcerers Crusade pdf 29, 63",
     text: "Cybernetic parts go on the body plan as prosthetics do: an arm with a weapon, eyes that see heat, legs for running. Used where people would see them as impossible, they risk Paradox. Before 1897 they are the Artificers, whose inventions use workshops and recipes."},
   {key: "nwo", label: "New World Order", match: ["nwo", "new world order", "cabal of pure thought"], feature: "watchers", names: [{until: 1896, label: "the Cabal of Pure Thought"}], title: "The Watchers", page: "M20, the Convention's pages; Sorcerers Crusade pdf 29, 63",
-    text: "Every record of the age reports to them: parish books and tax rolls, then police files, cameras and the net. A breach of the Masquerade sends the Storyteller a card that the Watchers heard of it first. Before 1897 the Cabal of Pure Thought speaks for the Order's reason."},
+    text: "Every record of the age reports to them: parish books and tax rolls, then police files, cameras and the net. A breach of the Masquerade reaches the Watchers first, and their agents press the hunters in the region. Before 1897 the Cabal of Pure Thought speaks for the Order's reason."},
   {key: "progenitors", label: "Progenitors", match: ["progenitors", "progenitor", "hippocratic circle"], feature: "line", names: [{until: 1896, label: "the Hippocratic Circle"}], title: "The lab", page: "M20, the Convention's pages; Sorcerers Crusade pdf 29, 63",
     text: "Medicines and drugs from the laboratory kits come out a quality step better. Clones and vat-grown servants are NPCs; surgery changes the body plan. Medicine gains a die.", effects: [{tags: ["medicine"], dice: 1}]},
   {key: "syndicate", label: "Syndicate", match: ["syndicate", "high guild"], feature: "line", also: ["leverage"], names: [{until: 1896, label: "the High Guild"}], title: "Moving the market", page: "M20, the Convention's pages; Sorcerers Crusade pdf 29, 63",
@@ -605,7 +605,7 @@ export const MAGE = [
   {key: "nephandi", label: "Nephandi", match: ["nephandi", "nephandus"], feature: "line", also: ["corruption"], title: "The inverted Avatar", page: "M20, the Nephandi",
     text: "NPCs. A Nephandus corrupts as a Follower of Set does, with the same hidden ledger on the victim. Their magick is not vulgar to their own kind; a lore page reveals the cabal."},
   {key: "marauder", label: "Marauders", match: ["marauder", "marauders"], feature: "line", title: "Living madness", page: "M20, the Marauders",
-    text: "NPCs. Paradox spirits shy from a Marauder, and reality bends near one: the Storyteller can change a region's look and rules for the scene."},
+    text: "NPCs. Paradox spirits shy from a Marauder, so its magick draws no Paradox, and the world bends around it: its token shimmers and flickers."},
   {key: "sorcerer", label: "Sorcerers and psychics", match: ["sorcerer", "sorcerers", "psychic", "psychics", "hedge"], feature: "line", title: "The path and its cost", page: "Sorcerer (Revised); M20, the sorcerer rules",
     text: "A sorcerer's path (Alchemy, Conjuration, Divination and the rest) works as recipes with hours and components. A psychic's numina cost Willpower."},
 ];
@@ -615,7 +615,7 @@ export const HOUSES = [
   {key: "bonisagus", label: "House Bonisagus", match: ["bonisagus"], feature: "line", title: "Keepers of research", page: "M20 pdf 127",
     text: "A research ledger: new rotes are made as recipes over weeks. Occult gains a die.", effects: [{tags: ["occult"], dice: 1}]},
   {key: "flambeau", label: "House Flambeau", match: ["flambeau"], feature: "certamen", title: "Fire and honour", page: "Book of Secrets pdf 65-66",
-    text: "A die on fire effects of Forces (the Storyteller adds it). An insult to the House calls for a certámen."},
+    text: "A die on Forces magick that burns. An insult to the House calls for a certámen.", effects: [{tags: ["fire"], dice: 1}]},
   {key: "quaesitor", label: "House Quaesitor", match: ["quaesitor"], feature: "ruling", title: "Judges of the Order", page: "Book of Secrets pdf 65-66",
     text: "A Quaesitor can call a Tribunal and post its ruling for all to see."},
   {key: "shaea", label: "House Shaea", match: ["shaea"], feature: "line", title: "The House of the far lands", page: "M20 pdf 160",
@@ -647,13 +647,13 @@ export const KITHS = [
   {key: "boggan", label: "Boggans", match: ["boggan", "boggans"], feature: "line", title: "Many hands", page: "C20, the kith's pages",
     text: "A Boggan at work in a household speeds crafting and building there by a step, and the household's goods come out a quality step better. Frailty: they cannot turn down a plea for help with work. Crafts gains a die.", effects: [{tags: ["crafts"], dice: 1}]},
   {key: "clurichaun", label: "Clurichaun", match: ["clurichaun", "clurichauns"], feature: "revel", title: "Spirits in the cellar", page: "C20, the kith's pages",
-    text: "They brew stronger drink as recipes and hold it better than other fae. A tavern brawl they start counts as a revel: the Storyteller gives Glamour on the card."},
+    text: "They brew stronger drink as recipes and hold it better than other fae. A tavern brawl they start counts as a revel, and the Glamour comes with it."},
   {key: "eshu", label: "Eshu", match: ["eshu"], feature: "line", title: "The road provides", page: "C20, the kith's pages",
     text: "Travelling with no set goal, an Eshu meets what the road holds: the Storyteller pulls a dated event or an encounter along the way. Frailty: a chance at adventure must be taken, or a Willpower point is lost. Performance gains a die.", effects: [{tags: ["performance"], dice: 1}]},
   {key: "nocker", label: "Nockers", match: ["nocker", "nockers"], feature: "line", title: "The flaw in every work", page: "C20, the kith's pages",
     text: "Everything a Nocker makes is a quality step better and carries one written flaw, which shows on a botched use. The machines of each age are their trade: clockwork, steam, then electronics. Crafts gains a die.", effects: [{tags: ["crafts"], dice: 1}]},
   {key: "piskies", label: "Piskies", match: ["piskie", "piskies", "pixie", "pixies"], feature: "line", title: "Little kindnesses", page: "C20 pdf 98",
-    text: "A gift left in trade gives a Piskie a point of Glamour (the Storyteller's call). Keeping something lifted gnaws at them: a Willpower roll. Lifting gains a die.", effects: [{tags: ["lift"], dice: 1}]},
+    text: "A gift left in a barter gives a Piskie a point of Glamour, once a day. Keeping something lifted gnaws at them: a Willpower roll. Lifting gains a die.", effects: [{tags: ["lift"], dice: 1}]},
   {key: "pooka", label: "Pooka", match: ["pooka", "pookas"], feature: "truth", title: "The liar's tongue", page: "C20, the kith's pages",
     text: "Their animal shape is a body shape of its own. Frailty: they lie. When a Pooka answers a question, the player picks the lie; telling the plain truth costs a Willpower point."},
   {key: "redcap", label: "Redcaps", match: ["redcap", "redcaps"], feature: "line", title: "Dark appetite", page: "C20, the kith's pages",
@@ -667,7 +667,7 @@ export const KITHS = [
   {key: "sluagh", label: "Sluagh", match: ["sluagh"], feature: "line", title: "In the cracks", page: "C20, the kith's pages",
     text: "They squeeze through narrow gaps and hear whispers clearly. They speak only in whispers. Hearing is one easier and Stealth gains a die.", effects: [{tags: ["hearing"], difficulty: -1}, {tags: ["stealth"], dice: 1}]},
   {key: "troll", label: "Trolls", match: ["troll", "trolls"], feature: "oath", title: "Bound by their word", page: "C20, the kith's pages",
-    text: "A troll's oath is written down. While it holds, the troll soaks one more die fighting for its cause (the Storyteller adds it); broken, the strength goes and a Willpower point with it."},
+    text: "A troll's oath is written down. While it holds, the troll soaks one more die in a fight; broken, the strength goes and a Willpower point with it."},
   {key: "ghilledhu", label: "Ghille Dhu", match: ["ghille dhu", "ghilledhu"], feature: "line", title: "Rooted in the green", page: "C20 pdf 12, 449-450",
     text: "Glamour returns faster to them in wild places; in a city they wilt, and Banality there is one harder to resist."},
   {key: "merfolk", label: "Merfolk", match: ["merfolk", "merrow", "merrows"], feature: "line", title: "The sea's call", page: "C20 pdf 12, 449-450",
@@ -769,7 +769,7 @@ export const LEGIONS = [
   legion("emerald", "Emerald Legion", "the Emerald Lord", ["accident", "chance", "drowned", "fell", "happenstance"], "Luck", "Once a week (a house reading of once a story), a reroll on a roll of chance.", [], ["luck"]),
   legion("fate", "Fate Legion", "the Ladies of Fate", ["fate", "marked", "unknown cause", "destined"], "Outside politics", "They hear the riddle of the next dated event, as the Oracles do.", [], ["glimpse"]),
   legion("grim", "Grim Legion", "the Smiling Lord", ["violence", "murder", "murdered", "killed", "war", "battle", "stabbed", "shot", "hanged", "executed"], "A die in fights", "Brawl and Melee gain a die.", [{tags: ["brawl", "melee"], dice: 1}]),
-  legion("iron", "Iron Legion", "the Ashen Lady", ["old age", "age", "natural", "in sleep", "peacefully"], "Patience", "Long tasks over the clock go a stage faster (the Storyteller counts it).", [{tags: ["crafts", "academics"], dice: 1}]),
+  legion("iron", "Iron Legion", "the Ashen Lady", ["old age", "age", "natural", "in sleep", "peacefully"], "Patience", "Long tasks over the clock gain a success on every roll that is not a botch.", [{tags: ["crafts", "academics"], dice: 1}]),
   legion("paupers", "Paupers Legion", "the Beggar Lord", ["mystery", "vanished", "lost", "never found"], "Hidden ways", "Stealth and the search for secrets gain a die.", [{tags: ["stealth", "investigation"], dice: 1}]),
   legion("penitent", "Penitent Legion", "the Laughing Lady", ["madness", "insane", "mad", "asylum"], "The mad ear", "They hear the living through a derangement, as the Malkavians do.", [], ["hear"]),
   legion("silent", "Silent Legion", "the Quiet Lord", ["despair", "suicide", "grief", "hopeless"], "Quiet against the Shadow", "Rolls against Angst and the Harrowing are one easier.", [{tags: ["angst", "harrowing"], difficulty: -1}]),
@@ -802,20 +802,20 @@ export const LUCK_DAYS = 7;
  */
 const row = (key, label, match, title, page, text, more = {}) => ({key, label, match, feature: "line", title, page, text, ...more});
 export const HUNTER = [
-  row("avenger", "Avengers", ["avenger", "avengers"], "The righteous blow", "Hunter: the Reckoning, the creeds", "Against a monster that hurt an innocent, fight rolls gain a die (the Storyteller says when). Walking away from one costs Conviction.", {from: 1999, effects: [{tags: ["brawl", "melee", "ranged"], dice: 1, when: "monster"}]}),
-  row("defender", "Defenders", ["defender", "defenders"], "The shield", "Hunter: the Reckoning, the creeds", "A Defender guards a place: harm or theft there reaches them wherever they are. Standing between a monster and its prey gives soak dice, which the Storyteller adds.", {from: 1999, feature: "guard"}),
-  row("judge", "Judges", ["judge", "judges"], "The verdict", "Hunter: the Reckoning, the creeds", "A Judge may give a verdict on a monster, which goes to the Storyteller alone, who answers whether it is guilty.", {from: 1999, feature: "ruling", secret: true}),
+  row("avenger", "Avengers", ["avenger", "avengers"], "The righteous blow", "Hunter: the Reckoning, the creeds", "Against a monster, fight rolls gain a die. Walking away from one costs Conviction.", {from: 1999, effects: [{tags: ["brawl", "melee", "ranged"], dice: 1, when: "monster"}]}),
+  row("defender", "Defenders", ["defender", "defenders"], "The shield", "Hunter: the Reckoning, the creeds", "A Defender guards a place: harm or theft there reaches them wherever they are. Standing beside someone a monster attacks gives a soak die.", {from: 1999, feature: "guard"}),
+  row("judge", "Judges", ["judge", "judges"], "The verdict", "Hunter: the Reckoning, the creeds", "A Judge may give a verdict on a monster, and learns whether it has harmed the innocent.", {from: 1999, feature: "ruling", secret: true}),
   row("innocent", "Innocents", ["innocent", "innocents"], "Open eyes", "Hunter: the Reckoning, the creeds", "A monster spoken to kindly by an Innocent thinks better of them. Empathy gains a die.", {from: 1999, effects: [{tags: ["empathy"], dice: 1}]}),
-  row("martyr", "Martyrs", ["martyr", "martyrs"], "Taking the wound", "Hunter: the Reckoning, the creeds", "A Martyr can take harm meant for someone else beside them, as the Storyteller moves it.", {from: 1999}),
+  row("martyr", "Martyrs", ["martyr", "martyrs"], "Taking the wound", "Hunter: the Reckoning, the creeds", "A Martyr can take harm meant for someone else beside them: when someone next to a Martyr is hurt, the Martyr's player gets a button to take the wound instead.", {from: 1999}),
   row("redeemer", "Redeemers", ["redeemer", "redeemers"], "The second chance", "Hunter: the Reckoning, the creeds", "A Redeemer's long work with a monster can help its Humanity or Path, a task over weeks on the clock.", {from: 1999}),
   row("visionary", "Visionaries", ["visionary", "visionaries"], "The bigger picture", "Hunter: the Reckoning, the creeds", "Lore pages open for them sooner. Occult and Investigation gain a die.", {from: 1999, effects: [{tags: ["occult", "investigation"], dice: 1}]}),
   row("hermit", "Hermits", ["hermit", "hermits"], "The messages", "Hunter: the Reckoning, the creeds", "Once a night a Hermit can hear the Messengers: a riddle about the next dated event.", {from: 1999, also: ["glimpse"]}),
   row("wayward", "Waywards", ["wayward", "waywards"], "Single minded", "Hunter: the Reckoning, the creeds", "Fight rolls to destroy monsters gain a die; a Wayward never takes a monster's side, even when it is right.", {from: 1999, effects: [{tags: ["brawl", "melee", "ranged"], dice: 1, when: "monster"}]}),
   row("hh2", "Mortal hunters", ["hunters hunted", "mortal hunter", "mortal hunters", "hunter"], "Faith and preparation", "Hunters Hunted II", "A hunter's kit (stakes, holy water, a crucifix carried with True Faith) is used from the pack, and preparing a hunt is a recipe. Investigation gains a die.", {from: 1500, until: 1998, effects: [{tags: ["investigation"], dice: 1}]}),
-  row("inquisition", "Inquisitors", ["inquisitor", "inquisitors", "inquisition", "society of leopold", "leopold"], "Faith and the files", "V20 Dark Ages, the Inquisition; Hunters Hunted II", "True Faith wards make monsters recoil and burn the wicked, and the faithful help them. Every breach of the Masquerade reaches the Inquisition: the Storyteller gets a card.", {feature: "watchers"}),
+  row("inquisition", "Inquisitors", ["inquisitor", "inquisitors", "inquisition", "society of leopold", "leopold"], "Faith and the files", "V20 Dark Ages, the Inquisition; Hunters Hunted II", "True Faith wards make monsters recoil and burn the wicked, and the faithful help them. Every breach of the Masquerade reaches the Inquisition, and its agents press the hunters in the region.", {feature: "watchers"}),
   row("arcanum", "Arcanum", ["arcanum"], "The library", "Hunters Hunted II, the Arcanum", "Research on any monster with the Library's files gains a die, and a breach of the Masquerade becomes a file they can read.", {effects: [{tags: ["academics", "occult"], dice: 1}]}),
   row("agencies", "Government hunters", ["project twilight", "twilight", "agency", "agencies", "fbi", "nsa"], "Case files", "Hunters Hunted II; Project Twilight", "They read police files and camera records as the New World Order does: a breach reaches them, and they send a team.", {from: 1900, house: true, feature: "watchers"}),
-  row("faithful", "Mortals with True Faith", ["true faith", "faithful"], "Faith that burns", "V20, True Faith", "On holy ground their Faith counts one higher (the Storyteller marks the place)."),
+  row("faithful", "Mortals with True Faith", ["true faith", "faithful"], "Faith that burns", "V20, True Faith", "On holy ground (a sacred place on the map that is not desecrated) their Faith counts one higher."),
 ];
 export const MUMMY = [
   row("kherminu", "Kher-minu", ["kher minu", "tomb watchers"], "The guarded place", "Mummy: the Resurrection, the Amenti", "Amulets made as charms are used from the pack. A place a Kher-minu takes as a charge (a tomb, a museum wing, a temple) is guarded: harm or theft there reaches them.", {feature: "guard"}),
@@ -830,7 +830,7 @@ export const MUMMY = [
 ];
 export const DEMON = [
   row("devils", "Devils", ["devil", "devils", "namaru"], "A following", "Demon: the Fallen, the Houses", "The demon draws passers-by into a following that grows with each scene of worship. Leadership gains a die.", {effects: [{tags: ["leadership"], dice: 1}]}),
-  row("scourges", "Scourges", ["scourge", "scourges", "asharu"], "The breath of the world", "Demon: the Fallen, the Houses", "The Lore of the Winds can change the scene's weather (the Storyteller sets it); the Lore of Awakening heals or sickens. Medicine gains a die.", {effects: [{tags: ["medicine"], dice: 1}]}),
+  row("scourges", "Scourges", ["scourge", "scourges", "asharu"], "The breath of the world", "Demon: the Fallen, the Houses", "The Lore of the Winds at three dots or more raises a gale over the place for the night, a storm at five; the Lore of Awakening heals or sickens. Medicine gains a die.", {effects: [{tags: ["medicine"], dice: 1}]}),
   row("malefactors", "Malefactors", ["malefactor", "malefactors", "annunaki"], "The Forge", "Demon: the Fallen, the Houses", "The Lore of the Forge enchants things they craft; the Lore of Paths finds the way through any place. Crafts gains a die.", {effects: [{tags: ["crafts"], dice: 1}]}),
   row("fiends", "Fiends", ["fiend", "fiends", "neberu"], "Patterns and portals", "Demon: the Fallen, the Houses", "The Lore of Patterns gives a riddle about the next dated event once a night; the Lore of Portals opens a door between two places.", {also: ["glimpse"]}),
   row("defilers", "Defilers", ["defiler", "defilers", "lammasu"], "Longing", "Demon: the Fallen, the Houses", "The Lore of Longing works on desire with the hidden Corruption ledger the Followers of Set use; the Lore of Storms works sea and rain.", {also: ["corruption"]}),
@@ -844,7 +844,7 @@ export const DEMON = [
   row("earthbound", "Earthbound", ["earthbound"], "The idol", "Demon: the Fallen, the Earthbound", "NPCs. An Earthbound's reliquary is a thing or a building, and its cult is a faction with an income of faith."),
 ];
 export const KUEIJIN = [
-  row("devilTiger", "Howl of the Devil-Tiger", ["devil tiger", "devil-tiger"], "Hunting the servants of the Yama Kings", "Kindred of the East, the Dharmas", "They track demons and corrupt spirits, and a fight against one restores Chi (the Storyteller's call). Their P'o is stronger: rolls to resist it are one harder.", {effects: [{tags: ["frenzy"], difficulty: 1}]}),
+  row("devilTiger", "Howl of the Devil-Tiger", ["devil tiger", "devil-tiger"], "Hunting the servants of the Yama Kings", "Kindred of the East, the Dharmas", "They track demons and corrupt spirits, and a fight against one restores a point of Yang Chi. Their P'o is stronger: rolls to resist it are one harder.", {effects: [{tags: ["frenzy"], difficulty: 1}]}),
   row("crane", "Way of the Resplendent Crane", ["crane", "resplendent crane"], "Duty", "Kindred of the East, the Dharmas", "A Crane may rule on a matter of law, posted for all; upholding the law earns face, breaking it costs face. Etiquette gains a die.", {feature: "ruling", effects: [{tags: ["etiquette"], dice: 1}]}),
   row("shadow", "Song of the Shadow", ["song of the shadow", "shadow"], "Shadow and death", "Kindred of the East, the Dharmas", "Yin Chi from graves and the Yin realms; ghosts come to them."),
   row("whispers", "Path of a Thousand Whispers", ["thousand whispers", "whispers"], "Many lives", "Kindred of the East, the Dharmas", "They hold several lives at once, each known to NPCs by its own name. Subterfuge gains a die.", {effects: [{tags: ["subterfuge"], dice: 1}]}),

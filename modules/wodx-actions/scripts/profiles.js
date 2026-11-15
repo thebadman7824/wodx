@@ -228,7 +228,38 @@ let LINE = "";
 export function setLine(kind) { const prev = LINE; LINE = kind ?? ""; return prev; }
 export const currentLine = () => LINE;
 
+/**
+ * B4926: the next dialog fills itself and is sent without being shown, for an NPC that uses a power by itself.
+ * values: {field name: value} set after the window's own render code has filled its defaults.
+ */
+let AUTO = null;
+export function autoNext(values = {}) { AUTO = { values, at: Date.now() }; }
+export const autoPending = () => !!AUTO;
+
+function askAuto({ content, buttons, onRender }) {
+    const a = AUTO; AUTO = null;
+    const root = document.createElement("div");
+    root.className = "wodx-auto-form";
+    root.style.display = "none";
+    root.innerHTML = content;
+    document.body.append(root);
+    try {
+        try { onRender?.(root, () => {}); } catch (e) { console.warn("WoDX | auto dialog render", e); }
+        for (const [k, v] of Object.entries(a.values ?? {})) {
+            const el = root.querySelector(`[name="${k}"]`);
+            if (!el) continue;
+            if (el.type === "checkbox") el.checked = !!v; else el.value = String(v);
+            el.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+        const ok = buttons.find(b => b.default) ?? buttons[0];
+        return Promise.resolve({ id: ok.id, data: readForm(root) });
+    } finally { root.remove(); }
+}
+
 export function ask({ title, content, buttons, width = 480, classes = [], onRender = null }) {
+    // An auto fill older than a few seconds is stale (its power never opened a window): drop it
+    if (AUTO && Date.now() - AUTO.at > 5000) AUTO = null;
+    if (AUTO) return askAuto({ content, buttons, onRender });
     const V2 = globalThis.foundry?.applications?.api?.DialogV2;
     const lc = lineClass(LINE);
     if (lc && !classes.includes(lc)) classes = [...classes, lc];

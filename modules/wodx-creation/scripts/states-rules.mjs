@@ -142,3 +142,6 @@ export function secondBreathStart({willpower = 0} = {}) {
   return {yin, yang, hun, po, dharma: 1, chi: {yin, yang}, willpower: Math.min(most, Math.max(5, n(willpower))), willpowerMost: most,
     toSpend: {chi: 4, disciplines: 3}};
 }
+
+/** B5023: the traits a Fallen takes from a new host's body (DtF pdf 260: the body's Physical traits). */
+export const HOST_PHYSICAL = ["strength", "dexterity", "stamina"];

@@ -276,11 +276,11 @@ export const STATES = {
   stimulant: {label: "Wired", text: "Wide awake: tiredness from lost sleep is set aside for the scene, then a crash: −1 die to all pools until the character sleeps (house rule)."},
   opiate: {label: "Dulled", text: "−2 dice to Dexterity and Ability pools for the scene, and pain feels far off (house rule after V20 printed p. 302)."},
   sedative: {label: "Drowsy", text: "−2 dice to all pools; a Stamina roll (difficulty 7) or asleep within the hour (house rule)."},
-  hallucinogen: {label: "Seeing things", text: "Pools drop by 1 to 3 as the Storyteller decides, with visions that seem real (house rule after V20 printed p. 301)."},
+  hallucinogen: {label: "Seeing things", text: "Pools drop by 1 to 3, rolled when it is taken, with visions that seem real, for the scene (house rule after V20 printed p. 301)."},
   cannabis: {label: "Mellow", text: "−1 die to Perception and Wits pools for the scene (house rule)."},
   tobacco: {label: "A smoke", text: "A calming smoke; no game effect."},
   caffeine: {label: "Alert", text: "A warm drink that keeps the eyes open; no game effect beyond the drink."},
-  remedy: {label: "Medicine", text: "It does for the ailment what it does for anyone; the Storyteller says what that is."}
+  remedy: {label: "Medicine", text: "It eases what ails: a sickness's next weekly Stamina roll is 1 easier, and a wounded character takes 1 die less from wounds for the scene (house rule)."}
 };
 /** The state a feeding vampire finds in the blood afterwards (wodx-actions vesselState, V20 printed pp. 301-302). */
 export const VESSEL_STATE = {drunk: "drunk", stimulant: "stimulant", opiate: "opiate", sedative: "opiate", hallucinogen: "hallucinogen"};
@@ -360,7 +360,7 @@ function ruling(sub, line, pick) {
   if ( mortal.does === "storyteller" ) return {does: "storyteller", text: pick === "weaker" ? WEAKER : pick === "stronger" ? STRONGER : "The Storyteller says what it is and what it does."};
   if ( pick === "weaker" || pick === "stronger" ) {
     const st = base.state && STATES[base.state] ? `${STATES[base.state].label}: ${STATES[base.state].text} ` : "";
-    return {...base, text: `${st}${pick === "weaker" ? WEAKER : STRONGER}`};
+    return {...base, scale: pick, text: `${st}${pick === "weaker" ? WEAKER : STRONGER}`};
   }
   return base;
 }
@@ -416,8 +416,69 @@ export function spends(good, ability) {
 export const STRENGTH_TEXT = {
   weak: "Weaker than usual: it does less and wears off sooner (house rule).",
   strong: "Stronger than usual: one more difficulty on any roll to resist it, and it lasts longer (house rule).",
-  impure: "Impure: it was botched in the making. The Storyteller decides what that does, from nothing to sickness or poisoning."
+  impure: "Impure: it was botched in the making, and what that does is rolled when it is taken."
 };
+
+/** Every Ability's roll tag (WoDX Chronicle's tags), for the effects that touch "Ability pools". */
+export const ABILITY_TAGS = ["survival", "empathy", "ride", "medicine", "larceny", "animalken", "athletics", "brawl", "melee", "dodge", "subterfuge",
+  "streetwise", "occult", "crafts", "finance", "academics", "drive", "etiquette", "performance", "intimidation", "computer", "science",
+  "investigation", "firearms", "ranged", "archery", "awareness", "social", "stealth", "alertness", "law", "politics", "technology", "linguistics"];
+const HOUR = 3600;
+/**
+ * B5012: what a state in the body does to rolls, as WoDX Chronicle timed roll effects:
+ * [{key, name, tags, dice, duration}]. count is the drinks in the last few hours; scale is "weaker" or "stronger"
+ * from Ben's picks; strength the made batch's (weak or strong); rand for the hallucinogen's 1 to 3.
+ * Drink fades by one die an hour, so it is one effect per die, each an hour longer. Wired, a smoke and caffeine
+ * change no roll.
+ */
+export function intoxBites(state, {count = 1, scale = "", strength = "", rand = Math.random, wounded = false} = {}) {
+  const weak = scale === "weaker" || strength === "weak", strong = scale === "stronger" || strength === "strong";
+  const size = n => Math.max(0, weak ? Math.floor(n / 2) : strong ? n + 1 : n);
+  const long = s => Math.max(60, Math.round(weak ? s / 2 : strong ? s * 2 : s));
+  const scene = {kind: "scene"};
+  const label = STATES[state]?.label ?? state;
+  const one = (dice, tags, duration, k = state) => dice > 0 ? [{key: `intox:${k}`, name: label, tags, dice: -dice, duration}] : [];
+  if ( state === "drunk" ) {
+    const n = size(Math.floor((Number(count) || 1) / 2));
+    return Array.from({length: n}, (_, i) => ({key: `intox:drunk:${i + 1}`, name: label, tags: ["dexterity", "intelligence"], dice: -1, duration: {kind: "time", seconds: long((i + 1) * HOUR)}}));
+  }
+  if ( state === "opiate" ) return one(size(2), ["dexterity", ...ABILITY_TAGS], weak || strong ? {kind: "time", seconds: long(3 * HOUR)} : scene);
+  if ( state === "sedative" ) return one(size(2), ["all"], weak || strong ? {kind: "time", seconds: long(3 * HOUR)} : scene);
+  if ( state === "hallucinogen" ) return one(size(1 + Math.floor(rand() * 3)), ["all"], weak || strong ? {kind: "time", seconds: long(3 * HOUR)} : scene);
+  if ( state === "cannabis" ) return one(size(1), ["perception", "wits"], weak || strong ? {kind: "time", seconds: long(2 * HOUR)} : scene);
+  if ( state === "remedy" && wounded ) return [{key: "intox:remedy", name: label, tags: ["all"], dice: Math.max(1, size(1)), duration: scene}];
+  return [];
+}
+/**
+ * B5178: a stimulant's crash. The high lasts about an hour (a scene); then 1 die off every roll until the character
+ * sleeps, at most a day. A weaker dose crashes sooner and softer in time, a stronger one later and longer. House reading
+ * of the Wired text above.
+ */
+export const CRASH = {key: "intox:stimulant:crash", name: "Crashing", tags: ["all"], dice: -1, high: HOUR, lasts: 24 * HOUR};
+export function crashOf({scale = "", strength = ""} = {}) {
+  const weak = scale === "weaker" || strength === "weak", strong = scale === "stronger" || strength === "strong";
+  const f = weak ? 0.5 : strong ? 2 : 1;
+  return {after: Math.round(CRASH.high * f), lasts: Math.round(CRASH.lasts * Math.min(1, f))};
+}
+/** Whether a crash waiting on a character is due. */
+export const crashDue = (flag, t) => !!flag && Number(flag.at) > 0 && Number(t) >= Number(flag.at);
+/** B5012: what an unknown drug can turn out to be, and the difficulty of telling which. */
+export const UNKNOWN_KINDS = ["stimulant", "opiate", "sedative", "hallucinogen", "cannabis"];
+export const KNOW_DIFF = 7;
+/** The sedative's pull to sleep: a Stamina roll at 7, or asleep within the hour. */
+export const SEDATIVE_SLEEP = {attr: "stamina", diff: 7};
+
+/**
+ * B5013: what an impure batch does when it is taken (a botch in the making), rolled on a d10: nothing, weaker,
+ * sick (a day of 1 die off every roll), or poisoned (a level of bashing). House reading.
+ */
+export const IMPURE = [
+  {upTo: 3, key: "nothing", text: "The impurity does nothing this time."},
+  {upTo: 6, key: "weaker", text: "The impurity takes the edge off: it works as a weaker batch."},
+  {upTo: 9, key: "sick", text: "It turns the stomach: 1 die off every roll for the day."},
+  {upTo: 10, key: "poison", text: "It is tainted: one level of bashing damage, and 1 die off every roll for the day."}
+];
+export function impureOutcome(d10) { const n = Math.max(1, Math.min(10, Number(d10) || 1)); return IMPURE.find(r => n <= r.upTo); }
 
 /** Common check difficulty change for first aid with supplies: −1 with something to treat with (house rule). */
 export const CARE_DIFF = -1;

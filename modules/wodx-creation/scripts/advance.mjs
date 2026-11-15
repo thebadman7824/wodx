@@ -9,6 +9,7 @@ import {propose, PATH_LABEL} from "./advance-rules.mjs";
 import {SWITCHES, DRIFT} from "../data/advance.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {writeLogPage} from "./xp.mjs";
+const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;");
 
 const ACT = "wodx-actions";
 // Flags kept by other WoDX modules are read and written through the flags object, not getFlag/setFlag: Foundry
@@ -69,6 +70,14 @@ export function awakeBefore(actor, now = game.time.worldTime) {
 }
 
 /** A plain view of the character for the advancers. */
+function townsForFetters() {
+  try {
+    const S = game.modules.get("wodx-storyteller")?.api;
+    const towns = S?.towns?.state?.()?.towns ?? {}, markets = S?.markets?.state?.()?.markets ?? [];
+    const nameOf = id => (Array.isArray(markets) ? markets : Object.values(markets)).find(m => m?.id === id)?.name ?? "";
+    return Object.values(towns).map(t => ({name: nameOf(t.id), scars: t.scars ?? [], history: t.history ?? []})).filter(t => t.name);
+  } catch (e) { return []; }
+}
 export function viewOf(actor) {
   const s = actor.system ?? {};
   const c = chronology(actor);
@@ -87,7 +96,12 @@ export function viewOf(actor) {
     backgrounds: items.filter(i => i.type === "Feature" && i.system?.type === "wod.types.background").map(i => ({id: i.id, name: i.name, value: n(i.system?.value)})),
     tribe: s.tribe === "custom" ? s.custom?.tribe : (s.tribe || s.custom?.tribe || ""),
     records: {daMage: flagGet(actor, ACT, "daMage") ?? null, daFae: flagGet(actor, ACT, "daFae") ?? null, inquisitor: flagGet(actor, ACT, "inquisitor") ?? null},
-    forcedSheet: !!flagGet(actor, "wodx-sheets", "sheet")
+    forcedSheet: !!flagGet(actor, "wodx-sheets", "sheet"),
+    // B5022: Fetters, and the people now dead whose names a Fetter may carry
+    fetters: items.filter(i => i.type === "Trait" && i.system?.type === "wod.types.fetter").map(i => ({id: i.id, name: i.name, value: n(i.system?.value)})),
+    // B5391: the towns over time a place Fetter may name (WoDX Storyteller)
+    towns: actor.type === "Wraith" ? townsForFetters() : [],
+    deadNames: actor.type === "Wraith" ? (game.actors?.contents ?? []).filter(a => a.id !== actor.id && (a.statuses?.has?.("dead") || Number.isFinite(Number(a.flags?.["wodx-creation"]?.chronology?.died)))).map(a => a.name) : []
   };
 }
 
@@ -195,7 +209,22 @@ export async function applyAdvance(actor, change, plan, choice = null) {
     }
     case "adv.lostTribe":
       await setChronology(actor, {lostTribe: d.tribe});
-      return null;
+      if ( d.became ) { await actor.update({"system.tribe": "custom", "system.custom.tribe": d.became}); return {note: d.became}; }
+      await setChronology(actor, {lastOfTribe: d.tribe});
+      return {note: `the last of the ${d.tribe}`};
+    case "adv.hostDies": {
+      await setChronology(actor, {hostDied: plan.to ?? null});
+      const r = await game.modules.get(MODULE_ID)?.api?.possess?.(actor, {target: "ordinary"});
+      return {note: r?.taken ? "a new host" : "no host yet"};
+    }
+    case "adv.fetterLost": {
+      const item = actor.items.get(d.itemId);
+      if ( item ) await item.update({"system.value": 0, name: `${item.name} (lost)`});
+      await ChatMessage.create({content: `<div class="wodx-card"><p><strong>${esc(actor.name)}</strong> loses the Fetter "${esc(item?.name ?? "")}": ${d.why ? esc(d.why) : `${esc(d.who)} has died`}. A Harrowing follows (Wraith 20th p. 308).</p></div>`,
+        speaker: {alias: "Chronicle"}, whisper: game.users.filter(u => u.isGM || actor.testUserPermission?.(u, "OWNER")).map(u => u.id)});
+      try { await game.modules.get("wodx-actions")?.api?.harrowing?.({actor, kind: "fetter"}); } catch (e) { /* the card stands */ }
+      return {note: d.who};
+    }
   }
   return null;
 }

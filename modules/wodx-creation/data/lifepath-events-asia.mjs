@@ -313,5 +313,30 @@ export const EVENTS_ASIA = {
   ["Sharpened a bamboo spear for the republic","ab Melee|bg Allies",[[1945,1949]],"+","a comrade|of the youth militia"],
   ["Came through the year of living dangerously","flaw Nightmares|flaw Dark Secret",[[1965,1966]],"-","a neighbour|who was on a list, or made one"],
   ["Did well under the new order","bg Resources|bg Influence",[[1966,1998]],"+",null],
-  ["Came through the great wave","flaw Phobia|note Uprooted",[[2004,2004]],"-",null]]}
+  ["Came through the great wave","flaw Phobia|note Uprooted",[[2004,2004]],"-",null]]},
+"philippines": {
+ origins: [
+  ["A datu's family of a Tagalog river town","ab Leadership|ab Politics|bg Status","noble",1200,1571],
+  ["A family of the Sulu sultan's court","ab Etiquette|ab Melee|bg Status","noble",1405,1915],
+  ["A Chinese family of the Manila Parián","ab Finance|merit Language|flaw Enemy","merchant",1581,1860],
+  ["An ilustrado family that sent a child to study in Madrid","ab Academics|ab Politics|bg Resources","prof",1870,1898],
+  ["A guerrilla family of the hills","ab Firearms|ab Survival|merit Iron Will","soldier",1942,1945]],
+ marks: [
+  ["Saw the strangers' ships come to Mactan and the fight on the shore","ab Melee|ab Awareness",[[1521,1521]],"+",null],
+  ["Saw Manila burned and taken for Spain","note Uprooted|flaw Vengeful",[[1570,1571]],"-",null],
+  ["Came through the Chinese massacre in Manila","flaw Nightmares|ab Stealth",[[1603,1603],[1639,1639]],"-",null],
+  ["Fought the friars' soldiers in the Bohol hills","ab Melee|ab Survival|flaw Hunted",[[1744,1829]],"0","a rebel|who held out for decades"],
+  ["Saw the British hold Manila","merit Language|ab Subterfuge",[[1762,1764]],"0",null],
+  ["Sailed with the raiders of the sultanate","ab Melee|ab Athletics|flaw Hunted",[[1600,1880]],"0","a raider captain|of the Sulu Sea"],
+  ["Watched the three priests garrotted","flaw Vengeful|ab Politics",[[1872,1872]],"-",null],
+  ["Took the oath of the secret society","ab Stealth|ab Melee|bg Allies",[[1892,1897]],"+","a sworn member of the society|with a scar on the arm"],
+  ["Fought in the war against the Americans","ab Firearms|ab Survival|flaw Enemy",[[1899,1902]],"-",null],
+  ["Came through the Bud Dajo killing","flaw Nightmares|flaw Vengeful",[[1906,1906]],"-",null],
+  ["Walked the death march from Bataan","flaw Nightmares|merit Iron Will",[[1942,1942]],"-",null],
+  ["Fought with the guerrillas against the occupation","ab Firearms|ab Stealth|bg Allies",[[1942,1945]],"+","a guerrilla captain|now in politics"],
+  ["Lived through the battle that levelled Manila","flaw Nightmares|note Uprooted",[[1945,1945]],"-",null],
+  ["Was taken in the night under martial law","flaw Nightmares|flaw Dark Secret",[[1972,1981]],"-","a cellmate|who never came out"],
+  ["Stood in the people power crowd on the avenue","ab Politics|bg Allies",[[1986,1986]],"+",null],
+  ["Fled the ash of the mountain that woke","flaw Phobia|note Uprooted",[[1991,1991]],"-",null],
+  ["Came through the great typhoon at Tacloban","flaw Phobia|ab Survival",[[2013,2013]],"-",null]]}
 };

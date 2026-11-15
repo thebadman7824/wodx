@@ -10,10 +10,13 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: m20-rules.js.
  */
+import * as LIM from "./limits.js";
 import * as M from "./m20-rules.js";
+import { floatOver } from "./daysleep.js";
 import { aim, castIntent } from "./aim.js";
 import * as C from "./consensus-rules.js";
 import * as EF from "./effects.js";
+import * as TH from "./trait-hooks.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -88,17 +91,28 @@ export function build(ctx) {
             const kw = form.keywords.length || form.world ? EF.plan(actor, form, 0, { used, feat: n(fd.feat), age: sg.age.key }) : null;
             const plan = M.castPlan({ arete: i.arete, willpower: i.willpower.perm, used, known: i.spheres, kind: fd.kind, mods, quint: n(fd.q), avatar: i.avatar, need: kw ? kw.need : n(fd.feat), extra: n(fd.extra), freeMod: n(fd.free) });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
+            // B4921: an Effect of the fifth level or higher is once a scene (house rule), refused before Quintessence is spent
+            const lim = await LIM.gate(actor, { name: `Effect: ${used.map(x => `${x.sphere} ${x.level}`).join(", ")}`, level: Math.max(0, ...used.map(x => x.level)) });
+            if (!lim) return null;
             if (plan.quintUsed) { if (plan.quintUsed > i.quint) { notify(`${actor.name} has ${i.quint} Quintessence.`); return null; } await updateActor(actor, { "system.quintessence.temporary": i.quint - plan.quintUsed }); }
             const wp = !!fd.wp && await spendWillpower(actor, 1);
-            const r = await rollPool(plan.dice, plan.difficulty, { willpower: wp });
+            // B4874: the caster's features on a casting (a House's fire, a choir's voices): magick, each Sphere, and fire for Forces that harms
+            const tm = TH.traitMods(actor, ["magick", ...used.map(x => x.sphere), ...(fd.dmg && used.some(x => x.sphere === "forces") ? ["fire"] : [])]);
+            plan.dice = Math.max(1, plan.dice + (tm.dice || 0));
+            plan.difficulty = Math.max(3, Math.min(10, plan.difficulty + (tm.diff || 0)));
+            const r = await rollPool(plan.dice, plan.difficulty + lim.diff, { willpower: wp });
+            await lim.done({ successes: r.botch ? 0 : r.successes });
             const d = M.degree(r, plan.need);
-            const px = M.paradoxGained(fd.kind, plan.highest, r.botch);
+            // B5172: Paradox spirits shy from a Marauder, so its magick draws none (M20, the Marauders; WoDX Chronicle's feature)
+            const marauder = (() => { try { return !!game.modules.get("wodx-chronicle")?.api?.signatures?.allRowsOf?.(actor)?.some(x => x.key === "marauder"); } catch (e) { return false; } })();
+            const shed = marauder ? M.paradoxGained(fd.kind, plan.highest, r.botch) : 0;
+            const px = marauder ? 0 : M.paradoxGained(fd.kind, plan.highest, r.botch);
             const after = px ? await setParadox(actor, info(actor).paradox + px) : null;
             await saveFlag(actor, { lastMagick: game.time?.worldTime ?? 0, ...(String(fd.style ?? "").trim() ? { style: String(fd.style).trim() } : {}) });
             const fortune = sg.age.key === "crusade" ? await fortuneRoll(actor) : null;
             const label = used.map(x => `${cap(x.sphere)} ${x.level}`).join(" / ");
             let body = rollBlock(`Arete ${plan.dice}`, r, [`${label}: ${(W[fd.kind] ?? M.KINDS[fd.kind].label).toLowerCase()} (${plan.base}${plan.net ? `, ${plan.net > 0 ? "+" : ""}${plan.net}` : ""})`, ...(plan.capped ? ["modifiers capped at ±3"] : []),
-                ...(plan.quintUsed ? [`${plan.quintUsed} Quintessence`] : []), ...(plan.over ? [`+${plan.over} needed: past difficulty 10`] : []), ...(wp ? ["Willpower"] : [])]);
+                ...(plan.quintUsed ? [`${plan.quintUsed} Quintessence`] : []), ...(plan.over ? [`+${plan.over} needed: past difficulty 10`] : []), ...(wp ? ["Willpower"] : []), ...(tm.parts ?? [])]);
             body += `<div class="vta-big ${d.key === "botch" ? "bad" : d.key === "success" || d.key === "extraordinary" ? "good" : ""}">${r.successes} of ${plan.need}: ${esc(d.text)}.</div>`;
             const fx = kw && r.successes && !r.botch ? EF.plan(actor, form, r.successes, { used, feat: n(fd.feat), age: sg.age.key }) : null;
             if (fx?.got?.ok || fx?.items?.length) body += fx.html;
@@ -107,6 +121,7 @@ export function build(ctx) {
                     : `<div class="vta-res">Duration: ${M.duration(r.successes)}.</div>`;
             }
             if (px) body += `<div class="vta-note">+${px} ${sg.age.key === "crusade" ? "Scourge" : "Paradox"} (${after.paradox})${after.quintLost ? `; it cancels ${after.quintLost} Quintessence on the wheel` : ""}.${after.paradox > 5 ? " Past five: the Storyteller may roll a backlash." : ""}${M.overload(after.paradox) ? " Twenty or more: an intense Quiet, a crack in reality, or worse." : ""}</div>`;
+            if (shed) body += `<div class="vta-note">Madness shields it: the ${shed} Paradox this would draw does not come.</div>`;
             if (fortune) body += fortune.html;
             if (r.botch && sg.age.key !== "crusade") body += `<div class="vta-note">To stave off the backlash: ${esc(M.STAVE)}.</div>`;
             body += `<div class="wodx-quiet">${sg.age.key === "crusade" ? `Sorcerers Crusade pdf pp. 244–249; ${REF} pp. 501–504 for the feats` : `${REF} pp. 501–504`}</div>`;
@@ -179,7 +194,14 @@ export function build(ctx) {
     async function purify(actor) {
         const i = info(actor), d = C.purifyDays(i.paradox - i.paradoxPerm);
         if (!d) { notify(`${actor.name} has no Scourge to clear.`); return null; }
-        return dialog(`Purify: ${actor.name}`, `<p>${esc(actor.name)} must spend ${d} day${d === 1 ? "" : "s"} alone in meditation to clear the Scourge Pool of ${i.paradox}.</p>`, "Done", async () => {
+        return dialog(`Purify: ${actor.name}`, `<form><p>${esc(actor.name)} must spend ${d} day${d === 1 ? "" : "s"} alone in meditation to clear the Scourge Pool of ${i.paradox}.</p>
+          <div class="form-group"><label><input type="checkbox" name="clock" checked/> Begin now, and clear it by itself when the clock has passed the days without magick</label></div></form>`, "Done", async fd => {
+            // B4992: the days are kept on the clock; shedAll clears the Scourge when they have passed
+            if (fd?.clock) {
+                const now = game.time?.worldTime ?? 0;
+                await saveFlag(actor, { purifying: { since: now, days: d } });
+                return post(actor, `${actor.name} withdraws to meditate`, `<div class="vta-res">${d} day${d === 1 ? "" : "s"} alone in meditation begin; the Scourge clears by itself when they have passed, if no magick is worked meanwhile.</div><div class="wodx-quiet">Sorcerers Crusade pdf p. 249</div>`);
+            }
             await setParadox(actor, i.paradoxPerm);
             await saveFlag(actor, { lastShed: game.time?.worldTime ?? 0 });
             return post(actor, `${actor.name} is purified`, `<div class="vta-res">${d} day${d === 1 ? "" : "s"} alone in meditation; the Scourge is cleared.</div><div class="wodx-quiet">Sorcerers Crusade pdf p. 249</div>`);
@@ -196,7 +218,8 @@ export function build(ctx) {
 
     /** Shedding Paradox (p. 549): a point a week without overt magick while the pool is under five. Called by the world-time hook (GM). */
     async function shedAll(actors = game.actors?.filter?.(a => a.type === "Mage") ?? []) {
-        if (age().key === "crusade") return; // in the Crusade the Scourge is cleared by meditation, not by time
+        await drawAll(actors);
+        if (age().key === "crusade") return purifyAll(actors); // in the Crusade the Scourge is cleared by meditation, not by time
         const now = game.time?.worldTime ?? 0, week = 7 * 86400;
         for (const a of actors) {
             const i = info(a);
@@ -210,6 +233,50 @@ export function build(ctx) {
         }
     }
 
+    /** B4992: the Crusade's purifying days, kept on the clock; working magick meanwhile breaks the meditation. */
+    async function purifyAll(actors) {
+        if (ctx.setting?.("autoPurify") === false) return;
+        const now = game.time?.worldTime ?? 0;
+        for (const a of actors) {
+            const i = info(a), p = i.f.purifying;
+            if (!p) continue;
+            if (n(i.f.lastMagick) > n(p.since)) { await saveFlag(a, { purifying: null }); await post(a, `${a.name}'s meditation is broken`, `<div class="vta-res bad">Magick was worked during the days of meditation; the Scourge stays and the days must begin again.</div><div class="wodx-quiet">Sorcerers Crusade pdf p. 249</div>`); continue; }
+            if (now - n(p.since) < n(p.days) * 86400) continue;
+            await setParadox(a, i.paradoxPerm);
+            await saveFlag(a, { purifying: null, lastShed: now });
+            floatOver(a, "Purified", "#fff3b0");
+            await post(a, `${a.name} is purified`, `<div class="vta-res good">${p.days} day${p.days === 1 ? "" : "s"} alone in meditation have passed; the Scourge is cleared by itself.</div><div class="wodx-quiet">Sorcerers Crusade pdf p. 249</div>`);
+        }
+    }
+    /**
+     * B4991: a mage marked to meditate draws Quintessence once a day by itself: the Avatar's rating, or a Node's when
+     * the mage sits on one and it is higher (M20 p. 330), never past the wheel's room beside Paradox.
+     */
+    async function drawAll(actors) {
+        if (ctx.setting?.("autoQuintessence") === false) return;
+        const day = Math.floor((game.time?.worldTime ?? 0) / 86400);
+        for (const a of actors) {
+            const i = info(a), plan = i.f.draws;
+            if (!plan || i.f.drawDay === day) continue;
+            await saveFlag(a, { drawDay: day });
+            if (i.f.drawDay === undefined) continue;
+            const room = Math.max(0, 20 - i.paradox - i.quint);
+            const gain = Math.min(room, Math.max(i.avatar, n(plan.node)));
+            if (!gain) continue;
+            await updateActor(a, { "system.quintessence.temporary": i.quint + gain });
+            floatOver(a, `+${gain} Quintessence`, "#9fe0ff");
+            await post(a, `${a.name} draws Quintessence`, `<div class="vta-res good">+${gain} Quintessence from the day's meditation${n(plan.node) > i.avatar ? " on the Node" : " with the Avatar"} (${i.quint + gain}).</div><div class="wodx-quiet">${REF} p. 330</div>`);
+        }
+    }
+    /** Marks a mage to meditate for Quintessence each day (and on a Node of a rating). */
+    async function drawDialog(actor) {
+        const i = info(actor), plan = i.f.draws;
+        return dialog(`Quintessence by meditation: ${actor.name}`, `<form><p>Avatar ${i.avatar}; Quintessence ${i.quint}, Paradox ${i.paradox}. Each day the mage meditates and draws the Avatar's rating, or the Node's (M20 p. 330).</p>
+          <div class="form-group"><label><input type="checkbox" name="on"${plan ? " checked" : ""}/> Meditate each day by itself</label></div>
+          <div class="form-group"><label>Node rating where the mage lives (0 for none)</label><input type="number" name="node" min="0" max="5" value="${n(plan?.node)}"/></div></form>`, "Save",
+            async fd => saveFlag(actor, { draws: fd.on ? { node: Math.max(0, Math.min(5, n(fd.node))) } : null }));
+    }
+
     /** The system's Rote button: true when WoDX's Cast window takes it (opened here), false to leave it to the system. */
     function castRote(actor, item) {
         if (!EF.takesRote(actor, age().key)) return false;
@@ -217,5 +284,5 @@ export function build(ctx) {
         return true;
     }
 
-    return { info, setParadox, cast, castRote, backlash: backlashRoll, counter, shedAll, purify, placeDialog, age, suggest, rules: M };
+    return { info, setParadox, cast, castRote, backlash: backlashRoll, counter, shedAll, purify, drawDialog, placeDialog, age, suggest, rules: M };
 }

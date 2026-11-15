@@ -94,6 +94,25 @@ export function lostTribe(tribe, fromYear, toYear) {
  * @param {object} ctx  {fromYear, toYear, years, awakeYears, fromEra, toEra, switches}
  * @returns {{changes: object[], notes: string[]}}
  */
+/** B5391: the kinds of town scar that take a place with them. */
+export const PLACE_LOST = {sack: "sacked", quake: "thrown down by an earthquake"};
+/**
+ * B5391: whether the town a place Fetter names is gone between two years: sacked or quaked (a scar in the years
+ * crossed), or in ruin at the end (no people, or prosperity under a half). towns: [{name, scars, history}].
+ * Returns {town, why} or null.
+ */
+export function placeGone(fetterName, towns = [], fromYear = 0, toYear = 0) {
+  const name = String(fetterName ?? "").toLowerCase();
+  for ( const t of towns ) {
+    const tn = String(t?.name ?? "").trim();
+    if ( tn.length < 3 || !name.includes(tn.toLowerCase()) ) continue;
+    const scar = (t.scars ?? []).find(x => PLACE_LOST[x?.kind] && Number(x.year) > Number(fromYear) && Number(x.year) <= Number(toYear));
+    if ( scar ) return {town: tn, why: `${tn} was ${PLACE_LOST[scar.kind]} in ${scar.year}`};
+    const at = [...(t.history ?? [])].filter(h => Number(h.year) <= Number(toYear)).sort((a, b) => a.year - b.year).at(-1);
+    if ( at && Number(at.year) > Number(fromYear) && (Number(at.people) <= 0 || Number(at.prosperity) < 0.5) ) return {town: tn, why: `${tn} lies in ruin by ${at.year}`};
+  }
+  return null;
+}
 export function propose(v, ctx) {
   const changes = [];
   const notes = [];
@@ -173,7 +192,10 @@ export function propose(v, ctx) {
       if ( t ) add("adv.road", `${v.road.label ?? "The Road"} ${v.road.rating ?? ""} becomes ${PATH_LABEL[t.to]}`.replace(/\s+/g, " "),
         `The rating carries over${t.note ? `; ${t.note}` : ""} (house rule).`, true, {choice: t.to, rating: v.road.rating},
         t.choices.length > 1 ? t.choices.map(k => ({value: k, label: PATH_LABEL[k]})) : null);
-      else notes.push(`${v.road.label ?? "Road"}: no V20 Path is set for it; pick one by hand`);
+      // B5022: a Road with no row in the table goes to Humanity, or Honorable Accord, by the Storyteller's tick
+      else add("adv.road", `${v.road.label ?? "The Road"} ${v.road.rating ?? ""} becomes ${PATH_LABEL.humanity}`.replace(/\s+/g, " "),
+        "No V20 Path matches it: Humanity by default, or Honorable Accord (house rule).", true, {choice: "humanity", rating: v.road.rating},
+        ["humanity", "accord"].map(k => ({value: k, label: PATH_LABEL[k]})));
     }
     if ( v.records?.daMage && v.records.daMage.system !== "m20" ) {
       add("adv.daMage", "The Dark Ages mage becomes a Mage 20th mage", `${DA_RECORDS.daMage}. The old record is kept, marked archived.`, true);
@@ -191,16 +213,37 @@ export function propose(v, ctx) {
   // Line notes the Storyteller acts on by hand
   if ( v.line === "garou" ) {
     const lost = lostTribe(v.tribe, ctx.fromYear, ctx.toYear);
-    if ( lost ) add("adv.lostTribe", `The ${lost.tribe} are gone by ${lost.goneBy}`, `${lost.why}${lost.became ? `; they became the ${lost.became}` : ""}. Tick to record it; the tribe is the Storyteller's to change.`, false, {tribe: lost.tribe});
+    // B5022: a lost tribe's member joins what the tribe became, or is marked the last of it
+    if ( lost ) add("adv.lostTribe", `The ${lost.tribe} are gone by ${lost.goneBy}`, `${lost.why}${lost.became ? `; the character goes with them and becomes one of the ${lost.became}` : "; the character is marked the last of the tribe"}.`, true, {tribe: lost.tribe, became: lost.became ?? ""});
   }
-  if ( v.line === "wraith" && eraChanges ) notes.push("Review the Fetters: people die and places fall between eras (Wraith 20th p. 49)");
+  // B5022: a Fetter that names someone now dead is lost, and a Harrowing follows (Wraith 20th p. 308)
+  if ( v.line === "wraith" ) for ( const f of v.fetters ?? [] ) {
+    const who = (v.deadNames ?? []).find(d => d && String(f.name ?? "").toLowerCase().includes(String(d).toLowerCase()));
+    if ( who ) add("adv.fetterLost", `The Fetter "${f.name}" is lost`, `${who} has died: the Fetter goes, and a Harrowing follows (Wraith 20th p. 308).`, true, {itemId: f.id, who});
+  }
+  // B5391: Ben's pick (15 November 2026): a Fetter that names a town is checked against the town over time; a town
+  // sacked, thrown down by a quake or left in ruin across the years takes the place with it, and a Harrowing follows
+  if ( v.line === "wraith" ) for ( const f of v.fetters ?? [] ) {
+    if ( (v.deadNames ?? []).some(d => d && String(f.name ?? "").toLowerCase().includes(String(d).toLowerCase())) ) continue;
+    const gone = placeGone(f.name, v.towns ?? [], ctx.fromYear, ctx.toYear);
+    if ( gone ) add("adv.fetterLost", `The Fetter "${f.name}" is lost`, `${gone.why}: the place is gone, and a Harrowing follows (Wraith 20th pp. 49, 308).`, true, {itemId: f.id, who: gone.town, why: `${gone.why}, and the place with it`});
+  }
+  if ( v.line === "wraith" && eraChanges ) notes.push("Fetters that name a town are checked against the town over time: a town sacked, quaked or in ruin takes the place with it (Wraith 20th p. 49)");
   if ( v.line === "kuei-jin" ) notes.push("Does not age; progress is by Dharma, not by years (Kindred of the East pdf pp. 30–31)");
-  if ( v.line === "demon" ) notes.push("The host ages as a mortal; when it dies the demon must find another body (Demon p. 171)");
+  if ( v.line === "demon" ) {
+    // B5022: a host past the age a body gives out dies across the years, and the demon seeks another (house age)
+    const age = v.born === null || v.born === undefined ? null : ctx.toYear - Number(v.born);
+    if ( age !== null && age >= HOST_LIFESPAN ) add("adv.hostDies", `The host's body gives out at ${age}`, "The demon must find another body: the possession roll is made (Demon p. 171; DtF pdf 260).", true);
+    else notes.push("The host ages as a mortal; when it dies the demon must find another body (Demon p. 171)");
+  }
   if ( v.line === "mummy" ) notes.push("Between deaths the body ages as a mortal's (house rule)");
   if ( v.line === "orpheus" ) notes.push("The projector's body ages; spirits do not");
 
   return {changes, notes};
 }
+
+/** B5022: the age at which a Fallen's host dies across the years (house figure). */
+export const HOST_LIFESPAN = 85;
 
 export function ordinal(n) {
   const x = Number(n);

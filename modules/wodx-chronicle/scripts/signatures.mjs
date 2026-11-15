@@ -5,6 +5,8 @@ import {getEngine, describeTime} from "./calendar.mjs";
 import * as events from "./events.mjs";
 import * as S from "./signature-rules.mjs";
 import * as POD from "./pod.mjs";
+import {registerTokenLook} from "./token-looks.mjs";
+import {on as ghoulNeedOn} from "./ghoul-need.mjs";
 
 /**
  * WoDX Chronicle 0.30.0: signature features on the Foundry side (Splat Features Desk, Vampire first). Rules in
@@ -21,7 +23,8 @@ import * as POD from "./pod.mjs";
  */
 
 const FLAG = "sig", CFLAG = "corruption", FIRED = "sigFired", OFF = "sigOff";
-const T_FAMILY = `${MODULE_ID}.sigFamily`;
+const T_FAMILY = `${MODULE_ID}.sigFamily`, T_GHOULFEED = `${MODULE_ID}.sigGhoulFeed`;
+const n = v => Number(v) || 0;
 const T_CORRUPT = `${MODULE_ID}.sigCorrupt`, T_CAUSE = `${MODULE_ID}.sigCause`, T_VICE = `${MODULE_ID}.sigVice`;
 const lineOn = k => { try { return !!game.settings.get(MODULE_ID, k); } catch (e) { return false; } };
 /** Any line's features on. Which rows an actor gets is decided per line in rowsOf. */
@@ -49,6 +52,10 @@ export function registerSignatureSettings() {
   game.settings.register(MODULE_ID, "sigChangeling", {
     name: "Kith, seeming and court features (Changeling)", hint: "Each kith's, seeming's, court's and sidhe House's own feature, stacked: the Satyr's and Clurichaun's revels, the Pooka's lies, the Selkie's coat, troll and sidhe oaths, the court that holds power by the season, the Inanimae, Nunnehi, Thallain and Hsien. Off by default.",
     scope: "world", config: true, type: Boolean, default: false
+  });
+  game.settings.register(MODULE_ID, "sigAuto", {
+    name: "Features give their points by themselves", hint: "A feature's Willpower, Rage, Glamour, Renown or Chi, a boon or a breach record is given as soon as it is earned, with Undo on the card, instead of a button for the Storyteller (through the approval queue when no Storyteller is connected).",
+    scope: "world", config: true, type: Boolean, default: true
   });
   game.settings.register(MODULE_ID, "sigWraith", {
     name: "Guild and legion features (Wraith)", hint: "Each Guild's, legion's and faction's own feature, picked in the feature window, with the legion suggested by the manner of death: the Oracles' riddles, the Pardoners' confessions, the Emerald luck, the Penitent ear, the Grim Legion's fighting and the rest. Off by default.",
@@ -110,6 +117,8 @@ export function allRowsOf(actor) {
   if ( actor.flags?.world?.wodx?.kinfolk ) return lineOn("sigWerewolf") ? [S.KINFOLK] : [];
   if ( !lineOn("sigVampire") ) return [];
   const kind = kindName(actor);
+  // B5054: an animal ghoul on a Creature sheet carries the ghoul row too
+  if ( actor.flags?.["wodx-creation"]?.animalGhoul ) return [S.GHOUL];
   if ( /ghoul|revenant/.test(kind) ) return [S.familyRow([actor.flags?.[MODULE_ID]?.family, ...clanNames(actor), actor.system?.custom?.family].filter(Boolean), foundedFamilies()) ?? S.GHOUL];
   if ( !/kindred|vampire/.test(kind) && !clanNames(actor).length ) return [];
   const r = S.vampireRow(clanNames(actor));
@@ -130,7 +139,44 @@ const isFeature = (actor, f) => on() && !!rowWith(actor, f);
 
 /* ---------------- cards and Undo ---------------- */
 
+const T_AWARD = `${MODULE_ID}.sigAward`;
+const autoOn = () => { try { return game.settings.get(MODULE_ID, "sigAuto") !== false; } catch (e) { return true; } };
+/** The actors an act touches, by the uuids and ids in its data. */
+function actsOn(data = {}) {
+  const out = new Map();
+  const add = x => { const a = typeof x === "string" ? (fromUuidSync?.(x) ?? game.actors.get(x)) : null; const d = a?.actor ?? a; if ( d?.documentName === "Actor" ) out.set(d.uuid, d); };
+  for ( const k of ["uuid", "to", "hero", "teller", "by"] ) if ( typeof data[k] === "string" ) add(data[k]);
+  for ( const id of data.ids ?? [] ) add(id);
+  return [...out.values()];
+}
+/** B4874: run an act now and keep what it changed on each actor's sheet, for Undo. */
+async function runSnap(act) {
+  const fn = ACTS[act?.key];
+  if ( !fn ) return [];
+  const who = actsOn(act.data ?? {});
+  const before = new Map(who.map(a => [a.uuid, foundry.utils.flattenObject(foundry.utils.deepClone(a.system ?? {}))]));
+  await fn(act.data ?? {});
+  const out = [];
+  for ( const a of who ) {
+    const b = before.get(a.uuid), now_ = foundry.utils.flattenObject(a.system ?? {}), changes = {};
+    for ( const [k, v] of Object.entries(now_) ) if ( b[k] !== v ) changes[`system.${k}`] = b[k] ?? null;
+    if ( Object.keys(changes).length ) out.push({uuid: a.uuid, changes});
+  }
+  return out;
+}
 async function card(title, body, {whisper = gmIds(), undo = null, act = null} = {}) {
+  // B4874: what the Storyteller used to give by a button is given at once (the approval queue when no Storyteller is here)
+  if ( act && act.who === "gm" && S.autoAct(act.key) && autoOn() ) {
+    if ( isActiveGM() ) {
+      const multi = await runSnap(act).catch(e => { console.error(`${MODULE_ID} | feature`, e); return []; });
+      body += `<p class="vta-note">${esc(act.label)}: done.</p>`;
+      if ( multi.length && !undo ) undo = {multi};
+    } else {
+      await propose({type: T_AWARD, title, detail: act.label, data: act});
+      body += `<p class="vta-note">${esc(act.label)}: waiting in the approval queue.</p>`;
+    }
+    act = null;
+  }
   const btn = (undo ? `<button type="button" data-wct-sig-undo>Undo</button>` : "") + (act ? `<button type="button" data-wct-sig-act>${esc(act.label)}</button>` : "");
   const flags = {};
   if ( undo ) flags.sigUndo = undo;
@@ -159,9 +205,12 @@ const mayPress = act => !!act && (game.user.isGM || (act.who === "owner" && !!fr
 async function runUndo(message) {
   const u = message?.flags?.[MODULE_ID]?.sigUndo;
   if ( !u || !game.user.isGM ) return;
-  const doc = await fromUuid(u.uuid);
-  if ( !doc ) return;
-  await doc.update({[`flags.${MODULE_ID}.${u.path}`]: u.before ?? null});
+  if ( u.multi ) { for ( const m of u.multi ) { const d = await fromUuid(m.uuid); if ( d ) await d.update(m.changes); } }
+  else {
+    const doc = await fromUuid(u.uuid);
+    if ( !doc ) return;
+    await doc.update({[`flags.${MODULE_ID}.${u.path}`]: u.before ?? null});
+  }
   await message.update({content: `${message.content}<p class="vta-note">Undone by the Storyteller.</p>`, [`flags.${MODULE_ID}.sigUndo`]: null});
 }
 const ownerIds = a => game.users.filter(u => u.isGM || a?.testUserPermission?.(u, "OWNER")).map(u => u.id);
@@ -375,7 +424,8 @@ async function onEventFired(ev) {
   if ( !on() || !isActiveGM() || !ev?.id ) return;
   for ( const a of game.actors ) {
     const hit = (a.flags?.[MODULE_ID]?.[FLAG]?.glimpses ?? []).find(x => x.event === ev.id);
-    if ( hit ) await cardFor(a, "glimpse", `${a.name} saw it coming`, `<p>${esc(ev.name)}: the glimpse was <i>${esc(hit.text)}</i>. If ${esc(a.name)} acted on it, give back a Willpower point.</p>`);
+    if ( hit ) await cardFor(a, "glimpse", `${a.name} saw it coming`, `<p>${esc(ev.name)}: the glimpse was <i>${esc(hit.text)}</i>. A Willpower point comes back for seeing it.</p>`,
+      {act: {key: "willpower", label: "A Willpower point back", who: "gm", data: {uuid: a.uuid, delta: 1}}});
   }
 }
 
@@ -537,6 +587,9 @@ export async function order(fromActor, toActor_, text = "") {
   const f = toActor(fromActor), t = toActor(toActor_);
   if ( !f || !t || !S.mayOrder(rankOf(f), rankOf(t)) ) return null;
   const cost = S.refuseCost(rankOf(f), rankOf(t));
+  // B4878: the order is kept in the Ledger as an oath of obedience, so it stands until it is done or refused
+  try { if ( isActiveGM() ) await actorsApi("wodx-storyteller")?.ledger?.save?.({kind: "oath", from: {id: t.id, name: t.name}, to: {id: f.id, name: f.name}, what: `An order down the Pyramid: ${String(text).slice(0, 200)}`}); }
+  catch (e) { console.warn(`${MODULE_ID} | order`, e); }
   return cardFor(f, "pyramid", `${f.name} (${S.rankLabel(rankOf(f))}) gives an order`, `<p>To ${esc(t.name)}: ${esc(text)}</p><p class="vta-note">Obey, or refuse at the cost of ${cost} Willpower.</p>`,
     {whisper: ownerIds(t), act: {key: "refuse", label: `Refuse (${cost} Willpower)`, who: "owner", uuid: t.uuid, data: {to: t.uuid, from: f.name, cost, text}}});
 }
@@ -568,7 +621,13 @@ export async function influence(actorOrId, institution = "") {
 export async function lostHolding(actorOrId, name = "a holding") {
   const a = toActor(actorOrId);
   if ( !a || !isFeature(a, "domain") ) return null;
-  return cardFor(a, "domain", `${a.name} answers to the clan`, `<p>${esc(a.name)} lost ${esc(name)}. The clan's elders call them to account at the next gathering.</p>`);
+  // B4878: the clan thinks less of them (WoDX NPC's faction standing)
+  let fell = "";
+  try {
+    const F = actorsApi("wodx-npc")?.factions, f = (F?.state?.()?.factions ?? []).find(x => /ventrue/i.test(x.name ?? ""));
+    if ( f && isActiveGM() ) { await F.adjustPeople(f.id, a.id, {delta: -1}); fell = ` ${f.name} think less of them.`; }
+  } catch (e) { console.warn(`${MODULE_ID} | holding`, e); }
+  return cardFor(a, "domain", `${a.name} answers to the clan`, `<p>${esc(a.name)} lost ${esc(name)}. The clan's elders call them to account at the next gathering.${esc(fell)}</p>`);
 }
 
 /* ---------------- Assamite ---------------- */
@@ -611,8 +670,24 @@ export async function bindWraith(actorOrId, {name = "a wraith", fetter = ""} = {
 export async function callWraith(actorOrId, id) {
   const a = toActor(actorOrId), w = (sigOf(a).servants ?? []).find(x => x.id === id);
   if ( !a || !w ) return null;
-  await cardFor(a, "family", `${a.name} calls ${w.name}`, `<p>${esc(a.name)} calls a bound wraith${w.fetter ? `, held by ${esc(w.fetter)}` : ""}. It comes across from the Shadowlands.</p>`);
+  // B4878: the wraith comes, as a token beside the caller (an unseen one, as wraiths are, until it manifests)
+  let placed = false;
+  try { placed = !!(await servantToken(a, w)); } catch (e) { console.warn(`${MODULE_ID} | wraith`, e); }
+  await cardFor(a, "family", `${a.name} calls ${w.name}`, `<p>${esc(a.name)} calls a bound wraith${w.fetter ? `, held by ${esc(w.fetter)}` : ""}. It comes across from the Shadowlands${placed ? " and stands beside them, unseen" : ""}.</p>`);
   return w;
+}
+async function servantToken(a, w) {
+  const tok = a.getActiveTokens?.()[0]?.document;
+  if ( !tok || !isActiveGM() ) return null;
+  let ghost = game.actors.find(x => x.flags?.[MODULE_ID]?.servant === w.id);
+  if ( !ghost ) {
+    const type = game.system?.documentTypes?.Actor ? (Object.keys(game.system.documentTypes.Actor).includes("Wraith") ? "Wraith" : "Mortal") : "Mortal";
+    ghost = await Actor.create({name: w.name, type, ownership: foundry.utils.deepClone(a.ownership ?? {}), prototypeToken: {actorLink: true, name: w.name}, flags: {[MODULE_ID]: {servant: w.id, of: a.id}}});
+  }
+  if ( tok.parent.tokens.some(t => t.actorId === ghost.id) ) return true;
+  const g = tok.parent.grid?.size ?? 100;
+  const [made] = await tok.parent.createEmbeddedDocuments("Token", [{...(await ghost.getTokenDocument()).toObject(), x: tok.x + g, y: tok.y, hidden: true, alpha: 0.5}]);
+  return made;
 }
 export async function releaseWraith(actorOrId, id) {
   const a = toActor(actorOrId), sig = sigOf(a);
@@ -635,6 +710,15 @@ export async function ghoulFed(actorOrId) {
 async function ghoulTick(a, t) {
   const row = rowOf(a);
   if ( !on() || row?.feature !== "ghoul" || row.revenant ) return;
+  // B5050: the monthly need now happens by itself (ghoul-need.mjs); this card only stands in when that is switched off.
+  // The domitor's feeding (B4983) is offered either way.
+  if ( ghoulNeedOn() ) {
+    const g = sigOf(a).ghoul, fedAt = g?.fedAt ?? a.flags?.[MODULE_ID]?.ghoulNeed?.fedAt;
+    if ( fedAt === undefined || fedAt === null ) return;
+    const m = S.monthsUnfed(fedAt, t);
+    if ( m >= 1 ) await offerFeed(a, m);
+    return;
+  }
   const sig = sigOf(a), g = sig.ghoul ?? {fedAt: t, warned: 0};
   if ( !sig.ghoul ) { sig.ghoul = g; await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig}); return; }
   const m = S.monthsUnfed(g.fedAt, t);
@@ -644,6 +728,36 @@ async function ghoulTick(a, t) {
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
   Hooks.callAll("wodxGhoulFix", {actor: a, drank: false, months: m});
   await cardFor(a, "ghoul", `${a.name}: no vitae`, `<p>${m} month${m === 1 ? "" : "s"} without a drink from the domitor: take away ${m === 1 ? "a blood point" : "another blood point"}. With none left, the years held off begin to come back.</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
+  await offerFeed(a, m);
+}
+/** B4983: the domitor is on the same scene: the Storyteller approves the feeding, and then it happens. */
+async function offerFeed(a, m) {
+  const dom = domitorOf(a);
+  const here = new Set((game.scenes?.active?.tokens ?? []).map(tk => tk.actorId));
+  if ( !dom || !here.has(a.id) || !here.has(dom.id) || n(dom.system?.advantages?.bloodpool?.temporary) < 1 ) return;
+  // Once a month unfed: a declined feeding is not asked again until another month passes
+  const key = `ghoulfeed:${a.id}:${m}`;
+  if ( a.getFlag?.(MODULE_ID, "ghoulFeedAsked") === key ) return;
+  await a.setFlag?.(MODULE_ID, "ghoulFeedAsked", key);
+  await propose({type: T_GHOULFEED, key, title: `${dom.name} feeds ${a.name}`, detail: `${a.name} has gone ${m} month${m === 1 ? "" : "s"} without vitae and ${dom.name} is here. Approve and a blood point passes from domitor to ghoul (V20 Dark Ages p. 397).`, data: {ghoul: a.id, domitor: dom.id}});
+}
+/** The ghoul's domitor (WoDX Creation's lineage), as an actor, or null. */
+function domitorOf(a) {
+  const l = a?.flags?.["wodx-creation"]?.lineage, id = typeof l?.domitor === "object" ? l?.domitor?.id : l?.domitor;
+  return id ? game.actors?.get?.(id) ?? null : null;
+}
+/** An approved feeding: a blood point from the domitor to the ghoul, the month starts again, and a card says so. */
+async function applyGhoulFeed({ghoul, domitor} = {}) {
+  const g = game.actors.get(ghoul), d = game.actors.get(domitor);
+  if ( !g || !d ) return null;
+  const db = n(d.system?.advantages?.bloodpool?.temporary);
+  if ( db < 1 ) return null;
+  await d.update({"system.advantages.bloodpool.temporary": db - 1});
+  const gb = g.system?.advantages?.bloodpool;
+  if ( gb ) await g.update({"system.advantages.bloodpool.temporary": Math.min(n(gb.max) || 10, n(gb.temporary) + 1)});
+  await ghoulFed(g);
+  await cardFor(g, "ghoul", `${g.name} drinks`, `<p>${esc(d.name)} gives ${esc(g.name)} a blood point of vitae. The month starts again.</p>`, {whisper: [...new Set([...ownerIds(g), ...ownerIds(d)])]});
+  return true;
 }
 /** Found a revenant family in play: the Storyteller's is kept at once, a player's goes to the queue. */
 export async function foundFamily(data = {}) {
@@ -708,12 +822,13 @@ export async function revel(actorOrId, scene = canvas?.scene) {
   return cardFor(a, "revel", `${a.name} holds a revel`, `<p>Drink, music and dancing${scene ? ` at ${esc(scene.name)}` : ""}. Every changeling there gains a point of Glamour; a Satyr gains two. Passers-by may be drawn in.</p>`,
     {whisper: [], act: {key: "glamour", label: "Give the Glamour", who: "gm", data: {ids: there}}});
 }
-ACTS.glamour = async ({ids = []}) => {
+ACTS.glamour = async ({ids = [], one = false}) => {
   for ( const id of ids ) {
     const x = game.actors.get(id);
     if ( !x || !isFae(x) ) continue;
     const g = x.system?.advantages?.glamour ?? {};
-    await x.update({"system.advantages.glamour.temporary": S.revelGlamour(rowWith(x, "revel") ?? rowsOf(x)[0], g)});
+    const to = one ? Math.min(Number(g.permanent) || 10, (Number(g.temporary) || 0) + 1) : S.revelGlamour(rowWith(x, "revel") ?? rowsOf(x)[0], g);
+    await x.update({"system.advantages.glamour.temporary": to});
   }
 };
 /** Pooka: the plain truth told costs a Willpower point. */
@@ -799,7 +914,13 @@ async function onBreach(p) {
   if ( !watchers.length ) return;
   const yr = currentYear(), groups = [...new Set(watchers.map(w => rowWith(w, "watchers")?.label).filter(Boolean))];
   watchers.forEach(w => fired(w, "watchers"));
-  await card("The Watchers hear of it", `<p>${esc(p?.by?.name ?? "Someone")} broke the Masquerade. ${esc(groups.join(" and "))} read ${esc(S.recordsAt(yr))} and hear of it first: ${watchers.slice(0, 3).map(w => esc(w.name)).join(", ")} can send agents.</p>`);
+  // B4878: the agents go out: a point more of hunter pressure in the region, with a file on the culprit
+  let sent = "";
+  try {
+    const H = actorsApi("wodx-storyteller")?.hunters, by = p?.by?.uuid ? fromUuidSync(p.by.uuid) : null, region = H?.regionAt?.(by?.getActiveTokens?.()[0]?.document?.parent ?? canvas?.scene);
+    if ( H && region ) { await H.add(region, "description", {why: "the Watchers read it in the records", who: by ? {id: by.id, name: by.name, kind: by.type} : null, gain: 1}); sent = " Their agents are out: the hunters in the region press harder."; }
+  } catch (e) { console.warn(`${MODULE_ID} | the Watchers`, e); }
+  await card("The Watchers hear of it", `<p>${esc(p?.by?.name ?? "Someone")} broke the Masquerade. ${esc(groups.join(" and "))} read ${esc(S.recordsAt(yr))} and hear of it first: ${watchers.slice(0, 3).map(w => esc(w.name)).join(", ")} can send agents.${esc(sent)}</p>`);
 }
 
 /* ---------------- Werewolf: tribes, auspices, breeds, Kinfolk, Fera ---------------- */
@@ -841,6 +962,14 @@ export async function offerTruce(actorOrId, combat = game.combat) {
   return cardFor(a, "truce", `${a.name} offers a truce`, `<p>${esc(a.name)} spends the turn calling for peace. Roll Charisma + Empathy (a house reading); the NPCs who are not set on killing, or whose nerve is going, take it and leave the fight.</p>`,
     {whisper: [], act: {key: "truce", label: "They take the truce", who: "gm", data: {combat: combat.id}}});
 }
+ACTS.willpower = async ({uuid, delta = 1}) => {
+  const a = await fromUuid(uuid), d = a?.actor ?? a;
+  if ( d ) await d.update({"system.advantages.willpower.temporary": S.willpowerStep(wpOf(d), Number(delta) || 0)});
+};
+ACTS.chi = async ({uuid}) => {
+  const a = await fromUuid(uuid), d = a?.actor ?? a, c = d?.system?.advantages?.yangchi;
+  if ( d && c ) await d.update({"system.advantages.yangchi.temporary": Math.min(Number(c.permanent) || 10, (Number(c.temporary) || 0) + 1)});
+};
 ACTS.truce = async ({combat}) => {
   const c = game.combats.get(combat);
   const ids = (c?.combatants ?? []).filter(x => x.actor && !x.actor.hasPlayerOwner).map(x => x.id);
@@ -901,12 +1030,27 @@ export async function ruling(actorOrId, {between = "", verdict = ""} = {}) {
   const a = toActor(actorOrId), row = rowWith(a, "ruling");
   if ( !a || !row || !verdict ) return null;
   const secret = row.key === "nagah" || !!row.secret;
+  // B4877: a Judge's verdict on a monster is answered from what it is and what it has done
+  if ( row.key === "judge" ) {
+    const t = game.actors.getName?.(String(between).trim());
+    if ( t ) {
+      const harmed = harmedInnocents(t), v = S.judgeVerdict({kind: kindName(t), harmed});
+      await cardFor(a, "ruling", `${a.name}: the verdict on ${t.name}`, `<p>${esc(v.text)}</p>`, {whisper: [...new Set([...ownerIds(a), ...gmIds()])]});
+    }
+  }
   const sig = sigOf(a);
   sig.rulings = [...(sig.rulings ?? []), {between: String(between), verdict: String(verdict), at: now()}].slice(-12);
   await putSig(a, sig);
   return cardFor(a, "ruling", secret ? `${a.name}: a hidden verdict` : `${a.name} rules`, `<p>${between ? `${esc(between)}: ` : ""}${esc(verdict)}</p><p class="vta-note">${secret ? "Carried out in secret." : "Both sides abide by it or lose Honour; the loser cannot raise the matter again for a month."}</p>`, {whisper: secret ? gmIds() : []});
 }
 
+/** Has this one harmed the innocent: a Masquerade record of theirs, a deed on the law's heat, or a hunters' file. */
+function harmedInnocents(t) {
+  try { if ( (actorsApi("wodx-actions")?.masqEntries?.() ?? []).some(e => e.byUuid === t.uuid || e.by === t.name) ) return true; } catch (e) { /* no Actions */ }
+  try { const L = game.modules.get(MODULE_ID)?.api?.law?.heat?.state?.(); if ( Object.values(L?.regions ?? {}).some(r => (r?.[t.id]?.deeds ?? []).length || Number(r?.[t.id]?.heat) > 0) ) return true; } catch (e) { /* no heat */ }
+  try { if ( (actorsApi("wodx-storyteller")?.hunters?.filesOn?.(t.id) ?? []).length ) return true; } catch (e) { /* no hunters */ }
+  return false;
+}
 /** Metis: the deformity, picked once (the Storyteller can change it). */
 export async function setDeformity(actorOrId, key) {
   const a = toActor(actorOrId), d = S.deformityByKey(key);
@@ -966,6 +1110,7 @@ export function effects(actorOrId) {
   for ( const e of dfm?.effects ?? [] ) out.push({...e, why: `Metis: ${dfm.label.toLowerCase()}`});
   const pen = S.beautyPenalty(sig.muses ?? []);
   if ( pen ) out.push({tags: ["beauty"], difficulty: pen, why: "Obsession with a Muse"});
+  try { out.push(...countEffects(a)); } catch (e) { /* no canvas */ }
   if ( sig.soil?.short > (rowWith(a, "soil")?.grace ?? 0) && isFeature(a, "soil") ) out.push({tags: ["all"], halve: true, why: "Rested without native soil"});
   return out;
 }
@@ -1118,12 +1263,14 @@ export async function open(actorOrId) {
 }
 
 export function registerSignatureHooks() {
+  registerHandler(T_AWARD, {label: "A feature's point (Willpower, Rage, Glamour, Renown, Chi, a boon)", approve: e => runSnap(e.data ?? {})});
   registerHandler(T_CORRUPT, {label: "A Setite works on a victim (Corruption ledger)", approve: e => applyCorrupt(e.data ?? {})});
   registerHandler(T_CAUSE, {label: "A Brujah's Cause of their own", approve: async e => {
     const a = game.actors.get(e.data?.actor), sig = sigOf(a);
     if ( a && sig.cause ) { sig.cause.approved = true; await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig}); }
   }});
   registerHandler(T_FAMILY, {label: "A new revenant family", approve: e => saveFamily(e.data ?? {})});
+  registerHandler(T_GHOULFEED, {label: "A domitor feeds a ghoul", approve: e => applyGhoulFeed(e.data ?? {})});
   registerHandler(T_VICE, {label: "Name a Setite victim's vice", approve: e => setVice(e.data?.npc, e.data?.by, e.data?.vice)});
   Hooks.on("wodxSocial", onSocial);
   Hooks.on("wodxTrade", onTrade);
@@ -1133,6 +1280,14 @@ export function registerSignatureHooks() {
   Hooks.on("wodxItemsTaken", onTaken);
   Hooks.on("deleteItem", item => onItemGone(item));
   Hooks.on("wodxBreach", p => { onBreach(p).catch(e => console.error(`${MODULE_ID} | the Watchers`, e)); });
+  // B4875-B4877: the features that used to wait on the Storyteller
+  Hooks.on("deleteCombat", c => { devilTiger(c).catch(e => console.error(`${MODULE_ID} | Devil-Tiger`, e)); });
+  Hooks.on("wodxDamageApplied", (a, d = {}) => { craving(a, d).catch(e => console.error(`${MODULE_ID} | craving`, e)); });
+  Hooks.on("wodxDamageApplied", (a, d = {}) => { martyr(a, d).catch(e => console.error(`${MODULE_ID} | Martyr`, e)); });
+  try { registerTokenLook("signatures.marauder", marauderLook); } catch (e) { console.warn(`${MODULE_ID} | Marauder look`, e); }
+  Hooks.on("createToken", t => { bunyip(t).catch(e => console.error(`${MODULE_ID} | Bunyip`, e)); });
+  Hooks.on("wodxAttitude", p => { shame(p).catch(e => console.error(`${MODULE_ID} | Hakken`, e)); });
+  Hooks.on("wodxTrade", p => { piskie(p).catch(e => console.error(`${MODULE_ID} | Piskie`, e)); });
   Hooks.on("wodxFightStarted", ({combat} = {}) => { desecrated(combat?.scene, "A fight broke out").catch(e => console.error(`${MODULE_ID} | guarded place`, e)); });
   Hooks.on("combatStart", combat => { onCombatStart(combat).catch(e => console.error(`${MODULE_ID} | first into battle`, e)); });
   Hooks.on("createToken", token => onToken(token, null));
@@ -1177,7 +1332,124 @@ export async function setOff(actorOrId, key, off = true) {
   return next;
 }
 
-export const signaturesApi = {rowOf, allRowsOf, summary, setOff, fired, open, glimpse, hearAs, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work,
+/* ---------------- B4874-B4878: features that act by themselves ---------------- */
+
+const tokenOf = a => a?.getActiveTokens?.()[0]?.document ?? null;
+const squaresApart = (t1, t2) => { const g = t1?.parent?.grid?.size ?? 100; return Math.max(Math.abs((t1.x - t2.x) / g), Math.abs((t1.y - t2.y) / g)); };
+const hasRow = (a, key) => on() && rowsOf(a).some(r => r.key === key);
+/** Soak dice a feature gives in this fight (WoDX Combat asks): the Ahroun, a troll's oath, a Defender's shield. */
+export function soakFor(target, {attacker = null} = {}) {
+  const a = toActor(target);
+  if ( !a || !on() ) return {dice: 0, names: []};
+  const me = tokenOf(a), foeKind = attacker ? kindName(toActor(attacker)) : "";
+  const wyrmFoe = (attacker && isWyrmActor(toActor(attacker))) || [...(game.combat?.combatants ?? [])].some(c => c.actor && c.actor.id !== a.id && isWyrmActor(c.actor));
+  const beside = !!me && (me.parent?.tokens ?? []).some(t => t.id !== me.id && t.actor && t.actor.id !== toActor(attacker)?.id && !S.isMonsterKind(kindName(t.actor)) && squaresApart(me, t) <= 1);
+  return S.sigSoak({ahroun: isFeature(a, "first"), crinos: !!a.system?.shapes?.crinos?.isactive, wyrmFoe,
+    troll: hasRow(a, "troll"), oathHeld: (sigOf(a).oaths ?? []).some(o => !o.broken),
+    defender: hasRow(a, "defender"), beside, monsterFoe: S.isMonsterKind(foeKind)});
+}
+/** Effects that count who stands around them: an Ajaba's pack, the Chorus's voices in a church. */
+function countEffects(a) {
+  const out = [], me = tokenOf(a);
+  if ( !me ) return out;
+  const others = (me.parent?.tokens ?? []).filter(t => t.id !== me.id && t.actor);
+  if ( hasRow(a, "ajaba") ) {
+    const d = S.packDice(others.filter(t => squaresApart(me, t) <= 1 && hasRow(t.actor, "ajaba")).length);
+    if ( d ) out.push({tags: ["brawl", "melee"], dice: d, why: "Ajaba: the pack"});
+  }
+  if ( hasRow(a, "chorus") && S.isChurchName(me.parent?.name) ) {
+    const voices = 1 + others.filter(t => hasRow(t.actor, "chorus") || hasRow(t.actor, "faithful")).length;
+    const diff = S.choirDiff(voices);
+    if ( diff ) out.push({tags: ["magick"], difficulty: diff, why: `The choir: ${voices} voices`});
+  }
+  return out;
+}
+/** Devil-Tiger: a fight against a servant of the Yama Kings that ends restores Chi. */
+async function devilTiger(combat) {
+  if ( !isActiveGM() || !combat ) return;
+  const cs = [...(combat.combatants ?? [])].map(c => c.actor).filter(Boolean);
+  if ( !cs.some(x => S.isYamaServant(x.name, kindName(x))) ) return;
+  for ( const t of cs.filter(x => hasRow(x, "devilTiger")) )
+    await cardFor(t, "line", `${t.name}: the hunt is done`, `<p>A fight against the servants of the Yama Kings is over.</p>`, {whisper: [...new Set([...ownerIds(t), ...gmIds()])], act: {key: "chi", label: "A point of Yang Chi", who: "gm", data: {uuid: t.uuid}}});
+}
+/** A roll a feature makes on its own: Willpower or a Virtue at a difficulty; a failure costs a temporary Willpower. */
+async function featureRoll(a, label, dice, diff, why) {
+  const roll = await new Roll(`${Math.max(1, dice)}d10`).evaluate();
+  const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
+  const hits = faces.filter(f => f >= diff).length, ones = faces.filter(f => f === 1).length, ok = hits - ones > 0;
+  if ( !ok ) await a.update({"system.advantages.willpower.temporary": S.willpowerStep(wpOf(a), -1)});
+  await ChatMessage.create({content: `<div class="wodx-card wct-sig"><h3>${esc(a.name)}: ${esc(label)}</h3><p>${esc(why)}</p><p>${dice} dice at ${diff}: ${faces.join(", ")}. ${ok ? "They hold." : "They give way, and a point of Willpower goes."}</p></div>`,
+    speaker: {alias: "Chronicle"}, whisper: [...new Set([...ownerIds(a), ...gmIds()])], rolls: [roll]});
+  return ok;
+}
+const virtue = (a, k) => Number(a?.system?.advantages?.virtues?.[k]?.permanent ?? a?.system?.advantages?.virtues?.[k]?.value) || 2;
+/** A ghoul near Kindred blood spilled: Self-Control against the craving. */
+async function craving(victim, d) {
+  if ( !isActiveGM() || !on() || !victim || !(Number(d.levels) > 0) || !["lethal", "aggravated"].includes(d.type) || !/vampire|kindred|cainite/.test(kindName(victim)) ) return;
+  const vt = tokenOf(victim);
+  if ( !vt ) return;
+  for ( const t of vt.parent.tokens ) {
+    const g = t.actor;
+    if ( !g || g.id === victim.id || !isFeature(g, "ghoul") || squaresApart(vt, t) > S.CRAVING_REACH ) continue;
+    await featureRoll(g, "the craving", virtue(g, "selfcontrol"), S.FEATURE_ROLLS.craving.diff, `${victim.name}'s blood is spilled close by.`);
+  }
+}
+/**
+ * B5171: a Martyr beside someone just hurt may take the wound instead: a button for the Martyr's player puts the
+ * victim's health back and the same levels on the Martyr (Hunter: the Reckoning, the creeds; house reading).
+ */
+async function martyr(victim, d = {}) {
+  if ( !isActiveGM() || !on() || !victim || !(Number(d.levels) > 0) || !d.before || !d.type ) return;
+  const vt = tokenOf(victim);
+  if ( !vt ) return;
+  const m = (vt.parent?.tokens ?? []).find(t => t.actor && t.actor.id !== victim.id && hasRow(t.actor, "martyr") && squaresApart(vt, t) <= 1)?.actor;
+  if ( !m ) return;
+  fired(m, "martyr");
+  await card(`${m.name} can take the wound`, `<p>${esc(victim.name)} takes ${Number(d.levels)} ${esc(d.type)}. ${esc(m.name)} stands beside them and can take it instead.</p>`,
+    {whisper: ownerIds(m), act: {key: "martyr", label: "Take the wound", who: "owner", uuid: m.uuid, data: {to: victim.uuid, by: m.uuid, before: d.before, type: d.type, levels: Number(d.levels)}}});
+}
+ACTS.martyr = async ({to, by, before, type, levels}) => {
+  const v = await fromUuid(to), m = await fromUuid(by), C = game.wodxCombat;
+  const va = v?.actor ?? v, ma = m?.actor ?? m;
+  if ( !va || !ma || !C?.setDamage || !C?.applyDamage ) return;
+  await C.setDamage(va, before);
+  await C.applyDamage(ma, type, levels);
+  await card(`${ma.name} takes the wound`, `<p>${esc(ma.name)} takes ${levels} ${esc(type)} meant for ${esc(va.name)}, whose wounds go back as they were.</p>`, {whisper: []});
+};
+/** B5172: a Marauder bends the world around it: a shifting, flickering aura on its token. */
+function marauderLook(token) {
+  const a = token?.actor;
+  if ( !a || !on() || !rowsOf(a).some(r => r.key === "marauder") ) return null;
+  return {aura: {color: 0xc04cff, radius: 1.2, alpha: 0.3}, flicker: true, tint: 0xf0d8ff};
+}
+/** A Bunyip spirit or relic comes onto a scene: the Garou there feel the old shame (a Harano test). */
+async function bunyip(token) {
+  if ( !isActiveGM() || !lineOn("sigWerewolf") || !S.isBunyip(token?.name ?? token?.actor?.name) ) return;
+  for ( const t of token.parent?.tokens ?? [] ) {
+    const g = t.actor;
+    if ( !g || t.id === token.id || !isShifter(g) || S.isBunyip(g.name) ) continue;
+    await featureRoll(g, "the War of Tears", Number(wpOf(g).permanent) || 3, S.FEATURE_ROLLS.bunyip.diff, `${token.name} is here, and the old shame of the War of Tears rises.`);
+  }
+}
+/** A Hakken's lord thinks less of them: the shame costs a Willpower point. */
+async function shame({npc, character, change} = {}) {
+  if ( !isActiveGM() || !character || !hasRow(character, "hakken") || !(Number(change?.delta) < 0) ) return;
+  const lord = sigOf(character).lord?.id ?? leaderOf(character);
+  if ( !lord || npc?.id !== lord ) return;
+  await willpower(character, -1, `Shame before ${npc.name}`, "line");
+}
+const leaderOf = a => { try { const f = (actorsApi("wodx-npc")?.factions?.state?.()?.factions ?? []).find(x => (x.members ?? []).includes(a.id)); return f?.leader ?? null; } catch (e) { return null; } };
+/** A Piskie leaves a gift in a trade: a point of Glamour, once a day. */
+const giftDay = new Map();
+async function piskie({actor, mode, give, owe} = {}) {
+  if ( !actor || !hasRow(actor, "piskies") || !S.piskieGift({mode, give, owe}) ) return;
+  const day = Math.floor(now() / 86400);
+  if ( giftDay.get(actor.id) === day ) return;
+  giftDay.set(actor.id, day);
+  await cardFor(actor, "line", `${actor.name} leaves a gift`, `<p>${esc(give)} left in the trade, freely.</p>`, {whisper: [...new Set([...ownerIds(actor), ...gmIds()])], act: {key: "glamour", label: "A point of Glamour", who: "gm", data: {ids: [actor.id], one: true}}});
+}
+
+export const signaturesApi = {soakFor,rowOf, allRowsOf, summary, setOff, fired, open, glimpse, hearAs, addMuse, museSeen, setCause, keptTemper, spendRant, addMark, healMark, corruption, setVice, work,
   giveSoil, setCamera, emptyFrame, setRavnosVice, ravnosFed, movedOn, secret, setRank, order, influence, lostHolding, contract, settle,
   bindWraith, callWraith, releaseWraith, ghoulFed, foundFamily, effects, rollEffects, tick, rowsOf,
   setSplat, setWraith, luck,

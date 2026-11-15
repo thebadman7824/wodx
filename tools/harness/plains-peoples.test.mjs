@@ -11,6 +11,9 @@ const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs")
 const W = await import(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs"));
 const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-creation/data/people.mjs"));
 const PR = await import(join(root, "modules/wodx-creation/scripts/people-rules.mjs"));
+// Names made by pattern from the same people's recorded parts (B5600) count as the people's own
+const {PATTERNED} = await import(join(root, "modules/wodx-creation/data/people-patterned.mjs"));
+const made = (o, sex) => PATTERNED[o]?.[sex] ?? [];
 const PL = await import(join(root, "modules/wodx-creation/data/people-plains.mjs"));
 const HN = await import(join(root, "modules/wodx-creation/data/people-haudenosaunee.mjs"));
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
@@ -34,9 +37,9 @@ test("plains: own names before 1800 with no church names, women of a band where 
     for ( const era of ["medieval", "early-modern"] ) {
       const ps = people(era, o);
       assert.ok(ps.every(p => !p.name.includes("{") && p.name.trim()), `${o} ${era}: ${ps.find(p => p.name.includes("{"))?.name}`);
-      assert.ok(ps.filter((p, i) => i % 2 === 0).every(p => split(men).includes(p.name)), `${o} ${era} men: ${ps.find((p, i) => i % 2 === 0 && !split(men).includes(p.name))?.name}`);
+      assert.ok(ps.filter((p, i) => i % 2 === 0).every(p => (split(men).includes(p.name) || made(o, "male").includes(p.name))), `${o} ${era} men: ${ps.find((p, i) => i % 2 === 0 && !(split(men).includes(p.name) || made(o, "male").includes(p.name)))?.name}`);
       const byBand = split(bands).map(b => `A woman of ${b}`);
-      assert.ok(ps.filter((p, i) => i % 2).every(p => split(women).includes(p.name) || byBand.includes(p.name)), `${o} ${era} women`);
+      assert.ok(ps.filter((p, i) => i % 2).every(p => (split(women).includes(p.name) || made(o, "female").includes(p.name)) || byBand.includes(p.name)), `${o} ${era} women`);
       assert.ok(ps.some(p => byBand.includes(p.name)), `${o}: a woman of a band`);
     }
   }

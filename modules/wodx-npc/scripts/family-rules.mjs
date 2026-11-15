@@ -45,7 +45,7 @@ export function countDice(dice = [], difficulty = 6) {
 }
 /** A birth's outcome: a botch is a loss, no success is a hard birth, any success goes well. */
 export const birthOutcome = ({successes = 0, botch = false} = {}) => (botch ? "loss" : successes > 0 ? "well" : "hard");
-/** A hard birth: bashing health levels and months of rest, for the Storyteller to apply. */
+/** A hard birth: bashing health levels and months of rest, put on the sheet (B4881). */
 export const HARD_BIRTH = {levels: 2, restMonths: 2};
 
 /** The custom of rest after a birth, by year and way of life. */

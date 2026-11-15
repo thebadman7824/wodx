@@ -14,6 +14,7 @@
  * Built by main.js with its helpers (ctx), like the Garou engine. Pure rules: kindred-rules.js.
  */
 
+import * as LIM from "./limits.js";
 import { spendTime } from "./spend-time.js";
 import * as K from "./kindred-rules.js";
 import * as P from "./profiles.js";
@@ -29,6 +30,8 @@ import * as WR from "./witness-rules.js";
 import * as MR from "./mummy-rules.js";
 import * as DR from "./demon-rules.js";
 import * as BR from "./book-rituals.js";
+import * as DSX from "./daysleep.js";
+import * as DSR from "./daysleep-rules.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -84,6 +87,9 @@ export function roadOf(actor) {
 
 export function build(ctx) {
     const { post, rollPool, rollBlock, dialog, updateActor, attr, findAbility, abilityList, setting, spendWillpower } = ctx;
+    // B4890: the day's sleep and rising, built once with this part's clock and healing
+    let DSE = null;
+    const ds = () => DSE ??= DSX.build({ ...ctx, clockActors, riseHeal });
 
     /* ---------------- History log ---------------- */
 
@@ -143,6 +149,30 @@ export function build(ctx) {
         return { dice, label: label.join(" + ") };
     }
 
+    /* B5132: Animalism and the master's own beasts; B5134 (WoDX Creation): the vozhd */
+    const SUBSUME = /subsume the spirit|twin souls/i;
+    const creationAnimals = () => game.modules.get("wodx-creation")?.active ? game.modules.get("wodx-creation").api?.animals : null;
+    const beastLink = (actor, tgt, p) => !!tgt && /^animalism$/i.test(p?.d ?? "") && !!creationAnimals()?.ownBeast?.(actor, tgt);
+    const immune = (tgt, p) => !!tgt?.flags?.["wodx-creation"]?.vozhd && /^(animalism|dominate|presence)$/i.test(p?.d ?? "");
+    async function shareSenses(beast) {
+        const tok = (canvas?.tokens?.placeables ?? []).find(t => t.actor?.id === beast.id);
+        if (!tok || !tok.isOwner) return;
+        tok.control({ releaseOthers: true });
+        await canvas.animatePan?.({ x: tok.center.x, y: tok.center.y, duration: 600 });
+    }
+    async function beckonOwn(actor) {
+        const me = (canvas?.tokens?.placeables ?? []).find(t => t.actor?.id === actor.id);
+        if (!me) return [];
+        const g = canvas.grid.size, came = [];
+        const mine = (canvas.tokens.placeables ?? []).filter(t => t !== me && t.isOwner && creationAnimals()?.ownBeast?.(actor, t.actor));
+        for (const [i, t] of mine.entries()) {
+            const dx = [1, -1, 0, 0, 1, -1, 1, -1][i % 8], dy = [0, 0, 1, -1, 1, 1, -1, -1][i % 8];
+            await t.document.update({ x: me.document.x + dx * g, y: me.document.y + dy * g });
+            came.push(t.name);
+        }
+        return came;
+    }
+
     async function useDiscipline(actor) {
         if (!DATA.disc) return ctx.notify("The Discipline library didn't load.");
         const sheet = sheetDisciplines(actor);
@@ -166,7 +196,10 @@ export function build(ctx) {
             const box = root.querySelector(".wodx-disc-info");
             if (!p) { box.textContent = ""; return; }
             const c = K.discCost(p.c);
-            const d = K.discDifficulty(p.diff, { t: targetTraits(tgt), own: { willpower: traitValue(actor, "willpower") } });
+            let d = K.discDifficulty(p.diff, { t: targetTraits(tgt), own: { willpower: traitValue(actor, "willpower") } });
+            // B5132: Animalism on one's own animal ghoul is one easier
+            const own = beastLink(actor, tgt, p);
+            if (own && d !== null) d = Math.max(2, d - 1);
             if (d !== null) root.querySelector("[name=diff]").value = d;
             root.querySelector("[name=blood]").value = c.optional ? 0 : c.blood;
             root.querySelector("[name=wp]").value = c.willpower;
@@ -175,11 +208,16 @@ export function build(ctx) {
             const roll = p.r ? `roll ${esc(poolOf(actor, p.r, root.querySelector("[name=attr]").value).label)}` : "no roll";
             box.innerHTML = `<b>${esc(p.n)}</b> (${esc(p.d)} ${p.l}) · cost ${esc(costTxt)} · ${roll} · ${esc(K.DURATION_TEXT[p.t] ?? p.t ?? "")} · ${p.book ?? "VtDA20"} p. ${p.p ?? "?"}<br>${esc(p.e)}`
                 + (d === null && p.diff && p.diff !== "var" ? `<br><i>Difficulty from the target (${esc(String(p.diff).replace("t:", ""))}): target a token or set it.</i>` : "")
-                + (p.diff === "var" ? "<br><i>The difficulty depends on the situation (see the page).</i>" : "");
+                + (p.diff === "var" ? "<br><i>The difficulty depends on the situation (see the page).</i>" : "")
+                + (own ? `<br><i>${esc(tgt.name)} is ${esc(actor.name)}'s own ghoul: one easier${SUBSUME.test(p.n) ? ", and no roll is needed to share its senses" : ""}.</i>` : "")
+                + (immune(tgt, p) ? `<br><i>${esc(tgt.name)} is a vozhd: Animalism, Dominate and Presence have no hold on it (V20 p. 502).</i>` : "");
         };
         return dialog(`Use a Discipline: ${actor.name}`, content, "Use", async fd => {
             const p = list.find(x => x.id === fd.power);
             if (!p) return null;
+            // B4921: a power the books (or the house rule) say is used up is refused before anything is spent
+            const lim = await LIM.gate(actor, { name: p.n, disc: p.d, level: p.l });
+            if (!lim) return null;
             const spendB = Math.max(0, n(fd.blood)), spendW = Math.max(0, n(fd.wp));
             const bb = ctx.blood(actor);
             if (spendB > bb.value) return ctx.notify(`${actor.name} has only ${bb.value} blood.`);
@@ -191,15 +229,25 @@ export function build(ctx) {
             let body = notes.length ? `<div class="vta-parts">${notes.map(esc).join(" · ")}</div>` : "";
             const rolls = [];
             let successes = 1;
-            if (p.r && !p.passive) {
+            const tgtNow = [...(game.user.targets ?? [])][0]?.actor ?? tgt;
+            const link = beastLink(actor, tgtNow, p);
+            if (immune(tgtNow, p)) {
+                body += `<div class="vta-warn">${esc(tgtNow.name)} is a vozhd: ${esc(p.d)} has no hold on it (V20 p. 502).</div>`;
+                return post(actor, `${actor.name}: ${esc(p.n)}`, body, rolls);
+            }
+            if (link && SUBSUME.test(p.n)) {
+                // B5132: one's own beast needs no roll beyond the cost, and the player sees through its eyes
+                body += `<div class="vta-note">${esc(tgtNow.name)} is ${esc(actor.name)}'s own ghoul: no roll is needed. The map now shows what it sees.</div>`;
+                await shareSenses(tgtNow);
+            } else if (p.r && !p.passive) {
                 const pool = poolOf(actor, p.r, fd.attr);
                 // The target's Iron Will or Magic Resistance makes a mind power or magic harder (V20 pp. 485, 493)
                 const target = [...(game.user.targets ?? [])][0]?.actor ?? null;
                 const rm = target && target !== actor ? TH.resistMods(target, TH.powerTags(p.d), actor) : { diff: 0, parts: [] };
-                const r = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), Math.min(10, n(fd.diff) + rm.diff), { specialty: fd.specialty });
+                const r = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), Math.min(10, n(fd.diff) + rm.diff + lim.diff), { specialty: fd.specialty });
                 rolls.push(r.roll);
                 successes = r.botch ? 0 : r.successes;
-                body += rollBlock(pool.label, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...rm.parts], fd.specialty);
+                body += rollBlock(pool.label, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...rm.parts, ...(lim.diff ? [`Drained +${lim.diff}`] : [])], fd.specialty);
                 if (r.botch) body += `<div class="vta-warn">Botch: the power turns on its user or fails badly (see the page).</div>`;
             }
             body += `<div class="vta-note">${esc(p.e)} <span class="wodx-quiet">(${p.book ?? "VtDA20"} p. ${p.p ?? "?"})</span></div>`;
@@ -218,6 +266,8 @@ export function build(ctx) {
             }
             // B3565: Aura Perception shows the black veins of a diablerist (V20 p. 294)
             if (/aura perception/i.test(p.n) && tgt && successes > 0) body += ctx.api().debtsMarks?.()?.auraNote?.(tgt) ?? "";
+            // B5132: The Beckoning reaches one's own animal ghouls first: they come to the caller's side
+            if (/beckoning/i.test(p.n) && successes > 0) { const came = await beckonOwn(actor); if (came.length) body += `<div class="vta-note">First to come: ${came.map(esc).join(", ")}.</div>`; }
             // Any other Discipline: its keywords on the effects card (Traits With Teeth step 4)
             // A power with no roll counts one success (B3751)
             if (!fx && !p.passive && successes > 0 && EF.isOn()) {
@@ -227,8 +277,9 @@ export function build(ctx) {
             const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");
             // Who could see it, if the power showed (3.42.0): the Storyteller judges whether it did
             if (!p.passive && setting("witnessAsk")) revealed(actor, { event: `used ${p.n}`, ask: true }).catch(e => console.error("WoDX |", e));
+            await lim.done({ successes });
             return post(actor, `${actor.name}: ${esc(p.n)}`, body, rolls, fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
-        }, { width: 540, render: root => { describe(root); root.querySelector("[name=power]")?.addEventListener("change", () => describe(root)); root.querySelector("[name=attr]")?.addEventListener("change", () => describe(root));
+        }, { width: 540, render: root => { LIM.decorate(root, { actor, powerOf: v => { const q = list.find(x => x.id === v); return q && { name: q.n, disc: q.d, level: q.l }; } }); describe(root); root.querySelector("[name=power]")?.addEventListener("change", () => describe(root)); root.querySelector("[name=attr]")?.addEventListener("change", () => describe(root));
             aim(root, { actor, lib: "disc", power: r => list.find(x => x.id === r.querySelector("[name=power]")?.value), onPick: a => { tgt = a; describe(root); } }); } });
     }
 
@@ -598,6 +649,13 @@ export function build(ctx) {
     /* ---------------- Prompts ---------------- */
 
     const kbtn = (k, actor, label, arg = "") => `<button type="button" class="vta-btn" data-kx="${k}" data-actor="${esc(actor?.uuid ?? "")}" data-arg="${esc(arg)}">${esc(label)}</button>`;
+    /** B4980: the Beast's check rolls by itself (setting "autoBeast"), or the old button. Returns the button html or "". */
+    const autoBeastOn = () => setting("autoBeast") !== false;
+    function beastCheck(actor, kind, prov, label) {
+        if (!autoBeastOn()) return kbtn(kind === "fear" ? "rotschreck" : "frenzy", actor, label, prov);
+        Promise.resolve().then(() => ctx.api().autoBeast?.({ actor, kind, provocation: prov })).catch(e => console.warn("WoDX | Beast check", e));
+        return `<p class="wodx-quiet">The check is rolled by itself.</p>`;
+    }
     async function prompt(actor, title, html, { gmOnly = false } = {}) {
         return ChatMessage.create({ content: `<div class="vta-card"><h3>${esc(title)}</h3>${html}</div>`, whisper: gmOnly ? gmIds() : ownerIds(actor),
             speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
@@ -608,7 +666,11 @@ export function build(ctx) {
      * source "combat" (WoDX Combat applied a card): fire or sunlight → Rötschreck; a mortal killed by a Cainite → sin.
      */
     async function onDamage(actor, { before, after, fireSun = false, attacker = null, source = "sheet" } = {}) {
-        if (!isActiveGM() || !actor || !setting("eventPrompts")) return null;
+        if (!isActiveGM() || !actor) return null;
+        // B4892: a Cainite hurt in the day's sleep rolls to wake by itself
+        const sum = d => n(d?.bashing) + n(d?.lethal) + n(d?.aggravated);
+        if (source === "sheet" && sum(after) > sum(before) && actor.getFlag?.(MOD, "daySleep")) await ds().onHurt(actor).catch(e => console.warn("WoDX | day sleep", e));
+        if (!setting("eventPrompts")) return null;
         const kind = P.detectProfile(actor);
         const bits = [];
         const total = d => n(d?.bashing) + n(d?.lethal) + n(d?.aggravated);
@@ -616,17 +678,21 @@ export function build(ctx) {
             if (total(after) <= total(before)) return null;
             if (kind === "kindred" && !actor.getFlag(MOD, "torpor")) {
                 const prov = K.woundProvocation(before, after);
-                if (prov && !actor.system?.conditions?.isfrenzy) bits.push(`<p>${prov === "lifethreat" ? "Their existence is in danger" : "A grievous wound"}: the Beast stirs (VtDA20 p. 357).</p>${kbtn("frenzy", actor, "Frenzy check", prov)}`);
+                if (prov && !actor.system?.conditions?.isfrenzy) bits.push(`<p>${prov === "lifethreat" ? "Their existence is in danger" : "A grievous wound"}: the Beast stirs (VtDA20 p. 357).</p>${beastCheck(actor, "frenzy", prov, "Frenzy check")}`);
                 const t = ctx.healthTrack(actor);
                 const cond = ctx.R.condition(after, t.max, "vampire");
                 if (cond.key === "torpor" && setting("autoTorpor")) await enterTorpor(actor, { cause: "wounds" });
             }
             if (kind === "lupine") {
                 const t = ctx.healthTrack(actor);
-                if (total(after) >= t.max && total(before) < t.max && n(after.aggravated) < t.max) bits.push(`<p>Beyond Incapacitated: Rage can keep the shapechanger on their feet once a scene.</p>${kbtn("riseRage", actor, "Rise on Rage")}`);
+                if (total(after) >= t.max && total(before) < t.max && n(after.aggravated) < t.max) {
+                    // B4986: rising on Rage rolls by itself (setting autoRiseRage)
+                    if (setting("autoRiseRage") !== false) Promise.resolve().then(() => ctx.api().remainActiveAuto?.({ actor })).catch(e => console.warn("WoDX | Rage", e));
+                    else bits.push(`<p>Beyond Incapacitated: Rage can keep the shapechanger on their feet once a scene.</p>${kbtn("riseRage", actor, "Rise on Rage")}`);
+                }
             }
         } else {
-            if (kind === "kindred" && fireSun && !actor.getFlag(MOD, "torpor")) bits.push(`<p>Burned by fire or sun: Rötschreck (VtDA20 p. 357).</p>${kbtn("rotschreck", actor, "Rötschreck check", "burned")}`);
+            if (kind === "kindred" && fireSun && !actor.getFlag(MOD, "torpor")) bits.push(`<p>Burned by fire or sun: Rötschreck (VtDA20 p. 357).</p>${beastCheck(actor, "fear", "burned", "Rötschreck check")}`);
             if (attacker && ["mortal", "hunter", "mage", "beast", "ghoul"].includes(kind)) {
                 const t = ctx.healthTrack(actor);
                 const dead = n(after?.lethal) + n(after?.aggravated) >= t.max && n(before?.lethal) + n(before?.aggravated) < t.max;
@@ -646,8 +712,8 @@ export function build(ctx) {
     async function onBlood(actor, before, after) {
         if (!isActiveGM() || !setting("eventPrompts") || P.detectProfile(actor) !== "kindred" || actor.getFlag(MOD, "torpor")) return null;
         const sc = n(actor.system?.advantages?.virtues?.selfcontrol?.permanent);
-        if (K.hungerCrossed(before, after, sc)) return prompt(actor, `${actor.name} hungers`, `<p>Blood ${after}, under ${7 - sc}: the sight, smell or taste of blood can drive ${esc(actor.name)} to frenzy (V20 Dark Ages p. 357).</p>${kbtn("frenzy", actor, "Frenzy check (sight of blood)", "sightblood")}`);
-        if (n(after) === 0 && n(before) > 0) return prompt(actor, `${actor.name} is empty`, `<p>No blood left: ${esc(actor.name)} is ravenous; hunger frenzy is likely, and they can't rise without blood (V20 Dark Ages p. 340).</p>${kbtn("frenzy", actor, "Frenzy check (hunger)", "hunger")}`);
+        if (K.hungerCrossed(before, after, sc)) return prompt(actor, `${actor.name} hungers`, `<p>Blood ${after}, under ${7 - sc}: the sight, smell or taste of blood can drive ${esc(actor.name)} to frenzy (V20 Dark Ages p. 357).</p>${beastCheck(actor, "frenzy", "sightblood", "Frenzy check (sight of blood)")}`);
+        if (n(after) === 0 && n(before) > 0) return prompt(actor, `${actor.name} is empty`, `<p>No blood left: ${esc(actor.name)} is ravenous; hunger frenzy is likely, and they can't rise without blood (V20 Dark Ages p. 340).</p>${beastCheck(actor, "frenzy", "hunger", "Frenzy check (hunger)")}`);
         return null;
     }
 
@@ -679,9 +745,11 @@ export function build(ctx) {
 
     /* ---------------- The clock: healing, dawn and dusk, torpor ---------------- */
 
-    let clockBusy = false;
+    // One at a time; a move of the clock while one runs is looked at again after it, so the newest time is never missed
+    let clockBusy = false, clockAgain = false;
     async function onClock({ force = false } = {}) {
-        if (!isActiveGM() || clockBusy) return null;
+        if (!isActiveGM()) return null;
+        if (clockBusy) { clockAgain = true; return null; }
         clockBusy = true;
         try {
             const now = game.time.worldTime;
@@ -695,9 +763,12 @@ export function build(ctx) {
                 const ch = K.sunChange(was === "" ? null : was === "night", t.isNight);
                 if (ch || was === "") await game.settings.set(MOD, "sunState", t.isNight ? "night" : "day");
                 if (ch && setting("dawnDusk") !== "off") await (ch === "dawn" ? dawn(t) : dusk(t));
+                // B4890: sleep by day, rise at each one's hour; state-based, so a long jump of the clock lands right
+                await ds().tick({ edge: ch });
             }
         } catch (e) { console.error("WoDX | clock", e); }
         finally { clockBusy = false; }
+        if (clockAgain) { clockAgain = false; return onClock({ force }); }
         return true;
     }
 
@@ -746,6 +817,11 @@ export function build(ctx) {
         for (const a of game.actors.filter(x => x.type !== "Group" && x.getFlag(MOD, "torpor"))) {
             const t = a.getFlag(MOD, "torpor");
             const until = t.until ?? K.torporUntil(t.since ?? 0, n(a.system?.advantages?.path?.permanent), { voluntary: t.voluntary, days: t.days });
+            // B4982: with "Rise from torpor by itself" on, the try is made on the date and each night after a failure
+            if (setting("autoTorporRise") !== false) {
+                if (now >= until && now >= n(t.retryAt)) { if (t.until !== until) await a.setFlag(MOD, "torpor", { ...t, until }); await ctx.api().autoTorporRise?.({ actor: a }); }
+                continue;
+            }
             if (now >= until && !t.reminded) {
                 await a.setFlag(MOD, "torpor", { ...t, until, reminded: true });
                 await prompt(a, `${a.name} may rise`, `<p>The torpor's time has passed. Rising costs a blood point and a Road roll (8).</p>${kbtn("torpor", a, "Attempt to rise")}`);
@@ -759,12 +835,18 @@ export function build(ctx) {
         const rows = [];
         const api = ctx.api();
         const sunInfo = await api.sunNow?.();
+        // B4890: with the day's sleep on, sleep and the vigil happen by themselves (their own card); this card only
+        // names who stands in the open, and the sun burns them by itself unless Sunlight damage asks for a button
+        const auto = setting("daySleep") !== false;
+        const burnBtn = (() => { try { return game.settings.get(MOD, "sunDamage") === "prompt"; } catch (e) { return true; } })();
         for (const a of vamps) {
             const toks = a.getActiveTokens?.() ?? [];
             // The sunlight system (3.3) decides; without it, regions named sunlit or a scene marked outdoors
             const sun = toks.some(tk => api.sunExposure ? api.sunExposure(tk, sunInfo)?.exposed : sunlit(tk));
-            rows.push(`<li><b>${esc(a.name)}</b>${sun ? ": <b>in the open, where the sun will burn them</b>" : ""} ${kbtn("stayAwake", a, "Stay awake (Road, 8)")}${sun ? kbtn("sun", a, "Sunlight") : ""}</li>`);
+            if (auto && !sun) continue;
+            rows.push(`<li><b>${esc(a.name)}</b>${sun ? ": <b>in the open, where the sun will burn them</b>" : ""} ${auto ? "" : kbtn("stayAwake", a, "Stay awake (Road, 8)")}${sun && (!auto || burnBtn) ? kbtn("sun", a, "Sunlight") : ""}</li>`);
         }
+        if (!rows.length) return null;
         return ChatMessage.create({ content: `<div class="vta-card"><h3>Dawn: ${esc(t.timeLabel ?? "")}</h3><p>Sunrise. Cainites sleep unless the Road holds them up (each success a turn, five the scene; VtDA20 pp. 336, 359).</p><ul>${rows.join("")}</ul></div>`,
             whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
     }
@@ -778,17 +860,24 @@ export function build(ctx) {
         const dmk = ctx.api().debtsMarks?.();
         if (risers.length && dmk) html.push(`<p>Rising: ${dmk.riseLines(risers).join("; ")}.</p>`);
         try { await dmk?.soulCards?.(); } catch (e) { console.warn("WoDX | diablerie", e); }
-        const heal = clockActors().filter(a => P.detectProfile(a) === "kindred" && !a.getFlag(MOD, "torpor") && (n(a.system?.health?.damage?.bashing) + n(a.system?.health?.damage?.lethal)));
+        // B4893: with the day's sleep on, each one heals as they rise (riseHeal setting); the buttons are for the rest
+        const autoHeal = setting("daySleep") !== false && setting("riseHeal") !== false;
+        const heal = clockActors().filter(a => P.detectProfile(a) === "kindred" && !a.getFlag(MOD, "torpor") && !(autoHeal && a.getFlag(MOD, "daySleep")) && (n(a.system?.health?.damage?.bashing) + n(a.system?.health?.damage?.lethal)));
         if (heal.length) html.push(`<p>Wounded on rising:</p><ul>${heal.map(a => `<li>${esc(a.name)} ${kbtn("riseHeal", a, "Heal with blood")}</li>`).join("")}</ul>`);
         return ChatMessage.create({ content: `<div class="vta-card"><h3>Nightfall</h3>${html.join("")}</div>`, whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
     }
     /** Heal bashing and lethal with blood on rising, keeping blood at the hunger line. */
-    async function riseHeal(actor) {
+    async function riseHeal(actor, { quiet = false } = {}) {
         const b = ctx.blood(actor), dmg = ctx.healthTrack(actor).damage;
         const plan = K.risingHeal(dmg, b.value, n(actor.system?.advantages?.virtues?.selfcontrol?.permanent), ctx.R.planHealing);
-        if (!plan.spent) return post(actor, `${actor.name} rises`, `<div class="vta-note">No blood to spare above the hunger line: ${esc(actor.name)} rises hurt.</div>`);
+        if (!plan.spent) {
+            if (quiet) return { text: "no blood to spare above the hunger line, so rises hurt" };
+            return post(actor, `${actor.name} rises`, `<div class="vta-note">No blood to spare above the hunger line: ${esc(actor.name)} rises hurt.</div>`);
+        }
         await ctx.setDamage(actor, { ...plan.after });
         const ch = await ctx.changeBlood(actor, -plan.spent);
+        const text = `heals ${plan.healed.lethal} lethal and ${plan.healed.bashing} bashing with blood (${ch.before} to ${ch.after})`;
+        if (quiet) return { text, plan, blood: ch };
         return post(actor, `${actor.name} heals on rising`, `<div class="vta-sec">Heals ${plan.healed.lethal} lethal and ${plan.healed.bashing} bashing: blood ${ch.before} → ${ch.after}. Now ${ctx.healthText(actor, plan.after)}.</div>`);
     }
 
@@ -807,7 +896,8 @@ export function build(ctx) {
         const r = await rollPool(rd, 8);
         const res = ctx.R.awakeningResult(r);
         let body = rollBlock(`Road ${rd}`, r) + `<div class="vta-big ${res.awake ? "good" : "bad"}">${esc(res.text)}</div>`;
-        if (res.awake) { await ctx.setFlag(actor, "daytime", { turns: res.turns === Infinity ? "scene" : res.turns }); body += `<div class="vta-note">By day no pool may exceed the Road rating (${rd}).</div>`; }
+        if (res.awake) { await ctx.setFlag(actor, "daytime", DSR.daytimeFlag(game.time.worldTime, res.turns)); body += `<div class="vta-note">By day no pool may exceed the Road rating (${rd}).</div>`; }
+        await ds().afterAwakening(actor, { awake: res.awake, botch: !!r.botch });
         return post(actor, `${actor.name} fights the dawn`, body, [r.roll]);
     }
 
@@ -979,24 +1069,47 @@ export function build(ctx) {
         });
     }
 
-    return { prestationJournal: () => BOONJ.ensure(), useDiscipline, castRitual, setRoad, roadOf, boons, downtime, masquerade, masqEntries: () => MASQJ.entries(), markHuntSeen: async id => { const l = MASQJ.entries(); const e = l.find(x => x.id === id); if (e) { e.huntSeen = true; await writeMasq(l); } }, recordBreach, setWitnessState, witnessStep, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt,
-        enterTorpor, onDamage, onBlood, onClock, healAll, healPlan, healing, riseHeal, stayAwake, crinosSeen, marksSeen, sunlit, onChatButton, onSocket, targetTraits, poolOf, hierarchyTable };
+    /** B4926: the Discipline powers an NPC may choose by itself (the window's own list, with its option values). */
+    function powersFor(actor) {
+        if (!DATA.disc) return [];
+        const era = (() => { try { return game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { return null; } })();
+        const lib = K.librarySet(DATA.disc.powers, DATA.v20?.powers, { darkAges: era === "dark-ages" || era === "long-night", v20Names: new Set(Object.keys(PK.LINE_KEYWORDS.v20 ?? {})) });
+        return K.powersFor(lib, sheetDisciplines(actor)).filter(p => !p.passive && p.r).map(p => ({ use: "useDiscipline", field: "power", value: p.id, name: p.n, disc: p.d, level: p.l,
+            set: p.book === "V20" ? "v20" : "disc", id: p.book === "V20" ? p.kw : p.id }));
+    }
+    return { powersFor, prestationJournal: () => BOONJ.ensure(), useDiscipline, castRitual, setRoad, roadOf, boons, downtime, masquerade, masqEntries: () => MASQJ.entries(), markHuntSeen: async id => { const l = MASQJ.entries(); const e = l.find(x => x.id === id); if (e) { e.huntSeen = true; await writeMasq(l); } }, recordBreach, setWitnessState, witnessStep, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt,
+        daySleep: () => ds(), enterTorpor, onDamage, onBlood, onClock, healAll, healPlan, healing, riseHeal, stayAwake, crinosSeen, marksSeen, sunlit, onChatButton, onSocket, targetTraits, poolOf, hierarchyTable };
 }
 
 /** Settings this part adds (registered by main.js). */
 export function registerSettings(register) {
     register("naturalHealing", "Heal with the clock", "As the Chronicle clock advances, mortals and ghouls heal by the chart (VtDA20 p. 352) and shapechangers regenerate; a whispered card lists it.", Boolean, true);
     register("eventPrompts", "Prompts from what happens", "Whispered cards with a button when a wound, fire, sunlight or hunger provokes the Beast, a killing may be a sin, or a shapechanger falls below Incapacitated.", Boolean, true);
+    register("daySleep", "The day's sleep", "Cainites fall asleep by themselves when the sun rises and rise at their own hour after sunset (Humanity or Road sets it), with the sleep marker on the token; one marked to stay awake rolls the Road at dawn, and a sleeper who is hurt rolls to wake (V20 pp. 262-263, 311).", Boolean, true);
+    register("autoBeast", "Frenzy and Rötschreck by themselves", "When a wound, hunger, blood, fire or the sun provokes the Beast, the check rolls by itself (Willpower spent when the character is marked to, in the check's dialog), holding on each turn until it subsides or breaks free. Off: a card with a button.", Boolean, true);
+    register("autoTorporRise", "Rise from torpor by itself", "When a torpor's time is up, the blood point and the Road roll (8) are made by themselves, and again each night after a failure. Off: a reminder with a button.", Boolean, true);
+    register("autoRiseRage", "Rise on Rage by itself", "A shapechanger falling past Incapacitated rolls Rage at 8 to stay up by itself, once a scene (W20 pp. 145, 256; DA:W p. 91). A character can be marked not to. Off: a card with a button.", Boolean, true);
+    register("autoMeditate", "Meditation by itself", "A shapechanger marked in the Meditate dialog rolls Wits + Enigmas for Gnosis once a day as the clock passes, outside a fight (DA:W p. 92; W20 p. 146).", Boolean, true);
+    register("autoSekhem", "A mummy's day for Sekhem by itself", "A mummy marked in the Sekhem dialog spends each day in Osiris's Blessing or the haven's meditation and rolls it by itself after the Gift of Ra (Mummy: The Resurrection pp. 143-144).", Boolean, true);
+    register("autoQuintessence", "A mage's Quintessence by itself", "A mage marked to meditate draws the Avatar's rating (or a Node's) in Quintessence once a day by itself (M20 p. 330).", Boolean, true);
+    register("autoPurify", "Purifying the Scourge on the clock", "In the Sorcerers Crusade, the days alone in meditation are kept on the clock and the Scourge clears by itself when they pass (Sorcerers Crusade p. 249).", Boolean, true);
+    register("autoChimerical", "Chimerical wounds heal by themselves", "Chimerical damage heals with the clock by Changeling 20th's times, halved where the scene is marked a freehold, fast in the Dreaming (Changeling 20th pp. 290-291).", Boolean, true);
+    register("autoCorpus", "Corpus mends by itself", "A wraith's bashing Corpus heals a level an hour with the clock (Wraith 20th p. 295).", Boolean, true);
+    register("autoFetter", "Fetters give Willpower by themselves", "At the end of a scene, a wraith sharing it with a token marked as their Fetter rolls the Fetter at 6 for Willpower (Wraith 20th p. 308).", Boolean, true);
+    register("autoVitality", "Vitality returns with rest", "Orpheus: a Vitality point each eight hours of the clock (an hour for a skimmer) up to the starting rating, outside a fight (Orpheus pp. 191-192).", Boolean, true);
+    register("golcondaRules", "Golconda's rules", "A vampire in Golconda may raise Traits to 10 whatever the Generation, falls from it when the Road drops below 7 or Conscience below 4, is beyond the powers that name it, and the sun falls on them one step weaker (V20 Dark Ages p. 359; the sun is a house rule).", Boolean, true);
+    register("riseHeal", "Heal on rising", "As a Cainite rises from the day's sleep, blood above the hunger line heals bashing and lethal wounds by itself.", Boolean, true);
     register("autoTorpor", "Torpor from wounds", "A Cainite whose health track fills with lethal damage sinks into torpor for as long as their Road sets, with a reminder on the date they may rise (VtDA20 p. 350).", Boolean, true);
     register("autoWitness", "Witnesses react on their own", "When something no mortal should see happens in sight of mortal NPCs, each rolls its line's rule (the Delirium, the Veil, Revelation, the Mists, Hysteria) hidden from players, falls still, flees or attacks, and the Masquerade record is made.", Boolean, true);
     register("autoDelirium", "The Delirium when a Crinos is seen", "When a shapechanger in Crinos moves or changes where mortal tokens can see it, the mortals who see it roll the Delirium and act on it.", Boolean, true);
     register("historyLog", "History journal", "Write sins, frenzies, oaths, diablerie, torpor, Renown, boons and downtime to a page per character in \"WoDX History\".", Boolean, true);
     register("witnessAsk", "Ask who saw a Discipline", "After a Discipline is used where mortals or other kinds can see, the Storyteller gets a card asking whether it showed, with a button to record who saw.", Boolean, true);
     register("witnessRange", "Witness range (feet)", "How far a mortal token can see a feeding, a Discipline or a Crinos for the witness checks (walls block sight).", Number, 60);
-    game.settings.register(MOD, "dawnDusk", { name: "Dawn and dusk", hint: "At sunrise and sunset on the Chronicle clock: a card with buttons (stay awake, sunlight, New Night, heal on rising), New Night run automatically at dusk, or nothing.",
-        scope: "world", config: true, type: String, default: "prompt", choices: { prompt: "Cards with buttons", auto: "New Night automatically at dusk", off: "Off" } });
+    game.settings.register(MOD, "dawnDusk", { name: "Dawn and dusk", hint: "At sunrise and sunset on the Chronicle clock: New Night run automatically at dusk (the default), a card with a New Night button, or nothing. The day's sleep and rising are their own setting.",
+        scope: "world", config: true, type: String, default: "auto", choices: { prompt: "Cards with buttons", auto: "New Night automatically at dusk", off: "Off" } });
     game.settings.register(MOD, "willpowerRecovery", { name: "Willpower recovery", hint: "One point a night (New Night), or all of it at the end of a story (End of story), or no automatic recovery.",
         scope: "world", config: true, type: String, default: "night", choices: { night: "One a night (and all at a story's end)", story: "All at the end of a story only", off: "Off" } });
     game.settings.register(MOD, "healClock", { scope: "world", config: false, type: Number, default: -1 });
+    game.settings.register(MOD, "autoDayV1", { scope: "world", config: false, type: Boolean, default: false });
     game.settings.register(MOD, "sunState", { scope: "world", config: false, type: String, default: "" });
 }

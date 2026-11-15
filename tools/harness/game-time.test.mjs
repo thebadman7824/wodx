@@ -110,7 +110,7 @@ test("time outside on an Otherworld journey", () => {
   assert.equal(J.timeOutside({realm: "moonbridge", hours: 5}).seconds, 18);
   assert.equal(J.timeOutside({realm: "trod-silver", hours: 3, arrival: {hours: 27, slip: "lost", days: 1}}).seconds, 27 * 3600);
   assert.equal(J.timeOutside({realm: "unknown", hours: 2}).rule, "same");
-  for ( const [k, t] of Object.entries(J.REALM_TIME) ) assert.ok(["same", "thousandth", "trod", "storyteller"].includes(t.rule), k);
+  for ( const [k, t] of Object.entries(J.REALM_TIME) ) assert.ok(["same", "thousandth", "trod", "storyteller", "random", "ratio"].includes(t.rule), k);
   // Every road a journey can take has a time rule
   for ( const k of Object.keys(J.REALMS) ) assert.ok(J.REALM_TIME[k], k);
 });

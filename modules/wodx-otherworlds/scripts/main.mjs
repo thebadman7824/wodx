@@ -1,5 +1,6 @@
 import {MODULE_ID, behaviorType, makeRatingsBehavior, placeOf} from "./ratings.mjs";
-import {registerStatuses, stepSideways, clearCrossing, onApplyChangeGM, STATUS, crossShroud, checkYearAndDay, registerYearHandler, disconnectionOf, worldOf, sendAcross} from "./crossing.mjs";
+import * as fading from "./fading.mjs";
+import {registerStatuses, stepSideways, clearCrossing, onApplyChangeGM, STATUS, crossShroud, checkYearAndDay, returnLost, registerDyingCross, dyingCross, registerYearHandler, disconnectionOf, worldOf, sendAcross} from "./crossing.mjs";
 import * as twins from "./twins.mjs";
 import {TwinsApp} from "./twins-app.mjs";
 import * as senses from "./senses.mjs";
@@ -62,7 +63,7 @@ Hooks.once("ready", () => {
     peek: () => stepSideways({mode: "peek"}),
     clearCrossing, openRatings: () => TaggingApp.open(), writeReport, writeChartsPage,
     buildPenumbraPrototype, placeOf, rules, STATUS,
-    crossShroud, sendAcross, openTwins: () => TwinsApp.open(), twins, disconnectionOf, worldOf, checkYearAndDay,
+    crossShroud, sendAcross, openTwins: () => TwinsApp.open(), twins, disconnectionOf, worldOf, checkYearAndDay, returnLost, dyingCross,
     readTheSoul: o => senses.readTheSoul(o), editAura: actor => senses.editAura(actor ?? canvas?.tokens?.controlled?.[0]?.actor), senses,
     journey: {draw: journey.drawJourney, propose: journey.proposeJourney, approve: journey.approveJourney, passTime: journey.passJourneyTime, rules: journey.J},
     journeyDialog: journey.journeyDialog, decayCss: journey.decayCss, lookCss: journey.lookCss, applyDecay: journey.applyDecay, swaying: journey.swaying,
@@ -74,6 +75,7 @@ Hooks.once("ready", () => {
       plan: corruption.planTurn, apply: corruption.applyTurn, rates: corruption.rates, rateOf: corruption.rateOf, setRate: corruption.setRate, regionOf: corruption.regionOfScene, undo: corruption.undoTurn, run: corruption.run, dialog: corruption.corruptionDialog, rules: corruptionRules,
       looks: corruptionLooks.api()},
     veil: veilLooks.api(),
+    fading: fading.api(),
     drift: {of: drift.driftOf, step: drift.stepDrift, lever: drift.leverStep, undo: drift.undoStep, dialog: drift.driftDialog, onMapEvent: drift.onMapEvent, rules: driftRules},
     ways: {make: ways.makeWay, realm: ways.makeRealm, dialog: ways.waysDialog, isRealm: ways.isRealm, rules: waysRules},
     worldsChart: {rules: worldsChartRules, svg: (o = {}) => worldsChartRules.svg(realmMapsRules.REALMS, o), layout: () => worldsChartRules.layout(realmMapsRules.REALMS)},
@@ -94,6 +96,8 @@ Hooks.once("ready", () => {
   if ( game.modules.get("wodx-chronicle")?.api ) { registerYearHandler(); drift.registerDriftHandler(); corruption.registerCorruptionHandlers(); }
   else Hooks.once("wodxChronicleReady", () => { registerYearHandler(); drift.registerDriftHandler(); corruption.registerCorruptionHandlers(); });
   corruption.setupCorruption();
+  registerDyingCross(); // B5020: the dying who see the dead cross by themselves
+  fading.setupFading(); // B5017: turning to spirit goes on by itself once approved
   corruptionLooks.setupCorruptionLooks();
   veilLooks.setupVeilLooks(); // B4634: the thin Gauntlet and Shroud, and the Wyrm's haze, for the right eyes
   journey.registerJourneys();
@@ -113,9 +117,11 @@ Hooks.on("deleteActiveEffect", netChange);
 const skipping = () => !!game.modules.get("wodx-chronicle")?.api?.isSkipping?.();
 Hooks.on("updateWorldTime", () => {
   if ( active && !skipping() ) checkYearAndDay().catch(err => console.error("WoDX |", err));
+  if ( active && !skipping() ) returnLost().catch(err => console.error("WoDX | lost", err));
 });
 Hooks.on("wodxSkipEnd", () => {
   if ( active ) checkYearAndDay().catch(err => console.error("WoDX |", err));
+  if ( active ) returnLost().catch(err => console.error("WoDX | lost", err));
 });
 
 Hooks.on("wodxMapEvent", ev => { if ( active ) drift.onMapEvent(ev).catch(err => console.error("WoDX |", err)); });

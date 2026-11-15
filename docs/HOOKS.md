@@ -20,6 +20,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxSessionEnded | storyteller | creation (a story hook counts the sessions since it was agreed) |
 | wodxBreach | actions | npc, storyteller, chronicle (the Watchers of the New World Order; the city's Masquerade exposure) |
 | wodxCultNoticed | npc | storyteller (a cult watched or moved against raises the hunters' pressure in its region and opens a file on its founder, B3306) |
+| wodxGhoulCraving | chronicle | npc (a Storyteller ghoul that botches the monthly craving goes to the nearest living mortal and the Storyteller is told, B5051) |
 | wodxChronicleReady | chronicle | actions, creation, interactables, npc, otherworlds, storyteller |
 | wodxCrossing | otherworlds | storyteller |
 | wodxAttackRolled | combat | paperdoll (a sprite token plays the move that fits the weapon, hit or miss; the one attacked blocks, parries or ducks as the defence says), senses (a gun fired near a character with Heightened Senses in use asks for Willpower) |
@@ -27,6 +28,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxAuraRead | otherworlds | senses (Aura Perception rings show what this Read the Soul showed) |
 | wodxDamageApplied | combat | interactables (a lethal or worse wound leaves blood and traces, B3368), actions, chronicle (harm to a Toreador's Muse, or to Kinfolk; a Golconda seeker's killing), npc, paperdoll (a sprite token plays its attack when no attack roll came just before) |
 | wodxPowerShown | actions (a power rolled from its window, with the actor, a target, the power's name, its group, its kind and the character's line) | paperdoll (a sprite token plays its casting move with the effect that fits the power) |
+| wodxNewScene | actions (a new scene by End the scene or a new active map, B4920) | actions (Drained ends, once-a-scene powers are free again, and after-costs with no lasting effect are paid, B4920, B4924) |
 | wodxEndScene | chronicle | actions, storyteller |
 | wodxEraApplied | chronicle | atmosphere, chronicle, otherworlds |
 | wodxEventFired | chronicle | chronicle (Malkavians who saw it coming), interactables, storyteller (market news; a great event darkens the sky over the town scenes, B4628) |
@@ -75,6 +77,8 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
+| wodxBond | npc | a bond was made, deepened or ended on the one ledger: {servant, master, kind, record, was} or {servant, master, kind, record: null, ended} (B5100) |
+| wodxBondRestraint | npc | a bound servant rolled before striking its master: {attacker, target, kind, stop} (B5102) |
 | wodxScar | chronicle | lasting damage left on a scene: {scene, id, kind, severity, hit} (B3759) |
 | wodxWay | storyteller | a company went through a Way: {from, to, kind, actors, minutes} (B4780) |
 | wodxTwist | chronicle | a twist of book one was revealed: {n, variant, chains, changes} (B4850) |

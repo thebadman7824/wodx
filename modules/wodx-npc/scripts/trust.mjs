@@ -121,6 +121,8 @@ export async function answerBlackmail(entryId, how = "pay") {
   } else {
     await st().ledger.status(e.id, "void");
     if ( of && by ) await st()?.ledger?.save?.({kind: "consequence", what: `${of.name} strikes back at ${by.name} over the blackmail`, from: {id: of.id, name: of.name}, to: {id: by.id, name: by.name}, due: game.time.worldTime + 7 * DAY});
+    // B4884: an NPC acts on the next faction turn; a player's character plays it out
+    if ( of && by && !of.hasPlayerOwner ) await of.setFlag(MOD, "strikeBack", {at: by.id, since: game.time.worldTime});
   }
   return TRR.RESPONSES[how] ?? null;
 }
@@ -150,7 +152,49 @@ export async function foundSide(actorLike, finderLike) {
   return s;
 }
 
+/** B4884: on the faction turn, each blackmailed NPC who chose to strike back does it, by the means its traits give. */
+const val = (a, path) => Number(foundry.utils.getProperty(a?.system ?? {}, path)) || 0;
+const bgOf = (a, re) => Number([...(a?.items ?? [])].find(i => re.test(String(i.name ?? "")))?.system?.value) || 0;
+const lineOfA = a => api()?.hearts?.lineOf?.(a) ?? "mortal";
+export async function strikeBacks() {
+  if ( !(game.user?.isGM && game.users.activeGM?.id === game.user.id) ) return [];
+  const out = [];
+  for ( const of of game.actors ) {
+    const f = of.flags?.[MOD]?.strikeBack;
+    if ( !f?.at ) continue;
+    await of.unsetFlag(MOD, "strikeBack");
+    const by = game.actors.get(f.at);
+    if ( !by ) continue;
+    const means = TRR.strikeMeans({fight: val(of, "abilities.brawl.value") + val(of, "abilities.melee.value") + val(of, "abilities.firearms.value"),
+      retainers: bgOf(of, /^retainers?\b/i), mortal: lineOfA(of) === "mortal", byMonster: lineOfA(by) !== "mortal"});
+    const S = st();
+    let did = false;
+    try {
+      if ( means === "attack" ) {
+        const w = S?.reach?.whereIs?.(by.id);
+        if ( w?.scene ) did = !!(await S.reach.send({extras: [{key: (Number(game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.()) || 1197) < 1600 ? "bandit" : "thug", n: 2}], scene: w.scene, near: w.token, hostile: true, why: `${of.name} strikes back`, flag: {strike: of.id}}))?.length;
+        if ( !did ) { await S?.ledger?.save?.({kind: "consequence", what: `${of.name}'s people are waiting for ${by.name}`, from: {id: of.id, name: of.name}, to: {id: by.id, name: by.name}, due: game.time.worldTime + DAY}); did = true; }
+      } else if ( means === "hunters" ) {
+        const reg = game.modules.get("wodx-chronicle")?.api?.world?.here?.(S?.reach?.whereIs?.(by.id)?.scene)?.id ?? "moravia";
+        did = !!(await S?.hunters?.add?.(reg, "description", {why: `${of.name} told them about ${by.name}`, who: by, gain: 1}));
+      } else did = !!(await S?.rumours?.start?.({text: `${by.name} is a blackmailer, and worse`, tellers: [of.id], about: by.id, source: of.id, truth: "true"}));
+    } catch (e) { console.error(`${MOD} | strike back`, e); }
+    // B5177: a mortal who strikes back by word also tells the law, so the blackmail becomes a named deed in the law's heat
+    let heat = null;
+    if ( means !== "attack" ) {
+      try {
+        const scene = S?.reach?.whereIs?.(by.id)?.scene ?? null;
+        heat = await game.modules.get("wodx-chronicle")?.api?.law?.heat?.add?.(by, "extortion", {scene: scene ?? canvas?.scene, named: true, witnesses: 1});
+      } catch (e) { console.error(`${MOD} | strike back heat`, e); }
+    }
+    const users = game.users.filter(u => u.isGM || by.testUserPermission?.(u, "OWNER")).map(u => u.id);
+    await ChatMessage.create({whisper: users, speaker: {alias: of.name}, content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p><b>${esc(of.name)} strikes back</b></p><p>Over the blackmail, ${esc(of.name)} ${TRR.STRIKE_WORDS[means]}.</p>${heat ? `<p>${esc(of.name)} also goes to the law: ${esc(by.name)} the law now looks into the blackmail.</p>` : ""}</div></div>`});
+    out.push({of: of.id, by: by.id, means, did, heat: !!heat});
+  }
+  return out;
+}
 export function listen() {
+  Hooks.on("wodxFactionTurn", () => { strikeBacks().catch(e => console.error(`${MOD} | strike back`, e)); });
   Hooks.on("wodxBoonSettled", p => { onSettled(p).catch(e => console.error(`${MOD} | trust`, e)); });
 }
 export const rules = TRR;

@@ -5,6 +5,8 @@
  * it is chosen, so the sheet, the creation check and Before the First Night always agree. The pure part is
  * wizard-rules.mjs.
  */
+import * as MDA from "../../wodx-actions/scripts/mage-da-rules.js";
+import * as FDA from "../../wodx-actions/scripts/fae-da-rules.js";
 import {MODULE_ID, esc} from "./actor-data.mjs";
 import {TOTALS} from "./totals-rules.mjs";
 import {totalsView, lineFor, CreationCheckApp} from "./totals-check.mjs";
@@ -15,6 +17,7 @@ import * as D from "./derived-rules.mjs";
 import {traitNote} from "../data/trait-notes.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {MERITS_FLAWS, BACKGROUNDS} from "../../wodx-chronicle/data/trait-effects.mjs";
+import * as Beasts from "./animal-stock.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 const FLAG = "wizard";
@@ -53,7 +56,7 @@ const preludeWillpower = actor => (Array.isArray(preludeLog(actor)) ? preludeLog
 /** The Traits that follow from the others, for a sheet (derived-rules.mjs). */
 export function derivedFor(actor, lineId = null) {
   const line = lineId && TOTALS[lineId] ? lineId : wizardLine(actor);
-  return D.derivedTraits(line, actor?.system ?? {}, {bought: wizardOf(actor).bought, prelude: preludeWillpower(actor), backgrounds: bgDots(actor)});
+  return D.derivedTraits(line, actor?.system ?? {}, {bought: wizardOf(actor).bought, prelude: preludeWillpower(actor), backgrounds: bgDots(actor), wilder: wizardOf(actor).wilder ?? "glamour"});
 }
 
 /** The ledger for a sheet: what Before the First Night's Build step and the check after the prelude read. */
@@ -71,7 +74,7 @@ export class WizardApp extends ApplicationV2 {
     position: {width: 680, height: "auto"},
     actions: {go: WizardApp.#onGo, step: WizardApp.#onStep, extra: WizardApp.#onExtra, other: WizardApp.#onOther, addItem: WizardApp.#onAddItem,
       removeItem: WizardApp.#onRemoveItem, addFeature: WizardApp.#onAddFeature, sheet: WizardApp.#onSheet, check: WizardApp.#onCheck, hub: WizardApp.#onHub,
-      derive: WizardApp.#onDerive, quick: WizardApp.#onQuick, blood: WizardApp.#onBlood}
+      derive: WizardApp.#onDerive, quick: WizardApp.#onQuick, blood: WizardApp.#onBlood, wilder: WizardApp.#onWilder, animal: WizardApp.#onAnimal}
   };
 
   static openFor(actor, page = null) {
@@ -128,6 +131,7 @@ export class WizardApp extends ApplicationV2 {
   _replaceHTML(result, content) { content.replaceChildren(result); }
 
   _onRender() {
+    Beasts.wirePanel(this.element);
     this.element.querySelector("select[name=line]")?.addEventListener("change", async ev => {
       const w = wizardOf(this.actor);
       w.line = ev.target.value;
@@ -187,7 +191,7 @@ export class WizardApp extends ApplicationV2 {
   #change(d) {
     if ( d.kind === "ability" ) return {kind: "ability", group: d.group, above: n(d.value) >= (TOTALS[this.lineId]?.abilityCap ?? 3)};
     if ( d.kind === "attribute" ) return {kind: "attribute", group: d.group};
-    if ( d.kind === "power" || d.kind === "sphere" ) return {kind: "power", key: d.key};
+    if ( d.kind === "power" || d.kind === "sphere" || d.kind === "flagpower" ) return {kind: "power", key: d.key};
     return {kind: d.kind};
   }
 
@@ -247,6 +251,14 @@ export class WizardApp extends ApplicationV2 {
     const row = ctx.led.check.rows.find(r => r.group === p.key);
     const head = `<h4>${esc(p.label)} <span class="wodx-quiet">${p.dots} at creation${row && row.have !== null ? `, ${row.under ? `${row.under} to spend` : row.over ? `${row.over} over` : "done"}` : ""}</span></h4>${p.note && page !== "freebies" ? `<p class="wodx-quiet">${esc(p.note)}</p>` : ""}`;
     if ( kind.store === "hand" ) return `${head}<p class="wodx-quiet">The sheet keeps no such Trait. Write them on the sheet with the Storyteller and count them by hand.</p>`;
+    // B5024: Pillars and Dominions, kept where WoDX Actions reads them
+    if ( kind.store === "flagmap" ) {
+      const rec = this.actor.flags?.["wodx-actions"]?.[kind.flag] ?? {};
+      const ids = W.flagPowerIds(p.key, {fellowships: MDA.FELLOWSHIPS, dominions: FDA.DOMINIONS, fellowship: rec.fellowship ?? ""});
+      const rows = ids.map(({id, label}) => this.#row(label, n(rec[kind.field]?.[id]), kind.max ?? 3, 0,
+        {kind: "flagpower", key: p.key, path: `flags.wodx-actions.${kind.flag}.${kind.field}.${id}`, value: n(rec[kind.field]?.[id])}, ctx, page)).join("");
+      return `${head}${rows ? `<table class="wodx-table">${rows}</table>` : `<p class="wodx-quiet">None to set.</p>`}`;
+    }
     if ( kind.store === "sphere" ) {
       const sp = this.actor.system?.spheres ?? {};
       const rows = Object.entries(sp).filter(([, s]) => s && typeof s === "object").map(([k, s]) => this.#row(W.POWER_NAMES.sphere.find(x => x.toLowerCase() === k) ?? k, n(s.value), 5, 0,
@@ -292,7 +304,8 @@ export class WizardApp extends ApplicationV2 {
       <div class="wodx-wz-add">${searchBox("select[name=pick-bg]", "Search Backgrounds…", "Search Backgrounds")}
         <select name="pick-bg"><option value="">Choose…</option>${list.map(b => `<option value="${esc(b.name)}">${esc(b.name)}${b.page ? ` (${esc(b.book)} p. ${b.page})` : ""}</option>`).join("")}</select>
         <input type="text" name="name-bg" placeholder="Or write a name" aria-label="Another Background">
-        <button type="button" data-action="addFeature" data-type="background"><i class="fa-solid fa-plus"></i> Add</button></div>`;
+        <button type="button" data-action="addFeature" data-type="background"><i class="fa-solid fa-plus"></i> Add</button></div>
+      ${Beasts.wizardPanel(this.actor, lineId)}`;
   }
 
   #virtueRows(ctx, page) {
@@ -319,6 +332,7 @@ export class WizardApp extends ApplicationV2 {
       ${off > 1 ? `<p><button type="button" data-action="derive" data-key=""><i class="fa-solid fa-wand-magic"></i> Set all ${off}</button></p>` : ""}
       ${blood ? `<p>Blood to start with: ${esc(blood.how)}. Now ${bloodNow}. <button type="button" data-action="blood">${blood.roll ? `<i class="fa-solid fa-dice-d10"></i> Roll it` : "Set it"}</button></p>` : ""}
       ${d.notes.length ? `<p class="wodx-quiet">${d.notes.map(esc).join(" ")}</p>` : ""}
+      ${ctx.lineId === "c20" && D.isWilder(this.actor.system) ? `<p>A wilder's point: <button type="button" data-action="wilder" data-to="glamour" ${(wizardOf(this.actor).wilder ?? "glamour") === "glamour" ? "disabled" : ""}>Glamour</button> <button type="button" data-action="wilder" data-to="willpower" ${wizardOf(this.actor).wilder === "willpower" ? "disabled" : ""}>Willpower</button></p>` : ""}
       <p class="wodx-quiet">From ${esc(d.ref)}. Dots bought with freebies and the prelude's Willpower are added on top.</p>
       ${notesBlock(d.rows.map(r => ({label: r.label === "Humanity or Path" ? "Humanity" : r.label, group: r.key})), ctx.lineId)}`;
   }
@@ -397,6 +411,13 @@ export class WizardApp extends ApplicationV2 {
   /* -------------------------------------------- */
 
   /** Puts one derived Trait (data-key) or all of them on the sheet. */
+  /** B5024: where a wilder's seeming point goes. */
+  static async #onWilder(ev, el) {
+    const w = wizardOf(this.actor); w.wilder = el.dataset.to === "willpower" ? "willpower" : "glamour";
+    await saveWizard(this.actor, w);
+    this.render();
+  }
+
   static async #onDerive(ev, el) {
     const key = el.dataset.key ?? "", rows = derivedFor(this.actor, this.lineId).rows.filter(r => r.off && (!key || r.key === key));
     if ( !rows.length ) return;
@@ -455,8 +476,8 @@ export class WizardApp extends ApplicationV2 {
   static async #onStep(ev, el) {
     const d = Number(el.dataset.d) || 0, a = this.actor, data = el.dataset;
     const value = n(data.value);
-    const kindRule = data.kind === "power" ? W.POWER_KIND[data.key] : null;
-    const max = data.kind === "power" ? (kindRule?.max ?? 5) : data.kind === "sphere" ? 5 : 5;
+    const kindRule = data.kind === "power" || data.kind === "flagpower" ? W.POWER_KIND[data.key] : null;
+    const max = kindRule ? (kindRule.max ?? 5) : 5;
     const min = ["attribute", "virtue", "background", "power"].includes(data.kind) ? 1 : 0;
     // The priorities hold still once the player spends: the order in use is saved on the first dot
     const kindOrder = data.kind === "attribute" ? "attributes" : data.kind === "ability" ? "abilities" : null;
@@ -534,6 +555,12 @@ export class WizardApp extends ApplicationV2 {
     if ( type === FLAW && points(a, FLAW) + cost > cap ) return ui.notifications.info(`That would pass the book's ${cap} points of Flaws.`);
     await a.createEmbeddedDocuments("Item", [{name: t.name, type: "Feature", system: {type, value: cost, level: String(cost)}, flags: {[MODULE_ID]: {wizard: true}}}]);
     this.render();
+  }
+
+  /** B5062: a Retainers dot made into a ghouled animal. */
+  static async #onAnimal() {
+    await Beasts.fromPanel(this.actor, this.element);
+    setTimeout(() => this.render(), 1500);
   }
 
   static #onSheet() { this.actor.sheet?.render(true); }

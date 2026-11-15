@@ -113,6 +113,9 @@ export function reading(actor, successes, {botch = false, random = Math.random} 
   let diablerist = !!aura.diablerist;
   let confused = !!aura.confused;
   let shift = MOODS[aura.shift] ? aura.shift : null;
+  // B5095: Golconda stills the aura: no frenzy ripples and no shift beneath it (house reading, Ben's Golconda Desk)
+  const golconda = !botch && nature === "vampire" && !!actor?.flags?.["wodx-actions"]?.golconda;
+  if ( golconda ) { frenzied = false; shift = null; }
   if ( botch ) {
     // Misinformation: a wrong colour and a wrong shade, told as if true
     const keys = Object.keys(MOODS).filter(k => k !== mood);
@@ -147,6 +150,7 @@ export function reading(actor, successes, {botch = false, random = Math.random} 
     if ( nature === "fae" ) p.push(["rainbow", N.text]);
     if ( diablerist ) p.push(["veins", "Black veins in the soul"]);
     if ( frenzied ) p.push(["ripples", "Rapidly rippling colours"]);
+    if ( golconda ) p.push(["still", "A deep stillness: no flicker of the Beast runs through it"]);
     if ( confused ) p.push(["mottled", "Mottled, shifting colours"]);
     for ( const [k, t] of p ) { draw.patterns.push(k); lines.push(`${t}.`); }
     if ( !p.length ) lines.push("No pattern runs through it.");
@@ -210,6 +214,7 @@ export function drawAura(token, draw, {seconds = 20} = {}) {
     if ( p === "rainbow" ) ["#e64a2e", "#ecd84a", "#3caa48", "#2f5fd0", "#a35de0"].forEach((c, i) => around(4, a => dot(cx + Math.cos(a + i * 0.25) * r * 1.3, cy + Math.sin(a + i * 0.25) * r * 1.3, r * 0.05, c, 0.75)));
     if ( p === "veins" ) around(8, a => line(cx + Math.cos(a) * r * 0.7, cy + Math.sin(a) * r * 0.7, cx + Math.cos(a + 0.2) * r * 1.45, cy + Math.sin(a + 0.2) * r * 1.45, r * 0.03, "#000000", 0.85));
     if ( p === "ripples" ) for ( let i = 1; i <= 3; i++ ) ring(r * (1.25 + i * 0.12), r * 0.02, base, 0.7);
+    if ( p === "still" ) ring(r * 1.35, r * 0.06, "#f6f0d8", 0.5);
     if ( p === "mottled" ) around(14, (a, i) => dot(cx + Math.cos(a) * r * (0.9 + (i % 3) * 0.15), cy + Math.sin(a) * r * (0.9 + (i % 3) * 0.15), r * 0.09, Object.values(MOODS)[(i * 5) % 22].hex, 0.4));
   }
   // The colour's name under the aura, for eyes that cannot tell the colours apart

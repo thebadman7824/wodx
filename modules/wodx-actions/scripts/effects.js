@@ -6,10 +6,16 @@
  * World setting "Magic that applies itself": Automatic (on, except in the Live world), On, Off. Rules: effects-rules.js.
  */
 import * as E from "./effects-rules.js";
+import * as KRG from "./kindred-rules.js";
 import * as DAE from "./mage-da-effects.js";
 import * as PE from "./path-effects.js";
 import * as PW from "./power-effects.js";
 import * as W from "./world-effects.js";
+import * as SUM from "./summons.js";
+import * as SR from "./summon-rules.js";
+import * as TR from "./turn-rules.js";
+import * as TURN from "./turns.js";
+import * as LIM from "./limits.js";
 import { ask } from "./profiles.js";
 import { BOOK_RITUALS, bookRitual, ritualResults } from "./book-rituals.js";
 export { E, W };
@@ -194,7 +200,14 @@ export function plan(actor, form, successes, {used = [], witnessed = false, feat
     const out = E.outcome(key, got, {...form.ctx, spheres, age});
     if ( !out ) continue;
     const resist = t.self ? null : E.resistOf(key);
-    if ( resist ) out.text = `${out.text}; ${resist.text}`;
+    if ( resist ) { out.text = `${out.text}; ${resist.text}`; out.resist = {pool: resist.pool, diff: resist.diff}; }
+    if ( key === "summon" ) {
+      // B4820: the beings a Mage calls (M20 pp. 513-523): bound only when the same casting binds them
+      const r = summonResult(actor, {key, who: "self", out}, got.strength, null, {bound: form.keywords.includes("bind")});
+      items.push({key, out: r.out, target: caster?.uuid ?? null, name: caster?.name ?? actor?.name ?? "", caster: actor?.uuid ?? null,
+        route: isOn() ? (actor?.hasPlayerOwner ? "queue" : "pick") : "off"});
+      continue;
+    }
     if ( out.area ) {
       // One circle on the scene: the Storyteller places it, and it works on whoever enters
       const route = isOn() ? E.route(key, {self: false, count: 1, witnessed, need: base}, out) : "off";
@@ -266,6 +279,22 @@ export function ritualPlan(actor, r, successes, source = "", line = "") {
 export const powerEffectsOn = () => { try { return game.settings.get(MOD, "powerEffects") !== false; } catch (e) { return true; } };
 
 /**
+ * B4820: a Summon result with its power's own rules (summon-specs.js), or the keyword's when the power has none: how
+ * many, how long, who commands them, the keeping roll. The card line says all of it.
+ */
+export function summonResult(actor, r, successes, power = null, {bound = false} = {}) {
+  const spec = (power?.name ? SUM.specFor(power.name, power.line ?? "") : null) ?? SR.KEYWORD_SPEC;
+  const adv = actor?.system?.advantages ?? {};
+  const ladder = r.out?.timed !== undefined ? r.out.timed : null;
+  const res = SR.resolve(spec, {successes: n(successes), faith: n(adv.faith?.permanent), torment: n(adv.torment?.permanent), level: n(r.out?.level ?? successes),
+    gnosisSpent: n(r.out?.spent?.gnosis), rageSpent: n(r.out?.spent?.rage), willpowerSpent: n(r.out?.spent?.willpower), bloodSpent: n(r.out?.spent?.blood),
+    ladder, ladderLabel: r.out?.duration ?? null, bound, npc: !actor?.hasPlayerOwner});
+  const caster = actor?.name ?? "the summoner";
+  return {...r, st: false, ask: false, who: "self", out: {...(r.out ?? {}), key: "summon", label: power?.name || r.out?.label || "Summon", kind: "summon", summon: res, count: res.count,
+    source: r.out?.source ?? res.page, text: SR.cardLines(res, {caster}).join("; ")}};
+}
+
+/**
  * Results in the [{key, who, ask?, st?, out}] shape, spread over the caster's targets: {items, html}. power: {name,
  * line, source} names the power, so a power that reaches the world (world-effects.js WORLD_POWERS, B3757) adds its
  * town, sickness, taint or ground result: town-wide ones to the approval queue, ground for the Storyteller to place.
@@ -281,22 +310,62 @@ export function planOf(actor, results, successes, power = null) {
     items.push({key: "world", out: r.out, target: null, name: r.out.scope === "ground" ? "an area" : r.out.scope === "taint" ? "this place" : "the town",
       caster: own?.uuid ?? null, scene: canvas?.scene?.id ?? null, route});
   }
-  for ( const r of results ) {
+  // B4836: a power tagged as a summoning that calls nothing works through its own keywords instead
+  const notSum = power?.name && results.some(r => r.key === "summon") ? SUM.notSummonOf(power.name, power.line ?? "") : null;
+  if ( notSum ) {
+    const have = new Set(results.map(r => r.key));
+    const extra = PW.powerOutcomes({keywords: notSum.kw.filter(k => !have.has(k))}, successes, {label: power.name, source: notSum.page || power.source || "", hasTarget: !targetsOf(actor).self}).results;
+    results = [...results.filter(r => r.key !== "summon"), ...extra];
+    if ( !results.length && !world.length ) return {items: [], html: ""};
+  }
+  const bound = results.some(r => r.key === "bind");
+  // B4832: a power whose book acts each turn rides that rule on its first matching result
+  const et0 = power?.name ? TR.everyTurnOf(power.name, power.line ?? "") : null;
+  if ( et0 ) {
+    // B4838: the casting's own numbers (successes, Faith, Torment) and the caster go on the record now
+    const adv = actor?.system?.advantages ?? {};
+    const et = TR.resolveRec(et0, {successes, faith: n(power.faith) || n(adv.faith?.permanent), torment: n(adv.torment?.permanent), by: own?.uuid ?? actor?.uuid ?? null});
+    const want = r => (et.on === "target" ? r.who !== "self" : r.who === "self") && TR.fits(et, r.out);
+    const i = results.findIndex(want);
+    const j = i >= 0 ? i : (et.high || et.levelsEq || et.on !== "target") ? -1 : 0;
+    if ( j >= 0 && results[j] ) results = results.map((r, x) => x === j ? {...r, out: {...r.out, everyTurn: et, text: `${r.out?.text ?? ""}; ${et.text}`}} : r);
+    // A rule on the caster with no result of the caster's own to ride (Tripping the Ire): it gets a timed effect for the scene
+    else if ( i < 0 && et.on !== "target" && !et.high && !et.levelsEq && results.length )
+      results = [...results, {key: "boost", who: "self", out: {key: "boost", kind: "timed", label: power.name, name: power.name, timed: {kind: "scene"}, duration: "the scene", everyTurn: et, source: power.source ?? et.page, text: et.text}}];
+  }
+  // B4841: a power whose book makes copies or servants but whose keywords say otherwise (One Fights as Many) also summons
+  if ( power?.name && !results.some(r => r.key === "summon") && SUM.specFor(power.name, power.line ?? "")?.extra )
+    results = [...results, {key: "summon", who: "self", out: {key: "summon", kind: "summon", label: power.name, source: power.source ?? ""}}];
+  for ( const r0 of results ) {
+    const r = r0.key === "summon" ? summonResult(actor, r0, successes, power, {bound}) : r0;
     const k = DAE.targetCount(r.who, successes, t.self ? 0 : t.docs.length);
     const docs = r.who === "self" || !k ? [own] : t.docs.slice(0, k);
     const self = r.who === "self" || t.self;
     for ( const d of docs ) {
       const a = d?.actor ?? d;
+      // B5093: the powers that name Golconda cannot reach a vampire in it (V20 pp. 158, 161, 177; V20 Dark Ages p. 220)
+      if ( power?.name && a?.flags?.[MOD]?.golconda && KRG.beyondGolconda(power.name) ) {
+        items.push({key: r.key, out: {...r.out, label: r.out.label, text: `${a.name ?? "The target"} is in Golconda, beyond this power's reach, and never knows it was tried`}, target: d?.uuid ?? null, name: d?.name ?? a?.name ?? "", route: "off", golconda: true});
+        continue;
+      }
       let route = !isOn() ? "off" : r.st ? "st" : E.route(r.key, {self, playerCharacter: !!a?.hasPlayerOwner, count: docs.length, need: 0}, r.out);
       if ( r.ask && route === "auto" ) route = "queue";
       if ( route === "auto" && r.out.kind === "move" ) route = "pick";
-      items.push({key: r.key, out: r.out, target: d?.uuid ?? null, name: d?.name ?? a?.name ?? "", route});
+      // B4820: a summoning by a player's character waits for the Storyteller's yes; an NPC's runs by itself (B4837): a
+      // plain being of the book's kind comes beside the NPC, and the Storyteller can dismiss it or Undo the card
+      if ( r.key === "summon" && isOn() ) route = actor?.hasPlayerOwner ? "queue" : "auto";
+      const rs = !self && r.key !== "summon" ? (r.out?.resist === null ? null : E.resistOf(r.key, r.out?.resist ? {resist: r.out.resist} : null)) : null;
+      const out = rs && !r.out?.resist ? {...r.out, resist: {pool: rs.pool, diff: rs.diff}} : r.out;
+      items.push({key: r.key, out, target: d?.uuid ?? null, name: d?.name ?? a?.name ?? "", route, ...(r.key === "summon" ? {caster: actor?.uuid ?? null} : {}),
+        // B4925, B4928: the power and its user, for a won resistance's bar (Compel Soul) and the resist card's breakdown
+        ...(power?.name ? {power: power.name, by: actor?.uuid ?? null, successes: n(successes)} : {})});
+      if ( r.key === "summon" ) break; // one summoning, however many targets the caster has picked
     }
   }
   const word = {auto: "applies", queue: "waits in the approval queue", st: "is the Storyteller's call", off: "is for the Storyteller to apply", pick: "goes where the Storyteller clicks",
     area: "waits for the Storyteller to place it"};
   const html = `<div class="vta-res wodx-effects"><b>What it does</b><ul>${items.map(i =>
-    `<li><b>${esc(i.out.label)}</b> on ${esc(i.name)}: ${esc(String(i.out.text).slice(0, 220))}. <span class="wodx-quiet">It ${word[i.route]}.</span></li>`).join("")}</ul></div>`;
+    `<li><b>${esc(i.out.label)}</b> on ${esc(i.name)}: ${esc(String(i.out.text).slice(0, 220))}. <span class="wodx-quiet">${i.golconda ? "It does not take hold." : `It ${word[i.route]}.`}</span></li>`).join("")}</ul></div>`;
   return {items, html};
 }
 
@@ -346,7 +415,18 @@ const tokenOf = d => (d?.documentName === "Token" ? d : actorOf(d)?.getActiveTok
 
 /** Apply one item. Returns an undo record, or {note} when nothing could change. */
 export async function applyItem(item, casterName = "the caster") {
+  // B5174: an Untamable target shrugs off Domination and the Gifts that command (W20 p. 476)
+  const ta = actorOf(docOf(item?.target));
+  if ( ta && E.untamableStops(item?.out?.label ?? item?.out?.name) && (chron()?.traits?.has?.(ta, "untamable") ?? 0) > 0 )
+    return {note: `${ta.name} is Untamable: ${item.out.label ?? "the power"} finds no hold.`};
   const rec = await applyCore(item, casterName);
+  // B4838: an each-turn rule on any other kind of result (a thing made, a hold, a boost) gets a timed effect of its own
+  const et = item?.out?.everyTurn;
+  if ( et && !["damage", "timed"].includes(item.out.kind) && rec && typeof rec === "object" && !rec.note ) {
+    const a = actorOf(docOf(item.target));
+    const uuid = a ? await TURN.attach(a, et, {label: item.out.label ?? item.out.name ?? "A power", by: casterName}) : null;
+    if ( uuid ) rec.everyEffect = uuid;
+  }
   // B3528: a mind or body binding on a player character gets the player a binding card (no hold on the token)
   try { await bindingCard(item, casterName); } catch (e) { console.warn("WoDX | binding card", e); }
   // Traits With Teeth step 5: Sway and Fear move an NPC's regard for the caster (WoDX NPC), undone with the rest
@@ -398,8 +478,12 @@ async function applyCore(item, casterName = "the caster") {
     case "damage":
       if ( !C ) return {note: "WoDX Combat is off: apply the damage by hand"};
       // A pool rolls its damage dice first (C20 Holly-Strike, Lord of Levin), levels go on as they are
-      await C.soakAndApply(tokenOf(d)?.object ?? a, {mode: o.pool ? "pool" : "levels", amount: o.pool || o.levels, type: o.type, soak: o.soak});
-      return {uuid: a.uuid, health};
+      // B4842: a poison eaten later (Bitter Fruit) does its harm only through its each-turn roll
+      if ( !o.everyTurn?.only ) await C.soakAndApply(tokenOf(d)?.object ?? a, {mode: o.pool ? "pool" : "levels", amount: o.pool || o.levels, type: o.type, soak: o.soak});
+      // B4832: harm that lasts goes on each turn, and a power whose book says so hurts each turn until it is stopped
+      const every = o.everyTurn ?? TR.lastingHarm(o);
+      const effect = every ? await TURN.attach(a, every, {label: o.label ?? "Harm", by: casterName}) : null;
+      return {uuid: a.uuid, health, ...(effect ? {effect} : {})};
     case "heal": {
       if ( !C ) return {note: "WoDX Combat is off: heal by hand"};
       let left = o.levels;
@@ -408,6 +492,7 @@ async function applyCore(item, casterName = "the caster") {
         const take = Math.min(has, left);
         if ( take > 0 ) { await C.healDamage(a, type, take); left -= take; }
       }
+      await TURN.onHealed(a);
       return {uuid: a.uuid, health};
     }
     case "quint": {
@@ -428,6 +513,9 @@ async function applyCore(item, casterName = "the caster") {
         await tok.update({elevation: n(tok.elevation) + o.feet});
       }
       if ( tok && o.vision ) await tok.update({"sight.visionMode": "darkvision", "sight.range": Math.max(n(tok.sight?.range), 30)});
+      if ( o.everyTurn && effect?.uuid ) await TURN.attach(a, o.everyTurn, {effect: effect.uuid, label: o.label ?? o.name, by: casterName});
+      // B4846: a burning sheath hurts whoever lands a close blow on its bearer
+      if ( o.touch?.levels && effect?.uuid ) await fromUuidSync(effect.uuid)?.setFlag?.(MOD, "touchHarm", o.touch);
       return {uuid: a.uuid, effect: effect?.uuid ?? null, token: tok && (o.feet || o.vision) ? tokenWas : null};
     }
     case "pool": {
@@ -439,16 +527,28 @@ async function applyCore(item, casterName = "the caster") {
     }
     case "summon": {
       // The Storyteller's effect (3.31.0): tokens of a chosen actor where the Storyteller clicks. 3.38.0: a cast Summon
-      // asks the Storyteller who comes and where, when the card did not say
-      const src = (o.actor ? fromUuidSync(o.actor) : null) ?? await choose("Who answers the summons?", [...game.actors].sort((x, y) => x.name.localeCompare(y.name)).map(x => [x.uuid, x.name]), fromUuidSync);
-      if ( src && !item.at ) item = {...item, at: await pickPoint(`Click where ${src.name} appears.`)};
+      // asks the Storyteller who comes and where, when the card did not say. B4820: the summoning's own rules (how long
+      // it stays, who commands it, its keeping roll) ride on the tokens, and a plain being of the book's kind can answer
+      const r = o.summon ?? null;
+      const plain = r ? `A plain ${SR.WHAT[r.what] ?? "being"} (the book's numbers)` : null;
+      const auto = item.route === "auto" && !o.actor;
+      const pick = o.actor ? o.actor : auto ? "plain" : await choose("Who answers the summons?", [...(plain ? [["", plain]] : []), ...[...game.actors].filter(x => !x.getFlag(MOD, "summonBase"))
+        .sort((x, y) => x.name.localeCompare(y.name)).map(x => [x.uuid, x.name])], v => v || "plain");
+      if ( !pick ) return {note: `${o.label}: no one answers`};
+      const src = pick === "plain" ? null : fromUuidSync(pick);
+      if ( pick !== "plain" && !src ) return {note: `${o.label}: that actor is gone`};
+      if ( !item.at && auto ) {
+        // B4837: an NPC's summoning comes beside the NPC, one square off
+        const who = item.caster ? fromUuidSync(item.caster) : null;
+        const tok = who?.token?.object ?? who?.getActiveTokens?.()?.[0] ?? null;
+        const g = canvas?.grid?.size ?? 100;
+        if ( tok?.center ) item = {...item, at: {x: tok.center.x + g, y: tok.center.y}};
+      }
+      if ( !item.at ) item = {...item, at: await pickPoint(`Click where ${src?.name ?? plain ?? "it"} appears.`)};
       const scene = canvas?.scene;
-      if ( !src || !scene || !item.at ) return {note: `${o.label}: no actor or no spot to place it`};
-      const size = scene.grid?.size ?? 100, count = Math.max(1, Math.min(12, n(o.count) || 1));
-      const proto = (await src.getTokenDocument()).toObject();
-      const docs = Array.from({length: count}, (_, i) => ({...proto, x: Math.round(item.at.x - size / 2 + (i % 4) * size), y: Math.round(item.at.y - size / 2 + Math.floor(i / 4) * size)}));
-      const made = await scene.createEmbeddedDocuments("Token", docs);
-      return {made: made.map(t => t.uuid)};
+      if ( !scene || !item.at ) return {note: `${o.label}: no spot to place it`};
+      const fallback = () => SR.resolve({...SR.KEYWORD_SPEC, count: {by: "fixed", fixed: Math.max(1, Math.min(12, n(o.count) || 1))}}, {ladder: o.timed ?? null, ladderLabel: o.duration ?? null});
+      return SUM.bring({...item, out: {...o, summon: r ?? fallback()}}, {src, at: item.at, casterName, scene});
     }
     case "give": {
       const src = o.item ? fromUuidSync(o.item) : null;
@@ -457,15 +557,28 @@ async function applyCore(item, casterName = "the caster") {
       if ( !src && !named ) return {note: `${o.label}: no item chosen`};
       const data = src ? src.toObject() : {name: named, type: "Item", system: {description: `Made by ${casterName} (${o.label}).`}};
       delete data._id;
+      // B4830: a made thing lasts as long as the power's duration and then fades, unless the book makes it real for good
+      // (a Mage creation with Prime in it; a house reading in PENDING-REVIEW): the clock or the scene's end takes it back
+      const ends = o.lasting ? null : madeEnd(o.timed);
+      if ( ends ) foundry.utils.setProperty(data, `flags.${MOD}.madeEnds`, {...ends, by: casterName, power: o.label ?? "Make"});
       const [made] = await a.createEmbeddedDocuments("Item", [data]);
       return {made: made ? [made.uuid] : []};
     }
     case "light": {
       const tok = tokenOf(d);
       if ( !tok ) return {note: "no token on the scene for the light"};
-      const was = foundry.utils.deepClone(tok.light ?? {});
+      // B4830: the plain data of the token's light (the light field is a data model), to put back when it ends
+      const was = tok.toObject?.()?.light ?? foundry.utils.deepClone(tok.light ?? {});
       await tok.update(o.dark ? {"light.negative": true, "light.dim": 20, "light.bright": 10} : {"light.negative": false, "light.dim": 30, "light.bright": 15, "light.color": "#ffd9a0"});
-      return {token: {uuid: tok.uuid, light: was}};
+      // B4830: the light or darkness ends with its duration; WoDX Chronicle's timer puts the token's own light back
+      let effect = null;
+      if ( T?.applyTimed && o.timed ) {
+        try {
+          effect = await T.applyTimed(a, {name: o.dark ? "Shrouded in darkness" : "Shedding light", description: `${o.text} (cast by ${casterName})`, duration: o.timed,
+            key: `wodx-effect-light`, revert: {key: "wodx-actions.lightEnd", data: {token: tok.uuid, light: was}}, source: o.source ?? "Mage 20th p. 504"});
+        } catch (e) { console.warn("WoDX | light timer", e); }
+      }
+      return {token: {uuid: tok.uuid, light: was}, effect: effect?.uuid ?? null};
     }
     case "move": {
       const tok = tokenOf(d);
@@ -587,6 +700,34 @@ function untilOf(timed) {
   if ( timed.kind === "time" ) return (game.time?.worldTime ?? 0) + n(timed.seconds);
   if ( timed.kind === "rounds" ) return (game.time?.worldTime ?? 0) + 6 * Math.max(1, n(timed.rounds));
   return null;
+}
+
+/** B4830: when a made thing fades: {until} in world seconds, or {scene} for the end of the scene; null when it lasts. */
+function madeEnd(timed) {
+  if ( !timed ) return null;
+  if ( timed.kind === "scene" ) return {scene: canvas?.scene?.id ?? null};
+  if ( timed.kind === "night" ) return {until: (game.time?.worldTime ?? 0) + 12 * 3600};
+  const u = untilOf(timed);
+  return u === null ? null : {until: u};
+}
+
+/** B4830: made things whose time has run out fade from their holders' things (active Storyteller only). */
+export async function expireMade({sceneEnd = false} = {}) {
+  if ( !isActiveGM() ) return 0;
+  const now = game.time?.worldTime ?? 0;
+  let gone = 0;
+  for ( const a of game.actors ?? [] ) {
+    const ids = a.items.filter(i => {
+      const m = i.flags?.[MOD]?.madeEnds;
+      return m && ((sceneEnd && "scene" in m) || (Number.isFinite(m.until) && now >= m.until));
+    });
+    if ( !ids.length ) continue;
+    await a.deleteEmbeddedDocuments("Item", ids.map(i => i.id));
+    gone += ids.length;
+    await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: game.users.filter(u => u.isGM || a.testUserPermission?.(u, "OWNER")).map(u => u.id),
+      content: `<div class="wodx-card"><p>${esc(ids.map(i => i.name).join(", "))} fade${ids.length === 1 ? "s" : ""} from ${esc(a.name)}'s hands: the power that made ${ids.length === 1 ? "it" : "them"} has run out.</p></div>`});
+  }
+  return gone;
 }
 
 /** Does the area touch this token? Not the caster, for an area meant to hurt or bind. */
@@ -730,6 +871,7 @@ export async function undo(records = []) {
         if ( AT && npc && ch ) await (r.attitude.met ? AT.apply(npc, ch, {to: r.attitude.before, why: "Undone"}) : AT.forget(npc, ch));
       }
       if ( r.effect ) await fromUuidSync(r.effect)?.delete?.({wodxUndo: true});
+      if ( r.everyEffect ) await fromUuidSync(r.everyEffect)?.delete?.({wodxUndo: true});
       if ( r.across ) { const t = fromUuidSync(r.across); if ( t ) await game.modules.get("wodx-otherworlds")?.api?.sendAcross?.(t, {to: r.to}); }
       if ( r.weather ) await game.modules.get("wodx-atmosphere")?.api?.weather?.set?.(r.weather.jdn, r.weather.prev ?? null);
       if ( r.taint ) { const sc = fromUuidSync(r.taint.scene); if ( sc ) await corruption()?.set?.(sc, r.taint.prev); }
@@ -762,10 +904,10 @@ async function onCard(msg) {
   }
   if ( data?.kind !== "effects" || data.done || data.hold || !isActiveGM() ) return;
   const records = [], notes = [];
-  for ( const item of data.items ?? [] ) {
+  for ( const [i, item] of (data.items ?? []).entries() ) {
     if ( item.route === "auto" ) {
       const r = await applyItem(item, data.caster);
-      if ( r?.note ) notes.push(r.note); else if ( r ) records.push(r);
+      if ( r?.note ) notes.push(r.note); else if ( r ) records.push(typeof r === "object" ? {...r, i} : r);
     } else if ( item.route === "queue" ) {
       await chron()?.propose?.({type: TYPE, title: `${data.caster}: ${item.out.label} on ${item.name}`, detail: item.out.text, data: {item, caster: data.caster}});
     }
@@ -810,7 +952,14 @@ export async function placeItem(msg, index, at = undefined) {
   const data = msg.flags?.[MOD];
   const item = data?.items?.[index];
   if ( !item || (data.placed ?? []).includes(index) ) return null;
-  const spot = at ?? await pickPoint(item.route === "area" ? `Click where the ${item.out.label} area goes.` : `Click where ${item.name} goes.`);
+  const spot = item.key === "summon" ? at : at ?? await pickPoint(item.route === "area" ? `Click where the ${item.out.label} area goes.` : `Click where ${item.name} goes.`);
+  if ( item.key === "summon" ) {
+    const rec = await applyItem({...item, ...(spot ? {at: spot} : {})}, data.caster);
+    const good = rec && !rec.note;
+    await msg.update({[`flags.${MOD}.placed`]: [...(data.placed ?? []), index], [`flags.${MOD}.undo`]: good ? [...(data.undo ?? []), rec] : (data.undo ?? []),
+      [`flags.${MOD}.undone`]: false, ...(rec?.note ? {[`flags.${MOD}.notes`]: [...(data.notes ?? []), rec.note]} : {})});
+    return rec;
+  }
   if ( !spot ) return null;
   const rec = item.route === "area" ? await placeArea(item, spot, {caster: data.caster}) : await applyItem({...item, at: spot}, data.caster);
   const good = rec && !rec.note;
@@ -833,9 +982,9 @@ export function setup() {
   });
   Hooks.on("createChatMessage", msg => { onCard(msg).catch(e => console.error("WoDX | effects", e)); });
   Hooks.on("updateToken", (tok, change) => { onMove(tok, change).catch(e => console.error("WoDX | effect areas", e)); });
-  Hooks.on("updateWorldTime", () => { expireAreas().catch(e => console.error("WoDX | effect areas", e)); });
+  Hooks.on("updateWorldTime", () => { expireAreas().catch(e => console.error("WoDX | effect areas", e)); expireMade().catch(e => console.error("WoDX | made things", e)); });
   Hooks.on("deleteRegion", region => { dropGroundDrawing(region).catch(e => console.error("WoDX | ground drawing", e)); });
-  Hooks.on("wodxEndScene", () => { expireAreas({sceneEnd: true}).catch(e => console.error("WoDX | effect areas", e)); });
+  Hooks.on("wodxEndScene", () => { expireAreas({sceneEnd: true}).catch(e => console.error("WoDX | effect areas", e)); expireMade({sceneEnd: true}).catch(e => console.error("WoDX | made things", e)); });
   Hooks.on("renderChatMessageHTML", (msg, el) => {
     const data = msg.flags?.[MOD];
     if ( data?.kind !== "effects" || !el?.querySelector ) return;
@@ -856,7 +1005,7 @@ export function setup() {
         game.wodxActions?.m20Counter?.({actor: who, card: msg.id});
       });
     }
-    if ( !game.user.isGM ) return;
+    if ( !game.user.isGM ) { if ( data.done && !data.undone ) addResistButtons(msg, data, box); return; }
     if ( data.hold ) {
       box.insertAdjacentHTML("beforeend", `<div class="vta-note">A target is a mage and may counter first.</div><button type="button" class="wodx-effects-release"><i class="fa-solid fa-play"></i> Apply now</button>`);
       box.querySelector(".wodx-effects-release").addEventListener("click", async ev => {
@@ -870,7 +1019,7 @@ export function setup() {
     if ( !data.undone ) {
       (data.items ?? []).forEach((item, i) => {
         if ( !["pick", "area"].includes(item.route) || (data.placed ?? []).includes(i) ) return;
-        const label = item.route === "area" ? `Place the ${item.out.label} area` : `Move ${item.name}`;
+        const label = item.route === "area" ? `Place the ${item.out.label} area` : item.key === "summon" ? `Place the summons (${item.out.label})` : `Move ${item.name}`;
         box.insertAdjacentHTML("beforeend", `<button type="button" class="wodx-effects-place" data-i="${i}"><i class="fa-solid fa-crosshairs"></i> ${esc(label)}</button>`);
       });
       box.querySelectorAll(".wodx-effects-place").forEach(b => b.addEventListener("click", async ev => {
@@ -878,6 +1027,7 @@ export function setup() {
         await placeItem(msg, n(ev.currentTarget.dataset.i));
       }));
     }
+    if ( !data.undone ) addResistButtons(msg, data, box);
     if ( !data.undo?.length || data.undone ) return;
     box.insertAdjacentHTML("beforeend", `<button type="button" class="wodx-effects-undo"><i class="fa-solid fa-rotate-left"></i> Undo what applied</button>`);
     box.querySelector(".wodx-effects-undo").addEventListener("click", async ev => {
@@ -888,8 +1038,88 @@ export function setup() {
   });
 }
 
+/* ------------------------------------------------------------------ */
+/*  Resisting (B4831): the roll the card names, made by the target      */
+/* ------------------------------------------------------------------ */
+
+/** The dice for a resistance pool, as the roster names it (house reading: the Ability that goes with each). */
+const RESIST_POOL = {willpower: "willpower", dexterity: "dexterity+athletics", perception: "perception+awareness", strength: "strength", stamina: "stamina"};
+/** Keywords whose effect a won resistance ends; hold can be tried again each turn. */
+const ENDS_ON_RESIST = new Set(["hold", "fear", "possess", "bind", "illusion", "boost", "trip", "veil", "sway", "fortune", "hasten"]);
+
+function addResistButtons(msg, data, box) {
+  (data.items ?? []).forEach((item, i) => {
+    const R = item.out?.resist;
+    if ( !R || item.route !== "auto" || (data.resisted ?? []).includes(i) || (data.tried ?? []).includes(i) && item.key !== "hold" ) return;
+    if ( !(data.undo ?? []).some(r => r?.i === i) ) return;
+    const a = actorOf(docOf(item.target));
+    if ( !a || !(game.user.isGM || a.testUserPermission?.(game.user, "OWNER")) ) return;
+    const pool = RESIST_POOL[R.pool] ?? R.pool;
+    const label = item.key === "hold" ? "Break free" : item.key === "illusion" ? "See through it" : "Resist";
+    box.insertAdjacentHTML("beforeend", `<button type="button" class="wodx-effects-resist" data-i="${i}"><i class="fa-solid fa-hand-fist"></i> ${esc(item.name)}: ${label} (${esc(pool.split("+").map(x => x[0].toUpperCase() + x.slice(1)).join(" + "))} at ${n(R.diff)})</button>`);
+  });
+  box.querySelectorAll(".wodx-effects-resist").forEach(b => b.addEventListener("click", async ev => {
+    ev.currentTarget.disabled = true;
+    await resistItem(msg, n(ev.currentTarget.dataset.i));
+  }));
+}
+
+/** The target rolls to resist one item; any success ends what it did (a house reading). NPC rolls are the Storyteller's alone. */
+export async function resistItem(msg, i) {
+  const data = msg?.flags?.[MOD];
+  const item = data?.items?.[i];
+  const R = item?.out?.resist;
+  const a = actorOf(docOf(item?.target));
+  if ( !R || !a ) return null;
+  const pool = RESIST_POOL[R.pool] ?? R.pool;
+  const dice = Math.max(1, SUM.poolDice(a, pool));
+  const roll = new Roll(`${dice}d10`);
+  await roll.evaluate();
+  const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
+  const {countSuccesses} = await import("./core-rules.js");
+  const res = countSuccesses(faces, n(R.diff));
+  const won = res.successes > 0;
+  const what = item.key === "hold" ? (won ? "breaks free" : "cannot break free this turn") : won ? `throws off ${item.out.label}` : `cannot throw off ${item.out.label}`;
+  // B4928: the whole roll shows: the pool's parts, each die, the ones that cancel, and the power's own successes.
+  // An NPC's resisting roll goes to the Storyteller alone (standing rule 19).
+  const bd = SR.breakdown({parts: SUM.poolParts(a, pool), dice, diff: n(R.diff), faces, successes: res.successes, botch: res.botch, against: item.successes ?? null});
+  await ChatMessage.create({speaker: {alias: a.name}, rolls: [roll], ...(a.hasPlayerOwner ? {} : {whisper: game.users.filter(u => u.isGM).map(u => u.id), blind: true}),
+    content: `<div class="wodx-card"><p><b>${esc(a.name)}</b> rolls against ${esc(data.caster ?? "the caster")}'s ${esc(item.out.label)}, and ${esc(what)}.</p>
+      <p class="wodx-quiet">${esc(bd.pool)}</p><p>${bd.faces.map(f => `<span class="vta-die ${f.mark}">${f.v}</span>`).join(" ")}</p><p>${esc(bd.result)}</p></div>`});
+  if ( game.user.isGM ) return resolveResist(msg, i, won);
+  game.socket.emit(`module.${MOD}`, {action: "effectResisted", msg: msg.id, i, won, user: game.user.id});
+  return won;
+}
+
+/** Active Storyteller: take back the resisted item, and note the try. */
+export async function resolveResist(msg, i, won) {
+  if ( !isActiveGM() || !msg ) return null;
+  const data = msg.flags?.[MOD];
+  const item = data?.items?.[i];
+  if ( !item ) return null;
+  // B4925: a ghost that beats Compel Soul is safe from all of that vampire's Necromancy tonight (VtDA p. 287)
+  if ( won && /compel soul/i.test(item.power ?? item.out?.label ?? "") && item.by ) {
+    const by = actorOf(docOf(item.by)), tgt = actorOf(docOf(item.target));
+    if ( by && tgt ) await LIM.lostTo(by, {name: "Compel Soul", disc: "Necromancy"}, tgt).catch(e => console.warn("WoDX | Compel Soul", e));
+  }
+  if ( won && ENDS_ON_RESIST.has(item.key) ) {
+    // B4839: tearing free of a bite costs the one who tears loose (Clenched Jaw)
+    const brk = item.out?.everyTurn?.onBreak?.damage;
+    if ( brk ) { const t = docOf(item.target); await combat()?.soakAndApply?.(tokenOf(t)?.object ?? actorOf(t), {mode: "levels", amount: n(brk.levels) || 1, type: brk.type ?? "lethal", soak: brk.soak !== false}); }
+    const recs = (data.undo ?? []).filter(r => r?.i === i);
+    await undo(recs);
+    await msg.update({[`flags.${MOD}.undo`]: (data.undo ?? []).filter(r => r?.i !== i), [`flags.${MOD}.resisted`]: [...(data.resisted ?? []), i]});
+  } else await msg.update({[`flags.${MOD}.tried`]: [...new Set([...(data.tried ?? []), i])]});
+  return won;
+}
+
 /** The approval queue's handler for queued keyword results (called once WoDX Chronicle is ready). */
 export function registerHandler(api) {
+  // B4830: a Light or Dark keyword's timer puts the token's own light back when it runs out
+  api?.timed?.registerReverter?.("wodx-actions.lightEnd", async (actor, data) => {
+    const tok = data?.token ? fromUuidSync(data.token) : null;
+    if ( tok && data.light ) await tok.update({light: data.light});
+  });
   // Small (Chronicle 0.46.0, B2453): never. Only what is already past the effect rules' own Auto reaches the queue
   // (witnessed vulgar magic, a mind effect, another player's character, more than three targets)
   api?.registerApprovalHandler?.(TYPE, {label: "Magic that applies itself", small: () => false, approve: async entry => {

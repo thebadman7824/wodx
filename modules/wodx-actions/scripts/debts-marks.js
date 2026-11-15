@@ -17,6 +17,7 @@
  *   markDiablerie(...)     the black veins and the taint; auraNote(target) for Aura Perception; marks(actor) to see
  *                          and roll the taint; the victim's soul at nightfall when that setting is on.
  */
+import * as LIM from "./limits.js";
 import * as D from "./debts-rules.js";
 import * as B from "./beast-marks-rules.js";
 import * as C from "./c20-rules.js";
@@ -91,6 +92,11 @@ export function build(ctx) {
             return callHunt(target, { caller: String(fd.caller || "").trim(), sect: fd.sect, ground: fd.ground, bounty: fd.bounty, pardon: !!fd.pardon });
         });
     }
+    /** Runs fn over the items twenty at a time (B5630). */
+    async function inBatches(items, fn, size = 20) {
+        const list = [...items];
+        for (let i = 0; i < list.length; i += size) await Promise.all(list.slice(i, i + size).map(fn));
+    }
     async function callHunt(target, { caller = "", sect = "", ground = "other", bounty = "", pardon = false } = {}) {
         const y = year();
         const camFrom = n(api("wodx-chronicle")?.events?.list?.()?.find?.(e => e.id === "camarilla")?.year) || 1435;
@@ -98,13 +104,15 @@ export function build(ctx) {
         const plan = D.huntPlan({ target: target.name, caller, form, ground, bounty, pardon, year: y, status: ctx.background(target, "Status"), at: game.time.worldTime });
         const h = { ...plan, id: foundry.utils.randomID(), targetId: target.id, steps: {} };
         const npc = api("wodx-npc"), lines = [];
-        for (const a of hunters(target)) {
+        // B5630: the court's Kindred turn on the target twenty at a time, not one after another: a big court took
+        // over 30 seconds to call or lift a hunt.
+        await inBatches(hunters(target), async a => {
             try {
                 const before = npc?.attitude?.of?.(a, target)?.step ?? null;
                 const r = await npc?.attitude?.apply?.(a, target, { to: D.HUNTED_STEP, why: `${plan.label} on ${target.name}` });
                 if (r) h.steps[a.id] = before;
             } catch (e) { console.warn("WoDX | hunt attitude", e); }
-        }
+        });
         const hn = Object.keys(h.steps).length;
         lines.push(hn ? `${hn} Kindred of the court now hunt ${esc(target.name)}.` : "No Kindred NPCs found to set hunting (WoDX NPC factions or Kindred actors).");
         try { const r = await api("wodx-storyteller")?.rumours?.start?.({ text: plan.rumour, big: true }); h.rumour = r?.id ?? null; lines.push("The rumour is out."); }
@@ -127,13 +135,20 @@ export function build(ctx) {
         if (!isActiveGM() || setting("autoBloodHunt") === false) return [];
         const list = hunts(), out = [];
         const breaches = kx().masqEntries?.() ?? [];
+        // B5620: every Kindred's "looked at" time goes in one batched write, not one write per actor: a world with
+        // hundreds of Kindred took over 30 seconds at each faction turn.
+        const looked = [], now = game.time.worldTime;
+        const toCall = [];
         for (const a of game.actors ?? []) {
             if (P.detectProfile(a) !== "kindred" || list.some(h => h.active && h.targetId === a.id)) continue;
             const since = n(a.getFlag(MOD, "huntLooked"));
             const mine = breaches.filter(e => e.byUuid === a.uuid || (!e.byUuid && e.by === a.name));
             const due = D.huntDue({ marks: a.getFlag(MOD, "diablerieMarks") ?? [], breaches: mine, since });
-            await a.setFlag(MOD, "huntLooked", game.time.worldTime);
-            if (!due) continue;
+            if (since !== now) looked.push({ _id: a.id, [`flags.${MOD}.huntLooked`]: now });
+            if (due) toCall.push([a, due]);
+        }
+        if (looked.length) await Actor.implementation.updateDocuments(looked);
+        for (const [a, due] of toCall) {
             if (due.entry) { try { await kx().markHuntSeen?.(due.entry); } catch (e) { /* older records */ } }
             if (a.hasPlayerOwner) {
                 await api("wodx-chronicle")?.approvals?.propose?.({ type: T_HUNT, key: `bloodHunt:${a.id}`, title: `The court calls a hunt on ${a.name}`,
@@ -164,10 +179,10 @@ export function build(ctx) {
         list[i] = h;
         const target = game.actors.get(h.targetId), npc = api("wodx-npc");
         if (how === "lifted" && target) {
-            for (const [aid, before] of Object.entries(h.steps ?? {})) {
+            await inBatches(Object.entries(h.steps ?? {}), async ([aid, before]) => {
                 const a = game.actors.get(aid);
-                if (a && before !== null && before !== undefined) await npc?.attitude?.apply?.(a, target, { to: before, why: `${h.label} lifted` }).catch?.(() => null);
-            }
+                if (a && before !== null && before !== undefined) await npc?.attitude?.apply?.(a, target, { to: before, why: `${h.label} lifted` })?.catch?.(() => null);
+            });
             if (h.restoreStatus !== null) await setStatus(target, h.restoreStatus);
         }
         if (h.rumour) { try { await api("wodx-storyteller")?.rumours?.end?.(h.rumour); } catch (e) { /* gone */ } }
@@ -325,7 +340,8 @@ export function build(ctx) {
         const humanity = found ? found.key === "humanity" && !found.path : (!label || label.startsWith("wod.") || /humanity/i.test(label));
         return { rating: n(p.permanent ?? p.value), humanity };
     }
-    const sceneKey = () => `${game.scenes?.viewed?.id ?? ""}:${Math.floor(game.time.worldTime / 3600)}`;
+    // B4920: one scene count for everything that works once a scene (End the scene, or a new active map)
+    const sceneKey = () => `s${LIM.sceneNo()}`;
     /** Mods for a Social roll by a vampire on a mortal: the bearing when the roll did not already take it, and the blood to seem alive. */
     function bearingMods(actor, target, fd = {}, preset = {}) {
         if (!actor || !target || !preset?.aura || P.detectProfile(actor) !== "kindred" || P.detectProfile(target) !== "mortal") return null;

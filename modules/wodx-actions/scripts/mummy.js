@@ -10,7 +10,9 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: mummy-rules.js.
  */
+import * as LIM from "./limits.js";
 import * as M from "./mummy-rules.js";
+import { floatOver } from "./daysleep.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as MH from "./mummy-hekau.js";
@@ -95,6 +97,10 @@ export function build(ctx) {
             const tv = ATTRS.includes(fd.tr) ? ctx.attr(actor, fd.tr) : n(ctx.findAbility?.(actor, fd.tr)?.value);
             const plan = M.spellPlan({ path: i.hekau[fd.path], trait: tv, level, cost: n(fd.c), extra: n(fd.x), pool: i.sekhem.pool, difficulty: n(fd.d) });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
+            // B4921: a spell the book (or the house rule) says is used up is refused before Sekhem is spent
+            const lim = await LIM.gate(actor, { name: ns?.name ?? sp?.name ?? `${M.HEKAU[fd.path]?.label ?? fd.path} ${level}`, disc: M.HEKAU[fd.path]?.label ?? fd.path, level });
+            if (!lim) return null;
+            plan.difficulty += lim.diff;
             if (plan.spend && !(await sekhem(actor, -plan.spend))) return null;
             const wp = !!fd.wp && await spendWillpower(actor, 1);
             const label = `${M.HEKAU[fd.path].label} ${n(i.hekau[fd.path])} + ${esc(traits.find(t => t.key === fd.tr)?.label ?? fd.tr)}`;
@@ -137,6 +143,8 @@ export function build(ctx) {
                 }
             }
             body += `<div class="wodx-quiet">${REF} p. 78${ns ? `, ${MH.PATH_PAGE[ns.path]}` : ""}</div>`;
+            if (lim.diff) body += `<div class="vta-note">Drained: +${lim.diff} difficulty.</div>`;
+            await lim.done({ successes: got });
             return post(actor, `${actor.name} works Hekau`, body, rolls.filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 540, render: root => { pickSpell(root); return aim(root, { actor, lib: "hekau", power: r => { const sp = spells.find(x => x.id === r.querySelector("[name=sp]")?.value); const path = r.querySelector("[name=path]")?.value; return sp ? { id: sp.id, n: sp.name, e: String(sp.system?.description ?? "").replace(/<[^>]+>/g, " ") } : path ? { id: path, n: M.HEKAU[path]?.label ?? path } : null; } }); } });
     }
@@ -148,20 +156,31 @@ export function build(ctx) {
           <div class="form-group"><label>How</label><select name="k" data-fixed><option value="bless">Osiris's Blessing: a full day in the Web of Faith (Balance at the Shroud)</option>
             <option value="haven">A haven outside the Web: a day's meditation (Wits + Meditation at 8, then Balance at 9)</option><option value="ra">The Gift of Ra (sunrise: one point)</option></select></div>
           <div class="form-group"><label>The local Shroud</label><input type="number" name="sh" min="2" max="10" value="6"/></div>
-          <div class="form-group"><label><input type="checkbox" name="web"${i.inWeb ? " checked" : ""}/> The mummy is within the Web of Faith now</label></div></form>`;
+          <div class="form-group"><label><input type="checkbox" name="web"${i.inWeb ? " checked" : ""}/> The mummy is within the Web of Faith now</label></div>
+          <div class="form-group"><label><input type="checkbox" name="daily"${i.f.dailyRegain ? " checked" : ""}/> Spend each day this way by itself (the Blessing or the haven's meditation)</label></div></form>`;
         return dialog(`Sekhem: ${actor.name}`, content, "Go", async fd => {
-            await saveFlag(actor, { inWeb: !!fd.web });
+            await saveFlag(actor, { inWeb: !!fd.web, dailyRegain: fd.daily && fd.k !== "ra" ? { k: fd.k, sh: n(fd.sh) || 6 } : null });
+            const { body, rolls } = await regainRoll(actor, fd.k, n(fd.sh), !!fd.web);
+            if (body === null) return null;
+            return post(actor, `${actor.name} seeks Sekhem`, body, rolls.filter(Boolean));
+        });
+    }
+    /** The rolls of a day's Sekhem: shared by the dialog and the daily routine (B4996). */
+    async function regainRoll(actor, k, sh, web) {
+        const i = info(actor);
+        {
+            const fd = { k, sh, web };
             const capS = M.sekhemCap(i.balance, i.sekhem.rating || null);
             let body = "", rolls = [];
             if (fd.k === "ra") {
                 if (!fd.web && i.sekhem.pool === 0) body = `<div class="vta-res bad">In semektet: Ra's gift does not come.</div>`;
                 else { await sekhem(actor, 1); body = `<div class="vta-res good">+1 Sekhem with the sunrise (${info(actor).sekhem.pool}).</div>`; }
             } else {
-                if (fd.k === "bless" && !fd.web) { notify(`${actor.name}: Osiris's Blessing needs a day within the Web of Faith.`); return null; }
+                if (fd.k === "bless" && !fd.web) { notify(`${actor.name}: Osiris's Blessing needs a day within the Web of Faith.`); return { body: null, rolls }; }
                 if (fd.k === "haven") {
                     const m = await rollPool(ctx.attr(actor, "wits") + n(ctx.findAbility?.(actor, "meditation")?.value), 8); rolls.push(m.roll);
                     body += rollBlock("Wits + Meditation", m);
-                    if (!m.successes) { body += `<div class="vta-res">The meditation finds no stillness.</div>`; return post(actor, `${actor.name} seeks Sekhem`, body + `<div class="wodx-quiet">${REF} pp. 143–144</div>`, rolls.filter(Boolean)); }
+                    if (!m.successes) { body += `<div class="vta-res">The meditation finds no stillness.</div><div class="wodx-quiet">${REF} pp. 143–144</div>`; return { body, rolls }; }
                 }
                 const r = await rollPool(i.balance, fd.k === "haven" ? 9 : n(fd.sh)); rolls.push(r.roll);
                 const b = M.blessing(r, { pool: i.sekhem.pool, cap: capS });
@@ -171,8 +190,8 @@ export function build(ctx) {
             const s = M.semektet({ pool: info(actor).sekhem.pool, inWeb: !!fd.web });
             if (s.weakened) body += `<div class="vta-note">Semektet: no Sekhem returns on its own and no Hekau works; after 70 days an Attribute fades each day (Mental first); each day Willpower at 7 (4 bandaged) or the tem-akh turns the body toward Egypt.</div>`;
             body += `<div class="wodx-quiet">${REF} pp. 143–144</div>`;
-            return post(actor, `${actor.name} seeks Sekhem`, body, rolls.filter(Boolean));
-        });
+            return { body, rolls };
+        }
     }
 
     /* -- Balance and Ma'at ------------------------------------------------- */
@@ -265,6 +284,16 @@ export function build(ctx) {
             const i = info(a);
             if (!i.inWeb && i.sekhem.pool === 0) continue;
             await sekhem(a, 1);
+            // B4996: a mummy marked to spend the day in the Blessing or the haven's meditation rolls it by itself
+            const plan = f.dailyRegain;
+            if (plan && ctx.setting?.("autoSekhem") !== false && (plan.k !== "bless" || i.inWeb)) {
+                const now = info(a);
+                if (now.sekhem.pool >= M.sekhemCap(now.balance, now.sekhem.rating || null)) continue;
+                const { body, rolls } = await regainRoll(a, plan.k, plan.sh, now.inWeb);
+                const gained = info(a).sekhem.pool - now.sekhem.pool;
+                if (gained > 0) floatOver(a, `+${gained} Sekhem`, "#ffd36b");
+                if (body !== null) await post(a, `${a.name} seeks Sekhem`, `<div class="vta-sub">The day's ${plan.k === "bless" ? "Blessing" : "meditation in the haven"}, rolled by itself</div>` + body, rolls.filter(Boolean));
+            }
         }
     }
 

@@ -11,6 +11,7 @@
  * Built by main.js with its helpers (ctx). Pure rules: hunter-rules.js.
  */
 
+import * as LIM from "./limits.js";
 import { spendTime } from "./spend-time.js";
 import * as H from "./hunter-rules.js";
 import * as P from "./profiles.js";
@@ -173,7 +174,8 @@ export function build(ctx) {
 
     /* ---------------- Virtue rolls ---------------- */
 
-    const sceneKey = () => `${canvas?.scene?.id ?? "none"}:${n(game.settings.get(MOD, "wraithScene"))}`;
+    // B4920: one scene count for everything that works once a scene (End the scene, or a new active map)
+    const sceneKey = () => `s${LIM.sceneNo()}`;
 
     async function virtueRoll(actor) {
         const i = inq(actor);
@@ -300,12 +302,24 @@ export function build(ctx) {
 
     /* ---------------- True Faith ---------------- */
 
-    function faithOf(actor) {
+    function baseFaith(actor) {
         const f = actor.system?.advantages?.faith;
         const fromSheet = n(f?.permanent ?? f?.value ?? f?.temporary);
         if (fromSheet) return fromSheet;
         if (isInquisitor(actor)) return H.STAGE_FAITH[stage(inq(actor))];
         return n(actor.getFlag(MOD, "trueFaith"));
+    }
+    /** B5170: on holy ground the faithful's Faith counts one higher (WoDX Chronicle's feature for Mortals with True Faith). */
+    function onHoly(actor) {
+        try {
+            if (!game.modules.get("wodx-chronicle")?.api?.signatures?.allRowsOf?.(actor)?.some(r => r.key === "faithful")) return false;
+            const tok = actor.getActiveTokens?.()[0]?.document;
+            return !!(tok && game.modules.get("wodx-interactables")?.api?.holyUnder?.(tok));
+        } catch (e) { return false; }
+    }
+    function faithOf(actor) {
+        const f = baseFaith(actor);
+        return f > 0 && onHoly(actor) ? Math.min(10, f + 1) : f;
     }
 
     async function trueFaith(actor) {
@@ -314,7 +328,7 @@ export function build(ctx) {
         const tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
         const tw = tgt ? (rules === "da20" ? n(tgt.system?.advantages?.willpower?.temporary) : n(tgt.system?.advantages?.willpower?.permanent)) : 0;
         const powers = H.faithPowers(rules, rating);
-        const content = `<form><p><b>${esc(actor.name)}</b>: True Faith ${rating}${isInquisitor(actor) && !n(actor.system?.advantages?.faith?.permanent) ? " (their inquisitor's stage)" : ""}; ${rules === "da20" ? "the Dark Ages rules (V20 Dark Ages pp. 392–395)" : "The Hunters Hunted II rules (pp. 83–85)"}.${tgt ? ` Target ${esc(tgt.name)}, Willpower ${tw}.` : ""}</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: True Faith ${rating}${rating > baseFaith(actor) ? " (one higher on holy ground)" : ""}${isInquisitor(actor) && !n(actor.system?.advantages?.faith?.permanent) ? " (their inquisitor's stage)" : ""}; ${rules === "da20" ? "the Dark Ages rules (V20 Dark Ages pp. 392–395)" : "The Hunters Hunted II rules (pp. 83–85)"}.${tgt ? ` Target ${esc(tgt.name)}, Willpower ${tw}.` : ""}</p>
           <ul class="wodx-quiet">${powers.map(([k, t]) => `<li>${k ? "•".repeat(k) : "Always"}: ${esc(t)}</li>`).join("")}</ul>
           <div class="form-group"><label>What</label><select name="k" data-fixed><option value="repel">Repel the creature (1 Willpower)</option><option value="resist">Resist a power (1 Willpower)</option><option value="loss">Acting against their faith (Conscience at 9)</option><option value="set">Set the rating (if the sheet has no field)</option></select></div>
           <div class="form-group"><label>Creature's Willpower / the power's successes</label><input type="number" name="cw" value="${tw || 6}" min="1" max="10" style="width:4em"/> <input type="number" name="ps" value="0" min="0" style="width:4em"/> <label><input type="checkbox" name="daim"/> Daimoinon</label></div>
@@ -325,8 +339,9 @@ export function build(ctx) {
             if (fd.k === "loss") {
                 const r = await rollPool(virtues(actor).conscience.value, H.FAITH_LOSS_DIFFICULTY);
                 const lost = !(r.successes > 0 && !r.botch);
-                if (lost) { if (n(actor.system?.advantages?.faith?.permanent)) await updateActor(actor, { "system.advantages.faith.permanent": rating - 1 }); else await ctx.setFlag(actor, "trueFaith", rating - 1); }
-                return post(actor, `${actor.name}: a test of faith`, rollBlock("Conscience", r) + `<div class="vta-res ${lost ? "bad" : "good"}">${lost ? `True Faith ${rating} → ${rating - 1}.` : "The faith holds."}</div>`, [r.roll]);
+                const base = baseFaith(actor);
+                if (lost) { if (n(actor.system?.advantages?.faith?.permanent)) await updateActor(actor, { "system.advantages.faith.permanent": base - 1 }); else await ctx.setFlag(actor, "trueFaith", base - 1); }
+                return post(actor, `${actor.name}: a test of faith`, rollBlock("Conscience", r) + `<div class="vta-res ${lost ? "bad" : "good"}">${lost ? `True Faith ${base} → ${base - 1}.` : "The faith holds."}</div>`, [r.roll]);
             }
             if (!(await spendWillpower(actor, 1))) return null;
             if (fd.k === "repel") {
@@ -376,11 +391,15 @@ export function build(ctx) {
             const { def, item } = pickV(String(fd.nm ?? ""));
             const rating = item?.value ?? n(fd.rating);
             if (n(fd.lvl) > rating) return ctx.notify(`The rating is ${rating}: level ${fd.lvl} is out of reach.`);
+            // B4921: a Numen level used up for its time (the house rule for the fifth level and up) is refused before Willpower is spent
+            const lim = def ? await LIM.gate(actor, { name: `${def.label} ${n(fd.lvl)}`, disc: def.label, level: n(fd.lvl) }) : { diff: 0, done: async () => {} };
+            if (!lim) return null;
             if (n(fd.wp) && !(await spendWillpower(actor, n(fd.wp)))) return null;
             if (!def) return post(actor, `${actor.name}: ${esc(item?.name ?? "a Numen")}`, `<div class="vta-note">Roll it by hand (not in the library).</div>`);
             const [a, b] = def.pool;
             const dice = attr(actor, a) + (findAbility(actor, b)?.value ?? 0);
-            const r = await rollPool(dice, fd.diff);
+            const r = await rollPool(dice, n(fd.diff) + lim.diff);
+            await lim.done({ successes: r.botch ? 0 : r.successes });
             const fx = !r.botch && r.successes > 0 && EF.isOn() ? EF.numinaPlan(actor, pickV(String(fd.nm ?? "")).key, n(fd.lvl), r.successes, def) : null;
             const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");
             return post(actor, `${actor.name}: ${esc(def.label)} ${"•".repeat(n(fd.lvl))}`, rollBlock(`${cap(a)} + ${cap(b)}`, r, n(fd.wp) ? [`${fd.wp} Willpower`] : []) + `<div class="vta-note">${esc(def.levels[n(fd.lvl) - 1])}</div>` + (fx?.html ?? "") + `<div class="wodx-quiet">The Hunters Hunted II p. ${def.p}</div>`, [r.roll],
@@ -429,11 +448,15 @@ export function build(ctx) {
             if (fd.mode === "ritual" && Math.max(...aspects) > rating) return ctx.notify(`The ritual needs ${Math.max(...aspects)} dots in ${def.label}.`);
             const S = H.spell({ rating, aspects, fast: fd.mode === "spell" ? n(fd.fast) : 0, trade: !!fd.trade, wpBase: def.wp });
             const cost = S.willpower + (fd.wpx ? 1 : 0);
+            // B4921: a working of the fifth level or higher is once a scene (house rule), refused before Willpower is spent
+            const lim = await LIM.gate(actor, { name: fd.mode === "ritual" ? (ritual?.name ?? def.label) : def.label, disc: def.label, level: Math.max(0, ...aspects) });
+            if (!lim) return null;
             if (cost && !(await spendWillpower(actor, cost))) return null;
             const [a, b] = def.pool;
             if (!a) return post(actor, `${actor.name}: ${esc(def.label)}`, `<div class="vta-note">Difficulty ${S.difficulty + n(fd.mod)}, ${S.need} success${S.need === 1 ? "" : "es"} needed; the roll is on p. ${def.p}.</div>`);
-            const r = await rollPool(statOf(a) + statOf(b), S.difficulty + n(fd.mod), { willpower: !!fd.wpx });
+            const r = await rollPool(statOf(a) + statOf(b), S.difficulty + n(fd.mod) + lim.diff, { willpower: !!fd.wpx });
             const s = r.botch ? 0 : r.successes, ok = s >= S.need;
+            await lim.done({ successes: ok ? s : 0 });
             let body = rollBlock(`${cap(a)} + ${b === "animalken" ? "Animal Ken" : cap(b)}`, r, [cost ? `${cost} Willpower` : "", S.traded ? "skill traded for power" : "", n(fd.fast) && fd.mode === "spell" ? `${fd.fast} turn${n(fd.fast) === 1 ? "" : "s"} cut` : ""].filter(Boolean));
             body += `<div class="vta-res ${ok ? "good" : "bad"}">${r.botch ? "A botch: the magic slips its leash (see the page's price of failure)." : ok ? `It works (${s} of ${S.need} needed)${H.pushAspect(s, S.need) ? "; doubled: the Storyteller may let one aspect go a level higher" : ""}.` : `${s} of ${S.need} needed: not yet (an extended casting can go on).`}</div>`;
             body += `<div class="vta-note">${fd.mode === "ritual" ? `${esc(ritual?.name ?? "A ritual")}: at least 10 minutes, usually longer.` : `Casting time ${S.turns} turn${S.turns === 1 ? "" : "s"}.`}${S.overLimit ? " <b>An aspect is above the Path rating.</b>" : ""}</div><div class="wodx-quiet">Sorcerer (Revised) pp. 60–63, ${def.p}</div>`;

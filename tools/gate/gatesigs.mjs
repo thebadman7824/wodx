@@ -23,6 +23,7 @@
  *  17. an Assamite contract kept raises standing; an overdue one fails at the tick
  *  18. a Giovanni binds and calls a wraith
  *  20. a ghoul unfed for two months gets a card; a Grimaldi revenant finds its family row; a family founded by the Storyteller is kept (the list is put back)
+ *  21. a ghoul and the domitor on the active scene: an approval, and once approved a blood point passes (B4983)
  *  19. bloodlines: a True Brujah finds its own row and roll effects; a Gargoyle talking to a mortal gets a breach card
  * Result: Data/wodx-gate/gatesigs-result.json.
  */
@@ -47,9 +48,11 @@ async function runGate(K) {
   const sig = a => game.actors.get(a.id)?.flags?.[C]?.sig ?? {};
   const lastCard = () => game.messages.contents.filter(m => m.timestamp >= t0 && m.content?.includes("wct-sig")).at(-1);
   const vamp = (name, clan, custom = "") => ({name, type: "Vampire", system: {clan, custom: {clan: custom}, generation: 12}});
-  let actors = [];
+  let actors = [], autoWas = null;
   try {
     await game.settings.set(C, "sigVampire", true);
+    // These steps press the card buttons; with "Features give their points by themselves" on (B4874) the points come at once instead (gatefeatures checks that)
+    autoWas = game.settings.get(C, "sigAuto"); await game.settings.set(C, "sigAuto", false);
     actors = await Actor.create([vamp("WoDX gate: Toreador", "toreador"), vamp("WoDX gate: Setite", "custom", "Followers of Set"),
       vamp("WoDX gate: Brujah", "brujah"), vamp("WoDX gate: Gangrel", "gangrel"), vamp("WoDX gate: Ventrue", "ventrue"),
       {name: "WoDX gate: Malkavian", type: "Vampire", system: {clan: "malkavian", generation: 12, derangement: "Paranoia"}},
@@ -215,14 +218,33 @@ async function runGate(K) {
     await step("20 ghouls", async () => {
       const gh = by("Ghoul"), gr = by("Grimaldi"), fams = game.settings.get(C, "sigFamilies");
       const kind = api().rowOf(gh)?.feature;
+      // B5050: the monthly need runs by itself (ghoul-need.mjs); the Clan card checked here stands in only with it off
+      const needWas = game.settings.get(C, "ghoulNeed");
+      await game.settings.set(C, "ghoulNeed", false);
       await gh.update({[`flags.${C}.sig`]: {ghoul: {fedAt: game.time.worldTime - 61 * 86400, warned: 0}}});
       await api().tick({force: true});
       await until(() => sig(gh).ghoul?.warned === 2);
+      await game.settings.set(C, "ghoulNeed", needWas);
       const fam = api().rowOf(gr)?.key;
       const made = await api().foundFamily({name: "Gatewardens", trait: "war", disciplines: "Potence, Fortitude", year: 1197});
       const kept = game.settings.get(C, "sigFamilies").some(f => f.key === "gatewardens");
       await game.settings.set(C, "sigFamilies", fams);
       ok("20 ghouls", kind === "ghoul" && sig(gh).ghoul?.warned === 2 && fam === "family-grimaldi" && made?.approved && kept, {kind, fam, warned: sig(gh).ghoul?.warned});
+    });
+    await step("21 the domitor feeds", async () => {
+      // B4983: domitor and ghoul on the active scene: an approval, and once approved a blood point moves
+      const gh = by("Ghoul"), dom = by("Toreador"), scene = canvas.scene, AP = game.modules.get(C).api.approvals;
+      if ( !scene ) { ok("21 the domitor feeds", false, {error: "no scene"}); return; }
+      if ( !scene.active ) await scene.activate();
+      await gh.update({"flags.wodx-creation.lineage": {domitor: dom.id}, "system.advantages.bloodpool.temporary": 0, [`flags.${C}.sig`]: {ghoul: {fedAt: game.time.worldTime - 31 * 86400, warned: 0}}});
+      await dom.update({"system.advantages.bloodpool.temporary": 6});
+      await scene.createEmbeddedDocuments("Token", [{actorId: gh.id, name: gh.name, x: 200, y: 200}, {actorId: dom.id, name: dom.name, x: 400, y: 200}]);
+      await api().tick({force: true});
+      await until(() => AP.pending().some(p => String(p.key ?? "").startsWith(`ghoulfeed:${gh.id}`)) || AP.history().some(p => String(p.key ?? "").startsWith(`ghoulfeed:${gh.id}`)));
+      const p = AP.pending().find(x => String(x.key ?? "").startsWith(`ghoulfeed:${gh.id}`));
+      if ( p ) await AP.decide(p.id, "approve");
+      await until(() => Number(dom.system.advantages.bloodpool.temporary) === 5);
+      ok("21 the domitor feeds", Number(dom.system.advantages.bloodpool.temporary) === 5 && sig(gh).ghoul?.warned === 0, {domBlood: dom.system.advantages.bloodpool.temporary, ghoul: sig(gh).ghoul, queued: !!p});
     });
   } catch (e) { R.errors.push(e.message); }
   finally {
@@ -231,6 +253,7 @@ async function runGate(K) {
       if ( msgs.length ) await ChatMessage.deleteDocuments(msgs.map(m => m.id));
       for ( const x of actors ) await game.actors.get(x?.id)?.delete();
       await game.settings.set(C, "sigVampire", was);
+      if ( autoWas !== null ) await game.settings.set(C, "sigAuto", autoWas);
     } catch (e) { R.errors.push(`cleanup: ${e.message}`); }
   }
   return save(R, "gatesigs-result.json");

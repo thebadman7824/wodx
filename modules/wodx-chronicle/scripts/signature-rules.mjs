@@ -512,3 +512,44 @@ export function featureSummary(rows = [], {fired = {}, off = [], year = 0, dateO
       last: Number.isFinite(last) ? (dateOf(last) || "") : "", fired: Number.isFinite(last), off: off.includes(r.key), notes};
   });
 }
+
+/* ---- B4874-B4878: the features act on their own (the Storyteller's Hand, s1 to s5). House readings throughout. ---- */
+
+/** Card buttons the Storyteller used to press that now happen at once (with Undo where a trait moved). */
+export const AUTO_ACTS = ["breach", "boon", "glamour", "rage", "renown", "willpower", "chi"];
+export const autoAct = key => AUTO_ACTS.includes(key);
+/** A foe that is no mortal (for the Avenger and the Defender). */
+export const isMonsterKind = k => !!k && !/mortal|human|kinfolk|ghoul|hunter/.test(String(k).toLowerCase());
+/** Soak dice a feature gives in a fight: the Ahroun in Crinos against the Wyrm, a troll's oath that holds, a Defender
+ *  standing beside someone a monster goes for. One die each. */
+export function sigSoak({ahroun = false, crinos = false, wyrmFoe = false, troll = false, oathHeld = false, defender = false, beside = false, monsterFoe = false} = {}) {
+  const names = [];
+  if ( ahroun && crinos && wyrmFoe ) names.push("First into battle");
+  if ( troll && oathHeld ) names.push("A troll's oath");
+  if ( defender && beside && monsterFoe ) names.push("The shield");
+  return {dice: names.length, names};
+}
+/** The servants of the Yama Kings a Devil-Tiger hunts. */
+export const YAMA_WORDS = ["yama", "akuma", "oni", "demon", "kumo", "bakemono", "ogre"];
+export const isYamaServant = (...names) => names.flat().some(x => String(x ?? "").toLowerCase().split(/[^a-z]+/).some(w => YAMA_WORDS.includes(w)));
+export const isBunyip = name => /\bbunyip\b/i.test(String(name ?? ""));
+/** A Judge's verdict, answered from what the target is and what it has done. */
+export function judgeVerdict({kind = "", harmed = false} = {}) {
+  if ( !isMonsterKind(kind) ) return {key: "none", text: "No monster: there is nothing to judge."};
+  return harmed ? {key: "guilty", text: "Guilty: it has harmed the innocent."} : {key: "unproven", text: "A monster, but no harm to the innocent is known of it."};
+}
+/** Ajaba: a die for each other Ajaba beside them, three at most. */
+export const packDice = n => Math.max(0, Math.min(3, Number(n) || 0));
+/** The Celestial Chorus: three voices or more in a church make magick one easier. */
+export const choirDiff = voices => (Number(voices) >= 3 ? -1 : 0);
+export const isChurchName = name => /church|chapel|cathedral|abbey|monaster|basilica|minster|kirk|priory/i.test(String(name ?? ""));
+/** A ghoul's craving: Kindred blood spilled within this many squares. */
+export const CRAVING_REACH = 3;
+/** A Piskie's gift: something left in a barter for nothing or more than it got. */
+export const piskieGift = ({mode = "", give = null, owe = 0} = {}) => mode === "barter" && !!give && Number(owe) >= 0;
+/** Rolls a feature now makes for itself: [dice source, difficulty, what a failure costs]. */
+export const FEATURE_ROLLS = {
+  craving: {diff: 7, fail: "willpower"},   // a ghoul near spilled vitae: Self-Control
+  bunyip: {diff: 7, fail: "willpower"},    // the Harano test of the War of Tears
+  shame: {diff: 0, fail: "willpower"}      // a Hakken's shame before the lord: no roll, the point goes
+};

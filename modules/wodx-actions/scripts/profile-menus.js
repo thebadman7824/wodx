@@ -47,7 +47,7 @@ export const MENUS = {
     mortal: {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:seduction", "Seduction", "fa-heart"], ["api:kinfolk", "Kinfolk", "fa-users"]]],
-            ["Faith and the uncanny", [["api:imbue", "The Imbuing (GM, 1999 on)", "fa-bolt"], ["api:trueFaith", "True Faith", "fa-cross"], ["api:numina", "Psychic Numina", "fa-eye"], ["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"]]],
+            ["Faith and the uncanny", [["api:imbue", "The Imbuing (GM, 1999 on)", "fa-bolt"], ["api:trueFaith", "True Faith", "fa-cross"], ["api:numina", "Psychic Numina", "fa-eye"], ["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"], ["api:fomorPower", "Fomor power (Numbing)", "fa-biohazard"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mortal", "Mortal rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
@@ -81,7 +81,7 @@ export const MENUS = {
     mage: {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["preset:researchmage", "Research / lore", "fa-book-open"]]],
-            ["Magick", [["cast", "Cast an effect (Arete)", "fa-hat-wizard"], ["api:m20Counter", "Countermagick / resist", "fa-shield-alt"], ["uses:quintessence", "Quintessence", "fa-gem"], ["uses:paradox", "Paradox", "fa-bolt"], ["api:m20Backlash", "Paradox backlash (GM)", "fa-meteor"], ["api:m20Quiet", "The Quiet", "fa-eye-slash"], ["api:m20Purify", "Purify the Scourge (Crusade)", "fa-praying-hands"], ["api:m20Place", "Consensus here (GM)", "fa-landmark"]]],
+            ["Magick", [["cast", "Cast an effect (Arete)", "fa-hat-wizard"], ["api:m20Counter", "Countermagick / resist", "fa-shield-alt"], ["uses:quintessence", "Quintessence", "fa-gem"], ["uses:paradox", "Paradox", "fa-bolt"], ["api:m20Backlash", "Paradox backlash (GM)", "fa-meteor"], ["api:m20Quiet", "The Quiet", "fa-eye-slash"], ["api:m20Purify", "Purify the Scourge (Crusade)", "fa-praying-hands"], ["api:m20Draw", "Meditate for Quintessence each day", "fa-om"], ["api:m20Place", "Consensus here (GM)", "fa-landmark"]]],
             ["Sorcery and Numina", [["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"], ["api:numina", "Psychic Numina", "fa-eye"], ["api:trueFaith", "True Faith", "fa-cross"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mage", "Mage rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
@@ -115,7 +115,7 @@ export const MENUS = {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:seduction", "Seduction / glamour", "fa-heart"]]],
             ["Glamour", [["cantrip", "Weave a cantrip", "fa-wand-magic-sparkles"], ["api:c20Unleash", "Unleash an Art", "fa-bolt"], ["api:c20Invoke", "Invoke the Wyrd or the Autumn", "fa-mask"],
-                ["api:c20Epiphany", "Epiphany (gather Glamour)", "fa-star"], ["uses:glamour", "Glamour", "fa-coins"]]],
+                ["api:c20Epiphany", "Epiphany (gather Glamour)", "fa-star"], ["api:c20Place", "This place: freehold, glade or the Dreaming (GM)", "fa-tree"], ["uses:glamour", "Glamour", "fa-coins"]]],
             ["Banality", [["api:c20Trigger", "A Banality trigger", "fa-cloud"], ["api:c20Mists", "The Mists (memory)", "fa-smog"], ["api:c20Everyday", "Everyday Banality (GM)", "fa-building"], ["api:oaths", "Oaths sworn and broken", "fa-handshake"], ["uses:banality", "Banality", "fa-cloud-rain"]]],
             ["Danger", [["api:c20Bedlam", "Nightmare and Bedlam", "fa-dizzy"], ["api:c20ColdIron", "Struck by cold iron", "fa-burn"], ["api:hazard", "Fire / fall", "fa-fire"], ["rules:fae", "Changeling rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
