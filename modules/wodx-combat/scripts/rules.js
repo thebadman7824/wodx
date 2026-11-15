@@ -664,3 +664,22 @@ export function stoodPenalty(flag, combat) {
     if (!flag || !combat || flag.combat !== combat.id) return 0;
     return Number(combat.round) === Number(flag.round) + 1 ? 2 : 0;
 }
+
+/** B5160: what conditions do to the body: mods.bodyBruised (extra Bruised levels) and mods.bodyEase (99: no wound penalties). Null for none. */
+export function conditionBody(conditions = []) {
+    let bruised = 0, ease = 0;
+    const names = [];
+    for (const c of conditions ?? []) {
+        const b = Number(c?.mods?.bodyBruised) || 0, e = Number(c?.mods?.bodyEase) || 0;
+        if (!b && !e) continue;
+        bruised += b; ease = Math.max(ease, e); names.push(c.name ?? c.id ?? "");
+    }
+    return bruised || ease ? { bruised, shift: 0, ease, silver: false, names } : null;
+}
+/** Two body summaries as one: levels add, the strongest easing and shift win. */
+export function mergeBody(a, b) {
+    if (!a) return b;
+    if (!b) return a;
+    const n = v => Number(v) || 0;
+    return { bruised: n(a.bruised) + n(b.bruised), shift: Math.max(n(a.shift), n(b.shift)), ease: Math.max(n(a.ease), n(b.ease)), silver: !!(a.silver || b.silver), names: [...(a.names ?? []), ...(b.names ?? [])] };
+}

@@ -1432,6 +1432,8 @@ Ben picked the Power Limits Desk (https://claude.ai/artifact/PChWEUj4WJaKdihePVF
 | 2026-11-14 | Which lasting effect carries an after-cost (B4924) | The power's next timed effect on its payer within two minutes, or one named for what it does; otherwise the scene's end | tryTag in after-costs.js |
 | 2026-11-14 | Background experience for servants (B4929) | The current rating times three, at least three (V20 leaves it to the Storyteller) | backgroundCost in summon-rules.js |
 | 2026-11-14 | When an NPC is cornered (B4927) | Two foes within 2 yards and at least three wound levels taken | powerPick in wodx-npc main.mjs |
+| 2026-11-15 | Strengthening the Demon's level (B5161) | Chi'iu Muh 2, from its place on Kindred of the East Companion p. 74 (the scan drops the dots); no Hun harness roll | the chiiumuh entry in kote-arts.js |
+| 2026-11-15 | Which fomor powers play by themselves (B5162) | Numbing only, from a Power item named Numbing; the other fomor powers stay with the Storyteller | fomor.js |
 
 ## Waiting for review
 
