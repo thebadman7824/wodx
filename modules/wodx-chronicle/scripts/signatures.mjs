@@ -395,7 +395,9 @@ const daysBetween = (a, b) => (b.year - a.year) * 365 + ((b.month ?? 1) - (a.mon
 function nextEvent() {
   const d = getEngine().timeToDate(now()), today = {year: d.year, month: d.month, day: d.day};
   const k = today.year * 10000 + today.month * 100 + today.day;
-  const ev = events.list().find(e => e.live && e.key > k && !events.has(e.id));
+  const codes = events.hereCodes();
+  // only what will be heard of here: a glimpse of far-off news is no glimpse at all (B5891)
+  const ev = events.list().find(e => e.live && e.key > k && !events.has(e.id) && events.heard(e, codes));
   return ev ? {ev, days: Math.max(1, daysBetween(today, ev))} : null;
 }
 
