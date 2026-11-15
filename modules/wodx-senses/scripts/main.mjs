@@ -29,7 +29,7 @@ import * as OR from "./otherworld-sight-rules.mjs";
 
 
 const MOD = "wodx-senses";
-const VERSION = "0.14.0";
+const VERSION = "0.14.1";
 const SOCKET = `module.${MOD}`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -332,7 +332,7 @@ export function gatherSources(scene, td, actor) {
   const presences = [];
   for ( const t of scene?.tokens ?? [] ) {
     if ( t.id === td.id || !t.actor ) continue;
-    presences.push({at: centerOf(t, scene), kind: kindOf(t.actor), wyrm: !!t.actor.flags?.[MOD]?.wyrm, hurt: num(t.actor.system?.health?.damage?.woundlevel) > 0 || num(t.actor.system?.health?.damage?.woundpenalty) < 0, name: t.name});
+    presences.push({at: centerOf(t, scene), kind: kindOf(t.actor), wyrm: !!t.actor.flags?.[MOD]?.wyrm && !game.wodxActions?.fomor?.taintHidden?.(t.actor), hurt: num(t.actor.system?.health?.damage?.woundlevel) > 0 || num(t.actor.system?.health?.damage?.woundpenalty) < 0, name: t.name});
   }
   const extra = [];
   try { Hooks.callAll("wodxSensesGather", {scene, token: td, actor, sources: extra}); } catch (e) { console.error(`${MOD} |`, e); }

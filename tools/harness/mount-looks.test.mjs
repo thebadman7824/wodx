@@ -128,3 +128,21 @@ test("the Future Darkness looks join the row before them from 2023 and never sho
   for ( const [kind, id] of [["motorbike", "2023-hoverbike"], ["armoured", "2023-hovercraft"], ["car", "2023-armedcab"], ["balloon", "2023-liner"], ["tank", "2023-capsule"]] )
     assert.ok(MR.looksOf(kind).some(l => l.id === id && l.adds), id);
 });
+
+test("a vehicle sheet's style narrows the shapes of its year, and worn takes rusted paint (B4977)", () => {
+  for ( let i = 0; i < 40; i++ ) {
+    assert.equal(MR.lookFor("car", 1995, {finish: "rugged", seed: `c${i}`}).id, "1990-fourbyfour");
+    assert.equal(MR.lookFor("car", 1925, {finish: "sporting", seed: `c${i}`}).id, "1920-roadster");
+    assert.equal(MR.lookFor("truck", 1950, {finish: "working", seed: `t${i}`}).from, 1940);
+    // nothing of the year suits: the year's own shapes stand
+    assert.equal(MR.lookFor("tank", 1944, {finish: "taxi", seed: `k${i}`}).id, MR.lookFor("tank", 1944, {seed: `k${i}`}).id);
+  }
+  // a picked shape still wins
+  assert.equal(MR.lookFor("car", 1995, {finish: "rugged", style: "hatch"}).id, "1990-hatch");
+  // every shape named is one that is drawn
+  const drawn = new Set(MR.kinds().flatMap(k => MR.looksOf(k).map(l => l.style)));
+  for ( const [f, list] of Object.entries(MR.FINISH) ) for ( const s of list ) assert.ok(drawn.has(s), `${f}: ${s}`);
+  const car = MR.lookFor("car", 1995, {style: "sedan"});
+  assert.equal(MR.schemeFor(car, {finish: "worn", seed: "x"}).id, "rust");
+  assert.equal(MR.schemeFor(car, {finish: "worn", colour: "red", seed: "x"}).id, "red");
+});

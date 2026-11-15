@@ -240,14 +240,14 @@ Next free block: B5650
 | B4920-B4949 | Power limits after Princes of Darkness: one scene count, use limits, Drained, after-costs, NPC power choice (used B4920-B4929) | Actions, NPC |
 | B4950-B4959 | Tuareg names (used B4950-B4952) | Creation, Chronicle |
 | B4960-B4969 | Bicycles, supernatural mounts, mount and vehicle sprites with riders (used B4960-B4969) | Interactables, Combat, NPC |
-| B4970-B4979 | Mount and vehicle sprites with riders, by era, shape and colour (used B4970-B4976) | Paperdoll |
+| B4970-B4979 | Mount and vehicle sprites with riders, by era, shape and colour (used B4970-B4977) | Paperdoll |
 | B4980-B4999 | The Automation Desk: player actions that follow the rules by themselves, every line (used B4980-B4999) | Actions, Chronicle |
 | B5000-B5009 | Moro names (used B5000-B5002) | Creation, Chronicle |
 | B5010-B5029 | The Storyteller's Hand, part three: fire, noticing, and the rest of the desk acts by itself (Ben's desk picks, 14 November 2026) (used B5010-B5024) | Interactables, Actions, Senses, Library, Chronicle, Storyteller, Otherworlds, Creation |
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5064) | Creation, NPC, Actions |
 | B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
-| B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5111) | NPC, Combat |
+| B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5119) | NPC, Combat, Actions |
 | B5130-B5139 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5130-B5137) | Creation, Actions, NPC |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 | B5160-B5169 | Playable Strengthening the Demon and fomor Numbing (used B5160-B5162) | Combat, Actions |
@@ -295,6 +295,7 @@ Next free block: B5650
 | B5580-B5589 | Names raised to 300, Mizrahi (used B5580) | Creation |
 | B5590-B5599 | Recheck: gates not on main (used B5590) | tools (PC job queue) |
 | B5600-B5609 | Names made by pattern for the short lists (used B5600) | Creation |
+| B5610-B5619 | Fomor powers: the full W20 list plays from the Fomor power window (used B5610-B5619) | Actions, Combat, Senses |
 | B5620-B5629 | Gates failing on main: court hunts batch write, gate-interact steps (used B5620-B5621) | Actions, gates |
 | B5630-B5639 | Blood hunts: court Kindred turn in batches (used B5630) | Actions |
 | B5640-B5649 | German names before 1900, and refilling emptied tables (used B5640-B5641) | Creation, Chronicle |
@@ -8011,6 +8012,11 @@ WoDX Paperdoll. Nine looks from 2023, the first year past the main timeline, so 
 
 Reverse: remove the looks marked adds in tools/sprites/mount_*.py and run mounts.py.
 
+## B4977. A vehicle sheet's style picks among the shapes (2026-11-15)
+WoDX Paperdoll. A vehicle on its own sheet (WoDX Interactables) carries a style: fine, rugged, sporting, working, official, luxury, hearse, cab, up-armoured or custom. Among the shapes drawn for the vehicle's year, the ones that suit that style are used (a rugged car of 1995 is the four-by-four, a sporting car of 1925 the roadster); where none suits, the year's shapes stand as they are. Worn has no shape of its own: it takes rusted paint where the sheet names no colour. A shape or colours the Storyteller picks on the palette button still win. House table (mount-rules FINISH), since the books give vehicles no looks.
+
+Reverse: drop `finish` from mountOf in mounts.mjs; the sheet's style then changes nothing drawn.
+
 ## B4980. The Beast's checks roll by themselves (2026-11-14)
 WoDX Actions. When a wound, hunger, the sight of blood, fire or the sun provokes the Beast, the frenzy or Rötschreck check is rolled by itself with the same difficulty the dialog would use (dawn dread, fire steps, Merits and Flaws). It repeats each turn while the result holds, up to eight turns. Willpower is spent to hold only when the character is marked to in the check's dialog. Characters on Golconda, in torpor or already in frenzy are skipped. Setting "Frenzy and Rötschreck by themselves", on by default (Ben's v2 pick).
 
@@ -8376,6 +8382,46 @@ WoDX NPC. The rules list what each kind of NPC master keeps in each era (ghouls 
 
 Reverse: drop KEEPERS.
 
+## B5112. A Dominate Conditioning action (2026-11-15)
+WoDX Actions. The Kindred menu gains Dominate Conditioning: it works on the targeted token through WoDX NPC's condition() (B5104), with the subject's nature picked as ordinary, yielding or wilful. Desk item v1.
+
+Reverse: remove the menu entry.
+
+## B5113. Enchantment runs down and ends as a dream (2026-11-15)
+WoDX Actions. A changeling's Enchant action spends Glamour into the targeted mortal and makes an enchant bond. The bond loses a point a day on the world clock. When it runs out, the bond ends, any Masquerade witness record for that mortal reads "remembers it as a dream" and the mortal's players get a card. The Parted Mists take Glamour from two or more changelings on the scene and, once the Storyteller approves, make the Enchantment lasting (C20 Appendix II, pdf p. 461). Desk item c1.
+
+Reverse: remove enchant, partedMists and enchantDaily.
+
+## B5114. Oaths broken by an attack (2026-11-15)
+WoDX Actions. When a character attacks someone named in one of their unbroken oaths of loyalty, fealty, brotherhood, love or guardianship, the Storyteller gets an approval. Approving breaks the oath and its book price applies, as the Oaths window already does. A willing oathbreaker's token wears a dark ring (C20 pp. 188, 204 to 205, 265 to 267). Desk item c2.
+
+Reverse: drop the wodxAttackRolled hook.
+
+## B5115. Demon pacts with real thralls (2026-11-15)
+WoDX Actions. A demon seals a pact with the targeted mortal. The Faith potential starts from the mortal's True Faith, or 2, and the Storyteller can change it. The gifts the potential buys go on the thrall's sheet as items, each with the Willpower difficulty the book gives, and "A pact gift" on the mortal menu rolls them. The thrall's entry on the demon is linked to the actor, so the dawn Faith arrives as before. Old typed thralls are linked where the name matches one actor. A player's pact waits for approval (Demon: The Fallen pp. 251 to 253). Desk item d1.
+
+Reverse: remove pact, applyPact and useGift; the typed list still works.
+
+## B5116. Celestial and True Names (2026-11-15)
+WoDX Actions. Every character keeps a list of the demons' names they know. An evocation whose card gives difficulties by name reads them for the targeted demon: the True Name, then the Celestial Name, then a mundane name, or the demon's own thrall where the card lists it. "Call by a True Name" brings the demon onto the caller's scene and rolls Willpower against Willpower at 6 to press a command. The command roll is a house reading, and the Storyteller approves the call (Demon: The Fallen pp. 132, 171 to 176). Desk item d2.
+
+Reverse: drop nameDifficulty from the Demon context.
+
+## B5117. Wraith Thralls (2026-11-15)
+WoDX Actions. A wraith can hold the targeted wraith as a Thrall, chained in Stygian steel (step 3: cannot flee or refuse an ordinary order) or unchained (step 1: serves from fear and can strike). The chain shows as the Thrall ring on the map (Wraith 20th, pdf p. 88). Desk item r1 (the Thrall markets and NPC keepers are step three).
+
+Reverse: remove chainThrall.
+
+## B5118. Puppeteer consorts (2026-11-15)
+WoDX Actions. Every possession by a wraith on a living person is counted. The third ride on the same mortal makes them the Puppeteer's consort, who then shows in the followers window; from the fourth ride, the ride is one easier (a house reading). Desk item r2.
+
+Reverse: drop the wodxEffectApplied hook.
+
+## B5119. A hook when an effect applies (2026-11-15)
+WoDX Actions. Applying an effect now calls the `wodxEffectApplied` hook with the effect, its undo record and the caster's name, so other systems can follow what powers do.
+
+Reverse: remove the hook call.
+
 ## B5130. The domitor's clan weakness in the beast (2026-11-14)
 WoDX Creation, WoDX NPC. With five or more points of its domitor's blood an animal ghoul shows the clan's weakness, only where it fits a beast (V20 Dark Ages p. 401): Nosferatu hideous, Lasombra no reflection, Followers of Set shun the sun, Brujah and Gangrel quick to rage (frenzy one harder), Malkavian odd ways, Ventrue picky, Toreador entranced. Shown as an effect on the token. Desk item 8.
 
@@ -8739,6 +8785,56 @@ Reverse: drop the notOnMain set in runner.mjs recheck().
 WoDX Creation. Ben asked (15 November 2026) whether lists under 300 names could be filled with names made from how the names were formed, and approved the plan: recorded names first, made names only where the records show the rule. Ten peoples qualify: the Lakota, Cheyenne, Mandan, Hidatsa, Arikara, Pawnee, Crow, Blackfoot, Arapaho and Kiowa, whose recorded own names are two-part names in translation (a describing word and a thing, as Red Cloud; a number and things, as Two Crows; women's names often ending in Woman). New names join only parts that the same people's records hold, from a fixed list of English describing words and things, so a word in the people's own language, a nation's name or a title never becomes a part. Peoples with no recorded women's own names get no made women's names. The made names sit in Roll Tables of their own ("made by pattern", data/people-patterned.mjs, written by tools/names/pattern-names.mjs) and are drawn a third as often as the recorded own names. The other 26 short lists (Tuareg, Moro, Banyarwanda, Sami, Khmer, Amazigh, Maya, the Haudenosaunee, Algonquian, Southwest, Basin, Northwest Coast, Cree, Anishinaabe, Inuit, Taíno, Aboriginal, Kongo, Luba, Ganda, Filipino and the Comanche and Diné) are single names in the people's own language with no rule in the records that could make more without inventing words, so nothing is made for them. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: empty PATTERNED in data/people-patterned.mjs.
+
+## B5610. Every W20 fomor power plays itself (2026-11-15)
+WoDX Actions. Ben asked why the other fomor powers stayed with the Storyteller (2026-11-15 02:15Z). All 73 on W20 pp. 430-439 are now in fomor-powers.js, in WoDX's own words with their pages. A Power item named after one is the fomor's power. Always-on powers work from the sheet through the system's own bonus rows on that item, natural weapon items, the token's sight and flags; rolled and free powers use the Fomor power window.
+
+Reverse: delete fomor-powers.js and put fomor.js back to the Numbing-only window.
+
+## B5611. A power's time on the fomor ends by itself (2026-11-15)
+WoDX Actions. What a rolled power does to the fomor (bonus rows, a weapon, flight, fire, a hidden or bigger token, shadow) is a Chronicle timed effect whose end reverts it (wodx-actions.fomorOff).
+
+Reverse: drop the reverter; the Storyteller takes the changes off by hand.
+
+## B5612. Gaseous and Liquid forms and Weakened are conditions (2026-11-15)
+WoDX Actions. Gaseous Form and Viscous Form put a no-attack condition on the fomor; Molecular Weakening marks the target Weakened (two dice more to hit it, a WoDX reading of doubled harm, in PENDING-REVIEW).
+
+Reverse: remove the three conditions.
+
+## B5613. Lasting harm rides each turn (2026-11-15)
+WoDX Actions. Hazardous Heave's two levels a turn and Malleate's level a turn a success use the each-turn harm of turns.js until stopped.
+
+Reverse: remove everyTurn from the results.
+
+## B5614. Regeneration and Extra Speed each new round (2026-11-15)
+WoDX Actions. On each new round of a fight the active Storyteller heals a bashing or lethal level of a fomor with Regeneration and gives a fomor with Extra Speed an extra action (the extraActions flag WoDX Combat reads).
+
+Reverse: remove the updateCombat hook in fomor.js.
+
+## B5615. Berserker's Rage and Spirit Ties' Gnosis are pools on the fomor (2026-11-15)
+WoDX Actions. The mortal sheet has neither trait, so they are flags: Berserker gives five Rage (a point back each new scene; one buys an extra action from the window), Spirit Ties a point of Gnosis a purchase up to five (back each new scene; pays Sense Gaia, rolls Umbral Passage). Where a power costs Rage the fomor lacks, Willpower stands in, as the book allows for Gifted Fomor (p. 434). Animal Control and Slither Skin summon through their own summoning specs.
+
+Reverse: drop the pools and charge Willpower only.
+
+## B5616. Blows on a fomor's flesh (2026-11-15)
+WoDX Actions, Senses. When a close blow lands on a fomor: Poison Tumors splash three lethal dice, Toxic Secretions a die a level (bites, claws and holds), Tar Skin holds a bare-handed attacker for the scene. A fomor's wounding Venomous Bite adds Strength + 2 aggravated, not soaked. Triatic Sense and a Deception in force keep Sense Wyrm from finding the fomor; any other fomor reads as Wyrm-tainted to the senses.
+
+Reverse: remove the wodxAttackRolled hook and the senses check.
+
+## B5617. NPC fomor choose their powers (2026-11-15)
+WoDX Actions. The NPC power choice (B4926) adds a fomor's usable powers with their own keywords and calls the Fomor power window to use one.
+
+Reverse: drop the fomor branch in npcPowers.
+
+## B5618. Homogeneity takes dice from the next power (2026-11-15)
+WoDX Actions. A target of Homogeneity carries a flag; the next power window it opens (any line, through the limits gate) rolls that many dice fewer, once.
+
+Reverse: remove the flag and the takeDull step in rollPool.
+
+## B5619. Armored Skin, Immunity to the Delirium and Gifted Fomor (2026-11-15)
+WoDX Actions, Combat. Armored Skin lets Stamina soak lethal harm (Combat's soak options). Immunity to the Delirium counts as Kinfolk for the Delirium and for witnesses. Gifted Fomor pays a Gift's Rage or Gnosis with Willpower and offers the Gift from the Fomor power window.
+
+Reverse: remove the three checks.
 
 ## B5620. The court's hunt check writes once per faction turn (2026-11-15)
 WoDX Actions. autoHunts set the huntLooked flag on every Kindred one at a time. With hundreds of Kindred in the
