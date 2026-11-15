@@ -133,7 +133,7 @@ export const LOYALTY_SENSES = [
   {line: "mage", power: "Mind 1 (sense thoughts and moods)", dots: 1, roll: "Arete", difficulty: "Sphere rating + 3 (coincidental)", book: "M20"},
   {line: "changeling", power: "Kenning", dots: 0, roll: "Perception + Kenning", difficulty: 7, book: "C20", shows: "a lie spoken, not the side"},
   {line: "hunter", power: "Discern", dots: 1, roll: "Wits + Awareness", difficulty: 7, book: "Hunter: the Reckoning", shows: "what a thing truly is"},
-  {line: "wraith", power: "Lifesight", dots: 0, roll: "Perception + Empathy", difficulty: 7, book: "Wraith 20th pdf p. 85", shows: "a lie, and what the living mean to do, not the side"},
+  {line: "wraith", power: "Lifesight", dots: 0, roll: "Perception + Empathy", difficulty: 5, book: "Wraith 20th pdf 191", shows: "a lie, and what the living mean to do, not the side"},
   {line: "mortal", power: "Empathy", dots: 0, roll: "Perception + Empathy", difficulty: "the spy's Manipulation + Subterfuge", book: "V20", shows: "a lie, not the side"}
 ];
 export const sensesFor = line => LOYALTY_SENSES.filter(s => s.line === line || s.line === "mortal");

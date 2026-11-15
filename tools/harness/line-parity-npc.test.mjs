@@ -49,17 +49,19 @@ test("after a fight each line mends with its own power, by its book", () => {
 
 test("loved ones and lovers: each line's own checks and truths", () => {
   const k = H.weakSpotChecks("kueijin", "spouse", "harm", {name: "Mei"}).map(c => c.text).join(" ");
-  assert.match(k, /P'o/); assert.doesNotMatch(k, /Beast/);
+  assert.match(k, /fire soul/); assert.match(k, /Yin against the P'o/); assert.doesNotMatch(k, /Beast/);
   assert.match(H.weakSpotChecks("wraith", "child", "taken").map(c => c.text).join(" "), /Angst/);
-  assert.match(H.weakSpotChecks("demon", "lover", "harm").map(c => c.text).join(" "), /Torment/);
-  // B6450: every check that names a roll carries it, and failing it is decided by the rules
-  assert.deepEqual(H.weakSpotChecks("demon", "lover", "harm")[0].roll, {pool: "willpower", diff: 7, fail: "torment"});
-  assert.equal(H.weakSpotChecks("kueijin", "lover", "harm", {po: 4})[0].roll.diff, 4, "Hun against the P'o");
-  assert.equal(H.weakSpotChecks("werewolf", "friend", "death").find(c => c.roll).roll.need, 4);
-  assert.ok(H.weakSpotChecks("changeling", "friend", "death").some(c => c.roll?.fail === "banality"));
-  assert.ok(H.lovedFailed({pool: "rage", need: 4}, 4) && !H.lovedFailed({pool: "rage", need: 4}, 3));
+  // B6453, checked against the books: no Torment for a demon's fear (Demon pdf 162: sins only), no Banality for a
+  // changeling's grief (C20 pdf 268); the Garou roll Rage by the moon, the Kuei-jin Yin against the P'o
+  assert.doesNotMatch(H.weakSpotChecks("demon", "lover", "harm").map(c => c.text).join(" "), /Torment/);
+  assert.deepEqual(H.weakSpotChecks("demon", "lover", "harm")[0].roll, {pool: "willpower", diff: 7, fail: "willpower"});
+  assert.deepEqual(H.weakSpotChecks("kueijin", "lover", "harm")[0].roll, {via: "fire", fail: "frenzy"});
+  assert.deepEqual(H.weakSpotChecks("werewolf", "friend", "harm")[0].roll, {via: "rage", fail: "frenzy"});
+  assert.equal(H.weakSpotChecks("werewolf", "friend", "death").find(c => c.roll).roll.via, "rage");
+  assert.ok(!H.weakSpotChecks("changeling", "friend", "death").some(c => /Banality/.test(c.text) || c.roll?.fail === "banality"));
   assert.ok(H.lovedFailed({pool: "willpower"}, 0) && !H.lovedFailed({pool: "willpower"}, 1));
   assert.equal(H.lovedFailed({via: "beast"}, 0), false, "the Beast is Actions' own roll");
+  assert.equal(H.lovedFailed({via: "rage"}, 9), false, "the Rage roll is decided by Actions' frenzy rules");
   // B6451: a household that talks starts a rumour
   assert.ok(H.householdTalks(2, 2) && !H.householdTalks(2, 3) && !H.householdTalks(0, 1));
   assert.match(H.householdRumour("Ana", "vampire"), /never seen by day/);
@@ -111,9 +113,23 @@ test("refills: lines WoDX Actions rolls daily are marked once, the others are ro
   for ( const l of ["vampire", "kuei-jin", "hunter", "mortal", "ghoul"] ) assert.deepEqual(RF.refillSteps(l, {}, {}, 5), [], l);
   const fae = RF.refillSteps("changeling", {glamour: {temp: 1, cap: 5}, holdings: 2}, {}, 10);
   assert.equal(fae[0].word, "Sanctuary"); assert.equal(fae[0].fixed, 2);
-  const dream = RF.refillSteps("changeling", {glamour: {temp: 1, cap: 5}, dreamers: 2, manipulation: 3, expression: 2}, {}, 14);
-  assert.equal(dream[0].dice, 5); assert.equal(dream[0].diff, 6);
-  assert.deepEqual(RF.refillSteps("changeling", {glamour: {temp: 1, cap: 5}, dreamers: 2}, {reverieWeek: 2}, 14), [], "one Reverie a week");
+  // B6453, C20 pdf 170, 262-263: study first (Perception + Kenning at 8, a success a Dreamers dot), then the musing
+  const sheet = {glamour: {temp: 1, cap: 5}, dreamers: 2, perception: 3, kenning: 2, manipulation: 3, inspire: 2};
+  const study = RF.refillSteps("changeling", sheet, {}, 14);
+  assert.equal(study[0].reverie, "study"); assert.equal(study[0].dice, 5); assert.equal(study[0].diff, 8); assert.equal(study[0].auto, 2);
+  assert.equal(RF.stepGain(study[0], {mine: 4}, sheet.glamour), 0, "studying gives no Glamour yet");
+  assert.deepEqual(RF.reverieMark(study[0], {succ: 3}, 14), {reverieDue: 21}, "three successes: a week");
+  assert.deepEqual(RF.reverieMark(study[0], {succ: 1}, 14), {reverieDue: 44}, "one success: a month");
+  assert.deepEqual(RF.reverieMark(study[0], {succ: 5}, 14), {reverieDue: 14}, "five: a few hours");
+  assert.deepEqual(RF.reverieMark(study[0], {succ: 0}, 14), {}, "nothing found: next week");
+  assert.deepEqual(RF.refillSteps("changeling", sheet, {reverieWeek: 2}, 14), [], "one study a week");
+  assert.deepEqual(RF.refillSteps("changeling", sheet, {reverieDue: 21}, 18), [], "still musing");
+  const muse = RF.refillSteps("changeling", sheet, {reverieDue: 21}, 21);
+  assert.equal(muse[0].reverie, "inspire"); assert.equal(muse[0].dice, 5); assert.equal(muse[0].diff, 6);
+  assert.equal(RF.stepGain(muse[0], {mine: 3}, sheet.glamour), 3, "a Glamour a success");
+  assert.deepEqual(RF.reverieMark(muse[0], {succ: 0}, 21), {reverieDue: 28}, "a failure: another week");
+  assert.equal(RF.reverieMark(muse[0], {succ: 0, botch: true}, 21).reverieDue, null, "a botch: start over");
+  assert.ok(RF.botched([1, 3], 6) && !RF.botched([1, 7], 6) && !RF.botched([3, 4], 6));
   assert.deepEqual(RF.refillSteps("changeling", {glamour: {temp: 5, cap: 5}, holdings: 2}, {}, 10), [], "a full pool rolls nothing");
   const w = RF.refillSteps("wraith", {pathos: {temp: 2, cap: 10}, passion: 4, memoriam: 2}, {}, 7);
   assert.deepEqual(w.map(s => [s.word, s.dice, s.diff]), [["Passion", 4, 6], ["Memoriam", 2, 8]]);
@@ -152,4 +168,19 @@ test("B6452: looking someone over rolls the viewer's line's sense for a hidden l
   assert.deepEqual(T.senseParts(wr), ["perception", "empathy"]);
   const src = readFileSync(join(root, "modules/wodx-npc/scripts/trust.mjs"), "utf8");
   assert.match(src, /Hooks\.on\("wodxLookOver"/); assert.match(src, /type: "trust\.found"/);
+});
+
+test("B6453: the Rage and fire soul rolls the loved-one checks use, as the books set them", async () => {
+  const G = await import("../../modules/wodx-actions/scripts/garou-rules.js");
+  const K = await import("../../modules/wodx-actions/scripts/kote-rules.js");
+  // W20 p. 262: new moon 8 down to full 4, one less for the auspice's moon or in Crinos
+  assert.equal(G.rageDifficulty({b: "w20", phaseIndex: 0, auspice: "philodox", form: "homid"}), 8);
+  assert.equal(G.rageDifficulty({b: "w20", phaseIndex: 4, auspice: "philodox", form: "homid"}), 4);
+  assert.equal(G.rageDifficulty({b: "w20", phaseIndex: 2, auspice: "philodox", form: "crinos"}), 5);
+  assert.equal(G.frenzyCheck(4).result, "frenzy"); assert.equal(G.frenzyCheck(6).result, "thrall"); assert.equal(G.frenzyCheck(3).result, "none");
+  // Kindred of the East pdf 138: two successes to either side decide; five turns and the urge passes
+  const need = K.natureNeed("fire");
+  assert.equal(K.natureStep({virtue: 0, po: 1, turn: 1}, 0, 1, need).result, "lapses");
+  assert.equal(K.natureStep({virtue: 1, po: 0, turn: 1}, 1, 0, need).result, "resists");
+  assert.equal(K.natureStep({virtue: 0, po: 0, turn: 4}, 0, 0, need).result, "passes");
 });

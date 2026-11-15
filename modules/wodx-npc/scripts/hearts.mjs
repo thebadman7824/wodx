@@ -330,6 +330,8 @@ async function lovedRoll(who, spec) {
     const r = await actApi()?.autoBeast?.({actor: who, provocation: "loved"});
     return {line: r ? "" : "The Beast stays quiet."};
   }
+  if ( spec.via === "rage" ) return rageRoll(who);
+  if ( spec.via === "fire" ) return fireSoulRoll(who);
   const dice = lovedPool(who, spec.pool);
   if ( dice <= 0 ) return null;
   const roll = await new Roll(`${dice}d10`).evaluate();
@@ -339,15 +341,71 @@ async function lovedRoll(who, spec) {
   const failed = H.lovedFailed(spec, succ);
   const label = {rage: "Rage", hun: "Hun", willpower: "Willpower"}[spec.pool] ?? spec.pool;
   if ( failed ) {
-    if ( spec.fail === "frenzy" || spec.fail === "shadow" ) {
-      await who.update({"system.conditions.isfrenzy": true});
-      try { await who.setFlag("wodx-actions", "frenzyType", spec.fail === "shadow" ? "po" : "berserk"); } catch (e) { /* Actions off */ }
-      try { await game.modules.get("wodx-chronicle")?.api?.conditions?.setCondition?.(who, "frenzy", true); } catch (e) { /* Chronicle off */ }
-    } else if ( spec.fail === "willpower" ) await bump(who, "willpower", -1);
+    if ( spec.fail === "frenzy" ) await markFrenzy(who, "berserk");
+    else if ( spec.fail === "willpower" ) await bump(who, "willpower", -1);
     else await bump(who, spec.fail, 1);
     LM.floatOver(who, H.LOVED_FAIL_WORD[spec.fail] ?? "", "#ff8a80");
   }
   return {roll, failed, line: `${label} ${dice} at ${spec.diff}: ${succ} ${succ === 1 ? "success" : "successes"}. ${failed ? `${H.LOVED_FAIL_WORD[spec.fail]}.` : "It holds."}`};
+}
+async function d10s(n) { const r = await new Roll(`${Math.max(1, n)}d10`).evaluate(); return {roll: r, faces: r.dice?.[0]?.results?.map(x => x.result) ?? []}; }
+const hitsAt = (faces, diff) => Math.max(0, faces.filter(f => f >= diff).length - faces.filter(f => f === 1).length);
+/** Mark a frenzy the way WoDX Actions does: the sheet's box, the frenzy kind and the Chronicle condition. */
+async function markFrenzy(who, kind = "berserk", {thrall = false} = {}) {
+  await who.update({"system.conditions.isfrenzy": true});
+  try { await who.setFlag("wodx-actions", "frenzyType", kind); } catch (e) { /* Actions off */ }
+  const C = game.modules.get("wodx-chronicle")?.api;
+  try { await C?.conditions?.setCondition?.(who, "frenzy", true); } catch (e) { /* Chronicle off */ }
+  if ( thrall ) try { await C?.timed?.applyTimed?.(who, {name: "Thrall of the Wyrm", img: "icons/svg/terror.svg", duration: {kind: "scene"}, key: "wodx-charm-thrall", source: "W20 p. 262",
+    description: "The frenzy of the Wyrm's thrall: it attacks friend and foe and does the Wyrm's work."}); } catch (e) { /* Chronicle off */ }
+}
+/**
+ * B6453: the Garou's Rage roll for a loved one hurt, taken or killed, by WoDX Actions' own rules: permanent Rage at the
+ * moon's difficulty (one less for the auspice's moon or in Crinos), the rank's frenzy need, six successes the Thrall of
+ * the Wyrm (W20 pdf 263-264).
+ */
+async function rageRoll(who) {
+  const A = actApi(), GX = A?.garouRules;
+  if ( !GX?.info || !GX.moonNow ) return null;
+  const G = await import("../../wodx-actions/scripts/garou-rules.js");
+  const i = GX.info(who), D = GX.data?.()?.garou ?? {}, b = GX.basis?.() ?? "w20";
+  if ( i.fera && i.fera.rage === false ) return null;
+  const dice = i.rage.perm;
+  if ( dice <= 0 ) return null;
+  const moon = await GX.moonNow();
+  const diff = Math.min(10, G.rageDifficulty({b, phaseIndex: moon.index, auspice: i.auspice, form: i.form, table: D.rageDifficulty?.w20}) + G.rankFrenzyDiff(i.rank, D.frenzyByRank));
+  const {roll, faces} = await d10s(dice);
+  const succ = hitsAt(faces, diff);
+  const fc = G.frenzyCheck(succ, {rank: i.rank, need: i.fera?.frenzy ?? 4, thrall: i.fera?.thrall ?? 6, byRank: D.frenzyByRank});
+  const failed = fc.result !== "none", thrall = fc.result === "thrall";
+  if ( failed ) { await markFrenzy(who, "berserk", {thrall}); LM.floatOver(who, thrall ? H.LOVED_FAIL_WORD.thrall : H.LOVED_FAIL_WORD.frenzy, "#ff8a80"); }
+  return {roll, failed, line: `Rage ${dice} at ${diff} (${moon.name} moon): ${succ} ${succ === 1 ? "success" : "successes"}, ${fc.needed} for a frenzy. ${thrall ? "Thrall of the Wyrm." : failed ? "Frenzy." : "It holds."}`};
+}
+/**
+ * B6453: the Kuei-jin's fire soul, by WoDX Actions' own rules: Yin against the P'o, both at 6, extended up to five
+ * turns; the P'o's need of two successes (one when ravenous, shifted by a Yin or Yang imbalance) brings the lapse,
+ * which is frenzy for the scene (Kindred of the East pdf 138).
+ */
+async function fireSoulRoll(who) {
+  const A = actApi(), K = A?.kotRules;
+  const i = A?.kotInfo?.(who);
+  if ( !K?.natureStep || !i ) return null;
+  const need = K.natureNeed("fire", {ravenous: i.hunger === "ravenous" || i.hunger === "uncontrollable", imbalance: i.perm});
+  let st = {virtue: 0, po: 0, turn: 0}, turns = [], last = null;
+  while ( !st.done ) {
+    const a = await d10s(i.v.yin), p = await d10s(i.v.po);
+    const ys = i.v.yin > 0 ? hitsAt(a.faces, 6) : 0, ps = i.v.po > 0 ? hitsAt(p.faces, 6) : 0;
+    st = K.natureStep(st, ys, ps, need); last = a.roll;
+    turns.push(`${ys}/${ps}`);
+  }
+  const failed = st.result === "lapses";
+  if ( failed ) {
+    await markFrenzy(who, "berserk");
+    try { await game.modules.get("wodx-chronicle")?.api?.timed?.applyTimed?.(who, {name: "Fire soul", duration: {kind: "scene"}, condition: "frenzy", key: "wodx-kote-soul", source: "Kindred of the East pp. 150-151",
+      description: "Fire soul: frenzy, as the Kindred know it."}); } catch (e) { /* Chronicle off */ }
+    LM.floatOver(who, H.LOVED_FAIL_WORD.fire, "#ff8a80");
+  }
+  return {roll: last, failed, line: `Yin ${i.v.yin} against P'o ${i.v.po} at 6, turn by turn (Yin/P'o): ${turns.join(", ")}. ${failed ? "Fire soul." : st.result === "resists" ? "The Yin holds." : "The urge passes after five turns."}`};
 }
 /** Someone close is taken: the captor's demands go in the Ledger, and the ones who love them are told. */
 export async function takeHostage(captorLike, victimLike, {demand = ""} = {}) {

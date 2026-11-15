@@ -306,11 +306,15 @@ export function weakSpotChecks(line, kind, ev, {name = "them", po = 0} = {}) {
   if ( ev === "harm" || ev === "taken" ) {
     const d = great ? 7 : 6, seen = ev === "taken" ? "taken" : "hurt";
     if ( line === "vampire" ) out.push({text: `Seeing ${name} ${seen} may stir the Beast: a frenzy check, a loved one in danger (V20).`, roll: {via: "beast"}});
-    else if ( line === "werewolf" ) out.push({text: `Rage at ${name} being ${seen}: Rage at difficulty ${great ? 6 : 7}, four successes and the Garou frenzies (W20 p. 262).`, roll: {pool: "rage", diff: great ? 6 : 7, need: 4, fail: "frenzy"}});
-    // The Kuei-jin's P'o (Kindred of the East pdf 82-84), the wraith's Shadow (Wraith 20th: Angst), the demon's Torment (Demon: the Fallen pdf 161-162)
-    else if ( line === "kueijin" ) out.push({text: `The P'o stirs at ${name} being ${seen}: Hun against the P'o, or the Shadow Soul rises.`, roll: {pool: "hun", diff: Math.max(2, Math.min(10, Number(po) || 6)), fail: "shadow"}});
+    // B6453, read from the books: the Garou's Rage roll is permanent Rage at the moon's difficulty, four successes a
+    // frenzy and six the Thrall of the Wyrm (W20 pdf 263-264); the Kuei-jin's fire soul is Yin against the P'o at 6,
+    // extended up to five turns, two successes deciding (Kindred of the East pdf 138). Both roll through WoDX Actions' rules.
+    else if ( line === "werewolf" ) out.push({text: `Rage at ${name} being ${seen}: a Rage roll at the moon's difficulty; four successes and the Garou frenzies, six and it is the Thrall of the Wyrm (W20 p. 262).`, roll: {via: "rage", fail: "frenzy"}});
+    else if ( line === "kueijin" ) out.push({text: `The fire soul stirs at ${name} being ${seen}: Yin against the P'o at 6 for up to five turns; two successes to the P'o and the Kuei-jin lapses into fire soul (Kindred of the East).`, roll: {via: "fire", fail: "frenzy"}});
+    // Wraith 20th pdf 301 lists inner turmoil and helplessness among the sources of Angst and leaves the roll to the
+    // Storyteller: WoDX rolls Willpower for it. A demon's Torment comes only from sins against its Virtues (Demon pdf
+    // 162), so a demon's fear for a loved one is the plain Willpower check below.
     else if ( line === "wraith" ) out.push({text: `The Shadow feeds on the fear for ${name}: Willpower at difficulty ${d}, or a point of temporary Angst.`, roll: {pool: "willpower", diff: d, fail: "angst"}});
-    else if ( line === "demon" ) out.push({text: `Anger for ${name}: Willpower at difficulty ${d}, or a point of temporary Torment.`, roll: {pool: "willpower", diff: d, fail: "torment"}});
     else out.push({text: `Willpower at difficulty ${d} to keep a clear head while ${name} is ${ev === "taken" ? "held" : "in danger"}, or a point of temporary Willpower lost to worry.`, roll: {pool: "willpower", diff: d, fail: "willpower"}});
     if ( ev === "taken" ) out.push({text: "Whoever holds them has leverage: their demands go in the Ledger."});
   }
@@ -318,8 +322,8 @@ export function weakSpotChecks(line, kind, ev, {name = "them", po = 0} = {}) {
     out.push({text: `Grief for ${name}: Willpower at difficulty ${great ? 8 : 7}, or lose a point of temporary Willpower.`});
     if ( great ) out.push({text: "A botch leaves a Derangement from the loss, drawn from those grief leaves."});
     if ( line === "vampire" ) out.push({text: "If the Kindred's own hand or neglect caused it, a degeneration roll may follow."});
-    if ( line === "werewolf" ) out.push({text: "Rage at the loss: Rage at difficulty 6, four successes and the Garou frenzies.", roll: {pool: "rage", diff: 6, need: 4, fail: "frenzy"}});
-    if ( line === "changeling" ) out.push({text: "Grief dims the Dreaming: Willpower at 7, or a point of temporary Banality.", roll: {pool: "willpower", diff: 7, fail: "banality"}});
+    if ( line === "werewolf" ) out.push({text: "Rage at the loss: a Rage roll at the moon's difficulty; four successes and the Garou frenzies.", roll: {via: "rage", fail: "frenzy"}});
+    // No Banality for a changeling's grief: C20 pdf 268 counts sorrow and loss among the feelings that carry Glamour (B6453)
   }
   return out;
 }
@@ -330,7 +334,7 @@ export function lovedFailed(roll, successes = 0) {
   return roll.need ? Number(successes) >= roll.need : Number(successes) <= 0;
 }
 /** The word over the token when a loved-one check fails. */
-export const LOVED_FAIL_WORD = {frenzy: "Frenzy", shadow: "The P'o rises", angst: "+1 Angst", torment: "+1 Torment", willpower: "-1 Willpower", banality: "+1 Banality"};
+export const LOVED_FAIL_WORD = {frenzy: "Frenzy", thrall: "Thrall of the Wyrm", fire: "Fire soul", angst: "+1 Angst", willpower: "-1 Willpower"};
 
 /* ------------------------------------------------------------------ */
 /*  Adoption of children and adults (B3213, Ben 2026-11-13)        */

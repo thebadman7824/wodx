@@ -61,7 +61,7 @@ export function bloodHeal(d = {}, blood = 0) {
  * B6315: every line that mends with its own power does so after a fight, as the Kindred do with blood. line: the
  * all-lines key (lines-rules.mjs); d: {bashing, lethal, aggravated}; pool: what the line spends, now.
  * Returns {pool, spent, bashing, lethal, aggravated, what} or null when the line has no such power (it heals with time).
- *   vampire, ghoul  a blood point a level of bashing or lethal (V20 pdf 129), two kept back (one for a ghoul)
+ *   vampire, ghoul  a blood point a level of bashing or lethal (V20 pdf 276), two kept back (one for a ghoul)
  *   kuei-jin        a Chi point a level of bashing or lethal, five for an aggravated one (Kindred of the East
  *                   Companion pdf 32, "like a Kuei-jin"); Yang Chi first, then Yin; two kept back
  *   wraith          a Pathos point mends two bashing or one lethal Corpus level; aggravated cannot (Wraith 20th pdf 360)

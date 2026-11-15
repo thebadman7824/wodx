@@ -324,7 +324,7 @@ export const LARGE = 60;
  * words of the choice. Kindred keep ghouls (V20 Dark Ages, through WoDX Creation); the other lines keep the people
  * their books give them, as the servant rules do (servant-rules KEEPERS): Kinfolk for the Garou and Fera (W20 pdf
  * 140), a blood cult for a Kuei-jin, who cannot make ghouls (Kindred of the East pdf 11), thralls by pact for the
- * Fallen (Demon: the Fallen pdf 157), a cult for a mummy (Mummy: the Resurrection), the enchanted for a changeling
+ * Fallen (Demon: the Fallen pdf 161), a cult for a mummy (Mummy: the Resurrection), the enchanted for a changeling
  * (C20 pdf 461), and conditioned agents for a mage of the Technocracy (M20 pdf 606).
  */
 export const HOUSEHOLD_SERVES = {

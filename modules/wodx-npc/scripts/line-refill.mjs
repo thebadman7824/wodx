@@ -54,8 +54,9 @@ async function addPool(a, id, n) {
 export function sheetOf(a) {
   const passions = [...(a?.items ?? [])].filter(i => i.type === "Trait" && i.system?.type === "wod.types.passion").map(i => num(i.system?.value ?? i.system?.level));
   return {glamour: pool(a, "glamour"), pathos: pool(a, "pathos"), faith: pool(a, "faith"), holdings: bg(a, "holdings"), dreamers: bg(a, "dreamers"),
-    manipulation: attr(a, "manipulation"), expression: ability(a, "expression"), passion: Math.max(0, ...passions), memoriam: bg(a, "memoriam"),
-    willpower: pool(a, "willpower").temp || num(a?.system?.advantages?.willpower?.permanent), thralls: (a?.flags?.[ACT]?.demon?.thralls ?? []).filter(t => !t.broken).length};
+    perception: attr(a, "perception"), kenning: ability(a, "kenning"), manipulation: attr(a, "manipulation"),
+    inspire: Math.max(...["empathy", "performance", "leadership", "intimidation"].map(k => ability(a, k))), passion: Math.max(0, ...passions), memoriam: bg(a, "memoriam"),
+    willpower: num(a?.system?.advantages?.willpower?.permanent) || pool(a, "willpower").cap, thralls: (a?.flags?.[ACT]?.demon?.thralls ?? []).filter(t => !t.broken).length};
 }
 
 async function faces(dice) {
@@ -82,9 +83,11 @@ export async function refillOne(a, night, line = LM.keyOf(a)) {
   const out = [], mark = {night};
   for ( const st of steps ) {
     const s = sheetOf(a);
-    let mine = 0, theirs = 0;
+    let mine = 0, theirs = 0, botch = false;
     if ( st.fixed === undefined ) {
-      mine = RR.successes(await faces(st.contest ? st.contest.dice : st.dice), st.contest ? st.contest.diff : st.diff);
+      const fs = await faces(st.contest ? st.contest.dice : st.dice), diff = st.contest ? st.contest.diff : st.diff;
+      mine = RR.successes(fs, diff) + num(st.auto);
+      botch = !num(st.auto) && RR.botched(fs, diff);
       if ( st.contest ) theirs = RR.successes(await faces(st.contest.vs), st.contest.vsDiff);
     }
     const gained = RR.stepGain(st, {mine, theirs}, s[st.pool]);
@@ -92,8 +95,8 @@ export async function refillOne(a, night, line = LM.keyOf(a)) {
       await addPool(a, st.pool, gained);
       LM.floatOver(a, RR.gainWord(st.pool, gained), RR.POOL_COLOUR[st.pool]);
     }
-    Object.assign(mark, st.mark ?? {});
-    out.push({word: st.word, ref: st.ref, gained, pool: st.pool, mine, theirs, fixed: st.fixed !== undefined});
+    Object.assign(mark, st.mark ?? {}, RR.reverieMark(st, {succ: mine, botch}, night));
+    out.push({word: st.word, ref: st.ref, gained, pool: st.pool, mine, theirs, botch, reverie: st.reverie, due: mark.reverieDue, fixed: st.fixed !== undefined});
   }
   await a.setFlag(MOD, "refill", {...f, ...mark});
   return out;
@@ -116,12 +119,14 @@ export async function runNight({force = false} = {}) {
       if ( !RR.OWN.has(line) ) continue;
       const got = await refillOne(a, night, line);
       const lines = got.filter(g => g.gained).map(g => `${esc(RR.gainWord(g.pool, g.gained, g.word))}`);
+      for ( const g of got.filter(x => x.reverie === "study" && x.due !== undefined && x.due !== null) ) { const n = num(g.due) - night; lines.push(`finds what moves a Dreamer: ${n > 1 ? `${n} nights with them` : "a few hours with them"} before the Reverie`); }
+      for ( const g of got.filter(x => x.reverie === "inspire" && !x.gained) ) lines.push(g.botch ? "pushes the Dreamer too hard: a creative block, and the musing starts over" : "the musing fails: another week with the Dreamer");
       if ( lines.length ) rows.push(`<li><b>${esc(a.name)}</b>: ${lines.join(", ")}</li>`);
     }
     if ( rows.length || marked.length ) {
       await ChatMessage.create({whisper: gmIds(), speaker: {alias: "NPCs refill"},
         content: `<div class="wodx-card wnpc-refill"><h3>NPCs refill their pools</h3>${rows.length ? `<ul>${rows.join("")}</ul>` : ""}${marked.length ? `<p>Marked for the daily roll in WoDX Actions: ${marked.join("; ")}.</p>` : ""}
-          <p class="wodx-quiet">Sanctuary and Reverie (C20 pp. 169, 259-264); Passions and Memoriam (Wraith 20th pdf 370, 180); reaping (Demon p. 250). Gnosis, Quintessence and Sekhem come from the WoDX Actions daily rolls.</p></div>`});
+          <p class="wodx-quiet">Sanctuary and Reverie (C20 pdf 170, 260-263); Passions and Memoriam (Wraith 20th pdf 370, 180); reaping (Demon p. 250). Gnosis, Quintessence and Sekhem come from the WoDX Actions daily rolls.</p></div>`});
     }
     return {night, rows: rows.length, marked: marked.length};
   } finally { busy = false; }
