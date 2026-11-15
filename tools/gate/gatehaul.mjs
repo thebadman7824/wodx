@@ -24,6 +24,13 @@ const body = (name, {str = 2, dex = 3, sta = 2, athletics = 0, melee = 0} = {}) 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 /** Move a token and wait for it to stand there; -> where it stands (in the result, so a stuck move shows). */
 const moveTo = async (doc, x, y) => { await doc.update({x, y}); await waitFor(() => Math.round(doc.x) === x && Math.round(doc.y) === y, 4000); return [doc.x, doc.y]; };
+/** When a load did not follow: does a plain move of it work, and one with the haul's options? -> [[x, y] after plain, after with options] */
+const probe = async (doc, x, y) => {
+  const out = [];
+  try { await doc.update({x, y}, {animate: false}); out.push([doc.x, doc.y]); } catch (e) { out.push(String(e?.message ?? e).slice(0, 120)); }
+  try { await doc.update({x: x + 50, y}, {wodxMove: false, wodxHaul: true, wodxHeld: true}); out.push([doc.x, doc.y]); } catch (e) { out.push(String(e?.message ?? e).slice(0, 120)); }
+  return out;
+};
 const text = html => String(html ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
 
 export async function run() {
@@ -31,7 +38,7 @@ export async function run() {
   if ( G.notLive() ) return "Not on the Live world.";
   // what Interactables says to the console while the gate runs goes in the result (a step that fails shows why)
   const said = [], keep = {error: console.error, warn: console.warn};
-  for ( const k of ["error", "warn"] ) console[k] = (...a) => { try { const t = a.map(x => x?.stack ?? x?.message ?? (typeof x === "string" ? x : JSON.stringify(x))).join(" "); if ( /wodx-interactables|haul/i.test(t) ) said.push(`${k}: ${t}`.slice(0, 400)); } catch {} return keep[k](...a); };
+  for ( const k of ["error", "warn"] ) console[k] = (...a) => { try { const t = a.map(x => x?.stack ?? x?.message ?? (typeof x === "string" ? x : JSON.stringify(x))).join(" "); if ( /wodx-interactables|haul/i.test(t) && !/deprecated/i.test(t) ) said.push(`${k}: ${t}`.slice(0, 400)); } catch {} return keep[k](...a); };
   const heard = () => said.splice(0);
   try {
     const hx = () => game.modules.get(IX)?.api?.haul, C = game.wodxCombat;
@@ -81,7 +88,7 @@ export async function run() {
       await sleep(600);
       const r = await hx().release(ta, {onto: cart.id});
       const aboard = await waitFor(() => (scene.tiles.get(cart.id)?.flags?.[IX]?.riders ?? []).some(x => x.t === tb.uuid), 6000);
-      G.ok("4. laid aboard a cart", r?.ok && aboard && !ta.flags?.[IX]?.hauling && !tb.flags?.[IX]?.haul, {r, riders: scene.tiles.get(cart.id)?.flags?.[IX]?.riders, holding: ta.flags?.[IX]?.hauling ?? null, held: tb.flags?.[IX]?.haul ?? null, said: heard()});
+      G.ok("4. laid aboard a cart", r?.ok && aboard && !ta.flags?.[IX]?.hauling && !tb.flags?.[IX]?.haul, {said: heard(), heldBy: (tb.flags?.[IX]?.haul?.by ?? []).map(b => b.n), b: [tb.x, tb.y], probe: await probe(tb, 250, 500)});
     });
 
     await G.step("5. dragged and bleeding", async () => {
@@ -94,7 +101,7 @@ export async function run() {
       const trail = await waitFor(() => scene.drawings.some(d => d.flags?.[IX]?.trail?.kind === "blood"), 10000);
       const clue = scene.tiles.some(t => t.flags?.[IX]?.clueKind === "trail");
       const behind = Math.round(td.x) === 700 && Math.round(td.y) === 1000;
-      G.ok("5. dragged and bleeding", r?.ok && r.mode === "drag" && trail && clue && behind, {r, at: [td.x, td.y], dAt, cAt, cira: [tc.x, tc.y], trail, clue, holding: tc.flags?.[IX]?.hauling ?? null, held: td.flags?.[IX]?.haul ?? null, said: heard()});
+      G.ok("5. dragged and bleeding", r?.ok && r.mode === "drag" && trail && clue && behind, {said: heard(), at: [td.x, td.y], cira: [tc.x, tc.y], trail, clue, probe: behind ? null : await probe(td, 600, 1000)});
     });
 
     await G.step("6. knocked down, it drops", async () => {
@@ -116,7 +123,7 @@ export async function run() {
       const t = scene.tiles.get(chest.id);
       const pic = !!t?.texture?.src && !!t.flags?.[IX]?.haulHome;
       const floor = scene.tiles.some(x => x.flags?.[IX]?.haulFloorOf === chest.id);
-      G.ok("7. a chest drawn into the map", r?.ok && moved && pic && floor, {r, x: t?.x, src: t?.texture?.src, home: t?.flags?.[IX]?.haulHome, floor, e0, e1, eli: [te.x, te.y], holding: te.flags?.[IX]?.hauling ?? null, held: t?.flags?.[IX]?.haul ?? null, said: heard()});
+      G.ok("7. a chest drawn into the map", r?.ok && moved && pic && floor, {r, x: t?.x, src: t?.texture?.src, home: t?.flags?.[IX]?.haulHome, floor, said: heard(), eli: [te.x, te.y], probe: moved ? null : await probe(t, 1250, 200)});
       await hx().release(te);
     });
 
