@@ -122,7 +122,7 @@ test("a character's own sprite: the roster entry, the manifest learned, the path
   assert.deepEqual(e, {id: "abc123", name: "Sir Test", kind: "person", line: "Vampire", look: {skin: "c8a080", hair: null}, worn: ["Class Three"], held: ["Broadsword"], powers: true, death: "ash"});
   assert.deepEqual(SR.rosterOf({id: "w1", name: "Wolf", type: "Creature"}), {id: "w1", name: "Wolf", kind: "animal"});
   assert.equal(SR.rosterOf({id: "m", name: "M", type: "Mortal"}).powers, false);
-  const n = SR.learn("worlds/t/wodx-sprites", {sprites: {abc123: {name: "Sir Test", key: "0123abcd", acts: ["claw", "swing", "dance"]}, "bad/../id": {name: "x"}, w1: {name: "Wolf", acts: ["bite"]}}});
+  const n = SR.learn("worlds/t/wodx-sprites", {sprites: {abc123: {name: "Sir Test", key: "0123abcd", acts: ["claw", "swing", "jig"]}, "bad/../id": {name: "x"}, w1: {name: "Wolf", acts: ["bite"]}}});
   assert.equal(n, 2);
   const own = SR.ownName("abc123");
   assert.ok(SR.isOwn(own) && !SR.isOwn("lady-1888"));
@@ -186,7 +186,7 @@ test("poses and more ways of going (B2610, B2611)", async () => {
     for ( const m of SR.POSES ) assert.ok(SR.hasAct(name, m) && SR.ACT_LABELS[m] && SR.isOwnMove(m), `${name} ${m}`);
     assert.ok(!SR.isOwnMove(SR.actOf(name, null)), "the move played by default is still an attack");
   }
-  assert.ok(SR.STAY.every(m => SR.HOLD.includes(m) && [...SR.POSES, ...SR.LIFE, ...SR.BEAST_LIFE].includes(m)));
+  assert.ok(SR.STAY.every(m => SR.HOLD.includes(m) && [...SR.POSES, ...SR.LIFE, ...SR.BEAST_LIFE, ...Object.keys(SR.LINE_LABELS ?? {})].includes(m)), "every pose a figure stays in is known");
   assert.equal(SR.gaitFor("townsman-1888", {action: "swim"}), "swim");
   assert.equal(SR.gaitFor("townsman-1888", {action: "climb", squares: 9}), "climb");
   assert.equal(SR.gaitFor("townsman-1888", {action: "walk", riding: true}), "ride");
