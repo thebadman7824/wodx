@@ -134,7 +134,7 @@ export const MENUS = {
     spirit: {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"]]],
-            ["Essence", [["uses:essence", "Essence", "fa-sparkles"]]],
+            ["Charms", [["api:spiritCharm", "Spirit Charms", "fa-wind"], ["uses:essence", "Essence", "fa-sparkles"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
     },

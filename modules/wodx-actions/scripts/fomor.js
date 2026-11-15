@@ -182,7 +182,7 @@ async function onBlow(attacker, d) {
     const lines = [];
     // The fomor's own venom: a wounding bite with Venomous Bite
     if (attacker && /venomous bite/i.test(d.weapon ?? "") && has(attacker, "venomousbite") && target) {
-        await C.soakAndApply(tgtTok, { mode: "pool", amount: n(attacker.system?.attributes?.strength?.total ?? attacker.system?.attributes?.strength?.value) + 2, type: "aggravated", soak: false });
+        await C.soakAndApply(tgtTok, { apply: true, mode: "pool", amount: n(attacker.system?.attributes?.strength?.total ?? attacker.system?.attributes?.strength?.value) + 2, type: "aggravated", soak: false });
         lines.push(`${target.name} takes the venom: Strength + 2 aggravated, not soaked (W20 p. 439).`);
     }
     if (!target || !isFomor(target) || d.ranged) return post(lines);
@@ -190,7 +190,7 @@ async function onBlow(attacker, d) {
         const p = x.power;
         if (p.burst && (!p.burst.close || d.brawl || d.bite)) {
             const dice = FP.burstDice(p, countOf(target, p.key));
-            await C.soakAndApply(atkTok, { mode: "pool", amount: dice, type: p.burst.type, soak: true });
+            await C.soakAndApply(atkTok, { apply: true, mode: "pool", amount: dice, type: p.burst.type, soak: true });
             lines.push(`${attacker?.name ?? "The attacker"} is splashed by ${p.name}: ${dice} ${p.burst.type} dice (${FP.pageOf(p)}).`);
         }
         if (p.key === "tarskin" && attacker) {
