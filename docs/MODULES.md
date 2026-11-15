@@ -21,7 +21,7 @@ Install every WoDX module together, even ones left off in a world. Some modules 
 
 | Module | Version | What it does | Enable in |
 |---|---|---|---|
-| wodx-chronicle | 0.118.1 | The era clock, dated events, house rules, the crossover referee, the WoDX look and player buttons. [Changelog](../modules/wodx-chronicle/CHANGELOG.md) | rothenstein-wodx |
+| wodx-chronicle | 0.118.0 | The era clock, dated events, house rules, the crossover referee, the WoDX look and player buttons. [Changelog](../modules/wodx-chronicle/CHANGELOG.md) | rothenstein-wodx |
 | wodx-otherworlds | 0.29.0 | The Umbra, the Shadowlands and other realms: crossings, realm maps and the Gauntlet. [Changelog](../modules/wodx-otherworlds/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-creation | 0.58.0 | Character and NPC creation, era advancement, the archive of the dead and changes of state. [Changelog](../modules/wodx-creation/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-actions | 3.90.0 | The Actions menu for every line: powers, feeding, social actions, trade and effect keywords. [Changelog](../modules/wodx-actions/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
@@ -36,7 +36,7 @@ Install every WoDX module together, even ones left off in a world. Some modules 
 | wodx-senses | 0.12.0 | What a character sees, hears, smells and feels, answered in chat; supernatural sight on the player's own map (Auspex, Lifesight, the Penumbra while peeking, a mage's Sphere sights, chimerical sight, the Shadowlands view); a quiet interface. | rothenstein-wodx (needs wodx-chronicle, wodx-actions; reads wodx-npc, wodx-interactables and wodx-otherworlds when on) |
 | wodx-paperdoll | 0.27.0 | Pixel faces that blink, speak and react, with features by line; Net persona faces; the Figure builder for sprite tokens. [Changelog](../modules/wodx-paperdoll/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle; reads wodx-atmosphere when on) |
 | wodx-atmosphere | 0.16.0 | Weather, light from the clock, era music and mood regions, scene opening cards. [Changelog](../modules/wodx-atmosphere/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
-| wodx-solo | 0.6.0 | The Lone Chronicle for one person playing alone: a hidden browser holds the Storyteller's seat, one switch sets every automation to act by itself, and the player has a panel (time, travel, pause, I am stuck, the curtain) plus optional Storyteller tools: secret cards, item grants, a systems check | rothenstein-wodx for tests, switch off; later a solo world of its own (needs wodx-chronicle). Never on at a shared table; does nothing in rothenstein-live |
+| wodx-solo | 0.5.0 | The Lone Chronicle for one person playing alone: a hidden browser holds the Storyteller's seat, one switch sets every automation to act by itself, and the player has a panel (time, travel, pause, I am stuck, the curtain) plus optional Storyteller tools: secret cards, item grants, a systems check | rothenstein-wodx for tests, switch off; later a solo world of its own (needs wodx-chronicle). Never on at a shared table; does nothing in rothenstein-live |
 
 Chronicle, Otherworlds and Creation stay idle in worlds without `flags.wodx` (the original Rothenstein world). WoDX Actions and WoDX Combat stay off wherever vtda20-actions or vtda20-combat is still enabled; the original Rothenstein world keeps the vtda20 modules, which stay installed.
 
