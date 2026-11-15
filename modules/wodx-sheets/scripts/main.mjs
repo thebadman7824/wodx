@@ -536,24 +536,63 @@ function sheetToolsButton(app, html) {
 }
 Hooks.on("renderActorSheet", sheetToolsButton);
 
-// B6114: on a line sheet that runs on ApplicationV2 the title bar already shows icon buttons with their names on
-// hover, and keeps the rest in its own menu (the three dots), which lists every control by name. The Sheet tools button
-// opens that menu, so it does the same job it does on the old sheets.
+// B6114: on a line sheet that runs on ApplicationV2 the Sheet tools button opens the same named list as on the old
+// sheets: the icon buttons in the title bar, then every control of the window's own menu (the three dots), by name.
+function sheetToolsEntries(app, header, self) {
+  const out = [];
+  for (const b of header.querySelectorAll("button.header-control, a.header-control")) {
+    if (b === self || b.dataset.action === "close" || b.dataset.action === "toggleControls" || b.offsetParent === null) continue;
+    const words = b.dataset.tooltip || b.getAttribute("aria-label") || (b.textContent ?? "").trim();
+    const fa = [...b.classList].filter(c => c.startsWith("fa"));
+    const icon = b.querySelector("i")?.outerHTML ?? (fa.length ? `<i class="${fa.join(" ")}"></i>` : "");
+    if (words) out.push({words: game.i18n.localize(words), icon, run: () => b.click()});
+  }
+  let controls = [];
+  try { controls = [...(app._headerControlButtons?.() ?? [])]; } catch (e) { /* none */ }
+  for (const c of controls) {
+    if (!c?.label || out.some(o => o.words === game.i18n.localize(c.label))) continue;
+    out.push({words: game.i18n.localize(c.label), icon: c.icon ? `<i class="${c.icon}"></i>` : "", run: ev => {
+      if (typeof c.onClick === "function") return c.onClick.call(app, ev);
+      const h = app.options?.actions?.[c.action];
+      const fn = typeof h === "function" ? h : h?.handler;
+      return fn?.call(app, ev, ev.currentTarget);
+    }});
+  }
+  return out;
+}
+
 function sheetToolsButtonV2(app) {
   const win = app?.element, header = win?.querySelector?.(".window-header");
   if (!app?.isLegacyBridge || !header || header.querySelector(".wodx-sheet-tools")) return;
   let when = "always";
   try { when = game.settings.get(MOD, "sheetTools"); } catch (e) { /* the default */ }
   if (when === "off" || (when === "beginner" && !BG.beginner())) return;
-  const toggle = header.querySelector('[data-action="toggleControls"]');
-  if (!toggle) return;
   const b = document.createElement("button");
   b.type = "button";
   b.className = `header-control icon wodx-sheet-tools${BG.beginner() ? " wodx-worded" : ""}`;
   b.dataset.tooltip = "Sheet tools: the buttons up here, with their names";
   b.setAttribute("aria-label", "Sheet tools");
   b.innerHTML = `<i class="fa-solid fa-list-ul" aria-hidden="true"></i>${BG.beginner() ? "<span>Sheet tools</span>" : ""}`;
-  b.addEventListener("click", ev => { ev.preventDefault(); ev.stopPropagation(); toggle.click(); });
+  b.addEventListener("click", ev => {
+    ev.preventDefault(); ev.stopPropagation();
+    document.querySelector(".wodx-sheet-tools-list")?.remove();
+    const list = document.createElement("div");
+    list.className = "wodx-sheet-tools-list wodx";
+    list.setAttribute("role", "menu");
+    for (const e of sheetToolsEntries(app, header, b)) {
+      const item = document.createElement("button");
+      item.type = "button"; item.setAttribute("role", "menuitem");
+      item.innerHTML = `${e.icon} `;
+      item.append(document.createTextNode(e.words));
+      item.addEventListener("click", ce => { ce.preventDefault(); list.remove(); e.run(ce); });
+      list.append(item);
+    }
+    const r = b.getBoundingClientRect();
+    list.style.top = `${Math.round(r.bottom + 4)}px`; list.style.left = `${Math.round(Math.max(4, r.left))}px`;
+    document.body.append(list);
+    const away = e => { if (!list.contains(e.target)) { list.remove(); document.removeEventListener("pointerdown", away, true); } };
+    setTimeout(() => document.addEventListener("pointerdown", away, true), 0);
+  });
   const title = header.querySelector(".window-title");
   title ? title.after(b) : header.prepend(b);
 }
