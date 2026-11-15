@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5900
+Next free block: B5920
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -318,6 +318,7 @@ Next free block: B5900
 | B5870-B5879 | Dates as each land tells them: Persia's solar year and a character's own count (used B5870-B5876) | Chronicle, Atmosphere |
 | B5880-B5889 | Era primers by region: what everyone knows, by the homeland's way of life (used B5880-B5882) | Storyteller |
 | B5890-B5899 | Future Darkness world news by region: the Americas, Africa and Oceania after 2023 (used B5890-B5892) | Chronicle |
+| B5900-B5919 | War beyond Europe: armies, sieges and ships by land (Armies and Ships Desk) (used B5900-B5910) | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9670,3 +9671,58 @@ Reverse: make heardIn return true.
 WoDX Chronicle. A card lists the news heard here from the last year; news heard here but older than a year (a world just switched to the branch, a homeland just changed) and news from elsewhere are counted in one line that points to the Dated events page, which lists every event with its place. A time skip still tells everything heard here, as it did.
 
 Reverse: drop the older count in newsFor.
+
+## B5900. A fight stands in a land (2026-11-15)
+WoDX Storyteller. A battle, siege or sea fight keeps `land`, a WoDX Chronicle region: the one it was started with, else the region of the scene in view (Where this scene stands), else the homeland. The battle form has a Land select. Desk item a1, recommended option, built while the desk waits.
+
+Reverse: drop `land` from contextOf in battles.mjs and naval.mjs.
+
+## B5901. The quick start keeps this timeline's wars, the land's part of the world first (2026-11-15)
+WoDX Storyteller. warEvents skips events that are not live (the other branch) and sorts the events of the battle's part of the world (Chronicle events-rules.mjs partOf) first. Desk item a2.
+
+Reverse: drop the live filter and the part sort.
+
+## B5902. Each land keeps its own ages of war where they differ from Europe's (2026-11-15)
+WoDX Storyteller, war-lands-rules.mjs LAND_AGES: 17 ages for Mesoamerica, the Caribbean, the Andes, the woodland nations, Japan (three), China and Korea, India, the steppe, the Sahel, Africa south of the Sahara, the impi of the south, Aotearoa (two), the Pacific and Australia. Each borrows the numbers of a European age (phase, losses, hazard) and turns guns off where the land had none. Desk item b1.
+
+Reverse: make landAge return null.
+
+## B5903. Troops of other lands, offered first in their land (2026-11-15)
+WoDX Storyteller. Thirteen unit types beside the book's (Spoils of War p. 44), WoDX figures on its scale, each with its years and lands. The setup lists the land's troops under their own heading, then the book's, then other lands' under a closed heading; a unit already in an army stays on the form. An army of them fights with the book's pools. Desk item b2.
+
+Reverse: remove LAND_UNITS from UNIT_TYPES.
+
+## B5904. The supernatural in the ranks named by land (2026-11-15)
+WoDX Storyteller. East and Southeast Asia name Kuei-jin, shen and Hengeyokai; Africa south of the Sahara the Laibon, Bastet and Mokolé; the lands of Islam the Ashirra; the Americas, the Pacific and Australia before the settlers the land's own changing breeds and spirits. The weight of each step is unchanged. Desk item b3.
+
+Reverse: make supernaturalFor return null.
+
+## B5905. The realms of the East (2026-11-15)
+WoDX Storyteller. In East and Southeast Asia a war of the dead is fought by the legions of the Dark Kingdom of Jade and a war in the Umbra in the spirit courts of the East, with the same numbers. Desk item b4.
+
+Reverse: make realmFor return its base.
+
+## B5906. Siege engines of other lands (2026-11-15)
+WoDX Storyteller. Fire lances, thunderclap bombs, rocket carts and iron-cased war rockets, WoDX figures on the book's scale (Spoils of War p. 33), listed first in their lands. Desk item c1.
+
+Reverse: remove LAND_ENGINES from ENGINES.
+
+## B5907. Walls of other lands, and a land's town or castle starts with them (2026-11-15)
+WoDX Storyteller. Rammed earth, mud brick, the fitted stone of the Andes, the pā, the thorn stockade and the castle on a stone base, on the scale of the book's walls (p. 34). A siege's campaign starts with the land's wall where it has one for the garrison's position and year. Desk item c2.
+
+Reverse: drop the landWall call in blankCampaign.
+
+## B5908. Camel caravans, llama trains and porters (2026-11-15)
+WoDX Storyteller. Three supply lines (shares 0.6, 0.5 to 1600, and 0.33), listed first in their lands. Desk item c3.
+
+Reverse: remove LAND_SUPPLY from SUPPLY_LINES.
+
+## B5909. Ships of other seas (2026-11-15)
+WoDX Storyteller. Twelve ships (war junks before and after guns, the treasure ship, the turtle ship, the atakebune, the dhow, the lancaran, the jong, the double-hulled war canoe, the waka taua, the lake canoe of Mexico, the piragua), WoDX figures on the book's scale (Spoils of War p. 40), listed first in their seas. Desk item d1.
+
+Reverse: remove LAND_SHIPS from SHIPS.
+
+## B5910. The navigators of the Pacific and the Indian Ocean (2026-11-15)
+WoDX Storyteller. A tick box on the navigation roll where it counts: a wayfinder of the islands makes it 2 easier in the Pacific and off Aotearoa; a pilot of the Indian Ocean with the kamal counts as a pilot's book there. Desk item d2.
+
+Reverse: make navAid return 0.

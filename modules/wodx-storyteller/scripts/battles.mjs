@@ -5,6 +5,7 @@ import * as C from "./core.mjs";
 import * as Clocks from "./clocks.mjs";
 import * as T from "./tasks-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import {partOf} from "../../wodx-chronicle/scripts/events-rules.mjs";
 
 /**
  * WoDX Storyteller 0.43.0: battles and sieges (B2200-B2209). The rules are in battle-rules.mjs.
@@ -54,7 +55,9 @@ export function contextOf(battle) {
   const ctx = C.tripContext(now());
   const year = battle?.year || ctx.year || 1197;
   const branch = battle?.branch ?? (ctx.future ? "future" : "classic");
-  return {year, branch, age: B.ageFor(year, {branch, realm: battle?.realm ?? "world"})};
+  // B5900: the battle's own land, else the land of the scene in view, else the homeland
+  const land = battle?.land || C.landHere();
+  return {year, branch, land, age: B.ageFor(year, {branch, realm: battle?.realm ?? "world", land})};
 }
 
 /* ---- Characters' numbers ---- */
@@ -93,7 +96,7 @@ async function roll(dice, diff) {
 /** Start a battle or a siege. */
 export async function start(raw = {}) {
   const ctx = contextOf(raw);
-  const b = B.normBattle({...raw, year: raw.year || ctx.year, branch: raw.branch ?? ctx.branch, started: now()});
+  const b = B.normBattle({...raw, year: raw.year || ctx.year, branch: raw.branch ?? ctx.branch, land: raw.land || ctx.land, started: now()});
   for ( const s of b.sides ) {
     const a = s.commander.actorId ? game.actors.get(s.commander.actorId) : null;
     if ( a ) { Object.assign(s.commander, commandPools(a)); s.commander.name ||= a.name; }
@@ -269,14 +272,17 @@ const realmOpts = cur => opt(B.REALMS, cur);
 const actorOpts = cur => `<option value="">(by name and pool)</option>${C.pcs().concat(game.actors.filter(a => !a.hasPlayerOwner && a.type !== "Group").slice(0, 300))
   .map(a => `<option value="${a.id}"${a.id === cur ? " selected" : ""}>${esc(a.name)}</option>`).join("")}`;
 
-function sideForm(i, s, year) {
+function sideForm(i, s, year, land = "") {
   const pos = Object.fromEntries(B.positionsFor(year).map(p => [p.id, p.label]));
+  const units = B.unitsFor(year, land, s.units);
+  const unitRow = t => `<div class="form-group"><label>${esc(t.label)} <span class="wodx-quiet">(${t.troops.toLocaleString("en")} a unit)</span></label><input type="number" name="s${i}.u.${t.id}" value="${n(s.units?.[t.id])}" min="0" max="999" step="1" style="width:5em"></div>`;
+  const own = units.filter(t => t.own), common = units.filter(t => !t.own && !t.other), other = units.filter(t => t.other);
   return `<fieldset><legend>${i === 0 ? "The first side (attacks)" : "The second side (defends)"}</legend>
     <div class="form-group"><label>Name</label><input type="text" name="s${i}.name" value="${esc(s.name)}" maxlength="120"></div>
     <div class="form-group"><label>Faction (optional)</label><input type="text" name="s${i}.faction" value="${esc(s.faction)}" list="wst-battle-factions"></div>
     <div class="form-group"><label>Men</label><input type="number" name="s${i}.men" value="${s.men}" min="1" step="1"></div>
     <div class="form-group"><label>Quality</label><select name="s${i}.quality" data-fixed>${opt(B.QUALITY, s.quality)}</select></div>
-    <div class="form-group"><label>The supernatural in its ranks</label><select name="s${i}.supernatural" data-fixed>${opt(B.SUPERNATURAL, s.supernatural)}</select></div>
+    <div class="form-group"><label>The supernatural in its ranks</label><select name="s${i}.supernatural" data-fixed>${opt(B.supernaturalLabels(land, year), s.supernatural)}</select></div>
     <div class="form-group"><label>Where it stands</label><select name="s${i}.position" data-fixed>${opt(pos, s.position)}</select></div>
     <div class="form-group"><label>Commander</label><select name="s${i}.actorId">${actorOpts(s.commander.actorId)}</select></div>
     <div class="form-group"><label>Or by name</label><input type="text" name="s${i}.cname" value="${esc(s.commander.name)}" maxlength="120"></div>
@@ -287,7 +293,8 @@ function sideForm(i, s, year) {
     ${i === 1 ? `<div class="form-group"><label>Stores (days, a siege)</label><input type="number" name="s1.stores" value="${s.stores}" min="0" step="1"></div>` : ""}
     <details${B.unitCount(s.units) ? " open" : ""}><summary>The book's army, by units (Spoils of War)</summary>
       <p class="wodx-quiet">Fill this in for both sides to fight with the book's army: its units set the men and the Maneuver, Melee, Ranged and Defense pools. Leave it empty to use men and quality.</p>
-      ${Object.entries(B.UNIT_TYPES).map(([k, t]) => `<div class="form-group"><label>${esc(t.label)} <span class="wodx-quiet">(${t.troops.toLocaleString("en")} a unit)</span></label><input type="number" name="s${i}.u.${k}" value="${n(s.units?.[k])}" min="0" max="999" step="1" style="width:5em"></div>`).join("")}
+      ${own.length ? `<p><strong>Troops of this land</strong> <span class="wodx-quiet">(WoDX figures on the book's scale)</span></p>${own.map(unitRow).join("")}<p><strong>The book's troops</strong></p>` : ""}${common.map(unitRow).join("")}
+      ${other.length ? `<details><summary>Troops of other lands</summary>${other.map(unitRow).join("")}</details>` : ""}
     </details>
   </fieldset>`;
 }
@@ -296,9 +303,10 @@ function sideForm(i, s, year) {
 export async function setupDialog({kind = "field", id = null} = {}) {
   if ( !game.user.isGM ) return null;
   const b = id ? get(id) : B.normBattle({kind});
-  const {year, age} = contextOf(b);
+  const {year, age, land} = contextOf(b);
   let evs = [];
-  try { evs = B.warEvents(C.chron()?.events?.list?.() ?? [], year); } catch (e) { evs = []; }
+  try { evs = B.warEvents(C.chron()?.events?.list?.() ?? [], year, 5, {part: partOf(land)}); } catch (e) { evs = []; }
+  const lands = C.landChoices();
   let factions = [];
   try { factions = (game.settings.get("wodx-npc", "factions")?.factions ?? []).map(f => f.name); } catch (e) { /* NPC is off */ }
   const pcs = C.pcs();
@@ -308,8 +316,9 @@ export async function setupDialog({kind = "field", id = null} = {}) {
     <div class="form-group"><label>Place</label><input type="text" name="place" value="${esc(b.place)}" maxlength="120"></div>
     <div class="form-group"><label>Kind</label><select name="kind" data-fixed>${opt({field: "A battle in the field", siege: "A siege"}, b.kind)}</select></div>
     <div class="form-group"><label>Where</label><select name="realm" data-fixed>${realmOpts(b.realm)}</select></div>
+    ${Object.keys(lands).length ? `<div class="form-group"><label>Land</label><select name="land" data-fixed>${opt(lands, land)}</select><p class="hint">The troops, walls, engines and the way war is fought follow the land. Save and open again after changing it to see its own.</p></div>` : ""}
     <datalist id="wst-battle-factions">${factions.map(f => `<option value="${esc(f)}">`).join("")}</datalist>
-    ${sideForm(0, b.sides[0], year)}${sideForm(1, b.sides[1], year)}
+    ${sideForm(0, b.sides[0], year, land)}${sideForm(1, b.sides[1], year, land)}
     <fieldset><legend>Characters in the battle</legend>${pcs.length > 8 ? searchBox(".wst-battle-pcs", "Find a character…", "Search characters") : ""}
       <div class="wst-battle-pcs wodx-scroll" style="max-height:12em">${pcs.map(a => {
         const c = b.chars.find(x => x.actorId === a.id);
@@ -328,7 +337,7 @@ export async function setupDialog({kind = "field", id = null} = {}) {
     commander: {actorId: data[`s${i}.actorId`], name: data[`s${i}.cname`] || game.actors.get(data[`s${i}.actorId`])?.name || "",
       pool: data[`s${i}.pool`], morale: data[`s${i}.morale`], works: data[`s${i}.works`], medicine: data[`s${i}.medicine`]}});
   const chars = pcs.filter(a => data[`c.${a.id}`]).map(a => ({actorId: a.id, name: a.name, side: Number(data[`cs.${a.id}`]) === 1 ? 1 : 0, stance: data[`ct.${a.id}`]}));
-  const raw = {...(id ? b : {}), kind: data.kind, realm: data.realm, name: data.name || ev?.name || "", place: data.place, eventId: ev?.id ?? "", sides: [side(0), side(1)], chars};
+  const raw = {...(id ? b : {}), kind: data.kind, realm: data.realm, land: data.land || land, name: data.name || ev?.name || "", place: data.place, eventId: ev?.id ?? "", sides: [side(0), side(1)], chars};
   raw.book = undefined;
   if ( id ) { raw.sides = raw.sides.map((s, i) => ({...s, resolve: b.phases.length ? b.sides[i].resolve : null, start: b.phases.length ? b.sides[i].start : null})); }
   for ( const sd of raw.sides ) { const a = sd.commander.actorId ? game.actors.get(sd.commander.actorId) : null; if ( a ) Object.assign(sd.commander, commandPools(a)); }
@@ -393,13 +402,14 @@ export class BattlesApp extends ApplicationV2 {
   }
 
   #detail(b) {
-    const {year, age} = contextOf(b);
+    const {year, age, land} = contextOf(b);
     const id = esc(b.id);
+    const supL = B.supernaturalLabels(land, year);
     const setup = b.kind === "siege" ? null : B.isBook(b) ? B.bookSetup(b, age) : B.phaseSetup(b, age);
     const bp = B.isBook(b) ? B.bookPools(b, age).pools : null;
     const side = (s, i) => `<div class="wst-battle-side"><strong>${esc(s.name)}</strong>${s.faction ? ` <span class="wodx-quiet">(${esc(s.faction)})</span>` : ""}
       <div>${s.men.toLocaleString("en")} of ${s.start.toLocaleString("en")} men, ${bp ? `${esc(unitWords(s.units))}. Maneuver ${bp[i].maneuver}, Melee ${bp[i].melee}, Ranged ${bp[i].ranged}, Defense ${bp[i].defense}, before the commanders roll.` : `${esc(B.QUALITY[s.quality])}. Resolve ${s.resolve}.`}</div>
-      <div class="wodx-quiet">${esc(B.POSITIONS[s.position].label)}${s.supernatural ? `; ${esc(B.SUPERNATURAL[s.supernatural])}` : ""}. ${esc(s.commander.name || "No named commander")}, ${setup ? `${setup[i].pool} dice at ${setup[i].difficulty}` : `${b.sides[0] === s ? `${s.commander.works} dice for the works` : `${s.commander.pool} dice`}`}.${b.kind === "siege" && i === 1 ? ` Stores for ${s.stores} days.` : ""}${s.penalty ? " Wavering: 2 dice less." : ""}${B.demoralised(s) ? ` Demoralised: ${B.demoralised(s)} dice less.` : ""}${s.sick ? ` Disease: +${s.sick} difficulty.` : ""}${s.unrest ? ` Unrest: +${s.unrest} difficulty.` : ""}</div>
+      <div class="wodx-quiet">${esc(B.POSITIONS[s.position].label)}${s.supernatural ? `; ${esc(supL[s.supernatural])}` : ""}. ${esc(s.commander.name || "No named commander")}, ${setup ? `${setup[i].pool} dice at ${setup[i].difficulty}` : `${b.sides[0] === s ? `${s.commander.works} dice for the works` : `${s.commander.pool} dice`}`}.${b.kind === "siege" && i === 1 ? ` Stores for ${s.stores} days.` : ""}${s.penalty ? " Wavering: 2 dice less." : ""}${B.demoralised(s) ? ` Demoralised: ${B.demoralised(s)} dice less.` : ""}${s.sick ? ` Disease: +${s.sick} difficulty.` : ""}${s.unrest ? ` Unrest: +${s.unrest} difficulty.` : ""}</div>
       ${b.over ? "" : `<div class="form-group"><label>Deeds this phase</label><input type="number" name="deed${i}" value="0" min="0" max="20" style="width:4em" title="Successes from the characters' deeds for this side"><input type="text" name="deedName${i}" placeholder="Who, and what they did" maxlength="120"></div>`}
       ${b.over || !bp || b.kind === "siege" ? "" : `<div class="form-group"><label>This turn</label><select name="act${i}" data-fixed>${opt(B.ACTIONS, "melee")}</select></div>`}
       ${b.over ? "" : `<button type="button" data-action="withdraw" data-id="${id}" data-side="${i}">${i === 0 && b.kind === "siege" ? "Lift the siege" : "Draw off"}</button>`}</div>`;
