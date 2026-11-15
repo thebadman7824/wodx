@@ -332,6 +332,7 @@ Next free block: B6500
 | B6020-B6039 | Re-audit of marks and flags that nothing reads (non-power systems) (used B6020-B6034) | Combat, Chronicle, Actions, Storyteller |
 | B6040-B6049 | Lone Chronicle step 4: the director, experience from the night's log, the recap (used B6040-B6049) | Solo |
 | B6050-B6059 | gate7b fresh arena each run (used B6050-B6051) | tools (gates) |
+| B6060-B6069 | Split the line skins stylesheet: each line's skin loads only when needed (used B6060-B6063) | Sheets |
 | B6070-B6079 | Snow vehicles, trains and trams (rules and sprites), and a quality pass on the vehicle sprites (used B6070-B6076) | Interactables, Paperdoll, Combat |
 | B6080-B6099 | Weights for loose gear and container contents, and loose gear on the map (used B6080-B6089) | Library, Interactables, Combat |
 | B6100-B6109 | Wraith 20th named Artifacts (forge, Skin, Spectre) and souled relics on the crafting table, with real Use powers and looks (used B6100-B6104) | Library, Creation |
@@ -10280,6 +10281,26 @@ suggestion for that step. The runner's flight from a far foe has nowhere to go, 
 first, which walks it round the wall to the hero.
 
 Reverse: keep the arena between runs again, drop the scene's mode and take the first attack or flight.
+
+## B6060. The line skins load line by line (2026-11-15)
+WoDX Sheets. tools/skins/build-skins.mjs now writes styles/wodx-skins.css (the fonts and the loading rule, on every page through module.json), styles/skins/<line>.css (one per line in skins-data.mjs) and scripts/skins-index.mjs (the lines in order, with the window selector each one dresses). scripts/skins.mjs listens to renderApplication and renderApplicationV2, matches the sheet's window against the index, and adds each needed file once. The harness checks the split adds up to the single stylesheet rule for rule (buildCss is kept for that), and tools/harness/skins-split-check.mjs compares the two in Chromium picture for picture. Part of the Live performance item for slower machines.
+
+Reverse: put "styles/skins/*.css" back as one file by making build-skins.mjs write buildCss() to styles/wodx-skins.css again and drop the SK.setup() call in main.mjs.
+
+## B6061. Same cascade, no flash (2026-11-15)
+WoDX Sheets. Each line file goes in straight after styles/wodx-skins.css and after any earlier line, so the order against wodx-layout.css and other modules is the one the single file had. A sheet whose file is still loading carries wodx-wait-skin, which hides its page (not its title bar) until the file loads, fails, or 4 seconds pass.
+
+Reverse: drop the wait rule from build-skins.mjs and the class from scripts/skins.mjs; sheets would show the system's look for a moment on first open.
+
+## B6062. Skins off loads nothing (2026-11-15)
+WoDX Sheets. With Sheet look set to the system's own look no line file loads; switching back to WoDX dresses every open sheet at once.
+
+Reverse: none needed; a world that never uses the skins simply never fetches them.
+
+## B6063. A line file follows the core sheet into its cascade layer (2026-11-15)
+WoDX Sheets. On the testbed Foundry brings module stylesheets in as @imports into a cascade layer, not as <link>s, so the first loader found no core sheet and added nothing. The loader now walks document.styleSheets to find the core sheet however it came in: after a <link> it adds a <link>; after an @import it imports the line file into the same sheet, straight after the core sheet and the earlier lines, into the same layer (a <style> of its own if that sheet will not take one). A watch on the page dresses any sheet window the render hooks miss. tools/harness/skins-split-check.mjs proves both ways picture for picture, and gateskinsplit checks the layer and order in Foundry.
+
+Reverse: drop the @import branch in scripts/skins.mjs; line files would then sit outside the layer and win over layered styles they used to lose to.
 
 ## B6070. Sleds, snow machines, trains and trams are mounts (2026-11-15)
 WoDX Interactables. Four new MOUNTS kinds, so they can be tiles and Vehicle sheets: sled (Sled or sleigh, Ride, any year, 4 seats), snowmobile (Snow machine, Drive, from 1910, 2 seats), train (Railway train, Drive, from 1825, 40 seats, cannot be worked below Drive 2) and tram (Tram or streetcar, Drive, from 1860, 40 seats, Drive 2). House rules; logged in PENDING-REVIEW.

@@ -58,14 +58,46 @@ test("every bundled font file exists, is woff2 and has its licence", () => {
   }
 });
 
-test("the stylesheet in wodx-sheets is the one the generator writes now", () => {
-  const css = readFileSync(join(sheets, "styles/wodx-skins.css"), "utf8");
-  assert.equal(css, B.buildCss(), "run node tools/skins/build-skins.mjs");
+const scoped = css => {
   assert.ok(!/(?<!body)\.wodx-skin/.test(css.replace(/body\.wodx-skin/g, "")), "every rule is scoped to body.wodx-skin");
   for ( const block of css.split("}").filter(b => b.includes("{") && !b.includes("@font-face")) )
     for ( const sel of block.split("{")[0].replace(/\/\*[\s\S]*?\*\//g, "").replace(/\([^()]*\)/g, "()").split(",") ) assert.match(sel.trim(), /^body\.wodx-skin /, sel);
+};
+
+test("the skin files in wodx-sheets are the ones the generator writes now (B6060)", () => {
+  const {core, lines, index} = B.buildSplit();
+  const msg = "run node tools/skins/build-skins.mjs";
+  assert.equal(readFileSync(join(sheets, "styles/wodx-skins.css"), "utf8"), core, msg);
+  assert.equal(readFileSync(join(sheets, "scripts/skins-index.mjs"), "utf8"), index, msg);
+  const files = readdirSync(join(sheets, "styles/skins")).filter(f => f.endsWith(".css")).sort();
+  assert.deepEqual(files, S.LINES.map(L => `${L.id}.css`).sort(), "one file per line, and no other");
+  for ( const L of S.LINES ) {
+    const css = readFileSync(join(sheets, `styles/skins/${L.id}.css`), "utf8");
+    assert.equal(css, lines[L.id], `${L.id}: ${msg}`);
+    scoped(css);
+    assert.ok(!css.includes("@font-face"), `${L.id}: the fonts stay in the core sheet`);
+  }
+  scoped(core);
   const mod = JSON.parse(readFileSync(join(sheets, "module.json"), "utf8"));
   assert.ok(mod.styles.includes("styles/wodx-skins.css"));
+  assert.ok(!mod.styles.some(s => s.startsWith("styles/skins/")), "line skins are loaded by scripts/skins.mjs, not on every page");
+});
+
+test("the split adds up to the single stylesheet rule for rule, in the same order (B6060)", () => {
+  const {core, lines} = B.buildSplit();
+  const body = t => t.replace(/^\/\* WoDX line skin:[\s\S]*?\*\/\n\n/, "");
+  const wait = /\/\* While a sheet's own skin file loads[\s\S]*?\n.*wodx-wait-skin.*\n\n?/;
+  assert.match(core, wait, "the loading rule is in the core sheet");
+  const whole = core.replace(wait, "") + S.LINES.map(L => body(lines[L.id])).join("\n");
+  assert.equal(whole, B.buildCss());
+});
+
+test("the loader's index names each line once, in the stylesheet's order, with a test for its sheet (B6060)", async () => {
+  const {SKINS} = await import(pathToFileURL(join(sheets, "scripts/skins-index.mjs")).href);
+  assert.deepEqual(SKINS.map(s => s.id), S.LINES.map(L => L.id));
+  for ( const s of SKINS ) assert.match(s.test, /^\.wod20\.wod-sheet/, s.id);
+  const main = readFileSync(join(sheets, "scripts/main.mjs"), "utf8");
+  assert.match(main, /SK\.setup\(\)/, "main.mjs starts the loader");
 });
 
 test("each rule is a well-formed SVG with nothing outside its box", () => {

@@ -17,6 +17,7 @@ import DemonActorSheet, { DemonActorSheetV2 } from "../../../systems/worldofdark
 import MummyActorSheet, { MummyActorSheetV2 } from "../../../systems/worldofdarkness/module/actor/template/mummy-actor-sheet.js";
 import { onV2 } from "../../../systems/worldofdarkness/module/actor/template/lines-v2.js";
 import * as BG from "./beginner.mjs";
+import * as SK from "./skins.mjs";
 import { isDA as isFaeDA } from "../../wodx-actions/scripts/fae-da.js";
 import { isDA as isMageDA } from "../../wodx-actions/scripts/mage-da.js";
 import * as FR from "../../wodx-actions/scripts/fae-da-rules.js";
@@ -445,7 +446,8 @@ const LABELS = {
 };
 
 // The line skins (B91 to B94): WoDX's own fonts, papers and rules on every sheet, or the system's look as it ships
-const skinOn = v => document.body.classList.toggle("wodx-skin", v !== "system");
+// Each line's skin loads when one of its sheets opens (B6060)
+const skinOn = v => { document.body.classList.toggle("wodx-skin", v !== "system"); if (v !== "system") SK.dressAll(); };
 
 // The title bar (layout pass): the buttons show as icons so the name always fits; each keeps its words as a tooltip
 /** Names for the title bar buttons that carry no words of their own. */
@@ -574,6 +576,7 @@ Hooks.once("init", async () => {
     choices: { wodx: "WoDX line skins", system: "The system's own look" },
     onChange: skinOn
   });
+  SK.setup();
   skinOn(game.settings.get(MOD, "sheetLook"));
   const reg = foundry.documents.collections.Actors;
   for (const [type, cls] of [["Changeling", WodxChangelingSheet], ["Mage", WodxMageSheet], ["Hunter", WodxHunterSheet], ["Werewolf", WodxWerewolfSheet], ["Vampire", WodxVampireSheet], ["Mortal", WodxMortalSheet],
@@ -584,6 +587,6 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.22.2", extras: X, rules: SR, sheetFor, viewFor,
+  game.modules.get(MOD).api = { version: "0.23.0", extras: X, rules: SR, sheetFor, viewFor, skins: { loaded: SK.loaded, linesOf: SK.linesOf, load: SK.load, report: SK.report },
     anachronism: { check: AN.check, scan: AN.scan, report: AN.report, keep: AN.keep, scanMaps: AN.scanMaps, mapThings: AN.mapThings, keepThing: AN.keepThing, showThing: AN.showThing, everything: AN.everything, bringForward: AN.bringForward, undoForward: AN.undoForward } };
 });
