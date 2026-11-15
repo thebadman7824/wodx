@@ -89,4 +89,6 @@ export function nextBeat(places = [], post = null, at = null, step = 0) {
   const next = ring[(i < 0 ? num(step) : i + 1) % ring.length];
   return next === at ? ring[(ring.indexOf(next) + 1) % ring.length] : next;
 }
+/** On the hour the watch is at its post (the routine's own place); the rounds fill the quarters between. */
+export const atPostNow = now => ((Math.floor(num(now)) % 3600) + 3600) % 3600 < BEAT_SECONDS;
 export const beatDue = (last, now) => !Number.isFinite(Number(last)) || last === null || num(now) - num(last) >= BEAT_SECONDS;

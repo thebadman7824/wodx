@@ -67,6 +67,7 @@ test("r3: a beat goes round the places and back to the post", () => {
   assert.equal(F.nextBeat(["post"], "post", "post"), null, "nowhere else to go");
   assert.equal(F.beatDue(null, 10), true);
   assert.equal(F.beatDue(0, F.BEAT_SECONDS - 1), false);
+  assert.equal(F.atPostNow(7200), true); assert.equal(F.atPostNow(7200 + F.BEAT_SECONDS), false); assert.equal(F.atPostNow(7200 + 3599), false);
 });
 
 test("routines: the reactions follow through on the map", () => {

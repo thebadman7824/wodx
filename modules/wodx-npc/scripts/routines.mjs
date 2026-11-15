@@ -1160,15 +1160,15 @@ export function build(ctx) {
       content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p>${esc(out.join("; "))}. They will remember who held them.</p></div></div>`});
     return out;
   }
-  /** r3: guards on a watch block walk between the tagged places of the map in view, a stop every quarter hour. */
+  /** r3: guards on a watch block walk between the tagged places of the map in view, a stop every quarter hour; on the hour they are back at the post. Auto mode only. */
   async function walkBeats(scene, t) {
     if ( !scene || canvas.scene?.id !== scene.id || !onGrid() ) return [];
     const here = listPlaces().filter(p => p.region && p.scene?.id === scene.id);
-    if ( here.length < 2 ) return [];
+    if ( here.length < 2 || FW.atPostNow(t) ) return [];
     const moved = [];
     for ( const tok of canvas.tokens.placeables ) {
       const a = tok.actor?.isToken ? (tok.actor.baseActor ?? game.actors.get(tok.actor.id)) : tok.actor;
-      if ( !a || a.hasPlayerOwner || !routineOf(a)?.on || paused(a, t) || downState(a) || game.combat?.combatants?.some?.(c => c.tokenId === tok.id) ) continue;
+      if ( !a || a.hasPlayerOwner || !routineOf(a)?.on || modeOf(a, scene) !== "auto" || paused(a, t) || downState(a) || game.combat?.combatants?.some?.(c => c.tokenId === tok.id) ) continue;
       const w = whereOf(a);
       if ( w?.activity !== "patrol" || !FW.beatDue(flag(a, "beat")?.at ?? null, t) ) continue;
       const at = here.find(p => tok.document.regions?.has?.(p.region))?.id ?? null;
