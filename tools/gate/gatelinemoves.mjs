@@ -65,11 +65,11 @@ export async function run() {
     await G.step("5. Obfuscate", async () => {
       Hooks.callAll("wodxPowerShown", vamp, {power: "Unseen Presence", group: "Obfuscate", line: "Vampire", token: tv.uuid});
       await waitFor(() => tv.flags?.[PD]?.veil?.kind === "unseen", 5000);
-      await sleep(400);
+      await sleep(1500);   // past the ripple that plays as the figure fades or comes back
       const hidden = tv.flags?.[PD]?.veil?.kind === "unseen", alpha = A.faded(tv.object);
       Hooks.callAll("wodxPowerShown", vamp, {power: "Unseen Presence", group: "Obfuscate", line: "Vampire", token: tv.uuid});
       await waitFor(() => !tv.flags?.[PD]?.veil, 5000);
-      await sleep(400);
+      await sleep(1500);   // past the ripple that plays as the figure fades or comes back
       G.ok("5. Obfuscate", hidden && alpha > 0 && alpha < .5 && !tv.flags?.[PD]?.veil && A.faded(tv.object) === 1, {hidden, alpha, back: A.faded(tv.object)});
     });
 
