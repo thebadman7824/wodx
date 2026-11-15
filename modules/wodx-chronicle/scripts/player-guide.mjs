@@ -64,12 +64,23 @@ export function installGuide() {
   offer();
 }
 
+/** The Lone Chronicle is on and this player has no token of their character on the scene they view. */
+function soloWaits() {
+  let solo = false;
+  try { solo = game.modules.get("wodx-solo")?.active && game.settings.get("wodx-solo", "on") === true; } catch { solo = false; }
+  if ( !solo || game.user.isGM ) return false;
+  const a = game.user.character;
+  return !a || !canvas?.scene?.tokens?.some?.(t => t.actorId === a.id);
+}
+
 /** Offer the tour once, the first time this player joins. */
 async function offer() {
   let on = true;
   try { on = game.settings.get(MODULE_ID, "guideOffer"); } catch { on = true; }
   const g = get();
   if ( !on || g.offered ) return;
+  // In solo play the tour waits until the player's token is on the map: WoDX Solo makes it and says so (B5144)
+  if ( soloWaits() ) { Hooks.once("wodxSoloArrived", () => offer()); return; }
   await put({offered: true});
   const yes = await DialogV2.confirm({classes: ["wodx", "wodx-dialog"], window: {title: "Your first night"}, rejectClose: false,
     content: "<p>A short tour of six steps: your sheet, a roll, moving, the chat, asking the Storyteller and the X-card. Each one lights up where to look. Take it now?</p><p class=\"wodx-quiet\">You can take it later from the question-mark button, What can I do now?</p>",

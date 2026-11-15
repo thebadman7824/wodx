@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5950
+Next free block: B6000
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -250,6 +250,7 @@ Next free block: B5950
 | B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
 | B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5127) | NPC, Combat, Actions |
 | B5130-B5139 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5130-B5137) | Creation, Actions, NPC |
+| B5140-B5149 | Solo arrival: landing scene, character with token on first login (used B5140-B5144) | Solo, Chronicle |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 | B5160-B5169 | Playable Strengthening the Demon and fomor Numbing (used B5160-B5162) | Combat, Actions |
 | B5170-B5179 | Storyteller's Hand round two: Martyr, Marauders, the winds, holy ground, Untamable, feeding flaws, Berserker, flight, blackmail, the stimulant crash (used B5170-B5179) | Actions, Chronicle, Interactables, Library, NPC, Storyteller |
@@ -322,6 +323,11 @@ Next free block: B5950
 | B5920-B5929 | The classic world timeline in the game (used B5920-B5926) | Chronicle, Storyteller |
 | B5930-B5939 | Market goods by region (the Market Goods Desk) (used B5930-B5936) | Storyteller |
 | B5940-B5949 | Primers for a scene far from home (used B5940-B5942) | Storyteller |
+| B5950-B5959 | Weather history by part of the world (used B5950-B5955) | Atmosphere |
+| B5960-B5969 | Cults that give what they promise (used B5960-B5964) | NPC |
+| B5970-B5979 | NPCs make their own wonders (used B5970-B5974) | Storyteller |
+| B5980-B5989 | Lone Chronicle step 3: the oracle, the Leads page and night encounters on the map (used B5980-B5985) | Solo |
+| B5990-B5999 | Say or Do: full sentences and grieving (Ben's picks on law sentences and heartbreak) (used B5990-B5992) | Chronicle, NPC, Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8618,6 +8624,31 @@ Reverse: householdBeasts in residents.mjs.
 ## B5137. Ghoul mounts (2026-11-14)
 WoDX Combat. Mounts are still tiles with fixed traits; when the mounts work puts riders on Creature sheets, it reads the war-trained mark and the beast's Potence, Celerity and Fortitude. Desk item 21.
 
+## B5140. The seat brings the lone player in on every login (2026-11-15)
+WoDX Solo. Ben logged in to the solo world and found no map and no token, so the first-night prompts had nothing to work on. Foundry lets no player make an Actor and a world may open with no scene active, so the hidden Storyteller's seat now does both: the player's client asks on login and the seat answers (also for players already in when the seat sits down). One ask runs at a time per player. Setting "Bring the player in" (on) turns it off.
+
+Reverse: turn the setting off, or remove installArrival from main.mjs.
+
+## B5141. The landing scene (2026-11-15)
+WoDX Solo. The landing is the scene flagged wodx-solo.landing, else the one the "landing" setting names, else a Rothenstein scene with a map, the market first (the recipe's market anchor), then Rothenstein, Lower Town, any Rothenstein name; else the active scene with a map; else any scene with a map. A world with no map at all gets a plain night scene ("Rothenstein by night: the way in", dark, gridded, token vision on), flagged as the landing so a map can be set on it later. The landing is made active only when no scene with a map is active, so a Storyteller's choice of scene stands.
+
+Reverse: edit LANDING_NAMES or pickLanding in solo-rules.mjs.
+
+## B5142. The seat makes the player's character from a name and a line (2026-11-15)
+WoDX Solo. A player with no character picks a name (plain text, 60 characters, "A stranger" if blank) and one of seven lines, the recipe's lines for the valley: Vampire, Werewolf, Mage, Changeling, Wraith, Hunter, Mortal. The seat makes that sheet type, owned by the player alone, with a linked friendly token with sight on, and assigns it as the player's character. The wizard then picks the book for the sheet and the era by itself. One character each: a player who has one is brought to it instead. Ghouls, Kuei-jin and the rest are made from the sheet or the wizard's change of state, as at a shared table.
+
+Reverse: edit ARRIVAL_LINES or newCharacterData in solo-rules.mjs.
+
+## B5143. The token goes to the landing's way in and the player is taken to it (2026-11-15)
+WoDX Solo. A character with no token on any scene gets one at the landing's way in (the scene's starting view, else its middle, snapped to the grid: the same spot as I am stuck, free my token). The seat pulls the player to the token's scene; the player's screen centres on the token and selects it, and the character wizard opens for a new character. The panel shows Make my character above its buttons while the player has none, for a player who closed the first window.
+
+Reverse: remove placeToken and the pull from arrival.mjs.
+
+## B5144. The first-night tour waits for the token in solo play (2026-11-15)
+WoDX Chronicle. The tour is offered once, on the first join, and was used up on a solo login with no token to move. With The Lone Chronicle on, it now waits until the player's character has a token on the scene they view, and is offered when Solo's arrival fires its hook. At a shared table nothing changes.
+
+Reverse: remove soloWaits from player-guide.mjs.
+
 ## B5150. The Philippines a region of its own (2026-11-15)
 WoDX Chronicle and Storyteller. Ben asked to build out the Philippines. The islands leave the Malay world and become the 45th world region, "The Philippines (Manila, the Visayas, Mindanao and Sulu)", with Manila as its city, the tropical wet climate and the Philippine money region. The world map gives it the squares north of 4.5 degrees and east of 119.5 (with Palawan) that were the Malay world's; the map builder cuts the country out by name on its next run. The region's letter comes last so no older square changes. Taken as recommended; logged in PENDING-REVIEW.
 
@@ -9814,3 +9845,128 @@ Reverse: abroadPrimer returns an empty page.
 WoDX Storyteller. Each time the active scene moves into another way of life than the last, a "Far from home" card for everyone names the land and links the page. Moving between scenes in the same land posts nothing.
 
 Reverse: refreshAbroad({card: false}) everywhere.
+
+## B5950. The long ages weighed by climate (2026-11-15)
+WoDX Atmosphere, weather-rules.mjs eraShift(year, month, {climate, region}). The medieval warm spell, the Little Ice Age and its Maunder low keep their figures for central Europe and are weighed by the climate elsewhere (ERA_WEIGHT): full around the North Atlantic and the far north, about two thirds in the Mediterranean and East Asia, a quarter to a third in the tropics and the south. The warming since 1980 and the Future Darkness trend run faster near the poles. Rounded figures for play, a house reading.
+
+Reverse: eraShift ignores the place (every weight 1).
+
+## B5951. Hard years where they struck (2026-11-15)
+WoDX Atmosphere, EPISODES. Seventeen hard years from the climate's history, each with its years, months, the world regions (else climates) it touched, and how much colder or warmer, wetter or drier and stormier it ran: the dim years after the 1257 eruption, the great drought of the dry west (1276 to 1299), the great rains of 1315 to 1317, the drought of New Spain (1540 to 1581), the cold years after the eruption in Peru (1601 to 1602), the late Ming drought (1637 to 1643), the dry fog of 1783 and the hard winter after it, the year without a summer (1816) and the ash years nearer the eruption, the great drought of 1876 to 1878, Krakatoa (1884), the failed monsoons of 1896 to 1900, the dust years (1930s), the Sahel drought (1968 to 1985), the highland drought of 1983 to 1985 and the cool year after Pinatubo (1992). Eruptions felt the world over are weighed by the climate. The years are history; the sizes are a house reading.
+
+Reverse: EPISODES = [] (1816 then has no cold summer; keep the tambora row to keep the old behaviour).
+
+## B5952. Drought and rain change the wet days themselves (2026-11-15)
+WoDX Atmosphere. A hard year's wet factor scales each month's share of wet days in the rain chain, so a drought shows as fewer rain and snow nights on the map (and fewer Foundry rain effects) and a wet year as more. Storm factors scale the share of storms.
+
+Reverse: weatherFor's wet chain reads monthly(C.wet) alone.
+
+## B5953. The region comes from the scene (2026-11-15)
+WoDX Atmosphere, main.mjs. The weather passes the world region the scene stands in (WoDX Chronicle's world.here: its own, else the homeland) so a hard year is felt by region; with a hand-picked climate and no Chronicle, the climate alone decides. Left without a place, the figures are central Europe's as before.
+
+Reverse: weatherOn passes no region.
+
+## B5954. Named on the card and in the window (2026-11-15)
+WoDX Atmosphere. The weather card gives a hard year a line of its own (class watmo-era); the Weather and atmosphere window names the hard year, else the long age ("The Little Ice Age: hard winters and late springs"). The card leaves out the long age, so it does not repeat every night for centuries.
+
+Reverse: drop the watmo-era lines.
+
+## B5955. A post and a history call in the api (2026-11-15)
+WoDX Atmosphere api.weather.post(day, {gm}) posts a weather card for a day, and api.weather.history(year, month, place) gives eraShift, for gates and other modules.
+
+Reverse: drop the two calls.
+
+## B5960. A player founder's cult stands on the sheet (2026-11-15)
+WoDX NPC cults.mjs serve. The cult's Background (Herd for a blood or Kuei-jin cult, Cult for a mage's cult, the Netaru and a Wyrm cult, Followers, Dreamers and Memoriam) is written on the founder's sheet for player founders too, as it was for NPCs, since the Storyteller approved the cult. A Background set by hand at or above the cult's dots is left alone. So the hunt reads a blood cult's Herd dots (V20 p. 114). Binding the inner circle, taint and faction Influence stay for NPC founders.
+
+Reverse: return before the Background for founders that are not NPCs.
+
+## B5961. A gathering gives Faith, Glamour or Pathos (2026-11-15)
+WoDX NPC cult-rules gatheringGift. Hold a gathering gives the founder: Faith equal to the Followers dots from a Demon's devotees (Demon: The Fallen p. 155), Glamour equal to the Dreamers dots as Reverie's automatic successes (C20 p. 169), or Pathos from rolling the Memoriam dots at difficulty 8 (Wraith 20th p. 144), each capped by the permanent rating. A house reading of how often and how much.
+
+Reverse: gather skips giveGift.
+
+## B5962. Once a week (2026-11-15)
+WoDX NPC. The gift comes once in a week of world time (cult field lastGift); a gathering sooner still adds attention and says the gift comes once a week.
+
+Reverse: GIFT_EVERY = 0.
+
+## B5963. Shown on the card and the sheet (2026-11-15)
+The gathering card gets a line (class wnpc-cult-gift) with the points gained, the dice for remembrance and the new total, or why none came.
+
+Reverse: drop the line.
+
+## B5964. Kinds that give at the hunt or the rite (2026-11-15)
+Blood and Kuei-jin cults feed through Herd at the hunt, and the mage's cult, the Netaru and a Wyrm cult add their dots to rites, so their gatherings add no pool.
+
+Reverse: give them a gatheringGift row.
+
+## B5970. A monthly look over the NPCs who could make something (2026-11-15)
+WoDX Storyteller wonders.mjs npcMonth, on the active Storyteller's client when the clock passes a month (and after a time skip). An NPC who is not a player's, not a passer-by's stand-in and not a group, and who can make something in a line whose crafting switch is on (WoDX Library's wonder kits), is a candidate.
+
+Reverse: turn off "Wonders: NPCs make their own".
+
+## B5971. A few start work, by chance (2026-11-15)
+npc-makers-rules.mjs. Each able NPC has a one in three chance a month to start, at most three a month, one piece of work at a time. The row is picked at random among those the kit's own blockers let through, with the plainest options (no Gnosis spent, then 1, then 2). A house reading.
+
+Reverse: PER_MONTH = 0.
+
+## B5972. No approval card for an NPC's work (2026-11-15)
+An NPC's work starts as the Storyteller's would, approved, with no notice on screen; the Storyteller gets one card naming the makers and their work. The long task runs on its own and the finished item goes on the NPC's sheet as it does for a player.
+
+Reverse: start with approved false and an approval proposal.
+
+## B5973. A world setting, on by default (2026-11-15)
+"Wonders: NPCs make their own" (world, default on). It does nothing in a line whose crafting switch is off, so the Live world, where those switches are off, sees nothing.
+
+Reverse: default false.
+
+## B5974. The api for gates (2026-11-15)
+api.wonders.npcMonth({force, rand, only}) runs the look now (force does not move the month's mark), for chosen actors.
+
+Reverse: drop the option.
+
+## B5980. The oracle answers a yes-or-no question with one d10 (2026-11-15)
+WoDX Solo world-rules.mjs ODDS and oracleAnswer. Five odds, each two faces of the die apart: Almost certain (yes on 2 or more), Likely (4), Even odds (6), Unlikely (8), Hardly (10). The face that just makes a yes is "Yes, but" and the face just short is "No, but"; at even odds or better a 10 is "Yes, and" and a 1 is "No, and". The seat rolls the die on a card whispered to the player and the Storyteller, so Dice So Nice shows it. A house rule: no World of Darkness book gives a solo oracle.
+
+Reverse: take "oracle" off solo-rules.mjs PANEL.
+
+## B5981. An "and" brings a lead (2026-11-15)
+"Yes, and" and "No, and" draw a foreshadowing for the character from WoDX Storyteller's story aids and send it through the approval queue, which the Lone Chronicle's standing approvals let through to the player as a card. The world has moved further than the player asked.
+
+Reverse: set lead false on ANSWERS.yesAnd and ANSWERS.noAnd.
+
+## B5982. The Leads page shows only what the character knows (2026-11-15)
+leadsFor. The ten newest signs and dreams WoDX Storyteller whispered to the player (dreams, visions, auguries, foreshadowings), the character's open oaths, debts and boons in the Ledger (by id, or by name where the entry was typed without one), open objectives with their next step, and the oracle's last five answers. A consequence stays the Storyteller's until it comes due, and kept, broken or cancelled entries are left off. Let it go takes a lead off the page for good.
+
+Reverse: take "leads" off solo-rules.mjs PANEL.
+
+## B5983. Each part of the night may bring one encounter (2026-11-15)
+encounterDue, CHANCE. While solo mode is on and the clock moves at night where the character is, each part of the night (early, the dead hours, before dawn) rolls once, a one in three chance, for the character's scene; a scene with a fight running is skipped. The roll is kept by night and part, so waiting longer does not roll again. World setting "Night encounters find the lone player" (on by default). A house figure: the books give no such chance.
+
+Reverse: turn the setting off, or CHANCE = 0.
+
+## B5984. The encounter's people come in sight, a few squares off (2026-11-15)
+arrivalSpot, RING. The people of the night's encounter line (WoDX Storyteller's placeEncounter and WoDX Creation's people generator) stand on the character's scene, in plain sight, on the first square four to eight squares away in one of eight directions that lies inside the map and that a wall does not cut off from the character. Being in plain sight, they stop a wait ("someone came near").
+
+Reverse: place them hidden.
+
+## B5985. Town or wilds, by the scene (2026-11-15)
+placeKind. A scene takes the wilds' encounters when its name says road, forest, field, moor, river, mountain, pass, camp and the like, else the town's; battle maps, test scenes and the other worlds take none. The scene flag wodx-solo.encounters (town, wilds or none) wins.
+
+Reverse: set the flag to none on a scene.
+
+## B5990. Time served takes the character off the map (2026-11-15)
+WoDX Chronicle. Prison, hard labour and the other time sentences hide every token of the character on every scene and keep a lawAway flag with the year the time ends. When the clock reaches that year, or the sentence is pardoned, the tokens come back and the table is told. Replaces the Storyteller-only time served of B5823.
+
+Reverse: remove sendAway, comeBack and releaseServed in law-punish.mjs.
+
+## B5991. A brand shows; heartbreak takes a social die (2026-11-15)
+WoDX Chronicle, NPC, Actions. A brand sentence puts a Branded status on the character's token until every brand is pardoned. A broken heart that is neither borne nor botched leaves Grieving for seven days: one die fewer on social rolls (Actions reads the new socialDice mod), replacing the +1 difficulty Heartsick of B5826.
+
+Reverse: remove brand() in law-punish.mjs; put Heartsick back in hearts.mjs; drop socialDice.
+
+## B5992. The law comes for the condemned (2026-11-15)
+WoDX Chronicle, Storyteller. A death sentence holds the condemned and calls WoDX Storyteller's raid (reach.lawCome) to arrest them where they stand; the player chooses to go or resist.
+
+Reverse: remove the lawCome call in carryOut.

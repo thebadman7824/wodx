@@ -215,12 +215,17 @@ export function build(ctx) {
     const place = tagged(scene?.documentName === "Scene" ? scene : null), day = DU.worshipDay(cult.id);
     const R = game.modules.get(MOD)?.api?.routines;
     for ( const m of cult.named ) { const x = game.actors.get(m.id); if ( x && place && R?.setDuty ) await R.setDuty(x, `cult-${cult.id}`, DU.worshipDuty(place, cult.name, day)); }
-    if ( !a || !cult.founder?.npc ) return {cult, lines};
+    if ( !a ) return {cult, lines};
     // e1: what the cult is for
-    const sv = DU.cultServes(cult.kind, C.dotsFor(cult.kind, cult.members, cult.ordained));
-    // The cult stands for a Background on the founder's sheet (V20 p. 114 Herd, M20 p. 310 Cult), so the founder's own rolls use it
-    if ( sv.herd && await syncBackground(a, "Herd", sv.herd, cult.id) ) lines.push(`feeds ${a.name} as Herd ${sv.herd}`);
-    if ( sv.dice && await syncBackground(a, "Cult", sv.dice, cult.id) ) lines.push(`adds ${sv.dice} ${sv.dice === 1 ? "die" : "dice"} to ${a.name}'s rites (Cult ${sv.dice})`);
+    const dots = C.dotsFor(cult.kind, cult.members, cult.ordained);
+    const sv = DU.cultServes(cult.kind, dots);
+    // The cult stands for a Background on the founder's sheet (V20 p. 114 Herd, M20 p. 310 Cult, Followers, Dreamers,
+    // Memoriam), so the founder's own rolls use it. B5960: a player's founder too, since the Storyteller approved the cult.
+    const bg = C.SHEET_BG[cult.kind];
+    if ( bg && dots && await syncBackground(a, bg, dots, cult.id) ) {
+      lines.push(bg === "Herd" ? `feeds ${a.name} as Herd ${dots}` : bg === "Cult" ? `adds ${dots} ${dots === 1 ? "die" : "dice"} to ${a.name}'s rites (Cult ${dots})` : `stands as ${bg} ${dots} on ${a.name}'s sheet`);
+    }
+    if ( !cult.founder?.npc ) return {cult, lines};
     if ( sv.bind ) {
       const SV = game.modules.get(MOD)?.api?.servants;
       for ( const m of cult.named.filter(x => x.rank === "ordained") ) {
@@ -362,13 +367,37 @@ export function build(ctx) {
   async function gather({cultId, userId = null} = {}) {
     if ( !on() ) return null;
     if ( !isActiveGM() ) { game.socket.emit(SOCKET, {type: "cult.gather", cultId, userId: game.user.id}); return null; }
-    let got = null;
-    await mutate(cur => cur.map(c => { if ( c.id !== cultId ) return c; got = {...c, attention: c.attention + 2, log: [...c.log, {at: now(), text: "A gathering was held."}]}; return got; }));
+    let got = null, giftNow = false;
+    await mutate(cur => cur.map(c => {
+      if ( c.id !== cultId ) return c;
+      giftNow = C.giftReady(c, now());
+      got = {...c, attention: c.attention + 2, lastGift: giftNow ? now() : c.lastGift, log: [...c.log, {at: now(), text: "A gathering was held."}]};
+      return got;
+    }));
     if ( !got ) return null;
     const s = C.summary(got, yearNow());
+    // B5961: the gathering gives the founder what it promises, once a week: Faith, Glamour or Pathos on the sheet
+    const gift = giftNow ? await giveGift(got, s.dots) : null;
+    const giftLine = gift ? `<p class="wnpc-cult-gift"><i class="fa-solid fa-hand-holding-heart"></i> ${esc(gift)}</p>`
+      : (C.GIFT_KINDS.includes(got.kind) && s.dots && !giftNow ? `<p class="wodx-quiet">Gathered again too soon: the gift comes once a week.</p>` : "");
     await ChatMessage.create({whisper: [...gmIds(), ...(userId ? [userId] : [])], speaker: {alias: got.name},
-      content: `<div class="wodx-card wnpc-cult-card"><p><b>${esc(got.name)} gathers</b>: ${esc(s.members)} ${esc(C.CULT_KINDS[got.kind].members)}, devotion ${s.devotion}. ${esc(s.gives)} <span class="wodx-quiet">(${esc(s.ref)})</span></p></div>`});
-    return got;
+      content: `<div class="wodx-card wnpc-cult-card"><p><b>${esc(got.name)} gathers</b>: ${esc(s.members)} ${esc(C.CULT_KINDS[got.kind].members)}, devotion ${s.devotion}. ${esc(s.gives)} <span class="wodx-quiet">(${esc(s.ref)})</span></p>${giftLine}</div>`});
+    return {...got, gift};
+  }
+  /** Applies a gathering's gift to the founder's sheet; returns the line for the card, or null. */
+  async function giveGift(c, dots) {
+    const a = founderOf(c);
+    if ( !a ) return null;
+    let faces = [];
+    if ( c.kind === "remembrance" && dots ) { const r = await new Roll(`${dots}d10`).evaluate(); faces = r.dice[0]?.results?.map(x => x.result) ?? []; }
+    const g = C.gatheringGift(c.kind, dots, faces);
+    if ( !g ) return null;
+    const cur = foundry.utils.getProperty(a, g.path) ?? {};
+    const temp = Number(cur.temporary) || 0, next = C.poolAfter(temp, cur.permanent, g.gain, g.cap);
+    if ( next !== temp ) await a.update({[`${g.path}.temporary`]: next});
+    const rolled = g.rolled ? ` (rolled ${g.faces.join(", ")} at difficulty 8)` : "";
+    return next > temp ? `${a.name} gains ${next - temp} ${g.label} from the gathering${rolled}: now ${next}.`
+      : `${a.name} gains no ${g.label} this time${rolled}${g.gain && next === temp ? ", the pool is full" : ""}.`;
   }
   async function ask({actorId, placeKey} = {}) {
     if ( !on() ) return false;
