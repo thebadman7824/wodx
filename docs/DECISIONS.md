@@ -340,7 +340,7 @@ Next free block: B6500
 | B6180-B6199 | Shared terms: one meaning for time, dice, health, distance, eras and who is who across every module (used B6180-B6199) | Chronicle, Actions, Combat, Creation, Interactables, Library, NPC, Otherworlds, Paperdoll, Senses, Sheets, Solo, Storyteller, Targeting, Atmosphere |
 | B6210-B6219 | gatevehicles plays in a year with cars (used B6210) | tools (gates) |
 | B6220-B6229 | The night's work: one Undo for a night of the Storyteller's Hand (Ben's desk pick hd1, 15 November 2026) (used B6220-B6226) | Chronicle, Solo |
-| B6240-B6249 | Load less on players' machines, and the Monday decisions archive (stale design desk 2026-11-15 f1, f2) (used B6240-B6243) | Chronicle, Storyteller, Creation, NPC, Actions, tools |
+| B6240-B6249 | Load less on players' machines, and the Monday decisions archive (stale design desk 2026-11-15 f1, f2) (used B6240-B6244) | tools |
 | B6250-B6259 | Names follow each year's customs (Improvement Desk nm1) (used B6250-B6253) | Creation, NPC |
 | B6260-B6269 | Real recorded cues: Freesound CC0/CC BY sounds for dawn, dusk, notice, birdsong, cock-crow and heartbeat, by era and faith (used B6260-B6263) | Atmosphere |
 | B6300-B6309 | Every line level with vampires in shared modules (Actions, Combat) (used B6300-B6308) | Actions, Combat |
@@ -10610,6 +10610,11 @@ Reverse: import the tables statically again in scripts/people.mjs and FEMININE i
 tools/docs/archive-decisions.mjs. Each Monday, with the build log, the decisions in docs/DECISIONS.md more than a month old (a "## B" heading and its lines, dated by its heading or the one above; or a dated row of the early table) move to docs/archive/decisions-<year>-<month>.md. A move, never a deletion: the archive file is written first, nothing is written twice, and a test checks every line is kept. The index of blocks stays at the top of DECISIONS.md, and each block whose text moved names its file ("text in decisions-2026-11", with "the rest in this file" when only part moved). The checks that look a decision up (the referee, rules clashes, fragments and index tests) read the archive files too. Nothing is due until 9 December 2026. Ben picked this on the stale design desk (2026-11-15 f2).
 
 Reverse: stop running the script on Mondays; to bring text back, move the sections from the archive file into DECISIONS.md and drop the "(text in ...)" notes.
+
+## B6244. The build log archive run moves the old decisions too, and the two-browser gates count every file (2026-11-15)
+tools/docs/archive-build-log.mjs ends each run, --dry included, by running tools/docs/archive-decisions.mjs with the same options, so the existing Monday docs archive task moves the decisions more than a month old with no change to the task (B6243). tools/harness/gate-two.mjs enlarges each browser's resource timing list before the game loads: the browser keeps 250 entries by default, and a full list hid the timeline files even on the Storyteller's client, so the player load measure (gateplayerload) undercounted. That gate now fails when the list is full, or when the Storyteller's measure does not show the timeline, so an empty "nothing heavy" on the player's side means something.
+
+Reverse: drop the import at the end of main() in archive-build-log.mjs, and the addInitScript line in gate-two.mjs.
 
 ## B6250. Name customs by year, with sources, only where a source dates them (2026-11-15)
 WoDX Creation, data/name-customs.mjs. Each people has stages (given, byname, settling, family) by year, a noble year where the nobility bore inherited names earlier, and the source. Dated laws: the Habsburg patent for Jews (23 July 1787), Japan (edicts of 1870 and 1875), the Netherlands (decree of 18 August 1811), Sweden (Name Ordinance of 1901), Hawaii (Act to Regulate Names, 1860), the Philippines (Clavería decree, 1849), Thailand (Surname Act, 1913), Iran (civil registration, 1925), Turkey (Surname Law, 21 June 1934). Peoples with no dated source keep their tables as they are and are listed as open.
