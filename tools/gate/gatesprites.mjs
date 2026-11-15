@@ -65,7 +65,7 @@ async function runGate(K) {
     ok("4. walk", right === "right" && down === "down", {right, down, covered: A.state(t.id)?.dist});
 
     const tex = t.object?.mesh?.texture, fr = tex?.frame ?? {};
-    ok("5. frame", Math.round(fr.width) === SR.FRAME_W && Math.round(fr.height) === SR.FRAME_H && (tex?.baseTexture?.width ?? tex?.source?.width) === SR.FRAME_W * SR.FRAMES,
+    ok("5. frame", Math.round(fr.width) === SR.FRAME_W && Math.round(fr.height) === SR.FRAME_H && (tex?.baseTexture?.width ?? tex?.source?.width) === SR.FRAME_W * (SR.FRAMES + (SR.hasStand?.(names[0]) ? 1 : 0)),
       {frame: {x: fr.x, y: fr.y, width: fr.width, height: fr.height}, sheet: tex?.baseTexture?.width ?? tex?.source?.width});
     await t.update({x: x0, y: y0}); await sleep(2500);
 
@@ -83,7 +83,7 @@ async function runGate(K) {
       const during = A.playing(t.id), atex = t.object?.mesh?.texture, aw = atex?.baseTexture?.width ?? atex?.source?.width, facing = A.state(t.id)?.facing;
       await sleep(1500);
       const after = A.playing(t.id), wtex = t.object?.mesh?.texture;
-      ok("7. attack", move === "cast" && Object.values(sheets).every(v => v === 200) && during?.act === "cast" && aw === SR.FRAME_W * SR.ACT_FRAMES && !after && (wtex?.baseTexture?.width ?? wtex?.source?.width) === SR.FRAME_W * SR.FRAMES,
+      ok("7. attack", move === "cast" && Object.values(sheets).every(v => v === 200) && during?.act === "cast" && aw === SR.FRAME_W * SR.ACT_FRAMES && !after && (wtex?.baseTexture?.width ?? wtex?.source?.width) === SR.FRAME_W * (SR.FRAMES + (SR.hasStand?.(names[0]) ? 1 : 0)),
         {move, sheets, during: during?.act, facing, attackSheetWidth: aw, ended: !after});
     } else ok("7. attack", false, {error: "api.sprites.play is missing"});
 

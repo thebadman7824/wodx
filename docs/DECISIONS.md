@@ -246,6 +246,7 @@ Next free block: B5780
 | B5010-B5029 | The Storyteller's Hand, part three: fire, noticing, and the rest of the desk acts by itself (Ben's desk picks, 14 November 2026) (used B5010-B5024) | Interactables, Actions, Senses, Library, Chronicle, Storyteller, Otherworlds, Creation |
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5064) | Creation, NPC, Actions |
+| B5070-B5089 | Carrying the fallen and moving large things (Carry Bodies Desk) (used B5070-B5086) | Interactables, Combat, NPC, Solo |
 | B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
 | B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5127) | NPC, Combat, Actions |
 | B5130-B5139 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5130-B5137) | Creation, Actions, NPC |
@@ -300,6 +301,7 @@ Next free block: B5780
 | B5630-B5639 | Blood hunts: court Kindred turn in batches (used B5630) | Actions |
 | B5640-B5649 | German names before 1900, and refilling emptied tables (used B5640-B5641) | Creation, Chronicle |
 | B5650-B5659 | Spirit Charms: the W20 Charms play from a Charm window (used B5650-B5657) | Actions, Combat |
+| B5660-B5669 | Child proportions, drawn poses by routine, animal legs (used B5660-B5668) | Paperdoll |
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 <!-- decision-index:end -->
@@ -8301,6 +8303,91 @@ Reverse: animalOrderBlock in give().
 ## B5064. Kept for later (2026-11-14)
 Coat colours are stored on the animal (flags.wodx-creation.animal.coat) for the sprite parts; drawing them is the pixel sprites' work.
 
+## B5070. Who can carry or drag (2026-11-14)
+WoDX Interactables. Anyone in reach of a character who is Incapacitated, unconscious, asleep, staked, in torpor, paralysed or dead gets Carry and Drag on the hand button of the token HUD, friend or foe. Seven health levels filled counts as Incapacitated. Ben's pick on the Carry Bodies Desk (c1).
+
+Reverse: turn off "Carrying the fallen and moving large things" in Configure Settings.
+
+## B5071. Carry if the lifting chart lifts it, else drag (2026-11-14)
+WoDX Interactables. The VtDA20 lifting chart (p. 335) against the body's weight. Strength counts the sheet's total (Crinos and the other forms) and Potence; two or more together add their Strength. A grown person weighs 70 kg, a youth 60, a child of 12 to 14 45, of 7 to 11 30, a small child 15; Glabro 110, Crinos 300, Hispo 180, Zulo 160; a creature by its squares (40, 450, 900, 2500 kg); mist and a body in the earth cannot be taken hold of. The weights are house figures. Ben's pick (c2).
+
+Reverse: edit PERSON_KG, SHAPE_KG and CREATURE_KG in haul-rules.mjs.
+
+## B5072. Half pace carrying, quarter dragging, no roll for a body (2026-11-14)
+WoDX Interactables and Combat. WoDX Combat's movement limit and the move ruler's floating count take the cut. A body more than two chart steps past the team's Strength will not move until others take hold (house reading: the desk set that limit for things, and it holds for bodies too). Ben's pick (c3).
+
+Reverse: change PACE in haul-rules.mjs, or drop the haul branch in moveCheck (movement.js).
+
+## B5073. Hands: carrying takes both, dragging one; more hands, more free (2026-11-14)
+WoDX Interactables and Combat. Carrying a body or straining at a thing past the chart takes two hands; dragging, hauling a pile or pushing something light takes one. Hands come from WoDX Combat's body (a Vicissitude extra arm counts; a beast holds in its jaws, one). A weapon from the sheet needs a free hand, two for a two-handed one; with two hands and one dragging, the other is the off hand (+1 difficulty, V20 p. 273, none with Ambidextrous); a shield needs a hand of its own beside the weapon. Natural weapons, punches and kicks need no hands. Ben's pick (c4), with Ben's note: hands must allow for characters with more than two.
+
+Reverse: change HANDS or attackWith in haul-rules.mjs, or drop handsCheck in Combat main.js.
+
+## B5074. In a fight: +1 to dodge, dropping is free, a fall drops it (2026-11-14)
+WoDX Interactables and Combat. Any burden (a body or a thing) puts a dodge at +1 difficulty. Letting go costs no action. Knocked down, dazed, stunned, prone or going down drops the load at once, with a card. Ben's pick (c5).
+
+Reverse: set DODGE to 0 in haul-rules.mjs; drop DROPS in haul.mjs.
+
+## B5075. The body on the map, and the trail (2026-11-14)
+WoDX Interactables. A carried body lies on the carrier's square, turned on its side and dimmed; a dragged one lies a square behind. Dragging leaves a line drawn on the map: scuffs, or blood for a body with lethal or aggravated damage or a dead one. A blood trail also leaves a trail clue where it began, for trackers to study, and a map event for the town. Ben's pick (c6).
+
+Reverse: drop growTrail from lay in haul.mjs.
+
+## B5076. Laying it down: on the ground, aboard, on a bed or a table (2026-11-14)
+WoDX Interactables. Next to a mount or vehicle with a seat free, the body is laid aboard as a passenger and goes where it goes; on a bed or a table it lies on the tile. Ben's pick (c7).
+
+Reverse: drop the onto branches in release (haul.mjs).
+
+## B5077. NPCs rescue their own, hide bodies and take captives (2026-11-14)
+WoDX NPC. An NPC who is retreating with an ally down within reach carries or drags the ally away; a Kindred, a cultist or anyone hiding its nature with mortals about drags a body out of their sight; an NPC with no foe standing in reach takes an incapacitated rival, enemy or hostile player character captive and carries them off. Suggest mode names it on the Storyteller's card with Accept; Auto does it. "Leaves the fallen where they lie" in the Behaviour window switches it off for one NPC. Ben's pick (c8), with Ben's note: NPCs also capture incapacitated rivals, enemies and hostile player characters.
+
+Reverse: have carryOption in npc-rules.mjs return null.
+
+## B5078. A carried character who wakes can struggle free or stay (2026-11-14)
+WoDX Interactables. A card to the owner: Struggle free (Strength + Athletics at 6 against the carrier's Strength at 6, more successes win) or Stay carried. Moving their own token is struggling free; one still down is put back. A Storyteller's move of a carried token lets it go. Ben's pick (c9).
+
+Reverse: drop movedWhileCarried and the wake card in haul.mjs.
+
+## B5079. In a Lone Chronicle a companion carries the player (2026-11-14)
+WoDX Solo and NPC. When the lone player's character goes down, the nearest companion (an NPC who serves them, or a friendly NPC of their party) carries or drags them away from danger by itself; the panel's Carry the fallen asks a companion to carry another fallen one. Ben's pick (c10).
+
+Reverse: turn off "Companions carry the fallen" in WoDX Solo's settings.
+
+## B5080. Which things move (2026-11-14)
+WoDX Interactables. Made-map chests, boxes and crates, barrels and sacks, cabinets and wardrobes, desks, strongboxes, safes, beds and tables, and carts, carriages, motorcycles and motor cars with nobody at the reins. Counters, bars, walls, doors and the rest of the house stay. Any tile the Storyteller gives a weight moves; Fixed in place keeps one still. WoDX keeps no weights for loose gear and no gear on the map (the Library's Examine left weight out), so heavy loose items are the stores: crates, barrels and sacks. Weights are house figures (a chest 30 kg, a barrel 100, a cabinet 60, a desk 45, a safe 400, a bed 50, a wardrobe 70, a table 30, a cart 250, a carriage 600, a car 1,100, and a kilo for each thing inside). Ben's pick (c11).
+
+Reverse: edit CONTAINER_KG, HIDE_KG, COVER_KG and VEHICLE_KG in haul-rules.mjs.
+
+## B5081. Push and pull by the lifting chart, help adds up (2026-11-14)
+WoDX Interactables. Under the chart: half pace, no roll. Up to two steps over: quarter pace and Strength + Athletics at 6 each turn; a failed roll keeps the thing and its holder where they were. Past that it will not budge, and a player's move is refused until others take hold. A thing that was only part of the map picture cuts its piece of the picture out as it first moves, and the floor beside it covers the spot it left. Ben's pick (c12).
+
+Reverse: change STRAIN_STEPS in haul-rules.mjs; drop liftPicture in haul.mjs.
+
+## B5082. Wheels halve the load, rough ground doubles it, no stairs (2026-11-14)
+WoDX Interactables. A cart, carriage, motorcycle or car, or any tile marked On wheels, counts as half its load and what lies aboard; mud, snow, rubble, sand or a bog (a region's name, the scene's ground, snow lying or rain out of doors) takes it back to full. A wheeled thing stops at a ladder or stairs tile. Ben's pick (c13).
+
+Reverse: change movingKg in haul-rules.mjs.
+
+## B5083. Dragging furniture is loud (2026-11-14)
+WoDX Interactables. Each turn of moving furniture of 20 kg or more without wheels is loud: NPCs in earshot roll to hear it and a map event goes out, as climbing and falls do. A cart creaks (quiet), a dragged body is quiet, carrying is silent. Ben's pick (c14).
+
+Reverse: change noiseOf in haul-rules.mjs.
+
+## B5084. Hauling a pile (2026-11-14)
+WoDX Interactables. A crate, barrel, sack or basket of goods (a container of the box kind) is hauled along at half pace with one hand, its goods inside it. Ben's pick (c15).
+
+Reverse: empty PILE_KINDS in haul-rules.mjs.
+
+## B5085. Furniture in a doorway blocks it (2026-11-14)
+WoDX Interactables. A thing left over a door's middle draws a wall in the doorway (it blocks sight too, unless it is a table or a vehicle) and is good cover (+2, V20 p. 286). Shoving it aside from either side is the same push by the chart. Ben's pick (c16).
+
+Reverse: drop settleBarricade in haul.mjs and the barricade line in coverOnShot (main.mjs).
+
+## B5086. No general encumbrance (2026-11-14)
+WoDX Interactables. Only bodies and large things use these rules; everyday gear stays as it is. Ben's pick (c17).
+
+Reverse: none needed; nothing was built for it.
+
 ## B5090. Golconda ends when its purity fails (2026-11-14)
 WoDX Actions. A vampire in Golconda falls from it by itself when the Road drops below 7 or Conscience (or Conviction) below 4 (V20 Dark Ages p. 359; Ben's pick go1). A card goes to the player and the Storyteller, and "Golconda lost" floats over the token. Frenzy, Rötschreck and the nightly blood loss return. The long road can be walked again. Setting "Golconda's rules".
 
@@ -8945,6 +9032,52 @@ Reverse: drop the spirit branch in soakOpts and the sheet bonus in soakAndApply.
 WoDX Actions. The NPC power choice offers a spirit's Charms by their effect keywords (Blast to attack, Armor to guard, Healing to heal, Re-form to escape), leaving out what it cannot pay for or what the era does not allow.
 
 Reverse: drop the spirit branch in npcPowers.
+
+## B5660. Beasts' legs are built by kind (2026-11-15)
+WoDX Paperdoll, tools/sprites/beast.py. Every four-legged kind used the wolf's leg, so cattle, horses, pigs and sheep stood on a dog's bent hind legs and paws. Each kind now names its leg: `hoof` (a knee low on the foreleg, the hock high and pointing back, a thin cannon bone, a dark hoof), `pad` (the thick columns and flat feet of bears and mammoths) or `paw` (dogs, cats, small beasts and the clawed beasts of legend). The walk is a four-beat walk: a hind foot, then the fore foot of the same side a quarter of the stride later. The mount sheets were drawn again from the same rig, so ridden horses, mules and camels have the same legs.
+
+Reverse: set `leg='paw'` for every kind and put the two-beat phases back in `side()`.
+
+## B5661. A standing frame (2026-11-15)
+A walk cycle has no frame with every foot down, so a still figure seen from the side showed a lifted leg. Every sheet the batch draws now carries a standing frame as a ninth column after the eight of the walk, and the manifest marks it (`stand: true`). The game shows that column when the token is not moving (sprite-rules `frameOf(st, grid, stand)`), and column 0 as before for a sheet without one.
+
+Reverse: drop the ninth column in batch.py `run()` and `STAND` in sprite-rules.mjs.
+
+## B5662. Beasts graze and lie down (2026-11-15)
+The beast rig takes a pose: the head comes down to the ground with the muzzle tipped (grazing, a loop) or the body comes down with the legs folded under it (lying, held). Sheets `graze` and `lie`, six frames by four facings.
+
+Reverse: remove `posed()` from beast.py and the two names from `BEAST_LIFE`.
+
+## B5663. Children have a child's proportions (2026-11-15)
+The child bands of B3480 squeezed the whole figure below the chin by one factor, which gave a small adult. Each band now gives the legs their own share of the height below the chin (0.50 for the smallest, 0.63 for the grown) and the trunk the rest; the head keeps nearly its full width and the shoulders come in. Heights by band are unchanged, so nothing that reads a child's size changes. The sample map of 15 November had shrunk grown figures instead of passing `growth`; that was the sample's mistake, not the game's.
+
+Reverse: one factor below the chin again in child.py `Warp`.
+
+## B5664. Poses are drawn, not made from the walk (2026-11-15)
+Sitting and kneeling were made by squashing the standing frame. wear.py now draws a pose joint by joint (`pose_at`, `posed`): on a seat, on a stool of its own, on the ground, kneeling with the hands together, seated with a cup, working with the hands, kneeling to tend, hoeing, and the walk with a sack in the arms (`carry`, a way of going). Asleep is the figure seen from above under a blanket, eyes shut, one row for each way the head can point. Long garments lie over bent legs and never hang below the ground. Children take every pose. Working, tending, hoeing, drinking and grazing go round for as long as the figure stays at them.
+
+Reverse: drop `PA.drawn()` from batch.py; the squashed sit and kneel return.
+
+## B5665. Figures live their routine on the map (2026-11-15)
+World setting `spriteLife`, on by default. The active Storyteller's computer looks every few seconds at each sprite token whose character has a WoDX NPC routine and, once the token has come to rest, gives it the pose of what the routine says it is doing: asleep lying down (along a bed when one is beside it), at rest on a seat beside it, else on a stool indoors or on the ground in the open, at work with the hands (hoeing in a yard, a park or the wilds), at prayer kneeling, drinking seated, and on an errand carrying a load as it walks. Beasts graze, and lie down to rest or sleep. A figure gets up when it walks. A pose given by hand, a figure in a fight and one fallen or dead are left alone. A seat or a bed is told by the name of a tile's picture, or by the tile flag `flags.wodx-paperdoll.furniture` ("bench", "bed"), with `flags.wodx-paperdoll.head` for the end the pillow is at. A lone player, who is their own Storyteller, sees the same.
+
+Reverse: turn the setting off, or remove `settle()` from sprites.mjs.
+
+## B5666. Getting up is played, not snapped (2026-11-15)
+
+A figure that sat, knelt or lay down used to jump straight back to standing. When the pose is let go (it walks off, the routine moves on, or someone helps it up), the way down is now played backwards in a little under half a second, on every screen, before the walk or the standing frame takes over. Sprite-rules `RISES` lists the poses a figure gets up from and `upFrame(t)` gives the frame.
+
+Reverse: drop the `up` branch in sprites.mjs `tick()` and the `RISES` check in `onTokenUpdate()`.
+
+## B5667. The blanket is the bed's (2026-11-15)
+
+A sleeper was always drawn under the same grey-brown blanket. Every sheet with `sleep` now has a `sleepcover` sheet beside it: the blanket alone, near white. When a routine puts a figure to sleep in a bed, the bed's colour goes on the pose (`act.blanket`) and every screen lays the cover over the sleeper tinted to it. The colour is the tile flag `flags.wodx-paperdoll.blanket` ("#rrggbb") when the map maker set one; otherwise it is read once from the bed picture itself (the commonest colour of its middle, sprite-rules `blanketOf`). A sleeper with no bed keeps the drawn blanket.
+
+Reverse: drop the `cover()` call in sprites.mjs `tick()`; the drawn blanket shows as before.
+
+## B5668. Every four-legged animal gets the straight hind leg (B5660 widened)
+
+Ben saw the hind legs bend forward under the belly. The hock now sits back under the rump and the cannon bone hangs straight to the hoof or paw, trailing as the foot lifts. The same fix went into the Garou Lupus and Hispo rig (wolf.py), whose test sheets were drawn again. Mounts and every monster or beast the batch draws are on the beast rig, so they take it at the next batch. The Crinos keeps its upright war-form legs, and birds, bats, snakes and spiders have no hock.
 
 ## B5670. Every line's NPCs choose their own powers (2026-11-15)
 WoDX Actions. Ben asked for the rest of the lines to get a power system for NPCs (2026-11-15 04:25Z). Each line's builder now has powersFor(actor): the powers the NPC knows, each with the effect keywords its own effects card gives (npc-power-rules.js keysOf), so the NPC choice picks one to attack, hold, heal, guard, flee, call or boost. autoPower fills the line's own window and rolls it, so the pool is paid, the roll is made and the effect lands exactly as a player's use would. A power whose card gives no keyword is left to the Storyteller.
