@@ -17,6 +17,7 @@ import * as W from "./world-rules.mjs";
 import {MOD, SOCKET, esc, isActiveGM, setting, isPC, chron, log} from "./core.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 import * as Hunters from "./hunters.mjs";
 import * as Herds from "./herds.mjs";
 
@@ -374,8 +375,8 @@ async function approveLapse(entry) {
   if ( d.how === "neglect" ) {
     const r = await new Roll(`${Math.max(1, before)}d10`).evaluate();
     const faces = r.dice?.[0]?.results?.map(x => x.result) ?? [];
-    const hits = faces.filter(f => f >= 9).length, ones = faces.filter(f => f === 1).length;
-    drop = U.neglectDrop({successes: hits - ones, botch: hits === 0 && ones > 0});
+    const got = TERMS.successes(faces, 9);
+    drop = U.neglectDrop({successes: got.successes, botch: got.botch});
     rolls = [r];
     line = `Neglect check, ${before} dice at 9: ${faces.join(", ")}. `;
   }
