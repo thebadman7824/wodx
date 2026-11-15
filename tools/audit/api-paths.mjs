@@ -23,6 +23,27 @@ const GET = `game\\.modules\\.get\\(\\s*["'\`](wodx-[a-z]+)["'\`]\\s*\\)\\??\\.a
 /** Split ".a?.b.c" into ["a","b","c"]. */
 const parts = s => (s.match(new RegExp(`\\.${ID}`, "g")) ?? []).map(x => x.slice(1));
 
+/** The text with the inside of string literals blanked (template ${...} parts kept), so words in messages are not read as code. */
+function blankStrings(src) {
+  let out = "", i = 0, q = null, depth = [];
+  while ( i < src.length ) {
+    const c = src[i];
+    if ( q ) {
+      if ( c === "\\" ) { out += "  "; i += 2; continue; }
+      if ( q === "`" && c === "$" && src[i + 1] === "{" ) { out += "${"; i += 2; depth.push(q); q = null; continue; }
+      if ( c === q || (c === "\n" && q !== "`") ) { out += c; q = null; i++; continue; } // a quote never runs past its line (a regex such as /"/ is not a string)
+      out += c === "\n" ? "\n" : " "; i++; continue;
+    }
+    if ( c === "}" && depth.length ) { out += c; q = depth.pop(); i++; continue; }
+    if ( c === "/" && src[i + 1] === "/" ) { const e = src.indexOf("\n", i); const end = e < 0 ? src.length : e; out += " ".repeat(end - i); i = end; continue; }
+    if ( c === "/" && src[i + 1] === "*" ) { const e = src.indexOf("*/", i + 2); const end = e < 0 ? src.length : e + 2; out += src.slice(i, end).replace(/[^\n]/g, " "); i = end; continue; }
+    if ( c === '"' || c === "'" || c === "`" ) { q = c; out += c; i++; continue; }
+    if ( c === "{" && depth.length ) depth.push(null);
+    out += c; i++;
+  }
+  return out;
+}
+
 function scanFile(file, text, mod, shared = []) {
   const out = [];
   const lineOf = i => text.slice(0, i).split("\n").length;
@@ -37,6 +58,7 @@ function scanFile(file, text, mod, shared = []) {
   // 3. Normalise every way of reaching an api into one marker: \u0001wodx-x\u0002
   let t = text.replace(new RegExp(`game\\.modules\\??\\.get\\??\\.?\\(\\s*([^()\\n]{1,40}?)\\s*\\)\\??\\.api\\b`, "g"), (all, arg) => { const m = modOf(arg); return m ? `\u0001${m}\u0002${" ".repeat(Math.max(0, all.length - m.length - 2))}` : all; });
   for ( const h of helpers ) t = t.replace(new RegExp(`(?<![.\\w$])${h}\\(\\s*([^()\\n]{1,40}?)\\s*\\)`, "g"), (all, arg) => { const m = modOf(arg); return m ? `\u0001${m}\u0002${" ".repeat(Math.max(0, all.length - m.length - 2))}` : all; });
+  t = blankStrings(t);
   const add = (target, chain, i, how) => {
     const p = parts(chain);
     if ( p.length ) out.push({from: mod, file: rel, line: lineOf(i), target, path: p, how});
@@ -48,7 +70,10 @@ function scanFile(file, text, mod, shared = []) {
   for ( const m of t.matchAll(new RegExp(`(?<![.\\w$])(${ID})\\s*=\\s*(\\(\\s*\\)\\s*=>\\s*)?[^;\\n=]{0,60}?\u0001(wodx-[a-z]+)\u0002\\s*${CHAIN}`, "g")) ) {
     if ( helpers.has(m[1]) ) continue;
     // A value saved from a call (const spot = await fx().pickPoint(...)) is not the api's shape
-    if ( /^\s*\(/.test(t.slice(m.index + m[0].length, m.index + m[0].length + 3)) ) continue;
+    if ( /^\s*(?:\?\.)?\(/.test(t.slice(m.index + m[0].length, m.index + m[0].length + 5)) ) continue;
+    // A value made from the api (Object.keys(api.world.regions)) is not the api either; a ternary's "? (" is fine
+    const lead = m[0].split("\u0001")[0];
+    if ( /[\w$\]]\s*\(\s*$/.test(lead) ) continue;
     // A saved api in a short-lived name that the file declares again or takes as a parameter is too easily shadowed
     if ( !m[2] ) {
       const n = m[1].replace(/\$/g, "\\$");

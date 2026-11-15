@@ -47,6 +47,37 @@
       "wodx-storyteller",
       "wodx-targeting",
       "wodx-voices"
+    ],
+    "gatetruthcombat": [
+      "wodx-combat",
+      "wodx-chronicle",
+      "wodx-npc",
+      "wodx-actions"
+    ],
+    "gatetruthactions": [
+      "wodx-actions",
+      "wodx-chronicle",
+      "wodx-combat"
+    ],
+    "gatetruthstoryteller": [
+      "wodx-storyteller",
+      "wodx-atmosphere",
+      "wodx-solo",
+      "wodx-chronicle",
+      "wodx-npc"
+    ],
+    "gatetruthnpc": [
+      "wodx-npc",
+      "wodx-voices",
+      "wodx-actions",
+      "wodx-chronicle"
+    ],
+    "gatetruthsheets": [
+      "wodx-sheets",
+      "wodx-creation",
+      "wodx-library",
+      "wodx-actions",
+      "wodx-chronicle"
     ]
   },
   "remove": {},

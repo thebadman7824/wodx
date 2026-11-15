@@ -1037,7 +1037,7 @@ export function build(ctx) {
             if (keep) kept.push(a);
             rows.push(`<li><b>${esc(a.name)}</b> (Willpower ${w}): ${esc(reaction || "takes it in")}${act ? ` (${act === "freeze" ? "falls still" : act === "flee" ? "flees" : "attacks"})` : ""}; ${keep ? "remembers" : "forgets"}.</li>`);
         }
-        if (rule === "hysteria" && rows.length) { try { await game.modules.get(MOD)?.api?.wraith?.hysteria?.(); } catch (e) { /* no wraith tools */ } }
+        if (rule === "hysteria" && rows.length) { try { const A = game.modules.get(MOD)?.api; await (A?.hysteria ?? A?.wraith?.hysteria)?.(); /* B6201: the api has hysteria at its top, not under wraith (found by gateapipaths) */ } catch (e) { /* no wraith tools */ } }
         if (fighters.length && by) {
             const ids = [...fighters.map(t => t.document?.id ?? t.id), by.document?.id ?? by.id];
             const sides = Object.fromEntries([...fighters.map(t => [t.document?.id ?? t.id, "a"]), [by.document?.id ?? by.id, "b"]]);
