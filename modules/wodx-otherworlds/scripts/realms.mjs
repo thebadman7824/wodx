@@ -46,7 +46,7 @@ export function storm() {
 }
 
 /** Roll the Shredding Winds for a mage's token (Storyteller). shield: Shield of the Soul. Whispered to the Storyteller. */
-export async function shreddingWinds(tokenDoc, {shield = false, reason = "crosses the Gauntlet", dice} = {}) {
+export async function shreddingWinds(tokenDoc, {shield = false, reason = "crosses the Gauntlet", dice, insulated = false} = {}) {
   const a = tokenDoc?.actor;
   if ( !a ) return null;
   const s = storm();
@@ -59,7 +59,24 @@ export async function shreddingWinds(tokenDoc, {shield = false, reason = "crosse
     content: card("The Avatar Storm", `<p><strong>${esc(tokenDoc.name)}</strong> ${esc(reason)}.</p>
       <p>Shredding Winds: ${shield ? "Paradox only (Shield of the Soul)" : "Paradox + Arete"}, ${plan.pool} dice at 6: ${diceLine(r.dice)} <b>${res.levels} level${res.levels === 1 ? "" : "s"} of ${esc(res.damage)} damage</b>, unless the traveller is insulated.</p>
       <p class="wodx-quiet">Life magick, enhanced armour or Wonders may add soak. Spirits, shapechangers, unAwakened sorcerers and astral travellers are spared. M20 pdf 480-481 / pp. 479-480.</p>`)});
+  // B5760: the winds hurt: the levels go on the health track through the soak (insulated: the Storyteller passes insulated)
+  if ( res.levels > 0 && !insulated ) {
+    await stormFlash(tokenDoc);
+    const C = game.wodxCombat;
+    if ( C?.soakAndApply ) await C.soakAndApply(tokenDoc.object ?? tokenDoc, {mode: "levels", amount: res.levels, type: s.fading ? "lethal" : "aggravated", soak: true});
+    else if ( C?.applyDamage ) await C.applyDamage(a, s.fading ? "lethal" : "aggravated", res.levels);
+    res.applied = true;
+  }
   return res;
+}
+
+/** B5760: the token flashes the Storm's cold blue for a moment, for everyone. */
+async function stormFlash(tokenDoc) {
+  try {
+    const was = tokenDoc.texture?.tint ?? "#ffffff";
+    await tokenDoc.update({"texture.tint": "#7f9cff"});
+    setTimeout(() => tokenDoc.update({"texture.tint": String(was)}).catch(() => null), 1200);
+  } catch (e) { /* no flash */ }
 }
 
 /** A mage's token reaching the Penumbra level while the Storm rages: the Storyteller gets the roll. */
@@ -239,10 +256,27 @@ export async function netContest({a, b, programA = 0, programB = 0, protectA = 0
   const x = RR.netExchange(sideA, sideB, ra.dice, rb.dice, {witsA: at(A, "wits"), witsB: system ? 0 : at(B, "wits"), protectA, protectB});
   const nameB = system ? `a system of ${system} CPU${system === 1 ? "" : "s"}` : (b?.name ?? "the foe");
   const who = x.winner === "a" ? a?.name : x.winner === "b" ? nameB : null;
-  await ChatMessage.create({speaker: {alias: "The Net"}, rolls: [ra.roll, rb.roll].filter(Boolean),
+  // B5761: the blow lands: damage dice against the loser's Wits + protection, both at 6; what gets through is
+  // bashing on a persona's own health track (house reading of the book's "damage"); a system loses that much ground
+  let hit = "";
+  const rolls2 = [];
+  if ( x.winner && x.damageDice > 0 ) {
+    const dr = await d10(x.damageDice), sr = await d10(x.soakPool);
+    rolls2.push(dr.roll, sr.roll);
+    const levels = Math.max(0, RR.netSuccesses(dr.dice) - RR.netSuccesses(sr.dice));
+    x.levels = levels;
+    const loser = x.winner === "a" ? (system ? null : b) : a;
+    if ( levels && loser?.actor ) {
+      const C = game.wodxCombat;
+      if ( C?.applyDamage ) { await C.applyDamage(loser.actor, "bashing", levels); x.applied = true; }
+      await stormFlash(loser.document ?? loser);
+    }
+    hit = `<p>Damage ${x.damageDice} dice ${diceLine(dr.dice)} against soak ${x.soakPool} ${diceLine(sr.dice)}: <b>${levels ? `${levels} level${levels === 1 ? "" : "s"} ${loser?.actor ? `of bashing on ${esc(loser.name)}` : "off the system (it is cracked open that much)"}` : "all soaked"}</b>.</p>`;
+  }
+  await ChatMessage.create({speaker: {alias: "The Net"}, rolls: [ra.roll, rb.roll, ...rolls2].filter(Boolean),
     content: card("Net combat", `<p><strong>${esc(a?.name)}</strong>: Intelligence + Computer ${pa.pool} at 6 ${diceLine(ra.dice)}${pa.auto ? `, +${pa.auto} from the program` : ""}: ${x.a}.</p>
       <p><strong>${esc(nameB)}</strong>: ${pb.pool} at 6 ${diceLine(rb.dice)}${pb.auto ? `, +${pb.auto} from the program` : ""}: ${x.b}.</p>
-      <p><b>${who ? `${esc(who)} wins: ${x.damageDice} damage dice, soaked with ${x.soakPool} (Wits and protection)` : "Neither gains ground."}</b></p>
+      <p><b>${who ? `${esc(who)} wins: ${x.damageDice} damage dice, soaked with ${x.soakPool} (Wits and protection)` : "Neither gains ground."}</b></p>${hit}
       <p class="wodx-quiet">World of Future Darkness p. 22 (pdf 9).</p>`)});
   return x;
 }
@@ -269,14 +303,14 @@ export async function rollsDialog() {
       <div class="form-group"><label>Caern level (here / the far one)</label><input type="number" name="caern" value="3" min="1" max="5"><input type="number" name="target" value="3" min="1" max="5"></div>
       <div class="form-group"><label><input type="checkbox" name="totem"> The pack totem matches the caern's</label></div>
       <div class="form-group"><label><input type="checkbox" name="failed"> An earlier attempt failed</label></div>
-      <div class="form-group"><label><input type="checkbox" name="shield"> Shield of the Soul</label></div>
+      <div class="form-group"><label><input type="checkbox" name="shield"> Shield of the Soul</label> <label><input type="checkbox" name="insulated"> Insulated (spared the damage)</label></div>
       <div class="form-group"><label>Bells / Haunt rating</label><input type="number" name="bells" value="3" min="1" max="5"><input type="number" name="haunt" value="0" min="0" max="5"></div>
       <div class="form-group"><label>Programs (mine / theirs) and protection</label><input type="number" name="pa" value="0" min="0" max="10"><input type="number" name="pb" value="0" min="0" max="10"><input type="number" name="prot" value="0" min="0" max="10"></div>
       <div class="form-group"><label>Or a system of so many CPUs</label><input type="number" name="cpus" value="0" min="0" max="12"></div>`,
     buttons: [{action: "roll", label: "Roll", default: true, callback: (e, b) => Object.fromEntries([...b.form.elements].filter(x => x.name).map(x => [x.name, x.type === "checkbox" ? x.checked : x.value]))},
       {action: "close", label: "Close"}]});
   if ( !r || r === "close" ) return null;
-  if ( r.kind === "storm" ) return sel ? shreddingWinds(sel, {shield: r.shield}) : ui.notifications.warn("Select the mage first.");
+  if ( r.kind === "storm" ) return sel ? shreddingWinds(sel, {shield: r.shield, insulated: r.insulated}) : ui.notifications.warn("Select the mage first.");
   if ( r.kind === "bridge" ) {
     const a = sel?.actor;
     if ( !a ) { ui.notifications.warn("Select the ritemaster first."); return null; }

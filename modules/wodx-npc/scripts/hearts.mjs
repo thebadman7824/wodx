@@ -262,7 +262,16 @@ async function heartbreak(who, other) {
   const botch = hits === 0 && ones > 0;
   let line = `Willpower ${dice} dice at ${H.HEARTBREAK_DIFF}: ${faces.join(", ")}. `, key = null;
   if ( botch ) { key = await game.modules.get("wodx-chronicle")?.api?.derangements?.gain?.(who, "loss", "from heartbreak"); line += key ? "It breaks something in them: a derangement." : "It breaks something in them."; }
-  else line += hits > ones ? "They bear it." : "It hurts, and it shows.";
+  else if ( hits > ones ) line += "They bear it.";
+  else {
+    // B5766: it shows for a week: +1 difficulty on their social rolls (Actions reads socialDiff), a mark on the token
+    const T = game.modules.get("wodx-chronicle")?.api;
+    if ( T?.registerCondition && !T?.conditions?.getCondition?.("heartsick") ) T.registerCondition({id: "heartsick", name: "Heartsick", img: "icons/svg/blood.svg",
+      source: "WoDX house reading", summary: "Heartbroken for a week: +1 difficulty on social rolls.", mods: {socialDiff: 1}});
+    if ( T?.applyTimed ) await T.applyTimed(who, {name: "Heartsick", description: `Heartbroken over ${other.name}`, duration: {kind: "time", seconds: 7 * 86400},
+      condition: "heartsick", key: "wodx-npc-heartsick", source: "WoDX NPC hearts"});
+    line += "It hurts, and it shows: heartsick for a week (+1 difficulty on social rolls).";
+  }
   await ChatMessage.create({whisper: ownersOf(who), speaker: {alias: who.name}, flags: {[MOD]: {heartCard: true}}, rolls: [roll],
     content: card(`${who.name}'s heart breaks over ${other.name}`, [line])});
   return {botch, derangement: key};

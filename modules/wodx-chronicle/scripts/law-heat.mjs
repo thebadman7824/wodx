@@ -75,6 +75,26 @@ async function stageCard(actor, region, res, law) {
       <p class="hint">${esc(H.summary(res.entry, now(), law))}${law.bribe <= 2 ? " Here the watch can be bought cheaply." : ""}</p>${hook ? `<p><em>${esc(hook)}</em></p>` : ""}${buttons}</div>`});
 }
 
+/**
+ * B5763: an outlaw or banishment sentence puts the character at Wanted in that land at once (a warrant is out), so the
+ * watch and a manhunt follow as for any warrant. Does nothing when the law's heat is off or the heat is already higher.
+ */
+export async function declareWanted(actor, region, why = "") {
+  if ( !isActiveGM() || !on() || !actor?.id || !region ) return null;
+  const s = state(), law = L.lawOf(region, yearNow());
+  s.regions[region] ??= {};
+  const e = H.normEntry({...(s.regions[region][actor.id] ?? {}), id: actor.id, name: actor.name, line: actorLine(actor)});
+  const min = H.STAGES.find(x => x.key === "warrant").min, before = H.cooled(e, now(), law);
+  if ( before >= min ) return null;
+  const entry = {...e, heat: min, at: now(), deeds: [...e.deeds, {deed: "sentence", at: now(), where: String(why).slice(0, 80)}].slice(-12)};
+  s.regions[region][actor.id] = entry;
+  await save(s);
+  const res = {entry, before, after: min, crossed: H.stageOf(min)};
+  await stageCard(actor, region, res, law);
+  Hooks.callAll("wodxLawStage", {actor: actor.id, region, stage: res.crossed.key, crossed: true, deed: "sentence"});
+  return res;
+}
+
 /** Make the arrest: heat clears, and the trial hears of it. */
 export async function arrest(actorId, region) {
   if ( !game.user.isGM ) return null;

@@ -131,6 +131,35 @@ export const TROUBLE = {
   wonder: [{key: "flaw", text: "The work takes on a flaw that only shows when it is used."}]
 };
 
+/**
+ * B5765: what each complication does to the project (Say or Do Desk d16), a house reading: the TROUBLE texts start a
+ * scene, and the work also feels it. delay: days the next roll waits; setback: successes lost; cost: weeks of the
+ * character's Resources living paid out (on credit); rumour: word gets around about the character. Unlisted keys wait
+ * two days.
+ */
+export const TROUBLE_DOES = {
+  sick: {delay: 3}, leaves: {delay: 7}, drink: {delay: 5}, closed: {delay: 3}, workers: {delay: 5}, permit: {delay: 7},
+  guild: {delay: 7}, material: {delay: 2, setback: 1}, family: {delay: 3}, teacher: {delay: 2}, inspector: {delay: 2},
+  price: {delay: 3}, patron: {delay: 3}, spirit: {delay: 3}, model: {delay: 2}, ill: {delay: 3}, rule: {delay: 7},
+  watch: {delay: 1}, police: {delay: 1}, censor: {delay: 3, rumour: true},
+  rival: {setback: 1}, fire: {setback: 2}, wrong: {setback: 2}, copy: {setback: 1}, plans: {setback: 1}, cold: {setback: 2},
+  under: {setback: 1}, road: {setback: 1}, partner: {setback: 1, cost: 1}, panic: {setback: 1, cost: 1}, suitor: {setback: 1},
+  letter: {setback: 1, rumour: true}, message: {setback: 1, rumour: true}, same: {setback: 1}, found: {delay: 2, rumour: true},
+  flaw: {setback: 1}, noticed: {setback: 1},
+  debt: {cost: 1}, tax: {cost: 1},
+  watched: {rumour: true}, neighbour: {rumour: true}, talk: {rumour: true}, talks: {rumour: true}, preacher: {rumour: true},
+  logged: {rumour: true}, index: {rumour: true}, accent: {rumour: true}
+};
+export const troubleDoes = key => TROUBLE_DOES[key] ?? {delay: 2};
+
+/** B5765: the task after a complication's delay and setback (pure). DAY in seconds. */
+export function troubleTask(task, does = {}, DAY = 86400) {
+  const t = {...task};
+  if ( does.delay ) t.next = n(t.next) + does.delay * DAY;
+  if ( does.setback ) t.total = Math.max(0, n(t.total) - does.setback);
+  return t;
+}
+
 const fits = (row, year) => !year || ((row.from == null || year >= row.from) && (row.to == null || year <= row.to));
 
 /** The rows that can come up for a kind in a year. */

@@ -14,6 +14,8 @@ import * as Own from "./owners.mjs";
 import * as Cook from "./cookery.mjs";
 import * as W from "./wonders.mjs";
 
+const n0 = v => Number.isFinite(Number(v)) ? Number(v) : 0;
+
 const now = () => game.time?.worldTime ?? 0;
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const held = () => { try { return !!chron()?.isHeld?.(); } catch (e) { return false; } };
@@ -65,13 +67,35 @@ export function poolFor(a, task) {
 /** B3341: a character's weekly budget of nights for projects; the Storyteller can set their own figure (flag projectBudget). */
 export const budgetOf = a => P.budgetFor({kind: a?.type, own: a?.flags?.[MOD]?.projectBudget ?? null});
 
-/** B3342: tell the Storyteller of a complication, keep it on the project and on the log. */
+/**
+ * B3342: tell the Storyteller of a complication, keep it on the project and on the log. B5765: the complication also
+ * acts (P.TROUBLE_DOES): the work waits, loses ground, costs money or gets talked about. Returns the task after it.
+ */
 async function trouble(a, t, c) {
+  const does = P.troubleDoes(c.key), lines = [];
+  const t2 = P.troubleTask(t, does, R.DAY);
+  if ( does.delay ) lines.push(`The work waits ${does.delay} day${does.delay === 1 ? "" : "s"}.`);
+  if ( does.setback && n0(t.total) > 0 ) lines.push(`${Math.min(does.setback, n0(t.total))} success${Math.min(does.setback, n0(t.total)) === 1 ? "" : "es"} of the work lost.`);
+  const api = game.modules.get(MOD)?.api;
+  if ( does.cost ) {
+    const M = api?.upkeep?.money;
+    try {
+      const dots = M?.of?.(a)?.dots ?? 1, year = chron()?.eras?.currentYear?.() ?? 1197;
+      let region = "moravian"; try { region = game.settings.get(MOD, "moneyRegion") || region; } catch (e) { /* default */ }
+      const amount = Math.max(1, Math.round(M.rules.allowance(Math.max(1, dots), year, region) / 4 * does.cost));
+      const r = await M.pay(a, amount, {credit: true, note: `${t.name}: ${c.key}`});
+      if ( r?.ok !== false ) lines.push(`It costs ${M.rules.formatMoney ? M.rules.formatMoney(amount, M.rules.moneyFor?.(year, region)) : amount}.`);
+    } catch (e) { lines.push("It costs money: take it from the purse."); }
+  }
+  if ( does.rumour ) {
+    try { await api?.rumours?.start?.({text: `${a.name} is up to something: ${t.name}`, about: a.id, truth: "half"}); lines.push("Word of it gets around (a rumour starts)."); } catch (e) { /* no rumours */ }
+  }
   await ChatMessage.create({content: `<div class="wodx-card wst-trouble"><h3>${esc(a.name)}: ${esc(t.name)}</h3><p>${esc(c.text)}</p>
-    <p class="wodx-quiet">${c.botch ? "The roll was a botch. " : ""}A complication in a downtime project: what comes of it is the Storyteller's.</p></div>`,
+    ${lines.length ? `<p><b>${esc(lines.join(" "))}</b></p>` : ""}<p class="wodx-quiet">${c.botch ? "The roll was a botch. " : ""}A complication in a downtime project: the scene it starts is the Storyteller's.</p></div>`,
     whisper: gmIds(), speaker: {alias: "A project meets trouble"}});
   await log({kind: "task", actor: isPC(a) ? a.id : null, name: a.name, attention: "A project met trouble", text: `${a.name}: ${t.name}. ${c.text}`});
-  Hooks.callAll("wodxProjectComplication", {actor: a, task: t, complication: c});
+  Hooks.callAll("wodxProjectComplication", {actor: a, task: t2, complication: c});
+  return t2;
 }
 
 /** B3343: a courting project moves warmth through WoDX NPC, which keeps the age floor. */
@@ -197,7 +221,7 @@ export async function tick({force = false} = {}) {
           t = R.stepTask(t, r, at);
           // B3342, B3343: trouble, and a courting roll's warmth
           const c = P.drawTrouble(t, r, {year: yearNow()});
-          if ( c ) { t = {...t, complications: P.addTrouble(t.complications, c, at)}; await trouble(a, t, c); }
+          if ( c ) { t = {...t, complications: P.addTrouble(t.complications, c, at)}; t = await trouble(a, t, c); }
           if ( t.kind === "court" ) await courtRoll(a, t, r);
           // 0.31.0: a botch in a drug or a medicine leaves it impure instead of ruining it; only the Storyteller hears
           if ( r.botch && t.strength ) t = {...t, impure: true};
