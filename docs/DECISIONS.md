@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5040
+Next free block: B5150
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -238,6 +238,7 @@ Next free block: B5040
 | B4950-B4959 | Tuareg names (used B4950-B4952) | Creation, Chronicle |
 | B5000-B5009 | Moro names (used B5000-B5002) | Creation, Chronicle |
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
+| B5140-B5149 | Solo arrival: landing scene, character with token on first login (used B5140-B5144) | Solo, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7606,3 +7607,28 @@ Reverse: edit the banyarwanda entry in data/people-world.mjs.
 WoDX Creation. From 1800 a Munyarwanda or Murundi carries a second, own Kinyarwanda or Kirundi name (Habimana, Uwimana, Nkurunziza) where other peoples carry a family name; it is the person's own and is not handed to the children.
 
 Reverse: drop fam from the banyarwanda entry.
+
+## B5140. The seat brings the lone player in on every login (2026-11-15)
+WoDX Solo. Ben logged in to the solo world and found no map and no token, so the first-night prompts had nothing to work on. Foundry lets no player make an Actor and a world may open with no scene active, so the hidden Storyteller's seat now does both: the player's client asks on login and the seat answers (also for players already in when the seat sits down). One ask runs at a time per player. Setting "Bring the player in" (on) turns it off.
+
+Reverse: turn the setting off, or remove installArrival from main.mjs.
+
+## B5141. The landing scene (2026-11-15)
+WoDX Solo. The landing is the scene flagged wodx-solo.landing, else the one the "landing" setting names, else a Rothenstein scene with a map, the market first (the recipe's market anchor), then Rothenstein, Lower Town, any Rothenstein name; else the active scene with a map; else any scene with a map. A world with no map at all gets a plain night scene ("Rothenstein by night: the way in", dark, gridded, token vision on), flagged as the landing so a map can be set on it later. The landing is made active only when no scene with a map is active, so a Storyteller's choice of scene stands.
+
+Reverse: edit LANDING_NAMES or pickLanding in solo-rules.mjs.
+
+## B5142. The seat makes the player's character from a name and a line (2026-11-15)
+WoDX Solo. A player with no character picks a name (plain text, 60 characters, "A stranger" if blank) and one of seven lines, the recipe's lines for the valley: Vampire, Werewolf, Mage, Changeling, Wraith, Hunter, Mortal. The seat makes that sheet type, owned by the player alone, with a linked friendly token with sight on, and assigns it as the player's character. The wizard then picks the book for the sheet and the era by itself. One character each: a player who has one is brought to it instead. Ghouls, Kuei-jin and the rest are made from the sheet or the wizard's change of state, as at a shared table.
+
+Reverse: edit ARRIVAL_LINES or newCharacterData in solo-rules.mjs.
+
+## B5143. The token goes to the landing's way in and the player is taken to it (2026-11-15)
+WoDX Solo. A character with no token on any scene gets one at the landing's way in (the scene's starting view, else its middle, snapped to the grid: the same spot as I am stuck, free my token). The seat pulls the player to the token's scene; the player's screen centres on the token and selects it, and the character wizard opens for a new character. The panel shows Make my character above its buttons while the player has none, for a player who closed the first window.
+
+Reverse: remove placeToken and the pull from arrival.mjs.
+
+## B5144. The first-night tour waits for the token in solo play (2026-11-15)
+WoDX Chronicle. The tour is offered once, on the first join, and was used up on a solo login with no token to move. With The Lone Chronicle on, it now waits until the player's character has a token on the scene they view, and is offered when Solo's arrival fires its hook. At a shared table nothing changes.
+
+Reverse: remove soloWaits from player-guide.mjs.

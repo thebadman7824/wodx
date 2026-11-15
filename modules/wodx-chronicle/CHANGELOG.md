@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.118.1 (The first-night tour waits, in solo play, until the player's token is on the map: WoDX Solo's arrival says when (B5144). Before, it was offered and used up on a login with nothing to move)
 - 0.118.0 (Book one's fronts, roles and clue carriers (B4910-B4919), as Ben picked them on the spine desk. Each front steps on its own pace (the court and the cult weekly, the council, the Church and the Husbandman every two weeks, Marta every three), never before its step's chapter, and never in a twist's week unless the company pushed it. The company can hold a front (it waits) or strike it (back a step, its marks go back too); the Storyteller can step, hold or push any front from the saga window. Roles: the ally who is not (most leaned on), the keeper of the Words, the Price, the hunter, the voice, the mortal for the rite, the inside man (twist 24's heart takes the clerk out) and the courier east (the next rides a week after one is stopped). Judgements for Reinhold and Baba Yaroslava send their card when their chapter comes. The api gains pod.saga.fronts and the hook wodxFront)
 - 0.117.0 (The Banyarwanda and Barundi in central Africa's mix (B5030))
 - 0.116.0 (The Moro in the Malay world's mix (B5000))
