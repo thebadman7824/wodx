@@ -1,6 +1,6 @@
 ---
 bump: minor
-what: The Lone Chronicle for one person playing alone: a hidden Storyteller's seat, one switch for every automation, a player's panel (time, travel, pause, I am stuck, the curtain), the oracle, a Leads page, night encounters, card scenes for towns with no map, a director that paces the night's trouble, experience each morning and a recap of the night before
+what: The Lone Chronicle for one person playing alone: a hidden Storyteller's seat, a player's panel, the oracle, Leads, night encounters, card scenes for towns with no map, a director that paces the night, experience each morning and a recap
 effect: at dusk the seat's director brings the lone character one or two of their live threads (flaws, a storyline's beat, Ledger oaths and debts, clocks), paced by the last nights and the trouble dial, moving clocks and under pressure bringing people onto the scene; each morning the character gets the experience the log shows for the night from the line's book list, at most 5; on login the player gets the night before as the character knows it
 visible: the director's things come as cards in the chat and rows on the Leads page, a clock it brings shows one more segment filled, an Experience award appears on the sheet with a card saying why, and a "Last night" card lists the night's travel, encounters and finds
 ---
