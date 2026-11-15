@@ -132,7 +132,7 @@ export const TROUBLE = {
 };
 
 /**
- * B5765: what each complication does to the project (Say or Do Desk d16), a house reading: the TROUBLE texts start a
+ * B5825: what each complication does to the project (Say or Do Desk d16), a house reading: the TROUBLE texts start a
  * scene, and the work also feels it. delay: days the next roll waits; setback: successes lost; cost: weeks of the
  * character's Resources living paid out (on credit); rumour: word gets around about the character. Unlisted keys wait
  * two days.
@@ -152,7 +152,7 @@ export const TROUBLE_DOES = {
 };
 export const troubleDoes = key => TROUBLE_DOES[key] ?? {delay: 2};
 
-/** B5765: the task after a complication's delay and setback (pure). DAY in seconds. */
+/** B5825: the task after a complication's delay and setback (pure). DAY in seconds. */
 export function troubleTask(task, does = {}, DAY = 86400) {
   const t = {...task};
   if ( does.delay ) t.next = n(t.next) + does.delay * DAY;

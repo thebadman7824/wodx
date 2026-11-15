@@ -54,7 +54,7 @@ export async function sentence(info, punish) {
 }
 
 /**
- * B5763: the sentence happens. A fine is taken from the purse at once (a month of a modest living for light deeds, more
+ * B5823: the sentence happens. A fine is taken from the purse at once (a month of a modest living for light deeds, more
  * for graver ones; on credit when short: a house reading, the books give no sums for every land and age); outlawry and
  * banishment put the character at Wanted in that land; a death sentence holds the condemned (Held for the scene) until
  * the Storyteller plays it out. Returns the Storyteller's line.

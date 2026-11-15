@@ -201,5 +201,5 @@ export function layerSoundFor({layer = "physical", inNet = false} = {}, root = "
   return LAYER_SOUNDS.includes(k) ? `${String(root).replace(/\/+$/, "")}/${k}.ogg` : null;
 }
 
-/** B5761: successes at 6 in a Net damage or soak roll (1s do not cancel here: a damage roll never botches). */
+/** B5821: successes at 6 in a Net damage or soak roll (1s do not cancel here: a damage roll never botches). */
 export const netSuccesses = dice => (dice ?? []).filter(x => x >= 6).length;

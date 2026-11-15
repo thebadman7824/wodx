@@ -152,7 +152,7 @@ function onSenses({scene, sources} = {}) {
   if ( lines ) sources.push({id: `pod.city.${st.city}`, key: `pod.city`, lines, name: `${st.name}: ${st.state}`, loud: "loud", strong: true});
 }
 /**
- * A building raised or restored: the patron pays (B5764: a season of a wealthy living, or the cost given; on credit
+ * A building raised or restored: the patron pays (B5824: a season of a wealthy living, or the cost given; on credit
  * when short), the town it stands in gains (prosperity up, a little calmer, through WoDX Storyteller's towns), and the
  * faction it serves owes a boon.
  */

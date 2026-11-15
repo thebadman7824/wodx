@@ -140,7 +140,7 @@ async function overload(tokens, why) {
   if ( !hit.length ) return;
   const gms = game.users.filter(u => u.isGM).map(u => u.id);
   const esc = v => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;");
-  // B5762: the Willpower roll is made and a failure stuns (Dazed) and deafens for the turn, on the token
+  // B5822: the Willpower roll is made and a failure stuns (Dazed) and deafens for the turn, on the token
   const T = game.modules.get("wodx-chronicle")?.api;
   const rows = [], rolls = [];
   for ( const t of hit ) {

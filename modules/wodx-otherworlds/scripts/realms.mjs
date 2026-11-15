@@ -59,7 +59,7 @@ export async function shreddingWinds(tokenDoc, {shield = false, reason = "crosse
     content: card("The Avatar Storm", `<p><strong>${esc(tokenDoc.name)}</strong> ${esc(reason)}.</p>
       <p>Shredding Winds: ${shield ? "Paradox only (Shield of the Soul)" : "Paradox + Arete"}, ${plan.pool} dice at 6: ${diceLine(r.dice)} <b>${res.levels} level${res.levels === 1 ? "" : "s"} of ${esc(res.damage)} damage</b>, unless the traveller is insulated.</p>
       <p class="wodx-quiet">Life magick, enhanced armour or Wonders may add soak. Spirits, shapechangers, unAwakened sorcerers and astral travellers are spared. M20 pdf 480-481 / pp. 479-480.</p>`)});
-  // B5760: the winds hurt: the levels go on the health track through the soak (insulated: the Storyteller passes insulated)
+  // B5820: the winds hurt: the levels go on the health track through the soak (insulated: the Storyteller passes insulated)
   if ( res.levels > 0 && !insulated ) {
     await stormFlash(tokenDoc);
     const C = game.wodxCombat;
@@ -70,7 +70,7 @@ export async function shreddingWinds(tokenDoc, {shield = false, reason = "crosse
   return res;
 }
 
-/** B5760: the token flashes the Storm's cold blue for a moment, for everyone. */
+/** B5820: the token flashes the Storm's cold blue for a moment, for everyone. */
 async function stormFlash(tokenDoc) {
   try {
     const was = tokenDoc.texture?.tint ?? "#ffffff";
@@ -256,7 +256,7 @@ export async function netContest({a, b, programA = 0, programB = 0, protectA = 0
   const x = RR.netExchange(sideA, sideB, ra.dice, rb.dice, {witsA: at(A, "wits"), witsB: system ? 0 : at(B, "wits"), protectA, protectB});
   const nameB = system ? `a system of ${system} CPU${system === 1 ? "" : "s"}` : (b?.name ?? "the foe");
   const who = x.winner === "a" ? a?.name : x.winner === "b" ? nameB : null;
-  // B5761: the blow lands: damage dice against the loser's Wits + protection, both at 6; what gets through is
+  // B5821: the blow lands: damage dice against the loser's Wits + protection, both at 6; what gets through is
   // bashing on a persona's own health track (house reading of the book's "damage"); a system loses that much ground
   let hit = "";
   const rolls2 = [];

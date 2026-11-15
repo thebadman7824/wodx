@@ -76,7 +76,7 @@ async function stageCard(actor, region, res, law) {
 }
 
 /**
- * B5763: an outlaw or banishment sentence puts the character at Wanted in that land at once (a warrant is out), so the
+ * B5823: an outlaw or banishment sentence puts the character at Wanted in that land at once (a warrant is out), so the
  * watch and a manhunt follow as for any warrant. Does nothing when the law's heat is off or the heat is already higher.
  */
 export async function declareWanted(actor, region, why = "") {

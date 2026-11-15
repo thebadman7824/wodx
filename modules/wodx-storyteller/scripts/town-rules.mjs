@@ -418,7 +418,7 @@ export const LEVER_TOWN = {
   patrol: {kind: "patrol", unrest: -0.1, text: "Patrols walk the streets, and people keep their heads down.", big: false},
   hands: {kind: "hands", unrest: 0.3, prosperity: -0.1, text: "The place changes hands: new masters, new rules, and old loyalties count for little.", big: true},
   martial: {kind: "martial", prosperity: -0.2, unrest: 0.4, text: "Martial law: soldiers at the gates and in the squares, and no one gathers.", big: true},
-  // B5764: a patron raises or restores a building (WoDX Chronicle's Parts of the Dark raiseBuilding)
+  // B5824: a patron raises or restores a building (WoDX Chronicle's Parts of the Dark raiseBuilding)
   build: {kind: "build", prosperity: 0.15, unrest: -0.05, text: "A new building rises: masons, carters and hauliers are paid, and the town is proud of it.", big: false},
   restore: {kind: "restore", prosperity: 0.1, unrest: -0.05, text: "An old building is put right, and the street around it lifts.", big: false}
 };

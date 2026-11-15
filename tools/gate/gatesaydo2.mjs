@@ -1,5 +1,5 @@
 /**
- * WoDX gate: more systems that used to only say now do (Say or Do Desk, B5760-B5766), in Foundry, in
+ * WoDX gate: more systems that used to only say now do (Say or Do Desk, B5820-B5826), in Foundry, in
  * rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatesaydo2.mjs?${Date.now()}`)).run()
  * Makes its own scene and characters and removes them; puts the Avatar Storm and law heat settings back.

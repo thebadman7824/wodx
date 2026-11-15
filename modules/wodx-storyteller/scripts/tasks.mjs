@@ -68,7 +68,7 @@ export function poolFor(a, task) {
 export const budgetOf = a => P.budgetFor({kind: a?.type, own: a?.flags?.[MOD]?.projectBudget ?? null});
 
 /**
- * B3342: tell the Storyteller of a complication, keep it on the project and on the log. B5765: the complication also
+ * B3342: tell the Storyteller of a complication, keep it on the project and on the log. B5825: the complication also
  * acts (P.TROUBLE_DOES): the work waits, loses ground, costs money or gets talked about. Returns the task after it.
  */
 async function trouble(a, t, c) {

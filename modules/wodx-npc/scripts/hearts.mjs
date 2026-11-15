@@ -264,7 +264,7 @@ async function heartbreak(who, other) {
   if ( botch ) { key = await game.modules.get("wodx-chronicle")?.api?.derangements?.gain?.(who, "loss", "from heartbreak"); line += key ? "It breaks something in them: a derangement." : "It breaks something in them."; }
   else if ( hits > ones ) line += "They bear it.";
   else {
-    // B5766: it shows for a week: +1 difficulty on their social rolls (Actions reads socialDiff), a mark on the token
+    // B5826: it shows for a week: +1 difficulty on their social rolls (Actions reads socialDiff), a mark on the token
     const T = game.modules.get("wodx-chronicle")?.api;
     if ( T?.registerCondition && !T?.conditions?.getCondition?.("heartsick") ) T.registerCondition({id: "heartsick", name: "Heartsick", img: "icons/svg/blood.svg",
       source: "WoDX house reading", summary: "Heartbroken for a week: +1 difficulty on social rolls.", mods: {socialDiff: 1}});
