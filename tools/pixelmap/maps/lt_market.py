@@ -17,6 +17,7 @@ import props as pr
 import land
 import wilds as wl
 import town as tw
+import dress as dr
 import roofs as RF
 import buildings as B
 from scene import Recorder
@@ -113,6 +114,7 @@ pr.garden(m, 54.4, 35.6, 63.2, 43.2); note("vegetable garden", 58.8, 39.4)
 # ---- floors, walls, doors, windows, fences ----
 for name, (r, kind, fl) in BLD.items():
     for x, y, w, h, k in fl: B._floor(m, x, y, w, h, k)
+dr.snap(m)
 for c in WALLS:
     _, r, kind = owner(c); rec.wall(*c, th=26, kind=kind)
 for c in DOORS:
@@ -323,6 +325,18 @@ X0_, Y0_, X1_, Y1_ = int(60.6 * T), int(6.6 * T), int(63.4 * T), int(8.8 * T)   
 img = RF.draw((60.6, 6.6, 2.8, 2.2), "shingle", seed=3); m.img.paste(img.convert("RGB"), (X0_, Y0_)); note("woodshed", 62, 7.7)
 pr.logpile(m, 60.7, 8.95, 2.6, .5)
 
+# ---- dressing (B5746): the small things of daily use in every room, the square and its edges ----
+KINDS = {"Inn at the Crossing": ("hall", [(15.5, 3.5, "home"), (15.5, 8.5, "store")]), "Bakery": ("shop", [(23.9, 4.0, "work")]),
+         "Richter Graff's house": ("home", [(42.6, 5.3, "store")]), "Chandler's house": ("home", ()), "Woodshed": ("store", ()),
+         "Master Voss, apothecary": ("shop", [(58.0, 17.5, "home")]), "Inn stables": ("stable", ()), "Barber-surgeon": ("shop", [(58.0, 27.0, "home")]),
+         "Lame Ox tavern": ("hall", [(4.5, 34.0, "store"), (11.0, 34.0, "home")]), "House by the tavern": ("home", ()), "Hatter and glover": ("craft", ()),
+         "General store": ("shop", ()), "Butcher's shop": ("shop", [(21.0, 41.5, "store")]), "Smokehouse": ("store", ())}
+LINES = WALLS + DOORS + WINDOWS
+for name, (r, kind, fl) in BLD.items():
+    k, at = KINDS.get(name, ("home", ())); dr.rooms(m, rec, r, LINES, k, at)
+dr.dress(m, rec, (14.0, 11.6, 35.0, 23.4), "market", n=44); dr.dress(m, rec, (13.0, 10.8, 37.0, 25.0), "street", n=60)
+dr.dress(m, rec, (0, 10.6, 13.0, 15.2), "street", n=14); dr.dress(m, rec, (28.0, 0, 6.0, 10.6), "street", n=6); dr.dress(m, rec, (44.8, 0, 7.4, 11.0), "yard", n=6)
+dr.dress(m, rec, (13.0, 35.0, 4.4, 9.0), "yard", n=5); dr.dress(m, rec, (29.6, 35.0, 5.2, 9.0), "yard", n=5)
 for _ in range(40):                                                                    # straw and muck trodden into the square, a puddle or two
     x, y = rng.uniform(14, 50), rng.uniform(11.5, 34)
     if any(inside(x, y, r, .6) for r, _, _ in BLD.values()): continue

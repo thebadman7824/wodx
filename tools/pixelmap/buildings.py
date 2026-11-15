@@ -10,6 +10,13 @@ TH = 26
 
 
 def _floor(m, x, y, w, h, kind):
+    """Lay a floor; if the map is being dressed (dress.snap), the new floor counts as bare."""
+    _floor0(m, x, y, w, h, kind)
+    if getattr(m, "_snap", None) is not None:
+        import dress; dress.resnap(m, (x, y, w, h))
+
+
+def _floor0(m, x, y, w, h, kind):
     X0, Y0, X1, Y1 = int(x * T), int(y * T), int((x + w) * T), int((y + h) * T)
     if kind == "earth":                                                         # beaten earth with straw trodden in
         st = (m.dirt(Y1 - Y0, X1 - X0) * .86).astype(np.uint8); m.put(st, X0, Y0)
