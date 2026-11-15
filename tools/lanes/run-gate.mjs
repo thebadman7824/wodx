@@ -44,10 +44,11 @@ const args = process.argv.slice(2);
 const opt = k => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : null; };
 const valued = new Set(["lane", "wait", "repo", "channel", "base", "shard", "report", "lanes", "gate-timeout", "step-timeout", "max-minutes"]);
 let gates = args.filter((a, i) => !a.startsWith("--") && !(i > 0 && valued.has(args[i - 1].slice(2))));
-if ( args.includes("--all") ) gates.push(...Object.keys(gateMap()));
+const gateRoot = path.resolve(opt("repo") ?? REPO);   // the checkout under test: a gate new on the branch is only there
+if ( args.includes("--all") ) gates.push(...Object.keys(gateMap(gateRoot)));
 if ( args.includes("--touched") ) {
-  const t = touched(changedPaths(opt("base") ?? "origin/main", path.resolve(opt("repo") ?? REPO)));
-  const list = gatesFor(t.modules, t.gates);
+  const t = touched(changedPaths(opt("base") ?? "origin/main", gateRoot), {root: gateRoot});
+  const list = gatesFor(t.modules, t.gates, gateMap(gateRoot));
   console.log(`Touched modules: ${t.modules.join(", ") || "none"}; ${list.length} gate(s) to run.`);
   if ( !list.length && !gates.length ) { console.log("Nothing in this change needs a gate."); process.exit(0); }
   gates.push(...list);
@@ -89,7 +90,7 @@ const only = opt("lane") ? [String(opt("lane"))] : null;
 const waitMin = Number(opt("wait") ?? 0);
 
 const gateMin = Number(opt("gate-timeout") ?? 15), stepSec = Number(opt("step-timeout") ?? 45);
-const perGate = loadExtra().timeouts ?? {};
+const perGate = loadExtra(gateRoot).timeouts ?? {};
 const limitOf = g => Number(perGate[g] ?? gateMin) * 60000;
 const maxMs = Number(opt("max-minutes") ?? 0) * 60000 || (15 * 60000 + gates.reduce((t, g) => t + limitOf(g) + 120000, 0));
 /** Rejects when p has not settled in ms (B3089). */
