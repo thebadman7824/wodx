@@ -5,6 +5,7 @@ import {getEngine, describeTime} from "./calendar.mjs";
 import * as events from "./events.mjs";
 import * as S from "./signature-rules.mjs";
 import * as POD from "./pod.mjs";
+import {on as ghoulNeedOn} from "./ghoul-need.mjs";
 
 /**
  * WoDX Chronicle 0.30.0: signature features on the Foundry side (Splat Features Desk, Vampire first). Rules in
@@ -114,6 +115,8 @@ export function allRowsOf(actor) {
   if ( actor.flags?.world?.wodx?.kinfolk ) return lineOn("sigWerewolf") ? [S.KINFOLK] : [];
   if ( !lineOn("sigVampire") ) return [];
   const kind = kindName(actor);
+  // B5054: an animal ghoul on a Creature sheet carries the ghoul row too
+  if ( actor.flags?.["wodx-creation"]?.animalGhoul ) return [S.GHOUL];
   if ( /ghoul|revenant/.test(kind) ) return [S.familyRow([actor.flags?.[MODULE_ID]?.family, ...clanNames(actor), actor.system?.custom?.family].filter(Boolean), foundedFamilies()) ?? S.GHOUL];
   if ( !/kindred|vampire/.test(kind) && !clanNames(actor).length ) return [];
   const r = S.vampireRow(clanNames(actor));
@@ -705,6 +708,8 @@ export async function ghoulFed(actorOrId) {
 async function ghoulTick(a, t) {
   const row = rowOf(a);
   if ( !on() || row?.feature !== "ghoul" || row.revenant ) return;
+  // B5050: the monthly need now happens by itself (ghoul-need.mjs); this card only stands in when that is switched off
+  if ( ghoulNeedOn() ) return;
   const sig = sigOf(a), g = sig.ghoul ?? {fedAt: t, warned: 0};
   if ( !sig.ghoul ) { sig.ghoul = g; await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig}); return; }
   const m = S.monthsUnfed(g.fedAt, t);

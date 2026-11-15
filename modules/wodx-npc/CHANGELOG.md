@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.86.0 (Animal ghoul behaviour (B5055 to B5057): the fight AI's frenzy option for animal ghouls (V20 Dark Ages p. 401 for when, Kindred of the Ebony Kingdom p. 185 for the triggers, no easier difficulty), the bound animal's loyalty floor in the loyalty drift, and the craving botch from WoDX Chronicle's monthly need)
 - 0.85.0 (The Philippines in NPC politics, routines and talk (B5152))
 - 0.84.0 (The NPC side of the Storyteller's Hand, part three (B4880-B4885))
 - 0.83.1 (Grief is rolled for the loved ones when a death lands (B4871), and the faction turn calls wodxFactionTurn so the court's Blood Hunts can act on it (B4873); An absent player's character that WoDX Storyteller stands in for (the standIn flag) takes its fight turns as an NPC does, without spending Willpower, using powers or taking a hostage (B4868))

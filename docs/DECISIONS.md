@@ -240,7 +240,7 @@ Next free block: B5430
 | B5000-B5009 | Moro names (used B5000-B5002) | Creation, Chronicle |
 | B5010-B5029 | The Storyteller's Hand, part three: fire, noticing, and the rest of the desk acts by itself (Ben's desk picks, 14 November 2026) (used B5010-B5024) | Interactables, Actions, Senses, Library, Chronicle, Storyteller, Otherworlds, Creation |
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
-| B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5049) | Creation, Chronicle, NPC, Sheets, Actions, Combat |
+| B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5057) | Creation, Chronicle, NPC, Sheets, Actions, Combat |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 | B5180-B5189 | Names raised to 300, Thai (used B5180) | Creation |
 | B5190-B5199 | Names raised to 300, Malay (used B5190) | Creation |
@@ -7954,6 +7954,46 @@ Reverse: the setAlly call in makeGhoul.
 WoDX Creation. A vampire within a square and a half of a mortal, ghoul or animal can feed it a point. The Storyteller's feed is at once; a player's goes to the approval queue (type wodx-vitae) and happens by itself on approval or auto-approval. Red "Vitae" rises from the token. Desk item 2.
 
 Reverse: registerFeedVitae in main.mjs.
+
+## B5050. The monthly need happens by itself (2026-11-14)
+WoDX Chronicle. Each month a ghoul goes unfed takes its month's vitae off the sheet (1, or an animal's by size, B5044); with the pool empty, one Discipline dot a month, Potence last (Kindred of the Ebony Kingdom p. 186 fills in where V20 Dark Ages p. 400 only says the powers fade). Covers human ghouls too. Setting ghoulNeed, on by default. Desk item 12.
+
+Reverse: switch "Ghouls need vitae each month" off; the old card comes back.
+
+## B5051. The craving is rolled (2026-11-14)
+WoDX Chronicle. Each new month unfed, Self-Control at difficulty 7 (Willpower for an animal, B5046), V20 Dark Ages p. 401. Held, craves, or a botch (must drink at once); the hook wodxGhoulCraving carries the result for WoDX NPC. Desk item 12.
+
+Reverse: drop rollCraving from ghoul-need.mjs.
+
+## B5052. An animal catches up with its years (2026-11-14)
+WoDX Chronicle. With its vitae gone, an animal ghoul ages a year a week until it has caught up with the years it held off. Past its span (B5045) it dies; past twice its span it turns to dust. House pace: V20 Dark Ages p. 400 says only that it comes quickly. Desk item 13.
+
+Reverse: R.ageing and its use in check().
+
+## B5053. Shown on the token (2026-11-14)
+WoDX Chronicle. Red "-1 vitae" rises each month; an empty ghoul's tokens grey (the old tint is kept on the token); dead of age takes the dead mark; dust fades the token to a faint grey. Desk item 26.
+
+Reverse: tint() and float() in ghoul-need.mjs.
+
+## B5054. A drink from the domitor starts the month again (2026-11-14)
+WoDX Chronicle and WoDX Creation. Give vitae and Feed vitae from the domitor call the Clan features' ghoulFed, whose wodxGhoulFix hook resets the need and brings the token's colour back. Animal ghouls on Creature sheets carry the ghoul row.
+
+Reverse: the ghoulFed call in WoDX Creation's giveVitae.
+
+## B5055. A bound animal ghoul's loyalty floor (2026-11-14)
+WoDX NPC. Loyalty drift never takes a blood-bound animal ghoul below Friendly (1) unless it was fed on by its master or went two months or more unfed (Kindred of the Ebony Kingdom p. 185). The floor never raises an attitude already under it. Desk item 10.
+
+Reverse: drift's animal and bound options in order-rules.mjs.
+
+## B5056. Animal ghoul frenzy (2026-11-14)
+WoDX NPC. With five or more vitae in it (V20 Dark Ages p. 401), an animal ghoul in a fight may frenzy when badly hurt (3 or more levels), cornered, or when its master is attacked in sight. It rolls Willpower at difficulty 6, with no easier difficulty for animals (Ben's pick); failing puts on WoDX Chronicle's frenzy condition. Desk item 14.
+
+Reverse: the animalGhoul block in scoreOptions.
+
+## B5057. A craving botch goes for the nearest person (2026-11-14)
+WoDX NPC. When a Storyteller's ghoul botches its craving roll (B5051), its token moves next to the nearest living mortal on the scene and the Storyteller is told it means to drink. Player characters' ghouls are left to their players. Desk item 12.
+
+Reverse: the wodxGhoulCraving hook in main.mjs.
 
 ## B5150. The Philippines a region of its own (2026-11-15)
 WoDX Chronicle and Storyteller. Ben asked to build out the Philippines. The islands leave the Malay world and become the 45th world region, "The Philippines (Manila, the Visayas, Mindanao and Sulu)", with Manila as its city, the tropical wet climate and the Philippine money region. The world map gives it the squares north of 4.5 degrees and east of 119.5 (with Palawan) that were the Malay world's; the map builder cuts the country out by name on its next run. The region's letter comes last so no older square changes. Taken as recommended; logged in PENDING-REVIEW.

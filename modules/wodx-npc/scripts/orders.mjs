@@ -43,7 +43,11 @@ export function build(ctx) {
     const master = game.actors.get(masterId);
     if ( !AT?.apply || !npc || !master ) return null;
     const step = Number(AT.of?.(npc, master)?.step) || 0;
-    const d = O.drift(kind, {step, ...extra});
+    // B5055: a bound animal ghoul holds to its master unless mistreated
+    const cf = npc.flags?.["wodx-creation"] ?? {};
+    const animal = !!(cf.animalGhoul || cf.animal);
+    const bound = (Number(cf.lineage?.bonds?.[masterId]?.drinks) || 0) >= 3;
+    const d = O.drift(kind, {step, animal, bound, ...extra});
     if ( !d ) return null;
     await AT.apply(npc, master, {delta: d.delta, why: d.why});
     if ( d.wavers ) {
