@@ -12,6 +12,7 @@
  *   8. Unseen Presence used through the effects card puts Obfuscated on the token (B6034)
  *   9. knocked down outdoors in rain: Filthy; the same fall in dry weather: clean (B6033)
  *  10. a player's character seven nights unwashed turns Filthy when the clock moves; one washed tonight stays clean (B6033)
+ *  11. lethal wounds adding up on the right arm cripple it, and the Crippled mark draws on the token on the map (B6032)
  * Result: Data/wodx-gate/gatestillmarks-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -138,6 +139,27 @@ export async function run() {
       await wait(900);
       const clean = !K.hasCondition(b, "filthy");
       G.ok("10. a week unwashed makes a player's character Filthy", filthy && clean, {filthy, clean, players, owned: b.hasPlayerOwner});
+    });
+
+    await G.step("11. a crippled arm shows on the token", async () => {
+      const BD = C.body;
+      let hl = null; try { hl = game.settings.get("wodx-combat", "hitLocations"); } catch (e) { hl = null; }
+      const s = await G.scene({name: "WoDX gate: gatestillmarks arm"});
+      const [tok] = await G.tokens(s, [{actor: a, x: 3, y: 3}]);
+      await wait(500);
+      const icons0 = tok.object?.effects?.children?.length ?? 0;
+      // the damage lands on the track first, then the same call the attack card makes: three lethal levels on the right arm
+      await a.update({"system.health.damage.lethal": 3});
+      await BD.recordWound(a, {location: {id: "arm-r", label: "Right arm"}, type: "lethal", levels: 3}, {before: {lethal: 0}, after: {lethal: 3}, effType: "lethal"}, null);
+      await wait(1200);
+      const fx = [...a.effects].find(e => e.flags?.["wodx-combat"]?.crippled === "arm-r");
+      const want = CONST.ACTIVE_EFFECT_SHOW_ICON?.ALWAYS;
+      const temp = !!fx && a.temporaryEffects.some(e => e.id === fx.id);
+      const icons1 = tok.object?.effects?.children?.length ?? 0;
+      const card = [...game.messages].some(m => m.flags?.["wodx-combat"]?.maim?.part === "arm-r");
+      G.ok("11. a crippled arm shows on the token", !!fx && (want === undefined || fx.showIcon === want) && temp && icons1 > icons0 && card,
+        {hl, fx: !!fx, showIcon: fx?.showIcon, want, temp, icons0, icons1, card});
+      await a.update({"system.health.damage.lethal": 0});
     });
   } finally { return G.finish(); }
 }
