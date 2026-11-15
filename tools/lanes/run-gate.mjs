@@ -160,7 +160,7 @@ try {
     for ( const gate of gates ) {
       const limit = limitOf(gate);
       extendLock(lane, Date.now() + limit + 5 * 60000);
-      if ( page && RECYCLE && sinceSignIn >= RECYCLE ) { await closeBrowser(); page = null; }
+      if ( page && RECYCLE && sinceSignIn >= RECYCLE ) { console.log(`Lane ${lane.id}: a new browser after ${sinceSignIn} gates (B6352).`); await closeBrowser(); page = null; }
       if ( !page ) {
         try { await signIn(); await within(page.evaluate(async () => { if ( !canvas?.scene && game.scenes.active ) await game.scenes.active.view(); }), 60000, "viewing the scene").catch(() => {}); }
         catch (e) { report(`${gate}: ERROR could not sign in again: ${e.message}`); code = 1; break; }
