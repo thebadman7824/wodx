@@ -16,7 +16,10 @@ const on = () => { try { return game.settings.get(MOD, "sprites") !== false; } c
 export function registerSpriteSettings() {
   game.settings.register(MOD, "sprites", {scope: "world", config: true, name: "Sprite tokens walk and turn",
     hint: "Tokens given a sprite face the way they move and step as they go. Off: they show the still figure.", type: Boolean, default: true});
+  game.settings.register(MOD, "spriteLife", {scope: "world", config: true, name: "Figures live their routine on the map",
+    hint: "A character with a routine (WoDX NPC) sleeps lying down, sits at rest, works with the hands, kneels at prayer, drinks seated and carries a load on errands; beasts graze and lie down. They get up when they walk. Off: everyone stands.", type: Boolean, default: true});
 }
+const lifeOn = () => { try { return game.settings.get(MOD, "spriteLife") !== false; } catch (e) { return true; } };
 
 const crisp = tex => { const b = tex?.baseTexture ?? tex?.source; if ( b ) b.scaleMode = globalThis.PIXI?.SCALE_MODES?.NEAREST ?? "nearest"; return tex; };
 
@@ -60,13 +63,14 @@ function tick() {
       tex = frame(name, {row: SR.ROW[st.facing] ?? SR.ROW.down, col: SR.ACT_FRAMES - 1}, a.act);
     }
     else if ( a ) {
-      const col = st.moving ? null : SR.actFrame(now - a.start, a.act);
+      // a pose that goes round (working, grazing) starts over for as long as the figure stays at it (B5664)
+      const col = st.moving ? null : SR.actFrame(a.loop ? (now - a.start) % SR.actTotal(a.act) : now - a.start, a.act);
       if ( col === null && a.hold && !st.moving ) a.held = true;
       else if ( col === null ) acts.delete(token.id);
       else {
         st = {...st, facing: a.facing ?? st.facing};
         const f = {row: SR.ROW[st.facing] ?? SR.ROW.down, col};
-        tex = frame(name, f, a.act) ?? frame(name, SR.frameOf(st, grid));
+        tex = frame(name, f, a.act) ?? frame(name, SR.frameOf(st, grid, SR.hasStand(name)));
         if ( a.fx ) try { glow(token, a.fx, f); } catch (e) { console.warn(`${MOD} | power effect`, e); a.fx = null; }
         else if ( glows.has(token.id) ) glow(token, null);
       }
@@ -78,10 +82,11 @@ function tick() {
     states.set(token.id, st);
     if ( !tex && seat?.pose === "ride" && !a ) { const g = SR.gaitFor(name, {action: "walk", riding: true}); if ( g === "ride" ) tex = frame(name, SR.frameOf(st, grid), g); }
     if ( !tex && st.moving ) {
-      const gait = SR.gaitFor(name, {action: token.document.movementAction ?? "walk", squares: strides.get(token.id) ?? 0, riding: rides.get(token.id) === true && seat?.pose !== "sit"});
+      const gait = SR.gaitFor(name, {action: token.document.movementAction ?? "walk", squares: strides.get(token.id) ?? 0, riding: rides.get(token.id) === true && seat?.pose !== "sit",
+        carrying: token.document.flags?.[MOD]?.carry === true});
       if ( gait ) tex = frame(name, SR.frameOf(st, grid), gait);
     }
-    tex ??= frame(name, SR.frameOf(st, grid));
+    tex ??= frame(name, SR.frameOf(st, grid, SR.hasStand(name)));
     if ( tex && token.mesh.texture !== tex ) token.mesh.texture = tex;
     else if ( !tex ) crisp(token.mesh.texture);
   }
@@ -126,7 +131,7 @@ function onTokenUpdate(doc, change) {
   base(name, act);
   const fx = act === "cast" && SR.fxOk(a.fx) ? a.fx : null;
   if ( fx ) base(FX, fx);
-  acts.set(doc.id, {act, fx, hold: !!a.hold && SR.HOLD.includes(act), facing: SR.ROW[a.facing] !== undefined ? a.facing : null, start: performance.now()});
+  acts.set(doc.id, {act, fx, hold: !!a.hold && SR.HOLD.includes(act), loop: !!a.hold && SR.LOOP.includes(act), facing: SR.ROW[a.facing] !== undefined ? a.facing : null, start: performance.now()});
 }
 
 /**
@@ -134,7 +139,7 @@ function onTokenUpdate(doc, change) {
  * first when left out or unknown); `toward` is a token, a token document or a point the figure turns to face.
  * Returns the move played, or null when the token has no sprite or the sprite knows no attack.
  */
-export async function play(tokenDoc, act = null, toward = null, {fx = null} = {}) {
+export async function play(tokenDoc, act = null, toward = null, {fx = null, face = null, by = ""} = {}) {
   tokenDoc = tokenDoc?.document ?? tokenDoc;
   const name = tokenDoc?.flags?.[MOD]?.sprite, move = SR.isOwnMove(act) ? (SR.hasAct(name, act) ? act : null) : SR.actOf(name, act);
   if ( !move ) return null;
@@ -142,9 +147,9 @@ export async function play(tokenDoc, act = null, toward = null, {fx = null} = {}
   const at = o && Number.isFinite(o.x) && Number.isFinite(o.y) ? {x: o.x + (o.width ?? 0) * g / 2, y: o.y + (o.height ?? 0) * g / 2} : null;
   const me = {x: tokenDoc.x + (tokenDoc.width ?? 1) * g / 2, y: tokenDoc.y + (tokenDoc.height ?? 1) * g / 2};
   const was = states.get(tokenDoc.id)?.facing ?? "down";
-  const facing = at ? SR.facingToward(me, at, was) : was;
+  const facing = SR.ROW[face] !== undefined ? face : at ? SR.facingToward(me, at, was) : was;
   const look = move === "cast" ? (SR.fxOk(fx) ? fx : SR.FX_OWN[name] ?? SR.fxFor({})) : "";
-  await tokenDoc.update({flags: {[MOD]: {act: {name: move, facing, fx: look, hold: SR.HOLD.includes(move), n: (tokenDoc.flags?.[MOD]?.act?.n ?? 0) + 1}}}}, {animate: false});
+  await tokenDoc.update({flags: {[MOD]: {act: {name: move, facing, fx: look, hold: SR.HOLD.includes(move), by, n: (tokenDoc.flags?.[MOD]?.act?.n ?? 0) + 1}}}}, {animate: false});
   return move;
 }
 
@@ -188,7 +193,7 @@ export async function rise(tokenDoc) {
   tokenDoc = tokenDoc?.document ?? tokenDoc;
   const a = tokenDoc?.flags?.[MOD]?.act;
   if ( !a?.hold ) return false;
-  await tokenDoc.update({flags: {[MOD]: {act: {name: "", hold: false, fx: "", n: (a.n ?? 0) + 1}}}}, {animate: false});
+  await tokenDoc.update({flags: {[MOD]: {act: {name: "", hold: false, fx: "", by: "", n: (a.n ?? 0) + 1}}}}, {animate: false});
   return true;
 }
 
@@ -245,15 +250,64 @@ function onSpoken(msg) {
 export async function pose(tokenDoc) {
   tokenDoc = tokenDoc?.document ?? tokenDoc;
   const name = tokenDoc?.flags?.[MOD]?.sprite, down = !!tokenDoc?.flags?.[MOD]?.act?.hold;
-  const can = ["sit", "kneel", "search", "talk"].filter(a => SR.hasAct(name, a));
+  const can = ["seat", "stool", "sit", "kneel", "sleep", "sup", "work", "tend", "dig", "graze", "lie", "search", "talk"].filter(a => SR.hasAct(name, a));
   if ( !can.length ) return null;
   const buttons = [...can.map(a => ({action: a, label: SR.ACT_LABELS[a]})), ...(down ? [{action: "rise", label: "Stand up"}] : []), {action: "cancel", label: "Cancel"}];
   const a = await foundry.applications.api.DialogV2.wait({window: {title: `What ${tokenDoc.name} does`}, classes: ["wodx-dialog"], rejectClose: false,
-    content: "<p>The figure on the map does it for everyone to see. One that sits or kneels stays so until it stands up or walks off.</p>", buttons});
+    content: "<p>The figure on the map does it for everyone to see. One that sits, kneels, sleeps or works stays at it until it stands up or walks off.</p>", buttons});
   if ( !a || a === "cancel" ) return null;
   if ( a === "rise" ) return rise(tokenDoc);
   if ( down ) await rise(tokenDoc);
   return play(tokenDoc, a);
+}
+
+/* ---- everyday life by routine (B5665) ---- */
+const animalOf = actor => /^creature$/i.test(actor?.type ?? "");
+/** What the routine says this token's character is doing now, and the kind of place it is in: {activity, place} or null. */
+function doingOf(tokenDoc) {
+  const actor = tokenDoc?.actor, b = actor?.isToken ? actor.baseActor ?? actor : actor;
+  const w = b?.flags?.["wodx-npc"]?.where;
+  if ( !w?.activity || b.flags?.["wodx-npc"]?.paused ) return null;
+  let place = null;
+  try { const d = w.place ? fromUuidSync(w.place) : null; place = d?.flags?.["wodx-npc"]?.place?.kind ?? null; } catch (e) { place = null; }
+  place ??= tokenDoc.parent?.flags?.["wodx-npc"]?.place?.kind ?? null;
+  return {activity: w.activity, place};
+}
+/** The pose a token should hold just now by its character's routine: {pose, facing, carry}, or null when it has no routine. */
+export function lifeOf(tokenDoc) {
+  tokenDoc = tokenDoc?.document ?? tokenDoc;
+  const name = tokenDoc?.flags?.[MOD]?.sprite, doing = name ? doingOf(tokenDoc) : null;
+  if ( !doing ) return null;
+  const g = tokenDoc.parent?.grid?.size ?? canvas.grid?.size ?? 100;
+  const pt = {x: tokenDoc.x + (tokenDoc.width ?? 1) * g / 2, y: tokenDoc.y + (tokenDoc.height ?? 1) * g / 2};
+  const things = [...(tokenDoc.parent?.tiles ?? [])].map(t => ({x: t.x, y: t.y, width: t.width, height: t.height, head: t.flags?.[MOD]?.head ?? null,
+    name: `${t.flags?.[MOD]?.furniture ?? ""} ${String(t.texture?.src ?? "").split("/").pop()}`}));
+  return SR.poseFor(doing.activity, {animal: animalOf(tokenDoc.actor), has: SR.ACTS[name] ?? [], ...SR.thingsBy(things, pt, g), place: doing.place,
+    facing: states.get(tokenDoc.id)?.facing ?? tokenDoc.flags?.[MOD]?.act?.facing ?? "down"});
+}
+/**
+ * Bring every figure of the scene in view to what its routine says (the active Storyteller's computer, every few
+ * seconds): one that has come to rest takes its pose, one whose hour has changed gets up or takes the new pose. A pose
+ * someone gave by hand, a figure in a fight and one that lies fallen are left alone. Returns how many were changed.
+ */
+export async function settle() {
+  if ( !globalThis.canvas?.ready || !on() || !mine() ) return 0;
+  const live = lifeOn(), now = performance.now();
+  let n = 0;
+  for ( const token of canvas.tokens?.placeables ?? [] ) {
+    const doc = token.document, f = doc.flags?.[MOD] ?? {}, a = f.act;
+    if ( !f.sprite ) continue;
+    const ours = a?.hold && a.by === "routine";
+    if ( a?.hold && !ours ) continue;                          // fallen, dead, or posed by hand
+    const st = states.get(token.id);
+    if ( st?.moving || (st && now - st.last < 1200) || token.inCombat || doc.inCombat ) continue;
+    const want = live ? lifeOf(doc) : null;
+    if ( !!f.carry !== !!want?.carry ) { await doc.update({flags: {[MOD]: {carry: !!want?.carry}}}, {animate: false}); n++; }
+    if ( !want?.pose ) { if ( ours ) { await rise(doc); n++; } continue; }
+    if ( ours && a.name === want.pose && (a.name !== "sleep" || a.facing === want.facing) ) continue;
+    await play(doc, want.pose, null, {face: want.facing, by: "routine"}); n++;
+  }
+  return n;
 }
 
 /** Harm that names an attacker but came without an attack roll just before (an older Combat, harm applied by hand) still plays the attack. */
@@ -281,10 +335,11 @@ export function startSprites() {
   Hooks.on("wodxInteractableWorked", onWorked);
   Hooks.on("createChatMessage", onSpoken);
   loadOwn();
+  globalThis.setInterval?.(() => { settle().catch(e => console.warn(`${MOD} | routine poses`, e)); }, 2500);
   Hooks.on("canvasReady", () => { states.clear(); glows.clear(); strides.clear(); acts.clear();
     // whoever lay fallen or dead when the scene was last seen still lies there
     for ( const t of canvas.tokens?.placeables ?? [] ) { const a = t.document.flags?.[MOD]?.act, n = t.document.flags?.[MOD]?.sprite;
-      if ( a?.hold && SR.HOLD.includes(a.name) && SR.hasAct(n, a.name) ) { base(n, a.name); acts.set(t.id, {act: a.name, fx: null, hold: true, held: true, facing: SR.ROW[a.facing] !== undefined ? a.facing : null, start: -Infinity}); } } canvas.app?.ticker?.remove(tick); canvas.app?.ticker?.add(tick); });
+      if ( a?.hold && SR.HOLD.includes(a.name) && SR.hasAct(n, a.name) ) { base(n, a.name); acts.set(t.id, {act: a.name, fx: null, hold: true, held: !SR.LOOP.includes(a.name), loop: SR.LOOP.includes(a.name), facing: SR.ROW[a.facing] !== undefined ? a.facing : null, start: SR.LOOP.includes(a.name) ? performance.now() : -Infinity}); } } canvas.app?.ticker?.remove(tick); canvas.app?.ticker?.add(tick); });
   if ( globalThis.canvas?.ready ) canvas.app?.ticker?.add(tick);
 }
 
@@ -326,9 +381,9 @@ export function addHudButton(hud, html) {
   const col = el?.querySelector?.(".col.right") ?? el;
   const doc = hud?.object?.document ?? hud?.document;
   // what the figure does: for whoever may move the token, when it is a sprite that knows a pose
-  if ( col && doc?.isOwner && on() && SR.hasAct(doc.flags?.[MOD]?.sprite, "sit") && !col.querySelector(".wodx-sprite-pose") ) {
+  if ( col && doc?.isOwner && on() && (SR.hasAct(doc.flags?.[MOD]?.sprite, "sit") || SR.hasAct(doc.flags?.[MOD]?.sprite, "lie")) && !col.querySelector(".wodx-sprite-pose") ) {
     const p = document.createElement("button");
-    p.type = "button"; p.className = "control-icon wodx-sprite-pose"; p.dataset.tooltip = "Sit, kneel, look about"; p.setAttribute("aria-label", "Sit, kneel, look about");
+    p.type = "button"; p.className = "control-icon wodx-sprite-pose"; p.dataset.tooltip = "Sit, sleep, work, look about"; p.setAttribute("aria-label", "Sit, sleep, work, look about");
     p.innerHTML = '<i class="fa-solid fa-chair"></i>';
     p.addEventListener("click", ev => { ev.preventDefault(); ev.stopPropagation(); pose(doc); });
     col.append(p);
@@ -433,4 +488,4 @@ export async function dress(scene = canvas.scene) {
   return n;
 }
 
-export const spriteApi = {ageOf, markChild, give, clear, pick, play, pose, rise, roster, saveRoster, loadOwn, dress, own: id => SR.isOwn(SR.ownName(id)) ? SR.ownName(id) : null, squares: name => SR.squaresOf(name), fxFor: SR.fxFor, glowing: id => { const g = glows.get(id); return g && !g.destroyed ? {visible: g.visible, width: g.width, height: g.height, x: g.position.x, y: g.position.y} : null; }, acts: name => [...(SR.ACTS[name] ?? [])], playing: id => acts.get(typeof id === "string" ? id : (id?.document?.id ?? id?.id)), names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};
+export const spriteApi = {ageOf, markChild, give, clear, pick, play, pose, rise, settle, lifeOf, roster, saveRoster, loadOwn, dress, own: id => SR.isOwn(SR.ownName(id)) ? SR.ownName(id) : null, squares: name => SR.squaresOf(name), fxFor: SR.fxFor, glowing: id => { const g = glows.get(id); return g && !g.destroyed ? {visible: g.visible, width: g.width, height: g.height, x: g.position.x, y: g.position.y} : null; }, acts: name => [...(SR.ACTS[name] ?? [])], playing: id => acts.get(typeof id === "string" ? id : (id?.document?.id ?? id?.id)), names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};

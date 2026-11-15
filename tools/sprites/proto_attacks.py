@@ -21,6 +21,10 @@ def person_sheets(spec,acts):
             for row,im in ((0,Wr.front(a,0,True,(act,i))),(1,r[:,::-1]),(2,Wr.front(a,0,False,(act,i))),(3,r)): sh[row*SH:(row+1)*SH,i*S:(i+1)*S]=im
         out[act]=sh
     return out
+def drawn(spec):
+    """the sheets a person is drawn in joint by joint (B5661, B5664): standing still, the poses, the walk with a load, asleep"""
+    d=Wr.fig(**spec); out={'stand':Wr.stand(d),'carry':Wr.carrying(d),'sleep':Wr.asleep(d)}
+    out.update({n:Wr.posed(d,n) for n in Wr.POSED}); return out
 def _keep(src,dx,dy):
     """a shift cut down so that nothing of the figure is pushed out of its frame"""
     ys,xs=np.nonzero(src[...,3])
@@ -262,8 +266,12 @@ if __name__=='__main__':
         for act,sh in person_sheets(spec,acts).items():
             Image.fromarray(sh).save(out+name+('.'+act if act else '')+'.png')
             if not act: Image.fromarray(sh[2*SH:3*SH,0:S]).save(out+name+'-still.png')
+        own=drawn(spec); walk=np.array(Image.open(out+name+'.png').convert('RGBA'))
+        for k,sh in {**extras(walk,DEATHS.get(name,'die')),**own}.items():
+            if k!='stand': Image.fromarray(sh).save(out+name+'.'+k+'.png',optimize=True)
+        Image.fromarray(np.concatenate([walk,own['stand']],1)).save(out+name+'.png',optimize=True)
     for name,kind in BEASTS.items():
         walk=np.array(Image.open(out+name+'.png').convert('RGBA')); Image.fromarray(lunge(walk,kind)).save(out+name+'.'+kind+'.png')
-    for name in list(PEOPLE)+list(BEASTS):
-        walk=np.array(Image.open(out+name+'.png').convert('RGBA'))
+    for name in list(BEASTS):
+        walk=np.array(Image.open(out+name+'.png').convert('RGBA'))[:,:8*S]
         for k,sh in extras(walk,DEATHS.get(name,'die')).items(): Image.fromarray(sh).save(out+name+'.'+k+'.png',optimize=True)

@@ -8,3 +8,7 @@ test("child sprites: the Python checks pass", {skip: !py && "needs Python 3 with
   const out = execFileSync(py, [fileURLToPath(new URL("../sprites/test_child.py", import.meta.url))], {encoding: "utf8"});
   assert.match(out, /child sprites ok/);
 });
+test("everyday life sprites: the Python checks pass (B5660-B5664)", {skip: !py && "needs Python 3 with numpy and Pillow", timeout: 600000}, () => {
+  const out = execFileSync(py, [fileURLToPath(new URL("../sprites/test_life.py", import.meta.url))], {encoding: "utf8"});
+  assert.match(out, /everyday life ok/);
+});

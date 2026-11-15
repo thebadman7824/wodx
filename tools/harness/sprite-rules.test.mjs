@@ -39,7 +39,7 @@ test("a placement far away is not a walk", () => {
 
 test("every sheet is in the module, at the size the rules cut frames from", () => {
   for ( const name of Object.keys(SR.SHEETS) ) {
-    for ( const [path, w, h] of [[SR.sheetPath(name), SR.FRAME_W * SR.FRAMES, SR.FRAME_H * 4], [SR.stillPath(name), SR.FRAME_W, SR.FRAME_H]] ) {
+    for ( const [path, w, h] of [[SR.sheetPath(name), SR.FRAME_W * (SR.FRAMES + (SR.hasStand(name) ? 1 : 0)), SR.FRAME_H * 4], [SR.stillPath(name), SR.FRAME_W, SR.FRAME_H]] ) {
       const file = join(root, path.replace("modules/", "modules/"));
       assert.ok(existsSync(file), path);
       const b = readFileSync(file);
@@ -186,7 +186,7 @@ test("poses and more ways of going (B2610, B2611)", async () => {
     for ( const m of SR.POSES ) assert.ok(SR.hasAct(name, m) && SR.ACT_LABELS[m] && SR.isOwnMove(m), `${name} ${m}`);
     assert.ok(!SR.isOwnMove(SR.actOf(name, null)), "the move played by default is still an attack");
   }
-  assert.ok(SR.STAY.every(m => SR.HOLD.includes(m) && SR.POSES.includes(m)));
+  assert.ok(SR.STAY.every(m => SR.HOLD.includes(m) && [...SR.POSES, ...SR.LIFE, ...SR.BEAST_LIFE].includes(m)));
   assert.equal(SR.gaitFor("townsman-1888", {action: "swim"}), "swim");
   assert.equal(SR.gaitFor("townsman-1888", {action: "climb", squares: 9}), "climb");
   assert.equal(SR.gaitFor("townsman-1888", {action: "walk", riding: true}), "ride");
@@ -234,4 +234,64 @@ test("a big creature's sprite asks for the squares of its true size (B2618)", ()
   assert.deepEqual(SR.squaresOf(SR.ownName("y1")), {width: 3, height: 3});
   SR.learn("x", null);
   assert.equal(SR.squaresOf(SR.ownName("d1")), null);
+});
+
+test("everyday life: the standing frame, drawn poses and the pose a routine asks for (B5661, B5664, B5665)", async () => {
+  const {existsSync} = await import("node:fs");
+  const people = ["kindred-elder-1888", "garou-homid", "townsman-1888", "lady-1888"];
+  for ( const name of people ) {
+    for ( const m of [...SR.LIFE, SR.CARRY] ) assert.ok(existsSync(new URL(`../../${SR.actPath(name, m)}`, import.meta.url)), `${name}.${m}`);
+    for ( const m of SR.LIFE ) assert.ok(SR.hasAct(name, m) && SR.ACT_LABELS[m] && SR.isOwnMove(m), `${name} ${m}`);
+    assert.ok(SR.hasStand(name));
+  }
+  assert.ok(!SR.hasStand("garou-lupus") && !SR.hasAct("garou-lupus", "seat"));
+  // a still figure shows the ninth column when its sheet has one
+  const st = SR.start({x: 0, y: 0}, "left");
+  assert.deepEqual(SR.frameOf(st, 100, true), {row: SR.ROW.left, col: SR.FRAMES});
+  assert.deepEqual(SR.frameOf(st, 100), {row: SR.ROW.left, col: 0});
+  assert.equal(SR.frameOf({...st, moving: true, dist: 30}, 100, true).col, 2);
+  // every pose that goes round is one a figure holds and leaves by walking off
+  assert.ok(SR.LOOP.every(m => SR.HOLD.includes(m) && SR.STAY.includes(m)));
+  assert.equal(SR.actTotal("work"), SR.ACT_TOTAL * SR.ACT_SLOW.work);
+  // what stands by the figure
+  const bed = {x: 100, y: 100, width: 200, height: 100, name: "Bed_Straw_A.png"}, bench = {x: 400, y: 100, width: 100, height: 100, name: " bench"};
+  assert.deepEqual(SR.thingsBy([bed, bench], {x: 150, y: 150}, 100), {seat: false, bed: {long: "h", head: null}});
+  assert.deepEqual(SR.thingsBy([bed, bench], {x: 450, y: 120}, 100), {seat: true, bed: null});
+  assert.deepEqual(SR.thingsBy([bed, bench], {x: 900, y: 900}, 100), {seat: false, bed: null});
+  assert.equal(SR.thingsBy([{x: 0, y: 0, width: 100, height: 220, name: "cot"}], {x: 50, y: 50}, 100).bed.long, "v");
+  assert.equal(SR.thingsBy([{x: 0, y: 0, width: 100, height: 100, name: "Table_Round.png"}], {x: 50, y: 50}, 100).seat, false);
+  // the routine's word to a pose
+  const has = SR.ACTS["townsman-1888"];
+  assert.deepEqual(SR.poseFor("rest", {has}), {pose: "stool", facing: "down", carry: false});
+  assert.equal(SR.poseFor("rest", {has, seat: true}).pose, "seat");
+  assert.equal(SR.poseFor("rest", {has, place: "wilds"}).pose, "sit");
+  assert.deepEqual(SR.poseFor("sleep", {has, bed: {long: "h"}, facing: "down"}), {pose: "sleep", facing: "left", carry: false});
+  assert.equal(SR.poseFor("sleep", {has, bed: {long: "v"}, facing: "left"}).facing, "up");
+  assert.equal(SR.poseFor("sleep", {has, bed: {long: "v", head: "down"}}).facing, "down");
+  assert.equal(SR.poseFor("sleep", {has, facing: "right"}).facing, "right");
+  assert.equal(SR.poseFor("pray", {has}).pose, "kneel");
+  assert.equal(SR.poseFor("drink", {has}).pose, "sup");
+  assert.equal(SR.poseFor("work", {has}).pose, "work");
+  assert.equal(SR.poseFor("work", {has, place: "yard"}).pose, "dig");
+  assert.deepEqual(SR.poseFor("errand", {has}), {pose: null, facing: "down", carry: true});
+  for ( const a of ["patrol", "hunt", "hide", "attend", "wander", null] ) assert.equal(SR.poseFor(a, {has}).pose, null, String(a));
+  // a sprite drawn before the poses were (no such sheets) falls back, or stands
+  assert.equal(SR.poseFor("rest", {has: ["sit", "kneel"]}).pose, "sit");
+  assert.equal(SR.poseFor("work", {has: ["sit"]}).pose, null);
+  // beasts
+  assert.equal(SR.poseFor("graze", {animal: true, has: ["graze", "lie"]}).pose, "graze");
+  assert.equal(SR.poseFor("sleep", {animal: true, has: ["graze", "lie"]}).pose, "lie");
+  assert.equal(SR.poseFor("errand", {animal: true, has: ["graze", "lie"]}).carry, false);
+  assert.equal(SR.poseFor("graze", {animal: true, has: []}).pose, null);
+  // the walk with a load
+  assert.equal(SR.gaitFor("townsman-1888", {action: "walk", squares: 2, carrying: true}), "carry");
+  assert.equal(SR.gaitFor("townsman-1888", {action: "walk", squares: 9, carrying: true}), "run");
+  assert.equal(SR.gaitFor("garou-lupus", {action: "walk", squares: 2, carrying: true}), null);
+  // a batch's manifest says which sprites have the standing frame and the load
+  SR.learn("worlds/t/wodx-sprites", {sprites: {a1: {name: "A", acts: ["claw", "seat", "sleep", "graze"], gaits: ["run", "carry"], stand: true}, a2: {name: "B", acts: [], gaits: []}}});
+  assert.ok(SR.hasStand(SR.ownName("a1")) && !SR.hasStand(SR.ownName("a2")));
+  assert.deepEqual(SR.GAIT[SR.ownName("a1")], ["run", "carry"]);
+  assert.ok(SR.hasAct(SR.ownName("a1"), "sleep") && SR.hasAct(SR.ownName("a1"), "graze"));
+  SR.learn("x", null);
+  assert.ok(!SR.hasStand(SR.ownName("a1")));
 });
