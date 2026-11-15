@@ -321,7 +321,7 @@ export function build(ctx) {
     const a = game.actors.get(it.actorId), w = whereOf(a);
     const what = w?.label || R.ACTIVITIES[w?.activity] || "";
     const dest = placeName(places, it.place);
-    const tail = it.duplicate ? " (a second token of the same NPC)" : it.hand ? " (placed by hand: needs the Storyteller)" : "";
+    const tail = it.beat ? " (the next stop on the beat)" : it.duplicate ? " (a second token of the same NPC)" : it.hand ? " (placed by hand: needs the Storyteller)" : "";
     return `${a?.name ?? "Someone"} ${VERB[it.type]} ${dest}${what ? `, ${what.toLowerCase()}` : ""}${tail}`;
   }
 
@@ -521,6 +521,11 @@ export function build(ctx) {
       content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">Routines need you</h3></header><div class="vta-body"><ul>${reports.map(r => `<li>${esc(r)}</li>`).join("")}</ul></div></div>`});
     if ( !scene || !canvas?.ready || canvas.scene?.id !== scene.id ) return {updates, items: [], fed};
     const items = planScene(scene, places, how === "walk" || how === "resume" ? "walk" : "jump", t);
+    // B6173: a guard's beat in Suggest mode is listed on the card (Auto walks it below)
+    if ( how === "walk" && post && NR.modeOf({scene: flag(scene, "routineMode"), world: setting("routineMode")}) === "suggest" ) {
+      const taken = new Set(items.map(i => i.tokenId).filter(Boolean));
+      items.push(...(await beatItems(scene, t).catch(e => { console.error(`${MOD} | beats`, e); return []; })).filter(i => !taken.has(i.tokenId)));
+    }
     const card = post ? await postRoutineCard(scene, items, how, t) : null;
     if ( how === "walk" || how === "resume" ) await checkStays(scene, t);
     // B5686 (r3): the watch walks its beat
@@ -1160,24 +1165,50 @@ export function build(ctx) {
       content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p>${esc(out.join("; "))}. They will remember who held them.</p></div></div>`});
     return out;
   }
-  /** r3: guards on a watch block walk between the tagged places of the map in view, a stop every quarter hour; on the hour they are back at the post. Auto mode only. */
-  async function walkBeats(scene, t) {
+  /**
+   * r3: guards on a watch block walk between the tagged places of the map in view, a stop every quarter hour; on the
+   * hour they are back at the post. The next stop of each guard whose beat is due, with the mode it is in.
+   */
+  async function beatsDue(scene, t) {
     if ( !scene || canvas.scene?.id !== scene.id || !onGrid() ) return [];
     const here = listPlaces().filter(p => p.region && p.scene?.id === scene.id);
     if ( here.length < 2 || FW.atPostNow(t) ) return [];
-    const moved = [];
+    const due = [];
     for ( const tok of canvas.tokens.placeables ) {
       const a = tok.actor?.isToken ? (tok.actor.baseActor ?? game.actors.get(tok.actor.id)) : tok.actor;
-      if ( !a || a.hasPlayerOwner || !routineOf(a)?.on || modeOf(a, scene) !== "auto" || paused(a, t) || downState(a) || game.combat?.combatants?.some?.(c => c.tokenId === tok.id) ) continue;
+      if ( !a || a.hasPlayerOwner || !routineOf(a)?.on || paused(a, t) || downState(a) || game.combat?.combatants?.some?.(c => c.tokenId === tok.id) ) continue;
+      const mode = modeOf(a, scene);
+      if ( mode === "off" ) continue;
       const w = whereOf(a);
       if ( w?.activity !== "patrol" || !FW.beatDue(flag(a, "beat")?.at ?? null, t) ) continue;
       const at = here.find(p => tok.document.regions?.has?.(p.region))?.id ?? null;
       const next = FW.nextBeat(here.map(p => p.id), w.place, at, Math.floor(t / FW.BEAT_SECONDS));
-      const p = here.find(x => x.id === next);
+      due.push({tok, a, mode, p: here.find(x => x.id === next) ?? null, next});
+    }
+    return due;
+  }
+  /** Auto mode: the guards walk their beat now. */
+  async function walkBeats(scene, t) {
+    const moved = [];
+    for ( const {tok, a, mode, p, next} of await beatsDue(scene, t) ) {
+      if ( mode !== "auto" ) continue;
       await a.setFlag(MOD, "beat", {at: t, to: next ?? null});
       if ( p && await walkToRegion(tok, p.region, null) ) moved.push(`${tok.name} walks the beat to ${p.name}`);
     }
     return moved;
+  }
+  /**
+   * B6173: in Suggest mode the beat goes on the routine card as a walk the Storyteller can accept, so a guard's round is
+   * seen and not lost (the walk itself still waits for Accept, as every routine move does in Suggest).
+   */
+  async function beatItems(scene, t) {
+    const items = [];
+    for ( const {tok, a, mode, p, next} of await beatsDue(scene, t) ) {
+      if ( mode !== "suggest" || !p ) continue;
+      await a.setFlag(MOD, "beat", {at: t, to: next ?? null});
+      items.push({type: "walk", actorId: a.id, tokenId: tok.id, place: p.id, beat: true});
+    }
+    return items;
   }
 
   /* r1 (B5687): the night's hunt, rolled when the hunting block ends */
@@ -1721,7 +1752,7 @@ export function build(ctx) {
     });
   }
 
-  return {setDuty, goTo, goAway, resolveHunt, checkChallenges, releaseHostages, walkBeats, onTrigger, raiseAlarmFull, carryAlarm, deliverCarries, undoCarry, noteMark, repairMarks, undoRepairCard, raiseAlarm, alertOf, alertLevel, onMapEvent, checkAlerts, undoAlarmCard, syncZones, alertRules: AR, registerSettings, registerBehavior, hooks, tick, idle, planScene, listPlaces, routineOf, whereOf, blocksFor, keepOf, routineNpcs, describer, loadCalendar,
+  return {setDuty, goTo, goAway, resolveHunt, checkChallenges, releaseHostages, walkBeats, beatItems, onTrigger, raiseAlarmFull, carryAlarm, deliverCarries, undoCarry, noteMark, repairMarks, undoRepairCard, raiseAlarm, alertOf, alertLevel, onMapEvent, checkAlerts, undoAlarmCard, syncZones, alertRules: AR, registerSettings, registerBehavior, hooks, tick, idle, planScene, listPlaces, routineOf, whereOf, blocksFor, keepOf, routineNpcs, describer, loadCalendar,
     watchFoes, onAttitude, applyItems, undoSnap, acceptRoutineCard, undoRoutineCard, react, doReaction, acceptReactionCard, undoReactionCard, checkStays, matchOwners,
     editRoutine, openPlaces: () => PlacesAppClass().open(), PlacesAppClass, modeOf, downState, entranceOf, freeCellsIn, walkTo, reactionType, bookNow, noticeBy};
 }

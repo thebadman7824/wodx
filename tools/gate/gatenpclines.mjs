@@ -11,6 +11,8 @@
  *   9. a Dark Ages Hermetic offers Wrath of Apollo; a Dark Ages fae offers its written cantrip
  *  10. the demon uses Fist of Air by itself on the target: a roll card from the demon names it
  *  11. the projector uses Helter Skelter by itself: a card names it and Vitality is spent
+ *  12. a real NPC turn in Auto (B6172): a projector whose best option is a power, its turn reached by a combat turn
+ *      change (WoDX NPC's updateCombat hook), uses Helter Skelter with no Accept; the plan card says done, Vitality is spent
  * Result: Data/wodx-gate/gatenpclines-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -20,6 +22,7 @@ const MOD = "wodx-actions";
 export async function run() {
   const G = gate("gatenpclines", {stepTimeout: 45000});
   const A = game.modules.get(MOD)?.api;
+  const kept = [];
   try {
     await G.step("1. the api", async () => {
       G.ok("1. the api", typeof A?.npcPowers === "function" && typeof A?.autoPower === "function");
@@ -102,8 +105,45 @@ export async function run() {
       const v1 = Number(body().system?.advantages?.vitality?.temporary);
       G.ok("11. the projector uses Helter Skelter by itself, spending Vitality", !!pick && !!seen && v1 < v0, {pick: pick?.name, vitality: [v0, v1]});
     });
+
+    await G.step("12. Auto: a projector uses its power on its own turn", async () => {
+      const N = game.modules.get("wodx-npc")?.api;
+      if ( !N?.planTurn ) return G.ok("12. Auto: a projector uses its power on its own turn", false, {error: "WoDX NPC is not active"});
+      if ( game.settings.settings.has("wodx-npc.pickPowers") ) { kept.push(["pickPowers", game.settings.get("wodx-npc", "pickPowers")]); await game.settings.set("wodx-npc", "pickPowers", true); }
+      const [auto, foe] = await G.make(Actor, [
+        {name: "Gate Lines Auto Projector", type: "Mortal", system: {settings: {variant: "orpheus", hasvitality: true, hasspite: true}}, items: [pw("Helter Skelter", "horror", 2)],
+          flags: {"wodx-npc": {behavior: {template: "spirit", aggression: 0.1, power: 5}}}},
+        {name: "Gate Lines Auto Foe", type: "Mortal"}]);
+      await auto.update({"system.advantages.vitality.permanent": 6, "system.advantages.vitality.temporary": 5, "system.advantages.spite.permanent": 2, "system.advantages.willpower.temporary": 5});
+      await A.limits?.clear?.(auto);
+      const [ta, tf] = await G.tokens(scene, [{actor: auto, x: 12, y: 4, actorLink: true, disposition: -1}, {actor: foe, x: 13, y: 4, actorLink: true, disposition: 1}]);
+      await scene.setFlag("wodx-npc", "mode", "off");
+      const [combat] = await G.make(Combat, [{scene: scene.id, active: true}]);
+      await combat.createEmbeddedDocuments("Combatant", [{tokenId: ta.id, sceneId: scene.id, actorId: auto.id}, {tokenId: tf.id, sceneId: scene.id, actorId: foe.id}]);
+      await combat.startCombat();
+      await new Promise(r => setTimeout(r, 2000));
+      const top = N.planTurn(canvas.tokens.get(ta.id), combat).options[0];
+      const v0 = Number(auto.system?.advantages?.vitality?.temporary);
+      await scene.setFlag("wodx-npc", "mode", "auto");
+      const since = Date.now();
+      const plans = () => [...game.messages].filter(m => (m.timestamp ?? 0) >= since && m.getFlag("wodx-npc", "plan")?.token === ta.uuid);
+      // the turn passes to the foe and back: WoDX NPC takes the projector's turn on updateCombat, as in play
+      await combat.update({turn: combat.turns.findIndex(c => c.tokenId === tf.id)});
+      await new Promise(r => setTimeout(r, 400));
+      await combat.update({turn: combat.turns.findIndex(c => c.tokenId === ta.id)});
+      await waitFor(() => plans().some(m => m.getFlag("wodx-npc", "plan")?.done), 10000);
+      await waitFor(() => Number(auto.system?.advantages?.vitality?.temporary) < v0, 6000);
+      const plan = plans().at(-1)?.getFlag("wodx-npc", "plan");
+      const v1 = Number(auto.system?.advantages?.vitality?.temporary);
+      G.ok("12. Auto: a projector uses its power on its own turn", top?.action === "power" && plan?.options?.[plan?.done?.k]?.power === "Helter Skelter" && v1 < v0,
+        {top: top?.action ?? null, picked: plan?.options?.[plan?.done?.k]?.power ?? null, done: plan?.done?.text ?? null, vitality: [v0, v1]});
+      await scene.unsetFlag("wodx-npc", "mode");
+      await combat.delete();
+    });
   } catch (e) {
     G.R.errors.push(String(e?.message ?? e));
+  } finally {
+    for ( const [k, v] of kept ) { try { await game.settings.set("wodx-npc", k, v); } catch (e) { G.R.notes.push(`setting ${k}: ${e?.message ?? e}`); } }
   }
   return G.finish();
 }

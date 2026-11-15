@@ -190,6 +190,9 @@ test("Auto acts only on what WoDX can carry out; the rest wait for the Storytell
   assert.equal(w.act, null);
   assert.equal(w.needsStoryteller.action, "frenzy");
   assert.equal(NR.autoChoice([]).act, null);
+  // B6172: a power with a picked power acts on its own in Auto; one with no pick still waits for the Storyteller
+  assert.equal(NR.autoChoice([{action: "power", power: "Helter Skelter"}, {action: "attack"}]).act?.power, "Helter Skelter");
+  assert.equal(NR.autoChoice([{action: "power"}, {action: "attack"}]).needsStoryteller?.action, "power");
 });
 
 test("the module: manifest, API and the card's buttons", () => {

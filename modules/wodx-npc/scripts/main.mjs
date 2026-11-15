@@ -1307,6 +1307,7 @@ Hooks.once("setup", () => {
       summary: "Hidden by Obfuscate: only Auspex at least equal to the Obfuscate finds them, with Perception + Awareness at 8, less 1 a dot above.", mods: {}});
     registerCondition({id: "sneaking", name: "Sneaking", img: "icons/svg/mystery-man.svg", source: "V20 Dark Ages p. 169",
       summary: "Moving quietly: watchers roll Perception + Alertness against Dexterity + Stealth.", mods: {}});
+    registerCondition(HEARTS.GRIEVING); // B6170: known on every client from the start, so a Grieving actor loses its social die after a reload
   } catch (e) { console.warn(`${MOD} | could not register the Obfuscate and sneaking conditions`, e); }
 });
 Hooks.once("ready", () => {

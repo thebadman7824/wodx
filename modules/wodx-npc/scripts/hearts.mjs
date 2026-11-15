@@ -267,8 +267,7 @@ async function heartbreak(who, other) {
   else {
     // B5826, B5991: it shows for a week: Grieving, one die fewer on social rolls (Actions reads socialDice), a mark on the token
     const T = game.modules.get("wodx-chronicle")?.api;
-    if ( T?.registerCondition && !T?.conditions?.getCondition?.("grieving") ) T.registerCondition({id: "grieving", name: "Grieving", img: "icons/svg/blood.svg",
-      source: "WoDX house reading", summary: "Heartbroken for a week: one die fewer on social rolls.", mods: {socialDice: -1}});
+    if ( T?.registerCondition && !T?.conditions?.getCondition?.("grieving") ) T.registerCondition(GRIEVING); // B6170: main.mjs registers it at setup; this is a fallback
     if ( T?.applyTimed ) await T.applyTimed(who, {name: "Grieving", description: `Heartbroken over ${other.name}`, duration: {kind: "time", seconds: 7 * 86400},
       condition: "grieving", key: "wodx-npc-grieving", source: "WoDX NPC hearts"});
     line += "It hurts, and it shows: grieving for a week (one die fewer on social rolls).";
@@ -315,3 +314,6 @@ export function listen() {
   Hooks.on("updateActor", (a, change) => { const d = change?.flags?.["wodx-creation"]?.chronology?.died; if ( d !== undefined && d !== null ) tellLoved(a, "death").catch(e => console.error(`${MOD} | hearts`, e)); });
 }
 export const rules = H;
+/** B5991, B6170: the Grieving condition; WoDX NPC registers it at setup on every client so it counts after a reload. */
+export const GRIEVING = {id: "grieving", name: "Grieving", img: "icons/svg/blood.svg",
+  source: "WoDX house reading", summary: "Heartbroken for a week: one die fewer on social rolls.", mods: {socialDice: -1}};

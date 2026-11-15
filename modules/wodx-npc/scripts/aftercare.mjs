@@ -25,6 +25,21 @@ export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {
   const dmg = a => { const ct = C()?.corpusTrack?.(a); const d = ct?.damage ?? a?.system?.health?.damage ?? {}; return {bashing: Number(d.bashing) || 0, lethal: Number(d.lethal) || 0, aggravated: Number(d.aggravated) || 0}; };
   const card = (title, text) => ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p><b>${esc(title)}</b></p><p>${esc(text)}</p></div></div>`});
   const homeOf = a => routines.routineOf(a)?.roles?.home ?? routines.routineOf(a)?.roles?.haven ?? null;
+  /**
+   * B6173: who a duty goes on. A linked NPC keeps its own; an unlinked token's NPC shares the routine of its world actor
+   * (routines move tokens by actor id), so the duty goes there when that actor keeps a routine and this is its only
+   * token on the scene (a shared "Thug" with five tokens is left alone, so the routine does not clear the others).
+   */
+  const dutyHolder = (a, tok = null) => {
+    const w = base(a);
+    if ( !w || !a?.isToken ) return w;
+    if ( routines.routineOf(w)?.on !== true ) return null;
+    const sc = tok?.parent ?? a.token?.parent ?? null;
+    const same = sc ? [...sc.tokens].filter(d => d.actorId === w.id).length : 0;
+    return same === 1 ? w : null;
+  };
+  /** Unlinked token actors on every scene that carry a flag of this module (their deltas are not in game.actors). */
+  const unlinkedWith = k => [...game.scenes].flatMap(s => [...s.tokens].filter(d => !d.actorLink && d.actor?.flags?.[MOD]?.[k]).map(d => d.actor));
   /** The first tagged place of these kinds: on the actor's scene if it has one there, else anywhere. */
   function placeOf(kinds, a = null) {
     const P = routines.listPlaces().filter(p => kinds.includes(p.kind));
@@ -108,8 +123,8 @@ export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {
       const d = dmg(a);
       if ( !AC.nextHeal(d) ) continue;
       await a.setFlag(MOD, "mend", {last: now()});
-      const w = base(a);
-      if ( AC.laidUp(d) && w && !a.isToken && routines.routineOf(w)?.on !== false ) {
+      const w = dutyHolder(a, c.token);
+      if ( AC.laidUp(d) && w && routines.routineOf(w)?.on !== false ) {
         const place = (AC.needsCare(d) ? placeOf(AC.HEALERS, w) : null) ?? homeOf(w);
         if ( place ) { await routines.setDuty(w, "tend", AC.tendDuty(place)); out.push(`${a.name} goes to be tended`); }
       }
@@ -129,7 +144,7 @@ export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {
     if ( !isActiveGM() ) return 0;
     const t = now();
     let n = 0;
-    const actors = [...game.actors, ...[...game.scenes].flatMap(s => [...s.tokens].filter(d => !d.actorLink && d.actor?.flags?.[MOD]?.mend).map(d => d.actor))];
+    const actors = [...game.actors, ...unlinkedWith("mend")];
     for ( const a of actors ) {
       const m = a?.flags?.[MOD]?.mend;
       if ( !m ) continue;
@@ -154,13 +169,14 @@ export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {
     try { await chron()?.conditions?.setCondition?.(v, "dazed", true); } catch (e) { /* no conditions */ }
     const weak = (Number(p.drunk) || 0) >= AC.WEAK_FROM;
     await v.setFlag(MOD, "kissed", {until: weak ? AC.nextMorning(now()) : now() + AC.DAZE_SECONDS, by: base(fromUuidSync(p.by?.uuid))?.id ?? null});
-    const home = homeOf(w);
-    if ( home && !v.isToken ) await routines.setDuty(w, "kissed", AC.restDuty(home, now()));
+    const h = dutyHolder(v), home = h ? homeOf(h) : null;
+    if ( home ) await routines.setDuty(h, "kissed", AC.restDuty(home, now()));
     return {weak, home: !!home};
   }
+  /** B6173: the Daze lifts on world actors and on unlinked tokens alike (a passer-by fed on is a token's own actor). */
   async function kissTick() {
     const t = now();
-    for ( const a of game.actors ) {
+    for ( const a of [...game.actors, ...unlinkedWith("kissed")] ) {
       const k = flag(a, "kissed");
       if ( !k || t < k.until ) continue;
       try { await chron()?.conditions?.setCondition?.(a, "dazed", false); } catch (e) { /* none */ }
