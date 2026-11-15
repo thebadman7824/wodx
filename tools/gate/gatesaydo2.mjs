@@ -48,6 +48,7 @@ export async function run() {
 
     const region = "moravia";
     await G.step("2 the fine is taken", async () => {
+      await M()?.receive?.(convict, 100000, {note: "gate"});
       const before = worth(convict);
       const mark = await C()?.law?.sentence?.pass?.({actorId: convict.id, name: convict.name, region, year: C()?.eras?.currentYear?.() ?? 1197, weight: 3}, "fine");
       const after = worth(convict);
@@ -55,12 +56,13 @@ export async function run() {
     });
 
     await G.step("3 the outlaw is wanted", async () => {
-      await C()?.law?.sentence?.pass?.({actorId: outlaw.id, name: outlaw.name, region, year: C()?.eras?.currentYear?.() ?? 1197, weight: 6}, "outlaw");
+      await C()?.law?.sentence?.pass?.({actorId: outlaw.id, name: outlaw.name, region, year: C()?.eras?.currentYear?.() ?? 1197, weight: 6}, "outlawry");
       const h = C()?.law?.heat?.of?.(outlaw.id, region);
       G.ok("3 the outlaw is wanted", !!h && ["warrant", "manhunt"].includes(h.stage?.key), {stage: h?.stage?.key ?? null, heat: h?.heat ?? null});
     });
 
     await G.step("4 the patron pays", async () => {
+      await M()?.receive?.(patron, 1000, {note: "gate"});
       const before = worth(patron);
       await C()?.pod?.raiseBuilding?.({patron: patron.id, building: "Gate chapel", faction: "", cost: 50});
       const after = worth(patron);

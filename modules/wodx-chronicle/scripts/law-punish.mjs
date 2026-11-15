@@ -67,7 +67,7 @@ async function carryOut(actor, mark, info) {
     const amount = P.fineAmount(M.rules.allowance(2, info.year, region), info.weight);
     const r = await M.pay(actor, amount, {credit: true, note: `Fined by the court (${info.region})`});
     const text = M.rules.formatMoney ? M.rules.formatMoney(amount, M.rules.moneyFor?.(info.year, region)) : String(amount);
-    return r?.ok === false ? `The fine of ${text} could not be taken: ${r?.why ?? "see the purse"}.` : `The fine of ${text} is taken from the purse.`;
+    return r?.ok === false ? `The fine of ${text} could not be taken: the purse is ${r?.text ?? "too"} short, even on credit.` : `The fine of ${text} is taken from the purse.`;
   }
   if ( mark.kind === "outlaw" || mark.kind === "banished" ) {
     const w = await declareWanted(actor, info.region, mark.words);
