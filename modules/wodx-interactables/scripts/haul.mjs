@@ -204,14 +204,20 @@ function float(doc, text) {
   } catch (e) { /* no canvas */ }
 }
 /** Put a token on a spot: a plain move first; past a wall, a displacement (as WoDX NPC's Undo does). */
+/** Wait (up to 4 s) until no token on this map is being animated along a move. */
+async function still(doc) {
+  const scene = doc?.parent;
+  const moving = () => (scene === canvas?.scene ? canvas.tokens?.placeables ?? [] : []).some(t => (t.animationContexts?.size ?? 0) > 0);
+  for ( let i = 0; i < 80 && moving(); i++ ) await new Promise(r => setTimeout(r, 50));
+}
 async function place(doc, pos) {
   trace("place", doc.name, [SX(doc), SY(doc)], "->", [Math.round(pos.x), Math.round(pos.y)]);
-  // Foundry 14 refuses to move a token that is still on its way somewhere: let that movement finish first
-  const settle = async () => { const a = doc.object?.movementAnimationPromise ?? doc.object?.animationContexts?.values?.()?.next?.()?.value?.promise; if ( a ) await Promise.race([a, new Promise(r => setTimeout(r, 1500))]).catch(() => null); };
-  await settle();
-  for ( let k = 0; k < 3; k++ ) {
+  // Foundry 14 refuses to move a token while a movement on the map is still being drawn ("Cannot redefine property"):
+  // wait for it to finish, then try again
+  await still(doc);
+  for ( let k = 0; k < 5; k++ ) {
     try { await doc.update({x: Math.round(pos.x), y: Math.round(pos.y)}, MOVE); break; }
-    catch (e) { trace("place threw", String(e?.message ?? e).slice(0, 90)); await new Promise(r => setTimeout(r, 250)); await settle(); }
+    catch (e) { trace("place threw", String(e?.message ?? e).slice(0, 60)); await new Promise(r => setTimeout(r, 300)); await still(doc); }
   }
   trace("placed", doc.name, [SX(doc), SY(doc)], [doc.x, doc.y]);
   if ( (Math.round(SX(doc)) !== Math.round(pos.x) || Math.round(SY(doc)) !== Math.round(pos.y)) && typeof doc.move === "function" && CONFIG.Token?.movement?.actions?.displace ) {
@@ -267,7 +273,11 @@ function imageOf(src) {
 async function cutPicture(scene, rect, name) {
   // Foundry 14 keeps the picture on the scene's levels; older scenes on the scene itself
   const lv = scene?.levels?.contents ?? [...(scene?.levels?.values?.() ?? [])];
-  const src = [scene?.initialLevel, ...lv].map(l => l?.background?.src ?? l?.textures?.background?.src).find(Boolean) || scene?._source?.background?.src || (() => { try { return scene?.background?.src; } catch (e) { return null; } })() || null;
+  const IMG = /\.(webp|png|jpe?g|gif|svg|avif)(\?.*)?$/i;
+  const deep = (o, path = "") => { if ( !o || typeof o !== "object" ) return null;
+    for ( const [k, v] of Object.entries(o) ) { const p = `${path}.${k}`; if ( typeof v === "string" && k === "src" && IMG.test(v) && /background/i.test(p) ) return v; const r = deep(v, p); if ( r ) return r; } return null; };
+  const src = [scene?.initialLevel, ...lv].map(l => l?.background?.src ?? l?.textures?.background?.src).find(Boolean) || scene?._source?.background?.src
+    || (() => { try { return deep(scene?.toObject?.() ?? {}); } catch (e) { return null; } })() || null;
   trace("cut", scene?.name, src, lv.length);
   if ( !src ) return null;
   const img = await imageOf(src);
@@ -544,6 +554,7 @@ async function onMovedNow(doc, changes, options = {}, userId = null) {
     if ( own?.kind === "body" && (own.by ?? []).length ) return await movedWhileCarried(doc, userId);
     const h = holdingOf(doc);
     if ( !h ) return;
+    await still(doc);
     const target = sync(h.what);
     if ( !target || target.parent?.id !== doc.parent?.id ) { await doc.update(unset(`flags.${MOD}.hauling`)); return; }
     const rec = haulOf(target);
