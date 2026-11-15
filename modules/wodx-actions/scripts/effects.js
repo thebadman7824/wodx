@@ -12,6 +12,7 @@ import * as KRG from "./kindred-rules.js";
 import * as DAE from "./mage-da-effects.js";
 import * as PE from "./path-effects.js";
 import * as PW from "./power-effects.js";
+import * as PM from "./power-mods.js";
 import * as W from "./world-effects.js";
 import * as SUM from "./summons.js";
 import * as SR from "./summon-rules.js";
@@ -496,7 +497,7 @@ async function applyCore(item, casterName = "the caster") {
       if ( !C ) return {note: "WoDX Combat is off: apply the damage by hand"};
       // A pool rolls its damage dice first (C20 Holly-Strike, Lord of Levin), levels go on as they are
       // B4842: a poison eaten later (Bitter Fruit) does its harm only through its each-turn roll
-      if ( !o.everyTurn?.only ) await C.soakAndApply(tokenOf(d)?.object ?? a, {mode: o.pool ? "pool" : "levels", amount: o.pool || o.levels, type: o.type, soak: o.soak});
+      if ( !o.everyTurn?.only ) await C.soakAndApply(tokenOf(d)?.object ?? a, {mode: o.pool ? "pool" : "levels", amount: o.pool || o.levels, type: o.type, soak: o.soak, of: o.of ?? null});
       // B4832: harm that lasts goes on each turn, and a power whose book says so hurts each turn until it is stopped
       const every = o.everyTurn ?? TR.lastingHarm(o);
       const effect = every ? await TURN.attach(a, every, {label: o.label ?? "Harm", by: casterName}) : null;
@@ -522,8 +523,21 @@ async function applyCore(item, casterName = "the caster") {
       const changes = [];
       const tok = tokenOf(d);
       const tokenWas = tok ? {uuid: tok.uuid, elevation: tok.elevation, movementAction: tok.movementAction ?? null, sight: foundry.utils.deepClone(tok.sight ?? {})} : null;
+      // B6000: the numbers a Ward, Boost, Blessing or Calm needs ride in the effect, so the dice read them (power-mods.js)
+      const owner = possessFor(item, a, o);
+      const reveal = o.key === "manifest" && tok ? manifestOf(tok) : null;
+      // B6013: an Illusion shows on the map: a shimmering figure where the Storyteller clicks, gone when it ends
+      const shown = o.key === "illusion" ? await illusionTile(item, tok, casterName) : null;
+      const revert = owner ? {key: "wodx-actions.possessEnd", data: {actor: a.uuid, ownership: owner.was}}
+        : reveal ? {key: "wodx-actions.manifestEnd", data: {token: tok.uuid, was: reveal.was}}
+        : shown ? {key: "wodx-actions.illusionEnd", data: {tile: shown}} : undefined;
       const effect = await T.applyTimed(a, {name: o.name ?? o.label, description: `${o.text} (cast by ${casterName})`, duration: o.timed, condition: o.condition,
-        changes, key: `wodx-effect-${o.key}`, source: o.source ?? "Mage 20th pp. 502-504", data: o.difficulty ? {difficulty: o.difficulty} : null});
+        changes, key: PM.keyFor(o), source: o.source ?? "Mage 20th pp. 502-504", data: PM.timedData(o), ...(revert ? {revert} : {})});
+      // B6005: Possess on an NPC hands its body to the possessor's players while it lasts
+      if ( owner ) await a.update({ownership: owner.now});
+      // B6008: Manifest: a being from beyond shows on this side, pale and flickering, on the physical level
+      if ( reveal ) await tok.update(reveal.now, {animate: false});
+      try { if ( ["ward", "boost", "fortune", "fear", "manifest", "sway", "bind"].includes(o.key) ) chron()?.tokenLooks?.refresh?.(); } catch (e) { /* no looks */ }
       // Rise: the token takes the Fly way of moving first, then goes up (Actions 3.42.1: Foundry 14 lifts a flier)
       if ( tok && o.feet ) {
         if ( "movementAction" in tok && tok.movementAction !== "fly" ) await tok.update({movementAction: "fly"});
@@ -533,7 +547,8 @@ async function applyCore(item, casterName = "the caster") {
       if ( o.everyTurn && effect?.uuid ) await TURN.attach(a, o.everyTurn, {effect: effect.uuid, label: o.label ?? o.name, by: casterName});
       // B4846: a burning sheath hurts whoever lands a close blow on its bearer
       if ( o.touch?.levels && effect?.uuid ) await fromUuidSync(effect.uuid)?.setFlag?.(MOD, "touchHarm", o.touch);
-      return {uuid: a.uuid, effect: effect?.uuid ?? null, token: tok && (o.feet || o.vision) ? tokenWas : null};
+      return {uuid: a.uuid, effect: effect?.uuid ?? null, token: tok && (o.feet || o.vision) ? tokenWas : reveal ? {uuid: tok.uuid, ...reveal.was} : null,
+        ...(owner ? {ownership: {uuid: a.uuid, was: owner.was}} : {}), ...(shown ? {made: [shown]} : {})};
     }
     case "pool": {
       const P = E.poolOf(o.pool);
@@ -573,6 +588,8 @@ async function applyCore(item, casterName = "the caster") {
       const named = src ? null : (o.thing || await askText(`What does ${casterName} make for ${a.name}?`));
       if ( !src && !named ) return {note: `${o.label}: no item chosen`};
       const data = src ? src.toObject() : {name: named, type: "Item", system: {description: `Made by ${casterName} (${o.label}).`}};
+      // B6006: an imbued thing (a talisman, a fetish, a charm) carries the power it was given and shows as charged
+      if ( o.imbued ) { foundry.utils.setProperty(data, `flags.${MOD}.imbued`, {power: o.label ?? "Imbue", by: casterName, source: o.source ?? ""}); data.img ??= "icons/svg/aura.svg"; }
       delete data._id;
       // B4830: a made thing lasts as long as the power's duration and then fades, unless the book makes it real for good
       // (a Mage creation with Prime in it; a house reading in PENDING-REVIEW): the clock or the scene's end takes it back
@@ -615,6 +632,18 @@ async function applyCore(item, casterName = "the caster") {
       const r = await OW.sendAcross(tok, {to: o.to});
       return r ? {across: tok.uuid, to: o.to ?? null} : {note: `${item.name}: could not cross`};
     }
+    case "banish": return banishCore(item, a, d, casterName);
+    case "place": {
+      // B6007: the Gauntlet, the Shroud or Banality of this place moves (WoDX Otherworlds drift), with a look on the map
+      const OW = game.modules.get("wodx-otherworlds")?.active ? game.modules.get("wodx-otherworlds").api : null;
+      const scene = (d?.parent?.documentName === "Scene" ? d.parent : null) ?? canvas?.scene ?? null;
+      if ( !OW?.drift?.lever || !scene ) return {note: `${o.label}: ${OW ? "no scene" : "WoDX Otherworlds is off"}; change the place by hand`};
+      const taken = await OW.drift.lever(scene, o.track ?? "value", n(o.step) || -1, `${casterName}: ${o.label}`);
+      if ( !taken ) return {note: `${o.label}: ${scene.name} can move no further`};
+      const look = await worldLook(scene, n(o.step) < 0 ? "dread" : "calm", `${casterName}: ${o.label}`);
+      return {drift: {scene: scene.uuid, taken}, ...(look ? {look} : {})};
+    }
+    case "work": return workCore(item, d, o, casterName);
     case "weather": {
       // 3.38.0: Weather sets tonight's weather in WoDX Atmosphere; Undo puts back what was set before
       const AT = game.modules.get("wodx-atmosphere")?.active ? game.modules.get("wodx-atmosphere").api?.weather : null;
@@ -669,6 +698,89 @@ async function applyWorld(item, casterName, a) {
   const r = await TW.power({kind, scale: o.scale, scene, label: why});
   // The town card carries its own Undo; nothing to keep here
   return r ? {note: `${o.label}: the town card has its own Undo`, look: await worldLook(scene, o.world, why)} : {note: "No town on this scene for it to reach"};
+}
+
+/** B6005: Possess on an NPC: the possessor's players own the body while it lasts. {was, now} or null. */
+function possessFor(item, a, o) {
+  if ( o?.key !== "possess" || !a || a.hasPlayerOwner || !game.user.isGM ) return null;
+  const by = item?.by ?? item?.caster ?? item?.casterUuid;
+  const caster = by ? actorOf(docOf(by)) : null;
+  const players = caster ? game.users.filter(u => !u.isGM && caster.testUserPermission?.(u, "OWNER")) : [];
+  if ( !players.length ) return null;
+  const was = foundry.utils.deepClone(a.ownership ?? {});
+  const now = {...was};
+  for ( const u of players ) now[u.id] = 3;
+  return {was, now};
+}
+/** B6013: the figure an Illusion puts on the map (a Tile), by the target or where the Storyteller clicks. Its uuid. */
+async function illusionTile(item, tok, casterName) {
+  const scene = tok?.parent ?? canvas?.scene;
+  if ( !scene || !game.user.isGM ) return null;
+  const g = scene.grid?.size ?? 100;
+  const at = item.at ?? (tok ? {x: n(tok.x) + g * 1.5, y: n(tok.y) + g / 2} : await pickPoint(`Click where ${casterName}'s illusion appears.`));
+  if ( !at ) return null;
+  const [t] = await scene.createEmbeddedDocuments("Tile", [{texture: {src: "icons/svg/mystery-man.svg", tint: "#cfe0ff"}, x: Math.round(at.x - g / 2), y: Math.round(at.y - g / 2),
+    width: g, height: g, alpha: 0.7, flags: {[MOD]: {illusion: {by: casterName, power: item.out?.label ?? "Illusion"}}}}]);
+  return t?.uuid ?? null;
+}
+/** B6008: what a Manifest does to the token: seen (not hidden), pale, and on the scene's physical level. {was, now}. */
+function manifestOf(tok) {
+  const was = {hidden: !!tok.hidden, alpha: Number(tok.alpha ?? 1)};
+  const now = {hidden: false, alpha: 0.8};
+  try {
+    const OW = game.modules.get("wodx-otherworlds")?.api;
+    const phys = OW?.twins?.layersOf?.(tok.parent)?.physical ?? null;
+    const lvl = tok._source?.level ?? tok.level ?? null;
+    if ( phys && lvl && lvl !== phys.id ) { was.level = lvl; now.level = phys.id; }
+  } catch (e) { /* no levels */ }
+  return {was, now};
+}
+/**
+ * B6009: Banish or Bar: the powers on the target end (their timed effects, with Undo); with none, a being from beyond
+ * goes back across, and anything else is driven off, away from the caster.
+ */
+async function banishCore(item, a, d, casterName) {
+  const o = item.out ?? {};
+  if ( !a ) return {note: `${item.name}: not found`};
+  const own = new Set(["wodx-effect-banish"]);
+  const powers = [...(a.effects ?? [])].filter(e => { const k = String(e.flags?.["wodx-chronicle"]?.timed?.key ?? ""); return k.startsWith("wodx-effect-") && !own.has(k); });
+  if ( powers.length ) {
+    const restoreEffects = powers.map(e => { const x = e.toObject(); delete x._id; return x; });
+    await a.deleteEmbeddedDocuments("ActiveEffect", powers.map(e => e.id));
+    try { chron()?.tokenLooks?.refresh?.(); } catch (e) { /* no looks */ }
+    return {uuid: a.uuid, restoreEffects};
+  }
+  const tok = tokenOf(d);
+  if ( !tok ) return {note: `${item.name}: no token to drive off`};
+  const OW = game.modules.get("wodx-otherworlds")?.active ? game.modules.get("wodx-otherworlds").api : null;
+  const beyond = (() => { try { const L = OW?.twins?.layersOf?.(tok.parent); const lvl = tok._source?.level ?? tok.level; return !!(L?.physical && lvl && lvl !== L.physical.id); } catch (e) { return false; } })();
+  if ( beyond && OW?.sendAcross ) { const r = await OW.sendAcross(tok); return r ? {across: tok.uuid, to: r.from === "shadowlands" ? "shadowlands" : null} : {note: `${item.name}: could not send it back`}; }
+  const by = item?.by ?? item?.caster ?? item?.casterUuid;
+  const from = tokenOf(by ? docOf(by) : null);
+  const size = tok.parent?.grid?.size ?? 100, dist = tok.parent?.grid?.distance ?? 5;
+  const sq = Math.max(1, Math.round(n(o.push || 10) / dist));
+  let dx = 1, dy = 0;
+  if ( from ) { const vx = n(tok.x) - n(from.x), vy = n(tok.y) - n(from.y), m = Math.hypot(vx, vy) || 1; dx = vx / m; dy = vy / m; }
+  const was = {uuid: tok.uuid, x: tok.x, y: tok.y};
+  await jump(tok, {x: Math.round(n(tok.x) + dx * sq * size), y: Math.round(n(tok.y) + dy * sq * size)});
+  return {token: was};
+}
+/** B6009: Work or Break: the door nearest the Storyteller's click (or the target) opens, shuts, or is broken open. */
+async function workCore(item, d, o, casterName) {
+  const scene = canvas?.scene;
+  if ( !scene ) return {note: `${o.label}: no scene`};
+  const tok = tokenOf(d);
+  const at = item.at ?? (tok ? {x: n(tok.x) + (scene.grid?.size ?? 100) / 2, y: n(tok.y) + (scene.grid?.size ?? 100) / 2} : await pickPoint(`Click by the door or lock ${casterName} works.`));
+  if ( !at ) return {note: `${o.label}: no spot chosen`};
+  const reach = 3 * (scene.grid?.size ?? 100);
+  const mid = w => ({x: (n(w.c[0]) + n(w.c[2])) / 2, y: (n(w.c[1]) + n(w.c[3])) / 2});
+  const door = [...(scene.walls ?? [])].filter(w => n(w.door) > 0).map(w => ({w, dist: Math.hypot(mid(w).x - at.x, mid(w).y - at.y)}))
+    .filter(x => x.dist <= reach).sort((p, q) => p.dist - q.dist)[0]?.w ?? null;
+  if ( !door ) return {note: `${o.label}: no door or lock within reach`};
+  const ds = n(door.ds);
+  // shut opens, open shuts, locked is broken open
+  await door.update({ds: ds === 1 ? 0 : 1});
+  return {door: {uuid: door.uuid, ds}};
 }
 
 async function choose(title, list, map = v => v) {
@@ -902,13 +1014,17 @@ export async function undo(records = []) {
       if ( r.everyEffect ) await fromUuidSync(r.everyEffect)?.delete?.({wodxUndo: true});
       if ( r.across ) { const t = fromUuidSync(r.across); if ( t ) await game.modules.get("wodx-otherworlds")?.api?.sendAcross?.(t, {to: r.to}); }
       if ( r.weather ) await game.modules.get("wodx-atmosphere")?.api?.weather?.set?.(r.weather.jdn, r.weather.prev ?? null);
+      // B6005-B6009: a possession's owners, a place's drift, a door, a banished token
+      if ( r.ownership ) await fromUuidSync(r.ownership.uuid)?.update?.({ownership: r.ownership.was}, {diff: false, recursive: false});
+      if ( r.drift ) { const sc = fromUuidSync(r.drift.scene); if ( sc ) await game.modules.get("wodx-otherworlds")?.api?.drift?.undo?.(sc); }
+      if ( r.door ) await fromUuidSync(r.door.uuid)?.update?.({ds: r.door.ds});
       if ( r.taint ) { const sc = fromUuidSync(r.taint.scene); if ( sc ) await corruption()?.set?.(sc, r.taint.prev); }
       if ( r.sick ) await upkeep()?.contagion?.end?.(r.sick, {immune: false});
       if ( r.look ) await chron()?.looks?.end?.(r.look);
       if ( r.token ) {
         const tok = fromUuidSync(r.token.uuid);
         const back = {};
-        for ( const k of ["elevation", "x", "y"] ) if ( k in r.token ) back[k] = r.token[k];
+        for ( const k of ["elevation", "x", "y", "hidden", "alpha", "level"] ) if ( k in r.token ) back[k] = r.token[k];
         if ( r.token.movementAction ) back.movementAction = r.token.movementAction;
         if ( r.token.sight ) back.sight = r.token.sight;
         if ( r.token.light ) back.light = r.token.light;
@@ -1153,6 +1269,20 @@ export function registerHandler(api) {
     const tok = data?.token ? fromUuidSync(data.token) : null;
     if ( tok && data.light ) await tok.update({light: data.light});
   });
+  // B6005, B6008: a possession hands the body back; a manifestation fades back to its own side
+  api?.timed?.registerReverter?.("wodx-actions.possessEnd", async (actor, data) => {
+    const a = data?.actor ? fromUuidSync(data.actor) : actor;
+    if ( a && data?.ownership ) await a.update({ownership: data.ownership}, {diff: false, recursive: false});
+  });
+  api?.timed?.registerReverter?.("wodx-actions.illusionEnd", async (actor, data) => { await (data?.tile ? fromUuidSync(data.tile) : null)?.delete?.(); });
+  api?.timed?.registerReverter?.("wodx-actions.manifestEnd", async (actor, data) => {
+    const tok = data?.token ? fromUuidSync(data.token) : null;
+    if ( tok && data?.was ) await tok.update(data.was, {animate: false});
+  });
+  // B6000: what a power does to a character shows on the token: a Ward's shimmer, a Boost's glow, a Curse's shadow
+  try { api?.tokenLooks?.register?.("wodx-actions.powers", token => { const l = PM.looksFrom(PM.effectsOf(token?.actor)); return l.length ? api.tokenLooks.rules?.combine?.(l, "full") ?? l[0] : null; }); } catch (e) { /* no looks */ }
+  Hooks.on("createActiveEffect", e => { if ( String(e.flags?.["wodx-chronicle"]?.timed?.key ?? "").startsWith("wodx-effect-") ) try { api?.tokenLooks?.refresh?.(); } catch (x) { /* no looks */ } });
+  Hooks.on("deleteActiveEffect", e => { if ( String(e.flags?.["wodx-chronicle"]?.timed?.key ?? "").startsWith("wodx-effect-") ) try { api?.tokenLooks?.refresh?.(); } catch (x) { /* no looks */ } });
   // Small (Chronicle 0.46.0, B2453): never. Only what is already past the effect rules' own Auto reaches the queue
   // (witnessed vulgar magic, a mind effect, another player's character, more than three targets)
   api?.registerApprovalHandler?.(TYPE, {label: "Magic that applies itself", small: () => false, approve: async entry => {

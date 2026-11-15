@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.129.1 (The first-night tour waits, in solo play, until the player's token is on the map: WoDX Solo's arrival says when (B5144). Before, it was offered and used up on a login with nothing to move)
 - 0.129.0 (Full sentences: time served, brands and the law coming for the condemned (B5990, B5992))
 - 0.128.0 (The classic world timeline: the approved round-three history of every part of the world, 1197 to 2009, as dated events with a place and a part of the world (B5920). The World of Darkness side of it is hidden and told only to the Storyteller (B5921). A card tells every book event and the newest twelve of the world's (B5922). The Dated events window and the Chronicle Rules page list one era of it at a time, and switching era keeps the other eras' settings (B5923). Legends keeps only Moravia's own part of it (B5924). Eight house readings still waiting on the book check and fourteen that the book events already tell are left out (B5926))
 - 0.127.0 (News by part of the world on the Future Darkness branch, with 85 new events for the Americas, Africa and Oceania from 2024 to 2099 (B5890 to B5892))

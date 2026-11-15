@@ -21,6 +21,27 @@ For each object, ask: would a player who has never seen our code know what this 
   it, a crate's lid on or off, a sack tied on its side or stood up and rolled open. The same goes for lit or out,
   full or empty, whole or broken, as those come.
 
+## True sizes
+
+A square is 5 ft. Check every new object against this table (Ben, 15 November 2026: "the proportions of world objects
+must make sense"), and add a row for each new kind of thing.
+
+| Thing | Real size | On the map |
+|---|---|---|
+| Bed for two (box bed) | 4 1/2 by 7 ft | 0.95 by 1.4 squares |
+| Narrow bed or cot | 4 by 6 1/2 ft | 0.8 by 1.35 |
+| Table for a household | 9 by 4 1/2 ft | 1.8 by 0.9 |
+| Bench | 8 by 1 3/4 ft | 1.6 by 0.34 |
+| Chest | 5 by 3 ft | 1.0 by 0.62 |
+| Bread oven | about 7 ft | 1.4 |
+| Cask | 2 to 2 1/2 ft across | 40 to 48 px |
+| Well head | about 4 ft | 80 px |
+| Farm cart bed, wheels | 8 by 4 1/2 ft, wheels 5 ft | 1.75 by 0.95, wheels 92 px |
+| Haystack (rick) | 10 to 12 ft across | radius 100 to 110 px |
+| Tree crown, field tree | 14 to 23 ft across | 2.8 to 4.6 squares |
+| Field strip | at least 8 ft wide on the map | 170 px rows |
+| Wayside cross base | about 3 ft | 60 px |
+
 ## Point of view and colour
 
 - Everything is seen from straight above. Never a side or three-quarter view (no end-on log circles, no front

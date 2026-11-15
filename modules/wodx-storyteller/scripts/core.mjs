@@ -17,7 +17,7 @@ import {secondsToNextDawn, secondsToNextDusk, describeTime} from "../../wodx-chr
 
 export const MOD = "wodx-storyteller";
 export const SOCKET = `module.${MOD}`;
-export const VERSION = "0.109.0";
+export const VERSION = "0.109.1";
 export const T = {travel: `${MOD}.travel`, encounter: `${MOD}.encounter`, solo: `${MOD}.solo`, beat: `${MOD}.beat`};
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -215,8 +215,10 @@ export const travelOf = scene => W.normPlace(scene?.flags?.[MOD]?.travel ?? {});
  */
 export function travelPlaces() {
   const scenes = all(game.scenes);
-  const marked = scenes.filter(s => s.flags?.[MOD]?.travel);
-  const list = marked.length ? marked.filter(s => travelOf(s).on) : scenes.filter(s => !W.NOT_A_PLACE.test(s.name ?? ""));
+  // B6043: a Lone Chronicle card scene (a town with no map) is a place either way, and never counts as one marked
+  const isCard = s => !!s.flags?.["wodx-solo"]?.card;
+  const marked = scenes.filter(s => s.flags?.[MOD]?.travel && !isCard(s));
+  const list = marked.length ? scenes.filter(s => (isCard(s) || s.flags?.[MOD]?.travel) && travelOf(s).on) : scenes.filter(s => !W.NOT_A_PLACE.test(s.name ?? ""));
   return list.map(s => ({id: s.id, uuid: s.uuid, name: sceneName(s), travel: s.flags?.[MOD]?.travel ?? {}, scene: s}))
     .sort((a, b) => a.name.localeCompare(b.name));
 }

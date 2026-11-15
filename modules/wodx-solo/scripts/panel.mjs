@@ -28,6 +28,9 @@ let H = null; // what main.mjs lends: {isOn, isSeat, log, entries, get}
 /** What st-tools.mjs draws on the panel and opens from it (B4800): {toggleHtml, toolsHtml, open, toggle}. */
 const ST_UI = {};
 export const setStUi = ui => Object.assign(ST_UI, ui);
+/** What arrival.mjs draws on the panel for a player with no character (B5143): {html, open}. */
+const ARRIVE_UI = {};
+export const setArriveUi = ui => Object.assign(ARRIVE_UI, ui);
 
 /* ------------------------------------------------------------------ */
 /*  Who and where                                                      */
@@ -198,6 +201,8 @@ const SEAT = {
 const CLIENT = {"curtain.rows": showCurtain};
 /** Other parts of the module add their asks and answers here (B4800). */
 export function addAsks(seat = {}, client = {}) { Object.assign(SEAT, seat); Object.assign(CLIENT, client); }
+/** ... and the panel buttons that open them (B5980): {id: () => ...} for a PANEL entry's id. */
+export function addActions(actions = {}) { Object.assign(ACTIONS, actions); }
 
 /**
  * Foundry hands a module's socket listener the sending user's id after the data. An ask whose payload names another
@@ -287,7 +292,7 @@ export class SoloPanel extends ApplicationV2 {
     classes: ["wodx", "wsolo-panel"],
     window: {title: R.NAME, icon: "fa-solid fa-moon", resizable: false},
     position: {width: 340, height: "auto", top: 80, left: 120},
-    actions: {act: SoloPanel.#onAct, st: (ev, t) => ST_UI.open?.(t.dataset.id), sttoggle: () => ST_UI.toggle?.()}
+    actions: {act: SoloPanel.#onAct, st: (ev, t) => ST_UI.open?.(t.dataset.id), sttoggle: () => ST_UI.toggle?.(), arrive: () => ARRIVE_UI.open?.()}
   };
   static open() {
     const app = foundry.applications.instances?.get?.("wodx-solo-panel") ?? new SoloPanel();
@@ -303,9 +308,9 @@ export class SoloPanel extends ApplicationV2 {
       return `<button type="button" data-action="act" data-id="${b.id}"><i class="${icon}"></i> ${esc(label)}</button>`;
     }).join("");
     // One main button; the rest under More, open once the player has opened it (B2831)
-    div.innerHTML = `<button type="button" class="wsolo-next" data-action="act" data-id="${R.NEXT.id}" title="${esc(R.NEXT.hint)}"><i class="${R.NEXT.icon}"></i> ${esc(R.NEXT.label)}</button>
+    div.innerHTML = `${ARRIVE_UI.html?.() ?? ""}<button type="button" class="wsolo-next" data-action="act" data-id="${R.NEXT.id}" title="${esc(R.NEXT.hint)}"><i class="${R.NEXT.icon}"></i> ${esc(R.NEXT.label)}</button>
       <p class="wodx-quiet wsolo-next-hint">${esc(R.NEXT.hint)}</p>
-      <details class="wsolo-more"${SoloPanel.moreOpen ? " open" : ""}><summary>More: time, travel, pause, I am stuck, the curtain, carry the fallen</summary><div class="wsolo-buttons">${rest}${ST_UI.toggleHtml?.() ?? ""}</div></details>${ST_UI.toolsHtml?.() ?? ""}`;
+      <details class="wsolo-more"${SoloPanel.moreOpen ? " open" : ""}><summary>More: the oracle, leads, time, travel, places with no map, pause, I am stuck, the curtain, carry the fallen</summary><div class="wsolo-buttons">${rest}${ST_UI.toggleHtml?.() ?? ""}</div></details>${ST_UI.toolsHtml?.() ?? ""}`;
     div.querySelector("details.wsolo-more")?.addEventListener("toggle", ev => { SoloPanel.moreOpen = ev.target.open; });
     return div;
   }

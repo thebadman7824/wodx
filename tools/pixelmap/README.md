@@ -17,7 +17,10 @@ in this public repository and, later, be drawn inside Foundry.
 | `props.py` | Furniture and goods, each drawn to be named at a glance. Doors, windows, chests, casks, crates and sacks are *openables*. |
 | `scene.py` | The recorder: notes walls, openables, lights and regions while a map is drawn, then writes everything Foundry needs. |
 | `bits.py` | Distance fields and smooth lines for paths and streams. |
+| `buildings.py` | Whole buildings laid out the same way each time: the log cottage and the timber chapel (B5737). |
+| `land.py` | Open ground: grass, roads, brooks, ploughed strips, a plank bridge, scattered trees. |
 | `maps/farmhouse.py` | The first map: a three-room timber farmhouse and its yard, 20 by 14 squares. |
+| `maps/village.py`, `maps/road.py` | Sample maps: a village of about 1200 (40 by 28) and a country road (36 by 20). They write to `out/` unless given a folder. |
 
 ## Making a map
 
