@@ -44,14 +44,14 @@ m.disc(cx_ + 14, cy_ + 16, 5, "red", 3); d.point((cx_ + 13, cy_ + 15), fill=R["p
 note("wayside cross", 12.3, 12.2)
 
 
-def cart(x, y, w=1.3, L=2.6):
+def cart(x, y, w=.95, L=1.75):                                                   # an 8 by 4 1/2 ft bed
     """A two-wheeled farm cart from above, shafts to the west and down on the ground: a plank bed with side
     boards, the wheels as narrow iron-shod rims beside it with their hubs, the shafts reaching out ahead."""
     X0, Y0, X1, Y1 = int(x * T), int(y * T), int((x + L) * T), int((y + w) * T)
     m.shade((X0 + 6, Y0 + 8, X1 + 8, Y1 + 10), f=.62)
     for yy in (Y0 + 10, Y1 - 14):                                                    # the shafts
-        m.box(X0 - 110, yy, X0 + 4, yy + 5, "wood", 2, bevel=False)
-    m.box(X0 - 116, Y0 + 8, X0 - 106, Y1 - 8, "wood", 2, bevel=False)              # the crossbar at the shafts' end
+        m.box(X0 - 150, yy, X0 + 4, yy + 5, "wood", 2, bevel=False)
+    m.box(X0 - 156, Y0 + 8, X0 - 146, Y1 - 8, "wood", 2, bevel=False)              # the crossbar at the shafts' end
     m.put(np.transpose(m.planks(X1 - X0, Y1 - Y0, "wood", bh=16), (1, 0, 2)), X0, Y0)
     d.rectangle([X0, Y0, X1, Y1], outline=OUT)
     for x0, y0, x1, y1 in ((X0, Y0, X1, Y0 + 8), (X0, Y1 - 8, X1, Y1), (X0, Y0, X0 + 8, Y1), (X1 - 8, Y0, X1, Y1)):
@@ -61,9 +61,9 @@ def cart(x, y, w=1.3, L=2.6):
         m.box(mx - 46, yy, mx + 46, yy + 12, "dwood", 2)
         d.line([mx - 44, yy + (1 if sg < 0 else 10), mx + 44, yy + (1 if sg < 0 else 10)], fill=R["iron"][3])
         m.disc(mx, yy + 6, 9, "iron", 2)
-    pr.sack(m, x + .55, y + .62, 22, name="Sack on the cart")
-    pr.barrel(m, x + 1.55, y + .62, 22, holds="grain", head="s", name="Cask on the cart")
-    pr.barrel(m, x + 2.15, y + .62, 20, holds="water", name="Small cask on the cart")
+    pr.sack(m, x + .45, y + .48, 20, name="Sack on the cart")
+    pr.barrel(m, x + 1.05, y + .48, 20, holds="grain", head="s", name="Cask on the cart")
+    pr.barrel(m, x + 1.45, y + .48, 17, holds="water", name="Small cask on the cart")
     note("cart", x + L / 2, y + w / 2)
 
 
@@ -104,10 +104,10 @@ built = [(3.0, 9.4, 4.6, 2.2), (11.2, 11.2, 2.2, 2.2), (27.2, 1.0, 7, 4.4), (33.
 
 def clear(x, y, r):
     """No tree on the road, the ford, a field, the cart or the cross; the wood is thick north of the road and east of the brook."""
-    if 14.2 < y and x < 21.2: return True
+    if 12.4 < y and x < 22.4: return True                                          # no crown over the strips
     if y > 10.4 and x < 22 and m.rng.random() < .75: return True                   # open ground south of the road, a tree here and there
     px_, py_ = min(max(int(x * T), 0), m.W - 1), min(max(int(y * T), 0), m.H - 1)
-    if dt[py_, px_] < 60 or db[py_, px_] < 44 + 60: return True
+    if dt[py_, px_] < r * T * .6 or db[py_, px_] < 44 + r * T * .6: return True
     return any(bx - r * .6 < x < bx + bw + r * .6 and by - r * .6 < y < by + bh + r * .6 for bx, by, bw, bh in built)
 
 

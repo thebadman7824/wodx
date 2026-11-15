@@ -38,8 +38,8 @@ def cottage(rec, x, y, w=7, h=5, door="s", cloth="red", paint="red", name="Cotta
     ox = fx(.14, 1.4); oy = fy(.14, 1.4)
     m.oven(ox, oy, 1.4, 1.4, side="n" if door == "s" else "s")
     rec.light(f"{name}-oven", f"The oven ({name})", (ox, oy, 1.4, 1.4), dim=4, bright=1.5); rec.note("bread oven", ox + .7, oy + .7)
-    bx = fx(w - 1.25, 1.1)
-    pr.bed(m, bx, fy(.15, 2.0), 1.1, 2.0, head="n" if door == "s" else "s", cloth=cloth); rec.note("bed", bx + .55, fy(1.15))
+    bx = fx(w - 1.1, .95)                                                       # a bed for two: 4 1/2 by 7 ft
+    pr.bed(m, bx, fy(.15, 1.4), .95, 1.4, head="n" if door == "s" else "s", cloth=cloth); rec.note("bed", bx + .48, fy(.85))
     sx = fx(1.8, 1.6); pr.shelf(m, sx, fy(.16, .44), 1.6, .44, ["jug", "bowl", "loaf", "cheese", "pot", "bowl"]); rec.note("shelf of crockery", sx + .8, fy(.38))
     pr.painted_chest(m, fx(w - 2.4, 1.0), fy(.2, .62), 1.0, .62, paint, name=f"Painted chest ({name})")
     tx = fx(w - 3.1, 1.8); ty = fy(h - 2.2, .9)                                 # the table by the front window, benches each side

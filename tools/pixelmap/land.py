@@ -43,7 +43,7 @@ def strips(m, x0, y0, x1, y1, crops=("rye", "oats", "fallow", "flax")):
     runs between strips."""
     X0, Y0, X1, Y1 = int(x0 * T), int(y0 * T), int(x1 * T), int(y1 * T); rng = m.rng; d = m.d
     look = {"rye": ("straw", 1, 4, R["straw"][4]), "oats": ("green", 2, 5, (176, 180, 120)), "flax": ("green", 1, 4, R["blue"][4]), "fallow": ("dirt", 1, 4, R["green"][2])}
-    h = 92; k = 0
+    h = 170; k = 0                                                              # a strip about 8 ft wide on the map, so it reads as a field, not a bed
     for y in range(Y0, Y1 - 30, h):
         crop = crops[k % len(crops)]; k += 1; yb = min(Y1, y + h - 10)
         name, lo, hi, dot = look[crop]
@@ -81,7 +81,7 @@ def trees(m, W, H, keep_clear, n=500, fir=.45, gap=.62):
     """Trees and firs scattered over the map, none where keep_clear(x, y, r) says no; drawn north to south."""
     rng = m.rng; got = []
     for _ in range(n):
-        x, y = rng.uniform(-.5, W + .5), rng.uniform(-.5, H + .5); r = rng.uniform(.95, 1.6)
+        x, y = rng.uniform(-.5, W + .5), rng.uniform(-.5, H + .5); r = rng.uniform(1.8, 2.9)   # crowns 14 to 23 ft across
         if keep_clear(x, y, r): continue
         if any(math.hypot(x - a, y - b) < (r + c) * gap for a, b, c, _ in got): continue
         got.append((x, y, r, rng.random() < fir))

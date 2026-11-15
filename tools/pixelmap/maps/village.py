@@ -39,7 +39,7 @@ B.chapel(rec, 12.4, 5.6, 8, 5, name="The chapel"); built.append((12.2, 5.4, 8.4,
 pr.well(m, 18.4, 11.6); note("well", 18.4, 11.6); built.append((17.6, 10.8, 1.8, 1.8))
 pr.trough(m, 19.6, 11.1, .46, 1.3); note("water trough", 19.83, 11.75)
 land.bridge(m, 29.4, 12.6, 32.0, 14.2); note("bridge", 30.7, 13.4)
-pr.hay(m, 36.6, 26.4, 30); note("haystack", 36.6, 26.4); built.append((35.8, 25.6, 1.8, 1.8))
+pr.hay(m, 36.4, 25.8, 105); note("haystack", 36.4, 25.8); built.append((35.0, 24.6, 2.8, 2.6))   # a stack about 11 ft across
 pr.washline(m, 9.6, 23.4, 12.2, 23.1, [("linen", 34), ("red", 20), ("linen", 30)]); note("washing line", 10.9, 23.3)
 
 
@@ -47,7 +47,7 @@ def clear(x, y, r):
     """No tree on the road, in the brook, on a field or a garden, or crowding a house."""
     if y < 3.9 and x < 28.2 or y > 24.1 and x < 29.2: return True
     px_, py_ = min(max(int(x * T), 0), m.W - 1), min(max(int(y * T), 0), m.H - 1)
-    if dt[py_, px_] < 70 or db[py_, px_] < 46 + 70: return True
+    if dt[py_, px_] < r * T * .6 or db[py_, px_] < 46 + r * T * .6: return True   # crowns may reach the verge, not cover the road
     return any(bx - r * .6 < x < bx + bw + r * .6 and by - r * .6 < y < by + bh + r * .6 for bx, by, bw, bh in built)
 
 

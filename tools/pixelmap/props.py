@@ -510,8 +510,26 @@ def _open_crate(m, X, Y, s, goods, lid="w"):
 
 
 def hay(m, x, y, r=26):
-    """A heap of loose hay with a pitchfork stuck in it."""
+    """A heap of loose hay with a pitchfork stuck in it. From r 60 up, a field stack: a tall round rick built about a
+    pole, its straw combed down the sides, domed and lit from the north-west, with loose hay round its foot."""
     d = m.d; cx, cy = P(x), P(y); S = R["straw"]; rng = m.rng
+    if r >= 60:
+        m.shade((cx - r + r * .3, cy - r + r * .38, cx + r + r * .3, cy + r + r * .38), kind="ellipse", f=.6)
+        for _ in range(int(r * 1.6)):                                             # loose hay trodden round the foot
+            a = rng.uniform(0, 6.28); t = r * rng.uniform(1.0, 1.22); x_, y_ = cx + math.cos(a) * t, cy + math.sin(a) * t; b = a + rng.uniform(-.6, .6)
+            d.line([x_, y_, x_ + math.cos(b) * 6, y_ + math.sin(b) * 6], fill=S[rng.integers(1, 4)])
+        m.dome(cx, cy, r, "straw")
+        for _ in range(int(r * r * .12)):                                         # straw combed down from the crown
+            a = rng.uniform(0, 6.28); t = rng.uniform(.15, .97) * r; x_, y_ = cx + math.cos(a) * t, cy + math.sin(a) * t
+            lit = (x_ - cx) + (y_ - cy) < -r * .2; L_ = rng.uniform(5, 10)
+            d.line([x_, y_, x_ + math.cos(a) * L_, y_ + math.sin(a) * L_], fill=S[4] if lit else S[1] if (x_ - cx) + (y_ - cy) > r * .3 else S[2])
+        for k in range(3):                                                        # ropes weighted over the top
+            a = k * 2.09 + .3; d.line([cx, cy, cx + math.cos(a) * r * .95, cy + math.sin(a) * r * .95], fill=R["dwood"][2], width=2)
+        m.disc(cx, cy, max(6, r // 12), "dwood", 2)                               # the stack pole's top
+        hx, hy = cx + r * 1.05, cy + r * .45                                      # a fork leant at the foot
+        d.line([hx, hy, hx + 36, hy - 26], fill=OUT, width=3); d.line([hx, hy, hx + 36, hy - 26], fill=R["wood"][4])
+        for k in (-4, 0, 4): d.line([hx + k * .6, hy + k * .8, hx - 7 + k * .6, hy + 6 + k * .8], fill=R["iron"][4])
+        return
     m.shade((cx - r + 3, cy - r * .7 + 5, cx + r + 5, cy + r * .7 + 7), kind="ellipse", f=.58)
     d.ellipse([cx - r, cy - r * .7, cx + r, cy + r * .7], fill=S[1], outline=OUT); d.ellipse([cx - r + 3, cy - r * .7 + 2, cx + r - 6, cy + r * .7 - 6], fill=S[2]); d.ellipse([cx - r * .6, cy - r * .5, cx + r * .2, cy], fill=S[3])
     for _ in range(int(r * 2.4)):
