@@ -114,6 +114,16 @@ export async function run() {
       G.ok("7. the ram on the menu", !!p?.valid && p.atkDice === Math.min(10, ride.maneuver) && new RegExp(`${dice} dice`).test(p.w.name) && new RegExp(`Durability ${ride.body.durability}`).test(p.w.name), {plan: p ? {valid: p.valid, dice: p.atkDice, name: p.w.name, why: p.why} : null, all: plans.map(x => x.w?.name)});
     });
 
+    await G.step("9. swerve and sat inside", async () => {
+      const d = C.bestDefense(driver, {}, pistol, {});
+      const p = C.bestDefense(pass, {}, pistol, {});
+      const dodge = p.plans.find(x => x.type === "dodge");
+      const m = V().vehicleFor(driver, td)?.maneuver ?? 10;
+      // run before the ram (step 8), whose blows can hurt the driver and the car and change these dice
+      G.ok("9. swerve and sat inside", d.best?.type === "swerve" && d.best.dice === Math.min(10, m) && dodge && !dodge.valid && /Sat in/.test(dodge.invalid ?? ""),
+        {driver: d.best ? {type: d.best.type, dice: d.best.dice, diff: d.best.diff} : null, maneuver: m, pass: dodge?.invalid});
+    });
+
     await G.step("8. a real ram", async () => {
       // the second car sits beside the first: ram it until a blow lands
       await car2.update({x: 300, y: 200});
@@ -126,15 +136,6 @@ export async function run() {
         await sleep(300);
       }
       G.ok("8. a real ram", /Ram with the/.test(card) && /second car takes it/i.test(card) && /that rammed/.test(card), {card: card.slice(0, 700)});
-    });
-
-    await G.step("9. swerve and sat inside", async () => {
-      const d = C.bestDefense(driver, {}, pistol, {});
-      const p = C.bestDefense(pass, {}, pistol, {});
-      const dodge = p.plans.find(x => x.type === "dodge");
-      const m = V().vehicleFor(driver, td)?.maneuver ?? 10;
-      G.ok("9. swerve and sat inside", d.best?.type === "swerve" && d.best.dice === Math.min(10, m) && dodge && !dodge.valid && /Sat in/.test(dodge.invalid ?? ""),
-        {driver: d.best ? {type: d.best.type, dice: d.best.dice, diff: d.best.diff} : null, pass: dodge?.invalid});
     });
 
     await G.step("10. an NPC takes a horse", async () => {
@@ -151,11 +152,11 @@ export async function run() {
       const c = ix.characterFor(nopilot, tn.object.center, bike);
       const o = t => ix.rules.optionsFor(ix.describeObj(t), {...c, kept: false});
       const bikeOk = ix.rules.optionsFor(ix.describeObj(bike), c).some(x => x.id === "mount");
-      const faeNo = o(fae)[0]?.id === "onlyNote", gryNo = !!o(gry).find(x => x.id === "skillNote")?.disabled;
+      const faeOpts = o(fae), faeNo = faeOpts.some(x => x.id === "onlyNote") && !faeOpts.some(x => x.id === "mount" || x.id === "board"), gryNo = !!o(gry).find(x => x.id === "skillNote")?.disabled;
       const ride = {...(await import("/modules/wodx-interactables/scripts/chase-rules.mjs")).rideInFight("ghoulhorse", 1200, "open"), kind: "ghoulhorse", role: "reins"};
       const MT = await import("/modules/wodx-combat/scripts/mounted-rules.js");
       const dodge = MT.mountDodge(ride, {rideDots: 3, ranged: true});
-      G.ok("11. bicycles and beasts", bikeOk && faeNo && gryNo && dodge.valid && dodge.diff === 6, {bikeOk, faeNo, gryNo, dodge, kind: c.kind});
+      G.ok("11. bicycles and beasts", bikeOk && faeNo && gryNo && dodge.valid && dodge.diff === 6, {bikeOk, faeNo, fae: faeOpts.map(x => x.id), gryNo, dodge, kind: c.kind});
     });
 
     await G.step("12. riding the beast itself", async () => {
