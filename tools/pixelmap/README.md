@@ -19,10 +19,11 @@ in this public repository and, later, be drawn inside Foundry.
 | `bits.py` | Distance fields and smooth lines for paths and streams. |
 | `buildings.py` | Whole buildings laid out the same way each time: the log cottage and the timber chapel (B5737). |
 | `land.py` | Open ground: grass or a forest floor, roads, brooks, ploughed strips, a plank bridge, scattered trees. |
-| `wilds.py` | The wood's pieces: stumps, camp fires, tents, charcoal kilns, boulders, rock scarps, felled trunks, ladders, a lean-to (B5739). |
+| `wilds.py` | The wood's pieces: stumps, camp fires, tents, charcoal kilns, boulders, rock scarps, felled trunks, ladders, a lean-to (B5739); hearths, bones, a warning rope and bell, a pit trap, pelts, drying racks, a den, a thicket, a wallow, a bow (B5740). |
 | `maps/farmhouse.py` | The first map: a three-room timber farmhouse and its yard, 20 by 14 squares. |
 | `maps/village.py`, `maps/road.py` | Sample maps: a village of about 1200 (40 by 28) and a country road (36 by 20). They write to `out/` unless given a folder. |
 | `maps/forest_road.py` | The Forest Road (66 by 46), the first valley map redrawn on its old scene's walls, lights and exits (B5739). |
+| `maps/high_woods.py` | The High Woods (66 by 48): the hermit's lodge, the wolf den, the game-reeve's lodge and the boar's thicket (B5740). |
 
 ## Making a map
 

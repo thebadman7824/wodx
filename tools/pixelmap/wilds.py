@@ -210,3 +210,158 @@ def leanto(m, x, y, w, h, low="s"):
     if low == "s":                                                                       # posts at the open side, a bedroll half out
         for xx in (X0 + 4, X1 - 4): m.disc(xx, Y1, 7, "dwood", 2)
         m.box(X0 + 30, Y1 - 12, X0 + 52, Y1 + 30, "red", 2); m.box(X0 + 62, Y1 - 12, X0 + 84, Y1 + 26, "blue", 2)
+
+
+# ---- High Woods pieces (B5740) ----
+def hearth(m, x, y, rec=None, label="Hearth", r=.55, lit=True):
+    """An open hearth on a hut's floor: a square of flat stones, a ring of kerb stones, ash, and a fire when lit."""
+    d = m.d; cx, cy = P(x), P(y); R_ = P(r); rng = m.rng
+    m.box(cx - R_, cy - R_, cx + R_, cy + R_, "stone", 2)
+    for k in range(int(R_ * 2 / 16)):                                                    # the slab joints
+        d.line([cx - R_ + 3, cy - R_ + 16 * k, cx + R_ - 3, cy - R_ + 16 * k], fill=R["stone"][1])
+    for a in np.linspace(0, 2 * math.pi, 10, endpoint=False):
+        m.rock(cx + math.cos(a) * R_ * .62, cy + math.sin(a) * R_ * .62, int(rng.integers(7, 10)), int(rng.integers(6, 8)))
+    d.ellipse([cx - R_ * .45, cy - R_ * .45, cx + R_ * .45, cy + R_ * .45], fill=(40, 32, 30))
+    if lit:
+        m.fire(cx, cy, int(R_ * .5), int(R_ * .46), seed=int(rng.integers(0, 99)))
+        m.hearths = getattr(m, "hearths", []) + [(cx, cy, 200, None)]
+    if rec:
+        rec.light(label, label, (x - .5, y - .5, 1, 1), dim=5, bright=1, color="#ff9a40", kind="fire", on=lit); rec.note(label.lower(), x, y)
+
+
+def bones(m, x, y, n=6, spread=.5, skull=True):
+    """Gnawed bones scattered on the ground: long bones with knobbed ends, a few ribs, and a small skull."""
+    d = m.d; rng = m.rng; B = [(150, 140, 120), (196, 188, 166), (228, 222, 204)]
+    for _ in range(n):
+        bx, by = P(x + rng.uniform(-spread, spread)), P(y + rng.uniform(-spread, spread)); a = rng.uniform(0, math.pi); L = rng.uniform(10, 20)
+        ex, ey = bx + math.cos(a) * L, by + math.sin(a) * L
+        d.line([bx + 2, by + 3, ex + 2, ey + 3], fill=(30, 26, 26), width=3)
+        d.line([bx, by, ex, ey], fill=B[1], width=3); d.line([bx, by - 1, ex, ey - 1], fill=B[2])
+        for px_, py_ in ((bx, by), (ex, ey)): d.ellipse([px_ - 3, py_ - 3, px_ + 3, py_ + 3], fill=B[2], outline=B[0])
+    if skull:
+        sx, sy = P(x), P(y)
+        d.ellipse([sx - 8, sy - 7, sx + 8, sy + 9], fill=B[2], outline=OUT)
+        d.rectangle([sx - 4, sy + 6, sx + 4, sy + 14], fill=B[1], outline=OUT)                 # the snout
+        for ex_ in (-4, 3): d.rectangle([ex_ + sx, sy, ex_ + sx + 2, sy + 2], fill=(30, 24, 24))
+
+
+def rope(m, x0, y0, x1, y1, bell=None):
+    """A thin rope stretched low across a path between two trunks, tied off at each end; with bell=(x, y), it runs
+    on to a cow-bell hung there."""
+    d = m.d; X0, Y0, X1, Y1 = P(x0), P(y0), P(x1), P(y1)
+    d.line([X0 + 3, Y0 + 5, X1 + 3, Y1 + 5], fill=(26, 22, 22), width=2)                 # its thin shadow
+    d.line([X0, Y0, X1, Y1], fill=R["straw"][3], width=2)
+    for px_, py_ in ((X0, Y0), (X1, Y1)): d.ellipse([px_ - 5, py_ - 5, px_ + 5, py_ + 5], fill=R["straw"][2], outline=OUT)   # the knots
+    if bell:
+        bx, by = P(bell[0]), P(bell[1]); d.line([X1, Y1, bx, by], fill=R["straw"][3], width=2)
+        d.ellipse([bx - 8, by - 8, bx + 8, by + 8], fill=R["gold"][2], outline=OUT); d.ellipse([bx - 4, by - 4, bx + 2, by + 2], fill=R["gold"][4])
+        d.point((bx + 1, by + 1), fill=(30, 24, 24))
+
+
+def pit_trap(m, x, y, w=1.2, h=1.2):
+    """A pit under a lattice of sticks and leaves. Drawn to be hard but not impossible to see: the leaves lie a shade
+    too even and too fresh, and sticks show at the edges where the ground's own litter does not quite meet."""
+    d = m.d; rng = m.rng; X0, Y0, X1, Y1 = P(x), P(y), P(x + w), P(y + h)
+    for _ in range(int((X1 - X0) * (Y1 - Y0) / 50)):                                       # an even layer of fresh leaves
+        lx, ly = rng.uniform(X0, X1), rng.uniform(Y0, Y1)
+        d.rectangle([lx, ly, lx + 2, ly + 1], fill=R["straw"][2] if rng.random() < .5 else R["red"][2])
+    for k in range(5):                                                                     # stick ends at the rim
+        t = (k + .5) / 5
+        d.line([X0 + (X1 - X0) * t, Y0 - 5, X0 + (X1 - X0) * t + 3, Y0 + 4], fill=R["dwood"][2], width=2)
+        d.line([X0 - 5, Y0 + (Y1 - Y0) * t, X0 + 4, Y0 + (Y1 - Y0) * t + 2], fill=R["dwood"][2], width=2)
+    d.line([X1 - 4, Y1 - 2, X1 + 4, Y1 + 1], fill=(28, 22, 22), width=2)                   # a dark crack where it sags
+
+
+def thicket(m, x0, y0, x1, y1, keep=(), n=90):
+    """A blackthorn thicket: low dark scrub packed tight, white with blossom in spring, blue-black sloes in autumn
+    (both shown a little), and thorny stems between the clumps; keep: (x, y, rx, ry) left open."""
+    rng = m.rng; got = []
+    for _ in range(n * 3):
+        x, y = rng.uniform(x0, x1), rng.uniform(y0, y1)
+        if any(((x - a) / c) ** 2 + ((y - b) / e) ** 2 < 1 for a, b, c, e in keep): continue
+        if any(math.hypot(x - a, y - b) < .4 for a, b in got): continue
+        got.append((x, y))
+        if len(got) >= n: break
+    for x, y in sorted(got, key=lambda p: p[1]):
+        m.bush(P(x), P(y), int(rng.uniform(.45, .62) * T), (46, 52, 92) if rng.random() < .6 else (232, 230, 220))
+        for _ in range(2):
+            a = rng.uniform(0, 2 * math.pi); L = rng.uniform(16, 30)
+            m.d.line([P(x), P(y), P(x) + math.cos(a) * L, P(y) + math.sin(a) * L], fill=(46, 32, 38), width=2)
+
+
+def wallow(m, x, y, rx=1.3, ry=.9):
+    """A boar's wallow: a hollow of churned brown mud, puddles of muddy water standing in it, the rim trampled bare and
+    printed with cloven tracks."""
+    d = m.d; rng = m.rng; cx, cy = P(x), P(y); RX, RY = P(rx), P(ry)
+    blobs = [(cx + rng.uniform(-.5, .5) * RX, cy + rng.uniform(-.4, .4) * RY, rng.uniform(.45, .7)) for _ in range(6)]
+    for bx, by, q in blobs: d.ellipse([bx - RX * q - 16, by - RY * q - 14, bx + RX * q + 16, by + RY * q + 14], fill=R["dirt"][1])
+    for bx, by, q in blobs: d.ellipse([bx - RX * q, by - RY * q, bx + RX * q, by + RY * q], fill=(70, 50, 36))
+    for bx, by, q in blobs: d.ellipse([bx - RX * q * .7, by - RY * q * .7, bx + RX * q * .5, by + RY * q * .5], fill=(56, 40, 30))
+    for k in range(3):                                                                     # muddy puddles
+        bx, by, q = blobs[k]; pw, ph = RX * q * .35, RY * q * .3
+        d.ellipse([bx - pw, by - ph, bx + pw, by + ph], fill=(72, 70, 56)); d.line([bx - pw * .5, by - ph * .3, bx, by - ph * .3], fill=(120, 120, 100))
+    for _ in range(int(RX / 2)):                                                           # cloven tracks in the mud and round the rim
+        a = rng.uniform(0, 2 * math.pi); t = rng.uniform(.3, 1.1); tx, ty = cx + math.cos(a) * RX * t, cy + math.sin(a) * RY * t
+        for sgn in (-2, 2): d.ellipse([tx + sgn - 1, ty - 3, tx + sgn + 1, ty + 3], fill=(34, 24, 20))
+
+
+def den(m, x, y, rx=2.6, ry=2.4, mouth=(-.6, -.2)):
+    """A wolf den under a pile of great boulders: a ring of rocks heaped round, a black hole going down under them,
+    earth scraped out bare in front, and bones."""
+    rng = m.rng; d = m.d
+    for a in np.linspace(0, 2 * math.pi, 12, endpoint=False):
+        if math.cos(a - math.atan2(mouth[1], mouth[0])) > .82: continue                     # the gap at the mouth
+        s = rng.uniform(1.6, 2.4); boulder(m, x + math.cos(a) * rx * rng.uniform(.85, 1), y + math.sin(a) * ry * rng.uniform(.85, 1), s, s * .8)
+    for k in range(3):                                                                    # rocks heaped over the hole, behind its mouth
+        s = rng.uniform(1.5, 2.0); boulder(m, x - mouth[0] * rx * .25 + (k - 1) * .9, y - mouth[1] * ry * .25 + rng.uniform(-.3, .3), s, s * .8)
+    mx, my = P(x + mouth[0] * rx * .4), P(y + mouth[1] * ry * .4)
+    d.ellipse([mx - 70, my - 54, mx + 70, my + 54], fill=R["dirt"][2])                      # scraped earth
+    for k, (c, sc) in enumerate(((OUT, 1), ((28, 22, 24), .82), ((14, 10, 12), .6))):         # the hole, deepening
+        d.ellipse([mx - 52 * sc, my - 40 * sc, mx + 52 * sc, my + 40 * sc], fill=c)
+    for _ in range(14):                                                                    # claw scrapes
+        sx, sy = mx + rng.uniform(-50, 50), my + rng.uniform(20, 50); d.line([sx, sy, sx + 4, sy + 10], fill=R["dirt"][0])
+
+
+def pelt(m, x, y, w=.9, h=1.2, fur="brown", head="n"):
+    """An animal's skin laid flat, seen from above: the body's outline with four leg flaps and a neck, fur
+    speckled light and dark, the edge a shade darker. fur: brown (deer, boar), grey (wolf) or red (fox)."""
+    d = m.d; rng = m.rng; F = {"brown": [(86, 58, 38), (120, 84, 54), (150, 108, 70), (176, 132, 88)],
+                               "grey": [(74, 72, 72), (110, 106, 102), (140, 136, 128), (170, 166, 156)],
+                               "red": [(110, 50, 26), (150, 74, 36), (184, 100, 50), (210, 140, 80)]}[fur]
+    cx, cy = P(x + w / 2), P(y + h / 2); hw, hh = P(w) / 2, P(h) / 2; sg = -1 if head == "n" else 1
+    pts = [(cx - hw * .2, cy + sg * hh), (cx + hw * .2, cy + sg * hh),                     # neck
+           (cx + hw * .45, cy + sg * hh * .6), (cx + hw, cy + sg * hh * .75), (cx + hw * .7, cy + sg * hh * .3),   # foreleg flap
+           (cx + hw * .6, cy - sg * hh * .35), (cx + hw * .95, cy - sg * hh * .85), (cx + hw * .4, cy - sg * hh * .7),   # hind leg flap
+           (cx, cy - sg * hh * .95),                                                       # tail end
+           (cx - hw * .4, cy - sg * hh * .7), (cx - hw * .95, cy - sg * hh * .85), (cx - hw * .6, cy - sg * hh * .35),
+           (cx - hw * .7, cy + sg * hh * .3), (cx - hw, cy + sg * hh * .75), (cx - hw * .45, cy + sg * hh * .6)]
+    m.shade((0, 0, m.W, m.H), f=.7, kind="poly", pts=[(px_ + 3, py_ + 4) for px_, py_ in pts])
+    d.polygon(pts, fill=F[1], outline=OUT)
+    inner = [(cx + (px_ - cx) * .7, cy + (py_ - cy) * .7) for px_, py_ in pts]; d.polygon(inner, fill=F[2])
+    d.line([cx, cy - hh * .8, cx, cy + hh * .8], fill=F[0], width=3)                       # the dark stripe down the back
+    for _ in range(int(hw * hh / 6)):
+        px_, py_ = cx + rng.uniform(-hw * .6, hw * .6), cy + rng.uniform(-hh * .7, hh * .7)
+        d.point((px_, py_), fill=F[3] if rng.random() < .5 else F[0])
+
+
+def hide_rack(m, x, y, L=2.4, hides=3, fur="brown"):
+    """A drying rack: two forked posts and a pole across (east-west), skins hung over it to dry, each one's halves
+    falling either side of the pole, legs and all."""
+    d = m.d; X0, X1, Y = P(x), P(x + L), P(y)
+    for px_ in (X0 - 8, X1 + 8): m.disc(px_, Y, 9, "dwood", 2)                             # the posts
+    for i in range(hides):
+        w = L / hides * .8; hx = x + L * (i + .5) / hides - w / 2
+        pelt(m, hx, y - .7, w, .7, fur, "s"); pelt(m, hx, y, w, .7, fur, "n")            # a skin over the pole, halves each side
+    d.line([X0 - 12, Y, X1 + 12, Y], fill=OUT, width=8); d.line([X0 - 12, Y, X1 + 12, Y], fill=R["dwood"][3], width=4)
+    d.line([X0 - 12, Y - 1, X1 + 12, Y - 1], fill=R["dwood"][4])
+
+
+def bow(m, x, y, along="y"):
+    """A hunting bow hung on the wall with its quiver: a curved stave and its string, arrows' fletching in the quiver."""
+    d = m.d; X, Y = P(x), P(y)
+    if along == "y":
+        d.arc([X - 10, Y - 40, X + 14, Y + 40], 100, 260, fill=R["wood"][3], width=3); d.line([X + 1, Y - 39, X + 1, Y + 39], fill=R["straw"][4])
+        m.box(X + 8, Y - 12, X + 18, Y + 20, "red", 1)
+        for k in range(3): d.rectangle([X + 9 + k * 3, Y - 18, X + 10 + k * 3, Y - 12], fill=R["linen"][4])
+    else:
+        d.arc([X - 40, Y - 10, X + 40, Y + 14], 190, 350, fill=R["wood"][3], width=3); d.line([X - 39, Y + 1, X + 39, Y + 1], fill=R["straw"][4])

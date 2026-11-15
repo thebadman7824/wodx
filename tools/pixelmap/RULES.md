@@ -48,6 +48,10 @@ must make sense"), and add a row for each new kind of thing.
 | Boulder | 3 to 5 ft | 0.6 to 1.0 squares |
 | Ladder | 16 in between the rails | 26 px wide |
 | Wayside shrine (roofed) | about 4 1/2 ft | 0.9 squares |
+| Deer or wolf pelt laid flat | about 4 by 6 ft | 0.8 to 0.9 by 1.1 to 1.2 |
+| Open hearth on its slab | about 5 ft | 1.0 to 1.1 squares |
+| Boar wallow | 10 to 15 ft across | 3.0 by 2.0 |
+| Den boulders | 8 to 12 ft each | 1.6 to 2.4 squares |
 
 ## Point of view and colour
 
