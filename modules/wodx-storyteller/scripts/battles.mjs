@@ -305,6 +305,7 @@ export async function setupDialog({kind = "field", id = null} = {}) {
   const b = id ? get(id) : B.normBattle({kind});
   const {year, age, land} = contextOf(b);
   let evs = [];
+  try { await C.chron()?.events?.load?.(); } catch (e) { /* the book events alone (B6240) */ }
   try { evs = B.warEvents(C.chron()?.events?.list?.() ?? [], year, 5, {part: partOf(land)}); } catch (e) { evs = []; }
   const lands = C.landChoices();
   let factions = [];
