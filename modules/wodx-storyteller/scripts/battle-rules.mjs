@@ -689,6 +689,16 @@ export function hazardFor(age, stance, attention = false) {
  * What a counterattack roll does: damage dice twice its successes, aggravated every third phase (fire, oil, blessed
  * weapons), and five or more successes a stake through a Cainite's heart (others take the damage, Spoils of War p. 44).
  */
+/**
+ * B6324: who a blow in the press can pin like a stake. A Kindred, always; a Kuei-jin only when aspected to Yin or Yang
+ * (wood paralyses the Yin, a foot of metal the Yang: Kindred of the East pdf 73); a Balanced one (Yin and Yang within a
+ * point, as Yang 4, Yin 3: pdf 72) is not pinned.
+ */
+export function stakeable(type = "", {variant = "", yin = 0, yang = 0} = {}) {
+  if ( !/vampire/i.test(String(type)) ) return false;
+  if ( String(variant ?? "").toLowerCase() !== "kindredeast" ) return true;
+  return Math.abs((Number(yin) || 0) - (Number(yang) || 0)) >= 2;
+}
 export function counterResult(successes, phaseNo, {cainite = false} = {}) {
   const k = Math.max(0, n(successes));
   return {dice: 2 * k, type: n(phaseNo) > 0 && n(phaseNo) % 3 === 0 ? "aggravated" : "lethal", staked: cainite && k >= 5};
