@@ -16,6 +16,9 @@ export const NEEDS_TARGET = ["harm", "hold", "fear", "trip", "sway", "possess", 
 /** Keywords that work on the user when nothing is targeted. */
 export const ON_SELF = ["sight", "rise", "light", "ward", "boost", "hasten", "veil", "sense", "speak", "know", "mend", "move", "fortune", "sideways"];
 
+/** B6034: is this an Obfuscate power? Its keyword id starts obfuscate- (power-keywords.js) or its line names it. */
+export const isObfuscate = (set, id, name = "") => /^obfuscate-/i.test(String(id ?? "")) || /^obfuscate\b/i.test(String(name ?? ""));
+
 /** The keywords of one power: the data set first, then the line list by name. {keywords, passive} or null. */
 export function powerKeywords(set, id, name = "", line = null) {
   return keywordsOf(set, id) ?? (line ? keywordsOf(line, slugOf(name)) : null);

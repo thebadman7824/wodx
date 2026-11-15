@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.44.0 (Conditions hold the token, and roll effects reach the fight (B6020-B6022): the conditions that hold a body now stop its movement in a fight and out of one (setting "Conditions hold the token"), Numbed slows it, and the attack and defence pools read WoDX Chronicle's roll effects, which until now only Actions and social rolls read; Incapacitated follows the health track and crippled limbs show on the token (B6031, B6032))
 - 3.43.0 (A swimmer is weighed down by what they carry (B6085), by WoDX Library's weights: the higher of that and the burden set by hand counts)
 - 3.42.1 (A fall from a mount or vehicle onto deep snow is 1 die, onto a railway line 4 (B6072))
 - 3.42.0 (Powers in fights (B6004, B6012): WoDX Combat reads the Wards, Boosts, Blessings, Curses and Hastes that WoDX Actions' powers and rituals put on a character. A being under a mummy's Forbiddance cannot attack that mummy (B6018))
