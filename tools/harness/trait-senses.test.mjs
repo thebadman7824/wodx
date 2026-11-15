@@ -64,7 +64,7 @@ test("a merit with no sense effect leaves the senses alone", () => {
 
 test("the Veil keyword keeps its difficulty on the timed effect, and Senses reads it", () => {
   assert.match(src("modules/wodx-chronicle/scripts/timed.mjs"), /data: o\.data \?\? null/);
-  assert.match(src("modules/wodx-actions/scripts/effects.js"), /data: o\.difficulty \? \{difficulty: o\.difficulty\} : null/);
+  assert.match(src("modules/wodx-actions/scripts/effects.js"), /data: PM\.timedData\(o\)/);
   const m = src("modules/wodx-senses/scripts/main.mjs");
   assert.match(m, /wodx-effect-veil/);
   assert.match(m, /key: "veiled"/);

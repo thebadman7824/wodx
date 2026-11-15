@@ -95,9 +95,11 @@ export async function run() {
       const [rope] = await cira.createEmbeddedDocuments("Item", [{name: "a coil of hemp rope", type: "Item"}]);
       const again = await ix().loose.setDown(tc, [rope.id]);
       const f = scene.tiles.get(pile.id)?.flags?.[IX] ?? {};
+      // the tile keeps its list as lines of text once saved through an update
+      const lines = (Array.isArray(f.items) ? f.items : String(f.items ?? "").split(/\r?\n/)).map(s => String(s).trim()).filter(Boolean);
       const haul = ix().haul.optionsFor(tc).find(o => o.op === "take" && o.what === again?.uuid);
-      G.ok("5. the pile grows and can be hauled", again?.id === pile.id && f.items?.length === 2 && /Haul the pile of gear/.test(haul?.label ?? "") && /About \d/.test(haul?.note ?? ""),
-        {same: again?.id === pile.id, items: f.items, haul: haul ? [haul.label, haul.note] : null});
+      G.ok("5. the pile grows and can be hauled", again?.id === pile.id && lines.length === 2 && f.loose?.length === 2 && /Haul the pile of gear/.test(haul?.label ?? "") && /About \d/.test(haul?.note ?? ""),
+        {same: again?.id === pile.id, items: lines, loose: f.loose?.length, haul: haul ? [haul.label, haul.note] : null});
     });
 
     await G.step("6. picking it up", async () => {

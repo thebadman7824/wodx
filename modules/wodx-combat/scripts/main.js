@@ -784,6 +784,7 @@ export async function attack({ attacker: a, target: t, weaponId, noAim = false }
     const w = fd.weapon === "auto" ? { id: "auto" } : weapons.find(x => x.id === fd.weapon);
     try {
         if (await bondHolds(attacker, target)) return null;
+        if (forbiddenFrom(attacker, target)) { ui.notifications.warn(`WoDX Combat: ${attacker.name} is Forbidden by ${target.name} and cannot attack them.`); return null; }
         if (!(await ambushFirst({ attacker, attackerTok, target, targetTok, fd }))) { openFight(attackerTok, targetTok); return null; }
         const res = await resolveAttack({ attacker, attackerTok, target, targetTok, weapon: w, fd }); openFight(attackerTok, targetTok); return res;
     }
@@ -829,6 +830,12 @@ async function ambushFirst({ attacker, attackerTok, target, targetTok, fd }) {
  * chained Thrall, a fomor's master) rolls first through WoDX NPC's bond ledger; a failed roll stops the blow. True
  * when the blow is not struck.
  */
+/** B6018: a mummy's Forbiddance: the being it holds cannot attack that mummy while it lasts. */
+export function forbiddenFrom(attacker, target) {
+    if (!attacker || !target?.id) return false;
+    return [...(attacker.effects ?? [])].some(e => !e.disabled && e.flags?.["wodx-actions"]?.forbiddenBy === target.id);
+}
+
 async function bondHolds(attacker, target) {
     if (!attacker || !target) return false;
     try {
@@ -956,6 +963,8 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
 
     const atk = await rollPool(pool.dice, pool.difficulty, { specialty: fd.specialty, willpower: fd.willpower });
     if (atk.roll) rolls.push(atk.roll);
+    // B6004: the Blessing or Curse the blow used is spent
+    if (pool.once?.length) { try { await game.modules.get("wodx-actions")?.api?.powerMods?.spend?.(attacker, pool.once); } catch (e) { /* nothing spent */ } }
     if (perShot?.ok) { await spendRows([perShot.spend]); log.push(`${esc(perShot.spend.item.name)}: one is shot.`); }
     if (w?.ranged && w.shots?.counted && countShots()) {
         const left = await spendShot(attacker, w);
@@ -1200,24 +1209,33 @@ function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0, targ
     // B4770: a blow from the saddle may use the mount's Strength or Dexterity (V20 Dark Ages p. 399)
     let at = { value: attr(attacker, attrKey), mount: false };
     if (!w.ranged) { try { at = MTD.strikeAttrOf(attacker, attrKey, at.value, { close: true }); } catch (e) { /* on foot */ } }
+    // B6004: a Boost, Blessing or Curse from a power or ritual (WoDX Actions power-mods) reaches the blow
+    const pm = powerModsOf(attacker, { tags: ["physical", attrKey, w.ranged ? "ranged" : "melee"] });
     const pool = R.attackPool({
         attribute: at.value, attributeLabel: `${cap(attrKey)}${at.mount ? " (the mount's)" : ""}`,
         ability: held.value, abilityLabel: held.label,
         accuracy: w.accuracy, maneuverDice: maneuver.dice || 0,
         celerityDice: (fd.celDice && attrKey === "dexterity") ? cel : 0,
-        flank: fd.flank, extraDice: (fd.extraDice || 0) + boostDice, woundPenalty: woundPenalty(attacker),
+        flank: fd.flank, extraDice: (fd.extraDice || 0) + boostDice + pm.dice, woundPenalty: woundPenalty(attacker),
         multiIndex: num(fd.multi), celerityIgnoresMulti: !!fd.celMulti,
         baseDifficulty: w.diff, maneuverDiff: maneuver.diff, targetingDiff: targeting.diff,
         rangeDiff: w.ranged ? (R.RANGE[fd.range]?.diff ?? 0) : 0, minStrDiff,
         crippledDiff: BodyRules.crippledAttackDiff(crippledParts(attacker), w),
         // Storyteller 0.64.0 (B2911): a night after bad dreams (the Nightmares Flaw) costs a die
         nightmareDice: Math.max(0, ...[...(attacker?.effects ?? [])].filter(e => !e.disabled).map(e => Number(e.flags?.["wodx-storyteller"]?.diceLess) || 0)),
-        bypassArmor: fd.bypass, opponents: fd.opponents, blind: fd.blind && !fp.blindCancelled, extraDiff: (fd.extraDiff || 0) + (w.ranged ? num(fd.coverDiff) + num(fd.mountShotDiff) : 0),
+        bypassArmor: fd.bypass, opponents: fd.opponents, blind: fd.blind && !fp.blindCancelled, extraDiff: (fd.extraDiff || 0) + pm.diff + (w.ranged ? num(fd.coverDiff) + num(fd.mountShotDiff) : 0),
         sheetDice, sheetDiff, shieldDiff: sh.attackDiff, fitDice: fp.fitDice, fitDiff: fp.fitDiff, wetString: fp.wetString
     });
+    if (pm.parts.length) { pool.parts = [...(pool.parts ?? []), ...pm.parts]; pool.once = pm.once; }
     // B4792: a ram's pool is the driving pool, held to the vehicle's Maneuver
     if (w.vehicle) { try { const c = VH.capPool(attacker, w, pool.dice); if (c.note) { pool.dice = c.dice; pool.parts.push(c.note); } } catch (e) { /* no vehicle */ } }
     return pool;
+}
+
+/** B6004: what powers and rituals on a character do to this roll (WoDX Actions power-mods); nothing with Actions off. */
+function powerModsOf(actor, ctx) {
+    try { return game.modules.get("wodx-actions")?.api?.powerMods?.of?.(actor, ctx) ?? { dice: 0, diff: 0, parts: [], once: [] }; }
+    catch (e) { return { dice: 0, diff: 0, parts: [], once: [] }; }
 }
 
 /** Damage type, bane and soak difficulty for this weapon against this target. */
@@ -1758,14 +1776,17 @@ export async function soakAndApply(tok, fd) {
     let type = type0, bane = !!fd.bane, soakDiff = Math.max(2, Math.min(10, Math.round(Number(fd.soakDiff) || 6)));
     if (sb) { bane = sb.bane && !sb.soak; if (sb.bane) { type = sb.type ?? type; soakDiff = sb.soakDiff ?? 6; } }
     fd = { ...fd, fortBlood: resolveFortitude(actor, fd.fortBlood, { dmgType: type }, fd) };
+    // B6004: a Ward (armour dice, or only against its kind of harm) and a soak Boost from a power or ritual
+    const soakPw = fd.soak ? powerModsOf(actor, { soak: true, harm: { type, of: fd.of ?? (fd.fireSun ? "fire" : ""), fireSun: !!fd.fireSun, bane } }) : { dice: 0, parts: [] };
     if (fd.soak) {
         const arm = armor(actor);
         sp = R.soakPool({ profile, damageType: type, stamina: attr(actor, "stamina"), fortitude: discipline(actor, "Fortitude"),
             armor: fd.noArmor ? 0 : (arm[type] ?? 0), fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane,
             // B5650: the sheet's soak rows count here too, as they do for a blow (B3800): Armor, Armored Hide
-            bonus: num(fd.soakBonus) + R.sheetBonus(actor?.items, "soak_buff", type),
+            bonus: num(fd.soakBonus) + R.sheetBonus(actor?.items, "soak_buff", type) + soakPw.dice,
             aggSoak: garouRules()?.isShifter?.(actor) ? garouRules().aggSoak(actor) : true, ...soakOpts(actor, profile) });
         if (sb) sp.notes.push(sb.note);
+        if (soakPw.parts.length) sp.notes.push(...soakPw.parts);
         if (fd.fortBlood && sp.autoSoak) await spend(actor, 0, 1);
         // A caller can ask that a botched soak turns the damage aggravated (electrocution of a vampire, V20 core printed p. 295, pdf 303)
         soak = await rollPool(sp.dice, soakDiff, { canBotch: !!fd.botchAggravated, autoSuccesses: sp.autoSoak });
@@ -1821,7 +1842,8 @@ export async function rollInitiative({ combat = game.combat, combatants = null, 
         // B3921: standing up from a knockdown last turn costs 2 Initiative this turn
         const stood = R.stoodPenalty(a.getFlag?.(MOD, "stoodUp"), combat);
         if (stood) await a.unsetFlag(MOD, "stoodUp");
-        const sheetInit = R.sheetBonus(a.items, "initiative_buff") + num(armsLib()?.atHand?.([...a.items], weaponList(a))?.init) - stood;
+        const sheetInit = R.sheetBonus(a.items, "initiative_buff") + num(armsLib()?.atHand?.([...a.items], weaponList(a))?.init) - stood
+            + powerModsOf(a, { initiative: true }).dice; // B6004: an Initiative Boost from a power
         const roll = new Roll(`1d10 + ${dex} + ${wits} + ${cel} + ${wp > -99 ? wp : 0} + ${sheetInit}`);
         if (GEN() < 12) await roll.evaluate({ async: true }); else await roll.evaluate();
         rolls.push(roll);
@@ -1952,7 +1974,7 @@ Hooks.once("init", () => {
     const vehicles = VH.setupVehicles({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall });
     FTime.setupFightTime();
     const api = { body, movement, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.41.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.42.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, followOn: R.followOn, markFollow, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -2419,6 +2441,7 @@ export async function quickAttack({ attacker: a = null, target: t = null, weapon
             // B4792: a named weapon (a ram) in place of the automatic choice
             const weapon = weaponId ? (weaponList(attacker).find(w => w.id === weaponId) ?? { id: "auto" }) : { id: "auto" };
             if (await bondHolds(attacker, target)) continue;
+            if (forbiddenFrom(attacker, target)) continue;
             if (await ambushFirst({ attacker, attackerTok, target, targetTok, fd })) results.push(await resolveAttack({ attacker, attackerTok, target, targetTok, weapon, fd }));
             openFight(attackerTok, targetTok);
         }
