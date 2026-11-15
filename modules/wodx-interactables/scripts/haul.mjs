@@ -45,6 +45,8 @@ let deps = {}; // {characterFor, describeTile, mapEvent, noiseAt, rules}
 /*  Reading the board                                                  */
 /* ------------------------------------------------------------------ */
 
+/** A trace a gate can read (globalThis.wodxHaulTrace = [] turns it on): what the haul code did, in order. */
+const trace = (...a) => { const t = globalThis.wodxHaulTrace; if ( Array.isArray(t) ) { t.push(a.map(x => (typeof x === "object" ? JSON.stringify(x) : String(x))).join(" ").slice(0, 160)); if ( t.length > 400 ) t.shift(); } };
 /** Where a document stands in the database: a token that is still being animated there reads its old place otherwise. */
 const SX = d => num(d?._source?.x ?? d?.x), SY = d => num(d?._source?.y ?? d?.y);
 const centreOf = doc => {
@@ -203,7 +205,9 @@ function float(doc, text) {
 }
 /** Put a token on a spot: a plain move first; past a wall, a displacement (as WoDX NPC's Undo does). */
 async function place(doc, pos) {
-  try { await doc.update({x: Math.round(pos.x), y: Math.round(pos.y)}, MOVE); } catch (e) { /* the move below */ }
+  trace("place", doc.name, [SX(doc), SY(doc)], "->", [Math.round(pos.x), Math.round(pos.y)]);
+  try { await doc.update({x: Math.round(pos.x), y: Math.round(pos.y)}, MOVE); } catch (e) { trace("place threw", e?.message); }
+  trace("placed", doc.name, [SX(doc), SY(doc)], [doc.x, doc.y]);
   if ( (Math.round(SX(doc)) !== Math.round(pos.x) || Math.round(SY(doc)) !== Math.round(pos.y)) && typeof doc.move === "function" && CONFIG.Token?.movement?.actions?.displace ) {
     try { await doc.move([{x: Math.round(pos.x), y: Math.round(pos.y), action: "displace"}], {animate: false, ...MOVE}); } catch (e) { /* stays */ }
   }
@@ -366,6 +370,7 @@ const onActorChanged = (...a) => serial(() => onActorChangedNow(...a));
  */
 async function takeNow(doc, target, want = "") {
   doc = docOf(doc); target = docOf(target);
+  trace("take", doc?.name, target?.name, want, [SX(doc), SY(doc)], [SX(target), SY(target)]);
   if ( !isActiveGM() ) return request("take", {who: doc?.uuid, what: target?.uuid, want});
   const why = cannotHold(doc);
   if ( why ) return {ok: false, why};
@@ -409,6 +414,7 @@ async function takeNow(doc, target, want = "") {
 /** Where a held body lies against the one holding it (B5075): on their square, or a square behind. */
 async function lay(body, holder, mode, from) {
   const h = haulOf(body);
+  trace("lay", body.name, "by", holder.name, mode, [SX(holder), SY(holder)], [holder.x, holder.y]);
   const look = H.LOOK[mode === "carry" ? "carry" : "drag"];
   const hc = centreOf(holder), g = sizeOf(body.parent);
   let at = hc;
@@ -432,6 +438,7 @@ async function lay(body, holder, mode, from) {
  */
 async function releaseNow(doc, {onto = null, drop = false, quiet = false} = {}) {
   doc = docOf(doc);
+  trace("release", doc?.name, onto, drop ? "drop" : "");
   if ( !isActiveGM() ) return request("release", {who: doc?.uuid, onto});
   const h = holdingOf(doc);
   if ( !h ) return {ok: false, why: `${doc?.name ?? "They"} hold nothing`};
@@ -519,6 +526,7 @@ function stairsOnWay(scene, a, b) {
 const busy = new Set();
 /** Active Storyteller: a token moved. Its load follows; a body that moved on its own struggles or is let go. */
 async function onMovedNow(doc, changes, options = {}, userId = null) {
+  trace("moved", doc.name, {x: changes?.x, y: changes?.y}, "haul" in (options ?? {}) ? "own" : "", options?.wodxHaul ? "skip" : "", busy.has(doc.uuid) ? "busy" : "", holdingOf(doc)?.n ?? "", haulOf(doc) ? "held" : "");
   if ( options?.wodxHaul || !isActiveGM() ) return;
   if ( !("x" in (changes ?? {}) || "y" in (changes ?? {})) ) return;
   if ( busy.has(doc.uuid) ) return;
@@ -592,6 +600,7 @@ async function onMovedNow(doc, changes, options = {}, userId = null) {
 
 /** A carried body moved by hand (B5078): a Storyteller's move lets it go; a player's is struggling free. */
 async function movedWhileCarried(body, userId) {
+  trace("movedWhileCarried", body.name, game.users.get(userId)?.isGM ? "gm" : "player");
   const rec = haulOf(body), lead = sync(rec.by[0]?.t);
   const user = game.users.get(userId);
   if ( !lead || user?.isGM ) return freeLoad(body);

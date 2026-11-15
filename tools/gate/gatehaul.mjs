@@ -41,7 +41,8 @@ export async function run() {
   // what Interactables says to the console while the gate runs goes in the result (a step that fails shows why)
   const said = [], keep = {error: console.error, warn: console.warn};
   for ( const k of ["error", "warn"] ) console[k] = (...a) => { try { const t = a.map(x => x?.stack ?? x?.message ?? (typeof x === "string" ? x : JSON.stringify(x))).join(" "); if ( /wodx-interactables|haul/i.test(t) && !/deprecated/i.test(t) ) said.push(`${k}: ${t}`.slice(0, 400)); } catch {} return keep[k](...a); };
-  const heard = () => said.splice(0);
+  globalThis.wodxHaulTrace = [];
+  const heard = () => [...said.splice(0), ...globalThis.wodxHaulTrace.splice(0).slice(-25)];
   try {
     const hx = () => game.modules.get(IX)?.api?.haul, C = game.wodxCombat;
     const scene = await G.scene({background: {src: "icons/svg/mystery-man.svg"}, width: 2000, height: 1500});
@@ -69,7 +70,7 @@ export async function run() {
       const look = Math.round(Number(tb.rotation)) === 90 && Math.abs(Number(tb.alpha) - 0.6) < 0.01;
       await ta.update({x: ta.x, y: ta.y + 200});
       const along = await waitFor(() => Y(tb) === Y(ta) && X(tb) === X(ta), 8000);
-      G.ok("2. carried on the map", r?.ok && on && look && along, {r, look: [tb.rotation, tb.alpha], at: [tb.x, tb.y, ta.x, ta.y]});
+      G.ok("2. carried on the map", r?.ok && on && look && along, {r, look: [tb.rotation, tb.alpha], at: [X(tb), Y(tb), X(ta), Y(ta)], said: on && along ? [] : heard()});
     });
 
     await G.step("3. in a fight", async () => {
@@ -113,10 +114,13 @@ export async function run() {
       await cira.toggleStatusEffect("wodx-knockdown", {active: false}).catch(() => null);
     });
 
-    const [chest, wardrobe, safe] = await scene.createEmbeddedDocuments("Tile", [
+    const made = await scene.createEmbeddedDocuments("Tile", [
       {x: 1300, y: 200, width: 100, height: 100, texture: {src: null}, flags: {[IX]: {container: true, kind: "chest", title: "Gate haul chest"}}},
       {x: 1300, y: 700, width: 100, height: 100, texture: {src: "icons/svg/door-exit.svg"}, flags: {[IX]: {hide: true, hideKind: "wardrobe", title: "Gate haul wardrobe"}}},
       {x: 1700, y: 1200, width: 100, height: 100, texture: {src: "icons/svg/padlock.svg"}, flags: {[IX]: {container: true, kind: "safe", title: "Gate haul safe"}}}]);
+    // the server may hand them back in any order
+    const tileNamed = t => made.find(d => d.flags?.[IX]?.title === t);
+    const chest = tileNamed("Gate haul chest"), wardrobe = tileNamed("Gate haul wardrobe"), safe = tileNamed("Gate haul safe");
     await G.step("7. a chest drawn into the map", async () => {
       const e0 = await moveTo(te, 1200, 200);
       const r = await hx().take(te, scene.tiles.get(chest.id), "push");
@@ -174,5 +178,5 @@ export async function run() {
       await hx().release(ta);
     });
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }
-  finally { console.error = keep.error; console.warn = keep.warn; if ( said.length ) G.R.notes.push(...said.slice(0, 20)); return G.finish(); }
+  finally { delete globalThis.wodxHaulTrace; console.error = keep.error; console.warn = keep.warn; if ( said.length ) G.R.notes.push(...said.slice(0, 20)); return G.finish(); }
 }
