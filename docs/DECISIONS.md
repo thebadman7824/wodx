@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5430
+Next free block: B5480
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -266,6 +266,11 @@ Next free block: B5430
 | B5400-B5409 | Names raised to 300, Hungarian (used B5400) | Creation |
 | B5410-B5419 | Names raised to 300, Persian (used B5410) | Creation |
 | B5420-B5429 | Names raised to 300, Yoruba (used B5420) | Creation |
+| B5430-B5439 | Names raised to 300, Portuguese (used B5430) | Creation |
+| B5440-B5449 | Names raised to 300, Dutch (used B5440) | Creation |
+| B5450-B5459 | Names raised to 300, Irish (used B5450) | Creation |
+| B5460-B5469 | Names raised to 300, Greek (used B5460) | Creation |
+| B5470-B5479 | Names raised to 300, Polish (used B5470) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8151,3 +8156,28 @@ Reverse: restore the persian entry in data/people-world.mjs and drop persian fro
 WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Yoruba list grows from 51 names to 382: old names of the alaafin, obas, war chiefs and royal and market women of Oyo, Ife, Ibadan, Abeokuta and Lagos, then Yoruba, church and Muslim names since, with a longer list of family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: restore the yoruba entry in data/people-world.mjs and drop yoruba from RAISED.
+
+## B5430. Portuguese names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Portuguese list grows from 54 names to 383: old names of kings, queens, captains, navigators and townsfolk of the Burgundian and Avis records, then names of modern Portugal, and a longer list of family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the portuguese entry in data/people-world.mjs and drop portuguese from RAISED.
+
+## B5440. Dutch names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Dutch list grows from 54 names to 468: old names of counts, regents, painters, seafarers and townsfolk of Holland and the Republic, with a father's name (Janszoon, Jansdochter) or a house or place name as the family name before the register of 1811, then modern Dutch names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the dutch entry in data/people-world.mjs and drop dutch from RAISED.
+
+## B5450. Irish names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Irish list grows from 55 names to 527: old names of kings, lords, poets, saints and women of the annals with the family name in Irish (Ó or Mac, Ní or Nic for a woman), then modern Irish names with the English forms of the family names used since the 18th century. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the irish entry in data/people-world.mjs and drop irish from RAISED.
+
+## B5460. Greek names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Greek list grows from 56 names to 472: old names of emperors, empresses, saints, scholars and great houses of Byzantium and the Greek lands under Venice and the Ottomans, then names of modern Greece, with a woman's family name in its own form. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the greek entry in data/people-world.mjs and drop greek from RAISED.
+
+## B5470. Polish names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Polish list grows from 58 names to 435: old names of Piast and Jagiellonian kings and dukes, knights, magnates and townsfolk, then names of modern Poland, with a woman's family name in its own form. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the polish entry in data/people-world.mjs and drop polish from RAISED.
