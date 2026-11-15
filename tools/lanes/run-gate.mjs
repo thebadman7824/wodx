@@ -119,9 +119,13 @@ process.on("SIGINT", () => bail(130, `Stopped by hand on lane ${lane.id}.`));
 process.on("SIGTERM", () => bail(143, `Stopped on lane ${lane.id}.`));
 // The whole run's watchdog (B3089): the run ends itself instead of holding the lane.
 setTimeout(() => bail(5, `Lane ${lane.id}: the run passed its ${Math.round(maxMs / 60000)} minute limit; browser closed, lane freed.`), maxMs);
+// B6352: a browser kept for a long run grew past 6 GB and held the queue below its memory floor; it is closed and a
+// new one signed in every RECYCLE gates (--recycle N, 0 for never), which also drops what earlier gates left in memory
+const RECYCLE = Number(opt("recycle") ?? 15) || 0;
+let sinceSignIn = 0;
 const signIn = async () => {
   const session = await within(openGM(laneUrl(lane), {channel: opt("channel") ?? undefined}), 7 * 60000, "signing in");
-  browser = session.browser; page = session.page;
+  browser = session.browser; page = session.page; sinceSignIn = 0;
 };
 try {
   // Code drift: the repo checkout against the lane's deployed files.
@@ -156,6 +160,7 @@ try {
     for ( const gate of gates ) {
       const limit = limitOf(gate);
       extendLock(lane, Date.now() + limit + 5 * 60000);
+      if ( page && RECYCLE && sinceSignIn >= RECYCLE ) { await closeBrowser(); page = null; }
       if ( !page ) {
         try { await signIn(); await within(page.evaluate(async () => { if ( !canvas?.scene && game.scenes.active ) await game.scenes.active.view(); }), 60000, "viewing the scene").catch(() => {}); }
         catch (e) { report(`${gate}: ERROR could not sign in again: ${e.message}`); code = 1; break; }
@@ -238,6 +243,7 @@ try {
         return {summary: String(text).slice(0, 600), error, moved, back: game.time.worldTime === t0, settingsBack, docsGone, shut};
       }, {gate, ignore: cfg.ignoreSettings ?? [], cleanDocs: !!lane.autoReset, limit, stepMs: stepSec * 1000});
       let out;
+      sinceSignIn++;
       try { out = await within(run, limit + 3 * 60000, gate); }
       catch (e) {
         // The page itself stopped answering: this gate fails, and the next one gets a new browser.
