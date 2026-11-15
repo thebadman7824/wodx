@@ -265,13 +265,13 @@ async function heartbreak(who, other) {
   if ( botch ) { key = await game.modules.get("wodx-chronicle")?.api?.derangements?.gain?.(who, "loss", "from heartbreak"); line += key ? "It breaks something in them: a derangement." : "It breaks something in them."; }
   else if ( hits > ones ) line += "They bear it.";
   else {
-    // B5826: it shows for a week: +1 difficulty on their social rolls (Actions reads socialDiff), a mark on the token
+    // B5826, B5991: it shows for a week: Grieving, one die fewer on social rolls (Actions reads socialDice), a mark on the token
     const T = game.modules.get("wodx-chronicle")?.api;
-    if ( T?.registerCondition && !T?.conditions?.getCondition?.("heartsick") ) T.registerCondition({id: "heartsick", name: "Heartsick", img: "icons/svg/blood.svg",
-      source: "WoDX house reading", summary: "Heartbroken for a week: +1 difficulty on social rolls.", mods: {socialDiff: 1}});
-    if ( T?.applyTimed ) await T.applyTimed(who, {name: "Heartsick", description: `Heartbroken over ${other.name}`, duration: {kind: "time", seconds: 7 * 86400},
-      condition: "heartsick", key: "wodx-npc-heartsick", source: "WoDX NPC hearts"});
-    line += "It hurts, and it shows: heartsick for a week (+1 difficulty on social rolls).";
+    if ( T?.registerCondition && !T?.conditions?.getCondition?.("grieving") ) T.registerCondition({id: "grieving", name: "Grieving", img: "icons/svg/blood.svg",
+      source: "WoDX house reading", summary: "Heartbroken for a week: one die fewer on social rolls.", mods: {socialDice: -1}});
+    if ( T?.applyTimed ) await T.applyTimed(who, {name: "Grieving", description: `Heartbroken over ${other.name}`, duration: {kind: "time", seconds: 7 * 86400},
+      condition: "grieving", key: "wodx-npc-grieving", source: "WoDX NPC hearts"});
+    line += "It hurts, and it shows: grieving for a week (one die fewer on social rolls).";
   }
   await ChatMessage.create({whisper: ownersOf(who), speaker: {alias: who.name}, flags: {[MOD]: {heartCard: true}}, rolls: [roll],
     content: card(`${who.name}'s heart breaks over ${other.name}`, [line])});

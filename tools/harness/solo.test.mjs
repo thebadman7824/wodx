@@ -444,3 +444,59 @@ test("experience from the tools is a whole number from 1 to the cap, with a plai
   const src = readFileSync(join(root, "modules/wodx-solo/scripts/st-tools.mjs"), "utf8");
   assert.match(src, /wodx-creation"\)\?\.api\?\.award/, "the award goes through WoDX Creation, so the sheet and its log stay right");
 });
+
+/* Arrival: a scene to land on, a character and its token (B5140 to B5145) */
+
+test("arrival: the landing is the flagged scene, then the chosen, then a Rothenstein map, market first", () => {
+  const s = (id, name, x = {}) => ({id, name, img: "map.webp", active: false, landing: false, ...x});
+  const world = [s("a", "A Moravian Village"), s("b", "Rothenstein: Lower Town"), s("c", "Market Square"), s("d", "The yard", {active: true})];
+  assert.equal(R.pickLanding(world), "c");
+  assert.equal(R.pickLanding(world, "a"), "a");
+  assert.equal(R.pickLanding([...world, s("e", "Cellar", {landing: true})], "a"), "e");
+  assert.equal(R.pickLanding(world, "gone"), "c", "a chosen scene that is gone is passed over");
+  assert.equal(R.pickLanding([s("d", "The yard", {active: true}), s("f", "Field")]), "d", "no Rothenstein map: the active one");
+  assert.equal(R.pickLanding([s("g", "Blank", {img: ""})]), null, "no map anywhere: none, so the plain night scene is made");
+  assert.equal(R.pickLanding([]), null);
+});
+
+test("arrival: the plain night scene is dark, gridded and seen through the token's eyes", () => {
+  const b = R.LANDING_BLANK;
+  assert.ok(b.environment.darknessLevel >= 0.5, "night");
+  assert.equal(b.tokenVision, true);
+  assert.equal(b.grid.size, 100);
+  const at = R.wayIn(b, 1);
+  assert.ok(at.x >= 0 && at.y >= 0 && at.x % 100 === 0 && at.y % 100 === 0);
+});
+
+test("arrival: the steps, the lines and a typed name", () => {
+  assert.equal(R.arrivalStep({}), "make");
+  assert.equal(R.arrivalStep({character: true}), "place");
+  assert.equal(R.arrivalStep({character: true, token: true}), "pull");
+  assert.equal(R.arrivalStep({character: true, token: true, viewing: true}), "ready");
+  assert.deepEqual(R.ARRIVAL_LINES.map(l => l.type), ["Vampire", "Werewolf", "Mage", "Changeling", "Wraith", "Hunter", "Mortal"]);
+  const types = JSON.parse(readFileSync(join(root, "system/worldofdarkness/template.json"), "utf8")).Actor?.types
+    ?? JSON.parse(readFileSync(join(root, "system/worldofdarkness/system.json"), "utf8")).documentTypes?.Actor;
+  const known = Array.isArray(types) ? types : Object.keys(types ?? {});
+  if ( known.length ) for ( const l of R.ARRIVAL_LINES ) assert.ok(known.includes(l.type), `${l.type} is an actor type`);
+  assert.equal(R.arrivalName("  Ilse   of  Dolany "), "Ilse of Dolany");
+  assert.equal(R.arrivalName("<b>x</b>"), "bx/b");
+  assert.equal(R.arrivalName(""), R.DEFAULT_NAME);
+  assert.equal(R.arrivalName("x".repeat(90)).length, R.NAME_MAX);
+  const d = R.newCharacterData({name: "Ilse", line: "werewolf", userId: "p1", at: 7});
+  assert.equal(d.type, "Werewolf");
+  assert.equal(d.ownership.p1, 3);
+  assert.equal(d.ownership.default, 0);
+  assert.equal(d.prototypeToken.actorLink, true);
+  assert.equal(d.prototypeToken.sight.enabled, true);
+  assert.equal(R.newCharacterData({line: "nonsense", userId: "p1"}).type, "Mortal");
+});
+
+test("arrival.mjs: the seat makes the character, assigns it, places its token and brings the player there", async () => {
+  const src = readFileSync(join(root, "modules/wodx-solo/scripts/arrival.mjs"), "utf8");
+  for ( const k of ["\"ask.arrive\"", "\"ask.arrive.make\"", "\"arrive.pick\"", "\"arrive.ready\"", "pullToScene", "wodxSoloArrived", "api?.wizard"] ) assert.ok(src.includes(k), `arrival.mjs has ${k}`);
+  const guide = readFileSync(join(root, "modules/wodx-chronicle/scripts/player-guide.mjs"), "utf8");
+  assert.ok(/soloWaits\(\)\s*\)\s*\{\s*Hooks\.once\("wodxSoloArrived"/.test(guide), "the first-night tour waits for the token in solo play");
+  assert.ok(guide.indexOf("soloWaits()") < guide.indexOf("put({offered: true})"), "the tour is not marked offered before the token is there");
+  const panel = readFileSync(join(root, "modules/wodx-solo/scripts/panel.mjs"), "utf8");
+  assert.ok(panel.includes("ARRIVE_UI.html?.()") && panel.includes("arrive: () => ARRIVE_UI.open?.()"), "the panel offers Make my character");
+});

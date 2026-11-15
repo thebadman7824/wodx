@@ -26,6 +26,9 @@
 .wsolo-give .wsolo-give-list li { display: flex; align-items: center; gap: 6px; }
 .wsolo-give .wsolo-give-list button { flex: 0 0 auto; width: auto; max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
+/* Arrival (B5143): the panel's Make my character, for a player with none */
+.wsolo-panel .wsolo-arrive-btn { width: 100%; margin-bottom: 6px; font-weight: bold; }
+.wsolo-arrive .form-group input[type=text] { width: 100%; }
 /* The oracle and the Leads page (B5980, B5982) */
 .wsolo-oracle .wsolo-q { font-style: italic; }
 .wsolo-oracle .wsolo-answer { font-size: 1.15em; margin: 4px 0; }

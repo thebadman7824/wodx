@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5980
+Next free block: B6000
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -250,6 +250,7 @@ Next free block: B5980
 | B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
 | B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5127) | NPC, Combat, Actions |
 | B5130-B5139 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5130-B5137) | Creation, Actions, NPC |
+| B5140-B5149 | Solo arrival: landing scene, character with token on first login (used B5140-B5144) | Solo, Chronicle |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 | B5160-B5169 | Playable Strengthening the Demon and fomor Numbing (used B5160-B5162) | Combat, Actions |
 | B5170-B5179 | Storyteller's Hand round two: Martyr, Marauders, the winds, holy ground, Untamable, feeding flaws, Berserker, flight, blackmail, the stimulant crash (used B5170-B5179) | Actions, Chronicle, Interactables, Library, NPC, Storyteller |
@@ -325,6 +326,7 @@ Next free block: B5980
 | B5950-B5959 | Weather history by part of the world (used B5950-B5955) | Atmosphere |
 | B5960-B5969 | Cults that give what they promise (used B5960-B5964) | NPC |
 | B5970-B5979 | NPCs make their own wonders (used B5970-B5974) | Storyteller |
+| B5990-B5999 | Say or Do: full sentences and grieving (Ben's picks on law sentences and heartbreak) (used B5990-B5992) | Chronicle, NPC, Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8621,6 +8623,31 @@ Reverse: householdBeasts in residents.mjs.
 ## B5137. Ghoul mounts (2026-11-14)
 WoDX Combat. Mounts are still tiles with fixed traits; when the mounts work puts riders on Creature sheets, it reads the war-trained mark and the beast's Potence, Celerity and Fortitude. Desk item 21.
 
+## B5140. The seat brings the lone player in on every login (2026-11-15)
+WoDX Solo. Ben logged in to the solo world and found no map and no token, so the first-night prompts had nothing to work on. Foundry lets no player make an Actor and a world may open with no scene active, so the hidden Storyteller's seat now does both: the player's client asks on login and the seat answers (also for players already in when the seat sits down). One ask runs at a time per player. Setting "Bring the player in" (on) turns it off.
+
+Reverse: turn the setting off, or remove installArrival from main.mjs.
+
+## B5141. The landing scene (2026-11-15)
+WoDX Solo. The landing is the scene flagged wodx-solo.landing, else the one the "landing" setting names, else a Rothenstein scene with a map, the market first (the recipe's market anchor), then Rothenstein, Lower Town, any Rothenstein name; else the active scene with a map; else any scene with a map. A world with no map at all gets a plain night scene ("Rothenstein by night: the way in", dark, gridded, token vision on), flagged as the landing so a map can be set on it later. The landing is made active only when no scene with a map is active, so a Storyteller's choice of scene stands.
+
+Reverse: edit LANDING_NAMES or pickLanding in solo-rules.mjs.
+
+## B5142. The seat makes the player's character from a name and a line (2026-11-15)
+WoDX Solo. A player with no character picks a name (plain text, 60 characters, "A stranger" if blank) and one of seven lines, the recipe's lines for the valley: Vampire, Werewolf, Mage, Changeling, Wraith, Hunter, Mortal. The seat makes that sheet type, owned by the player alone, with a linked friendly token with sight on, and assigns it as the player's character. The wizard then picks the book for the sheet and the era by itself. One character each: a player who has one is brought to it instead. Ghouls, Kuei-jin and the rest are made from the sheet or the wizard's change of state, as at a shared table.
+
+Reverse: edit ARRIVAL_LINES or newCharacterData in solo-rules.mjs.
+
+## B5143. The token goes to the landing's way in and the player is taken to it (2026-11-15)
+WoDX Solo. A character with no token on any scene gets one at the landing's way in (the scene's starting view, else its middle, snapped to the grid: the same spot as I am stuck, free my token). The seat pulls the player to the token's scene; the player's screen centres on the token and selects it, and the character wizard opens for a new character. The panel shows Make my character above its buttons while the player has none, for a player who closed the first window.
+
+Reverse: remove placeToken and the pull from arrival.mjs.
+
+## B5144. The first-night tour waits for the token in solo play (2026-11-15)
+WoDX Chronicle. The tour is offered once, on the first join, and was used up on a solo login with no token to move. With The Lone Chronicle on, it now waits until the player's character has a token on the scene they view, and is offered when Solo's arrival fires its hook. At a shared table nothing changes.
+
+Reverse: remove soloWaits from player-guide.mjs.
+
 ## B5150. The Philippines a region of its own (2026-11-15)
 WoDX Chronicle and Storyteller. Ben asked to build out the Philippines. The islands leave the Malay world and become the 45th world region, "The Philippines (Manila, the Visayas, Mindanao and Sulu)", with Manila as its city, the tropical wet climate and the Philippine money region. The world map gives it the squares north of 4.5 degrees and east of 119.5 (with Palawan) that were the Malay world's; the map builder cuts the country out by name on its next run. The region's letter comes last so no older square changes. Taken as recommended; logged in PENDING-REVIEW.
 
@@ -9897,3 +9924,18 @@ Reverse: default false.
 api.wonders.npcMonth({force, rand, only}) runs the look now (force does not move the month's mark), for chosen actors.
 
 Reverse: drop the option.
+
+## B5990. Time served takes the character off the map (2026-11-15)
+WoDX Chronicle. Prison, hard labour and the other time sentences hide every token of the character on every scene and keep a lawAway flag with the year the time ends. When the clock reaches that year, or the sentence is pardoned, the tokens come back and the table is told. Replaces the Storyteller-only time served of B5823.
+
+Reverse: remove sendAway, comeBack and releaseServed in law-punish.mjs.
+
+## B5991. A brand shows; heartbreak takes a social die (2026-11-15)
+WoDX Chronicle, NPC, Actions. A brand sentence puts a Branded status on the character's token until every brand is pardoned. A broken heart that is neither borne nor botched leaves Grieving for seven days: one die fewer on social rolls (Actions reads the new socialDice mod), replacing the +1 difficulty Heartsick of B5826.
+
+Reverse: remove brand() in law-punish.mjs; put Heartsick back in hearts.mjs; drop socialDice.
+
+## B5992. The law comes for the condemned (2026-11-15)
+WoDX Chronicle, Storyteller. A death sentence holds the condemned and calls WoDX Storyteller's raid (reach.lawCome) to arrest them where they stand; the player chooses to go or resist.
+
+Reverse: remove the lawCome call in carryOut.

@@ -75,15 +75,65 @@ async function carryOut(actor, mark, info) {
   }
   if ( mark.kind === "death" ) {
     await applyTimed(actor, {name: "Held for sentence", description: "Held by the court until the sentence is carried out", duration: {kind: "scene"}, condition: "held", key: "wodx-law-held", source: "WoDX Chronicle law"});
-    return "The condemned is held (Held for the scene) until you play the sentence out.";
+    // B5992: the law comes for the condemned where they are (WoDX Storyteller's raid)
+    const R = game.modules.get("wodx-storyteller")?.api?.reach;
+    try { await R?.lawCome?.({actorId: actor.id, region: info.region, mode: "arrest", why: "a death sentence"}); } catch (e) { console.warn("WoDX | law comes", e); }
+    return R?.lawCome ? "The condemned is held, and the law comes to take them to the sentence." : "The condemned is held (Held for the scene) until you play the sentence out.";
   }
+  if ( mark.kind === "time" && mark.until ) return (await sendAway(actor, mark)) ? `Taken away to serve the sentence until ${mark.until}: the character's tokens leave the map until then.` : "";
+  if ( mark.kind === "brand" ) { await brand(actor, true); return "The brand shows on the character's token for all to see."; }
   return "";
+}
+
+/* B5990: time served takes the character off the map until the year it ends; the clock brings them back. */
+async function sendAway(actor, mark) {
+  const hidden = [];
+  for ( const sc of game.scenes ) {
+    const ids = sc.tokens.filter(t => t.actorId === actor.id && !t.hidden).map(t => t.id);
+    if ( ids.length ) { await sc.updateEmbeddedDocuments("Token", ids.map(_id => ({_id, hidden: true}))); hidden.push({scene: sc.id, ids}); }
+  }
+  await actor.setFlag(MODULE_ID, "lawAway", {until: mark.until, mark: mark.id, region: mark.region, hidden});
+  return true;
+}
+async function comeBack(actor, why = "The sentence is served") {
+  const away = actor.getFlag(MODULE_ID, "lawAway");
+  if ( !away ) return false;
+  for ( const h of away.hidden ?? [] ) {
+    const sc = game.scenes.get(h.scene);
+    const ids = (h.ids ?? []).filter(id => sc?.tokens.get(id));
+    if ( sc && ids.length ) await sc.updateEmbeddedDocuments("Token", ids.map(_id => ({_id, hidden: false})));
+  }
+  await actor.unsetFlag(MODULE_ID, "lawAway");
+  await ChatMessage.create({speaker: {alias: "The court"}, content: `<div class="wodx-card wodx-law-sentence"><p>${esc(why)}: ${esc(actor.name)} is free again.</p></div>`});
+  return true;
+}
+/** B5990: at each move of the clock, those whose time is up come back. */
+export async function releaseServed(year = yearNow()) {
+  if ( !isActiveGM() ) return [];
+  const out = [];
+  for ( const a of game.actors ) { const w = a.getFlag?.(MODULE_ID, "lawAway"); if ( w && P.servedBy(w, year) && await comeBack(a) ) out.push(a.id); }
+  return out;
+}
+
+/* B5991: a brand is a lasting mark on the token (a status everyone sees) until pardoned. */
+function ensureBrand() {
+  const C = game.modules.get(MODULE_ID)?.api;
+  if ( C?.registerCondition && !C?.conditions?.getCondition?.("branded") ) C.registerCondition({id: "branded", name: "Branded", img: "icons/svg/fire.svg",
+    source: "WoDX Chronicle law", summary: "Bears the court's brand: anyone who sees the face or hand sees it."});
+}
+async function brand(actor, on) {
+  ensureBrand();
+  try { await actor.toggleStatusEffect?.("wodx-branded", {active: on}); } catch (e) { console.warn("WoDX | brand", e); }
 }
 
 /** Pardon a mark (the Storyteller). */
 export async function pardon(actor, markId) {
   if ( !game.user.isGM || !actor ) return null;
+  const m0 = marksOf(actor).find(m => m.id === markId);
   await actor.setFlag(MODULE_ID, "lawMarks", marksOf(actor).map(m => (m.id === markId ? {...m, pardoned: true} : m)));
+  // B5990-B5991: a pardon brings the prisoner back and takes the brand's mark off the token
+  if ( m0?.kind === "time" && actor.getFlag(MODULE_ID, "lawAway")?.mark === markId ) await comeBack(actor, "Pardoned");
+  if ( m0?.kind === "brand" && !marksOf(actor).some(m => m.kind === "brand" && !m.pardoned) ) await brand(actor, false);
   return true;
 }
 
@@ -101,6 +151,8 @@ export function playerMarks(actor, region, year = yearNow()) {
 
 export function registerPunishHooks() {
   Hooks.on("wodxVerdict", p => { if ( p?.guilty ) sentenceCard(p).catch(e => console.error("WoDX | sentence", e)); });
+  Hooks.on("updateWorldTime", () => { releaseServed().catch(e => console.error("WoDX | sentence served", e)); });
+  Hooks.once("ready", () => { ensureBrand(); releaseServed().catch(() => null); });
   Hooks.on("renderChatMessageHTML", (message, el) => {
     if ( !game.user.isGM ) return;
     const info = message.flags?.[MODULE_ID]?.lawSentence;

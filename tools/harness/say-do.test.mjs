@@ -28,3 +28,9 @@ test("B5825: every complication does something to the work", () => {
   assert.deepEqual([t.next, t.total], [120, 0]);
   assert.deepEqual(PR.troubleDoes("nothing-like-it"), {delay: 2});
 });
+
+test("B5990: time away is served in the year it ends", () => {
+  assert.equal(LP.servedBy({until: 1205}, 1204), false);
+  assert.equal(LP.servedBy({until: 1205}, 1205), true);
+  assert.equal(LP.servedBy({}, 1300), false);
+});

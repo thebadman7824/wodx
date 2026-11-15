@@ -363,3 +363,89 @@ export function addEyes(list = [], card, cap = EYES_CAP) {
   if ( card?.id ) out.push(card);
   return out.slice(-cap);
 }
+
+/* ------------------------------------------------------------------ */
+/*  Arrival (B5140 to B5145)                                          */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The lines a lone player may start as on arrival, with the sheet type each one makes. The wizard then picks the
+ * book for the sheet and the era by itself (Creation's lineFor). Vampire first, as the chronicle opens with it.
+ */
+export const ARRIVAL_LINES = [
+  {id: "vampire", type: "Vampire", label: "Vampire", hint: "one of the Cainites, who wake at dusk"},
+  {id: "werewolf", type: "Werewolf", label: "Werewolf", hint: "a Garou of the hills and the old grove"},
+  {id: "mage", type: "Mage", label: "Mage", hint: "a wise one who bends the world by will"},
+  {id: "changeling", type: "Changeling", label: "Changeling", hint: "a fae soul in a borrowed body"},
+  {id: "wraith", type: "Wraith", label: "Wraith", hint: "one of the restless dead"},
+  {id: "hunter", type: "Hunter", label: "Hunter", hint: "one who hunts what hides in the night"},
+  {id: "mortal", type: "Mortal", label: "Mortal", hint: "a living soul of the valley"}
+];
+export const NAME_MAX = 60;
+export const DEFAULT_NAME = "A stranger";
+export const arrivalLine = id => ARRIVAL_LINES.find(l => l.id === String(id ?? "").toLowerCase()) ?? null;
+/** A name typed on arrival: plain text, trimmed, at most NAME_MAX characters, never empty. */
+export function arrivalName(v) {
+  const s = String(v ?? "").replace(/[<>]/g, "").replace(/\s+/g, " ").trim().slice(0, NAME_MAX).trim();
+  return s || DEFAULT_NAME;
+}
+
+/** Names that mark a Rothenstein scene the chronicle opens on (the recipe's market anchor first). */
+export const LANDING_NAMES = [/Market (Street|Square)/i, /^Rothenstein\b/i, /Lower Town/i, /Rothenstein/i];
+
+/**
+ * The scene the lone player lands on. scenes: [{id, name, active, landing, img}], where landing is the scene's
+ * wodx-solo.landing flag and img its background. chosen: the world setting's scene id. Order: the flagged scene, the
+ * chosen one, a Rothenstein scene with a map (market first), the active scene, any scene with a map. Null when none
+ * fits; the seat then makes the plain night scene (LANDING_BLANK).
+ */
+export function pickLanding(scenes = [], chosen = "") {
+  const list = (scenes ?? []).filter(s => s?.id);
+  const flagged = list.find(s => s.landing);
+  if ( flagged ) return flagged.id;
+  if ( chosen && list.some(s => s.id === chosen) ) return chosen;
+  const mapped = list.filter(s => s.img);
+  for ( const re of LANDING_NAMES ) {
+    const hit = mapped.find(s => re.test(String(s.name ?? "")));
+    if ( hit ) return hit.id;
+  }
+  return list.find(s => s.active && s.img)?.id ?? mapped[0]?.id ?? null;
+}
+
+/**
+ * The plain scene made when the world has no map at all: a dark square of night with a grid, token vision on so the
+ * night shows. A map can be set on it later; the flag keeps it the landing.
+ */
+export const LANDING_BLANK = {
+  name: "Rothenstein by night: the way in",
+  width: 3000, height: 2000, padding: 0.1, backgroundColor: "#0b0f1a",
+  grid: {size: 100, type: 1},
+  tokenVision: true,
+  environment: {darknessLevel: 0.85, globalLight: {enabled: false}},
+  initial: {x: 1500, y: 1000, scale: 1}
+};
+
+/**
+ * What arrival does for a player. has: {character, token, onLanding, viewing}: the player has a character, it has a
+ * token on some scene, that token is on the landing, the player views the token's scene. Returns
+ * "make" (ask the player for a name and a line), "place" (put a token on the landing), "pull" (bring the player to
+ * the token's scene) or "ready".
+ */
+export function arrivalStep(has = {}) {
+  if ( !has.character ) return "make";
+  if ( !has.token ) return "place";
+  if ( !has.viewing ) return "pull";
+  return "ready";
+}
+
+/** The data for the lone player's new character. The seat makes it; the player owns it, and its token is linked. */
+export function newCharacterData({name, line, userId, at = 0} = {}) {
+  const L = arrivalLine(line) ?? arrivalLine("mortal");
+  const n = arrivalName(name);
+  return {
+    name: n, type: L.type,
+    ownership: {default: 0, [String(userId)]: 3},
+    prototypeToken: {name: n, actorLink: true, disposition: 1, displayName: 30, sight: {enabled: true, range: 0}},
+    flags: {"wodx-solo": {arrival: {line: L.id, userId: String(userId), at: Number(at) || 0}}}
+  };
+}
