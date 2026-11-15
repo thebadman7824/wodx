@@ -28,9 +28,9 @@ export const TIE_KINDS = {
   chantry: {label: "Chantry or Construct", days: 30, lapse: "A member who skips the errands and chores owed loses standing; a member who quits takes their pool points away (M20 p. 309).", act: "Duties at the chantry"},
   freehold: {label: "A freehold (Holdings)", days: 30, lapse: "An untended balefire in a dull place fades a rank each season (Places of power).", act: "Places of power: dream by the balefire"},
   // B6323: the other lines' own ties, from their Backgrounds (in WoDX's words)
-  dreamers: {label: "Dreamers", days: 30, lapse: "Dreamers who are not visited stop dreaming for the changeling: less Glamour from them, and Banality creeps in (C20 pdf p. 169).", act: "A visit, or a Rhapsody with them"},
-  haunt: {label: "A Haunt", days: 30, lapse: "A Haunt left to itself draws other wraiths and Spectres, and the Shroud there thickens again (Wraith 20th pdf p. 143).", act: "Time at the Haunt"},
-  pacts: {label: "Pacts with thralls", days: 30, lapse: "A thrall the demon does not see drifts: the pact's Faith comes slower, and another may court them (Demon: the Fallen pdf pp. 157-161).", act: "A visit to the thralls"},
+  dreamers: {label: "Dreamers", days: 30, lapse: "Dreamers who are not visited stop dreaming for the changeling: a Dreamers dot is lost, and with it a success on each Reverie (C20 pdf 170).", act: "A visit, or a Reverie with them"},
+  haunt: {label: "A Haunt", days: 30, lapse: "A Haunt left to itself draws other wraiths and Spectres, and the Shroud there thickens again (Wraith 20th p. 143, the Haunt Background).", act: "Time at the Haunt"},
+  pacts: {label: "Pacts with thralls", days: 30, lapse: "A thrall the demon does not see drifts: the pact's Faith comes slower, and another may court them (Demon: the Fallen pdf 161).", act: "A visit to the thralls"},
   cult: {label: "A cult", days: 30, lapse: "A cult that is not led splits or drifts: fewer hands to keep the vessel between lives (Mummy: the Resurrection, Cult).", act: "A rite with the cult"},
   nest: {label: "A dragon nest", days: 30, lapse: "A dragon nest no one guards draws spirits, rivals and the Wan Kuei of other courts to its Chi (Kindred of the East pdf p. 18).", act: "Time at the nest"},
   custom: {label: "Other", days: 30, lapse: "The Storyteller decides.", act: ""}
