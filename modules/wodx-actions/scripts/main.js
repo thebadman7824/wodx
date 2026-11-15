@@ -82,6 +82,7 @@ import { calendarFor } from "../../wodx-npc/scripts/hunt-calendar.mjs";
 import * as OD from "./odds-rules.js";
 import * as AIM from "./aim.js";
 import * as DMK from "./debts-marks.js";
+import * as SVA from "./servant-actions.js";
 import * as DR_DEBTS from "./debts-rules.js";
 import * as DR_BEAST from "./beast-marks-rules.js";
 import * as NAT from "./nature-rules.js";
@@ -2782,6 +2783,7 @@ let DXE = null;
 /** The fallen (3.10.0, Phase 6i). */
 function dx() {
     return DXE ??= DXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, attr, findAbility, spendWillpower, healthTrack, setDamage, applyDamage, notify: m => ui.notifications.warn(m),
+        nameDifficulty: (a, text, t) => svx().nameDifficulty(a, text, t),
         revealed: (a, o) => kx().revealed(a, o),
         traits: a => [...ATTRS.map(k => ({ key: k, label: game.i18n.localize(a.system?.attributes?.[k]?.label || k) || k, value: attr(a, k) })),
             ...abilityList(a).map(x => ({ key: x.key, label: x.name, value: x.value }))] });
@@ -2911,6 +2913,12 @@ let DME = null;
 function dm() {
     return DME ??= DMK.build({ post, dialog, setFlag, updateActor, rollPool, rollBlock, setting, spendWillpower, background, attr, abilityList, generationOf,
         roadOf: a => KX.roadOf(a), healthTrack, kx, api: () => API, notify: m => ui.notifications.warn(m) });
+}
+
+let SVAE = null;
+/** Servants and bonds (B5112-B5119): Conditioning, Enchantment, oaths that cost, pacts, names, Thralls, Puppeteer consorts. */
+function svx() {
+    return SVAE ??= SVA.build({ post, dialog, rollPool, rollBlock, setFlag, dm, dx, kx, kindOf: a => P.detectProfile(a), notify: m => ui.notifications.warn(m) });
 }
 
 let KXE = null;
@@ -3182,6 +3190,9 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     demonEvoke: withActor(a => dx().evoke(a)), demonForm: withActor(a => dx().form(a)), demonRevelation: withActor(a => dx().revelation(a)), demonReap: withActor(a => dx().reap(a)),
     demonThralls: withActor(a => dx().thralls(a)), demonSin: withActor(a => dx().sin(a)), demonKindness: withActor(a => dx().kindness(a)), demonHeal: withActor(a => dx().heal(a)),
     demonHoly: withActor(a => dx().holy(a)), demonName: withActor(a => dx().named(a)), demonIllusion: withActor(a => dx().illusion(a)), demonInfo: a => dx().info(resolveActor(a)),
+    conditioning: withActor(a => svx().condition(a)), enchant: withActor(a => svx().enchant(a)), partedMists: withActor(a => svx().partedMists(a)),
+    demonPact: withActor(a => svx().pact(a)), pactGift: withActor(a => svx().useGift(a)), knownNames: withActor(a => svx().names(a)), pressName: withActor(a => svx().pressName(a)),
+    chainThrall: withActor(a => svx().chainThrall(a)), servantActions: () => svx(),
     demonDaily: () => dx().daily(), demonRules: DR, isDemon: a => DXD.isDemon(resolveActor(a)),
     kotFeed: withActor(a => qx().feed(a)), kotSpend: withActor(a => qx().spend(a)), kotNature: withActor(a => qx().nature(a)), kotDharma: withActor(a => qx().dharmaRoll(a)),
     kotDemon: withActor(a => qx().demon(a)), kotRise: withActor(a => qx().rise(a)), kotRiseAuto: a => qx().riseAuto(resolveActor(a) ?? a), kotSunAuto: (a, o) => qx().sunAuto(resolveActor(a) ?? a, o), kotSun: withActor(a => qx().sun(a)), kotHeal: withActor(a => qx().heal(a)),
@@ -3306,8 +3317,13 @@ Hooks.once("ready", async () => {
         AFC.setup(); } catch (e) { console.error("WoDX | limits", e); }
         // Lifted and planted items, and being caught at it (3.21.0)
         try { sox().registerHandlers(); } catch (e) { console.error("WoDX | social", e); }
+        // B5112-B5119: the Parted Mists, oaths broken by an attack, pacts, True Names
+        try { svx().registerHandlers(); } catch (e) { console.error("WoDX | servants", e); }
     };
     if (chronicle()) withChronicle(); else Hooks.once("wodxChronicleReady", withChronicle);
+    // B5115: attacking someone an oath binds you to; B5119: a Puppeteer's rides
+    Hooks.on("wodxAttackRolled", (attacker, d) => { svx().onAttack(attacker, d ?? {}).catch(e => console.error("WoDX | oaths", e)); });
+    Hooks.on("wodxEffectApplied", (item, rec, by) => { svx().onEffect(item, rec, by).catch(e => console.error("WoDX | consorts", e)); });
     // B3556: the end of a scene counts everyday Banality for the changelings on it
     Hooks.on("wodxEndScene", () => { if (game.user.isGM && game.users.activeGM?.id === game.user.id) blx().endScene(canvas?.scene).catch(e => console.error("WoDX | banality", e)); });
     Hooks.on("wodxEndScene", () => {
@@ -3422,7 +3438,7 @@ function kindredHooks() {
     // Each routine runs on its own, so one that fails does not stop the rest.
     let fadeBusy = false, fadeAgain = false;
     const clockRoutines = [() => mx().fadeAll(), () => fx().daily(), () => dx().daily(), () => ux().daily(), () => zx().shedAll(),
-        () => wx().restAll(), () => ox().restAll(), () => cx().healChimerical()];
+        () => wx().restAll(), () => ox().restAll(), () => cx().healChimerical(), () => svx().enchantDaily()];
     async function fadeRun() {
         fadeBusy = true;
         try {

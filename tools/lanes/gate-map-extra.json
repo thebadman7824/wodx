@@ -17,6 +17,10 @@
     "gateservants": [
       "wodx-npc",
       "wodx-combat"
+    ],
+    "gateservants2": [
+      "wodx-actions",
+      "wodx-npc"
     ]
   },
   "remove": {},
