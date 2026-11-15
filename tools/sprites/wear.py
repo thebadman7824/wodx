@@ -391,6 +391,9 @@ _P=dict(
  stand=_ST,
  seat=dict(dy=13,lean=0,sl=(((61,71.5),(61.5,84.5)),((59.5,71.5),(60,84.5))),sa=(((1,9),(8.5,13.5)),((.5,9),(7.5,13.5))),fl=(4.4,74,4.2,84.5),fa=(((1.4,8.5),(-1.8,14)),((1.4,8.5),(-1.8,14)))),
  sit=dict(dy=25,lean=-1.5,sl=(((57,73),(65,84.5)),((55.5,73.5),(63,84.5))),sa=(((2,8),(9.5,8)),((1.5,8),(8.5,8.5))),fl=(7,74,5.4,84.5),fa=(((2.2,8),(-.5,10)),((2.2,8),(-.5,10)))),
+ # astride (B6146): hips in the saddle, thighs down and forward round the barrel, shins hanging a little back; seen from the front the
+ # knees and feet spread wide either side of the beast; hands low and forward on the reins
+ ride=dict(dy=11,lean=1,sl=(((56,79.5),(53.5,91.5)),((54.5,79.5),(52,91.5))),sa=(((1.5,8.5),(8,11)),((1,8.5),(7,11))),fl=(10,77,10.5,90),fa=(((2,8),(-2.2,12)),((2,8),(-2.2,12)))),
  kneel=dict(dy=13.5,lean=1,sl=(((49.5,84.6),(37,85)),((48.5,84.6),(36,85))),sa=(((3,7.5),(7,3.5)),((2.5,7.5),(6.5,3.5))),fl=(3.8,83.6,3.8,84.4),fa=(((1.6,8),(-5.6,4.5)),((1.6,8),(-5.6,4.5)))),
  tend=dict(dy=13.5,lean=6,sl=(((49.5,84.6),(37,85)),((48.5,84.6),(36,85))),sa=(((4,8),(10.5,14)),((3.5,8),(9.5,14))),fl=(3.8,83.6,3.8,84.4),fa=(((1.8,8.5),(-2.6,15)),((1.8,8.5),(-2.6,15)))),
  work=dict(dy=0,lean=1.5,sl=_ST['sl'],sa=(((3,8),(10,7)),((2.5,8),(9,7))),fl=_ST['fl'],fa=(((1.6,8.5),(-2.4,10)),((1.6,8.5),(-2.4,10)))),
@@ -733,6 +736,13 @@ def posed(d,name):
     for i in range(6):
         p=pose_at(name,i); r=side(d,0,None,p)
         for row,im in ((0,front(d,0,True,None,p)),(1,r[:,::-1]),(2,front(d,0,False,None,p)),(3,r)): sh[row*SH:(row+1)*SH,i*S:(i+1)*S]=im
+    return sh
+def riding(d):
+    """astride a mount or a bicycle (B6146): eight frames by four facings, the body rising and settling a pixel with the gait"""
+    sh=np.zeros((4*SH,8*S,4),np.uint8)
+    for f in range(8):
+        p=dict(pose_at('ride',0)); p['dy']=_P['ride']['dy']-(1 if f%4 in(1,2) else 0); r=side(d,0,None,p)
+        for row,im in ((0,front(d,0,True,None,p)),(1,r[:,::-1]),(2,front(d,0,False,None,p)),(3,r)): sh[row*SH:(row+1)*SH,f*S:(f+1)*S]=im
     return sh
 def carrying(d):
     """the walk with a sack in the arms: eight frames by four facings"""

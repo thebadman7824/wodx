@@ -104,12 +104,13 @@ function release(obj) {
     try { obj.renderFlags?.set({[flag]: true}); } catch (e) { /* not one of its flags */ }
   }
 }
-function releaseAll() { for ( const [id, obj] of held ) release(obj); held.clear(); shown.clear(); seated.clear(); }
+function releaseAll() { for ( const [id, obj] of held ) release(obj); held.clear(); shown.clear(); seated.clear(); layFronts(new Map()); }
 
 function tick() {
   if ( !globalThis.canvas?.ready || !ready ) return;
   if ( !on() ) { if ( held.size ) releaseAll(); return; }
   const grid = canvas.grid?.size || 100, k = MR.pixel(grid), now = performance.now(), seen = new Set();
+  const fronts = new Map();
   for ( const obj of [...(canvas.tiles?.placeables ?? []), ...(canvas.tokens?.placeables ?? [])] ) {
     const doc = obj.document, m = obj.mesh;
     if ( !m || m.destroyed ) continue;
@@ -139,7 +140,12 @@ function tick() {
     for ( let i = 0; i < riders.length; i++ ) {
       const tok = tokenByUuid(riders[i].t), rm = tok?.mesh;
       if ( !rm || rm.destroyed ) continue;
-      const seat = MR.seatOf(L.look, st.facing, i), p = MR.seatPoint(L.look, seat, ground, k), d = MR.riderDraw(seat, p, k);
+      let seat = MR.seatOf(L.look, st.facing, i);
+      // B6146: coming toward the viewer, a rider astride sits behind the beast's head and chest: drawn whole, the mount laid over it
+      const behind = st.facing === "down" && seat.pose === "ride" && !L.own && !!m.texture;
+      if ( behind ) seat = {...seat, cut: MR.RIDER.h};
+      const p = MR.seatPoint(L.look, seat, ground, k), d = MR.riderDraw(seat, p, k);
+      if ( behind && !d.hidden ) { fronts.set(key, {tok, m}); }
       const rk = tok.document.uuid; seen.add(rk); held.set(rk, tok);
       seated.set(tok.id, {facing: st.facing, pose: seat.pose, moving: st.moving});
       shown.set(rk, {seat: i, on: key, hidden: d.hidden, x: d.x, y: d.y, rows: d.rows, pose: seat.pose, facing: st.facing});
@@ -155,7 +161,25 @@ function tick() {
     }
   }
   for ( const [key, obj] of held ) if ( !seen.has(key) ) { release(obj); held.delete(key); shown.delete(key); states.delete(key); }
+  layFronts(fronts);
 }
+
+/* B6146: the mount's own picture again, over its riders, when they sit behind its head (it comes toward the viewer). It hangs
+   on the first such rider's token, which is drawn above every figure on the map, in the place and size of the mount. */
+const overs = new Map();
+function layFronts(fronts) {
+  for ( const [key, o] of overs ) if ( !fronts.has(key) || o.parent !== fronts.get(key).tok || o.destroyed ) { if ( !o.destroyed ) o.destroy(); overs.delete(key); }
+  for ( const [key, {tok, m}] of fronts ) {
+    let o = overs.get(key);
+    if ( !o ) { o = new PIXI.Sprite(m.texture); o.eventMode = "none"; overs.set(key, tok.addChild(o)); }
+    if ( o.texture !== m.texture ) o.texture = m.texture;
+    o.anchor.set(m.anchor?.x ?? 0.5, m.anchor?.y ?? 0.5);
+    o.position.set(m.position.x - tok.position.x, m.position.y - tok.position.y);
+    o.width = Math.abs(m.width); o.height = Math.abs(m.height);
+    o.alpha = m.alpha ?? 1;
+  }
+}
+export const frontsShown = () => [...overs.keys()];
 
 /** The Storyteller picks a mount's shape and colours (its own button on the token or the tile). */
 export async function pick(doc) {
@@ -224,6 +248,6 @@ export function seats(doc, facing = null) {
   return (L.look.seats?.[f] ?? []).map((_, i) => { const s = MR.seatOf(L.look, f, i), p = MR.seatPoint(L.look, s, ground, k); return {x: p.x, y: p.y, hidden: s.cut <= 0, pose: s.pose}; });
 }
 
-export const mountApi = {rules: MR, mountOf, lookOf, seats, pick, setLook, load: loadMounts, ready: () => ready,
+export const mountApi = {rules: MR, mountOf, lookOf, seats, pick, setLook, load: loadMounts, ready: () => ready, fronts: frontsShown,
   showing: doc => shown.get((doc?.document ?? doc)?.uuid) ?? null, facing: doc => states.get((doc?.document ?? doc)?.uuid)?.facing ?? null,
   sheetReady: doc => { const L = lookOf(doc?.document ?? doc); return !!(L && sheet(L.kind, L.look, L.scheme)); }};

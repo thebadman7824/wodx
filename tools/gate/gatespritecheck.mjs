@@ -5,7 +5,7 @@
  * Checks the picture on the canvas, not only the flags. Makes its own scratch scene, actors, tokens, regions, a door
  * and a horse tile, and removes them; puts the clock back. Saves map pictures as Data/wodx-gate/gatespritecheck-*.png.
  *   1. four figures walk up, down, left and right: each shows the walk row of the way it goes, while it walks and after
- *   2. a rider on a horse: the horse tile and the rider turn together, left and then up
+ *   2. a rider on a horse: the horse tile and the rider turn together, left and then up; astride, and behind the head facing the viewer (B6146)
  *   3. a real NPC routine: the routine places the token (its prototype carries a sprite), the token works with its
  *      hands; the routine's next hours walk it to the tavern, turning as it goes, and it sits down there
  *   4. a real door action: listening at a door (Interactables' own roll and card) plays the listening move
@@ -102,6 +102,14 @@ export async function run() {
       const up = {horse: MA.facing(horse), rider: MA.showing(tr)?.facing ?? null};
       pics.push(await shot("2-rider", {x: tr.x + g / 2, y: tr.y + g / 2}, 2));
       G.ok("2. horse and rider face left, then up", left.horse === "left" && left.rider === "left" && up.horse === "up" && up.rider === "up", {left, up, kind: MA.showing(horse)?.kind ?? null});
+      // B6146: seated astride, and coming toward the viewer the rider is behind the horse's head
+      await tr.update({x: tr.x + 2 * g}); await settled(); await sleep(900);
+      pics.push(await shot("2-rider-side", {x: tr.x + g / 2, y: tr.y + g / 2}, 2));
+      const side = {facing: MA.showing(tr)?.facing ?? null, pose: MA.showing(tr)?.pose ?? null, sheet: tr.object?.mesh?.texture?.baseTexture?.resource?.src ?? tr.object?.mesh?.texture?.source?.resource?.src ?? null};
+      await tr.update({y: tr.y + 2 * g}); await settled(); await sleep(900);
+      pics.push(await shot("2-rider-down", {x: tr.x + g / 2, y: tr.y + g / 2}, 2));
+      const down = {facing: MA.showing(tr)?.facing ?? null, rows: MA.showing(tr)?.rows ?? null, fronts: MA.fronts?.() ?? null};
+      G.ok("2. the rider sits astride, and facing the viewer sits behind the horse's head", side.facing === "right" && side.pose === "ride" && down.facing === "down" && down.rows === 112 && (down.fronts ?? []).includes(horse.uuid), {side, down});
     });
 
     await G.step("3. a real routine: works, walks to the tavern, sits", async () => {
