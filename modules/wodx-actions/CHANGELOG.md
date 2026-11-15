@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.96.0 (Ghouled animals, step four (B5132): the Use a Discipline window reads WoDX Creation's animal ghouls)
 - 3.95.1 (The court's Blood Hunt check at each faction turn writes every Kindred's "looked at" time in one batch, not one write per actor, so it no longer stalls for half a minute in a world full of Kindred (B5620); Calling or lifting a Blood Hunt turns the court's Kindred twenty at a time instead of one after another, so a big court no longer holds the faction turn for half a minute (B5630))
 - 3.95.0 (The Storyteller's Hand, round two: holy ground lifts Faith by one for the faithful, a Marauder's magick draws no Paradox, Untamable shrugs off commanding powers, and the Lore of the Winds at three dots or more raises the wind or a storm for the night (B5170, B5172-B5174))
 - 3.94.0 (Ben's Power Limits Desk picks a1, b1, b2 and c1 (22:44Z) and After-Cost Desk picks (22:59Z), 14 November 2026. New limit-rules.js, limits.js, after-cost-rules.js and after-costs.js; the werewolf and wraith once-a-scene counts move onto the one scene count. api limits {state, gate, decorate, lostTo, clear, sceneNo, newScene, isDrained, rules, afterCosts}, plus npcPowers and autoPower for WoDX NPC)

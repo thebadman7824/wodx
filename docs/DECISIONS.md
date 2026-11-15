@@ -247,6 +247,7 @@ Next free block: B5640
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5064) | Creation, NPC, Actions |
 | B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
 | B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5111) | NPC, Combat |
+| B5130-B5139 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5130-B5137) | Creation, Actions, NPC |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 | B5170-B5179 | Storyteller's Hand round two: Martyr, Marauders, the winds, holy ground, Untamable, feeding flaws, Berserker, flight, blackmail, the stimulant crash (used B5170-B5179) | Actions, Chronicle, Interactables, Library, NPC, Storyteller |
 | B5180-B5189 | Names raised to 300, Thai (used B5180) | Creation |
@@ -8309,6 +8310,44 @@ Reverse: remove socialRoll.
 WoDX NPC. The rules list what each kind of NPC master keeps in each era (ghouls for Kindred, revenants for Tzimisce, Social Conditioning for the Union and so on) so step three can stock them. Desk item x4 (the table).
 
 Reverse: drop KEEPERS.
+
+## B5130. The domitor's clan weakness in the beast (2026-11-14)
+WoDX Creation, WoDX NPC. With five or more points of its domitor's blood an animal ghoul shows the clan's weakness, only where it fits a beast (V20 Dark Ages p. 401): Nosferatu hideous, Lasombra no reflection, Followers of Set shun the sun, Brujah and Gangrel quick to rage (frenzy one harder), Malkavian odd ways, Ventrue picky, Toreador entranced. Shown as an effect on the token. Desk item 8.
+
+Reverse: registerAnimalBlood's updateActor hook.
+
+## B5131. The blood bar and red eyes (2026-11-14)
+WoDX Creation. An animal ghoul's tokens show its blood as the second bar and carry a faint red light that shows only in the dark. Desk item 26.
+
+Reverse: showBlood.
+
+## B5132. Animalism and one's own beasts (2026-11-14)
+WoDX Actions. One easier on one's own animal ghoul; Subsume the Spirit or the Twin Souls on it needs no roll and puts the player's view in the beast; the Beckoning brings one's own beasts on the scene first. Feral Whispers opens every order (B5063). Desk item 15.
+
+Reverse: beastLink in kindred.js.
+
+## B5133. The szlachta (2026-11-14)
+WoDX Creation with WoDX Storyteller. A long task for a vampire with Vicissitude 3 (Dexterity + Medicine, difficulty 7, 10 successes, house): a person takes the book's traits (V20 p. 502) and Monstrous; a beast gains a dot of Strength, Stamina, Perception and Brawl (house) and stands larger; both gain Fortitude 1 and can never go back among people. Desk item 22.
+
+Reverse: the fleshcraft wodxTaskDone hook.
+
+## B5134. The vozhd (2026-11-14)
+WoDX Creation, WoDX Actions. A long task for an elder with Vicissitude 5 and fifteen of their own ghouls (difficulty 8, 25 successes, house); the ghouls are marked dead and hidden, not deleted. The vozhd takes the book's traits (V20 pp. 502 to 503) and is immune to Animalism, Dominate and Presence; its making goes to the Masquerade ledger. Desk item 23.
+
+Reverse: makeVozhd and immune() in kindred.js.
+
+## B5135. Kennels (2026-11-14)
+WoDX Creation. The Storyteller marks a vampire as keeping a kennel of a kind; with two or more of its ghouls of that kind, one young a year in the kind's season (house months), born trained, filled by its first drink. Desk item 24.
+
+Reverse: kennelTick.
+
+## B5136. The beasts a household keeps (2026-11-14)
+WoDX Creation, WoDX NPC. Gangrel, Tzimisce, Nosferatu and any vampire with Animalism keep one to three animal ghouls: one, plus one in the Dark Ages, plus one in the countryside, the first by clan and the rest from the age's list. They come with a household seeded as that vampire's ghouls. Desk items 25 and 27.
+
+Reverse: householdBeasts in residents.mjs.
+
+## B5137. Ghoul mounts (2026-11-14)
+WoDX Combat. Mounts are still tiles with fixed traits; when the mounts work puts riders on Creature sheets, it reads the war-trained mark and the beast's Potence, Celerity and Fortitude. Desk item 21.
 
 ## B5150. The Philippines a region of its own (2026-11-15)
 WoDX Chronicle and Storyteller. Ben asked to build out the Philippines. The islands leave the Malay world and become the 45th world region, "The Philippines (Manila, the Visayas, Mindanao and Sulu)", with Manila as its city, the tropical wet climate and the Philippine money region. The world map gives it the squares north of 4.5 degrees and east of 119.5 (with Palawan) that were the Malay world's; the map builder cuts the country out by name on its next run. The region's letter comes last so no older square changes. Taken as recommended; logged in PENDING-REVIEW.

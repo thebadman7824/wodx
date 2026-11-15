@@ -54,7 +54,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.90.0";
+const VERSION = "0.91.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -542,10 +542,12 @@ async function animalFrenzy(tok) {
   const dice = Math.max(1, num(actor.system?.advantages?.willpower?.permanent) || 1);
   const roll = await new Roll(`${dice}d10`).evaluate();
   const faces = roll.dice?.[0]?.results?.map(r => r.result) ?? [];
-  const net = faces.filter(f => f >= 6).length - faces.filter(f => f === 1).length;
+  // B5130: a Brujah or Gangrel domitor's blood makes the beast quick to rage
+  const extra = num(actor.flags?.["wodx-creation"]?.clanMark?.frenzy) || 0, diff = Math.min(10, 6 + extra);
+  const net = faces.filter(f => f >= diff).length - faces.filter(f => f === 1).length;
   const holds = net > 0;
   if ( !holds ) { try { await chron()?.conditions?.setCondition?.(actor, "frenzy", true); } catch (e) { console.warn(`${MOD} | frenzy`, e); } }
-  return {done: true, text: `${tok.name} fights the blood in it: Willpower ${dice} dice at 6 (${faces.join(", ")}). ${holds ? "It holds." : "It frenzies."}`};
+  return {done: true, text: `${tok.name} fights the blood in it: Willpower ${dice} dice at ${diff}${extra ? " (its master's blood makes it quick to rage)" : ""} (${faces.join(", ")}). ${holds ? "It holds." : "It frenzies."}`};
 }
 
 /** Carry out one option. Returns {done, text}. */
