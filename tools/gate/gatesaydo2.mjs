@@ -8,7 +8,9 @@
  *   3. an outlaw sentence puts the character at Wanted in that land
  *   4. a patron who raises a building pays for it
  *   5. a loud noise stuns a heightened-senses character with no Willpower to hold (Dazed)
- *   6. a betrayal that breaks a heart leaves the lover Heartsick (+1 social difficulty)
+ *   6. a betrayal that breaks a heart leaves the lover Grieving (one die fewer on social rolls)
+ *   7. a prison sentence takes the character's token off the map, and a pardon brings it back
+ *   8. a brand shows on the token, and a pardon takes it off
  * Result: Data/wodx-gate/gatesaydo2-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -77,7 +79,7 @@ export async function run() {
       G.ok("5 senses overwhelmed", !!dazed, {senses, statuses: [...(ear.statuses ?? [])]});
     });
 
-    await G.step("6 heartsick", async () => {
+    await G.step("6 grieving", async () => {
       const H = game.modules.get("wodx-npc")?.api?.hearts;
       await lover.update({"system.advantages.willpower.permanent": 1, "system.advantages.willpower.temporary": 1});
       let sick = false, tries = 0, last = null;
@@ -85,9 +87,32 @@ export async function run() {
       while ( !sick && tries++ < 8 ) {
         await lover.setFlag("wodx-npc", "warmth", {[beloved.id]: {value: 4, at: game.time.worldTime, log: []}});
         last = await H?.court?.(lover, beloved, "betrayal", {why: "the gate"});
-        sick = lover.statuses?.has?.("wodx-heartsick");
+        sick = lover.statuses?.has?.("wodx-grieving");
       }
-      G.ok("6 heartsick", sick, {tries, last: last?.heartbreak ?? last?.why ?? null});
+      // what WoDX Actions' social rolls read off the conditions: one die fewer
+      const dice = (C()?.conditions?.conditionsOf?.(lover) ?? []).reduce((t, c) => t + (Number(c.mods?.socialDice) || 0), 0);
+      const actions = !!game.modules.get("wodx-actions")?.active;
+      G.ok("6 grieving", sick && dice === -1, {tries, dice, actions, last: last?.heartbreak ?? last?.why ?? null});
+    });
+
+    await G.step("7 time served", async () => {
+      const [prisoner] = await G.make(Actor, [{name: "Gate SayDo Prisoner", type: "Mortal", prototypeToken: {actorLink: true}}]);
+      const [tp] = await G.tokens(scene, [{actor: prisoner, x: 8, y: 3}]);
+      const L = C()?.law?.sentence;
+      const mark = await L?.pass?.({actorId: prisoner.id, name: prisoner.name, region, year: C()?.eras?.currentYear?.() ?? 1197, weight: 4}, "prison");
+      const gone = (tp.document ?? tp).hidden === true;
+      await L?.pardon?.(prisoner, mark?.id);
+      const back = (tp.document ?? tp).hidden === false && !prisoner.getFlag("wodx-chronicle", "lawAway");
+      G.ok("7 time served", mark?.kind === "time" && gone && back, {kind: mark?.kind, until: mark?.until, gone, back});
+    });
+
+    await G.step("8 the brand shows", async () => {
+      const L = C()?.law?.sentence;
+      const mark = await L?.pass?.({actorId: outlaw.id, name: outlaw.name, region, year: C()?.eras?.currentYear?.() ?? 1197, weight: 4}, "maiming");
+      const shown = outlaw.statuses?.has?.("wodx-branded");
+      await L?.pardon?.(outlaw, mark?.id);
+      const off = !outlaw.statuses?.has?.("wodx-branded");
+      G.ok("8 the brand shows", mark?.kind === "brand" && shown && off, {kind: mark?.kind, shown, off});
     });
   } finally {
     for ( const [m, k] of KEEP ) { try { if ( `${m}.${k}` in keep ) await game.settings.set(m, k, keep[`${m}.${k}`]); } catch (e) { /* put back */ } }

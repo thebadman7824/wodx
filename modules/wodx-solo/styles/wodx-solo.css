@@ -25,3 +25,16 @@
 .wsolo-give .wsolo-give-list { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
 .wsolo-give .wsolo-give-list li { display: flex; align-items: center; gap: 6px; }
 .wsolo-give .wsolo-give-list button { flex: 0 0 auto; width: auto; max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Arrival (B5143): the panel's Make my character, for a player with none */
+.wsolo-panel .wsolo-arrive-btn { width: 100%; margin-bottom: 6px; font-weight: bold; }
+.wsolo-arrive .form-group input[type=text] { width: 100%; }
+/* The oracle and the Leads page (B5980, B5982) */
+.wsolo-oracle .wsolo-q { font-style: italic; }
+.wsolo-oracle .wsolo-answer { font-size: 1.15em; margin: 4px 0; }
+.wsolo-oracle.wsolo-yes .wsolo-answer { color: var(--color-level-success, #3a7d3a); }
+.wsolo-oracle.wsolo-no .wsolo-answer { color: var(--color-level-error, #a83232); }
+.wsolo-leads h4 { margin: 8px 0 2px; border-bottom: 1px solid var(--color-border-light-tertiary, #7a7971); }
+.wsolo-leads .wsolo-lead-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.wsolo-leads .wsolo-lead { position: relative; padding: 2px 84px 2px 0; }
+.wsolo-leads .wsolo-letgo { position: absolute; right: 0; top: 2px; width: auto; font-size: 0.85em; line-height: 1.4; }

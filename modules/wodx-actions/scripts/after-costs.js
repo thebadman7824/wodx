@@ -154,6 +154,12 @@ export function socialDiff(actor) {
   try { return (C?.conditions?.conditionsOf?.(actor) ?? []).reduce((s, c) => s + n(c.mods?.socialDiff), 0); } catch (e) { return 0; }
 }
 
+/** B5991: social rolls: the dice conditions add or take (Grieving, from a broken heart, takes one). */
+export function socialDice(actor) {
+  const C = chronicle();
+  try { return (C?.conditions?.conditionsOf?.(actor) ?? []).reduce((s, c) => s + n(c.mods?.socialDice), 0); } catch (e) { return 0; }
+}
+
 /* ---------------- Setup ---------------- */
 
 export function setup() {

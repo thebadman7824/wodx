@@ -1,6 +1,6 @@
 import * as SR from "./social-rules.js";
 import { curseDice } from "./garou-rules.js";
-import { socialDiff } from "./after-costs.js";
+import { socialDiff, socialDice } from "./after-costs.js";
 import * as TH from "./trait-hooks.js";
 import * as TRD from "./trade.js";
 
@@ -154,7 +154,7 @@ export function build(ctx) {
             traitDice: tm.dice - curse, traitDiff: tm.diff, traitParts: curse ? [...(tm.parts ?? []), `The Curse −${curse}`] : tm.parts,
             attribute: pool.attribute, attributeLabel: pool.attributeLabel, ability: pool.ability, abilityLabel: pool.abilityLabel || pick.abilityName,
             abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey,
-            bonusDice: (Number(fd.bonus) || 0) + (act.offer ? SR.offerDice(fd.offer) : 0), extraDiff: (Number(fd.extraDiff) || 0) + shift + bondShift + rankShift + socialDiff(actor),
+            bonusDice: (Number(fd.bonus) || 0) + (act.offer ? SR.offerDice(fd.offer) : 0) + socialDice(actor), extraDiff: (Number(fd.extraDiff) || 0) + shift + bondShift + rankShift + socialDiff(actor),
             baseDifficulty: preset.diff ?? 6, woundPenalty: woundPenalty(actor), multiIndex: 0, retries: 0,
             aura: fd.aura ? R.auraModifier(rd.value) : 0
         });
@@ -365,7 +365,7 @@ export function build(ctx) {
         const built = R.actionPool({
             attribute: pool.attribute, attributeLabel: pool.attributeLabel, ability: pool.ability, abilityLabel: pool.abilityLabel || pick.abilityName,
             abilityType: setting("untrained") ? pool.abilityType : "talent", abilityKey: pool.abilityKey,
-            bonusDice: Number(fd.bonus) || 0, extraDiff: (Number(fd.extraDiff) || 0) + socialDiff(actor), baseDifficulty: preset.diff, woundPenalty: woundPenalty(actor), multiIndex: 0, retries: 0, aura: 0
+            bonusDice: (Number(fd.bonus) || 0) + socialDice(actor), extraDiff: (Number(fd.extraDiff) || 0) + socialDiff(actor), baseDifficulty: preset.diff, woundPenalty: woundPenalty(actor), multiIndex: 0, retries: 0, aura: 0
         });
         if (built.blocked) { ui.notifications.warn(built.blocked); return null; }
         const me = await rollPool(built.dice, built.difficulty, { specialty: !!fd.specialty, willpower: !!fd.wp });
