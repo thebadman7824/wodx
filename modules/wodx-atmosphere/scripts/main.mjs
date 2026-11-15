@@ -1222,7 +1222,7 @@ function openingCard(scene) {
     let church = null, eraId = "";
     try { church = chron()?.church?.on?.(t) ?? null; } catch (e) { church = null; }
     try { eraId = chron()?.eras?.activeEra?.()?.profile?.id ?? ""; } catch (e) { eraId = ""; }
-    told = reckon(t, {church, eraId});
+    told = reckon(t, {church, eraId, latitude: lat}); // B5870: church carries the faith and region of the scene
   }
   let weather = "";
   try { weather = now()?.label ?? ""; } catch (e) { weather = ""; }
