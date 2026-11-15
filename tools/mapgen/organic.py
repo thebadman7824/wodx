@@ -1,5 +1,5 @@
 """WoDX village, town and city generator, organic layout. The street plan comes from layout.py (a port of the
-Medieval Fantasy City Generator's layout steps); the buildings are WoDX's own furnished types from buildings.py,
+Medieval Fantasy City Generator's layout steps, GPL-3.0; see MFCG-CREDIT.md); the buildings are WoDX's own furnished types from buildings.py,
 each turned to face its street, in steps of 15 degrees.
 
 How it decides where things go
