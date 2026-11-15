@@ -314,7 +314,7 @@ Next free block: B5880
 | B5840-B5849 | Gates traced by name: gate6b, gateconsensus, gatemounts (used B5840) | tools (gates) |
 | B5850-B5859 | gate6i clear track, gatepassing finds its card (used B5850) | tools (gates) |
 | B5860-B5869 | gates after other gates, approval queue one change at a time (used B5860-B5861) | tools (gates), wodx-chronicle |
-| B5870-B5879 | Dates as each land tells them: the player's clock by the local reckoning (used B5870-B5873) | Chronicle, Atmosphere |
+| B5870-B5879 | Dates as each land tells them: Persia's solar year and a character's own count (used B5870-B5876) | Chronicle, Atmosphere |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9572,3 +9572,18 @@ Reverse: edit CIVIL_FROM in local-reckoning-rules.mjs.
 Before striking clocks, the hour is told as the land told it: the lands of Islam by the five prayers (dawn, noon, afternoon, sunset and night, from the scene's sunrise and sunset), the lands of the Chinese year by the twelve double hours (the hour of the Rat from 23:00), India and the Buddhist south by the four watches of the day and four of the night, and Tibet, the Jewish year and peoples with a count of their own by the sun's course. The Western and Eastern churches keep the canonical hours. Striking clocks reach the lands outside Christendom in 1700 instead of 1350 (a house reading: clocks were rare outside Europe before then). Railway time from 1840 and the Future Darkness readout stay the same everywhere.
 
 Reverse: set CLOCKS_ABROAD to 1350 and have landTime return null.
+
+## B5874. Persia by the solar Hijra year from 1925 (2026-11-15)
+WoDX Chronicle, local-reckoning-rules.mjs. Persia took up the solar Hijra year by law in 1925 (1304). From then a scene in Persia tells the date by it: the year starts at Nowruz, the day of the spring equinox at Tehran (the next day when the equinox comes after noon, UTC+3:30), with six months of 31 days, five of 30 and Esfand of 29 or 30. From 21 March 1976 to 27 August 1978 the year is the Shah's count (the solar year plus 1180). Before 1925 the lunar Hijra of B5871 stays. A house reading of history; the books set no calendar.
+
+Reverse: set SOLAR_HIJRI_FROM to 9999 in local-reckoning-rules.mjs.
+
+## B5875. A character's own count (2026-11-15)
+WoDX Chronicle (clock-app.mjs) and Atmosphere (the opening card). A player's character counts the days by, in order: the count the player picks on the Chronicle Clock ("counts the days", kept as flags.wodx-chronicle.reckonFaith on the character; "As the land does" clears it); else the faith of the people picked on the lifepath (PEOPLE_FAITH, the same keys WoDX NPC's origin faiths use, with the Sephardi, Mizrahi, Amazigh, Tuareg, Moro, Khmer and Thai added) when it differs from the land's; else the land's. The civil years of B5872 still follow the land. The land's holy day name is left out of a date told in another count. The Storyteller's "Players hear" line keeps the land's count. Works the same in a Lone Chronicle, where the lone player's character is the user's character.
+
+Reverse: drop countOf from clock-app.mjs and WoDX Atmosphere's openingCard.
+
+## B5876. gatefaith finds its goods by name (2026-11-15)
+tools/gate/gatefaith.mjs made three goods in one batch and took them in the order asked; Foundry does not keep that order, so the beads, the charm and the astrolabe could swap and steps 1 and 4 failed on a lane. Each good is now found by its name, and the divining card is the newest matching message rather than one of the last two.
+
+Reverse: restore the list order in gatefaith.mjs.

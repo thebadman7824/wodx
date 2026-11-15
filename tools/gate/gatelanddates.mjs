@@ -8,6 +8,8 @@
  *   4. the Storyteller's Chronicle Clock shows "Players hear" with the scene's own count
  *   5. the opening card over the map tells the date in the scene's count
  *   6. every other WoDX module still answers
+ *   7. (B5874) Persia from 1925 tells the solar Hijra year
+ *   8. (B5875) a character keeps its own people's count, or the player's pick, over the land's
  * Result: Data/wodx-gate/gatelanddates-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -72,6 +74,22 @@ export async function run() {
       }
       G.ok("5. the opening card tells the scene's count", /of the Hijra/.test(text), {text, atmosphere: game.modules.get("wodx-atmosphere")?.version});
       document.getElementById("watmo-opening")?.remove();
+    });
+    await G.step("7. Persia by the solar Hijra from 1925", async () => {
+      const d = {year: 1950, month: 3, day: 12, hour: 12, minute: 0, weekday: "Sunday", monthName: "March", sunrise: "06:10", sunset: "17:55", calendar: "gregorian"};
+      const old = {...d, year: 1900, weekday: "Monday"};
+      const a = R.reckon(d, {faith: "islamic", region: "persia"}), b = R.reckon(old, {faith: "islamic", region: "persia"});
+      G.ok("7. Persia by the solar Hijra from 1925", /1328 of the solar Hijra/.test(a.date) && /of the Hijra$/.test(b.date) && !/solar/.test(b.date), {a, b});
+    });
+    await G.step("8. a character keeps its own people's count", async () => {
+      const [pc] = await G.make(Actor, [{name: "WoDX gate: land dates traveller", type: "Mortal",
+        flags: {"wodx-creation": {lifepath: {path: {picks: {people: "jewish"}}}}}}]);
+      const byPeople = L.countOf(pc.flags?.[MOD] ?? {}, pc.flags?.["wodx-creation"]?.lifepath, "islamic");
+      await pc.setFlag(MOD, "reckonFaith", "chinese");
+      const byPick = L.countOf(pc.flags?.[MOD] ?? {}, pc.flags?.["wodx-creation"]?.lifepath, "islamic");
+      const told = R.reckon(now(), {church: {faith: "islamic", region: "egypt", day: null}, faith: byPick.faith, region: "egypt"});
+      G.ok("8. a character keeps its own people's count", byPeople.faith === "jewish" && byPick.faith === "chinese" && !/Hijra/.test(told.date),
+        {byPeople, byPick, told});
     });
     await G.step("6. every other WoDX module still answers", async () => {
       const ids = [...game.modules].filter(m => m.id.startsWith("wodx-") && m.active).map(m => m.id);

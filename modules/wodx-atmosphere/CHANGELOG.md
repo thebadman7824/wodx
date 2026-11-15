@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.16.2 (The opening card tells a player the date in their character's own count when it differs from the land's (B5875))
 - 0.16.1 (The scene's opening card tells the date in the count of the scene's land, with the latitude of the chronicle for the seasons, and reads the holy days of the scene being opened rather than the active scene (B5870))
 - 0.16.0 (a mood region can carry a rule: Gauntlet, Shroud and Banality steps that WoDX Otherworlds reads, and a fear-of-fire step kept for the frenzy rolls (B2913); not deployed)
 - 0.15.0 (weather by region: a scene far from home has its region's own weather for the night, rolled apart from the homeland's, and each scene shows and sounds its own; the weather window and the post say when the weather is that of a place far from home; a Storyteller's set weather abroad is kept for that region only)
