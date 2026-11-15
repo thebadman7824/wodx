@@ -116,3 +116,9 @@ test("the archive README lists each month", () => {
   assert.match(t, /## Build log by month/);
   assert.equal(A.readme(t, ["2026-11"]), t);
 });
+
+test("the Monday build log run moves the decisions too", () => {
+  const src = readFileSync(join(root, "tools/docs/archive-build-log.mjs"), "utf8");
+  assert.match(src, /import\("\.\/archive-decisions\.mjs"\)\)\.main\(args\)/);
+  assert.equal(typeof A.main, "function");
+});
