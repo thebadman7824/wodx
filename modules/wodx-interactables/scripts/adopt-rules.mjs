@@ -11,6 +11,10 @@
  *   households  (0.21.0, a town generator's) who lives in each building, roles only: kept on that building's region
  *   (0.22.0) a feature may carry a rotation in degrees, and a region an outline (points), for an organic town whose
  *   buildings are turned to face winding streets
+ *   pictures (B5733) a feature or an opening may carry art {state: file} and artRect [x, y, w, h], as the pixel map
+ *             drawer (tools/pixelmap) writes: files relative to the map's picture. A feature's tile then shows the
+ *             picture for its state; an opening gets a tile of its own that follows its door wall, so a door, a
+ *             shutter, a chest or a cask is seen shut or open by everyone, and changes when it is opened
  * Positions in the sidecar are grid cells from the map's top-left corner, so the scale the map was imported at does
  * not matter. Everything made is marked with the sidecar's id for it: adopting again skips what is already there, and
  * Undo removes what was made and puts the door walls back as they were.
@@ -51,6 +55,18 @@ const isRect = r => Array.isArray(r) && r.length === 4 && r.every(v => Number.is
 const isSeg = c => Array.isArray(c) && c.length === 4 && c.every(v => Number.isFinite(num(v))) && (c[0] !== c[2] || c[1] !== c[3]);
 const plain = o => o && typeof o === "object" && !Array.isArray(o);
 const idOk = s => typeof s === "string" && /^[A-Za-z0-9._-]{1,80}$/.test(s);
+/** B5733: a picture file beside the map: a relative path of plain parts, a png or webp, no climbing out with "..". */
+const artPathOk = s => typeof s === "string" && s.length <= 200 && /^[A-Za-z0-9_-][A-Za-z0-9._\/-]*\.(png|webp)$/i.test(s) && !s.split("/").includes("..");
+/** The pictures a sidecar entry carries, kept only for states named by plain words and paths that pass artPathOk. */
+export function artOf(x, errors) {
+  if ( x?.art === undefined ) return null;
+  const out = {};
+  for ( const [k, v] of Object.entries(plain(x.art) ? x.art : {}) ) {
+    if ( /^[a-z]{1,20}$/.test(k) && artPathOk(v) ) out[k] = v;
+    else errors.push(`${x.id}: the picture for "${k}" is not a file beside the map, so it was left out.`);
+  }
+  return Object.keys(out).length ? out : null;
+}
 
 /**
  * Read a sidecar (text or an object). Returns {ok, errors, data}: data keeps only what is well formed, and errors say
@@ -79,7 +95,10 @@ export function parseSidecar(input) {
     if ( !isSeg(o.c) || !onMap(o.c) || !onMap(o.c.slice(2)) ) { errors.push(`${o.id}: its position is not a line on the map.`); continue; }
     const flags = Object.fromEntries(Object.entries(plain(o.flags) ? o.flags : {}).filter(([k]) => OPENING_KEYS.has(k)));
     const inside = Array.isArray(o.inside) && o.inside.length === 2 && o.inside.every(v => Number.isFinite(num(v))) ? o.inside : null;
-    openings.push({id: o.id, label: String(o.label ?? o.id).slice(0, 80), c: o.c.map(Number), inside, barInside: !!o.barInside && !!inside, flags});
+    const art = artOf(o, errors), artRect = art && isRect(o.artRect) ? o.artRect.map(Number) : null;
+    if ( art && !artRect ) errors.push(`${o.id}: its pictures have no place on the map (artRect), so they were left out.`);
+    openings.push({id: o.id, label: String(o.label ?? o.id).slice(0, 80), c: o.c.map(Number), inside, barInside: !!o.barInside && !!inside, flags,
+      ...(art && artRect ? {art, artRect, startOpen: !!o.startOpen} : {})});
   }
   const features = [];
   for ( const f of Array.isArray(d.features) ? d.features : [] ) {
@@ -93,7 +112,8 @@ export function parseSidecar(input) {
     const clean = Object.fromEntries(Object.entries(flags).filter(([k, v]) => /^[A-Za-z]{1,30}$/.test(k) && ["string", "number", "boolean"].includes(typeof v)));
     // 0.22.0: a thing turned with its building (organic towns): degrees about its middle; the rect is its unturned size
     const rotation = Number.isFinite(num(f.rotation)) ? ((f.rotation % 360) + 360) % 360 : 0;
-    features.push({id: f.id, label: String(f.label ?? f.id).slice(0, 80), rect: f.rect.map(Number), rotation, flags: clean, light});
+    const art = artOf(f, errors);
+    features.push({id: f.id, label: String(f.label ?? f.id).slice(0, 80), rect: f.rect.map(Number), rotation, flags: clean, light, ...(art ? {art} : {})});
   }
   const regions = [];
   for ( const r of Array.isArray(d.regions) ? d.regions : [] ) {
@@ -197,11 +217,29 @@ export function openingFlags(o, c, fr) {
   return f;
 }
 
-/** A tile for a feature, with its WoDX settings. The tile has no picture of its own: the map already shows the thing. */
-export function tileData(f, fr) {
+/** The folder a map's pictures sit in, from its scene's background ("a/b/map.png" gives "a/b/"); "" when it has none. */
+export const artBase = src => { const s = String(src ?? "").split("?")[0]; const i = s.lastIndexOf("/"); return i >= 0 ? s.slice(0, i + 1) : ""; };
+/** B5733: the pictures of an entry as full paths from the folder base. */
+export const artPaths = (art, base = "") => Object.fromEntries(Object.entries(art ?? {}).map(([k, v]) => [k, `${base}${v}`]));
+
+/**
+ * A tile for a feature, with its WoDX settings. Without pictures the tile has none of its own (the map already shows
+ * the thing); with them (B5733) it shows the picture for its first state and WoDX swaps it as the state changes.
+ */
+export function tileData(f, fr, base = "") {
   const [x, y] = px(fr, f.rect[0], f.rect[1]);
+  const art = f.art ? artPaths(f.art, base) : null;
   return {x: Math.round(x), y: Math.round(y), width: Math.max(1, Math.round(f.rect[2] * fr.size)), height: Math.max(1, Math.round(f.rect[3] * fr.size)),
-    rotation: f.rotation ?? 0, hidden: false, texture: {src: null}, flags: {[MOD]: {...f.flags, adoptId: f.id}}};
+    rotation: f.rotation ?? 0, hidden: false, texture: {src: art ? (art.closed ?? Object.values(art)[0]) : null},
+    flags: {[MOD]: {...f.flags, adoptId: f.id, ...(art ? {art} : {})}}};
+}
+
+/** B5733: the tile that shows a door or window, over its pictures' place; follows is filled in once the wall exists. */
+export function followerData(o, fr, base = "") {
+  const r = o.artRect, [x, y] = px(fr, r[0], r[1]), art = artPaths(o.art, base);
+  return {x: Math.round(x), y: Math.round(y), width: Math.max(1, Math.round(r[2] * fr.size)), height: Math.max(1, Math.round(r[3] * fr.size)),
+    rotation: 0, hidden: false, texture: {src: art[o.startOpen ? "open" : "closed"] ?? Object.values(art)[0]},
+    flags: {[MOD]: {art, follows: null, noMarker: true, adoptId: `${o.id}.art`}}};
 }
 
 /** The light for a light feature, centred on it. Radii are in squares in the sidecar and in scene units here. */
@@ -233,6 +271,7 @@ export function regionData(r, fr, types = new Set()) {
  * Returns {wallUpdates, wallCreates, tiles, lights: [{data, featureId}], regions, notes}.
  */
 export function plan(sc, scene, fr, types = new Set()) {
+  const base = scene.artBase ?? "";
   const have = new Set();
   for ( const k of ["walls", "tiles", "lights", "regions"] ) for ( const d of scene[k] ?? [] ) { const a = d.flags?.[MOD]?.adoptId; if ( a ) have.add(`${k}:${a}`); }
   const notes = [];
@@ -245,7 +284,9 @@ export function plan(sc, scene, fr, types = new Set()) {
   const wallCreates = missing.map(({opening, c}) => ({c: c.map(Math.round), door: 1, flags: {[MOD]: openingFlags(opening, c, fr)}, label: opening.label}));
   if ( missing.length ) notes.push(`No wall was found at ${missing.length === 1 ? "one door or window" : `${missing.length} doors or windows`} (${missing.map(m => m.opening.label).join(", ")}): a new door wall is drawn there.`);
   const feats = sc.features.filter(f => !have.has(`tiles:${f.id}`));
-  const tiles = feats.map(f => tileData(f, fr));
+  const tiles = feats.map(f => tileData(f, fr, base));
+  // B5733: a picture tile for every door and window that has pictures, tied to its wall when the plan is carried out
+  const followers = sc.openings.filter(o => o.art && !have.has(`tiles:${o.id}.art`)).map(o => ({openingId: o.id, data: followerData(o, fr, base)}));
   const lights = feats.filter(f => f.light && !have.has(`lights:${f.id}.light`)).map(f => ({data: lightData(f, fr), featureId: f.id}));
   const regions = [], tagged = [];
   for ( const r0 of sc.regions.filter(x => !have.has(`regions:${x.id}`)) ) {
@@ -266,7 +307,7 @@ export function plan(sc, scene, fr, types = new Set()) {
   if ( sc.place && scene.placeKind && scene.placeKind !== sc.place.kind ) notes.push(`The scene is already tagged as ${scene.placeKind}; the map's ${sc.place.kind} was left out.`);
   if ( sc.settlement && regions.some(r => r.flags?.[MOD]?.household) )
     notes.push(`This map is part of ${sc.settlement.name || "a settlement"}${sc.settlement.year ? ` as it stands in ${sc.settlement.year}` : ""}. Bring in its record under Settlements in the Storyteller's hand before seeding the residents.`);
-  return {wallUpdates, wallCreates, tiles, lights, regions, notes, scenePlace};
+  return {wallUpdates, wallCreates, tiles, followers, lights, regions, notes, scenePlace};
 }
 
 /** One plain line for each part of a plan, for the Storyteller to read before saying yes. */
@@ -276,6 +317,9 @@ export function summary(p) {
   if ( p.wallUpdates.length ) out.push(`${n(p.wallUpdates.length, "door or window", "doors and windows")} on the imported walls set up`);
   if ( p.wallCreates.length ) out.push(`${n(p.wallCreates.length, "door wall", "door walls")} drawn new`);
   if ( p.tiles.length ) out.push(`${n(p.tiles.length, "thing", "things")} made interactable (${TILE_KINDS.filter(k => p.tiles.some(t => t.flags[MOD][k] === true)).map(k => KIND_WORDS[k]).join(", ")})`);
+  if ( p.followers?.length ) out.push(`${n(p.followers.length, "door or window", "doors and windows")} given pictures that show them open or shut`);
+  const pics = p.tiles.filter(t => t.flags[MOD].art).length;
+  if ( pics ) out.push(`${n(pics, "thing", "things")} given pictures that show them open or shut`);
   if ( p.lights.length ) out.push(`${n(p.lights.length, "light", "lights")} placed`);
   if ( p.regions.length ) {
     const names = p.regions.map(r => r.name), shown = names.slice(0, 8).join(", ");

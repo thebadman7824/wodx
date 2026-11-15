@@ -55,7 +55,7 @@ export async function planFor(scene, text) {
   if ( !parsed.ok ) throw new Error(parsed.errors.join(" "));
   const types = new Set(Object.keys(CONFIG.RegionBehavior?.dataModels ?? {}));
   const fr = A.frameOf(scene);
-  const p = A.plan(parsed.data, {walls: arr(scene.walls).map(plainOf), tiles: arr(scene.tiles).map(plainOf), lights: arr(scene.lights).map(plainOf), regions: arr(scene.regions).map(plainOf), placeKind: scene.flags?.["wodx-npc"]?.place?.kind ?? null, faith: await faithOf(scene)}, fr, types);
+  const p = A.plan(parsed.data, {walls: arr(scene.walls).map(plainOf), tiles: arr(scene.tiles).map(plainOf), lights: arr(scene.lights).map(plainOf), regions: arr(scene.regions).map(plainOf), artBase: A.artBase(scene.background?.src ?? scene.img), placeKind: scene.flags?.["wodx-npc"]?.place?.kind ?? null, faith: await faithOf(scene)}, fr, types);
   return {sc: parsed.data, p, errors: parsed.errors};
 }
 
@@ -78,6 +78,13 @@ export async function applyPlan(scene, p) {
     });
     made.Tile = ids(await scene.createEmbeddedDocuments("Tile", data));
   }
+  // B5733: picture tiles for doors and windows follow the wall the plan set up or drew for that opening
+  const fol = (p.followers ?? []).map(f => {
+    const wid = p.wallUpdates.find(u => u.flags?.[MOD]?.adoptId === f.openingId)?._id
+      ?? made.Wall[p.wallCreates.findIndex(c => c.flags?.[MOD]?.adoptId === f.openingId)];
+    return wid ? {...f.data, flags: {[MOD]: {...f.data.flags[MOD], follows: wid}}} : null;
+  }).filter(Boolean);
+  if ( fol.length ) made.Tile = [...made.Tile, ...ids(await scene.createEmbeddedDocuments("Tile", fol))];
   if ( p.regions.length ) made.Region = ids(await scene.createEmbeddedDocuments("Region", p.regions));
   const prev = scene.flags?.[MOD]?.adopted;
   const rec = A.record(made, p, Date.now());
