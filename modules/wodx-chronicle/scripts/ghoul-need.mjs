@@ -12,6 +12,7 @@
 import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
 import * as R from "./ghoul-need-rules.mjs";
 import {getEngine} from "./calendar.mjs";
+import {isSkipping} from "./skip.mjs";
 
 const FLAG = "ghoulNeed";
 const SIG = "sig";
@@ -24,6 +25,9 @@ const creation = () => game.modules.get("wodx-creation")?.active ? game.modules.
 export const on = () => { try { return game.settings.get(MODULE_ID, "ghoulNeed") !== false; } catch (e) { return true; } };
 
 export function registerGhoulNeedSettings() {
+  // Time skips' spans (world time): the skip's own plan settles what passes in those years, so the monthly need
+  // does not count them again
+  game.settings.register(MODULE_ID, "ghoulNeedSkips", {scope: "world", config: false, type: Array, default: []});
   game.settings.register(MODULE_ID, "ghoulNeed", {
     name: "Ghouls need vitae each month", scope: "world", config: true, type: Boolean, default: true,
     hint: "Every ghoul, human or animal, loses a month's vitae when it goes a month without a drink from its domitor, then its Disciplines, Potence last, and rolls against the craving (V20 Dark Ages pp. 400 to 401). An animal ghoul with no vitae left ages back to its true years. Shown on the token."
@@ -87,13 +91,29 @@ async function rollCraving(a) {
   return out;
 }
 
+const skips = () => { try { return game.settings.get(MODULE_ID, "ghoulNeedSkips") ?? []; } catch (e) { return []; } };
+/** Seconds of [a, b] that fell inside a time skip. */
+export function skippedBetween(a, b, list = skips()) {
+  let out = 0;
+  for ( const k of list ) out += Math.max(0, Math.min(b, Number(k.to)) - Math.max(a, Number(k.from)));
+  return out;
+}
+async function noteSkip({from, to} = {}) {
+  if ( !Number.isFinite(from) || !Number.isFinite(to) || to <= from ) return;
+  const list = [...skips(), {from, to}].sort((x, y) => x.from - y.from);
+  // join spans that touch, so the list stays short
+  const merged = [];
+  for ( const k of list ) { const l = merged.at(-1); if ( l && k.from <= l.to ) l.to = Math.max(l.to, k.to); else merged.push({...k}); }
+  await game.settings.set(MODULE_ID, "ghoulNeedSkips", merged.slice(-50));
+}
+
 /** One ghoul's check. */
 export async function check(a, t = now()) {
   if ( !isGhoul(a) ) return null;
   const st = stateOf(a);
   const fedAt = a.flags?.[MODULE_ID]?.[SIG]?.ghoul?.fedAt ?? st.fedAt;
   if ( fedAt === undefined || fedAt === null ) { await a.update({[`flags.${MODULE_ID}.${FLAG}`]: {...st, fedAt: t, warned: 0}}); return null; }
-  const months = Math.max(0, Math.floor((t - fedAt) / MONTH));
+  const months = Math.max(0, Math.floor((t - fedAt - skippedBetween(fedAt, t)) / MONTH));
   // Months the Clan features' card already told of are not taken again
   st.warned = Math.max(Number(st.warned) || 0, Number(a.flags?.[MODULE_ID]?.[SIG]?.ghoul?.warned) || 0);
   const out = {months, taken: 0, cuts: [], state: "alive"};
@@ -128,7 +148,7 @@ export async function check(a, t = now()) {
     const heldOff = ghouledY !== null && nowY !== null ? Math.max(0, nowY - ghouledY) : 0;
     const bornY = Number.isFinite(Number(chron.bornYear)) && chron.bornYear !== null ? Number(chron.bornYear) : null;
     const ageAt = bornY !== null && ghouledY !== null ? Math.max(0, ghouledY - bornY) : Math.ceil(span / 2);
-    const g = R.ageing({ageAtGhouling: ageAt, heldOff, emptySince: s2.emptySince, now: t, span});
+    const g = R.ageing({ageAtGhouling: ageAt, heldOff, emptySince: s2.emptySince, now: t - skippedBetween(s2.emptySince, t), span});
     out.state = g.state;
     if ( g.state !== (s2.aged ?? "alive") ) {
       await a.update({[`flags.${MODULE_ID}.${FLAG}`]: {...s2, aged: g.state, dust: g.state === "dust"}});
@@ -156,7 +176,7 @@ export async function fed(a, t = now()) {
 
 let last = -1, busy = false;
 export async function tick({force = false} = {}) {
-  if ( !on() || !isActiveGM() || busy ) return;
+  if ( !on() || !isActiveGM() || busy || isSkipping() ) return;
   const t = now(), day = Math.floor(t / DAY);
   if ( day === last && !force ) return;
   last = day; busy = true;
@@ -166,7 +186,7 @@ export async function tick({force = false} = {}) {
 
 export function registerGhoulNeedHooks() {
   Hooks.on("updateWorldTime", () => { tick().catch(e => console.error(`${MODULE_ID} | ghoul need`, e)); });
-  Hooks.on("wodxSkipEnd", () => { tick({force: true}).catch(e => console.error(`${MODULE_ID} | ghoul need`, e)); });
+  Hooks.on("wodxSkipEnd", info => { if ( isActiveGM() ) noteSkip(info).catch(e => console.error(`${MODULE_ID} | ghoul need`, e)); });
   Hooks.on("wodxGhoulFix", e => { if ( e?.drank && isActiveGM() ) fed(e.actor).catch(err => console.error(`${MODULE_ID} | ghoul need`, err)); });
 }
 
