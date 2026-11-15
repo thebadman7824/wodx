@@ -238,7 +238,17 @@ async function questionAct(item, casterName, h, caster, a) {
 
 const pathRegions = scene => [...(scene?.regions ?? [])].filter(r => r.flags?.[MOD]?.[PATH_FLAG]);
 /** A teleport behaviour's destinations as an array (Foundry keeps them in a Set). */
-export const destsOf = b => [...(b?.system?.destinations ?? [])];
+/** B6445: a destination kept relative ("..", "..<id>", ".Region.<id>") is read as the whole uuid of the region it names. */
+export function absDest(d, b) {
+  const s = String(d ?? "");
+  if ( !s.startsWith(".") ) return s;
+  for ( const rel of [b, b?.parent, b?.parent?.parent] ) {
+    if ( !rel ) continue;
+    try { const doc = globalThis.fromUuidSync?.(s, {relative: rel}); if ( doc?.documentName === "Region" ) return doc.uuid; } catch (e) { /* try the next */ }
+  }
+  return s;
+}
+export const destsOf = b => [...(b?.system?.destinations ?? [])].map(d => absDest(d, b));
 /**
  * B6445: does a destination name this region? Foundry may keep it whole ("Scene.<id>.Region.<id>") or relative to its
  * scene (".Region.<id>", as WoDX Otherworlds' resolveRegion reads it), so the region is matched by its ids.

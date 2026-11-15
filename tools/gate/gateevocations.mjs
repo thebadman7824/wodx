@@ -182,13 +182,15 @@ export async function run() {
         // B6445: a destination may be kept whole ("Scene.<id>.Region.<id>") or relative (".Region.<id>"), so each is
         // read as the region it names
         const raw = () => tps().map(b => [...(b.system?.destinations ?? [])]);
+        // a relative destination (Foundry keeps a loop back into its own region as "..") is resolved from the behaviour
+        const abs = (d, b) => A.effects?.absDest?.(d, b) ?? d;
         const regionOf = d => String(d ?? "").match(/Region\.([^.]+)$/)?.[1] ?? String(d);
-        const ids = () => tps().map(b => [...(b.system?.destinations ?? [])].map(regionOf).sort().join());
+        const ids = () => tps().map(b => [...(b.system?.destinations ?? [])].map(d => regionOf(abs(d, b))).sort().join());
         const before = ids();
         detail.before = raw();
         const w = await A.effects.apply(item(evo("paths", 5), demon), "Gate Evo Demon");
         detail.rec = {keys: Object.keys(w ?? {}), note: w?.note ?? null, warp: w?.warp ?? null};
-        seen.warped = await waitFor(() => tps().some(b => [...(b.system?.destinations ?? [])].map(regionOf).includes(b.parent?.id)), 4000);
+        seen.warped = await waitFor(() => tps().some(b => [...(b.system?.destinations ?? [])].map(d => regionOf(abs(d, b))).includes(b.parent?.id)), 4000);
         detail.warped = raw();
         await undo(w);
         seen.back = await waitFor(() => ids().join("|") === before.join("|"), 4000);

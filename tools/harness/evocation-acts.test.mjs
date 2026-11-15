@@ -148,3 +148,14 @@ test("B6445: a path's end is matched whole or relative to its scene", async () =
   assert.match(src, /r\.behaviors\?\.some\?\.\(b => leadsTo\(b, pick\)\)/);
   assert.match(src, /warp: \{to: dest, kept\}/);
 });
+
+test("B6445: a relative teleport destination is read as the region's whole uuid", () => {
+  const region = {documentName: "Region", uuid: "Scene.s.Region.g", id: "g"};
+  const b = {parent: region, system: {destinations: new Set(["..", "Scene.s.Region.o"])}};
+  const was = globalThis.fromUuidSync;
+  globalThis.fromUuidSync = (u, {relative} = {}) => (u === ".." && relative === b) ? region : null;
+  try {
+    assert.deepEqual(ACT.destsOf(b), ["Scene.s.Region.g", "Scene.s.Region.o"]);
+    assert.equal(ACT.absDest(".x", null), ".x");
+  } finally { globalThis.fromUuidSync = was; }
+});

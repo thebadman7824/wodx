@@ -14,7 +14,7 @@
  *   7. a True Name called brings the demon beside the caller on the map
  * Result: Data/wodx-gate/gateservants4-result.json.
  */
-import {gate} from "./kit.mjs";
+import {gate, waitFor} from "./kit.mjs";
 import {NEVER_AUTO} from "/modules/wodx-chronicle/scripts/approvals-rules.mjs";
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
@@ -28,7 +28,10 @@ export async function run() {
   const held = a => game.actors.get(a.id)?.flags?.["wodx-npc"]?.held ?? {};
   try {
     await G.step("1. every kind can stand approved", async () => {
-      const known = (C?.approvals?.types?.() ?? []).map(t => t.type ?? t);
+      // the modules register their approval kinds as they get ready: wait a little for all of them
+      const kinds = () => (C?.approvals?.types?.() ?? []).map(t => t.type ?? t);
+      await waitFor(() => TYPES.every(t => kinds().includes(t)), 10000).catch(() => null);
+      const known = kinds();
       const missing = TYPES.filter(t => !known.includes(t)), barred = TYPES.filter(t => NEVER_AUTO.includes(t));
       G.ok("1. every kind can stand approved", !missing.length && !barred.length, {missing, barred});
     });
@@ -97,14 +100,17 @@ export async function run() {
       const card = game.messages.filter(m => m.timestamp >= since && /calls on a pact gift/.test(m.content ?? "")).at(-1);
       const items = card?.flags?.["wodx-actions"]?.items ?? [];
       for ( const it of items ) await A.effects?.apply?.(it, mortal.name).catch(e => G.R.notes.push(`apply: ${e?.message ?? e}`));
-      await wait(600);
+      const boostOf = () => { const a = game.actors.get(mortal.id); return Math.max(Number(A.powerMods?.of?.(a, {tags: ["charisma", "social"]})?.dice) || 0, Number(A.powerMods?.of?.(a, {tags: ["strength", "physical"]})?.dice) || 0); };
+      await waitFor(() => boostOf() > 0, 6000).catch(() => null);
       const m = game.actors.get(mortal.id);
+      const fx = [...(m?.effects ?? [])].map(e => ({name: e.name, key: e.flags?.["wodx-chronicle"]?.timed?.key ?? null, data: e.flags?.["wodx-chronicle"]?.timed?.data ?? null, disabled: !!e.disabled}));
+      const routes = items.map(it => it?.route ?? null);
       const boost = Math.max(Number(A.powerMods?.of?.(m, {tags: ["charisma", "social"]})?.dice) || 0, Number(A.powerMods?.of?.(m, {tags: ["strength", "physical"]})?.dice) || 0);
       // B6447: the card's own words go in the details, so a failed roll ("nothing comes") is told from a card with no items
       const said = String(card?.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 240);
       const wpNow = m?.system?.advantages?.willpower ?? {};
       G.ok("6b. the pact gift answers", !!card && items.length >= 1 && boost > 0,
-        {card: !!card, items: items.length, boost, forced, willpower: [wpNow.temporary, wpNow.permanent], said});
+        {card: !!card, items: items.length, boost, forced, willpower: [wpNow.temporary, wpNow.permanent], said, routes, fx});
     });
     await G.step("7. a True Name brings the demon to the map", async () => {
       await C.propose({type: "wodx-actions.pressName", key: `gate4:press:${mortal.id}`, title: "gate", data: {caller: mortal.id, demon: demon.id, cmd: "kneel", scene: scene.id}});
