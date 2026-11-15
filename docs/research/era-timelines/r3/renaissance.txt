@@ -3,7 +3,7 @@
 1450|H|mor|EU|Kent|uprising|Jack Cade's rebellion|Kentish rebels march on London against corrupt ministers.
 1450|H|mor|EU|Milan|crown|Francesco Sforza|The condottiere Francesco Sforza becomes Duke of Milan.
 1450|W|mag|EU|Horizon|founding,occult|Horizon is raised|Mages of nine traditions build the Horizon realm; the Grand Convocation begins.
-1450|H|mor|EU|Mainz|science,media|Gutenberg's press|Gutenberg sets up his press with Fust's money in Mainz.
+1450|H|mor|EU|Mainz|science,media|Gutenberg's press|Gutenberg sets up a press with Fust's money in Mainz.
 1451|H|mor|ME|Edirne|crown|Mehmed II returns|Mehmed II becomes sultan for good and plans to take Constantinople.
 1451|H|mor|EU|Glasgow|learning,founding|Glasgow university|A university is founded at Glasgow.
 1452|H|mor|ME|Rumeli Hisari|building,war|The throat-cutter fortress|Mehmed builds Rumeli Hisari on the Bosporus to close the strait.
@@ -16,7 +16,7 @@
 1454|H|mor|EU|Torun|war,uprising|The Thirteen Years War|The Prussian towns rise against the Teutonic Order and turn to Poland.
 1455|H|mor|EU|Mainz|media,faith|The Gutenberg Bible|The first great printed book is finished.
 1455|H|mor|EU|St Albans|battle|The Wars of the Roses begin|York and Lancaster fight at St Albans.
-1456|H|mor|EU|Belgrade|siege,battle|Belgrade|John Hunyadi breaks Mehmed II's siege of Belgrade; he dies of plague weeks later.
+1456|H|mor|EU|Belgrade|siege,battle|Belgrade|John Hunyadi breaks Mehmed II's siege of Belgrade and dies of plague weeks later.
 1456|H|mor|EU|Rome|faith|The noon bell|Pope Callixtus III orders church bells rung at noon to pray against the Turks.
 1456|W|vam|EU|Wallachia|crown|Vlad Dracula takes Wallachia|Vlad III takes the Wallachian throne for the second time and rules by the stake.
 1457|H|mor|EU|Moldavia|crown|Stephen the Great|Stephen becomes Prince of Moldavia and rules for 47 years.
@@ -25,7 +25,7 @@
 1459|H|mor|EU|Serbia|war,crown|Serbia falls|The Ottomans take Smederevo; Serbia is a province.
 1459|W|vam|EU|Brasov|massacre|The forest of stakes|Vlad has merchants of Brasov impaled; the Tzimisce of the Carpathians wonder what they have made.
 1460|H|mor|EU|Northampton|battle|Northampton|Henry VI is captured by the Yorkists.
-1460|H|mor|EU|Wakefield|battle,death|Wakefield|Richard of York is killed; his head is set on York's gate in a paper crown.
+1460|H|mor|EU|Wakefield|battle,death|Wakefield|Richard of York is killed; the duke's head is set on York's gate in a paper crown.
 1460|H|mor|EU|Lisbon|exploration,death|Henry the Navigator dies|The prince who sent the Portuguese down Africa's coast dies.
 1461|H|mor|EU|Towton|battle|Towton|The bloodiest battle on English soil; Edward IV takes the throne.
 1461|H|mor|ME|Trebizond|crown|Trebizond falls|Mehmed II takes the last Byzantine state.
@@ -63,26 +63,26 @@
 1478|H|mor|EU|Florence|death,crown|The Pazzi conspiracy|Plotters kill Giuliano de' Medici in the cathedral; Lorenzo survives.
 1478|W|hun|EU|Seville|persecution,faith|The Spanish Inquisition|The pope allows Ferdinand and Isabella their own Inquisition; the first burnings come in 1481.
 1478|H|mor|EU|Novgorod|crown|Novgorod taken|Ivan III ends the Novgorod republic.
-1479|H|mor|EU|Olomouc|treaty|The Peace of Olomouc|Matthias keeps Moravia, Silesia and Lusatia for his lifetime.
+1479|H|mor|EU|Olomouc|treaty|The Peace of Olomouc|Matthias keeps Moravia, Silesia and Lusatia for life.
 1479|H|mor|EU|Constantinople|treaty|Venice pays for peace|Venice makes peace with Mehmed II.
 1480|H|mor|EU|Ugra River|war|The Great Stand on the Ugra|Moscow and the Horde face each other across the Ugra; the Tatars ride away and the yoke ends.
 1480|H|mor|EU|Otranto|massacre|Otranto|The Ottomans take Otranto in Italy and kill hundreds who will not convert.
 1480|H|mor|EU|Rhodes|siege|Rhodes holds|The Hospitallers beat off an Ottoman siege.
-1481|H|mor|ME|Constantinople|crown,death|Mehmed II dies|The conqueror dies; Bayezid II succeeds after a fight with his brother.
+1481|H|mor|ME|Constantinople|crown,death|Mehmed II dies|The conqueror dies; Bayezid II succeeds after a fight with a brother, Cem.
 1481|H|hun|EU|Seville|fire,persecution|The first auto-da-fe|Six people are burned at Seville by the Spanish Inquisition.
 1482|H|mor|EU|Granada|war|The Granada war|Castile begins the ten-year conquest of Granada.
-1483|H|mor|EU|London|crown,death|The princes in the Tower|Edward IV dies; his sons vanish in the Tower and Richard III takes the crown.
+1483|H|mor|EU|London|crown,death|The princes in the Tower|Edward IV dies; the two young princes vanish in the Tower and Richard III takes the crown.
 1483|H|mor|EU|Eisleben|faith|Luther born|Martin Luther is born.
 1483|H|hun|EU|Spain|persecution|Torquemada|Tomas de Torquemada becomes Inquisitor General.
 1484|H|hun|EU|Rome|persecution,occult|The witch bull|Innocent VIII's bull against witchcraft in Germany gives Kramer and Sprenger the pope's backing.
 1485|H|mor|EU|Bosworth|battle,crown|Bosworth|Henry Tudor kills Richard III and takes the crown.
-1485|H|mor|EU|Vienna|siege|Matthias takes Vienna|Matthias Corvinus captures Vienna and moves his court there.
+1485|H|mor|EU|Vienna|siege|Matthias takes Vienna|Matthias Corvinus captures Vienna and moves the court there.
 1486|W|vam|EU|Europe|faith|The first Conclave|The Camarilla holds its first Conclave and proclaims the Masquerade.
 1486|W|hun|EU|Speyer|occult,persecution,media|The Hammer of Witches|Kramer's Malleus Maleficarum is printed; hunters use it for two centuries.
 1487|H|mor|EU|Lisbon|exploration,sea|Dias sails south|Bartolomeu Dias leaves Lisbon with three ships to find the southern end of Africa.
 1488|H|mor|EU|Bruges|uprising|Maximilian held captive|Bruges imprisons Maximilian of Austria.
 1489|H|mor|ME|Cyprus|crown,trade|Venice takes Cyprus|Cyprus's Venetian queen hands the island to Venice.
-1490|H|mor|EU|Vienna|crown,death|Matthias dies|Matthias Corvinus dies; his library and his army scatter.
+1490|H|mor|EU|Vienna|crown,death|Matthias dies|Matthias Corvinus dies; the library and the Black Army scatter.
 1491|H|mor|EU|Brittany|crown|Brittany joins France|Anne of Brittany marries Charles VIII.
 1492-1|H|mor|EU|Granada|war,crown|Granada falls|The last Muslim kingdom in Spain surrenders.
 1492-3|H|hun|EU|Spain|persecution,migration|The Alhambra decree|Spain's Jews are ordered to convert or leave; many go to the Ottomans, who welcome them.
@@ -123,7 +123,7 @@
 1511|H|mor|AS|Malacca|war,trade|Malacca taken|Albuquerque takes Malacca and its spice trade.
 1512|H|mor|EU|Ravenna|battle|Ravenna|The French win and lose their general Gaston de Foix.
 1512|H|mor|ME|Constantinople|crown|Selim the Grim|Selim I takes the Ottoman throne.
-1513|H|mor|EU|Flodden|battle,death|Flodden|James IV of Scotland is killed with much of his nobility.
+1513|H|mor|EU|Flodden|battle,death|Flodden|James IV of Scotland is killed with much of the Scots nobility.
 1513|H|mor|EU|Florence|learning|The Prince|Machiavelli writes The Prince in exile.
 1514|H|mor|ME|Chaldiran|battle|Chaldiran|Ottoman guns break Shah Ismail's army.
 1514|H|mor|EU|Hungary|uprising|Dozsa's revolt|A crusade turns into a peasant war in Hungary; Gyorgy Dozsa is burned on an iron throne.
@@ -138,7 +138,7 @@
 1519|H|mor|EU|Frankfurt|crown|Charles V elected emperor|Charles of Spain is chosen emperor, ruling half of Europe.
 1519|H|mor|EU|Amboise|art,death|Leonardo dies|Leonardo dies in France.
 1519|H|mor|EU|Seville|exploration,sea|Magellan sails|Magellan leaves Spain to sail round the world.
-1520|H|mor|EU|Stockholm|massacre|The Stockholm Bloodbath|Christian II of Denmark executes Swedish nobles after his coronation.
+1520|H|mor|EU|Stockholm|massacre|The Stockholm Bloodbath|Christian II of Denmark executes Swedish nobles after the coronation.
 1520|H|mor|ME|Constantinople|crown|Suleiman the Magnificent|Suleiman becomes sultan.
 1520|H|mor|EU|Field of the Cloth of Gold|treaty|The Field of the Cloth of Gold|Henry VIII and Francis I meet in tents of gold near Calais.
 1521|H|mor|EU|Worms|faith,law|The Diet of Worms|Luther refuses to recant and is outlawed.
@@ -185,7 +185,7 @@
 1543|H|mor|AS|Tanegashima|science,trade|Guns reach Japan|Portuguese traders bring arquebuses to Japan.
 1545|H|mor|EU|Trent|faith|The Council of Trent|The Catholic Church meets to answer the reformers.
 1545|H|mor|EU|Seville|money|Potosi silver reaches Seville|A silver mountain found in Peru sends its silver through Seville; prices across Europe begin to climb.
-1546|H|mor|EU|Eisleben|faith,death|Luther dies|Luther dies where he was born.
+1546|H|mor|EU|Eisleben|faith,death|Luther dies|Luther dies at Eisleben, the town of Luther's birth.
 1547|H|mor|EU|Muhlberg|battle|Muhlberg|Charles V crushes the Protestant princes.
 1547|H|mor|EU|Moscow|crown|Ivan the Terrible crowned tsar|Ivan IV is crowned the first tsar of Russia.
 1547|H|mor|EU|Prague|uprising|The Bohemian estates rise|Ferdinand crushes a revolt of Bohemian towns and nobles.
@@ -196,11 +196,11 @@
 1552|H|mor|EU|Kazan|siege|Kazan taken|Ivan IV takes the khanate of Kazan.
 1553|H|mor|EU|London|crown|Mary Tudor|Mary I takes the throne and restores the old Church.
 1553|H|mor|EU|Geneva|fire,heresy|Servetus burned|Calvin's Geneva burns Michael Servetus.
-1555|H|mor|EU|Augsburg|treaty,faith|The Peace of Augsburg|Each prince of the Empire chooses the faith of his land.
+1555|H|mor|EU|Augsburg|treaty,faith|The Peace of Augsburg|Each prince of the Empire chooses the faith of the land.
 1555|H|mor|EU|Oxford|fire,persecution|The Oxford martyrs|Bishops Latimer and Ridley are burned at Oxford.
 1556|H|mor|AS|Shaanxi|quake,disaster|The Shaanxi earthquake|The deadliest earthquake recorded kills perhaps 830,000 in China.
 1556|H|mor|AS|Panipat|battle|The second Panipat|The young Akbar's army wins northern India.
-1556|H|mor|EU|Spain|crown|Philip II|Charles V gives up his crowns; Philip II takes Spain and the Netherlands.
+1556|H|mor|EU|Spain|crown|Philip II|Charles V gives up the crowns; Philip II takes Spain and the Netherlands.
 1558|H|mor|EU|Calais|war|Calais lost|France takes Calais, England's last French town.
 1558|H|mor|EU|London|crown|Elizabeth I|Elizabeth becomes Queen of England.
 1558|H|mor|EU|Livonia|war|The Livonian War|Ivan IV invades Livonia.
@@ -221,7 +221,7 @@
 1567|H|mor|EU|Brussels|persecution|The Council of Blood|The Duke of Alba arrives to crush the Netherlands.
 1568|H|mor|EU|Netherlands|war|The Eighty Years War|William of Orange leads the Dutch revolt.
 1569|H|mor|EU|Lublin|treaty,crown|The Union of Lublin|Poland and Lithuania become one commonwealth.
-1569|H|mor|EU|Duisburg|science|Mercator's map|Mercator publishes his world map.
+1569|H|mor|EU|Duisburg|science|Mercator's map|Mercator publishes a world map.
 1570|H|mor|EU|Novgorod|massacre|The Novgorod massacre|Ivan IV's men kill thousands in Novgorod.
 1570|H|mor|ME|Cyprus|war|Cyprus invaded|The Ottomans invade Venetian Cyprus.
 1571|H|mor|ME|Famagusta|siege,massacre|Famagusta|Famagusta falls; its commander is flayed alive.
@@ -236,7 +236,7 @@
 1576|H|mor|EU|Antwerp|massacre|The Spanish Fury|Unpaid Spanish troops sack Antwerp.
 1576|H|mor|EU|Prague|crown|Rudolf II|Rudolf II becomes emperor.
 1576|W|mag|EU|Hven|science,building|Uraniborg|Tycho Brahe builds an observatory on Hven; the Order of Reason funds measurements, the Hermetics read omens in them.
-1577|H|mor|EU|Plymouth|exploration,sea|Drake sails|Francis Drake leaves on his voyage round the world.
+1577|H|mor|EU|Plymouth|exploration,sea|Drake sails|Francis Drake leaves on a voyage round the world.
 1578|H|mor|EU|Alcacer Quibir|battle,crown|The Battle of the Three Kings|King Sebastian of Portugal vanishes in a disaster in Morocco.
 1579|H|mor|EU|Utrecht|treaty|The Union of Utrecht|The northern Dutch provinces bind together.
 1580|H|mor|EU|Lisbon|crown|Spain takes Portugal|Philip II becomes King of Portugal.
@@ -248,11 +248,11 @@
 1584|H|mor|EU|Moscow|crown,death|Ivan the Terrible dies|Ivan IV dies over a chessboard.
 1585|H|mor|EU|Antwerp|siege|Antwerp falls|Parma takes Antwerp; trade moves to Amsterdam.
 1586|H|mor|AS|Kyoto|crown|Hideyoshi|Toyotomi Hideyoshi becomes chancellor of Japan.
-1587|H|mor|EU|Fotheringhay|death,crown|Mary Queen of Scots beheaded|Elizabeth signs her cousin's death warrant.
+1587|H|mor|EU|Fotheringhay|death,crown|Mary Queen of Scots beheaded|Elizabeth signs the death warrant of Mary, Queen of Scots.
 1587|H|mor|ME|Isfahan|crown|Shah Abbas|Abbas the Great takes the Persian throne.
 1588|H|mor|EU|English Channel|battle,sea,storm|The Armada|The Spanish fleet is beaten off and wrecked by storms.
 1589|H|mor|EU|Paris|death,crown|Henry III murdered|A friar stabs the French king; Henry of Navarre is heir.
-1590|H|mor|AS|Odawara|siege|Japan unified|Hideyoshi takes Odawara; all Japan is his.
+1590|H|mor|AS|Odawara|siege|Japan unified|Hideyoshi takes Odawara; all Japan is in Hideyoshi's hands.
 1590|W|mag|EU|Prague|occult|The Golem tale|The tale of the rabbi who made a man of clay runs through the crown lands; mages argue whether it is a story or a working.
 1592|H|mor|AS|Busan|war|The invasion of Korea|Hideyoshi's army lands at Busan.
 1592|H|mor|AS|Hansan|battle,sea|Hansan Island|Admiral Yi Sun-sin's turtle ships destroy a Japanese fleet.
@@ -264,7 +264,7 @@
 1597|H|mor|AS|Nagasaki|persecution,faith|The Nagasaki martyrs|Twenty-six Christians are crucified at Nagasaki.
 1598|H|mor|AS|Noryang|battle,sea,death|Noryang|Admiral Yi dies winning the last sea battle; Japan leaves Korea.
 1598|H|mor|EU|Nantes|law,faith|The Edict of Nantes|Henry IV grants the Huguenots toleration.
-1598|H|mor|ME|Isfahan|founding|Isfahan the capital|Shah Abbas makes Isfahan his capital.
+1598|H|mor|ME|Isfahan|founding|Isfahan the capital|Shah Abbas makes Isfahan the capital.
 1598|H|mor|EU|Moscow|crown,death|The Rurikids end|Tsar Fyodor dies; Boris Godunov is chosen tsar.
 1599|H|mor|EU|London|art,building|The Globe|Shakespeare's company builds the Globe.
 1600|H|mor|EU|Rome|fire,heresy|Giordano Bruno burned|The Roman Inquisition burns Bruno in the Campo de' Fiori.
@@ -292,7 +292,7 @@
 1500|W|vam|AS|Hong Kong|trade|A backwater ruled from Canton|Hong Kong's villages fish and farm while Canton grows into a great port.
 1502|H|mor|EU|Wittenberg|learning,founding|Wittenberg university|Frederick the Wise founds a university at Wittenberg.
 1505|H|mor|EU|Moscow|crown,death|Ivan the Great dies|Ivan III dies having tripled the lands of Moscow.
-1507|W|mag|EU|Sponheim|occult|Trithemius and Faust|The abbot Trithemius warns of a vagabond calling himself Faustus.
+1507|W|mag|EU|Sponheim|occult|Trithemius and Faust|The abbot Trithemius warns of a vagabond going by the name Faustus.
 1509|H|mor|EU|Agnadello|battle|Agnadello|The French crush Venice's army.
 1510|W|mag|EU|Cologne|occult,learning|Agrippa's occult philosophy|Cornelius Agrippa drafts the Three Books of Occult Philosophy.
 1514|H|mor|EU|Moravia|faith|Brethren in Moravia|The Unity of Brethren grow in Moravia despite the king's ban.
@@ -312,17 +312,17 @@
 1555|H|mor|AS|Delhi|crown|Humayun returns|Humayun takes back Delhi.
 1557|W|mag|EU|Antwerp|science|The age of printing|Antwerp printers flood Europe with books; the Order of Reason backs the printers of almanacs.
 1560|W|vam|EU|France|faith,war|The Toreador and the wars of religion|The Grand Court's Kindred back Catholic and Huguenot nobles as it suits them.
-1564|W|mag|EU|London|occult|John Dee's Monad|John Dee publishes the Hieroglyphic Monad; the Hermetic houses of England court him.
+1564|W|mag|EU|London|occult|John Dee's Monad|John Dee publishes the Hieroglyphic Monad; the Hermetic houses of England court Dee.
 1569|H|mor|AS|Fatehpur Sikri|building|Fatehpur Sikri|Akbar builds a new capital near Agra.
 1571|H|mor|AS|Nagasaki|trade,founding|Nagasaki opened|Nagasaki is opened to Portuguese trade.
-1575|H|mor|AS|Fatehpur Sikri|faith,learning|The house of worship|Akbar invites scholars of every faith to debate at his court.
+1575|H|mor|AS|Fatehpur Sikri|faith,learning|The house of worship|Akbar invites scholars of every faith to debate at the Mughal court.
 1579|H|mor|AS|Fatehpur Sikri|faith|Akbar's decree|Akbar claims the right to judge disputes of Islamic law.
 1580|W|vam|EU|Prague|occult|Kindred at Rudolf's court|Rudolf's alchemists and astrologers draw Tremere and Toreador to Prague.
 1583|W|mag|EU|Prague|occult|Dee and Kelley in Bohemia|John Dee and Edward Kelley come to Bohemia to speak with angels.
 1587|W|hun|EU|Trier|persecution,occult|The Trier witch trials|Hundreds are burned in the Trier trials over a decade.
-1589|W|hun|EU|Trier|persecution|Dietrich Flade burned|A judge who doubted the witch trials is himself burned at Trier.
-1591|H|mor|EU|Prague|science|Rudolf's cabinet of curiosities|Rudolf fills his rooms with clocks, stones, paintings and marvels.
-1595|W|hun|EU|Lorraine|persecution,occult|Nicholas Remy's book|A witch judge of Lorraine publishes his book on demons, boasting of hundreds burned.
+1589|W|hun|EU|Trier|persecution|Dietrich Flade burned|A judge who doubted the witch trials is burned in turn at Trier.
+1591|H|mor|EU|Prague|science|Rudolf's cabinet of curiosities|Rudolf fills the castle rooms with clocks, stones, paintings and marvels.
+1595|W|hun|EU|Lorraine|persecution,occult|Nicholas Remy's book|A witch judge of Lorraine publishes a book on demons, boasting of hundreds burned.
 1597|W|hun|EU|Edinburgh|persecution,occult|King James's Daemonologie|James VI of Scotland writes against witches.
 1599|H|mor|EU|Prague|science|Tycho in Prague|Tycho Brahe becomes imperial mathematician to Rudolf.
 # The Americas, Africa and Oceania (the global rule, 2026-11-12)
@@ -339,7 +339,7 @@
 1513|H|mor|AM|Darien|exploration,sea|Balboa sees the Pacific|Balboa crosses the isthmus of Panama and wades into the South Sea to claim it for Castile.
 1519|H|mor|AM|Veracruz|war,exploration,empire|Cortes lands|Hernan Cortes lands on the Gulf coast with some five hundred soldiers, marches inland and enters Tenochtitlan as a guest.
 1520|H|mor|AM|Tenochtitlan|plague,death,uprising|Smallpox and the Night of Sorrows|The Mexica drive the Spaniards out with great loss, and smallpox then kills a large part of the city.
-1521|H|mor|AM|Tenochtitlan|siege,war,empire|Tenochtitlan falls|After a siege of three months Cortes and his Tlaxcalan allies take the ruined city.
+1521|H|mor|AM|Tenochtitlan|siege,war,empire|Tenochtitlan falls|After a siege of three months Cortes and the Tlaxcalan allies take the ruined city.
 1521|W|wra|AM|Tenochtitlan|plague,occult|The dead of the conquest|The house reading has the plagues and the siege fill the lands of the dead beyond anything their keepers can bear; the wraiths' books tell of a Dark Kingdom of the Americas broken in these years.
 1527|H|mor|AM|Quito|plague,death,crown|Huayna Capac dies|The Inca emperor dies of a sickness that runs ahead of the Spaniards, and two sons fight over the empire.
 1531|H|mor|AM|Tepeyac|faith|Our Lady of Guadalupe|By the church's account a Nahua convert sees the Virgin on the hill of Tepeyac outside Mexico City.
@@ -379,11 +379,11 @@
 1543|H|mor|AF|Wayna Daga|battle,death|Wayna Daga|Ethiopian and Portuguese musketeers kill Ahmad Gran, and the invasion collapses.
 1562|H|mor|AF|Sierra Leone|trade,sea,persecution|Hawkins's voyage|John Hawkins carries captives from the Guinea coast to Hispaniola, the first English slaving voyage.
 1568|H|mor|AF|Mbanza Kongo|war|The Jaga in Kongo|Invaders from the east sack the capital of Kongo, and the king regains it only with Portuguese guns.
-1571|H|mor|AF|Ngazargamu|crown,empire|Idris Alooma|Idris Alooma becomes ruler of Bornu about this year and arms his horsemen with Turkish muskets.
+1571|H|mor|AF|Ngazargamu|crown,empire|Idris Alooma|Idris Alooma becomes ruler of Bornu about this year and arms the horsemen of Bornu with Turkish muskets.
 1575|H|mor|AF|Luanda|founding,empire,trade|Luanda founded|Paulo Dias de Novais founds Luanda, which will send more captives across the Atlantic than any other port.
 1591|H|mor|AF|Tondibi|battle,empire|Tondibi|A Moroccan army with firearms crosses the Sahara and destroys Songhai at Tondibi.
 1593|H|mor|AF|Mombasa|building,empire|Fort Jesus|The Portuguese build Fort Jesus to hold Mombasa.
-1594|H|mor|AF|Timbuktu|persecution,learning|Ahmad Baba in chains|The Moroccans carry the scholar Ahmad Baba and his library from Timbuktu to Marrakesh.
+1594|H|mor|AF|Timbuktu|persecution,learning|Ahmad Baba in chains|The Moroccans carry the scholar Ahmad Baba and the scholar's library from Timbuktu to Marrakesh.
 1470|H|mor|OC|Tongatapu|crown,law|A second line in Tonga|The Tu'i Tonga keeps the sacred office and hands the daily rule to a brother, the first Tu'i Ha'atakalaua.
 1500|H|mor|OC|Hawaii|crown,war|Umi of Hawaii|By tradition the chief Umi-a-Liloa unites the island of Hawaii about this time.
 1500|H|mor|OC|Aotearoa|war,building|The age of the pa|As land grows scarce the tribes of Aotearoa build terraced hill forts.

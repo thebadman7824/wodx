@@ -52,10 +52,11 @@ async function change(id, fn) {
 export async function setupDialog(id) {
   const b = api.get(id);
   if ( !b || b.kind !== "siege" || !game.user.isGM ) return null;
-  const {year, branch} = api.context(b);
+  const {year, branch, land} = api.context(b);
   const c = SW.normCampaign(b.campaign) ?? SW.blankCampaign(b);
-  const walls = {"": "(no walls)", ...Object.fromEntries(SW.wallsFor(year).map(w => [w.id, `${w.label} (soak ${w.soak}, ${w.health} health levels)`]))};
-  const lines = Object.fromEntries(SW.supplyLinesFor(year, branch).map(s => [s.id, s.label]));
+  const mark = x => x.own ? ", of this land" : x.other ? ", from far away" : "";
+  const walls = {"": "(no walls)", ...Object.fromEntries(SW.wallsFor(year, land).map(w => [w.id, `${w.label} (soak ${w.soak}, ${w.health} health levels${mark(w)})`]))};
+  const lines = Object.fromEntries(SW.supplyLinesFor(year, branch, land).map(s => [s.id, `${s.label}${mark(s)}`]));
   const ctr = c.counter ?? {watch: true, watchPool: 5, pool: 5, fast: false};
   const side = i => `<fieldset><legend>${esc(b.sides[i].name)}: keeping order</legend>
     <div class="form-group"><label>Supply</label><select name="supply${i}" data-fixed>${opt(SW.SUPPLY_WORDS, c.order.supply[i])}</select></div>
@@ -112,8 +113,8 @@ export async function mineDialog(id) {
 }
 
 export const addEngine = (id, type) => change(id, (c, b) => {
-  const {year, branch} = api.context(b);
-  if ( !SW.enginesFor(year, branch).some(e => e.id === type) ) { ui.notifications.warn("That engine is not of this age."); return null; }
+  const {year, branch, land} = api.context(b);
+  if ( !SW.enginesFor(year, branch, land).some(e => e.id === type) ) { ui.notifications.warn("That engine is not of this age."); return null; }
   return {...c, engines: [...c.engines, {type, stage: "materials", got: 0}]};
 });
 export const removeEngine = (id, engineId) => change(id, c => ({...c, engines: c.engines.filter(e => e.id !== engineId)}));
@@ -129,14 +130,14 @@ export function render(b) {
   const id = esc(b.id);
   const c = SW.normCampaign(b.campaign);
   if ( !c ) return b.over ? "" : `<p><button type="button" data-action="campSetup" data-id="${id}" title="Foraging, keeping order, mines, engines and the walls (Spoils of War)"><i class="fa-solid fa-trowel-bricks"></i> Set up the campaign</button></p>`;
-  const {year, branch} = api.context(b);
+  const {year, branch, land} = api.context(b);
   const w = SW.wallsOf(c), m = c.mine, ctr = c.counter;
   const eng = c.engines.map(e => {
     const E = SW.ENGINES[e.type];
     return `<li>${esc(E.label)}: ${STAGE[e.stage]}${e.stage !== "ready" ? ` (${e.got} of ${E.damage})` : ""}${b.over ? "" : ` <button type="button" data-action="campEngineReady" data-id="${id}" data-engine="${esc(e.id)}"${e.stage === "ready" ? " hidden" : ""} title="Brought in already built">Ready</button>
       <button type="button" data-action="campEngineRemove" data-id="${id}" data-engine="${esc(e.id)}">Remove</button>`}</li>`;
   }).join("");
-  const engineOpts = SW.enginesFor(year, branch).map(e => `<option value="${esc(e.id)}">${esc(`${e.label} (${e.damage}${e.aggravated ? "A" : "L"})`)}</option>`).join("");
+  const engineOpts = SW.enginesFor(year, branch, land).map(e => `<option value="${esc(e.id)}">${esc(`${e.label} (${e.damage}${e.aggravated ? "A" : "L"})${e.own ? ", of this land" : e.other ? ", from far away" : ""}`)}</option>`).join("");
   return `<details open><summary>The campaign around the siege</summary>
     <p>${w ? `${esc(w.label)}: ${w.damage} of ${w.health} health levels of damage, soak ${w.soak}.` : "No walls set."}${c.wall.moat ? ` A ditch before them, ${c.wall.moatFill >= SW.MOAT_FILL ? "filled" : `${c.wall.moatFill} of ${SW.MOAT_FILL} filled`}.` : ""}</p>
     <p>${esc(b.sides[0].name)}: ${esc(SW.SUPPLY_LINES[c.supplyLine].label)}${c.forage.on ? `, ${c.forage.foragers.toLocaleString("en")} foragers (${esc(SW.FORAGE_LAND[c.forage.difficulty].toLowerCase())})` : ""}; camp stores ${c.stores0} days.

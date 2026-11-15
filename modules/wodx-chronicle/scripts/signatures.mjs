@@ -397,7 +397,7 @@ function nextEvent() {
   const k = today.year * 10000 + today.month * 100 + today.day;
   const codes = events.hereCodes();
   // only what will be heard of here: a glimpse of far-off news is no glimpse at all (B5891)
-  const ev = events.list().find(e => e.live && e.key > k && !events.has(e.id) && events.heard(e, codes));
+  const ev = events.list().find(e => e.live && e.key > k && !events.has(e.id) && !e.hidden && events.heard(e, codes));
   return ev ? {ev, days: Math.max(1, daysBetween(today, ev))} : null;
 }
 

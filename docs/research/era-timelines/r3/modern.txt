@@ -68,7 +68,7 @@
 1993|W|hun|EU|London|occult|The Arcanum's new age|The house reading has the Arcanum put its library onto computers and fear what the networks will reveal.
 1994-2|H|mor|EU|Sarajevo|massacre|The Markale market|A mortar shell kills sixty-eight people in a Sarajevo market.
 1994-2|H|mor|ME|Hebron|massacre,faith|The Cave of the Patriarchs|An Israeli settler shoots twenty-nine Muslims at prayer in Hebron.
-1994-7|H|mor|AS|Pyongyang|crown,death|Kim Il-sung dies|North Korea's founder dies, and his son Kim Jong-il succeeds.
+1994-7|H|mor|AS|Pyongyang|crown,death|Kim Il-sung dies|North Korea's founder dies, and the son, Kim Jong-il, succeeds.
 1994-9|H|mor|EU|Baltic|sea,disaster|The Estonia sinks|The ferry Estonia sinks in a storm in the Baltic; over eight hundred die.
 1994-12|H|mor|EU|Grozny|war|The first Chechen war|Russia invades Chechnya, and Grozny is bombed to ruins.
 1994|H|mor|AS|Surat|plague|Plague at Surat|Plague breaks out in Surat in India, and hundreds of thousands flee.
@@ -89,7 +89,7 @@
 1995-11|H|mor|EU|Dayton|treaty|Dayton|The Dayton agreement ends the Bosnian war.
 1995|H|mor|MO|Brno|law|The Constitutional Court in Brno|The Czech Constitutional Court and supreme courts sit in Brno, which becomes the country's judicial capital.
 1995|H|mor|EU|Vienna|treaty|Austria joins the Union|Austria, Finland and Sweden join the European Union.
-1995|H|mor|AS|Beijing|faith|The Panchen Lama|China takes the boy named Panchen Lama by the Dalai Lama and puts its own choice in his place.
+1995|H|mor|AS|Beijing|faith|The Panchen Lama|China takes the boy named Panchen Lama by the Dalai Lama and puts its own choice in the boy's place.
 1995|H|mor|ME|Ankara|war|Turkey's war with the PKK|Turkey's army fights the PKK in the south-east, and thousands of Kurdish villages are emptied.
 1995|W|cha|EU|London|occult|The Kithain and the net|The house reading has young changelings find Glamour in the early web, and the elders do not understand it.
 1995|H|mor|MO|Mikulov|trade,art|The Palava wine route|Vineyards around Mikulov and the Palava hills open to tourists from Austria and beyond.
@@ -155,8 +155,8 @@
 1999|H|mor|EU|Moscow|crown|Putin|Yeltsin resigns on the last day of the year and leaves Vladimir Putin as acting president.
 1999|H|mor|EU|Brussels|money|The euro born|The euro begins as a currency for banks and markets.
 1999|H|mor|AS|Kathmandu|travel|The Kathmandu hijacking|An Indian airliner is hijacked to Kandahar.
-1999|H|mor|ME|Amman|crown,death|King Hussein dies|King Hussein of Jordan dies, and his son Abdullah succeeds.
-1999|H|mor|ME|Rabat|crown|Mohammed VI|Morocco's king dies and his son takes the throne.
+1999|H|mor|ME|Amman|crown,death|King Hussein dies|King Hussein of Jordan dies, and the son, Abdullah, succeeds.
+1999|H|mor|ME|Rabat|crown|Mohammed VI|Morocco's king dies and the son, Mohammed VI, takes the throne.
 1999|W|wer|AS|Bangladesh|occult|The Garou's losses|The house reading has the Garou of India count their dead after the Week of Nightmares; whole septs are gone.
 1999|W|cha|EU|Europe|occult|The Dreaming's storm|The house reading has the Maelstrom's echo shake the Dreaming, and the Kithain dream of a red star.
 1999|W|wer|EU|Europe|occult|The Red Star|The house reading follows Werewolf canon: a red star appears in the Umbral sky, and the Garou fear the Apocalypse is near.
@@ -171,7 +171,7 @@
 2000|W|mag|MO|Temelin|science,occult|Temelin and the Weaver|The house reading has the Technocracy run Temelin's start quietly, while a Brno Verbena reads the land's unease.
 2000|H|mor|MO|Brno|law|The South Moravian Region|The Czech lands are divided into regions, and Brno becomes the seat of the South Moravian Region.
 2000|H|mor|AS|Seoul|treaty|The Korean summit|The leaders of the two Koreas meet in Pyongyang.
-2000|H|mor|ME|Damascus|crown,death|Hafez al-Assad dies|Syria's president dies, and his son Bashar succeeds.
+2000|H|mor|ME|Damascus|crown,death|Hafez al-Assad dies|Syria's president dies, and the son, Bashar, succeeds.
 2000|H|mor|ME|Beirut|war|Israel leaves Lebanon|Israel withdraws from southern Lebanon.
 2000|W|vam|ME|Damascus|occult|The Assamite schism|The house reading follows Vampire canon in spirit: the Assamites split as the old one at Alamut wakes.
 2001-1|H|mor|AS|Gujarat|quake|The Gujarat earthquake|An earthquake kills twenty thousand in Gujarat.
@@ -343,7 +343,7 @@
 1998-8|H|mor|AF|Nairobi|terror,death|The embassy bombings|Truck bombs at the American embassies in Nairobi and Dar es Salaam kill more than two hundred people.
 1998-8|H|mor|AF|Goma|war,famine,death|Africa's great war|A second war begins in the Congo and draws in nine countries; several million die, most of hunger and disease.
 1999-5|H|mor|AF|Abuja|law,crown|Nigeria's generals step down|Nigeria returns to elected government after sixteen years of military rule.
-2000-2|H|mor|AF|Mozambique|flood,disaster|The Mozambique floods|The Limpopo floods for weeks; a woman gives birth in a tree before a helicopter reaches her.
+2000-2|H|mor|AF|Mozambique|flood,disaster|The Mozambique floods|The Limpopo floods for weeks; a woman gives birth in a tree before a helicopter reaches mother and child.
 2000|H|mor|AF|Zimbabwe|law,uprising,famine|The farm seizures|War veterans occupy Zimbabwe's white-owned farms, and the country's harvests and currency collapse over the next years.
 2002-2|H|mor|AF|Moxico|death,war,treaty|Savimbi killed|The death of the rebel leader in an ambush ends twenty-seven years of civil war in Angola.
 2002-7|H|mor|AF|Durban|treaty,founding|The African Union|The Organisation of African Unity is replaced by the African Union.

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5900
+Next free block: B5950
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -318,6 +318,10 @@ Next free block: B5900
 | B5870-B5879 | Dates as each land tells them: Persia's solar year and a character's own count (used B5870-B5876) | Chronicle, Atmosphere |
 | B5880-B5889 | Era primers by region: what everyone knows, by the homeland's way of life (used B5880-B5882) | Storyteller |
 | B5890-B5899 | Future Darkness world news by region: the Americas, Africa and Oceania after 2023 (used B5890-B5892) | Chronicle |
+| B5900-B5919 | War beyond Europe: armies, sieges and ships by land (Armies and Ships Desk) (used B5900-B5910) | Storyteller |
+| B5920-B5929 | The classic world timeline in the game (used B5920-B5926) | Chronicle, Storyteller |
+| B5930-B5939 | Market goods by region (the Market Goods Desk) (used B5930-B5936) | Storyteller |
+| B5940-B5949 | Primers for a scene far from home (used B5940-B5942) | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9670,3 +9674,143 @@ Reverse: make heardIn return true.
 WoDX Chronicle. A card lists the news heard here from the last year; news heard here but older than a year (a world just switched to the branch, a homeland just changed) and news from elsewhere are counted in one line that points to the Dated events page, which lists every event with its place. A time skip still tells everything heard here, as it did.
 
 Reverse: drop the older count in newsFor.
+
+## B5900. A fight stands in a land (2026-11-15)
+WoDX Storyteller. A battle, siege or sea fight keeps `land`, a WoDX Chronicle region: the one it was started with, else the region of the scene in view (Where this scene stands), else the homeland. The battle form has a Land select. Desk item a1, recommended option, built while the desk waits.
+
+Reverse: drop `land` from contextOf in battles.mjs and naval.mjs.
+
+## B5901. The quick start keeps this timeline's wars, the land's part of the world first (2026-11-15)
+WoDX Storyteller. warEvents skips events that are not live (the other branch) and sorts the events of the battle's part of the world (Chronicle events-rules.mjs partOf) first. Desk item a2.
+
+Reverse: drop the live filter and the part sort.
+
+## B5902. Each land keeps its own ages of war where they differ from Europe's (2026-11-15)
+WoDX Storyteller, war-lands-rules.mjs LAND_AGES: 17 ages for Mesoamerica, the Caribbean, the Andes, the woodland nations, Japan (three), China and Korea, India, the steppe, the Sahel, Africa south of the Sahara, the impi of the south, Aotearoa (two), the Pacific and Australia. Each borrows the numbers of a European age (phase, losses, hazard) and turns guns off where the land had none. Desk item b1.
+
+Reverse: make landAge return null.
+
+## B5903. Troops of other lands, offered first in their land (2026-11-15)
+WoDX Storyteller. Thirteen unit types beside the book's (Spoils of War p. 44), WoDX figures on its scale, each with its years and lands. The setup lists the land's troops under their own heading, then the book's, then other lands' under a closed heading; a unit already in an army stays on the form. An army of them fights with the book's pools. Desk item b2.
+
+Reverse: remove LAND_UNITS from UNIT_TYPES.
+
+## B5904. The supernatural in the ranks named by land (2026-11-15)
+WoDX Storyteller. East and Southeast Asia name Kuei-jin, shen and Hengeyokai; Africa south of the Sahara the Laibon, Bastet and Mokolé; the lands of Islam the Ashirra; the Americas, the Pacific and Australia before the settlers the land's own changing breeds and spirits. The weight of each step is unchanged. Desk item b3.
+
+Reverse: make supernaturalFor return null.
+
+## B5905. The realms of the East (2026-11-15)
+WoDX Storyteller. In East and Southeast Asia a war of the dead is fought by the legions of the Dark Kingdom of Jade and a war in the Umbra in the spirit courts of the East, with the same numbers. Desk item b4.
+
+Reverse: make realmFor return its base.
+
+## B5906. Siege engines of other lands (2026-11-15)
+WoDX Storyteller. Fire lances, thunderclap bombs, rocket carts and iron-cased war rockets, WoDX figures on the book's scale (Spoils of War p. 33), listed first in their lands. Desk item c1.
+
+Reverse: remove LAND_ENGINES from ENGINES.
+
+## B5907. Walls of other lands, and a land's town or castle starts with them (2026-11-15)
+WoDX Storyteller. Rammed earth, mud brick, the fitted stone of the Andes, the pā, the thorn stockade and the castle on a stone base, on the scale of the book's walls (p. 34). A siege's campaign starts with the land's wall where it has one for the garrison's position and year. Desk item c2.
+
+Reverse: drop the landWall call in blankCampaign.
+
+## B5908. Camel caravans, llama trains and porters (2026-11-15)
+WoDX Storyteller. Three supply lines (shares 0.6, 0.5 to 1600, and 0.33), listed first in their lands. Desk item c3.
+
+Reverse: remove LAND_SUPPLY from SUPPLY_LINES.
+
+## B5909. Ships of other seas (2026-11-15)
+WoDX Storyteller. Twelve ships (war junks before and after guns, the treasure ship, the turtle ship, the atakebune, the dhow, the lancaran, the jong, the double-hulled war canoe, the waka taua, the lake canoe of Mexico, the piragua), WoDX figures on the book's scale (Spoils of War p. 40), listed first in their seas. Desk item d1.
+
+Reverse: remove LAND_SHIPS from SHIPS.
+
+## B5910. The navigators of the Pacific and the Indian Ocean (2026-11-15)
+WoDX Storyteller. A tick box on the navigation roll where it counts: a wayfinder of the islands makes it 2 easier in the Pacific and off Aotearoa; a pilot of the Indian Ocean with the kamal counts as a pilot's book there. Desk item d2.
+
+Reverse: make navAid return 0.
+
+## B5920. The world timeline, 1197 to 2009, as dated events (2026-11-15)
+WoDX Chronicle. The approved round-three world timeline (docs/research/era-timelines/r3, the eight classic era files) is built by tools/timeline/build-world-history.mjs into data/world-history.mjs: one dated event per line, with its part of the world (MO, EU, ME, AS, AF, AM, OC), its place, its tags, its era and the lines it touches. Events from 1990 belong to the classic timeline only; earlier ones fire on both. Ids are made from the year and the title (wh-1347-...), so editing or adding lines never renames an event or loses the Storyteller's overrides. The research files' 167 lines with gendered pronouns were reworded so the in-game text stays neutral, and "the house reading" is told in the game as "the hidden story".
+
+Reverse: drop WORLD_HISTORY from EVENTS in events.mjs.
+
+## B5921. The World of Darkness side is the Storyteller's (2026-11-15)
+WoDX Chronicle. Lines of kind W (history with a World of Darkness reading) are hidden events. They fire and call wodxEventFired like any other, but are never on the players' card or the Chronicle Rules page; a "Behind the curtain" card is whispered to the Storytellers with the ones heard of here.
+
+Reverse: drop `hidden` in the build.
+
+## B5922. A card keeps to twelve pieces of world news (2026-11-15)
+WoDX Chronicle. However many world events a time skip passes, a card tells every book event and only the newest twelve of the world timeline, and counts the rest ("more pieces of news from these parts"). All of them are on the Dated events page.
+
+Reverse: TOLD_CAP = Infinity.
+
+## B5923. One era at a time in the Dated events window and on the rules page (2026-11-15)
+WoDX Chronicle. The Dated events window lists the book events and the world timeline of one era (the clock's when it opens), with a list to switch era or show none. Switching saves the page first, and saving keeps the overrides of events the page does not list. The Chronicle Rules page, which players can read, lists the clock's era of the world timeline as heard here, without the hidden story, and counts the rest.
+
+Reverse: list every event again (slow with three thousand rows).
+
+## B5924. Legends keeps Moravia's own history (2026-11-15)
+WoDX Chronicle. Legends writes world timeline events only when they happened in Moravia, the chronicle's own part, and never the hidden story; the Future Darkness branch's world news is kept as B5891 has it. The Malkavian glimpse never foretells a hidden event.
+
+Reverse: inLegends returns true.
+
+## B5925. Signals take only fresh news heard here (2026-11-15)
+WoDX Storyteller. The signal board turns a world timeline event into a signal only when it is heard where the chronicle stands and is no more than a year old, so a century's time skip does not fill the board with old news.
+
+Reverse: drop quietNews in signals.mjs.
+
+## B5926. Nothing fires twice (2026-11-15)
+WoDX Chronicle. Fourteen W lines tell events the book events already tell (the Shattering, the Camarilla, the Convention of Thorns, the Maelstroms, the Week of Nightmares and others); the build leaves them out (TOLD_BY_BOOK). The eight house readings of the Americas, Africa and Oceania still waiting on the PC's book check stay out until it lands (WAITING). The timeline deconfliction check ran on the edited files: 6,477 events, no new clash.
+
+Reverse: empty the two lists.
+
+## B5930. Imports cost more the farther they came (2026-11-15)
+WoDX Storyteller, goods-place-rules.mjs. A good that WoDX Library says is not at home on this scene's land, but is at home somewhere else in that year, costs twice as much when its home is in the same part of the world (Moravia counts as Europe) and three times as much from another part. Goods found everywhere, coins and goods out of their time keep their price. Built at the Market Goods Desk's recommendation (https://claude.ai/artifact/NNY9DKE1hzvJZtSeHMqhys, item m1) while it waits.
+
+Reverse: IMPORT = {near: 1, far: 1}.
+
+## B5931. The land's own goods are a quarter cheaper (2026-11-15)
+WoDX Storyteller. A good whose entry names this region or its way of life costs three quarters of the usual price there (desk item m2).
+
+Reverse: OWN = 1.
+
+## B5932. Each land's trade (2026-11-15)
+WoDX Storyteller. Each of the 16 ways of life has one to three kinds of goods it has cheap (x0.85) and one or two it pays dear for (x1.25), a house reading of history: paper and cloth in China, cloth in India and the lands of Islam, fuel and timber in the north, food dear in the Sahel and in Tibet. It applies on top of the market's own index, fades from 1900 and is gone by 2000, and shows in the market window (desk item m3).
+
+Reverse: empty LAND_TRADE.
+
+## B5933. Caravans name their goods (2026-11-15)
+WoDX Storyteller. A caravan's card, the road report and the caravan list name up to two real goods of the sending market's land for each kind it carries, the land's own goods first, the same each time for the same caravan (desk item m4).
+
+Reverse: loadLabel returns label(k).
+
+## B5934. World news that moves the markets (2026-11-15)
+WoDX Storyteller, market-news-rules.mjs worldNewsFor. A world timeline event (WoDX Chronicle wh- and fdw-) tagged plague or famine in the homeland's own part of the world, or a war in Moravia when Moravia is home, offers the same market news card as the book events. Never the hidden story, never news a year old, and at most one card of each kind in 90 days of game time, so a long time skip brings one card, not hundreds (desk item m5).
+
+Reverse: worldNewsFor returns null.
+
+## B5935. The price says why (2026-11-15)
+WoDX Storyteller. A price carries "brought from far off", "brought from nearby lands" or "the land's own" after it, in every place that shows the price text (desk item m6).
+
+Reverse: drop WHY_WORDS from priceSync.
+
+## B5936. One setting for it all (2026-11-15)
+WoDX Storyteller. The world setting "Prices know where goods come from" (goodsByPlace, on by default) turns B5930 to B5935 off together.
+
+Reverse: set it off.
+
+## B5940. "Where you are now" (2026-11-15)
+WoDX Storyteller, setup-rules.mjs abroadPrimer. The players' primer journal gets a second page, "Where you are now". When the active scene stands in a region whose way of life (WoDX Chronicle sphereFor) differs from the homeland's, the page holds what everyone knows there (the world primers of B5880; Western Christendom reads as the era's own lines). It is rewritten when the active scene changes, when a scene's land is set, when the homeland changes and when an era is applied.
+
+Reverse: drop refreshAbroad's hooks in setup.mjs.
+
+## B5941. At home the page says so (2026-11-15)
+WoDX Storyteller. On a scene at home or with no land set, the page says the table is among its own people. The page is kept rather than deleted, so a link to it never breaks.
+
+Reverse: abroadPrimer returns an empty page.
+
+## B5942. A card when the table comes to another way of life (2026-11-15)
+WoDX Storyteller. Each time the active scene moves into another way of life than the last, a "Far from home" card for everyone names the land and links the page. Moving between scenes in the same land posts nothing.
+
+Reverse: refreshAbroad({card: false}) everywhere.
