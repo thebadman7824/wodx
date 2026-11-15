@@ -306,7 +306,7 @@ Next free block: B6220
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5680-B5709 | NPC Motives Desk: every NPC action has a reason and a follow-through (used B5680-B5703) | NPC, Storyteller |
 | B5710-B5729 | Aftercare of the carried (Aftercare Desk a1-a12) (used B5710-B5721) | NPC |
-| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5745) | tools |
+| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5746) | tools |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 | B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
 | B5800-B5809 | NPC Aftercare Desk: what comes after each NPC action (used B5800-B5806) | NPC, Chronicle |
@@ -9430,6 +9430,11 @@ Reverse: remove the map file and town.py; nothing else uses them.
 Tools. maps/lt_crafts.py redraws Craftsmen's Lane (66 by 40) with all 110 walls, 20 doors, 37 windows and 4 fences on the old scene's own squares, and a new roof picture for each of its 10 roof tiles. Each workshop is furnished so a player can name it by sight: horse stalls in the stables; the forge with its bellows, the anvil, the quench trough and horseshoes in the smithy; staves, hoops, new casks and the bending fire in the cooperage; four looms with cloth on them and bolts of cloth in the Weavers' Hall; dye vats in four colours, a kettle on the fire and lines of dyed cloth in the dyers' yard; the mash tun, the cooling tun and the furnace with its copper in the Brewhouse. The Shuttered House's day-rest room has no window and a bar on its door, as the scene's note says. town.py gains the forge, anvil, loom, vat, staves, hoops, handcart, dye line, brew furnace and horseshoes. The town ditch runs down the east side under a plank bridge.
 
 Reverse: remove the map file and the new pieces; nothing else uses them.
+
+## B5746. Every redrawn map is furnished so it looks lived in (2026-11-15)
+Tools. The sample maps looked bare, so the drawer gains dress.py. Once a map's own furniture is down, it fills each room, yard, street and stretch of wood with the furnishings of its kind of place. Furniture goes square along the walls first: shelves set with crockery, cupboards, benches, chests, stacked crates, rows of casks and sacks, woodpiles, workbenches with tools, tool racks, spinning wheels, sawhorses, grindstones and beds. Then come the small things of daily use: baskets, buckets, pots, kindling, brooms, rag rugs, boots, cloaks on pegs, stools, straw, dung, shavings, ferns, fallen branches and toadstools. Each trade has its own list (home, shop, store, hall, stable, joinery, smith, craft, dye, brew, market, street, yard, camp, wood, ruin), so a weaving hall gets wheels and baskets of wool, not sawhorses. Rooms are found by flooding between the map's own wall, door and window lines. A piece is laid only where the picture is still bare floor or ground and clear of anything that opens, so nothing lands on furniture, walls or doors. Every piece is drawn at true size, to be named by sight. The five maps drawn so far (Forest Road, High Woods, Altenhof, Lower Town Market, Craftsmen's Lane) are all re-dressed; the market square also gets more stalls and goods set out on cloths.
+
+Reverse: drop the dress() calls from the maps; the maps draw as before.
 
 ## B5750. Witness reactions given by a window act on the map (2026-11-15)
 WoDX Actions. The witness step takes results already rolled (the Delirium check, a demon's Revelation) and acts them out: a frozen witness is Immobilized for the scene, a fleeing one runs, a fighting one starts a fight; those who keep it go on the Masquerade record. With no revealed actor on the map, nothing is recorded against anyone.
