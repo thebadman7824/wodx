@@ -131,11 +131,13 @@ export function failingGates(report = "") {
  * "fails on main too" (not this change's: the gate or main is at fault), "new with this change", "passes alone"
  * (it fails only after other gates: leftovers or order), or "fails" on main jobs.
  */
-export function recheckVerdicts(gates, alone, main) {
+export function recheckVerdicts(gates, alone, main, notOnMain = new Set()) {
   const bad = r => new Set(failingGates(r));
   const a = bad(alone), m = main === null ? null : bad(main);
   return gates.map(gate => {
     if ( !a.has(gate) ) return {gate, verdict: "passes alone: it fails only after other gates (leftovers or order)"};
+    // B5590: a gate this change adds cannot run on main, so its failure there says nothing: the change must fix it.
+    if ( notOnMain.has(gate) ) return {gate, verdict: "NEW with this change: the gate is not on main yet, so this change must fix it"};
     if ( m === null ) return {gate, verdict: "fails alone too"};
     return {gate, verdict: m.has(gate) ? "fails on main too: not this change's fault" : "NEW with this change: passes on main"};
   });
