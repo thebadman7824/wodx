@@ -1222,7 +1222,7 @@ export async function open(actorOrId) {
   if ( has("deformity") && on() && (!sig.deformity || game.user.isGM) ) S.DEFORMITIES.forEach(d => buttons.unshift({action: `dfm:${d.key}`, label: `Deformity: ${d.label}`}));
   if ( has("camera") && on() && game.user.isGM && canvas?.scene ) buttons.unshift({action: "cam", label: S.watched(currentYear(), canvas.scene.flags?.[MODULE_ID]?.camera) ? "Mark scene not watched" : "Mark scene watched"});
   const pick = await foundry.applications.api.DialogV2.wait({window: {title: `${a.name}: ${isWraith(a) ? "Guild and legion" : rows.some(r => FAE_LIKE.has(r)) ? "kith, seeming and court" : rows.some(r => TRIBE_LIKE.has(r)) ? (rows.some(r => S.MAGE.includes(r) || S.HOUSES.includes(r)) ? "Tradition and House" : "tribe, auspice and breed") : "clan feature"}`}, content: `<div class="wct-sig-window">${body}</div>`, buttons, rejectClose: false});
-  if ( String(pick).startsWith("pod:") ) return POD.handle(a, pick, ask);
+  if ( String(pick).startsWith("pod:") || String(pick).startsWith("road:") ) return POD.handle(a, pick, ask);
   if ( pick === "glimpse" ) return glimpse(a);
   if ( pick === "splat" ) { const t = S.SMALL_LINES[small].table; const f = await ask("The group", [{name: "g", label: t.map(r => r.label).join(", "), value: rows[0]?.label ?? ""}]); return f ? setSplat(a, f.g) : null; }
   if ( pick === "guild" || pick === "wraith" ) { const w = wraithOf(a); const f = await ask("Guild, legion and faction", [

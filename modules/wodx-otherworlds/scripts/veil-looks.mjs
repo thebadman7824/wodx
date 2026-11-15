@@ -33,7 +33,7 @@ export function veilNow() {
   for ( const t of mine ) {
     let r = {};
     try { r = ratingsAt(t.document); } catch (e) { r = {}; }
-    const v = V.veilFor({gauntlet: r.gauntlet, shroud: r.ratings?.shroud}, {nature: natureOf(t.actor), gm: game.user.isGM});
+    const v = V.veilFor({gauntlet: r.gauntlet, shroud: r.ratings?.shroud}, {nature: natureOf(t.actor), gm: game.user.isGM, sights: V.sightsOf(t.actor?.flags?.["wodx-actions"] ?? {}, game.time?.worldTime ?? 0)});
     out.shimmer ||= v.shimmer; out.mist ||= v.mist;
   }
   return out;

@@ -636,13 +636,28 @@ export function applyBodyDerived(data, body) {
  * Hold and Grapple hold until the victim's next action, and a Stake or Impale with three damage successes stakes a
  * vampire (V20 Dark Ages p. 347). [{condition, name, lasts: "turn" | "staked"}]; empty on a miss.
  */
-export function followOn(key, { hit = false, damageSuccesses = 0, profile = "" } = {}) {
+export function followOn(key, { hit = false, damageSuccesses = 0, profile = "", chi = null, metal = false } = {}) {
     if (!hit) return [];
     if (key === "sweep" || key === "tackle") return [{ condition: "knockdown", name: "Knocked down", lasts: "turn" }];
     if (key === "hold" || key === "c_grapple") return [{ condition: "held", name: "Held", lasts: "turn" }];
-    if ((key === "stake" || key === "impale") && Number(damageSuccesses) >= 3 && profile === "vampire") return [{ condition: "staked", name: "Staked", lasts: "staked" }];
+    if ((key === "stake" || key === "impale") && Number(damageSuccesses) >= 3 && profile === "vampire" && kueiJinStaked(key, chi, metal)) return [{ condition: "staked", name: "Staked", lasts: "staked" }];
     return [];
 }
+
+/**
+ * B6302: a Kuei-jin is not staked as a Cainite is (Kindred of the East, pdf pp. 11 and 73). Yin is held
+ * by wood, as a Kindred is; Yang only by a metal blade or shaft of a foot or more driven through the heart (never a
+ * bullet or an arrow); Balance by neither. chi: null for a Cainite (the old rule), else "yin" | "yang" | "balance" | "".
+ * An aspect not yet set follows the Cainite rule. metal: the weapon is a long metal blade or shaft.
+ */
+export function kueiJinStaked(key, chi = null, metal = false) {
+    if (chi === null || chi === undefined || chi === "") return true;
+    if (chi === "yin") return !metal;
+    if (chi === "yang") return key === "stake" && !!metal;
+    return false;
+}
+/** A weapon that counts as a long metal blade or shaft for a Yang Kuei-jin (by its name). */
+export const LONG_METAL = /sword|sabre|saber|rapier|katana|jian|\bdao\b|spear|lance|pike|halberd|glaive|naginata|yari|bayonet|longsword|scimitar|falchion|iron bar|metal (bar|rod|pipe)|rebar|blade/i;
 /** The maneuver's key in MANEUVERS or CLASSIC ("normal" when it is neither). */
 export const maneuverKey = m => Object.entries({ ...MANEUVERS, ...CLASSIC }).find(([, v]) => v === m)?.[0] ?? "normal";
 
