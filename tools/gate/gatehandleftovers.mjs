@@ -21,7 +21,9 @@ export async function run() {
   const api = id => game.modules.get(id)?.api;
   const clock = game.time.worldTime;
   const heatWas = foundry.utils.deepClone(game.settings.get(C, "lawHeat"));
+  const huntWas = game.settings.get(C, "sigHunter");
   try {
+    await game.settings.set(C, "sigHunter", true);   // the Hunter features are off by default
     const scene = await G.scene();
     const [user, martyr, hurt, mark, blackmailer, wolf] = await G.make(Actor, [
       {name: "Gate Leftovers Wired", type: "Mortal", prototypeToken: {actorLink: true}},
@@ -87,6 +89,7 @@ export async function run() {
     });
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }
   finally {
+    try { await game.settings.set(C, "sigHunter", huntWas); } catch (e) { G.R.notes.push("sigHunter"); }
     try { await game.settings.set(C, "lawHeat", heatWas); } catch (e) { G.R.notes.push("law heat"); }
     if ( game.time.worldTime !== clock ) { try { await game.time.advance(clock - game.time.worldTime); } catch (e) { G.R.notes.push("clock"); } }
     return G.finish();
