@@ -23,7 +23,7 @@ test("the Wraith kit is registered, with its rows, its maker and its switch", ()
   assert.ok(K, "the wraith kit");
   assert.equal(K.setting, "craftWraith");
   assert.ok(K.settingName && K.settingHint && K.ref);
-  const rows = K.rows();
+  const rows = K.rows().filter(w => !w.level); // the two open rows; the named ones are in wraith-artifacts.test.mjs
   assert.deepEqual(rows.map(w => w.product).sort(), ["artifact", "relic"]);
   for ( const w of rows ) {
     assert.equal(K.row(w.key), w);
@@ -33,7 +33,7 @@ test("the Wraith kit is registered, with its rows, its maker and its switch", ()
   }
   const m = wraith();
   assert.deepEqual([m.kind, m.pathos, m.dexterity, m.crafts, m.corpus], ["wraith", 6, 3, 2, 10]);
-  assert.equal(K.listFor(m).length, 2);
+  assert.equal(K.listFor(m).filter(w => !w.level).length, 2);
   assert.equal(K.makerOf(K.factsFrom(sheet(), {profile: "lupine"})).kind, null);
   assert.equal(K.listFor(K.makerOf({profile: "mage"})).length, 0);
   assert.ok(K.makerOf(K.factsFrom(sheet({items: [{type: "Background", name: "Artificers' Guild", system: {}}]}), {profile: "wraith"})).artificer);

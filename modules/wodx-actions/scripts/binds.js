@@ -3,7 +3,7 @@
  * While a binding effect runs on a character a player moves:
  *   still  Hold and Possess: the player cannot move the token (the one who possesses moves the body)
  *   away   Fear: the token cannot be moved closer to the one feared
- *   ask    Sway and Bind (a command, an oath): each move goes to the Storyteller, who allows or refuses it
+ *   ask    Sway and Bind (a command, an oath), and a Kuei-jin's shadow soul: each move goes to the Storyteller, who allows or refuses it
  * The Storyteller moves any token freely. With no Storyteller on (a Lone Chronicle), a command's move stands with a reminder. The world setting "Bindings hold the token" turns it off.
  */
 const MOD = "wodx-actions";
@@ -19,7 +19,12 @@ export function bindingsOn(actor) {
   const out = [];
   for ( const e of actor?.effects ?? [] ) {
     if ( e.disabled ) continue;
-    const m = String(e.flags?.["wodx-chronicle"]?.timed?.key ?? "").match(KEY_RE);
+    const tk = String(e.flags?.["wodx-chronicle"]?.timed?.key ?? "");
+    // B6018: shadow soul (Kindred of the East): the P'o has the body, so each move goes to the Storyteller, as a command's does
+    if ( tk === "wodx-kote-soul" && [...(e.statuses ?? [])].some(x => String(x).endsWith("shadow-soul")) ) {
+      out.push({key: "shadow", rule: "ask", name: "Shadow soul", by: null, id: e.id ?? null}); continue;
+    }
+    const m = tk.match(KEY_RE);
     if ( !m ) continue;
     out.push({key: m[1], rule: RULE[m[1]], name: e.name ?? m[1], by: e.flags?.[MOD]?.bindBy ?? null, id: e.id ?? null});
   }

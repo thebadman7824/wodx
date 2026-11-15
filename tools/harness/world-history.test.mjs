@@ -39,9 +39,24 @@ test("B5920: ids are unique, clash with no other event and come from the year an
   for ( const e of WH.events ) assert.equal(again.get(`${e.year}|${e.name}|${e.place}`), e.id);
 });
 
-test("B5920: the house readings still waiting on the book check stay out", () => {
-  for ( const e of WH.events ) assert.ok(!WAITING.has(`${e.year}|${e.name}`), e.id);
-  assert.equal(WAITING.size, 8);
+test("B6130: the eight readings held for the book check are in, each worded as the books back it", () => {
+  assert.equal(WAITING.size, 0);
+  const by = (y, name) => WH.events.find(e => e.year === y && e.name === name);
+  const want = [[1521, "The dead of the conquest", /Obsidian/], [1692, "What was at Salem", /Verbena/],
+    [1791, "The dead walk with the living", /Les Invisibles/], [1830, "The Squattocracy", /Squatters' Council/],
+    [1885, "The scramble", /Bush of Ghosts/], [1890, "The Ghost Dance", /Wovoka/], [1994, "The killing in Rwanda", /Laibon/]];
+  for ( const [y, name, re] of want ) {
+    const e = by(y, name);
+    assert.ok(e, `${y} ${name}`);
+    assert.equal(e.hidden, true, name);
+    assert.match(e.summary, re, name);
+    assert.doesNotMatch(e.summary, /house reading/i, name);
+  }
+  // B6131: the Croatan card is told by the book event, so it is left out rather than firing twice
+  assert.equal(TOLD_BY_BOOK["1589|The Croatan"], "croatan");
+  assert.ok(!WH.events.some(e => e.year === 1589 && e.name === "The Croatan"));
+  // B6132: the War of Tears stays the book event's; the 1830 card no longer claims to start it
+  assert.ok(!WH.events.some(e => /War of Tears/.test(e.name)));
 });
 
 test("B5926: no house reading tells again what a book event already tells", () => {

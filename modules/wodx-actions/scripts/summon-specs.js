@@ -913,6 +913,18 @@ export const SPECS = {
   "page": "Wraith 20th p. 214",
   "note": "The wraith rides a body dead no longer than their Stamina in hours. 3 Pathos, 1 Willpower; Shadow gains Angst. Shares damage; heavy wound penalty."
  },
+ "mage-dark-ages|utterance-of-the-72-names": {
+  "what": "construct",
+  "profile": "servant",
+  "count": {"by": "fixed", "fixed": 1, "max": 1},
+  "lasts": {"kind": "until-destroyed"},
+  "control": {"mode": "orders", "orders": "simple"},
+  "cost": {"pool": "quintessence", "per": 1},
+  "stats": {"strength": 10, "dexterity": 2, "stamina": 8, "wits": 2, "brawl": 2, "health": 10, "armor": 4, "willpower": 3, "attack": "brawl"},
+  "onDeath": "Broken, it slumps back into wet earth.",
+  "page": "DA Mage Grimoire p. 58",
+  "note": "B6017: a golem of clean earth and water, best kept as an Ongoing spell. Eats 1 Quintessence a day or sleeps; refuses cruel orders; a botch puts a hostile spirit inside it."
+ },
  "mage-dark-ages|ancient-warder-of-the-land": {
   "what": "plant",
   "profile": "servant",

@@ -56,7 +56,7 @@ export function markTrack(lost = 0, n = 0, structure = 0) {
 export function headlights(kind, year, on = false) {
   const W = WAYS[kind];
   if ( !on || !W?.motor || (Number(year) || 0) < 1900 ) return null;
-  const big = ["truck", "armoured", "tank"].includes(kind);
+  const big = ["truck", "armoured", "tank", "train", "tram"].includes(kind);
   return {dim: big ? 24 : 18, bright: big ? 10 : 8, angle: 70, color: "#ffe9b0", alpha: 0.35, animation: {type: null}};
 }
 
