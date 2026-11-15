@@ -694,9 +694,11 @@ export function build(ctx) {
 
     /* ---------------- The clock: healing, dawn and dusk, torpor ---------------- */
 
-    let clockBusy = false;
+    // One at a time; a move of the clock while one runs is looked at again after it, so the newest time is never missed
+    let clockBusy = false, clockAgain = false;
     async function onClock({ force = false } = {}) {
-        if (!isActiveGM() || clockBusy) return null;
+        if (!isActiveGM()) return null;
+        if (clockBusy) { clockAgain = true; return null; }
         clockBusy = true;
         try {
             const now = game.time.worldTime;
@@ -715,6 +717,7 @@ export function build(ctx) {
             }
         } catch (e) { console.error("WoDX | clock", e); }
         finally { clockBusy = false; }
+        if (clockAgain) { clockAgain = false; return onClock({ force }); }
         return true;
     }
 

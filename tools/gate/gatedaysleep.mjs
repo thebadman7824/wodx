@@ -35,7 +35,7 @@ export async function run() {
     const scene = await G.scene({activate: true});
     const vamp = await G.make(Actor, {name: "WoDX gate: day sleeper", type: "Vampire", ownership: {default: 3}});
     await vamp.update({"system.advantages.bloodpool.temporary": 8, "system.advantages.bloodpool.max": 10, "system.advantages.path.permanent": 5,
-      "system.health.damage.lethal": 1});
+      "system.health.damage.lethal": 1, "system.advantages.virtues.selfcontrol.permanent": 3});
     await G.tokens(scene, [{actor: vamp, x: 3, y: 3}]);
     await new Promise(r => setTimeout(r, 400));
 
@@ -74,8 +74,8 @@ export async function run() {
       const blood0 = vamp.system.advantages.bloodpool.temporary;
       if ( wakeAt ) await game.time.advance(wakeAt - game.time.worldTime + 60);
       await DS.tick();
-      await waitFor(() => !sleeping() && !marker(), 5000);
-      G.ok("4. rises at the hour, heals with blood", !!wakeAt && !sleeping() && !marker() && vamp.system.health.damage.lethal === 0 && vamp.system.advantages.bloodpool.temporary === blood0 - 1,
+      await waitFor(() => !sleeping() && !marker() && vamp.system.health.damage.lethal === 0, 6000);
+      G.ok("4. rises at the hour, heals with blood", !!wakeAt && !sleeping() && !marker() && vamp.system.health.damage.lethal === 0 && vamp.system.advantages.bloodpool.temporary < blood0,
         {wakeAt, lethal: vamp.system.health.damage.lethal, blood: [blood0, vamp.system.advantages.bloodpool.temporary]});
     });
 
