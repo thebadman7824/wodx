@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5920
+Next free block: B5930
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -319,6 +319,7 @@ Next free block: B5920
 | B5880-B5889 | Era primers by region: what everyone knows, by the homeland's way of life (used B5880-B5882) | Storyteller |
 | B5890-B5899 | Future Darkness world news by region: the Americas, Africa and Oceania after 2023 (used B5890-B5892) | Chronicle |
 | B5900-B5919 | War beyond Europe: armies, sieges and ships by land (Armies and Ships Desk) (used B5900-B5910) | Storyteller |
+| B5920-B5929 | The classic world timeline in the game (used B5920-B5926) | Chronicle, Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9726,3 +9727,38 @@ Reverse: remove LAND_SHIPS from SHIPS.
 WoDX Storyteller. A tick box on the navigation roll where it counts: a wayfinder of the islands makes it 2 easier in the Pacific and off Aotearoa; a pilot of the Indian Ocean with the kamal counts as a pilot's book there. Desk item d2.
 
 Reverse: make navAid return 0.
+
+## B5920. The world timeline, 1197 to 2009, as dated events (2026-11-15)
+WoDX Chronicle. The approved round-three world timeline (docs/research/era-timelines/r3, the eight classic era files) is built by tools/timeline/build-world-history.mjs into data/world-history.mjs: one dated event per line, with its part of the world (MO, EU, ME, AS, AF, AM, OC), its place, its tags, its era and the lines it touches. Events from 1990 belong to the classic timeline only; earlier ones fire on both. Ids are made from the year and the title (wh-1347-...), so editing or adding lines never renames an event or loses the Storyteller's overrides. The research files' 167 lines with gendered pronouns were reworded so the in-game text stays neutral, and "the house reading" is told in the game as "the hidden story".
+
+Reverse: drop WORLD_HISTORY from EVENTS in events.mjs.
+
+## B5921. The World of Darkness side is the Storyteller's (2026-11-15)
+WoDX Chronicle. Lines of kind W (history with a World of Darkness reading) are hidden events. They fire and call wodxEventFired like any other, but are never on the players' card or the Chronicle Rules page; a "Behind the curtain" card is whispered to the Storytellers with the ones heard of here.
+
+Reverse: drop `hidden` in the build.
+
+## B5922. A card keeps to twelve pieces of world news (2026-11-15)
+WoDX Chronicle. However many world events a time skip passes, a card tells every book event and only the newest twelve of the world timeline, and counts the rest ("more pieces of news from these parts"). All of them are on the Dated events page.
+
+Reverse: TOLD_CAP = Infinity.
+
+## B5923. One era at a time in the Dated events window and on the rules page (2026-11-15)
+WoDX Chronicle. The Dated events window lists the book events and the world timeline of one era (the clock's when it opens), with a list to switch era or show none. Switching saves the page first, and saving keeps the overrides of events the page does not list. The Chronicle Rules page, which players can read, lists the clock's era of the world timeline as heard here, without the hidden story, and counts the rest.
+
+Reverse: list every event again (slow with three thousand rows).
+
+## B5924. Legends keeps Moravia's own history (2026-11-15)
+WoDX Chronicle. Legends writes world timeline events only when they happened in Moravia, the chronicle's own part, and never the hidden story; the Future Darkness branch's world news is kept as B5891 has it. The Malkavian glimpse never foretells a hidden event.
+
+Reverse: inLegends returns true.
+
+## B5925. Signals take only fresh news heard here (2026-11-15)
+WoDX Storyteller. The signal board turns a world timeline event into a signal only when it is heard where the chronicle stands and is no more than a year old, so a century's time skip does not fill the board with old news.
+
+Reverse: drop quietNews in signals.mjs.
+
+## B5926. Nothing fires twice (2026-11-15)
+WoDX Chronicle. Fourteen W lines tell events the book events already tell (the Shattering, the Camarilla, the Convention of Thorns, the Maelstroms, the Week of Nightmares and others); the build leaves them out (TOLD_BY_BOOK). The eight house readings of the Americas, Africa and Oceania still waiting on the PC's book check stay out until it lands (WAITING). The timeline deconfliction check ran on the edited files: 6,477 events, no new clash.
+
+Reverse: empty the two lists.

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.106.1 (The signal board takes world timeline news only when it is heard here and less than a year old, so a long time skip or news from the far side of the world does not flood Threads of Fate (B5925))
 - 0.106.0 (War beyond Europe: armies, sieges and ships by land, from the Armies and Ships Desk at its recommended picks (B5900 to B5910))
 - 0.105.0 (Era primers by region (B5880-B5882): the players' primer used to describe feudal Europe wherever the chronicle stood. A homeland that follows another way of life (the Eastern church, the lands of Islam, India, China and Korea, Japan, mainland Southeast Asia, Tibet, the Malay world, the Sahel, the Swahili coast and Ethiopia, southern and central Africa, Mesoamerica, the Andes, Polynesia, the far north) now gets two or three paragraphs of what everyone there knows, for five periods from 1197 to the Future Darkness. The page is written again when an era is applied or the homeland changes; the Storyteller's own pages in the journal stay as they are)
 - 0.104.1 (B5089: the captive's rumour)
