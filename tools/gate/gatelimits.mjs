@@ -194,7 +194,7 @@ export async function run() {
       const wp0 = Number(body().system?.advantages?.willpower?.temporary) || 0;
       const cards = [];
       for ( let k = 0; k < 4 && !body().statuses?.has?.("wodx-numbing"); k++ ) {
-        const m = await A.fomor.numbing(body());
+        const m = await A.fomor.numbing({actor: body()});
         cards.push(String(m?.content ?? "no card").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").slice(0, 120));
         await waitFor(() => body().statuses?.has?.("wodx-numbing"), 1500);
         if ( !body().statuses?.has?.("wodx-numbing") ) await L.clear?.(body());
