@@ -248,12 +248,14 @@ test("queue relief in the queue: bulk approve with an exception, approve on its 
   await A.decideMany("reject", {ids: [ids[1]]});
   assert.ok(!A.pending().some(p => p.type === "test-kind"));
 
+  // the start level (automation.mjs seedLevel) may already have set standing approvals of its own by now
+  const autoBefore = foundry.utils.deepClone(set("autoApprove") ?? {});
   await A.setAuto("test-kind", true);
   assert.equal(await A.addToQueue({id: "auto1", type: "test-kind", title: "four", data: {}}), "auto");
   assert.ok(done.includes("four"));
   assert.ok(A.history().find(h => h.id === "auto1")?.auto, "listed as approved on its own");
   await A.setAuto("test-kind", false);
-  assert.deepEqual(set("autoApprove"), {});
+  assert.deepEqual(set("autoApprove"), autoBefore);
 
   await game.settings.set(M, "npcCap", 1);
   A.resetSession();

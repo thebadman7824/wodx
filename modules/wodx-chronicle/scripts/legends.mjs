@@ -3,6 +3,7 @@ import {getEngine} from "./calendar.mjs";
 import {searchBox} from "./search.mjs";
 import * as events from "./events.mjs";
 import * as L from "./legends-rules.mjs";
+import {inLegends} from "./events-rules.mjs";
 import * as LS from "./legend-standing-rules.mjs";
 import {propose, registerHandler} from "./approvals.mjs";
 import {officeTitle, polityFor} from "../../wodx-npc/scripts/politics-rules.mjs";
@@ -128,7 +129,7 @@ export function gather(prevSnap = null) {
   const at = game.time.worldTime, d = today();
   const when = {at, ...d};
   const lines = [
-    ...L.eventLines(fired.map(id => byId.get(id)).filter(ev => ev && events.heard(ev, codes))),
+    ...L.eventLines(fired.map(id => byId.get(id)).filter(ev => ev && inLegends(ev) && events.heard(ev, codes))),
     ...L.actorLines(actorRows(), other(CREATION, "archived", {}), dateOf),
     ...L.ledgerLines(other(ST, "ledger", {entries: []})?.entries ?? [], dateOf),
     ...L.battleLines(other(ST, "battles", {list: []})?.list ?? [], dateOf),
