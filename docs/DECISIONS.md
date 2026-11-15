@@ -246,6 +246,7 @@ Next free block: B5780
 | B5010-B5029 | The Storyteller's Hand, part three: fire, noticing, and the rest of the desk acts by itself (Ben's desk picks, 14 November 2026) (used B5010-B5024) | Interactables, Actions, Senses, Library, Chronicle, Storyteller, Otherworlds, Creation |
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5064) | Creation, NPC, Actions |
+| B5070-B5089 | Carrying the fallen and moving large things (Carry Bodies Desk) (used B5070-B5086) | Interactables, Combat, NPC, Solo |
 | B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
 | B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5127) | NPC, Combat, Actions |
 | B5130-B5139 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5130-B5137) | Creation, Actions, NPC |
@@ -8300,6 +8301,91 @@ Reverse: animalOrderBlock in give().
 
 ## B5064. Kept for later (2026-11-14)
 Coat colours are stored on the animal (flags.wodx-creation.animal.coat) for the sprite parts; drawing them is the pixel sprites' work.
+
+## B5070. Who can carry or drag (2026-11-14)
+WoDX Interactables. Anyone in reach of a character who is Incapacitated, unconscious, asleep, staked, in torpor, paralysed or dead gets Carry and Drag on the hand button of the token HUD, friend or foe. Seven health levels filled counts as Incapacitated. Ben's pick on the Carry Bodies Desk (c1).
+
+Reverse: turn off "Carrying the fallen and moving large things" in Configure Settings.
+
+## B5071. Carry if the lifting chart lifts it, else drag (2026-11-14)
+WoDX Interactables. The VtDA20 lifting chart (p. 335) against the body's weight. Strength counts the sheet's total (Crinos and the other forms) and Potence; two or more together add their Strength. A grown person weighs 70 kg, a youth 60, a child of 12 to 14 45, of 7 to 11 30, a small child 15; Glabro 110, Crinos 300, Hispo 180, Zulo 160; a creature by its squares (40, 450, 900, 2500 kg); mist and a body in the earth cannot be taken hold of. The weights are house figures. Ben's pick (c2).
+
+Reverse: edit PERSON_KG, SHAPE_KG and CREATURE_KG in haul-rules.mjs.
+
+## B5072. Half pace carrying, quarter dragging, no roll for a body (2026-11-14)
+WoDX Interactables and Combat. WoDX Combat's movement limit and the move ruler's floating count take the cut. A body more than two chart steps past the team's Strength will not move until others take hold (house reading: the desk set that limit for things, and it holds for bodies too). Ben's pick (c3).
+
+Reverse: change PACE in haul-rules.mjs, or drop the haul branch in moveCheck (movement.js).
+
+## B5073. Hands: carrying takes both, dragging one; more hands, more free (2026-11-14)
+WoDX Interactables and Combat. Carrying a body or straining at a thing past the chart takes two hands; dragging, hauling a pile or pushing something light takes one. Hands come from WoDX Combat's body (a Vicissitude extra arm counts; a beast holds in its jaws, one). A weapon from the sheet needs a free hand, two for a two-handed one; with two hands and one dragging, the other is the off hand (+1 difficulty, V20 p. 273, none with Ambidextrous); a shield needs a hand of its own beside the weapon. Natural weapons, punches and kicks need no hands. Ben's pick (c4), with Ben's note: hands must allow for characters with more than two.
+
+Reverse: change HANDS or attackWith in haul-rules.mjs, or drop handsCheck in Combat main.js.
+
+## B5074. In a fight: +1 to dodge, dropping is free, a fall drops it (2026-11-14)
+WoDX Interactables and Combat. Any burden (a body or a thing) puts a dodge at +1 difficulty. Letting go costs no action. Knocked down, dazed, stunned, prone or going down drops the load at once, with a card. Ben's pick (c5).
+
+Reverse: set DODGE to 0 in haul-rules.mjs; drop DROPS in haul.mjs.
+
+## B5075. The body on the map, and the trail (2026-11-14)
+WoDX Interactables. A carried body lies on the carrier's square, turned on its side and dimmed; a dragged one lies a square behind. Dragging leaves a line drawn on the map: scuffs, or blood for a body with lethal or aggravated damage or a dead one. A blood trail also leaves a trail clue where it began, for trackers to study, and a map event for the town. Ben's pick (c6).
+
+Reverse: drop growTrail from lay in haul.mjs.
+
+## B5076. Laying it down: on the ground, aboard, on a bed or a table (2026-11-14)
+WoDX Interactables. Next to a mount or vehicle with a seat free, the body is laid aboard as a passenger and goes where it goes; on a bed or a table it lies on the tile. Ben's pick (c7).
+
+Reverse: drop the onto branches in release (haul.mjs).
+
+## B5077. NPCs rescue their own, hide bodies and take captives (2026-11-14)
+WoDX NPC. An NPC who is retreating with an ally down within reach carries or drags the ally away; a Kindred, a cultist or anyone hiding its nature with mortals about drags a body out of their sight; an NPC with no foe standing in reach takes an incapacitated rival, enemy or hostile player character captive and carries them off. Suggest mode names it on the Storyteller's card with Accept; Auto does it. "Leaves the fallen where they lie" in the Behaviour window switches it off for one NPC. Ben's pick (c8), with Ben's note: NPCs also capture incapacitated rivals, enemies and hostile player characters.
+
+Reverse: have carryOption in npc-rules.mjs return null.
+
+## B5078. A carried character who wakes can struggle free or stay (2026-11-14)
+WoDX Interactables. A card to the owner: Struggle free (Strength + Athletics at 6 against the carrier's Strength at 6, more successes win) or Stay carried. Moving their own token is struggling free; one still down is put back. A Storyteller's move of a carried token lets it go. Ben's pick (c9).
+
+Reverse: drop movedWhileCarried and the wake card in haul.mjs.
+
+## B5079. In a Lone Chronicle a companion carries the player (2026-11-14)
+WoDX Solo and NPC. When the lone player's character goes down, the nearest companion (an NPC who serves them, or a friendly NPC of their party) carries or drags them away from danger by itself; the panel's Carry the fallen asks a companion to carry another fallen one. Ben's pick (c10).
+
+Reverse: turn off "Companions carry the fallen" in WoDX Solo's settings.
+
+## B5080. Which things move (2026-11-14)
+WoDX Interactables. Made-map chests, boxes and crates, barrels and sacks, cabinets and wardrobes, desks, strongboxes, safes, beds and tables, and carts, carriages, motorcycles and motor cars with nobody at the reins. Counters, bars, walls, doors and the rest of the house stay. Any tile the Storyteller gives a weight moves; Fixed in place keeps one still. WoDX keeps no weights for loose gear and no gear on the map (the Library's Examine left weight out), so heavy loose items are the stores: crates, barrels and sacks. Weights are house figures (a chest 30 kg, a barrel 100, a cabinet 60, a desk 45, a safe 400, a bed 50, a wardrobe 70, a table 30, a cart 250, a carriage 600, a car 1,100, and a kilo for each thing inside). Ben's pick (c11).
+
+Reverse: edit CONTAINER_KG, HIDE_KG, COVER_KG and VEHICLE_KG in haul-rules.mjs.
+
+## B5081. Push and pull by the lifting chart, help adds up (2026-11-14)
+WoDX Interactables. Under the chart: half pace, no roll. Up to two steps over: quarter pace and Strength + Athletics at 6 each turn; a failed roll keeps the thing and its holder where they were. Past that it will not budge, and a player's move is refused until others take hold. A thing that was only part of the map picture cuts its piece of the picture out as it first moves, and the floor beside it covers the spot it left. Ben's pick (c12).
+
+Reverse: change STRAIN_STEPS in haul-rules.mjs; drop liftPicture in haul.mjs.
+
+## B5082. Wheels halve the load, rough ground doubles it, no stairs (2026-11-14)
+WoDX Interactables. A cart, carriage, motorcycle or car, or any tile marked On wheels, counts as half its load and what lies aboard; mud, snow, rubble, sand or a bog (a region's name, the scene's ground, snow lying or rain out of doors) takes it back to full. A wheeled thing stops at a ladder or stairs tile. Ben's pick (c13).
+
+Reverse: change movingKg in haul-rules.mjs.
+
+## B5083. Dragging furniture is loud (2026-11-14)
+WoDX Interactables. Each turn of moving furniture of 20 kg or more without wheels is loud: NPCs in earshot roll to hear it and a map event goes out, as climbing and falls do. A cart creaks (quiet), a dragged body is quiet, carrying is silent. Ben's pick (c14).
+
+Reverse: change noiseOf in haul-rules.mjs.
+
+## B5084. Hauling a pile (2026-11-14)
+WoDX Interactables. A crate, barrel, sack or basket of goods (a container of the box kind) is hauled along at half pace with one hand, its goods inside it. Ben's pick (c15).
+
+Reverse: empty PILE_KINDS in haul-rules.mjs.
+
+## B5085. Furniture in a doorway blocks it (2026-11-14)
+WoDX Interactables. A thing left over a door's middle draws a wall in the doorway (it blocks sight too, unless it is a table or a vehicle) and is good cover (+2, V20 p. 286). Shoving it aside from either side is the same push by the chart. Ben's pick (c16).
+
+Reverse: drop settleBarricade in haul.mjs and the barricade line in coverOnShot (main.mjs).
+
+## B5086. No general encumbrance (2026-11-14)
+WoDX Interactables. Only bodies and large things use these rules; everyday gear stays as it is. Ben's pick (c17).
+
+Reverse: none needed; nothing was built for it.
 
 ## B5090. Golconda ends when its purity fails (2026-11-14)
 WoDX Actions. A vampire in Golconda falls from it by itself when the Road drops below 7 or Conscience (or Conviction) below 4 (V20 Dark Ages p. 359; Ben's pick go1). A card goes to the player and the Storyteller, and "Golconda lost" floats over the token. Frenzy, Rötschreck and the nightly blood loss return. The long road can be walked again. Setting "Golconda's rules".
