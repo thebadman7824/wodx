@@ -541,7 +541,7 @@ async function applyCore(item, casterName = "the caster") {
       // Rise: the token takes the Fly way of moving first, then goes up (Actions 3.42.1: Foundry 14 lifts a flier)
       if ( tok && o.feet ) {
         if ( "movementAction" in tok && tok.movementAction !== "fly" ) await tok.update({movementAction: "fly"});
-        await tok.update({elevation: n(tok.elevation) + o.feet});
+        await tok.update({elevation: n(tok.elevation) + o.feet}, {animate: false});
       }
       if ( tok && o.vision ) await tok.update({"sight.visionMode": "darkvision", "sight.range": Math.max(n(tok.sight?.range), 30)});
       if ( o.everyTurn && effect?.uuid ) await TURN.attach(a, o.everyTurn, {effect: effect.uuid, label: o.label ?? o.name, by: casterName});
