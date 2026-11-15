@@ -295,6 +295,7 @@ Next free block: B5650
 | B5580-B5589 | Names raised to 300, Mizrahi (used B5580) | Creation |
 | B5590-B5599 | Recheck: gates not on main (used B5590) | tools (PC job queue) |
 | B5600-B5609 | Names made by pattern for the short lists (used B5600) | Creation |
+| B5610-B5619 | Fomor powers: the full W20 list plays from the Fomor power window (used B5610-B5619) | Actions, Combat, Senses |
 | B5620-B5629 | Gates failing on main: court hunts batch write, gate-interact steps (used B5620-B5621) | Actions, gates |
 | B5630-B5639 | Blood hunts: court Kindred turn in batches (used B5630) | Actions |
 | B5640-B5649 | German names before 1900, and refilling emptied tables (used B5640-B5641) | Creation, Chronicle |
@@ -8784,6 +8785,56 @@ Reverse: drop the notOnMain set in runner.mjs recheck().
 WoDX Creation. Ben asked (15 November 2026) whether lists under 300 names could be filled with names made from how the names were formed, and approved the plan: recorded names first, made names only where the records show the rule. Ten peoples qualify: the Lakota, Cheyenne, Mandan, Hidatsa, Arikara, Pawnee, Crow, Blackfoot, Arapaho and Kiowa, whose recorded own names are two-part names in translation (a describing word and a thing, as Red Cloud; a number and things, as Two Crows; women's names often ending in Woman). New names join only parts that the same people's records hold, from a fixed list of English describing words and things, so a word in the people's own language, a nation's name or a title never becomes a part. Peoples with no recorded women's own names get no made women's names. The made names sit in Roll Tables of their own ("made by pattern", data/people-patterned.mjs, written by tools/names/pattern-names.mjs) and are drawn a third as often as the recorded own names. The other 26 short lists (Tuareg, Moro, Banyarwanda, Sami, Khmer, Amazigh, Maya, the Haudenosaunee, Algonquian, Southwest, Basin, Northwest Coast, Cree, Anishinaabe, Inuit, Taíno, Aboriginal, Kongo, Luba, Ganda, Filipino and the Comanche and Diné) are single names in the people's own language with no rule in the records that could make more without inventing words, so nothing is made for them. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: empty PATTERNED in data/people-patterned.mjs.
+
+## B5610. Every W20 fomor power plays itself (2026-11-15)
+WoDX Actions. Ben asked why the other fomor powers stayed with the Storyteller (2026-11-15 02:15Z). All 73 on W20 pp. 430-439 are now in fomor-powers.js, in WoDX's own words with their pages. A Power item named after one is the fomor's power. Always-on powers work from the sheet through the system's own bonus rows on that item, natural weapon items, the token's sight and flags; rolled and free powers use the Fomor power window.
+
+Reverse: delete fomor-powers.js and put fomor.js back to the Numbing-only window.
+
+## B5611. A power's time on the fomor ends by itself (2026-11-15)
+WoDX Actions. What a rolled power does to the fomor (bonus rows, a weapon, flight, fire, a hidden or bigger token, shadow) is a Chronicle timed effect whose end reverts it (wodx-actions.fomorOff).
+
+Reverse: drop the reverter; the Storyteller takes the changes off by hand.
+
+## B5612. Gaseous and Liquid forms and Weakened are conditions (2026-11-15)
+WoDX Actions. Gaseous Form and Viscous Form put a no-attack condition on the fomor; Molecular Weakening marks the target Weakened (two dice more to hit it, a WoDX reading of doubled harm, in PENDING-REVIEW).
+
+Reverse: remove the three conditions.
+
+## B5613. Lasting harm rides each turn (2026-11-15)
+WoDX Actions. Hazardous Heave's two levels a turn and Malleate's level a turn a success use the each-turn harm of turns.js until stopped.
+
+Reverse: remove everyTurn from the results.
+
+## B5614. Regeneration and Extra Speed each new round (2026-11-15)
+WoDX Actions. On each new round of a fight the active Storyteller heals a bashing or lethal level of a fomor with Regeneration and gives a fomor with Extra Speed an extra action (the extraActions flag WoDX Combat reads).
+
+Reverse: remove the updateCombat hook in fomor.js.
+
+## B5615. Berserker's Rage and Spirit Ties' Gnosis are pools on the fomor (2026-11-15)
+WoDX Actions. The mortal sheet has neither trait, so they are flags: Berserker gives five Rage (a point back each new scene; one buys an extra action from the window), Spirit Ties a point of Gnosis a purchase up to five (back each new scene; pays Sense Gaia, rolls Umbral Passage). Where a power costs Rage the fomor lacks, Willpower stands in, as the book allows for Gifted Fomor (p. 434). Animal Control and Slither Skin summon through their own summoning specs.
+
+Reverse: drop the pools and charge Willpower only.
+
+## B5616. Blows on a fomor's flesh (2026-11-15)
+WoDX Actions, Senses. When a close blow lands on a fomor: Poison Tumors splash three lethal dice, Toxic Secretions a die a level (bites, claws and holds), Tar Skin holds a bare-handed attacker for the scene. A fomor's wounding Venomous Bite adds Strength + 2 aggravated, not soaked. Triatic Sense and a Deception in force keep Sense Wyrm from finding the fomor; any other fomor reads as Wyrm-tainted to the senses.
+
+Reverse: remove the wodxAttackRolled hook and the senses check.
+
+## B5617. NPC fomor choose their powers (2026-11-15)
+WoDX Actions. The NPC power choice (B4926) adds a fomor's usable powers with their own keywords and calls the Fomor power window to use one.
+
+Reverse: drop the fomor branch in npcPowers.
+
+## B5618. Homogeneity takes dice from the next power (2026-11-15)
+WoDX Actions. A target of Homogeneity carries a flag; the next power window it opens (any line, through the limits gate) rolls that many dice fewer, once.
+
+Reverse: remove the flag and the takeDull step in rollPool.
+
+## B5619. Armored Skin, Immunity to the Delirium and Gifted Fomor (2026-11-15)
+WoDX Actions, Combat. Armored Skin lets Stamina soak lethal harm (Combat's soak options). Immunity to the Delirium counts as Kinfolk for the Delirium and for witnesses. Gifted Fomor pays a Gift's Rage or Gnosis with Willpower and offers the Gift from the Fomor power window.
+
+Reverse: remove the three checks.
 
 ## B5620. The court's hunt check writes once per faction turn (2026-11-15)
 WoDX Actions. autoHunts set the huntLooked flag on every Kindred one at a time. With hundreds of Kindred in the
