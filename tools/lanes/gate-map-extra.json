@@ -13,6 +13,10 @@
     "gatepowers": [
       "wodx-actions",
       "wodx-combat"
+    ],
+    "gateservants": [
+      "wodx-npc",
+      "wodx-combat"
     ]
   },
   "remove": {},

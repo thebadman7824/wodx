@@ -103,3 +103,24 @@ export function describe(kind) {
   const k = KINDS[kind], s = SIZES[sizeOf(kind)];
   return `${k?.label ?? "Animal"}, ${s.label.toLowerCase()}: holds ${s.blood} vitae, needs ${s.monthly} a month`;
 }
+
+/**
+ * B5130: the domitor's clan weakness in an animal ghoul that holds five or more points (V20 Dark Ages p. 401). Only
+ * the weaknesses that fit a beast; clans whose weakness needs a mind of its own (Tremere, Giovanni and the like) have
+ * none. frenzy: added to the difficulty of the animal's frenzy roll. Each is shown as a mark on the token.
+ */
+export const MARK_AT = 5;
+export const CLAN_MARKS = {
+  nosferatu: {label: "Hideous", text: "The beast has turned hideous; people near it check for fear."},
+  lasombra: {label: "No reflection", text: "The beast casts no reflection."},
+  setite: {label: "Shuns the sun", text: "Sunlight burns the beast as it burns its master."},
+  brujah: {label: "Quick to rage", text: "Frenzy is one harder for the beast to resist.", frenzy: 1},
+  gangrel: {label: "Quick to rage", text: "Frenzy is one harder for the beast to resist.", frenzy: 1},
+  malkavian: {label: "Odd ways", text: "The beast keeps an odd habit: it circles, or stares at nothing."},
+  ventrue: {label: "Picky", text: "The beast will feed from only one kind of prey."},
+  toreador: {label: "Entranced", text: "The beast freezes before bright or beautiful things."}
+};
+/** The mark an animal ghoul shows: its domitor's clan id and the points in it. -> a CLAN_MARKS entry or null. */
+export function clanMark(clanId, points = 0) {
+  return Number(points) >= MARK_AT ? CLAN_MARKS[clanId] ?? null : null;
+}

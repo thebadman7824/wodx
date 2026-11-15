@@ -4,6 +4,7 @@
  * derangements at Virtue 7 and above, and the Imbuing (modern only). Pure rules: reckoning-rules.js.
  */
 
+import * as LIM from "./limits.js";
 import * as K from "./reckoning-rules.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -18,7 +19,8 @@ const ATTR = ["strength", "dexterity", "stamina", "charisma", "manipulation", "a
 
 export function build(ctx) {
     const { post, rollPool, rollBlock, dialog, attr, findAbility, updateActor } = ctx;
-    const sceneKey = () => `${canvas?.scene?.id ?? "none"}:${n(game.settings.get(MOD, "wraithScene"))}`;
+    // B4920: one scene count for everything that works once a scene (End the scene, or a new active map)
+    const sceneKey = () => `s${LIM.sceneNo()}`;
     const sessionKey = () => game.settings.get(MOD, "sessionId") || "";
 
     function info(actor) {
@@ -133,6 +135,9 @@ export function build(ctx) {
         return dialog(`Use an edge: ${actor.name}`, content, "Use", async fd => {
             const e = K.edgeFor(fd.edge);
             if (!e) return null;
+            // B4921: an edge the book (or the house rule) says is used up is refused before Conviction is spent
+            const lim = await LIM.gate(actor, { name: e.name, level: e.level });
+            if (!lim) return null;
             const risk = risked || e.id === "surge" ? 0 : Math.min(n(fd.risk), Math.max(0, i.conviction - e.conviction));
             if (e.conviction > i.conviction) return ctx.notify(`${e.name} needs ${e.conviction} Conviction (${i.conviction} left).`);
             let conv = i.conviction - e.conviction - risk;
@@ -144,12 +149,12 @@ export function build(ctx) {
                 return { html: pp.html, items: pp.items.filter(x => x.route !== "off" && x.route !== "st") };
             };
             const fxOf = items => items.length ? { kind: "effects", caster: actor.name, items } : undefined;
-            if (!e.roll) { const pl = plan(1); return post(actor, `${actor.name}: ${esc(e.name)}`, `<div class="vta-note">${e.conviction ? `${e.conviction} Conviction. ` : ""}${esc(e.e)}</div>${pl.html}<div class="wodx-quiet">Hunter: The Reckoning p. ${e.p}</div>`, [], fxOf(pl.items)); }
+            if (!e.roll) { const pl = plan(1); await lim.done({ successes: 1 }); return post(actor, `${actor.name}: ${esc(e.name)}`, `<div class="vta-note">${e.conviction ? `${e.conviction} Conviction. ` : ""}${esc(e.e)}</div>${pl.html}<div class="wodx-quiet">Hunter: The Reckoning p. ${e.p}</div>`, [], fxOf(pl.items)); }
             const [a, v] = e.roll;
             const stat = k => (ATTR.includes(k) ? attr(actor, k) : K.VIRTUES.includes(k) ? i.virtues[k] : (findAbility(actor, k)?.value ?? 0));
             const dice = (a ? stat(a) : 0) + stat(v) + risk + n(fd.bonus);
-            const r = await rollPool(dice, fd.diff);
-            let body = rollBlock(`${a ? `${cap(a)} + ` : ""}${cap(v)}${risk ? ` + ${risk} risked` : ""}`, r, [e.conviction ? `${e.conviction} Conviction` : ""].filter(Boolean));
+            const r = await rollPool(dice, n(fd.diff) + lim.diff);
+            let body = rollBlock(`${a ? `${cap(a)} + ` : ""}${cap(v)}${risk ? ` + ${risk} risked` : ""}`, r, [e.conviction ? `${e.conviction} Conviction` : "", lim.diff ? `Drained +${lim.diff}` : ""].filter(Boolean));
             if (risk) {
                 await actor.setFlag(MOD, "riskScene", sceneKey());
                 const ok = !r.botch && r.successes > 0 && (!fd.resisted || fd.won);
@@ -158,9 +163,10 @@ export function build(ctx) {
                 body += `<div class="vta-res ${ok ? "good" : "bad"}">Risked ${risk}: Conviction ${conv + risk} → ${R.after}${R.lostAll ? " (a botch: all of it lost)" : ""}. A success counts only if the edge achieves something (Hunter: The Reckoning p. 137).</div>`;
             }
             const pl = plan(r.botch || (fd.resisted && !fd.won) ? 0 : r.successes);
+            await lim.done({ successes: r.botch || (fd.resisted && !fd.won) ? 0 : r.successes });
             body += `<div class="vta-note">${esc(e.e)}</div>${pl.html}<div class="wodx-quiet">Hunter: The Reckoning p. ${e.p}</div>`;
             return post(actor, `${actor.name}: ${esc(e.name)}`, body, [r.roll], fxOf(pl.items));
-        }, { width: 560, render: root => { describe(root); root.querySelector("[name=edge]")?.addEventListener("change", () => describe(root));
+        }, { width: 560, render: root => { LIM.decorate(root, { actor, sel: "select[name=edge]", powerOf: v => { const q = K.edgeFor(v); return q && { name: q.name, level: q.level }; } }); describe(root); root.querySelector("[name=edge]")?.addEventListener("change", () => describe(root));
             aim(root, { actor, lib: "edge", power: r => K.edgeFor(r.querySelector("[name=edge]")?.value), onPick: a => { tgt = a; describe(root); } }); } });
     }
 
@@ -204,5 +210,9 @@ export function build(ctx) {
         }, { width: 560 });
     }
 
-    return { info, sheet, secondSight, useEdge, imbue, setConviction };
+    /** B4926: the edges an NPC hunter may choose by itself (only those on the sheet). */
+    function powersFor(actor) {
+        return info(actor).edges.filter(e => e.def?.roll).map(e => ({ use: "useEdge", field: "edge", value: e.def.id, name: e.def.name, level: e.def.level, set: "htr", id: `${e.def.path}-${e.def.id}` }));
+    }
+    return { powersFor, info, sheet, secondSight, useEdge, imbue, setConviction };
 }

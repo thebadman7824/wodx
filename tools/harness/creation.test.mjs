@@ -459,6 +459,32 @@ test("ghouled animals: training bought with experience, and a Retainers dot made
   } finally { Actor.create = create; }
 });
 
+test("ghouled animals: a szlachta, and a household's beasts (B5133, B5136)", async () => {
+  const d = api().data;
+  const tz = new Actor(vampireData("Vladislav", "Tzimisce", 7, [["Vicissitude", 3], ["Animalism", 2]]));
+  const serf = new Actor(mortalData("Bohdan the Serf"));
+  for ( const a of [tz, serf] ) game.actors.set(a.id, a);
+  await api().giveVitae(serf, tz, {points: 2});
+  await api().animals.makeSzlachta(serf, tz);
+  assert.equal(serf.system.attributes.strength.value, 5, "V20 p. 502");
+  assert.ok(serf.items.some(i => i.name === "Monstrous"));
+  assert.deepEqual(d.disciplinesOf(serf).map(x => `${x.name} ${x.value}`).sort(), ["Fortitude 1", "Potence 1"]);
+  assert.ok(serf.flags[M].szlachta);
+  const create = Actor.create;
+  Actor.create = async data => { const a = new Actor({...data, system: structuredClone(animalData("x").system), items: []}); game.actors.set(a.id, a); return a; };
+  try {
+    const beasts = await api().animals.householdBeasts(tz, {region: "Scene.s.Region.r", seed: 2, rural: true});
+    assert.ok(beasts.length >= 2, "a Tzimisce in the Dark Ages countryside keeps more than one");
+    for ( const b of beasts ) {
+      assert.equal(d.lineOf(b), "ghoul");
+      assert.equal(d.domitorOf(b)?.id, tz.id);
+      assert.equal(b.flags["wodx-npc"].routine.roles.home, "Scene.s.Region.r", "it lives at the haven");
+    }
+    assert.equal(api().animals.dotsLeft(tz), 0, "household beasts take no Retainers dots");
+    assert.deepEqual(tz.flags[M]?.animalRetainers ?? [], []);
+  } finally { Actor.create = create; }
+});
+
 test("no error notifications", () => {
   assert.deepEqual(mock.log.notifications.filter(([l]) => l === "error"), []);
 });

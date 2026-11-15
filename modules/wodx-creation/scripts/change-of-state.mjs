@@ -149,7 +149,8 @@ export async function makeGhoul(mortal, {domitor = null, points = 1, time = game
     "system.settings.powers.hasdisciplines": true,
     "system.advantages.bloodpool.max": max,
     "system.advantages.bloodpool.perturn": GHOUL.perTurn,
-    "system.advantages.bloodpool.temporary": Math.min(max, Math.max(0, Number(points) || 0))
+    // B5135: a young bred in a kennel from ghouled stock is filled by its first drink
+    "system.advantages.bloodpool.temporary": mark.bred ? max : Math.min(max, Math.max(0, Number(points) || 0))
   };
   if ( creature ) await mortal.update({...pool, "system.settings.powers.haspowers": true,
     [`flags.${MODULE_ID}.animalGhoul`]: true, [`flags.${MODULE_ID}.animal`]: mark});

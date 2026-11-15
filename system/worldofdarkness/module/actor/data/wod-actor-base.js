@@ -40,7 +40,7 @@ export class WoDActor extends Actor {
         super.prepareData();
 
         // WoDX fork: a Group actor has no character sheet data to prepare
-        if (this.type === "Group") return;
+        if (this.type === "Group" || String(this.type).includes(".")) return; // WoDX fork: a module's own kind (a vehicle) has no character data
 
         const actorData = this;
         // Make separate methods for each Actor type (character, npc, etc.) to keep things organized.
@@ -48,7 +48,7 @@ export class WoDActor extends Actor {
     }
 
     async prepareDerivedData() {
-        if (this.type === "Group") return; // WoDX fork
+        if (this.type === "Group" || String(this.type).includes(".")) return; // WoDX fork
         const actorData = this;
         const systemData = actorData.system;
 
@@ -610,7 +610,7 @@ export class WoDActor extends Actor {
      */
     async _preCreate(data, options, user) {
         await super._preCreate(data, options, user);
-        if (this.type === "Group") return; // WoDX fork
+        if (this.type === "Group" || String(this.type).includes(".")) return; // WoDX fork
         const actor = this;
 
         try {
@@ -817,7 +817,7 @@ export class WoDActor extends Actor {
         // WoDX fork: only the client that made the change recomputes, so two owners never both write the actor back
         if (user !== game.user.id) return;
 
-        if (this.type !== "PC" && this.type !== "Group") {
+        if (this.type !== "PC" && this.type !== "Group" && !String(this.type).includes(".")) {
             let actor;
 
             try {
@@ -948,7 +948,7 @@ export class WoDActor extends Actor {
     _onUpdateDescendantDocuments(parent, collection, documents, changes, options, userId) {
         super._onUpdateDescendantDocuments(parent, collection, documents, changes, options, userId);
 
-        if (this.type === "PC" || this.type === "Group") return;
+        if (this.type === "PC" || this.type === "Group" || String(this.type).includes(".")) return;
         if (this.permission < 3) return;
         if (userId !== game.user.id) return; // WoDX fork: only the client that changed the items recomputes
         if (collection !== "items" || !documents?.length) return;
