@@ -50,7 +50,7 @@ export const DA_EFFECTS = {
   "g-summoning": S("summon"), "g-binding": S("bind"), "g-commanding": S(),
   // Messianic Voices (Grimoire)
   "g-comeforsouls": T("fear", "Terror of the Souls", {turns: 20}, "each"), "g-plowshares": T("sway", "Swords into Plowshares", "scene", "each"), "g-revokeadam": T("sway", "Speech taken", "reach"),
-  "g-72names": T("make", "Golem of the 72 Names", "reach", "self"),
+  "g-72names": T("summon", "Golem of the 72 Names", "reach", "self"),
   // Old Faith (Grimoire)
   "g-glamour": T("ward", "Bewitching Glamour", "night", "self"), "g-bitterfruit": H("harm", 1, "lethal", {soak: false, ask: true}), "g-circe": T("shape", "Circe's Enchantment", "reach"), "g-dowsing": N(),
   "g-slumber": S(), "g-eyehunter": T("sight", "Eye of the Hunter", "reach", "self"), "g-faeriegate": S("sideways"), "g-giantsdance": T("summon", "Stone giant", "scene", "self"),
@@ -136,7 +136,14 @@ export function outcomesOf(spec, base, successes, text = "") {
     }
     case "timed": {
       const d = lastsFor(spec.lasts, s);
-      return [{key: spec.kw, who: spec.who, out: {...base, kind: "timed", name: spec.name, timed: d.timed, duration: d.label, successes: s,
+      // B6016: a summoning, a made thing, the weather, a light, a crossing (and the rest whose result is not a timed
+      // effect) did only put a named marker on the sheet; now they do what their keyword does, for the spec's time
+      if ( OWN_KIND.has(spec.kw) ) {
+        const [r] = stOutcomes([spec.kw], {strength: s, step: 2, ctx: spec.ctx ?? {}});
+        if ( r?.out ) return [{key: spec.kw, who: spec.who, out: {...base, ...r.out, label: spec.name ?? base.label ?? r.out.label, source: base.source ?? r.out.source,
+          ...(r.out.timed !== undefined || d.timed ? {timed: d.timed ?? r.out.timed, duration: d.label} : {}), text: `${s} success${s === 1 ? "" : "es"} for ${d.label}: ${text}`}}];
+      }
+      return [{key: spec.kw, who: spec.who, out: {...base, kind: "timed", name: spec.name, timed: d.timed, duration: d.label, successes: s, ...timedNumbers(spec, s),
         text: `${s} success${s === 1 ? "" : "es"} for ${d.label}: ${text}`}}];
     }
     case "condition": {
@@ -157,6 +164,24 @@ export function outcomesOf(spec, base, successes, text = "") {
       return [{key: spec.kw, who: "self", st: true, out: {...base, kind: "note", text: `${s} success${s === 1 ? "" : "es"}: ${text}`}}];
   }
 }
+
+/**
+ * B6011: the numbers a timed result needs to change the game, by its keyword, when the spec gives none: a Ward's
+ * armour dice and a Boost's dice (one a success, five at most), a Blessing's or Curse's shift (three at most), Night
+ * Sight on the token, Rise's height. A spec's own numbers win.
+ */
+export function timedNumbers(spec = {}, s = 1) {
+  const k = spec.kw, x = Math.max(1, n(s));
+  if ( k === "ward" ) return {dice: n(spec.dice) || Math.min(5, x), ...(spec.against ? {against: spec.against} : {})};
+  if ( k === "boost" ) { const dice = n(spec.dice) || Math.min(5, x); return {dice: spec.sap ? -dice : dice, on: spec.on ?? "physical"}; }
+  if ( k === "fortune" ) { const sh = Math.min(3, x); return {shift: spec.curse ? sh : -sh}; }
+  if ( k === "sight" ) return {vision: true};
+  if ( k === "rise" ) return {feet: n(spec.feet) || 5 * x};
+  return {};
+}
+
+/** Keywords whose own result is not a timed effect (B6016). */
+const OWN_KIND = new Set(["summon", "make", "weather", "light", "move", "sideways", "banish", "place", "work", "charge", "know", "sense", "harm", "trip", "imbue", "mend", "hold"]);
 
 /** How many targets a result lands on: the caster, the first target, one per success, or all of them. */
 export function targetCount(who, successes, available) {

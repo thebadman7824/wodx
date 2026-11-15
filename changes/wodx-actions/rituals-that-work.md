@@ -1,0 +1,6 @@
+---
+bump: minor
+effect: a Ward adds armour dice to soak (only against its kind of harm when it names one), a Boost adds dice to Physical, Social or Mental rolls, soak or Initiative, a Blessing or Curse moves the next roll's difficulty and is spent on it, a Calm eases the frenzy roll, Hasten gives extra actions; Banish ends powers on the target or drives it off, a place rite moves the Gauntlet, Shroud or Banality, Imbue makes a charged item, Work opens or shuts the nearest door, an Illusion puts a figure on the map, Possess hands an NPC to the possessor's players, Bind and Sway warm an NPC to the caster; book rituals' flavoured keywords (fortune:curse, ward:fire) no longer drop off the card
+visible: a warded token shimmers blue, a boosted one glows gold, a cursed one flickers purple, a calmed one glows pale; a manifest ghost shows pale on the map; an illusion's figure stands on the map; a door swings; a place rite brings a fog or calm look; the soak, attack and roll cards list the power that changed them
+---
+Rituals and powers that really work (B6000-B6016): the effects a power or ritual leaves on a character are read by the dice (power-mods.js), the keywords that were only text change the world, and a guard test fails any power whose result nothing reads.
