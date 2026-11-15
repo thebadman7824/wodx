@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5160
+Next free block: B5190
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -242,6 +242,7 @@ Next free block: B5160
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5049) | Creation, Chronicle, NPC, Sheets, Actions, Combat |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
+| B5180-B5189 | Names raised to 300, Thai (used B5180) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7950,3 +7951,8 @@ Reverse: drop the philippines rows from each table.
 WoDX Creation and Storyteller. The lifepath has the Philippines under Asia, with its own origins and callings in each age, and dated origins and marks from Mactan (1521) to the typhoon at Tacloban (2013). Threads of Fate gets two cards: "The galleon is late" (its own hook) and "The datu's buried gold".
 
 Reverse: drop the philippines entries in data/lifepath-local-asia.mjs, data/lifepath-events-asia.mjs and the r-philippines cards.
+
+## B5180. Thai names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Thai list grows from 24 names to 361: the kings, nobles and commoners of Sukhothai and Ayutthaya given alone before the surname act of 1913, modern given names after, and the family names chosen since. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the thai entry in data/people-world.mjs and drop thai from RAISED.
