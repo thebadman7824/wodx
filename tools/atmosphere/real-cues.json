@@ -53,7 +53,7 @@
     {"kits": ["dark-ages", "victorian", "wild-west", "great-war", "modern"], "cue": "dawn", "faith": "chinese", "len": 8, "ids": [397352, 516051, 259997], "why": "The morning bell of a temple"},
     {"kits": ["dark-ages", "victorian", "wild-west", "great-war", "modern"], "cue": "dusk", "faith": "chinese", "len": 7, "ids": [13786, 193040], "why": "The evening gong of a temple"},
     {"kits": ["dark-ages", "victorian", "wild-west", "great-war", "modern"], "cue": "dawn", "faith": "tibetan", "len": 8, "ids": [192680, 65858], "why": "Long monastery horns at dawn"},
-    {"kits": ["dark-ages", "victorian", "wild-west", "great-war", "modern"], "cue": "dusk", "faith": "tibetan", "len": 8, "ids": [217228, 65861], "why": "Monastery horns at evening"},
+    {"kits": ["dark-ages", "victorian", "wild-west", "great-war", "modern"], "cue": "dusk", "faith": "tibetan", "len": 8, "ids": [217228, 65861, 65865, 192680, 65858], "why": "Monastery horns at evening"},
     {"kits": ["dark-ages", "victorian", "wild-west", "great-war", "modern"], "cue": "dawn", "faith": "theravada", "len": 7, "ids": [91196, 516051], "why": "A temple prayer bell"},
     {"kits": ["dark-ages", "victorian", "wild-west", "great-war", "modern"], "cue": "dusk", "faith": "theravada", "len": 7, "ids": [423401, 91196], "why": "Temple bells at evening"}
   ]
