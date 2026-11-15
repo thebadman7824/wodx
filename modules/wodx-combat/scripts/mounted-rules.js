@@ -18,7 +18,15 @@
  */
 export const MOUNT_TRAITS = {
   horse: {label: "the horse", strength: 6, dexterity: 2, stamina: 5, athletics: 3, brawl: 1, ref: "V20 Dark Ages p. 399 (large horse)"},
-  mule:  {label: "the mule", strength: 4, dexterity: 2, stamina: 3, athletics: 3, brawl: 1, ref: "V20 Dark Ages p. 399 (small horse, for a mule: house reading)"}
+  mule:  {label: "the mule", strength: 4, dexterity: 2, stamina: 3, athletics: 3, brawl: 1, ref: "V20 Dark Ages p. 399 (small horse, for a mule: house reading)"},
+  // B4963: the beasts out of the books. A ghouled horse is the large horse with a dot of Potence and Celerity (V20 Dark
+  // Ages p. 401; which dots, house reading); a szlachta is the book's war ghoul (V20 p. 510 of the pdf); the rest are
+  // house figures (a Stygian steed "fierce in combat", Wraith 20th p. 31).
+  ghoulhorse: {label: "the ghouled horse", strength: 7, dexterity: 3, stamina: 5, athletics: 3, brawl: 2, celerity: true, ref: "V20 Dark Ages p. 401 (animal ghouls); house dots"},
+  szlachta: {label: "the fleshcrafted steed", strength: 5, dexterity: 4, stamina: 5, athletics: 2, brawl: 4, ref: "V20 (war ghouls, szlachta)"},
+  chimera: {label: "the chimerical steed", strength: 5, dexterity: 4, stamina: 4, athletics: 4, brawl: 1, ref: "house figures (Changeling 20th p. 280)"},
+  stygian: {label: "the Stygian steed", strength: 6, dexterity: 4, stamina: 5, athletics: 4, brawl: 3, ref: "house figures (Wraith 20th p. 31)"},
+  gryphon: {label: "the gryphon", strength: 6, dexterity: 4, stamina: 5, athletics: 3, brawl: 3, ref: "house figures (Mage 20th p. 298)"}
 };
 
 /** A beast under the rider: a saddle and hooves, at the reins. ride: WoDX Interactables' rideOf(). */
@@ -30,6 +38,8 @@ export const astride = ride => !!(ride && ride.saddle);
 
 export function traitsOf(ride) {
   if ( !inSaddle(ride) ) return null;
+  // B4966: a beast ridden as itself brings its own sheet's traits (WoDX Interactables rideOf)
+  if ( ride.beast && Number(ride.beast.strength) > 0 ) return ride.beast;
   return MOUNT_TRAITS[ride.kind] ?? MOUNT_TRAITS.horse;
 }
 
@@ -62,7 +72,9 @@ export function mountDodge(ride, {rideDots = 0, ranged = false, used = false, ce
   const ath = Math.min(t.athletics, Math.max(0, Number(rideDots) || 0));
   const notes = [`${t.label}'s Dexterity ${t.dexterity} + Athletics ${ath}${ath < t.athletics ? ` (held to the rider's Ride ${ath})` : ""}, at no cost to the rider (${t.ref.split(" (")[0]})`];
   let diff = 6;
-  if ( ranged && !celerity ) { diff += 2; notes.push("dodging missiles +2 diff"); }
+  // a ghouled horse's own Celerity lets it dodge shots as a vampire with the Discipline does (B4963)
+  if ( ranged && !(celerity || t.celerity) ) { diff += 2; notes.push("dodging missiles +2 diff"); }
+  else if ( ranged && t.celerity ) notes.push(`${t.label}'s Celerity: no +2 against missiles`);
   return {type: "mount", valid: true, dice: t.dexterity + ath, diff, notes, abilityName: `Athletics, ${t.label}'s`, label: t.label};
 }
 
