@@ -103,8 +103,11 @@ export function bodyKg(view = {}) {
 /*  Large things (B5080)                                               */
 /* ------------------------------------------------------------------ */
 
-/** Containers, empty (house figures), plus a kilo for each thing inside. */
-export const CONTAINER_KG = {chest: 30, box: 25, cabinet: 60, drawers: 45, strongbox: 25, safe: 400};
+/**
+ * Containers, empty (house figures), plus what is inside: its real weight from WoDX Library (B6083), or a kilo for
+ * each thing when the Library is off. A pile of loose gear weighs only what is in it (B6086).
+ */
+export const CONTAINER_KG = {chest: 30, box: 25, cabinet: 60, drawers: 45, strongbox: 25, safe: 400, pile: 0};
 /** A hiding place that is furniture. The rest (curtains, shadows, a loft, a priest hole) are part of the house. */
 export const HIDE_KG = {wardrobe: 70, bed: 50};
 /** Cover that moves: a table. Counters, bars, barricades and walls are built in. */
@@ -112,16 +115,17 @@ export const COVER_KG = {table: 30};
 /** Mounts and vehicles that can be pushed by hand when nobody is at the reins. Wheels: they roll. */
 export const VEHICLE_KG = {cart: 250, carriage: 600, motorbike: 180, car: 1100};
 /** Piles: the box kind (a crate, a barrel, a sack, a basket) is hauled, not pushed (B5084). */
-export const PILE_KINDS = new Set(["box"]);
+export const PILE_KINDS = new Set(["box", "pile"]);
 /**
- * What a tile is as a thing to move. f: the tile's flags.wodx-interactables; items: how many things are inside.
- * -> null (it does not move) or {kg, label, wheels, pile, ground}
+ * What a tile is as a thing to move. f: the tile's flags.wodx-interactables; inside: what its contents weigh, in kg
+ * (haul.mjs works it out; before B6083 this was a count of things at a kilo each).
+ * -> null (it does not move) or {kg, label, wheels, pile, inside}
  * The Storyteller's own setting wins: haulFixed keeps it still, haulKg sets its weight and makes any tile movable,
  * haulWheels puts it on wheels (B5080).
  */
-export function thingOf(f = {}, items = 0) {
+export function thingOf(f = {}, inside = 0) {
   if ( !f || f.haulFixed ) return null;
-  const extra = Math.max(0, num(items));
+  const extra = Math.max(0, num(inside));
   const own = num(f.haulKg) > 0 ? num(f.haulKg) : null;
   let kg = null, label = "", wheels = !!f.haulWheels, pile = false;
   if ( f.container ) {
@@ -130,7 +134,7 @@ export function thingOf(f = {}, items = 0) {
     // a barrel full of ale is heavy; an open sack is light
     if ( k === "box" && f.material === "heavy" ) kg = 100 + extra;
     else if ( k === "box" && f.ds === "open" ) kg = 15 + extra;
-    label = {chest: "chest", box: f.material === "heavy" ? "barrel" : f.ds === "open" ? "sack" : "crate", cabinet: "cabinet", drawers: "desk", strongbox: "strongbox", safe: "safe"}[k];
+    label = {chest: "chest", box: f.material === "heavy" ? "barrel" : f.ds === "open" ? "sack" : "crate", cabinet: "cabinet", drawers: "desk", strongbox: "strongbox", safe: "safe", pile: "pile of gear"}[k];
     pile = PILE_KINDS.has(k);
   } else if ( f.hide && HIDE_KG[f.hideKind] ) {
     kg = HIDE_KG[f.hideKind]; label = f.hideKind === "bed" ? "bed" : "wardrobe";
@@ -141,7 +145,7 @@ export function thingOf(f = {}, items = 0) {
   }
   if ( own !== null ) kg = own;
   if ( kg === null ) return null;
-  return {kg, label: String(f.title ?? "").trim() || label || "thing", wheels, pile};
+  return {kg: Math.round(kg * 10) / 10, label: String(f.title ?? "").trim() || label || "thing", wheels, pile, inside: f.container && own === null ? Math.round(extra * 10) / 10 : 0};
 }
 
 /* ------------------------------------------------------------------ */

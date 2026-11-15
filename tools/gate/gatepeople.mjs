@@ -132,7 +132,7 @@ export async function run() {
     await step("10. sheet", async () => {
       await elder.sheet.render(true);
       await sleep(1500);
-      const el = elder.sheet.element?.[0] ?? elder.sheet.element;
+      const el = (elder.sheet.element instanceof HTMLElement ? elder.sheet.element : elder.sheet.element?.[0]);
       const tab = el?.querySelector?.(".tab.wodxties");
       const html = tab?.innerHTML ?? "";
       ok("10. Relationships: the childe, the ghoul, the family tree and Secrets buttons, the regard", /Relationships/.test(html) && /Gate Childe/.test(html) && /Gate Ghoul/.test(html)

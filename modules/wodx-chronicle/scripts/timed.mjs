@@ -10,6 +10,7 @@ import {getCondition, STATUS_PREFIX} from "./conditions.mjs";
  */
 
 const FLAG = "timed";
+const SHOW_ALWAYS = (() => { try { return globalThis.CONST?.ACTIVE_EFFECT_SHOW_ICON?.ALWAYS ?? null; } catch (e) { return null; } })();
 const reverters = new Map();
 
 /** A module registers how to take back what one of its effects changed: fn(actor, data, effect). */
@@ -64,6 +65,9 @@ export async function applyTimed(actor, o) {
     description: `${o.description ?? cond?.summary ?? ""}${timed.source ? ` (${timed.source})` : ""}`,
     statuses: cond ? [STATUS_PREFIX + cond.id] : [],
     changes: o.changes ?? [], duration, transfer: false,
+    // B6023: a mark that lasts the scene or the night has no rounds or seconds, so Foundry would not draw it on the
+    // token; WoDX marks always show there, so players see the fever, the night's penalty or the lying-in
+    ...(SHOW_ALWAYS !== null && o.showIcon !== false ? {showIcon: SHOW_ALWAYS} : {}),
     flags: {[MODULE_ID]: {[FLAG]: timed}}
   }]);
   return effect;

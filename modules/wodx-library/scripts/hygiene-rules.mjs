@@ -38,3 +38,17 @@ export function newWound(before = {}, after = {}) {
   const n = v => Number(v) || 0;
   return ["lethal", "aggravated"].some(k => after?.[k] !== undefined && n(after[k]) > n(before?.[k]));
 }
+
+/** B6033: nights without washing before a living body counts as Filthy (house rule). */
+export const UNWASHED_NIGHTS = 7;
+/** B6033: does a fall make them Filthy? Knocked down outdoors in rain, sleet, snow or on lying snow. */
+export function fallDirties(tags = [], outdoor = true) {
+  if ( outdoor === false ) return false;
+  const t = new Set(tags ?? []);
+  return ["rain", "snow", "sleet", "snow-lying"].some(k => t.has(k));
+}
+/** B6033: have they gone too long unwashed? washedNight: the night they last washed (null: never recorded). */
+export function unwashedTooLong(washedNight, worldTime, living = true) {
+  if ( !living || washedNight === null || washedNight === undefined ) return false;
+  return nightOf(worldTime) - Number(washedNight) >= UNWASHED_NIGHTS;
+}

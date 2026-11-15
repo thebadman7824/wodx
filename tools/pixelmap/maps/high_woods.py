@@ -14,6 +14,7 @@ from px import R, T
 import props as pr
 import land
 import wilds as wl
+import dress as dr
 import buildings as B
 from scene import Recorder
 
@@ -26,6 +27,7 @@ west = [(34.6, 27.4), (28.0, 28.6), (22.4, 29.6), (19.6, 32.4), (19.8, 38.4), (2
 reeve = [(19.8, 38.6), (17.4, 39.6), (15.2, 40.2)]
 denp = [(22.4, 29.6), (18.6, 25.6), (14.4, 20.0), (11.6, 14.6)]
 dt, db = land.ground(m, roads=[(main, 82), (lodge, 54), (west, 66), (reeve, 30), (denp, 34)], floor="forest")
+dr.snap(m)
 
 # ---- Egon's lodge, north: one room round an open hearth; a bell by the east window on the warning rope ----
 rec.roof("egons-lodge-roof", "Roof (Egon's lodge)", (19.47, 4.08, 9.0625, 7.0625), "shingle", smoke=(24.02, 7.62))
@@ -95,6 +97,11 @@ def clear(x, y, r):
     return dt[py_, px_] < r * T * .4
 
 
+# ---- dressing (B5746): both lodges, their yards and the wood floor ----
+dr.dress(m, rec, (20.0, 4.6, 8.0, 6.0), "home")
+dr.rooms(m, rec, (8.0, 37.6, 7.0, 5.4), [(12.1, 37.6, 12.1, 43.0)], "home")
+dr.dress(m, rec, (17.0, 2.0, 14.0, 13.0), "yard", n=16); dr.dress(m, rec, (5.0, 33.6, 13.0, 12.0), "yard", n=14)
+dr.dress(m, rec, (0, 0, W, H), "wood", n=180)
 land.trees(m, W, H, clear, n=1700, fir=.45, gap=.56)
 for hx, hy, hr, cone in getattr(m, "hearths", []): m.glow(hx, hy, hr, cone=cone, power=.55); m.glow(hx, hy, 70, power=.5)
 out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, "..", "out", "high-woods")
