@@ -134,4 +134,6 @@ test("the window, the menus, Combat's soak and the NPC choice are wired", () => 
   const cm = src("modules/wodx-combat/scripts/main.js");
   assert.match(cm, /profile === "spirit" && actor\?\.type === "Creature"/);
   assert.match(cm, /R\.sheetBonus\(actor\?\.items, "soak_buff", type\)/);
+  assert.match(cm, /setting\("autoApply"\) \|\| fd\.apply/);
+  assert.match(f, /soakAndApply\?\.\(tg\[0\], \{ apply: true/);
 });

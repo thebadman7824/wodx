@@ -1766,7 +1766,8 @@ export async function soakAndApply(tok, fd) {
     html += `</div>`;
     const data = { target: actor.uuid, targetToken: tok.document?.uuid ?? null, type, levels: left.levels, applied: false, fireSun: !!fd.fireSun };
     const msg = await postCard(tok.document ? tok : null, actor, html, rolls, data);
-    if (setting("autoApply") && left.levels) await applyFromMessage(msg, "main");
+    // B5650: a power whose harm the book applies outright (a spirit's Blast, a fomor's splash) asks for it with apply: true
+    if ((setting("autoApply") || fd.apply) && left.levels) await applyFromMessage(msg, "main");
     if (dazed && setting("statusEffects")) await markDazed(actor);
     return { levels: left.levels, dazed, message: msg };
 }

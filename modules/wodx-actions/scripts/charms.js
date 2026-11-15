@@ -283,7 +283,7 @@ export function build(ctx) {
             }
             case "blast": {
                 if (!first) { notify(`${c.name}: target someone first.`); return false; }
-                await C?.soakAndApply?.(tg[0], { mode: "pool", amount: t.rage, type: "aggravated", soak: true });
+                await C?.soakAndApply?.(tg[0], { apply: true, mode: "pool", amount: t.rage, type: "aggravated", soak: true });
                 if (has(actor, "blightedtouch")) await blight(actor, first);
                 return { html: note(`${first.name} takes ${t.rage} aggravated dice: no roll to hit, no dodge.`) };
             }
@@ -317,7 +317,7 @@ export function build(ctx) {
                 await actor.update({ "system.advantages.rage.permanent": dice });
                 await mark(actor, c, { rage: 1 }, { name: "Spent in the cold", img: "icons/svg/frozen.svg" });
                 const hit = near(tok, 10);
-                if (dice) for (const p of hit) await C?.soakAndApply?.(p, { mode: "pool", amount: dice, type: "aggravated", soak: true });
+                if (dice) for (const p of hit) await C?.soakAndApply?.(p, { apply: true, mode: "pool", amount: dice, type: "aggravated", soak: true });
                 if (tok) await chron()?.looks?.weather?.({ scene: canvas.scene, kind: "snow", until: { seconds: 600 }, source: c.name }).catch?.(() => null);
                 return { html: note(`Rage ${t.rage} to ${dice} for the scene. ${hit.length ? `${hit.map(p => p.name).join(", ")} take${hit.length === 1 ? "s" : ""} ${dice} aggravated dice.` : "No one stands near."}`) };
             }
@@ -374,7 +374,7 @@ export function build(ctx) {
                 const hit = near(tok, 10);
                 for (const p of hit) {
                     await chron()?.timed?.applyTimed?.(p.actor, { name: "Knocked down", condition: "knockdown", duration: { kind: "rounds", rounds: 1 }, key: "wodx-charm-quake", source: SC.pageOf(c), description: "Thrown to the ground by an Umbraquake." });
-                    if (dice) await C?.soakAndApply?.(p, { mode: "pool", amount: dice, type: "bashing", soak: true });
+                    if (dice) await C?.soakAndApply?.(p, { apply: true, mode: "pool", amount: dice, type: "bashing", soak: true });
                 }
                 if (tok) await chron()?.looks?.weather?.({ scene: canvas.scene, kind: "quake", until: { seconds: 60 }, source: c.name }).catch?.(() => null);
                 return { html: note(hit.length ? `${hit.map(p => p.name).join(", ")}: thrown down, ${dice} bashing dice.` : "The ground heaves; no one stands near.") };
