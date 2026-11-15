@@ -111,11 +111,19 @@ function tick() {
       if ( gait ) tex = frame(name, SR.frameOf(st, grid), gait);
     }
     tex ??= frame(name, SR.frameOf(st, grid, SR.hasStand(name)));
+    // B6145: a sprite turns by its rows, never by spinning the picture (a move with autoRotate turns the token itself)
+    upright(token);
     if ( tex && token.mesh.texture !== tex ) token.mesh.texture = tex;
     else if ( !tex ) crisp(token.mesh.texture);
     try { applyLooks(token, now); } catch (e) { console.warn(`${MOD} | line look`, e); }
   }
   for ( const id of states.keys() ) if ( !seen.has(id) ) { states.delete(id); acts.delete(id); const g = glows.get(id); if ( g ) { if ( !g.destroyed ) g.destroy(); glows.delete(id); } const c = covers.get(id); if ( c ) { if ( !c.destroyed ) c.destroy(); covers.delete(id); } }
+}
+
+/* B6145: the token's rotation is kept on the document (flanking reads it) but the figure is drawn upright. */
+function upright(token) {
+  const m = token?.mesh;
+  if ( m && m.rotation ) m.rotation = 0;
 }
 
 /* A power's effect, laid over the token while its casting move plays: one small picture on the token itself, in step
@@ -589,6 +597,7 @@ export function startSprites() {
   Hooks.on("wodxInteractableWorked", onWorked);
   Hooks.on("createChatMessage", onSpoken);
   Hooks.on("createToken", onTokenMade);
+  Hooks.on("refreshToken", t => { if ( on() && t?.document?.flags?.[MOD]?.sprite ) upright(t); });
   loadOwn().then(() => resumeDraw()).catch(() => null);
   const every = globalThis.setInterval?.(() => { settle().catch(e => console.warn(`${MOD} | routine poses`, e)); }, 2500);
   every?.unref?.();   // under Node (the test stand-in) the timer must not keep the process alive

@@ -144,6 +144,9 @@ export async function run() {
       G.ok("3. at work its hands move", work && where1 === "work" && f1 !== f2, {where: where1, act: work, frames: [f1, f2]});
       G.ok("3. it walks to the tavern facing the way it goes", turned.length >= 1 && turned.includes("right"), {turned});
       G.ok("3. and sits down there", ["stool", "seat", "sit"].includes(sat), {sat, where: smith.flags?.[NPC]?.where?.activity});
+      // B6145: a walk with autoRotate turns the token, but the figure stays upright (the stool under it, not beside it)
+      const rot = {doc: tok?.rotation ?? null, drawn: tok?.object?.mesh?.rotation ?? null};
+      G.ok("3. the seated figure is drawn upright, however the token was turned", rot.drawn === 0, rot);
     });
 
     await G.step("4. listening at a door plays the move", async () => {
