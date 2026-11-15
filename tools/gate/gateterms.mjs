@@ -2,7 +2,8 @@
  * Shared terms (B6180-B6199), in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateterms.mjs?${Date.now()}`)).run()
  * Covers WoDX Chronicle (api.terms, the end of the scene, night-long effects), WoDX Actions (End scene, the scene
- * count, power limits), WoDX Combat, WoDX NPC, WoDX Storyteller, WoDX Library and WoDX Otherworlds (their dice counts).
+ * count, power limits), WoDX Combat, WoDX NPC, WoDX Storyteller, WoDX Library and WoDX Otherworlds (their dice counts),
+ * WoDX Targeting, WoDX Interactables, WoDX Senses, WoDX Creation, WoDX Sheets, WoDX Paperdoll, WoDX Solo and WoDX Atmosphere.
  * Makes two scratch scenes and one actor; puts the active scene and the scene count's meaning back. The clock does not move.
  *   1. api.terms answers with the books' figures
  *   2. every module's dice count agrees with the shared one, past 10 and below 2 too
@@ -12,6 +13,7 @@
  *   6. a ghoul on the system's ghoul variant reads as a ghoul in WoDX NPC, a Kuei-jin as a Kuei-jin
  *   7. a metre is a yard in Combat, and a turn outside a fight is the table's turn length in Actions' limits
  *   8. every other WoDX module still answers
+ *   9. Targeting, Interactables, Senses, Creation, Sheets, Paperdoll, Solo and Atmosphere read the same metre, era and health words
  * Result: Data/wodx-gate/gateterms-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -105,6 +107,29 @@ export async function run() {
       const key3 = L.periodKey("turn", {worldTime: 7, scene: 1, turnSeconds: 3}), keyDefault = L.periodKey("turn", {worldTime: 7, scene: 1});
       G.ok("7. a metre is a yard; a turn is the table's turn", (toYards ? toYards(10, "m") === 10 : true) && T.toYards(1, "mi") === 1760
         && key3 === "t1:2" && keyDefault === key3, {combat: toYards?.(10, "m"), key3, keyDefault});
+    });
+
+    await G.step("9. the other modules read the same words", async () => {
+      const M = p => import(`/modules/${p}?${Date.now()}`).catch(() => null);
+      const [tg, cr, se, cra, sh, pd, so, intr] = await Promise.all([M("wodx-targeting/scripts/target-rules.mjs"),
+        M("wodx-interactables/scripts/carry-rules.mjs"), M("wodx-senses/scripts/senses-rules.mjs"), M("wodx-creation/data/advance.mjs"),
+        M("wodx-sheets/scripts/extras-rules.mjs"), M("wodx-paperdoll/scripts/doll-rules.mjs"), M("wodx-solo/scripts/solo-rules.mjs"),
+        M("wodx-interactables/scripts/fill-rules.mjs")]);
+      const got = {
+        targeting: tg?.shapeFromText?.("a 10-meter radius")?.size,
+        carry: cr?.toUnits?.(10, "m"),
+        senses: [se?.eraBand?.(1840), se?.eraBand?.(1960)],
+        creation: cra?.DA_ERAS,
+        sheets: sh?.ERA_LIKE === T.ERA_LIKE || JSON.stringify(sh?.ERA_LIKE) === JSON.stringify(T.ERA_LIKE),
+        fill: !intr?.ERA_LIKE || JSON.stringify(intr.ERA_LIKE) === JSON.stringify(T.ERA_LIKE),
+        paperdoll: JSON.stringify(pd?.LEVELS) === JSON.stringify(T.HEALTH_LEVELS),
+        solo: so?.nightStart?.(T.DAY * 3, 3600)
+      };
+      const ok = got.targeting === 10 && got.carry === 10 && got.senses[0] === "industrial" && got.senses[1] === "modern"
+        && Array.isArray(got.creation) && got.creation.includes("renaissance") && got.creation.includes("age-of-reason")
+        && got.sheets && got.fill && got.paperdoll && got.solo === T.DAY * 2 + 3600
+        && typeof game.modules.get("wodx-atmosphere")?.api === "object";
+      G.ok("9. the other modules read the same words", ok, got);
     });
 
     await G.step("8. every other WoDX module still answers", async () => {

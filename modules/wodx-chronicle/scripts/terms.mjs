@@ -155,7 +155,8 @@ export function margin(faces = [], difficulty = DEFAULT_DIFFICULTY, opts = {}) {
 /** The seven health levels below Healthy (V20 pdf 290, the sheet on pdf 86), and the dice each takes away. */
 export const HEALTH_LEVELS = ["bruised", "hurt", "injured", "wounded", "mauled", "crippled", "incapacitated"];
 export const HEALTH_LABELS = {bruised: "Bruised", hurt: "Hurt", injured: "Injured", wounded: "Wounded", mauled: "Mauled", crippled: "Crippled", incapacitated: "Incapacitated"};
-export const WOUND_PENALTY = {bruised: 0, hurt: -1, injured: -1, wounded: -2, mauled: -2, crippled: -5, incapacitated: null};
+const PENALTY_BY_PLACE = [0, -1, -1, -2, -2, -5, null];
+export const WOUND_PENALTY = Object.fromEntries(HEALTH_LEVELS.map((k, i) => [k, PENALTY_BY_PLACE[i]]));
 /** A level's place, 1 (Bruised) to 7 (Incapacitated); 0 is unhurt. */
 export const LEVEL_INDEX = {unhurt: 0, ...Object.fromEntries(HEALTH_LEVELS.map((k, i) => [k, i + 1]))};
 export const DAMAGE_TYPES = ["bashing", "lethal", "aggravated"];
