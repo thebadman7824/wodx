@@ -165,7 +165,16 @@ export async function unstick(userId, fix) {
     await tell(userId, `<p>${fights ? `${fights === 1 ? "The fight" : `${fights} fights`} ended.` : "No fight was running on your scene."} ${windows ? `${windows} waiting ${windows === 1 ? "window was" : "windows were"} closed.` : ""}</p>`);
     return {fights, windows};
   }
-  // A lead: a foreshadowing for the character, through the approval queue (the standing approvals let it through)
+  // B6046: a lead is the director's, one light thing from what is live for the character now
+  const director = game.modules.get(MOD)?.api?.director;
+  if ( actor && director?.direct ) {
+    const r = await director.direct({actorId: actor.id, force: true, count: 1, light: true}).catch(() => null);
+    if ( r?.brought?.length ) {
+      await H.log({kind: "note", source: MOD, title: "I am stuck: a lead was brought", note: r.brought.map(b => b.title).join("; ")});
+      return r.brought[0];
+    }
+  }
+  // else a foreshadowing for the character, through the approval queue (the standing approvals let it through)
   const night = game.modules.get(ST)?.api?.aid;
   const aid = actor && night?.draw ? await night.draw({kind: "foreshadow", actorId: actor.id, nonce: Date.now() % 997}).catch(() => null) : null;
   if ( !aid ) { await tell(userId, "<p>No lead could be found just now.</p>"); return null; }
