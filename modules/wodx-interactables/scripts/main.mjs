@@ -57,6 +57,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {registerStateSettings, setupStates, publish} from "./states.mjs";
 import {setupLiving} from "./living.mjs";
 import {setupCarry} from "./carry.mjs";
+import {setupHaul} from "./haul.mjs";
 import {setupAdopt} from "./adopt.mjs";
 import * as Fill from "./fill.mjs";
 import * as FillRules from "./fill-rules.mjs";
@@ -68,7 +69,7 @@ import {setupCase, registerCaseSettings, pinClue} from "./case.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.49.1";
+const VERSION = "0.51.1";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -227,8 +228,12 @@ export function coverOnShot(fromTok, toTok) {
   const tiles = [];
   for ( const doc of tilesOf(scene) ) {
     const o = describeTile(doc);
-    if ( !o?.cover ) continue;
-    tiles.push({x: num(doc.x), y: num(doc.y), width: num(doc.width), height: num(doc.height), rotation: num(doc.rotation), level: o.level, name: R.nameOf(o)});
+    // B5085: furniture pushed into a doorway is good cover too
+    const bar = doc.flags?.[MOD]?.barricade ? 2 : 0;
+    if ( !o?.cover && !bar ) continue;
+    const level = Math.max(o?.cover ? o.level : 0, bar);
+    const name = o?.cover && o.level >= bar ? R.nameOf(o) : `The ${game.modules.get(MOD)?.api?.haul?.thingOf?.(doc)?.label ?? "barricade"} in the doorway`;
+    tiles.push({x: num(doc.x), y: num(doc.y), width: num(doc.width), height: num(doc.height), rotation: num(doc.rotation), level, name});
   }
   const c = R.coverOnShot(mid(a), mid(b), tiles, grid);
   const words = [];
@@ -1950,6 +1955,11 @@ export function tileConfigHtml(doc) {
     ${field("Cover", `<input type="checkbox" name="${p}.cover"${cov.cover ? " checked" : ""}>`, "Any other kind ticked on the same tile wins.")}
     ${field("Kind of cover", `<select name="${p}.coverKind" data-fixed>${opt(R.COVERS, cov.coverKind)}</select>`, "Light cover +1, good +2, superior +3 to shots at someone behind it (V20 p. 286).")}
     ${field("Tipped over", `<input type="checkbox" name="${p}.tipped"${cov.tipped ? " checked" : ""}>`, "A table only. Untick to set it on its legs again.")}
+    <h4 class="wix-sub">Moving it</h4>
+    <p class="hint">Chests, cabinets, desks, stores, beds, wardrobes, tables, carts and carriages can be pushed, pulled or hauled by the lifting chart (VtDA20 p. 335): under a character's Strength at half pace, up to two steps over at quarter pace with a roll, past that only with help. Left blank, the weight comes from the kind of thing.</p>
+    ${field("Weight in kg", `<input type="number" name="${p}.haulKg" value="${esc(num(doc?.flags?.[MOD]?.haulKg) || "")}" min="1" max="20000" placeholder="By its kind">`, "Any tile with a weight can be moved, even one with no other WoDX kind.")}
+    ${field("On wheels", `<input type="checkbox" name="${p}.haulWheels"${doc?.flags?.[MOD]?.haulWheels ? " checked" : ""}>`, "A barrow, a handcart, a trolley: counts as half its load; mud, snow and rubble double it; no stairs.")}
+    ${field("Fixed in place", `<input type="checkbox" name="${p}.haulFixed"${doc?.flags?.[MOD]?.haulFixed ? " checked" : ""}>`, "Built in or nailed down: nobody moves it.")}
   </fieldset>`;
 }
 function onRenderTileConfig(app, html) {
@@ -1999,6 +2009,7 @@ function onPreUpdateTile(doc, changes) {
   if ( "hazDice" in f && (f.hazDice === "" || f.hazDice === null) ) f.hazDice = null;
   if ( f.hazType === "" ) f.hazType = null;
   if ( "seats" in f && (f.seats === "" || f.seats === null) ) f.seats = null;
+  if ( "haulKg" in f ) f.haulKg = Math.max(0, Math.min(20000, Math.round(Number(f.haulKg) || 0))) || null;
   for ( const k of ["height", "gap", "depth"] ) if ( k in f && (f[k] === "" || f[k] === null) ) f[k] = null;
   if ( typeof f.climbTo === "string" ) f.climbTo = R.cleanClimb({climbTo: f.climbTo}).climbTo;
   // Everyone off, by the Storyteller's hand
@@ -2076,6 +2087,8 @@ Hooks.once("init", () => {
   game.modules.get(MOD).api.states = setupStates({describeObj, describeWall, describeTile, objectIn, rules: R});
   game.modules.get(MOD).api.living = setupLiving();
   game.modules.get(MOD).api.carry = setupCarry();
+  // B5070-B5086: carrying and dragging the fallen, and moving large things
+  game.modules.get(MOD).api.haul = setupHaul({characterFor, describeTile, mapEvent, noiseAt, rules: R});
   game.modules.get(MOD).api.adopt = setupAdopt();
   Stock.setupStock();
   game.modules.get(MOD).api.stock = {draw: Stock.drawStock, all: Stock.restockAll};

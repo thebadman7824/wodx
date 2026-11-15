@@ -155,6 +155,8 @@ export async function raid({region, kind = "raid", file = null, also = []} = {})
     if ( !w?.scene ) { await log({kind: "hunters", text: `The hunters looked for ${a.name} and found no trace.`}); continue; }
     const made = await send({kind: kind === "purge" ? "purge" : "raid", scene: w.scene, near: w.token, hostile: !!w.token, why: `hunters come for ${a.name}`, flag: {target: id}});
     out.push(...made);
+    // B5700 (h2): nobody there: one stays to watch
+    if ( made.length && !w.token ) { try { await game.modules.get(MOD)?.api?.hunters?.follow?.missed?.(w.scene, made, {target: id}); } catch (e) { console.warn(`${MOD} | watch`, e); } }
     await log({kind: "hunters", actor: id, name: a.name, scene: w.scene.uuid, place: w.scene.name, attention: "The hunters strike", text: `Hunters come for ${a.name} at ${w.scene.navName || w.scene.name}${sleeper ? ", by day" : ""}.`});
     if ( made.length ) await gmCard(`Hunters come for ${a.name}`, `At ${w.scene.navName || w.scene.name}${sleeper ? " by day, while they sleep" : ""}.`, {scene: w.scene, tokens: made});
     for ( const uid of ownerIds(a) ) await ChatMessage.create({speaker: {alias: "The world"}, whisper: [uid], content: `<div class="wodx-card wst-reach"><p><b>${esc(a.name)}:</b> armed strangers are here, and they are looking for you.</p></div>`});

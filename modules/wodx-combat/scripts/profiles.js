@@ -123,6 +123,8 @@ export function detectProfile(actor, { ignoreFlag = false } = {}) {
         else if (hasDiscipline(actor, ["fortitude", "potence", "celerity"])) key = "ghoul";
     }
     if (key === "wraith" && /spectre|shadow/.test(variant)) key = "spirit";
+    // B5650: a Creature made as a spirit (the system's spirit variant) is a spirit, with its Charms
+    if (key === "beast" && /\bspirit\b/.test(variant)) key = "spirit";
     return key;
 }
 

@@ -1,5 +1,5 @@
 # Age of Reason, 1601 to 1836. year[-month]|kind|lines|region|place|tags|title|text
-1601|H|mor|EU|Prague|science,death|Tycho dies|Tycho Brahe dies in Prague; Kepler inherits his observations.
+1601|H|mor|EU|Prague|science,death|Tycho dies|Tycho Brahe dies in Prague; Kepler inherits the observations.
 1601|H|mor|EU|Kinsale|battle|Kinsale|The English break the Irish and Spanish at Kinsale.
 1601|H|mor|EU|Russia|famine,weather|The Russian famine|Three years of failed harvests kill perhaps a third of Russia.
 1602|H|mor|EU|Amsterdam|trade,founding,money|The Dutch East India Company|The VOC is founded and sells shares to the public.
@@ -9,19 +9,19 @@
 1605|H|mor|EU|London|terror|The Gunpowder Plot|Guy Fawkes is caught under Parliament with barrels of powder.
 1605|H|mor|EU|Moscow|crown,uprising|The False Dmitry|A pretender claiming to be Ivan's son takes Moscow.
 1605|H|mor|EU|Madrid|art|Don Quixote|Cervantes publishes the first part of Don Quixote.
-1605|H|mor|AS|Agra|crown,death|Akbar dies|Akbar dies at Agra after nearly fifty years; his son Jahangir takes the Mughal throne.
+1605|H|mor|AS|Agra|crown,death|Akbar dies|Akbar dies at Agra after nearly fifty years; a son, Jahangir, takes the Mughal throne.
 1606|H|mor|EU|Zsitvatorok|treaty|The Peace of Zsitvatorok|The Long Turkish War ends at Zsitvatorok; the emperor stops paying tribute and the border in Hungary holds.
 1607|H|mor|EU|Ulster|migration|The Flight of the Earls|The Gaelic lords of Ulster flee to the continent.
 1608|H|mor|EU|Middelburg|science|The telescope|A spectacle-maker asks for a patent on a looking glass that sees far.
 1609|H|mor|EU|Prague|law,faith|The Letter of Majesty|Rudolf II grants the Bohemian estates freedom of worship, a promise the Habsburgs will break within twenty years.
 1609|H|mor|EU|Prague|science|Kepler's new astronomy|Kepler publishes the New Astronomy in Prague, showing that Mars moves in an ellipse.
 1609|H|mor|EU|Spain|persecution,migration|The Moriscos expelled|Spain begins expelling the Moriscos, some three hundred thousand descendants of its Muslims, over five years.
-1610|H|mor|EU|Paris|death,crown|Henry IV murdered|Ravaillac stabs the French king in his carriage.
+1610|H|mor|EU|Paris|death,crown|Henry IV murdered|Ravaillac stabs the French king in the royal carriage.
 1610|H|mor|EU|Moscow|war|The Poles in Moscow|A Polish army takes Moscow and a Polish prince is offered the Russian throne in the Time of Troubles.
 1610|W|mag|EU|Padua|science|The moons of Jupiter|Galileo publishes the moons of Jupiter; the Order of Reason calls it proof, the Celestial Chorus a trespass.
 1611|H|mor|EU|London|faith,media|The King James Bible|The authorised English Bible is printed, and its language shapes English for centuries.
-1611|H|mor|EU|Prague|crown|Rudolf deposed|Matthias forces his brother Rudolf to give up the Bohemian crown; Rudolf is left with his collections in the castle.
-1612|H|mor|EU|Prague|crown,death|Rudolf II dies|Rudolf II dies in Prague; his court of alchemists and artists scatters and his treasures begin to drift away.
+1611|H|mor|EU|Prague|crown|Rudolf deposed|Matthias forces a brother, Rudolf, to give up the Bohemian crown; Rudolf is left with the collections in the castle.
+1612|H|mor|EU|Prague|crown,death|Rudolf II dies|Rudolf II dies in Prague; the court of alchemists and artists scatters and the treasures begin to drift away.
 1612|H|mor|EU|Moscow|war|Minin and Pozharsky|A Russian militia drives the Poles out of Moscow.
 1612|W|hun|EU|Lancashire|persecution,occult|The Pendle witches|Ten people are hanged as witches at Lancaster.
 1613|H|mor|EU|Moscow|crown|The Romanovs|The assembly of the land chooses sixteen-year-old Michael Romanov as tsar, ending the Time of Troubles.
@@ -56,16 +56,16 @@
 1630|H|mor|EU|Milan|plague|The Milan plague|Plague kills perhaps half of Milan; the city hunts for anointers said to spread it with ointment.
 1631|H|mor|EU|Magdeburg|massacre,fire|The sack of Magdeburg|Tilly's army storms Magdeburg; twenty thousand die in the sack and fire, and the city is a byword for horror.
 1631|H|mor|EU|Breitenfeld|battle|Breitenfeld|Gustavus Adolphus destroys Tilly's army at Breitenfeld and the road into southern Germany is open.
-1631|H|mor|AS|Agra|death,building|Mumtaz Mahal dies|Shah Jahan's wife dies; he begins the Taj Mahal.
+1631|H|mor|AS|Agra|death,building|Mumtaz Mahal dies|Mumtaz Mahal dies, and Shah Jahan begins the Taj Mahal.
 1631|H|mor|EU|Naples|disaster|Vesuvius erupts|Vesuvius erupts after centuries of quiet and kills several thousand people around Naples.
 1632|H|mor|EU|Lutzen|battle,death|Lutzen|Gustavus Adolphus dies leading a cavalry charge in the fog at Lutzen, though the Swedes win the field.
-1632|H|mor|EU|Florence|science|Galileo's Dialogue|Galileo publishes his Dialogue on the two world systems.
-1633|H|mor|EU|Rome|science,faith,law|Galileo tried|The Roman Inquisition forces Galileo to recant his teaching that the earth moves; he spends his last years under house arrest.
-1634|H|mor|EU|Cheb|death|Wallenstein murdered|The emperor's general Wallenstein, suspected of treason, is killed by his own officers at Cheb.
+1632|H|mor|EU|Florence|science|Galileo's Dialogue|Galileo publishes the Dialogue on the two world systems.
+1633|H|mor|EU|Rome|science,faith,law|Galileo tried|The Roman Inquisition forces Galileo to recant the teaching that the earth moves, and the old astronomer spends the last years under house arrest.
+1634|H|mor|EU|Cheb|death|Wallenstein murdered|The emperor's general Wallenstein, suspected of treason, is killed by officers of the general's own army at Cheb.
 1634|H|mor|EU|Nordlingen|battle|Nordlingen|The Swedes and their allies are destroyed at Nordlingen; France prepares to enter the war openly.
 1635|H|mor|EU|Prague|treaty|The Peace of Prague|The emperor makes peace with Saxony and most Lutheran princes; the war goes on, now a contest of France and the Habsburgs.
 1635|H|mor|EU|Paris|learning,founding|The French Academy|Richelieu founds the Academie francaise to guard the French language.
-1636|H|mor|AS|Mukden|crown,founding|The Qing|Hong Taiji renames his Later Jin state the Great Qing and his people the Manchu.
+1636|H|mor|AS|Mukden|crown,founding|The Qing|Hong Taiji renames the Later Jin state the Great Qing and its people the Manchu.
 1637|H|mor|EU|Leiden|science,learning|Descartes's Discourse|Descartes publishes the Discourse on Method: I think, therefore I am.
 1637|H|mor|EU|Amsterdam|money,trade|Tulip mania|The price of tulip bulbs in Holland collapses overnight, ruining speculators.
 1637|H|mor|AS|Shimabara|uprising,faith|The Shimabara rising|Christian peasants of Shimabara and Amakusa rise against taxes and persecution in Kyushu.
@@ -78,10 +78,10 @@
 1641|H|mor|EU|Ulster|uprising,massacre|The Irish rising|Irish Catholics rise against English and Scottish settlers; thousands die and the tales grow in the telling.
 1642|H|mor|EU|Edgehill|battle,war|The English Civil War|King and Parliament raise armies and fight at Edgehill; the English Civil War has begun.
 1642|H|mor|EU|Olomouc|war,siege|The Swedes take Olomouc|Swedish troops take Olomouc and hold it as their base in Moravia until 1650.
-1642|H|mor|EU|Paris|crown,death|Richelieu dies|Richelieu dies; Cardinal Mazarin takes his place at the young king's side.
+1642|H|mor|EU|Paris|crown,death|Richelieu dies|Richelieu dies; Cardinal Mazarin takes the cardinal's place at the young king's side.
 1643|H|mor|EU|Rocroi|battle|Rocroi|The French destroy the famed Spanish infantry at Rocroi.
-1643|H|mor|EU|Paris|crown|Louis XIV|The four-year-old Louis XIV becomes king of France, with his mother and Mazarin to rule for him.
-1644|H|mor|AS|Beijing|crown,death|The Ming fall|Li Zicheng takes Beijing; the last Ming emperor hangs himself.
+1643|H|mor|EU|Paris|crown|Louis XIV|The four-year-old Louis XIV becomes king of France, with the queen mother and Mazarin to rule in the boy's name.
+1644|H|mor|AS|Beijing|crown,death|The Ming fall|Li Zicheng takes Beijing; the last Ming emperor is found hanged on Coal Hill.
 1644|H|mor|AS|Shanhai Pass|war,crown|The Qing take Beijing|Wu Sangui opens the pass; the Manchus take China.
 1644|H|mor|EU|Marston Moor|battle|Marston Moor|Cromwell's cavalry win the north for Parliament at Marston Moor.
 1645|H|mor|EU|Brno|siege|Brno holds|The Swedes besiege Brno for months and fail; the town is honoured for it ever after.
@@ -94,8 +94,8 @@
 1648|H|mor|EU|Prague|siege|The Swedes at Prague|Swedish troops take Prague castle and loot Rudolf's collections.
 1648|H|mor|EU|Ukraine|uprising,massacre|Khmelnytsky|The Cossacks rise against Poland; tens of thousands of Jews are killed.
 1648|H|mor|EU|Paris|uprising|The Fronde|Paris rises against Mazarin and the court flees the city; the Fronde lasts five years.
-1648|H|mor|ME|Constantinople|crown,death|Sultan Ibrahim deposed|The mad Sultan Ibrahim is deposed and strangled; his seven-year-old son takes the throne.
-1649|H|mor|EU|London|crown,death,revolution|Charles I beheaded|Charles I is beheaded outside his own Banqueting House in Whitehall.
+1648|H|mor|ME|Constantinople|crown,death|Sultan Ibrahim deposed|The mad Sultan Ibrahim is deposed and strangled; a seven-year-old son takes the throne.
+1649|H|mor|EU|London|crown,death,revolution|Charles I beheaded|Charles I is beheaded outside the royal Banqueting House in Whitehall.
 1649|H|mor|EU|Drogheda|massacre|Drogheda|Cromwell's army storms Drogheda and kills the garrison and many townspeople.
 1649|H|mor|EU|Russia|law|The Ulozhenie|Russia's law code binds peasants to the land.
 1650|H|mor|EU|Olomouc|war|The Swedes leave Olomouc|The Swedish garrison marches out of Olomouc after eight years, leaving a ruined town.
@@ -103,19 +103,19 @@
 1651|H|mor|EU|Worcester|battle|Worcester|Cromwell beats Charles II, who escapes by hiding in an oak.
 1652|H|mor|EU|Moscow|faith|Patriarch Nikon|Patriarch Nikon's reforms of Russian worship split the church; the Old Believers refuse them.
 1652|H|mor|EU|Channel|war,sea|The Anglo-Dutch War|England and the Dutch Republic go to war at sea over trade.
-1653|H|mor|AS|Agra|building|The Taj Mahal finished|The Taj Mahal is finished at Agra as Shah Jahan's tomb for his wife.
+1653|H|mor|AS|Agra|building|The Taj Mahal finished|The Taj Mahal is finished at Agra as Shah Jahan's tomb for Mumtaz Mahal.
 1653|H|mor|EU|London|crown|Lord Protector|Oliver Cromwell becomes Lord Protector of England, Scotland and Ireland.
 1654|H|mor|EU|Pereyaslav|treaty|Pereyaslav|At Pereyaslav the Cossacks of Ukraine swear loyalty to the tsar.
 1655|H|mor|EU|Poland|war|The Deluge|Sweden invades Poland; the years of war that follow are remembered as the Deluge.
 1656|H|mor|EU|Naples|plague|The Naples plague|Plague kills perhaps half of Naples in a single summer.
 1656|H|mor|ME|Constantinople|crown|The Koprulu viziers|Mehmed Koprulu becomes grand vizier and saves the empire.
-1658|H|mor|EU|London|death|Cromwell dies|Oliver Cromwell dies; his son cannot hold power.
-1658|H|mor|AS|Delhi|crown|Aurangzeb|Aurangzeb imprisons his father and takes the throne.
+1658|H|mor|EU|London|death|Cromwell dies|Oliver Cromwell dies; the son, Richard, cannot hold power.
+1658|H|mor|AS|Delhi|crown|Aurangzeb|Aurangzeb imprisons Shah Jahan and takes the throne.
 1659|H|mor|EU|Pyrenees|treaty|The Peace of the Pyrenees|France and Spain make peace at the Pyrenees; Louis XIV will marry the Spanish infanta.
 1660|H|mor|EU|London|crown|The Restoration|Charles II returns to London and the monarchy is restored.
 1660|H|mor|EU|London|science,founding|The Royal Society|The Royal Society is founded in London for the advancement of natural knowledge by experiment.
-1661|H|mor|EU|Paris|crown|Louis rules himself|Mazarin dies and Louis XIV announces that he will rule without a chief minister.
-1661|H|mor|AS|Beijing|crown|Kangxi|The Kangxi emperor takes the Qing throne as a child; he will rule sixty-one years.
+1661|H|mor|EU|Paris|crown|Louis rules alone|Mazarin dies and Louis XIV announces a reign without a chief minister.
+1661|H|mor|AS|Beijing|crown|Kangxi|The Kangxi emperor takes the Qing throne as a child, to rule sixty-one years.
 1662|H|mor|AS|Taiwan|war|Koxinga takes Taiwan|The Ming loyalist Koxinga drives the Dutch from Taiwan.
 1663|H|mor|EU|Moravia|war|The Tatar raid|Ottoman Tatars raid Moravia and carry off thousands.
 1664|H|mor|EU|Szentgotthard|battle|Szentgotthard|Imperial and French troops beat an Ottoman army at Szentgotthard.
@@ -131,14 +131,14 @@
 1673|H|mor|AS|China|uprising|The Three Feudatories|Three southern generals rebel against the Kangxi emperor; the war lasts eight years.
 1675|H|mor|EU|Fehrbellin|battle|Fehrbellin|The Great Elector of Brandenburg beats the Swedes at Fehrbellin.
 1675|H|mor|EU|London|science,building|Greenwich observatory|Charles II founds the Royal Observatory at Greenwich.
-1677|H|mor|EU|The Hague|learning,death|Spinoza dies|Spinoza dies at The Hague; his Ethics is published after his death and shocks Europe.
+1677|H|mor|EU|The Hague|learning,death|Spinoza dies|Spinoza dies at The Hague; the Ethics is published after the philosopher's death and shocks Europe.
 1678|W|hun|EU|Velke Losiny|persecution,occult|The Losiny trials|Witch trials in northern Moravia begin; about a hundred people burn before 1696.
 1679|H|mor|EU|Vienna|plague|The Vienna plague|Plague kills tens of thousands in Vienna; the Plague Column on the Graben is vowed in thanks.
 1680|H|mor|EU|Bohemia|uprising|The Bohemian peasant revolt|Bohemian peasants rise against forced labour after plague and are put down.
 1680|H|mor|EU|Paris|crime,occult|The Affair of the Poisons|Fortune-tellers and poisoners at court are burned; the king's mistress is implicated.
 1681|H|mor|EU|Strasbourg|war|Strasbourg taken|Louis XIV seizes the free city of Strasbourg in peacetime.
 1682|H|mor|EU|Versailles|building,crown|Versailles|Louis XIV moves the court to Versailles, where the nobility can be watched.
-1682|H|mor|EU|Moscow|crown|Peter and Ivan|Peter and his brother Ivan are crowned joint tsars.
+1682|H|mor|EU|Moscow|crown|Peter and Ivan|The half-brothers Peter and Ivan are crowned joint tsars.
 1683|H|all|EU|Vienna|siege,battle|Kahlenberg|Jan Sobieski breaks the Ottoman siege of Vienna.
 1684|H|mor|EU|Linz|treaty|The Holy League|The emperor, Poland and Venice ally against the Ottomans.
 1685|H|mor|EU|Fontainebleau|persecution,faith|The Edict of Nantes revoked|Louis XIV revokes the Edict of Nantes; two hundred thousand Huguenots flee France.
@@ -153,14 +153,14 @@
 1691|W|vam|EU|Europe|occult|The eclipse of 1691|An eclipse on 23 August is marked by Lasombra across Europe.
 1693|H|mor|EU|Sicily|quake,disaster|The Sicilian earthquake|An earthquake destroys towns across eastern Sicily and kills about sixty thousand.
 1694|H|mor|EU|London|money,founding|The Bank of England|The Bank of England is founded to lend money to the crown for war.
-1696|H|mor|EU|Azov|siege|Azov taken|Peter the Great takes the Ottoman fortress of Azov with his new fleet.
+1696|H|mor|EU|Azov|siege|Azov taken|Peter the Great takes the Ottoman fortress of Azov with the new fleet.
 1697|H|mor|EU|Zenta|battle|Zenta|Prince Eugene of Savoy destroys an Ottoman army crossing the Tisza at Zenta.
 1697|H|mor|EU|Amsterdam|travel|Peter's Grand Embassy|Tsar Peter travels west in disguise and works in Dutch shipyards.
-1698|H|mor|EU|Moscow|uprising,death|The streltsy executed|Peter executes over a thousand rebel musketeers and hangs bodies outside his sister's window.
+1698|H|mor|EU|Moscow|uprising,death|The streltsy executed|Peter executes over a thousand rebel musketeers and hangs bodies outside the window of Sophia, the tsar's sister.
 1699|H|mor|EU|Karlowitz|treaty|Karlowitz|At Karlowitz the Ottomans give up Hungary and Transylvania; their retreat from Europe begins.
 1700|H|mor|EU|Narva|battle|Narva|Charles XII of Sweden crushes a much larger Russian army at Narva in a snowstorm.
 1700|H|mor|EU|Madrid|crown,death|Charles II of Spain dies|The last Spanish Habsburg dies, leaving Spain to a French prince and Europe to war.
-1701|H|mor|EU|Berlin|crown|The King in Prussia|The Elector of Brandenburg crowns himself King in Prussia at Konigsberg.
+1701|H|mor|EU|Berlin|crown|The King in Prussia|The Elector of Brandenburg is crowned King in Prussia at Konigsberg.
 1702|H|mor|AS|Edo|death|The forty-seven ronin|Masterless samurai avenge their lord and are ordered to kill themselves.
 1703|H|mor|EU|St Petersburg|founding|St Petersburg founded|Peter founds a city on the Neva marshes.
 1703|H|mor|EU|Hungary|uprising|Rakoczi's war|Francis II Rakoczi leads Hungary in a war of independence against the Habsburgs that lasts eight years.
@@ -175,7 +175,7 @@
 1711|H|mor|EU|Pruth|war|The Pruth|The Ottomans trap Peter's army on the Pruth and make the tsar give back Azov.
 1712|H|mor|EU|Moravia|plague|Plague in Moravia|Plague returns to Moravia; columns of thanks follow.
 1713|H|mor|EU|Utrecht|treaty|The Peace of Utrecht|The Peace of Utrecht ends the War of the Spanish Succession.
-1713|H|mor|EU|Vienna|law,crown|The Pragmatic Sanction|Charles VI issues the Pragmatic Sanction so his daughter can inherit the Habsburg lands.
+1713|H|mor|EU|Vienna|law,crown|The Pragmatic Sanction|Charles VI issues the Pragmatic Sanction so a daughter, Maria Theresa, can inherit the Habsburg lands.
 1714|H|mor|EU|London|crown|George I|The Elector of Hanover becomes George I of Great Britain.
 1715|H|mor|EU|Versailles|crown,death|Louis XIV dies|Louis XIV dies after seventy-two years on the throne.
 1715|H|mor|EU|Scotland|uprising|The Fifteen|A Jacobite rising in Scotland for James Stuart fails.
@@ -186,13 +186,13 @@
 1720|H|mor|EU|London|money|The South Sea Bubble|Shares in the South Sea Company collapse and ruin thousands in Britain.
 1721|H|mor|EU|St Petersburg|crown,empire|Peter emperor|Peter the Great takes the title of Emperor of All Russia.
 1722|H|mor|ME|Isfahan|siege|Isfahan falls|Afghan rebels take Isfahan after a long siege and famine; the Safavid state collapses.
-1725|H|mor|EU|St Petersburg|crown,death|Peter dies|Peter the Great dies; his wife Catherine takes the throne.
+1725|H|mor|EU|St Petersburg|crown,death|Peter dies|Peter the Great dies; the widow, Catherine, takes the throne.
 1726|H|mor|EU|London|art|Gulliver's Travels|Jonathan Swift publishes Gulliver's Travels.
 1727|H|mor|EU|London|science,death|Newton dies|Isaac Newton dies and is buried in Westminster Abbey.
-1725|H|mor|EU|Kisiljevo|occult|Petar Blagojevich|An imperial official reports that a dead peasant of Kisiljevo in Serbia rose to drink the blood of his neighbours.
+1725|H|mor|EU|Kisiljevo|occult|Petar Blagojevich|An imperial official reports that a dead peasant of Kisiljevo in Serbia rose to drink the blood of the neighbours.
 1732|W|vam|EU|Medvedja|occult,media|The Medvedja vampires|An Austrian army surgeon's report on vampires in Serbia is printed across Europe; the Masquerade strains.
 1733|H|mor|EU|Poland|war|The Polish Succession|War breaks out over the Polish throne between Russia, Austria and France.
-1735|H|mor|AS|Beijing|crown|Qianlong|The Qianlong emperor takes the Qing throne; his reign is China's last great age.
+1735|H|mor|AS|Beijing|crown|Qianlong|The Qianlong emperor takes the Qing throne; the reign is China's last great age.
 1736|H|mor|ME|Persia|crown|Nader Shah|Nader is crowned shah of Persia, ending the Safavid line.
 1737|H|mor|EU|Naples|building|The San Carlo|The San Carlo opera house of Naples opens, the oldest working opera house in Europe.
 1739|H|mor|AS|Delhi|massacre,war|Nader sacks Delhi|Nader Shah sacks Delhi and carries off the Peacock Throne and the Koh-i-Noor.
@@ -204,7 +204,7 @@
 1742|H|mor|EU|Dublin|art|The Messiah|Handel's Messiah is first performed in Dublin.
 1745|H|mor|EU|Scotland|uprising|The Forty-Five|Charles Edward Stuart lands in Scotland and raises the clans.
 1746|H|mor|EU|Culloden|battle|Culloden|The Jacobite army is destroyed at Culloden; the Highlands are broken.
-1746|H|mor|EU|Paris|learning,occult|Calmet's treatise|Dom Augustin Calmet publishes his learned treatise on ghosts and vampires.
+1746|H|mor|EU|Paris|learning,occult|Calmet's treatise|Dom Augustin Calmet publishes a learned treatise on ghosts and vampires.
 1748|H|mor|EU|Aachen|treaty|Aix-la-Chapelle|The peace of Aix-la-Chapelle leaves Silesia to Prussia.
 1748|H|mor|EU|Naples|science|Pompeii dug|Excavations begin at Pompeii, buried by Vesuvius in the year 79.
 1751|H|mor|EU|Paris|learning,media|The Encyclopedie|Diderot and d'Alembert begin the Encyclopedie.
@@ -214,7 +214,7 @@
 1757|H|mor|EU|Kolin|battle|Kolin|Austria beats Frederick at Kolin in Bohemia.
 1757|H|mor|AS|Plassey|battle|Plassey|The East India Company wins Bengal at Plassey.
 1757|H|mor|EU|Rossbach|battle|Rossbach and Leuthen|Frederick crushes the French at Rossbach and the Austrians at Leuthen within a month.
-1758|H|mor|EU|Olomouc|siege|Olomouc holds|Frederick besieges Olomouc and fails when his supply convoy is destroyed.
+1758|H|mor|EU|Olomouc|siege|Olomouc holds|Frederick besieges Olomouc and fails when the Prussian supply convoy is destroyed.
 1759|H|mor|EU|Kunersdorf|battle|Kunersdorf|Russians and Austrians destroy Frederick's army at Kunersdorf.
 1760|H|mor|EU|London|crown|George III|George III becomes king of Great Britain.
 1761|H|mor|AS|Panipat|battle|The third Panipat|The Afghans destroy the Maratha army at the third battle of Panipat.
@@ -250,7 +250,7 @@
 1788|H|mor|EU|Paris|weather|The hailstorm of 1788|A great hailstorm destroys France's harvests and bread prices soar.
 1789-7|H|all|EU|Paris|revolution|The Bastille|Paris takes the Bastille on 14 July.
 1789|H|mor|EU|Versailles|law|The Rights of Man|The Assembly declares the rights of man and of the citizen.
-1790|H|mor|EU|Vienna|crown,death|Joseph II dies|Joseph II dies, his reforms undone.
+1790|H|mor|EU|Vienna|crown,death|Joseph II dies|Joseph II dies, the reforms undone.
 1791|H|mor|EU|Varennes|crown|The flight to Varennes|Louis XVI is caught fleeing Paris at Varennes.
 1791|H|mor|EU|Vienna|art,death|Mozart dies|Mozart dies in Vienna at thirty-five.
 1792|H|mor|EU|Valmy|battle|Valmy|The French revolutionary army holds the Prussians at Valmy.
@@ -273,7 +273,7 @@
 1800|H|mor|EU|Marengo|battle|Marengo|Bonaparte beats Austria at Marengo.
 1801|H|mor|EU|London|law|The Union with Ireland|Ireland joins Great Britain in the United Kingdom.
 1801|H|mor|EU|St Petersburg|death,crown|Paul I murdered|Tsar Paul I is murdered by officers; Alexander I becomes tsar.
-1804|H|mor|EU|Paris|crown|Napoleon emperor|Napoleon crowns himself emperor in Notre-Dame.
+1804|H|mor|EU|Paris|crown|Napoleon emperor|Napoleon takes the crown and is made emperor in Notre-Dame.
 1804|H|mor|EU|Serbia|uprising|The Serbian revolt|Serbia rises against the Ottomans under Karadjordje.
 1805-10|H|mor|EU|Trafalgar|battle,sea|Trafalgar|Nelson dies winning at Trafalgar.
 1805-12|W|wra|EU|Austerlitz|battle|Austerlitz|Napoleon wins near Brno; the dead flood the Moravian Shadowlands.
@@ -382,7 +382,7 @@
 1804|H|mor|AM|Haiti|founding,revolution,massacre|Haiti|Dessalines declares the independence of Haiti, the first state founded by people who freed themselves from slavery.
 1804|H|mor|AM|Saint Louis|exploration,travel|Lewis and Clark|An army expedition sets out up the Missouri to find a way to the Pacific.
 1808|H|mor|AM|Rio de Janeiro|crown,migration|A court in the tropics|The Portuguese court, fleeing Napoleon, lands in Brazil and rules its empire from Rio.
-1810|H|mor|AM|Dolores|uprising,revolution,faith|The cry of Dolores|The priest Miguel Hidalgo rings the church bell and calls his parish to rise against Spanish rule.
+1810|H|mor|AM|Dolores|uprising,revolution,faith|The cry of Dolores|The priest Miguel Hidalgo rings the church bell and calls the parish to rise against Spanish rule.
 1811|H|mor|AM|New Madrid|quake,disaster|The New Madrid earthquakes|Three great earthquakes shake the Mississippi valley; the river runs backward and church bells ring in Boston.
 1811|H|mor|AM|Tippecanoe|battle,war,faith|Tippecanoe|An American army burns Prophetstown, the centre of Tecumseh's league of nations.
 1814|H|mor|AM|Washington|war,fire|Washington burned|British troops burn the Capitol and the President's house.
@@ -401,7 +401,7 @@
 1636|H|mor|AF|Gondar|founding,building,crown|Gondar|Fasilides founds a capital at Gondar and builds a stone castle there.
 1652|H|mor|AF|Cape Town|founding,trade,empire|The Cape station|Jan van Riebeeck lands at Table Bay to grow food for the Dutch East India Company's ships.
 1659|H|mor|AF|Saint-Louis|founding,trade|Saint-Louis|The French build a fort on an island in the mouth of the Senegal.
-1665|H|mor|AF|Mbwila|battle,death,crown|Mbwila|A Portuguese army kills the king of Kongo in battle and carries his head to Luanda; the kingdom breaks into civil war.
+1665|H|mor|AF|Mbwila|battle,death,crown|Mbwila|A Portuguese army kills the king of Kongo in battle and carries the king's head to Luanda; the kingdom breaks into civil war.
 1672|H|mor|AF|Cape Coast|trade,persecution,sea|The Royal African Company|An English company with a royal charter takes over the forts of the Gold Coast and brands its captives with its initials.
 1693|H|mor|AF|Zambezi|war,empire|Changamire|The Rozvi ruler Changamire Dombo drives the Portuguese from the plateau south of the Zambezi.
 1698|H|mor|AF|Mombasa|siege,empire,sea|Fort Jesus falls|After a siege of nearly three years the Omanis take Fort Jesus, and the Swahili coast north of Mozambique passes from Portugal to Oman.
@@ -417,8 +417,8 @@
 1804|H|mor|AF|Gobir|faith,war,founding|The jihad of Usman dan Fodio|A Fulani scholar raises the Hausa lands against their kings and founds the Sokoto caliphate.
 1816|H|mor|AF|Zululand|crown,war|Shaka|Shaka takes the Zulu chieftaincy and remakes its regiments; the wars and migrations that follow empty and remake southern Africa.
 1822|H|mor|AF|Monrovia|founding,migration|Liberia|Freed black Americans sent by a colonisation society land at Cape Mesurado.
-1824|H|mor|AF|Nsamankow|battle,war,death|The Asante defeat the British|The governor of the Gold Coast is killed fighting the Asante, and his skull is kept in Kumasi.
-1828|H|mor|AF|KwaDukuza|death,crown|Shaka killed|Shaka's half-brothers stab him to death, and Dingane takes the kingship.
+1824|H|mor|AF|Nsamankow|battle,war,death|The Asante defeat the British|The governor of the Gold Coast is killed fighting the Asante, and the governor's skull is kept in Kumasi.
+1828|H|mor|AF|KwaDukuza|death,crown|Shaka killed|Shaka is stabbed to death by half-brothers, and Dingane takes the kingship.
 1828|H|mor|AF|Antananarivo|crown,persecution,faith|Ranavalona of Madagascar|The queen of the Merina takes the throne, closes the island to Europeans and persecutes its Christians.
 1830|H|mor|AF|Algiers|war,empire|The French take Algiers|A French army lands and takes Algiers, the beginning of a hundred and thirty years of rule.
 1832|H|mor|AF|Zanzibar|crown,trade|The sultan moves to Zanzibar|Said of Oman moves the court to Zanzibar, plants cloves and makes it the market for the ivory and slaves of the interior.

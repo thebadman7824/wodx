@@ -26,6 +26,9 @@ const MOD = "wodx-npc";
 const npc = () => game.modules.get(MOD).api, FX = () => npc().factions;
 const chron = () => game.modules.get("wodx-chronicle").api;
 const DAY = 86400;
+// Factions compared whatever the key order: an Undo can give the same state with its keys in another order.
+const sortKeys = v => Array.isArray(v) ? v.map(sortKeys) : v && typeof v === "object" ? Object.fromEntries(Object.keys(v).sort().map(k => [k, sortKeys(v[k])])) : v;
+const sameState = (a, b) => JSON.stringify(sortKeys(a)) === JSON.stringify(sortKeys(b));
 
 async function save(R, name) {
   R.finished = new Date().toISOString();
@@ -150,7 +153,7 @@ export async function run() {
     await FX().undoCard(card);
     await sleep(300);
     const s = FX().state();
-    ok("6. Undo puts every faction back as before the turn, and the card says so", JSON.stringify(strip(s)) === JSON.stringify(strip(afterFirst))
+    ok("6. Undo puts every faction back as before the turn, and the card says so", sameState(strip(s), strip(afterFirst))
       && game.messages.get(card.id)?.content.includes("Undone") && game.messages.get(card.id)?.flags[MOD].factionTurn.undone === true, {first: first?.id});
   });
 

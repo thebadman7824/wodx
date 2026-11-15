@@ -1,4 +1,4 @@
-import {esc, rule, setting, setSetting} from "./util.mjs";
+import {esc, rule, setting, setSetting, MODULE_ID} from "./util.mjs";
 import {describeTime, getEngine, secondsToNextDusk, secondsToNextDawn, MONTHS, REFORMS} from "./calendar.mjs";
 import * as eras from "./eras.mjs";
 import * as approvals from "./approvals.mjs";
@@ -9,6 +9,8 @@ import {runEraTest} from "./era-test.mjs";
 import {searchBox} from "./search.mjs";
 import * as church from "./church.mjs";
 import {reckon} from "./reckoning-rules.mjs";
+import {countOf, OWN_COUNTS} from "./local-reckoning-rules.mjs";
+import {FAITHS} from "./faith-rules.mjs";
 import * as place from "./place.mjs";
 import {offsetWords} from "./place-rules.mjs";
 import {paceLine} from "./pace.mjs";
@@ -82,7 +84,16 @@ export class ClockApp extends ApplicationV2 {
     const ch = church.on(now, {scene: globalThis.canvas?.scene ?? null, others: gm});
     const night = now.isNight ? "Night" : "Day";
     // A player sees the date and hour the way the character would hear them told
-    const told = (!gm && rule("eraReckoning")) ? reckon(now, {church: ch, eraId: p?.id ?? ""}) : null;
+    const heard = rule("eraReckoning") ? reckon(now, {church: ch, eraId: p?.id ?? "", latitude: setting("latitude")}) : null;
+    // B5875: a player's character may count the days by its own people's year rather than the land's
+    const mine = !gm ? game.user.character ?? null : null;
+    const count = mine ? countOf(mine.flags?.[MODULE_ID] ?? {}, mine.flags?.["wodx-creation"]?.lifepath ?? null, ch.faith ?? "western") : null;
+    const told = !gm && heard ? (count && count.faith !== (ch.faith ?? "western")
+      ? reckon(now, {church: {...ch, day: null}, faith: count.faith, region: ch.region, eraId: p?.id ?? "", latitude: setting("latitude")}) : heard) : null;
+    const pickNow = mine?.flags?.[MODULE_ID]?.reckonFaith || "land";
+    const countPick = mine && rule("eraReckoning") ? `<div class="form-group wodx-own-count" data-fixed><label>${esc(mine.name)} counts the days</label>
+          <select name="reckonFaith" data-fixed><option value="land" ${pickNow === "land" ? "selected" : ""}>As the land does${count?.why === "people" ? " (or as their people do)" : ""}</option>
+          ${OWN_COUNTS.map(f => `<option value="${f}" ${pickNow === f ? "selected" : ""}>${esc(FAITHS[f]?.label ?? f)}</option>`).join("")}</select></div>` : "";
     const div = document.createElement("div");
     div.className = "wodx-body wodx-scroll";
     div.innerHTML = `
@@ -90,6 +101,8 @@ export class ClockApp extends ApplicationV2 {
         <div class="wodx-date">${esc(told?.date ?? now.dateLabel)}</div>
         <div class="wodx-time">${esc(told?.time ?? now.timeLabel)} <span class="wodx-tag">${night}</span></div>
         <div class="wodx-quiet">${esc(now.calendarLabel)} calendar</div>
+        ${countPick}
+        ${gm && heard ? `<div class="wodx-quiet wodx-heard" title="How the players' clocks tell it, by the year kept where the scene stands (B5870)">Players hear: ${esc(heard.date)}, ${esc(heard.time)}</div>` : ""}
         <dl class="wodx-facts">
           <dt>Sunset</dt><dd>${esc(now.sunset)}</dd>
           <dt>Sunrise</dt><dd>${esc(now.sunrise)}</dd>
@@ -160,6 +173,14 @@ export class ClockApp extends ApplicationV2 {
     // The era select uses change, not click
     const select = this.element.querySelector("select[name=eraLock]");
     select?.addEventListener("change", ev => ClockApp.#onLockEra.call(this, ev, select));
+    // B5875: the player's pick of their character's own count, kept on the character
+    const own = this.element.querySelector("select[name=reckonFaith]");
+    own?.addEventListener("change", async () => {
+      const a = game.user.character;
+      if ( !a?.isOwner ) return;
+      await a.setFlag(MODULE_ID, "reckonFaith", own.value === "land" ? "" : own.value);
+      this.render();
+    });
     try { game.modules.get("wodx-storyteller")?.api?.time?.bindClockRow?.(this.element); } catch (e) { /* no Storyteller */ }
   }
 

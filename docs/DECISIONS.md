@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5650
+Next free block: B6000
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -246,6 +246,7 @@ Next free block: B5650
 | B5010-B5029 | The Storyteller's Hand, part three: fire, noticing, and the rest of the desk acts by itself (Ben's desk picks, 14 November 2026) (used B5010-B5024) | Interactables, Actions, Senses, Library, Chronicle, Storyteller, Otherworlds, Creation |
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5064) | Creation, NPC, Actions |
+| B5070-B5089 | Carrying the fallen and moving large things (Carry Bodies Desk) (used B5070-B5089) | NPC, Solo, Interactables |
 | B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
 | B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5127) | NPC, Combat, Actions |
 | B5130-B5139 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5130-B5137) | Creation, Actions, NPC |
@@ -299,6 +300,32 @@ Next free block: B5650
 | B5620-B5629 | Gates failing on main: court hunts batch write, gate-interact steps (used B5620-B5621) | Actions, gates |
 | B5630-B5639 | Blood hunts: court Kindred turn in batches (used B5630) | Actions |
 | B5640-B5649 | German names before 1900, and refilling emptied tables (used B5640-B5641) | Creation, Chronicle |
+| B5650-B5659 | Spirit Charms: the W20 Charms play from a Charm window (used B5650-B5657) | Actions, Combat |
+| B5660-B5669 | Child proportions, drawn poses by routine, animal legs (used B5660-B5668) | Paperdoll |
+| B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
+| B5680-B5709 | NPC Motives Desk: every NPC action has a reason and a follow-through (used B5680-B5703) | NPC, Storyteller |
+| B5710-B5729 | Aftercare of the carried (Aftercare Desk a1-a12) (used B5710-B5721) | NPC |
+| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5736) | Interactables, tools |
+| B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
+| B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
+| B5800-B5809 | NPC Aftercare Desk: what comes after each NPC action (used B5800-B5806) | NPC, Chronicle |
+| B5810-B5819 | Moves only one line has (line moves desk) (used B5810-B5819) | Paperdoll |
+| B5820-B5829 | Say or Do: systems that only posted text now act, second batch (used B5820-B5826) | Otherworlds, Senses, Chronicle, Storyteller, NPC |
+| B5830-B5839 | Gate failures on main, round two; run-gate names failed steps (used B5830-B5831) | tools (gates, lanes) |
+| B5840-B5849 | Gates traced by name: gate6b, gateconsensus, gatemounts (used B5840) | tools (gates) |
+| B5850-B5859 | gate6i clear track, gatepassing finds its card (used B5850) | tools (gates) |
+| B5860-B5869 | gates after other gates, approval queue one change at a time (used B5860-B5861) | tools (gates), wodx-chronicle |
+| B5870-B5879 | Dates as each land tells them: Persia's solar year and a character's own count (used B5870-B5876) | Chronicle, Atmosphere |
+| B5880-B5889 | Era primers by region: what everyone knows, by the homeland's way of life (used B5880-B5882) | Storyteller |
+| B5890-B5899 | Future Darkness world news by region: the Americas, Africa and Oceania after 2023 (used B5890-B5892) | Chronicle |
+| B5900-B5919 | War beyond Europe: armies, sieges and ships by land (Armies and Ships Desk) (used B5900-B5910) | Storyteller |
+| B5920-B5929 | The classic world timeline in the game (used B5920-B5926) | Chronicle, Storyteller |
+| B5930-B5939 | Market goods by region (the Market Goods Desk) (used B5930-B5936) | Storyteller |
+| B5940-B5949 | Primers for a scene far from home (used B5940-B5942) | Storyteller |
+| B5950-B5959 | Weather history by part of the world (used B5950-B5955) | Atmosphere |
+| B5960-B5969 | Cults that give what they promise (used B5960-B5964) | NPC |
+| B5970-B5979 | NPCs make their own wonders (used B5970-B5974) | Storyteller |
+| B5990-B5999 | Say or Do: full sentences and grieving (Ben's picks on law sentences and heartbreak) (used B5990-B5992) | Chronicle, NPC, Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8298,6 +8325,106 @@ Reverse: animalOrderBlock in give().
 ## B5064. Kept for later (2026-11-14)
 Coat colours are stored on the animal (flags.wodx-creation.animal.coat) for the sprite parts; drawing them is the pixel sprites' work.
 
+## B5070. Who can carry or drag (2026-11-14)
+WoDX Interactables. Anyone in reach of a character who is Incapacitated, unconscious, asleep, staked, in torpor, paralysed or dead gets Carry and Drag on the hand button of the token HUD, friend or foe. Seven health levels filled counts as Incapacitated. Ben's pick on the Carry Bodies Desk (c1).
+
+Reverse: turn off "Carrying the fallen and moving large things" in Configure Settings.
+
+## B5071. Carry if the lifting chart lifts it, else drag (2026-11-14)
+WoDX Interactables. The VtDA20 lifting chart (p. 335) against the body's weight. Strength counts the sheet's total (Crinos and the other forms) and Potence; two or more together add their Strength. A grown person weighs 70 kg, a youth 60, a child of 12 to 14 45, of 7 to 11 30, a small child 15; Glabro 110, Crinos 300, Hispo 180, Zulo 160; a creature by its squares (40, 450, 900, 2500 kg); mist and a body in the earth cannot be taken hold of. The weights are house figures. Ben's pick (c2).
+
+Reverse: edit PERSON_KG, SHAPE_KG and CREATURE_KG in haul-rules.mjs.
+
+## B5072. Half pace carrying, quarter dragging, no roll for a body (2026-11-14)
+WoDX Interactables and Combat. WoDX Combat's movement limit and the move ruler's floating count take the cut. A body more than two chart steps past the team's Strength will not move until others take hold (house reading: the desk set that limit for things, and it holds for bodies too). Ben's pick (c3).
+
+Reverse: change PACE in haul-rules.mjs, or drop the haul branch in moveCheck (movement.js).
+
+## B5073. Hands: carrying takes both, dragging one; more hands, more free (2026-11-14)
+WoDX Interactables and Combat. Carrying a body or straining at a thing past the chart takes two hands; dragging, hauling a pile or pushing something light takes one. Hands come from WoDX Combat's body (a Vicissitude extra arm counts; a beast holds in its jaws, one). A weapon from the sheet needs a free hand, two for a two-handed one; with two hands and one dragging, the other is the off hand (+1 difficulty, V20 p. 273, none with Ambidextrous); a shield needs a hand of its own beside the weapon. Natural weapons, punches and kicks need no hands. Ben's pick (c4), with Ben's note: hands must allow for characters with more than two.
+
+Reverse: change HANDS or attackWith in haul-rules.mjs, or drop handsCheck in Combat main.js.
+
+## B5074. In a fight: +1 to dodge, dropping is free, a fall drops it (2026-11-14)
+WoDX Interactables and Combat. Any burden (a body or a thing) puts a dodge at +1 difficulty. Letting go costs no action. Knocked down, dazed, stunned, prone or going down drops the load at once, with a card. Ben's pick (c5).
+
+Reverse: set DODGE to 0 in haul-rules.mjs; drop DROPS in haul.mjs.
+
+## B5075. The body on the map, and the trail (2026-11-14)
+WoDX Interactables. A carried body lies on the carrier's square, turned on its side and dimmed; a dragged one lies a square behind. Dragging leaves a line drawn on the map: scuffs, or blood for a body with lethal or aggravated damage or a dead one. A blood trail also leaves a trail clue where it began, for trackers to study, and a map event for the town. Ben's pick (c6).
+
+Reverse: drop growTrail from lay in haul.mjs.
+
+## B5076. Laying it down: on the ground, aboard, on a bed or a table (2026-11-14)
+WoDX Interactables. Next to a mount or vehicle with a seat free, the body is laid aboard as a passenger and goes where it goes; on a bed or a table it lies on the tile. Ben's pick (c7).
+
+Reverse: drop the onto branches in release (haul.mjs).
+
+## B5077. NPCs rescue their own, hide bodies and take captives (2026-11-14)
+WoDX NPC. An NPC who is retreating with an ally down within a run carries or drags the ally away (a loyal one with no foe in reach does it too, house reading); a Kindred, a cultist or anyone hiding its nature with mortals about drags a body out of their sight; an NPC with no foe standing in reach takes an incapacitated rival, enemy or hostile player character captive and carries them off. Suggest mode names it on the Storyteller's card with Accept; Auto does it; Undo lets go and puts both back. One holding a body goes on with it, and drops it (free) to fight a foe in reach unless it is rescuing. Animals do none of it. "Leaves the fallen where they lie" in the Behaviour window switches it off for one NPC. Ben's pick (c8), with Ben's note: NPCs also capture incapacitated rivals, enemies and hostile player characters.
+
+Reverse: have carryOption in npc-rules.mjs return null.
+
+## B5078. A carried character who wakes can struggle free or stay (2026-11-14)
+WoDX Interactables. A card to the owner: Struggle free (Strength + Athletics at 6 against the carrier's Strength at 6, more successes win) or Stay carried. Moving their own token is struggling free; one still down is put back. A Storyteller's move of a carried token lets it go. Ben's pick (c9).
+
+Reverse: drop movedWhileCarried and the wake card in haul.mjs.
+
+## B5079. In a Lone Chronicle a companion carries the player (2026-11-14)
+WoDX Solo and NPC. When the lone player's character goes down, the nearest companion (an NPC who serves them, or a friendly NPC of their party) carries or drags them away from danger by itself; the panel's Carry the fallen asks a companion to carry another fallen one. Outside a fight the companion goes at once; in one, on its own turn. Ben's pick (c10).
+
+Reverse: turn off "Companions carry the fallen" in WoDX Solo's settings.
+
+## B5080. Which things move (2026-11-14)
+WoDX Interactables. Made-map chests, boxes and crates, barrels and sacks, cabinets and wardrobes, desks, strongboxes, safes, beds and tables, and carts, carriages, motorcycles and motor cars with nobody at the reins. Counters, bars, walls, doors and the rest of the house stay. Any tile the Storyteller gives a weight moves; Fixed in place keeps one still. WoDX keeps no weights for loose gear and no gear on the map (the Library's Examine left weight out), so heavy loose items are the stores: crates, barrels and sacks. Weights are house figures (a chest 30 kg, a barrel 100, a cabinet 60, a desk 45, a safe 400, a bed 50, a wardrobe 70, a table 30, a cart 250, a carriage 600, a car 1,100, and a kilo for each thing inside). Ben's pick (c11).
+
+Reverse: edit CONTAINER_KG, HIDE_KG, COVER_KG and VEHICLE_KG in haul-rules.mjs.
+
+## B5081. Push and pull by the lifting chart, help adds up (2026-11-14)
+WoDX Interactables. Under the chart: half pace, no roll. Up to two steps over: quarter pace and Strength + Athletics at 6 each turn; a failed roll keeps the thing and its holder where they were. Past that it will not budge, and a player's move is refused until others take hold. A thing that was only part of the map picture cuts its piece of the picture out as it first moves, and the floor beside it covers the spot it left. Ben's pick (c12).
+
+Reverse: change STRAIN_STEPS in haul-rules.mjs; drop liftPicture in haul.mjs.
+
+## B5082. Wheels halve the load, rough ground doubles it, no stairs (2026-11-14)
+WoDX Interactables. A cart, carriage, motorcycle or car, or any tile marked On wheels, counts as half its load and what lies aboard; mud, snow, rubble, sand or a bog (a region's name, the scene's ground, snow lying or rain out of doors) takes it back to full. A wheeled thing stops at a ladder or stairs tile. Ben's pick (c13).
+
+Reverse: change movingKg in haul-rules.mjs.
+
+## B5083. Dragging furniture is loud (2026-11-14)
+WoDX Interactables. Each turn of moving furniture of 20 kg or more without wheels is loud: NPCs in earshot roll to hear it and a map event goes out, as climbing and falls do. A cart creaks (quiet), a dragged body is quiet, carrying is silent. Ben's pick (c14).
+
+Reverse: change noiseOf in haul-rules.mjs.
+
+## B5084. Hauling a pile (2026-11-14)
+WoDX Interactables. A crate, barrel, sack or basket of goods (a container of the box kind) is hauled along at half pace with one hand, its goods inside it. Ben's pick (c15).
+
+Reverse: empty PILE_KINDS in haul-rules.mjs.
+
+## B5085. Furniture in a doorway blocks it (2026-11-14)
+WoDX Interactables. A thing left over a door's middle draws a wall in the doorway (it blocks sight too, unless it is a table or a vehicle) and is good cover (+2, V20 p. 286). Shoving it aside from either side is the same push by the chart. Ben's pick (c16).
+
+Reverse: drop settleBarricade in haul.mjs and the barricade line in coverOnShot (main.mjs).
+
+## B5086. No general encumbrance (2026-11-14)
+WoDX Interactables. Only bodies and large things use these rules; everyday gear stays as it is. Ben's pick (c17).
+
+Reverse: none needed; nothing was built for it.
+
+## B5087. Where the rescued and the dead are carried (2026-11-15)
+WoDX NPC. An NPC carrying a fallen ally takes them to its own haven or home (its routine's places; a Cainite's haven first): a region tagged as that place on this map, or the map itself when the whole scene is that place. A dead mortal ally is brought to their own household's home and buried (the token leaves the map; the actor keeps flags.wodx-npc.buried). A Cainite ally slain or in torpor is laid to rest in a haven. With no such place on this map, the carrier walks to the nearest edge and both leave the map, to their own people beyond it. When the place is on another map, the carrier and body leave by the nearest edge and arrive there once the clock has run the walk (Ben's pick 2026-11-15, "Travel time, then arrive"): an hour within the same region, three hours to another, doubled when dragging (house figures, as scenes keep no distances between them); copies of both tokens then stand in the place on that map, the ones left behind stay hidden, and turning the clock back before then hides the arrivals again. A player's character is never carried off the map this way: with no such place on this map they are carried away from the danger instead. Ben's choice, "Real destinations (all three)", 2026-11-15.
+
+Reverse: have carryTurn in main.mjs skip carryGoals and walk away from the danger only, as before.
+
+## B5088. A hidden body goes into a hiding spot (2026-11-15)
+WoDX NPC. A body dragged out of mortal sight goes into the nearest hiding spot on the map with room (a WoDX Interactables hiding tile: a wardrobe, a bed, a curtain, a crawlspace, a priest hole), as one of its occupants and out of sight, so a search of that spot finds it. With none, the NPC drags it away out of sight. Ben's choice, 2026-11-15.
+
+Reverse: return "away" for intent "hide" in goalFor (carry-goal-rules.mjs).
+
+## B5089. Captives are tied and kept as prisoners (2026-11-15)
+WoDX NPC. A captive is carried to the captor's faction's watch-house or barracks, else its keep, haven or cellars (a place on this map first), else the captor's own post or haven, else off the map. There they are tied (WoDX Chronicle's Completely immobilized: hit automatically), kept on the prisoners list (world setting wodx-npc.prisoners), and the news goes out as a rumour (hook wodxCaptive, read by WoDX Storyteller's signals). A player's character who steps next to a prisoner gets a card to untie them. A player's character is only taken captive once the Storyteller approves (approval "An NPC takes a player's character captive"): approval ties them and takes them to that place at once; rejection and the NPC leaves them. Ben's choice, 2026-11-15.
+
+Reverse: drop "prison" from AFTER in carry-goal-rules.mjs and have arrive in carry-goals.mjs only set the body down.
+
 ## B5090. Golconda ends when its purity fails (2026-11-14)
 WoDX Actions. A vampire in Golconda falls from it by itself when the Road drops below 7 or Conscience (or Conviction) below 4 (V20 Dark Ages p. 359; Ben's pick go1). A card goes to the player and the Storyteller, and "Golconda lost" floats over the token. Frenzy, Rötschreck and the nightly blood loss return. The long road can be walked again. Setting "Golconda's rules".
 
@@ -8902,3 +9029,887 @@ Reverse: restore the six German lists in data/people.mjs.
 WoDX Chronicle. A Roll Table whose update was cut off between clearing and refilling was left with no results, then kept for good as if the Storyteller had edited it, so every Japanese name draw on one testbed lane came up empty. Now a table with no results is refilled at start-up, and until then the shipped names are drawn in its place. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: drop the two empty-table checks in scripts/gen.mjs.
+
+## B5650. Every W20 spirit Charm plays itself (2026-11-15)
+WoDX Actions. Ben asked which NPCs had no power system (2026-11-15 02:16Z). All 32 Charms on W20 pp. 366-368 are in spirit-charms.js, in WoDX's own words with their pages. A Power of the Charm type named after one is the spirit's Charm; the Spirit Charms window pays the Essence, makes the roll on Rage, Gnosis or Willpower, and applies the Charm (charms.js). A Creature made as a spirit (the system's spirit variant) is now read as a spirit, in Actions and in Combat.
+
+Reverse: delete spirit-charms.js and charms.js, and the spirit-variant line in both profiles.js.
+
+## B5651. A Charm's time ends by itself (2026-11-15)
+WoDX Actions. What a Charm does for a while (Armor's and Swift Flight's rows, a token's name or way of moving, lights put out, Spirit Static's Gauntlet, Freeze's lost Rage, Calcify's lost dots, Solidify Reality's levels) is a Chronicle timed effect whose end puts it back (wodx-actions.charmOff).
+
+Reverse: drop the reverter; the Storyteller takes the changes off by hand.
+
+## B5652. House numbers where the book gives none (2026-11-15)
+WoDX Actions. Cleanse the Blight rolls at 7 when the blight's strength is not known; Freeze and Umbraquake reach everyone within 10 yards; Blighted Touch resists at Willpower 6 and lasts three hours; Calcify lasts the scene; Updraft holds the target up for 3 turns; Flood's town-wide water costs 3 Essence and needs Gnosis 6. All in PENDING-REVIEW.
+
+Reverse: change the numbers in spirit-charms.js.
+
+## B5653. Charms that need the wiring of the modern world wait for it (2026-11-15)
+WoDX Actions. Control Electrical Systems and Short Out are greyed out before 1880 (the Chronicle's year); in play they switch or put out the scene's lights within 20 yards.
+
+Reverse: drop the era field on the two Charms.
+
+## B5654. The world-sized Charms use the world systems (2026-11-15)
+WoDX Actions. Flood, Create Fires, Shatter Glass and Cleanse the Blight put world results on the effects card (deep water, fire, broken ground, a cleansing; a town flood or fire waits for the Storyteller); Create Wind sets the weather; Freeze brings snow and Umbraquake shakes the screen through Chronicle's looks; Spirit Static and Materialize work with Otherworlds' Gauntlet; Open Moon Bridge makes a Moon Path between two scenes.
+
+Reverse: remove the world lists and the does handlers.
+
+## B5655. Possession and a blight from a botch last until removed (2026-11-15)
+WoDX Actions. Possession is permanent by the book: the target gets a Possessed effect with no end and the spirit's token is hidden; a botched Blighted Touch roll leaves a Blighted effect with no end. The Storyteller deletes them when the spirit is driven out or the soul is healed.
+
+Reverse: give both a scene's duration.
+
+## B5656. Spirits soak with Willpower (2026-11-15)
+WoDX Combat. A Creature spirit soaks with its Willpower (W20 p. 366); harm applied straight from a power (soakAndApply) now counts the sheet's soak rows, as a blow already did (B3800).
+
+Reverse: drop the spirit branch in soakOpts and the sheet bonus in soakAndApply.
+
+## B5657. NPC spirits choose their Charms (2026-11-15)
+WoDX Actions. The NPC power choice offers a spirit's Charms by their effect keywords (Blast to attack, Armor to guard, Healing to heal, Re-form to escape), leaving out what it cannot pay for or what the era does not allow.
+
+Reverse: drop the spirit branch in npcPowers.
+
+## B5660. Beasts' legs are built by kind (2026-11-15)
+WoDX Paperdoll, tools/sprites/beast.py. Every four-legged kind used the wolf's leg, so cattle, horses, pigs and sheep stood on a dog's bent hind legs and paws. Each kind now names its leg: `hoof` (a knee low on the foreleg, the hock high and pointing back, a thin cannon bone, a dark hoof), `pad` (the thick columns and flat feet of bears and mammoths) or `paw` (dogs, cats, small beasts and the clawed beasts of legend). The walk is a four-beat walk: a hind foot, then the fore foot of the same side a quarter of the stride later. The mount sheets were drawn again from the same rig, so ridden horses, mules and camels have the same legs.
+
+Reverse: set `leg='paw'` for every kind and put the two-beat phases back in `side()`.
+
+## B5661. A standing frame (2026-11-15)
+A walk cycle has no frame with every foot down, so a still figure seen from the side showed a lifted leg. Every sheet the batch draws now carries a standing frame as a ninth column after the eight of the walk, and the manifest marks it (`stand: true`). The game shows that column when the token is not moving (sprite-rules `frameOf(st, grid, stand)`), and column 0 as before for a sheet without one.
+
+Reverse: drop the ninth column in batch.py `run()` and `STAND` in sprite-rules.mjs.
+
+## B5662. Beasts graze and lie down (2026-11-15)
+The beast rig takes a pose: the head comes down to the ground with the muzzle tipped (grazing, a loop) or the body comes down with the legs folded under it (lying, held). Sheets `graze` and `lie`, six frames by four facings.
+
+Reverse: remove `posed()` from beast.py and the two names from `BEAST_LIFE`.
+
+## B5663. Children have a child's proportions (2026-11-15)
+The child bands of B3480 squeezed the whole figure below the chin by one factor, which gave a small adult. Each band now gives the legs their own share of the height below the chin (0.50 for the smallest, 0.63 for the grown) and the trunk the rest; the head keeps nearly its full width and the shoulders come in. Heights by band are unchanged, so nothing that reads a child's size changes. The sample map of 15 November had shrunk grown figures instead of passing `growth`; that was the sample's mistake, not the game's.
+
+Reverse: one factor below the chin again in child.py `Warp`.
+
+## B5664. Poses are drawn, not made from the walk (2026-11-15)
+Sitting and kneeling were made by squashing the standing frame. wear.py now draws a pose joint by joint (`pose_at`, `posed`): on a seat, on a stool of its own, on the ground, kneeling with the hands together, seated with a cup, working with the hands, kneeling to tend, hoeing, and the walk with a sack in the arms (`carry`, a way of going). Asleep is the figure seen from above under a blanket, eyes shut, one row for each way the head can point. Long garments lie over bent legs and never hang below the ground. Children take every pose. Working, tending, hoeing, drinking and grazing go round for as long as the figure stays at them.
+
+Reverse: drop `PA.drawn()` from batch.py; the squashed sit and kneel return.
+
+## B5665. Figures live their routine on the map (2026-11-15)
+World setting `spriteLife`, on by default. The active Storyteller's computer looks every few seconds at each sprite token whose character has a WoDX NPC routine and, once the token has come to rest, gives it the pose of what the routine says it is doing: asleep lying down (along a bed when one is beside it), at rest on a seat beside it, else on a stool indoors or on the ground in the open, at work with the hands (hoeing in a yard, a park or the wilds), at prayer kneeling, drinking seated, and on an errand carrying a load as it walks. Beasts graze, and lie down to rest or sleep. A figure gets up when it walks. A pose given by hand, a figure in a fight and one fallen or dead are left alone. A seat or a bed is told by the name of a tile's picture, or by the tile flag `flags.wodx-paperdoll.furniture` ("bench", "bed"), with `flags.wodx-paperdoll.head` for the end the pillow is at. A lone player, who is their own Storyteller, sees the same.
+
+Reverse: turn the setting off, or remove `settle()` from sprites.mjs.
+
+## B5666. Getting up is played, not snapped (2026-11-15)
+
+A figure that sat, knelt or lay down used to jump straight back to standing. When the pose is let go (it walks off, the routine moves on, or someone helps it up), the way down is now played backwards in a little under half a second, on every screen, before the walk or the standing frame takes over. Sprite-rules `RISES` lists the poses a figure gets up from and `upFrame(t)` gives the frame.
+
+Reverse: drop the `up` branch in sprites.mjs `tick()` and the `RISES` check in `onTokenUpdate()`.
+
+## B5667. The blanket is the bed's (2026-11-15)
+
+A sleeper was always drawn under the same grey-brown blanket. Every sheet with `sleep` now has a `sleepcover` sheet beside it: the blanket alone, near white. When a routine puts a figure to sleep in a bed, the bed's colour goes on the pose (`act.blanket`) and every screen lays the cover over the sleeper tinted to it. The colour is the tile flag `flags.wodx-paperdoll.blanket` ("#rrggbb") when the map maker set one; otherwise it is read once from the bed picture itself (the commonest colour of its middle, sprite-rules `blanketOf`). A sleeper with no bed keeps the drawn blanket.
+
+Reverse: drop the `cover()` call in sprites.mjs `tick()`; the drawn blanket shows as before.
+
+## B5668. Every four-legged animal gets the straight hind leg (B5660 widened)
+
+Ben saw the hind legs bend forward under the belly. The hock now sits back under the rump and the cannon bone hangs straight to the hoof or paw, trailing as the foot lifts. The same fix went into the Garou Lupus and Hispo rig (wolf.py), whose test sheets were drawn again. Mounts and every monster or beast the batch draws are on the beast rig, so they take it at the next batch. The Crinos keeps its upright war-form legs, and birds, bats, snakes and spiders have no hock.
+
+## B5670. Every line's NPCs choose their own powers (2026-11-15)
+WoDX Actions. Ben asked for the rest of the lines to get a power system for NPCs (2026-11-15 04:25Z). Each line's builder now has powersFor(actor): the powers the NPC knows, each with the effect keywords its own effects card gives (npc-power-rules.js keysOf), so the NPC choice picks one to attack, hold, heal, guard, flee, call or boost. autoPower fills the line's own window and rolls it, so the pool is paid, the roll is made and the effect lands exactly as a player's use would. A power whose card gives no keyword is left to the Storyteller.
+
+Reverse: drop the powersFor functions and the line() rows in main.js npcPowers.
+
+## B5671. Mummies: Hekau spells only, paid from Sekhem (2026-11-15)
+The named spells of the paths the mummy knows, with a Sekhem cost it can still pay. Rituals take hours and are never chosen in a fight.
+
+## B5672. Mages: rotes of the era's own magic (2026-11-15)
+A Dark Ages mage offers the fellowship's rotes its Pillars reach; a modern mage offers its saved rotes whose Spheres it knows (the rote's own keywords).
+
+## B5673. Changelings: named cantrips with the Realm known best (2026-11-15)
+A changeling of the later eras offers the cantrips its Arts reach, and the window fills the Actor or Fae Realm it knows best. Nothing is offered while it has no Glamour or the Dreaming is closed to it. A Dark Ages fae offers the cantrips written on its sheet with what they do in brackets.
+
+## B5674. Demons: the evocations of their Lores, while Faith lasts (2026-11-15)
+
+## B5675. Kuei-jin: the named powers of their Chi Disciplines (2026-11-15)
+A Kuei-jin's Disciplines are no longer read as Kindred Disciplines for the NPC choice.
+
+## B5676. Orpheus: Horrors with one Vitality put in (2026-11-15)
+
+## B5677. Inquisitors: the book's Blessings on the sheet (2026-11-15)
+A Blessing on the sheet counts with or without the Virtue in brackets after its name.
+
+## B5680. A challenge that is not answered goes further (2026-11-15)
+WoDX NPC (desk m1). A challenge is kept on the scene (flag wodx-npc.challenges) for an hour. If the intruder is still in the place ten minutes of world time after it, the watchers react again with the region's conditions set aside; challenge and letting it pass drop out, a keeper leans to the alarm or a fight, anyone else to sending for help, shouting or running. Help that arrives (B5682) counts as a challenge too. House reading.
+
+Reverse: drop checkChallenges from checkAlerts and recordChallenge from the challenge and send cases in routines.mjs.
+
+## B5681. Those who hear an alarm come or go (2026-11-15)
+WoDX NPC (desk m2). follow-rules hearAlarm: keepers and the bold (Aggression 1 or more) walk to the intruder; the timid (Aggression under a half, or Cowardice 1 or more) and anyone facing what they fear make for their home on this map, else run from the trouble; the rest stay. Animals stay. House reading.
+
+Reverse: remove the hearer loop from the alarm case in doReaction.
+
+## B5682. Help that is sent for walks to the trouble (2026-11-15)
+WoDX NPC (desk m3). The watch who answer Send for help walk from the way in to the intruder and stand as a challenge (B5680).
+
+Reverse: remove the goTo loop from the send case.
+
+## B5683. An informer walks off to tell, and can be stopped (2026-11-15)
+WoDX NPC (desk m4). The informer walks to a region tagged as a gate (watch-house) on the map, else the way in, else away from the intruder. The report keeps who carries it; if they are dead, down or held when it falls due, it is dropped and the place does not go on alarm. The description of the intruder already goes round through WoDX's descriptions where there were witnesses. House reading.
+
+Reverse: drop the walk in the report case and the stopped() filter in checkAlerts.
+
+## B5684. One who runs makes for home and remembers (2026-11-15)
+WoDX NPC (desk m5). A fleeing NPC makes for its home or haven region on this map, else runs from the trouble. It keeps a memory note against the intruder (kind cold, -1, "Frightened them off", not seen by the player), and one of the kind who talk (the report tactic, townsfolk, or Aggression under a half) leaves a report as in B5683. House reading.
+
+Reverse: restore the old flee case.
+
+## B5685. A hostage is let go when the fight ends (2026-11-15)
+WoDX NPC (desk c1). When a fight ends, every hostage held in it is let go (the held condition and the taker's flag cleared), makes for home or runs, and keeps a memory note against the taker (harm, -4, seen). House reading.
+
+Reverse: drop releaseHostages from onCombatEnd.
+
+## B5686. A guard on watch walks a beat (2026-11-15)
+WoDX NPC (desk r3). An NPC whose routine block is On watch, on the map in view and not in a fight, walks to the next tagged place of that map at each quarter hour of world time and is back at its post on the hour, in Auto mode only. A map with one place keeps it still. House reading.
+
+Reverse: drop walkBeats from tick.
+
+## B5687. Kindred and Kuei-jin NPCs feed when their hunt ends (2026-11-15)
+WoDX NPC (desk r1). When a routine's hunting block ends for a Vampire NPC (blood pool) or one with Yang Chi (a Kuei-jin), the night's hunt is settled once. Prey on the same map (a passer-by, else a lone mortal townsperson) is walked to and fed on, as a player would. Otherwise the books' hunting roll is made through the hunting window's own rules (V20 pp. 259-260; V20 Dark Ages p. 334) with the NPC's best way to hunt. A success gives one die's worth of blood or Chi, the books' Storyteller option, never past the pool's top; a passer-by fed on loses what was taken. A failure leaves the NPC hungry for up to three days (Aggression +0.5, Hunger +1, prone to frenzy) until it feeds; a botch starts a severity 1 rumour with a witness. House reading on the figures.
+
+Reverse: drop the hunts list from tick and HN.withHunger from profileFor.
+
+## B5688. Criminals on the prowl pick a mark (2026-11-15)
+WoDX NPC (desk r2). Footpads and burglars by night, bandits by day and highwaymen at any hour, during their hunting block, pick a player's character within 30 yards with no one of theirs within 10 yards and no armed guard within 30, walk up and demand money. The player answers on the card: pay (half the carried purse, at least one), talk (the better of Manipulation + Intimidation and Charisma + Persuasion at difficulty 6, 7 for a bold one) or fight (the fight starter). Paid or talked down, the criminal leaves; refused, it fights. Each remembers the meeting. A mark is tried once in twelve hours. House reading.
+
+Reverse: remove prowl.hooks() from main.mjs.
+
+## B5690. Every grudge move does what it says (2026-11-15)
+WoDX NPC (desk g1). Still through the approval queue. Calling in a boon sets the owed boon due within seven days in the Ledger. Working against the character at court pulls the gentlest harmful lever the NPC's best seat opens, through Storyteller's own levers. Spoiling a venture costs the character's largest open venture a quarter of its value. Turning on someone dear gives the character's household and anyone warm to them a cold memory of the tale (a slight to those who court them). Meaning harm waits up to a week for a night when the character can be found, then hired men come there with a fight. House reading.
+
+Reverse: restore the card-only approve in memory.mjs.
+
+## B5691. An NPC who knows a wanted culprit acts (2026-11-15)
+WoDX NPC (desk g2). The Perception + Alertness roll on the recognition card is made for the NPC (Storyteller only). On a success: a guard or watchman challenges the culprit on the map and the law is sent for; townsfolk say nothing now and slip off to tell (B5683); a criminal keeps it as a hold, a crime secret it has found; a servant of the culprit was never tested. House reading.
+
+Reverse: drop knowAndAct from test in wanted.mjs.
+
+## B5692. An NPC's cult serves its founder (2026-11-15)
+WoDX NPC (desk e1). Each weekly turn an NPC founder's cult does what its kind is for: a blood or death cult stands as a Herd Background on the founder's sheet (V20 p. 114), a mage's, Wyrm or Netaru cult as a Cult Background (M20 p. 310), so the founder's own rolls use them; a Background the Storyteller set higher stands. The ordained drink of a vampire founder, take a pact with a demon or serve a mummy as cultists. A Wyrm cult raises its place's corruption a step. A sect gives the founder's faction a dot of church Influence a week, up to the cult's dots. The NPC's reason and the cult's purpose show on the founding card. House reading.
+
+Reverse: drop serve() from runTurns in cults.mjs.
+
+## B5693. The faithful on the map (2026-11-15)
+WoDX NPC (desk e2). Up to six of a cult's members are named from the mortal NPCs at its meeting place, the first ordained as the inner circle allows. Each named member keeps one evening a week (19:00 to 23:00, the same night for the same cult) at a tagged place on the meeting place's map, as a duty over their own hours. House reading.
+
+Reverse: drop the worship duties in serve().
+
+## B5694. A raid on a cult happens at the meeting place (2026-11-15)
+WoDX NPC (desk e3). Approving the raid sends the Church's men before 1700, the town's watch after, to the meeting place through Storyteller's reach; with the founder or one of the faithful there, a fight starts. The halving follows as before. House reading.
+
+Reverse: drop raidPlace from the raid handler.
+
+## B5695. NPC masters' servants attend them (2026-11-15)
+WoDX NPC (desk g3). At the monthly keeper turn every bound servant of an NPC master keeps hours at the master's haven or home (else where the master is): a Kindred's ghoul by day (V20 pp. 115-116), the rest 18:00 to 22:00. While one attends, the master's hunt (B5687) has one more die, a vessel brought. House reading.
+
+Reverse: drop attendAll from keeperTurn.
+
+## B5696. A follower sent to fetch brings back (2026-11-15)
+WoDX NPC (desk g4). At the one pointed at: a person at Unknown or better toward the master is given a follow order and walks back; one below says a stock refusal over their token; a thing (a token with no sheet traits) is carried along beside the follower. House reading.
+
+Aftercare (round two of the review): the fetched follow lasts an hour, then the one fetched goes back to its day; a fetch order in its way-back stage clears after an hour (fetchedHome in orders.mjs).
+
+Reverse: restore the card-only doFetch in orders.mjs.
+
+## B5697. Every Embrace off the screen has a reason (2026-11-15)
+WoDX NPC (desk g5). Each childe the years make gets a reason drawn from the sire's sect, half the time leaning on the sire's Nature (V20 Archetypes); it shows on the brood record and in the childe's sheet notes when brought into play. In a Camarilla or Dark Ages court a quarter of the Embraces by anyone but a Prince or lord are made without leave and become a grave secret on the sire. House reading.
+
+Reverse: drop the reason and noLeave lines in fates-rules.mjs and fates.mjs.
+
+## B5698. A faction on guard posts a sentry (2026-11-15)
+WoDX NPC (desk g6). When the Defend move lands, one of the faction's NPCs, another than the leader where one is free, keeps watch at the faction's first place for seven days of world time. House reading.
+
+Reverse: drop postGuard from applyNow in factions.mjs.
+
+## B5699. The body of a supernatural is taken as proof (2026-11-15)
+WoDX Storyteller (desk h1). Hunters who bring down a supernatural take the body by who hunts in the region: the bishop's court to be judged and burned (to 1230), the Inquisition as proof for a trial (1231-1833), the Society of Leopold's reliquary (from 1834, The Hunters Hunted II pp. 122-123), the Arcanum's scholars, a government morgue (from 1947); the imbued burn it where it lies (from 1999). With WoDX NPC's carrying the body is carried for real (intent "proof"); without it the nearest hunter walks to it and leaves with it, and the body token is hidden, never deleted (Put the body back on the card). Their file on that kind rises a level, the region's pressure falls by two, and a rumour goes round. House reading.
+
+Reverse: drop proof() from raidEnded in hunt-follow.mjs.
+
+## B5700. After a raid the hunters follow through (2026-11-15)
+WoDX Storyteller (desk h2). When a fight with raiding hunters ends: the quarry down, they take the body (B5699) and leave the map; half or more of them down, the rest run, their file on the quarry rises a level and pressure +1; otherwise they draw back. A raid that finds nobody at the place leaves one hunter watching it for three nights; one who sees the quarry come back sends word (the file grows). House reading.
+
+Reverse: drop the deleteCombat hook and missed() in hunt-follow.mjs and reach.mjs.
+
+## B5701. The investigator walks the town (2026-11-15)
+WoDX Storyteller (desk h3). An approved investigator comes onto the region's town map (one with a tagged market, tavern or church) and keeps a day there: the market in the morning, the tavern at midday, the church in the afternoon, lodging at the tavern. Each day they roll Perception + Investigation at difficulty 7; each success adds to the file on every culprit whose description is going round. Harm them and pressure rises by two; win one of the characters' regard to a friendly step and they leave early; after three days they go. A new Investigator extra (house figures). House reading.
+
+Reverse: drop investigator() from approve in hunters.mjs.
+
+## B5702. Someone a hunters' faction finds goes into the file (2026-11-15)
+WoDX NPC (desk h4). The one found on a faction turn goes into the region's hunters' file (two points of progress) and pressure there rises by one; a deep enough file brings the usual raid proposal. House reading.
+
+Reverse: drop the found() call in foundCard in factions.mjs.
+
+## B5703. A body found drained or savaged feeds the hunters (2026-11-15)
+WoDX Storyteller (desk h5). When a body is first found, drained of blood or savaged, the region's hunters' pressure rises by one, or two before 1700 and from 1986 (the years when the finding itself names something unnatural: a curse or witchcraft, a file that reaches the wrong people). From 1840, the age of the police surgeon, the body is taken to the morgue (hidden on the map), and the hunters claim it on their next turn: each file in the region grows, and a supernatural's body counts as proof (B5699). A mortal townsperson can be the first to find a body, as a player's character can. House reading.
+
+Reverse: drop bodyFound() from found() and claimMorgue() from turn().
+
+## B5710. A hurt ally is tended, then mends on the clock (2026-11-15)
+WoDX NPC carry-aftercare.mjs. When an NPC lays a hurt ally down at its haven or home, the best healer there (the carrier and the NPCs whose routine names the place home, haven or post) rolls Intelligence + Medicine at 6, harder for deep wounds; success marks the wounds treated (WoDX Actions' flag), so they mend by the books' healing times. Off the map they mend each day by WoDX Actions' healing plan; on the map Actions' own clock heals them. A Cainite ally is fed by a vessel or ghoul and spends the blood on the wounds, and is fed again each day until whole. Ben's pick (a1).
+
+Reverse: turn off "Aftercare of the carried" in WoDX NPC's settings.
+
+## B5711. A Cainite in torpor is guarded and may be woken with blood (2026-11-15)
+WoDX NPC. A Cainite laid to rest still unliving goes into torpor (WoDX Actions' torpor, its length by Road) and stays hidden at the haven. Once a day, if a sire, childe, regnant or faction-mate Cainite has blood to spare, an approval card offers to feed them two points; approval sets the torpor's end to now and Actions' rise from torpor takes over. Ben's pick (a2).
+
+Reverse: reject the npc-torpor-blood approval, or turn off Aftercare.
+
+## B5712. A dead mortal ally gets a funeral by faith and era (2026-11-15)
+WoDX NPC. A dead mortal brought home is given the rite of the faith kept where they lie (WoDX Chronicle's faith of the scene and year): burial, cremation, sky burial or a barrow. A map pin marks the grave at the place, the actor keeps flags.wodx-npc.funeral, a rumour spreads, and every family member or loved one holds a grudge (WoDX NPC's memory, "killed someone dear to them") against whoever last hurt the dead (flags.wodx-npc.hurtBy, from wodxDamageApplied). Ben's pick (a3).
+
+Reverse: turn off Aftercare.
+
+## B5713. A Cainite's Final Death: the remains gathered, the news spread (2026-11-15)
+WoDX NPC. A Cainite brought to rest who has met Final Death is gathered up (the token leaves the map, flags.wodx-npc.finalDeath), a rumour spreads, their faction loses a dot of Status, and the sire hears of it. Ben's pick (a4).
+
+Reverse: turn off Aftercare.
+
+## B5714. A dead enemy is disposed of by kind (2026-11-15)
+WoDX NPC. A dead foe hidden is disposed of six hours later, one taken as proof a day later: mortals of the church, a lord or the folk hand the body to the law, other mortals bury it unmarked, Cainites and the like burn or sink it, Garou leave it to the wilds. The token leaves the map, its WoDX Storyteller body marks go, and the evidence the takers' side left on that scene around the death is cleared. Ben's pick (a5).
+
+Reverse: turn off Aftercare.
+
+## B5715. The fallen foe's and the captive's things go into the captors' stores (2026-11-15)
+WoDX NPC. Weapons, armour, gear and wonders (not powers or natural weapons) are taken from a dead foe or a new prisoner: each becomes a world item in the folder "WoDX: captors' stores" and a line in a container at the captors' place (or the nearest on that map), where its Take gives it back; with no container, the place's stores (world setting wodx-npc.stores) keep them. The actor keeps flags.wodx-npc.takenGoods. Ben's pick (a6).
+
+Reverse: turn off Aftercare.
+
+## B5716. Prisoners are guarded and fed, and may slip free (2026-11-15)
+WoDX NPC. Each day a mortal prisoner is fed and mends a day's worth; each night an NPC prisoner tries Dexterity + Larceny or Strength + Athletics at 7 against the bonds, the successes kept from night to night until three free them (a botch starts over). Freed, they are untied and leave the prisoners list. Ben's pick (a7).
+
+Reverse: turn off Aftercare.
+
+## B5717. Questioning each day, nothing graphic (2026-11-15)
+WoDX NPC. Once a day the captor (or the faction's leader) rolls Manipulation + Intimidation, or Dominate or Presence when better, against the prisoner's Willpower; each success gives up one of the prisoner's secrets (WoDX NPC's secrets, found by the captor, with its Ledger hook). The Storyteller's card names what was learned. Ben's pick (a8).
+
+Reverse: turn off Aftercare.
+
+## B5718. Cainite captors feed on mortal prisoners, carefully (2026-11-15)
+WoDX NPC. A Cainite captor feeds on a mortal prisoner every other night, one or two points, never past three health levels left: the captor gains the blood, the prisoner takes bashing damage, and wodxFed fires (evidence, memory). Ben's pick (a9).
+
+Reverse: turn off Aftercare.
+
+## B5719. After a week the faction decides (2026-11-15)
+WoDX NPC. After seven days the captors' faction picks by its kind's temper: ransom (a dot of Resources from the prisoner's faction to the captors'), trade for one of their own held by the prisoner's people, the law (WoDX Chronicle's trial card), or release. A killing, and any choice about a player's character, waits on the Storyteller (approval type npc-prisoner-fate); rejecting keeps them another week. Ben's pick (a10).
+
+Reverse: turn off Aftercare.
+
+## B5720. The prisoner's faction may come for them (2026-11-15)
+WoDX NPC. On each faction turn the prisoner's own faction tries a rescue: Wits 2 + Retainers or Herd against 6 + the captors' Security. Success frees the prisoner and both factions think worse of each other; a botch costs the rescuers a dot of Retainers. A player's character is left to the players (in a Lone Chronicle, see B5721). Ben's pick (a11).
+
+Reverse: turn off Aftercare.
+
+## B5721. A player's character held prisoner (2026-11-15)
+WoDX NPC. The player gets a card when taken and each day: where they are, who holds them, and buttons to try the bonds (the same roll, once a night), to talk (an approval card brings a captor to them) or to wait. Every choice the captors make about them waits on approval (B5719). In a Lone Chronicle (WoDX Solo on) one who serves them tries to get them out on each faction turn. Ben's pick (a12).
+
+Reverse: turn off Aftercare.
+
+## B5730. The pixel map drawer lives in tools/pixelmap (2026-11-15)
+Tools. WoDX's own maps are drawn by code in our own pixel art (the Whole World desk, choices x1 and t1): 94 art pixels to a 5 ft square at one screen pixel each, the grain of the character sprites, in the World of Darkness palette, painted in daylight colours for the clock to darken. No pack pictures, so the art can ship in the public repository. The 47 pixel look picked first on the desk is kept behind PIXELMAP_COARSE=1; the finer grain is what Ben directed the samples toward.
+
+Reverse: delete tools/pixelmap; maps fall back to the Dungeondraft route.
+
+## B5731. One drawing writes the picture, the walls and the sidecar (2026-11-15)
+Tools. A Recorder (scene.py) notes walls, doors, windows, containers, lights, regions and every named object while the map is drawn, and writes the picture, a Universal VTT file that tools/gate/mapimport.mjs already reads (walls cut where the openings are, a door wall at each), and a WoDX sidecar for "Adopt a generated map". The sidecar's `key` lists what a player would call each object and its square, for action logic and world effects later. No Dungeondraft step.
+
+Reverse: write the sidecar by hand.
+
+## B5732. Openables are drawn once per state, not into the map (2026-11-15)
+Tools. Doors, shutters, chests, casks, crates and sacks are left out of the map's picture. Each is drawn over the finished map once shut and once open, and only the pixels it changed are kept, so each state is a picture of its own the same size. A doorway keeps its threshold, jambs and scraped arc in the map; only the leaf moves.
+
+Reverse: draw them into the picture in one state (props.OPEN).
+
+## B5733. A sidecar can give pictures for each state (2026-11-15)
+WoDX Interactables. A feature or opening in the sidecar may carry `art` ({state: file beside the map}) and `artRect`. Adopting the map lays the container's tile with its shut picture and the state art, and gives each door and window a tile that follows its door wall, so the picture swaps for every player when it is opened or shut (the follower and state-picture machinery of states.mjs). Shutters start open by day. Paths must be png or webp files under the map's folder; anything else is left out with a plain note. Undo removes the picture tiles.
+
+Reverse: drop `art` from the sidecar; tiles go back to having no picture.
+
+## B5734. The drawing rules are a file beside the drawer (2026-11-15)
+Tools. tools/pixelmap/RULES.md holds Ben's critiques and the pixel-art technique: above all, draw every object for the player characters' eyes, since players only use what they can recognise, and show each thing's state.
+
+Reverse: none needed.
+
+## B5735. The farmhouse is the drawer's first map and the gate's fixture (2026-11-15)
+Tools. tools/pixelmap/maps/farmhouse.py writes tools/gate/fixtures/pixel-farmhouse: 5 doors, 7 windows, 14 containers with shut and open pictures, the oven's light and the house as a home. gatepixelmap imports it on a lane, adopts it, and opens and shuts a door, a shutter and a chest to see the pictures change.
+
+Reverse: remove the fixture and the gate.
+
+## B5736. A touched gate run reads the gate list from the branch under test (2026-11-15)
+Tools. run-gate.mjs --touched and --all built the gate list from the PC's own copy of the repository, so a gate new on the branch (gatepixelmap in job #1400) was silently left out. Both now read tools/gate, the module graph and the per-gate timeouts from the --repo checkout.
+
+Reverse: none needed.
+
+## B5750. Witness reactions given by a window act on the map (2026-11-15)
+WoDX Actions. The witness step takes results already rolled (the Delirium check, a demon's Revelation) and acts them out: a frozen witness is Immobilized for the scene, a fleeing one runs, a fighting one starts a fight; those who keep it go on the Masquerade record. With no revealed actor on the map, nothing is recorded against anyone.
+
+Reverse: drop the `given` option; the windows post their table again.
+
+## B5751. Revelation acts on the targeted mortals (2026-11-15)
+WoDX Actions. The Revelation window reads the targeted token's Willpower and hands its reaction to the witness step (B5750).
+
+Reverse: remove the witness call after the card.
+
+## B5752. A lost Harrowing costs what was at stake (2026-11-15)
+WoDX Actions. A Passion's Harrowing lost takes the quarry Passion to 0 and tests another Passion (rolled at 5, down 1 on failure); a Fetter's loses a dot; other kinds add a permanent Angst on a loss; a lost Destruction Harrowing offers the Storyteller a button to turn the wraith Spectre (hostile, darkened, logged). The wraith's token fades while the Harrowing runs and comes back after. House reading of Wraith 20th's Harrowing outcomes where the book leaves the amount to the Storyteller.
+
+Reverse: remove payHarrowing and harrowedLook.
+
+## B5753. Summoning a spirit brings one (2026-11-15)
+WoDX Actions. A Garou's spirit summons with Gnosis successes brings a spirit through the summons layer beside the summoner for the scene: a called one when the attitude roll holds, a wild one on 2 successes or less, a Bane on a botch.
+
+Reverse: drop the SUM.bring call.
+
+## B5754. The Curse takes dice off social rolls with mortals (2026-11-15)
+WoDX Actions. A Garou's social roll against a mortal, hunter or ghoul loses the Curse dice by permanent Rage (W20), shown as a part of the pool.
+
+Reverse: remove the curse part in social().
+
+## B5755. A lost Kuei-jin soul contest sets the state (2026-11-15)
+WoDX Actions. Lost to the fire soul: frenzy; to the wave soul: the Fear (rotschreck); to the shadow soul: a new "shadow soul" condition, each for the scene.
+
+Reverse: remove the timed condition after the contest.
+
+## B5756. A won Forbiddance makes the being afraid (2026-11-15)
+WoDX Actions. A won Forbiddance on a targeted being sets a "forbidden" condition and Afraid for the scene: an NPC runs from the mummy.
+
+Reverse: remove the timed effect.
+
+## B5757. The resource Uses window does the use (2026-11-15)
+WoDX Actions. Willpower's automatic success and ignored wounds wait on the character for the next roll; vitae heals bashing then lethal damage, or adds a held Physical die; Rage gives extra actions in a running fight, takes the Dazed mark off, or opens Change form; Glamour heals; stepping sideways opens the Otherworlds window.
+
+Reverse: drop the fifth element of each USES row and carryOut.
+
+## B5758. Kindred Background downtime brings what it says (2026-11-15)
+WoDX Actions. Resources: money into the purse, a week of a month's allowance per success (house reading). Contacts: current rumours named, up to the successes. Influence: a boon owed by the institution in the Prestation journal. Retainers: servants named and their orders opened. Domain or Hunting Grounds with no success: a rival feeds there (the herd thins). A botch starts a rumour about the character.
+
+Reverse: remove downtimeDoes.
+
+## B5780. The Evocations desk built as picked (2026-11-15)
+WoDX Actions. Ben picked "Build this rule" for all eleven evocations on the Evocations desk and asked that every ritual have a tangible effect (2026-11-15 05:19Z). acts.js works the effects a keyword cannot: memory, vision, seize, mark, cleanse, remote and path. Each runs from the effects card on the active Storyteller's client and leaves an undo record. Evocation specs may now chain several keywords.
+
+Reverse: set the eleven specs in demon-evocations.js back to null and drop acts.js.
+
+## B5781. An NPC's ground effect lands under its target (2026-11-15)
+An NPC has no one to click a spot, so a ground area (a blaze, broken ground) from an NPC's power is placed at its target token's centre.
+
+## B5782. Alter Memory on an NPC forgets the demon (2026-11-15)
+WoDX NPC. Erasing a memory removes the NPC's memory notes and grudges of the demon (memory.forget); Undo restores them (memory.restore). An edit or a planted memory is written into the NPC's memory as a note. A player's character gets a private card to play the change.
+
+## B5783. NPC demons cover their tracks (2026-11-15)
+Ben's note on Alter Memory asked what an NPC demon would do with it. When a fight ends, an NPC demon who knows Alter Memory and has Faith left uses it on each mortal or hunter on the scene who does not already carry a changed memory.
+
+## B5784. Hand of Faith turns the next evocation back (2026-11-15)
+While a demon holds Hand of Faith, another demon's evocation on the scene with fewer successes than the seizing roll lands on its own user instead, and the hold is spent.
+
+## B5785. The Mark of the Celestials, read by NPCs (2026-11-15)
+The mark lasts a day for one success, a week for two, a month for three, a year for four or more. An NPC who meets the bearer reads it when its Wits are below the successes, or when it fails a hidden Willpower roll at 7; it warms (honour) or cools (shun) one step toward the bearer.
+
+## B5786. Touch from Afar and the words of a vision or a mark (2026-11-15)
+A player is asked for the words of a vision, a mark or a changed memory, and for whom Touch from Afar reaches (any token on any scene). An NPC demon reaches its current target.
+
+## B5787. A keyword may carry its flavour (2026-11-15)
+In a power's keyword list, "fortune:curse" or "boost:sap" passes the flavour to the keyword's outcome, so a ritual can chain a curse or a sapping with other keywords.
+
+## B5788. Sense lays a detection sense (2026-11-15)
+The Sense keyword puts a sense-all detection mode on the caster's token, 30 feet a step of duration, for the effect's duration, and whispers what the target's sheet and the scene show (hurt, Willpower, effects, darkness, hidden figures, worked ground). Undo or the end of the effect takes it off.
+
+## B5789. Know finds out a secret (2026-11-15)
+The Know keyword reveals the heaviest secret the target keeps that the caster has not found (WoDX NPC secrets, with its hook in the Ledger). With no secret left, what the sheet shows is pinned on the open case board as a clue and whispered, and the Storyteller may add an answer.
+
+## B5790. Beasts and ghosts need a power to talk (2026-11-15)
+WoDX NPC. The talk menu opens on an animal or a Wraith only for a character with a Speak effect running. Werewolves and other shapeshifters talk with beasts and the dead with the dead. The world setting "Beasts and ghosts need a power to talk" turns it off.
+
+## B5791. Hekau rituals do something (2026-11-15)
+The 36 Hekau rituals that only went to the Storyteller now give results: the weather magics set the weather, Tears of Isis gives Sekhem, the Chattels and Reflections make their things, the Bonds and Bindings bind, Name the Secret and Read the Tree of Life find out a secret and lay a curse or a blessing, Forgetting the Person dims the memories of those near, Rousing Apophis hurts everyone near. Two new spec kinds: K (any keyword's own outcome) and P (points into a pool).
+
+## B5792. The 63 book rituals that only told something chain world keywords (2026-11-15)
+Each of the 63 book rituals whose keywords were only Sense, Know or Speak gains the keyword its own effect names: Sight for the far-seeing rituals, Light, Hold, Fear, Summon, Manifest, Ward, Boost, Bind, Sway, Sideways, Fortune, Imbue or a charge. tools/powers/inventory.mjs now counts no ritual as a card only.
+
+## B5793. A binding holds the bound character's token (2026-11-15)
+The say-or-do audit (d19) found that a binding on a player character only posted a card. Now, while Hold or Possess binds a player's character, its player cannot move the token. Fear keeps the token from going nearer the one feared, who is remembered on the effect. A command or an oath (Sway, Bind) sends each move to the Storyteller, who allows or refuses it on a card. With no Storyteller on (a Lone Chronicle), a command's move stands, with a reminder. The world setting "Bindings hold the token" turns it off.
+
+Reverse: drop binds.js and its setup call in effects.js.
+
+## B5795. A pact gift does what it gives (2026-11-15)
+The say-or-do audit (d12) found that using a pact gift only said "it answers". Now a lesser evocation gift runs one of the giving demon's evocations, up to the gift's level and the demon's Lore, through the effects card as the thrall's own. An innate power lends dice to Social rolls for the scene, and an apocalyptic enhancement lends dice to Physical rolls, by the successes of the Willpower roll.
+
+## B5800. The law: held, sentenced, let go (2026-11-15)
+WoDX NPC (desk n1). An arrested NPC is held at a place tagged as a gate (the watch-house) until the verdict, or kept off the maps where there is none. Found not guilty or shown mercy: home for an hour, then the routine. A sentence of time keeps the NPC off the maps until it ends, then home first. Banished: the routine ends and the NPC is marked gone. Death: the dead status. Chronicle's mercy now fires wodxSentence with no mark. House reading.
+
+Reverse: drop onArrest, onVerdict and onSentence from aftercare hooks(), and the mercy Hooks.callAll in law-punish.mjs.
+
+## B5801. Wounds are tended and mend on the clock (2026-11-15)
+WoDX NPC (desk n2). After a fight a Kindred NPC spends blood to heal bashing and lethal levels, keeping two points back (V20). Injured or worse keeps to bed: with lethal or aggravated harm at Injured, or bashing at Wounded, at a hospital, else a church, monastery, temple, synagogue or mosque, else at home; otherwise at home. Levels heal on the mortal chart (M20 pp. 408-409): bashing an hour a level to Wounded, then three, six and twelve hours; lethal and aggravated a day, three days, a week, a month, two, three and five months. Back on the routine once no worse than Hurt. The same clock as the carried allies of the Aftercare thread.
+
+Reverse: drop afterFight and mendTick from hooks().
+
+## B5802. A rival who backs down (2026-11-15)
+WoDX NPC (desk n3). In a standoff the one outnumbered gives way, then the one off its own ground, then the less bold. It walks off, remembers being shamed, and the next meeting of the same two in thirty days is ten points likelier to come to blows. House reading.
+
+Reverse: drop standoff() and standoffBonus from rivalry.mjs.
+
+## B5803. After the Kiss (2026-11-15)
+WoDX NPC (desk n4). A mortal NPC fed on without consent is Dazed (V20 Dark Ages p. 348 condition) for ten minutes, or until the next morning when three or more points were drunk, and rests at home from ten minutes on until morning. House reading.
+
+Reverse: drop onFed and kissTick from hooks().
+
+## B5804. Mourning by faith (2026-11-15)
+WoDX NPC (desk n5). An NPC who loses someone close mourns: Western Christian 7 days, Orthodox 9, Islamic 3, Jewish 7 (shiva), Hindu 13, Theravada 7, Tibetan 49, Chinese 7, others 7. Home by day, and 18:00 to 21:00 at the faith's place of worship where the map has one. The mourner remembers whoever the dead fell fighting. House reading.
+
+Reverse: drop the aftercare mourn call in hearts.mjs tellLoved.
+
+## B5805. After a robbery (2026-11-15)
+WoDX NPC (desk n6). A robber who got money spends the night at the tavern until the next morning. The victim gets Report it to the watch: theft heat on the robber and a rumour. House reading.
+
+Reverse: drop spree() and the report button in prowl.mjs.
+
+## B5806. Married NPCs share a home (2026-11-15)
+WoDX NPC (desk n7). The one with no home moves; with two homes the bride moves to the groom's (the custom of most lands and ages); otherwise the one with the smaller household. Player characters' sex plays no part. A divorce moves the one who moved back (flag homeBefore). House reading.
+
+Reverse: drop onMarried and onDivorced from hooks(), and the wodxDivorced call in hearts.mjs.
+
+## B5810. Kindred: frenzy, feeding from behind, the swoon (2026-11-15)
+WoDX Paperdoll. A Kindred in frenzy crouches with red eyes and a red cast over the figure for as long as the frenzy lasts. Feeding plays the embrace from behind; the one fed upon plays the swoon, a slow sag to the ground, and gets up when it walks. Every person sprite gets the swoon. Desk picks k1 to k4, all Build.
+
+Reverse: drop frenzy, embrace and swoon from LINE_MOVES in tools/sprites/batch.py and from line-rules.mjs.
+
+## B5811. Kindred: the day's sleep and torpor (2026-11-15)
+A Kindred asleep by day lies on its back with the arms crossed: in an open coffin indoors or wherever a coffin is set, in the earth with only the face showing out of doors. Torpor is the same pose, greyed. Desk picks k5 to k7.
+
+Reverse: lineHold in line-rules.mjs returns null for daySleep and torpor.
+
+## B5812. Garou: the howl and the rite dance (2026-11-15)
+A wolf form throws its head back to the sky; a Homid cups the hands to the mouth. Rites play a circling dance. Call of the Wyld and other howls play the howl; rites play the dance. Desk picks g1, g2.
+
+Reverse: drop howl, cup and dance from powerMove.
+
+## B5813. Garou: forms in its own fur, changed through the forms between (2026-11-15)
+Each Garou sprite is drawn in all five forms in the colour of its own fur (the hair colour, else wolf grey): Glabro a head taller and hairier in the same clothes, Crinos, Hispo and Lupus recoloured from the wolf rigs. Changing form passes through each form between, a beat apart, so Homid to Lupus shows Glabro, Crinos and Hispo on the way. Fera forms are not drawn yet. Desk picks g3 to g5.
+
+Reverse: drop others() from batch.py; onForm falls back to the old single sheet.
+
+## B5814. Mages: the gesture follows the focus (2026-11-15)
+A mage working magick plays the gesture of its focus, read from paradigm, practice and instruments: raising a staff or wand, praying, working a device, laying cards, pouring a potion; long workings play the ritual, meditation sits cross-legged with shut eyes. No focus found: the open-hand cast as before. Desk picks m1 to m4.
+
+Reverse: focusMove returns "cast".
+
+## B5815. Hunters: faith, the stake, the clue, Second Sight (2026-11-15)
+True Faith and rebukes raise a holy symbol with a halo of light; a hunter bracing a stake kneels with it set; studying a clue kneels over it; Second Sight and the other edges of sight look about with a ring of light. Desk picks h1 to h4.
+
+Reverse: drop brandish, brace, study and the ring look from powerMove.
+
+## B5816. Mummies: rising from the sarcophagus, speaking Hekau (2026-11-15)
+A mummy rises from a stone sarcophagus when it wakes, and speaking Hekau raises the hands with a glyph of light over the figure.
+
+Reverse: drop situp and hekau.
+
+## B5817. Ghouls and Wraiths (2026-11-15)
+A ghoul in need of vitae shakes where it stands until it feeds; drinking vitae plays a slow drink from a vial. A Wraith goes a little above the ground, Catharsis and the Spectre show as dark smoke, Slumber leaves the figure faint where it lies; Skinride hides the rider from all but its owner. Desk picks o1 to o3, w1 to w4.
+
+Reverse: lineHold returns null for need and slumber; drop the smoke look and the ride veil.
+
+## B5818. Demons, Earth Meld and Obfuscate (2026-11-15)
+An apocalyptic form shows wings of light opening behind the figure. Earth Meld sinks the figure into the ground; Obfuscate fades it out for everyone but its owner, who sees it faint. Both stay until the power ends. Desk picks o4, o5.
+
+Reverse: drop the meld and unseen veils and the wings look.
+
+## B5819. Changelings: the fae mien and the mortal seeming (2026-11-15)
+A changeling sprite is drawn twice: its fae mien and a mortal seeming. The Storyteller, changelings, Kinain and the enchanted see the mien; everyone else sees the seeming. Cantrips throw a few motes of light. Desk picks c1 to c4.
+
+Reverse: seesFae returns true for all.
+
+## B5820. The Shredding Winds hurt (2026-11-15)
+WoDX Otherworlds. The levels rolled go through the combat soak onto the mage (aggravated, lethal while the Storm fades); the Storyteller ticks Insulated when Life magick, enhanced armour or a Wonder spares the traveller. The token flashes.
+
+Reverse: remove the soakAndApply call after the card.
+
+## B5821. Net combat damage is rolled and applied (2026-11-15)
+WoDX Otherworlds. The winner's damage dice against the loser's Wits + protection, both at 6; what gets through is bashing on the loser (house reading: the book says only "damage"); a system loser is cracked open by that much.
+
+Reverse: remove the damage block in netContest.
+
+## B5822. Heightened senses overload is rolled (2026-11-15)
+WoDX Senses. Willpower at 6 for each heightened-senses token hit; a failure gives Dazed for a turn (stunned and deafened). A token already dazed is not rolled again.
+
+Reverse: restore the text-only overload card.
+
+## B5823. Sentences act (2026-11-15)
+WoDX Chronicle. A fine is paid from the purse at once, on credit when short: a month of a modest living (Resources 2 allowance) at weight 3, scaled by weight (house reading). Outlawry and banishment raise the law's heat in that land to Wanted. A death sentence holds the condemned (Held) for the scene.
+
+Reverse: remove carryOut in law-punish.mjs and declareWanted.
+
+## B5824. A raised building is paid for and lifts its town (2026-11-15)
+WoDX Chronicle, Storyteller. The patron pays three months of a Resources 4 living (two for a restoration) unless a cost is given; the scene's town takes a "build" or "restore" event (prosperity +0.15 or +0.1, unrest -0.05).
+
+Reverse: remove the payment and the lever call in raiseBuilding, and the two LEVER_TOWN rows.
+
+## B5825. Project complications act (2026-11-15)
+WoDX Storyteller. Each complication has a deed (TROUBLE_DOES): the next roll waits some days, successes are lost, a week of the character's living is paid, or a rumour starts about the character. A house reading: the texts stay the start of a scene.
+
+Reverse: drop TROUBLE_DOES and the lines in trouble().
+
+## B5826. Heartbreak shows for a week (2026-11-15)
+WoDX NPC. A heartbreak roll that is neither borne nor botched leaves a Heartsick condition for seven days: +1 difficulty on social rolls (Actions reads socialDiff).
+
+Reverse: remove the applyTimed call in heartbreak().
+
+## B5830. run-gate names the failed steps of the older gates (2026-11-15)
+Lanes. The kit's gates put their failed steps in the summary line, but the older gates (gate6b, gate6d, gate7d,
+gateconsensus and others) say only "17/18 passed", and their result files are gone after the next lane reset. When a
+summary has a shortfall and names no step, run-gate now reads the gate's result file, if it was written during this
+run, and adds "failed:" with each failed step and its detail.
+
+Reverse: drop the result-file read after mod.run().
+
+## B5831. gate6d reads three-digit versions; gate7d compares factions whatever the key order (2026-11-15)
+Gates. gate6d's version check was a regular expression that stopped matching at Actions 3.100.0. gate7d step 6
+compared the factions after Undo with a plain JSON.stringify, which fails when the keys come back in another order
+(the gatepolitics fault). Both are fixed, and the shared workflow notes now list these gotchas, along with the
+Foundry 14 rule to pass a fresh options object to each document update.
+
+Reverse: put the old checks back.
+
+## B5840. gate6b, gateconsensus and gatemounts follow the features they test (2026-11-15)
+Gates. Now that run-gate names failed steps (B5830), three gates that failed on main were traced. gate6b's Delirium
+step relied on a token drawn a moment before taking a target, so the Kinfolk witness was sometimes missed; the
+witnesses are now passed in. gateconsensus pressed Done on the purify dialog, but B4992 made "begin now, clear it on
+the clock" the default; the step unticks it to test the at-once purify. In gatemounts a car tile starts facing
+right, so the step went on before the first move had finished and the move down was read as a diagonal; each move
+is now waited out.
+
+Reverse: drop the three set-ups.
+
+## B5850. gate6i starts the holy burn from a clear track; gatepassing finds the finding card by its flag (2026-11-15)
+Gates. gate6i keeps its demon between runs, so wounds from earlier runs added up and the burn read 7 lethal levels
+for a potential of 2; the step now clears the track first. gatepassing step 4 wanted exactly one new message and the
+newest one to be the finding card, but other cards can follow it now; it finds the card by its flag.
+
+Reverse: drop the clear and go back to the newest message.
+
+## B5860. gate-maps step 9 reads every card since the move; gatehuntpowder step 7 records its notices (2026-11-15)
+Gates. Both steps pass alone and fail after other gates. gate-maps step 9 looked for its trigger note in the newest six
+cards and read the region's "set off" mark half a second after the move; it now looks at every card since the move and
+waits up to five seconds for the mark. gatehuntpowder step 7 now keeps the notices the reload and the match gave, the
+answers of both calls and whether the gun is still on the sheet, so a failure after other gates names its cause.
+
+## B5861. The approval queue changes one at a time (2026-11-15)
+Chronicle. Every change to the queue read the whole setting, edited it and wrote it back, so two changes at once kept
+only the later one. gateautomation, run after other gates, lost its thirty-hour proposal that way while a clock hook
+queued its own. Queueing, deciding, releasing held proposals, Undo and editing a waiting proposal now wait for the
+change before them. The handlers' own work (moving the clock, a card) runs outside that wait, so a handler that
+proposes again does not wait on itself.
+
+Reverse: go back to the newest six cards and the plain step; drop the wait in approvals.mjs.
+
+## B5870. The clock tells the date in the count of the scene's land (2026-11-15)
+WoDX Chronicle, reckoning-rules.mjs and the new local-reckoning-rules.mjs. The era reckoning house rule told every date "in the year of Our Lord", even in Cairo or Kyoto. reckon() now takes the year kept where the scene stands (church.on() gives its faith and region, by the same order as the holy days of B2537: the scene's pick, the scene's region, the chronicle's pick, the homeland) and tells the date in that count. The Western church year is unchanged. The Storyteller's Chronicle Clock shows a "Players hear" line with the player's words. The opening card of WoDX Atmosphere reads the same rule. The Master Plan and docs/GLOBAL.md listed calendars outside the Western reckoning as open.
+
+Reverse: pass faith "western" to reckon() in clock-app.mjs and in WoDX Atmosphere's openingCard.
+
+## B5871. The counts (2026-11-15)
+House readings of how each people told the year: Orthodox lands from the Creation of the World (the Byzantine year from 1 September, 5508 or 5509 before Christ) until 1700 in Russia and Siberia (Peter's reform) and 1821 in the Aegean, then the Julian date marked Old Style; the Hijra year by the counted calendar of B2537; the Hebrew year from the Creation by the fixed calendar; the Chinese year by the sixty-year cycle of stems and branches with its animal (Korean words in Korea; in Japan the animal before 1868 and the emperor's era from 1868); Tibet by element and animal from Losar, months counted by new moons from it; north India by the Vikrama year from Chaitra with the bright and dark halves; the islands (Nusantara) by the Saka year; the Buddhist south by the year of the Buddha (Buddha year = AD + 543, the Thai count) and the Thai month numbers (the fifth month is Chaitra); a count of their own by the night of the moon and the season by the chronicle's latitude. Nothing in the game books sets these; they are calendar history in WoDX's own words.
+
+Reverse: edit ownYear and ownDay in local-reckoning-rules.mjs.
+
+## B5872. When the civil date takes over (2026-11-15)
+Each land's count leads until it took up the Gregorian date for everyday use (CIVIL_FROM): Russia 1918, the Aegean 1923, the Balkans 1919; Turkey 1926, Egypt 1875, the Levant 1918, the Maghreb 1912, Persia 1925, Central Asia 1920, West and East Africa 1900, Arabia never; China 1912 (told by the years of the Republic until 1949), Korea 1896, Japan 1873 (told by the emperor's era); Tibet 1951; India 1858; the Buddhist south 1889 (told by the year of the Buddha); the Jewish year 1800 (emancipation, a house date). From then the civil date leads and the old count follows in brackets. Persia's solar Hijri year from 1925 is not reckoned; its date shows the civil date with the lunar Hijra in brackets.
+
+Reverse: edit CIVIL_FROM in local-reckoning-rules.mjs.
+
+## B5873. The hour before clocks (2026-11-15)
+Before striking clocks, the hour is told as the land told it: the lands of Islam by the five prayers (dawn, noon, afternoon, sunset and night, from the scene's sunrise and sunset), the lands of the Chinese year by the twelve double hours (the hour of the Rat from 23:00), India and the Buddhist south by the four watches of the day and four of the night, and Tibet, the Jewish year and peoples with a count of their own by the sun's course. The Western and Eastern churches keep the canonical hours. Striking clocks reach the lands outside Christendom in 1700 instead of 1350 (a house reading: clocks were rare outside Europe before then). Railway time from 1840 and the Future Darkness readout stay the same everywhere.
+
+Reverse: set CLOCKS_ABROAD to 1350 and have landTime return null.
+
+## B5874. Persia by the solar Hijra year from 1925 (2026-11-15)
+WoDX Chronicle, local-reckoning-rules.mjs. Persia took up the solar Hijra year by law in 1925 (1304). From then a scene in Persia tells the date by it: the year starts at Nowruz, the day of the spring equinox at Tehran (the next day when the equinox comes after noon, UTC+3:30), with six months of 31 days, five of 30 and Esfand of 29 or 30. From 21 March 1976 to 27 August 1978 the year is the Shah's count (the solar year plus 1180). Before 1925 the lunar Hijra of B5871 stays. A house reading of history; the books set no calendar.
+
+Reverse: set SOLAR_HIJRI_FROM to 9999 in local-reckoning-rules.mjs.
+
+## B5875. A character's own count (2026-11-15)
+WoDX Chronicle (clock-app.mjs) and Atmosphere (the opening card). A player's character counts the days by, in order: the count the player picks on the Chronicle Clock ("counts the days", kept as flags.wodx-chronicle.reckonFaith on the character; "As the land does" clears it); else the faith of the people picked on the lifepath (PEOPLE_FAITH, the same keys WoDX NPC's origin faiths use, with the Sephardi, Mizrahi, Amazigh, Tuareg, Moro, Khmer and Thai added) when it differs from the land's; else the land's. The civil years of B5872 still follow the land. The land's holy day name is left out of a date told in another count. The Storyteller's "Players hear" line keeps the land's count. Works the same in a Lone Chronicle, where the lone player's character is the user's character.
+
+Reverse: drop countOf from clock-app.mjs and WoDX Atmosphere's openingCard.
+
+## B5876. gatefaith finds its goods by name (2026-11-15)
+tools/gate/gatefaith.mjs made three goods in one batch and took them in the order asked; Foundry does not keep that order, so the beads, the charm and the astrolabe could swap and steps 1 and 4 failed on a lane. Each good is now found by its name, and the divining card is the newest matching message rather than one of the last two.
+
+Reverse: restore the list order in gatefaith.mjs.
+
+## B5880. What everyone knows follows the homeland's way of life (2026-11-15)
+WoDX Storyteller, data/primers-world.mjs and setup-rules.mjs playerPrimer(). The era primers were written for Western Christendom ("Europe lives by the feudal order"), and docs/GLOBAL.md listed primers by region as open. Where the homeland's way of life (WoDX Chronicle's sphereFor, B2670) is not Western Christendom and the year is 1197 or later, the players' page shows that way of life's lines for the period instead, with its name above them. Five periods: to 1449, 1450 to 1799, 1800 to 1913, 1914 to 1999, and 2000 on with the Future Darkness. A way of life that ends in WoDX's history (the Andes and Mesoamerica after the conquest) keeps its last period, though by then those lands follow Western Christendom anyway. Prologue years before 1197 keep the era's own lines. The lines are plain history in WoDX's words, as an ordinary person of the land would know it: no metaplot of the game lines. The Storyteller's era page is unchanged.
+
+Reverse: pass no sphere to playerPrimer in setup.mjs.
+
+## B5881. The primer is written again as the chronicle moves (2026-11-15)
+WoDX Storyteller, setup.mjs refreshPrimer(). The primer journal was written once, at setup. Now the active Storyteller rewrites its page "What everyone knows" when an era is applied (wodxEraApplied) or the homeland setting changes, for the year and homeland of that moment, and renames the journal for the era. Only the page the setup made is touched; any other page the Storyteller added stays. The Storyteller API carries setup.refreshPrimer().
+
+Reverse: remove the two hooks at the end of setup.mjs.
+
+## B5882. Gate gateworldprimers (2026-11-15)
+tools/gate/gateworldprimers.mjs moves the homeland to Egypt and back and checks the page follows, and that the Storyteller's own page is kept.
+
+Reverse: delete the gate.
+
+## B5890. The Americas, Africa and Oceania after 2023 are house history around the approved timeline (2026-11-15)
+WoDX Chronicle. The Cyberpunk 2020 books say nothing of these regions after 2020, so the 85 new events in docs/research/era-timelines/r3/future-darkness.txt (the Americas 45, Africa 24, Oceania 16, 2024 to 2099) are WoDX's own. Each is either the side of an approved Future Darkness event that ordinary people see (the Sacramento registry office in 2027 for the registration law, the fires at the Pacific Northwest preserve in 2039 for the tribe war, the dead-zone killings in 2080) or plain history of the region in that world (the Sahel drought, the Confederation's charter, Tuvalu under the sea). None moves an approved event; the daily deconfliction check finds nothing new. They ship with the rest of the branch's world history (384 events of kind F) in data/future-world.mjs, built by tools/wofd/build-future-world.mjs. Before this the round-three world timeline lived only in the research folder.
+
+Reverse: remove FUTURE_WORLD from EVENTS in scripts/events.mjs.
+
+## B5891. A regional event happens everywhere on its date; only its news is local (2026-11-15)
+WoDX Chronicle. An event with a region fires on its date whatever the homeland (has() is true, the hook runs), so changing the homeland never floods a card with old news. The card tells it only where the news is heard: the homeland's part of the world and the part the active scene stands in (events-rules.mjs newsCodes; Moravia hears Europe's news too). A Malkavian's glimpse and the Legends record follow the same test, so neither speaks of a far-off land's news.
+
+Reverse: make heardIn return true.
+
+## B5892. Old and far-off news is counted on the card, not told (2026-11-15)
+WoDX Chronicle. A card lists the news heard here from the last year; news heard here but older than a year (a world just switched to the branch, a homeland just changed) and news from elsewhere are counted in one line that points to the Dated events page, which lists every event with its place. A time skip still tells everything heard here, as it did.
+
+Reverse: drop the older count in newsFor.
+
+## B5900. A fight stands in a land (2026-11-15)
+WoDX Storyteller. A battle, siege or sea fight keeps `land`, a WoDX Chronicle region: the one it was started with, else the region of the scene in view (Where this scene stands), else the homeland. The battle form has a Land select. Desk item a1, recommended option, built while the desk waits.
+
+Reverse: drop `land` from contextOf in battles.mjs and naval.mjs.
+
+## B5901. The quick start keeps this timeline's wars, the land's part of the world first (2026-11-15)
+WoDX Storyteller. warEvents skips events that are not live (the other branch) and sorts the events of the battle's part of the world (Chronicle events-rules.mjs partOf) first. Desk item a2.
+
+Reverse: drop the live filter and the part sort.
+
+## B5902. Each land keeps its own ages of war where they differ from Europe's (2026-11-15)
+WoDX Storyteller, war-lands-rules.mjs LAND_AGES: 17 ages for Mesoamerica, the Caribbean, the Andes, the woodland nations, Japan (three), China and Korea, India, the steppe, the Sahel, Africa south of the Sahara, the impi of the south, Aotearoa (two), the Pacific and Australia. Each borrows the numbers of a European age (phase, losses, hazard) and turns guns off where the land had none. Desk item b1.
+
+Reverse: make landAge return null.
+
+## B5903. Troops of other lands, offered first in their land (2026-11-15)
+WoDX Storyteller. Thirteen unit types beside the book's (Spoils of War p. 44), WoDX figures on its scale, each with its years and lands. The setup lists the land's troops under their own heading, then the book's, then other lands' under a closed heading; a unit already in an army stays on the form. An army of them fights with the book's pools. Desk item b2.
+
+Reverse: remove LAND_UNITS from UNIT_TYPES.
+
+## B5904. The supernatural in the ranks named by land (2026-11-15)
+WoDX Storyteller. East and Southeast Asia name Kuei-jin, shen and Hengeyokai; Africa south of the Sahara the Laibon, Bastet and Mokolé; the lands of Islam the Ashirra; the Americas, the Pacific and Australia before the settlers the land's own changing breeds and spirits. The weight of each step is unchanged. Desk item b3.
+
+Reverse: make supernaturalFor return null.
+
+## B5905. The realms of the East (2026-11-15)
+WoDX Storyteller. In East and Southeast Asia a war of the dead is fought by the legions of the Dark Kingdom of Jade and a war in the Umbra in the spirit courts of the East, with the same numbers. Desk item b4.
+
+Reverse: make realmFor return its base.
+
+## B5906. Siege engines of other lands (2026-11-15)
+WoDX Storyteller. Fire lances, thunderclap bombs, rocket carts and iron-cased war rockets, WoDX figures on the book's scale (Spoils of War p. 33), listed first in their lands. Desk item c1.
+
+Reverse: remove LAND_ENGINES from ENGINES.
+
+## B5907. Walls of other lands, and a land's town or castle starts with them (2026-11-15)
+WoDX Storyteller. Rammed earth, mud brick, the fitted stone of the Andes, the pā, the thorn stockade and the castle on a stone base, on the scale of the book's walls (p. 34). A siege's campaign starts with the land's wall where it has one for the garrison's position and year. Desk item c2.
+
+Reverse: drop the landWall call in blankCampaign.
+
+## B5908. Camel caravans, llama trains and porters (2026-11-15)
+WoDX Storyteller. Three supply lines (shares 0.6, 0.5 to 1600, and 0.33), listed first in their lands. Desk item c3.
+
+Reverse: remove LAND_SUPPLY from SUPPLY_LINES.
+
+## B5909. Ships of other seas (2026-11-15)
+WoDX Storyteller. Twelve ships (war junks before and after guns, the treasure ship, the turtle ship, the atakebune, the dhow, the lancaran, the jong, the double-hulled war canoe, the waka taua, the lake canoe of Mexico, the piragua), WoDX figures on the book's scale (Spoils of War p. 40), listed first in their seas. Desk item d1.
+
+Reverse: remove LAND_SHIPS from SHIPS.
+
+## B5910. The navigators of the Pacific and the Indian Ocean (2026-11-15)
+WoDX Storyteller. A tick box on the navigation roll where it counts: a wayfinder of the islands makes it 2 easier in the Pacific and off Aotearoa; a pilot of the Indian Ocean with the kamal counts as a pilot's book there. Desk item d2.
+
+Reverse: make navAid return 0.
+
+## B5920. The world timeline, 1197 to 2009, as dated events (2026-11-15)
+WoDX Chronicle. The approved round-three world timeline (docs/research/era-timelines/r3, the eight classic era files) is built by tools/timeline/build-world-history.mjs into data/world-history.mjs: one dated event per line, with its part of the world (MO, EU, ME, AS, AF, AM, OC), its place, its tags, its era and the lines it touches. Events from 1990 belong to the classic timeline only; earlier ones fire on both. Ids are made from the year and the title (wh-1347-...), so editing or adding lines never renames an event or loses the Storyteller's overrides. The research files' 167 lines with gendered pronouns were reworded so the in-game text stays neutral, and "the house reading" is told in the game as "the hidden story".
+
+Reverse: drop WORLD_HISTORY from EVENTS in events.mjs.
+
+## B5921. The World of Darkness side is the Storyteller's (2026-11-15)
+WoDX Chronicle. Lines of kind W (history with a World of Darkness reading) are hidden events. They fire and call wodxEventFired like any other, but are never on the players' card or the Chronicle Rules page; a "Behind the curtain" card is whispered to the Storytellers with the ones heard of here.
+
+Reverse: drop `hidden` in the build.
+
+## B5922. A card keeps to twelve pieces of world news (2026-11-15)
+WoDX Chronicle. However many world events a time skip passes, a card tells every book event and only the newest twelve of the world timeline, and counts the rest ("more pieces of news from these parts"). All of them are on the Dated events page.
+
+Reverse: TOLD_CAP = Infinity.
+
+## B5923. One era at a time in the Dated events window and on the rules page (2026-11-15)
+WoDX Chronicle. The Dated events window lists the book events and the world timeline of one era (the clock's when it opens), with a list to switch era or show none. Switching saves the page first, and saving keeps the overrides of events the page does not list. The Chronicle Rules page, which players can read, lists the clock's era of the world timeline as heard here, without the hidden story, and counts the rest.
+
+Reverse: list every event again (slow with three thousand rows).
+
+## B5924. Legends keeps Moravia's own history (2026-11-15)
+WoDX Chronicle. Legends writes world timeline events only when they happened in Moravia, the chronicle's own part, and never the hidden story; the Future Darkness branch's world news is kept as B5891 has it. The Malkavian glimpse never foretells a hidden event.
+
+Reverse: inLegends returns true.
+
+## B5925. Signals take only fresh news heard here (2026-11-15)
+WoDX Storyteller. The signal board turns a world timeline event into a signal only when it is heard where the chronicle stands and is no more than a year old, so a century's time skip does not fill the board with old news.
+
+Reverse: drop quietNews in signals.mjs.
+
+## B5926. Nothing fires twice (2026-11-15)
+WoDX Chronicle. Fourteen W lines tell events the book events already tell (the Shattering, the Camarilla, the Convention of Thorns, the Maelstroms, the Week of Nightmares and others); the build leaves them out (TOLD_BY_BOOK). The eight house readings of the Americas, Africa and Oceania still waiting on the PC's book check stay out until it lands (WAITING). The timeline deconfliction check ran on the edited files: 6,477 events, no new clash.
+
+Reverse: empty the two lists.
+
+## B5930. Imports cost more the farther they came (2026-11-15)
+WoDX Storyteller, goods-place-rules.mjs. A good that WoDX Library says is not at home on this scene's land, but is at home somewhere else in that year, costs twice as much when its home is in the same part of the world (Moravia counts as Europe) and three times as much from another part. Goods found everywhere, coins and goods out of their time keep their price. Built at the Market Goods Desk's recommendation (https://claude.ai/artifact/NNY9DKE1hzvJZtSeHMqhys, item m1) while it waits.
+
+Reverse: IMPORT = {near: 1, far: 1}.
+
+## B5931. The land's own goods are a quarter cheaper (2026-11-15)
+WoDX Storyteller. A good whose entry names this region or its way of life costs three quarters of the usual price there (desk item m2).
+
+Reverse: OWN = 1.
+
+## B5932. Each land's trade (2026-11-15)
+WoDX Storyteller. Each of the 16 ways of life has one to three kinds of goods it has cheap (x0.85) and one or two it pays dear for (x1.25), a house reading of history: paper and cloth in China, cloth in India and the lands of Islam, fuel and timber in the north, food dear in the Sahel and in Tibet. It applies on top of the market's own index, fades from 1900 and is gone by 2000, and shows in the market window (desk item m3).
+
+Reverse: empty LAND_TRADE.
+
+## B5933. Caravans name their goods (2026-11-15)
+WoDX Storyteller. A caravan's card, the road report and the caravan list name up to two real goods of the sending market's land for each kind it carries, the land's own goods first, the same each time for the same caravan (desk item m4).
+
+Reverse: loadLabel returns label(k).
+
+## B5934. World news that moves the markets (2026-11-15)
+WoDX Storyteller, market-news-rules.mjs worldNewsFor. A world timeline event (WoDX Chronicle wh- and fdw-) tagged plague or famine in the homeland's own part of the world, or a war in Moravia when Moravia is home, offers the same market news card as the book events. Never the hidden story, never news a year old, and at most one card of each kind in 90 days of game time, so a long time skip brings one card, not hundreds (desk item m5).
+
+Reverse: worldNewsFor returns null.
+
+## B5935. The price says why (2026-11-15)
+WoDX Storyteller. A price carries "brought from far off", "brought from nearby lands" or "the land's own" after it, in every place that shows the price text (desk item m6).
+
+Reverse: drop WHY_WORDS from priceSync.
+
+## B5936. One setting for it all (2026-11-15)
+WoDX Storyteller. The world setting "Prices know where goods come from" (goodsByPlace, on by default) turns B5930 to B5935 off together.
+
+Reverse: set it off.
+
+## B5940. "Where you are now" (2026-11-15)
+WoDX Storyteller, setup-rules.mjs abroadPrimer. The players' primer journal gets a second page, "Where you are now". When the active scene stands in a region whose way of life (WoDX Chronicle sphereFor) differs from the homeland's, the page holds what everyone knows there (the world primers of B5880; Western Christendom reads as the era's own lines). It is rewritten when the active scene changes, when a scene's land is set, when the homeland changes and when an era is applied.
+
+Reverse: drop refreshAbroad's hooks in setup.mjs.
+
+## B5941. At home the page says so (2026-11-15)
+WoDX Storyteller. On a scene at home or with no land set, the page says the table is among its own people. The page is kept rather than deleted, so a link to it never breaks.
+
+Reverse: abroadPrimer returns an empty page.
+
+## B5942. A card when the table comes to another way of life (2026-11-15)
+WoDX Storyteller. Each time the active scene moves into another way of life than the last, a "Far from home" card for everyone names the land and links the page. Moving between scenes in the same land posts nothing.
+
+Reverse: refreshAbroad({card: false}) everywhere.
+
+## B5950. The long ages weighed by climate (2026-11-15)
+WoDX Atmosphere, weather-rules.mjs eraShift(year, month, {climate, region}). The medieval warm spell, the Little Ice Age and its Maunder low keep their figures for central Europe and are weighed by the climate elsewhere (ERA_WEIGHT): full around the North Atlantic and the far north, about two thirds in the Mediterranean and East Asia, a quarter to a third in the tropics and the south. The warming since 1980 and the Future Darkness trend run faster near the poles. Rounded figures for play, a house reading.
+
+Reverse: eraShift ignores the place (every weight 1).
+
+## B5951. Hard years where they struck (2026-11-15)
+WoDX Atmosphere, EPISODES. Seventeen hard years from the climate's history, each with its years, months, the world regions (else climates) it touched, and how much colder or warmer, wetter or drier and stormier it ran: the dim years after the 1257 eruption, the great drought of the dry west (1276 to 1299), the great rains of 1315 to 1317, the drought of New Spain (1540 to 1581), the cold years after the eruption in Peru (1601 to 1602), the late Ming drought (1637 to 1643), the dry fog of 1783 and the hard winter after it, the year without a summer (1816) and the ash years nearer the eruption, the great drought of 1876 to 1878, Krakatoa (1884), the failed monsoons of 1896 to 1900, the dust years (1930s), the Sahel drought (1968 to 1985), the highland drought of 1983 to 1985 and the cool year after Pinatubo (1992). Eruptions felt the world over are weighed by the climate. The years are history; the sizes are a house reading.
+
+Reverse: EPISODES = [] (1816 then has no cold summer; keep the tambora row to keep the old behaviour).
+
+## B5952. Drought and rain change the wet days themselves (2026-11-15)
+WoDX Atmosphere. A hard year's wet factor scales each month's share of wet days in the rain chain, so a drought shows as fewer rain and snow nights on the map (and fewer Foundry rain effects) and a wet year as more. Storm factors scale the share of storms.
+
+Reverse: weatherFor's wet chain reads monthly(C.wet) alone.
+
+## B5953. The region comes from the scene (2026-11-15)
+WoDX Atmosphere, main.mjs. The weather passes the world region the scene stands in (WoDX Chronicle's world.here: its own, else the homeland) so a hard year is felt by region; with a hand-picked climate and no Chronicle, the climate alone decides. Left without a place, the figures are central Europe's as before.
+
+Reverse: weatherOn passes no region.
+
+## B5954. Named on the card and in the window (2026-11-15)
+WoDX Atmosphere. The weather card gives a hard year a line of its own (class watmo-era); the Weather and atmosphere window names the hard year, else the long age ("The Little Ice Age: hard winters and late springs"). The card leaves out the long age, so it does not repeat every night for centuries.
+
+Reverse: drop the watmo-era lines.
+
+## B5955. A post and a history call in the api (2026-11-15)
+WoDX Atmosphere api.weather.post(day, {gm}) posts a weather card for a day, and api.weather.history(year, month, place) gives eraShift, for gates and other modules.
+
+Reverse: drop the two calls.
+
+## B5960. A player founder's cult stands on the sheet (2026-11-15)
+WoDX NPC cults.mjs serve. The cult's Background (Herd for a blood or Kuei-jin cult, Cult for a mage's cult, the Netaru and a Wyrm cult, Followers, Dreamers and Memoriam) is written on the founder's sheet for player founders too, as it was for NPCs, since the Storyteller approved the cult. A Background set by hand at or above the cult's dots is left alone. So the hunt reads a blood cult's Herd dots (V20 p. 114). Binding the inner circle, taint and faction Influence stay for NPC founders.
+
+Reverse: return before the Background for founders that are not NPCs.
+
+## B5961. A gathering gives Faith, Glamour or Pathos (2026-11-15)
+WoDX NPC cult-rules gatheringGift. Hold a gathering gives the founder: Faith equal to the Followers dots from a Demon's devotees (Demon: The Fallen p. 155), Glamour equal to the Dreamers dots as Reverie's automatic successes (C20 p. 169), or Pathos from rolling the Memoriam dots at difficulty 8 (Wraith 20th p. 144), each capped by the permanent rating. A house reading of how often and how much.
+
+Reverse: gather skips giveGift.
+
+## B5962. Once a week (2026-11-15)
+WoDX NPC. The gift comes once in a week of world time (cult field lastGift); a gathering sooner still adds attention and says the gift comes once a week.
+
+Reverse: GIFT_EVERY = 0.
+
+## B5963. Shown on the card and the sheet (2026-11-15)
+The gathering card gets a line (class wnpc-cult-gift) with the points gained, the dice for remembrance and the new total, or why none came.
+
+Reverse: drop the line.
+
+## B5964. Kinds that give at the hunt or the rite (2026-11-15)
+Blood and Kuei-jin cults feed through Herd at the hunt, and the mage's cult, the Netaru and a Wyrm cult add their dots to rites, so their gatherings add no pool.
+
+Reverse: give them a gatheringGift row.
+
+## B5970. A monthly look over the NPCs who could make something (2026-11-15)
+WoDX Storyteller wonders.mjs npcMonth, on the active Storyteller's client when the clock passes a month (and after a time skip). An NPC who is not a player's, not a passer-by's stand-in and not a group, and who can make something in a line whose crafting switch is on (WoDX Library's wonder kits), is a candidate.
+
+Reverse: turn off "Wonders: NPCs make their own".
+
+## B5971. A few start work, by chance (2026-11-15)
+npc-makers-rules.mjs. Each able NPC has a one in three chance a month to start, at most three a month, one piece of work at a time. The row is picked at random among those the kit's own blockers let through, with the plainest options (no Gnosis spent, then 1, then 2). A house reading.
+
+Reverse: PER_MONTH = 0.
+
+## B5972. No approval card for an NPC's work (2026-11-15)
+An NPC's work starts as the Storyteller's would, approved, with no notice on screen; the Storyteller gets one card naming the makers and their work. The long task runs on its own and the finished item goes on the NPC's sheet as it does for a player.
+
+Reverse: start with approved false and an approval proposal.
+
+## B5973. A world setting, on by default (2026-11-15)
+"Wonders: NPCs make their own" (world, default on). It does nothing in a line whose crafting switch is off, so the Live world, where those switches are off, sees nothing.
+
+Reverse: default false.
+
+## B5974. The api for gates (2026-11-15)
+api.wonders.npcMonth({force, rand, only}) runs the look now (force does not move the month's mark), for chosen actors.
+
+Reverse: drop the option.
+
+## B5990. Time served takes the character off the map (2026-11-15)
+WoDX Chronicle. Prison, hard labour and the other time sentences hide every token of the character on every scene and keep a lawAway flag with the year the time ends. When the clock reaches that year, or the sentence is pardoned, the tokens come back and the table is told. Replaces the Storyteller-only time served of B5823.
+
+Reverse: remove sendAway, comeBack and releaseServed in law-punish.mjs.
+
+## B5991. A brand shows; heartbreak takes a social die (2026-11-15)
+WoDX Chronicle, NPC, Actions. A brand sentence puts a Branded status on the character's token until every brand is pardoned. A broken heart that is neither borne nor botched leaves Grieving for seven days: one die fewer on social rolls (Actions reads the new socialDice mod), replacing the +1 difficulty Heartsick of B5826.
+
+Reverse: remove brand() in law-punish.mjs; put Heartsick back in hearts.mjs; drop socialDice.
+
+## B5992. The law comes for the condemned (2026-11-15)
+WoDX Chronicle, Storyteller. A death sentence holds the condemned and calls WoDX Storyteller's raid (reach.lawCome) to arrest them where they stand; the player chooses to go or resist.
+
+Reverse: remove the lawCome call in carryOut.

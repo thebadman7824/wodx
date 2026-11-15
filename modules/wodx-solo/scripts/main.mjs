@@ -19,6 +19,8 @@
  *   the panel    the player's own buttons: time, travel, pause, I am stuck, the curtain (panel.mjs, 0.2.0)
  *   the tools    Storyteller tools the lone player may switch on from the panel, answered by the seat (st-tools.mjs, B4800)
  *   arrival      a scene to land on, a character for a player with none and its token at the way in (arrival.mjs, B5140)
+ *   the fallen   a companion carries the player's character when it goes down, and anyone else the panel names
+ *                (companions.mjs, B5079)
  *
  * It never acts in the Live world. Everything here runs on the active Storyteller's client, except the notice a
  * player gets when the seat is empty.
@@ -28,6 +30,7 @@ import {NEVER_AUTO} from "../../wodx-chronicle/scripts/approvals-rules.mjs";
 import {registerPanelSettings, installPanel, panelApi} from "./panel.mjs";
 import {registerStSettings, installStTools, stApi} from "./st-tools.mjs";
 import {registerArrivalSettings, installArrival, arrivalApi} from "./arrival.mjs";
+import {registerCarrySettings, installCarry, carryApi} from "./companions.mjs";
 
 const MOD = "wodx-solo";
 const CHRON = "wodx-chronicle";
@@ -258,11 +261,13 @@ Hooks.once("init", () => {
   registerPanelSettings();
   registerStSettings();
   registerArrivalSettings();
+  registerCarrySettings();
 });
 
 Hooks.once("ready", () => {
   const api = {
     rules: R, isOn, isSeat, apply, restore, panel: panelApi, st: stApi, arrival: arrivalApi,
+    rules: R, isOn, isSeat, apply, restore, panel: panelApi, st: stApi, carry: carryApi,
     log: {entries: () => (game.user.isGM ? entries() : []), add: log,
       stalls: (since = 0) => (game.user.isGM ? R.stallReport(entries(), since) : R.stallReport([], since)),
       clear: () => (game.user.isGM ? game.settings.set(MOD, "log", R.blankLog()) : null)}
@@ -279,6 +284,7 @@ Hooks.once("ready", () => {
   Hooks.on("userConnected", (u, on) => { if ( on && !u.isGM ) setTimeout(() => { unpause(`${u.name} arrived`).catch(() => {}); follow(u); }, 1500); });
   installStTools({isOn, isSeat, blocked, log, entries, get, read, findButton});
   installArrival({isOn, isSeat, log, get});
+  installCarry({isOn, isSeat, log, get});
 
   if ( game.user.isGM ) watchPlayer();
   if ( !isOn() ) return;

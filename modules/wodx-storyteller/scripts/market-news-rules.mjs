@@ -52,6 +52,26 @@ export const EVENT_NEWS = {
   "tofj-k5-22": "collapse"
 };
 
+/**
+ * B5934: the world timeline's news (WoDX Chronicle wh- and fdw- events) moves the markets too, but only what the
+ * homeland feels: a plague or a famine in the homeland's own part of the world, and a war when it is fought in Moravia
+ * itself and Moravia is home. Never the hidden story, never news a year old by the time it fires (a time skip), and
+ * one card of each kind in WORLD_GAP_DAYS. homePart: WoDX Chronicle partOf(homeland); year: the year now.
+ */
+export const WORLD_TAGS = {plague: "plague", famine: "famine"};
+export const WORLD_GAP_DAYS = 90;
+export const isWorldEvent = ev => typeof ev?.id === "string" && /^(wh|fdw)-/.test(ev.id);
+export function worldNewsFor(ev = {}, {homePart = "MO", year = 0} = {}) {
+  if ( !isWorldEvent(ev) || ev.hidden || !ev.region || ev.region !== homePart ) return null;
+  if ( year && Number(ev.year) < year - 1 ) return null;
+  const tags = Array.isArray(ev.tags) ? ev.tags : [];
+  for ( const t of ["plague", "famine"] ) if ( tags.includes(t) ) return WORLD_TAGS[t];
+  if ( homePart === "MO" && tags.includes("war") ) return "war";
+  return null;
+}
+/** Is a world card of this kind too soon after the last one? last: world time of the last card of the kind. */
+export const tooSoon = (last, now) => Number.isFinite(last) && now - last >= 0 && now - last < WORLD_GAP_DAYS * 86400;
+
 /** The preset key for an event, or null. */
 export function newsFor(ev = {}) {
   const own = typeof ev?.market === "string" && PRESETS[ev.market] ? ev.market : null;

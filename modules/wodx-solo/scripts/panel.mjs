@@ -254,6 +254,18 @@ const ACTIONS = {
     const pick = await choose("I am stuck", R.STUCK);
     if ( pick ) ask("ask.stuck", {fix: pick});
   },
+  /** B5079: someone near the character is down; a companion carries them. */
+  async carry() {
+    const me = placeOf(game.user).token;
+    const scene = canvas?.scene;
+    const haul = game.modules.get("wodx-interactables")?.active ? game.modules.get("wodx-interactables").api?.haul : null;
+    if ( !haul || !scene ) { ui.notifications.warn("Carrying needs WoDX Interactables."); return; }
+    const down = all(scene.tokens).filter(t => t.actor && !t.hidden && haul.fallenOf(t)?.down && !(t.flags?.["wodx-interactables"]?.haul?.by ?? []).length);
+    if ( !down.length ) { ui.notifications.info("Nobody here is down."); return; }
+    const pick = await choose("Carry the fallen", Object.fromEntries(down.map(t => [t.id, {label: t.name, hint: t.id === me?.id ? "(your character)" : ""}])),
+      "A companion of yours goes to them and carries or drags them to safety.");
+    if ( pick ) ask("ask.carry", {tokenId: pick, sceneId: scene.id});
+  },
   async curtain() {
     const yes = await DialogV2.confirm({classes: ["wodx", "wodx-dialog"], window: {title: "Lift the curtain"}, rejectClose: false,
       content: "<p>This shows what the Storyteller's seat decided tonight, secrets and all. Tonight is then marked as seen. Look?</p>"});
@@ -296,7 +308,7 @@ export class SoloPanel extends ApplicationV2 {
     // One main button; the rest under More, open once the player has opened it (B2831)
     div.innerHTML = `${ARRIVE_UI.html?.() ?? ""}<button type="button" class="wsolo-next" data-action="act" data-id="${R.NEXT.id}" title="${esc(R.NEXT.hint)}"><i class="${R.NEXT.icon}"></i> ${esc(R.NEXT.label)}</button>
       <p class="wodx-quiet wsolo-next-hint">${esc(R.NEXT.hint)}</p>
-      <details class="wsolo-more"${SoloPanel.moreOpen ? " open" : ""}><summary>More: time, travel, pause, I am stuck, the curtain</summary><div class="wsolo-buttons">${rest}${ST_UI.toggleHtml?.() ?? ""}</div></details>${ST_UI.toolsHtml?.() ?? ""}`;
+      <details class="wsolo-more"${SoloPanel.moreOpen ? " open" : ""}><summary>More: time, travel, pause, I am stuck, the curtain, carry the fallen</summary><div class="wsolo-buttons">${rest}${ST_UI.toggleHtml?.() ?? ""}</div></details>${ST_UI.toolsHtml?.() ?? ""}`;
     div.querySelector("details.wsolo-more")?.addEventListener("toggle", ev => { SoloPanel.moreOpen = ev.target.open; });
     return div;
   }

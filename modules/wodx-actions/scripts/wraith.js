@@ -504,7 +504,11 @@ export function build(ctx) {
           <div class="form-group"><label>Kind</label><select name="kind" data-fixed>${Object.entries(W.HARROWING_KINDS).map(([k, l]) => `<option value="${k}" ${k === kind ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></div>
           <div class="form-group"><label>Good play lowers the difficulty by</label><select name="good" data-fixed><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></div>
           <div class="form-group"><label><input type="checkbox" name="eidolon" ${i.eidolon && !usedEidolon ? "" : "disabled"}/> Roll Eidolon first (${i.eidolon}, at 9, once a session${usedEidolon ? ": used" : ""})</label></div>
-          <div class="form-group"><label><input type="checkbox" name="wp" ${i.willpower.temp > 1 ? "" : "disabled"}/> Spend Willpower for an automatic success on the escape (not the last point)</label></div></form>`;
+          <div class="form-group"><label><input type="checkbox" name="wp" ${i.willpower.temp > 1 ? "" : "disabled"}/> Spend Willpower for an automatic success on the escape (not the last point)</label></div>
+          ${i.passions.length ? `<div class="form-group"><label>The Passion at stake (a Passion's Harrowing)</label><select name="quarry" data-fixed>${i.passions.map(p => `<option value="${p.id}">${esc(p.name)} (${p.value})</option>`).join("")}</select></div>` : ""}
+          ${i.fetters.length ? `<div class="form-group"><label>The Fetter at stake (a Fetter's Harrowing)</label><select name="stake" data-fixed>${i.fetters.map(f => `<option value="${f.id}">${esc(f.name)} (${f.value})</option>`).join("")}</select></div>` : ""}</form>`;
+        // B5752: while Harrowed the wraith is gone from the Shadowlands; the token fades until the escape roll settles it
+        await harrowedLook(actor, true);
         return dialog(`Harrowing: ${actor.name}`, content, "Roll", async fd => {
             const rolls = []; let body = "";
             if (fd.eidolon && i.eidolon) {
@@ -517,22 +521,80 @@ export function build(ctx) {
             body += rollBlock(`Permanent Willpower (${i.willpower.perm})`, r, fd.wp ? ["Willpower spent"] : []);
             const out = r.successes > 0 && !r.botch;
             body += `<div class="vta-big ${out ? "good" : "bad"}">${out ? "Free of the Harrowing." : "The Harrowing takes its price."}</div>`;
-            if (!out) body += `<div class="vta-note">${esc(W.harrowingLoss(fd.kind))}</div>${fd.kind !== "passion" ? wbtn("vsAngst", actor, "Willpower vs the Shadow's Angst") : ""}`;
+            if (!out) {
+                body += `<div class="vta-note">${esc(W.harrowingLoss(fd.kind))}</div>`;
+                // B5752: the price is paid on the sheet (Wraith 20th pp. 244-245)
+                const paid = await payHarrowing(actor, fd, rolls);
+                body += paid.html;
+            }
             if (fd.kind === "destruction" && out) { await P.adjust(actor, "angst", -1); body += `<div class="vta-note">A Destruction Harrowing won: the Shadow loses 1–3 temporary Angst (1 taken; p. 245).</div>`; }
             await ctx.logEvent?.(actor, `Harrowing (${fd.kind}): ${out ? "escaped" : "lost"}.`, "harrowing");
+            await harrowedLook(actor, false);
             return post(actor, `${actor.name}: Harrowing`, body, rolls);
         });
     }
-    async function vsAngst(actor) {
+    /** B5752: a Harrowed wraith's tokens fade to a ghost of themselves, and come back after. */
+    async function harrowedLook(actor, on) {
+        for (const t of actor.getActiveTokens?.() ?? []) {
+            const d = t.document ?? t;
+            if (!d?.isOwner) continue;
+            try {
+                if (on && d.getFlag(MOD, "harrowAlpha") == null) await d.update({ alpha: 0.2, [`flags.${MOD}.harrowAlpha`]: d.alpha ?? 1 });
+                else if (!on && d.getFlag(MOD, "harrowAlpha") != null) await d.update({ alpha: n(d.getFlag(MOD, "harrowAlpha")) || 1, [`flags.${MOD}.-=harrowAlpha`]: null });
+            } catch (e) { console.warn("WoDX | Harrowing look", e); }
+        }
+    }
+    /** B5752: what a lost Harrowing takes, by kind. Returns {html}. */
+    async function payHarrowing(actor, fd, rolls) {
+        const i = info(actor), lines = [];
+        if (fd.kind === "passion") {
+            const q = i.passions.find(p => p.id === fd.quarry) ?? i.passions[0];
+            const item = q ? actor.items.get(q.id) : null;
+            if (item) { await item.update({ "system.value": 0 }); lines.push(`The Passion “${q.name}” is lost (0 dots).`); }
+            const others = i.passions.filter(p => p.id !== q?.id && p.value > 0);
+            if (others.length) {
+                const o = others[Math.floor(Math.random() * others.length)];
+                const r = await rollPool(o.value, 5); rolls.push(r.roll);
+                if (!(r.successes > 0) || r.botch) { await actor.items.get(o.id)?.update({ "system.value": Math.max(0, o.value - 1) }); lines.push(`${o.name} at 5 fails: it drops to ${Math.max(0, o.value - 1)}.`); }
+                else lines.push(`${o.name} at 5 holds.`);
+            }
+        }
+        if (fd.kind === "fetter") {
+            const f = i.fetters.find(x => x.id === fd.stake) ?? i.fetters[0];
+            const item = f ? actor.items.get(f.id) : null;
+            if (item) { await item.update({ "system.value": Math.max(0, f.value - 1) }); lines.push(`The Fetter “${f.name}” weakens to ${Math.max(0, f.value - 1)}.`); }
+        }
+        let html = lines.length ? `<div class="vta-note bad">${lines.map(esc).join(" ")}</div>` : "";
+        if (fd.kind !== "passion") html += await vsAngst(actor, { inline: true, rolls, destruction: fd.kind === "destruction" });
+        await ctx.logEvent?.(actor, `Harrowing lost (${fd.kind}): ${lines.join(" ")}`, "harrowing");
+        return { html };
+    }
+    /** B5752: the Shadow gaining ground adds a point of permanent Angst. */
+    async function addPermAngst(actor, k = 1) {
+        const item = [...(actor.items ?? [])].find(x => x.type === "Advantage" && x.system?.id === "angst");
+        const cur = info(actor).angst.perm;
+        if (item) return item.update({ "system.permanent": Math.min(10, cur + k) });
+        if (actor.system?.advantages?.angst) return actor.update({ "system.advantages.angst.permanent": Math.min(10, cur + k) });
+        return actor.setFlag(MOD, "angstPermanent", Math.min(10, cur + k));
+    }
+    async function vsAngst(actor, { inline = false, rolls = null, destruction = false } = {}) {
         const i = info(actor);
         const a = await rollPool(i.willpower.perm, 6), s = await rollPool(i.angst.perm, 6);
         const won = a.successes > s.successes;
+        // B5752: losing gives the Shadow a permanent point; a lost Destruction Harrowing offers the Storyteller the Spectre
+        if (!won) await addPermAngst(actor, 1);
+        if (inline) {
+            rolls?.push(a.roll, s.roll);
+            return rollBlock("Permanent Willpower", a) + rollBlock("The Shadow's permanent Angst", s) + `<div class="vta-big ${won ? "good" : "bad"}">${won ? "The Psyche endures." : `The Shadow gains ground: permanent Angst ${Math.min(10, i.angst.perm + 1)}.`}</div>`
+                + (!won && destruction ? `<div class="vta-note">The Shadow wins a Destruction Harrowing: Oblivion or a Spectre.</div>${wbtn("spectre", actor, "Make it a Spectre (Storyteller)")}` : "");
+        }
         return post(actor, `${actor.name} against the Shadow`, rollBlock("Permanent Willpower", a) + rollBlock("The Shadow's permanent Angst", s) + `<div class="vta-big ${won ? "good" : "bad"}">${won ? "The Psyche endures." : "The Shadow gains ground."}</div><div class="wodx-quiet">Wraith 20th pp. 244–245</div>`, [a.roll, s.roll]);
     }
 
     /** After a spend: the last Willpower drops the wraith into a Harrowing (p. 304). */
     async function afterSpend(actor) {
         if (!isWraith(actor) || !setting("eventPrompts")) return;
+        if (n(actor.system?.advantages?.willpower?.temporary) === 0) await harrowedLook(actor, true);
         if (n(actor.system?.advantages?.willpower?.temporary) === 0) await ChatMessage.create({ content: `<div class="vta-card"><h3>${esc(actor.name)}</h3><p>The last Willpower is spent: a fall into a Harrowing (Wraith 20th p. 304).</p>${wbtn("harrowing", actor, "Harrowing", "general")}</div>`, whisper: ownerIds(actor), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
     }
 
@@ -542,6 +604,7 @@ export function build(ctx) {
         const max = info(actor).corpus.max;
         const was = W.corpusState(before, max), now = W.corpusState(after, max);
         if (now === was || now === "corporeal") return null;
+        if (now === "harrowed") await harrowedLook(actor, true);
         return ChatMessage.create({ content: `<div class="vta-card"><h3>${esc(actor.name)}</h3><p>${now === "harrowed" ? "The Corpus is torn apart: a Harrowing (Wraith 20th p. 292)." : "The Corpus is full of bashing damage: wavering; lethal harm now starts a Harrowing."}</p>${now === "harrowed" ? wbtn("harrowing", actor, "Harrowing", "destruction") : ""}</div>`,
             whisper: ownerIds(actor), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
     }
@@ -681,6 +744,14 @@ export function build(ctx) {
         if (!(a.isOwner || game.user.isGM)) return ctx.notify("Only the character's owner or the GM can do that.");
         if (k === "harrowing") return harrowing(a, { kind: b.dataset.arg || "general" });
         if (k === "vsAngst") return vsAngst(a);
+        if (k === "spectre") {
+            if (!game.user.isGM) return ctx.notify("The Storyteller decides.");
+            // B5752: a Spectre: the Shadow has the wraith; its tokens turn hostile and dark, and WoDX NPC plays it
+            await a.setFlag(MOD, "spectre", true);
+            for (const t of a.getActiveTokens?.() ?? []) { try { await (t.document ?? t).update({ disposition: CONST.TOKEN_DISPOSITIONS.HOSTILE, "texture.tint": "#3a2a4a" }); } catch (e) { /* no token */ } }
+            await ctx.logEvent?.(a, "The Shadow takes the wraith: a Spectre.", "harrowing");
+            return post(a, `${a.name} is a Spectre`, `<div class="vta-big bad">The Shadow has won. ${esc(a.name)} is a Spectre now.</div>`);
+        }
         return null;
     }
 

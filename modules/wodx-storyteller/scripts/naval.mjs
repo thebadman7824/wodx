@@ -46,12 +46,13 @@ export async function remove(id) {
 /** The year and branch for a fight at sea. */
 export function contextOf(fight) {
   const ctx = C.tripContext(now());
-  return {year: fight?.year || ctx.year || 1197, branch: fight?.branch ?? (ctx.future ? "future" : "classic")};
+  // B5900: the fight's own sea, else the land of the scene in view, else the homeland
+  return {year: fight?.year || ctx.year || 1197, branch: fight?.branch ?? (ctx.future ? "future" : "classic"), land: fight?.land || C.landHere()};
 }
 
 export async function start(raw = {}) {
-  const {year, branch} = contextOf(raw);
-  return put({...raw, id: undefined, year, branch});
+  const {year, branch, land} = contextOf(raw);
+  return put({...raw, id: undefined, year, branch, land});
 }
 
 async function say(f, before) {
@@ -109,7 +110,7 @@ function shipForm(i, s, ships) {
   const p = `s${i}`;
   return `<fieldset><legend>${i ? "The second ship" : "The first ship"}</legend>
     <div class="form-group"><label>Name</label><input type="text" name="${p}.name" value="${esc(s.name)}" maxlength="120"></div>
-    <div class="form-group"><label>Ship</label><select name="${p}.type" data-fixed>${opt(Object.fromEntries(ships.map(x => [x.id, `${x.label}${x.house ? " (house rule)" : ""}`])), s.type)}</select></div>
+    <div class="form-group"><label>Ship</label><select name="${p}.type" data-fixed>${opt(Object.fromEntries(ships.map(x => [x.id, `${x.label}${x.house ? " (house rule)" : ""}${x.own ? ", of these seas" : x.other ? ", from far away" : ""}`])), s.type)}</select></div>
     <div class="form-group"><label title="The captain's Intelligence + Seamanship">Captain's seamanship</label><input type="number" name="${p}.seamanship" value="${s.seamanship}" min="1" max="15" style="width:4em"></div>
     <div class="form-group"><label title="The captain's Wits + Seamanship">Captain at the helm</label><input type="number" name="${p}.helm" value="${s.helm}" min="1" max="15" style="width:4em"></div>
     <div class="form-group"><label title="Dexterity + Archery for engines, Heavy Weaponry for guns">Gunners' dice</label><input type="number" name="${p}.gunners" value="${s.gunners}" min="1" max="15" style="width:4em"></div>
@@ -119,8 +120,8 @@ function shipForm(i, s, ships) {
 export async function setupDialog() {
   if ( !game.user.isGM ) return null;
   const f = N.normFight({});
-  const {year, branch} = contextOf(f);
-  const ships = N.shipsFor(year, branch);
+  const {year, branch, land} = contextOf(f);
+  const ships = N.shipsFor(year, branch, land);
   if ( ships.length ) f.ships = f.ships.map((s, i) => N.normShip({...s, type: ships[Math.min(i, ships.length - 1)].id}, s.name));
   const content = `<p class="wodx-quiet">${esc(String(year))}. The ships of the age; those marked as house rules are WoDX figures after the book's.</p>
     <div class="form-group"><label>Name</label><input type="text" name="name" value="" placeholder="A fight at sea" maxlength="120"></div>
@@ -137,7 +138,7 @@ export async function setupDialog() {
     if ( data[`s${i}.soldiers`] !== "" && data[`s${i}.soldiers`] !== null ) o.soldiers = data[`s${i}.soldiers`];
     return o;
   };
-  const out = await start({name: data.name, place: data.place, gap: data.gap, year, branch, ships: [ship(0), ship(1)]});
+  const out = await start({name: data.name, place: data.place, gap: data.gap, year, branch, land, ships: [ship(0), ship(1)]});
   NavalApp.open(out?.id);
   return out;
 }
@@ -156,7 +157,7 @@ export class NavalApp extends ApplicationV2 {
       navRam: (e, t) => ram(t.dataset.id, Number(t.dataset.ship)),
       navBreak: (e, t) => breakAway(t.dataset.id, Number(t.dataset.ship)),
       navGap: (e, t) => setGap(t.dataset.id, n(NavalApp.field("gap")?.value)),
-      navCourse: (e, t) => navigate(t.dataset.id, Number(t.dataset.ship), {land: !!NavalApp.field("land")?.checked, compass: !!NavalApp.field("compass")?.checked, pilot: !!NavalApp.field("pilot")?.checked}),
+      navCourse: (e, t) => navigate(t.dataset.id, Number(t.dataset.ship), {land: !!NavalApp.field("land")?.checked, compass: !!NavalApp.field("compass")?.checked, pilot: !!NavalApp.field("pilot")?.checked, wayfinder: !!NavalApp.field("wayfinder")?.checked}),
       navQuarter: (e, t) => quarter(t.dataset.id, {repair: [0, 1].map(k => !!NavalApp.field(`fix${k}`)?.checked), pool: [0, 1].map(k => n(NavalApp.field(`fixPool${k}`)?.value) || 3), helpers: [0, 1].map(k => n(NavalApp.field(`fixHelp${k}`)?.value))}),
       navBoard: (e, t) => boarding(t.dataset.id, [0, 1].map(k => n(NavalApp.field(`down${k}`)?.value))),
       navRow: (e, t) => setRowing(t.dataset.id, Number(t.dataset.ship), !!NavalApp.field(`row${t.dataset.ship}`)?.checked, n(NavalApp.field(`push${t.dataset.ship}`)?.value)),
@@ -227,7 +228,7 @@ export class NavalApp extends ApplicationV2 {
       ${f.ships.map(ship).join("")}
       ${live ? `<div class="form-group"><label>Range for shooting</label><select name="range" data-fixed>${opt({short: "Short", medium: "Medium", long: "Long"}, f.gap < 300 ? "short" : f.gap < 1500 ? "medium" : "long")}</select>
         <label>Yards apart</label><input type="number" name="gap" value="${f.gap}" min="0" max="50000" style="width:6em"><button type="button" data-action="navGap" data-id="${id}">Set</button></div>
-        <div class="form-group"><label><input type="checkbox" name="land" checked> In sight of land</label><label><input type="checkbox" name="compass"> Compass</label><label><input type="checkbox" name="pilot"> Pilot's book</label></div>` : ""}
+        <div class="form-group"><label><input type="checkbox" name="land" checked> In sight of land</label><label><input type="checkbox" name="compass"> Compass</label><label><input type="checkbox" name="pilot"> Pilot's book</label>${N.WL_NAV(f.land) ? `<label title="${esc(N.WL_NAV(f.land))}"><input type="checkbox" name="wayfinder"> A navigator of these seas</label>` : ""}</div>` : ""}
       <div class="wodx-buttons">
         ${live ? `<button type="button" data-action="navTurn" data-id="${id}" title="Resisted Intelligence + Seamanship for the wind and the initiative">Turn for position</button>
           <button type="button" data-action="navQuarter" data-id="${id}" title="Flooding and repair">A quarter hour passes</button>

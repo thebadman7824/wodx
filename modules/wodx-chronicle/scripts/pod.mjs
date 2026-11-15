@@ -151,12 +151,25 @@ function onSenses({scene, sources} = {}) {
   const st = cityState(scene), lines = P.senseLines(st);
   if ( lines ) sources.push({id: `pod.city.${st.city}`, key: `pod.city`, lines, name: `${st.name}: ${st.state}`, loud: "loud", strong: true});
 }
-/** A building raised or restored: logs a boon the faction it serves owes the patron. */
-export async function raiseBuilding({patron, building, faction, restore = false} = {}) {
+/**
+ * A building raised or restored: the patron pays (B5824: a season of a wealthy living, or the cost given; on credit
+ * when short), the town it stands in gains (prosperity up, a little calmer, through WoDX Storyteller's towns), and the
+ * faction it serves owes a boon.
+ */
+export async function raiseBuilding({patron, building, faction, restore = false, cost = null} = {}) {
   const a = toActor(patron) ?? game.actors.getName?.(patron);
   if ( !lineOn("podCities") || !building ) return null;
-  const st = cityState();
-  return card(`${restore ? "Restored" : "Raised"}: ${building}`, `<p>${esc(a?.name ?? patron ?? "A patron")} pays to ${restore ? "restore" : "raise"} ${esc(building)}${st ? ` in ${esc(st.name)} (${esc(st.state)})` : ""}. ${faction ? `${esc(faction)} gains by it and owes a boon.` : ""}</p>`,
+  const st = cityState(), ST = api("wodx-storyteller"), done = [];
+  const M = ST?.upkeep?.money;
+  if ( a && M?.pay && M?.rules?.allowance ) {
+    let region = "moravian"; try { region = game.settings.get("wodx-storyteller", "moneyRegion") || region; } catch (e) { /* default */ }
+    const year = currentYear(), amount = Number(cost) > 0 ? Math.round(Number(cost)) : Math.round(M.rules.allowance(4, year, region) * (restore ? 2 : 3));
+    const r = await M.pay(a, amount, {credit: true, note: `${restore ? "Restoring" : "Raising"} ${building}`});
+    if ( r?.ok !== false ) done.push(`Paid ${M.rules.formatMoney ? M.rules.formatMoney(amount, M.rules.moneyFor?.(year, region)) : amount}.`);
+  }
+  const town = ST?.towns?.ofScene?.(canvas?.scene);
+  if ( town?.id && ST?.towns?.lever ) { await ST.towns.lever({kind: restore ? "restore" : "build", town: town.id, label: building}); done.push("The town gains by it."); }
+  return card(`${restore ? "Restored" : "Raised"}: ${building}`, `<p>${esc(a?.name ?? patron ?? "A patron")} pays to ${restore ? "restore" : "raise"} ${esc(building)}${st ? ` in ${esc(st.name)} (${esc(st.state)})` : ""}. ${faction ? `${esc(faction)} gains by it and owes a boon.` : ""}</p>${done.length ? `<p>${esc(done.join(" "))}</p>` : ""}`,
     faction && a ? {act: {key: "boon", label: "Log the boon", data: {from: {id: null, name: faction}, to: {id: a.id, name: a.name}, what: `${restore ? "restoring" : "raising"} ${building}`}}} : {});
 }
 ACTS.boon = async ({from, to, what}) => { await api("wodx-storyteller")?.ledger?.save?.({kind: "boon", size: "minor", from, to, what}); };

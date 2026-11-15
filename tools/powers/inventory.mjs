@@ -42,9 +42,10 @@ const MH = await import(A("scripts/mummy-hekau.js"));
 const OH = await import(A("scripts/orpheus-horrors.js"));
 const CB = await import(pathToFileURL(path.join(ROOT, "modules/wodx-combat/scripts/rules.js")).href);
 
-/** Keywords that only tell the user something; they do not change the game. */
-const INFO = new Set(["sense", "know", "speak"]);
-const applyingKw = (ks = []) => ks.some(k => E.KEYWORDS[k] && E.KEYWORDS[k].tier !== "st" && !INFO.has(k));
+/** Keywords that only tell the user something; they do not change the game. B5788-B5790: Sense lays a detection sense on the
+ * token, Know finds out a secret or pins a clue, and Speak opens talk with beasts and ghosts, so none is only a card now. */
+const INFO = new Set([]);
+const applyingKw = (ks = []) => ks.map(k => String(k).split(":")[0]).some(k => E.KEYWORDS[k] && E.KEYWORDS[k].tier !== "st" && !INFO.has(k));
 /** B4820: a Summon applies whatever its spec kind, since the effects card turns it into a summoning with its own rules. */
 const applyingSpec = s => !!s && (!["note", "st"].includes(s.kind) || s.kw === "summon");
 /** Keywords a power used with no roll applies (its Harm readies the user; the attack roll deals it, B3751). */

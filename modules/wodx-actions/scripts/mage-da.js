@@ -13,6 +13,8 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: mage-da-rules.js.
  */
+import * as NPW from "./npc-power-rules.js";
+import * as DAE from "./mage-da-effects.js";
 import * as LIM from "./limits.js";
 import * as M from "./mage-da-rules.js";
 import * as G from "./mage-da-grimoire.js";
@@ -525,5 +527,14 @@ export function build(ctx) {
         }
     }
 
-    return { info, sheet, cast, onButton, quintessence, counter, guide, certamen, fadeAll, isDA, rules: M, grimoire: G };
+    /** B5672: the fellowship's rotes an NPC mage may cast by itself (main.js npcPowers). */
+    function powersFor(actor) {
+        const i = info(actor);
+        if (!i.fellowship) return [];
+        return M.ROTES.filter(r => r.f === i.fellowship && Object.entries(r.levels).every(([k, v]) => n(i.ratings[k]) >= n(v))).map(r => ({
+            use: "useDaSpell", field: "rote", value: r.id, name: r.name, level: Math.max(0, ...Object.values(r.levels).map(n)), set: "darote", id: r.id,
+            keywords: NPW.keysOf(DAE.daOutcomes(r, 3)) })).filter(p => p.keywords.length);
+    }
+
+    return { powersFor, info, sheet, cast, onButton, quintessence, counter, guide, certamen, fadeAll, isDA, rules: M, grimoire: G };
 }

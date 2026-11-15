@@ -134,6 +134,7 @@ export async function divorce(aLike, bLike, {region = regionNow(), year = yearNo
     await x.setFlag(MOD, "marriages", (x.flags?.[MOD]?.marriages ?? []).map(m => m.with?.id === y.id && !m.ended ? {...m, ended: game.time.worldTime, how: "divorce"} : m));
     await dropHandTie(x, y, "spouse");
   }
+  Hooks.callAll("wodxDivorced", {a, b});
   return {ok: true, law};
 }
 
@@ -262,7 +263,16 @@ async function heartbreak(who, other) {
   const botch = hits === 0 && ones > 0;
   let line = `Willpower ${dice} dice at ${H.HEARTBREAK_DIFF}: ${faces.join(", ")}. `, key = null;
   if ( botch ) { key = await game.modules.get("wodx-chronicle")?.api?.derangements?.gain?.(who, "loss", "from heartbreak"); line += key ? "It breaks something in them: a derangement." : "It breaks something in them."; }
-  else line += hits > ones ? "They bear it." : "It hurts, and it shows.";
+  else if ( hits > ones ) line += "They bear it.";
+  else {
+    // B5826, B5991: it shows for a week: Grieving, one die fewer on social rolls (Actions reads socialDice), a mark on the token
+    const T = game.modules.get("wodx-chronicle")?.api;
+    if ( T?.registerCondition && !T?.conditions?.getCondition?.("grieving") ) T.registerCondition({id: "grieving", name: "Grieving", img: "icons/svg/blood.svg",
+      source: "WoDX house reading", summary: "Heartbroken for a week: one die fewer on social rolls.", mods: {socialDice: -1}});
+    if ( T?.applyTimed ) await T.applyTimed(who, {name: "Grieving", description: `Heartbroken over ${other.name}`, duration: {kind: "time", seconds: 7 * 86400},
+      condition: "grieving", key: "wodx-npc-grieving", source: "WoDX NPC hearts"});
+    line += "It hurts, and it shows: grieving for a week (one die fewer on social rolls).";
+  }
   await ChatMessage.create({whisper: ownersOf(who), speaker: {alias: who.name}, flags: {[MOD]: {heartCard: true}}, rolls: [roll],
     content: card(`${who.name}'s heart breaks over ${other.name}`, [line])});
   return {botch, derangement: key};
@@ -277,6 +287,8 @@ async function tellLoved(victim, ev) {
     if ( !checks.length ) continue;
     const lines = checks.map(c => c.text), rolls = [];
     if ( ev === "death" ) { const g = await grieve(who, e.kind); if ( g ) { lines.push(g.line); rolls.push(g.roll); } }
+    // B5804 (n5): an NPC mourns on the map by its faith
+    if ( ev === "death" && !who.hasPlayerOwner ) { try { const m = await api()?.aftercare?.mourn?.(who, victim); if ( m ) lines.push(`In mourning: ${m.words}, ${m.days} days.`); } catch (err) { console.warn(`${MOD} | mourning`, err); } }
     await ChatMessage.create({whisper: ownersOf(who), speaker: {alias: who.name}, flags: {[MOD]: {heartCard: true}}, rolls,
       content: card(`${victim.name} ${ev === "death" ? "is dead" : ev === "taken" ? "is taken" : "is hurt"}`, lines)});
     out.push({to: who.id, checks});

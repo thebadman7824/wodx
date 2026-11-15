@@ -99,3 +99,9 @@ export const LINE_PUNISH = {
   revenant: "The family can buy a pardon, and will want it repaid.",
   mortal: ""
 };
+
+/** B5823: a fine in the smallest coin: a month of a modest living (allowance) at weight 3, scaled by how grave the deeds were. */
+export const fineAmount = (monthly, weight = 3) => Math.max(1, Math.round(n(monthly) * clamp(n(weight) / 3, 0.5, 4)));
+
+/** B5990: is time away served by this year? */
+export const servedBy = (away = {}, year = 0) => n(away?.until) > 0 && n(year) >= n(away.until);

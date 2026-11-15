@@ -288,6 +288,8 @@ export function normCult(c = {}) {
     attention: Math.max(0, n(c.attention)), quiet: Math.max(0, Math.round(n(c.quiet))), lastTurn: n(c.lastTurn), band: EXPOSURE_BANDS.some(b => b.key === c.band) ? c.band : "hidden",
     ended: c.ended ? {at: n(c.ended.at), why: str(c.ended.why, 200)} : null, parent: c.parent ? str(c.parent, 40) : null,
     faction: c.faction ? str(c.faction, 40) : null,
+    why: c.why ? str(c.why, 200) : null,
+    lastGift: n(c.lastGift),
     log: (Array.isArray(c.log) ? c.log : []).slice(-40).map(e => ({at: n(e.at), text: str(e.text, 240)}))
   };
 }
@@ -445,4 +447,42 @@ export function summary(cult, year = 0) {
     exposure: c.exposure, band: bandOf(c.exposure).label, dots, bg: k.bg, gives: dots ? k.gives(dots) : "Too few yet to give anything.",
     doctrine: doctrineOf(c.themes, c.kind).map(t => THEMES[t].label), creed: creedText(doctrineOf(c.themes, c.kind), c.founder?.name), ref: k.ref,
     inner: c.named.filter(m => m.rank === "ordained").map(m => m.name), initiates: c.named.filter(m => m.rank === "initiate").map(m => m.name), room: innerRoom(c.members)};
+}
+
+/* ------------------------------------------------------------------ */
+/*  What a cult gives, applied (B5960 to B5964)                        */
+/* ------------------------------------------------------------------ */
+
+/** The Background a cult stands for on its founder's sheet, by kind; kinds left out help rolls by hand only. */
+export const SHEET_BG = {blood: "Herd", kuei: "Herd", cult: "Cult", netaru: "Cult", wyrm: "Cult", thralls: "Followers", dreamers: "Dreamers", remembrance: "Memoriam"};
+/** The kinds whose gathering gives a pool to the founder. */
+export const GIFT_KINDS = ["thralls", "dreamers", "remembrance"];
+/** How often a gathering gives its gift: once a week of world time. */
+export const GIFT_EVERY = WEEK;
+
+/**
+ * What a gathering gives the founder, by kind and dots (house readings on the books named in CULT_KINDS):
+ *   thralls      Faith: one point for each dot of Followers, reaped from the gathered devotees (Demon: The Fallen p. 155)
+ *   dreamers     Glamour: the Dreamers dots as automatic successes on Reverie, a point each (C20 p. 169)
+ *   remembrance  Pathos: roll the Memoriam dots at difficulty 8, a point a success (Wraith 20th p. 144)
+ * faces: the d10 faces rolled for remembrance (the caller rolls). Returns {pool, path, gain, label} or null.
+ */
+export function gatheringGift(kind, dots, faces = []) {
+  const d = Math.max(0, Math.min(5, Math.round(n(dots))));
+  if ( !d ) return null;
+  if ( kind === "thralls" ) return {pool: "faith", path: "system.advantages.faith", gain: d, label: "Faith", cap: 10};
+  if ( kind === "dreamers" ) return {pool: "glamour", path: "system.advantages.glamour", gain: d, label: "Glamour", cap: 10};
+  if ( kind === "remembrance" ) {
+    const f = (faces ?? []).slice(0, d).map(x => n(x));
+    const hits = f.filter(x => x >= 8).length, ones = f.filter(x => x === 1).length;
+    return {pool: "pathos", path: "system.advantages.pathos", gain: Math.max(0, hits - ones), label: "Pathos", cap: 10, faces: f, rolled: true};
+  }
+  return null;
+}
+/** Whether a gathering may give its gift now: once in GIFT_EVERY. */
+export const giftReady = (cult, now) => !n(cult?.lastGift) || n(now) - n(cult.lastGift) >= GIFT_EVERY;
+/** The new temporary value of a pool after a gain: capped by the permanent rating (or cap when that is 0). */
+export function poolAfter(temp, perm, gain, cap = 10) {
+  const top = n(perm) > 0 ? n(perm) : cap;
+  return Math.max(0, Math.min(top, n(temp) + Math.max(0, n(gain))));
 }

@@ -63,6 +63,7 @@ import * as BodyRules from "./body-rules.mjs";
 import * as Hard from "./hardship.mjs";
 import * as HardRules from "./hardship-rules.mjs";
 import * as Remains from "./remains.mjs";
+import * as HuntFollow from "./hunt-follow.mjs";
 import * as RemainsRules from "./remains-rules.mjs";
 import * as Hunters from "./hunters.mjs";
 import * as Levers from "./levers.mjs";
@@ -113,6 +114,7 @@ Hooks.once("init", () => {
   Setup.registerSetupSettings();
   Builder.registerBuilderSettings();
   Ways.registerWaySettings();
+  Wonders.registerWonderSettings();
   Ways.registerWayBehavior();
   Night.registerNightSettings();
   Dreams.registerDreamSettings();
@@ -162,6 +164,7 @@ Hooks.once("init", () => {
   Remains.registerRemainsHooks();
   Hunters.registerHunterSettings();
   Hunters.registerHunterHooks();
+  HuntFollow.registerHuntFollowHooks();
   Reach.registerReachSettings(); // B4861: the world's own hand
   Reach.registerReachHooks();
   Levers.registerLeverSettings();
@@ -227,7 +230,7 @@ Hooks.once("ready", () => {
     wills: {of: Wills.willOf, save: Wills.saveWill, open: Wills.willDialog, estate: Wills.estateOf, law: Wills.lawAt, kin: Wills.kinOf, rules: WillRules},
     ledger: {open: () => Led.LedgerApp.open(), state: Led.ledger, save: Led.saveEntry, remove: Led.removeEntry, status: Led.setStatus, veil: Led.moveVeil, checkDue: Led.checkDue, heirOf: Led.heirOf, breach: Led.onBreach, syncTraits: Led.syncTraits},
     beatsDialog: A.beatsDialog, endSessionDialog: A.endSessionDialog, editBeat: A.editBeat, placesDialog: A.placesDialog, TrackerClass: A.TrackerClass,
-    setup: {open: Setup.openSetup, run: Setup.runSetup, have: Setup.have, enableModules: Setup.enableModules},
+    setup: {open: Setup.openSetup, run: Setup.runSetup, have: Setup.have, enableModules: Setup.enableModules, refreshPrimer: Setup.refreshPrimer, refreshAbroad: Setup.refreshAbroad},
     builder: {open: Builder.openBuilder, plan: Builder.plan, run: Builder.runStep, again: Builder.rerunStep, undo: Builder.undoStep, runAll: Builder.runAll, record: Builder.record, recipe: Builder.recipe, recipes: Builder.RECIPES, layWays: Builder.layWays, takeBackWays: Builder.takeBackWays},
     night: {pacing: Night.pacingNow, draw: Night.drawNight, propose: Night.proposeNight, approve: Night.approveNight, dialog: Night.nightDialog, now: Night.nightNow, layers: Night.layersInPlay, road: Night.roadEncounter, place: Night.placeEncounter, placeCard: Night.placeCard, placeFrom: Night.placeFromCard, peopleIn: Night.N.peopleIn},
     aid: {draw: Night.drawAid, propose: Night.proposeAid, approve: Night.approveAid, dialog: Night.aidDialog, fragments: Night.fragmentsFor, makeItem: Night.makeAidItem},

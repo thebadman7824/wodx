@@ -5,6 +5,8 @@
  * one Undo button. What needs a yes goes to the approval queue; what is the Storyteller's call is listed for them.
  * World setting "Magic that applies itself": Automatic (on, except in the Live world), On, Off. Rules: effects-rules.js.
  */
+import * as ACT from "./acts.js";
+import * as BIND from "./binds.js";
 import * as E from "./effects-rules.js";
 import * as KRG from "./kindred-rules.js";
 import * as DAE from "./mage-da-effects.js";
@@ -302,13 +304,16 @@ export function summonResult(actor, r, successes, power = null, {bound = false} 
 export function planOf(actor, results, successes, power = null) {
   const world = power?.name ? W.worldResults({source: results[0]?.out?.source ?? "", ...power}, successes) : [];
   if ( !results.length && !world.length ) return {items: [], html: ""};
-  const t = targetsOf(actor);
+  // B5786: a power aimed by name (Touch from Afar) reaches its far target instead of the ones picked on the map
+  const t = targetsOf(actor, power?.targets ?? null);
   const own = actor?.getActiveTokens?.()?.[0]?.document ?? actor;
   const items = [];
   for ( const r of world ) {
     const route = !isOn() ? "off" : W.worldRoute(r.out);
+    // B5781: an NPC's fire or flood lands on its target's square by itself
+    const tg = !t.self && actor && !actor.hasPlayerOwner && r.out.scope === "ground" ? (t.docs[0]?.object ?? t.docs[0]?.getActiveTokens?.()?.[0] ?? null) : null;
     items.push({key: "world", out: r.out, target: null, name: r.out.scope === "ground" ? "an area" : r.out.scope === "taint" ? "this place" : "the town",
-      caster: own?.uuid ?? null, scene: canvas?.scene?.id ?? null, route});
+      caster: own?.uuid ?? null, scene: canvas?.scene?.id ?? null, route, ...(tg?.center ? {at: {x: tg.center.x, y: tg.center.y}} : {})});
   }
   // B4836: a power tagged as a summoning that calls nothing works through its own keywords instead
   const notSum = power?.name && results.some(r => r.key === "summon") ? SUM.notSummonOf(power.name, power.line ?? "") : null;
@@ -351,6 +356,9 @@ export function planOf(actor, results, successes, power = null) {
       let route = !isOn() ? "off" : r.st ? "st" : E.route(r.key, {self, playerCharacter: !!a?.hasPlayerOwner, count: docs.length, need: 0}, r.out);
       if ( r.ask && route === "auto" ) route = "queue";
       if ( route === "auto" && r.out.kind === "move" ) route = "pick";
+      // B5780: WoDX's own acts: an NPC's run by itself; on a player's character they wait for the Storyteller's yes,
+      // which then applies them; readying one's own (Hand of Faith, Touch from Afar) needs no one's yes
+      if ( isOn() && ACT.KINDS.has(r.out?.kind) ) route = !actor?.hasPlayerOwner ? "auto" : ["seize", "remote"].includes(r.out.kind) ? "auto" : route === "st" ? "queue" : route;
       // B4820: a summoning by a player's character waits for the Storyteller's yes; an NPC's runs by itself (B4837): a
       // plain being of the book's kind comes beside the NPC, and the Storyteller can dismiss it or Undo the card
       if ( r.key === "summon" && isOn() ) route = actor?.hasPlayerOwner ? "queue" : "auto";
@@ -427,8 +435,14 @@ export async function applyItem(item, casterName = "the caster") {
     const uuid = a ? await TURN.attach(a, et, {label: item.out.label ?? item.out.name ?? "A power", by: casterName}) : null;
     if ( uuid ) rec.everyEffect = uuid;
   }
-  // B3528: a mind or body binding on a player character gets the player a binding card (no hold on the token)
+  // B3528: a mind or body binding on a player character gets the player a binding card; B5793: the binding's effect
+  // remembers who bound them, so Fear keeps the token from going nearer that one (binds.js)
   try { await bindingCard(item, casterName); } catch (e) { console.warn("WoDX | binding card", e); }
+  try {
+    const byA = item?.by ?? item?.caster ?? item?.casterUuid;
+    const by = byA ? actorOf(docOf(byA)) : null;
+    if ( by && rec?.effect && BIND.RULE[item?.key] ) await fromUuidSync(rec.effect)?.setFlag?.(MOD, "bindBy", by.id);
+  } catch (e) { console.warn("WoDX | binding by", e); }
   // Traits With Teeth step 5: Sway and Fear move an NPC's regard for the caster (WoDX NPC), undone with the rest
   try {
     const mood = await moodAfter(item, casterName);
@@ -450,7 +464,7 @@ export async function bindingCard(item, casterName = "the caster", {actor = null
     content: `<div class="wodx-card wodx-binding"><h3><i class="fa-solid fa-link"></i> ${esc(a.name)} is bound</h3>
       <p><b>${esc(b.label)}</b>, from ${esc(b.by)}: ${esc(b.command)}.</p>
       <p>It lasts ${esc(b.lasts)}. Resisting: ${esc(b.resist)}.</p>
-      <p class="wodx-quiet">Play the character as bound until it ends or the Storyteller lifts it. Nothing holds your token; the Storyteller rules on what you try.</p></div>`});
+      <p class="wodx-quiet">Play the character as bound until it ends or the Storyteller lifts it. ${E.BIND_HOLDS[b.key] ?? "The Storyteller rules on what you try."}</p></div>`});
 }
 
 /** Sway (not Awe) on an NPC: one step warmer toward the caster; Fear (Afraid): one step colder. Returns the undo record. */
@@ -473,6 +487,7 @@ async function applyCore(item, casterName = "the caster") {
   // item is reassigned when the Storyteller picks a spot (Summon, Move)
   const d = docOf(item.target), a = actorOf(d), o = item.out;
   if ( o?.kind === "world" ) return applyWorld(item, casterName, a);
+  if ( ACT.KINDS.has(o?.kind) ) return ACT.apply(item, casterName, {docOf, actorOf, tokenOf, pickPoint, choose});
   if ( !a && !["summon", "weather"].includes(o?.kind) ) return {note: `${item.name}: not found`};
   const C = combat(), T = chron();
   const health = foundry.utils.deepClone(a?.system?.health?.damage ?? {});
@@ -873,6 +888,17 @@ export async function undo(records = []) {
         if ( AT && npc && ch ) await (r.attitude.met ? AT.apply(npc, ch, {to: r.attitude.before, why: "Undone"}) : AT.forget(npc, ch));
       }
       if ( r.effect ) await fromUuidSync(r.effect)?.delete?.({wodxUndo: true});
+      // B5780: what WoDX's own acts changed
+      for ( const u of r.regions ?? [] ) await fromUuidSync(u)?.delete?.();
+      if ( r.pathPrev ) await ACT.pathBack({prev: r.pathPrev});
+      if ( r.restoreEffects?.length && a ) await a.createEmbeddedDocuments("ActiveEffect", r.restoreEffects);
+      if ( r.npcMemory ) await game.modules.get("wodx-npc")?.api?.memory?.restore?.(r.npcMemory.npc, r.npcMemory.char, r.npcMemory.notes);
+      if ( r.unflag ) await fromUuidSync(r.unflag.uuid)?.unsetFlag?.(MOD, r.unflag.key);
+      if ( r.detect ) await ACT.detectBack(r.detect);
+      for ( const m of r.moods ?? [] ) {
+        const AT = game.modules.get("wodx-npc")?.api?.attitude, npc = game.actors.get(m.npc), ch = game.actors.get(m.char);
+        if ( AT && npc && ch ) await (m.met ? AT.apply(npc, ch, {to: m.before, why: "Undone"}) : AT.forget(npc, ch));
+      }
       if ( r.everyEffect ) await fromUuidSync(r.everyEffect)?.delete?.({wodxUndo: true});
       if ( r.across ) { const t = fromUuidSync(r.across); if ( t ) await game.modules.get("wodx-otherworlds")?.api?.sendAcross?.(t, {to: r.to}); }
       if ( r.weather ) await game.modules.get("wodx-atmosphere")?.api?.weather?.set?.(r.weather.jdn, r.weather.prev ?? null);
@@ -905,16 +931,19 @@ async function onCard(msg) {
     return;
   }
   if ( data?.kind !== "effects" || data.done || data.hold || !isActiveGM() ) return;
-  const records = [], notes = [];
+  const records = [], notes = [], placed = [];
   for ( const [i, item] of (data.items ?? []).entries() ) {
-    if ( item.route === "auto" ) {
+    if ( item.route === "area" && item.at ) {
+      const r = await placeArea(item, item.at, {caster: data.caster});
+      if ( r?.note ) notes.push(r.note); else if ( r ) { records.push({...r, i}); placed.push(i); }
+    } else if ( item.route === "auto" ) {
       const r = await applyItem(item, data.caster);
       if ( r?.note ) notes.push(r.note); else if ( r ) records.push(typeof r === "object" ? {...r, i} : r);
     } else if ( item.route === "queue" ) {
       await chron()?.propose?.({type: TYPE, title: `${data.caster}: ${item.out.label} on ${item.name}`, detail: item.out.text, data: {item, caster: data.caster}});
     }
   }
-  await msg.update({[`flags.${MOD}.done`]: true, [`flags.${MOD}.undo`]: records, [`flags.${MOD}.notes`]: notes});
+  await msg.update({[`flags.${MOD}.done`]: true, [`flags.${MOD}.undo`]: records, [`flags.${MOD}.notes`]: notes, ...(placed.length ? {[`flags.${MOD}.placed`]: [...(data.placed ?? []), ...placed]} : {})});
 }
 
 /* The Storyteller's next click on the map, in scene pixels (null when cancelled). */
@@ -971,6 +1000,7 @@ export async function placeItem(msg, index, at = undefined) {
 }
 
 export function setup() {
+  BIND.setup();
   game.settings.register(MOD, "effectsApply", {
     name: "Magic that applies itself", hint: "Mage 20th castings with effect keywords change health, Quintessence, timed effects, light, height and place on their own, with Undo; areas work on whoever enters; the rest goes to the approval queue. Automatic: on, except in the Live world.",
     scope: "world", config: true, type: String, default: "auto", choices: {auto: "Automatic", on: "On", off: "Off"}
@@ -1117,6 +1147,7 @@ export async function resolveResist(msg, i, won) {
 
 /** The approval queue's handler for queued keyword results (called once WoDX Chronicle is ready). */
 export function registerHandler(api) {
+  ACT.setup();
   // B4830: a Light or Dark keyword's timer puts the token's own light back when it runs out
   api?.timed?.registerReverter?.("wodx-actions.lightEnd", async (actor, data) => {
     const tok = data?.token ? fromUuidSync(data.token) : null;

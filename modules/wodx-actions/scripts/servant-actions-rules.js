@@ -49,14 +49,14 @@ export function potentialGuess({trueFaith = 0, set = null} = {}) {
 /** The difficulty a thrall rolls Willpower at to use a gift (Demon: The Fallen p. 253). Null for gifts with no roll. */
 export const GIFT_DIFF = {innate: 7, enhancement: 6, evocation: 8};
 /** What a pact puts on the thrall's sheet, as items. Each item knows its gift, its roll and what it cost. */
-export function giftItems(picks = [], {demon = "the demon"} = {}) {
+export function giftItems(picks = [], {demon = "the demon", demonId = ""} = {}) {
   const LABEL = {heal: "A healed body", freebies: "Ten freebie points", innate: "A demon's innate power", enhancement: "An apocalyptic enhancement", evocation: "A lesser evocation", offering: "A daily Faith offering"};
   return picks.filter(p => LABEL[p.k]).map(p => ({
     name: `Pact gift: ${p.name || LABEL[p.k]}`,
     type: "Feature",
     img: "icons/magic/symbols/runes-star-pentagon-orange.webp",
     system: {type: "wod.types.merit", description: `<p>${LABEL[p.k]}, a gift of ${demon}'s pact${GIFT_DIFF[p.k] ? `: Willpower at ${GIFT_DIFF[p.k]} to use it` : ""}${p.k === "evocation" ? `, level ${clamp(n(p.level), 1, 5)}` : ""}.</p><p><em>Demon: The Fallen p. 253</em></p>`},
-    flags: {"wodx-actions": {pactGift: {k: p.k, level: p.k === "evocation" ? clamp(n(p.level), 1, 5) : 0, points: p.k === "offering" ? n(p.points) : 0, diff: GIFT_DIFF[p.k] ?? 0, demon}}}
+    flags: {"wodx-actions": {pactGift: {k: p.k, demonId, level: p.k === "evocation" ? clamp(n(p.level), 1, 5) : 0, points: p.k === "offering" ? n(p.points) : 0, diff: GIFT_DIFF[p.k] ?? 0, demon}}}
   }));
 }
 /** A thrall entry on the demon, linked to the mortal's actor. */

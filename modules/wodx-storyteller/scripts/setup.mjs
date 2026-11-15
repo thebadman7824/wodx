@@ -123,7 +123,14 @@ export async function runSetup(opts = {}) {
     {name: "WoDX tools", html: S.TOOLS_PAGE}
   ], {ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE}});
   done.push("screen");
-  await upsertJournal("primer", `The world in ${active?.name ?? "this era"}`, [{name: "What everyone knows", html: S.playerPrimer(active)}],
+  // B5880: what everyone knows follows the homeland's way of life
+  let sphere = null, sphereLabel = "";
+  try {
+    const W = game.modules.get("wodx-chronicle")?.api?.world;
+    sphere = W?.rules?.sphereFor?.(W.homeland(), year) ?? null;
+    sphereLabel = W?.rules?.SPHERES?.[sphere] ?? "";
+  } catch (e) { sphere = null; }
+  await upsertJournal("primer", `The world in ${active?.name ?? "this era"}`, [{name: "What everyone knows", html: S.playerPrimer(active, {sphere, sphereLabel, year})}],
     {ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER}});
   done.push("primer");
   if ( !findDoc(game.actors, "group") ) {
@@ -229,3 +236,71 @@ export function maybeOpenSetup() {
   if ( (game.settings.get(MOD, "setup") ?? {}).done ) return;
   setTimeout(() => openSetup().catch(e => console.error(`${MOD} | setup`, e)), 1200);
 }
+
+/**
+ * B5881: the players' primer follows the chronicle. When an era is applied, or the homeland changes, the page "What
+ * everyone knows" is written again for the active era, the year and the homeland's way of life. Only a primer the setup
+ * made is touched; the Storyteller's own pages beside it stay.
+ */
+export async function refreshPrimer() {
+  if ( !game.user.isGM || game.users?.activeGM?.id !== game.user.id ) return false;
+  const j = findDoc(game.journal, "primer");
+  if ( !j ) return false;
+  const C = chron();
+  const year = Number(C?.eras?.currentYear?.()) || 1197;
+  const active = C?.eras?.activeEra?.()?.profile ?? null;
+  let sphere = null, sphereLabel = "";
+  try { const W = C?.world; sphere = W?.rules?.sphereFor?.(W.homeland(), year) ?? null; sphereLabel = W?.rules?.SPHERES?.[sphere] ?? ""; } catch (e) { sphere = null; }
+  const html = S.playerPrimer(active, {sphere, sphereLabel, year});
+  const page = j.pages.find(p => p.name === "What everyone knows");
+  if ( !page || page.text?.content === html ) return false;
+  await page.update({"text.content": html});
+  await j.update({name: `The world in ${active?.name ?? "this era"}`});
+  return true;
+}
+/**
+ * B5940 to B5942: the primer for a scene far from home. The page "Where you are now" of the players' primer follows the
+ * active scene's land: what everyone knows there when its way of life is not the homeland's, a line saying so at
+ * home. When the table comes to stand in another way of life, a card tells the players and links the page.
+ */
+export async function refreshAbroad({card = true} = {}) {
+  if ( !game.user.isGM || game.users?.activeGM?.id !== game.user.id ) return null;
+  const j = findDoc(game.journal, "primer");
+  if ( !j ) return null;
+  const C = chron(), W = C?.world;
+  const year = Number(C?.eras?.currentYear?.()) || 1197;
+  const active = C?.eras?.activeEra?.()?.profile ?? null;
+  const scene = game.scenes?.active ?? null;
+  let homeSphere = null, hereSphere = null, hereLabel = "", placeLabel = "";
+  try {
+    homeSphere = W?.rules?.sphereFor?.(W.homeland(), year) ?? null;
+    const r = scene && W?.isAbroad?.(scene) ? W.here(scene) : null;
+    if ( r?.id ) { hereSphere = W.rules.sphereFor(r.id, year); hereLabel = W.rules.SPHERES?.[hereSphere] ?? ""; placeLabel = String(r.label ?? "").replace(/\s*\(.*\)$/, ""); }
+  } catch (e) { hereSphere = null; }
+  const out = S.abroadPrimer(active, {homeSphere, hereSphere, hereLabel, placeLabel, year});
+  let page = j.pages.find(p => p.name === S.ABROAD_PAGE);
+  if ( !page ) [page] = await j.createEmbeddedDocuments("JournalEntryPage", [{name: S.ABROAD_PAGE, type: "text", sort: 200, text: {content: out.html, format: 1}}]);
+  else if ( page.text?.content !== out.html ) await page.update({"text.content": out.html});
+  const was = j.getFlag(MOD, "abroadKey") ?? "";
+  if ( was !== out.key ) {
+    await j.setFlag(MOD, "abroadKey", out.key);
+    const e = v => foundry.utils.escapeHTML?.(v) ?? v;
+    if ( card && out.abroad ) await ChatMessage.create({speaker: {alias: "The world"}, flags: {[MOD]: {abroad: out.key}},
+      content: `<div class="wodx-card wst-abroad"><h3>Far from home</h3><p>${[...new Set([placeLabel, hereLabel].filter(Boolean))].map(e).join(", ")}. Life here runs by other ways than at home.</p><p>@UUID[${page.uuid}]{${S.ABROAD_PAGE}}</p></div>`});
+  }
+  return out;
+}
+
+Hooks.on("wodxEraApplied", () => {
+  refreshPrimer().catch(e => console.warn("wodx-storyteller | primer", e));
+  refreshAbroad({card: false}).catch(e => console.warn("wodx-storyteller | primer abroad", e));
+});
+Hooks.on("updateScene", (scene, changes) => {
+  const placed = foundry.utils.hasProperty(changes, "flags.wodx-chronicle.place") || foundry.utils.hasProperty(changes, "flags.wodx-chronicle.-=place");
+  if ( changes.active === true || (placed && scene.active) ) refreshAbroad().catch(e => console.warn("wodx-storyteller | primer abroad", e));
+});
+Hooks.on("updateSetting", s => {
+  if ( s?.key !== "wodx-chronicle.homeland" ) return;
+  refreshPrimer().catch(e => console.warn("wodx-storyteller | primer", e));
+  refreshAbroad().catch(e => console.warn("wodx-storyteller | primer abroad", e));
+});

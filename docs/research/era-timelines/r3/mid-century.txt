@@ -34,7 +34,7 @@
 1921|H|mor|EU|Dublin|treaty|The Anglo-Irish Treaty|The Irish Free State is born, and the civil war follows.
 1921|W|mag|EU|Vienna|occult,learning|The Order in Vienna|The house reading has Vienna's Hermetics salvage the old court library's secret shelves as the empire's archives are split.
 1922-9|H|mor|ME|Smyrna|fire,massacre|Smyrna burns|The Turkish army retakes Smyrna, and the Greek and Armenian quarters burn.
-1922-10|H|mor|EU|Rome|revolution|The March on Rome|Mussolini's Blackshirts march on Rome and the king makes him prime minister.
+1922-10|H|mor|EU|Rome|revolution|The March on Rome|Mussolini's Blackshirts march on Rome and the king makes Mussolini prime minister.
 1922-11|H|mor|ME|Luxor|occult,exploration|Tutankhamun's tomb|Howard Carter opens the sealed tomb of Tutankhamun in the Valley of the Kings.
 1922-11|W|mum|ME|Luxor|occult,crime|The curse of the pharaoh|The house reading has the tomb's guardians wake, and Lord Carnarvon's death the next spring is no accident.
 1922-12|H|mor|EU|Moscow|founding|The Soviet Union|Russia, Ukraine, Belarus and Transcaucasia join as the Union of Soviet Socialist Republics.
@@ -50,14 +50,14 @@
 1924|H|mor|EU|Prague|art,death|Kafka dies|Franz Kafka dies near Vienna; a friend refuses to burn the manuscripts.
 1924|W|wra|EU|Ypres|death,occult|The Menin Gate|The house reading has the names on the Menin Gate draw the unremembered dead of Flanders in a slow crowd.
 1925|H|mor|ME|Damascus|uprising|The Great Syrian Revolt|The Druze rise against the French, and France shells Damascus.
-1925|H|mor|ME|Tehran|crown|Reza Shah|Reza Khan ends the Qajar dynasty and crowns himself shah of Persia.
+1925|H|mor|ME|Tehran|crown|Reza Shah|Reza Khan ends the Qajar dynasty and is crowned shah of Persia.
 1925|H|mor|AS|Shanghai|uprising|The May Thirtieth Movement|British-led police fire on protesters in Shanghai, and strikes spread across China.
 1925|H|mor|EU|Locarno|treaty|Locarno|Germany, France and Belgium agree their western borders; the eastern ones are left open.
 1926|H|mor|AS|Guangzhou|war|The Northern Expedition|Chiang Kai-shek's Nationalists march north from Canton to beat the warlords and unify China.
 1926|H|mor|EU|London|uprising,industry|The General Strike|British unions call a general strike for nine days in support of the miners.
 1926|H|mor|MO|Brno|art|The Makropulos Affair|Janacek's opera of a woman who has lived three hundred years opens in Brno.
 1926|W|vam|MO|Brno|art,occult|An opera about the undying|The house reading has the Kindred of Brno attend Janacek's premiere and wonder who told the composer.
-1927|H|mor|AS|Shanghai|massacre|The Shanghai massacre|Chiang turns on his communist allies in Shanghai and kills thousands.
+1927|H|mor|AS|Shanghai|massacre|The Shanghai massacre|Chiang turns on the communist allies in Shanghai and kills thousands.
 1927|H|mor|ME|Kirkuk|industry,trade|Oil at Baba Gurgur|Oil gushes for days from the well at Baba Gurgur near Kirkuk, and Iraq's oil age begins.
 1927|H|mor|EU|Berlin|art|Metropolis|Fritz Lang's film of a city of machines and workers opens in Berlin.
 1928|H|mor|MO|Brno|building,art|The Exhibition of Contemporary Culture|Brno opens its new exhibition grounds with a show of ten years of the republic; functionalist buildings rise across the city.
@@ -74,9 +74,9 @@
 1931|H|mor|AS|Wuhan|flood|The China floods|The Yangtze and Huai flood, and perhaps two million die.
 1931|H|mor|MO|Zlin|industry,founding|Bata's Zlin|The shoe king Tomas Bata builds Zlin into a company town of brick and glass and sells shoes across the world.
 1931|H|mor|EU|Madrid|revolution|The Spanish Republic|Spain's king leaves and a republic is proclaimed.
-1932|H|mor|MO|Otrokovice|death,travel|Bata dies|Tomas Bata dies when his plane crashes on take-off at Otrokovice.
+1932|H|mor|MO|Otrokovice|death,travel|Bata dies|Tomas Bata dies when a company plane crashes on take-off at Otrokovice.
 1932|H|mor|EU|Ukraine|famine|The Holodomor|Stalin's seizure of grain and seed starves Ukraine and the Kuban; millions die in villages sealed off by police.
-1932|H|mor|ME|Riyadh|founding,crown|Saudi Arabia|Ibn Saud, master of Najd and the Hejaz, names his kingdom Saudi Arabia after his own house.
+1932|H|mor|ME|Riyadh|founding,crown|Saudi Arabia|Ibn Saud, master of Najd and the Hejaz, names the kingdom Saudi Arabia after the house of Saud.
 1932|H|mor|ME|Baghdad|founding|Iraq independent|Iraq joins the League of Nations as an independent kingdom.
 1933|H|mor|EU|Berlin|crown|Hitler chancellor|President Hindenburg appoints Hitler chancellor of Germany, and the Nazis take the state apart within months.
 1933|H|mor|EU|Berlin|fire,law|The Reichstag fire|The German parliament burns, and the Nazis use it to suspend civil rights.
@@ -95,7 +95,7 @@
 1936|W|vam|EU|Madrid|war,occult|The Lasombra in Spain|The house reading has the Sabbat and the Camarilla both fight in the shadow of the Spanish war; the Lasombra claim Madrid.
 1936|H|mor|EU|Berlin|sport|The Berlin Olympics|Germany stages the Olympics as propaganda; Jesse Owens wins four gold medals.
 1936|H|mor|ME|Jaffa|uprising|The Arab revolt in Palestine|Palestinian Arabs strike and rise against British rule and Jewish immigration.
-1936|H|mor|AS|Xi'an|crime|The Xi'an Incident|Chiang Kai-shek is kidnapped by his own generals until he agrees to fight Japan with the communists.
+1936|H|mor|AS|Xi'an|crime|The Xi'an Incident|Chiang Kai-shek is kidnapped by Nationalist generals until agreeing to fight Japan with the communists.
 1936|H|mor|MO|Brno|building|The Masaryk circuit|Brno opens its road racing circuit, and the Czechoslovak Grand Prix draws crowds of a hundred thousand.
 1937|H|mor|AS|Marco Polo Bridge|war|The war with Japan|Fighting at the Marco Polo Bridge begins full war between China and Japan.
 1937|H|mor|AS|Nanjing|massacre|The Nanjing massacre|Japanese troops kill hundreds of thousands of civilians and prisoners in Nanjing.
@@ -125,7 +125,7 @@
 1941-4|H|mor|EU|Belgrade|war,terror|Yugoslavia invaded|Germany bombs Belgrade without warning and overruns Yugoslavia and Greece in a few weeks.
 1941-5|H|mor|ME|Baghdad|war,uprising|The Iraqi coup|A pro-Axis government in Iraq fights the British and loses; a pogrom follows in Baghdad.
 1941-6|H|mor|EU|Russia|war|Barbarossa|Germany invades the Soviet Union with three million men.
-1941-8|H|mor|ME|Tehran|war,crown|Iran invaded|Britain and the Soviets invade Iran, and Reza Shah gives up the throne to his son.
+1941-8|H|mor|ME|Tehran|war,crown|Iran invaded|Britain and the Soviets invade Iran, and Reza Shah gives up the throne to the crown prince.
 1941-9|H|mor|EU|Babi Yar|massacre|Babi Yar|German units shoot nearly thirty-four thousand Jews in two days in a ravine outside Kiev.
 1941-9|H|mor|EU|Leningrad|siege,famine|The siege of Leningrad|Germany surrounds Leningrad; about a million die in a siege of nearly nine hundred days.
 1941-9|H|mor|EU|Prague|terror|Heydrich arrives|Reinhard Heydrich takes charge of the protectorate and begins mass arrests and executions.
@@ -186,8 +186,8 @@
 1947|H|mor|ME|Qumran|learning,exploration|The Dead Sea Scrolls|A Bedouin shepherd finds ancient scrolls in a cave near Qumran.
 1947|W|mag,hun|ME|Qumran|learning,occult|The scrolls watched|The house reading has the Celestial Chorus and the Society of Leopold both send scholars to the scrolls.
 1948-2|H|mor|EU|Prague|revolution|The February coup|The Communists take power in Czechoslovakia when the democratic ministers resign and Benes gives way.
-1948-3|H|mor|EU|Prague|death|Jan Masaryk falls|The foreign minister Jan Masaryk is found dead below his window.
-1948-5|H|mor|ME|Tel Aviv|founding,war|Israel|Ben-Gurion declares the state of Israel in Tel Aviv, and the armies of its Arab neighbours invade.
+1948-3|H|mor|EU|Prague|death|Jan Masaryk falls|The foreign minister Jan Masaryk is found dead below a window of the Czernin Palace.
+1948-5|H|mor|ME|Tel Aviv|founding,war|Israel|The Jewish leadership in Palestine declares the state of Israel in Tel Aviv, and the armies of its Arab neighbours invade.
 1948|H|mor|ME|Deir Yassin|massacre,migration|The Nakba|Some seven hundred thousand Palestinians flee or are driven from their homes.
 1948|H|mor|EU|Berlin|siege|The Berlin airlift|The Soviets blockade West Berlin, and the Allies fly in its food for a year.
 1948|H|mor|AS|Delhi|death|Gandhi killed|A Hindu nationalist shoots Gandhi at a prayer meeting in Delhi.
@@ -200,7 +200,7 @@
 1951|H|mor|ME|Tehran|trade,law|Iranian oil nationalised|Prime Minister Mossadegh nationalises Iran's oil, and Britain blockades Iranian exports.
 1952|H|mor|ME|Cairo|revolution|The Free Officers|Nasser's Free Officers overthrow King Farouk, and Egypt becomes a republic within a year.
 1952|H|mor|EU|Prague|law,persecution|The Slansky trial|Fourteen Communist leaders, most of them Jewish, are tried as traitors; eleven are hanged.
-1953|H|mor|EU|Moscow|death|Stalin dies|Stalin dies at his dacha after a stroke, and the camps begin slowly to empty.
+1953|H|mor|EU|Moscow|death|Stalin dies|Stalin dies at the Kuntsevo dacha after a stroke, and the camps begin slowly to empty.
 1953|H|mor|EU|Plzen|uprising,money|The Plzen rising|A currency reform wipes out savings, and workers in Plzen storm the town hall.
 1953|H|mor|ME|Tehran|revolution|The coup in Iran|American and British agents help the army and the mobs overthrow Mossadegh, and the shah returns.
 1953|H|mor|AS|Panmunjom|treaty|The Korean armistice|The fighting in Korea ends with the peninsula divided.
@@ -219,7 +219,7 @@
 1957|W|mag|EU|Moscow|science,occult|The Void Engineers look up|The house reading has the Void Engineers race to claim space for the Technocracy before the Traditions can dream it otherwise.
 1957|H|mor|EU|Kyshtym|disaster,science|The Kyshtym disaster|A nuclear waste tank explodes in the Urals and poisons a wide stretch of land; the Soviets keep it secret.
 1957|H|mor|EU|Rome|treaty|The Treaty of Rome|France, Germany, Italy and the Low Countries found the European Economic Community.
-1958|H|mor|ME|Baghdad|revolution|The Iraqi revolution|Officers overthrow Iraq's monarchy and kill the young king and his family in the palace courtyard.
+1958|H|mor|ME|Baghdad|revolution|The Iraqi revolution|Officers overthrow Iraq's monarchy and kill the young king and the royal family in the palace courtyard.
 1958|H|mor|AS|Beijing|famine|The Great Leap Forward|Mao's Great Leap brings famine that kills tens of millions.
 1958|H|mor|EU|Brussels|building,art|Expo 58|Czechoslovakia's pavilion and its Laterna Magika win the Brussels fair.
 1959|H|mor|AS|Lhasa|uprising|The Tibetan rising|Tibet rises against China, and the Dalai Lama flees to India.
@@ -251,7 +251,7 @@
 1968-8|W|vam|EU|Prague|revolution,occult|The Kindred and the tanks|The house reading has Prague's Kindred split over the Spring; Ventrue loyal to Moscow help the invaders and the Anarchs pay for it.
 1968|H|mor|AS|My Lai|massacre|My Lai|American soldiers kill hundreds of villagers at My Lai.
 1968|W|hun|MO|Brno|revolution,occult|Hunters behind the tanks|The house reading has the StB open files on Brno's nightwalkers after the invasion, a knot later hunters will untangle.
-1969-1|H|mor|EU|Prague|death,uprising|Jan Palach|The student Jan Palach sets fire to himself in Wenceslas Square in protest.
+1969-1|H|mor|EU|Prague|death,uprising|Jan Palach|The student Jan Palach sets fire to their own body in Wenceslas Square in protest.
 1969-3|H|mor|EU|Prague|sport,uprising|The hockey riots|Czechoslovakia beats the Soviets twice at ice hockey, and crowds attack the Soviet airline office.
 1969-7|H|mor|EU|London|science,travel|The Moon landing|Apollo 11 lands on the Moon, and the world watches on television.
 1969-7|W|cha|EU|London|science,occult|The Resurgence|The house reading follows Changeling canon: the Moon landing reopens the Dreaming, and the sidhe return.
@@ -328,7 +328,7 @@
 1962-10|H|mor|AM|Havana|war,terror,sea|The missiles in Cuba|American aircraft photograph Soviet missiles in Cuba, and for thirteen days the navies face each other at a quarantine line.
 1963|H|mor|AM|Dallas|death,crime,media|Kennedy shot|The American president is shot dead in an open car in Dallas, three months after a quarter of a million people marched on Washington for civil rights.
 1964|H|mor|AM|Rio de Janeiro|war,crown,persecution|The generals take Brazil|A coup begins twenty-one years of military rule.
-1967|H|mor|AM|La Higuera|death,war,revolution|Guevara shot|Bolivian soldiers with American advisers capture Che Guevara and shoot him.
+1967|H|mor|AM|La Higuera|death,war,revolution|Guevara shot|Bolivian soldiers with American advisers capture and shoot Che Guevara.
 1968-4|H|mor|AM|Memphis|death,uprising,fire|King shot|Martin Luther King is shot dead in Memphis, and more than a hundred American cities burn.
 1968-10|H|mor|AM|Mexico City|massacre,uprising,sport|Tlatelolco|Soldiers fire on a student meeting in the Plaza of the Three Cultures ten days before the Olympic Games open.
 1969-6|H|mor|AM|New York|uprising,law|Stonewall|The patrons of a Greenwich Village bar fight back against a police raid for several nights.
@@ -362,7 +362,7 @@
 1958|H|mor|AF|Conakry|law,founding|Guinea says no|Guinea alone votes against de Gaulle's French community; the French leave at once and take even the light bulbs.
 1960-3|H|mor|AF|Sharpeville|massacre,law,persecution|Sharpeville|South African police fire on a crowd protesting the pass laws and kill sixty-nine.
 1960|H|mor|AF|Leopoldville|founding,war,revolution|The year of Africa|Seventeen African states become independent; the Congo's army mutinies within a week and its richest province breaks away.
-1961|H|mor|AF|Katanga|death,crime,war|Lumumba killed|The Congo's deposed first prime minister is handed to his enemies in Katanga and shot.
+1961|H|mor|AF|Katanga|death,crime,war|Lumumba killed|The Congo's deposed first prime minister is handed to enemies in Katanga and shot.
 1962|H|mor|AF|Algiers|founding,migration,war|Algeria independent|After eight years of war Algeria is independent, and nearly a million settlers leave within months.
 1963|H|mor|AF|Addis Ababa|treaty,founding|The Organisation of African Unity|Thirty-two states found a union in Addis Ababa and agree to keep the colonial borders.
 1964|H|mor|AF|Zanzibar|revolution,massacre|The Zanzibar revolution|A rising overthrows the sultan a month after independence, and thousands of Arabs and Indians are killed.

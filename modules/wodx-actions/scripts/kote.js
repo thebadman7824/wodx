@@ -13,6 +13,7 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: kote-rules.js.
  */
+import * as NPW from "./npc-power-rules.js";
 import * as LIM from "./limits.js";
 import * as K from "./kote-rules.js";
 import * as KA from "./kote-arts.js";
@@ -231,6 +232,18 @@ export function build(ctx) {
             if (lost && fd.k === "shadow" && i.archetype) body += `<div class="vta-note">The P'o plays its Archetype: ${esc(i.archetype)}. A Hun roll at 9 keeps the Hun aware; Willpower then buys a turn's hesitation or one lucid sentence.</div>`;
             if (lost && fd.k !== "shadow") body += `<div class="vta-note">Coming out of ${N.label} risks shadow soul. No Martial Arts in fire or wave soul.</div>`;
             body += `<div class="wodx-quiet">${REF} pp. 91, 136, 150–151</div>`;
+            // B5755: the lapse takes hold on the character for the scene: fire soul is frenzy and wave soul Rötschreck
+            // (the same conditions, rules and red or cold glow as the Kindred's), shadow soul the P'o in the body
+            if (lost) {
+                const C = game.modules.get("wodx-chronicle")?.api;
+                const cond = fd.k === "fire" ? "frenzy" : fd.k === "wave" ? "rotschreck" : "shadow-soul";
+                try {
+                    if (cond === "shadow-soul") C?.registerCondition?.({ id: "shadow-soul", name: "Shadow soul", img: "icons/svg/terror.svg", source: `${REF} p. 151`,
+                        summary: "The P'o has the body for the scene and plays its Archetype; a Hun roll at 9 keeps the Hun aware.", lines: ["kuei-jin"], mods: {} });
+                    await C?.timed?.applyTimed?.(actor, { name: cap(N.label), duration: { kind: "scene" }, condition: cond, key: "wodx-kote-soul", source: `${REF} pp. 150–151`,
+                        description: `${cap(N.label)}: ${N.fails}.` });
+                } catch (e) { console.warn("WoDX | soul lapse", e); }
+            }
             return post(actor, `${actor.name}: ${N.label}`, body, rolls.filter(Boolean));
         });
     }
@@ -478,5 +491,12 @@ export function build(ctx) {
         });
     }
 
-    return { info, stoke, feed, spend, nature, dharmaRoll, demon, rise, riseAuto, sun, sunAuto, heal, sight, setup, isKotE, rules: K };
+    /** B5677: the named powers of the Kuei-jin's Disciplines, for an NPC to use by itself (main.js npcPowers). */
+    function powersFor(actor) {
+        const arts = (actor.items ?? []).filter(x => x.type === "Power" && /types\.discipline$/.test(String(x.system?.type ?? "")));
+        return arts.flatMap(it => KA.powersOf(KA.artKeyOf(it.name), n(it.system?.value)).map(p => ({ use: "useChiArt", field: "art", value: it.id, fill: { pw: p.id }, name: p.name, disc: it.name, level: p.l, set: "chiart", id: p.id,
+            keywords: NPW.keysOf(KA.artResults(p.id, 3)) }))).filter(p => p.keywords.length);
+    }
+
+    return { powersFor, info, stoke, feed, spend, nature, dharmaRoll, demon, rise, riseAuto, sun, sunAuto, heal, sight, setup, isKotE, rules: K };
 }

@@ -30,7 +30,9 @@ export function powerOutcomes(kw, successes, {label = "", source = "", hasTarget
   const s = Number(successes) || 0;
   if ( !kw || kw.passive || s < 1 ) return {results: [], skipped: []};
   const results = [], skipped = [];
-  for ( const key of kw.keywords ?? [] ) {
+  for ( const raw of kw.keywords ?? [] ) {
+    // B5787: "boost:sap", "fortune:curse", "fear:calm": a keyword with its flavour, for a chain of keywords
+    const [key, flavour] = String(raw).split(":");
     if ( !KEYWORDS[key] ) continue;
     // A power with no roll (claws grown, a weapon readied) gives no damage of its own: it readies the user for the
     // scene and the attack roll deals the damage (B3751)
@@ -40,7 +42,7 @@ export function powerOutcomes(kw, successes, {label = "", source = "", hasTarget
       continue;
     }
     if ( !hasTarget && NEEDS_TARGET.includes(key) ) { skipped.push(KEYWORDS[key].label); continue; }
-    const [r] = stOutcomes([key], { strength: s, step: 2 });
+    const [r] = stOutcomes([key], { strength: s, step: 2, ctx: flavour ? { [flavour]: true } : {} });
     if ( !r?.out ) continue;
     const who = !hasTarget && ON_SELF.includes(key) ? "self" : "one";
     results.push({ key, who, out: { ...r.out, label: label ? `${label}: ${r.out.label}` : r.out.label, source } });

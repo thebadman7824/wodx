@@ -18,6 +18,7 @@
  * remarks while about a routine, cries of alarm and pain, and trade and social-roll lines for WoDX Actions (stock()).
  */
 import * as TK from "./talk-rules.mjs";
+import {isAnimal} from "./animal-rules.mjs";
 import * as STOCK from "../data/stock-talk.mjs";
 import * as MORE from "../data/stock-talk-more.mjs";
 import * as G from "./talk-grammar.mjs";
@@ -41,6 +42,8 @@ export function build(ctx) {
       scope: "world", config: true, type: Boolean, default: true});
     game.settings.register(MOD, "talkReach", {name: "Talking distance, in squares", hint: "How close a character must stand to talk (1: side by side).",
       scope: "world", config: true, type: Number, default: 2, range: {min: 1, max: 10, step: 1}});
+    game.settings.register(MOD, "speakGate", {name: "Beasts and ghosts need a power to talk", hint: "Animals and ghosts answer only a character with a Speak power running (or a shapeshifter, for beasts, and the dead, for ghosts).",
+      scope: "world", config: true, type: Boolean, default: true});
     game.settings.register(MOD, "sharedTalk", {scope: "world", config: false, type: Object, default: {}});
     game.settings.register(MOD, "talkAskWait", {name: "\"Ask me first\": seconds before the NPC answers by itself",
       hint: "When an NPC is set to \"ask me first\" and you have not picked a line in this time, they say the first written line that fits, so the player is not left standing. A later pick still goes out. 0 waits for you however long it takes.",
@@ -111,6 +114,15 @@ export function build(ctx) {
   /** Check a request and find the two tokens. */
   // B4883: an open telephone or radio line, {meTokenId: {sceneId, npcTokenId, until}} on the Storyteller's client
   const phoneLines = new Map();
+  /** B5790: a beast or a ghost answers only someone who can speak with it. Returns why not, or "". */
+  function speechGate(npc, talker) {
+    if ( setting("speakGate") === false || !npc || !talker ) return "";
+    const p = savedProfile(npc) ?? {};
+    const kind = TK.speechKind({animal: npc.getFlag?.(MOD, "passerbyBase") === "animal" || isAnimal(p.template), type: npc.type});
+    const effects = [...(talker.effects ?? [])].filter(e => !e.disabled).map(e => ({name: e.name, key: e.flags?.["wodx-chronicle"]?.timed?.key ?? ""}));
+    if ( TK.canTalkWith(kind, {type: talker.type, effects}) ) return "";
+    return kind === "beast" ? "It is a beast: it does not understand you. A power to speak with animals would open its mouth." : "The dead do not hear the living. A power to speak with ghosts would reach them.";
+  }
   function resolve(p, user) {
     if ( !setting("talkMenu") ) return {why: "Talking to NPCs is off in this world."};
     const scene = game.scenes.get(p?.sceneId);
@@ -127,6 +139,8 @@ export function build(ctx) {
     if ( npcTok.hidden && !user.isGM ) return {why: "There is no one there to talk to."};
     if ( !owns(user, me.actor) ) return {why: "That is not your character."};
     if ( !reachOK(me, npcTok, scene) ) return {why: `Step closer: within ${Number(setting("talkReach")) || 2} squares.`};
+    const gate = speechGate(npcTok.actor, me.actor);
+    if ( gate ) return {why: gate};
     return {scene, npcTok, me};
   }
 
@@ -813,5 +827,5 @@ export function build(ctx) {
     });
   }
 
-  return {registerSettings, hooks, openTalk, serve, editShared, talkHtml, speakerToken, stock, say, bark, letterReply, openLine, onPass, rules: TK, lines: MORE, stockLines: STOCK, get grammar() { return GRAMMAR; }, openGrammar, loadGrammar, reroll, keepLine, wantMet};
+  return {registerSettings, hooks, openTalk, serve, editShared, talkHtml, speakerToken, stock, say, bark, letterReply, openLine, onPass, rules: TK, lines: MORE, stockLines: STOCK, get grammar() { return GRAMMAR; }, openGrammar, loadGrammar, reroll, keepLine, wantMet, speechGate};
 }
