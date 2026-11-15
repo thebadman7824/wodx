@@ -248,3 +248,15 @@ test("B5096: Golconda's grace: the sun falls one step weaker on the ladder", asy
   assert.match(posts.at(-1).body, /Golconda's grace/);
   assert.match(posts.at(-1).body, /Fortitude soak.*\(2 at 9\)/s, "direct sun soaks as a cloudy day");
 });
+
+test("B6214: a low sun's shadow ray stops inside the scene, short of the map's edge", () => {
+  const rect = {x: 100, y: 100, width: 1000, height: 800};
+  const v = S.sunVector(60, 0); // morning, east and up the map
+  const d = S.rayInScene({x: 400, y: 450}, v, 5000, rect);
+  assert.ok(d.y >= 101 - 1e-9 && d.x <= 1099 + 1e-9, JSON.stringify(d));
+  assert.ok(Math.abs(d.y - 101) < 1e-6 || Math.abs(d.x - 1099) < 1e-6, "stops at the first edge it meets");
+  const short = S.rayInScene({x: 400, y: 450}, v, 50, rect);
+  assert.ok(Math.abs(Math.hypot(short.x - 400, short.y - 450) - 50) < 1e-6, "a short ray is kept whole");
+  assert.deepEqual(S.rayInScene({x: 50, y: 50}, v, 500, rect), {x: 50, y: 50}, "a token off the scene casts no ray");
+  assert.ok(Math.abs(Math.hypot(...Object.values(S.rayInScene({x: 0, y: 0}, v, 70, null))) - 70) < 1e-6, "no rectangle: the ray as asked");
+});

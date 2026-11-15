@@ -101,7 +101,7 @@ export async function run() {
       await tok.update({x: tok.x + scene.grid.size});
       await waitFor(() => (Number(vamp.system.health.damage.aggravated) || 0) > a0, 10000);
       G.ok("6. burned in the sun, the marker shows", (Number(vamp.system.health.damage.aggravated) || 0) > a0 && vamp.statuses?.has?.("burning"),
-        {sun: {phase: sun.phase, altitude: sun.altitude, timeLabel: sun.timeLabel}, aggravated: [a0, vamp.system.health.damage.aggravated], statuses: [...(vamp.statuses ?? [])]});
+        {sun: {phase: sun.phase, altitude: sun.altitude, timeLabel: sun.timeLabel}, exposure: (() => { try { const e = A.sunExposure(tok, sun); return {exposed: !!e?.exposed, why: e?.why ?? ""}; } catch (e) { return String(e); } })(), aggravated: [a0, vamp.system.health.damage.aggravated], statuses: [...(vamp.statuses ?? [])]});
       await scene.setFlag(MOD, "light", "indoors");
     });
 
