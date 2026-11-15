@@ -373,6 +373,118 @@ test("search boxes filter selects, lists and tables (rule B24)", async () => {
   div.remove();
 });
 
+function animalData(name, {type = "Creature", template = null} = {}) {
+  const d = mortalData(name);
+  d.type = type;
+  d.system.settings.variant = "general";
+  d.system.attributes.charisma = trait(1, "charisma");
+  if ( template ) d.flags = {"wodx-npc": {behavior: {template}}};
+  return d;
+}
+
+test("ghouled animals: a Creature horse holds vitae by size and learns only the physical Disciplines (B5040 to B5048)", async () => {
+  const horse = new Actor(animalData("Ghoul Warhorse"));
+  const cat = new Actor(animalData("Mouser", {type: "Mortal", template: "cat"}));
+  for ( const a of [horse, cat] ) game.actors.set(a.id, a);
+  const d = api().data;
+  assert.equal(d.lineOf(horse), null, "an animal is no line until it drinks");
+  assert.ok(d.isAnimal(horse) && d.isAnimal(cat) && !d.isAnimal(tomas));
+  const r = await api().giveVitae(horse, marta, {points: 20});
+  assert.equal(r.becameGhoul, true);
+  assert.equal(d.lineOf(horse), "ghoul");
+  assert.equal(horse.system.advantages.bloodpool.max, 14, "a horse holds 14 (V20DA p. 401)");
+  assert.equal(horse.system.advantages.bloodpool.temporary, 14);
+  assert.equal(horse.system.settings.variant, "general", "the Creature variant stays, so the sheet and mount tag stay");
+  assert.equal(horse.system.settings.hasbloodpool, true);
+  assert.deepEqual(d.disciplinesOf(horse).map(x => `${x.name} ${x.value}`), ["Potence 1"]);
+  assert.match(mock.log.chat.at(-1)?.content ?? "", /Horse, large: holds 14 vitae/);
+  const opts = d.purchaseOptions(horse);
+  assert.ok(!opts.some(o => o.kind === "attribute" && o.key === "charisma"), "no Social Attributes for a beast");
+  assert.ok(!opts.some(o => o.kind === "virtue" || o.kind === "road"));
+  assert.ok(d.newDisciplineOption(horse, "Celerity").reason !== "An animal can only learn Celerity, Fortitude and Potence");
+  assert.equal(d.newDisciplineOption(horse, "Obtenebration").reason, "An animal can only learn Celerity, Fortitude and Potence",
+    "not even the domitor's own Disciplines");
+  await api().giveVitae(cat, marta, {points: 5});
+  assert.equal(d.lineOf(cat), "ghoul");
+  assert.equal(cat.system.advantages.bloodpool.max, 3, "a cat on a Mortal sheet holds 3");
+  assert.equal(cat.system.settings.hasvirtue, false);
+  // a second drink tops up to the size cap, not the human 10
+  await api().giveVitae(cat, marta, {points: 9, time: game.time.worldTime + 86400});
+  assert.equal(cat.system.advantages.bloodpool.temporary, 3);
+});
+
+test("ghouled animals: a player character's animal ghoul is that character's ally, paid from the domitor (B5048)", async () => {
+  const pcVamp = new Actor(vampireData("Jaromir", "Gangrel", 10, [["Animalism", 2], ["Protean", 1]]));
+  pcVamp.ownership = {default: 0, p1: 3};
+  const hound = new Actor(animalData("Jaromir's wolfhound"));
+  for ( const a of [pcVamp, hound] ) game.actors.set(a.id, a);
+  await api().giveVitae(hound, pcVamp, {points: 2});
+  assert.equal(hound.system.advantages.bloodpool.max, 6);
+  assert.equal(api().data.allyOf(hound)?.patron?.id, pcVamp.id);
+  assert.equal(api().data.payerOf(hound), pcVamp);
+});
+
+test("ghouled animals: training bought with experience, and a Retainers dot made into a beast (B5059 to B5062)", async () => {
+  const d = api().data;
+  const pcVamp = new Actor(vampireData("Ludmila", "Ventrue", 10, [["Dominate", 2]]));
+  pcVamp.ownership = {default: 0, p1: 3};
+  const horse = new Actor(animalData("Ludmila's courser"));
+  for ( const a of [pcVamp, horse] ) game.actors.set(a.id, a);
+  await api().giveVitae(horse, pcVamp, {points: 3});
+  await api().award([pcVamp], 20, "test");
+  const t = d.purchaseOptions(horse).find(o => o.kind === "training");
+  assert.equal(t?.key, "trained");
+  assert.equal(t.cost, 5);
+  await d.applyPurchase(horse, t);
+  assert.equal(horse.flags[M].animal.training, "trained");
+  assert.equal(horse.system.abilities.brawl.value, 3, "a trained horse's Brawl 3 (V20 Dark Ages p. 398)");
+  assert.equal(horse.flags[M].animal.kind, "horse", "the kind stays");
+  assert.equal(d.purchaseOptions(horse).find(o => o.kind === "training")?.key, "war");
+  // a Retainers dot made into a beast: traits, breed, bond, full pool, owners
+  await pcVamp.createEmbeddedDocuments("Item", [{name: "Retainers", type: "Feature", system: {type: "wod.types.background", value: 3}}]);
+  assert.equal(api().animals.dotsLeft(pcVamp), 3);
+  const create = Actor.create;
+  Actor.create = async data => { const a = new Actor({...data, system: structuredClone(animalData("x").system), items: []}); game.actors.set(a.id, a); return a; };
+  try {
+    const dog = await api().animals.makeBeast(pcVamp, {kind: "guard-dog", breed: "mastiff", training: "trained", dots: 2, name: ""});
+    assert.equal(dog.name, "Mastiff");
+    assert.equal(dog.system.attributes.strength.value, 4, "medium dog 3, mastiff +1");
+    assert.equal(dog.system.advantages.bloodpool.max, 6);
+    assert.equal(dog.system.advantages.bloodpool.temporary, 6, "fed full");
+    assert.equal(dog.flags[M].lineage.bonds[pcVamp.id].drinks, 3, "the full oath");
+    assert.deepEqual(d.disciplinesOf(dog).map(x => `${x.name} ${x.value}`).sort(), ["Fortitude 1", "Potence 1"], "a second dot adds Fortitude");
+    assert.equal(dog.ownership.p1, 3, "the player owns it");
+    assert.equal(api().animals.dotsLeft(pcVamp), 1);
+    assert.equal(api().animals.training(dog), "trained");
+  } finally { Actor.create = create; }
+});
+
+test("ghouled animals: a szlachta, and a household's beasts (B5133, B5136)", async () => {
+  const d = api().data;
+  const tz = new Actor(vampireData("Vladislav", "Tzimisce", 7, [["Vicissitude", 3], ["Animalism", 2]]));
+  const serf = new Actor(mortalData("Bohdan the Serf"));
+  for ( const a of [tz, serf] ) game.actors.set(a.id, a);
+  await api().giveVitae(serf, tz, {points: 2});
+  await api().animals.makeSzlachta(serf, tz);
+  assert.equal(serf.system.attributes.strength.value, 5, "V20 p. 502");
+  assert.ok(serf.items.some(i => i.name === "Monstrous"));
+  assert.deepEqual(d.disciplinesOf(serf).map(x => `${x.name} ${x.value}`).sort(), ["Fortitude 1", "Potence 1"]);
+  assert.ok(serf.flags[M].szlachta);
+  const create = Actor.create;
+  Actor.create = async data => { const a = new Actor({...data, system: structuredClone(animalData("x").system), items: []}); game.actors.set(a.id, a); return a; };
+  try {
+    const beasts = await api().animals.householdBeasts(tz, {region: "Scene.s.Region.r", seed: 2, rural: true});
+    assert.ok(beasts.length >= 2, "a Tzimisce in the Dark Ages countryside keeps more than one");
+    for ( const b of beasts ) {
+      assert.equal(d.lineOf(b), "ghoul");
+      assert.equal(d.domitorOf(b)?.id, tz.id);
+      assert.equal(b.flags["wodx-npc"].routine.roles.home, "Scene.s.Region.r", "it lives at the haven");
+    }
+    assert.equal(api().animals.dotsLeft(tz), 0, "household beasts take no Retainers dots");
+    assert.deepEqual(tz.flags[M]?.animalRetainers ?? [], []);
+  } finally { Actor.create = create; }
+});
+
 test("no error notifications", () => {
   assert.deepEqual(mock.log.notifications.filter(([l]) => l === "error"), []);
 });

@@ -13,7 +13,10 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: c20-rules.js.
  */
+import * as NPW from "./npc-power-rules.js";
+import * as LIM from "./limits.js";
 import * as C from "./c20-rules.js";
+import { floatOver } from "./daysleep.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim, castIntent } from "./aim.js";
 import * as CA from "./c20-arts.js";
@@ -51,7 +54,8 @@ export function build(ctx) {
             wyrd: n(f.wyrdUntil) > game.time.worldTime || (f.wyrdScene && f.wyrdScene === sceneKey()), closed: f.closed?.scene === sceneKey() ? f.closed : null,
             freehold: ctx.background?.(actor, "Holdings") ?? 0 };
     }
-    const sceneKey = () => `${game.scenes?.viewed?.id ?? ""}:${Math.floor(game.time.worldTime / 3600)}`;
+    // B4920: one scene count for everything that works once a scene (End the scene, or a new active map)
+    const sceneKey = () => `s${LIM.sceneNo()}`;
     const saveFlag = (actor, patch) => ctx.setFlag(actor, "c20", { ...(actor.getFlag(MOD, "c20") ?? {}), ...patch });
     const setT = (actor, upd) => updateActor(actor, upd);
 
@@ -141,9 +145,14 @@ export function build(ctx) {
             const plan = C.cantripPlan({ art: i.arts[fd.art], artLevel: n(fd.lvl), used, known: i.realms, nightmare: i.nightmare, wyrd: !!fd.wyrd, wyrdInvoked: i.wyrd },
                 { targetBanality: n(fd.tb), placeBanality: n(fd.pb), higherTitle: !!fd.title, freehold: !!fd.freehold, enchanted: !!fd.ench, affinity: !!fd.aff, bunk: n(fd.bunk), volunteer: !!fd.vol });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
+            // B4921: a cantrip the book (or the house rule) says is used up is refused before Glamour is spent
+            const limPower = { name: fd.power ? cantripName(fd.power) : `${C.ARTS[fd.art]?.label ?? fd.art} ${n(fd.lvl)}`, disc: C.ARTS[fd.art]?.label ?? fd.art, level: n(fd.lvl) };
+            const lim = await LIM.gate(actor, limPower);
+            if (!lim) return null;
             if (plan.cost && !(await glamour(actor, -plan.cost))) return null;
             const wp = !!fd.wp && await spendWillpower(actor, 1);
-            const r = await rollPool(plan.dice, plan.difficulty, { willpower: wp });
+            const r = await rollPool(plan.dice, plan.difficulty + lim.diff, { willpower: wp });
+            if (lim.diff) plan.notes.push(`Drained +${lim.diff}`);
             const nmK = C.nightmareFrom(r.faces, plan.nightmareDice, r.botch);
             const nmNote = await nightmare(actor, nmK);
             const art = C.ARTS[fd.art];
@@ -164,8 +173,9 @@ export function build(ctx) {
                 }
             }
             body += `<div class="wodx-quiet">${REF} pp. 193–196, ${art.page}, 274</div>`;
+            await lim.done({ successes: r.botch ? 0 : r.successes });
             return post(actor, `${actor.name} weaves a cantrip`, body, [r.roll].filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
-        }, { width: 540, render: root => { pickCantrip(root); return aim(root, { actor, cast: { from: r => castIntent({ arts: [r.querySelector("[name=art]")?.value ?? ""], realms: Object.keys(C.REALMS).filter(k => Number(r.querySelector(`[name=r-${k}]`)?.value) > 0) }) } }); } });
+        }, { width: 540, render: root => { LIM.decorate(root, { actor, powerOf: v => { const q = CA.CANTRIPS[v]; return q && { name: cantripName(v), disc: C.ARTS[q.art]?.label ?? q.art, level: q.level }; } }); pickCantrip(root); return aim(root, { actor, cast: { from: r => castIntent({ arts: [r.querySelector("[name=art]")?.value ?? ""], realms: Object.keys(C.REALMS).filter(k => Number(r.querySelector(`[name=r-${k}]`)?.value) > 0) }) } }); } });
     }
 
     async function unleash(actor) {
@@ -350,5 +360,61 @@ export function build(ctx) {
         });
     }
 
-    return { info, cantrip, unleash, invoke, trigger: triggerDialog, epiphany, bedlam, coldIron, mists, nightmare, banality, rules: C };
+    /** The scene an actor's token stands on (the viewed scene first). */
+    function sceneOf(actor) {
+        const has = sc => sc?.tokens?.some?.(t => t.actorId === actor.id);
+        return has(game.scenes?.viewed) ? game.scenes.viewed : (game.scenes?.find?.(has) ?? null);
+    }
+    /**
+     * B4993: chimerical wounds heal with the clock by C20's times (pp. 290-291), halved in a freehold or glade and fast
+     * in the Dreaming (a scene marked so in its WoDX flags, or the freehold the changeling holds as a Background when
+     * the scene says "freehold"). The health track changes; a quiet card tells the Storyteller.
+     */
+    async function healChimerical(actors = game.actors ?? []) {
+        if (ctx.setting?.("autoChimerical") === false) return [];
+        const now = game.time?.worldTime ?? 0, lines = [];
+        for (const a of actors) {
+            const ch = a.system?.health?.damage?.chimerical;
+            if (!ch) continue;
+            const f = a.getFlag(MOD, "c20") ?? {}, clock = f.chimClock;
+            const hurt = n(ch.bashing) + n(ch.lethal) + n(ch.aggravated);
+            if (!hurt) { if (clock) await saveFlag(a, { chimClock: null }); continue; }
+            if (!clock) { await saveFlag(a, { chimClock: { last: now, carry: 0 } }); continue; }
+            const dt = now - n(clock.last);
+            if (dt < 60) continue;
+            const sc = sceneOf(a), place = sc?.getFlag?.(MOD, "place") ?? {};
+            const plan = C.chimericalHealing(ch, dt, { carry: clock.carry, freehold: !!(place.freehold || sc?.getFlag?.(MOD, "freehold")), dreaming: !!(place.dreaming || sc?.getFlag?.(MOD, "dreaming")) });
+            await saveFlag(a, { chimClock: { last: now, carry: plan.carry } });
+            const got = Object.entries(plan.healed).filter(([, v]) => v);
+            if (!got.length) continue;
+            await setT(a, { "system.health.damage.chimerical.bashing": plan.damage.bashing, "system.health.damage.chimerical.lethal": plan.damage.lethal, "system.health.damage.chimerical.aggravated": plan.damage.aggravated });
+            floatOver(a, "The mien heals", "#e6a8ff");
+            lines.push(`<b>${esc(a.name)}</b>: the mien heals ${got.map(([k, v]) => `${v} ${k}`).join(", ")}`);
+        }
+        if (lines.length) await ChatMessage.create({ content: `<div class="vta-card"><h3>Chimerical wounds heal</h3><ul>${lines.map(l => `<li>${l}</li>`).join("")}</ul><p class="wodx-quiet">${REF} pp. 290-291</p></div>`,
+            whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: { alias: "WoDX" }, flags: { [MOD]: { info: true } } });
+        return lines;
+    }
+
+    /** The Storyteller marks the viewed scene a freehold or glade, or in the Dreaming (healing times, B4993). */
+    async function placeDialog(scene = canvas?.scene) {
+        if (!game.user.isGM || !scene) return notify("The Storyteller marks a place.");
+        const p = scene.getFlag(MOD, "place") ?? {};
+        return dialog(`This place: ${scene.navName || scene.name}`, `<form><p>Chimerical wounds heal twice as fast in a freehold or glade, and a level each 15 minutes in the Dreaming (${REF} pp. 290-291).</p>
+          <div class="form-group"><label><input type="checkbox" name="freehold"${p.freehold ? " checked" : ""}/> A freehold or glade</label></div>
+          <div class="form-group"><label><input type="checkbox" name="dreaming"${p.dreaming ? " checked" : ""}/> In the Dreaming</label></div></form>`, "Save",
+            async fd => scene.setFlag(MOD, "place", { ...p, freehold: !!fd.freehold, dreaming: !!fd.dreaming }));
+    }
+    /** B5674: the named cantrips an NPC changeling may weave by itself (main.js npcPowers), with the Realm it knows best for a person. */
+    function powersFor(actor) {
+        const i = info(actor);
+        if (i.closed?.all || i.glamour.temp < 1) return [];
+        const realm = ["actor", "fae"].map(r => [r, n(i.realms[r])]).sort((a, b) => b[1] - a[1])[0];
+        const fill = realm && realm[1] > 0 ? { [`r-${realm[0]}`]: String(Math.min(5, realm[1])) } : {};
+        return Object.keys(C.ARTS).flatMap(a => CA.cantripsOf(a, n(i.arts[a]))).filter(k => i.closed?.art !== k.art).map(k => ({
+            use: "useCantrip", field: "power", value: k.id, fill, name: cantripName(k.id), disc: C.ARTS[k.art]?.label ?? k.art, level: k.level, set: "cantrip", id: k.id,
+            keywords: NPW.keysOf(CA.cantripResults(k.id, 3, { willpower: i.willpower.perm, glamour: i.glamour.perm }, { name: cantripName(k.id) })) })).filter(p => p.keywords.length);
+    }
+
+    return { powersFor, placeDialog, healChimerical, info, cantrip, unleash, invoke, trigger: triggerDialog, epiphany, bedlam, coldIron, mists, nightmare, banality, rules: C };
 }

@@ -98,9 +98,11 @@ export async function bring(lineId, memberId) {
   const year = yearNow(), founder = game.actors.get(l.founder.id);
   const name = m.name || `${l.family ? `${l.family} ` : ""}${K.relationWord(m)} of ${l.founder.name}`;
   const story = K.storyOf(m, l, {year, undying: undying(founder)});
+  // B5105: a Garou's or a Kinfolk's line carries the blood: whoever is brought into play from it is Kinfolk
+  const blood = carriesBlood(founder);
   const [actor] = await Actor.createDocuments([{name, type: "Mortal",
     flags: {[MOD]: {kin: {line: l.id, member: m.id, founder: {id: l.founder.id, name: l.founder.name}, relation: K.relationWord(m), story}},
-      "wodx-creation": {chronology: {bornYear: m.born}}}}]);
+      "wodx-creation": {chronology: {bornYear: m.born}}, ...(blood ? {world: {wodx: {kinfolk: true}}} : {})}}]);
   m.actorId = actor.id; if ( !m.name ) m.name = name;
   await save(s);
   return actor;
@@ -109,13 +111,15 @@ export async function bring(lineId, memberId) {
 /** The tree's family line section: living members, nearest first, and a Bring into play button for the Storyteller. */
 const willButton = actor => (actor && game.modules.get("wodx-storyteller")?.api?.wills && (game.user.isGM || actor.isOwner)
   ? ` <button type="button" data-kin-will="${esc(actor.id)}"><i class="fa-solid fa-scroll"></i> Will</button>` : "");
+/** A line founded by a Garou or by Kinfolk carries the blood (W20 pdf p. 140). */
+export const carriesBlood = founder => !!founder && (String(founder.type ?? "").toLowerCase() === "werewolf" || !!founder.flags?.world?.wodx?.kinfolk);
 export function treeSection(actor) {
   const l = lineOf(actor);
   if ( !l ) return game.user.isGM && actor ? `<section class="wnpc-tree-line"><h3>Family line</h3><p class="wodx-quiet">No family line kept yet.</p><button type="button" data-kin-start="${esc(actor.id)}"><i class="fa-solid fa-people-roof"></i> Keep a family line</button>${willButton(actor)}</section>` : (willButton(actor) ? `<section class="wnpc-tree-line"><h3>Family line</h3>${willButton(actor)}</section>` : "");
   const year = yearNow();
   const living = descendants(actor, year);
   const rows = living.map(m => `<li>${m.actorId && game.actors.get(m.actorId) ? `<a data-open="${esc(m.actorId)}">${esc(m.name)}</a>` : esc(m.name || "(unnamed)")} <span class="wodx-quiet">${esc(m.relation)}, ${m.age}</span>${game.user.isGM ? `<br><span class="wodx-quiet">${esc(m.story)}</span>${m.actorId ? "" : ` <button type="button" data-kin-bring="${esc(l.id)}:${esc(m.id)}">Bring into play</button>`}` : ""}</li>`).join("");
-  return `<section class="wnpc-tree-line"><h3>Family line${l.family ? `: ${esc(l.family)}` : ""}</h3><p class="wodx-quiet">Kept since ${l.foundedYear}, grown to ${l.year}. ${living.length} living.${willButton(actor)}</p>${rows ? `<ul data-fixed>${rows}</ul>` : ""}</section>`;
+  return `<section class="wnpc-tree-line"><h3>Family line${l.family ? `: ${esc(l.family)}` : ""}</h3><p class="wodx-quiet">Kept since ${l.foundedYear}, grown to ${l.year}. ${living.length} living.${carriesBlood(actor) ? " The line carries the Garou blood: its people are Kinfolk." : ""}${willButton(actor)}</p>${rows ? `<ul data-fixed>${rows}</ul>` : ""}</section>`;
 }
 /** Wire the buttons of treeSection inside a dialog element; refresh() redraws the tree. */
 export function wireTree(el, refresh) {

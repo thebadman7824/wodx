@@ -135,6 +135,8 @@ export async function mark(a, kinds = ["food", "water", "sleep"]) {
   const x = needsOf(a), t = now();
   for ( const k of kinds ) { x[k] = t; x.checked[k] = 0; if ( k === "sleep" ) x.tired = 0; }
   await a.update({[`flags.${MOD}.needs`]: x});
+  // B5178: sleep ends a stimulant's crash (WoDX Library)
+  if ( kinds.includes("sleep") ) { try { await game.modules.get("wodx-library")?.api?.use?.sleptOff?.(a); } catch (e) { console.error(`${MOD} | crash`, e); } }
   return x;
 }
 

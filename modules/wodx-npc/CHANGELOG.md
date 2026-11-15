@@ -2,6 +2,16 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.94.0 (Servants and bonds, step three: fomori powers and masters, the Retinue enchanted, mummy cults that keep the vessel, Social Conditioning programmes and NPC masters who keep servants by era (B5120-B5127))
+- 0.93.0 (Ben's Power Limits Desk picks e1 and e2 (22:44Z, 14 November 2026). New power-pick-rules.mjs; world setting pickPowers and a per-NPC "I pick their powers" box in the Behaviour window)
+- 0.92.0 (NPCs no longer pick a mount they cannot ride: a chimerical steed is for the fae and a Stygian steed for the dead (B4961); NPCs ride beasts on their own tokens (B4966))
+- 0.91.0 (Ghouled animals, step four (B5130, B5136))
+- 0.90.0 (Servants and bonds for every line, step one: one ledger, the blow held back, hard orders, opinion floors, acolytes and consors, Kinfolk, revenant families, guanxi and Dominate Conditioning (B5100-B5111))
+- 0.89.0 (A blackmailed NPC who strikes back by word also goes to the law (B5177))
+- 0.88.0 (Ghouled animals, step three (B5063): orders read the animal's training from WoDX Creation. An animal with no training on record counts as trained, so animal followers from before keep their orders)
+- 0.87.0 (Masters of Golconda keep out of the Jyhad (B5097, V20 pp. 299-300))
+- 0.86.0 (Animal ghoul behaviour (B5055 to B5057): the fight AI's frenzy option for animal ghouls (V20 Dark Ages p. 401 for when, Kindred of the Ebony Kingdom p. 185 for the triggers, no easier difficulty), the bound animal's loyalty floor in the loyalty drift, and the craving botch from WoDX Chronicle's monthly need)
+- 0.85.0 (The Philippines in NPC politics, routines and talk (B5152))
 - 0.84.0 (The NPC side of the Storyteller's Hand, part three (B4880-B4885))
 - 0.83.1 (Grief is rolled for the loved ones when a death lands (B4871), and the faction turn calls wodxFactionTurn so the court's Blood Hunts can act on it (B4873); An absent player's character that WoDX Storyteller stands in for (the standIn flag) takes its fight turns as an NPC does, without spending Willpower, using powers or taking a hostage (B4868))
 - 0.83.0 (NPCs and vehicles (B4797, house rule). The fight reading lists the free mounts and vehicles on the scene in the year (nobody at the reins, a seat left, not wrecked) with the distance and whether the NPC has the dots to drive it. A new option, "Get into a vehicle", scores just above flight when flight is the best choice, or just above the best attack when every foe is out of reach and further than a run (aggression a half or more). Auto mode carries it out: the token walks beside the tile and takes the reins through WoDX Interactables' own Mount it action. At the reins the NPC's flight and approach use the mount's or vehicle's pace, so it drives off or runs a foe down, and the ram is among its attacks)

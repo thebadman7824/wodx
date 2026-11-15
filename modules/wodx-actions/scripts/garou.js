@@ -5,7 +5,11 @@
  * chiminage. Rules basis by era (B41): Dark Ages: Werewolf in the Dark Ages profiles, W20 elsewhere.
  * Every card carries its page reference. Nothing here copies book text.
  */
+import * as SUM from "./summons.js";
+import * as SR from "./summon-rules.js";
+import * as LIM from "./limits.js";
 import { spendTime } from "./spend-time.js";
+import { floatOver } from "./daysleep.js";
 import * as P from "./profiles.js";
 import * as G from "./garou-rules.js";
 export { bringsDelirium } from "./garou-rules.js";
@@ -14,6 +18,7 @@ import { aim } from "./aim.js";
 import * as EF from "./effects.js";
 import * as BR from "./book-rituals.js";
 import { outcomesOf } from "./mage-da-effects.js";
+import * as FOM from "./fomor.js";
 
 const MOD = "wodx-actions";
 const DATA = {};
@@ -163,6 +168,8 @@ export function build(ctx) {
         if (!cost) return "";
         if (res === "willpower") { if (!(await spendWillpower(actor, cost))) return false; return `${actor.name} spends ${cost} Willpower.`; }
         const r = P.resource(actor, res);
+        // B5619: Gifted Fomor pays a Gift's Rage or Gnosis with Willpower (W20 p. 434)
+        if (!r.ok && FOM.giftStandIn(actor)) { if (!(await spendWillpower(actor, cost))) return false; return `${actor.name} spends ${cost} Willpower in place of ${res === "rage" ? "Rage" : "Gnosis"} (Gifted Fomor).`; }
         if (!r.ok) { ctx.notify(`${actor.name} has no ${r.label} on the sheet.`); return false; }
         if (r.value < cost) { ctx.notify(`${actor.name} has only ${r.value} ${r.label}.`); return false; }
         if (!setting("spendResources")) return `${r.label}: spend ${cost} (not deducted: setting off)`;
@@ -369,11 +376,13 @@ export function build(ctx) {
 
     async function remainActive(actor) {
         const i = info(actor), b = basis();
-        const scene = canvas?.scene?.id ?? "none";
+        const scene = `s${ctx.api?.()?.limits?.sceneNo?.() ?? 0}`; // B4920: the one scene count
         if (actor.getFlag?.(MOD, "remainedActive") === scene) return ctx.notify("Only once per scene.");
         const content = `<form><p><b>${esc(actor.name)}</b> is below Incapacitated. Rage roll (${i.rage.perm} dice) at 8; each success heals a level; once a scene.</p>
-          <div class="form-group"><label>The worst damage is</label><select name="type" data-fixed><option value="aggravated">aggravated</option><option value="lethal">lethal</option><option value="bashing">bashing</option></select></div></form>`;
+          <div class="form-group"><label>The worst damage is</label><select name="type" data-fixed><option value="aggravated">aggravated</option><option value="lethal">lethal</option><option value="bashing">bashing</option></select></div>
+          <div class="form-group"><label><input type="checkbox" name="auto"${actor.getFlag?.(MOD, "noRiseRage") ? "" : " checked"}/> When it comes, roll this by itself</label></div></form>`;
         return dialog(`Remain active: ${actor.name}`, content, "Roll", async fd => {
+            if (fd.auto) { if (actor.getFlag?.(MOD, "noRiseRage")) await actor.unsetFlag?.(MOD, "noRiseRage"); } else await actor.setFlag?.(MOD, "noRiseRage", true);
             const rr = await rollPool(i.rage.perm, 8);
             await actor.setFlag?.(MOD, "remainedActive", scene);
             const ra = G.remainingActive(b, fd.type, rr.botch ? 0 : rr.successes);
@@ -390,7 +399,61 @@ export function build(ctx) {
         });
     }
 
+    /**
+     * B4986: rising on Rage by itself when a shapechanger falls past Incapacitated, once a scene, unless the character is
+     * marked not to (flag noRiseRage). The worst damage type on the track decides, as the dialog's choice did.
+     */
+    async function remainActiveAuto(actor) {
+        if (!actor || actor.getFlag?.(MOD, "noRiseRage")) return null;
+        const i = info(actor), b = basis();
+        const scene = canvas?.scene?.id ?? "none";
+        if (actor.getFlag?.(MOD, "remainedActive") === scene || i.rage.perm <= 0) return null;
+        const h0 = actor.system?.health?.damage ?? {};
+        const type = n(h0.aggravated) ? "aggravated" : n(h0.lethal) ? "lethal" : "bashing";
+        const rr = await rollPool(i.rage.perm, 8);
+        await actor.setFlag?.(MOD, "remainedActive", scene);
+        const ra = G.remainingActive(b, type, rr.botch ? 0 : rr.successes);
+        let body = `<div class="vta-sub">Rolled by itself (worst wounds ${type})</div>` + rollBlock("Rage", rr, ["difficulty 8"]) + await markTurn(actor, "rage");
+        if (!ra.heals) return post(actor, `${actor.name} fails to rise`, body + `<div class="vta-note bad">No recovery: with aggravated wounds this is death (W20 p. 256).</div>`, [rr.roll].filter(Boolean));
+        const h = actor.system?.health?.damage ?? {};
+        let left = ra.heals;
+        for (const k of ["aggravated", "lethal", "bashing"]) { const take = Math.min(left, n(h[k])); if (take && game.wodxCombat?.healDamage) await game.wodxCombat.healDamage(actor, k, take); left -= take; }
+        body += `<div class="vta-big good">${ra.heals} level${ra.heals === 1 ? "" : "s"} heal</div>`;
+        floatOver(actor, "Rises on Rage", "#ff6b4a");
+        if (ra.frenzy) { body += `<div class="vta-note">A berserk frenzy follows.</div>`; await enterFrenzy(actor, "berserk"); }
+        if (ra.scar) body += `<div class="vta-note">The wound leaves a Battle Scar. <button type="button" class="vta-btn" data-garou="scar" data-actor="${actor.uuid}">Choose the scar</button></div>`;
+        return post(actor, `${actor.name} rises on Rage`, body, [rr.roll].filter(Boolean));
+    }
+
     /* ---------------- Gnosis ---------------- */
+
+    /**
+     * B4987: a shapechanger marked to meditate (the Meditate dialog's box) rolls Wits + Enigmas once a day by itself as
+     * the clock passes into a new day, for the hours they set (DA:W p. 92; W20 p. 146). Not in a fight.
+     */
+    async function meditateDaily() {
+        if (!isActiveGM()) return [];
+        const today = Math.floor(game.time.worldTime / 86400), week = Math.floor(today / 7);
+        const out = [];
+        for (const actor of game.actors ?? []) {
+            const plan = actor.getFlag?.(MOD, "meditates");
+            if (!plan || !isShifter(actor)) continue;
+            if (game.combat?.started && game.combat.combatants?.some?.(c => c.actorId === actor.id)) continue;
+            const log = actor.getFlag?.(MOD, "meditation") ?? {};
+            if (log.day === today) continue;
+            const i = info(actor);
+            if (i.gnosis.temp >= i.gnosis.perm) { await actor.setFlag?.(MOD, "meditation", { ...log, day: today }); continue; }
+            const earlier = log.week === week ? n(log.count) : 0;
+            const diff = G.meditationDifficulty(earlier);
+            const rr = await rollPool(attr(actor, "wits") + abilityDots(actor, "enigmas"), diff);
+            const gain = Math.min(rr.botch ? 0 : rr.successes, Math.max(1, n(plan.hours)), Math.max(0, i.gnosis.perm - i.gnosis.temp));
+            if (gain) { await P.adjust(actor, "gnosis", gain); floatOver(actor, `+${gain} Gnosis`, "#9fc5ff"); }
+            await actor.setFlag?.(MOD, "meditation", { day: today, week, count: earlier + 1 });
+            out.push(actor.name);
+            await post(actor, `${actor.name} meditates`, `<div class="vta-sub">The day's meditation (${Math.max(1, n(plan.hours))} hours), rolled by itself</div>` + rollBlock("Wits + Enigmas", rr, []) + `<div class="vta-big ${gain ? "good" : ""}">+${gain} Gnosis</div>`, [rr.roll].filter(Boolean));
+        }
+        return out;
+    }
 
     async function meditate(actor) {
         const i = info(actor);
@@ -401,8 +464,10 @@ export function build(ctx) {
         const diff = G.meditationDifficulty(earlier);
         const content = `<form><p><b>${esc(actor.name)}</b>: Gnosis ${i.gnosis.temp}/${i.gnosis.perm}. Wits + Enigmas at ${diff}${earlier ? ` (+${earlier} for earlier days this week)` : ""}; up to one point an hour (DA:W p. 92; W20 p. 146).</p>
           <div class="form-group"><label>Hours of meditation</label><input type="number" name="hours" value="1" min="1"/></div>
-          <div class="form-group"><label>Move the clock by the hours (a player asks the Storyteller)</label><input type="checkbox" name="advance"/></div></form>`;
+          <div class="form-group"><label>Move the clock by the hours (a player asks the Storyteller)</label><input type="checkbox" name="advance"/></div>
+          <div class="form-group"><label>Meditate this long each day by itself</label><input type="checkbox" name="daily" ${actor.getFlag?.(MOD, "meditates") ? "checked" : ""}/></div></form>`;
         return dialog(`Meditate: ${actor.name}`, content, "Roll", async fd => {
+            if (fd.daily) await actor.setFlag?.(MOD, "meditates", { hours: Math.max(1, n(fd.hours)) }); else if (actor.getFlag?.(MOD, "meditates")) await actor.unsetFlag?.(MOD, "meditates");
             const rr = await rollPool(attr(actor, "wits") + abilityDots(actor, "enigmas"), diff);
             const gain = Math.min(rr.botch ? 0 : rr.successes, Math.max(1, n(fd.hours)), Math.max(0, i.gnosis.perm - i.gnosis.temp));
             if (gain) await P.adjust(actor, "gnosis", gain);
@@ -457,6 +522,9 @@ export function build(ctx) {
         return dialog(`Use a Gift: ${actor.name}`, content, "Use", async fd => {
             const it = actor.items.get(fd.gift); if (!it) return null;
             const g = giftData(it);
+            // B4921: a Gift the books (or the house rule) say is used up is refused before anything is spent
+            const lim = await LIM.gate(actor, { name: it.name, level: g?.l ?? 0 });
+            if (!lim) return null;
             const c = G.giftCost(g?.c);
             const notes = [];
             for (const [res, pts] of [["gnosis", c.gnosis + (c.variable || c.per ? n(fd.extra) : 0)], ["rage", c.rage], ["willpower", c.willpower]]) {
@@ -471,10 +539,10 @@ export function build(ctx) {
             const code = g?.r ?? (it.system?.dice1 ? `${it.system.dice1}${it.system.dice2 ? `+${it.system.dice2}` : ""}` : null);
             if (code) {
                 const pool = poolOf(actor, code, i);
-                const rr = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), fd.diff);
+                const rr = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), n(fd.diff) + lim.diff);
                 rolls.push(rr.roll);
                 successes = rr.botch ? 0 : rr.successes;
-                body += rollBlock(pool.label, rr, [n(fd.bonus) ? `bonus ${fd.bonus}` : ""].filter(Boolean));
+                body += rollBlock(pool.label, rr, [n(fd.bonus) ? `bonus ${fd.bonus}` : "", lim.diff ? `Drained +${lim.diff}` : ""].filter(Boolean));
             }
             if (g) body += `<div class="vta-note">${esc(g.e)} <span class="wodx-quiet">(${giftRef(g)})</span></div>`;
             const dur = successes > 0 ? G.giftDuration(g?.t, successes) : null;
@@ -495,8 +563,9 @@ export function build(ctx) {
                 body += pp.html;
                 fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             }
+            await lim.done({ successes });
             return post(actor, `${actor.name}: ${esc(it.name)}`, body, rolls.filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
-        }, { render: root => { describe(root); root.querySelector("[name=gift]")?.addEventListener("change", () => describe(root));
+        }, { render: root => { LIM.decorate(root, { actor, sel: "select[name=gift]", powerOf: v => { const it = actor.items.get(v); return it ? { name: it.name, level: giftData(it)?.l ?? 0 } : null; } }); describe(root); root.querySelector("[name=gift]")?.addEventListener("change", () => describe(root));
             aim(root, { actor, lib: "gift", power: r => { const it = actor.items.get(r.querySelector("[name=gift]")?.value); return it ? (giftData(it) ?? { id: it.id, n: it.name }) : null; }, onPick: a => { tgt = a; describe(root); } }); } });
     }
 
@@ -602,14 +671,31 @@ export function build(ctx) {
             const diff = clampDiff(G.summonDifficulty(fd.type, fd.hours, D.summoning) + ce.diff);
             const pool = poolOf(actor, "wits+rituals", info(actor));
             const rr = await rollPool(pool.dice, diff);
-            let body = rollBlock(pool.label, rr, [`${fd.type}: difficulty ${diff}`, ...(ce.note ? [ce.note] : [])]), rolls = [rr.roll];
+            let body = rollBlock(pool.label, rr, [`${fd.type}: difficulty ${diff}`, ...(ce.note ? [ce.note] : [])]), rolls = [rr.roll], gnosisHits = 0;
             if (rr.successes > 0) {
                 const gr = await rollPool(effectiveGnosis(actor), 6);
+                gnosisHits = Math.max(0, n(gr.successes));
                 rolls.push(gr.roll);
                 body += rollBlock("Gnosis", gr, ["the spirit's attitude"]) + `<div class="vta-big">${esc(G.summonAttitude(gr.successes, D.summoning))}</div>`;
                 if (["Incarna", "Celestine avatar"].includes(fd.type)) body += `<div class="vta-note">Summoning an Incarna or Celestine earns Wisdom.</div>`;
             } else if (rr.botch) body += `<div class="vta-note bad">A botch: the wrong spirit answers, perhaps a Bane.</div>`;
-            return post(actor, `${actor.name} summons a ${esc(fd.type)}`, body, rolls.filter(Boolean));
+            const msg = await post(actor, `${actor.name} summons a ${esc(fd.type)}`, body, rolls.filter(Boolean));
+            // B5753: the spirit comes onto the map through the summons system (it answers by its attitude: hostile ones
+            // go for whoever is nearest, the rest take requests); a botch brings a Bane, out of hand
+            const came = rr.botch ? "bane" : rr.successes > 0 ? (gnosisHits >= 1 ? "spirit" : null) : null;
+            if (came) {
+                const tok = actor.getActiveTokens?.()[0] ?? null, scene = tok?.document?.parent ?? canvas?.scene;
+                const size = scene?.grid?.size ?? 100;
+                const at = tok ? { x: tok.document.x + size * 1.5 + (tok.document.width ?? 1) * size / 2, y: tok.document.y + (tok.document.height ?? 1) * size / 2 } : null;
+                const hostile = came === "bane" || gnosisHits <= 2;
+                const label = came === "bane" ? "A Bane" : fd.type;
+                try {
+                    const summon = SR.resolve({ what: "spirit", profile: hostile ? "wild" : "called", count: 1, lasts: { kind: "scene" }, page: D.summoning?.page ?? "DA:W p. 150",
+                        note: came === "bane" ? "The wrong spirit answered." : G.summonAttitude(gnosisHits, D.summoning) }, {});
+                    if (at) await SUM.bring({ caster: actor.uuid, out: { label, summon } }, { at, casterName: actor.name, scene });
+                } catch (e) { console.warn("WoDX | summon spirit", e); }
+            }
+            return msg;
         });
     }
 
@@ -744,7 +830,8 @@ export function build(ctx) {
 
     /* ---------------- The Delirium, the Curse, Kinfolk ---------------- */
 
-    function isKinfolk(a) { return !!P.worldFlag(a, "kinfolk"); }
+    // B5619: a fomor with Immunity to the Delirium is untouched, as Kinfolk are (W20 p. 434)
+    function isKinfolk(a) { return !!P.worldFlag(a, "kinfolk") || FOM.immune(a); }
     const HUMAN = ["mortal", "hunter", "ghoul"];
 
     async function deliriumCheck({ tokens: given = null } = {}) {
@@ -756,7 +843,7 @@ export function build(ctx) {
           <div class="form-group"><label>Witnesses who know the occult roll Wits + Occult (9) for extra Willpower</label><input type="checkbox" name="occult"/></div>
           <div class="form-group"><label>The shifter is a Ratkin (milder: +2)</label><input type="checkbox" name="ratkin"/></div></form>`;
         return dialog("The Delirium", content, "Check", async fd => {
-            const rows = [], rolls = [];
+            const rows = [], rolls = [], acted = [], given = {};
             for (const tok of tokens) {
                 const a = tok.actor; if (!a) continue;
                 const k = P.detectProfile(a);
@@ -771,8 +858,16 @@ export function build(ctx) {
                 }
                 const d = G.delirium(w, b, T);
                 rows.push(`<li><b>${esc(a.name)}</b> (Willpower ${d.willpower}${esc(extra)}): ${esc(d.reaction)}; ${esc(d.memory)}.</li>`);
+                acted.push(tok); given[tok.document?.id ?? tok.id] = { reaction: d.reaction, memory: d.memory };
             }
-            return ChatMessage.create({ content: `<div class="vta-card"><h3>The Delirium</h3><ul>${rows.join("")}</ul></div>`, whisper: gmIds(), speaker: { alias: "WoDX" }, rolls: rolls.filter(Boolean) });
+            const msg = await ChatMessage.create({ content: `<div class="vta-card"><h3>The Delirium</h3><ul>${rows.join("")}</ul></div>`, whisper: gmIds(), speaker: { alias: "WoDX" }, rolls: rolls.filter(Boolean) });
+            // B5750: the reactions happen on the map (fall still, flee, attack) and the memory column decides who keeps it,
+            // through the same witness step a Crinos in plain sight uses
+            if (acted.length) {
+                const shifter = (canvas.tokens?.controlled ?? []).map(t => t.actor).find(x => x && P.detectProfile(x) === "lupine") ?? null;
+                try { await ctx.api?.()?.witnessStep?.({ actor: shifter, tokens: acted, secret: "lupine", event: "in Crinos", given }); } catch (e) { console.warn("WoDX | Delirium", e); }
+            }
+            return msg;
         });
     }
 
@@ -893,7 +988,12 @@ export function build(ctx) {
         if (k === "scar") return battleScar(a);
     }
 
-    return { shift, rageRoll, enterFrenzy, endFrenzy, spendRage, remainActive, meditate, useGift, learnGift, performRite, summonSpirit, useFetish,
+    /** B4926: the Gifts an NPC may choose by itself. */
+    function powersFor(actor) {
+        return giftItems(actor).map(it => { const g = giftData(it); return { use: "useGift", field: "gift", value: it.id, name: it.name, level: g?.l ?? 0,
+            set: g?.book === "W20 CB" ? "fera" : g?.book === "W20" ? "w20" : "gift", id: g?.book === "W20" ? (g?.kw ?? "") : (g?.id ?? "") }; });
+    }
+    return { powersFor, shift, rageRoll, enterFrenzy, endFrenzy, spendRage, remainActive, remainActiveAuto, meditate, meditateDaily, useGift, learnGift, performRite, summonSpirit, useFetish,
         awardRenown, applyRenown, accomplishment, battleScar, deliriumCheck, curse, kinfolk, chiminage, moonRise, regenRound, embracePain, onChatButton, setForm, info };
 }
 

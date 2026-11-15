@@ -2,6 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.32.0 (Time in the Labyrinth is drawn each journey from its own table, from an hour here for each day there to a month here (B5179))
+- 0.31.0 (A still aura for Golconda (B5095; a house reading))
 - 0.30.0 (The Otherworlds act without the Storyteller's hand (B5017-B5020))
 - 0.29.0 (What only the right eyes see (B4634): the thin Gauntlet, the thin Shroud and the Wyrm's haze on a person, drawn on each client for its own viewer and never saved)
 - 0.28.0 (Wyrm corruption shown on the map (B4621): whenever a place's corruption changes (the weekly turn, its Undo, the corruption window, a cleansing), its scene is drawn again to match, through WoDX Chronicle's shared looks layer when it is there and locked plain drawings otherwise. World setting "Show Wyrm corruption on the map", on by default)

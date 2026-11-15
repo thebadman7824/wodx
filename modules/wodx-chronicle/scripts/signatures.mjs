@@ -5,6 +5,8 @@ import {getEngine, describeTime} from "./calendar.mjs";
 import * as events from "./events.mjs";
 import * as S from "./signature-rules.mjs";
 import * as POD from "./pod.mjs";
+import {registerTokenLook} from "./token-looks.mjs";
+import {on as ghoulNeedOn} from "./ghoul-need.mjs";
 
 /**
  * WoDX Chronicle 0.30.0: signature features on the Foundry side (Splat Features Desk, Vampire first). Rules in
@@ -21,7 +23,8 @@ import * as POD from "./pod.mjs";
  */
 
 const FLAG = "sig", CFLAG = "corruption", FIRED = "sigFired", OFF = "sigOff";
-const T_FAMILY = `${MODULE_ID}.sigFamily`;
+const T_FAMILY = `${MODULE_ID}.sigFamily`, T_GHOULFEED = `${MODULE_ID}.sigGhoulFeed`;
+const n = v => Number(v) || 0;
 const T_CORRUPT = `${MODULE_ID}.sigCorrupt`, T_CAUSE = `${MODULE_ID}.sigCause`, T_VICE = `${MODULE_ID}.sigVice`;
 const lineOn = k => { try { return !!game.settings.get(MODULE_ID, k); } catch (e) { return false; } };
 /** Any line's features on. Which rows an actor gets is decided per line in rowsOf. */
@@ -114,6 +117,8 @@ export function allRowsOf(actor) {
   if ( actor.flags?.world?.wodx?.kinfolk ) return lineOn("sigWerewolf") ? [S.KINFOLK] : [];
   if ( !lineOn("sigVampire") ) return [];
   const kind = kindName(actor);
+  // B5054: an animal ghoul on a Creature sheet carries the ghoul row too
+  if ( actor.flags?.["wodx-creation"]?.animalGhoul ) return [S.GHOUL];
   if ( /ghoul|revenant/.test(kind) ) return [S.familyRow([actor.flags?.[MODULE_ID]?.family, ...clanNames(actor), actor.system?.custom?.family].filter(Boolean), foundedFamilies()) ?? S.GHOUL];
   if ( !/kindred|vampire/.test(kind) && !clanNames(actor).length ) return [];
   const r = S.vampireRow(clanNames(actor));
@@ -705,6 +710,15 @@ export async function ghoulFed(actorOrId) {
 async function ghoulTick(a, t) {
   const row = rowOf(a);
   if ( !on() || row?.feature !== "ghoul" || row.revenant ) return;
+  // B5050: the monthly need now happens by itself (ghoul-need.mjs); this card only stands in when that is switched off.
+  // The domitor's feeding (B4983) is offered either way.
+  if ( ghoulNeedOn() ) {
+    const g = sigOf(a).ghoul, fedAt = g?.fedAt ?? a.flags?.[MODULE_ID]?.ghoulNeed?.fedAt;
+    if ( fedAt === undefined || fedAt === null ) return;
+    const m = S.monthsUnfed(fedAt, t);
+    if ( m >= 1 ) await offerFeed(a, m);
+    return;
+  }
   const sig = sigOf(a), g = sig.ghoul ?? {fedAt: t, warned: 0};
   if ( !sig.ghoul ) { sig.ghoul = g; await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig}); return; }
   const m = S.monthsUnfed(g.fedAt, t);
@@ -714,6 +728,36 @@ async function ghoulTick(a, t) {
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
   Hooks.callAll("wodxGhoulFix", {actor: a, drank: false, months: m});
   await cardFor(a, "ghoul", `${a.name}: no vitae`, `<p>${m} month${m === 1 ? "" : "s"} without a drink from the domitor: take away ${m === 1 ? "a blood point" : "another blood point"}. With none left, the years held off begin to come back.</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
+  await offerFeed(a, m);
+}
+/** B4983: the domitor is on the same scene: the Storyteller approves the feeding, and then it happens. */
+async function offerFeed(a, m) {
+  const dom = domitorOf(a);
+  const here = new Set((game.scenes?.active?.tokens ?? []).map(tk => tk.actorId));
+  if ( !dom || !here.has(a.id) || !here.has(dom.id) || n(dom.system?.advantages?.bloodpool?.temporary) < 1 ) return;
+  // Once a month unfed: a declined feeding is not asked again until another month passes
+  const key = `ghoulfeed:${a.id}:${m}`;
+  if ( a.getFlag?.(MODULE_ID, "ghoulFeedAsked") === key ) return;
+  await a.setFlag?.(MODULE_ID, "ghoulFeedAsked", key);
+  await propose({type: T_GHOULFEED, key, title: `${dom.name} feeds ${a.name}`, detail: `${a.name} has gone ${m} month${m === 1 ? "" : "s"} without vitae and ${dom.name} is here. Approve and a blood point passes from domitor to ghoul (V20 Dark Ages p. 397).`, data: {ghoul: a.id, domitor: dom.id}});
+}
+/** The ghoul's domitor (WoDX Creation's lineage), as an actor, or null. */
+function domitorOf(a) {
+  const l = a?.flags?.["wodx-creation"]?.lineage, id = typeof l?.domitor === "object" ? l?.domitor?.id : l?.domitor;
+  return id ? game.actors?.get?.(id) ?? null : null;
+}
+/** An approved feeding: a blood point from the domitor to the ghoul, the month starts again, and a card says so. */
+async function applyGhoulFeed({ghoul, domitor} = {}) {
+  const g = game.actors.get(ghoul), d = game.actors.get(domitor);
+  if ( !g || !d ) return null;
+  const db = n(d.system?.advantages?.bloodpool?.temporary);
+  if ( db < 1 ) return null;
+  await d.update({"system.advantages.bloodpool.temporary": db - 1});
+  const gb = g.system?.advantages?.bloodpool;
+  if ( gb ) await g.update({"system.advantages.bloodpool.temporary": Math.min(n(gb.max) || 10, n(gb.temporary) + 1)});
+  await ghoulFed(g);
+  await cardFor(g, "ghoul", `${g.name} drinks`, `<p>${esc(d.name)} gives ${esc(g.name)} a blood point of vitae. The month starts again.</p>`, {whisper: [...new Set([...ownerIds(g), ...ownerIds(d)])]});
+  return true;
 }
 /** Found a revenant family in play: the Storyteller's is kept at once, a player's goes to the queue. */
 export async function foundFamily(data = {}) {
@@ -1226,6 +1270,7 @@ export function registerSignatureHooks() {
     if ( a && sig.cause ) { sig.cause.approved = true; await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig}); }
   }});
   registerHandler(T_FAMILY, {label: "A new revenant family", approve: e => saveFamily(e.data ?? {})});
+  registerHandler(T_GHOULFEED, {label: "A domitor feeds a ghoul", approve: e => applyGhoulFeed(e.data ?? {})});
   registerHandler(T_VICE, {label: "Name a Setite victim's vice", approve: e => setVice(e.data?.npc, e.data?.by, e.data?.vice)});
   Hooks.on("wodxSocial", onSocial);
   Hooks.on("wodxTrade", onTrade);
@@ -1238,6 +1283,8 @@ export function registerSignatureHooks() {
   // B4875-B4877: the features that used to wait on the Storyteller
   Hooks.on("deleteCombat", c => { devilTiger(c).catch(e => console.error(`${MODULE_ID} | Devil-Tiger`, e)); });
   Hooks.on("wodxDamageApplied", (a, d = {}) => { craving(a, d).catch(e => console.error(`${MODULE_ID} | craving`, e)); });
+  Hooks.on("wodxDamageApplied", (a, d = {}) => { martyr(a, d).catch(e => console.error(`${MODULE_ID} | Martyr`, e)); });
+  try { registerTokenLook("signatures.marauder", marauderLook); } catch (e) { console.warn(`${MODULE_ID} | Marauder look`, e); }
   Hooks.on("createToken", t => { bunyip(t).catch(e => console.error(`${MODULE_ID} | Bunyip`, e)); });
   Hooks.on("wodxAttitude", p => { shame(p).catch(e => console.error(`${MODULE_ID} | Hakken`, e)); });
   Hooks.on("wodxTrade", p => { piskie(p).catch(e => console.error(`${MODULE_ID} | Piskie`, e)); });
@@ -1346,6 +1393,34 @@ async function craving(victim, d) {
     if ( !g || g.id === victim.id || !isFeature(g, "ghoul") || squaresApart(vt, t) > S.CRAVING_REACH ) continue;
     await featureRoll(g, "the craving", virtue(g, "selfcontrol"), S.FEATURE_ROLLS.craving.diff, `${victim.name}'s blood is spilled close by.`);
   }
+}
+/**
+ * B5171: a Martyr beside someone just hurt may take the wound instead: a button for the Martyr's player puts the
+ * victim's health back and the same levels on the Martyr (Hunter: the Reckoning, the creeds; house reading).
+ */
+async function martyr(victim, d = {}) {
+  if ( !isActiveGM() || !on() || !victim || !(Number(d.levels) > 0) || !d.before || !d.type ) return;
+  const vt = tokenOf(victim);
+  if ( !vt ) return;
+  const m = (vt.parent?.tokens ?? []).find(t => t.actor && t.actor.id !== victim.id && hasRow(t.actor, "martyr") && squaresApart(vt, t) <= 1)?.actor;
+  if ( !m ) return;
+  fired(m, "martyr");
+  await card(`${m.name} can take the wound`, `<p>${esc(victim.name)} takes ${Number(d.levels)} ${esc(d.type)}. ${esc(m.name)} stands beside them and can take it instead.</p>`,
+    {whisper: ownerIds(m), act: {key: "martyr", label: "Take the wound", who: "owner", uuid: m.uuid, data: {to: victim.uuid, by: m.uuid, before: d.before, type: d.type, levels: Number(d.levels)}}});
+}
+ACTS.martyr = async ({to, by, before, type, levels}) => {
+  const v = await fromUuid(to), m = await fromUuid(by), C = game.wodxCombat;
+  const va = v?.actor ?? v, ma = m?.actor ?? m;
+  if ( !va || !ma || !C?.setDamage || !C?.applyDamage ) return;
+  await C.setDamage(va, before);
+  await C.applyDamage(ma, type, levels);
+  await card(`${ma.name} takes the wound`, `<p>${esc(ma.name)} takes ${levels} ${esc(type)} meant for ${esc(va.name)}, whose wounds go back as they were.</p>`, {whisper: []});
+};
+/** B5172: a Marauder bends the world around it: a shifting, flickering aura on its token. */
+function marauderLook(token) {
+  const a = token?.actor;
+  if ( !a || !on() || !rowsOf(a).some(r => r.key === "marauder") ) return null;
+  return {aura: {color: 0xc04cff, radius: 1.2, alpha: 0.3}, flicker: true, tint: 0xf0d8ff};
 }
 /** A Bunyip spirit or relic comes onto a scene: the Garou there feel the old shame (a Harano test). */
 async function bunyip(token) {

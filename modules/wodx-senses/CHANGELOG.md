@@ -2,6 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.14.1 (Sense Wyrm passes by a fomor with Triatic Sense or a Deception in force (B5616))
+- 0.14.0 (The Golconda halo and the still aura (B5094, B5095; house readings))
 - 0.13.0 (The unseen are noticed by themselves (B5011))
 - 0.12.0 (Cyberware reaches the senses (B3799): the sense pieces installed on a character (WoDX Library, api.cyber.installedFx) count in every Senses roll. Low Lite, Thermograph and Infrared optics, the radar sensor and the sonar implant take away the darkness step as Eyes of the Cat does; Amplified Hearing, Image Enhancement, the boosts and the like make their sense one step easier each. A power that already sees in the dark keeps its own name. Gate: gatecyber step 7)
 - 0.11.1 (The words under sight rings and other-world marks use a plain colour for their outline, as the canvas library in Foundry 14 needs; the object form stopped the Penumbra, mage, chimerical and Shadowlands layers from drawing (B3540-B3546, testbed find))

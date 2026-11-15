@@ -13,6 +13,8 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: demon-rules.js.
  */
+import * as NPW from "./npc-power-rules.js";
+import * as LIM from "./limits.js";
 import * as D from "./demon-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
@@ -61,7 +63,8 @@ export async function revertForm(actor, { attrs = {}, init = 0, lethalWas = null
 
 export function build(ctx) {
     const { post, rollPool, rollBlock, dialog, updateActor, spendWillpower, notify } = ctx;
-    const sceneKey = () => `${game.scenes?.viewed?.id ?? ""}:${Math.floor(game.time.worldTime / 3600)}`;
+    // B4920: one scene count for everything that works once a scene (End the scene, or a new active map)
+    const sceneKey = () => `s${LIM.sceneNo()}`;
     const flag = a => a.getFlag(MOD, "demon") ?? {};
     const dawnDay = () => Math.floor(((game.time?.worldTime ?? 0) - 6 * 3600) / 86400);
     const saveFlag = (a, patch) => ctx.setFlag(a, "demon", { ...flag(a), ...patch });
@@ -164,13 +167,23 @@ export function build(ctx) {
             const plan = D.evocationPlan({ attr: traitVal(actor, ak), ability: traitVal(actor, bk), level: e.level, loreRating: i.lores[lore], faithCost: e.faith, faithSpent: n(fd.fs),
                 ravage: thralls.length ? n(fd.rav) : 0, permFaith: i.faith.perm, faithPool: i.faith.temp, unbelievers: n(fd.unb), mod: n(fd.mod) });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
+            // B4921: an evocation the book (or the house rule) says is used up is refused before Faith is spent
+            const lim = await LIM.gate(actor, { name: e.name, disc: lore, level: e.level });
+            if (!lim) return null;
+            // B5116: reached by a name, the card's own difficulty for the best name known (or the demon's own thrall)
+            try {
+                const nc = DE.evocationCard(lore, e.level), tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
+                const nd = nc ? ctx.nameDifficulty?.(actor, nc.fx, tgt) : null;
+                if (nd) { plan.difficulty = Math.max(2, Math.min(10, plan.difficulty + nd.difficulty - 6)); plan.notes.push(`reached by ${nd.by} (difficulty ${nd.difficulty})`); }
+            } catch (err) { console.warn("WoDX | names", err); }
             if (fd.endOld && run.length) await saveFlag(actor, { running: live });
             // An empty pool: ravaged thralls stand in for the Faith the evocation needs (p. 169)
             const fromPool = plan.ravaged ? Math.min(plan.cost, i.faith.temp) : plan.cost;
             if (fromPool && !(await faith(actor, -fromPool))) return null;
             if (plan.cost > fromPool) plan.notes.push(`${plan.cost - fromPool} Faith drawn from the ravaged thralls`);
             const wp = !!fd.wp && await spendWillpower(actor, 1);
-            const r = await rollPool(plan.dice, plan.difficulty, { willpower: wp, autoSuccesses: plan.autoSuccesses });
+            const r = await rollPool(plan.dice, plan.difficulty + lim.diff, { willpower: wp, autoSuccesses: plan.autoSuccesses });
+            if (lim.diff) plan.notes.push(`Drained +${lim.diff}`);
             const out = D.evocationOutcome(r, { torment: i.torment.perm, chooseHigh: !!fd.dark, rule: i.rule });
             const notes = [];
             if (out.faithLoss) { await faith(actor, -1); notes.push("The botch costs a Faith point."); }
@@ -203,6 +216,20 @@ export function build(ctx) {
                     fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
                 }
             }
+            // B5173: the Lore of the Winds at three dots or more rouses the night's wind over the whole place, a storm at five
+            // (WoDX Atmosphere; house reading of the Scourges' lore)
+            if (works && lore === "winds" && e.level >= 3) {
+                const AT = game.modules.get("wodx-atmosphere")?.active ? game.modules.get("wodx-atmosphere").api?.weather : null;
+                const w = EF.E?.WEATHER_SET?.[e.level >= 5 ? "storm" : "wind"];
+                if (AT?.set && AT?.night && w) {
+                    try {
+                        const jdn = AT.night();
+                        const prev = game.settings.get("wodx-atmosphere", "overrides")?.[jdn] ?? {};
+                        await AT.set(jdn, { ...prev, ...w.day });
+                        notes.push(`${w.label} rises over the place tonight.`);
+                    } catch (er) { console.warn("WoDX | winds", er); }
+                }
+            }
             if (works && lingers) {
                 const until = (game.time?.worldTime ?? 0) + DE.lingerSeconds(lore, e.level, i.faith.perm);
                 await saveFlag(actor, { running: [...running(actor), { id: `${lore}:${e.level}`, name: e.name, until }] });
@@ -211,8 +238,9 @@ export function build(ctx) {
             for (const x of notes.filter(Boolean)) body += `<div class="vta-note">${esc(x)}</div>`;
             body += `<div class="vta-res">${esc(revealLine(info(actor).spent))}</div>`;
             body += `<div class="wodx-quiet">${REF} pp. 161, 169–171, ${D.LORES[lore].page}</div>`;
+            await lim.done({ successes: r.botch ? 0 : r.successes });
             return post(actor, `${actor.name} evokes ${e.name}`, body, [r.roll].filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
-        }, { width: 560, render: root => aim(root, { actor, lib: "evo", power: r => { const v = r.querySelector("[name=evo]")?.value; const e = known.find(x => opt(x) === v); return e ? { id: v, n: e.name } : null; } }) });
+        }, { width: 560, render: root => (LIM.decorate(root, { actor, sel: "select[name=evo]", powerOf: v => { const q = known.find(x => opt(x) === v); return q && { name: q.name, disc: q.lore, level: q.level }; } }), aim(root, { actor, lib: "evo", power: r => { const v = r.querySelector("[name=evo]")?.value; const e = known.find(x => opt(x) === v); return e ? { id: v, n: e.name } : null; } })) });
     }
 
     /* -- the apocalyptic form ---------------------------------------- */
@@ -297,16 +325,25 @@ export function build(ctx) {
     /* -- Revelation, a witness -------------------------------------- */
     async function revelation(actor) {
         const i = info(actor);
+        // B5751: a targeted witness fills the window, and its reaction happens on the map through the witness step
+        const wt = [...(game.user.targets ?? [])].find(t => t.actor && t.actor !== actor) ?? null;
+        const wwp = n(wt?.actor?.system?.advantages?.willpower?.permanent) || 3;
         const content = `<form><p>${esc(revealLine(i.spent))}</p>
-          <div class="form-group"><label>A witness's Willpower (rolled against Faith ${i.faith.perm})</label><input type="number" name="wp" min="1" max="10" value="3"/></div>
-          <div class="form-group"><label>Witness's name</label><input type="text" name="who" value=""/></div></form>`;
+          <div class="form-group"><label>A witness's Willpower (rolled against Faith ${i.faith.perm})</label><input type="number" name="wp" min="1" max="10" value="${wwp}"/></div>
+          <div class="form-group"><label>Witness's name</label><input type="text" name="who" value="${esc(wt?.name ?? "")}"/></div>
+          ${wt ? `<p class="vta-note">${esc(wt.name)} is targeted: what they do shows on the map.</p>` : `<p class="vta-note">Target the witness's token for it to act on the map.</p>`}</form>`;
         return dialog(`Revelation: ${actor.name}`, content, "Roll for the witness", async fd => {
             const r = await rollPool(n(fd.wp), Math.max(2, i.faith.perm || 6));
             const re = D.mortalReaction(r);
             const who = fd.who || "The witness";
             const body = rollBlock(`${esc(who)}: Willpower`, r) + `<div class="vta-res ${re.key === "copes" ? "" : "bad"}">${esc(who)} ${esc(re.text)}.</div>`
                 + `<div class="vta-note">${esc(D.visageLook(i.torment.perm, i.willpower.perm) === "glorious" ? "What they see is glorious." : D.visageLook(i.torment.perm, i.willpower.perm) === "nightmarish" ? "What they see is a nightmare." : "What they see is awful or wondrous, by their own lights.")} A Revelation alone never reaps Faith.</div><div class="wodx-quiet">${REF} pp. 253–254</div>`;
-            return post(actor, `${actor.name}: Revelation`, body, [r.roll].filter(Boolean));
+            const m = await post(actor, `${actor.name}: Revelation`, body, [r.roll].filter(Boolean));
+            if (wt) {
+                const id = wt.document?.id ?? wt.id;
+                try { await ctx.api?.()?.witnessStep?.({ actor, tokens: [wt], secret: "demon", event: "the apocalyptic form", given: { [id]: { reaction: re.key, reveal: re.key } } }); } catch (e) { console.warn("WoDX | Revelation", e); }
+            }
+            return m;
         });
     }
 
@@ -442,5 +479,13 @@ export function build(ctx) {
         }
     }
 
-    return { info, evoke, form, revelation, reap, thralls, sin, kindness, heal, holy, named, illusion, daily, faith, torment, isDemon, rules: D };
+    /** B5676: the evocations of the Lores an NPC demon knows, to use by itself (main.js npcPowers). */
+    function powersFor(actor) {
+        const i = info(actor);
+        if (i.faith.temp < 1) return [];
+        return D.evocationsKnown(i.lores).map(e => ({ use: "useEvocation", field: "evo", value: `${e.lore}:${e.level}`, name: e.name, disc: D.LORES[e.lore]?.label ?? e.lore, level: e.level, set: "evocation", id: `${e.lore}:${e.level}`,
+            keywords: NPW.keysOf(DE.evocationResults(e.lore, e.level, 3, { faith: i.faith.perm, name: e.name })) })).filter(p => p.keywords.length);
+    }
+
+    return { powersFor, info, evoke, form, revelation, reap, thralls, sin, kindness, heal, holy, named, illusion, daily, faith, torment, isDemon, rules: D };
 }

@@ -15,7 +15,9 @@
  * Built by main.js with its helpers (ctx). Pure rules: wraith-rules.js.
  */
 
+import * as LIM from "./limits.js";
 import { spendTime } from "./spend-time.js";
+import { floatOver } from "./daysleep.js";
 import * as W from "./wraith-rules.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -176,6 +178,9 @@ export function build(ctx) {
         return dialog(`Use an Arcanos: ${actor.name}`, content, "Use", async fd => {
             const a = list.find(x => x.id === fd.art);
             if (!a) return null;
+            // B4921: an art the books (or the house rule) say is used up is refused before anything is spent
+            const lim = await LIM.gate(actor, { name: a.n, disc: a.d, level: a.l }, { targets: fd.onSelf ? [] : null });
+            if (!lim) return null;
             const notes = [];
             for (const [id, k] of [["pathos", n(fd.pathos)], ["corpus", n(fd.corpus)]]) {
                 if (!k) continue;
@@ -191,9 +196,9 @@ export function build(ctx) {
             if (a.r) {
                 const [at, sec] = a.r.split("+");
                 const dice = Math.max(0, attr(actor, at) + second(a, sec) + n(fd.bonus));
-                const r = await rollPool(dice, fd.diff);
+                const r = await rollPool(dice, n(fd.diff) + lim.diff);
                 rolls.push(r.roll); faces = r.faces ?? []; successes = r.botch ? 0 : r.successes;
-                body += rollBlock(`${cap(at)} + ${sec && sec !== "arc" ? cap(sec) : a.d}`, r, n(fd.bonus) ? [`bonus ${fd.bonus}`] : []);
+                body += rollBlock(`${cap(at)} + ${sec && sec !== "arc" ? cap(sec) : a.d}`, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...(lim.diff ? [`Drained +${lim.diff}`] : [])]);
                 if (r.botch) body += `<div class="vta-warn">Botch: the art turns on the user (see the page); a gift to the Shadow.</div>`;
             }
             const angst = W.realmAngst(a.d, fd.realm, faces);
@@ -208,8 +213,9 @@ export function build(ctx) {
                 fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             }
             if (n(fd.wp)) await afterSpend(actor);
+            await lim.done({ successes });
             return post(actor, `${actor.name}: ${esc(a.n)}`, body, rolls, fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
-        }, { width: 560, render: root => { describe(root); for (const k of ["art", "realm", "onSelf"]) root.querySelector(`[name=${k}]`)?.addEventListener("change", () => describe(root));
+        }, { width: 560, render: root => { LIM.decorate(root, { actor, sel: "select[name=art]", powerOf: v => { const q = list.find(x => x.id === v); return q && { name: q.n, disc: q.d, level: q.l }; } }); describe(root); for (const k of ["art", "realm", "onSelf"]) root.querySelector(`[name=${k}]`)?.addEventListener("change", () => describe(root));
             const artNow = r => (r.querySelector("[name=onSelf]")?.checked ? null : list.find(x => x.id === r.querySelector("[name=art]")?.value));
             aim(root, { actor, lib: String(list[0]?.id ?? "").startsWith("gw-") ? "gw" : "w20", power: artNow, onPick: a => { tgt = a; describe(root); } }); } });
     }
@@ -217,7 +223,8 @@ export function build(ctx) {
     /* ---------------- Passions, Fetters, Memoriam ---------------- */
 
     /** A scene: the canvas scene plus the Storyteller's "New scene" counter (Passions once a scene, Hysteria). */
-    const sceneKey = () => `${canvas?.scene?.id ?? "none"}:${n(game.settings.get(MOD, "wraithScene"))}`;
+    // B4920: one scene count for everything that works once a scene (End the scene, or a new active map)
+    const sceneKey = () => `s${LIM.sceneNo()}`;
     const sessionKey = () => game.settings.get(MOD, "sessionId") || "";
 
     async function passion(actor) {
@@ -288,11 +295,18 @@ export function build(ctx) {
         const i = info(actor);
         const content = `<form><p><b>${esc(actor.name)}</b>: Willpower ${i.willpower.temp}/${i.willpower.perm}. ${i.fetters.length ? "" : "<b>No Fetters: 1 Willpower a scene in the Shadowlands (Wraith 20th p. 308).</b>"}</p>
           ${i.fetters.length ? `<div class="form-group"><label>Fetter</label>${i.fetters.length > 5 ? searchBox("select[name=f]", "Search Fetters…", "Search Fetters") : ""}<select name="f" data-fixed>${i.fetters.map(f => `<option value="${f.id}">${esc(f.name)} (${f.value})</option>`).join("")}</select></div>` : ""}
-          <div class="form-group"><label>What</label><select name="how" data-fixed><option value="scene">After a scene with it (6): Willpower</option><option value="slumber">Slumbered in it 8 hours (4): Willpower</option><option value="neglect">Neglect check (Storyteller, 9)</option><option value="lost">It is destroyed (a Harrowing)</option><option value="nofetter">A scene in the Shadowlands with no Fetters (1 Willpower)</option></select></div></form>`;
+          <div class="form-group"><label>What</label><select name="how" data-fixed><option value="scene">After a scene with it (6): Willpower</option><option value="slumber">Slumbered in it 8 hours (4): Willpower</option><option value="neglect">Neglect check (Storyteller, 9)</option><option value="lost">It is destroyed (a Harrowing)</option><option value="mark">Mark the selected token as this Fetter (Willpower by itself after each scene with it)</option><option value="unmark">Unmark the selected token</option><option value="nofetter">A scene in the Shadowlands with no Fetters (1 Willpower)</option></select></div></form>`;
         return dialog(`Fetter: ${actor.name}`, content, "Go", async fd => {
             if (fd.how === "nofetter") { if (!(await spendWillpower(actor, 1))) return null; await afterSpend(actor); return post(actor, `${actor.name}`, `<div class="vta-note">1 Willpower to stay in the Shadowlands this scene without Fetters (Wraith 20th p. 308).</div>`); }
             const f = i.fetters.find(x => x.id === fd.f); const item = f ? actor.items.get(f.id) : null;
             if (!f || !item) return ctx.notify("Pick a Fetter.");
+            if (fd.how === "mark" || fd.how === "unmark") {
+                const tok = canvas?.tokens?.controlled?.[0]?.document;
+                if (!tok || tok.actorId === actor.id) return ctx.notify("Select the Fetter's token on the map first (a person or a thing).");
+                if (fd.how === "unmark") { await tok.unsetFlag(MOD, "fetter"); return ctx.notify(`${tok.name} is no longer a Fetter.`); }
+                await tok.setFlag(MOD, "fetter", { actor: actor.id, item: f.id });
+                return post(actor, `${actor.name}: a Fetter on the map`, `<div class="vta-res">${esc(tok.name)} is ${esc(actor.name)}'s Fetter “${esc(f.name)}”. At the end of each scene they share, the Fetter is rolled at 6 for Willpower by itself.</div><div class="wodx-quiet">Wraith 20th p. 308</div>`);
+            }
             if (fd.how === "lost") {
                 await item.update({ "system.value": 0 });
                 await ctx.logEvent?.(actor, `The Fetter “${f.name}” is destroyed.`, "fetter");
@@ -490,7 +504,11 @@ export function build(ctx) {
           <div class="form-group"><label>Kind</label><select name="kind" data-fixed>${Object.entries(W.HARROWING_KINDS).map(([k, l]) => `<option value="${k}" ${k === kind ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></div>
           <div class="form-group"><label>Good play lowers the difficulty by</label><select name="good" data-fixed><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></div>
           <div class="form-group"><label><input type="checkbox" name="eidolon" ${i.eidolon && !usedEidolon ? "" : "disabled"}/> Roll Eidolon first (${i.eidolon}, at 9, once a session${usedEidolon ? ": used" : ""})</label></div>
-          <div class="form-group"><label><input type="checkbox" name="wp" ${i.willpower.temp > 1 ? "" : "disabled"}/> Spend Willpower for an automatic success on the escape (not the last point)</label></div></form>`;
+          <div class="form-group"><label><input type="checkbox" name="wp" ${i.willpower.temp > 1 ? "" : "disabled"}/> Spend Willpower for an automatic success on the escape (not the last point)</label></div>
+          ${i.passions.length ? `<div class="form-group"><label>The Passion at stake (a Passion's Harrowing)</label><select name="quarry" data-fixed>${i.passions.map(p => `<option value="${p.id}">${esc(p.name)} (${p.value})</option>`).join("")}</select></div>` : ""}
+          ${i.fetters.length ? `<div class="form-group"><label>The Fetter at stake (a Fetter's Harrowing)</label><select name="stake" data-fixed>${i.fetters.map(f => `<option value="${f.id}">${esc(f.name)} (${f.value})</option>`).join("")}</select></div>` : ""}</form>`;
+        // B5752: while Harrowed the wraith is gone from the Shadowlands; the token fades until the escape roll settles it
+        await harrowedLook(actor, true);
         return dialog(`Harrowing: ${actor.name}`, content, "Roll", async fd => {
             const rolls = []; let body = "";
             if (fd.eidolon && i.eidolon) {
@@ -503,22 +521,80 @@ export function build(ctx) {
             body += rollBlock(`Permanent Willpower (${i.willpower.perm})`, r, fd.wp ? ["Willpower spent"] : []);
             const out = r.successes > 0 && !r.botch;
             body += `<div class="vta-big ${out ? "good" : "bad"}">${out ? "Free of the Harrowing." : "The Harrowing takes its price."}</div>`;
-            if (!out) body += `<div class="vta-note">${esc(W.harrowingLoss(fd.kind))}</div>${fd.kind !== "passion" ? wbtn("vsAngst", actor, "Willpower vs the Shadow's Angst") : ""}`;
+            if (!out) {
+                body += `<div class="vta-note">${esc(W.harrowingLoss(fd.kind))}</div>`;
+                // B5752: the price is paid on the sheet (Wraith 20th pp. 244-245)
+                const paid = await payHarrowing(actor, fd, rolls);
+                body += paid.html;
+            }
             if (fd.kind === "destruction" && out) { await P.adjust(actor, "angst", -1); body += `<div class="vta-note">A Destruction Harrowing won: the Shadow loses 1–3 temporary Angst (1 taken; p. 245).</div>`; }
             await ctx.logEvent?.(actor, `Harrowing (${fd.kind}): ${out ? "escaped" : "lost"}.`, "harrowing");
+            await harrowedLook(actor, false);
             return post(actor, `${actor.name}: Harrowing`, body, rolls);
         });
     }
-    async function vsAngst(actor) {
+    /** B5752: a Harrowed wraith's tokens fade to a ghost of themselves, and come back after. */
+    async function harrowedLook(actor, on) {
+        for (const t of actor.getActiveTokens?.() ?? []) {
+            const d = t.document ?? t;
+            if (!d?.isOwner) continue;
+            try {
+                if (on && d.getFlag(MOD, "harrowAlpha") == null) await d.update({ alpha: 0.2, [`flags.${MOD}.harrowAlpha`]: d.alpha ?? 1 });
+                else if (!on && d.getFlag(MOD, "harrowAlpha") != null) await d.update({ alpha: n(d.getFlag(MOD, "harrowAlpha")) || 1, [`flags.${MOD}.-=harrowAlpha`]: null });
+            } catch (e) { console.warn("WoDX | Harrowing look", e); }
+        }
+    }
+    /** B5752: what a lost Harrowing takes, by kind. Returns {html}. */
+    async function payHarrowing(actor, fd, rolls) {
+        const i = info(actor), lines = [];
+        if (fd.kind === "passion") {
+            const q = i.passions.find(p => p.id === fd.quarry) ?? i.passions[0];
+            const item = q ? actor.items.get(q.id) : null;
+            if (item) { await item.update({ "system.value": 0 }); lines.push(`The Passion “${q.name}” is lost (0 dots).`); }
+            const others = i.passions.filter(p => p.id !== q?.id && p.value > 0);
+            if (others.length) {
+                const o = others[Math.floor(Math.random() * others.length)];
+                const r = await rollPool(o.value, 5); rolls.push(r.roll);
+                if (!(r.successes > 0) || r.botch) { await actor.items.get(o.id)?.update({ "system.value": Math.max(0, o.value - 1) }); lines.push(`${o.name} at 5 fails: it drops to ${Math.max(0, o.value - 1)}.`); }
+                else lines.push(`${o.name} at 5 holds.`);
+            }
+        }
+        if (fd.kind === "fetter") {
+            const f = i.fetters.find(x => x.id === fd.stake) ?? i.fetters[0];
+            const item = f ? actor.items.get(f.id) : null;
+            if (item) { await item.update({ "system.value": Math.max(0, f.value - 1) }); lines.push(`The Fetter “${f.name}” weakens to ${Math.max(0, f.value - 1)}.`); }
+        }
+        let html = lines.length ? `<div class="vta-note bad">${lines.map(esc).join(" ")}</div>` : "";
+        if (fd.kind !== "passion") html += await vsAngst(actor, { inline: true, rolls, destruction: fd.kind === "destruction" });
+        await ctx.logEvent?.(actor, `Harrowing lost (${fd.kind}): ${lines.join(" ")}`, "harrowing");
+        return { html };
+    }
+    /** B5752: the Shadow gaining ground adds a point of permanent Angst. */
+    async function addPermAngst(actor, k = 1) {
+        const item = [...(actor.items ?? [])].find(x => x.type === "Advantage" && x.system?.id === "angst");
+        const cur = info(actor).angst.perm;
+        if (item) return item.update({ "system.permanent": Math.min(10, cur + k) });
+        if (actor.system?.advantages?.angst) return actor.update({ "system.advantages.angst.permanent": Math.min(10, cur + k) });
+        return actor.setFlag(MOD, "angstPermanent", Math.min(10, cur + k));
+    }
+    async function vsAngst(actor, { inline = false, rolls = null, destruction = false } = {}) {
         const i = info(actor);
         const a = await rollPool(i.willpower.perm, 6), s = await rollPool(i.angst.perm, 6);
         const won = a.successes > s.successes;
+        // B5752: losing gives the Shadow a permanent point; a lost Destruction Harrowing offers the Storyteller the Spectre
+        if (!won) await addPermAngst(actor, 1);
+        if (inline) {
+            rolls?.push(a.roll, s.roll);
+            return rollBlock("Permanent Willpower", a) + rollBlock("The Shadow's permanent Angst", s) + `<div class="vta-big ${won ? "good" : "bad"}">${won ? "The Psyche endures." : `The Shadow gains ground: permanent Angst ${Math.min(10, i.angst.perm + 1)}.`}</div>`
+                + (!won && destruction ? `<div class="vta-note">The Shadow wins a Destruction Harrowing: Oblivion or a Spectre.</div>${wbtn("spectre", actor, "Make it a Spectre (Storyteller)")}` : "");
+        }
         return post(actor, `${actor.name} against the Shadow`, rollBlock("Permanent Willpower", a) + rollBlock("The Shadow's permanent Angst", s) + `<div class="vta-big ${won ? "good" : "bad"}">${won ? "The Psyche endures." : "The Shadow gains ground."}</div><div class="wodx-quiet">Wraith 20th pp. 244–245</div>`, [a.roll, s.roll]);
     }
 
     /** After a spend: the last Willpower drops the wraith into a Harrowing (p. 304). */
     async function afterSpend(actor) {
         if (!isWraith(actor) || !setting("eventPrompts")) return;
+        if (n(actor.system?.advantages?.willpower?.temporary) === 0) await harrowedLook(actor, true);
         if (n(actor.system?.advantages?.willpower?.temporary) === 0) await ChatMessage.create({ content: `<div class="vta-card"><h3>${esc(actor.name)}</h3><p>The last Willpower is spent: a fall into a Harrowing (Wraith 20th p. 304).</p>${wbtn("harrowing", actor, "Harrowing", "general")}</div>`, whisper: ownerIds(actor), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
     }
 
@@ -528,6 +604,7 @@ export function build(ctx) {
         const max = info(actor).corpus.max;
         const was = W.corpusState(before, max), now = W.corpusState(after, max);
         if (now === was || now === "corporeal") return null;
+        if (now === "harrowed") await harrowedLook(actor, true);
         return ChatMessage.create({ content: `<div class="vta-card"><h3>${esc(actor.name)}</h3><p>${now === "harrowed" ? "The Corpus is torn apart: a Harrowing (Wraith 20th p. 292)." : "The Corpus is full of bashing damage: wavering; lethal harm now starts a Harrowing."}</p>${now === "harrowed" ? wbtn("harrowing", actor, "Harrowing", "destruction") : ""}</div>`,
             whisper: ownerIds(actor), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
     }
@@ -559,12 +636,55 @@ export function build(ctx) {
     }
 
     /** The Storyteller starts a new scene: Passions may be tapped again and Hysteria ends. */
+    /** B4994: at the end of a scene, a wraith sharing it with a marked Fetter token rolls that Fetter at 6 for Willpower. */
+    async function fetterScene(scene = canvas?.scene) {
+        if (!isActiveGM() || !scene || setting("autoFetter") === false) return [];
+        const out = [];
+        const toks = [...(scene.tokens ?? [])];
+        for (const t of toks) {
+            const m = t.getFlag?.(MOD, "fetter");
+            if (!m) continue;
+            const actor = game.actors?.get(m.actor);
+            if (!actor || !toks.some(x => x.actorId === actor.id)) continue;
+            const i = info(actor), f = i.fetters.find(x => x.id === m.item);
+            if (!f || !f.value) continue;
+            const r = await rollPool(f.value, 6);
+            const to = Math.min(i.willpower.perm, i.willpower.temp + (r.botch ? 0 : r.successes));
+            if (to > i.willpower.temp) { await ctx.updateActor(actor, { "system.advantages.willpower.temporary": to }); floatOver(actor, `+${to - i.willpower.temp} Willpower`, "#c9b3ff"); }
+            out.push(actor.name);
+            await post(actor, `${actor.name}: Fetter`, `<div class="vta-sub">A scene with ${esc(t.name)}, rolled by itself</div>` + rollBlock(`${esc(f.name)} (${f.value})`, r) + `<div class="vta-res">Willpower ${i.willpower.temp} → ${to}</div><div class="wodx-quiet">Wraith 20th p. 308</div>`, [r.roll]);
+        }
+        return out;
+    }
+    /** B4995: a wraith's bashing Corpus mends a level an hour by itself as the clock passes (Wraith 20th p. 295). */
+    async function restAll(actors = game.actors?.filter?.(isWraith) ?? []) {
+        if (!isActiveGM() || setting("autoCorpus") === false) return [];
+        const now = game.time?.worldTime ?? 0, lines = [];
+        for (const a of actors) {
+            const i = info(a), d = i.hasCorpusTrack ? i.damage : (a.system?.health?.damage ?? {});
+            const last = a.getFlag(MOD, "corpusClock");
+            if (!n(d.bashing)) { if (last !== undefined) await a.unsetFlag(MOD, "corpusClock"); continue; }
+            if (last === undefined) { await a.setFlag(MOD, "corpusClock", now); continue; }
+            const hours = Math.floor((now - n(last)) / 3600);
+            if (hours < 1) continue;
+            const after = W.corpusRest(d, hours);
+            await a.setFlag(MOD, "corpusClock", n(last) + hours * 3600);
+            await setCorpusDamage(a, { bashing: n(after.bashing), lethal: n(d.lethal), aggravated: n(d.aggravated) });
+            lines.push(`<b>${esc(a.name)}</b>: ${n(d.bashing) - n(after.bashing)} bashing mend`);
+            floatOver(a, "Corpus mends", "#b8d8e0");
+        }
+        if (lines.length) await ChatMessage.create({ content: `<div class="vta-card"><h3>Corpus mends</h3><ul>${lines.map(l => `<li>${l}</li>`).join("")}</ul><p class="wodx-quiet">Wraith 20th p. 295</p></div>`, whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { info: true } } });
+        return lines;
+    }
     async function newScene({ quiet = false } = {}) {
         if (!game.user.isGM) return ctx.notify("The Storyteller starts a new scene.");
+        await fetterScene().catch(e => console.warn("WoDX | Fetters", e));
         await game.settings.set(MOD, "wraithScene", n(game.settings.get(MOD, "wraithScene")) + 1);
         if (canvas?.scene?.getFlag(MOD, "hysteria")) await canvas.scene.unsetFlag(MOD, "hysteria");
         await autoStorm().catch(e => console.error("WoDX | Maelstrom", e));
         if (quiet) return true;
+        // B4920: pressed by hand, it starts a new scene for every once-a-scene count, not only the wraith ones
+        await LIM.newScene("A new scene");
         return ChatMessage.create({ content: `<div class="vta-card"><h3>A new scene</h3><p>Passions can be tapped again; Hysteria ends.</p></div>`, whisper: gmIds(), speaker: { alias: "WoDX" } });
     }
     /** A new session (Memoriam and Eidolon are once a session). Set at a GM's first login after six hours away, or by hand. */
@@ -624,10 +744,25 @@ export function build(ctx) {
         if (!(a.isOwner || game.user.isGM)) return ctx.notify("Only the character's owner or the GM can do that.");
         if (k === "harrowing") return harrowing(a, { kind: b.dataset.arg || "general" });
         if (k === "vsAngst") return vsAngst(a);
+        if (k === "spectre") {
+            if (!game.user.isGM) return ctx.notify("The Storyteller decides.");
+            // B5752: a Spectre: the Shadow has the wraith; its tokens turn hostile and dark, and WoDX NPC plays it
+            await a.setFlag(MOD, "spectre", true);
+            for (const t of a.getActiveTokens?.() ?? []) { try { await (t.document ?? t).update({ disposition: CONST.TOKEN_DISPOSITIONS.HOSTILE, "texture.tint": "#3a2a4a" }); } catch (e) { /* no token */ } }
+            await ctx.logEvent?.(a, "The Shadow takes the wraith: a Spectre.", "harrowing");
+            return post(a, `${a.name} is a Spectre`, `<div class="vta-big bad">The Shadow has won. ${esc(a.name)} is a Spectre now.</div>`);
+        }
         return null;
     }
 
-    return { maelstrom, storm, great, autoStorm, info, useArcanos, corpusDamage, newScene, newSession, onReady, passion, fetter, memoriam, healCorpus, setCorpusDamage, shadowguide, whisper, shadow, harrowing, vsAngst, caul, hysteria, onCorpus, afterSpend, shroudAt, onChatButton, guideOf, targetTraits };
+    /** B4926: the Arcanoi an NPC may choose by itself. */
+    function powersFor(actor) {
+        const lib = library();
+        if (!lib) return [];
+        return W.artsFor(lib.arts, info(actor).arcanoi).filter(a => a.r).map(a => ({ use: "useArcanos", field: "art", value: a.id, name: a.n, disc: a.d, level: a.l,
+            set: String(a.id).startsWith("gw-") ? "greatwar" : "wraith", id: a.id }));
+    }
+    return { powersFor, fetterScene, restAll, maelstrom, storm, great, autoStorm, info, useArcanos, corpusDamage, newScene, newSession, onReady, passion, fetter, memoriam, healCorpus, setCorpusDamage, shadowguide, whisper, shadow, harrowing, vsAngst, caul, hysteria, onCorpus, afterSpend, shroudAt, onChatButton, guideOf, targetTraits };
 }
 
 export function registerSettings() {

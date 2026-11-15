@@ -381,4 +381,19 @@ export function downtimeResult(kind, successes, botch) {
 
 /** Who counts as a Masquerade witness: the living who don't already know (mortals, hunters, mages, creatures). */
 export const WITNESS_PROFILES = ["mortal", "hunter", "mage", "beast"];
-export const WITNESS_STATES = { saw: "Saw it", forgot: "Made to forget (Dominate)", convinced: "Talked round", silenced: "Silenced", told: "Told others", ghoul: "Bound as a ghoul" };
+export const WITNESS_STATES = { saw: "Saw it", forgot: "Made to forget (Dominate)", convinced: "Talked round", silenced: "Silenced", told: "Told others", ghoul: "Bound as a ghoul", dream: "Remembers it as a dream (Enchantment ran out)" };
+
+/* ------------------------------------------------------------------ */
+/*  Golconda (Ben's Golconda Desk, B5090-B5099)                         */
+/* ------------------------------------------------------------------ */
+
+/** Golconda holds while Humanity (the Road) stays at 7 or more and Conscience (or Conviction) at 4 or more (V20 Dark Ages p. 359). */
+export const golcondaHolds = ({ road, conscience }) => n(road) >= 7 && n(conscience) >= 4;
+/** In Golconda any Trait may reach 10 regardless of Generation (V20 Dark Ages p. 359); the blood pool stays. */
+export const golcondaTraitMax = (golconda, genMax) => (golconda ? 10 : n(genMax) || 5);
+/** Powers that cannot reach a vampire in Golconda (V20 pp. 158, 161, 177; V20 Dark Ages p. 220), by name. */
+export const GOLCONDA_BEYOND = ["speak through the blood", "summon soul", "insight"];
+export const beyondGolconda = name => GOLCONDA_BEYOND.includes(String(name ?? "").toLowerCase().replace(/[^a-z ]/g, "").replace(/\s+/g, " ").trim());
+/** B5096: the sun counts one step weaker on the ladder for a vampire in Golconda (Ben's pick, a house rule). */
+export const GOLCONDA_SUN_LADDER = ["faint", "covered", "indirect", "cloudy", "direct"];
+export const golcondaSun = light => { const i = GOLCONDA_SUN_LADDER.indexOf(light); return i > 0 ? GOLCONDA_SUN_LADDER[i - 1] : light; };

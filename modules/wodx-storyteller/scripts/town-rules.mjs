@@ -102,7 +102,7 @@ export const TOWN_OUTBREAKS = [
   {key: "cocoliztli-1545", from: 1545, to: 1548, name: "The great sickness", share: 0.4, weeks: 40, chance: 0.04, reach: ["mexico"]},
   {key: "plague-1634", from: 1634, to: 1635, name: "Plague in the war years", share: 0.1, weeks: 20, chance: 0.04, reach: ["moravia", "german-lands", "italy", "france", "low-countries"]},
   {key: "plague-1665", from: 1663, to: 1666, name: "The Great Plague", share: 0.15, weeks: 26, chance: 0.03, reach: ["british-isles", "low-countries"]},
-  {key: "cholera-1817", from: 1817, to: 1824, name: "Cholera", share: 0.03, weeks: 12, chance: 0.02, reach: ["india", "southeast-asia", "nusantara", "china", "persia", "arabia", "east-africa"]},
+  {key: "cholera-1817", from: 1817, to: 1824, name: "Cholera", share: 0.03, weeks: 12, chance: 0.02, reach: ["india", "southeast-asia", "nusantara", "philippines", "china", "persia", "arabia", "east-africa"]},
   {key: "cholera-1831", from: 1830, to: 1832, name: "Cholera", share: 0.03, weeks: 12, chance: 0.04, reach: [...EUROPE, "india", "north-america-east", "canada", "egypt"]},
   {key: "cholera-1848", from: 1848, to: 1849, name: "Cholera", share: 0.03, weeks: 12, chance: 0.04, reach: [...EUROPE, "north-america-east", "egypt"]},
   {key: "plague-1855", from: 1855, to: 1900, name: "Plague", share: 0.04, weeks: 16, chance: 0.002, reach: ["china", "india"]},

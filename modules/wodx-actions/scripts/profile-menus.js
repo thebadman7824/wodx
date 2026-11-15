@@ -29,7 +29,7 @@ export const MENUS = {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:seduction", "Seduction", "fa-heart"], ["api:hunt", "Hunt", "fa-paw"]]],
             ["Blood", [["api:feed", "Feed on target", "fa-tint"], ["api:spendBlood", "Spend blood", "fa-heartbeat"], ["api:bloodOath", "Blood Oath", "fa-link"]]],
-            ["Disciplines and Road", [["api:useDiscipline", "Use a Discipline", "fa-hand-sparkles"], ["api:setRoad", "Road and Path", "fa-road"], ["api:downtime", "Downtime and domain", "fa-hourglass-half"]]],
+            ["Disciplines and Road", [["api:useDiscipline", "Use a Discipline", "fa-hand-sparkles"], ["api:conditioning", "Dominate Conditioning", "fa-user-lock"], ["api:setRoad", "Road and Path", "fa-road"], ["api:downtime", "Downtime and domain", "fa-hourglass-half"]]],
             ["The Beast", [["api:frenzy", "Frenzy", "fa-fire-alt"], ["api:rotschreck", "Rötschreck", "fa-running"], ["api:endFrenzy", "End frenzy", "fa-hand-paper"], ["api:sin", "Sin / degeneration", "fa-balance-scale"], ["api:diablerieMarks", "Marks of diablerie", "fa-eye"]]],
             ["Night and day", [["api:daytime", "Awaken by day", "fa-sun"], ["api:hazard", "Sun / fire / fall", "fa-burn"], ["api:sunAndHaven", "Sun and haven", "fa-house-user"], ["api:torpor", "Torpor", "fa-bed"], ["api:diablerie", "Diablerie", "fa-skull"]]],
             ["Court and chronicle (GM)", [["api:boons", "Prestation (boons)", "fa-handshake"], ["api:bloodHunt", "Blood Hunt", "fa-crosshairs"], ["api:masquerade", "Masquerade and witnesses", "fa-mask"], ["api:skyAndSun", "Sky and sun", "fa-cloud-sun"], ["api:endStory", "End of story", "fa-book"]]],
@@ -47,7 +47,7 @@ export const MENUS = {
     mortal: {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:seduction", "Seduction", "fa-heart"], ["api:kinfolk", "Kinfolk", "fa-users"]]],
-            ["Faith and the uncanny", [["api:imbue", "The Imbuing (GM, 1999 on)", "fa-bolt"], ["api:trueFaith", "True Faith", "fa-cross"], ["api:numina", "Psychic Numina", "fa-eye"], ["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"]]],
+            ["Faith and the uncanny", [["api:imbue", "The Imbuing (GM, 1999 on)", "fa-bolt"], ["api:trueFaith", "True Faith", "fa-cross"], ["api:numina", "Psychic Numina", "fa-eye"], ["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"], ["api:pactGift", "A pact gift", "fa-file-signature"], ["api:knownNames", "Names known", "fa-signature"], ["api:pressName", "Call by a True Name", "fa-bullhorn"], ["api:fomorPower", "Fomor powers", "fa-biohazard"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mortal", "Mortal rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
@@ -81,7 +81,7 @@ export const MENUS = {
     mage: {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["preset:researchmage", "Research / lore", "fa-book-open"]]],
-            ["Magick", [["cast", "Cast an effect (Arete)", "fa-hat-wizard"], ["api:m20Counter", "Countermagick / resist", "fa-shield-alt"], ["uses:quintessence", "Quintessence", "fa-gem"], ["uses:paradox", "Paradox", "fa-bolt"], ["api:m20Backlash", "Paradox backlash (GM)", "fa-meteor"], ["api:m20Quiet", "The Quiet", "fa-eye-slash"], ["api:m20Purify", "Purify the Scourge (Crusade)", "fa-praying-hands"], ["api:m20Place", "Consensus here (GM)", "fa-landmark"]]],
+            ["Magick", [["cast", "Cast an effect (Arete)", "fa-hat-wizard"], ["api:m20Counter", "Countermagick / resist", "fa-shield-alt"], ["uses:quintessence", "Quintessence", "fa-gem"], ["uses:paradox", "Paradox", "fa-bolt"], ["api:m20Backlash", "Paradox backlash (GM)", "fa-meteor"], ["api:m20Quiet", "The Quiet", "fa-eye-slash"], ["api:m20Purify", "Purify the Scourge (Crusade)", "fa-praying-hands"], ["api:m20Draw", "Meditate for Quintessence each day", "fa-om"], ["api:m20Place", "Consensus here (GM)", "fa-landmark"]]],
             ["Sorcery and Numina", [["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"], ["api:numina", "Psychic Numina", "fa-eye"], ["api:trueFaith", "True Faith", "fa-cross"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mage", "Mage rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
@@ -115,7 +115,7 @@ export const MENUS = {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:seduction", "Seduction / glamour", "fa-heart"]]],
             ["Glamour", [["cantrip", "Weave a cantrip", "fa-wand-magic-sparkles"], ["api:c20Unleash", "Unleash an Art", "fa-bolt"], ["api:c20Invoke", "Invoke the Wyrd or the Autumn", "fa-mask"],
-                ["api:c20Epiphany", "Epiphany (gather Glamour)", "fa-star"], ["uses:glamour", "Glamour", "fa-coins"]]],
+                ["api:c20Epiphany", "Epiphany (gather Glamour)", "fa-star"], ["api:c20Place", "This place: freehold, glade or the Dreaming (GM)", "fa-tree"], ["api:enchant", "Enchant a mortal", "fa-wand-sparkles"], ["api:partedMists", "The Parted Mists", "fa-cloud-sun"], ["uses:glamour", "Glamour", "fa-coins"]]],
             ["Banality", [["api:c20Trigger", "A Banality trigger", "fa-cloud"], ["api:c20Mists", "The Mists (memory)", "fa-smog"], ["api:c20Everyday", "Everyday Banality (GM)", "fa-building"], ["api:oaths", "Oaths sworn and broken", "fa-handshake"], ["uses:banality", "Banality", "fa-cloud-rain"]]],
             ["Danger", [["api:c20Bedlam", "Nightmare and Bedlam", "fa-dizzy"], ["api:c20ColdIron", "Struck by cold iron", "fa-burn"], ["api:hazard", "Fire / fall", "fa-fire"], ["rules:fae", "Changeling rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
@@ -125,7 +125,7 @@ export const MENUS = {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:useArcanos", "Use an Arcanos", "fa-ghost"]]],
             ["Passions and Fetters", [["api:passion", "Passion", "fa-heart"], ["api:fetter", "Fetter", "fa-link"], ["api:memoriam", "Memoriam", "fa-book-dead"], ["uses:pathos", "Pathos", "fa-fire-alt"]]],
-            ["Corpus", [["api:healCorpus", "Heal Corpus", "fa-band-aid"], ["api:caul", "The Caul", "fa-baby"], ["api:soulforge", "Soulforge (a long task)", "fa-hammer"]]],
+            ["Corpus", [["api:healCorpus", "Heal Corpus", "fa-band-aid"], ["api:caul", "The Caul", "fa-baby"], ["api:soulforge", "Soulforge (a long task)", "fa-hammer"], ["api:chainThrall", "Hold a Thrall", "fa-link"]]],
             ["The Shadow", [["api:shadow", "The Shadow (Shadowguide)", "fa-mask"], ["api:shadowWhisper", "Whisper", "fa-comment-dots"], ["api:harrowing", "Harrowing", "fa-skull"], ["api:shadowguide", "Assign the Shadowguide (GM)", "fa-user-secret"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:hysteria", "Hysteria (GM)", "fa-exclamation-triangle"], ["api:maelstrom", "The Maelstrom (GM)", "fa-wind"], ["rules:wraith", "Wraith rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
@@ -134,7 +134,7 @@ export const MENUS = {
     spirit: {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"]]],
-            ["Essence", [["uses:essence", "Essence", "fa-sparkles"]]],
+            ["Charms", [["api:spiritCharm", "Spirit Charms", "fa-wind"], ["uses:essence", "Essence", "fa-sparkles"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
     },
@@ -152,9 +152,9 @@ MENUS.demon = {
     sections: [
         ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:seduction", "Seduction", "fa-heart"]]],
         ["Faith", [["api:demonEvoke", "Evoke (a lore)", "fa-hand-sparkles"], ["api:demonForm", "The apocalyptic form", "fa-dragon"], ["api:demonRevelation", "Revelation (a witness)", "fa-eye"],
-            ["api:demonReap", "Reap Faith", "fa-hand-holding"], ["api:demonThralls", "Thralls and pacts", "fa-users"], ["api:demonHeal", "Heal with Faith", "fa-band-aid"]]],
+            ["api:demonReap", "Reap Faith", "fa-hand-holding"], ["api:demonThralls", "Thralls and pacts", "fa-users"], ["api:demonPact", "Seal a pact (target)", "fa-file-signature"], ["api:demonHeal", "Heal with Faith", "fa-band-aid"]]],
         ["Torment", [["api:demonSin", "A sin (Virtue at 8)", "fa-balance-scale"], ["api:demonKindness", "An act of kindness", "fa-dove"], ["uses:torment", "Torment", "fa-fire"]]],
-        ["Danger", [["api:demonHoly", "Holy ground / sacred object", "fa-cross"], ["api:demonName", "A name is spoken", "fa-comment"], ["api:demonIllusion", "See through illusion", "fa-low-vision"],
+        ["Danger", [["api:demonHoly", "Holy ground / sacred object", "fa-cross"], ["api:demonName", "A name is spoken", "fa-comment"], ["api:knownNames", "Names known", "fa-signature"], ["api:pressName", "Call by a True Name", "fa-bullhorn"], ["api:demonIllusion", "See through illusion", "fa-low-vision"],
             ["api:hazard", "Fire / fall", "fa-burn"], ["rules:demon", "Demon rules", "fa-book"]]],
         ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
     ]
@@ -219,31 +219,31 @@ export const EXTRA_PRESETS = {
 /** Resource uses: [label, cost, roll?, note]. roll = { pool: resource id | "attr+ability", diff }. */
 export const USES = {
     willpower: { title: "Willpower", uses: [
-        ["Automatic success on a roll", 1, null, "One Willpower point = one automatic success (cannot be canceled by 1s). One per turn."],
-        ["Ignore wound penalties for one turn", 1, null, "VtDA20 printed p. 339 (pdf 340)."],
+        ["Automatic success on a roll", 1, null, "One Willpower point = one automatic success (cannot be canceled by 1s). One per turn. Held for your next roll.", "hold:wp"],
+        ["Ignore wound penalties for one turn", 1, null, "VtDA20 printed p. 339 (pdf 340). Held for your next roll.", "hold:wounds"],
         ["Resist Dominate / compulsion", 1, null, "Per the power; roll Willpower if the rule asks."],
         ["Regain Willpower (rest / ST award)", -1, null, "Cost -1 adds a point."]
     ] },
     blood: { title: "Vitae", uses: [
-        ["Heal bashing or lethal damage (1 vitae per level)", 1, null, "Ghouls and revenants heal as the Storyteller allows (G&R)."],
-        ["Increase a Physical Attribute (+1 die)", 1, null, "For one action or turn."]
+        ["Heal bashing or lethal damage (1 vitae per level)", 1, null, "Each point heals one level, bashing first. Ghouls and revenants heal as the Storyteller allows (G&R).", "heal"],
+        ["Increase a Physical Attribute (+1 die)", 1, null, "+1 die a point on your next Strength, Dexterity or Stamina roll.", "hold:physical"]
     ] },
     rage: { title: "Rage", uses: [
-        ["Extra action (declare at the start of the turn)", 1, null, "Max Rage spent for actions per turn = half permanent Rage. Rage and Gnosis cannot both be used in one turn. (W20 p. 144, 266)"],
-        ["Change form instantly (no Stamina + Primal-Urge roll)", 1, null, "W20 p. 144, 285."],
-        ["Ignore being stunned", 1, null, "Lost more health levels than Stamina in one turn: W20 p. 144."],
+        ["Extra action (declare at the start of the turn)", 1, null, "Max Rage spent for actions per turn = half permanent Rage. Rage and Gnosis cannot both be used in one turn. (W20 p. 144, 266) The fight gives the extra action this turn.", "extra"],
+        ["Change form instantly (no Stamina + Primal-Urge roll)", 1, null, "W20 p. 144, 285. Opens Change form, which spends the Rage.", "route:shift"],
+        ["Ignore being stunned", 1, null, "Lost more health levels than Stamina in one turn: W20 p. 144. Takes the Dazed mark off.", "unstun"],
         ["Remain active below Incapacitated (Rage roll, diff 8)", 0, { pool: "rage", diff: 8 }, "Each success heals a health level of any type; once per scene; leaves a Battle Scar; frenzy risk. (W20 p. 144)"],
         ["Rage roll (frenzy test)", 0, { pool: "rage", diff: 6 }, "4 or more successes: the Garou enters frenzy (W20 p. 144, 261). Difficulty depends on provocation."],
         ["Regain Rage (provocation / the moon)", -1, null, "Cost -1 adds a point."]
     ] },
     gnosis: { title: "Gnosis", uses: [
         ["Activate a Gift or fetish", 1, null, "Spend 1 Gnosis (some Gifts ask for none). Not in the same turn as Rage."],
-        ["Step sideways (Gnosis roll, diff = Gauntlet)", 0, { pool: "gnosis", diff: 6 }, "Difficulty = local Gauntlet (caern 3, city up to 8)."],
+        ["Step sideways (Gnosis roll, diff = Gauntlet)", 0, { pool: "gnosis", diff: 6 }, "Difficulty = local Gauntlet (caern 3, city up to 8). Opens the crossing, which rolls against this place's Gauntlet.", "route:sideways"],
         ["Spirit bargain: gain Gnosis", -1, null, "Cost -1 adds a point."]
     ] },
     glamour: { title: "Glamour", uses: [
         ["Wyrd cantrip (use the cantrip button)", 1, null, "Chimerical cantrips cost nothing; Wyrd cantrips cost 1 Glamour (Changeling 20th)."],
-        ["Heal a health level [house]", 1, null, "Storyteller's option."],
+        ["Heal a health level [house]", 1, null, "Storyteller's option. Each point heals one level, bashing first.", "heal"],
         ["Reap Glamour (Rapture / dreamers)", -1, null, "Cost -1 adds a point."]
     ] },
     banality: { title: "Banality", uses: [
@@ -342,6 +342,42 @@ export function build(ctx) {
         return { dice: r.perm || r.max || r.value, label: r.label };
     }
 
+    /** B5757: what a resource use does once paid. hold:* waits on the character for the next roll (main.js resolveAction). */
+    async function carryOut(actor, key, points) {
+        if (!key || !points) return "";
+        if (key.startsWith("hold:")) {
+            const k = key.slice(5), held = { ...(actor.getFlag("wodx-actions", "held") ?? {}) };
+            held[k] = num(held[k]) + (k === "physical" ? points : 1);
+            held.at = game.time?.worldTime ?? 0;
+            await actor.setFlag("wodx-actions", "held", held);
+            return k === "wp" ? "An automatic success waits for the next roll." : k === "wounds" ? "The next roll ignores wound penalties." : `+${held[k]} die on the next Physical roll.`;
+        }
+        if (key === "heal") {
+            const C = game.wodxCombat;
+            if (!C?.healDamage) return "Heal it on the sheet (WoDX Combat is off).";
+            const d = actor.system?.health?.damage ?? {};
+            let left = points, out = [];
+            for (const type of ["bashing", "lethal"]) {
+                const k = Math.min(left, num(d[type])); if (!k) continue;
+                await C.healDamage(actor, type, k); left -= k; out.push(`${k} ${type}`);
+            }
+            return out.length ? `Healed ${out.join(" and ")}.` : "No bashing or lethal damage to heal.";
+        }
+        if (key === "extra") {
+            const c = game.combat;
+            if (!c?.started) return "No fight running: the extra action is for the next turn of a fight.";
+            const k = `${c.id}:${c.round}`, prev = actor.getFlag("wodx-actions", "extraActions");
+            await actor.setFlag("wodx-actions", "extraActions", { key: k, n: (prev?.key === k ? num(prev.n) : 0) + points });
+            return `${points} extra action${points === 1 ? "" : "s"} this turn.`;
+        }
+        if (key === "unstun") {
+            if (!actor.statuses?.has?.("wodx-dazed")) return "Not dazed.";
+            await actor.toggleStatusEffect?.("wodx-dazed", { active: false });
+            return "Shakes off the daze.";
+        }
+        return "";
+    }
+
     /** "Use a resource" dialog. */
     async function uses(actor, resId) {
         const def = USES[resId];
@@ -355,8 +391,12 @@ export function build(ctx) {
           <p class="vta-note vta-use-note">${esc(def.uses[0][3] ?? "")}</p></form>`;
         return ctx.dialog(`${def.title}: ${actor.name}`, content, "Use", async fd => {
             const u = def.uses[num(fd.use)];
+            // B5757: a use another window does properly opens that window (it pays there)
+            const doKey = String(u[4] ?? "");
+            if (doKey === "route:shift") return API?.shift?.({ actor });
+            if (doKey === "route:sideways") { const ow = game.modules.get("wodx-otherworlds")?.api; if (ow?.stepSideways) return ow.stepSideways(); ctx.notify("WoDX Otherworlds is off: step sideways by hand."); return null; }
             const note = await pay(actor, resId, fd.cost);
-            if (note === false) return null;
+            if (note === false || note === null) return null;
             let body = note ? `<div class="vta-parts">${esc(note)}</div>` : "";
             const rolls = [];
             if (u[2]) {
@@ -366,6 +406,9 @@ export function build(ctx) {
                 body += rollBlock(`${pool.label} roll`, rr, [`${pool.label} ${pool.dice}`, fd.bonus ? `bonus ${fd.bonus}` : ""].filter(Boolean));
             }
             if (u[3]) body += `<div class="vta-note">${esc(u[3])}</div>`;
+            // B5757: the use itself happens
+            const done = await carryOut(actor, doKey, Math.max(0, num(fd.cost)));
+            if (done) body += `<div class="vta-res good">${esc(done)}</div>`;
             return post(actor, `${actor.name}: ${esc(u[0])}`, body, rolls);
         }, {
             render: root => {

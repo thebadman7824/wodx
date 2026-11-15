@@ -63,7 +63,7 @@ export const MENU_PLAN = {
         scene: ["api:endScene", "api:innerVoice", "api:voices", "rules:ghoul"]
     },
     mortal: {
-        act: ["action", "api:quickCheck", "api:withPerson", "api:seduction", "api:trueFaith", "api:numina", "api:hedgeMagic", "api:kinfolk"],
+        act: ["action", "api:quickCheck", "api:withPerson", "api:seduction", "api:trueFaith", "api:numina", "api:hedgeMagic", "api:fomorPower", "api:kinfolk"],
         resist: ["api:hazard"],
         recover: ["api:healing", "uses:willpower"],
         st: ["api:imbue"],
@@ -106,7 +106,7 @@ export const MENU_PLAN = {
         st: ["api:c20Mists", "api:c20Everyday"],
         scene: ["api:endScene", "api:voices", "rules:fae"]
     },
-    spirit: { act: ["action", "api:quickCheck", "api:withPerson", "uses:essence"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] },
+    spirit: { act: ["action", "api:quickCheck", "api:withPerson", "api:spiritCharm", "uses:essence"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] },
     beast: { act: ["action", "api:quickCheck", "api:withPerson", "preset:trackscent", "preset:sneaking"], resist: ["api:hazard"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices", "rules:beast"] },
     /** Kindred of the East (3.10.0). */
     kote: {
@@ -171,6 +171,16 @@ export const DESC = {
     "api:oaths": "Swear an oath, or break one and pay its price",
     "api:masquerade": "Who saw what: witnesses to a breach of the Masquerade",
     "api:skyAndSun": "Set the sky and the light on this scene (cloud, shade, indoors)",
+    "api:m20Draw": "Mark the mage to meditate each day and draw the Avatar's or the Node's Quintessence by itself",
+    "api:c20Place": "Mark this scene a freehold or glade, or in the Dreaming, for how fast chimerical wounds heal",
+    "api:conditioning": "Roll Dominate Conditioning on a mortal and grow the hold it gives you",
+    "api:enchant": "Spend Glamour to Enchant a mortal so they can see and touch the Dreaming for a while",
+    "api:partedMists": "With other changelings, part the Mists for one mortal so the Enchantment lasts",
+    "api:chainThrall": "Chain a wraith as your Thrall, a servant bound to obey",
+    "api:demonPact": "Strike a pact with a mortal: a thrall who feeds you Faith, and the gifts you grant",
+    "api:pactGift": "The gifts a demon's pact gave you, and what they cost",
+    "api:knownNames": "The demons' names you know: mundane, Celestial or True",
+    "api:pressName": "Speak a demon's True Name to call it to you and press it to obey",
     "api:endStory": "End the story: what lasts a story is restored or reset for every character",
     "api:newNight": "Start a new night for every Kindred: blood to rise, Willpower, the watch",
     "api:endScene": "End the scene: once-a-scene powers and limits reset",
@@ -200,6 +210,8 @@ export const DESC = {
     "uses:conviction": "Spend or regain Conviction",
     "api:numina": "Psychic Numina: the roll for each power",
     "api:hedgeMagic": "Sorcery: a spell or a ritual on a path",
+    "api:fomorPower": "Fomor powers from the book: armored hides, claws, Numbing, the Wyrm's gaze and the rest",
+    "api:spiritCharm": "Spirit Charms from the book: Blast, Armor, Materialize, Possession and the rest",
     "api:relic": "Call on a holy relic",
     "api:sinGod": "A sin against God: the Piety roll",
     "api:healing": "Heal wounds with time, care or medicine",

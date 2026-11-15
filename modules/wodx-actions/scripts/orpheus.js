@@ -11,7 +11,10 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: orpheus-rules.js.
  */
+import * as NPW from "./npc-power-rules.js";
+import * as LIM from "./limits.js";
 import * as O from "./orpheus-rules.js";
+import { floatOver } from "./daysleep.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
 import * as OH from "./orpheus-horrors.js";
@@ -94,11 +97,14 @@ export function build(ctx) {
             const it = i.horrors.find(x => x.id === fd.h);
             const k = Math.max(0, Math.min(5, n(fd.v)));
             if (k > i.vitality.now) { notify(`${actor.name} has ${i.vitality.now} Vitality.`); return null; }
+            // B4921: a Horror used up for its time (the house rule counts the Vitality put in as its level) is refused
+            const lim = it ? await LIM.gate(actor, { name: it.name, level: k }) : { diff: 0, done: async () => {} };
+            if (!lim) return null;
             let body = "", rolls = [];
             const note = k ? await setVitality(actor, i.vitality.now - k) : "";
             const total = k ? await spentThisTurn(actor, k) : 0;
             const pool = (fd.a ? ctx.attr(actor, fd.a) : 0) + (fd.b ? n(ctx.findAbility?.(actor, fd.b)?.value) : 0);
-            const diff = n(fd.d) + i.state.penalty;
+            const diff = n(fd.d) + i.state.penalty + lim.diff;
             const name = it ? esc(it.name) : "A Horror";
             let got = 0;
             if (pool) {
@@ -123,6 +129,8 @@ export function build(ctx) {
             if (sym) body += `<div class="vta-note">Fearful symmetry: ${total} Vitality this turn ${esc(sym.text)}.</div>`;
             if (note) body += `<div class="vta-note">${esc(note)}</div>`;
             body += `<div class="wodx-quiet">${REF} ${hfx ? `${hfx.page}; ` : ""}pp. 124, 190–193</div>`;
+            if (lim.diff) body += `<div class="vta-note">Drained: +${lim.diff} difficulty.</div>`;
+            await lim.done({ successes: got });
             return post(actor, `${actor.name}: ${it?.name ?? "a Horror"}`, body, rolls.filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 520, render: root => { describe(root, true); root.querySelector("[name=h]")?.addEventListener("change", () => describe(root, true)); root.querySelector("[name=v]")?.addEventListener("input", () => describe(root, false)); return aim(root, { actor, lib: "horror", power: r => { const it = i.horrors.find(x => x.id === r.querySelector("[name=h]")?.value); if (!it) return null; const key = String(it.name ?? "").toLowerCase().replace(/[^a-z]/g, ""); return { id: key, n: it.name }; }, onPick: () => describe(root, true) }); } });
     }
@@ -252,5 +260,42 @@ export function build(ctx) {
         return post(actor, `${actor.name}, of the crucible`, body);
     }
 
-    return { info, horror, vitality, harm, spite, project, setup, isOrpheus, rules: O };
+    /**
+     * B4998: Vitality returns with rest by itself, a point each eight hours of the clock (an hour for a skimmer resting
+     * in the body, p. 122), up to the starting rating (pp. 191-192). Not during a fight the character is in; any loss starts the
+     * count again, as the dialog says.
+     */
+    async function restAll(actors = game.actors?.filter?.(isOrpheus) ?? []) {
+        if (!game.user?.isGM || ctx.setting?.("autoVitality") === false) return [];
+        const now = game.time?.worldTime ?? 0, lines = [];
+        for (const a of actors) {
+            const i = info(a), clock = i.f.restClock;
+            if (i.vitality.now >= i.vitality.start) { if (clock) await saveFlag(a, { restClock: null }); continue; }
+            const fighting = game.combat?.started && game.combat.combatants?.some?.(c => c.actorId === a.id);
+            if (!clock || clock.v > i.vitality.now || fighting) { await saveFlag(a, { restClock: { since: now, v: i.vitality.now } }); continue; }
+            const fast = i.lament === "skimmer"; // the skimmer's bonus: an hour a point resting in the body (p. 122)
+            const step = fast ? 3600 : 8 * 3600;
+            const hours = (now - n(clock.since)) / 3600;
+            if (now - n(clock.since) < step) continue;
+            const v = O.rest(i.vitality.now, i.vitality.start, hours, fast);
+            const used = (v - i.vitality.now) * step;
+            await setVitality(a, v);
+            await saveFlag(a, { restClock: { since: n(clock.since) + used, v } });
+            lines.push(`<b>${esc(a.name)}</b>: Vitality ${i.vitality.now} → ${v}`);
+            floatOver(a, `+${v - i.vitality.now} Vitality`, "#8fd18f");
+        }
+        if (lines.length) await ChatMessage.create({ content: `<div class="vta-card"><h3>Rest</h3><ul>${lines.map(l => `<li>${l}</li>`).join("")}</ul><p class="wodx-quiet">${REF} pp. 191–192</p></div>`, whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: { alias: "WoDX" }, flags: { [MOD]: { info: true } } });
+        return lines;
+    }
+    /** B5678: the Horrors an NPC projector or spook may use by itself (main.js npcPowers), with one Vitality put in. */
+    function powersFor(actor) {
+        if (!isOrpheus(actor)) return [];
+        const i = info(actor);
+        const v = Math.min(1, i.vitality.now);
+        return i.horrors.map(it => ({ it, key: O.horrorOf(it.name) })).filter(x => OH.HORROR_FX[x.key]).map(({ it, key }) => ({
+            use: "useHorror", field: "h", value: it.id, fill: { v: String(v) }, name: it.name, level: n(it.system?.value), set: "horror", id: key,
+            keywords: NPW.keysOf(OH.horrorResults(key, v, 3, { name: it.name })) })).filter(p => p.keywords.length);
+    }
+
+    return { powersFor, restAll, info, horror, vitality, harm, spite, project, setup, isOrpheus, rules: O };
 }

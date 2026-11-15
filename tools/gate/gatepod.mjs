@@ -113,6 +113,8 @@ async function runGate(K) {
 
     await step("7 threshold", async () => {
       const a = by("Seeker");
+      // Golconda asks Humanity 7 and Conscience 4 (B5090); the Seeker is brought up to them before the last test
+      await a.update({"system.advantages.path.permanent": 7, "system.advantages.virtues.conscience.permanent": 4});
       await api().golcondaStep(a, 10, "The last test");
       await until(() => !!cardWith("grant"));
       const pressed = await press(cardWith("grant"));

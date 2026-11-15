@@ -247,13 +247,16 @@ async function recheck(job, lane, tag, wt, rep, L) {
   };
   log(`${tag} lane ${lane}: rechecking ${failing.join(" ")}`);
   const alone = await runOn(wt.dir, "alone");
-  let main = null;
+  let main = null; const notOnMain = new Set();
   if ( job.ref !== "main" ) {
     const m = await worktree(lane, "main");
-    if ( !m.error ) main = m.sha === wt.sha ? alone : await runOn(m.dir, "main");
+    if ( !m.error ) {
+      for ( const g of failing ) if ( !fs.existsSync(path.join(m.dir, "tools", "gate", `${g}.mjs`)) ) notOnMain.add(g);
+      main = m.sha === wt.sha ? alone : await runOn(m.dir, "main");
+    }
   }
   if ( alone === null ) return "Recheck: the lane would not take the rerun; nothing more to say.";
-  const rows = recheckVerdicts(failing, alone, main);
+  const rows = recheckVerdicts(failing, alone, main, notOnMain);
   return ["Recheck (each failing gate rerun on a fresh lane):", ...rows.map(r => `- ${r.gate}: ${r.verdict}`)].join("\n");
 }
 async function runLight(job, tag) {

@@ -8,6 +8,9 @@
  * order window with the follower and the master already picked. A player sees their own characters' followers only.
  */
 import * as FR from "./followers-rules.mjs";
+import * as SV from "./servants.mjs";
+import * as SR from "./servant-rules.mjs";
+import * as SW from "./servant-world.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export function build(ctx) {
@@ -34,12 +37,16 @@ export function build(ctx) {
     const AT = attitude?.();
     const rows = [];
     for ( const a of game.actors ?? [] ) {
-      if ( a.id === master.id || a.hasPlayerOwner || !FR.serves(a.flags, master.id) ) continue;
+      if ( a.id === master.id || a.hasPlayerOwner ) continue;
+      // B5101: every bond in the one ledger makes a follower too (Kinfolk, revenants, cultists, Thralls, fomori...)
+      const recs = SR.toward(SV.records(a), master.id);
+      if ( !FR.serves(a.flags, master.id) && !recs.length ) continue;
       let now = null;
       try { now = AT?.of?.(a, master) ?? null; } catch (e) { now = null; }
       const described = (() => { try { return wanted?.ofActor?.(a.id)?.length ?? 0; } catch (e) { return 0; } })();
       rows.push(FR.rowFor({id: a.id, name: a.name, flags: a.flags, ...placeOf(a)}, master.id,
         {attitudeEntry: a.flags?.[MOD]?.attitude?.[master.id] ?? null, step: now?.step ?? 0, word: now?.word ?? "", names, described, isGM: game.user.isGM}));
+      FR.withLedger(rows[rows.length - 1], recs, {masterLine: String(master.type ?? "").toLowerCase(), consor: !!a.flags?.[MOD]?.consor || a.items?.some?.(i => /numina|hedge/i.test(String(i.system?.type ?? "")))});
     }
     return FR.sortRows(rows);
   }
@@ -62,7 +69,7 @@ export function build(ctx) {
     const list = rows.map(rowHtml).join("");
     return `<div class="wnpc-followers-wrap">${rows.length > 5 ? searchBox(".wnpc-followers-rows", "Search followers…", "Search followers") : ""}
       <div class="wnpc-followers-rows">${list || `<p>No one serves ${esc(master.name)} yet. Ghouls, retainers, allies and herd made in Creation or from the sheet's Backgrounds show here, and the Storyteller can mark anyone else in the order window.</p>`}</div>
-      <p><button type="button" data-dayjobs="${esc(master.id)}"><i class="fa-solid fa-briefcase"></i> Day jobs…</button></p>
+      <p><button type="button" data-dayjobs="${esc(master.id)}"><i class="fa-solid fa-briefcase"></i> Day jobs…</button> <button type="button" data-bind="${esc(master.id)}"><i class="fa-solid fa-link"></i> Bind someone…</button>${game.user.isGM ? ` <button type="button" data-social="${esc(master.id)}"><i class="fa-solid fa-brain"></i> Social Conditioning…</button>` : ""}</p>
       <p class="wodx-quiet">Orders from here reach followers on the scene you are looking at. A hard order still waits for the Storyteller.${game.user.isGM ? "" : " A follower shows here once the Storyteller lets you see its sheet."}</p></div>`;
   }
 
@@ -77,13 +84,17 @@ export function build(ctx) {
     await dlg.render(true);
     const redraw = () => { const box = dlg.element?.querySelector(".wnpc-followers-wrap"); if ( box ) box.outerHTML = bodyHtml(master); };
     let wait = null;
-    const hook = Hooks.on("updateActor", a => { if ( a.id === master.id || FR.serves(a.flags, master.id) ) { clearTimeout(wait); wait = setTimeout(redraw, 300); } });
+    const hook = Hooks.on("updateActor", a => { if ( a.id === master.id || FR.serves(a.flags, master.id) || a.flags?.[MOD]?.held ) { clearTimeout(wait); wait = setTimeout(redraw, 300); } });
     const hook2 = Hooks.on("canvasReady", () => redraw());
     Hooks.once("closeDialogV2", app => { if ( app === dlg ) { Hooks.off("updateActor", hook); Hooks.off("canvasReady", hook2); } });
     dlg.element?.addEventListener("click", async ev => {
-      const o = ev.target.closest("[data-open]"), p = ev.target.closest("[data-pan]"), q = ev.target.closest("[data-order]"), m = ev.target.closest("[data-more]"), j = ev.target.closest("[data-dayjobs]");
-      if ( !o && !p && !q && !m && !j ) return;
+      const o = ev.target.closest("[data-open]"), p = ev.target.closest("[data-pan]"), q = ev.target.closest("[data-order]"), m = ev.target.closest("[data-more]"), j = ev.target.closest("[data-dayjobs]"), b = ev.target.closest("[data-bind]"), sc = ev.target.closest("[data-social]");
+      if ( !o && !p && !q && !m && !j && !b && !sc ) return;
       ev.preventDefault();
+      // B5101: make a bond of any kind by hand (a player's goes to the Storyteller, and approving makes it)
+      if ( b ) { await SV.openBind({master}); return redraw(); }
+      // B5123: a Social Conditioning programme on the targeted subject (organisations only, the Storyteller runs it)
+      if ( sc ) { await SW.openSocial(master); return redraw(); }
       // B3590: send an agent or a dot of Influence on a job by day
       if ( j ) return game.modules.get(MOD)?.api?.openDayJobs?.(master);
       if ( o ) return game.actors.get(o.dataset.open)?.sheet?.render(true);
