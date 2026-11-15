@@ -262,7 +262,8 @@ async function runGate(K) {
             for (const d of [tok[M.name], tok[F.name], hTok]) target(d, true); await sleep(300);
             R.targets = [...game.user.targets].map(t => t.name);
             answer(() => {});
-            const n = game.messages.size; await A().delirium(); const m = await untilMsg(n);
+            // The witnesses are passed in, not only targeted: a token drawn a moment ago may not take a target yet
+            const n = game.messages.size; await A().delirium({ tokens: [tok[M.name], tok[F.name], hTok].filter(Boolean) }); const m = await untilMsg(n);
             const t = text(m);
             ok("the Delirium", /Kinfolk, untouched/.test(t) && /Miller/.test(t) && /Father Anselm/.test(t) && m.whisper?.length > 0, { card: t.slice(0, 400) });
             for (const t of [...game.user.targets]) t.setTarget(false, { releaseOthers: false });

@@ -65,15 +65,21 @@ export async function run() {
     });
 
     await G.step("4. it turns the way it goes", async () => {
+      // A car tile starts facing right, so the move is waited out before the next one: a move down begun while the
+      // first is still sliding is diagonal, and a diagonal keeps the old facing.
+      const settled = () => waitFor(() => Math.abs((car.object?.x ?? 0) - car.x) < 1 && Math.abs((car.object?.y ?? 0) - car.y) < 1, 5000);
       await car.update({x: car.x + g});
+      await settled();
       await waitFor(() => MA.facing(car) === "right", 5000);
       const right = MA.facing(car), fr = car.object.mesh.texture?.frame?.y;
       await car.update({y: car.y + g});
+      await settled();
       await waitFor(() => MA.facing(car) === "down", 5000);
       const down = MA.facing(car), fd = car.object.mesh.texture?.frame?.y;
       const look = MR.looksOf("car").find(l => l.id === "1960-sedan");
       G.ok("4. it turns the way it goes", right === "right" && down === "down" && fr === 3 * look.h && fd === 2 * look.h, {right, down, rows: [fr, fd]});
       await car.update({x: car.x + g});
+      await settled();
       await waitFor(() => MA.facing(car) === "right", 5000);
     });
 
