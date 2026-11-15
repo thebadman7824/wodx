@@ -18,6 +18,7 @@ import dress as dr
 from px import R, T, OUT
 from library.core import add, YEAR_END
 from library import house as hs
+from library import kitchen as kt
 AGE6 = hs.looks("medieval", "early modern", "1800s", "1900s", "modern", "Future Darkness")
 
 E = YEAR_END
@@ -40,9 +41,9 @@ add("table-long", "long table", "furniture", ((8, 12), (2.5, 3.25)), hs.table, l
     tags=("hall", "inn", "refectory"), ref="hall boards on trestles, 8 to 12 ft")
 add("table-small", "small table", "furniture", ((2.5, 3.75), (2, 2.75)), hs.table, looks=AGE6,
     tags=HOME + ("chamber",), ref="side tables and stands, 2 1/2 to 3 1/2 ft")
-add("bench", "bench", "furniture", ((4, 8), (1, 1.5)), lambda tm, x, y, w, h, st, v: pr.bench(tm, x, y, w, h),
+add("bench", "bench", "furniture", ((4, 8), (1, 1.5)), kt.bench, looks=AGE6,
     tags=HOME + ("kitchen", "street", "yard", "work"), ref="plank benches, a seat 12 to 16 in deep")
-add("stool", "stool", "furniture", (1.5, 1.5), lambda tm, x, y, w, h, st, v: pr.stool(tm, x + w / 2, y + h / 2, rpx(w, h, .4)),
+add("stool", "stool", "furniture", (1.5, 1.5), kt.stool, looks=AGE6,
     tags=HOME + ("kitchen", "work", "craft"), ref="three-legged stools, a seat about 12 in across, the legs splayed past it")
 add("bed", "bed", "furniture", ((4, 5), (6.25, 7)), hs.bed, looks=AGE6,
     front=True, clear=1.5, mount="wall", tags=("home", "chamber", "inn"),
@@ -58,7 +59,7 @@ add("chest", "chest", "container", ((3.5, 5), (1.5, 2.25)),
     front=True, clear=1.5, back=1.5, mount="wall", states=("closed", "open"), openable="chest", tags=("home", "chamber", "store", "shop"),
     variants={"plain": {}, "red": {"paint": "red"}, "blue": {"paint": "blue"}, "green": {"paint": "green"}},
     ref="boarded and painted chests of the 14th to 19th c., 3 1/2 to 5 ft long, 1 1/2 to 2 ft deep; the lid needs 1 1/2 ft behind to open")
-add("dresser", "dresser with plates", "furniture", ((4.5, 6.5), (1.5, 2.25)), lambda tm, x, y, w, h, st, v: dr.t_dresser(tm, x, y, w, h),
+add("dresser", "dresser with plates", "furniture", ((4.5, 6.5), (1.5, 2.25)), kt.dresser, looks=hs.looks("early modern", "1800s", "1900s", "modern", "Future Darkness", start=1),
     front=True, clear=2, mount="wall", eras=(1550, E), tags=("home", "kitchen", "inn"), ref="open-shelved dressers from the later 16th c., 5 to 6 ft long, 18 to 24 in deep")
 add("cupboard", "cupboard", "furniture", ((3.5, 5.5), (1.5, 2.25)), hs.cupboard, looks=AGE6, states=("closed", "open"), openable="chest",
     front=True, clear=2, mount="wall", tags=("home", "kitchen", "chamber", "shop", "sacristy"), ref="aumbries and press cupboards, 3 1/2 to 5 ft wide; wardrobes 20 to 24 in deep; the doors need 2 ft before them")
@@ -72,9 +73,9 @@ add("sofa", "sofa", "furniture", ((5, 7.5), (2.75, 3.25)), hs.armchair, looks=hs
     front=True, clear=2, eras=(1781, E), tags=("home", "parlour", "inn", "office"),
     variants={"plain": {}, "red": {"cloth": "red"}, "green": {"cloth": "green"}, "blue": {"cloth": "blue"}}, ref="sofas and settees from the later 18th c., 5 to 7 ft by about 3 ft")
 add("shelf", "wall shelf", "furniture", ((3, 8), (1, 1.5)),
-    lambda tm, x, y, w, h, st, v: pr.shelf(tm, x, y, w, h, v.get("goods") or dr.shelfgoods(tm.rng.random())[:max(2, int(w * 3))]),
+    kt.shelf, looks=AGE6,
     front=True, clear=1.5, mount="wall", tags=("home", "kitchen", "store", "shop", "craft"),
-    variants={"crocks": {}, "linen": {"goods": ["linen", "candle", "jug", "linen"]}, "stores": {"goods": ["pot", "pot", "cheese", "jug", "eggs", "loaf"]}},
+    variants={"crocks": {}, "linen": {"goods": ["box", "candle", "jug", "box"]}, "stores": {"goods": ["crock", "crock", "cheese", "jug", "loaf"]}},
     ref="boards on brackets about a foot deep")
 add("pegrail", "peg rail with clothes", "furniture", ((3, 7), (1.5, 2.25)), lambda tm, x, y, w, h, st, v: dr.t_pegrail(tm, x, y, w, h),
     front=True, mount="wall", tags=("home", "chamber", "inn", "stable"), ref="a peg board with cloaks hung on it, standing out about 18 in")
@@ -111,6 +112,15 @@ add("hearth", "open hearth", "hearth", ((4.5, 6), (4.5, 6)), lambda tm, x, y, w,
     clear=2, tags=("home", "hut", "hall"), eras=(1197, 1900), light={"dim": 5, "bright": 1, "color": "#ff9a40", "kind": "fire"},
     ref="a stone hearth slab about 5 ft square in the middle of the floor")
 
+add("fireplace", "fireplace", "hearth", ((5, 7), (2.5, 3.5)), kt.fireplace, looks=AGE6, states=("lit", "out"),
+    front=True, clear=3, mount="wall", tags=("home", "hall", "inn", "parlour", "chamber"), light={"dim": 5, "bright": 1.5, "color": "#ff9a40", "kind": "fire"},
+    ref="wall fireplaces with hoods from the 12th c., hearths 4 to 6 ft wide; Victorian grates and tiled surrounds about 5 ft; stoves on a 3 ft slate hearth")
+add("cooker", "kitchen range", "hearth", ((3, 4.5), (2, 2.5)), kt.cooker, looks=hs.looks("1800s", "1900s", "modern", "Future Darkness", start=2),
+    front=True, clear=3, mount="wall", eras=(1781, E), tags=("home", "kitchen", "inn"),
+    ref="cast-iron ranges 3 to 4 1/2 ft wide; gas and electric cookers about 2 by 2 ft")
+add("sink", "sink", "fitting", ((2.5, 4.5), (1.5, 2.25)), kt.sink, looks=hs.looks("1800s", "1900s", "modern", "Future Darkness", start=2),
+    front=True, clear=2, mount="wall", eras=(1781, E), tags=("home", "kitchen", "inn", "scullery"),
+    ref="shallow stone sinks about 3 ft by 20 in; Belfast sinks 2 ft with a 2 ft draining board; sink units 3 1/2 to 4 ft")
 
 def _forge(tm, x, y, w, h, st, v):
     """The forge block in the left of the footprint, the bellows inside it on the right (B6331): nothing past the box."""
