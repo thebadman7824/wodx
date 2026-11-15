@@ -205,13 +205,35 @@ export function cleanupOutcome({successes = 0, botch = false} = {}) {
  * the Storyteller is told the follower may refuse, leave or turn. Returns {delta, why} or null.
  */
 export const DRIFT_FLOOR = -1, DRIFT_CEIL = 3;
-export function drift(kind, {step = 0, months = 0} = {}) {
+/**
+ * B5055: a blood-bound animal ghoul's loyalty does not drift below Friendly (1) unless it is mistreated: fed on by its
+ * master, or two months or more without vitae (Kindred of the Ebony Kingdom p. 185: bound animals turn only when
+ * badly mistreated). The floor never raises an attitude already under it.
+ */
+export const ANIMAL_FLOOR = 1;
+export const mistreated = (kind, months = 0) => kind === "fedOn" || (kind === "unfed" && Number(months) >= 2);
+export function drift(kind, {step = 0, months = 0, animal = false, bound = false} = {}) {
   const now = Math.round(Number(step) || 0);
   const want = {drank: 1, unfed: -1, fedOn: -1, hard: -1, errand: 0}[kind];
   if ( !want ) return null;
-  const to = Math.max(DRIFT_FLOOR, Math.min(DRIFT_CEIL, now + want));
+  const floor = animal && bound && !mistreated(kind, months) ? Math.min(ANIMAL_FLOOR, now) : DRIFT_FLOOR;
+  const to = Math.max(floor, Math.min(DRIFT_CEIL, now + want));
   if ( to === now ) return null;
   const why = {drank: "drank from its domitor", unfed: `${months || 1} month${months === 1 ? "" : "s"} without the domitor's vitae`,
     fedOn: "its master fed on it", hard: "made to carry out a hard order"}[kind];
   return {delta: to - now, why, wavers: to <= DRIFT_FLOOR};
+}
+
+/**
+ * B5063: orders an animal understands. Without Feral Whispers (Animalism 1) from the one it serves, a trained animal
+ * takes the trained commands (follow, wait, guard, watch, go to, and the fight orders) and an untrained one takes
+ * none; errands, help with a long task and talking round a witness are never open to it. With Feral Whispers, every
+ * order is open. An animal with no training on record counts as trained, as every animal follower did before.
+ * -> "" when it can take the order, else why not.
+ */
+export const TRAINED_ORDERS = new Set(["follow", "wait", "guard", "watch", "fetch", "attack", "holdback", "cutoff"]);
+export function animalOrderBlock(kind, {animal = false, trained = true, whispers = false} = {}) {
+  if ( !animal || whispers || kind === "none" ) return "";
+  if ( !TRAINED_ORDERS.has(kind) ) return "An animal cannot do that unless the one it serves speaks to it with Feral Whispers (Animalism).";
+  return trained ? "" : "An untrained animal does not understand that order. Train it, or speak to it with Feral Whispers (Animalism).";
 }

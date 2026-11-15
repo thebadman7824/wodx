@@ -366,7 +366,7 @@ REGION_SPHERE = {
     "russia": _O, "aegean": [(-9999, "orthodox"), (1453, "islamic"), (1830, "orthodox")], "siberia": _settled("northern", 1600, "orthodox"),
     "anatolia": _I, "levant": _I, "egypt": _I, "arabia": _I, "maghreb": _I, "persia": _I, "central-asia": _I,
     "tibet-himalaya": [(-9999, "tibetan")], "india": [(-9999, "indic")], "china": [(-9999, "sinic")], "korea": [(-9999, "sinic")],
-    "japan": [(-9999, "japanese")], "southeast-asia": [(-9999, "theravada")], "nusantara": [(-9999, "malay")],
+    "japan": [(-9999, "japanese")], "southeast-asia": [(-9999, "theravada")], "nusantara": [(-9999, "malay")], "philippines": [(-9999, "malay"), (1571, "latin")],
     "west-africa": [(-9999, "sahel")], "east-africa": [(-9999, "swahili")], "southern-africa": _settled("bantu", 1652),
     "central-africa": [(-9999, "bantu")],
     "canada": _settled("northern", 1608), "north-america-east": _settled("northern", 1607), "north-america-west": _settled("northern", 1769),

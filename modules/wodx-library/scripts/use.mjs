@@ -106,13 +106,73 @@ async function spendOne(item) {
 
 /* ---------------------------------------------------------------- what an ability does */
 
+const chronTraits = () => game.modules.get("wodx-chronicle")?.api?.traits ?? null;
+const statOf = (a, k) => Number(a?.system?.attributes?.[k]?.total ?? a?.system?.attributes?.[k]?.value) || 0;
+const skillOf = (a, k) => Number(a?.system?.abilities?.[k]?.value) || 0;
+/** B5012: what an unknown drug truly is, kept on the item so every dose of it is the same. */
+async function trueKindOf(item) {
+  const k = item.flags?.[MOD]?.trueKind;
+  if ( U.UNKNOWN_KINDS.includes(k) ) return k;
+  const pick = U.UNKNOWN_KINDS[Math.floor(Math.random() * U.UNKNOWN_KINDS.length)];
+  if ( item.isOwner ) await item.update({[`flags.${MOD}.trueKind`]: pick});
+  return pick;
+}
+/** B5012: Intelligence + Medicine or Occult (the better) at 7 tells the taker what an unknown drug is. */
+async function knowIt(actor, item, kind) {
+  const pool = statOf(actor, "intelligence") + Math.max(skillOf(actor, "medicine"), skillOf(actor, "occult"));
+  const r = await AU.rollPool(pool, U.KNOW_DIFF);
+  const what = U.EFFECT_LABELS[kind] ?? kind;
+  await tellPrivately(actor, `${actor.name} looks at ${item.name}`, r.successes > 0 ? `It is ${what.toLowerCase()} (Intelligence + ${skillOf(actor, "occult") > skillOf(actor, "medicine") ? "Occult" : "Medicine"} at ${U.KNOW_DIFF}, ${r.successes} success${r.successes === 1 ? "" : "es"}).`
+    : `It could be anything (${r.botch ? "a botch" : "no successes"} at ${U.KNOW_DIFF}).`);
+  if ( r.successes > 0 && item.isOwner ) await item.update({[`flags.${MOD}.known`]: true});
+  return r.successes > 0;
+}
+/** B5012, B5013: put what the dose does to rolls on the patient, as WoDX Chronicle timed roll effects. Lines for the card. */
+async function landDose(patient, state, eff, made) {
+  const T = chronTraits();
+  const out = [];
+  if ( !patient?.isOwner ) return out;
+  let strength = made.strength ?? "";
+  if ( made.impure ) {
+    const d10 = 1 + Math.floor(Math.random() * 10), o = U.impureOutcome(d10);
+    out.push(`${o.text} (d10: ${d10})`);
+    if ( o.key === "weaker" ) strength = "weak";
+    if ( o.key === "sick" || o.key === "poison" ) await T?.addBite?.(patient, {key: "intox:impure", name: "Tainted dose", tags: ["all"], dice: -1, duration: {kind: "time", seconds: 24 * 3600}, source: "WoDX Library"});
+    if ( o.key === "poison" ) await (game.wodxCombat ?? game.modules.get("wodx-combat")?.api)?.applyDamage?.(patient, "bashing", 1);
+  }
+  const wounded = (Number(patient.system?.health?.damage?.woundpenalty) || 0) > 0;
+  const count = Number(patient.flags?.[MOD]?.intox?.count) || 1;
+  for ( const b of U.intoxBites(state, {count, scale: eff.scale ?? "", strength, wounded}) ) {
+    await T?.addBite?.(patient, {...b, source: "WoDX Library"});
+  }
+  if ( state === "drunk" && count >= 2 ) out.push(`${Math.floor(count / 2)} dice off Dexterity and Intelligence, fading a die an hour.`);
+  if ( state === "remedy" ) {
+    await patient.update({[`flags.${MOD}.remedyAt`]: now()});
+    out.push(wounded ? "The pain eases: 1 die back on every roll for the scene, and a sickness's next week is easier." : "A sickness's next weekly roll is easier.");
+  }
+  if ( state === "sedative" ) {
+    const r = await AU.rollPool(statOf(patient, "stamina"), U.SEDATIVE_SLEEP.diff);
+    if ( r.successes > 0 ) out.push(`Fights off sleep (Stamina at ${U.SEDATIVE_SLEEP.diff}).`);
+    else { out.push(`Falls asleep (Stamina at ${U.SEDATIVE_SLEEP.diff} failed).`); try { await patient.toggleStatusEffect?.("sleep", {active: true}); } catch (e) { /* no token status */ } }
+  }
+  return out;
+}
+
 async function takeIt(actor, item, good, ability, patient = actor) {
-  const key = U.effectKeyOf(good, ability);
+  let key = U.effectKeyOf(good, ability);
   const line = lineOfActor(patient);
   const tor = patient?.system?.advantages?.torment;
-  const eff = U.effectForActor(key, line, clanOf(patient), {torment: tor ? Number(tor.permanent ?? tor.temporary ?? 0) : null,
-    holyFlaw: (patient?.items ?? []).some(i => /cannot enter holy ground/i.test(i.name))});
+  const opts = {torment: tor ? Number(tor.permanent ?? tor.temporary ?? 0) : null, holyFlaw: (patient?.items ?? []).some(i => /cannot enter holy ground/i.test(i.name))};
+  let eff = U.effectForActor(key, line, clanOf(patient), opts);
   const thing = item.name;
+  // B5012: an unknown drug is something; a look may tell what, and it works as that (with the line's weaker or stronger)
+  if ( key === "unknown" && eff.does === "storyteller" ) {
+    const kind = await trueKindOf(item);
+    if ( !item.flags?.[MOD]?.known ) await knowIt(actor, item, kind);
+    const was = eff;
+    key = kind; eff = U.effectForActor(kind, line, clanOf(patient), opts);
+    if ( U.PICKS.unknown?.[line] === "weaker" || U.PICKS.unknown?.[line] === "stronger" ) eff = {...eff, scale: U.PICKS.unknown[line], text: `${eff.text ?? (eff.state && U.STATES[eff.state] ? `${U.STATES[eff.state].label}: ${U.STATES[eff.state].text}` : "")} ${was.text ?? ""}`.trim()};
+  }
   await say(actor, ability === "throw" && patient !== actor ? `${actor.name} throws ${thing} over ${patient.name}.` : U.useLine(actor.name, ability, thing));
   if ( eff.does === "feeds" ) await gmDo({op: "mark", actor: patient.id, kinds: ability === "drink" ? ["food", "water"] : ["food"]});
   if ( eff.does === "waters" || eff.waters ) await gmDo({op: "mark", actor: patient.id, kinds: ["water"]});
@@ -133,10 +193,12 @@ async function takeIt(actor, item, good, ability, patient = actor) {
   // 0.10.0: a made drug or medicine's strength; an impure batch is the Storyteller's to know
   const made = item.flags?.["wodx-storyteller"] ?? {};
   if ( text && U.STRENGTH_TEXT[made.strength] ) text = `${text} ${U.STRENGTH_TEXT[made.strength]}`;
-  if ( made.impure && eff.does !== "cannot" ) await ChatMessage.create({content: `<div class="wodx-card wlib-use-card"><p><b>${esc(patient.name)} and ${esc(thing)}</b></p><p>${esc(U.STRENGTH_TEXT.impure)}</p></div>`,
+  const landed = state && eff.does === "takes" ? await landDose(patient, state, eff, made) : [];
+  if ( made.impure && eff.does !== "cannot" ) await ChatMessage.create({content: `<div class="wodx-card wlib-use-card"><p><b>${esc(patient.name)} and ${esc(thing)}</b></p><p>${esc(U.STRENGTH_TEXT.impure)}</p>${landed.length ? `<p>${esc(landed[0])}</p>` : ""}</div>`,
     whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: {alias: "What it does"}});
+  const extra = landed.length ? ` ${landed.slice(made.impure ? 1 : 0).join(" ")}` : "";
   if ( eff.does === "storyteller" ) await tellPrivately(patient, `${patient.name} and ${thing}`, `The Storyteller decides what this does to a ${U.LINE_LABELS[line].toLowerCase()}.`);
-  else if ( text ) await tellPrivately(patient, `${patient.name} and ${thing}`, state === "drunk" ? `${text} Drinks in the last few hours: ${patient.flags?.[MOD]?.intox?.count ?? 1}.` : text);
+  else if ( text ) await tellPrivately(patient, `${patient.name} and ${thing}`, `${state === "drunk" ? `${text} Drinks in the last few hours: ${patient.flags?.[MOD]?.intox?.count ?? 1}.` : text}${extra}`);
   if ( U.spends(good, ability) && eff.does !== "cannot" ) await spendOne(item);
 }
 

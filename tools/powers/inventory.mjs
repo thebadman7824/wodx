@@ -45,7 +45,8 @@ const CB = await import(pathToFileURL(path.join(ROOT, "modules/wodx-combat/scrip
 /** Keywords that only tell the user something; they do not change the game. */
 const INFO = new Set(["sense", "know", "speak"]);
 const applyingKw = (ks = []) => ks.some(k => E.KEYWORDS[k] && E.KEYWORDS[k].tier !== "st" && !INFO.has(k));
-const applyingSpec = s => !!s && !["note", "st"].includes(s.kind);
+/** B4820: a Summon applies whatever its spec kind, since the effects card turns it into a summoning with its own rules. */
+const applyingSpec = s => !!s && (!["note", "st"].includes(s.kind) || s.kw === "summon");
 /** Keywords a power used with no roll applies (its Harm readies the user; the attack roll deals it, B3751). */
 const noRollKw = (ks = []) => applyingKw(ks.map(k => k === "harm" ? "boost" : k));
 /** Always-on Disciplines WoDX Combat reads by rating: soak, damage dice and extra actions or speed. */

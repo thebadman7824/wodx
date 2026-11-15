@@ -32,7 +32,7 @@ export const CURFEW_YEARS = {
   "china": [[-9999, 1912]], "japan": [[-9999, 1868]], "korea": [[-9999, 1895], [1945, 1982]],
   "anatolia": [[-9999, 1850]], "levant": [[-9999, 1850]], "egypt": [[-9999, 1850]], "arabia": [[-9999, 1900]],
   "maghreb": [[-9999, 1850]], "persia": [[-9999, 1880]], "central-asia": [[-9999, 1880]], "india": [[-9999, 1820]],
-  "southeast-asia": [[-9999, 1880]], "nusantara": [[-9999, 1880]], "tibet-himalaya": [[-9999, 1950]],
+  "southeast-asia": [[-9999, 1880]], "nusantara": [[-9999, 1880]], "philippines": [[-9999, 1880]], "tibet-himalaya": [[-9999, 1950]],
   "southern-africa": [[-9999, 1800], [1950, 1986]],
   // Lands settled late keep no town curfew of the old kind
   "canada": [], "north-america-east": [], "north-america-west": [], "australia": [], "aotearoa": [], "pacific-islands": [],
@@ -44,7 +44,7 @@ export const BLACKOUT_YEARS = {
   "france": [[1914, 1918], [1939, 1944]], "low-countries": [[1940, 1945]], "italy": [[1940, 1945]], "scandinavia": [[1940, 1945]],
   "poland-baltic": [[1939, 1945]], "carpathians-balkans": [[1941, 1945]], "russia": [[1941, 1945]], "japan": [[1942, 1945]],
   "korea": [[1943, 1945]], "china": [[1937, 1945]], "north-america-east": [[1942, 1943]], "north-america-west": [[1941, 1943]],
-  "australia": [[1942, 1945]], "aotearoa": [[1942, 1943]], "southeast-asia": [[1941, 1945]], "nusantara": [[1942, 1945]],
+  "australia": [[1942, 1945]], "aotearoa": [[1942, 1943]], "southeast-asia": [[1941, 1945]], "nusantara": [[1942, 1945]], "philippines": [[1941, 1945]],
   "india": [[1942, 1945]], "egypt": [[1940, 1945]], "levant": [[1940, 1945]], "maghreb": [[1940, 1943]]
 };
 const within = (rows, y) => (rows ?? []).some(([a, b]) => y >= a && y <= b);

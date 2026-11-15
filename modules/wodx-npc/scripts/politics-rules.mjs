@@ -601,20 +601,20 @@ const REASON = /technocra|order of reason|union|construct|daedalean|craftmason|c
 export const REGION_COURTS = {
   "west-africa": "laibon-council", "east-africa": "laibon-council", "central-africa": "laibon-council", "southern-africa": "laibon-council",
   maghreb: "ashirra", egypt: "ashirra", arabia: "ashirra", levant: "ashirra", persia: "ashirra", anatolia: "ashirra",
-  china: "kuei-jin-court", japan: "kuei-jin-court", korea: "kuei-jin-court", "southeast-asia": "kuei-jin-court", nusantara: "kuei-jin-court",
+  china: "kuei-jin-court", japan: "kuei-jin-court", korea: "kuei-jin-court", "southeast-asia": "kuei-jin-court", nusantara: "kuei-jin-court", philippines: "kuei-jin-court",
   // NPC 0.63.0 (B2963): India keeps the Ravnos until 1999, Central Asia the Ashirra, Tibet the Kuei-jin
   india: "ravnos-court", "central-asia": "ashirra", "tibet-himalaya": "kuei-jin-court"
 };
 /** NPC 0.63.0 (B2965, B2966): the shapeshifters' court a Garou faction keeps by region. */
 export const REGION_SHIFTERS = {
-  china: "beast-court", japan: "beast-court", korea: "beast-court", "southeast-asia": "beast-court", nusantara: "beast-court",
+  china: "beast-court", japan: "beast-court", korea: "beast-court", "southeast-asia": "beast-court", nusantara: "beast-court", philippines: "beast-court",
   "tibet-himalaya": "beast-court",
   "west-africa": "bastet-land", "east-africa": "bastet-land", "central-africa": "bastet-land", "southern-africa": "bastet-land"
 };
 /** NPC 0.63.0 (B2967, B2968): the mages' body a faction that does not serve Reason keeps by region. */
 export const REGION_MAGES = {
   china: "wu-lung-court", korea: "wu-lung-court",
-  japan: "akashic-monastery", "southeast-asia": "akashic-monastery", nusantara: "akashic-monastery", india: "akashic-monastery", "tibet-himalaya": "akashic-monastery",
+  japan: "akashic-monastery", "southeast-asia": "akashic-monastery", nusantara: "akashic-monastery", philippines: "akashic-monastery", india: "akashic-monastery", "tibet-himalaya": "akashic-monastery",
   maghreb: "batini-circle", egypt: "batini-circle", arabia: "batini-circle", levant: "batini-circle", persia: "batini-circle", anatolia: "batini-circle", "central-asia": "batini-circle"
 };
 /** NPC 0.64.0 (B2971): the shapeshifters' body a Garou faction keeps by region before the settlers come. */
@@ -629,7 +629,7 @@ const MOKOLE = /mokol|gumagan|makara|piasa|werecroc|werelizard|dragon-kin/i;
 const BREEDS = [["ananasi-web", /ananasi|werespider/i], ["corax-flock", /corax|wereraven/i], ["gurahl-den", /gurahl|werebear/i],
   ["ratkin-nest", /ratkin|wererat/i], ["rokea-shiver", /rokea|wereshark/i]];
 /** NPC 0.66.0 (B3013): the Hsien are the fae of East and Southeast Asia. */
-export const HSIEN_LANDS = new Set(["china", "japan", "korea", "southeast-asia", "nusantara"]);
+export const HSIEN_LANDS = new Set(["china", "japan", "korea", "southeast-asia", "nusantara", "philippines"]);
 /** NPC 0.66.0 (B3014): the land's own fae of the Pacific and Siberia before the settlers. */
 export const LAND_FAE_LANDS = new Set(["pacific-islands", "aotearoa", "siberia"]);
 /**

@@ -111,7 +111,7 @@ export const proofFor = year => { let o = PROOF_BY_ERA[0]; for ( const p of PROO
 /** What a victim can do: pay, strike back, confess first. Their odds come from the secret's weight (1 or 2). */
 export const RESPONSES = {
   pay: {label: "Pay", text: "Pays this month's price; the hold stays."},
-  strike: {label: "Strike back", text: "Moves against the blackmailer: a scene, or the Storyteller's call on the faction turn."},
+  strike: {label: "Strike back", text: "Moves against the blackmailer: a player plays it out; someone the Storyteller plays acts on the next faction turn, by their own means."},
   confess: {label: "Confess first", text: "Lays the secret bare before it can be used: the hold is gone, and the secret's cost falls now."}
 };
 /** A monthly price by the secret's weight and the victim's Resources. */
@@ -146,3 +146,16 @@ export function normSide(s = {}) {
   const leader = s.leader && (s.leader.id || s.leader.name) ? {id: s.leader.id ? String(s.leader.id) : null, name: String(s.leader.name ?? "")} : null;
   return {faction: String(s.faction), name: String(s.name ?? ""), leader, note: String(s.note ?? "").slice(0, 200), since: Number(s.since) || null, found: {...(s.found ?? {})}};
 }
+
+/**
+ * B4884: how a blackmailed NPC strikes back on the next faction turn, chosen by its traits (house reading). A fighter
+ * (Brawl, Melee and Firearms 5 or more, or Retainers) sends someone to hurt the blackmailer; a mortal who can tell what
+ * the blackmailer is tips off the hunters; anyone else spreads word against them (Manipulation, Contacts, Influence).
+ * t: {fight, retainers, mortal, byMonster}. Returns "attack", "hunters" or "rumour".
+ */
+export function strikeMeans({fight = 0, retainers = 0, mortal = false, byMonster = false} = {}) {
+  if ( (Number(fight) || 0) >= 5 || (Number(retainers) || 0) >= 2 ) return "attack";
+  if ( mortal && byMonster ) return "hunters";
+  return "rumour";
+}
+export const STRIKE_WORDS = {attack: "sends people to hurt them", hunters: "tips off the hunters about them", rumour: "spreads word against them"};

@@ -157,6 +157,8 @@ export function build({MOD, esc, isActiveGM, chron, C, profileFor, savedProfile,
   async function checkPair(aTok, bTok, scene, {rng = Math.random} = {}) {
     if ( !aTok?.actor || !bTok?.actor || down(aTok.actor) || down(bTok.actor) ) return null;
     if ( inFight(aTok.document) && inFight(bTok.document) ) return null;
+    // B5098: masters of Golconda keep out of the Jyhad, and even the werewolves leave them be (V20 pp. 299-300)
+    if ( RV.inGolconda(baseOf(aTok.actor)) || RV.inGolconda(baseOf(bTok.actor)) ) return null;
     const key = RV.pairKey(aTok.id, bTok.id), now = game.time.worldTime;
     if ( RV.quietPair(lastPair.get(key), now) ) return null;
     const yards = yardsBetween(aTok, bTok), range = FR.sightRange(sightYards(), isNight());

@@ -68,20 +68,35 @@ async function undoGear(message) {
   await message.update({content: `<div class="vtc-card"><p><s>${esc(actor.name)}: gear came off</s> (undone, put back on)</p></div>`});
 }
 
-/** The Storyteller's card after a heavy blow to a limb or eye. */
+/**
+ * After a heavy blow to a limb or eye (B4886): the part is crippled at once until those health levels heal (VtDA20
+ * p. 348); the Storyteller's card can still make it lost for good, or take the crippling back.
+ */
 export async function offerMaim(target, offer, {attacker = null} = {}) {
   if ( !target || !offer || !game.settings.get(MOD, "hitLocations") ) return;
-  await ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX"},
-    flags: {[MOD]: {maim: {actor: target.uuid, part: offer.part, label: offer.label, by: attacker?.name ?? ""}}},
-    content: `<div class="vtc-card"><p>A heavy blow to <b>${esc(target.name)}</b>'s <b>${esc(offer.label.toLowerCase())}</b>. The Storyteller may rule it crippled until those health levels heal (+2 difficulty on actions with it, VtDA20 p. 348), or lost for good: then ${esc(target.name)} ${esc(offer.stops)}.</p><p><small>Offered at 3 or more lethal or aggravated levels after soak (house rule). Regrowing a lost part: Kindred with blood (VtDA20 p. 340), ghouls with Willpower, blood and a Stamina roll (V20 p. 501), Garou unless it becomes a Battle Scar (W20 p. 259).</small></p><button type="button" data-action="wodx-cripple">Crippled until healed</button> <button type="button" data-action="wodx-maim">Lost for good</button></div>`});
+  const users = [...new Set([...gmIds(), ...game.users.filter(u => target.testUserPermission?.(u, "OWNER")).map(u => u.id)])];
+  const made = await target.createEmbeddedDocuments("ActiveEffect", [crippleEffect(offer.part, offer.label)]).catch(e => { console.warn(`${MOD} | cripple`, e); return []; });
+  await ChatMessage.create({whisper: users, speaker: {alias: "WoDX"},
+    flags: {[MOD]: {maim: {actor: target.uuid, part: offer.part, label: offer.label, by: attacker?.name ?? "", effect: made?.[0]?.id ?? null}}},
+    content: `<div class="vtc-card"><p>A heavy blow to <b>${esc(target.name)}</b>'s <b>${esc(offer.label.toLowerCase())}</b>: crippled until those health levels heal (+2 difficulty on actions with it, VtDA20 p. 348). The Storyteller may rule it lost for good: then ${esc(target.name)} ${esc(offer.stops)}.</p><p><small>At 3 or more lethal or aggravated levels after soak (house rule). Regrowing a lost part: Kindred with blood (VtDA20 p. 340), ghouls with Willpower, blood and a Stamina roll (V20 p. 501), Garou unless it becomes a Battle Scar (W20 p. 259).</small></p><button type="button" data-action="wodx-maim">Lost for good</button> <button type="button" data-action="wodx-cripple-undo">Not crippled after all</button></div>`});
+}
+const crippleEffect = (part, label) => ({name: `Crippled: ${String(label).toLowerCase()}`, img: "icons/svg/bones.svg",
+  description: "+2 difficulty on actions with this part until the health levels on it heal (VtDA20 p. 348). WoDX Combat adds it to attacks with the part and takes this off when the part heals.", flags: {[MOD]: {crippled: part}}});
+
+async function uncripple(message) {
+  const f = message.flags?.[MOD]?.maim;
+  const actor = f?.actor ? await fromUuid(f.actor) : null;
+  if ( !actor || !game.user.isGM ) return;
+  const ids = actor.effects.filter(e => e.id === f.effect || e.flags?.[MOD]?.crippled === f.part).map(e => e.id);
+  if ( ids.length ) await actor.deleteEmbeddedDocuments("ActiveEffect", ids);
+  await message.update({content: `<div class="vtc-card"><p><s>${esc(actor.name)}'s ${esc(f.label.toLowerCase())} crippled</s> (taken back).</p></div>`});
 }
 
 async function cripple(message) {
   const f = message.flags?.[MOD]?.maim;
   const actor = f?.actor ? await fromUuid(f.actor) : null;
   if ( !actor || !game.user.isGM ) return;
-  await actor.createEmbeddedDocuments("ActiveEffect", [{name: `Crippled: ${f.label.toLowerCase()}`, img: "icons/svg/bones.svg",
-    description: "+2 difficulty on actions with this part until the health levels on it heal (VtDA20 p. 348). WoDX Combat adds it to attacks with the part and takes this off when the part heals.", flags: {[MOD]: {crippled: f.part}}}]);
+  await actor.createEmbeddedDocuments("ActiveEffect", [crippleEffect(f.part, f.label)]);
   await message.update({content: `<div class="vtc-card"><p>${esc(actor.name)}'s ${esc(f.label.toLowerCase())} is crippled until those health levels heal.</p></div>`});
 }
 
@@ -187,6 +202,7 @@ export function setupBody() {
     if ( msg.flags?.[MOD]?.bodyGear ) el.querySelector("[data-action='wodx-body-undo']")?.addEventListener("click", () => undoGear(msg));
     if ( msg.flags?.[MOD]?.maim ) el.querySelector("[data-action='wodx-maim']")?.addEventListener("click", () => maim(msg));
     if ( msg.flags?.[MOD]?.maim ) el.querySelector("[data-action='wodx-cripple']")?.addEventListener("click", () => cripple(msg));
+    if ( msg.flags?.[MOD]?.maim ) el.querySelector("[data-action='wodx-cripple-undo']")?.addEventListener("click", () => uncripple(msg));
   });
   return {
     of: bodyFor, view: viewOf, rules: B, check: checkShape,

@@ -213,7 +213,9 @@ async function people(st, mst, rng) {
     }
     if ( !x ) continue;
     const d = R.DISEASES[x.disease];
-    const rolled = R.strikesThisWeek(x) ? await rollStamina(a, d.diff) : null;
+    // B5012: a medicine taken in the last week (WoDX Library) makes the week's roll 1 easier
+    const eased = now() - (Number(a.flags?.["wodx-library"]?.remedyAt) || -Infinity) <= R.REMEDY_WEEK ? R.REMEDY_EASE : 0;
+    const rolled = R.strikesThisWeek(x) ? await rollStamina(a, Math.max(2, d.diff - eased)) : null;
     const w = R.illnessWeek(x, rolled);
     if ( !w ) { delete st.people[a.id]; continue; }
     if ( w.illness ) st.people[a.id] = w.illness; else delete st.people[a.id];
