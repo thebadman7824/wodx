@@ -306,7 +306,7 @@ Next free block: B6140
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5680-B5709 | NPC Motives Desk: every NPC action has a reason and a follow-through (used B5680-B5703) | NPC, Storyteller |
 | B5710-B5729 | Aftercare of the carried (Aftercare Desk a1-a12) (used B5710-B5721) | NPC |
-| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5744) | tools |
+| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5745) | tools |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 | B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
 | B5800-B5809 | NPC Aftercare Desk: what comes after each NPC action (used B5800-B5806) | NPC, Chronicle |
@@ -9423,6 +9423,11 @@ Reverse: drop the roofs; the old roof tiles stay.
 Tools. maps/lt_market.py redraws the Lower Town market (64 by 44) with all 141 walls, 32 doors, 36 windows and 8 fences on the old scene's own squares, and a new roof picture for each of its 13 roof tiles. Every building is furnished for its trade, so a player can name it by sight: the inn's tables and hearth, the bakery's oven, horse stalls with mangers, the chandler's candles, the butcher's block, hams hanging in the smokehouse, the surgeon's table, the apothecary's jars on shelves, the hatter's hats, the general store's sacks and crates. town.py adds the town's own pieces: cobbles with straw and puddles, market stalls under striped awnings with their goods along the front, lantern posts that cast real light, the market cross on its steps, horse stalls, and woven hurdle fences. The old map's narrow building with a hearth is drawn as a smokehouse and its small fenced square as a sheep pen.
 
 Reverse: remove the map file and town.py; nothing else uses them.
+
+## B5745. Lower Town, Craftsmen's Lane, redrawn on its old scene (2026-11-15)
+Tools. maps/lt_crafts.py redraws Craftsmen's Lane (66 by 40) with all 110 walls, 20 doors, 37 windows and 4 fences on the old scene's own squares, and a new roof picture for each of its 10 roof tiles. Each workshop is furnished so a player can name it by sight: horse stalls in the stables; the forge with its bellows, the anvil, the quench trough and horseshoes in the smithy; staves, hoops, new casks and the bending fire in the cooperage; four looms with cloth on them and bolts of cloth in the Weavers' Hall; dye vats in four colours, a kettle on the fire and lines of dyed cloth in the dyers' yard; the mash tun, the cooling tun and the furnace with its copper in the Brewhouse. The Shuttered House's day-rest room has no window and a bar on its door, as the scene's note says. town.py gains the forge, anvil, loom, vat, staves, hoops, handcart, dye line, brew furnace and horseshoes. The town ditch runs down the east side under a plank bridge.
+
+Reverse: remove the map file and the new pieces; nothing else uses them.
 
 ## B5750. Witness reactions given by a window act on the map (2026-11-15)
 WoDX Actions. The witness step takes results already rolled (the Delirium check, a demon's Revelation) and acts them out: a frozen witness is Immobilized for the scene, a fleeing one runs, a fighting one starts a fight; those who keep it go on the Masquerade record. With no revealed actor on the map, nothing is recorded against anyone.
