@@ -12,9 +12,11 @@
  *   8. Unseen Presence used through the effects card puts Obfuscated on the token (B6034)
  *   9. knocked down outdoors in rain: Filthy; the same fall in dry weather: clean (B6033)
  *  10. a player's character seven nights unwashed turns Filthy when the clock moves; one washed tonight stays clean (B6033)
+ *  11. two lethal blows adding up on the right arm cripple it, and the Crippled mark draws on the token on the map (B6032);
+ *      healing the levels takes the mark off again
  * Result: Data/wodx-gate/gatestillmarks-result.json.
  */
-import {gate} from "./kit.mjs";
+import {gate, waitFor} from "./kit.mjs";
 
 export async function run() {
   const G = gate("gatestillmarks");
@@ -138,6 +140,43 @@ export async function run() {
       await wait(900);
       const clean = !K.hasCondition(b, "filthy");
       G.ok("10. a week unwashed makes a player's character Filthy", filthy && clean, {filthy, clean, players, owned: b.hasPlayerOwner});
+    });
+
+    await G.step("11. a crippled arm shows on the token", async () => {
+      const BD = C.body;
+      let hl = null; try { hl = game.settings.get("wodx-combat", "hitLocations"); } catch (e) { hl = null; }
+      const s = await G.scene({name: "WoDX gate: gatestillmarks arm"});
+      const [tok] = await G.tokens(s, [{actor: a, x: 3, y: 3}]);
+      await wait(500);
+      const icons0 = tok.object?.effects?.children?.length ?? 0, t1 = Date.now();
+      // two blows of two lethal levels each on the right arm: the damage lands on the track, then the attack card records
+      // where (recordWound); wounds that add up to three on one part cripple it (B2903). A single blow of three takes the
+      // attack's own maiming path instead.
+      const ta = tok.actor ?? a;
+      await ta.update({"system.health.damage.lethal": 2});
+      await BD.recordWound(ta, {location: {id: "arm-r", label: "Right arm"}, type: "lethal", levels: 2}, {before: {lethal: 0}, after: {lethal: 2}, effType: "lethal"}, null);
+      await wait(1200);
+      // the icons the token draws after the first blow (Bloody comes on with it): the second must add the Crippled one
+      const iconsMid = tok.object?.effects?.children?.length ?? 0;
+      const srcs = () => (tok.object?.effects?.children ?? []).map(c => String(c.texture?.baseTexture?.resource?.src ?? c.texture?.source?.resource?.src ?? c.texture?.source?.label ?? c.texture?.label ?? ""));
+      await ta.update({"system.health.damage.lethal": 4});
+      await BD.recordWound(ta, {location: {id: "arm-r", label: "Right arm"}, type: "lethal", levels: 2}, {before: {lethal: 2}, after: {lethal: 4}, effType: "lethal"}, null);
+      await waitFor(() => [...ta.effects].some(e => e.flags?.["wodx-combat"]?.crippled), 5000).catch(() => null);
+      await wait(400);
+      const fx = [...ta.effects].find(e => e.flags?.["wodx-combat"]?.crippled === "arm-r");
+      const seen = [...ta.effects].map(e => `${e.name}|${JSON.stringify(e.flags?.["wodx-combat"] ?? {})}|${e.showIcon}`);
+      const tokFx = [...(tok.actor?.effects ?? [])].map(e => e.name);
+      const want = CONST.ACTIVE_EFFECT_SHOW_ICON?.ALWAYS;
+      const temp = !!fx && ta.temporaryEffects.some(e => e.id === fx.id);
+      const icons1 = tok.object?.effects?.children?.length ?? 0;
+      const card = [...game.messages].some(m => (m.timestamp ?? 0) >= t1 && m.flags?.["wodx-combat"]?.maim?.part === "arm-r");
+      const drawn = srcs();
+      G.ok("11. a crippled arm shows on the token", !!fx && (want === undefined || fx.showIcon === want) && icons1 > iconsMid && card,
+        {hl, fx: !!fx, showIcon: fx?.showIcon, want, temp, icons0, iconsMid, icons1, card, bones: drawn.some(x => /bones/.test(x)), drawn: drawn.slice(0, 8), tokFx, linked: tok.actorLink});
+      // healed: the levels leave the track, the Crippled mark goes by itself
+      await ta.update({"system.health.damage.lethal": 0});
+      const healed = await waitFor(() => ![...ta.effects].some(e => e.flags?.["wodx-combat"]?.crippled), 5000);
+      G.ok("11b. the crippled arm heals with its levels", healed, {left: [...ta.effects].map(e => e.name)});
     });
   } finally { return G.finish(); }
 }
