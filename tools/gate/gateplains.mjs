@@ -31,7 +31,8 @@
  *  23. the Moro (B5000): Mindanao and Sulu in the Malay world's mix, sultanate names, then family names
  *  24. the Banyarwanda and Barundi (B5030): Rwanda and Burundi in central Africa, own names, then family names
  *  25. the Philippines (B5150): a region of its own with its map squares, money, law and mix; the Malay world keeps no Filipinos
- *  26. clean up
+ *  26. the raised lists (B5180 on): every people raised to 300 names has 50 or more in each list in each age on the testbed
+ *  27. clean up
  * Result: Data/wodx-gate/gateplains-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -278,6 +279,15 @@ export async function run() {
       G.ok("25. the Philippines a region of its own: Filipinos and Moro, Spain after 1565; the Malay world keeps none of the Filipinos",
         !!ph && ph.money === "philippine" && med.includes("filipino") && med.includes("moro") && !med.includes("spanish") && em.includes("spanish") && !mw.includes("filipino"),
         {region: ph?.label, money: ph?.money, medieval: med, earlyModern: em, malayWorld: mw});
+    });
+    await G.step("26. the raised lists", async () => {
+      const {RAISED} = await import(`/modules/${CR}/data/people-world.mjs`);
+      const thin = [];
+      for ( const o of RAISED ) for ( const era of ["medieval", "early-modern", "industrial", "modern"] ) for ( const sex of ["male", "female"] ) {
+        const n = results({era}, `names.${sex}.${o}`).length;
+        if ( n < 50 ) thin.push(`${o} ${era} ${sex}: ${n}`);
+      }
+      G.ok("26. every raised people has 50 names or more in each list in each age", RAISED.includes("thai") && !thin.length, {raised: RAISED, thin: thin.slice(0, 8)});
     });
   } catch (e) {
     G.ok("error", false, {error: e.message});
