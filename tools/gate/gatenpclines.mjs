@@ -42,6 +42,7 @@ export async function run() {
     await demon.update({"system.advantages.faith.permanent": 5, "system.advantages.faith.temporary": 5});
     await kote.update({"system.advantages.yinchi.temporary": 5, "system.advantages.yangchi.temporary": 5, "system.advantages.demonchi.temporary": 5, "system.advantages.willpower.temporary": 5});
     await orph.update({"system.advantages.vitality.permanent": 6, "system.advantages.vitality.temporary": 5, "system.advantages.spite.permanent": 2, "system.advantages.willpower.temporary": 5});
+    await inq.update({"system.advantages.conviction.permanent": 4, "system.advantages.conviction.temporary": 4});
     await inq.setFlag(MOD, "inquisitor", {conviction: 4});
     await fae.update({"system.advantages.glamour.permanent": 5, "system.advantages.glamour.temporary": 5});
     await fae.setFlag(MOD, "c20", {arts: {autumn: 2}, realms: {actor: 3}});
