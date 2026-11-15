@@ -7,12 +7,14 @@
  *   - shown on the token: red "-1 vitae" rises, an empty ghoul greys, a dead one takes the dead mark, dust fades (B5053)
  *   - a drink from the domitor (WoDX Creation's Give vitae or Feed vitae, or the card's button) starts the month again
  *     and puts the token's colour back (B5054)
+ *   - with the domitor on the active scene, the feeding goes to the approval queue (B4983, offered from here: B6160)
  * WoDX Clan features' own ghoul card stands aside while this is on.
  */
 import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
 import * as R from "./ghoul-need-rules.mjs";
 import {getEngine} from "./calendar.mjs";
 import {isSkipping} from "./skip.mjs";
+import {offerFeed} from "./signatures.mjs";
 
 const FLAG = "ghoulNeed";
 const SIG = "sig";
@@ -138,6 +140,9 @@ export async function check(a, t = now()) {
     if ( newly > 0 ) await rollCraving(a);
     out.taken = plan.taken; out.cuts = plan.cuts;
   }
+  // B6160: the domitor's feeding (B4983) is offered from here, so it comes at the default settings (Clan features off).
+  // offerFeed asks once for each month count and only with ghoul and domitor on the active scene.
+  if ( months >= 1 && !stateOf(a).dust ) await offerFeed(a, months);
   // An animal catches up with its years (B5052)
   const s2 = stateOf(a);
   if ( s2.emptySince && isAnimal(a) && !s2.dust ) {

@@ -18,3 +18,11 @@ test("token looks: looks combine, Light drops movement, Off shows nothing; each 
     assert.ok(T.EDGE_CSS[T.edgeOf([k])], k);
   assert.equal(T.edgeOf([]), null);
 });
+
+test("token looks: the sheet's own Frenzy box glows like the status (B6163)", () => {
+  assert.equal(T.conditionOn("frenzy", {system: {conditions: {isfrenzy: true}}}), true);
+  assert.equal(T.conditionOn("frenzy", {system: {conditions: {isfrenzy: false}}}), false);
+  assert.equal(T.conditionOn("frenzy", {hasStatus: true}), true);
+  assert.equal(T.conditionOn("rotschreck", {system: {conditions: {isfrenzy: true}}}), false);
+  assert.equal(T.conditionOn("rotschreck", {hasStatus: true}), true);
+});

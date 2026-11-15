@@ -28,7 +28,7 @@ export default {
       "id": "lightTouch",
       "group": "automation",
       "name": "Light-touch mode",
-      "hint": "Holds back every WoDX proposal for tonight's session, quietly, and skips the era check. Players' own requests still come through. The held ones wait in the approvals window until you put them in the queue. The clock still runs.",
+      "hint": "Holds back every WoDX proposal for tonight's session, quietly, and skips the era check. Players' own requests still come through. The held ones wait in the approvals window until you put them in the queue. It holds proposals only: what happens by itself still happens (timed effects ending, a ghoul's monthly need, law heat and the watch, story chains). To quiet one of those, switch off its own setting.",
       "default": false,
       "source": "WoDX plan: Light-touch mode"
     },

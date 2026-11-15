@@ -5,6 +5,7 @@ import * as P from "./pod-rules.mjs";
 import * as TW from "./twist-rules.mjs";
 import * as Fronts from "./fronts.mjs";
 import {watched} from "./signature-rules.mjs";
+import {isSkipping} from "./skip.mjs";
 
 /**
  * WoDX Chronicle 0.37.0: four ideas taken from the Princes of Darkness mod, rebuilt on WoDX's own systems.
@@ -158,8 +159,10 @@ function onSenses({scene, sources} = {}) {
  */
 export async function raiseBuilding({patron, building, faction, restore = false, cost = null} = {}) {
   const a = toActor(patron) ?? game.actors.getName?.(patron);
-  if ( !lineOn("podCities") || !building ) return null;
-  const st = cityState(), ST = api("wodx-storyteller"), done = [];
+  // B6164: the patron pays whenever a building is raised or restored (the Storyteller's call, so no switch of its
+  // own); Great cities only adds the city's state to the card
+  if ( !building ) return null;
+  const st = lineOn("podCities") ? cityState() : null, ST = api("wodx-storyteller"), done = [];
   const M = ST?.upkeep?.money;
   if ( a && M?.pay && M?.rules?.allowance ) {
     let region = "moravian"; try { region = game.settings.get("wodx-storyteller", "moneyRegion") || region; } catch (e) { /* default */ }
@@ -167,8 +170,10 @@ export async function raiseBuilding({patron, building, faction, restore = false,
     const r = await M.pay(a, amount, {credit: true, note: `${restore ? "Restoring" : "Raising"} ${building}`});
     if ( r?.ok !== false ) done.push(`Paid ${M.rules.formatMoney ? M.rules.formatMoney(amount, M.rules.moneyFor?.(year, region)) : amount}.`);
   }
-  const town = ST?.towns?.ofScene?.(canvas?.scene);
-  if ( town?.id && ST?.towns?.lever ) { await ST.towns.lever({kind: restore ? "restore" : "build", town: town.id, label: building}); done.push("The town gains by it."); }
+  // B6164: WoDX Storyteller keeps its towns under api.upkeep.towns
+  const TOWNS = ST?.upkeep?.towns ?? ST?.towns;
+  const town = TOWNS?.ofScene?.(canvas?.scene);
+  if ( town?.id && TOWNS?.lever ) { await TOWNS.lever({kind: restore ? "restore" : "build", town: town.id, label: building}); done.push("The town gains by it."); }
   return card(`${restore ? "Restored" : "Raised"}: ${building}`, `<p>${esc(a?.name ?? patron ?? "A patron")} pays to ${restore ? "restore" : "raise"} ${esc(building)}${st ? ` in ${esc(st.name)} (${esc(st.state)})` : ""}. ${faction ? `${esc(faction)} gains by it and owes a boon.` : ""}</p>${done.length ? `<p>${esc(done.join(" "))}</p>` : ""}`,
     faction && a ? {act: {key: "boon", label: "Log the boon", data: {from: {id: null, name: faction}, to: {id: a.id, name: a.name}, what: `${restore ? "restoring" : "raising"} ${building}`}}} : {});
 }
@@ -594,8 +599,7 @@ export class PodApp extends ApplicationV2 {
     }
     if ( lineOn("podCities") ) {
       const st = cityState();
-      parts.push(`<h3>Great cities in ${yr}</h3>${st ? `<p>This scene is in <b>${esc(st.name)}: ${esc(st.state)}</b>.</p>` : ""}<ul>${P.CITIES.map(c => { const x = P.stateAt(c, yr); return `<li><b>${esc(c.label)}</b>: ${esc(x.label)}. ${esc(x.text)}</li>`; }).join("")}</ul>
-        <div data-build class="form-group"><input name="patron" placeholder="Patron (a character)"><input name="building" placeholder="Building"><input name="faction" placeholder="Faction that gains"><label><input type="checkbox" name="restore"> Restore</label><button type="button" data-action="build">Raise or restore</button></div>`);
+      parts.push(`<h3>Great cities in ${yr}</h3>${st ? `<p>This scene is in <b>${esc(st.name)}: ${esc(st.state)}</b>.</p>` : ""}<ul>${P.CITIES.map(c => { const x = P.stateAt(c, yr); return `<li><b>${esc(c.label)}</b>: ${esc(x.label)}. ${esc(x.text)}</li>`; }).join("")}</ul>`);
     }
     if ( lineOn("podChains") ) {
       const list = P.chainsFor(yr);
@@ -628,6 +632,9 @@ export class PodApp extends ApplicationV2 {
       parts.push(`<h3>Seekers of Golconda</h3><ul>${list.map(a => `<li>${esc(a.name)}: step ${golOf(a).step} of ${P.GOLCONDA_STEPS}${golOf(a).mentor ? `, taught by ${esc(golOf(a).mentor)}` : ""}</li>`).join("") || "<li>None.</li>"}</ul><p class="vta-note">Start or teach from the character's Signature feature window.</p>`);
     }
     if ( !parts.length ) parts.push(`<p>Turn on City Masquerade exposure, Great cities, Golconda as a long road, Story chains or the Rothenstein saga in the module settings.</p>`);
+    // B6164: a patron raises or restores a building with every switch off too
+    parts.push(`<h3>A building raised or restored</h3><p class="vta-note">The patron pays, the scene's town gains and the faction owes a boon.</p>
+        <div data-build class="form-group"><input name="patron" placeholder="Patron (a character)"><input name="building" placeholder="Building"><input name="faction" placeholder="Faction that gains"><label><input type="checkbox" name="restore"> Restore</label><button type="button" data-action="build">Raise or restore</button></div>`);
     return `<div class="wodx-pod-body" style="overflow-y:auto;height:100%">${parts.join("")}</div>`;
   }
   _replaceHTML(result, content) { content.innerHTML = result; }
@@ -654,11 +661,13 @@ export function registerPodHooks() {
   Hooks.on("wodxFed", onFed);
   Hooks.on("wodxFirstNightSigned", onFirstNight);
   let last = 0;
-  const tick = () => { if ( !isActiveGM() || Date.now() - last < 2000 ) return; last = Date.now();
+  // B6162: story chains, the saga, fronts and Golconda teaching wait through a time skip or a hold; the skip's end
+  // runs them once (settle)
+  const tick = ({settle = false} = {}) => { if ( !isActiveGM() || (!settle && isSkipping()) || (!settle && Date.now() - last < 2000) ) return; last = Date.now();
     dealChains().then(() => lifepathTick()).then(() => sagaTick()).then(() => Fronts.frontTick()).catch(e => console.error(`${MODULE_ID} | story chains`, e));
     if ( lineOn("podGolconda") ) teachTick().catch(e => console.error(`${MODULE_ID} | Golconda`, e)); };
-  Hooks.on("updateWorldTime", tick);
-  Hooks.on("wodxSkipEnd", tick);
+  Hooks.on("updateWorldTime", () => tick());
+  Hooks.on("wodxSkipEnd", () => tick({settle: true}));
   Hooks.on("renderChatMessageHTML", (message, el) => {
     const root = el?.[0] ?? el;
     const a = root?.querySelector?.("[data-wct-pod-act]");

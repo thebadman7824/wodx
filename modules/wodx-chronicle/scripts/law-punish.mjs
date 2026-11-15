@@ -14,6 +14,7 @@ import * as P from "./law-punish-rules.mjs";
 import {standingFor} from "./law-standing.mjs";
 import {declareWanted} from "./law-heat.mjs";
 import {applyTimed} from "./timed.mjs";
+import {isSkipping} from "./skip.mjs";
 
 const yearNow = () => { try { return currentYear(); } catch (e) { return 1197; } };
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
@@ -109,8 +110,9 @@ async function comeBack(actor, why = "The sentence is served") {
   return true;
 }
 /** B5990: at each move of the clock, those whose time is up come back. */
-export async function releaseServed(year = yearNow()) {
-  if ( !isActiveGM() ) return [];
+export async function releaseServed(year = yearNow(), {settle = false} = {}) {
+  // B6162: a time skip or a hold waits; the skip's end lets them out once (settle)
+  if ( !isActiveGM() || (!settle && isSkipping()) ) return [];
   const out = [];
   for ( const a of game.actors ) { const w = a.getFlag?.(MODULE_ID, "lawAway"); if ( w && P.servedBy(w, year) && await comeBack(a) ) out.push(a.id); }
   return out;
@@ -153,7 +155,11 @@ export function playerMarks(actor, region, year = yearNow()) {
 export function registerPunishHooks() {
   Hooks.on("wodxVerdict", p => { if ( p?.guilty ) sentenceCard(p).catch(e => console.error("WoDX | sentence", e)); });
   Hooks.on("updateWorldTime", () => { releaseServed().catch(e => console.error("WoDX | sentence served", e)); });
-  Hooks.once("ready", () => { ensureBrand(); releaseServed().catch(() => null); });
+  Hooks.on("wodxSkipEnd", () => { releaseServed(yearNow(), {settle: true}).catch(e => console.error("WoDX | sentence served", e)); });
+  Hooks.once("ready", () => { releaseServed().catch(() => null); });
+  // B6163: Branded is a token status from the start, not only after the first brand. At ready the Chronicle api is
+  // not set yet, so it is registered when Chronicle says it is ready.
+  Hooks.once("wodxChronicleReady", () => { try { ensureBrand(); } catch (e) { console.warn("WoDX | brand", e); } });
   Hooks.on("renderChatMessageHTML", (message, el) => {
     if ( !game.user.isGM ) return;
     const info = message.flags?.[MODULE_ID]?.lawSentence;

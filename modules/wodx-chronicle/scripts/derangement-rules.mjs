@@ -74,6 +74,18 @@ export function boutEffects(keys = [], ctx = {}) {
 /** A bout still running at this world time. */
 export const boutLive = (bout, now) => !!bout?.keys?.length && Number(now) - Number(bout.at ?? -Infinity) < SCENE_SECONDS && Number(now) >= Number(bout.at);
 
+/**
+ * B6161: does the end of a scene end this bout? ended: the scene that ended (null: the scene, whichever it is);
+ * active: a scene just made active, which ends a bout begun on another one. A bout from before B6161 has no
+ * sceneId: any scene's end, or any change of scene, ends it.
+ */
+export function boutEndsWithScene(bout = {}, {ended, active} = {}) {
+  const at = bout?.sceneId ?? null;
+  if ( active !== undefined ) return !at || at !== active;
+  if ( ended !== undefined ) return !ended || !at || at === ended;
+  return false;
+}
+
 /** The Willpower roll's outcome: {held, line}. botch: they lose the scene to it and the bout is worse. */
 export function holdResult(key, roll = {}) {
   const e = TABLE[key];

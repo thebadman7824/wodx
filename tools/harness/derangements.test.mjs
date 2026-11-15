@@ -78,3 +78,16 @@ test("derangements: Actions' Virtue-loss botches write one into the box (B3915)"
   assert.match(a, /derangement: withActor\(a => game\.modules\.get\("wodx-chronicle"\)\?\.api\?\.derangements\?\.hold\?\.\(a\)\)/);
   assert.doesNotMatch(a, /a Derangement may follow/);
 });
+
+test("derangements: a bout ends with its scene, not only after an hour (B6161)", () => {
+  assert.equal(D.boutEndsWithScene({keys: ["paranoia"], sceneId: "s1"}, {ended: "s1"}), true, "its own scene ends");
+  assert.equal(D.boutEndsWithScene({keys: ["paranoia"], sceneId: "s1"}, {ended: "s2"}), false, "another scene's end leaves it");
+  assert.equal(D.boutEndsWithScene({keys: ["paranoia"], sceneId: "s1"}, {ended: null}), true, "the scene ends, no scene named");
+  assert.equal(D.boutEndsWithScene({keys: ["paranoia"]}, {ended: "s2"}), true, "an older bout with no scene ends with any");
+  assert.equal(D.boutEndsWithScene({keys: ["paranoia"], sceneId: "s1"}, {active: "s2"}), true, "another scene made active");
+  assert.equal(D.boutEndsWithScene({keys: ["paranoia"], sceneId: "s1"}, {active: "s1"}), false, "its own scene made active again");
+  assert.equal(D.boutEndsWithScene({keys: ["paranoia"], sceneId: "s1"}), false);
+  const f = src("modules/wodx-chronicle/scripts/derangements.mjs");
+  assert.match(f, /Hooks\.on\("wodxEndScene"/);
+  assert.match(f, /sceneId: b\?\.sceneId \?\? game\.scenes\?\.active\?\.id/);
+});

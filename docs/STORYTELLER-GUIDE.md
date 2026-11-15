@@ -517,7 +517,7 @@ A good habit for a first live session: leave everything on Suggest, and switch o
 
 ## Known quirks
 
-- **Light-touch mode is narrower than its name.** It stops era-change proposals only. NPC plans, routines, factions, dawn and dusk cards and sunlight prompts keep coming; to quiet them, set their own settings to Off.
+- **Light-touch mode is narrower than its name.** It holds back proposals (B790): every WoDX proposal but a player's own request waits in the approvals window, and the era check is skipped. What acts by itself keeps acting: timed effects end, a ghoul's monthly need, law heat and the watch, story chains, NPC plans whispered as cards. To quiet one of those, set its own setting to Off.
 - **Places are not tagged in Rothenstein yet.** Routines need places to send NPCs to, so they do little until you tag scenes in **WoDX places**. Factions and rumours already treat every scene that is not a battlemap as a place, with its kind guessed from its name.
 - **Factions may be empty.** If the factions window shows none, press **Rothenstein's factions** once.
 - **Gridless scenes.** NPCs do not move themselves there; you move them.

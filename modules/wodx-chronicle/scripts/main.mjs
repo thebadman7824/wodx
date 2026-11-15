@@ -403,6 +403,10 @@ async function onSocket(message) {
     case "roster.play":
       await roster.onPlaySocket(payload ?? {});
       break;
+    case "looks.show":
+      // B6163: a player's look on the map, placed by the active Storyteller
+      await looks.onShowSocket(payload ?? {});
+      break;
     case "approval.propose":
       // Players may only send free-form requests; automation proposals come from the GM's own client
       if ( payload ) await approvals.addToQueue({...payload, type: "request", data: {}});

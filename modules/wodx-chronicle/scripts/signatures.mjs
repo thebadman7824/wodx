@@ -6,7 +6,8 @@ import * as events from "./events.mjs";
 import * as S from "./signature-rules.mjs";
 import * as POD from "./pod.mjs";
 import {registerTokenLook} from "./token-looks.mjs";
-import {on as ghoulNeedOn} from "./ghoul-need.mjs";
+import {on as ghoulNeedOn, isGhoul as needIsGhoul} from "./ghoul-need.mjs";
+import {isSkipping} from "./skip.mjs";
 
 /**
  * WoDX Chronicle 0.30.0: signature features on the Foundry side (Splat Features Desk, Vampire first). Rules in
@@ -238,8 +239,9 @@ export async function museSeen(actorOrId, museId, how = "see") {
 
 /** The weekly rise of every Toreador's Obsession, and healed Gangrel marks. Run by the active Storyteller. */
 let lastTick = -1;
-export async function tick({force = false} = {}) {
-  if ( !on() || !isActiveGM() ) return;
+export async function tick({force = false, settle = false} = {}) {
+  // B6162: a time skip or a hold waits; the skip's end settles it once (settle)
+  if ( !on() || !isActiveGM() || (!settle && isSkipping()) ) return;
   const t = now(), day = Math.floor(t / 86400);
   if ( day === lastTick && !force ) return;
   lastTick = day;
@@ -713,8 +715,10 @@ async function ghoulTick(a, t) {
   const row = rowOf(a);
   if ( !on() || row?.feature !== "ghoul" || row.revenant ) return;
   // B5050: the monthly need now happens by itself (ghoul-need.mjs); this card only stands in when that is switched off.
-  // The domitor's feeding (B4983) is offered either way.
+  // The domitor's feeding (B4983) is offered either way. B6160: a ghoul the monthly need reads is offered it there
+  // (that tick runs at the default settings), so it is not asked twice; this offer is for the rest.
   if ( ghoulNeedOn() ) {
+    if ( needIsGhoul(a) ) return;
     const g = sigOf(a).ghoul, fedAt = g?.fedAt ?? a.flags?.[MODULE_ID]?.ghoulNeed?.fedAt;
     if ( fedAt === undefined || fedAt === null ) return;
     const m = S.monthsUnfed(fedAt, t);
@@ -733,7 +737,7 @@ async function ghoulTick(a, t) {
   await offerFeed(a, m);
 }
 /** B4983: the domitor is on the same scene: the Storyteller approves the feeding, and then it happens. */
-async function offerFeed(a, m) {
+export async function offerFeed(a, m) {
   const dom = domitorOf(a);
   const here = new Set((game.scenes?.active?.tokens ?? []).map(tk => tk.actorId));
   if ( !dom || !here.has(a.id) || !here.has(dom.id) || n(dom.system?.advantages?.bloodpool?.temporary) < 1 ) return;
@@ -1295,7 +1299,7 @@ export function registerSignatureHooks() {
   Hooks.on("createToken", token => onToken(token, null));
   Hooks.on("updateToken", onToken);
   Hooks.on("updateWorldTime", () => tick());
-  Hooks.on("wodxSkipEnd", () => tick());
+  Hooks.on("wodxSkipEnd", () => tick({settle: true}));
   Hooks.on("renderChatMessageHTML", (message, el) => {
     const root = el?.[0] ?? el, a = root?.querySelector?.("[data-wct-sig-act]");
     if ( a ) { if ( !mayPress(message.flags?.[MODULE_ID]?.sigAct) ) a.remove(); else a.addEventListener("click", () => runAct(message)); }

@@ -3,7 +3,8 @@
  *
  *   hold(actor, key?, {spend, roll}): when one is set off, a Willpower roll at the entry's difficulty (or a spent
  *     Willpower point) holds it off for the scene; a failure starts a bout: the Deranged status and an actor flag
- *     wodx-chronicle.bout = {keys, at}. While the bout lasts (a scene, an hour of game time) the entry's roll
+ *     wodx-chronicle.bout = {keys, at, sceneId}. While the bout lasts (the scene, at most an hour of game time; the
+ *     scene's end or another scene made active ends it, B6161) the entry's roll
  *     effects reach every roll through the trait effect channel, and the card says what it does.
  *   gain(actor, cause, why): a Virtue loss writes a new derangement into the sheet's box and posts a card.
  *   end(actor): the bout is over.
@@ -50,7 +51,8 @@ function modLines(key) {
 export async function startBout(actor, key) {
   const b = boutOf(actor);
   const keys = [...new Set([...(b?.keys ?? []), key])];
-  await actor.setFlag(MODULE_ID, FLAG, {keys, at: b?.at ?? now()});
+  // B6161: the scene it began on, so the end of that scene (or a move to another) ends it
+  await actor.setFlag(MODULE_ID, FLAG, {keys, at: b?.at ?? now(), sceneId: b?.sceneId ?? game.scenes?.active?.id ?? null});
   if ( !hasCondition(actor, "deranged") ) await setCondition(actor, "deranged", true).catch(() => false);
   return keys;
 }
@@ -123,10 +125,24 @@ export function setupDerangements() {
     const b = boutOf(actor);
     return b ? D.boutEffects(b.keys, ctx) : [];
   });
+  const gm = () => game.user?.isGM && game.users.activeGM?.id === game.user.id;
   // a bout past its scene drops its status (the Storyteller's client)
   Hooks.on("updateWorldTime", () => {
-    if ( !game.user?.isGM || game.users.activeGM?.id !== game.user.id ) return;
+    if ( !gm() ) return;
     for ( const a of game.actors ?? [] ) if ( hasCondition(a, "deranged") && a.getFlag(MODULE_ID, FLAG) && !boutOf(a) ) end(a).catch(() => {});
+  });
+  // B6161: the scene ends (the clock's End the scene, WoDX Actions' End scene) or another scene is made active:
+  // the bouts begun there end with it, whether or not the clock moved
+  const endWith = (test, why) => {
+    if ( !gm() ) return;
+    for ( const a of game.actors ?? [] ) {
+      const b = a.getFlag(MODULE_ID, FLAG);
+      if ( (b || hasCondition(a, "deranged")) && test(b ?? {}) ) end(a).then(() => card(a, `${a.name} comes back to themselves`, [why])).catch(() => {});
+    }
+  };
+  Hooks.on("wodxEndScene", ({sceneId = null} = {}) => endWith(b => D.boutEndsWithScene(b, {ended: sceneId}), "The scene is over, and the bout with it."));
+  Hooks.on("updateScene", (scene, changes) => {
+    if ( changes?.active === true ) endWith(b => D.boutEndsWithScene(b, {active: scene.id}), "A new scene: the bout is over.");
   });
 }
 

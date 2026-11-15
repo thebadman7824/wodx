@@ -4,7 +4,8 @@
  * Makes actors "WoDX gate gaps: ..." and deletes them, every chat card and queue card it made, after.
  * The clock does not move; leverState and hunterState are put back.
  *   1. the APIs are there (ticket, roster, levers, inheritance, binding card)
- *   2. a ruling ticket goes to the queue with the pool from the sheet, and never applies on its own
+ *   2. a ruling ticket goes to the queue with the pool from the sheet, and never applies on its own; approved, the
+ *      Roll button on its card rolls the pool at the ruled difficulty
  *   3. a crisis lever on a region is logged, read back, and undone to where it was
  *   4. a binding card is whispered to the bound character's owner and puts nothing on the token
  *   5. My characters lists the player's characters with the right tie, and Away changes the state
@@ -64,8 +65,21 @@ export async function run() {
       await sleep(200);
       const p = (ch().approvals.pending() ?? []).find(x => x.type === "ticket" && x.data?.actorId === pc.id);
       const never = ch().approvals.rules?.NEVER_AUTO ?? null;
-      ok("2 a ruling ticket waits in the queue", !!p && Number(p.data?.pool) > 0 && (!never || never.includes("ticket")),
-        {queued: !!p, pool: p?.data?.pool, difficulty: p?.data?.difficulty, risks: p?.data?.risks?.length, returned: !!e});
+      // nothing was rolled while it waits; approved, its card's Roll button rolls the pool at the ruled difficulty
+      const rolledEarly = game.messages.some(m => !msgsBefore.has(m.id) && /dice at \d+:/.test(m.content ?? "") && (m.content ?? "").includes("leap the gap"));
+      let rolled = null;
+      if ( p ) {
+        await ch().approvals.decide(p.id, "approve");
+        let card = null;
+        for ( let i = 0; i < 20 && !card; i++ ) { await sleep(150); card = game.messages.find(m => !msgsBefore.has(m.id) && m.flags?.["wodx-chronicle"]?.ticketRoll?.actorId === pc.id); }
+        const el = card ? await card.renderHTML() : null;
+        el?.querySelector?.("button.wodx-ticket-roll")?.click();
+        for ( let i = 0; i < 20 && !rolled; i++ ) { await sleep(150); rolled = game.messages.find(m => !msgsBefore.has(m.id) && /dice at \d+:/.test(m.content ?? "") && (m.content ?? "").includes("leap the gap")); }
+      }
+      const at = rolled ? /(\d+) dice at (\d+):/.exec(rolled.content) : null;
+      ok("2 a ruling ticket waits in the queue", !!p && Number(p.data?.pool) > 0 && (!never || never.includes("ticket")) && !rolledEarly
+        && !!at && Number(at[1]) === Number(p.data.pool) && Number(at[2]) === Number(p.data.difficulty),
+        {queued: !!p, pool: p?.data?.pool, difficulty: p?.data?.difficulty, rolledEarly, rolled: at ? `${at[1]} at ${at[2]}` : null, risks: p?.data?.risks?.length, returned: !!e});
     });
 
     await step("3 a crisis lever is logged and undone", async () => {
