@@ -10,6 +10,7 @@
  * Pure rules: voice-rules.js.
  */
 
+import * as LIM from "./limits.js";
 import * as V from "./voice-rules.js";
 import * as P from "./profiles.js";
 
@@ -30,7 +31,8 @@ export function registerSettings() {
 
 export function build(ctx) {
     const { dialog, setFlag, notify, api, virtues, wraithInfo, inquisitor } = ctx;
-    const sceneKey = () => `${canvas?.scene?.id ?? "none"}:${n(game.settings.get(MOD, "wraithScene"))}`;
+    // B4920: one scene count for everything that works once a scene (End the scene, or a new active map)
+    const sceneKey = () => `s${LIM.sceneNo()}`;
 
     function kindOf(actor) {
         // Orpheus spooks play on the mortal sheet: their voice is Spite (3.10.0)

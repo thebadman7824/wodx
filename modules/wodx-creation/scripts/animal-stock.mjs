@@ -112,7 +112,7 @@ export async function makeBeast(domitor, spec = {}) {
   // The system fills in a new Creature's sheet as it is made; the beast's own traits go on after
   const beast = await Actor.create({name, type: CONFIG.worldofdarkness?.sheettype?.creature ?? "Creature",
     ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE, ...owners},
-    flags: {[MODULE_ID]: {animal: {kind, breed: b?.key ?? null, coat, zone: AS.ZONES[spec.zone] ? spec.zone : null, training, retainerOf: domitor.id, dots}}}});
+    flags: {[MODULE_ID]: {animal: {kind, breed: b?.key ?? null, coat, zone: AS.ZONES[spec.zone] ? spec.zone : null, training, ...(spec.retainer !== false ? {retainerOf: domitor.id} : {}), dots}}}});
   const sheet = {"system.settings.variant": "general", "system.advantages.willpower.permanent": stats.willpower, "system.advantages.willpower.temporary": stats.willpower};
   for ( const [k, v] of Object.entries(stats.attributes) ) sheet[`system.attributes.${k}.value`] = v;
   for ( const [k, v] of Object.entries(stats.abilities) ) { sheet[`system.abilities.${k}.value`] = v; sheet[`system.abilities.${k}.isvisible`] = true; }
@@ -132,9 +132,9 @@ export async function makeBeast(domitor, spec = {}) {
   // Bonded and fed: the full oath, and the month starts now
   await setLineage(beast, {bonds: {[domitor.id]: {name: domitor.name, drinks: 3, last: t}}});
   Hooks.callAll("wodxGhoulFix", {actor: beast, drank: true, by: domitor});
-  const made = [...(domitor.getFlag(MODULE_ID, "animalRetainers") ?? []), {id: beast.id, dots}];
-  await domitor.setFlag(MODULE_ID, "animalRetainers", made);
-  await ChatMessage.create({speaker: {alias: "Retainers"}, whisper: game.users.filter(u => u.isGM || domitor.testUserPermission(u, "OWNER")).map(u => u.id),
+  // A beast a household keeps (B5136) is the domitor's ghoul, not a Retainers dot
+  if ( spec.retainer !== false ) await domitor.setFlag(MODULE_ID, "animalRetainers", [...(domitor.getFlag(MODULE_ID, "animalRetainers") ?? []), {id: beast.id, dots}]);
+  if ( spec.retainer !== false ) await ChatMessage.create({speaker: {alias: "Retainers"}, whisper: game.users.filter(u => u.isGM || domitor.testUserPermission(u, "OWNER")).map(u => u.id),
     content: `<div class="wodx-card wodx-animal-retainer"><h3>${esc(domitor.name)}'s ${esc(name)}</h3><p>${esc(AG.describe(kind))}.${b ? ` ${esc(b.label)}${coat ? `, ${esc(coat)}` : ""}.` : ""} ${training === "trained" ? "Trained." : "Untrained."} Bound to ${esc(domitor.name)} by the full oath and fed this night. ${dots > 1 ? `Made from ${dots} Retainers dots.` : ""}</p>
       <p>@UUID[Actor.${beast.id}]{Open the sheet}</p><p class="wodx-quiet">Traits: ${esc(stats.ref)}</p></div>`});
   return beast;

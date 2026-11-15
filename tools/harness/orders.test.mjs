@@ -109,7 +109,7 @@ test("orders: sentries notice strangers only, and warn or step in the way", () =
 
 test("orders: the orders tool reads every tie, and sentries are wired to token moves", () => {
   const s = src("modules/wodx-npc/scripts/orders.mjs");
-  assert.match(s, /servesOf = a => O\.servesFrom\(a\?\.flags\)/);
+  assert.match(s, /servesOf = a => \{ const out = O\.servesFrom\(a\?\.flags\); try \{ for \( const id of SV\.mastersOf\(a\)/, "every older tie plus the bond ledger (B5101)");
   assert.match(s, /sentries\(doc\)/);
   assert.match(src("modules/wodx-npc/scripts/routines.mjs"), /bookNow, noticeBy\}/);
 });

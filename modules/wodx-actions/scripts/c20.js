@@ -13,6 +13,7 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: c20-rules.js.
  */
+import * as LIM from "./limits.js";
 import * as C from "./c20-rules.js";
 import { floatOver } from "./daysleep.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -52,7 +53,8 @@ export function build(ctx) {
             wyrd: n(f.wyrdUntil) > game.time.worldTime || (f.wyrdScene && f.wyrdScene === sceneKey()), closed: f.closed?.scene === sceneKey() ? f.closed : null,
             freehold: ctx.background?.(actor, "Holdings") ?? 0 };
     }
-    const sceneKey = () => `${game.scenes?.viewed?.id ?? ""}:${Math.floor(game.time.worldTime / 3600)}`;
+    // B4920: one scene count for everything that works once a scene (End the scene, or a new active map)
+    const sceneKey = () => `s${LIM.sceneNo()}`;
     const saveFlag = (actor, patch) => ctx.setFlag(actor, "c20", { ...(actor.getFlag(MOD, "c20") ?? {}), ...patch });
     const setT = (actor, upd) => updateActor(actor, upd);
 
@@ -142,9 +144,14 @@ export function build(ctx) {
             const plan = C.cantripPlan({ art: i.arts[fd.art], artLevel: n(fd.lvl), used, known: i.realms, nightmare: i.nightmare, wyrd: !!fd.wyrd, wyrdInvoked: i.wyrd },
                 { targetBanality: n(fd.tb), placeBanality: n(fd.pb), higherTitle: !!fd.title, freehold: !!fd.freehold, enchanted: !!fd.ench, affinity: !!fd.aff, bunk: n(fd.bunk), volunteer: !!fd.vol });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
+            // B4921: a cantrip the book (or the house rule) says is used up is refused before Glamour is spent
+            const limPower = { name: fd.power ? cantripName(fd.power) : `${C.ARTS[fd.art]?.label ?? fd.art} ${n(fd.lvl)}`, disc: C.ARTS[fd.art]?.label ?? fd.art, level: n(fd.lvl) };
+            const lim = await LIM.gate(actor, limPower);
+            if (!lim) return null;
             if (plan.cost && !(await glamour(actor, -plan.cost))) return null;
             const wp = !!fd.wp && await spendWillpower(actor, 1);
-            const r = await rollPool(plan.dice, plan.difficulty, { willpower: wp });
+            const r = await rollPool(plan.dice, plan.difficulty + lim.diff, { willpower: wp });
+            if (lim.diff) plan.notes.push(`Drained +${lim.diff}`);
             const nmK = C.nightmareFrom(r.faces, plan.nightmareDice, r.botch);
             const nmNote = await nightmare(actor, nmK);
             const art = C.ARTS[fd.art];
@@ -165,8 +172,9 @@ export function build(ctx) {
                 }
             }
             body += `<div class="wodx-quiet">${REF} pp. 193–196, ${art.page}, 274</div>`;
+            await lim.done({ successes: r.botch ? 0 : r.successes });
             return post(actor, `${actor.name} weaves a cantrip`, body, [r.roll].filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
-        }, { width: 540, render: root => { pickCantrip(root); return aim(root, { actor, cast: { from: r => castIntent({ arts: [r.querySelector("[name=art]")?.value ?? ""], realms: Object.keys(C.REALMS).filter(k => Number(r.querySelector(`[name=r-${k}]`)?.value) > 0) }) } }); } });
+        }, { width: 540, render: root => { LIM.decorate(root, { actor, powerOf: v => { const q = CA.CANTRIPS[v]; return q && { name: cantripName(v), disc: C.ARTS[q.art]?.label ?? q.art, level: q.level }; } }); pickCantrip(root); return aim(root, { actor, cast: { from: r => castIntent({ arts: [r.querySelector("[name=art]")?.value ?? ""], realms: Object.keys(C.REALMS).filter(k => Number(r.querySelector(`[name=r-${k}]`)?.value) > 0) }) } }); } });
     }
 
     async function unleash(actor) {

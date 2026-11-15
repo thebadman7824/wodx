@@ -16,6 +16,7 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: fae-da-rules.js.
  */
+import * as LIM from "./limits.js";
 import * as F from "./fae-da-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
@@ -213,9 +214,14 @@ export function build(ctx) {
             const plan = F.castPlan({ dominion, rating: i.dominions[dominion], trait: t.value, traitLabel: t.label, level, court: i.court, mists: i.mists.perm, weaving: i.weaving.perm },
                 { time, holding: fd.holding ? 1 : 0, base: n(fd.base) || 6, mod: n(fd.mod) });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
+            // B4921: a cantrip used up for its time (the house rule for the fifth level and up) is refused before Mists are spent
+            const lim = await LIM.gate(actor, { name: c?.name ?? `${F.DOMINIONS[dominion]?.label ?? dominion} ${level}`, disc: F.DOMINIONS[dominion]?.label ?? dominion, level });
+            if (!lim) return null;
+            if (lim.diff) plan.notes.push(`Drained +${lim.diff}`);
             if (fd.cloak && !(await spend(actor, "mists", 1))) return null;
             const wp = !!fd.wp && await spendWillpower(actor, 1);
-            const r = await rollPool(plan.dice, plan.difficulty, { willpower: wp });
+            const r = await rollPool(plan.dice, plan.difficulty + lim.diff, { willpower: wp });
+            await lim.done({ successes: r.botch ? 0 : r.successes });
             const name = c?.name ?? `a level-${level} ${F.DOMINIONS[dominion].label} cantrip`;
             let body = rollBlock(`${F.DOMINIONS[dominion].label} + ${esc(t.label)}`, r, [...plan.notes, ...(fd.cloak ? ["cloaked: Perception + Kenning (8) to see it"] : []), ...(wp ? ["Willpower"] : [])]);
             body += r.botch ? `<div class="vta-big bad">The cantrip twists: the Storyteller says how.</div>`

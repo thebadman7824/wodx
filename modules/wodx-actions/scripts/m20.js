@@ -10,6 +10,7 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: m20-rules.js.
  */
+import * as LIM from "./limits.js";
 import * as M from "./m20-rules.js";
 import { floatOver } from "./daysleep.js";
 import { aim, castIntent } from "./aim.js";
@@ -90,15 +91,22 @@ export function build(ctx) {
             const kw = form.keywords.length || form.world ? EF.plan(actor, form, 0, { used, feat: n(fd.feat), age: sg.age.key }) : null;
             const plan = M.castPlan({ arete: i.arete, willpower: i.willpower.perm, used, known: i.spheres, kind: fd.kind, mods, quint: n(fd.q), avatar: i.avatar, need: kw ? kw.need : n(fd.feat), extra: n(fd.extra), freeMod: n(fd.free) });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
+            // B4921: an Effect of the fifth level or higher is once a scene (house rule), refused before Quintessence is spent
+            const lim = await LIM.gate(actor, { name: `Effect: ${used.map(x => `${x.sphere} ${x.level}`).join(", ")}`, level: Math.max(0, ...used.map(x => x.level)) });
+            if (!lim) return null;
             if (plan.quintUsed) { if (plan.quintUsed > i.quint) { notify(`${actor.name} has ${i.quint} Quintessence.`); return null; } await updateActor(actor, { "system.quintessence.temporary": i.quint - plan.quintUsed }); }
             const wp = !!fd.wp && await spendWillpower(actor, 1);
             // B4874: the caster's features on a casting (a House's fire, a choir's voices): magick, each Sphere, and fire for Forces that harms
             const tm = TH.traitMods(actor, ["magick", ...used.map(x => x.sphere), ...(fd.dmg && used.some(x => x.sphere === "forces") ? ["fire"] : [])]);
             plan.dice = Math.max(1, plan.dice + (tm.dice || 0));
             plan.difficulty = Math.max(3, Math.min(10, plan.difficulty + (tm.diff || 0)));
-            const r = await rollPool(plan.dice, plan.difficulty, { willpower: wp });
+            const r = await rollPool(plan.dice, plan.difficulty + lim.diff, { willpower: wp });
+            await lim.done({ successes: r.botch ? 0 : r.successes });
             const d = M.degree(r, plan.need);
-            const px = M.paradoxGained(fd.kind, plan.highest, r.botch);
+            // B5172: Paradox spirits shy from a Marauder, so its magick draws none (M20, the Marauders; WoDX Chronicle's feature)
+            const marauder = (() => { try { return !!game.modules.get("wodx-chronicle")?.api?.signatures?.allRowsOf?.(actor)?.some(x => x.key === "marauder"); } catch (e) { return false; } })();
+            const shed = marauder ? M.paradoxGained(fd.kind, plan.highest, r.botch) : 0;
+            const px = marauder ? 0 : M.paradoxGained(fd.kind, plan.highest, r.botch);
             const after = px ? await setParadox(actor, info(actor).paradox + px) : null;
             await saveFlag(actor, { lastMagick: game.time?.worldTime ?? 0, ...(String(fd.style ?? "").trim() ? { style: String(fd.style).trim() } : {}) });
             const fortune = sg.age.key === "crusade" ? await fortuneRoll(actor) : null;
@@ -113,6 +121,7 @@ export function build(ctx) {
                     : `<div class="vta-res">Duration: ${M.duration(r.successes)}.</div>`;
             }
             if (px) body += `<div class="vta-note">+${px} ${sg.age.key === "crusade" ? "Scourge" : "Paradox"} (${after.paradox})${after.quintLost ? `; it cancels ${after.quintLost} Quintessence on the wheel` : ""}.${after.paradox > 5 ? " Past five: the Storyteller may roll a backlash." : ""}${M.overload(after.paradox) ? " Twenty or more: an intense Quiet, a crack in reality, or worse." : ""}</div>`;
+            if (shed) body += `<div class="vta-note">Madness shields it: the ${shed} Paradox this would draw does not come.</div>`;
             if (fortune) body += fortune.html;
             if (r.botch && sg.age.key !== "crusade") body += `<div class="vta-note">To stave off the backlash: ${esc(M.STAVE)}.</div>`;
             body += `<div class="wodx-quiet">${sg.age.key === "crusade" ? `Sorcerers Crusade pdf pp. 244–249; ${REF} pp. 501–504 for the feats` : `${REF} pp. 501–504`}</div>`;

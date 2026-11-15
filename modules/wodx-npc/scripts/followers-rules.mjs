@@ -8,6 +8,7 @@
  * bond's three drinks); the words for each are WoDX's.
  */
 import * as O from "./order-rules.mjs";
+import * as SR from "./servant-rules.mjs";
 
 const idOf = v => (v && typeof v === "object" ? v.id : v) ? String(v && typeof v === "object" ? v.id : v) : null;
 
@@ -98,4 +99,21 @@ export function lastText(last) {
   if ( !last ) return "";
   const n = Math.abs(last.delta), steps = n === 1 ? "a step" : `${n} steps`;
   return `${last.delta > 0 ? "Rose" : "Fell"} ${steps}${last.why ? `: ${last.why}` : ""}`;
+}
+
+/**
+ * B5101, B5110: a row with the one bond ledger laid over it. A follower the older ties only call "Follower" takes the
+ * ledger's kind (Kinfolk, Revenant, Cultist, Thrall, Fomor, Enchanted, Conditioned...), the bond line shows the deepest
+ * bond when there is no blood bond, and a mage's mortal allies and retainers are acolytes or consors (desk m2).
+ */
+export function withLedger(row, recs = [], {masterLine = "", consor = false} = {}) {
+  if ( !row ) return row;
+  const lk = (recs ?? []).map(SR.followerKindOf).find(Boolean);
+  if ( lk && row.kind === "follower" ) row.kind = lk;
+  const word = SR.mageWord(row.kind, {masterLine, consor});
+  if ( word !== row.kind ) row.kind = word;
+  row.kindLabel = KINDS[row.kind] ?? SR.FOLLOWER_KINDS[row.kind] ?? row.kindLabel;
+  const deep = (recs ?? []).filter(r => r.kind !== "blood").sort((a, b) => b.step - a.step)[0];
+  if ( deep && !row.bond?.text ) row.bond = {...(row.bond ?? {drinks: 0}), text: SR.stepWord(deep.kind, deep.step) || SR.KINDS[deep.kind]?.label || ""};
+  return row;
 }

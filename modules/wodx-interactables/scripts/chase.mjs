@@ -380,6 +380,24 @@ export async function fled(tokDoc, foes = []) {
   return start(scene, {quarry: tokDoc.id, pursuers: near.map(d => d.id), night: !!game.modules.get("wodx-chronicle")?.api?.when?.context?.()?.isNight});
 }
 
+/**
+ * B5176: a player character who breaks away from a fight starts a chase too. In a fight on this scene, a player's token
+ * that was within CLOSE yards of NPC foes and ends its move more than BROKE yards from all of them is fleeing; those
+ * foes give chase. House reading of when a step back becomes a flight.
+ */
+export const FLEE = {close: 3, broke: 8};
+export async function pcMoved(tokDoc, from, to) {
+  const scene = tokDoc?.parent, combat = game.combat;
+  if ( !isActiveGM() || !autoOn() || !scene || !tokDoc.actor?.hasPlayerOwner || !combat?.started || combat.scene?.id !== scene.id ) return null;
+  if ( !combat.combatants.some(c => c.tokenId === tokDoc.id) || stateOf(scene)?.status === "running" ) return null;
+  const yards = (a, b) => deps.yardsOn ? deps.yardsOn(scene, a, b) : Math.hypot(a.x - b.x, a.y - b.y) / (scene.grid?.size ?? 100);
+  const at = d => deps.centerOf ? deps.centerOf(d, scene) : {x: d.x, y: d.y};
+  const foes = combat.combatants.map(c => scene.tokens.get(c.tokenId)).filter(d => d && d.id !== tokDoc.id && d.actor && !d.actor.hasPlayerOwner && !d.hidden && !c_dead(d));
+  const close = foes.filter(d => yards(from, at(d)) <= FLEE.close);
+  if ( !close.length || !close.every(d => yards(to, at(d)) > FLEE.broke) ) return null;
+  return fled(tokDoc, close);
+}
+const c_dead = d => !!d.actor?.statuses?.has?.("dead") || !!d.actor?.statuses?.has?.("unconscious");
 async function fight(msg) {
   const f = msg.flags?.[MOD]?.chaseTurn, scene = game.scenes.get(f?.scene);
   const st = stateOf(scene);
@@ -420,5 +438,5 @@ export function setupChase(d = {}) {
     wire("button.wix-chase-fight", () => fight(msg));
     wire("button.wix-chase-grudge", () => grudges(msg));
   });
-  return {open, start, rollTurn, end, undoTurn, join, fled, tick: tickChases, state: stateOf, rideOf, rules: C};
+  return {open, start, rollTurn, end, undoTurn, join, fled, pcMoved, tick: tickChases, state: stateOf, rideOf, rules: C};
 }

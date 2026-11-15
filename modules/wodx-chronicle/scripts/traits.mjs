@@ -143,7 +143,7 @@ const MOMENTS = {feed: "feeding", social: "a social act", fight: "a fight", nigh
  * A moment where traits should bite (P11): one queue card a character, keyed so the same moment is not asked twice.
  * on: feed, social, fight or night. at: what makes the moment its own (a night's date, a fight id). Returns how many.
  */
-export async function prompt(actors, on, {at = "", where = ""} = {}) {
+export async function prompt(actors, on, {at = "", where = "", vessel = null} = {}) {
   if ( !MOMENTS[on] ) return 0;
   let n = 0;
   for ( const a of [actors].flat().filter(Boolean) ) {
@@ -152,7 +152,7 @@ export async function prompt(actors, on, {at = "", where = ""} = {}) {
     n++;
     await propose({type: PROMPT_TYPE, key: `trait:${on}:${a.id}:${at || Math.floor(game.time?.worldTime ?? 0)}`,
       title: `${a.name}: ${list.map(x => x.name).join(", ")} (${MOMENTS[on]})`,
-      detail: list.map(x => `${x.name}: ${x.text}.`).join(" "), data: {actor: a.id, on, where, list}});
+      detail: list.map(x => `${x.name}: ${x.text}.`).join(" "), data: {actor: a.id, on, where, list, vessel}});
   }
   return n;
 }
@@ -191,6 +191,32 @@ async function bite(a, x, d) {
     const D = game.modules.get(MODULE_ID)?.api?.derangements;
     if ( f.bout ) await D?.startBout?.(a, f.bout); else await D?.hold?.(a);
     return `${said}a derangement takes hold for the scene.`;
+  }
+  if ( f.infect ) {
+    const v = d.vessel ? await fromUuid(d.vessel) : null, va = v?.actor ?? v;
+    if ( !va ) return "no vessel to infect.";
+    const die = (await new Roll("1d10").evaluate()).total;
+    if ( !TB.infects(f.infect, die) ) return `rolled ${die}: the bite stays clean.`;
+    await va.update({"flags.wodx-actions.vesselState": "disease"});
+    try { await va.toggleStatusEffect?.("disease", {active: true}); } catch (e) { /* no such status */ }
+    await applyTimed(va, {name: TB.FEVER.name, description: "−1 die on every roll while the fever runs", duration: {kind: "time", seconds: TB.FEVER.seconds},
+      key: `${BITE_KEY}:fever`, data: {name: TB.FEVER.name, tags: TB.FEVER.tags, dice: TB.FEVER.dice, diff: 0}, source: "V20 p. 481"});
+    return `rolled ${die}: the bite festers. ${va.name} falls sick (a die off every roll for a week) and carries it in the blood.`;
+  }
+  if ( f.consume ) {
+    const v = d.vessel ? await fromUuid(d.vessel) : null, va = v?.actor ?? v;
+    if ( !va ) return "no vessel.";
+    const mortal = !/vampire|kindred|cainite|wraith|spirit/i.test(`${va.type} ${va.system?.kind ?? ""}`);
+    if ( !mortal ) return `${va.name} is no mortal: there is nothing to eat.`;
+    try { await va.toggleStatusEffect?.("dead", {active: true, overlay: true}); } catch (e) { /* no status */ }
+    await va.update({"flags.wodx-actions.fleshTaken": true});
+    return `the heart and liver are eaten too: ${va.name} is dead.`;
+  }
+  if ( f.berserk ) {
+    const to = game.users.filter(u => u.isGM || a.testUserPermission(u, "OWNER")).map(u => u.id);
+    await ChatMessage.create({content: `<div class="wodx-card"><p><b>Berserker</b>: ${esc(a.name)} can go berserk at will, ignoring wound penalties (W20 p. 476).</p><button type="button" data-wct-berserk="${esc(a.uuid)}">Go berserk</button></div>`,
+      speaker: {alias: a.name}, whisper: to});
+    return "the player has a button to go berserk.";
   }
   if ( f.frenzy ) {
     if ( !frenzy ) return `${said}no frenzy.`;
@@ -246,6 +272,20 @@ export function registerTraitHooks() {
     if ( pcs.length ) prompt(pcs, "fight", {at: p?.combat?.id ?? ""});
   });
   const can = a => !!a && (game.user.isGM || a.isOwner);
+  // B5175: Berserker's button: the player sends the character into a berserk frenzy (frenzy ignores wound penalties)
+  Hooks.on("renderChatMessageHTML", (msg, el) => {
+    const b = el?.querySelector?.("[data-wct-berserk]");
+    if ( !b ) return;
+    b.addEventListener("click", async ev => {
+      ev.preventDefault();
+      const d = await fromUuid(b.dataset.wctBerserk), a = d?.actor ?? d;
+      if ( !can(a) || b.disabled ) return;
+      b.disabled = true;
+      await a.update({"system.conditions.isfrenzy": true});
+      await game.modules.get(MODULE_ID)?.api?.conditions?.setCondition?.(a, "frenzy", true);
+      await ChatMessage.create({content: `<div class="wodx-card"><p><b>${esc(a.name)}</b> goes berserk: frenzy, and no wound penalties while it lasts.</p></div>`, speaker: {alias: a.name}});
+    });
+  });
   Hooks.on("getHeaderControlsActorSheetV2", (app, controls) => {
     const a = app.document;
     if ( !can(a) || controls.some(c => c.action === "wctTraits") ) return;

@@ -2,6 +2,12 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.76.0 (Ghouled animals, step four (B5130 to B5137). Clan marks after V20 Dark Ages p. 401, only the weaknesses a beast can show. The szlachta and vozhd after V20 pp. 502 to 503; a vozhd is immune to Animalism, Dominate and Presence and its making goes to the Masquerade ledger. Kennels breed in each kind's season, once a year, from two or more ghouls of the kind; the young is born trained and its first drink fills it. Households: Gangrel, Tzimisce, Nosferatu and any vampire with Animalism keep one to three animal ghouls, more in the Dark Ages and the countryside, of the kinds the age and the clan fit; they live at the haven on the animal routines. An animal ghoul's tokens are linked to its sheet, so its blood, bond and mark are the ones on the map)
+- 0.75.0 (Names made by pattern for the short lists (B5600))
+- 0.74.0 (Mizrahi names raised to 300 (B5580); Sephardi names raised to 300 (B5570))
+- 0.73.0 (German names raised to 300 (B5540); Maori names raised to 300 (B5560); Norse names raised to 300 (B5550))
+- 0.72.0 (English names raised to 300 (B5480); French names raised to 300 (B5490); Italian names raised to 300 (B5510); Japanese names raised to 300 (B5520); Russian names raised to 300 (B5530); Spanish names raised to 300 (B5500))
+- 0.71.0 (A Fetter that is a place is checked against the town over time when the era moves on (B5391))
 - 0.70.0 (Ghouled animals, step three (B5058 to B5064): traits for every animal kind from the V20 Dark Ages animals list (pp. 396 to 399), with house figures for the kinds it leaves out. Three steps of training: trained gives the traits the list puts in brackets, war-trained (horses, camels, elephants, guard dogs and hounds) adds a dot of Brawl and is the mark the mounts rules read to stop a horse shying. Training costs 5 experience, then 10, or runs as a long task (Manipulation + Animal Ken, difficulty 7, a roll a week). Breeds by year and land, from destriers and alaunts to Dobermanns and salukis. In the wizard's Backgrounds page a vampire picks the kind, land, breed and training for each Retainers dot; dots put together make one tougher beast with the Storyteller's leave)
 - 0.69.0 (Golconda lifts the Generation's limit on Traits (B5091, V20 Dark Ages p. 359))
 - 0.68.0 (Dutch names raised to 300 (B5440); Greek names raised to 300 (B5460); Irish names raised to 300 (B5450); Polish names raised to 300 (B5470); Portuguese names raised to 300 (B5430))

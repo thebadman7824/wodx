@@ -42,6 +42,7 @@ import * as RV from "./rivalry-rules.mjs";
 import * as KIN from "./kin.mjs";
 import * as FATES from "./fates.mjs";
 import * as BONDS from "./bonds.mjs";
+import * as SERVANTS from "./servants.mjs";
 import * as TRUST from "./trust.mjs";
 import * as MEMORY from "./memory.mjs";
 import * as HEARTS from "./hearts.mjs";
@@ -53,7 +54,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.88.0";
+const VERSION = "0.91.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -547,10 +548,12 @@ async function animalFrenzy(tok) {
   const dice = Math.max(1, num(actor.system?.advantages?.willpower?.permanent) || 1);
   const roll = await new Roll(`${dice}d10`).evaluate();
   const faces = roll.dice?.[0]?.results?.map(r => r.result) ?? [];
-  const net = faces.filter(f => f >= 6).length - faces.filter(f => f === 1).length;
+  // B5130: a Brujah or Gangrel domitor's blood makes the beast quick to rage
+  const extra = num(actor.flags?.["wodx-creation"]?.clanMark?.frenzy) || 0, diff = Math.min(10, 6 + extra);
+  const net = faces.filter(f => f >= diff).length - faces.filter(f => f === 1).length;
   const holds = net > 0;
   if ( !holds ) { try { await chron()?.conditions?.setCondition?.(actor, "frenzy", true); } catch (e) { console.warn(`${MOD} | frenzy`, e); } }
-  return {done: true, text: `${tok.name} fights the blood in it: Willpower ${dice} dice at 6 (${faces.join(", ")}). ${holds ? "It holds." : "It frenzies."}`};
+  return {done: true, text: `${tok.name} fights the blood in it: Willpower ${dice} dice at ${diff}${extra ? " (its master's blood makes it quick to rage)" : ""} (${faces.join(", ")}). ${holds ? "It holds." : "It frenzies."}`};
 }
 
 /** Carry out one option. Returns {done, text}. */
@@ -988,7 +991,7 @@ passersby.hooks();
 const overheard = buildOverheard({MOD, esc, isActiveGM, chron, savedProfile, talk, nameFor: (t, u) => Faces.nameFor(t, u), sidesOf: a => rivalry.sidesOf(a)});
 overheard.hooks();
 const attitude = buildAttitude({MOD, chron, savedProfile, factions, rivalry, profileFor});
-Hooks.on("wodxChronicleReady", () => { attitude.registerHandler(); MEMORY.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); FATES.registerHandlers(); });
+Hooks.on("wodxChronicleReady", () => { SERVANTS.registerHandler(); attitude.registerHandler(); MEMORY.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); FATES.registerHandlers(); });
 /* 0.30.0: relationships, the family and lineage tree, secrets and hooks, why an NPC feels as they do */
 const people = buildPeople({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry});
 people.hooks();
@@ -1029,6 +1032,8 @@ Hooks.once("init", () => {
   FATES.listen();
   BONDS.registerSettings();
   BONDS.listen();
+  SERVANTS.registerSettings();
+  SERVANTS.listen();
   TRUST.listen();
   MEMORY.listen();
   HEARTS.registerSettings();
@@ -1051,6 +1056,10 @@ Hooks.once("init", () => {
     cults, openCults: cults.open,
     kin: {lines: KIN.lines, lineOf: KIN.lineOf, start: KIN.startLine, grow: KIN.growLines, descendants: KIN.descendants, bring: KIN.bring, reportFor: KIN.reportFor, rules: KIN.rules},
     bonds: {stepToward: BONDS.stepToward, socialShift: BONDS.socialShift, vinculum: BONDS.vinculum, payFamiliar: BONDS.payFamiliar, rules: BONDS.rules},
+    servants: {records: SERVANTS.records, mastersOf: SERVANTS.mastersOf, servantsOf: SERVANTS.servantsOf, bind: SERVANTS.bind, unbind: SERVANTS.unbind,
+      restrain: SERVANTS.restrain, orderWeight: SERVANTS.orderWeight, warmFloor: SERVANTS.warmFloor, dominateShift: SERVANTS.dominateShift,
+      condition: SERVANTS.condition, socialRoll: SERVANTS.socialRoll, flash: SERVANTS.flash, flashBetween: SERVANTS.flashBetween,
+      openBind: SERVANTS.openBind, setRevenantMaster: SERVANTS.setRevenantMaster, familyKeyOf: SERVANTS.familyKeyOf, rules: SERVANTS.rules},
     memory: {remember: MEMORY.remember, balance: MEMORY.balanceOf, known: MEMORY.knownBy, turn: MEMORY.turn, open: MEMORY.rememberedDialog, fromTrust: MEMORY.fromTrust, rules: MEMORY.rules},
     trust: {of: TRUST.trustOf, move: TRUST.moveTrust, betray: TRUST.betray, debtWord: TRUST.debtWord, tradeBoon: TRUST.tradeBoon, blackmail: TRUST.blackmail,
       answerBlackmail: TRUST.answerBlackmail, strikeBacks: TRUST.strikeBacks, sideOf: TRUST.sideOf, setSide: TRUST.setSide, howToFind: TRUST.howToFind, foundSide: TRUST.foundSide, rules: TRUST.rules},
