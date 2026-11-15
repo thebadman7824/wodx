@@ -228,6 +228,7 @@ export function propose(v, ctx) {
     const gone = placeGone(f.name, v.towns ?? [], ctx.fromYear, ctx.toYear);
     if ( gone ) add("adv.fetterLost", `The Fetter "${f.name}" is lost`, `${gone.why}: the place is gone, and a Harrowing follows (Wraith 20th pp. 49, 308).`, true, {itemId: f.id, who: gone.town, why: `${gone.why}, and the place with it`});
   }
+  if ( v.line === "wraith" && eraChanges ) notes.push("Fetters that name a town are checked against the town over time: a town sacked, quaked or in ruin takes the place with it (Wraith 20th p. 49)");
   if ( v.line === "kuei-jin" ) notes.push("Does not age; progress is by Dharma, not by years (Kindred of the East pdf pp. 30–31)");
   if ( v.line === "demon" ) {
     // B5022: a host past the age a body gives out dies across the years, and the demon seeks another (house age)
