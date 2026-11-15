@@ -9,6 +9,7 @@
  * the path can enchant: hedge sorcerers, hunters of the Hunters Hunted era, Kinfolk, ghouls.
  */
 import {registerLine} from "./wonder-registry.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const para = s => `<p>${String(s ?? "").replace(/[<>&]/g, c => ({"<": "&lt;", ">": "&gt;", "&": "&amp;"})[c])}</p>`;
@@ -45,10 +46,10 @@ export const USES = {always: "Always at work", daily: "Once a day", charges: "As
 
 /** B5015: the keepings a talisman can need, and how long one keeping lasts (house figures). One in five needs none. */
 export const KEEPINGS = [
-  {key: "blood", text: "a drop of its bearer's blood", every: 7 * 86400, label: "a week"},
-  {key: "moon", text: "a night under the full moon", every: 30 * 86400, label: "a month"},
-  {key: "water", text: "washing in running water", every: 30 * 86400, label: "a month"},
-  {key: "words", text: "its maker's words spoken over it", every: 90 * 86400, label: "a season"}
+  {key: "blood", text: "a drop of its bearer's blood", every: 7 * DAY, label: "a week"},
+  {key: "moon", text: "a night under the full moon", every: 30 * DAY, label: "a month"},
+  {key: "water", text: "washing in running water", every: 30 * DAY, label: "a month"},
+  {key: "words", text: "its maker's words spoken over it", every: 90 * DAY, label: "a season"}
 ];
 export function keepingOf(seed = "") {
   let h = 0; for ( const c of String(seed) ) h = (h * 31 + c.charCodeAt(0)) >>> 0;

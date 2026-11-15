@@ -6,6 +6,7 @@
  * judgement, stays the Storyteller's call and is only listed on the card.
  */
 import { H, T, C, N, S, MV, HL, outcomesOf } from "./mage-da-effects.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 /**
  * Dark Ages path powers, by power id, from a page check of each power (2026-11-11). Summoned beings, raised dead,
@@ -62,7 +63,7 @@ export const PATH_EFFECTS = {
   [`${TH}elementorum-strength-of-the-earth`]: T("shape", "Strength of the Earth", {turns: 1}, "self"), [`${TH}elementorum-wooden-tongues`]: N(),
   [`${TH}elementorum-animate-the-unmoving`]: S(), [`${TH}elementorum-elemental-form`]: T("shape", "Elemental Form", "night", "self"),
   [`${TH}elementorum-summon-elemental`]: S("summon"),
-  [`${TH}exsecrabilis-stigma`]: T("fortune", "Stigma", {seconds: 86400}, "one"), [`${TH}exsecrabilis-malady`]: S("harm"),
+  [`${TH}exsecrabilis-stigma`]: T("fortune", "Stigma", {seconds: DAY}, "one"), [`${TH}exsecrabilis-malady`]: S("harm"),
   [`${TH}exsecrabilis-scapegoat`]: T("sway", "Scapegoat", {days: 1}, "one"), [`${TH}exsecrabilis-corrupt-body`]: S("shape"),
   [`${TH}exsecrabilis-acedia`]: S("fortune"),
   [`${TH}vitae-a-taste-for-blood`]: N(), [`${TH}vitae-blood-awakening`]: S(), [`${TH}vitae-inner-vessel`]: S(), [`${TH}vitae-theft-of-vitae`]: S("charge"),

@@ -267,11 +267,16 @@ async function player(ids) {
     api.st.open("hidden");
     const hid = await until(() => !!win(/Hidden on|What is hidden/), 8000);
     await win(/Hidden on|What is hidden/)?.close?.();
+    // B6226: the night's work, asked of the seat and shown as a list with its Undo
+    const hasNight = (api.rules.ST_TOOLS ?? []).some(t => t.id === "night");
+    if ( hasNight ) api.st.open("night");
+    const night = !hasNight || await until(() => !!foundry.applications.instances?.get?.("wodx-solo-night")?.element?.querySelector?.("button[data-action=undo]"), 8000);
+    await foundry.applications.instances?.get?.("wodx-solo-night")?.close?.();
     // Off again from the panel
     api.panel.ask("ask.st.toggle", {to: false});
     const off = await until(() => !api.st.usable(game.user.id), 8000);
-    ok("9e. Storyteller tools", toggleShown && on && tools && eyes && eyesWin && given && xpGiven && check && hid && off,
-      {toggleShown, on, tools, eyes, cards: api.st.cards().length, eyesWin, given, xpGiven, xpWas, check, checkRows, hidden: hid, off});
+    ok("9e. Storyteller tools", toggleShown && on && tools && eyes && eyesWin && given && xpGiven && check && hid && night && off,
+      {toggleShown, on, tools, eyes, cards: api.st.cards().length, eyesWin, given, xpGiven, xpWas, check, checkRows, hidden: hid, night, off});
   });
   await step("9f. arrival", async () => {
     if ( !S()?.arrival ) return ok("9f. arrival", false, {error: "no arrival in this version"});

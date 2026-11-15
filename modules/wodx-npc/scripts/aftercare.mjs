@@ -14,12 +14,13 @@
  */
 import * as AC from "./aftercare-rules.mjs";
 import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {
   const now = () => game.time?.worldTime ?? 0;
   const yearNow = () => { try { return Number(chron()?.eras?.currentYear?.()) || 1197; } catch (e) { return 1197; } };
   const base = a => (a?.isToken ? (a.baseActor ?? game.actors.get(a.id)) : a);
-  const isNpc = a => !!a && !a.hasPlayerOwner;
+  const isNpc = TERMS.isNPC;
   const mem = () => game.modules.get(MOD)?.api?.memory ?? null;
   const flag = (a, k) => a?.getFlag?.(MOD, k);
   const dmg = a => { const ct = C()?.corpusTrack?.(a); const d = ct?.damage ?? a?.system?.health?.damage ?? {}; return {bashing: Number(d.bashing) || 0, lethal: Number(d.lethal) || 0, aggravated: Number(d.aggravated) || 0}; };

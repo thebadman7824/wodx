@@ -67,10 +67,11 @@ import {setupChase} from "./chase.mjs";
 import {setupVehicleSheet, setLights} from "./vehicle-sheet.mjs";
 import * as VS from "./vehicle-sheet-rules.mjs";
 import {setupCase, registerCaseSettings, pinClue} from "./case.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.53.0";
+const VERSION = "0.53.1";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -321,7 +322,7 @@ export function weaponsOf(actor) {
 export function yardsOn(scene, a, b) {
   const g = scene?.grid ?? canvas?.scene?.grid ?? {};
   const size = num(g.size) || 100, dist = num(g.distance) || 5, units = String(g.units ?? "ft");
-  const per = /m|meter|metre|yd|yard/i.test(units) ? dist : dist / 3;
+  const per = TERMS.toYards(dist, units);
   return Math.hypot(num(a?.x) - num(b?.x), num(a?.y) - num(b?.y)) / size * per;
 }
 const reachPx = scene => (num(scene?.grid?.size) || canvas?.grid?.size || 100) * (0.5 + (num(setting("reach")) || 1));
@@ -419,6 +420,10 @@ const NOISE_WORD = {silent: "silent", quiet: "quiet", loud: "loud"};
  * they are apart from the group (B1961). Returns {advanced (clock seconds), personal (for Undo), line}.
  */
 async function passTime(actor, seconds) {
+  // B6198: an attempt counted in turns (under a minute, whole turns of three seconds) takes the table's turn length
+  // (WoDX Combat's "Seconds a turn takes", through api.terms.turnSeconds)
+  const per = Number(game.modules.get("wodx-chronicle")?.api?.terms?.turnSeconds?.()) || TERMS.TURN_SECONDS;
+  if ( seconds > 0 && seconds < TERMS.MINUTE && seconds % TERMS.TURN_SECONDS === 0 ) seconds = (seconds / TERMS.TURN_SECONDS) * per;
   const time = game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller")?.api?.time : null;
   if ( time?.spend && actor?.hasPlayerOwner ) {
     try {
@@ -892,7 +897,7 @@ const yardsBetween = (a, b) => {
   try {
     const units = canvas.scene?.grid?.units ?? "ft";
     const d = canvas.grid.measurePath([a, b]).distance;
-    return /m|meter|metre|yd|yard/i.test(units) ? d : d / 3;
+    return TERMS.toYards(d, units);
   } catch (e) { return Math.hypot(a.x - b.x, a.y - b.y) / (canvas.grid?.size ?? 100) * 1.67; }
 };
 const soundWalls = (a, b) => {

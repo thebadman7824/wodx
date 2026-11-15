@@ -1,6 +1,7 @@
 import {MODULE_ID, placeOf} from "./ratings.mjs";
 import {planAttempt, countRoll, outcomeOf, SETTLEMENTS, disconnection} from "./rules.mjs";
 import {layersOf, tokenLayer} from "./twins.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const STATUS = {
   umbra: {id: "wodx-umbra", name: "In the Umbra", img: "icons/svg/portal.svg"},
@@ -261,7 +262,7 @@ async function resolveGroup({group, place, chart, procedure, mode, inUmbra, choi
       } else if ( outcome.status === "lost" ) {
         change.add.push(STATUS.lost.id);
         // B5018: the way out of the Pattern Web is found after some days, rolled now
-        change.attempts = {key, lostAt: now, returnAt: now + lostDays() * 86400};
+        change.attempts = {key, lostAt: now, returnAt: now + lostDays() * DAY};
       }
     }
     if ( change.add.length || change.remove.length || change.attempts !== undefined || change.level || change.world ) {
@@ -329,7 +330,7 @@ export function disconnectionOf(actor, now = game.time.worldTime) {
  * traveller was lost, still in the Penumbra; the Storyteller's Clear crossing brings them back sooner. */
 export const LOST_DAYS = {base: 1, die: 10};
 export const lostDays = (rand = Math.random) => LOST_DAYS.base + 1 + Math.floor(rand() * LOST_DAYS.die);
-const daysLeft = s => { const d = Math.ceil(Math.max(0, s) / 86400); return d <= 1 ? "within a day" : `in about ${d} days`; };
+const daysLeft = s => { const d = Math.ceil(Math.max(0, s) / DAY); return d <= 1 ? "within a day" : `in about ${d} days`; };
 /** Active GM: bring back those whose time in the Pattern Web is up. Returns how many came back. */
 export async function returnLost(now = game.time.worldTime, rand = Math.random) {
   if ( !game.user?.isGM || game.users.activeGM?.id !== game.user.id ) return 0;
@@ -344,7 +345,7 @@ export async function returnLost(now = game.time.worldTime, rand = Math.random) 
     await applyLocally(t, {remove: [STATUS.lost.id], attempts: null});
     try { await t.update({x, y}, {animate: false}); } catch (e) { /* the token stays where it was */ }
     const whisper = game.users.filter(u => u.isGM || a.testUserPermission?.(u, "OWNER")).map(u => u.id);
-    await ChatMessage.create({whisper, speaker: {alias: "WoDX"}, content: `<div class="wodx-card"><p><strong>${esc(a.name)}</strong> finds a way out of the Pattern Web after ${Math.max(1, Math.round((now - (rec.lostAt ?? now)) / 86400))} days, and comes out in the Penumbra not far from where they were lost.</p></div>`});
+    await ChatMessage.create({whisper, speaker: {alias: "WoDX"}, content: `<div class="wodx-card"><p><strong>${esc(a.name)}</strong> finds a way out of the Pattern Web after ${Math.max(1, Math.round((now - (rec.lostAt ?? now)) / DAY))} days, and comes out in the Penumbra not far from where they were lost.</p></div>`});
     k++;
   }
   return k;

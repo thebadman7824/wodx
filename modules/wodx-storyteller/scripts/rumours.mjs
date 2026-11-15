@@ -6,6 +6,7 @@ import {MOD, esc, chron, npc, isActiveGM, isPC, setting, mutate} from "./core.mj
 import {nightNow} from "./night.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Signals from "./signals.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 /**
  * The rumour network: a rumour, once started (from the night's draw when approved, or by hand), passes between the
@@ -15,7 +16,7 @@ import * as Signals from "./signals.mjs";
 
 const all = c => (c ? [...(c.contents ?? c)] : []);
 const skipping = () => { try { return !!chron()?.isSkipping?.(); } catch { return false; } };
-const isNpc = a => !!a && !isPC(a) && !/group/i.test(String(a.type ?? ""));
+const isNpc = TERMS.isNPC;
 
 export function registerRumourSettings() {
   game.settings.register(MOD, "rumours", {scope: "world", config: false, type: Array, default: [], onChange: () => RumoursApp.refresh()});

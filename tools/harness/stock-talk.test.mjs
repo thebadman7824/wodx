@@ -36,8 +36,11 @@ test("the writing: gender-neutral, no dashes for pauses, no duplicates, each lin
 });
 
 test("eras and regard: years to spans, steps to feelings, attitude before standing", () => {
-  assert.deepEqual([1197, 1499, 1500, 1850, 1944, 1999, 2025, 2030].map(y => TK.eraBand(y)), ["medieval", "medieval", "earlymodern", "nineteenth", "twentieth", "modern", "modern", "future"]);
+  // B6194: the bands follow the era profiles (the Renaissance from 1450, the Victorian Age from 1837, mid-century from 1919)
+  assert.deepEqual([1197, 1449, 1450, 1850, 1944, 1999, 2025, 2030].map(y => TK.eraBand(y)), ["medieval", "medieval", "earlymodern", "nineteenth", "twentieth", "modern", "modern", "future"]);
   assert.equal(TK.eraBand(2030, "future"), "future");
+  assert.equal(TK.eraBand(2015, "future"), "future", "the Future Darkness branch speaks its era from 2010");
+  assert.equal(TK.eraBand(2015), "modern");
   assert.deepEqual([-3, -2, -1, 0, 1, 2, 3].map(TK.regardOf), ["hate", "dislike", "dislike", "neutral", "neutral", "like", "love"]);
   assert.equal(TK.stepFor({attitude: 3, standings: [-3]}), 3, "the NPC's own attitude wins");
   assert.equal(TK.stepFor({attitude: null, standings: [-3, -2]}), -2);

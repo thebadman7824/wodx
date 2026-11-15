@@ -9,8 +9,9 @@
  * without one they starve. Salons gather people round a host and start a tale. The art of each age and way of life is
  * history in WoDX's own words; every figure is a house figure.
  */
+import {MONTH} from "../../wodx-chronicle/scripts/terms.mjs";
+export {MONTH};
 
-export const MONTH = 30 * 86400;
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const str = (v, k) => String(v ?? "").replace(/\s+/g, " ").trim().slice(0, k);
 const fits = (r, y) => !y || ((r.from == null || y >= r.from) && (r.to == null || y <= r.to));

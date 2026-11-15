@@ -9,6 +9,7 @@ import * as TR from "./turn-rules.js";
 export const rules = TR;
 import { countSuccesses } from "./core-rules.js";
 import { poolDice } from "./summons.js";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
@@ -44,7 +45,7 @@ function inside(tok, rec) {
   if ( !tok || !scene ) return [];
   const g = scene.grid?.size ?? 100, dist = scene.grid?.distance ?? 1, units = String(scene.grid?.units ?? "yd");
   const yards = n(rec.area?.yards) || 1;
-  const perYard = /ft|feet/i.test(units) ? 3 : /m/i.test(units) ? 0.9144 : 1;
+  const perYard = TERMS.unitsPerYard(units);
   const px = yards * perYard / (dist || 1) * g;
   const cx = n(tok.x) + (n(tok.width) || 1) * g / 2, cy = n(tok.y) + (n(tok.height) || 1) * g / 2;
   return scene.tokens.filter(t => t.id !== tok.id && t.actor && Math.hypot(n(t.x) + (n(t.width) || 1) * g / 2 - cx, n(t.y) + (n(t.height) || 1) * g / 2 - cy) <= px)

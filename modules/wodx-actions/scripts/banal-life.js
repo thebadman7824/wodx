@@ -11,10 +11,10 @@
  */
 import * as B from "./banal-life-rules.js";
 import * as P from "./profiles.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-const DAY = 86400;
 
 export function build(ctx) {
     const { setFlag, notify, banality, seemingOf } = ctx;

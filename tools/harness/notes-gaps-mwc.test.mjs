@@ -118,7 +118,7 @@ test("everyday Banality: banal places, Autumn People, long tasks; heavier with t
   assert.deepEqual(B.add(2, 1, 1300), {tally: 0, points: 1, need: 3, close: false});
   assert.deepEqual(B.add(0, 2, 1900), {tally: 0, points: 2, need: 1, close: false});
   const main = src("modules/wodx-actions/scripts/main.js");
-  assert.match(main, /blx\(\)\.endScene\(canvas\?\.scene\)/);
+  assert.match(main, /blx\(\)\.endScene\(endedScene\(o\)\)/);
   assert.match(main, /Hooks\.on\("wodxTaskDone"/);
   assert.match(src("modules/wodx-actions/scripts/theme-rules.js"), /"api:c20Everyday":/);
   assert.match(src("modules/wodx-actions/scripts/theme-rules.js"), /"api:soulforge":/);

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6220
+Next free block: B6500
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -329,14 +329,24 @@ Next free block: B6220
 | B5980-B5989 | Lone Chronicle step 3: the oracle, the Leads page and night encounters on the map (used B5980-B5985) | Solo |
 | B5990-B5999 | Say or Do: full sentences and grieving (Ben's picks on law sentences and heartbreak) (used B5990-B5992) | Chronicle, NPC, Actions |
 | B6000-B6019 | Rituals and powers that really work: every effect read by a roll, soak, token or map system (used B6000-B6018) | Actions, Combat |
+| B6020-B6039 | Re-audit of marks and flags that nothing reads (non-power systems) (used B6020-B6034) | Combat, Chronicle, Actions, Storyteller |
 | B6040-B6049 | Lone Chronicle step 4: the director, experience from the night's log, the recap (used B6040-B6049) | Solo |
 | B6050-B6059 | gate7b fresh arena each run (used B6050-B6051) | tools (gates) |
+| B6060-B6069 | Split the line skins stylesheet: each line's skin loads only when needed (used B6060-B6063) | Sheets |
 | B6070-B6079 | Snow vehicles, trains and trams (rules and sprites), and a quality pass on the vehicle sprites (used B6070-B6076) | Interactables, Paperdoll, Combat |
 | B6080-B6099 | Weights for loose gear and container contents, and loose gear on the map (used B6080-B6089) | Library, Interactables, Combat |
 | B6100-B6109 | Wraith 20th named Artifacts (forge, Skin, Spectre) and souled relics on the crafting table, with real Use powers and looks (used B6100-B6104) | Library, Creation |
 | B6110-B6129 | Line sheets move to ApplicationV2 (the newer sheet engine), one line at a time (used B6110-B6114) | System fork, Sheets, Chronicle |
 | B6130-B6139 | The eight held-back world timeline readings after the book check (used B6130-B6132) | Chronicle |
+| B6180-B6199 | Shared terms: one meaning for time, dice, health, distance, eras and who is who across every module (used B6180-B6199) | Chronicle, Actions, Combat, Creation, Interactables, Library, NPC, Otherworlds, Paperdoll, Senses, Sheets, Solo, Storyteller, Targeting, Atmosphere |
 | B6210-B6219 | gatevehicles plays in a year with cars (used B6210) | tools (gates) |
+| B6220-B6229 | The night's work: one Undo for a night of the Storyteller's Hand (Ben's desk pick hd1, 15 November 2026) (used B6220-B6226) | Chronicle, Solo |
+| B6240-B6249 | Load less on players' machines, and the Monday decisions archive (stale design desk 2026-11-15 f1, f2) (used B6240-B6244) | tools |
+| B6250-B6259 | Names follow each year's customs (Improvement Desk nm1) (used B6250-B6253) | Creation, NPC |
+| B6260-B6269 | Real recorded cues: Freesound CC0/CC BY sounds for dawn, dusk, notice, birdsong, cock-crow and heartbeat, by era and faith (used B6260-B6263) | Atmosphere |
+| B6300-B6309 | Every line level with vampires in shared modules (Actions, Combat) (used B6300-B6308) | Actions, Combat |
+| B6350-B6359 | gate kit yearAtLeast, gatearms and gateplayerextras (used B6350-B6353) | tools (gates) |
+| B6490-B6499 | pc queue ageing (used B6490) | tools (pcq) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10135,6 +10145,81 @@ A mummy's won Forbiddance marks the mummy as the one feared (a player's token ca
 
 Reverse: forbiddenFrom in wodx-combat main.js, the bindBy/forbiddenBy flags in mummy.js, the shadow soul line in binds.js bindingsOn.
 
+## B6020. Conditions that hold a body stop its token (2026-11-15)
+WoDX Combat. Held, Completely immobilized, Staked, Torpor, Incapacitated and Asleep leave no movement (movementFor) and a player's drag of the token is refused in a fight or out of one; the Storyteller moves any token. Before this, only power bindings held a token; the core conditions only changed attack dice. World setting "Conditions hold the token", default on.
+
+Reverse: set "Conditions hold the token" off, or drop the preUpdateToken hook and the still/pace arguments in auto.js movement.
+
+## B6021. Numbed moves at three-quarter pace (2026-11-15)
+WoDX Combat. Numbed (VtDA p. 275) already took a Dexterity point; its three-quarter movement was only on the card.
+
+Reverse: remove numbed from SLOW_CONDITIONS in auto.js.
+
+## B6022. Combat reads the roll effects of WoDX Chronicle traits (2026-11-15)
+WoDX Combat. Attack pools read traits.effects with tags attack and combat, defence with defense, combat and dodge. Effects tagged "all" (fever, drink and drugs, the night's feeding penalty) and any trait tagged for combat now count; before, only Actions and social rolls read them.
+
+Reverse: remove the traitRoll calls in conditionMods, defenseDiffOf and defenseDiceOf.
+
+## B6023. Timed marks show on the token (2026-11-15)
+WoDX Chronicle. applyTimed sets showIcon ALWAYS, so a scene or night mark (no rounds, no seconds) draws on the token. A caller may pass showIcon: false.
+
+Reverse: drop the showIcon line in timed.mjs.
+
+## B6024. The night's feeding penalty is a roll effect (2026-11-15)
+WoDX Actions. Feeding against the blood's law (a vessel not beaten in a fight, Willpower failed) puts a bite of -2 dice on every roll until dawn through traits.addBite; before, it was a named mark no roll read.
+
+Reverse: go back to the plain applyTimed mark in main.js.
+
+## B6025. Behind the age is a roll effect (2026-11-15)
+WoDX Actions. After a long torpor, each Ability listed as behind rolls at +1 difficulty (BEHIND_DIFFICULTY) until the Storyteller presses "caught up", through a traits roll source reading the longSleep flag. Old tongues stay with the Storyteller.
+
+Reverse: remove the addSource call in main.js.
+
+## B6026. Closed shelves give two dice for the season (2026-11-15)
+WoDX Storyteller. The institution's "closed shelves are open" answer now adds a bite of +2 dice on Academics, Investigation, Occult, Science, Medicine and Linguistics for 90 days. It applies wherever the character studies, a simplification of "there".
+
+Reverse: remove the addBite call in reach.mjs.
+
+## B6027. Crippled limb counts in a fight (2026-11-15)
+WoDX Chronicle. The Crippled limb status had no rule behind it (maimed parts have their own). It now gives +2 difficulty on the bearer's attacks and defence, since a status on the token names no limb.
+
+Reverse: set mods back to {} on crippled in conditions.mjs.
+
+## B6028. Ravenous is harder to act through (2026-11-15)
+WoDX Actions. Ravenous (W20 p. 177) only said "must eat first". It now gives +1 difficulty in a fight and on social rolls for its day, a house reading.
+
+Reverse: set mods back to {} on ravenous in after-cost-rules.js.
+
+## B6029. Branded, Filthy and Bloody are a step colder in talk (2026-11-15)
+WoDX Chronicle and Library. "Meets them a step colder" and "anyone who sees it" had no reader. Each now gives +1 difficulty on social rolls (socialDiff, read by Actions' social rolls).
+
+Reverse: set mods back to {} on branded (law-punish.mjs), filthy and bloody (hygiene-use.mjs).
+
+## B6030. A good hide or sneak roll sets Sneaking (2026-11-15)
+WoDX Actions. Sneaking was read by Senses, Combat and targeting but never set by a roll. A successful "Find a hiding place" or "Hold still and stay hidden" check now gives the roller Sneaking for the scene.
+
+Reverse: remove the sneak applyTimed in resolveAction (wodx-actions main.js).
+
+## B6031. Incapacitated follows the health track (2026-11-15)
+WoDX Combat. Incapacitated was only ever set by hand. It now turns on when the health track reaches Incapacitated and off when healing lifts it, unless the status-effects setting is off.
+
+Reverse: remove the updateActor incapacitated hook in wodx-combat main.js.
+
+## B6032. A crippled limb shows on the token (2026-11-15)
+WoDX Combat. The maimed-part effect was hidden on the token. It now always shows its icon.
+
+Reverse: drop showIcon from crippleEffect in body.js.
+
+## B6033. Mud, rain and a week unwashed make a body Filthy (2026-11-15)
+WoDX Library. Filthy had no way in. Being knocked down outdoors in rain, sleet or snow now sets it, and so does going seven nights without washing (player characters who are alive; a house rule). Washing clears it as before and records the night.
+
+Reverse: remove the knockdown and night hooks in hygiene-use.mjs.
+
+## B6034. Obfuscate sets Obfuscated (2026-11-15)
+WoDX Actions. Senses, targeting and Combat read the Obfuscated condition, but Obfuscate powers only set the Veiled effect. An Obfuscate Discipline use with a duration, and an Obfuscate veil on the effects card, now also set Obfuscated while it lasts.
+
+Reverse: remove the condition line from kindred.js and the isObfuscate map in effects.js powerPlan.
+
 ## B6040. Places with no map are the country map's towns (2026-11-15)
 WoDX Solo card-rules.mjs cardTowns. The panel's Places with no map lists the towns of WoDX Storyteller's country map (data/country.mjs) that stand in the character's own year and have no scene set at the town itself. A town that gains a map later is gone to on that map. The list has a search box.
 
@@ -10196,6 +10281,26 @@ suggestion for that step. The runner's flight from a far foe has nowhere to go, 
 first, which walks it round the wall to the hero.
 
 Reverse: keep the arena between runs again, drop the scene's mode and take the first attack or flight.
+
+## B6060. The line skins load line by line (2026-11-15)
+WoDX Sheets. tools/skins/build-skins.mjs now writes styles/wodx-skins.css (the fonts and the loading rule, on every page through module.json), styles/skins/<line>.css (one per line in skins-data.mjs) and scripts/skins-index.mjs (the lines in order, with the window selector each one dresses). scripts/skins.mjs listens to renderApplication and renderApplicationV2, matches the sheet's window against the index, and adds each needed file once. The harness checks the split adds up to the single stylesheet rule for rule (buildCss is kept for that), and tools/harness/skins-split-check.mjs compares the two in Chromium picture for picture. Part of the Live performance item for slower machines.
+
+Reverse: put "styles/skins/*.css" back as one file by making build-skins.mjs write buildCss() to styles/wodx-skins.css again and drop the SK.setup() call in main.mjs.
+
+## B6061. Same cascade, no flash (2026-11-15)
+WoDX Sheets. Each line file goes in straight after styles/wodx-skins.css and after any earlier line, so the order against wodx-layout.css and other modules is the one the single file had. A sheet whose file is still loading carries wodx-wait-skin, which hides its page (not its title bar) until the file loads, fails, or 4 seconds pass.
+
+Reverse: drop the wait rule from build-skins.mjs and the class from scripts/skins.mjs; sheets would show the system's look for a moment on first open.
+
+## B6062. Skins off loads nothing (2026-11-15)
+WoDX Sheets. With Sheet look set to the system's own look no line file loads; switching back to WoDX dresses every open sheet at once.
+
+Reverse: none needed; a world that never uses the skins simply never fetches them.
+
+## B6063. A line file follows the core sheet into its cascade layer (2026-11-15)
+WoDX Sheets. On the testbed Foundry brings module stylesheets in as @imports into a cascade layer, not as <link>s, so the first loader found no core sheet and added nothing. The loader now walks document.styleSheets to find the core sheet however it came in: after a <link> it adds a <link>; after an @import it imports the line file into the same sheet, straight after the core sheet and the earlier lines, into the same layer (a <style> of its own if that sheet will not take one). A watch on the page dresses any sheet window the render hooks miss. tools/harness/skins-split-check.mjs proves both ways picture for picture, and gateskinsplit checks the layer and order in Foundry.
+
+Reverse: drop the @import branch in scripts/skins.mjs; line files would then sit outside the layer and win over layered styles they used to lose to.
 
 ## B6070. Sleds, snow machines, trains and trams are mounts (2026-11-15)
 WoDX Interactables. Four new MOUNTS kinds, so they can be tiles and Vehicle sheets: sled (Sled or sleigh, Ride, any year, 4 seats), snowmobile (Snow machine, Drive, from 1910, 2 seats), train (Railway train, Drive, from 1825, 40 seats, cannot be worked below Drive 2) and tram (Tram or streetcar, Drive, from 1860, 40 seats, Drive 2). House rules; logged in PENDING-REVIEW.
@@ -10365,9 +10470,293 @@ WoDX Chronicle. Rage Across Australia (pdf 20 to 21) has the Wyrm's agents hold 
 
 Reverse: restore the 1830 line "The War of Tears begins" in r3/age-of-reason.txt; move war-of-tears to 1937 in data/events.mjs to follow Past Lives.
 
+## B6180. One source for shared terms (2026-11-15)
+WoDX Chronicle. modules/wodx-chronicle/scripts/terms.mjs (pure) holds the words every module uses, and api.terms adds what needs the running game (the table's turn length, the night on a scene, the scene count). Modules import the file ("../../wodx-chronicle/scripts/terms.mjs") or call api.terms. The guard test tools/harness/terms-guard.test.mjs fails a new local copy; its baseline lists the older copies still there and may only shrink. Asked for by Ben in the thread "Make every module agree on shared terms".
+
+Reverse: put the local constants back from git history and delete the guard test.
+
+## B6181. A month is 30 days, a year 365.25, a lunar month 29.530588853 (2026-11-15)
+Rules that count "a month" (rent, a herd filling again, a cult fading) use 30 days, as most modules already did; a year is the Julian 365.25 days (four years are 1461 days). Before, "a year" was 365 days in NPC memory and Storyteller haven works and 365.2425 in Paperdoll sprites, "a month" was 30.44 days in NPC family and Actions beast marks and 29.5 days in Otherworlds fading, and the lunar month was 29.53 or 29.53059. Where the true length matters over many months (a pregnancy, beast marks by age) the shared CALENDAR_MONTH (a twelfth of a year) is used; Otherworlds fading counts lunar months.
+
+Reverse: give a module its own figure again and add it to the guard baseline.
+
+## B6182. A scene put on the clock lasts an hour; a turn is three seconds (2026-11-15)
+V20 pdf 262: a turn is three seconds to three minutes, three at its shortest; the books' fight figure is three seconds (V20 pdf 262, V20 Dark Ages pdf 344, W20 pdf 241). WoDX Combat's "Seconds a turn takes" house rule now applies wherever a turn is counted by the clock (day sleep's Road roll, power limits outside a fight), through api.terms.turnSeconds(). Actions' power limits counted a six-second turn outside a fight; now the table's turn. A scene with no running scene to end it, where a clock is needed, is one hour (Actions day sleep, Chronicle derangements), as before.
+
+Reverse: limit-rules periodKey back to Math.floor(t / 6).
+
+## B6183. A night's count turns over at noon (2026-11-15)
+"Per night" keys (power limits, the Storyteller's night draw) run noon to noon, so the small hours belong to the night that began at dusk. Both modules already did this; it is now one function (terms.nightIndex).
+
+Reverse: none needed.
+
+## B6184. One period key for turn, scene, night, day, week, month, lunar month and year (2026-11-15)
+terms.periodKey replaces Actions' own; api.terms.periodNow() gives the key now from the clock, the fight and the scene count. The lunar key now uses the clock's own lunar month (29.530588853 days, not 29.53), so a "once a lunar month" use may reset once at the boundary after this release.
+
+Reverse: limit-rules keeps its own periodKey.
+
+## B6185. Night is sunset to sunrise where the scene stands (2026-11-15)
+The Chronicle clock's sun for the date and the scene's own place (latitude and hour) is the one night. NPC passers-by thinned the herd from 19:00 to 06:00 by the clock and the Storyteller's manhunt patrols went out from 20:00 to 05:00: both now use the sun's night where the scene is (the set hours remain only when no clock is there). A known haven is knocked on only in daylight working hours. Actions day sleep and Chronicle night-long timed effects read the sleeper's or actor's own scene instead of always the chronicle's home latitude. Readings about the chronicle as a whole (the Storyteller's night draw, Garou moon, Atmosphere cues) keep the home sun.
+
+Reverse: pass an hour instead of night to herdCrowd and lawMove.
+
+## B6186. A metre counts as a yard (2026-11-15)
+The books give ranges as "yards or meters" and count them the same (V20 pdf 290). Combat, Interactables, Senses and NPC already did; Targeting counted a metre as 1.094 yards and Actions' area powers and Interactables' carried lights as 0.9144, so a 10-yard power reached a different number of squares by module on the system's default 2 m grid. Now one conversion (terms.toYards/fromYards): ft 3, yd and m 1, km 1/1000, mi 1/1760; a scene with no unit is in yards. Senses and Interactables read "mi" as yards (their units test matched the m in mi); fixed.
+
+Reverse: give unitsPerYard m 0.9144 (exact metres) in terms.mjs; every module follows.
+
+## B6187. One reading of a sheet's line (2026-11-15)
+terms.lineOf: a Mortal sheet is a ghoul by the system's ghoul or revenant variant or a WoDX Creation/NPC mark, kinfolk the same way; a Creature that drank vitae is a ghoul; a Kuei-jin is a Vampire sheet of the Kindred of the East variant; the system's Exalted sheet is the Exalted crossover. NPC loved ones read only the WoDX marks, so a ghoul made on the system's ghoul variant counted as a mortal; Chronicle's condition words took "kuei-jin" for the Exalted kind, but Combat fights a Kuei-jin as Kindred. Both follow the shared reading now.
+
+Reverse: hearts.lineOf back to its own test.
+
+## B6188. A player character is a person sheet a player owns (2026-11-15)
+terms.isPC excludes party (Group) sheets, as Storyteller and NPC faces did; Chronicle's gender, Creation's apps and NPC aftercare and memory counted a party sheet as a player character or as an NPC.
+
+Reverse: none needed.
+
+## B6189. One V20 dice count (2026-11-15)
+terms.successes: difficulty held to 2-10 (V20 pdf 257: always between 2 and 10), 6 when none is given, a 10 always hits, each 1 takes away a success, a botch is no hit and a 1, specialty 10s count twice, Willpower an automatic success and no botch. Seventeen counters disagreed past 10 (most gave no success where V20 makes it 10) or below 2; they and 26 inline counts now call the shared count, keeping their own return shapes. Fourteen older inline counts with fixed difficulties are frozen in the guard baseline.
+
+Reverse: none needed (the shared count is the books').
+
+## B6190. A scene ends the same way for every module (2026-11-15)
+Two ways, both firing wodxEndScene once with {sceneId, next, map}: the Storyteller ends it (the clock, the Storyteller's hand, or Actions' End scene, which now goes through the Chronicle's), or another map becomes active (V20 pdf 262: a scene is play in one place). Before, a new map ended Chronicle's timed effects and Actions' scene count but not ignoring pain, daytime activity, effect areas, banality or Delirium; and Actions' own End scene did not move the scene count or clear effect areas. A new map does not post the Nature card or release a convened scene (both wait for the Storyteller's own End the scene).
+
+Reverse: Chronicle onSceneChange stops firing the hook; Actions limits listens to updateScene again.
+
+## B6191. The table's turn length (2026-11-15)
+api.terms.turnSeconds() reads WoDX Combat's house rule, else three seconds.
+
+Reverse: none needed.
+
+## B6192. Dark Ages rules follow the era profile (2026-11-15)
+The era profiles (data/eras.json) play the Renaissance and the Age of Reason by the Dark Ages rules (system darkages). Creation converted a vampire's Road, a Dark Ages mage and an inquisitor at 1450 while the sheet still played by Roads, and the Dark Ages Abilities only on leaving the Age of Reason; the referee read the Renaissance as the later books; Interactables used year 1450. All now use terms.darkAgesRules (the profile's rule set; the ancient eras count too). terms.ERAS mirrors eras.json and a test keeps them equal. Senses' era bands follow the profiles' years (industrial from 1837). The Encyclopaedia's own era tags (ERA_FROM in Library) are the wiki's, not WoDX's era profiles, and are left as they are.
+
+Reverse: creation DA_ERAS back to ["dark-ages", "long-night"].
+
+## B6193. The guard (2026-11-15)
+tools/harness/terms-guard.mjs: rules timeUnit, timeLiteral, diceCount, healthLevels, distance, nightHours, pcTest, eraTable.
+
+Reverse: delete the guard and its baseline.
+
+## B6194. NPC speech follows the era profiles (2026-11-15)
+Stock talk and its grammar (WoDX NPC) each had their own year bands (1500, 1800, 1900, 1980, 2026). Both now use terms.speechBand on the profiles' years: medieval to 1449, early modern 1450 to 1836, the nineteenth-century register 1837 to 1918, the twentieth 1919 to 1989, modern after; on the Future Darkness branch the future register from 2010 (the branch setting had no effect before). The year-ranged words (drink, the watch, the station) were widened to close the gaps.
+
+Reverse: talk-rules eraBand and talk-grammar bandOf back to their own years.
+
+## B6195. Encyclopaedia era tags no later than the WoDX era (2026-11-15)
+An Encyclopaedia tag that is also a WoDX era is in play no later than that era's profile begins: Future Darkness entries from 2010, not 2023. Wiki eras wider than the profile (Dark Ages lore from 800, Modern from 1950) keep their earlier year.
+
+Reverse: drop the loop after ERA_FROM in know-rules.
+
+## B6196. Atmosphere's dawn and dusk where the scene stands (2026-11-15)
+Dawn and dusk cues, the dawn dread edge, the Storyteller's cock-crow card and the scene's opening card read the sun of the scene's place (terms.placeNow), not always the home latitude. The sky already did.
+
+Reverse: sunHere returns the home latitude.
+
+## B6197. The Exalted fight as their own kind (2026-11-15)
+Storyteller battle deeds grouped the Exalted with mummies; they are their own kind now (they keep the spirits-of-war deed and count as more than human).
+
+Reverse: KIND exalted back to "mummy".
+
+## B6198. An attempt counted in turns takes the table's turn (2026-11-15)
+Interactables attempts that take whole turns (under a minute) move the clock by the table's turn length (WoDX Combat's house rule), not a fixed three seconds.
+
+Reverse: passTime without the turn scaling.
+
+## B6199. The guard's allowance is zero (2026-11-15)
+The fifteen older inline counts and the patrols' set night hours now use the shared terms; the guard baseline is empty, so any copy fails.
+
+Reverse: none needed.
+
 ## B6210. gatevehicles plays in a year that has cars (2026-11-15)
 Gates. gatevehicles read the year from the clock. After other gates the clock could stand before the motor car, so
 the aeroplane step read "No motor car yet" and the ram missed. When the year is before 1950 the run now moves the
 clock to 1995 and notes the move. The kit puts the clock back after.
 
 Reverse: drop the move and play in whatever year the clock shows.
+
+## B6220. The Hand's work is written down as document changes, not read from each card's Undo (2026-11-15)
+WoDX Chronicle. The desk said the batch Undo would use the Undo each card already keeps. Those Undos come in more than a dozen forms across eight modules, and most kinds of approval keep none, so a list built on them would miss most of the night. Instead, while a piece of the Hand's work is open, every change the Storyteller's client makes to actors, actor deltas, items, effects, tokens, tiles, drawings, lights, sounds, notes, regions, walls, templates, scenes, journals, tables, fights and world settings is kept with its old and new values (nightwork-rules.mjs, nightwork.mjs), and each card it posts is noted. Undo puts those back. A kind of approval whose work changed nothing the list can see but which keeps its own Undo is taken back with that Undo. Settings never taken back: the clock and core, the night's work itself, the approval queue, the Lone Chronicle seat's records, the session timer and mark.
+
+Reverse: take nightwork.registerNightHooks out of main.mjs; nothing else is written down.
+
+## B6221. What counts as the Hand's work (2026-11-15)
+WoDX Chronicle. Three things open a piece of work: an approval carried out (decide() runs the kind's approve inside record(), whether approved on its own or by the Storyteller), the world's time moving (a "Time passed" piece stays open while the clock's listeners keep changing things, closing after 4 quiet seconds and 90 seconds at most), and the Lone Chronicle seat's choices (B6225). Other modules can wrap their own automatic work with api.nightwork.record(label, fn) or begin/end. A token walked by hand in the seconds after the clock moved is left out; other changes the Storyteller makes in those seconds are listed and can be unticked.
+
+Reverse: drop the updateWorldTime hook in nightwork.mjs to list only approvals and the seat.
+
+## B6222. Newest first, read against the world at each step (2026-11-15)
+WoDX Chronicle. One Undo takes every ticked piece's changes newest first. Each change is checked against the world at the moment it is taken back, so when two ticked pieces changed the same field, the newer is put back first and the older then sees its own value and puts the first value back.
+
+Reverse: none needed; this is the only order that gives back the oldest value.
+
+## B6223. Changed since: kept by default, with a warning that names the player (2026-11-15)
+WoDX Chronicle. A field that no longer holds what the Hand left there was changed since. The list warns of it on the piece's row and names the player when a player's client made the change (the Storyteller's own later changes are named "you"; a later piece of the Hand's own work is shown without a warning). The window's default keeps such fields as they are now and puts back the rest; "Put it back as it was before the Hand anyway" overwrites them too. A document the Hand made that a player has changed since is kept rather than removed under the default.
+
+Reverse: change the radio's default in nightwork-rules.mjs listHTML and NightApp.keep.
+
+## B6224. Limits: 30 days, 300 pieces, 1,000 changes a piece (2026-11-15)
+WoDX Chronicle. The list is a world setting (nightWork), so it keeps the newest 300 pieces of work from the last 30 days, about 1.5 MB at most. A piece with more than 1,000 changes (a long time skip) is kept as "too much to keep" and is not offered for Undo; a single change over 150 KB is left out of its piece and counted, and the rest can still be taken back. Bookkeeping that follows every change (WoDX Sheets' history strip and window state) is never written down. An approval taken back here is marked undone in the approval queue's history, and one taken back from its own card shows as taken back in the list (approvals.mjs undoById, markTakenBack). The Hand's cards lose their buttons and say they were taken back.
+
+Reverse: change CAPS in nightwork-rules.mjs.
+
+## B6225. The Lone Chronicle seat's choices are the Hand's work (2026-11-15)
+WoDX Solo. Each button the seat presses on a card and each window choice it makes for the absent Storyteller opens a piece of work named after the card and the choice (seatClick in main.mjs), so the lone player can take back a choice the seat got wrong.
+
+Reverse: call el.click() directly again in onMessage and onDialog.
+
+## B6226. The night's work in the lone player's Storyteller tools (2026-11-15)
+WoDX Solo. A sixth Storyteller tool, The night's work: the player's window asks the seat for the list (ask.st.night) and sends the ticked pieces back (ask.st.nightUndo); the seat carries out the Undo, logs it and tells the player what was done. The player's own changes since are warned of in the same way.
+
+Reverse: take the night entry out of ST_TOOLS in solo-rules.mjs.
+
+## B6240. The world timeline loads on the Storyteller's client only (2026-11-15)
+WoDX Chronicle. The world timeline (data/world-history.mjs), the future events and the future world (about 1.2 MB together) are no longer imported when the world starts. The Storyteller's client starts loading them at init and waits for them before WoDX Chronicle tells the other modules it is ready, so everything that runs there sees the whole list as before. A player's client reads has() and fired() from the fired list the Storyteller's client keeps in a world setting, and reads the Dated events page and the news cards the Storyteller's client writes, so it loses nothing it shows. The few things that can run on a player's client and read the list itself (a Malkavian's glimpse, a long torpor's wake report, a blood hunt's date, the first night forecast) await events.load() first, so on that client the timeline loads the first time one of them is used. Until it loads, list() holds the book events alone. Ben picked this on the stale design desk (2026-11-15 f1).
+
+Reverse: put the three static imports back at the top of scripts/events.mjs and drop load().
+
+## B6241. The Threads of Fate cards load on first use (2026-11-15)
+WoDX Storyteller. The hook cards (data/threads-cards.mjs, about 290 KB) load the first time the weave runs, a storyline opens or ends, or the Threads of Fate window opens. All of these run on the Storyteller's client only, so a player's client never fetches the cards. api.threads.cards reads the loaded deck; api.threads.loadCards() loads it.
+
+Reverse: import CARDS statically again in scripts/threads.mjs.
+
+## B6242. The People name lists load on first use (2026-11-15)
+WoDX Creation and WoDX NPC. The People tables (data/people.mjs, data/people-world.mjs and each people's own file, about 600 KB) and their rules load the first time a person is made. The Storyteller's client loads them once WoDX Chronicle is ready, so the shipped tables still bring the world's Roll Tables up to date; a player's client never makes people and never fetches them. Before they are registered, a client draws from the world's installed Roll Tables, which hold the same names. Who puts the family name first and the Haudenosaunee clan pattern move to the small data/people-order.mjs, which WoDX NPC reads without the lists; the feminine family names reach NPC households through api.people.feminine() once loaded, and the households window awaits api.people.load() first.
+
+Reverse: import the tables statically again in scripts/people.mjs and FEMININE in resident-rules.mjs.
+
+## B6243. Decision text more than a month old moves to docs/archive each Monday (2026-11-15)
+tools/docs/archive-decisions.mjs. Each Monday, with the build log, the decisions in docs/DECISIONS.md more than a month old (a "## B" heading and its lines, dated by its heading or the one above; or a dated row of the early table) move to docs/archive/decisions-<year>-<month>.md. A move, never a deletion: the archive file is written first, nothing is written twice, and a test checks every line is kept. The index of blocks stays at the top of DECISIONS.md, and each block whose text moved names its file ("text in decisions-2026-11", with "the rest in this file" when only part moved). The checks that look a decision up (the referee, rules clashes, fragments and index tests) read the archive files too. Nothing is due until 9 December 2026. Ben picked this on the stale design desk (2026-11-15 f2).
+
+Reverse: stop running the script on Mondays; to bring text back, move the sections from the archive file into DECISIONS.md and drop the "(text in ...)" notes.
+
+## B6244. The build log archive run moves the old decisions too, and the two-browser gates count every file (2026-11-15)
+tools/docs/archive-build-log.mjs ends each run, --dry included, by running tools/docs/archive-decisions.mjs with the same options, so the existing Monday docs archive task moves the decisions more than a month old with no change to the task (B6243). tools/harness/gate-two.mjs enlarges each browser's resource timing list before the game loads: the browser keeps 250 entries by default, and a full list hid the timeline files even on the Storyteller's client, so the player load measure (gateplayerload) undercounted. That gate now fails when the list is full, or when the Storyteller's measure does not show the timeline, so an empty "nothing heavy" on the player's side means something.
+
+Reverse: drop the import at the end of main() in archive-build-log.mjs, and the addInitScript line in gate-two.mjs.
+
+## B6250. Name customs by year, with sources, only where a source dates them (2026-11-15)
+WoDX Creation, data/name-customs.mjs. Each people has stages (given, byname, settling, family) by year, a noble year where the nobility bore inherited names earlier, and the source. Dated laws: the Habsburg patent for Jews (23 July 1787), Japan (edicts of 1870 and 1875), the Netherlands (decree of 18 August 1811), Sweden (Name Ordinance of 1901), Hawaii (Act to Regulate Names, 1860), the Philippines (Clavería decree, 1849), Thailand (Surname Act, 1913), Iran (civil registration, 1925), Turkey (Surname Law, 21 June 1934). Peoples with no dated source keep their tables as they are and are listed as open.
+
+Reverse: delete the people's entry in NAME_CUSTOMS.
+
+## B6251. The year shapes the generated name without changing the person's other draws (2026-11-15)
+WoDX Creation, people-rules withCustom. The custom draws from its own stream seeded by the name, so a re-rolled row keeps its trade, Nature and the rest. Where a family name is due but the era group's list holds only a "son of" pattern, a family name comes from the next age's list. A noble, knight, lord, samurai or steward bears an inherited name from the noble year.
+
+Reverse: drop the withCustom call in person().
+
+## B6252. Kin do not share a byname; children are named for the father where the list gives the form (2026-11-15)
+WoDX NPC, resident-rules nameHousehold. The father is the master, else the partner, when a man. Child names come only from a pattern in the people's list or from a father's-name pair the list holds, so no form is made up.
+
+Reverse: remove the `own` branch in nameHousehold.
+
+## B6253. The Storyteller's note says how the name is borne (2026-11-15)
+WoDX Creation, people-rules customLine, one quiet line on the generated sheet.
+
+Reverse: drop customLine from noteOf.
+
+## B6260. Recorded cues live in the kit folders, the generated ones stay as the fallback (2026-11-15)
+WoDX Atmosphere. Ben asked for every generated sound to be swapped for a real recording where possible. The recordings
+go in the Data folder's wodx-kits (each kit's sounds/, and a new common/sounds/ for what every era shares), fetched on
+the PC by tools/atmosphere/fetch-cues.mjs, since the cloud cannot reach Freesound and kit audio has stayed out of the
+public repo. The 26 generated cues and the browser-made heartbeat are kept and play wherever no recording is found.
+
+Reverse: delete the kit folders' sounds; nothing else changes.
+
+## B6261. Freesound CC0 and CC BY only, picked per era (2026-11-15)
+WoDX Atmosphere. tools/atmosphere/real-cues.json lists each slot's Freesound sounds in order; the tool takes the
+first whose page names CC0 or CC BY and refuses BY-NC, Sampling+ and unclear pages. Each file is cut from its first
+sound to the slot's length, faded and levelled; credits.json records the author, licence, page and what was changed.
+
+Reverse: edit the ids in real-cues.json and run the tool again.
+
+## B6262. Dawn and sunset by the faith of the scene's land (2026-11-15)
+WoDX Atmosphere. A cue is looked up as <cue>-<faith> first (orthodox, islamic, jewish, hindu, theravada, tibetan,
+chinese, from WoDX Chronicle's faith of the scene's land and year), then as the plain cue, through the kit's chain,
+then the common folder, then the generated sound. Building a kit's playlists also reads the common folder.
+
+Reverse: drop the faith from cueSrc in main.mjs.
+
+## B6263. A recorded heartbeat (2026-11-15)
+WoDX Atmosphere. common/sounds/heart.ogg holds one whole beat; it plays once per beat at the heartbeat's volume. The
+generated thump plays until the file is decoded and wherever there is none.
+
+Reverse: delete heart.ogg.
+
+## B6300. The Kindred menu's line-agnostic tools go on every line's menu (2026-11-15)
+WoDX Actions. Downtime on Backgrounds, healing with time (lines that heal as the living do and lacked it: Changeling, Fae of the Dark Ages, Demon, Mummy, Orpheus), Seduction (Werewolf, Mage, Dark Ages Mage) and the Storyteller's New night, End of story, Witnesses and Sky and sun are added to each line's menu from one table (profile-menus SHARED_TOOLS and SHARED_FOR). Spirits and beasts get only the Storyteller's tools. Kept Kindred-only: Hunt, Feed, Spend blood, Blood Oath, Prestation, Blood Hunt, Golconda, sun and haven, torpor, diablerie, the Road, daytime pool caps.
+
+Reverse: empty SHARED_FOR in modules/wodx-actions/scripts/profile-menus.js.
+
+## B6301. The witness window is named for the one seen (2026-11-15)
+WoDX Actions. The same breach records already serve every line's secret (witness-rules SECRETS); the window is titled Masquerade for a Kindred and Witnesses for anyone else.
+
+Reverse: set the title back to "Masquerade" in kindred.js masquerade().
+
+## B6302. A Kuei-jin is staked by its Chi aspect (2026-11-15)
+WoDX Combat. Kindred of the East (pdf pp. 11, 73): a stake does not paralyze a Kuei-jin as such; Yin is held by wood as a Kindred is, Yang by a metal blade or shaft at least a foot long through the heart (not bullets or arrows), Balance by neither. A long metal weapon is read from the weapon's name (rules LONG_METAL). A Kuei-jin whose aspect is not yet set follows the Cainite rule.
+
+Reverse: drop the chi and metal arguments at the followOn call in modules/wodx-combat/scripts/main.js.
+
+## B6303. A new story rolls Garou Rage on one die (2026-11-15)
+WoDX Actions. DA:W p. 91 and W20 p. 145: at the start of each story the player rolls a die for the character's Rage. End of story does it for every shapechanger whose Rage comes from the moon (Moon Rage setting on), capped at permanent Rage; the books let the Storyteller go past it, which stays a hand edit.
+
+Reverse: remove the gx().newStory line in endStory (modules/wodx-actions/scripts/main.js).
+
+## B6304. The long roads out for the other lines (2026-11-15)
+WoDX Chronicle (roads.mjs, roads-rules.mjs), setting podRoads, on by default. Transcendence for wraiths, the Road Back for the Kuei-jin and Redemption for demons, shown in the feature window beside Golconda. Every end goes through the approval queue, so a lone player's automation level decides as for any proposal; each is asked once per state.
+
+Reverse: turn off "Transcendence, the Road Back and Redemption" in WoDX Chronicle's settings.
+
+## B6305. Transcendence: the Eight Truths (2026-11-15)
+Wraith 20th pp. 297-300: there is no mechanical path; the Eight Truths of the Tomes of Golden Light are the steps, each judged by the Storyteller (a player asks through the queue). A rise in permanent Angst undoes Conquer the Shadow. With all eight and permanent Angst below permanent Willpower the Storyteller may let the wraith go: the token flares and fades from every map, flag wodx-actions.transcended, and New night and End of story leave them out. The Storyteller can bring them back from the feature window. The Angst-below-Willpower test is a house reading of "conquer the Shadow".
+
+Reverse: change transcendReady in roads-rules.mjs.
+
+## B6306. The Road Back: bodhisattva and arhat (2026-11-15)
+Kindred of the East pdf pp. 30-31: the road is the Dharma on the sheet. At Dharma 9 the Storyteller may recognise a bodhisattva (the heading's number is unreadable in the scan; 9 chosen, after Ancestor at 7); below 9 the rank is lost. At Dharma 10 a bodhisattva may become an arhat and leave the chronicle as a transcended wraith does.
+
+Reverse: change BODHISATTVA_DHARMA in roads-rules.mjs.
+
+## B6307. The bodhisattva's communion with the spirit worlds (2026-11-15)
+WoDX Actions kote.js: a bodhisattva's Ghostsight and spirit speech cost no Chi and need no roll. Ghostsight that works (for anyone) sets flag yinSight for an hour of the clock. WoDX Otherworlds veil-looks reads both (sightsOf): the Shroud mist shows where it is thin, and a bodhisattva also sees the Gauntlet shimmer.
+
+Reverse: drop the sights argument in veil-looks.mjs veilNow.
+
+## B6308. Redemption: an angel until Torment rises (2026-11-15)
+Demon: The Fallen p. 160: permanent Torment 0 lets the Storyteller approve redemption (flag wodx-actions.redeemed, a soft light on the token). Holy ground and objects do not harm the redeemed (demon.js holy); the first Torment gained ends it and puts the light out. That holy ground spares an angel, and that a sin ends grace, are house readings.
+
+Reverse: drop the redeemed checks in modules/wodx-actions/scripts/demon.js.
+
+## B6350. The gate kit moves an early clock to a year a gate needs (2026-11-15)
+Gates. The kit gains yearAtLeast(min): when the clock stands before the year given, the run moves it to 1995 and notes
+the move, and cleanup puts it back. gatevehicles now uses it (B6210 had done the same by hand). gatearms uses it with
+1880: after other gates its cartridge revolver went off the sheet during the reload step.
+
+## B6351. gateplayerextras counts six or more buttons under More (2026-11-15)
+Gates. The solo panel's More list has grown since the gate was written (eight or nine buttons now), so the step that
+wanted exactly six failed on main. It now wants six or more.
+
+## B6352. run-gate opens a new browser every 15 gates (2026-11-15)
+PC runner. A browser kept for a 50-minute touched run grew to 6.5 GB, and with four lanes busy the PC fell below the
+3 GB the runner wants free before it starts a job, so 16 jobs waited. run-gate now closes its browser and signs in a
+new one every 15 gates (--recycle N; 0 keeps one browser for the whole run). A fresh page also drops hooks and state
+that earlier gates left in memory.
+
+## B6353. A runner update waits at most 10 minutes for running jobs (2026-11-15)
+PC runner. When main changed the runner it stopped taking jobs until every running job ended. A 100-gate touched run
+then held 19 queued jobs, four of them top priority, for most of an hour with four lanes free. The drain now lasts at
+most drainMinutes (10, runner.json); after that the runner takes jobs again and updates the next time it is idle, or
+at the nightly lane reset.
+
+Reverse: drop drainMinutes and wait for every job again; --recycle 0 by default; drop yearAtLeast and go back to the hand-written move in gatevehicles; want exactly six again.
+
+## B6490. A waiting PC job gains a priority step each hour (2026-11-15)
+PC runner. The queue ran strictly by priority, so a p5 job (#1547, nine sheet gates) sat at the head of the queue for
+over three and a half hours while newer p1 and p3 jobs took every free lane. A job now gains one priority step for
+each full hour it has waited, never past 1; ties still go to the older issue. A p5 job reaches the top within four
+hours, and a p3 job within two.
+
+Reverse: sort by the priority given alone.

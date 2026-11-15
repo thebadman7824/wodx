@@ -21,6 +21,7 @@ import * as AR from "./alert-rules.mjs";
 import {isAnimal} from "./animal-rules.mjs";
 import {SIDE_FACTS} from "../data/grammar/groups.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export function build(ctx) {
   const {MOD, esc, isActiveGM, chron, savedProfile, talk, nameFor, sidesOf} = ctx;
@@ -145,7 +146,7 @@ export function build(ctx) {
       const ok = OR.mayChat({now, lastPair: lastPair.get(key) ?? null, lastScene: lastScene.get(scene.id) ?? null,
         pairGap: (Number(setting("overheardGap")) || 5) * 60000, chance: Number(setting("overheardChance") ?? OR.DEFAULTS.chance), roll: Math.random(), force});
       if ( !ok ) continue;
-      const day = Math.floor((game.time?.worldTime ?? 0) / 86400);
+      const day = Math.floor((game.time?.worldTime ?? 0) / DAY);
       const seed = G.mix(TK.hashSeed(baseActor(a.doc)?.id, baseActor(b.doc)?.id, day), `n${count++}`);
       const {shared, rumourId} = sharedOf(a.doc, b.doc, scene, hear.map(p => p.doc), seed);
       const said = OR.exchange({a: {facts: speakerFacts(a.doc, scene)}, b: {facts: speakerFacts(b.doc, scene)}, shared, grammar: talk.grammar, seed,

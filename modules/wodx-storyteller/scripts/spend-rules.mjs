@@ -5,9 +5,9 @@
  * own personal time instead, and Convene lines everyone up later (B1961). The main group is the scene that holds more
  * than half of the player characters present tonight; with no such scene (a party split two and two), everyone is apart.
  */
+import {DAY, HOUR} from "../../wodx-chronicle/scripts/terms.mjs";
 
-export const MAX_ASK = 90 * 86400;
-const DAY = 86400, HOUR = 3600;
+export const MAX_ASK = 90 * DAY;
 
 /** Seconds kept whole and in range: 0 for nothing, at most MAX_ASK. */
 /** A span small enough to pass the queue on its own (Chronicle 0.46.0, B2453): one night or one day, and no fight. */

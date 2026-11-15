@@ -5,7 +5,8 @@
  * ends, the clock now moves by rounds times the seconds a turn takes (3, the books' figure: V20 pdf 262, V20 Dark Ages pdf 344, W20 pdf 241; a setting; 0 keeps fights
  * timeless), in one step so the timed parts wake once (B1966).
  */
-export const DEFAULT_TURN = 3;
+import {TURN_SECONDS} from "../../wodx-chronicle/scripts/terms.mjs";
+export const DEFAULT_TURN = TURN_SECONDS;
 
 /** Seconds a fight of so many rounds took. */
 export function fightSeconds(rounds, perTurn = DEFAULT_TURN) {

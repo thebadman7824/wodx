@@ -18,6 +18,8 @@
  */
 import * as SR from "./servant-rules.mjs";
 import * as BONDS from "./bonds.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
 const SOCKET = `module.${MOD}`;
@@ -162,8 +164,8 @@ async function rollPool(dice, difficulty) {
   const n = Math.max(1, Math.round(num(dice)));
   const r = await new Roll(`${n}d10`).evaluate();
   const faces = r.dice[0]?.results?.map(x => x.result) ?? [];
-  const hits = faces.filter(f => f >= difficulty).length, ones = faces.filter(f => f === 1).length;
-  return {roll: r, faces, successes: Math.max(0, hits - ones), botch: hits === 0 && ones > 0, difficulty};
+  const c = TERMS.successes(faces, difficulty);
+  return {roll: r, faces, successes: c.successes, botch: c.botch, difficulty: c.difficulty};
 }
 /** Kindness or abuse from the master lately, from the attitude log: -2 (kind) to +2 (cruel). */
 function treatmentOf(servant, masterId) {
@@ -293,7 +295,7 @@ export async function socialRoll(subjectLike, masterLike, {group = "union", agen
     if ( out.ruined ) { await bind(s, m, "social", {step: num(was?.step), quiet: true, flash: false, data: {...(was?.data ?? {}), ruined: true}}); }
   }
   const step = SR.socialStep(stage);
-  const rec = stage ? await bind(s, m, "social", {step, quiet: true, flash: step > num(was?.step), data: {stage, group, nextAt: now() + g.days * 86400}}) : was;
+  const rec = stage ? await bind(s, m, "social", {step, quiet: true, flash: step > num(was?.step), data: {stage, group, nextAt: now() + g.days * DAY}}) : was;
   const st = SR.SOCIAL_STAGES[stage];
   await ChatMessage.create({whisper: [...new Set([...gmIds(), ...ownersOf(s)])], speaker: {alias: g.label},
     content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p><b>Social Conditioning: ${esc(s.name)}</b></p><p>${lines.map(esc).join(" ")}</p>

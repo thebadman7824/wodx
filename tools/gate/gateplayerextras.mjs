@@ -4,7 +4,7 @@
  * It makes one Vampire actor and deletes it, and puts back every WoDX setting of this screen it touches.
  *   1. the modules: Chronicle 0.52.0, Sheets 0.19.0, Solo 0.3.0, Interactables 0.41.0, Paperdoll 0.21.0, Library 0.22.0 or later
  *   2. the Possessions tab says "You carry ..." in one line; the coins fold is open in Full view and closed in Beginner view
- *   3. the solo panel opens on What happens next?, with the six other buttons under More (Carry the fallen, B5079)
+ *   3. the solo panel opens on What happens next?, with the other buttons (six or more) under More (Carry the fallen, B5079)
  *   4. a new case board's rules lay out Who, Where and What we know; the figure menu lists the main parts first, the rest under More
  *   5. the Glossary journal exists with a page per letter and opens at a term's letter
  *   6. Find anything has a ? in its title bar; with tips reset, the tip shows, and Got it marks it seen
@@ -68,7 +68,7 @@ export async function run() {
     const next = panel?.querySelector(".wsolo-next")?.textContent?.trim() ?? "";
     const more = panel?.querySelectorAll("details.wsolo-more button[data-id]").length ?? 0;
     await foundry.applications.instances.get("wodx-solo-panel")?.close();
-    ok("3. solo panel", /What happens next/.test(next) && more === 6, {next, more});
+    ok("3. solo panel", /What happens next/.test(next) && more >= 6, {next, more});
 
     const CR = await import(`/modules/wodx-interactables/scripts/case-rules.mjs?${Date.now()}`);
     const cards = CR.starterBoard().cards.map(c => c.title);

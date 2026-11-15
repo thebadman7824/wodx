@@ -11,6 +11,7 @@
  */
 import {REALMS, realmEra} from "./realm-maps-rules.mjs";
 import {PLACES, LAYOUT, CHANGE} from "./realm-places.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const W = 200, H = 110;
 const cx = W / 2, cy = H / 2;
@@ -533,5 +534,5 @@ export function goPlan(j, {hazards = [], rand = Math.random} = {}) {
   const chance = Math.min(GO.top, GO.base + GO.perDanger * list.length) / 100;
   const meetings = [];
   for ( let d = 0; d < checks && meetings.length < GO.max; d++ ) if ( rand() < chance ) meetings.push({day: d + 1, what: list.length ? list[Math.floor(rand() * list.length) % list.length] : "something of the realm"});
-  return {seconds: Math.round(Math.max(days, 1 / 24) * 86400), days, chance: Math.round(chance * 100), meetings};
+  return {seconds: Math.round(Math.max(days, 1 / 24) * DAY), days, chance: Math.round(chance * 100), meetings};
 }
