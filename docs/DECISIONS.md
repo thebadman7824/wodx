@@ -8339,7 +8339,7 @@ WoDX Interactables. Next to a mount or vehicle with a seat free, the body is lai
 Reverse: drop the onto branches in release (haul.mjs).
 
 ## B5077. NPCs rescue their own, hide bodies and take captives (2026-11-14)
-WoDX NPC. An NPC who is retreating with an ally down within reach carries or drags the ally away; a Kindred, a cultist or anyone hiding its nature with mortals about drags a body out of their sight; an NPC with no foe standing in reach takes an incapacitated rival, enemy or hostile player character captive and carries them off. Suggest mode names it on the Storyteller's card with Accept; Auto does it. "Leaves the fallen where they lie" in the Behaviour window switches it off for one NPC. Ben's pick (c8), with Ben's note: NPCs also capture incapacitated rivals, enemies and hostile player characters.
+WoDX NPC. An NPC who is retreating with an ally down within a run carries or drags the ally away (a loyal one with no foe in reach does it too, house reading); a Kindred, a cultist or anyone hiding its nature with mortals about drags a body out of their sight; an NPC with no foe standing in reach takes an incapacitated rival, enemy or hostile player character captive and carries them off. Suggest mode names it on the Storyteller's card with Accept; Auto does it; Undo lets go and puts both back. One holding a body goes on with it, and drops it (free) to fight a foe in reach unless it is rescuing. Animals do none of it. "Leaves the fallen where they lie" in the Behaviour window switches it off for one NPC. Ben's pick (c8), with Ben's note: NPCs also capture incapacitated rivals, enemies and hostile player characters.
 
 Reverse: have carryOption in npc-rules.mjs return null.
 
@@ -8349,7 +8349,7 @@ WoDX Interactables. A card to the owner: Struggle free (Strength + Athletics at 
 Reverse: drop movedWhileCarried and the wake card in haul.mjs.
 
 ## B5079. In a Lone Chronicle a companion carries the player (2026-11-14)
-WoDX Solo and NPC. When the lone player's character goes down, the nearest companion (an NPC who serves them, or a friendly NPC of their party) carries or drags them away from danger by itself; the panel's Carry the fallen asks a companion to carry another fallen one. Ben's pick (c10).
+WoDX Solo and NPC. When the lone player's character goes down, the nearest companion (an NPC who serves them, or a friendly NPC of their party) carries or drags them away from danger by itself; the panel's Carry the fallen asks a companion to carry another fallen one. Outside a fight the companion goes at once; in one, on its own turn. Ben's pick (c10).
 
 Reverse: turn off "Companions carry the fallen" in WoDX Solo's settings.
 

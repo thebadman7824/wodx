@@ -65,6 +65,7 @@ export const LISTEN = {
   },
   wodxCultFormed: ({cult, founder} = {}) => ({key: `cult:${idOf(cult)}`, kind: "cult", weight: 2, what: `${cult?.name ?? "A cult"} gathers`, who: nameOf(founder), from: "cults"}),
   wodxCultNoticed: ({cult, band} = {}) => ({key: `cult:${idOf(cult)}`, kind: "cult", weight: band === "moved" ? 3 : 2, what: `${cult?.name ?? "A cult"} is ${band}`, from: "cults"}),
+  wodxCaptive: ({actor, name, factionName, placeName, text} = {}) => ({key: `captive:${actor}`, kind: "rumour", about: actor, weight: 2, who: name, where: placeName ?? "", what: text || `${name ?? "Someone"} is held prisoner${factionName ? ` by ${factionName}` : ""}`, from: "npc"}),
   wodxArrest: ({actor, name, region} = {}) => ({key: `arrest:${actor}`, kind: "arrest", about: actor, region, weight: 2, who: name, what: `${name ?? "Someone"} is arrested`, from: "law"}),
   wodxVerdict: ({actor, name, region, guilty} = {}) => ({key: `trial:${actor}`, kind: "trial", about: actor, region, weight: guilty ? 3 : 2, who: name, what: guilty ? "Found guilty" : "Set free", from: "law"}),
   wodxSentence: ({actor, region, mark} = {}) => ({key: `law:${actor}`, kind: "law", about: actor, region, weight: 2, what: `Sentenced${mark ? `: ${mark?.label ?? mark}` : ""}`, from: "law"}),

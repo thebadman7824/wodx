@@ -103,6 +103,8 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxLookOver | actions | a character looked a stranger over or asked around about them: {actor, npc, kind (lookover or askabout), successes, botch} |
 | wodxSecretFound | npc | a character finds out a secret: {holder, finder, secret, entry} (entry: the Ledger hook's id) |
 | wodxSecretExposed | npc | a secret is laid bare at court: {holder, secret, by} |
+| wodxCaptive | npc | an NPC has taken someone prisoner: {actor, name, faction, factionName, place, placeName, by, text} (B5089); the Storyteller's signal board makes it a rumour |
+| wodxBodyTaken | npc | an NPC has carried someone where it meant to: {body, actor, name, by, byActor, faction, place, placeName, intent (safe, rest, burial, hidden, prison, proof), dead, offstage} (B5087 to B5089) |
 | wodxAtmosphereReady | atmosphere | Atmosphere's API, once it is ready |
 | wodxStockDrawn | interactables | a container tile and the stock lines it just drew |
 | wodxInteractablesHazard | interactables | a hazard went off |

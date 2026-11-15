@@ -79,7 +79,10 @@ const asleepOf = actor => {
 export function fallenOf(tokDoc) {
   const actor = docOf(tokDoc)?.actor;
   if ( !actor ) return {down: false, why: ""};
-  return H.fallenOf({statuses: statusesOf(actor), wounds: woundsOf(actor), asleep: asleepOf(actor)});
+  const f = H.fallenOf({statuses: statusesOf(actor), wounds: woundsOf(actor), asleep: asleepOf(actor)});
+  // one who has yielded in a fight (WoDX NPC) can be taken: led off as a captive, held as a body is
+  if ( !f.down && docOf(tokDoc)?.flags?.["wodx-npc"]?.surrendered ) return {down: true, why: "yielded"};
+  return f;
 }
 const ch = actor => { try { return deps.characterFor?.(actor) ?? {}; } catch (e) { return {}; } };
 const strengthOf = actor => H.liftStrength(ch(actor));
