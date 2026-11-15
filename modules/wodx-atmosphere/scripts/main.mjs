@@ -25,7 +25,7 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Mood from "./mood.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.16.0";
+const VERSION = "0.16.1";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -1220,9 +1220,9 @@ function openingCard(scene) {
   try { reck = game.settings.get("wodx-chronicle", "rule.eraReckoning") !== false; } catch (e) { reck = true; }
   if ( reck ) {
     let church = null, eraId = "";
-    try { church = chron()?.church?.on?.(t) ?? null; } catch (e) { church = null; }
+    try { church = chron()?.church?.on?.(t, {scene}) ?? null; } catch (e) { church = null; } // B5870: the land of the scene opened
     try { eraId = chron()?.eras?.activeEra?.()?.profile?.id ?? ""; } catch (e) { eraId = ""; }
-    told = reckon(t, {church, eraId});
+    told = reckon(t, {church, eraId, latitude: lat}); // B5870: church carries the faith and region of the scene
   }
   let weather = "";
   try { weather = now()?.label ?? ""; } catch (e) { weather = ""; }
