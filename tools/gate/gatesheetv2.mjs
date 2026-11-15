@@ -81,18 +81,19 @@ export async function run() {
       await G.step(`${pre} 6. a dot sets a value`, async () => {
         const el = elOf(sheet);
         el.querySelector('nav.sheet-tabs [data-tab="core"]')?.click(); await sleep(150);
-        let path, dot;
-        const sysDot = el.querySelector('.tab.core .resource-value[data-name="attributes.strength.value"] .resource-value-step[data-index="3"]');
-        if (sysDot) { path = "system.attributes.strength.value"; dot = sysDot; }
+        // the system's dots count from 0 (data-index 2 is the third dot, value 3); WoDX dots count from 1 (data-i)
+        let path, dots, key;
+        const sysBox = el.querySelector('.tab.core .resource-value[data-name="attributes.strength.value"]');
+        if (sysBox) { path = "system.attributes.strength.value"; dots = sysBox; key = v => `.resource-value-step[data-index="${v - 1}"]`; }
         else {
           const box = el.querySelector(".tab.core .wodx-dots[data-set*='strength']") ?? el.querySelector(".tab.core .wodx-dots[data-set]");
-          dot = box?.querySelector(".wodx-dot[data-i='3']");
+          dots = box; key = v => `.wodx-dot[data-i='${v}']`;
           const set = box?.dataset.set;
           path = set ? (set.startsWith("system.") || set.startsWith("flags.") ? set : `system.${set}`) : null;
         }
         const before = path ? Number(foundry.utils.getProperty(a, path) ?? 0) : null;
         const want = before === 3 ? 2 : 3;
-        if (want === 2) dot = dot?.parentElement?.querySelector(`[data-index="2"], [data-i="2"]`) ?? dot;
+        const dot = dots?.querySelector(key(want));
         dot?.click();
         const set = path ? await waitFor(() => Number(foundry.utils.getProperty(a, path)) === want, 6000) : false;
         G.ok(`${pre} 6. a dot sets a value`, !!dot && set, {path, before, now: path && foundry.utils.getProperty(a, path)});
