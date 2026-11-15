@@ -38,6 +38,17 @@ def _sig(r, size=24):
     return np.asarray(im).astype(np.float32)
 
 
+SHAPE_SAME = 0.08  # a twin whose light-and-dark pattern differs less than this is a recolour, not a new look
+
+
+def _shape(sig):
+    """The drawing's light-and-dark pattern with colour, tint and overall brightness taken out (grey, then scaled to
+    its own mean and spread), so an era passed off with a colour cast alone is caught."""
+    g = sig.mean(axis=2); m = g > 0
+    if m.sum() < 4: return g
+    return np.where(m, (g - g[m].mean()) / (g[m].std() + 1e-6), 0)
+
+
 def check(oid, eras=None):
     bad = []
     if oid not in CATALOGUE: return [f"{oid}: in the census but not drawn (no library definition)"]
@@ -50,8 +61,9 @@ def check(oid, eras=None):
             pe, pv, ps = prev; same = []
             for v, sg in zip(vs, sigs):
                 twin = next((k for k, w in enumerate(pv) if {a: b for a, b in w.items() if a not in ("era", "age", "vid")} == {a: b for a, b in v.items() if a not in ("era", "age", "vid")}), None)
-                if twin is not None and np.abs(sg - ps[twin]).mean() <= DIFF / 2: same.append(v["vid"])
-            if len(same) > len(vs) // 2: bad.append(f"{oid} {era}: {len(same)} of {len(vs)} variations look the same as in {pe} (each era needs its own look), e.g. {same[0]}")
+                if twin is not None and (np.abs(sg - ps[twin]).mean() <= DIFF / 2
+                                         or np.abs(_shape(sg) - _shape(ps[twin])).mean() <= SHAPE_SAME): same.append(v["vid"])
+            if len(same) > len(vs) // 2: bad.append(f"{oid} {era}: {len(same)} of {len(vs)} variations look the same as in {pe}, or differ only in colour (each era needs its own look: change how it is made, not only its tint), e.g. {same[0]}")
         prev = (era, vs, sigs)
         distinct = []
         for k, s in enumerate(sigs):

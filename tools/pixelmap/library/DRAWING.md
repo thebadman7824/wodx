@@ -133,7 +133,9 @@ python3 tools/pixelmap/maps/farmhouse.py /tmp/fh
 `vcheck` fails an object in an era when:
 - fewer than ten of its variations look different;
 - more than half of its variations look the same as the same variation one era earlier (each era needs its own look: the
-  making, materials and wear of its time, even where the form barely changed);
+  making, materials and wear of its time, even where the form barely changed). A colour cast or tint laid over the
+  whole drawing does not count: the check also compares the light-and-dark pattern with colour taken out, so the
+  era must change in shape, parts, fittings or detail;
 - a third of its pairs from different regions look alike;
 - a drawing spills past its footprint or is far smaller than it.
 
