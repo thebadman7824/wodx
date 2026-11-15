@@ -15,7 +15,7 @@
  *  11. lethal wounds adding up on the right arm cripple it, and the Crippled mark draws on the token on the map (B6032)
  * Result: Data/wodx-gate/gatestillmarks-result.json.
  */
-import {gate} from "./kit.mjs";
+import {gate, waitFor} from "./kit.mjs";
 
 export async function run() {
   const G = gate("gatestillmarks");
@@ -147,19 +147,23 @@ export async function run() {
       const s = await G.scene({name: "WoDX gate: gatestillmarks arm"});
       const [tok] = await G.tokens(s, [{actor: a, x: 3, y: 3}]);
       await wait(500);
-      const icons0 = tok.object?.effects?.children?.length ?? 0;
+      const icons0 = tok.object?.effects?.children?.length ?? 0, t1 = Date.now();
       // the damage lands on the track first, then the same call the attack card makes: three lethal levels on the right arm
-      await a.update({"system.health.damage.lethal": 3});
-      await BD.recordWound(a, {location: {id: "arm-r", label: "Right arm"}, type: "lethal", levels: 3}, {before: {lethal: 0}, after: {lethal: 3}, effType: "lethal"}, null);
-      await wait(1200);
-      const fx = [...a.effects].find(e => e.flags?.["wodx-combat"]?.crippled === "arm-r");
+      const ta = tok.actor ?? a; // the attack card works on the token's actor, as play does
+      await ta.update({"system.health.damage.lethal": 3});
+      await BD.recordWound(ta, {location: {id: "arm-r", label: "Right arm"}, type: "lethal", levels: 3}, {before: {lethal: 0}, after: {lethal: 3}, effType: "lethal"}, null);
+      await waitFor(() => [...ta.effects].some(e => e.flags?.["wodx-combat"]?.crippled), 5000).catch(() => null);
+      await wait(400);
+      const fx = [...ta.effects].find(e => e.flags?.["wodx-combat"]?.crippled === "arm-r");
+      const seen = [...ta.effects].map(e => `${e.name}|${JSON.stringify(e.flags?.["wodx-combat"] ?? {})}|${e.showIcon}`);
+      const tokFx = [...(tok.actor?.effects ?? [])].map(e => e.name);
       const want = CONST.ACTIVE_EFFECT_SHOW_ICON?.ALWAYS;
-      const temp = !!fx && a.temporaryEffects.some(e => e.id === fx.id);
+      const temp = !!fx && ta.temporaryEffects.some(e => e.id === fx.id);
       const icons1 = tok.object?.effects?.children?.length ?? 0;
-      const card = [...game.messages].some(m => m.flags?.["wodx-combat"]?.maim?.part === "arm-r");
+      const card = [...game.messages].some(m => (m.timestamp ?? 0) >= t1 && m.flags?.["wodx-combat"]?.maim?.part === "arm-r");
       G.ok("11. a crippled arm shows on the token", !!fx && (want === undefined || fx.showIcon === want) && temp && icons1 > icons0 && card,
-        {hl, fx: !!fx, showIcon: fx?.showIcon, want, temp, icons0, icons1, card});
-      await a.update({"system.health.damage.lethal": 0});
+        {hl, fx: !!fx, showIcon: fx?.showIcon, want, temp, icons0, icons1, card, seen, tokFx, linked: tok.actorLink});
+      await ta.update({"system.health.damage.lethal": 0});
     });
   } finally { return G.finish(); }
 }
