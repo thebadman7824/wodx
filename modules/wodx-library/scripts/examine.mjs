@@ -112,13 +112,18 @@ export async function lookCloser(item, actor = looker(item)) {
   const {successes, botch} = X.countSuccesses(faces, p.difficulty);
   const found = X.findings(good.kind, successes, lookOf(item), ownerOf(item), T.detailsOf(good.former ?? good.name));
   const dice = faces.map(v => `<span class="vta-die ${v === 1 ? "one" : v >= p.difficulty ? "hit" : "miss"}">${v}</span>`).join("");
-  const body = botch ? "<p>A botch. The Storyteller may tell something misleading.</p>"
-    : found.length ? `<p class="wodx-quiet">What the look shows. The Storyteller fills in the details.</p><ul>${found.map(l => `<li>${esc(l.text)}</li>`).join("")}</ul>` : "<p>Nothing more than meets the eye.</p>";
+  // B5016: a botch reads something false into it, shown to the looker as if it were true; the Storyteller is told
+  const lie = botch ? X.falseNote(lookOf(item), ownerOf(item)) : "";
+  const shown = botch ? [{text: lie}] : found;
+  const body = shown.length ? `<p class="wodx-quiet">What the look shows.</p><ul>${shown.map(l => `<li>${esc(l.text)}</li>`).join("")}</ul>` : "<p>Nothing more than meets the eye.</p>";
   const gms = game.users.filter(u => u.isGM).map(u => u.id);
-  await ChatMessage.create({speaker: ChatMessage.getSpeaker({actor}), rolls: [roll], whisper: [...new Set([game.user.id, ...gms])],
-    content: `<div class="vta-card wodx-x"><header class="vta-head"><h3>${esc(actor.name)} looks closer at ${esc(item.name)}</h3><span class="vta-verdict">${botch ? "Botch" : `${successes} success${successes === 1 ? "" : "es"}`}</span></header>
-      <div class="vta-body"><p class="wodx-quiet">Perception + ${esc(abilityLabel(p.ability))}: ${p.pool} dice at ${p.difficulty}</p><div class="vta-dice">${dice}</div>${body}</div></div>`,
+  const head = verdict => `<header class="vta-head"><h3>${esc(actor.name)} looks closer at ${esc(item.name)}</h3><span class="vta-verdict">${verdict}</span></header>`;
+  await ChatMessage.create({speaker: ChatMessage.getSpeaker({actor}), rolls: botch ? [] : [roll], whisper: [...new Set([game.user.id, ...gms])],
+    content: `<div class="vta-card wodx-x">${head(botch ? "1 success" : `${successes} success${successes === 1 ? "" : "es"}`)}
+      <div class="vta-body"><p class="wodx-quiet">Perception + ${esc(abilityLabel(p.ability))}: ${p.pool} dice at ${p.difficulty}</p>${botch ? "" : `<div class="vta-dice">${dice}</div>`}${body}</div></div>`,
     flags: {[MOD]: {examine: {item: item.uuid, successes, botch}}}});
+  if ( botch && gms.length ) await ChatMessage.create({speaker: {alias: "Examine"}, whisper: gms,
+    content: `<div class="vta-card wodx-x"><div class="vta-body"><p>${esc(actor.name)} botched the look at ${esc(item.name)} (${dice}). What they were shown is false: ${esc(lie)}</p></div></div>`});
   return {successes, botch, found};
 }
 

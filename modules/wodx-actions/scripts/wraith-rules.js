@@ -212,6 +212,25 @@ export const MAELSTROM = [
     { dice: [8, 12], agg: "about half the time", diff: 3, armor: "one die less", haunt: "one die less than the Haunt level" },
     { dice: [14, 14], agg: "usually", diff: 3, armor: "half (round down)", haunt: "−1 die per two Haunt levels" }
 ];
+/**
+ * B5021: the Great Maelstroms set the storm's force in their own years, once their dated event has happened in the
+ * chronicle (WoDX Chronicle events). Years and forces are house readings of the events' summaries.
+ */
+export const GREAT_MAELSTROMS = [
+    { event: "black-death", from: 1347, to: 1351, force: 4, name: "the Second Great Maelstrom" },
+    { event: "third-great-maelstrom", from: 1600, to: 1601, force: 5, name: "the Third Great Maelstrom" },
+    { event: "fourth-great-maelstrom", from: 1916, to: 1918, force: 5, name: "the Fourth Great Maelstrom" },
+    { event: "fifth-great-maelstrom", from: 1945, to: 1945, force: 4, name: "the Fifth Great Maelstrom" },
+    { event: "sixth-great-maelstrom", from: 1999, to: 1999, force: 5, name: "the Sixth Great Maelstrom" }
+];
+/** The Great Maelstrom raging in a year, or null. has(eventId) says whether the event has happened. */
+export function greatMaelstrom(year, has = () => true) {
+    const y = n(year);
+    return GREAT_MAELSTROMS.find(g => y >= g.from && y <= g.to && has(g.event)) ?? null;
+}
+/** How often the storm's harm is aggravated, by force (Wraith: The Great War p. 87, read as chances). */
+export const AGG_CHANCE = [0, 0, 0.25, 0.5, 0.5, 0.9];
+
 /** Dice for an exposed wraith this scene: the force's range (middle by default), less shelter. */
 export function maelstromDice(force, { haunt = 0, roll = null } = {}) {
     const f = MAELSTROM[Math.max(0, Math.min(5, n(force)))];

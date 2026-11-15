@@ -65,6 +65,12 @@ export const garouKit = {
     if ( status === "done" ) {
       if ( t.forced ) { try { await sp?.move?.(a, "bound", {court: w.court, why: `forced a spirit into the ${w.name}`}); out.push("The spirit was forced: its court remembers."); } catch (e) { /* Otherworlds off */ } }
       if ( w.silver ) out.push(`Carrying it costs ${w.silver} from the bearer's effective Gnosis.`);
+      // B5013: a month of torture marks the maker with the Wyrm's taint, a step deeper (WoDX Otherworlds; house reading)
+      if ( w.atrocity && a ) {
+        const C = game.modules.get("wodx-otherworlds")?.api?.corruption;
+        const t = C?.taintOf?.(a);
+        if ( t && !t.innate && C?.setTaint ) { const level = Math.min(3, (Number(t.level) || 0) + 1); await C.setTaint(a, {...t, level, where: `the making of ${w.name}`}); out.push(`The atrocity leaves its mark: the Wyrm's taint on the maker deepens to step ${level}.`); }
+      }
     } else if ( status === "ruined" ) {
       try { await sp?.move?.(a, "slight", {court: w.court, why: `a botched binding (${w.name})`}); } catch (e) { /* Otherworlds off */ }
       out.push("A botch: the vessel is spoiled and the spirit leaves angry.");

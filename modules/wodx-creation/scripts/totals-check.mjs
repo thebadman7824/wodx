@@ -38,8 +38,12 @@ export function totalsView(actor, lineId) {
     lore: sum(i => i.type === "Power" && typed(/lore/)(i)),
     hekau: sum(i => i.type === "Power" && typed(/hekau/)(i))
   };
-  // Hand counts where the system keeps no such Trait (Pillars, Dominions, edges)
-  for ( const k of ["pillar", "dominion", "edge"] ) powers[k] = null;
+  // B5024: Pillars and Dominions as WoDX Actions keeps them; edges as Powers, with the hunter's Virtues in the same pool
+  const fl = actor?.flags?.["wodx-actions"] ?? {};
+  const mapSum = m => Object.values(m ?? {}).reduce((t, x) => t + n(x), 0);
+  powers.pillar = mapSum(fl.daMage?.pillars);
+  powers.dominion = mapSum(fl.daFae?.dominions);
+  powers.edge = sum(i => i.type === "Power" && i.system?.type === "wod.types.edge") + ["mercy", "vision", "zeal"].reduce((t, k) => t + n(s.advantages?.virtues?.[k]?.permanent), 0);
   let virtues = null;
   const v = s.advantages?.virtues;
   if ( v ) {

@@ -641,6 +641,9 @@ export function describeHazard(f = {}) {
     title: String(f.title ?? "").trim().slice(0, 80), electronic: "none", lock: "none", items: [], progress: {}, tries: f.tries ?? {}
   };
 }
+/** B5010: the Rötschreck provocation a fire is to a vampire near it, by its size (WoDX Actions' table). */
+export const FEAR_OF_FIRE = {small: "torch", large: "bonfire", inferno: "trapped"};
+export const FEAR_YARDS = 6;
 /**
  * What a live hazard does to one character. ch.profile: the WoDX Combat soak profile ("vampire", "mortal" ...).
  * careful: {successes, botch} on stepping through glass carefully, or null.
@@ -650,7 +653,7 @@ export function hazardHit(o, ch = {}, careful = null) {
   if ( !o?.live ) return null;
   if ( o.kind === "fire" || o.kind === "brazier" ) {
     const vampire = ch.profile === "vampire";
-    const notes = vampire ? ["Fire: the Storyteller may call for a Courage roll to resist the Red Fear."] : [];
+    const notes = vampire ? ["Fire: the Red Fear is rolled (Courage, being burned)."] : [];
     const type = vampire ? "aggravated" : o.type ?? (["mortal", "ghoul"].includes(ch.profile) ? "lethal" : "aggravated");
     return {mode: "levels", amount: FIRE_SIZES[o.size].levels, type, fireSun: vampire, soakDiff: FIRE_HEAT[o.heat].diff,
       text: `is burned (${FIRE_SIZES[o.size].levels} level${FIRE_SIZES[o.size].levels === 1 ? "" : "s"}, soaked at ${FIRE_HEAT[o.heat].diff}).`, notes};
@@ -782,6 +785,18 @@ export function findHidden(o, roll = {successes: 0, botch: false}, {bonus = 0} =
 export function clueTexts(o, successes = 0) {
   const n = Math.max(0, Math.min(CLUE_TIERS, Number(successes) || 0));
   return o.texts.slice(0, n + 1).filter(Boolean);
+}
+/**
+ * B5016: a botched look at a clue reads a false lead into it: a deeper line of another clue on the same map, or,
+ * with none, one of the stock wrong turns. others: the other clues' interactable data. House reading.
+ */
+export const FALSE_LEADS = ["Marks here point the wrong way, toward the door nobody used.", "Someone has been here recently; the signs say a stranger, not anyone known.",
+  "It looks older than it is, and whatever happened here seems long over.", "It seems to have nothing to do with the matter at hand."];
+export function falseClue(o, others = [], rand = Math.random) {
+  const own = new Set((o?.texts ?? []).map(t => String(t).trim()));
+  const pool = others.flatMap(x => (x?.texts ?? []).slice(1)).map(t => String(t ?? "").trim()).filter(t => t && !own.has(t));
+  const from = pool.length ? pool : FALSE_LEADS;
+  return from[Math.floor(rand() * from.length)];
 }
 /** What a container holds: one item a line (a UUID, or the name of an item in the world), at most MAX_ITEMS. */
 export function parseItems(text) {
@@ -1082,9 +1097,9 @@ function watchOptions(o, ch) {
   if ( W.calls ) {
     const year = Number(ch.year) || 0;
     if ( !ch.kept && year && year < W.from ) return [{id: "eraNote", label: `No ${W.label.toLowerCase()} yet`, roll: null, disabled: true, note: `Not before about ${W.from}.`}];
-    out.push(o.target ? {id: "call", label: o.kind === "radio" ? "Call on the radio" : "Make a call", roll: null, seconds: TURN, noise: {success: "quiet"}, note: "Reaches the one it is tied to; the Storyteller plays the other end."}
+    out.push(o.target ? {id: "call", label: o.kind === "radio" ? "Call on the radio" : "Make a call", roll: null, seconds: TURN, noise: {success: "quiet"}, note: "Reaches the one it is tied to: whoever is there picks up and talks (WoDX NPC Talk)."}
       : {id: "callNote", label: "Not tied to another phone", roll: null, disabled: true, note: "The Storyteller ties it to another tile in its config."});
-    out.push({id: "callHelp", label: "Call for help", roll: null, seconds: TURN, noise: {success: "quiet"}, note: "The police, the watch or the household: the Storyteller decides who comes."});
+    out.push({id: "callHelp", label: "Call for help", roll: null, seconds: TURN, noise: {success: "quiet"}, note: "The watch or the police come, after the era's delay (WoDX Storyteller)."});
   }
   if ( W.alarm ) out.push({id: "ringAlarm", label: "Raise the alarm", roll: null, seconds: TURN, noise: {success: "loud"}, note: "Loud: everyone in earshot hears it.", fight: true});
   if ( W.sprinkler ) {
@@ -1613,7 +1628,21 @@ export function cleanSettings(s = {}) {
 
 /** Clean a tile's container settings from the config form. */
 /** How often a container's stock list is drawn again (Interactables 0.23.0). */
-export const RESTOCK = {"": "Never (draw it by hand)", dawn: "Every dawn", week: "Every week", month: "Every month", season: "Every season (three months)"};
+export const RESTOCK = {"": "By the place (a shop weekly, a larder monthly, a store or armoury each season, a home never)", never: "Never (draw it by hand)", dawn: "Every dawn", week: "Every week", month: "Every month", season: "Every season (three months)"};
+/**
+ * B4888: the restock a container gets when none is set, from its own name first (a shop shelf, a larder, a store) and
+ * then from WoDX NPC's place kinds around it, the smallest first. House figures. Returns a RESTOCK_SECONDS key or "".
+ */
+export const RESTOCK_WORDS = [[/\b(shop|stall|counter|shelf|shelves|booth|wares)\b/i, "week"], [/\b(larder|pantry|kitchen|buttery|cupboard)\b/i, "month"],
+  [/\b(store|storeroom|armou?ry|granary|warehouse|cellar|magazine|stores)\b/i, "season"]];
+export const RESTOCK_BY_PLACE = {market: "week", workplace: "week", tavern: "month", castle: "season", gate: "season", docks: "season", chantry: "month"};
+export function restockFor(f = {}, {title = "", kinds = []} = {}) {
+  if ( f.restock === "never" ) return "";
+  if ( RESTOCK_SECONDS[f.restock] ) return f.restock;
+  for ( const [re, k] of RESTOCK_WORDS ) if ( re.test(String(title ?? "")) ) return k;
+  for ( const k of kinds ?? [] ) if ( RESTOCK_BY_PLACE[k] ) return RESTOCK_BY_PLACE[k];
+  return "";
+}
 export const RESTOCK_SECONDS = {dawn: 86400, week: 7 * 86400, month: 30 * 86400, season: 91 * 86400};
 
 /**

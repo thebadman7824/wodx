@@ -16,6 +16,7 @@
  * Nothing runs on players' machines, and players never see the hunters' files.
  */
 import * as H from "./hunters-rules.mjs";
+import * as Reach from "./reach-rules.mjs";
 import * as TownLooks from "./town-looks.mjs";
 import {MOD, esc, isActiveGM, setting, chron, npc, log} from "./core.mjs";
 import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
@@ -110,8 +111,16 @@ export async function onBreach(p) {
   const a = actorFrom(p?.by);
   let scene = canvas?.scene;
   try { const tok = a?.getActiveTokens?.()[0]; if ( tok?.scene ) scene = tok.scene; } catch (err) { /* the GM's scene */ }
-  return add(regionAt(scene), "breach", {why: `A breach with witnesses${e.event ? ` (${String(e.event).slice(0, 60)})` : ""}`, who: culpritOf(a), gain: 1});
+  const res = await add(regionAt(scene), "breach", {why: `A breach with witnesses${e.event ? ` (${String(e.event).slice(0, 60)})` : ""}`, who: culpritOf(a), gain: 1});
+  // B4866: with the Veil Failing or Torn, the authorities take notice: the law's heat, and more hunter pressure
+  const vm = Reach.veilMoves(Reach.veilBand(veilValue()));
+  if ( vm.breachHunters > 1 || vm.breachHeat ) {
+    for ( let i = 1; i < vm.breachHunters; i++ ) await add(regionAt(scene), "veil", {why: "The Veil is failing"});
+    if ( vm.breachHeat && a ) { try { await chron()?.law?.heat?.add?.(a, "breach", {scene, witnesses: 2}); } catch (err) { /* no law */ } }
+  }
+  return res;
 }
+function veilValue() { try { const v = game.modules.get(MOD)?.api?.ledger?.state?.()?.veil?.value; return Number.isFinite(Number(v)) ? Number(v) : 10; } catch (e) { return 10; } }
 
 /** A cult in the region has been noticed (WoDX NPC wodxCultNoticed, B3306): watched +1, moved +2, and a file on its founder. */
 export async function onCult(p) {
@@ -190,6 +199,8 @@ export async function turn({force = false} = {}) {
       const at = t - (turns - 1 - i) * H.TURN_DAYS * H.DAY;
       for ( const [id, r0] of Object.entries(s.regions) ) {
         const res = H.regionTurn(r0, at, {bodies: bodiesAt(id, r0), veilLow: veil, faith: faithAt(id), year});
+        // B4866: with the Veil torn, every region's hunters stay on alarm: a point of pressure each week
+        if ( Reach.veilMoves(Reach.veilBand(veilValue())).weeklyAlarm ) res.region = H.addPressure(res.region, "veil", at, {faith: faithAt(id), year, why: "The secret is out"}).region;
         s.regions[id] = res.region;
         for ( const e of res.events ) events.push({region: id, ...e});
       }
@@ -233,8 +244,8 @@ async function report(events, s) {
 
 const MOVE_TEXT = {
   investigator: (lead, who) => ({title: `${cap(lead.label)} send an investigator`, text: `Someone from ${lead.label} arrives to ask about the dead and the strange.${who ? ` They already have a file on ${who.name}.` : ""} Approving starts a rumour and sends every description of a culprit they know of round the whole town.`}),
-  raid: (lead, who) => ({title: `${cap(lead.label)} move against ${who?.name ?? "a culprit"}`, text: `They know ${H.levelOf(who?.level ?? 2).name.toLowerCase()} and act on it: a watch on the places ${who?.name ?? "the culprit"} goes, then a strike when they are ready. Approving logs it and starts a rumour; the Storyteller stages the attempt.`}),
-  purge: (lead, who) => ({title: `A purge by ${lead.label}`, text: `Trials, raids and curfews across the region. Every stranger is suspect${who ? `, and ${who.name} is named` : ""}. Approving logs it and starts a rumour.`})
+  raid: (lead, who) => ({title: `${cap(lead.label)} move against ${who?.name ?? "a culprit"}`, text: `They know ${H.levelOf(who?.level ?? 2).name.toLowerCase()} and act on it: a watch on the places ${who?.name ?? "the culprit"} goes, then a strike when they are ready. Approving starts a rumour and sends them, armed, to the haven or wherever the quarry stands.`}),
+  purge: (lead, who) => ({title: `A purge by ${lead.label}`, text: `Trials, raids and curfews across the region. Every stranger is suspect${who ? `, and ${who.name} is named` : ""}. Approving starts a rumour and sends hunters after every known one of the kind.`})
 };
 const cap = s => String(s ?? "").replace(/^\w/, c => c.toUpperCase());
 
@@ -253,6 +264,13 @@ async function approve(entry) {
   await log({kind: "hunters", attention: "The hunters move", text: `${place}: ${d.text ?? text}`});
   // B4623: a raid or purge brings a crowd with torches onto the region's town scenes for the night
   if ( d.kind === "raid" || d.kind === "purge" ) { try { await TownLooks.torchesIn(d.region); } catch (err) { console.warn(`${MOD} | torches`, err); } }
+  // B4864: and the hunters go for the one they are after (a purge: every known one of that kind in the region)
+  if ( d.kind === "raid" || d.kind === "purge" ) {
+    const files = Object.values(state().regions[d.region]?.files ?? {});
+    const kindOf = files.find(f => f.id === d.file?.id)?.kind ?? null;
+    const also = d.kind === "purge" ? files.filter(f => !kindOf || f.kind === kindOf).sort((a, b) => b.level - a.level).map(f => f.id) : [];
+    try { await game.modules.get(MOD)?.api?.reach?.raid?.({region: d.region, kind: d.kind, file: d.file ?? (also[0] ? {id: also[0]} : null), also}); } catch (err) { console.warn(`${MOD} | raid`, err); }
+  }
   if ( d.kind === "investigator" ) {
     const files = Object.keys(state().regions[d.region]?.files ?? {});
     const w = npc()?.wanted;

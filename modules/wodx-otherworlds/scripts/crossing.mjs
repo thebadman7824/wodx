@@ -200,7 +200,7 @@ async function resolveGroup({group, place, chart, procedure, mode, inUmbra, choi
   });
 
   if ( !choice.override ) {
-    if ( hasStatus(actor, STATUS.lost.id) ) plan.blocks.push("Lost in the Pattern Web: the Storyteller decides when and where they come back.");
+    if ( hasStatus(actor, STATUS.lost.id) ) plan.blocks.push(`Lost in the Pattern Web${record.returnAt ? `: the way out is found ${daysLeft(record.returnAt - now)}` : ""}.`);
     if ( record.trapped && group.members.length === 1 ) plan.blocks.push("Trapped until rescued: another Garou must step sideways with them as a pack.");
     if ( plan.blocks.length ) plan.allowed = false;
   }
@@ -260,7 +260,8 @@ async function resolveGroup({group, place, chart, procedure, mode, inUmbra, choi
         change.attempts = {key, caughtAt: record.caughtAt ?? now, trapped: true};
       } else if ( outcome.status === "lost" ) {
         change.add.push(STATUS.lost.id);
-        change.attempts = null;
+        // B5018: the way out of the Pattern Web is found after some days, rolled now
+        change.attempts = {key, lostAt: now, returnAt: now + lostDays() * 86400};
       }
     }
     if ( change.add.length || change.remove.length || change.attempts !== undefined || change.level || change.world ) {
@@ -324,11 +325,36 @@ export function disconnectionOf(actor, now = game.time.worldTime) {
   return {world: w?.in ?? null, ...disconnection(w ? now - w.since : null)};
 }
 
+/* B5018: lost in the Pattern Web. The way out comes after 1 + d10 days (house figure), a few squares from where the
+ * traveller was lost, still in the Penumbra; the Storyteller's Clear crossing brings them back sooner. */
+export const LOST_DAYS = {base: 1, die: 10};
+export const lostDays = (rand = Math.random) => LOST_DAYS.base + 1 + Math.floor(rand() * LOST_DAYS.die);
+const daysLeft = s => { const d = Math.ceil(Math.max(0, s) / 86400); return d <= 1 ? "within a day" : `in about ${d} days`; };
+/** Active GM: bring back those whose time in the Pattern Web is up. Returns how many came back. */
+export async function returnLost(now = game.time.worldTime, rand = Math.random) {
+  if ( !game.user?.isGM || game.users.activeGM?.id !== game.user.id ) return 0;
+  let k = 0;
+  for ( const scene of game.scenes ?? [] ) for ( const t of scene.tokens ?? [] ) {
+    const a = t.actor;
+    if ( !a || !hasStatus(a, STATUS.lost.id) ) continue;
+    const rec = a.getFlag(MODULE_ID, "attempts") ?? {};
+    if ( !Number.isFinite(rec.returnAt) || rec.returnAt > now ) continue;
+    const g = scene.grid?.size ?? 100, ang = rand() * Math.PI * 2, r = (3 + Math.floor(rand() * 5)) * g;
+    const x = Math.max(0, Math.min((scene.width ?? 4000) - g, Math.round(t.x + Math.cos(ang) * r))), y = Math.max(0, Math.min((scene.height ?? 3000) - g, Math.round(t.y + Math.sin(ang) * r)));
+    await applyLocally(t, {remove: [STATUS.lost.id], attempts: null});
+    try { await t.update({x, y}, {animate: false}); } catch (e) { /* the token stays where it was */ }
+    const whisper = game.users.filter(u => u.isGM || a.testUserPermission?.(u, "OWNER")).map(u => u.id);
+    await ChatMessage.create({whisper, speaker: {alias: "WoDX"}, content: `<div class="wodx-card"><p><strong>${esc(a.name)}</strong> finds a way out of the Pattern Web after ${Math.max(1, Math.round((now - (rec.lostAt ?? now)) / 86400))} days, and comes out in the Penumbra not far from where they were lost.</p></div>`});
+    k++;
+  }
+  return k;
+}
+
 export const YEAR_TYPE = "wodx-umbra-year";
 
 /**
  * Active GM: a traveler who has spent a year and a day in the Umbra starts to become a creature of spirit
- * (W20 p. 319). Proposed once per stay to the WoDX approval queue; the Storyteller decides what it means.
+ * (W20 p. 319). Proposed once per stay to the WoDX approval queue; on approval the change goes on by itself (fading.mjs, B5017).
  */
 export async function checkYearAndDay(now = game.time.worldTime) {
   if ( !game.user?.isGM || game.users.activeGM?.id !== game.user.id ) return 0;
@@ -344,7 +370,7 @@ export async function checkYearAndDay(now = game.time.worldTime) {
     await chronicle.propose({
       type: YEAR_TYPE, key: `${YEAR_TYPE}:${actor.id}:${w.since}`,
       title: `${actor.name}: a year and a day in the Umbra`,
-      detail: `${actor.name} has not left the spirit world for ${Math.floor(d.days)} days. A shapechanger who stays past a year and a day starts turning into a spirit, a little at a time (W20 p. 319). Approve to mark the change as begun on the sheet's WoDX record; reject to leave it.`,
+      detail: `${actor.name} has not left the spirit world for ${Math.floor(d.days)} days. A shapechanger who stays past a year and a day starts turning into a spirit, a little at a time (W20 p. 319). Approve and the change begins: a step for each lunar month more in the spirit world, shown on the token and felt on the rolls in the flesh; reject to leave it.`,
       data: {actorId: actor.id, since: w.since}
     });
     n++;
@@ -358,9 +384,9 @@ export function registerYearHandler() {
     approve: async entry => {
       const actor = game.actors.get(entry.data?.actorId);
       if ( !actor ) throw new Error("The character is gone");
-      await actor.setFlag(MODULE_ID, "spiritChange", {since: entry.data.since, begun: game.time.worldTime});
+      await actor.setFlag(MODULE_ID, "spiritChange", {since: entry.data.since, begun: game.time.worldTime, last: game.time.worldTime, away: 0, step: 1});
       await ChatMessage.create({whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: {alias: "WoDX"},
-        content: `<div class="wodx-card"><p><strong>${esc(actor.name)}</strong> begins to become a creature of spirit (W20 p. 319). The Storyteller decides how it shows.</p></div>`});
+        content: `<div class="wodx-card"><p><strong>${esc(actor.name)}</strong> begins to become a creature of spirit (W20 p. 319): a step for each lunar month more in the Umbra, shown on the token.</p></div>`});
     }
   });
 }
@@ -372,7 +398,7 @@ export function registerYearHandler() {
 export const SHROUD_MEANS = {
   wraith: "A wraith Materializes, Skinrides or is drawn across (Wraith 20th)",
   necromancy: "Necromancy, a rite or a Gift",
-  neardeath: "Near death, or the dying",
+  neardeath: "Near death, or the dying (one who sees the dead crosses on their own, B5020)",
   storyteller: "The Storyteller's call"
 };
 
@@ -442,4 +468,44 @@ export async function sendAcross(tokenDoc, {to = null} = {}) {
   await applyChange(tokenDoc, {...change, world: {in: side, since: now}});
   Hooks.callAll("wodxCrossing", {mode: "cross", inUmbra: from !== "physical", outcome: {outcome: "success", text: "Across by a power"}, result: null, place: null, travelers: [tokenDoc]});
   return {from, to: side};
+}
+
+/* -------------------------------------------- */
+/*  The dying cross by themselves (B5020)       */
+/* -------------------------------------------- */
+
+/** Traits that let the living see the dead, and so follow them across when near death (W20th; V20 Medium). */
+export const DEATH_SIGHT = ["medium", "deathsight", "deathwalker"];
+/** Whether a character can see the dead: a wraith-to-be (the flag wraithToBe), one of the traits, or Necromancy. */
+export function seesTheDead(actor) {
+  if ( !actor ) return false;
+  if ( actor.getFlag?.(MODULE_ID, "wraithToBe") ) return true;
+  const T = game.modules.get("wodx-chronicle")?.api?.traits;
+  try { if ( T?.has && DEATH_SIGHT.some(k => T.has(actor, k)) ) return true; } catch (e) { /* traits off */ }
+  return (actor.items ?? []).some(i => /necromancy/i.test(i.name ?? "") && (Number(i.system?.value) || 0) > 0);
+}
+const DYING = new Set(["dead", "wodx-incapacitated"]);
+/**
+ * Active GM: a character who can see the dead and reaches Incapacitated or dies slips into the Shadowlands,
+ * on every token of theirs on a scene with a Shadowlands level (or with the Shadowlands status where there is none).
+ */
+export async function dyingCross(actor) {
+  if ( !game.user?.isGM || game.users.activeGM?.id !== game.user.id || !seesTheDead(actor) ) return 0;
+  let k = 0;
+  for ( const t of actor.getActiveTokens?.(false, true) ?? [] ) {
+    const doc = t.document ?? t;
+    if ( hasStatus(doc.actor, STATUS.shadowlands.id) || tokenLayer(doc) === "shadowlands" || hasStatus(doc.actor, STATUS.umbra.id) ) continue;
+    await sendAcross(doc, {to: "shadowlands"});
+    k++;
+  }
+  if ( k ) await ChatMessage.create({whisper: game.users.filter(u => u.isGM || actor.testUserPermission?.(u, "OWNER")).map(u => u.id), speaker: {alias: "WoDX"},
+    content: `<div class="wodx-card"><p><strong>${esc(actor.name)}</strong> slips across the Shroud at the edge of death, into the Shadowlands.</p></div>`});
+  return k;
+}
+export function registerDyingCross() {
+  Hooks.on("createActiveEffect", e => {
+    const a = e?.parent;
+    if ( a?.documentName !== "Actor" || ![...(e.statuses ?? [])].some(s => DYING.has(s)) ) return;
+    dyingCross(a).catch(err => console.error("WoDX | dying cross", err));
+  });
 }

@@ -101,7 +101,34 @@ export function build(ctx) {
     /* ---------------- Arcanoi ---------------- */
 
     /** The local Maelstrom (a scene flag, 0–5; the Storyteller sets it with the Maelstrom tool). */
-    const storm = () => Math.max(0, Math.min(5, n(canvas?.scene?.getFlag?.(MOD, "maelstrom"))));
+    // B5021: a Great Maelstrom in its years sets the force everywhere; a scene's own storm can be stronger
+    const great = () => { const ev = game.modules.get("wodx-chronicle")?.api?.events; return W.greatMaelstrom(yearNow(), id => (ev?.has ? ev.has(id) : true)); };
+    const storm = () => Math.max(0, Math.min(5, Math.max(n(canvas?.scene?.getFlag?.(MOD, "maelstrom")), n(great()?.force))));
+    /** B5021: once a scene, the storm harms the wraiths here outside shelter (indoors counts as a Haunt of 1). Active GM. */
+    async function autoStorm() {
+        if (!game.user.isGM || game.users.activeGM?.id !== game.user.id || !canvas?.scene) return null;
+        const force = storm();
+        if (!force) return null;
+        const key = `${n(game.settings.get(MOD, "wraithScene"))}:${canvas.scene.id}`;
+        if (canvas.scene.getFlag(MOD, "stormRolled") === key) return null;
+        await canvas.scene.setFlag(MOD, "stormRolled", key);
+        let indoor = false;
+        try { indoor = game.modules.get("wodx-atmosphere")?.api?.weather?.isOutdoor?.(canvas.scene) === false; } catch (e) { indoor = false; }
+        const lines = [];
+        for (const t of canvas.tokens?.placeables ?? []) {
+            const a = t.actor;
+            if (!a || !isWraith(a)) continue;
+            const dice = W.maelstromDice(force, { haunt: indoor ? 1 : 0 });
+            if (!dice) { lines.push(`<li>${esc(a.name)}: sheltered</li>`); continue; }
+            const r = await rollPool(dice, 6, { canBotch: false });
+            const agg = Math.random() < W.AGG_CHANCE[force];
+            if (r.successes) await corpusDamage(a, agg ? "aggravated" : "lethal", r.successes);
+            lines.push(`<li>${esc(a.name)}: ${dice} dice, ${r.successes} ${agg ? "aggravated" : "lethal"} on the Corpus</li>`);
+        }
+        if (!lines.length) return null;
+        const g = great();
+        return ChatMessage.create({ content: `<div class="vta-card"><h3>The Maelstrom, force ${force}${g ? `: ${esc(g.name)}` : ""}</h3><p>The storm tears at the wraiths here${indoor ? " (indoors: some shelter)" : ""}. Outdoors +${W.MAELSTROM[force].diff} difficulty to everything.</p><ul>${lines.join("")}</ul><p class="wodx-quiet">Wraith: The Great War p. 87</p></div>`, speaker: { alias: "WoDX" } });
+    }
     /** The second half of an art's roll: the Arcanos, or an Ability the page names (Cravings: Empathy). */
     const second = (a, sec) => (!sec || sec === "arc" ? a.rating : (findAbility(actor0, sec)?.value ?? 0));
     let actor0 = null;
@@ -536,6 +563,7 @@ export function build(ctx) {
         if (!game.user.isGM) return ctx.notify("The Storyteller starts a new scene.");
         await game.settings.set(MOD, "wraithScene", n(game.settings.get(MOD, "wraithScene")) + 1);
         if (canvas?.scene?.getFlag(MOD, "hysteria")) await canvas.scene.unsetFlag(MOD, "hysteria");
+        await autoStorm().catch(e => console.error("WoDX | Maelstrom", e));
         if (quiet) return true;
         return ChatMessage.create({ content: `<div class="vta-card"><h3>A new scene</h3><p>Passions can be tapped again; Hysteria ends.</p></div>`, whisper: gmIds(), speaker: { alias: "WoDX" } });
     }
@@ -599,7 +627,7 @@ export function build(ctx) {
         return null;
     }
 
-    return { maelstrom, storm, info, useArcanos, corpusDamage, newScene, newSession, onReady, passion, fetter, memoriam, healCorpus, setCorpusDamage, shadowguide, whisper, shadow, harrowing, vsAngst, caul, hysteria, onCorpus, afterSpend, shroudAt, onChatButton, guideOf, targetTraits };
+    return { maelstrom, storm, great, autoStorm, info, useArcanos, corpusDamage, newScene, newSession, onReady, passion, fetter, memoriam, healCorpus, setCorpusDamage, shadowguide, whisper, shadow, harrowing, vsAngst, caul, hysteria, onCorpus, afterSpend, shroudAt, onChatButton, guideOf, targetTraits };
 }
 
 export function registerSettings() {

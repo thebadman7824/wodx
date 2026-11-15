@@ -302,7 +302,7 @@ export function aimOptions(body) {
 /**
  * Should the Storyteller be offered a maiming (house rule B1204)? A blow of 3 or more lethal or aggravated levels after
  * soak to a part that can be lost (a limb, hand, eye, wing, tail or fin). The same three that a stake needs to reach
- * the heart (V20 Dark Ages p. 347). Never automatic: the Storyteller decides.
+ * the heart (V20 Dark Ages p. 347). Crippled until healed applies at once (B4886); lost for good is the Storyteller's call.
  */
 export function maimOffer(loc, {levels = 0, type = "bashing", aimed = false} = {}) {
   if ( !loc || type === "bashing" || levels < 3 ) return null;
