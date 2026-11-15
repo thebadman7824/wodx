@@ -268,7 +268,9 @@ export function powerPlan(actor, {set, id, name, line = null, successes, source 
   if ( !isOn() || !powerEffectsOn() ) return {items: [], html: "", skipped: []};
   const kw = PW.powerKeywords(set, id, name, line);
   const t = targetsOf(actor);
-  const {results, skipped} = PW.powerOutcomes(kw, successes, {label: name, source, hasTarget: !t.self && t.docs.length > 0, noRoll});
+  const {results: got, skipped} = PW.powerOutcomes(kw, successes, {label: name, source, hasTarget: !t.self && t.docs.length > 0, noRoll});
+  // B6034: an Obfuscate veil also sets the Obfuscated condition, which Senses and targeting read (V20 pp. 165-171)
+  const results = PW.isObfuscate(set, id, name) ? got.map(r => r.key === "veil" ? {...r, out: {...r.out, condition: r.out?.condition ?? "obfuscated"}} : r) : got;
   const plan = planOf(actor, results, successes, {name, line: world, source});
   if ( skipped.length ) plan.html += `<p class="wodx-quiet">Needs a target: ${esc(skipped.join(", "))}.</p>`;
   return {...plan, skipped};

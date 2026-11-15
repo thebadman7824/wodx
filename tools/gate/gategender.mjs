@@ -45,7 +45,7 @@ export async function run() {
       {pcOwned: pc.hasPlayerOwner, pcRules: G.forRules(pc), gen: G.forRules(gen)});
     {
       const sheet = pc.sheet; await sheet.render(true); await sleep(1200);
-      const el = sheet.element?.[0] ?? sheet.element, input = el?.querySelector?.(".wodx-gender-field input");
+      const el = (sheet.element instanceof HTMLElement ? sheet.element : sheet.element?.[0]), input = el?.querySelector?.(".wodx-gender-field input");
       const shown = input?.value;
       if ( input ) { input.value = "Two-spirit"; input.dispatchEvent(new Event("change", {bubbles: true})); await sleep(800); }
       const kept = pc.flags?.["wodx-chronicle"]?.gender;

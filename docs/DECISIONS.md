@@ -306,7 +306,7 @@ Next free block: B6220
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5680-B5709 | NPC Motives Desk: every NPC action has a reason and a follow-through (used B5680-B5703) | NPC, Storyteller |
 | B5710-B5729 | Aftercare of the carried (Aftercare Desk a1-a12) (used B5710-B5721) | NPC |
-| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5745) | tools |
+| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5748) | tools |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 | B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
 | B5800-B5809 | NPC Aftercare Desk: what comes after each NPC action (used B5800-B5806) | NPC, Chronicle |
@@ -329,9 +329,13 @@ Next free block: B6220
 | B5980-B5989 | Lone Chronicle step 3: the oracle, the Leads page and night encounters on the map (used B5980-B5985) | Solo |
 | B5990-B5999 | Say or Do: full sentences and grieving (Ben's picks on law sentences and heartbreak) (used B5990-B5992) | Chronicle, NPC, Actions |
 | B6000-B6019 | Rituals and powers that really work: every effect read by a roll, soak, token or map system (used B6000-B6018) | Actions, Combat |
+| B6020-B6039 | Re-audit of marks and flags that nothing reads (non-power systems) (used B6020-B6034) | Combat, Chronicle, Actions, Storyteller |
 | B6040-B6049 | Lone Chronicle step 4: the director, experience from the night's log, the recap (used B6040-B6049) | Solo |
 | B6050-B6059 | gate7b fresh arena each run (used B6050-B6051) | tools (gates) |
 | B6070-B6079 | Snow vehicles, trains and trams (rules and sprites), and a quality pass on the vehicle sprites (used B6070-B6076) | Interactables, Paperdoll, Combat |
+| B6080-B6099 | Weights for loose gear and container contents, and loose gear on the map (used B6080-B6089) | Library, Interactables, Combat |
+| B6100-B6109 | Wraith 20th named Artifacts (forge, Skin, Spectre) and souled relics on the crafting table, with real Use powers and looks (used B6100-B6104) | Library, Creation |
+| B6110-B6129 | Line sheets move to ApplicationV2 (the newer sheet engine), one line at a time (used B6110-B6114) | System fork, Sheets, Chronicle |
 | B6130-B6139 | The eight held-back world timeline readings after the book check (used B6130-B6132) | Chronicle |
 | B6210-B6219 | gatevehicles plays in a year with cars (used B6210) | tools (gates) |
 <!-- decision-index:end -->
@@ -9430,6 +9434,21 @@ Tools. maps/lt_crafts.py redraws Craftsmen's Lane (66 by 40) with all 110 walls,
 
 Reverse: remove the map file and the new pieces; nothing else uses them.
 
+## B5746. Every redrawn map is furnished so it looks lived in (2026-11-15)
+Tools. The sample maps looked bare, so the drawer gains dress.py. Once a map's own furniture is down, it fills each room, yard, street and stretch of wood with the furnishings of its kind of place. Furniture goes square along the walls first: shelves set with crockery, cupboards, benches, chests, stacked crates, rows of casks and sacks, woodpiles, workbenches with tools, tool racks, spinning wheels, sawhorses, grindstones and beds. Then come the small things of daily use: baskets, buckets, pots, kindling, brooms, rag rugs, boots, cloaks on pegs, stools, straw, dung, shavings, ferns, fallen branches and toadstools. Each trade has its own list (home, shop, store, hall, stable, joinery, smith, craft, dye, brew, market, street, yard, camp, wood, ruin), so a weaving hall gets wheels and baskets of wool, not sawhorses. Rooms are found by flooding between the map's own wall, door and window lines. A piece is laid only where the picture is still bare floor or ground and clear of anything that opens, so nothing lands on furniture, walls or doors. Every piece is drawn at true size, to be named by sight. The five maps drawn so far (Forest Road, High Woods, Altenhof, Lower Town Market, Craftsmen's Lane) are all re-dressed; the market square also gets more stalls and goods set out on cloths.
+
+Reverse: drop the dress() calls from the maps; the maps draw as before.
+
+## B5747. Furnishings face their rooms, show what they are, and fill the rooms (2026-11-15)
+Tools. Following review of the first furnishing pass, three fixes. First, every piece that has a front now faces the room it serves. dress.turned() draws a piece facing south on a scratch map and turns it to face north, east or west, with its shadow and any glow it throws. Oven mouths, dresser and chest fronts, bench seats, tool racks and peg rails all face out from their wall, and beds stand head to the wall. The market's three ovens, which faced their walls, now open on the kitchen, the bakehouse and the hall. Second, the pieces are drawn in more detail so each can be named by sight. These include a dresser with plates in its rack and jugs on top, a joiner's bench with a vice, saw, plane, mallet and chisels, a tool rack hung with spade, rake, fork, sickle, axe and rope, and a peg rail with cloak, hat, satchel and belt. There are also a spinning wheel with its flyer, distaff and treadle, a straw pallet with bolster and blanket, a butter churn, a hand quern, a wash tub with washboard, a table with stools drawn up, braided rag rugs and a three-legged pot with its bail and ladle. Third, rooms are fuller: more furniture along every wall and more things on the floor. No room gets more than one rug, wheel or dresser, and jugs and cups stay off the floor. All five maps are re-drawn with it.
+
+Reverse: return dress.py and the three oven calls to B5746.
+
+## B5748. Window shutters stay outside the wall (2026-11-15)
+Tools. Following review, shutters no longer clip into the walls. Shut, the two leaves now lie against the outside face of the wall with their planks, hinges and iron bar, where before they were drawn halfway into the wall itself. Open, each leaf still lies flat along the outside face, but only where there is room. The drawer now knows the scene's walls, doors and windows, so a leaf stops short of the building's corner, of a wall that crosses the ground outside, of a doorway, and of the next window's leaf (two windows share the wall between them). Where a leaf has no room to lie flat, it stands open square to the wall instead. All eight maps were re-drawn, and a check of every shutter picture, open and shut, finds none on a wall: 120 windows, where before every shut shutter overlapped its wall.
+
+Reverse: return props.window and the recorder's line list to B5747.
+
 ## B5750. Witness reactions given by a window act on the map (2026-11-15)
 WoDX Actions. The witness step takes results already rolled (the Delirium check, a demon's Revelation) and acts them out: a frozen witness is Immobilized for the scene, a fleeing one runs, a fighting one starts a fight; those who keep it go on the Masquerade record. With no revealed actor on the map, nothing is recorded against anyone.
 
@@ -10117,6 +10136,81 @@ A mummy's won Forbiddance marks the mummy as the one feared (a player's token ca
 
 Reverse: forbiddenFrom in wodx-combat main.js, the bindBy/forbiddenBy flags in mummy.js, the shadow soul line in binds.js bindingsOn.
 
+## B6020. Conditions that hold a body stop its token (2026-11-15)
+WoDX Combat. Held, Completely immobilized, Staked, Torpor, Incapacitated and Asleep leave no movement (movementFor) and a player's drag of the token is refused in a fight or out of one; the Storyteller moves any token. Before this, only power bindings held a token; the core conditions only changed attack dice. World setting "Conditions hold the token", default on.
+
+Reverse: set "Conditions hold the token" off, or drop the preUpdateToken hook and the still/pace arguments in auto.js movement.
+
+## B6021. Numbed moves at three-quarter pace (2026-11-15)
+WoDX Combat. Numbed (VtDA p. 275) already took a Dexterity point; its three-quarter movement was only on the card.
+
+Reverse: remove numbed from SLOW_CONDITIONS in auto.js.
+
+## B6022. Combat reads the roll effects of WoDX Chronicle traits (2026-11-15)
+WoDX Combat. Attack pools read traits.effects with tags attack and combat, defence with defense, combat and dodge. Effects tagged "all" (fever, drink and drugs, the night's feeding penalty) and any trait tagged for combat now count; before, only Actions and social rolls read them.
+
+Reverse: remove the traitRoll calls in conditionMods, defenseDiffOf and defenseDiceOf.
+
+## B6023. Timed marks show on the token (2026-11-15)
+WoDX Chronicle. applyTimed sets showIcon ALWAYS, so a scene or night mark (no rounds, no seconds) draws on the token. A caller may pass showIcon: false.
+
+Reverse: drop the showIcon line in timed.mjs.
+
+## B6024. The night's feeding penalty is a roll effect (2026-11-15)
+WoDX Actions. Feeding against the blood's law (a vessel not beaten in a fight, Willpower failed) puts a bite of -2 dice on every roll until dawn through traits.addBite; before, it was a named mark no roll read.
+
+Reverse: go back to the plain applyTimed mark in main.js.
+
+## B6025. Behind the age is a roll effect (2026-11-15)
+WoDX Actions. After a long torpor, each Ability listed as behind rolls at +1 difficulty (BEHIND_DIFFICULTY) until the Storyteller presses "caught up", through a traits roll source reading the longSleep flag. Old tongues stay with the Storyteller.
+
+Reverse: remove the addSource call in main.js.
+
+## B6026. Closed shelves give two dice for the season (2026-11-15)
+WoDX Storyteller. The institution's "closed shelves are open" answer now adds a bite of +2 dice on Academics, Investigation, Occult, Science, Medicine and Linguistics for 90 days. It applies wherever the character studies, a simplification of "there".
+
+Reverse: remove the addBite call in reach.mjs.
+
+## B6027. Crippled limb counts in a fight (2026-11-15)
+WoDX Chronicle. The Crippled limb status had no rule behind it (maimed parts have their own). It now gives +2 difficulty on the bearer's attacks and defence, since a status on the token names no limb.
+
+Reverse: set mods back to {} on crippled in conditions.mjs.
+
+## B6028. Ravenous is harder to act through (2026-11-15)
+WoDX Actions. Ravenous (W20 p. 177) only said "must eat first". It now gives +1 difficulty in a fight and on social rolls for its day, a house reading.
+
+Reverse: set mods back to {} on ravenous in after-cost-rules.js.
+
+## B6029. Branded, Filthy and Bloody are a step colder in talk (2026-11-15)
+WoDX Chronicle and Library. "Meets them a step colder" and "anyone who sees it" had no reader. Each now gives +1 difficulty on social rolls (socialDiff, read by Actions' social rolls).
+
+Reverse: set mods back to {} on branded (law-punish.mjs), filthy and bloody (hygiene-use.mjs).
+
+## B6030. A good hide or sneak roll sets Sneaking (2026-11-15)
+WoDX Actions. Sneaking was read by Senses, Combat and targeting but never set by a roll. A successful "Find a hiding place" or "Hold still and stay hidden" check now gives the roller Sneaking for the scene.
+
+Reverse: remove the sneak applyTimed in resolveAction (wodx-actions main.js).
+
+## B6031. Incapacitated follows the health track (2026-11-15)
+WoDX Combat. Incapacitated was only ever set by hand. It now turns on when the health track reaches Incapacitated and off when healing lifts it, unless the status-effects setting is off.
+
+Reverse: remove the updateActor incapacitated hook in wodx-combat main.js.
+
+## B6032. A crippled limb shows on the token (2026-11-15)
+WoDX Combat. The maimed-part effect was hidden on the token. It now always shows its icon.
+
+Reverse: drop showIcon from crippleEffect in body.js.
+
+## B6033. Mud, rain and a week unwashed make a body Filthy (2026-11-15)
+WoDX Library. Filthy had no way in. Being knocked down outdoors in rain, sleet or snow now sets it, and so does going seven nights without washing (player characters who are alive; a house rule). Washing clears it as before and records the night.
+
+Reverse: remove the knockdown and night hooks in hygiene-use.mjs.
+
+## B6034. Obfuscate sets Obfuscated (2026-11-15)
+WoDX Actions. Senses, targeting and Combat read the Obfuscated condition, but Obfuscate powers only set the Veiled effect. An Obfuscate Discipline use with a duration, and an Obfuscate veil on the effects card, now also set Obfuscated while it lasts.
+
+Reverse: remove the condition line from kindred.js and the isObfuscate map in effects.js powerPlan.
+
 ## B6040. Places with no map are the country map's towns (2026-11-15)
 WoDX Solo card-rules.mjs cardTowns. The panel's Places with no map lists the towns of WoDX Storyteller's country map (data/country.mjs) that stand in the character's own year and have no scene set at the town itself. A town that gains a map later is gone to on that map. The list has a search box.
 
@@ -10213,6 +10307,125 @@ Reverse: drop the snowmobile kind.
 tools/sprites. Every ramp shifts hue (shadows cooler, lights warmer), as the pixel art rules ask; tanks and armoured cars get plate seams, a lit top edge, a stowage box, a tow cable, return rollers on the track's top run, and the 1916 tanks their sponson with its gun or machine gun in plain sight.
 
 Reverse: restore ramp() in mountkit.py and drop _plates and the sponson in mount_motor.py.
+
+## B6080. Every thing has a weight (2026-11-15)
+WoDX Library (weight-rules.mjs, weight.mjs, api.weight). An item, a good from Everyday goods or a line in a container weighs something in kilograms. The Storyteller's own figure on an item (flag wodx-library.kg) wins; then about 250 named figures (an anvil 100 kg, a saddle 12, a musket 5, a sword 1.5, a knife 0.3); then a figure for the kind of good and how well it hides (V20's concealment steps), from a pocketful to a thing that cannot be hidden. Installed cyberware, implants and bioware are part of the body and add nothing; loose, a limb weighs 4 kg. Traits, powers and notes weigh nothing. The books give no weights for gear, so all are house figures. This replaces the Examine rule that WoDX keeps no weights (B5080 said so too). Examine still shows no weight.
+
+Reverse: remove api.weight from WoDX Library main.mjs; Interactables then counts a kilo a thing again and Combat uses the hand-set burden alone.
+
+## B6081. Weights by the year (2026-11-15)
+WoDX Library. A thing whose make changed weighs what it weighed that year, written as stages ("2.3>1960:0.6>1995:0.25" for a walkie-talkie). Armor goes by its lethal soak: iron, leather and mail before 1900 (soak 4 is 18 kg, full plate 25), aramid and ceramic from 1900 (soak 3 is 5 kg), and Future Darkness composites from 2050 (a third lighter). Shields are 5 kg of wood and iron before 1900, 3.5 of polycarbonate after. Guns and gadgets lose a fifth from 2050. The year is the chronicle's.
+
+Reverse: edit ARMOR_OLD, ARMOR_NEW, MODERN_FROM, FUTURE_FROM, FUTURE_LIGHTER and the staged NAMED entries in weight-rules.mjs.
+
+## B6082. Counts weigh (2026-11-15)
+WoDX Library. "silver pennies (7)" and "7 silver pennies" weigh seven pennies; a name WoDX does not know weighs half a kilo.
+
+Reverse: edit readCount and PLAIN_KG in weight-rules.mjs.
+
+## B6083. A container weighs what is in it (2026-11-15)
+WoDX Interactables. A chest, crate, barrel, sack, cabinet, desk, strongbox or safe weighs its empty weight (B5080) plus the real weight of what is inside, in place of a kilo a thing. Once its contents are taken, they weigh nothing. The Storyteller's own weight on a tile is the whole thing. The Carry and drag menu names it ("About 130 kg (30 and 100 inside)") and the Interact menu's Take line names the weight of what is inside.
+
+Reverse: pass the count back to H.thingOf in haul.mjs thingOf.
+
+## B6084. A body weighs what is on it (2026-11-15)
+WoDX Interactables. A fallen character weighs their body (B5071) plus everything on their sheet that is carried, worn armor included: a knight in mail is 18 kg heavier to carry than one in a shirt. The Carry option says how much of it is gear.
+
+Reverse: drop the gear part of bodyWeight in haul.mjs.
+
+## B6085. A swimmer is weighed down by what they carry (2026-11-15)
+WoDX Combat. The swimmer's load (B2443) also reads the weight of the gear on the character, worn armor left out (its Dexterity penalty counts already), against what their Strength and Potence lift on the VtDA20 chart: up to a quarter is nothing that matters, up to half a pack, up to all of it a heavy load, past it all they can lift. The higher of that and the burden set by hand counts. Strength is in the chart, so it takes nothing more off the gear. The swim note names the kilos. Setting gear down lightens it.
+
+Reverse: drop gearKg and liftKg from loadOf in movement.js.
+
+## B6086. Loose gear on the map (2026-11-15)
+WoDX Interactables (loose.mjs, loose-rules.mjs). Set gear down here, on the Carry and drag menu, lets a character tick things on their sheet and put them on the ground where they stand. They leave the sheet and become a pile of gear on that square (a tile with no picture); more set down on the same square joins it. Anyone in reach picks the pile up from the Interact menu, and gets the items back exactly as they were, with their own settings. A heavy pile is hauled like a sack, at its real weight. A pile that has been picked up is gone from the map and the menus. A player's choice goes to the Storyteller's client, as hauling does.
+
+Reverse: drop the setdown option in haul.mjs and the pile kind in interact-rules.mjs CONTAINERS.
+
+## B6087. The heap is drawn (2026-11-15)
+WoDX Interactables. Each pile is drawn on the map as a heap of pixel blocks, one for each thing, coloured by what it is made of (steel, iron, wood, leather, cloth, paper, gold, glass), wider and taller the more it weighs, with a shadow under it. It is drawn with the floor, under the tokens, so the scene's lighting darkens it at night. Players see it where their token can see it; the Storyteller also sees its weight under it. The heap shrinks or goes when things are taken.
+
+Reverse: drop the drawing part of loose.mjs.
+
+## B6088. What can be set down (2026-11-15)
+WoDX Interactables. Items, armor, weapons and fetishes. Natural weapons, installed cyberware, traits, powers and notes stay on the sheet. Armor set down is no longer worn.
+
+Reverse: edit PUT_DOWN and canSetDown in loose-rules.mjs.
+
+## B6089. Every era and the lone player (2026-11-15)
+All three modules. The weights follow the chronicle's year from 1197 to the World of Future Darkness (B6081); piles need no approval, so a lone player's character sets down and picks up gear with no Storyteller at the table, and the Storyteller's client does the work.
+
+Reverse: none needed.
+
+## B6100. The named Artifacts of Wraith 20th are made at the soulforge (2026-11-15)
+WoDX Library data/wonders-wraith.mjs and scripts/wonders-wraith.mjs. The Master Plan item (Wraith artifacts, every era) is
+built from Wraith 20th pp. 425-431: Bell of Summoning, masks of office, Redeyes, Scribbler's Pen, Soulfire Mask, Soulfire
+Lantern, Star of the East, Candelabra of Souls, eMap, Stygian steel armor, Stygian Wall Flies, Living Chains and the
+Fetterguard from the forges; Beasthide, Bloodwebs, Shroudripper gloves, the Wail Tongue and the Guardian Orb from slain
+plasmics; Forgebait, the Memory Net and the Bean Nighe Caul for Spectres; and a souled relic fitted for a soulfire
+crystal (p. 428). Left off: Instant Nihils (no maker known, p. 425), the Spectre-altered relics (Lucky's Mr. Bunny, the
+Maggot Revolver) and the named relics of pp. 423-425, which are found, not made. Every summary is in WoDX's own words
+with its page; the book overlap check finds no run of eight words. The two open rows stay.
+
+Reverse: drop NAMED from ALL in wonders-wraith.mjs.
+
+## B6101. The forge's goal follows the Artifact's level (2026-11-15)
+House rule: 2 + 2 successes a level (4 for level 1, 12 for level 5), at the forge's own difficulty, the soulfire's Pathos
+half the goal rounded up as before (one more after Stygia's fall). A re-forged obolus adds to it as for any Artifact.
+Skin Artifacts need a slain plasmic (the Storyteller's say), must be fed 2 Pathos a day or go dull, and a day and 4
+Pathos wake them (p. 428); a botch with one adds a temporary Angst. The eMap waits for the Electron Highway: from 1970
+(house). Item powers gain costs (more than one trait paid) and onBotch.add.
+
+Reverse: change goalFor in data/wonders-wraith.mjs; drop SKIN_POWERS and skinBotch.
+
+## B6102. What shows when an Artifact is used (2026-11-15)
+WoDX Library wonder-use.mjs. Every item power may name a look (the figure's casting move through wodxPowerShown, read by
+WoDX Paperdoll), a token look (alpha and light, put back by a later power or the Undo) and a light that stays on the map
+(made on the active Storyteller's computer through the Library socket, flagged wonderLight). A failed roll shows nothing.
+
+Reverse: drop showPower and onWonderSocket from wonder-use.mjs and the socket line in use.mjs.
+
+## B6103. Spectres feed the soulfire with Angst (2026-11-15)
+House rule: a sheet whose variant names a Spectre or the Shadow is a Spectre maker; only Spectres make Spectre
+Artifacts (p. 430), and they burn Angst for the soulfire where a wraith burns Pathos. The books give Spectres Angst as
+their fuel; no page says how they forge.
+
+Reverse: make fuelOf return Pathos for everyone.
+
+## B6104. A sealed Fetterguard keeps Fetters from their town's fall (2026-11-15)
+WoDX Creation advance.mjs and advance-rules.mjs. A Fetterguard whose Seal has run, not spent, keeps as many of the
+wraith's place Fetters as it holds likenesses (in sheet order) when their town is sacked, quaked or ruined across the
+years; the change list says so instead of losing them. A Fetter that names a person who has died is still lost: the
+box keeps harm off a Fetter, it does not keep a mortal alive (house reading of p. 428).
+
+Reverse: drop the fetterguard line in advance.mjs and the check in advance-rules.mjs.
+
+## B6110. One code base per line sheet, on either engine (2026-11-15)
+System fork. Each line sheet's class (Mortal and the eleven lines over it) is now a mixin applied twice: over the old engine's ActorSheet (the class it always was) and over LegacyActorSheetV2. Both keep the same class name, so the sheet id (WoD.VampireActorSheet) and render hooks named after the class stay the same.
+
+Reverse: take the line out of LINES_V2 (B6112); the old-engine class is still there.
+
+## B6111. The bridge: LegacyActorSheetV2 (2026-11-15)
+System fork, module/actor/template/legacy-sheet-v2.js. HandlebarsApplicationMixin(ActorSheetV2) with one part, the line's own template. It gives the line code what the old engine gave: getData with the old context, _renderInner (WoDX Sheets wraps it), activateListeners(html) with jQuery after each render, the tabs from defaultOptions, options.editable, activateTab, and the document as "object". The template's form root becomes a div with the same classes (the window is the form now). {{editor}} boxes become always-open prose-mirror editors on the same field, saving on focus loss and on close; the profile image opens the file picker; a change saves the whole form minus active-effect overrides, as before; the open tab and scroll positions survive a redraw. The old window's 8 px inner spacing and scrolling are kept in wod.css.
+
+Reverse: remove the file and the V2 exports; nothing else depends on it while LINES_V2 is empty.
+
+## B6112. Which lines are moved: LINES_V2 (2026-11-15)
+System fork, module/actor/template/lines-v2.js, read by wod.js and WoDX Sheets. Lines move one at a time, each gated on the testbed (gatesheetv2 plus the sheet gates, fit-audit and gateuisnap) before the next. Mummy goes first: a small line that still has a WoDX book sheet over it, so both layers are tested.
+
+Reverse: remove a type from the set.
+
+## B6113. System hooks follow the moved sheets (2026-11-15)
+System fork, hooks.js. The language, line, font and dark-mode classes the old sheets got from renderActorSheet are applied from renderLegacyActorSheetV2 too, and the PC sheet's renderActorSheetV2 handler skips the moved line sheets so it does not strip their line class.
+
+Reverse: drop the two hook lines.
+
+## B6114. Modules follow the moved sheets (2026-11-15)
+WoDX Sheets builds its sheet over the V2 class for a moved line (same name), adds the Gender line and the Sheet tools button from renderLegacyActorSheetV2 (on V2 the button opens the title bar's own menu, which already names every control), and adds Print and History as V2 header controls. WoDX Chronicle's player guide counts opening a moved sheet. Header buttons from other modules already had V2 versions.
+
+Reverse: the hooks are additive; remove them with the line from LINES_V2.
+
 ## B6130. The held readings go in, worded as the books back them (2026-11-15)
 WoDX Chronicle, tools/timeline/build-world-history.mjs. WAITING is empty. The book check (project files global-world/book-check-readings.md, finished in the cloud from the OCR text) settled each card. 1521: Wraith 20th (pdf 101, 512 to 517) breaks the Dark Kingdom of Obsidian through the heretics' Flaying and the storm after it, so the card names the Flaying, with the plague and siege dead as the background, and the survivors' Mictlan. 1692: Verbena Revised (pdf 43) keeps the Verbena out of the trials; no book has hunters and mages blaming each other, so that part is gone. 1791: Wraith 20th (pdf 521) has Les Invisibles fan the slave revolts and the Mirrorlands battered by storms and Baka; the lwa among the rebels "by both sides" had no book and is gone. 1885: Wraith 20th (pdf 517 to 518, the Bush of Ghosts behind a false Ivory Queen) and Kindred of the Ebony Kingdom (pdf 16, Laibon fighting the Portuguese around 1540) back a continent already held. 1890: the Wendigo tribebook (pdf 28, 50 to 51) backs Garou among the Ghost Dancers. 1994: Kindred of the Ebony Kingdom (pdf 168) keeps the genocide mortal with elders using the chaos, and A World of Rage (pdf 94 to 95) has the Wyrm feed on it; no book ties it to the lands of the dead, so the card no longer says so and is renamed The killing in Rwanda.
 

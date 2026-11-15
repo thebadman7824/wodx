@@ -109,7 +109,7 @@ export async function run() {
       await a.sheet.render(true);
       await sleep(1500);
       // Sheets are Application V1: element is a jQuery object
-      const el = a.sheet.element?.[0] ?? a.sheet.element;
+      const el = (a.sheet.element instanceof HTMLElement ? a.sheet.element : a.sheet.element?.[0]);
       const html = el?.querySelector?.(".tab.wodxties")?.innerHTML ?? el?.innerHTML ?? "";
       ok("8. the Relationships tab shows the warmth word", /Devoted|Fond/.test(html));
       await a.sheet.close();

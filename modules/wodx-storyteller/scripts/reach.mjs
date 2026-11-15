@@ -328,7 +328,14 @@ async function knowCard(asker, who, what, inst) {
     const L = lawApi(), reg = chron()?.world?.here?.(whereIs(who.id)?.scene)?.id ?? "moravia", h = L?.of?.(who.id, reg);
     if ( h && h.stage?.key !== "none" ) lines.push(`The law: ${h.stage.name}.`);
   } else lines.push(`The closed shelves of ${inst.name} are open to ${asker.name} for a season: rolls to research or study there gain two dice.`);
-  if ( what === "lore" ) await asker.setFlag(MOD, "closedShelves", {until: now() + 90 * DAY, inst: inst.id});
+  if ( what === "lore" ) {
+    await asker.setFlag(MOD, "closedShelves", {until: now() + 90 * DAY, inst: inst.id});
+    // B6026: the two dice are a roll effect research and study rolls read for the season, shown on the token, not only a line
+    try {
+      await game.modules.get("wodx-chronicle")?.api?.traits?.addBite?.(asker, {key: `shelves-${inst.id}`, name: `Closed shelves of ${inst.name}`,
+        tags: ["academics", "investigation", "occult", "science", "medicine", "linguistics"], dice: 2, duration: {kind: "time", seconds: 90 * DAY}, source: "WoDX Storyteller reach"});
+    } catch (e) { console.warn(`${MOD} | closed shelves`, e); }
+  }
   const to = [...ownerIds(asker), ...gmIds()];
   await ChatMessage.create({speaker: {alias: inst.name}, whisper: to, content: `<div class="wodx-card wst-reach"><h3>What ${esc(asker.name)} finds</h3>${lines.map(l => `<p>${esc(l)}</p>`).join("")}</div>`});
 }

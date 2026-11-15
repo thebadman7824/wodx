@@ -81,6 +81,8 @@ export function registerHooks(constants, isTablet) {
 	 * font settings, and dark mode theme class.
 	 */
 	Hooks.on("renderActorSheetV2", (sheet) => { 
+		// WoDX fork (B6113): a line sheet moved to ApplicationV2 takes the line sheets' classes (renderLegacyActorSheetV2 below)
+		if (sheet.isLegacyBridge) return;
 		CONFIG.worldofdarkness.darkmode = game.settings.get('core', 'uiConfig').colorScheme.applications === "dark";
 
 		clearHTML(sheet);
@@ -201,7 +203,7 @@ export function registerHooks(constants, isTablet) {
 	 * font settings, and dark mode theme class.
 	 * Also handles tablet viewport detection.
 	 */
-	Hooks.on("renderActorSheet", (sheet) => { 
+	const onRenderLineSheet = (sheet) => { 
 		CONFIG.worldofdarkness.darkmode = game.settings.get('core', 'uiConfig').colorScheme.applications === "dark";
 
 		clearHTML(sheet);
@@ -332,7 +334,10 @@ export function registerHooks(constants, isTablet) {
 		if (CONFIG.worldofdarkness.darkmode) {
 			classList.add("wod-theme-dark");
 		}	
-	});
+	};
+	Hooks.on("renderActorSheet", onRenderLineSheet);
+	// WoDX fork (B6113): the same classes on a line sheet that runs on ApplicationV2
+	Hooks.on("renderLegacyActorSheetV2", onRenderLineSheet);
 
 	/**
 	 * Hook: renderItemSheet
