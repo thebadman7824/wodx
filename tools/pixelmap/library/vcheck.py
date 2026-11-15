@@ -28,8 +28,12 @@ def _pic(oid, v):
 
 
 def _sig(r, size=24):
+    """The drawing's footprint (and the few pixels its edge and shadow may take), shrunk to a small square, so a cup
+    and a cart are compared on their own pixels and not on the empty floor round them."""
     a = r["rgb"].astype(np.float32); b = r["body"]
     a = np.where(b[..., None], a, 0)
+    k = max(0, r.get("pad", 0) - 4); H, W = a.shape[:2]
+    if k and H > 2 * k + 2 and W > 2 * k + 2: a = a[k:H - k, k:W - k]
     im = Image.fromarray(a.clip(0, 255).astype(np.uint8)).resize((size, size), Image.BILINEAR)
     return np.asarray(im).astype(np.float32)
 
