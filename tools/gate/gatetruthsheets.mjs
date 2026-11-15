@@ -23,9 +23,15 @@ import {gate, waitFor} from "./kit.mjs";
 const SH = "wodx-sheets", CR = "wodx-creation", LIB = "wodx-library", CB = "wodx-combat", ACT = "wodx-actions", CH = "wodx-chronicle";
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
-const mortal = (name, extra = {}) => foundry.utils.mergeObject({name, type: "Mortal", system: {
-  attributes: {strength: {value: 3}, dexterity: {value: 3}, stamina: {value: 2}, perception: {value: 2}, intelligence: {value: 2}, wits: {value: 2}},
-  abilities: {melee: {value: 2}}}}, extra, {inplace: false});
+/** A plain mortal. The system's rolls and WoDX Combat read an Attribute's stored total, which a script-made actor
+ *  does not get from its value (it stays at 1 until the sheet recomputes), so each total is written with its value. */
+const mortal = (name, extra = {}) => {
+  const d = foundry.utils.mergeObject({name, type: "Mortal", system: {
+    attributes: {strength: {value: 3}, dexterity: {value: 3}, stamina: {value: 2}, perception: {value: 2}, intelligence: {value: 2}, wits: {value: 2}},
+    abilities: {melee: {value: 2}}}}, extra, {inplace: false});
+  for ( const a of Object.values(d.system.attributes) ) a.total = a.value;
+  return d;
+};
 /** Answer the next DialogV2 that test() picks out by clicking its button. */
 function answer(test, action = "ok", fill = null) {
   const id = Hooks.on("renderDialogV2", async (app, el) => {
@@ -154,7 +160,7 @@ export async function run() {
     });
 
     await G.step("6. an item named in free text, in a fight", async () => {
-      const [fighter, foe] = await G.make(Actor, [mortal("Gate TruthSheets Smith"), mortal("Gate TruthSheets Foe")]);
+      const [fighter, foe] = await G.make(Actor, [mortal("Gate TruthSheets Smith", {system: {attributes: {strength: {value: 4}}}}), mortal("Gate TruthSheets Foe")]);
       const data = await lib.itemByName("a battle-axe");
       const [ax] = data ? await fighter.createEmbeddedDocuments("Item", [data]) : [];
       const p = C.bestAttack(fighter, foe, {}, {ignoreDistance: true}).plans.find(x => x.w?.name === ax?.name);

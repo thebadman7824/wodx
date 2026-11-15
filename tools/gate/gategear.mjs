@@ -57,7 +57,10 @@ export async function run() {
     ok("5. implant soak in Combat", arm?.lethal === 4 && arm?.names?.includes("Subdermal Armor"), {armor: arm});
 
     // The audit (B6177): read the pool the attack would roll, not only that the item is there
-    await actor.update({"system.attributes.dexterity.value": 3, "system.attributes.strength.value": 3, "system.abilities.melee.value": 2});
+    // the totals too: the system and Combat read the stored total, which a script's update of the value leaves at 1.
+    // Strength 4 meets the Battle-Ax's minimum, so the plan's difficulty is the axe's own
+    await actor.update({"system.attributes.dexterity.value": 3, "system.attributes.dexterity.total": 3,
+      "system.attributes.strength.value": 4, "system.attributes.strength.total": 4, "system.abilities.melee.value": 2});
     foe = await Actor.create({name: "Gate gear foe", type: "Mortal"});
     await sleep(300);
     const C = game.modules.get(CB)?.api ?? game.wodxCombat;
