@@ -293,5 +293,10 @@ add("wattle", "wattle fence", "outdoor", ((5, 40), (.75, 1.25)), lambda tm, x, y
 # ---------------------------------------------------------------- the family modules (B6346): each draws one or more census families in every era,
 # with ten or more variations, and defines or redefines its objects with library.core.define
 import importlib as _il, pkgutil as _pk, library as _lib  # noqa: E402
+import os as _os, sys as _sys, traceback as _tb  # noqa: E402
+FAILED = {}                                       # a family module that does not load is reported, and the others still load
 for _m in sorted(m.name for m in _pk.iter_modules(_lib.__path__) if m.name.startswith("fam_")):
-    _il.import_module("library." + _m)
+    try: _il.import_module("library." + _m)
+    except Exception as _e:
+        FAILED[_m] = _tb.format_exc(limit=3)
+        if not _os.environ.get("LIBRARY_QUIET"): print(f"library: {_m} did not load: {_e!r}", file=_sys.stderr)
