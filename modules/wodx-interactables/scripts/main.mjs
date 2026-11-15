@@ -1418,16 +1418,37 @@ async function fearOfFire(scene, tokDoc, actor, p) {
     await game.modules.get("wodx-actions")?.api?.rotschreckAuto?.({actor, provocation: R.FEAR_OF_FIRE[o.size] ?? "torch", why: `Close to ${o.title || "a fire"}`});
   }
 }
-/** B5170: the holy ground a token stands on (a sacred tile that hallows its ground and is not desecrated), or null. */
+/** B6362: the house of worship (a region tagged church, mosque, synagogue or temple) a point is in, as holy ground, or null. */
+function worshipAt(scene, p) {
+  const sceneFaith = scene?.flags?.["wodx-chronicle"]?.place?.faith ?? null;
+  for ( const r of scene?.regions?.contents ?? [...(scene?.regions?.values?.() ?? [])] ) {
+    const place = r.flags?.["wodx-npc"]?.place;
+    if ( !place || !R.WORSHIP_PLACES.includes(place.kind) ) continue;
+    const el = Number.isFinite(r.elevation?.bottom) ? r.elevation.bottom : 0;
+    let inside = false;
+    try { inside = !!r.testPoint?.({x: p.x, y: p.y, elevation: el}, el) || !!r.object?.testPoint?.({x: p.x, y: p.y}, el); } catch (e) { inside = false; }
+    if ( !inside ) continue;
+    const o = R.worshipGround(place, r.name, sceneFaith);
+    if ( o ) return {doc: r, o};
+  }
+  return null;
+}
+/**
+ * B5170: the holy ground a token stands on (a sacred tile that hallows its ground and is not desecrated), or null.
+ * B6362: a house of worship's region is holy ground too, and the ground keeps a faith: the tile's own, else the
+ * house it stands in, else the scene's. -> {doc, o} with o.faith
+ */
 export function holyUnder(tokDoc) {
   const scene = tokDoc?.parent;
   if ( !scene ) return null;
   const p = centerOf(tokDoc, scene);
+  const house = worshipAt(scene, p);
   for ( const doc of tilesOf(scene) ) {
     const o = describeTile(doc);
-    if ( o && R.holyGround(o) && inRect(p, rectOf(doc)) ) return {doc, o};
+    if ( o && R.holyGround(o) && inRect(p, rectOf(doc)) )
+      return {doc, o: {...o, faith: o.faith ?? house?.o.faith ?? scene.flags?.["wodx-chronicle"]?.place?.faith ?? null}};
   }
-  return null;
+  return house && R.holyGround(house.o) ? house : null;
 }
 /** Active GM: a card for a hazard hurting a character, with Undo. why: "enters" or "turn". */
 export async function hazardCard(tokDoc, actor, doc, o, why = "enters") {
@@ -1465,10 +1486,14 @@ export async function onTurnStart(combat) {
   }
   if ( isDemonActor(actor) ) {
     const p = centerOf(tokDoc, scene);
+    let any = false;
     for ( const doc of tilesOf(scene) ) {
       const o = describeTile(doc);
-      if ( R.holyGround(o) && inRect(p, rectOf(doc)) ) cards.push(await holyCard(tokDoc, actor, doc, o, "turn"));
+      if ( R.holyGround(o) && inRect(p, rectOf(doc)) ) { any = true; cards.push(await holyCard(tokDoc, actor, doc, o, "turn")); }
     }
+    // B6362: a church, mosque, synagogue or temple sears as an altar does, whatever its faith (Demon: The Fallen p. 254)
+    const house = any ? null : worshipAt(scene, p);
+    if ( house && R.holyGround(house.o) ) cards.push(await holyCard(tokDoc, actor, house.doc, house.o, "turn"));
   }
   return cards.filter(Boolean);
 }
@@ -1491,7 +1516,8 @@ export async function holyCard(tokDoc, actor, doc, o, why = "enters") {
   try {
     const scene = doc.parent;
     const h = R.holyHarm(o, {kind: "demon", torment: tormentOf(actor)});
-    const lines = [why === "turn" ? `${actor.name} starts the turn on holy ground.` : `${actor.name} steps onto holy ground (rating ${o.rating}).`];
+    const where = o.house ? ` (${o.title || o.house}${o.faith ? `, kept for ${R.FAITH_WORDS[o.faith]}` : ""}, rating ${o.rating})` : ` (rating ${o.rating})`;
+    const lines = [why === "turn" ? `${actor.name} starts the turn on holy ground${o.house ? where : ""}.` : `${actor.name} steps onto holy ground${where}.`];
     let hurt = 0, faces = [];
     if ( !h?.harmed ) lines.push(`${h?.why ?? "Nothing happens"}.`);
     else {

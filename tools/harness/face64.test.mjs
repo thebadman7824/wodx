@@ -309,3 +309,17 @@ test("more eyes, hair, head shapes and noses: every nose kind and head curve is 
   for ( const cf of [1.4, 4.4] ) for ( const ce of [0.38, 0.66] ) heads.add(Buffer.from(P.drawFace({...base, cf, ce}, {}).rgba).toString("base64"));
   assert.equal(heads.size, 4, "crown and chin curves each change the head");
 });
+
+test("low Humanity on a Kindred face: pale at 3 and 2, the beast's look at 1 and 0, a Path keeps the face (B6363)", () => {
+  const S = P.roll("low-h", "kindred");
+  const px = h => P.drawFace(S, {state: {lowHumanity: P.lowHumanityFor(h)}}).rgba;
+  const same = (a, b) => Buffer.from(a).equals(Buffer.from(b));
+  const lum = a => { let s = 0, k = 0; for ( let i = 0; i < a.length; i += 4 ) if ( a[i + 3] ) { s += a[i] + a[i + 1] + a[i + 2]; k++; } return s / k; };
+  assert.equal(P.lowHumanityFor(7), 0); assert.equal(P.lowHumanityFor(3), 1); assert.equal(P.lowHumanityFor(2), 1);
+  assert.equal(P.lowHumanityFor(1), 2); assert.equal(P.lowHumanityFor(0), 2);
+  assert.equal(P.lowHumanityFor(1, {humanity: false}), 0, "the Road or Path of another keeps its own look");
+  assert.ok(!same(px(7), px(2)) && !same(px(2), px(1)), "each step shows");
+  assert.ok(same(px(3), px(2)) && same(px(1), px(0)));
+  assert.ok(lum(px(2)) !== lum(px(7)), "the skin changes");
+  assert.ok(same(P.drawFace(S, {state: {lowHumanity: P.lowHumanityFor(1, {humanity: false})}}).rgba, px(7)));
+});

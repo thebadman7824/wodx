@@ -740,12 +740,39 @@ export function describeSacred(f = {}) {
   const rating = Math.max(1, Math.min(top, Math.round(Number(f.rating) || (kind === "fetish" ? 5 : 1))));
   return {
     sacred: true, hazard: false, hide: false, light: false, clue: false, trap: false, container: false, door: false, secret: false, ds: "open",
-    kind, rating, desecrated: !!f.desecrated, items: parseItems(f.sacredItems), taken: !!f.taken,
+    kind, rating, desecrated: !!f.desecrated, items: parseItems(f.sacredItems), taken: !!f.taken, faith: FAITHS.includes(f.faith) ? f.faith : null,
     title: String(f.title ?? "").trim().slice(0, 80), electronic: "none", lock: "none", progress: {}, tries: f.tries ?? {}
   };
 }
 /** Whether a sacred tile is holy ground now. */
 export const holyGround = o => !!o?.sacred && SACRED[o.kind].ground && !o.desecrated;
+/** B6362: the faiths a house of worship or an altar can be kept for (WoDX Chronicle's faith-rules.mjs keys). */
+export const FAITHS = ["western", "orthodox", "islamic", "jewish", "hindu", "theravada", "tibetan", "chinese", "own"];
+const FAITH_FAMILY = {western: "christian", orthodox: "christian", theravada: "buddhist", tibetan: "buddhist"};
+/** The places a region can be tagged as that are houses of worship (adopt-rules worshipFor). */
+export const WORSHIP_PLACES = ["church", "mosque", "synagogue", "temple"];
+/**
+ * B6362: a region tagged as a house of worship (flags.wodx-npc.place {kind, faith, holy}) is holy ground, as an
+ * altar tile is: rating place.holy (1 to 5), 1 when not set (house rule: a parish church or a town mosque). faith:
+ * the place's own, else the scene's. -> a describeSacred-shaped object, or null for any other place.
+ */
+export function worshipGround(place, label = "", faith = null) {
+  if ( !place || !WORSHIP_PLACES.includes(place.kind) ) return null;
+  const f = FAITHS.includes(place.faith) ? place.faith : (FAITHS.includes(faith) ? faith : null);
+  const o = describeSacred({sacredKind: "altar", rating: Number(place.holy) || 1, desecrated: !!place.desecrated, title: label || place.kind, faith: f});
+  return {...o, house: place.kind};
+}
+/**
+ * B6362: whether holy ground of placeFaith is a believer's own (believerFaith). Christians share their churches,
+ * as do the Buddhists of the south and of Tibet; a ground or a believer of no named faith counts as anyone's.
+ */
+export function sameFaith(placeFaith, believerFaith) {
+  if ( !placeFaith || !believerFaith ) return true;
+  return placeFaith === believerFaith || (!!FAITH_FAMILY[placeFaith] && FAITH_FAMILY[placeFaith] === FAITH_FAMILY[believerFaith]);
+}
+/** The faith's name for a card. */
+export const FAITH_WORDS = {western: "the Western church", orthodox: "the Orthodox church", islamic: "Islam", jewish: "the Jewish faith", hindu: "the Hindu faith",
+  theravada: "the Buddhist faith", tibetan: "the Tibetan Buddhist faith", chinese: "the Chinese temples", own: "the people's own faith"};
 /**
  * What holy ground does to a demon (WoDX Actions' reading of Demon: The Fallen pp. 254-255): torment 3 or less, nothing;
  * otherwise lethal levels equal to the rating, and a Willpower roll each turn to stay. Null for anyone else.

@@ -17,6 +17,8 @@
  *   8. B6154 with the turn conductor off, Foundry's Next on the round's last turn gives a declared extra action its
  *      turn in the same round, and the next Next starts the new round
  *   9. moving past half the running speed: the attack warns that no attack follows by the book (GM, limit shown)
+ *  10. B6361 a quick attack on a vehicle on its own sheet (a cart's token): the card says the vehicle itself is struck,
+ *      and the Structure it names as lost (levels less Durability) is what the sheet holds after the blow
  * Result: Data/wodx-gate/gatetruthcombat-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -36,7 +38,8 @@ export async function run() {
   if ( G.notLive() ) return "Not on the Live world.";
   const uniform0 = CONFIG.Dice.randomUniform;
   const touched = [[CMB, "autoApply", true], [CMB, "standUpRoll", true], [CMB, "autoInitiative", "start"], [CMB, "statusEffects", true],
-    [CMB, "turnConductor", "off"], [CMB, "movementLimit", "note"], [CMB, "turnMoves", "off"]];
+    [CMB, "turnConductor", "off"], [CMB, "movementLimit", "note"], [CMB, "turnMoves", "off"],
+    [CMB, "vehicleCombat", true]];
   const was = [];
   const dice = async face => {
     for ( const u of [(face - 0.5) / 10, 1 - (face - 0.5) / 10] ) {
@@ -223,6 +226,23 @@ export async function run() {
         G.ok("9. an attack after moving past half the running speed warns", yards > n(lim.attackAfter) && said,
           {yards, attackAfter: lim.attackAfter, said, warned: warned.slice(-2), attacked: !!res});
       } finally { ui.notifications.warn = warn0; }
+    });
+
+    await G.step("10. a quick attack on a vehicle's token comes off its sheet's Structure", async () => {
+      await dice(8);
+      const [cart] = await G.make(Actor, [{name: "Gate TC Cart", type: "wodx-interactables.vehicle", system: {kind: "cart", built: 1800}}]);
+      const [tV] = await G.tokens(scene, [{actor: cart, x: 5, y: 2, actorLink: true}]);
+      await waitFor(() => tV?.object, 6000);
+      const t0 = Date.now(), lost0 = n(cart.system.lost);
+      const [res] = await C.quickAttack({attacker: tG.object, target: tV.object, weaponId: null}).catch(() => []);
+      const struck = await waitFor(() => n(cart.system.lost) > lost0, 8000);
+      const card = game.messages.contents.filter(m => m.timestamp >= t0 && m.speaker?.actor === guard.id).pop();
+      const txt = String(card?.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+      const m = txt.match(/takes it: (\d+) levels? against Durability (\d+): (\d+) off its Structure \((\d+) of (\d+) lost\)/);
+      const said = /itself is struck/.test(txt);
+      const want = m ? Math.min(n(m[5]), lost0 + Math.max(0, n(m[1]) - n(m[2]))) : null;
+      G.ok("10. a quick attack on a vehicle's token comes off its sheet's Structure", !!res && struck && said && !!m && n(m[4]) === n(cart.system.lost) && n(m[4]) === want,
+        {lost: cart.system.lost, card: m ? m.slice(1) : txt.slice(0, 300), said, want, levels: res?.outcome?.levels ?? null});
     });
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }
   finally {

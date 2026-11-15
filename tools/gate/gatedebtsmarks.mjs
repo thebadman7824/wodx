@@ -17,7 +17,8 @@
  *   "player" (Player Test):
  *     b2. the oath card reaches the player; the Storyteller's hunt card does not
  *     c2. "Spend Willpower: take this turn back" on the Beast card spends 1 and marks the turn held
- *     d2. the pixel face: lowHumanity 1 at Humanity 2, and the face drawn differs from the same face at Humanity 7
+ *     d2. the pixel face: lowHumanity 1 at Humanity 2, and the face drawn differs from the same face at Humanity 7;
+ *         at Humanity 1 lowHumanity 2 and a face unlike the one at 2; on the Path of Caine at 2, the face at 7 (B6363)
  *     f2. the waking card reaches the player
  *   "finish" (Gamemaster Test): c3. the turn is held; c4. with "The Beast takes the token" the next round brings
  *            "The Beast has"; then puts every setting back, deletes what it made, and writes
@@ -254,10 +255,21 @@ async function player(ids) {
     await pc.update({"system.advantages.path.permanent": 7});
     await until(() => F.state(pc).lowHumanity === 0, 3000);
     const at7 = draw();
-    await pc.update({"system.advantages.path.permanent": 2});
+    // B6363: Humanity 1 brings the beast's look as well; a Path other than Humanity keeps its own face at 2
+    await pc.update({"system.advantages.path.permanent": 1});
+    await until(() => F.state(pc).lowHumanity === 2, 3000);
+    const at1 = draw(), low1 = F.state(pc).lowHumanity;
+    const path0 = pc.system?.advantages?.path?.custom ?? "";
+    await pc.update({"system.advantages.path.permanent": 2, "system.advantages.path.custom": "Path of Caine"});
+    await until(() => F.state(pc).lowHumanity === 0, 3000);
+    const atPath = draw(), lowPath = F.state(pc).lowHumanity;
+    await pc.update({"system.advantages.path.permanent": 2, "system.advantages.path.custom": path0});
     const lum = px => { if ( !px ) return null; let s = 0, k = 0; for ( let i = 0; i < px.length; i += 4 ) if ( px[i + 3] ) { s += px[i] + px[i + 1] + px[i + 2]; k++; } return k ? s / k : null; };
     const differs = !!at2 && !!at7 && at2.some((v, i) => v !== at7[i]);
-    ok("d2. the face at low Humanity", low === 1 && differs, {lowHumanity: low, differs, lum2: lum(at2), lum7: lum(at7), drawn: !!at2});
+    const beast = !!at1 && !!at2 && at1.some((v, i) => v !== at2[i]);
+    const ownPath = !!atPath && !!at7 && atPath.every((v, i) => v === at7[i]);
+    ok("d2. the face at low Humanity", low === 1 && differs && low1 === 2 && beast && lowPath === 0 && ownPath,
+      {lowHumanity: low, differs, low1, beast, lowPath, ownPath, lum1: lum(at1), lum2: lum(at2), lum7: lum(at7), lumPath: lum(atPath), drawn: !!at2});
   });
   await step("f2. the waking card", async () => {
     await until(() => game.messages.get(ids.wakeMsg)?.visible, 8000);
