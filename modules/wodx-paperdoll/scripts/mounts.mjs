@@ -86,7 +86,9 @@ const tokenByUuid = uuid => { const id = String(uuid ?? "").split(".").pop(); re
 const aboard = doc => { const f = doc.flags?.[IX] ?? {}; return [f.driver, ...(Array.isArray(f.riders) ? f.riders : [])].filter(r => r?.t); };
 const centreOf = obj => { const d = obj.document, g = canvas.grid?.size || 100, tile = d.documentName === "Tile";
   const w = tile ? d.width : d.width * g, h = tile ? d.height : d.height * g;
-  return {x: obj.position.x + w / 2, y: obj.position.y + h / 2, w, h}; };
+  // a tile stands where its document says (it is not walked from place to place); a token is followed as it walks
+  const x = tile ? d.x : obj.position.x, y = tile ? d.y : obj.position.y;
+  return {x: x + w / 2, y: y + h / 2, w, h}; };
 
 /* Give a picture back to Foundry: its own size, place and anchor again. */
 function release(obj) {
@@ -95,7 +97,12 @@ function release(obj) {
   m.alpha = d?.alpha ?? 1;
   if ( m.anchor ) m.anchor.set(d?.texture?.anchorX ?? 0.5, d?.texture?.anchorY ?? 0.5);
   seated.delete(obj.id);
-  try { obj.renderFlags?.set({refreshMesh: true, refreshPosition: true, refreshSize: true, refreshState: true}); if ( d?.documentName === "Tile" ) obj.renderFlags?.set({refreshShape: true}); if ( d?.documentName === "Tile" ) obj.draw?.(); } catch (e) { /* gone */ }
+  // its own picture back on the mesh, then each refresh asked for by itself: a flag this kind of thing lacks must not stop the rest
+  const own = obj.texture;
+  if ( own && !own.destroyed && own.baseTexture !== null && m.texture !== own && (d?.documentName === "Tile" || !d?.flags?.[MOD]?.sprite) ) m.texture = own;
+  for ( const flag of ["refreshMesh", "refreshPosition", "refreshSize", "refreshState", "refreshTransform"] ) {
+    try { obj.renderFlags?.set({[flag]: true}); } catch (e) { /* not one of its flags */ }
+  }
 }
 function releaseAll() { for ( const [id, obj] of held ) release(obj); held.clear(); shown.clear(); seated.clear(); }
 
