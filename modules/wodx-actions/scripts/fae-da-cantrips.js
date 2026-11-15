@@ -12,6 +12,7 @@
  * Pure: no Foundry calls.
  */
 import { H, T, C, N, S, MV, K, P, A, HL, outcomesOf } from "./mage-da-effects.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const REF = "Dark Ages: Fae";
 const X = (name, dominion, level, trait, fx, spec, page, extra = {}) => ({ name, dominion, level, trait, fx, spec, page, ...extra });
@@ -34,10 +35,10 @@ each("call-element", 1, "strength", 123, {
 each("court-summons", 1, "charisma", 124, Object.fromEntries(DOMS.map(d => [d, { name: "Court Summons",
     fx: "A call only fae of the caster's Court can feel, carrying the caster's mood: a mile with one success, 5, 10, 20 and 50 miles with more. Beasts of the Dominion grow restless near it.", spec: K("summon", "self") }])));
 each("leaves-of-metal", 1, "wits", 124, {
-    day: { name: "Leaves of Gold", fx: "Green and growing things turn to seeming gold, coin or jewellery, finer with more successes; it is plant again at the next noon.", spec: T("illusion", "Faerie gold", { seconds: 86400 }, "self") },
-    night: { name: "Leaves of Silver", fx: "Dead things of nature (a branch, a bone, a stone) turn to seeming silver until the next midnight. It is no true silver to a werewolf.", spec: T("illusion", "Faerie silver", { seconds: 86400 }, "self") },
-    dawn: { name: "Leaves of Copper", fx: "Nuts, living twigs or berries turn to bright seeming copper until the next sunrise.", spec: T("illusion", "Faerie copper", { seconds: 86400 }, "self") },
-    dusk: { name: "Leaves of Bronze", fx: "Things dead with the season (fallen leaves, husks, dry seed) turn to seeming bronze until the next sunset.", spec: T("illusion", "Faerie bronze", { seconds: 86400 }, "self") }
+    day: { name: "Leaves of Gold", fx: "Green and growing things turn to seeming gold, coin or jewellery, finer with more successes; it is plant again at the next noon.", spec: T("illusion", "Faerie gold", { seconds: DAY }, "self") },
+    night: { name: "Leaves of Silver", fx: "Dead things of nature (a branch, a bone, a stone) turn to seeming silver until the next midnight. It is no true silver to a werewolf.", spec: T("illusion", "Faerie silver", { seconds: DAY }, "self") },
+    dawn: { name: "Leaves of Copper", fx: "Nuts, living twigs or berries turn to bright seeming copper until the next sunrise.", spec: T("illusion", "Faerie copper", { seconds: DAY }, "self") },
+    dusk: { name: "Leaves of Bronze", fx: "Things dead with the season (fallen leaves, husks, dry seed) turn to seeming bronze until the next sunset.", spec: T("illusion", "Faerie bronze", { seconds: DAY }, "self") }
 });
 each("control-element", 2, "wits", 125, {
     day: { name: "Control Fire", fx: "Fire moves at the caster's wave for a turn a success: a candle burns twice as bright, a torch's flame leaps a few feet. It cannot burn what fire cannot.", spec: K("work", "self") },

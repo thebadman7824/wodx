@@ -11,6 +11,9 @@
  *   9. Healing: a lethal level closes on the target
  *  10. an NPC spirit's power choice offers Blast to attack
  *  11. WoDX Combat reads the Creature spirit as a spirit, soaking with its Willpower
+ *  12. a faerie sprite's Blast is the Dark Ages: Fae one: harm bought by the level, Willpower to hit (B6555)
+ *  13. Animate Tools: two Essence a tool, a bashing weapon on the sprite's sheet, gone when it ends
+ *  14. Paralyzing Stare: one Essence on a mortal; the target is held a turn a success
  * Result: Data/wodx-gate/gatecharms-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -24,8 +27,9 @@ export async function run() {
   try {
     await G.step("1. the rules and the api", async () => {
       const list = K?.rules?.CHARMS ?? [];
-      G.ok("1. the rules and the api", list.length === 32 && list.every(c => c.p >= 366 && c.p <= 368) && typeof K?.use === "function" && typeof A?.spiritCharm === "function",
-        {n: list.length});
+      const w20 = list.filter(c => c.group !== "sprite"), sprite = list.filter(c => c.group === "sprite");
+      G.ok("1. the rules and the api", w20.length === 32 && w20.every(c => c.p >= 366 && c.p <= 368) && sprite.length === 7 && sprite.every(c => c.p === 97) && typeof K?.use === "function" && typeof A?.spiritCharm === "function",
+        {n: list.length, sprite: sprite.length});
     });
     if ( !K?.use ) return;
     const scene = await G.scene({name: "WoDX gate: charms"});
@@ -149,6 +153,64 @@ export async function run() {
       const WC = game.modules.get("wodx-combat")?.api;
       const kind = WC?.getProfile?.(body());
       G.ok("11. WoDX Combat: a Creature spirit soaks as a spirit", kind === "spirit", {kind});
+    });
+    // B6555: a faerie sprite (Dark Ages: Fae p. 97)
+    const [spr] = await G.make(Actor, [{name: "Gate Messenger Sprite", type: "Creature", system: {settings: {variant: "spirit"}},
+      items: ["Animate Tools", "Blast", "Paralyzing Stare", "Speech"].map(charm)}]);
+    await spr.update({"system.advantages.rage.permanent": 2, "system.advantages.gnosis.permanent": 4, "system.advantages.willpower.permanent": 6,
+      "system.advantages.essence.temporary": 40, "system.advantages.essence.max": 40});
+    const [sprt] = await G.tokens(scene, [{actor: spr, x: 6, y: 4}]);
+    const sb = () => scene.tokens.get(sprt.id)?.actor;
+    const sEss = () => Number(sb().system?.advantages?.essence?.temporary);
+
+    await G.step("12. a sprite's Blast: bought by the level, Willpower to hit", async () => {
+      const keys = K.of(sb()).map(x => x.key);
+      await v().update({"system.health.damage.bashing": 0, "system.health.damage.lethal": 0, "system.health.damage.aggravated": 0});
+      aim(true);
+      const bash = () => Number(v()?.system?.health?.damage?.bashing) || 0;
+      let paid = 0;
+      for ( let k = 0; k < 4 && !bash(); k++ ) {
+        await A.limits?.clear?.(sb());
+        const e0 = sEss();
+        await K.use(sb(), "spriteblast", {size: "bashing:2"});
+        await waitFor(() => bash() > 0, 3000);
+        paid = e0 - sEss();
+      }
+      aim(false);
+      G.ok("12. a sprite's Blast: bought by the level, Willpower to hit", keys.includes("spriteblast") && keys.includes("paralyzingstare") && paid === 2 && bash() >= 0 && bash() <= 2,
+        {keys, paid, bashing: bash()});
+    });
+
+    await G.step("13. Animate Tools: two Essence a tool, a weapon on the sheet, gone when it ends", async () => {
+      await A.limits?.clear?.(sb());
+      const e0 = sEss();
+      await K.use(sb(), "animatetools", {size: "2"});
+      const w = () => sb().items.find(i => i.type === "Melee Weapon" && /^Animated tools/.test(i.name));
+      await waitFor(() => !!w(), 5000);
+      const had = !!w(), type = w()?.system?.damage?.type, paid = e0 - sEss();
+      await CH.timed.endFor(sb(), {key: "wodx-charm-animatetools"});
+      await waitFor(() => !w(), 5000);
+      G.ok("13. Animate Tools: two Essence a tool, a weapon on the sheet, gone when it ends", had && type === "bashing" && paid === 4 && !w(), {had, type, paid, after: !!w()});
+    });
+
+    await G.step("14. Paralyzing Stare: one Essence on a mortal, the target held", async () => {
+      aim(true);
+      const held = () => [...(v()?.statuses ?? [])].some(st => /immobilized|held/.test(st)) || v()?.effects?.some?.(e => /Paralyzed/.test(e.name));
+      let paid = 0, cards = 0;
+      for ( let k = 0; k < 4 && !held(); k++ ) {
+        await A.limits?.clear?.(sb());
+        const e0 = sEss(), n0 = game.messages.size;
+        await K.use(sb(), "paralyzingstare");
+        paid = e0 - sEss();
+        const m = game.messages.contents.slice(n0).find(x => /Paralyzing Stare/.test(x.content ?? ""));
+        if ( m ) cards++;
+        // the effects card: apply what it carries to the target
+        const items = m?.getFlag?.(MOD, "effects")?.items ?? m?.flags?.[MOD]?.effects?.items ?? [];
+        for ( let i = 0; i < items.length; i++ ) await A.effects?.applyItem?.(m, i).catch?.(() => null);
+        await waitFor(() => held(), 3000);
+      }
+      aim(false);
+      G.ok("14. Paralyzing Stare: one Essence on a mortal, the target held", paid === 1 && cards > 0, {paid, cards, held: !!held()});
     });
   } catch (e) {
     G.R.errors.push(String(e?.message ?? e));
