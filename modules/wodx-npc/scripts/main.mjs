@@ -901,6 +901,14 @@ const phaseKey = combat => { const f = combat?.getFlag?.("wodx-combat", "conduct
  * watch, unless the NPC is frenzied, cornered or near death. Null: no fitting power (the menu opens as before).
  */
 function powerPick(tok, aim = null, {held = false} = {}) {
+  const pc = powerContext(tok, aim);
+  return pc ? (held ? PP.heldBack : PP.pick)(pc.list, pc.st) : null;
+}
+/**
+ * What powerPick weighs: {list, st}, or null when the NPC picks no powers. B6486: the fight is read once here, so the
+ * card's pick and B6400's held-back test share one reading (readFight weighs every foe's best attack).
+ */
+function powerContext(tok, aim = null) {
   if ( !setting("pickPowers") || savedProfile(tok.actor)?.noAutoPower ) return null;
   const list = A()?.npcPowers?.(tok.actor) ?? [];
   if ( !list.length ) return null;
@@ -908,12 +916,12 @@ function powerPick(tok, aim = null, {held = false} = {}) {
   try { st = readFight(tok).state; } catch (e) { return null; }
   const s = st.self, combatId = game.combat?.id ?? "";
   const close = (st.enemies ?? []).filter(e => (e.distance ?? 99) <= 2).length;
-  return (held ? PP.heldBack : PP.pick)(list, {
+  return {list, st: {
     wounds: s.wounds, nearDeath: s.wounds >= 6, losing: s.wounds >= 5 || (st.sideDown ?? 0) >= 0.5,
     outnumbered: (st.enemies?.length ?? 0) > (st.allies?.length ?? 0) + 1, frenzied: !!s.inFrenzy, cornered: close >= 2 && s.wounds >= 3,
     mortalsSee: (st.witnesses ?? 0) > 0, hasTarget: !!aim || (st.enemies ?? []).some(e => e.visible),
     boosted: tok.actor.getFlag?.(MOD, "boosted") === combatId, called: tok.actor.getFlag?.(MOD, "called") === combatId
-  });
+  }};
 }
 /** WoDX Targeting's pick for a power plan, when that module is on and not switched off on this computer. */
 function rankPower(tok) {
@@ -928,10 +936,11 @@ async function postPlan(tok, combat, {profile, options}, mode) {
     const a = NR.aimPower(o, ranked ??= rankPower(tok));
     // B4926: the card names the power the NPC would pick
     const aimTok = canvas.tokens.get(ranked?.pick?.id ?? "") ?? null;
-    const pp = powerPick(tok, aimTok);
+    const pc = powerContext(tok, aimTok);
+    const pp = pc ? PP.pick(pc.list, pc.st) : null;
     if ( pp ) return {...a, power: pp.power.name, why: `${a.why}; ${pp.power.name}: ${pp.why}`};
     // B6400: its fitting powers are all obvious and mortals are watching, so it holds them back
-    return powerPick(tok, aimTok, {held: true}) ? {...a, held: true, why: `${a.why}; holds its powers back: mortals are watching`} : a;
+    return pc && PP.heldBack(pc.list, pc.st) ? {...a, held: true, why: `${a.why}; holds its powers back: mortals are watching`} : a;
   });
   const flags = {plan: {token: tok.document.uuid, combatId: combat?.id ?? null, round: combat?.round ?? 0, combatant: combat?.combatant?.id ?? null, options: shown, mode}};
   let result = null, chosen = null, waiting = null;

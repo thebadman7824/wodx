@@ -74,22 +74,29 @@ async function runGate(K) {
   });
 
   await step("NPC turns: an NPC acts on Auto and the turn moves on by itself; a player's turn waits for the player", async () => {
-    await game.settings.set(MOD, "turnConductor", "npc");
+    // B6486: the turn is placed by hand only while the conductor is off and the fight is at rest. With the conductor
+    // on, its move past the NPC that acted first in the new round could land just after the hand-placed turn and
+    // carry the fight past it before that NPC took its turn (no card for it, the turn gone on)
+    await settle();
     await combat.setFlag(MOD, "conductor", {});
     // From before the new round: an NPC first in the order acts at once
     const t0 = Date.now();
     await combat.nextRound(); await sleep(2500);
     const firstNpc = combat.turns.find(c => !c.actor?.hasPlayerOwner);
-    await combat.update({turn: combat.turns.indexOf(firstNpc)});
+    const cardOf = c => game.messages.contents.find(m => m.timestamp >= t0 && m.getFlag(NPC, "plan")?.combatant === c.id);
+    if ( combat.combatant?.id !== firstNpc.id ) await combat.update({turn: combat.turns.indexOf(firstNpc)});
+    const acted = await waitFor(() => !!cardOf(firstNpc)?.getFlag(NPC, "plan")?.done, 15000);
+    // Now the conductor: the NPC has acted, so the turn moves on by itself
+    await game.settings.set(MOD, "turnConductor", "npc");
     const moved = await waitFor(() => combat.combatant?.id !== firstNpc.id, 20000);
-    const card = game.messages.contents.find(m => m.timestamp >= t0 && m.getFlag(NPC, "plan")?.combatant === firstNpc.id);
+    const card = cardOf(firstNpc);
     // Run on to the hero: the conductor stops there at this level
     const reachedHero = await waitFor(() => combat.combatant?.tokenId === T.hero.id || combat.round > (card?.getFlag(NPC, "plan")?.round ?? combat.round), 30000);
     await sleep(2000);
     if ( combat.combatant?.tokenId === T.hero.id ) await waitFor(() => !!CD().state().why, 3000);
     const heroWaits = combat.combatant?.tokenId === T.hero.id ? /players'/.test(CD().state().why ?? "") : null;
     ok("NPC turns: an NPC acts on Auto and the turn moves on by itself; a player's turn waits for the player", moved && !!card?.getFlag(NPC, "plan")?.done && (heroWaits ?? true),
-      {npc: firstNpc.name, moved, did: card?.getFlag(NPC, "plan")?.done?.text ?? null, nowTurn: curName(), why: CD().state().why ?? null, reachedHero,
+      {npc: firstNpc.name, acted, moved, did: card?.getFlag(NPC, "plan")?.done?.text ?? null, nowTurn: curName(), why: CD().state().why ?? null, reachedHero,
        cards: game.messages.contents.filter(m => m.timestamp >= t0 && m.getFlag(NPC, "plan")).map(m => { const p = m.getFlag(NPC, "plan"); return {who: p.combatant, mode: p.mode, done: p.done?.text ?? null, options: (p.options ?? []).map(o => o.kind ?? o.type ?? o.label)}; })});
   });
 

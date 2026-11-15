@@ -80,6 +80,18 @@ export async function run() {
       if ( combat.turn === idx() ) await combat.update({turn: (idx() + 1) % combat.turns.length});
       await combat.update({turn: idx()});
     };
+    // B6485: a turn of theirs that has not started yet this round. B6436 rolls the stand-up once per knockdown per
+    // turn, so stepping off and back onto a turn whose roll already ran (step 2's new rounds, when the fallen
+    // character won the Initiative tie and holds the first turn) is rightly not a new try; a new round is
+    const freshTurnOf = async actor => {
+      const idx = () => combat.turns.findIndex(c => c.actorId === actor.id);
+      if ( Number.isInteger(combat.turn) && combat.turn >= idx() ) {
+        const r = combat.round;
+        await combat.nextRound();
+        await waitFor(() => combat.round === r + 1, 6000);
+      }
+      if ( combat.turn !== idx() ) await combat.update({turn: idx()});
+    };
     const standCards = t0 => game.messages.contents.filter(m => m.timestamp >= t0 && /tries to stand/.test(m.content ?? "") && m.speaker?.actor === fallen.id);
     const knock = async () => { await C.markFollow(fallen, {name: "Knocked down", condition: "knockdown", lasts: "turn"}); return waitFor(() => K.hasCondition(fallen, "knockdown"), 4000); };
 
@@ -116,7 +128,7 @@ export async function run() {
       await dice(8);
       if ( !K.hasCondition(fallen, "knockdown") ) await knock();
       const t0 = Date.now();
-      await toTurnOf(fallen);
+      await freshTurnOf(fallen);
       await waitFor(() => standCards(t0).length > 0, 8000);
       const up = await waitFor(() => !K.hasCondition(fallen, "knockdown"), 4000);
       const init0 = initOf(fallen), r0 = combat.round;
