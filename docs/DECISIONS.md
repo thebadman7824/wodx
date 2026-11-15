@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6000
+Next free block: B6060
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -306,7 +306,7 @@ Next free block: B6000
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5680-B5709 | NPC Motives Desk: every NPC action has a reason and a follow-through (used B5680-B5703) | NPC, Storyteller |
 | B5710-B5729 | Aftercare of the carried (Aftercare Desk a1-a12) (used B5710-B5721) | NPC |
-| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5736) | Interactables, tools |
+| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5738) | tools |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 | B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
 | B5800-B5809 | NPC Aftercare Desk: what comes after each NPC action (used B5800-B5806) | NPC, Chronicle |
@@ -328,6 +328,9 @@ Next free block: B6000
 | B5970-B5979 | NPCs make their own wonders (used B5970-B5974) | Storyteller |
 | B5980-B5989 | Lone Chronicle step 3: the oracle, the Leads page and night encounters on the map (used B5980-B5985) | Solo |
 | B5990-B5999 | Say or Do: full sentences and grieving (Ben's picks on law sentences and heartbreak) (used B5990-B5992) | Chronicle, NPC, Actions |
+| B6000-B6019 | Rituals and powers that really work: every effect read by a roll, soak, token or map system (used B6000-B6018) | Actions, Combat |
+| B6040-B6049 | Lone Chronicle step 4: the director, experience from the night's log, the recap (used B6040-B6049) | Solo |
+| B6050-B6059 | gate7b fresh arena each run (used B6050-B6051) | tools (gates) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9379,6 +9382,16 @@ Tools. run-gate.mjs --touched and --all built the gate list from the PC's own co
 
 Reverse: none needed.
 
+## B5737. Whole buildings and open ground for the pixel drawer, and two sample maps (2026-11-15)
+Tools. tools/pixelmap/buildings.py draws a one-room log cottage (oven in a back corner, bed, painted chest, table and benches by the front window, a door and three shuttered windows, all recorded as walls, openings, a light and a home) and a small timber chapel; land.py lays grass, rutted roads, brooks, ploughed strips by crop, a plank bridge and trees that keep clear of what was built. maps/village.py (a Moravian village of about 1200, 40 by 28 squares) and maps/road.py (a country road with a ford, a wayside cross and a cart, 36 by 20) are the samples sent to Ben before the larger map work.
+
+Reverse: remove the files; nothing else uses them yet.
+
+## B5738. Every object at its true size (2026-11-15)
+Tools. After Ben's review of the samples, every object was measured against the 5 ft square: beds were 10 ft long and are now 7, tree crowns grow to 14 to 23 ft, field strips are wide enough to read as fields, the cart is a farm cart's size, and a field haystack is drawn as a domed rick about 11 ft across. RULES.md keeps the size table.
+
+Reverse: none needed.
+
 ## B5750. Witness reactions given by a window act on the map (2026-11-15)
 WoDX Actions. The witness step takes results already rolled (the Delirium check, a demon's Revelation) and acts them out: a frozen witness is Immobilized for the scene, a fleeing one runs, a fighting one starts a fight; those who keep it go on the Masquerade record. With no revealed actor on the map, nothing is recorded against anyone.
 
@@ -9970,3 +9983,160 @@ Reverse: remove brand() in law-punish.mjs; put Heartsick back in hearts.mjs; dro
 WoDX Chronicle, Storyteller. A death sentence holds the condemned and calls WoDX Storyteller's raid (reach.lawCome) to arrest them where they stand; the player chooses to go or resist.
 
 Reverse: remove the lawCome call in carryOut.
+
+## B6000. A power's numbers ride in its timed effect (2026-11-15)
+WoDX Actions. A Ward, Boost, Blessing, Curse, Calm or Hasten keeps its dice, kind, shift or actions in the WoDX Chronicle timed data (power-mods.js timedData), and a token look shows it: blue shimmer, gold glow, purple flicker. Before, the effect carried a name only.
+
+Reverse: drop the data argument in effects.js applyCore and the tokenLooks register.
+
+## B6001. Powers count on every roll with the traits (2026-11-15)
+WoDX Actions trait-hooks traitMods adds what the powers on the roller do to the roll's tags (power-mods modsFrom).
+
+Reverse: remove powerPart from traitMods.
+
+## B6002. A Blessing or Curse is spent on the next roll (2026-11-15)
+House reading of the Fortune keyword's "next roll": the roll, attack or frenzy check that used it deletes the effect.
+
+Reverse: drop TH.spendOnce calls and the once flag.
+
+## B6003. A Calm eases frenzy, a Rousing makes it harder (2026-11-15)
+Fear with the calm flavour: resisting frenzy is up to 3 easier while it lasts; roused, up to 3 harder. Its own key (wodx-effect-calm), so it never holds the token away as a Fear does.
+
+Reverse: restore the old outcome text in effects-rules fear.
+
+## B6004. WoDX Combat reads them (2026-11-15)
+Attack pool: Boost dice and Fortune difficulty; soak: Ward armour (the stronger Ward, only against its named harm) and soak Boost; Initiative: Initiative Boost.
+
+Reverse: remove powerModsOf calls in wodx-combat main.js.
+
+## B6005. Sway, Bind and Possess on NPCs (2026-11-15)
+Sway is a timed Swayed effect (an NPC warms one step; a player character's moves go to the Storyteller, binds.js). Bind warms an NPC two steps toward the binder. Possess on an NPC gives the possessor's players ownership of it while it lasts, handed back at the end or on Undo.
+
+Reverse: moodDelta bind line, possessFor in effects.js, sway back to a note.
+
+## B6006. Imbue makes a charged item (2026-11-15)
+An Imbue result is a made item, real for good, flagged imbued with the power and caster.
+
+Reverse: imbue back to the default note.
+
+## B6007. Place moves the Gauntlet, Shroud or Banality (2026-11-15)
+Through WoDX Otherworlds drift (lever): thins by 1 (2 at strength 4+), "place:thick" thickens; "place:shroud" and "place:banality" pick the track. A fog look when it thins, a calm look when it thickens. House reading.
+
+Reverse: place back to the default note.
+
+## B6008. Manifest shows the being on this side (2026-11-15)
+The token is unhidden, pale (alpha 0.8) and on the scene's physical level while it lasts.
+
+Reverse: remove manifestOf.
+
+## B6009. Banish and Work act (2026-11-15)
+Banish ends WoDX timed powers on the target (restored on Undo); with none, a being from beyond goes back across and anything else is driven off from the caster, 10 feet a success. Work toggles the nearest door within 3 squares (a locked door is broken open).
+
+Reverse: banishCore and workCore in effects.js.
+
+## B6010. Ritual flavours (2026-11-15)
+Flavours join with "+"; a Ward flavour names its harm (ward:fire, ward:sunlight); a Boost flavour names its roll; a self-cast Calm needs no target. Ritual keyword fixes: Blood Rush fear:calm, Chill of Oblivion ward:fire, Defense of the Sacred Haven ward:sunlight, Firewalker ward:fire, Flesh of Fiery Touch harm, Essence of Longing boost:social, Scarab of Death ward, Scouring Oblivion mend, Rite of Ostracism boost:sap+social, Esilio, Nightmare Drums and Candle of Haunting place:shroud, Dedicate the Haven and the Shrouded Glen place:thick.
+
+Reverse: the k lists in book-rituals.js.
+
+## B6011. Spec timed results carry their numbers (2026-11-15)
+mage-da-effects timedNumbers: Ward and Boost dice a success (5 at most), Fortune shift (3 at most), Night Sight on the token, Rise 5 feet a success.
+
+Reverse: remove timedNumbers.
+
+## B6012. Hasten gives extra actions (2026-11-15)
+WoDX Combat's conductor counts a Hasten's actions in the extra pass; a Slow costs 2 Initiative a step (house rule).
+
+Reverse: hastenExtra in conductor.js.
+
+## B6013. An Illusion stands on the map (2026-11-15)
+A pale figure Tile by the target or where the Storyteller clicks, removed when it ends or on Undo.
+
+Reverse: illusionTile.
+
+## B6014. Flavoured ritual keywords reached the card (2026-11-15)
+book-rituals ritualResults and bookRitual dropped any keyword with a flavour ("fortune:curse", "charge:drain"), so the caster's card and the Storyteller's window lost them. Fixed.
+
+Reverse: none needed.
+
+## B6015. Guard: every applying power is read (2026-11-15)
+tools/powers/read-rules.mjs says which system reads each result kind and timed key; the inventory marks each power read, partly, told, unread or direct; tools/harness/power-reads.test.mjs fails on any unread and checks each reader is still in the code.
+
+Reverse: delete the test.
+
+## B6016. Spec timed results of keywords with their own kind act as that kind (2026-11-15)
+A T() spec for summon, make, weather, light, move, sideways, banish, place, work, charge, know, sense, harm, trip, imbue, mend or hold works as the keyword does (a summoning, an item, the weather), for the spec's time; before, it was a named marker.
+
+Reverse: OWN_KIND in mage-da-effects.js.
+
+## B6017. The Golem of the 72 Names is a real summoning (2026-11-15)
+Utterance of the 72 Names (DA Mage Grimoire p. 58) now calls one golem with its own profile: Strength 10, Dexterity 2, Stamina 8, ten health levels, 4 armour dice, Willpower 3, simple orders, lasting until it is broken. Before, it was a named marker. A spec's own name also stays on a result of its own kind (Tracked by a spirit).
+
+Reverse: the mage-dark-ages|utterance-of-the-72-names entry in summon-specs.js.
+
+## B6018. A Forbiddance and shadow soul do what they say (2026-11-15)
+A mummy's won Forbiddance marks the mummy as the one feared (a player's token cannot go nearer) and the one the being cannot strike: WoDX Combat refuses its attacks on that mummy, by hand or by the NPC. A Kuei-jin's shadow soul hands the body to the P'o: each move the player makes goes to the Storyteller to allow or refuse, as a command's does; in a Lone Chronicle the move stands with a reminder.
+
+Reverse: forbiddenFrom in wodx-combat main.js, the bindBy/forbiddenBy flags in mummy.js, the shadow soul line in binds.js bindingsOn.
+
+## B6040. Places with no map are the country map's towns (2026-11-15)
+WoDX Solo card-rules.mjs cardTowns. The panel's Places with no map lists the towns of WoDX Storyteller's country map (data/country.mjs) that stand in the character's own year and have no scene set at the town itself. A town that gains a map later is gone to on that map. The list has a search box.
+
+Reverse: take "places" off solo-rules.mjs PANEL.
+
+## B6041. A card scene is made once per town and kept (2026-11-15)
+The seat makes a plain scene for the town the first time a character goes there: a dark square of ground with a grid and light, flag wodx-solo.card (the town id) and wodx-solo.encounters town, set at the town on the country map so the trip there is the Travel window's own country-map trip, with its hours, fares, stops and road encounters. It is kept for the next visit and can be given a map later. Nothing is deleted.
+
+Reverse: delete the card scenes by hand; the next visit makes a new one.
+
+## B6042. The card says where the character is (2026-11-15)
+A locked drawing in the middle of the card scene, written again on every arrival and every look: the town, the year, day and hour on the character's own clock, the weather (WoDX Atmosphere), the land from the country map (its name and kind), the nearest river and which way it lies, how wooded the land is in that age, and the best road in. The same words go to the player as a card in the chat. The character's token stands below the card.
+
+Reverse: remove writeCard from card.mjs; the scene stays plain.
+
+## B6043. A card scene is always a travel place, never a marked one (2026-11-15)
+WoDX Storyteller travelPlaces. A card scene carries a travel flag for its country-map spot; it does not count as a scene the Storyteller marked, so a world with no marked scenes keeps listing every scene, and a world with marked scenes lists the card scenes too.
+
+Reverse: drop isCard from travelPlaces.
+
+## B6044. Look around costs half an hour and may bring people (2026-11-15)
+On a card scene, Places with no map offers Look around: half an hour on the character's own clock, then a town encounter is drawn as at night (no chance roll, by day or night) and its people stand on the card scene a few squares off, in plain sight. When none comes, the player is told nobody comes near. House rule: no book gives a solo look-about.
+
+Reverse: take the "look" choice out of showPlaces in card.mjs.
+
+## B6045. The director brings one or two live things a night (2026-11-15, Ben's pick sp18)
+WoDX Solo director-rules.mjs. Once a night, at dusk on the seat, the director gathers what is already live for the character: the flaws and merits that pull trouble (WoDX Chronicle traits), a storyline's next beat (Threads of Fate), open oaths, debts, boons and aims in the Ledger, the Storyteller's own clocks the player may see, and a sign drawn from the story aids. A hard night just past, or three hard of the last four, is a rest (light things only); two quiet nights or more is pressure (two things, heavy ones first); else steady (one). The trouble dial takes one off (Quiet) or adds one (Often), from 1 to 3. Nothing is brought again within three nights, and each kind comes once before any comes twice. House rule after the pacing note (B1714) and the trouble dial (B1604).
+
+Reverse: turn off "The director brings the night's trouble".
+
+## B6046. What the director brings does something (2026-11-15)
+Each thing comes as a card to the player and the Storyteller, flagged as a story aid so it is on the Leads page, and goes in the Storyteller's log. A clock it brings moves a step. Under pressure the first heavy thing also brings people onto the character's scene, as a night encounter does. "I am stuck: bring me a lead" now asks the director for one light thing at once, and falls back to a foreshadowing.
+
+Reverse: drop the people and clock lines from bring in director.mjs; panel.mjs's stuck lead goes back to the foreshadowing.
+
+## B6047. Experience in the morning, from the log (2026-11-15, Ben's pick sp20)
+In the morning after a night (before noon), the seat awards the lone player's character from the line's own list in the book (WoDX Storyteller wrapup-rules.mjs, the session and story reasons, with the Dark Ages list before 1500), ticking only what the log shows: took part (anything the character did, the oracle included), real danger (an encounter, a fight, a breach, a frenzy, a death or torpor that night), learned something (the oracle asked, or a place seen for the first time) and a goal reached (a Ledger oath, debt, boon or aim marked kept that night). At most 5 a night (V20 pp. 123-124: 1 to 5 a session). It goes on the sheet through WoDX Creation's award, with its date and log page. Anything the log cannot judge (acting, heroism) is left out, so awards run low, as the desk said.
+
+Reverse: turn off "Experience at the end of each night", or change XP_NIGHT_MAX.
+
+## B6048. One award a night (2026-11-15)
+Each character's night is awarded once (setting wodx-solo.awarded). A long sleep through several nights awards only the night the morning follows.
+
+Reverse: clear wodx-solo.awarded to award a night again.
+
+## B6049. The recap when the player comes back (2026-11-15, Ben's pick sp27)
+When the lone player logs in, the seat whispers "Last night": the entries about the character in the night just gone, oldest first (travel, solo acts, encounters, the director's things, the award, the oracle's answers), in their own words. Asks and the seat's own log stay out. At most twelve lines; the rest are counted. Once per player per night.
+
+Reverse: remove the userConnected hook in director.mjs.
+
+## B6050. gate7b builds a fresh arena every run (2026-11-15)
+Gates. gate7b kept its arena scene and tokens between runs, so the tokens carried wounds, a frenzy and moves from one
+run into the next and into the lane snapshots; the plan steps passed on one lane and failed on another. The gate now
+removes any old arena and its fight, starts each token's sheet unhurt and out of frenzy, and removes the arena after.
+
+## B6051. gate7b asks for a suggestion on its plan step and walks the runner by its attack (2026-11-15)
+Gates. The world's NPC mode can be Auto, so the plan step's card was already played; the arena now asks for a
+suggestion for that step. The runner's flight from a far foe has nowhere to go, so the wall step takes its attack
+first, which walks it round the wall to the hero.
+
+Reverse: keep the arena between runs again, drop the scene's mode and take the first attack or flight.

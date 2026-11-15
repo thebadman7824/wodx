@@ -1512,7 +1512,9 @@ Rows dated 14 November that were still waiting at 06:00 UTC count as approved un
 | 2026-11-15 | (Ben picked this on the desk, 12:34 UTC) NPC Aftercare Desk n6: after a robbery (B5805) | The robber spends the night at the tavern; the victim can report it (theft heat and a rumour) | Drop spree() and the report button |
 | 2026-11-15 | (Ben picked this on the desk, 12:34 UTC) NPC Aftercare Desk n7: married NPCs share a home (B5806) | No home moves first; else the bride to the groom's; else the smaller household; PCs' sex plays no part; a divorce moves them back | Drop onMarried and onDivorced |
 
-## Waiting for review
+## Approved by Ben, 15 November 2026, 13:15 UTC (all waiting entries)
+
+Ben approved every entry that was waiting for review ("Approve on all pending review items") at 13:15 UTC on 15 November 2026 (104 rows). Each still lists how to reverse it.
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
@@ -1625,3 +1627,11 @@ Rows dated 14 November that were still waiting at 06:00 UTC count as approved un
 | 2026-11-15 | New chase grounds: Deep snow or ice, A railway line (B6071, B6072) | Runners and snow machines go only on snow; trains only on rails; trams on rails or streets; on snow wheels are +2 and capped at 15 yards, hooves capped at 20, bicycles shut out; in a fight a sled always stands on snow and a train on its line | Remove snow, rails and ONLY_ON from chase-rules.mjs |
 | 2026-11-15 | Train sprites at true length (B6073) | A train's look is its engine, tender and first coach end to end at true size, up to 30 squares long (the eight-square cap stays for every other kind); trams up to 22 squares | Shorten the parts in tools/sprites/mount_rail.py and lower LONG in mount-looks.test.mjs |
 | 2026-11-15 | Vehicle sprites keep the side-on facings of the people's sprites (B6073) | Snow vehicles, trains and trams are drawn as the existing mounts are (four facings, seen from the side and the ends, riders shown in their seats), not from straight above as map furniture is, so they match the figures riding them | A top-down set would need a new sheet layout in mounts.mjs |
+| 2026-11-15 | Rituals and powers that only said they worked (B6000 to B6018) | House readings so every effect does something: a Blessing or Curse is spent on the next roll (Fortune's "next roll"); a Calm eases the frenzy roll by up to 3; a Slow costs 2 Initiative a step; a place rite moves the Gauntlet, Shroud or Banality by 1 (2 at strength 4+); Bind warms an NPC two steps; Possess hands an NPC to the possessor's players; Banish drives a being off 10 feet a success when no power on it can end; Rite of Ostracism is a Social sap; Work toggles the nearest door | Reverse each in changes/decisions/B6000.md (power-mods.js, effects-rules.js, effects.js, book-rituals.js) |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-15 | The Lone Chronicle, step 3: card scenes for places with no map (B6040 to B6044) | The country map's towns that stand in the character's year and have no scene; a card scene made once per town (dark ground, grid, a locked card drawing with the town, year and hour, weather, land, river, woods and road), reached by a Travel trip over the country map; Look around costs half an hour and may bring a town encounter onto the scene | Take "places" off PANEL in solo-rules.mjs, or edit cardLines and LOOK_MINUTES in card-rules.mjs |
+| 2026-11-15 | The Lone Chronicle, step 4: the director, experience from the night's log, the recap (B6045 to B6049) | The director: once at dusk, a rest after a hard night (light things only), pressure after two quiet nights (two things, people come for the first heavy one), else one; the trouble dial adds or takes one; clocks it brings move a step; nothing again within three nights. Experience: before noon, took part, real danger, learned something (the oracle or a first visit), a goal reached (a Ledger entry kept), at most 5. The recap: on login, the night before in its own words, at most twelve lines | Turn off the two world settings, or edit TEMPERS, AGAIN_NIGHTS, XP_NIGHT_MAX and RECAP_MAX in director-rules.mjs |

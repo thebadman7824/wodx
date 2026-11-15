@@ -41,10 +41,12 @@ export function powerOutcomes(kw, successes, {label = "", source = "", hasTarget
         timed: { kind: "scene" }, duration: "the scene", source, text: "ready to strike for the scene: the attack roll deals the power's damage (see the page)" } });
       continue;
     }
-    if ( !hasTarget && NEEDS_TARGET.includes(key) ) { skipped.push(KEYWORDS[key].label); continue; }
-    const [r] = stOutcomes([key], { strength: s, step: 2, ctx: flavour ? { [flavour]: true } : {} });
+    // B6010: a Calm on oneself (Blood Rush) is not a Fear on someone else
+    if ( !hasTarget && NEEDS_TARGET.includes(key) && !(key === "fear" && String(flavour).split("+").includes("calm")) ) { skipped.push(KEYWORDS[key].label); continue; }
+    // B6010: several flavours join with "+" ("boost:sap+social")
+    const [r] = stOutcomes([key], { strength: s, step: 2, ctx: flavour ? Object.fromEntries(flavour.split("+").filter(Boolean).map(f => [f, true])) : {} });
     if ( !r?.out ) continue;
-    const who = !hasTarget && ON_SELF.includes(key) ? "self" : "one";
+    const who = !hasTarget && (ON_SELF.includes(key) || String(flavour).split("+").includes("calm")) ? "self" : "one";
     results.push({ key, who, out: { ...r.out, label: label ? `${label}: ${r.out.label}` : r.out.label, source } });
   }
   return { results, skipped };
@@ -53,6 +55,8 @@ export function powerOutcomes(kw, successes, {label = "", source = "", hasTarget
 /** How a keyword result moves an NPC's regard for the caster: Sway +1 (Awe has its own rule), Fear's Afraid -1. */
 export function moodDelta(key, out = {}) {
   if ( key === "sway" && !out.awe ) return 1;
+  // B6005: a binding (an oath, a bond, a command) on an NPC turns it two steps toward the one who bound it
+  if ( key === "bind" ) return 2;
   if ( key === "fear" && out.name === "Afraid" ) return -1;
   return 0;
 }

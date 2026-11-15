@@ -172,7 +172,8 @@ test("3.26.0: every Dark Ages rote says what it does on the table, or leaves it 
     assert.ok(["harm", "timed", "condition", "move", "note", "st"].includes(spec.kind), r.id);
     const outs = D.daOutcomes(r, 3);
     assert.ok(outs.length >= 1, r.id);
-    for ( const o of outs ) assert.ok(o.out.label && o.out.text && ["damage", "timed", "condition", "move", "note"].includes(o.out.kind), r.id);
+    // B6016: a rote whose keyword has its own result (a summoning, a made thing, the weather) acts as that kind
+    for ( const o of outs ) assert.ok(o.out.label && o.out.text && ["damage", "timed", "condition", "move", "note", "summon", "give", "weather", "light", "cross", "banish", "place", "work", "quint", "pool", "heal", "detect", "question"].includes(o.out.kind), `${r.id}: ${o.out.kind}`);
   }
   assert.equal(Object.keys(D.DA_EFFECTS).length, 97);
   const by = id => M.ROTES.find(r => r.id === id);
@@ -189,7 +190,7 @@ test("3.26.0: every Dark Ages rote says what it does on the table, or leaves it 
   assert.equal(D.daOutcomes(by("g-skogarmathur"), 2)[0].out.timed.seconds, 14 * 86400);
   assert.equal(D.daOutcomes(by("g-battlesmite"), 2)[0].out.condition, "blinded");
   assert.equal(D.daOutcomes(by("g-summoning"), 4)[0].st, true);
-  assert.equal(D.daOutcomes(by("g-72names"), 4)[0].out.kind, "timed", "the golem shows on the token (B3752)");
+  assert.equal(D.daOutcomes(by("g-72names"), 4)[0].out.kind, "summon", "the golem is called onto the map (B6016)");
   assert.deepEqual(D.daOutcomes(by("verdantslumber"), 0), []);
   assert.deepEqual([D.targetCount("self", 3, 2), D.targetCount("one", 3, 2), D.targetCount("each", 3, 5), D.targetCount("each", 3, 2), D.targetCount("all", 1, 4)], [0, 1, 3, 2, 4]);
   const da = src("modules/wodx-actions/scripts/mage-da.js");
