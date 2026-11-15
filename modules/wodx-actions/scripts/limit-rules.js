@@ -5,6 +5,7 @@
  * failed use counts (the books that bar a second try after a failure). The table holds only powers whose own page
  * sets a limit; everything else is free to use as often as its cost allows.
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** How long a use counts. Scenes are counted by the WoDX scene tally (End the scene, or a new active map). */
 export const PERIODS = {
@@ -18,22 +19,14 @@ export const PERIODS = {
   story: "this story"
 };
 
-const DAY = 86400;
 
-/** The key a use is filed under for its period, from the clock, the fight and the scene tally. */
-export function periodKey(per, {worldTime = 0, combat = null, scene = 0} = {}) {
-  const t = Number(worldTime) || 0;
-  switch (per) {
-    case "turn": return combat ? `${combat.id}:${combat.round ?? 0}` : `t${scene}:${Math.floor(t / 6)}`;
-    case "scene": return `s${scene}`;
-    // A night runs from noon to noon, so the small hours belong to the night before
-    case "night": return `n${Math.floor((t - DAY / 2) / DAY)}`;
-    case "day": return `d${Math.floor(t / DAY)}`;
-    case "week": return `w${Math.floor(t / (7 * DAY))}`;
-    case "month": return `m${Math.floor(t / (30 * DAY))}`;
-    case "lunar": return `l${Math.floor(t / (29.53 * DAY))}`;
-    default: return "story";
-  }
+/**
+ * The key a use is filed under for its period, from the clock, the fight and the scene tally: the shared terms'
+ * periodKey (B6184). A night runs from noon to noon, so the small hours belong to the night before; outside a fight a
+ * turn is the table's turn length (three seconds unless WoDX Combat's house rule says otherwise), not six.
+ */
+export function periodKey(per, ctx = {}) {
+  return TERMS.periodKey(per, ctx);
 }
 
 export const slug = s => String(s ?? "").toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "")

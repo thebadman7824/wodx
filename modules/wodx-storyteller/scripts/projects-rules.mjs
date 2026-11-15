@@ -10,6 +10,7 @@
  * Rolls are V20 extended actions (V20 pdf 254-261; V20 Dark Ages p. 324), as long tasks already are. The budget, the
  * nights each kind needs, the chance of trouble and the tables are house figures (docs/PENDING-REVIEW.md).
  */
+import {DAY as TERMS_DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** Nights (or days) a week a character can give to projects (B3341). A vampire loses one to the hunt. */
 export const BUDGET = 7;
@@ -153,7 +154,7 @@ export const TROUBLE_DOES = {
 export const troubleDoes = key => TROUBLE_DOES[key] ?? {delay: 2};
 
 /** B5825: the task after a complication's delay and setback (pure). DAY in seconds. */
-export function troubleTask(task, does = {}, DAY = 86400) {
+export function troubleTask(task, does = {}, DAY = TERMS_DAY) {
   const t = {...task};
   if ( does.delay ) t.next = n(t.next) + does.delay * DAY;
   if ( does.setback ) t.total = Math.max(0, n(t.total) - does.setback);

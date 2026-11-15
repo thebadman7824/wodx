@@ -11,8 +11,9 @@
  * dream and omen is the Storyteller's to see, change or refuse before it comes. The symbols are WoDX's own; the chances
  * are house figures.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY};
 
-export const DAY = 86400;
 export const COOLDOWN = 7 * DAY;
 export const READ_DIFF = 7;
 export const FALSE_CHANCE = 0.1;

@@ -11,9 +11,9 @@
  * vessels, V20 p. 114. The books give no number for how many vessels a district can bear before the herd thins: the
  * pool size, the stages and their difficulties are house rules (B3571-B3573).
  */
+import {DAY, MONTH} from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY, MONTH};
 
-export const DAY = 86400;
-export const MONTH = 30 * DAY;
 export const LOG_CAP = 20;
 
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);

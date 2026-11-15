@@ -18,6 +18,7 @@ in this public repository and, later, be drawn inside Foundry.
 | `scene.py` | The recorder: notes walls, openables, lights and regions while a map is drawn, then writes everything Foundry needs. |
 | `bits.py` | Distance fields and smooth lines for paths and streams. |
 | `roofs.py` | Roof pictures (shingle, thatch, slate) laid over a building as its roof tile; the recorder writes them to `roofs/` (B5743). |
+| `dress.py` | Furnishing: fills each room, yard, street and wood with furniture along the walls and the small things of daily use for its trade, only on bare floor (B5746). Call `snap(m)` once the ground is laid, then `rooms()` or `dress()` after the map's own furniture. |
 | `town.py` | A town's own pieces: cobbles, market stalls, lantern posts, the market cross, horse stalls, hurdle fences, hats, hams and jars (B5744); forge, anvil, loom, vats, staves, hoops, handcart, dye lines and brew furnace (B5745). |
 | `buildings.py` | Whole buildings laid out the same way each time: the log cottage and the timber chapel (B5737). |
 | `land.py` | Open ground: grass or a forest floor, roads, brooks, ploughed strips, a plank bridge, scattered trees. |

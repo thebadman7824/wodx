@@ -18,6 +18,7 @@
  * the lock, a shelter) counts as dry. Every black-powder lock also misfires on a botch, as V20 has it.
  * When a gun names no lock, the year chooses one: the lock most guns of that age used.
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const LOCKS = {
   handgonne: {label: "hand cannon", from: 1380, match: true, black: true},
@@ -110,7 +111,7 @@ export function misfire(g, faces = [], botch = false, wet = {}, {covered = false
   if ( !g?.black ) return none;
   if ( botch ) return {misfire: true, why: `a botch: the ${g.label} misfires (a flash in the pan, a hang fire, or worse)`,
     wetPowder: !!wet.heavy && !covered, matchOut: g.match && !!wet.wet && !covered};
-  const ones = (faces ?? []).filter(f => f === 1).length;
+  const {ones} = TERMS.successes(faces ?? []);
   if ( wet.wet && !covered && ones > 0 ) return {misfire: true, why: `${wet.why}: a 1 on the dice and the damp ${g.label} misfires`,
     wetPowder: !!wet.heavy, matchOut: g.match && !!wet.heavy};
   return none;

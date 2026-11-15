@@ -55,8 +55,12 @@ export function generate({batch, row, nonce = 0, kind = "mortal", sex = "any", t
   const ctx = fitContext(g, culture ? {...here, culture} : here);
   const rand = g.random(`people:${batch}:${row}`, nonce);
   const {person} = need();
-  return {...person({rand, tables: g.lookup(ctx), era: ctx.era, culture: ctx.culture, kind, sex, trade, origin}), batch, row, nonce, eraId: ctx.eraId};
+  // B6251: the year shapes the name; the next age's tables give a family name that falls due early
+  const later = ctx.era && NEXT_GROUP[ctx.era] ? g.lookup({...ctx, era: NEXT_GROUP[ctx.era]}) : null;
+  return {...person({rand, tables: g.lookup(ctx), era: ctx.era, culture: ctx.culture, kind, sex, trade, origin, year: ctx.year ?? null, later}), batch, row, nonce, eraId: ctx.eraId};
 }
+/** The era group whose name tables come next (B6251). */
+const NEXT_GROUP = {ancient: "medieval", medieval: "early-modern", "early-modern": "industrial", industrial: "modern", "mid-century": "modern", modern: "modern", future: "future"};
 
 /**
  * The nearest context that has people tables: the homeland's, else the same land in a later age (a region WoDX has

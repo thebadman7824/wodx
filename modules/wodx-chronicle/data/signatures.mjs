@@ -5,6 +5,8 @@
  * Mechanics only, in our own words. Page refs: "pdf" pages unless marked printed. V20 first, then V20 Dark Ages.
  * Rows marked house: true go past what the books say (Ben's notes on the desk, or a gap the book check found).
  */
+import {DAY, LUNAR_MONTH_DAYS, WEEK} from "../scripts/terms.mjs";
+export {DAY, WEEK};
 
 /**
  * Bloodlines, castes and Laibon legacies (Chronicle 0.29.0). They come before the clans so that "True Brujah" or
@@ -207,8 +209,6 @@ export const MARKS = [
   {key: "teeth", label: "A mouth of animal teeth", edge: "+1 die to Intimidation", cost: "-1 Appearance, slurred speech", effects: [{tags: ["intimidation"], dice: 1}, {tags: ["appearance"], dice: -1}]},
 ];
 
-export const DAY = 86400;
-export const WEEK = 7 * DAY;
 export const MARK_LASTS = 30 * DAY;
 export const RANT_POINTS = 3;
 export const OBSESSION_MAX = 5;
@@ -528,7 +528,7 @@ export const COURTS_TEXT = "A Hengeyokai of the Beast Courts: rank in the Courts
 /** Words that make an NPC a creature of the Wyrm for the Ahroun. */
 export const WYRM_WORDS = ["wyrm", "spiral", "fomor", "fomori", "bane", "banes", "pentex"];
 /** Days in a lunar month, for the Stargazer's sky reading. */
-export const LUNAR_MONTH = 29.53;
+export const LUNAR_MONTH = LUNAR_MONTH_DAYS;
 
 /* ================= Mage (Chronicle 0.33.0) ================= */
 

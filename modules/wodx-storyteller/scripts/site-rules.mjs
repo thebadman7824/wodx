@@ -13,9 +13,9 @@
  * size, its refill, the half yield and the quarrel are house rules (B3581-B3585): no book has one pool that several
  * lines draw on at once.
  */
+import {DAY, WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY, WEEK};
 
-export const DAY = 86400;
-export const WEEK = 7 * DAY;
 export const LOG_CAP = 30;
 
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);

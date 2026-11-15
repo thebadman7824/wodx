@@ -16,10 +16,10 @@ import * as TR from "./ties-rules.mjs";
 import * as SR from "./standing-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import {DAY, WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
 const T = {ideas: `${MOD}.scene-ideas`};
-const WEEK = 7 * 86400;
 const st = () => (game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null);
 const chron = () => game.modules.get("wodx-chronicle")?.api ?? null;
 const api = () => game.modules.get(MOD).api;
@@ -76,7 +76,7 @@ export async function teach(teacherLike, studentLike, {what = "", dots = 1, mont
   const t = actorOf(teacherLike), s = actorOf(studentLike);
   if ( !game.user.isGM || !t || !s || t.id === s.id ) return null;
   const map = taughtBy(t);
-  const row = {what: what || LR.TEACHABLE[lineOf(t)] || "Abilities", dots, from: game.time.worldTime, to: game.time.worldTime + Math.max(0, Number(months) || 0) * 30 * 86400, owed};
+  const row = {what: what || LR.TEACHABLE[lineOf(t)] || "Abilities", dots, from: game.time.worldTime, to: game.time.worldTime + Math.max(0, Number(months) || 0) * 30 * DAY, owed};
   map[s.id] = [...(map[s.id] ?? []), row];
   await t.setFlag(MOD, "taught", map);
   await handTie(s, t, "mentor");

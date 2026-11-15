@@ -21,9 +21,10 @@
  *              runs out or two rolls in a row succeed. Slow sicknesses strike once a month (B3435).
  * The shares, chances, weeks and courses are the Storyteller's to change; WoDX starts from these (B3432-B3435).
  */
+import {WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
+export {WEEK};
 
 export const STATE_VERSION = 1;
-export const WEEK = 7 * 24 * 60 * 60;
 export const IMMUNE_WEEKS = 104;
 export const QUARANTINE = 1 / 6;
 export const LIST_CAP = 200;

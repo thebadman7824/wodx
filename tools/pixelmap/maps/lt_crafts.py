@@ -16,6 +16,7 @@ import props as pr
 import land
 import wilds as wl
 import town as tw
+import dress as dr
 import buildings as B
 from scene import Recorder
 
@@ -100,6 +101,7 @@ land.bridge(m, 58.6, 18.0, 62.4, 22.0); note("plank bridge over the town ditch",
 # ---- floors, walls, doors, windows, fences ----
 for name, (r, kind, fl) in BLD.items():
     for x, y, w, h, k in fl: B._floor(m, x, y, w, h, k)
+dr.snap(m)
 for c in WALLS:
     _, r, kind = owner(c); rec.wall(*c, th=26, kind=kind)
 for c in DOORS:
@@ -263,6 +265,18 @@ for _ in range(30):
         rx, ry = rng.uniform(20, 46), rng.uniform(12, 26); d.ellipse([x * T - rx, y * T - ry, x * T + rx, y * T + ry], fill=R["water"][1]); d.line([x * T - rx * .4, y * T - ry * .3, x * T, y * T - ry * .3], fill=R["water"][3])
     else:
         for k in range(8): d.line([x * T + rng.uniform(-20, 20), y * T + rng.uniform(-12, 12), x * T + rng.uniform(-20, 20), y * T + rng.uniform(-12, 12)], fill=R["straw"][int(rng.integers(1, 4))])
+# ---- dressing: the small things of daily use in every room, the yards and the lane (B5746) ----
+KINDS = {"The Stables": ("stable", ()), "The Smithy": ("smith", ()), "The Weiss Cooperage": ("joinery", [(20, 7, "home"), (25.4, 7, "store")]),
+         "The Weavers' Hall": ("craft", [(32, 5, "home"), (36.6, 5, "home"), (40.6, 5, "home")]), "The Shuttered House": ("home", [(48, 12.6, "home")]),
+         "The Dyers' Workshop": ("dye", [(10.8, 27, "home"), (10.8, 31, "store")]), "The Brewhouse": ("brew", [(33.6, 26.6, "home"), (33.6, 31.3, "store")])}
+LINES = WALLS + DOORS + WINDOWS
+for name, (r, kind, fl) in BLD.items():
+    k, at = KINDS.get(name, ("home", ())); dr.rooms(m, rec, r, LINES, k, at)
+dr.dress(m, rec, (0, 17.4, 59, 5.0), "street", n=36)
+dr.dress(m, rec, (13.0, 23.0, 8.6, 11.6), "yard", n=10)
+for gx in (37.6, 44.2, 51.4): dr.dress(m, rec, (gx - .3, 23.0, 6.6, 1.6), "yard", n=3)
+dr.dress(m, rec, (15.0, 1.0, 14.0, 15.0), "yard", n=8); dr.dress(m, rec, (42.8, 1.0, 2.2, 15.0), "yard", n=4)
+dr.dress(m, rec, (0, 34.6, 59, 5.4), "wood", n=14); dr.dress(m, rec, (62.0, 0, 4, 40), "wood", n=10)
 for hx, hy, hr, cone in getattr(m, "hearths", []): m.glow(hx, hy, hr, cone=cone, power=.5); m.glow(hx, hy, 60, power=.45)
 out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, "..", "out", "lt-crafts")
 side = rec.finish(out)

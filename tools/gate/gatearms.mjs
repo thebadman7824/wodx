@@ -38,6 +38,9 @@ export async function run() {
     const lib = game.modules.get(LIB)?.api;
     const C = game.modules.get("wodx-combat")?.api ?? game.wodxCombat;
     const scene = await G.scene();
+    // B6350: a cartridge revolver needs a year that has one; a clock left early swept it off the sheet (the kit puts
+    // the clock back after)
+    await G.yearAtLeast(1880);
     const [a, b, m] = await G.make(Actor, [strong("Gate Arms Sprayer"), strong("Gate Arms Victim"), strong("Gate Arms Masked")]);
     const docs = await G.tokens(scene, [{actor: a, x: 2, y: 2, actorLink: true}, {actor: b, x: 3, y: 2, actorLink: true}, {actor: m, x: 2, y: 3, actorLink: true}]);
     await settle(() => docs.every(d => d?.object));

@@ -13,9 +13,10 @@
  * Every number here is a house rule (B2386 to B2389). The books give no rules for freight.
  */
 import {SUPPLY, INDEX} from "./market-rules.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY};
 
 export const STATE_VERSION = 1;
-export const DAY = 86400;
 export const DEFAULT_KM = 40;
 export const MAX_DAYS = 12;
 export const IN_TOWN_DAYS = 2;

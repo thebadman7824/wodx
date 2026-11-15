@@ -86,7 +86,8 @@ export async function run() {
       await chron.place.set(scene, {region: "japan"});
       await until(() => chron.place.of(scene).region === "japan");
       const jp = people(8, "japan");
-      const first = jp.filter(p => p.family && p.name.startsWith(`${p.family} `)).length;
+      // B6250: a Japanese commoner before 1870 bears one name alone; everyone with a family name puts it first
+      const first = jp.filter(p => p.family ? p.name.startsWith(`${p.family} `) : (p.nameCustom?.form === "given" || p.nameCustom?.unset === "given")).length;
       await chron.place.set(scene, {region: "mexico"});
       await until(() => chron.place.of(scene).region === "mexico");
       const mx = people(8, "mexico");

@@ -6,6 +6,7 @@
  * Context: {now, played: [chapter keys played], force}.
  */
 import {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS, WEEK} from "../data/twists-rothenstein.mjs";
+import {DAY} from "./terms.mjs";
 export {CHAINS, TWISTS, PAIRS, ORDER, LAST_CHAPTER, CHAPTERS, WEEK};
 
 export const twistOf = n => TWISTS.find(t => t.n === Number(n)) ?? null;
@@ -48,7 +49,7 @@ export function whyNot(n, state = {}, ctx = {}) {
   if ( !ctx.force && now && idx(t.from) > idx(now) ) return `It fits from chapter ${idx(t.from) + 1}; the company is in chapter ${idx(now) + 1}.`;
   const last = state.last === undefined || state.last === null ? NaN : Number(state.last), at = Number(ctx.now) || 0;
   if ( !ctx.force && Number.isFinite(last) && at - last < WEEK ) {
-    const days = Math.ceil((WEEK - (at - last)) / 86400);
+    const days = Math.ceil((WEEK - (at - last)) / DAY);
     return `One twist a week: the next can come in ${days} ${days === 1 ? "day" : "days"}.`;
   }
   return "";

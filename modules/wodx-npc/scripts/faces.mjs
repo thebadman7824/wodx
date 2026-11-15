@@ -8,11 +8,12 @@
  */
 import * as F from "./faces-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const on = () => { try { return !!game.settings.get(MOD, "faces"); } catch (e) { return false; } };
-const isPC = a => !!a && a.hasPlayerOwner && !/group/i.test(String(a.type ?? ""));
+const isPC = TERMS.isPC;
 const mine = () => (game.actors?.contents ?? []).filter(a => isPC(a) && a.isOwner).map(a => a.id);
 
 export function registerFaceSettings() {

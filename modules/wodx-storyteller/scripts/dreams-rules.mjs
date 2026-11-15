@@ -7,6 +7,7 @@
  * Flaw (V20 p. 485) works by itself: after each day's sleep a Willpower roll, and a failure costs a die on every roll
  * until the next sleep.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** The hour a dream comes by default: in the day's sleep (the Kindred sleep by day; others are abed by then too). */
 export const DEFAULT_HOUR = 8;
@@ -31,7 +32,7 @@ export function nightmareResult(successes, botch = false) {
 }
 
 /** The next day's sleep after now, given the time today's sleep hour falls at. */
-export function nextSleep(todayAt, now, day = 86400) {
+export function nextSleep(todayAt, now, day = DAY) {
   const t = Number(todayAt), n = Number(now);
   if ( !Number.isFinite(t) || !Number.isFinite(n) ) return null;
   return t > n ? t : t + Math.ceil((n - t + 1) / day) * day;

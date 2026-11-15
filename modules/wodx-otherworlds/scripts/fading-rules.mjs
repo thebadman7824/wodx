@@ -6,7 +6,9 @@
  * approved it goes on by itself: a step for every lunar month spent in the spirit world after it began, up to five,
  * and it holds while the traveller is back in the flesh. The pace and what each step does are house readings.
  */
-export const MONTH = 29.5 * 86400;
+import {LUNAR_MONTH} from "../../wodx-chronicle/scripts/terms.mjs";
+/** A lunar month (the shared figure, B6181). */
+export const MONTH = LUNAR_MONTH;
 export const MAX_STEP = 5;
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 

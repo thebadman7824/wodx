@@ -3,6 +3,7 @@
  * pure part. No Foundry calls, so the tests use it directly. The books' numbers live in ../data/creation-totals.mjs.
  */
 import {TOTALS} from "../data/creation-totals.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export {TOTALS};
 
@@ -93,8 +94,9 @@ export function checkCreation(view, lineId, {order = null} = {}) {
 
 /** Successes on a roll: dice at or above the difficulty. Ones cancel unless `onesCancel` is false. */
 export function successes(dice, difficulty, {onesCancel = true} = {}) {
-  const hits = dice.filter(d => d >= difficulty).length;
-  return onesCancel ? hits - dice.filter(d => d === 1).length : hits;
+  // Can go below 0 (more 1s than hits), as before; the difficulty is held to 2-10 (B6189)
+  const r = TERMS.successes(dice, difficulty, {onesCancel});
+  return onesCancel ? r.raw - r.ones : r.raw;
 }
 
 /**

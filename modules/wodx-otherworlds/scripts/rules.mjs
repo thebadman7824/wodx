@@ -8,6 +8,9 @@
  * - W20 Wyld West Expansion Pack, "The Gauntlet" (p. 7) and Umbral Storms and Broken Lands (pp. 27-28).
  * Anything not in those books is marked `ourCall` and recorded in the Chronicle Rules journal.
  */
+import {DAY, LUNAR_MONTH_DAYS, YEAR_AND_A_DAY_DAYS} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+export {YEAR_AND_A_DAY_DAYS};
 
 /** Kinds of place a scene or region can be tagged with. */
 export const SETTLEMENTS = {
@@ -111,11 +114,8 @@ export function shiftTime(successes) {
  * @param {boolean} [options.doubleOnes]  Umbral storm (Wyld West p. 27): each 1 counts as two 1s
  */
 export function countRoll(faces, difficulty, {doubleOnes = false} = {}) {
-  const successes = faces.filter(f => f >= difficulty).length;
-  const ones = faces.filter(f => f === 1).length * (doubleOnes ? 2 : 1);
-  const net = successes - ones;
-  const botch = (successes === 0) && (ones > 0);
-  return {successes, ones, net: Math.max(0, net), botch, success: net > 0};
+  const r = TERMS.successes(faces, difficulty, {doubleOnes});
+  return {successes: r.raw, ones: r.ones, net: r.net, botch: r.botch, success: r.raw - r.ones > 0};
 }
 
 /**
@@ -258,9 +258,8 @@ export function battlemapParent(name) {
 /* -------------------------------------------- */
 
 /** One lunar cycle, new moon to new moon, in days. */
-export const LUNAR_CYCLE_DAYS = 29.53059;
+export const LUNAR_CYCLE_DAYS = LUNAR_MONTH_DAYS;
 /** A year and a day (W20 p. 319), taken as 366 days. */
-export const YEAR_AND_A_DAY_DAYS = 366;
 
 /**
  * How long a traveler has been in one world, and what it costs.
@@ -269,6 +268,6 @@ export const YEAR_AND_A_DAY_DAYS = 366;
  */
 export function disconnection(seconds) {
   if ( seconds === null || seconds === undefined || !Number.isFinite(seconds) || seconds < 0 ) return {known: false, days: 0, cycles: 0, yearAndDay: false};
-  const days = seconds / 86400;
+  const days = seconds / DAY;
   return {known: true, days, cycles: Math.floor(days / LUNAR_CYCLE_DAYS), yearAndDay: days >= YEAR_AND_A_DAY_DAYS};
 }

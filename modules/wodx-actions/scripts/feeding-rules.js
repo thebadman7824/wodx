@@ -10,6 +10,7 @@
  * Clan and bloodline limits (B961-B965). Each rule has a V20 version and, where V20 Dark Ages prints its own, a
  * Dark Ages one, used in the Dark Ages and Long Night eras or before 1450.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** Profiles (profiles.js) whose bodies hold their own living blood: these take damage when drunk from. */
 export const LIVING = ["mortal", "hunter", "mage", "beast", "fae", "lupine", "ghoul"];
@@ -19,7 +20,7 @@ export const isLiving = kind => LIVING.includes(kind);
 export const ANIMALS = ["cow", "dog", "cat", "bird", "rat"];
 
 const n = v => Number(v) || 0;
-const SECONDS_A_DAY = 86400;
+const SECONDS_A_DAY = DAY;
 
 /* ------------------------------------------------------------------ */
 /*  The vessel                                                          */

@@ -11,10 +11,12 @@
 import {FIRE_HEAT as ACTIONS_FIRE_HEAT} from "../../wodx-actions/scripts/rules.js";
 import {holy as demonHoly} from "../../wodx-actions/scripts/demon-rules.js";
 import * as Cover from "./cover-rules.mjs";
+import {DAY, MINUTE, TURN_SECONDS} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+export {MINUTE};
 export {COVERS, COVER_LEVELS, describeCover, cleanCover, coverOnShot} from "./cover-rules.mjs";
 
-export const TURN = 3; // seconds in a turn (V20 Dark Ages printed p. 324)
-export const MINUTE = 60;
+export const TURN = TURN_SECONDS; // seconds in a turn (V20 Dark Ages printed p. 324)
 
 export const KINDS = {door: "Door", gate: "Gate", window: "Window", shutter: "Shutter", hatch: "Hatch"};
 
@@ -75,7 +77,9 @@ export const CONTAINERS = {
   cabinet: {label: "Cabinet or wardrobe", material: "wood"},
   drawers: {label: "Desk or filing drawers", material: "wood"},
   strongbox: {label: "Strongbox", material: "ironbound"},
-  safe: {label: "Safe", material: "steel"}
+  safe: {label: "Safe", material: "steel"},
+  // B6086: loose gear set down on the ground, drawn as a heap; no lid, no lock
+  pile: {label: "Gear on the ground", material: "wood"}
 };
 /** At most this many things in one container. */
 export const MAX_ITEMS = 50;
@@ -505,8 +509,8 @@ export function bringForward(f = {}, {wall = false, year = 0, keys = null} = {})
 /** Eras with keypads, card readers and alarms. */
 const MODERN_ERAS = new Set(["modern", "time-of-judgment", "future-darkness", "time-of-future-judgement"]);
 export function isModern({eraId = "", year = 0, kept = false} = {}) { return MODERN_ERAS.has(eraId) || year >= ELECTRONIC_FROM || !!kept; }
-const DARK_AGE_ERAS = new Set(["dark-ages", "long-night", "classical", "living-gods", "mythic-age", "bronze-kings", "iron-dawn", "greece-republic", "roman-empire", "migration-age", "premyslid-duchy"]);
-export function isDarkAge({eraId = "", year = 0} = {}) { return DARK_AGE_ERAS.has(eraId) || (year > 0 && year < 1450); }
+/** B6192: Dark Ages rules as the era profile has them (terms.darkAgesRules); with no era named, before 1450. */
+export function isDarkAge({eraId = "", year = 0} = {}) { return TERMS.eraById(eraId) ? TERMS.darkAgesRules(eraId) : ["classical", "living-gods"].includes(eraId) || (year > 0 && year <= TERMS.MEDIEVAL_YEAR_END); }
 
 /**
  * The Ability a character picks a lock with. The name differs by line and era: Larceny (V20, W20, C20), Legerdemain
@@ -856,6 +860,14 @@ export function parseItems(text) {
   return lines.map(l => String(l ?? "").trim()).filter(Boolean).slice(0, MAX_ITEMS);
 }
 
+/** "3 things, about 12 kg": the count, and the weight when WoDX Library has put one on (o.kg, B6087). */
+export function kgPart(o) {
+  const n = o.items.length, c = n === 1 ? "one thing" : `${n} things`;
+  const kg = Number(o.kg);
+  if ( !Number.isFinite(kg) || o.kg === null || o.kg === undefined ) return c;
+  return `${c}, ${kg <= 0 ? "weighing nothing to speak of" : kg < 1 ? "under a kilo" : `about ${kg >= 10 ? Math.round(kg) : Math.round(kg * 10) / 10} kg`}`;
+}
+
 /** A short name for an interactable: "Locked iron-bound door", "Open window". */
 export function nameOf(o, era = {}) {
   if ( o.cover ) return Cover.coverTitle(o);
@@ -899,6 +911,7 @@ export function nameOf(o, era = {}) {
     return o.armed ? `${T.label} (${g})` : `Disarmed ${T.label.toLowerCase()} (${g})`;
   }
   if ( o.breakable && !o.door ) return `${WALLS[o.breakable].label} wall`;
+  if ( o.container && o.kind === "pile" ) return `${o.title || "Gear on the ground"}${o.items.length && !o.taken ? ` (${kgPart(o)})` : ", gone"}`;
   if ( o.container ) {
     const st = o.ds === "open" ? (o.items.length && !o.taken ? "Open" : "Open, empty") : o.ds === "locked" ? "Locked" : "Closed";
     const m = ["wood", "steel"].includes(o.material) || (o.kind === "strongbox" && o.material === "ironbound") ? "" : ` ${MATERIALS[o.material].label.toLowerCase()}`;
@@ -1018,11 +1031,16 @@ function hackOption(o, ch) {
 /** A chest, cabinet, strongbox or safe: open it, take what is inside, pick or force its lock, beat its keypad. */
 function containerOptions(o, ch) {
   const out = [];
+  // B6086: a pile of loose gear is picked up, nothing else
+  if ( o.kind === "pile" ) {
+    if ( o.items.length && !o.taken ) out.push({id: "take", label: `Pick it up (${kgPart(o)})`, roll: null, seconds: TURN, noise: {success: "silent"}, note: o.items.slice(0, 6).join(", ") + (o.items.length > 6 ? ", ..." : "")});
+    return out;
+  }
   const name = CONTAINERS[o.kind].label.toLowerCase().split(" ")[0];
   const isOpen = o.ds === "open", locked = o.ds === "locked";
   const strength = (Number(ch.strength) || 0) + (Number(ch.potence) || 0);
   if ( isOpen ) {
-    if ( o.items.length && !o.taken ) out.push({id: "take", label: `Take what is inside (${o.items.length === 1 ? "one thing" : `${o.items.length} things`})`, roll: null, seconds: TURN, noise: {success: "silent"}});
+    if ( o.items.length && !o.taken ) out.push({id: "take", label: `Take what is inside (${kgPart(o)})`, roll: null, seconds: TURN, noise: {success: "silent"}});
     out.push({id: "close", label: `Close the ${name}`, roll: null, seconds: TURN, noise: {success: "quiet"}});
   } else if ( !locked ) out.push({id: "open", label: `Open the ${name}`, roll: null, seconds: TURN, noise: {success: "quiet"}});
   if ( ((ch.hasKey && o.keyName) || ch.opensFor) && !isOpen ) out.push({id: locked ? "unlock" : "lock", label: ch.hasKey && o.keyName ? (locked ? "Unlock it with the key" : "Lock it with the key") : (locked ? "Unlock it (it opens for you)" : "Lock it (it opens for you)"), roll: null, seconds: TURN, noise: {success: "quiet"}});
@@ -1658,9 +1676,9 @@ export function hears(noise, {yards = 0, walls = 0, asleep = false, perception =
   if ( noise === "loud" && !asleep ) return {inRange: true, hears: true};
   const diff = asleep ? 8 : 7;
   const dice = Math.max(1, perception + alertness);
-  let hits = 0, ones = 0;
-  for ( let k = 0; k < dice; k++ ) { const f = 1 + Math.floor(rng() * 10); if ( f >= diff ) hits++; if ( f === 1 ) ones++; }
-  return {inRange: true, hears: hits - ones > 0, roll: {dice, diff, successes: Math.max(0, hits - ones)}};
+  const faces = Array.from({length: dice}, () => 1 + Math.floor(rng() * 10));
+  const r = TERMS.successes(faces, diff);
+  return {inRange: true, hears: r.successes > 0, roll: {dice, diff, successes: r.successes}};
 }
 
 /** Clean a wall's WoDX settings from the config form. */
@@ -1698,7 +1716,7 @@ export function restockFor(f = {}, {title = "", kinds = []} = {}) {
   for ( const k of kinds ?? [] ) if ( RESTOCK_BY_PLACE[k] ) return RESTOCK_BY_PLACE[k];
   return "";
 }
-export const RESTOCK_SECONDS = {dawn: 86400, week: 7 * 86400, month: 30 * 86400, season: 91 * 86400};
+export const RESTOCK_SECONDS = {dawn: DAY, week: 7 * DAY, month: 30 * DAY, season: 91 * DAY};
 
 /**
  * A stock list (Interactables 0.23.0), the Storyteller's own table for a container: one entry a line,
@@ -1744,7 +1762,7 @@ export function restockDue(restock, last = 0, now = 0) {
   const s = RESTOCK_SECONDS[restock];
   if ( !s ) return false;
   if ( !last ) return true;
-  if ( restock === "dawn" ) return Math.floor(now / 86400) > Math.floor(last / 86400);
+  if ( restock === "dawn" ) return Math.floor(now / DAY) > Math.floor(last / DAY);
   return now - last >= s;
 }
 

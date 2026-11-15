@@ -9,6 +9,7 @@
  * to bring a charge that sticks. Which secrets a court cares about changes with the line and the age: heresy in 1197,
  * infernalism always, a Technocracy defection after 1897. The weights, methods and difficulties are house rules.
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** Groups of polities (politics-rules.mjs keys). */
 const KINDRED = ["dark-ages-court", "camarilla", "sabbat", "anarch"];
@@ -89,8 +90,8 @@ export function reachable(secrets = [], method, charId) {
 /** Roll d10s. Returns {dice, hits, ones, net, botch} (V20: each 1 cancels a success; no successes and a 1 is a botch). */
 export function rollPool(n, diff, rand = Math.random) {
   const dice = Array.from({length: Math.max(0, Math.round(n) || 0)}, () => 1 + Math.floor(rand() * 10));
-  const hits = dice.filter(d => d >= diff).length, ones = dice.filter(d => d === 1).length;
-  return {dice, hits, ones, net: Math.max(0, hits - ones), botch: hits === 0 && ones > 0};
+  const r = TERMS.successes(dice, diff);
+  return {dice, hits: r.raw, ones: r.ones, net: r.net, botch: r.botch};
 }
 
 /**
