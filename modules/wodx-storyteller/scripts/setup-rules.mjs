@@ -6,6 +6,7 @@
  * makes or updates, by a flag and never twice: the Storyteller screen, the era primer for the players, the group actor,
  * Session Zero and the Chronicle Rules (through WoDX Chronicle). A dry run shows the plan first.
  */
+import {worldPrimer} from "../data/primers-world.mjs";
 
 export const TEMPLATE_VERSION = 1;
 
@@ -165,10 +166,17 @@ export const PRIMERS = {
   }
 };
 
-/** The era primer for the players, as journal page HTML. profile: an era profile from WoDX Chronicle. */
-export function playerPrimer(profile) {
+/**
+ * The era primer for the players, as journal page HTML. profile: an era profile from WoDX Chronicle. B5880: where the
+ * homeland follows another way of life than Western Christendom (opts.sphere, WoDX Chronicle's sphereFor), and the year
+ * is 1197 or later, the players read what everyone knows there instead (data/primers-world.mjs).
+ */
+export function playerPrimer(profile, {sphere = null, sphereLabel = "", year = null} = {}) {
   const p = PRIMERS[profile?.id] ?? PRIMERS["dark-ages"];
-  return `<h2>${esc(profile?.name ?? "The era")}</h2>${ps(p.players)}<p class="wodx-quiet">The Storyteller can add to this page or change it.</p>`;
+  const y = Number(year ?? profile?.start ?? 1197);
+  const world = sphere && sphere !== "latin" && y >= 1197 ? worldPrimer(sphere, y) : null;
+  const where = world && sphereLabel ? `<p class="wodx-quiet">${esc(sphereLabel)}</p>` : "";
+  return `<h2>${esc(profile?.name ?? "The era")}</h2>${where}${ps(world ?? p.players)}<p class="wodx-quiet">The Storyteller can add to this page or change it.</p>`;
 }
 
 /** The era page of the Storyteller screen. */

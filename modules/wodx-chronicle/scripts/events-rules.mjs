@@ -76,3 +76,56 @@ export function cleanOverride(raw) {
   if ( raw?.day !== "" && raw?.day != null && Number.isInteger(d) && d >= 1 && d <= 31 ) out.day = d;
   return out;
 }
+
+/* ------------------------------------------------------------------ */
+/*  News by part of the world (Chronicle, B5890 to B5892)             */
+/* ------------------------------------------------------------------ */
+
+/**
+ * An event with a `region` (the Future Darkness branch's world history, data/future-world.mjs) happens on its date
+ * wherever the chronicle is, but the card only tells it where its news is heard: in the homeland's part of the world
+ * and in the part the active scene stands in. Moravia hears Europe's news as well as its own.
+ */
+export const NEWS_PARTS = {MO: "Moravia", EU: "Europe", ME: "the Middle East", AS: "Asia", AF: "Africa", AM: "the Americas", OC: "Oceania"};
+const PART_OF = {
+  moravia: "MO",
+  ...Object.fromEntries(["german-lands", "british-isles", "france", "iberia", "italy", "low-countries", "scandinavia", "poland-baltic",
+    "carpathians-balkans", "russia", "aegean"].map(id => [id, "EU"])),
+  ...Object.fromEntries(["anatolia", "levant", "egypt", "arabia", "persia"].map(id => [id, "ME"])),
+  ...Object.fromEntries(["central-asia", "siberia", "tibet-himalaya", "india", "china", "japan", "korea", "southeast-asia", "nusantara",
+    "philippines"].map(id => [id, "AS"])),
+  ...Object.fromEntries(["maghreb", "west-africa", "east-africa", "southern-africa", "central-africa"].map(id => [id, "AF"])),
+  ...Object.fromEntries(["canada", "north-america-east", "north-america-west", "mexico", "caribbean", "andes", "brazil", "southern-cone",
+    "arctic"].map(id => [id, "AM"])),
+  ...Object.fromEntries(["australia", "aotearoa", "pacific-islands", "antarctica"].map(id => [id, "OC"]))
+};
+/** The part of the world a WoDX region (Chronicle world-rules.mjs) belongs to; an unknown one counts as Moravia's. */
+export const partOf = regionId => PART_OF[regionId] ?? "MO";
+/** The parts of the world whose news is heard by people in these regions. */
+export function newsCodes(...regionIds) {
+  const out = new Set();
+  for ( const id of regionIds.filter(Boolean) ) {
+    const p = partOf(id);
+    out.add(p);
+    if ( p === "MO" ) out.add("EU");
+  }
+  if ( !out.size ) { out.add("MO"); out.add("EU"); }
+  return out;
+}
+/** Is this event's news heard here? Events with no region are heard everywhere. */
+export const heardIn = (ev, codes) => !ev?.region || codes.has(ev.region);
+
+/**
+ * What a card tells of the events that just fired: the ones heard here, newest news first kept to the year before the
+ * date unless a time skip is being told (older news is counted, not listed), and how many happened elsewhere.
+ */
+export function newsFor(events, codes, {date = null, skip = false} = {}) {
+  const near = [], older = [];
+  let elsewhere = 0;
+  const cut = date ? dateKey({...date, year: date.year - 1}) : -Infinity;
+  for ( const ev of events ) {
+    if ( !heardIn(ev, codes) ) { elsewhere++; continue; }
+    if ( ev.region && !skip && dateKey(ev) < cut ) older.push(ev); else near.push(ev);
+  }
+  return {told: near, older: older.length, elsewhere};
+}
