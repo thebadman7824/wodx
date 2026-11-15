@@ -211,6 +211,18 @@ export function build(ctx) {
             else {
                 const o = await rollPool(n(fd.o), 6); rolls.push(o.roll);
                 res = r.successes > o.successes ? "The malign being cannot attack and must leave as soon as it can." : r.successes === o.successes ? "A tie: nothing happens." : "It stands its ground.";
+                // B5756: a won Forbiddance takes hold of the targeted being: Afraid for the scene, so WoDX NPC keeps it
+                // away and runs it off, and a Forbidden mark on its token that the Storyteller and players see
+                const being = [...(game.user.targets ?? [])].map(t => t.actor).find(x => x && x !== actor) ?? null;
+                if (being && r.successes > o.successes) {
+                    const C = game.modules.get("wodx-chronicle")?.api;
+                    try {
+                        C?.registerCondition?.({ id: "forbidden", name: "Forbidden", img: "icons/svg/cancel.svg", source: `${REF} pp. 141–142`,
+                            summary: "Forbidden by a mummy's Balance: it cannot attack the mummy and must leave as soon as it can.", mods: {} });
+                        await C?.applyTimed?.(being, { name: "Afraid", description: `Forbidden by ${actor.name}: cannot attack and must leave.`, duration: { kind: "scene" }, key: "wodx-effect-fear", condition: "forbidden", source: `${REF} pp. 141–142` });
+                        res += ` ${being.name} turns to go.`;
+                    } catch (e) { console.warn("WoDX | Forbiddance", e); }
+                } else if (!being && r.successes > o.successes) res += " (Target the being for it to act on the map.)";
                 return post(actor, `${actor.name}: Forbiddance`, rollBlock("Balance", r) + rollBlock("Its Willpower", o) + `<div class="vta-res">${res}</div><div class="vta-note">${esc(u.note)}</div><div class="wodx-quiet">${REF} p. 142</div>`, rolls.filter(Boolean));
             }
             return post(actor, `${actor.name}: Balance`, rollBlock("Balance", r) + `<div class="vta-res">${esc(res)}</div><div class="vta-note">${esc(u.note)}</div><div class="wodx-quiet">${REF} pp. 141–142</div>`, rolls.filter(Boolean));
