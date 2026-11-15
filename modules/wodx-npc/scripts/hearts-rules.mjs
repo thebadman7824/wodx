@@ -264,6 +264,12 @@ export function masqueradeRisk(line, list = [], {kinfolk = []} = {}) {
   const n = normHousehold(list).filter(x => ["spouse", "child", "kin", "servant", "ward"].includes(x.role) && !(sec.kinfolkSafe && x.id && kin.has(x.id))).length;
   return n >= 3 ? 2 : n ? 1 : 0;
 }
+/**
+ * B6451: a month with mortals under the roof: one die, and at or under the risk (1 or 2 on a d10) someone in the house
+ * talks, and a true rumour about the master starts (WoDX reading: the books leave a breach to the Storyteller).
+ */
+export const householdTalks = (risk, face) => Number(risk) > 0 && Number(face) >= 1 && Number(face) <= Number(risk);
+export const householdRumour = (name, line) => `${name || "Someone"}'s ${line === "werewolf" ? "people say odd things about the master's nights in the wild" : "household whispers that the master never eats, and is never seen by day"}`;
 /** What each secret-keeping line risks, by the words hearts lineOf gives (lines-rules SECRET, B6312). */
 export const SECRET_OF = {vampire: SECRET.vampire, kueijin: SECRET["kuei-jin"], werewolf: SECRET.werewolf};
 /** The card's words for a risk: "" when there is none. */
@@ -293,32 +299,38 @@ export function griefResult({successes = 0, botch = false} = {}, great = false) 
   return {held: false, lose: 1, derange: !!(botch && great)};
 }
 
-export function weakSpotChecks(line, kind, ev, {name = "them"} = {}) {
+export function weakSpotChecks(line, kind, ev, {name = "them", po = 0} = {}) {
   const great = GREAT.includes(kind);
   const out = [];
+  // B6450: each check carries the roll that is made for it (hearts.mjs lovedRoll) and what failing it does
   if ( ev === "harm" || ev === "taken" ) {
-    if ( line === "vampire" ) out.push({text: `Seeing ${name} ${ev === "taken" ? "taken" : "hurt"} may stir the Beast: a frenzy check (Self-Control or Instinct) at difficulty ${great ? 7 : 6}.`});
-    else if ( line === "werewolf" ) out.push({text: `Rage at ${name} being ${ev === "taken" ? "taken" : "hurt"}: a frenzy check (Rage) at difficulty ${great ? 6 : 7}.`});
-    // B6313: the Kuei-jin's P'o (Kindred of the East pdf 82-84), the wraith's Shadow (Wraith 20th: Angst), the demon's Torment (Demon: the Fallen pdf 161-162)
-    else if ( line === "kueijin" ) out.push({text: `The P'o stirs at ${name} being ${ev === "taken" ? "taken" : "hurt"}: Hun at difficulty ${great ? 7 : 6} or the Shadow Soul rises.`});
-    else if ( line === "wraith" ) out.push({text: `The Shadow feeds on the fear for ${name}: Willpower at difficulty ${great ? 7 : 6}, or a point of temporary Angst.`});
-    else if ( line === "demon" ) out.push({text: `Anger for ${name}: Willpower at difficulty ${great ? 7 : 6}, or the demon lashes out in its Torment.`});
-    else out.push({text: `Willpower at difficulty ${great ? 7 : 6} to keep a clear head while ${name} is ${ev === "taken" ? "held" : "in danger"}.`});
+    const d = great ? 7 : 6, seen = ev === "taken" ? "taken" : "hurt";
+    if ( line === "vampire" ) out.push({text: `Seeing ${name} ${seen} may stir the Beast: a frenzy check, a loved one in danger (V20).`, roll: {via: "beast"}});
+    else if ( line === "werewolf" ) out.push({text: `Rage at ${name} being ${seen}: Rage at difficulty ${great ? 6 : 7}, four successes and the Garou frenzies (W20 p. 262).`, roll: {pool: "rage", diff: great ? 6 : 7, need: 4, fail: "frenzy"}});
+    // The Kuei-jin's P'o (Kindred of the East pdf 82-84), the wraith's Shadow (Wraith 20th: Angst), the demon's Torment (Demon: the Fallen pdf 161-162)
+    else if ( line === "kueijin" ) out.push({text: `The P'o stirs at ${name} being ${seen}: Hun against the P'o, or the Shadow Soul rises.`, roll: {pool: "hun", diff: Math.max(2, Math.min(10, Number(po) || 6)), fail: "shadow"}});
+    else if ( line === "wraith" ) out.push({text: `The Shadow feeds on the fear for ${name}: Willpower at difficulty ${d}, or a point of temporary Angst.`, roll: {pool: "willpower", diff: d, fail: "angst"}});
+    else if ( line === "demon" ) out.push({text: `Anger for ${name}: Willpower at difficulty ${d}, or a point of temporary Torment.`, roll: {pool: "willpower", diff: d, fail: "torment"}});
+    else out.push({text: `Willpower at difficulty ${d} to keep a clear head while ${name} is ${ev === "taken" ? "held" : "in danger"}, or a point of temporary Willpower lost to worry.`, roll: {pool: "willpower", diff: d, fail: "willpower"}});
     if ( ev === "taken" ) out.push({text: "Whoever holds them has leverage: their demands go in the Ledger."});
   }
   if ( ev === "death" ) {
     out.push({text: `Grief for ${name}: Willpower at difficulty ${great ? 8 : 7}, or lose a point of temporary Willpower.`});
     if ( great ) out.push({text: "A botch leaves a Derangement from the loss, drawn from those grief leaves."});
     if ( line === "vampire" ) out.push({text: "If the Kindred's own hand or neglect caused it, a degeneration roll may follow."});
-    if ( line === "werewolf" ) out.push({text: "Rage at the loss: a frenzy check at difficulty 6."});
-    if ( line === "changeling" ) out.push({text: "Grief dims the Dreaming: Banality may rise by one (Storyteller)."});
-    if ( line === "wraith" ) out.push({text: "A Passion tied to them may fade, and the Shadow speaks of it."});
-    if ( line === "kueijin" ) out.push({text: "If the Cathayan's own hand or neglect caused it, the Dharma is tested."});
-    if ( line === "demon" ) out.push({text: "If the demon's own hand caused it, a Virtue roll, or a point of temporary Torment (Demon: the Fallen pdf 162)."});
-    if ( line === "mummy" ) out.push({text: "A mummy outlives the living: a Willpower roll or the grief carries into the next death."});
+    if ( line === "werewolf" ) out.push({text: "Rage at the loss: Rage at difficulty 6, four successes and the Garou frenzies.", roll: {pool: "rage", diff: 6, need: 4, fail: "frenzy"}});
+    if ( line === "changeling" ) out.push({text: "Grief dims the Dreaming: Willpower at 7, or a point of temporary Banality.", roll: {pool: "willpower", diff: 7, fail: "banality"}});
   }
   return out;
 }
+
+/** B6450: did a check's roll fail? A frenzy check fails at `need` successes or more; the others fail at none. */
+export function lovedFailed(roll, successes = 0) {
+  if ( !roll || roll.via ) return false;
+  return roll.need ? Number(successes) >= roll.need : Number(successes) <= 0;
+}
+/** The word over the token when a loved-one check fails. */
+export const LOVED_FAIL_WORD = {frenzy: "Frenzy", shadow: "The P'o rises", angst: "+1 Angst", torment: "+1 Torment", willpower: "-1 Willpower", banality: "+1 Banality"};
 
 /* ------------------------------------------------------------------ */
 /*  Adoption of children and adults (B3213, Ben 2026-11-13)        */

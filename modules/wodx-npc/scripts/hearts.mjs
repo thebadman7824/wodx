@@ -15,6 +15,7 @@
  */
 import * as H from "./hearts-rules.mjs";
 import * as LR from "./lines-rules.mjs";
+import * as LM from "./line-mend.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 
 const MOD = "wodx-npc";
@@ -224,7 +225,15 @@ async function onMonth({months = {}} = {}) {
     const u = upkeepOf(a, n);
     if ( !u.total ) continue;
     try { await st().upkeep.money.pay(a, u.total, {note: "Household"}); } catch (e) { continue; }
-    lines.push(`${a.name}: ${u.rows.length} under the roof, ${u.text}.${H.riskWords(u.line, u.risk)}`);
+    let talk = "";
+    if ( u.risk > 0 ) {
+      const face = Math.ceil(Math.random() * 10);
+      if ( H.householdTalks(u.risk, face) ) {
+        const tellers = householdOf(a).map(x => x.id).filter(id => id && game.actors.get(id));
+        try { await st()?.rumours?.start?.({text: H.householdRumour(a.name, u.line), tellers, source: tellers[0] ?? null, about: a.id, truth: "true"}); talk = " Someone in the house talked: a rumour has started."; } catch (e) { console.warn(`${MOD} | household rumour`, e); }
+      }
+    }
+    lines.push(`${a.name}: ${u.rows.length} under the roof, ${u.text}.${H.riskWords(u.line, u.risk)}${talk}`);
   }
   if ( lines.length ) await ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX"}, flags: {[MOD]: {household: true}}, content: card("The month's household keep", lines)});
 }
@@ -278,23 +287,67 @@ async function heartbreak(who, other) {
     content: card(`${who.name}'s heart breaks over ${other.name}`, [line])});
   return {botch, derangement: key};
 }
-async function tellLoved(victim, ev) {
+export async function tellLoved(victim, ev) {
   if ( !isActiveGM() || !on() || !victim?.id ) return [];
   const out = [];
   for ( const e of closeTo(victim.id) ) {
     const who = game.actors.get(e.from);
     if ( !who ) continue;
-    const checks = H.weakSpotChecks(lineOf(who), e.kind, ev, {name: victim.name});
+    const checks = H.weakSpotChecks(lineOf(who), e.kind, ev, {name: victim.name, po: Number(who.system?.advantages?.po?.permanent) || 0});
     if ( !checks.length ) continue;
-    const lines = checks.map(c => c.text), rolls = [];
+    const lines = checks.map(c => c.text), rolls = [], rolled = [];
+    // B6450: the checks are rolled for them, and a failure lands on the sheet
+    for ( const c of checks.filter(x => x.roll) ) {
+      const r = await lovedRoll(who, c.roll).catch(err => { console.warn(`${MOD} | loved-one check`, err); return null; });
+      if ( r?.line ) lines.push(r.line);
+      if ( r?.roll ) rolls.push(r.roll);
+      if ( r ) rolled.push({fail: c.roll.fail ?? null, failed: !!r.failed});
+    }
     if ( ev === "death" ) { const g = await grieve(who, e.kind); if ( g ) { lines.push(g.line); rolls.push(g.roll); } }
     // B5804 (n5): an NPC mourns on the map by its faith
     if ( ev === "death" && !who.hasPlayerOwner ) { try { const m = await api()?.aftercare?.mourn?.(who, victim); if ( m ) lines.push(`In mourning: ${m.words}, ${m.days} days.`); } catch (err) { console.warn(`${MOD} | mourning`, err); } }
     await ChatMessage.create({whisper: ownersOf(who), speaker: {alias: who.name}, flags: {[MOD]: {heartCard: true}}, rolls,
       content: card(`${victim.name} ${ev === "death" ? "is dead" : ev === "taken" ? "is taken" : "is hurt"}`, lines)});
-    out.push({to: who.id, checks});
+    out.push({to: who.id, checks, rolled});
   }
   return out;
+}
+/* B6450: the roll a loved-one check names, made and applied. */
+const actApi = () => (game.modules.get("wodx-actions")?.active ? game.modules.get("wodx-actions").api : null);
+function lovedPool(a, pool) {
+  const adv = a?.system?.advantages ?? {};
+  if ( pool === "willpower" ) return Number(adv.willpower?.permanent) || 0;
+  return Number(adv[pool]?.permanent) || 0;
+}
+async function bump(a, id, delta) {
+  const P = actApi()?.profiles;
+  if ( P?.adjust && P.resource?.(a, id)?.ok ) return P.adjust(a, id, delta, {note: false});
+  const cur = Number(a.system?.advantages?.[id]?.temporary) || 0;
+  return a.update({[`system.advantages.${id}.temporary`]: Math.max(0, Math.min(10, cur + delta))});
+}
+async function lovedRoll(who, spec) {
+  if ( spec.via === "beast" ) {
+    const r = await actApi()?.autoBeast?.({actor: who, provocation: "loved"});
+    return {line: r ? "" : "The Beast stays quiet."};
+  }
+  const dice = lovedPool(who, spec.pool);
+  if ( dice <= 0 ) return null;
+  const roll = await new Roll(`${dice}d10`).evaluate();
+  const faces = roll.dice?.[0]?.results?.map(x => x.result) ?? [];
+  const hits = faces.filter(f => f >= spec.diff).length, ones = faces.filter(f => f === 1).length;
+  const succ = Math.max(0, hits - ones);
+  const failed = H.lovedFailed(spec, succ);
+  const label = {rage: "Rage", hun: "Hun", willpower: "Willpower"}[spec.pool] ?? spec.pool;
+  if ( failed ) {
+    if ( spec.fail === "frenzy" || spec.fail === "shadow" ) {
+      await who.update({"system.conditions.isfrenzy": true});
+      try { await who.setFlag("wodx-actions", "frenzyType", spec.fail === "shadow" ? "po" : "berserk"); } catch (e) { /* Actions off */ }
+      try { await game.modules.get("wodx-chronicle")?.api?.conditions?.setCondition?.(who, "frenzy", true); } catch (e) { /* Chronicle off */ }
+    } else if ( spec.fail === "willpower" ) await bump(who, "willpower", -1);
+    else await bump(who, spec.fail, 1);
+    LM.floatOver(who, H.LOVED_FAIL_WORD[spec.fail] ?? "", "#ff8a80");
+  }
+  return {roll, failed, line: `${label} ${dice} at ${spec.diff}: ${succ} ${succ === 1 ? "success" : "successes"}. ${failed ? `${H.LOVED_FAIL_WORD[spec.fail]}.` : "It holds."}`};
 }
 /** Someone close is taken: the captor's demands go in the Ledger, and the ones who love them are told. */
 export async function takeHostage(captorLike, victimLike, {demand = ""} = {}) {

@@ -160,3 +160,40 @@ export function strikeMeans({fight = 0, retainers = 0, mortal = false, byMonster
   return "rumour";
 }
 export const STRIKE_WORDS = {attack: "sends people to hurt them", hunters: "tips off the hunters about them", rumour: "spreads word against them"};
+
+/**
+ * B6452: a hidden loyalty sought for real. When a character looks someone over (WoDX Actions' Look over), the best
+ * sense their line gives is rolled at once. A sense that reads the side finds it on any success; one that only shows a
+ * lie (Lifesight, Kenning, Empathy, Aura Perception) finds it on three or more (WoDX reading: a lie read clearly enough
+ * points to whom it serves), and on one or two shows only that something is hidden.
+ * have: {powers: {name lower case: dots}}; target: {willpower, manipulation, subterfuge}.
+ */
+const POWER_OF = s => String(s.power ?? "").split(" (")[0].toLowerCase();
+export function senseHeld(s, have = {}) {
+  if ( !Number(s.dots) ) return true;
+  return (Number(have.powers?.[POWER_OF(s)]) || 0) >= Number(s.dots);
+}
+/** The best held sense: one that reads the side first, then the rest, in the table's order. */
+export function pickSense(senses = [], have = {}) {
+  const held = senses.filter(s => senseHeld(s, have));
+  return held.find(s => !s.shows) ?? held[0] ?? null;
+}
+/** The roll's parts: ["intelligence", "subterfuge"], or ["arete"]. */
+export const senseParts = s => String(s.roll ?? "").toLowerCase().split("+").map(x => x.trim()).filter(Boolean);
+/** The difficulty, numbers or the target's traits (clamped 2 to 10). */
+export function senseDifficulty(s, target = {}, have = {}) {
+  const d = s.difficulty;
+  let v = 6;
+  if ( Number.isFinite(Number(d)) ) v = Number(d);
+  else if ( /willpower/i.test(d) ) v = Number(target.willpower) || 6;
+  else if ( /manipulation \+ subterfuge/i.test(d) ) v = (Number(target.manipulation) || 0) + (Number(target.subterfuge) || 0) || 6;
+  else if ( /sphere rating \+ 3/i.test(d) ) v = (Number(have.powers?.[POWER_OF(s)]) || 1) + 3;
+  return Math.max(2, Math.min(10, v));
+}
+/** "found", "hint" or "none". */
+export function senseResult(s, successes = 0) {
+  const n = Number(successes) || 0;
+  if ( n <= 0 || !s ) return "none";
+  if ( !s.shows ) return "found";
+  return n >= 3 ? "found" : "hint";
+}

@@ -51,8 +51,18 @@ test("loved ones and lovers: each line's own checks and truths", () => {
   const k = H.weakSpotChecks("kueijin", "spouse", "harm", {name: "Mei"}).map(c => c.text).join(" ");
   assert.match(k, /P'o/); assert.doesNotMatch(k, /Beast/);
   assert.match(H.weakSpotChecks("wraith", "child", "taken").map(c => c.text).join(" "), /Angst/);
-  assert.match(H.weakSpotChecks("demon", "lover", "death").map(c => c.text).join(" "), /Torment/);
-  assert.match(H.weakSpotChecks("mummy", "lover", "death").map(c => c.text).join(" "), /outlives/);
+  assert.match(H.weakSpotChecks("demon", "lover", "harm").map(c => c.text).join(" "), /Torment/);
+  // B6450: every check that names a roll carries it, and failing it is decided by the rules
+  assert.deepEqual(H.weakSpotChecks("demon", "lover", "harm")[0].roll, {pool: "willpower", diff: 7, fail: "torment"});
+  assert.equal(H.weakSpotChecks("kueijin", "lover", "harm", {po: 4})[0].roll.diff, 4, "Hun against the P'o");
+  assert.equal(H.weakSpotChecks("werewolf", "friend", "death").find(c => c.roll).roll.need, 4);
+  assert.ok(H.weakSpotChecks("changeling", "friend", "death").some(c => c.roll?.fail === "banality"));
+  assert.ok(H.lovedFailed({pool: "rage", need: 4}, 4) && !H.lovedFailed({pool: "rage", need: 4}, 3));
+  assert.ok(H.lovedFailed({pool: "willpower"}, 0) && !H.lovedFailed({pool: "willpower"}, 1));
+  assert.equal(H.lovedFailed({via: "beast"}, 0), false, "the Beast is Actions' own roll");
+  // B6451: a household that talks starts a rumour
+  assert.ok(H.householdTalks(2, 2) && !H.householdTalks(2, 3) && !H.householdTalks(0, 1));
+  assert.match(H.householdRumour("Ana", "vampire"), /never seen by day/);
   assert.match(H.weakSpotChecks("vampire", "lover", "harm").map(c => c.text).join(" "), /Beast/, "the Kindred keep theirs");
   assert.equal(H.hindrance({line: "kueijin", humanity: 2}, {line: "mortal"}).cap, 2);
   assert.equal(H.hindrance({line: "demon", torment: 8}, {line: "mortal"}).cap, 2);
@@ -126,4 +136,20 @@ test("wiring: the refill runs on the clock and the NPC api keeps every entry aft
   const rf = readFileSync(join(root, "modules/wodx-npc/scripts/line-refill.mjs"), "utf8");
   assert.match(rf, /Hooks\.on\("updateWorldTime"/); assert.match(rf, /Hooks\.on\("wodxSkipEnd"/);
   assert.match(rf, /floatOver/); assert.match(rf, /whisper: gmIds\(\)/);
+});
+
+test("B6452: looking someone over rolls the viewer's line's sense for a hidden loyalty", async () => {
+  const T = await imp("modules/wodx-npc/scripts/trust-rules.mjs");
+  const wr = T.pickSense(T.sensesFor("wraith"), {powers: {}});
+  assert.equal(wr.power, "Lifesight", "a wraith's own sense before plain Empathy");
+  assert.equal(T.senseResult(wr, 2), "hint"); assert.equal(T.senseResult(wr, 3), "found"); assert.equal(T.senseResult(wr, 0), "none");
+  const vNo = T.pickSense(T.sensesFor("vampire"), {powers: {}});
+  assert.equal(vNo.power, "Empathy", "no Auspex: only Empathy");
+  const vYes = T.pickSense(T.sensesFor("vampire"), {powers: {auspex: 4}});
+  assert.equal(vYes.power, "Auspex (Telepathy)"); assert.equal(T.senseResult(vYes, 1), "found");
+  assert.equal(T.senseDifficulty(vYes, {willpower: 7}), 7);
+  assert.equal(T.senseDifficulty(T.LOYALTY_SENSES.find(s => s.line === "mortal"), {manipulation: 3, subterfuge: 2}), 5);
+  assert.deepEqual(T.senseParts(wr), ["perception", "empathy"]);
+  const src = readFileSync(join(root, "modules/wodx-npc/scripts/trust.mjs"), "utf8");
+  assert.match(src, /Hooks\.on\("wodxLookOver"/); assert.match(src, /type: "trust\.found"/);
 });
