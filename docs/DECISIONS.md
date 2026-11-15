@@ -242,7 +242,7 @@ Next free block: B5480
 | B5000-B5009 | Moro names (used B5000-B5002) | Creation, Chronicle |
 | B5010-B5029 | The Storyteller's Hand, part three: fire, noticing, and the rest of the desk acts by itself (Ben's desk picks, 14 November 2026) (used B5010-B5024) | Interactables, Actions, Senses, Library, Chronicle, Storyteller, Otherworlds, Creation |
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
-| B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5057) | Creation, Chronicle, NPC, Sheets, Actions, Combat |
+| B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5064) | Creation, NPC, Actions |
 | B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 | B5180-B5189 | Names raised to 300, Thai (used B5180) | Creation |
@@ -8097,6 +8097,39 @@ Reverse: the animalGhoul block in scoreOptions.
 WoDX NPC. When a Storyteller's ghoul botches its craving roll (B5051), its token moves next to the nearest living mortal on the scene and the Storyteller is told it means to drink. Player characters' ghouls are left to their players. Desk item 12.
 
 Reverse: the wodxGhoulCraving hook in main.mjs.
+
+## B5058. Traits by kind (2026-11-14)
+WoDX Creation. Each animal kind takes its traits from the V20 Dark Ages animals list (pp. 396 to 399); pigeon, poultry, sheep or goat, deer, cattle and elephant are house figures beside their nearest listed kin. Desk item 19.
+
+Reverse: animal-stock-rules STATS.
+
+## B5059. Three steps of training (2026-11-14)
+WoDX Creation, WoDX Actions. Untrained, trained, war-trained. Trained gives the bracket traits and lets the animal keep and win back Willpower (V20 Dark Ages p. 396); an untrained one wins none back at a new night or the end of a story. War-trained is for horses, camels, elephants, guard dogs and hounds: a dot of Brawl (house) and the mark (flags.wodx-creation.animal.training "war") the mounts rules read to stop shying. Desk items 4 and 18.
+
+Reverse: drop trainingOption from purchaseOptions and untrainedBeast from WoDX Actions.
+
+## B5060. Training by experience or by a long task (2026-11-14)
+WoDX Creation with WoDX Storyteller. 5 experience for trained, 10 for war (house). Or a long task on the trainer's sheet: Manipulation + Animal Ken at difficulty 7, a roll a week, 5 successes to train and 10 for war; when the task is done the animal is trained by itself. Desk items 17 and 18.
+
+Reverse: registerAnimalStock's wodxTaskDone hook and the Train token button.
+
+## B5061. Breeds by era and land (2026-11-14)
+WoDX Creation. A breed fits a span of years and a set of lands, moves a trait by one dot at most, and gives the beast its name and coat. Desk item 19.
+
+Reverse: animal-stock-rules BREEDS.
+
+## B5062. Animal retainers in the wizard (2026-11-14)
+WoDX Creation. A vampire's Retainers dots can each be a ghouled animal (V20 Dark Ages p. 182), made, bonded by the full oath and fed by itself, owned by the player. A kept beast may start trained. Dots put together make one beast with the Storyteller's leave: each past the first adds a dot of Fortitude, Celerity or Potence in turn (house). Desk item 20.
+
+Reverse: drop wizardPanel from the wizard's Backgrounds page.
+
+## B5063. Trained commands only (2026-11-14)
+WoDX NPC. Without Feral Whispers from the one it serves, an animal follower takes only the trained commands, and only when trained; errands, help and talking round a witness need Feral Whispers. An animal with no training on record counts as trained. Desk item 16.
+
+Reverse: animalOrderBlock in give().
+
+## B5064. Kept for later (2026-11-14)
+Coat colours are stored on the animal (flags.wodx-creation.animal.coat) for the sprite parts; drawing them is the pixel sprites' work.
 
 ## B5090. Golconda ends when its purity fails (2026-11-14)
 WoDX Actions. A vampire in Golconda falls from it by itself when the Road drops below 7 or Conscience (or Conviction) below 4 (V20 Dark Ages p. 359; Ben's pick go1). A card goes to the player and the Storyteller, and "Golconda lost" floats over the token. Frenzy, Rötschreck and the nightly blood loss return. The long road can be walked again. Setting "Golconda's rules".

@@ -223,3 +223,17 @@ export function drift(kind, {step = 0, months = 0, animal = false, bound = false
     fedOn: "its master fed on it", hard: "made to carry out a hard order"}[kind];
   return {delta: to - now, why, wavers: to <= DRIFT_FLOOR};
 }
+
+/**
+ * B5063: orders an animal understands. Without Feral Whispers (Animalism 1) from the one it serves, a trained animal
+ * takes the trained commands (follow, wait, guard, watch, go to, and the fight orders) and an untrained one takes
+ * none; errands, help with a long task and talking round a witness are never open to it. With Feral Whispers, every
+ * order is open. An animal with no training on record counts as trained, as every animal follower did before.
+ * -> "" when it can take the order, else why not.
+ */
+export const TRAINED_ORDERS = new Set(["follow", "wait", "guard", "watch", "fetch", "attack", "holdback", "cutoff"]);
+export function animalOrderBlock(kind, {animal = false, trained = true, whispers = false} = {}) {
+  if ( !animal || whispers || kind === "none" ) return "";
+  if ( !TRAINED_ORDERS.has(kind) ) return "An animal cannot do that unless the one it serves speaks to it with Feral Whispers (Animalism).";
+  return trained ? "" : "An untrained animal does not understand that order. Train it, or speak to it with Feral Whispers (Animalism).";
+}
