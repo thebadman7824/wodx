@@ -10,6 +10,7 @@
  *   8. Spirit Static: the Gauntlet one higher here, back when it ends (WoDX Otherworlds)
  *   9. Healing: a lethal level closes on the target
  *  10. an NPC spirit's power choice offers Blast to attack
+ *  11. WoDX Combat reads the Creature spirit as a spirit, soaking with its Willpower
  * Result: Data/wodx-gate/gatecharms-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -142,6 +143,12 @@ export async function run() {
       const powers = A.npcPowers(body());
       const b = powers.find(p => p.name === "Blast");
       G.ok("10. an NPC spirit's power choice offers Blast to attack", !!b && b.uses.includes("attack") && b.use === "useCharm", {sample: powers.map(p => ({name: p.name, uses: p.uses}))});
+    });
+
+    await G.step("11. WoDX Combat: a Creature spirit soaks as a spirit", async () => {
+      const WC = game.modules.get("wodx-combat")?.api;
+      const kind = WC?.getProfile?.(body());
+      G.ok("11. WoDX Combat: a Creature spirit soaks as a spirit", kind === "spirit", {kind});
     });
   } catch (e) {
     G.R.errors.push(String(e?.message ?? e));
