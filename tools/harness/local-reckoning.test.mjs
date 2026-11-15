@@ -92,6 +92,28 @@ test("local reckoning: the clock and the opening card hear it", () => {
   const clock = src("modules/wodx-chronicle/scripts/clock-app.mjs");
   assert.ok(clock.includes("Players hear:"));
   assert.ok(clock.includes("reckon(now, {church: ch"));
-  assert.ok(src("modules/wodx-atmosphere/scripts/main.mjs").includes("reckon(t, {church, eraId, latitude: lat})"));
+  assert.ok(src("modules/wodx-atmosphere/scripts/main.mjs").includes("{church, eraId, latitude: lat}"));
   assert.ok(src("modules/wodx-atmosphere/scripts/main.mjs").includes("church?.on?.(t, {scene})"));
+});
+
+test("local reckoning: Persia's solar year from 1925 (B5874)", () => {
+  const ymd = j => C.jdnToGregorian(j);
+  assert.deepEqual(ymd(L.nowruz(2024)), {year: 2024, month: 3, day: 20});
+  assert.deepEqual(ymd(L.nowruz(2026)), {year: 2026, month: 3, day: 21});
+  assert.deepEqual(L.solarHijriDate(C.gregorianToJDN(1979, 2, 11)), {year: 1357, month: 11, day: 22});
+  assert.deepEqual(L.solarHijriDate(C.gregorianToJDN(2023, 12, 22)), {year: 1402, month: 10, day: 1});
+  assert.equal(L.solarHijriWords(C.gregorianToJDN(1977, 1, 1)), "the 11th of Dey, in the year 2535 of the Shah's count");
+  assert.equal(R.reckon(at(1950, 3, 12), {faith: "islamic", region: "persia"}).date, "Sunday, the 21st of Esfand, in the year 1328 of the solar Hijra");
+  assert.match(R.reckon(at(1900, 3, 12), {faith: "islamic", region: "persia"}).date, /of the Hijra$/);
+});
+
+test("local reckoning: a character's own count (B5875)", () => {
+  assert.deepEqual(L.countOf({}, {path: {picks: {people: "jewish"}}}, "western"), {faith: "jewish", why: "people"});
+  assert.deepEqual(L.countOf({}, {path: {picks: {people: {id: "arabic"}}}}, "islamic"), {faith: "islamic", why: "land"});
+  assert.deepEqual(L.countOf({reckonFaith: "chinese"}, {path: {picks: {people: "jewish"}}}, "western"), {faith: "chinese", why: "pick"});
+  assert.deepEqual(L.countOf({reckonFaith: "land"}, null, "hindu"), {faith: "hindu", why: "land"});
+  assert.deepEqual(L.countOf({}, {path: {picks: {people: "czech"}}}, "western"), {faith: "western", why: "land"});
+  const clock = src("modules/wodx-chronicle/scripts/clock-app.mjs");
+  assert.ok(clock.includes('select name="reckonFaith" data-fixed') && clock.includes('setFlag(MODULE_ID, "reckonFaith"'));
+  assert.ok(src("modules/wodx-atmosphere/scripts/main.mjs").includes("countOf(mine.flags"));
 });
