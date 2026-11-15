@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.95.0 (Say or Do: heartbreak shows for a week (B5826))
 - 0.94.0 (Servants and bonds, step three: fomori powers and masters, the Retinue enchanted, mummy cults that keep the vessel, Social Conditioning programmes and NPC masters who keep servants by era (B5120-B5127))
 - 0.93.0 (Ben's Power Limits Desk picks e1 and e2 (22:44Z, 14 November 2026). New power-pick-rules.mjs; world setting pickPowers and a per-NPC "I pick their powers" box in the Behaviour window)
 - 0.92.0 (NPCs no longer pick a mount they cannot ride: a chimerical steed is for the fae and a Stygian steed for the dead (B4961); NPCs ride beasts on their own tokens (B4966))

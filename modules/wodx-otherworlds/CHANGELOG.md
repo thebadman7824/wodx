@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.33.0 (Say or Do: the Avatar Storm and Net combat now hurt (B5820-B5821))
 - 0.32.0 (Time in the Labyrinth is drawn each journey from its own table, from an hour here for each day there to a month here (B5179))
 - 0.31.0 (A still aura for Golconda (B5095; a house reading))
 - 0.30.0 (The Otherworlds act without the Storyteller's hand (B5017-B5020))
