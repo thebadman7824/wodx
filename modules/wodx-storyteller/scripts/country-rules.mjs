@@ -12,6 +12,7 @@
  */
 import * as Road from "./road-rules.mjs";
 import * as D from "../data/country.mjs";
+import {HOUR} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const {west, east, south, north, cell: CELL} = D.BOUNDS;
 const KY = 111.2, KX = 111.2 * Math.cos(((south + north) / 2) * Math.PI / 180);
@@ -409,7 +410,6 @@ export const LODGINGS = {
   inn: {label: "Inns and lodgings", enc: 1, cost: 1 / 30, hint: "A bed each night where the road has one."},
   camp: {label: "Camp by the road", enc: 1.25, cost: 0, hint: "Free, and a quarter more likely to be found by trouble."}
 };
-const HOUR = 3600;
 
 /**
  * Lay a trip over the clock. trip: from countryTrip. opts: start (seconds), nextDawn(t), nextDusk(t) (seconds),

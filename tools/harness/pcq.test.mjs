@@ -53,6 +53,13 @@ test("the queue runs priority first, then the oldest, and holds jobs waiting on 
   assert.deepEqual(order(q, new Set([2])).map(j => j.number), [6, 7, 9, 5]);
 });
 
+test("a waiting job gains a priority step each hour, so a p5 job is not passed over all day (B6490)", () => {
+  const now = Date.parse("2026-11-15T18:00:00Z"), at = h => ({created_at: new Date(now - h * 3600000).toISOString()});
+  const q = [{number: 1547, issue: at(3.6), job: {prio: 5}}, {number: 1605, issue: at(0.2), job: {prio: 1}}, {number: 1600, issue: at(0.5), job: {prio: 3}}];
+  assert.deepEqual(order(q, new Set(), now).map(j => j.number), [1605, 1547, 1600]);
+  assert.deepEqual(order(q, new Set(), now + 3600000).map(j => j.number), [1547, 1605, 1600]);
+});
+
 test("a gates job splits over its lanes with a report file", () => {
   const job = validate({kind: "gates", gates: ["a", "b", "c"], lanes: 2}, LANES).job;
   assert.deepEqual(gateArgs(job, "4", 1, 2, "r.txt"), ["a", "b", "c", "--lane", "4", "--shard", "2/2", "--wait", "10", "--report", "r.txt"]);

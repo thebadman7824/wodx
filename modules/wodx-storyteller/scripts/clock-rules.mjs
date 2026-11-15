@@ -16,12 +16,12 @@
  * Players see only the clocks the Storyteller shows them. A shown clock can be for everyone or for some characters.
  * Stored in the world setting wodx-storyteller.clocks: {v, own: [clock], shown: {"<derived id>": [actor ids] | true}}.
  */
+import {DAY, WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const CLOCKS_VERSION = 1;
 export const SEGMENTS = [4, 6, 8, 10, 12];
 export const TICKS = {none: "By hand only", faction: "Each faction turn", session: "Each session's end", week: "Each week of game time"};
 export const KINDS = {task: "Long task", heat: "Heat", tie: "A tie to tend", objective: "Objective", due: "Comes due", own: "The Storyteller's"};
-const WEEK = 7 * 86400;
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const ids = v => (Array.isArray(v) ? [...new Set(v.map(String).filter(Boolean))] : []);
@@ -105,7 +105,7 @@ export function tieClocks(ties = [], now = 0) {
   const out = [];
   for ( const {actorId, actorName, tie} of ties ) {
     if ( !tie || tie.off || !Number.isFinite(Number(tie.last)) || !(n(tie.every) > 0) ) continue;
-    const span = n(tie.every) * 86400, gone = clamp(n(now) - Number(tie.last), 0, span);
+    const span = n(tie.every) * DAY, gone = clamp(n(now) - Number(tie.last), 0, span);
     if ( gone < span / 2 ) continue;
     out.push({id: `tie:${actorId}:${tie.key}`, kind: "tie", name: `${actorName}: ${tie.name}`, segments: 6, filled: scaled(gone, span, 6),
       note: gone >= span ? "Needs tending now." : `Needs tending every ${n(tie.every)} days.`, for: [String(actorId)]});

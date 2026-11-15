@@ -3,6 +3,7 @@
  * "WoDX choice" marks what the books leave open. Each optional rule sits behind a house-rule switch in WoDX Chronicle.
  * Design: "WoDX: Carrying a Character Across Eras".
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** The house-rule switches (WoDX Chronicle, rule.<id>) and what each one sets. */
 export const SWITCHES = {
@@ -73,7 +74,8 @@ export const ROAD_TO_PATH = {
 };
 
 /** WoDX era profiles before the Victorian age (Dark Ages rules) and the modern ones. */
-export const DA_ERAS = ["dark-ages", "long-night"];
+/** B6192: the eras whose profile plays by the Dark Ages rules (terms.darkAgesRules: the Roads stay to the Age of Reason). */
+export const DA_ERAS = TERMS.ERAS.filter(e => TERMS.darkAgesRules(e.id)).map(e => e.id);
 
 /**
  * Lines that exist only in some years (B83): outside them a character is refused unless the Storyteller allows it

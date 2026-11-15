@@ -6,6 +6,7 @@
  *   taught     flags["wodx-npc"].taught {<student id>: [{what, dots, from, to, owed}]} on the teacher
  * The rolls and numbers are house rules (B2873, B2875).
  */
+import {WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
 
 /* ------------------------------------------------------------------ */
 /*  Past lives and returning souls (c4)                                */
@@ -132,7 +133,6 @@ export function circleLayout(nodes = [], {size = 520, pad = 60} = {}) {
 /*  Scene ideas from ties (t2)                                         */
 /* ------------------------------------------------------------------ */
 
-const WEEK = 7 * 86400;
 /**
  * Scene ideas for the week ahead. Each source is plain data the Foundry side gathers:
  *   due: Ledger entries open and due within the week; held: hostages {victim, captor}; feuds: live, at heat 3;

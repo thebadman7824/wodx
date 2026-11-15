@@ -16,10 +16,10 @@
  * The counts (one in a hundred of the dead rising, the Shroud a point thinner for a year and a day, two for a great
  * slaughter) and the echoes are house rules.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const fmt = v => Math.round(n(v)).toLocaleString("en");
-const DAY = 86400;
 
 /** The dead of a battle: everyone who fell on both sides. */
 export const deadOf = battle => (battle?.sides ?? []).reduce((t, s) => t + Math.max(0, n(s.start) - n(s.men)), 0);

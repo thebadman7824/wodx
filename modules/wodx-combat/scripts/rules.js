@@ -3,8 +3,9 @@
  * Everything here works on plain numbers so it can be unit-tested outside Foundry.
  * Rules references are to Vampire: The Dark Ages 20th Anniversary Edition (VtDA20).
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
-export const WOUND_LEVELS = ["bruised", "hurt", "injured", "wounded", "mauled", "crippled", "incapacitated"];
+export const WOUND_LEVELS = TERMS.HEALTH_LEVELS;
 
 /**
  * Count a Storyteller-system roll (VtDA20 p. 322-323).
@@ -16,21 +17,15 @@ export const WOUND_LEVELS = ["bruised", "hurt", "injured", "wounded", "mauled", 
  * - canBotch=false for damage and soak rolls, which never botch (VtDA20 p. 344-345).
  */
 export function countSuccesses(faces, difficulty, opts = {}) {
+    // B6189: the one V20 count (terms.mjs): difficulty held to 2-10, a 10 always hits
     const { specialty = false, willpower = false, autoSuccesses = 0, canBotch = true } = opts;
-    let raw = 0, ones = 0;
-    for (const f of faces) {
-        if (f === 1) ones++;
-        if (f >= difficulty) raw += (specialty && f === 10) ? 2 : 1;
-    }
-    const net = Math.max(0, raw - ones);
-    const botch = canBotch && raw === 0 && ones > 0 && !willpower && autoSuccesses === 0;
-    const successes = net + (willpower ? 1 : 0) + autoSuccesses;
-    return { raw, ones, successes, botch };
+    const r = TERMS.successes(faces, difficulty, { specialty, willpower, auto: autoSuccesses, canBotch });
+    return { raw: r.raw, ones: r.ones, successes: r.successes, botch: r.botch };
 }
 
 /** Clamp a difficulty into the 2-10 range used by the Storyteller System. */
 export function clampDifficulty(d) {
-    return Math.max(2, Math.min(10, d));
+    return TERMS.clampDifficulty(d);
 }
 
 /**

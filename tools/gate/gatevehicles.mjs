@@ -38,6 +38,8 @@ export async function run() {
   try {
     const C = game.wodxCombat, V = () => C?.vehicles, ix = game.modules.get(IX)?.api, npc = game.modules.get("wodx-npc")?.api;
     const scene = await G.scene({flags: {[IX]: {ground: "road"}}});
+    // B6210: cars, aeroplanes and rams need a year that has them (the kit puts the clock back after)
+    await G.yearAtLeast(1950);
     const [driver, pass, foe, nopilot, runner] = await G.make(Actor, [
       body("Gate Vehicles Driver", {dex: 5, drive: 5, sta: 3}),
       body("Gate Vehicles Passenger", {dex: 3, athletics: 3}),
@@ -155,7 +157,7 @@ export async function run() {
       const ride = {...(await import("/modules/wodx-interactables/scripts/chase-rules.mjs")).rideInFight("ghoulhorse", 1200, "open"), kind: "ghoulhorse", role: "reins"};
       const MT = await import("/modules/wodx-combat/scripts/mounted-rules.js");
       const dodge = MT.mountDodge(ride, {rideDots: 3, ranged: true});
-      G.ok("11. bicycles and beasts", bikeOk && faeNo && gryNo && dodge.valid && dodge.diff === 6, {bikeOk, faeNo, gryNo, dodge, kind: c.kind});
+      G.ok("11. bicycles and beasts", bikeOk && faeNo && gryNo && dodge.valid && dodge.diff === 6, {faeOpts: o(fae).map(x => x.id).slice(0, 4), gryOpts: o(gry).map(x => `${x.id}${x.disabled ? "(off)" : ""}`).slice(0, 4), bikeOk, faeNo, gryNo, kind: c.kind, year: c.year, dodge});
     });
 
     await G.step("12. riding the beast itself", async () => {

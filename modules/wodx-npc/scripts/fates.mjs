@@ -14,13 +14,14 @@
 import * as F from "./fates-rules.mjs";
 import {officesOf, polityFor, POLITIES} from "./politics-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
 const DEAD_FOLDER = "WoDX · The Dead";
 const chron = () => game.modules.get("wodx-chronicle")?.api;
 const creation = () => (game.modules.get("wodx-creation")?.active ? game.modules.get("wodx-creation").api : null);
 const isActiveGM = () => game.user?.isGM && game.users.activeGM?.id === game.user.id;
-const YEAR_SECONDS = 365.25 * 86400;
+const YEAR_SECONDS = YEAR;
 export const T = {fates: `${MOD}.npc-fates`};
 
 const yearAt = t => getEngine().timeToDate(Number(t) || 0).year;

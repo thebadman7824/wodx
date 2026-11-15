@@ -60,9 +60,10 @@ import * as LEGACY from "./legacy.mjs";
 import * as PO from "./politics-rules.mjs";
 import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.100.0";
+const VERSION = "0.101.1";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -217,7 +218,7 @@ function sides(tok, combat, harm) {
   const ally = t => (RV.enemiesBySide(sideMap, tok.id, t.id) === false) || (RV.enemiesBySide(sideMap, tok.id, t.id) === null && t.document.disposition === me);
   return {enemies: fighters.filter(enemy), allies: fighters.filter(t => !enemy(t) && ally(t))};
 }
-const unitsPerYard = () => 1 / (C()?.auto?.toYards?.(1, canvas.scene?.grid?.units ?? "ft") ?? 1 / 3);
+const unitsPerYard = () => TERMS.unitsPerYard(canvas.scene?.grid?.units ?? "ft");
 const yardsBetween = (a, b) => {
   try { return canvas.grid.measurePath([a.center, b.center]).distance / unitsPerYard(); } catch (e) { return null; }
 };
@@ -612,7 +613,7 @@ async function animalFrenzy(tok) {
   const faces = roll.dice?.[0]?.results?.map(r => r.result) ?? [];
   // B5130: a Brujah or Gangrel domitor's blood makes the beast quick to rage
   const extra = num(actor.flags?.["wodx-creation"]?.clanMark?.frenzy) || 0, diff = Math.min(10, 6 + extra);
-  const net = faces.filter(f => f >= diff).length - faces.filter(f => f === 1).length;
+  const net = TERMS.margin(faces, diff);
   const holds = net > 0;
   if ( !holds ) { try { await chron()?.conditions?.setCondition?.(actor, "frenzy", true); } catch (e) { console.warn(`${MOD} | frenzy`, e); } }
   return {done: true, text: `${tok.name} fights the blood in it: Willpower ${dice} dice at ${diff}${extra ? " (its master's blood makes it quick to rage)" : ""} (${faces.join(", ")}). ${holds ? "It holds." : "It frenzies."}`};

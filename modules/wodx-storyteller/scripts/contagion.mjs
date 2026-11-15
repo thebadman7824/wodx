@@ -19,6 +19,7 @@ import {living} from "./hardship.mjs";
 import {MOD, esc, chron, isActiveGM, isPC, gmIds, setting, log, tripContext} from "./core.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const TYPE = `${MOD}.contagion`;
 const NPC = "wodx-npc", ACT = "wodx-actions";
@@ -191,9 +192,7 @@ const stamina = a => { const s = a?.system?.attributes?.stamina; return Math.max
 async function rollStamina(a, diff) {
   const r = new Roll(`${stamina(a)}d10`);
   await r.evaluate();
-  let s = 0, ones = 0;
-  for ( const f of r.dice.flatMap(d => d.results.map(x => x.result)) ) { if ( f === 1 ) ones++; if ( f >= diff ) s++; }
-  return {successes: Math.max(0, s - ones)};
+  return {successes: TERMS.successes(r.dice.flatMap(d => d.results.map(x => x.result)), diff).successes};
 }
 
 /** The week for living player characters: catching it in a sick town, then the weekly roll while sick. */

@@ -6,6 +6,7 @@
  * gives. The Use window sets, springs and disarms traps with the trap functions here.
  */
 import {ARMS, FITTINGS, CARRIERS, WARDS, TRAPS, KIT, AMMO} from "../data/goods-arms.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export {ARMS, FITTINGS, CARRIERS, WARDS, TRAPS, KIT, AMMO};
 
@@ -155,9 +156,8 @@ const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : s);
 
 /** V20 successes: each face at or above the difficulty, less one for each 1; a botch is no successes and a 1. */
 export function countSuccesses(faces = [], diff = 6) {
-  const hits = faces.filter(f => f >= diff).length, ones = faces.filter(f => f === 1).length;
-  const successes = Math.max(0, hits - ones);
-  return {successes, botch: hits === 0 && ones > 0};
+  const r = TERMS.successes(faces, diff);
+  return {successes: r.successes, botch: r.botch};
 }
 
 /* ---------------------------------------------------------------- ammunition (B3900, B3901) */

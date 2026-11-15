@@ -15,10 +15,11 @@
  * The bodies and their dates are page-referenced below; the pressure figures, stages, file sizes and trail times are
  * house figures (docs/PENDING-REVIEW.md).
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY};
 
 export const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
-export const DAY = 86400;
 export const MAX = 10;
 /** Days between the hunters' turns, and days without anything new before pressure falls by one. */
 export const TURN_DAYS = 7, QUIET_DAYS = 14;

@@ -28,6 +28,7 @@
 
 import {hooksFor, SECRET_KINDS} from "./secrets-rules.mjs";
 import {sphereFor} from "../../wodx-chronicle/scripts/world-rules.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const MAX_RANK = 5;
 export const MAX_VINCULUM = 10;
@@ -916,7 +917,7 @@ const rollDice = (rand, n) => Array.from({length: Math.max(0, n)}, () => 1 + Mat
 /** Successes, less one for each 1; a botch is no successes and a 1 (V20 pdf 257). */
 export function hits(dice, difficulty) {
   const d = Math.max(2, Math.min(10, difficulty));
-  const h = dice.filter(x => x >= d).length, ones = dice.filter(x => x === 1).length;
+  const {raw: h, ones} = TERMS.successes(dice, d);
   return {net: Math.max(0, h - ones), botch: h === 0 && ones > 0};
 }
 const attr = (info, id, k) => clampInt(info?.[id]?.attrs?.[k] ?? 2, 0, 10) || 2;

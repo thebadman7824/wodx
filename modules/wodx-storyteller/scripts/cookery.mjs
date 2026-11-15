@@ -15,6 +15,7 @@
 import * as CR from "./craft-rules.mjs";
 import {MOD, esc, isActiveGM, chron, whereNow} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const LIB = "wodx-library";
 const now = () => game.time?.worldTime ?? 0;
@@ -133,7 +134,7 @@ export async function start(a, goodId, {batch = 1, buy = false} = {}) {
   const spent = [...plan.take.map(t => `${t.n} ${t.name}`), ...bought];
   if ( R.noRoll(rec, pool, diff) ) {
     const made = await makeItem(a, {good, makes: rec.makes, batch: n, wait: rec.wait, waitWord: rec.waitWord, leaves: rec.leaves.map(([nm, k]) => `${k * n} ${nm}`), strength: rec.strength});
-    await ChatMessage.create({content: `<div class="wodx-card wst-cook"><p>${esc(a.name)} makes ${esc(n > 1 ? `${n} of ${rec.makes}` : rec.makes)} (${esc(rec.label.toLowerCase())}): everyday work, no roll needed.${rec.wait ? ` It stands ${esc(R.leftLine(rec.wait * 86400))} ${esc(rec.waitWord)}.` : ""}</p></div>`,
+    await ChatMessage.create({content: `<div class="wodx-card wst-cook"><p>${esc(a.name)} makes ${esc(n > 1 ? `${n} of ${rec.makes}` : rec.makes)} (${esc(rec.label.toLowerCase())}): everyday work, no roll needed.${rec.wait ? ` It stands ${esc(R.leftLine(rec.wait * DAY))} ${esc(rec.waitWord)}.` : ""}</p></div>`,
       speaker: ChatMessage.getSpeaker({actor: a})});
     return {ok: true, made, now: true};
   }
@@ -182,7 +183,7 @@ async function makeItem(a, {good, makes, batch = 1, wait = 0, waitWord = "", lea
   data.flags = {...(data.flags ?? {}), [LIB]: {...(data.flags?.[LIB] ?? {}), ...(good?.id ? {good: good.id} : {})},
     "wodx-sheets": {...(data.flags?.["wodx-sheets"] ?? {}), ...(batch > 1 ? {qty: batch} : {})},
     [MOD]: {...(data.flags?.[MOD] ?? {}), ...(taskId ? {madeBy: taskId} : {}), maker: a.name, owner: {id: a.uuid, kind: "actor", name: a.name}, ...extra,
-      ...(wait ? {ripens: {at: now() + wait * 86400, name: finalName}} : {})}};
+      ...(wait ? {ripens: {at: now() + wait * DAY, name: finalName}} : {})}};
   const out = [data];
   for ( const line of leaves ) {
     const m = /^(\d+)\s+(.+)$/.exec(line);
@@ -280,7 +281,7 @@ export async function cookDialog(actor = null, {using = ""} = {}) {
     const time = r.everyday ? "everyday work" : `${r.goal} success${r.goal === 1 ? "" : "es"}, a roll ${r.interval === "hour" ? "an hour" : r.interval === "day" ? "a day" : "a week"}`;
     return `<tr data-kind="${esc(x.good.kind)}" data-search-text="${esc(`${x.good.name} ${r.label} ${uses}`)}" class="${[x.ready ? "" : "wodx-quiet", x.here ? "" : "wst-away"].filter(Boolean).join(" ")}">
       <td><input type="radio" name="good" value="${esc(x.good.id)}" data-batch="${r.batch}"></td>
-      <td><b>${esc(cap(x.good.name))}</b>${x.here ? "" : ` <small class="wodx-quiet">(from another land)</small>`}<br><small>${esc(r.label)}; ${esc(R.abLabel(r.ab[0]))}, ${esc(time)}${r.wait ? `; stands ${esc(R.leftLine(r.wait * 86400))} ${esc(r.waitWord)}` : ""}</small></td>
+      <td><b>${esc(cap(x.good.name))}</b>${x.here ? "" : ` <small class="wodx-quiet">(from another land)</small>`}<br><small>${esc(r.label)}; ${esc(R.abLabel(r.ab[0]))}, ${esc(time)}${r.wait ? `; stands ${esc(R.leftLine(r.wait * DAY))} ${esc(r.waitWord)}` : ""}</small></td>
       <td><small>Uses ${esc(uses)}. ${esc(cap(R.kitForm(r.kit, y)))}.</small>${why ? `<br><small class="wst-cook-why">${esc(cap(why))}.</small>` : ""}</td></tr>`;
   };
   const kitBoxes = game.user.isGM ? `<details><summary>Kits on this scene (Storyteller)</summary><div class="wst-cook-kits">${Object.entries(R.KITS).filter(([k]) => k !== "none")

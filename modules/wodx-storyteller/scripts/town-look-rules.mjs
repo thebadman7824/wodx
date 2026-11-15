@@ -8,8 +8,8 @@
  * and lasts a while of game time. The spots are seeded by the town, the event and the scene, so the same turn draws the
  * same marks. How long each lasts and how many there are are house rules.
  */
+import {DAY, HOUR, WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
 
-const HOUR = 3600, DAY = 24 * HOUR, WEEK = 7 * DAY;
 
 /**
  * By town event kind: the marks it leaves. spots: how many; r: radius in grid squares; band: where on the scene the

@@ -19,6 +19,7 @@ import {localTable, LOCAL_LOOKS} from "./passerby-local.mjs";
 import {sphereFor, mixFor} from "../../wodx-chronicle/scripts/world-rules.mjs";
 import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
 import {originFaith} from "./routine-rules.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** Ages of the street. The first five match routine-rules.mjs AGES; the Future Darkness street is its own. */
 export const AGES = {
@@ -88,10 +89,10 @@ export function townCrowd(view) {
  * streets are as the town makes them. stage: the scene's herd stage key; hour: the hour of the day. House rule.
  */
 export const HERD_NIGHT = {fine: 1, thin: 0.75, over: 0.5, stripped: 0.25};
-export const isNightHour = hour => Number(hour) >= 19 || Number(hour) < 6;
-export const herdCrowd = (stage, hour) => (isNightHour(hour) ? (HERD_NIGHT[stage] ?? 1) : 1);
+/** night: the clock's own night (sunset to sunrise, B6185); a number is read as an hour, 19:00 to 06:00, for old callers. */
+export const herdCrowd = (stage, night) => ((typeof night === "boolean" ? night : (Number(night) >= 19 || Number(night) < 6)) ? (HERD_NIGHT[stage] ?? 1) : 1);
 /** The herd stage of a scene's flag at a world time: a new month fills the herd again, so an old month's stage is gone. */
-export const herdStageAt = (herd, t) => (herd && Number(herd.month) === Math.floor(Number(t) / (30 * 86400)) ? herd.stage : "fine");
+export const herdStageAt = (herd, t) => (herd && Number(herd.month) === TERMS.monthIndex(t) ? herd.stage : "fine");
 
 /** How many passers-by the street holds now. */
 export function crowdSize({year, hour, area = "market", density = "normal", max = 8, place = "street"} = {}) {

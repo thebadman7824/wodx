@@ -7,6 +7,7 @@
  * A tag comes from the reviewed table (data/tags.json) when the power is in it, else from seedTag(), which reads
  * the power's own data: a difficulty set by the target, "passive", and words in its summary.
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const INTENTS = {
   h: {key: "hostile", label: "a foe"},
@@ -295,7 +296,7 @@ export function parseShape(code) {
 export const shapeCode = sh => `${sh.s}${sh.size}`;
 
 const WORDN = {one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, twelve: 12, fifteen: 15, twenty: 20, thirty: 30, fifty: 50, hundred: 100};
-const toYards = (n, unit) => (/^(foot|feet|ft)/i.test(unit) ? n / 3 : /^(met|metr)/i.test(unit) ? n * 1.09361 : n);
+const toYards = (n, unit) => TERMS.toYards(n, /^(foot|feet|ft)/i.test(unit) ? "ft" : /^(met|metr)/i.test(unit) ? "m" : "yd");
 
 /** A size and shape named in a power's text, or null. "within ten yards", "a 20-foot radius", "a cone ...". */
 export function shapeFromText(text = "") {

@@ -16,6 +16,7 @@ import * as DU from "./duty-rules.mjs";
 import * as O from "./order-rules.mjs";
 import * as SV from "./servants.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const T_ORDER = "wodx-npc.order";
 
@@ -65,7 +66,7 @@ export function build(ctx) {
     if ( L.bound ) return {balks: false, L};
     const roll = await new Roll(`${Math.max(1, L.pool)}d10`).evaluate();
     const faces = roll.dice[0]?.results?.map(x => x.result) ?? [];
-    const net = faces.filter(f => f >= L.diff).length - faces.filter(f => f === 1).length;
+    const net = TERMS.margin(faces, L.diff);
     return {balks: net > 0, faces, L, roll};
   }
   /** It refuses; wavering or Hostile, it leaves its master's service. */
@@ -244,7 +245,7 @@ export function build(ctx) {
     const pool = Math.max(1, Number(w.system?.attributes?.manipulation?.value ?? 0) + Number(w.system?.abilities?.subterfuge?.value ?? 0));
     const roll = await new Roll(`${pool}d10`).evaluate();
     const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
-    const hits = faces.filter(f => f >= 6).length, ones = faces.filter(f => f === 1).length;
+    const {raw: hits, ones} = TERMS.successes(faces, 6);
     const out = O.cleanupOutcome({successes: Math.max(0, hits - ones), botch: hits === 0 && ones > 0});
     let changed = 0;
     if ( out.state ) { try { changed = await AC()?.setWitnessState?.(worldActor(wit), out.state, `by ${w.name}`) ?? 0; } catch (e) { changed = 0; } }

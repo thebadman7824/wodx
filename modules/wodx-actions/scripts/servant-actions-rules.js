@@ -8,11 +8,12 @@
  *   ride, one easier).
  * Nothing here copies book text.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY};
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 const low = s => String(s ?? "").trim().toLowerCase();
 
-export const DAY = 86400;
 export const dayOf = t => Math.floor(n(t) / DAY);
 
 /* -- Enchantment -------------------------------------------------- */

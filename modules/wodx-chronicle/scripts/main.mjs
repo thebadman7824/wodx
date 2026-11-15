@@ -1,9 +1,11 @@
 import {MODULE_ID, SOCKET, isActiveGM, rule, setting, log} from "./util.mjs";
+import {termsApi} from "./terms-live.mjs";
 import {registerSettings} from "./settings.mjs";
 import * as tokenLooks from "./token-looks.mjs";
 import {makeCalendarClass, makeCalendarConfig, setReform, EPOCH_YEAR} from "./calendar.mjs";
 import * as eras from "./eras.mjs";
 import * as approvals from "./approvals.mjs";
+import * as nightwork from "./nightwork.mjs";
 import * as know from "./know.mjs";
 import * as knowRules from "./know-rules.mjs";
 import * as safety from "./safety.mjs";
@@ -94,6 +96,9 @@ Hooks.once("init", () => {
   });
   // 0.46.0: how much runs by itself, and the Waiting tray (B2450-B2452)
   automation.registerAutomationSettings();
+  // B6220: the night's work, everything the Hand did, with one Undo
+  nightwork.registerNightSettings();
+  nightwork.registerNightHooks();
   waiting.registerWaitingSettings();
   // 0.35.0: the clock that runs with the table (off by default)
   pace.registerPaceSettings(() => ClockApp.refresh());
@@ -224,6 +229,8 @@ Hooks.once("ready", async () => {
 
   age.listen();
   const api = {
+    // B6180-B6199: one meaning for the words every module uses (time, dice, health, distance, eras, who is who)
+    terms: termsApi(),
     // B3210: the age floor of 18 for anything romantic or sexual
     age: {minor: age.minor, romance: age.romance, allow: age.allowRomance, rules: age.rules},
     // B3500: one gender for every module; forRules is "" for every player character
@@ -235,6 +242,7 @@ Hooks.once("ready", async () => {
     pace: {line: pace.paceLine},
     setDate: setDateDialog,
     eras, approvals, safety,
+    nightwork: nightwork.api(),
     automation: {level: automation.level, setLevel: automation.setLevel, seed: automation.seedLevel, preview: automation.preview, rules: automationRules},
     waiting: {open: () => waiting.WaitingApp.open(), rows: waiting.rows, count: waiting.count, take: waiting.take, wrapLine: waiting.wrapLine, rules: waitingRules},
     know: {render: know.render, traitsOf: know.traitsOf, passages: knowRules.passages, rules: knowRules},
@@ -297,6 +305,7 @@ Hooks.once("ready", async () => {
   Hooks.callAll("wodxChronicleReady", api);
   // The crossover referee sits in the Storyteller's hand when WoDX Storyteller is on
   if ( game.user.isGM ) referee.addToHand();
+  nightwork.start({undoById: approvals.undoById, markTakenBack: approvals.markTakenBack, history: approvals.history});
 
   // Which WoDX build this server runs (GM only, so players' machines skip the extra reads)
   if ( game.user.isGM ) release.announce().catch(err => console.error("WoDX | Release stamp could not be read", err));

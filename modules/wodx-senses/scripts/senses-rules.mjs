@@ -10,6 +10,7 @@
  * The draw is seeded, so the same question in the same hour and place gives the same answer.
  */
 import {stream, shuffled, expand} from "../../wodx-chronicle/scripts/gen-core.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const SENSES = {
   sight: {label: "Sight", verb: "Looking", cmd: "look"},
@@ -21,11 +22,14 @@ export const SENSE_KEYS = Object.keys(SENSES);
 
 /** Era bands for the place lines. The lines that carry no band fit every era. */
 export const ERA_BANDS = {
-  medieval: "Before 1450", early: "1450 to 1849", industrial: "1850 to 1949", modern: "1950 to 2009", future: "2010 on"
+  medieval: "Before 1450", early: "1450 to 1836", industrial: "1837 to 1949", modern: "1950 to 2009", future: "2010 on"
 };
+/** B6192: the bands follow the era profiles' years (terms.eraGroup); the mid-century turns modern in 1950. */
 export function eraBand(year) {
   const y = Number(year) || 1197;
-  return y < 1450 ? "medieval" : y < 1850 ? "early" : y < 1950 ? "industrial" : y < 2010 ? "modern" : "future";
+  const g = TERMS.eraGroup(y);
+  return g === "ancient" || g === "medieval" ? "medieval" : g === "early-modern" ? "early" : g === "industrial" ? "industrial"
+    : g === "mid-century" ? (y < 1950 ? "industrial" : "modern") : g === "modern" ? "modern" : "future";
 }
 
 /** Place kinds (as WoDX NPC tags them) that are indoors unless the Storyteller says otherwise. */
