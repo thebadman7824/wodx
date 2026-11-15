@@ -2,6 +2,9 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.87.0 (Masters of Golconda keep out of the Jyhad (B5097, V20 pp. 299-300))
+- 0.86.0 (Animal ghoul behaviour (B5055 to B5057): the fight AI's frenzy option for animal ghouls (V20 Dark Ages p. 401 for when, Kindred of the Ebony Kingdom p. 185 for the triggers, no easier difficulty), the bound animal's loyalty floor in the loyalty drift, and the craving botch from WoDX Chronicle's monthly need)
+- 0.85.0 (The Philippines in NPC politics, routines and talk (B5152))
 - 0.84.0 (The NPC side of the Storyteller's Hand, part three (B4880-B4885))
 - 0.83.1 (Grief is rolled for the loved ones when a death lands (B4871), and the faction turn calls wodxFactionTurn so the court's Blood Hunts can act on it (B4873); An absent player's character that WoDX Storyteller stands in for (the standIn flag) takes its fight turns as an NPC does, without spending Willpower, using powers or taking a hostage (B4868))
 - 0.83.0 (NPCs and vehicles (B4797, house rule). The fight reading lists the free mounts and vehicles on the scene in the year (nobody at the reins, a seat left, not wrecked) with the distance and whether the NPC has the dots to drive it. A new option, "Get into a vehicle", scores just above flight when flight is the best choice, or just above the best attack when every foe is out of reach and further than a run (aggression a half or more). Auto mode carries it out: the token walks beside the tile and takes the reins through WoDX Interactables' own Mount it action. At the reins the NPC's flight and approach use the mount's or vehicle's pace, so it drives off or runs a foe down, and the ram is among its attacks)

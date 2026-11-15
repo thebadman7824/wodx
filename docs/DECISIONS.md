@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5040
+Next free block: B5480
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -234,12 +234,46 @@ Next free block: B5040
 | B4820-B4849 | Summoning rules and power effect bounds (used B4820-B4849) | Actions |
 | B4850-B4859 | Rothenstein Rebuilt: book one's twist web (six chains, locks, one twist a week) (used B4850-B4853) | Chronicle |
 | B4860-B4889 | The Storyteller's Hand, part two: clan, tribe, kith and creed features act by themselves (Ben's desk picks s1-s5, 14 November 2026) (used B4860-B4889) | Chronicle, Combat, Actions, Storyteller, NPC, Interactables |
+| B4890-B4899 | Day and night by themselves for the Kindred (sleep, vigil, waking, rising, burns) (used B4890-B4897) | Actions |
 | B4900-B4909 | Sami names (used B4900-B4902) | Creation, Chronicle |
 | B4910-B4919 | Rothenstein Rebuilt: book one fronts, roles and clue carriers (spine part two) (used B4910-B4917) | Chronicle |
 | B4950-B4959 | Tuareg names (used B4950-B4952) | Creation, Chronicle |
+| B4980-B4999 | The Automation Desk: player actions that follow the rules by themselves, every line (used B4980-B4999) | Actions, Chronicle |
 | B5000-B5009 | Moro names (used B5000-B5002) | Creation, Chronicle |
 | B5010-B5029 | The Storyteller's Hand, part three: fire, noticing, and the rest of the desk acts by itself (Ben's desk picks, 14 November 2026) (used B5010-B5024) | Interactables, Actions, Senses, Library, Chronicle, Storyteller, Otherworlds, Creation |
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
+| B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5057) | Creation, Chronicle, NPC, Sheets, Actions, Combat |
+| B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
+| B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
+| B5180-B5189 | Names raised to 300, Thai (used B5180) | Creation |
+| B5190-B5199 | Names raised to 300, Malay (used B5190) | Creation |
+| B5200-B5209 | Names raised to 300, Quechua (used B5200) | Creation |
+| B5210-B5219 | PC runner watchdog (used B5210-B5212) | tools (PC job queue) |
+| B5220-B5229 | Names raised to 300, Steppe (used B5220) | Creation |
+| B5230-B5239 | Names raised to 300, Nahua (used B5230) | Creation |
+| B5240-B5249 | Names raised to 300, Tamil (used B5240) | Creation |
+| B5250-B5259 | Names raised to 300, Javanese (used B5250) | Creation |
+| B5260-B5269 | Names raised to 300, Swahili (used B5260) | Creation |
+| B5270-B5279 | Names raised to 300, Hawaiian (used B5270) | Creation |
+| B5280-B5289 | Names raised to 300, Amharic (used B5280) | Creation |
+| B5290-B5299 | Names raised to 300, Tibetan (used B5290) | Creation |
+| B5300-B5309 | Names raised to 300, Romanian (used B5300) | Creation |
+| B5310-B5319 | Names raised to 300, Akan (used B5310) | Creation |
+| B5320-B5329 | Names raised to 300, Vietnamese (used B5320) | Creation |
+| B5330-B5339 | Names raised to 300, Serbian (used B5330) | Creation |
+| B5340-B5349 | Table install speed-up and gate step timeout (used B5340) | Chronicle |
+| B5350-B5359 | Names raised to 300, Turkish (used B5350) | Creation |
+| B5360-B5369 | Names raised to 300, Korean (used B5360) | Creation |
+| B5370-B5379 | Names raised to 300, Mande (used B5370) | Creation |
+| B5380-B5389 | Names raised to 300, Zulu (used B5380) | Creation |
+| B5400-B5409 | Names raised to 300, Hungarian (used B5400) | Creation |
+| B5410-B5419 | Names raised to 300, Persian (used B5410) | Creation |
+| B5420-B5429 | Names raised to 300, Yoruba (used B5420) | Creation |
+| B5430-B5439 | Names raised to 300, Portuguese (used B5430) | Creation |
+| B5440-B5449 | Names raised to 300, Dutch (used B5440) | Creation |
+| B5450-B5459 | Names raised to 300, Irish (used B5450) | Creation |
+| B5460-B5469 | Names raised to 300, Greek (used B5460) | Creation |
+| B5470-B5479 | Names raised to 300, Polish (used B5470) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7704,6 +7738,48 @@ WoDX Interactables. Pick o5. A window, spyhole or lookout with no tied area now 
 
 Reverse: watchReport reads the tied area alone.
 
+## B4890. Cainites sleep by day by themselves (2026-11-14)
+WoDX Actions. Every Cainite the clock covers (tokens on the active scene and every player character) who is not in torpor falls asleep while the sun is up and rises at their own hour: sunset moved by Humanity or Road as in riseOffset (7+ ten minutes before, 5-6 at sunset, 4 twenty minutes after, down to an hour after at 1; V20 p. 311, V20 Dark Ages p. 113). The check is by state on every clock tick, so a long jump of the clock lands on the right state. The sleep marker goes on the token. A player cannot use the Action dialog for a sleeping Cainite (the Storyteller can). Setting "The day's sleep", on by default.
+
+Kuei-jin sleep too and roll Hun or Dharma, the higher, in place of Humanity (Kindred of the East p. 139); their rising hour uses the same rating.
+
+Reverse: turn "The day's sleep" off; Dawn and Nightfall cards then show the old buttons.
+
+## B4891. The dawn vigil (2026-11-14)
+WoDX Actions. "At dawn, try to stay awake" in Sun and haven. At dawn the Awakening roll (Road or Humanity, difficulty 8; Deep Sleeper +2, Light Sleeper wakes at once; V20 pp. 262-263) is rolled by itself once a day. Each success is a turn of three seconds of the clock, counted down by a fight's rounds too; five successes are the scene, taken as an hour of the clock. When the turns run out, sleep takes them. House reading: a scene is an hour of the clock for this purpose.
+
+Reverse: untick the vigil on the character.
+
+## B4892. Hurt in the day's sleep (2026-11-14)
+WoDX Actions. A sleeping Cainite who takes damage rolls the Awakening roll by itself. Being hurt counts as noticed, so the Perception roll is skipped (house reading). A botch sleeps until sundown and nothing rouses them. The Awaken by day dialog also clears or deepens the sleep by its result.
+
+Reverse: roll Perception first by hand with Awaken by day.
+
+## B4893. Healing on rising (2026-11-14)
+WoDX Actions. As a Cainite rises, blood above the hunger line heals bashing and lethal wounds by itself, as the Nightfall card's button did. Setting "Heal on rising", on by default.
+
+Reverse: turn "Heal on rising" off; the Nightfall card's buttons return.
+
+## B4894. Rolls for the Storyteller's Cainites stay hidden (2026-11-14)
+WoDX Actions. The vigil and waking rolls of a Cainite with no player owner go to the Storyteller only, blind (standing rule 19). The day's sleep card for them is the Storyteller's only.
+
+Reverse: none needed.
+
+## B4895. New Night and the sun's burns by themselves (2026-11-14)
+WoDX Actions. "Dawn and dusk" now defaults to New Night run at dusk, and "Sunlight damage" to roll and apply. Once per world, a world still on the button setting is moved over, with a whispered note to the Storyteller. A world set to Off keeps it. Rötschreck after a burn stays a button, because the player chooses whether to spend Willpower.
+
+Reverse: set either setting back to "A card with a button" / "Cards with buttons".
+
+## B4896. The sun and sleep shown on the map (2026-11-14)
+WoDX Actions. A Cainite in the sun carries Foundry's burning marker while exposed, with the damage floating over the token for everyone; the marker comes off in shade or at night. The sleep marker shows the day's sleep, and "Asleep", "Rises" and "Fights the dawn" float over the token on every client.
+
+Reverse: none needed; the markers are Foundry's own status effects.
+
+## B4897. Solo play (2026-11-14)
+WoDX Actions. The Lone Chronicle's "Sleep the day" and waits work with the day's sleep: the cards are whispered to the character's owner, so a wait stops at dawn when word comes, and the character rises at their own hour.
+
+Reverse: none needed.
+
 ## B4900. Scandinavia holds the Sami beside the Norse (2026-11-14)
 WoDX Creation and Chronicle. Scandinavia was all Norse; the Sami of the north are now 6 in 100 in the medieval and early-modern mix, 4 in the industrial age and 3 today. The Kola Sami in the Russian mix wait. Taken as recommended; logged in PENDING-REVIEW.
 
@@ -7773,6 +7849,59 @@ Reverse: edit the tuareg entry in data/people-world.mjs.
 WoDX Creation. A Tuareg is "ag" (son of) or "welet" (daughter of) the father's name, then and now; no family names.
 
 Reverse: give the tuareg entry a fam list.
+
+## B4980. The Beast's checks roll by themselves (2026-11-14)
+WoDX Actions. When a wound, hunger, the sight of blood, fire or the sun provokes the Beast, the frenzy or Rötschreck check is rolled by itself with the same difficulty the dialog would use (dawn dread, fire steps, Merits and Flaws). It repeats each turn while the result holds, up to eight turns. Willpower is spent to hold only when the character is marked to in the check's dialog. Characters on Golconda, in torpor or already in frenzy are skipped. Setting "Frenzy and Rötschreck by themselves", on by default (Ben's v2 pick).
+
+Reverse: turn the setting off; the cards with buttons return.
+
+## B4981. The Storyteller's characters roll in private (2026-11-14)
+WoDX Actions. An automatic check for a character with no player owner is whispered blind to the Storyteller (standing rule 19). The Rötschreck check follows a sun burn by itself.
+
+## B4982. Rising from torpor by itself (2026-11-14)
+WoDX Actions. When a torpor's time is up, a blood point is spent and the Road rolled at 8 by itself (V20 p. 285). On a failure or with no blood, it tries again the next night. Setting "Rise from torpor by itself".
+
+## B4983. A ghoul fed by the domitor, with approval (2026-11-14)
+WoDX Chronicle. When a ghoul goes a month without vitae and the domitor stands on the same active scene with blood, the Storyteller gets an approval. Once approved, a blood point moves from domitor to ghoul and the month starts again (V20 Dark Ages p. 397). This is Ben's one "gate" pick (v4).
+
+## B4984. Kuei-jin rise with Chi by themselves (2026-11-14)
+WoDX Actions. At the day's-sleep rising hour a Kuei-jin rises with Chi by the cycle kept in the Rise dialog, once a night, and P'o is rolled for Demon Chi (Kindred of the East pp. 91, 139). They do not heal with blood on rising.
+
+## B4985. The sun on a Kuei-jin (2026-11-14)
+WoDX Actions. A Kuei-jin in the sun uses Kindred of the East's rule (p. 151): the day's grace in minutes, then rot each turn, Yang spent against it when marked in the Rise dialog. It shows the burning marker with "Rots: N" or "Endures the sun".
+
+## B4986. Rising on Rage by itself (2026-11-14)
+WoDX Actions. A shapechanger who falls past Incapacitated rolls Rage at 8 by itself, once a scene (W20 pp. 145, 256; DA:W p. 91). The worst wound type on the track decides the result. A character can be unmarked in the Remain active dialog. Setting "Rise on Rage by itself".
+
+## B4987. A shapechanger's daily meditation (2026-11-14)
+WoDX Actions. A shapechanger marked in the Meditate dialog rolls Wits + Enigmas once a day by itself as the clock passes into a new day, outside a fight. It gains up to one Gnosis an hour of the hours set, and later days in the week cost more (DA:W p. 92; W20 p. 146). Setting "Meditation by itself".
+
+## B4991. A mage's Quintessence by meditation (2026-11-14)
+WoDX Actions. A mage marked with the new "Meditate for Quintessence each day" row draws Quintessence once a day by itself. The amount is the Avatar's rating, or a Node's rating when the mage lives on one and it is higher. It never goes past the wheel's room beside Paradox (M20 p. 330). House reading: once a day, the higher of the two, no roll. Setting "A mage's Quintessence by itself".
+
+## B4992. The Crusade's Scourge cleared on the clock (2026-11-14)
+WoDX Actions. In the Purify dialog the days alone in meditation begin, and the Scourge clears by itself when the clock has passed them (Sorcerers Crusade p. 249). Working magick meanwhile breaks the meditation. Setting "Purifying the Scourge on the clock".
+
+## B4993. Chimerical wounds heal with the clock (2026-11-14)
+WoDX Actions. Chimerical damage heals by Changeling 20th's Chimerical Healing Times (pp. 290-291). The times are halved where the Storyteller marks the scene a freehold or glade (new GM row "This place"). In the Dreaming each level takes 15 minutes. Incapacitated outside the Dreaming heals only in a freehold. House reading: aggravated chimerical levels take the lethal time, at least a day each (twelve hours in the Dreaming). Setting "Chimerical wounds heal by themselves".
+
+## B4994. Willpower from a Fetter at a scene's end (2026-11-14)
+WoDX Actions. The Fetter dialog can mark a selected token as a wraith's Fetter. At each scene's end that both share, the Fetter is rolled at 6 for Willpower by itself (Wraith 20th p. 308). Setting "Fetters give Willpower by themselves".
+
+## B4995. Corpus mends with the clock (2026-11-14)
+WoDX Actions. A wraith's bashing Corpus heals a level an hour by itself (Wraith 20th p. 295). Setting "Corpus mends by itself".
+
+## B4996. A mummy's day for Sekhem (2026-11-14)
+WoDX Actions. A mummy marked in the Sekhem dialog spends each day in Osiris's Blessing (within the Web of Faith) or the haven's meditation. The roll is made by itself after the Gift of Ra (Mummy: The Resurrection pp. 143-144). Setting "A mummy's day for Sekhem by itself".
+
+## B4997. Conviction at a story's end for every imbued (2026-11-14)
+WoDX Actions. End of story already set a Hunter sheet's Conviction back to the creed's level. It now does so for any character with a creed set in Hunter traits too (Hunter: The Reckoning p. 138).
+
+## B4998. Vitality from rest (2026-11-14)
+WoDX Actions. An Orpheus character regains a Vitality point each eight hours of the clock by itself, up to the starting rating (Orpheus pp. 191-192). A skimmer regains one each hour, resting in the body (p. 122). The count does not run during a fight the character is in, and a loss starts it again. Setting "Vitality returns with rest".
+
+## B4999. What stays by hand (2026-11-14)
+Per Ben's picks, Changeling's Glamour from the Dreaming (c2), a wraith's Pathos from Passions (w3) and a demon's Torment from sins (d1) stay as dialogs. They need the player's or the Storyteller's judgment.
 
 ## B5000. The Moro in the Malay world's mix (2026-11-14)
 WoDX Creation and Chronicle. The Maguindanao, Maranao and Tausug of Mindanao and Sulu are 4 in 100 in the Malay world's mix before the industrial age and 3 after, beside the Filipinos (B4750). Taken as recommended; logged in PENDING-REVIEW.
@@ -7878,3 +8007,299 @@ Reverse: edit the banyarwanda entry in data/people-world.mjs.
 WoDX Creation. From 1800 a Munyarwanda or Murundi carries a second, own Kinyarwanda or Kirundi name (Habimana, Uwimana, Nkurunziza) where other peoples carry a family name; it is the person's own and is not handed to the children.
 
 Reverse: drop fam from the banyarwanda entry.
+
+## B5040. An animal ghoul keeps its own sheet (2026-11-14)
+WoDX Creation. An animal is a Creature sheet of the plain variant, a Mortal sheet whose WoDX NPC template is an animal, or a sheet marked flags["wodx-creation"].animal. Drinking vitae switches on its blood pool and Disciplines and marks a Creature flags["wodx-creation"].animalGhoul; the Creature variant is left alone so the mountable tag and sheet stay. Desk item 1.
+
+Reverse: drop isAnimal from giveVitae; animals then only record a bond.
+
+## B5041. Blood pool by size (2026-11-14)
+WoDX Creation. V20 Dark Ages p. 401 over p. 396 and Kindred of the Ebony Kingdom p. 186 (Ben chose by size): tiny 1, small 3, dog-sized 6, human-sized 10, large 14, very large 20 (house). Desk item 3.
+
+Reverse: SIZES in animal-ghoul-rules.mjs.
+
+## B5042. Only Celerity, Fortitude and Potence; any trained animal may learn Celerity (2026-11-14)
+WoDX Creation. V20 Dark Ages p. 396 and p. 401; the Ebony Kingdom's Intelligence limit on Celerity is not used. The domitor's other Disciplines make no difference. Desk items 5 to 7.
+
+Reverse: animalCanLearn.
+
+## B5043. The century rule holds for animals (2026-11-14)
+WoDX Creation. One more point of vitae a century as a ghoul (V20 Dark Ages p. 400); Pass the Years shows it. Desk item 9.
+
+Reverse: animalBloodMax's century term.
+
+## B5044. One point a month, two for the very large (2026-11-14)
+WoDX Creation data, used by WoDX Chronicle's monthly check. Kindred of the Ebony Kingdom p. 186. Desk item 11.
+
+Reverse: SIZES monthly.
+
+## B5045. Natural life spans (2026-11-14)
+WoDX Creation. House figures per kind (rat 3, cat 15, dog 13, horse 28...). With the vitae gone an animal ghoul past its span dies, past twice its span turns to dust. Desk item 13.
+
+Reverse: KINDS span; Pass the Years then uses the human dust age of 100.
+
+## B5046. No Road or Virtues for animals; Willpower stands in for Self-Control (2026-11-14)
+WoDX Creation. A Mortal-sheet animal ghoul has no Road or Virtues switched on; rolls that ask for Self-Control use Willpower. Desk item 4.
+
+Reverse: makeGhoul's haspath and hasvirtue for animals.
+
+## B5047. Animals buy only Physical and Mental Attributes (2026-11-14)
+WoDX Creation. V20 Dark Ages p. 396: animals have no Social Attributes. Experience purchases skip them, and Virtues and Road. Desk item 17.
+
+Reverse: purchaseOptions' beast checks.
+
+## B5048. A player character's animal ghoul is that character's ally, paid from the domitor (2026-11-14)
+WoDX Creation. Standing rule 13 (players may spend XP on ghouls). Made an ally with payer "patron" and the domitor's owners as Observers. Costs are the ghoul costs (V20 Dark Ages p. 400). Desk item 17.
+
+Reverse: the setAlly call in makeGhoul.
+
+## B5049. Feed vitae on the token menu (2026-11-14)
+WoDX Creation. A vampire within a square and a half of a mortal, ghoul or animal can feed it a point. The Storyteller's feed is at once; a player's goes to the approval queue (type wodx-vitae) and happens by itself on approval or auto-approval. Red "Vitae" rises from the token. Desk item 2.
+
+Reverse: registerFeedVitae in main.mjs.
+
+## B5050. The monthly need happens by itself (2026-11-14)
+WoDX Chronicle. Each month a ghoul goes unfed takes its month's vitae off the sheet (1, or an animal's by size, B5044); with the pool empty, one Discipline dot a month, Potence last (Kindred of the Ebony Kingdom p. 186 fills in where V20 Dark Ages p. 400 only says the powers fade). Covers human ghouls too. Setting ghoulNeed, on by default. Desk item 12.
+
+Reverse: switch "Ghouls need vitae each month" off; the old card comes back.
+
+## B5051. The craving is rolled (2026-11-14)
+WoDX Chronicle. Each new month unfed, Self-Control at difficulty 7 (Willpower for an animal, B5046), V20 Dark Ages p. 401. Held, craves, or a botch (must drink at once); the hook wodxGhoulCraving carries the result for WoDX NPC. Desk item 12.
+
+Reverse: drop rollCraving from ghoul-need.mjs.
+
+## B5052. An animal catches up with its years (2026-11-14)
+WoDX Chronicle. With its vitae gone, an animal ghoul ages a year a week until it has caught up with the years it held off. Past its span (B5045) it dies; past twice its span it turns to dust. House pace: V20 Dark Ages p. 400 says only that it comes quickly. Desk item 13.
+
+Reverse: R.ageing and its use in check().
+
+## B5053. Shown on the token (2026-11-14)
+WoDX Chronicle. Red "-1 vitae" rises each month; an empty ghoul's tokens grey (the old tint is kept on the token); dead of age takes the dead mark; dust fades the token to a faint grey. Desk item 26.
+
+Reverse: tint() and float() in ghoul-need.mjs.
+
+## B5054. A drink from the domitor starts the month again (2026-11-14)
+WoDX Chronicle and WoDX Creation. Give vitae and Feed vitae from the domitor call the Clan features' ghoulFed, whose wodxGhoulFix hook resets the need and brings the token's colour back. Animal ghouls on Creature sheets carry the ghoul row.
+
+Reverse: the ghoulFed call in WoDX Creation's giveVitae.
+
+## B5055. A bound animal ghoul's loyalty floor (2026-11-14)
+WoDX NPC. Loyalty drift never takes a blood-bound animal ghoul below Friendly (1) unless it was fed on by its master or went two months or more unfed (Kindred of the Ebony Kingdom p. 185). The floor never raises an attitude already under it. Desk item 10.
+
+Reverse: drift's animal and bound options in order-rules.mjs.
+
+## B5056. Animal ghoul frenzy (2026-11-14)
+WoDX NPC. With five or more vitae in it (V20 Dark Ages p. 401), an animal ghoul in a fight may frenzy when badly hurt (3 or more levels), cornered, or when its master is attacked in sight. It rolls Willpower at difficulty 6, with no easier difficulty for animals (Ben's pick); failing puts on WoDX Chronicle's frenzy condition. Desk item 14.
+
+Reverse: the animalGhoul block in scoreOptions.
+
+## B5057. A craving botch goes for the nearest person (2026-11-14)
+WoDX NPC. When a Storyteller's ghoul botches its craving roll (B5051), its token moves next to the nearest living mortal on the scene and the Storyteller is told it means to drink. Player characters' ghouls are left to their players. Desk item 12.
+
+Reverse: the wodxGhoulCraving hook in main.mjs.
+
+## B5090. Golconda ends when its purity fails (2026-11-14)
+WoDX Actions. A vampire in Golconda falls from it by itself when the Road drops below 7 or Conscience (or Conviction) below 4 (V20 Dark Ages p. 359; Ben's pick go1). A card goes to the player and the Storyteller, and "Golconda lost" floats over the token. Frenzy, Rötschreck and the nightly blood loss return. The long road can be walked again. Setting "Golconda's rules".
+
+## B5091. Traits to 10 in Golconda (2026-11-14)
+WoDX Actions and WoDX Creation. While Golconda holds, the sheet's Ability and Discipline limits rise to 10 whatever the Generation, and experience may buy Traits to 10. The blood pool stays as it was (V20 Dark Ages p. 359; go2). Losing Golconda puts the Generation's limit back. Dots already above it are left for the Storyteller.
+
+## B5092. Beyond some powers' reach (2026-11-14)
+WoDX Actions. Speak Through the Blood (V20 p. 158; V20 Dark Ages p. 220), Summon Soul (V20 p. 161) and the ritual Insight (V20 p. 177) do not take hold on a vampire in Golconda. The power's card says so (go3).
+
+## B5093. Who may be granted Golconda (2026-11-14)
+WoDX Chronicle. At the end of the long road, the Grant button appears only for a vampire on the Road of Humanity with Humanity 7 and Conscience 4. If they fall short, a card says what is missing. On another Road or a Path the grant goes to the approval queue, and once the Storyteller approves, it happens (V20 Dark Ages pp. 115, 359; V20 p. 300; Ben's pick go4, gate).
+
+## B5094. The Golconda halo (2026-11-14)
+WoDX Senses. A soft pale halo shows round a vampire in Golconda on the Storyteller's map always. A player sees it while using a sight that draws rings (Aura Perception, Heightened Senses and the like). This is a house touch, since the books describe no sign (go5).
+
+## B5095. The still aura (2026-11-14)
+WoDX Senses and WoDX Otherworlds. The aura ring reads "pale and still". Read the Soul shows no frenzy ripples and no shift beneath, and adds "a deep stillness" with a pale ring on the overlay. This is a house reading (go6).
+
+## B5096. The sun one step weaker (2026-11-14)
+WoDX Actions. For a vampire in Golconda the sun counts one step weaker on the ladder: direct as a cloudy day, cloudy as indirect, and so on, while faint stays faint. This is a house rule from Ben's decision card (go7). The burn card says "Golconda's grace".
+
+## B5097. Masters of Golconda keep out of the Jyhad (2026-11-14)
+WoDX NPC. A vampire in Golconda is drawn into no rivalry or feud fight, and the werewolves leave them be (V20 pp. 299-300; V20 Dark Ages p. 359; go8).
+
+## B5150. The Philippines a region of its own (2026-11-15)
+WoDX Chronicle and Storyteller. Ben asked to build out the Philippines. The islands leave the Malay world and become the 45th world region, "The Philippines (Manila, the Visayas, Mindanao and Sulu)", with Manila as its city, the tropical wet climate and the Philippine money region. The world map gives it the squares north of 4.5 degrees and east of 119.5 (with Palawan) that were the Malay world's; the map builder cuts the country out by name on its next run. The region's letter comes last so no older square changes. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: drop philippines from WORLD_REGIONS and the other region tables, and the letter s in Storyteller's data/world.mjs.
+
+## B5151. Who lives there (2026-11-15)
+WoDX Chronicle and Creation. Filipino 78, Moro 17 and Chinese 5 in the medieval age; Filipino 74, Moro 14, Chinese 8 and Spanish 4 in the early modern; Filipino 77, Moro 10, Chinese 8, Spanish 4 and English 1 (the Americans) in the industrial; Filipino 85, Moro 8, Chinese 6 and English 1 now. The Malay world keeps Moro 2 for the Tausug and Bajau of the Sabah coast and no Filipinos.
+
+Reverse: edit the philippines and nusantara mixes in world-rules.mjs.
+
+## B5152. How the islands live by age (2026-11-15)
+WoDX Chronicle, Storyteller, NPC and Library. Island ways (malay) until 1571, then Catholic ways; holy days of the land until 1571, then the church year. Law: the datus and elders with debt bondage, the qadi in the sultanates from 1405, Spain's Audiencia and the friars from 1565, the Guardia Civil from 1868, American rule from 1898, the republic from 1946, martial law 1972 to 1981. Print 1593, papers 1890, radio 1935, television 1965, the net 2008; rail 1892, tram 1888, expressway 1977; post 1767, telegraph 1873, telephone 1890. Cholera 1820, the flu of 1918 and the cholera of 1961 reach it; Kuei-jin courts, Hengeyokai and the Akashic monasteries hold the islands as in the Malay world; church goods from 1565.
+
+Reverse: drop the philippines rows from each table.
+
+## B5153. Lifepath and story hooks (2026-11-15)
+WoDX Creation and Storyteller. The lifepath has the Philippines under Asia, with its own origins and callings in each age, and dated origins and marks from Mactan (1521) to the typhoon at Tacloban (2013). Threads of Fate gets two cards: "The galleon is late" (its own hook) and "The datu's buried gold".
+
+Reverse: drop the philippines entries in data/lifepath-local-asia.mjs, data/lifepath-events-asia.mjs and the r-philippines cards.
+
+## B5180. Thai names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Thai list grows from 24 names to 361: the kings, nobles and commoners of Sukhothai and Ayutthaya given alone before the surname act of 1913, modern given names after, and the family names chosen since. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the thai entry in data/people-world.mjs and drop thai from RAISED.
+
+## B5190. Malay names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Malay list grows from 24 names to 306: the Malacca court, the Hikayat heroes and the village names of the old Malay world, then the names of modern Malaysia and Brunei, bin or binti the father throughout. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the malay entry in data/people-world.mjs and drop malay from RAISED.
+
+## B5200. Quechua names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Quechua list grows from 25 names to 335: the Inca kings, queens and captains and the Quechua names of the Tawantinsuyu before the conquest, then a church name and a Quechua family name from the viceroyalty on. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the quechua entry in data/people-world.mjs and drop quechua from RAISED.
+
+## B5210. A watchdog on the PC starts the runner again when it dies (2026-11-15)
+PC job queue. The runner and its wrapper were ended three times on 14 and 15 November with nothing in the log, and
+the pc-heartbeat schedule (B4700) did not notice: GitHub ran that schedule once in seven hours, so the queue sat
+still for 27 minutes until another thread asked. `tools/pcq/watchdog.ps1` checks every two minutes that
+`run-runner.ps1` is running and, if not, runs `start-runner.ps1`, which puts every running job back in the queue.
+
+Reverse: put a file named `watchdog-off` in `D:\WoDX\pcq`.
+
+## B5211. The watchdog lives apart from the runner (2026-11-15)
+PC job queue. `start-runner.ps1` starts the watchdog through WMI, so it is not in the runner's process tree and a kill
+of that tree leaves it running. The wrapper runs `start-runner.ps1` before each runner start, which starts the
+watchdog when it is missing, so each one brings the other back. `start-runner.ps1` copies itself and the watchdog
+from the runner's clone into `D:\WoDX\pcq`, so the copies there stay current.
+
+Reverse: remove the Start-Watchdog calls.
+
+## B5212. The heartbeat issue stays as a second check (2026-11-15)
+PC job queue. The pc-heartbeat workflow is kept: when GitHub does run it, it still opens an issue if the PC itself is
+off or asleep, which the watchdog cannot report.
+
+Reverse: delete .github/workflows/pc-heartbeat.yml.
+
+## B5220. Steppe names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Steppe list grows from 28 names to 311: the khans, queens and captains of the Mongol and Kipchak steppe in the old ages, then the names of Mongolia and the Kazakh steppe, given alone. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the steppe entry in data/people-world.mjs and drop steppe from RAISED.
+
+## B5230. Nahua names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Nahua list grows from 28 names to 320: the tlatoque, captains and calendar names of the Mexica, Acolhua and Tlaxcalteca before 1521, then a church name and a Nahuatl or Spanish family name from New Spain on. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the nahua entry in data/people-world.mjs and drop nahua from RAISED.
+
+## B5240. Tamil names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Tamil list grows from 32 names to 308: the Chola, Pandya and Pallava kings and queens, the Sangam poets and saints and village names of old, then modern Tamil names, given alone. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the tamil entry in data/people-world.mjs and drop tamil from RAISED.
+
+## B5250. Javanese names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Javanese list grows from 32 names to 308: the kings, queens, saints and poets of Singhasari, Majapahit, Demak and Mataram, the wayang heroines and village names of old Java, then modern Javanese names, one name each. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the javanese entry in data/people-world.mjs and drop javanese from RAISED.
+
+## B5260. Swahili names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Swahili list grows from 32 names to 311: the sultans, poets and traders of Kilwa, Mombasa, Lamu and Zanzibar and the Mwana names of the coast, then modern Tanzanian and Kenyan names, bin or binti the father throughout. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the swahili entry in data/people-world.mjs and drop swahili from RAISED.
+
+## B5270. Hawaiian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Hawaiian list grows from 32 names to 308: the aliʻi of the island kingdoms and the heroines of the chants in the old ages, then Hawaiian church and modern names and family names taken from a father's name after the 1860 law. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the hawaiian entry in data/people-world.mjs and drop hawaiian from RAISED.
+
+## B5280. Amharic names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Amharic list grows from 34 names to 301: the Zagwe and Solomonic kings and queens, the saints and the court of Gondar in the old ages, then modern Ethiopian names, the father's name second. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the amharic entry in data/people-world.mjs and drop amharic from RAISED.
+
+## B5290. Tibetan names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Tibetan list grows from 38 names to 303: old names from the imperial and monastic records, later names from twentieth century lists, clan and house names kept. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the tibetan entry in data/people-world.mjs and drop tibetan from RAISED.
+
+## B5300. Romanian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Romanian list grows from 45 names to 309: old names from Wallachian and Moldavian charters, later given names and family names from modern lists. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the romanian entry in data/people-world.mjs and drop romanian from RAISED.
+
+## B5310. Akan names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Akan list grows from 45 names to 302: day names, royal and stool names, and family names from Asante and Fante records. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the akan entry in data/people-world.mjs and drop akan from RAISED.
+
+## B5320. Vietnamese names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Vietnamese list grows from 46 names to 324: old names from the Lý, Trần and Lê court records, modern given names, the common family names, family name first. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the vietnamese entry in data/people-world.mjs and drop vietnamese from RAISED.
+
+## B5330. Serbian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Serbian list grows from 47 names to 307: old names from Nemanjić charters and monastery records, later given names and -ić family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the serbian entry in data/people-world.mjs and drop serbian from RAISED.
+
+## B5340. Shipped tables written eight at a time (2026-11-15)
+WoDX Chronicle. With the name lists raised to 300, a world that had not yet seen the new data spent over half a minute bringing its shipped Roll Tables up to date one by one, and the names gate timed out at its first step on a reset testbed lane. The install now writes eight tables at a time; what it writes, and the rule that a table the Storyteller edited is never overwritten, are unchanged. The gate kit's step also takes its own timeout, and the names gate gives its start-up step three minutes. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the one-at-a-time loop in scripts/gen.mjs doInstall.
+
+## B5350. Turkish names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Turkish list grows from 47 names to 420: old names of beys, sultans, viziers, poets, valide sultans and townsfolk from Seljuk and Ottoman records, later names of the Republic, and a longer list of family names taken after the law of 1934. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the turkish entry in data/people-world.mjs and drop turkish from RAISED.
+
+## B5360. Korean names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Korean list grows from 48 names to 424: old names of scholars, generals, painters, clerks, gisaeng and household registers of Goryeo and Joseon, later names since the colonial years, and close to a hundred family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the korean entry in data/people-world.mjs and drop korean from RAISED.
+
+## B5370. Mande names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Mande list grows from 48 names to 340: old names of the mansas, griots, captains and royal women of Mali, Kaabu, Segou and the Wassoulou, later names from Mali to the Gambia, and a longer list of clan names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the mande entry in data/people-world.mjs and drop mande from RAISED.
+
+## B5380. Zulu names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Zulu list grows from 48 names to 402: old names of the kings, royal women, councillors and captains of the Zulu kingdom and its neighbours, later names of KwaZulu-Natal, and over a hundred clan names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the zulu entry in data/people-world.mjs and drop zulu from RAISED.
+
+## B5400. Hungarian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Hungarian list grows from 50 names to 411: old names of kings, chieftains, lords, captains and townsfolk from Árpád, Angevin, Hunyadi and Transylvanian records with the old noble and town family names, then names and family names of modern Hungary. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the hungarian entry in data/people-world.mjs and drop hungarian from RAISED.
+
+## B5410. Persian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Persian list grows from 50 names to 444: old names of kings and heroes of the old tales and of Samanid, Seljuk, Safavid and Qajar rulers, ministers, poets and royal women, a town name as the family name until the surname law of 1925, then modern Iranian names and surnames. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the persian entry in data/people-world.mjs and drop persian from RAISED.
+
+## B5420. Yoruba names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Yoruba list grows from 51 names to 382: old names of the alaafin, obas, war chiefs and royal and market women of Oyo, Ife, Ibadan, Abeokuta and Lagos, then Yoruba, church and Muslim names since, with a longer list of family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the yoruba entry in data/people-world.mjs and drop yoruba from RAISED.
+
+## B5430. Portuguese names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Portuguese list grows from 54 names to 383: old names of kings, queens, captains, navigators and townsfolk of the Burgundian and Avis records, then names of modern Portugal, and a longer list of family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the portuguese entry in data/people-world.mjs and drop portuguese from RAISED.
+
+## B5440. Dutch names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Dutch list grows from 54 names to 468: old names of counts, regents, painters, seafarers and townsfolk of Holland and the Republic, with a father's name (Janszoon, Jansdochter) or a house or place name as the family name before the register of 1811, then modern Dutch names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the dutch entry in data/people-world.mjs and drop dutch from RAISED.
+
+## B5450. Irish names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Irish list grows from 55 names to 527: old names of kings, lords, poets, saints and women of the annals with the family name in Irish (Ó or Mac, Ní or Nic for a woman), then modern Irish names with the English forms of the family names used since the 18th century. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the irish entry in data/people-world.mjs and drop irish from RAISED.
+
+## B5460. Greek names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Greek list grows from 56 names to 472: old names of emperors, empresses, saints, scholars and great houses of Byzantium and the Greek lands under Venice and the Ottomans, then names of modern Greece, with a woman's family name in its own form. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the greek entry in data/people-world.mjs and drop greek from RAISED.
+
+## B5470. Polish names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Polish list grows from 58 names to 435: old names of Piast and Jagiellonian kings and dukes, knights, magnates and townsfolk, then names of modern Poland, with a woman's family name in its own form. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the polish entry in data/people-world.mjs and drop polish from RAISED.

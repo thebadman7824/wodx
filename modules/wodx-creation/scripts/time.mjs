@@ -1,4 +1,5 @@
-import {MODULE_ID, esc, lineOf, lineage, chronology, domitorOf, disciplinesOf, allyOf} from "./actor-data.mjs";
+import {MODULE_ID, esc, lineOf, lineage, chronology, domitorOf, disciplinesOf, allyOf, isAnimal, animalKindOf} from "./actor-data.mjs";
+import * as AG from "./animal-ghoul-rules.mjs";
 import {ghoulBloodMax, bondStage} from "./rules.mjs";
 import {setLineage, setChronology, writeLineageJournal} from "./lineage.mjs";
 import {MORTAL, GHOUL_AGING, BOND_FADE, TORPOR, BACKGROUND_REVIEW, ERA_SECONDARY, LINE_OF_TYPE, SECONDS_PER_MONTH} from "../data/time.mjs";
@@ -131,13 +132,17 @@ export function planSkip({from = game.time.worldTime, to, actors = game.actors, 
       const domitor = domitorOf(actor);
       const gone = !domitorAlive(actor);
       const ghouledYear = c.ghouled !== undefined ? yearOf(c.ghouled) : fromYear;
-      const realEnd = born !== null ? toYear - born : MORTAL.assumedAge + (toYear - ghouledYear);
-      const newMax = ghoulBloodMax(toYear - ghouledYear);
+      // B5043, B5045: an animal's pool is its size band plus one a century; it ages against its own span
+      const kind = isAnimal(actor) ? animalKindOf(actor) : null;
+      const span = kind ? AG.lifespan(kind) : null;
+      const realEnd = born !== null ? toYear - born : (kind ? Math.ceil(span / 2) : MORTAL.assumedAge) + (toYear - ghouledYear);
+      const newMax = kind ? AG.animalBloodMax(kind, toYear - ghouledYear) : ghoulBloodMax(toYear - ghouledYear);
+      const dustAt = kind ? span * 2 : GHOUL_AGING.dustAt;
       const oldMax = Number(actor.system?.advantages?.bloodpool?.max) || 10;
       add("ghoulFed", `Fed each month by ${domitor?.name ?? l.domitor?.name ?? "the domitor"}`,
         `Does not age while the vitae lasts; blood pool ${oldMax}${newMax !== oldMax ? ` → ${newMax} (+1 a century)` : ""} (V20 Dark Ages p. 399)`, !gone, {newMax, domitorId: domitor?.id ?? l.domitor?.id});
       add("vitaeLapses", "The vitae lapses",
-        `${gone ? "The domitor is gone. " : ""}Reverts to the real age (${realEnd})${realEnd >= GHOUL_AGING.dustAt ? " and turns to dust" : ""}; the Disciplines go dark (V20 Dark Ages p. 399)`, gone, {dust: realEnd >= GHOUL_AGING.dustAt});
+        `${gone ? "The domitor is gone. " : ""}Reverts to the real age (${realEnd})${realEnd >= dustAt ? " and turns to dust" : (kind && realEnd >= span ? ", past its natural span, and dies" : "")}; the Disciplines go dark (V20 Dark Ages p. 399)`, gone, {dust: realEnd >= dustAt});
     }
 
     // Bonds fade without a drink: one step per (12 − Willpower) months (V20DA p. 341)

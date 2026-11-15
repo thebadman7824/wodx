@@ -45,6 +45,7 @@ YEARS = {
     "japan": [(1781, "reform"), (1868, "industrial"), (1919, "republic"), (1946, "postwar")],
     "southeast-asia": [(1781, "reform"), (1886, "colonial"), (1947, "postwar"), (1975, "socialist"), (1990, "modern")],
     "nusantara": [(1781, "reform"), (1800, "colonial"), (1946, "postwar")],
+    "philippines": [(1571, "colonial"), (1946, "postwar"), (1986, "modern")],
     "west-africa": [(1781, "reform"), (1885, "colonial"), (1960, "postwar")],
     "east-africa": [(1781, "reform"), (1885, "colonial"), (1960, "postwar"), (1974, "socialist"), (1991, "modern")],
     "southern-africa": [(1781, "colonial"), (1870, "industrial"), (1919, "republic"), (1946, "postwar")],

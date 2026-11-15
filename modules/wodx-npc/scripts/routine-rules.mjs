@@ -171,7 +171,7 @@ const NO_WEEK = new Set(["neonate", "elder", "garou", "spirit", "beast"]);
  *  or turned a Friday land to Sunday (Turkey in 1935, Soviet Central Asia in 1924, the Dutch Indies, the colonies). */
 export const SUNDAY_FROM = {
   "india": 1843, "china": 1912, "japan": 1876, "korea": 1895, "southeast-asia": 1899, "tibet-himalaya": 1959,
-  "nusantara": 1800, "west-africa": 1900, "east-africa": 1900, "anatolia": 1935, "central-asia": 1924, "antarctica": 1899
+  "nusantara": 1800, "philippines": 1800, "west-africa": 1900, "east-africa": 1900, "anatolia": 1935, "central-asia": 1924, "antarctica": 1899
 };
 /** The weekday (0 Monday ... 6 Sunday) a faith rests and worships in a region and year, or null for none. */
 export function restDay(faith, region = null, year = 0) {

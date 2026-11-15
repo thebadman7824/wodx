@@ -1,5 +1,6 @@
 import {findClan, clanDisciplines, generationRow, ghoulDisciplineCap, ghoulCanLearn, xpCost, traitMax, KINDS} from "./rules.mjs";
 import {XP} from "../data/vampire.mjs";
+import * as AG from "./animal-ghoul-rules.mjs";
 
 export const MODULE_ID = "wodx-creation";
 export const DISCIPLINE = "wod.types.discipline";
@@ -32,8 +33,46 @@ export function lineOf(actor) {
   const types = CONFIG.worldofdarkness?.sheettype ?? {};
   if ( actor?.type === (types.vampire ?? "Vampire") ) return "vampire";
   if ( actor?.type === (types.mortal ?? "Mortal") ) return actor.system?.settings?.variant === "ghoul" ? "ghoul" : "mortal";
+  // B5040: an animal on a Creature sheet that has drunk vitae is a ghoul; one that has not is no line of ours
+  if ( actor?.type === (types.creature ?? "Creature") && actor.getFlag?.(MODULE_ID, "animalGhoul") ) return "ghoul";
   return null;
 }
+
+/* -------------------------------------------- */
+/*  Animals (B5040 to B5049)                    */
+/* -------------------------------------------- */
+
+/** Creature variants that are plain beasts; the rest (chimera, spirit, construct, Fera kin...) are not animals. */
+const BEAST_VARIANTS = new Set(["", "general", "animal", "mortal"]);
+
+/**
+ * Is this actor an animal? A Creature sheet of the plain variant, or marked flags["wodx-creation"].animal; a Mortal
+ * sheet whose WoDX NPC template is an animal (passers-by, household beasts) or that is marked the same way.
+ */
+export function isAnimal(actor) {
+  if ( !actor ) return false;
+  const types = CONFIG.worldofdarkness?.sheettype ?? {};
+  const mark = actor.getFlag?.(MODULE_ID, "animal");
+  if ( mark === false ) return false;
+  if ( mark ) return true;
+  if ( actor.type === (types.creature ?? "Creature") ) return BEAST_VARIANTS.has(String(actor.system?.settings?.variant ?? ""));
+  if ( actor.type === (types.mortal ?? "Mortal") ) {
+    if ( actor.getFlag?.("wodx-npc", "passerbyBase") === "animal" ) return true;
+    const t = actor.getFlag?.("wodx-npc", "behavior")?.template;
+    return !!t && (t === "beast" || !!AG.KINDS[t]);
+  }
+  return false;
+}
+
+/** The kind of animal (an animal-ghoul-rules KINDS key), or null when it is not an animal. */
+export function animalKindOf(actor) {
+  if ( !isAnimal(actor) ) return null;
+  const mark = actor.getFlag?.(MODULE_ID, "animal");
+  return AG.kindOf({kind: mark?.kind ?? null, template: actor.getFlag?.("wodx-npc", "behavior")?.template ?? null, name: actor.name})
+    ?? "stray-dog";
+}
+
+export const isAnimalGhoul = actor => lineOf(actor) === "ghoul" && isAnimal(actor);
 
 export function lineage(actor) {
   return foundry.utils.deepClone(actor?.getFlag?.(MODULE_ID, "lineage") ?? {});
@@ -153,7 +192,7 @@ export function purchaseOptions(actor) {
   const {available} = xpTotals(payerOf(actor));
   const out = [];
   const add = (kind, key, label, current, extra = {}) => {
-    const max = traitMax({line, kind, generation: gen, domitorGeneration: domitorGen});
+    const max = traitMax({line, kind, generation: gen, domitorGeneration: domitorGen, golconda: !!actor?.flags?.["wodx-actions"]?.golconda});
     const cost = xpCost({line, kind, current, discipline: extra.discipline});
     let reason = "";
     if ( cost === null ) reason = "Not available to this character";
@@ -163,8 +202,11 @@ export function purchaseOptions(actor) {
     out.push({kind, key, label, current, next: current + 1, cost, max, ok: !reason, reason, ...extra});
   };
 
+  const beast = line === "ghoul" && isAnimal(actor);
   for ( const [k, a] of Object.entries(sys.attributes ?? {}) ) {
     if ( a?.isvisible === false ) continue;
+    // B5047: an animal has only Physical and Mental Attributes (V20 Dark Ages p. 396)
+    if ( beast && !AG.ANIMAL_ATTRIBUTES.includes(k) ) continue;
     add("attribute", k, loc(a.label) || k, Number(a.value) || 0);
   }
   for ( const [k, a] of Object.entries(sys.abilities ?? {}) ) {
@@ -177,16 +219,16 @@ export function purchaseOptions(actor) {
   if ( line !== "mortal" ) {
     for ( const d of disciplinesOf(actor) ) {
       const inClan = clanList.includes(d.name.toLowerCase());
-      const blocked = (line === "ghoul" && !ghoulCanLearn(d.name, domitorDisciplines))
-        ? "The domitor does not know this Discipline" : "";
+      const blocked = beast && !AG.animalCanLearn(d.name) ? "An animal can only learn Celerity, Fortitude and Potence"
+        : (line === "ghoul" && !ghoulCanLearn(d.name, domitorDisciplines)) ? "The domitor does not know this Discipline" : "";
       add("discipline", `item:${d.id}`, d.name, d.value, {discipline: caitiff ? "caitiff" : (inClan ? "clan" : "other"), blocked});
     }
   }
-  for ( const [k, v] of Object.entries(sys.advantages?.virtues ?? {}) ) {
+  for ( const [k, v] of Object.entries(beast ? {} : (sys.advantages?.virtues ?? {})) ) {
     if ( !v ) continue;
     add("virtue", k, loc(v.label) || k, Number(v.permanent) || 0);
   }
-  if ( sys.advantages?.path ) {
+  if ( sys.advantages?.path && !beast ) {
     const p = sys.advantages.path;
     const label = p.label === "custom" ? (p.custom || "Road") : loc(p.label) || "Humanity";
     add("road", "path", label, Number(p.permanent) || 0);
@@ -206,6 +248,7 @@ export function newDisciplineOption(actor, name) {
   const cost = XP[line].newDiscipline;
   let reason = "";
   if ( disciplinesOf(actor).some(d => d.name.toLowerCase() === clean.toLowerCase()) ) reason = "Already known; raise it instead";
+  else if ( line === "ghoul" && isAnimal(actor) && !AG.animalCanLearn(clean) ) reason = "An animal can only learn Celerity, Fortitude and Potence";
   else if ( line === "ghoul" && !ghoulCanLearn(clean, domitorDisciplines) ) reason = "The domitor does not know this Discipline";
   else if ( cost > available ) reason = `Needs ${cost} experience; ${available} available`;
   return {kind: "newDiscipline", key: `new:${clean}`, label: clean, current: 0, next: 1, cost, max: 1, ok: !reason, reason};

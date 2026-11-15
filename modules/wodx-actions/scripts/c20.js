@@ -15,6 +15,7 @@
  */
 import * as LIM from "./limits.js";
 import * as C from "./c20-rules.js";
+import { floatOver } from "./daysleep.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim, castIntent } from "./aim.js";
 import * as CA from "./c20-arts.js";
@@ -358,5 +359,50 @@ export function build(ctx) {
         });
     }
 
-    return { info, cantrip, unleash, invoke, trigger: triggerDialog, epiphany, bedlam, coldIron, mists, nightmare, banality, rules: C };
+    /** The scene an actor's token stands on (the viewed scene first). */
+    function sceneOf(actor) {
+        const has = sc => sc?.tokens?.some?.(t => t.actorId === actor.id);
+        return has(game.scenes?.viewed) ? game.scenes.viewed : (game.scenes?.find?.(has) ?? null);
+    }
+    /**
+     * B4993: chimerical wounds heal with the clock by C20's times (pp. 290-291), halved in a freehold or glade and fast
+     * in the Dreaming (a scene marked so in its WoDX flags, or the freehold the changeling holds as a Background when
+     * the scene says "freehold"). The health track changes; a quiet card tells the Storyteller.
+     */
+    async function healChimerical(actors = game.actors ?? []) {
+        if (ctx.setting?.("autoChimerical") === false) return [];
+        const now = game.time?.worldTime ?? 0, lines = [];
+        for (const a of actors) {
+            const ch = a.system?.health?.damage?.chimerical;
+            if (!ch) continue;
+            const f = a.getFlag(MOD, "c20") ?? {}, clock = f.chimClock;
+            const hurt = n(ch.bashing) + n(ch.lethal) + n(ch.aggravated);
+            if (!hurt) { if (clock) await saveFlag(a, { chimClock: null }); continue; }
+            if (!clock) { await saveFlag(a, { chimClock: { last: now, carry: 0 } }); continue; }
+            const dt = now - n(clock.last);
+            if (dt < 60) continue;
+            const sc = sceneOf(a), place = sc?.getFlag?.(MOD, "place") ?? {};
+            const plan = C.chimericalHealing(ch, dt, { carry: clock.carry, freehold: !!(place.freehold || sc?.getFlag?.(MOD, "freehold")), dreaming: !!(place.dreaming || sc?.getFlag?.(MOD, "dreaming")) });
+            await saveFlag(a, { chimClock: { last: now, carry: plan.carry } });
+            const got = Object.entries(plan.healed).filter(([, v]) => v);
+            if (!got.length) continue;
+            await setT(a, { "system.health.damage.chimerical.bashing": plan.damage.bashing, "system.health.damage.chimerical.lethal": plan.damage.lethal, "system.health.damage.chimerical.aggravated": plan.damage.aggravated });
+            floatOver(a, "The mien heals", "#e6a8ff");
+            lines.push(`<b>${esc(a.name)}</b>: the mien heals ${got.map(([k, v]) => `${v} ${k}`).join(", ")}`);
+        }
+        if (lines.length) await ChatMessage.create({ content: `<div class="vta-card"><h3>Chimerical wounds heal</h3><ul>${lines.map(l => `<li>${l}</li>`).join("")}</ul><p class="wodx-quiet">${REF} pp. 290-291</p></div>`,
+            whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: { alias: "WoDX" }, flags: { [MOD]: { info: true } } });
+        return lines;
+    }
+
+    /** The Storyteller marks the viewed scene a freehold or glade, or in the Dreaming (healing times, B4993). */
+    async function placeDialog(scene = canvas?.scene) {
+        if (!game.user.isGM || !scene) return notify("The Storyteller marks a place.");
+        const p = scene.getFlag(MOD, "place") ?? {};
+        return dialog(`This place: ${scene.navName || scene.name}`, `<form><p>Chimerical wounds heal twice as fast in a freehold or glade, and a level each 15 minutes in the Dreaming (${REF} pp. 290-291).</p>
+          <div class="form-group"><label><input type="checkbox" name="freehold"${p.freehold ? " checked" : ""}/> A freehold or glade</label></div>
+          <div class="form-group"><label><input type="checkbox" name="dreaming"${p.dreaming ? " checked" : ""}/> In the Dreaming</label></div></form>`, "Save",
+            async fd => scene.setFlag(MOD, "place", { ...p, freehold: !!fd.freehold, dreaming: !!fd.dreaming }));
+    }
+    return { placeDialog, healChimerical, info, cantrip, unleash, invoke, trigger: triggerDialog, epiphany, bedlam, coldIron, mists, nightmare, banality, rules: C };
 }

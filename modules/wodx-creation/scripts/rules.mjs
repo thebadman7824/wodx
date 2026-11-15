@@ -126,10 +126,11 @@ export function xpCost({line, kind, current = 0, discipline = "other"}) {
  * @param {number} [p.generation]        A vampire's Generation
  * @param {number} [p.domitorGeneration] A ghoul's domitor's Generation
  */
-export function traitMax({line, kind, generation, domitorGeneration}) {
+export function traitMax({line, kind, generation, domitorGeneration, golconda = false}) {
   if ( kind === "virtue" ) return 5;
   if ( kind === "road" || kind === "willpower" ) return 10;
-  if ( line === "vampire" ) return generationRow(generation).maxTrait;
+  // B5092: in Golconda any Trait may reach 10 regardless of Generation (V20 Dark Ages p. 359)
+  if ( line === "vampire" ) return golconda ? 10 : generationRow(generation).maxTrait;
   if ( kind === "discipline" || kind === "newDiscipline" ) return line === "ghoul" ? ghoulDisciplineCap(domitorGeneration) : 0;
   return 5;
 }

@@ -279,8 +279,11 @@ export function build(ctx) {
         const fed = n(f.riseUntil) > night();
         const content = `<form><p>${state(i)}.${fed ? ` Black cycled: no Chi needed tonight (until night ${f.riseUntil}).` : ""}</p>
           <div class="form-group"><label>Rise with</label><select name="a" data-fixed><option value="yang">Yang (scarlet cycle: each night; looks alive)</option><option value="yin"${i.perm === "yin" ? " selected" : ""}>Yin (black cycle: ten nights; +1 Social difficulty with mortals)</option></select></div>
-          <div class="form-group"><label><input type="checkbox" name="dc" checked/> Roll P'o at 6 for Demon Chi back</label></div></form>`;
+          <div class="form-group"><label><input type="checkbox" name="dc" checked/> Roll P'o at 6 for Demon Chi back</label></div>
+          <div class="form-group"><label><input type="checkbox" name="keep" checked/> Rise this way by itself each evening</label></div>
+          <div class="form-group"><label><input type="checkbox" name="sunYang" ${f.sunYang ? "checked" : ""}/> In the sun, spend Yang Chi to hold the rot back</label></div></form>`;
         return dialog(`Rise: ${actor.name}`, content, "Rise", async fd => {
+            await saveFlag(actor, { ...(fd.keep ? { cycle: fd.a } : {}), sunYang: !!fd.sunYang, autoRoseNight: night() });
             let body = "", rolls = [];
             if (!fed) {
                 const r = K.awaken({ yinChi: i.chi.yin, yangChi: i.chi.yang, permImb: i.perm }, fd.a);
@@ -332,6 +335,65 @@ export function build(ctx) {
             body += `<div class="wodx-quiet">${REF} pp. 140, 151</div>`;
             return post(actor, `${actor.name} in the sun`, body);
         });
+    }
+
+    /**
+     * B4984: rising by itself at the day's-sleep hour. The cycle is the character's standing choice (flag kote.cycle,
+     * set in the Rise dialog; a Yin imbalance always rises Yin), and P'o is rolled at 6 for Demon Chi (pp. 91, 139).
+     */
+    async function riseAuto(actor) {
+        const i = info(actor);
+        const f = flag(actor);
+        if (n(f.autoRoseNight) === night()) return null;
+        await saveFlag(actor, { autoRoseNight: night() });
+        const fed = n(f.riseUntil) > night();
+        let body = "", rolls = [];
+        if (!fed) {
+            const r = K.awaken({ yinChi: i.chi.yin, yangChi: i.chi.yang, permImb: i.perm }, f.cycle === "yin" ? "yin" : "yang");
+            if (r.rot) { await ctx.applyDamage(actor, "lethal", 1); body += `<div class="vta-big bad">No Chi in the body: the corpse loses a Health Level instead.</div>`; }
+            else {
+                await setChi(actor, { yin: r.yinChi, yang: r.yangChi });
+                await saveFlag(actor, { aspect: r.aspect, riseUntil: night() + r.nights });
+                body += `<div class="vta-res">Aspected to ${KIND[r.aspect]}${r.nights > 1 ? ` for ${r.nights} nights` : ""}.${r.socialPenalty ? " A corpse's pallor: +1 difficulty to Social rolls with mortals." : ""}</div>`;
+            }
+        } else body += `<div class="vta-res">Still black cycled: the night costs nothing.</div>`;
+        const pr = await rollPool(i.v.po, 6); rolls.push(pr.roll);
+        const back = K.demonRefresh(i.chi.demon, i.v.po, pr.successes);
+        await setChi(actor, { demon: back });
+        body += rollBlock("P'o (Demon Chi)", pr) + `<div class="vta-res">Demon Chi ${back}/${i.v.po}.</div>`;
+        body += `<div class="wodx-quiet">${REF} pp. 91, 139</div>`;
+        return post(actor, `${actor.name} rises`, body, rolls.filter(Boolean));
+    }
+
+    /**
+     * B4985: the sun on a Kuei-jin, by the book (p. 151) instead of a Cainite's burn: the day's grace in minutes, then a
+     * turn of rot for each turn past it (a Health Level healed as aggravated, a Yin Chi), with Yang spent to hold a turn
+     * back when the character is marked to (flag kote.sunYang). turns: turns of exposure (three seconds each).
+     */
+    async function sunAuto(actor, { turns = 1, direct = true } = {}) {
+        const i = info(actor);
+        const f = flag(actor);
+        const day = Math.floor((game.time?.worldTime ?? 0) / 86400);
+        const used = f.sunDay === day ? n(f.sunMin) : 0;
+        const minutes = Math.max(1, Math.round(n(turns) * 3 / 6)) / 10;
+        const grace = K.sunGrace({ stamina: i.stamina, yinChi: i.chi.yin, yangImbalanced: i.perm === "yang", direct });
+        const total = used + minutes;
+        await saveFlag(actor, { sunDay: day, sunMin: total });
+        const past = total > grace ? Math.min(n(turns), Math.ceil((total - Math.max(grace, used)) * 20)) : 0;
+        const y = f.sunYang ? Math.min(past, i.chi.yang) : 0;
+        const rot = Math.max(0, past - y);
+        if (y) await setChi(actor, { yang: i.chi.yang - y });
+        let body = `<div class="vta-sec">Grace: ${grace} ${grace === 1 ? "minute" : "minutes"} a day; ${Math.round(total * 10) / 10} spent today.</div>`;
+        if (rot) {
+            await ctx.applyDamage(actor, "aggravated", rot);
+            await setChi(actor, { yin: Math.max(0, info(actor).chi.yin - rot) });
+            await saveFlag(actor, { rot: n(flag(actor).rot) + rot });
+            body += `<div class="vta-big bad">${rot} ${rot === 1 ? "turn" : "turns"} of rot: ${rot} Health ${rot === 1 ? "Level" : "Levels"} (healed as aggravated), −${rot} Yin Chi, and −${rot} to each Physical Attribute and Appearance until healed.</div>`;
+        } else body += `<div class="vta-res ${past ? "" : "good"}">${past ? "The rot is held back with Yang." : "Within the grace."}</div>`;
+        if (y) body += `<div class="vta-note">${y} Yang spent: the rot is held back ${y} ${y === 1 ? "turn" : "turns"}.</div>`;
+        body += `<div class="wodx-quiet">${REF} pp. 140, 151</div>`;
+        await post(actor, `${actor.name} in the sun`, body);
+        return { rot, yang: y, grace, total };
     }
 
     /* -- healing, sight, Horoscope ------------------------------------------ */
@@ -399,5 +461,5 @@ export function build(ctx) {
         });
     }
 
-    return { info, feed, spend, nature, dharmaRoll, demon, rise, sun, heal, sight, setup, isKotE, rules: K };
+    return { info, feed, spend, nature, dharmaRoll, demon, rise, riseAuto, sun, sunAuto, heal, sight, setup, isKotE, rules: K };
 }
