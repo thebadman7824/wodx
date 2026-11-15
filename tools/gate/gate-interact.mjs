@@ -180,6 +180,10 @@ export async function run() {
     });
 
     await step("7. wall", async () => {
+      // The world's automation level may approve a breach on sight (automation-rules: "auto"); this step tests the
+      // queue, so that standing rule is set aside here (run-gate puts world settings back after the gate).
+      const auto = foundry.utils.deepClone(game.settings.get("wodx-chronicle", "autoApprove") ?? {});
+      if ( `${MOD}.breach` in auto ) { delete auto[`${MOD}.breach`]; await game.settings.set("wodx-chronicle", "autoApprove", auto); }
       await attrs(burglar, {strength: 5});
       const msg = await applied(await ix().attempt(tok, wattle.id, "breach", {fd: {}}));
       const q = game.settings.get("wodx-chronicle", "approvals").pending.find(p => p.type === `${MOD}.breach`);
@@ -422,6 +426,10 @@ export async function run() {
 
     await step("21. watch point", async () => {
       const cx = tb.x + 50, cy = tb.y + 50;
+      // The watchman may still be walking toward a noise from an earlier step: stop and settle them on the grid first
+      try { await tw.stopMovement?.(); } catch {}
+      await tw.update({x: Math.round(tw.x / G) * G, y: Math.round(tw.y / G) * G}, {animate: false});
+      await sleep(300);
       await scene.createEmbeddedDocuments("Tile", [
         {x: tw.x - 10, y: tw.y - 10, width: 120, height: 120, texture: {src: "icons/svg/target.svg"}, flags: {[MOD]: {gate: "yard"}}}]);
       await sleep(400);

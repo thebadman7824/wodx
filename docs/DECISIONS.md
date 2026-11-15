@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5610
+Next free block: B5640
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -291,6 +291,8 @@ Next free block: B5610
 | B5580-B5589 | Names raised to 300, Mizrahi (used B5580) | Creation |
 | B5590-B5599 | Recheck: gates not on main (used B5590) | tools (PC job queue) |
 | B5600-B5609 | Names made by pattern for the short lists (used B5600) | Creation |
+| B5620-B5629 | Gates failing on main: court hunts batch write, gate-interact steps (used B5620-B5621) | Actions, gates |
+| B5630-B5639 | Blood hunts: court Kindred turn in batches (used B5630) | Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8557,3 +8559,25 @@ Reverse: drop the notOnMain set in runner.mjs recheck().
 WoDX Creation. Ben asked (15 November 2026) whether lists under 300 names could be filled with names made from how the names were formed, and approved the plan: recorded names first, made names only where the records show the rule. Ten peoples qualify: the Lakota, Cheyenne, Mandan, Hidatsa, Arikara, Pawnee, Crow, Blackfoot, Arapaho and Kiowa, whose recorded own names are two-part names in translation (a describing word and a thing, as Red Cloud; a number and things, as Two Crows; women's names often ending in Woman). New names join only parts that the same people's records hold, from a fixed list of English describing words and things, so a word in the people's own language, a nation's name or a title never becomes a part. Peoples with no recorded women's own names get no made women's names. The made names sit in Roll Tables of their own ("made by pattern", data/people-patterned.mjs, written by tools/names/pattern-names.mjs) and are drawn a third as often as the recorded own names. The other 26 short lists (Tuareg, Moro, Banyarwanda, Sami, Khmer, Amazigh, Maya, the Haudenosaunee, Algonquian, Southwest, Basin, Northwest Coast, Cree, Anishinaabe, Inuit, Taíno, Aboriginal, Kongo, Luba, Ganda, Filipino and the Comanche and Diné) are single names in the people's own language with no rule in the records that could make more without inventing words, so nothing is made for them. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: empty PATTERNED in data/people-patterned.mjs.
+
+## B5620. The court's hunt check writes once per faction turn (2026-11-15)
+WoDX Actions. autoHunts set the huntLooked flag on every Kindred one at a time. With hundreds of Kindred in the
+testbed world that took more than 30 seconds at each faction turn, and gatehandx step 5 timed out on main. The
+times now go in one Actor.updateDocuments call after the loop, and hunts are called after that.
+
+Reverse: put the setFlag back inside the loop.
+
+## B5621. gate-interact sets aside the breach standing rule and settles the watchman (2026-11-15)
+Gates. The automation level approves a wall breach on sight, so step 7, which tests the queue, found nothing
+queued; the step now removes that one standing rule for itself (run-gate puts world settings back). In step 21 the
+watchman could still be walking toward the noise from step 7, so the yard was empty; the step now stops and settles
+the watchman on the grid first.
+
+Reverse: drop the two set-ups.
+
+## B5630. A hunt changes the court's attitudes twenty at a time (2026-11-15)
+WoDX Actions. callHunt and endHunt set each court Kindred's attitude to the target one after another. Each is a
+separate actor update, so with a big court calling and lifting one hunt took more than 30 seconds (gatehandx step 5
+still timed out after B5620). They now run twenty at a time; each update is to a different actor.
+
+Reverse: go back to the plain for loops.
