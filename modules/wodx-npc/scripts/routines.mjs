@@ -1064,7 +1064,7 @@ export function build(ctx) {
     return FW.challengeFresh(c, t) ? c : null;
   }
   async function recordChallenge(scene, regionUuid, tokenId, by, t) {
-    if ( !scene || !regionUuid || !tokenId ) return;
+    if ( !scene?.setFlag || !regionUuid || !tokenId ) return;
     const keep = (flag(scene, "challenges") ?? []).filter(x => FW.challengeFresh(x, t) && !(x.region === regionUuid && x.intruder === tokenId));
     await scene.setFlag(MOD, "challenges", [...keep, {region: regionUuid, intruder: tokenId, by: by?.name ?? "", at: t}]);
   }
