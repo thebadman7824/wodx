@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5650
+Next free block: B5660
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -299,6 +299,7 @@ Next free block: B5650
 | B5620-B5629 | Gates failing on main: court hunts batch write, gate-interact steps (used B5620-B5621) | Actions, gates |
 | B5630-B5639 | Blood hunts: court Kindred turn in batches (used B5630) | Actions |
 | B5640-B5649 | German names before 1900, and refilling emptied tables (used B5640-B5641) | Creation, Chronicle |
+| B5650-B5659 | Spirit Charms: the W20 Charms play from a Charm window (used B5650-B5657) | Actions, Combat |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8902,3 +8903,43 @@ Reverse: restore the six German lists in data/people.mjs.
 WoDX Chronicle. A Roll Table whose update was cut off between clearing and refilling was left with no results, then kept for good as if the Storyteller had edited it, so every Japanese name draw on one testbed lane came up empty. Now a table with no results is refilled at start-up, and until then the shipped names are drawn in its place. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: drop the two empty-table checks in scripts/gen.mjs.
+
+## B5650. Every W20 spirit Charm plays itself (2026-11-15)
+WoDX Actions. Ben asked which NPCs had no power system (2026-11-15 02:16Z). All 32 Charms on W20 pp. 366-368 are in spirit-charms.js, in WoDX's own words with their pages. A Power of the Charm type named after one is the spirit's Charm; the Spirit Charms window pays the Essence, makes the roll on Rage, Gnosis or Willpower, and applies the Charm (charms.js). A Creature made as a spirit (the system's spirit variant) is now read as a spirit, in Actions and in Combat.
+
+Reverse: delete spirit-charms.js and charms.js, and the spirit-variant line in both profiles.js.
+
+## B5651. A Charm's time ends by itself (2026-11-15)
+WoDX Actions. What a Charm does for a while (Armor's and Swift Flight's rows, a token's name or way of moving, lights put out, Spirit Static's Gauntlet, Freeze's lost Rage, Calcify's lost dots, Solidify Reality's levels) is a Chronicle timed effect whose end puts it back (wodx-actions.charmOff).
+
+Reverse: drop the reverter; the Storyteller takes the changes off by hand.
+
+## B5652. House numbers where the book gives none (2026-11-15)
+WoDX Actions. Cleanse the Blight rolls at 7 when the blight's strength is not known; Freeze and Umbraquake reach everyone within 10 yards; Blighted Touch resists at Willpower 6 and lasts three hours; Calcify lasts the scene; Updraft holds the target up for 3 turns; Flood's town-wide water costs 3 Essence and needs Gnosis 6. All in PENDING-REVIEW.
+
+Reverse: change the numbers in spirit-charms.js.
+
+## B5653. Charms that need the wiring of the modern world wait for it (2026-11-15)
+WoDX Actions. Control Electrical Systems and Short Out are greyed out before 1880 (the Chronicle's year); in play they switch or put out the scene's lights within 20 yards.
+
+Reverse: drop the era field on the two Charms.
+
+## B5654. The world-sized Charms use the world systems (2026-11-15)
+WoDX Actions. Flood, Create Fires, Shatter Glass and Cleanse the Blight put world results on the effects card (deep water, fire, broken ground, a cleansing; a town flood or fire waits for the Storyteller); Create Wind sets the weather; Freeze brings snow and Umbraquake shakes the screen through Chronicle's looks; Spirit Static and Materialize work with Otherworlds' Gauntlet; Open Moon Bridge makes a Moon Path between two scenes.
+
+Reverse: remove the world lists and the does handlers.
+
+## B5655. Possession and a blight from a botch last until removed (2026-11-15)
+WoDX Actions. Possession is permanent by the book: the target gets a Possessed effect with no end and the spirit's token is hidden; a botched Blighted Touch roll leaves a Blighted effect with no end. The Storyteller deletes them when the spirit is driven out or the soul is healed.
+
+Reverse: give both a scene's duration.
+
+## B5656. Spirits soak with Willpower (2026-11-15)
+WoDX Combat. A Creature spirit soaks with its Willpower (W20 p. 366); harm applied straight from a power (soakAndApply) now counts the sheet's soak rows, as a blow already did (B3800).
+
+Reverse: drop the spirit branch in soakOpts and the sheet bonus in soakAndApply.
+
+## B5657. NPC spirits choose their Charms (2026-11-15)
+WoDX Actions. The NPC power choice offers a spirit's Charms by their effect keywords (Blast to attack, Armor to guard, Healing to heal, Re-form to escape), leaving out what it cannot pay for or what the era does not allow.
+
+Reverse: drop the spirit branch in npcPowers.

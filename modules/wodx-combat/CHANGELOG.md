@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.40.0 (Spirits soak with Willpower (W20 p. 366), and a Creature made as a spirit is read as a spirit; harm applied by a power counts the sheet's soak rows as a blow does, and a power can ask for its harm to go on at once (apply: true: a spirit's Blast, a fomor's splash and venom) (B5650))
 - 3.39.1 (A fomor's Armored Skin lets Stamina soak lethal harm, and the soak card names the power (B5619))
 - 3.39.0 (Conditions that change the body: a Chronicle condition's bodyBruised and bodyEase add health levels and ease wound penalties, beside merits, flaws and cyberware (B5160))
 - 3.38.0 (Fighting from a ghouled horse, a fleshcrafted steed, a chimerical steed, a Stygian steed or a gryphon (B4963); Mounted combat reads a ridden beast's own sheet (B4966); Fighting with and against vehicles on their own sheets (B4968))
