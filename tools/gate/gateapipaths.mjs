@@ -50,10 +50,10 @@ export async function run() {
       for ( const [k, paths] of places ) {
         const api = game.modules.get(k.split(" ")[1])?.api;
         const found = paths.filter(p => holds(api, p));
-        if ( !found.length ) misses.push(`${k}: ${paths.map(p => p.join(".")).join(" | ")}`);
+        if ( !found.length ) misses.push(`${k.replace(/^modules\//, "").replace(" wodx-", ">")} ${paths.map(p => p.join(".")).join("|")}`);
         else if ( found.length < paths.length ) partial.push(`${k}: ${paths.filter(p => !holds(api, p)).map(p => p.join(".")).join(" | ")}`);
       }
-      G.ok("2. every api read finds its path", !misses.length, {places: places.size, misses, partialFallbacks: partial.length, partial: partial.slice(0, 40)});
+      G.ok("2. every api read finds its path", !misses.length, {misses, places: places.size, partialFallbacks: partial.length, partial: partial.slice(0, 40)});
     });
   } finally { return G.finish(); }
 }

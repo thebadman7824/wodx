@@ -47,6 +47,14 @@ function scanFile(file, text, mod, shared = []) {
   const getters = [];
   for ( const m of t.matchAll(new RegExp(`(?<![.\\w$])(${ID})\\s*=\\s*(\\(\\s*\\)\\s*=>\\s*)?[^;\\n=]{0,60}?\u0001(wodx-[a-z]+)\u0002\\s*${CHAIN}`, "g")) ) {
     if ( helpers.has(m[1]) ) continue;
+    // A value saved from a call (const spot = await fx().pickPoint(...)) is not the api's shape
+    if ( /^\s*\(/.test(t.slice(m.index + m[0].length, m.index + m[0].length + 3)) ) continue;
+    // A saved api in a short-lived name that the file declares again or takes as a parameter is too easily shadowed
+    if ( !m[2] ) {
+      const n = m[1].replace(/\$/g, "\\$");
+      const decl = (t.match(new RegExp(`\\b(?:const|let|var)\\s+${n}\\b|[(,]\\s*${n}\\s*(?=[,)=])|\\b${n}\\s*=>|\\{\\s*${n}\\s*[,}]`, "g")) ?? []).length;
+      if ( decl > 1 || n.length < 2 ) continue;
+    }
     getters.push({name: m[1], target: m[3], prefix: parts(m[4]), fn: !!m[2]});
   }
   // Getters another file of the module exports, imported here by name
