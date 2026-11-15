@@ -1419,6 +1419,14 @@ Ben picked the recommendation on all 29 desk items (https://claude.ai/artifact/A
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-14 | Move existing worlds from the dawn/dusk and sunlight buttons to automatic (B4895) | Yes, once per world on the first load: "Dawn and dusk" from buttons to New Night at dusk, "Sunlight damage" from a button to roll and apply, with a note to the Storyteller. Off stays off | Set either setting back in WoDX Actions' settings |
+| 2026-11-14 | How long "the whole scene" awake by day lasts on the clock (B4891) | An hour of the clock, or until the scene is ended | SCENE_SECONDS in daysleep-rules.js |
+| 2026-11-14 | Does a sleeper hurt by day roll Perception before the Awakening roll? (B4892) | No: being hurt counts as noticed, so only the Road roll is made | onHurt in daysleep.js; the Awaken by day dialog still offers Perception |
+| 2026-11-14 | Heal on rising by itself, or keep the button? (B4893) | By itself, spending only blood above the hunger line, as the button did | Turn off "Heal on rising" |
+| 2026-11-14 | Rötschreck after a sun burn: roll it by itself too? (B4895, B4981) | Yes, per Ben's Automation Desk pick v2: it rolls by itself, and Willpower is spent only for a character marked to in the check's dialog | Turn off "Frenzy and Rötschreck by themselves" |
+| 2026-11-14 | How much Quintessence a mage draws by meditation each day (B4991) | The Avatar's rating, or the Node's when higher, once a day, no roll, never past the wheel's room | drawAll in m20.js |
+| 2026-11-14 | How fast aggravated chimerical wounds heal (B4993) | As lethal on the Chimerical Healing Times, at least a day a level (twelve hours in the Dreaming) | chimericalHealing in c20-rules.js |
+| 2026-11-14 | Which Orpheus projectors regain Vitality an hour (B4998) | Only skimmers, whose Lament grants it; sleepers and ghosts take eight hours | restAll in orpheus.js |
 | 2026-11-14 | How much experience the Storyteller tools give at once (B4806) | A whole number from 1 to 100 per press, as a normal award through WoDX Creation | Change XP_MAX in solo-rules.mjs |
 | 2026-11-14 | Who the world sends (B4861) | Quick extras from kits-rules: the watch two (police from 1600), a patrol three, soldiers three, a hunters' raid one leader and three helpers, a purge six, a "vanish" three men with no names; they arrive three squares from the target, visible | Change FORCES in reach-rules.mjs |
 | 2026-11-14 | Road encounters on the map (B4862) | Wolves and dogs come as the books' beasts, bandits and robbers as bandits (thugs from 1600) and fight; anyone else comes as WoDX Creation people who do not | Change BEASTS, HOSTILE in reach-rules.mjs |

@@ -162,3 +162,37 @@ export function startingTempers(seeming, pick = "glamour") {
     return t;
 }
 export const undone = banality => n(banality) >= 10;
+
+/* ------------------------------------------------------------------ */
+/*  Chimerical healing (B4993)                                         */
+/* ------------------------------------------------------------------ */
+
+const H = 3600, DAY = 86400;
+/** C20's Chimerical Healing Times (pp. 290-291), seconds for the level being healed (Bruised to Incapacitated). */
+export const CHIM_HEAL = {
+    bashing: [0.5 * H, 0.5 * H, H, H, H, 3 * H, 6 * H],
+    lethal: [6 * H, 12 * H, DAY, 3 * DAY, 5 * DAY, 7 * DAY, 21 * DAY]
+};
+/**
+ * Heal the chimerical track over `seconds`, worst level first. Aggravated chimerical wounds take the lethal time with
+ * at least a day a level; in a freehold or glade the times are halved (an aggravated level never under a day); in the
+ * Dreaming every level takes 15 minutes, aggravated 12 hours. Incapacitated outside the Dreaming does not heal
+ * unless in a freehold (p. 290). Returns {damage, carry, healed, stuck}.
+ */
+export function chimericalHealing(damage, seconds, { carry = 0, freehold = false, dreaming = false } = {}) {
+    const d = { bashing: n(damage.bashing), lethal: n(damage.lethal), aggravated: n(damage.aggravated) };
+    let left = Math.max(0, n(seconds)) + Math.max(0, n(carry));
+    const healed = { bashing: 0, lethal: 0, aggravated: 0 };
+    const total = () => d.bashing + d.lethal + d.aggravated;
+    if (total() >= 7 && !dreaming && !freehold) return { damage: d, carry: 0, healed, stuck: true };
+    for (let guard = 0; guard < 50 && total(); guard++) {
+        const idx = Math.min(6, total() - 1);
+        const type = d.bashing ? "bashing" : d.lethal ? "lethal" : "aggravated";
+        let need = dreaming ? (type === "aggravated" ? 12 * H : 0.25 * H) : CHIM_HEAL[type === "aggravated" ? "lethal" : type][idx];
+        if (!dreaming && freehold) need = need / 2;
+        if (!dreaming && type === "aggravated") need = Math.max(DAY, need);
+        if (left < need) break;
+        left -= need; d[type] -= 1; healed[type] += 1;
+    }
+    return { damage: d, carry: total() ? left : 0, healed, stuck: false };
+}

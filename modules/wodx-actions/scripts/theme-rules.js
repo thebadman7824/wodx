@@ -171,6 +171,8 @@ export const DESC = {
     "api:oaths": "Swear an oath, or break one and pay its price",
     "api:masquerade": "Who saw what: witnesses to a breach of the Masquerade",
     "api:skyAndSun": "Set the sky and the light on this scene (cloud, shade, indoors)",
+    "api:m20Draw": "Mark the mage to meditate each day and draw the Avatar's or the Node's Quintessence by itself",
+    "api:c20Place": "Mark this scene a freehold or glade, or in the Dreaming, for how fast chimerical wounds heal",
     "api:endStory": "End the story: what lasts a story is restored or reset for every character",
     "api:newNight": "Start a new night for every Kindred: blood to rise, Willpower, the watch",
     "api:endScene": "End the scene: once-a-scene powers and limits reset",

@@ -332,7 +332,12 @@ test("Roads: the WoDX choice wins over the sheet, and the sin prompt suggests th
 
 test("wounds prompt frenzy; a track full of lethal sends a Cainite to torpor with its end date; a shapechanger past Incapacitated may rise on Rage", async () => {
   reset();
+  // B4980, B4986: by themselves, the default; the buttons when the settings are off
   const v = actor("Ottilie", {road: 8});
+  await E.onDamage(v, {before: {bashing: 0, lethal: 2, aggravated: 0}, after: {bashing: 0, lethal: 4, aggravated: 0}});
+  assert.match(mock.log.chat.at(-1).content, /rolled by itself/);
+  S.autoBeast = false;
+  S.autoRiseRage = false;
   await E.onDamage(v, {before: {bashing: 0, lethal: 2, aggravated: 0}, after: {bashing: 0, lethal: 4, aggravated: 0}});
   assert.match(mock.log.chat.at(-1).content, /data-kx="frenzy"[^>]*data-arg="physical"/);
   v.system.health.damage = {bashing: 0, lethal: 7, aggravated: 0};
@@ -346,6 +351,8 @@ test("wounds prompt frenzy; a track full of lethal sends a Cainite to torpor wit
   const f = actor("Fritz");
   await E.onDamage(f, {before: {}, after: {aggravated: 1}, fireSun: true, source: "combat"});
   assert.match(mock.log.chat.at(-1).content, /data-kx="rotschreck"/);
+  S.autoBeast = true;
+  S.autoRiseRage = true;
 });
 
 test("a mortal killed by a Cainite's attack prompts the sin her Road names, and the history records it", async () => {
@@ -365,7 +372,11 @@ test("blood under the hunger line prompts a frenzy check", async () => {
   reset();
   const v = actor("Hungry", {virtues: [3, 3, 3]});
   await E.onBlood(v, 5, 3);
+  assert.match(mock.log.chat.at(-1).content, /rolled by itself/);
+  S.autoBeast = false;
+  await E.onBlood(v, 5, 3);
   assert.match(mock.log.chat.at(-1).content, /sightblood/);
+  S.autoBeast = true;
 });
 
 test("the clock heals mortals by the chart, wakes the torpid, and marks dawn and dusk", async () => {
@@ -379,9 +390,12 @@ test("the clock heals mortals by the chart, wakes the torpid, and marks dawn and
   const v = actor("Sleeper", {road: 9});
   game.actors.set(v.id, v);
   await v.setFlag("wodx-actions", "torpor", {since: 0, days: 3, until: game.time.worldTime, voluntary: false});
+  // B4982: by default the rising is tried by itself; with the setting off, a reminder
+  S.autoTorporRise = false;
   await E.onClock();
   assert.ok(mock.log.chat.some(c => /may rise/.test(c.content)));
   assert.equal(v.getFlag("wodx-actions", "torpor").reminded, true);
+  S.autoTorporRise = true;
   // the clock reads night at the epoch: coming from day, that is dusk
   const t0 = await import(join(root, "modules/wodx-chronicle/scripts/calendar.mjs"));
   const night = t0.describeTime(game.time.worldTime, game.settings.get("wodx-chronicle", "latitude")).isNight;
