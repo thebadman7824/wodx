@@ -147,6 +147,8 @@ export async function run() {
   });
   await step("an NPC's turn: a plan whispered to the Storyteller, best first, each with its reason", async () => {
     combat = await fight(sc, T);
+    // B6051: the world's own mode can be Auto (Balanced runs NPCs by themselves), so this scene suggests for the step
+    await sc.setFlag(MOD, "mode", "suggest");
     const t0 = Date.now();
     // A new round, so this round's turns have not been planned yet: the combat hook makes the card
     await combat.nextRound();
@@ -160,6 +162,7 @@ export async function run() {
       gmOnly && plan.mode === "suggest" && !plan.done && opts.length >= 1 && opts.every(o => o.why) && opts.every((o, k) => k === 0 || opts[k - 1].score >= o.score),
       {options: opts.map(o => `${o.label} (${o.score}): ${o.why}`), whisper: msg?.whisper?.length ?? 0});
     R.suggestCard = msg?.id ?? null;
+    await sc.unsetFlag(MOD, "mode");
   });
   await step("the plan follows the profile: unhurt and beside a foe, it fights (a bystander runs)", async () => {
     const p = npc().profileFor(T.fighter.actor), {options, fight: f} = npc().planTurn(T.fighter, combat);
@@ -257,7 +260,9 @@ export async function run() {
     let done = msg?.getFlag(MOD, "plan")?.done;
     // An option that needs the Storyteller came first: take the first one that moves, as the Storyteller would
     if ( msg && !done ) {
-      const k = msg.getFlag(MOD, "plan").options.findIndex(o => ["attack", "flee"].includes(o.action));
+      // B6051: the step is about the way round the wall, so an attack (it walks to the hero) before a flight
+      const opts = msg.getFlag(MOD, "plan").options, ka = opts.findIndex(o => o.action === "attack");
+      const k = ka >= 0 ? ka : opts.findIndex(o => o.action === "flee");
       R.notes.push(`The runner waited for the Storyteller (${msg.getFlag(MOD, "plan").options[0].label}); accepted option ${k}.`);
       if ( k >= 0 ) done = await npc().acceptCard(msg, k);
     }
