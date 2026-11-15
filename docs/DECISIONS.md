@@ -231,7 +231,6 @@ Next free block: B4860
 | B4790-B4799 | Vehicles in a fight: aircraft, armoured vehicles, Durability, ramming, NPC drivers (used B4790-B4797) | Interactables, Combat, NPC |
 | B4800-B4809 | Storyteller tools for the lone player: add experience (used B4800-B4806) | Solo |
 | B4810-B4819 | Rothenstein Rebuilt: Ways laid by the builder, old exits and doors to the places inside (used B4810-B4813) | Storyteller |
-| B4820-B4849 | Summoning rules and power effect bounds (used B4820-B4849) | Actions |
 | B4850-B4859 | Rothenstein Rebuilt: book one's twist web (six chains, locks, one twist a week) (used B4850-B4853) | Chronicle |
 <!-- decision-index:end -->
 
@@ -7411,121 +7410,6 @@ Reverse: none needed; the check only reads.
 WoDX Storyteller. builder.layWays(recipe, made, {only}) and builder.takeBackWays(made) are on the api, so a gate tests the step in scenes of its own in any testbed world without running the earlier steps or touching the lane's maps.
 
 Reverse: drop the two api entries; the step keeps working.
-
-## B4820. Summoned beings carry their books' rules (2026-11-14)
-WoDX Actions. Ben asked (20:39Z) for summoning built out properly: the summoner controls the creature, it lasts a set time, it joins combat and it can be dismissed, and for every power's effects to be bound by rules. Each summoning power has a spec in summon-specs.js read from its page; summon-rules.js resolves it against the casting. A summons by a player's character waits for the Storyteller's yes; an NPC's runs by itself (B4837). When no actor is named, a plain being of the book's kind answers with the book's numbers on its token.
-
-Reverse: drop the summonResult call in effects.js planOf and plan.
-
-## B4821. Control (2026-11-14)
-A servant is owned by the summoner's players and moved by them. A called being serves the summoner through WoDX NPC's orders, hard orders weighed by the Storyteller. A wild one is hostile and is given an attack order on the nearest living thing. A Bind keyword on the same Mage casting makes a called being a servant (M20: summoning alone does not bind). An NPC's summons serve that NPC and WoDX NPC plays them.
-
-Reverse: summon-rules.js resolve().
-
-## B4822. Lasting, fights and dismissal (2026-11-14)
-Each token gets a "Summoned" timed effect from WoDX Chronicle (rounds, scene, dawn or clock); when it runs out the being fades away in its look. A being with no timer lasts until dismissed, destroyed, its task done or its upkeep unpaid, and resolve() turns any spec with none of these into the scene. A started fight on the scene adds the tokens with an initiative roll. The Storyteller, the token's owners or the summoner's owners dismiss it from the token HUD or the card.
-
-Reverse: summons.js bring(), dismiss().
-
-## B4823. Keeping rolls (2026-11-14)
-Where a book asks for a roll to keep a summons in hand, WoDX rolls it: on arrival (with a ladder by successes, as V20's Summon Elemental), on each of the being's turns (a Demon's Torment rolls), or each turn it is more than 20 yards from the summoner (house rule for "away from them"). A failure makes it hostile, free or gone as the book says; a botch on a ladder turns it on the summoner.
-
-Reverse: summons.js onTurn(), keepingRoll().
-
-## B4824. Upkeep and familiars (2026-11-14)
-A lasting servant with upkeep (Mummy effigies' Sekhem a day, week or month) is fed from the master's pool when it falls due; unfed it falls still (a token HUD button wakes it once paid) or leaves. The M20 Familiar/Companion Background (pp. 315-317) costs its rating in Quintessence each week; unfed it leaves; its death costs the mage a permanent Willpower and two Quintessence a dot, the rest as Paradox.
-
-Reverse: summons.js sweepUpkeep(), onFamiliarDeath().
-
-## B4830. Lights end and made things fade (2026-11-14)
-The powers review found two effects with no end. A Light or Dark keyword now puts a timed effect on its bearer whose end puts the token's own light back. A thing made by a power now fades from its holder's things when the power's duration ends; a Mage creation with Prime in it stays (house reading, PENDING-REVIEW).
-
-Reverse: effects.js light and give cases, expireMade().
-
-## B4831. Resistance and break-free rolls (2026-11-14)
-Effect cards named a resistance roll that nobody rolled. Each applied item with a resistance now has a button for the target's owners and the Storyteller; any success throws the effect off (house reading, PENDING-REVIEW); a hold can be tried each turn. An NPC's roll goes to the Storyteller only.
-
-Reverse: effects.js addResistButtons(), resistItem().
-
-## B4832. Each-turn rules are worked (2026-11-14)
-Harm that lasts and the powers whose books act each turn (Silver Claws, Claws of the Glassblower, Heart Claw, Combat Healing, Lost in the Mists, the Demon's Scry, Animal Form) carry an everyTurn record on their timed effect; on the bearer's turn WoDX applies the damage, healing or pool point, or rolls the book's roll and does what a failure or win does. The others the bounds check finds go on the review desk.
-
-Reverse: turns.js, turn-rules.js.
-
-## B4835. The bounds check (2026-11-14)
-tools/powers/bounds.mjs lists, for every applying power, what ends each keyword's effect and who controls it; the harness holds unbound keywords and summonings with no spec at none, and each-turn text with nothing working it to a ceiling.
-
-Reverse: delete tools/powers/bounds.mjs and its test.
-
-## B4836. Powers tagged as summonings that call nothing (2026-11-14)
-The book read of all 105 summoning powers found 22 that call no being (Night Cry, Summon Talisman, Fetish Fetch, the Hunts and Great Hunts, Rousing Apophis, Call the Stars, Shivers, Infest, the Rites of Spirit Awakening and of the Totem, King of the Beasts, Command Animals, Mind of the Swarm and others). summon-specs.js NOT_SUMMON gives each the keywords it works through instead: a curse as a Bind written on the sheet, a thing fetched to hand as a Make, command of animals already present as a Sway (house reading, on the review desk).
-
-Reverse: drop the notSummon branch in effects.js planOf.
-
-## B4837. An NPC's summoning runs by itself (2026-11-14)
-A summoning by an NPC with no player owner goes on the card as automatic: a plain being of the book's kind comes one square beside the NPC with its spec's rules, joins the fight and serves the NPC. The Storyteller can dismiss it or Undo the card (house reading, on the review desk).
-
-Reverse: route "pick" for an NPC's summon in planOf.
-
-## B4838. Each-turn powers carry the casting's numbers (2026-11-14)
-WoDX Actions. Ben picked every item on the Powers Bounds Desk as recommended (22:17Z). The fourteen powers whose books act each turn are built. When a power is used, its each-turn record takes the successes, Faith, Torment and the caster, so a rule that counts successes or uses the caster's pool reads the real casting. A record with no roll, harm or strike does nothing on the turn. A self power with no result of its own gets a scene boost to carry the record; any other result (a thing made, a hold) gets a timed effect of its own.
-
-Reverse: turn-rules.js resolveRec and the planOf call in effects.js.
-
-## B4839. Clenched Jaw (2026-11-14)
-The bitten target takes aggravated harm each turn from the caster's Strength + 1, difficulty 3. Breaking free costs the target one lethal level that cannot be soaked.
-
-Reverse: drop the "clenched jaw" record and onBreak in resolveResist.
-
-## B4840. Scabwalker Curse (2026-11-14)
-The target loses one bashing level each turn. When the target touched nothing made by people that turn, the Storyteller presses Skip on the turn card and the level is healed back.
-
-Reverse: drop the record and the skip button in turns.js.
-
-## B4841. One Fights as Many (2026-11-14)
-DA Mage p. 109. Each copy costs one Quintessence, up to the successes; only paid copies come. At each round's end the mage takes the worst harm any one copy took, by type and unsoakable, and the copies are made whole.
-
-Reverse: drop the hand spec, payFor and shareWounds.
-
-## B4842. Bitter Fruit (2026-11-14)
-The poison does nothing when eaten. Each turn for the successes in turns the eater rolls Stamina at 7; a failure costs one lethal level that cannot be soaked. Healing ends it.
-
-Reverse: drop the record and the only flag in the damage case.
-
-## B4843. Tripping the Ire and Ride the Flames (2026-11-14)
-Both keep a counter on the card. Tripping the Ire starts at the successes and loses one each turn. Ride the Flames loses one on each failed Willpower roll at 6. Either ends at zero.
-
-Reverse: drop the counter step.
-
-## B4844. Command the Wind and Cyclone (2026-11-14)
-Command the Wind at its high level strikes every living being within Faith yards each turn for one bashing level that cannot be soaked; masked ones are spared. Cyclone hits everything within Faith yards for dice equal to its counter, which drops by one each turn.
-
-Reverse: drop the two records and the area step.
-
-## B4845. Earth Meld and Invoke the Storm (2026-11-14)
-Earth Meld needs a Strength + Athletics roll at 6 each turn to keep the hold; a failure is noted on the card. Invoke the Storm lasts Faith turns: each turn a die of 9 or more calls lightning on someone within Faith yards for Torment dice of lethal harm. High-Torment forms carry their own rules alone.
-
-Reverse: drop the records and the out.high mark.
-
-## B4846. Witch's Nimbus (2026-11-14)
-A burning sheath: anyone who lands a close blow on its bearer takes lethal harm equal to the nimbus level. Bolts thrown from it are an ordinary attack.
-
-Reverse: drop touchHarm and onBlow.
-
-## B4847. Naming the Body's Destruction (2026-11-14)
-Only the serious level acts each turn: the target rolls Stamina at 8, and a failure costs one lethal level. Healing ends it.
-
-Reverse: drop the record and levelsEq.
-
-## B4848. Summon the Simple Form (2026-11-14)
-V20. Keeping the form costs one Willpower each turn; it ends when Willpower runs out.
-
-Reverse: drop the record.
-
-## B4849. Blood Pump (2026-11-14)
-For its scene the Kindred may spend more blood a turn than Generation allows.
-
-Reverse: drop noBloodCap from blood() in main.js.
 
 ## B4850. The twist web keeps the shape, not the words (2026-11-14)
 WoDX Chronicle. data/twists-rothenstein.mjs holds the twenty-four twists by number with a short handle in our own words, the six chains with their twists and pay-off chapters, the pairs that cannot both stand as written, and the quick order. The twists' own words stay in the Storyteller's third volume, which is kept privately and never in the repo.
