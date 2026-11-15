@@ -239,6 +239,7 @@ Next free block: B5640
 | B4910-B4919 | Rothenstein Rebuilt: book one fronts, roles and clue carriers (spine part two) (used B4910-B4917) | Chronicle |
 | B4920-B4949 | Power limits after Princes of Darkness: one scene count, use limits, Drained, after-costs, NPC power choice (used B4920-B4929) | Actions, NPC |
 | B4950-B4959 | Tuareg names (used B4950-B4952) | Creation, Chronicle |
+| B4960-B4969 | Bicycles, supernatural mounts, mount and vehicle sprites with riders (used B4960-B4969) | Interactables, Combat, NPC |
 | B4970-B4979 | Mount and vehicle sprites with riders, by era, shape and colour (used B4970-B4976) | Paperdoll |
 | B4980-B4999 | The Automation Desk: player actions that follow the rules by themselves, every line (used B4980-B4999) | Actions, Chronicle |
 | B5000-B5009 | Moro names (used B5000-B5002) | Creation, Chronicle |
@@ -7910,6 +7911,58 @@ Reverse: edit the tuareg entry in data/people-world.mjs.
 WoDX Creation. A Tuareg is "ag" (son of) or "welet" (daughter of) the father's name, then and now; no family names.
 
 Reverse: give the tuareg entry a fam list.
+
+## B4960. The bicycle is a mount tile (2026-11-14)
+WoDX Interactables. A bicycle, from 1885, ridden with Dexterity + Athletics as the chase already had it, one seat, astride (it can throw its rider). Until now it was only a way to run in a chase.
+
+Reverse: remove bicycle from MOUNTS in interact-rules.mjs and the mount key from WAYS.bicycle in chase-rules.mjs.
+
+## B4961. Some mounts are for one kind of rider (2026-11-14)
+WoDX Interactables and NPC. A chimerical steed can be ridden only by the fae (Changeling 20th p. 280: chimerical horses; mortals cannot see them). A Stygian steed, one of Charon's horses of the dead, only by wraiths and spirits (Wraith 20th p. 31). Anyone else gets a greyed line saying why. A tile the Storyteller keeps out of its era is left to the Storyteller. NPCs never pick one they cannot ride.
+
+Reverse: drop the only lists in MOUNTS, or riderMay.
+
+## B4962. Speeds of the beasts out of the books (2026-11-14)
+WoDX Interactables, house figures in yards a turn: ghouled horse 60 (its Celerity), fleshcrafted steed 45, chimerical steed 55, Stygian steed 75 ("swift beyond telling"), gryphon 65 and flying. All of them are shut out indoors. Only the gryphon crosses water.
+
+Reverse: edit the speed lines in WAYS in chase-rules.mjs.
+
+## B4963. Their traits in a fight (2026-11-14)
+WoDX Combat. The rider uses the mount's Strength and Dexterity in blows, and the mount dodges for its rider, as with the horse (V20 Dark Ages p. 399). Ghouled horse: the large horse with Potence and Celerity (Strength 7, Dexterity 3; animal ghouls, V20 Dark Ages p. 401), and its Celerity takes away the +2 for dodging shots. Fleshcrafted steed: the book's szlachta (Strength 5, Dexterity 4, Stamina 5, Brawl 4). Chimerical steed, Stygian steed and gryphon: house figures.
+
+Reverse: edit MOUNT_TRAITS in mounted-rules.js.
+
+## B4964. Exotic mounts need Ride 3 (2026-11-14)
+WoDX Interactables. A fleshcrafted steed and a gryphon need Ride 3 or better to get on at all (Mage 20th p. 298: griffins and other dangerous or exotic mounts). With less, the line is greyed and gives the reason.
+
+Reverse: drop min from those MOUNTS rows.
+
+## B4966. Riding the animal itself (2026-11-14)
+WoDX Interactables, Combat and NPC. Ben's ask: a creature's own sheet can be ridden, as Cataclysm tags its mountable animals. The tag is flags.wodx-interactables.mountable on the actor or its token: a kind, "no", or blank, which means WoDX goes by the name. Horses, ponies, warhorses, mules, donkeys, camels, ghoul warhorses, gryphons and the named steeds count. A player's own character is never guessed by name. The rider mounts from the Interact window and the rider's token goes onto the beast's. Moving the rider moves the beast, and the beast's steps don't count as its own movement. In a fight the rider uses the beast's own Strength and Dexterity, and the beast dodges with its own Dexterity + Athletics and its own Celerity (V20 Dark Ages p. 399). Its wounds slow it. A ridden beast's NPC turn goes with its rider. Mount tiles stay for vehicles, and for old maps. Camels are added as a kind, 40 yards a turn.
+
+Reverse: make beastOf in Interactables main.mjs return null.
+
+## B4967. A ridden beast that goes down throws its riders (2026-11-14)
+WoDX Interactables. When a ridden beast reaches Incapacitated (seven levels marked), everyone on it is thrown a square aside and knocked prone, and takes two dice of bashing to soak (Changeling 20th p. 280, a fall from a trotting horse). The Storyteller sees a card saying so.
+
+Reverse: remove the updateActor hook calling beastDown.
+
+## B4968. A vehicle has its own sheet (2026-11-14)
+WoDX Interactables, Combat and the system fork. Ben's pick: a new kind of actor, "wodx-interactables.vehicle", declared by the module and not by the system (the system fork 7.3.2-wodx.11 skips module kinds when it prepares character data, as it already did for Group). The sheet holds:
+- the kind, and the year it was built (left blank, the chronicle's year);
+- the figures for that year from the tables the tiles use (Mage 20th pp. 458-463, house figures before);
+- a Structure track marked like health, plus burnt out, seats and notes;
+- who is aboard;
+- mounted guns and cargo, both items dropped on the sheet.
+
+Its token is got into and driven as a mount tile is. A blow at the vehicle itself, or one that a closed body takes for someone inside, comes off the Structure on the sheet. Mounted guns are on the attack menu of anyone aboard. Damage is kept for the whole vehicle, as Mage 20th keeps it, never by part. Tiles keep working.
+
+Reverse: remove documentTypes from module.json and setupVehicleSheet.
+
+## B4969. Paint, style and headlights (2026-11-14)
+WoDX Interactables. A vehicle sheet has paint and style, for the pictures (Ben: different colours, shapes and styles). With "Lights on", a motor vehicle from 1900 lights its token in a cone ahead (house figures: 18 yards dim and 8 bright, 24 and 10 for lorries and armour). Its token is tinted as it takes damage, as the tiles are.
+
+Reverse: drop headlights in vehicle-sheet-rules.mjs.
 
 ## B4970. Every mount and vehicle has drawn looks (2026-11-14)
 WoDX Paperdoll. Each of the 22 kinds of mount has looks drawn by the sprite rig (tools/sprites/mounts.py and its mount_*.py painters): the same five-tone ramps, dark outline, top light and scale as the people and the beasts, own art. A look is a sheet of its frames across by four facings down. It is painted in three key ramps (paint or coat, trim or mane, cloth or stripe) that the game replaces with one of the look's colour schemes on each computer, so one sheet serves every colour. The list (sprites/mounts/mounts.json) names every look's year, shape, schemes and seats. Other games with many vehicle shapes and colours were looked at for the idea only (a body, its era and its paint as separate choices); no outside art is used.
