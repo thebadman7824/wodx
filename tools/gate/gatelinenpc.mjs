@@ -9,6 +9,9 @@
  *   4. a hurt demon NPC mends with Faith
  *   5. a hurt mortal NPC spends nothing and keeps its wounds for the clock
  *   6. a Kindred NPC still mends with blood, as before
+ *   7. B6319: a changeling NPC in its freehold (Holdings 2) takes 2 Glamour for the night, and only once that night
+ *   8. a wraith NPC rolls its Passion for Pathos and a demon NPC with no thralls reaps; each is marked for the night
+ *   9. a Fera and a mage NPC are marked for WoDX Actions' daily Gnosis and Quintessence rolls
  * Result: Data/wodx-gate/gatelinenpc-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -71,6 +74,42 @@ export async function run() {
       await fight([va]);
       const d = dmg(va), b = Number(va.system.advantages.bloodpool.temporary);
       G.ok("6. the Kindred as before", d.lethal === 0 && b === 6, {damage: d, blood: b});
+    });
+
+    const [ch, wr2, de2, mg] = await G.make(Actor, [
+      {name: "Gate Line Changeling", type: "Changeling", system: {advantages: {glamour: {permanent: 5, temporary: 1}}},
+        items: [{name: "Holdings", type: "Feature", system: {type: "wod.types.background", value: 2}}]},
+      {name: "Gate Line Wraith Two", type: "Wraith", system: {advantages: {pathos: {temporary: 1, max: 10}}},
+        items: [{name: "Keep the house standing", type: "Trait", system: {type: "wod.types.passion", value: 5}}]},
+      {name: "Gate Line Demon Two", type: "Demon", system: {advantages: {faith: {temporary: 1, permanent: 5, max: 10}, willpower: {temporary: 6, permanent: 6}}}},
+      {name: "Gate Line Mage", type: "Mage"}
+    ]);
+    const R = () => api().lines.refill;
+    const night = Math.floor((game.time.worldTime - 18 * 3600) / 86400) + 9000;
+
+    await G.step("7. Glamour from Sanctuary", async () => {
+      const read = () => Number(game.actors.get(ch.id)?.system?.advantages?.glamour?.temporary ?? NaN);
+      const pool = R().sheet(ch).glamour;
+      await R().one(ch, night);
+      const once = R().sheet(ch).glamour.temp;
+      await R().one(ch, night);
+      const twice = R().sheet(ch).glamour.temp;
+      G.ok("7. Glamour from Sanctuary", once === pool.temp + 2 && twice === once, {before: pool, once, twice, sheet: read()});
+    });
+
+    await G.step("8. Pathos and Faith", async () => {
+      const p0 = R().sheet(wr2).pathos.temp, f0 = R().sheet(de2).faith.temp;
+      const w = await R().one(wr2, night), d = await R().one(de2, night);
+      const p1 = R().sheet(wr2).pathos.temp, f1 = R().sheet(de2).faith.temp;
+      G.ok("8. Pathos and Faith", w.some(x => x.word === "Passion") && d.some(x => x.word === "Reaping") && p1 >= p0 && f1 >= f0
+        && game.actors.get(wr2.id).getFlag(MOD, "refill")?.night === night && p1 - p0 === (w.find(x => x.word === "Passion")?.gained ?? -1),
+        {wraith: {p0, p1, w}, demon: {f0, f1, d}});
+    });
+
+    await G.step("9. marked for the daily rolls", async () => {
+      await R().enroll(fe); await R().enroll(mg);
+      const ff = game.actors.get(fe.id).flags?.["wodx-actions"] ?? {}, mf = game.actors.get(mg.id).flags?.["wodx-actions"] ?? {};
+      G.ok("9. marked for the daily rolls", !!ff.meditates && !!mf.m20?.draws && !!game.actors.get(mg.id).getFlag(MOD, "refillMarked"), {fera: ff.meditates, mage: mf.m20});
     });
   } finally {
     return G.finish();

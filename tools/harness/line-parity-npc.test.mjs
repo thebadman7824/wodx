@@ -87,3 +87,43 @@ test("Fates, servants, households and duties follow the right line", () => {
   assert.ok(TRR.sensesFor("wraith").some(s => s.power === "Lifesight"));
   assert.ok(!TRR.sensesFor("kueijin").some(s => /Auspex/.test(s.power)), "no Auspex for a Cathayan");
 });
+
+// B6319: NPCs of every line refill their own pools
+const RF = await imp("modules/wodx-npc/scripts/line-refill-rules.mjs");
+const {readFileSync} = await import("node:fs");
+
+test("refills: lines WoDX Actions rolls daily are marked once, the others are rolled here by their books", () => {
+  assert.deepEqual(RF.enrollPatch("werewolf", {}), {key: "meditates", value: {hours: 2}});
+  assert.equal(RF.enrollPatch("fera", {meditates: {hours: 4}}), null, "a mark already there is kept");
+  assert.deepEqual(RF.enrollPatch("mage", {m20: {x: 1}}, {node: 3}).value, {x: 1, draws: {node: 3}});
+  assert.equal(RF.enrollPatch("mummy", {}).value.dailyRegain.k, "haven");
+  assert.equal(RF.enrollPatch("vampire", {}), null);
+  for ( const l of ["vampire", "kuei-jin", "hunter", "mortal", "ghoul"] ) assert.deepEqual(RF.refillSteps(l, {}, {}, 5), [], l);
+  const fae = RF.refillSteps("changeling", {glamour: {temp: 1, cap: 5}, holdings: 2}, {}, 10);
+  assert.equal(fae[0].word, "Sanctuary"); assert.equal(fae[0].fixed, 2);
+  const dream = RF.refillSteps("changeling", {glamour: {temp: 1, cap: 5}, dreamers: 2, manipulation: 3, expression: 2}, {}, 14);
+  assert.equal(dream[0].dice, 5); assert.equal(dream[0].diff, 6);
+  assert.deepEqual(RF.refillSteps("changeling", {glamour: {temp: 1, cap: 5}, dreamers: 2}, {reverieWeek: 2}, 14), [], "one Reverie a week");
+  assert.deepEqual(RF.refillSteps("changeling", {glamour: {temp: 5, cap: 5}, holdings: 2}, {}, 10), [], "a full pool rolls nothing");
+  const w = RF.refillSteps("wraith", {pathos: {temp: 2, cap: 10}, passion: 4, memoriam: 2}, {}, 7);
+  assert.deepEqual(w.map(s => [s.word, s.dice, s.diff]), [["Passion", 4, 6], ["Memoriam", 2, 8]]);
+  assert.equal(RF.refillSteps("wraith", {pathos: {temp: 2, cap: 10}, passion: 4}, {night: 7}, 7).length, 0, "once a night");
+  const d = RF.refillSteps("demon", {faith: {temp: 1, cap: 4}, willpower: 5}, {}, 3);
+  assert.equal(d[0].word, "Reaping"); assert.equal(d[0].contest.vs, 3);
+  assert.equal(RF.refillSteps("demon", {faith: {temp: 1, cap: 4}, willpower: 5, thralls: 2}, {}, 3).length, 0, "thralls already offer Faith at dawn");
+  assert.equal(RF.successes([10, 6, 1, 3], 6), 1);
+  assert.equal(RF.stepGain({contest: {}}, {mine: 2, theirs: 1}, {temp: 1, cap: 4}), 1);
+  assert.equal(RF.stepGain({}, {mine: 5}, {temp: 8, cap: 10}), 2, "never past the cap");
+  assert.equal(RF.stepGain({fixed: 3}, {}, {temp: 0, cap: 5}), 3);
+  assert.equal(RF.gainWord("pathos", 2, "Passion"), "+2 Pathos (Passion)");
+});
+
+test("wiring: the refill runs on the clock and the NPC api keeps every entry after the lines api", () => {
+  const main = readFileSync(join(root, "modules/wodx-npc/scripts/main.mjs"), "utf8");
+  const apiLine = main.split("\n").find(l => l.includes("const api = {version"));
+  assert.ok(!/\/\/.*factionLooks/.test(apiLine), "no line comment swallows the rest of the api");
+  assert.match(main, /REFILL\.listen\(\)/);
+  const rf = readFileSync(join(root, "modules/wodx-npc/scripts/line-refill.mjs"), "utf8");
+  assert.match(rf, /Hooks\.on\("updateWorldTime"/); assert.match(rf, /Hooks\.on\("wodxSkipEnd"/);
+  assert.match(rf, /floatOver/); assert.match(rf, /whisper: gmIds\(\)/);
+});

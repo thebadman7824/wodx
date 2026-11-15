@@ -16,6 +16,7 @@ import * as HN from "./hunt-npc-rules.mjs";
 import {build as buildProwl} from "./prowl.mjs";
 import {build as buildAftercare} from "./aftercare.mjs";
 import * as LM from "./line-mend.mjs";
+import * as REFILL from "./line-refill.mjs";
 import * as LR from "./lines-rules.mjs";
 import * as NR from "./npc-rules.mjs";
 import * as PP from "./power-pick-rules.mjs";
@@ -1267,8 +1268,10 @@ Hooks.once("init", () => {
   cults.registerSettings();
   LEGACY.registerSettings();
   LEGACY.listen();
+  REFILL.registerSettings();
+  REFILL.listen();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
-  const api = {version: VERSION, prowl, aftercare, lines: {of: LM.keyOf, family: k => LR.familyOf(k), keys: LR.KEYS, mendOwn: LM.mendOwn}, // B6310 factionLooks: FactionLooks.api(), rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, orderCarry, carryGoals: {goalOf: carryGoals.goalOf, pointOf: carryGoals.pointOf, arrive: carryGoals.arrive, approveCapture: carryGoals.approveCapture, freePrisoner: carryGoals.freePrisoner, prisoners: carryGoals.prisoners, trips: carryGoals.trips, onClock: carryGoals.onClock, rules: CG},
+  const api = {version: VERSION, prowl, aftercare, lines: {of: LM.keyOf, family: k => LR.familyOf(k), keys: LR.KEYS, mendOwn: LM.mendOwn, refill: {night: REFILL.runNight, one: REFILL.refillOne, enroll: REFILL.enroll, sheet: REFILL.sheetOf}}, /* B6310, B6319 */ factionLooks: FactionLooks.api(), rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, orderCarry, carryGoals: {goalOf: carryGoals.goalOf, pointOf: carryGoals.pointOf, arrive: carryGoals.arrive, approveCapture: carryGoals.approveCapture, freePrisoner: carryGoals.freePrisoner, prisoners: carryGoals.prisoners, trips: carryGoals.trips, onClock: carryGoals.onClock, rules: CG},
     carryAftercare: {wards: carryAftercare.wards, stores: carryAftercare.stores, tick: carryAftercare.onClock, day: carryAftercare.day, dispose: carryAftercare.dispose, factionTurn: carryAftercare.onFactionTurn, held: carryAftercare.heldChoice, fate: carryAftercare.doFate, taken: carryAftercare.onTaken, rules: carryAftercare.rules}, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
