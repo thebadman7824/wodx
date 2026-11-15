@@ -324,7 +324,7 @@ export function build(ctx) {
     const answer = target ? DU.fetchAnswer({person, step}) : null;
     let said = `reaches ${target?.name ?? "the one pointed at"}`;
     if ( answer === "comes" && target.actor && !target.actor.hasPlayerOwner && master ) {
-      await target.actor.update({[`flags.${MOD}.order`]: {kind: "follow", leader: master.id, by: game.user.id, fetched: true, at: game.time.worldTime, until: game.time.worldTime + DU.FETCH_STAY}});
+      await worldActor(target.actor).update({[`flags.${MOD}.order`]: {kind: "follow", leader: master.id, by: game.user.id, fetched: true, at: game.time.worldTime, until: game.time.worldTime + DU.FETCH_STAY}});
       said += ` and brings them back`;
     } else if ( answer === "comes" ) said += ` and asks them to come`;
     else if ( answer === "refuses" ) {

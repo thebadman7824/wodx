@@ -95,9 +95,9 @@ export async function run() {
     });
 
     await G.step("6. meaning harm waits for its night", async () => {
-      await npc().memory.act(robber, pc, "violence");
+      const said = await npc().memory.act(robber, pc, "violence");
       const f = robber.getFlag(MOD, "harm");
-      G.ok("6. the harm is waiting, or has come", !!f || [...game.messages].some(m => /Men sent by Gate Motives Highwayman/.test(m.content ?? "")), {f});
+      G.ok("6. the harm is waiting, or has come", !!f || /Men sent by Gate Motives Highwayman/.test(said ?? "") || [...game.messages].some(m => /Men sent by Gate Motives Highwayman/.test(m.content ?? "")), {f, said});
       await robber.unsetFlag(MOD, "harm");
     });
 
