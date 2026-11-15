@@ -27,6 +27,12 @@ export const TIE_KINDS = {
   node: {label: "A Node", days: 30, lapse: "A Node nobody watches draws visitors: rival mages, spirits or werewolves may claim it, and its Quintessence and Tass go to whoever comes (M20 p. 320).", act: "Places of power: take Quintessence or Tass"},
   chantry: {label: "Chantry or Construct", days: 30, lapse: "A member who skips the errands and chores owed loses standing; a member who quits takes their pool points away (M20 p. 309).", act: "Duties at the chantry"},
   freehold: {label: "A freehold (Holdings)", days: 30, lapse: "An untended balefire in a dull place fades a rank each season (Places of power).", act: "Places of power: dream by the balefire"},
+  // B6323: the other lines' own ties, from their Backgrounds (in WoDX's words)
+  dreamers: {label: "Dreamers", days: 30, lapse: "Dreamers who are not visited stop dreaming for the changeling: less Glamour from them, and Banality creeps in (C20 pdf p. 169).", act: "A visit, or a Rhapsody with them"},
+  haunt: {label: "A Haunt", days: 30, lapse: "A Haunt left to itself draws other wraiths and Spectres, and the Shroud there thickens again (Wraith 20th pdf p. 143).", act: "Time at the Haunt"},
+  pacts: {label: "Pacts with thralls", days: 30, lapse: "A thrall the demon does not see drifts: the pact's Faith comes slower, and another may court them (Demon: the Fallen pdf pp. 157-161).", act: "A visit to the thralls"},
+  cult: {label: "A cult", days: 30, lapse: "A cult that is not led splits or drifts: fewer hands to keep the vessel between lives (Mummy: the Resurrection, Cult).", act: "A rite with the cult"},
+  nest: {label: "A dragon nest", days: 30, lapse: "A dragon nest no one guards draws spirits, rivals and the Wan Kuei of other courts to its Chi (Kindred of the East pdf p. 18).", act: "Time at the nest"},
   custom: {label: "Other", days: 30, lapse: "The Storyteller decides.", act: ""}
 };
 
@@ -34,7 +40,8 @@ export const TIE_KINDS = {
 export const BACKGROUND_TIES = [
   [/^herd/, "herd"], [/^domain|^hunting grounds/, "domain"], [/^retainer/, "people"], [/^allies|^ally/, "people"],
   [/^contacts?/, "people"], [/^kinfolk/, "kinfolk"], [/^mentor/, "mentor"], [/^dependents?/, "people"],
-  [/^node\b/, "node"], [/^chantry|^construct\b/, "chantry"], [/^holdings?\b|^freehold/, "freehold"]
+  [/^node\b/, "node"], [/^chantry|^construct\b/, "chantry"], [/^holdings?\b|^freehold/, "freehold"],
+  [/^dreamers?\b/, "dreamers"], [/^haunt\b/, "haunt"], [/^pacts?\b/, "pacts"], [/^cult\b/, "cult"], [/^dragon nest/, "nest"]
 ];
 
 export function tieKindOfBackground(name) {
@@ -136,6 +143,23 @@ export function betweenPlan(c = {}, {nights = 0, willpowerMode = "night", nightl
       lines.push({key: "blood", text: `Rising costs ${cost} blood over ${n} ${n === 1 ? "night" : "nights"}${c.golconda ? " (Golconda: one a week)" : ""}: ${b} to ${after}.`,
         warn: after <= 0 ? "No blood left: ravenous, frenzy likely. Feed with the Hunt button." : (cost > b ? "It would have cost more than the pool holds: the Storyteller decides whether they fed." : null)});
     }
+  }
+  // B6321: a Kuei-jin spends a point of Chi to rise each night (Kindred of the East pdf 127), the larger pool first
+  if ( c.kueijin && !c.torpor && nightlyBlood ) {
+    const yang = num(c.chi?.yang), yin = num(c.chi?.yin), have = yang + yin, cost = Math.min(n, have);
+    if ( n > 0 ) {
+      let left = cost, dy = 0, di = 0, y = yang, i = yin;
+      while ( left > 0 ) { if ( y >= i && y > 0 ) { y--; dy--; } else if ( i > 0 ) { i--; di--; } else break; left--; }
+      if ( dy ) delta.yangchi = dy;
+      if ( di ) delta.yinchi = di;
+      lines.push({key: "chi", text: `Rising costs ${n} Chi over ${n} ${n === 1 ? "night" : "nights"}: Yang ${yang} to ${yang + dy}, Yin ${yin} to ${yin + di}.`,
+        warn: n > have ? "It would have cost more Chi than the pools hold: the Storyteller decides whether they fed." : (y + i <= 0 ? "No Chi left: hungry. Feed with the Hunt button." : null)});
+    }
+  }
+  // B6322: a Garou or Fera regains Rage the first time each night it sees the moon, at least one point (W20 pdf 147)
+  if ( c.shifter && !c.torpor ) {
+    const r = num(c.rage?.temp), p = num(c.rage?.perm), to = Math.min(p, r + Math.max(1, num(c.moonRage)) * n);
+    if ( to > r ) { delta.rage = to - r; lines.push({key: "rage", text: `The moon brings Rage back each night: ${r} to ${to}.`}); }
   }
   if ( !c.torpor && willpowerMode === "night" ) {
     const t = num(c.willpower?.temp), p = num(c.willpower?.perm), to = Math.min(p, t + n);
