@@ -182,6 +182,9 @@ export function armorPenalty(actor) {
 }
 
 function willpower(actor) { return num(actor?.system?.advantages?.willpower?.temporary); }
+/** B6378: WoDX Actions' Lucky, Destiny and Fate (rerolls a story), for the attack window. */
+const fortuneApi = () => game.modules.get("wodx-actions")?.active ? (game.modules.get("wodx-actions").api?.fortune ?? null) : null;
+function fortuneHtml(actor) { try { return fortuneApi()?.html?.(actor, esc) ?? ""; } catch (e) { return ""; } }
 function blood(actor) { return num(actor?.system?.advantages?.bloodpool?.temporary); }
 
 function woundPenalty(actor) {
@@ -726,6 +729,7 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
     <div class="form-group"><label>Extra damage dice</label><input type="number" name="extraDmg" value="0"/></div>
     <div class="form-group"><label><input type="checkbox" name="specialty"/> Specialty applies (10s count twice)</label></div>
     <div class="form-group"><label><input type="checkbox" name="willpower"/> Spend Willpower (+1 auto success) [${willpower(attacker)}]</label></div>
+    ${fortuneHtml(attacker)}
     <div class="form-group"><label><input type="checkbox" name="bypass"/> Aim around armor (+2 diff)</label></div>
     <div class="form-group"><label><input type="checkbox" name="blind" ${blindCounted ? "disabled" : ""}/> Blind / darkness (+2 diff)${blindCounted ? " (counted above: Blinded)" : ""}</label></div>
     ${cel ? `<div class="form-group"><label><input type="checkbox" name="celDice" ${setting("celerityDice") ? "checked" : ""}/> Celerity ${cel}: add dice to Dexterity</label></div>
@@ -1023,7 +1027,21 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     }
     if (rageAction) log.push(`Rage: ${attacker.name} takes ${rageAction} extra action${rageAction === 1 ? "" : "s"} this turn without multiple-action penalties.`);
 
-    const atk = await rollPool(pool.dice, pool.difficulty, { specialty: fd.specialty, willpower: fd.willpower });
+    let atk = await rollPool(pool.dice, pool.difficulty, { specialty: fd.specialty, willpower: fd.willpower });
+    // B6378: Lucky, Destiny or Fate ticked in the window: a failed attack roll (no successes, or a botch) is rolled again
+    // at once, before the defence, damage and anything else follow from it; the card shows the first dice
+    if (fd.lucky && (atk.botch || !atk.successes)) {
+        let lk = null;
+        try { lk = await fortuneApi()?.use?.(attacker); } catch (e) { lk = null; }
+        if (lk) {
+            if (atk.roll) rolls.push(atk.roll);
+            const first = atk.faces ?? [];
+            atk = await rollPool(pool.dice, pool.difficulty, { specialty: fd.specialty, willpower: fd.willpower });
+            let name = "Lucky";
+            try { name = fortuneApi()?.name?.(attacker) ?? name; } catch (e) { /* the plain name */ }
+            log.push(`${esc(name)}: the first attack roll failed${setting("showDice") && first.length ? ` (${first.join(", ")})` : ""} and is rolled again (${lk.left} left this story).`);
+        }
+    }
     if (atk.roll) rolls.push(atk.roll);
     // B6004: the Blessing or Curse the blow used is spent
     if (pool.once?.length) { try { await game.modules.get("wodx-actions")?.api?.powerMods?.spend?.(attacker, pool.once); } catch (e) { /* nothing spent */ } }

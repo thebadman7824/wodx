@@ -34,6 +34,13 @@ export function build(ctx) {
         if (!get("consensusEra", true)) return C.AGES[2];
         let y = null;
         try { y = game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.() ?? null; } catch (e) { /* no chronicle */ }
+        // B6430: the era the Storyteller set wins when the clock's year lies outside it (a chronicle set in the Burning
+        // Times keeps the Crusade's rules, as WoDX's hunters keep their era's line)
+        try {
+            const p = game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile;
+            const from = Number(p?.start ?? NaN), to = Number(p?.end ?? NaN), yy = Number(y);
+            if (p && y !== null && Number.isFinite(from) && Number.isFinite(yy)) y = Math.min(Math.max(yy, from), Number.isFinite(to) ? to : Infinity);
+        } catch (e) { /* the year alone */ }
         return C.ageFor(y);
     }
     const placeOf = scene => String(scene?.flags?.[MOD]?.consensus?.styles ?? "");

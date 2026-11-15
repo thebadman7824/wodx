@@ -26,6 +26,9 @@
  *   9. Lucky, Destiny and Fate (B6371): a Cainite with Destiny 2 rolls a frenzy check from its window with the box
  *      ticked; the first roll comes up 1s (a botch: frenzy), it is rolled again at once (10s), the Beast is held off,
  *      no frenzy, and one reroll of the story is spent
+ *   10. the same in WoDX Combat's attack window (B6378): a mortal with Destiny 2 punches from the window with the box
+ *      ticked; the first attack roll comes up 1s, it is rolled again at once (10s) before the defence and damage, the
+ *      blow lands (the target is hurt) and one reroll of the story is spent
  * Result: Data/wodx-gate/gatetruthactions-result.json.
  */
 import {gate, waitFor, newestMessage} from "./kit.mjs";
@@ -322,6 +325,47 @@ export async function run() {
         G.ok("9. Destiny rolls a failed frenzy check again", !!seen?.lucky && !!card && /2 successes|Held off/.test(card?.content ?? "") && !fated.system?.conditions?.isfrenzy && used === 1,
           {offered: seen?.lucky ?? null, left0, card: !!card, used, isfrenzy: !!fated.system?.conditions?.isfrenzy});
       } finally { CONFIG.Dice.randomUniform = dice; }
+    });
+    await G.step("10. Destiny rolls a failed attack again in WoDX Combat's window", async () => {
+      const CB = game.modules.get("wodx-combat")?.api ?? game.wodxCombat;
+      const [hero, foe] = await G.make(Actor, [{name: "Gate TA Hero", type: "Mortal", ownership: {default: 3}, prototypeToken: {actorLink: true}},
+        {name: "Gate TA Foe", type: "Mortal", prototypeToken: {actorLink: true}}]);
+      await hero.update({"system.attributes.dexterity.value": 3, "system.attributes.dexterity.total": 3, "system.attributes.strength.value": 3,
+        "system.attributes.strength.total": 3, "system.abilities.brawl.value": 2});
+      await hero.createEmbeddedDocuments("Item", [{name: "Destiny", type: "Feature", system: {type: "wod.types.background", value: 2}}]);
+      const [tH, tF] = await G.tokens(scene, [{actor: hero, x: 12, y: 4}, {actor: foe, x: 13, y: 4}]);
+      await waitFor(() => tH?.object && tF?.object, 6000);
+      await wait(300);
+      const hurt = () => dmg(foe, "bashing") + dmg(foe, "lethal");
+      const hurt0 = hurt();
+      const u1 = await uFor(1), u10 = await uFor(10);
+      const orig = Roll.prototype.evaluate;
+      let evals = 0;
+      CONFIG.Dice.randomUniform = () => (evals === 0 ? u1 : u10); // the first roll after the press (the attack) all 1s, the rest 10s
+      Roll.prototype.evaluate = async function(...a) { try { return await orig.apply(this, a); } finally { evals++; } };
+      const since = Date.now();
+      let offered = null, res = null;
+      const auto0 = game.settings.get("wodx-combat", "autoApply");
+      await game.settings.set("wodx-combat", "autoApply", true);
+      try {
+        evals = -1; // nothing counted before the window's press
+        const run = CB.attack({attacker: tH.object, target: tF.object, weaponId: "unarmed:punch", noAim: true});
+        let dlg = null;
+        await waitFor(() => (dlg = [...foundry.applications.instances.values()].find(a => a.rendered && a.element?.querySelector?.("select[name='weapon']"))), 8000);
+        const root = dlg?.element;
+        offered = root?.querySelector("input[name=lucky]")?.checked ?? null;
+        const def = root?.querySelector("select[name='defense']");
+        if ( def ) { def.value = "none"; def.dispatchEvent(new Event("change", {bubbles: true})); }
+        evals = 0;
+        root?.querySelector("button[data-action='attack']")?.click();
+        res = await run;
+        await waitFor(() => hurt() > hurt0, 6000);
+      } finally { Roll.prototype.evaluate = orig; CONFIG.Dice.randomUniform = dice; await game.settings.set("wodx-combat", "autoApply", auto0); }
+      const card = cardsOf(since, hero, /rolled again/)[0] ?? null;
+      const used = num(hero.getFlag(MOD, "lucky")?.used);
+      G.ok("10. Destiny rolls a failed attack again in WoDX Combat's window", offered === true && !!card && num(res?.attack?.successes) > 0 && used === 1 && hurt() > hurt0,
+        {offered, card: !!card, atk: res?.attack?.successes ?? null, used, hurt: [hurt0, hurt()]});
+      for ( const c of game.combats.filter(c => c.combatants.some(x => x.tokenId === tH.id)) ) { try { await c.delete(); } catch (e) { /* gone */ } }
     });
     G.R.notes.push(`ran ${Math.round((Date.now() - t0) / 1000)} s`);
   } catch (e) {

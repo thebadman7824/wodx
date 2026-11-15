@@ -10,6 +10,15 @@
  *   5. a changeling's chimerical wounds heal with the clock
  *   6. the Storyteller ends the scene: a Fetter token gives Willpower, 1 to 5
  *   7. every other WoDX module still answers
+ *   8. the day's routines, on two moves of the clock (a minute, then a day; dice forced to 10s) (B6379):
+ *      8a. a werewolf marked to meditate gains Gnosis by Wits + Enigmas
+ *      8b. a mage marked to meditate draws the Avatar's rating in Quintessence (3)
+ *      8c. a mummy marked to spend the day in Osiris's Blessing gains Sekhem past the Gift of Ra's one
+ *      8d. an Orpheus projector rests back Vitality
+ *   9. the Crusade's Scourge (B6379, B6430): with the chronicle set to the Burning Times, a mage withdrawn to meditate
+ *      for a point of Scourge is cleared by itself a day later; the era is put back
+ *  10. Conviction at a story's end (B6379): in the Time of Judgment, the Storyteller's End of story sets an imbued
+ *      mortal's Conviction back to the Defender creed's 3; the era and the story are put back
  * Result: Data/wodx-gate/gateautoactions-result.json.
  */
 import {gate, waitFor, newestMessage} from "./kit.mjs";
@@ -122,6 +131,82 @@ export async function run() {
       const ids = ["wodx-chronicle", "wodx-npc", "wodx-combat", "wodx-storyteller", "wodx-solo"].filter(id => game.modules.get(id)?.active);
       G.ok("7. other modules answer", ids.every(id => !!game.modules.get(id).api), {ids, ms: Date.now() - t0});
     });
+    // B6379: the lines of the desk that run on the clock or the story, each driven by its own trigger
+    const [mage, mummy, orph, purer, imbued] = await G.make(Actor, [
+      {name: "WoDX gate: auto mage", type: "Mage", items: [{name: "Avatar", type: "Feature", system: {type: "wod.types.background", value: 3}}]},
+      {name: "WoDX gate: auto mummy", type: "Mummy"},
+      {name: "WoDX gate: auto projector", type: "Mortal", system: {settings: {variant: "orpheus", hasvitality: true, hasspite: true}}},
+      {name: "WoDX gate: auto purifier", type: "Mage"},
+      {name: "WoDX gate: auto imbued", type: "Mortal"}]);
+    await G.step("8. the day's routines", async () => {
+      const gnosis = () => Number(wolf.system?.advantages?.gnosis?.temporary) || 0;
+      const quint = () => Number(mage.system?.quintessence?.temporary) || 0;
+      const sek = () => Number(mummy.system?.advantages?.sekhem?.temporary) || 0;
+      const vit = () => Number(orph.system?.advantages?.vitality?.temporary) || 0;
+      await wolf.update({"system.advantages.gnosis.permanent": 5, "system.advantages.gnosis.temporary": 1});
+      await wolf.unsetFlag(MOD, "meditation");
+      await wolf.setFlag(MOD, "meditates", {hours: 3});
+      await mage.update({"system.quintessence.temporary": 0, "system.paradox.temporary": 0, "system.paradox.permanent": 0});
+      await mage.setFlag(MOD, "m20", {draws: {node: 0}});
+      await mummy.update({"system.advantages.balance.permanent": 5, "system.advantages.sekhem.permanent": 8, "system.advantages.sekhem.temporary": 2});
+      await mummy.setFlag(MOD, "mummy", {inWeb: true, dailyRegain: {k: "bless", sh: 6}});
+      await orph.update({"system.advantages.vitality.permanent": 5, "system.advantages.vitality.temporary": 2});
+      const was = {gnosis: gnosis(), quint: quint(), sekhem: sek(), vitality: vit()};
+      await fixDice(10);
+      try {
+        await game.time.advance(60); // the routines note the day and start the rest
+        await waitFor(() => mage.getFlag(MOD, "m20")?.drawDay !== undefined && mummy.getFlag(MOD, "mummy")?.raDay !== undefined && !!orph.getFlag(MOD, "orpheus")?.restClock, 8000);
+        await new Promise(r => setTimeout(r, 1000));
+        await game.time.advance(86400);
+        await waitFor(() => quint() > was.quint && sek() > was.sekhem + 1 && vit() > was.vitality, 10000);
+        // the moon's routine is skipped while a run of it is busy: a minute more lets the meditation through
+        for ( let k = 0; k < 3 && gnosis() <= was.gnosis; k++ ) { await game.time.advance(60); await waitFor(() => gnosis() > was.gnosis, 4000); }
+      } finally { CONFIG.Dice.randomUniform = dice; }
+      G.ok("8a. a werewolf's daily meditation gains Gnosis", gnosis() > was.gnosis, {gnosis: [was.gnosis, gnosis()]});
+      G.ok("8b. a mage's daily meditation draws Quintessence", quint() === was.quint + 3, {quint: [was.quint, quint()]});
+      G.ok("8c. a mummy's day in the Blessing gains Sekhem", sek() > was.sekhem + 1, {sekhem: [was.sekhem, sek()]});
+      G.ok("8d. an Orpheus projector rests back Vitality", vit() > was.vitality, {vitality: [was.vitality, vit()]});
+    });
+
+    const CH = game.modules.get("wodx-chronicle")?.api;
+    const era0 = (() => { try { return game.settings.get("wodx-chronicle", "activeEra"); } catch (e) { return undefined; } })();
+    const declined0 = (() => { try { return game.settings.get("wodx-chronicle", "declinedEra"); } catch (e) { return undefined; } })();
+    const story0 = (() => { try { return game.settings.get(MOD, "storyId"); } catch (e) { return undefined; } })();
+    const tEra = Date.now();
+    try {
+      await G.step("9. the Crusade's Scourge clears by meditation on the clock", async () => {
+        if ( era0 === undefined ) return G.ok("9. the Crusade's Scourge clears by meditation on the clock", false, {error: "WoDX Chronicle is off"});
+        await game.settings.set("wodx-chronicle", "activeEra", "renaissance");
+        await new Promise(r => setTimeout(r, 1000));
+        const ageKey = A.consensus?.age?.()?.key ?? null;
+        await purer.update({"system.paradox.temporary": 1, "system.paradox.permanent": 0});
+        await purer.setFlag(MOD, "m20", {purifying: {since: game.time.worldTime, days: 1}});
+        const scourge = () => Number(purer.system?.paradox?.temporary) || 0;
+        await game.time.advance(86400 + 60);
+        await waitFor(() => scourge() === 0, 10000);
+        G.ok("9. the Crusade's Scourge clears by meditation on the clock", ageKey === "crusade" && scourge() === 0 && !purer.getFlag(MOD, "m20")?.purifying,
+          {age: ageKey, scourge: scourge(), purifying: purer.getFlag(MOD, "m20")?.purifying ?? null});
+      });
+      await G.step("10. Conviction returns to the creed's level at a story's end", async () => {
+        if ( era0 === undefined ) return G.ok("10. Conviction returns to the creed's level at a story's end", false, {error: "WoDX Chronicle is off"});
+        await game.settings.set("wodx-chronicle", "activeEra", "time-of-judgment");
+        await new Promise(r => setTimeout(r, 1000));
+        await imbued.setFlag(MOD, "imbued", {creed: "defender", conviction: 1});
+        await A.endStory({actors: [imbued]});
+        const conv = () => Number(imbued.getFlag(MOD, "imbued")?.conviction);
+        await waitFor(() => conv() === 3, 6000);
+        G.ok("10. Conviction returns to the creed's level at a story's end", conv() === 3, {conviction: conv()});
+      });
+    } finally {
+      if ( era0 !== undefined ) {
+        try { await game.settings.set("wodx-chronicle", "activeEra", era0); } catch (e) { G.R.notes.push(`era back: ${e?.message ?? e}`); }
+        // a clock move under the borrowed era may have asked to change it back: those asks are withdrawn
+        const ap = CH?.approvals;
+        for ( const e of (ap?.pending?.() ?? []).filter(x => x.type === "era-change" && x.createdAt >= tEra) ) { try { await ap.decide(e.id, "reject"); } catch (err) { /* gone */ } }
+        try { await game.settings.set("wodx-chronicle", "declinedEra", declined0 ?? ""); } catch (e) { /* gone */ }
+      }
+      if ( story0 !== undefined ) { try { await game.settings.set(MOD, "storyId", story0); } catch (e) { /* gone */ } }
+    }
   } catch (e) {
     G.R.errors.push(e?.message ?? String(e));
   } finally {

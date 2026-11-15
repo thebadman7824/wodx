@@ -15,6 +15,13 @@
  *  13. Short Out (B6375): a light within 20 yards goes out (hidden) and comes back when the effect ends; in an era
  *      before electric light the Charm is refused and the light stays (dice forced to 10s)
  *  14. Re-form (B6375): the spirit's token leaves the map (hidden) on a Gnosis roll (dice forced to 10s)
+ *  15. Create Wind (B6377): a strong breeze waits in the Storyteller's approval queue; approved, tonight's weather in
+ *      WoDX Atmosphere has a gale (dice forced to 10s; the weather is put back)
+ *  16. Updraft (B6377): the target's token goes up 5 feet a success and takes the Fly way of moving (dice forced to 10s)
+ *  17. Flood (B6377): one Essence; deep water (a region WoDX Combat swims and drowns in, with its drawing) lands on the
+ *      target's square
+ *  18. Create Fires (B6377): a bonfire on a Gnosis roll: a fire region (two lethal dice to whoever stands in it) with its
+ *      drawing lands on the target's square (dice forced to 10s)
  * Result: Data/wodx-gate/gatecharms-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -191,6 +198,71 @@ export async function run() {
       try { await K.use(body(), "reform"); } finally { CONFIG.Dice.randomUniform = dice0; }
       await waitFor(() => !!scene.tokens.get(st.id)?.hidden, 6000);
       G.ok("14. Re-form: the spirit leaves the map", !!scene.tokens.get(st.id)?.hidden, {hidden: scene.tokens.get(st.id)?.hidden});
+    });
+    // B6377: the weather, lift, water and fire Charms, each checked by what it leaves on the map, the token or the world
+    await body().createEmbeddedDocuments("Item", ["Create Wind", "Updraft", "Flood", "Create Fires"].map(charm));
+    const v2 = () => scene.tokens.get(vt.id);
+    const aim2 = aim;
+    // the spirit's token is hidden after Re-form: bring it back so its Charms have a place on the map
+    await scene.tokens.get(st.id)?.update({hidden: false});
+    await G.step("15. Create Wind: the night's weather turns to a gale once approved", async () => {
+      const ATM = game.modules.get("wodx-atmosphere")?.active ? game.modules.get("wodx-atmosphere").api?.weather : null;
+      if ( !ATM?.night ) return G.ok("15. Create Wind: the night's weather turns to a gale once approved", false, {error: "WoDX Atmosphere is off"});
+      const jdn = ATM.night();
+      const over0 = foundry.utils.deepClone(game.settings.get("wodx-atmosphere", "overrides") ?? {});
+      const AP = CH.approvals;
+      const t0 = Date.now();
+      try {
+        await A.limits?.clear?.(body());
+        await tens();
+        try { await K.use(body(), "createwind", {size: "breeze"}); } finally { CONFIG.Dice.randomUniform = dice0; }
+        const mine = e => e?.data?.item?.out?.kind === "weather" && /Create Wind/.test(`${e.title} ${e.data?.item?.out?.label ?? ""} ${e.data?.item?.power ?? ""}`) && e.createdAt >= t0;
+        let entry = null;
+        await waitFor(() => (entry = AP.pending().find(mine) ?? AP.history().find(mine) ?? null), 6000);
+        if ( entry && AP.pending().some(e => e.id === entry.id) ) await AP.decide(entry.id, "approve");
+        const wind = () => game.settings.get("wodx-atmosphere", "overrides")?.[jdn]?.wind ?? null;
+        await waitFor(() => wind() === "gale", 6000);
+        G.ok("15. Create Wind: the night's weather turns to a gale once approved", !!entry && wind() === "gale", {queued: !!entry, wind: wind(), jdn});
+      } finally { await game.settings.set("wodx-atmosphere", "overrides", over0).catch(() => null); }
+    });
+    await G.step("16. Updraft: the target goes up on the wind", async () => {
+      await A.limits?.clear?.(body());
+      const e0 = Number(v2()?.elevation) || 0;
+      aim2(true);
+      await tens();
+      try { await K.use(body(), "updraft"); } finally { CONFIG.Dice.randomUniform = dice0; }
+      await waitFor(() => (Number(v2()?.elevation) || 0) > e0, 6000);
+      const e1 = Number(v2()?.elevation) || 0, flying = v2()?.movementAction;
+      const risen = [...(v2()?.actor?.effects ?? [])].some(e => /Risen|Updraft/.test(e.name ?? ""));
+      aim2(false);
+      // 5 feet a success
+      G.ok("16. Updraft: the target goes up on the wind", e1 > e0 && (e1 - e0) % 5 === 0 && risen && (flying === undefined || flying === "fly"), {e0, e1, risen, flying});
+    });
+    const areaOf = world => scene.regions.find(r => r.flags?.[MOD]?.effectArea?.item?.out?.world === world) ?? null;
+    const onSquare = r => { const a = r?.flags?.[MOD]?.effectArea; const c = v2()?.object?.center; return !!(a && c && Math.hypot(a.x - c.x, a.y - c.y) < 5); };
+    await G.step("17. Flood: deep water lands on the target's square", async () => {
+      await A.limits?.clear?.(body());
+      const e0 = ess();
+      aim2(true);
+      await K.use(body(), "flood", {size: "block"});
+      await waitFor(() => !!areaOf("water"), 6000);
+      const r = areaOf("water");
+      aim2(false);
+      const drawn = !!scene.drawings.find(d => d.flags?.[MOD]?.groundOf === r?.id);
+      G.ok("17. Flood: deep water lands on the target's square", !!r && r.flags?.["wodx-combat"]?.water === "deep" && onSquare(r) && drawn && e0 - ess() === 1,
+        {region: !!r, water: r?.flags?.["wodx-combat"]?.water ?? null, onSquare: onSquare(r), drawn, paid: e0 - ess()});
+    });
+    await G.step("18. Create Fires: a bonfire burns on the target's square", async () => {
+      await A.limits?.clear?.(body());
+      aim2(true);
+      await tens();
+      try { await K.use(body(), "createfires", {size: "bonfire"}); } finally { CONFIG.Dice.randomUniform = dice0; }
+      await waitFor(() => !!areaOf("blaze"), 6000);
+      const r = areaOf("blaze");
+      aim2(false);
+      const drawn = !!scene.drawings.find(d => d.flags?.[MOD]?.groundOf === r?.id);
+      G.ok("18. Create Fires: a bonfire burns on the target's square", !!r && onSquare(r) && drawn && Number(r.flags?.[MOD]?.effectArea?.item?.out?.dice) >= 2,
+        {region: !!r, onSquare: onSquare(r), drawn, dice: r?.flags?.[MOD]?.effectArea?.item?.out?.dice ?? null});
     });
   } catch (e) {
     G.R.errors.push(String(e?.message ?? e));

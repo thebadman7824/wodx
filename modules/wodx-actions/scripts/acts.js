@@ -26,6 +26,9 @@ const isActiveGM = () => game.user?.isGM && game.users.activeGM?.id === game.use
 
 export const KINDS = new Set(["memory", "vision", "seize", "mark", "cleanse", "remote", "path", "detect", "question"]);
 const PATH_FLAG = "demonPath";
+/** B6379: the mark a sent vision leaves on the token while it plays (Demon: The Fallen, Lore of the Celestials). */
+export const VISION = {id: "vision", name: "Seeing a vision", img: "icons/svg/eye.svg", source: "Demon: The Fallen p. 175",
+  summary: "A vision sent into the mind plays out before their eyes.", mods: {}};
 
 /** The mark's span by successes (DtF Lore of Radiance): a day, a week, a month, a year. */
 export const markSpan = s => (n(s) >= 4 ? {label: "a year", seconds: 365 * 86400} : n(s) === 3 ? {label: "a month", seconds: 30 * 86400}
@@ -90,7 +93,9 @@ export async function apply(item, casterName, h) {
       if ( !a ) return {note: `${o.label}: no one to reach`};
       const said = String(o.say || "a vision that the Storyteller describes").slice(0, 500);
       await tell(a, `A vision comes to ${a.name}`, `<p>${esc(said)}</p><p class="wodx-quiet">${esc(o.label)}, sent by ${esc(casterName)}.</p>`);
-      const eff = await timed(a, {name: "Sees a vision", img: "icons/svg/eye.svg", description: `${said} (${casterName})`, key: "wodx-act-vision"});
+      // B6379: the vision shows on the target's token while it plays (a status the map draws), not only on a card
+      try { chron()?.registerCondition?.(VISION); } catch (e) { /* Chronicle off: the effect alone */ }
+      const eff = await timed(a, {name: "Sees a vision", img: "icons/svg/eye.svg", description: `${said} (${casterName})`, key: "wodx-act-vision", condition: VISION.id});
       return {uuid: a.uuid, effect: eff?.uuid ?? null};
     }
     case "seize": {

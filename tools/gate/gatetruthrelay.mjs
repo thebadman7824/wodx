@@ -8,12 +8,18 @@
  *   "player" (Player Test): fixes the player's d10s to 8, then
  *     a. a quick attack with fists on the bearer (rolled on the player's client)
  *     b. 2 lethal applied to the player's own fighter through soakAndApply (applied on the player's client)
+ *     c. a pistol shot at a listener with heightened senses and no Willpower (B6377)
+ *     d. a punch on a fomor with Tar Skin (B6377)
  *   "finish" (Gamemaster Test):
  *     1. the attack fired wodxAttackRolled once on the Storyteller's client, and the bearer's sheath burned the
  *        player's fighter there: its health is 2 lethal worse than before the attack, besides step b
  *     2. the damage fired wodxDamageApplied once on the Storyteller's client, relayed, for the player's fighter
  *     3. the fighter swore an oath of clasped hands to the bearer: the attack puts "breaks an oath" in the Storyteller's
  *        approval queue (WoDX Actions' oath listener, which acts on the Storyteller's client only)
+ *     4. the player's gunshot overwhelms the listener's heightened senses on the Storyteller's client: Dazed on the token
+ *        (WoDX Senses' overload, which acts on the Storyteller's client only)
+ *     5. the player's blow on the fomor sticks the fighter to its tar skin: Held on the fighter (WoDX Actions' fomor
+ *        blow powers, Storyteller's client only)
  *   then puts the dice and every setting back and removes what it made.
  * Result: Data/wodx-gate/gatetruthrelay-result.json. The clock never moves.
  */
@@ -53,10 +59,19 @@ async function setup() {
     {name: "Gate Relay Fighter", type: "Mortal", ownership: OWN, system: {attributes: {strength: {value: 3}, dexterity: {value: 4}, stamina: {value: 1}}, abilities: {brawl: {value: 3}}}},
     // owned by the player too, so WoDX NPC's fight AI leaves its turn alone
     {name: "Gate Relay Bearer", type: "Mortal", ownership: OWN, system: {attributes: {dexterity: {value: 1}, stamina: {value: 1}}}}]);
+  // B6377: a listener with heightened senses and no Willpower to hold, and a fomor whose tar skin catches bare hands
+  const [listener, fomor] = await G.make(Actor, [
+    {name: "Gate Relay Listener", type: "Mortal", system: {attributes: {dexterity: {value: 1}, stamina: {value: 3}}}},
+    {name: "Gate Relay Fomor", type: "Mortal", system: {attributes: {dexterity: {value: 1}, stamina: {value: 3}}},
+      items: [{name: "Tar Skin", type: "Power", system: {type: "wod.types.power", value: 1}}]}]);
+  await listener.update({"system.advantages.willpower.permanent": 0, "system.advantages.willpower.temporary": 0, "flags.wodx-senses.sight": "heightened"});
+  await fighter.createEmbeddedDocuments("Item", [{name: "Gate Relay pistol", type: "Ranged Weapon", system: {isequipped: true, difficulty: 6, range: 20,
+    damage: {attribute: "", bonus: 4, type: "lethal"}, attack: {attribute: "dexterity", ability: "firearms"}, clip: {value: 6, max: 6}}}]);
   await bearer.createEmbeddedDocuments("ActiveEffect", [{name: "Gate Relay burning sheath", img: "icons/svg/fire.svg",
     flags: {"wodx-actions": {touchHarm: {levels: 2, type: "lethal"}}}}]);
-  const [tf, tb] = await G.tokens(scene, [{actor: fighter, x: 2, y: 2, actorLink: true}, {actor: bearer, x: 3, y: 2, actorLink: true}]);
-  await waitFor(() => tf?.object && tb?.object, 8000);
+  const [tf, tb, tl, tm] = await G.tokens(scene, [{actor: fighter, x: 2, y: 2, actorLink: true}, {actor: bearer, x: 3, y: 2, actorLink: true},
+    {actor: listener, x: 6, y: 2, actorLink: true}, {actor: fomor, x: 2, y: 3, actorLink: true}]);
+  await waitFor(() => tf?.object && tb?.object && tl?.object && tm?.object, 8000);
   const combat = await G.make(Combat, {scene: scene.id, active: true});
   await combat.createEmbeddedDocuments("Combatant", [tf, tb].map(t => ({tokenId: t.id, sceneId: scene.id, actorId: t.actorId})));
   await combat.startCombat();
@@ -68,7 +83,8 @@ async function setup() {
     Hooks.on("wodxAttackRolled", (a, d = {}) => { if ( a?.id === fighter.id ) seen.attack.push({relayed: !!d.relayed, hit: !!d.hit, target: d.target?.id ?? null}); }),
     Hooks.on("wodxDamageApplied", (a, d = {}) => { if ( a?.id === fighter.id ) seen.damage.push({relayed: !!d.relayed, levels: n(d.levels), type: d.type ?? null}); })];
   globalThis.wodxGateRelay = {G, keep, seen, hooks};
-  return {scene: scene.id, fighter: fighter.id, bearer: bearer.id, tf: tf.id, tb: tb.id, combat: combat.id, lethal0: lethal(fighter)};
+  return {scene: scene.id, fighter: fighter.id, bearer: bearer.id, listener: listener.id, fomor: fomor.id, tf: tf.id, tb: tb.id, tl: tl.id, tm: tm.id,
+    pistol: fighter.items.find(i => i.name === "Gate Relay pistol")?.id ?? null, combat: combat.id, lethal0: lethal(fighter)};
 }
 
 async function player(ids) {
@@ -94,6 +110,19 @@ async function player(ids) {
       ok("b. the player applies 2 lethal to their own fighter", r !== null && r !== undefined, {levels: r?.levels ?? null});
     } catch (e) { ok("b. the player applies 2 lethal to their own fighter", false, {error: e.message}); }
     await new Promise(r => setTimeout(r, 3000));
+    // B6377: a gunshot by the player, then a bare-handed blow on a fomor; both act only on the Storyteller's client
+    const tl = scene.tokens.get(ids.tl)?.object, tm = scene.tokens.get(ids.tm)?.object;
+    try {
+      const [res] = await C.quickAttack({attacker: tf, target: tl, weaponId: ids.pistol});
+      ok("c. the player fires a pistol at the listener", !!res?.attack, {weapon: res?.weapon?.name ?? null, atk: res?.attack?.successes ?? null});
+    } catch (e) { ok("c. the player fires a pistol at the listener", false, {error: e.message}); }
+    await new Promise(r => setTimeout(r, 3000));
+    try {
+      const [res] = await C.quickAttack({attacker: tf, target: tm, weaponId: "unarmed:punch"});
+      ok("d. the player punches the fomor and hits", !!res?.attack && n(res?.attack?.successes) > n(res?.defense?.successes ?? 0),
+        {atk: res?.attack?.successes ?? null, def: res?.defense?.successes ?? null});
+    } catch (e) { ok("d. the player punches the fomor and hits", false, {error: e.message}); }
+    await new Promise(r => setTimeout(r, 3000));
   } finally { CONFIG.Dice.randomUniform = uniform0; }
   return steps;
 }
@@ -106,7 +135,7 @@ async function finish(ids, playerSteps = []) {
     G.R.steps.push(...(playerSteps ?? []));
     const fighter = game.actors.get(ids.fighter);
     await waitFor(() => lethal(fighter) >= n(ids.lethal0) + 4, 6000);
-    const atk = seen.attack;
+    const atk = seen.attack.filter(x => x.target === ids.bearer);
     G.ok("1. the player's attack fires once on the Storyteller's client and the sheath burns them", atk.length === 1 && atk[0].relayed && atk[0].hit
       && atk[0].target === ids.bearer && lethal(fighter) === n(ids.lethal0) + 2 + 2,
       {fired: atk, lethal0: ids.lethal0, lethal: lethal(fighter), want: n(ids.lethal0) + 4});
@@ -117,6 +146,16 @@ async function finish(ids, playerSteps = []) {
     const ap = () => game.modules.get("wodx-chronicle")?.api?.approvals;
     const asked = await waitFor(() => [...(ap()?.pending?.() ?? []), ...(ap()?.history?.() ?? [])].some(e => e.key === key), 6000);
     G.ok("3. the player's attack on someone an oath protects asks the Storyteller", !!asked, {key});
+    // 4. B6377: the gunshot, relayed, reaches WoDX Senses' overload: no Willpower to hold, so the listener is Dazed
+    const listener = game.actors.get(ids.listener);
+    const dazed = await waitFor(() => listener?.statuses?.has?.("wodx-dazed"), 6000);
+    G.ok("4. the player's gunshot overwhelms heightened senses: Dazed", !!dazed && seen.attack.some(x => x.target === ids.listener && x.relayed),
+      {statuses: [...(listener?.statuses ?? [])], fired: seen.attack.filter(x => x.target === ids.listener)});
+    // 5. B6377: the punch on the fomor, relayed, reaches its blow powers: Tar Skin holds the fighter fast
+    const held = await waitFor(() => fighter.statuses?.has?.("wodx-held"), 6000);
+    const card = game.messages.contents.slice(-15).some(m => /Fomor flesh/.test(m.content ?? "") && /tar skin/i.test(m.content ?? ""));
+    G.ok("5. the player's blow on the fomor triggers its tar skin: the fighter is Held", !!held && card,
+      {statuses: [...(fighter.statuses ?? [])], card, fired: seen.attack.filter(x => x.target === ids.fomor)});
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }
   finally {
     for ( const [h, id] of [["wodxAttackRolled", hooks[0]], ["wodxDamageApplied", hooks[1]]] ) Hooks.off(h, id);
