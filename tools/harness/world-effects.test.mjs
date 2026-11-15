@@ -27,7 +27,9 @@ test("every name in the table is a power WoDX lists", () => {
 test("the powers the words flag but the table leaves out were each read and left out", () => {
   // Each one: senses or hides taint, a single burning weapon or person, a drink, a river crossing, a caern's upkeep
   const LEFT_OUT = ["Consecration of Esus", "Into the Chasm", "Sense Wyrm", "Wrath of Gaia", "Infest", "Burning Blade", "Mask Taint",
-    "Engulf", "Howling Gale", "The Beltane Blade", "Simple Philtre", "Whispers to the Heart", "Witch's Nimbus", "Moot Rite"];
+    "Engulf", "Howling Gale", "The Beltane Blade", "Simple Philtre", "Whispers to the Heart", "Witch's Nimbus", "Moot Rite",
+    // B6560: one wounded person fills with sea water
+    "Sword of Drowning"];
   const unread = [...new Set(sweep.unread.map(h => h.name.replace(/^[•\s]+/, "")))];
   assert.deepEqual(unread.filter(n => !LEFT_OUT.includes(n)), [], "a new power the words flag: read it and add it to WORLD_POWERS or here");
 });
