@@ -94,6 +94,25 @@ export function lostTribe(tribe, fromYear, toYear) {
  * @param {object} ctx  {fromYear, toYear, years, awakeYears, fromEra, toEra, switches}
  * @returns {{changes: object[], notes: string[]}}
  */
+/** B5391: the kinds of town scar that take a place with them. */
+export const PLACE_LOST = {sack: "sacked", quake: "thrown down by an earthquake"};
+/**
+ * B5391: whether the town a place Fetter names is gone between two years: sacked or quaked (a scar in the years
+ * crossed), or in ruin at the end (no people, or prosperity under a half). towns: [{name, scars, history}].
+ * Returns {town, why} or null.
+ */
+export function placeGone(fetterName, towns = [], fromYear = 0, toYear = 0) {
+  const name = String(fetterName ?? "").toLowerCase();
+  for ( const t of towns ) {
+    const tn = String(t?.name ?? "").trim();
+    if ( tn.length < 3 || !name.includes(tn.toLowerCase()) ) continue;
+    const scar = (t.scars ?? []).find(x => PLACE_LOST[x?.kind] && Number(x.year) > Number(fromYear) && Number(x.year) <= Number(toYear));
+    if ( scar ) return {town: tn, why: `${tn} was ${PLACE_LOST[scar.kind]} in ${scar.year}`};
+    const at = [...(t.history ?? [])].filter(h => Number(h.year) <= Number(toYear)).sort((a, b) => a.year - b.year).at(-1);
+    if ( at && Number(at.year) > Number(fromYear) && (Number(at.people) <= 0 || Number(at.prosperity) < 0.5) ) return {town: tn, why: `${tn} lies in ruin by ${at.year}`};
+  }
+  return null;
+}
 export function propose(v, ctx) {
   const changes = [];
   const notes = [];
@@ -202,7 +221,14 @@ export function propose(v, ctx) {
     const who = (v.deadNames ?? []).find(d => d && String(f.name ?? "").toLowerCase().includes(String(d).toLowerCase()));
     if ( who ) add("adv.fetterLost", `The Fetter "${f.name}" is lost`, `${who} has died: the Fetter goes, and a Harrowing follows (Wraith 20th p. 308).`, true, {itemId: f.id, who});
   }
-  if ( v.line === "wraith" && eraChanges ) notes.push("Places can fall between eras too: a Fetter that is a place is checked by hand (Wraith 20th p. 49)");
+  // B5391: Ben's pick (15 November 2026): a Fetter that names a town is checked against the town over time; a town
+  // sacked, thrown down by a quake or left in ruin across the years takes the place with it, and a Harrowing follows
+  if ( v.line === "wraith" ) for ( const f of v.fetters ?? [] ) {
+    if ( (v.deadNames ?? []).some(d => d && String(f.name ?? "").toLowerCase().includes(String(d).toLowerCase())) ) continue;
+    const gone = placeGone(f.name, v.towns ?? [], ctx.fromYear, ctx.toYear);
+    if ( gone ) add("adv.fetterLost", `The Fetter "${f.name}" is lost`, `${gone.why}: the place is gone, and a Harrowing follows (Wraith 20th pp. 49, 308).`, true, {itemId: f.id, who: gone.town, why: `${gone.why}, and the place with it`});
+  }
+  if ( v.line === "wraith" && eraChanges ) notes.push("Fetters that name a town are checked against the town over time: a town sacked, quaked or in ruin takes the place with it (Wraith 20th p. 49)");
   if ( v.line === "kuei-jin" ) notes.push("Does not age; progress is by Dharma, not by years (Kindred of the East pdf pp. 30–31)");
   if ( v.line === "demon" ) {
     // B5022: a host past the age a body gives out dies across the years, and the demon seeks another (house age)

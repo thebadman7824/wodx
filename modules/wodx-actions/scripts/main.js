@@ -61,6 +61,9 @@ import * as BLX from "./banal-life.js";
 import * as EFX from "./effects.js";
 import * as SUM from "./summons.js";
 import * as TURN from "./turns.js";
+import * as LIM from "./limits.js";
+import * as AFC from "./after-costs.js";
+import * as NPW from "./npc-power-rules.js";
 import * as PK from "./power-keywords.js";
 import * as BR from "./book-rituals.js";
 import * as ZR from "./m20-rules.js";
@@ -533,6 +536,40 @@ async function dialog(title, content, label, callback, { width = 460, render = n
         return out;
     }
     catch (e) { console.error(e); ui.notifications.error(`WoDX Actions: ${e.message}`); return null; }
+}
+
+/**
+ * B4926: the powers an NPC may choose by itself, with what each is for (attack, hold, heal, guard, escape, call, boost),
+ * whether mortals would see it, and whether its limits leave it free now. Lines whose windows fill themselves:
+ * Disciplines, Gifts, Arcanoi and edges.
+ */
+function npcPowers(actor) {
+    if (!actor) return [];
+    const kind = P.detectProfile(actor);
+    const from = [];
+    try { if (["kindred", "ghoul"].includes(kind) || actor.items.some(i => i.type === "Power" && /discipline/i.test(i.system?.type ?? ""))) from.push(...kx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
+    try { if (kind === "lupine" || actor.items.some(i => i.type === "Power" && /gift/i.test(i.system?.type ?? ""))) from.push(...gx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
+    try { if (kind === "wraith" || kind === "spectre") from.push(...wx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
+    try { if (kind === "hunter") from.push(...rx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
+    const bySlug = n => { for (const set of Object.keys(PK.LINE_KEYWORDS)) { const k = PK.keywordsOf(set, PK.slugOf(n)); if (k?.keywords?.length) return k; } return null; };
+    return from.map(p => {
+        const kw = (p.id && PK.keywordsOf(p.set, p.id)) || bySlug(p.name) || { keywords: [] };
+        const t = NPW.tagsOf(kw.keywords ?? []);
+        const st = LIM.stateOf(actor, p, []);
+        return { ...p, keywords: kw.keywords ?? [], uses: t.uses, obvious: t.obvious, free: st.ok, why: st.why };
+    }).filter(p => p.uses.length);
+}
+
+/**
+ * B4926: an NPC uses a power by itself: its window fills itself with the power chosen and rolls as if sent.
+ * The target goes up first so the window's own aim and difficulty read it.
+ */
+async function autoPower(actor, pick, { target = null } = {}) {
+    if (!actor || !pick?.use) return null;
+    if (target) { for (const t of game.user.targets ?? []) t.setTarget(false, { releaseOthers: false }); target.setTarget?.(true, { releaseOthers: true, groupSelection: false }); }
+    P.autoNext({ [pick.field]: pick.value });
+    const call = { useDiscipline: a => kx().useDiscipline(a), useGift: a => gx().useGift(a), useArcanos: a => wx().useArcanos(a), useEdge: a => rx().useEdge(a) }[pick.use];
+    return call ? call(actor) : null;
 }
 
 function resolveActor(a) {
@@ -1829,7 +1866,7 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     if (pexHit === true) html += `<div class="vta-warn">Prey Exclusion: ${esc(vesselActor?.name ?? "the vessel")} is one of the forbidden. Frenzy at once, and a roll of the Road or Humanity at difficulty 7.</div><button type="button" class="vta-btn" data-kx="frenzy" data-actor="${esc(actor.uuid)}" data-arg="physical">Frenzy</button>`;
     else if (pexHit === null) { const prey = drunk > 0 ? TH.preyNote(actor) : ""; if (prey) html += `<div class="vta-warn">${esc(prey)}</div>`; }
     // Chronicle 0.22.0: flaws that bite on feeding go to the Storyteller's queue (Infectious Bite and the like)
-    if (drunk > 0) { try { game.modules.get("wodx-chronicle")?.api?.traits?.prompt?.(actor, "feed", { at: `${vesselActor?.id ?? vesselType}:${Math.floor(game.time.worldTime)}` }); } catch (e) { /* no traits */ } }
+    if (drunk > 0) { try { game.modules.get("wodx-chronicle")?.api?.traits?.prompt?.(actor, "feed", { at: `${vesselActor?.id ?? vesselType}:${Math.floor(game.time.worldTime)}`, vessel: vesselActor?.uuid ?? null }); } catch (e) { /* no traits */ } }
     const faeVessel = vesselType === "fae" || (vesselActor && P.detectProfile(vesselActor) === "fae");
     const high = faeVessel && isVampire(actor) ? R.faeBloodHigh(drunk) : null;
     if (high) html += `<div class="vta-warn">${esc(high.note)}</div>`;
@@ -3122,7 +3159,7 @@ async function gainDerangement(actor, cause, why) {
 }
 const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, rotschreckAuto, endFrenzy, sin, daytime, torpor, hazard, autoBeast, autoTorporRise,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.93.1", summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.95.1", npcPowers, autoPower, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Draw: withActor(a => zx().drawDialog(a)), m20Place: () => zx().placeDialog(), m20Quiet: withActor(a => qtx().panel(a)), quiet: { state: a => qtx().state(resolveActor(a)), act: (a, fd) => qtx().act(resolveActor(a), fd), rules: QR, onRefreshToken: QX.onRefreshToken }, consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
@@ -3206,6 +3243,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
 
 Hooks.once("init", () => {
     registerSettings();
+    LIM.register();
     EFX.setup();
     SUM.setup();
     TURN.setup();
@@ -3263,6 +3301,9 @@ Hooks.once("ready", async () => {
         EFX.registerHandler(chronicle() ?? game.modules.get("wodx-chronicle")?.api);
         // Summoned beings: their timer's end and their token look (B4820)
         SUM.connect(chronicle() ?? game.modules.get("wodx-chronicle")?.api);
+        // B4920-B4923: the one scene count, power use limits and Drained
+        try { LIM.setup();
+        AFC.setup(); } catch (e) { console.error("WoDX | limits", e); }
         // Lifted and planted items, and being caught at it (3.21.0)
         try { sox().registerHandlers(); } catch (e) { console.error("WoDX | social", e); }
     };
@@ -3440,7 +3481,8 @@ function kindredHooks() {
         const before = options?.wodxHealthBefore?.corpus ?? {};
         wx().onCorpus(actor, { bashing: num(before.bashing), lethal: num(before.lethal), aggravated: num(before.aggravated) }, actor.system.health.damage.corpus).catch(e => console.error("WoDX |", e));
     });
-    Hooks.on("wodxEndScene", () => { if (game.user.isGM && game.users.activeGM?.id === game.user.id) wx().newScene({ quiet: true }).catch(e => console.error("WoDX |", e)); });
+    // B4920: Passions and Hysteria reset on the one scene count (End the scene or a new active map)
+    Hooks.on("wodxNewScene", () => { if (game.user.isGM && game.users.activeGM?.id === game.user.id) wx().newScene({ quiet: true }).catch(e => console.error("WoDX |", e)); });
     // B5021: the storm's harm comes once a scene on its own, on arriving at a scene and at each new scene
     Hooks.on("canvasReady", () => { setTimeout(() => wx().autoStorm().catch(e => console.error("WoDX | Maelstrom", e)), 1500); });
     wx().onReady().catch(e => console.error("WoDX |", e));

@@ -449,6 +449,19 @@ export function intoxBites(state, {count = 1, scale = "", strength = "", rand = 
   if ( state === "remedy" && wounded ) return [{key: "intox:remedy", name: label, tags: ["all"], dice: Math.max(1, size(1)), duration: scene}];
   return [];
 }
+/**
+ * B5178: a stimulant's crash. The high lasts about an hour (a scene); then 1 die off every roll until the character
+ * sleeps, at most a day. A weaker dose crashes sooner and softer in time, a stronger one later and longer. House reading
+ * of the Wired text above.
+ */
+export const CRASH = {key: "intox:stimulant:crash", name: "Crashing", tags: ["all"], dice: -1, high: HOUR, lasts: 24 * HOUR};
+export function crashOf({scale = "", strength = ""} = {}) {
+  const weak = scale === "weaker" || strength === "weak", strong = scale === "stronger" || strength === "strong";
+  const f = weak ? 0.5 : strong ? 2 : 1;
+  return {after: Math.round(CRASH.high * f), lasts: Math.round(CRASH.lasts * Math.min(1, f))};
+}
+/** Whether a crash waiting on a character is due. */
+export const crashDue = (flag, t) => !!flag && Number(flag.at) > 0 && Number(t) >= Number(flag.at);
 /** B5012: what an unknown drug can turn out to be, and the difficulty of telling which. */
 export const UNKNOWN_KINDS = ["stimulant", "opiate", "sedative", "hallucinogen", "cannabis"];
 export const KNOW_DIFF = 7;

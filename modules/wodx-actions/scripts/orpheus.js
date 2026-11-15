@@ -11,6 +11,7 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: orpheus-rules.js.
  */
+import * as LIM from "./limits.js";
 import * as O from "./orpheus-rules.js";
 import { floatOver } from "./daysleep.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -95,11 +96,14 @@ export function build(ctx) {
             const it = i.horrors.find(x => x.id === fd.h);
             const k = Math.max(0, Math.min(5, n(fd.v)));
             if (k > i.vitality.now) { notify(`${actor.name} has ${i.vitality.now} Vitality.`); return null; }
+            // B4921: a Horror used up for its time (the house rule counts the Vitality put in as its level) is refused
+            const lim = it ? await LIM.gate(actor, { name: it.name, level: k }) : { diff: 0, done: async () => {} };
+            if (!lim) return null;
             let body = "", rolls = [];
             const note = k ? await setVitality(actor, i.vitality.now - k) : "";
             const total = k ? await spentThisTurn(actor, k) : 0;
             const pool = (fd.a ? ctx.attr(actor, fd.a) : 0) + (fd.b ? n(ctx.findAbility?.(actor, fd.b)?.value) : 0);
-            const diff = n(fd.d) + i.state.penalty;
+            const diff = n(fd.d) + i.state.penalty + lim.diff;
             const name = it ? esc(it.name) : "A Horror";
             let got = 0;
             if (pool) {
@@ -124,6 +128,8 @@ export function build(ctx) {
             if (sym) body += `<div class="vta-note">Fearful symmetry: ${total} Vitality this turn ${esc(sym.text)}.</div>`;
             if (note) body += `<div class="vta-note">${esc(note)}</div>`;
             body += `<div class="wodx-quiet">${REF} ${hfx ? `${hfx.page}; ` : ""}pp. 124, 190–193</div>`;
+            if (lim.diff) body += `<div class="vta-note">Drained: +${lim.diff} difficulty.</div>`;
+            await lim.done({ successes: got });
             return post(actor, `${actor.name}: ${it?.name ?? "a Horror"}`, body, rolls.filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 520, render: root => { describe(root, true); root.querySelector("[name=h]")?.addEventListener("change", () => describe(root, true)); root.querySelector("[name=v]")?.addEventListener("input", () => describe(root, false)); return aim(root, { actor, lib: "horror", power: r => { const it = i.horrors.find(x => x.id === r.querySelector("[name=h]")?.value); if (!it) return null; const key = String(it.name ?? "").toLowerCase().replace(/[^a-z]/g, ""); return { id: key, n: it.name }; }, onPick: () => describe(root, true) }); } });
     }

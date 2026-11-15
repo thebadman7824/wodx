@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.32.0 (Time in the Labyrinth is drawn each journey from its own table, from an hour here for each day there to a month here (B5179))
 - 0.31.0 (A still aura for Golconda (B5095; a house reading))
 - 0.30.0 (The Otherworlds act without the Storyteller's hand (B5017-B5020))
 - 0.29.0 (What only the right eyes see (B4634): the thin Gauntlet, the thin Shroud and the Wyrm's haze on a person, drawn on each client for its own viewer and never saved)

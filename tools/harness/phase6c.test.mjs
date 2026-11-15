@@ -294,6 +294,8 @@ test("a Passion gives Pathos once a scene; a neglected Fetter at 0 calls a Harro
   await W.passion(w);
   assert.match(notes.at(-1), /already tapped/);
   game.settings.set("wodx-actions", "wraithScene", 5);
+  game.settings.register("wodx-actions", "sceneTally", {scope: "world", config: false, type: Number, default: 0});
+  await game.settings.set("wodx-actions", "sceneTally", 5); // B4920: one scene count for every once-a-scene power
   forms.push({p: p.id, how: "second"}); rolls.push(1);
   await W.passion(w);
   assert.equal(w.system.advantages.pathos.temporary, 8, "a new scene: tapped again");

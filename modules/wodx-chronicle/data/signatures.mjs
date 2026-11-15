@@ -605,7 +605,7 @@ export const MAGE = [
   {key: "nephandi", label: "Nephandi", match: ["nephandi", "nephandus"], feature: "line", also: ["corruption"], title: "The inverted Avatar", page: "M20, the Nephandi",
     text: "NPCs. A Nephandus corrupts as a Follower of Set does, with the same hidden ledger on the victim. Their magick is not vulgar to their own kind; a lore page reveals the cabal."},
   {key: "marauder", label: "Marauders", match: ["marauder", "marauders"], feature: "line", title: "Living madness", page: "M20, the Marauders",
-    text: "NPCs. Paradox spirits shy from a Marauder, and reality bends near one: the Storyteller can change a region's look and rules for the scene."},
+    text: "NPCs. Paradox spirits shy from a Marauder, so its magick draws no Paradox, and the world bends around it: its token shimmers and flickers."},
   {key: "sorcerer", label: "Sorcerers and psychics", match: ["sorcerer", "sorcerers", "psychic", "psychics", "hedge"], feature: "line", title: "The path and its cost", page: "Sorcerer (Revised); M20, the sorcerer rules",
     text: "A sorcerer's path (Alchemy, Conjuration, Divination and the rest) works as recipes with hours and components. A psychic's numina cost Willpower."},
 ];
@@ -806,7 +806,7 @@ export const HUNTER = [
   row("defender", "Defenders", ["defender", "defenders"], "The shield", "Hunter: the Reckoning, the creeds", "A Defender guards a place: harm or theft there reaches them wherever they are. Standing beside someone a monster attacks gives a soak die.", {from: 1999, feature: "guard"}),
   row("judge", "Judges", ["judge", "judges"], "The verdict", "Hunter: the Reckoning, the creeds", "A Judge may give a verdict on a monster, and learns whether it has harmed the innocent.", {from: 1999, feature: "ruling", secret: true}),
   row("innocent", "Innocents", ["innocent", "innocents"], "Open eyes", "Hunter: the Reckoning, the creeds", "A monster spoken to kindly by an Innocent thinks better of them. Empathy gains a die.", {from: 1999, effects: [{tags: ["empathy"], dice: 1}]}),
-  row("martyr", "Martyrs", ["martyr", "martyrs"], "Taking the wound", "Hunter: the Reckoning, the creeds", "A Martyr can take harm meant for someone else beside them, as the Storyteller moves it.", {from: 1999}),
+  row("martyr", "Martyrs", ["martyr", "martyrs"], "Taking the wound", "Hunter: the Reckoning, the creeds", "A Martyr can take harm meant for someone else beside them: when someone next to a Martyr is hurt, the Martyr's player gets a button to take the wound instead.", {from: 1999}),
   row("redeemer", "Redeemers", ["redeemer", "redeemers"], "The second chance", "Hunter: the Reckoning, the creeds", "A Redeemer's long work with a monster can help its Humanity or Path, a task over weeks on the clock.", {from: 1999}),
   row("visionary", "Visionaries", ["visionary", "visionaries"], "The bigger picture", "Hunter: the Reckoning, the creeds", "Lore pages open for them sooner. Occult and Investigation gain a die.", {from: 1999, effects: [{tags: ["occult", "investigation"], dice: 1}]}),
   row("hermit", "Hermits", ["hermit", "hermits"], "The messages", "Hunter: the Reckoning, the creeds", "Once a night a Hermit can hear the Messengers: a riddle about the next dated event.", {from: 1999, also: ["glimpse"]}),
@@ -815,7 +815,7 @@ export const HUNTER = [
   row("inquisition", "Inquisitors", ["inquisitor", "inquisitors", "inquisition", "society of leopold", "leopold"], "Faith and the files", "V20 Dark Ages, the Inquisition; Hunters Hunted II", "True Faith wards make monsters recoil and burn the wicked, and the faithful help them. Every breach of the Masquerade reaches the Inquisition, and its agents press the hunters in the region.", {feature: "watchers"}),
   row("arcanum", "Arcanum", ["arcanum"], "The library", "Hunters Hunted II, the Arcanum", "Research on any monster with the Library's files gains a die, and a breach of the Masquerade becomes a file they can read.", {effects: [{tags: ["academics", "occult"], dice: 1}]}),
   row("agencies", "Government hunters", ["project twilight", "twilight", "agency", "agencies", "fbi", "nsa"], "Case files", "Hunters Hunted II; Project Twilight", "They read police files and camera records as the New World Order does: a breach reaches them, and they send a team.", {from: 1900, house: true, feature: "watchers"}),
-  row("faithful", "Mortals with True Faith", ["true faith", "faithful"], "Faith that burns", "V20, True Faith", "On holy ground their Faith counts one higher (the Storyteller marks the place)."),
+  row("faithful", "Mortals with True Faith", ["true faith", "faithful"], "Faith that burns", "V20, True Faith", "On holy ground (a sacred place on the map that is not desecrated) their Faith counts one higher."),
 ];
 export const MUMMY = [
   row("kherminu", "Kher-minu", ["kher minu", "tomb watchers"], "The guarded place", "Mummy: the Resurrection, the Amenti", "Amulets made as charms are used from the pack. A place a Kher-minu takes as a charge (a tomb, a museum wing, a temple) is guarded: harm or theft there reaches them.", {feature: "guard"}),
@@ -830,7 +830,7 @@ export const MUMMY = [
 ];
 export const DEMON = [
   row("devils", "Devils", ["devil", "devils", "namaru"], "A following", "Demon: the Fallen, the Houses", "The demon draws passers-by into a following that grows with each scene of worship. Leadership gains a die.", {effects: [{tags: ["leadership"], dice: 1}]}),
-  row("scourges", "Scourges", ["scourge", "scourges", "asharu"], "The breath of the world", "Demon: the Fallen, the Houses", "The Lore of the Winds can change the scene's weather (the Storyteller sets it); the Lore of Awakening heals or sickens. Medicine gains a die.", {effects: [{tags: ["medicine"], dice: 1}]}),
+  row("scourges", "Scourges", ["scourge", "scourges", "asharu"], "The breath of the world", "Demon: the Fallen, the Houses", "The Lore of the Winds at three dots or more raises a gale over the place for the night, a storm at five; the Lore of Awakening heals or sickens. Medicine gains a die.", {effects: [{tags: ["medicine"], dice: 1}]}),
   row("malefactors", "Malefactors", ["malefactor", "malefactors", "annunaki"], "The Forge", "Demon: the Fallen, the Houses", "The Lore of the Forge enchants things they craft; the Lore of Paths finds the way through any place. Crafts gains a die.", {effects: [{tags: ["crafts"], dice: 1}]}),
   row("fiends", "Fiends", ["fiend", "fiends", "neberu"], "Patterns and portals", "Demon: the Fallen, the Houses", "The Lore of Patterns gives a riddle about the next dated event once a night; the Lore of Portals opens a door between two places.", {also: ["glimpse"]}),
   row("defilers", "Defilers", ["defiler", "defilers", "lammasu"], "Longing", "Demon: the Fallen, the Houses", "The Lore of Longing works on desire with the hidden Corruption ledger the Followers of Set use; the Lore of Storms works sea and rain.", {also: ["corruption"]}),

@@ -34,11 +34,14 @@ test("the lost come back from the Pattern Web; the dying who see the dead cross"
   assert.ok(/returnLost\(\)/.test(m) && /registerDyingCross\(\)/.test(m));
 });
 
-test("the Far Dreaming's time is drawn; the Labyrinth stays the Storyteller's", () => {
+test("the Far Dreaming's and the Labyrinth's time are drawn (B5179)", () => {
   assert.equal(J.drawSlip(() => 0).factor, 1 / 24);
   assert.equal(J.drawSlip(() => 0.99).factor, 365);
   const t = J.timeOutside({realm: "far-dreaming", hours: 4, slip: J.drawSlip(() => 0.75)});
   assert.equal(t.seconds, 4 * 3600 * 7);
   assert.equal(J.timeOutside({realm: "deep-umbra", hours: 3}).seconds, 3 * 3600);
-  assert.equal(J.REALM_TIME.labyrinth.rule, "storyteller");
+  assert.equal(J.REALM_TIME.labyrinth.rule, "random");
+  assert.equal(J.drawSlip(() => 0.99, "labyrinth").factor, 30);
+  assert.equal(J.drawSlip(() => 0, "labyrinth").factor, 1 / 24);
+  assert.equal(J.timeOutside({realm: "labyrinth", hours: 2, slip: J.drawSlip(() => 0.5, "labyrinth")}).seconds, 2 * 3600);
 });

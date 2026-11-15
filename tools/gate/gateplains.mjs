@@ -290,6 +290,17 @@ export async function run() {
       }
       G.ok("26. every raised people has 50 names or more in each list in each age", RAISED.includes("thai") && !thin.length, {raised: RAISED, thin: thin.slice(0, 8)});
     });
+
+    await G.step("27. names made by pattern", async () => {
+      // B5600: the world's Roll Tables hold each people's made names apart, and a medieval Lakota draw can land on one
+      const {PATTERNED} = await import(`/modules/${CR}/data/people-patterned.mjs`);
+      const made = new Set(PATTERNED.lakota.male);
+      const own = results({}, "names.patterned.male.lakota");
+      const men = draw("medieval", "lakota", 200, "made").filter((p, i) => i % 2 === 0).map(p => p.name);
+      const hits = men.filter(n => made.has(n));
+      G.ok("27. a Roll Table of Lakota names made by pattern, and some medieval men drawn from it",
+        own.length === made.size && hits.length > 0 && hits.length < men.length / 2, {table: own.length, drawn: men.length, made: hits.slice(0, 4)});
+    });
   } catch (e) {
     G.ok("error", false, {error: e.message});
   } finally {

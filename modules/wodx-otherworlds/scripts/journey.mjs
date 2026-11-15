@@ -43,7 +43,7 @@ export function drawJourney({realm = "tempest", hours = 2, storm = false, travel
   try { moon = moonNow(); } catch (e) { moon = null; }
   const j = J.planJourney({realm, hours, year, storm, fired, moon, tables: g.lookup(g.context()), randFor: k => g.random(`journey:${count}:${realm}:${k}`, nonce)});
   // B5019: the Far Dreaming's time against the world's, drawn with the journey
-  const slip = J.REALM_TIME[realm]?.rule === "random" ? J.drawSlip(g.random(`journey:${count}:${realm}:time`, nonce)) : null;
+  const slip = J.REALM_TIME[realm]?.rule === "random" ? J.drawSlip(g.random(`journey:${count}:${realm}:time`, nonce), J.REALM_TIME[realm]?.table ?? "dream") : null;
   return {...j, travellers, count, nonce, year, ...(slip ? {slip} : {})};
 }
 

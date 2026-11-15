@@ -8,7 +8,7 @@
  *     Water and salt are made, a vial or a line a success; a weapon carried is marked. All of it lasts the scene: the
  *     Storyteller (or the user) ends it with a button.
  *   Enshrine a relic: an order's work on a carried thing; Intelligence + Religion at 7, ten successes, a roll a week;
- *     the Storyteller approves the thing as truly holy before it starts. Its rating is a success in five, 1 to 3; the
+ *     whether the thing is truly holy is rolled once when it is picked (B5390). Its rating is a success in five, 1 to 3; the
  *     Storyteller can raise it on the item.
  */
 import * as H from "../data/wonders-hunter.mjs";
@@ -22,6 +22,19 @@ const NOT_THINGS = ["Power", "Ability", "Advantage", "Sphere", "Realm", "Bonus",
 const STAGE_FAITH = {servant: 1, acolyte: 2, advocate: 3, judge: 4};
 const stageOf = f => { const t = n(f.faith) + n(f.wisdom) + n(f.zeal); return t >= 10 ? "judge" : t >= 5 ? "advocate" : t >= 1 ? "acolyte" : "servant"; };
 const WEAPONS = ["Melee Weapon", "Ranged Weapon"];
+/**
+ * B5390: Ben's pick (15 November 2026): whether remains are truly holy is rolled once, the order's Faith rating against
+ * difficulty 8, when the remains are picked. The dice are seeded by the thing and the maker, so picking again gives the
+ * same answer. Holy on a success; then the rites go on with no Storyteller judgement.
+ */
+export const HOLY_DIFF = 8;
+const seedOf = str => { let h = 2166136261; for ( const c of String(str) ) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; } return h; };
+export function holyRoll(faith, seed) {
+  let x = seedOf(seed) || 1;
+  const dice = Array.from({length: Math.max(1, n(faith))}, () => { x = (Math.imul(x, 1103515245) + 12345) >>> 0; return 1 + ((x >>> 16) % 10); });
+  const hits = dice.filter(d => d >= HOLY_DIFF).length, ones = dice.filter(d => d === 1).length;
+  return {dice, successes: Math.max(0, hits - ones), holy: hits - ones > 0};
+}
 
 export const hunterKit = {
   title: "Inquisitors: blessings and relics",
@@ -58,11 +71,15 @@ export const hunterKit = {
     if ( (r.item === "weapon" || r.kind === "relic") && !t ) out.push(r.kind === "relic" ? "pick the remains or the saint's thing" : "pick the weapon to bless");
     if ( r.item === "weapon" && t && !WEAPONS.includes(t.type) ) out.push(`${t.name} is not a weapon`);
     if ( t?.wonder ) out.push(`${t.name} already holds something`);
+    if ( r.kind === "relic" && t && !t.wonder ) {
+      const h = holyRoll(Math.max(1, n(m.faithRating)), `${t.id}:${m.name ?? ""}`);
+      if ( !h.holy ) out.push(`${t.name} is not truly holy (Faith ${Math.max(1, n(m.faithRating))} at ${HOLY_DIFF}: ${h.dice.join(", ")})`);
+    }
     return out;
   },
   cautions(r) {
     const out = ["The books give no rule for this, so the Storyteller approves each one."];
-    if ( r.kind === "relic" ) out.push("V20 Dark Ages holds that Holy Artifacts arise on their own: the Storyteller judges whether the remains are truly holy before the rites begin.");
+    if ( r.kind === "relic" ) out.push(`V20 Dark Ages holds that Holy Artifacts arise on their own: whether the remains are truly holy is rolled once, the order's Faith against ${HOLY_DIFF}, when they are picked.`);
     return out;
   },
   fields(m = {}) {
@@ -121,7 +138,7 @@ export const hunterKit = {
   label: r => r.name,
   detail: (r, t = {}) => t.note ?? "",
   intro: m => `${m.order ? "Order member" : "Inquisitor"}, True Faith equivalent ${n(m.faithRating)}, Willpower ${n(m.willpower)}.`,
-  approvalText: "is it truly holy, and is the prayer sincere?"
+  approvalText: "is the prayer sincere?"
 };
 
 registerLine("hunter", hunterKit);
