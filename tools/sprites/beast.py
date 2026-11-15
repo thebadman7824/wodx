@@ -143,7 +143,7 @@ def side(a,f,pose=None):
         if lie>.6: return lying(False,dark,g)
         sw,lift=sl(p); hip=P(-10,-21+bob)
         if lk=='hoof':
-            st=(-7.4+sw*1.6,-14+bob*.6); hk=(-12.3+sw*3.4-lift*.6,-9.6-lift*1.4); ft=(-11.3+sw*5.6+lift*.9,-3.4-lift*2.6)
+            st=(-8.6+sw*1.2,-16.6+bob*.8); hk=(-11.7+sw*3.6+lift*.8,-10.6-lift*1.6); ft=(-11.4+sw*5.4-lift*1.3,-3.4-lift*2.6)   # the stifle stays up in the flank; the cannon bone hangs straight below the hock and trails when the foot is lifted
             cv.capsule(hip,P(*st),rl(3.9),rl(2.6),ramp=rp,fur=.7*fu,seed=2,dark=dark,g=g); cv.capsule(P(*st),P(*hk),rl(2.3),rl(1.5),ramp=rp,dark=dark,g=g); cv.capsule(P(*hk),P(*ft),rl(1.4),rl(1.25),ramp=rp,dark=dark,g=g)
             cv.capsule(P(ft[0]+.2,ft[1]+1.3),P(ft[0]+1.0,ft[1]+2.0),rl(1.6),rl(1.7),ramp=hf,dark=dark,g=g+'h')
         elif lk=='pad':
@@ -151,7 +151,7 @@ def side(a,f,pose=None):
             cv.capsule(hip,P(*kn),rl(4.3),rl(3.3),ramp=rp,fur=.8*fu,seed=2,dark=dark,g=g); cv.capsule(P(*kn),P(*ft),rl(3.1),rl(2.7),ramp=rp,fur=.5*fu,seed=32,dark=dark,g=g)
             cv.capsule(P(ft[0],ft[1]+.6),P(ft[0]+3.0,ft[1]+.9),rl(2.2),rl(1.9),ramp=rp,dark=dark,g=g)
         else:
-            st=(-7.2+sw*1.8,-13.6+bob*.6); hk=(-12.2+sw*3.8-lift*.4,-8.2-lift*1.0); pw=(-11.2+sw*5.8+lift*.8,-2.2-lift*2.2)
+            st=(-8.2+sw*1.4,-15.6+bob*.8); hk=(-11.8+sw*3.9+lift*.6,-8.0-lift*1.4); pw=(-11.5+sw*5.6-lift*1.0,-2.2-lift*2.2)
             cv.capsule(hip,P(*st),rl(3.8),rl(2.6),ramp=rp,fur=.8*fu,seed=2,dark=dark,g=g); cv.capsule(P(*st),P(*hk),rl(2.2),rl(1.6),ramp=rp,dark=dark,g=g); cv.capsule(P(*hk),P(*pw),rl(1.5),rl(1.4),ramp=rp,dark=dark,g=g)
             cv.capsule(P(pw[0],pw[1]+.5),P(pw[0]+1.9,pw[1]+.7),rl(1.5),rl(1.2),ramp=rp,dark=dark,g=g)
     t=a['tail']; wag=math.sin(ph)

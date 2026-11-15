@@ -36,6 +36,13 @@ assert box(cell(Wr.posed(d,'sit'),2,5))[1]>box(cell(Wr.posed(d,'seat'),2,5))[1],
 sl=Wr.asleep(d)
 for row,flat in ((0,False),(1,True),(2,False),(3,True)):
     b=box(cell(sl,row,5)); assert ((b[2]-b[0])>(b[3]-b[1]))==flat, (row,b)
+# the blanket alone (B5667): only blanket, near white so a tint gives the bed's colour, and it covers the sleeper's blanket exactly
+cv=Wr.asleep(d,cover=True)
+for row in range(4):
+    c=cell(cv,row,5); s5=cell(sl,row,5); on=c[...,3]>0
+    assert on.any() and (s5[...,3][on]>0).all(), ('cover inside the sleeper',row)
+    assert (s5[...,3]>0).sum()>on.sum()+20, ('the head stays uncovered',row)
+assert not cell(cv,2,0)[...,3].any(), 'no blanket while sitting down'
 ca=Wr.carrying(d); assert ca.shape==(4*SH,8*S,4)
 assert box(cell(ca,3,0))[2]>box(cell(Wr.sheet(d),3,0))[2], 'the load is carried in front'
 # children take every pose too, smaller
@@ -43,7 +50,7 @@ k=dict(d,growth='small')
 for n in Wr.POSED: assert box(cell(Wr.posed(k,n),2,5))[1]>box(cell(Wr.posed(d,n),2,5))[1], n
 # the batch: a person's walk gets its standing frame, the drawn poses and the load; a beast its own
 sheets,label,notes,sq=Bt.draw(dict(id='t1',kind='person',year=1300,look=dict(skin='c89878',hair='3a2a1c'),worn=[],held=[]))
-assert set(Wr.POSED)<=set(sheets) and {'stand','carry','sleep'}<=set(sheets), set(sheets)
+assert set(Wr.POSED)<=set(sheets) and {'stand','carry','sleep','sleepcover'}<=set(sheets), set(sheets)
 sheets,label,notes,sq=Bt.draw(dict(id='t2',kind='animal',name='Cow'))
 assert {'stand','graze','lie'}<=set(sheets), set(sheets)
 print('everyday life ok')

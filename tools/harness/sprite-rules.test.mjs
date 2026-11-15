@@ -255,17 +255,17 @@ test("everyday life: the standing frame, drawn poses and the pose a routine asks
   assert.equal(SR.actTotal("work"), SR.ACT_TOTAL * SR.ACT_SLOW.work);
   // what stands by the figure
   const bed = {x: 100, y: 100, width: 200, height: 100, name: "Bed_Straw_A.png"}, bench = {x: 400, y: 100, width: 100, height: 100, name: " bench"};
-  assert.deepEqual(SR.thingsBy([bed, bench], {x: 150, y: 150}, 100), {seat: false, bed: {long: "h", head: null}});
+  assert.deepEqual(SR.thingsBy([bed, bench], {x: 150, y: 150}, 100), {seat: false, bed: {long: "h", head: null, blanket: null}});
   assert.deepEqual(SR.thingsBy([bed, bench], {x: 450, y: 120}, 100), {seat: true, bed: null});
   assert.deepEqual(SR.thingsBy([bed, bench], {x: 900, y: 900}, 100), {seat: false, bed: null});
   assert.equal(SR.thingsBy([{x: 0, y: 0, width: 100, height: 220, name: "cot"}], {x: 50, y: 50}, 100).bed.long, "v");
   assert.equal(SR.thingsBy([{x: 0, y: 0, width: 100, height: 100, name: "Table_Round.png"}], {x: 50, y: 50}, 100).seat, false);
   // the routine's word to a pose
   const has = SR.ACTS["townsman-1888"];
-  assert.deepEqual(SR.poseFor("rest", {has}), {pose: "stool", facing: "down", carry: false});
+  assert.deepEqual(SR.poseFor("rest", {has}), {pose: "stool", facing: "down", carry: false, blanket: null});
   assert.equal(SR.poseFor("rest", {has, seat: true}).pose, "seat");
   assert.equal(SR.poseFor("rest", {has, place: "wilds"}).pose, "sit");
-  assert.deepEqual(SR.poseFor("sleep", {has, bed: {long: "h"}, facing: "down"}), {pose: "sleep", facing: "left", carry: false});
+  assert.deepEqual(SR.poseFor("sleep", {has, bed: {long: "h"}, facing: "down"}), {pose: "sleep", facing: "left", carry: false, blanket: null});
   assert.equal(SR.poseFor("sleep", {has, bed: {long: "v"}, facing: "left"}).facing, "up");
   assert.equal(SR.poseFor("sleep", {has, bed: {long: "v", head: "down"}}).facing, "down");
   assert.equal(SR.poseFor("sleep", {has, facing: "right"}).facing, "right");
@@ -273,7 +273,7 @@ test("everyday life: the standing frame, drawn poses and the pose a routine asks
   assert.equal(SR.poseFor("drink", {has}).pose, "sup");
   assert.equal(SR.poseFor("work", {has}).pose, "work");
   assert.equal(SR.poseFor("work", {has, place: "yard"}).pose, "dig");
-  assert.deepEqual(SR.poseFor("errand", {has}), {pose: null, facing: "down", carry: true});
+  assert.deepEqual(SR.poseFor("errand", {has}), {pose: null, facing: "down", carry: true, blanket: null});
   for ( const a of ["patrol", "hunt", "hide", "attend", "wander", null] ) assert.equal(SR.poseFor(a, {has}).pose, null, String(a));
   // a sprite drawn before the poses were (no such sheets) falls back, or stands
   assert.equal(SR.poseFor("rest", {has: ["sit", "kneel"]}).pose, "sit");
@@ -294,4 +294,27 @@ test("everyday life: the standing frame, drawn poses and the pose a routine asks
   assert.ok(SR.hasAct(SR.ownName("a1"), "sleep") && SR.hasAct(SR.ownName("a1"), "graze"));
   SR.learn("x", null);
   assert.ok(!SR.hasStand(SR.ownName("a1")));
+});
+
+test("getting up plays the way down backwards and ends (B5666)", () => {
+  assert.equal(SR.upFrame(0), SR.ACT_FRAMES - 1);
+  assert.equal(SR.upFrame(SR.UP_MS - 1), 0);
+  assert.equal(SR.upFrame(SR.UP_MS), null);
+  let last = SR.ACT_FRAMES;
+  for ( let t = 0; t < SR.UP_MS; t += 10 ) { const c = SR.upFrame(t); assert.ok(c <= last && c >= 0); last = c; }
+  for ( const m of SR.RISES ) assert.ok(SR.STAY.includes(m) || SR.BEAST_LIFE.includes(m), m);
+});
+
+test("a sleeper's blanket takes the colour of the bed (B5667)", () => {
+  assert.equal(SR.hexColour("#A03020"), "#a03020"); assert.equal(SR.hexColour("red"), null);
+  const w = 10, h = 10, px = new Uint8ClampedArray(w * h * 4);
+  for ( let i = 0; i < w * h; i++ ) { const y = Math.floor(i / w); px.set(y < 3 ? [240, 240, 230, 255] : [150, 40, 30, 255], i * 4); }
+  assert.equal(SR.blanketOf(px, w, h), "#96281e");
+  assert.equal(SR.blanketOf(new Uint8ClampedArray(16), 2, 2), null);
+  const by = SR.thingsBy([{x: 0, y: 0, width: 200, height: 100, name: "bed", blanket: "#336699"}], {x: 50, y: 50}, 100);
+  assert.equal(by.bed.blanket, "#336699");
+  const want = SR.poseFor("sleep", {has: ["sleep", "sit"], bed: by.bed});
+  assert.equal(want.pose, "sleep"); assert.equal(want.blanket, "#336699");
+  assert.equal(SR.poseFor("rest", {has: ["stool"], bed: by.bed}).blanket, null);
+  assert.equal(SR.COVER, "sleepcover");
 });

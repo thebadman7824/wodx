@@ -108,6 +108,13 @@ export const ACT_LABELS = {claw: "Strike with the hand", cast: "Work a power", s
 /** How much longer than a blow a move takes: looking about and feeding are slow, speech and a change of form unhurried. */
 export const ACT_SLOW = {search: 2.6, pick: 2.6, feed: 2.2, talk: 1.8, shift: 1.7, sit: 1.2, kneel: 1.2, seat: 1.2, stool: 1.2, sleep: 1.6, lie: 1.6,
   sup: 4, work: 2.2, tend: 2.6, dig: 2.4, graze: 4.5};
+/** The sheet of a sleeper's blanket alone, tinted in the game to the colour of the bed (B5667). Every sheet with "sleep" has one. */
+export const COVER = "sleepcover";
+/** Poses a figure gets up from: the way down is played backwards (B5666). */
+export const RISES = ["seat", "stool", "sit", "kneel", "sleep", "lie"];
+export const UP_MS = 420;
+/** The column shown t thousandths of a second into getting up; null once the figure is up. */
+export const upFrame = t => t < 0 || t >= UP_MS ? null : ACT_FRAMES - 1 - Math.min(ACT_FRAMES - 1, Math.floor(t / UP_MS * ACT_FRAMES));
 /** How long one round of a move takes, in thousandths of a second. */
 export const actTotal = act => ACT_TOTAL * (ACT_SLOW[act] ?? 1);
 export const actPath = (name, act) => `${stem(name)}.${act}.png${stamp(name)}`;
@@ -318,10 +325,31 @@ export function thingsBy(things = [], pt = {x: 0, y: 0}, grid = 100) {
     const w = Number(t.width) || 0, h = Number(t.height) || 0, pad = grid * 0.35;
     if ( pt.x < t.x - pad || pt.x > t.x + w + pad || pt.y < t.y - pad || pt.y > t.y + h + pad ) continue;
     const name = String(t.name ?? "");
-    if ( BED.test(name) ) bed = {long: w > h * 1.15 ? "h" : "v", head: t.head ?? null};
+    if ( BED.test(name) ) bed = {long: w > h * 1.15 ? "h" : "v", head: t.head ?? null, blanket: hexColour(t.blanket)};
     else if ( SEAT.test(name) ) seat = true;
   }
   return {seat, bed};
+}
+/** A colour as "#rrggbb", or null when it is not one. */
+export const hexColour = c => { const m = /^#?([0-9a-f]{6})$/i.exec(String(c ?? "").trim()); return m ? `#${m[1].toLowerCase()}` : null; };
+/**
+ * The blanket colour of a bed picture (B5667): the commonest colour of the middle of the picture, read from its pixels
+ * as [r, g, b, a, ...]. Near-transparent pixels are skipped, colours are grouped by 16 steps, and the group's average is
+ * given. Null when nothing is solid.
+ */
+export function blanketOf(px, width, height) {
+  const groups = new Map();
+  const x0 = Math.floor(width * 0.2), x1 = Math.ceil(width * 0.8), y0 = Math.floor(height * 0.2), y1 = Math.ceil(height * 0.8);
+  for ( let y = y0; y < y1; y++ ) for ( let x = x0; x < x1; x++ ) {
+    const i = (y * width + x) * 4;
+    if ( px[i + 3] < 128 ) continue;
+    const k = (px[i] >> 4) << 8 | (px[i + 1] >> 4) << 4 | px[i + 2] >> 4;
+    const g = groups.get(k) ?? [0, 0, 0, 0]; g[0] += px[i]; g[1] += px[i + 1]; g[2] += px[i + 2]; g[3]++; groups.set(k, g);
+  }
+  let best = null;
+  for ( const g of groups.values() ) if ( !best || g[3] > best[3] ) best = g;
+  if ( !best ) return null;
+  return "#" + [0, 1, 2].map(j => Math.round(best[j] / best[3]).toString(16).padStart(2, "0")).join("");
 }
 /** Kinds of place under the open sky, where a figure at rest sits on the ground and work is work of the field. */
 export const OPEN_PLACES = ["wilds", "yard", "park", "caern"];
@@ -343,5 +371,5 @@ export function poseFor(activity, {animal = false, has = [], seat = false, bed =
   else if ( activity === "drink" ) pose = first("sup", "stool", "sit");
   else if ( activity === "pray" ) pose = first("kneel");
   else if ( activity === "work" ) pose = open ? first("dig", "work") : first("work");
-  return {pose, facing: face, carry: !animal && activity === "errand"};
+  return {pose, facing: face, carry: !animal && activity === "errand", blanket: pose === "sleep" ? bed?.blanket ?? null : null};
 }

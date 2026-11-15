@@ -741,23 +741,28 @@ def carrying(d):
         r=side(d,f,None,p)
         for row,im in ((0,front(d,f,True,None,p)),(1,r[:,::-1]),(2,front(d,f,False,None,p)),(3,r)): sh[row*SH:(row+1)*SH,f*S:(f+1)*S]=im
     return sh
-def asleep(d,blanket='#8a8170'):
+COVER='#f2f0ec'   # the blanket of the cover sheet: near white, so the game can tint it to the bed's own colour (B5667)
+def asleep(d,blanket='#8a8170',cover=False):
     """lying asleep under a blanket, seen from above: the row is the way the head points (up, left, down, right). Six frames: down to the
-    ground, then lying still with the eyes shut"""
-    sh=np.zeros((4*SH,6*S,4),np.uint8); lie=front(dict(d,shut=True,held=None,off=None,stow=None),0); bl=rc(blanket)
+    ground, then lying still with the eyes shut. cover=True gives the blanket alone, near white, for the game to lay over the
+    sleeper in the colour of the bed (the sleepcover sheet)"""
+    if cover: blanket=COVER
+    sh=np.zeros((4*SH,6*S,4),np.uint8); lie=front(dict(d,shut=True,held=None,off=None,stow=None),0); bl=rc(blanket); mask=np.zeros(lie.shape[:2],bool)
     ys,xs=np.nonzero(lie[...,3]); top,bot=ys.min(),ys.max(); mid=(xs.min()+xs.max())//2; y0=top+int((bot-top)*.36)
     hw=max(8,int((xs.max()-xs.min())*.5)+2)
     for y in range(y0,bot+2):
         for x in range(mid-hw,mid+hw+1):
             if x in(mid-hw,mid+hw) and y in(y0,bot+1): continue
-            e=x in(mid-hw,mid+hw) or y in(y0,bot+1); lie[y,x]=(*(d['ink'] if e and y!=y0 else bl[4] if y==y0 else bl[3] if x<mid-hw//2 else bl[1] if x>mid+hw-3 else bl[2]),255)
+            e=x in(mid-hw,mid+hw) or y in(y0,bot+1); mask[y,x]=True; lie[y,x]=(*(d['ink'] if e and y!=y0 else bl[4] if y==y0 else bl[3] if x<mid-hw//2 else bl[1] if x>mid+hw-3 else bl[2]),255)
         if (y-y0)%7==6:
             for x in range(mid-hw+1,mid+hw): lie[y,x,:3]=bl[1]
+    if cover: lie[~mask]=0
     from PIL import Image
     im=Image.fromarray(lie,'RGBA').crop((0,top,S,bot+2)); cyc=78
     for row,rot in ((0,0),(1,90),(2,180),(3,270)):
         q=im.rotate(rot,expand=True) if rot else im; cell=Image.new('RGBA',(S,SH),(0,0,0,0)); cell.paste(q,(48-q.width//2,min(SH-q.height,max(0,cyc-q.height//2)))); cell=np.array(cell)
         for i in range(2,6): sh[row*SH:(row+1)*SH,i*S:(i+1)*S]=cell
+    if cover: return sh
     sitp=posed(d,'sit')
     for row in range(4): sh[row*SH:(row+1)*SH,0:S]=sitp[row*SH:(row+1)*SH,S:2*S]; sh[row*SH:(row+1)*SH,S:2*S]=sitp[row*SH:(row+1)*SH,4*S:5*S]
     return sh

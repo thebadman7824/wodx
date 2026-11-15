@@ -8,7 +8,7 @@
  *   3. a figure that is not walking shows the standing frame, not a step of the walk
  *   4. at rest with nothing to sit on it sits down on a stool of its own
  *   5. with a bench beside it, it sits on the bench
- *   6. asleep by a bed it lies along the bed, eyes shut, and stays so
+ *   6. asleep by a bed it lies along the bed, eyes shut, under a blanket the colour of the bed, and stays so
  *   7. at work its hands keep moving: the picture changes while it stands in place
  *   8. it gets up to walk, and takes its pose again when it has stopped
  *   9. on an errand it carries a load as it walks
@@ -74,10 +74,12 @@ export async function run() {
     });
 
     await G.step("6. asleep along the bed", async () => {
-      const [bed] = await scene.createEmbeddedDocuments("Tile", [{x: 5.5 * g, y: 6 * g, width: 2 * g, height: g, texture: {src: "icons/svg/sleep.svg"}, flags: {[PD]: {furniture: "bed"}}}]);
+      const [bed] = await scene.createEmbeddedDocuments("Tile", [{x: 5.5 * g, y: 6 * g, width: 2 * g, height: g, texture: {src: "icons/svg/sleep.svg"}, flags: {[PD]: {furniture: "bed", blanket: "#7a2e2a"}}}]);
       await doing("sleep");
       const a = await settled("sleep"), s = shown(), row = SR.ROW[a.facing];
-      G.ok("6. asleep along the bed", a.name === "sleep" && ["left", "right"].includes(a.facing) && s.y === row * SR.FRAME_H && s.x === SR.FRAME_W * (SR.ACT_FRAMES - 1), {act: a, shown: s});
+      const quilt = A.covered?.(tok);
+      G.ok("6. asleep along the bed", a.name === "sleep" && ["left", "right"].includes(a.facing) && s.y === row * SR.FRAME_H && s.x === SR.FRAME_W * (SR.ACT_FRAMES - 1)
+        && a.blanket === "#7a2e2a" && quilt?.tint === 0x7a2e2a && quilt.visible, {act: a, shown: s, quilt});
       await bed.delete();
     });
 

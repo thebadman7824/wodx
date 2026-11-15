@@ -23,7 +23,7 @@ def person_sheets(spec,acts):
     return out
 def drawn(spec):
     """the sheets a person is drawn in joint by joint (B5661, B5664): standing still, the poses, the walk with a load, asleep"""
-    d=Wr.fig(**spec); out={'stand':Wr.stand(d),'carry':Wr.carrying(d),'sleep':Wr.asleep(d)}
+    d=Wr.fig(**spec); out={'stand':Wr.stand(d),'carry':Wr.carrying(d),'sleep':Wr.asleep(d),'sleepcover':Wr.asleep(d,cover=True)}
     out.update({n:Wr.posed(d,n) for n in Wr.POSED}); return out
 def _keep(src,dx,dy):
     """a shift cut down so that nothing of the figure is pushed out of its frame"""

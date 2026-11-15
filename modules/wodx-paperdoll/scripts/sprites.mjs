@@ -57,7 +57,13 @@ function tick() {
     let st = SR.step(states.get(token.id) ?? SR.start(pos), pos, grid, now);
     let tex = null;
     const a = acts.get(token.id);
-    if ( a?.held ) {
+    if ( a?.up ) {
+      // getting up: the way down, played backwards and quickly, also on the first step of a walk (B5666)
+      const col = SR.upFrame(now - a.start);
+      if ( col === null ) acts.delete(token.id);
+      else { st = {...st, facing: a.facing ?? st.facing}; tex = frame(name, {row: SR.ROW[st.facing] ?? SR.ROW.down, col}, a.act); }
+    }
+    else if ( a?.held ) {
       // fallen or dead: the last frame stays, wherever the token is dragged, until the figure is helped up
       st = {...st, facing: a.facing ?? st.facing};
       tex = frame(name, {row: SR.ROW[st.facing] ?? SR.ROW.down, col: SR.ACT_FRAMES - 1}, a.act);
@@ -76,6 +82,7 @@ function tick() {
       }
     }
     if ( !acts.has(token.id) && glows.has(token.id) ) glow(token, null);
+    { const c = acts.get(token.id); cover(token, name, c && !c.up && c.act === "sleep" && c.blanket && !st.moving ? {row: SR.ROW[st.facing] ?? SR.ROW.down, col: c.held ? SR.ACT_FRAMES - 1 : SR.actFrame(now - c.start, c.act) ?? SR.ACT_FRAMES - 1} : null, c?.blanket); }
     // aboard a mount or a vehicle (B4970): turned as it is turned, legs folded when the seat is a saddle
     const seat = seated.get(token.id);
     if ( seat ) st = {...st, facing: seat.facing};
@@ -90,11 +97,29 @@ function tick() {
     if ( tex && token.mesh.texture !== tex ) token.mesh.texture = tex;
     else if ( !tex ) crisp(token.mesh.texture);
   }
-  for ( const id of states.keys() ) if ( !seen.has(id) ) { states.delete(id); acts.delete(id); const g = glows.get(id); if ( g ) { if ( !g.destroyed ) g.destroy(); glows.delete(id); } }
+  for ( const id of states.keys() ) if ( !seen.has(id) ) { states.delete(id); acts.delete(id); const g = glows.get(id); if ( g ) { if ( !g.destroyed ) g.destroy(); glows.delete(id); } const c = covers.get(id); if ( c ) { if ( !c.destroyed ) c.destroy(); covers.delete(id); } }
 }
 
 /* A power's effect, laid over the token while its casting move plays: one small picture on the token itself, in step
    with the figure (same frame, same place, same size), taken away when the move ends. */
+/* The bed's own blanket laid over a sleeper (B5667): the near-white cover sheet, tinted to the bed's colour. */
+const covers = new Map();
+function cover(token, name, f, colour) {
+  let c = covers.get(token.id);
+  const tex = f ? frame(name, f, SR.COVER) : null;
+  if ( !tex ) { if ( c ) { if ( !c.destroyed ) c.destroy(); covers.delete(token.id); } return; }
+  if ( !c || c.destroyed || c.parent !== token ) {
+    if ( c && !c.destroyed ) c.destroy();
+    c = new PIXI.Sprite(tex); c.eventMode = "none"; covers.set(token.id, token.addChild(c));
+  }
+  const m = token.mesh;
+  if ( c.texture !== tex ) c.texture = tex;
+  c.tint = Number.parseInt(String(colour).slice(1), 16);
+  c.anchor.set(m.anchor?.x ?? 0.5, m.anchor?.y ?? 0.5);
+  c.position.set(m.position.x - token.position.x, m.position.y - token.position.y);
+  c.width = Math.abs(m.width); c.height = Math.abs(m.height); c.scale.x = Math.abs(c.scale.x) * Math.sign(m.scale.x || 1);
+}
+
 function glow(token, fx, f) {
   let g = glows.get(token.id);
   const tex = fx ? frame(FX, f, fx) : null;
@@ -125,13 +150,18 @@ function onTokenUpdate(doc, change) {
   }
   if ( !change?.flags?.[MOD]?.act || !on() ) return;
   const a = doc.flags?.[MOD]?.act;
-  if ( !a?.name ) { acts.delete(doc.id); return; }
+  if ( !a?.name ) {
+    const was = acts.get(doc.id);
+    if ( was && (was.held || was.hold) && SR.RISES.includes(was.act) ) acts.set(doc.id, {act: was.act, facing: was.facing, up: true, start: performance.now()});
+    else acts.delete(doc.id);
+    return;
+  }
   const name = doc.flags?.[MOD]?.sprite, act = SR.actOf(name, a.name);
   if ( !act ) return;
   base(name, act);
   const fx = act === "cast" && SR.fxOk(a.fx) ? a.fx : null;
   if ( fx ) base(FX, fx);
-  acts.set(doc.id, {act, fx, hold: !!a.hold && SR.HOLD.includes(act), loop: !!a.hold && SR.LOOP.includes(act), facing: SR.ROW[a.facing] !== undefined ? a.facing : null, start: performance.now()});
+  acts.set(doc.id, {act, fx, blanket: SR.hexColour(a.blanket), hold: !!a.hold && SR.HOLD.includes(act), loop: !!a.hold && SR.LOOP.includes(act), facing: SR.ROW[a.facing] !== undefined ? a.facing : null, start: performance.now()});
 }
 
 /**
@@ -139,7 +169,7 @@ function onTokenUpdate(doc, change) {
  * first when left out or unknown); `toward` is a token, a token document or a point the figure turns to face.
  * Returns the move played, or null when the token has no sprite or the sprite knows no attack.
  */
-export async function play(tokenDoc, act = null, toward = null, {fx = null, face = null, by = ""} = {}) {
+export async function play(tokenDoc, act = null, toward = null, {fx = null, face = null, by = "", blanket = null} = {}) {
   tokenDoc = tokenDoc?.document ?? tokenDoc;
   const name = tokenDoc?.flags?.[MOD]?.sprite, move = SR.isOwnMove(act) ? (SR.hasAct(name, act) ? act : null) : SR.actOf(name, act);
   if ( !move ) return null;
@@ -149,7 +179,7 @@ export async function play(tokenDoc, act = null, toward = null, {fx = null, face
   const was = states.get(tokenDoc.id)?.facing ?? "down";
   const facing = SR.ROW[face] !== undefined ? face : at ? SR.facingToward(me, at, was) : was;
   const look = move === "cast" ? (SR.fxOk(fx) ? fx : SR.FX_OWN[name] ?? SR.fxFor({})) : "";
-  await tokenDoc.update({flags: {[MOD]: {act: {name: move, facing, fx: look, hold: SR.HOLD.includes(move), by, n: (tokenDoc.flags?.[MOD]?.act?.n ?? 0) + 1}}}}, {animate: false});
+  await tokenDoc.update({flags: {[MOD]: {act: {name: move, facing, fx: look, hold: SR.HOLD.includes(move), by, blanket: move === "sleep" ? SR.hexColour(blanket) : null, n: (tokenDoc.flags?.[MOD]?.act?.n ?? 0) + 1}}}}, {animate: false});
   return move;
 }
 
@@ -274,6 +304,26 @@ function doingOf(tokenDoc) {
   return {activity: w.activity, place};
 }
 /** The pose a token should hold just now by its character's routine: {pose, facing, carry}, or null when it has no routine. */
+/* The blanket colour read from a bed's picture (B5667), once per picture: null until it has loaded, then the colour. */
+const colours = new Map();
+function pictureColour(src) {
+  if ( !src ) return null;
+  if ( colours.has(src) ) return colours.get(src);
+  colours.set(src, null);
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.onload = () => {
+    try {
+      const w = Math.min(64, img.naturalWidth || 64), h = Math.min(64, img.naturalHeight || 64), c = document.createElement("canvas");
+      c.width = w; c.height = h;
+      const x = c.getContext("2d", {willReadFrequently: true}); x.drawImage(img, 0, 0, w, h);
+      colours.set(src, SR.blanketOf(x.getImageData(0, 0, w, h).data, w, h));
+    } catch (e) { console.warn(`${MOD} | bed colour`, e); }
+  };
+  img.src = src;
+  return null;
+}
+
 export function lifeOf(tokenDoc) {
   tokenDoc = tokenDoc?.document ?? tokenDoc;
   const name = tokenDoc?.flags?.[MOD]?.sprite, doing = name ? doingOf(tokenDoc) : null;
@@ -281,6 +331,7 @@ export function lifeOf(tokenDoc) {
   const g = tokenDoc.parent?.grid?.size ?? canvas.grid?.size ?? 100;
   const pt = {x: tokenDoc.x + (tokenDoc.width ?? 1) * g / 2, y: tokenDoc.y + (tokenDoc.height ?? 1) * g / 2};
   const things = [...(tokenDoc.parent?.tiles ?? [])].map(t => ({x: t.x, y: t.y, width: t.width, height: t.height, head: t.flags?.[MOD]?.head ?? null,
+    blanket: SR.hexColour(t.flags?.[MOD]?.blanket) ?? pictureColour(t.texture?.src),
     name: `${t.flags?.[MOD]?.furniture ?? ""} ${String(t.texture?.src ?? "").split("/").pop()}`}));
   return SR.poseFor(doing.activity, {animal: animalOf(tokenDoc.actor), has: SR.ACTS[name] ?? [], ...SR.thingsBy(things, pt, g), place: doing.place,
     facing: states.get(tokenDoc.id)?.facing ?? tokenDoc.flags?.[MOD]?.act?.facing ?? "down"});
@@ -304,8 +355,8 @@ export async function settle() {
     const want = live ? lifeOf(doc) : null;
     if ( !!f.carry !== !!want?.carry ) { await doc.update({flags: {[MOD]: {carry: !!want?.carry}}}, {animate: false}); n++; }
     if ( !want?.pose ) { if ( ours ) { await rise(doc); n++; } continue; }
-    if ( ours && a.name === want.pose && (a.name !== "sleep" || a.facing === want.facing) ) continue;
-    await play(doc, want.pose, null, {face: want.facing, by: "routine"}); n++;
+    if ( ours && a.name === want.pose && (a.name !== "sleep" || (a.facing === want.facing && (a.blanket ?? null) === want.blanket)) ) continue;
+    await play(doc, want.pose, null, {face: want.facing, by: "routine", blanket: want.blanket}); n++;
   }
   return n;
 }
@@ -339,7 +390,7 @@ export function startSprites() {
   Hooks.on("canvasReady", () => { states.clear(); glows.clear(); strides.clear(); acts.clear();
     // whoever lay fallen or dead when the scene was last seen still lies there
     for ( const t of canvas.tokens?.placeables ?? [] ) { const a = t.document.flags?.[MOD]?.act, n = t.document.flags?.[MOD]?.sprite;
-      if ( a?.hold && SR.HOLD.includes(a.name) && SR.hasAct(n, a.name) ) { base(n, a.name); acts.set(t.id, {act: a.name, fx: null, hold: true, held: !SR.LOOP.includes(a.name), loop: SR.LOOP.includes(a.name), facing: SR.ROW[a.facing] !== undefined ? a.facing : null, start: SR.LOOP.includes(a.name) ? performance.now() : -Infinity}); } } canvas.app?.ticker?.remove(tick); canvas.app?.ticker?.add(tick); });
+      if ( a?.hold && SR.HOLD.includes(a.name) && SR.hasAct(n, a.name) ) { base(n, a.name); acts.set(t.id, {act: a.name, fx: null, blanket: SR.hexColour(a.blanket), hold: true, held: !SR.LOOP.includes(a.name), loop: SR.LOOP.includes(a.name), facing: SR.ROW[a.facing] !== undefined ? a.facing : null, start: SR.LOOP.includes(a.name) ? performance.now() : -Infinity}); } } canvas.app?.ticker?.remove(tick); canvas.app?.ticker?.add(tick); });
   if ( globalThis.canvas?.ready ) canvas.app?.ticker?.add(tick);
 }
 
@@ -488,4 +539,4 @@ export async function dress(scene = canvas.scene) {
   return n;
 }
 
-export const spriteApi = {ageOf, markChild, give, clear, pick, play, pose, rise, settle, lifeOf, roster, saveRoster, loadOwn, dress, own: id => SR.isOwn(SR.ownName(id)) ? SR.ownName(id) : null, squares: name => SR.squaresOf(name), fxFor: SR.fxFor, glowing: id => { const g = glows.get(id); return g && !g.destroyed ? {visible: g.visible, width: g.width, height: g.height, x: g.position.x, y: g.position.y} : null; }, acts: name => [...(SR.ACTS[name] ?? [])], playing: id => acts.get(typeof id === "string" ? id : (id?.document?.id ?? id?.id)), names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};
+export const spriteApi = {covered: t => { const c = covers.get(typeof t === "string" ? t : (t?.object?.id ?? t?.id)); return c && !c.destroyed ? {tint: c.tint, visible: c.visible, width: c.width} : null; }, ageOf, markChild, give, clear, pick, play, pose, rise, settle, lifeOf, roster, saveRoster, loadOwn, dress, own: id => SR.isOwn(SR.ownName(id)) ? SR.ownName(id) : null, squares: name => SR.squaresOf(name), fxFor: SR.fxFor, glowing: id => { const g = glows.get(id); return g && !g.destroyed ? {visible: g.visible, width: g.width, height: g.height, x: g.position.x, y: g.position.y} : null; }, acts: name => [...(SR.ACTS[name] ?? [])], playing: id => acts.get(typeof id === "string" ? id : (id?.document?.id ?? id?.id)), names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};
