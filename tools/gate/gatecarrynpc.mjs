@@ -171,7 +171,9 @@ export async function run() {
       await waitFor(() => hx().fallenOf(tj).down, 4000);
       const r = await N().execute(tg.object, {action: "carry", target: tj.id, intent: "capture", want: ""});
       const C = game.modules.get("wodx-chronicle")?.api;
-      const entry = await waitFor(() => C.approvals.pending().find(p => p.type === "npc-capture" && p.data?.target === tj.uuid), 6000);
+      const findEntry = () => C.approvals.pending().find(p => p.type === "npc-capture" && p.data?.target === tj.uuid);
+      await waitFor(findEntry, 6000);
+      const entry = findEntry(); // waitFor gives back only true or false
       const notYet = !tg.flags?.[IX]?.hauling && !jo.statuses?.has?.("wodx-immobilized");
       if ( entry ) await C.approvals.decide(entry.id, "approve");
       const tied = await waitFor(() => jo.statuses?.has?.("wodx-immobilized"), 6000);

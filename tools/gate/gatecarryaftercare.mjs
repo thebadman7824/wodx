@@ -157,7 +157,9 @@ export async function run() {
       await game.settings.set(NPC, "prisoners", [...(game.settings.get(NPC, "prisoners") ?? []),
         {captive: ivy.id, token: ti.uuid, name: ivy.name, captor: gil.id, captorName: gil.name, faction: fid, factionName: "Gate Aftercare Watch", place: watch.uuid, placeName: "Gate Aftercare watch-house", pc: true, since: game.time.worldTime, freed: null}]);
       await AC().day();
-      const c = await waitFor(() => game.messages.contents.slice(-12).reverse().find(m => /data-wnpc-held="escape"/.test(m.content) && m.content.includes(ivy.id)), 4000);
+      const findCard = () => game.messages.contents.slice(-12).reverse().find(m => /data-wnpc-held="escape"/.test(m.content) && m.content.includes(ivy.id));
+      await waitFor(findCard, 4000);
+      const c = findCard(); // waitFor gives back only true or false
       await AC().held(ivy.id, "wait", "the gate");
       const waited = await waitFor(() => game.messages.contents.slice(-6).some(m => /keeps still and watches/.test(m.content)), 4000);
       G.ok("10. a player's character held", !!c && !!c.whisper?.includes(player.id) && !!waited, {card: !!c, toPlayer: !!c?.whisper?.includes(player.id), whisper: [...(c?.whisper ?? [])], player: player.id, owner: ivy.testUserPermission(player, "OWNER"), waited});
