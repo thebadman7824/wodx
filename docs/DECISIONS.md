@@ -306,7 +306,7 @@ Next free block: B6220
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5680-B5709 | NPC Motives Desk: every NPC action has a reason and a follow-through (used B5680-B5703) | NPC, Storyteller |
 | B5710-B5729 | Aftercare of the carried (Aftercare Desk a1-a12) (used B5710-B5721) | NPC |
-| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5747) | tools |
+| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5748) | tools |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 | B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
 | B5800-B5809 | NPC Aftercare Desk: what comes after each NPC action (used B5800-B5806) | NPC, Chronicle |
@@ -9441,6 +9441,11 @@ Reverse: drop the dress() calls from the maps; the maps draw as before.
 Tools. Following review of the first furnishing pass, three fixes. First, every piece that has a front now faces the room it serves. dress.turned() draws a piece facing south on a scratch map and turns it to face north, east or west, with its shadow and any glow it throws. Oven mouths, dresser and chest fronts, bench seats, tool racks and peg rails all face out from their wall, and beds stand head to the wall. The market's three ovens, which faced their walls, now open on the kitchen, the bakehouse and the hall. Second, the pieces are drawn in more detail so each can be named by sight. These include a dresser with plates in its rack and jugs on top, a joiner's bench with a vice, saw, plane, mallet and chisels, a tool rack hung with spade, rake, fork, sickle, axe and rope, and a peg rail with cloak, hat, satchel and belt. There are also a spinning wheel with its flyer, distaff and treadle, a straw pallet with bolster and blanket, a butter churn, a hand quern, a wash tub with washboard, a table with stools drawn up, braided rag rugs and a three-legged pot with its bail and ladle. Third, rooms are fuller: more furniture along every wall and more things on the floor. No room gets more than one rug, wheel or dresser, and jugs and cups stay off the floor. All five maps are re-drawn with it.
 
 Reverse: return dress.py and the three oven calls to B5746.
+
+## B5748. Window shutters stay outside the wall (2026-11-15)
+Tools. Following review, shutters no longer clip into the walls. Shut, the two leaves now lie against the outside face of the wall with their planks, hinges and iron bar, where before they were drawn halfway into the wall itself. Open, each leaf still lies flat along the outside face, but only where there is room. The drawer now knows the scene's walls, doors and windows, so a leaf stops short of the building's corner, of a wall that crosses the ground outside, of a doorway, and of the next window's leaf (two windows share the wall between them). Where a leaf has no room to lie flat, it stands open square to the wall instead. All eight maps were re-drawn, and a check of every shutter picture, open and shut, finds none on a wall: 120 windows, where before every shut shutter overlapped its wall.
+
+Reverse: return props.window and the recorder's line list to B5747.
 
 ## B5750. Witness reactions given by a window act on the map (2026-11-15)
 WoDX Actions. The witness step takes results already rolled (the Delirium check, a demon's Revelation) and acts them out: a frozen witness is Immobilized for the scene, a fleeing one runs, a fighting one starts a fight; those who keep it go on the Masquerade record. With no revealed actor on the map, nothing is recorded against anyone.
