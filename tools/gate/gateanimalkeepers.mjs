@@ -63,9 +63,11 @@ export async function run() {
       G.ok("4. a szlachta by long task", !!task && task.opts?.fleshcraft === "szlachta" && !!serf.getFlag("wodx-creation", "szlachta") && str >= 5 && monstrous, {task: task?.name, str, monstrous});
     });
 
+    // fifteen ghouls made before the step, so the step's time is the graft's alone
+    const list = await G.make(Actor, Array.from({length: 15}, (_, i) => ({name: `Gate Keepers Ghoul ${i + 1}`, type: "Mortal"})));
+    for ( const g of list ) await C().giveVitae(g, tz, {points: 1});
+
     await G.step("5. a vozhd from fifteen ghouls", async () => {
-      const list = await G.make(Actor, Array.from({length: 15}, (_, i) => ({name: `Gate Keepers Ghoul ${i + 1}`, type: "Mortal"})));
-      for ( const g of list ) await C().giveVitae(g, tz, {points: 1});
       const task = await C().animals.craft(tz, "vozhd");
       Hooks.callAll("wodxTaskDone", {actor: tz, task: {...task, status: "done"}});
       // the vozhd is made first and the ghouls are spent into it after, so wait for the last of them

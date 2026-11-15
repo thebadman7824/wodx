@@ -36,7 +36,9 @@ export async function syncMark(actor) {
 /** The blood bar and the red eyes on the beast's own token and its tokens on every scene. */
 export async function showBlood(actor) {
   if ( !actor || !isAnimalGhoul(actor) ) return;
-  const patch = {"bar2.attribute": "advantages.bloodpool", "displayBars": CONST.TOKEN_DISPLAY_MODES?.OWNER_HOVER ?? 20, light: EYES};
+  // An animal ghoul is one beast, not a herd: its tokens are linked to its sheet, so the blood, the bond and the
+  // clan's mark on the sheet are the ones its token shows
+  const patch = {actorLink: true, "bar2.attribute": "advantages.bloodpool", "displayBars": CONST.TOKEN_DISPLAY_MODES?.OWNER_HOVER ?? 20, light: EYES};
   try { await actor.update({prototypeToken: foundry.utils.expandObject(patch)}); } catch (e) { /* older data */ }
   for ( const s of game.scenes ?? [] ) {
     const list = [...(s.tokens ?? [])].filter(t => t.actorId === actor.id && !t.flags?.[MODULE_ID]?.eyes);

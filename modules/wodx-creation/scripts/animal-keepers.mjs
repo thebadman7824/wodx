@@ -86,10 +86,13 @@ export async function makeVozhd(crafter) {
     flags: {[MODULE_ID]: {vozhd: {by: crafter.id, from: list.map(a => a.id)}, lineage: {domitor: {id: crafter.id, name: crafter.name}}}}});
   await v.update(sys);
   await raiseDisciplines(v, AK.VOZHD.disciplines);
-  for ( const g of list ) {
-    await g.update({[`flags.${MODULE_ID}.grafted`]: v.id});
-    try { await g.toggleStatusEffect?.("dead", {active: true, overlay: true}); } catch (e) { /* no status */ }
-    for ( const s of game.scenes ) { const toks = [...s.tokens].filter(t => t.actorId === g.id).map(t => t.id); if ( toks.length ) await s.updateEmbeddedDocuments("Token", toks.map(id => ({_id: id, hidden: true}))); }
+  // All fifteen at once: the grafted mark, the dead mark, and their tokens hidden on every scene
+  await Actor.updateDocuments(list.map(g => ({_id: g.id, [`flags.${MODULE_ID}.grafted`]: v.id})));
+  await Promise.all(list.map(g => Promise.resolve(g.toggleStatusEffect?.("dead", {active: true, overlay: true})).catch(() => null)));
+  const ids = new Set(list.map(g => g.id));
+  for ( const s of game.scenes ) {
+    const toks = [...s.tokens].filter(t => ids.has(t.actorId)).map(t => ({_id: t.id, hidden: true}));
+    if ( toks.length ) await s.updateEmbeddedDocuments("Token", toks);
   }
   await ChatMessage.create({speaker: {alias: "Fleshcraft"}, whisper: gmIds(),
     content: `<div class="wodx-card wodx-fleshcraft"><h3>A vozhd is made</h3><p>${esc(crafter.name)} has grafted ${list.length} ghouls into one: @UUID[Actor.${v.id}]{${esc(v.name)}}. Animalism, Dominate and Presence have no hold on it, and it eats anything in its path. The ghouls it was made from are gone into it.</p><p>Nothing that size stays hidden: the town will hear of it.</p><p class="wodx-quiet">${AK.VOZHD.ref}</p></div>`});
