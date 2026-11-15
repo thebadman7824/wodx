@@ -102,7 +102,7 @@ export const TOWN_OUTBREAKS = [
   {key: "cocoliztli-1545", from: 1545, to: 1548, name: "The great sickness", share: 0.4, weeks: 40, chance: 0.04, reach: ["mexico"]},
   {key: "plague-1634", from: 1634, to: 1635, name: "Plague in the war years", share: 0.1, weeks: 20, chance: 0.04, reach: ["moravia", "german-lands", "italy", "france", "low-countries"]},
   {key: "plague-1665", from: 1663, to: 1666, name: "The Great Plague", share: 0.15, weeks: 26, chance: 0.03, reach: ["british-isles", "low-countries"]},
-  {key: "cholera-1817", from: 1817, to: 1824, name: "Cholera", share: 0.03, weeks: 12, chance: 0.02, reach: ["india", "southeast-asia", "nusantara", "china", "persia", "arabia", "east-africa"]},
+  {key: "cholera-1817", from: 1817, to: 1824, name: "Cholera", share: 0.03, weeks: 12, chance: 0.02, reach: ["india", "southeast-asia", "nusantara", "philippines", "china", "persia", "arabia", "east-africa"]},
   {key: "cholera-1831", from: 1830, to: 1832, name: "Cholera", share: 0.03, weeks: 12, chance: 0.04, reach: [...EUROPE, "india", "north-america-east", "canada", "egypt"]},
   {key: "cholera-1848", from: 1848, to: 1849, name: "Cholera", share: 0.03, weeks: 12, chance: 0.04, reach: [...EUROPE, "north-america-east", "egypt"]},
   {key: "plague-1855", from: 1855, to: 1900, name: "Plague", share: 0.04, weeks: 16, chance: 0.002, reach: ["china", "india"]},
@@ -407,10 +407,22 @@ export const POWER_TOWN = {
   dread: {kind: "dread", prosperity: -0.1, unrest: 0.4, fled: 0.01, text: "Fear settles on the town: people keep indoors, and some leave.", big: false},
   calm: {kind: "calm", unrest: -0.6, text: "Tempers cool and the town settles.", big: false}
 };
+/** B4863: what a lever pulled in an institution does to its town (WoDX Storyteller reach-rules LEVERS; house figures). */
+export const LEVER_TOWN = {
+  curfew: {kind: "curfew", prosperity: -0.05, unrest: 0.15, text: "A curfew: the streets empty at dark and the watch stop anyone abroad.", big: false},
+  levy: {kind: "levy", prosperity: -0.15, unrest: 0.25, text: "A new tax: purses are lighter and the market grumbles.", big: false},
+  prices: {kind: "prices", prosperity: -0.05, unrest: 0.1, text: "The guild sets its prices for the season, and buyers pay more.", big: false},
+  works: {kind: "works", prosperity: -0.2, unrest: 0.2, text: "The works close or move, and their people are out of work.", big: true},
+  decree: {kind: "decree", unrest: 0.2, text: "An order is cried in the ruler's name, and the town talks of nothing else.", big: false},
+  short: {kind: "short", prosperity: -0.1, unrest: 0.1, text: "Supplies go missing, and the stores run short.", big: false},
+  patrol: {kind: "patrol", unrest: -0.1, text: "Patrols walk the streets, and people keep their heads down.", big: false},
+  hands: {kind: "hands", unrest: 0.3, prosperity: -0.1, text: "The place changes hands: new masters, new rules, and old loyalties count for little.", big: true},
+  martial: {kind: "martial", prosperity: -0.2, unrest: 0.4, text: "Martial law: soldiers at the gates and in the squares, and no one gathers.", big: true}
+};
 const SCALE = {1: 1, 2: 1.5, 3: 2};
 /** A power's blow to one town: the POWER_TOWN figures times its scale; label names the caster and power. */
 export function powerEvent(kind, townId, {scale = 1, label = ""} = {}) {
-  const e = POWER_TOWN[kind];
+  const e = POWER_TOWN[kind] ?? LEVER_TOWN[kind];
   if ( !e || !townId ) return null;
   const k = SCALE[scale] ?? 1, out = {...e, town: townId};
   for ( const f of ["prosperity", "unrest", "dead", "fled"] ) if ( Number.isFinite(e[f]) ) out[f] = Math.round(e[f] * k * 10000) / 10000;

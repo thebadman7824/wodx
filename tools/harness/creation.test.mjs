@@ -373,6 +373,57 @@ test("search boxes filter selects, lists and tables (rule B24)", async () => {
   div.remove();
 });
 
+function animalData(name, {type = "Creature", template = null} = {}) {
+  const d = mortalData(name);
+  d.type = type;
+  d.system.settings.variant = "general";
+  d.system.attributes.charisma = trait(1, "charisma");
+  if ( template ) d.flags = {"wodx-npc": {behavior: {template}}};
+  return d;
+}
+
+test("ghouled animals: a Creature horse holds vitae by size and learns only the physical Disciplines (B5040 to B5048)", async () => {
+  const horse = new Actor(animalData("Ghoul Warhorse"));
+  const cat = new Actor(animalData("Mouser", {type: "Mortal", template: "cat"}));
+  for ( const a of [horse, cat] ) game.actors.set(a.id, a);
+  const d = api().data;
+  assert.equal(d.lineOf(horse), null, "an animal is no line until it drinks");
+  assert.ok(d.isAnimal(horse) && d.isAnimal(cat) && !d.isAnimal(tomas));
+  const r = await api().giveVitae(horse, marta, {points: 20});
+  assert.equal(r.becameGhoul, true);
+  assert.equal(d.lineOf(horse), "ghoul");
+  assert.equal(horse.system.advantages.bloodpool.max, 14, "a horse holds 14 (V20DA p. 401)");
+  assert.equal(horse.system.advantages.bloodpool.temporary, 14);
+  assert.equal(horse.system.settings.variant, "general", "the Creature variant stays, so the sheet and mount tag stay");
+  assert.equal(horse.system.settings.hasbloodpool, true);
+  assert.deepEqual(d.disciplinesOf(horse).map(x => `${x.name} ${x.value}`), ["Potence 1"]);
+  assert.match(mock.log.chat.at(-1)?.content ?? "", /Horse, large: holds 14 vitae/);
+  const opts = d.purchaseOptions(horse);
+  assert.ok(!opts.some(o => o.kind === "attribute" && o.key === "charisma"), "no Social Attributes for a beast");
+  assert.ok(!opts.some(o => o.kind === "virtue" || o.kind === "road"));
+  assert.ok(d.newDisciplineOption(horse, "Celerity").reason !== "An animal can only learn Celerity, Fortitude and Potence");
+  assert.equal(d.newDisciplineOption(horse, "Obtenebration").reason, "An animal can only learn Celerity, Fortitude and Potence",
+    "not even the domitor's own Disciplines");
+  await api().giveVitae(cat, marta, {points: 5});
+  assert.equal(d.lineOf(cat), "ghoul");
+  assert.equal(cat.system.advantages.bloodpool.max, 3, "a cat on a Mortal sheet holds 3");
+  assert.equal(cat.system.settings.hasvirtue, false);
+  // a second drink tops up to the size cap, not the human 10
+  await api().giveVitae(cat, marta, {points: 9, time: game.time.worldTime + 86400});
+  assert.equal(cat.system.advantages.bloodpool.temporary, 3);
+});
+
+test("ghouled animals: a player character's animal ghoul is that character's ally, paid from the domitor (B5048)", async () => {
+  const pcVamp = new Actor(vampireData("Jaromir", "Gangrel", 10, [["Animalism", 2], ["Protean", 1]]));
+  pcVamp.ownership = {default: 0, p1: 3};
+  const hound = new Actor(animalData("Jaromir's wolfhound"));
+  for ( const a of [pcVamp, hound] ) game.actors.set(a.id, a);
+  await api().giveVitae(hound, pcVamp, {points: 2});
+  assert.equal(hound.system.advantages.bloodpool.max, 6);
+  assert.equal(api().data.allyOf(hound)?.patron?.id, pcVamp.id);
+  assert.equal(api().data.payerOf(hound), pcVamp);
+});
+
 test("no error notifications", () => {
   assert.deepEqual(mock.log.notifications.filter(([l]) => l === "error"), []);
 });

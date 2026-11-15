@@ -313,7 +313,7 @@ export function build(ctx) {
     async function endFrenzy(actor) {
         const i = info(actor);
         if (!actor.system?.conditions?.isfrenzy && !actor.statuses?.has?.("wodx-frenzy")) return ctx.notify(`${actor.name} is not in frenzy.`);
-        if (actor.getFlag?.(MOD, "frenzyType") === "thrall") ctx.notify("The Thrall of the Wyrm ends only when the Storyteller says.");
+        if (actor.getFlag?.(MOD, "frenzyType") === "thrall") ctx.notify("The Thrall of the Wyrm ends by itself when the Garou is knocked out or the fight is over; ending it by hand is the Storyteller's call.");
         const content = `<form><p><b>${esc(actor.name)}</b>: once what caused the frenzy is over, roll Willpower at difficulty = permanent Rage (${i.rage.perm}); retry each turn (DA:W p. 94; W20 p. 261).</p>
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="${Math.max(2, Math.min(10, i.rage.perm))}"/></div></form>`;
         return dialog(`End frenzy: ${actor.name}`, content, "Roll", async fd => {

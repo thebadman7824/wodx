@@ -22,7 +22,7 @@ import {LOCAL_WORLD} from "./lifepath-local-world.mjs";
 
 export const CONTINENTS = [
  ["Europe", ["moravia","german-lands","british-isles","france","iberia","italy","low-countries","scandinavia","poland-baltic","carpathians-balkans","russia","aegean"]],
- ["Asia", ["anatolia","levant","arabia","persia","central-asia","siberia","tibet-himalaya","india","china","japan","korea","southeast-asia","nusantara"]],
+ ["Asia", ["anatolia","levant","arabia","persia","central-asia","siberia","tibet-himalaya","india","china","japan","korea","southeast-asia","nusantara","philippines"]],
  ["Africa", ["egypt","maghreb","west-africa","east-africa","southern-africa","central-africa"]],
  ["North America", ["canada","north-america-east","north-america-west","mexico","caribbean"]],
  ["South America", ["andes","brazil","southern-cone"]],
@@ -226,7 +226,7 @@ export const REGION_COMING_OF_AGE = {japan: {M: 15, E: 15}};
 
 /** Peoples whose plain name needs more than a capital letter. */
 export const PEOPLE_LABELS = {steppe: "Steppe peoples", arabic: "Arab", hindi: "Hindustani", anglo: "Anglo-American", norse: "Norse", jewish: "Jewish",
-  lakota: "Lakota, Dakota and Nakota", pueblo: "Pueblo (the Hopi, Zuni and the Rio Grande)", dine: "Diné (Navajo)", mandan: "Mandan", hidatsa: "Hidatsa", arikara: "Arikara", pawnee: "Pawnee", crow: "Crow (Apsáalooke)", blackfoot: "Blackfoot (Niitsitapi)", arapaho: "Arapaho", shoshone: "Shoshone (Newe)", ute: "Ute (Nuche)", cree: "Cree (Nehiyawak)", anishinaabe: "Anishinaabe (Ojibwe and Odawa)", haida: "Haida", tlingit: "Tlingit", inuit: "Inuit (Kalaallit and the Canadian Arctic)", taino: "Taíno", aboriginal: "Aboriginal Australians", kongo: "Bakongo (the Kongo kingdom)", luba: "Luba and Lunda", ganda: "Baganda (Buganda)", amazigh: "Amazigh (Berbers)", sephardi: "Sephardi Jews", mizrahi: "Mizrahi Jews", khmer: "Khmer", filipino: "Filipinos (Tagalog, Visayan, Ilocano)"};
+  lakota: "Lakota, Dakota and Nakota", pueblo: "Pueblo (the Hopi, Zuni and the Rio Grande)", dine: "Diné (Navajo)", mandan: "Mandan", hidatsa: "Hidatsa", arikara: "Arikara", pawnee: "Pawnee", crow: "Crow (Apsáalooke)", blackfoot: "Blackfoot (Niitsitapi)", arapaho: "Arapaho", shoshone: "Shoshone (Newe)", ute: "Ute (Nuche)", cree: "Cree (Nehiyawak)", anishinaabe: "Anishinaabe (Ojibwe and Odawa)", haida: "Haida", tlingit: "Tlingit", inuit: "Inuit (Kalaallit and the Canadian Arctic)", taino: "Taíno", aboriginal: "Aboriginal Australians", kongo: "Bakongo (the Kongo kingdom)", luba: "Luba and Lunda", ganda: "Baganda (Buganda)", amazigh: "Amazigh (Berbers)", sephardi: "Sephardi Jews", mizrahi: "Mizrahi Jews", khmer: "Khmer", filipino: "Filipinos (Tagalog, Visayan, Ilocano)", sami: "Sami", tuareg: "Tuareg (Kel Tamasheq)", moro: "Moro (Mindanao and Sulu)", banyarwanda: "Banyarwanda and Barundi (Rwanda and Burundi)"};
 
 /** What brought a character from elsewhere to the chronicle's homeland. */
 export const ARRIVALS = ["Work, trade or study", "Flight from something at home", "Sent by someone you answer to", "Following a person", "Something called you here"];

@@ -136,8 +136,11 @@ async function doInstall() {
   const byKey = new Map();
   for ( const t of game.tables ) { const f = t.getFlag(MODULE_ID, "table"); if ( f?.id ) byKey.set(tableKey(f), t); }
   let created = 0, updated = 0, kept = 0;
+  // Tables are written eight at a time: after a data change (the name lists raised to 300, B5340) a world has many
+  // tables to bring up to date, and one at a time held the start-up for over half a minute
+  const jobs = [];
   for ( const [source, list] of SOURCES ) {
-    for ( const d of list ) {
+    for ( const d of list ) jobs.push(async () => {
       const ranged = G.withRanges(d.results);
       const results = ranged.map(r => ({type: CONST.TABLE_RESULT_TYPES?.TEXT ?? "text", name: r.text.slice(0, 120), description: r.text, weight: r.weight, range: r.range}));
       const shipped = contentHash(d.results);
@@ -147,10 +150,10 @@ async function doInstall() {
         await RollTable.create({name: d.name ?? d.id, folder: folder.id, formula: `1d${ranged.at(-1)?.range[1] ?? 1}`, replacement: true, displayRoll: false,
           description: d.description ?? "", results, flags: {[MODULE_ID]: {table: flag}}});
         created++;
-        continue;
+        return;
       }
       const f = have.getFlag(MODULE_ID, "table");
-      if ( f.shipped === shipped ) continue;
+      if ( f.shipped === shipped ) return;
       const now = contentHash([...have.results].map(r => ({text: textOf(r), weight: r.weight})));
       if ( now === f.shipped ) {
         await have.deleteEmbeddedDocuments("TableResult", have.results.map(r => r.id));
@@ -158,8 +161,9 @@ async function doInstall() {
         await have.update({formula: `1d${ranged.at(-1)?.range[1] ?? 1}`, [`flags.${MODULE_ID}.table`]: flag});
         updated++;
       } else kept++;
-    }
+    });
   }
+  for ( let i = 0; i < jobs.length; i += 8 ) await Promise.all(jobs.slice(i, i + 8).map(j => j()));
   cache = null;
   if ( created || updated || kept ) log(`Tables: ${created} added, ${updated} brought up to date, ${kept} kept as the Storyteller edited them`);
   return {created, updated, kept};

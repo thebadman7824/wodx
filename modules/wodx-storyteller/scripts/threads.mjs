@@ -17,6 +17,7 @@
  *            Legends book records it, and what it writes back to other systems is listed for the Storyteller to do
  *            through their own controls. The slot frees for the next week.
  */
+import * as Reach from "./reach.mjs";
 import * as T from "./threads-rules.mjs";
 import * as Signals from "./signals.mjs";
 import * as SR from "./signals-rules.mjs";
@@ -222,8 +223,11 @@ export async function endStory(key, endingKey) {
   } catch (er) { /* no Legends */ }
   try { if ( s.clock ) await game.modules.get(MOD)?.api?.clocks?.remove?.(s.clock); } catch (er) { /* no clock */ }
   Hooks.callAll("wodxThreadEnded", {story: s, ending: e});
+  // B4860 (w1): each write-back is carried out through its own system (reach.mjs writeBack)
+  let done = [];
+  if ( todo.length ) { try { done = await Reach.writeBack(s, e, pcs()); } catch (er) { console.error(`${MOD} | write-back`, er); } }
   if ( todo.length ) await ChatMessage.create({whisper: gm(), speaker: {alias: "Threads of Fate"},
-    content: `<div class="wodx-card wstory"><p><b>${esc(s.title)}: ${esc(e.label)}</b></p><p>To write back, through each system's own controls: ${esc(todo.map(w => `${w.to}, ${w.what}`).join("; "))}.</p></div>`});
+    content: `<div class="wodx-card wstory"><p><b>${esc(s.title)}: ${esc(e.label)}</b></p><p>${done.length ? `Written back: ${esc(done.join("; "))}.` : "Nothing here to write back to (no factions, NPCs or town in reach)."}</p></div>`});
   return e;
 }
 

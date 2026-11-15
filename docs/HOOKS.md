@@ -10,6 +10,8 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxCrimeSeen | npc | chronicle (a crime with witnesses raises the law's heat on the culprit in that land, B3606) |
 | wodxRegimeTurn | chronicle | storyteller (a turn of rule sweeps holders out of the institutions of its kinds, in its region or town, or only one character's seats after an election, B3618) |
 | wodxArrest | chronicle | chronicle (an arrest puts the accused before the court of the land: the forms of trial it allows, B3608) |
+| wodxLawStage | chronicle | storyteller (a region's heat crossing a stage sends the watch after the wanted, B4865) |
+| wodxFactionTurn | npc | actions (each faction turn lets the court act on its open Blood Hunts, B4873) |
 | wodxVerdict | chronicle | chronicle (a guilty verdict brings the sentencing card: the sentences the land allows for deeds that grave, B3610) |
 | wodxAttitude | npc | npc (a fight when an NPC turns hostile; the NPC remembers the change, B3346) |
 | wodxBoonSettled | storyteller | npc (a boon kept or broken moves the debtor's standing in a court, and the holder's trust in the debtor) |
@@ -75,6 +77,7 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxScar | chronicle | lasting damage left on a scene: {scene, id, kind, severity, hit} (B3759) |
 | wodxWay | storyteller | a company went through a Way: {from, to, kind, actors, minutes} (B4780) |
 | wodxTwist | chronicle | a twist of book one was revealed: {n, variant, chains, changes} (B4850) |
+| wodxFront | chronicle | a front of book one stepped or was struck, a clue carrier was found, or a judgement came due: {front, step, at, title, scene, people, moves, struck} or {clue, carrier, whole} or {judgement, choice} (B4910) |
 | wodxThreadOpened | storyteller | a Threads of Fate storyline opened: {story} (B3650) |
 | wodxThreadEnded | storyteller | a Threads of Fate storyline ended: {story, ending} (B3654) |
 | wodxInheritance | storyteller | the Inheritance step passed things from the dead to the heir: {dead, heir, done} (B3530) |

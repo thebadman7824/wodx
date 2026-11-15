@@ -106,11 +106,11 @@ const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : s);
 export const RAIL_FROM = {"british-isles": 1830, "low-countries": 1835, "france": 1840, "german-lands": 1838, "moravia": 1839, "north-america-east": 1835, "italy": 1850,
   "iberia": 1855, "scandinavia": 1860, "poland-baltic": 1850, "carpathians-balkans": 1860, "russia": 1855, "aegean": 1875, "anatolia": 1875, "levant": 1895,
   "egypt": 1856, "india": 1855, "canada": 1855, "north-america-west": 1869, "mexico": 1875, "caribbean": 1840, "andes": 1875, "southern-cone": 1860, "brazil": 1860,
-  "australia": 1860, "aotearoa": 1865, "japan": 1872, "china": 1890, "korea": 1900, "southeast-asia": 1890, "nusantara": 1870, "southern-africa": 1865, "maghreb": 1865,
+  "australia": 1860, "aotearoa": 1865, "japan": 1872, "china": 1890, "korea": 1900, "southeast-asia": 1890, "nusantara": 1870, "philippines": 1892, "southern-africa": 1865, "maghreb": 1865,
   "persia": 1930, "central-asia": 1888, "siberia": 1900, "west-africa": 1900, "east-africa": 1900, "central-africa": 1900, "arabia": 1908, "tibet-himalaya": 2006};
 const NO_RAIL = new Set(["arctic", "antarctica", "pacific-islands"]);
 /** Regions where the railways stay few and far between: a journey gets less from them. */
-const THIN_RAIL = new Set(["west-africa", "central-africa", "east-africa", "maghreb", "arabia", "persia", "central-asia", "siberia", "tibet-himalaya", "southeast-asia", "nusantara",
+const THIN_RAIL = new Set(["west-africa", "central-africa", "east-africa", "maghreb", "arabia", "persia", "central-asia", "siberia", "tibet-himalaya", "southeast-asia", "nusantara", "philippines",
   "andes", "brazil", "australia", "levant", "anatolia"]);
 /** How hard each ground is to cross on foot or by beast: a share of the open-plain pace. */
 export const GROUND_PACE = {p: 1, ".": 0.9, P: 0.75, D: 0.7, T: 0.5, w: 0.5, M: 0.45, i: 0.12, l: 1};

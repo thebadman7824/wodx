@@ -17,7 +17,7 @@ import {secondsToNextDawn, secondsToNextDusk, describeTime} from "../../wodx-chr
 
 export const MOD = "wodx-storyteller";
 export const SOCKET = `module.${MOD}`;
-export const VERSION = "0.99.0";
+export const VERSION = "0.102.0";
 export const T = {travel: `${MOD}.travel`, encounter: `${MOD}.encounter`, solo: `${MOD}.solo`, beat: `${MOD}.beat`};
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -576,7 +576,8 @@ export function registerHandlers() {
     approve: async e => { const r = await travel({...e.data, approved: true}); if ( !r.ok ) ui.notifications.warn(r.why); },
     reject: async e => { const a = game.actors.get(e.data?.actorId); await log({kind: "note", actor: e.data?.actorId, name: a?.name, user: e.data?.userId, text: "The Storyteller turned down a trip."}); }});
   c.registerApprovalHandler(T.encounter, {label: "Encounter",
-    approve: async e => { const a = game.actors.get(e.data?.actorId); await log({kind: "note", actor: e.data?.actorId, name: a?.name, user: e.data?.userId, text: `The Storyteller will play the encounter: ${e.data?.text ?? ""}`}); },
+    // B4862: approved, the encounter is put on the map by the traveller (reach.mjs road)
+    approve: async e => { const made = await game.modules.get(MOD)?.api?.reach?.road?.({actorId: e.data?.actorId, text: e.data?.text ?? ""}); if ( !made?.length ) { const a = game.actors.get(e.data?.actorId); await log({kind: "note", actor: e.data?.actorId, name: a?.name, user: e.data?.userId, text: `On the road: ${e.data?.text ?? ""}`}); } },
     reject: async e => { const a = game.actors.get(e.data?.actorId); await log({kind: "note", actor: e.data?.actorId, name: a?.name, user: e.data?.userId, text: "The road was quiet after all."}); }});
   c.registerApprovalHandler(T.solo, {label: "Solo result"});
   c.registerApprovalHandler(T.beat, {label: "Beat",
@@ -593,7 +594,7 @@ export async function endSession({factions = true} = {}) {
   if ( factions ) { try { await npc()?.endSession?.(); } catch (e) { console.error(`${MOD} |`, e); } }
   await release();
   await game.settings.set(MOD, "session", {at: now(), real: Date.now()});
-  try { if ( absentIds().length ) await game.settings.set(MOD, "absent", {}); } catch (e) { /* the setting comes with 0.18.0 */ }
+  try { if ( absentIds().length ) { for ( const a of all(game.actors) ) if ( a.getFlag?.(MOD, "standIn") ) await a.unsetFlag(MOD, "standIn"); await game.settings.set(MOD, "absent", {}); } } catch (e) { /* the setting comes with 0.18.0 */ }
   await log({kind: "session", text: "The session ended."});
   Hooks.callAll("wodxSessionEnded");
   // 0.41.0: clocks of the Storyteller's own that tick on a faction turn or at a session's end

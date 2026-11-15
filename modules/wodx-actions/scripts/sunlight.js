@@ -200,6 +200,8 @@ export function build(ctx) {
         html += `<div class="vta-big ${levels ? "bad" : "good"}">${levels ? `${levels} ${type} level${levels === 1 ? "" : "s"}` : "No damage"}</div>`;
         await showBurn(actor, true, levels ? `Burns: ${levels} ${type}` : "Smoulders");
         if (levels) {
+            // B4981: the sun's own Rötschreck below is the one rolled; the wound card's check for this burn stands down
+            if (!noRotschreck) ctx.claimFear?.(actor);
             const res = await ctx.applyDamage(actor, type, levels);
             if (res?.after) html += `<div class="vta-res">Now ${ctx.healthText(actor, res.after)}${res.condition?.text ? `: <b>${esc(res.condition.text)}</b>` : ""}</div>`;
             await ctx.logEvent?.(actor, `Burned by the sun: ${levels} ${type}.`, "sun");
@@ -208,7 +210,7 @@ export function build(ctx) {
         if (!noRotschreck && !actor.system?.conditions?.isfrenzy && !autoFear) html += `<button type="button" class="vta-btn" data-kx="rotschreck" data-actor="${esc(actor.uuid)}" data-arg="${light === "direct" ? "directsun" : "obscuredsun"}">Rötschreck check</button>`;
         const msg = await post(actor, `${actor.name}: sunlight`, html, rolls);
         // B4981: the Rötschreck check follows the burn by itself
-        if (autoFear) await ctx.autoBeast({ actor, kind: "fear", provocation: light === "direct" ? "directsun" : "obscuredsun" }).catch(e => console.warn("WoDX | Rötschreck", e));
+        if (autoFear) await ctx.autoBeast({ actor, kind: "fear", provocation: light === "direct" ? "directsun" : "obscuredsun", claimed: true }).catch(e => console.warn("WoDX | Rötschreck", e));
         return msg;
     }
 

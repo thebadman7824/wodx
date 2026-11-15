@@ -13,7 +13,7 @@ const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-creation/data/peop
 const PR = await import(join(root, "modules/wodx-creation/scripts/people-rules.mjs"));
 const A = await import(join(root, "modules/wodx-creation/data/people-filipino.mjs"));
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
-const NU = W.cultureOf("nusantara");
+const NU = W.cultureOf("philippines");
 const people = (era, n = 200) => Array.from({length: n}, (_, i) => PR.nameOf({rand: G.stream("filipino", era, i),
   tables: id => G.resolveTable(PEOPLE_TABLES, id, {era, culture: NU}), origin: "filipino", sex: i % 2 ? "female" : "male"}));
 const origin = era => G.resolveTable(PEOPLE_TABLES, "people.origin", {era, culture: NU})?.results.map(r => r.text) ?? [];
@@ -33,6 +33,6 @@ test("filipino: own names and women of a barangay before 1565, church names afte
   assert.ok(people("modern", 60).every(p => split(A.FI_FAMILY).includes(p.family)));
 });
 
-test("filipino: the islands share the Malay world's mix in every age", () => {
+test("filipino: the islands of the Philippines draw them in every age", () => {
   for ( const era of ["medieval", "early-modern", "industrial", "modern"] ) assert.ok(origin(era).includes("filipino"), era);
 });

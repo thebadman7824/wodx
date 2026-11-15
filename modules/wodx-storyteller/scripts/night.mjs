@@ -282,7 +282,7 @@ export async function placeFromCard(message, i) {
  * Make the people one encounter line brings (N.peopleIn) with WoDX Creation's people generator, seeded by key, and put
  * their tokens hidden on the current scene. Returns the tokens made (or the actors when no scene is open).
  */
-export async function placeEncounter(text, {key = "night", nonce = 0, x = null, y = null} = {}) {
+export async function placeEncounter(text, {key = "night", nonce = 0, x = null, y = null, scene: onScene = null, hidden = true} = {}) {
   if ( !game.user.isGM ) return [];
   const P = game.modules.get("wodx-creation")?.api?.people;
   const g = chron()?.gen;
@@ -297,13 +297,13 @@ export async function placeEncounter(text, {key = "night", nonce = 0, x = null, 
   }
   if ( !people.length ) return [];
   const actors = await P.create({people});
-  const scene = canvas?.scene;
+  const scene = onScene ?? canvas?.scene; // B4861: a road encounter names its scene
   if ( !scene ) return actors;
   const size = scene.grid?.size ?? 100;
   const cx = x ?? (canvas.stage?.pivot?.x ?? 0), cy = y ?? (canvas.stage?.pivot?.y ?? 0);
   const tokens = [];
   for ( const [j, a] of actors.entries() ) {
-    const t = await a.getTokenDocument({x: cx + (j % 3) * size, y: cy + Math.floor(j / 3) * size, hidden: true});
+    const t = await a.getTokenDocument({x: cx + (j % 3) * size, y: cy + Math.floor(j / 3) * size, hidden: !!hidden});
     tokens.push(t.toObject());
   }
   const made = tokens.length ? await scene.createEmbeddedDocuments("Token", tokens) : [];

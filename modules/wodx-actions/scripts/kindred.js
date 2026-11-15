@@ -26,6 +26,8 @@ import * as PE from "./path-effects.js";
 import * as PK from "./power-keywords.js";
 import * as TH from "./trait-hooks.js";
 import * as WR from "./witness-rules.js";
+import * as MR from "./mummy-rules.js";
+import * as DR from "./demon-rules.js";
 import * as BR from "./book-rituals.js";
 import * as DSX from "./daysleep.js";
 import * as DSR from "./daysleep-rules.js";
@@ -559,9 +561,10 @@ export function build(ctx) {
         const what = WR.SECRETS[secret] || "something they did not know of";
         Hooks.callAll("wodxSecretSeen", { by: by?.uuid ? { uuid: by.uuid, name: by.name } : null, secret, seen: list.map(a => ({ uuid: a.uuid, name: a.name, profile: P.detectProfile(a) })), event });
         if (by?.uuid) await logEvent(by, `${list.map(a => a.name).join(", ")} saw what ${by.name} is${event ? ` (${event})` : ""}.`, "masquerade");
+        // B4870: they know the kind from now on (an unlinked passer-by shares its actor and is left out)
+        for (const a of list) { if (a.isToken) continue; const cur = P.worldFlag(a, "knows"); if (cur === "*") continue; await P.setWorldFlag(a, "knows", [...new Set([...(Array.isArray(cur) ? cur : []), secret])]); }
         return ChatMessage.create({ content: `<div class="vta-card"><h3>Seen by another kind</h3><p>${list.map(a => `${esc(a.name)} (${esc(P.PROFILES[P.detectProfile(a)]?.label ?? "")})`).join(", ")} saw ${esc(by?.name ?? "someone")}${event ? `: ${esc(event)}` : ""}.</p>
-            <p>No mortal rumour comes of it, but they now know ${esc(what)} is here. How they take it is yours to play.</p>
-            ${by?.uuid ? kbtn("knows", by, "They know this kind from now on", `${secret}|${list.map(a => a.uuid).join(",")}`) : ""}</div>`,
+            <p>No mortal rumour comes of it, but they now know ${esc(what)} is here, and remember it from now on.</p></div>`,
             whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
     }
     /**
@@ -582,6 +585,8 @@ export function build(ctx) {
             await startledCard(actor, o.secret, fresh.map(t => t.actor), event);
         }
         const note = WR.placeNote(o.mode, o.secret, event);
+        // B4869: an act that surely showed: the witnesses react by their line's rule and the record is made at once
+        if (!startledOnly && !ask && o.breach.length && setting("autoWitness") !== false) return witnessStep(actor, o.breach, { secret: o.secret, event }).then(() => o);
         if (!startledOnly && (o.breach.length || (ask && o.startled.length))) {
             const ev = String(event || "something no mortal should see").replace(/\|/g, "/");
             const names = t => t.map(x => esc(x.name)).join(", ");
@@ -866,9 +871,8 @@ export function build(ctx) {
         const w = witnessesOf(tok, { profiles: ["mortal", "hunter", "beast"] }).filter(t => !seen.has(t.actor.isToken ? t.document.id : t.actor.id) && !P.worldFlag(t.actor, "kinfolk") && P.worldFlag(t.actor, "knows") !== "*" && !(P.worldFlag(t.actor, "knows") ?? []).includes?.("lupine"));
         if (!w.length) return null;
         await canvas.scene.setFlag(MOD, `delirium.${a.id}`, [...seen, ...w.map(t => (t.actor.isToken ? t.document.id : t.actor.id))]);
-        const ids = w.map(t => t.document.uuid).join(",");
-        return ChatMessage.create({ content: `<div class="vta-card"><h3>The Delirium</h3><p>${w.map(t => esc(t.name)).join(", ")} can see ${esc(a.name)} in Crinos.</p>${kbtn("delirium", a, "Run the Delirium for them", ids)}</div>`,
-            whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
+        // B4869: the Delirium runs for them at once, and they act on it
+        return witnessStep(a, w, { secret: "lupine", event: "in Crinos" });
     }
 
     /* ---------------- Marks a mortal cannot explain away (3.67.0, B3443) ---------------- */
@@ -897,6 +901,59 @@ export function build(ctx) {
         return ChatMessage.create({ content: `<div class="vta-card"><h3>${esc(a.name)}: ${esc(ev)}</h3><p class="vta-warn">Masquerade: ${fresh.map(t => esc(t.name)).join(", ")} can see a face no living person has.</p>${note ? `<p>${esc(note)}</p>` : ""}
             ${kbtn("seen", a, "Record the witnesses", `kindred|${ev}|${fresh.map(t => t.actor.uuid).join(",")}`)}</div>`,
             whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { prompt: true } } });
+    }
+
+    /* ---------------- The witness step (B4869-B4870) ---------------- */
+
+    /**
+     * Mortal witnesses of a reveal react by their line's book rule, hidden from players (rule 19): the Delirium for a
+     * shapechanger, the Veil for a mummy, Revelation for a demon, the Mists for the fae, Hysteria for the restless dead.
+     * Each acts on the map (falls still, flees, or attacks), and those who keep it go on the Masquerade record and now
+     * know the kind. Returns {rows, kept}.
+     */
+    async function witnessStep(actor, tokens, { secret = null, event = "" } = {}) {
+        if (!isActiveGM() || !actor || !tokens?.length) return null;
+        const sec = secret ?? WR.secretOf(P.detectProfile(actor));
+        const rule = WR.lineRule(sec);
+        const T = game.modules.get("wodx-chronicle")?.api;
+        const by = actor.getActiveTokens?.()[0] ?? null;
+        const rows = [], kept = [], fighters = [], rolls = [];
+        const faith = n(actor.system?.advantages?.faith?.permanent ?? actor.system?.faith?.permanent) || 6;
+        for (const tok of tokens) {
+            const a = tok.actor;
+            if (!a || P.worldFlag(a, "kinfolk")) continue;
+            const w = n(a.system?.advantages?.willpower?.permanent) || 3;
+            let reaction = "", memory = null, reveal = null;
+            if (rule === "delirium") { const d = G.delirium(w, GX.basis(), GX.data().garou?.delirium); reaction = d.reaction; memory = d.memory; }
+            else if (rule === "veil") reaction = MR.veil(w);
+            else if (rule === "revelation") { const r = await rollPool(w, Math.max(2, faith)); rolls.push(r.roll); const re = DR.mortalReaction(r); reveal = re.key; reaction = re.key; }
+            const act = WR.witnessAct(reaction);
+            const keep = WR.remembers(rule, { memory, willpower: w, reveal, banality: n(a.system?.banality?.permanent) || 6 });
+            try {
+                if (act === "freeze" && T?.applyTimed) await T.applyTimed(a, { name: "Frozen with fear", description: `Frozen by what ${actor.name} is`, duration: { kind: "scene" }, condition: "immobilized", key: "wodx-witness-freeze", source: "WoDX witness step" });
+                if (act === "flee" && T?.applyTimed) await T.applyTimed(a, { name: "Afraid", description: `Afraid of ${actor.name}`, duration: { kind: "scene" }, key: "wodx-effect-fear", source: "WoDX witness step" });
+            } catch (e) { console.warn(`${MOD} | witness`, e); }
+            if (act === "fight") fighters.push(tok);
+            if (keep) kept.push(a);
+            rows.push(`<li><b>${esc(a.name)}</b> (Willpower ${w}): ${esc(reaction || "takes it in")}${act ? ` (${act === "freeze" ? "falls still" : act === "flee" ? "flees" : "attacks"})` : ""}; ${keep ? "remembers" : "forgets"}.</li>`);
+        }
+        if (rule === "hysteria" && rows.length) { try { await game.modules.get(MOD)?.api?.wraith?.hysteria?.(); } catch (e) { /* no wraith tools */ } }
+        if (fighters.length && by) {
+            const ids = [...fighters.map(t => t.document?.id ?? t.id), by.document?.id ?? by.id];
+            const sides = Object.fromEntries([...fighters.map(t => [t.document?.id ?? t.id, "a"]), [by.document?.id ?? by.id, "b"]]);
+            try { await game.modules.get("wodx-combat")?.api?.fight?.start?.({ scene: by.document?.parent ?? canvas.scene, tokens: ids, source: "witness", why: `the sight of ${actor.name}`, sides }); } catch (e) { /* no Combat */ }
+        }
+        // the record first (it leaves out those who already know), then they know
+        if (kept.length) await recordBreach({ by: actor, event: event || "seen for what they are", witnesses: kept, secret: sec });
+        // x2: whoever keeps it now knows the kind (an unlinked passer-by shares its actor and is left out)
+        for (const a of kept) {
+            if (a.isToken || !sec) continue;
+            const cur = P.worldFlag(a, "knows"); if (cur === "*") continue;
+            await P.setWorldFlag(a, "knows", [...new Set([...(Array.isArray(cur) ? cur : []), sec])]);
+        }
+        if (rows.length) await ChatMessage.create({ content: `<div class="vta-card"><h3>Witnesses: ${esc(actor.name)}${event ? `, ${esc(event)}` : ""}</h3><ul>${rows.join("")}</ul>${rule ? "" : "<p>No line rule beyond the Masquerade: those who saw it remember.</p>"}</div>`,
+            whisper: gmIds(), speaker: { alias: "WoDX" }, rolls: rolls.filter(Boolean) });
+        return { rows, kept };
     }
 
     /* ---------------- Buttons and socket ---------------- */
@@ -966,7 +1023,7 @@ export function build(ctx) {
         });
     }
 
-    return { prestationJournal: () => BOONJ.ensure(), useDiscipline, castRitual, setRoad, roadOf, boons, downtime, masquerade, recordBreach, setWitnessState, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt,
+    return { prestationJournal: () => BOONJ.ensure(), useDiscipline, castRitual, setRoad, roadOf, boons, downtime, masquerade, masqEntries: () => MASQJ.entries(), markHuntSeen: async id => { const l = MASQJ.entries(); const e = l.find(x => x.id === id); if (e) { e.huntSeen = true; await writeMasq(l); } }, recordBreach, setWitnessState, witnessStep, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt,
         daySleep: () => ds(), enterTorpor, onDamage, onBlood, onClock, healAll, healPlan, healing, riseHeal, stayAwake, crinosSeen, marksSeen, sunlit, onChatButton, onSocket, targetTraits, poolOf, hierarchyTable };
 }
 
@@ -989,7 +1046,8 @@ export function registerSettings(register) {
     register("golcondaRules", "Golconda's rules", "A vampire in Golconda may raise Traits to 10 whatever the Generation, falls from it when the Road drops below 7 or Conscience below 4, is beyond the powers that name it, and the sun falls on them one step weaker (V20 Dark Ages p. 359; the sun is a house rule).", Boolean, true);
     register("riseHeal", "Heal on rising", "As a Cainite rises from the day's sleep, blood above the hunger line heals bashing and lethal wounds by itself.", Boolean, true);
     register("autoTorpor", "Torpor from wounds", "A Cainite whose health track fills with lethal damage sinks into torpor for as long as their Road sets, with a reminder on the date they may rise (VtDA20 p. 350).", Boolean, true);
-    register("autoDelirium", "The Delirium when a Crinos is seen", "When a shapechanger in Crinos moves or changes where mortal tokens can see it, the GM gets a card to run the Delirium for them.", Boolean, true);
+    register("autoWitness", "Witnesses react on their own", "When something no mortal should see happens in sight of mortal NPCs, each rolls its line's rule (the Delirium, the Veil, Revelation, the Mists, Hysteria) hidden from players, falls still, flees or attacks, and the Masquerade record is made.", Boolean, true);
+    register("autoDelirium", "The Delirium when a Crinos is seen", "When a shapechanger in Crinos moves or changes where mortal tokens can see it, the mortals who see it roll the Delirium and act on it.", Boolean, true);
     register("historyLog", "History journal", "Write sins, frenzies, oaths, diablerie, torpor, Renown, boons and downtime to a page per character in \"WoDX History\".", Boolean, true);
     register("witnessAsk", "Ask who saw a Discipline", "After a Discipline is used where mortals or other kinds can see, the Storyteller gets a card asking whether it showed, with a button to record who saw.", Boolean, true);
     register("witnessRange", "Witness range (feet)", "How far a mortal token can see a feeding, a Discipline or a Crinos for the witness checks (walls block sight).", Number, 60);

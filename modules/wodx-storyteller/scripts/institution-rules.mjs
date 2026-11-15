@@ -196,6 +196,14 @@ export function promote(inst0, who, {at = 0, cap = RANKS - 1} = {}) {
   return {inst, from: have ? have.rank : -1, to: target, bumped};
 }
 
+/** B4863: take every seat someone holds (an expulsion, a firing). Returns {inst, removed}. */
+export function unseat(inst0, id) {
+  const inst = normInst(inst0);
+  let removed = 0;
+  inst.seats = inst.seats.map(s => (s.holder && (s.holder.id === id || s.holder.pawnOf === id) ? (removed++, {rank: s.rank, holder: null, since: 0}) : s));
+  return {inst, removed};
+}
+
 /** Who controls it: shares by faction (or holder when they have none), each seat weighing its rank + 1. */
 export function control(inst) {
   const m = {};

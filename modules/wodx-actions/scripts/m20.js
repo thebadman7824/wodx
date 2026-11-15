@@ -15,6 +15,7 @@ import { floatOver } from "./daysleep.js";
 import { aim, castIntent } from "./aim.js";
 import * as C from "./consensus-rules.js";
 import * as EF from "./effects.js";
+import * as TH from "./trait-hooks.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -91,6 +92,10 @@ export function build(ctx) {
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
             if (plan.quintUsed) { if (plan.quintUsed > i.quint) { notify(`${actor.name} has ${i.quint} Quintessence.`); return null; } await updateActor(actor, { "system.quintessence.temporary": i.quint - plan.quintUsed }); }
             const wp = !!fd.wp && await spendWillpower(actor, 1);
+            // B4874: the caster's features on a casting (a House's fire, a choir's voices): magick, each Sphere, and fire for Forces that harms
+            const tm = TH.traitMods(actor, ["magick", ...used.map(x => x.sphere), ...(fd.dmg && used.some(x => x.sphere === "forces") ? ["fire"] : [])]);
+            plan.dice = Math.max(1, plan.dice + (tm.dice || 0));
+            plan.difficulty = Math.max(3, Math.min(10, plan.difficulty + (tm.diff || 0)));
             const r = await rollPool(plan.dice, plan.difficulty, { willpower: wp });
             const d = M.degree(r, plan.need);
             const px = M.paradoxGained(fd.kind, plan.highest, r.botch);
@@ -99,7 +104,7 @@ export function build(ctx) {
             const fortune = sg.age.key === "crusade" ? await fortuneRoll(actor) : null;
             const label = used.map(x => `${cap(x.sphere)} ${x.level}`).join(" / ");
             let body = rollBlock(`Arete ${plan.dice}`, r, [`${label}: ${(W[fd.kind] ?? M.KINDS[fd.kind].label).toLowerCase()} (${plan.base}${plan.net ? `, ${plan.net > 0 ? "+" : ""}${plan.net}` : ""})`, ...(plan.capped ? ["modifiers capped at ±3"] : []),
-                ...(plan.quintUsed ? [`${plan.quintUsed} Quintessence`] : []), ...(plan.over ? [`+${plan.over} needed: past difficulty 10`] : []), ...(wp ? ["Willpower"] : [])]);
+                ...(plan.quintUsed ? [`${plan.quintUsed} Quintessence`] : []), ...(plan.over ? [`+${plan.over} needed: past difficulty 10`] : []), ...(wp ? ["Willpower"] : []), ...(tm.parts ?? [])]);
             body += `<div class="vta-big ${d.key === "botch" ? "bad" : d.key === "success" || d.key === "extraordinary" ? "good" : ""}">${r.successes} of ${plan.need}: ${esc(d.text)}.</div>`;
             const fx = kw && r.successes && !r.botch ? EF.plan(actor, form, r.successes, { used, feat: n(fd.feat), age: sg.age.key }) : null;
             if (fx?.got?.ok || fx?.items?.length) body += fx.html;

@@ -66,6 +66,7 @@ export const REGION_MEDIA = {
   "korea": MY(1577, 1896, 1927, 1961, 1998),
   "southeast-asia": MY(1844, 1900, 1930, 1965, 2005),
   "nusantara": MY(1744, 1900, 1934, 1962, 2008),
+  "philippines": MY(1593, 1890, 1935, 1965, 2008),
   "west-africa": MY(1859, 1920, 1935, 1965, 2012),
   "central-africa": MY(1900, 1950, 1940, 1975, 2015),
   "east-africa": MY(1890, 1930, 1928, 1963, 2010),

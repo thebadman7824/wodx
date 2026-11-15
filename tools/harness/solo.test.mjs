@@ -420,7 +420,7 @@ test("hidden tokens show by square and stance; the card list keeps the newest, o
 
 test("the tools are asks to the seat: the player's side never makes items or presses cards itself", () => {
   const src = readFileSync(join(root, "modules/wodx-solo/scripts/st-tools.mjs"), "utf8");
-  for ( const fn of ["toggle", "eyes", "press", "items", "give", "check", "hidden"] ) {
+  for ( const fn of ["toggle", "eyes", "press", "items", "give", "xp", "check", "hidden"] ) {
     const body = src.split(`async function ${fn}(`)[1]?.split("\n}\n")[0] ?? "";
     assert.ok(body, fn);
     if ( fn !== "toggle" ) assert.match(body, /if \( !usable\(userId\) \)/, `${fn} checks the player may use the tools`);
@@ -429,4 +429,17 @@ test("the tools are asks to the seat: the player's side never makes items or pre
   const panel = readFileSync(join(root, "modules/wodx-solo/scripts/panel.mjs"), "utf8");
   assert.match(panel, /senderId !== payload\.userId/, "an ask naming another user than its sender is dropped");
   assert.match(src, /userConnected[\s\S]{0,120}guard\(/, "a second player logging in takes the tools away");
+});
+
+test("experience from the tools is a whole number from 1 to the cap, with a plain reason when none is given", () => {
+  assert.equal(R.xpAmount(5), 5);
+  assert.equal(R.xpAmount("7"), 7);
+  for ( const bad of [0, -1, 2.5, R.XP_MAX + 1, "x", null, undefined, NaN] ) assert.equal(R.xpAmount(bad), null, String(bad));
+  assert.equal(R.xpAmount(R.XP_MAX), R.XP_MAX);
+  assert.equal(R.xpNote("  "), "Given with the Storyteller tools");
+  assert.equal(R.xpNote("Testing Thaumaturgy"), "Testing Thaumaturgy");
+  assert.equal(R.xpNote("x".repeat(300)).length, 100);
+  assert.ok(R.ST_TOOLS.some(t => t.id === "xp"));
+  const src = readFileSync(join(root, "modules/wodx-solo/scripts/st-tools.mjs"), "utf8");
+  assert.match(src, /wodx-creation"\)\?\.api\?\.award/, "the award goes through WoDX Creation, so the sheet and its log stay right");
 });
