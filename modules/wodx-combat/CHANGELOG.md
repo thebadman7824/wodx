@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.39.0 (Conditions that change the body: a Chronicle condition's bodyBruised and bodyEase add health levels and ease wound penalties, beside merits, flaws and cyberware (B5160))
 - 3.38.0 (Fighting from a ghouled horse, a fleshcrafted steed, a chimerical steed, a Stygian steed or a gryphon (B4963); Mounted combat reads a ridden beast's own sheet (B4966); Fighting with and against vehicles on their own sheets (B4968))
 - 3.37.0 (A bond holds back the hand: before a servant strikes its master, the bond is rolled and a held blow is never struck (B5102))
 - 3.36.1 (Crippled at once (B4886); Soak reads WoDX Chronicle's signatures.soakFor for the target against its attacker (B4874); A hostage as a shield (B4885))
