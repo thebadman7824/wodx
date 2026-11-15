@@ -101,7 +101,7 @@ export function filterFor(sight, a) {
   return null;
 }
 
-const powerHere = () => { try { return (st()?.power?.state?.()?.list ?? []).filter(p => p.scene && p.scene === canvas?.scene?.id); } catch (e) { return []; } };
+const powerHere = () => { try { return (st()?.upkeep?.power?.state?.()?.list ?? []).filter(p => p.scene && p.scene === canvas?.scene?.id); } catch (e) { return []; } };
 function dressed(a) {
   const fh = powerHere().find(p => p.kind === "freehold" && !p.destroyed);
   let dream = false; try { const id = ow()?.STATUS?.dreaming?.id; dream = !!id && !!a?.statuses?.has?.(id); } catch (e) { dream = false; }

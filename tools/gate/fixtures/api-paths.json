@@ -558,7 +558,7 @@
    "modules/wodx-combat/scripts/main.js:2624",
    "modules/wodx-library/scripts/arms-use.mjs:146",
    "modules/wodx-library/scripts/hygiene-use.mjs:9",
-   "modules/wodx-npc/scripts/main.mjs:1011"
+   "modules/wodx-npc/scripts/main.mjs:1014"
   ]
  },
  {
@@ -1385,7 +1385,7 @@
    "modules/wodx-npc/scripts/fates.mjs:188",
    "modules/wodx-npc/scripts/kin.mjs:172",
    "modules/wodx-npc/scripts/legacy.mjs:211",
-   "modules/wodx-npc/scripts/main.mjs:1317",
+   "modules/wodx-npc/scripts/main.mjs:1320",
    "modules/wodx-npc/scripts/servants.mjs:410",
    "modules/wodx-npc/scripts/servants.mjs:416",
    "modules/wodx-otherworlds/scripts/crossing.mjs:382",
@@ -1848,7 +1848,7 @@
    "modules/wodx-interactables/scripts/main.mjs:1999",
    "modules/wodx-interactables/scripts/stock.mjs:18",
    "modules/wodx-npc/scripts/main.mjs:152",
-   "modules/wodx-npc/scripts/main.mjs:1118"
+   "modules/wodx-npc/scripts/main.mjs:1121"
   ]
  },
  {
@@ -4271,15 +4271,6 @@
  {
   "target": "wodx-storyteller",
   "path": [
-   "herds"
-  ],
-  "uses": [
-   "modules/wodx-actions/scripts/kindred.js:477"
-  ]
- },
- {
-  "target": "wodx-storyteller",
-  "path": [
    "hunters"
   ],
   "uses": [
@@ -4442,16 +4433,6 @@
   ],
   "uses": [
    "modules/wodx-interactables/scripts/main.mjs:478"
-  ]
- },
- {
-  "target": "wodx-storyteller",
-  "path": [
-   "power",
-   "state"
-  ],
-  "uses": [
-   "modules/wodx-senses/scripts/otherworld-sight.mjs:104"
   ]
  },
  {
@@ -4808,6 +4789,16 @@
   "target": "wodx-storyteller",
   "path": [
    "upkeep",
+   "herds"
+  ],
+  "uses": [
+   "modules/wodx-actions/scripts/kindred.js:477"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
    "huntHere"
   ],
   "uses": [
@@ -4960,6 +4951,17 @@
    "modules/wodx-npc/scripts/hearts.mjs:114",
    "modules/wodx-npc/scripts/prowl.mjs:80",
    "modules/wodx-npc/scripts/trust.mjs:114"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "power",
+   "state"
+  ],
+  "uses": [
+   "modules/wodx-senses/scripts/otherworld-sight.mjs:104"
   ]
  },
  {

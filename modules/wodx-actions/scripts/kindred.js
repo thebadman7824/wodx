@@ -474,7 +474,7 @@ export function build(ctx) {
         }
         if ((kind === "domain" || kind === "huntinggrounds") && !total) {
             const h = actor.getFlag(MOD, "haven"), scene = h?.sceneId ? game.scenes?.get?.(h.sceneId) : canvas?.scene;
-            const herds = ST?.herds;
+            const herds = ST?.upkeep?.herds; // B6204: herds live under Storyteller api.upkeep
             if (herds?.feed && scene) { for (let w = 0; w < weeks; w++) await herds.feed({ scene, who: "a rival" }); out.push(`A rival hunts ${scene.name} while the domain slips: its herd thins.`); }
         }
         if (botched) {
