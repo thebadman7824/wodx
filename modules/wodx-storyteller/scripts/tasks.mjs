@@ -245,7 +245,8 @@ export async function tick({force = false} = {}) {
         if ( t.status === "done" && t.makes && !t.made ) {
           try {
             const base = game.items?.getName?.(t.makes);
-            const data = base ? base.toObject() : {name: t.makes, type: "Item"};
+            // B6177: an item from WoDX Library's packs (Gear by era and the rest) when the world has none by that name
+            const data = base ? base.toObject() : (await game.modules.get("wodx-library")?.api?.itemByName?.(t.makes)) ?? {name: t.makes, type: "Item"};
             delete data._id;
             // 0.27.0: a recipe's quality and its maker as owner
             const q = t.good ? Own.finishCraft(t) : null;
