@@ -19,7 +19,7 @@ test("every evocation in the Lore table has a card with effect, duration, range 
     const c = DE.evocationCard(id, k + 1);
     assert.ok(c, `${e.name} (${id} ${k + 1}) has no card`);
     for ( const f of ["fx", "lasts", "range", "high"] ) assert.ok(String(c[f] ?? "").length > 3, `${e.name}: no ${f}`);
-    for ( const s of [c.spec, c.highSpec].filter(Boolean) ) assert.ok(E.KEYWORDS[s.kw], `${e.name}: unknown keyword ${s.kw}`);
+    for ( const s of [c.spec, c.highSpec].flat().filter(Boolean) ) assert.ok(E.KEYWORDS[s.kw], `${e.name}: unknown keyword ${s.kw}`);
     count++;
   });
   assert.equal(count, Object.keys(DE.EVOCATIONS).length, "a card for an evocation the Lore table does not have");

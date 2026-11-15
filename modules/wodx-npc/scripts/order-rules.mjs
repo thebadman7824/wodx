@@ -33,7 +33,8 @@ export function normOrder(o = {}) {
   if ( !o || !ORDERS[o.kind] ) return null;
   return {kind: o.kind, by: String(o.by ?? ""), leader: String(o.leader ?? ""), target: o.target ? String(o.target) : null,
     at: Number(o.at) || 0, hard: !!o.hard, note: String(o.note ?? "").slice(0, 200), stage: o.stage === "back" ? "back" : "out",
-    errand: ERRANDS[o.errand] ? o.errand : null, task: o.task ? String(o.task) : null, cost: Math.max(0, Math.round(Number(o.cost) || 0))};
+    errand: ERRANDS[o.errand] ? o.errand : null, task: o.task ? String(o.task) : null, cost: Math.max(0, Math.round(Number(o.cost) || 0)), carry: o.carry ? String(o.carry) : null,
+    fetched: !!o.fetched, until: Number(o.until) > 0 ? Number(o.until) : null};
 }
 
 /** May a user order this NPC? It must have no player owner and serve a character the user owns (the Storyteller always may). */

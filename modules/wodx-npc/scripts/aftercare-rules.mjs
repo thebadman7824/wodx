@@ -1,193 +1,122 @@
 /**
- * WoDX NPC: what NPCs do once they have carried someone where they meant to (Aftercare Desk a1-a12, B5710 to B5721).
- * Pure rules; the Foundry side is aftercare.mjs. Every figure marked "house" is logged in docs/PENDING-REVIEW.md.
+ * WoDX NPC (NPC Aftercare Desk, round two of the NPC review, B5800-B5806): what comes after an NPC is taken by the
+ * law, hurt, faced down by a rival, fed on, bereaved, robbed or married. The pure part; aftercare.mjs acts on the world.
  *
- *   a1  a hurt ally is tended (Intelligence + Medicine, 6, harder for worse wounds), then mends on the clock; a
- *       Cainite ally is fed and mends with the blood
- *   a2  a Cainite in torpor is kept hidden; one of their own may feed them blood to wake them (the Storyteller approves)
- *   a3  a dead mortal ally gets the rite of their faith and era, a marked grave, and their family's grudge
- *   a4  a Cainite's Final Death: the remains are gathered, the news spreads, their faction loses Status
- *   a5  a dead enemy is disposed of by kind (burned, sunk, buried in the wilds, or handed to the law)
- *   a6  the fallen foe's and the captive's things go into the captors' stores
- *   a7  a prisoner is guarded and fed, and tries the bonds each night (Dexterity + Larceny or Strength + Athletics, 7)
- *   a8  questioning each day: Manipulation + Intimidation (or Dominate or Presence) against the prisoner's Willpower
- *   a9  a Cainite captor feeds on a mortal prisoner every other night, a point or two, never to the death
- *   a10 after a week the captors' faction decides: ransom, trade, the law, or let go; killing waits on the Storyteller
- *   a11 on its turn the prisoner's own faction may come for them
- *   a12 a player's character held prisoner gets a card each day: try the bonds, talk, or wait
+ * Book basis (in WoDX's own words; printed pages):
+ *   Healing times: bashing heals an hour a level to Wounded, then three, six and twelve hours; lethal and aggravated
+ *   take a day, three days, a week, a month, two months, three months and five months, the times adding up; worse
+ *   wounds need someone with Medicine (M20 pp. 408-409, the mortal chart the lines share).
+ *   A vampire heals a level of bashing or lethal damage with a point of blood (V20, healing with blood).
+ * WoDX readings: the hours, who moves on marriage, mourning days by faith, the rest.
  */
 
-export const DAY = 86400;
+const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
+export const HOUR = 3600, DAY = 86400, YEAR = Math.round(365.25 * DAY);
+const B = (from, to, place, activity, label, more = {}) => ({from, to, place, activity, when: "any", days: null, feast: "any", label, ...more});
 
-/* ---------------- dice ---------------- */
+/* ---- n1: the law ---- */
 
-/** V20 dice: {dice, hits, ones, net, botch}. */
-export function roll(n, diff, rand = Math.random) {
-  const d = Math.max(3, Math.min(10, Math.round(Number(diff) || 6)));
-  const dice = Array.from({length: Math.max(0, Math.round(Number(n) || 0))}, () => 1 + Math.floor(rand() * 10));
-  const hits = dice.filter(x => x >= d).length, ones = dice.filter(x => x === 1).length;
-  return {dice, diff: d, hits, ones, net: Math.max(0, hits - ones), botch: hits === 0 && ones > 0};
+/** The NPC is held for trial at the watch-house, if there is one. */
+export const heldDuty = place => (place ? B(0, 24, place, "rest", "Held for trial") : null);
+/** After the verdict or the sentence: "free" (home first, then the routine), "time" (off the maps for seconds), "gone" (leaves for good), "dead". */
+export function lawAfter(mark = null, {guilty = true} = {}) {
+  if ( !guilty || !mark ) return {do: "free", seconds: 0};
+  if ( mark.kind === "death" ) return {do: "dead", seconds: 0};
+  if ( mark.kind === "banished" ) return {do: "gone", seconds: 0};
+  if ( mark.kind === "time" ) return {do: "time", seconds: Math.max(1, num(mark.until) - num(mark.year)) * YEAR, away: !!mark.away};
+  return {do: "free", seconds: 0};
 }
-const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
+/** Home first for an hour after being let go. */
+export const HOME_FIRST = HOUR;
+export const homeDuty = (place, now) => (place ? {...B(0, 24, place, "rest", "Home again"), until: num(now) + HOME_FIRST} : null);
 
-/* ---------------- a1: a hurt ally ---------------- */
+/* ---- n2: wounds ---- */
 
-/** First aid difficulty: 6, one harder past three levels of lethal or aggravated wounds, two past five (house). */
-export function tendDiff(dmg = {}) {
-  const deep = n(dmg.lethal) + n(dmg.aggravated);
-  return 6 + (deep > 5 ? 2 : deep > 3 ? 1 : 0);
+export const BASHING_TIMES = [HOUR, HOUR, HOUR, HOUR, 3 * HOUR, 6 * HOUR, 12 * HOUR];
+export const LETHAL_TIMES = [DAY, 3 * DAY, 7 * DAY, 30 * DAY, 60 * DAY, 90 * DAY, 150 * DAY];
+const total = d => num(d?.bashing) + num(d?.lethal) + num(d?.aggravated);
+/** The next level to heal (the top of the track: bashing first) and how long it takes, or null when unhurt. */
+export function nextHeal(d = {}) {
+  const n = Math.min(7, total(d));
+  if ( n <= 0 ) return null;
+  const type = num(d.bashing) > 0 ? "bashing" : num(d.lethal) > 0 ? "lethal" : "aggravated";
+  return {type, seconds: (type === "bashing" ? BASHING_TIMES : LETHAL_TIMES)[n - 1]};
 }
-/** The best healer: the highest Intelligence + Medicine among those to hand. people: [{id, name, int, medicine}]. */
-export function bestHealer(people = []) {
-  return [...people].filter(p => p && n(p.medicine) + n(p.int) > 0).sort((a, b) => (n(b.int) + n(b.medicine)) - (n(a.int) + n(a.medicine)) || n(b.medicine) - n(a.medicine))[0] ?? null;
-}
-/**
- * A Cainite ally mends with blood (V20: a point heals a level of bashing or lethal). blood: {value, max}; dmg as
- * health damage. They are first fed up to `feed` points by a vessel or a ghoul (house: three), then spend blood
- * on the wounds, keeping one. -> {fed, spent, damage, blood}
- */
-export function kindredMend(blood = {}, dmg = {}, feed = 3) {
-  const max = Math.max(1, n(blood.max) || 10);
-  let value = Math.min(max, n(blood.value) + Math.max(0, n(feed)));
-  const fed = value - n(blood.value);
-  const damage = {bashing: n(dmg.bashing), lethal: n(dmg.lethal), aggravated: n(dmg.aggravated)};
-  let spent = 0;
-  while ( value > 1 && (damage.lethal || damage.bashing) ) {
-    if ( damage.lethal ) damage.lethal--; else damage.bashing--;
-    value--; spent++;
-  }
-  return {fed, spent, damage, blood: value};
-}
-
-/* ---------------- a3: the rite of a faith ---------------- */
-
-/**
- * The rite for a mortal's funeral by faith and year. faith: WoDX Chronicle's faith key; region: the world region.
- * -> {rite, words, within} within: how soon it is done, in hours (house readings of custom).
- */
-export function riteFor(faith = "western", year = 1197, region = "") {
-  if ( faith === "jewish" ) return {rite: "burial", words: "washed, wrapped in a plain shroud and buried before the next sunset", within: 24};
-  if ( faith === "islamic" ) return {rite: "burial", words: "washed, wrapped and buried facing Mecca within the day", within: 24};
-  if ( faith === "hindu" ) return {rite: "cremation", words: "burned on a pyre, the ashes given to the river", within: 24};
-  if ( faith === "tibetan" ) return {rite: "sky", words: "given to the birds on the high ground after the prayers", within: 72};
-  if ( faith === "theravada" ) return {rite: "cremation", words: "burned after the monks' chants", within: 72};
-  if ( faith === "chinese" ) return {rite: "burial", words: "dressed, coffined and buried after the days of mourning, the family in white", within: 72};
-  if ( faith === "own" ) return {rite: "barrow", words: "laid in the earth with grave goods by the old ways", within: 48};
-  // the Western and Eastern churches: a wake, then burial in the churchyard; cremation from the twentieth century on
-  if ( Number(year) >= 1960 && faith === "western" && /british|low-countries|german|nordic|scandinav|america|australia/.test(region) )
-    return {rite: "cremation", words: "a service, then cremation, the ashes kept or scattered", within: 120};
-  return {rite: "burial", words: faith === "orthodox" ? "watched over three days, then buried in the churchyard" : "watched over through the night, then buried in the churchyard", within: faith === "orthodox" ? 72 : 48};
-}
-export const RITE_WORDS = {burial: "Grave of", cremation: "Ashes of", sky: "Cairn of", barrow: "Barrow of"};
-
-/* ---------------- a5: a dead enemy ---------------- */
-
-/** How a dead foe's body goes, by who disposes of it. kind: the taker's (kindred, garou, mage, fae, mortal, ...). */
-export function disposalFor(kind = "mortal", {lawful = false, water = false, year = 1197} = {}) {
-  if ( kind === "mortal" || kind === "hunter" ) return lawful ? {how: "law", words: "handed over to the law"} : {how: "buried", words: "buried in an unmarked grave"};
-  if ( kind === "garou" || kind === "lupine" ) return {how: "wilds", words: "carried deep into the wilds and left to the beasts"};
-  if ( water ) return {how: "sunk", words: "weighted and sunk"};
-  return Number(year) >= 1900 && kind === "kindred" ? {how: "burned", words: "burned to ash in a furnace"} : {how: "burned", words: "burned to ash"};
+/** Wounds that want a healer: bashing to Wounded or worse, lethal or aggravated to Injured or worse (M20 p. 409). */
+export const needsCare = d => (num(d?.lethal) + num(d?.aggravated) > 0 ? total(d) >= 3 : total(d) >= 4);
+/** Hurt enough to keep to bed: Injured or worse. Back on the routine once no worse than Hurt. */
+export const laidUp = d => total(d) >= 3;
+/** Where the hurt go to be tended, in order, by the age: a hospital or infirmary, else a house of worship, else home. */
+export const HEALERS = ["hospital", "church", "monastery", "temple", "synagogue", "mosque"];
+export const tendDuty = (place, label = "Being tended") => (place ? B(0, 24, place, "rest", label) : null);
+/** A Kindred NPC heals with blood: a point a level of bashing or lethal, keeping two points back. */
+export const BLOOD_KEEP = 2;
+export function bloodHeal(d = {}, blood = 0) {
+  const can = Math.max(0, num(blood) - BLOOD_KEEP);
+  const b = Math.min(num(d.bashing), can), l = Math.min(num(d.lethal), can - b);
+  return {bashing: b, lethal: l, spent: b + l};
 }
 
-/* ---------------- a6: their things ---------------- */
+/* ---- n3: rivals who back down ---- */
 
-const VALUABLE_TYPES = new Set(["Melee Weapon", "Ranged Weapon", "Armor", "Item", "Weapon", "Talisman", "Fetish", "Wonder", "melee", "ranged", "armor", "item", "weapon"]);
-/** Which of a body's items the captors take: weapons, armour, gear and wonders (not powers, traits or features). */
-export function lootable(items = []) {
-  return (items ?? []).filter(i => i && VALUABLE_TYPES.has(String(i.type)) && !i.natural);
+/** Which of two rivals gives way: outnumbered first, then off its own ground, then the less bold. sides: [{id, us, them, ownGround, aggression}]. */
+export function givesWay([a, b] = []) {
+  if ( !a || !b ) return null;
+  const score = x => (num(x.us) - num(x.them)) * 10 + (x.ownGround ? 5 : 0) + num(x.aggression);
+  return score(a) < score(b) ? a.id : b.id;
 }
+/** The next meeting of the same two is likelier to come to blows. */
+export const FLASH_BONUS = 10, STANDOFF_KEEP = 30 * DAY;
+export const standoffBonus = (at, now) => (Number.isFinite(Number(at)) && num(now) - num(at) < STANDOFF_KEEP ? FLASH_BONUS : 0);
 
-/* ---------------- a7 to a12: prisoners ---------------- */
+/* ---- n4: after the Kiss ---- */
 
-/** Escape: successes needed against the bonds, kept from night to night (house); a botch starts them over. */
-export const BONDS = 3;
-export const ESCAPE_DIFF = 7;
-/** The better pool for the bonds. stats: {dex, larceny, str, athletics}. */
-export function escapePool(s = {}) {
-  const a = n(s.dex) + n(s.larceny), b = n(s.str) + n(s.athletics);
-  return a >= b ? {pool: a, words: "Dexterity + Larceny"} : {pool: b, words: "Strength + Athletics"};
+export const DAZE_SECONDS = 10 * 60, WEAK_FROM = 3, MORNING = 6;
+/** The world time of the next morning (06:00) after now. */
+export function nextMorning(now) {
+  const t = num(now), day = Math.floor(t / DAY) * DAY, m = day + MORNING * HOUR;
+  return m > t ? m : m + DAY;
 }
-/** One night's try at the bonds. progress: successes so far. -> {roll, progress, free, botch} */
-export function tryBonds(progress, stats, rand = Math.random, {guarded = true} = {}) {
-  const p = escapePool(stats);
-  const r = roll(p.pool, ESCAPE_DIFF + (guarded ? 0 : -1), rand);
-  const to = r.botch ? 0 : n(progress) + r.net;
-  return {roll: r, words: p.words, progress: to, free: to >= BONDS, botch: r.botch};
-}
-/** Questioning pool: the better of Manipulation + Intimidation and a mind power (Dominate or Presence dots + Manipulation or Charisma). */
-export function questionPool(c = {}) {
-  const talk = n(c.manipulation) + n(c.intimidation);
-  const power = Math.max(n(c.dominate) ? n(c.dominate) + n(c.manipulation) : 0, n(c.presence) ? n(c.presence) + n(c.charisma) : 0);
-  return power > talk ? {pool: power, words: n(c.dominate) >= n(c.presence) ? "Dominate" : "Presence"} : {pool: talk, words: "Manipulation + Intimidation"};
-}
-/** Each success gives up one secret. -> {roll, secrets: [first n of the prisoner's not yet known]} */
-export function question(captor, willpower, secrets = [], rand = Math.random) {
-  const p = questionPool(captor);
-  const r = roll(p.pool, Math.max(3, Math.min(10, n(willpower) || 5)), rand);
-  return {roll: r, words: p.words, secrets: secrets.slice(0, r.net)};
-}
-/** a9: a Cainite captor feeds every other night, one or two points, while the prisoner has more than this many health levels left (house). */
-export const FEED_EVERY = 2 * DAY;
-export const FEED_KEEP = 3;
-export function feedDraw({hunger = 0, healthLeft = 7, rand = Math.random} = {}) {
-  if ( n(healthLeft) <= FEED_KEEP ) return 0;
-  const want = Math.max(1, Math.min(2, n(hunger) || (rand() < 0.5 ? 1 : 2)));
-  return Math.min(want, n(healthLeft) - FEED_KEEP);
-}
+export const restDuty = (place, now) => (place ? {...B(0, 24, place, "rest", "Resting, pale and tired"), after: num(now) + DAZE_SECONDS, until: nextMorning(num(now) + DAZE_SECONDS)} : null);
 
-/** a10: after a week the faction decides. */
-export const WEEK = 7 * DAY;
-export const FATES = {
-  ransom: "ransomed to their people",
-  trade: "traded for one of the captors' own",
-  law: "handed over to the law",
-  release: "let go",
-  kill: "put to death (the Storyteller decides)"
+/* ---- n5: mourning ---- */
+
+/** Days of mourning and where the mourner goes each evening, by faith (WoDX Chronicle FAITHS ids). House reading. */
+export const MOURNING = {
+  western: {days: 7, place: ["church"], words: "a vigil, then black for a month"}, orthodox: {days: 9, place: ["church"], words: "the ninth-day prayers"},
+  islamic: {days: 3, place: ["mosque"], words: "three days of mourning"}, jewish: {days: 7, place: ["synagogue"], words: "shiva, seven days"},
+  hindu: {days: 13, place: ["temple"], words: "thirteen days of rites"}, theravada: {days: 7, place: ["temple", "monastery"], words: "seven days of merit-making"},
+  tibetan: {days: 49, place: ["temple", "monastery"], words: "prayers through the forty-nine days"}, chinese: {days: 7, place: ["temple"], words: "the first seven days of mourning"},
+  own: {days: 7, place: ["temple", "church"], words: "the rites of their own"}
 };
-/** Weights by the captors' kind: a house reading of each kind's temper. */
-const TEMPER = {
-  kindred: {ransom: 2, trade: 3, law: 0, release: 1, kill: 2},
-  mortal: {ransom: 3, trade: 2, law: 3, release: 1, kill: 0.5},
-  church: {ransom: 1, trade: 1, law: 4, release: 2, kill: 0.5},
-  guild: {ransom: 4, trade: 2, law: 2, release: 1, kill: 0},
-  folk: {ransom: 1, trade: 1, law: 3, release: 3, kill: 0.5},
-  hunters: {ransom: 0, trade: 1, law: 2, release: 0.5, kill: 3},
-  garou: {ransom: 0, trade: 2, law: 0, release: 2, kill: 2},
-  mages: {ransom: 1, trade: 3, law: 0, release: 2, kill: 1},
-  fae: {ransom: 2, trade: 3, law: 0, release: 2, kill: 0.5},
-  spirits: {ransom: 0, trade: 2, law: 0, release: 3, kill: 1},
-  mercenaries: {ransom: 5, trade: 2, law: 1, release: 0.5, kill: 1},
-  other: {ransom: 2, trade: 2, law: 2, release: 2, kill: 0.5}
-};
+export const mourningOf = faith => MOURNING[faith] ?? MOURNING.own;
+/** Home by day, the place of worship each evening, for the mourning days. */
+export function mournDuties(home, worship, now, faith) {
+  const m = mourningOf(faith), until = num(now) + m.days * DAY;
+  const out = {};
+  if ( worship ) out.worship = {...B(18, 21, worship, "pray", "In mourning, at prayer"), until};
+  if ( home ) out.home = {...B(0, 24, home, "rest", "In mourning"), until};
+  return out;
+}
+
+/* ---- n6: after a robbery ---- */
+
+/** A robber who got money spends the night at the tavern: from now to the next morning. */
+export const spreeDuty = (place, now) => (place ? {...B(0, 24, place, "drink", "Spending what was taken"), until: nextMorning(now)} : null);
+
+/* ---- n7: marriage ---- */
+
 /**
- * The faction's choice. ctx: {kind, payer: can the prisoner's people pay (Resources), swap: a member of the captors
- * held by the prisoner's people, lawHere: there is a court to take them}. Choices that cannot be done drop out.
+ * Who moves in with whom: the one with no home moves; with two homes, the bride moves to the groom's (the custom of most
+ * lands and ages, a house reading); otherwise the smaller household. people: [{id, home, sex, household}].
  */
-export function decideFate({kind = "other", payer = false, swap = false, lawHere = true, pc = false} = {}, rand = Math.random) {
-  const w = {...(TEMPER[kind] ?? TEMPER.other)};
-  if ( !payer ) w.ransom = 0;
-  if ( !swap ) w.trade = 0;
-  if ( !lawHere ) w.law = 0;
-  const list = Object.entries(w).filter(([, v]) => v > 0);
-  const total = list.reduce((s, [, v]) => s + v, 0);
-  let r = rand() * total;
-  for ( const [k, v] of list ) { r -= v; if ( r < 0 ) return {fate: k, words: FATES[k], ask: k === "kill" || !!pc}; }
-  return {fate: "release", words: FATES.release, ask: !!pc};
+export function whoMoves([a, b] = []) {
+  if ( !a || !b ) return null;
+  if ( !a.home && !b.home ) return null;
+  if ( !a.home ) return {moves: a.id, to: b.id};
+  if ( !b.home ) return {moves: b.id, to: a.id};
+  if ( a.home === b.home ) return null;
+  if ( a.sex === "female" && b.sex === "male" ) return {moves: a.id, to: b.id};
+  if ( b.sex === "female" && a.sex === "male" ) return {moves: b.id, to: a.id};
+  return num(a.household) <= num(b.household) ? {moves: a.id, to: b.id} : {moves: b.id, to: a.id};
 }
-
-/** a11: the prisoner's faction comes for them: its Retainers (or Herd) and Wits 2 against 6 + the captors' Security. */
-export function rescueTry({retainers = 0, herd = 0, security = 0, guard = false} = {}, rand = Math.random) {
-  const pool = 2 + Math.max(n(retainers), n(herd));
-  const r = roll(pool, 6 + n(security) + (guard ? 1 : 0), rand);
-  return {roll: r, freed: r.net > 0, botch: r.botch};
-}
-
-/** Whole days and nights crossed between two world times (a long jump of the clock counts each, up to a cap). */
-export function daysCrossed(from, to, cap = 14) {
-  if ( !Number.isFinite(from) || !Number.isFinite(to) || to <= from ) return 0;
-  return Math.min(cap, Math.floor(to / DAY) - Math.floor(from / DAY));
-}
-
-/** Health levels left on a track: max levels less the filled ones. */
-export const healthLeft = (dmg = {}, max = 7) => Math.max(0, n(max) - (n(dmg.bashing) + n(dmg.lethal) + n(dmg.aggravated)));

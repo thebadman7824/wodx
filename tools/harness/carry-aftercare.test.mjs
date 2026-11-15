@@ -2,7 +2,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import * as A from "../../modules/wodx-npc/scripts/aftercare-rules.mjs";
+import * as A from "../../modules/wodx-npc/scripts/carry-aftercare-rules.mjs";
 import {CONTAINERS} from "../../modules/wodx-interactables/scripts/interact-rules.mjs";
 
 const seq = (...v) => { let i = 0; return () => v[i++ % v.length]; };
@@ -101,7 +101,7 @@ test("days crossed and health left", () => {
 });
 
 test("the container kinds NPC names match WoDX Interactables'", () => {
-  const src = fs.readFileSync(new URL("../../modules/wodx-npc/scripts/aftercare.mjs", import.meta.url), "utf8");
+  const src = fs.readFileSync(new URL("../../modules/wodx-npc/scripts/carry-aftercare.mjs", import.meta.url), "utf8");
   const m = /const CONTAINERS = \{(.+)\};/.exec(src);
   const keys = [...m[1].matchAll(/(\w+): \{label/g)].map(x => x[1]);
   assert.deepEqual(keys.sort(), Object.keys(CONTAINERS).sort());

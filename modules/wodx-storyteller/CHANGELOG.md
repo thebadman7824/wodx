@@ -2,6 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.104.0 (NPC Motives Desk, part four (B5699-B5703). hunt-follow-rules.mjs and hunt-follow.mjs; an Investigator extra; hunters.mutate; harness hunt-follow.test.mjs, gate gatehuntfollow; For WoDX NPC's grudge moves (B5690): venture-rules LOSS.spoiled and touched("spoiled", {actor}))
+- 0.103.0 (Say or Do: project complications act, and towns gain from new buildings (B5824-B5825))
 - 0.102.1 (Sleep marked in Hardship ends a stimulant's crash (B5178))
 - 0.102.0 (The Philippines on the world map and in the Storyteller's tables (B5150, B5152, B5153))
 - 0.101.0 (Long tasks read the Iron Legion's patience from WoDX Chronicle's features (B4877); Letters answered and help that comes (B4882, B4883); Stages with their own roll, and medicine against sickness (B5012, B5014))

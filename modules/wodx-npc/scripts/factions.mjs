@@ -17,6 +17,7 @@
  *              (in the Dark Ages, the Inquisition: B42). Each rise is a queue card, so the Storyteller can stop it.
  * Player characters are never changed by a faction turn: anything that touches one waits for the Storyteller.
  */
+import * as DU from "./duty-rules.mjs";
 import * as F from "./faction-rules.mjs";
 import {calendarFor} from "./hunt-calendar.mjs";
 import * as WR from "./war-rules.mjs";
@@ -215,9 +216,22 @@ export function build(ctx) {
       return {state: r.state, result: {inverse: r.inverse, applied: r.applied}};
     });
     for ( const c of res?.applied ?? [] ) if ( c.op === "found" ) await foundCard(c);
+    for ( const c of res?.applied ?? [] ) if ( c.op === "guard" && c.until ) await postGuard(c).catch(e => console.error(`${MOD} | guard`, e));
     for ( const c of changes ) if ( c.op === "pol-fight" ) await stageFight(c);
     for ( const c of changes ) if ( c.op === "pol-expose" ) await game.modules.get(MOD)?.api?.secrets?.expose?.(c.holder, c.secret, {by: c.finder, entry: c.entry, why: c.law}).catch?.(e => console.warn(`${MOD} | expose`, e));
     return res ?? {inverse: [], applied: []};
+  }
+  /** B5698 (g6): a faction on guard posts one of its people to keep watch at its place until the next turn. */
+  async function postGuard(c) {
+    const f = state().factions.find(x => x.id === c.faction);
+    const R = game.modules.get(MOD)?.api?.routines;
+    if ( !f || !R?.setDuty || !f.places?.length ) return null;
+    const cands = (f.members ?? []).map(id => game.actors.get(id)).filter(a => a && !a.hasPlayerOwner && !R.downState?.(a));
+    const who = cands.find(a => a.id !== f.leader) ?? cands[0];
+    if ( !who ) return null;
+    await R.setDuty(who, `guard-${f.id}`, DU.guardDuty(f.places[0], DU.guardUntil(game.time.worldTime)));
+    await ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX factions"}, content: `<div class="wodx-card wnpc wnpc-faction"><p>${esc(who.name)} keeps watch for ${esc(f.name)} at ${esc(names(state()).place(f.places[0]))} until the next turn.</p></div>`});
+    return who;
   }
   /**
    * NPC 0.26.0: a challenge with a player's character is staged as a fight through WoDX Combat when both are on the
@@ -240,8 +254,11 @@ export function build(ctx) {
   }
   async function foundCard(c) {
     const s = state(), n = names(s);
+    // B5702 (h4): the one found goes into the region's file
+    let filed = false;
+    try { const a = game.actors.get(c.actor); if ( a ) filed = !!(await game.modules.get("wodx-storyteller")?.api?.hunters?.follow?.found?.(a, {by: n.faction(c.faction)})); } catch (e) { console.warn(`${MOD} | found`, e); }
     return ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX factions"}, content: `<div class="wodx-card wnpc wnpc-faction"><h3>${esc(n.faction(c.faction))} has found someone</h3>
-      <p>${esc(n.actor(c.actor))}, of ${esc(n.faction(c.target))}. What the hunters do now is yours to play; WoDX changes nothing.</p></div>`});
+      <p>${esc(n.actor(c.actor))}, of ${esc(n.faction(c.target))}. ${filed ? "They go into the region's hunters' file, and the hunters there stir; a deep enough file brings a raid." : "What the hunters do now is yours to play."}</p></div>`});
   }
   function proposeChanges(title, detail, changes, {key = null, kind = "turn", extra = {}} = {}) {
     return chron()?.propose?.({type: TYPE, key, title, detail, data: {kind, changes, ...extra}});
@@ -594,12 +611,15 @@ export function build(ctx) {
     if ( !data || data === "cancel" ) return null;
     return hunt(game.actors.get(data.actor), data.place, {method: data.method, hours: num(data.hours) || 1});
   }
+  /** B5687 (r1): the dice of each way to hunt, so an NPC goes about it its own best way. */
+  const huntPools = actor => Object.fromEntries(Object.keys(METHODS).map(m => { const [at, ab] = m.split("+"); return [m, attrOf(actor, at) + abilityOf(actor, ab)]; }));
   /** Roll a hunt: one roll an hour until prey is caught or the hours run out. */
-  async function hunt(actor, placeId, {method = "wits+streetwise", hours = 1} = {}) {
+  async function hunt(actor, placeId, {method = "wits+streetwise", hours = 1, extra = 0} = {}) {
     if ( !actor ) return null;
     const h = huntingFor(actor, placeId);
     const [at, ab] = method.split("+");
-    const pool = attrOf(actor, at) + abilityOf(actor, ab) + h.herdDice;
+    // B5692/B5695: extra dice from a blood cult (as Herd) and a servant who brings a vessel
+    const pool = attrOf(actor, at) + abilityOf(actor, ab) + h.herdDice + Math.max(0, num(extra));
     const rolls = [];
     let caught = false, botch = false;
     for ( let i = 0; i < Math.max(1, Math.min(8, hours)) && !caught && !botch; i++ ) {
@@ -615,7 +635,7 @@ export function build(ctx) {
     const tres = h.trespass ? `<p>This is ${esc(h.trespass.name)}'s domain: a trespass, at +${h.trespass.security} for its security (V20 p. 113).</p>` : "";
     const msg = await ChatMessage.create({speaker: ChatMessage.getSpeaker({actor}), whisper: actor.hasPlayerOwner ? undefined : gmIds(), rolls: rolls.map(r => r.roll),
       content: `<div class="wodx-card wnpc wnpc-faction"><h3>${esc(actor.name)} hunts at ${esc(n.place(placeId))}</h3>
-        <p class="wodx-quiet">${esc(METHODS[method] ?? method)}${h.herdDice ? ` + Herd ${h.herdDice}` : ""}: ${pool} dice at ${h.difficulty} (${esc(h.area.label)} ${h.area.difficulty}${h.domainDots ? `, Domain −${h.domainDots}` : ""}${h.fame ? `, Fame −${h.fame}` : ""}${h.church && !h.calendar?.length ? `, ${h.church < 0 ? "a night of revel −1" : "a fast +1"}` : h.calendar?.length ? `, the calendar ${h.church > 0 ? "+" : h.church < 0 ? "−" : "±"}${Math.abs(h.church)}` : ""}${h.trespass ? `, trespass +${h.trespass.security}` : ""}).</p>
+        <p class="wodx-quiet">${esc(METHODS[method] ?? method)}${h.herdDice ? ` + Herd ${h.herdDice}` : ""}${extra ? ` + ${extra} from the faithful and servants` : ""}: ${pool} dice at ${h.difficulty} (${esc(h.area.label)} ${h.area.difficulty}${h.domainDots ? `, Domain −${h.domainDots}` : ""}${h.fame ? `, Fame −${h.fame}` : ""}${h.church && !h.calendar?.length ? `, ${h.church < 0 ? "a night of revel −1" : "a fast +1"}` : h.calendar?.length ? `, the calendar ${h.church > 0 ? "+" : h.church < 0 ? "−" : "±"}${Math.abs(h.church)}` : ""}${h.trespass ? `, trespass +${h.trespass.security}` : ""}).</p>
         ${h.calendar?.length ? `<p class="wodx-quiet">The calendar: ${h.calendar.map(c => esc(`${c.n > 0 ? "+" : c.n < 0 ? "−" : "±"}${Math.abs(c.n)} ${c.why}`)).join("; ")}.</p>` : ""}
         <p>${rolls.map(r => `[${r.dice.join(" ")}]`).join(" ")}</p><p><b>${esc(verdict)}</b></p>${tres}</div>`});
     // A trespass the holder notices (a botch, or a holder with Domain security watching) sours its standing: queued
@@ -1219,7 +1239,7 @@ export function build(ctx) {
     return proposeChanges(`Word spreads: ${src} ${moved > 0 ? "thinks better" : "thinks worse"} of ${who}`, `${words.join("; ")}.`, changes, {key: `spill:${factionId}:${actorId}:${game.time.worldTime}`, kind: "spill"});
   }
   const peopleOf = actorId => F.peopleStandingOf(state(), actorId);
-  return {warTurn, adjustPeople, peopleOf, onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, hunt, huntDialog,
+  return {postGuard, warTurn, adjustPeople, peopleOf, onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, huntPools, hunt, huntDialog,
     setupRothenstein, editFaction, deleteFaction, reportDialog, setBreach, deleteBreach, setArea, undoCard, eraInfo, placeList, names, leaders, masqEntries, findActor,
     FactionsAppClass, openFactions: () => (game.user.isGM ? FactionsAppClass().open() : founding?.openPlayer?.()), rules: F, ROTHENSTEIN,
     applyNow, proposeChanges, bgValue, allActors, yearSweep, onEventFired, endFaction, absorbFaction, setFounding: f => { founding = f; }, politicsInfo, openBoons, onBoonSettled, stageFight, onMaelstrom};

@@ -474,3 +474,20 @@ export function voiceLine(voices, voice, part, {regard = "neutral", seed = 0} = 
   if ( part === "greet" ) return pickLine(v.greet?.[warmthOf(regard)], seed);
   return pickLine(v[part], seed);
 }
+
+/* B5790 (house reading, PENDING-REVIEW): beasts and ghosts do not talk with just anyone. A Speak power (an effect named
+ * "Speaks with ..." or a WoDX speak effect) opens the talk; werewolves and other shapeshifters talk with beasts, and the
+ * dead with the dead. kind: "beast" | "ghost" | null. talker: {type, effects: [{name, key}]}. */
+export function speechKind({animal = false, type = ""} = {}) {
+  if ( animal ) return "beast";
+  if ( type === "Wraith" ) return "ghost";
+  return null;
+}
+export function canTalkWith(kind, talker = {}) {
+  if ( !kind ) return true;
+  const fx = talker.effects ?? [];
+  if ( fx.some(e => /^speaks with/i.test(e.name ?? "") || String(e.key ?? "").startsWith("wodx-effect-speak")) ) return true;
+  if ( kind === "beast" ) return ["Werewolf", "Changing Breed"].includes(talker.type);
+  if ( kind === "ghost" ) return talker.type === "Wraith";
+  return true;
+}

@@ -63,6 +63,7 @@ import * as BodyRules from "./body-rules.mjs";
 import * as Hard from "./hardship.mjs";
 import * as HardRules from "./hardship-rules.mjs";
 import * as Remains from "./remains.mjs";
+import * as HuntFollow from "./hunt-follow.mjs";
 import * as RemainsRules from "./remains-rules.mjs";
 import * as Hunters from "./hunters.mjs";
 import * as Levers from "./levers.mjs";
@@ -162,6 +163,7 @@ Hooks.once("init", () => {
   Remains.registerRemainsHooks();
   Hunters.registerHunterSettings();
   Hunters.registerHunterHooks();
+  HuntFollow.registerHuntFollowHooks();
   Reach.registerReachSettings(); // B4861: the world's own hand
   Reach.registerReachHooks();
   Levers.registerLeverSettings();

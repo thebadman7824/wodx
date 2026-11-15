@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5780
+Next free block: B5840
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -303,7 +303,12 @@ Next free block: B5780
 | B5650-B5659 | Spirit Charms: the W20 Charms play from a Charm window (used B5650-B5657) | Actions, Combat |
 | B5660-B5669 | Child proportions, drawn poses by routine, animal legs (used B5660-B5668) | Paperdoll |
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
+| B5680-B5709 | NPC Motives Desk: every NPC action has a reason and a follow-through (used B5680-B5703) | NPC, Storyteller |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
+| B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
+| B5800-B5809 | NPC Aftercare Desk: what comes after each NPC action (used B5800-B5806) | NPC, Chronicle |
+| B5820-B5829 | Say or Do: systems that only posted text now act, second batch (used B5820-B5826) | Otherworlds, Senses, Chronicle, Storyteller, NPC |
+| B5830-B5839 | Gate failures on main, round two; run-gate names failed steps (used B5830-B5831) | tools (gates, lanes) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9103,6 +9108,123 @@ A Kuei-jin's Disciplines are no longer read as Kindred Disciplines for the NPC c
 ## B5677. Inquisitors: the book's Blessings on the sheet (2026-11-15)
 A Blessing on the sheet counts with or without the Virtue in brackets after its name.
 
+## B5680. A challenge that is not answered goes further (2026-11-15)
+WoDX NPC (desk m1). A challenge is kept on the scene (flag wodx-npc.challenges) for an hour. If the intruder is still in the place ten minutes of world time after it, the watchers react again with the region's conditions set aside; challenge and letting it pass drop out, a keeper leans to the alarm or a fight, anyone else to sending for help, shouting or running. Help that arrives (B5682) counts as a challenge too. House reading.
+
+Reverse: drop checkChallenges from checkAlerts and recordChallenge from the challenge and send cases in routines.mjs.
+
+## B5681. Those who hear an alarm come or go (2026-11-15)
+WoDX NPC (desk m2). follow-rules hearAlarm: keepers and the bold (Aggression 1 or more) walk to the intruder; the timid (Aggression under a half, or Cowardice 1 or more) and anyone facing what they fear make for their home on this map, else run from the trouble; the rest stay. Animals stay. House reading.
+
+Reverse: remove the hearer loop from the alarm case in doReaction.
+
+## B5682. Help that is sent for walks to the trouble (2026-11-15)
+WoDX NPC (desk m3). The watch who answer Send for help walk from the way in to the intruder and stand as a challenge (B5680).
+
+Reverse: remove the goTo loop from the send case.
+
+## B5683. An informer walks off to tell, and can be stopped (2026-11-15)
+WoDX NPC (desk m4). The informer walks to a region tagged as a gate (watch-house) on the map, else the way in, else away from the intruder. The report keeps who carries it; if they are dead, down or held when it falls due, it is dropped and the place does not go on alarm. The description of the intruder already goes round through WoDX's descriptions where there were witnesses. House reading.
+
+Reverse: drop the walk in the report case and the stopped() filter in checkAlerts.
+
+## B5684. One who runs makes for home and remembers (2026-11-15)
+WoDX NPC (desk m5). A fleeing NPC makes for its home or haven region on this map, else runs from the trouble. It keeps a memory note against the intruder (kind cold, -1, "Frightened them off", not seen by the player), and one of the kind who talk (the report tactic, townsfolk, or Aggression under a half) leaves a report as in B5683. House reading.
+
+Reverse: restore the old flee case.
+
+## B5685. A hostage is let go when the fight ends (2026-11-15)
+WoDX NPC (desk c1). When a fight ends, every hostage held in it is let go (the held condition and the taker's flag cleared), makes for home or runs, and keeps a memory note against the taker (harm, -4, seen). House reading.
+
+Reverse: drop releaseHostages from onCombatEnd.
+
+## B5686. A guard on watch walks a beat (2026-11-15)
+WoDX NPC (desk r3). An NPC whose routine block is On watch, on the map in view and not in a fight, walks to the next tagged place of that map at each quarter hour of world time and is back at its post on the hour, in Auto mode only. A map with one place keeps it still. House reading.
+
+Reverse: drop walkBeats from tick.
+
+## B5687. Kindred and Kuei-jin NPCs feed when their hunt ends (2026-11-15)
+WoDX NPC (desk r1). When a routine's hunting block ends for a Vampire NPC (blood pool) or one with Yang Chi (a Kuei-jin), the night's hunt is settled once. Prey on the same map (a passer-by, else a lone mortal townsperson) is walked to and fed on, as a player would. Otherwise the books' hunting roll is made through the hunting window's own rules (V20 pp. 259-260; V20 Dark Ages p. 334) with the NPC's best way to hunt. A success gives one die's worth of blood or Chi, the books' Storyteller option, never past the pool's top; a passer-by fed on loses what was taken. A failure leaves the NPC hungry for up to three days (Aggression +0.5, Hunger +1, prone to frenzy) until it feeds; a botch starts a severity 1 rumour with a witness. House reading on the figures.
+
+Reverse: drop the hunts list from tick and HN.withHunger from profileFor.
+
+## B5688. Criminals on the prowl pick a mark (2026-11-15)
+WoDX NPC (desk r2). Footpads and burglars by night, bandits by day and highwaymen at any hour, during their hunting block, pick a player's character within 30 yards with no one of theirs within 10 yards and no armed guard within 30, walk up and demand money. The player answers on the card: pay (half the carried purse, at least one), talk (the better of Manipulation + Intimidation and Charisma + Persuasion at difficulty 6, 7 for a bold one) or fight (the fight starter). Paid or talked down, the criminal leaves; refused, it fights. Each remembers the meeting. A mark is tried once in twelve hours. House reading.
+
+Reverse: remove prowl.hooks() from main.mjs.
+
+## B5690. Every grudge move does what it says (2026-11-15)
+WoDX NPC (desk g1). Still through the approval queue. Calling in a boon sets the owed boon due within seven days in the Ledger. Working against the character at court pulls the gentlest harmful lever the NPC's best seat opens, through Storyteller's own levers. Spoiling a venture costs the character's largest open venture a quarter of its value. Turning on someone dear gives the character's household and anyone warm to them a cold memory of the tale (a slight to those who court them). Meaning harm waits up to a week for a night when the character can be found, then hired men come there with a fight. House reading.
+
+Reverse: restore the card-only approve in memory.mjs.
+
+## B5691. An NPC who knows a wanted culprit acts (2026-11-15)
+WoDX NPC (desk g2). The Perception + Alertness roll on the recognition card is made for the NPC (Storyteller only). On a success: a guard or watchman challenges the culprit on the map and the law is sent for; townsfolk say nothing now and slip off to tell (B5683); a criminal keeps it as a hold, a crime secret it has found; a servant of the culprit was never tested. House reading.
+
+Reverse: drop knowAndAct from test in wanted.mjs.
+
+## B5692. An NPC's cult serves its founder (2026-11-15)
+WoDX NPC (desk e1). Each weekly turn an NPC founder's cult does what its kind is for: a blood or death cult stands as a Herd Background on the founder's sheet (V20 p. 114), a mage's, Wyrm or Netaru cult as a Cult Background (M20 p. 310), so the founder's own rolls use them; a Background the Storyteller set higher stands. The ordained drink of a vampire founder, take a pact with a demon or serve a mummy as cultists. A Wyrm cult raises its place's corruption a step. A sect gives the founder's faction a dot of church Influence a week, up to the cult's dots. The NPC's reason and the cult's purpose show on the founding card. House reading.
+
+Reverse: drop serve() from runTurns in cults.mjs.
+
+## B5693. The faithful on the map (2026-11-15)
+WoDX NPC (desk e2). Up to six of a cult's members are named from the mortal NPCs at its meeting place, the first ordained as the inner circle allows. Each named member keeps one evening a week (19:00 to 23:00, the same night for the same cult) at a tagged place on the meeting place's map, as a duty over their own hours. House reading.
+
+Reverse: drop the worship duties in serve().
+
+## B5694. A raid on a cult happens at the meeting place (2026-11-15)
+WoDX NPC (desk e3). Approving the raid sends the Church's men before 1700, the town's watch after, to the meeting place through Storyteller's reach; with the founder or one of the faithful there, a fight starts. The halving follows as before. House reading.
+
+Reverse: drop raidPlace from the raid handler.
+
+## B5695. NPC masters' servants attend them (2026-11-15)
+WoDX NPC (desk g3). At the monthly keeper turn every bound servant of an NPC master keeps hours at the master's haven or home (else where the master is): a Kindred's ghoul by day (V20 pp. 115-116), the rest 18:00 to 22:00. While one attends, the master's hunt (B5687) has one more die, a vessel brought. House reading.
+
+Reverse: drop attendAll from keeperTurn.
+
+## B5696. A follower sent to fetch brings back (2026-11-15)
+WoDX NPC (desk g4). At the one pointed at: a person at Unknown or better toward the master is given a follow order and walks back; one below says a stock refusal over their token; a thing (a token with no sheet traits) is carried along beside the follower. House reading.
+
+Aftercare (round two of the review): the fetched follow lasts an hour, then the one fetched goes back to its day; a fetch order in its way-back stage clears after an hour (fetchedHome in orders.mjs).
+
+Reverse: restore the card-only doFetch in orders.mjs.
+
+## B5697. Every Embrace off the screen has a reason (2026-11-15)
+WoDX NPC (desk g5). Each childe the years make gets a reason drawn from the sire's sect, half the time leaning on the sire's Nature (V20 Archetypes); it shows on the brood record and in the childe's sheet notes when brought into play. In a Camarilla or Dark Ages court a quarter of the Embraces by anyone but a Prince or lord are made without leave and become a grave secret on the sire. House reading.
+
+Reverse: drop the reason and noLeave lines in fates-rules.mjs and fates.mjs.
+
+## B5698. A faction on guard posts a sentry (2026-11-15)
+WoDX NPC (desk g6). When the Defend move lands, one of the faction's NPCs, another than the leader where one is free, keeps watch at the faction's first place for seven days of world time. House reading.
+
+Reverse: drop postGuard from applyNow in factions.mjs.
+
+## B5699. The body of a supernatural is taken as proof (2026-11-15)
+WoDX Storyteller (desk h1). Hunters who bring down a supernatural take the body by who hunts in the region: the bishop's court to be judged and burned (to 1230), the Inquisition as proof for a trial (1231-1833), the Society of Leopold's reliquary (from 1834, The Hunters Hunted II pp. 122-123), the Arcanum's scholars, a government morgue (from 1947); the imbued burn it where it lies (from 1999). With WoDX NPC's carrying the body is carried for real (intent "proof"); without it the nearest hunter walks to it and leaves with it, and the body token is hidden, never deleted (Put the body back on the card). Their file on that kind rises a level, the region's pressure falls by two, and a rumour goes round. House reading.
+
+Reverse: drop proof() from raidEnded in hunt-follow.mjs.
+
+## B5700. After a raid the hunters follow through (2026-11-15)
+WoDX Storyteller (desk h2). When a fight with raiding hunters ends: the quarry down, they take the body (B5699) and leave the map; half or more of them down, the rest run, their file on the quarry rises a level and pressure +1; otherwise they draw back. A raid that finds nobody at the place leaves one hunter watching it for three nights; one who sees the quarry come back sends word (the file grows). House reading.
+
+Reverse: drop the deleteCombat hook and missed() in hunt-follow.mjs and reach.mjs.
+
+## B5701. The investigator walks the town (2026-11-15)
+WoDX Storyteller (desk h3). An approved investigator comes onto the region's town map (one with a tagged market, tavern or church) and keeps a day there: the market in the morning, the tavern at midday, the church in the afternoon, lodging at the tavern. Each day they roll Perception + Investigation at difficulty 7; each success adds to the file on every culprit whose description is going round. Harm them and pressure rises by two; win one of the characters' regard to a friendly step and they leave early; after three days they go. A new Investigator extra (house figures). House reading.
+
+Reverse: drop investigator() from approve in hunters.mjs.
+
+## B5702. Someone a hunters' faction finds goes into the file (2026-11-15)
+WoDX NPC (desk h4). The one found on a faction turn goes into the region's hunters' file (two points of progress) and pressure there rises by one; a deep enough file brings the usual raid proposal. House reading.
+
+Reverse: drop the found() call in foundCard in factions.mjs.
+
+## B5703. A body found drained or savaged feeds the hunters (2026-11-15)
+WoDX Storyteller (desk h5). When a body is first found, drained of blood or savaged, the region's hunters' pressure rises by one, or two before 1700 and from 1986 (the years when the finding itself names something unnatural: a curse or witchcraft, a file that reaches the wrong people). From 1840, the age of the police surgeon, the body is taken to the morgue (hidden on the map), and the hunters claim it on their next turn: each file in the region grows, and a supernatural's body counts as proof (B5699). A mortal townsperson can be the first to find a body, as a player's character can. House reading.
+
+Reverse: drop bodyFound() from found() and claimMorgue() from turn().
+
 ## B5750. Witness reactions given by a window act on the map (2026-11-15)
 WoDX Actions. The witness step takes results already rolled (the Delirium check, a demon's Revelation) and acts them out: a frozen witness is Immobilized for the scene, a fleeing one runs, a fighting one starts a fight; those who keep it go on the Masquerade record. With no revealed actor on the map, nothing is recorded against anyone.
 
@@ -9147,3 +9269,138 @@ Reverse: drop the fifth element of each USES row and carryOut.
 WoDX Actions. Resources: money into the purse, a week of a month's allowance per success (house reading). Contacts: current rumours named, up to the successes. Influence: a boon owed by the institution in the Prestation journal. Retainers: servants named and their orders opened. Domain or Hunting Grounds with no success: a rival feeds there (the herd thins). A botch starts a rumour about the character.
 
 Reverse: remove downtimeDoes.
+
+## B5780. The Evocations desk built as picked (2026-11-15)
+WoDX Actions. Ben picked "Build this rule" for all eleven evocations on the Evocations desk and asked that every ritual have a tangible effect (2026-11-15 05:19Z). acts.js works the effects a keyword cannot: memory, vision, seize, mark, cleanse, remote and path. Each runs from the effects card on the active Storyteller's client and leaves an undo record. Evocation specs may now chain several keywords.
+
+Reverse: set the eleven specs in demon-evocations.js back to null and drop acts.js.
+
+## B5781. An NPC's ground effect lands under its target (2026-11-15)
+An NPC has no one to click a spot, so a ground area (a blaze, broken ground) from an NPC's power is placed at its target token's centre.
+
+## B5782. Alter Memory on an NPC forgets the demon (2026-11-15)
+WoDX NPC. Erasing a memory removes the NPC's memory notes and grudges of the demon (memory.forget); Undo restores them (memory.restore). An edit or a planted memory is written into the NPC's memory as a note. A player's character gets a private card to play the change.
+
+## B5783. NPC demons cover their tracks (2026-11-15)
+Ben's note on Alter Memory asked what an NPC demon would do with it. When a fight ends, an NPC demon who knows Alter Memory and has Faith left uses it on each mortal or hunter on the scene who does not already carry a changed memory.
+
+## B5784. Hand of Faith turns the next evocation back (2026-11-15)
+While a demon holds Hand of Faith, another demon's evocation on the scene with fewer successes than the seizing roll lands on its own user instead, and the hold is spent.
+
+## B5785. The Mark of the Celestials, read by NPCs (2026-11-15)
+The mark lasts a day for one success, a week for two, a month for three, a year for four or more. An NPC who meets the bearer reads it when its Wits are below the successes, or when it fails a hidden Willpower roll at 7; it warms (honour) or cools (shun) one step toward the bearer.
+
+## B5786. Touch from Afar and the words of a vision or a mark (2026-11-15)
+A player is asked for the words of a vision, a mark or a changed memory, and for whom Touch from Afar reaches (any token on any scene). An NPC demon reaches its current target.
+
+## B5787. A keyword may carry its flavour (2026-11-15)
+In a power's keyword list, "fortune:curse" or "boost:sap" passes the flavour to the keyword's outcome, so a ritual can chain a curse or a sapping with other keywords.
+
+## B5788. Sense lays a detection sense (2026-11-15)
+The Sense keyword puts a sense-all detection mode on the caster's token, 30 feet a step of duration, for the effect's duration, and whispers what the target's sheet and the scene show (hurt, Willpower, effects, darkness, hidden figures, worked ground). Undo or the end of the effect takes it off.
+
+## B5789. Know finds out a secret (2026-11-15)
+The Know keyword reveals the heaviest secret the target keeps that the caster has not found (WoDX NPC secrets, with its hook in the Ledger). With no secret left, what the sheet shows is pinned on the open case board as a clue and whispered, and the Storyteller may add an answer.
+
+## B5790. Beasts and ghosts need a power to talk (2026-11-15)
+WoDX NPC. The talk menu opens on an animal or a Wraith only for a character with a Speak effect running. Werewolves and other shapeshifters talk with beasts and the dead with the dead. The world setting "Beasts and ghosts need a power to talk" turns it off.
+
+## B5791. Hekau rituals do something (2026-11-15)
+The 36 Hekau rituals that only went to the Storyteller now give results: the weather magics set the weather, Tears of Isis gives Sekhem, the Chattels and Reflections make their things, the Bonds and Bindings bind, Name the Secret and Read the Tree of Life find out a secret and lay a curse or a blessing, Forgetting the Person dims the memories of those near, Rousing Apophis hurts everyone near. Two new spec kinds: K (any keyword's own outcome) and P (points into a pool).
+
+## B5792. The 63 book rituals that only told something chain world keywords (2026-11-15)
+Each of the 63 book rituals whose keywords were only Sense, Know or Speak gains the keyword its own effect names: Sight for the far-seeing rituals, Light, Hold, Fear, Summon, Manifest, Ward, Boost, Bind, Sway, Sideways, Fortune, Imbue or a charge. tools/powers/inventory.mjs now counts no ritual as a card only.
+
+## B5793. A binding holds the bound character's token (2026-11-15)
+The say-or-do audit (d19) found that a binding on a player character only posted a card. Now, while Hold or Possess binds a player's character, its player cannot move the token. Fear keeps the token from going nearer the one feared, who is remembered on the effect. A command or an oath (Sway, Bind) sends each move to the Storyteller, who allows or refuses it on a card. With no Storyteller on (a Lone Chronicle), a command's move stands, with a reminder. The world setting "Bindings hold the token" turns it off.
+
+Reverse: drop binds.js and its setup call in effects.js.
+
+## B5795. A pact gift does what it gives (2026-11-15)
+The say-or-do audit (d12) found that using a pact gift only said "it answers". Now a lesser evocation gift runs one of the giving demon's evocations, up to the gift's level and the demon's Lore, through the effects card as the thrall's own. An innate power lends dice to Social rolls for the scene, and an apocalyptic enhancement lends dice to Physical rolls, by the successes of the Willpower roll.
+
+## B5800. The law: held, sentenced, let go (2026-11-15)
+WoDX NPC (desk n1). An arrested NPC is held at a place tagged as a gate (the watch-house) until the verdict, or kept off the maps where there is none. Found not guilty or shown mercy: home for an hour, then the routine. A sentence of time keeps the NPC off the maps until it ends, then home first. Banished: the routine ends and the NPC is marked gone. Death: the dead status. Chronicle's mercy now fires wodxSentence with no mark. House reading.
+
+Reverse: drop onArrest, onVerdict and onSentence from aftercare hooks(), and the mercy Hooks.callAll in law-punish.mjs.
+
+## B5801. Wounds are tended and mend on the clock (2026-11-15)
+WoDX NPC (desk n2). After a fight a Kindred NPC spends blood to heal bashing and lethal levels, keeping two points back (V20). Injured or worse keeps to bed: with lethal or aggravated harm at Injured, or bashing at Wounded, at a hospital, else a church, monastery, temple, synagogue or mosque, else at home; otherwise at home. Levels heal on the mortal chart (M20 pp. 408-409): bashing an hour a level to Wounded, then three, six and twelve hours; lethal and aggravated a day, three days, a week, a month, two, three and five months. Back on the routine once no worse than Hurt. The same clock as the carried allies of the Aftercare thread.
+
+Reverse: drop afterFight and mendTick from hooks().
+
+## B5802. A rival who backs down (2026-11-15)
+WoDX NPC (desk n3). In a standoff the one outnumbered gives way, then the one off its own ground, then the less bold. It walks off, remembers being shamed, and the next meeting of the same two in thirty days is ten points likelier to come to blows. House reading.
+
+Reverse: drop standoff() and standoffBonus from rivalry.mjs.
+
+## B5803. After the Kiss (2026-11-15)
+WoDX NPC (desk n4). A mortal NPC fed on without consent is Dazed (V20 Dark Ages p. 348 condition) for ten minutes, or until the next morning when three or more points were drunk, and rests at home from ten minutes on until morning. House reading.
+
+Reverse: drop onFed and kissTick from hooks().
+
+## B5804. Mourning by faith (2026-11-15)
+WoDX NPC (desk n5). An NPC who loses someone close mourns: Western Christian 7 days, Orthodox 9, Islamic 3, Jewish 7 (shiva), Hindu 13, Theravada 7, Tibetan 49, Chinese 7, others 7. Home by day, and 18:00 to 21:00 at the faith's place of worship where the map has one. The mourner remembers whoever the dead fell fighting. House reading.
+
+Reverse: drop the aftercare mourn call in hearts.mjs tellLoved.
+
+## B5805. After a robbery (2026-11-15)
+WoDX NPC (desk n6). A robber who got money spends the night at the tavern until the next morning. The victim gets Report it to the watch: theft heat on the robber and a rumour. House reading.
+
+Reverse: drop spree() and the report button in prowl.mjs.
+
+## B5806. Married NPCs share a home (2026-11-15)
+WoDX NPC (desk n7). The one with no home moves; with two homes the bride moves to the groom's (the custom of most lands and ages); otherwise the one with the smaller household. Player characters' sex plays no part. A divorce moves the one who moved back (flag homeBefore). House reading.
+
+Reverse: drop onMarried and onDivorced from hooks(), and the wodxDivorced call in hearts.mjs.
+
+## B5820. The Shredding Winds hurt (2026-11-15)
+WoDX Otherworlds. The levels rolled go through the combat soak onto the mage (aggravated, lethal while the Storm fades); the Storyteller ticks Insulated when Life magick, enhanced armour or a Wonder spares the traveller. The token flashes.
+
+Reverse: remove the soakAndApply call after the card.
+
+## B5821. Net combat damage is rolled and applied (2026-11-15)
+WoDX Otherworlds. The winner's damage dice against the loser's Wits + protection, both at 6; what gets through is bashing on the loser (house reading: the book says only "damage"); a system loser is cracked open by that much.
+
+Reverse: remove the damage block in netContest.
+
+## B5822. Heightened senses overload is rolled (2026-11-15)
+WoDX Senses. Willpower at 6 for each heightened-senses token hit; a failure gives Dazed for a turn (stunned and deafened). A token already dazed is not rolled again.
+
+Reverse: restore the text-only overload card.
+
+## B5823. Sentences act (2026-11-15)
+WoDX Chronicle. A fine is paid from the purse at once, on credit when short: a month of a modest living (Resources 2 allowance) at weight 3, scaled by weight (house reading). Outlawry and banishment raise the law's heat in that land to Wanted. A death sentence holds the condemned (Held) for the scene.
+
+Reverse: remove carryOut in law-punish.mjs and declareWanted.
+
+## B5824. A raised building is paid for and lifts its town (2026-11-15)
+WoDX Chronicle, Storyteller. The patron pays three months of a Resources 4 living (two for a restoration) unless a cost is given; the scene's town takes a "build" or "restore" event (prosperity +0.15 or +0.1, unrest -0.05).
+
+Reverse: remove the payment and the lever call in raiseBuilding, and the two LEVER_TOWN rows.
+
+## B5825. Project complications act (2026-11-15)
+WoDX Storyteller. Each complication has a deed (TROUBLE_DOES): the next roll waits some days, successes are lost, a week of the character's living is paid, or a rumour starts about the character. A house reading: the texts stay the start of a scene.
+
+Reverse: drop TROUBLE_DOES and the lines in trouble().
+
+## B5826. Heartbreak shows for a week (2026-11-15)
+WoDX NPC. A heartbreak roll that is neither borne nor botched leaves a Heartsick condition for seven days: +1 difficulty on social rolls (Actions reads socialDiff).
+
+Reverse: remove the applyTimed call in heartbreak().
+
+## B5830. run-gate names the failed steps of the older gates (2026-11-15)
+Lanes. The kit's gates put their failed steps in the summary line, but the older gates (gate6b, gate6d, gate7d,
+gateconsensus and others) say only "17/18 passed", and their result files are gone after the next lane reset. When a
+summary has a shortfall and names no step, run-gate now reads the gate's result file, if it was written during this
+run, and adds "failed:" with each failed step and its detail.
+
+Reverse: drop the result-file read after mod.run().
+
+## B5831. gate6d reads three-digit versions; gate7d compares factions whatever the key order (2026-11-15)
+Gates. gate6d's version check was a regular expression that stopped matching at Actions 3.100.0. gate7d step 6
+compared the factions after Undo with a plain JSON.stringify, which fails when the keys come back in another order
+(the gatepolitics fault). Both are fixed, and the shared workflow notes now list these gotchas, along with the
+Foundry 14 rule to pass a fresh options object to each document update.
+
+Reverse: put the old checks back.
