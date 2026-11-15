@@ -29,6 +29,10 @@ const text = html => String(html ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g,
 export async function run() {
   const G = gate("gatehaul");
   if ( G.notLive() ) return "Not on the Live world.";
+  // what Interactables says to the console while the gate runs goes in the result (a step that fails shows why)
+  const said = [], keep = {error: console.error, warn: console.warn};
+  for ( const k of ["error", "warn"] ) console[k] = (...a) => { try { const t = a.map(x => x?.stack ?? x?.message ?? (typeof x === "string" ? x : JSON.stringify(x))).join(" "); if ( /wodx-interactables|haul/i.test(t) ) said.push(`${k}: ${t}`.slice(0, 400)); } catch {} return keep[k](...a); };
+  const heard = () => said.splice(0);
   try {
     const hx = () => game.modules.get(IX)?.api?.haul, C = game.wodxCombat;
     const scene = await G.scene({background: {src: "icons/svg/mystery-man.svg"}, width: 2000, height: 1500});
@@ -77,7 +81,7 @@ export async function run() {
       await sleep(600);
       const r = await hx().release(ta, {onto: cart.id});
       const aboard = await waitFor(() => (scene.tiles.get(cart.id)?.flags?.[IX]?.riders ?? []).some(x => x.t === tb.uuid), 6000);
-      G.ok("4. laid aboard a cart", r?.ok && aboard && !ta.flags?.[IX]?.hauling && !tb.flags?.[IX]?.haul, {r, riders: scene.tiles.get(cart.id)?.flags?.[IX]?.riders});
+      G.ok("4. laid aboard a cart", r?.ok && aboard && !ta.flags?.[IX]?.hauling && !tb.flags?.[IX]?.haul, {r, riders: scene.tiles.get(cart.id)?.flags?.[IX]?.riders, holding: ta.flags?.[IX]?.hauling ?? null, held: tb.flags?.[IX]?.haul ?? null, said: heard()});
     });
 
     await G.step("5. dragged and bleeding", async () => {
@@ -90,7 +94,7 @@ export async function run() {
       const trail = await waitFor(() => scene.drawings.some(d => d.flags?.[IX]?.trail?.kind === "blood"), 10000);
       const clue = scene.tiles.some(t => t.flags?.[IX]?.clueKind === "trail");
       const behind = Math.round(td.x) === 700 && Math.round(td.y) === 1000;
-      G.ok("5. dragged and bleeding", r?.ok && r.mode === "drag" && trail && clue && behind, {r, at: [td.x, td.y], dAt, cAt, cira: [tc.x, tc.y], trail, clue});
+      G.ok("5. dragged and bleeding", r?.ok && r.mode === "drag" && trail && clue && behind, {r, at: [td.x, td.y], dAt, cAt, cira: [tc.x, tc.y], trail, clue, holding: tc.flags?.[IX]?.hauling ?? null, held: td.flags?.[IX]?.haul ?? null, said: heard()});
     });
 
     await G.step("6. knocked down, it drops", async () => {
@@ -112,7 +116,7 @@ export async function run() {
       const t = scene.tiles.get(chest.id);
       const pic = !!t?.texture?.src && !!t.flags?.[IX]?.haulHome;
       const floor = scene.tiles.some(x => x.flags?.[IX]?.haulFloorOf === chest.id);
-      G.ok("7. a chest drawn into the map", r?.ok && moved && pic && floor, {r, x: t?.x, src: t?.texture?.src, home: t?.flags?.[IX]?.haulHome, floor, e0, e1, eli: [te.x, te.y]});
+      G.ok("7. a chest drawn into the map", r?.ok && moved && pic && floor, {r, x: t?.x, src: t?.texture?.src, home: t?.flags?.[IX]?.haulHome, floor, e0, e1, eli: [te.x, te.y], holding: te.flags?.[IX]?.hauling ?? null, held: t?.flags?.[IX]?.haul ?? null, said: heard()});
       await hx().release(te);
     });
 
@@ -129,7 +133,7 @@ export async function run() {
       await waitFor(() => shooter?.object && mark?.object);
       const cov = game.modules.get(IX).api.coverOnShot(shooter, mark);
       const still = !!scene.tiles.get(wardrobe.id)?.flags?.[IX]?.barricade;
-      G.ok("8. a doorway barricaded", r?.ok && blocked && still && !!wall && Number(wall.move) > 0 && door?.id && cov.diff >= 2, {r, e0, wall: wall ? {move: wall.move, c: wall.c} : null, cov, still});
+      G.ok("8. a doorway barricaded", r?.ok && blocked && still && !!wall && Number(wall.move) > 0 && door?.id && cov.diff >= 2, {r, e0, wall: wall ? {move: wall.move, c: wall.c} : null, cov, still, at: [scene.tiles.get(wardrobe.id)?.x, scene.tiles.get(wardrobe.id)?.y], said: heard()});
     });
 
     await G.step("9. a safe will not budge for one", async () => {
@@ -143,7 +147,7 @@ export async function run() {
       await waitFor(() => !hx().fallenOf(td).down, 4000);
       await hx().take(td, scene.tiles.get(safe.id), "push");
       const two = hx().loadOf(scene.tiles.get(safe.id));
-      G.ok("9. a safe will not budge for one", one && !one.move.budge && two && two.strength > one.strength && two.team.length === 2, {one: one?.move, two: two ? {move: two.move, strength: two.strength} : null});
+      G.ok("9. a safe will not budge for one", one && !one.move.budge && two && two.strength > one.strength && two.team.length === 2, {one: one?.move, two: two ? {move: two.move, strength: two.strength} : null, held: scene.tiles.get(safe.id)?.flags?.[IX]?.haul ?? null, said: heard()});
       await hx().release(te); await hx().release(td);
     });
 
@@ -161,5 +165,5 @@ export async function run() {
       await hx().release(ta);
     });
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }
-  finally { return G.finish(); }
+  finally { console.error = keep.error; console.warn = keep.warn; if ( said.length ) G.R.notes.push(...said.slice(0, 20)); return G.finish(); }
 }
