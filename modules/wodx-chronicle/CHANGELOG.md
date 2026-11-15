@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.122.0 (Ghouls fed by their domitor (B4983): the feeding waits for the Storyteller's approval and then happens by itself; Who may be granted Golconda (B5093))
 - 0.121.0 (A ghoul's monthly need, carried out by itself (B5050 to B5054), for human and animal ghouls alike, the Storyteller's as well as the players'. Before, the Clan features card only asked someone to take a blood point away; now the sheet changes, the craving is rolled (V20 Dark Ages p. 401: Self-Control at difficulty 7, Willpower for an animal) and a botch sends out the wodxGhoulCraving hook. New world setting "Ghouls need vitae each month", on by default; with it off the old card comes back. Animal ghouls on Creature sheets carry the ghoul row)
 - 0.120.1 (Shipped tables written eight at a time (B5340))
 - 0.120.0 (The Philippines becomes a world region of its own (B5150 to B5152))

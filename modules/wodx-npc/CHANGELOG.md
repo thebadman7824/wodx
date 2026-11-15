@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.87.0 (Masters of Golconda keep out of the Jyhad (B5097, V20 pp. 299-300))
 - 0.86.0 (Animal ghoul behaviour (B5055 to B5057): the fight AI's frenzy option for animal ghouls (V20 Dark Ages p. 401 for when, Kindred of the Ebony Kingdom p. 185 for the triggers, no easier difficulty), the bound animal's loyalty floor in the loyalty drift, and the craving botch from WoDX Chronicle's monthly need)
 - 0.85.0 (The Philippines in NPC politics, routines and talk (B5152))
 - 0.84.0 (The NPC side of the Storyteller's Hand, part three (B4880-B4885))

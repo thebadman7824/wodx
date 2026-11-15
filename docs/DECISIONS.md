@@ -234,13 +234,16 @@ Next free block: B5480
 | B4820-B4849 | Summoning rules and power effect bounds (used B4820-B4849) | Actions |
 | B4850-B4859 | Rothenstein Rebuilt: book one's twist web (six chains, locks, one twist a week) (used B4850-B4853) | Chronicle |
 | B4860-B4889 | The Storyteller's Hand, part two: clan, tribe, kith and creed features act by themselves (Ben's desk picks s1-s5, 14 November 2026) (used B4860-B4889) | Chronicle, Combat, Actions, Storyteller, NPC, Interactables |
+| B4890-B4899 | Day and night by themselves for the Kindred (sleep, vigil, waking, rising, burns) (used B4890-B4897) | Actions |
 | B4900-B4909 | Sami names (used B4900-B4902) | Creation, Chronicle |
 | B4910-B4919 | Rothenstein Rebuilt: book one fronts, roles and clue carriers (spine part two) (used B4910-B4917) | Chronicle |
 | B4950-B4959 | Tuareg names (used B4950-B4952) | Creation, Chronicle |
+| B4980-B4999 | The Automation Desk: player actions that follow the rules by themselves, every line (used B4980-B4999) | Actions, Chronicle |
 | B5000-B5009 | Moro names (used B5000-B5002) | Creation, Chronicle |
 | B5010-B5029 | The Storyteller's Hand, part three: fire, noticing, and the rest of the desk acts by itself (Ben's desk picks, 14 November 2026) (used B5010-B5024) | Interactables, Actions, Senses, Library, Chronicle, Storyteller, Otherworlds, Creation |
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5057) | Creation, Chronicle, NPC, Sheets, Actions, Combat |
+| B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 | B5180-B5189 | Names raised to 300, Thai (used B5180) | Creation |
 | B5190-B5199 | Names raised to 300, Malay (used B5190) | Creation |
@@ -7735,6 +7738,48 @@ WoDX Interactables. Pick o5. A window, spyhole or lookout with no tied area now 
 
 Reverse: watchReport reads the tied area alone.
 
+## B4890. Cainites sleep by day by themselves (2026-11-14)
+WoDX Actions. Every Cainite the clock covers (tokens on the active scene and every player character) who is not in torpor falls asleep while the sun is up and rises at their own hour: sunset moved by Humanity or Road as in riseOffset (7+ ten minutes before, 5-6 at sunset, 4 twenty minutes after, down to an hour after at 1; V20 p. 311, V20 Dark Ages p. 113). The check is by state on every clock tick, so a long jump of the clock lands on the right state. The sleep marker goes on the token. A player cannot use the Action dialog for a sleeping Cainite (the Storyteller can). Setting "The day's sleep", on by default.
+
+Kuei-jin sleep too and roll Hun or Dharma, the higher, in place of Humanity (Kindred of the East p. 139); their rising hour uses the same rating.
+
+Reverse: turn "The day's sleep" off; Dawn and Nightfall cards then show the old buttons.
+
+## B4891. The dawn vigil (2026-11-14)
+WoDX Actions. "At dawn, try to stay awake" in Sun and haven. At dawn the Awakening roll (Road or Humanity, difficulty 8; Deep Sleeper +2, Light Sleeper wakes at once; V20 pp. 262-263) is rolled by itself once a day. Each success is a turn of three seconds of the clock, counted down by a fight's rounds too; five successes are the scene, taken as an hour of the clock. When the turns run out, sleep takes them. House reading: a scene is an hour of the clock for this purpose.
+
+Reverse: untick the vigil on the character.
+
+## B4892. Hurt in the day's sleep (2026-11-14)
+WoDX Actions. A sleeping Cainite who takes damage rolls the Awakening roll by itself. Being hurt counts as noticed, so the Perception roll is skipped (house reading). A botch sleeps until sundown and nothing rouses them. The Awaken by day dialog also clears or deepens the sleep by its result.
+
+Reverse: roll Perception first by hand with Awaken by day.
+
+## B4893. Healing on rising (2026-11-14)
+WoDX Actions. As a Cainite rises, blood above the hunger line heals bashing and lethal wounds by itself, as the Nightfall card's button did. Setting "Heal on rising", on by default.
+
+Reverse: turn "Heal on rising" off; the Nightfall card's buttons return.
+
+## B4894. Rolls for the Storyteller's Cainites stay hidden (2026-11-14)
+WoDX Actions. The vigil and waking rolls of a Cainite with no player owner go to the Storyteller only, blind (standing rule 19). The day's sleep card for them is the Storyteller's only.
+
+Reverse: none needed.
+
+## B4895. New Night and the sun's burns by themselves (2026-11-14)
+WoDX Actions. "Dawn and dusk" now defaults to New Night run at dusk, and "Sunlight damage" to roll and apply. Once per world, a world still on the button setting is moved over, with a whispered note to the Storyteller. A world set to Off keeps it. Rötschreck after a burn stays a button, because the player chooses whether to spend Willpower.
+
+Reverse: set either setting back to "A card with a button" / "Cards with buttons".
+
+## B4896. The sun and sleep shown on the map (2026-11-14)
+WoDX Actions. A Cainite in the sun carries Foundry's burning marker while exposed, with the damage floating over the token for everyone; the marker comes off in shade or at night. The sleep marker shows the day's sleep, and "Asleep", "Rises" and "Fights the dawn" float over the token on every client.
+
+Reverse: none needed; the markers are Foundry's own status effects.
+
+## B4897. Solo play (2026-11-14)
+WoDX Actions. The Lone Chronicle's "Sleep the day" and waits work with the day's sleep: the cards are whispered to the character's owner, so a wait stops at dawn when word comes, and the character rises at their own hour.
+
+Reverse: none needed.
+
 ## B4900. Scandinavia holds the Sami beside the Norse (2026-11-14)
 WoDX Creation and Chronicle. Scandinavia was all Norse; the Sami of the north are now 6 in 100 in the medieval and early-modern mix, 4 in the industrial age and 3 today. The Kola Sami in the Russian mix wait. Taken as recommended; logged in PENDING-REVIEW.
 
@@ -7804,6 +7849,59 @@ Reverse: edit the tuareg entry in data/people-world.mjs.
 WoDX Creation. A Tuareg is "ag" (son of) or "welet" (daughter of) the father's name, then and now; no family names.
 
 Reverse: give the tuareg entry a fam list.
+
+## B4980. The Beast's checks roll by themselves (2026-11-14)
+WoDX Actions. When a wound, hunger, the sight of blood, fire or the sun provokes the Beast, the frenzy or Rötschreck check is rolled by itself with the same difficulty the dialog would use (dawn dread, fire steps, Merits and Flaws). It repeats each turn while the result holds, up to eight turns. Willpower is spent to hold only when the character is marked to in the check's dialog. Characters on Golconda, in torpor or already in frenzy are skipped. Setting "Frenzy and Rötschreck by themselves", on by default (Ben's v2 pick).
+
+Reverse: turn the setting off; the cards with buttons return.
+
+## B4981. The Storyteller's characters roll in private (2026-11-14)
+WoDX Actions. An automatic check for a character with no player owner is whispered blind to the Storyteller (standing rule 19). The Rötschreck check follows a sun burn by itself.
+
+## B4982. Rising from torpor by itself (2026-11-14)
+WoDX Actions. When a torpor's time is up, a blood point is spent and the Road rolled at 8 by itself (V20 p. 285). On a failure or with no blood, it tries again the next night. Setting "Rise from torpor by itself".
+
+## B4983. A ghoul fed by the domitor, with approval (2026-11-14)
+WoDX Chronicle. When a ghoul goes a month without vitae and the domitor stands on the same active scene with blood, the Storyteller gets an approval. Once approved, a blood point moves from domitor to ghoul and the month starts again (V20 Dark Ages p. 397). This is Ben's one "gate" pick (v4).
+
+## B4984. Kuei-jin rise with Chi by themselves (2026-11-14)
+WoDX Actions. At the day's-sleep rising hour a Kuei-jin rises with Chi by the cycle kept in the Rise dialog, once a night, and P'o is rolled for Demon Chi (Kindred of the East pp. 91, 139). They do not heal with blood on rising.
+
+## B4985. The sun on a Kuei-jin (2026-11-14)
+WoDX Actions. A Kuei-jin in the sun uses Kindred of the East's rule (p. 151): the day's grace in minutes, then rot each turn, Yang spent against it when marked in the Rise dialog. It shows the burning marker with "Rots: N" or "Endures the sun".
+
+## B4986. Rising on Rage by itself (2026-11-14)
+WoDX Actions. A shapechanger who falls past Incapacitated rolls Rage at 8 by itself, once a scene (W20 pp. 145, 256; DA:W p. 91). The worst wound type on the track decides the result. A character can be unmarked in the Remain active dialog. Setting "Rise on Rage by itself".
+
+## B4987. A shapechanger's daily meditation (2026-11-14)
+WoDX Actions. A shapechanger marked in the Meditate dialog rolls Wits + Enigmas once a day by itself as the clock passes into a new day, outside a fight. It gains up to one Gnosis an hour of the hours set, and later days in the week cost more (DA:W p. 92; W20 p. 146). Setting "Meditation by itself".
+
+## B4991. A mage's Quintessence by meditation (2026-11-14)
+WoDX Actions. A mage marked with the new "Meditate for Quintessence each day" row draws Quintessence once a day by itself. The amount is the Avatar's rating, or a Node's rating when the mage lives on one and it is higher. It never goes past the wheel's room beside Paradox (M20 p. 330). House reading: once a day, the higher of the two, no roll. Setting "A mage's Quintessence by itself".
+
+## B4992. The Crusade's Scourge cleared on the clock (2026-11-14)
+WoDX Actions. In the Purify dialog the days alone in meditation begin, and the Scourge clears by itself when the clock has passed them (Sorcerers Crusade p. 249). Working magick meanwhile breaks the meditation. Setting "Purifying the Scourge on the clock".
+
+## B4993. Chimerical wounds heal with the clock (2026-11-14)
+WoDX Actions. Chimerical damage heals by Changeling 20th's Chimerical Healing Times (pp. 290-291). The times are halved where the Storyteller marks the scene a freehold or glade (new GM row "This place"). In the Dreaming each level takes 15 minutes. Incapacitated outside the Dreaming heals only in a freehold. House reading: aggravated chimerical levels take the lethal time, at least a day each (twelve hours in the Dreaming). Setting "Chimerical wounds heal by themselves".
+
+## B4994. Willpower from a Fetter at a scene's end (2026-11-14)
+WoDX Actions. The Fetter dialog can mark a selected token as a wraith's Fetter. At each scene's end that both share, the Fetter is rolled at 6 for Willpower by itself (Wraith 20th p. 308). Setting "Fetters give Willpower by themselves".
+
+## B4995. Corpus mends with the clock (2026-11-14)
+WoDX Actions. A wraith's bashing Corpus heals a level an hour by itself (Wraith 20th p. 295). Setting "Corpus mends by itself".
+
+## B4996. A mummy's day for Sekhem (2026-11-14)
+WoDX Actions. A mummy marked in the Sekhem dialog spends each day in Osiris's Blessing (within the Web of Faith) or the haven's meditation. The roll is made by itself after the Gift of Ra (Mummy: The Resurrection pp. 143-144). Setting "A mummy's day for Sekhem by itself".
+
+## B4997. Conviction at a story's end for every imbued (2026-11-14)
+WoDX Actions. End of story already set a Hunter sheet's Conviction back to the creed's level. It now does so for any character with a creed set in Hunter traits too (Hunter: The Reckoning p. 138).
+
+## B4998. Vitality from rest (2026-11-14)
+WoDX Actions. An Orpheus character regains a Vitality point each eight hours of the clock by itself, up to the starting rating (Orpheus pp. 191-192). A skimmer regains one each hour, resting in the body (p. 122). The count does not run during a fight the character is in, and a loss starts it again. Setting "Vitality returns with rest".
+
+## B4999. What stays by hand (2026-11-14)
+Per Ben's picks, Changeling's Glamour from the Dreaming (c2), a wraith's Pathos from Passions (w3) and a demon's Torment from sins (d1) stay as dialogs. They need the player's or the Storyteller's judgment.
 
 ## B5000. The Moro in the Malay world's mix (2026-11-14)
 WoDX Creation and Chronicle. The Maguindanao, Maranao and Tausug of Mindanao and Sulu are 4 in 100 in the Malay world's mix before the industrial age and 3 after, beside the Filipinos (B4750). Taken as recommended; logged in PENDING-REVIEW.
@@ -7999,6 +8097,30 @@ Reverse: the animalGhoul block in scoreOptions.
 WoDX NPC. When a Storyteller's ghoul botches its craving roll (B5051), its token moves next to the nearest living mortal on the scene and the Storyteller is told it means to drink. Player characters' ghouls are left to their players. Desk item 12.
 
 Reverse: the wodxGhoulCraving hook in main.mjs.
+
+## B5090. Golconda ends when its purity fails (2026-11-14)
+WoDX Actions. A vampire in Golconda falls from it by itself when the Road drops below 7 or Conscience (or Conviction) below 4 (V20 Dark Ages p. 359; Ben's pick go1). A card goes to the player and the Storyteller, and "Golconda lost" floats over the token. Frenzy, Rötschreck and the nightly blood loss return. The long road can be walked again. Setting "Golconda's rules".
+
+## B5091. Traits to 10 in Golconda (2026-11-14)
+WoDX Actions and WoDX Creation. While Golconda holds, the sheet's Ability and Discipline limits rise to 10 whatever the Generation, and experience may buy Traits to 10. The blood pool stays as it was (V20 Dark Ages p. 359; go2). Losing Golconda puts the Generation's limit back. Dots already above it are left for the Storyteller.
+
+## B5092. Beyond some powers' reach (2026-11-14)
+WoDX Actions. Speak Through the Blood (V20 p. 158; V20 Dark Ages p. 220), Summon Soul (V20 p. 161) and the ritual Insight (V20 p. 177) do not take hold on a vampire in Golconda. The power's card says so (go3).
+
+## B5093. Who may be granted Golconda (2026-11-14)
+WoDX Chronicle. At the end of the long road, the Grant button appears only for a vampire on the Road of Humanity with Humanity 7 and Conscience 4. If they fall short, a card says what is missing. On another Road or a Path the grant goes to the approval queue, and once the Storyteller approves, it happens (V20 Dark Ages pp. 115, 359; V20 p. 300; Ben's pick go4, gate).
+
+## B5094. The Golconda halo (2026-11-14)
+WoDX Senses. A soft pale halo shows round a vampire in Golconda on the Storyteller's map always. A player sees it while using a sight that draws rings (Aura Perception, Heightened Senses and the like). This is a house touch, since the books describe no sign (go5).
+
+## B5095. The still aura (2026-11-14)
+WoDX Senses and WoDX Otherworlds. The aura ring reads "pale and still". Read the Soul shows no frenzy ripples and no shift beneath, and adds "a deep stillness" with a pale ring on the overlay. This is a house reading (go6).
+
+## B5096. The sun one step weaker (2026-11-14)
+WoDX Actions. For a vampire in Golconda the sun counts one step weaker on the ladder: direct as a cloudy day, cloudy as indirect, and so on, while faint stays faint. This is a house rule from Ben's decision card (go7). The burn card says "Golconda's grace".
+
+## B5097. Masters of Golconda keep out of the Jyhad (2026-11-14)
+WoDX NPC. A vampire in Golconda is drawn into no rivalry or feud fight, and the werewolves leave them be (V20 pp. 299-300; V20 Dark Ages p. 359; go8).
 
 ## B5150. The Philippines a region of its own (2026-11-15)
 WoDX Chronicle and Storyteller. Ben asked to build out the Philippines. The islands leave the Malay world and become the 45th world region, "The Philippines (Manila, the Visayas, Mindanao and Sulu)", with Manila as its city, the tropical wet climate and the Philippine money region. The world map gives it the squares north of 4.5 degrees and east of 119.5 (with Palawan) that were the Malay world's; the map builder cuts the country out by name on its next run. The region's letter comes last so no older square changes. Taken as recommended; logged in PENDING-REVIEW.

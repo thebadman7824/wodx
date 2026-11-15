@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.69.0 (Golconda lifts the Generation's limit on Traits (B5091, V20 Dark Ages p. 359))
 - 0.68.0 (Dutch names raised to 300 (B5440); Greek names raised to 300 (B5460); Irish names raised to 300 (B5450); Polish names raised to 300 (B5470); Portuguese names raised to 300 (B5430))
 - 0.67.0 (Hungarian names raised to 300 (B5400); Persian names raised to 300 (B5410); Yoruba names raised to 300 (B5420))
 - 0.66.0 (Korean names raised to 300 (B5360); Mande names raised to 300 (B5370); Turkish names raised to 300 (B5350); Zulu names raised to 300 (B5380))
