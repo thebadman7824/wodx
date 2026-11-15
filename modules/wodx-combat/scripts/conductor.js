@@ -26,7 +26,7 @@ const FLAG = "conductor";
 export function registerConductorSettings() {
     const s = (key, name, hint, type, def, extra = {}) => game.settings.register(MOD, key, { name, hint, scope: "world", config: true, type, default: def, ...extra });
     s("turnConductor", "Turns advance on their own",
-        "Off: the Storyteller advances every turn. NPC turns: an NPC's turn ends when WoDX NPC has acted or the plan is accepted. Everyone: player characters' turns end too, when the action is spent or the time runs out.",
+        "Off: the Storyteller advances every turn, and Next at the end of a round still gives the extra actions (Celerity, Rage, Hasten) their pass. NPC turns: an NPC's turn ends when WoDX NPC has acted or the plan is accepted. Everyone: player characters' turns end too, when the action is spent or the time runs out.",
         String, "off", { choices: CR.LEVELS, onChange: () => refreshBanner() });
     s("conductorGrace", "Countdown after the action (seconds)",
         "Once a player character's action is spent, the turn ends after this many seconds unless the player holds it.",
@@ -62,6 +62,9 @@ function cannotAct(c) {
     if (!a || c.isDefeated) return true;
     const cond = chron()?.conditions;
     if (NO_ACTION.some(id => cond?.hasCondition?.(a, id))) return true;
+    // B6151: a failed stand-up from a knockdown spent this turn's action
+    const lost = a.getFlag?.(MOD, "lostAction"), combat = c.parent ?? c.combat ?? null;
+    if (lost && combat && lost.combat === combat.id && Number(lost.round) === Number(combat.round)) return true;
     const d = a.system?.health?.damage ?? {};
     return (Number(d.bashing) || 0) + (Number(d.lethal) || 0) + (Number(d.aggravated) || 0) >= 7 && !a.items?.some?.(i => i.type === "Advantage" && i.system?.id === "corpus");
 }
@@ -183,15 +186,62 @@ export async function advance(combat = game.combat, note = null) {
         return nextRound(combat);
     }
     if (isLastTurn(combat)) {
-        const queue = CR.extraPass(combat.combatants.contents.map(c => ({ id: c.id, initiative: c.initiative, extra: extraOf(c, combat), defeated: c.isDefeated })));
-        if (queue.length) {
-            await combat.setFlag(MOD, FLAG, { ...s, phase: "extra", round: combat.round, queue, index: 0 });
-            await whisperGM(`Extra actions, in Initiative order: ${queue.map(q => `${esc(combat.combatants.get(q.id)?.name)} (${q.n})`).join(", ")} (VtDA20 p. 344; W20 p. 268).`);
-            return combat.update({ turn: combat.turns.findIndex(c => c.id === queue[0].id) });
-        }
+        const queue = extraQueue(combat);
+        if (queue.length) return startExtraPass(combat, queue);
         return nextRound(combat);
     }
     return combat.nextTurn();
+}
+
+const extraQueue = combat => CR.extraPass(combat.combatants.contents.map(c => ({ id: c.id, initiative: c.initiative, extra: extraOf(c, combat), defeated: c.isDefeated })));
+async function startExtraPass(combat, queue) {
+    await combat.setFlag(MOD, FLAG, { ...state(combat), phase: "extra", round: combat.round, queue, index: 0 });
+    await whisperGM(`Extra actions, in Initiative order: ${queue.map(q => `${esc(combat.combatants.get(q.id)?.name)} (${q.n})`).join(", ")} (VtDA20 p. 344; W20 p. 268).`);
+    return combat.update({ turn: combat.turns.findIndex(c => c.id === queue[0].id) });
+}
+
+/*
+ * B6154: with the conductor off, Foundry's own Next turn and Next round run the extra-action pass too. Reaching the
+ * round's end starts the pass (Celerity, Rage and Hasten extra actions, declared ones) in Initiative order; Next inside
+ * the pass goes to the next one in it, and after the last the round ends. A player's Next that would start the pass or
+ * move inside it is passed to the active Storyteller's client, which can write the fight's state.
+ */
+let foundryNextTurn = null, foundryNextRound = null;
+function offPassWanted(combat) {
+    return level() === "off" && !!combat?.started;
+}
+async function offPass(combat, kind) {
+    if (!offPassWanted(combat)) return undefined;
+    if (phaseOf(combat) === "extra") {
+        const queue = state(combat).queue ?? [];
+        const i = queue.findIndex(q => q.id === combat.combatant?.id);
+        const next = i >= 0 ? queue[i + 1] : null;
+        if (!game.user.isGM) return requestNext(combat);
+        if (next) {
+            await combat.setFlag(MOD, FLAG, { ...state(combat), index: i + 1 });
+            return combat.update({ turn: combat.turns.findIndex(c => c.id === next.id) });
+        }
+        return foundryNextRound.call(combat);
+    }
+    if (kind === "turn" && !isLastTurn(combat)) return undefined;
+    const queue = extraQueue(combat);
+    if (!queue.length) return undefined;
+    if (!game.user.isGM) return requestNext(combat);
+    return startExtraPass(combat, queue);
+}
+function requestNext(combat) {
+    if (!game.users.activeGM) return undefined; // no Storyteller to write the state: Foundry's own Next
+    game.socket.emit(SOCKET, { conductor: true, action: "next", combatId: combat.id, combatantId: null, userId: game.user.id });
+    return combat;
+}
+export function wrapFoundryNext() {
+    const proto = CONFIG.Combat?.documentClass?.prototype;
+    if (!proto || foundryNextTurn || typeof proto.nextTurn !== "function" || typeof proto.nextRound !== "function") return false;
+    foundryNextTurn = proto.nextTurn;
+    foundryNextRound = proto.nextRound;
+    proto.nextTurn = async function (...args) { const r = await offPass(this, "turn"); return r === undefined ? foundryNextTurn.apply(this, args) : r; };
+    proto.nextRound = async function (...args) { const r = await offPass(this, "round"); return r === undefined ? foundryNextRound.apply(this, args) : r; };
+    return true;
 }
 
 async function nextRound(combat) {
@@ -271,6 +321,7 @@ async function onRequest(p) {
     if (!owns) return;
     switch (p.action) {
         case "end": if (combat.combatant?.id === c?.id) return advance(combat); return;
+        case "next": if (level() === "off" && combat.combatant?.id === c?.id) return combat.nextTurn(); return; // B6154
         case "hold": if (combat.combatant?.id === c?.id) return hold(combat, c); return;
         case "stepIn": return stepIn(combat, c);
         case "extra": return declareExtra(combat, c, 1);
@@ -327,6 +378,7 @@ export function refreshBanner() {
 export function installConductor() {
     game.socket.on(SOCKET, p => { if (p?.conductor) onRequest(p).catch(e => console.error(`${MOD} | conductor`, e)); });
     Hooks.on("wodxNpcTurnDone", r => { try { onNpcReport(r); } catch (e) { console.error(e); } });
+    try { wrapFoundryNext(); } catch (e) { console.error(`${MOD} | extra pass`, e); }
     Hooks.on("createChatMessage", msg => { try { onMessage(msg); } catch (e) { console.error(e); } });
     // The turn moved (Next, Step back, or set by hand): coming back to a turn starts it afresh
     Hooks.on("updateCombat", (combat, changes) => {
@@ -343,4 +395,4 @@ export function installConductor() {
     refreshBanner();
 }
 
-export const conductorApi = { advance, hold, stepIn, declareExtra, request, refreshBanner, rules: CR, state: () => ({ ...(cur ?? {}) }) };
+export const conductorApi = { advance, hold, stepIn, declareExtra, request, refreshBanner, rules: CR, extraQueue, state: () => ({ ...(cur ?? {}) }) };

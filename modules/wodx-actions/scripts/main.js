@@ -3614,7 +3614,7 @@ function kindredHooks() {
     // A blow from a vampire marks the target as fought, for the bloodlines whose blood must be taken by force (3.41.0)
     Hooks.on("wodxDamageApplied", async (actor, info) => {
         try {
-            if (!info?.attacker || !actor?.isOwner) return;
+            if (!info?.attacker || !actor?.isOwner || info.relayed) return; // B6150: the applying client already marked it
             const d = await fromUuid(info.attacker);
             const by = d?.actor ?? d;
             if (!by || !isVampire(by) || by.id === actor.id) return;

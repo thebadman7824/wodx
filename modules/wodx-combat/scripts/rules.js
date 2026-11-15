@@ -664,6 +664,43 @@ export function stoodPenalty(flag, combat) {
     if (!flag || !combat || flag.combat !== combat.id) return 0;
     return Number(combat.round) === Number(flag.round) + 1 ? 2 : 0;
 }
+/** B6151: a failed stand-up spends the turn's action: true while the flag {combat, round} is for this fight's turn now. */
+export function lostActionNow(flag, combat) {
+    return !!flag && !!combat && flag.combat === combat.id && Number(flag.round) === Number(combat.round);
+}
+/**
+ * B6151: how long a knockdown lasts. In a fight with the stand-up roll on it lasts until the character stands (the
+ * roll at the start of each of their turns clears it); with the roll off, until their next turn as before; outside a
+ * fight, until the scene ends.
+ */
+export function knockdownDuration({ inFight = false, standRoll = true } = {}) {
+    if (!inFight) return { kind: "scene" };
+    return standRoll ? { kind: "scene" } : { kind: "rounds", rounds: 1 };
+}
+/**
+ * B6151: the -2 Initiative after standing when Initiative is not rolled again each turn (autoInitiative "start" or
+ * "off"). At the start of the turn after standing the combatant's Initiative drops by 2 ({lower: 2}); at the start of
+ * the turn after that it goes back up ({restore: 2}). stood: the stoodUp flag; restore: the stoodRestore flag.
+ */
+export function stoodInitiativeStep({ stood = null, restore = null, combat = null, reroll = false } = {}) {
+    if (!combat) return {};
+    const out = {};
+    if (restore && restore.combat === combat.id && Number(combat.round) > Number(restore.round)) out.restore = Number(restore.by) || 2;
+    if (!reroll && stoodPenalty(stood, combat)) out.lower = 2;
+    return out;
+}
+
+/** B6152: the token is on full defence this turn: WoDX NPC's flag "<combatId>:<round>" for the fight's turn now. */
+export function fullDefenseNow(flag, combat) {
+    return !!flag && !!combat && String(flag) === `${combat.id}:${combat.round}`;
+}
+
+/** B6153: the Ability a ranged weapon with none set on its sheet uses: Firearms for a gun, Archery for anything else. */
+export function rangedAbilityDefault(name = "") {
+    const s = String(name ?? "");
+    if (isCrossbow(s) || /\b(bow|longbow|shortbow|sling|blowpipe|blowgun)\b/i.test(s)) return "archery";
+    return GUN.test(s) ? "firearms" : "archery";
+}
 
 /** B5160: what conditions do to the body: mods.bodyBruised (extra Bruised levels) and mods.bodyEase (99: no wound penalties). Null for none. */
 export function conditionBody(conditions = []) {
