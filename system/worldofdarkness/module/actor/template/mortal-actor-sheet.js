@@ -1,4 +1,5 @@
 import DropHelper from "../../scripts/drop-helpers.js";
+import LegacyActorSheetV2 from "./legacy-sheet-v2.js";
 import ActionHelper from "../../scripts/action-helpers.js";
 import CreateHelper from "../../scripts/create-helpers.js";
 import BioHelper from "../../scripts/bio-helpers.js";
@@ -14,7 +15,8 @@ import BonusHelper from "../../scripts/bonus-helpers.js";
 import { calculateHealth } from "../../scripts/health.js";
 import * as selectbox from "../../scripts/spec-select.js";
 
-export default class MortalActorSheet extends foundry.appv1.sheets.ActorSheet {
+/** The Mortal sheet's code, on either sheet engine (B6110): the old one (appv1 ActorSheet) or ApplicationV2 through LegacyActorSheetV2. */
+export const MortalSheetMixin = Base => class extends Base {
 	
 	/** @override */
 	static get defaultOptions() {
@@ -34,11 +36,11 @@ export default class MortalActorSheet extends foundry.appv1.sheets.ActorSheet {
 		});
 	}
   
-	constructor(actor, options) {
-		super(actor, options);
+	constructor(...args) {
+		super(...args);
 
 		this.isGM = game.user.isGM;	
-		this.isLimited = actor.limited;
+		this.isLimited = this.actor.limited;
 		this.locked = true;
 		this.isCharacter = true;
 		this.variantOpen = false;
@@ -1415,7 +1417,15 @@ export default class MortalActorSheet extends foundry.appv1.sheets.ActorSheet {
 		actorData.system.settings.isupdated = false;
 		await this.actor.update(actorData);
 	}		
-}
+};
+
+const MortalActorSheet = MortalSheetMixin(foundry.appv1.sheets.ActorSheet);
+Object.defineProperty(MortalActorSheet, "name", { value: "MortalActorSheet" });
+export default MortalActorSheet;
+
+/** The same sheet on ApplicationV2 (B6110), used for the lines listed in LINES_V2 (wod.js). */
+export const MortalActorSheetV2 = MortalSheetMixin(LegacyActorSheetV2);
+Object.defineProperty(MortalActorSheetV2, "name", { value: "MortalActorSheet" }); // the same name: the sheet keeps its id (WoD.MortalActorSheet) and its render hooks
 
 function parseCounterStates(states) {
 	return states.split(",").reduce((obj, state) => {

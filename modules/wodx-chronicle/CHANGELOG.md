@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.130.1 (The player guide's "open your sheet" step also counts a line sheet that runs on ApplicationV2 (B6114))
 - 0.130.0 (The eight world timeline readings held back for the book check are settled (B6130 to B6136). Seven go into the game, each reworded to what the books back: the Flaying of the Dark Kingdom of Obsidian (Wraith 20th), Salem without the Verbena (Verbena Revised), Les Invisibles fanning the revolt on Saint-Domingue (Wraith 20th), the Squattocracy in 1830 in place of a start to the War of Tears (Rage Across Australia), the Congo already held by its own shapeshifters, Laibon and dead (Wraith 20th, Kindred of the Ebony Kingdom), the Wendigo Ghost Dance camp (Wendigo tribebook), and the hundred days in Rwanda kept a mortal crime (Kindred of the Ebony Kingdom, A World of Rage). The Croatan card is left out, since the book event already tells it)
 - 0.129.1 (The first-night tour waits, in solo play, until the player's token is on the map: WoDX Solo's arrival says when (B5144). Before, it was offered and used up on a login with nothing to move)
 - 0.129.0 (Full sentences: time served, brands and the law coming for the condemned (B5990, B5992))

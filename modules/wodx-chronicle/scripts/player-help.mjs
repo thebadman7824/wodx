@@ -41,7 +41,7 @@ function windowOf(el) { return WINDOWS.find(w => el.classList?.contains(w.cls)) 
 export function installPlayerHelp() {
   Hooks.on("renderApplicationV2", (app, el) => {
     try {
-      const root = el?.[0] ?? el ?? app.element;
+      const root = (el instanceof HTMLElement ? el : el?.[0]) ?? app.element; // a V2 form's [0] is its first control (B6114)
       if ( !root?.classList?.contains("wodx") ) return;
       const w = windowOf(root);
       addHelpMark(app, root, w);
