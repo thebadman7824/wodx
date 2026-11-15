@@ -75,3 +75,53 @@ test("B6302: a Kuei-jin's Chi aspect decides what holds them (KotE pdf pp. 11, 7
   assert.equal(st("stake", "", false), true, "no aspect set yet: the Cainite rule");
   assert.ok(CR.LONG_METAL.test("Katana") && CR.LONG_METAL.test("Iron bar") && !CR.LONG_METAL.test("Wooden stake") && !CR.LONG_METAL.test("Pistol"));
 });
+
+const RD = await import(join(root, "modules/wodx-chronicle/scripts/roads-rules.mjs"));
+const VL = await import(join(root, "modules/wodx-otherworlds/scripts/veil-look-rules.mjs"));
+
+test("B6304: each road belongs to its line", () => {
+  assert.equal(RD.roadLine({type: "Wraith"}), "wraith");
+  assert.equal(RD.roadLine({type: "Vampire", variant: "kindredeast"}), "kuei-jin");
+  assert.equal(RD.roadLine({type: "Vampire"}), null, "Cainites walk to Golconda instead");
+  assert.equal(RD.roadLine({type: "Demon"}), "demon");
+  assert.equal(RD.roadLine({type: "Mortal", hastorment: true}), "demon");
+  assert.equal(RD.roadLine({type: "Mage"}), null);
+});
+
+test("B6305, B6306: Transcendence needs all Eight Truths and a Shadow weaker than the will (Wraith 20th p. 298)", () => {
+  const all = RD.TRUTHS.map(t => t.key);
+  assert.equal(RD.TRUTHS.length, 8);
+  assert.equal(RD.transcendReady(all, 3, 6).ready, true);
+  assert.equal(RD.transcendReady(all, 6, 6).ready, false);
+  assert.equal(RD.transcendReady(all.slice(1), 1, 6).ready, false);
+  assert.deepEqual(RD.withTruth(["self", "patience"], "shadow"), ["patience", "shadow", "self"]);
+  assert.deepEqual(RD.withTruth(["shadow"], "shadow", false), []);
+  assert.deepEqual(RD.withTruth([], "nonsense"), []);
+  assert.equal(RD.shadowRose(2, 3), true);
+  assert.equal(RD.shadowRose(3, 3), false);
+  assert.equal(RD.shadowRose(null, 3), false);
+});
+
+test("B6307: the Road Back by Dharma (KotE pdf pp. 30-31)", () => {
+  assert.equal(RD.roadBackStage(6), "walking");
+  assert.equal(RD.roadBackStage(9), "bodhisattva-ready");
+  assert.equal(RD.roadBackStage(9, {bodhisattva: true}), "bodhisattva");
+  assert.equal(RD.roadBackStage(10, {bodhisattva: true}), "arhat-ready");
+  assert.equal(RD.roadBackStage(10), "bodhisattva-ready", "an arhat is a bodhisattva first");
+  assert.equal(RD.roadBackStage(7, {bodhisattva: true}), "lapsed");
+});
+
+test("B6307: a bodhisattva sees across the Shroud and the Gauntlet; Ghostsight for its scene only", () => {
+  assert.deepEqual(VL.sightsOf({bodhisattva: true}, 0), ["shroud", "penumbra"]);
+  assert.deepEqual(VL.sightsOf({yinSight: {until: 100}}, 50), ["shroud"]);
+  assert.deepEqual(VL.sightsOf({yinSight: {until: 100}}, 150), []);
+  assert.deepEqual(VL.sightsOf({}, 0), []);
+  assert.equal(VL.veilFor({shroud: 4}, {nature: "vampire", sights: VL.sightsOf({bodhisattva: true})}).mist, true);
+  assert.equal(VL.veilFor({shroud: 4}, {nature: "vampire", sights: []}).mist, false);
+});
+
+test("B6308: Redemption counts down from Torment 10 (Demon: The Fallen p. 160)", () => {
+  assert.equal(RD.redemptionStep(10), 0);
+  assert.equal(RD.redemptionStep(3), 7);
+  assert.equal(RD.redemptionStep(0), 10);
+});

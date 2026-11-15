@@ -2512,7 +2512,8 @@ async function condition(actor, id, active) {
 export async function newNight({ actors } = {}) {
     if (!game.user.isGM && !actors) return ui.notifications.warn("New Night is for the GM (or pass your own actors).");
     await endScene({ actors });
-    const list = actors ?? game.actors.filter(a => a.type !== "Group" && (a.hasPlayerOwner || canvas.tokens.placeables.some(t => t.actor?.id === a.id)));
+    // B6305: those who left the chronicle (Transcendence, an arhat) are not part of a new night
+    const list = (actors ?? game.actors.filter(a => a.type !== "Group" && (a.hasPlayerOwner || canvas.tokens.placeables.some(t => t.actor?.id === a.id)))).filter(a => !a?.flags?.["wodx-chronicle"]?.departed);
     const lines = [];
     for (const actor of list) {
         if (!actor?.isOwner) continue;
@@ -2569,7 +2570,7 @@ const untrainedBeast = actor => actor?.flags?.["wodx-creation"]?.animal?.trainin
 /** The end of a story: Willpower returns in full (unless the setting is off). */
 export async function endStory({ actors } = {}) {
     if (!game.user.isGM) return ui.notifications.warn("End of story is for the GM.");
-    const list = actors ?? game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner);
+    const list = (actors ?? game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner)).filter(a => !a?.flags?.["wodx-chronicle"]?.departed);
     const lines = [];
     for (const actor of list) {
         if (untrainedBeast(actor)) { lines.push(`<li><b>${esc(actor.name)}</b>: untrained, so it wins back no Willpower (V20 Dark Ages p. 396)</li>`); continue; }
@@ -3269,7 +3270,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     c20ColdIron: withActor(a => cx().coldIron(a)), c20Mists: withActor(a => cx().mists(a)), c20Place: () => cx().placeDialog(), c20Info: a => cx().info(resolveActor(a)), c20Everyday: () => blx().panel(), everydayBanality: { endScene: sc => blx().endScene(sc), panel: () => blx().panel(), rules: BLX },
     demonEvoke: withActor(a => dx().evoke(a)), demonForm: withActor(a => dx().form(a)), demonRevelation: withActor(a => dx().revelation(a)), demonReap: withActor(a => dx().reap(a)),
     demonThralls: withActor(a => dx().thralls(a)), demonSin: withActor(a => dx().sin(a)), demonKindness: withActor(a => dx().kindness(a)), demonHeal: withActor(a => dx().heal(a)),
-    demonHoly: withActor(a => dx().holy(a)), demonName: withActor(a => dx().named(a)), demonIllusion: withActor(a => dx().illusion(a)), demonInfo: a => dx().info(resolveActor(a)),
+    demonHoly: withActor(a => dx().holy(a)), demonName: withActor(a => dx().named(a)), demonIllusion: withActor(a => dx().illusion(a)), demonInfo: a => dx().info(resolveActor(a)), demonTorment: (a, k) => dx().torment(resolveActor(a), k),
     conditioning: withActor(a => svx().condition(a)), enchant: withActor(a => svx().enchant(a)), partedMists: withActor(a => svx().partedMists(a)),
     demonPact: withActor(a => svx().pact(a)), pactGift: withActor(a => svx().useGift(a)), knownNames: withActor(a => svx().names(a)), pressName: withActor(a => svx().pressName(a)),
     chainThrall: withActor(a => svx().chainThrall(a)), servantActions: () => svx(),

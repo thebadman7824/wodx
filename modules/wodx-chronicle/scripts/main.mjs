@@ -55,6 +55,7 @@ import * as placeRules from "./place-rules.mjs";
 import * as worldRules from "./world-rules.mjs";
 import * as pace from "./pace.mjs";
 import * as pod from "./pod.mjs";
+import * as roads from "./roads.mjs";
 import * as legends from "./legends.mjs";
 import * as automation from "./automation.mjs";
 import * as automationRules from "./automation-rules.mjs";
@@ -146,7 +147,9 @@ Hooks.once("init", () => {
   ghoulNeed.registerGhoulNeedSettings();
   ghoulNeed.registerGhoulNeedHooks();
   pod.registerPodSettings();
+  roads.registerRoadSettings();
   pod.registerPodHooks();
+  roads.registerRoadHooks();
   // Knowledge-gated handouts: @Know[Latin]{...} in journals
   know.registerKnow();
 
@@ -278,6 +281,7 @@ Hooks.once("ready", async () => {
     signatures: signatures.signaturesApi,
     ghoulNeed: ghoulNeed.ghoulNeedApi,
     pod: pod.podApi,
+    roads: roads.roadsApi,
     legends: {open: () => legends.LegendsApp.open(), build: legends.build, book: legends.book, visible: legends.visible, setShown: legends.setShown, gather: legends.gather, addDeed: legends.addDeed},
     languages: {open: () => languages.LanguagesApp.open(), of: languages.languagesOf, set: languages.setLanguages, canRead: languages.canRead},
     migrations: {status: migrations.status, run: migrations.runMigrations, register: migrations.register, backup: migrations.backupModule},

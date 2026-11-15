@@ -118,8 +118,16 @@ export function build(ctx) {
             await updateActor(actor, { "system.advantages.torment.temporary": Math.max(0, i.torment.temp + k) });
             return i.torment.temp ? `−1 temporary Torment (${Math.max(0, i.torment.temp + k)}).` : "No temporary Torment to lose.";
         }
+        // B6308: a redeemed demon who gains Torment falls from grace again (WoDX Chronicle roads.mjs)
+        let fell = "";
+        if (actor.getFlag?.(MOD, "redeemed")) {
+            await actor.unsetFlag(MOD, "redeemed");
+            for (const t of actor.getActiveTokens?.(false, true) ?? []) { try { await (t.document ?? t).update({ light: { dim: 0, bright: 0 } }, {}); } catch (e) { /* no token */ } }
+            fell = "Grace is lost: the demon falls again. ";
+        }
         const r = D.addTorment(i.torment, k);
         await updateActor(actor, { "system.advantages.torment.temporary": r.temp, "system.advantages.torment.permanent": r.perm });
+        if (fell) return `${fell}+${k} temporary Torment (${r.temp}).`;
         if (r.gained) return `Ten Torment points become a permanent point: Torment ${r.perm}.${r.lost ? " Torment 10: consumed, the character leaves play." : r.perm >= 7 && r.perm <= 10 ? ` A high-Torment power of the form may be added (${D.highSlots(r.perm)}).` : ""}`;
         return `+${k} temporary Torment (${r.temp}).`;
     }
@@ -490,7 +498,8 @@ export function build(ctx) {
         const content = `<form><div class="form-group"><label>What</label><select name="k" data-fixed><option value="g">Holy ground</option><option value="o">A sacred object against the skin</option></select></div>
           <div class="form-group"><label>Its Faith potential (1–5)</label><input type="number" name="p" min="1" max="5" value="1"/></div></form>`;
         return dialog(`The holy: ${actor.name}`, content, "Apply", async fd => {
-            const h = D.holy(i.torment.perm, n(fd.p), { ground: fd.k === "g" });
+            // B6308: the redeemed are angels again; holy ground and holy things do not burn them (Demon: The Fallen p. 160)
+            const h = actor.getFlag?.(MOD, "redeemed") ? { harmed: false, why: "Redeemed: the holy welcomes an angel" } : D.holy(i.torment.perm, n(fd.p), { ground: fd.k === "g" });
             let body = `<div class="vta-sec">Torment ${i.torment.perm}; potential ${n(fd.p)}.</div>`, rolls = [];
             if (!h.harmed) body += `<div class="vta-res good">${esc(h.why)}.</div>`;
             else {
