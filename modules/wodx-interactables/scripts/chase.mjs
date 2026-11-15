@@ -291,6 +291,7 @@ export async function rollTurn(scene, st = stateOf(scene), {dialog = false} = {}
   } catch (e) { console.warn(`${MOD} | chase noise`, e); }
   if ( state.status !== "running" ) {
     Hooks.callAll("wodxChase", {kind: state.status, scene: scene.id, state});
+    if ( autoOn() ) await settle(scene, state).catch(e => console.error(`${MOD} | chase end`, e));
     return state;
   }
   return dialog ? turnDialog(scene, state) : state;
@@ -302,7 +303,7 @@ export async function end(scene = canvas?.scene) {
   const st = stateOf(scene);
   if ( !st ) return null;
   await scene.update(unsetChase());
-  await ChatMessage.create({speaker: {alias: "WoDX"}, content: card("The chase is over", `<p>The Storyteller calls it.</p>`)});
+  await ChatMessage.create({speaker: {alias: "WoDX"}, content: card("The chase is over", `<p>It is called off.</p>`)});
   Hooks.callAll("wodxChase", {kind: "end", scene: scene.id, state: st});
   return null;
 }
@@ -343,6 +344,42 @@ async function grudges(msg) {
     done.length ? `<ul>${done.map(d => `<li>${esc(d)}</li>`).join("")}</ul><p class="wodx-quiet">Change it on the NPC's attitude track if it doesn't fit (house rule).</p>` : "<p>Nobody's attitude changed.</p>")});
 }
 
+/* ---- B4887: chases that run and end by themselves ---- */
+const autoOn = () => { try { return game.settings.get(MOD, "chaseAuto") !== false; } catch (e) { return false; } };
+const isActiveGM = () => game.user?.isGM && game.users.activeGM?.id === game.user.id;
+/** A chase over: a catch opens a fight, the hard feelings land, and the scene's chase is cleared. */
+async function settle(scene, st) {
+  if ( !isActiveGM() ) return;
+  const att = game.modules.get("wodx-npc")?.api?.attitude;
+  if ( att?.apply ) for ( const g of C.chaseGrudges(st) ) {
+    const n = scene.tokens.get(g.npc)?.actor, p = scene.tokens.get(g.pc)?.actor;
+    if ( n && p ) await att.apply(n, p, {delta: -1, why: `${p.name} ${g.why}`}).catch(() => null);
+  }
+  await scene.update(unsetChase());
+  if ( st.status === "caught" ) {
+    const ids = [st.quarry.id, ...(st.caughtBy ?? [])];
+    await game.wodxCombat?.fight?.start?.({scene, tokens: ids.map(id => scene.tokens.get(id)).filter(Boolean), source: "chase", why: "a chase ends in a catch"});
+  } else await ChatMessage.create({speaker: {alias: "WoDX"}, content: card("The chase is over", `<p>${esc(st.quarry.name)} gets away.</p>`)});
+}
+let ticking = false;
+/** The active Storyteller's client: every running chase on a scene rolls a turn. */
+async function tickChases() {
+  if ( ticking || !isActiveGM() || !autoOn() ) return;
+  try { if ( game.modules.get("wodx-chronicle")?.api?.isHeld?.() ) return; } catch (e) { /* no Chronicle */ }
+  ticking = true;
+  try { for ( const scene of game.scenes ) { const st = stateOf(scene); if ( st?.status === "running" ) await rollTurn(scene, st); } }
+  finally { ticking = false; }
+}
+/** B4887: an NPC flees a fight and its foes close behind give chase (WoDX NPC calls this after the flight). */
+export async function fled(tokDoc, foes = []) {
+  const scene = tokDoc?.parent;
+  if ( !isActiveGM() || !autoOn() || !scene || stateOf(scene)?.status === "running" ) return null;
+  const at = d => deps.centerOf ? deps.centerOf(d, scene) : {x: d.x, y: d.y};
+  const near = foes.map(f => f?.document ?? f).filter(d => d?.parent?.id === scene.id && d.actor && (deps.yardsOn ? deps.yardsOn(scene, at(tokDoc), at(d)) : 0) <= 40);
+  if ( !near.length ) return null;
+  return start(scene, {quarry: tokDoc.id, pursuers: near.map(d => d.id), night: !!game.modules.get("wodx-chronicle")?.api?.when?.context?.()?.isNight});
+}
+
 async function fight(msg) {
   const f = msg.flags?.[MOD]?.chaseTurn, scene = game.scenes.get(f?.scene);
   const st = stateOf(scene);
@@ -370,6 +407,7 @@ export function setupChase(d = {}) {
     };
     if ( !add() ) setTimeout(add, 2000);
   });
+  Hooks.once("ready", () => { setInterval(() => { tickChases().catch(e => console.error(`${MOD} | chase`, e)); }, 6000); });
   Hooks.on("renderChatMessageHTML", (msg, el) => {
     if ( !msg.flags?.[MOD]?.chaseTurn ) return;
     const wire = (sel, fn) => el.querySelectorAll?.(sel).forEach(b => {
@@ -382,5 +420,5 @@ export function setupChase(d = {}) {
     wire("button.wix-chase-fight", () => fight(msg));
     wire("button.wix-chase-grudge", () => grudges(msg));
   });
-  return {open, start, rollTurn, end, undoTurn, join, state: stateOf, rideOf, rules: C};
+  return {open, start, rollTurn, end, undoTurn, join, fled, tick: tickChases, state: stateOf, rideOf, rules: C};
 }

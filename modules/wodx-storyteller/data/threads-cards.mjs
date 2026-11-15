@@ -1,6 +1,6 @@
 /**
  * Threads of Fate hook cards (B3650-B3656), made by the build script kept with the project files
- * (story-weaver/build_cards.py). Own words; no book text. Groups: Rothenstein (roth-), the 44 world regions
+ * (story-weaver/build_cards.py). Own words; no book text. Groups: Rothenstein (roth-), the 45 world regions
  * (r-<region> and r-<region>-alt), line doors for twists (door-), and a player's own threads (own-).
  * The Storyteller can add, change, refuse or lock any card in play; the Storyteller's lines always win.
  */
@@ -7312,6 +7312,191 @@ export const CARDS = [
   "region": "southeast-asia",
   "src": "history"
  },
+ {
+   "key": "r-philippines",
+   "title": "The galleon is late",
+   "steps": [
+    {
+     "key": "s1",
+     "title": "Signs",
+     "text": "Small wrong things: a smell, a missing face, a story that does not fit.",
+     "days": 0
+    },
+    {
+     "key": "s2",
+     "title": "It spreads",
+     "text": "More people are touched by it, and someone powerful notices.",
+     "days": 7
+    },
+    {
+     "key": "s3",
+     "title": "The night it breaks",
+     "text": "It comes into the open. Whoever has not chosen a side is chosen for.",
+     "days": 14
+    }
+   ],
+   "endings": [
+    {
+     "key": "stopped",
+     "label": "It is stopped, at a cost",
+     "writes": [
+      {
+       "to": "rumours",
+       "what": "Word goes round that it was ended"
+      },
+      {
+       "to": "factions",
+       "what": "Those who helped gain standing"
+      }
+     ]
+    },
+    {
+     "key": "bargain",
+     "label": "It is bargained down, not ended",
+     "writes": [
+      {
+       "to": "ledger",
+       "what": "A debt is owed to whoever held it back"
+      }
+     ]
+    },
+    {
+     "key": "lost",
+     "label": "It wins this time",
+     "writes": [
+      {
+       "to": "towns",
+       "what": "The place is changed for the worse"
+      },
+      {
+       "to": "rumours",
+       "what": "A frightened story spreads"
+      }
+     ]
+    }
+   ],
+   "role": "anchor",
+   "open": "The ship from across the ocean is a month overdue, and a fisher swears it passed the point at night with no one at the wheel.",
+   "surface": "A trading ship everyone's fortune rides on has come back wrong, or not at all.",
+   "want": "The cargo, the crew, or the truth.",
+   "question": "What came back on the ship?",
+   "complication": "Half the town has borrowed against what it carries.",
+   "needs": [
+    "arrival",
+    "debt",
+    "rumour"
+   ],
+   "place": [
+    "sea",
+    "market"
+   ],
+   "cast": [
+    "merchant",
+    "dead"
+   ],
+   "beneath": {
+    "kuei-jin": "Something from the far shore rides in the hold.",
+    "wraith": "The drowned crew are still sailing it.",
+    "mortal": "Debts, a storm and a captain who lied."
+   },
+   "regions": [
+    "philippines"
+   ],
+   "region": "philippines",
+   "src": "history"
+  },
+  {
+   "key": "r-philippines-alt",
+   "title": "The datu's buried gold",
+   "steps": [
+   {
+    "key": "s1",
+    "title": "Word of it",
+    "text": "Someone learns where it is, and tells the wrong person.",
+    "days": 0
+   },
+   {
+    "key": "s2",
+    "title": "The race",
+    "text": "More than one party is after it, and they know of each other.",
+    "days": 5
+   },
+   {
+    "key": "s3",
+    "title": "Who holds it",
+    "text": "It changes hands, by trade, theft or blood.",
+    "days": 12
+   }
+  ],
+  "endings": [
+   {
+    "key": "kept",
+    "label": "The players keep it",
+    "writes": [
+     {
+      "to": "tales",
+      "what": "A tale of the finding"
+     },
+     {
+      "to": "factions",
+      "what": "Its old keepers remember"
+     }
+    ]
+   },
+   {
+    "key": "returned",
+    "label": "It goes home to its keepers",
+    "writes": [
+     {
+      "to": "memory",
+      "what": "Its keepers owe a kindness"
+     },
+     {
+      "to": "rumours",
+      "what": "Word of an honest deed"
+     }
+    ]
+   },
+   {
+    "key": "destroyed",
+    "label": "No one has it now",
+    "writes": [
+     {
+      "to": "factions",
+      "what": "Every party that wanted it is angry"
+     },
+     {
+      "to": "tales",
+      "what": "A tale of the loss"
+     }
+    ]
+   }
+  ],
+  "role": "any",
+   "surface": "A chief's treasure hidden from the Spanish, and the spirit set to keep it.",
+   "needs": [
+    "hook",
+    "rumour",
+    "fight"
+   ],
+   "place": [
+    "wild",
+    "grave"
+   ],
+   "cast": [
+    "spirit",
+    "stranger"
+   ],
+   "beneath": {
+    "werewolf": "A spirit of the old barangay keeps the hoard.",
+    "mortal": "Treasure hunters and a family that knows the place."
+   },
+   "regions": [
+    "philippines"
+   ],
+   "region": "philippines",
+   "src": "history"
+  },
  {
   "key": "r-nusantara",
   "title": "When the mountain wakes",

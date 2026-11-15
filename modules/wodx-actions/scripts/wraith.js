@@ -16,6 +16,7 @@
  */
 
 import { spendTime } from "./spend-time.js";
+import { floatOver } from "./daysleep.js";
 import * as W from "./wraith-rules.js";
 import * as P from "./profiles.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -101,7 +102,34 @@ export function build(ctx) {
     /* ---------------- Arcanoi ---------------- */
 
     /** The local Maelstrom (a scene flag, 0–5; the Storyteller sets it with the Maelstrom tool). */
-    const storm = () => Math.max(0, Math.min(5, n(canvas?.scene?.getFlag?.(MOD, "maelstrom"))));
+    // B5021: a Great Maelstrom in its years sets the force everywhere; a scene's own storm can be stronger
+    const great = () => { const ev = game.modules.get("wodx-chronicle")?.api?.events; return W.greatMaelstrom(yearNow(), id => (ev?.has ? ev.has(id) : true)); };
+    const storm = () => Math.max(0, Math.min(5, Math.max(n(canvas?.scene?.getFlag?.(MOD, "maelstrom")), n(great()?.force))));
+    /** B5021: once a scene, the storm harms the wraiths here outside shelter (indoors counts as a Haunt of 1). Active GM. */
+    async function autoStorm() {
+        if (!game.user.isGM || game.users.activeGM?.id !== game.user.id || !canvas?.scene) return null;
+        const force = storm();
+        if (!force) return null;
+        const key = `${n(game.settings.get(MOD, "wraithScene"))}:${canvas.scene.id}`;
+        if (canvas.scene.getFlag(MOD, "stormRolled") === key) return null;
+        await canvas.scene.setFlag(MOD, "stormRolled", key);
+        let indoor = false;
+        try { indoor = game.modules.get("wodx-atmosphere")?.api?.weather?.isOutdoor?.(canvas.scene) === false; } catch (e) { indoor = false; }
+        const lines = [];
+        for (const t of canvas.tokens?.placeables ?? []) {
+            const a = t.actor;
+            if (!a || !isWraith(a)) continue;
+            const dice = W.maelstromDice(force, { haunt: indoor ? 1 : 0 });
+            if (!dice) { lines.push(`<li>${esc(a.name)}: sheltered</li>`); continue; }
+            const r = await rollPool(dice, 6, { canBotch: false });
+            const agg = Math.random() < W.AGG_CHANCE[force];
+            if (r.successes) await corpusDamage(a, agg ? "aggravated" : "lethal", r.successes);
+            lines.push(`<li>${esc(a.name)}: ${dice} dice, ${r.successes} ${agg ? "aggravated" : "lethal"} on the Corpus</li>`);
+        }
+        if (!lines.length) return null;
+        const g = great();
+        return ChatMessage.create({ content: `<div class="vta-card"><h3>The Maelstrom, force ${force}${g ? `: ${esc(g.name)}` : ""}</h3><p>The storm tears at the wraiths here${indoor ? " (indoors: some shelter)" : ""}. Outdoors +${W.MAELSTROM[force].diff} difficulty to everything.</p><ul>${lines.join("")}</ul><p class="wodx-quiet">Wraith: The Great War p. 87</p></div>`, speaker: { alias: "WoDX" } });
+    }
     /** The second half of an art's roll: the Arcanos, or an Ability the page names (Cravings: Empathy). */
     const second = (a, sec) => (!sec || sec === "arc" ? a.rating : (findAbility(actor0, sec)?.value ?? 0));
     let actor0 = null;
@@ -261,11 +289,18 @@ export function build(ctx) {
         const i = info(actor);
         const content = `<form><p><b>${esc(actor.name)}</b>: Willpower ${i.willpower.temp}/${i.willpower.perm}. ${i.fetters.length ? "" : "<b>No Fetters: 1 Willpower a scene in the Shadowlands (Wraith 20th p. 308).</b>"}</p>
           ${i.fetters.length ? `<div class="form-group"><label>Fetter</label>${i.fetters.length > 5 ? searchBox("select[name=f]", "Search Fetters…", "Search Fetters") : ""}<select name="f" data-fixed>${i.fetters.map(f => `<option value="${f.id}">${esc(f.name)} (${f.value})</option>`).join("")}</select></div>` : ""}
-          <div class="form-group"><label>What</label><select name="how" data-fixed><option value="scene">After a scene with it (6): Willpower</option><option value="slumber">Slumbered in it 8 hours (4): Willpower</option><option value="neglect">Neglect check (Storyteller, 9)</option><option value="lost">It is destroyed (a Harrowing)</option><option value="nofetter">A scene in the Shadowlands with no Fetters (1 Willpower)</option></select></div></form>`;
+          <div class="form-group"><label>What</label><select name="how" data-fixed><option value="scene">After a scene with it (6): Willpower</option><option value="slumber">Slumbered in it 8 hours (4): Willpower</option><option value="neglect">Neglect check (Storyteller, 9)</option><option value="lost">It is destroyed (a Harrowing)</option><option value="mark">Mark the selected token as this Fetter (Willpower by itself after each scene with it)</option><option value="unmark">Unmark the selected token</option><option value="nofetter">A scene in the Shadowlands with no Fetters (1 Willpower)</option></select></div></form>`;
         return dialog(`Fetter: ${actor.name}`, content, "Go", async fd => {
             if (fd.how === "nofetter") { if (!(await spendWillpower(actor, 1))) return null; await afterSpend(actor); return post(actor, `${actor.name}`, `<div class="vta-note">1 Willpower to stay in the Shadowlands this scene without Fetters (Wraith 20th p. 308).</div>`); }
             const f = i.fetters.find(x => x.id === fd.f); const item = f ? actor.items.get(f.id) : null;
             if (!f || !item) return ctx.notify("Pick a Fetter.");
+            if (fd.how === "mark" || fd.how === "unmark") {
+                const tok = canvas?.tokens?.controlled?.[0]?.document;
+                if (!tok || tok.actorId === actor.id) return ctx.notify("Select the Fetter's token on the map first (a person or a thing).");
+                if (fd.how === "unmark") { await tok.unsetFlag(MOD, "fetter"); return ctx.notify(`${tok.name} is no longer a Fetter.`); }
+                await tok.setFlag(MOD, "fetter", { actor: actor.id, item: f.id });
+                return post(actor, `${actor.name}: a Fetter on the map`, `<div class="vta-res">${esc(tok.name)} is ${esc(actor.name)}'s Fetter “${esc(f.name)}”. At the end of each scene they share, the Fetter is rolled at 6 for Willpower by itself.</div><div class="wodx-quiet">Wraith 20th p. 308</div>`);
+            }
             if (fd.how === "lost") {
                 await item.update({ "system.value": 0 });
                 await ctx.logEvent?.(actor, `The Fetter “${f.name}” is destroyed.`, "fetter");
@@ -532,10 +567,52 @@ export function build(ctx) {
     }
 
     /** The Storyteller starts a new scene: Passions may be tapped again and Hysteria ends. */
+    /** B4994: at the end of a scene, a wraith sharing it with a marked Fetter token rolls that Fetter at 6 for Willpower. */
+    async function fetterScene(scene = canvas?.scene) {
+        if (!isActiveGM() || !scene || setting("autoFetter") === false) return [];
+        const out = [];
+        const toks = [...(scene.tokens ?? [])];
+        for (const t of toks) {
+            const m = t.getFlag?.(MOD, "fetter");
+            if (!m) continue;
+            const actor = game.actors?.get(m.actor);
+            if (!actor || !toks.some(x => x.actorId === actor.id)) continue;
+            const i = info(actor), f = i.fetters.find(x => x.id === m.item);
+            if (!f || !f.value) continue;
+            const r = await rollPool(f.value, 6);
+            const to = Math.min(i.willpower.perm, i.willpower.temp + (r.botch ? 0 : r.successes));
+            if (to > i.willpower.temp) { await ctx.updateActor(actor, { "system.advantages.willpower.temporary": to }); floatOver(actor, `+${to - i.willpower.temp} Willpower`, "#c9b3ff"); }
+            out.push(actor.name);
+            await post(actor, `${actor.name}: Fetter`, `<div class="vta-sub">A scene with ${esc(t.name)}, rolled by itself</div>` + rollBlock(`${esc(f.name)} (${f.value})`, r) + `<div class="vta-res">Willpower ${i.willpower.temp} → ${to}</div><div class="wodx-quiet">Wraith 20th p. 308</div>`, [r.roll]);
+        }
+        return out;
+    }
+    /** B4995: a wraith's bashing Corpus mends a level an hour by itself as the clock passes (Wraith 20th p. 295). */
+    async function restAll(actors = game.actors?.filter?.(isWraith) ?? []) {
+        if (!isActiveGM() || setting("autoCorpus") === false) return [];
+        const now = game.time?.worldTime ?? 0, lines = [];
+        for (const a of actors) {
+            const i = info(a), d = i.hasCorpusTrack ? i.damage : (a.system?.health?.damage ?? {});
+            const last = a.getFlag(MOD, "corpusClock");
+            if (!n(d.bashing)) { if (last !== undefined) await a.unsetFlag(MOD, "corpusClock"); continue; }
+            if (last === undefined) { await a.setFlag(MOD, "corpusClock", now); continue; }
+            const hours = Math.floor((now - n(last)) / 3600);
+            if (hours < 1) continue;
+            const after = W.corpusRest(d, hours);
+            await a.setFlag(MOD, "corpusClock", n(last) + hours * 3600);
+            await setCorpusDamage(a, { bashing: n(after.bashing), lethal: n(d.lethal), aggravated: n(d.aggravated) });
+            lines.push(`<b>${esc(a.name)}</b>: ${n(d.bashing) - n(after.bashing)} bashing mend`);
+            floatOver(a, "Corpus mends", "#b8d8e0");
+        }
+        if (lines.length) await ChatMessage.create({ content: `<div class="vta-card"><h3>Corpus mends</h3><ul>${lines.map(l => `<li>${l}</li>`).join("")}</ul><p class="wodx-quiet">Wraith 20th p. 295</p></div>`, whisper: gmIds(), speaker: { alias: "WoDX" }, flags: { [MOD]: { info: true } } });
+        return lines;
+    }
     async function newScene({ quiet = false } = {}) {
         if (!game.user.isGM) return ctx.notify("The Storyteller starts a new scene.");
+        await fetterScene().catch(e => console.warn("WoDX | Fetters", e));
         await game.settings.set(MOD, "wraithScene", n(game.settings.get(MOD, "wraithScene")) + 1);
         if (canvas?.scene?.getFlag(MOD, "hysteria")) await canvas.scene.unsetFlag(MOD, "hysteria");
+        await autoStorm().catch(e => console.error("WoDX | Maelstrom", e));
         if (quiet) return true;
         return ChatMessage.create({ content: `<div class="vta-card"><h3>A new scene</h3><p>Passions can be tapped again; Hysteria ends.</p></div>`, whisper: gmIds(), speaker: { alias: "WoDX" } });
     }
@@ -599,7 +676,7 @@ export function build(ctx) {
         return null;
     }
 
-    return { maelstrom, storm, info, useArcanos, corpusDamage, newScene, newSession, onReady, passion, fetter, memoriam, healCorpus, setCorpusDamage, shadowguide, whisper, shadow, harrowing, vsAngst, caul, hysteria, onCorpus, afterSpend, shroudAt, onChatButton, guideOf, targetTraits };
+    return { fetterScene, restAll, maelstrom, storm, great, autoStorm, info, useArcanos, corpusDamage, newScene, newSession, onReady, passion, fetter, memoriam, healCorpus, setCorpusDamage, shadowguide, whisper, shadow, harrowing, vsAngst, caul, hysteria, onCorpus, afterSpend, shroudAt, onChatButton, guideOf, targetTraits };
 }
 
 export function registerSettings() {

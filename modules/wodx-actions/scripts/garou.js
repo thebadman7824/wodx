@@ -6,6 +6,7 @@
  * Every card carries its page reference. Nothing here copies book text.
  */
 import { spendTime } from "./spend-time.js";
+import { floatOver } from "./daysleep.js";
 import * as P from "./profiles.js";
 import * as G from "./garou-rules.js";
 export { bringsDelirium } from "./garou-rules.js";
@@ -312,7 +313,7 @@ export function build(ctx) {
     async function endFrenzy(actor) {
         const i = info(actor);
         if (!actor.system?.conditions?.isfrenzy && !actor.statuses?.has?.("wodx-frenzy")) return ctx.notify(`${actor.name} is not in frenzy.`);
-        if (actor.getFlag?.(MOD, "frenzyType") === "thrall") ctx.notify("The Thrall of the Wyrm ends only when the Storyteller says.");
+        if (actor.getFlag?.(MOD, "frenzyType") === "thrall") ctx.notify("The Thrall of the Wyrm ends by itself when the Garou is knocked out or the fight is over; ending it by hand is the Storyteller's call.");
         const content = `<form><p><b>${esc(actor.name)}</b>: once what caused the frenzy is over, roll Willpower at difficulty = permanent Rage (${i.rage.perm}); retry each turn (DA:W p. 94; W20 p. 261).</p>
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="${Math.max(2, Math.min(10, i.rage.perm))}"/></div></form>`;
         return dialog(`End frenzy: ${actor.name}`, content, "Roll", async fd => {
@@ -372,8 +373,10 @@ export function build(ctx) {
         const scene = canvas?.scene?.id ?? "none";
         if (actor.getFlag?.(MOD, "remainedActive") === scene) return ctx.notify("Only once per scene.");
         const content = `<form><p><b>${esc(actor.name)}</b> is below Incapacitated. Rage roll (${i.rage.perm} dice) at 8; each success heals a level; once a scene.</p>
-          <div class="form-group"><label>The worst damage is</label><select name="type" data-fixed><option value="aggravated">aggravated</option><option value="lethal">lethal</option><option value="bashing">bashing</option></select></div></form>`;
+          <div class="form-group"><label>The worst damage is</label><select name="type" data-fixed><option value="aggravated">aggravated</option><option value="lethal">lethal</option><option value="bashing">bashing</option></select></div>
+          <div class="form-group"><label><input type="checkbox" name="auto"${actor.getFlag?.(MOD, "noRiseRage") ? "" : " checked"}/> When it comes, roll this by itself</label></div></form>`;
         return dialog(`Remain active: ${actor.name}`, content, "Roll", async fd => {
+            if (fd.auto) { if (actor.getFlag?.(MOD, "noRiseRage")) await actor.unsetFlag?.(MOD, "noRiseRage"); } else await actor.setFlag?.(MOD, "noRiseRage", true);
             const rr = await rollPool(i.rage.perm, 8);
             await actor.setFlag?.(MOD, "remainedActive", scene);
             const ra = G.remainingActive(b, fd.type, rr.botch ? 0 : rr.successes);
@@ -390,7 +393,61 @@ export function build(ctx) {
         });
     }
 
+    /**
+     * B4986: rising on Rage by itself when a shapechanger falls past Incapacitated, once a scene, unless the character is
+     * marked not to (flag noRiseRage). The worst damage type on the track decides, as the dialog's choice did.
+     */
+    async function remainActiveAuto(actor) {
+        if (!actor || actor.getFlag?.(MOD, "noRiseRage")) return null;
+        const i = info(actor), b = basis();
+        const scene = canvas?.scene?.id ?? "none";
+        if (actor.getFlag?.(MOD, "remainedActive") === scene || i.rage.perm <= 0) return null;
+        const h0 = actor.system?.health?.damage ?? {};
+        const type = n(h0.aggravated) ? "aggravated" : n(h0.lethal) ? "lethal" : "bashing";
+        const rr = await rollPool(i.rage.perm, 8);
+        await actor.setFlag?.(MOD, "remainedActive", scene);
+        const ra = G.remainingActive(b, type, rr.botch ? 0 : rr.successes);
+        let body = `<div class="vta-sub">Rolled by itself (worst wounds ${type})</div>` + rollBlock("Rage", rr, ["difficulty 8"]) + await markTurn(actor, "rage");
+        if (!ra.heals) return post(actor, `${actor.name} fails to rise`, body + `<div class="vta-note bad">No recovery: with aggravated wounds this is death (W20 p. 256).</div>`, [rr.roll].filter(Boolean));
+        const h = actor.system?.health?.damage ?? {};
+        let left = ra.heals;
+        for (const k of ["aggravated", "lethal", "bashing"]) { const take = Math.min(left, n(h[k])); if (take && game.wodxCombat?.healDamage) await game.wodxCombat.healDamage(actor, k, take); left -= take; }
+        body += `<div class="vta-big good">${ra.heals} level${ra.heals === 1 ? "" : "s"} heal</div>`;
+        floatOver(actor, "Rises on Rage", "#ff6b4a");
+        if (ra.frenzy) { body += `<div class="vta-note">A berserk frenzy follows.</div>`; await enterFrenzy(actor, "berserk"); }
+        if (ra.scar) body += `<div class="vta-note">The wound leaves a Battle Scar. <button type="button" class="vta-btn" data-garou="scar" data-actor="${actor.uuid}">Choose the scar</button></div>`;
+        return post(actor, `${actor.name} rises on Rage`, body, [rr.roll].filter(Boolean));
+    }
+
     /* ---------------- Gnosis ---------------- */
+
+    /**
+     * B4987: a shapechanger marked to meditate (the Meditate dialog's box) rolls Wits + Enigmas once a day by itself as
+     * the clock passes into a new day, for the hours they set (DA:W p. 92; W20 p. 146). Not in a fight.
+     */
+    async function meditateDaily() {
+        if (!isActiveGM()) return [];
+        const today = Math.floor(game.time.worldTime / 86400), week = Math.floor(today / 7);
+        const out = [];
+        for (const actor of game.actors ?? []) {
+            const plan = actor.getFlag?.(MOD, "meditates");
+            if (!plan || !isShifter(actor)) continue;
+            if (game.combat?.started && game.combat.combatants?.some?.(c => c.actorId === actor.id)) continue;
+            const log = actor.getFlag?.(MOD, "meditation") ?? {};
+            if (log.day === today) continue;
+            const i = info(actor);
+            if (i.gnosis.temp >= i.gnosis.perm) { await actor.setFlag?.(MOD, "meditation", { ...log, day: today }); continue; }
+            const earlier = log.week === week ? n(log.count) : 0;
+            const diff = G.meditationDifficulty(earlier);
+            const rr = await rollPool(attr(actor, "wits") + abilityDots(actor, "enigmas"), diff);
+            const gain = Math.min(rr.botch ? 0 : rr.successes, Math.max(1, n(plan.hours)), Math.max(0, i.gnosis.perm - i.gnosis.temp));
+            if (gain) { await P.adjust(actor, "gnosis", gain); floatOver(actor, `+${gain} Gnosis`, "#9fc5ff"); }
+            await actor.setFlag?.(MOD, "meditation", { day: today, week, count: earlier + 1 });
+            out.push(actor.name);
+            await post(actor, `${actor.name} meditates`, `<div class="vta-sub">The day's meditation (${Math.max(1, n(plan.hours))} hours), rolled by itself</div>` + rollBlock("Wits + Enigmas", rr, []) + `<div class="vta-big ${gain ? "good" : ""}">+${gain} Gnosis</div>`, [rr.roll].filter(Boolean));
+        }
+        return out;
+    }
 
     async function meditate(actor) {
         const i = info(actor);
@@ -401,8 +458,10 @@ export function build(ctx) {
         const diff = G.meditationDifficulty(earlier);
         const content = `<form><p><b>${esc(actor.name)}</b>: Gnosis ${i.gnosis.temp}/${i.gnosis.perm}. Wits + Enigmas at ${diff}${earlier ? ` (+${earlier} for earlier days this week)` : ""}; up to one point an hour (DA:W p. 92; W20 p. 146).</p>
           <div class="form-group"><label>Hours of meditation</label><input type="number" name="hours" value="1" min="1"/></div>
-          <div class="form-group"><label>Move the clock by the hours (a player asks the Storyteller)</label><input type="checkbox" name="advance"/></div></form>`;
+          <div class="form-group"><label>Move the clock by the hours (a player asks the Storyteller)</label><input type="checkbox" name="advance"/></div>
+          <div class="form-group"><label>Meditate this long each day by itself</label><input type="checkbox" name="daily" ${actor.getFlag?.(MOD, "meditates") ? "checked" : ""}/></div></form>`;
         return dialog(`Meditate: ${actor.name}`, content, "Roll", async fd => {
+            if (fd.daily) await actor.setFlag?.(MOD, "meditates", { hours: Math.max(1, n(fd.hours)) }); else if (actor.getFlag?.(MOD, "meditates")) await actor.unsetFlag?.(MOD, "meditates");
             const rr = await rollPool(attr(actor, "wits") + abilityDots(actor, "enigmas"), diff);
             const gain = Math.min(rr.botch ? 0 : rr.successes, Math.max(1, n(fd.hours)), Math.max(0, i.gnosis.perm - i.gnosis.temp));
             if (gain) await P.adjust(actor, "gnosis", gain);
@@ -893,7 +952,7 @@ export function build(ctx) {
         if (k === "scar") return battleScar(a);
     }
 
-    return { shift, rageRoll, enterFrenzy, endFrenzy, spendRage, remainActive, meditate, useGift, learnGift, performRite, summonSpirit, useFetish,
+    return { shift, rageRoll, enterFrenzy, endFrenzy, spendRage, remainActive, remainActiveAuto, meditate, meditateDaily, useGift, learnGift, performRite, summonSpirit, useFetish,
         awardRenown, applyRenown, accomplishment, battleScar, deliriumCheck, curse, kinfolk, chiminage, moonRise, regenRound, embracePain, onChatButton, setForm, info };
 }
 

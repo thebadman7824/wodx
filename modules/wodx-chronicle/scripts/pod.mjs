@@ -3,6 +3,7 @@ import {propose, registerHandler} from "./approvals.mjs";
 import {currentYear} from "./eras.mjs";
 import * as P from "./pod-rules.mjs";
 import * as TW from "./twist-rules.mjs";
+import * as Fronts from "./fronts.mjs";
 import {watched} from "./signature-rules.mjs";
 
 /**
@@ -36,6 +37,7 @@ import {watched} from "./signature-rules.mjs";
 
 const DAY = 86400;
 const T_TEACH = `${MODULE_ID}.podTeach`;
+const T_GRANT = `${MODULE_ID}.podGolcondaGrant`;
 const T_LP = `${MODULE_ID}.podLifepath`;
 const T_SAGA = `${MODULE_ID}.podSaga`;
 const lineOn = k => { try { return !!game.settings.get(MODULE_ID, k); } catch (e) { return false; } };
@@ -177,11 +179,39 @@ export async function golcondaStep(actorOrId, delta, why) {
   rec.log = [...(before.log ?? []), {t: now(), text: `${delta > 0 ? "+" : ""}${delta}: ${why}`}].slice(-12);
   await a.update({[`flags.${MODULE_ID}.golconda`]: rec});
   await card(`${a.name}: the road to Golconda`, `<p>${esc(why)}. Step ${rec.step} of ${P.GOLCONDA_STEPS}.</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: "golconda", before}});
-  if ( rec.step >= P.GOLCONDA_STEPS && before.step < P.GOLCONDA_STEPS )
-    await card(`${a.name} stands at the threshold`, `<p>The road is walked. Whether ${esc(a.name)} reaches Golconda is the Storyteller's call.</p>`, {act: {key: "grant", label: "Grant Golconda", data: {uuid: a.uuid}}});
+  if ( rec.step >= P.GOLCONDA_STEPS && before.step < P.GOLCONDA_STEPS ) await threshold(a);
   return rec;
 }
-ACTS.grant = async ({uuid}) => { const a = await fromUuid(uuid); if ( a ) await a.setFlag("wodx-actions", "golconda", true); };
+/**
+ * B5097 (Ben's Golconda Desk, go4): who may be granted Golconda. On the Road of Humanity the Grant button needs
+ * Humanity 7 and Conscience 4 (V20 Dark Ages p. 359; V20 p. 300). On another Road or a Path the Storyteller approves
+ * the grant in the queue, since each Road teaches its own Golconda (V20 Dark Ages p. 115) and the books doubt Paths
+ * reach it; once approved it is granted.
+ */
+export function readiness(a) {
+  const adv = a?.system?.advantages ?? {}, path = adv.path ?? {};
+  const humanity = /humanit/i.test(String(path.custom || path.label || "humanity"));
+  const road = Number(path.permanent ?? path.value) || 0, conscience = Number(adv.virtues?.conscience?.permanent) || 0;
+  return {humanity, road, conscience, pure: road >= 7 && conscience >= 4};
+}
+async function threshold(a) {
+  const r = readiness(a);
+  if ( r.humanity && r.pure )
+    return card(`${a.name} stands at the threshold`, `<p>The road is walked. Whether ${esc(a.name)} reaches Golconda is the Storyteller's call.</p>`, {act: {key: "grant", label: "Grant Golconda", data: {uuid: a.uuid}}});
+  if ( r.humanity )
+    return card(`${a.name} stands at the threshold`, `<p>The road is walked, but Humanity ${r.road} and Conscience ${r.conscience} fall short of the purity Golconda asks (7 and 4). The Grant waits until they are met.</p>`, {whisper: ownerIds(a)});
+  return propose({type: T_GRANT, key: `golgrant:${a.id}`, title: `Grant Golconda to ${a.name}?`, detail: `${a.name} has walked the road on a Road other than Humanity (rating ${r.road}). Each Road teaches its own Golconda; approve to grant it.`, data: {uuid: a.uuid}});
+}
+export const atThreshold = actorOrId => { const a = toActor(actorOrId); return a ? threshold(a) : null; };
+async function grant(uuid, {force = false} = {}) {
+  const a = await fromUuid(uuid);
+  if ( !a ) return null;
+  const r = readiness(a);
+  if ( !force && r.humanity && !r.pure ) { ui.notifications?.warn?.(`${a.name}: Humanity ${r.road} and Conscience ${r.conscience} fall short of 7 and 4.`); return null; }
+  await a.setFlag("wodx-actions", "golconda", true);
+  return card(`${a.name} reaches Golconda`, `<p>The Beast is mastered. No frenzy and no Rötschreck, a blood point a week, Traits to 10 whatever the Generation, and the sun falls a step weaker. It holds while the Road stays at 7 or more and Conscience at 4 or more.</p>`, {whisper: ownerIds(a)});
+}
+ACTS.grant = async ({uuid}) => grant(uuid);
 export const setback = (actorOrId, kind) => { const s = P.GOLCONDA_SETBACKS[kind]; return s ? golcondaStep(actorOrId, -s.steps, `${toActor(actorOrId)?.name ?? "The seeker"} ${s.label}`) : null; };
 export async function setMentor(actorOrId, mentor = "") {
   const a = toActor(actorOrId), rec = golOf(a);
@@ -530,6 +560,7 @@ export class PodApp extends ApplicationV2 {
       twist: async function(e, el) { const row = el.closest("[data-twist]"), v = row.querySelector("select")?.value ?? "";
         try { await revealTwist(el.dataset.n, {variant: v, force: el.dataset.force === "1"}); } catch (err) { ui.notifications.warn(err.message); } this.render(); },
       untwist: async function(e, el) { await unrevealTwist(el.dataset.n); this.render(); },
+      ...Fronts.ACTIONS,
       sagaClocks: async function() { for ( const i of this.element.querySelectorAll("[data-clock]") ) await setSagaClock(i.dataset.clock, i.value); this.render(); },
       thread: async function(e, el) { const a = game.actors.get(el.dataset.actor), x = threadsOf(a).find(t => t.id === el.dataset.thread); if ( x ) await startThread(a.id, x); this.render(); },
       build: async function() { const f = this.element.querySelector("[data-build]"), v = n => f.querySelector(`[name=${n}]`).value.trim();
@@ -537,6 +568,7 @@ export class PodApp extends ApplicationV2 {
     }};
   _onRender() {
     for ( const sel of this.element.querySelectorAll("select[data-ending]") ) sel.addEventListener("change", () => setEnding(sel.dataset.ending, sel.value).then(() => this.render()));
+    Fronts.bind(this);
   }
   async _renderHTML() {
     const s = state(), yr = currentYear(), parts = [];
@@ -576,6 +608,7 @@ export class PodApp extends ApplicationV2 {
           ${endable ? ` <select data-ending="${b.key}" data-fixed><option value="">No ending yet</option>${ends.map(([k, e]) => `<option value="${k}" ${x.endings[b.key] === k ? "selected" : ""}>${esc(e.label)}</option>`).join("")}</select>` : ""}</li>`; }).join("")}</ul>
         <p class="vta-note">${x.endings[P.saga.FIRST_BOOK] ? esc(P.saga.SAGA_ENDINGS[x.endings[P.saga.FIRST_BOOK]].text) : "The first book's ending changes the words of later books."}</p>`);
       if ( x.books[P.saga.FIRST_BOOK] === "running" || Object.keys(x.twists?.revealed ?? {}).length ) parts.push(twistSection(s));
+      if ( x.books[P.saga.FIRST_BOOK] === "running" || x.fronts ) parts.push(Fronts.section(s));
     }
     if ( lineOn("podGolconda") ) {
       const list = seekers();
@@ -590,6 +623,7 @@ export class PodApp extends ApplicationV2 {
 /* ---------------- hooks ---------------- */
 
 export function registerPodHooks() {
+  registerHandler(T_GRANT, {label: "Grant Golconda on a Road other than Humanity", approve: e => grant(e.data?.uuid, {force: true})});
   registerHandler(T_TEACH, {label: "A mentor teaches a step on the road to Golconda", approve: async e => {
     const a = game.actors.get(e.data?.actor), r = golOf(a);
     if ( !a || !r?.mentor ) return;
@@ -608,7 +642,7 @@ export function registerPodHooks() {
   Hooks.on("wodxFirstNightSigned", onFirstNight);
   let last = 0;
   const tick = () => { if ( !isActiveGM() || Date.now() - last < 2000 ) return; last = Date.now();
-    dealChains().then(() => lifepathTick()).then(() => sagaTick()).catch(e => console.error(`${MODULE_ID} | story chains`, e));
+    dealChains().then(() => lifepathTick()).then(() => sagaTick()).then(() => Fronts.frontTick()).catch(e => console.error(`${MODULE_ID} | story chains`, e));
     if ( lineOn("podGolconda") ) teachTick().catch(e => console.error(`${MODULE_ID} | Golconda`, e)); };
   Hooks.on("updateWorldTime", tick);
   Hooks.on("wodxSkipEnd", tick);
@@ -621,6 +655,6 @@ export function registerPodHooks() {
   });
 }
 
-export const podApi = {exposure, expose, setSect, cityOf, cityState, raiseBuilding, golconda, seek, golcondaStep, setback, setMentor,
+export const podApi = {exposure, expose, setSect, cityOf, cityState, raiseBuilding, golconda, seek, golcondaStep, setback, setMentor, golcondaReadiness: readiness, atThreshold,
   startChain, stopChain, dealChains, lifepathTick, startThread, threads: threadsOf, goals, setGoal,
-  saga: {state: sagaState, current: sagaCurrent, start: startSaga, skip: skipSaga, played: sagaPlayed, twists: {state: twistState, reveal: revealTwist, takeBack: unrevealTwist, rules: TW}, ending: setEnding, clock: setSagaClock, tick: sagaTick, rules: P.saga}, open: () => new PodApp().render(true), rules: P};
+  saga: {state: sagaState, current: sagaCurrent, start: startSaga, skip: skipSaga, played: sagaPlayed, twists: {state: twistState, reveal: revealTwist, takeBack: unrevealTwist, rules: TW}, fronts: Fronts.api(), ending: setEnding, clock: setSagaClock, tick: sagaTick, rules: P.saga}, open: () => new PodApp().render(true), rules: P};

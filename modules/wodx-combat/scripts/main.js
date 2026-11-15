@@ -598,6 +598,7 @@ async function onSocket(p) {
     else if (p.action === "blinded") await chronicle()?.applyTimed?.(actor, { name: "Blinded", condition: "blinded", key: "wodx-blinded", duration: { kind: "scene" }, source: "WoDX house rule" });
     else if (p.action === "follow" && ["knockdown", "held", "staked"].includes(p.follow?.condition)) await markFollow(actor, p.follow);
     else if (p.action === "update") await actor.update(p.data);
+    else if (p.action === "maim" && p.offer?.part) await BD.offerMaim(actor, p.offer, { attacker: p.by ? { name: String(p.by) } : null });
 }
 
 async function recordApplied(messageId, actor, r) {
@@ -986,7 +987,7 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
         } else if (target) {
             const arm = armor(target);
             const armorRating = Math.max(arm.bashing, arm.lethal, arm.aggravated);
-            const sp = soakPoolFor(target, profile, w, fd, dp);
+            const sp = soakPoolFor(target, profile, w, fd, dp, attacker);
             if (fd.fortBlood && sp.autoSoak) spendNotes.push(...await spend(target, 0, 1));
             soak = await rollPool(sp.dice, soakDiff, { canBotch: false, autoSuccesses: sp.autoSoak });
             soak.pool = sp;
@@ -1073,7 +1074,8 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     if (special || (atk.botch && fitNow && w?.ranged && armsLib()?.rules?.kindsOf?.(w)?.has?.("bow"))) await armsAftermath({ attacker, target, w, hit, outcome, special, botch: atk.botch });
     if (target && location && outcome?.levels) {
         const offer = BodyRules.maimOffer(location, { levels: outcome.levels, type: outcome.type });
-        if (offer) await BD.offerMaim(target, offer, { attacker });
+        if (offer && target.isOwner) await BD.offerMaim(target, offer, { attacker });
+        else if (offer) requestGM({ action: "maim", uuid: target.uuid, offer, by: attacker?.name ?? "" });
     }
     return { attack: atk, defense: def, damage: dmg, soak, outcome, counter, message: msg };
 }
@@ -1197,7 +1199,11 @@ function damageProfile(target, tKind, w, fd) {
     return { dmgType, bane, soakDiff, minLevels, sb, note };
 }
 
-function soakPoolFor(target, profile, w, fd, dp) {
+/** B4874: soak dice a character's feature gives in this fight (an Ahroun in Crinos against the Wyrm, a troll's oath, a Defender's shield). */
+function sigSoak(target, attacker) {
+    try { return chronicle()?.signatures?.soakFor?.(target, { attacker }) ?? { dice: 0, names: [] }; } catch (e) { return { dice: 0, names: [] }; }
+}
+function soakPoolFor(target, profile, w, fd, dp, attacker = null) {
     const arm = armor(target);
     // B3802: a cyber limb or plate soaks a blow aimed at it with its own dice; B3800: the sheet's soak rows
     const limb = R.limbSoak(cyber(target)?.limbs ?? [], fd.aimType ?? fd.targeting);
@@ -1206,7 +1212,7 @@ function soakPoolFor(target, profile, w, fd, dp) {
         profile, damageType: dp.dmgType,
         stamina: attr(target, "stamina"), fortitude: discipline(target, "Fortitude"),
         armor: (arm[dp.dmgType] ?? 0) + limb.dice, armorPiercing: w.piercing, bypassArmor: fd.bypass,
-        fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: num(fd.soakBonus) + sheetSoak,
+        fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane: dp.bane, bonus: num(fd.soakBonus) + sheetSoak + num(sigSoak(target, attacker).dice),
         aggSoak: garouRules()?.isShifter?.(target) ? garouRules().aggSoak(target) : true,
         ...soakOpts(target, profile)
     });
@@ -1298,7 +1304,7 @@ function planAttacks(attacker, target, fd, distance, reachD = distance) {
         const dp = target ? damageProfile(target, tKind, w, f) : { dmgType: w.type || "lethal", minLevels: 0 };
         if (target) f.fortBlood = resolveFortitude(target, fd.fortBlood, dp, f);
         const dmg = damagePool(attacker, w, 0, maneuver, targeting, f, pot);
-        const sp = target ? soakPoolFor(target, profile, w, f, dp) : { dice: 0, autoSoak: 0 };
+        const sp = target ? soakPoolFor(target, profile, w, f, dp, attacker) : { dice: 0, autoSoak: 0 };
         const harm = R.expectedHarm({ atkDice: pool.dice, atkDiff: Math.min(10, pool.difficulty), atkAuto: f.willpower ? 1 : 0, defDice, defDiff,
             dmgBase: dmg.dice, dmgAuto: dmg.auto, soakDice: target ? sp.dice : 0, soakDiff: dp.soakDiff ?? 6, soakAuto: sp.autoSoak ?? 0,
             halveBashing: dp.dmgType === "bashing" && (profile === "vampire" || (profile === "ghoul" && isElder(target))),
@@ -1886,8 +1892,8 @@ Hooks.once("init", () => {
     const mounted = MTD.setupMounted({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall, markFollow });
     const vehicles = VH.setupVehicles({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall });
     FTime.setupFightTime();
-    const api = { body, movement, mounted, vehicles, aftermath, useRoom, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.36.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+    const api = { body, movement, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.36.1", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, followOn: R.followOn, markFollow, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -2418,7 +2424,23 @@ export function conditionMods(attacker, target) {
         out.attackerDiff += mv.diff;
         out.notes = [...(out.notes ?? []), ...mv.notes.map(n => `${n} (house rule)`), ...(mv.blocked ? [`Cannot attack: ${mv.blocked}`] : [])];
     } catch (e) { /* movement off */ }
+    // B4885: someone held as a shield by a WoDX NPC hostage-taker makes every attack on them 2 harder (house rule)
+    try {
+        const sh = shieldOf(target);
+        if (sh) { out.attackerDiff += 2; out.notes = [...(out.notes ?? []), `${sh} is held as a shield (+2 difficulty, house rule)`]; }
+    } catch (e) { /* no tokens */ }
     return out;
+}
+/** B4885: the name of the hostage this actor holds as a shield in this fight, still beside them; null otherwise. */
+export function shieldOf(actor) {
+    const tok = actor?.getActiveTokens?.()?.[0]?.document;
+    const h = tok?.flags?.["wodx-npc"]?.hostage;
+    if (!h?.token || (h.combat && h.combat !== game.combat?.id)) return null;
+    const hos = tok.parent?.tokens?.get(h.token);
+    if (!hos || hos.actor?.statuses?.has?.("dead")) return null;
+    const g = tok.parent?.grid?.size ?? 100;
+    const near = Math.abs(hos.x - tok.x) <= g * 1.5 && Math.abs(hos.y - tok.y) <= g * 1.5;
+    return near ? hos.name : null;
 }
 /** The defence difficulty: the defender's conditions and, on a dodge, their stance (3.12.0). */
 function defenseDiffOf(target) {

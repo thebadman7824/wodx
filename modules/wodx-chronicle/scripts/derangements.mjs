@@ -105,7 +105,7 @@ export async function hold(actor, key = null, {spend = false, give = false} = {}
   return {key, held: res.held, botch: !!res.botch, roll: r, bout: res.held ? null : boutOf(actor)};
 }
 
-/** A Virtue loss leaves a derangement: written into the box, with a card. cause: frenzy, sin, fear or other. */
+/** A Virtue loss leaves a derangement: written into the box, with a card. cause: frenzy, sin, fear, loss (a death mourned), binding (a soul bound) or other. */
 export async function gain(actor, cause = "other", why = "") {
   if ( !actor?.isOwner ) return null;
   const key = D.pickNew(cause, of(actor), Math.random());

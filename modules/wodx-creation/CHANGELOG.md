@@ -2,6 +2,21 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.70.0 (Ghouled animals, step three (B5058 to B5064): traits for every animal kind from the V20 Dark Ages animals list (pp. 396 to 399), with house figures for the kinds it leaves out. Three steps of training: trained gives the traits the list puts in brackets, war-trained (horses, camels, elephants, guard dogs and hounds) adds a dot of Brawl and is the mark the mounts rules read to stop a horse shying. Training costs 5 experience, then 10, or runs as a long task (Manipulation + Animal Ken, difficulty 7, a roll a week). Breeds by year and land, from destriers and alaunts to Dobermanns and salukis. In the wizard's Backgrounds page a vampire picks the kind, land, breed and training for each Retainers dot; dots put together make one tougher beast with the Storyteller's leave)
+- 0.69.0 (Golconda lifts the Generation's limit on Traits (B5091, V20 Dark Ages p. 359))
+- 0.68.0 (Dutch names raised to 300 (B5440); Greek names raised to 300 (B5460); Irish names raised to 300 (B5450); Polish names raised to 300 (B5470); Portuguese names raised to 300 (B5430))
+- 0.67.0 (Hungarian names raised to 300 (B5400); Persian names raised to 300 (B5410); Yoruba names raised to 300 (B5420))
+- 0.66.0 (Korean names raised to 300 (B5360); Mande names raised to 300 (B5370); Turkish names raised to 300 (B5350); Zulu names raised to 300 (B5380))
+- 0.65.0 (Akan names raised to 300 (B5310); Romanian names raised to 300 (B5300); Serbian names raised to 300 (B5330); Tibetan names raised to 300 (B5290); Vietnamese names raised to 300 (B5320))
+- 0.64.0 (Amharic names raised to 300 (B5280); Hawaiian names raised to 300 (B5270); Javanese names raised to 300 (B5250); Nahua names raised to 300 (B5230); Quechua names raised to 300 (B5200); Steppe names raised to 300 (B5220); Swahili names raised to 300 (B5260); Tamil names raised to 300 (B5240))
+- 0.63.0 (Malay names raised to 300 (B5190))
+- 0.62.0 (Thai names raised to 300 (B5180))
+- 0.61.0 (The Philippines in the lifepath (B5153))
+- 0.60.0 (Ghouled animals, step one (B5040 to B5049): Give vitae and the new Feed vitae token button work on animals, on Creature sheets (which keep their variant, so the mounts' mountable tag stays) and on Mortal-sheet animals from the passers-by and households. The pool goes by size from the V20 Dark Ages ghoul rules (p. 401), plus one a century; only the physical Disciplines can ever be learned; animals buy only Physical and Mental Attributes and no Virtues or Road. A player's request to feed goes to the approval queue and happens by itself once approved. Pass the Years ages an animal ghoul against its own life span)
+- 0.59.0 (Creation acts without the Storyteller's hand (B5022-B5024))
+- 0.58.0 (The Banyarwanda and Barundi join the People generator (B5030 to B5032))
+- 0.57.0 (The Moro join the People generator (B5000 to B5002))
+- 0.56.0 (The Tuareg join the People generator (B4950 to B4952))
 - 0.55.0 (The Sami join the People generator (B4900 to B4902))
 - 0.54.0 (Filipinos join the People generator with names from Pigafetta, Legazpi and the Clavería catalogue (B4750 to B4752))
 - 0.53.0 (The Khmer join the People generator (B4740 to B4742))

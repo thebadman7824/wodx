@@ -51,3 +51,8 @@ merge past it. "recheck": false in the job turns this off.
     D:\WoDX\pcq\logs                                                        its logs (14 days kept)
 
 `lane-reset.cmd` runs `start-runner.ps1` every night, so the runner is back by morning after a reboot.
+
+A watchdog (`watchdog.ps1`, B5210-B5212) runs apart from the runner, started through WMI by `start-runner.ps1`, and
+the runner's wrapper starts it again whenever it is missing. Every two minutes it checks that `run-runner.ps1` is
+running and, if not, starts it again and writes a line in `logs\runner-console.log`. A file named `runner-off` in
+`D:\WoDX\pcq` keeps it from restarting the runner; a file named `watchdog-off` stops the watchdog itself.

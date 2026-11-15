@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B4910
+Next free block: B5480
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -231,8 +231,49 @@ Next free block: B4910
 | B4790-B4799 | Vehicles in a fight: aircraft, armoured vehicles, Durability, ramming, NPC drivers (used B4790-B4797) | Interactables, Combat, NPC |
 | B4800-B4809 | Storyteller tools for the lone player: add experience (used B4800-B4806) | Solo |
 | B4810-B4819 | Rothenstein Rebuilt: Ways laid by the builder, old exits and doors to the places inside (used B4810-B4813) | Storyteller |
+| B4820-B4849 | Summoning rules and power effect bounds (used B4820-B4849) | Actions |
 | B4850-B4859 | Rothenstein Rebuilt: book one's twist web (six chains, locks, one twist a week) (used B4850-B4853) | Chronicle |
+| B4860-B4889 | The Storyteller's Hand, part two: clan, tribe, kith and creed features act by themselves (Ben's desk picks s1-s5, 14 November 2026) (used B4860-B4889) | Chronicle, Combat, Actions, Storyteller, NPC, Interactables |
+| B4890-B4899 | Day and night by themselves for the Kindred (sleep, vigil, waking, rising, burns) (used B4890-B4897) | Actions |
 | B4900-B4909 | Sami names (used B4900-B4902) | Creation, Chronicle |
+| B4910-B4919 | Rothenstein Rebuilt: book one fronts, roles and clue carriers (spine part two) (used B4910-B4917) | Chronicle |
+| B4950-B4959 | Tuareg names (used B4950-B4952) | Creation, Chronicle |
+| B4980-B4999 | The Automation Desk: player actions that follow the rules by themselves, every line (used B4980-B4999) | Actions, Chronicle |
+| B5000-B5009 | Moro names (used B5000-B5002) | Creation, Chronicle |
+| B5010-B5029 | The Storyteller's Hand, part three: fire, noticing, and the rest of the desk acts by itself (Ben's desk picks, 14 November 2026) (used B5010-B5024) | Interactables, Actions, Senses, Library, Chronicle, Storyteller, Otherworlds, Creation |
+| B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
+| B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5064) | Creation, NPC, Actions |
+| B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
+| B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
+| B5180-B5189 | Names raised to 300, Thai (used B5180) | Creation |
+| B5190-B5199 | Names raised to 300, Malay (used B5190) | Creation |
+| B5200-B5209 | Names raised to 300, Quechua (used B5200) | Creation |
+| B5210-B5219 | PC runner watchdog (used B5210-B5212) | tools (PC job queue) |
+| B5220-B5229 | Names raised to 300, Steppe (used B5220) | Creation |
+| B5230-B5239 | Names raised to 300, Nahua (used B5230) | Creation |
+| B5240-B5249 | Names raised to 300, Tamil (used B5240) | Creation |
+| B5250-B5259 | Names raised to 300, Javanese (used B5250) | Creation |
+| B5260-B5269 | Names raised to 300, Swahili (used B5260) | Creation |
+| B5270-B5279 | Names raised to 300, Hawaiian (used B5270) | Creation |
+| B5280-B5289 | Names raised to 300, Amharic (used B5280) | Creation |
+| B5290-B5299 | Names raised to 300, Tibetan (used B5290) | Creation |
+| B5300-B5309 | Names raised to 300, Romanian (used B5300) | Creation |
+| B5310-B5319 | Names raised to 300, Akan (used B5310) | Creation |
+| B5320-B5329 | Names raised to 300, Vietnamese (used B5320) | Creation |
+| B5330-B5339 | Names raised to 300, Serbian (used B5330) | Creation |
+| B5340-B5349 | Table install speed-up and gate step timeout (used B5340) | Chronicle |
+| B5350-B5359 | Names raised to 300, Turkish (used B5350) | Creation |
+| B5360-B5369 | Names raised to 300, Korean (used B5360) | Creation |
+| B5370-B5379 | Names raised to 300, Mande (used B5370) | Creation |
+| B5380-B5389 | Names raised to 300, Zulu (used B5380) | Creation |
+| B5400-B5409 | Names raised to 300, Hungarian (used B5400) | Creation |
+| B5410-B5419 | Names raised to 300, Persian (used B5410) | Creation |
+| B5420-B5429 | Names raised to 300, Yoruba (used B5420) | Creation |
+| B5430-B5439 | Names raised to 300, Portuguese (used B5430) | Creation |
+| B5440-B5449 | Names raised to 300, Dutch (used B5440) | Creation |
+| B5450-B5459 | Names raised to 300, Irish (used B5450) | Creation |
+| B5460-B5469 | Names raised to 300, Greek (used B5460) | Creation |
+| B5470-B5479 | Names raised to 300, Polish (used B5470) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7412,6 +7453,121 @@ WoDX Storyteller. builder.layWays(recipe, made, {only}) and builder.takeBackWays
 
 Reverse: drop the two api entries; the step keeps working.
 
+## B4820. Summoned beings carry their books' rules (2026-11-14)
+WoDX Actions. Ben asked (20:39Z) for summoning built out properly: the summoner controls the creature, it lasts a set time, it joins combat and it can be dismissed, and for every power's effects to be bound by rules. Each summoning power has a spec in summon-specs.js read from its page; summon-rules.js resolves it against the casting. A summons by a player's character waits for the Storyteller's yes; an NPC's runs by itself (B4837). When no actor is named, a plain being of the book's kind answers with the book's numbers on its token.
+
+Reverse: drop the summonResult call in effects.js planOf and plan.
+
+## B4821. Control (2026-11-14)
+A servant is owned by the summoner's players and moved by them. A called being serves the summoner through WoDX NPC's orders, hard orders weighed by the Storyteller. A wild one is hostile and is given an attack order on the nearest living thing. A Bind keyword on the same Mage casting makes a called being a servant (M20: summoning alone does not bind). An NPC's summons serve that NPC and WoDX NPC plays them.
+
+Reverse: summon-rules.js resolve().
+
+## B4822. Lasting, fights and dismissal (2026-11-14)
+Each token gets a "Summoned" timed effect from WoDX Chronicle (rounds, scene, dawn or clock); when it runs out the being fades away in its look. A being with no timer lasts until dismissed, destroyed, its task done or its upkeep unpaid, and resolve() turns any spec with none of these into the scene. A started fight on the scene adds the tokens with an initiative roll. The Storyteller, the token's owners or the summoner's owners dismiss it from the token HUD or the card.
+
+Reverse: summons.js bring(), dismiss().
+
+## B4823. Keeping rolls (2026-11-14)
+Where a book asks for a roll to keep a summons in hand, WoDX rolls it: on arrival (with a ladder by successes, as V20's Summon Elemental), on each of the being's turns (a Demon's Torment rolls), or each turn it is more than 20 yards from the summoner (house rule for "away from them"). A failure makes it hostile, free or gone as the book says; a botch on a ladder turns it on the summoner.
+
+Reverse: summons.js onTurn(), keepingRoll().
+
+## B4824. Upkeep and familiars (2026-11-14)
+A lasting servant with upkeep (Mummy effigies' Sekhem a day, week or month) is fed from the master's pool when it falls due; unfed it falls still (a token HUD button wakes it once paid) or leaves. The M20 Familiar/Companion Background (pp. 315-317) costs its rating in Quintessence each week; unfed it leaves; its death costs the mage a permanent Willpower and two Quintessence a dot, the rest as Paradox.
+
+Reverse: summons.js sweepUpkeep(), onFamiliarDeath().
+
+## B4830. Lights end and made things fade (2026-11-14)
+The powers review found two effects with no end. A Light or Dark keyword now puts a timed effect on its bearer whose end puts the token's own light back. A thing made by a power now fades from its holder's things when the power's duration ends; a Mage creation with Prime in it stays (house reading, PENDING-REVIEW).
+
+Reverse: effects.js light and give cases, expireMade().
+
+## B4831. Resistance and break-free rolls (2026-11-14)
+Effect cards named a resistance roll that nobody rolled. Each applied item with a resistance now has a button for the target's owners and the Storyteller; any success throws the effect off (house reading, PENDING-REVIEW); a hold can be tried each turn. An NPC's roll goes to the Storyteller only.
+
+Reverse: effects.js addResistButtons(), resistItem().
+
+## B4832. Each-turn rules are worked (2026-11-14)
+Harm that lasts and the powers whose books act each turn (Silver Claws, Claws of the Glassblower, Heart Claw, Combat Healing, Lost in the Mists, the Demon's Scry, Animal Form) carry an everyTurn record on their timed effect; on the bearer's turn WoDX applies the damage, healing or pool point, or rolls the book's roll and does what a failure or win does. The others the bounds check finds go on the review desk.
+
+Reverse: turns.js, turn-rules.js.
+
+## B4835. The bounds check (2026-11-14)
+tools/powers/bounds.mjs lists, for every applying power, what ends each keyword's effect and who controls it; the harness holds unbound keywords and summonings with no spec at none, and each-turn text with nothing working it to a ceiling.
+
+Reverse: delete tools/powers/bounds.mjs and its test.
+
+## B4836. Powers tagged as summonings that call nothing (2026-11-14)
+The book read of all 105 summoning powers found 22 that call no being (Night Cry, Summon Talisman, Fetish Fetch, the Hunts and Great Hunts, Rousing Apophis, Call the Stars, Shivers, Infest, the Rites of Spirit Awakening and of the Totem, King of the Beasts, Command Animals, Mind of the Swarm and others). summon-specs.js NOT_SUMMON gives each the keywords it works through instead: a curse as a Bind written on the sheet, a thing fetched to hand as a Make, command of animals already present as a Sway (house reading, on the review desk).
+
+Reverse: drop the notSummon branch in effects.js planOf.
+
+## B4837. An NPC's summoning runs by itself (2026-11-14)
+A summoning by an NPC with no player owner goes on the card as automatic: a plain being of the book's kind comes one square beside the NPC with its spec's rules, joins the fight and serves the NPC. The Storyteller can dismiss it or Undo the card (house reading, on the review desk).
+
+Reverse: route "pick" for an NPC's summon in planOf.
+
+## B4838. Each-turn powers carry the casting's numbers (2026-11-14)
+WoDX Actions. Ben picked every item on the Powers Bounds Desk as recommended (22:17Z). The fourteen powers whose books act each turn are built. When a power is used, its each-turn record takes the successes, Faith, Torment and the caster, so a rule that counts successes or uses the caster's pool reads the real casting. A record with no roll, harm or strike does nothing on the turn. A self power with no result of its own gets a scene boost to carry the record; any other result (a thing made, a hold) gets a timed effect of its own.
+
+Reverse: turn-rules.js resolveRec and the planOf call in effects.js.
+
+## B4839. Clenched Jaw (2026-11-14)
+The bitten target takes aggravated harm each turn from the caster's Strength + 1, difficulty 3. Breaking free costs the target one lethal level that cannot be soaked.
+
+Reverse: drop the "clenched jaw" record and onBreak in resolveResist.
+
+## B4840. Scabwalker Curse (2026-11-14)
+The target loses one bashing level each turn. When the target touched nothing made by people that turn, the Storyteller presses Skip on the turn card and the level is healed back.
+
+Reverse: drop the record and the skip button in turns.js.
+
+## B4841. One Fights as Many (2026-11-14)
+DA Mage p. 109. Each copy costs one Quintessence, up to the successes; only paid copies come. At each round's end the mage takes the worst harm any one copy took, by type and unsoakable, and the copies are made whole.
+
+Reverse: drop the hand spec, payFor and shareWounds.
+
+## B4842. Bitter Fruit (2026-11-14)
+The poison does nothing when eaten. Each turn for the successes in turns the eater rolls Stamina at 7; a failure costs one lethal level that cannot be soaked. Healing ends it.
+
+Reverse: drop the record and the only flag in the damage case.
+
+## B4843. Tripping the Ire and Ride the Flames (2026-11-14)
+Both keep a counter on the card. Tripping the Ire starts at the successes and loses one each turn. Ride the Flames loses one on each failed Willpower roll at 6. Either ends at zero.
+
+Reverse: drop the counter step.
+
+## B4844. Command the Wind and Cyclone (2026-11-14)
+Command the Wind at its high level strikes every living being within Faith yards each turn for one bashing level that cannot be soaked; masked ones are spared. Cyclone hits everything within Faith yards for dice equal to its counter, which drops by one each turn.
+
+Reverse: drop the two records and the area step.
+
+## B4845. Earth Meld and Invoke the Storm (2026-11-14)
+Earth Meld needs a Strength + Athletics roll at 6 each turn to keep the hold; a failure is noted on the card. Invoke the Storm lasts Faith turns: each turn a die of 9 or more calls lightning on someone within Faith yards for Torment dice of lethal harm. High-Torment forms carry their own rules alone.
+
+Reverse: drop the records and the out.high mark.
+
+## B4846. Witch's Nimbus (2026-11-14)
+A burning sheath: anyone who lands a close blow on its bearer takes lethal harm equal to the nimbus level. Bolts thrown from it are an ordinary attack.
+
+Reverse: drop touchHarm and onBlow.
+
+## B4847. Naming the Body's Destruction (2026-11-14)
+Only the serious level acts each turn: the target rolls Stamina at 8, and a failure costs one lethal level. Healing ends it.
+
+Reverse: drop the record and levelsEq.
+
+## B4848. Summon the Simple Form (2026-11-14)
+V20. Keeping the form costs one Willpower each turn; it ends when Willpower runs out.
+
+Reverse: drop the record.
+
+## B4849. Blood Pump (2026-11-14)
+For its scene the Kindred may spend more blood a turn than Generation allows.
+
+Reverse: drop noBloodCap from blood() in main.js.
+
 ## B4850. The twist web keeps the shape, not the words (2026-11-14)
 WoDX Chronicle. data/twists-rothenstein.mjs holds the twenty-four twists by number with a short handle in our own words, the six chains with their twists and pay-off chapters, the pairs that cannot both stand as written, and the quick order. The twists' own words stay in the Storyteller's third volume, which is kept privately and never in the repo.
 
@@ -7432,6 +7588,198 @@ WoDX Chronicle. Desk pick pl10: when one twist of a pair is revealed, its partne
 
 Reverse: none needed; the notes only advise.
 
+## B4860. New worlds start at Balanced (2026-11-14)
+WoDX Chronicle. Ben's pick a1 on the Storyteller's Hand desk. A world that has never had an automation level set moves to Balanced once, at its first start on the active Storyteller's client (setting automationSeeded). The Live world (rothenstein-live) is never moved; a world where someone picked a level, or whose automationBase is already set, is left alone; while the Lone Chronicle is on the move waits until the switch goes off. The testbed lanes reset to snapshots, so each lane starts at Balanced after a reset.
+
+Reverse: set START_LEVEL to null in automation-rules.mjs, or pick Hands on in the approval queue window.
+
+## B4861. The world's own hand sends people in plain sight (2026-11-14)
+WoDX Storyteller, reach.mjs and reach-rules.mjs. Ben, 14 November 2026: "I'm happy with gating things with human intelligence, but only if something actually happens afterwards." When a system acts on someone, the quick extras (kits-rules.mjs, house figures) are put on that character's scene a few squares away, visible, and a fight starts through WoDX Combat's fight starter when they mean harm (its own Auto or Suggest setting still applies). The Storyteller's card on each move has Send them away. Setting reachOn (default on). Which extras and how many is a house reading: the watch two, a patrol three, soldiers three, a raid one leader and three helpers, a purge six.
+
+Reverse: turn off "The world acts on its own".
+
+## B4862. An approved road encounter is put on the map (2026-11-14)
+WoDX Storyteller. Pick w3. Approving the encounter reads its words: beasts (wolves, dogs) and armed men (bandits, robbers, a gang) come as extras who fight; anyone else comes as people made by WoDX Creation, as the night card's Put it on the scene does. They stand by the traveller on the scene the trip reached.
+
+Reverse: the encounter handler in core.mjs logs again instead of calling reach.road.
+
+## B4863. Every institution lever does what it says (2026-11-14)
+WoDX Storyteller. Pick w2. Each of the 55 levers has moves (reach-rules.mjs LEVERS): a rumour, the law's heat raised or lowered, an arrest, people sent, hunter pressure, a town event (new LEVER_TOWN events: curfew, levy, prices, works, decree, short supplies, patrol, martial law, a change of hands), months of wages gained or lost, a seat given or taken, the seat holders' attitude, or a card of what is found (money and standing, where someone was seen, the closed shelves). A lever turned on someone other than the asker uses its "against" moves; with no target or on the asker, its "for" moves. "Trouble in an institution" on a player character's seat, once approved, lands: a scandal costs the seat and starts talk, a contest drops the holder a rank. House readings.
+
+Reverse: approveLever logs only, as before.
+
+## B4864. An approved raid or purge sends hunters (2026-11-14)
+WoDX Storyteller. Pick w4. Besides the rumour and the torches, the hunters go to the target: by day to a day sleeper's haven when WoDX knows it and the token is there, otherwise to wherever the target stands, and a fight starts. A purge goes after up to four known ones of the same kind in the region.
+
+Reverse: drop the reach.raid call in hunters.mjs approve.
+
+## B4865. The law comes for the wanted (2026-11-14)
+WoDX Chronicle and Storyteller. Pick w5. At Wanted (the warrant stage) and at a manhunt, Chronicle calls wodxLawStage and the watch (from 1600 the police) come to the culprit's scene. The culprit's players get a card: Go with them (the arrest goes to the trial as before, and the culprit's and the watch's tokens leave the scene) or Resist (a fight, and a fight deed on the heat). An NPC culprit goes with them. Through a manhunt a patrol comes each night (20:00 to 05:00), and by day (09:00 to 16:00) the law knocks at a vampire's haven when the token is there; one visit a culprit a day. The Storyteller's Make the arrest and Let it go buttons stay. Hours are by world time, a house reading.
+
+Reverse: turn off "The world acts on its own"; the cards stay as before.
+
+## B4866. The Veil's two lowest bands act (2026-11-14)
+WoDX Storyteller. Pick x3. Failing (1 to 2): each breach also adds a breach deed to the law's heat on the culprit and a point of hunter pressure more. Torn (0): the same with two points, every region's hunters gain a point of pressure each weekly turn, and big rumours spread twice a night. Torn ends when the Veil is mended on the ledger, as before.
+
+Reverse: veilMoves in reach-rules.mjs returns the holding moves for every band.
+
+## B4867. Threads of Fate endings and three projects write back on their own (2026-11-14)
+WoDX Storyteller. Picks w1 and w6. Each of the twenty kinds of ending write-back on the cards has moves (reach-rules.mjs WRITE_BACKS): the region's factions regard the player characters a step better or worse, the story's NPC and the factions' leaders remember them (NPC memory kinds), grudges pass to heirs, a ledger debt or boon, debts the story touched paid, hunter pressure with a lead on whom the story was about, or a town event. The Storyteller's card lists what was written. A finished language project puts the language on the sheet (from what it makes or its name), a trail names the scene and region where the quarry's token is, and research puts journal pages whose names match its subject into the character's codex. Business and Herd dots stay the Storyteller's to award (B850). House readings.
+
+Reverse: endStory posts the to-do list again; projectDone returns at once.
+
+## B4868. An absent player's character goes along with the party (2026-11-14)
+WoDX Storyteller and NPC. Pick w8. Marked away with "WoDX plays their character", the character gets the standIn flag: when a present player's character arrives on a scene, it is moved there too, and WoDX NPC takes its fight turns as it does an NPC's. Unticking, or the end of the session, takes the flag off. Its turn plan drops spending Willpower, using a power and taking a hostage, so it spends nothing of the player's.
+
+Reverse: setAbsent no longer sets the flag.
+
+## B4869. Witnesses react by their line's rule on their own (2026-11-14)
+WoDX Actions. Picks x1 and x2. When a shapechanger in Crinos is seen, or an act surely shows what someone is, each mortal witness rolls the line's rule hidden from players (rule 19): the Delirium (W20 p. 263, DA:W p. 97), the Veil (Mummy: The Resurrection p. 140), Revelation (Demon: The Fallen pp. 253-254), the Mists, or Hysteria (the scene's Shroud drops). Catatonia, collapse and rapt make the witness Immobilized for the scene, panic and terror make it Afraid, berserk and bloodlust start a fight. Who keeps it: the Delirium's memory column, the Veil at Willpower 7 or more, Revelation when the witness copes, the Mists below Banality 6 (house readings). Those who keep it go on the Masquerade record and know the kind from then on; a startled supernatural witness knows the kind at once. Setting autoWitness (on).
+
+Reverse: turn off "Witnesses react on their own".
+
+## B4870. Those who saw know (2026-11-14)
+WoDX Actions. Pick x2. The knows flag is set for witnesses who keep a reveal and for startled ones, without the button; an unlinked passer-by shares its base actor and is left out.
+
+Reverse: drop the knows writes in witnessStep and startledCard.
+
+## B4871. Derangements drawn by cause; grief rolled (2026-11-14)
+WoDX Chronicle, NPC, Library. Pick t2. Two causes join the table: loss (fugue, regression, obsession, paranoia, hysteria) and binding (multiple personalities, schizophrenia, paranoia, fugue), house picks. When someone close dies, those who loved them roll Willpower at 7 (8 for a spouse, child, lover or childe): a failure takes a temporary Willpower, a botch over one of those draws a derangement from loss. A soul twisted by a binder's Torment gets one from binding.
+
+Reverse: FROM_CAUSE without loss and binding; tellLoved without grieve.
+
+## B4872. A frenzy past the Storyteller's word ends by itself (2026-11-14)
+WoDX Actions. Pick t3. A botched frenzy or Rötschreck lasts to the end of the scene (the fight is deleted, or the vampire's token comes onto another scene), then Self-Control (Courage for the fear) at the frenzy's difficulty is rolled each turn of three seconds of world time until it passes. The Thrall of the Wyrm ends when the Garou reaches Incapacitated or the fight it was in ends. House reading; ending by hand stays.
+
+Reverse: drop frenzyHooks and markBotch in main.js.
+
+## B4873. The court calls Blood Hunts; favours become boons (2026-11-14)
+WoDX Actions and NPC. Pick x4. At each faction turn (WoDX NPC now calls wodxFactionTurn) a Kindred not already hunted, with a diablerie mark made since the court last looked or a breach record with three or more witnesses who still remember where word spreads, is hunted: for diablerie or for the Masquerade. A Storyteller's character at once, with Lift it on the card; a player character through the approval queue. Persuading or charming another Kindred to a win writes a boon owed to them in the Ledger: trivial, minor when won by three or more. House readings of V20 pp. 28 and 493 and of prestation. Setting autoBloodHunt (on).
+
+Reverse: turn off "The court calls Blood Hunts"; favourBoon returns null.
+
+## B4874. Features give their points at once (2026-11-14)
+WoDX Chronicle. Picks s1 and s2. The card buttons that gave a feature's Willpower, Rage, Glamour, Renown, Chi, a boon or a breach record now happen as soon as the card is made, with Undo for any trait it moved; with no Storyteller connected they wait in the approval queue (Hands off passes them). The Child of Gaia's truce and the Tremere's refusal stay as buttons, being choices. Setting sigAuto (on). Soak dice: the Ahroun in Crinos with a creature of the Wyrm in the fight, a troll with an oath that holds, a Defender beside someone a monster attacks, a die each (WoDX Combat asks soakFor). Casting: WoDX Actions' M20 roll now reads trait and feature effects for magick, each Sphere, and fire when Forces does harm, so House Flambeau's die and the Chorus's voices apply. House readings.
+
+Reverse: turn off "Features give their points by themselves"; soakFor returns no dice.
+
+## B4875. The rolls a feature calls for are made (2026-11-14)
+WoDX Chronicle. Pick s3. A ghoul within three squares of Kindred blood spilled (lethal or aggravated) rolls Self-Control at 7; a Garou on a scene a Bunyip spirit or relic comes onto rolls Willpower at 7; either losing costs a temporary Willpower. A Hakken whose lord (the leader of the faction they belong to, or a lord set on the sheet) thinks less of them loses a Willpower point. House readings.
+
+Reverse: drop the deleteCombat, wodxDamageApplied, createToken and wodxAttitude listeners in registerSignatureHooks.
+
+## B4876. Awards that wait on a trigger (2026-11-14)
+WoDX Chronicle. Pick s2. A Malkavian's glimpse that comes true gives a Willpower point; a Devil-Tiger in a fight with a servant of the Yama Kings (akuma, oni, demons) gains a point of Yang Chi when it ends; a Piskie who leaves something in a barter for nothing more gains a point of Glamour, once a day; a Black Fury hears of harm to the guarded place and gains the Rage point at once.
+
+Reverse: the cards carry the button again (sigAuto off).
+
+## B4877. Counts and verdicts (2026-11-14)
+WoDX Chronicle and Storyteller. Pick s4. Ajaba gain a die to attack for each other Ajaba beside them (three at most); the Chorus in a church with three voices or more (Chorus or the faithful on the scene) cast one easier; a Judge's verdict on a named monster is answered from what it is and whether it has a Masquerade record, a deed on the law's heat or a hunters' file; the Iron Legion's long tasks gain a success on each roll that is not a botch. A Martyr's harm, a Marauder's region, the Scourges' winds and holy ground for the faithful stay with the Storyteller for now. House readings.
+
+Reverse: countEffects returns nothing; the Judge's card no longer answers; tasks.mjs without ironLegion.
+
+## B4878. Cards that told the Storyteller now change the world (2026-11-14)
+WoDX Chronicle. Pick s5. A Tremere order is kept in the Ledger as an oath of obedience; a Ventrue's lost holding lowers their standing with the Ventrue faction by one; a Giovanni's called wraith stands beside them as an unseen token; a breach that reaches the Watchers or the Inquisition adds a point of hunter pressure in the region with a file on the culprit. House readings.
+
+Reverse: lostHolding, callWraith, order and onBreach post their cards only.
+
+## B4879. Merits and flaws that only made a card now bite (2026-11-14)
+WoDX Chronicle. Pick t1. When one of these traits comes into play (feeding, a social act, a fight, the night) and the approval queue passes it, it rolls and lands an effect (trait-bite-rules.mjs): Impatient, Guilt-Wracked, Failure, Curiosity, Obsession, PTSD, Stress Atavism, Indecisive and Anachronism put a difficulty on the rolls they touch for the scene; Absent-Minded and Chronic Depression take a die for the night; Eat Food weighs on physical rolls for the night; Victim of the Masquerade costs a Willpower point; Compulsion and Driving Goal spend one or bear the difficulty; Flashbacks and Deranged start a derangement bout; Hatred frenzies on four successes of Rage; Poetic Heart adds a point of Banality on a failure; Bizarre Quality makes stealth and guile harder; Feral Mind social rolls; Common Sense whispers a warning to the player. Infectious Bite, Conspicuous Consumption, Cursed, Dark Fate, Bedeviled, Ulterior Motive, Black and White, Rose-Colored Glasses, Gall, Berserker, Untamable, Prone to Quiet, the Sidhe's Curse and Oracular Ability keep the card. Difficulties and rolls are house readings.
+
+Reverse: empty BITES in trait-bite-rules.mjs.
+
+## B4880. Followers and their masters (2026-11-14)
+WoDX NPC. Picks n1 and n2. An order a follower might refuse rolls the follower's loyalty first (Willpower against the bond's difficulty); a refusal is told to the master, and a follower whose attitude to the master falls two steps below neutral leaves service. A master whose follower breaches the Masquerade loses a step with every faction they share with that follower. House readings.
+
+Reverse: the T_ORDER approval skips loyaltyRoll; drop the wodxAttitude listener in orders.mjs and the adjustPeople call in onBreach.
+
+## B4881. Births and losses pay their cost (2026-11-14)
+WoDX NPC. Picks n3 and n4. A hard birth puts two levels of bashing damage on the mother (WoDX Combat) and a timed "Lying in" for the months of rest. A familiar's death costs its mage a point of permanent Willpower and two Quintessence per Familiar dot, any shortfall coming back as Paradox, and the Familiar Background clears (M20 p. 407, in WoDX's words). A dead teacher's Mentor dots come off the sheet and wait on a card for the player to move to another Background, or to keep for a new teacher, whose tie takes them. A heartbreak (warmth of 2 or more broken by a betrayal, cruelty or a botched courting roll) rolls Willpower at 7, and a botch draws a derangement from those a loss leaves. House readings except the familiar's cost.
+
+Reverse: bonds.mjs onDeath without payFamiliar; legacy.mjs onDeath posts the old card; hearts.mjs court without heartbreak.
+
+## B4882. Letters to NPCs are answered (2026-11-14)
+WoDX Storyteller and NPC. Pick n5. When a letter reaches someone the Storyteller plays, they write back on their own: the Storyteller's "letter" line on their talk sheet if there is one, else their greeting, some news or a rumour and a farewell in the era's stock talk, in the tone they hold toward the sender (one who hates the sender may not answer). The answer goes back the same long way, and the Storyteller's card on it can lose it, put it back, have it read, or rewrite it. Setting "NPCs answer letters" (on). AI-made words follow standing rule 11: the Storyteller's lines win.
+
+Reverse: turn off "NPCs answer letters".
+
+## B4883. Calls reach someone, and help comes (2026-11-14)
+WoDX Interactables, NPC and Storyteller. Pick n6. A call to a tied place is picked up by someone the Storyteller plays standing in it, else the nearest within eight squares, and the caller's player gets the Talk window with them for as long as the line is open (quarter of an hour of real time); nobody near means it rings out. A call for help brings the watch (before 1600) or the police after a delay: ten minutes by telephone (from 1890) or radio (from 1930), twenty for a bell, horn or shout, half an hour by runner. They arrive by the caller, with the Storyteller's Send them away. House figures.
+
+Reverse: watchReport's call and help lines without answerer, openLine and callHelp.
+
+## B4884. A blackmailed NPC strikes back (2026-11-14)
+WoDX NPC. Pick n7. An NPC who answers blackmail by striking back acts on the next faction turn: a fighter (Brawl, Melee and Firearms 5 or more, or Retainers 2 or more) sends two bandits or street thugs at the blackmailer; a mortal who can tell the blackmailer is no mortal tips off the hunters (a point of pressure and a file); anyone else starts a rumour against them. The law's heat is not used, as blackmail is no deed on its scale. House reading.
+
+Reverse: drop the wodxFactionTurn listener in trust.mjs.
+
+## B4885. NPC tactics that did only words now act (2026-11-14)
+WoDX NPC and Combat. Pick f1. Search rolls the same notice as the reaction regions against everyone hidden within sight, and whoever is found stays found for the fight. Hostage seizes the nearest bystander or passer-by not in the fight with Dexterity + Brawl at 6: the hostage is Held, and while beside the taker every attack on the taker is 2 harder. Full defence keeps its words: WoDX Combat already meets every attack with the best defence the sheet allows, and the defender now makes no attack that turn. House readings.
+
+Reverse: the search and hostage cases go back to their lines; conditionMods without shieldOf.
+
+## B4886. A heavy blow cripples by itself (2026-11-14)
+WoDX Combat. Pick f2. A blow of 3 or more lethal or aggravated levels after soak to a limb or eye cripples it at once until those health levels heal (+2 difficulty on actions with it, VtDA20 p. 348), and the crippling comes off as before when the part heals. The card goes to the Storyteller and the wounded character's players; Lost for good stays the Storyteller's button, and Not crippled after all takes it back. A player's blow on someone they do not own asks the Storyteller's client to do it.
+
+Reverse: offerMaim posts the old two-button card.
+
+## B4887. Chases run and end by themselves (2026-11-14)
+WoDX Interactables and NPC. Pick f3. A running chase rolls a turn every six seconds on the active Storyteller's client; a catch opens a fight through WoDX Combat's fight starter (its own Auto or Suggest still applies), a quarry who gets away is gone, and in either case the hard feelings land on the NPCs' attitude tracks. An NPC whose tactic is to flee starts a chase with every foe within forty yards behind it. A player character who runs still needs the Storyteller's Chase window, as there is no flight action for players to hook. Setting "Chases run by themselves" (on). House readings.
+
+Reverse: turn off "Chases run by themselves".
+
+## B4888. Containers restock by their place (2026-11-14)
+WoDX Interactables. Pick w9. A container with a stock list and no restock set now restocks by its place: by its own name first (a shop, stall, counter or shelf every week; a larder, pantry or kitchen every month; a store, armoury, granary, warehouse or cellar every season), else by WoDX NPC's place kinds round it (market and workplace weekly, tavern and chantry monthly, castle, gate and docks each season); a home or a find never. "Never" is now its own choice. House figures.
+
+Reverse: restockAll reads f.restock alone.
+
+## B4889. A look from a watch point shows who is there (2026-11-14)
+WoDX Interactables. Pick o5. A window, spyhole or lookout with no tied area now looks over what the watcher can see from it (the tokens in sight of the point on the same scene), and the whisper names them as the roll allows. A botch shows nothing, without asking the Storyteller. House readings.
+
+Reverse: watchReport reads the tied area alone.
+
+## B4890. Cainites sleep by day by themselves (2026-11-14)
+WoDX Actions. Every Cainite the clock covers (tokens on the active scene and every player character) who is not in torpor falls asleep while the sun is up and rises at their own hour: sunset moved by Humanity or Road as in riseOffset (7+ ten minutes before, 5-6 at sunset, 4 twenty minutes after, down to an hour after at 1; V20 p. 311, V20 Dark Ages p. 113). The check is by state on every clock tick, so a long jump of the clock lands on the right state. The sleep marker goes on the token. A player cannot use the Action dialog for a sleeping Cainite (the Storyteller can). Setting "The day's sleep", on by default.
+
+Kuei-jin sleep too and roll Hun or Dharma, the higher, in place of Humanity (Kindred of the East p. 139); their rising hour uses the same rating.
+
+Reverse: turn "The day's sleep" off; Dawn and Nightfall cards then show the old buttons.
+
+## B4891. The dawn vigil (2026-11-14)
+WoDX Actions. "At dawn, try to stay awake" in Sun and haven. At dawn the Awakening roll (Road or Humanity, difficulty 8; Deep Sleeper +2, Light Sleeper wakes at once; V20 pp. 262-263) is rolled by itself once a day. Each success is a turn of three seconds of the clock, counted down by a fight's rounds too; five successes are the scene, taken as an hour of the clock. When the turns run out, sleep takes them. House reading: a scene is an hour of the clock for this purpose.
+
+Reverse: untick the vigil on the character.
+
+## B4892. Hurt in the day's sleep (2026-11-14)
+WoDX Actions. A sleeping Cainite who takes damage rolls the Awakening roll by itself. Being hurt counts as noticed, so the Perception roll is skipped (house reading). A botch sleeps until sundown and nothing rouses them. The Awaken by day dialog also clears or deepens the sleep by its result.
+
+Reverse: roll Perception first by hand with Awaken by day.
+
+## B4893. Healing on rising (2026-11-14)
+WoDX Actions. As a Cainite rises, blood above the hunger line heals bashing and lethal wounds by itself, as the Nightfall card's button did. Setting "Heal on rising", on by default.
+
+Reverse: turn "Heal on rising" off; the Nightfall card's buttons return.
+
+## B4894. Rolls for the Storyteller's Cainites stay hidden (2026-11-14)
+WoDX Actions. The vigil and waking rolls of a Cainite with no player owner go to the Storyteller only, blind (standing rule 19). The day's sleep card for them is the Storyteller's only.
+
+Reverse: none needed.
+
+## B4895. New Night and the sun's burns by themselves (2026-11-14)
+WoDX Actions. "Dawn and dusk" now defaults to New Night run at dusk, and "Sunlight damage" to roll and apply. Once per world, a world still on the button setting is moved over, with a whispered note to the Storyteller. A world set to Off keeps it. Rötschreck after a burn stays a button, because the player chooses whether to spend Willpower.
+
+Reverse: set either setting back to "A card with a button" / "Cards with buttons".
+
+## B4896. The sun and sleep shown on the map (2026-11-14)
+WoDX Actions. A Cainite in the sun carries Foundry's burning marker while exposed, with the damage floating over the token for everyone; the marker comes off in shade or at night. The sleep marker shows the day's sleep, and "Asleep", "Rises" and "Fights the dawn" float over the token on every client.
+
+Reverse: none needed; the markers are Foundry's own status effects.
+
+## B4897. Solo play (2026-11-14)
+WoDX Actions. The Lone Chronicle's "Sleep the day" and waits work with the day's sleep: the cards are whispered to the character's owner, so a wait stops at dawn when word comes, and the character rises at their own hour.
+
+Reverse: none needed.
+
 ## B4900. Scandinavia holds the Sami beside the Norse (2026-11-14)
 WoDX Creation and Chronicle. Scandinavia was all Norse; the Sami of the north are now 6 in 100 in the medieval and early-modern mix, 4 in the industrial age and 3 today. The Kola Sami in the Russian mix wait. Taken as recommended; logged in PENDING-REVIEW.
 
@@ -7446,3 +7794,545 @@ Reverse: edit the sami entry in data/people-world.mjs.
 WoDX Creation. Family names (Somby, Hætta, Turi, Valkeapää) came with the Norwegian, Swedish and Finnish rolls in the 18th and 19th centuries; WoDX gives them from 1800.
 
 Reverse: give the sami entry an old family list.
+
+## B4910. Fronts step on their own pace, gated by chapter (2026-11-14)
+WoDX Chronicle. Spine desk f1-f6 and m1: the court and the cult step every week of game time, the council, the Church and the Husbandman every two weeks, Marta every three. A step never comes before the chapter its scene belongs to, so the plot keeps its order when the company is slow. A front's first step is due at once. After a long skip the steps come one a tick, each counting from when the last was due.
+
+Reverse: set each front's `every` in data/fronts-rothenstein.mjs.
+
+## B4911. Fronts keep out of a twist's week (2026-11-14)
+WoDX Chronicle. Desk m1: a front does not step within seven days of a revealed twist, unless the company pushed it (the window's Pushed button). A front gives way to one twist only; it is not held up again by the next twist before it has stepped.
+
+Reverse: drop the twist check in whyNot.
+
+## B4912. Holds and strikes (2026-11-14)
+WoDX Chronicle. Desk m2: a front the company holds (a bribe, a threat, an ally inside) waits until let go, and its pace counts from then. A front struck (a key person gone, a ledger taken) goes back one step, and its map marks go back to the step before. The Storyteller can hold any front.
+
+Reverse: none needed.
+
+## B4913. A step shows on the map first (2026-11-14)
+WoDX Chronicle. Desk m3 and Ben's show, don't tell rule: each step's sight is drawn on its scene (found by part of its name, a walkable map before a session's or trial copy) through WoDX Storyteller's town looks, one key per front so the last step's marks give way. Street talk goes on the signal board; the Storyteller's card names the step's people (roles filled in) and place, and the saga clocks it moved. A world without that map gets the card with a note to tell it at the table.
+
+Reverse: set townLooks off in WoDX Storyteller.
+
+## B4914. Roles pass down a line (2026-11-14)
+WoDX Chronicle. Desk r1-r8: each role has an order of succession; marking a name gone passes the role on. The ally who is not is whoever the company leaned on most (the window counts it). Lines ending in a thing or someone found when needed never run out. Twist 24's "killed" heart takes the clerk out of the inside man's role. The Storyteller can put anyone in a role by hand.
+
+Reverse: none needed.
+
+## B4915. The courier east (2026-11-14)
+WoDX Chronicle. Desk r8: when the courier is stopped, the next rider goes a week later, with a card and a rider on the mountain trail.
+
+Reverse: none needed.
+
+## B4916. Judgements set later chapters (2026-11-14)
+WoDX Chronicle. Desk f7 and f8: whether the company lied to Reinhold (kin on the bridge in chapter 7, or a debt to call in from chapter 8) and what Baba Yaroslava decided (the Words offered at the choosing, or not). The Storyteller marks it; the card comes once when its chapter begins.
+
+Reverse: none needed.
+
+## B4917. Three carriers to a fact (2026-11-14)
+WoDX Chronicle. Desk c1-c7: six facts of the plot, each with a person, a place and a thing that carry it. Each carrier found pins a card on the open case board with a hint; the third pins the whole fact. Found carriers can be taken back.
+
+Reverse: none needed.
+
+## B4950. The Tuareg at the desert edge (2026-11-14)
+WoDX Creation and Chronicle. The Tuareg of the Aïr and the Niger bend are 3 or 4 in 100 in West Africa's mix in every age, and 2 in the Maghreb's (the Ahaggar) before the industrial age. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: drop tuareg from those mixes in world-rules.mjs and the tuareg entry in people-world.mjs.
+
+## B4951. The names (2026-11-14)
+WoDX Creation. The amenokals and chiefs of the Kel Ahaggar, Kel Ajjer and Kel Aïr in the French and Arabic records and the given names since, one list for every age (Islamic names are old among them). Fewer than 300 names.
+
+Reverse: edit the tuareg entry in data/people-world.mjs.
+
+## B4952. Ag and welet in every age (2026-11-14)
+WoDX Creation. A Tuareg is "ag" (son of) or "welet" (daughter of) the father's name, then and now; no family names.
+
+Reverse: give the tuareg entry a fam list.
+
+## B4980. The Beast's checks roll by themselves (2026-11-14)
+WoDX Actions. When a wound, hunger, the sight of blood, fire or the sun provokes the Beast, the frenzy or Rötschreck check is rolled by itself with the same difficulty the dialog would use (dawn dread, fire steps, Merits and Flaws). It repeats each turn while the result holds, up to eight turns. Willpower is spent to hold only when the character is marked to in the check's dialog. Characters on Golconda, in torpor or already in frenzy are skipped. Setting "Frenzy and Rötschreck by themselves", on by default (Ben's v2 pick).
+
+Reverse: turn the setting off; the cards with buttons return.
+
+## B4981. The Storyteller's characters roll in private (2026-11-14)
+WoDX Actions. An automatic check for a character with no player owner is whispered blind to the Storyteller (standing rule 19). The Rötschreck check follows a sun burn by itself.
+
+## B4982. Rising from torpor by itself (2026-11-14)
+WoDX Actions. When a torpor's time is up, a blood point is spent and the Road rolled at 8 by itself (V20 p. 285). On a failure or with no blood, it tries again the next night. Setting "Rise from torpor by itself".
+
+## B4983. A ghoul fed by the domitor, with approval (2026-11-14)
+WoDX Chronicle. When a ghoul goes a month without vitae and the domitor stands on the same active scene with blood, the Storyteller gets an approval. Once approved, a blood point moves from domitor to ghoul and the month starts again (V20 Dark Ages p. 397). This is Ben's one "gate" pick (v4).
+
+## B4984. Kuei-jin rise with Chi by themselves (2026-11-14)
+WoDX Actions. At the day's-sleep rising hour a Kuei-jin rises with Chi by the cycle kept in the Rise dialog, once a night, and P'o is rolled for Demon Chi (Kindred of the East pp. 91, 139). They do not heal with blood on rising.
+
+## B4985. The sun on a Kuei-jin (2026-11-14)
+WoDX Actions. A Kuei-jin in the sun uses Kindred of the East's rule (p. 151): the day's grace in minutes, then rot each turn, Yang spent against it when marked in the Rise dialog. It shows the burning marker with "Rots: N" or "Endures the sun".
+
+## B4986. Rising on Rage by itself (2026-11-14)
+WoDX Actions. A shapechanger who falls past Incapacitated rolls Rage at 8 by itself, once a scene (W20 pp. 145, 256; DA:W p. 91). The worst wound type on the track decides the result. A character can be unmarked in the Remain active dialog. Setting "Rise on Rage by itself".
+
+## B4987. A shapechanger's daily meditation (2026-11-14)
+WoDX Actions. A shapechanger marked in the Meditate dialog rolls Wits + Enigmas once a day by itself as the clock passes into a new day, outside a fight. It gains up to one Gnosis an hour of the hours set, and later days in the week cost more (DA:W p. 92; W20 p. 146). Setting "Meditation by itself".
+
+## B4991. A mage's Quintessence by meditation (2026-11-14)
+WoDX Actions. A mage marked with the new "Meditate for Quintessence each day" row draws Quintessence once a day by itself. The amount is the Avatar's rating, or a Node's rating when the mage lives on one and it is higher. It never goes past the wheel's room beside Paradox (M20 p. 330). House reading: once a day, the higher of the two, no roll. Setting "A mage's Quintessence by itself".
+
+## B4992. The Crusade's Scourge cleared on the clock (2026-11-14)
+WoDX Actions. In the Purify dialog the days alone in meditation begin, and the Scourge clears by itself when the clock has passed them (Sorcerers Crusade p. 249). Working magick meanwhile breaks the meditation. Setting "Purifying the Scourge on the clock".
+
+## B4993. Chimerical wounds heal with the clock (2026-11-14)
+WoDX Actions. Chimerical damage heals by Changeling 20th's Chimerical Healing Times (pp. 290-291). The times are halved where the Storyteller marks the scene a freehold or glade (new GM row "This place"). In the Dreaming each level takes 15 minutes. Incapacitated outside the Dreaming heals only in a freehold. House reading: aggravated chimerical levels take the lethal time, at least a day each (twelve hours in the Dreaming). Setting "Chimerical wounds heal by themselves".
+
+## B4994. Willpower from a Fetter at a scene's end (2026-11-14)
+WoDX Actions. The Fetter dialog can mark a selected token as a wraith's Fetter. At each scene's end that both share, the Fetter is rolled at 6 for Willpower by itself (Wraith 20th p. 308). Setting "Fetters give Willpower by themselves".
+
+## B4995. Corpus mends with the clock (2026-11-14)
+WoDX Actions. A wraith's bashing Corpus heals a level an hour by itself (Wraith 20th p. 295). Setting "Corpus mends by itself".
+
+## B4996. A mummy's day for Sekhem (2026-11-14)
+WoDX Actions. A mummy marked in the Sekhem dialog spends each day in Osiris's Blessing (within the Web of Faith) or the haven's meditation. The roll is made by itself after the Gift of Ra (Mummy: The Resurrection pp. 143-144). Setting "A mummy's day for Sekhem by itself".
+
+## B4997. Conviction at a story's end for every imbued (2026-11-14)
+WoDX Actions. End of story already set a Hunter sheet's Conviction back to the creed's level. It now does so for any character with a creed set in Hunter traits too (Hunter: The Reckoning p. 138).
+
+## B4998. Vitality from rest (2026-11-14)
+WoDX Actions. An Orpheus character regains a Vitality point each eight hours of the clock by itself, up to the starting rating (Orpheus pp. 191-192). A skimmer regains one each hour, resting in the body (p. 122). The count does not run during a fight the character is in, and a loss starts it again. Setting "Vitality returns with rest".
+
+## B4999. What stays by hand (2026-11-14)
+Per Ben's picks, Changeling's Glamour from the Dreaming (c2), a wraith's Pathos from Passions (w3) and a demon's Torment from sins (d1) stay as dialogs. They need the player's or the Storyteller's judgment.
+
+## B5000. The Moro in the Malay world's mix (2026-11-14)
+WoDX Creation and Chronicle. The Maguindanao, Maranao and Tausug of Mindanao and Sulu are 4 in 100 in the Malay world's mix before the industrial age and 3 after, beside the Filipinos (B4750). Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: drop moro from the nusantara mixes in world-rules.mjs and the moro entry in people-world.mjs.
+
+## B5001. The names (2026-11-14)
+WoDX Creation. The sultans, datus and royal women of the tarsila and the Spanish and American records before 1800, given alone; the given names of the Bangsamoro since. Titles (datu, bai, hadji) are left out of the name lists. Fewer than 300 names.
+
+Reverse: edit the moro entry in data/people-world.mjs.
+
+## B5002. Bin, binti or a family name after 1800 (2026-11-14)
+WoDX Creation. From 1800 a Moro is bin or binti the father or carries a family name (Kiram, Alonto, Misuari).
+
+Reverse: change child or fam in the moro entry.
+
+## B5010. Fire calls up the Red Fear (2026-11-14)
+WoDX Interactables and Actions. Pick o6. A Kindred who comes within six yards of a lit fire rolls the Red Fear once a scene for that fire, at the difficulty of a torch, a bonfire or being trapped by flames as the fire's size gives on the Red Fear chart; one who is burned rolls at once. The roll is made with no dialog through WoDX Actions' frenzy roll (rotschreckAuto), and its outcome applies as a rolled frenzy does.
+
+Reverse: fearOfFire and the burned roll return nothing.
+
+## B5011. The unseen are noticed by themselves (2026-11-14)
+WoDX Senses. Pick o7. When a player's character comes within sight of a hidden or sneaking token (thirty squares), after either moves five squares, and at each turn of a fight, the noticing roll is made on its own, and a token found shows to the players whose characters found it. The HUD button still rolls it by hand. Setting "Noticing rolls itself" (on). House readings.
+
+Reverse: turn off "Noticing rolls itself".
+
+## B5012. Drink and drugs change the rolls (2026-11-14)
+WoDX Library, Chronicle, Actions and Storyteller. Picks i1 and i2. What a dose puts in the body now lands on the rolls as WoDX Chronicle timed roll effects: drink takes a die from Dexterity and Intelligence for every two drinks and gives one back each hour; an opiate 2 dice from Dexterity and Ability pools for the scene; a sedative 2 dice from every pool and a Stamina roll at 7 against sleep (the token is marked asleep on a failure); a hallucinogen 1 to 3 dice from every pool, rolled when it is taken; cannabis a die from Perception and Wits. Ben's weaker and stronger picks halve the dice and the time or add a die and double it. A medicine makes a sickness's next weekly Stamina roll 1 easier for a week and gives a wounded character a die back for the scene. An unknown drug is one of five kinds, kept on the item: Intelligence + Medicine or Occult at 7 tells the taker which, and it then works as that kind. A vampire who drinks a drugged vessel's blood takes the same on the rolls (V20 pp. 301-302), and an opiate in the blood makes frenzy 1 easier to resist. The sizes are house readings.
+
+Reverse: addBite and vesselBites return nothing; the cards keep their words.
+
+## B5013. Impure goods and botched makings are rolled (2026-11-14)
+WoDX Library. Pick i3. An impure dose rolls a d10 when it is taken: nothing (1-3), a weaker dose (4-6), a day of 1 die off every roll (7-9), or that and a level of bashing (10). A botched Wonder of a mage loses its materials, and on 5 or more on a d10 a Willpower point, and on 9 or more a point of Paradox as well (Book of Secrets pdf 152 leaves the cost open). A Black Spiral fetish made by atrocity deepens the maker's Wyrm taint a step when it is done (WoDX Otherworlds). House figures.
+
+Reverse: landDose skips the impure roll; the after steps go back to their lines.
+
+## B5014. A Treasure's components are found as stages (2026-11-14)
+WoDX Library and Storyteller. Pick i4. Crafting a Treasure first finds its components, one for each level of the Art, each a stage of the long task rolled at Perception + Kenning at 7 for 3 successes, and then the crafting itself. Long-task stages may now roll their own Attribute, Ability and difficulty. The chimera's and the servant's traits already come from their points; whether remains are holy stays the Storyteller's call. House figures.
+
+Reverse: the Treasure task without stages.
+
+## B5015. A talisman's keeping is drawn (2026-11-14)
+WoDX Library. Pick i4. Four in five talismans made by the Path of Enchantment need a keeping, drawn when the talisman is made: a drop of the bearer's blood each week, a night under the full moon or washing in running water each month, or the maker's words each season. Unkept, its powers stop with "it has faded"; the Keep it power renews it. House figures.
+
+Reverse: keepingOf returns null.
+
+## B5016. A botched look misleads (2026-11-14)
+WoDX Library and Interactables. Pick i5. A botched closer look at a thing shows the looker one false line as if it were a success: the wrong quality, a false doubt, or a false all-clear, turned from the thing's own notes. A botched look at a clue shows a deeper line from another clue on the same map, or one of four stock wrong turns. Either way the Storyteller is whispered which line is false. House readings.
+
+Reverse: the botch lines go back to "the Storyteller may tell something misleading".
+
+## B5017. Turning to spirit goes on by itself (2026-11-14)
+WoDX Otherworlds. Pick o1. Once the year and a day in the Umbra (W20 p. 319) or Disembodiment (M20 pdf 89-90) is approved, the change goes on by itself: a step for each lunar month more in the spirit world, up to five, holding while the traveller is back in the flesh. A shapechanger takes +1 difficulty to every roll in the physical world for each two steps and is a spirit at five; a mage takes a die off Strength, Dexterity and Stamina rolls a step and has lost the body at five. The token shows a pale cold aura that grows with the step, and the Storyteller and the player are told when it rises. The pace and the effects are house readings.
+
+Reverse: setupFading does nothing; the flags stay as marks.
+
+## B5018. The lost find their way out of the Pattern Web (2026-11-14)
+WoDX Otherworlds. Pick o2. A botched crossing that leaves a traveller lost in the Pattern Web rolls when they come out: after 2 to 11 days they come out in the Penumbra a few squares from where they were lost, with a card to the Storyteller and the player. Clear crossing still brings them back sooner. House figures.
+
+Reverse: the lost record carries no return time.
+
+## B5019. Time in the Far Dreaming is drawn (2026-11-14)
+WoDX Otherworlds. Pick o3. A journey through the Far Dreaming or Arcadia draws how time runs against the world's on a d10 (W20 pdf 331: at random): an hour here for each day there, half, the same, a week, a month, or a year for each day there, and the journey's time button lets that much pass. The Deep Umbra keeps the world's time. The Labyrinth stays the Storyteller's call (WR20 pdf 307). The table is a house reading.
+
+Reverse: the Far Dreaming and the Deep Umbra go back to "storyteller".
+
+## B5020. The dying who see the dead cross by themselves (2026-11-14)
+WoDX Otherworlds. Pick o4. A character who can see the dead (a wraith-to-be, the Medium, Deathsight or Deathwalker trait, or Necromancy) and becomes Incapacitated or dead slips into the Shadowlands on their own, on every token of theirs, with a card to the Storyteller and the player. Powers that cross go through their own rolls as before. House reading.
+
+Reverse: registerDyingCross does nothing.
+
+## B5021. The Great Maelstroms blow by themselves (2026-11-14)
+WoDX Actions. Pick e1. In the years of a Great Maelstrom, once its dated event has happened in the chronicle, the storm's force is set everywhere: the Second (1347-1351, force 4), the Third (1600-1601, 5), the Fourth (1916-1918, 5), the Fifth (1945, 4) and the Sixth (1999, 5, with its metaplot event on). A scene's own storm can still be stronger. Once a scene, on arriving and at each new scene, every wraith here outside shelter takes the storm's harm as the Maelstrom tool rolls it (Wraith: The Great War p. 87), indoors counting as a Haunt of 1, and the harm is aggravated as often as the force says. Years and forces are house readings of the events.
+
+Reverse: great returns null and autoStorm returns nothing.
+
+## B5022. The era notes act (2026-11-14)
+WoDX Creation. Pick e2. Across the years: a Fetter that names someone now dead is lost, and a Harrowing follows (Wraith 20th p. 308); a lost tribe's member becomes one of what the tribe became, or is marked the last of it; a Fallen's host who passes 85 dies, and the possession roll is made; a Road with no V20 Path goes to Humanity, or Honorable Accord at the tick. Each is a ticked change the Storyteller can untick. A Fetter that is a place stays a note. House readings.
+
+Reverse: the changes go back to notes.
+
+## B5023. A Fallen takes the body on a sheet (2026-11-14)
+WoDX Creation. Pick e3. The new host window names the person taken; on success the demon keeps its own traits, takes the body's Strength, Dexterity and Stamina (DtF pdf 260), and the person's tokens show the demon; the person's sheet is marked taken. With nobody on a sheet the card asks for the rebuild as before.
+
+Reverse: possess without a host.
+
+## B5024. The wizard stores Pillars, Dominions, edges and a wilder's point (2026-11-14)
+WoDX Creation. Pick e4. Dark Ages Pillars (a fellowship's four) and Dominions go on the WoDX Actions records its rolls read, edges go on the sheet as Powers, and each is counted in the totals, with a hunter's Virtues in the same pool as edges. A wilder's seeming point is a pick in the wizard, Glamour or Willpower, and the derived traits follow it.
+
+Reverse: the three go back to "count by hand" and the wilder to a note.
+
+## B5030. The Banyarwanda and Barundi in central Africa's mix (2026-11-14)
+WoDX Creation and Chronicle. The people of the kingdoms of Rwanda and Burundi are 10 in 100 in central Africa's mix in the medieval age, 9 in the early modern, 8 in the industrial and 9 in the modern, beside the Kongo, Luba and Baganda (B4690). Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: drop banyarwanda from the central-africa mixes in world-rules.mjs and the banyarwanda entry in people-world.mjs.
+
+## B5031. The names (2026-11-14)
+WoDX Creation. Before 1800, the royal names of the mwami king lists and the court histories with own Kinyarwanda and Kirundi names, given alone; from 1800, French church names. Fewer than 300 names.
+
+Reverse: edit the banyarwanda entry in data/people-world.mjs.
+
+## B5032. An own name in place of a family name (2026-11-14)
+WoDX Creation. From 1800 a Munyarwanda or Murundi carries a second, own Kinyarwanda or Kirundi name (Habimana, Uwimana, Nkurunziza) where other peoples carry a family name; it is the person's own and is not handed to the children.
+
+Reverse: drop fam from the banyarwanda entry.
+
+## B5040. An animal ghoul keeps its own sheet (2026-11-14)
+WoDX Creation. An animal is a Creature sheet of the plain variant, a Mortal sheet whose WoDX NPC template is an animal, or a sheet marked flags["wodx-creation"].animal. Drinking vitae switches on its blood pool and Disciplines and marks a Creature flags["wodx-creation"].animalGhoul; the Creature variant is left alone so the mountable tag and sheet stay. Desk item 1.
+
+Reverse: drop isAnimal from giveVitae; animals then only record a bond.
+
+## B5041. Blood pool by size (2026-11-14)
+WoDX Creation. V20 Dark Ages p. 401 over p. 396 and Kindred of the Ebony Kingdom p. 186 (Ben chose by size): tiny 1, small 3, dog-sized 6, human-sized 10, large 14, very large 20 (house). Desk item 3.
+
+Reverse: SIZES in animal-ghoul-rules.mjs.
+
+## B5042. Only Celerity, Fortitude and Potence; any trained animal may learn Celerity (2026-11-14)
+WoDX Creation. V20 Dark Ages p. 396 and p. 401; the Ebony Kingdom's Intelligence limit on Celerity is not used. The domitor's other Disciplines make no difference. Desk items 5 to 7.
+
+Reverse: animalCanLearn.
+
+## B5043. The century rule holds for animals (2026-11-14)
+WoDX Creation. One more point of vitae a century as a ghoul (V20 Dark Ages p. 400); Pass the Years shows it. Desk item 9.
+
+Reverse: animalBloodMax's century term.
+
+## B5044. One point a month, two for the very large (2026-11-14)
+WoDX Creation data, used by WoDX Chronicle's monthly check. Kindred of the Ebony Kingdom p. 186. Desk item 11.
+
+Reverse: SIZES monthly.
+
+## B5045. Natural life spans (2026-11-14)
+WoDX Creation. House figures per kind (rat 3, cat 15, dog 13, horse 28...). With the vitae gone an animal ghoul past its span dies, past twice its span turns to dust. Desk item 13.
+
+Reverse: KINDS span; Pass the Years then uses the human dust age of 100.
+
+## B5046. No Road or Virtues for animals; Willpower stands in for Self-Control (2026-11-14)
+WoDX Creation. A Mortal-sheet animal ghoul has no Road or Virtues switched on; rolls that ask for Self-Control use Willpower. Desk item 4.
+
+Reverse: makeGhoul's haspath and hasvirtue for animals.
+
+## B5047. Animals buy only Physical and Mental Attributes (2026-11-14)
+WoDX Creation. V20 Dark Ages p. 396: animals have no Social Attributes. Experience purchases skip them, and Virtues and Road. Desk item 17.
+
+Reverse: purchaseOptions' beast checks.
+
+## B5048. A player character's animal ghoul is that character's ally, paid from the domitor (2026-11-14)
+WoDX Creation. Standing rule 13 (players may spend XP on ghouls). Made an ally with payer "patron" and the domitor's owners as Observers. Costs are the ghoul costs (V20 Dark Ages p. 400). Desk item 17.
+
+Reverse: the setAlly call in makeGhoul.
+
+## B5049. Feed vitae on the token menu (2026-11-14)
+WoDX Creation. A vampire within a square and a half of a mortal, ghoul or animal can feed it a point. The Storyteller's feed is at once; a player's goes to the approval queue (type wodx-vitae) and happens by itself on approval or auto-approval. Red "Vitae" rises from the token. Desk item 2.
+
+Reverse: registerFeedVitae in main.mjs.
+
+## B5050. The monthly need happens by itself (2026-11-14)
+WoDX Chronicle. Each month a ghoul goes unfed takes its month's vitae off the sheet (1, or an animal's by size, B5044); with the pool empty, one Discipline dot a month, Potence last (Kindred of the Ebony Kingdom p. 186 fills in where V20 Dark Ages p. 400 only says the powers fade). Covers human ghouls too. Setting ghoulNeed, on by default. Desk item 12.
+
+Reverse: switch "Ghouls need vitae each month" off; the old card comes back.
+
+## B5051. The craving is rolled (2026-11-14)
+WoDX Chronicle. Each new month unfed, Self-Control at difficulty 7 (Willpower for an animal, B5046), V20 Dark Ages p. 401. Held, craves, or a botch (must drink at once); the hook wodxGhoulCraving carries the result for WoDX NPC. Desk item 12.
+
+Reverse: drop rollCraving from ghoul-need.mjs.
+
+## B5052. An animal catches up with its years (2026-11-14)
+WoDX Chronicle. With its vitae gone, an animal ghoul ages a year a week until it has caught up with the years it held off. Past its span (B5045) it dies; past twice its span it turns to dust. House pace: V20 Dark Ages p. 400 says only that it comes quickly. Desk item 13.
+
+Reverse: R.ageing and its use in check().
+
+## B5053. Shown on the token (2026-11-14)
+WoDX Chronicle. Red "-1 vitae" rises each month; an empty ghoul's tokens grey (the old tint is kept on the token); dead of age takes the dead mark; dust fades the token to a faint grey. Desk item 26.
+
+Reverse: tint() and float() in ghoul-need.mjs.
+
+## B5054. A drink from the domitor starts the month again (2026-11-14)
+WoDX Chronicle and WoDX Creation. Give vitae and Feed vitae from the domitor call the Clan features' ghoulFed, whose wodxGhoulFix hook resets the need and brings the token's colour back. Animal ghouls on Creature sheets carry the ghoul row.
+
+Reverse: the ghoulFed call in WoDX Creation's giveVitae.
+
+## B5055. A bound animal ghoul's loyalty floor (2026-11-14)
+WoDX NPC. Loyalty drift never takes a blood-bound animal ghoul below Friendly (1) unless it was fed on by its master or went two months or more unfed (Kindred of the Ebony Kingdom p. 185). The floor never raises an attitude already under it. Desk item 10.
+
+Reverse: drift's animal and bound options in order-rules.mjs.
+
+## B5056. Animal ghoul frenzy (2026-11-14)
+WoDX NPC. With five or more vitae in it (V20 Dark Ages p. 401), an animal ghoul in a fight may frenzy when badly hurt (3 or more levels), cornered, or when its master is attacked in sight. It rolls Willpower at difficulty 6, with no easier difficulty for animals (Ben's pick); failing puts on WoDX Chronicle's frenzy condition. Desk item 14.
+
+Reverse: the animalGhoul block in scoreOptions.
+
+## B5057. A craving botch goes for the nearest person (2026-11-14)
+WoDX NPC. When a Storyteller's ghoul botches its craving roll (B5051), its token moves next to the nearest living mortal on the scene and the Storyteller is told it means to drink. Player characters' ghouls are left to their players. Desk item 12.
+
+Reverse: the wodxGhoulCraving hook in main.mjs.
+
+## B5058. Traits by kind (2026-11-14)
+WoDX Creation. Each animal kind takes its traits from the V20 Dark Ages animals list (pp. 396 to 399); pigeon, poultry, sheep or goat, deer, cattle and elephant are house figures beside their nearest listed kin. Desk item 19.
+
+Reverse: animal-stock-rules STATS.
+
+## B5059. Three steps of training (2026-11-14)
+WoDX Creation, WoDX Actions. Untrained, trained, war-trained. Trained gives the bracket traits and lets the animal keep and win back Willpower (V20 Dark Ages p. 396); an untrained one wins none back at a new night or the end of a story. War-trained is for horses, camels, elephants, guard dogs and hounds: a dot of Brawl (house) and the mark (flags.wodx-creation.animal.training "war") the mounts rules read to stop shying. Desk items 4 and 18.
+
+Reverse: drop trainingOption from purchaseOptions and untrainedBeast from WoDX Actions.
+
+## B5060. Training by experience or by a long task (2026-11-14)
+WoDX Creation with WoDX Storyteller. 5 experience for trained, 10 for war (house). Or a long task on the trainer's sheet: Manipulation + Animal Ken at difficulty 7, a roll a week, 5 successes to train and 10 for war; when the task is done the animal is trained by itself. Desk items 17 and 18.
+
+Reverse: registerAnimalStock's wodxTaskDone hook and the Train token button.
+
+## B5061. Breeds by era and land (2026-11-14)
+WoDX Creation. A breed fits a span of years and a set of lands, moves a trait by one dot at most, and gives the beast its name and coat. Desk item 19.
+
+Reverse: animal-stock-rules BREEDS.
+
+## B5062. Animal retainers in the wizard (2026-11-14)
+WoDX Creation. A vampire's Retainers dots can each be a ghouled animal (V20 Dark Ages p. 182), made, bonded by the full oath and fed by itself, owned by the player. A kept beast may start trained. Dots put together make one beast with the Storyteller's leave: each past the first adds a dot of Fortitude, Celerity or Potence in turn (house). Desk item 20.
+
+Reverse: drop wizardPanel from the wizard's Backgrounds page.
+
+## B5063. Trained commands only (2026-11-14)
+WoDX NPC. Without Feral Whispers from the one it serves, an animal follower takes only the trained commands, and only when trained; errands, help and talking round a witness need Feral Whispers. An animal with no training on record counts as trained. Desk item 16.
+
+Reverse: animalOrderBlock in give().
+
+## B5064. Kept for later (2026-11-14)
+Coat colours are stored on the animal (flags.wodx-creation.animal.coat) for the sprite parts; drawing them is the pixel sprites' work.
+
+## B5090. Golconda ends when its purity fails (2026-11-14)
+WoDX Actions. A vampire in Golconda falls from it by itself when the Road drops below 7 or Conscience (or Conviction) below 4 (V20 Dark Ages p. 359; Ben's pick go1). A card goes to the player and the Storyteller, and "Golconda lost" floats over the token. Frenzy, Rötschreck and the nightly blood loss return. The long road can be walked again. Setting "Golconda's rules".
+
+## B5091. Traits to 10 in Golconda (2026-11-14)
+WoDX Actions and WoDX Creation. While Golconda holds, the sheet's Ability and Discipline limits rise to 10 whatever the Generation, and experience may buy Traits to 10. The blood pool stays as it was (V20 Dark Ages p. 359; go2). Losing Golconda puts the Generation's limit back. Dots already above it are left for the Storyteller.
+
+## B5092. Beyond some powers' reach (2026-11-14)
+WoDX Actions. Speak Through the Blood (V20 p. 158; V20 Dark Ages p. 220), Summon Soul (V20 p. 161) and the ritual Insight (V20 p. 177) do not take hold on a vampire in Golconda. The power's card says so (go3).
+
+## B5093. Who may be granted Golconda (2026-11-14)
+WoDX Chronicle. At the end of the long road, the Grant button appears only for a vampire on the Road of Humanity with Humanity 7 and Conscience 4. If they fall short, a card says what is missing. On another Road or a Path the grant goes to the approval queue, and once the Storyteller approves, it happens (V20 Dark Ages pp. 115, 359; V20 p. 300; Ben's pick go4, gate).
+
+## B5094. The Golconda halo (2026-11-14)
+WoDX Senses. A soft pale halo shows round a vampire in Golconda on the Storyteller's map always. A player sees it while using a sight that draws rings (Aura Perception, Heightened Senses and the like). This is a house touch, since the books describe no sign (go5).
+
+## B5095. The still aura (2026-11-14)
+WoDX Senses and WoDX Otherworlds. The aura ring reads "pale and still". Read the Soul shows no frenzy ripples and no shift beneath, and adds "a deep stillness" with a pale ring on the overlay. This is a house reading (go6).
+
+## B5096. The sun one step weaker (2026-11-14)
+WoDX Actions. For a vampire in Golconda the sun counts one step weaker on the ladder: direct as a cloudy day, cloudy as indirect, and so on, while faint stays faint. This is a house rule from Ben's decision card (go7). The burn card says "Golconda's grace".
+
+## B5097. Masters of Golconda keep out of the Jyhad (2026-11-14)
+WoDX NPC. A vampire in Golconda is drawn into no rivalry or feud fight, and the werewolves leave them be (V20 pp. 299-300; V20 Dark Ages p. 359; go8).
+
+## B5150. The Philippines a region of its own (2026-11-15)
+WoDX Chronicle and Storyteller. Ben asked to build out the Philippines. The islands leave the Malay world and become the 45th world region, "The Philippines (Manila, the Visayas, Mindanao and Sulu)", with Manila as its city, the tropical wet climate and the Philippine money region. The world map gives it the squares north of 4.5 degrees and east of 119.5 (with Palawan) that were the Malay world's; the map builder cuts the country out by name on its next run. The region's letter comes last so no older square changes. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: drop philippines from WORLD_REGIONS and the other region tables, and the letter s in Storyteller's data/world.mjs.
+
+## B5151. Who lives there (2026-11-15)
+WoDX Chronicle and Creation. Filipino 78, Moro 17 and Chinese 5 in the medieval age; Filipino 74, Moro 14, Chinese 8 and Spanish 4 in the early modern; Filipino 77, Moro 10, Chinese 8, Spanish 4 and English 1 (the Americans) in the industrial; Filipino 85, Moro 8, Chinese 6 and English 1 now. The Malay world keeps Moro 2 for the Tausug and Bajau of the Sabah coast and no Filipinos.
+
+Reverse: edit the philippines and nusantara mixes in world-rules.mjs.
+
+## B5152. How the islands live by age (2026-11-15)
+WoDX Chronicle, Storyteller, NPC and Library. Island ways (malay) until 1571, then Catholic ways; holy days of the land until 1571, then the church year. Law: the datus and elders with debt bondage, the qadi in the sultanates from 1405, Spain's Audiencia and the friars from 1565, the Guardia Civil from 1868, American rule from 1898, the republic from 1946, martial law 1972 to 1981. Print 1593, papers 1890, radio 1935, television 1965, the net 2008; rail 1892, tram 1888, expressway 1977; post 1767, telegraph 1873, telephone 1890. Cholera 1820, the flu of 1918 and the cholera of 1961 reach it; Kuei-jin courts, Hengeyokai and the Akashic monasteries hold the islands as in the Malay world; church goods from 1565.
+
+Reverse: drop the philippines rows from each table.
+
+## B5153. Lifepath and story hooks (2026-11-15)
+WoDX Creation and Storyteller. The lifepath has the Philippines under Asia, with its own origins and callings in each age, and dated origins and marks from Mactan (1521) to the typhoon at Tacloban (2013). Threads of Fate gets two cards: "The galleon is late" (its own hook) and "The datu's buried gold".
+
+Reverse: drop the philippines entries in data/lifepath-local-asia.mjs, data/lifepath-events-asia.mjs and the r-philippines cards.
+
+## B5180. Thai names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Thai list grows from 24 names to 361: the kings, nobles and commoners of Sukhothai and Ayutthaya given alone before the surname act of 1913, modern given names after, and the family names chosen since. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the thai entry in data/people-world.mjs and drop thai from RAISED.
+
+## B5190. Malay names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Malay list grows from 24 names to 306: the Malacca court, the Hikayat heroes and the village names of the old Malay world, then the names of modern Malaysia and Brunei, bin or binti the father throughout. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the malay entry in data/people-world.mjs and drop malay from RAISED.
+
+## B5200. Quechua names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Quechua list grows from 25 names to 335: the Inca kings, queens and captains and the Quechua names of the Tawantinsuyu before the conquest, then a church name and a Quechua family name from the viceroyalty on. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the quechua entry in data/people-world.mjs and drop quechua from RAISED.
+
+## B5210. A watchdog on the PC starts the runner again when it dies (2026-11-15)
+PC job queue. The runner and its wrapper were ended three times on 14 and 15 November with nothing in the log, and
+the pc-heartbeat schedule (B4700) did not notice: GitHub ran that schedule once in seven hours, so the queue sat
+still for 27 minutes until another thread asked. `tools/pcq/watchdog.ps1` checks every two minutes that
+`run-runner.ps1` is running and, if not, runs `start-runner.ps1`, which puts every running job back in the queue.
+
+Reverse: put a file named `watchdog-off` in `D:\WoDX\pcq`.
+
+## B5211. The watchdog lives apart from the runner (2026-11-15)
+PC job queue. `start-runner.ps1` starts the watchdog through WMI, so it is not in the runner's process tree and a kill
+of that tree leaves it running. The wrapper runs `start-runner.ps1` before each runner start, which starts the
+watchdog when it is missing, so each one brings the other back. `start-runner.ps1` copies itself and the watchdog
+from the runner's clone into `D:\WoDX\pcq`, so the copies there stay current.
+
+Reverse: remove the Start-Watchdog calls.
+
+## B5212. The heartbeat issue stays as a second check (2026-11-15)
+PC job queue. The pc-heartbeat workflow is kept: when GitHub does run it, it still opens an issue if the PC itself is
+off or asleep, which the watchdog cannot report.
+
+Reverse: delete .github/workflows/pc-heartbeat.yml.
+
+## B5220. Steppe names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Steppe list grows from 28 names to 311: the khans, queens and captains of the Mongol and Kipchak steppe in the old ages, then the names of Mongolia and the Kazakh steppe, given alone. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the steppe entry in data/people-world.mjs and drop steppe from RAISED.
+
+## B5230. Nahua names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Nahua list grows from 28 names to 320: the tlatoque, captains and calendar names of the Mexica, Acolhua and Tlaxcalteca before 1521, then a church name and a Nahuatl or Spanish family name from New Spain on. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the nahua entry in data/people-world.mjs and drop nahua from RAISED.
+
+## B5240. Tamil names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Tamil list grows from 32 names to 308: the Chola, Pandya and Pallava kings and queens, the Sangam poets and saints and village names of old, then modern Tamil names, given alone. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the tamil entry in data/people-world.mjs and drop tamil from RAISED.
+
+## B5250. Javanese names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Javanese list grows from 32 names to 308: the kings, queens, saints and poets of Singhasari, Majapahit, Demak and Mataram, the wayang heroines and village names of old Java, then modern Javanese names, one name each. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the javanese entry in data/people-world.mjs and drop javanese from RAISED.
+
+## B5260. Swahili names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Swahili list grows from 32 names to 311: the sultans, poets and traders of Kilwa, Mombasa, Lamu and Zanzibar and the Mwana names of the coast, then modern Tanzanian and Kenyan names, bin or binti the father throughout. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the swahili entry in data/people-world.mjs and drop swahili from RAISED.
+
+## B5270. Hawaiian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Hawaiian list grows from 32 names to 308: the aliʻi of the island kingdoms and the heroines of the chants in the old ages, then Hawaiian church and modern names and family names taken from a father's name after the 1860 law. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the hawaiian entry in data/people-world.mjs and drop hawaiian from RAISED.
+
+## B5280. Amharic names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Amharic list grows from 34 names to 301: the Zagwe and Solomonic kings and queens, the saints and the court of Gondar in the old ages, then modern Ethiopian names, the father's name second. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the amharic entry in data/people-world.mjs and drop amharic from RAISED.
+
+## B5290. Tibetan names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Tibetan list grows from 38 names to 303: old names from the imperial and monastic records, later names from twentieth century lists, clan and house names kept. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the tibetan entry in data/people-world.mjs and drop tibetan from RAISED.
+
+## B5300. Romanian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Romanian list grows from 45 names to 309: old names from Wallachian and Moldavian charters, later given names and family names from modern lists. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the romanian entry in data/people-world.mjs and drop romanian from RAISED.
+
+## B5310. Akan names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Akan list grows from 45 names to 302: day names, royal and stool names, and family names from Asante and Fante records. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the akan entry in data/people-world.mjs and drop akan from RAISED.
+
+## B5320. Vietnamese names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Vietnamese list grows from 46 names to 324: old names from the Lý, Trần and Lê court records, modern given names, the common family names, family name first. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the vietnamese entry in data/people-world.mjs and drop vietnamese from RAISED.
+
+## B5330. Serbian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Serbian list grows from 47 names to 307: old names from Nemanjić charters and monastery records, later given names and -ić family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the serbian entry in data/people-world.mjs and drop serbian from RAISED.
+
+## B5340. Shipped tables written eight at a time (2026-11-15)
+WoDX Chronicle. With the name lists raised to 300, a world that had not yet seen the new data spent over half a minute bringing its shipped Roll Tables up to date one by one, and the names gate timed out at its first step on a reset testbed lane. The install now writes eight tables at a time; what it writes, and the rule that a table the Storyteller edited is never overwritten, are unchanged. The gate kit's step also takes its own timeout, and the names gate gives its start-up step three minutes. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the one-at-a-time loop in scripts/gen.mjs doInstall.
+
+## B5350. Turkish names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Turkish list grows from 47 names to 420: old names of beys, sultans, viziers, poets, valide sultans and townsfolk from Seljuk and Ottoman records, later names of the Republic, and a longer list of family names taken after the law of 1934. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the turkish entry in data/people-world.mjs and drop turkish from RAISED.
+
+## B5360. Korean names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Korean list grows from 48 names to 424: old names of scholars, generals, painters, clerks, gisaeng and household registers of Goryeo and Joseon, later names since the colonial years, and close to a hundred family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the korean entry in data/people-world.mjs and drop korean from RAISED.
+
+## B5370. Mande names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Mande list grows from 48 names to 340: old names of the mansas, griots, captains and royal women of Mali, Kaabu, Segou and the Wassoulou, later names from Mali to the Gambia, and a longer list of clan names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the mande entry in data/people-world.mjs and drop mande from RAISED.
+
+## B5380. Zulu names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Zulu list grows from 48 names to 402: old names of the kings, royal women, councillors and captains of the Zulu kingdom and its neighbours, later names of KwaZulu-Natal, and over a hundred clan names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the zulu entry in data/people-world.mjs and drop zulu from RAISED.
+
+## B5400. Hungarian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Hungarian list grows from 50 names to 411: old names of kings, chieftains, lords, captains and townsfolk from Árpád, Angevin, Hunyadi and Transylvanian records with the old noble and town family names, then names and family names of modern Hungary. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the hungarian entry in data/people-world.mjs and drop hungarian from RAISED.
+
+## B5410. Persian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Persian list grows from 50 names to 444: old names of kings and heroes of the old tales and of Samanid, Seljuk, Safavid and Qajar rulers, ministers, poets and royal women, a town name as the family name until the surname law of 1925, then modern Iranian names and surnames. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the persian entry in data/people-world.mjs and drop persian from RAISED.
+
+## B5420. Yoruba names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Yoruba list grows from 51 names to 382: old names of the alaafin, obas, war chiefs and royal and market women of Oyo, Ife, Ibadan, Abeokuta and Lagos, then Yoruba, church and Muslim names since, with a longer list of family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the yoruba entry in data/people-world.mjs and drop yoruba from RAISED.
+
+## B5430. Portuguese names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Portuguese list grows from 54 names to 383: old names of kings, queens, captains, navigators and townsfolk of the Burgundian and Avis records, then names of modern Portugal, and a longer list of family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the portuguese entry in data/people-world.mjs and drop portuguese from RAISED.
+
+## B5440. Dutch names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Dutch list grows from 54 names to 468: old names of counts, regents, painters, seafarers and townsfolk of Holland and the Republic, with a father's name (Janszoon, Jansdochter) or a house or place name as the family name before the register of 1811, then modern Dutch names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the dutch entry in data/people-world.mjs and drop dutch from RAISED.
+
+## B5450. Irish names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Irish list grows from 55 names to 527: old names of kings, lords, poets, saints and women of the annals with the family name in Irish (Ó or Mac, Ní or Nic for a woman), then modern Irish names with the English forms of the family names used since the 18th century. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the irish entry in data/people-world.mjs and drop irish from RAISED.
+
+## B5460. Greek names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Greek list grows from 56 names to 472: old names of emperors, empresses, saints, scholars and great houses of Byzantium and the Greek lands under Venice and the Ottomans, then names of modern Greece, with a woman's family name in its own form. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the greek entry in data/people-world.mjs and drop greek from RAISED.
+
+## B5470. Polish names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Polish list grows from 58 names to 435: old names of Piast and Jagiellonian kings and dukes, knights, magnates and townsfolk, then names of modern Poland, with a woman's family name in its own form. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the polish entry in data/people-world.mjs and drop polish from RAISED.

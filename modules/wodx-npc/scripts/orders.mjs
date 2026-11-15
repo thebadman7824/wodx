@@ -43,11 +43,48 @@ export function build(ctx) {
     const master = game.actors.get(masterId);
     if ( !AT?.apply || !npc || !master ) return null;
     const step = Number(AT.of?.(npc, master)?.step) || 0;
-    const d = O.drift(kind, {step, ...extra});
+    // B5055: a bound animal ghoul holds to its master unless mistreated
+    const cf = npc.flags?.["wodx-creation"] ?? {};
+    const animal = !!(cf.animalGhoul || cf.animal);
+    const bound = (Number(cf.lineage?.bonds?.[masterId]?.drinks) || 0) >= 3;
+    const d = O.drift(kind, {step, animal, bound, ...extra});
     if ( !d ) return null;
     await AT.apply(npc, master, {delta: d.delta, why: d.why});
-    if ( d.wavers ) await note(`<p><b>${esc(npc.name)}</b> is wavering in its loyalty to ${esc(master.name)} (${esc(d.why)}). It may refuse an order, leave or turn; the Storyteller decides.</p>`, gmIds(), "Loyalty");
+    if ( d.wavers ) {
+      await npc.update({[`flags.${MOD}.wavers.${masterId}`]: true});
+      await note(`<p><b>${esc(npc.name)}</b> is wavering in its loyalty to ${esc(master.name)} (${esc(d.why)}). The next hard order it balks at, it leaves.</p>`, tellMaster(masterId), "Loyalty");
+    }
     return d;
+  }
+  /** B4880: roll the loyalty check WoDX works out: any success and it balks (a blood-bound follower only before near-certain death). */
+  async function loyaltyRoll(npc, leaderId) {
+    const L = loyaltyFor(npc, leaderId);
+    if ( L.bound ) return {balks: false, L};
+    const roll = await new Roll(`${Math.max(1, L.pool)}d10`).evaluate();
+    const faces = roll.dice[0]?.results?.map(x => x.result) ?? [];
+    const net = faces.filter(f => f >= L.diff).length - faces.filter(f => f === 1).length;
+    return {balks: net > 0, faces, L, roll};
+  }
+  /** It refuses; wavering or Hostile, it leaves its master's service. */
+  async function balked(npc, masterId, r) {
+    const master = game.actors.get(masterId);
+    let step = 0;
+    try { step = Number(attitude?.()?.of?.(npc, master)?.step) || 0; } catch (e) { step = 0; }
+    const leaves = !!flag(npc, "wavers")?.[masterId] || step <= -2;
+    if ( leaves ) await leaveService(npc, masterId);
+    return note(`<p><b>${esc(npc.name)}</b> refuses ${esc(master?.name ?? "its master")}'s order (Willpower ${r.L.pool} at ${r.L.diff}: ${r.faces.join(", ")}).${leaves ? " It leaves their service." : ""}</p>`, tellMaster(masterId), "Loyalty");
+  }
+  async function leaveService(npc, masterId) {
+    const cur = Array.isArray(flag(npc, "serves")) ? flag(npc, "serves") : [];
+    await npc.update({[`flags.${MOD}.serves`]: cur.filter(id => id !== masterId), [`flags.${MOD}.order`]: null, ...unsetKey(`flags.${MOD}.wavers.${masterId}`)});
+  }
+  /** At Hostile toward its master, a follower leaves on its own. */
+  async function onAttitude({npc, character, entry} = {}) {
+    if ( !isActiveGM() || !npc || !character ) return;
+    const w = worldActor(npc);
+    if ( !servesOf(w).includes(character.id) || !(Number(entry?.step) <= -2) ) return;
+    await leaveService(w, character.id);
+    await note(`<p><b>${esc(w.name)}</b> has turned against ${esc(character.name)} and leaves their service.</p>`, tellMaster(character.id), "Loyalty");
   }
   const inFightOn = scene => !!game.combats?.some?.(c => c.started && c.scene?.id === scene?.id);
   /** The roll WoDX suggests for a hard order: Willpower against the bond and the follower's attitude to the leader. */
@@ -75,6 +112,18 @@ export function build(ctx) {
     });
   }
 
+  /** Is this follower an animal, is it trained, and does the one it serves have Feral Whispers (B5063)? */
+  function animalOrders(npc, leaderId) {
+    const c = game.modules.get("wodx-creation")?.active ? game.modules.get("wodx-creation").api?.animals : null;
+    const animal = !!c?.isAnimal?.(npc);
+    if ( !animal ) return {animal: false};
+    const t = npc.flags?.["wodx-creation"]?.animal?.training;
+    const trained = t === undefined || t === null ? true : t !== "untrained";
+    const leader = leaderId ? game.actors.get(leaderId) : null;
+    const whispers = !!leader && [...(leader.items ?? [])].some(i => i.type === "Power" && /^animalism$/i.test(i.name?.trim() ?? "") && (Number(i.system?.value) || 0) >= 1);
+    return {animal, trained, whispers};
+  }
+
   /** The active Storyteller: check and carry out an order. */
   async function give(req, {userId = game.user.id} = {}) {
     if ( !isActiveGM() || !setting("followerOrders") ) return {ok: false, why: "Orders are off."};
@@ -89,6 +138,10 @@ export function build(ctx) {
     if ( req.kind === "none" ) return clear(npc, {by: user, scene, tok});
     if ( !O.ORDERS[req.kind] ) return {ok: false, why: "No such order."};
     const leader = O.leaderFor({picked: req.leader, serves: servesOf(npc), ownedActorIds: mine, isGM: user.isGM});
+    // B5063: an animal takes only what it was trained for, unless its master speaks to it
+    const beast = animalOrders(npc, leader);
+    const blocked = O.animalOrderBlock(req.kind, beast);
+    if ( blocked ) return {ok: false, why: blocked};
     if ( req.kind === "follow" && !leader ) return {ok: false, why: "Pick the character it should follow."};
     const order = O.normOrder({kind: req.kind, by: user.id, leader, target: req.target ?? null, at: game.time?.worldTime ?? 0, hard: !!req.hard, note: req.note,
       errand: req.errand, task: req.task, cost: req.cost});
@@ -295,7 +348,11 @@ export function build(ctx) {
     const a = worldActor(fromUuidSync?.(by.uuid));
     const masters = a ? servesOf(a).map(id => game.actors.get(id)).filter(Boolean) : [];
     if ( !masters.length ) return null;
-    return note(`<p><b>${esc(a.name)}</b> serves ${esc(masters.map(m => m.name).join(" and "))}. Word of this breach may be laid at ${masters.length === 1 ? "that master's" : "their"} door: weigh it against their standing.</p>`, gmIds(), "Masquerade");
+    // B4880: the breach is laid at the master's door: a step down with the factions the follower belongs to
+    const F = game.modules.get(MOD)?.api?.factions, fs = (F?.state?.()?.factions ?? []).filter(f => (f.members ?? []).includes(a.id) || f.leader === a.id);
+    const fell = [];
+    for ( const m of masters ) for ( const f of fs ) { try { await F.adjustPeople(f.id, m.id, {delta: -1}); fell.push(`${m.name} with ${f.name}`); } catch (e) { /* no factions */ } }
+    return note(`<p><b>${esc(a.name)}</b> serves ${esc(masters.map(m => m.name).join(" and "))}. Word of this breach is laid at ${masters.length === 1 ? "that master's" : "their"} door${fell.length ? `: a step down for ${esc(fell.join(", "))}` : ""}.</p>`, gmIds(), "Masquerade");
   }
 
   /* ---------------- Sentries (NPC 0.38.0) ---------------- */
@@ -366,7 +423,7 @@ export function build(ctx) {
         <div class="form-group"><label>A hard order (dangerous, or against its nature)</label><input type="checkbox" name="hard"></div>
         <div class="form-group"><label>In your words</label><input type="text" name="note" maxlength="200"></div>
         ${game.user.isGM ? `<div class="form-group"><label>It serves</label><input type="checkbox" name="setServes"> <small>Make it serve the character above</small></div>` : ""}
-        <p class="hint">${target ? `Go to: ${esc(target.name)}.` : "To send it to someone or set it on them, target that token first."} A hard order waits for the Storyteller, who weighs the bond and loyalty.</p>`,
+        <p class="hint">${target ? `Go to: ${esc(target.name)}.` : "To send it to someone or set it on them, target that token first."} A hard order waits for the Storyteller, who weighs the bond and loyalty. An animal takes only trained commands, unless the one it serves has Feral Whispers.</p>`,
       buttons: [{action: "go", label: "Give the order", default: true, callback: (ev, b) => Object.fromEntries(new FormData(b.form))}, {action: "cancel", label: "Cancel"}]});
     if ( !res || !res.token ) return null;
     const tok = canvas.scene.tokens.get(res.token);
@@ -391,13 +448,17 @@ export function build(ctx) {
       const d = entry?.data ?? {};
       const scene = game.scenes.get(d.sceneId), tok = scene?.tokens?.get(d.tokenId);
       if ( tok?.actor && d.order ) {
+        // B4880: the follower rolls its loyalty first; a balk refuses, and a wavering one that balks leaves
+        const npc = worldActor(tok.actor), r = await loyaltyRoll(npc, d.order.leader);
+        if ( r.balks ) return balked(npc, d.order.leader, r);
         await apply(tok.actor, O.normOrder(d.order), {scene, tok, by: game.users.get(entry.from) ?? null});
-        await driftFor(worldActor(tok.actor), d.order.leader, "hard");
+        await driftFor(npc, d.order.leader, "hard");
       }
     }});
   }
 
   function hooks() {
+    Hooks.on("wodxAttitude", p => { onAttitude(p).catch(e => console.error(`${MOD} | loyalty`, e)); });
     Hooks.once("ready", () => {
       game.socket.on(SOCKET, async m => {
         if ( m?.type !== "order" || !isActiveGM() ) return;

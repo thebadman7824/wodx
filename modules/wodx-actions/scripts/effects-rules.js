@@ -372,9 +372,12 @@ export function outcome(key, got, ctx = {}) {
     case "summon":
       return {...base, kind: "summon", count: Math.max(1, Math.min(5, Math.ceil(str / 2))), actor: ctx.actor ?? null,
         text: `${Math.max(1, Math.min(5, Math.ceil(str / 2)))} called to the caster; the Storyteller picks who and where`};
-    case "make":
-      return {...base, kind: "give", item: ctx.item ?? null, thing: String(ctx.thing ?? "").slice(0, 80),
-        text: `${ctx.thing ? String(ctx.thing).slice(0, 80) : "a thing"} made, into the target's things`};
+    case "make": {
+      // B4830 (house reading, PENDING-REVIEW): a creation with Prime in it is real for good; anything else fades when its duration ends
+      const lasting = spheres.includes("prime") || !!ctx.lasting;
+      return {...base, kind: "give", item: ctx.item ?? null, thing: String(ctx.thing ?? "").slice(0, 80), lasting,
+        text: `${ctx.thing ? String(ctx.thing).slice(0, 80) : "a thing"} made, into the target's things${lasting ? ", real for good" : `, for ${dur.label}`}`};
+    }
     case "weather": {
       const w = WEATHER_SET[ctx.weather] ? ctx.weather : null;
       return {...base, kind: "weather", weather: w, text: `${w ? WEATHER_SET[w].label.toLowerCase() : "the weather changed"} tonight`};

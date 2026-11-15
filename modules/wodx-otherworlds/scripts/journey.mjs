@@ -42,7 +42,9 @@ export function drawJourney({realm = "tempest", hours = 2, storm = false, travel
   try { fired = chron()?.events?.fired?.() ?? null; } catch (e) { fired = null; }
   try { moon = moonNow(); } catch (e) { moon = null; }
   const j = J.planJourney({realm, hours, year, storm, fired, moon, tables: g.lookup(g.context()), randFor: k => g.random(`journey:${count}:${realm}:${k}`, nonce)});
-  return {...j, travellers, count, nonce, year};
+  // B5019: the Far Dreaming's time against the world's, drawn with the journey
+  const slip = J.REALM_TIME[realm]?.rule === "random" ? J.drawSlip(g.random(`journey:${count}:${realm}:time`, nonce)) : null;
+  return {...j, travellers, count, nonce, year, ...(slip ? {slip} : {})};
 }
 
 /** The moon's phase index now (0 new ... 4 full), from WoDX Chronicle's calendar. */

@@ -131,6 +131,7 @@ async function rollOnce(dice, diff, specialty) {
 }
 
 /** The active Storyteller: roll every task that has come due and post one card per character. */
+const ironLegion = a => { try { return (game.modules.get("wodx-chronicle")?.api?.signatures?.rowsOf?.(a) ?? []).some(r => r.key === "iron"); } catch (e) { return false; } };
 export async function tick({force = false} = {}) {
   if ( busy || !isActiveGM() || !setting("longTasks") || (held() && !force) ) return [];
   busy = true;
@@ -174,7 +175,8 @@ export async function tick({force = false} = {}) {
           t = {...t, paidStage: t.stage};
           return true;
         };
-        const dice = poolFor(a, t);
+        let dice = poolFor(a, R.rollingAs(t));
+        const iron = ironLegion(a);
         if ( await payNow() ) while ( due-- > 0 && t.status === "open" ) {
           // B3689: costs paid on each roll; without them the work waits
           let adds = 0;
@@ -185,7 +187,11 @@ export async function tick({force = false} = {}) {
             for ( const [k, v] of Object.entries(p.updates) ) { if ( !(k in paidBefore) ) paidBefore[k] = foundry.utils.getProperty(a, k); paidNow[k] = v; }
             adds = p.adds;
           }
-          const r0 = await rollOnce(dice, t.diff, t.specialty);
+          const as = R.rollingAs(t);
+          dice = poolFor(a, as);
+          const r1 = await rollOnce(dice, as.diff, t.specialty);
+          // B4877: the Iron Legion's patience: a success more on each roll that is not a botch
+          const r0 = iron && !r1.botch ? {...r1, successes: Math.max(0, r1.successes) + 1} : r1;
           const r = adds ? {...r0, successes: Math.max(0, r0.successes) + adds, botch: false} : r0;
           const at = t.next;
           t = R.stepTask(t, r, at);
@@ -239,6 +245,8 @@ export async function tick({force = false} = {}) {
         if ( l.status === "done" && after[l.id]?.nights ) {
           const o = P.outcomeOf(after[l.id], after[l.id].target?.name ?? "");
           await log({kind: "task", actor: isPC(a) ? a.id : null, name: a.name, attention: o.background ? `A dot of ${o.background} to award` : null, text: `${a.name}: ${l.name}. ${o.text}`});
+          // B4867: a language, a trail and research end by themselves (reach.mjs projectDone)
+          try { await game.modules.get(MOD)?.api?.reach?.projectDone?.(a, after[l.id]); } catch (e) { console.error(`${MOD} | project done`, e); }
         }
         if ( l.status === "done" || l.status === "ruined" ) await log({kind: "task", actor: isPC(a) ? a.id : null, name: a.name,
           attention: l.status === "ruined" ? "A long task was ruined" : null, text: `${a.name}: ${l.name} ${l.status === "done" ? "is finished" : `was ${R.ruinWord(after[l.id])}`}.`});
