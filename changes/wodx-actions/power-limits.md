@@ -1,7 +1,0 @@
----
-bump: minor
-what: Powers follow the books' use limits and after-costs, one scene count for every line, Drained after a great power, full resist rolls and servant caps (B4920-B4929)
-effect: a used-up power is greyed out in its window with the reason and page and refused at submit (the Storyteller may allow it once); a level 5+ power works once a scene and leaves its user at +1 difficulty until the scene ends; nine powers pay their book cost when they end (sleep, lost blood, a lost Willpower dot, a Derangement roll, a penalty mark); End the scene or a new active map starts a new scene for every line; a resistance card shows every die and the pool behind it; a player's lasting servants stop at their Retainers rating unless the Storyteller raises it for experience or allows it
-visible: the greyed option reads "(used)" with the page on hover; Drained, Asleep, Ravenous, Animal habits, Blurred sight and Numbed show as status icons on the token (an Asleep token is dimmed), each with a chat card saying why
----
-Ben's Power Limits Desk picks a1, b1, b2 and c1 (22:44Z) and After-Cost Desk picks (22:59Z), 14 November 2026. New limit-rules.js, limits.js, after-cost-rules.js and after-costs.js; the werewolf and wraith once-a-scene counts move onto the one scene count. api limits {state, gate, decorate, lostTo, clear, sceneNo, newScene, isDrained, rules, afterCosts}, plus npcPowers and autoPower for WoDX NPC.
