@@ -46,6 +46,7 @@ class Spec:
     looks: tuple = ()                            # ((from year, to year, label, draw options), ...): how it looks in each age
     axes: dict = field(default_factory=dict)     # variation axes the drawing honours (variants.py): material, colour, contents ...
     nvar: int = 0                                # variations wanted in each era beyond the minimum of ten
+    global_from: int = None                      # from this year the thing looks the same the world over (a server rack, a photocopier): no regional styles, its variations come from its makes, models, loads and wear
 
     def look(self, year):
         """The draw options for a year: the look whose years hold it (the first look when no year is set)."""
@@ -265,22 +266,46 @@ def _centre(rec, line, toward):
     return toward if toward else (rec.cells[0] / 2, rec.cells[1] / 2)
 
 
-def door(rec, line, at, width=1.0, toward=None, exterior=False, swing=-1, hinge="a", name=None, oid=None):
+def _look(rec, kind, wealth, style, condition, era):
+    """The look of a door or window (props.door_kind, props.window_kind): its era from `era` or the map's year, its
+    household's wealth and style from the arguments or the recorder (rec.wealth, rec.style), its condition, and a kind
+    to choose one outright. None when nothing is known: the plain plank door and casement window."""
+    yr = getattr(rec, "year", None)
+    look = {"kind": kind, "wealth": wealth if wealth is not None else getattr(rec, "wealth", None),
+            "style": style or getattr(rec, "style", None), "condition": condition or "new"}
+    if era is None and yr is not None:
+        from library.variants import era_of
+        era = era_of(yr)
+    if era is None and not any(v for k, v in look.items() if k != "condition") and look["condition"] == "new": return None
+    look["era"] = era or "dark-ages"
+    return look
+
+
+def door(rec, line, at, width=1.0, toward=None, exterior=False, swing=-1, hinge="a", name=None, oid=None,
+         kind=None, wealth=None, style=None, condition=None, era=None):
     """A door in a recorded wall: its opening `width` squares wide centred at `at` along the wall line, drawn at the
-    wall's own thickness so its frame fills the wall exactly. toward: a point inside the room (the door's inner side)."""
+    wall's own thickness so its frame fills the wall exactly. toward: a point inside the room (the door's inner side).
+    kind (props.DOOR_KINDS: plank, ironbound, panelled, glazed, flush, steel, sliding, sealed), wealth (0 to 5),
+    style (a census style family), condition (new, worn, broken) and era (a census era key; the map's year when not
+    given) choose how it looks; left out, a door of the map's age and a middling household."""
     sp = spec(oid or ("door-outer" if exterior else "door-inner")); x0, y0, x1, y1 = line; horiz = abs(y0 - y1) < 1e-6; th = wall_th(rec, line)
     c = (at - width / 2, y0, at + width / 2, y0) if horiz else (x0, at - width / 2, x0, at + width / 2)
-    pr.door(rec.m, *c, th=th, centre=_centre(rec, line, toward), swing=swing, hinge=hinge, exterior=exterior, name=name or sp.name)
+    pr.door(rec.m, *c, th=th, centre=_centre(rec, line, toward), swing=swing, hinge=hinge, exterior=exterior, name=name or sp.name,
+            look=_look(rec, kind, wealth, style, condition, era))
     _placed(rec).append(Placed(sp, min(c[0], c[2]), min(c[1], c[3]), abs(c[2] - c[0]), abs(c[3] - c[1]), "s", name or sp.name, wall=tuple(line)))
 
 
-def window(rec, line, at, width=1.0, toward=None, glass=None, name=None, oid=None):
+def window(rec, line, at, width=1.0, toward=None, glass=None, name=None, oid=None,
+           kind=None, wealth=None, style=None, condition=None, era=None):
     """A window in a recorded wall, at the wall's own thickness, its shutters folded back along the outside face.
-    glass: None takes it from the map's year (rec.year) and the library's windows."""
+    glass: None takes it from the map's year (rec.year) and the library's windows. kind (props.WINDOW_KINDS: open,
+    cloth, horn, leaded, glazed, sash, steel, plate, paper, jali, sealed), wealth, style, condition and era choose how it
+    looks, as for door(); windows without shutters draw a blind inside the glass when shut."""
     if oid is None:
         yr = getattr(rec, "year", None)
         oid = "window-glazed" if (glass if glass is not None else (yr is not None and yr >= 1500)) else "window-shuttered"
     sp = spec(oid); x0, y0, x1, y1 = line; horiz = abs(y0 - y1) < 1e-6; th = wall_th(rec, line)
     c = (at - width / 2, y0, at + width / 2, y0) if horiz else (x0, at - width / 2, x0, at + width / 2)
-    pr.window(rec.m, *c, th=th, centre=_centre(rec, line, toward), glass=oid == "window-glazed", name=name or sp.name)
+    pr.window(rec.m, *c, th=th, centre=_centre(rec, line, toward), glass=oid == "window-glazed", name=name or sp.name,
+              look=_look(rec, kind, wealth, style, condition, era))
     _placed(rec).append(Placed(sp, min(c[0], c[2]), min(c[1], c[3]), abs(c[2] - c[0]), abs(c[3] - c[1]), "s", name or sp.name, wall=tuple(line)))

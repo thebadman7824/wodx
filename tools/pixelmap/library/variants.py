@@ -65,8 +65,10 @@ def axes(oid, era):
     sp = spec(oid); ax = dict(getattr(sp, "axes", None) or {})
     ax.setdefault("wealth", wealth_range(oid))
     ax.setdefault("style", styles_for(oid, era))
+    gf = getattr(sp, "global_from", None)
+    if gf is not None and era_span(era)[0] >= gf: ax["style"] = [None]  # one look worldwide: no made-up regional ornament
     if not ax.get("condition"): ax["condition"] = list(CONDITIONS)
-    return {k: list(v) for k, v in ax.items() if v}
+    return {k: list(v) for k, v in ax.items() if v and v != [None] or k == "style"}
 
 
 BANDS = ((0, 1), (2, 3), (4, 5))                             # poor, middling, rich: each style is drawn at each band it is found at

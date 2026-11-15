@@ -87,6 +87,15 @@ A player tells a pauper's table from a prince's at a glance.
 
 Where an object is not found in a style (the census's `styles`), it is not drawn in it.
 
+**Never make up a regional look.** Paint a people's pattern, colour or ornament only onto things that people really
+decorated that way (a chest, a rug, a lamp, a stool). Machines and mass-made goods (a server rack, a photocopier, a
+vending machine, a fuse box, a petrol pump of the 1990s) look the same the world over: give them `global_from=` the
+year from which that is true, and the gate then wants no regional difference. Their ten looks come from what really
+varies: the makes and models of the day and their liveries (beige, grey, black, a maker's red), size and fit-out,
+what they hold or show, cables and clutter round them, and wear. A rainbow on a server rack fails review even if the
+gate passes. Where a region does change such a thing, change it in an honest way (signage shape, plug and socket,
+which side the controls are on), never with a people's ornament.
+
 **Condition.**
 - worn: faded paint, scuffs, a patch, a chipped corner, a stain.
 - broken: a split board, a missing leg or tilt, a crack, a hole, spilt contents.
