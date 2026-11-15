@@ -76,8 +76,7 @@ class C:
 
 
 def _obj(fn, era0, off=4):
-    """Wrap a drawing: wear and breakage on the pixels drawn, the poor one's rust, tape and dents, the rich one's
-    polish, and a short shadow south-east."""
+    """Wrap a drawing: a mirrored build where asked, and a short shadow south-east."""
     def draw(tm, x, y, w, h, st, v):
         c = C(v, st, era0); before = np.asarray(tm.img).copy()
         glows = fn(tm, x, y, w, h, st, v, c) or []
@@ -93,36 +92,7 @@ def _obj(fn, era0, off=4):
             i = int(rng.integers(0, len(xs))); return xs[i], ys[i]
         yy, xx = np.ogrid[:a.shape[0], :a.shape[1]]
         big = (bx1 - bx0) * (by1 - by0)
-        if c.poor:
-            for _ in range(max(2, int(m.sum() / 700))):
-                px_, py_ = pick(); rr = max(2, min(7, (bx1 - bx0) // 10))
-                bl = (((xx - px_) / rr) ** 2 + ((yy - py_) / (rr * .7)) ** 2 <= 1) & m
-                a[bl] = a[bl] * .45 + np.array(RUST[2], np.float32) * .55
-            if big > 900:
-                px_, py_ = bx0 + (bx1 - bx0) * .62, by0 + (by1 - by0) * .35; L = max(6, min(18, (bx1 - bx0) // 4))
-                tp = (np.abs(yy - py_ - (xx - px_) * .4) <= 1.5) & (np.abs(xx - px_) <= L) & m
-                a[tp] = np.array((176, 178, 172), np.float32); a[tp & (np.abs(yy - py_ - (xx - px_) * .4) <= .5)] = (204, 206, 200)
-        if c.cond in ("worn", "broken"):
-            a[m] = a[m] * .82 + np.array(GREY, np.float32) * .18
-            for _ in range(max(3, int(m.sum() / 450))):
-                px_, py_ = pick(); sl = (slice(py_, py_ + 2), slice(px_, px_ + 3)); mm = m[sl]; a[sl][mm] = a[sl][mm] * .7
-            px_, py_ = pick(); rr = max(3, min(8, (bx1 - bx0) // 7))
-            stn = (((xx - px_) / rr) ** 2 + ((yy - py_) / (rr * .7)) ** 2 <= 1) & m
-            a[stn] = a[stn] * .74 + np.array((60, 44, 28), np.float32) * .12
-        if c.cond == "broken":
-            x_, y_ = bx0 + (bx1 - bx0) * rng.uniform(.25, .6), by0 + 1
-            while y_ < by1:
-                nx, ny = x_ + rng.integers(-2, 3), y_ + rng.integers(1, 4)
-                for t in np.linspace(0, 1, 5):
-                    ix, iy = int(x_ + (nx - x_) * t), int(y_ + (ny - y_) * t)
-                    if 0 <= iy < a.shape[0] and 0 <= ix + 1 < a.shape[1] and m[iy, ix]:
-                        a[iy, ix] = (30, 24, 28)
-                        if m[iy, ix + 1]: a[iy, ix + 1] = a[iy, ix + 1] * .6
-                x_, y_ = nx, ny
-        if c.rich and c.cond == "new":
-            for _ in range(3):
-                px_, py_ = pick(); sl = (slice(py_, py_ + 1), slice(px_, px_ + 3)); mm = m[sl]
-                a[sl][mm] = np.minimum(255, a[sl][mm] * .4 + 160)
+        # no stamped rust, tape, stains, cracks or glints (the owner, 2026-11-15): poor is plainer, wear is core.wear_layer
         if off:
             sh = np.zeros_like(m); sh[off:, off - 1:] = m[:-off, :m.shape[1] - (off - 1)]; sh &= ~m
             a[sh] = before[sh].astype(np.float32) * np.array([.55, .56, .62], np.float32)
