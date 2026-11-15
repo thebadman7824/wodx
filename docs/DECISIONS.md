@@ -304,6 +304,7 @@ Next free block: B5840
 | B5660-B5669 | Child proportions, drawn poses by routine, animal legs (used B5660-B5668) | Paperdoll |
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
+| B5820-B5829 | Say or Do: systems that only posted text now act, second batch (used B5820-B5826) | Otherworlds, Senses, Chronicle, Storyteller, NPC |
 | B5830-B5839 | Gate failures on main, round two; run-gate names failed steps (used B5830-B5831) | tools (gates, lanes) |
 <!-- decision-index:end -->
 
@@ -9148,6 +9149,41 @@ Reverse: drop the fifth element of each USES row and carryOut.
 WoDX Actions. Resources: money into the purse, a week of a month's allowance per success (house reading). Contacts: current rumours named, up to the successes. Influence: a boon owed by the institution in the Prestation journal. Retainers: servants named and their orders opened. Domain or Hunting Grounds with no success: a rival feeds there (the herd thins). A botch starts a rumour about the character.
 
 Reverse: remove downtimeDoes.
+
+## B5820. The Shredding Winds hurt (2026-11-15)
+WoDX Otherworlds. The levels rolled go through the combat soak onto the mage (aggravated, lethal while the Storm fades); the Storyteller ticks Insulated when Life magick, enhanced armour or a Wonder spares the traveller. The token flashes.
+
+Reverse: remove the soakAndApply call after the card.
+
+## B5821. Net combat damage is rolled and applied (2026-11-15)
+WoDX Otherworlds. The winner's damage dice against the loser's Wits + protection, both at 6; what gets through is bashing on the loser (house reading: the book says only "damage"); a system loser is cracked open by that much.
+
+Reverse: remove the damage block in netContest.
+
+## B5822. Heightened senses overload is rolled (2026-11-15)
+WoDX Senses. Willpower at 6 for each heightened-senses token hit; a failure gives Dazed for a turn (stunned and deafened). A token already dazed is not rolled again.
+
+Reverse: restore the text-only overload card.
+
+## B5823. Sentences act (2026-11-15)
+WoDX Chronicle. A fine is paid from the purse at once, on credit when short: a month of a modest living (Resources 2 allowance) at weight 3, scaled by weight (house reading). Outlawry and banishment raise the law's heat in that land to Wanted. A death sentence holds the condemned (Held) for the scene.
+
+Reverse: remove carryOut in law-punish.mjs and declareWanted.
+
+## B5824. A raised building is paid for and lifts its town (2026-11-15)
+WoDX Chronicle, Storyteller. The patron pays three months of a Resources 4 living (two for a restoration) unless a cost is given; the scene's town takes a "build" or "restore" event (prosperity +0.15 or +0.1, unrest -0.05).
+
+Reverse: remove the payment and the lever call in raiseBuilding, and the two LEVER_TOWN rows.
+
+## B5825. Project complications act (2026-11-15)
+WoDX Storyteller. Each complication has a deed (TROUBLE_DOES): the next roll waits some days, successes are lost, a week of the character's living is paid, or a rumour starts about the character. A house reading: the texts stay the start of a scene.
+
+Reverse: drop TROUBLE_DOES and the lines in trouble().
+
+## B5826. Heartbreak shows for a week (2026-11-15)
+WoDX NPC. A heartbreak roll that is neither borne nor botched leaves a Heartsick condition for seven days: +1 difficulty on social rolls (Actions reads socialDiff).
+
+Reverse: remove the applyTimed call in heartbreak().
 
 ## B5830. run-gate names the failed steps of the older gates (2026-11-15)
 Lanes. The kit's gates put their failed steps in the summary line, but the older gates (gate6b, gate6d, gate7d,

@@ -18,7 +18,7 @@ export const MAX = 10;
 /** How grave each deed is (house figures). breach: a mortal saw something they should not, mostly an assault. extortion: a blackmailed person told the law (B5177). */
 export const GRAVITY = {theft: 2, break: 2, force: 1, fire: 3, desecrate: 2, fight: 1, breach: 2, killing: 4, tax: 2, extortion: 2};
 export const DEED_WORDS = {theft: "theft", break: "breaking in", force: "forcing a way in", fire: "setting a fire", desecrate: "desecrating a holy place",
-  fight: "brawling", breach: "an assault", killing: "a killing", tax: "not paying the taxes", extortion: "blackmail"};
+  fight: "brawling", breach: "an assault", killing: "a killing", tax: "not paying the taxes", extortion: "blackmail", sentence: "a sentence of the court"};
 
 /** The stages of the law's interest. */
 export const STAGES = [

@@ -140,8 +140,31 @@ async function overload(tokens, why) {
   if ( !hit.length ) return;
   const gms = game.users.filter(u => u.isGM).map(u => u.id);
   const esc = v => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;");
-  await ChatMessage.create({whisper: gms, speaker: {alias: "WoDX Senses"},
-    content: `<div class="wodx-card"><h3>Senses overwhelmed</h3><p class="wodx-quiet">${esc(why)}</p>${hit.map(t => `<p>${esc(S.overloadText(t.name))}</p>`).join("")}</div>`});
+  // B5822: the Willpower roll is made and a failure stuns (Dazed) and deafens for the turn, on the token
+  const T = game.modules.get("wodx-chronicle")?.api;
+  const rows = [], rolls = [];
+  for ( const t of hit ) {
+    if ( t.actor.statuses?.has?.("wodx-dazed") ) continue;
+    const w = Math.max(0, Number(t.actor.system?.advantages?.willpower?.permanent) || 0);
+    let ok = false, line = "";
+    if ( w ) {
+      const r = await new Roll(`${w}d10cs>=${S.OVERLOAD.difficulty}`).evaluate();
+      const faces = r.dice?.[0]?.results?.map(x => x.result) ?? [];
+      const succ = Math.max(0, faces.filter(x => x >= S.OVERLOAD.difficulty).length - faces.filter(x => x === 1).length);
+      ok = succ > 0; rolls.push(r);
+      line = `Willpower ${w} at ${S.OVERLOAD.difficulty} (${faces.join(", ")}): ${succ} success${succ === 1 ? "" : "es"}.`;
+    } else line = "No Willpower to roll.";
+    if ( !ok ) {
+      if ( T?.applyTimed ) {
+        await T.applyTimed(t.actor, {name: "Senses overwhelmed", description: "Stunned and deafened by the noise", duration: {kind: "rounds", rounds: S.OVERLOAD.turns},
+          condition: "dazed", key: "wodx-senses-overload", source: "WoDX Senses"});
+      }
+    }
+    rows.push(`<p>${esc(S.overloadText(t.name))}</p><p>${esc(line)} <b>${ok ? "Holds steady." : "Stunned and deafened."}</b></p>`);
+  }
+  if ( !rows.length ) return;
+  await ChatMessage.create({whisper: gms, speaker: {alias: "WoDX Senses"}, rolls,
+    content: `<div class="wodx-card"><h3>Senses overwhelmed</h3><p class="wodx-quiet">${esc(why)}</p>${rows.join("")}</div>`});
 }
 function near(a, b, units) {
   const g = canvas?.grid?.distance || 5, px = canvas?.grid?.size || 100;

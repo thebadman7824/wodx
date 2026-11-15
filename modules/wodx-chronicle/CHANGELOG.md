@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.124.0 (Say or Do: sentences and raised buildings now act (B5823-B5824))
 - 0.123.3 (Ghouled animals follow-up: the monthly need skips the spans of time skips)
 - 0.123.2 (Emptied tables are refilled (B5641))
 - 0.123.1 (The domitor's feeding (B4983) is offered again while the monthly need (B5050) runs by itself; a declined feeding waits for the next month)
