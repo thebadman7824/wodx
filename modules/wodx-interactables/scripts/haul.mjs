@@ -607,13 +607,22 @@ export async function struggle(body, {moved = false} = {}) {
 /*  Falling and waking (B5074, B5078)                                  */
 /* ------------------------------------------------------------------ */
 
+/** An actor's tokens: its own for a token actor, else the linked ones on every scene (Foundry's own index). */
+function tokensFor(actor) {
+  if ( actor.isToken && actor.token ) return [actor.token];
+  try { if ( typeof actor.getDependentTokens === "function" ) return actor.getDependentTokens({linked: true}) ?? []; } catch (e) { /* the walk below */ }
+  const out = [];
+  for ( const scene of game.scenes ?? [] ) for ( const t of tokensOf(scene) ) if ( t.actorLink && t.actorId === actor.id ) out.push(t);
+  return out;
+}
 const DROPS = ["wodx-knockdown", "wodx-dazed", "stun", "prone"];
 const woken = new Set();
 /** Active Storyteller: an actor's statuses or health changed. */
 async function onActorChanged(actor) {
   if ( !isActiveGM() || !actor ) return;
-  for ( const scene of game.scenes ?? [] ) for ( const t of tokensOf(scene) ) {
-    if ( !(t.actor === actor || t.actor?.uuid === actor.uuid || (t.actorLink && t.actorId === actor.id)) ) continue;
+  // Only this actor's own tokens, and only one that holds something or is held: every other change costs nothing
+  for ( const t of tokensFor(actor) ) {
+    if ( !t.flags?.[MOD]?.hauling && !t.flags?.[MOD]?.haul && !woken.has(t.uuid) ) continue;
     const st = new Set(statusesOf(actor));
     // A carrier knocked down, dazed or stunned, or down themselves, drops the load
     if ( holdingOf(t) && (DROPS.some(s => st.has(s)) || fallenOf(t).down) ) {
@@ -808,5 +817,5 @@ export function setupHaul(d = {}) {
     col.appendChild(b);
   });
   Hooks.once("ready", () => game.socket?.on?.(SOCKET, msg => { if ( msg?.action === "haul" ) onSocket(msg).catch(e => console.error(`${MOD} | haul`, e)); }));
-  return {rules: H, fallenOf, bodyWeight, thingOf, handsOf, loadOf, burdenOf, take, release, struggle, optionsFor, choose, open: openHaul, settleBarricade, onMoved};
+  return {rules: H, fallenOf, bodyWeight, thingOf, handsOf, strengthOf, loadOf, burdenOf, take, release, struggle, optionsFor, choose, open: openHaul, settleBarricade, onMoved};
 }
