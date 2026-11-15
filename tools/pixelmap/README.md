@@ -24,6 +24,7 @@ in this public repository and, later, be drawn inside Foundry.
 | `maps/village.py`, `maps/road.py` | Sample maps: a village of about 1200 (40 by 28) and a country road (36 by 20). They write to `out/` unless given a folder. |
 | `maps/forest_road.py` | The Forest Road (66 by 46), the first valley map redrawn on its old scene's walls, lights and exits (B5739). |
 | `maps/high_woods.py` | The High Woods (66 by 48): the hermit's lodge, the wolf den, the game-reeve's lodge and the boar's thicket (B5740). |
+| `maps/altenhof.py` | The Ruins of Altenhof (58 by 46): the broken manor, Lady Adelheid's chamber, the dry well and the fallen tower (B5742). |
 
 ## Making a map
 
