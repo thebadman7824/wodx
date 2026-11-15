@@ -35,8 +35,11 @@ export async function run() {
       await C().giveVitae(dog, nos, {points: 6});
       await wait(() => [...dog.effects].some(e => e.getFlag("wodx-creation", "clanMark")));
       const fx = [...dog.effects].find(e => e.getFlag("wodx-creation", "clanMark"));
-      const onToken = !!fx && [...(td.object?.actor?.temporaryEffects ?? [])].some(e => e.id === fx.id);
-      G.ok("1. the clan's mark at five points", fx?.name?.includes("Hideous") && onToken, {name: fx?.name, onToken});
+      // the dog's token is unlinked, so look at the token's own actor; a status effect is what the token shows
+      const tokActor = td.actor ?? td.object?.actor;
+      await wait(() => [...(tokActor?.temporaryEffects ?? [])].some(e => e.getFlag?.("wodx-creation", "clanMark")));
+      const onToken = [...(tokActor?.temporaryEffects ?? [])].some(e => e.getFlag?.("wodx-creation", "clanMark"));
+      G.ok("1. the clan's mark at five points", !!fx?.name?.includes("Hideous") && onToken, {mark: fx?.name, onToken});
     });
 
     await G.step("2. the blood bar and the red eyes", async () => {
@@ -54,7 +57,8 @@ export async function run() {
       await C().giveVitae(serf, tz, {points: 2});
       const task = await C().animals.craft(tz, "szlachta", serf);
       Hooks.callAll("wodxTaskDone", {actor: tz, task: {...task, status: "done"}});
-      await wait(() => !!serf.getFlag("wodx-creation", "szlachta"));
+      // the flag lands first and the flaw after it, so wait for the flaw
+      await wait(() => !!serf.getFlag("wodx-creation", "szlachta") && [...serf.items].some(i => /monstrous/i.test(i.name)));
       const str = Number(serf.system.attributes?.strength?.value), monstrous = [...serf.items].some(i => /monstrous/i.test(i.name));
       G.ok("4. a szlachta by long task", !!task && task.opts?.fleshcraft === "szlachta" && !!serf.getFlag("wodx-creation", "szlachta") && str >= 5 && monstrous, {task: task?.name, str, monstrous});
     });
@@ -64,7 +68,8 @@ export async function run() {
       for ( const g of list ) await C().giveVitae(g, tz, {points: 1});
       const task = await C().animals.craft(tz, "vozhd");
       Hooks.callAll("wodxTaskDone", {actor: tz, task: {...task, status: "done"}});
-      await wait(() => game.actors.some(a => a.getFlag("wodx-creation", "vozhd")?.by === tz.id), 15000);
+      // the vozhd is made first and the ghouls are spent into it after, so wait for the last of them
+      await wait(() => list.filter(g => g.getFlag("wodx-creation", "grafted")).length >= 15, 20000);
       const v = game.actors.find(a => a.getFlag("wodx-creation", "vozhd")?.by === tz.id);
       if ( v ) extra.push(v);
       const spent = list.filter(g => g.getFlag("wodx-creation", "grafted")).length;
