@@ -55,7 +55,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.91.0";
+const VERSION = "0.92.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -318,9 +318,12 @@ function vehiclesNear(tok) {
   const ix = IXA(), R = ix?.rules;
   if ( !ix || !R?.MOUNTS ) return [];
   const year = yearNow(), out = [];
-  for ( const t of canvas.scene?.tiles ?? [] ) {
+  // B4966: mount tiles, and beasts that can be ridden, on their own tokens
+  const beasts = (canvas.scene?.tokens?.contents ?? []).filter(t => t.id !== tok.document?.id && ix.beastOf?.(t));
+  for ( const t of [...(canvas.scene?.tiles ?? []), ...beasts] ) {
     const f = t.flags?.["wodx-interactables"];
-    if ( !f?.mount || t.hidden ) continue;
+    if ( t.documentName !== "Token" && !f?.mount ) continue;
+    if ( t.hidden ) continue;
     let o = null;
     try { o = ix.describeObj?.(t); } catch (e) { o = null; }
     if ( !o?.mount ) continue;
@@ -328,6 +331,8 @@ function vehiclesNear(tok) {
     if ( !M || o.driver || (M.from && year && year < M.from) ) continue;
     if ( R.aboard?.(o)?.length >= o.seats ) continue;
     if ( R.hullState?.(o.hull, o.hull?.structure)?.state === "wrecked" ) continue;
+    // B4961: a chimerical steed is for the fae, a Stygian steed for the dead
+    if ( R.riderMay && !R.riderMay(o.kind, C()?.getKind?.(tok.actor) ?? "mortal") ) continue;
     const dots = C()?.ability?.(tok.actor, M.skill)?.value ?? 0;
     const pseudo = tileAsToken(t);
     out.push({id: t.id, label: o.title || M.label, distance: Math.max(0, Math.round((yardsBetween(tok, pseudo) ?? 999) - tileReach(t))), canDrive: dots >= (R.minSkill?.(o.kind) ?? 1)});
@@ -336,12 +341,13 @@ function vehiclesNear(tok) {
 }
 /** A tile as the token-like shape the path finder walks beside. */
 function tileAsToken(t) {
+  if ( t.documentName === "Token" ) return t.object ?? t;
   const size = canvas.scene?.grid?.size ?? 100;
   return {id: t.id, center: {x: num(t.x) + num(t.width) / 2, y: num(t.y) + num(t.height) / 2},
     document: {x: num(t.x), y: num(t.y), width: Math.max(1, num(t.width) / size), height: Math.max(1, num(t.height) / size)}, w: num(t.width), h: num(t.height)};
 }
 /** Yards from a tile's centre to its edge (a big vehicle is reached at its side). */
-const tileReach = t => Math.max(0, Math.max(num(t.width), num(t.height)) / 2 / (canvas.scene?.grid?.size ?? 100) * (canvas.scene?.grid?.distance ?? 5) / unitsPerYard() - 1);
+const tileReach = t => t.documentName === "Token" ? 0 : Math.max(0, Math.max(num(t.width), num(t.height)) / 2 / (canvas.scene?.grid?.size ?? 100) * (canvas.scene?.grid?.distance ?? 5) / unitsPerYard() - 1);
 
 /** The options for this NPC's turn, best first, with the target filled in for Willpower and named for the card. */
 export function planTurn(tok, combat = game.combat) {
@@ -602,7 +608,7 @@ async function execute(tok, opt) {
       return {done: moved, path, text: moved ? `${tok.name} ${pace.atWheel ? `drives off in the ${String(pace.ride?.label ?? "vehicle").toLowerCase()}` : "flees"}.` : `${tok.name} has nowhere to run.`};
     }
     case "board": {
-      const tile = canvas.scene?.tiles?.get(opt.vehicle);
+      const tile = canvas.scene?.tiles?.get(opt.vehicle) ?? canvas.scene?.tokens?.get(opt.vehicle);
       const ix = IXA();
       if ( !tile || !ix ) return {done: false, text: "The vehicle is gone."};
       const label = String(ix.describeObj?.(tile)?.title || ix.rules?.MOUNTS?.[tile.flags?.["wodx-interactables"]?.mountKind]?.label || "vehicle").toLowerCase();
@@ -844,6 +850,13 @@ export async function takeTurn(combat = game.combat, {force = false} = {}) {
   if ( stuck ) report(combat.id, c.id, {cannotAct: true});
   if ( stuck ) return ChatMessage.create({speaker: ChatMessage.getSpeaker({token: tok.document}), whisper: gmIds(),
     content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">${esc(tok.name)}'s turn</h3></header><div class="vta-body">${esc(tok.name)} cannot act (${esc(cond?.getCondition?.(stuck)?.name ?? stuck)}).</div></div>`});
+  // B4966: a beast with someone in its saddle goes where its rider takes it (its dodge and its blows go with the rider's)
+  const ridden = IXA()?.riddenBy?.(tok.document);
+  if ( ridden?.driver ) {
+    report(combat.id, c.id, {cannotAct: true});
+    return ChatMessage.create({speaker: ChatMessage.getSpeaker({token: tok.document}), whisper: gmIds(),
+      content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">${esc(tok.name)}'s turn</h3></header><div class="vta-body">${esc(tok.name)} goes where ${esc(ridden.driver.n ?? "its rider")} takes it.</div></div>`});
+  }
   const planned = planTurn(tok, combat);
   return postPlan(tok, combat, planned, mode);
 }
