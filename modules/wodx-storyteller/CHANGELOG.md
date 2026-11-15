@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.108.0 (The primer for a scene far from home (B5940 to B5942): the players' primer follows the active scene's land as well as the homeland)
 - 0.107.0 (Market goods by region, at the Market Goods Desk's recommended picks: imports dearer the farther they came (B5930), the land's own goods cheaper (B5931), each way of life's trade by kind of goods, fading with world trade from 1900 to 2000 (B5932), caravans naming up to two real goods of the sending land for each kind (B5933), world timeline news that moves the markets (B5934), and the price saying why (B5935). A setting, Prices know where goods come from, turns it all off (B5936))
 - 0.106.1 (The signal board takes world timeline news only when it is heard here and less than a year old, so a long time skip or news from the far side of the world does not flood Threads of Fate (B5925))
 - 0.106.0 (War beyond Europe: armies, sieges and ships by land, from the Armies and Ships Desk at its recommended picks (B5900 to B5910))

@@ -179,6 +179,24 @@ export function playerPrimer(profile, {sphere = null, sphereLabel = "", year = n
   return `<h2>${esc(profile?.name ?? "The era")}</h2>${where}${ps(world ?? p.players)}<p class="wodx-quiet">The Storyteller can add to this page or change it.</p>`;
 }
 
+/**
+ * B5940: the primer for a scene far from home. When the active scene stands where another way of life holds than the
+ * homeland's, the players' primer gets a page "Where you are now" with what everyone knows there (latin: the era's
+ * own lines). At home, or with no scene placed, the page says so in a line. Returns {html, abroad, key}: key names the
+ * way of life the page speaks of, so the arrival card is posted once for each move.
+ */
+export const ABROAD_PAGE = "Where you are now";
+export function abroadPrimer(profile, {homeSphere = null, hereSphere = null, hereLabel = "", placeLabel = "", year = null} = {}) {
+  const y = Number(year ?? profile?.start ?? 1197);
+  if ( !hereSphere || hereSphere === homeSphere || y < 1197 ) {
+    return {abroad: false, key: "", html: `<h2>${esc(ABROAD_PAGE)}</h2><p>Among your own people. What everyone knows holds here.</p><p class="wodx-quiet">This page changes by itself when the scene stands in another land.</p>`};
+  }
+  const p = PRIMERS[profile?.id] ?? PRIMERS["dark-ages"];
+  const text = hereSphere === "latin" ? p.players : (worldPrimer(hereSphere, y) ?? p.players);
+  const where = [...new Set([placeLabel, hereLabel].filter(Boolean))].join(", ");
+  return {abroad: true, key: hereSphere, html: `<h2>${esc(ABROAD_PAGE)}${where ? `: ${esc(where)}` : ""}</h2><p class="wodx-quiet">Far from home. What people here take for granted:</p>${ps(text)}<p class="wodx-quiet">This page changes by itself when the scene stands in another land.</p>`};
+}
+
 /** The era page of the Storyteller screen. */
 export function eraPage(profile, {lines = [], date = "", region = "", climate = ""} = {}) {
   const p = PRIMERS[profile?.id] ?? PRIMERS["dark-ages"];
