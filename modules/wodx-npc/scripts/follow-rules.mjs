@@ -1,5 +1,5 @@
 /**
- * WoDX NPC (NPC Motives Desk, B5680-B5689): what an NPC does after its first reaction, so that it never acts and then
+ * WoDX NPC (NPC Motives Desk, B5680-B5686): what an NPC does after its first reaction, so that it never acts and then
  * stands there. The pure part; routines.mjs and main.mjs read the map and hand the results here.
  *
  *   m1  A challenge that is not answered: the intruder still in the place a while later meets the next step.

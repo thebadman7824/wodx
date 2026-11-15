@@ -12,6 +12,7 @@
  *   Hooks out wodxGrudgeMove {npc, character, move}.
  */
 import * as M from "./memory-rules.mjs";
+import * as GR from "./grudge-rules.mjs";
 
 const MOD = "wodx-npc";
 const TYPE = `${MOD}.grudge`;
@@ -108,14 +109,88 @@ async function approve(e) {
   const npc = game.actors.get(nid), ch = game.actors.get(cid);
   if ( !npc || !ch ) return;
   const m = M.MOVES.find(x => x.key === move);
-  const s = st();
-  try {
-    if ( move === "talk" ) await s?.rumours?.start?.({text: `${npc.name} has a bad word to say about ${ch.name}`, tellers: [npc.id], source: npc.id, about: ch.id, truth: "half"});
-    if ( move === "hunters" ) await s?.hunters?.add?.(s.hunters.regionAt?.(), "manual", {n: 1, why: `${npc.name} told someone where to look`, who: {id: ch.id, name: ch.name}});
-  } catch (er) { console.error(`${MOD} | grudge`, er); }
+  let did = "";
+  try { did = await act(npc, ch, move); } catch (er) { console.error(`${MOD} | grudge`, er); }
   await ChatMessage.create({whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: {alias: npc.name},
-    content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p><b>${npc.name}</b>: ${m?.label ?? move} (${ch.name}).</p><p class="wodx-quiet">An old grudge. How it plays out is the Storyteller's.</p></div></div>`});
+    content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p><b>${npc.name}</b>: ${m?.label ?? move} (${ch.name}).</p><p class="wodx-quiet">${did || "An old grudge. How it plays out is the Storyteller's."}</p></div></div>`});
   Hooks.callAll("wodxGrudgeMove", {npc, character: ch, move});
+}
+
+/** B5690 (g1): every grudge move does what it says. Returns what happened, for the card. */
+export async function act(npc, ch, move) {
+  const s = st(), t = now();
+  switch ( move ) {
+    case "talk":
+      await s?.rumours?.start?.({text: `${npc.name} has a bad word to say about ${ch.name}`, tellers: [npc.id], source: npc.id, about: ch.id, truth: "half"});
+      return "The tale is out in the town.";
+    case "hunters":
+      await s?.hunters?.add?.(s.hunters.regionAt?.(), "manual", {n: 1, why: `${npc.name} told someone where to look`, who: {id: ch.id, name: ch.name}});
+      return "The hunters of the region have a name.";
+    case "boon": {
+      const entry = (s?.ledger?.state?.()?.entries ?? []).find(x => x.status === "open" && x.from?.id === ch.id && x.to?.id === npc.id);
+      if ( !entry ) return "";
+      await s.ledger.save({...entry, due: GR.boonDue(t), history: [...(entry.history ?? []), {at: t, what: `Called in by ${npc.name}, at the worst time.`}]});
+      return `The boon is called in: due within ${GR.BOON_DAYS} days, or it is broken.`;
+    }
+    case "seat": {
+      const Inst = s?.upkeep?.institutions;
+      const seat = (Inst?.seatsOf?.(npc.id) ?? []).sort((a, b) => b.rank - a.rank)[0];
+      const inst = seat ? Inst.byId(seat.inst) : null;
+      const key = inst ? GR.pickLever(Inst.rules.leversFor(inst.kind, seat.rank)) : null;
+      if ( !key ) return "";
+      const done = await s?.reach?.lever?.({actor: npc, inst, key, target: ch, words: `${npc.name} has not forgotten`});
+      return `${npc.name} works against ${ch.name} in ${inst.name}${done?.length ? `: ${done.join("; ")}` : ""}.`;
+    }
+    case "venture": {
+      const out = await s?.upkeep?.ventures?.hit?.("spoiled", {actor: ch.id}, `${npc.name} spoils it`);
+      return out?.length ? out.map(o => o.text).join(" ") : "";
+    }
+    case "kin": {
+      const dear = dearOf(ch);
+      for ( const d of dear ) {
+        await remember(d, ch, {kind: "cold", text: `Heard ${npc.name}'s tale about them`, seen: false});
+        if ( (d.flags?.[MOD]?.warmth ?? {})[ch.id] ) await game.modules.get(MOD)?.api?.hearts?.court?.(d, ch, "slight", {why: `${npc.name}'s tale`}).catch(() => null);
+      }
+      return dear.length ? `${dear.map(d => d.name).join(", ")} heard ${npc.name}'s tale and think less of ${ch.name}.` : "";
+    }
+    case "violence": {
+      await npc.setFlag(MOD, "harm", {character: ch.id, at: t});
+      const sent = await harmCheck();
+      return sent.length ? sent.join(" ") : `${npc.name} waits for a night when ${ch.name} can be found (a week at most).`;
+    }
+  }
+  return "";
+}
+
+/** Those dear to a character: the household's people and anyone who holds warm feelings for them. */
+function dearOf(ch) {
+  const ids = new Set((ch.flags?.[MOD]?.household ?? []).map(h => h?.id).filter(Boolean));
+  for ( const a of game.actors ) if ( isNpc(a) && Number((a.flags?.[MOD]?.warmth ?? {})[ch.id]?.value) > 0 ) ids.add(a.id);
+  return [...ids].map(id => game.actors.get(id)).filter(a => isNpc(a) && a.id !== ch.id);
+}
+
+/** g1 violence: a waiting harm comes at night to where the character is, through the fight starter. */
+let harmBusy = false;
+export async function harmCheck() {
+  if ( !isActiveGM() || harmBusy ) return [];
+  harmBusy = true;
+  const out = [];
+  try {
+    const t = now();
+    let night = false;
+    try { const R = game.modules.get(MOD)?.api?.routines; await R?.loadCalendar?.(); night = !!R?.describer?.()?.(t)?.isNight; } catch (e) { night = false; }
+    for ( const npc of game.actors.filter(a => isNpc(a) && a.flags?.[MOD]?.harm) ) {
+      const p = npc.flags[MOD].harm, ch = game.actors.get(p.character);
+      if ( !ch || GR.harmLapsed(p, t) ) { await npc.unsetFlag(MOD, "harm"); continue; }
+      const where = st()?.reach?.whereIs?.(ch.id);
+      if ( !GR.harmNow({night, found: !!where?.token}) ) continue;
+      await npc.unsetFlag(MOD, "harm");
+      const why = `${npc.name} means ${ch.name} harm`;
+      const made = await st()?.reach?.send?.({kind: "secret", scene: where.scene, near: where.token, hostile: true, why, flag: {grudge: npc.id}});
+      out.push(`Men sent by ${npc.name} come for ${ch.name} at ${where.scene.name} (${made?.length ?? 0}).`);
+    }
+  } finally { harmBusy = false; }
+  return out;
 }
 
 export function registerHandler() {
@@ -142,7 +217,7 @@ export function listen() {
     const x = M.noteFromAttitude(change, now());
     if ( x ) remember(npc, character, x).catch(e => console.error(`${MOD} | memory`, e));
   });
-  Hooks.on("updateWorldTime", () => { turn().catch(e => console.error(`${MOD} | memory`, e)); });
+  Hooks.on("updateWorldTime", () => { turn().catch(e => console.error(`${MOD} | memory`, e)); harmCheck().catch(e => console.error(`${MOD} | harm`, e)); });
   Hooks.on("wodxSkipEnd", () => { turn().catch(e => console.error(`${MOD} | memory`, e)); });
   Hooks.on("updateActor", (actor, change) => {
     const d = change?.flags?.[CREATION]?.chronology?.died;

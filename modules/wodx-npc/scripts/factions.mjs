@@ -594,6 +594,8 @@ export function build(ctx) {
     if ( !data || data === "cancel" ) return null;
     return hunt(game.actors.get(data.actor), data.place, {method: data.method, hours: num(data.hours) || 1});
   }
+  /** B5687 (r1): the dice of each way to hunt, so an NPC goes about it its own best way. */
+  const huntPools = actor => Object.fromEntries(Object.keys(METHODS).map(m => { const [at, ab] = m.split("+"); return [m, attrOf(actor, at) + abilityOf(actor, ab)]; }));
   /** Roll a hunt: one roll an hour until prey is caught or the hours run out. */
   async function hunt(actor, placeId, {method = "wits+streetwise", hours = 1} = {}) {
     if ( !actor ) return null;
@@ -1219,7 +1221,7 @@ export function build(ctx) {
     return proposeChanges(`Word spreads: ${src} ${moved > 0 ? "thinks better" : "thinks worse"} of ${who}`, `${words.join("; ")}.`, changes, {key: `spill:${factionId}:${actorId}:${game.time.worldTime}`, kind: "spill"});
   }
   const peopleOf = actorId => F.peopleStandingOf(state(), actorId);
-  return {warTurn, adjustPeople, peopleOf, onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, hunt, huntDialog,
+  return {warTurn, adjustPeople, peopleOf, onMapEvent, startMapBreach, registerSettings, registerHandler, hooks, state, save, mutate, runTurns, endSession, onClock, tickBreaches, reportBreach, onActionsBreach, huntingFor, huntPools, hunt, huntDialog,
     setupRothenstein, editFaction, deleteFaction, reportDialog, setBreach, deleteBreach, setArea, undoCard, eraInfo, placeList, names, leaders, masqEntries, findActor,
     FactionsAppClass, openFactions: () => (game.user.isGM ? FactionsAppClass().open() : founding?.openPlayer?.()), rules: F, ROTHENSTEIN,
     applyNow, proposeChanges, bgValue, allActors, yearSweep, onEventFired, endFaction, absorbFaction, setFounding: f => { founding = f; }, politicsInfo, openBoons, onBoonSettled, stageFight, onMaelstrom};

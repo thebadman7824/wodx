@@ -12,6 +12,8 @@
  *   Off:     nothing.
  * Attacks go through WoDX Combat's quick attack (every automatic choice), so the dice and the rules are Combat's own.
  */
+import * as HN from "./hunt-npc-rules.mjs";
+import {build as buildProwl} from "./prowl.mjs";
 import * as NR from "./npc-rules.mjs";
 import * as PP from "./power-pick-rules.mjs";
 import * as RR from "./routine-rules.mjs";
@@ -140,7 +142,8 @@ function animalOf(actor) {
 export function savedProfile(actor) { return actor?.getFlag(MOD, "behavior") ?? {}; }
 export function profileFor(actor, {phases = true} = {}) {
   const saved = savedProfile(actor);
-  const p = NR.profileOf(saved, NR.templateFor(infoOf(actor)));
+  // B5687 (r1): a Kindred or Kuei-jin who went hungry last night is bolder and quicker to frenzy until it feeds
+  const p = HN.withHunger(NR.profileOf(saved, NR.templateFor(infoOf(actor))), HN.isHungry(actor?.getFlag?.(MOD, "hungry"), game.time?.worldTime ?? 0));
   if ( !phases || !String(saved.phases ?? "").trim() ) return p;
   const W = chron()?.when;
   if ( !W?.check ) return p;
@@ -1007,6 +1010,9 @@ export async function openNpcPanel() {
 const routines = buildRoutines({MOD, esc, gmIds, isActiveGM, C, chron, profileFor, H3, gridKind, grid, cellOf, cellsAt, topLeftFor, passableFor, stepsFor, stepCost,
   hexHeuristic, cellsFor, walk, approach, yardsBetween, obvious, hiddenByObfuscate});
 routines.hooks();
+/* B5688 (r2): criminals on the prowl pick a mark */
+const prowl = buildProwl({MOD, esc, gmIds, isActiveGM, C, chron, routines, profileFor, yardsBetween});
+prowl.hooks();
 /* Phase 7d: factions and domains, on top of 7c's places */
 const factions = buildFactions({MOD, esc, gmIds, isActiveGM, chron, routines});
 factions.hooks();
@@ -1087,7 +1093,7 @@ Hooks.once("init", () => {
   LEGACY.registerSettings();
   LEGACY.listen();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
-  const api = {version: VERSION, factionLooks: FactionLooks.api(), rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
+  const api = {version: VERSION, prowl, factionLooks: FactionLooks.api(), rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
     faces: {open: Faces.openFaces, apply: Faces.applyName}, nameFor: Faces.nameFor, knowledgeOf: a => rivalry.knowledgeOf(a), orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd, overheard, openOverheard: overheard.open,
@@ -1104,7 +1110,7 @@ Hooks.once("init", () => {
       condition: SERVANTS.condition, socialRoll: SERVANTS.socialRoll, flash: SERVANTS.flash, flashBetween: SERVANTS.flashBetween,
       openBind: SERVANTS.openBind, setRevenantMaster: SERVANTS.setRevenantMaster, familyKeyOf: SERVANTS.familyKeyOf, rules: SERVANTS.rules,
       fomorise: SWORLD.fomorise, openSocial: SWORLD.openSocial, keeperTurn: SWORLD.keeperTurn, undoKeepers: SWORLD.undoKeepers, world: SWORLD.api},
-    memory: {remember: MEMORY.remember, balance: MEMORY.balanceOf, known: MEMORY.knownBy, turn: MEMORY.turn, open: MEMORY.rememberedDialog, fromTrust: MEMORY.fromTrust, rules: MEMORY.rules},
+    memory: {remember: MEMORY.remember, balance: MEMORY.balanceOf, known: MEMORY.knownBy, turn: MEMORY.turn, open: MEMORY.rememberedDialog, fromTrust: MEMORY.fromTrust, act: MEMORY.act, harmCheck: MEMORY.harmCheck, rules: MEMORY.rules},
     trust: {of: TRUST.trustOf, move: TRUST.moveTrust, betray: TRUST.betray, debtWord: TRUST.debtWord, tradeBoon: TRUST.tradeBoon, blackmail: TRUST.blackmail,
       answerBlackmail: TRUST.answerBlackmail, strikeBacks: TRUST.strikeBacks, sideOf: TRUST.sideOf, setSide: TRUST.setSide, howToFind: TRUST.howToFind, foundSide: TRUST.foundSide, rules: TRUST.rules},
     family: {conceive: FAMILY.conceive, birth: FAMILY.birth, end: FAMILY.endPregnancy, expecting: FAMILY.expectingOf, check: FAMILY.checkBirths, lines: FAMILY.lines, askChild: FAMILY.askChild,

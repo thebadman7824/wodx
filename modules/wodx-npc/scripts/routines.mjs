@@ -26,6 +26,7 @@ import * as FR from "./fight-rules.mjs";
 import * as AN from "./animal-rules.mjs";
 import * as MR from "./mortal-rules.mjs";
 import * as FW from "./follow-rules.mjs";
+import * as HN from "./hunt-npc-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export const REACTION = "reaction";
@@ -476,7 +477,7 @@ export function build(ctx) {
     if ( !isActiveGM() ) return null;
     await loadCalendar();
     const t = game.time.worldTime, describeBy = describers(), places = listPlaces();
-    const npcs = routineNpcs(), computed = new Map(), updates = [], reports = [];
+    const npcs = routineNpcs(), computed = new Map(), updates = [], reports = [], hunts = [];
     // Domitors first, so a ghoul can follow theirs
     const order = [...npcs].sort((a, b) => (domitorOf(a) ? 1 : 0) - (domitorOf(b) ? 1 : 0));
     for ( const actor of order ) {
@@ -495,21 +496,27 @@ export function build(ctx) {
         const k = `${actor.id}:missing:${r.missing}`;
         if ( !reported.has(k) ) { reported.add(k); reports.push(`${actor.name}'s ${R.ROLES[r.missing]?.label?.toLowerCase() ?? "place"} is no longer a tagged place: set it again in their routine`); }
       }
+      // B5687 (r1): a Kindred or Kuei-jin NPC's hunting hours end in a meal or in hunger
+      if ( HN.huntEnded(w, r.block) && HN.feedsOn(sheetOf(actor)) && !actor.hasPlayerOwner ) hunts.push({actor, where: {...w}});
       if ( w.place !== r.place || w.index !== r.index || w.reported ) {
         updates.push({_id: actor.id, [`flags.${MOD}.where`]: {place: r.place, index: r.index, activity: r.block?.activity ?? null, label: r.block?.label ?? "", since: t, reported: null}});
       }
     }
     if ( updates.length ) await Actor.updateDocuments(updates);
+    const fed = [];
+    for ( const h of hunts ) fed.push(await resolveHunt(h.actor, h.where, t).catch(e => { console.error(`${MOD} | hunt`, e); return null; }));
+    if ( fed.some(Boolean) ) await ChatMessage.create({speaker: {alias: "WoDX routines"}, whisper: gmIds(),
+      content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">The night's hunting</h3></header><div class="vta-body"><ul>${fed.filter(Boolean).map(r => `<li>${esc(r)}</li>`).join("")}</ul></div></div>`});
     if ( reports.length ) await ChatMessage.create({speaker: {alias: "WoDX routines"}, whisper: gmIds(),
       content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">Routines need you</h3></header><div class="vta-body"><ul>${reports.map(r => `<li>${esc(r)}</li>`).join("")}</ul></div></div>`});
-    if ( !scene || !canvas?.ready || canvas.scene?.id !== scene.id ) return {updates, items: []};
+    if ( !scene || !canvas?.ready || canvas.scene?.id !== scene.id ) return {updates, items: [], fed};
     const items = planScene(scene, places, how === "walk" || how === "resume" ? "walk" : "jump", t);
     const card = post ? await postRoutineCard(scene, items, how, t) : null;
     if ( how === "walk" || how === "resume" ) await checkStays(scene, t);
     // B5686 (r3): the watch walks its beat
     let beats = [];
     if ( how === "walk" ) beats = await walkBeats(scene, t).catch(e => { console.error(`${MOD} | beats`, e); return []; });
-    return {updates, items, card, beats};
+    return {updates, items, card, beats, fed};
   }
 
   let timer = null, pendingDelta = 0, running = Promise.resolve();
@@ -1163,6 +1170,60 @@ export function build(ctx) {
     return moved;
   }
 
+  /* r1 (B5687): the night's hunt, rolled when the hunting block ends */
+  const sheetOf = a => ({type: a?.type, bloodMax: num(a?.system?.advantages?.bloodpool?.max), yangMax: num(a?.system?.advantages?.yangchi?.permanent ?? a?.system?.advantages?.yangchi?.max)});
+  const facs = () => game.modules.get(MOD)?.api?.factions ?? null;
+  /** People on this map to lead aside, as the rules want them. */
+  function preyHere(tok) {
+    const list = [];
+    for ( const o of canvas.tokens.placeables ) {
+      if ( o.id === tok.id || !o.actor || o.document.hidden ) continue;
+      const pb = o.document.getFlag(MOD, "passerby");
+      const mortal = (C()?.getKind?.(o.actor) ?? "mortal") === "mortal" && o.actor.type === "Mortal";
+      const near = canvas.tokens.placeables.filter(x => x.id !== o.id && x.id !== tok.id && x.actor && !x.document.getFlag(MOD, "passerby") && ctx.yardsBetween(o, x) <= 10).length;
+      list.push({id: o.id, passerby: !!pb, animal: !!pb?.animal, mortal, player: !!o.actor.hasPlayerOwner, alone: near === 0});
+    }
+    return list;
+  }
+  /** Roll (or, with prey on the map, take) one NPC's meal at the end of its hunt. Returns a line for the card, or null. */
+  async function resolveHunt(actor, w, t) {
+    const feeds = HN.feedsOn(sheetOf(actor));
+    if ( !feeds ) return null;
+    const path = feeds === "chi" ? "system.advantages.yangchi" : "system.advantages.bloodpool";
+    const pool = foundry.utils.getProperty(actor, path) ?? {};
+    const before = {now: num(pool.temporary), max: feeds === "chi" ? num(pool.permanent ?? pool.max) : num(pool.max)};
+    const F = facs();
+    // Prey on the map where the hunter walks: led aside, as a player would, instead of a roll
+    const onMap = canvas?.ready && (listPlaces().find(p => p.id === w.place)?.scene?.id ?? (String(w.place).startsWith("Scene.") ? String(w.place).split(".")[1] : null)) === canvas.scene?.id;
+    const tok = onMap ? canvas.tokens.placeables.find(x => x.actor && (x.actor.id === actor.id || x.actor.baseActor?.id === actor.id)) : null;
+    let caught = false, botch = false, vessel = null, how = "";
+    const preyId = tok && onGrid() ? HN.preyOnMap(preyHere(tok), feeds) : null;
+    if ( preyId ) {
+      const prey = canvas.tokens.get(preyId);
+      await goTo(tok, prey, null);
+      caught = true; vessel = prey; how = `leads ${prey.name} aside`;
+    } else if ( F?.hunt ) {
+      const r = await F.hunt(actor, w.place, {method: HN.bestMethod(F.huntPools?.(actor) ?? {}), hours: HN.huntHours(w.since, t)});
+      caught = !!r?.caught; botch = !!r?.botch;
+      how = caught ? "finds prey" : botch ? "botches the hunt" : "finds nothing";
+    } else return null;
+    if ( caught ) {
+      const die = (await new Roll("1d10").evaluate()).total;
+      const m = HN.meal(before, die);
+      const ups = {[`${path}.temporary`]: m.after, [`flags.${MOD}.-=hungry`]: null};
+      await actor.update(ups);
+      // The vessel gives what was taken (a passer-by's own pool, so a second feeding finds less)
+      if ( vessel?.actor && m.taken ) {
+        const vb = num(vessel.actor.system?.advantages?.bloodpool?.temporary);
+        await vessel.actor.update({"system.advantages.bloodpool.temporary": Math.max(0, vb - m.taken)}).catch(() => null);
+      }
+      return `${actor.name} ${how} and takes ${m.taken} ${feeds === "chi" ? "Chi" : "blood"} (${m.after} of ${before.max})`;
+    }
+    await actor.setFlag(MOD, "hungry", {since: t});
+    if ( botch ) await F?.reportBreach?.({severity: 1, place: w.place, by: actor.id, event: HN.botchTale(actor.name, feeds)}).catch(e => console.error(`${MOD} | breach`, e));
+    return `${actor.name} ${how} and goes hungry${botch ? "; someone saw, and the talk begins" : ""}`;
+  }
+
   /** Carry out response k of a reaction. Returns {text, snap}. */
   async function doReaction(data, k) {
     const o = data.options[k];
@@ -1647,7 +1708,7 @@ export function build(ctx) {
     });
   }
 
-  return {checkChallenges, releaseHostages, walkBeats, onTrigger, raiseAlarmFull, carryAlarm, deliverCarries, undoCarry, noteMark, repairMarks, undoRepairCard, raiseAlarm, alertOf, alertLevel, onMapEvent, checkAlerts, undoAlarmCard, syncZones, alertRules: AR, registerSettings, registerBehavior, hooks, tick, idle, planScene, listPlaces, routineOf, whereOf, blocksFor, keepOf, routineNpcs, describer, loadCalendar,
+  return {goTo, goAway, resolveHunt, checkChallenges, releaseHostages, walkBeats, onTrigger, raiseAlarmFull, carryAlarm, deliverCarries, undoCarry, noteMark, repairMarks, undoRepairCard, raiseAlarm, alertOf, alertLevel, onMapEvent, checkAlerts, undoAlarmCard, syncZones, alertRules: AR, registerSettings, registerBehavior, hooks, tick, idle, planScene, listPlaces, routineOf, whereOf, blocksFor, keepOf, routineNpcs, describer, loadCalendar,
     watchFoes, onAttitude, applyItems, undoSnap, acceptRoutineCard, undoRoutineCard, react, doReaction, acceptReactionCard, undoReactionCard, checkStays, matchOwners,
     editRoutine, openPlaces: () => PlacesAppClass().open(), PlacesAppClass, modeOf, downState, entranceOf, freeCellsIn, walkTo, reactionType, bookNow, noticeBy};
 }
