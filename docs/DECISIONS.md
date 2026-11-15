@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6050
+Next free block: B6060
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -330,6 +330,7 @@ Next free block: B6050
 | B5990-B5999 | Say or Do: full sentences and grieving (Ben's picks on law sentences and heartbreak) (used B5990-B5992) | Chronicle, NPC, Actions |
 | B6000-B6019 | Rituals and powers that really work: every effect read by a roll, soak, token or map system (used B6000-B6018) | Actions, Combat |
 | B6040-B6049 | Lone Chronicle step 3: card scenes for places with no map (used B6040-B6044) | Solo, Storyteller |
+| B6050-B6059 | gate7b fresh arena each run (used B6050-B6051) | tools (gates) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10102,3 +10103,15 @@ Reverse: drop isCard from travelPlaces.
 On a card scene, Places with no map offers Look around: half an hour on the character's own clock, then a town encounter is drawn as at night (no chance roll, by day or night) and its people stand on the card scene a few squares off, in plain sight. When none comes, the player is told nobody comes near. House rule: no book gives a solo look-about.
 
 Reverse: take the "look" choice out of showPlaces in card.mjs.
+
+## B6050. gate7b builds a fresh arena every run (2026-11-15)
+Gates. gate7b kept its arena scene and tokens between runs, so the tokens carried wounds, a frenzy and moves from one
+run into the next and into the lane snapshots; the plan steps passed on one lane and failed on another. The gate now
+removes any old arena and its fight, starts each token's sheet unhurt and out of frenzy, and removes the arena after.
+
+## B6051. gate7b asks for a suggestion on its plan step and walks the runner by its attack (2026-11-15)
+Gates. The world's NPC mode can be Auto, so the plan step's card was already played; the arena now asks for a
+suggestion for that step. The runner's flight from a far foe has nowhere to go, so the wall step takes its attack
+first, which walks it round the wall to the hero.
+
+Reverse: keep the arena between runs again, drop the scene's mode and take the first attack or flight.
