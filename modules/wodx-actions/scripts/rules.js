@@ -190,10 +190,27 @@ export const VESSEL_STATES = {
     clean: { label: "Nothing unusual" },
     drunk: { label: "Drunk", note: "Alcohol: −1 die to Dexterity and Intelligence pools for every two drinks in the vessel's blood, fading by one die an hour (V20 p. 301)." },
     stimulant: { label: "On cocaine, meth or speed", note: "A vampire with Celerity has one more dot of it for 10 − Stamina minutes (V20 p. 301)." },
-    hallucinogen: { label: "On a hallucinogen", note: "Pools drop by 1 to 3, with visions like Dementation's second level, as the Storyteller decides (V20 p. 301)." },
-    opiate: { label: "On heroin, morphine or barbiturates", note: "Lower Dexterity and Ability pools, and frenzy is easier to resist, as the Storyteller decides (V20 p. 302)." },
+    hallucinogen: { label: "On a hallucinogen", note: "Pools drop by 1 to 3, rolled when it is drunk, with visions like Dementation's second level, for the scene (V20 p. 301)." },
+    opiate: { label: "On heroin, morphine or barbiturates", note: "Dexterity and Ability pools drop by 2 and frenzy is 1 easier to resist, for the scene (V20 p. 302; the sizes are a house reading)." },
     disease: { label: "Carrying a blood-borne disease", note: "Vampires take no harm from most sickness but carry blood-borne disease to later vessels (V20 p. 295)." }
 };
+
+/** Every Ability's roll tag in WoDX Chronicle, for effects on "Ability pools". */
+const ABILITY_TAGS = ["survival", "empathy", "ride", "medicine", "larceny", "animalken", "athletics", "brawl", "melee", "dodge", "subterfuge",
+    "streetwise", "occult", "crafts", "finance", "academics", "drive", "etiquette", "performance", "intimidation", "computer", "science",
+    "investigation", "firearms", "ranged", "archery", "awareness", "social", "stealth", "law", "politics", "technology", "linguistics"];
+/**
+ * B5012: what a drugged vessel's blood does to the vampire's rolls, as WoDX Chronicle timed roll effects
+ * [{key, name, tags, dice, diff, duration}]. pen is the drink penalty; drink fades a die an hour.
+ */
+export function vesselBites(taint, pen = 0, rand = Math.random) {
+    const label = VESSEL_STATES[taint]?.label ?? taint;
+    if (taint === "drunk") return Array.from({ length: Math.max(0, pen) }, (_, i) => ({ key: `vessel:drunk:${i + 1}`, name: label, tags: ["dexterity", "intelligence"], dice: -1, duration: { kind: "time", seconds: (i + 1) * 3600 } }));
+    if (taint === "hallucinogen") return [{ key: "vessel:hallucinogen", name: label, tags: ["all"], dice: -(1 + Math.floor(rand() * 3)), duration: { kind: "scene" } }];
+    if (taint === "opiate") return [{ key: "vessel:opiate", name: label, tags: ["dexterity", ...ABILITY_TAGS], dice: -2, duration: { kind: "scene" } },
+        { key: "vessel:opiate-calm", name: `${label}: calm`, tags: ["frenzy"], diff: -1, duration: { kind: "scene" } }];
+    return [];
+}
 
 /**
  * Fae blood (house rule, every era): the Glamour in it is a potent drug to Kindred, bringing hallucinations and

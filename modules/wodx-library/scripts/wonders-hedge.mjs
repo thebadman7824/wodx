@@ -43,6 +43,19 @@ export const POWERS = {
 };
 export const USES = {always: "Always at work", daily: "Once a day", charges: "As many times as the roll's successes, then spent", once: "Once, then spent"};
 
+/** B5015: the keepings a talisman can need, and how long one keeping lasts (house figures). One in five needs none. */
+export const KEEPINGS = [
+  {key: "blood", text: "a drop of its bearer's blood", every: 7 * 86400, label: "a week"},
+  {key: "moon", text: "a night under the full moon", every: 30 * 86400, label: "a month"},
+  {key: "water", text: "washing in running water", every: 30 * 86400, label: "a month"},
+  {key: "words", text: "its maker's words spoken over it", every: 90 * 86400, label: "a season"}
+];
+export function keepingOf(seed = "") {
+  let h = 0; for ( const c of String(seed) ) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  const i = h % 5;
+  return i < KEEPINGS.length ? KEEPINGS[i] : null;
+}
+
 /** The difficulty of the Enchantment roll (pdf 73): 4 + level, less one for a mastered Enchantment; a fine object takes one more off (house). */
 export const difficultyOf = (w, o = {}) => Math.max(3, Math.min(10, 4 + n(w?.level) - (o.mastered ? 1 : 0) - (o.fine ? 1 : 0)));
 
@@ -88,7 +101,7 @@ export const hedgeKit = {
   },
   cautions(w, m) {
     const out = ["The object is crafted first (the Storyteller's Crafts roll); a fine one makes the Enchantment easier.",
-      "Most talismans have a keeping: something they need, or they fade. The Storyteller sets it."];
+      "Most talismans have a keeping: something they need, or they fade. One is drawn when it is made."];
     if ( w?.level >= 4 ) out.push("A talisman this strong may raise a trait past 5 or copy a low power of another kind.");
     return out;
   },
@@ -124,9 +137,16 @@ export const hedgeKit = {
       techno: !!o.techno, powers: [power],
       ...(o.power === "attr" && o.attr ? {worn: [{attr: o.attr, value: amt, label: `${w.name} (Enchantment)`}]} : {}),
       ...(uses === "charges" ? {uses: {value: s, max: s}} : {}), ...(uses === "once" ? {oneUse: true} : {})};
+    // B5015: most talismans have a keeping; without it they stop working until kept again
+    const keep = keepingOf(`${w.key}:${maker}:${n(at)}`);
+    if ( keep ) {
+      Object.assign(flag, {keeping: keep.key, expires: n(at) + keep.every, expiredText: `it has faded: it needs ${keep.text}`});
+      flag.powers = [...flag.powers, {id: "keep", label: `Keep it: ${keep.text}`, renew: keep.every, renewText: `It is kept: it works for ${keep.label} more.`,
+        text: `Give it its keeping (${keep.text}); it then works for ${keep.label}.`}];
+    }
     return [{name: `${w.name}: ${label}`, type: "Item", img: "icons/svg/item-bag.svg",
       system: {description: para(w.does) + para(P.text(amt)) + para(`${USES[uses]}.${uses === "charges" ? ` ${s} use${s === 1 ? "" : "s"}.` : ""}`)
-        + para("Its keeping, if it has one, is the Storyteller's to set.") + para(`${ref}.`), reference: ref},
+        + para(keep ? `Its keeping: ${keep.text}. Kept, it works for ${keep.label}; then it fades until kept again.` : "It needs no keeping.") + para(`${ref}.`), reference: ref},
       flags: {"wodx-library": {wonder: flag}}}];
   },
   /** The Willpower is paid on the roll (perRoll); nothing more is taken when it ends. */

@@ -48,7 +48,7 @@ export async function run() {
         await step("versions", async () => {
             const ch = game.modules.get(CH)?.version;
             const th = game.modules.get(CH).api?.theme?.VERSION;
-            ok("versions", atLeastV(A().version, "3.6.0") && (/^0\.([3-9]|\d\d)\./.test(ch) || /^0\.([3-9]|\d\d)\./.test(th ?? "")), { actions: A().version, chronicle: ch, theme: th, note: ch !== "0.3.0" ? "Foundry shows the manifest read at its last start" : "" });
+            ok("versions", atLeastV(A().version, "3.6.0") && (atLeastV(ch ?? "0", "0.3.0") || atLeastV(th ?? "0", "0.3.0")), { actions: A().version, chronicle: ch, theme: th, note: ch !== "0.3.0" ? "Foundry shows the manifest read at its last start" : "" });
         });
         await game.settings.set(CH, "look", "era");
         await game.settings.set(CH, "textSize", "1");

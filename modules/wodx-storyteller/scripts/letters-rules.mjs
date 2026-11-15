@@ -4,7 +4,8 @@
  * A player sends a letter or message from their character, by a carrier the year allows, to another player character
  * or to someone the Storyteller plays. It arrives when the carrier would bring it, on the clock. The Storyteller sees
  * every letter when it is sent and can hold it back (it was lost, stopped or read on the way) or let it go; nothing is
- * intercepted by a roll. A reply to someone the Storyteller plays is the Storyteller's own to write.
+ * intercepted by a roll. Someone the Storyteller plays writes back on their own (WoDX NPC talk sheets, B4882); the
+ * Storyteller can rewrite, hold or lose that answer on the way, or write one by hand.
  * House figures: the books give no delivery times. The telephone date matches WoDX NPC's alarm carriers.
  *
  * Storyteller 0.59.0 (B2700 to B2704): a letter goes from one part of the world to another (WoDX Chronicle's world

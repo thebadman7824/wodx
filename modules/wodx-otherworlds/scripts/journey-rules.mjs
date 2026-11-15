@@ -131,15 +131,31 @@ export const REALM_TIME = {
   labyrinth: {rule: "storyteller", ref: "WR20 pdf 307", note: "Time in the Labyrinth runs as the Storyteller says, and stranger still in a Harrowing: seconds or years."},
   moonbridge: {rule: "thousandth", ref: "W20 pdf 209 / p. 207"},
   "trod-silver": {rule: "trod", ref: "C20 pdf 53 / p. 52"}, "trod-balor": {rule: "trod", ref: "C20 pdf 53 / p. 52"}, "trod-twilight": {rule: "trod", ref: "C20 pdf 53 / p. 52"},
-  "far-dreaming": {rule: "storyteller", ref: "C20 pdf 53; W20 pdf 331", note: "Time in the Far Dreaming and Arcadia runs at random against the world's: a day there may be an hour here, or a year. The Storyteller's call."},
-  "deep-umbra": {rule: "storyteller", ref: "W20 pdf 332", note: "Some Deep Umbra realms keep their own time (the Computer Web runs faster than the CyberRealm). The Storyteller's call."}
+  "far-dreaming": {rule: "random", ref: "C20 pdf 53; W20 pdf 331", note: "Time in the Far Dreaming and Arcadia runs at random against the world's: a day there may be an hour here, or a year."},
+  "deep-umbra": {rule: "ratio", ratio: 1, ref: "W20 pdf 332", note: "The Deep Umbra keeps the world's time here (house figure; the books name no rate but that the Computer Web runs faster than the CyberRealm)."}
 };
+/**
+ * B5019: how time runs in the Far Dreaming and Arcadia against the world's, drawn once per journey from a d10
+ * (W20 pdf 331 says only that it runs at random; the table is a house reading). factor: world hours per hour there.
+ */
+export const DREAM_SLIPS = [
+  {upTo: 1, factor: 1 / 24, words: "an hour here for each day there"},
+  {upTo: 3, factor: 0.5, words: "half the time here"},
+  {upTo: 6, factor: 1, words: "the same time here"},
+  {upTo: 8, factor: 7, words: "a week here for each day there"},
+  {upTo: 9, factor: 30, words: "a month here for each day there"},
+  {upTo: 10, factor: 365, words: "a year here for each day there"}
+];
+export function drawSlip(rand = Math.random) { const d = 1 + Math.floor(Math.max(0, Math.min(0.9999, rand())) * 10); return {...DREAM_SLIPS.find(x => d <= x.upTo), d10: d}; }
 
+const spanWords = sec => { const h = sec / 3600; if ( h < 1 ) return `${Math.max(1, Math.round(sec / 60))} minutes`; if ( h < 48 ) return `${Math.round(h)} hours`; const d = h / 24; return d < 60 ? `${Math.round(d)} days` : `${Math.round(d / 30)} months`; };
 /** Seconds that pass outside for a drawn journey, and the words for the card: {seconds, rule, words}. */
 export function timeOutside(j) {
   const t = REALM_TIME[j?.realm] ?? {rule: "same"};
   const hours = Math.max(0, Number(j?.hours) || 0);
   if ( t.rule === "thousandth" ) { const s = Math.max(1, Math.round(hours * 3600 / 1000)); return {seconds: s, rule: t.rule, words: `${s} seconds outside (a thousandth of ${hours} hours)`}; }
   if ( t.rule === "trod" && j?.arrival ) { const h = Math.max(1, Number(j.arrival.hours) || hours); return {seconds: h * 3600, rule: t.rule, words: `${h} hours outside (${slipWords(j.arrival)})`}; }
+  if ( t.rule === "random" && j?.slip?.factor ) { const sec = Math.max(1, Math.round(hours * 3600 * j.slip.factor)); return {seconds: sec, rule: t.rule, words: `${spanWords(sec)} outside (${j.slip.words}, d10 ${j.slip.d10})`}; }
+  if ( t.rule === "ratio" ) { const sec = Math.round(hours * 3600 * (Number(t.ratio) || 1)); return {seconds: sec, rule: t.rule, words: `${spanWords(sec)} outside`, note: t.note ?? null}; }
   return {seconds: Math.round(hours * 3600), rule: t.rule, words: `${hours} hours outside`, note: t.note ?? null};
 }

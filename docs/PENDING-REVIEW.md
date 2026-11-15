@@ -1399,6 +1399,22 @@ Ben approved everything that was waiting for review ("Approved on all pending re
 | 2026-11-14 | The fuel tank (B4796) | Any hit on a motor vehicle with 3 successes and 6 levels sets the fuel off: 12 aggravated dice to all aboard, burnt out, a fire on the map; no separate aim at the tank | Have fuelGoes return false, or ask for an aimed shot at the tank |
 | 2026-11-14 | NPCs taking vehicles (B4797) | A free vehicle within a run that the NPC can drive: just above flight when fleeing, or above the best attack when every foe is beyond a run; at the reins it moves at the vehicle's pace | Have boardOption in npc-rules.mjs return null, or change its scores |
 
+## Approved by Ben, 14 November 2026, 22:15 UTC (Powers Bounds Desk)
+
+Ben picked the recommendation on all 29 desk items (https://claude.ai/artifact/AfpAP4mUt6heeikGRwk9Cd).
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-14 | Summoning control by profile (B4821) | Book servants are moved by the summoner's player; called beings take orders through the Orders tool; wild ones go for the nearest | summon-rules.js resolve() |
+| 2026-11-14 | An NPC's summoning runs by itself (B4837) | A plain being of the book's kind comes beside the NPC and serves it, no click needed; the Storyteller can dismiss or Undo | route pick for an NPC's summon in effects.js planOf |
+| 2026-11-14 | Away from the summoner is 20 yards (B4823) | A being that obeys only while near rolls its keeping roll each turn past 20 yards | AWAY_YARDS in summons.js |
+| 2026-11-14 | More than 12 summoned beings come as one swarm token (B4820) | Up to 12 tokens, then one swarm token with the count on its card | MAX_TOKENS in summon-rules.js |
+| 2026-11-14 | A familiar takes orders (B4824) | The M20 familiar takes the mage's orders and is not moved by the player | the familiar spec in summon-specs.js |
+| 2026-11-14 | Made things fade unless Prime makes them real (B4830) | A Make result vanishes when its duration ends; with Prime in the casting it stays | the lasting line in effects-rules.js make |
+| 2026-11-14 | One success throws off a resisted effect (B4831) | Hold, fear, sway, possession, bind and illusion end on any success of the target's resist roll | resolveResist in effects.js |
+| 2026-11-14 | Powers tagged as summonings that call nothing (B4836) | 22 powers work through Bind, Make or Sway instead of a summoning | NOT_SUMMON in summon-specs.js |
+| 2026-11-14 | Unclear summoning pages (B4820) | Solomonic Summoning, The Giant's Dance, Slip the Shadow, Welcoming Waters, Summon the Pack and Blood that wakes the image built from the best reading of badly scanned or silent pages | their entries in summon-specs.js |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |

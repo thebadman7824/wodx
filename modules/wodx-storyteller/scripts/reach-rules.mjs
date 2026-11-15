@@ -231,3 +231,15 @@ export function writeMoves(w = {}) {
   return {factions: [{op: "standing", delta: 1}], memory: [{op: "memory", kind: "warm"}], ledger: [{op: "debt", from: "npc", size: "minor"}],
     hunters: [{op: "hunters", n: 1, lead: true}], towns: [{op: "town", event: "dread"}]}[w.to] ?? [];
 }
+
+/**
+ * B4883: a call for help, and how long before help comes (house figures). A telephone or radio call brings the police
+ * (or the watch before 1600) in ten minutes; a bell, horn or shout brings the watch in twenty; with neither, a runner
+ * fetches them in half an hour. Returns {kind, seconds, words}.
+ */
+export function helpPlan(how = "shout", year = 1197) {
+  const wired = (how === "phone" && num(year) >= 1890) || (how === "radio" && num(year) >= 1930);
+  const minutes = wired ? 10 : how === "bell" || how === "shout" ? 20 : 30;
+  return {kind: "law", seconds: minutes * 60, minutes, words: forceWords("law", year)};
+}
+export const helpDue = (list = [], now = 0) => (Array.isArray(list) ? list : []).filter(h => h && num(h.at) <= num(now));

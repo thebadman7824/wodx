@@ -69,9 +69,11 @@ export async function court(lover, loved, event, {successes = 0, botch = false, 
   const age = ageCheck(a, b);
   if ( !age.ok ) return {ok: false, why: age.why};
   const h = hindranceFor(a, b);
+  const before = H.normWarmth(a.flags?.[MOD]?.warmth)[b.id]?.value ?? 0;
   const t = H.moveWarmth(a.flags?.[MOD]?.warmth, b.id, event, {at: game.time.worldTime, why, nature: a.system?.nature ?? "", successes, botch, cap: h.cap, halve: h.halve});
   await a.setFlag(MOD, "warmth", t);
-  return {...t[b.id], word: H.warmthWord(t[b.id].value), notes: h.notes};
+  const broken = H.heartbreakDue(before, t[b.id].value, event, botch) ? await heartbreak(a, b).catch(e => { console.error(`${MOD} | heartbreak`, e); return null; }) : null;
+  return {...t[b.id], word: H.warmthWord(t[b.id].value), notes: h.notes, ...(broken ? {heartbreak: broken} : {})};
 }
 export const courtship = ({region = regionNow(), year = yearNow()} = {}) => H.courtshipFor(sphereNow(region, year), year);
 
@@ -250,6 +252,20 @@ async function grieve(who, kind) {
     if ( res.derange ) { const k = await game.modules.get("wodx-chronicle")?.api?.derangements?.gain?.(who, "loss", "from grief"); if ( k ) line += " The loss leaves a derangement."; }
   }
   return {line, roll};
+}
+/** A heartbreak: Willpower at difficulty 7 for the one whose heart broke; a botch draws a derangement from the loss table. */
+async function heartbreak(who, other) {
+  const dice = Math.max(1, Number(who.system?.advantages?.willpower?.permanent) || 3);
+  const roll = await new Roll(`${dice}d10`).evaluate();
+  const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
+  const hits = faces.filter(f => f >= H.HEARTBREAK_DIFF).length, ones = faces.filter(f => f === 1).length;
+  const botch = hits === 0 && ones > 0;
+  let line = `Willpower ${dice} dice at ${H.HEARTBREAK_DIFF}: ${faces.join(", ")}. `, key = null;
+  if ( botch ) { key = await game.modules.get("wodx-chronicle")?.api?.derangements?.gain?.(who, "loss", "from heartbreak"); line += key ? "It breaks something in them: a derangement." : "It breaks something in them."; }
+  else line += hits > ones ? "They bear it." : "It hurts, and it shows.";
+  await ChatMessage.create({whisper: ownersOf(who), speaker: {alias: who.name}, flags: {[MOD]: {heartCard: true}}, rolls: [roll],
+    content: card(`${who.name}'s heart breaks over ${other.name}`, [line])});
+  return {botch, derangement: key};
 }
 async function tellLoved(victim, ev) {
   if ( !isActiveGM() || !on() || !victim?.id ) return [];
