@@ -13,6 +13,7 @@
  * after their leader stops moving, on the Storyteller's client only; players' clients do nothing but send the request.
  */
 import * as O from "./order-rules.mjs";
+import * as SV from "./servants.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export const T_ORDER = "wodx-npc.order";
@@ -27,7 +28,8 @@ export function build(ctx) {
   };
   const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
   const owned = user => game.actors.filter(a => a.testUserPermission?.(user, "OWNER") && a.hasPlayerOwner).map(a => a.id);
-  const servesOf = a => O.servesFrom(a?.flags);
+  // B5101: the one bond ledger adds its masters (Kinfolk, revenants, cultists, Thralls, fomori, the conditioned...)
+  const servesOf = a => { const out = O.servesFrom(a?.flags); try { for ( const id of SV.mastersOf(a) ) if ( !out.includes(id) ) out.push(id); } catch (e) { /* no ledger */ } return out; };
   const ST = () => game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null;
   const AC = () => game.modules.get("wodx-actions")?.active ? (game.modules.get("wodx-actions").api ?? game.wodxActions) : null;
   const IA = () => game.modules.get("wodx-interactables")?.active ? game.modules.get("wodx-interactables").api : null;
@@ -55,7 +57,9 @@ export function build(ctx) {
     const drinks = npc?.flags?.["wodx-creation"]?.lineage?.bonds?.[leaderId]?.drinks ?? 0;
     let step = 0;
     try { step = Number(attitude?.()?.of?.(npc, game.actors.get(leaderId))?.step) || 0; } catch (e) { step = 0; }
-    return O.loyaltyCheck({bondStage: Math.min(3, Number(drinks) || 0), step, willpower: npc?.system?.advantages?.willpower?.permanent ?? 3});
+    let weight = null;
+    try { weight = SV.orderWeight(npc, leaderId); } catch (e) { weight = null; }
+    return O.loyaltyCheck({bondStage: Math.min(3, Number(drinks) || 0), step, willpower: npc?.system?.advantages?.willpower?.permanent ?? 3, weight});
   }
   const orderOf = a => O.normOrder(flag(a, "order"));
   const names = () => Object.fromEntries(Array.from(game.actors ?? [], a => [a.id, a.name]));

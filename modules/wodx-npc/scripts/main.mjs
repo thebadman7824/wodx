@@ -42,6 +42,7 @@ import * as RV from "./rivalry-rules.mjs";
 import * as KIN from "./kin.mjs";
 import * as FATES from "./fates.mjs";
 import * as BONDS from "./bonds.mjs";
+import * as SERVANTS from "./servants.mjs";
 import * as TRUST from "./trust.mjs";
 import * as MEMORY from "./memory.mjs";
 import * as HEARTS from "./hearts.mjs";
@@ -920,7 +921,7 @@ passersby.hooks();
 const overheard = buildOverheard({MOD, esc, isActiveGM, chron, savedProfile, talk, nameFor: (t, u) => Faces.nameFor(t, u), sidesOf: a => rivalry.sidesOf(a)});
 overheard.hooks();
 const attitude = buildAttitude({MOD, chron, savedProfile, factions, rivalry, profileFor});
-Hooks.on("wodxChronicleReady", () => { attitude.registerHandler(); MEMORY.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); FATES.registerHandlers(); });
+Hooks.on("wodxChronicleReady", () => { SERVANTS.registerHandler(); attitude.registerHandler(); MEMORY.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); FATES.registerHandlers(); });
 /* 0.30.0: relationships, the family and lineage tree, secrets and hooks, why an NPC feels as they do */
 const people = buildPeople({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry});
 people.hooks();
@@ -961,6 +962,8 @@ Hooks.once("init", () => {
   FATES.listen();
   BONDS.registerSettings();
   BONDS.listen();
+  SERVANTS.registerSettings();
+  SERVANTS.listen();
   TRUST.listen();
   MEMORY.listen();
   HEARTS.registerSettings();
@@ -983,6 +986,10 @@ Hooks.once("init", () => {
     cults, openCults: cults.open,
     kin: {lines: KIN.lines, lineOf: KIN.lineOf, start: KIN.startLine, grow: KIN.growLines, descendants: KIN.descendants, bring: KIN.bring, reportFor: KIN.reportFor, rules: KIN.rules},
     bonds: {stepToward: BONDS.stepToward, socialShift: BONDS.socialShift, vinculum: BONDS.vinculum, rules: BONDS.rules},
+    servants: {records: SERVANTS.records, mastersOf: SERVANTS.mastersOf, servantsOf: SERVANTS.servantsOf, bind: SERVANTS.bind, unbind: SERVANTS.unbind,
+      restrain: SERVANTS.restrain, orderWeight: SERVANTS.orderWeight, warmFloor: SERVANTS.warmFloor, dominateShift: SERVANTS.dominateShift,
+      condition: SERVANTS.condition, socialRoll: SERVANTS.socialRoll, flash: SERVANTS.flash, flashBetween: SERVANTS.flashBetween,
+      openBind: SERVANTS.openBind, setRevenantMaster: SERVANTS.setRevenantMaster, familyKeyOf: SERVANTS.familyKeyOf, rules: SERVANTS.rules},
     memory: {remember: MEMORY.remember, balance: MEMORY.balanceOf, known: MEMORY.knownBy, turn: MEMORY.turn, open: MEMORY.rememberedDialog, fromTrust: MEMORY.fromTrust, rules: MEMORY.rules},
     trust: {of: TRUST.trustOf, move: TRUST.moveTrust, betray: TRUST.betray, debtWord: TRUST.debtWord, tradeBoon: TRUST.tradeBoon, blackmail: TRUST.blackmail,
       answerBlackmail: TRUST.answerBlackmail, sideOf: TRUST.sideOf, setSide: TRUST.setSide, howToFind: TRUST.howToFind, foundSide: TRUST.foundSide, rules: TRUST.rules},

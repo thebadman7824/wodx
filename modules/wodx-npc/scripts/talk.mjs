@@ -193,7 +193,7 @@ export function build(ctx) {
     try { wc = chron()?.when?.context?.({actor: pc}) ?? {}; year = wc.year ?? null; branch = wc.branch ?? ""; } catch (e) { /* no calendar */ }
     let att = npc?.flags?.[MOD]?.attitude?.[pc?.id]?.step ?? null;
     // NPC 0.12.0: the attitude track, which seeds a first meeting from the household or faction
-    try { const o = game.modules.get(MOD)?.api?.attitude?.of?.(npc, pc); if ( o?.met ) att = o.step; } catch (e) { /* keep the saved step */ }
+    try { const o = game.modules.get(MOD)?.api?.attitude?.of?.(npc, pc); if ( o?.met || o?.floor ) att = o.step; } catch (e) { /* keep the saved step */ }
     let standings = [];
     try {
       const people = game.modules.get(MOD)?.api?.factions?.peopleOf?.(pc.id) ?? {};

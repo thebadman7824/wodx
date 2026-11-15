@@ -50,6 +50,8 @@ const edges = () => game.modules.get(MOD).api?.ties?.edges?.() ?? [];
 
 export async function onAttack(attacker, data = {}) {
   if ( !isActiveGM() || !on() ) return [];
+  // B5102: with "Bonds hold back a blow" on, the roll was made before the blow; no card after it
+  try { if ( game.settings.get(MOD, "servantRestraint") !== false ) return []; } catch (e) { /* setting not there */ }
   const by = actorOf(attacker), of = actorOf(data.target);
   if ( !by || !of ) return [];
   return tell(BR.cardsFor({kind: "attack", by: by.id, of: of.id}, [], {stepOf: (a, b) => stepToward(a, b)}), `${by.name} strikes at ${of.name}`);
