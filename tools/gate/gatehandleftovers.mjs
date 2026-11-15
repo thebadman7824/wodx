@@ -29,7 +29,7 @@ export async function run() {
       {name: "Gate Leftovers Hurt", type: "Mortal", prototypeToken: {actorLink: true}},
       {name: "Gate Leftovers Mark", type: "Mortal", prototypeToken: {actorLink: true}},
       {name: "Gate Leftovers Blackmailer", type: "Mortal", prototypeToken: {actorLink: true}},
-      {name: "Gate Leftovers Untamable", type: "Mortal", prototypeToken: {actorLink: true}}]);
+      {name: "Gate Leftovers Untamable", type: "Werewolf", prototypeToken: {actorLink: true}}]);
     await wolf.createEmbeddedDocuments("Item", [{name: "Untamable", type: "Feature", system: {type: "wod.types.merit", value: 6}}]);
     await G.tokens(scene, [{actor: martyr, x: 3, y: 3}, {actor: hurt, x: 4, y: 3}, {actor: blackmailer, x: 9, y: 9}]);
 
@@ -52,7 +52,9 @@ export async function run() {
 
     await G.step("3 martyr", async () => {
       const before = game.messages.size;
-      await game.wodxCombat?.applyDamage?.(game.actors.get(hurt.id), "bashing", 2);
+      // a wound from an attack card sends wodxDamageApplied (WoDX Combat); a bare api call does not, so the gate sends it
+      const h = game.actors.get(hurt.id), r = await game.wodxCombat?.applyDamage?.(h, "bashing", 2);
+      Hooks.callAll("wodxDamageApplied", h, {type: "bashing", levels: 2, before: r?.before, after: r?.after});
       const card = await waitFor(() => [...game.messages].slice(before).some(m => /can take the wound/.test(m.content ?? "")), 5000);
       G.ok("3 martyr", !!card, {card: !!card, combat: !!game.wodxCombat});
     });
