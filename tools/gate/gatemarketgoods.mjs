@@ -34,6 +34,9 @@ export async function run() {
     const year = Number(ch()?.eras?.currentYear?.()) || 1197;
     const wayOf = r => ch().world.rules.sphereFor(r, year);
     const inUse = (r, way) => (g, y) => W.inUseAt(g, y, {way, region: r});
+    // the dearest goods first, so rounding a price of a coin or two does not hide the factor
+    const valueOf = x => Number(x.values?.[ch()?.eras?.activeEra?.()?.profile?.id] ?? x.value ?? 0);
+    const byValue = [...GOODS].sort((a, b) => valueOf(b) - valueOf(a));
     const price = async (name, scene, on = true) => {
       await game.settings.set(ST, "goodsByPlace", on);
       return money().price(name, {scene});
@@ -44,7 +47,7 @@ export async function run() {
     });
     await G.step("2. Kyoto: brought from far off", async () => {
       const jp = {region: "japan", way: wayOf("japan")};
-      const g = GOODS.find(x => x.ways && x.kind !== "coin" && x.from <= year && (x.to ?? 9999) >= year && GP.placeOf(x, year, inUse("japan", jp.way), jp).why === "far");
+      const g = byValue.find(x => x.ways && x.kind !== "coin" && x.from <= year && (x.to ?? 9999) >= year && GP.placeOf(x, year, inUse("japan", jp.way), jp).why === "far");
       const on = g ? await price(g.name, kyoto, true) : null, off = g ? await price(g.name, kyoto, false) : null;
       const ratio = on && off ? on.each / off.each : 0;
       G.ok("2. Kyoto: brought from far off", !!g && on.origin === "far" && /brought from far off/.test(on.text) && ratio > 2.3 && ratio < 3.8,
@@ -52,7 +55,7 @@ export async function run() {
     });
     await G.step("3. Moravia: the land's own", async () => {
       const mo = {region: "moravia", way: wayOf("moravia")};
-      const g = GOODS.find(x => x.ways && x.kind !== "coin" && x.from <= year && (x.to ?? 9999) >= year && GP.placeOf(x, year, inUse("moravia", mo.way), mo).why === "own");
+      const g = byValue.find(x => x.ways && x.kind !== "coin" && x.from <= year && (x.to ?? 9999) >= year && GP.placeOf(x, year, inUse("moravia", mo.way), mo).why === "own");
       const on = g ? await price(g.name, brno, true) : null, off = g ? await price(g.name, brno, false) : null;
       const ratio = on && off ? on.each / off.each : 0;
       G.ok("3. Moravia: the land's own", !!g && on.origin === "own" && /the land's own/.test(on.text) && ratio > 0.55 && ratio < 0.95, {good: g?.name, ratio, text: on?.text});
@@ -61,9 +64,9 @@ export async function run() {
     const kinds = Object.keys((await import(`/modules/wodx-library/data/goods.mjs`)).KINDS ?? {});
     const mid = "wodx-gate-kyoto";
     await G.step("4. the market window names the land's trade", async () => {
-      const s = st().markets.state();
+      const s = st().upkeep.markets.state();
       await game.settings.set(ST, "markets", {...s, markets: [...s.markets.filter(m => m.id !== mid), {id: mid, name: "WoDX gate: Kyoto market", scenes: [kyoto.id], index: {}, supply: {}, traders: [], links: []}]});
-      st().markets.edit(mid);
+      st().upkeep.markets.edit(mid);
       const find = () => [...foundry.applications.instances.values()].find(a => a.element?.querySelector?.(".wst-land-trade-line"));
       await waitFor(find, 8000);
       const app = find(), text = app?.element?.querySelector(".wst-land-trade-line")?.textContent ?? "";
@@ -72,7 +75,7 @@ export async function run() {
     });
     await G.step("5. a caravan names goods of Japan", async () => {
       const c = {id: "gatecaravan", from: mid, to: "elsewhere", fromName: "Kyoto", toName: "Osaka", ship: [], kinds: ["papers", "drink", "kitchen"], way: "pack", left: 0, arrive: 86400};
-      const line = st().caravans.describe(c);
+      const line = st().upkeep.caravans.describe(c);
       G.ok("5. a caravan names goods of Japan", /\(/.test(line), {line});
     });
     await G.step("6. plague at home moves the markets once", async () => {
@@ -82,10 +85,10 @@ export async function run() {
       const ev = n => ({id: `wh-${year}-wodx-gate-plague-${n}`, year, name: "WoDX gate: a plague", summary: "A sickness spreads.", region: part, tags: ["plague"]});
       // a card from an earlier run would hold the next one back
       for ( const m of game.messages.filter(m => m.flags?.[ST]?.marketNews?.world === "plague") ) await m.delete();
-      await st().marketNews.hear(ev(1));
+      await st().upkeep.marketNews.hear(ev(1));
       await waitFor(() => cards().length >= 1, 6000);
       const first = cards().length;
-      await st().marketNews.hear(ev(2));
+      await st().upkeep.marketNews.hear(ev(2));
       await new Promise(r => setTimeout(r, 800));
       G.ok("6. plague at home moves the markets once", first === 1 && cards().length === 1, {first, after: cards().length, part});
     });
