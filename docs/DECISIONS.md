@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6500
+Next free block: B6510
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -347,6 +347,7 @@ Next free block: B6500
 | B6300-B6309 | Every line level with vampires in shared modules (Actions, Combat) (used B6300-B6308) | Actions, Combat |
 | B6350-B6359 | gate kit yearAtLeast, gatearms and gateplayerextras (used B6350-B6353) | tools (gates) |
 | B6490-B6499 | pc queue ageing (used B6490) | tools (pcq) |
+| B6500-B6509 | lanes ignore the dawn and dusk move and session id (used B6500) | tools (lanes) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10760,3 +10761,12 @@ each full hour it has waited, never past 1; ties still go to the older issue. A 
 hours, and a p3 job within two.
 
 Reverse: sort by the priority given alone.
+
+## B6500. Lane drift checks pass over the session id and the once-per-world dawn and dusk move (2026-11-15)
+PC lanes. Lane 4 reported DRIFT on job 1637 right after a reset from its clean copy, and no gate ran. Two world
+settings had changed on their own: the session id that WoDX Actions sets when a GM first loads, and dawnDusk, which
+the once-per-world move to dawn and dusk by themselves (B4895) changes. That move runs again on every reset because the
+clean copies predate it. The drift check now passes over sessionId, dawnDusk, sunDamage and autoDayV1. A fresh clean
+copy (`lanes.mjs snapshot --from 1`, which Ben runs) would also clear it.
+
+Reverse: take the four settings out of ignoreSettings in tools/lanes/lanes.json.
