@@ -156,11 +156,7 @@ export function betweenPlan(c = {}, {nights = 0, willpowerMode = "night", nightl
         warn: n > have ? "It would have cost more Chi than the pools hold: the Storyteller decides whether they fed." : (y + i <= 0 ? "No Chi left: hungry. Feed with the Hunt button." : null)});
     }
   }
-  // B6322: a Garou or Fera regains Rage the first time each night it sees the moon, at least one point (W20 pdf 147)
-  if ( c.shifter && !c.torpor ) {
-    const r = num(c.rage?.temp), p = num(c.rage?.perm), to = Math.min(p, r + Math.max(1, num(c.moonRage)) * n);
-    if ( to > r ) { delta.rage = to - r; lines.push({key: "rage", text: `The moon brings Rage back each night: ${r} to ${to}.`}); }
-  }
+  // B6322: a shapechanger's Rage is not added here: WoDX Actions' moonRise already gives moon Rage after every skip
   if ( !c.torpor && willpowerMode === "night" ) {
     const t = num(c.willpower?.temp), p = num(c.willpower?.perm), to = Math.min(p, t + n);
     if ( to > t ) { delta.willpower = to - t; lines.push({key: "willpower", text: `Willpower comes back one a night: ${t} to ${to}.`}); }

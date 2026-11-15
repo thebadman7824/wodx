@@ -87,8 +87,8 @@ async function applyDelta(a, delta, sign = 1) {
     const b = num(s.bloodpool?.temporary), to = Math.max(0, Math.min(num(s.bloodpool?.max) || Infinity, b + sign * delta.blood));
     if ( to !== b ) { upd["system.advantages.bloodpool.temporary"] = to; done.blood = to - b; }
   }
-  // B6321-B6322: a Kuei-jin's Chi and a Garou's Rage, as the Kindred's blood
-  for ( const [k, cap] of [["yangchi", "permanent"], ["yinchi", "permanent"], ["rage", "permanent"]] ) {
+  // B6321: a Kuei-jin's Chi, as the Kindred's blood
+  for ( const [k, cap] of [["yangchi", "permanent"], ["yinchi", "permanent"]] ) {
     if ( !delta[k] ) continue;
     const v = num(s[k]?.temporary), top = num(s[k]?.[cap]) || num(s[k]?.max) || Infinity;
     const to = Math.max(0, Math.min(top, v + sign * delta[k]));
@@ -113,12 +113,12 @@ async function approveBetween(entry) {
     const bits = [];
     if ( done.blood ) bits.push(`blood ${done.blood > 0 ? "+" : ""}${done.blood}`);
     if ( done.willpower ) bits.push(`Willpower ${done.willpower > 0 ? "+" : ""}${done.willpower}`);
-    for ( const [k, w] of [["yangchi", "Yang Chi"], ["yinchi", "Yin Chi"], ["rage", "Rage"]] ) if ( done[k] ) bits.push(`${w} ${done[k] > 0 ? "+" : ""}${done[k]}`);
+    for ( const [k, w] of [["yangchi", "Yang Chi"], ["yinchi", "Yin Chi"]] ) if ( done[k] ) bits.push(`${w} ${done[k] > 0 ? "+" : ""}${done[k]}`);
     lines.push(`<li><b>${esc(a.name)}</b>: ${bits.join(", ")}</li>`);
   }
   if ( !applied.length ) return;
   await ChatMessage.create({content: `<div class="wodx-card wst-between"><h3>Between nights</h3><ul>${lines.join("")}</ul>
-    <p class="wodx-quiet">Rising costs a blood a night (VtDA20 p. 340), a Chi for a Kuei-jin (Kindred of the East pdf 127); the moon brings back Rage (W20 pdf 147); Willpower one a night (VtDA20 p. 309).</p>
+    <p class="wodx-quiet">Rising costs a blood a night (VtDA20 p. 340), a Chi for a Kuei-jin (Kindred of the East pdf 127); Willpower one a night (VtDA20 p. 309).</p>
     <button type="button" data-action="wst-between-undo"><i class="fa-solid fa-rotate-left"></i> Undo</button></div>`,
     whisper: gmIds(), speaker: {alias: "Between nights"}, flags: {[MOD]: {betweenUndo: applied}}});
 }

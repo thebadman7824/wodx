@@ -30,15 +30,14 @@ test("the dashboard shows each line's own pools, and the lowest leads", () => {
   assert.deepEqual(D.partyRow({type: "Demon", system: {advantages: {faith: {temporary: 3, max: 6}, torment: {temporary: 2, max: 10}}}}).pools.map(p => p.key), ["faith", "torment"]);
 });
 
-test("between nights: a Kuei-jin pays Chi to rise, a Garou's Rage comes back with the moon", () => {
+test("between nights: a Kuei-jin pays Chi to rise; Rage stays with WoDX Actions' moon", () => {
   const k = U.betweenPlan({kueijin: true, chi: {yang: 3, yin: 1}}, {nights: 3});
   assert.equal((k.delta.yangchi ?? 0) + (k.delta.yinchi ?? 0), -3);
   assert.ok(k.lines.some(l => l.key === "chi"));
   assert.ok(!k.lines.some(l => l.key === "blood"), "no blood for a Cathayan");
   assert.match(U.betweenPlan({kueijin: true, chi: {yang: 1, yin: 0}}, {nights: 3}).lines.find(l => l.key === "chi").warn, /more Chi/);
   const g = U.betweenPlan({shifter: true, rage: {temp: 1, perm: 5}}, {nights: 2});
-  assert.equal(g.delta.rage, 2);
-  assert.equal(U.betweenPlan({shifter: true, rage: {temp: 5, perm: 5}}, {nights: 2}).delta.rage, undefined, "never above the rating");
+  assert.equal(g.delta.rage, undefined, "B6322: moonRise in WoDX Actions already gives Rage after a skip, so it is not counted twice");
   const v = U.betweenPlan({vampire: true, blood: {value: 5, max: 10}}, {nights: 2});
   assert.equal(v.delta.blood, -2, "the Kindred as before");
 });

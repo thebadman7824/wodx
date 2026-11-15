@@ -4,7 +4,7 @@
  *   await (await import(`/wodx-gate/gatelinest.mjs?${Date.now()}`)).run()
  * Never moves the clock (between nights is called with a from and to of its own). Makes its own actors.
  *   1. the dashboard row of a Kuei-jin shows Yang and Yin Chi, not blood; a Garou's shows Rage and Gnosis
- *   2. between nights: approving the card takes a Chi a night from a Kuei-jin and gives a Garou Rage back
+ *   2. between nights: approving the card takes a Chi a night from a Kuei-jin and leaves Rage to the moon
  *   3. ties: a changeling's Dreamers and a wraith's Haunt are ties to tend
  * Result: Data/wodx-gate/gatelinest-result.json.
  */
@@ -43,7 +43,7 @@ export async function run() {
       const entry = (AP()?.pending?.() ?? []).find(e => e.key === `between:${from}:${to}`);
       if ( entry ) await AP().decide(entry.id, "approve");
       const yang = Number(kj.system.advantages.yangchi.temporary), yin = Number(kj.system.advantages.yinchi.temporary), rage = Number(ga.system.advantages.rage.temporary);
-      G.ok("2. between nights", yang + yin < 7 && rage > 1, {queued: !!entry, yang, yin, rage});
+      G.ok("2. between nights", yang + yin < 7, {queued: !!entry, yang, yin, rage});
     });
 
     await G.step("3. ties", async () => {
