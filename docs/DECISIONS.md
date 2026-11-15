@@ -240,7 +240,7 @@ Next free block: B5640
 | B4920-B4949 | Power limits after Princes of Darkness: one scene count, use limits, Drained, after-costs, NPC power choice (used B4920-B4929) | Actions, NPC |
 | B4950-B4959 | Tuareg names (used B4950-B4952) | Creation, Chronicle |
 | B4960-B4969 | Bicycles, supernatural mounts, mount and vehicle sprites with riders (used B4960-B4969) | Interactables, Combat, NPC |
-| B4970-B4979 | Mount and vehicle sprites with riders, by era, shape and colour (used B4970-B4976) | Paperdoll |
+| B4970-B4979 | Mount and vehicle sprites with riders, by era, shape and colour (used B4970-B4977) | Paperdoll |
 | B4980-B4999 | The Automation Desk: player actions that follow the rules by themselves, every line (used B4980-B4999) | Actions, Chronicle |
 | B5000-B5009 | Moro names (used B5000-B5002) | Creation, Chronicle |
 | B5010-B5029 | The Storyteller's Hand, part three: fire, noticing, and the rest of the desk acts by itself (Ben's desk picks, 14 November 2026) (used B5010-B5024) | Interactables, Actions, Senses, Library, Chronicle, Storyteller, Otherworlds, Creation |
@@ -7998,6 +7998,11 @@ Reverse: drop the own branch in mounts.mjs tick().
 WoDX Paperdoll. Nine looks from 2023, the first year past the main timeline, so they show only on the Future Darkness branch: two ducted-fan flying cars, a tilt-rotor transport and an autogyro (with the helicopters), a hover bike, a combat hovercraft, an armoured cab, a tracked capsule and an airship liner. They join the row before them instead of replacing it, so the ordinary machines of the day are still seen beside them, and give way to the 2040 row. They follow the vehicles the near-future game books we hold describe (the research note lists the books and pages), drawn fresh under plain names; no figures are taken over, as the looks change nothing in the rules.
 
 Reverse: remove the looks marked adds in tools/sprites/mount_*.py and run mounts.py.
+
+## B4977. A vehicle sheet's style picks among the shapes (2026-11-15)
+WoDX Paperdoll. A vehicle on its own sheet (WoDX Interactables) carries a style: fine, rugged, sporting, working, official, luxury, hearse, cab, up-armoured or custom. Among the shapes drawn for the vehicle's year, the ones that suit that style are used (a rugged car of 1995 is the four-by-four, a sporting car of 1925 the roadster); where none suits, the year's shapes stand as they are. Worn has no shape of its own: it takes rusted paint where the sheet names no colour. A shape or colours the Storyteller picks on the palette button still win. House table (mount-rules FINISH), since the books give vehicles no looks.
+
+Reverse: drop `finish` from mountOf in mounts.mjs; the sheet's style then changes nothing drawn.
 
 ## B4980. The Beast's checks roll by themselves (2026-11-14)
 WoDX Actions. When a wound, hunger, the sight of blood, fire or the sun provokes the Beast, the frenzy or Rötschreck check is rolled by itself with the same difficulty the dialog would use (dawn dread, fire steps, Merits and Flaws). It repeats each turn while the result holds, up to eight turns. Willpower is spent to hold only when the character is marked to in the check's dialog. Characters on Golconda, in torpor or already in frenzy are skipped. Setting "Frenzy and Rötschreck by themselves", on by default (Ben's v2 pick).

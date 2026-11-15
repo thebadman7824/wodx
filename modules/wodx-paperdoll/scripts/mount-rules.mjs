@@ -52,8 +52,29 @@ export function lookFor(kind, year, pick = {}) {
   // the era's own row, and the looks that have joined it since (B4976)
   const next = eras.find(e => e > era) ?? Infinity;
   const own = all.filter(l => l.adds ? l.from >= era && l.from <= y && l.from < next : l.from === era);
-  return own[hash(`${pick.seed ?? ""}:shape`) % own.length];
+  // what its sheet says of it (B4977): the shapes of its year that suit, when there are any
+  const suit = pick.finish ? own.filter(l => (FINISH[pick.finish] ?? []).includes(l.style)) : [];
+  const from = suit.length ? suit : own;
+  return from[hash(`${pick.seed ?? ""}:shape`) % from.length];
 }
+
+/**
+ * The styles a vehicle sheet offers (WoDX Interactables), as the drawn shapes that suit each (B4977). A sheet's style
+ * narrows the shapes of the vehicle's year; where none of them suits, the year's shapes stand as they are. "Worn" has
+ * no shape of its own: it takes rusted paint where the sheet names no colour.
+ */
+export const FINISH = {
+  fine: ["saloon", "sedan", "brougham", "landau", "berline", "victoria", "tourer", "executive", "business", "cruiser", "roadster", "ladies", "airliner", "launch"],
+  luxury: ["saloon", "brougham", "landau", "berline", "coach", "tourer", "executive", "business", "cruiser", "airship", "liner", "airliner", "launch"],
+  rugged: ["fourbyfour", "field", "trail", "mountain", "bush", "mrap", "wagon", "halftrack", "utility", "rib", "work", "whaler", "despatch"],
+  sporting: ["sport", "roadster", "coupe", "racer", "cafe", "speed", "aerobatic", "bmx", "chariot", "calash", "runabout", "foil", "swift", "dart"],
+  working: ["estate", "delivery", "cargo", "work", "flat", "tipper", "tanker", "covered", "utility", "cart", "wagon", "wain", "combination", "courier", "turboprop", "floatplane", "skiff", "punt", "hatch"],
+  official: ["police", "patrol", "despatch", "sedan", "saloon", "rescue", "riot", "stage", "stagecoach", "courier", "scout", "roadster", "launch"],
+  hearse: ["estate", "brougham", "berline", "covered", "tonneau"],
+  taxi: ["cab", "hansom", "sedan", "saloon", "tonneau", "brougham", "compact", "flyingcar"],
+  armoured: ["armedcab", "mrap", "heavy", "field", "fourbyfour", "gunship", "turret", "carrier"],
+  custom: ["chopper", "sport", "roadster", "coupe", "cafe", "bmx", "pod"]
+};
 
 /** The colours a vehicle sheet offers (WoDX Interactables), as paint, to find the nearest scheme a look has. */
 export const PAINT = {black: [44, 42, 48], white: [226, 226, 222], grey: [130, 132, 136], silver: [170, 174, 180], red: [176, 40, 36], maroon: [108, 30, 38],
@@ -65,9 +86,10 @@ export function schemeFor(look, pick = {}) {
   const all = schemesOf(look);
   if ( !all.length ) return null;
   if ( pick.scheme ) { const s = all.find(x => x.id === pick.scheme); if ( s ) return s; }
-  if ( pick.colour ) {
-    const same = all.find(x => x.id === pick.colour); if ( same ) return same;
-    const want = PAINT[pick.colour];
+  const colour = pick.colour || (pick.finish === "worn" ? "rust" : "");
+  if ( colour ) {
+    const same = all.find(x => x.id === colour); if ( same ) return same;
+    const want = PAINT[colour];
     if ( want ) {
       // nearest by hue first (each colour scaled to its strongest channel), then by how light it is
       const hue = c => { const m = Math.max(...c, 1); return c.map(v => v / m); }, light = c => (c[0] + c[1] + c[2]) / 765;
