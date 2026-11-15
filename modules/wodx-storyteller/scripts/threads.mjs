@@ -21,7 +21,6 @@ import * as Reach from "./reach.mjs";
 import * as T from "./threads-rules.mjs";
 import * as Signals from "./signals.mjs";
 import * as SR from "./signals-rules.mjs";
-import {CARDS} from "../data/threads-cards.mjs";
 import {MOD, esc, chron, isActiveGM, isPC, setting, mutate} from "./core.mjs";
 import {getLinesVeils} from "../../wodx-chronicle/scripts/journals.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
@@ -35,7 +34,15 @@ const futureOn = () => { try { return !!game.settings.get("wodx-chronicle", "rul
 const homeNow = () => { try { const h = chron()?.world?.homeland?.(); return (typeof h === "string" ? h : h?.id) || "moravia"; } catch (e) { return "moravia"; } };
 const gm = () => game.users.filter(u => u.isGM).map(u => u.id);
 const cardOf = key => DECK.find(c => c.key === key) ?? null;
-const DECK = CARDS.map(T.normCard).filter(Boolean);
+/*
+ * The hook cards (data/threads-cards.mjs, about 290 KB) load the first time the weave, the window or a storyline
+ * needs them (B6241). Every one of those runs on the Storyteller's client, so a player's client never fetches them.
+ */
+let DECK = [], deckLoading = null;
+export function loadDeck() {
+  deckLoading ??= import("../data/threads-cards.mjs").then(m => (DECK = m.CARDS.map(T.normCard).filter(Boolean))).catch(err => { deckLoading = null; throw err; });
+  return deckLoading;
+}
 
 export function registerThreadSettings() {
   game.settings.register(MOD, "threads", {name: "Threads of Fate (storylines woven from what happens)", hint: "Off, Suggest (each storyline asks the Storyteller first) or Open by itself (it opens and the Storyteller is told). Woven once a week, when a session ends, and at once for great events.",
@@ -89,6 +96,7 @@ export async function run({force = false, why = "week"} = {}) {
   if ( !isActiveGM() || (!on() && !force) || running ) return null;
   running = true;
   try {
+    await loadDeck();
     for ( const s of gather() ) await Signals.post(s);
     const st = state(), t = now();
     const ctx = context();
@@ -148,6 +156,7 @@ function storyHtml(story) {
 export async function openStory(story) {
   if ( !game.user.isGM || !story?.key ) return null;
   if ( state().open.some(s => s.key === story.key) ) return null;
+  await loadDeck();
   const f = await folder();
   const j = await JournalEntry.create({name: story.title, folder: f.id, ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE}, flags: {[MOD]: {thread: story.key}},
     pages: [{name: story.title, type: "text", text: {content: storyHtml(story), format: 1}}]});
@@ -207,6 +216,7 @@ export async function endStory(key, endingKey) {
   if ( !game.user.isGM ) return null;
   const s = state().open.find(x => x.key === key);
   if ( !s ) return null;
+  await loadDeck();
   const a = cardOf(s.anchor);
   const e = a?.endings?.find(x => x.key === endingKey) ?? {key: endingKey || "ended", label: "It ends", writes: []};
   await save(st => T.close(st, key, e.key, now()));
@@ -299,6 +309,7 @@ export class ThreadsApp extends ApplicationV2 {
   static refresh() { if ( this.#instance?.rendered ) this.#instance.render(); }
 
   async _renderHTML() {
+    await loadDeck();
     const st = state(), cap = T.capacity(st), board = Signals.board();
     const openRow = s => {
       const a = cardOf(s.anchor);
@@ -361,4 +372,4 @@ export class ThreadsApp extends ApplicationV2 {
   }
 }
 
-export const api = () => ({rules: T, cards: DECK, context, run, open: () => ThreadsApp.open(), state, openStory, endStory, refuseStory, lockStory, unrefuse, refuseCard, addHook, tickSteps, nightBeat});
+export const api = () => ({rules: T, get cards() { return DECK; }, loadCards: loadDeck, context, run, open: () => ThreadsApp.open(), state, openStory, endStory, refuseStory, lockStory, unrefuse, refuseCard, addHook, tickSteps, nightBeat});

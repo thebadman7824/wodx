@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.110.2 (The Threads of Fate cards (about 290 KB) load the first time the weave, a storyline or the window needs them, all on the Storyteller's client; api.threads.loadCards() is new. The battle setup awaits the world timeline before listing the wars of the year (B6240, B6241))
 - 0.110.1 (Shared terms (B6180-B6199): a manhunt's patrols go out by the sun's night where the culprit is, and the day knock at a known haven only comes in daylight; a Kuei-jin is a day sleeper for the law too; a convened scene is released by the Storyteller's own End the scene, not by a new map; every dice count holds the difficulty to 2-10; time units, health levels and player characters come from WoDX Chronicle's shared terms. In battle the Exalted fight as their own kind, not as mummies)
 - 0.110.0 (Closed shelves give their dice (B6026): the card promised two dice on research for a season but nothing read the flag. It is now a roll effect lasting 90 days)
 - 0.109.1 (WoDX Storyteller travelPlaces (B6043). Before, the first scene with a travel flag made only flagged scenes count as places; a card scene carries a travel flag so its trip runs over the country map, and would have hidden every unmarked scene from the Travel window)
