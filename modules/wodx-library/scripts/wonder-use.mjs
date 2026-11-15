@@ -72,6 +72,56 @@ async function askFor(item, ask = {}) {
   return Number.isFinite(v) ? v : null;
 }
 
+const SOCKET = `module.${MOD}`;
+const tokenOf = actor => {
+  const own = actor?.getActiveTokens?.(true, true) ?? [];
+  const here = [...(canvas?.scene?.tokens ?? [])].filter(t => t.actorId === actor?.id || t.actor === actor);
+  return own.find(t => t?.parent?.id === canvas?.scene?.id) ?? here[0] ?? own[0] ?? null;
+};
+
+/**
+ * B6102: show what the power does. The figure plays its casting move (WoDX Paperdoll reads wodxPowerShown), the
+ * user's own token fades or glows (a player may change their own token), and a light that stays on the map goes
+ * through the Storyteller's computer. Returns the token's earlier look for the Undo, or null.
+ */
+async function showPower(item, actor, power, show = {}) {
+  let tokenWas = null;
+  try { Hooks.callAll("wodxPowerShown", actor, {power: power.label, group: item.name, kind: "artifact", line: flagOf(item)?.line ?? actor?.type ?? "", fx: show.fx ?? undefined}); } catch (e) { /* no figure */ }
+  const tok = tokenOf(actor);
+  if ( show.token && tok?.isOwner ) {
+    const was = flagOf(item)?.tokenWas;
+    if ( show.token.restore ) {
+      if ( was ) { await tok.update({alpha: was.alpha ?? 1, light: was.light ?? {}}); await item.update({[`flags.${MOD}.${P.FLAG}.tokenWas`]: null}); }
+    } else if ( show.token.set ) {
+      tokenWas = {alpha: tok.alpha ?? 1, light: tok.light?.toObject?.() ?? foundry.utils.deepClone(tok.light ?? {})};
+      if ( !was ) await item.update({[`flags.${MOD}.${P.FLAG}.tokenWas`]: tokenWas});
+      const up = {};
+      if ( show.token.set.alpha !== undefined ) up.alpha = n(show.token.set.alpha);
+      if ( show.token.set.light ) up.light = show.token.set.light;
+      await tok.update(up);
+    }
+  }
+  if ( show.place?.light && tok ) {
+    const op = {op: "wonderLight", scene: tok.parent?.id, x: n(tok.x) + n(tok.parent?.grid?.size) / 2, y: n(tok.y) + n(tok.parent?.grid?.size) / 2,
+      light: show.place.light, item: item.uuid, by: actor.name};
+    if ( game.user.isGM ) await onWonderSocket(op);
+    else if ( game.users.some(u => u.isGM && u.active) ) game.socket.emit(SOCKET, op);
+  }
+  return tokenWas;
+}
+
+/** The Storyteller's side of a light that stays (Redeyes hung in the storm, a candelabra burning). */
+export async function onWonderSocket(op) {
+  if ( op?.op !== "wonderLight" || !game.user.isGM || game.users.activeGM?.id !== game.user.id ) return null;
+  const sc = game.scenes.get(op.scene);
+  if ( !sc ) return null;
+  const L = op.light ?? {};
+  const [doc] = await sc.createEmbeddedDocuments("AmbientLight", [{x: n(op.x), y: n(op.y),
+    config: {bright: n(L.bright), dim: n(L.dim) || 2, color: String(L.color ?? "#c0141e"), alpha: n(L.alpha) || 0.6, animation: {type: L.animation ?? "torch", speed: 3, intensity: 4}},
+    flags: {[MOD]: {wonderLight: {item: String(op.item ?? ""), label: String(L.label ?? ""), by: String(op.by ?? "")}}}}]);
+  return doc ?? null;
+}
+
 const ownersOf = a => game.users.filter(u => a?.testUserPermission?.(u, "OWNER")).map(u => u.id);
 const gms = () => game.users.filter(u => u.isGM).map(u => u.id);
 
@@ -97,7 +147,10 @@ export async function runPower(item, key, actor, {answer = null} = {}) {
   if ( out.spent && f.worn?.length ) itemUp["system.bonuslist"] = P.wornList({...f, spent: true}, false, item.system?.bonuslist);
   if ( Object.keys(itemUp).length ) await item.update(itemUp);
   if ( Object.keys(out.actor).length ) await actor.update(out.actor);
-  const undo = {item: item.uuid, actor: actor.uuid, itemData: out.undo.item, actorData: out.undo.actor,
+  let tokenWas = null;
+  try { tokenWas = await showPower(item, actor, power, out.show); } catch (e) { console.warn(`${MOD} | wonder look`, e); }
+  const tok = tokenWas ? tokenOf(actor) : null;
+  const undo = {item: item.uuid, actor: actor.uuid, itemData: out.undo.item, actorData: out.undo.actor, token: tok ? tok.uuid : null, tokenData: tokenWas,
     bonuslist: out.spent && f.worn?.length ? (item.system?.bonuslist ?? []) : null};
   const rollHtml = r ? `<p>${esc(r.label)}: ${r.dice} dice at difficulty ${r.diff}${r.faces.length ? ` (${r.faces.join(", ")})` : ""}.</p>` : "";
   await ChatMessage.create({speaker: ChatMessage.getSpeaker({actor}), whisper: [...new Set([...ownersOf(actor), ...gms()])], rolls: r?.roll ? [r.roll] : [],
@@ -114,6 +167,7 @@ export async function undoCard(message) {
   if ( !(game.user.isGM || actor?.isOwner) ) { ui.notifications.warn("Only the Storyteller or the character's player can undo this."); return false; }
   if ( item && (Object.keys(u.itemData ?? {}).length || u.bonuslist) ) await item.update({...u.itemData, ...(u.bonuslist ? {"system.bonuslist": u.bonuslist} : {})});
   if ( actor && Object.keys(u.actorData ?? {}).length ) await actor.update(u.actorData);
+  if ( u.token && u.tokenData ) { const t = await fromUuid(u.token); if ( t?.isOwner ) await t.update({alpha: u.tokenData.alpha ?? 1, light: u.tokenData.light ?? {}}); if ( item ) await item.update({[`flags.${MOD}.${P.FLAG}.tokenWas`]: null}); }
   if ( message.isOwner || game.user.isGM ) await message.update({[`flags.${MOD}.wonderUndo.done`]: true, content: message.content.replace(/<button[^>]*wlib-wonder-undo[^>]*>Undo<\/button>/, "<p><i>Undone.</i></p>")});
   return true;
 }

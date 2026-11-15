@@ -1627,3 +1627,7 @@ Ben approved every entry that was waiting for review ("Approve on all pending re
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-15 | How hard a named Wraith Artifact is to forge (B6101) | 2 + 2 successes a level at the forge's own difficulty, Pathos half the goal; Skin Artifacts fed 2 Pathos a day, a botch adds an Angst; the eMap only from 1970 | Change goalFor in modules/wodx-library/data/wonders-wraith.mjs, or the row's from |
+| 2026-11-15 | Spectres forge with Angst (B6103) | Only Spectres make Spectre Artifacts, and they pay the soulfire in Angst | Make fuelOf in modules/wodx-library/scripts/wonders-wraith.mjs return Pathos |
+| 2026-11-15 | What a Fetterguard keeps (B6104) | A sealed Fetterguard keeps place Fetters from their town's sack, quake or ruin across the years; a Fetter naming someone who died is still lost | Drop the fetterguard check in modules/wodx-creation/scripts/advance-rules.mjs |
+| 2026-11-15 | Wraith Artifacts left off the crafting table (B6100) | Instant Nihils, Lucky's Mr. Bunny, the Maggot Revolver and the named relics are not made at the forge and are not built as items yet (found things, a follow-up) | Add rows to modules/wodx-library/data/wonders-wraith.mjs |
