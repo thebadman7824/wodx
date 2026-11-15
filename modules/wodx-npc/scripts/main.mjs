@@ -892,7 +892,7 @@ const phaseKey = combat => { const f = combat?.getFlag?.("wodx-combat", "conduct
  * B4926, B4927: the power this NPC would use now, by what the moment calls for; obvious powers wait while mortals
  * watch, unless the NPC is frenzied, cornered or near death. Null: no fitting power (the menu opens as before).
  */
-function powerPick(tok, aim = null) {
+function powerPick(tok, aim = null, {held = false} = {}) {
   if ( !setting("pickPowers") || savedProfile(tok.actor)?.noAutoPower ) return null;
   const list = A()?.npcPowers?.(tok.actor) ?? [];
   if ( !list.length ) return null;
@@ -900,7 +900,7 @@ function powerPick(tok, aim = null) {
   try { st = readFight(tok).state; } catch (e) { return null; }
   const s = st.self, combatId = game.combat?.id ?? "";
   const close = (st.enemies ?? []).filter(e => (e.distance ?? 99) <= 2).length;
-  return PP.pick(list, {
+  return (held ? PP.heldBack : PP.pick)(list, {
     wounds: s.wounds, nearDeath: s.wounds >= 6, losing: s.wounds >= 5 || (st.sideDown ?? 0) >= 0.5,
     outnumbered: (st.enemies?.length ?? 0) > (st.allies?.length ?? 0) + 1, frenzied: !!s.inFrenzy, cornered: close >= 2 && s.wounds >= 3,
     mortalsSee: (st.witnesses ?? 0) > 0, hasTarget: !!aim || (st.enemies ?? []).some(e => e.visible),
@@ -919,8 +919,11 @@ async function postPlan(tok, combat, {profile, options}, mode) {
     if ( o.action !== "power" ) return o;
     const a = NR.aimPower(o, ranked ??= rankPower(tok));
     // B4926: the card names the power the NPC would pick
-    const pp = powerPick(tok, canvas.tokens.get(ranked?.pick?.id ?? "") ?? null);
-    return pp ? {...a, power: pp.power.name, why: `${a.why}; ${pp.power.name}: ${pp.why}`} : a;
+    const aimTok = canvas.tokens.get(ranked?.pick?.id ?? "") ?? null;
+    const pp = powerPick(tok, aimTok);
+    if ( pp ) return {...a, power: pp.power.name, why: `${a.why}; ${pp.power.name}: ${pp.why}`};
+    // B6400: its fitting powers are all obvious and mortals are watching, so it holds them back
+    return powerPick(tok, aimTok, {held: true}) ? {...a, held: true, why: `${a.why}; holds its powers back: mortals are watching`} : a;
   });
   const flags = {plan: {token: tok.document.uuid, combatId: combat?.id ?? null, round: combat?.round ?? 0, combatant: combat?.combatant?.id ?? null, options: shown, mode}};
   let result = null, chosen = null, waiting = null;
@@ -930,7 +933,7 @@ async function postPlan(tok, combat, {profile, options}, mode) {
       const k = shown.indexOf(pick.act);
       const snap = snapshot([tok, ...(pick.act.target ? [canvas.tokens.get(pick.act.target)].filter(Boolean) : [])]);
       const r = await execute(tok, pick.act);
-      result = r.text; chosen = k;
+      result = pick.heldPower ? `${tok.name} holds back from using a power with mortals watching. ${r.text}` : r.text; chosen = k;
       flags.plan.done = {k, text: r.text, snap, added: r.added ?? [], path: r.path ?? null};
     } else waiting = pick.needsStoryteller;
   }

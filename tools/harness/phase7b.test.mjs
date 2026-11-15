@@ -193,6 +193,11 @@ test("Auto acts only on what WoDX can carry out; the rest wait for the Storytell
   // B6172: a power with a picked power acts on its own in Auto; one with no pick still waits for the Storyteller
   assert.equal(NR.autoChoice([{action: "power", power: "Helter Skelter"}, {action: "attack"}]).act?.power, "Helter Skelter");
   assert.equal(NR.autoChoice([{action: "power"}, {action: "attack"}]).needsStoryteller?.action, "power");
+  // B6400: a power held back because mortals watch: Auto does the next thing it can do by itself
+  const h = NR.autoChoice([{action: "power", held: true}, {action: "frenzy"}, {action: "attack", target: "x"}]);
+  assert.equal(h.act?.action, "attack");
+  assert.equal(h.heldPower?.action, "power");
+  assert.equal(NR.autoChoice([{action: "power", held: true}, {action: "frenzy"}]).needsStoryteller?.action, "power", "nothing else it can do: it waits");
 });
 
 test("the module: manifest, API and the card's buttons", () => {

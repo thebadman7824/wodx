@@ -6,6 +6,7 @@
  *   3. a Hostile NPC makes a real Persuade roll harder than a Neutral one (attitude -> social difficulty)
  *   4. a mortal on an UNLINKED token fed on (wodxFed, as WoDX Actions fires it) is Dazed, and the Daze is gone by the next morning
  *   5. in Auto mode an NPC whose best option is a power uses it by itself on its turn (combat hook path): Vitality is spent
+ *  5b. with mortals looking on it holds that obvious power back and Auto does its next self-acting option (B6400)
  *   6. WoDX Voices speaks a real talk-sheet answer (api.talk.serve "ask"), not a hand-built card
  *   7. a hurt NPC on an UNLINKED token goes to be tended when the fight is deleted (deleteCombat, not afterFight called directly)
  *   8. a hurt NPC (linked) walks to the hospital on the clock in Auto routine mode: the token ends in the hospital region
@@ -117,42 +118,65 @@ export async function run() {
       G.ok("4. a fed-on unlinked mortal is Dazed, and wakes by morning", dazed && !still, {dazed, stillDazedNextDay: still});
     });
 
-    await G.step("5. Auto: an NPC whose best option is a power uses it on its own turn", async () => {
+    /**
+     * The projector's turn in Auto, through the real path: WoDX NPC takes the turn on updateCombat (main.mjs soon ->
+     * takeTurn). Returns the top option planned beforehand, the card's plan and the Vitality before and after.
+     */
+    const pa = () => sc.tokens.get(tProj.id).actor;
+    const others = () => sc.tokens.filter(t => !t.hidden && ![tProj.id, tFoe.id].includes(t.id));
+    const autoTurn = async () => {
       await keep(MOD, "pickPowers", true);
-      const pa = () => sc.tokens.get(tProj.id).actor;
       await pa().update({"system.advantages.vitality.permanent": 6, "system.advantages.vitality.temporary": 5, "system.advantages.spite.permanent": 2, "system.advantages.willpower.temporary": 5});
       await A()?.limits?.clear?.(pa());
       await sc.setFlag(MOD, "mode", "off");
+      const [combat] = await G.make(Combat, [{scene: sc.id, active: true}]);
+      try {
+        await combat.createEmbeddedDocuments("Combatant", [{tokenId: tProj.id, sceneId: sc.id, actorId: projector.id}, {tokenId: tFoe.id, sceneId: sc.id, actorId: foe.id}]);
+        await combat.startCombat();
+        await sleep(2000);
+        const top = npc().planTurn(tokObj(tProj), combat).options[0];
+        const v0 = Number(pa().system?.advantages?.vitality?.temporary);
+        await sc.setFlag(MOD, "mode", "auto");
+        const since = Date.now();
+        const plans = () => [...game.messages].filter(m => (m.timestamp ?? 0) >= since && m.getFlag(MOD, "plan")?.token === tProj.uuid);
+        await combat.update({turn: combat.turns.findIndex(c => c.tokenId === tFoe.id)});
+        await sleep(400);
+        await combat.update({turn: combat.turns.findIndex(c => c.tokenId === tProj.id)});
+        const card = await waitFor(() => plans().length > 0, 8000);
+        await waitFor(() => !!plans().at(-1)?.getFlag(MOD, "plan")?.done, 5000);
+        await sleep(1500);
+        const m = plans().at(-1), plan = m?.getFlag(MOD, "plan");
+        return {top, card, plan, content: String(m?.content ?? ""), v0, v1: Number(pa().system?.advantages?.vitality?.temporary)};
+      } finally {
+        await sc.setFlag(MOD, "mode", "off");
+        await combat.delete();
+      }
+    };
+
+    await G.step("5. Auto: an NPC whose best option is a power uses it on its own turn", async () => {
       // Helter Skelter is an obvious power, and an NPC holds an obvious power back while mortals outside the fight watch
       // (B4927, witnessesOf in main.mjs: 30 yards). The gate's other mortals stand within that, so they step out of sight.
-      const onlookers = sc.tokens.filter(t => !t.hidden && ![tProj.id, tFoe.id].includes(t.id)).map(t => t.id);
+      const onlookers = others().map(t => t.id);
       await sc.updateEmbeddedDocuments("Token", onlookers.map(_id => ({_id, hidden: true})));
       try {
-      const [combat] = await G.make(Combat, [{scene: sc.id, active: true}]);
-      await combat.createEmbeddedDocuments("Combatant", [{tokenId: tProj.id, sceneId: sc.id, actorId: projector.id}, {tokenId: tFoe.id, sceneId: sc.id, actorId: foe.id}]);
-      await combat.startCombat();
-      await sleep(2000);
-      const top = npc().planTurn(tokObj(tProj), combat).options[0];
-      const v0 = Number(pa().system?.advantages?.vitality?.temporary);
-      await sc.setFlag(MOD, "mode", "auto");
-      const since = Date.now();
-      // the real path: WoDX NPC takes the turn on updateCombat (main.mjs soon -> takeTurn)
-      const other = combat.turns.findIndex(c => c.tokenId === tFoe.id), mine = combat.turns.findIndex(c => c.tokenId === tProj.id);
-      await combat.update({turn: other});
-      await sleep(400);
-      await combat.update({turn: mine});
-      const card = await waitFor(() => [...game.messages].some(m => (m.timestamp ?? 0) >= since && m.getFlag(MOD, "plan")?.token === tProj.uuid), 8000);
-      await sleep(3000);
-      const plan = [...game.messages].filter(m => (m.timestamp ?? 0) >= since && m.getFlag(MOD, "plan")?.token === tProj.uuid).at(-1)?.getFlag(MOD, "plan");
-      const v1 = Number(pa().system?.advantages?.vitality?.temporary);
-      G.ok("5. Auto: an NPC whose best option is a power uses it on its own turn", top?.action === "power" && card && !!plan?.done && v1 < v0,
-        {top: top?.action, card, done: plan?.done?.text ?? null, vitality: [v0, v1], picked: plan?.options?.[0]?.power ?? null,
-          why: plan?.options?.[0]?.why ?? null, onlookers: sc.tokens.filter(t => !t.hidden && ![tProj.id, tFoe.id].includes(t.id)).length});
-      await sc.setFlag(MOD, "mode", "off");
-      await combat.delete();
+        const {top, card, plan, v0, v1} = await autoTurn();
+        G.ok("5. Auto: an NPC whose best option is a power uses it on its own turn", top?.action === "power" && card && !!plan?.done && v1 < v0,
+          {top: top?.action, card, done: plan?.done?.text ?? null, vitality: [v0, v1], picked: plan?.options?.[0]?.power ?? null,
+            why: plan?.options?.[0]?.why ?? null, onlookers: others().length});
       } finally {
         await sc.updateEmbeddedDocuments("Token", onlookers.filter(id => sc.tokens.has(id)).map(_id => ({_id, hidden: false})));
       }
+    });
+
+    await G.step("5b. Auto: with mortals watching it holds the power back and does the next thing", async () => {
+      // B6400: the same projector with the onlookers in view: the power is held back (B4927), and Auto carries out the
+      // next option it can do by itself instead of waiting for the Storyteller; no Vitality is spent
+      const {top, card, plan, content, v0, v1} = await autoTurn();
+      const k = plan?.done?.k, did = plan?.options?.[k] ?? null;
+      G.ok("5b. Auto: with mortals watching it holds the power back and does the next thing",
+        top?.action === "power" && card && plan?.options?.[0]?.held === true && Number.isInteger(k) && k > 0 && did?.action !== "power" && v1 === v0 && /holds back/.test(content),
+        {top: top?.action, card, held: plan?.options?.[0]?.held ?? null, did: did?.action ?? null, done: plan?.done?.text ?? null, vitality: [v0, v1],
+          onlookers: others().length, options: (plan?.options ?? []).map(o => o.action)});
     });
 
     await G.step("6. WoDX Voices speaks a real talk-sheet answer", async () => {

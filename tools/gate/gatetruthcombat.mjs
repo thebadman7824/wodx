@@ -145,7 +145,12 @@ export async function run() {
 
     await G.step("5. B6152 full defence: no attack of its own, full dodge then one die less", async () => {
       await dice(8);
-      await tFoe.setFlag("wodx-npc", "fullDefense", `${combat.id}:${combat.round}`);
+      // WoDX NPC's own "Full defence" option (execute, as Auto or Accept runs it) writes the flag Combat reads; the flag
+      // by hand only when WoDX NPC is off
+      const N = game.modules.get("wodx-npc")?.api;
+      const viaNpc = !!(N?.execute && await N.execute(tFoe.object, {action: "defend", label: "Full defence", why: "gate"}).catch(() => null));
+      if ( !viaNpc ) await tFoe.setFlag("wodx-npc", "fullDefense", `${combat.id}:${combat.round}`);
+      await waitFor(() => tFoe.getFlag("wodx-npc", "fullDefense") === `${combat.id}:${combat.round}`, 3000);
       const before = hurt(guard);
       const own = await C.quickAttack({attacker: tFoe.object, target: tG.object});
       const struck = (own ?? []).filter(Boolean).length > 0;
@@ -161,7 +166,7 @@ export async function run() {
       const full = n(foe.system.attributes.dexterity.total) + 2; // Dexterity + Athletics or Brawl, both 2
       const note = /full defence/i.test(a1?.message ? game.messages.get(a1.message.id)?.content ?? "" : "");
       G.ok("5. B6152 full defence: no attack of its own, full dodge then one die less", !struck && hurt(guard) === before && d1 === full && d2 === d1 - 1 && note,
-        {struck, guardBefore: before, guardAfter: hurt(guard), full, d1, d2, note, types: [a1?.defense?.type, a2?.defense?.type], foeHurt: hurt(foe)});
+        {viaNpc, flag: tFoe.getFlag("wodx-npc", "fullDefense") ?? null, struck, guardBefore: before, guardAfter: hurt(guard), full, d1, d2, note, types: [a1?.defense?.type, a2?.defense?.type], foeHurt: hurt(foe)});
     });
 
     await G.step("6. B6153 a pistol with no Ability rolls Firearms", async () => {

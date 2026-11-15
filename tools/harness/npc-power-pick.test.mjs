@@ -48,3 +48,11 @@ test("keywords give the uses and whether a power shows", () => {
   assert.ok(s.uses.includes("hold"));
   assert.equal(s.obvious, false);
 });
+
+test("B6400: held back only when every fitting power is obvious and mortals watch", () => {
+  const st = {hasTarget: true, wounds: 0, boosted: true, mortalsSee: true};
+  assert.equal(PP.heldBack([claws], st), true);
+  assert.equal(PP.heldBack([claws], {...st, mortalsSee: false}), false, "no one watching: it uses the power");
+  assert.equal(PP.heldBack([claws, dominate], st), false, "a quiet power fits: it uses that one");
+  assert.equal(PP.heldBack([mend], st), false, "nothing fits at all: not held back, the menu opens");
+});

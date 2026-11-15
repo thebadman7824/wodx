@@ -488,6 +488,12 @@ export function autoChoice(options) {
   const top = options[0];
   if ( !top ) return {act: null};
   if ( selfActing(top) ) return {act: top};
+  // B6400: a power held back because mortals watch (option.held) is not a choice the Storyteller must make: the NPC
+  // does the next thing it can do by itself instead (the next self-acting option); with none it still waits
+  if ( top.action === "power" && top.held ) {
+    const next = options.slice(1).find(o => selfActing(o));
+    if ( next ) return {act: next, heldPower: top};
+  }
   return {act: null, needsStoryteller: top};
 }
 
