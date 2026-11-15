@@ -46,15 +46,13 @@ function wyrmCandidates() {
 export async function fomorise(actorLike, {powers = null} = {}) {
   const a = game.actors.get(actorLike?.id ?? actorLike);
   if ( !a || !game.user.isGM || a.flags?.[MOD]?.fomori ) return null;
-  const picks = powers ?? W.pickPowers();
-  await a.createEmbeddedDocuments("Item", W.powerItems(picks));
-  const upd = W.powerSheet(picks);
-  if ( Object.keys(upd).length ) await a.update(upd).catch(() => null);
-  await a.update({[`flags.${MOD}.fomori`]: {at: now(), powers: picks.map(p => p.k)}});
+  const picks = powers ?? W.pickPowers(game.wodxActions?.fomor?.rules?.POWERS ?? []);
+  if ( picks.length ) await a.createEmbeddedDocuments("Item", W.powerItems(picks));
+  await a.update({[`flags.${MOD}.fomori`]: {at: now(), powers: picks.map(p => p.key)}});
   const m = W.wyrmMaster(wyrmCandidates(), {year: yearNow(), sceneId: sceneOf(a)});
   if ( m ) await SV.bind(a, m.id, "fomor", {step: 1, quiet: true});
   else { const t = tokenOf(a); if ( t ) SV.flash("fomor", t, t); }
-  await card(`${a.name} is fomor`, `<p>Powers: ${picks.map(p => esc(p.n)).join(", ")} (on the sheet).</p><p>${m ? `Serves ${esc(m.name)}.` : "No Wyrm master is known yet: bind one from the followers window."}</p><p class="wodx-quiet">${W.PAGE}</p>`);
+  await card(`${a.name} is fomor`, `<p>Powers: ${(picks.map(p => esc(p.name)).join(", ") || "none yet (WoDX Actions gives the list)")} (on the sheet).</p><p>${m ? `Serves ${esc(m.name)}.` : "No Wyrm master is known yet: bind one from the followers window."}</p><p class="wodx-quiet">${W.PAGE}</p>`);
   return {powers: picks, master: m};
 }
 
@@ -147,7 +145,10 @@ const discOf = a => Object.fromEntries((a.items ?? []).filter(i => i.type === "P
 export async function keeperTurn({force = false, only = null} = {}) {
   if ( !isActiveGM() || (!force && setting("npcKeepers") === false) ) return null;
   const t = now();
-  if ( !force && t - num(setting("keeperTurn")) < W.KEEPER_EVERY ) return null;
+  const last = num(setting("keeperTurn"));
+  // the first month starts when the world first sees the clock move, so no one is bound the moment the module arrives
+  if ( !force && !last ) { await game.settings.set(MOD, "keeperTurn", t); return null; }
+  if ( !force && t - last < W.KEEPER_EVERY ) return null;
   await game.settings.set(MOD, "keeperTurn", t);
   await cultDrift();
   const year = yearNow();

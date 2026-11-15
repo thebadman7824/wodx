@@ -10,21 +10,18 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const src = p => readFileSync(join(root, p), "utf8");
 const W = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/servant-world-rules.mjs")));
 
-test("fomori get one to three different powers, rollable where the book rolls, and the sheet changes they bring", () => {
+test("fomori get one to three different powers from the list WoDX Actions plays, named as it reads them", async () => {
+  const FP = await import(pathToFileURL(join(root, "modules/wodx-actions/scripts/fomor-powers.js")));
   for ( const r of [0, 0.5, 0.99] ) {
-    const p = W.pickPowers(() => r);
+    const p = W.pickPowers(FP.POWERS, () => r);
     assert.ok(p.length >= 1 && p.length <= 3);
-    assert.equal(new Set(p.map(x => x.k)).size, p.length, "no power twice");
+    assert.equal(new Set(p.map(x => x.key)).size, p.length, "no power twice");
   }
-  const items = W.powerItems(W.FOMORI.filter(p => ["animalControl", "berserker"].includes(p.k)));
-  assert.equal(items[0].system.dice1, "manipulation");
-  assert.equal(items[0].system.difficulty, 6);
-  assert.equal(items[1].system.dice1, undefined, "Berserker has no roll of its own");
+  assert.deepEqual(W.pickPowers([], () => 0.5), [], "no list, no powers");
+  const items = W.powerItems([FP.BY_KEY.berserker, FP.BY_KEY.animalcontrol]);
   assert.ok(items.every(i => i.type === "Power" && i.flags["wodx-npc"].fomori));
-  const upd = W.powerSheet(W.FOMORI.filter(p => ["berserker", "armoredSkin"].includes(p.k)));
-  assert.equal(upd["system.advantages.rage.permanent"], 5);
-  assert.equal(upd["system.settings.soak.lethal.isrollable"], true);
-  for ( const p of W.FOMORI ) assert.ok(p.e.split(" ").length < 30, `${p.n} is in WoDX's own short words`);
+  assert.deepEqual(items.map(i => FP.powerOf(i.name)?.key), ["berserker", "animalcontrol"], "WoDX Actions takes them up");
+  assert.ok(/fomor\?\.rules\?\.POWERS/.test(src("modules/wodx-npc/scripts/servant-world.mjs")));
 });
 
 test("a fomor serves the nearest Wyrm master; Pentex only from 1900", () => {
@@ -42,12 +39,14 @@ test("an untended mummy cult thins; a mistreated one turns", () => {
   assert.equal(W.cultDrift({step: 2, last: 0}, wk, {mistreated: true}).betray, true);
 });
 
-test("NPC keepers recruit unbound mortals nearest first, only as many as are missing", () => {
+test("NPC keepers recruit unbound mortals near them, only as many as are missing", () => {
   assert.equal(W.shortfall(3, 1), 2);
   assert.equal(W.shortfall(1, 4), 0);
   const pool = [{id: "a", sceneId: "x"}, {id: "b", sceneId: "here"}, {id: "c", sceneId: "here"}];
   assert.deepEqual(W.recruits(pool, 2, {sceneId: "here"}), ["b", "c"]);
-  assert.deepEqual(W.recruits(pool, 2, {sceneId: "here", taken: new Set(["b"])}), ["c", "a"]);
+  assert.deepEqual(W.recruits(pool, 2, {sceneId: "here", taken: new Set(["b"])}), ["c"], "only from the master's own scene");
+  assert.deepEqual(W.recruits([{id: "d", sceneId: null}, ...pool], 3, {sceneId: null}), ["d"], "a master with no token takes those with none");
+  assert.ok(/!force && !last/.test(src("modules/wodx-npc/scripts/servant-world.mjs")), "the first month starts, it does not run at once");
   assert.equal(W.LINE_OF_TYPE.Mummy, "mummy");
 });
 

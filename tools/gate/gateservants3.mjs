@@ -3,7 +3,7 @@
  *   await (await import(`/wodx-gate/gateservants3.mjs?${Date.now()}`)).run()
  * It makes scratch actors and a scene and deletes them. It does not move the clock (the programme's next roll is set back).
  *   1. the API
- *   2. a fomor: powers on the sheet, Rage from Berserker, serves a Black Spiral Dancer
+ *   2. a fomor: powers on the sheet that WoDX Actions plays, serves a Black Spiral Dancer
  *   3. a mummy's death: the cult guards the vessel
  *   4. a Social Conditioning programme rolls by itself when its time comes
  *   5. NPC keepers: a month's turn binds an unbound mortal to an NPC master, and Undo takes it back
@@ -31,13 +31,14 @@ export async function run() {
     await G.tokens(scene, [{actor: spiral, x: 2, y: 2}, {actor: victim, x: 3, y: 2}, {actor: mummy, x: 5, y: 5}, {actor: cultist, x: 6, y: 5}]);
 
     await G.step("2. a fomor", async () => {
-      const R = W.rules;
-      const r = await W.fomorise(victim, {powers: R.FOMORI.filter(p => ["berserker", "animalControl"].includes(p.k))});
+      const FP = game.wodxActions?.fomor?.rules;
+      const r = await W.fomorise(victim, {powers: [FP.BY_KEY.berserker, FP.BY_KEY.animalcontrol]});
+      await new Promise(r => setTimeout(r, 900));
       const a = game.actors.get(victim.id);
       const items = a.items.filter(i => i.flags?.["wodx-npc"]?.fomori);
       const bond = a.flags?.["wodx-npc"]?.held?.[`fomor:${spiral.id}`];
-      G.ok("2. a fomor", items.length === 2 && Number(a.system?.advantages?.rage?.permanent) === 5 && !!bond && r?.master?.id === spiral.id,
-        {items: items.length, rage: a.system?.advantages?.rage?.permanent, master: r?.master?.name});
+      G.ok("2. a fomor", items.length === 2 && game.wodxActions.fomor.powersOf(a).length === 2 && !!bond && r?.master?.id === spiral.id,
+        {items: items.length, known: game.wodxActions.fomor.powersOf(a).map(x => x.key), master: r?.master?.name});
     });
 
     await G.step("3. a mummy's death", async () => {
