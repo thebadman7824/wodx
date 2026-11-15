@@ -223,9 +223,10 @@ export async function run() {
         const second = game.time.advance(wakeAt - game.time.worldTime + 90);
         await Promise.all([first, second]);
       }
-      const risen = await waitFor(() => !sleeper.getFlag(MOD, "daySleep") && dmg(sleeper, "lethal") === 0, 15000);
+      // the rising's last write is waited for (B6441): the flag goes, then blood is spent, then the wound closes
+      const risen = await waitFor(() => !sleeper.getFlag(MOD, "daySleep") && dmg(sleeper, "lethal") === 0 && blood(sleeper) < b0, 15000);
       G.ok("5. two clock moves at once: the sleeper still rises and heals", !!wakeAt && !!risen && blood(sleeper) < b0 && !A.cannotAct(sleeper),
-        {wakeAt, lethal: dmg(sleeper, "lethal"), blood: [b0, blood(sleeper)]});
+        {wakeAt, now: game.time.worldTime, asleep: !!sleeper.getFlag(MOD, "daySleep"), lethal: dmg(sleeper, "lethal"), blood: [b0, blood(sleeper)], why: A.cannotAct(sleeper) || null});
     });
 
     await G.step("6. a frenzy check in a fight is held turn by turn", async () => {

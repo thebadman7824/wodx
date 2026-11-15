@@ -218,3 +218,13 @@ test("the settings: New Night and the sun's burns by themselves are the defaults
   assert.match(k, /register\("daySleep"/);
   assert.match(k, /register\("riseHeal"/);
 });
+
+test("B6441: healing on rising spends the blood before the wounds close (a healed sheet has paid already)", async () => {
+  const {readFileSync} = await import("node:fs");
+  const k = readFileSync(join(root, "modules/wodx-actions/scripts/kindred.js"), "utf8");
+  const body = k.slice(k.indexOf("async function riseHeal("), k.indexOf("function sunlit("));
+  const spend = body.indexOf("ctx.changeBlood(actor, -plan.spent)"), heal = body.indexOf("ctx.setDamage(actor, { ...plan.after })");
+  assert.ok(spend > 0 && heal > 0 && spend < heal);
+  const g = readFileSync(join(root, "tools/gate/gatetruthactions.mjs"), "utf8");
+  assert.match(g, /const risen = await waitFor\(\(\) => [^\n]*blood\(sleeper\) < b0/);
+});

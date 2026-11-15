@@ -923,8 +923,9 @@ export function build(ctx) {
             if (quiet) return { text: "no blood to spare above the hunger line, so rises hurt" };
             return post(actor, `${actor.name} rises`, `<div class="vta-note">No blood to spare above the hunger line: ${esc(actor.name)} rises hurt.</div>`);
         }
-        await ctx.setDamage(actor, { ...plan.after });
+        // B6441: the blood goes first and the wounds close after it, so a sheet that reads healed has paid already
         const ch = await ctx.changeBlood(actor, -plan.spent);
+        await ctx.setDamage(actor, { ...plan.after });
         const text = `heals ${plan.healed.lethal} lethal and ${plan.healed.bashing} bashing with blood (${ch.before} to ${ch.after})`;
         if (quiet) return { text, plan, blood: ch };
         return post(actor, `${actor.name} heals on rising`, `<div class="vta-sec">Heals ${plan.healed.lethal} lethal and ${plan.healed.bashing} bashing: blood ${ch.before} → ${ch.after}. Now ${ctx.healthText(actor, plan.after)}.</div>`);
