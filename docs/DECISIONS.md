@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6060
+Next free block: B6080
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -331,6 +331,7 @@ Next free block: B6060
 | B6000-B6019 | Rituals and powers that really work: every effect read by a roll, soak, token or map system (used B6000-B6018) | Actions, Combat |
 | B6040-B6049 | Lone Chronicle step 4: the director, experience from the night's log, the recap (used B6040-B6049) | Solo |
 | B6050-B6059 | gate7b fresh arena each run (used B6050-B6051) | tools (gates) |
+| B6070-B6079 | Snow vehicles, trains and trams (rules and sprites), and a quality pass on the vehicle sprites (used B6070-B6076) | Interactables, Paperdoll, Combat |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10140,3 +10141,38 @@ suggestion for that step. The runner's flight from a far foe has nowhere to go, 
 first, which walks it round the wall to the hero.
 
 Reverse: keep the arena between runs again, drop the scene's mode and take the first attack or flight.
+
+## B6070. Sleds, snow machines, trains and trams are mounts (2026-11-15)
+WoDX Interactables. Four new MOUNTS kinds, so they can be tiles and Vehicle sheets: sled (Sled or sleigh, Ride, any year, 4 seats), snowmobile (Snow machine, Drive, from 1910, 2 seats), train (Railway train, Drive, from 1825, 40 seats, cannot be worked below Drive 2) and tram (Tram or streetcar, Drive, from 1860, 40 seats, Drive 2). House rules; logged in PENDING-REVIEW.
+
+Reverse: remove the four entries from MOUNTS.
+
+## B6071. Deep snow or ice (2026-11-15)
+WoDX Interactables chase-rules. A new ground "snow": +1 difficulty, +2 for wheels and motors, hooves capped at 20 yards a turn, wheels 15, bicycles shut out. Sleds and snow machines go only on snow (ONLY_ON) and take no difficulty from it. Sled speed 20 yards a turn; the snow machines' chart by year (1910 to 2040). In a fight (rideInFight) a sled or a snow machine always stands on snow. A fall onto snow is 1 die (WoDX Combat FALL_DICE).
+
+Reverse: remove snow from GROUNDS and ONLY_ON, and from FALL_DICE.
+
+## B6072. A railway line (2026-11-15)
+WoDX Interactables chase-rules. A new ground "rails"; trains go only there, trams on rails or town streets. Charts by year with Maneuver 1 (they cannot swerve). Bodies: trains durability 6 to 12, structure 10 to 25, ram mass 8; trams 3 to 6, 6 to 12, mass 5. Headlights from 1900 as other motor vehicles, the big cone. A fall onto the line is 4 dice.
+
+Reverse: remove rails from GROUNDS, ONLY_ON, BODIES and WAYS.
+
+## B6073. Train and tram sprites at true length (2026-11-15)
+WoDX Paperdoll, tools/sprites/mount_rail.py. A train's look is its engine (with tender) and its first coach or wagon laid end to end at 37 pixels to the metre, so a train is up to 30 squares long and a tram up to 22; every sheet stays within 4096 pixels a side. Looks: 1825 pioneer, coal train, horse wagonway; 1850 American, European passenger, goods; 1900 express, tank engine, heavy goods; 1935 streamlined express, diesel railcar, electric engine; 1960 diesel, electric train, diesel freight; 1990 high-speed, regional, container freight; 2040 magnetic train, driverless shuttle, freight pod. Trams 1860 to 2040 (horse trams, electric with trolley poles, double-deck, streamlined, articulated, low-floor, driverless). Drawn side on with four facings like every mount, so the riders' own figures show.
+
+Reverse: drop the train and tram kinds from tools/sprites/mounts.py and rewrite the sheets.
+
+## B6074. Sled and sleigh sprites (2026-11-15)
+tools/sprites/mount_snow.py. Dog sleds (six or eight dogs in pairs, the musher standing on the runners), reindeer sledges, horse sledges with logs, hay or crates, painted sleighs with scrolls and bells, troikas with the arch over the shaft horse, cutters, bob sleighs; the team drawn from the beast rig with collars, traces and reins to the bit.
+
+Reverse: drop the sled kind.
+
+## B6075. Snow machine sprites (2026-11-15)
+tools/sprites/mount_snow.py. Motor sledges and propeller sledges from 1910, snow coaches and snowcats from 1935, snowmobiles from 1960, sport and touring snowmobiles from 1990, electric ones from 2040.
+
+Reverse: drop the snowmobile kind.
+
+## B6076. Quality pass on the vehicle sprites (2026-11-15)
+tools/sprites. Every ramp shifts hue (shadows cooler, lights warmer), as the pixel art rules ask; tanks and armoured cars get plate seams, a lit top edge, a stowage box, a tow cable, return rollers on the track's top run, and the 1916 tanks their sponson with its gun or machine gun in plain sight.
+
+Reverse: restore ramp() in mountkit.py and drop _plates and the sponson in mount_motor.py.
