@@ -148,7 +148,9 @@ test("a Way lets a convened character through and the call goes along (B6166)", 
 test("the hunters' proof: npc().orderCarry and the uuid the carry hook sends (B6167)", () => {
   const s = src("modules/wodx-storyteller/scripts/hunt-follow.mjs");
   assert.match(s, /const carry = npc\(\)\?\.orderCarry \?\? null;/);
-  assert.match(s, /if \( r\?\.ok \) return p;/);
+  assert.match(s, /if \( r\?\.ok \) \{/);
+  // B6426: a carrier that has the proof still leaves the map once it arrives
+  assert.match(s, /if \( r\.arrived \) \{ await leave\(scene, \[t\]\); return p; \}/);
   assert.match(s, /typeof ref === "string" \? await fromUuid\(ref\)/);
   assert.match(src("modules/wodx-npc/scripts/main.mjs"), /orderCarry, carryGoals/, "WoDX NPC's api has orderCarry at its top");
 });
