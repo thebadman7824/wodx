@@ -41,3 +41,5 @@
 /* B6040: places with no map */
 .wsolo-dialog .wsolo-places { list-style: none; margin: 4px 0 0; padding: 0; max-height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
 .wsolo-dialog .wsolo-pick { display: flex; align-items: center; gap: 6px; }
+/* B6049: the recap */
+.wsolo-recap { margin: 4px 0 0; padding-left: 18px; }
