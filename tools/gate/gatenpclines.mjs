@@ -130,20 +130,30 @@ export async function run() {
       const top = N.planTurn(canvas.tokens.get(ta.id), combat).options[0];
       const v0 = Number(auto.system?.advantages?.vitality?.temporary);
       await scene.setFlag("wodx-npc", "mode", "auto");
+      // what the turn will read, logged so a failure says which part is missing
+      const diag = {mode: N.modeFor?.(auto), pickPowers: game.settings.get("wodx-npc", "pickPowers"), started: combat.started, paused: game.paused,
+        pick: N.powerPick?.(canvas.tokens.get(ta.id))?.power?.name ?? null, targeting: !!game.modules.get("wodx-targeting")?.active,
+        powers: (A.npcPowers?.(auto) ?? []).map(p => `${p.name}:${(p.uses ?? []).join("/")}${p.obvious ? ":obvious" : ""}${p.free === false ? `:not free (${p.why})` : ""}`)};
+      const errors = [], realError = console.error;
+      console.error = (...args) => { errors.push(args.map(x => String(x?.message ?? x)).join(" ").slice(0, 300)); realError.apply(console, args); };
       const since = Date.now();
       const plans = () => [...game.messages].filter(m => (m.timestamp ?? 0) >= since && m.getFlag("wodx-npc", "plan")?.token === ta.uuid);
       // the turn passes to the foe and back: WoDX NPC takes the projector's turn on updateCombat, as in play
       await combat.update({turn: combat.turns.findIndex(c => c.tokenId === tf.id)});
       await new Promise(r => setTimeout(r, 400));
       await combat.update({turn: combat.turns.findIndex(c => c.tokenId === ta.id)});
-      await waitFor(() => plans().some(m => m.getFlag("wodx-npc", "plan")?.done), 10000);
-      await waitFor(() => Number(auto.system?.advantages?.vitality?.temporary) < v0, 6000);
+      diag.current = combat.combatant?.tokenId === ta.id;
+      try {
+        await waitFor(() => plans().some(m => m.getFlag("wodx-npc", "plan")?.done), 10000);
+        await waitFor(() => Number(auto.system?.advantages?.vitality?.temporary) < v0, 6000);
+      } finally { console.error = realError; }
+      diag.errors = errors.slice(0, 5);
       const plan = plans().at(-1)?.getFlag("wodx-npc", "plan");
       const v1 = Number(auto.system?.advantages?.vitality?.temporary);
       G.ok("12. Auto: a projector uses its power on its own turn", top?.action === "power" && plan?.options?.[plan?.done?.k]?.power === "Helter Skelter" && v1 < v0,
         {top: top?.action ?? null, picked: plan?.options?.[plan?.done?.k]?.power ?? null, done: plan?.done?.text ?? null, vitality: [v0, v1],
           plans: plans().length, first: plan?.options?.[0] ? {power: plan.options[0].power ?? null, why: plan.options[0].why} : null,
-          onlookers: scene.tokens.filter(t => !t.hidden && ![ta.id, tf.id].includes(t.id)).length});
+          onlookers: scene.tokens.filter(t => !t.hidden && ![ta.id, tf.id].includes(t.id)).length, diag});
       await scene.unsetFlag("wodx-npc", "mode");
       await combat.delete();
       } finally {

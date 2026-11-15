@@ -137,16 +137,25 @@ export async function run() {
         const top = npc().planTurn(tokObj(tProj), combat).options[0];
         const v0 = Number(pa().system?.advantages?.vitality?.temporary);
         await sc.setFlag(MOD, "mode", "auto");
-        const since = Date.now();
-        const plans = () => [...game.messages].filter(m => (m.timestamp ?? 0) >= since && m.getFlag(MOD, "plan")?.token === tProj.uuid);
-        await combat.update({turn: combat.turns.findIndex(c => c.tokenId === tFoe.id)});
-        await sleep(400);
-        await combat.update({turn: combat.turns.findIndex(c => c.tokenId === tProj.id)});
-        const card = await waitFor(() => plans().length > 0, 8000);
-        await waitFor(() => !!plans().at(-1)?.getFlag(MOD, "plan")?.done, 5000);
-        await sleep(1500);
-        const m = plans().at(-1), plan = m?.getFlag(MOD, "plan");
-        return {top, card, plan, content: String(m?.content ?? ""), v0, v1: Number(pa().system?.advantages?.vitality?.temporary)};
+        // what the turn will read, logged so a failure says which part is missing
+        const diag = {mode: npc().modeFor?.(pa()), pickPowers: game.settings.get(MOD, "pickPowers"), started: combat.started, paused: game.paused,
+          pick: npc().powerPick?.(tokObj(tProj))?.power?.name ?? null, targeting: !!game.modules.get("wodx-targeting")?.active,
+          powers: (A()?.npcPowers?.(pa()) ?? []).map(p => `${p.name}:${(p.uses ?? []).join("/")}${p.obvious ? ":obvious" : ""}${p.free === false ? `:not free (${p.why})` : ""}`)};
+        const errors = [], realError = console.error;
+        console.error = (...args) => { errors.push(args.map(x => String(x?.message ?? x)).join(" ").slice(0, 300)); realError.apply(console, args); };
+        try {
+          const since = Date.now();
+          const plans = () => [...game.messages].filter(m => (m.timestamp ?? 0) >= since && m.getFlag(MOD, "plan")?.token === tProj.uuid);
+          await combat.update({turn: combat.turns.findIndex(c => c.tokenId === tFoe.id)});
+          await sleep(400);
+          await combat.update({turn: combat.turns.findIndex(c => c.tokenId === tProj.id)});
+          diag.current = combat.combatant?.tokenId === tProj.id;
+          const card = await waitFor(() => plans().length > 0, 8000);
+          await waitFor(() => !!plans().at(-1)?.getFlag(MOD, "plan")?.done, 5000);
+          await sleep(1500);
+          const m = plans().at(-1), plan = m?.getFlag(MOD, "plan");
+          return {top, card, plan, content: String(m?.content ?? ""), v0, v1: Number(pa().system?.advantages?.vitality?.temporary), diag: {...diag, errors: errors.slice(0, 5)}};
+        } finally { console.error = realError; }
       } finally {
         await sc.setFlag(MOD, "mode", "off");
         await combat.delete();
@@ -159,10 +168,10 @@ export async function run() {
       const onlookers = others().map(t => t.id);
       await sc.updateEmbeddedDocuments("Token", onlookers.map(_id => ({_id, hidden: true})));
       try {
-        const {top, card, plan, v0, v1} = await autoTurn();
+        const {top, card, plan, v0, v1, diag} = await autoTurn();
         G.ok("5. Auto: an NPC whose best option is a power uses it on its own turn", top?.action === "power" && card && !!plan?.done && v1 < v0,
           {top: top?.action, card, done: plan?.done?.text ?? null, vitality: [v0, v1], picked: plan?.options?.[0]?.power ?? null,
-            why: plan?.options?.[0]?.why ?? null, onlookers: others().length});
+            why: plan?.options?.[0]?.why ?? null, onlookers: others().length, diag});
       } finally {
         await sc.updateEmbeddedDocuments("Token", onlookers.filter(id => sc.tokens.has(id)).map(_id => ({_id, hidden: false})));
       }
@@ -171,12 +180,12 @@ export async function run() {
     await G.step("5b. Auto: with mortals watching it holds the power back and does the next thing", async () => {
       // B6400: the same projector with the onlookers in view: the power is held back (B4927), and Auto carries out the
       // next option it can do by itself instead of waiting for the Storyteller; no Vitality is spent
-      const {top, card, plan, content, v0, v1} = await autoTurn();
+      const {top, card, plan, content, v0, v1, diag} = await autoTurn();
       const k = plan?.done?.k, did = plan?.options?.[k] ?? null;
       G.ok("5b. Auto: with mortals watching it holds the power back and does the next thing",
         top?.action === "power" && card && plan?.options?.[0]?.held === true && Number.isInteger(k) && k > 0 && did?.action !== "power" && v1 === v0 && /holds back/.test(content),
         {top: top?.action, card, held: plan?.options?.[0]?.held ?? null, did: did?.action ?? null, done: plan?.done?.text ?? null, vitality: [v0, v1],
-          onlookers: others().length, options: (plan?.options ?? []).map(o => o.action)});
+          onlookers: others().length, options: (plan?.options ?? []).map(o => o.action), diag});
     });
 
     await G.step("6. WoDX Voices speaks a real talk-sheet answer", async () => {

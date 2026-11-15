@@ -800,7 +800,14 @@ async function execute(tok, opt) {
       return {done: true, text: `Frenzy check for ${tok.name}.`};
     case "power": {
       // The target WoDX Targeting picked goes up first, so the power window's own panel starts on it
-      const aim = target ?? canvas.tokens.get(rankPower(tok)?.pick?.id ?? "") ?? null;
+      // B6403: without WoDX Targeting's pick, the nearest foe in sight, so a harmful power is never rolled at no one
+      const nearest = () => {
+        try {
+          const e = (readFight(tok).state.enemies ?? []).filter(x => x.visible).sort((x, y) => (x.distance ?? 99) - (y.distance ?? 99))[0];
+          return e ? canvas.tokens.get(e.id) ?? null : null;
+        } catch (err) { return null; }
+      };
+      const aim = target ?? canvas.tokens.get(rankPower(tok)?.pick?.id ?? "") ?? nearest();
       if ( aim ) game.modules.get("wodx-targeting")?.api?.setTargets?.([aim.id]);
       // B4926: the NPC picks a power that fits the moment and rolls it, when WoDX Actions can fill that window
       const pp = powerPick(tok, aim);
@@ -932,7 +939,8 @@ async function postPlan(tok, combat, {profile, options}, mode) {
     if ( pick.act ) {
       const k = shown.indexOf(pick.act);
       const snap = snapshot([tok, ...(pick.act.target ? [canvas.tokens.get(pick.act.target)].filter(Boolean) : [])]);
-      const r = await execute(tok, pick.act);
+      // B6403: a failure while acting still posts the card, saying what went wrong, so the turn is not lost unseen
+      const r = await execute(tok, pick.act).catch(e => { console.error(`${MOD} | auto turn`, e); return {done: false, text: `${tok.name} could not act: ${e?.message ?? e}.`}; });
       result = pick.heldPower ? `${tok.name} holds back from using a power with mortals watching. ${r.text}` : r.text; chosen = k;
       flags.plan.done = {k, text: r.text, snap, added: r.added ?? [], path: r.path ?? null};
     } else waiting = pick.needsStoryteller;
@@ -1008,9 +1016,11 @@ export async function takeTurn(combat = game.combat, {force = false} = {}) {
   if ( tok.scene?.id !== canvas.scene?.id ) return null;
   const key = `${combat.id}:${combat.round}:${c.id}:${phaseKey(combat)}`;
   if ( handled.has(key) && !force ) return null;
-  handled.add(key);
+  // B6403: a turn passed over while WoDX was off for this NPC is not marked taken, so it is taken once Auto or
+  // Suggest is switched on and the turn comes round again (before, the key was spent while off)
   const mode = modeFor(tok.actor);
   if ( mode === "off" ) return null;
+  handled.add(key);
   const cond = chron()?.conditions;
   const stuck = NO_ACTION.find(id => cond?.hasCondition?.(tok.actor, id)) ?? (wounds(tok.actor) >= 7 ? "incapacitated" : null);
   if ( stuck ) report(combat.id, c.id, {cannotAct: true});
@@ -1269,7 +1279,7 @@ Hooks.once("init", () => {
   LEGACY.registerSettings();
   LEGACY.listen();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
-  const api = {version: VERSION, prowl, aftercare, factionLooks: FactionLooks.api(), rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, orderCarry, carryGoals: {goalOf: carryGoals.goalOf, pointOf: carryGoals.pointOf, arrive: carryGoals.arrive, approveCapture: carryGoals.approveCapture, freePrisoner: carryGoals.freePrisoner, prisoners: carryGoals.prisoners, trips: carryGoals.trips, onClock: carryGoals.onClock, rules: CG},
+  const api = {version: VERSION, prowl, aftercare, factionLooks: FactionLooks.api(), rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, powerPick: (tok, aim = null) => powerPick(tok, aim), editBehavior, openNpcPanel, execute, orderCarry, carryGoals: {goalOf: carryGoals.goalOf, pointOf: carryGoals.pointOf, arrive: carryGoals.arrive, approveCapture: carryGoals.approveCapture, freePrisoner: carryGoals.freePrisoner, prisoners: carryGoals.prisoners, trips: carryGoals.trips, onClock: carryGoals.onClock, rules: CG},
     carryAftercare: {wards: carryAftercare.wards, stores: carryAftercare.stores, tick: carryAftercare.onClock, day: carryAftercare.day, dispose: carryAftercare.dispose, factionTurn: carryAftercare.onFactionTurn, held: carryAftercare.heldChoice, fate: carryAftercare.doFate, taken: carryAftercare.onTaken, rules: carryAftercare.rules}, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
