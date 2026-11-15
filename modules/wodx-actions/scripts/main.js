@@ -1120,9 +1120,9 @@ async function resolveAction(actor, target, fd) {
         body += `<div class="vta-big">Jumps up to ${jumpTo.yards} yard${jumpTo.yards === 1 ? "" : "s"} across or ${jumpTo.upFeet} feet up. Choose Jump on the token to make it.</div>`;
         try { await actor.setFlag("wodx-combat", "jump", { ...jumpTo, at: game.time.worldTime }); } catch (e) { /* WoDX Combat is off */ }
     }
-    // B6030: a successful hiding or sneaking check puts the Sneaking status on for the scene, so watchers' noticing
+    // B6030: a successful hiding check (Find a hiding place, Hold still and stay hidden) puts the Sneaking status on for the scene, so watchers' noticing
     // rolls, NPC routines and ambushes read it (it was only ever set by hand)
-    if (/^check-(hide|sneak|shadow)/.test(String(fd.preset ?? "")) && !r.botch && r.successes > 0 && setting("applyChanges")) {
+    if (/^check-(hide|holdstill|sneak|shadow)/.test(String(fd.preset ?? "")) && !r.botch && r.successes > 0 && setting("applyChanges")) {
         try {
             await chronicle()?.applyTimed?.(actor, { name: "Sneaking", condition: "sneaking", duration: { kind: "scene" }, key: "wodx-actions-sneak", source: "V20 Dark Ages p. 169" });
             body += `<div class="vta-note">${esc(actor.name)} is out of sight and moving quietly: marked Sneaking for the scene.</div>`;

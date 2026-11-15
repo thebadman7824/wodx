@@ -1,14 +1,17 @@
 /**
  * Re-audit gate (B6020-B6034), in Foundry, in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatestillmarks.mjs?${Date.now()}`)).run()
- * Makes its own actor and removes it; never moves the clock; starts no fight.
+ * Makes its own actors and a scratch scene and removes them; moves the clock 2 seconds and puts it back; starts no fight.
  *   1. the setting "Conditions hold the token" is there and on; Combat's movementFor, holdOfActor and traitRoll are up
  *   2. a Staked character has no movement at all; with the stake out it moves again
  *   3. a roll effect on every roll (-2 dice, as feeding against the blood's law gives) lowers the attack and the defence
  *   4. a WoDX mark that lasts the scene shows on the token (showIcon ALWAYS), not only on the sheet
  *   5. Crippled limb makes the attack harder; Branded, Filthy and Bloody carry a social difficulty
  *   6. a mortal beaten to a full track of bashing gets Incapacitated by itself, and loses it on healing (B6031)
- *   7. a timed effect with the Obfuscated or Sneaking condition puts that status on the token (B6030, B6034)
+ *   7. a Find a hiding place roll that succeeds puts Sneaking on the token (B6030)
+ *   8. Unseen Presence used through the effects card puts Obfuscated on the token (B6034)
+ *   9. knocked down outdoors in rain: Filthy; the same fall in dry weather: clean (B6033)
+ *  10. a player's character seven nights unwashed turns Filthy when the clock moves; one washed tonight stays clean (B6033)
  * Result: Data/wodx-gate/gatestillmarks-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -19,7 +22,7 @@ export async function run() {
     const C = game.modules.get("wodx-combat")?.api;
     const X = game.modules.get("wodx-chronicle")?.api;
     const K = X?.conditions;
-    const [a, b] = await G.make(Actor, [{name: "Gate Still Body", type: "Mortal"}, {name: "Gate Still Foe", type: "Mortal"}]);
+    const [a, b] = await G.make(Actor, [{name: "Gate Still Body", type: "Mortal", system: {attributes: {wits: {value: 3}}, abilities: {stealth: {value: 3}}}}, {name: "Gate Still Foe", type: "Mortal"}]);
 
     await G.step("1. setting and api", async () => {
       let on = null;
@@ -68,15 +71,72 @@ export async function run() {
       G.ok("6. incapacitated follows the health track", on && off, {on, off, max});
     });
 
-    await G.step("7. obfuscated and sneaking reach the token", async () => {
-      const got = {};
-      for ( const id of ["obfuscated", "sneaking"] ) {
-        if ( !K.getCondition(id) ) { got[id] = "not registered"; continue; }
-        const e = await X.applyTimed(a, {name: `Gate ${id}`, condition: id, duration: {kind: "scene"}, key: `gate-still-${id}`, source: "gate"});
-        got[id] = !!a.statuses?.has?.(`wodx-${id}`) && !!K.hasCondition(a, id);
-        await e?.delete?.();
+    // Steps 7-10 set each status off the way play does, never by placing it directly
+    const wait = (ms = 700) => new Promise(r => setTimeout(r, ms));
+    const ACT = game.modules.get("wodx-actions")?.api;
+
+    await G.step("7. a good hiding roll sets Sneaking", async () => {
+      let tries = 0, on = false;
+      const apply = (() => { try { return game.settings.get("wodx-actions", "applyChanges"); } catch (e) { return null; } })();
+      while ( !on && tries < 3 ) {
+        tries++;
+        await ACT.quickCheck({actor: a, check: "hide", bonus: 8, direct: true});
+        await wait();
+        on = !!a.statuses?.has?.("wodx-sneaking") && !!K.hasCondition(a, "sneaking");
       }
-      G.ok("7. obfuscated and sneaking reach the token", got.obfuscated === true && got.sneaking === true, got);
+      const card = [...game.messages].slice(-3).map(m => m.content ?? "").join(" ").includes("marked Sneaking");
+      G.ok("7. a good hiding roll sets Sneaking", on && card, {on, card, tries, apply});
+      for ( const e of [...a.effects].filter(e => e.statuses?.has?.("wodx-sneaking")) ) await e.delete();
+    });
+
+    await G.step("8. an Obfuscate power sets Obfuscated", async () => {
+      const plan = ACT.effects.powerPlan(a, {set: "v20", id: "obfuscate-unseen-presence", name: "Unseen Presence", line: "v20", successes: 3, source: "gate"});
+      const item = (plan.items ?? []).find(i => i.key === "veil");
+      if ( item ) await ACT.effects.apply(item, "Gate Still Body");
+      await wait();
+      const on = !!a.statuses?.has?.("wodx-obfuscated") && !!K.hasCondition(a, "obfuscated");
+      // and a plain veil that is not Obfuscate (a Gift, a Mage effect) leaves the condition off
+      G.ok("8. an Obfuscate power sets Obfuscated", !!item && on, {item: item ? {key: item.key, route: item.route, condition: item.out?.condition} : null, on, keys: (plan.items ?? []).map(i => i.key)});
+      for ( const e of [...a.effects].filter(e => e.statuses?.has?.("wodx-obfuscated")) ) await e.delete();
+    });
+
+    await G.step("9. a fall in the rain outdoors makes them Filthy", async () => {
+      const AT = game.modules.get("wodx-atmosphere")?.api?.weather;
+      const s = await G.scene({flags: {"wodx-atmosphere": {outdoors: "on"}}});
+      const jdn = AT.night();
+      await AT.set(jdn, {sky: "overcast", precip: "rain", intensity: "moderate", fog: "none", wind: "calm", tempNight: 8, tempDay: 12, thunder: false, snowLying: false, leaves: false});
+      await wait(300);
+      const tags = AT.now()?.tags ?? [], outdoor = AT.isOutdoor(s);
+      await K.setCondition(a, "knockdown", true);
+      await wait();
+      const filthy = !!K.hasCondition(a, "filthy") && !!a.statuses?.has?.("wodx-filthy");
+      await K.setCondition(a, "knockdown", false);
+      await K.setCondition(a, "filthy", false);
+      // dry weather: the same fall leaves them clean
+      await AT.set(jdn, {sky: "clear", precip: "none", intensity: null, fog: "none", wind: "calm", tempNight: 8, tempDay: 14, thunder: false, snowLying: false, leaves: false});
+      await wait(300);
+      await K.setCondition(a, "knockdown", true);
+      await wait();
+      const dry = !K.hasCondition(a, "filthy");
+      await K.setCondition(a, "knockdown", false);
+      await AT.set(jdn, null);
+      G.ok("9. a fall in the rain outdoors makes them Filthy", filthy && dry, {filthy, dry, tags, outdoor});
+    });
+
+    await G.step("10. a week unwashed makes a player's character Filthy", async () => {
+      const players = game.users.filter(u => !u.isGM).length;
+      await b.update({"ownership.default": CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER});
+      const night = Math.floor((game.time.worldTime - 43200) / 86400);
+      await b.setFlag("wodx-library", "washed", night - 8);
+      await game.time.advance(1);
+      await wait(900);
+      const filthy = !!K.hasCondition(b, "filthy");
+      await K.setCondition(b, "filthy", false);
+      await b.setFlag("wodx-library", "washed", night);
+      await game.time.advance(1);
+      await wait(900);
+      const clean = !K.hasCondition(b, "filthy");
+      G.ok("10. a week unwashed makes a player's character Filthy", filthy && clean, {filthy, clean, players, owned: b.hasPlayerOwner});
     });
   } finally { return G.finish(); }
 }

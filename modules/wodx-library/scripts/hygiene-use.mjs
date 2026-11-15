@@ -50,9 +50,8 @@ export function setupHygiene() {
   Hooks.on("updateWorldTime", worldTime => {
     const gm = game.users?.activeGM;
     if ( !game.user.isGM || (gm && gm.id !== game.user.id) ) return;
+    // Checked on every move of the clock (a few player characters, two flag reads each), so a skip or a short wait both count
     const night = H.nightOf(worldTime);
-    if ( night === lastNight ) return;
-    lastNight = night;
     for ( const a of game.actors ?? [] ) {
       if ( !a.hasPlayerOwner || conds()?.hasCondition?.(a, "filthy") ) continue;
       const washed = a.getFlag(MOD, "washed");
@@ -62,4 +61,3 @@ export function setupHygiene() {
     }
   });
 }
-let lastNight = null;
