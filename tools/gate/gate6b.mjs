@@ -266,7 +266,9 @@ async function runGate(K) {
             R.targets = [...game.user.targets].map(t => t.name);
             answer(() => {});
             // The witnesses are passed in, not only targeted: a token drawn a moment ago may not take a target yet
-            const n = game.messages.size; await A().delirium({ tokens: [tok[M.name], tok[F.name], hTok].filter(Boolean) }); const m = await untilMsg(n);
+            const n = game.messages.size; await A().delirium({ tokens: [tok[M.name], tok[F.name], hTok].filter(Boolean) }); await untilMsg(n); await sleep(500);
+            // B5750 follows the Delirium card with the witnesses' card, so the Delirium card is found by its title
+            const m = game.messages.contents.slice(n).find(x => /The Delirium/.test(x.content)) ?? game.messages.contents.at(-1);
             const t = text(m);
             ok("the Delirium", /Kinfolk, untouched/.test(t) && /Miller/.test(t) && /Father Anselm/.test(t) && m.whisper?.length > 0, { card: t.slice(0, 400), kinToken: !!hTok });
             for (const t of [...game.user.targets]) t.setTarget(false, { releaseOthers: false });
