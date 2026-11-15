@@ -510,8 +510,7 @@ test("arrival: Foundry's welcome scene is never the landing and always gives way
   assert.equal(R.mayReplaceActive(core), true);
   assert.equal(R.mayReplaceActive(null), true);
   assert.equal(R.mayReplaceActive({id: "x", img: ""}), true);
-  assert.equal(R.mayReplaceActive(ferry, {playerTokens: 0}), true);
-  assert.equal(R.mayReplaceActive(ferry, {playerTokens: 1}), false);
+  assert.equal(R.mayReplaceActive(ferry), false, "a map made active by the Storyteller stays");
   assert.equal(R.ownsByName({default: 3}, "p1"), false);
   assert.equal(R.ownsByName({default: 0, p1: 3}, "p1"), true);
   assert.equal(R.ownsByName({p1: 2}, "p1"), false);

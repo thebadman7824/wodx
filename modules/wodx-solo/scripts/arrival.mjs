@@ -46,9 +46,8 @@ export async function landing() {
   }
   if ( H.get("landing") !== scene.id ) await game.settings.set(MOD, "landing", scene.id);
   const active = game.scenes.active;
-  // Foundry's welcome scene, a scene with no map or one where no player's character stands gives way (B5147)
-  const playerTokens = active ? all(active.tokens).filter(t => t.actor && all(game.users).some(u => !u.isGM && R.ownsByName(t.actor.ownership, u.id))).length : 0;
-  if ( R.mayReplaceActive(active ? sceneRow(active) : null, {playerTokens}) ) {
+  // Nothing active, a scene with no map, or Foundry's welcome scene gives way (B5147)
+  if ( R.mayReplaceActive(active ? sceneRow(active) : null) ) {
     if ( active?.id !== scene.id ) {
       await scene.activate();
       await H.log({kind: "scene", source: MOD, title: scene.name, note: "made the active scene, to land on"});

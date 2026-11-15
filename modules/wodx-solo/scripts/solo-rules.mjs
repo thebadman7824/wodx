@@ -403,13 +403,12 @@ export const LANDING_NAMES = [/Market (Street|Square)/i, /^Rothenstein\b/i, /Low
 export const isCoreScene = s => s?.id === "NUEDEFAULTSCENE0" || /nue\/defaultscene/i.test(String(s?.img ?? ""));
 
 /**
- * May the landing take the active scene's place? Yes when nothing is active, the active scene has no map, it is
- * Foundry's welcome scene, or no player's character stands on it (so nobody is in play there).
+ * May the landing take the active scene's place? Only when nothing is active, the active scene has no map, or it is
+ * Foundry's welcome scene: a map the Storyteller made active stays (B5147).
  */
-export function mayReplaceActive(active = null, {playerTokens = 0} = {}) {
+export function mayReplaceActive(active = null) {
   if ( !active ) return true;
-  if ( !active.img || isCoreScene(active) ) return true;
-  return !(Number(playerTokens) > 0);
+  return !active.img || isCoreScene(active);
 }
 
 /**

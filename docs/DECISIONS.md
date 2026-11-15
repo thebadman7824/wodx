@@ -8655,7 +8655,7 @@ WoDX Solo. The first walk in the solo world found the new player handed an old g
 Reverse: drop ownsByName from characterOf in panel.mjs.
 
 ## B5147. Foundry's welcome scene gives way to the landing (2026-11-15)
-WoDX Solo. The landing is made active when nothing is active, the active scene has no map, it is Foundry's own welcome scene, or no player's character stands on it. The welcome scene is never picked as the landing.
+WoDX Solo. The landing is made active when nothing is active, the active scene has no map or it is Foundry's own welcome scene; a map the Storyteller made active stays. The welcome scene is never picked as the landing.
 
 Reverse: edit mayReplaceActive and isCoreScene in solo-rules.mjs.
 
