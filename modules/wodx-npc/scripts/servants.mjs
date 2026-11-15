@@ -180,6 +180,8 @@ export async function restrain(attackerLike, targetLike) {
   if ( !a || !t || a.id === t.id || setting("servantRestraint") === false ) return null;
   const r = SR.restraint(records(a), t.id, {treatment: treatmentOf(a, t.id)});
   if ( !r ) return null;
+  // Bonds' after-the-blow card (bonds.mjs onAttack) stands aside for a blow that was rolled here first
+  (globalThis.__wodxRestrained ??= new Map()).set(`${a.id}>${t.id}`, Date.now());
   const wpNow = num(a.system?.advantages?.willpower?.temporary), wpPerm = num(a.system?.advantages?.willpower?.permanent) || 3;
   const res = await rollPool(wpPerm, r.difficulty);
   const won = res.successes > 0 && (!r.spend || wpNow > 0);
