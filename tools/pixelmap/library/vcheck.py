@@ -15,6 +15,7 @@ from library.core import CATALOGUE, render
 from library.census import CENSUS, ERAS
 from library import variants as V
 from library.measure import measure
+from library.steady import steady
 
 DIFF = 7.0            # mean difference (0-255) over the object's own pixels for two variations to count as different
 MIN = V.MIN_VARIANTS
@@ -70,7 +71,7 @@ def check(oid, eras=None):
         odd = [v["vid"] for v, a in zip(vs, asy) if a > max(2.2 * med, med + 18)]  # a stray or off-centre detail
         if odd: bad.append(f"{oid} {era}: {len(odd)} variations far less symmetric than the rest (a misaligned or stray detail?), e.g. {odd[0]}")
         # each era its own: the same variation one era on must look different in most cases (Long Night is not Dark Ages)
-        if prev is not None and eras is None:
+        if prev is not None and eras is None and not steady(oid, era):  # the real thing did not change (steady.py)
             pe, pv, ps = prev; same = []
             for v, sg in zip(vs, sigs):
                 twin = next((k for k, w in enumerate(pv) if {a: b for a, b in w.items() if a not in ("era", "age", "vid")} == {a: b for a, b in v.items() if a not in ("era", "age", "vid")}), None)

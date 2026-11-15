@@ -156,7 +156,9 @@ python3 tools/pixelmap/maps/farmhouse.py /tmp/fh
 - more than half of its variations look the same as the same variation one era earlier (each era needs its own look: the
   making, materials and wear of its time, even where the form barely changed). A colour cast or tint laid over the
   whole drawing does not count: the check also compares the light-and-dark pattern with colour taken out, so the
-  era must change in shape, parts, fittings or detail;
+  era must change in shape, parts, fittings or detail. Where the real object did not change, list that era in
+  `steady.py` with the reason instead of inventing a difference: no clock faces, gears or other tokens added only to
+  set one era apart (the owner, 2026-11-15);
 - a third of its pairs from different regions look alike;
 - a drawing spills past its footprint or is far smaller than it.
 
