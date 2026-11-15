@@ -11,6 +11,7 @@ HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, os.path.di
 from px import R, T, OUT
 import props as pr
 import land
+import wilds as wl
 from scene import Recorder
 
 W, H = 36, 20
@@ -70,28 +71,7 @@ def cart(x, y, w=.95, L=1.75):                                                  
 cart(4.6, 10.7)
 
 
-def trunk(x0, y0, x1, y1, r=22):
-    """A felled tree: bark-dark trunk with a pale sawn end, branch stubs, lying where it was dropped."""
-    X0, Y0, X1, Y1 = x0 * T, y0 * T, x1 * T, y1 * T; ang = math.atan2(Y1 - Y0, X1 - X0); nx, ny = -math.sin(ang), math.cos(ang)
-    sh = [(X0 + nx * r + 8, Y0 + ny * r + 12), (X1 + nx * r * .6 + 8, Y1 + ny * r * .6 + 12), (X1 - nx * r * .6 + 8, Y1 - ny * r * .6 + 12), (X0 - nx * r + 8, Y0 - ny * r + 12)]
-    m.shade((0, 0, m.W, m.H), f=.6, kind="poly", pts=sh)
-    for k, (c, rr) in enumerate(((OUT, r), (R["dwood"][1], r - 2), (R["dwood"][2], r - 6), (R["dwood"][3], r - 12))):
-        off = -k * 1.2
-        pts = [(X0 + nx * (rr + off), Y0 + ny * (rr + off)), (X1 + nx * rr * .6, Y1 + ny * rr * .6), (X1 - nx * rr * .6, Y1 - ny * rr * .6), (X0 - nx * rr, Y0 - ny * rr)]
-        d.polygon(pts, fill=c)
-    rng = m.rng
-    for t in np.linspace(.15, .9, 9):                                                # bark furrows along the trunk
-        px_, py_ = X0 + (X1 - X0) * t, Y0 + (Y1 - Y0) * t; o = rng.uniform(-.5, .5) * r
-        d.line([px_ + nx * o, py_ + ny * o, px_ + nx * o + math.cos(ang) * 18, py_ + ny * o + math.sin(ang) * 18], fill=R["dwood"][0])
-    for t, s in ((.45, 1), (.7, -1)):                                               # lopped branch stubs
-        px_, py_ = X0 + (X1 - X0) * t, Y0 + (Y1 - Y0) * t
-        m.disc(px_ + nx * r * s * .9, py_ + ny * r * s * .9, 7, "wood", 3)
-    d.ellipse([X0 - r, Y0 - r, X0 + r, Y0 + r], fill=R["wood"][3], outline=OUT)     # the sawn end, with rings
-    for rr in (r - 6, r - 12): d.ellipse([X0 - rr, Y0 - rr, X0 + rr, Y0 + rr], outline=R["wood"][2])
-    d.point((X0, Y0), fill=R["wood"][1])
-
-
-trunk(28.6, 3.4, 33.6, 1.6); note("felled trunk", 31, 2.6)
+wl.trunk(m, 28.6, 3.4, 33.6, 1.6); note("felled trunk", 31, 2.6)
 pr.logpile(m, 27.4, 4.4, 2.6, .6); note("woodcutter's stack", 28.7, 4.7)
 pr.chopping(m, 30.4, 4.9) if hasattr(pr, "chopping") else None
 for x, y, r, b in ((9.2, 9.4, 22, None), (19.6, 12.4, 24, R["red"][3]), (14.8, 8.8, 20, None), (25.4, 11.6, 26, None)):
