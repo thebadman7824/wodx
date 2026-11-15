@@ -131,11 +131,14 @@ export async function run() {
       const [tp] = await G.tokens(scene, [{actor: pr, x: 4, y: 4}]);
       const s = await sentenceByButton(pr, [{deed: "killing"}], p => kindOf(p) === "time", timeRegion([{deed: "killing"}]));
       const tok = () => scene.tokens.get((tp.document ?? tp).id);
-      const gone = !!s.mark && (await waitFor(() => tok()?.hidden === true, 5000));
+      // B6429: the term on the character and the token off the map, both, before the term is shortened
+      const gone = !!s.mark && (await waitFor(() => tok()?.hidden === true && !!game.actors.get(pr.id)?.getFlag(C_ID, "lawAway"), 5000));
       // a term that ends this year (a sentence passed years ago), so no years of clock are needed; held, the clock
       // moves a minute and nothing reacts
       const away = game.actors.get(pr.id)?.getFlag(C_ID, "lawAway");
-      if ( away ) await pr.setFlag(C_ID, "lawAway", {...away, until: C()?.eras?.currentYear?.() ?? s.year});
+      const yearNow = C()?.eras?.currentYear?.() ?? s.year;
+      if ( away ) await pr.setFlag(C_ID, "lawAway", {...away, until: yearNow});
+      const shortened = await waitFor(() => Number(game.actors.get(pr.id)?.getFlag(C_ID, "lawAway")?.until) === Number(yearNow), 5000);
       await game.time.advance(60);
       await new Promise(r => setTimeout(r, 1500));
       const heldStill = tok()?.hidden === true && !!game.actors.get(pr.id)?.getFlag(C_ID, "lawAway");
@@ -148,8 +151,9 @@ export async function run() {
       const after = {shown: tok() ? tok().hidden === false : "no token", away: game.actors.get(pr.id)?.getFlag(C_ID, "lawAway") ?? null,
         year: C()?.eras?.currentYear?.() ?? null, skipping: game.settings.get(C_ID, "skipping") ?? null};
       await set(C_ID, "hold", true);
-      G.ok("2. prison: off the map; a hold frees no one; the skip's end does", s.mark?.kind === "time" && gone && heldStill && back,
-        {region: s.region, offered: s.offered, punish: s.punish, until: s.mark?.until, gone, heldStill, back, ...(back ? {} : {after}), error: s.error});
+      // offered lists the card's buttons; "" is its Mercy button (no sentence)
+      G.ok("2. prison: off the map; a hold frees no one; the skip's end does", s.mark?.kind === "time" && gone && shortened && heldStill && back,
+        {region: s.region, offered: s.offered, punish: s.punish, until: s.mark?.until, gone, shortened, heldStill, back, ...(back ? {} : {after}), error: s.error});
     });
 
     await G.step("3. the domitor's feeding, default settings", async () => {
@@ -251,6 +255,8 @@ export async function run() {
       try { await T?.applyTimed?.(t, {name: "Gate TruthC dazzled", condition: "blinded", duration: {kind: "time", seconds: 30}, source: "gate"}); }
       catch (e) { G.R.notes.push(`timed: ${e?.message ?? e}`); }
       const timedOn = () => !!game.actors.get(t.id)?.statuses?.has?.("wodx-blinded");
+      // B6432: on before the clock moves, so "held" below means kept, not never there
+      const timedBefore = await waitFor(timedOn, 5000);
       const heatBefore = game.settings.get(C_ID, "quietHeld")?.law?.length ?? 0;
       const since = Date.now();
       for ( let i = 0; i < 6; i++ ) await C()?.law?.heat?.add?.(c, "killing", {scene, named: true, witnesses: 3});
@@ -259,6 +265,8 @@ export async function run() {
       await new Promise(r => setTimeout(r, 2000));
       const held = {bout: !!game.actors.get(d.id)?.getFlag(C_ID, "bout") && game.actors.get(d.id)?.statuses?.has?.("wodx-deranged"),
         timed: timedOn(), cards: stageCards(), queued: (game.settings.get(C_ID, "quietHeld")?.law?.length ?? 0) - heatBefore};
+      // what is left of the effect after the clock move, when the status is gone (deleted, or switched off)
+      const effect = (() => { const e = game.actors.get(t.id)?.effects?.find?.(x => x.name === "Gate TruthC dazzled"); return e ? {disabled: e.disabled, active: e.active, duration: e.toObject?.().duration ?? null} : null; })();
       await set(C_ID, L, false);
       const boutOver = await waitFor(() => !game.actors.get(d.id)?.statuses?.has?.("wodx-deranged"), 10000);
       const timedOver = await waitFor(() => !timedOn(), 10000);
@@ -266,8 +274,8 @@ export async function run() {
       const cleared = (game.settings.get(C_ID, "quietHeld")?.law ?? []).length === 0;
       await set(C_ID, "hold", true);
       G.ok("8. Light-touch mode holds what acts by itself, and it settles once when turned off",
-        held.bout && held.timed && held.cards === 0 && held.queued >= 1 && boutOver && timedOver && card && cleared,
-        {held, boutOver, timedOver, card, cleared});
+        timedBefore && held.bout && held.timed && held.cards === 0 && held.queued >= 1 && boutOver && timedOver && card && cleared,
+        {timedBefore, held, effect, boutOver, timedOver, card, cleared});
     });
 
     await G.step("9. an era profile: new sheets get its abilities, and existing sheets follow", async () => {
@@ -356,20 +364,25 @@ export async function run() {
         await C()?.derangements?.hold?.(ph, "phobia", {give: true});
         const combat = await G.make(Combat, {scene: scene.id, active: true});
         await combat.createEmbeddedDocuments("Combatant", [tp, tf].map(t => ({tokenId: t.id, sceneId: scene.id, actorId: t.actorId})));
+        // B6433: the dice are set before the fight starts, since the start is already a turn: with no initiative the
+        // phobic sorts first, and that first turn's Courage roll (read once a turn) is the one checked
+        const fixed = await dice(3);
+        const t0 = Date.now();
         await combat.startCombat();
         await waitFor(() => combat.started, 4000);
-        const fixed = await dice(3);
         const idx = () => combat.turns.findIndex(c => c.actorId === ph.id);
-        const t0 = Date.now();
-        if ( combat.turn === idx() ) await combat.update({turn: (idx() + 1) % combat.turns.length});
-        await combat.update({turn: idx()});
-        const lost = await waitFor(() => game.actors.get(ph.id)?.getFlag("wodx-combat", "lostAction")?.combat === combat.id, 8000);
+        if ( combat.turn !== idx() ) await combat.update({turn: idx()});
+        const courageCard = () => game.messages.contents.some(m => m.timestamp >= t0 && m.speaker?.actor === ph.id && /Courage, \d+ dice at 7/.test(m.content ?? ""));
+        // the card is the last thing the turn's reading writes
+        const lostNow = () => game.actors.get(ph.id)?.getFlag("wodx-combat", "lostAction")?.combat === combat.id;
+        await waitFor(() => lostNow() && courageCard(), 8000);
+        const lost = lostNow();
         const flag = game.actors.get(ph.id)?.getFlag("wodx-combat", "lostAction") ?? null;
-        const card = game.messages.contents.some(m => m.timestamp >= t0 && m.speaker?.actor === ph.id && /Courage/.test(m.content ?? ""));
+        const card = courageCard();
         CONFIG.Dice.randomUniform = uniform0;
         const CB = game.wodxCombat ?? game.modules.get("wodx-combat")?.api;
         G.ok("12. a phobia bout: on their turn in a fight, Courage fails and the action is lost", fixed && lost && Number(flag?.round) === Number(combat.round) && card,
-          {fixed, lost, flag, round: combat.round, card, combatApi: !!CB});
+          {fixed, lost, flag, round: combat.round, card, combatApi: !!CB, heldTurn: game.actors.get(ph.id)?.getFlag(C_ID, "bout")?.heldTurn ?? null});
       } finally { CONFIG.Dice.randomUniform = uniform0; }
     });
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }

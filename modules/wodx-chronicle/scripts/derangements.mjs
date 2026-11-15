@@ -72,24 +72,31 @@ export const boutSceneStep = {
   }
 };
 
+const heldReading = new Set();
 /** B6386: the held move of a bout for the combatant whose turn it is now. */
 export async function heldMove(combat) {
-  const c = combat?.combatant, a = c?.actor, b = a ? boutOf(a) : null;
-  const turnKey = c ? `${combat.id}:${combat.round}:${c.id}` : null;
-  if ( !D.heldMoveTurn(b, turnKey) ) return null;
-  const v = a.system?.advantages?.virtues?.courage ?? {};
-  const n = Math.max(1, num(v.roll ?? v.permanent ?? v.value));
-  const roll = await new Roll(`${n}d10`).evaluate();
-  const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
-  const courage = {...count(faces, 7), faces, roll, dice: n};
-  const res = D.heldMoveTurn(b, turnKey, courage);
-  await a.setFlag(MODULE_ID, FLAG, {...b, heldTurn: turnKey});
-  if ( res.lose ) await a.setFlag("wodx-combat", "lostAction", {combat: combat.id, round: combat.round, why: D.TABLE[res.key].label});
-  await card(a, `${a.name}: ${D.TABLE[res.key].label}`, [`Courage, ${n} dice at 7: ${faces.join(", ")} (${courage.botch ? "a botch" : `${courage.successes} success${courage.successes === 1 ? "" : "es"}`}).`, esc(res.line)], [roll]);
-  for ( const t of a.getActiveTokens?.() ?? [] ) {
-    try { canvas.interface?.createScrollingText?.(t.center, res.lose ? "Flees in terror" : "Stands fast", {anchor: CONST.TEXT_ANCHOR_POINTS?.TOP, fill: "#d8c27a", stroke: "#111", strokeThickness: 4, fontSize: 24, duration: 2400}); } catch (e) { /* no canvas */ }
-  }
-  return res;
+  const c = combat?.combatant, a = c?.actor, b = a ? boutOf(a) : null, round = combat?.round;
+  const turnKey = c ? `${combat.id}:${round}:${c.id}` : null;
+  // B6433: the start of a fight and a turn change can come close together; the turn is read once, so it is taken
+  // here before the roll and marked on the bout before anything else is written
+  if ( !D.heldMoveTurn(b, turnKey) || heldReading.has(turnKey) ) return null;
+  heldReading.add(turnKey);
+  try {
+    await a.setFlag(MODULE_ID, FLAG, {...b, heldTurn: turnKey});
+    const v = a.system?.advantages?.virtues?.courage ?? {};
+    // the stored roll value, else the dots (a sheet not yet recomputed keeps a roll of 0)
+    const n = Math.max(1, num(v.roll) || num(v.permanent) || num(v.value));
+    const roll = await new Roll(`${n}d10`).evaluate();
+    const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
+    const courage = {...count(faces, 7), faces, roll, dice: n};
+    const res = D.heldMoveTurn(b, turnKey, courage);
+    if ( res.lose ) await a.setFlag("wodx-combat", "lostAction", {combat: combat.id, round, why: D.TABLE[res.key].label});
+    await card(a, `${a.name}: ${D.TABLE[res.key].label}`, [`Courage, ${n} dice at 7: ${faces.join(", ")} (${courage.botch ? "a botch" : `${courage.successes} success${courage.successes === 1 ? "" : "es"}`}).`, esc(res.line)], [roll]);
+    for ( const t of a.getActiveTokens?.() ?? [] ) {
+      try { canvas.interface?.createScrollingText?.(t.center, res.lose ? "Flees in terror" : "Stands fast", {anchor: CONST.TEXT_ANCHOR_POINTS?.TOP, fill: "#d8c27a", stroke: "#111", strokeThickness: 4, fontSize: 24, duration: 2400}); } catch (e) { /* no canvas */ }
+    }
+    return res;
+  } finally { heldReading.delete(turnKey); }
 }
 
 /** Start (or add to) a bout for the scene. */

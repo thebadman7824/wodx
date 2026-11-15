@@ -50,8 +50,9 @@ export async function applyTimed(actor, o) {
   } else if ( d.kind === "night" ) {
     timed.until = now + secondsToNextDawn(now, setting("latitude"));
   } else if ( d.kind === "time" ) {
+    // B6432: WoDX keeps the time (timed.until) and ends it, as for the night: a core duration in seconds lets Foundry
+    // run the effect out by itself, past a hold, a skip or Light-touch mode and without the reverter
     timed.until = now + Math.max(1, Number(d.seconds) || 1);
-    duration.seconds = Math.max(1, Number(d.seconds) || 1);
   } else throw new Error(`Unknown duration ${d.kind}`);
 
   if ( timed.key ) {

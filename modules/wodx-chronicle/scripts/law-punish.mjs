@@ -92,9 +92,15 @@ async function sendAway(actor, mark) {
   for ( const sc of game.scenes ) {
     // B6165: a token WoDX Storyteller's watch already took (hidden, lawTaken) counts too, so comeBack shows it again
     const ids = sc.tokens.filter(t => t.actorId === actor.id && (!t.hidden || t.flags?.["wodx-storyteller"]?.lawTaken)).map(t => t.id);
-    if ( ids.length ) { await sc.updateEmbeddedDocuments("Token", ids.map(_id => ({_id, hidden: true}))); hidden.push({scene: sc.id, ids}); }
+    if ( ids.length ) hidden.push({scene: sc.id, ids});
   }
+  // B6429: the term first, then the tokens: a token seen leaving the map always has its term on the character, and a
+  // token a failed step left hidden is still shown again when the term is up
   await actor.setFlag(MODULE_ID, "lawAway", {until: mark.until, mark: mark.id, region: mark.region, hidden});
+  for ( const h of hidden ) {
+    try { await game.scenes.get(h.scene)?.updateEmbeddedDocuments("Token", h.ids.map(_id => ({_id, hidden: true}))); }
+    catch (e) { console.error(`WoDX | sentence: hiding ${actor.name}`, e); }
+  }
   return true;
 }
 async function comeBack(actor, why = "The sentence is served") {
