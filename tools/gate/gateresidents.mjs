@@ -18,7 +18,7 @@
  * Result: Data/wodx-gate/gateresidents-result.json.
  */
 const MOD = "wodx-npc";
-const N = 9;
+const N = 10;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 async function save(R) {
