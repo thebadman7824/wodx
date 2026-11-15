@@ -192,7 +192,17 @@ export const mageKit = {
     const out = [];
     if ( w?.kind === "fetish" && status === "done" && t.forced ) { try { await services.spirits?.move?.(services.actor, "bound", {court: w.court, why: `forced a spirit into the ${w.name}`}); out.push("The spirit was forced: its court remembers, and the fetish is unreliable."); } catch (e) { /* Otherworlds off */ } }
     if ( w?.kind === "fetish" && status === "ruined" ) { try { await services.spirits?.move?.(services.actor, "slight", {court: w.court, why: `a botched binding (${w.name})`}); } catch (e) { /* Otherworlds off */ } }
-    if ( status === "ruined" ) out.push("A botch: the work collapses, and the Storyteller decides what it costs (Book of Secrets pdf 152).");
+    // B5013: what the collapse costs, rolled (house figures; Book of Secrets pdf 152 leaves it open)
+    if ( status === "ruined" ) {
+      const a = services.actor, o = botchCost(services.d10 ?? (1 + Math.floor(Math.random() * 10)));
+      if ( a?.isOwner ) {
+        const adv = a.system?.advantages ?? {}, upd = {};
+        if ( o.willpower ) upd["system.advantages.willpower.temporary"] = Math.max(0, n(adv.willpower?.temporary) - o.willpower);
+        if ( o.paradox ) upd["system.paradox.temporary"] = Math.min(20, n(a.system?.paradox?.temporary) + o.paradox);
+        if ( Object.keys(upd).length ) await a.update(upd);
+      }
+      out.push(`A botch: the work collapses (Book of Secrets pdf 152). ${o.text}`);
+    }
     if ( status === "done" && t.opts?.lean === "vulgar" ) out.push("Its Effects are vulgar: using one before Sleepers brings Paradox.");
     return out;
   },
@@ -201,6 +211,14 @@ export const mageKit = {
   intro: m => `Arete ${n(m.arete)}, Quintessence ${n(m.quintessence)}; ${SPHERES.filter(s => n(m.spheres?.[s])).map(s => `${s[0].toUpperCase()}${s.slice(1)} ${m.spheres[s]}`).join(", ") || "no Spheres"}.`,
   approvalText: "are the materials, the Tass and the time at hand?"
 };
+
+/** B5013: what a botched Wonder costs the mage, on a d10 (house figures). The materials are always lost. */
+export const BOTCH_COSTS = [
+  {upTo: 4, willpower: 0, paradox: 0, text: "The materials are lost."},
+  {upTo: 8, willpower: 1, paradox: 0, text: "The materials are lost, and the strain costs a Willpower point."},
+  {upTo: 10, willpower: 1, paradox: 1, text: "The materials are lost, the strain costs a Willpower point, and reality pushes back: a point of Paradox."}
+];
+export function botchCost(d10) { const x = Math.max(1, Math.min(10, Number(d10) || 1)); return BOTCH_COSTS.find(r => x <= r.upTo); }
 
 registerLine("mage", mageKit);
 export {mageByKey};

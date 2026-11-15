@@ -377,15 +377,36 @@ export async function fallenHost(mortal, {house = "devils", celestial = "", natu
   return made;
 }
 
-/** GM: a Fallen without a host tries to take a new body (DtF pdf 260 / printed 259). Posts the roll; the sheet is rebuilt by hand. */
-export async function possess(demon, {target = "ordinary", dice} = {}) {
+/**
+ * B5023: the demon moves into a host on a sheet. Its own Mental and Social traits, Lore, Faith and Torment stay; the
+ * body's Strength, Dexterity and Stamina come from the host; the host's tokens show the demon and the host's
+ * sheet is marked taken. Returns the line for the card.
+ */
+async function takeBody(demon, host) {
+  const att = host.system?.attributes ?? {}, upd = {};
+  for ( const k of SR.HOST_PHYSICAL ) if ( att[k] ) upd[`system.attributes.${k}.value`] = n(att[k].value);
+  upd[`flags.${MODULE_ID}.fallen.host`] = host.name;
+  await demon.update(upd);
+  let moved = 0;
+  for ( const scene of game.scenes ?? [] ) for ( const t of scene.tokens ?? [] ) {
+    if ( t.actorId !== host.id ) continue;
+    try { await t.update({actorId: demon.id, name: demon.name, actorLink: true}); moved++; } catch (e) { /* that token stays */ }
+  }
+  await host.update({[`flags.${MODULE_ID}.takenBy`]: {demon: demon.id, at: game.time.worldTime}});
+  return `${SR.HOST_PHYSICAL.map(k => `${k[0].toUpperCase()}${k.slice(1)} ${n(att[k]?.value)}`).join(", ")} from the body${moved ? `; ${moved} token(s) now show the demon` : ""}.`;
+}
+
+/** GM: a Fallen without a host tries to take a new body (DtF pdf 260 / printed 259). With the person on a sheet the body is taken (B5023). */
+export async function possess(demon, {target = "ordinary", dice, host = null} = {}) {
   if ( !game.user.isGM || !demon ) return null;
   const wp = n(demon.system?.advantages?.willpower?.temporary ?? demon.system?.advantages?.willpower?.permanent);
   const T = SR.HOST_TARGETS[target] ?? SR.HOST_TARGETS.ordinary;
   const d = T.diff === null ? [] : (dice ?? await rollD10(wp));
   const r = SR.possession(target, d);
   const line = T.diff === null ? "A willing thrall: no roll." : `Willpower ${wp} at difficulty ${r.diff}: ${d.join(", ")}, ${r.successes} success${r.successes === 1 ? "" : "es"}.`;
-  const what = r.taken ? (target === "object" || target === "attuned" ? "The demon sinks into the object." : "The demon takes the new body. Rebuild the sheet with the player, adding experience equal to what the demon has earned.")
+  // B5023: a body on a sheet is taken: the demon keeps its own traits and takes the host's Physical ones (DtF pdf 260)
+  const body = r.taken && host && !(target === "object" || target === "attuned") ? await takeBody(demon, host) : null;
+  const what = r.taken ? (target === "object" || target === "attuned" ? "The demon sinks into the object." : body ? `The demon takes ${host.name}'s body: ${body}` : "The demon takes the new body. Rebuild the sheet with the player, adding experience equal to what the demon has earned.")
     : r.botch && (target === "object" || target === "attuned") ? "A botch: 1 permanent Willpower lost, and that object is barred for good."
     : (target === "object" || target === "attuned") ? "It fails: that object is barred for good." : "It fails. Each turn without a host costs a Willpower roll at 6, or the Abyss takes it back.";
   await ChatMessage.create({content: `<div class="wodx-card wodx-embrace"><h3>${esc(demon.name)} seeks a host</h3><p>${esc(T.label)}. ${esc(line)}</p><p><b>${esc(what)}</b></p>
@@ -506,10 +527,11 @@ export async function possessDialog() {
   const r = await ask("A new host", `
     <p>A Fallen whose host has died seeks another body, or an object (Demon: The Fallen pdf 260 / printed 259).</p>
     <div class="form-group"><label>Demon</label>${searchBox("select[name=demon]", "Search demons…", "Search demons")}<select name="demon">${opts(demons.map(a => [a.id, a.name]), demons[0].id)}</select></div>
-    <div class="form-group"><label>The new body</label><select name="target" data-fixed>${opts(Object.entries(SR.HOST_TARGETS).map(([k, t]) => [k, `${t.label}${t.diff ? `, difficulty ${t.diff}` : ", no roll"}`]), "ordinary")}</select></div>`,
-    "Roll", f => ({demon: f.demon.value, target: f.target.value}));
+    <div class="form-group"><label>The new body</label><select name="target" data-fixed>${opts(Object.entries(SR.HOST_TARGETS).map(([k, t]) => [k, `${t.label}${t.diff ? `, difficulty ${t.diff}` : ", no roll"}`]), "ordinary")}</select></div>
+    <div class="form-group"><label>The person taken</label>${searchBox("select[name=host]", "Search people…", "Search people")}<select name="host"><option value="">(nobody on a sheet)</option>${opts(game.actors.filter(a => a.type !== (CONFIG.worldofdarkness?.sheettype?.demon ?? "Demon")).sort(byName).map(a => [a.id, a.name]), "")}</select></div>`,
+    "Roll", f => ({demon: f.demon.value, target: f.target.value, host: f.host?.value ?? ""}));
   if ( !r ) return null;
-  return possess(game.actors.get(r.demon), r);
+  return possess(game.actors.get(r.demon), {...r, host: r.host ? game.actors.get(r.host) : null});
 }
 
 export async function secondBreathDialog() {

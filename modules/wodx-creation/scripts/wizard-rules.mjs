@@ -84,6 +84,8 @@ export function normWizard(w = {}) {
   if ( goodOrder(w?.order?.attributes, ATTR_GROUPS) ) out.order.attributes = [...w.order.attributes];
   if ( goodOrder(w?.order?.abilities, ABIL_GROUPS) ) out.order.abilities = [...w.order.abilities];
   for ( const [k, v] of Object.entries(w?.bought ?? {}) ) if ( EXTRAS[k] && n(v) ) out.bought[k] = n(v);
+  // B5024: where a wilder's seeming point goes
+  if ( w?.wilder === "willpower" || w?.wilder === "glamour" ) out.wilder = w.wilder;
   return out;
 }
 
@@ -207,8 +209,21 @@ export const POWER_KIND = {
   realm: {store: "item", type: "Realm", sub: "", dots: true, max: 5},
   lore: {store: "item", type: "Power", sub: "wod.types.lore", dots: true, max: 5},
   hekau: {store: "item", type: "Power", sub: "wod.types.hekau", dots: true, max: 5},
-  pillar: {store: "hand"}, dominion: {store: "hand"}, edge: {store: "hand"}
+  // B5024: Pillars and Dominions go where WoDX Actions reads them (its daMage and daFae records); edges are Powers
+  pillar: {store: "flagmap", flag: "daMage", field: "pillars", max: 3},
+  dominion: {store: "flagmap", flag: "daFae", field: "dominions", max: 3},
+  edge: {store: "item", type: "Power", sub: "wod.types.edge", dots: true, max: 5}
 };
+/** B5024: the ids and names a flag-kept power offers: a fellowship's four Pillars (all when none is set), the four Dominions. */
+export function flagPowerIds(key, {fellowships = {}, dominions = {}, fellowship = ""} = {}) {
+  if ( key === "pillar" ) {
+    const list = fellowships[fellowship]?.pillars ?? Object.values(fellowships).flatMap(f => f.pillars ?? []);
+    const seen = new Set();
+    return list.filter(([id]) => !seen.has(id) && seen.add(id)).map(([id, label]) => ({id, label}));
+  }
+  if ( key === "dominion" ) return Object.entries(dominions).map(([id, d]) => ({id, label: d.label}));
+  return [];
+}
 
 /** Names the books give (names only; the PC book check confirms the lists). A player can always write another. */
 export const POWER_NAMES = {
