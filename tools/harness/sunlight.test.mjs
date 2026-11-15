@@ -249,7 +249,7 @@ test("B5096: Golconda's grace: the sun falls one step weaker on the ladder", asy
   assert.match(posts.at(-1).body, /Fortitude soak.*\(2 at 9\)/s, "direct sun soaks as a cloudy day");
 });
 
-test("B6214: a low sun's shadow ray stops inside the scene, short of the map's edge", () => {
+test("B6424: a low sun's shadow ray stops inside the scene, short of the map's edge", () => {
   const rect = {x: 100, y: 100, width: 1000, height: 800};
   const v = S.sunVector(60, 0); // morning, east and up the map
   const d = S.rayInScene({x: 400, y: 450}, v, 5000, rect);

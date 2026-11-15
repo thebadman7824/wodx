@@ -114,7 +114,7 @@ export async function releaseServed(year = yearNow(), {settle = false} = {}) {
   // B6162: a time skip or a hold waits; the skip's end lets them out once (settle)
   if ( !isActiveGM() || (!settle && isSkipping()) ) return [];
   const out = [];
-  // B6217: one prisoner whose return fails (a scene or token gone wrong) does not keep the others in
+  // B6427: one prisoner whose return fails (a scene or token gone wrong) does not keep the others in
   for ( const a of game.actors ) {
     const w = a.getFlag?.(MODULE_ID, "lawAway");
     if ( !w || !P.servedBy(w, year) ) continue;

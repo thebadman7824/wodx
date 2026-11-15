@@ -47,7 +47,7 @@ export function sunVector(azimuth, north = 0) {
 }
 
 /**
- * B6214: where a ray toward the sun stops inside the scene's own rectangle ({x, y, width, height}), a pixel short of
+ * B6424: where a ray toward the sun stops inside the scene's own rectangle ({x, y, width, height}), a pixel short of
  * its edge. The scene's bounds count as walls to Foundry's collision test (v12 on), so a low sun's long shadow ray
  * that ran off the map read as shade from the map's edge; past the edge there are no walls to throw a shadow anyway.
  */

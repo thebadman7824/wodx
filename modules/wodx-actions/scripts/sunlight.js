@@ -102,7 +102,7 @@ export function build(ctx) {
         const pxPerUnit = (scene.grid?.size ?? 100) / (scene.grid?.distance ?? 5);
         const len = Math.min(S.shadowLength(wallHeight(scene), sun.altitude) * pxPerUnit, Math.hypot(scene.width ?? 4000, scene.height ?? 4000));
         const v = S.sunVector(sun.azimuth, sceneNorth(scene));
-        // B6214: the ray stops inside the scene, so the map's own edge does not count as a wall
+        // B6424: the ray stops inside the scene, so the map's own edge does not count as a wall
         const rect = globalThis.canvas?.dimensions?.sceneRect ?? null;
         const dest = S.rayInScene(tok.center, v, len, rect);
         if (Math.hypot(dest.x - tok.center.x, dest.y - tok.center.y) < 1) return false;

@@ -92,7 +92,7 @@ export async function proof(body, by = null, {region = null} = {}) {
   if ( carry && by?.object && body.object ) {
     let r = null;
     try { r = await carry(by.object, body.object, {intent: "proof", faction: "hunters", place: p.to}); } catch (e) { console.warn(`${MOD} | proof carry`, e); }
-    // B6216: the hunter still leaves the map. Off the map's edge WoDX NPC hides the carrier and fires wodxBodyTaken (the
+    // B6426: the hunter still leaves the map. Off the map's edge WoDX NPC hides the carrier and fires wodxBodyTaken (the
     // proof's effects come from onBodyTaken); set down at its goal on this map, the carrier goes; a carry that stalled
     // on the map lets go, and the walk-and-hide below takes the body
     if ( r?.ok ) {

@@ -2218,7 +2218,7 @@ Hooks.on("updateCombat", (combat, changed) => {
     try { if (!setting("standUpRoll")) return; } catch (e) { return; }
     const c = combat.combatant;
     if (!c?.actor || !chronicle()?.conditions?.hasCondition?.(c.actor, "knockdown")) return;
-    // B6226: one roll per knockdown per turn start. The key names the knockdown itself, so a turn that came round
+    // B6436: one roll per knockdown per turn start. The key names the knockdown itself, so a turn that came round
     // with nobody down (the fight's first turn) or an earlier knockdown that was stood up from never blocks this one;
     // Previous and Next turn on the same knockdown in the same turn do not roll again
     const fx = [...(c.actor.effects ?? [])].find(e => e.statuses?.has?.("wodx-knockdown"));
