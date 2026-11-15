@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5930
+Next free block: B5940
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -320,6 +320,7 @@ Next free block: B5930
 | B5890-B5899 | Future Darkness world news by region: the Americas, Africa and Oceania after 2023 (used B5890-B5892) | Chronicle |
 | B5900-B5919 | War beyond Europe: armies, sieges and ships by land (Armies and Ships Desk) (used B5900-B5910) | Storyteller |
 | B5920-B5929 | The classic world timeline in the game (used B5920-B5926) | Chronicle, Storyteller |
+| B5930-B5939 | Market goods by region (the Market Goods Desk) (used B5930-B5936) | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9762,3 +9763,38 @@ Reverse: drop quietNews in signals.mjs.
 WoDX Chronicle. Fourteen W lines tell events the book events already tell (the Shattering, the Camarilla, the Convention of Thorns, the Maelstroms, the Week of Nightmares and others); the build leaves them out (TOLD_BY_BOOK). The eight house readings of the Americas, Africa and Oceania still waiting on the PC's book check stay out until it lands (WAITING). The timeline deconfliction check ran on the edited files: 6,477 events, no new clash.
 
 Reverse: empty the two lists.
+
+## B5930. Imports cost more the farther they came (2026-11-15)
+WoDX Storyteller, goods-place-rules.mjs. A good that WoDX Library says is not at home on this scene's land, but is at home somewhere else in that year, costs twice as much when its home is in the same part of the world (Moravia counts as Europe) and three times as much from another part. Goods found everywhere, coins and goods out of their time keep their price. Built at the Market Goods Desk's recommendation (https://claude.ai/artifact/NNY9DKE1hzvJZtSeHMqhys, item m1) while it waits.
+
+Reverse: IMPORT = {near: 1, far: 1}.
+
+## B5931. The land's own goods are a quarter cheaper (2026-11-15)
+WoDX Storyteller. A good whose entry names this region or its way of life costs three quarters of the usual price there (desk item m2).
+
+Reverse: OWN = 1.
+
+## B5932. Each land's trade (2026-11-15)
+WoDX Storyteller. Each of the 16 ways of life has one to three kinds of goods it has cheap (x0.85) and one or two it pays dear for (x1.25), a house reading of history: paper and cloth in China, cloth in India and the lands of Islam, fuel and timber in the north, food dear in the Sahel and in Tibet. It applies on top of the market's own index, fades from 1900 and is gone by 2000, and shows in the market window (desk item m3).
+
+Reverse: empty LAND_TRADE.
+
+## B5933. Caravans name their goods (2026-11-15)
+WoDX Storyteller. A caravan's card, the road report and the caravan list name up to two real goods of the sending market's land for each kind it carries, the land's own goods first, the same each time for the same caravan (desk item m4).
+
+Reverse: loadLabel returns label(k).
+
+## B5934. World news that moves the markets (2026-11-15)
+WoDX Storyteller, market-news-rules.mjs worldNewsFor. A world timeline event (WoDX Chronicle wh- and fdw-) tagged plague or famine in the homeland's own part of the world, or a war in Moravia when Moravia is home, offers the same market news card as the book events. Never the hidden story, never news a year old, and at most one card of each kind in 90 days of game time, so a long time skip brings one card, not hundreds (desk item m5).
+
+Reverse: worldNewsFor returns null.
+
+## B5935. The price says why (2026-11-15)
+WoDX Storyteller. A price carries "brought from far off", "brought from nearby lands" or "the land's own" after it, in every place that shows the price text (desk item m6).
+
+Reverse: drop WHY_WORDS from priceSync.
+
+## B5936. One setting for it all (2026-11-15)
+WoDX Storyteller. The world setting "Prices know where goods come from" (goodsByPlace, on by default) turns B5930 to B5935 off together.
+
+Reverse: set it off.
