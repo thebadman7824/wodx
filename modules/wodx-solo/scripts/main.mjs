@@ -21,6 +21,7 @@
  *   arrival      a scene to land on, a character for a player with none and its token at the way in (arrival.mjs, B5140)
  *   the fallen   a companion carries the player's character when it goes down, and anyone else the panel names
  *                (companions.mjs, B5079)
+ *   the world    the oracle, the Leads page and night encounters on the map, step 3 (world.mjs, B5980 to B5985)
  *
  * It never acts in the Live world. Everything here runs on the active Storyteller's client, except the notice a
  * player gets when the seat is empty.
@@ -31,6 +32,7 @@ import {registerPanelSettings, installPanel, panelApi} from "./panel.mjs";
 import {registerStSettings, installStTools, stApi} from "./st-tools.mjs";
 import {registerArrivalSettings, installArrival, arrivalApi} from "./arrival.mjs";
 import {registerCarrySettings, installCarry, carryApi} from "./companions.mjs";
+import {registerWorldSettings, installWorld, worldApi} from "./world.mjs";
 
 const MOD = "wodx-solo";
 const CHRON = "wodx-chronicle";
@@ -262,12 +264,12 @@ Hooks.once("init", () => {
   registerStSettings();
   registerArrivalSettings();
   registerCarrySettings();
+  registerWorldSettings();
 });
 
 Hooks.once("ready", () => {
   const api = {
-    rules: R, isOn, isSeat, apply, restore, panel: panelApi, st: stApi, arrival: arrivalApi,
-    rules: R, isOn, isSeat, apply, restore, panel: panelApi, st: stApi, carry: carryApi,
+    rules: R, isOn, isSeat, apply, restore, panel: panelApi, st: stApi, arrival: arrivalApi, carry: carryApi, world: worldApi,
     log: {entries: () => (game.user.isGM ? entries() : []), add: log,
       stalls: (since = 0) => (game.user.isGM ? R.stallReport(entries(), since) : R.stallReport([], since)),
       clear: () => (game.user.isGM ? game.settings.set(MOD, "log", R.blankLog()) : null)}
@@ -285,6 +287,7 @@ Hooks.once("ready", () => {
   installStTools({isOn, isSeat, blocked, log, entries, get, read, findButton});
   installArrival({isOn, isSeat, log, get});
   installCarry({isOn, isSeat, log, get});
+  installWorld({isOn, isSeat, log, get});
 
   if ( game.user.isGM ) watchPlayer();
   if ( !isOn() ) return;

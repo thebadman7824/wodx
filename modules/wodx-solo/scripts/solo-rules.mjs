@@ -99,8 +99,8 @@ export function stallReport(entries = [], since = 0) {
 /* ------------------------------ the player's panel (0.2.0) ------------------------------ */
 
 /**
- * What the panel offers in step 2 of the plan (B2640). The oracle, the Leads page and the trouble dial come in step 3
- * and the director in step 4, so they are not on it yet.
+ * What the panel offers: step 2 of the plan (B2640), with the oracle and the Leads page of step 3 (B5980, B5982).
+ * The director of step 4 is not on it yet.
  */
 /**
  * The panel's one main button (Solo 0.3.0, B2831): the clock runs until something happens, an hour at most, with
@@ -110,6 +110,9 @@ export const NEXT = {id: "next", label: "What happens next?", icon: "fa-solid fa
   hint: "The clock runs until something happens, an hour at most."};
 
 export const PANEL = [
+  // B5980, B5982: step 3 of the plan
+  {id: "oracle", label: "Ask the oracle", icon: "fa-solid fa-circle-question"},
+  {id: "leads", label: "Leads", icon: "fa-solid fa-route"},
   {id: "time", label: "Let time pass", icon: "fa-solid fa-hourglass-half"},
   {id: "travel", label: "Travel", icon: "fa-solid fa-person-walking-luggage"},
   {id: "pause", label: "Pause or go on", icon: "fa-solid fa-pause"},
