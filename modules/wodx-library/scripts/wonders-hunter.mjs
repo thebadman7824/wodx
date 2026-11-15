@@ -13,6 +13,7 @@
  */
 import * as H from "../data/wonders-hunter.mjs";
 import {registerLine} from "./wonder-registry.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const WILL = "system.advantages.willpower.temporary";
@@ -32,7 +33,7 @@ const seedOf = str => { let h = 2166136261; for ( const c of String(str) ) { h ^
 export function holyRoll(faith, seed) {
   let x = seedOf(seed) || 1;
   const dice = Array.from({length: Math.max(1, n(faith))}, () => { x = (Math.imul(x, 1103515245) + 12345) >>> 0; return 1 + ((x >>> 16) % 10); });
-  const hits = dice.filter(d => d >= HOLY_DIFF).length, ones = dice.filter(d => d === 1).length;
+  const {raw: hits, ones} = TERMS.successes(dice, HOLY_DIFF);
   return {dice, successes: Math.max(0, hits - ones), holy: hits - ones > 0};
 }
 

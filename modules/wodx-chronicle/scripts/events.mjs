@@ -2,9 +2,6 @@ import {MODULE_ID, esc, isActiveGM, rule, setting, setSetting, log} from "./util
 import {getEngine} from "./calendar.mjs";
 import {searchBox} from "./search.mjs";
 import EVENT_DATA from "../data/events.mjs";
-import FUTURE_DATA from "../data/future-events.mjs";
-import FUTURE_WORLD from "../data/future-world.mjs";
-import WORLD_HISTORY from "../data/world-history.mjs";
 import {eventTable, dateKey, dateLabel, cleanOverride, newsCodes, heardIn, newsFor, NEWS_PARTS, capTold, isWorld, worldEraAt, shownIn} from "./events-rules.mjs";
 import * as place from "./place.mjs";
 
@@ -15,11 +12,31 @@ import * as place from "./place.mjs";
  * Other modules ask with game.wodx.chronicle.events.has(id).
  */
 
-export const EVENTS = [...EVENT_DATA.events, ...FUTURE_DATA.events, ...FUTURE_WORLD.events, ...WORLD_HISTORY.events];
-/** The eras of the world timeline, 1197 to 2009 (B5920): {id, name, from, to}. */
-export const WORLD_ERAS = WORLD_HISTORY.eras;
+/*
+ * The world timeline, the future events and the future world (about 1.2 MB, B6240) load on the Storyteller's client
+ * only: main.mjs starts load() at init there, and every caller that may run on a player's client awaits load() first.
+ * A player's client asks has() and fired(), which read the fired list the Storyteller's client keeps in a setting, and
+ * reads the Dated events page and the news cards the Storyteller's client writes. Until load() ends, list() holds the
+ * book events alone.
+ */
+let BIG = null, loading = null;
+/** Load the large tables once; resolves to {future, world, history}. */
+export function load() {
+  if ( BIG ) return Promise.resolve(BIG);
+  loading ??= Promise.all([import("../data/future-events.mjs"), import("../data/future-world.mjs"), import("../data/world-history.mjs")])
+    .then(([f, w, h]) => (BIG = {future: f.default, world: w.default, history: h.default}))
+    .catch(err => { loading = null; throw err; });
+  return loading;
+}
+/** Are the large tables in? */
+export const loaded = () => !!BIG;
+
+/** Every event the data holds: the book events, and once loaded the future and the world timeline. */
+export const allEvents = () => BIG ? [...EVENT_DATA.events, ...BIG.future.events, ...BIG.world.events, ...BIG.history.events] : EVENT_DATA.events;
+/** The eras of the world timeline, 1197 to 2009 (B5920): {id, name, from, to}; empty until loaded. */
+export const worldEras = () => BIG?.history.eras ?? [];
 /** The era of the world timeline the clock stands in. */
-export const worldEra = (year = today().year) => worldEraAt(WORLD_ERAS, year);
+export const worldEra = (year = today().year) => worldEraAt(worldEras(), year);
 
 const activeScene = () => { try { return game.scenes?.active ?? null; } catch (e) { return null; } };
 /** The parts of the world whose news reaches the table: the homeland's and the active scene's (B5891). */
@@ -29,7 +46,7 @@ export function hereCodes(scene = activeScene()) {
 /** Is this event's news heard where the chronicle stands now? Events with no region always are. */
 export const heard = (ev, codes = hereCodes()) => heardIn(ev, codes);
 /** The Cascades of the Time of Future Judgement (2099): {id, name, pitch}. */
-export const CASCADES = FUTURE_DATA.cascades;
+export const cascades = () => BIG?.future.cascades ?? [];
 export const BRANCH_NOTE = EVENT_DATA.branchNote;
 
 export function registerEventSettings(onChange) {
@@ -54,7 +71,7 @@ const opts = () => ({overrides: setting("eventOverrides") ?? {}, futureBranch: r
 
 /** The chosen Cascade's name, or a note that none is chosen yet. */
 function cascadeLine() {
-  const c = CASCADES.find(x => x.id === setting("futureCascade"));
+  const c = cascades().find(x => x.id === setting("futureCascade"));
   return c ? `Time of Future Judgement (2099): ${c.name}.` : "Time of Future Judgement (2099): no Cascade chosen yet, so none of its events fire.";
 }
 const stateOf = (ev, done) => !ev.live ? (!ev.on ? "Off" : ev.cascade && rule("futureBranch") ? "Other Cascade" : "Other timeline")
@@ -70,9 +87,9 @@ function today() {
 let table = {key: null, rows: [], byId: new Map()};
 function current() {
   const o = opts();
-  const key = `${JSON.stringify(o.overrides)}|${!!o.futureBranch}|${o.cascade}`;
+  const key = `${JSON.stringify(o.overrides)}|${!!o.futureBranch}|${o.cascade}|${!!BIG}`;
   if ( table.key !== key ) {
-    const rows = eventTable(EVENTS, o);
+    const rows = eventTable(allEvents(), o);
     table = {key, rows, byId: new Map(rows.map(ev => [ev.id, ev]))};
   }
   return table;
@@ -110,6 +127,7 @@ export function checkEvents(options = {}) {
 
 async function _checkEvents({label = "", force = false} = {}) {
   if ( !isActiveGM() ) return null;
+  await load();
   // `force` checks even while the world is held (the gate uses it, so nothing else in the world reacts)
   if ( setting("hold") && !force ) return {fired: [], undone: [], held: true};
   const now = firedNow();
@@ -210,17 +228,19 @@ export class EventsApp extends ApplicationV2 {
   /** The era of the world timeline whose events the window lists (B5923): the clock's own when it opens. */
   era = null;
 
-  static open(era = null) {
+  static async open(era = null) {
+    await load();
     this.#instance ??= new EventsApp();
     this.#instance.era = era ?? worldEra()?.id ?? "";
     return this.#instance.render({force: true});
   }
 
   async _renderHTML() {
+    await load();
     const ov = setting("eventOverrides") ?? {};
     const done = new Set(fired());
     const era = this.era ?? worldEra()?.id ?? "";
-    const eraOptions = [...WORLD_ERAS.map(e => ({id: e.id, name: `${e.name} (${e.from} to ${e.to})`})), {id: "", name: "None: book events only"}]
+    const eraOptions = [...worldEras().map(e => ({id: e.id, name: `${e.name} (${e.from} to ${e.to})`})), {id: "", name: "None: book events only"}]
       .map(e => `<option value="${esc(e.id)}" ${e.id === era ? "selected" : ""}>${esc(e.name)}</option>`).join("");
     const rows = list().filter(ev => shownIn(ev, era)).map(ev => `
       <div class="form-group wodx-event-row" data-search-item data-search-text="${esc(`${ev.name} ${ev.year} ${ev.lines.join(" ")} ${ev.place ?? ""} ${NEWS_PARTS[ev.region] ?? ""}`)}">
@@ -235,7 +255,7 @@ export class EventsApp extends ApplicationV2 {
         <p class="hint">${esc(dateLabel(ev))} · ${stateOf(ev, done).toLowerCase()} · ${esc(ev.summary)} <em>${esc(ev.source)}</em></p>
       </div>`).join("");
     const cur = setting("futureCascade") ?? "";
-    const cascadeOptions = [{id: "", name: "None yet", pitch: ""}, ...CASCADES].map(c =>
+    const cascadeOptions = [{id: "", name: "None yet", pitch: ""}, ...cascades()].map(c =>
       `<option value="${esc(c.id)}" ${c.id === cur ? "selected" : ""} title="${esc(c.pitch)}">${esc(c.name)}</option>`).join("");
     const div = document.createElement("div");
     div.className = "wodx-body";
@@ -273,7 +293,7 @@ export class EventsApp extends ApplicationV2 {
   static async save(form) {
     const prev = setting("eventOverrides") ?? {};
     const next = {};
-    for ( const ev of EVENTS ) {
+    for ( const ev of allEvents() ) {
       const f = n => form.elements[`${ev.id}.${n}`];
       if ( !f("on") ) { if ( prev[ev.id] ) next[ev.id] = prev[ev.id]; continue; }
       const o = cleanOverride({on: !!f("on")?.checked, year: f("year")?.value, month: f("month")?.value, day: f("day")?.value});
@@ -283,7 +303,7 @@ export class EventsApp extends ApplicationV2 {
       if ( Object.keys(o).length ) next[ev.id] = o;
     }
     const cascade = String(form.elements.futureCascade?.value ?? "");
-    if ( cascade !== (setting("futureCascade") ?? "") && (!cascade || CASCADES.some(c => c.id === cascade)) ) await setSetting("futureCascade", cascade);
+    if ( cascade !== (setting("futureCascade") ?? "") && (!cascade || cascades().some(c => c.id === cascade)) ) await setSetting("futureCascade", cascade);
     await setSetting("eventOverrides", next);
   }
 }

@@ -10,6 +10,7 @@
  *   referee(q, ctx)    both together: [{case, test}]
  */
 import {CASES, POWERS, LINES} from "../data/crossover.mjs";
+import * as TERMS from "./terms.mjs";
 
 export {CASES, POWERS, LINES};
 
@@ -38,7 +39,8 @@ export function profileOf(actor) {
 }
 
 /** The Dark Ages books rule the Dark Ages, the Long Night and the eras before; every later era takes V20 and its kin. */
-export const DA_ERAS = ["classical", "living-gods", "mythic-age", "bronze-kings", "iron-dawn", "greece-republic", "roman-empire", "migration-age", "premyslid-duchy", "dark-ages", "long-night"];
+/** B6192: the eras the era profiles play by the Dark Ages rules (terms.darkAgesRules), plus the upstream era names. */
+export const DA_ERAS = ["classical", "living-gods", ...TERMS.ERAS.filter(e => TERMS.darkAgesRules(e.id)).map(e => e.id)];
 export const bookOf = era => (DA_ERAS.includes(String(era ?? "").toLowerCase()) ? "da" : "late");
 
 /**
@@ -180,8 +182,8 @@ export function referee(q = {}, ctx = {}) {
  * Returns {successes, botch}.
  */
 export function successes(faces = [], difficulty = 6) {
-  const hits = faces.filter(f => f >= difficulty).length, ones = faces.filter(f => f === 1).length;
-  return {successes: Math.max(0, hits - ones), botch: hits === 0 && ones > 0};
+  const r = TERMS.successes(faces, difficulty);
+  return {successes: r.successes, botch: r.botch};
 }
 
 /** The powers a line can use as the one acting, for the window's list: every power some case lets this line use. */

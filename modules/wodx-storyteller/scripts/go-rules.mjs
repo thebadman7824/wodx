@@ -3,6 +3,7 @@
  * the clock moves on by the days it takes, each day on the way may bring a meeting, and the party arrives in the
  * part of the world at the far end (its money and its people). Pure rules, no Foundry.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** Most meetings one long journey can bring, so a voyage of months is not a page of cards. */
 export const MAX_MEETINGS = 3;
@@ -23,7 +24,7 @@ export function goPlan(j, {way = "surface", chance = 10, rand = Math.random} = {
   const p = Math.max(0, Math.min(100, Number(chance) || 0)) / 100 * WAY_FACTOR[by];
   const meetings = [];
   for ( let d = 0; d < days && meetings.length < MAX_MEETINGS; d++ ) if ( p && rand() < p ) meetings.push(d);
-  return {way: by, days, seconds: days * 86400, meetings, legs: by === "surface" ? (leg.legs ?? []) : []};
+  return {way: by, days, seconds: days * DAY, meetings, legs: by === "surface" ? (leg.legs ?? []) : []};
 }
 
 /** The words for the Storyteller's card. */

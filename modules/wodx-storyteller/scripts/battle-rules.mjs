@@ -38,6 +38,7 @@ import {normOffers, POSTS as DEED_POSTS} from "./battle-deeds.mjs";
 import {normAftermath} from "./battle-aftermath.mjs";
 import {normCampaign} from "./siege-works-rules.mjs";
 import * as WL from "./war-lands-rules.mjs";
+import {DAY, HOUR} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const BATTLES_VERSION = 1;
 export const BATTLES_CAP = 200;
@@ -45,7 +46,6 @@ export const BATTLES_CAP = 200;
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const str = (v, max = 120) => String(v ?? "").trim().slice(0, max);
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
-const HOUR = 3600, DAY = 86400;
 
 /**
  * How war is fought in each age. `phase` is the game time one phase of a battle takes; `kill` the share of the

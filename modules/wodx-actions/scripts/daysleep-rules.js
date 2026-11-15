@@ -13,13 +13,13 @@
  * No Foundry here: tools/harness/daysleep.test.mjs runs these.
  */
 import { riseOffset } from "./beast-marks-rules.js";
+import {SCENE_SECONDS, TURN_SECONDS} from "../../wodx-chronicle/scripts/terms.mjs";
+export {SCENE_SECONDS, TURN_SECONDS};
 
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 
 /** Seconds of the clock one turn takes by day (the sunlight system counts the same). */
-export const TURN_SECONDS = 3;
 /** Five successes keep a Cainite up for the scene; the clock takes a scene as this long. */
-export const SCENE_SECONDS = 3600;
 
 /** Seconds before sunset that a Cainite of this rating stirs (Road or Humanity 7+ rise just before it). */
 export const earlySeconds = rating => Math.max(0, -riseOffset(rating) * 60);
@@ -42,9 +42,9 @@ export function wakeAt(now, toDusk, rating) {
 }
 
 /** A Road roll that keeps them up: until when. turns: a number, or "scene" / Infinity. */
-export function awakeUntil(now, turns) {
+export function awakeUntil(now, turns, perTurn = TURN_SECONDS) {
     if (turns === "scene" || turns === Infinity) return n(now) + SCENE_SECONDS;
-    return n(now) + Math.max(1, n(turns)) * TURN_SECONDS;
+    return n(now) + Math.max(1, n(turns)) * (n(perTurn) > 0 ? n(perTurn) : TURN_SECONDS);
 }
 
 /** One key per day (the hour of its sunset), for the vigil rolled once at dawn. */

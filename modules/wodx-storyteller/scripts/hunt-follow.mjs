@@ -19,6 +19,7 @@ import * as HF from "./hunt-follow-rules.mjs";
 import * as H from "./hunters-rules.mjs";
 import * as Between from "./between.mjs";
 import {MOD, esc, isActiveGM, chron, npc, gmIds, log} from "./core.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const now = () => game.time?.worldTime ?? 0;
 const all = c => (c ? [...(c.contents ?? c)] : []);
@@ -237,8 +238,7 @@ async function dailyRoll(scene, d, r, today) {
   const a = d.actor, s = a?.system ?? {};
   const pool = Math.max(1, Number(s.attributes?.perception?.value || 3) + Number(s.abilities?.investigation?.value || 3));
   const roll = await new Roll(`${pool}d10cs>=${HF.INVESTIGATE_DIFF}`).evaluate();
-  const ones = roll.dice[0]?.results?.filter(x => x.result === 1).length ?? 0;
-  const net = Math.max(0, roll.total - ones);
+  const net = TERMS.successes((roll.dice[0]?.results ?? []).map(x => x.result), HF.INVESTIGATE_DIFF).successes;
   const told = new Set((npc()?.wanted?.list?.() ?? []).filter(x => !x.dropped && x.of).map(x => x.of));
   let names = [];
   if ( net ) await hunters()?.mutate?.(r.region, x0 => {

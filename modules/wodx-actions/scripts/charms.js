@@ -18,6 +18,7 @@ import * as LIM from "./limits.js";
 import * as SC from "./spirit-charms.js";
 import * as EF from "./effects.js";
 import * as E from "./effects-rules.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -424,7 +425,7 @@ export function build(ctx) {
             case "solidify": {
                 const who = first ?? actor;
                 if (who.effects?.some?.(e => e.flags?.["wodx-chronicle"]?.timed?.key === "wodx-charm-solidify" || e.name === "Solidified")) return { html: note(`${who.name} already has the Pattern's strength: this use fails.`) };
-                const day = { kind: "time", seconds: 86400 };
+                const day = { kind: "time", seconds: DAY };
                 if (isSpirit(who) || !who.system?.attributes) {
                     await who.update({ "system.advantages.essence.temporary": n(who.system?.advantages?.essence?.temporary) + got });
                     await mark(who, c, { essence: got }, { name: "Solidified", duration: day });

@@ -83,6 +83,7 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
+| wodxNightUndone | chronicle | pieces of the Hand's work taken back with the night's work: {ids, plan} (B6222) |
 | wodxBondRestraint | npc | a bound servant rolled before striking its master: {attacker, target, kind, stop} (B5102) |
 | wodxScar | chronicle | lasting damage left on a scene: {scene, id, kind, severity, hit} (B3759) |
 | wodxWay | storyteller | a company went through a Way: {from, to, kind, actors, minutes} (B4780) |

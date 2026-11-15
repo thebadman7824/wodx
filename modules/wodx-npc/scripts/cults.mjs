@@ -20,6 +20,7 @@
 import * as C from "./cult-rules.mjs";
 import * as DU from "./duty-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export function build(ctx) {
   const {MOD, esc, gmIds, isActiveGM, chron} = ctx;
@@ -342,8 +343,8 @@ export function build(ctx) {
   async function rollPool(dice, diff = 6) {
     const r = await new Roll(`${Math.max(1, dice)}d10`).evaluate();
     const faces = r.dice[0]?.results?.map(x => x.result) ?? [];
-    const hits = faces.filter(f => f >= diff).length, ones = faces.filter(f => f === 1).length;
-    return {roll: r, faces, net: hits - ones, botch: hits === 0 && ones > 0};
+    const c = TERMS.successes(faces, diff);
+    return {roll: r, faces, net: c.raw - c.ones, botch: c.botch};
   }
 
   /** A sermon: the words count by their themes; the roll by its successes (two awe each). Storyteller's client. */

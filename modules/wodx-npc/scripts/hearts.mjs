@@ -15,6 +15,8 @@
  */
 import * as H from "./hearts-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
 const st = () => (game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null);
@@ -38,12 +40,9 @@ function ageCheck(...people) {
 
 /** The line a sheet belongs to. */
 export function lineOf(actorLike) {
-  const a = actorOf(actorLike);
-  const t = String(a?.type ?? "").toLowerCase();
-  if ( t === "mortal" ) return a?.flags?.["wodx-creation"]?.lineage?.kinfolk || a?.flags?.[MOD]?.kinfolk ? "kinfolk" : a?.flags?.["wodx-creation"]?.ghoul || a?.flags?.[MOD]?.ghoul ? "ghoul" : "mortal";
-  if ( t.startsWith("changel") ) return "changeling";
-  if ( /kuei|cathayan/.test(t) ) return "kueijin";
-  return ["vampire", "werewolf", "mage", "wraith", "hunter", "mummy", "demon"].includes(t) ? t : "mortal";
+  // B6187: the shared reading (a ghoul by the sheet's own variant too, a Kuei-jin by the Kindred of the East variant)
+  const l = TERMS.lineOf(actorOf(actorLike));
+  return ["spirit", "creature", "exalted"].includes(l) ? "mortal" : l;
 }
 const pathOf = a => { const c = String(a?.system?.advantages?.path?.custom ?? "").trim(); return c && !/humanit/i.test(c) ? c : ""; };
 const humanityOf = a => Number(a?.system?.advantages?.path?.permanent ?? a?.system?.advantages?.humanity?.permanent) || 0;
@@ -242,7 +241,7 @@ async function grieve(who, kind) {
   const dice = Math.max(1, Number(who.system?.advantages?.willpower?.permanent) || 3);
   const roll = await new Roll(`${dice}d10`).evaluate();
   const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
-  const hits = faces.filter(f => f >= diff).length, ones = faces.filter(f => f === 1).length;
+  const {raw: hits, ones} = TERMS.successes(faces, diff);
   const res = H.griefResult({successes: Math.max(0, hits - ones), botch: hits === 0 && ones > 0}, great);
   let line = `Grief, Willpower ${dice} dice at ${diff}: ${faces.join(", ")}. `;
   if ( res.held ) line += "They hold together.";
@@ -259,7 +258,7 @@ async function heartbreak(who, other) {
   const dice = Math.max(1, Number(who.system?.advantages?.willpower?.permanent) || 3);
   const roll = await new Roll(`${dice}d10`).evaluate();
   const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
-  const hits = faces.filter(f => f >= H.HEARTBREAK_DIFF).length, ones = faces.filter(f => f === 1).length;
+  const {raw: hits, ones} = TERMS.successes(faces, H.HEARTBREAK_DIFF);
   const botch = hits === 0 && ones > 0;
   let line = `Willpower ${dice} dice at ${H.HEARTBREAK_DIFF}: ${faces.join(", ")}. `, key = null;
   if ( botch ) { key = await game.modules.get("wodx-chronicle")?.api?.derangements?.gain?.(who, "loss", "from heartbreak"); line += key ? "It breaks something in them: a derangement." : "It breaks something in them."; }
@@ -269,7 +268,7 @@ async function heartbreak(who, other) {
     const T = game.modules.get("wodx-chronicle")?.api;
     if ( T?.registerCondition && !T?.conditions?.getCondition?.("grieving") ) T.registerCondition({id: "grieving", name: "Grieving", img: "icons/svg/blood.svg",
       source: "WoDX house reading", summary: "Heartbroken for a week: one die fewer on social rolls.", mods: {socialDice: -1}});
-    if ( T?.applyTimed ) await T.applyTimed(who, {name: "Grieving", description: `Heartbroken over ${other.name}`, duration: {kind: "time", seconds: 7 * 86400},
+    if ( T?.applyTimed ) await T.applyTimed(who, {name: "Grieving", description: `Heartbroken over ${other.name}`, duration: {kind: "time", seconds: 7 * DAY},
       condition: "grieving", key: "wodx-npc-grieving", source: "WoDX NPC hearts"});
     line += "It hurts, and it shows: grieving for a week (one die fewer on social rolls).";
   }
@@ -303,7 +302,7 @@ export async function takeHostage(captorLike, victimLike, {demand = ""} = {}) {
   const told = await tellLoved(v, "taken");
   for ( const t of told ) {
     const who = game.actors.get(t.to);
-    try { await st()?.ledger?.save?.({kind: "consequence", what: `${c.name} holds ${v.name}${demand ? ` and demands ${demand}` : ""}`, from: {id: who.id, name: who.name}, to: {id: c.id, name: c.name}, due: game.time.worldTime + 3 * 86400}); } catch (e) { /* Ledger off */ }
+    try { await st()?.ledger?.save?.({kind: "consequence", what: `${c.name} holds ${v.name}${demand ? ` and demands ${demand}` : ""}`, from: {id: who.id, name: who.name}, to: {id: c.id, name: c.name}, due: game.time.worldTime + 3 * DAY}); } catch (e) { /* Ledger off */ }
   }
   return told;
 }

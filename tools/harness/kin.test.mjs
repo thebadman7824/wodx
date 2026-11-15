@@ -157,7 +157,7 @@ test("wiring: settings, hooks, approval types, the tree's buttons and the APIs",
 
 test("a short time skip over New Year is not a jump: ties and false heirs count whole years of time (NPC 0.67.1, Storyteller 0.65.1)", () => {
   assert.match(src("modules/wodx-npc/scripts/kin.mjs"), /\(Number\(info\.to\) - Number\(info\.from\)\) \/ YEAR_SECONDS >= 1/);
-  assert.match(src("modules/wodx-storyteller/scripts/wills.mjs"), /Math\.floor\(\(Number\(info\.to\) - Number\(info\.from\)\) \/ \(365\.25 \* 86400\)\)/);
+  assert.match(src("modules/wodx-storyteller/scripts/wills.mjs"), /Math\.floor\(\(Number\(info\.to\) - Number\(info\.from\)\) \/ \(365\.25 \* DAY\)\)/);
 });
 
 test("deleting a sheet is not a death with an estate", () => {

@@ -3,8 +3,8 @@
  * the tracker, the ledger, the beats, the dreams and the clock: how the party stands, what runs out or comes next,
  * what is still open, and which debts and grudges come due. It changes nothing. No Foundry here.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
-const DAY = 86400;
 const num = v => (v === null || v === undefined || v === "" ? NaN : Number(v));
 
 /** "in 3 h", "in 4 days", "2 days ago", "now". */

@@ -25,7 +25,9 @@ const CLASSES = {vampire: "vampire", ghoul: "mortal ghoul", mortal: "mortal", we
 const sys = join(root, "system/worldofdarkness");
 const css = ["css/wod.css", "css/werewolf.css", "css/vampire.css", "css/mage.css", "css/changeling.css", "css/hunter.css", "css/demon.css", "css/wraith.css",
   "css/mummy.css", "css/exalted.css", "css/mortal.css", "css/creature.css", "css/darkmode.css"].map(f => pathToFileURL(join(sys, f)).href);
-css.push(pathToFileURL(join(root, "modules/wodx-chronicle/styles/wodx-theme.css")).href, pathToFileURL(join(root, "modules/wodx-sheets/styles/wodx-skins.css")).href);
+css.push(pathToFileURL(join(root, "modules/wodx-chronicle/styles/wodx-theme.css")).href, pathToFileURL(join(root, "modules/wodx-sheets/styles/wodx-skins.css")).href,
+  // Every line's file, in the loader's order, as if a sheet of each line were open (B6060)
+  ...LINES.map(L => pathToFileURL(join(root, `modules/wodx-sheets/styles/skins/${L.id}.css`)).href));
 
 const dots = n => Array.from({length: 5}, (_, i) => `<span class="dot${i < n ? " on" : ""}"></span>`).join("");
 // As in Foundry: the system's classes on the window, WoDX Sheets' own class on the form inside it

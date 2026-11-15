@@ -6,13 +6,35 @@
  */
 import {MODULE_ID, esc, lineOf} from "./actor-data.mjs";
 import {makeGhoul} from "./change-of-state.mjs";
-import {PEOPLE_TABLES, TRADE_SHEETS} from "../data/people.mjs";
-import {person, noteOf, peopleFlags} from "./people-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 const FOLDER = "WoDX people";
 const chron = () => game.modules.get("wodx-chronicle")?.api;
+
+/*
+ * The name lists and the rest of the People tables (data/people.mjs and data/people-world.mjs with the peoples' own
+ * files, about 600 KB, B6242) load the first time a person is made, not when the world starts. The Storyteller's
+ * client loads them once WoDX Chronicle is ready, so the shipped tables keep the world's Roll Tables up to date; a
+ * player's client never makes people, so it never fetches them.
+ */
+let D = null, loading = null;
+export function load() {
+  if ( D ) return Promise.resolve(D);
+  loading ??= Promise.all([import("../data/people.mjs"), import("./people-rules.mjs"), import("../data/people-world.mjs")])
+    .then(([data, rules, world]) => (D = {tables: data.PEOPLE_TABLES, sheets: data.TRADE_SHEETS, feminine: world.FEMININE, ...rules}))
+    .catch(err => { loading = null; throw err; });
+  return loading;
+}
+/** The tables once loaded, else null. */
+export const loaded = () => D;
+const need = () => {
+  if ( D ) return D;
+  load().catch(() => {});
+  throw new Error("WoDX Creation: the People tables are not loaded yet; await api.people.load() first");
+};
+/** The feminine forms of family names by people (WoDX NPC's households); empty until loaded. */
+export const feminine = () => D?.feminine ?? {};
 
 export function registerPeopleSettings() {
   game.settings.register(MODULE_ID, "peopleBatch", {scope: "world", config: false, type: Number, default: 0});
@@ -20,7 +42,7 @@ export function registerPeopleSettings() {
 
 /** At start (WoDX Chronicle is ready): the tables and the queue's handler. */
 export function registerPeople() {
-  const go = () => chron()?.gen?.registerTables(MODULE_ID, PEOPLE_TABLES);
+  const go = () => { if ( game.user?.isGM ) load().then(d => chron()?.gen?.registerTables(MODULE_ID, d.tables)).catch(err => console.error("WoDX | People tables", err)); };
   if ( chron()?.gen ) go(); else Hooks.once("wodxChronicleReady", go);
   chron()?.registerApprovalHandler?.("wodx-people", {label: "New people", approve: entry => createPeople(entry.data)});
 }
@@ -32,8 +54,13 @@ export function generate({batch, row, nonce = 0, kind = "mortal", sex = "any", t
   // culture: a person from another land (a lifepath lived abroad) is named as that land names its people
   const ctx = fitContext(g, culture ? {...here, culture} : here);
   const rand = g.random(`people:${batch}:${row}`, nonce);
-  return {...person({rand, tables: g.lookup(ctx), era: ctx.era, culture: ctx.culture, kind, sex, trade, origin}), batch, row, nonce, eraId: ctx.eraId};
+  const {person} = need();
+  // B6251: the year shapes the name; the next age's tables give a family name that falls due early
+  const later = ctx.era && NEXT_GROUP[ctx.era] ? g.lookup({...ctx, era: NEXT_GROUP[ctx.era]}) : null;
+  return {...person({rand, tables: g.lookup(ctx), era: ctx.era, culture: ctx.culture, kind, sex, trade, origin, year: ctx.year ?? null, later}), batch, row, nonce, eraId: ctx.eraId};
 }
+/** The era group whose name tables come next (B6251). */
+const NEXT_GROUP = {ancient: "medieval", medieval: "early-modern", "early-modern": "industrial", industrial: "modern", "mid-century": "modern", modern: "modern", future: "future"};
 
 /**
  * The nearest context that has people tables: the homeland's, else the same land in a later age (a region WoDX has
@@ -48,6 +75,7 @@ export function fitContext(g, ctx) {
 /** Make the sheets. GM only. people: the generated people; domitorId for ghouls. */
 export async function createPeople({people = [], domitorId = null} = {}) {
   if ( !game.user.isGM ) return [];
+  const {noteOf, peopleFlags} = await load();
   let folder = game.folders.find(f => f.type === "Actor" && f.name === FOLDER);
   if ( !folder ) folder = await Folder.create({name: FOLDER, type: "Actor", color: "#3b3540"});
   const domitor = domitorId ? game.actors.get(domitorId) : null;
@@ -111,8 +139,9 @@ export class PeopleApp extends ApplicationV2 {
   people = [];
 
   async _renderHTML() {
+    const {sheets} = await load();
     const ctx = fitContext(chron().gen, chron().gen.context());
-    const trades = [...new Set(chron().gen.lookup(ctx)("people.trade")?.results.map(r => r.text) ?? Object.keys(TRADE_SHEETS))].sort();
+    const trades = [...new Set(chron().gen.lookup(ctx)("people.trade")?.results.map(r => r.text) ?? Object.keys(sheets))].sort();
     const kindred = game.actors.filter(a => lineOf(a) === "vampire").sort((a, b) => a.name.localeCompare(b.name));
     const o = this.opts;
     const sel = (name, list, cur, fixed = true) => `<select name="${name}" ${fixed ? "data-fixed" : ""}>${list.map(([v, l]) => `<option value="${esc(v)}" ${v === cur ? "selected" : ""}>${esc(l)}</option>`).join("")}</select>`;
@@ -164,6 +193,7 @@ export class PeopleApp extends ApplicationV2 {
   }
 
   static async #onRoll() {
+    await load();
     const n = Number(game.settings.get(MODULE_ID, "peopleBatch")) + 1;
     await game.settings.set(MODULE_ID, "peopleBatch", n);
     this.batch = n;

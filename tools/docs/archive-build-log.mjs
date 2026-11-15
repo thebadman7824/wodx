@@ -12,6 +12,7 @@
  *   node tools/docs/archive-build-log.mjs              move what is due today
  *   node tools/docs/archive-build-log.mjs --dry        say what would move, change nothing
  *   node tools/docs/archive-build-log.mjs --today 2026-12-14
+ * Each run also moves the decisions more than a month old (tools/docs/archive-decisions.mjs, B6243).
  */
 import {readFileSync, writeFileSync, existsSync} from "node:fs";
 import {fileURLToPath} from "node:url";
@@ -82,7 +83,7 @@ export function readme(text, months) {
   return `${text.slice(0, at)}${list}${next < 0 ? "" : text.slice(next)}`;
 }
 
-function main() {
+async function main() {
   const args = process.argv.slice(2), dry = args.includes("--dry");
   const today = args[args.indexOf("--today") + 1] && args.includes("--today") ? args[args.indexOf("--today") + 1] : new Date().toISOString().slice(0, 10);
   const docs = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "docs");
@@ -92,12 +93,15 @@ function main() {
   const existing = Object.fromEntries(months.map(m => [m, join(arch, `build-log-${m}.md`)]).filter(([, p]) => existsSync(p)).map(([m, p]) => [m, readFileSync(p, "utf8")]));
   const r = plan(log, existing, today);
   console.log(`Cutoff ${r.cutoff}: ${r.moved} entries to move${r.moved ? ` (${Object.keys(r.archives).join(", ")})` : ""}.`);
-  if ( dry || !r.moved ) return;
-  // The archive first, so an entry is never only in memory
-  for ( const [m, text] of Object.entries(r.archives) ) writeFileSync(join(arch, `build-log-${m}.md`), text);
-  const rp = join(arch, "README.md");
-  writeFileSync(rp, readme(existsSync(rp) ? readFileSync(rp, "utf8") : "# Archive\n", Object.keys(r.archives)));
-  writeFileSync(logPath, r.log);
+  if ( !dry && r.moved ) {
+    // The archive first, so an entry is never only in memory
+    for ( const [m, text] of Object.entries(r.archives) ) writeFileSync(join(arch, `build-log-${m}.md`), text);
+    const rp = join(arch, "README.md");
+    writeFileSync(rp, readme(existsSync(rp) ? readFileSync(rp, "utf8") : "# Archive\n", Object.keys(r.archives)));
+    writeFileSync(logPath, r.log);
+  }
+  // The decisions more than a month old move in the same run (B6243, stale design desk 2026-11-15 f2)
+  (await import("./archive-decisions.mjs")).main(args);
 }
 
 if ( process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1] ) main();

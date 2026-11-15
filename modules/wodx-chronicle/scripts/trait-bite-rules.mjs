@@ -18,6 +18,8 @@
  *         {consume}      (B5175) the vessel is eaten as well as drunk: a mortal vessel dies
  *         {berserk}      (B5175) the player gets a button to go berserk: a frenzy, which ignores wound penalties
  */
+import * as TERMS from "./terms.mjs";
+import {DAY} from "./terms.mjs";
 export const BITES = {
   "eat-food": {fail: {diff: 1, tags: ["strength", "dexterity", "stamina"], lasts: "night", name: "Food sits heavy"}},
   "common-sense": {fail: {hint: true}},
@@ -49,13 +51,13 @@ export const BITES = {
 };
 export const biteOf = key => BITES[key] ?? null;
 /** The sickness an infected bite leaves on a mortal vessel: a die off every roll for a week (house reading). */
-export const FEVER = {name: "A fevered bite", dice: -1, tags: ["all"], seconds: 7 * 86400};
+export const FEVER = {name: "A fevered bite", dice: -1, tags: ["all"], seconds: 7 * DAY};
 /** Does the bite infect? one in five (V20 p. 481). */
 export const infects = (chance, d10) => Number(d10) <= Math.round((Number(chance) || 0) * 10);
 
 /** Count a roll: successes less ones, and a botch. */
 export function count(faces = [], diff = 6) {
-  const hits = faces.filter(f => f >= diff).length, ones = faces.filter(f => f === 1).length;
+  const {raw: hits, ones} = TERMS.successes(faces, diff);
   return {successes: Math.max(0, hits - ones), raw: hits, botch: hits === 0 && ones > 0};
 }
 /** What a bite's roll comes to: {held, frenzy}. Hatred frenzies on four successes or more (W20 p. 261). */

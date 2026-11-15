@@ -15,6 +15,7 @@
  * health, move, init). spec: an effects result (mage-da-effects.js helpers). once: per "scene" or "day".
  */
 import { H, T, C, N, S, MV, outcomesOf } from "./mage-da-effects.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 export const BOOK = "W20";
@@ -191,7 +192,7 @@ export function lastsOf(lasts, successes = 1) {
     const s = Math.max(1, n(successes));
     if (!lasts || lasts === "scene") return { timed: { kind: "scene" }, label: "the scene" };
     if (lasts.turns) { const t = lasts.turns * s; return { timed: { kind: "rounds", rounds: t }, label: `${t} turn${t === 1 ? "" : "s"}` }; }
-    if (lasts.days) { const d = lasts.days * s; return { timed: { kind: "time", seconds: d * 86400 }, label: `${d} day${d === 1 ? "" : "s"}` }; }
+    if (lasts.days) { const d = lasts.days * s; return { timed: { kind: "time", seconds: d * DAY }, label: `${d} day${d === 1 ? "" : "s"}` }; }
     return { timed: { kind: "scene" }, label: "the scene" };
 }
 

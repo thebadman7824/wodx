@@ -38,12 +38,14 @@
  *   place?: {light: {color, bright, dim, label}}  the Storyteller's computer sets a light on the map where the user stands (B6102)}
  * A transfer power gets a reverse button of its own (`<id>~back`) when `back` is set: {label}.
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const FLAG = "wonder";
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const ITEM_POOL = "flags.wodx-library.wonder.pool.value";
 /** The night a world time falls in, dusk to dusk (as WoDX Actions counts Kuei-jin nights). */
-export const nightOf = t => Math.floor((n(t) - 18 * 3600) / 86400);
+export const nightOf = t => Math.floor((n(t) - 18 * 3600) / DAY);
 /** The difficulty of a roll that asks for a number first: the answer held to min..max, plus add, 2 to 10. */
 export function askedDiff(roll = {}, answer = 0) {
   const a = roll.ask ?? {};
@@ -134,11 +136,8 @@ export function blockersOf(power, {flag = {}, values = {}, isGM = false, now = n
 
 /** V20 dice: successes at or over the difficulty, each 1 takes one away; no successes and a 1 is a botch. */
 export function countSuccesses(faces = [], diff = 6) {
-  const d = Math.max(2, Math.min(10, Math.round(n(diff) || 6)));
-  let hits = 0, ones = 0;
-  for ( const f of faces ) { if ( f === 1 ) ones++; else if ( f >= d ) hits++; }
-  const successes = Math.max(0, hits - ones);
-  return {successes, botch: hits === 0 && ones > 0, ones, diff: d};
+  const r = TERMS.successes(faces, diff);
+  return {successes: r.successes, botch: r.botch, ones: r.ones, diff: r.difficulty};
 }
 
 /**

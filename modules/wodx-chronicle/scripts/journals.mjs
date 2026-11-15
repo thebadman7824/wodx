@@ -2,7 +2,7 @@ import {MODULE_ID, esc, rule} from "./util.mjs";
 import {HOUSE_RULES} from "./settings.mjs";
 import {REFORMS} from "./calendar-math.mjs";
 import {conditionsHTML} from "./conditions.mjs";
-import {eventsHTML} from "./events.mjs";
+import {eventsHTML, load as loadEvents} from "./events.mjs";
 
 const OBSERVER = () => CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER;
 
@@ -91,6 +91,7 @@ async function _writeChronicleRules({profile, interlude, locked, dateLabel, gaps
   }).join("");
   await setPage(journal, "House rules", `<p>Updated (in-game date): ${stamp}</p>${groups}`);
   await setPage(journal, "Conditions", conditionsHTML());
+  await loadEvents();
   await setPage(journal, "Dated events", eventsHTML());
   return journal;
 }

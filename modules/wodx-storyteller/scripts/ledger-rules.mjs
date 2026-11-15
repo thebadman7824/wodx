@@ -2,6 +2,7 @@
  * The ledger, the pure part: oaths, debts, boons and consequences that come due, the Veil track, and who inherits
  * what when someone dies. No Foundry in here.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const KINDS = {
   oath: "Oath or vow",
@@ -144,7 +145,7 @@ export function moveVeil(veil, delta) {
 
 /** Days of quiet before the Veil mends a step (a house rule): 30 days with no breach, one step, up to the top. */
 export const MEND_DAYS = 30;
-export function mendSteps(veil, now, day = 86400) {
+export function mendSteps(veil, now, day = DAY) {
   const since = Math.max(veil.lastBreach ?? -Infinity, veil.lastRise ?? -Infinity);
   if ( !Number.isFinite(since) || veil.value >= VEIL_MAX ) return 0;
   return Math.min(VEIL_MAX - veil.value, Math.floor((now - since) / (MEND_DAYS * day)));

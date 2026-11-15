@@ -12,9 +12,10 @@
  * the Arcanum studies what it finds (The Hunters Hunted II pp. 133-141); the imbued burn what they kill (Hunter: The
  * Reckoning). The rest, and every figure, is a WoDX house reading.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY};
 
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
-export const DAY = 86400;
 
 /* ---- h1: the body as proof ---- */
 

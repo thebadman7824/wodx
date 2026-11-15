@@ -12,8 +12,14 @@
  */
 import {PRESETS, originFaith} from "./routine-rules.mjs";
 import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
-import {FEMININE, FAMILY_FIRST} from "../../wodx-creation/data/people-world.mjs";
-import {CLAN} from "../../wodx-creation/data/people-haudenosaunee.mjs";
+import {FAMILY_FIRST} from "../../wodx-creation/data/people-order.mjs";
+/*
+ * The feminine forms of family names come with WoDX Creation's name lists, which load on first use (B6242): residents.mjs
+ * hands them over with useFeminine() before naming a household.
+ */
+let FEMININE = {};
+export function useFeminine(forms) { FEMININE = forms && typeof forms === "object" ? forms : {}; }
+import {CLAN} from "../../wodx-creation/data/people-order.mjs";
 
 /** "Son of" and "daughter of" a father's name: Hebrew ben and bat, Arabic ibn and bint, Malay and Swahili bin and binti. */
 const CHILD = /^(ben|bat|ibn|bint|bin|binti) /;
@@ -269,6 +275,8 @@ export function nameHousehold(plans, draw, rand = Math.random, {year = 0, region
   // A medieval Jewish household is named for the master's father; the master is ben or bat him
   if ( CHILD.test(house.family) ) house.family = `${childWord(house.family, first.sex)} ${house.family.replace(CHILD, "")}`;
   const out = [];
+  const own = first.nameCustom?.hereditary === false && !CHILD.test(String(house.family ?? "")) && !CLAN.test(String(first.family ?? ""));
+  let father = null;
   plans.forEach((plan, i) => {
     let p = first;
     if ( i > 0 ) {
@@ -284,6 +292,16 @@ export function nameHousehold(plans, draw, rand = Math.random, {year = 0, region
     if ( CLAN.test(String(p.family ?? "")) && (i === 0 || plan.role === "partner" || !plan.kin) ) {
       if ( p.sex === "female" && (i === 0 || !house.motherClan) ) house.motherClan = p.family;
       out.push({...p, family, name: [p.given, family].filter(Boolean).join(" ") || p.name || plan.label, plan});
+      return;
+    }
+    // B6252: where the year's custom gives each person a byname of their own (data/name-customs.mjs in WoDX
+    // Creation), kin do not share one: each keeps their own, and a child is named for the father where the people
+    // names children that way (Eriksson, ibn Yusuf, Mehmedoğlu)
+    if ( own ) {
+      const form = (p.nameForm ?? p.sex) === "female" ? "female" : "male";
+      if ( !father && (i === 0 || plan.role === "partner") && (p.nameForm ?? p.sex) === "male" ) father = p;
+      if ( plan.kin && plan.role === "child" ) family = father?.nameCustom?.childNames?.[form] ?? p.family;
+      out.push({...p, family, name: (FAMILY_FIRST.has(p.origin) ? [family, p.given] : [p.given, family]).filter(Boolean).join(" ") || p.name || plan.label, plan});
       return;
     }
     if ( i === 0 ) family = CHILD.test(house.family) ? house.family : kinFamily({...house, masterGiven: null}, p);
