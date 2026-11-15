@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5190
+Next free block: B5200
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -243,6 +243,7 @@ Next free block: B5190
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5049) | Creation, Chronicle, NPC, Sheets, Actions, Combat |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 | B5180-B5189 | Names raised to 300, Thai (used B5180) | Creation |
+| B5190-B5199 | Names raised to 300, Malay (used B5190) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7956,3 +7957,8 @@ Reverse: drop the philippines entries in data/lifepath-local-asia.mjs, data/life
 WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Thai list grows from 24 names to 361: the kings, nobles and commoners of Sukhothai and Ayutthaya given alone before the surname act of 1913, modern given names after, and the family names chosen since. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: restore the thai entry in data/people-world.mjs and drop thai from RAISED.
+
+## B5190. Malay names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Malay list grows from 24 names to 306: the Malacca court, the Hikayat heroes and the village names of the old Malay world, then the names of modern Malaysia and Brunei, bin or binti the father throughout. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the malay entry in data/people-world.mjs and drop malay from RAISED.

@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.63.0 (Malay names raised to 300 (B5190))
 - 0.62.0 (Thai names raised to 300 (B5180))
 - 0.61.0 (The Philippines in the lifepath (B5153))
 - 0.60.0 (Ghouled animals, step one (B5040 to B5049): Give vitae and the new Feed vitae token button work on animals, on Creature sheets (which keep their variant, so the mounts' mountable tag stays) and on Mortal-sheet animals from the passers-by and households. The pool goes by size from the V20 Dark Ages ghoul rules (p. 401), plus one a century; only the physical Disciplines can ever be learned; animals buy only Physical and Mental Attributes and no Virtues or Road. A player's request to feed goes to the approval queue and happens by itself once approved. Pass the Years ages an animal ghoul against its own life span)
