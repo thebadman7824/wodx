@@ -49,13 +49,26 @@ def _shape(sig):
     return np.where(m, (g - g[m].mean()) / (g[m].std() + 1e-6), 0)
 
 
+def _asym(r):
+    """How far the drawing is from its own left-right mirror (front to the south), on the body only."""
+    a = r["rgb"].astype(np.float32).mean(axis=2); b = r["body"]
+    ys, xs = np.nonzero(b)
+    if len(xs) < 9: return 0.0
+    a = a[ys.min():ys.max() + 1, xs.min():xs.max() + 1]; m = b[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+    both = m & m[:, ::-1]
+    return float(np.abs(a - a[:, ::-1])[both].mean()) if both.any() else 0.0
+
+
 def check(oid, eras=None):
     bad = []
     if oid not in CATALOGUE: return [f"{oid}: in the census but not drawn (no library definition)"]
     prev = None
     for era in (eras or V.eras_for(oid)):
         vs = V.variations(oid, era)
-        sigs = [_sig(_pic(oid, v)) for v in vs]
+        pics = [_pic(oid, v) for v in vs]; sigs = [_sig(p) for p in pics]
+        asy = [_asym(p) for p in pics]; med = float(np.median(asy))
+        odd = [v["vid"] for v, a in zip(vs, asy) if a > max(2.2 * med, med + 18)]  # a stray or off-centre detail
+        if odd: bad.append(f"{oid} {era}: {len(odd)} variations far less symmetric than the rest (a misaligned or stray detail?), e.g. {odd[0]}")
         # each era its own: the same variation one era on must look different in most cases (Long Night is not Dark Ages)
         if prev is not None and eras is None:
             pe, pv, ps = prev; same = []

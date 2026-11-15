@@ -70,7 +70,9 @@ def axes(oid, era):
     ax.setdefault("style", styles_for(oid, era))
     gf = getattr(sp, "global_from", None)
     if gf is not None and era_span(era)[0] >= gf: ax["style"] = [None]  # one look worldwide: no made-up regional ornament
-    if not ax.get("condition"): ax["condition"] = list(CONDITIONS)
+    # wear is not a variation (the owner, 2026-11-15: stamped patches, dark circles and cracks read as nothing): every
+    # variation is drawn sound; a map asks for worn or broken explicitly, and only objects that declare it draw it
+    ax["condition"] = ["new"]
     return {k: list(v) for k, v in ax.items() if v and v != [None] or k == "style"}
 
 

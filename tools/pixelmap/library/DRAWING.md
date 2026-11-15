@@ -24,6 +24,14 @@ names the thing from straight above (an armchair's arms and back making a U). So
 - Decoration (pattern, colour, inlay) is the last thing added and stays small. Do not paint pattern over the whole
   surface to make variations differ: differ by form, parts, material and fittings.
 - A blind naming test now runs before any desk: a checker shown only the picture, with no name, must say what it is.
+- No stamped marks. The owner's review named the faults: patches on cushions that do not look like patches, strange
+  dark circles over things, random cracks, and details that are misaligned. So: no stains, spots, rings or cracks laid
+  over a drawing; no patch squares; wear is not a variation (every variation is drawn sound, and only objects that need
+  a broken state for play draw one, as that object would really break: a leg off, a lid split along its grain).
+- Every detail sits on the part it belongs to and lines up with it: a cushion centred on its seat, knobs centred on
+  their drawers, slats parallel and evenly spaced, a pair of arms the same size on both sides. Where the real thing is
+  symmetric, the drawing is symmetric. The gate now fails a variation that is far less symmetric than the rest of its
+  object, which is how a stray or off-centre detail shows up.
 
 ## The contract
 
@@ -73,8 +81,8 @@ time made this thing:
 Long Night differs from Dark Ages: plague years, more wear, heavier locks and shutters, the first painted chests.
 
 **Wealth.**
-- 0 and 1: rough, patched, scavenged, a few uneven pieces. No dye but brown, grey and undyed wool; mended with
-  rope or rag.
+- 0 and 1: rough, plain and scavenged: fewer parts, simpler joints, coarser material (split wood, rush, undyed wool,
+  rope lashing that is part of how it is built). No stamped patches or stains.
 - 2 and 3: sound and plain. One dye, honest joinery, a little iron or brass.
 - 4 and 5: carved, inlaid, gilded or lacquered. Strong dyes (crimson, deep blue, green), fine cloth, fringes,
   brass and silver, and more of everything (more cushions, more books, more candles).

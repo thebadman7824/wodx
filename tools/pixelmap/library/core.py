@@ -139,6 +139,7 @@ def render(sp, face, w_ft, d_ft, state="one", var=None, seed=7, margin=1):
     mult (H x W x 3 factor on the floor elsewhere), pad (pixels round the footprint), fw, fh (footprint in squares
     after turning), hearths (glows, relative to the crop's centre)."""
     var = dict(var or {}); W, D = w_ft / 5.0, d_ft / 5.0
+    cond = var.get("condition", "new"); var["condition"] = "new"  # drawn sound; wear is one shared layer (below)
     if not isinstance(seed, (int, np.integer)): seed = int(seed.integers(1, 1 << 30))
     lw, lh = (W, D) if sp.native in "ns" else (D, W)
     ta = _draw_on(sp, BG_A, lw, lh, state, var, seed, margin); tb = _draw_on(sp, BG_B, lw, lh, state, var, seed, margin)
@@ -154,8 +155,33 @@ def render(sp, face, w_ft, d_ft, state="one", var=None, seed=7, margin=1):
     for hx, hy, hr, cone in getattr(ta, "hearths", []):
         u, v = _turn_pt(hx - cx0, hy - cy0, k); t = -k * math.pi / 2
         glows.append((u, v, hr, (cone[0] + t, cone[1]) if cone else None))
+    if cond in ("worn", "broken"): a, body, mult = wear_layer(a, body, mult, cond, seed)
     fw, fh = (W, D) if face in "ns" else (D, W)
     return {"rgb": a.astype(np.uint8), "body": body, "mult": mult, "pad": pad, "fw": fw, "fh": fh, "hearths": glows}
+
+
+def wear_layer(a, body, mult, cond, seed=7):
+    """The one worn or broken look every object shares (the owner, 2026-11-15: no unique breakage for each object).
+    Worn: colours faded toward grey and a little darker, grime along the edges. Broken: greyer and darker still, and a
+    few splinters of the object lying on the floor beside it. Nothing is stamped over the object itself."""
+    a = a.copy(); body = body.copy(); mult = mult.copy()
+    grey = a.mean(axis=2, keepdims=True)
+    f, d = (0.30, 0.90) if cond == "worn" else (0.65, 0.72)
+    a[body] = ((a * (1 - f) + grey * f) * d)[body]
+    inner = body.copy(); inner[1:] &= body[:-1]; inner[:-1] &= body[1:]; inner[:, 1:] &= body[:, :-1]; inner[:, :-1] &= body[:, 1:]
+    rim = body & ~inner; a[rim] *= 0.82
+    if cond == "broken":
+        ys, xs = np.nonzero(body)
+        if len(xs):
+            rng = np.random.default_rng(seed); H, W = body.shape
+            cols = a[body]; dark = cols[cols.mean(1).argsort()[len(cols) // 4]]
+            for _ in range(5):
+                k = rng.integers(len(xs)); x = int(xs[k]) + int(rng.integers(-10, 11)); y = int(ys.max()) + int(rng.integers(2, 9))
+                for dx, dy in ((0, 0), (1, 0), (0, 1), (1, 1), (2, 0)):
+                    yy, xx = y + dy, x + dx
+                    if 0 <= yy < H and 0 <= xx < W and not body[yy, xx]:
+                        a[yy, xx] = dark; body[yy, xx] = True; mult[yy, xx] = 1.0
+    return a, body, mult
 
 
 def blend(floor, r):
