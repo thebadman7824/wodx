@@ -169,7 +169,7 @@ export const DESC = {
     "api:bloodHunt": "Call or lift a Blood Hunt: hunters, rumour, Status (Storyteller)",
     "api:diablerieMarks": "The black veins and the taint a diablerist bears, and who feels it",
     "api:oaths": "Swear an oath, or break one and pay its price",
-    "api:masquerade": "Who saw what: witnesses to a breach of the Masquerade",
+    "api:masquerade": "Who saw what: witnesses to a breach of the Masquerade, the Veil or the Delirium",
     "api:skyAndSun": "Set the sky and the light on this scene (cloud, shade, indoors)",
     "api:m20Draw": "Mark the mage to meditate each day and draw the Avatar's or the Node's Quintessence by itself",
     "api:c20Place": "Mark this scene a freehold or glade, or in the Dreaming, for how fast chimerical wounds heal",
@@ -182,7 +182,7 @@ export const DESC = {
     "api:knownNames": "The demons' names you know: mundane, Celestial or True",
     "api:pressName": "Speak a demon's True Name to call it to you and press it to obey",
     "api:endStory": "End the story: what lasts a story is restored or reset for every character",
-    "api:newNight": "Start a new night for every Kindred: blood to rise, Willpower, the watch",
+    "api:newNight": "Start a new night for every character: Willpower, healing rested, frenzy over, and blood to rise for the Kindred",
     "api:endScene": "End the scene: once-a-scene powers and limits reset",
     "api:innerVoice": "The character's inner voice: whisper, propose a check, assign who plays it",
     "api:voices": "The inner voices you play for other characters",
@@ -350,6 +350,7 @@ export function groupMenu(kind, sections, { isGM = false } = {}) {
         for (const id of ["act", "resist", "recover", "st", "scene"]) if ((plan[id] ?? []).includes(b.spec)) return id;
         if (/\(GM\)/.test(b.label)) return "st";
         if (b.section === "Scene") return "scene";
+        if (b.section === "Between stories") return "recover"; // B6300: the shared tools (profile-menus SHARED_TOOLS)
         if (/Danger|Beast|Shadow|Rage|Frenzy/i.test(b.section)) return "resist";
         if (/heal|rest|regain/i.test(b.label)) return "recover";
         return "act";
