@@ -420,6 +420,11 @@ function soakOpts(actor, profile) {
     if (profile === "mortal") {
         try { const f = game.wodxActions?.fomor?.soakOf?.(actor); return f?.lethalSoak ? { lethalSoak: true, lethalWhy: f.why } : {}; } catch (e) { return {}; }
     }
+    // B5650: a spirit soaks with its Willpower (W20 p. 366, Spirits in Combat); a Creature spirit has no real Stamina
+    if (profile === "spirit" && actor?.type === "Creature") {
+        const wp = Number(actor.system?.advantages?.willpower?.permanent ?? actor.system?.willpower?.permanent) || 0;
+        return wp ? { stamina: wp } : {};
+    }
     if (profile !== "fae") return {};
     try {
         const f = game.wodxActions?.faeSoak?.(actor);
@@ -1731,7 +1736,9 @@ export async function soakAndApply(tok, fd) {
     if (fd.soak) {
         const arm = armor(actor);
         sp = R.soakPool({ profile, damageType: type, stamina: attr(actor, "stamina"), fortitude: discipline(actor, "Fortitude"),
-            armor: fd.noArmor ? 0 : (arm[type] ?? 0), fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane, bonus: fd.soakBonus,
+            armor: fd.noArmor ? 0 : (arm[type] ?? 0), fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane,
+            // B5650: the sheet's soak rows count here too, as they do for a blow (B3800): Armor, Armored Hide
+            bonus: num(fd.soakBonus) + R.sheetBonus(actor?.items, "soak_buff", type),
             aggSoak: garouRules()?.isShifter?.(actor) ? garouRules().aggSoak(actor) : true, ...soakOpts(actor, profile) });
         if (sb) sp.notes.push(sb.note);
         if (fd.fortBlood && sp.autoSoak) await spend(actor, 0, 1);
