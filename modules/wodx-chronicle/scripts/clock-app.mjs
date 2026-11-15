@@ -82,7 +82,8 @@ export class ClockApp extends ApplicationV2 {
     const ch = church.on(now, {scene: globalThis.canvas?.scene ?? null, others: gm});
     const night = now.isNight ? "Night" : "Day";
     // A player sees the date and hour the way the character would hear them told
-    const told = (!gm && rule("eraReckoning")) ? reckon(now, {church: ch, eraId: p?.id ?? ""}) : null;
+    const heard = rule("eraReckoning") ? reckon(now, {church: ch, eraId: p?.id ?? "", latitude: setting("latitude")}) : null;
+    const told = !gm ? heard : null;
     const div = document.createElement("div");
     div.className = "wodx-body wodx-scroll";
     div.innerHTML = `
@@ -90,6 +91,7 @@ export class ClockApp extends ApplicationV2 {
         <div class="wodx-date">${esc(told?.date ?? now.dateLabel)}</div>
         <div class="wodx-time">${esc(told?.time ?? now.timeLabel)} <span class="wodx-tag">${night}</span></div>
         <div class="wodx-quiet">${esc(now.calendarLabel)} calendar</div>
+        ${gm && heard ? `<div class="wodx-quiet wodx-heard" title="How the players' clocks tell it, by the year kept where the scene stands (B5870)">Players hear: ${esc(heard.date)}, ${esc(heard.time)}</div>` : ""}
         <dl class="wodx-facts">
           <dt>Sunset</dt><dd>${esc(now.sunset)}</dd>
           <dt>Sunrise</dt><dd>${esc(now.sunrise)}</dd>

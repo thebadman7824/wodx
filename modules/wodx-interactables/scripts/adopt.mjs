@@ -20,7 +20,7 @@ const unsetKey = path => {
 
 /** The file the generator would have written beside the map's picture, as a first guess for the picker. */
 function guessPath(scene) {
-  const src = scene?.background?.src ?? scene?.img ?? "";
+  const src = backgroundOf(scene);
   return src ? src.replace(/\.[^./]+$/, ".wodx.json") : "";
 }
 
@@ -36,6 +36,13 @@ async function pickFile(scene) {
 }
 
 /** The faith a scene keeps (B3200): its own, else its region's in the chronicle's year; null without Chronicle. */
+/** The scene's map picture. Foundry 14 keeps it on the scene's levels; older scenes on scene.background or img. */
+function backgroundOf(scene) {
+  const lv = scene.initialLevel ?? scene.firstLevel ?? scene.levels?.contents?.[0] ?? [...(scene.levels ?? [])][0];
+  return scene.background?.src || lv?.background?.src || lv?.textures?.background?.src || scene._source?.background?.src
+    || scene._source?.levels?.[0]?.background?.src || scene.img || "";
+}
+
 export async function faithOf(scene) {
   try {
     const own = scene?.flags?.["wodx-chronicle"]?.place?.faith;
@@ -49,13 +56,16 @@ export async function faithOf(scene) {
   } catch (e) { return null; }
 }
 
-/** Read a sidecar and work out the plan for a scene. Returns {sc, p, errors} or throws a plain message. */
-export async function planFor(scene, text) {
+/**
+ * Read a sidecar and work out the plan for a scene. Returns {sc, p, errors} or throws a plain message.
+ * from: the sidecar's own path; its pictures (art/...) sit beside it, so their paths are taken from its folder.
+ */
+export async function planFor(scene, text, {from = null} = {}) {
   const parsed = A.parseSidecar(text);
   if ( !parsed.ok ) throw new Error(parsed.errors.join(" "));
   const types = new Set(Object.keys(CONFIG.RegionBehavior?.dataModels ?? {}));
   const fr = A.frameOf(scene);
-  const p = A.plan(parsed.data, {walls: arr(scene.walls).map(plainOf), tiles: arr(scene.tiles).map(plainOf), lights: arr(scene.lights).map(plainOf), regions: arr(scene.regions).map(plainOf), placeKind: scene.flags?.["wodx-npc"]?.place?.kind ?? null, faith: await faithOf(scene)}, fr, types);
+  const p = A.plan(parsed.data, {walls: arr(scene.walls).map(plainOf), tiles: arr(scene.tiles).map(plainOf), lights: arr(scene.lights).map(plainOf), regions: arr(scene.regions).map(plainOf), artBase: A.artBase(from || backgroundOf(scene)), placeKind: scene.flags?.["wodx-npc"]?.place?.kind ?? null, faith: await faithOf(scene)}, fr, types);
   return {sc: parsed.data, p, errors: parsed.errors};
 }
 
@@ -78,6 +88,13 @@ export async function applyPlan(scene, p) {
     });
     made.Tile = ids(await scene.createEmbeddedDocuments("Tile", data));
   }
+  // B5733: picture tiles for doors and windows follow the wall the plan set up or drew for that opening
+  const fol = (p.followers ?? []).map(f => {
+    const wid = p.wallUpdates.find(u => u.flags?.[MOD]?.adoptId === f.openingId)?._id
+      ?? made.Wall[p.wallCreates.findIndex(c => c.flags?.[MOD]?.adoptId === f.openingId)];
+    return wid ? {...f.data, flags: {[MOD]: {...f.data.flags[MOD], follows: wid}}} : null;
+  }).filter(Boolean);
+  if ( fol.length ) made.Tile = [...made.Tile, ...ids(await scene.createEmbeddedDocuments("Tile", fol))];
   if ( p.regions.length ) made.Region = ids(await scene.createEmbeddedDocuments("Region", p.regions));
   const prev = scene.flags?.[MOD]?.adopted;
   const rec = A.record(made, p, Date.now());
@@ -118,7 +135,7 @@ export async function adoptDialog(scene) {
   try { text = await (await fetch(path, {cache: "no-store"})).text(); }
   catch (e) { ui.notifications.warn(`The file could not be read: ${e.message}`); return null; }
   let got;
-  try { got = await planFor(scene, text); }
+  try { got = await planFor(scene, text, {from: path}); }
   catch (e) { ui.notifications.warn(e.message); return null; }
   const lines = A.summary(got.p);
   if ( !lines.length ) { ui.notifications.info("Everything in that file is already on this scene."); return null; }

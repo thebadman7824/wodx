@@ -12,6 +12,8 @@
  * timekeeping to the Storyteller.
  */
 
+import {landDate, landStyle, landTime} from "./local-reckoning-rules.mjs";
+
 const ORD = n => {
   const s = ["th", "st", "nd", "rd"], v = n % 100;
   return `${n}${s[(v - 20) % 10] || s[v] || s[0]}`;
@@ -64,13 +66,26 @@ export function railwayHour(hour, minute) {
   return `${(h % 12) || 12}:${String(m).padStart(2, "0")} ${h < 12 ? "a.m." : "p.m."}`;
 }
 
+const hmOf = s => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(s ?? "")); return m ? Number(m[1]) + Number(m[2]) / 60 : null; };
+
 /**
  * The date and hour as the character would have them. d: describeTime()'s result (year, month, day, hour, minute,
  * weekday, monthName, sunrise/sunset as "HH:MM" or null); church: church.on()'s result or null.
  * Returns {style, date, time}.
  */
-export function reckon(d, {church = null, eraId = ""} = {}) {
-  const style = styleFor(d?.year, eraId);
+export function reckon(d, {church = null, eraId = "", faith = null, region = null, latitude = 50} = {}) {
+  // B5870: a scene that keeps another year than the Western church's hears the date in that year's own count
+  const kept = faith ?? church?.faith ?? "western";
+  const where = region ?? church?.region ?? "";
+  const style = landStyle(styleFor(d?.year, eraId), kept, d?.year);
+  if ( kept !== "western" ) {
+    const date = landDate(d, kept, {region: where, latitude, feast: church?.day ?? null, style});
+    if ( date ) {
+      const time = style === "hours" ? (landTime(d, kept) ?? canonicalHour((Number(d?.hour) || 0) + (Number(d?.minute) || 0) / 60, hmOf(d?.sunrise), hmOf(d?.sunset)))
+        : style === "striking" ? strikingHour(d.hour, d.minute) : railwayHour(d.hour, d.minute);
+      return {style, date, time, faith: kept};
+    }
+  }
   const hm = s => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(s ?? "")); return m ? Number(m[1]) + Number(m[2]) / 60 : null; };
   const hour = (Number(d?.hour) || 0) + (Number(d?.minute) || 0) / 60;
   if ( style === "hours" ) {

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5840
+Next free block: B5880
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -304,11 +304,16 @@ Next free block: B5840
 | B5660-B5669 | Child proportions, drawn poses by routine, animal legs (used B5660-B5668) | Paperdoll |
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5680-B5709 | NPC Motives Desk: every NPC action has a reason and a follow-through (used B5680-B5703) | NPC, Storyteller |
+| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5736) | Interactables, tools |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 | B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
 | B5800-B5809 | NPC Aftercare Desk: what comes after each NPC action (used B5800-B5806) | NPC, Chronicle |
 | B5820-B5829 | Say or Do: systems that only posted text now act, second batch (used B5820-B5826) | Otherworlds, Senses, Chronicle, Storyteller, NPC |
 | B5830-B5839 | Gate failures on main, round two; run-gate names failed steps (used B5830-B5831) | tools (gates, lanes) |
+| B5840-B5849 | Gates traced by name: gate6b, gateconsensus, gatemounts (used B5840) | tools (gates) |
+| B5850-B5859 | gate6i clear track, gatepassing finds its card (used B5850) | tools (gates) |
+| B5860-B5869 | gates after other gates, approval queue one change at a time (used B5860-B5861) | tools (gates), wodx-chronicle |
+| B5870-B5879 | Dates as each land tells them: the player's clock by the local reckoning (used B5870-B5873) | Chronicle, Atmosphere |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9225,6 +9230,41 @@ WoDX Storyteller (desk h5). When a body is first found, drained of blood or sava
 
 Reverse: drop bodyFound() from found() and claimMorgue() from turn().
 
+## B5730. The pixel map drawer lives in tools/pixelmap (2026-11-15)
+Tools. WoDX's own maps are drawn by code in our own pixel art (the Whole World desk, choices x1 and t1): 94 art pixels to a 5 ft square at one screen pixel each, the grain of the character sprites, in the World of Darkness palette, painted in daylight colours for the clock to darken. No pack pictures, so the art can ship in the public repository. The 47 pixel look picked first on the desk is kept behind PIXELMAP_COARSE=1; the finer grain is what Ben directed the samples toward.
+
+Reverse: delete tools/pixelmap; maps fall back to the Dungeondraft route.
+
+## B5731. One drawing writes the picture, the walls and the sidecar (2026-11-15)
+Tools. A Recorder (scene.py) notes walls, doors, windows, containers, lights, regions and every named object while the map is drawn, and writes the picture, a Universal VTT file that tools/gate/mapimport.mjs already reads (walls cut where the openings are, a door wall at each), and a WoDX sidecar for "Adopt a generated map". The sidecar's `key` lists what a player would call each object and its square, for action logic and world effects later. No Dungeondraft step.
+
+Reverse: write the sidecar by hand.
+
+## B5732. Openables are drawn once per state, not into the map (2026-11-15)
+Tools. Doors, shutters, chests, casks, crates and sacks are left out of the map's picture. Each is drawn over the finished map once shut and once open, and only the pixels it changed are kept, so each state is a picture of its own the same size. A doorway keeps its threshold, jambs and scraped arc in the map; only the leaf moves.
+
+Reverse: draw them into the picture in one state (props.OPEN).
+
+## B5733. A sidecar can give pictures for each state (2026-11-15)
+WoDX Interactables. A feature or opening in the sidecar may carry `art` ({state: file beside the map}) and `artRect`. Adopting the map lays the container's tile with its shut picture and the state art, and gives each door and window a tile that follows its door wall, so the picture swaps for every player when it is opened or shut (the follower and state-picture machinery of states.mjs). Shutters start open by day. Paths must be png or webp files under the map's folder; anything else is left out with a plain note. Undo removes the picture tiles.
+
+Reverse: drop `art` from the sidecar; tiles go back to having no picture.
+
+## B5734. The drawing rules are a file beside the drawer (2026-11-15)
+Tools. tools/pixelmap/RULES.md holds Ben's critiques and the pixel-art technique: above all, draw every object for the player characters' eyes, since players only use what they can recognise, and show each thing's state.
+
+Reverse: none needed.
+
+## B5735. The farmhouse is the drawer's first map and the gate's fixture (2026-11-15)
+Tools. tools/pixelmap/maps/farmhouse.py writes tools/gate/fixtures/pixel-farmhouse: 5 doors, 7 windows, 14 containers with shut and open pictures, the oven's light and the house as a home. gatepixelmap imports it on a lane, adopts it, and opens and shuts a door, a shutter and a chest to see the pictures change.
+
+Reverse: remove the fixture and the gate.
+
+## B5736. A touched gate run reads the gate list from the branch under test (2026-11-15)
+Tools. run-gate.mjs --touched and --all built the gate list from the PC's own copy of the repository, so a gate new on the branch (gatepixelmap in job #1400) was silently left out. Both now read tools/gate, the module graph and the per-gate timeouts from the --repo checkout.
+
+Reverse: none needed.
+
 ## B5750. Witness reactions given by a window act on the map (2026-11-15)
 WoDX Actions. The witness step takes results already rolled (the Delirium check, a demon's Revelation) and acts them out: a frozen witness is Immobilized for the scene, a fleeing one runs, a fighting one starts a fight; those who keep it go on the Masquerade record. With no revealed actor on the map, nothing is recorded against anyone.
 
@@ -9404,3 +9444,55 @@ compared the factions after Undo with a plain JSON.stringify, which fails when t
 Foundry 14 rule to pass a fresh options object to each document update.
 
 Reverse: put the old checks back.
+
+## B5840. gate6b, gateconsensus and gatemounts follow the features they test (2026-11-15)
+Gates. Now that run-gate names failed steps (B5830), three gates that failed on main were traced. gate6b's Delirium
+step relied on a token drawn a moment before taking a target, so the Kinfolk witness was sometimes missed; the
+witnesses are now passed in. gateconsensus pressed Done on the purify dialog, but B4992 made "begin now, clear it on
+the clock" the default; the step unticks it to test the at-once purify. In gatemounts a car tile starts facing
+right, so the step went on before the first move had finished and the move down was read as a diagonal; each move
+is now waited out.
+
+Reverse: drop the three set-ups.
+
+## B5850. gate6i starts the holy burn from a clear track; gatepassing finds the finding card by its flag (2026-11-15)
+Gates. gate6i keeps its demon between runs, so wounds from earlier runs added up and the burn read 7 lethal levels
+for a potential of 2; the step now clears the track first. gatepassing step 4 wanted exactly one new message and the
+newest one to be the finding card, but other cards can follow it now; it finds the card by its flag.
+
+Reverse: drop the clear and go back to the newest message.
+
+## B5860. gate-maps step 9 reads every card since the move; gatehuntpowder step 7 records its notices (2026-11-15)
+Gates. Both steps pass alone and fail after other gates. gate-maps step 9 looked for its trigger note in the newest six
+cards and read the region's "set off" mark half a second after the move; it now looks at every card since the move and
+waits up to five seconds for the mark. gatehuntpowder step 7 now keeps the notices the reload and the match gave, the
+answers of both calls and whether the gun is still on the sheet, so a failure after other gates names its cause.
+
+## B5861. The approval queue changes one at a time (2026-11-15)
+Chronicle. Every change to the queue read the whole setting, edited it and wrote it back, so two changes at once kept
+only the later one. gateautomation, run after other gates, lost its thirty-hour proposal that way while a clock hook
+queued its own. Queueing, deciding, releasing held proposals, Undo and editing a waiting proposal now wait for the
+change before them. The handlers' own work (moving the clock, a card) runs outside that wait, so a handler that
+proposes again does not wait on itself.
+
+Reverse: go back to the newest six cards and the plain step; drop the wait in approvals.mjs.
+
+## B5870. The clock tells the date in the count of the scene's land (2026-11-15)
+WoDX Chronicle, reckoning-rules.mjs and the new local-reckoning-rules.mjs. The era reckoning house rule told every date "in the year of Our Lord", even in Cairo or Kyoto. reckon() now takes the year kept where the scene stands (church.on() gives its faith and region, by the same order as the holy days of B2537: the scene's pick, the scene's region, the chronicle's pick, the homeland) and tells the date in that count. The Western church year is unchanged. The Storyteller's Chronicle Clock shows a "Players hear" line with the player's words. The opening card of WoDX Atmosphere reads the same rule. The Master Plan and docs/GLOBAL.md listed calendars outside the Western reckoning as open.
+
+Reverse: pass faith "western" to reckon() in clock-app.mjs and in WoDX Atmosphere's openingCard.
+
+## B5871. The counts (2026-11-15)
+House readings of how each people told the year: Orthodox lands from the Creation of the World (the Byzantine year from 1 September, 5508 or 5509 before Christ) until 1700 in Russia and Siberia (Peter's reform) and 1821 in the Aegean, then the Julian date marked Old Style; the Hijra year by the counted calendar of B2537; the Hebrew year from the Creation by the fixed calendar; the Chinese year by the sixty-year cycle of stems and branches with its animal (Korean words in Korea; in Japan the animal before 1868 and the emperor's era from 1868); Tibet by element and animal from Losar, months counted by new moons from it; north India by the Vikrama year from Chaitra with the bright and dark halves; the islands (Nusantara) by the Saka year; the Buddhist south by the year of the Buddha (Buddha year = AD + 543, the Thai count) and the Thai month numbers (the fifth month is Chaitra); a count of their own by the night of the moon and the season by the chronicle's latitude. Nothing in the game books sets these; they are calendar history in WoDX's own words.
+
+Reverse: edit ownYear and ownDay in local-reckoning-rules.mjs.
+
+## B5872. When the civil date takes over (2026-11-15)
+Each land's count leads until it took up the Gregorian date for everyday use (CIVIL_FROM): Russia 1918, the Aegean 1923, the Balkans 1919; Turkey 1926, Egypt 1875, the Levant 1918, the Maghreb 1912, Persia 1925, Central Asia 1920, West and East Africa 1900, Arabia never; China 1912 (told by the years of the Republic until 1949), Korea 1896, Japan 1873 (told by the emperor's era); Tibet 1951; India 1858; the Buddhist south 1889 (told by the year of the Buddha); the Jewish year 1800 (emancipation, a house date). From then the civil date leads and the old count follows in brackets. Persia's solar Hijri year from 1925 is not reckoned; its date shows the civil date with the lunar Hijra in brackets.
+
+Reverse: edit CIVIL_FROM in local-reckoning-rules.mjs.
+
+## B5873. The hour before clocks (2026-11-15)
+Before striking clocks, the hour is told as the land told it: the lands of Islam by the five prayers (dawn, noon, afternoon, sunset and night, from the scene's sunrise and sunset), the lands of the Chinese year by the twelve double hours (the hour of the Rat from 23:00), India and the Buddhist south by the four watches of the day and four of the night, and Tibet, the Jewish year and peoples with a count of their own by the sun's course. The Western and Eastern churches keep the canonical hours. Striking clocks reach the lands outside Christendom in 1700 instead of 1350 (a house reading: clocks were rare outside Europe before then). Railway time from 1840 and the Future Darkness readout stay the same everywhere.
+
+Reverse: set CLOCKS_ABROAD to 1350 and have landTime return null.
