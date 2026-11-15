@@ -3,7 +3,9 @@ import {getEngine} from "./calendar.mjs";
 import {searchBox} from "./search.mjs";
 import EVENT_DATA from "../data/events.mjs";
 import FUTURE_DATA from "../data/future-events.mjs";
-import {eventTable, firedAt, diffFired, dateLabel, cleanOverride} from "./events-rules.mjs";
+import FUTURE_WORLD from "../data/future-world.mjs";
+import {eventTable, firedAt, diffFired, dateLabel, cleanOverride, newsCodes, heardIn, newsFor, NEWS_PARTS} from "./events-rules.mjs";
+import * as place from "./place.mjs";
 
 /**
  * Dated events. When the Chronicle Clock passes an event's date it fires once: a chat card, the hook
@@ -12,7 +14,15 @@ import {eventTable, firedAt, diffFired, dateLabel, cleanOverride} from "./events
  * Other modules ask with game.wodx.chronicle.events.has(id).
  */
 
-export const EVENTS = [...EVENT_DATA.events, ...FUTURE_DATA.events];
+export const EVENTS = [...EVENT_DATA.events, ...FUTURE_DATA.events, ...FUTURE_WORLD.events];
+
+const activeScene = () => { try { return game.scenes?.active ?? null; } catch (e) { return null; } };
+/** The parts of the world whose news reaches the table: the homeland's and the active scene's (B5891). */
+export function hereCodes(scene = activeScene()) {
+  try { return newsCodes(place.homeland(), place.placeOf(scene)?.region); } catch (e) { return newsCodes(); }
+}
+/** Is this event's news heard where the chronicle stands now? Events with no region always are. */
+export const heard = (ev, codes = hereCodes()) => heardIn(ev, codes);
 /** The Cascades of the Time of Future Judgement (2099): {id, name, pitch}. */
 export const CASCADES = FUTURE_DATA.cascades;
 export const BRANCH_NOTE = EVENT_DATA.branchNote;
@@ -93,16 +103,25 @@ async function _checkEvents({label = "", force = false} = {}) {
   await setSetting("eventsFired", now);
   for ( const id of newly ) Hooks.callAll("wodxEventFired", byId(id));
   for ( const id of undone ) Hooks.callAll("wodxEventUndone", byId(id));
-  await postCard(newly.map(byId), undone.map(byId), label);
+  await postCard(newly.map(byId), undone.map(byId), label, today());
   return {fired: newly, undone};
 }
 
-async function postCard(newly, undone, label) {
+async function postCard(allNew, allUndone, label, date = null) {
+  const codes = hereCodes();
+  const news = newsFor(allNew, codes, {date, skip: !!label});
+  const newly = news.told;
+  const undone = allUndone.filter(ev => heardIn(ev, codes));
   const item = ev => {
     const link = ev.journal ? ` @UUID[${esc(ev.journal)}]{Read more}` : "";
-    return `<li><strong>${esc(dateLabel(ev))}: ${esc(ev.name)}.</strong> ${esc(ev.summary)}${link}</li>`;
+    const where = ev.place ? `, ${esc(ev.place)}` : "";
+    return `<li><strong>${esc(dateLabel(ev))}${where}: ${esc(ev.name)}.</strong> ${esc(ev.summary)}${link}</li>`;
   };
   const parts = [];
+  // News that happened far away, or long ago, is counted, not told (B5892); it is all on the Dated events page.
+  const quiet = [news.older ? `${news.older} older piece${news.older === 1 ? "" : "s"} of news from these parts` : "",
+    news.elsewhere ? `${news.elsewhere} event${news.elsewhere === 1 ? "" : "s"} elsewhere in the world` : ""].filter(Boolean);
+  if ( !newly.length && !undone.length ) return;
   if ( newly.length ) {
     const title = newly.length === 1 ? "The world turns" : `The world turns${label ? ` during ${esc(label)}` : ""}`;
     parts.push(`<h3>${title}</h3><ul>${newly.map(item).join("")}</ul>`);
@@ -110,13 +129,14 @@ async function postCard(newly, undone, label) {
   if ( undone.length ) {
     parts.push(`<h3>Not yet happened</h3><p>The clock is before these again, so they count as not yet happened:</p><ul>${undone.map(ev => `<li>${esc(ev.name)}</li>`).join("")}</ul>`);
   }
+  if ( quiet.length ) parts.push(`<p class="wodx-quiet">Not told here: ${quiet.join(" and ")} (Chronicle Rules, Dated events).</p>`);
   await ChatMessage.create({content: `<div class="wodx-card wodx-events">${parts.join("")}</div>`, speaker: {alias: "Chronicle"}});
 }
 
 /** The "Dated events" page of Chronicle Rules. */
 export function eventsHTML() {
   const done = new Set(fired());
-  const rows = list().map(ev => `<tr><td>${esc(dateLabel(ev))}${ev.moved ? " (moved)" : ""}</td><td>${esc(ev.name)}</td>
+  const rows = list().map(ev => `<tr><td>${esc(dateLabel(ev))}${ev.moved ? " (moved)" : ""}</td><td>${esc(ev.name)}${ev.place ? ` <em>(${esc(ev.place)}, ${esc(NEWS_PARTS[ev.region] ?? "")})</em>` : ""}</td>
     <td>${stateOf(ev, done)}</td><td>${esc(ev.source)}${ev.dateNote ? `<br><em>${esc(ev.dateNote)}</em>` : ""}</td></tr>`).join("");
   return `<p>Each event fires once when the clock passes its date. The Storyteller turns them on or off and moves them in Configure Settings, Dated events.</p>
     <p><strong>Timeline:</strong> ${rule("futureBranch") ? "Future Darkness branch" : "classic"}. ${esc(BRANCH_NOTE)}</p>
@@ -148,9 +168,9 @@ export class EventsApp extends ApplicationV2 {
     const ov = setting("eventOverrides") ?? {};
     const done = new Set(fired());
     const rows = list().map(ev => `
-      <div class="form-group wodx-event-row" data-search-item data-search-text="${esc(`${ev.name} ${ev.year} ${ev.lines.join(" ")}`)}">
+      <div class="form-group wodx-event-row" data-search-item data-search-text="${esc(`${ev.name} ${ev.year} ${ev.lines.join(" ")} ${ev.place ?? ""} ${NEWS_PARTS[ev.region] ?? ""}`)}">
         <label class="wodx-event-name"><input type="checkbox" name="${esc(ev.id)}.on" ${ev.on ? "checked" : ""}>
-          ${esc(ev.name)}${ev.metaplot ? " <em>(metaplot)</em>" : ""}</label>
+          ${esc(ev.name)}${ev.metaplot ? " <em>(metaplot)</em>" : ""}${ev.place ? ` <em>(${esc(ev.place)})</em>` : ""}</label>
         <div class="form-fields">
           <input type="number" name="${esc(ev.id)}.year" value="${esc(ov[ev.id]?.year ?? "")}" placeholder="${ev.year}" aria-label="Year" min="1" max="3000" step="1">
           <input type="number" name="${esc(ev.id)}.month" value="${esc(ov[ev.id]?.month ?? "")}" placeholder="${ev.month ?? "month"}" aria-label="Month" min="1" max="12" step="1">
