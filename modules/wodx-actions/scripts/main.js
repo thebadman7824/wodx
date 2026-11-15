@@ -553,7 +553,7 @@ function npcPowers(actor) {
     if (!actor) return [];
     const kind = P.detectProfile(actor);
     const from = [];
-    try { if (["kindred", "ghoul"].includes(kind) || actor.items.some(i => i.type === "Power" && /discipline/i.test(i.system?.type ?? ""))) from.push(...kx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
+    try { if (!KXD.isKotE(actor) && (["kindred", "ghoul"].includes(kind) || actor.items.some(i => i.type === "Power" && /discipline/i.test(i.system?.type ?? "")))) from.push(...kx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
     try { if (kind === "lupine" || actor.items.some(i => i.type === "Power" && /gift/i.test(i.system?.type ?? ""))) from.push(...gx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
     try { if (kind === "wraith" || kind === "spectre") from.push(...wx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
     try { if (kind === "hunter") from.push(...rx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
@@ -561,6 +561,17 @@ function npcPowers(actor) {
     try { if (FOM.isFomor(actor)) from.push(...fmx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
     // B5657: spirits choose their own Charms
     try { if (CHM.isSpirit(actor)) from.push(...chmx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
+    // B5660: the other lines choose their own powers: Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors, Blessings
+    const line = (test, get) => { try { if (test()) from.push(...get()); } catch (e) { console.warn("WoDX | npc powers", e); } };
+    line(() => UXD.isMummy(actor), () => ux().powersFor(actor));
+    line(() => kind === "mage" && MXD.isDA(actor), () => mx().powersFor(actor));
+    line(() => kind === "mage" && !MXD.isDA(actor), () => zx().powersFor(actor));
+    line(() => kind === "fae" && FXD.isDA(actor), () => fx().powersFor(actor));
+    line(() => kind === "fae" && !FXD.isDA(actor), () => cx().powersFor(actor));
+    line(() => kind === "demon" || DXD.isDemon(actor), () => dx().powersFor(actor));
+    line(() => KXD.isKotE(actor), () => qx().powersFor(actor));
+    line(() => OXD.isOrpheus(actor), () => ox().powersFor(actor));
+    line(() => true, () => hx().powersFor(actor));
     const bySlug = n => { for (const set of Object.keys(PK.LINE_KEYWORDS)) { const k = PK.keywordsOf(set, PK.slugOf(n)); if (k?.keywords?.length) return k; } return null; };
     return from.map(p => {
         const kw = (p.keywords?.length ? { keywords: p.keywords } : null) || (p.id && PK.keywordsOf(p.set, p.id)) || bySlug(p.name) || { keywords: [] };
@@ -577,8 +588,10 @@ function npcPowers(actor) {
 async function autoPower(actor, pick, { target = null } = {}) {
     if (!actor || !pick?.use) return null;
     if (target) { for (const t of game.user.targets ?? []) t.setTarget(false, { releaseOthers: false }); target.setTarget?.(true, { releaseOthers: true, groupSelection: false }); }
-    P.autoNext({ [pick.field]: pick.value });
-    const call = { useDiscipline: a => kx().useDiscipline(a), useGift: a => gx().useGift(a), useArcanos: a => wx().useArcanos(a), useEdge: a => rx().useEdge(a), useFomor: a => fmx().power(a), useCharm: a => chmx().power(a) }[pick.use];
+    P.autoNext({ [pick.field]: pick.value, ...(pick.fill ?? {}) });
+    const call = { useDiscipline: a => kx().useDiscipline(a), useGift: a => gx().useGift(a), useArcanos: a => wx().useArcanos(a), useEdge: a => rx().useEdge(a), useFomor: a => fmx().power(a), useCharm: a => chmx().power(a),
+        useHekau: a => ux().cast(a), useDaSpell: a => mx().cast(a), useEffect: a => zx().cast(a), useFaeCantrip: a => fx().cast(a), useCantrip: a => cx().cantrip(a),
+        useEvocation: a => dx().evoke(a), useChiArt: a => qx().spend(a), useHorror: a => ox().horror(a), useBlessing: a => hx().blessing(a) }[pick.use];
     return call ? call(actor) : null;
 }
 

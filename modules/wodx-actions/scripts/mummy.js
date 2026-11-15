@@ -302,7 +302,7 @@ export function build(ctx) {
     function powersFor(actor) {
         const i = info(actor);
         if (!i.inWeb && i.sekhem.pool === 0) return [];
-        return Object.keys(M.HEKAU).flatMap(p => MH.spellsOf(p, n(i.hekau[p]))).filter(k => n(MH.SPELLS[k].cost) <= i.sekhem.pool).map(k => {
+        return Object.keys(M.HEKAU).flatMap(p => MH.spellsOf(p, n(i.hekau[p]))).filter(k => MH.SPELLS[k].type === "spell" && n(MH.SPELLS[k].cost) <= i.sekhem.pool).map(k => {
             const s = MH.SPELLS[k];
             return { use: "useHekau", field: "named", value: k, name: s.name, disc: M.HEKAU[s.path]?.label ?? s.path, level: s.level, set: "hekau", id: k,
                 keywords: NPW.keysOf(MH.hekauResults(k, 3, { name: s.name })) };
