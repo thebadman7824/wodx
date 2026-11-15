@@ -10,7 +10,8 @@ import * as N from "./market-news-rules.mjs";
 import * as MK from "./market-rules.mjs";
 import * as Markets from "./markets.mjs";
 import * as Money from "./money.mjs";
-import {MOD, esc, isActiveGM, gmIds} from "./core.mjs";
+import {MOD, esc, isActiveGM, gmIds, setting, chron} from "./core.mjs";
+import {partOf} from "../../wodx-chronicle/scripts/events-rules.mjs";
 
 const NPC = "wodx-npc";
 const H3 = "margin:0;font-size:1.05em";
@@ -31,10 +32,10 @@ function changeLines(changes, crowd) {
   return out.join("");
 }
 
-async function card({title, text, changes, crowd, key, eventId = null}) {
+async function card({title, text, changes, crowd, key, eventId = null, world = null}) {
   if ( !changes.length && !crowd.length ) return null;
   return ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(),
-    flags: {[MOD]: {marketNews: {key, eventId, changes, crowd, applied: false}}},
+    flags: {[MOD]: {marketNews: {key, eventId, changes, crowd, applied: false, ...(world ? {world, at: game.time?.worldTime ?? 0} : {})}}},
     content: `<div class="vta-card wodx-x wst-news"><header class="vta-head"><h3 style="${H3}">${esc(title)}</h3><span class="vta-verdict">Markets</span></header><div class="vta-body">
       <p>${esc(text)}</p><ul>${changeLines(changes, crowd)}</ul>
       <p class="wodx-quiet">A suggestion (house rule). Nothing changes until you apply it.</p>
@@ -57,13 +58,33 @@ async function undo(msg, {why = ""} = {}) {
   if ( why ) await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), content: `<div class="vta-card wodx-x"><div class="vta-body"><p>${esc(why)}</p></div></div>`});
 }
 
+/** The world timeline's news that moves the markets (B5934), at most one card of each kind in three months. */
+const lastWorld = {};
+function worldKey(ev) {
+  if ( setting("goodsByPlace") === false ) return null;
+  let homePart = "MO", year = 0;
+  try { homePart = partOf(chron()?.world?.homeland?.() ?? "moravia"); year = Number(chron()?.eras?.currentYear?.()) || 0; } catch (e) { /* Moravia */ }
+  const key = N.worldNewsFor(ev, {homePart, year});
+  if ( !key ) return null;
+  const t = game.time?.worldTime ?? 0;
+  // the cards say when the last one came; the note here only holds back the rest of one time skip's events, which fire together
+  const batch = lastWorld[key] && Date.now() - lastWorld[key].real < 10000 ? lastWorld[key].t : -Infinity;
+  const last = Math.max(batch, ...game.messages.filter(m => m.flags?.[MOD]?.marketNews?.world === key).map(m => Number(m.flags[MOD].marketNews.at)).filter(Number.isFinite));
+  if ( N.tooSoon(last, t) ) return null;
+  lastWorld[key] = {t, real: Date.now()};
+  return key;
+}
+
 async function onEventFired(ev) {
-  const key = N.newsFor(ev);
-  if ( !key || !isActiveGM() ) return;
+  if ( !isActiveGM() ) return;
+  const book = N.newsFor(ev);
+  const key = book ?? worldKey(ev);
+  if ( !key ) return;
   const p = N.PRESETS[key], st = Markets.state();
   const changes = N.marketChanges(key, st.markets, kinds, MK.INDEX);
   const crowd = p.crowd ? crowdScenes().map(s => ({scene: s.id, name: s.name, density: p.crowd, prev: s.flags[NPC].crowd.density ?? "normal"})) : [];
-  await card({title: `${p.label}: ${ev.name ?? "news"}`, text: p.note, changes, crowd, key: `event:${ev.id}`, eventId: ev.id});
+  await card({title: `${p.label}: ${ev.name ?? "news"}`, text: book ? p.note : `${ev.summary ?? ""} ${p.note}`.trim(), changes, crowd, key: `event:${ev.id}`, eventId: ev.id,
+    world: book ? null : key});
 }
 async function onEventUndone(ev) {
   if ( !isActiveGM() || !ev?.id ) return;
@@ -115,4 +136,4 @@ export async function setupMarketNews() {
   });
 }
 
-export const api = () => ({rules: N, apply, undo});
+export const api = () => ({rules: N, apply, undo, hear: onEventFired});

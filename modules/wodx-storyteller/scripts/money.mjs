@@ -15,6 +15,7 @@
  */
 import * as R from "./money-rules.mjs";
 import * as MK from "./market-rules.mjs";
+import * as GP from "./goods-place-rules.mjs";
 import {MOD, esc, isActiveGM, setting, isPC, chron, log} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Own from "./owners.mjs";
@@ -30,6 +31,8 @@ export function registerMoneySettings() {
   game.settings.register(MOD, "money", {name: "Money by era", hint: "Once a month of game time, tell the Storyteller how each character lives on their Resources, and the coin of the day.",
     scope: "world", config: true, type: Boolean, default: true});
   game.settings.register(MOD, "changers", {name: "Money changers far from home", hint: "On a scene that stands in another region (the Clock, Where this scene stands), prices are charged to the purse in the coin of home with a money changer's cut on top, and the price is also named in the money of the place. Off: prices abroad are the same as at home.",
+    scope: "world", config: true, type: Boolean, default: true});
+  game.settings.register(MOD, "goodsByPlace", {name: "Prices know where goods come from", hint: "A good brought from far off costs two or three times as much, the land's own goods a quarter less, and each land has a few kinds of goods cheap and a few dear until world trade evens them out (1900 to 2000). The price says why. Off: the same price everywhere. House rules.",
     scope: "world", config: true, type: Boolean, default: true});
   game.settings.register(MOD, "moneyRegion", {name: "Coins of the day", hint: "Which land's coins to name (a house rule from history; the books name none).",
     scope: "world", config: true, type: String, default: "moravian", choices: Object.fromEntries(Object.entries(R.COINS).map(([k, v]) => [k, v.label]))});
@@ -339,10 +342,29 @@ export async function undoLast(a) {
 
 let goodsCache = null;
 /** Load the goods list once (WoDX Library); later calls are instant, so stock draws can price lines at once. */
+let waysLib = null;
 export async function goodsList() {
   if ( goodsCache ) return goodsCache;
   try { goodsCache = (await import("../../wodx-library/data/goods.mjs")).GOODS ?? []; } catch (e) { goodsCache = []; }
+  try { waysLib = await import("../../wodx-library/data/goods-ways.mjs"); } catch (e) { waysLib = null; }
   return goodsCache;
+}
+
+/**
+ * Where a price is asked, for the goods of the place (B5930 to B5936): {region, way, part, inUse}, or null when
+ * WoDX Chronicle or Library cannot say. The market's own scene first, then the scene asked about, then the one in view.
+ */
+export function placeHere({market = null, scene = null, year = yearNow()} = {}) {
+  try {
+    const w = chron()?.world;
+    if ( !w?.here || typeof waysLib?.inUseAt !== "function" ) return null;
+    const mScene = (market?.scenes ?? []).map(id => game.scenes.get(id)).find(Boolean) ?? null;
+    const sc = mScene ?? ((scene && typeof scene === "object") ? scene : (scene ? game.scenes.get(scene) : globalThis.canvas?.scene)) ?? null;
+    const r = w.here(sc);
+    if ( !r?.id ) return null;
+    const way = typeof w.rules?.sphereFor === "function" ? w.rules.sphereFor(r.id, year) : null;
+    return {region: r.id, way, inUse: (g, y) => waysLib.inUseAt(g, y, {way, region: r.id})};
+  } catch (e) { return null; }
 }
 export const goodsLoaded = () => goodsCache ?? [];
 
@@ -387,13 +409,18 @@ export function priceSync(good, {place = {}, count = 1, market = null, tile = nu
   const n = Math.max(1, Math.round(num(count) > 1 ? num(count) : (hit.count || 1)));
   const mk = marketFor({market, tile, scene});
   const idx = mk ? MK.indexOf(mk, g.kind) : 1;
-  const home = Math.max(1, Math.round(R.priceOf({...g, value: tier}, yearNow(), region(), {place}) * idx));
+  // the goods of the place (B5930 to B5932): imports dearer, the land's own cheaper, and the land's trade by kind
+  const here = setting("goodsByPlace") === false ? null : placeHere({market: mk, scene: scene ?? (tile?.parent ?? null)});
+  const at = here ? GP.placeOf(g, yearNow(), here.inUse, here) : {factor: 1, why: null};
+  const trade = here ? GP.landTrade(g.kind, here.way, yearNow()) : 1;
+  const home = Math.max(1, Math.round(R.priceOf({...g, value: tier}, yearNow(), region(), {place}) * idx * at.factor * trade));
   const m = moneyNow();
   // Far from home the purse still pays in the coin of home, and a money changer takes a cut (0.56.0)
   const away = g.kind === "coin" ? null : awayMoney(scene);
   const ab = away ? R.priceAbroad(home, yearNow(), region(), away.region, {troubled: away.troubled}) : null;
   const each = ab ? ab.total : home;
-  const out = {each, total: each * n, count: n, index: idx, market: mk?.id ?? null, text: R.formatMoney(each * n, m), sell: R.sellPrice(home * n), fence: R.sellPrice(home * n, {fence: true}), money: m.id};
+  const out = {each, total: each * n, count: n, index: idx, market: mk?.id ?? null, origin: at.why, trade,
+    text: `${R.formatMoney(each * n, m)}${at.why ? ` (${GP.WHY_WORDS[at.why]})` : ""}`, sell: R.sellPrice(home * n), fence: R.sellPrice(home * n, {fence: true}), money: m.id};
   if ( ab && ab.cut > 0 ) {
     out.abroad = {region: away.region, label: away.label, share: ab.share, cut: ab.cut * n, local: ab.local * n, localText: R.formatMoney(ab.local * n, ab.localMoney), money: ab.localMoney.id};
     out.text = `${out.text} (${out.abroad.localText} here, and the money changer's ${Math.round(ab.share * 100)} in the hundred)`;
