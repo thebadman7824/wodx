@@ -12,6 +12,8 @@ An object declares its axes on its Spec (`axes`); the census gives the wealth ra
 variations(oid, era) spreads a deterministic set of at least MIN_VARIANTS over those axes, as far apart as possible,
 and every one is checked to look different from the others (test_variants.py)."""
 import itertools
+import random
+import zlib
 import math
 
 from library.census import ERAS, WEALTH, STYLES, CENSUS
@@ -86,14 +88,21 @@ def _spread(ax, n):
             ws = [w for w in wealth if w is not None and lo <= w <= hi]
             if ws: cells.append((st, ws))
     if not cells: cells = [(st, [w for w in wealth]) for st in styles]
+    # the object's own axes: every combination of their values, in a fixed shuffled order, so no two axes move in step
+    free = [k for k in others if k != "condition"]
+    combos = list(itertools.islice(itertools.product(*[range(len(ax[k])) for k in free]), 5000)) if free else []
+    random.Random(zlib.crc32(repr([(k, len(ax[k])) for k in free]).encode())).shuffle(combos)
     out, seen, i = [], set(), 0
     while len(out) < max(n, len(cells)) and i < max(n, len(cells)) * 6:
         st, ws = cells[i % len(cells)]; r = i // len(cells)
         v = {}
         if st is not None: v["style"] = st
         if ws and ws[0] is not None: v["wealth"] = ws[r % len(ws)] if r else ws[len(ws) // 2]
-        for j, k in enumerate(others):
-            L = len(ax[k]); v[k] = ax[k][(i * (j + 2) + r) % L] if k != "condition" else ax[k][0 if (i + r) % 4 else (1 + (i // 4) % (L - 1) if L > 1 else 0)]
+        combo = combos[i % len(combos)] if combos else ()
+        for j, k in enumerate(free):
+            v[k] = ax[k][combo[j]]
+        if "condition" in ax:
+            L = len(ax["condition"]); v["condition"] = ax["condition"][0 if (i + r) % 4 else (1 + (i // 4) % (L - 1) if L > 1 else 0)]
         key = tuple(sorted((k, str(x)) for k, x in v.items()))
         if key not in seen: seen.add(key); out.append(v)
         i += 1
