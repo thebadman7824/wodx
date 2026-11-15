@@ -19,10 +19,10 @@ const B = (from, to, place, activity, more = {}) => ({from, to, place, activity,
 /* ---- Duties: hours laid over an NPC's own routine, first in line ---- */
 
 /** Is a duty in force at now? */
-export const dutyActive = (d, now) => !!d?.place && (!d.until || num(now) < num(d.until));
+export const dutyActive = (d, now) => !!d?.place && (!d.until || num(now) < num(d.until)) && (!d.after || num(now) >= num(d.after));
 /** The routine's blocks with the duties in force laid on top (the first block that fits an hour wins). */
 export function withDuties(blocks = [], duties = {}, now = 0) {
-  const on = Object.values(duties ?? {}).filter(d => dutyActive(d, now)).map(({until, why, ...b}) => ({...B(0, 24, b.place, b.activity), ...b, duty: true}));
+  const on = Object.values(duties ?? {}).filter(d => dutyActive(d, now)).map(({until, why, after, ...b}) => ({...B(0, 24, b.place, b.activity), ...b, duty: true}));
   return on.length ? [...on, ...(blocks ?? [])] : blocks;
 }
 
@@ -82,6 +82,8 @@ export function fetchAnswer({person = true, step = 0} = {}) {
   if ( !person ) return "carried";
   return num(step) >= 0 ? "comes" : "refuses";
 }
+/** One fetched comes along for an hour of world time, then goes back to their own day. */
+export const FETCH_STAY = 3600;
 export const REFUSALS = ["I have no business with them.", "Tell them to come themselves.", "Not tonight.", "I am going nowhere with you.", "Leave me be."];
 export const refusal = seed => REFUSALS[hash(seed) % REFUSALS.length];
 

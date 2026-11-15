@@ -14,6 +14,7 @@
  */
 import * as HN from "./hunt-npc-rules.mjs";
 import {build as buildProwl} from "./prowl.mjs";
+import {build as buildAftercare} from "./aftercare.mjs";
 import * as NR from "./npc-rules.mjs";
 import * as PP from "./power-pick-rules.mjs";
 import * as RR from "./routine-rules.mjs";
@@ -1013,6 +1014,9 @@ routines.hooks();
 /* B5688 (r2): criminals on the prowl pick a mark */
 const prowl = buildProwl({MOD, esc, gmIds, isActiveGM, C, chron, routines, profileFor, yardsBetween});
 prowl.hooks();
+// NPC Aftercare Desk (B5800-B5806): what comes after the law, a fight, the Kiss, a death, a robbery, a marriage
+const aftercare = buildAftercare({MOD, esc, gmIds, isActiveGM, chron, routines, C});
+aftercare.hooks();
 /* Phase 7d: factions and domains, on top of 7c's places */
 const factions = buildFactions({MOD, esc, gmIds, isActiveGM, chron, routines});
 factions.hooks();
@@ -1093,7 +1097,7 @@ Hooks.once("init", () => {
   LEGACY.registerSettings();
   LEGACY.listen();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
-  const api = {version: VERSION, prowl, factionLooks: FactionLooks.api(), rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
+  const api = {version: VERSION, prowl, aftercare, factionLooks: FactionLooks.api(), rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
     faces: {open: Faces.openFaces, apply: Faces.applyName}, nameFor: Faces.nameFor, knowledgeOf: a => rivalry.knowledgeOf(a), orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd, overheard, openOverheard: overheard.open,

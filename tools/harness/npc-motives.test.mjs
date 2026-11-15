@@ -219,3 +219,13 @@ test("part three is wired to the world", () => {
   assert.match(src("modules/wodx-npc/scripts/fates-rules.mjs"), /embraceReason\(/, "an Embrace has a reason");
   assert.match(src("modules/wodx-npc/scripts/factions.mjs"), /postGuard\(c\)/, "a guard is posted");
 });
+
+test("g4 aftercare: a fetched person comes for an hour, then goes home", async () => {
+  const O = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/order-rules.mjs")));
+  const D = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/duty-rules.mjs")));
+  const o = O.normOrder({kind: "follow", leader: "m", fetched: true, until: 100 + D.FETCH_STAY});
+  assert.equal(o.fetched, true);
+  assert.equal(o.until, 100 + 3600);
+  assert.equal(O.normOrder({kind: "follow", leader: "m"}).until, null);
+  assert.match(src("modules/wodx-npc/scripts/orders.mjs"), /fetchedHome/);
+});

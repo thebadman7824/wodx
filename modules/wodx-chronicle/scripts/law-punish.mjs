@@ -41,7 +41,7 @@ export async function sentenceCard({actor: actorId, name, region, deeds = [], ye
 export async function sentence(info, punish) {
   if ( !game.user.isGM ) return null;
   const actor = game.actors.get(info.actorId);
-  if ( !punish ) { await ChatMessage.create({speaker: {alias: "The court"}, content: `<div class="wodx-card"><p>The court shows ${esc(info.name)} mercy.</p></div>`}); return null; }
+  if ( !punish ) { await ChatMessage.create({speaker: {alias: "The court"}, content: `<div class="wodx-card"><p>The court shows ${esc(info.name)} mercy.</p></div>`}); Hooks.callAll("wodxSentence", {actor: info.actorId, region: info.region, mark: null, mercy: true}); return null; }
   const mark = P.markFor(punish, {year: info.year, region: info.region, weight: info.weight, id: foundry.utils.randomID()});
   if ( actor ) await actor.setFlag(MODULE_ID, "lawMarks", [...marksOf(actor), mark].slice(-30));
   const extra = mark.kind === "fine" ? " Take it from the purse with the money window." : mark.kind === "death" ? " The condemned is held for the sentence." : "";

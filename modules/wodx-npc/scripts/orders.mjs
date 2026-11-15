@@ -324,7 +324,7 @@ export function build(ctx) {
     const answer = target ? DU.fetchAnswer({person, step}) : null;
     let said = `reaches ${target?.name ?? "the one pointed at"}`;
     if ( answer === "comes" && target.actor && !target.actor.hasPlayerOwner && master ) {
-      await target.actor.update({[`flags.${MOD}.order`]: {kind: "follow", leader: master.id, fetched: true, since: game.time.worldTime}});
+      await target.actor.update({[`flags.${MOD}.order`]: {kind: "follow", leader: master.id, by: game.user.id, fetched: true, at: game.time.worldTime, until: game.time.worldTime + DU.FETCH_STAY}});
       said += ` and brings them back`;
     } else if ( answer === "comes" ) said += ` and asks them to come`;
     else if ( answer === "refuses" ) {
@@ -484,7 +484,21 @@ export function build(ctx) {
     }});
   }
 
+  /** B5696 (g4): a fetched person's hour is up: they go back to their own day; a fetcher back beside its master is done. */
+  async function fetchedHome() {
+    if ( !isActiveGM() ) return 0;
+    const t = game.time.worldTime;
+    let n = 0;
+    for ( const a of game.actors ) {
+      const o = orderOf(a);
+      if ( o?.fetched && o.until && t >= o.until ) { await clear(a, {quiet: true}); n++; }
+      else if ( o?.kind === "fetch" && o.stage === "back" && o.at && t - o.at >= DU.FETCH_STAY ) { await clear(a, {quiet: true}); n++; }
+    }
+    return n;
+  }
+
   function hooks() {
+    Hooks.on("updateWorldTime", () => { fetchedHome().catch(e => console.error(`${MOD} | fetched`, e)); });
     Hooks.on("wodxAttitude", p => { onAttitude(p).catch(e => console.error(`${MOD} | loyalty`, e)); });
     Hooks.once("ready", () => {
       game.socket.on(SOCKET, async m => {
@@ -522,6 +536,6 @@ export function build(ctx) {
     });
   }
 
-  return {doFetch, registerSettings, hooks, registerHandler, give, send, clear, openOrders, followersFor, orderOf, servesOf, stepBeside, sentries, loyaltyFor,
+  return {doFetch, fetchedHome, registerSettings, hooks, registerHandler, give, send, clear, openOrders, followersFor, orderOf, servesOf, stepBeside, sentries, loyaltyFor,
     onTaskDone, onChase, onBreach, driftFor, setHelper, rules: O};
 }

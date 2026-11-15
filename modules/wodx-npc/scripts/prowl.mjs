@@ -97,9 +97,26 @@ export function build({MOD, esc, gmIds, isActiveGM, C, chron, routines, profileF
       if ( starter ) { const r = await starter({scene: canvas.scene, tokens: [p.document, m.document], source: "region", why: `${p.name} robs ${m.name}`, byHand: true}); fight = r?.done === "off" ? " Start the fight from the combat tracker." : " The fight begins."; }
       else fight = " Start the fight from the combat tracker.";
     }
+    // B5805 (n6): a robber who got money spends the night at the tavern; the robbed may report it to the watch
+    const got = choice === "pay" && paid;
+    if ( got ) { try { await game.modules.get(MOD)?.api?.aftercare?.spree?.(p.actor); } catch (e) { /* no tavern */ } }
     const text = `${p.name} ${out.text}${extra}.${fight}`;
-    await msg.update({[`flags.${MOD}.prowl.done`]: choice, content: String(msg.content).replace(/<div class="wnpc-done">[\s\S]*?<\/div>/, `<p><b>${esc(text)}</b></p>`)});
+    const report = got || (choice === "talk" && !talked) ? ` <button type="button" class="wnpc-pw-report">Report it to the watch</button>` : "";
+    await msg.update({[`flags.${MOD}.prowl.done`]: choice, content: String(msg.content).replace(/<div class="wnpc-done">[\s\S]*?<\/div>/, `<p><b>${esc(text)}</b>${report}</p>`)});
     return {choice, ...out, text};
+  }
+
+  /** B5805 (n6): the robbed report it: the law's heat on the robber rises and word goes round. Once a card. */
+  async function report(msg, {userId = game.user.id} = {}) {
+    msg = typeof msg === "string" ? game.messages.get(msg) : msg;
+    const d = msg?.flags?.[MOD]?.prowl;
+    if ( !d?.done || d.reported || !isActiveGM() ) return null;
+    const p = await fromUuid(d.prowler), m = await fromUuid(d.mark);
+    const u = game.users.get(userId);
+    if ( u && !u.isGM && !m?.actor?.testUserPermission(u, "OWNER") ) return null;
+    const heat = await game.modules.get(MOD)?.api?.aftercare?.reportRobbery?.(p?.actor, m?.actor, p?.parent ?? canvas.scene);
+    await msg.update({[`flags.${MOD}.prowl.reported`]: true, content: String(msg.content).replace(/ <button type="button" class="wnpc-pw-report">[^<]*<\/button>/, " <i>Reported to the watch.</i>")});
+    return heat ?? true;
   }
 
   function hooks() {
@@ -116,12 +133,19 @@ export function build({MOD, esc, gmIds, isActiveGM, C, chron, routines, profileF
         if ( isActiveGM() ) answer(msg, b.dataset.a).catch(e => console.error(`${MOD} | prowl`, e));
         else game.socket.emit(SOCKET, {type: "prowl.answer", msgId: msg.id, choice: b.dataset.a, userId: game.user.id});
       }));
+      el.querySelectorAll("button.wnpc-pw-report").forEach(b => b.addEventListener("click", ev => {
+        ev.preventDefault(); b.disabled = true;
+        if ( isActiveGM() ) report(msg).catch(e => console.error(`${MOD} | prowl`, e));
+        else game.socket.emit(SOCKET, {type: "prowl.report", msgId: msg.id, userId: game.user.id});
+      }));
     });
     Hooks.once("ready", () => game.socket.on(SOCKET, m => {
-      if ( !isActiveGM() || m?.type !== "prowl.answer" ) return;
+      if ( !isActiveGM() ) return;
+      if ( m?.type === "prowl.report" ) return void report(m.msgId, {userId: m.userId}).catch(e => console.error(`${MOD} | prowl`, e));
+      if ( m?.type !== "prowl.answer" ) return;
       answer(m.msgId, m.choice, {userId: m.userId}).catch(e => console.error(`${MOD} | prowl`, e));
     }));
   }
 
-  return {check, answer, hooks, rules: PW};
+  return {check, answer, report, hooks, rules: PW};
 }
