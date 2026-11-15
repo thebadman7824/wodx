@@ -5,6 +5,7 @@
  */
 import * as PW from "./prowl-rules.mjs";
 import * as MR from "./mortal-rules.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export function build({MOD, esc, gmIds, isActiveGM, C, chron, routines, profileFor, yardsBetween}) {
   const SOCKET = `module.${MOD}`;
@@ -84,8 +85,7 @@ export function build({MOD, esc, gmIds, isActiveGM, C, chron, routines, profileF
     } else if ( choice === "talk" ) {
       const tr = PW.talkRoll({manipulation: attr(m.actor, "manipulation"), charisma: attr(m.actor, "charisma"), intimidation: abil(m.actor, "intimidation"), persuasion: abil(m.actor, "persuasion")}, profileFor?.(p.actor) ?? {});
       const roll = await new Roll(`${tr.pool}d10cs>=${tr.difficulty}`).evaluate();
-      const ones = roll.dice[0]?.results?.filter(x => x.result === 1).length ?? 0;
-      talked = roll.total - ones > 0;
+      talked = TERMS.successes((roll.dice[0]?.results ?? []).map(x => x.result), tr.difficulty).successes > 0;
       await roll.toMessage({speaker: ChatMessage.getSpeaker({token: m.document}), flavor: `${tr.ability} to talk ${p.name} down, difficulty ${tr.difficulty}`});
     }
     const out = PW.after(choice, {talked, paid});

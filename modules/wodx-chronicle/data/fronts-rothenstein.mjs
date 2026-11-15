@@ -12,7 +12,8 @@
  * scene's short side), mark or text (a sign drawn as words), color, line (spots in a row), wash (the whole scene).
  * Scene "@company" means the scene the company stands in.
  */
-const DAY = 86400;
+import {DAY, WEEK} from "../scripts/terms.mjs";
+export {WEEK};
 
 export const FRONTS = [
   {key: "court", label: "The court", who: "Voivode Bogdan Ursu", every: 7,
@@ -218,5 +219,4 @@ export const CLUES = [
 /** Book one's chapters in order (as in twists-rothenstein.mjs). */
 export const CHAPTERS = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10"];
 /** A twist's week: fronts keep out of it unless pushed. */
-export const WEEK = 7 * DAY;
 export {DAY};

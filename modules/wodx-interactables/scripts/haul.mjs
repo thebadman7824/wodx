@@ -16,6 +16,7 @@
  *   Who acts    Every change is made on the active Storyteller's client; a player's choice goes there by the socket.
  */
 import * as H from "./haul-rules.mjs";
+import {contentsKg, gearKg, openSetDown, setDownChoices} from "./loose.mjs";
 import {countSuccesses, clampDifficulty} from "../../wodx-actions/scripts/core-rules.js";
 import {actionPool} from "../../wodx-actions/scripts/rules.js";
 
@@ -107,22 +108,21 @@ const growthOf = actor => {
     return age < 7 ? "small" : age < 12 ? "child" : age < 15 ? "young" : "youth";
   } catch (e) { return ""; }
 };
-/** What a body weighs: {kg, can, why}. */
+/** What a body weighs: {kg, can, why, gear (kg of it that is what they have on them, B6084)}. */
 export function bodyWeight(tokDoc) {
   const doc = docOf(tokDoc), actor = doc?.actor, b = bodyFor(actor);
   const shape = b && !["person", "homid"].includes(b.shape) ? b.shape : null;
-  return H.bodyKg({creature: /creature/i.test(actor?.type ?? ""), squares: num(doc?.width) || 1, shape, intangible: !!b?.intangible, growth: growthOf(actor)});
+  const w = H.bodyKg({creature: /creature/i.test(actor?.type ?? ""), squares: num(doc?.width) || 1, shape, intangible: !!b?.intangible, growth: growthOf(actor)});
+  if ( !w.can ) return {...w, gear: 0};
+  const gear = Math.round(gearKg(actor).kg);
+  return {...w, kg: w.kg + gear, gear};
 }
-const itemsIn = f => {
-  const raw = f?.items;
-  if ( Array.isArray(raw) ) return raw.length;
-  return String(raw ?? "").split(/\n|;/).map(s => s.trim()).filter(Boolean).length;
-};
-/** A tile as a thing to move, or null. */
+/** A tile as a thing to move, or null. Its contents weigh what WoDX Library says (B6083). A picked-up pile is gone. */
 export function thingOf(tile) {
   const f = tile?.flags?.[MOD] ?? {};
   if ( f.mount && (f.driver || (Array.isArray(f.riders) && f.riders.some(r => !r.laid))) && !f.haul ) return null;
-  return H.thingOf(f, itemsIn(f));
+  if ( (f.pile || (f.container && f.kind === "pile")) && (f.taken || !(Array.isArray(f.items) ? f.items.length : String(f.items ?? "").trim())) ) return null;
+  return H.thingOf(f, f.container ? contentsKg(f) : 0);
 }
 /** Is the ground at a point rough for wheels: a region named for mud, snow or rubble, or snow lying, or rain out of doors. */
 function roughAt(scene, p) {
@@ -742,7 +742,8 @@ export function optionsFor(tok) {
     const team = [...(haulOf(t)?.by ?? []).map(b => sync(b.t)?.actor).filter(Boolean), doc.actor];
     const m = H.moveOf({kind: "body", kg: w.kg, strength: team.reduce((s, a) => s + strengthOf(a), 0)});
     const help = haulOf(t)?.by?.length ? ` with ${haulOf(t).by.map(b => b.n).join(" and ")}` : "";
-    out.push({op: "take", what: t.uuid, want: "carry", label: `Carry ${t.name}${help} (${f.why})`, note: m.mode === "carry" ? `About ${w.kg} kg: half pace, both hands.` : `About ${w.kg} kg: too heavy to lift; drag instead.`, disabled: m.mode !== "carry"});
+    const gear = w.gear ? ` (${w.kg - w.gear} and ${w.gear} of gear)` : "";
+    out.push({op: "take", what: t.uuid, want: "carry", label: `Carry ${t.name}${help} (${f.why})`, note: m.mode === "carry" ? `About ${w.kg} kg${gear}: half pace, both hands.` : `About ${w.kg} kg${gear}: too heavy to lift; drag instead.`, disabled: m.mode !== "carry"});
     out.push({op: "take", what: t.uuid, want: "drag", label: `Drag ${t.name}${help}`, note: m.budge ? "Quarter pace, one hand." : m.note, disabled: false});
   }
   for ( const t of tilesOf(scene) ) {
@@ -755,8 +756,10 @@ export function optionsFor(tok) {
     const help = prior?.by?.length ? ` with ${prior.by.map(b => b.n).join(" and ")}` : "";
     const bar = t.flags?.[MOD]?.barricade;
     out.push({op: "take", what: t.uuid, want: th.pile ? "haul" : "push", label: `${bar ? "Shove aside" : th.pile ? "Haul" : "Push or pull"} the ${th.label}${help}`,
-      note: `About ${Math.round(th.kg)} kg${th.wheels ? ", on wheels" : ""}: ${m.note}.`});
+      note: `About ${Math.round(th.kg)} kg${th.inside > 0 && th.kg > th.inside ? ` (${Math.round(th.kg - th.inside)} and ${Math.round(th.inside) || "under 1"} inside)` : ""}${th.wheels ? ", on wheels" : ""}: ${m.note}.`});
   }
+  // B6086: set gear from the sheet down here, as a pile anyone can pick up
+  if ( setDownChoices(doc.actor).length ) out.push({op: "setdown", label: "Set gear down here", note: `${(() => { const g = gearKg(doc.actor); return g.kg ? `Carrying about ${Math.round(g.kg * 10) / 10} kg in all. ` : ""; })()}Pick what goes on the ground.`});
   if ( !out.length ) out.push({op: "none", label: "Nobody fallen and nothing to move within reach.", disabled: true});
   return out;
 }
@@ -773,6 +776,7 @@ export async function choose(doc, opt) {
   }
   if ( opt.op === "release" ) return release(doc, {onto: opt.onto ?? null});
   if ( opt.op === "struggle" ) return struggle(doc);
+  if ( opt.op === "setdown" ) return openSetDown(doc);
   return null;
 }
 

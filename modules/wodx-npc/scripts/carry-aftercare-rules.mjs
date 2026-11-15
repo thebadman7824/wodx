@@ -16,8 +16,10 @@
  *   a11 on its turn the prisoner's own faction may come for them
  *   a12 a player's character held prisoner gets a card each day: try the bonds, talk, or wait
  */
+import {DAY, WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY, WEEK};
 
-export const DAY = 86400;
 
 /* ---------------- dice ---------------- */
 
@@ -25,7 +27,7 @@ export const DAY = 86400;
 export function roll(n, diff, rand = Math.random) {
   const d = Math.max(3, Math.min(10, Math.round(Number(diff) || 6)));
   const dice = Array.from({length: Math.max(0, Math.round(Number(n) || 0))}, () => 1 + Math.floor(rand() * 10));
-  const hits = dice.filter(x => x >= d).length, ones = dice.filter(x => x === 1).length;
+  const {raw: hits, ones} = TERMS.successes(dice, d);
   return {dice, diff: d, hits, ones, net: Math.max(0, hits - ones), botch: hits === 0 && ones > 0};
 }
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -137,7 +139,6 @@ export function feedDraw({hunger = 0, healthLeft = 7, rand = Math.random} = {}) 
 }
 
 /** a10: after a week the faction decides. */
-export const WEEK = 7 * DAY;
 export const FATES = {
   ransom: "ransomed to their people",
   trade: "traded for one of the captors' own",

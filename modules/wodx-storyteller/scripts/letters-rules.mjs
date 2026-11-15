@@ -14,8 +14,9 @@
  * each only where and when that land has it. The Storyteller sees what is on the way and can lose it, delay it or
  * have it read; an answer goes back the same long way.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
-const H = 3600, D = 86400;
+const H = 3600, D = DAY;
 
 /** Distances a sender can pick. Storyteller 0.59.0: only inside one part of the world; between parts the world map gives the way. */
 export const REACH = {

@@ -17,6 +17,7 @@ import props as pr
 import land
 import wilds as wl
 import town as tw
+import dress as dr
 import roofs as RF
 import buildings as B
 from scene import Recorder
@@ -113,6 +114,7 @@ pr.garden(m, 54.4, 35.6, 63.2, 43.2); note("vegetable garden", 58.8, 39.4)
 # ---- floors, walls, doors, windows, fences ----
 for name, (r, kind, fl) in BLD.items():
     for x, y, w, h, k in fl: B._floor(m, x, y, w, h, k)
+dr.snap(m)
 for c in WALLS:
     _, r, kind = owner(c); rec.wall(*c, th=26, kind=kind)
 for c in DOORS:
@@ -145,7 +147,7 @@ for tx, ty in ((4.2, 4.1), (4.0, 6.2), (4.0, 8.2), (8.0, 2.2), (7.2, 4.8), (10.3
 note("tables and stools", 6, 6)
 pr.bench(m, 3.6, 9.65, 1.9, .34); note("bench", 4.5, 9.8)
 pr.shelf(m, 13.0, 2.0, 1.8, .44, ["plates", "bowl", "jug", "plates"]); note("shelf of plates", 13.9, 2.2)
-m.oven(14.6, 1.8, 1.4, 1.2, side="s"); rec.light("Oven (the inn)", "The inn's oven", (14.6, 1.8, 1.4, 1.2), dim=4, bright=1.5); note("oven", 15.3, 2.4)
+dr.oven(m, 14.6, 1.8, 1.4, 1.2, "s"); rec.light("Oven (the inn)", "The inn's oven", (14.6, 1.8, 1.4, 1.2), dim=4, bright=1.5); note("oven", 15.3, 2.4)
 m.table(14.6, 3.6, 1.8, .9, things=True); note("kitchen table", 15.5, 4.05)
 pr.crate(m, 12.5, 2.9, 44, goods="apples", name="Crate (inn kitchen)")
 pr.barrel(m, 16.9, 5.7, 21, holds="water", name="Water cask (inn kitchen)"); pr.barrel(m, 17.6, 5.7, 21, holds="grain", name="Flour cask (inn kitchen)")
@@ -170,7 +172,7 @@ for k in range(3): d.line([2.4 * T + k * 30, 16.0 * T, 2.4 * T + k * 30 + 40, 16
 note("harness on pegs", 2.9, 16.1)
 
 # ---- the bakery ----
-m.oven(25.1, 2.5, 2.1, 2.1, side="w"); rec.light("Bake oven (bakery)", "The bake oven", (25.1, 2.5, 2.1, 2.1), dim=5, bright=1.5); note("bake oven", 26.15, 3.55)
+dr.oven(m, 25.1, 2.5, 2.1, 2.1, "w"); rec.light("Bake oven (bakery)", "The bake oven", (25.1, 2.5, 2.1, 2.1), dim=5, bright=1.5); note("bake oven", 26.15, 3.55)
 m.table(21.4, 3.5, 2.2, 1.0, things=False); note("kneading trough", 22.5, 4.0)
 for k in range(3): pr.sack(m, 21.0 + k * .5, 2.75, 19, name="Flour sack (bakery)")
 pr.barrel(m, 20.95, 4.95, 20, holds="water", name="Water cask (bakery)")
@@ -195,7 +197,7 @@ d.rectangle([34.9 * T, 6.0 * T, 36.6 * T, 7.6 * T], fill=R["dwood"][1], outline=
 for k in range(6): d.line([34.9 * T + 4, 6.0 * T + 8 + k * 22, 36.6 * T - 4, 6.0 * T + 8 + k * 22], fill=R["dwood"][3], width=4)
 note("stairs up", 35.75, 6.8)
 m.table(38.3, 6.1, 1.2, .7, things=False); pr.stool(m, 38.6, 6.9)
-m.oven(39.4, 6.9, 1.0, 1.0, side="w"); light(39.99, 7.34, "Stove (Graff's hall)", "fire", 5, "#ff9a40"); note("stove", 39.9, 7.4)
+dr.oven(m, 39.5, 6.85, 1.05, 1.05, "w"); light(39.99, 7.34, "Stove (Graff's hall)", "fire", 5, "#ff9a40"); note("stove", 39.9, 7.4)
 for k in range(5): pr.barrel(m, 40.1, 5.9 + k * .62, 20, holds=("water", "grain")[k % 2], name="Cask (Graff's hall)")
 pr.shelf(m, 34.4, 8.5, 1.6, .44, ["linen", "linen", "jug"]); light(34.25, 7.28, "Candle (Graff's hall)")
 
@@ -323,6 +325,18 @@ X0_, Y0_, X1_, Y1_ = int(60.6 * T), int(6.6 * T), int(63.4 * T), int(8.8 * T)   
 img = RF.draw((60.6, 6.6, 2.8, 2.2), "shingle", seed=3); m.img.paste(img.convert("RGB"), (X0_, Y0_)); note("woodshed", 62, 7.7)
 pr.logpile(m, 60.7, 8.95, 2.6, .5)
 
+# ---- dressing (B5746): the small things of daily use in every room, the square and its edges ----
+KINDS = {"Inn at the Crossing": ("hall", [(15.5, 3.5, "home"), (15.5, 8.5, "store")]), "Bakery": ("shop", [(23.9, 4.0, "work")]),
+         "Richter Graff's house": ("home", [(42.6, 5.3, "store")]), "Chandler's house": ("home", ()), "Woodshed": ("store", ()),
+         "Master Voss, apothecary": ("shop", [(58.0, 17.5, "home")]), "Inn stables": ("stable", ()), "Barber-surgeon": ("shop", [(58.0, 27.0, "home")]),
+         "Lame Ox tavern": ("hall", [(4.5, 34.0, "store"), (11.0, 34.0, "home")]), "House by the tavern": ("home", ()), "Hatter and glover": ("craft", ()),
+         "General store": ("shop", ()), "Butcher's shop": ("shop", [(21.0, 41.5, "store")]), "Smokehouse": ("store", ())}
+LINES = WALLS + DOORS + WINDOWS
+for name, (r, kind, fl) in BLD.items():
+    k, at = KINDS.get(name, ("home", ())); dr.rooms(m, rec, r, LINES, k, at)
+dr.dress(m, rec, (14.0, 11.6, 35.0, 23.4), "market", n=44); dr.dress(m, rec, (13.0, 10.8, 37.0, 25.0), "street", n=60)
+dr.dress(m, rec, (0, 10.6, 13.0, 15.2), "street", n=14); dr.dress(m, rec, (28.0, 0, 6.0, 10.6), "street", n=6); dr.dress(m, rec, (44.8, 0, 7.4, 11.0), "yard", n=6)
+dr.dress(m, rec, (13.0, 35.0, 4.4, 9.0), "yard", n=5); dr.dress(m, rec, (29.6, 35.0, 5.2, 9.0), "yard", n=5)
 for _ in range(40):                                                                    # straw and muck trodden into the square, a puddle or two
     x, y = rng.uniform(14, 50), rng.uniform(11.5, 34)
     if any(inside(x, y, r, .6) for r, _, _ in BLD.values()): continue

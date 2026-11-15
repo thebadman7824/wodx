@@ -119,7 +119,7 @@ export async function releaseServed(year = yearNow()) {
 function ensureBrand() {
   const C = game.modules.get(MODULE_ID)?.api;
   if ( C?.registerCondition && !C?.conditions?.getCondition?.("branded") ) C.registerCondition({id: "branded", name: "Branded", img: "icons/svg/fire.svg",
-    source: "WoDX Chronicle law", summary: "Bears the court's brand: anyone who sees the face or hand sees it."});
+    source: "WoDX Chronicle law", summary: "Bears the court's brand: anyone who sees the face or hand sees it, and social rolls are at +1 difficulty (B6029).", mods: {socialDiff: 1}});
 }
 async function brand(actor, on) {
   ensureBrand();

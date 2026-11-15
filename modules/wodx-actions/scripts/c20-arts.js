@@ -8,6 +8,7 @@
  */
 import { H, T, C, N, S, MV, HL, outcomesOf } from "./mage-da-effects.js";
 import * as PK from "./power-keywords.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const A = (art, level, fx, lasts, type, spec = null, extra = {}) => ({ art, level, fx, lasts, type, spec, ...extra });
 
@@ -113,8 +114,8 @@ CANTRIPS["lord-of-levin"].dice = (c, s) => 5 + Math.max(0, s - 1);
 /** The cantrips of an Art at or below a level, in order. */
 export const cantripsOf = (art, upTo = 5) => Object.entries(CANTRIPS).filter(([, c]) => c.art === art && c.level <= upTo).map(([id, c]) => ({ id, ...c }));
 
-const CODE = { t: { rounds: 1 }, m: 60, "2m": 120, "3m": 180, "4m": 240, "5m": 300, "10m": 600, h: 3600, s: "scene", d: 86400, w: 7 * 86400, mo: 30 * 86400, "6mo": 182 * 86400,
-    y: 365 * 86400, yd: 366 * 86400, dec: 3650 * 86400 };
+const CODE = { t: { rounds: 1 }, m: 60, "2m": 120, "3m": 180, "4m": 240, "5m": 300, "10m": 600, h: 3600, s: "scene", d: DAY, w: 7 * DAY, mo: 30 * DAY, "6mo": 182 * DAY,
+    y: 365 * DAY, yd: 366 * DAY, dec: 3650 * DAY };
 const LABEL = { t: "a turn", m: "a minute", "2m": "two minutes", "3m": "three minutes", "4m": "four minutes", "5m": "five minutes", "10m": "ten minutes", h: "an hour",
     s: "the scene", d: "a day", w: "a week", mo: "a month", "6mo": "six months", y: "a year", yd: "a year and a day", dec: "a decade" };
 /** A table duration for these successes and this Glamour: {label, timed}. */
@@ -122,7 +123,7 @@ export function tableLasts(lasts, successes, glamour = 1) {
     const codes = String(lasts).replace(/^TABLE:/, "").split(",");
     const c = codes[Math.max(1, Math.min(5, successes)) - 1];
     const g = Math.max(1, Number(glamour) || 1);
-    const G = { gt: [g, "turn", 0], gm: [g * 60, "minute", 60], g5m: [g * 300, "minute", 60], g30m: [g * 1800, "minute", 60], gh: [g * 3600, "hour", 3600], gd: [g * 86400, "day", 86400] }[c];
+    const G = { gt: [g, "turn", 0], gm: [g * 60, "minute", 60], g5m: [g * 300, "minute", 60], g30m: [g * 1800, "minute", 60], gh: [g * 3600, "hour", 3600], gd: [g * DAY, "day", DAY] }[c];
     if (G) {
         if (c === "gt") return { label: `${g} turn${g === 1 ? "" : "s"}`, timed: { kind: "rounds", rounds: g } };
         const k = G[0] / G[2];

@@ -15,9 +15,10 @@
  */
 import * as TRR from "./trust-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
-const DAY = 86400;
 const st = () => (game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null);
 const api = () => game.modules.get(MOD).api;
 const isActiveGM = () => game.user?.isGM && game.users.activeGM?.id === game.user.id;
@@ -71,9 +72,7 @@ export async function betray(byLike, ofLike, {kind = "other", what = ""} = {}) {
 /* ---- Boons ---- */
 export function debtWord(actorLike) {
   const a = actorOf(actorLike);
-  const t = String(a?.type ?? "").toLowerCase();
-  const line = t === "vampire" ? "vampire" : t === "werewolf" ? "werewolf" : t === "mage" ? "mage" : t.startsWith("changel") ? "changeling" : t === "wraith" ? "wraith"
-    : t === "hunter" ? "hunter" : t === "mummy" ? "mummy" : t === "demon" ? "demon" : /kuei|cathayan/.test(t) ? "kueijin" : "mortal";
+  const line = lineOfA(a); // B6310: the all-lines key, so a Kuei-jin owes face and a Fera honour
   return TRR.debtWordFor(line);
 }
 export async function tradeBoon(entryId, newHolderLike) {
@@ -140,8 +139,7 @@ export async function setSide(actorLike, side) {
 /** Who can find it out, and how: the powers of the viewer's line, with roll and difficulty, for the Storyteller. */
 export function howToFind(viewerLike) {
   const v = actorOf(viewerLike);
-  const t = String(v?.type ?? "mortal").toLowerCase();
-  return TRR.sensesFor(t.startsWith("changel") ? "changeling" : t);
+  return TRR.sensesFor(lineOfA(v)); // B6310: a Kuei-jin has no Auspex; a Fera reads as the Garou do
 }
 export async function foundSide(actorLike, finderLike) {
   const a = actorOf(actorLike), f = actorOf(finderLike);
@@ -193,7 +191,63 @@ export async function strikeBacks() {
   }
   return out;
 }
+/* B6452: looking someone over rolls the viewer's line's sense for a hidden loyalty, on the viewer's own client */
+const SOCK = `module.${MOD}`;
+function haveOf(a) {
+  const powers = {};
+  for ( const i of a?.items ?? [] ) {
+    const v = Number(i.system?.value) || (i.type === "Power" ? 1 : 0);
+    const k = String(i.name ?? "").split(" (")[0].trim().toLowerCase();
+    if ( k && v > (powers[k] ?? 0) ) powers[k] = v;
+  }
+  const sp = a?.system?.spheres ?? {};
+  if ( Number(sp.mind?.value) ) powers.mind = Number(sp.mind.value);
+  return {powers};
+}
+const traitOf = (a, k) => {
+  const at = a?.system?.attributes?.[k];
+  if ( at ) return Number(at.total ?? at.value) || 0;
+  if ( k === "arete" ) return Number(a?.system?.advantages?.arete?.permanent ?? a?.system?.arete?.value) || 0;
+  const ab = a?.system?.abilities?.[k];
+  if ( ab?.value !== undefined ) return Number(ab.value) || 0;
+  return Number([...(a?.items ?? [])].find(i => (i.type === "Ability" || i.type === "Trait") && i.name.trim().toLowerCase() === k)?.system?.value) || 0;
+};
+export async function seekSide(viewerLike, targetLike) {
+  const v = actorOf(viewerLike), t = actorOf(targetLike);
+  const side = sideOf(t);
+  if ( !v || !t || !side || side.found?.[v.id] ) return null;
+  const have = haveOf(v), sense = TRR.pickSense(howToFind(v), have);
+  if ( !sense ) return null;
+  const dice = TRR.senseParts(sense).reduce((n, k) => n + traitOf(v, k), 0);
+  const diff = TRR.senseDifficulty(sense, {willpower: Number(t.system?.advantages?.willpower?.permanent) || 0, manipulation: traitOf(t, "manipulation"), subterfuge: traitOf(t, "subterfuge")}, have);
+  if ( dice <= 0 ) return null;
+  const roll = await new Roll(`${dice}d10`).evaluate();
+  const faces = roll.dice?.[0]?.results?.map(x => x.result) ?? [];
+  const succ = TERMS.successes(faces, diff).successes;
+  const res = TRR.senseResult(sense, succ);
+  const who = side.leader?.name || side.name || "someone";
+  const text = res === "found" ? `${t.name} secretly serves ${who}${side.name && side.leader?.name ? ` (${side.name})` : ""}.` : res === "hint" ? `${t.name} is hiding who they truly serve.` : "Nothing more shows.";
+  const owners = game.users.filter(u => v.testUserPermission?.(u, "OWNER")).map(u => u.id);
+  await ChatMessage.create({whisper: [...new Set([...owners, ...game.users.filter(u => u.isGM).map(u => u.id)])], speaker: {alias: v.name}, rolls: [roll],
+    content: `<div class="wodx-card"><h3>${esc(sense.power)}: ${esc(t.name)}</h3><p>${esc(sense.roll)} at ${diff}: ${succ} ${succ === 1 ? "success" : "successes"} (${esc(sense.book)}).</p><p>${esc(text)}</p></div>`});
+  if ( res === "found" ) {
+    if ( game.user.isGM ) await foundSide(t, v);
+    else game.socket.emit(SOCK, {type: "trust.found", target: t.id, finder: v.id, userId: game.user.id});
+  }
+  return {sense: sense.power, successes: succ, result: res};
+}
+
 export function listen() {
+  Hooks.on("wodxLookOver", p => {
+    const v = p?.actor, t = p?.npc?.isToken ? (p.npc.baseActor ?? p.npc) : p?.npc;
+    if ( !v || !t || !(v.isOwner) || !(Number(p.successes) > 0) ) return;
+    seekSide(v, t).catch(e => console.error(`${MOD} | hidden loyalty`, e));
+  });
+  Hooks.once("ready", () => game.socket?.on?.(SOCK, m => {
+    if ( m?.type !== "trust.found" || !isActiveGM() ) return;
+    const u = game.users.get(m.userId), f = game.actors.get(m.finder);
+    if ( u && f?.testUserPermission?.(u, "OWNER") ) foundSide(m.target, f).catch(e => console.error(`${MOD} | hidden loyalty`, e));
+  }));
   Hooks.on("wodxFactionTurn", () => { strikeBacks().catch(e => console.error(`${MOD} | strike back`, e)); });
   Hooks.on("wodxBoonSettled", p => { onSettled(p).catch(e => console.error(`${MOD} | trust`, e)); });
 }

@@ -6,10 +6,10 @@ import * as D from "../data/pod.mjs";
 export * from "../data/pod.mjs";
 import * as LPD from "../data/pod-lifepath.mjs";
 import * as S from "./saga-rules.mjs";
+import {DAY} from "./terms.mjs";
 export * as saga from "./saga-rules.mjs";
 export {LP_CHAINS, LP_DAYS, meansFor} from "../data/pod-lifepath.mjs";
 
-const DAY = 86400;
 const norm = s => String(s ?? "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
 
 /* ---------------- city exposure ---------------- */

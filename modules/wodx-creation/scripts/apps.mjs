@@ -16,11 +16,12 @@ import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {PassYearsApp} from "./pass-years.mjs";
 import {PeopleApp} from "./people.mjs";
 import {runSkipTest, isTestWorld} from "./skip-test.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const {ApplicationV2} = foundry.applications.api;
 const OBSERVER = 2;
 const byName = (a, b) => a.name.localeCompare(b.name);
-const isPC = a => !!a.hasPlayerOwner;
+const isPC = TERMS.isPC;
 
 function describeActor(a) {
   if ( lineOf(a) === "vampire" && splatOf(a) !== "kuei-jin" ) return `${clanNameOf(a) || "Vampire"}, ${generationOf(a) ? ordinal(generationOf(a)) : "?"}`;

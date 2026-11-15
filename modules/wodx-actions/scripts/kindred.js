@@ -33,6 +33,7 @@ import * as BR from "./book-rituals.js";
 import * as DSX from "./daysleep.js";
 import * as DSR from "./daysleep-rules.js";
 import * as FOM from "./fomor.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -257,7 +258,9 @@ export function build(ctx) {
             if (PE.isPath(p.d) && successes > 0 && p.r && EF.isOn()) { fx = EF.pathPlan(actor, p, successes); body += fx.html; }
             const dur = successes > 0 && !PE.PATH_EFFECTS[p.id] ? K.discDuration(p.t, successes) : null;
             if (dur && chronicle()?.applyTimed && actor.isOwner) {
-                await chronicle().applyTimed(actor, { name: p.n, img: "icons/svg/aura.svg", description: p.e, duration: dur, source: `${p.book ?? "VtDA20"} p. ${p.p}`, key: `disc-${p.id}` });
+                await chronicle().applyTimed(actor, { name: p.n, img: "icons/svg/aura.svg", description: p.e, duration: dur, source: `${p.book ?? "VtDA20"} p. ${p.p}`, key: `disc-${p.id}`,
+                    // B6034: Obfuscate sets the Obfuscated condition, which Senses and targeting read
+                    ...(/obfuscate/i.test(String(p.d ?? "")) ? { condition: "obfuscated" } : {}) });
                 body += `<div class="vta-note">Shown on the token until it ends (${esc(K.DURATION_TEXT[p.t] ?? "")}).</div>`;
             }
             // The Forgetful Mind on a witness: the Masquerade ledger marks them as made to forget
@@ -524,7 +527,7 @@ export function build(ctx) {
             }
             // B5758: the other Backgrounds do what their note says
             try { body += await downtimeDoes(actor, r.k, total, dots, Math.max(1, n(fd.weeks)), body.includes("Botch")); } catch (e) { console.warn("WoDX | downtime", e); }
-            if (fd.advance) body += await spendTime(actor, 7 * 86400 * Math.max(1, n(fd.weeks)), "downtime");
+            if (fd.advance) body += await spendTime(actor, 7 * DAY * Math.max(1, n(fd.weeks)), "downtime");
             await logEvent(actor, `Downtime: ${r.d.label.toLowerCase()}, ${total} success${total === 1 ? "" : "es"}.`, "downtime");
             return post(actor, `${actor.name}: ${esc(r.d.label)}`, body, rolls);
         }, { render: root => { sync(root); root.querySelector("[name=kind]").addEventListener("change", () => sync(root)); } });
@@ -573,7 +576,9 @@ export function build(ctx) {
     }
 
     async function masquerade(actor = null) {
-        if (!game.user.isGM) return ctx.notify("The Storyteller keeps the Masquerade records.");
+        if (!game.user.isGM) return ctx.notify("The Storyteller keeps the records of who saw what.");
+        // B6301: the same records serve every line; the window is named for the secret of the one who was seen
+        const title = !actor || P.detectProfile(actor) === "kindred" ? "Masquerade" : "Witnesses";
         const list = MASQJ.entries();
         const targets = [...(game.user.targets ?? [])].map(t => t.actor).filter(Boolean);
         const open = [];
@@ -581,14 +586,14 @@ export function build(ctx) {
         const content = `<form>
           <fieldset><legend>Record what was seen</legend>
             <div class="form-group"><label>Who was seen</label><input type="text" name="by" value="${esc(actor?.name ?? "")}"/></div>
-            <div class="form-group"><label>What</label><input type="text" name="event" placeholder="fed in the open, used a Discipline, walked away from a killing blow…"/></div>
+            <div class="form-group"><label>What</label><input type="text" name="event" placeholder="used a power in the open, changed shape, walked away from a killing blow…"/></div>
             <p class="vta-note">Witnesses: the targeted tokens (${targets.length ? targets.map(t => esc(t.name)).join(", ") : "none targeted"}).</p></fieldset>
           <fieldset><legend>Or update a witness (${open.length} still remember)</legend>
             ${open.length > 5 ? searchBox("select[name=w]", "Search witnesses…", "Search witnesses") : ""}
             <div class="form-group"><select name="w"><option value="">— none —</option>${open.map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join("")}</select></div>
             <div class="form-group"><label>Now</label><select name="state">${Object.entries(K.WITNESS_STATES).filter(([k]) => k !== "saw").map(([k, l]) => `<option value="${k}">${esc(l)}</option>`).join("")}</select></div>
             <div class="form-group"><label>Note</label><input type="text" name="note"/></div></fieldset></form>`;
-        return dialog("Masquerade", content, "Record", async fd => {
+        return dialog(title, content, "Record", async fd => {
             if (fd.w) {
                 const [i, j] = String(fd.w).split(":").map(Number);
                 const L = MASQJ.entries();
@@ -1111,7 +1116,7 @@ export function build(ctx) {
 
     /** Healing menu: mark a mortal's wounds as treated, see the plan, heal now. */
     async function healing(actor) {
-        const plan = healPlan(actor, 86400);
+        const plan = healPlan(actor, DAY);
         const treated = !!actor.getFlag(MOD, "treated");
         const content = `<form><p><b>${esc(actor.name)}</b>: ${ctx.healthText(actor, ctx.healthTrack(actor).damage)}.</p>
           <p class="vta-note">${plan ? `In a day: ${Object.entries(plan.healed).filter(([, v]) => v).map(([k, v]) => `${v} ${k}`).join(", ") || "nothing yet"}${plan.next ? `; the next level in ${Math.ceil(plan.next / 3600)} hours` : ""}.` : "This character doesn't heal with time (Cainites heal with blood)."} The clock heals automatically as it advances.</p>

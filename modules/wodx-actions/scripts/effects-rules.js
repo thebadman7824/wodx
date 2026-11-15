@@ -20,6 +20,7 @@
  * marked and logged in DECISIONS (B763).
  */
 import * as M from "./m20-rules.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 
@@ -181,9 +182,9 @@ export function durationFor(step) {
   const label = M.DURATION[s];
   if ( s === 1 ) return {label, timed: {kind: "rounds", rounds: 1}};
   if ( s === 2 ) return {label, timed: {kind: "scene"}};
-  if ( s === 3 ) return {label, timed: {kind: "time", seconds: 86400}};
-  if ( s === 4 ) return {label, timed: {kind: "time", seconds: 30 * 86400}}; // a story: a month of game time (house rule)
-  if ( s === 5 ) return {label, timed: {kind: "time", seconds: 182 * 86400}};
+  if ( s === 3 ) return {label, timed: {kind: "time", seconds: DAY}};
+  if ( s === 4 ) return {label, timed: {kind: "time", seconds: 30 * DAY}}; // a story: a month of game time (house rule)
+  if ( s === 5 ) return {label, timed: {kind: "time", seconds: 182 * DAY}};
   return {label, timed: null}; // the Storyteller's call
 }
 

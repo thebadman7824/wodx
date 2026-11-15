@@ -34,10 +34,11 @@
  * The rest is house reading (PENDING-REVIEW): the awe figures, the weekly turn, growth, notice and schism, and the
  * Netaru, Garou, Kuei-jin, hunter and mortal kinds, whose books give no cult rules held in WoDX's book store.
  */
+import {DAY, WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY, WEEK};
 
 export const VERSION = 1;
-export const DAY = 86400;
-export const WEEK = 7 * DAY;
 /** Awe needed in one place before a following can gather, and the lower mark at which the founder may ask (B3242). */
 export const FORM_AT = 10;
 export const ASK_AT = 5;
@@ -474,7 +475,7 @@ export function gatheringGift(kind, dots, faces = []) {
   if ( kind === "dreamers" ) return {pool: "glamour", path: "system.advantages.glamour", gain: d, label: "Glamour", cap: 10};
   if ( kind === "remembrance" ) {
     const f = (faces ?? []).slice(0, d).map(x => n(x));
-    const hits = f.filter(x => x >= 8).length, ones = f.filter(x => x === 1).length;
+    const {raw: hits, ones} = TERMS.successes(f, 8);
     return {pool: "pathos", path: "system.advantages.pathos", gain: Math.max(0, hits - ones), label: "Pathos", cap: 10, faces: f, rolled: true};
   }
   return null;

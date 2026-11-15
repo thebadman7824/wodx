@@ -16,7 +16,7 @@ const {HOUSE} = await imp("modules/wodx-npc/data/grammar/house.mjs");
 const GR = await imp("modules/wodx-npc/data/grammar/groups.mjs");
 
 const grammar = G.mergeGrammars({rules: G.poolRules(STOCK, MORE)}, HOUSE, GR.GROUPS_GRAMMAR);
-const YEARS = [1197, 1250, 1420, 1499, 1500, 1620, 1750, 1800, 1850, 1870, 1899, 1900, 1944, 1979, 1980, 1995, 2025, 2026, 2060];
+const YEARS = [1197, 1250, 1420, 1449, 1450, 1499, 1500, 1620, 1750, 1800, 1836, 1837, 1850, 1870, 1899, 1900, 1905, 1918, 1919, 1944, 1979, 1980, 1989, 1990, 1995, 2015, 2025, 2026, 2060];
 
 test("facts: values, any-of, not, years and rated traits", () => {
   assert.ok(G.testFact("clan", "ventrue", {clan: "Ventrue"}));

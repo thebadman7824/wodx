@@ -147,6 +147,13 @@ function findButton(messageId, pick) {
   return null;
 }
 
+/** B6225: a choice the seat makes for the absent Storyteller is one piece of the Hand's work in the night's work. */
+function seatClick(el, label, source) {
+  const nw = chron()?.nightwork;
+  const id = nw?.begin?.(label, {kind: "seat", source: String(source ?? "The seat")}) ?? null;
+  try { el.click(); } finally { if ( id ) nw.end(id); }
+}
+
 function onMessage(msg) {
   if ( !isSeat() || !R.forStoryteller(msg.whisper, gmIds()) ) return;
   const buttons = R.buttonsOf(msg.content);
@@ -163,7 +170,7 @@ function onMessage(msg) {
       if ( !pick ) return log({...base, note: "no plain choice"});
       if ( !acts() ) return log({...base, choice: pick.label, note: "the seat only watches"});
       const el = findButton(msg.id, pick);
-      if ( el ) el.click();
+      if ( el ) seatClick(el, `${R.titleOf(msg)}: ${pick.label}`, R.sourceOf(msg.flags));
       return log({...base, choice: pick.label, acted: !!el, note: el ? pick.why : "button not found on the seat's screen"});
     } catch (e) { console.warn(`${MOD} | card`, e); }
   }, waitMs());
@@ -187,7 +194,7 @@ function onDialog(app, element) {
       const base = {kind: "window", source: app.constructor?.name ?? "window", title: String(title), buttons: labels};
       if ( !pick || !el || R.AVOID.test(pick.label) ) return log({...base, note: "no plain choice"});
       if ( !acts() ) return log({...base, choice: pick.label, note: "the seat only watches"});
-      el.click();
+      seatClick(el, `${String(title)}: ${pick.label}`, base.source);
       return log({...base, choice: pick.label, acted: true, note: pick.why});
     } catch (e) { console.warn(`${MOD} | window`, e); }
   }, waitMs());

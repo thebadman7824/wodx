@@ -88,7 +88,7 @@ export class DashboardApp extends ApplicationV2 {
     const span = s => esc(DR.whenLabel(s));
     const pRow = r => `<div class="wstory-dash-row" data-search-item data-search-text="${esc(`${r.name} ${r.where ?? ""} ${r.statuses.join(" ")}`)}">
       <div><button type="button" class="wstory-dash-name" data-action="sheet" data-id="${esc(r.id)}">${esc(r.name)}</button> <span class="wodx-quiet">${esc(r.where ?? "on no scene")}${Math.abs(r.ahead) >= 60 ? `, ${esc(W.aheadLabel(r.ahead))}` : ""}</span></div>
-      <div class="wodx-quiet">${esc(DR.woundWords(r.wounds))}${r.willpower ? `; Willpower ${r.willpower.now}/${r.willpower.of}` : ""}${r.blood ? `; blood ${r.blood.now}/${r.blood.of}` : ""}${r.statuses.length ? `; ${esc(r.statuses.join(", "))}` : ""}</div></div>`;
+      <div class="wodx-quiet">${esc(DR.woundWords(r.wounds))}${r.willpower ? `; Willpower ${r.willpower.now}/${r.willpower.of}` : ""}${r.blood ? `; blood ${r.blood.now}/${r.blood.of}` : ""}${r.pools?.length ? `; ${esc(DR.poolWords(r.pools))}` : ""}${r.statuses.length ? `; ${esc(r.statuses.join(", "))}` : ""}</div></div>`;
     const cRow = c => `<div class="wstory-dash-row" data-search-item data-search-text="${esc(c.what)}"><strong>${span(c.at - g.now)}</strong> ${esc(c.what)} <span class="wodx-quiet">${esc(C.timeLabel(c.at))}</span></div>`;
     const tRow = x => `<div class="wstory-dash-row" data-search-item data-search-text="${esc(x.what)}">${esc(x.what)} <span class="wodx-quiet">${esc(x.why)}</span></div>`;
     const who = s => esc(s?.name || "someone");

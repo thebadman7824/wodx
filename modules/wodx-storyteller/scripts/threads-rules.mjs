@@ -17,8 +17,9 @@
  * Every storyline is only a proposal: the Storyteller approves, edits, refuses or locks it (B3650).
  */
 import {fresh, ECHO, OWN} from "./signals-rules.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY};
 
-export const DAY = 86400;
 /** Open storylines at once, besides one per player's own hook (desk item 7). */
 export const CAP = 3;
 /** The share of night draws that give an open storyline's next beat instead of a table line (desk item 9). */

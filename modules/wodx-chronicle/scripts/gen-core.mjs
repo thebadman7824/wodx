@@ -9,6 +9,7 @@
  *   {{name}}        a value given by the caller (vars)
  */
 import {CULTURE_BORROW} from "./world-rules.mjs";
+import * as TERMS from "./terms.mjs";
 
 /** A 128-bit hash of a string, as four 32-bit numbers (cyrb128). */
 export function hash128(str) {
@@ -152,9 +153,5 @@ export function eraGroupFor(profileId, year = null) {
 }
 
 /** Era profiles gathered into the groups the people tables are written for. */
-export const ERA_GROUP = {
-  "dark-ages": "medieval", "long-night": "medieval", "classical": "ancient", "living-gods": "ancient",
-  "mythic-age": "ancient", "bronze-kings": "ancient", "iron-dawn": "ancient", "greece-republic": "ancient", "roman-empire": "ancient", "migration-age": "ancient", "premyslid-duchy": "ancient",
-  "renaissance": "early-modern", "age-of-reason": "early-modern", "mid-century": "mid-century", "victorian": "industrial", "wild-west": "industrial", "great-war": "industrial",
-  "modern": "modern", "time-of-judgment": "modern", "future-darkness": "future", "time-of-future-judgement": "future"
-};
+/** The broad age of each era profile, for the generators (B6192: from the shared terms' era table). */
+export const ERA_GROUP = {classical: "ancient", "living-gods": "ancient", ...Object.fromEntries(TERMS.ERAS.map(e => [e.id, e.group]))};

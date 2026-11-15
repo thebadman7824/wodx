@@ -18,6 +18,7 @@
  *   setting wodx-solo.director   Boolean            "The director brings the night's trouble" (on)
  *   setting wodx-solo.nightXp    Boolean            "Experience at the end of each night" (on)
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 import * as D from "./director-rules.mjs";
 import * as WR from "../../wodx-storyteller/scripts/wrapup-rules.mjs";
 import {lineFor} from "../../wodx-storyteller/scripts/prelude-rules.mjs";
@@ -175,7 +176,7 @@ export async function awardNight({actorId = null, night = null, force = false} =
 /* ------------------------------------------------------------------ */
 
 /** The night to recap: this morning's night before noon, else last night. */
-const lastNight = now => (((Number(now) % 86400) + 86400) % 86400 < 43200 ? D.nightOf(now) : D.nightOf(now) - 1);
+const lastNight = now => (((Number(now) % DAY) + DAY) % DAY < DAY / 2 ? D.nightOf(now) : D.nightOf(now) - 1);
 
 /** Show the player their character's last night, once. force (the gate): show it again. -> the rows, or null */
 export async function recap(userId, {force = false, night = null, actorId = null} = {}) {
@@ -224,7 +225,7 @@ export function installDirector(helpers) {
       const now = game.time.worldTime;
       const night = cal.secondsToNextDawn(now, lat) < cal.secondsToNextDusk(now, lat);
       if ( night ) await direct();
-      else if ( ((now % 86400) + 86400) % 86400 < 43200 ) await awardNight();
+      else if ( ((now % DAY) + DAY) % DAY < DAY / 2 ) await awardNight();
     })().catch(e => console.error(`${MOD} | director`, e)).finally(() => { busy = false; });
   });
   Hooks.on("userConnected", (u, on) => {

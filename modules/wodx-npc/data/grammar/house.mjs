@@ -47,8 +47,8 @@ export const SYMBOLS = {
   /** who keeps order, always plural */
   watch: [
     E("medieval", ["the watchmen", "the burgrave's men"]),
-    Y(1500, 1848, ["the town watch", "the constables"]),
-    Y(1849, 1899, ["the gendarmes", "the police"]),
+    Y(1450, 1848, ["the town watch", "the constables"]),
+    Y(1849, 1918, ["the gendarmes", "the police"]),
     E("twentieth", ["the police", "the gendarmes"]),
     E("modern", ["the cops", "the police"]),
     E("future", ["the security drones", "the patrols"])
@@ -63,8 +63,8 @@ export const SYMBOLS = {
   ],
   drink: [
     E("medieval", ["some ale", "a cup of wine", "some mead"]),
-    Y(1500, 1699, ["some beer", "a cup of wine"]),
-    Y(1700, 1799, ["some coffee", "a cup of wine"]),
+    Y(1450, 1699, ["some beer", "a cup of wine"]),
+    Y(1700, 1836, ["some coffee", "a cup of wine"]),
     E("nineteenth", ["some coffee", "a glass of beer", "some slivovice"]),
     E("twentieth", ["some coffee", "a beer", "some slivovice"]),
     E("modern", ["a coffee", "a beer", "something stronger"]),
@@ -74,7 +74,7 @@ export const SYMBOLS = {
     E("medieval", ["the market cross", "the church", "the town gate"]),
     E("earlymodern", ["the town hall", "the plague column", "the church"]),
     Y(1800, 1838, ["the town hall", "the post house"]),
-    Y(1839, 1899, ["the railway station", "the town hall"]),
+    Y(1839, 1918, ["the railway station", "the town hall"]),
     E("twentieth", ["the station", "the tram stop", "the square"]),
     E("modern", ["the station", "the tram stop", "the shopping centre"]),
     E("future", ["the transit hub", "the tram stop", "the old square"])

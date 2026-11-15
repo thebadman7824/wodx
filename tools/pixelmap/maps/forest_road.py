@@ -13,6 +13,7 @@ from px import R, T
 import props as pr
 import land
 import wilds as wl
+import dress as dr
 import buildings as B
 from scene import Recorder
 
@@ -25,6 +26,7 @@ trail = [(42.0, 28.0), (43.4, 24.6), (45.2, 21.4), (46.0, 19.4)]               #
 burner = [(5.8, 7.9), (6.4, 10.5), (7.4, 14.6)]
 work = [(13.0, 17.0), (14.4, 24.0), (15.8, 32.5)]
 dt, db = land.ground(m, roads=[(road, 118), (grove, 80), (trail, 18), (burner, 30), (work, 44)], floor="forest")
+dr.snap(m)
 
 # ---- the abandoned charcoal burner's hut, north-west: nobody has lived here for a while ----
 fin = B.hut(rec, 3.4, 3.4, 5.0, 4.2, doors=[("s", 1.9)], name="Abandoned burner's hut")          # it has no window
@@ -122,6 +124,12 @@ def clear(x, y, r):
     return dt[py_, px_] < r * T * .45
 
 
+# ---- dressing (B5746): the huts, the woodcutters' yard, the camp and the wood floor ----
+dr.dress(m, rec, (3.4, 3.4, 5.0, 4.2), "camp", n=9)
+dr.dress(m, rec, (8.0, 30.0, 7.0, 5.0), "home")
+dr.dress(m, rec, (9.0, 28.4, 16.0, 15.6), "yard", n=24); dr.dress(m, rec, (9.0, 28.4, 16.0, 15.6), "joinery", n=10)
+dr.dress(m, rec, (45.4, 1.4, 16.6, 18.4), "camp", n=30)
+dr.dress(m, rec, (0, 0, W, H), "wood", n=170)
 oak = (46.9, 21.6)                                                                   # the lookout's oak over the trail
 shrine(33.0, 23.85)
 land.trees(m, W, H, lambda x, y, r: clear(x, y, r) or math.hypot(x - oak[0], y - oak[1]) < 3.2 + r * .5, n=1500, fir=.5, gap=.6)

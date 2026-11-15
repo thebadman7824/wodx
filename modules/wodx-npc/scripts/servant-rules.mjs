@@ -13,10 +13,10 @@
  * data, source}. Step 3 is always the full hold: a full blood oath, full Conditioning, Social Conditioning at
  * Alliance or past it, a chained Thrall.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const idOf = v => (v && typeof v === "object" ? (v.id ?? null) : v) || null;
-const DAY = 86400;
 
 /**
  * The kinds. line: the game line the bond belongs to (null for any). restrain: the roll a servant makes before

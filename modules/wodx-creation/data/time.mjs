@@ -1,8 +1,9 @@
 /**
  * Phase 4: what the years do. Book rules carry their page; "WoDX choice" marks what the books leave open.
  */
+import {YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
 
-export const SECONDS_PER_YEAR = 365.25 * 86400;
+export const SECONDS_PER_YEAR = YEAR;
 export const SECONDS_PER_MONTH = SECONDS_PER_YEAR / 12;
 
 /** Mortal death checks over a time skip. House rule: the books give no lifespan rule. */
