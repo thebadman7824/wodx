@@ -476,3 +476,17 @@ def tanks():
         (2040, 'walker', 'Heavy tank', T(230, 26, [(4, 24), (0, 44), (24, 56), (176, 56), (226, 32), (228, 26)], (70, 150, 56, 74, 8), (90, 65, 5), w=118, skirt=True, extras=(('line', 24, 46, 206, 46, NEON), ('rect', 96, 80, 120, 74, KA))), 'army'),
     ]
     return out
+
+
+# ---- the Future Darkness row (B4976): looks that join the row before them (adds), from 2023, the first year past the
+# main timeline. After the vehicles the near-future game books describe, under plain names. ----
+_cars0, _armoured0, _tanks0 = cars, armoured, tanks
+def cars():
+    out = _cars0(); base = next(l for l in out if l[0] == 1990 and l[1] == 'sedan')
+    return out + [(2023, 'armedcab', 'Armoured cab', dict(base[3], adds=True, bumper=IRON, strip=22), 'bright')]
+def armoured():
+    out = _armoured0(); base = next(l for l in out if l[0] == 2040 and l[1] == 'hover')
+    return out + [(2023, 'hovercraft', 'Combat hovercraft', dict(base[3], adds=True, turret=(60, 104, 60, 70, 6), gun=(30, 66, 2)), 'army')]
+def tanks():
+    out = _tanks0(); base = next(l for l in out if l[0] == 2040 and l[1] == 'battle')
+    return out + [(2023, 'capsule', 'Tracked capsule', dict(base[3], adds=True, hull=[(4, 20), (0, 38), (16, 54), (196, 54), (222, 38), (224, 22)], turret=(150, 186, 54, 62, 6), gun=(64, 58, 4)), 'army')]

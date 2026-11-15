@@ -138,7 +138,7 @@ def write(out):
             Image.fromarray(im).save(f'{out}/{kind}/{look_id(look)}.png', optimize=True); total += 1
             assert look[-1] in SCHEMES, look[-1]
             seats = {f: [[s['x'], s['y'], s['cut'], 1 if s['pose'] == 'ride' else 0] for s in fr[0][1][f]] for f in ROWS}
-            entry['looks'].append(dict(id=look_id(look), **{'from': look[0]}, style=look[1], label=look[2], w=w, h=h, ground=h - foot, schemes=look[-1], seats=seats))
+            entry['looks'].append(dict(id=look_id(look), **{'from': look[0]}, style=look[1], label=look[2], w=w, h=h, ground=h - foot, schemes=look[-1], seats=seats, **({'adds': True} if look[3].get('adds') else {})))
             if i == 0: Image.fromarray(recolour(fr[0][0]['right'], ramps(SCHEMES[look[-1]][0]))).save(f'{out}/{kind}/still.png', optimize=True)
         man['kinds'][kind] = entry
     json.dump(man, open(f'{out}/mounts.json', 'w'), separators=(',', ':'))

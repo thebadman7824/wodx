@@ -31,13 +31,14 @@ export function hash(text) {
   return h >>> 0;
 }
 
-/** The years from which a kind has looks, oldest first. */
-export const erasOf = kind => [...new Set(looksOf(kind).map(l => l.from))].sort((a, b) => a - b);
+/** The years from which a kind has a whole row of looks, oldest first. A look marked adds joins the row before it (B4976). */
+export const erasOf = kind => [...new Set(looksOf(kind).filter(l => !l.adds).map(l => l.from))].sort((a, b) => a - b);
 
 /**
  * The look of a kind in a year. pick: {look: an id that wins outright, style: a shape to keep across the years, seed}.
  * The era is the latest one not after the year (the oldest when the year is before them all); a style that the era
  * does not have falls back to the nearest earlier era that has it, then to a seeded pick of the era's own.
+ * The Future Darkness looks (from 2023, past the main timeline's last year) join the row before them.
  */
 export function lookFor(kind, year, pick = {}) {
   const all = looksOf(kind);
@@ -48,7 +49,9 @@ export function lookFor(kind, year, pick = {}) {
   if ( pick.style ) {
     for ( const e of [...eras].reverse().filter(e => e <= era) ) { const l = all.find(x => x.from === e && x.style === pick.style); if ( l ) return l; }
   }
-  const own = all.filter(l => l.from === era);
+  // the era's own row, and the looks that have joined it since (B4976)
+  const next = eras.find(e => e > era) ?? Infinity;
+  const own = all.filter(l => l.adds ? l.from >= era && l.from <= y && l.from < next : l.from === era);
   return own[hash(`${pick.seed ?? ""}:shape`) % own.length];
 }
 

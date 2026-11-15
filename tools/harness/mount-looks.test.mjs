@@ -117,3 +117,14 @@ test("a rider is drawn in the seat: saddle riders whole and folded, those inside
   // more riders than seats: out of sight inside
   assert.equal(MR.riderDraw(MR.seatOf(car, "right", 40), p, k).hidden, true);
 });
+
+test("the Future Darkness looks join the row before them from 2023 and never show on the main timeline (B4976)", () => {
+  assert.ok(!MR.erasOf("helicopter").includes(2023));
+  const at = year => { const ids = new Set(); for ( let i = 0; i < 200; i++ ) ids.add(MR.lookFor("helicopter", year, {seed: `h${i}`}).id); return ids; };
+  const classic = at(2022), future = at(2030), late = at(2045);
+  assert.ok(![...classic].some(id => id.startsWith("2023")));
+  assert.ok(future.has("2023-flyingcar") && future.has("2023-tiltrotor") && future.has("2000-executive"));
+  assert.ok(![...late].some(id => id.startsWith("2023")) && late.has("2040-quad"));
+  for ( const [kind, id] of [["motorbike", "2023-hoverbike"], ["armoured", "2023-hovercraft"], ["car", "2023-armedcab"], ["balloon", "2023-liner"], ["tank", "2023-capsule"]] )
+    assert.ok(MR.looksOf(kind).some(l => l.id === id && l.adds), id);
+});

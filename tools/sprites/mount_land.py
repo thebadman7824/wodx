@@ -552,3 +552,27 @@ def motorboats():
         (2040, 'jet', 'Patrol boat', dict(L=176, w=62, style='tube', h=12, floorc=IRON, cabin=(84, 124, 22), helm_in=True, helm=None, thwarts=5, rub=NEON), 'rubber'),
         (2040, 'solar', 'Solar launch', dict(L=200, w=58, hull=WHITE, floorc=PALEWOOD, rub=KA, canopy=(50, 156, 24), canopyc=SOLAR, helm=150, thwarts=5, bow=24), 'future'),
     ]
+
+
+# ---- the Future Darkness row (B4976): a motorcycle with four folding fans, wheels for the road and fans to fly low ----
+_motorbike0, _motorbikes0 = motorbike, motorbikes
+def motorbike(p, ph=0):
+    fr, seats = _motorbike0(p, ph)
+    if not p.get('fans'): return fr, seats
+    FW, FH = 144, 112; G = FH - 9; cx = FW // 2
+    t = Pt(FW, FH)
+    for x in (cx - 36, cx + 36):
+        t.ell(x, G - 6, 13, 4, IRON, 2, edge=1); t.ell(x, G - 6, 10, 2, GLASS, 3 if ph % 2 else 2)
+        t.line([(x, G - 8), (x - (8 if x > cx else -8), G - 16)], STEEL, 2, w=2)
+    side = t.outline()
+    e = Pt(FW, FH)
+    for x in (cx - 18, cx + 18):
+        e.ell(x, G - 6, 9, 4, IRON, 2, edge=1); e.ell(x, G - 6, 7, 2, GLASS, 3 if ph % 2 else 2); e.line([(x, G - 8), (cx, G - 16)], STEEL, 2, w=2)
+    end = e.outline()
+    def under(a, b):
+        out = b.copy(); m = a[..., 3] > 0; out[m] = a[m]; return out
+    r = under(fr['right'], side)
+    return dict(right=r, left=mirror(r), down=under(fr['down'], end), up=under(fr['up'], end)), seats
+def motorbikes():
+    out = _motorbikes0(); base = next(l for l in out if l[0] == 2040 and l[1] == 'street')
+    return out + [(2023, 'hoverbike', 'Hover bike', dict(base[3], adds=True, fans=True), 'bright')]

@@ -529,3 +529,18 @@ def jets():
         (2040, 'dart', 'Hypersonic dart', dict(L=350, d=20, span=110, chord=140, sweep=70, taper=.05, tailplane=False, fins=2, fin=26, finsweep=30, cx0=270, seats=2, pipes=2, wx=130, radome=False), 'future'),
         (2040, 'shuttle', 'Air shuttle', dict(L=300, d=30, span=150, chord=56, sweep=40, rear=True, ttail=True, fin=36, finsweep=34, cab='cabin', windows=6, cl=130, cx0=170, seats=2, stripe=True, radome=False, fat=1.15), 'future'),
     ]
+
+
+# ---- the Future Darkness row (B4976): flying cars on ducted fans, a tilt-rotor, an autogyro, an airship liner ----
+_helicopter0, _helicopters0, _balloons0 = helicopter, helicopters, balloons
+def helicopter(p, ph=0):
+    return plane(p, ph) if p.get('winged') else _helicopter0(p, ph)
+def helicopters():
+    return _helicopters0() + [
+        (2023, 'flyingcar', 'Ducted-fan flying car', dict(adds=True, L=180, bl=124, bh=44, style='quad', nose=12, glass=.3, windows=2, stripe=True, seats=5, w=58), 'modern'),
+        (2023, 'fancar', 'Personal flying car', dict(adds=True, L=150, bl=96, bh=38, style='quad', nose=30, glass=.5, windows=1, seats=4, w=50), 'modern'),
+        (2023, 'tiltrotor', 'Tilt-rotor transport', dict(adds=True, winged=True, L=230, d=30, span=150, chord=30, gear='wheels', nosewheel=True, noprop=True, nose='round', seats=5, cab='cabin', windows=4, cl=80, cx0=130, wx=126, wy=62, ay=44, rotor=(126,), ttail=True, fin=30, finsweep=8, fat=1.1), 'warbird'),
+        (2023, 'autogyro', 'Autogyro', dict(adds=True, L=190, bl=66, bh=40, style='bubble', lattice=True, rotor=120, seats=2, w=42), 'bright'),
+    ]
+def balloons():
+    return _balloons0() + [(2023, 'liner', 'Airship liner', dict(adds=True, style='ship', L=268, r=38, cy=176, ribs=10, fins=True, rigid=True, gw=120, gx=10, drop=2, blunt=.55, stripe=True), 'airline')]
