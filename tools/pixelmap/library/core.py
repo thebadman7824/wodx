@@ -155,32 +155,54 @@ def render(sp, face, w_ft, d_ft, state="one", var=None, seed=7, margin=1):
     for hx, hy, hr, cone in getattr(ta, "hearths", []):
         u, v = _turn_pt(hx - cx0, hy - cy0, k); t = -k * math.pi / 2
         glows.append((u, v, hr, (cone[0] + t, cone[1]) if cone else None))
-    if cond in ("worn", "broken"): a, body, mult = wear_layer(a, body, mult, cond, seed)
+    if cond in ("worn", "damaged", "broken"): a, body, mult = wear_layer(a, body, mult, cond, seed)
+    if cond == "broken": glows = []  # a heap of rubble gives no light
     fw, fh = (W, D) if face in "ns" else (D, W)
     return {"rgb": a.astype(np.uint8), "body": body, "mult": mult, "pad": pad, "fw": fw, "fh": fh, "hearths": glows}
 
 
 def wear_layer(a, body, mult, cond, seed=7):
-    """The one worn or broken look every object shares (the owner, 2026-11-15: no unique breakage for each object).
-    Worn: colours faded toward grey and a little darker, grime along the edges. Broken: greyer and darker still, and a
-    few splinters of the object lying on the floor beside it. Nothing is stamped over the object itself."""
+    """The one damaged and broken look every object shares (the owner, 2026-11-15: "add a crack over items that are
+    damaged and show a pile of rubble for things that are broken"). Damaged ("worn" or "damaged"): one clear crack
+    across the object, the same shape on everything, scaled to it. Broken: the object is gone, and a pile of rubble
+    in its own colours lies where it stood."""
     a = a.copy(); body = body.copy(); mult = mult.copy()
-    grey = a.mean(axis=2, keepdims=True)
-    f, d = (0.30, 0.90) if cond == "worn" else (0.65, 0.72)
-    a[body] = ((a * (1 - f) + grey * f) * d)[body]
-    inner = body.copy(); inner[1:] &= body[:-1]; inner[:-1] &= body[1:]; inner[:, 1:] &= body[:, :-1]; inner[:, :-1] &= body[:, 1:]
-    rim = body & ~inner; a[rim] *= 0.82
-    if cond == "broken":
-        ys, xs = np.nonzero(body)
-        if len(xs):
-            rng = np.random.default_rng(seed); H, W = body.shape
-            cols = a[body]; dark = cols[cols.mean(1).argsort()[len(cols) // 4]]
-            for _ in range(5):
-                k = rng.integers(len(xs)); x = int(xs[k]) + int(rng.integers(-10, 11)); y = int(ys.max()) + int(rng.integers(2, 9))
-                for dx, dy in ((0, 0), (1, 0), (0, 1), (1, 1), (2, 0)):
-                    yy, xx = y + dy, x + dx
-                    if 0 <= yy < H and 0 <= xx < W and not body[yy, xx]:
-                        a[yy, xx] = dark; body[yy, xx] = True; mult[yy, xx] = 1.0
+    ys, xs = np.nonzero(body)
+    if not len(xs): return a, body, mult
+    x0, x1, y0, y1 = xs.min(), xs.max(), ys.min(), ys.max(); w, h = x1 - x0 + 1, y1 - y0 + 1
+    H, W = body.shape
+    if cond in ("worn", "damaged"):
+        # a jagged crack from the upper left to the lower right, through the middle, with a lit edge below it
+        pts = [(.18, .22), (.34, .38), (.30, .50), (.50, .58), (.62, .74), (.80, .80)]
+        th = 1 if min(w, h) < 24 else 2
+        for (u0, v0), (u1, v1) in zip(pts, pts[1:]):
+            n = int(max(abs(u1 - u0) * w, abs(v1 - v0) * h)) + 1
+            for t in np.linspace(0, 1, n):
+                cx = int(x0 + (u0 + (u1 - u0) * t) * w); cy = int(y0 + (v0 + (v1 - v0) * t) * h)
+                for d in range(th):
+                    if 0 <= cy + d < H and 0 <= cx < W and body[cy + d, cx]: a[cy + d, cx] = (28, 22, 20)
+                if 0 <= cy + th < H and 0 <= cx < W and body[cy + th, cx]: a[cy + th, cx] = np.minimum(a[cy + th, cx] * 1.25 + 18, 255)
+        return a, body, mult
+    # broken: a pile of rubble in the object's own colours, lower and smaller than the object was
+    cols = a[body]; order = cols.mean(1).argsort(); ramp = [cols[order[int(q * (len(order) - 1))]] for q in (.15, .35, .55, .75)]
+    body[:] = False; mult[:] = 1.0
+    rng = np.random.default_rng(seed); cx, cy = x0 + w / 2, y0 + h / 2
+    rx, ry = max(4, w * .38), max(4, h * .34)
+    n = int(np.clip(w * h / 25, 14, 160))
+    for k in range(n):
+        ang = rng.uniform(0, 2 * np.pi); r = np.sqrt(rng.uniform(0, 1))
+        px, py = cx + np.cos(ang) * rx * r, cy + np.sin(ang) * ry * r
+        s = max(2, int((1.3 - r) * min(w, h) / 7)); c = ramp[min(3, int(rng.integers(0, 3) + (1 - r) * 1.5))]
+        for dy in range(-s, s + 1):
+            for dx in range(-s, s + 1):
+                if abs(dx) + abs(dy) * 1.3 > s * 1.4: continue
+                yy, xx = int(py + dy), int(px + dx)
+                if 0 <= yy < H and 0 <= xx < W:
+                    shade = 1.15 if (dx < 0 and dy < 0) else (0.75 if (dx > 0 and dy > 0) else 1.0)
+                    a[yy, xx] = np.clip(c * shade, 0, 255); body[yy, xx] = True
+    edge = body & ~np.roll(body, 1, 0) | body & ~np.roll(body, -1, 0) | body & ~np.roll(body, 1, 1) | body & ~np.roll(body, -1, 1)
+    a[edge] *= 0.55
+    sh = np.zeros_like(body); sh[3:, 3:] = body[:-3, :-3]; sh &= ~body; mult[sh] = np.minimum(mult[sh], 0.72)
     return a, body, mult
 
 
