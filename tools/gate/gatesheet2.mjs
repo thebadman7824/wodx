@@ -32,8 +32,8 @@ async function check(label, actor, { words, cls, dot = null, read = null }) {
     const sheet = actor.sheet;
     sheet.locked = false; // the system's sheets open locked; permanent dots move only when unlocked
     await sheet.render(true);
-    await until(() => sheet.rendered && sheet.element?.[0]?.querySelector(".wodx-book"));
-    const el = sheet.element[0];
+    await until(() => sheet.rendered && (sheet.element?.[0] ?? sheet.element)?.querySelector(".wodx-book"));
+    const el = (sheet.element?.[0] ?? sheet.element);
     const core = el.querySelector(".tab.core");
     const t = core?.textContent.replace(/\s+/g, " ") ?? "";
     const pos = words.map(w => t.indexOf(w));

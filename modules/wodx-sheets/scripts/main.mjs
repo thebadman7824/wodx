@@ -6,15 +6,16 @@
  * definitions in sheet-rules.mjs. The system's listeners bind to the same markup, so rolls, Attribute and Ability dots,
  * health, combat, gear, notes and settings keep working. Outside the sheet's era the system's own layout is shown.
  */
-import ChangelingActorSheet from "../../../systems/worldofdarkness/module/actor/template/changeling-actor-sheet.js";
-import MageActorSheet from "../../../systems/worldofdarkness/module/actor/template/mage-actor-sheet.js";
-import HunterActorSheet from "../../../systems/worldofdarkness/module/actor/template/hunter-actor-sheet.js";
-import WerewolfActorSheet from "../../../systems/worldofdarkness/module/actor/template/werewolf-actor-sheet.js";
-import VampireActorSheet from "../../../systems/worldofdarkness/module/actor/template/vampire-actor-sheet.js";
-import MortalActorSheet from "../../../systems/worldofdarkness/module/actor/template/mortal-actor-sheet.js";
-import WraithActorSheet from "../../../systems/worldofdarkness/module/actor/template/wraith-actor-sheet.js";
-import DemonActorSheet from "../../../systems/worldofdarkness/module/actor/template/demon-actor-sheet.js";
-import MummyActorSheet from "../../../systems/worldofdarkness/module/actor/template/mummy-actor-sheet.js";
+import ChangelingActorSheet, { ChangelingActorSheetV2 } from "../../../systems/worldofdarkness/module/actor/template/changeling-actor-sheet.js";
+import MageActorSheet, { MageActorSheetV2 } from "../../../systems/worldofdarkness/module/actor/template/mage-actor-sheet.js";
+import HunterActorSheet, { HunterActorSheetV2 } from "../../../systems/worldofdarkness/module/actor/template/hunter-actor-sheet.js";
+import WerewolfActorSheet, { WerewolfActorSheetV2 } from "../../../systems/worldofdarkness/module/actor/template/werewolf-actor-sheet.js";
+import VampireActorSheet, { VampireActorSheetV2 } from "../../../systems/worldofdarkness/module/actor/template/vampire-actor-sheet.js";
+import MortalActorSheet, { MortalActorSheetV2 } from "../../../systems/worldofdarkness/module/actor/template/mortal-actor-sheet.js";
+import WraithActorSheet, { WraithActorSheetV2 } from "../../../systems/worldofdarkness/module/actor/template/wraith-actor-sheet.js";
+import DemonActorSheet, { DemonActorSheetV2 } from "../../../systems/worldofdarkness/module/actor/template/demon-actor-sheet.js";
+import MummyActorSheet, { MummyActorSheetV2 } from "../../../systems/worldofdarkness/module/actor/template/mummy-actor-sheet.js";
+import { onV2 } from "../../../systems/worldofdarkness/module/actor/template/lines-v2.js";
 import * as BG from "./beginner.mjs";
 import { isDA as isFaeDA } from "../../wodx-actions/scripts/fae-da.js";
 import { isDA as isMageDA } from "../../wodx-actions/scripts/mage-da.js";
@@ -422,15 +423,18 @@ function listeners(sheet, root) {
   })));
 }
 
-export const WodxChangelingSheet = wodxSheet(ChangelingActorSheet, "Changeling");
-export const WodxMageSheet = wodxSheet(MageActorSheet, "Mage");
-export const WodxHunterSheet = wodxSheet(HunterActorSheet, "Hunter");
-export const WodxWerewolfSheet = wodxSheet(WerewolfActorSheet, "Werewolf");
-export const WodxVampireSheet = wodxSheet(VampireActorSheet, "Vampire");
-export const WodxMortalSheet = wodxSheet(MortalActorSheet, "Mortal");
-export const WodxWraithSheet = wodxSheet(WraithActorSheet, "Wraith");
-export const WodxDemonSheet = wodxSheet(DemonActorSheet, "Demon");
-export const WodxMummySheet = wodxSheet(MummyActorSheet, "Mummy");
+// B6114: a line whose system sheet runs on ApplicationV2 (the system's LINES_V2) gets the same WoDX sheet over that one.
+// The class keeps its name either way, so a character's chosen sheet (wodx-sheets.WodxVampireSheet) stays chosen.
+const pick = (type, v1, v2) => wodxSheet(onV2(type) && v2 ? v2 : v1, type);
+export const WodxChangelingSheet = pick("Changeling", ChangelingActorSheet, ChangelingActorSheetV2);
+export const WodxMageSheet = pick("Mage", MageActorSheet, MageActorSheetV2);
+export const WodxHunterSheet = pick("Hunter", HunterActorSheet, HunterActorSheetV2);
+export const WodxWerewolfSheet = pick("Werewolf", WerewolfActorSheet, WerewolfActorSheetV2);
+export const WodxVampireSheet = pick("Vampire", VampireActorSheet, VampireActorSheetV2);
+export const WodxMortalSheet = pick("Mortal", MortalActorSheet, MortalActorSheetV2);
+export const WodxWraithSheet = pick("Wraith", WraithActorSheet, WraithActorSheetV2);
+export const WodxDemonSheet = pick("Demon", DemonActorSheet, DemonActorSheetV2);
+export const WodxMummySheet = pick("Mummy", MummyActorSheet, MummyActorSheetV2);
 for (const [k, c] of Object.entries({ WodxChangelingSheet, WodxMageSheet, WodxHunterSheet, WodxWerewolfSheet, WodxVampireSheet, WodxMortalSheet, WodxWraithSheet, WodxDemonSheet, WodxMummySheet })) Object.defineProperty(c, "name", { value: k });
 
 const LABELS = {
@@ -480,6 +484,8 @@ function genderField(app, html) {
   nameBox.after(div);
 }
 Hooks.on("renderActorSheet", genderField);
+// B6114: the line sheets that run on ApplicationV2 get the Gender line too
+Hooks.on("renderLegacyActorSheetV2", genderField);
 Hooks.on("renderItemSheet", nameHeaderButtons);
 
 // Sheet tools (B2837): one labelled button that lists the title bar's icon buttons with their names
@@ -526,6 +532,29 @@ function sheetToolsButton(app, html) {
   a.addEventListener("keydown", ev => { if (ev.key === "Enter" || ev.key === " ") open(ev); });
 }
 Hooks.on("renderActorSheet", sheetToolsButton);
+
+// B6114: on a line sheet that runs on ApplicationV2 the title bar already shows icon buttons with their names on
+// hover, and keeps the rest in its own menu (the three dots), which lists every control by name. The Sheet tools button
+// opens that menu, so it does the same job it does on the old sheets.
+function sheetToolsButtonV2(app) {
+  const win = app?.element, header = win?.querySelector?.(".window-header");
+  if (!app?.isLegacyBridge || !header || header.querySelector(".wodx-sheet-tools")) return;
+  let when = "always";
+  try { when = game.settings.get(MOD, "sheetTools"); } catch (e) { /* the default */ }
+  if (when === "off" || (when === "beginner" && !BG.beginner())) return;
+  const toggle = header.querySelector('[data-action="toggleControls"]');
+  if (!toggle) return;
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = `header-control icon wodx-sheet-tools${BG.beginner() ? " wodx-worded" : ""}`;
+  b.dataset.tooltip = "Sheet tools: the buttons up here, with their names";
+  b.setAttribute("aria-label", "Sheet tools");
+  b.innerHTML = `<i class="fa-solid fa-list-ul" aria-hidden="true"></i>${BG.beginner() ? "<span>Sheet tools</span>" : ""}`;
+  b.addEventListener("click", ev => { ev.preventDefault(); ev.stopPropagation(); toggle.click(); });
+  const title = header.querySelector(".window-title");
+  title ? title.after(b) : header.prepend(b);
+}
+Hooks.on("renderLegacyActorSheetV2", sheetToolsButtonV2);
 
 Hooks.once("init", async () => {
   X.setup();

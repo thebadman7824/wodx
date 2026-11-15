@@ -21,8 +21,8 @@ export async function run() {
     ok("the module, and the sheet class for a Dark Ages changeling", game.modules.get("wodx-sheets")?.active && sheet?.constructor?.name === "WodxChangelingSheet" && sheet.wodxId === "faeDA",
       { active: game.modules.get("wodx-sheets")?.active, cls: sheet?.constructor?.name, sheet: sheet?.wodxId });
     wasLocked = sheet.locked; sheet.locked = false;
-    await sheet.render(true); await until(() => sheet.rendered && sheet.element?.[0]?.querySelector(".wodx-book[data-sheet='faeDA']"));
-    el = sheet.element[0];
+    await sheet.render(true); await until(() => sheet.rendered && (sheet.element?.[0] ?? sheet.element)?.querySelector(".wodx-book[data-sheet='faeDA']"));
+    el = (sheet.element?.[0] ?? sheet.element);
   });
   await step("the book's sections in order, the Dark Ages: Fae Abilities, no Arts or Realms", async () => {
     const t = el.querySelector(".tab.core").textContent.replace(/\s+/g, " ");
@@ -39,30 +39,30 @@ export async function run() {
     ok("a Dominion dot sets the rating", done, { dusk: a.getFlag(ACT, "daFae")?.dominions?.dusk });
   });
   await step("Mists: a dot sets the rating, a box the points (never above the rating)", async () => {
-    el = sheet.element[0];
+    el = (sheet.element?.[0] ?? sheet.element);
     el.querySelector(".wodx-track[data-perm='flag:wodx-actions.daFae.mists.perm'] .wodx-dots .wodx-dot[data-i='5']").click();
     await until(() => a.getFlag(ACT, "daFae")?.mists?.perm === 5);
-    el = sheet.element[0];
+    el = (sheet.element?.[0] ?? sheet.element);
     el.querySelector(".wodx-track[data-perm='flag:wodx-actions.daFae.mists.perm'] .wodx-boxes .wodx-box[data-i='4']").click();
     const done = await until(() => a.getFlag(ACT, "daFae")?.mists?.temp === 4);
-    el = sheet.element[0];
+    el = (sheet.element?.[0] ?? sheet.element);
     el.querySelector(".wodx-track[data-perm='flag:wodx-actions.daFae.mists.perm'] .wodx-boxes .wodx-box[data-i='9']").click();
     await sleep(800);
     const m = a.getFlag(ACT, "daFae")?.mists;
-    ok("Mists: a dot sets the rating, a box the points (never above the rating)", done && m.perm === 5 && m.temp === 5, { mists: m, imbalanceShown: /imbalance/.test(sheet.element[0].textContent) });
+    ok("Mists: a dot sets the rating, a box the points (never above the rating)", done && m.perm === 5 && m.temp === 5, { mists: m, imbalanceShown: /imbalance/.test((sheet.element?.[0] ?? sheet.element).textContent) });
   });
   await step("a missing Ability: the first dot adds Archery as a skill", async () => {
-    el = sheet.element[0];
+    el = (sheet.element?.[0] ?? sheet.element);
     const had = a.items.find(i => i.name === "Archery");
     if (!had) el.querySelector(".wodx-dots[data-add-ability='Archery'] .wodx-dot[data-i='2']").click();
     const done = await until(() => a.items.find(i => i.name === "Archery")?.system?.value === (had ? had.system.value : 2));
     const it = a.items.find(i => i.name === "Archery");
-    await until(() => !!sheet.element[0].querySelector(`.resource-value[data-key='${it?.id}']`));
-    ok("a missing Ability: the first dot adds Archery as a skill", done && it?.system?.type === "wod.types.skillsecondability" && !!sheet.element[0].querySelector(`.resource-value[data-key='${it.id}']`), { item: it?.system?.type });
+    await until(() => !!(sheet.element?.[0] ?? sheet.element).querySelector(`.resource-value[data-key='${it?.id}']`));
+    ok("a missing Ability: the first dot adds Archery as a skill", done && it?.system?.type === "wod.types.skillsecondability" && !!(sheet.element?.[0] ?? sheet.element).querySelector(`.resource-value[data-key='${it.id}']`), { item: it?.system?.type });
     if (it && !had) await it.delete();
   });
   await step("the system's own tabs are still there (combat, gear, notes)", async () => {
-    el = sheet.element[0];
+    el = (sheet.element?.[0] ?? sheet.element);
     ok("the system's own tabs are still there (combat, gear, notes)", ["combat", "gear", "note", "dreaming"].every(t => el.querySelector(`.tab[data-tab='${t}']`)), {});
   });
   await step("a modern changeling gets the Changeling 20th sheet, not the Dark Ages one", async () => {

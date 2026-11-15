@@ -1,8 +1,9 @@
-import { default as MortalActorSheet } from "./mortal-actor-sheet.js";
+import { default as MortalActorSheet, MortalActorSheetV2 } from "./mortal-actor-sheet.js";
 import ActionHelper from "../../scripts/action-helpers.js";
 import TokenHelper from "../../scripts/token-helpers.js";
 
-export default class WerewolfActorSheet extends MortalActorSheet {
+/** The Werewolf sheet's code, on either sheet engine (B6110): over the Mortal sheet of the old engine or of ApplicationV2. */
+export const WerewolfSheetMixin = Base => class extends Base {
 	
 	/** @override */
 	static get defaultOptions() {
@@ -12,8 +13,8 @@ export default class WerewolfActorSheet extends MortalActorSheet {
 		});
 	}
   
-	constructor(actor, options) {
-		super(actor, options);			
+	constructor(...args) {
+		super(...args);			
 	}
 
 	/** @override */
@@ -243,4 +244,12 @@ export default class WerewolfActorSheet extends MortalActorSheet {
 		actorData.system.settings.isupdated = false;
 		await this.actor.update(actorData);
 	}	
-}
+};
+
+const WerewolfActorSheet = WerewolfSheetMixin(MortalActorSheet);
+Object.defineProperty(WerewolfActorSheet, "name", { value: "WerewolfActorSheet" });
+export default WerewolfActorSheet;
+
+/** The same sheet on ApplicationV2 (B6110), used for the lines listed in LINES_V2 (wod.js). */
+export const WerewolfActorSheetV2 = WerewolfSheetMixin(MortalActorSheetV2);
+Object.defineProperty(WerewolfActorSheetV2, "name", { value: "WerewolfActorSheet" }); // the same name: the sheet keeps its id (WoD.WerewolfActorSheet) and its render hooks
