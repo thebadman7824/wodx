@@ -23,7 +23,7 @@ const body = (name, {str = 2, dex = 3, sta = 2, athletics = 0, melee = 0} = {}) 
   system: {attributes: {strength: {value: str, total: str}, dexterity: {value: dex, total: dex}, stamina: {value: sta, total: sta}}, abilities: {athletics: {value: athletics}, melee: {value: melee}}}});
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 /** Move a token and wait for it to stand there; -> where it stands (in the result, so a stuck move shows). */
-const moveTo = async (doc, x, y) => { await doc.update({x, y}); await waitFor(() => Math.round(doc.x) === x && Math.round(doc.y) === y, 4000); return [doc.x, doc.y]; };
+const moveTo = async (doc, x, y) => { await doc.update({x, y}); await waitFor(() => X(doc) === x && Y(doc) === y, 4000); return [X(doc), Y(doc)]; };
 /** When a load did not follow: does a plain move of it work, and one with the haul's options? -> [[x, y] after plain, after with options] */
 const probe = async (doc, x, y) => {
   const out = [];
@@ -31,6 +31,8 @@ const probe = async (doc, x, y) => {
   try { await doc.update({x: x + 50, y}, {wodxMove: false, wodxHaul: true, wodxHeld: true}); out.push([doc.x, doc.y]); } catch (e) { out.push(String(e?.message ?? e).slice(0, 120)); }
   return out;
 };
+/** Where a document stands in the database (a token mid-animation reads its old place otherwise). */
+const X = d => Math.round(Number(d?._source?.x ?? d?.x)), Y = d => Math.round(Number(d?._source?.y ?? d?.y));
 const text = html => String(html ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
 
 export async function run() {
@@ -63,10 +65,10 @@ export async function run() {
 
     await G.step("2. carried on the map", async () => {
       const r = await hx().take(ta, tb, "carry");
-      const on = await waitFor(() => Math.round(tb.x) === Math.round(ta.x) && Math.round(tb.y) === Math.round(ta.y), 6000);
+      const on = await waitFor(() => X(tb) === X(ta) && Y(tb) === Y(ta), 6000);
       const look = Math.round(Number(tb.rotation)) === 90 && Math.abs(Number(tb.alpha) - 0.6) < 0.01;
       await ta.update({x: ta.x, y: ta.y + 200});
-      const along = await waitFor(() => Math.round(tb.y) === Math.round(ta.y) && Math.round(tb.x) === Math.round(ta.x), 8000);
+      const along = await waitFor(() => Y(tb) === Y(ta) && X(tb) === X(ta), 8000);
       G.ok("2. carried on the map", r?.ok && on && look && along, {r, look: [tb.rotation, tb.alpha], at: [tb.x, tb.y, ta.x, ta.y]});
     });
 
@@ -88,7 +90,7 @@ export async function run() {
       await sleep(600);
       const r = await hx().release(ta, {onto: cart.id});
       const aboard = await waitFor(() => (scene.tiles.get(cart.id)?.flags?.[IX]?.riders ?? []).some(x => x.t === tb.uuid), 6000);
-      G.ok("4. laid aboard a cart", r?.ok && aboard && !ta.flags?.[IX]?.hauling && !tb.flags?.[IX]?.haul, {said: heard(), heldBy: (tb.flags?.[IX]?.haul?.by ?? []).map(b => b.n), b: [tb.x, tb.y], probe: await probe(tb, 250, 500)});
+      G.ok("4. laid aboard a cart", r?.ok && aboard && !ta.flags?.[IX]?.hauling && !tb.flags?.[IX]?.haul, {said: heard(), heldBy: (tb.flags?.[IX]?.haul?.by ?? []).map(b => b.n), b: [X(tb), Y(tb)], probe: await probe(tb, 250, 500)});
     });
 
     await G.step("5. dragged and bleeding", async () => {
@@ -100,8 +102,8 @@ export async function run() {
       await tc.update({x: 800, y: 1000});
       const trail = await waitFor(() => scene.drawings.some(d => d.flags?.[IX]?.trail?.kind === "blood"), 10000);
       const clue = scene.tiles.some(t => t.flags?.[IX]?.clueKind === "trail");
-      const behind = Math.round(td.x) === 700 && Math.round(td.y) === 1000;
-      G.ok("5. dragged and bleeding", r?.ok && r.mode === "drag" && trail && clue && behind, {said: heard(), at: [td.x, td.y], cira: [tc.x, tc.y], trail, clue, probe: behind ? null : await probe(td, 600, 1000)});
+      const behind = await waitFor(() => X(td) === 700 && Y(td) === 1000, 6000);
+      G.ok("5. dragged and bleeding", r?.ok && r.mode === "drag" && trail && clue && behind, {said: heard(), at: [X(td), Y(td)], cira: [X(tc), Y(tc)], trail, clue, probe: behind ? null : await probe(td, 600, 1000)});
     });
 
     await G.step("6. knocked down, it drops", async () => {
@@ -119,7 +121,7 @@ export async function run() {
       const e0 = await moveTo(te, 1200, 200);
       const r = await hx().take(te, scene.tiles.get(chest.id), "push");
       const e1 = await moveTo(te, 1100, 200);
-      const moved = await waitFor(() => Math.round(scene.tiles.get(chest.id)?.x) === 1200, 10000);
+      const moved = await waitFor(() => X(scene.tiles.get(chest.id)) === 1200, 10000);
       const t = scene.tiles.get(chest.id);
       const pic = !!t?.texture?.src && !!t.flags?.[IX]?.haulHome;
       const floor = scene.tiles.some(x => x.flags?.[IX]?.haulFloorOf === chest.id);

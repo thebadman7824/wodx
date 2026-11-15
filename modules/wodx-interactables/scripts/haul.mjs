@@ -255,7 +255,9 @@ function imageOf(src) {
 }
 /** Cut a rectangle of the scene's own picture into a file. -> a path, or null. */
 async function cutPicture(scene, rect, name) {
-  const src = scene?.background?.src;
+  // Foundry 14 keeps the picture on the scene's levels; older scenes on the scene itself
+  const lv = scene?.levels?.contents ?? [...(scene?.levels?.values?.() ?? [])];
+  const src = [scene?.initialLevel, ...lv].map(l => l?.background?.src).find(Boolean) || scene?._source?.background?.src || null;
   if ( !src ) return null;
   const img = await imageOf(src);
   const dim = scene.dimensions ?? canvas.dimensions;
@@ -448,7 +450,10 @@ async function releaseNow(doc, {onto = null, drop = false, quiet = false} = {}) 
   if ( rec.kind === "body" ) {
     const tile = onto ? target.parent.tiles.get(onto) : null, tf = tile?.flags?.[MOD] ?? {};
     const before = rec.before ?? {rotation: 0, alpha: 1};
-    await target.update({...unset(`flags.${MOD}.haul`), alpha: before.alpha ?? 1, rotation: tile && !tf.mount ? 90 : num(before.rotation)}, MOVE);
+    // the mark first, on its own (a deletion sent with other changes was kept on some bodies), then the look
+    await target.update(unset(`flags.${MOD}.haul`));
+    if ( haulOf(target) ) await target.update({[`flags.${MOD}.haul`]: null});
+    await target.update({alpha: before.alpha ?? 1, rotation: tile && !tf.mount ? 90 : num(before.rotation)}, MOVE);
     if ( tile && tf.mount ) {
       // Aboard: a passenger who goes where the mount or vehicle goes (laid: nobody at the reins is kept from pushing it)
       const pos = {x: SX(tile) + num(tile.width) / 2, y: SY(tile) + num(tile.height) / 2};
