@@ -560,43 +560,50 @@ reg("ballmachine", ballmachine, "tennis ball machines of about 2 by 2 ft (Little
 
 
 def bandsaw(tm, x, y, w, h, st, v, c):
-    """A band saw from above: its square table with the blade slot and a board half cut, the tall frame seen from
-    over the top running across the table with the upper wheel's housing, the blade guard post where the blade
-    comes down, the fence and a heap of sawdust. Victorian: a wooden frame and table, the wheel rim showing. Great
-    War: a cast-iron frame in black japan. Mid-Century: enamelled castings in the maker's grey or green on a steel
-    stand with a motor. Modern: a painted steel cabinet. Future Darkness: a dark cabinet with a lit guard. The
-    butcher's one is stainless with a cut of meat on the table. Running: a blur on the blade, the lamp lit."""
+    """A band saw from above: the tall C-frame standing at the back and side, its upper and lower wheel covers two
+    rounded bulges joined by the column, the bright blade running down from the upper cover through the slot in the
+    square table, the guide block over the table, the fence beside the blade, a board half cut and a heap of
+    sawdust. Victorian: a cast frame in its paint with brass lining, a wooden table. Great War: black or green
+    japanned castings. Mid-Century: enamelled castings in the maker's grey or green and a motor. Modern: a painted
+    steel frame and cabinet. Future Darkness: a dark frame with a lit blade guard. The butcher's one is stainless
+    with a cut of meat on the table. Running: the blade a bright blur and the lamp lit."""
     d = tm.d; X0, Y0, X1, Y1 = box_px(x, y, w, h, 1); W, H = X1 - X0, Y1 - Y0; p = c.per; m = mk(c, 5); L = c.liv
     meat = m == 4 and p != "V"
-    base = SS if meat else L
-    case(d, X0 + 3, Y0 + 3, X1 - 3, Y1 - 3, base, r=2)                                                   # the stand or cabinet
-    if p in "NF": louvres(d, X0 + 6, Y1 - 10, X0 + 16, Y1 - 5, base, 2, vert=True)
+    frC = SS if meat else (L if p != "N" else c.alt)
     tb = WOOD if p == "V" else (SS if meat else ramp((140, 144, 148), 12))
-    case(d, X0 + 8, Y0 + 10, X1 - 8, Y1 - 10, tb)                                                        # the table
-    bx = X0 + W * .62
-    d.line([bx, Y0 + H * .45, bx, Y1 - 10], fill=tb[0])                                                  # blade slot
-    if p != "V": d.line([X0 + 10, Y0 + H * .72, X1 - 10, Y0 + H * .72], fill=tb[1])                       # mitre slot
-    work = (ramp((190, 140, 130), 12) if meat else WOOD)
-    if meat:
-        d.ellipse([bx - 14, Y0 + H * .5, bx + 2, Y0 + H * .72], fill=(170, 60, 60), outline=OUT); d.ellipse([bx - 10, Y0 + H * .55, bx - 4, Y0 + H * .63], fill=(230, 220, 200))
-    else:
-        case(d, bx - 3, Y0 + H * .56, bx + 9, Y1 - 6, ramp((196, 160, 110), 14))                        # a board half through
-        d.line([bx, Y0 + H * .56, bx, Y0 + H * .66], fill=(40, 30, 20))
-    fy0, fy1 = Y0 + H * .2, Y0 + H * .46                                                                 # the frame across, upper wheel housing
-    frC = L if p in "VG" else (SS if meat else (L if p != "N" else c.alt))
-    case(d, X0 + 1, fy0, bx + 9, fy1, frC, r=8)
-    d.line([X0 + 6, (fy0 + fy1) / 2, bx + 4, (fy0 + fy1) / 2], fill=frC[0], width=2)                       # the wheel rims under the cover
+    bx = X0 + W * .62                                                                                     # the blade's line
+    case(d, X0 + 2, Y0 + H * .62, X0 + W * .56, Y1 - 1, frC, r=10)                                       # the lower wheel cover
+    d.arc([X0 + 5, Y0 + H * .65, X0 + W * .53, Y1 - 4], 180, 270, fill=frC[4])
+    case(d, X0 + 2, Y0 + 6, X0 + 11, Y1 - 6, ramp(tone(frC[2], -24), 14), r=3)                             # the column of the C
+    case(d, X0 + 2, Y0 + 1, bx + 8, Y0 + H * .34, frC, r=10)                                              # the upper wheel cover
+    d.arc([X0 + 5, Y0 + 4, bx + 5, Y0 + H * .34 - 3], 180, 270, fill=frC[4])
+    d.ellipse([X0 + W * .3 - 3, Y0 + H * .17 - 3, X0 + W * .3 + 3, Y0 + H * .17 + 3], fill=frC[0], outline=OUT)   # the wheel's hub knob
     if p == "V":
-        for q in range(int(X0 + 8), int(bx), 8): bolt(d, q, fy0 + 3, BRASS if c.w >= 3 else IRON)
+        for q in range(int(X0 + 10), int(bx), 7): bolt(d, q, Y0 + 3, BRASS if c.w >= 3 else IRON)
     else:
-        d.line([X0 + 5, fy0 + 2, bx + 4, fy0 + 2], fill=frC[4]); glyphs(d, X0 + 8, (fy0 + fy1) / 2, X0 + 22, (fy0 + fy1) / 2 + 1, frC[0])
-    d.rectangle([bx - 2, fy1, bx + 2, Y0 + H * .54], fill=STEEL[2] if not (p == "F" and c.on) else GLOW[2], outline=OUT)   # the guard post
-    if c.on and not c.broken: d.line([bx, Y0 + H * .54, bx, Y0 + H * .6], fill=(220, 224, 230), width=1)
-    case(d, X0 + 9, Y0 + H * .5, X0 + 13, Y1 - 12, ramp((150, 150, 156), 12))                              # the fence
-    d.ellipse([X1 - 16, Y1 - 10, X1 - 2, Y1 - 2], fill=(206, 180, 128) if not meat else (230, 220, 210))  # sawdust or bone dust
-    d.ellipse([X1 - 13, Y1 - 8, X1 - 6, Y1 - 4], fill=(222, 200, 150) if not meat else (244, 238, 230))
-    if p in "MN" and not meat: case(d, X0, Y1 - 18, X0 + 8, Y1 - 6, ramp((70, 76, 84), 10), r=3)         # motor
-    lamp(d, X0 + 6, Y0 + 6, (230, 60, 40) if p != "V" else (200, 160, 80), c.on, 2)
+        glyphs(d, X0 + 14, Y0 + H * .25, X0 + 28, Y0 + H * .25 + 1, frC[0])
+    t0 = (X0 + W * .3, Y0 + H * .36, X1 - 3, Y1 - 9)                                                     # the square table
+    case(d, *t0, tb)
+    if p != "V": d.line([t0[0] + 2, t0[1] + (t0[3] - t0[1]) * .7, t0[2] - 2, t0[1] + (t0[3] - t0[1]) * .7], fill=tb[1])   # mitre slot
+    d.line([bx, t0[1] + 2, bx, t0[3] - 2], fill=tb[0])                                                   # the blade slot
+    fx = X0 + W * .4                                                                                     # the fence
+    case(d, fx - 2, t0[1] + 2, fx + 2, t0[3] - 2, ramp((90, 96, 104), 12) if not meat else SS)
+    if meat:
+        d.ellipse([fx + 3, Y0 + H * .52, bx - 1, Y0 + H * .74], fill=(170, 60, 60), outline=OUT); d.ellipse([fx + 6, Y0 + H * .57, fx + 11, Y0 + H * .65], fill=(230, 220, 200))
+    else:
+        case(d, fx + 3, Y0 + H * .58, bx + 5, Y1 - 11, ramp((196, 160, 110), 14))                         # a board half through
+        d.line([bx, Y0 + H * .58, bx, Y0 + H * .68], fill=(40, 30, 20))
+    blade = (250, 250, 255) if c.on and not c.broken else (206, 212, 220)
+    d.line([bx, Y0 + H * .34, bx, Y0 + H * .6], fill=OUT, width=4); d.line([bx, Y0 + H * .34, bx, Y0 + H * .6], fill=blade, width=2)   # the blade, down from the cover
+    if c.on and not c.broken: d.line([bx + 1, Y0 + H * .36, bx + 1, Y0 + H * .56], fill=(170, 200, 230))
+    gd = STEEL if not (p == "F") else ramp((40, 44, 52), 10)
+    case(d, bx - 4, Y0 + H * .4, bx + 4, Y0 + H * .48, gd); d.point((bx - 2, Y0 + H * .42), fill=gd[4])     # the guide block
+    if p == "F": d.line([bx + 4, Y0 + H * .4, bx + 4, Y0 + H * .48], fill=GLOW[2] if c.on and not c.broken else GLOW[0], width=2)
+    dust = ((206, 180, 128), (226, 204, 156)) if not meat else ((228, 216, 206), (244, 238, 230))       # sawdust on the table and the floor
+    d.ellipse([bx - 2, t0[3] - 6, bx + 10, t0[3] + 6], fill=dust[0]); d.ellipse([bx, t0[3] - 3, bx + 6, t0[3] + 3], fill=dust[1])
+    d.ellipse([X1 - 14, Y1 - 7, X1 - 2, Y1 - 1], fill=dust[0])
+    if p in "MN" and not meat: case(d, X0 + W * .36, Y1 - 9, X0 + W * .56, Y1 - 1, ramp((70, 76, 84), 10), r=3)   # motor
+    lamp(d, X0 + 7, Y0 + H * .5, (230, 60, 40) if p != "V" else (200, 160, 80), c.on, 2)
     if c.broken: d.line([bx - 6, Y0 + H * .5, bx + 10, Y0 + H * .62], fill=(220, 224, 230))                 # a snapped blade
 
 
@@ -797,29 +804,31 @@ def chainhoist(tm, x, y, w, h, st, v, c):
     with a lit strip."""
     d = tm.d; X0, Y0, X1, Y1 = box_px(x, y, w, h, 1); W, H = X1 - X0, Y1 - Y0; p = c.per; m = mk(c, 5); L = c.liv
     by = Y0 + H * .3
-    beam = DARKWOOD if p == "V" else ramp((90, 92, 96), 12)
+    beam = [DARKWOOD, WOOD, ramp((90, 92, 96), 12), ramp((140, 110, 74), 14), IRON][m] if p == "V" else ramp((90, 92, 96), 12)
     case(d, X0, by - 5, X1, by + 5, beam)                                                              # the beam overhead
     if p != "V": d.line([X0 + 1, by, X1 - 1, by], fill=beam[0])
+    d.rectangle([X0, by + 5, X1, by + 8], fill=tone(beam[0], -10))                                     # the beam's shadow on the floor below
     load = int(c.axis("load", 0)) % 4
     cx = X0 + W * .45
-    ly = Y0 + H * .72
-    if load == 1: case(d, cx - 12, ly - 9, cx + 12, ly + 9, ramp((170, 130, 80), 14)); d.line([cx - 11, ly, cx + 11, ly], fill=ramp((170, 130, 80), 14)[0])
+    ly = Y1 - 7
+    if load == 1: case(d, cx - 11, ly - 6, cx + 11, ly + 6, ramp((170, 130, 80), 14)); d.line([cx - 10, ly, cx + 10, ly], fill=ramp((170, 130, 80), 14)[0])
     elif load == 2:
-        case(d, cx - 12, ly - 8, cx + 12, ly + 8, ramp((80, 84, 90), 12), r=2)
-        for q in range(4): d.ellipse([cx - 10 + q * 6, ly - 4, cx - 6 + q * 6, ly], fill=(40, 40, 44))
+        case(d, cx - 11, ly - 6, cx + 11, ly + 6, ramp((80, 84, 90), 12), r=2)
+        for q in range(4): d.ellipse([cx - 9 + q * 5, ly - 2, cx - 6 + q * 5, ly + 1], fill=(40, 40, 44))
     elif load == 3:
-        for q in range(4): tube(d, cx - 14, ly - 8 + q * 4, cx + 14, ly - 5 + q * 4, RUST if c.poor else STEEL)
+        for q in range(3): tube(d, cx - 13, ly - 6 + q * 4, cx + 13, ly - 3 + q * 4, RUST if c.poor else STEEL)
     d.line([cx, by, cx, ly - (6 if load else 0)], fill=(70, 70, 76), width=2)                          # load chain
     for q in range(int(by) + 2, int(ly) - 4, 3): d.point((cx, q), fill=(170, 170, 176))
-    if not load: d.arc([cx - 4, ly - 4, cx + 4, ly + 4], 300, 200, fill=STEEL[1], width=2)              # the empty hook
-    else: d.line([cx - 8, ly - 8, cx, by + 8, cx + 8, ly - 8], fill=(60, 60, 64))                       # the sling
     if p == "V":
         disc(d, cx, by, 10, IRON if c.k % 2 else ramp(LIV["V"][c.k % 7], 14))
         d.ellipse([cx - 6, by - 6, cx + 6, by + 6], outline=IRON[0]); d.ellipse([cx - 2, by - 2, cx + 2, by + 2], fill=BRASS[2] if c.rich else IRON[3])
+        if m % 2: disc(d, cx - 12, by + 6, 6, IRON)                                                      # the lower running block
     else:
         for wx in (cx - 9, cx + 7): d.rectangle([wx, by - 7, wx + 3, by + 7], fill=STEEL[1], outline=OUT)  # trolley wheels
         body = IRON if p == "G" and c.k % 2 == 0 else L
-        if p == "G": disc(d, cx, by, 9, body); d.rectangle([cx + 6, by - 4, cx + 14, by + 4], fill=body[1], outline=OUT)
+        if p == "G" and m >= 3:                                                                              # a boxed spur-geared block with its hand wheel
+            case(d, cx - 11, by - 7, cx + 9, by + 7, body, r=2); d.ellipse([cx + 5, by - 9, cx + 15, by + 9], outline=OUT, width=3); d.ellipse([cx + 6, by - 8, cx + 14, by + 8], outline=body[3])
+        elif p == "G": disc(d, cx, by, 9, body); d.rectangle([cx + 6, by - 4, cx + 14, by + 4], fill=body[1], outline=OUT)
         else:
             case(d, cx - 12, by - 8, cx + 14, by + 8, body, r=5); louvres(d, cx - 8, by - 5, cx + 2, by + 5, body, 3, vert=True)
             if p == "F": d.line([cx - 10, by + 6, cx + 12, by + 6], fill=GLOW[2])
@@ -831,6 +840,11 @@ def chainhoist(tm, x, y, w, h, st, v, c):
         px_ = cx + 16; cable(d, [(cx + 12, by + 6), (px_, Y1 - 12)], (30, 30, 34), 1)
         case(d, px_ - 4, Y1 - 13, px_ + 4, Y1 - 2, YEL if p != "F" else ramp((40, 40, 46), 10), r=2)
         lamp(d, px_, Y1 - 9, (90, 220, 90), True, 1); lamp(d, px_, Y1 - 5, (230, 60, 40), False, 1)
+    hb = YEL if p in "MNF" else (RED if c.k % 2 else IRON)                                              # the hook block, below the hoist
+    hy = by + 13
+    if load: d.line([cx - 9, ly - 6, cx, hy + 3, cx + 9, ly - 6], fill=(40, 40, 44))                      # the sling up to the hook
+    case(d, cx - 4, hy - 3, cx + 4, hy + 3, hb, r=2)
+    d.arc([cx - 4, hy + 1, cx + 4, hy + 9], 300, 220, fill=OUT, width=4); d.arc([cx - 4, hy + 1, cx + 4, hy + 9], 300, 220, fill=STEEL[3], width=2)   # the hook
     if c.broken: d.line([cx + 2, by + 8, cx + 10, ly], fill=(70, 70, 76), width=2)
 
 
@@ -861,6 +875,12 @@ def chromatograph(tm, x, y, w, h, st, v, c):
         for q in range(X0 + 6, X1 - 6, 2): pts.append((q, base - (9 if (q - X0) % 11 in (0, 1) and c.on else 0) * (1 + (q % 3) * .3)))
         d.line(pts, fill=(200, 40, 40))
         dial(d, X0 + 7, Y1 - 5, 2); dial(d, X0 + 14, Y1 - 5, 2)
+    elif p == "F":                                                                                     # a sealed unit: a rack of vials under a lid and a wide screen
+        d.rounded_rectangle([X0 + 4, Y0 + (17 if lc else 5), X1 - 4, Y0 + H * .55], 5, fill=GLASS[1], outline=OUT)
+        for q in range(4):
+            for r_ in range(2): d.ellipse([X0 + 8 + q * 6, Y0 + (20 if lc else 8) + r_ * 6, X0 + 12 + q * 6, Y0 + (24 if lc else 12) + r_ * 6], fill=GLASS[3] if (q + r_) % 3 else (200, 80, 160), outline=OUT)
+        screen(d, X0 + 3, Y1 - 13, X1 - 3, Y1 - 4, c.on, c.broken, tint=(90, 220, 200))
+        d.line([X0 + 4, Y0 + H * .6, X1 - 4, Y0 + H * .6], fill=GLOW[2] if c.on and not c.broken else GLOW[0], width=2)
     else:
         screen(d, X0 + 5, Y1 - 12, X0 + W * .6, Y1 - 4, c.on, c.broken, tint=(90, 220, 120))
         if not lc:                                                                                     # the autosampler carousel
@@ -1222,21 +1242,26 @@ def evcharger(tm, x, y, w, h, st, v, c):
     padC = CONC if p == "N" else ramp((50, 52, 56), 8)
     d.rectangle([X0, Y0, X1, Y1], fill=padC[2], outline=padC[0])                                            # the pad
     if p == "F": d.rectangle([X0 + 1, Y1 - 3, X1 - 1, Y1 - 1], fill=(40, 170, 90) if m % 2 else (40, 110, 200))   # the painted bay
+    d.line([X0 + 1, Y1 - 2, X1 - 1, Y1 - 2], fill=(240, 240, 232) if p == "N" or m % 2 else (240, 210, 60), width=2)   # the parking bay's painted line
     d.ellipse([X0 + 1, Y1 - 9, X0 + 8, Y1 - 2], fill=YEL[2] if m % 2 == 0 else (200, 200, 200), outline=OUT)   # bollard
     px0, py0, px1, py1 = X0 + 3, Y0 + 2, X1 - 3, Y0 + H * .66
     if p == "N": case(d, px0, py0, px1, py1, L, r=2)
     else: d.ellipse([px0, py0, px1, py1 + 3], fill=L[2], outline=OUT); d.ellipse([px0 + 3, py0 + 2, px1 - 6, py1 - 4], fill=L[3])
     screen(d, px0 + 3, py0 + 3, px1 - 3, py0 + 7, use, c.broken, tint=(80, 200, 120))
-    hcol = (30, 30, 34)
+    hcol = [(30, 30, 34), (226, 120, 40), (150, 154, 160), (40, 80, 150), (60, 140, 80)][m]             # the cable's own colour by make
     if p == "F":
         d.ellipse([px0 + 2, py0 + 2, px1 - 2, py1 + 1], outline=(60, 220, 230) if use else (70, 90, 100), width=2)
     if m == 1: d.rectangle([px0 + 2, py1 - 5, px1 - 2, py1 - 2], fill=ramp(PAL[(c.k + 3) % 6], 10)[2])   # a network's band
     elif m == 3: d.rectangle([px0 + 2, py0 + 2, px0 + 5, py1 - 2], fill=(240, 240, 236))
     if not use:
-        hose_coil(d, X0 + W * .55, Y0 + H * .78, 6, hcol, 2)
-        d.rectangle([px1 - 6, py1 - 8, px1 - 2, py1 - 2], fill=(20, 20, 22), outline=OUT)                 # plug in its holster
+        hose_coil(d, X0 + W * .55, py1 - 1, 6, hcol, 2)                                                    # the cable coiled on its hook on the post
+        d.rectangle([X0 + W * .55 - 2, py1 - 9, X0 + W * .55 + 2, py1 - 6], fill=STEEL[3], outline=OUT)
+        d.rectangle([px1 - 7, py1 - 9, px1 - 1, py1 - 2], fill=(20, 20, 22), outline=OUT)                 # the plug in its holster
+        d.rectangle([px1 - 5, py1 - 7, px1 - 3, py1 - 4], fill=(60, 200, 230) if p == "F" else (230, 230, 226))
     else:
         cable(d, [(px1 - 4, py1), (X0 + W * .6, Y1 - 4), (X0 + W * .35, Y1 - 2)], hcol, 2)
+        d.rectangle([X0 + W * .3, Y1 - 6, X0 + W * .3 + 5, Y1 - 1], fill=(20, 20, 22), outline=OUT)      # the plug run out to the car
+        d.rectangle([px0 + 2, py0 + 2, px1 - 2, py0 + 9], outline=(140, 240, 200))                     # the screen's glow
     if p == "N" and m == 4: d.rectangle([px0 + 3, py1 - 7, px0 + 9, py1 - 3], fill=(120, 40, 140), outline=OUT)   # the paddle plug's magenta badge
     if c.broken: d.line([px0 + 2, py0 + 2, px1 - 2, py1 - 2], fill=(240, 240, 230)); sparks(d, px1 - 2, py1 - 4)
     if use: return [(X0 + W / 2, Y0 + H * .4, 16, (.7, 1.3, 1.4))]
