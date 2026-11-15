@@ -6,6 +6,8 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import * as S from "../release/merge-stamp.mjs";
+// B6243: decisions more than a month old are in docs/archive/decisions-<month>.md
+import {decisionsBelowIndex} from "../docs/archive-decisions.mjs";
 
 const ROOT = S.ROOT;
 
@@ -24,7 +26,7 @@ test("every fragment under changes/ is well formed", () => {
     const r = S.blockRange(x.frag.meta.block);
     // A fragment may add decisions to a block already in the index (the same block exactly), never overlap another.
     for ( const o of rows ) if ( !(o.lo === r.lo && o.hi === r.hi) ) assert.ok(r.hi < o.lo || r.lo > o.hi, `${x.file}: ${x.frag.meta.block} overlaps B${o.lo}-B${o.hi}`);
-    const used = S.sectionNumbers(text.split("<!-- decision-index:end -->")[1] ?? "");
+    const used = S.sectionNumbers(decisionsBelowIndex(ROOT));
     for ( const n of S.sectionNumbers(x.frag.body) ) assert.ok(!used.includes(n), `${x.file}: B${n} is already in docs/DECISIONS.md`);
     for ( const o of taken ) assert.ok(r.hi < o.lo || r.lo > o.hi || (o.lo === r.lo && o.hi === r.hi), `${x.file}: ${x.frag.meta.block} overlaps B${o.lo}-B${o.hi}`);
     taken.push(r);

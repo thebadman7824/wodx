@@ -6,6 +6,7 @@
  *   NPC keepers (desk x4): what to recruit, from whom, with an undo record.
  * Nothing here copies book text.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 const num = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 
 export const PAGE = "W20 pp. 430-439";
@@ -43,7 +44,7 @@ export function wyrmMaster(cands = [], {year = 1197, sceneId = null} = {}) {
 /** A cult left untended this long (weeks) loses a step; mistreated it may turn. House reading. */
 export const CULT_NEGLECT_WEEKS = 12;
 export function cultDrift({step = 1, last = 0} = {}, now = 0, {mistreated = false} = {}) {
-  const weeks = Math.floor((num(now) - num(last)) / (7 * 86400));
+  const weeks = Math.floor((num(now) - num(last)) / (7 * DAY));
   if ( mistreated ) return {step: 0, why: "mistreated, the cult turns on its master", betray: true};
   if ( weeks >= CULT_NEGLECT_WEEKS && num(step) > 0 ) return {step: num(step) - 1, why: `${weeks} weeks untended: the cult thins`, betray: false};
   return {step: num(step), why: "", betray: false};
@@ -65,4 +66,4 @@ export function recruits(pool = [], k = 0, {sceneId = null, taken = new Set()} =
   return pool.filter(p => p?.id && !taken.has(p.id) && (p.sceneId ?? null) === (sceneId ?? null)).slice(0, Math.max(0, k)).map(p => p.id);
 }
 /** The keeper turn runs once a month of world time. */
-export const KEEPER_EVERY = 30 * 86400;
+export const KEEPER_EVERY = 30 * DAY;

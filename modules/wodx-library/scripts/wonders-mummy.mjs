@@ -14,11 +14,11 @@
  */
 import * as M from "../data/wonders-mummy.mjs";
 import {registerLine} from "./wonder-registry.mjs";
+import {MONTH} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const SEKHEM = "system.advantages.sekhem.temporary";
 const SEKHEM_MAX = "system.advantages.sekhem.permanent";
-const MONTH = 30 * 86400;
 const para = s => `<p>${String(s ?? "").replace(/[<>&]/g, c => ({"<": "&lt;", ">": "&gt;", "&": "&amp;"})[c])}</p>`;
 const NOT_THINGS = ["Power", "Ability", "Advantage", "Sphere", "Realm", "Bonus", "Experience", "Feature", "Splat", "Trait"];
 const ATTRS = ["strength", "dexterity", "stamina", "charisma", "manipulation", "appearance", "perception", "intelligence", "wits"];

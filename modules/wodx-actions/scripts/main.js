@@ -93,6 +93,7 @@ import * as SVA from "./servant-actions.js";
 import * as DR_DEBTS from "./debts-rules.js";
 import * as DR_BEAST from "./beast-marks-rules.js";
 import * as NAT from "./nature-rules.js";
+import {DAY, TURN_SECONDS} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -1404,7 +1405,7 @@ export async function autoTorporRise({ actor: a } = {}) {
     if (hide) AUTO_HIDE.add(actor.id);
     try {
         if (b.value < 1) {
-            await setFlag(actor, "torpor", { ...t, retryAt: game.time.worldTime + 86400 });
+            await setFlag(actor, "torpor", { ...t, retryAt: game.time.worldTime + DAY });
             return post(actor, `${actor.name} cannot rise`, `<div class="vta-big bad">No blood in the body: no rising until someone feeds them.</div>`);
         }
         await changeBlood(actor, -1);
@@ -1416,7 +1417,7 @@ export async function autoTorporRise({ actor: a } = {}) {
             await dm().wake(actor, t?.since);
             html += `<div class="vta-big good">${esc(actor.name)} rises: Crippled; heal or hunt at once.</div>`;
         } else {
-            await setFlag(actor, "torpor", { ...t, retryAt: game.time.worldTime + 86400 });
+            await setFlag(actor, "torpor", { ...t, retryAt: game.time.worldTime + DAY });
             html += `<div class="vta-big bad">${esc(actor.name)} sleeps on. The next night brings another try.</div>`;
         }
         return post(actor, `${actor.name} tries to rise from torpor`, html, [r.roll]);
@@ -1440,7 +1441,7 @@ export async function endFrenzy({ actor: a } = {}) {
  * The Thrall of the Wyrm ends when the Garou is Incapacitated or the fight is over (the Wyrm creature gone).
  * Ending a frenzy by hand stays. House reading of V20 p. 298 and W20 p. 262. */
 const knockedOut = a => { const d = a?.system?.health?.damage ?? {}; return /incapac/i.test(String(d.woundlevel ?? "")) || (num(d.bashing) + num(d.lethal) + num(d.aggravated)) >= 7; };
-const FRENZY_TURN = 3;
+const FRENZY_TURN = TURN_SECONDS;
 async function markBotch(actor, fear, diff) {
     await setFlag(actor, "frenzyBotch", { scene: actor.getActiveTokens?.()[0]?.document?.parent?.id ?? canvas?.scene?.id ?? null, combat: game.combat?.id ?? null, fear: !!fear, diff: R.clampDifficulty(num(diff) || 6), over: false, last: 0 });
 }
@@ -2375,7 +2376,7 @@ export async function torpor({ actor: a } = {}) {
     const actor = needActor(a);
     if (!actor) return;
     const rd = road(actor), t = flag(actor, "torpor"), tl = R.torporLength(rd.value), b = blood(actor);
-    const elapsed = t ? Math.floor((game.time.worldTime - (t.since ?? 0)) / 86400) : 0;
+    const elapsed = t ? Math.floor((game.time.worldTime - (t.since ?? 0)) / DAY) : 0;
     const content = `<form>
       <p>${esc(actor.name)}: ${esc(rd.name)} ${rd.value}: torpor lasts <b>${tl.text}</b>. Blood ${b.value}.</p>
       ${t ? `<p>In ${t.voluntary ? "voluntary " : ""}torpor since ${elapsed} day(s) of game time ago (minimum ${t.voluntary ? Math.ceil(t.days / 2) : t.days} days).</p>` : ""}
@@ -2456,7 +2457,14 @@ async function natureCard(list) {
         [], { kind: "natureScene", natures: rows.map(a => a.uuid) });
 }
 
-export async function endScene({ actors, fromChronicle = false } = {}) {
+export async function endScene({ actors, fromChronicle = false, map = false } = {}) {
+    // B6190: the Storyteller's End scene is the Chronicle's, so every module's scene ends at once (the scene count,
+    // effect areas, banality, Delirium); the Chronicle then calls back here for the characters
+    if (!fromChronicle && game.user.isGM && chronicle()?.endScene) {
+        await chronicle().endScene();
+        if (actors || canvas.tokens.controlled.length) return endScene({ actors: actors ?? canvas.tokens.controlled.map(t => t.actor), fromChronicle: true });
+        return null;
+    }
     const list = actors ?? (canvas.tokens.controlled.length ? canvas.tokens.controlled.map(t => t.actor) : game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner && a.isOwner));
     if (!fromChronicle && game.user.isGM) await wx().newScene({ quiet: true }); // Passions can be tapped again; Hysteria ends
     const lines = [];
@@ -2481,7 +2489,8 @@ export async function endScene({ actors, fromChronicle = false } = {}) {
         if (flag(actor, "daytime")) { await actor.unsetFlag(MOD, "daytime"); bits.push("daytime activity ends"); }
         if (bits.length) lines.push(`<li><b>${esc(actor.name)}</b>: ${bits.join(", ")}</li>`);
     }
-    await natureCard(list);
+    // A new map is a new scene too, but the Nature card waits for the Storyteller's own End scene (no card per map)
+    if (!map) await natureCard(list);
     if (fromChronicle && !lines.length) return null;
     return post(null, "End of scene", lines.length ? `<ul>${lines.join("")}</ul>` : "<p>Nothing to clear.</p>");
 }
@@ -2525,7 +2534,8 @@ async function condition(actor, id, active) {
 export async function newNight({ actors } = {}) {
     if (!game.user.isGM && !actors) return ui.notifications.warn("New Night is for the GM (or pass your own actors).");
     await endScene({ actors });
-    const list = actors ?? game.actors.filter(a => a.type !== "Group" && (a.hasPlayerOwner || canvas.tokens.placeables.some(t => t.actor?.id === a.id)));
+    // B6305: those who left the chronicle (Transcendence, an arhat) are not part of a new night
+    const list = (actors ?? game.actors.filter(a => a.type !== "Group" && (a.hasPlayerOwner || canvas.tokens.placeables.some(t => t.actor?.id === a.id)))).filter(a => !a?.flags?.["wodx-chronicle"]?.departed);
     const lines = [];
     for (const actor of list) {
         if (!actor?.isOwner) continue;
@@ -2582,7 +2592,7 @@ const untrainedBeast = actor => actor?.flags?.["wodx-creation"]?.animal?.trainin
 /** The end of a story: Willpower returns in full (unless the setting is off). */
 export async function endStory({ actors } = {}) {
     if (!game.user.isGM) return ui.notifications.warn("End of story is for the GM.");
-    const list = actors ?? game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner);
+    const list = (actors ?? game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner)).filter(a => !a?.flags?.["wodx-chronicle"]?.departed);
     const lines = [];
     for (const actor of list) {
         if (untrainedBeast(actor)) { lines.push(`<li><b>${esc(actor.name)}</b>: untrained, so it wins back no Willpower (V20 Dark Ages p. 396)</li>`); continue; }
@@ -2591,6 +2601,8 @@ export async function endStory({ actors } = {}) {
         if (to > w.temp) { await actor.update({ "system.advantages.willpower.temporary": to }); lines.push(`<li><b>${esc(actor.name)}</b>: Willpower ${w.temp} → ${to}</li>`); }
         const c = await hx().newStory(actor);
         if (c) lines.push(`<li>${esc(c)} (a new story, Dark Ages: Inquisitor p. 160)</li>`);
+        // B6303: shapechangers roll their Rage afresh for the new story
+        try { const g = await gx().newStory(actor); if (g) lines.push(`<li>${esc(g)}</li>`); } catch (e) { console.warn("WoDX Actions | new story Rage", e); }
         // B4997: any imbued with a creed (a Hunter sheet or another type marked in Hunter traits) goes back to the creed's level
         if ((actor.type === "Hunter" || rx().info(actor).creed) && HX.lineNow() === "reckoning") {
             const ri = rx().info(actor), start = ri.creedDef?.conviction;
@@ -3258,7 +3270,7 @@ async function gainDerangement(actor, cause, why) {
 }
 const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, rotschreckAuto, endFrenzy, sin, daytime, torpor, hazard, autoBeast, autoTorporRise,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    powerMods: { of: POWMOD.powerMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.105.0", npcPowers, autoPower, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    powerMods: { of: POWMOD.powerMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.107.1", npcPowers, autoPower, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Draw: withActor(a => zx().drawDialog(a)), m20Place: () => zx().placeDialog(), m20Quiet: withActor(a => qtx().panel(a)), quiet: { state: a => qtx().state(resolveActor(a)), act: (a, fd) => qtx().act(resolveActor(a), fd), rules: QR, onRefreshToken: QX.onRefreshToken }, consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
@@ -3280,7 +3292,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     c20ColdIron: withActor(a => cx().coldIron(a)), c20Mists: withActor(a => cx().mists(a)), c20Place: () => cx().placeDialog(), c20Info: a => cx().info(resolveActor(a)), c20Everyday: () => blx().panel(), everydayBanality: { endScene: sc => blx().endScene(sc), panel: () => blx().panel(), rules: BLX },
     demonEvoke: withActor(a => dx().evoke(a)), demonForm: withActor(a => dx().form(a)), demonRevelation: withActor(a => dx().revelation(a)), demonReap: withActor(a => dx().reap(a)),
     demonThralls: withActor(a => dx().thralls(a)), demonSin: withActor(a => dx().sin(a)), demonKindness: withActor(a => dx().kindness(a)), demonHeal: withActor(a => dx().heal(a)),
-    demonHoly: withActor(a => dx().holy(a)), demonName: withActor(a => dx().named(a)), demonIllusion: withActor(a => dx().illusion(a)), demonInfo: a => dx().info(resolveActor(a)),
+    demonHoly: withActor(a => dx().holy(a)), demonName: withActor(a => dx().named(a)), demonIllusion: withActor(a => dx().illusion(a)), demonInfo: a => dx().info(resolveActor(a)), demonTorment: (a, k) => dx().torment(resolveActor(a), k),
     conditioning: withActor(a => svx().condition(a)), enchant: withActor(a => svx().enchant(a)), partedMists: withActor(a => svx().partedMists(a)),
     demonPact: withActor(a => svx().pact(a)), pactGift: withActor(a => svx().useGift(a)), knownNames: withActor(a => svx().names(a)), pressName: withActor(a => svx().pressName(a)),
     chainThrall: withActor(a => svx().chainThrall(a)), servantActions: () => svx(),
@@ -3423,9 +3435,11 @@ Hooks.once("ready", async () => {
     Hooks.on("wodxAttackRolled", (attacker, d) => { svx().onAttack(attacker, d ?? {}).catch(e => console.error("WoDX | oaths", e)); });
     Hooks.on("wodxEffectApplied", (item, rec, by) => { svx().onEffect(item, rec, by).catch(e => console.error("WoDX | consorts", e)); });
     // B3556: the end of a scene counts everyday Banality for the changelings on it
-    Hooks.on("wodxEndScene", () => { if (game.user.isGM && game.users.activeGM?.id === game.user.id) blx().endScene(canvas?.scene).catch(e => console.error("WoDX | banality", e)); });
-    Hooks.on("wodxEndScene", () => {
-        if (game.user.isGM && game.users.activeGM?.id === game.user.id) endScene({ actors: game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner), fromChronicle: true }).catch(e => console.error("WoDX |", e));
+    // B6190: the scene that ended (a new map passes the old one), not just the map the Storyteller is looking at
+    const endedScene = o => game.scenes?.get?.(o?.sceneId) ?? canvas?.scene ?? null;
+    Hooks.on("wodxEndScene", (o = {}) => { if (game.user.isGM && game.users.activeGM?.id === game.user.id) blx().endScene(endedScene(o)).catch(e => console.error("WoDX | banality", e)); });
+    Hooks.on("wodxEndScene", (o = {}) => {
+        if (game.user.isGM && game.users.activeGM?.id === game.user.id) endScene({ actors: game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner), fromChronicle: true, map: !!o?.map }).catch(e => console.error("WoDX |", e));
     });
     if (game.system.id !== "worldofdarkness") console.warn(`${MOD} | designed for the worldofdarkness system (found ${game.system.id}).`);
     game.socket.on(SOCKET, onSocket);
@@ -3575,9 +3589,10 @@ function kindredHooks() {
         if (options?.wodxBloodBefore !== undefined) kx().onBlood(actor, options.wodxBloodBefore, num(actor.system?.advantages?.bloodpool?.temporary)).catch(e => console.error("WoDX |", e));
     });
     // A new scene: the Delirium can strike the same witnesses again
-    Hooks.on("wodxEndScene", () => { if (game.user.isGM && canvas.scene?.getFlag?.(MOD, "delirium")) canvas.scene.unsetFlag(MOD, "delirium").catch(() => {}); });
+    const sceneEnded = o => game.scenes?.get?.(o?.sceneId) ?? canvas.scene ?? null;
+    Hooks.on("wodxEndScene", (o = {}) => { const s = sceneEnded(o); if (game.user.isGM && s?.getFlag?.(MOD, "delirium")) s.unsetFlag(MOD, "delirium").catch(() => {}); });
     // and a Kindred's marks can be seen again (3.67.0)
-    Hooks.on("wodxEndScene", () => { if (game.user.isGM && canvas.scene?.getFlag?.(MOD, "marksSeen")) canvas.scene.unsetFlag(MOD, "marksSeen").catch(() => {}); });
+    Hooks.on("wodxEndScene", (o = {}) => { const s = sceneEnded(o); if (game.user.isGM && s?.getFlag?.(MOD, "marksSeen")) s.unsetFlag(MOD, "marksSeen").catch(() => {}); });
     Hooks.on("wodxDamageApplied", (actor, info) => kx().onDamage(actor, { ...info, source: "combat" }).catch(e => console.error("WoDX |", e)));
     // A blow from a vampire marks the target as fought, for the bloodlines whose blood must be taken by force (3.41.0)
     Hooks.on("wodxDamageApplied", async (actor, info) => {

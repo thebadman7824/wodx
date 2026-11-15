@@ -7,7 +7,8 @@
  * home and when a fortune is neglected comes from the same pages. Coins of the day are a house rule (history,
  * not the books), so the Storyteller can name a price in the right money.
  */
-export const DAY = 86400;
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY};
 
 /** The way each rating lives (V20 p. 116, V20 Dark Ages pp. 181-182). */
 export const LIFESTYLE = [

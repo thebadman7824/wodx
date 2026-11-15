@@ -10,9 +10,9 @@
  *   Demon: The Fallen's followers and thralls (pp. 155-161).
  * WoDX readings: the hours, the reasons for an Embrace, how many faithful are seen, and the rest.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
-const DAY = 86400;
 const hash = s => { let h = 2166136261; for ( const c of String(s) ) { h ^= c.codePointAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
 const B = (from, to, place, activity, more = {}) => ({from, to, place, activity, when: "any", days: null, feast: "any", label: "", ...more});
 

@@ -10,6 +10,7 @@
  */
 import * as RR from "./line-refill-rules.mjs";
 import * as LM from "./line-mend.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc", ACT = "wodx-actions";
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -25,7 +26,7 @@ export function registerSettings() {
     scope: "world", config: true, type: Boolean, default: true});
 }
 
-const isNpc = a => !!a && !a.hasPlayerOwner && a.type !== "Group";
+const isNpc = a => TERMS.isNPC(a);
 const bg = (a, name) => num([...(a?.items ?? [])].find(i => i.type === "Feature" && /background/i.test(i.system?.type ?? "") && i.name.trim().toLowerCase().startsWith(name))?.system?.value);
 const attr = (a, k) => { const x = a?.system?.attributes?.[k]; return x ? num(x.total ?? x.value) : 0; };
 function ability(a, k) {

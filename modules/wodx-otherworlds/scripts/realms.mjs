@@ -6,6 +6,7 @@ import {MODULE_ID} from "./ratings.mjs";
 import {STATUS, applyLocally} from "./crossing.mjs";
 import {layersOf, tokenLayer} from "./twins.mjs";
 import * as RR from "./realms-rules.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const esc = v => String(v ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 const num = v => Number(v) || 0;
@@ -331,8 +332,8 @@ export async function rollsDialog() {
     if ( wayfare < 3 || fae < 5 ) { ui.notifications.warn(`${sel.name} needs Wayfare 3 and the Fae Realm at 5 (has ${wayfare} and ${fae}).`); return null; }
     const pool = wayfare + fae;
     const roll = await d10(pool);
-    const c = roll.dice.filter(x => x >= 8).length - roll.dice.filter(x => x === 1).length;
-    const res = RR.wayfarePortal({successes: Math.max(0, c), botch: !roll.dice.some(x => x >= 8) && roll.dice.includes(1)});
+    const c = TERMS.successes(roll.dice, 8);
+    const res = RR.wayfarePortal({successes: c.successes, botch: c.botch});
     await ChatMessage.create({speaker: {alias: sel.name}, rolls: roll.roll ? [roll.roll] : [], content: card("Wayfare: a portal onto a trod",
       `<p>Wayfare + Fae, ${pool} dice at 8 ${diceLine(roll.dice)}.</p><p><b>${res.danger ? "A botch: the portal opens somewhere dangerous." : res.chosen ? "The caster chooses the trod." : res.open ? "A portal opens onto a Near Dreaming trod, the Storyteller's pick." : "No portal."}</b></p>
        <p class="wodx-quiet">Wayfare 3 with the Fae Realm at 5; an extended action of 5 successes picks the trod. C20 pdf 309 / p. 308. The difficulty is the Storyteller's; 8 is used here.</p>`)});

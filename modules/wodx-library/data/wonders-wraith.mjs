@@ -26,7 +26,7 @@ export const WP = "system.advantages.willpower.temporary";
 const A = p => `actor:${p}`;
 
 /** Every Skin Artifact must be fed 2 Pathos a day or it goes dull; waking it again takes a day and 4 (p. 428). */
-const DAY = 86400;
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 const SKIN_POWERS = [
   {id: "feed", label: "Feed it (2 Pathos, a day)", text: "Two Pathos keep a Skin Artifact awake for another day.", spend: {pool: A(PATHOS), amount: 2}, renew: DAY,
     renewText: "It drinks the Pathos and stirs for another day."},

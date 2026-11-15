@@ -11,6 +11,7 @@
  * Item flag wodx-library.examine = {origin, quality, forged, forgedTell, stolen, worn, uncanny, uncannyNeed, lines:
  * [{need, text}], note}. Nothing here is needed: an item with no flag is examined from its goods entry alone.
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 export const DIFFICULTY = 6;
 export const NEEDS = {made: 1, origin: 2, truth: 3, uncanny: 4};
 export const QUALITY = {poor: "Poor", plain: "Plain", good: "Good", fine: "Fine", master: "Masterwork"};
@@ -103,9 +104,8 @@ export function closerPool(kind, {perception = 0, abilities = {}} = {}) {
 
 /** Count successes on d10 faces at a difficulty: tens count once, ones take one away. Returns {successes, botch}. */
 export function countSuccesses(faces = [], difficulty = DIFFICULTY) {
-  const hits = faces.filter(f => f >= difficulty).length;
-  const ones = faces.filter(f => f === 1).length;
-  return {successes: Math.max(0, hits - ones), botch: hits === 0 && ones > 0};
+  const r = TERMS.successes(faces, difficulty);
+  return {successes: r.successes, botch: r.botch};
 }
 
 /** The plain facts of an item from its goods entry. good: a goods entry; extra {value, price, quality}. */

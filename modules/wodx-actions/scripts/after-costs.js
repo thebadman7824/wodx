@@ -6,6 +6,8 @@
  * pays when the scene ends.
  */
 import * as AC from "./after-cost-rules.js";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const WINDOW = 120000;
@@ -86,7 +88,7 @@ export async function pay(actor, key, {successes = 1, id = null} = {}) {
       for ( const t of toks ) await t.update({alpha: 0.5});
       await T?.applyTimed?.(actor, {name: "Asleep", img: AC.CONDITIONS.asleep.img, condition: AC.CONDITIONS.asleep.id, duration: {kind: "time", seconds: c.seconds},
         key: "wodx-after-sleep", source: entry.page, description: entry.say, revert: {key: "wodx-actions.afterWake", data: {alpha, then: c.then ?? null, page: entry.page}}});
-      return card(`<p>Asleep for ${c.seconds >= 86400 ? `${Math.round(c.seconds / 86400)} days` : `${Math.round(c.seconds / 3600)} hours`} of game time: no actions until the clock passes it.</p>`);
+      return card(`<p>Asleep for ${c.seconds >= DAY ? `${Math.round(c.seconds / DAY)} days` : `${Math.round(c.seconds / 3600)} hours`} of game time: no actions until the clock passes it.</p>`);
     }
     case "bloodCap": {
       const bp = actor.system?.advantages?.bloodpool ?? {};
@@ -99,14 +101,14 @@ export async function pay(actor, key, {successes = 1, id = null} = {}) {
       const diff = Math.min(10, Math.max(2, po || 6));
       const roll = hun > 0 ? await new Roll(`${hun}d10`).evaluate() : null;
       const faces = roll?.dice?.[0]?.results?.map(r => r.result) ?? [];
-      const succ = faces.filter(f => f >= diff).length - faces.filter(f => f === 1).length;
+      const succ = TERMS.margin(faces, diff);
       const lost = succ <= 0;
       if ( lost ) await C?.derangements?.gain?.(actor, "other", "from Strengthening the Demon");
       return card(`<p>Hun ${hun} against difficulty ${diff} (the P'o): ${faces.join(", ") || "no dice"}. ${lost ? "Failed: a Derangement takes hold (written on the sheet)." : "Held: no harm done."}</p>`);
     }
     case "habits": {
       const nights = AC.habitNights(successes);
-      await T?.applyTimed?.(actor, {name: "Animal habits", img: AC.CONDITIONS.habits.img, condition: AC.CONDITIONS.habits.id, duration: {kind: "time", seconds: nights * 86400},
+      await T?.applyTimed?.(actor, {name: "Animal habits", img: AC.CONDITIONS.habits.img, condition: AC.CONDITIONS.habits.id, duration: {kind: "time", seconds: nights * DAY},
         key: "wodx-after-habits", source: entry.page, description: AC.CONDITIONS.habits.summary});
       return card(`<p>${nights} night${nights === 1 ? "" : "s"} of the beast's tics: +1 difficulty on Social rolls (WoDX house reading).</p>
         <p><button type="button" data-wodx-after="shake" data-actor="${esc(actor.uuid)}">Shake it off (1 Willpower)</button></p>`);
@@ -168,7 +170,7 @@ export function setup() {
   C?.timed?.registerReverter?.("wodx-actions.afterWake", async (actor, data) => {
     for ( const a of data?.alpha ?? [] ) { const t = fromUuidSync(a.uuid); if ( t ) await t.update({alpha: a.alpha ?? 1}); }
     if ( data?.then === "ravenous" ) {
-      await C.timed.applyTimed(actor, {name: "Ravenous", img: AC.CONDITIONS.ravenous.img, condition: AC.CONDITIONS.ravenous.id, duration: {kind: "time", seconds: 86400},
+      await C.timed.applyTimed(actor, {name: "Ravenous", img: AC.CONDITIONS.ravenous.img, condition: AC.CONDITIONS.ravenous.id, duration: {kind: "time", seconds: DAY},
         key: "wodx-after-ravenous", source: data.page ?? "", description: AC.CONDITIONS.ravenous.summary});
       await ChatMessage.create({speaker: ChatMessage.getSpeaker({actor}), content: `<div class="wodx-card wodx-after"><p><b>${esc(actor.name)}</b> wakes ravenous and must eat (${esc(data.page ?? "")}).</p></div>`});
     }

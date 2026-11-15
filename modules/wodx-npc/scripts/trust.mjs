@@ -15,9 +15,10 @@
  */
 import * as TRR from "./trust-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
-const DAY = 86400;
 const st = () => (game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null);
 const api = () => game.modules.get(MOD).api;
 const isActiveGM = () => game.user?.isGM && game.users.activeGM?.id === game.user.id;
@@ -222,7 +223,7 @@ export async function seekSide(viewerLike, targetLike) {
   if ( dice <= 0 ) return null;
   const roll = await new Roll(`${dice}d10`).evaluate();
   const faces = roll.dice?.[0]?.results?.map(x => x.result) ?? [];
-  const succ = Math.max(0, faces.filter(f => f >= diff).length - faces.filter(f => f === 1).length);
+  const succ = TERMS.successes(faces, diff).successes;
   const res = TRR.senseResult(sense, succ);
   const who = side.leader?.name || side.name || "someone";
   const text = res === "found" ? `${t.name} secretly serves ${who}${side.name && side.leader?.name ? ` (${side.name})` : ""}.` : res === "hint" ? `${t.name} is hiding who they truly serve.` : "Nothing more shows.";

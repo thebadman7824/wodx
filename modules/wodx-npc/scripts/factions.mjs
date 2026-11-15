@@ -25,6 +25,8 @@ import * as PO from "./politics-rules.mjs";
 import * as SX from "./secrets-rules.mjs";
 import * as Media from "../../wodx-chronicle/scripts/media-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const TYPE = "wodx-npc.faction";
 
@@ -459,7 +461,7 @@ export function build(ctx) {
   }
   /** B83 for factions: one whose leader and members are all gone loses a dot of each Background per untended decade. */
   async function untended(from, to) {
-    const decades = Math.floor((to - from) / (365.25 * 86400) / 10);
+    const decades = Math.floor((to - from) / (365.25 * DAY) / 10);
     if ( decades < 1 ) return;
     for ( const f of state().factions ) {
       if ( f.dormant || f.owners.length ) continue;
@@ -531,7 +533,7 @@ export function build(ctx) {
       for ( let d = 1; d <= days; d++ ) {
         const s = state(), b = s.breaches.find(x => x.id === b0.id);
         if ( !b || b.state !== "live" ) break;
-        const t = b.lastStep + 86400;
+        const t = b.lastStep + DAY;
         if ( F.fades(b, t) ) {
           const ch = [{op: "breach-sev", id: b.id, delta: -1}, {op: "breach-set", id: b.id, lastStep: t, lastFed: t}];
           if ( m === "auto" ) { const r = await applyNow(ch); undo = [...r.inverse, ...undo]; lines.push(`${b.event}: a quiet week, and the talk fades.`); }
@@ -739,6 +741,7 @@ export function build(ctx) {
     const number = (name, v, max = 5) => `<input type="number" name="${name}" value="${v}" min="0" max="${max}">`;
     const actorOpts = list => list.map(a => `<option value="${a.id}"${a.id === f.leader ? " selected" : ""}>${esc(a.name)}</option>`).join("");
     const goals = [...f.goals, {move: ""}, {move: ""}].slice(0, Math.max(3, f.goals.length + 1));
+    try { await chron()?.events?.load?.(); } catch (e) { /* the book events alone (B6240) */ }
     const evs = (() => { try { return chron()?.events?.list?.() ?? []; } catch (e) { return []; } })();
     // NPC 0.25.0: the faction's politics
     const polKey = PO.polityFor(f, era.year), P = PO.POLITIES[polKey] ?? null, pol = f.politics ?? PO.normPolitics();
@@ -1117,7 +1120,7 @@ export function build(ctx) {
     const r = new Roll(`${WR.powerPool(f)}d10`);
     await r.evaluate();
     const faces = r.dice[0]?.results?.map(x => x.result) ?? [];
-    return {name: `${leaderName}'s powers`, successes: Math.max(0, faces.filter(x => x >= 6).length - faces.filter(x => x === 1).length), seen: true};
+    return {name: `${leaderName}'s powers`, successes: TERMS.successes(faces, 6).net, seen: true};
   }
   async function fightOut(api, b, s) {
     const facs = [b.war.attacker, b.war.defender].map(id => s.factions.find(f => f.id === id));
@@ -1187,7 +1190,7 @@ export function build(ctx) {
     Hooks.on("wodxEventFired", ev => { onEventFired(ev).catch(e => console.error(`${MOD} |`, e)); });
     Hooks.on("updateWorldTime", now => {
       if ( !isActiveGM() || skipping() ) return;
-      const day = Math.floor(now / 86400);
+      const day = Math.floor(now / DAY);
       if ( lastDay === null ) { lastDay = day; return; }
       if ( day === lastDay ) return;
       lastDay = day;

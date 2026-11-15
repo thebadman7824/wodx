@@ -9,9 +9,10 @@
  *   A vampire heals a level of bashing or lethal damage with a point of blood (V20, healing with blood).
  * WoDX readings: the hours, who moves on marriage, mourning days by faith, the rest.
  */
+import {DAY, HOUR, YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY, HOUR, YEAR};
 
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
-export const HOUR = 3600, DAY = 86400, YEAR = Math.round(365.25 * DAY);
 const B = (from, to, place, activity, label, more = {}) => ({from, to, place, activity, when: "any", days: null, feast: "any", label, ...more});
 
 /* ---- n1: the law ---- */

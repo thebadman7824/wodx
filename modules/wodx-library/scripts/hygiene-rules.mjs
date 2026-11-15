@@ -9,6 +9,7 @@
  *     step warmer (house rule), unless filth or blood still shows.
  *   Things for the house or the body that do neither (a plunger, a bathroom scale) are plain things with no Use.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 export const MARKS = ["filthy", "bloody"];
 export const CLEANERS = /\b(soap|towel|sponge|scrub brush|pumice|tin bath|washboard)\b/i;
 export const NO_USE = /plunger|toilet brush|\bmop\b|bathroom scale|sanitary pads|tampon/i;
@@ -17,7 +18,7 @@ export const isCleaner = name => CLEANERS.test(String(name ?? ""));
 export const hasNoUse = name => NO_USE.test(String(name ?? ""));
 
 /** The night a world time falls in (a day counted from noon). */
-export const nightOf = worldTime => Math.floor(((Number(worldTime) || 0) - 43200) / 86400);
+export const nightOf = worldTime => Math.floor(((Number(worldTime) || 0) - 43200) / DAY);
 
 /** What washing or grooming with this does: {clears: [marks taken off], groomed, line}. marks: the marks on them. */
 export function washResult(name, marks = []) {

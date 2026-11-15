@@ -2,6 +2,9 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.23.1 (Every WoDX line sheet follows the system's line sheets onto ApplicationV2, one switch per line (B6112). On those sheets, Sheet tools lists the title bar buttons and the window menu controls by name, as on the old sheets (B6114))
+- 0.23.0 (Line skins by line: the 170 KB skins stylesheet is split into a small core sheet (fonts and the loading rule) and one file per line under styles/skins, which scripts/skins.mjs puts in place the first time a sheet of that line draws, on either sheet engine, in the same cascade order and layer the single file had. While the file loads the sheet's page waits blank rather than flashing the system's look. The Sheet look setting still switches the skins off, and then no line file loads at all. The API gains skins.loaded(), skins.linesOf() and skins.load() and skins.report() for gates (B6060-B6063))
+- 0.22.2 (Shared terms (B6180-B6199): time units, dice counts, health levels, distance, eras, lines and player characters come from WoDX Chronicle's shared terms instead of a copy of this module's own)
 - 0.22.1 (Line sheets on ApplicationV2 (B6114): a line that the system moves to ApplicationV2 (its LINES_V2 list, Mummy first) gets the same WoDX sheet over the new one, under the same name, so a character's chosen sheet stays chosen. The Gender line, the Print and History controls (in the title bar's menu) and the Sheet tools button (it opens that menu) come with it)
 - 0.22.0 (Nature button on every sheet and Set off on the Derangements panel (B3917))
 - 0.21.0 (An optional Gender line under the name on every character sheet, in the player's own words. For a player character it describes and changes nothing in play (B3501))

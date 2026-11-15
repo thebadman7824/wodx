@@ -33,6 +33,7 @@ export function build({MOD, esc, chron, settle = () => null}) {
   /** The planned people of every household on a scene. nonce: how many times the Storyteller drew again. */
   function plan(scene, {nonce = 0} = {}) {
     const ppl = creation(), y = year(), batch = hashOf(scene.uuid);
+    try { RS.useFeminine(ppl?.feminine?.()); } catch (e) { RS.useFeminine({}); }
     return listOf(scene).map((h, hi) => {
       // 0.51.0 (B2672): the land's faith names the clergy, and the clergy keep it
       const land = landOf(scene), plans = RS.planHousehold(h, {year: y, land: land.faith});
@@ -142,6 +143,8 @@ export function build({MOD, esc, chron, settle = () => null}) {
     if ( !game.user.isGM ) return null;
     if ( !scene ) return ui.notifications.warn("No scene in view.");
     if ( !listOf(scene).length ) return ui.notifications.info(`${scene.name} has no households. Adopt a map from the town or village generator first (the scene's right-click menu).`);
+    // B6242: the name lists load on first use
+    try { await creation()?.load?.(); } catch (e) { /* named by role */ }
     let nonce = 0;
     for ( let guard = 0; guard < 50; guard++ ) {
       const list = plan(scene, {nonce});

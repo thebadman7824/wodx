@@ -5,6 +5,7 @@
  */
 
 import { discDifficulty } from "./kindred-rules.js";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
 export const REALMS = { across: "Across the Shroud (into the Skinlands)", shadowlands: "In the Shadowlands", tempest: "In the Tempest or Stygia", labyrinth: "In the Labyrinth" };
@@ -63,7 +64,7 @@ export function arcanosDifficulty(code, { t = null, own = {}, shroud = 7, realm 
 /** Angst the Shadow takes from the art itself (pp. 199, 204): Outrage in the Labyrinth 1; Pandemonium in the Tempest or Stygia a point per 1 rolled. */
 export function realmAngst(arcanos, realm, faces = []) {
     if (arcanos === "Outrage" && realm === "labyrinth") return 1;
-    if (arcanos === "Pandemonium" && (realm === "tempest" || realm === "labyrinth")) return faces.filter(f => f === 1).length;
+    if (arcanos === "Pandemonium" && (realm === "tempest" || realm === "labyrinth")) return TERMS.successes(faces).ones;
     return 0;
 }
 
@@ -154,7 +155,7 @@ export function catharsis(shadowSuccesses, psycheSuccesses) {
 /** Shadow Dice (p. 235): at most 5; every 1 on them is a temporary Angst point. */
 export function shadowDice(offered, faces) {
     const dice = Math.max(0, Math.min(5, n(offered)));
-    return { dice, angst: (faces ?? []).slice(0, dice).filter(f => f === 1).length };
+    return { dice, angst: TERMS.successes((faces ?? []).slice(0, dice)).ones };
 }
 /** Dark Passion rolls (p. 235): 7 when the wraith indulges it, 9 to stir it in someone else; an Angst a success. */
 export const darkPassionDifficulty = others => (others ? 9 : 7);

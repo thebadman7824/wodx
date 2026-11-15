@@ -12,6 +12,7 @@
  *   The recap       the first time the player is back after a night: that night as the character knows it, from the
  *                   entries about the character, never the seat's own log
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 import {pastNights, hardness, nightOf} from "../../wodx-storyteller/scripts/pacing-rules.mjs";
 
 export {nightOf};
@@ -124,7 +125,8 @@ export function clockThings(clocks = []) {
 export const XP_NIGHT_MAX = 5;
 
 /** The night's window: [start, end) in world seconds, noon to noon (WoDX Storyteller pacing). */
-export const nightWindow = night => ({start: (Number(night) * 86400) + 43200, end: ((Number(night) + 1) * 86400) + 43200});
+// B6183: a night runs noon to noon, as terms.nightIndex counts it
+export const nightWindow = night => ({start: (Number(night) * DAY) + DAY / 2, end: ((Number(night) + 1) * DAY) + DAY / 2});
 
 /**
  * What the log shows the character did in a night. entries: the Storyteller's log; me: {id, name}; asked: the

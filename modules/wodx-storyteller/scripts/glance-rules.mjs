@@ -12,6 +12,7 @@ import {HARROWING_KINDS, escapeDifficulty} from "../../wodx-actions/scripts/wrai
 import {FORM_DIFF} from "../../wodx-actions/scripts/garou-rules.js";
 import {CHECKS} from "../../wodx-actions/scripts/checks-rules.js";
 import {CHARTS, DEFAULT_CHART} from "../../wodx-otherworlds/scripts/rules.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** The lines a section can belong to (the same ids as the prelude templates). */
 export const LINES = ["vampire", "ghoul", "werewolf", "mage", "changeling", "wraith", "hunter", "mummy", "demon", "revenant", "mortal"];
@@ -39,7 +40,7 @@ function difficulties() {
 }
 
 function health() {
-  const pen = [["Bruised", "0"], ["Hurt", "-1"], ["Injured", "-1"], ["Wounded", "-2"], ["Mauled", "-2"], ["Crippled", "-5"], ["Incapacitated", "no actions"]];
+  const pen = TERMS.HEALTH_LEVELS.map(k => [TERMS.HEALTH_LABELS[k], TERMS.WOUND_PENALTY[k] === null ? "no actions" : String(TERMS.WOUND_PENALTY[k])]);
   return {id: "health", title: "Health and soak", for: "all", ref: "V20 health chart; each line's book has the last word",
     lines: [...pen.map(([l, p]) => ({label: l, value: `dice ${p}`})),
       {label: "Bashing", value: "soaked with Stamina; vampires halve what gets through"},

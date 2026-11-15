@@ -17,6 +17,8 @@ import * as H from "./hearts-rules.mjs";
 import * as LR from "./lines-rules.mjs";
 import * as LM from "./line-mend.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
 const st = () => (game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null);
@@ -40,7 +42,9 @@ function ageCheck(...people) {
 
 /** The line a sheet belongs to (B6310: the all-lines key, so a Kuei-jin is not read as Kindred nor a Fera as a mortal). */
 export function lineOf(actorLike) {
-  return LR.tableLine(LR.lineKey(actorOf(actorLike), linesApi()));
+  // B6187: the shared reading (a ghoul by the sheet's own variant too, a Kuei-jin by the Kindred of the East variant)
+  const l = TERMS.lineOf(actorOf(actorLike));
+  return ["spirit", "creature", "exalted"].includes(l) ? "mortal" : l;
 }
 /** The all-lines key itself (lines-rules.mjs KEYS). */
 export const lineKeyOf = actorLike => LR.lineKey(actorOf(actorLike), linesApi());
@@ -252,7 +256,7 @@ async function grieve(who, kind) {
   const dice = Math.max(1, Number(who.system?.advantages?.willpower?.permanent) || 3);
   const roll = await new Roll(`${dice}d10`).evaluate();
   const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
-  const hits = faces.filter(f => f >= diff).length, ones = faces.filter(f => f === 1).length;
+  const {raw: hits, ones} = TERMS.successes(faces, diff);
   const res = H.griefResult({successes: Math.max(0, hits - ones), botch: hits === 0 && ones > 0}, great);
   let line = `Grief, Willpower ${dice} dice at ${diff}: ${faces.join(", ")}. `;
   if ( res.held ) line += "They hold together.";
@@ -269,7 +273,7 @@ async function heartbreak(who, other) {
   const dice = Math.max(1, Number(who.system?.advantages?.willpower?.permanent) || 3);
   const roll = await new Roll(`${dice}d10`).evaluate();
   const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
-  const hits = faces.filter(f => f >= H.HEARTBREAK_DIFF).length, ones = faces.filter(f => f === 1).length;
+  const {raw: hits, ones} = TERMS.successes(faces, H.HEARTBREAK_DIFF);
   const botch = hits === 0 && ones > 0;
   let line = `Willpower ${dice} dice at ${H.HEARTBREAK_DIFF}: ${faces.join(", ")}. `, key = null;
   if ( botch ) { key = await game.modules.get("wodx-chronicle")?.api?.derangements?.gain?.(who, "loss", "from heartbreak"); line += key ? "It breaks something in them: a derangement." : "It breaks something in them."; }
@@ -279,7 +283,7 @@ async function heartbreak(who, other) {
     const T = game.modules.get("wodx-chronicle")?.api;
     if ( T?.registerCondition && !T?.conditions?.getCondition?.("grieving") ) T.registerCondition({id: "grieving", name: "Grieving", img: "icons/svg/blood.svg",
       source: "WoDX house reading", summary: "Heartbroken for a week: one die fewer on social rolls.", mods: {socialDice: -1}});
-    if ( T?.applyTimed ) await T.applyTimed(who, {name: "Grieving", description: `Heartbroken over ${other.name}`, duration: {kind: "time", seconds: 7 * 86400},
+    if ( T?.applyTimed ) await T.applyTimed(who, {name: "Grieving", description: `Heartbroken over ${other.name}`, duration: {kind: "time", seconds: 7 * DAY},
       condition: "grieving", key: "wodx-npc-grieving", source: "WoDX NPC hearts"});
     line += "It hurts, and it shows: grieving for a week (one die fewer on social rolls).";
   }
@@ -337,8 +341,7 @@ async function lovedRoll(who, spec) {
   if ( dice <= 0 ) return null;
   const roll = await new Roll(`${dice}d10`).evaluate();
   const faces = roll.dice?.[0]?.results?.map(x => x.result) ?? [];
-  const hits = faces.filter(f => f >= spec.diff).length, ones = faces.filter(f => f === 1).length;
-  const succ = Math.max(0, hits - ones);
+  const succ = TERMS.successes(faces, spec.diff).successes;
   const failed = H.lovedFailed(spec, succ);
   const label = {rage: "Rage", hun: "Hun", willpower: "Willpower"}[spec.pool] ?? spec.pool;
   if ( failed ) {
@@ -350,7 +353,7 @@ async function lovedRoll(who, spec) {
   return {roll, failed, line: `${label} ${dice} at ${spec.diff}: ${succ} ${succ === 1 ? "success" : "successes"}. ${failed ? `${H.LOVED_FAIL_WORD[spec.fail]}.` : "It holds."}`};
 }
 async function d10s(n) { const r = await new Roll(`${Math.max(1, n)}d10`).evaluate(); return {roll: r, faces: r.dice?.[0]?.results?.map(x => x.result) ?? []}; }
-const hitsAt = (faces, diff) => Math.max(0, faces.filter(f => f >= diff).length - faces.filter(f => f === 1).length);
+const hitsAt = (faces, diff) => TERMS.successes(faces, diff).successes;
 /** Mark a frenzy the way WoDX Actions does: the sheet's box, the frenzy kind and the Chronicle condition. */
 async function markFrenzy(who, kind = "berserk", {thrall = false} = {}) {
   await who.update({"system.conditions.isfrenzy": true});
@@ -416,7 +419,7 @@ export async function takeHostage(captorLike, victimLike, {demand = ""} = {}) {
   const told = await tellLoved(v, "taken");
   for ( const t of told ) {
     const who = game.actors.get(t.to);
-    try { await st()?.ledger?.save?.({kind: "consequence", what: `${c.name} holds ${v.name}${demand ? ` and demands ${demand}` : ""}`, from: {id: who.id, name: who.name}, to: {id: c.id, name: c.name}, due: game.time.worldTime + 3 * 86400}); } catch (e) { /* Ledger off */ }
+    try { await st()?.ledger?.save?.({kind: "consequence", what: `${c.name} holds ${v.name}${demand ? ` and demands ${demand}` : ""}`, from: {id: who.id, name: who.name}, to: {id: c.id, name: c.name}, due: game.time.worldTime + 3 * DAY}); } catch (e) { /* Ledger off */ }
   }
   return told;
 }

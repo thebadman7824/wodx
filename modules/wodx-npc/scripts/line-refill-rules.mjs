@@ -21,6 +21,9 @@
  * each new story in WoDX Actions), mortals and ghouls (no pool of their own that refills by itself).
  */
 
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {HOUR, DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 
 /** Lines WoDX Actions already refills daily once marked: the flag to set, and its value. */
@@ -36,7 +39,7 @@ export const ENROLL = {
 export const OWN = new Set(["changeling", "wraith", "demon"]);
 
 /** The night a time falls in: a night begins at 18:00, so a day key turns at dusk. */
-export const nightOf = t => Math.floor((num(t) - 18 * 3600) / 86400);
+export const nightOf = t => Math.floor((num(t) - 18 * HOUR) / DAY);
 export const weekOf = night => Math.floor(num(night) / 7);
 
 /**
@@ -103,13 +106,11 @@ export function reverieMark(step, {succ = 0, botch = false} = {}, night = 0) {
   return {};
 }
 /** A roll botches when it has no successes and at least one 1. */
-export const botched = (faces = [], diff = 6) => !faces.some(f => num(f) >= num(diff)) && faces.some(f => num(f) === 1);
+export const botched = (faces = [], diff = 6) => TERMS.successes(faces, diff).botch;
 
 /** Successes of a set of d10 faces at a difficulty: 10s count, 1s cancel (never below 0 here; a botch gives nothing). */
 export function successes(faces = [], diff = 6) {
-  let s = 0, ones = 0;
-  for ( const f of faces ) { if ( num(f) >= num(diff) ) s++; if ( num(f) === 1 ) ones++; }
-  return Math.max(0, s - ones);
+  return TERMS.successes(faces, diff).successes;
 }
 
 /**
