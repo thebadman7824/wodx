@@ -65,3 +65,25 @@ test("B5170-B5173: holy ground, Martyr, Marauder, the winds act", () => {
   assert.match(src("modules/wodx-actions/scripts/m20.js"), /marauder/);
   assert.match(src("modules/wodx-actions/scripts/demon.js"), /lore === "winds"/);
 });
+
+const AR = await imp("modules/wodx-creation/scripts/advance-rules.mjs");
+const WH = await imp("modules/wodx-library/scripts/wonders-hunter.mjs");
+test("B5391: a place Fetter goes with its town", () => {
+  const towns = [{name: "Steinfeld", scars: [{kind: "sack", year: 1420}], history: []}, {name: "Brno", scars: [{kind: "fire", year: 1420}], history: [{year: 1500, people: 9000, prosperity: 3}]},
+    {name: "Kunov", scars: [], history: [{year: 1300, people: 300, prosperity: 2}, {year: 1450, people: 0, prosperity: 0}]}];
+  assert.equal(AR.placeGone("The well at Steinfeld", towns, 1400, 1500)?.town, "Steinfeld");
+  assert.equal(AR.placeGone("The well at Steinfeld", towns, 1430, 1500), null);
+  assert.equal(AR.placeGone("A house in Brno", towns, 1400, 1500), null);
+  assert.equal(AR.placeGone("Kunov chapel", towns, 1400, 1500)?.town, "Kunov");
+  assert.equal(AR.placeGone("My sister's ring", towns, 1400, 1500), null);
+});
+test("B5390: whether remains are holy is rolled once, the same each time", () => {
+  const a = WH.holyRoll(3, "item1:Brother Jan"), b = WH.holyRoll(3, "item1:Brother Jan");
+  assert.deepEqual(a, b);
+  assert.equal(a.dice.length, 3);
+  assert.ok(a.dice.every(d => d >= 1 && d <= 10));
+  assert.equal(a.holy, a.successes > 0);
+  assert.equal(WH.HOLY_DIFF, 8);
+  let holy = 0; for ( let i = 0; i < 200; i++ ) if ( WH.holyRoll(3, `t${i}`).holy ) holy++;
+  assert.ok(holy > 40 && holy < 160, `holy ${holy}`);
+});

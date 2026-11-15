@@ -128,7 +128,8 @@ export const NET_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="0" height
  */
 export const REALM_TIME = {
   tempest: {rule: "same"}, umbra: {rule: "same"}, moonpath: {rule: "same"},
-  labyrinth: {rule: "storyteller", ref: "WR20 pdf 307", note: "Time in the Labyrinth runs as the Storyteller says, and stranger still in a Harrowing: seconds or years."},
+  // B5179: Ben's pick (15 November 2026): the Labyrinth's time is drawn each journey, as the Far Dreaming's is, from its own table
+  labyrinth: {rule: "random", table: "labyrinth", ref: "WR20 pdf 307", note: "Time in the Labyrinth runs strangely against the world's, drawn once for each journey."},
   moonbridge: {rule: "thousandth", ref: "W20 pdf 209 / p. 207"},
   "trod-silver": {rule: "trod", ref: "C20 pdf 53 / p. 52"}, "trod-balor": {rule: "trod", ref: "C20 pdf 53 / p. 52"}, "trod-twilight": {rule: "trod", ref: "C20 pdf 53 / p. 52"},
   "far-dreaming": {rule: "random", ref: "C20 pdf 53; W20 pdf 331", note: "Time in the Far Dreaming and Arcadia runs at random against the world's: a day there may be an hour here, or a year."},
@@ -146,7 +147,16 @@ export const DREAM_SLIPS = [
   {upTo: 9, factor: 30, words: "a month here for each day there"},
   {upTo: 10, factor: 365, words: "a year here for each day there"}
 ];
-export function drawSlip(rand = Math.random) { const d = 1 + Math.floor(Math.max(0, Math.min(0.9999, rand())) * 10); return {...DREAM_SLIPS.find(x => d <= x.upTo), d10: d}; }
+/** B5179: the Labyrinth's slips, a d10 each journey: from an hour here for each day there to a month here (house table). */
+export const LABYRINTH_SLIPS = [
+  {upTo: 2, factor: 1 / 24, words: "an hour here for each day there"},
+  {upTo: 4, factor: 0.5, words: "half the time here"},
+  {upTo: 6, factor: 1, words: "the same time here"},
+  {upTo: 8, factor: 7, words: "a week here for each day there"},
+  {upTo: 10, factor: 30, words: "a month here for each day there"}
+];
+export const SLIP_TABLES = {dream: DREAM_SLIPS, labyrinth: LABYRINTH_SLIPS};
+export function drawSlip(rand = Math.random, table = "dream") { const d = 1 + Math.floor(Math.max(0, Math.min(0.9999, rand())) * 10); return {...(SLIP_TABLES[table] ?? DREAM_SLIPS).find(x => d <= x.upTo), d10: d}; }
 
 const spanWords = sec => { const h = sec / 3600; if ( h < 1 ) return `${Math.max(1, Math.round(sec / 60))} minutes`; if ( h < 48 ) return `${Math.round(h)} hours`; const d = h / 24; return d < 60 ? `${Math.round(d)} days` : `${Math.round(d / 30)} months`; };
 /** Seconds that pass outside for a drawn journey, and the words for the card: {seconds, rule, words}. */

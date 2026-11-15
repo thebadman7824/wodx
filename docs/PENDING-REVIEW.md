@@ -1444,3 +1444,6 @@ Ben picked the recommendation on all 29 desk items (https://claude.ai/artifact/A
 | 2026-11-15 | Fleeing a fight (B5176) | A player character within 3 yards of an NPC foe who ends a move more than 8 yards from all of them starts a chase | Change FLEE in chase.mjs |
 | 2026-11-15 | Blackmail and the law (B5177) | A strike back by rumour or hunter tip also adds a named blackmail deed, gravity 2 | Change GRAVITY.extortion or the heat call in trust.mjs |
 | 2026-11-15 | The stimulant crash (B5178) | An hour after (30 minutes weak, 2 hours strong), one die off every roll until slept, at most a day (12 hours weak) | Change CRASH and crashOf in use-rules.mjs |
+| 2026-11-15 | The Labyrinth's time (B5179) | d10 each journey: 1-2 an hour here a day there, 3-4 half, 5-6 the same, 7-8 a week, 9-10 a month | Change LABYRINTH_SLIPS in journey-rules.mjs |
+| 2026-11-15 | Whether remains are holy (B5390) | The order member's Faith against 8, rolled once, seeded by the thing and the maker | Change HOLY_DIFF or holyRoll in wonders-hunter.mjs |
+| 2026-11-15 | Place Fetters (B5391) | Lost when its named town was sacked or quaked in the years crossed, or has no people or prosperity under a half at the end | Change PLACE_LOST or placeGone in advance-rules.mjs |

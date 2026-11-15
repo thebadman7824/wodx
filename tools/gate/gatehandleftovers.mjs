@@ -7,6 +7,8 @@
  *   3. a Martyr beside someone hurt gets the Take the wound card (wodx-chronicle signatures)
  *   4. a blackmailed mortal who strikes back by word raises the blackmailer's law heat (wodx-npc trust)
  *   5. Command from wodx-actions finds no hold on an Untamable target, with a note
+ *   6. the desk picks as deployed: wodx-otherworlds draws the Labyrinth's time, wodx-library rolls a relic's holiness
+ *      (the same each pick), wodx-creation loses a Fetter whose town was sacked
  * Result: Data/wodx-gate/gatehandleftovers-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -67,6 +69,19 @@ export async function run() {
     await G.step("5 untamable", async () => {
       const r = await api(ACT)?.effects?.apply?.({target: game.actors.get(wolf.id).uuid, out: {kind: "timed", label: "Command", name: "Command"}}, "Gate Leftovers Wired");
       G.ok("5 untamable", /Untamable/.test(r?.note ?? ""), {r});
+    });
+
+    await G.step("6 desk picks", async () => {
+      const J = await import(`/modules/wodx-otherworlds/scripts/journey-rules.mjs?${Date.now()}`);
+      const AR = await import(`/modules/wodx-creation/scripts/advance-rules.mjs?${Date.now()}`);
+      const kit = api(LIB)?.wonders?.kitFor?.("hunter");
+      const lab = J.REALM_TIME.labyrinth?.rule === "random" && J.timeOutside({realm: "labyrinth", hours: 2, slip: J.drawSlip(() => 0.95, "labyrinth")}).seconds === 2 * 3600 * 30;
+      const m = {kind: "inquisitor", order: "Gate Order", name: "Gate Leftovers Wired", faithRating: 3, objects: [{id: "relic1", name: "A finger bone", type: "Item", wonder: ""}]};
+      const row = kit?.rows?.().find(r => r.kind === "relic");
+      const b1 = row ? kit.blockers(row, m, {target: "relic1"}) : null, b2 = row ? kit.blockers(row, m, {target: "relic1"}) : null;
+      const relic = Array.isArray(b1) && JSON.stringify(b1) === JSON.stringify(b2) && !(kit.cautions(row, m) ?? []).some(c => /Storyteller judges/.test(c));
+      const fetter = AR.placeGone("The well at Gatestadt", [{name: "Gatestadt", scars: [{kind: "sack", year: 1450}], history: []}], 1400, 1500)?.town === "Gatestadt";
+      G.ok("6 desk picks", lab && relic && fetter, {lab, relic, fetter, blockers: b1});
     });
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }
   finally {
