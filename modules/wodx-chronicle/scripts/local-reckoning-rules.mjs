@@ -24,7 +24,7 @@
  * calendars to the Storyteller. No Foundry here.
  */
 import {jdnToJulian, jdnToGregorian, julianToJDN, gregorianToJDN} from "./calendar-math.mjs";
-import {islamicDate, ISLAMIC_MONTHS, hebrewNewYear, hebrewYear, chineseDate, indianMonths, losar, moonBefore, moonJD} from "./faith-rules.mjs";
+import {islamicDate, ISLAMIC_MONTHS, hebrewNewYear, hebrewYear, chineseDate, indianMonths, losar, moonBefore, moonJD, sunLongitude, FAITHS} from "./faith-rules.mjs";
 
 const ORD = n => {
   const s = ["th", "st", "nd", "rd"], v = n % 100;
@@ -148,6 +148,66 @@ export function indianDate(jdn) {
 }
 /** The Thai and Lao month number of an Indian month (the fifth month is Chaitra). */
 const thaiMonth = indianMonth => ((indianMonth + 3) % 12) + 1;
+
+/* ------------------------------------------------------------------ Persia's solar year (B5874) ---- */
+
+/** Persia keeps the solar Hijra year as its civil calendar from 1925 (the law of 1304); 1976 to 1978 the Shah's count. */
+export const SOLAR_HIJRI_FROM = 1925;
+export const IMPERIAL = {from: [1976, 3, 21], to: [1978, 8, 27], add: 1180};
+export const SOLAR_MONTHS = ["Farvardin", "Ordibehesht", "Khordad", "Tir", "Mordad", "Shahrivar", "Mehr", "Aban", "Azar", "Dey", "Bahman", "Esfand"];
+/** The JDN of Nowruz in a Gregorian year: the day of the spring equinox at Tehran (UTC+3:30), the next day if it falls after noon. */
+export function nowruz(gy) {
+  let jd = gregorianToJDN(gy, 3, 20) - 0.5;
+  for ( let i = 0; i < 8; i++ ) {
+    let d = ((0 - sunLongitude(jd)) % 360 + 360) % 360; if ( d > 180 ) d -= 360;
+    jd += d * 365.2422 / 360;
+  }
+  const local = jd + 0.5 + 3.5 / 24, day = Math.floor(local);
+  return local - day < 0.5 ? day : day + 1;
+}
+/** The solar Hijra date of a JDN: {year, month (1 to 12), day}. */
+export function solarHijriDate(jdn) {
+  const gy = jdnToGregorian(jdn).year;
+  const g0 = jdn >= nowruz(gy) ? gy : gy - 1;
+  let left = jdn - nowruz(g0);
+  const year = g0 - 621;
+  for ( let m = 1; m <= 12; m++ ) {
+    const len = m <= 6 ? 31 : m <= 11 ? 30 : 31;
+    if ( left < len || m === 12 ) return {year, month: m, day: left + 1};
+    left -= len;
+  }
+  return {year, month: 12, day: 29};
+}
+const imperialOn = jdn => jdn >= gregorianToJDN(...IMPERIAL.from) && jdn <= gregorianToJDN(...IMPERIAL.to);
+/** "the 21st of Esfand, in the year 1328 of the solar Hijra" (the Shah's years 1976 to 1978). */
+export function solarHijriWords(jdn) {
+  const h = solarHijriDate(jdn);
+  const year = imperialOn(jdn) ? `in the year ${h.year + IMPERIAL.add} of the Shah's count` : `in the year ${h.year} of the solar Hijra`;
+  return `the ${ORD(h.day)} of ${SOLAR_MONTHS[h.month - 1]}, ${year}`;
+}
+
+/* ------------------------------------------------------------------ the character's own count (B5875) ---- */
+
+/** The faith a people keeps when it differs from the land's: the culture keys of WoDX Creation's peoples (house reading). */
+export const PEOPLE_FAITH = {jewish: "jewish", sephardi: "jewish", mizrahi: "jewish", arabic: "islamic", turkish: "islamic",
+  persian: "islamic", amazigh: "islamic", tuareg: "islamic", moro: "islamic", greek: "orthodox", russian: "orthodox",
+  serbian: "orthodox", romanian: "orthodox", armenian: "orthodox", tamil: "hindu", hindi: "hindu", tibetan: "tibetan",
+  chinese: "chinese", khmer: "theravada", thai: "theravada"};
+/** The faiths a player may pick for a character's own count, in the order shown. */
+export const OWN_COUNTS = ["western", "orthodox", "islamic", "jewish", "hindu", "theravada", "tibetan", "chinese", "own"];
+/**
+ * The count a character keeps: the pick on the character (flags.wodx-chronicle.reckonFaith), else the faith of the people
+ * picked on the lifepath when it differs from the land's, else the land's. Returns {faith, why}.
+ */
+export function countOf(actorFlags = {}, lifepath = null, landFaith = "western") {
+  const pick = actorFlags?.reckonFaith;
+  if ( pick && pick !== "land" && FAITHS[pick] ) return {faith: pick, why: "pick"};
+  const raw = lifepath?.path?.picks?.people;
+  const people = typeof raw === "object" ? raw?.id : raw;
+  const own = PEOPLE_FAITH[String(people ?? "").toLowerCase()];
+  if ( own && own !== landFaith ) return {faith: own, why: "people"};
+  return {faith: landFaith, why: "land"};
+}
 
 /* ------------------------------------------------------------------ the hours ---- */
 
@@ -292,6 +352,7 @@ export function landDate(d, faith, {region = "", latitude = 50, feast = null, st
   }
   if ( faith === "chinese" && region !== "korea" && region !== "japan" && d.year >= 1912 && d.year < 1949 )
     return `${d.weekday}, ${d.day} ${d.monthName}, in the ${ORD(d.year - 1911)} year of the Republic`;
+  if ( faith === "islamic" && region === "persia" && d.year >= SOLAR_HIJRI_FROM ) return `${d.weekday}${named}, ${solarHijriWords(jdn)}`;
   const own = `${ownDay(faith, jdn, {region})}, ${ownYear(faith, jdn, {region})}`;
   if ( d.year < civilFrom(faith, region) ) return `${d.weekday}${named}, ${own}`;
   return `${civilDate(d, jdn, faith, region)} (${own})`;

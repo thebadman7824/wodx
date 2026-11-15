@@ -23,8 +23,11 @@ export async function run() {
     const lib = game.modules.get(LIB)?.api;
     const T = game.modules.get("wodx-chronicle")?.api?.traits;
     const [a] = await G.make(Actor, [seeker("Gate Faith Seeker")]);
-    const [beads, charm, astro] = await a.createEmbeddedDocuments("Item", [{name: "a string of prayer beads", type: "Item"},
+    // B5876: a batch create does not keep its order, so each good is found by its name (gate rule 1)
+    const made = await a.createEmbeddedDocuments("Item", [{name: "a string of prayer beads", type: "Item"},
       {name: "a tiny folded paper charm", type: "Item"}, {name: "a brass astrolabe", type: "Item"}]);
+    const named = n => made.find(i => i.name === n) ?? a.items.find(i => i.name === n);
+    const [beads, charm, astro] = ["a string of prayer beads", "a tiny folded paper charm", "a brass astrolabe"].map(named);
 
     await G.step("1. api and Use", async () => {
       const ab = async i => (await lib.use.abilities(i)) ?? [];
@@ -62,7 +65,7 @@ export async function run() {
     await G.step("4. divining", async () => {
       await lib.faith.divine(a, astro);
       await wait(400);
-      const m = [...game.messages].slice(-2).find(x => /reads the signs with a brass astrolabe/i.test(x.content));
+      const m = [...game.messages].filter(x => /reads the signs with a brass astrolabe/i.test(x.content ?? "")).sort((x, y) => (x.timestamp ?? 0) - (y.timestamp ?? 0)).at(-1);
       G.ok("4. divining", !!m && /Perception \+ Occult/.test(m.content) && (m.whisper?.length ?? 0) > 0, {card: !!m, whisper: m?.whisper?.length ?? 0});
     });
   } finally { return G.finish(); }
