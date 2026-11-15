@@ -43,7 +43,7 @@ export const HORROR_FX = {
             "Two lethal levels on contact; Stealth +2 difficulty.", "Three lethal levels by touch, all close blows lethal, and a bolt to ten yards every other turn (Dexterity + Athletics).",
             "Four levels by touch, a bolt every turn; Stealth +4 difficulty and attacks aimed by sight +1 difficulty.", "Two lethal levels to all within ten feet, five by touch, two bolts a turn; it melts steel; attacks aimed by sight +2 difficulty."],
         results(k, s, base) {
-            const out = [{ key: "light", who: "self", out: { ...base, kind: "timed", name: "Witch's Nimbus", timed: { kind: "scene" }, duration: "the scene", successes: k, text: `A burning or crackling aura at ${k} Vitality for the scene` } }];
+            const out = [{ key: "light", who: "self", out: { ...base, kind: "timed", name: "Witch's Nimbus", timed: { kind: "scene" }, duration: "the scene", successes: k, ...(k >= 1 ? { touch: { levels: k, type: "lethal" } } : {}), text: `A burning or crackling aura at ${k} Vitality for the scene${k >= 1 ? `; a close blow on the bearer costs the striker ${k} lethal` : ""}` } }];
             if (k >= 3 && s > 0) out.push({ key: "harm", who: "one", ask: true, out: { ...base, kind: "damage", levels: k + s - 1, type: "lethal", soak: true, text: `A bolt: ${k + s - 1} lethal levels, soaked as usual` } });
             return out;
         }
