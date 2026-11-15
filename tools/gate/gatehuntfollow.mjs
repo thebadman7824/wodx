@@ -6,6 +6,9 @@
  *   4. an investigator comes to the town map, keeps a day among the market, tavern and church, and leaves (h3)
  *   5. someone a hunters' faction finds goes into the region's file (h4)
  *   6. a body found drained feeds the hunters (h5)
+ *   7. a body WoDX NPC's carrying took as proof (wodxBodyTaken with the token's uuid, as carry-goals.mjs sends it)
+ *      eases the region's pressure by two (B6167)
+ * Steps 1 and 7 read the region's pressure itself, not only a flag on the body.
  */
 import {gate} from "./kit.mjs";
 
@@ -46,6 +49,9 @@ export async function run() {
 
     await G.step("1. a raid won: the body is taken as proof", async () => {
       const [tq, ta, tb] = await G.tokens(sc, [{actor: kin, x: 12, y: 10}, {actor: h1, x: 14, y: 10, ...raider(kin.id)}, {actor: h2, x: 15, y: 11, ...raider(kin.id)}]);
+      // pressure to ease: the proof takes two off (B6167 checks the effect, not just the flag)
+      await st().hunters.add(region, "manual", {n: 6, why: "Gate HF: pressure to ease"});
+      const p0 = st().hunters.state().regions[region]?.pressure ?? 0;
       await sleep(300);
       const c = await fight([tq, ta, tb]);
       await sc.tokens.get(tq.id).actor.toggleStatusEffect("dead", {active: true});
@@ -54,7 +60,12 @@ export async function run() {
       const body = sc.tokens.get(tq.id);
       const p = body?.flags?.[ST]?.proof;
       G.ok("1. the raid is won", end === "won", {end});
-      G.ok("1. the body is taken or burned as proof", !!p && (body.hidden || p.to === "burned"), {p, hidden: body?.hidden});
+      // B6167: with WoDX NPC's carrying the hunter really carries the body (orderCarry); else it is hidden with the proof flag
+      const carried = sc.tokens.some(t => t.flags?.["wodx-interactables"]?.hauling?.what === body?.uuid) || !!body?.flags?.["wodx-npc"]?.carriedOff;
+      G.ok("1. the body is taken or burned as proof", carried || (!!p && (body.hidden || p.to === "burned")), {p, carried, hidden: body?.hidden});
+      await sleep(600);
+      const p1 = st().hunters.state().regions[region]?.pressure ?? 0;
+      G.ok("1. their proof eases the region's pressure", carried || p1 < p0, {p0, p1, carried});
       G.ok("1. the hunters leave the map", !sc.tokens.get(ta.id) && !sc.tokens.get(tb.id));
     });
 
@@ -110,6 +121,17 @@ export async function run() {
       const p1 = st().hunters.state().regions[region]?.pressure ?? 0;
       G.ok("6. pressure rose", p1 > p0, {p0, p1});
       void tf;
+    });
+
+    await G.step("7. a body carried off as proof eases the region", async () => {
+      const [tb] = await G.tokens(sc, [{actor: kin, x: 16, y: 14}]);
+      await st().hunters.add(region, "manual", {n: 6, why: "Gate HF: pressure to ease"});
+      const p0 = st().hunters.state().regions[region]?.pressure ?? 0;
+      // the hook as WoDX NPC's carry-goals.mjs calls it once the hunter arrives: body is the token's uuid string
+      Hooks.callAll("wodxBodyTaken", {body: sc.tokens.get(tb.id).uuid, actor: kin.id, name: kin.name, by: null, intent: "proof", offstage: true});
+      let p1 = p0;
+      for ( let i = 0; i < 20 && p1 >= p0; i++ ) { await sleep(150); p1 = st().hunters.state().regions[region]?.pressure ?? 0; }
+      G.ok("7. the region's pressure eases by two", p1 === Math.max(0, p0 - 2), {p0, p1});
     });
   } finally {
     for ( const id of combats ) { try { await game.combats.get(id)?.delete(); } catch (e) { /* gone */ } }
