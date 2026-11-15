@@ -112,6 +112,18 @@ export function build(ctx) {
     });
   }
 
+  /** Is this follower an animal, is it trained, and does the one it serves have Feral Whispers (B5063)? */
+  function animalOrders(npc, leaderId) {
+    const c = game.modules.get("wodx-creation")?.active ? game.modules.get("wodx-creation").api?.animals : null;
+    const animal = !!c?.isAnimal?.(npc);
+    if ( !animal ) return {animal: false};
+    const t = npc.flags?.["wodx-creation"]?.animal?.training;
+    const trained = t === undefined || t === null ? true : t !== "untrained";
+    const leader = leaderId ? game.actors.get(leaderId) : null;
+    const whispers = !!leader && [...(leader.items ?? [])].some(i => i.type === "Power" && /^animalism$/i.test(i.name?.trim() ?? "") && (Number(i.system?.value) || 0) >= 1);
+    return {animal, trained, whispers};
+  }
+
   /** The active Storyteller: check and carry out an order. */
   async function give(req, {userId = game.user.id} = {}) {
     if ( !isActiveGM() || !setting("followerOrders") ) return {ok: false, why: "Orders are off."};
@@ -126,6 +138,10 @@ export function build(ctx) {
     if ( req.kind === "none" ) return clear(npc, {by: user, scene, tok});
     if ( !O.ORDERS[req.kind] ) return {ok: false, why: "No such order."};
     const leader = O.leaderFor({picked: req.leader, serves: servesOf(npc), ownedActorIds: mine, isGM: user.isGM});
+    // B5063: an animal takes only what it was trained for, unless its master speaks to it
+    const beast = animalOrders(npc, leader);
+    const blocked = O.animalOrderBlock(req.kind, beast);
+    if ( blocked ) return {ok: false, why: blocked};
     if ( req.kind === "follow" && !leader ) return {ok: false, why: "Pick the character it should follow."};
     const order = O.normOrder({kind: req.kind, by: user.id, leader, target: req.target ?? null, at: game.time?.worldTime ?? 0, hard: !!req.hard, note: req.note,
       errand: req.errand, task: req.task, cost: req.cost});
@@ -407,7 +423,7 @@ export function build(ctx) {
         <div class="form-group"><label>A hard order (dangerous, or against its nature)</label><input type="checkbox" name="hard"></div>
         <div class="form-group"><label>In your words</label><input type="text" name="note" maxlength="200"></div>
         ${game.user.isGM ? `<div class="form-group"><label>It serves</label><input type="checkbox" name="setServes"> <small>Make it serve the character above</small></div>` : ""}
-        <p class="hint">${target ? `Go to: ${esc(target.name)}.` : "To send it to someone or set it on them, target that token first."} A hard order waits for the Storyteller, who weighs the bond and loyalty.</p>`,
+        <p class="hint">${target ? `Go to: ${esc(target.name)}.` : "To send it to someone or set it on them, target that token first."} A hard order waits for the Storyteller, who weighs the bond and loyalty. An animal takes only trained commands, unless the one it serves has Feral Whispers.</p>`,
       buttons: [{action: "go", label: "Give the order", default: true, callback: (ev, b) => Object.fromEntries(new FormData(b.form))}, {action: "cancel", label: "Cancel"}]});
     if ( !res || !res.token ) return null;
     const tok = canvas.scene.tokens.get(res.token);
