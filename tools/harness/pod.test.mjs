@@ -101,6 +101,6 @@ test("pod: a patron pays with Great cities off, the town is found under upkeep.t
   const raise = f.slice(f.indexOf("export async function raiseBuilding"), f.indexOf("ACTS.boon"));
   assert.doesNotMatch(raise, /!lineOn\("podCities"\) \|\|/, "the payment is not behind Great cities");
   assert.match(raise, /ST\?\.upkeep\?\.towns/);
-  assert.match(f, /\(!settle && isSkipping\(\)\)/);
+  assert.match(f, /\(!settle && isQuiet\(\)\)/);
   assert.match(f, /Hooks\.on\("wodxSkipEnd", \(\) => tick\(\{settle: true\}\)\)/);
 });

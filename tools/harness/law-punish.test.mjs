@@ -54,7 +54,7 @@ test("sentences: the wiring", () => {
 
 test("sentences: time served waits through a skip or a hold, and Branded is a status from Chronicle's ready (B6162, B6163)", () => {
   const f = src("modules/wodx-chronicle/scripts/law-punish.mjs");
-  assert.match(f, /export async function releaseServed\(year = yearNow\(\), \{settle = false\} = \{\}\) \{\n.*\n  if \( !isActiveGM\(\) \|\| \(!settle && isSkipping\(\)\) \) return \[\];/);
+  assert.match(f, /export async function releaseServed\(year = yearNow\(\), \{settle = false\} = \{\}\) \{\n.*\n  if \( !isActiveGM\(\) \|\| \(!settle && isQuiet\(\)\) \) return \[\];/);
   assert.match(f, /Hooks\.on\("wodxSkipEnd", \(\) => \{ releaseServed\(yearNow\(\), \{settle: true\}\)/);
   assert.match(f, /Hooks\.once\("wodxChronicleReady", \(\) => \{ try \{ ensureBrand\(\); \}/);
 });
@@ -63,5 +63,5 @@ test("ghouls: the domitor's feeding is offered from the monthly need, once (B616
   const g = src("modules/wodx-chronicle/scripts/ghoul-need.mjs"), s = src("modules/wodx-chronicle/scripts/signatures.mjs");
   assert.match(g, /if \( months >= 1 && !stateOf\(a\)\.dust \) await offerFeed\(a, months\);/);
   assert.match(s, /if \( ghoulNeedOn\(\) \) \{\n    if \( needIsGhoul\(a\) \) return;/, "the Clan features tick stands aside for a ghoul the need reads");
-  assert.match(s, /if \( !on\(\) \|\| !isActiveGM\(\) \|\| \(!settle && isSkipping\(\)\) \) return;/);
+  assert.match(s, /if \( !on\(\) \|\| !isActiveGM\(\) \|\| \(!settle && isQuiet\(\)\) \) return;/);
 });

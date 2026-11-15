@@ -56,6 +56,8 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxShroudCrossing | otherworlds | storyteller |
 | wodxSkipStart | chronicle | chronicle (the Legends book is brought up to date before the clock moves) |
 | wodxSkipEnd | chronicle | actions, atmosphere, chronicle, interactables, npc, otherworlds, sheets, storyteller |
+| wodxLightTouchEnd | chronicle | chronicle (timed effects, the ghoul's monthly need, time served, derangement bouts, the Clan features and Cities ticks settle once when Light-touch mode is turned off, B6380); storyteller (the watch's patrols and calls for help, B6380) |
+| wodxSheetFollowsEra | chronicle | chronicle (a listener that returns false keeps a sheet on its old era when the era moves on; gatetruthchronicle keeps the world's own sheets out this way, B6383) |
 | wodxSocial | actions | chronicle (flaws that bite on a social act; a Ravnos vice fed or called; a Nosferatu's true face; a Setite's won seduction, persuasion, deceit or bribe moves the victim's Corruption; a Golconda seeker's theft) |
 | wodxStockFilter | interactables | storyteller (markets thin or fill a trader's stock draw) |
 | wodxTradeDone | actions | storyteller (a week of player trade gluts or empties a market) |
