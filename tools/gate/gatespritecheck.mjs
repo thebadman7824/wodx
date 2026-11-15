@@ -144,7 +144,7 @@ export async function run() {
       const watch = setInterval(() => { const f = facingShown(tok); if ( A.state(tok.id)?.moving ) { movingSeen++; if ( f && turned.at(-1) !== f ) turned.push(f); } }, 40);
       try {
         const r = await R.tick("walk", {scene, post: true});
-        how = {items: (r?.items ?? []).filter(i => i?.tokenId === tok.id).map(i => `${i.type}:${i.status}`), moved: tok.x !== from.x || tok.y !== from.y};
+        how = {items: (r?.items ?? []).filter(i => i?.tokenId === tok.id).map(i => `${i.type}:${i.status}`), moved: tok.x !== from.x || tok.y !== from.y, walk: api.lastWalk?.() ?? null};
         await waitFor(() => tok.regions?.has?.(inn) || inn.testPoint?.({x: tok.x + g / 2, y: tok.y + g / 2, elevation: 0}), 30000).catch(() => null);
         await sleep(400);
         pics.push(await shot("3-walked", {x: tok.x + g / 2, y: tok.y + g / 2}, 1.2));

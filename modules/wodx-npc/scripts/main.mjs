@@ -515,14 +515,17 @@ const stepCost = () => gridKind() === "hex" ? (() => 1) : NR.squareCost;
 const hexHeuristic = goal => c => { try { return canvas.grid.getDistance?.(grid().getCenterPoint(c), grid().getCenterPoint(goal)) / (canvas.scene.grid.distance || 5) || 0; } catch (e) { return 0; } };
 const cellsFor = yards => Math.floor((yards * unitsPerYard()) / (canvas.scene.grid.distance || 5) + 1e-6);
 
+/* How the last walk went (for gates): moved along its way, or placed square by square when the move was refused. */
+let lastWalk = null;
 async function walk(tok, path) {
   if ( path.length < 2 ) return false;
   const waypoints = path.slice(1).map(c => topLeftFor(tok, c));
   const doc = tok.document;
+  lastWalk = {token: doc.id, steps: waypoints.length, how: "move", error: null, at: Date.now()};
   if ( typeof doc.move === "function" ) {
-    try { await doc.move(waypoints, {autoRotate: true}); }
-    catch (e) { for ( const w of waypoints ) await doc.update(w); }
-  } else for ( const w of waypoints ) await doc.update(w);
+    try { const ok = await doc.move(waypoints, {autoRotate: true}); if ( ok === false ) lastWalk.how = "refused"; }
+    catch (e) { lastWalk.how = "update"; lastWalk.error = String(e?.message ?? e).slice(0, 300); for ( const w of waypoints ) await doc.update(w); }
+  } else { lastWalk.how = "update"; for ( const w of waypoints ) await doc.update(w); }
   try { await tok.movementAnimationPromise; } catch (e) { /* none */ }
   await sleep(250);
   return true;
@@ -1299,6 +1302,7 @@ Hooks.once("init", () => {
       feudsOf: STANDING.feudsOf, feudSidesOf: STANDING.feudSidesOf, feudRows: STANDING.feudRows, rules: STANDING.rules},
     legacy: {pastLives: LEGACY.pastLives, addPastLife: LEGACY.addPastLife, recall: LEGACY.recall, teach: LEGACY.teach, taughtBy: LEGACY.taughtBy, teachingLine: LEGACY.teachingLine,
       web: LEGACY.web, openWeb: LEGACY.openWeb, ideas: LEGACY.ideasNow, rules: LEGACY.rules}, openWeb: LEGACY.openWeb};
+  api.lastWalk = () => lastWalk;
   game.modules.get(MOD).api = api;
 });
 /* Obfuscate and sneaking as token statuses, for the noticing roll (V20 Dark Ages pp. 169, 195, 224-226) */
