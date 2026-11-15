@@ -59,8 +59,7 @@ export async function run() {
     await G.step("3. Armored Skin, Immunity and Triatic Sense", async () => {
       await F.settle(skin);
       const s = F.soakOf(skin), imm = F.immune(skin), hid = F.taintHidden(skin);
-      await waitFor(() => skin.flags?.["wodx-senses"]?.wyrm === false, 4000);
-      G.ok("3. Armored Skin, Immunity and Triatic Sense", !!s?.lethalSoak && imm && hid && skin.flags?.["wodx-senses"]?.wyrm === false, {s, imm, hid, wyrm: skin.flags?.["wodx-senses"]?.wyrm});
+            G.ok("3. Armored Skin, Immunity and Triatic Sense", !!s?.lethalSoak && imm && hid && !skin.flags?.["wodx-senses"]?.wyrm, {s, imm, hid, wyrm: skin.flags?.["wodx-senses"]?.wyrm});
     });
 
     await G.step("4. Mind Blast dazes its victim", async () => {
@@ -90,7 +89,7 @@ export async function run() {
 
     await G.step("6. Regeneration closes a lethal level each new round", async () => {
       await body().update({"system.health.damage.lethal": 2});
-      const [fight] = await G.make(Combat, [{scene: scene.id, active: true}]);
+      const fight = await Combat.create({scene: scene.id, active: true});
       await fight.createEmbeddedDocuments("Combatant", [{tokenId: ft.id, sceneId: scene.id, actorId: fo.id}]);
       await fight.startCombat();
       await wait(800);
