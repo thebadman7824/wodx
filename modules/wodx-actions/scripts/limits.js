@@ -99,6 +99,13 @@ export async function gate(actor, power, {targets = null} = {}) {
       content: `<p>${esc(st.why)}</p><p>Allow it this once?</p>`, rejectClose: false}).catch(() => false);
     if ( !yes ) return null;
   }
+  // B5618: a fomor's Homogeneity takes dice from this power's roll (the next roll the window makes)
+  const dull = actor?.getFlag?.(MOD, "powerDulled");
+  if ( dull?.dice && actor.isOwner ) {
+    DULL = {dice: Number(dull.dice) || 0, at: Date.now()};
+    await actor.unsetFlag(MOD, "powerDulled");
+    ui.notifications?.info(`${actor.name}: ${dull.dice} dice fewer, dulled by ${dull.by ?? "a fomor"} (Homogeneity, W20 p. 434).`);
+  }
   const free = st.barred.length ? tg.filter(t => !st.barred.includes(t?.uuid)) : tg;
   if ( st.barred.length && st.ok ) ui.notifications?.info(`${st.why} Not on: ${tg.filter(t => st.barred.includes(t?.uuid)).map(t => t.name).join(", ")}.`);
   return {
@@ -111,6 +118,13 @@ export async function gate(actor, power, {targets = null} = {}) {
       if ( !failed ) await AFC.filed(actor, power, {targets: tg, successes}).catch(e => console.warn("WoDX | after-cost", e));
     }
   };
+}
+
+/** B5618: the dice Homogeneity takes from the roll that follows a gate (once, within half a minute). */
+let DULL = null;
+export function takeDull() {
+  const d = DULL; DULL = null;
+  return d && Date.now() - d.at < 30000 ? d.dice : 0;
 }
 
 /* ---------------- Drained (B4923) ---------------- */

@@ -49,6 +49,7 @@ import * as DXD from "./demon.js";
 import * as DR from "./demon-rules.js";
 import * as KXD from "./kote.js";
 import * as FOM from "./fomor.js";
+import * as FP from "./fomor-powers.js";
 import * as KER from "./kote-rules.js";
 import * as UXD from "./mummy.js";
 import * as UR from "./mummy-rules.js";
@@ -368,6 +369,7 @@ async function setDamage(actor, damage) { return updateActor(actor, healthUpdate
 
 async function rollPool(dice, difficulty, opts = {}) {
     const diff = R.clampDifficulty(difficulty);
+    dice = Math.max(0, dice - LIM.takeDull());
     let faces = [], roll = null;
     if (dice > 0) {
         roll = new Roll(`${dice}d10`);
@@ -552,9 +554,11 @@ function npcPowers(actor) {
     try { if (kind === "lupine" || actor.items.some(i => i.type === "Power" && /gift/i.test(i.system?.type ?? ""))) from.push(...gx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
     try { if (kind === "wraith" || kind === "spectre") from.push(...wx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
     try { if (kind === "hunter") from.push(...rx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
+    // B5617: fomor choose their own powers too
+    try { if (FOM.isFomor(actor)) from.push(...fmx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
     const bySlug = n => { for (const set of Object.keys(PK.LINE_KEYWORDS)) { const k = PK.keywordsOf(set, PK.slugOf(n)); if (k?.keywords?.length) return k; } return null; };
     return from.map(p => {
-        const kw = (p.id && PK.keywordsOf(p.set, p.id)) || bySlug(p.name) || { keywords: [] };
+        const kw = (p.keywords?.length ? { keywords: p.keywords } : null) || (p.id && PK.keywordsOf(p.set, p.id)) || bySlug(p.name) || { keywords: [] };
         const t = NPW.tagsOf(kw.keywords ?? []);
         const st = LIM.stateOf(actor, p, []);
         return { ...p, keywords: kw.keywords ?? [], uses: t.uses, obvious: t.obvious, free: st.ok, why: st.why };
@@ -569,7 +573,7 @@ async function autoPower(actor, pick, { target = null } = {}) {
     if (!actor || !pick?.use) return null;
     if (target) { for (const t of game.user.targets ?? []) t.setTarget(false, { releaseOthers: false }); target.setTarget?.(true, { releaseOthers: true, groupSelection: false }); }
     P.autoNext({ [pick.field]: pick.value });
-    const call = { useDiscipline: a => kx().useDiscipline(a), useGift: a => gx().useGift(a), useArcanos: a => wx().useArcanos(a), useEdge: a => rx().useEdge(a) }[pick.use];
+    const call = { useDiscipline: a => kx().useDiscipline(a), useGift: a => gx().useGift(a), useArcanos: a => wx().useArcanos(a), useEdge: a => rx().useEdge(a), useFomor: a => fmx().power(a) }[pick.use];
     return call ? call(actor) : null;
 }
 
@@ -2837,7 +2841,7 @@ function qx() {
 let FME = null;
 /** B5162: fomor powers (Numbing). */
 function fmx() {
-    return FME ??= FOM.build({ post, rollPool, rollBlock, attr, findAbility, spendWillpower, notify: m => ui.notifications.warn(m) });
+    return FME ??= FOM.build({ post, rollPool, rollBlock, dialog, attr, findAbility, spendWillpower, profile: a => P.detectProfile(a), notify: m => ui.notifications.warn(m) });
 }
 
 let GXE = null;
@@ -3246,7 +3250,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     innerVoice: withActor(a => vx().panel(a)), voices: () => vx().mine(), voiceRules: VR, voicePressure: a => vx().pressureOf(resolveActor(a)),
     voiceLive: a => vx().live(resolveActor(a)), voiceButton: b => vx().onChatButton(b), voiceSceneEnd: () => vx().onEndScene(), proposeVoice: (a, prop, note) => vx().propose(resolveActor(a), prop, note), imbue: withActor(a => rx().imbue(a)), reckoningRules: KRR,
     sinGod: withActor(a => hx().sin(a)), prayer: withActor(a => hx().prayer(a)), relic: withActor(a => hx().relic(a)), bankConviction: withActor(a => hx().cashIn(a)),
-    trueFaith: withActor(a => hx().trueFaith(a)), numina: withActor(a => hx().numina(a)), hedgeMagic: withActor(a => hx().hedgeMagic(a)), fomorPower: withActor(a => fmx().power(a)), fomor: { numbing: withActor(a => fmx().numbing(a)), powersOf: a => FOM.fomorPowersOf(resolveActor(a)), condition: FOM.NUMBING }, ghoulBlood: withActor(a => hx().ghoulBlood(a)), hunterLine: () => HX.lineNow(), hunterRules: HR };
+    trueFaith: withActor(a => hx().trueFaith(a)), numina: withActor(a => hx().numina(a)), hedgeMagic: withActor(a => hx().hedgeMagic(a)), fomorPower: withActor(a => fmx().power(a)), fomor: { numbing: withActor(a => fmx().numbing(a)), use: (a, key) => fmx().use(resolveActor(a), key), settle: a => FOM.settle(resolveActor(a)), powersOf: a => FOM.fomorPowersOf(resolveActor(a)), pools: a => FOM.pools(resolveActor(a)), soakOf: a => FOM.soakOf(a), immune: a => FOM.immune(a), taintHidden: a => FOM.taintHidden(a), condition: FOM.NUMBING, rules: FP }, ghoulBlood: withActor(a => hx().ghoulBlood(a)), hunterLine: () => HX.lineNow(), hunterRules: HR };
 
 Hooks.once("init", () => {
     registerSettings();

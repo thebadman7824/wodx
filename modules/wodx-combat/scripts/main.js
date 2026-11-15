@@ -416,6 +416,10 @@ function soakOpts(actor, profile) {
     if (profile === "demon") {
         try { return { formOn: !!game.wodxActions?.demonInfo?.(actor)?.formOn }; } catch (e) { return {}; }
     }
+    // B5619: a fomor's Armored Skin soaks lethal harm as bashing (W20 p. 430)
+    if (profile === "mortal") {
+        try { const f = game.wodxActions?.fomor?.soakOf?.(actor); return f?.lethalSoak ? { lethalSoak: true, lethalWhy: f.why } : {}; } catch (e) { return {}; }
+    }
     if (profile !== "fae") return {};
     try {
         const f = game.wodxActions?.faeSoak?.(actor);
