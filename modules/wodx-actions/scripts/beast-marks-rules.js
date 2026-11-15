@@ -21,9 +21,9 @@
  *                    blood. The book gives it as a rumour with no system: the trigger is the book's, the effect a house
  *                    rule (docs/PENDING-REVIEW.md).
  */
+import {CALENDAR_MONTH as MONTH, YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
-const YEAR = 365.25 * 86400, MONTH = YEAR / 12;
 
 /* ------------------------------------------------------------------ */
 /*  The Beast takes the token                                          */

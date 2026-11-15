@@ -25,8 +25,9 @@
  * years and house figures before; the rest are house figures by year, kept to Moravia's dates as the travel rules are:
  * bicycles from 1885, motor cars from 1900, motorcycles and motorboats from 1910, faster ones on the Future Darkness branch.
  */
+import {TURN_SECONDS} from "../../wodx-chronicle/scripts/terms.mjs";
+export {TURN_SECONDS};
 
-export const TURN_SECONDS = 3;
 export const FLAT_OUT = 3;
 export const EDGE_PER = 10;
 export const EDGE_MAX = 3;

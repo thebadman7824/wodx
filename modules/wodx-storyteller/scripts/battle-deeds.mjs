@@ -17,6 +17,7 @@
  *
  * The deed table, the posts and the pick are house rules; the rolls follow the usual V20 Attribute + Ability.
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const str = (v, max = 120) => String(v ?? "").trim().slice(0, max);
@@ -235,7 +236,7 @@ export function leaderDeed(side = {}, ageId = "feudal", {kind = null, seed = "",
 export function deedSuccessesFor(pool, difficulty = 6, rng = Math.random) {
   const dice = clamp(Math.round(n(pool)), 0, 30), diff = clamp(Math.round(n(difficulty)) || 6, 2, 10);
   const faces = Array.from({length: dice}, () => 1 + Math.floor(clamp(n(rng()), 0, 0.9999) * 10));
-  const hits = faces.filter(f => f >= diff).length, ones = faces.filter(f => f === 1).length;
+  const {raw: hits, ones} = TERMS.successes(faces, diff);
   return {successes: Math.max(0, hits - ones), botch: hits === 0 && ones > 0, faces, pool: dice};
 }
 

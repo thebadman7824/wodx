@@ -28,7 +28,7 @@ test("turning to spirit rises a step a lunar month and bites", () => {
 
 test("the lost come back from the Pattern Web; the dying who see the dead cross", () => {
   const c = src("modules/wodx-otherworlds/scripts/crossing.mjs");
-  assert.ok(/returnAt: now \+ lostDays\(\) \* 86400/.test(c));
+  assert.ok(/returnAt: now \+ lostDays\(\) \* DAY/.test(c));
   assert.ok(/export async function returnLost/.test(c) && /export async function dyingCross/.test(c));
   const m = src("modules/wodx-otherworlds/scripts/main.mjs");
   assert.ok(/returnLost\(\)/.test(m) && /registerDyingCross\(\)/.test(m));

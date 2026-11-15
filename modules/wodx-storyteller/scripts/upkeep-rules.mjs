@@ -10,8 +10,9 @@
  * Retainers, Allies, Contacts, Kinfolk, Mentor). How often each needs tending is a house rule; the Storyteller can
  * change it per tie.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY};
 
-export const DAY = 86400;
 
 /** Kinds of tie: label, default days between tendings, and what happens when it goes untended. */
 export const TIE_KINDS = {

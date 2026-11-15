@@ -18,8 +18,9 @@
  * nobody before 1892, blood says nothing of who until typing in 1901, and DNA arrives in 1986. Every figure is a house
  * reading; the dates are rounded history in WoDX's own words.
  */
+import {DAY, HOUR} from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY, HOUR};
 
-export const HOUR = 3600, DAY = 86400;
 export const TEST_DIFF = 7, SEARCH_DIFF = 7;
 const str = (v, n) => String(v ?? "").replace(/\s+/g, " ").trim().slice(0, n);
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);

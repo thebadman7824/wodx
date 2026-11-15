@@ -14,6 +14,7 @@
 import {MOD, esc, isActiveGM, chron, log, isPC} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as NM from "./npc-makers-rules.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const T_WONDER = `${MOD}.wonder`;
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -138,7 +139,7 @@ async function approve(entry) {
   const raw = T.rawTasks(a)?.[id];
   if ( !a || !raw ) return;
   const now = game.time?.worldTime ?? 0;
-  await a.update({[`flags.${MOD}.tasks.${id}`]: {...raw, approved: true, status: "open", waits: "", next: now + (num(raw.delay) || 0) * 86400 + 86400}});
+  await a.update({[`flags.${MOD}.tasks.${id}`]: {...raw, approved: true, status: "open", waits: "", next: now + (num(raw.delay) || 0) * DAY + DAY}});
   await tell(a, `The Storyteller agrees: ${raw.name} begins${num(raw.delay) ? ` with ${raw.delay} days of preparation` : ""}.`);
 }
 async function reject(entry) {

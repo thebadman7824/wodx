@@ -76,12 +76,14 @@ export const DAY_SLEEPERS = ["vampire"];
  * What the law does at a stage (law-heat-rules STAGES keys): "come" (the watch come to the culprit's scene) when Wanted (warrant) or a manhunt is
  * first reached; through a manhunt "patrol" each night, and "haven" by day for a day sleeper whose haven is known.
  */
-export function lawMove(stage, {crossed = false, line = "mortal", hour = 12, havenKnown = false} = {}) {
+export function lawMove(stage, {crossed = false, line = "mortal", hour = 12, havenKnown = false, night = null} = {}) {
   if ( stage !== "warrant" && stage !== "manhunt" ) return null;
   if ( crossed ) return "come";
   if ( stage !== "manhunt" ) return null;
-  if ( DAY_SLEEPERS.includes(line) && havenKnown && isDayHour(hour) ) return "haven";
-  if ( isNightHour(hour) ) return "patrol";
+  // B6185: night is the clock's (sunset to sunrise) when given; the set hours stand in when it is not
+  const dark = typeof night === "boolean" ? night : isNightHour(hour);
+  if ( DAY_SLEEPERS.includes(line) && havenKnown && !dark && isDayHour(hour) ) return "haven";
+  if ( dark ) return "patrol";
   return null;
 }
 /** One patrol a culprit a day: the day number a patrol last went out is kept, and this says if one is due. */

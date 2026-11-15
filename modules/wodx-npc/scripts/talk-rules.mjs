@@ -24,6 +24,7 @@
  */
 
 import {parseWhen} from "../../wodx-chronicle/scripts/when-rules.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** Asked of anyone, always on the menu. */
 export const LOCAL = {news: "News", rumours: "Rumours", work: "Work", directions: "Directions"};
@@ -191,7 +192,7 @@ export function greetFor(chain = [], check = null) {
  * time of their last call to this character (or null); now: world time; chance: 0 to 1; roll: 0 to 1. One call a
  * character a day of game time, and only if the roll comes under the chance. Returns true or false.
  */
-export const PASS_GAP = 86400;
+export const PASS_GAP = DAY;
 export function mayCallOut({last = null, now = 0, chance = 0.5, roll = 0} = {}) {
   if ( last !== null && last !== undefined && Number.isFinite(Number(last)) && now - Number(last) < PASS_GAP && now >= Number(last) ) return false;
   return Number(roll) < Math.max(0, Math.min(1, Number(chance) || 0));
@@ -417,7 +418,7 @@ export function smallTalk(small, keys = [], {seed = 0, feast = ""} = {}) {
 export function rememberOf(last, now) {
   const l = Number(last), n = Number(now);
   if ( !Number.isFinite(l) || !Number.isFinite(n) || n < l ) return null;
-  const days = (n - l) / 86400;
+  const days = (n - l) / DAY;
   return days <= 30 ? "soon" : days > 365 ? "long" : null;
 }
 

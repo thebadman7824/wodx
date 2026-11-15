@@ -24,6 +24,7 @@ import {countOf} from "../../wodx-chronicle/scripts/local-reckoning-rules.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Mood from "./mood.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-atmosphere";
 const VERSION = "0.17.0";
@@ -676,7 +677,7 @@ async function dreadCard(time, delta) {
   if ( !isActiveGM() || setting("dawnPressure") === false || !CAL || chron()?.isSkipping?.() ) return;
   const toDawn = CAL.secondsToNextDawn(time, latitude());
   if ( !K.dreadCuesCrossed(toDawn, delta).includes("cock") ) return;
-  const night = Math.floor((time + toDawn) / 86400);
+  const night = Math.floor((time + toDawn) / DAY);
   if ( dreadCarded === night ) return;
   dreadCarded = night;
   await ChatMessage.create({speaker: {alias: "The dawn"}, whisper: game.users.filter(u => u.isGM).map(u => u.id),

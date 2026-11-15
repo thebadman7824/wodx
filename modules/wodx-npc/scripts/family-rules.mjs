@@ -5,10 +5,11 @@
  * Nothing here ever describes anything sexual. A pregnancy is a state with a due date, and a birth is a roll and a card.
  * Who may have a child together is decided first by Chronicle's age floor (B3210) and by hearts-rules childOf.
  */
+import {CALENDAR_MONTH} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const GESTATION_MONTHS = 9;
 /** The average Gregorian month in seconds, for a due date on the world clock. */
-export const MONTH_SECONDS = 2629746;
+export const MONTH_SECONDS = CALENDAR_MONTH;
 export const dueAt = (start, months = GESTATION_MONTHS) => Number(start || 0) + Math.round(months * MONTH_SECONDS);
 
 /** Who attends a birth by default in a year: a midwife before 1850, a physician to 1930, a hospital after. */

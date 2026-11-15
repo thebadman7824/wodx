@@ -16,6 +16,8 @@
  */
 
 import {normPolitics, applyPolitics, POL_OPS, politicsBig, describePolitics, polityFor, innerTurn, POLITIES} from "./politics-rules.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const STATE_VERSION = 1;
 export const MAX_DOTS = 5;
@@ -277,10 +279,8 @@ export const holderOf = (state, placeId) => state.factions.find(f => f.places.in
 export const rollDice = (rand, n) => Array.from({length: Math.max(0, n)}, () => 1 + Math.floor(rand() * 10));
 /** Successes at a difficulty: each die at or above it, less one for each 1; a botch is no successes and a 1 (V20 p. 249). */
 export function successes(dice, difficulty) {
-  const diff = Math.max(2, Math.min(10, difficulty));
-  const hits = dice.filter(d => d >= diff).length, ones = dice.filter(d => d === 1).length;
-  const net = hits - ones;
-  return {net: Math.max(0, net), botch: hits === 0 && ones > 0, hits, ones};
+  const r = TERMS.successes(dice, difficulty);
+  return {net: r.net, botch: r.botch, hits: r.raw, ones: r.ones};
 }
 
 /* ------------------------------------------------------------------ */
@@ -671,7 +671,7 @@ export function applyChanges(state, changes, {ids = () => Math.random().toString
 export function turnsDue(last, now, {days = TURN_DAYS, cap = TURN_CAP} = {}) {
   if ( !Number.isFinite(now) ) return {due: 0, skipped: 0};
   if ( last === null || last === undefined || !Number.isFinite(last) ) return {due: 0, skipped: 0, start: now};
-  const span = days * 86400;
+  const span = days * DAY;
   const n = Math.max(0, Math.floor((now - last) / span));
   return {due: Math.min(n, cap), skipped: Math.max(0, n - cap), span};
 }
@@ -700,7 +700,7 @@ export function runTurn(state, {streamFor, seedKey, leaders = {}, places = [], p
       choice = {move: o.move, target: t?.id ?? null, sphere: o.sphere, place: o.place, goal: null};
       if ( MOVES[o.move].rival && !t ) choice = {...choice, move: "recruit", target: null};
       if ( o.move === "expand" && o.place && !t ) choice.target = holderOf(work, o.place)?.id ?? null;
-    } else choice = pickMove(work, f, rand, {turn, spheres, since: now - TURN_DAYS * 86400});
+    } else choice = pickMove(work, f, rand, {turn, spheres, since: now - TURN_DAYS * DAY});
     const r = resolveMove(work, f, choice, rand, leaders, {turn, places, spheres, rand2: streamFor(`${seedKey}:${f.id}:defence`)});
     if ( f.orders ) r.changes.push({op: "faction-set", faction: f.id, set: {orders: null}});
     r.size = sizeOf(r.changes, {pcActors, state: work});
@@ -843,11 +843,11 @@ function shuffle(rand, list) {
   return a;
 }
 /** Whole days of rumour due since the breach last spread, at most `cap`. */
-export const daysDue = (b, now, cap = 31) => (b.state === "live" ? Math.min(cap, Math.max(0, Math.floor((now - b.lastStep) / 86400))) : 0);
+export const daysDue = (b, now, cap = 31) => (b.state === "live" ? Math.min(cap, Math.max(0, Math.floor((now - b.lastStep) / DAY))) : 0);
 /** A week with nothing new to feed it, and a rumour the hunters have not heard loses a step of severity (WoDX reading). */
 export function fades(b, now) {
   if ( b.state !== "live" || b.stage >= 2 ) return false;
-  return now - b.lastFed >= 7 * 86400;
+  return now - b.lastFed >= 7 * DAY;
 }
 
 /**

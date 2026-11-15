@@ -1,0 +1,17 @@
+{
+ "diceCount|wodx-actions/scripts/wraith-rules.js": 2,
+ "diceCount|wodx-combat/scripts/powder-rules.js": 1,
+ "diceCount|wodx-interactables/scripts/interact-rules.mjs": 1,
+ "diceCount|wodx-npc/scripts/family-rules.mjs": 1,
+ "diceCount|wodx-npc/scripts/prowl.mjs": 1,
+ "diceCount|wodx-npc/scripts/settlement-rules.mjs": 1,
+ "diceCount|wodx-npc/scripts/wanted.mjs": 1,
+ "diceCount|wodx-otherworlds/scripts/realms.mjs": 1,
+ "diceCount|wodx-storyteller/scripts/contagion.mjs": 1,
+ "diceCount|wodx-storyteller/scripts/hardship.mjs": 1,
+ "diceCount|wodx-storyteller/scripts/hunt-follow.mjs": 1,
+ "diceCount|wodx-storyteller/scripts/naval-rules.mjs": 1,
+ "diceCount|wodx-storyteller/scripts/siege-works-rules.mjs": 1,
+ "diceCount|wodx-storyteller/scripts/tasks-rules.mjs": 1,
+ "nightHours|wodx-storyteller/scripts/reach-rules.mjs": 1
+}

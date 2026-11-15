@@ -66,6 +66,7 @@ import {setupChase} from "./chase.mjs";
 import {setupVehicleSheet, setLights} from "./vehicle-sheet.mjs";
 import * as VS from "./vehicle-sheet-rules.mjs";
 import {setupCase, registerCaseSettings, pinClue} from "./case.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
@@ -314,7 +315,7 @@ export function weaponsOf(actor) {
 export function yardsOn(scene, a, b) {
   const g = scene?.grid ?? canvas?.scene?.grid ?? {};
   const size = num(g.size) || 100, dist = num(g.distance) || 5, units = String(g.units ?? "ft");
-  const per = /m|meter|metre|yd|yard/i.test(units) ? dist : dist / 3;
+  const per = TERMS.toYards(dist, units);
   return Math.hypot(num(a?.x) - num(b?.x), num(a?.y) - num(b?.y)) / size * per;
 }
 const reachPx = scene => (num(scene?.grid?.size) || canvas?.grid?.size || 100) * (0.5 + (num(setting("reach")) || 1));
@@ -877,7 +878,7 @@ const yardsBetween = (a, b) => {
   try {
     const units = canvas.scene?.grid?.units ?? "ft";
     const d = canvas.grid.measurePath([a, b]).distance;
-    return /m|meter|metre|yd|yard/i.test(units) ? d : d / 3;
+    return TERMS.toYards(d, units);
   } catch (e) { return Math.hypot(a.x - b.x, a.y - b.y) / (canvas.grid?.size ?? 100) * 1.67; }
 };
 const soundWalls = (a, b) => {

@@ -93,6 +93,7 @@ import * as SVA from "./servant-actions.js";
 import * as DR_DEBTS from "./debts-rules.js";
 import * as DR_BEAST from "./beast-marks-rules.js";
 import * as NAT from "./nature-rules.js";
+import {DAY, TURN_SECONDS} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const SOCKET = `module.${MOD}`;
@@ -1396,7 +1397,7 @@ export async function autoTorporRise({ actor: a } = {}) {
     if (hide) AUTO_HIDE.add(actor.id);
     try {
         if (b.value < 1) {
-            await setFlag(actor, "torpor", { ...t, retryAt: game.time.worldTime + 86400 });
+            await setFlag(actor, "torpor", { ...t, retryAt: game.time.worldTime + DAY });
             return post(actor, `${actor.name} cannot rise`, `<div class="vta-big bad">No blood in the body: no rising until someone feeds them.</div>`);
         }
         await changeBlood(actor, -1);
@@ -1408,7 +1409,7 @@ export async function autoTorporRise({ actor: a } = {}) {
             await dm().wake(actor, t?.since);
             html += `<div class="vta-big good">${esc(actor.name)} rises: Crippled; heal or hunt at once.</div>`;
         } else {
-            await setFlag(actor, "torpor", { ...t, retryAt: game.time.worldTime + 86400 });
+            await setFlag(actor, "torpor", { ...t, retryAt: game.time.worldTime + DAY });
             html += `<div class="vta-big bad">${esc(actor.name)} sleeps on. The next night brings another try.</div>`;
         }
         return post(actor, `${actor.name} tries to rise from torpor`, html, [r.roll]);
@@ -1432,7 +1433,7 @@ export async function endFrenzy({ actor: a } = {}) {
  * The Thrall of the Wyrm ends when the Garou is Incapacitated or the fight is over (the Wyrm creature gone).
  * Ending a frenzy by hand stays. House reading of V20 p. 298 and W20 p. 262. */
 const knockedOut = a => { const d = a?.system?.health?.damage ?? {}; return /incapac/i.test(String(d.woundlevel ?? "")) || (num(d.bashing) + num(d.lethal) + num(d.aggravated)) >= 7; };
-const FRENZY_TURN = 3;
+const FRENZY_TURN = TURN_SECONDS;
 async function markBotch(actor, fear, diff) {
     await setFlag(actor, "frenzyBotch", { scene: actor.getActiveTokens?.()[0]?.document?.parent?.id ?? canvas?.scene?.id ?? null, combat: game.combat?.id ?? null, fear: !!fear, diff: R.clampDifficulty(num(diff) || 6), over: false, last: 0 });
 }
@@ -2362,7 +2363,7 @@ export async function torpor({ actor: a } = {}) {
     const actor = needActor(a);
     if (!actor) return;
     const rd = road(actor), t = flag(actor, "torpor"), tl = R.torporLength(rd.value), b = blood(actor);
-    const elapsed = t ? Math.floor((game.time.worldTime - (t.since ?? 0)) / 86400) : 0;
+    const elapsed = t ? Math.floor((game.time.worldTime - (t.since ?? 0)) / DAY) : 0;
     const content = `<form>
       <p>${esc(actor.name)}: ${esc(rd.name)} ${rd.value}: torpor lasts <b>${tl.text}</b>. Blood ${b.value}.</p>
       ${t ? `<p>In ${t.voluntary ? "voluntary " : ""}torpor since ${elapsed} day(s) of game time ago (minimum ${t.voluntary ? Math.ceil(t.days / 2) : t.days} days).</p>` : ""}
@@ -2443,7 +2444,14 @@ async function natureCard(list) {
         [], { kind: "natureScene", natures: rows.map(a => a.uuid) });
 }
 
-export async function endScene({ actors, fromChronicle = false } = {}) {
+export async function endScene({ actors, fromChronicle = false, map = false } = {}) {
+    // B6190: the Storyteller's End scene is the Chronicle's, so every module's scene ends at once (the scene count,
+    // effect areas, banality, Delirium); the Chronicle then calls back here for the characters
+    if (!fromChronicle && game.user.isGM && chronicle()?.endScene) {
+        await chronicle().endScene();
+        if (actors || canvas.tokens.controlled.length) return endScene({ actors: actors ?? canvas.tokens.controlled.map(t => t.actor), fromChronicle: true });
+        return null;
+    }
     const list = actors ?? (canvas.tokens.controlled.length ? canvas.tokens.controlled.map(t => t.actor) : game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner && a.isOwner));
     if (!fromChronicle && game.user.isGM) await wx().newScene({ quiet: true }); // Passions can be tapped again; Hysteria ends
     const lines = [];
@@ -2468,7 +2476,8 @@ export async function endScene({ actors, fromChronicle = false } = {}) {
         if (flag(actor, "daytime")) { await actor.unsetFlag(MOD, "daytime"); bits.push("daytime activity ends"); }
         if (bits.length) lines.push(`<li><b>${esc(actor.name)}</b>: ${bits.join(", ")}</li>`);
     }
-    await natureCard(list);
+    // A new map is a new scene too, but the Nature card waits for the Storyteller's own End scene (no card per map)
+    if (!map) await natureCard(list);
     if (fromChronicle && !lines.length) return null;
     return post(null, "End of scene", lines.length ? `<ul>${lines.join("")}</ul>` : "<p>Nothing to clear.</p>");
 }
@@ -3405,9 +3414,11 @@ Hooks.once("ready", async () => {
     Hooks.on("wodxAttackRolled", (attacker, d) => { svx().onAttack(attacker, d ?? {}).catch(e => console.error("WoDX | oaths", e)); });
     Hooks.on("wodxEffectApplied", (item, rec, by) => { svx().onEffect(item, rec, by).catch(e => console.error("WoDX | consorts", e)); });
     // B3556: the end of a scene counts everyday Banality for the changelings on it
-    Hooks.on("wodxEndScene", () => { if (game.user.isGM && game.users.activeGM?.id === game.user.id) blx().endScene(canvas?.scene).catch(e => console.error("WoDX | banality", e)); });
-    Hooks.on("wodxEndScene", () => {
-        if (game.user.isGM && game.users.activeGM?.id === game.user.id) endScene({ actors: game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner), fromChronicle: true }).catch(e => console.error("WoDX |", e));
+    // B6190: the scene that ended (a new map passes the old one), not just the map the Storyteller is looking at
+    const endedScene = o => game.scenes?.get?.(o?.sceneId) ?? canvas?.scene ?? null;
+    Hooks.on("wodxEndScene", (o = {}) => { if (game.user.isGM && game.users.activeGM?.id === game.user.id) blx().endScene(endedScene(o)).catch(e => console.error("WoDX | banality", e)); });
+    Hooks.on("wodxEndScene", (o = {}) => {
+        if (game.user.isGM && game.users.activeGM?.id === game.user.id) endScene({ actors: game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner), fromChronicle: true, map: !!o?.map }).catch(e => console.error("WoDX |", e));
     });
     if (game.system.id !== "worldofdarkness") console.warn(`${MOD} | designed for the worldofdarkness system (found ${game.system.id}).`);
     game.socket.on(SOCKET, onSocket);
@@ -3557,9 +3568,10 @@ function kindredHooks() {
         if (options?.wodxBloodBefore !== undefined) kx().onBlood(actor, options.wodxBloodBefore, num(actor.system?.advantages?.bloodpool?.temporary)).catch(e => console.error("WoDX |", e));
     });
     // A new scene: the Delirium can strike the same witnesses again
-    Hooks.on("wodxEndScene", () => { if (game.user.isGM && canvas.scene?.getFlag?.(MOD, "delirium")) canvas.scene.unsetFlag(MOD, "delirium").catch(() => {}); });
+    const sceneEnded = o => game.scenes?.get?.(o?.sceneId) ?? canvas.scene ?? null;
+    Hooks.on("wodxEndScene", (o = {}) => { const s = sceneEnded(o); if (game.user.isGM && s?.getFlag?.(MOD, "delirium")) s.unsetFlag(MOD, "delirium").catch(() => {}); });
     // and a Kindred's marks can be seen again (3.67.0)
-    Hooks.on("wodxEndScene", () => { if (game.user.isGM && canvas.scene?.getFlag?.(MOD, "marksSeen")) canvas.scene.unsetFlag(MOD, "marksSeen").catch(() => {}); });
+    Hooks.on("wodxEndScene", (o = {}) => { const s = sceneEnded(o); if (game.user.isGM && s?.getFlag?.(MOD, "marksSeen")) s.unsetFlag(MOD, "marksSeen").catch(() => {}); });
     Hooks.on("wodxDamageApplied", (actor, info) => kx().onDamage(actor, { ...info, source: "combat" }).catch(e => console.error("WoDX |", e)));
     // A blow from a vampire marks the target as fought, for the bloodlines whose blood must be taken by force (3.41.0)
     Hooks.on("wodxDamageApplied", async (actor, info) => {

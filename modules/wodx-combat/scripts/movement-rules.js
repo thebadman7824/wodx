@@ -13,6 +13,7 @@
  * as stances, the mounted charge of V20 Dark Ages p. 399 read for a map), and a load that slows a swimmer (worn
  * armor and what is carried; house rules B2440-B2444).
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** The ways a token moves. Foundry's own movement actions where they exist; "phase" is WoDX's. */
 export const MODES = {
@@ -159,12 +160,8 @@ export function speedFor(mode, base = {walk: 7, jog: 14, run: 26}, ab = {}, {ath
 
 /** Scene distance units → feet (elevation is in the scene's units). */
 export function toFeet(distance, units = "ft") {
-  const u = String(units ?? "").toLowerCase().trim(), d = Number(distance) || 0;
-  if ( ["ft", "feet", "foot", "'"].includes(u) ) return d;
-  if ( ["yd", "yard", "yards", "m", "meter", "meters", "metre", "metres", ""].includes(u) ) return d * 3;
-  if ( ["mi", "mile", "miles"].includes(u) ) return d * 5280;
-  if ( u === "km" ) return d * 3280;
-  return d;
+  // B6186: the shared conversion (terms.mjs)
+  return TERMS.toFeet(distance, units);
 }
 /** Falling (VtDA20 p. 355, as WoDX Actions rules.js): 1 die of bashing per 10 feet; 100 feet or more is 10 dice lethal, armor half. */
 export function fallingDamage(feet) {

@@ -20,6 +20,7 @@
  * the fact's own words (a rumour, a feast, a name). #they# #them# #their# #theirs# #themself# #theyre# #theyve#
  * are always they, them and so on, so generated text stays gender-neutral.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** Era bands, as stock talk (data/stock-talk.mjs) has them. */
 export const BANDS = ["medieval", "earlymodern", "nineteenth", "twentieth", "modern", "future"];
@@ -197,7 +198,6 @@ export function factsFromSides(sides = [], keys = []) {
   return out;
 }
 
-const DAY = 86400;
 /**
  * The mood an NPC talks in (B1644). The Storyteller's choice wins; else a place in alarm makes them afraid, wounds make
  * them hurt, a fight with this character in the last day or a fall in regard makes them angry, a wary place makes them

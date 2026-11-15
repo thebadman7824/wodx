@@ -9,6 +9,7 @@ import {propose, PATH_LABEL} from "./advance-rules.mjs";
 import {SWITCHES, DRIFT} from "../data/advance.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {writeLogPage} from "./xp.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;");
 
 const ACT = "wodx-actions";
@@ -133,7 +134,7 @@ async function driftRolls(actor, rolls) {
   for ( let k = 0; k < rolls; k++ ) {
     const r = await new Roll(`${dice}d10`).evaluate();
     const faces = r.dice?.[0]?.results?.map(x => x.result) ?? [];
-    const net = faces.filter(f => f >= DRIFT.difficulty).length - faces.filter(f => f === 1).length;
+    const net = TERMS.margin(faces, DRIFT.difficulty);
     if ( net <= 0 ) lost++;
   }
   return lost;

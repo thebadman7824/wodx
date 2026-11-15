@@ -15,9 +15,9 @@
  */
 import * as TRR from "./trust-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
-const DAY = 86400;
 const st = () => (game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null);
 const api = () => game.modules.get(MOD).api;
 const isActiveGM = () => game.user?.isGM && game.users.activeGM?.id === game.user.id;

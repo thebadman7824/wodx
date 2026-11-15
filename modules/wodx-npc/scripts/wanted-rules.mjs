@@ -14,9 +14,9 @@
  * description of a foreigner fades half as slowly again, and a change of clothes does not break it while they still
  * dress as foreigners; blending into a crowd (Stealth or Subterfuge) is one harder for them. Dress of the place ends it.
  */
+import {DAY, HOUR} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
-const HOUR = 3600, DAY = 86400;
 
 /**
  * How word of a culprit gets round, by year. town: hours until every place in town has heard; fade: days until it is

@@ -1628,3 +1628,8 @@ Ben approved every entry that was waiting for review ("Approve on all pending re
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-15 | Shared terms: how long is "a month" and "a year" in rules that count time? | A month 30 days, a year 365.25 days, a lunar month 29.530588853 days; a pregnancy counts calendar months (a twelfth of a year) (B6181) | MONTH, YEAR, CALENDAR_MONTH in modules/wodx-chronicle/scripts/terms.mjs |
+| 2026-11-15 | Shared terms: does a metre count as a yard? | Yes, as the books have it ("yards or meters", V20 pdf 290), in every module; Targeting and two Actions and Interactables spots counted exact metres (B6186) | unitsPerYard in terms.mjs (set m to 0.9144 for exact metres everywhere) |
+| 2026-11-15 | Shared terms: does a new active map end the scene for every module? | Yes (a scene is play in one place, V20 pdf 262); the Nature card and the release of a convened scene still wait for the Storyteller's own End the scene (B6190) | onSceneChange in wodx-chronicle/scripts/timed.mjs |
+| 2026-11-15 | Shared terms: when does a vampire's Road convert on a time skip? | When the era profile leaves the Dark Ages rules (into the Victorian Age), the same step as the Dark Ages Abilities, since the profiles play the Renaissance and the Age of Reason by Roads (B6192) | DA_ERAS in wodx-creation/data/advance.mjs |
+| 2026-11-15 | Shared terms: is night set hours or the sun? | The sun for the date and the scene's own place, everywhere a module reads night for play (passers-by, manhunt patrols, day sleep, night-long effects) (B6185) | herdCrowd and lawMove accept an hour again |

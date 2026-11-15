@@ -10,6 +10,8 @@
 import {GROUPS, KITS, KIT_WORKSHOP, FAMILIES, BOOKS, METHODS, WORDS, RAW, FACTORY, FACTORY_PRINTER, PART_CHOICES, SALVAGE, NOT_APART, APART_TOOLS, APART_QUALITIES} from "../data/recipes.mjs";
 import {substanceOf} from "./use-rules.mjs";
 import {inUseAt} from "../data/goods-ways.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export {GROUPS, KITS, FAMILIES, METHODS, PART_CHOICES, SALVAGE};
 
@@ -198,7 +200,7 @@ export function taskFor(recipe, {batch = 1, ability = "crafts", diff = recipe.di
 export const waitingName = (makes, word) => `${makes} (${word || "standing"})`;
 /** How long is left, for the item and the window: "4 days", "about 3 months". */
 export function leftLine(seconds) {
-  const d = Math.max(0, Math.ceil((Number(seconds) || 0) / 86400));
+  const d = Math.max(0, Math.ceil((Number(seconds) || 0) / DAY));
   if ( d <= 1 ) return "less than a day";
   if ( d < 60 ) return `${d} days`;
   return `about ${Math.round(d / 30)} months`;
@@ -248,8 +250,8 @@ export function apartTool(tool = "any", carried = [], qualitiesOf = null) {
 
 /** V20 successes: each die at or over the difficulty, less one for each 1; a botch is ones and no successes. */
 export function successes(faces = [], diff = 6) {
-  const hits = faces.filter(f => f >= diff).length, ones = faces.filter(f => f === 1).length;
-  return {successes: Math.max(0, hits - ones), botch: hits === 0 && ones > 0};
+  const r = TERMS.successes(faces, diff);
+  return {successes: r.successes, botch: r.botch};
 }
 
 const cap = s => String(s ?? "").replace(/^./, c => c.toUpperCase());

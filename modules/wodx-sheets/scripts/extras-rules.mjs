@@ -8,6 +8,7 @@
  * the item carries them (else they come from the gear and goods lists by name). A container is an item with the
  * system's own system.iscontainer switch on.
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const MOD = "wodx-sheets";
 
@@ -102,7 +103,7 @@ export function canPut(item, box, items = [], good = null) {
 /* -------------------------------------------------------------- */
 
 /** Eras that carry another's goods (as Library's ERA_LIKE). */
-export const ERA_LIKE = {"time-of-future-judgement": "future-darkness", "age-of-reason": "renaissance", "mid-century": "great-war"};
+export const ERA_LIKE = TERMS.ERA_LIKE;
 
 /**
  * Where an item stands in the chronicle's time: "ok", "early" (not made yet), "late" (no longer in use) or null when

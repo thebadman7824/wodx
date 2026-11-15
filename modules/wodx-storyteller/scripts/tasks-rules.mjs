@@ -6,11 +6,9 @@
  * an interval of game time passes. Successes add up until the goal is reached; a botch loses them all, and in a
  * delicate task it ruins the work.
  */
+import {DAY, HOUR, MONTH, WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY, HOUR, MONTH, WEEK};
 
-export const HOUR = 3600;
-export const DAY = 24 * HOUR;
-export const WEEK = 7 * DAY;
-export const MONTH = 30 * DAY;
 export const INTERVALS = {hour: {label: "Each hour", s: HOUR}, day: {label: "Each night or day", s: DAY},
   week: {label: "Each week", s: WEEK}, month: {label: "Each month", s: MONTH}};
 /** Rolls made in one clock change; more wait for the next change. */

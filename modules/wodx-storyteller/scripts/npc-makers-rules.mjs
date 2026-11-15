@@ -5,7 +5,8 @@
  * whose crafting switch is on (WoDX Library's wonder kits). A few of them, picked by chance, start one piece of work
  * as a long task, as a player would but with no approval card; the finished task puts the item on their sheet.
  */
-export const MONTH = 30 * 86400;
+import {MONTH} from "../../wodx-chronicle/scripts/terms.mjs";
+export {MONTH};
 /** At most this many NPCs start work in one month, so a large world is not flooded. */
 export const PER_MONTH = 3;
 /** The chance that one able NPC starts work in a month. */

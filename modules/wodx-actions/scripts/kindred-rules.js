@@ -6,6 +6,7 @@
  * Sources: V20 Dark Ages (VtDA20). Mortal healing p. 352; torpor p. 350; frenzy p. 357; Roads pp. 110–145;
  * Disciplines pp. 188–316. Anything marked [WoDX] is a convenience or a reading of the rules, not printed text.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
 
@@ -133,7 +134,7 @@ export function discDuration(code, successes = 1) {
         case "turn": return { kind: "rounds", rounds: 1 };
         case "turns": return { kind: "rounds", rounds: s };
         case "night": return { kind: "night" };
-        case "nights": case "days": return { kind: "time", seconds: 86400 * s };
+        case "nights": case "days": return { kind: "time", seconds: DAY * s };
         default: return null;
     }
 }
@@ -204,7 +205,7 @@ export function roadVirtues(found) {
 /*  Natural healing over time (mortals p. 352; shapechangers)          */
 /* ------------------------------------------------------------------ */
 
-const H = 3600, D = 86400;
+const H = 3600, D = DAY;
 /** Seconds to heal the worst level, by its place on the track (1 Bruised … 7 Incapacitated). */
 export const MORTAL_HEAL = {
     bashing: [H, H, H, H, 3 * H, 6 * H, 12 * H],

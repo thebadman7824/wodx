@@ -12,6 +12,7 @@ import * as AG from "./animal-ghoul-rules.mjs";
 import * as AK from "./animal-keepers-rules.mjs";
 import {makeBeast} from "./animal-stock.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const REACH = 1.5;
 const storyteller = () => game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller").api : null;
@@ -189,7 +190,7 @@ let lastDay = -1;
 export function registerAnimalKeepers() {
   Hooks.on("wodxTaskDone", e => { onTaskDone(e).catch(err => console.error(`${MODULE_ID} | fleshcraft`, err)); });
   Hooks.on("updateWorldTime", () => {
-    const day = Math.floor((game.time?.worldTime ?? 0) / 86400);
+    const day = Math.floor((game.time?.worldTime ?? 0) / DAY);
     if ( day === lastDay ) return;
     lastDay = day;
     kennelTick().catch(e => console.error(`${MODULE_ID} | kennel`, e));
