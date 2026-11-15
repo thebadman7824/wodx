@@ -105,7 +105,7 @@ export async function run() {
       await FX().undoCard(card);
       await sleep(400);
       const p = fac("gateCourt").politics;
-      ok("5. Undo puts the politics back as after the first turn", JSON.stringify(p) === JSON.stringify(afterFirst), {now: p, then: afterFirst});
+      ok("5. Undo puts the politics back as after the first turn", sameState(p, afterFirst), {now: p, then: afterFirst});
     });
 
     await step("6. a broken boon", async () => {
@@ -162,3 +162,6 @@ export async function run() {
 }
 
 import {newestMessage} from "./kit.mjs";
+/** The same politics, whatever order the keys came back in (a favour map once came back reordered). */
+const sortKeys = v => Array.isArray(v) ? v.map(sortKeys) : v && typeof v === "object" ? Object.fromEntries(Object.keys(v).sort().map(k => [k, sortKeys(v[k])])) : v;
+const sameState = (a, b) => JSON.stringify(sortKeys(a)) === JSON.stringify(sortKeys(b));
