@@ -1,4 +1,5 @@
 import * as RR from "./rumour-rules.mjs";
+import * as Reach from "./reach-rules.mjs";
 import * as T from "./tale-rules.mjs";
 import * as Media from "../../wodx-chronicle/scripts/media-rules.mjs";
 import {MOD, esc, chron, npc, isActiveGM, isPC, setting, mutate} from "./core.mjs";
@@ -139,13 +140,17 @@ export function tick({force = false, once = null} = {}) {
     const moved = [];
     const year = yearNow(), future = futureOn(), region = homeNow(), twist = setting("rumourGarble") ? Media.TWIST_CHANCE : 0;
     const taleTwist = setting("tales") !== false ? Media.TWIST_CHANCE : twist;
+    let speed = 1;
+    try { speed = Reach.veilMoves(Reach.veilBand(game.modules.get(MOD)?.api?.ledger?.state?.()?.veil?.value ?? 10)).rumourSpeed; } catch (e) { speed = 1; }
     await mutate("rumours", cur => {
       const list = RR.normRumours(cur).map(r => {
         if ( once && r.id !== once ) return r;
         const nights = once ? [(r.night ?? at.jdn) + 1] : RR.nightsDue(r, at.jdn);
         let x = r;
-        for ( const n of nights ) {
-          const {rumour, heard} = RR.spreadNight(x, net, rand(`rumour:${r.id}:${n}`), {heat: RR.heatAfterDoubt(Media.rumourHeat(year, {big: r.big, future, region}), x.doubt),
+        // B4866: with the Veil torn, big talk goes round twice a night
+        const reps = r.big ? speed : 1;
+        for ( const n of nights.flatMap(v => Array(reps).fill(v)) ) {
+          const {rumour, heard} = RR.spreadNight(x, net, rand(`rumour:${r.id}:${n}:${x.log?.length ?? 0}`), {heat: RR.heatAfterDoubt(Media.rumourHeat(year, {big: r.big, future, region}), x.doubt),
             twist: x.tale ? taleTwist : twist, leanings: x.tale ? leaningsFor(x) : {}});
           x = {...rumour, night: once ? r.night : n, log: [...rumour.log, ...(heard.length ? [{night: n, heard: heard.length, label: once ? "by hand" : ""}] : [])].slice(-40)};
           if ( heard.length ) moved.push(r.id);

@@ -88,8 +88,21 @@ async function choose(to) {
 export function registerAutomationSettings() {
   game.settings.register(MODULE_ID, "automationLevel", {scope: "world", config: false, type: String, default: "handsOn"});
   game.settings.register(MODULE_ID, "automationBase", {scope: "world", config: false, type: Object, default: {}});
+  game.settings.register(MODULE_ID, "automationSeeded", {scope: "world", config: false, type: Boolean, default: false});
+}
+
+/** B4860: a world that never had a level starts at Balanced, once (never the Live world). */
+export async function seedLevel() {
+  if ( !isActiveGM() ) return null;
+  const to = AR.seedPlan({worldId: game.world?.id, seeded: setting("automationSeeded") === true, level: level(),
+    base: setting("automationBase") ?? {}, solo: soloOn()});
+  // While the Lone Chronicle is on it sets everything; the start level waits for the switch to go off.
+  if ( !soloOn() && !AR.NEVER_SEED.includes(game.world?.id) ) await setSetting("automationSeeded", true);
+  if ( !to ) return null;
+  return setLevel(to);
 }
 
 export function initAutomation() {
   approvals.setLevelUI(picker, choose);
+  setTimeout(() => seedLevel().catch(e => console.warn("WoDX | start level", e)), 1500);
 }

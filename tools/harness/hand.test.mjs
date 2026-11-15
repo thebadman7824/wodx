@@ -201,7 +201,7 @@ test("runtime: absent tonight is set, logged and cleared when the session ends",
   B.registerBetweenSettings();
   await B.setAbsent("u1", true, {runBy: "st"});
   assert.deepEqual(Core.absentIds(), ["u1"]);
-  assert.match(Core.entries()[0].text, /Ana is away tonight; the Storyteller plays/);
+  assert.match(Core.entries()[0].text, /Ana is away tonight; their character goes along with the party/);
   await Core.endSession({factions: false});
   assert.deepEqual(Core.absentIds(), []);
 });
