@@ -18,12 +18,15 @@
  *    9b. the panel (0.2.0) is open on the player's screen with its five buttons
  *    9c. Pause and Go on from the panel: the seat pauses the game and starts it again
  *    9d. Lift the curtain: the seat sends tonight's log and marks the night as seen
+ *    9e. Storyteller tools (B4800): the player switches them on from the panel, sees the Storyteller's cards, gives
+ *        the character the gate's item and 3 experience, opens Check the systems and What is hidden here, and switches them off
  *   "finish" (Gamemaster Test):
  *    10. a fight between the character and the stranger: the character's turn is ended as a player would, and the
  *        stranger must then act with nobody at the Storyteller's hand
  *   10b. Let time pass (0.2.0): ten minutes pass in one step and the player is told; the clock is put back in 13
  *   10c. I am stuck, free my token: the character's token goes to the scene's way in
  *   10d. the switch sets fights to end by themselves
+ *   10e. the tools stay safe: a Storyteller's ask is refused, they are off after the player's run, two players block them
  *    11. the stall report holds what waited
  *    12. the switch off: every setting and the standing approvals are back exactly as they were
  *    13. clean up; the clock has not moved
@@ -95,6 +98,10 @@ async function setup() {
     {...(await pc.getTokenDocument({x: 4 * G, y: 4 * G})).toObject(), actorLink: true, disposition: CONST.TOKEN_DISPOSITIONS.FRIENDLY},
     {...(await foe.getTokenDocument({x: 6 * G, y: 4 * G})).toObject(), disposition: CONST.TOKEN_DISPOSITIONS.HOSTILE}]);
   ids.tokens = toks.map(t => t.id);
+  // An item in the world for the Storyteller tools to give (9e)
+  const trial = await Item.create({name: `${TAG} trial item`, type: "Feature", system: {}});
+  ids.items = [trial.id];
+  ids.stBefore = foundry.utils.deepClone(read(MOD, "st") ?? null);
   // The player plays the gate's character for the run, so the panel's asks never reach a real testbed character
   ids.userCharacter = user.character?.id ?? null;
   await user.update({character: pc.id});
@@ -109,7 +116,9 @@ async function setup() {
     const now = R.PRESET.map(p => ({key: `${p.mod}.${p.key}`, value: read(p.mod, p.key), to: p.to}));
     const wrong = now.filter(n => n.value !== undefined && n.value !== n.to), missing = now.filter(n => n.value === undefined).map(n => n.key);
     const auto = read(CHRON, "autoApprove") ?? {};
-    const notAuto = Q().types().map(t => t.type).filter(t => t !== "request" && auto[t] !== true);
+    // A player's own ruling always waits (Chronicle's NEVER_AUTO, B3521), so those are not expected on sight
+    const never = (await import("/modules/wodx-chronicle/scripts/approvals-rules.mjs").catch(() => ({}))).NEVER_AUTO ?? ["request"];
+    const notAuto = Q().types().map(t => t.type).filter(t => !never.includes(t) && auto[t] !== true);
     ok("2. the switch", S().isOn() && S().isSeat() && !wrong.length && !notAuto.length && !game.paused, {wrong, missing, notAuto, kinds: Q().types().length, paused: game.paused});
   });
 
@@ -184,7 +193,9 @@ async function player(ids) {
     if ( !opened ) { await S()?.panel?.open?.(); opened = await until(() => foundry.applications.instances?.get?.("wodx-solo-panel")?.rendered, 3000); }
     const el = foundry.applications.instances?.get?.("wodx-solo-panel")?.element;
     const buttons = [...(el?.querySelectorAll?.("button[data-action=act]") ?? [])].map(b => b.dataset.id);
-    ok("9b. the panel", opened && byItself && buttons.length === 5, {byItself, buttons, minVersion: atLeast(MOD, "0.2.0")});
+    // The main button (B2831) and the five under More
+    const want = ["next", ...(S()?.rules?.PANEL ?? []).map(b => b.id)];
+    ok("9b. the panel", opened && byItself && want.every(id => buttons.includes(id)) && buttons.length === want.length, {byItself, buttons, want, minVersion: atLeast(MOD, "0.2.0")});
   });
   await step("9c. pause from the panel", async () => {
     const was = game.paused;
@@ -203,6 +214,44 @@ async function player(ids) {
     await app?.close?.();
     const seen = await until(() => (game.settings.get(MOD, "seen") ?? []).length > 0, 4000);
     ok("9d. the curtain", shown && seen, {rows, seen});
+  });
+  await step("9e. Storyteller tools", async () => {
+    // B4800-B4805: the lone player switches the tools on from the panel; every tool is answered by the seat
+    const api = S();
+    if ( !api?.st ) return ok("9e. Storyteller tools", false, {error: "no Storyteller tools in this version"});
+    const panel = () => foundry.applications.instances?.get?.("wodx-solo-panel")?.element;
+    const toggleShown = !!panel()?.querySelector?.("button[data-action=sttoggle]");
+    api.panel.ask("ask.st.toggle", {to: true});
+    const on = await until(() => api.st.usable(game.user.id), 8000);
+    const tools = await until(() => (panel()?.querySelectorAll?.("button[data-action=st]")?.length ?? 0) === (api.rules.ST_TOOLS?.length ?? 4), 4000);
+    // The Storyteller's cards: the gate's own cards from the setup, sent by the seat
+    api.st.open("eyes");
+    const eyes = await until(() => api.st.cards().length > 0, 8000);
+    const eyesWin = await until(() => !!foundry.applications.instances?.get?.("wodx-solo-eyes")?.element?.querySelector?.("li.wsolo-eye"), 4000);
+    await foundry.applications.instances?.get?.("wodx-solo-eyes")?.close?.();
+    // Give an item: found by name and made on the character's sheet
+    const me = game.users.get(game.user.id).character;
+    api.panel.ask("ask.st.give", {uuid: `Item.${ids.items[0]}`});
+    const given = await until(() => me?.items?.some?.(i => i.name === `${TAG} trial item` && i.flags?.[MOD]?.granted), 8000);
+    // Add experience (B4806): an award on the character's sheet, through WoDX Creation
+    const xpWas = me?.items?.filter?.(i => i.type === "Experience").length ?? 0;
+    const hasXp = (api.rules.ST_TOOLS ?? []).some(t => t.id === "xp");
+    if ( hasXp ) api.panel.ask("ask.st.xp", {amount: 3, note: `${TAG} experience`});
+    const xpGiven = !hasXp || await until(() => me?.items?.some?.(i => i.type === "Experience" && i.name === `${TAG} experience` && Number(i.system?.amount) === 3), 8000);
+    // Check the systems and What is hidden here open as windows on the player's screen
+    const win = re => [...(foundry.applications.instances?.values?.() ?? [])].find(a => a.rendered && re.test(a.title ?? a.options?.window?.title ?? ""));
+    api.st.open("check");
+    const check = await until(() => !!win(/Check the systems/)?.element?.querySelector?.("table.wsolo-curtain tbody tr"), 8000);
+    const checkRows = win(/Check the systems/)?.element?.querySelectorAll?.("tbody tr")?.length ?? 0;
+    await win(/Check the systems/)?.close?.();
+    api.st.open("hidden");
+    const hid = await until(() => !!win(/Hidden on|What is hidden/), 8000);
+    await win(/Hidden on|What is hidden/)?.close?.();
+    // Off again from the panel
+    api.panel.ask("ask.st.toggle", {to: false});
+    const off = await until(() => !api.st.usable(game.user.id), 8000);
+    ok("9e. Storyteller tools", toggleShown && on && tools && eyes && eyesWin && given && xpGiven && check && hid && off,
+      {toggleShown, on, tools, eyes, cards: api.st.cards().length, eyesWin, given, xpGiven, xpWas, check, checkRows, hidden: hid, off});
   });
   return steps;
 }
@@ -276,6 +325,19 @@ async function finish(ids, playerSteps) {
     ok("10d. fights end by themselves", read("wodx-combat", "fightEnd") === "auto", {fightEnd: read("wodx-combat", "fightEnd")});
   });
 
+  await step("10e. the tools stay safe", async () => {
+    // A Storyteller cannot take the player's tools, the tools are off after the player's run, and with the mode off
+    // nobody may switch them on (B4801)
+    const st = S()?.st;
+    if ( !st ) return ok("10e. the tools stay safe", false, {error: "no Storyteller tools in this version"});
+    const pl = game.users.getName(PLAYER);
+    await st.toggle({userId: game.user.id, to: true});
+    const gmRefused = !st.usable(game.user.id);
+    const offAfterPlayer = !st.state().on;
+    const r = st.mayUse({on: true, userId: pl.id}, pl.id, {soloOn: true, blocked: false, activePlayers: [pl.id, "someone-else"]});
+    ok("10e. the tools stay safe", gmRefused && offAfterPlayer && r === false, {gmRefused, offAfterPlayer, twoPlayers: r});
+  });
+
   await step("11. the stall report", async () => {
     const rep = S().log.stalls(ids.since);
     R.stallReport = rep;
@@ -309,13 +371,15 @@ async function cleanup(ids, R) {
     const pu = game.users.get(ids?.user);
     if ( pu && ids && "userCharacter" in ids ) await pu.update({character: ids.userCharacter ?? null});
     for ( const id of ids?.actors ?? [] ) await game.actors.get(id)?.delete();
+    for ( const id of ids?.items ?? [] ) await game.items.get(id)?.delete();
+    if ( ids && "stBefore" in ids && game.settings.settings.has(`${MOD}.st`) ) await game.settings.set(MOD, "st", ids.stBefore ?? {on: false, userId: null, at: 0});
     const since = ids?.since ?? Date.now();
     const mine = game.messages.filter(m => m.timestamp >= since - 1000 && (m.speaker?.alias === TAG || m.speaker?.alias === "The Lone Chronicle" || String(m.content ?? "").includes(TAG))).map(m => m.id);
     if ( mine.length ) await ChatMessage.deleteDocuments(mine);
     const q = Q()?.pending?.().filter(p => String(p.title ?? "").startsWith(TAG)) ?? [];
     for ( const p of q ) await Q().decide(p.id, "reject");
     if ( ids && game.time.worldTime !== ids.t0 ) { R.notes.push(`the clock had moved by ${game.time.worldTime - ids.t0} s; put back`); await game.time.advance(ids.t0 - game.time.worldTime); }
-    const left = game.actors.filter(a => a.name.startsWith(TAG)).length + game.scenes.filter(s => s.name.startsWith(TAG)).length;
+    const left = game.actors.filter(a => a.name.startsWith(TAG)).length + game.scenes.filter(s => s.name.startsWith(TAG)).length + game.items.filter(i => i.name.startsWith(TAG)).length;
     ok("13. clean up", left === 0 && (!ids || game.time.worldTime === ids.t0) && !read(MOD, "on"), {left, clock: ids ? game.time.worldTime - ids.t0 : null});
   } catch (e) { ok("13. clean up", false, {error: e.message}); }
 }

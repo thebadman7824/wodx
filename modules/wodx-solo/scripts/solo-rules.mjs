@@ -222,3 +222,125 @@ export function markSeen(seen = [], key) {
   list.push(k);
   return list.slice(-60);
 }
+
+/* ------------------------------ Storyteller tools (B4800 to B4805) ------------------------------ */
+
+/**
+ * The lone player may switch on Storyteller tools from the panel, to check that the world works and to hand their
+ * character things to try out (Ben, 14 November 2026). The player stays a player: every tool asks the seat, and the
+ * seat answers only that one player. Off unless switched on.
+ */
+export const ST_TOOLS = [
+  {id: "eyes", label: "The Storyteller's cards", icon: "fa-solid fa-eye",
+    hint: "Every card, roll and whisper meant for the Storyteller alone, as it arrives. You can press its buttons yourself."},
+  {id: "give", label: "Give my character an item", icon: "fa-solid fa-gift",
+    hint: "Any item in the world or the compendiums, put straight onto your character's sheet."},
+  {id: "xp", label: "Add experience", icon: "fa-solid fa-star",
+    hint: "Experience points for your character, recorded on the sheet like any award, to try out spends."},
+  {id: "check", label: "Check the systems", icon: "fa-solid fa-stethoscope",
+    hint: "Which WoDX parts are running, whether the switch still holds, what waits for a Storyteller and any errors on the seat."},
+  {id: "hidden", label: "What is hidden here", icon: "fa-solid fa-user-secret",
+    hint: "The hidden tokens on your scene, with where they stand."}
+];
+export const ST_OFF = () => ({on: false, userId: null, at: 0});
+export const normSt = s => ({on: s?.on === true, userId: s?.userId ? String(s.userId) : null, at: Number(s?.at) || 0});
+
+/**
+ * Whether a user may switch the tools on (B4801). The world must be in solo mode and not one the mode never acts in,
+ * the user must be a player, not a Storyteller, and nobody else may be playing: the one active player is this user.
+ * @param {{soloOn: boolean, blocked: boolean, userId: string, isGM: boolean, activePlayers: string[]}} w
+ * @returns {{ok: boolean, why: string|null}}
+ */
+export function mayTurnOn({soloOn = false, blocked = false, userId = null, isGM = false, activePlayers = []} = {}) {
+  if ( blocked ) return {ok: false, why: "not in this world"};
+  if ( !soloOn ) return {ok: false, why: `${NAME} is off`};
+  if ( !userId ) return {ok: false, why: "no player asked"};
+  if ( isGM ) return {ok: false, why: "a Storyteller has these already"};
+  const others = (activePlayers ?? []).filter(id => id !== userId);
+  if ( others.length ) return {ok: false, why: "someone else is playing"};
+  return {ok: true, why: null};
+}
+
+/** Whether a user may use the tools now: they are on, for this user, and still nobody else is playing (B4801). */
+export function mayUse(st, userId, {soloOn = false, blocked = false, activePlayers = []} = {}) {
+  const s = normSt(st);
+  if ( !s.on || !userId || s.userId !== userId ) return false;
+  return mayTurnOn({soloOn, blocked, userId, isGM: false, activePlayers}).ok;
+}
+
+/** Items that match a search, best first: names that start with it, then names that hold it. At most `limit`. */
+export function itemMatches(index = [], query = "", limit = 40) {
+  const q = String(query ?? "").trim().toLowerCase();
+  if ( q.length < 2 ) return [];
+  const rows = (index ?? []).filter(r => r?.name && r?.uuid).map(r => ({r, n: String(r.name).toLowerCase()}));
+  const starts = rows.filter(x => x.n.startsWith(q)), holds = rows.filter(x => !x.n.startsWith(q) && x.n.includes(q));
+  const by = (a, b) => a.n.localeCompare(b.n) || String(a.r.from ?? "").localeCompare(String(b.r.from ?? ""));
+  const seen = new Set(), out = [];
+  for ( const x of [...starts.sort(by), ...holds.sort(by)] ) {
+    if ( seen.has(x.r.uuid) ) continue;
+    seen.add(x.r.uuid);
+    out.push({uuid: String(x.r.uuid), name: String(x.r.name), type: String(x.r.type ?? ""), from: String(x.r.from ?? "")});
+    if ( out.length >= limit ) break;
+  }
+  return out;
+}
+
+/** Item data made ready for a character: no id, no folder, no sort, and a note of where it came from. */
+export function grantData(src = {}, {by = "", at = 0} = {}) {
+  const d = JSON.parse(JSON.stringify(src ?? {}));
+  delete d._id; delete d.folder; delete d.sort; delete d.ownership; delete d._stats;
+  d.flags = {...(d.flags ?? {}), "wodx-solo": {...(d.flags?.["wodx-solo"] ?? {}), granted: {by: String(by), at: Number(at) || 0}}};
+  return d;
+}
+
+/**
+ * The systems check as rows (B4803). r: {modules: [{id, title, version}] running, off: [title] switched off,
+ * broken: [{id, title, needs: [id]}] running parts whose required part is off, drift: [{mod, key, what}],
+ * missing: [{mod, key}], pending, held, waiting, errors: [{at, text}], paused, sameScene, fights}
+ * Each row: {area, state: "ok"|"warn", text}.
+ */
+export function checkRows(r = {}) {
+  const rows = [];
+  const add = (area, bad, good, warn) => rows.push({area, state: bad ? "warn" : "ok", text: bad ? warn : good});
+  const mods = r.modules ?? [], broken = r.broken ?? [];
+  add("WoDX parts", broken.length > 0, `${mods.length} running${(r.off ?? []).length ? `; switched off: ${r.off.join(", ")}` : ""}`,
+    `${broken.map(b => `${b.title ?? b.id} needs ${b.needs.join(", ")}, which is off`).join("; ")}`);
+  const drift = r.drift ?? [];
+  add("The switch", drift.length > 0, "every automation still acts by itself", `changed since the switch: ${drift.map(d => d.what ?? `${d.mod} ${d.key}`).join("; ")}`);
+  if ( (r.missing ?? []).length ) rows.push({area: "The switch", state: "warn", text: `not found, so left alone: ${r.missing.map(m => `${m.mod} ${m.key}`).join(", ")}`});
+  const q = (Number(r.pending) || 0) + (Number(r.held) || 0);
+  add("Approval queue", q > 0, "nothing waits", `${Number(r.pending) || 0} waiting, ${Number(r.held) || 0} held back`);
+  add("Tonight", (Number(r.waiting) || 0) > 0, "nothing was left waiting for a Storyteller", `${Number(r.waiting) || 0} cards or windows were left waiting for a Storyteller`);
+  const errs = r.errors ?? [];
+  add("Errors on the seat", errs.length > 0, "none since the seat sat down", `${errs.length}; newest: ${String(errs[errs.length - 1]?.text ?? "").slice(0, 160)}`);
+  add("The seat's map", r.sameScene === false, "the seat views your scene", "the seat views another scene, so NPCs there cannot see you");
+  add("The game", !!r.paused, "running", "paused: NPCs will not act until it goes on");
+  rows.push({area: "Fights", state: "ok", text: Number(r.fights) ? `${Number(r.fights)} running` : "none running"});
+  return rows;
+}
+
+/** A hidden token as the tool shows it: name, kind and grid square. */
+export function hiddenRow(t = {}, grid = 100) {
+  const g = Number(grid) || 100;
+  const disp = {"-2": "secret", "-1": "hostile", "0": "neutral", "1": "friendly"}[String(t.disposition ?? 0)] ?? "neutral";
+  return {name: String(t.name ?? "Someone"), kind: String(t.kind ?? ""), disposition: disp,
+    square: `${Math.floor((Number(t.x) || 0) / g) + 1}, ${Math.floor((Number(t.y) || 0) / g) + 1}`};
+}
+
+/** Experience the tool may give at once (B4806): a whole number from 1 to XP_MAX, or null. */
+export const XP_MAX = 100;
+export function xpAmount(v) {
+  const n = Number(v);
+  if ( !Number.isFinite(n) || !Number.isInteger(n) || n < 1 || n > XP_MAX ) return null;
+  return n;
+}
+/** The award's name on the sheet: the player's reason, or a plain one. */
+export const xpNote = note => (String(note ?? "").trim().slice(0, 100) || "Given with the Storyteller tools");
+
+export const EYES_CAP = 60;
+/** Keep the newest cards, one per message, at most EYES_CAP. */
+export function addEyes(list = [], card, cap = EYES_CAP) {
+  const out = (list ?? []).filter(c => c && c.id !== card?.id);
+  if ( card?.id ) out.push(card);
+  return out.slice(-cap);
+}

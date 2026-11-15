@@ -267,7 +267,9 @@ export function evocationResults(lore, level, successes, { high = false, faith =
     const base = { key: spec.kw, label: name, source };
     const fl = faithLasts(spec.lasts, faith);
     const fixed = fl ? { ...spec, lasts: "scene" } : spec;
-    return outcomesOf(fixed, base, successes, text).map(r => {
+    return outcomesOf(fixed, base, successes, text).map(r0 => {
+        // B4845: the high-Torment form is marked, so its own each-turn rules go on it alone
+        const r = high ? { ...r0, out: { ...r0.out, high: true } } : r0;
         if (!fl || !r.out?.timed) return r;
         const t = r.out.kind === "timed" ? `${successes} success${successes === 1 ? "" : "es"} for ${fl.label}: ${text}` : `${r.out.name}, for ${fl.label}: ${text}`;
         return { ...r, out: { ...r.out, timed: fl.timed, duration: fl.label, text: t } };

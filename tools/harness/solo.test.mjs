@@ -350,3 +350,96 @@ test("panel.mjs 0.2.1: with no assigned character, the one on the viewed scene i
   await P.unstick("p1", "token");
   assert.equal(tokA.x, 7);
 });
+
+/* Storyteller tools for the lone player (B4800 to B4805) */
+
+test("the tools go on only in solo mode, for a player, with nobody else playing", () => {
+  const base = {soloOn: true, blocked: false, userId: "p1", isGM: false, activePlayers: ["p1"]};
+  assert.equal(R.mayTurnOn(base).ok, true);
+  assert.equal(R.mayTurnOn({...base, soloOn: false}).ok, false);
+  assert.equal(R.mayTurnOn({...base, blocked: true}).ok, false);
+  assert.equal(R.mayTurnOn({...base, isGM: true}).ok, false);
+  assert.equal(R.mayTurnOn({...base, activePlayers: ["p1", "p2"]}).ok, false);
+  assert.equal(R.mayTurnOn({...base, userId: null}).ok, false);
+});
+
+test("only the player who switched them on may use them, and only while nobody else plays", () => {
+  const w = {soloOn: true, blocked: false, activePlayers: ["p1"]};
+  const st = {on: true, userId: "p1", at: 1};
+  assert.equal(R.mayUse(st, "p1", w), true);
+  assert.equal(R.mayUse(st, "p2", {...w, activePlayers: ["p2"]}), false);
+  assert.equal(R.mayUse(st, "p1", {...w, activePlayers: ["p1", "p2"]}), false);
+  assert.equal(R.mayUse(st, "p1", {...w, soloOn: false}), false);
+  assert.equal(R.mayUse(st, "p1", {...w, blocked: true}), false);
+  assert.equal(R.mayUse({on: false, userId: "p1"}, "p1", w), false);
+  assert.equal(R.mayUse(undefined, "p1", w), false);
+  assert.deepEqual(R.normSt(null), R.ST_OFF());
+});
+
+test("the item search puts names that start with the words first and keeps one row per item", () => {
+  const idx = [{uuid: "a", name: "Knife", type: "melee", from: "World"}, {uuid: "b", name: "Butcher's Knife", type: "melee", from: "Gear"},
+    {uuid: "c", name: "Knife", type: "melee", from: "Gear"}, {uuid: "a", name: "Knife", type: "melee", from: "World"}, {uuid: "d", name: "Rope"}, {name: "no uuid"}];
+  const rows = R.itemMatches(idx, "kni");
+  assert.deepEqual(rows.map(r => r.uuid), ["c", "a", "b"]);
+  assert.deepEqual(R.itemMatches(idx, "k"), []);
+  assert.equal(R.itemMatches(Array.from({length: 99}, (_, i) => ({uuid: `u${i}`, name: `Knife ${i}`})), "knife", 40).length, 40);
+});
+
+test("a given item loses its id, folder and ownership and says who asked for it", () => {
+  const src = {_id: "x", name: "Knife", type: "melee", folder: "f", sort: 5, ownership: {default: 0}, _stats: {}, system: {damage: 2}, flags: {other: {a: 1}}};
+  const d = R.grantData(src, {by: "Ben", at: 100});
+  assert.equal(d._id, undefined); assert.equal(d.folder, undefined); assert.equal(d.ownership, undefined); assert.equal(d.sort, undefined);
+  assert.deepEqual(d.system, {damage: 2});
+  assert.deepEqual(d.flags.other, {a: 1});
+  assert.deepEqual(d.flags["wodx-solo"].granted, {by: "Ben", at: 100});
+  assert.equal(src._id, "x", "the source is left alone");
+});
+
+test("the systems check marks what to look at", () => {
+  const fine = R.checkRows({modules: [{id: "wodx-npc", title: "WoDX NPC", version: "1"}], off: ["WoDX Voices"], broken: [], drift: [], missing: [],
+    pending: 0, held: 0, waiting: 0, errors: [], paused: false, sameScene: true, fights: 0});
+  assert.ok(fine.every(r => r.state === "ok"), JSON.stringify(fine));
+  assert.match(fine[0].text, /switched off: WoDX Voices/);
+  const bad = R.checkRows({modules: [], broken: [{id: "wodx-solo", title: "WoDX Solo", needs: ["wodx-chronicle"]}], drift: [{what: "NPCs in combat act"}],
+    pending: 2, held: 1, waiting: 3, errors: [{text: "boom"}], paused: true, sameScene: false});
+  const warn = bad.filter(r => r.state === "warn").map(r => r.area);
+  for ( const a of ["WoDX parts", "The switch", "Approval queue", "Tonight", "Errors on the seat", "The seat's map", "The game"] ) assert.ok(warn.includes(a), a);
+  assert.match(bad.find(r => r.area === "Errors on the seat").text, /boom/);
+});
+
+test("hidden tokens show by square and stance; the card list keeps the newest, one per card", () => {
+  assert.deepEqual(R.hiddenRow({name: "Watcher", kind: "Vampire", disposition: -1, x: 250, y: 0}, 100), {name: "Watcher", kind: "Vampire", disposition: "hostile", square: "3, 1"});
+  let l = [];
+  for ( let i = 0; i < 70; i++ ) l = R.addEyes(l, {id: `m${i}`});
+  assert.equal(l.length, R.EYES_CAP);
+  assert.equal(l.at(-1).id, "m69");
+  l = R.addEyes(l, {id: "m30", v: 2});
+  assert.equal(l.filter(c => c.id === "m30").length, 1);
+  assert.equal(l.at(-1).v, 2);
+});
+
+test("the tools are asks to the seat: the player's side never makes items or presses cards itself", () => {
+  const src = readFileSync(join(root, "modules/wodx-solo/scripts/st-tools.mjs"), "utf8");
+  for ( const fn of ["toggle", "eyes", "press", "items", "give", "xp", "check", "hidden"] ) {
+    const body = src.split(`async function ${fn}(`)[1]?.split("\n}\n")[0] ?? "";
+    assert.ok(body, fn);
+    if ( fn !== "toggle" ) assert.match(body, /if \( !usable\(userId\) \)/, `${fn} checks the player may use the tools`);
+  }
+  assert.match(src, /senderId|addAsks/);
+  const panel = readFileSync(join(root, "modules/wodx-solo/scripts/panel.mjs"), "utf8");
+  assert.match(panel, /senderId !== payload\.userId/, "an ask naming another user than its sender is dropped");
+  assert.match(src, /userConnected[\s\S]{0,120}guard\(/, "a second player logging in takes the tools away");
+});
+
+test("experience from the tools is a whole number from 1 to the cap, with a plain reason when none is given", () => {
+  assert.equal(R.xpAmount(5), 5);
+  assert.equal(R.xpAmount("7"), 7);
+  for ( const bad of [0, -1, 2.5, R.XP_MAX + 1, "x", null, undefined, NaN] ) assert.equal(R.xpAmount(bad), null, String(bad));
+  assert.equal(R.xpAmount(R.XP_MAX), R.XP_MAX);
+  assert.equal(R.xpNote("  "), "Given with the Storyteller tools");
+  assert.equal(R.xpNote("Testing Thaumaturgy"), "Testing Thaumaturgy");
+  assert.equal(R.xpNote("x".repeat(300)).length, 100);
+  assert.ok(R.ST_TOOLS.some(t => t.id === "xp"));
+  const src = readFileSync(join(root, "modules/wodx-solo/scripts/st-tools.mjs"), "utf8");
+  assert.match(src, /wodx-creation"\)\?\.api\?\.award/, "the award goes through WoDX Creation, so the sheet and its log stay right");
+});

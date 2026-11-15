@@ -17,7 +17,7 @@ import {secondsToNextDawn, secondsToNextDusk, describeTime} from "../../wodx-chr
 
 export const MOD = "wodx-storyteller";
 export const SOCKET = `module.${MOD}`;
-export const VERSION = "0.96.1";
+export const VERSION = "0.101.0";
 export const T = {travel: `${MOD}.travel`, encounter: `${MOD}.encounter`, solo: `${MOD}.solo`, beat: `${MOD}.beat`};
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -226,8 +226,9 @@ export async function setTravel(scene, data) {
 }
 
 /** What a trip would be: minutes, arrival, dawn, and whether it waits for the Storyteller. */
-export function planTrip(actor, destId, {mode = null, pace = null, lodging = null} = {}) {
-  const dest = travelPlaces().find(p => p.id === destId);
+export function planTrip(actor, destId, {mode = null, pace = null, lodging = null, way = null} = {}) {
+  // B4781: a Way leads to its scene even when the scene is not set out for the travel window
+  const dest = travelPlaces().find(p => p.id === destId) ?? (way ? (s => s ? {id: s.id, uuid: s.uuid, name: sceneName(s), travel: s.flags?.[MOD]?.travel ?? {}, scene: s} : null)(game.scenes.get(destId)) : null);
   if ( !dest ) return null;
   const from = whereIs(actor);
   const fromPlace = from ? {id: from.id, name: sceneName(from), travel: from.flags?.[MOD]?.travel ?? {}} : null;
@@ -236,13 +237,14 @@ export function planTrip(actor, destId, {mode = null, pace = null, lodging = nul
   const wage = wageNow(at.year);
   const burns = sunBurns(actor);
   const trip = from?.id === dest.id ? {minutes: 0, by: "here", mode: null, modeLabel: null, road: null, why: []}
+    : Number.isFinite(way?.minutes) ? {minutes: way.minutes, by: "way", mode: null, modeLabel: null, road: null, why: []}
     : W.tripPlan(fromPlace, dest, {fallback: setting("travelMinutes") ?? 30, want: mode, ...at, night: at.night || burns, wage});
   // A trip across the country map is laid over the nights and days: rests, day shelter, inns and fares.
   const sched = trip.by === "map" ? Country.schedule(trip, {start, nextDawn: dawnAfter, nextDusk: duskAfter, sunBurns: burns, pace: pace ?? "steady", lodging: lodging ?? "inn", wage}) : null;
   const minutes = sched ? sched.minutes : trip.minutes;
   const arrive = start + (minutes * 60);
   const dawnAt = dawnAfter(start);
-  const ask = W.travelNeedsAsk({place: dest, arrive, dawnAt, sunBurns: burns, plan: sched});
+  const ask = W.travelNeedsAsk({place: dest, arrive, dawnAt, sunBurns: burns, plan: sched}) || way?.ask || null;
   return {dest, from, minutes, start, arrive, dawnAt, ask, trip, sched, year: at.year, night: at.night, region: at.region};
 }
 /** A month's plain wage in the year's money, in its smallest unit: fares and inn nights are shares of it. */
@@ -282,8 +284,8 @@ export function tripWords(plan) {
 }
 
 /** Where a token lands on a scene: the place's own spot, else the middle of the scene. */
-function landing(scene, actor) {
-  const t = travelOf(scene);
+function landing(scene, actor, at = null) {
+  const t = {...travelOf(scene), ...(at ? {x: at.x, y: at.y} : {})};
   const d = scene.dimensions ?? {};
   const size = (d.size ?? scene.grid?.size ?? 100);
   const w = (actor?.prototypeToken?.width ?? 1) * size, h = (actor?.prototypeToken?.height ?? 1) * size;
@@ -293,11 +295,11 @@ function landing(scene, actor) {
 }
 
 /** Move a character's token to another scene (the active Storyteller). Returns the new token, or null. */
-export async function moveToScene(actor, scene, {from = null} = {}) {
+export async function moveToScene(actor, scene, {from = null, at = null} = {}) {
   if ( !isActiveGM() || !actor || !scene ) return null;
   const origin = from ?? whereIs(actor);
   if ( origin?.id === scene.id ) return all(scene.tokens).find(t => t.actorId === actor.id) ?? null;
-  const td = await actor.getTokenDocument(landing(scene, actor));
+  const td = await actor.getTokenDocument(landing(scene, actor, at));
   const data = td?.toObject ? td.toObject() : td;
   const [made] = await scene.createEmbeddedDocuments("Token", [data], {wodxTravel: true});
   if ( origin ) {
@@ -358,18 +360,18 @@ async function drawEncounter(dest) {
  * A trip, on the active Storyteller's client. A place that asks first, or a trip into the dawn for a character the sun
  * burns, goes to the approval queue unless approved is set.
  */
-export async function travel({actorId, destId, userId = null, approved = false, mode = null, pace = null, lodging = null} = {}) {
+export async function travel({actorId, destId, userId = null, approved = false, mode = null, pace = null, lodging = null, way = null} = {}) {
   if ( !isActiveGM() ) return {ok: false, why: "Only the Storyteller's client moves tokens."};
   const actor = game.actors.get(actorId);
   if ( !actor ) return {ok: false, why: "That character is gone."};
   if ( convenedMap()[actorId] && !approved ) return {ok: false, why: "This character is in a scene the Storyteller called. Travel waits until it ends."};
-  const plan = planTrip(actor, destId, {mode, pace, lodging});
+  const plan = planTrip(actor, destId, {mode, pace, lodging, way});
   if ( !plan ) return {ok: false, why: "That place is not open for travel."};
   const sched = plan.sched, owed = sched ? sched.cost + sched.fare : 0;
   const user = userId ?? ownerOf(actor)?.id ?? null;
   if ( plan.ask && !approved ) {
     await chron()?.propose?.({type: T.travel, key: `travel:${actorId}:${destId}`, title: `${actor.name} wants to go to ${plan.dest.name}`,
-      detail: `${plan.ask} The trip takes ${W.spanLabel(plan.minutes * 60)} and would arrive at ${timeLabel(plan.arrive)}.`, data: {actorId, destId, userId: user, mode, pace, lodging}});
+      detail: `${plan.ask} The trip takes ${W.spanLabel(plan.minutes * 60)} and would arrive at ${timeLabel(plan.arrive)}.`, data: {actorId, destId, userId: user, mode, pace, lodging, way}});
     await log({kind: "ask", actor: actorId, name: actor.name, user, scene: plan.dest.uuid, place: plan.dest.name, text: `Asked to go to ${plan.dest.name}: ${plan.ask}`});
     return {ok: true, waiting: true, why: plan.ask};
   }
@@ -383,12 +385,12 @@ export async function travel({actorId, destId, userId = null, approved = false, 
     else if ( !approved ) return {ok: false, why: `This trip costs ${moneyWords(owed, plan.year)}${r?.text ? `, and the purse is short by ${r.text}` : ""}. Go by your own means, camp by the road, or ask the Storyteller.`};
     else paid = ` ${moneyWords(owed, plan.year)} for the trip was not paid.`;
   }
-  const tok = await moveToScene(actor, plan.dest.scene, {from: plan.from});
+  const tok = await moveToScene(actor, plan.dest.scene, {from: plan.from, at: way?.at ?? null});
   if ( plan.minutes ) await advancePersonal(actorId, plan.minutes * 60);
-  const way = plan.trip?.by === "map" ? ` The way: ${Country.legLines(plan.trip, x => W.spanLabel(x)).join("; ")}.` : "";
+  const route = plan.trip?.by === "map" ? ` The way: ${Country.legLines(plan.trip, x => W.spanLabel(x)).join("; ")}.` : "";
   const halts = sched?.stops?.length ? ` Stops: ${sched.stops.map(x => `${x.why} at ${x.at}`).join("; ")}.` : "";
   await log({kind: "travel", actor: actorId, name: actor.name, user, scene: plan.dest.uuid, place: plan.dest.name, hours: plan.minutes / 60,
-    text: `${plan.from ? `From ${sceneName(plan.from)} to` : "To"} ${plan.dest.name}, ${plan.trip?.modeLabel ? `${plan.trip.modeLabel.toLowerCase()}, ` : ""}${W.spanLabel(plan.minutes * 60)} on the way${plan.trip?.why?.length ? ` (slowed by ${plan.trip.why.join(", ")})` : ""}.${way}${halts}${paid}`,
+    text: `${plan.from ? `From ${sceneName(plan.from)} to` : "To"} ${plan.dest.name}, ${plan.trip?.modeLabel ? `${plan.trip.modeLabel.toLowerCase()}, ` : ""}${W.spanLabel(plan.minutes * 60)} on the way${plan.trip?.why?.length ? ` (slowed by ${plan.trip.why.join(", ")})` : ""}.${route}${halts}${paid}`,
     ...(sched?.toll ? {attention: `Forced pace: a Stamina roll (difficulty 7) for each of ${sched.toll} ${sched.toll === 1 ? "day" : "days"}, or a level of bashing harm each, for mounts too`} : {})});
   pull(user, plan.dest.id);
   // 0.49.0: a caravan out on the same road is noted for the Storyteller
@@ -574,7 +576,8 @@ export function registerHandlers() {
     approve: async e => { const r = await travel({...e.data, approved: true}); if ( !r.ok ) ui.notifications.warn(r.why); },
     reject: async e => { const a = game.actors.get(e.data?.actorId); await log({kind: "note", actor: e.data?.actorId, name: a?.name, user: e.data?.userId, text: "The Storyteller turned down a trip."}); }});
   c.registerApprovalHandler(T.encounter, {label: "Encounter",
-    approve: async e => { const a = game.actors.get(e.data?.actorId); await log({kind: "note", actor: e.data?.actorId, name: a?.name, user: e.data?.userId, text: `The Storyteller will play the encounter: ${e.data?.text ?? ""}`}); },
+    // B4862: approved, the encounter is put on the map by the traveller (reach.mjs road)
+    approve: async e => { const made = await game.modules.get(MOD)?.api?.reach?.road?.({actorId: e.data?.actorId, text: e.data?.text ?? ""}); if ( !made?.length ) { const a = game.actors.get(e.data?.actorId); await log({kind: "note", actor: e.data?.actorId, name: a?.name, user: e.data?.userId, text: `On the road: ${e.data?.text ?? ""}`}); } },
     reject: async e => { const a = game.actors.get(e.data?.actorId); await log({kind: "note", actor: e.data?.actorId, name: a?.name, user: e.data?.userId, text: "The road was quiet after all."}); }});
   c.registerApprovalHandler(T.solo, {label: "Solo result"});
   c.registerApprovalHandler(T.beat, {label: "Beat",
@@ -591,7 +594,7 @@ export async function endSession({factions = true} = {}) {
   if ( factions ) { try { await npc()?.endSession?.(); } catch (e) { console.error(`${MOD} |`, e); } }
   await release();
   await game.settings.set(MOD, "session", {at: now(), real: Date.now()});
-  try { if ( absentIds().length ) await game.settings.set(MOD, "absent", {}); } catch (e) { /* the setting comes with 0.18.0 */ }
+  try { if ( absentIds().length ) { for ( const a of all(game.actors) ) if ( a.getFlag?.(MOD, "standIn") ) await a.unsetFlag(MOD, "standIn"); await game.settings.set(MOD, "absent", {}); } } catch (e) { /* the setting comes with 0.18.0 */ }
   await log({kind: "session", text: "The session ended."});
   Hooks.callAll("wodxSessionEnded");
   // 0.41.0: clocks of the Storyteller's own that tick on a faction turn or at a session's end

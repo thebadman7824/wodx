@@ -88,6 +88,8 @@ export const FROM_CAUSE = {
   frenzy: ["hysteria", "bulimia", "paranoia", "animism"],
   sin: ["obsession", "regression", "fugue", "manic", "multiple", "perfection"],
   fear: ["phobia", "paranoia", "hysteria"],
+  loss: ["fugue", "regression", "obsession", "paranoia", "hysteria"],
+  binding: ["multiple", "schizophrenia", "paranoia", "fugue"],
   other: ["paranoia", "obsession", "manic", "phobia", "regression"]
 };
 

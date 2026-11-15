@@ -15,7 +15,7 @@ const ctx = {regions: Object.keys(WORLD_REGIONS), placeKinds: Object.keys(PLACE_
 test("the Rothenstein recipe is in order", () => {
   assert.deepEqual(R.validate(ROTHENSTEIN, ctx), []);
   assert.equal(ROTHENSTEIN.world, "rothenstein-x");
-  assert.equal(ROTHENSTEIN.opening.year, 1197);
+  assert.equal(ROTHENSTEIN.opening.year, 1200);
   assert.ok(ROTHENSTEIN.reach.every(h => h.region === null || h.region !== ROTHENSTEIN.homeland));
 });
 
@@ -56,7 +56,7 @@ test("steps run in order: one ready at a time, later phases wait", () => {
   assert.equal(rows.find(r => r.id === "anchors").state, "blocked");
   rows = R.planSteps({modules: {"wodx-chronicle": "0.40.0"}, record: {steps: {check: {at: 1}}}});
   assert.match(rows.find(r => r.id === "settings").reason, /wodx-chronicle 0\.48\.0/);
-  assert.ok(R.STEPS.filter(s => s.phase === R.PHASE_NOW).every(s => ["check", "settings", "carry", "anchors"].includes(s.id)));
+  assert.ok(R.STEPS.filter(s => s.phase === R.PHASE_NOW).every(s => ["check", "settings", "carry", "anchors", "ways"].includes(s.id)));
 });
 
 test("an older world's documents are sorted for the carry-over", () => {

@@ -74,9 +74,17 @@ export const KINDS = {
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const strs = v => (Array.isArray(v) ? v.map(x => String(x).slice(0, 120)).filter(Boolean).slice(0, 20) : []);
-const stagesOf = v => (Array.isArray(v) ? v.slice(0, 8).map(x => ({name: String(x?.name ?? "").slice(0, 60) || "Work",
-  goal: Math.max(1, Math.round(n(x?.goal) || 1)), cost: Math.max(0, Math.round(n(x?.cost)))})) : []);
 const clampDiff = d => Math.max(2, Math.min(10, Math.round(n(d) || 6)));
+// B5014: a stage may roll its own Attribute + Ability at its own difficulty (finding a Treasure's components)
+const stagesOf = v => (Array.isArray(v) ? v.slice(0, 12).map(x => ({name: String(x?.name ?? "").slice(0, 60) || "Work",
+  goal: Math.max(1, Math.round(n(x?.goal) || 1)), cost: Math.max(0, Math.round(n(x?.cost))),
+  ...(x?.attr ? {attr: String(x.attr).slice(0, 20)} : {}), ...(x?.ability ? {ability: String(x.ability).slice(0, 30)} : {}), ...(x?.diff ? {diff: clampDiff(x.diff)} : {})})) : []);
+/** B5014: the task as its current stage rolls it (the stage's own roll where it has one). */
+export function rollingAs(t) {
+  const st = t?.stages?.[t?.stage ?? 0];
+  if ( !st || (!st.attr && !st.ability && !st.diff) ) return t;
+  return {...t, ...(st.attr ? {attr: st.attr} : {}), ...(st.ability ? {ability: st.ability} : {}), ...(st.diff ? {diff: st.diff} : {})};
+}
 
 /** The system's key for an Ability a task names: tasks say "crafts", the system keeps Crafts as "craft" (B3683). */
 export const ABILITY_ALIAS = {crafts: "craft"};

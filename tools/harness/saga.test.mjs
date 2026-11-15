@@ -12,7 +12,7 @@ test("the saga is sound: dated steps in order, books apart, known eras, clocks a
   assert.deepEqual(S.validate(S.SAGA, {eras}), []);
 });
 
-test("the saga covers every era of the main timeline from 1197, and the prologue before it", () => {
+test("the saga covers every era of the main timeline from 1200, and the prologue before it", () => {
   const sp = S.span();
   assert.equal(sp.from, 880);
   assert.equal(sp.to, 2030);
@@ -22,15 +22,21 @@ test("the saga covers every era of the main timeline from 1197, and the prologue
   assert.ok(S.span({future: true}).to > 2030);
 });
 
-test("the first book runs five years, not ten nights", () => {
+test("the first book opens in the autumn of 1200 and each chapter waits to be played", () => {
   const b = S.bookByKey("red-stone"), c = S.bookChain(b);
-  assert.equal(b.steps.filter(x => x.kind === "chapter").length, 10, "ten chapters, one for each old session");
+  const ch = b.steps.filter(x => x.kind === "chapter");
+  assert.equal(ch.length, 10, "ten chapters, one for each session");
+  assert.deepEqual(b.steps[0].at, [1200, 9, 1]);
+  assert.equal(ch.at(-1).at[0], 1200, "the tenth night falls at the first snow of 1200");
+  assert.ok(ch.every(x => x.wait), "every chapter waits");
+  assert.ok(c.steps.filter(x => x.kind !== "chapter").every(x => !x.wait));
   const days = c.steps.reduce((n, x) => n + x.days, 0);
-  assert.ok(days > 4 * 365 && days < 6 * 365, `${days} days`);
+  assert.ok(days > 60 && days < 365, `${days} days`);
   assert.equal(c.steps[0].days, 0);
   assert.ok(c.steps.every(x => x.days >= 0));
   assert.equal(c.steps.at(-1).kind, "interlude");
   assert.ok(c.steps.find(x => x.key === "c10").ending.includes("take"));
+  assert.ok(c.steps.find(x => x.key === "c10").ending.includes("alone"), "a fourth ending: left alone");
 });
 
 test("a gap on the clock is the gap between the dates", () => {
@@ -50,15 +56,20 @@ test("the first book's ending changes later words", () => {
 
 test("a book is a story chain the clock can deal out", () => {
   const run = {id: "r", key: S.chainKey("red-stone"), where: "Rothenstein", at: 0, last: 100, saga: {book: "red-stone", endings: {}}};
-  const c = P.chainOf(run, 1197);
+  const c = P.chainOf(run, 1200);
   assert.equal(c.saga, "red-stone");
   assert.match(c.label, /What Sleeps Beneath Rothenstein, book 1/);
-  let n = P.nextStep(run, 1197);
+  let n = P.nextStep(run, 1200);
   assert.equal(n.key, "c1");
   assert.equal(n.due, 100);
-  run.at = 1; n = P.nextStep(run, 1197);
+  run.at = 1; n = P.nextStep(run, 1200);
   assert.equal(n.key, "i1");
-  assert.equal(n.due, 100 + 50 * S.DAY);
+  assert.equal(n.due, Infinity, "the book waits until the first night is played");
+  assert.equal(n.waiting, "c1");
+  assert.equal(S.waitingOn(run, c).key, "c1");
+  run.played = ["c1"]; n = P.nextStep(run, 1200);
+  assert.equal(n.due, 100 + 4 * S.DAY, "then the gap counts as dated");
+  assert.equal(S.waitingOn(run, c), null);
   assert.ok(P.chainByKey(S.chainKey("lantern")).steps.length >= 10);
   assert.equal(P.chainByKey("black-death").key, "black-death", "the old chains still work");
   assert.ok(!P.chainsFor(1200).some(c => S.isSagaKey(c.key)), "saga books stay out of the plain chain list");
@@ -66,7 +77,8 @@ test("a book is a story chain the clock can deal out", () => {
 });
 
 test("the next book: one at a time, by year, never one already dealt with", () => {
-  assert.equal(S.dueBook({}, 1197).key, "red-stone");
+  assert.equal(S.dueBook({}, 1200).key, "red-stone");
+  assert.equal(S.dueBook({}, 1197), null, "no book before the autumn of 1200");
   assert.equal(S.dueBook({}, 900).key, "prologue");
   assert.equal(S.dueBook({books: {"red-stone": "running"}}, 1203), null, "not while another runs");
   assert.equal(S.dueBook({books: {"red-stone": "done"}}, 1203).key, "patriarch");
@@ -136,6 +148,12 @@ test("a long skip deals every saga step it passes, on the book's own calendar (B
   const t = 6 * 365 * S.DAY, dealt = [];
   let n = P.nextStep(run, 1200);
   while ( n && n.due <= t ) { dealt.push(n.key); run.at = n.index + 1; run.last = n.due; n = P.nextStep(run, 1200); }
+  assert.deepEqual(dealt, ["c1"], "an unplayed chapter holds the book, however long the skip");
+  run.played = [];
+  while ( n ) {
+    if ( n.waiting ) { run.played.push(n.waiting); n = P.nextStep(run, 1200); continue; }
+    assert.ok(n.due <= t); dealt.push(n.key); run.at = n.index + 1; run.last = n.due; n = P.nextStep(run, 1200);
+  }
   assert.equal(dealt.length, S.bookByKey("red-stone").steps.length);
   assert.equal(dealt.at(-1), "e1");
 });

@@ -179,3 +179,16 @@ export function changesText(changes = {}) {
     if (changes.banality) out.push(`Banality +${changes.banality}`);
     return out.join(", ").replace(/-(\d)/g, "−$1");
 }
+
+/* ---- x4 (B4873): the court calls a hunt on its own ----
+ * At a faction turn the prince's court looks at what happened in its domain since it last looked: a diablerie mark made
+ * since then, or a severe breach (a record of the Masquerade with three or more witnesses who still remember, in a
+ * place where word spreads). House reading of V20 pp. 28 and 493. */
+export const SEVERE_WITNESSES = 3;
+export function huntDue({ marks = [], breaches = [], since = 0 } = {}) {
+    const dia = (marks ?? []).filter(m => Number(m?.at) > Number(since || 0));
+    if (dia.length) return { ground: "diablerie", why: `diablerie${dia[0].victim ? ` on ${dia[0].victim}` : ""}` };
+    const bad = (breaches ?? []).find(e => e?.spread !== false && (e.witnesses ?? []).filter(w => ["saw", "told"].includes(w.state)).length >= SEVERE_WITNESSES && !e.huntSeen);
+    if (bad) return { ground: "masquerade", why: `breaking the Masquerade: ${bad.event || "seen by many"}`, entry: bad.id };
+    return null;
+}

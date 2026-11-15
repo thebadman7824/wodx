@@ -19,6 +19,8 @@ import * as W from "./world-rules.mjs";
 import * as Led from "./ledger.mjs";
 import * as Setup from "./setup.mjs";
 import * as Builder from "./builder.mjs";
+import * as Ways from "./ways.mjs";
+import * as WayRules from "./way-rules.mjs";
 import * as Night from "./night.mjs";
 import * as Dreams from "./dreams.mjs";
 import * as Codex from "./codex.mjs";
@@ -41,6 +43,7 @@ import * as Threads from "./threads.mjs";
 import * as Patron from "./patronage.mjs";
 import * as Towns from "./towns.mjs";
 import * as TownLooks from "./town-looks.mjs";
+import * as TownScars from "./town-scars.mjs";
 import * as SickLooks from "./sick-looks.mjs";
 import * as PowerLooks from "./power-looks.mjs";
 import * as Contagion from "./contagion.mjs";
@@ -63,6 +66,7 @@ import * as Remains from "./remains.mjs";
 import * as RemainsRules from "./remains-rules.mjs";
 import * as Hunters from "./hunters.mjs";
 import * as Levers from "./levers.mjs";
+import * as Reach from "./reach.mjs";
 import * as Inherit from "./inherit.mjs";
 import * as MoneyRules from "./money-rules.mjs";
 import * as Rumours from "./rumours.mjs";
@@ -108,6 +112,8 @@ Hooks.once("init", () => {
   Wills.listen();
   Setup.registerSetupSettings();
   Builder.registerBuilderSettings();
+  Ways.registerWaySettings();
+  Ways.registerWayBehavior();
   Night.registerNightSettings();
   Dreams.registerDreamSettings();
   Dreams.registerDreamHooks();
@@ -133,6 +139,7 @@ Hooks.once("init", () => {
   Patron.registerPatronageSettings();
   Towns.registerTownSettings();
   TownLooks.registerTownLookSettings();
+  TownScars.registerTownScarSettings();
   Contagion.registerContagionSettings();
   Power.registerPowerSettings();
   Herds.registerHerdSettings();
@@ -155,6 +162,8 @@ Hooks.once("init", () => {
   Remains.registerRemainsHooks();
   Hunters.registerHunterSettings();
   Hunters.registerHunterHooks();
+  Reach.registerReachSettings(); // B4861: the world's own hand
+  Reach.registerReachHooks();
   Levers.registerLeverSettings();
   Levers.registerLeverTools();
   Inherit.registerInheritTools();
@@ -200,6 +209,7 @@ Hooks.once("ready", () => {
   Ventures.setupVentures().catch(e => console.error("WoDX | ventures", e));
   Towns.setupTowns().catch(e => console.error("WoDX | towns", e));
   TownLooks.setupTownLooks();
+  TownScars.setupTownScars();
   SickLooks.setupSickLooks(); // B4633: the sick show it
   PowerLooks.setupPowerLooks(); // B4635: places of power glow for those who could see them
   Contagion.setupContagion().catch(e => console.error("WoDX | contagion", e));
@@ -218,7 +228,7 @@ Hooks.once("ready", () => {
     ledger: {open: () => Led.LedgerApp.open(), state: Led.ledger, save: Led.saveEntry, remove: Led.removeEntry, status: Led.setStatus, veil: Led.moveVeil, checkDue: Led.checkDue, heirOf: Led.heirOf, breach: Led.onBreach, syncTraits: Led.syncTraits},
     beatsDialog: A.beatsDialog, endSessionDialog: A.endSessionDialog, editBeat: A.editBeat, placesDialog: A.placesDialog, TrackerClass: A.TrackerClass,
     setup: {open: Setup.openSetup, run: Setup.runSetup, have: Setup.have, enableModules: Setup.enableModules},
-    builder: {open: Builder.openBuilder, plan: Builder.plan, run: Builder.runStep, again: Builder.rerunStep, undo: Builder.undoStep, runAll: Builder.runAll, record: Builder.record, recipe: Builder.recipe, recipes: Builder.RECIPES},
+    builder: {open: Builder.openBuilder, plan: Builder.plan, run: Builder.runStep, again: Builder.rerunStep, undo: Builder.undoStep, runAll: Builder.runAll, record: Builder.record, recipe: Builder.recipe, recipes: Builder.RECIPES, layWays: Builder.layWays, takeBackWays: Builder.takeBackWays},
     night: {pacing: Night.pacingNow, draw: Night.drawNight, propose: Night.proposeNight, approve: Night.approveNight, dialog: Night.nightDialog, now: Night.nightNow, layers: Night.layersInPlay, road: Night.roadEncounter, place: Night.placeEncounter, placeCard: Night.placeCard, placeFrom: Night.placeFromCard, peopleIn: Night.N.peopleIn},
     aid: {draw: Night.drawAid, propose: Night.proposeAid, approve: Night.approveAid, dialog: Night.aidDialog, fragments: Night.fragmentsFor, makeItem: Night.makeAidItem},
     dreams: {open: () => Dreams.DreamsApp.open(), list: Dreams.dreams, save: Dreams.saveDream, release: Dreams.releaseDream, remove: Dreams.removeDream, check: Dreams.checkDreams},
@@ -238,15 +248,17 @@ Hooks.once("ready", () => {
     siegeWorks: {rules: SiegeWorksRules, setup: SiegeWorks.setupDialog, mine: SiegeWorks.mineDialog, addEngine: SiegeWorks.addEngine, readyEngine: SiegeWorks.readyEngine,
       removeEngine: SiegeWorks.removeEngine, endMine: SiegeWorks.endMine, draw: SiegeWorks.draw},
     prelude: {dialog: Prelude.preludeDialog, make: Prelude.makePrelude, compose: PreludeRules.composePrelude, lineFor: PreludeRules.lineFor, lines: PreludeRules.LINE_ORDER},
-    letters: {open: Letters.openLetters, send: Letters.send, set: Letters.setLetter, deliver: Letters.deliver, list: Letters.lettersOnTheWay, delay: Letters.delayLetter, read: Letters.readOnTheWay, plan: Letters.planFor, regionOf: Letters.regionOfActor, rules: LettersRules},
+    letters: {open: Letters.openLetters, send: Letters.send, set: Letters.setLetter, deliver: Letters.deliver, list: Letters.lettersOnTheWay, delay: Letters.delayLetter, read: Letters.readOnTheWay, rewrite: Letters.rewriteLetter, plan: Letters.planFor, regionOf: Letters.regionOfActor, rules: LettersRules},
     upkeep: {open: Up.upkeepChooser, ties: Up.tiesDialog, tiesOf: Up.tiesOf, tend: Up.tend, check: Up.checkTies, between: Up.onSkip, undo: Up.undoBetween,
       grounds: Up.groundsDialog, huntHere: Up.huntHere, addHeat: Up.addHeat, rules: UpRules,
       money: {of: Money.moneyOf, dialog: Money.moneyDialog, monthly: Money.monthly, setAway: Money.setAway, setNeglected: Money.setNeglected, coins: Money.coinsNow, rules: MoneyRules,
         purse: Money.purseOf, pay: Money.pay, receive: Money.receive, transfer: Money.transfer, undo: Money.undoLast, price: Money.priceNow, findGood: Money.findGood,
         cashIn: Money.cashIn, payDay: Money.payDay, priceSync: Money.priceSync, awayMoney: Money.awayMoney, changeQuote: Money.changeQuote, change: Money.changePurse, receiveForeign: Money.receiveForeign, foreign: Money.foreignOf, arrival: Money.arrival, market: Money.marketFor, money: Money.moneyNow, format: (v, m) => MoneyRules.formatMoney(v, m ?? Money.moneyNow())},
-      markets: Markets.api(), marketNews: News.api(), marketTurn: Turn.api(), marketMoves: Moves.api(), caravans: Caravans.api(), ventures: Ventures.api(), institutions: Inst.api(), towns: Towns.api(), townLooks: TownLooks.api(), sickLooks: SickLooks.api(), powerLooks: PowerLooks.api(), contagion: Contagion.api(), power: Power.api(), herds: Herds.api(), sites: Sites.api()},
+      markets: Markets.api(), marketNews: News.api(), marketTurn: Turn.api(), marketMoves: Moves.api(), caravans: Caravans.api(), ventures: Ventures.api(), institutions: Inst.api(), towns: Towns.api(), townLooks: TownLooks.api(), townScars: TownScars.api(), sickLooks: SickLooks.api(), powerLooks: PowerLooks.api(), contagion: Contagion.api(), power: Power.api(), herds: Herds.api(), sites: Sites.api()},
     hardship: {open: Hard.hardshipDialog, weatherOf: Hard.weatherOf, tick: Hard.tick, undo: Hard.undoTick, mark: Hard.mark, off: Hard.setOff, weather: Hard.setWeather, of: Hard.needsOf, living: Hard.living, rules: HardRules},
     hunters: Hunters.api(),
+    // B4861-B4866: the world's own hand (the watch, hunters, road encounters, levers)
+    reach: Reach.api(),
     // B3524-B3527: crisis levers for a region
     levers: Levers.api(),
     // B3530-B3533: the Inheritance step
@@ -280,6 +292,7 @@ Hooks.once("ready", () => {
     // B3631: fetishes, talens and the other lines' supernatural items (WoDX Library api.wonders)
     wonders: Wonders.wondersApi(),
     teleport: {arm: Teleport.arm, to: Teleport.teleport, cursor: Teleport.cursorPoint, armed: Teleport.isArmed},
+    ways: {open: Ways.waysDialog, make: Ways.makeWay, walk: Ways.walk, network: Ways.network, check: Ways.check, region: Ways.wayRegion, rules: WayRules},
     draw: Night.drawChooser, nightRules: Night.N
   };
   const mod = game.modules.get(C.MOD);
@@ -387,6 +400,8 @@ Hooks.on("getSceneControlButtons", controls => {
     button: true, visible: game.user.isGM, onChange: () => Hand.handDialog()};
   tokens.tools.wodxDowntime = {name: "wodxDowntime", title: "Downtime request (what your character does between sessions)", icon: "fa-solid fa-bed", order: 124,
     button: true, visible: true, onChange: () => Between.downtimeDialog()};
+  tokens.tools.wodxWays = {name: "wodxWays", title: "Ways (doors, gates and roads between places; check that every place can be reached)", icon: "fa-solid fa-door-open", order: 135,
+    button: true, visible: game.user.isGM, onChange: () => Ways.waysDialog()};
   tokens.tools.wodxTeleport = {name: "wodxTeleport", title: "Teleport the selected tokens (then click the map; Alt+Shift+P sends them to the cursor)", icon: "fa-solid fa-person-through-window", order: 125,
     button: true, visible: game.user.isGM, onChange: () => Teleport.arm()};
   tokens.tools.wodxDraw = {name: "wodxDraw", title: "Draw for the story (tonight, a story aid, an Otherworld journey)", icon: "fa-solid fa-dice-d20", order: 119,
@@ -414,6 +429,8 @@ async function onSocket(message) {
   if ( type === "req.hunted" ) { await Up.onHunted(payload, {userId: payload.userId}); return; }
   if ( type === "req.fed" ) { await Herds.feedFrom(payload, {userId: payload.userId}); return; }
   if ( type === "req.venture" ) { await Ventures.onRequest(payload); return; }
+  if ( type === "req.way" ) { await Ways.onRequest(payload); return; }
+  if ( type === "req.reach" ) { await Reach.onRequest(payload); return; }
   if ( type !== "req.travel" && type !== "req.solo" ) return;
   // A player may only act for a character they own
   const user = game.users.get(payload.userId);

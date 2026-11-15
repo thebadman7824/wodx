@@ -12,3 +12,16 @@
 .wsolo-panel .wsolo-next { font-weight: bold; padding: 6px 8px; height: auto; }
 .wsolo-panel .wsolo-next-hint { margin: 0; }
 .wsolo-panel .wsolo-more > summary { cursor: pointer; opacity: 0.85; margin: 2px 0; }
+
+/* Storyteller tools for the lone player (B4800) */
+.wsolo-panel .wsolo-st > summary { cursor: pointer; font-weight: bold; margin: 4px 0 2px; }
+.wsolo-panel .wsolo-st-toggle.active { border-color: var(--color-warm-2, #c9593f); }
+.wsolo-eyes .wsolo-eyes-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.wsolo-eyes .wsolo-eye { border: 1px solid var(--color-border-light-tertiary, #7a7971); border-radius: 4px; padding: 4px 6px; }
+.wsolo-eyes .wsolo-eye-card { font-size: 0.9em; max-height: 260px; overflow-y: auto; opacity: 0.95; }
+.wsolo-eyes .wsolo-eye-card .message-header .message-delete, .wsolo-eyes .wsolo-eye-card .message-metadata a { display: none; }
+.wsolo-eyes .wsolo-eye-buttons { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.wsolo-eyes .wsolo-eye-buttons button { flex: 0 1 auto; width: auto; }
+.wsolo-give .wsolo-give-list { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+.wsolo-give .wsolo-give-list li { display: flex; align-items: center; gap: 6px; }
+.wsolo-give .wsolo-give-list button { flex: 0 0 auto; width: auto; max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

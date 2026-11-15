@@ -47,9 +47,11 @@ async function runGate(K) {
   const sig = a => game.actors.get(a.id)?.flags?.[C]?.sig ?? {};
   const lastCard = () => game.messages.contents.filter(m => m.timestamp >= t0 && m.content?.includes("wct-sig")).at(-1);
   const vamp = (name, clan, custom = "") => ({name, type: "Vampire", system: {clan, custom: {clan: custom}, generation: 12}});
-  let actors = [];
+  let actors = [], autoWas = null;
   try {
     await game.settings.set(C, "sigVampire", true);
+    // These steps press the card buttons; with "Features give their points by themselves" on (B4874) the points come at once instead (gatefeatures checks that)
+    autoWas = game.settings.get(C, "sigAuto"); await game.settings.set(C, "sigAuto", false);
     actors = await Actor.create([vamp("WoDX gate: Toreador", "toreador"), vamp("WoDX gate: Setite", "custom", "Followers of Set"),
       vamp("WoDX gate: Brujah", "brujah"), vamp("WoDX gate: Gangrel", "gangrel"), vamp("WoDX gate: Ventrue", "ventrue"),
       {name: "WoDX gate: Malkavian", type: "Vampire", system: {clan: "malkavian", generation: 12, derangement: "Paranoia"}},
@@ -231,6 +233,7 @@ async function runGate(K) {
       if ( msgs.length ) await ChatMessage.deleteDocuments(msgs.map(m => m.id));
       for ( const x of actors ) await game.actors.get(x?.id)?.delete();
       await game.settings.set(C, "sigVampire", was);
+      if ( autoWas !== null ) await game.settings.set(C, "sigAuto", autoWas);
     } catch (e) { R.errors.push(`cleanup: ${e.message}`); }
   }
   return save(R, "gatesigs-result.json");

@@ -173,7 +173,10 @@ export function propose(v, ctx) {
       if ( t ) add("adv.road", `${v.road.label ?? "The Road"} ${v.road.rating ?? ""} becomes ${PATH_LABEL[t.to]}`.replace(/\s+/g, " "),
         `The rating carries over${t.note ? `; ${t.note}` : ""} (house rule).`, true, {choice: t.to, rating: v.road.rating},
         t.choices.length > 1 ? t.choices.map(k => ({value: k, label: PATH_LABEL[k]})) : null);
-      else notes.push(`${v.road.label ?? "Road"}: no V20 Path is set for it; pick one by hand`);
+      // B5022: a Road with no row in the table goes to Humanity, or Honorable Accord, by the Storyteller's tick
+      else add("adv.road", `${v.road.label ?? "The Road"} ${v.road.rating ?? ""} becomes ${PATH_LABEL.humanity}`.replace(/\s+/g, " "),
+        "No V20 Path matches it: Humanity by default, or Honorable Accord (house rule).", true, {choice: "humanity", rating: v.road.rating},
+        ["humanity", "accord"].map(k => ({value: k, label: PATH_LABEL[k]})));
     }
     if ( v.records?.daMage && v.records.daMage.system !== "m20" ) {
       add("adv.daMage", "The Dark Ages mage becomes a Mage 20th mage", `${DA_RECORDS.daMage}. The old record is kept, marked archived.`, true);
@@ -191,16 +194,30 @@ export function propose(v, ctx) {
   // Line notes the Storyteller acts on by hand
   if ( v.line === "garou" ) {
     const lost = lostTribe(v.tribe, ctx.fromYear, ctx.toYear);
-    if ( lost ) add("adv.lostTribe", `The ${lost.tribe} are gone by ${lost.goneBy}`, `${lost.why}${lost.became ? `; they became the ${lost.became}` : ""}. Tick to record it; the tribe is the Storyteller's to change.`, false, {tribe: lost.tribe});
+    // B5022: a lost tribe's member joins what the tribe became, or is marked the last of it
+    if ( lost ) add("adv.lostTribe", `The ${lost.tribe} are gone by ${lost.goneBy}`, `${lost.why}${lost.became ? `; the character goes with them and becomes one of the ${lost.became}` : "; the character is marked the last of the tribe"}.`, true, {tribe: lost.tribe, became: lost.became ?? ""});
   }
-  if ( v.line === "wraith" && eraChanges ) notes.push("Review the Fetters: people die and places fall between eras (Wraith 20th p. 49)");
+  // B5022: a Fetter that names someone now dead is lost, and a Harrowing follows (Wraith 20th p. 308)
+  if ( v.line === "wraith" ) for ( const f of v.fetters ?? [] ) {
+    const who = (v.deadNames ?? []).find(d => d && String(f.name ?? "").toLowerCase().includes(String(d).toLowerCase()));
+    if ( who ) add("adv.fetterLost", `The Fetter "${f.name}" is lost`, `${who} has died: the Fetter goes, and a Harrowing follows (Wraith 20th p. 308).`, true, {itemId: f.id, who});
+  }
+  if ( v.line === "wraith" && eraChanges ) notes.push("Places can fall between eras too: a Fetter that is a place is checked by hand (Wraith 20th p. 49)");
   if ( v.line === "kuei-jin" ) notes.push("Does not age; progress is by Dharma, not by years (Kindred of the East pdf pp. 30–31)");
-  if ( v.line === "demon" ) notes.push("The host ages as a mortal; when it dies the demon must find another body (Demon p. 171)");
+  if ( v.line === "demon" ) {
+    // B5022: a host past the age a body gives out dies across the years, and the demon seeks another (house age)
+    const age = v.born === null || v.born === undefined ? null : ctx.toYear - Number(v.born);
+    if ( age !== null && age >= HOST_LIFESPAN ) add("adv.hostDies", `The host's body gives out at ${age}`, "The demon must find another body: the possession roll is made (Demon p. 171; DtF pdf 260).", true);
+    else notes.push("The host ages as a mortal; when it dies the demon must find another body (Demon p. 171)");
+  }
   if ( v.line === "mummy" ) notes.push("Between deaths the body ages as a mortal's (house rule)");
   if ( v.line === "orpheus" ) notes.push("The projector's body ages; spirits do not");
 
   return {changes, notes};
 }
+
+/** B5022: the age at which a Fallen's host dies across the years (house figure). */
+export const HOST_LIFESPAN = 85;
 
 export function ordinal(n) {
   const x = Number(n);

@@ -118,7 +118,13 @@ export async function birth(aLike, {outcome = ""} = {}) {
   const restUntil = (Number(game.time.worldTime) || 0) + Math.round(rest.weeks * 7 * 86400) + (result === "hard" ? F.HARD_BIRTH.restMonths * F.MONTH_SECONDS : 0);
   await mother.setFlag(MOD, "lyingIn", {until: restUntil, label: rest.label, hard: result === "hard"});
   const lines = [child ? `${child.name} is born.` : "The child is born.", `Then ${rest.label}, about ${rest.weeks} weeks.`];
-  if ( result === "hard" ) lines.push(`A hard birth: ${F.HARD_BIRTH.levels} bashing health levels and about ${F.HARD_BIRTH.restMonths} more months of rest.`);
+  if ( result === "hard" ) {
+    // B4881: the hard birth's harm and rest are put on the sheet
+    try { await game.modules.get("wodx-combat")?.api?.applyDamage?.(mother, "bashing", F.HARD_BIRTH.levels); } catch (e) { console.warn(`${MOD} | hard birth`, e); }
+    lines.push(`A hard birth: ${F.HARD_BIRTH.levels} bashing health levels, marked, and about ${F.HARD_BIRTH.restMonths} more months of rest.`);
+  }
+  try { await game.modules.get("wodx-chronicle")?.api?.applyTimed?.(mother, {name: "Lying in", description: `${rest.label}${result === "hard" ? ", after a hard birth" : ""}`, duration: {kind: "time", seconds: Math.max(86400, restUntil - (Number(game.time.worldTime) || 0))}, key: "wodx-npc-lying-in", source: "WoDX NPC family"}); }
+  catch (e) { console.warn(`${MOD} | lying in`, e); }
   await ChatMessage.create({whisper: [...new Set([...ownersOf(mother), ...(other ? ownersOf(other) : [])])], speaker: {alias: "WoDX"}, flags: {[MOD]: {birth: rec.id}},
     content: card(`${mother.name} gives birth`, lines)});
   Hooks.callAll("wodxBirth", {mother, other, record: rec, outcome: result, child});

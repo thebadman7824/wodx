@@ -28,6 +28,7 @@ import * as languages from "./languages.mjs";
 import * as tours from "./tours.mjs";
 import * as effects from "./effects.mjs";
 import * as looks from "./looks.mjs";
+import * as scars from "./scars.mjs";
 import * as church from "./church.mjs";
 import * as law from "./law.mjs";
 import * as lawHeat from "./law-heat.mjs";
@@ -231,7 +232,7 @@ Hooks.once("ready", async () => {
     pace: {line: pace.paceLine},
     setDate: setDateDialog,
     eras, approvals, safety,
-    automation: {level: automation.level, setLevel: automation.setLevel, preview: automation.preview, rules: automationRules},
+    automation: {level: automation.level, setLevel: automation.setLevel, seed: automation.seedLevel, preview: automation.preview, rules: automationRules},
     waiting: {open: () => waiting.WaitingApp.open(), rows: waiting.rows, count: waiting.count, take: waiting.take, wrapLine: waiting.wrapLine, rules: waitingRules},
     know: {render: know.render, traitsOf: know.traitsOf, passages: knowRules.passages, rules: knowRules},
     propose: approvals.propose,
@@ -251,6 +252,8 @@ Hooks.once("ready", async () => {
     effects: {hiding: effects.hiding, applyAll: effects.applyAll, isVideoSrc: effects.isVideoSrc},
     // B3758: looks on the map that show players what happens to a place (show, don't tell)
     looks: looks.api(),
+    // B3759: lasting damage a disaster or a great power leaves on the map, healed by the town turns, with Undo
+    scars: scars.api(),
     release: {check: release.check, current: release.current},
     when: {check: when.check, run: when.run, context: when.contextFor, checker: when.checker, parse: when.rules.parseWhen, parseThen: when.rules.parseThen, help: when.rules.helpText, rules: when.rules},
     // B3520-B3523: a player's freeform action as one ruling ticket in the queue

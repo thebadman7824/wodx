@@ -2,6 +2,9 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.84.0 (The NPC side of the Storyteller's Hand, part three (B4880-B4885))
+- 0.83.1 (Grief is rolled for the loved ones when a death lands (B4871), and the faction turn calls wodxFactionTurn so the court's Blood Hunts can act on it (B4873); An absent player's character that WoDX Storyteller stands in for (the standIn flag) takes its fight turns as an NPC does, without spending Willpower, using powers or taking a hostage (B4868))
+- 0.83.0 (NPCs and vehicles (B4797, house rule). The fight reading lists the free mounts and vehicles on the scene in the year (nobody at the reins, a seat left, not wrecked) with the distance and whether the NPC has the dots to drive it. A new option, "Get into a vehicle", scores just above flight when flight is the best choice, or just above the best attack when every foe is out of reach and further than a run (aggression a half or more). Auto mode carries it out: the token walks beside the tile and takes the reins through WoDX Interactables' own Mount it action. At the reins the NPC's flight and approach use the mount's or vehicle's pace, so it drives off or runs a foe down, and the ram is among its attacks)
 - 0.82.0 (Who holds a place, and a thinned herd, on the map (B4630, B4631): faction banners follow who holds what, and the night streets of an over-fed district empty before the Hunt gets harder. World setting "Show who holds a place on the map", on by default)
 - 0.81.0 (Wants met (B3926): talk.mjs wantAsked, wantMet (api talk.wantMet), the talk card's want button; wanted-rules normMarks keeps features)
 - 0.80.0 (Event powers for the classic events and Future Darkness (B3922): EVENT_POWERS gains nine entries, EVENT_ENDS ends factions by name, test event-effects)

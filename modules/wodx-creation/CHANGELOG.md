@@ -2,6 +2,12 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.59.0 (Creation acts without the Storyteller's hand (B5022-B5024))
+- 0.58.0 (The Banyarwanda and Barundi join the People generator (B5030 to B5032))
+- 0.57.0 (The Moro join the People generator (B5000 to B5002))
+- 0.56.0 (The Tuareg join the People generator (B4950 to B4952))
+- 0.55.0 (The Sami join the People generator (B4900 to B4902))
+- 0.54.0 (Filipinos join the People generator with names from Pigafetta, Legazpi and the Clavería catalogue (B4750 to B4752))
 - 0.53.0 (The Khmer join the People generator (B4740 to B4742))
 - 0.52.0 (Sephardi and Mizrahi Jews join the People generator with their own names and families (B4730 to B4732))
 - 0.51.0 (The Amazigh (Berbers) join the People generator with names from the Almoravid and Almohad records and the Kabyle and Moroccan names since (B4710 to B4712))

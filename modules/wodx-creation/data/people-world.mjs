@@ -24,6 +24,7 @@ import {inuitTables} from "./people-inuit.mjs";
 import {tainoTables} from "./people-taino.mjs";
 import {aboriginalTables} from "./people-aboriginal.mjs";
 import {centralAfricaTables} from "./people-central-africa.mjs";
+import {filipinoTables} from "./people-filipino.mjs";
 import {ARMENIAN} from "./people-armenian.mjs";
 
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
@@ -75,6 +76,14 @@ const P = {
     m: "Jan, Pieter, Willem, Dirk, Hendrik, Cornelis, Gerrit, Jacob, Klaas, Adriaan, Floris, Arnout, Johannes, Maarten, Bram, Joost, Ruben, Thijs",
     f: "Maria, Anna, Johanna, Cornelia, Elisabeth, Geertruida, Margaretha, Aleid, Machteld, Katrijn, Neeltje, Trijntje, Hendrika, Wilhelmina, Sanne, Lotte",
     fam: "de Jong, Jansen, de Vries, van den Berg, van Dijk, Bakker, Janssen, Visser, Smit, Meijer, de Boer, Mulder, de Groot, Bos, Vos, Peters, Hendriks, van Leeuwen, Dekker, Brouwer"},
+  // The Sami of Sápmi, the north of Norway, Sweden and Finland and the Kola (B4900): Sami forms of the church names the
+  // missions and the tax rolls recorded from the 16th century, then the given and family names of the 19th and 20th
+  sami: {
+    m: {old: "Ánde, Ánte, Áslat, Biehtar, Máhtte, Niillas, Jovnna, Heaika, Mihkkal, Ovllá, Isak, Piera, Juhán, Lásse, Sámmol, Jon, Ole, Mihkkel, Ivvár, Ádjá, Oula",
+      new: "Nils, Per, Aslak, Johan, Mikkel, Anders, Isak, Ole, Lars, Jon, Mattis, Ante, Niillas, Áilu, Sven, Mons, Nils-Aslak, Hans, Thomas, Jovnna, Máhtte, Ánde"},
+    f: {old: "Elle, Biret, Risten, Ingá, Máret, Gáren, Ánne, Sára, Márjá, Káddja, Siri, Ellen, Kirsten, Elsá, Bigge, Gunnel",
+      new: "Elle, Sara, Inga, Karen, Maret, Biret, Ellen, Anna, Kristina, Elsa, Ristin, Ánná, Sofia, Marja, Máret, Risten, Mari, Áile"},
+    fam: {new: "Somby, Hætta, Gaup, Eira, Sara, Utsi, Valkeapää, Kuoljok, Labba, Turi, Bals, Buljo, Bongo, Kemi, Mienna, Partapuoli, Sarri, Siri, Skum, Tuolja, Aikio, Magga, Oskal, Balto, Logje, Marainen, Nutti, Pittja, Kitti, Lukkari, Näkkäläjärvi, Länsman, Persen, Gaino, Triumf, Renberg, Laula, Bær"}},
   norse: {
     m: {old: "Erik, Olaf, Harald, Sigurd, Knut, Magnus, Håkon, Sven, Gunnar, Bjørn, Ragnvald, Torstein, Eystein, Ivar, Halvdan, Arne, Leif, Ulf",
       new: "Erik, Karl, Lars, Anders, Johan, Nils, Per, Olof, Gustav, Sven, Axel, Oskar, Henrik, Mikael, Stefan, Jonas, Magnus, Fredrik"},
@@ -188,6 +197,23 @@ const P = {
     m: "Ahmad, Ismail, Hassan, Ibrahim, Osman, Yusof, Abdullah, Rahman, Hamzah, Zainal, Razak, Kassim",
     f: "Aminah, Fatimah, Zainab, Halimah, Salmah, Rokiah, Noraini, Siti, Aishah, Mariam, Rohani, Zaleha",
     child: ["bin", "binti", 1]},
+  // The Moro of Mindanao and Sulu: the Maguindanao, Maranao, Tausug and their sultanates (B5000), from the court
+  // genealogies (tarsila) and the Spanish and American records, then the family names of the Bangsamoro since
+  moro: {
+    m: {old: "Kudarat, Kabungsuwan, Dipatuan, Bayan, Barahaman, Jamalul, Azim ud-Din, Badar ud-Din, Muizz ud-Din, Israel, Alimud Din, Bantilan, Pulalun, Mahakuttah, Uto, Piang, Ali, Amai Pakpak, Kalun, Abu Bakr, Makaalang, Malinug, Ampuan, Raja Bongsu, Salibad, Tambilawan",
+      new: "Hashim, Nur, Salamat, Abdulmari, Ahmad, Ibrahim, Murad, Ghazali, Jaafar, Mohagher, Esmael, Zaldy, Andal, Abdullah, Khalid, Nurhan, Sharif, Mujiv, Ismael"},
+    f: {old: "Tarhata, Piandao, Inda, Sitti, Nur, Fatima, Salima, Mayang, Bolawan, Sakinah, Jamila",
+      new: "Tarhata, Sitti, Nur, Fatima, Salima, Amina, Bainon, Johaira, Sittie, Noraida, Jalilah, Rohaida, Samira, Normina"},
+    child: ["bin", "binti", 1],
+    fam: {new: "Kiram, Piang, Alonto, Lucman, Dimaporo, Misuari, Ampatuan, Mangudadatu, Sinsuat, Pendatun, Abubakar, Sema, Jaafar, Lidasan, Matalam, Tan, Adiong, Macarambon, Dimakuta, Pangarungan, Dumarpa, Balindong, Sangki, Paglas, Masturah, Arbison, Jikiri, Tulawie, Sahali, Hataman, Ututalum"}},
+  // The Banyarwanda and Barundi of the kingdoms of Rwanda and Burundi (B5030): the mwami king lists and the court
+  // histories, then a church name with an own name of Kinyarwanda or Kirundi, which is not passed to the children
+  banyarwanda: {
+    m: {old: "Ruganzu, Cyilima, Kigeli, Mibambwe, Yuhi, Mutara, Rwabugiri, Musinga, Ntare, Mwezi, Mutaga, Mwambutsa, Gihanga, Rudahigwa, Ndori, Rwogera, Gahindiro, Mazimpaka, Ruhinankiko, Rwakagara, Kabare, Ntwari, Habimana, Mugabo, Ndayisaba, Bizimana, Nkurunziza, Hakizimana, Nsengiyumva, Ndikumana",
+      new: "Jean, Pierre, Emmanuel, Jean-Baptiste, Joseph, Innocent, Théogène, Alphonse, Déogratias, Félicien, Pascal, Eric, Patrick, Olivier, Fabrice, Claude, Aimable, Célestin"},
+    f: {old: "Kanjogera, Nyiramavugo, Nyirarumaga, Uwimana, Mukamana, Uwase, Ingabire, Umutoni, Mutesi, Uwera, Mukeshimana, Nyiramana, Kankindi, Kayitesi, Murekatete, Mukandoli, Nyirabukara",
+      new: "Marie, Jeanne, Claudine, Immaculée, Speciose, Béatrice, Chantal, Josiane, Diane, Aline, Solange, Grâce, Clarisse, Espérance, Vestine, Pélagie"},
+    fam: {new: "Habimana, Uwimana, Mugabo, Ndayisaba, Bizimana, Nkurunziza, Hakizimana, Nsengiyumva, Ndikumana, Niyonzima, Uwase, Ingabire, Mukamana, Mutesi, Uwera, Mukeshimana, Niyonsaba, Nshimiyimana, Twagiramungu, Munyaneza, Nzeyimana, Ntirenganya, Nizeyimana, Irakoze, Ndayishimiye, Bigirimana, Ntakirutimana, Kwizera, Iradukunda, Manirakiza, Nduwimana, Havyarimana"}},
   mande: {
     m: "Sundiata, Mamadou, Moussa, Bakary, Seydou, Modibo, Amadou, Ibrahima, Lassana, Boubacar, Souleymane, Fodé, Sékou, Tiémoko, Drissa, Oumar",
     f: "Fatoumata, Aminata, Mariam, Kadiatou, Oumou, Awa, Sogolon, Djénéba, Rokia, Bintou, Salimata, Nana, Assetou, Korotoumou, Hawa, Ramata",
@@ -238,6 +264,12 @@ const P = {
     child: ["ben", "bat", 3],
     fam: {old: "ha-Kohen, ha-Levi, al-Baghdadi, al-Fasi, al-Tustari, al-Maghribi, al-Halabi, al-Ammani, al-Iskandarani, ha-Bavli, al-Sanaani, al-Dimashqi, al-Qabisi, al-Tahiri",
       new: "Sassoon, Kadoorie, Shasha, Somekh, Shamash, Dangoor, Twena, Basri, Moallem, Shohet, Elias, Gabbay, Zilkha, Hakim, Sehayek, Kohen, Levi, Mizrahi, Hakimian, Elghanayan, Nazarian, Kashani, Sharabi, Tzadok, Damari, Nahari, Kafih, Hamami, Abergel, Ohayon, Azoulay, Bitton, Elbaz, Dahan, Amsalem, Benchetrit, Ohana, Assaraf"}},
+  // The Tuareg (Kel Tamasheq) of the Ahaggar, the Aïr and the Niger bend (B4950): the amenokals and chiefs of the
+  // French and Arabic records and the given names since, with "ag" (son of) and "welet" (daughter of) the father
+  tuareg: {
+    m: "Moussa, Amastan, Attici, Ahitaghel, Akhamouk, Kaocen, Firhoun, Mano, Intalla, Iyad, Alla, Bay, Hama, Mohammed, Ibrahim, Aghali, Ahmed, Abdallah, Ghali, Rissa, Alhassane, Amoumine, Elmehdi, Ilyas, Mohamed Ali, Effad, Assalat, Koudede, Abdoulahi, Ousmane",
+    f: "Tin Hinan, Dassine, Fadimata, Takamat, Tahenkot, Aïchatou, Mariama, Tamou, Fatimata, Khadija, Zeinabou, Aminatou, Raichatou, Tina, Assia, Hadiza, Mina, Tanina",
+    child: ["ag", "welet", 1]},
   zulu: {
     m: "Sipho, Themba, Bongani, Mandla, Sibusiso, Nkosana, Mthunzi, Dumisani, Jabulani, Vusumuzi, Zwelakhe, Mzwandile, Lungile, Siyabonga, Senzo, Bheki",
     f: "Nomvula, Thandiwe, Nomsa, Zanele, Lindiwe, Busisiwe, Nokuthula, Sibongile, Ntombi, Thandeka, Nonhlanhla, Zodwa, Khanyisile, Nomusa, Ayanda, Hlengiwe",
@@ -298,10 +330,10 @@ for ( const id of Object.keys(WORLD_REGIONS) ) {
 
 // Peoples with hand-built tables of their own (clans, names staged by age): the Haudenosaunee (B3120), the Algonquian
 // coast (B3510), the Plains (B3820) and the Southwest (B3930)
-const BUILT = {haudenosaunee: haudenosauneeTables(), ...Object.groupBy([...algonquianTables(), ...plainsTables(), ...southwestTables(), ...missouriTables(), ...plainsNorthTables(), ...basinTables(), ...canadaTables(), ...inuitTables(), ...tainoTables(), ...aboriginalTables(), ...centralAfricaTables()], t => t.id.split(".").at(-1))};
+const BUILT = {haudenosaunee: haudenosauneeTables(), ...Object.groupBy([...algonquianTables(), ...plainsTables(), ...southwestTables(), ...missouriTables(), ...plainsNorthTables(), ...basinTables(), ...canadaTables(), ...inuitTables(), ...tainoTables(), ...aboriginalTables(), ...centralAfricaTables(), ...filipinoTables()], t => t.id.split(".").at(-1))};
 export const WORLD_PEOPLE_TABLES = [...origins, ...names, ...Object.values(BUILT).flat()];
 /** Peoples who bear a given name alone in some or all ages. */
-export const GIVEN_ONLY = new Set(["new-england-algonquian", "powhatan", "lakota", "cheyenne", "comanche", "kiowa", "apache", "arikara", "pawnee", "mandan", "hidatsa", "blackfoot", "arapaho", "shoshone", "ute", "cree", "anishinaabe", "inuit", "taino", "aboriginal", "luba", ...Object.entries(P).filter(([, p]) => !p.child && (!p.fam || (typeof p.fam !== "string" && !Object.keys(p.fam).some(k => k === "old" || k.includes("medieval"))))).map(([o]) => o)]);
+export const GIVEN_ONLY = new Set(["new-england-algonquian", "powhatan", "lakota", "cheyenne", "comanche", "kiowa", "apache", "arikara", "pawnee", "mandan", "hidatsa", "blackfoot", "arapaho", "shoshone", "ute", "cree", "anishinaabe", "inuit", "taino", "aboriginal", "luba", "filipino", "moro", "banyarwanda", ...Object.entries(P).filter(([, p]) => !p.child && (!p.fam || (typeof p.fam !== "string" && !Object.keys(p.fam).some(k => k === "old" || k.includes("medieval"))))).map(([o]) => o)]);
 /** Every people named here. */
 export const WORLD_PEOPLES = [...Object.keys(P), ...Object.keys(BUILT)];
 /** Peoples raised to at least 300 distinct names (Ben 2026-11-13, B3310 on): one at a time, the biggest homelands first. */

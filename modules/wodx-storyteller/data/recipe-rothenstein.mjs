@@ -3,7 +3,7 @@
  * approved by Ben 2026-11-13; B2780-B2785). The builder (builder.mjs) reads it and makes the chronicle step by step in
  * the world it names. Data only: recipe-rules.mjs checks it and plans the steps.
  *
- * Phase 1 uses: world, title, homeland, opening, lines, carry and anchors. The later parts (town, reach, ages, spine)
+ * Phase 1 uses: world, title, homeland, opening, lines, carry, anchors and doors. The later parts (town, reach, ages, spine)
  * are written down now so the shape is fixed; their steps come with phases 2 to 7.
  */
 export const ROTHENSTEIN = {
@@ -13,8 +13,8 @@ export const ROTHENSTEIN = {
   // The world the builder works in. It refuses rothenstein-live always, and any other world unless forced.
   world: "rothenstein-x",
   homeland: "moravia",
-  // 1197 as now (desk s4); a later start is a change of this line.
-  opening: {year: 1197, month: 10, day: 1, hour: 21},
+  // The autumn of 1200, as the Storyteller volumes open (B4760).
+  opening: {year: 1200, month: 9, day: 1, hour: 21},
   climate: "auto",
   // Every line has a door into the valley from the first night (desk w4), Vampire in front.
   lines: ["vampire", "werewolf", "mage", "changeling", "wraith", "hunter", "mortal"],
@@ -59,10 +59,51 @@ export const ROTHENSTEIN = {
       {key: "etienne", name: "Etienne", home: "inn", faction: null}
     ]
   },
+  // The Ways step (B4810-B4813): the old world's exits between the walkable maps become Ways, and each place inside gets a
+  // door from the street it stands on. By scene name; the door's end sits on the street map's south edge until the
+  // Storyteller moves it. A private place of a schemer is locked (the lock rules decide); Bogdan's rooms ask first.
+  doors: [
+    {inside: "Trespass · Baba Yaroslava's House", street: "Dolany Village"},
+    {inside: "Trespass · Bogdan's Private Chambers", street: "Kranzfels · Upper Floor and Undercroft", kind: "stair", shut: "asks"},
+    {inside: "Trespass · Brother Anselm's Hermitage", street: "The High Woods"},
+    {inside: "Trespass · Captain Ondrej's Barracks", street: "Kranzfels · The Outer Bailey"},
+    {inside: "Trespass · Etienne's Room at the Inn", street: "Workplace · The Inn Upstairs and Cellar", kind: "stair"},
+    {inside: "Trespass · Father Ludovic's Presbytery", street: "Lower Town · Church Close"},
+    {inside: "Trespass · Gizela's Midwife House", street: "Lower Town · Craftsmen's Lane"},
+    {inside: "Trespass · Ivo's Ferry Cabin", street: "Toll-post and Ivo's Ferry"},
+    {inside: "Trespass · Kasimir's Lair in the Adit", street: "The Silver Adit", shut: "locked"},
+    {inside: "Trespass · Konrad's Undercroft Workshop", street: "Kranzfels · Upper Floor and Undercroft", shut: "locked"},
+    {inside: "Trespass · Master Voss's Laboratory and Cellar", street: "Lower Town · Craftsmen's Lane", shut: "locked"},
+    {inside: "Trespass · Richter Graff's House and Strongroom", street: "Lower Town · Market Square", shut: "locked"},
+    {inside: "Trespass · Sieglinde's Rooms", street: "Kranzfels · Inner Ward and Great Hall"},
+    {inside: "Trespass · Sister Marta's Cell and the Keep Chapel", street: "Kranzfels · Inner Ward and Great Hall"},
+    {inside: "Trespass · The Scriptorium and Brother Paval's Cell", street: "Lower Town · Church Close"},
+    {inside: "Trespass · Zdenka's Wellhouse", street: "Lower Town · Riverside Quay"},
+    {inside: "Workplace · The Bakery", street: "Lower Town · Market Square"},
+    {inside: "Workplace · The Barber-Surgeon's Shop", street: "Lower Town · Market Square"},
+    {inside: "Workplace · The Brewhouse", street: "Lower Town · Riverside Quay"},
+    {inside: "Workplace · The Butcher's Shop", street: "Lower Town · Craftsmen's Lane"},
+    {inside: "Workplace · The Cooper's Workshop", street: "Lower Town · Craftsmen's Lane"},
+    {inside: "Workplace · The General Store", street: "Lower Town · Market Square"},
+    {inside: "Workplace · The Inn Upstairs and Cellar", street: "Locus · The Tavern", kind: "stair"},
+    {inside: "Locus · The Tavern", street: "Lower Town · Market Square"},
+    {inside: "Workplace · The Mining Camp", street: "The Mining Camp and Adit Mouth"},
+    {inside: "Workplace · The Tannery", street: "Lower Town · Riverside Quay"},
+    {inside: "Workplace · The Warehouse and Customs House", street: "Lower Town · Riverside Quay"},
+    {inside: "Workplace · The Watch-house and Cells", street: "Lower Town · West Gate and the Common"},
+    {inside: "Workplace · The Water Mill", street: "The Ford and Wenzel's Mill"},
+    {inside: "Workplace · The Weaver's Workshop", street: "Lower Town · Craftsmen's Lane"},
+    {inside: "Workplace · The Woodcutters' and Charcoal Camp", street: "The Forest Road"},
+    {inside: "Locus · Church of St. Aegidius", street: "Lower Town · Church Close"},
+    {inside: "Locus · The Churchyard", street: "Lower Town · Church Close"},
+    {inside: "Locus · Smithy and Stables", street: "Lower Town · West Gate and the Common"},
+    {inside: "Locus · The Forest Cottage", street: "The High Woods"},
+    {inside: "Locus · The Herdsman's Shelter", street: "The Mountain Trail"}
+  ],
   // Phase 2: the town from one fixed seed (desk w1); anchors take their plots first.
-  town: {name: "Rothenstein", seed: 1197, size: "town", region: "moravia", sewers: false},
+  town: {name: "Rothenstein", seed: 1200, size: "town", region: "moravia", sewers: false},
   // Phase 5: the settlement ages the town is rebuilt at, with households carried forward by heirs (desk w1).
-  ages: [1197, 1420, 1620, 1781, 1851, 1919, 1948, 1990, 2030],
+  ages: [1200, 1420, 1620, 1781, 1851, 1919, 1948, 1990, 2030],
   // Phase 5: the sleeper's origin is dated in the Classical age, in Great Moravia (desk s2); the details go on a desk.
   spine: {origin: {era: "classical", place: "great-moravia"}, opening: "Sessio I to X and the encounters (desk s3)", saga: "rothenstein"},
   // Phase 5 and 6: one away hub per era on another continent, tied in by letters, trade and events (desk w2). Each

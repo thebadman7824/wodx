@@ -47,6 +47,12 @@ function artsOf(items = []) {
   return out;
 }
 
+/** B5014: finding a Treasure's components, each an extended stage (house figures; C20 leaves the finding to the story). */
+export const COMPONENT_FIND = {attr: "perception", ability: "kenning", diff: 7, goal: 3};
+export function componentStages(level = 1) {
+  return Array.from({length: Math.max(1, Math.min(5, n(level) || 1))}, (_, i) => ({name: `Finding component ${i + 1}`, goal: COMPONENT_FIND.goal,
+    attr: COMPONENT_FIND.attr, ability: COMPONENT_FIND.ability, diff: COMPONENT_FIND.diff}));
+}
 /** Points of a forged chimera spent the simple way (the Storyteller may rework them on the sheet). */
 export function chimeraTraits(points = 20) {
   const p = Math.max(6, Math.round(n(points)));
@@ -113,7 +119,7 @@ export const changelingKit = {
     if ( r.house ) out.push("Gathering is a story in the books; here it is one roll.");
     if ( r.kind === "craft" ) out.push("Failure loses a week; a botch can break a tool, spoil materials, cost the work done so far, or hurt someone.");
     if ( r.key === "forged-chimera" ) out.push("The chimera is made with simple traits from its points; the Storyteller can rework them and add Redes.");
-    if ( r.kind === "treasure" ) out.push("The Storyteller decides when the components are found: one for each level of the Art. The Treasure manifests the Art even if its maker does not know it.");
+    if ( r.kind === "treasure" ) out.push("The components are found first, one for each level of the Art, each a stage of the work. The Treasure manifests the Art even if its maker does not know it.");
     if ( r.kind === "imbue" ) out.push("A very Banal thing is harder to imbue, at the Storyteller's word.");
     return out;
   },
@@ -143,9 +149,14 @@ export const changelingKit = {
       attr: "intelligence", ability: "gremayre", diff: 6, goal: 5 * lvl, interval: "hour", delicate: false, delay: 0, opts,
       note: `Intelligence + Gremayre each hour, ${5 * lvl} successes, ${lvl} Glamour given (${ref}).`};
     const scope = r.scope ?? "advanced";
-    return {kind: "wonder", line: "changeling", name: r.kind === "treasure" ? `Craft a Treasure of ${C.ARTS[o.art] ?? "an Art"} ${lvl}` : `Craft: ${r.name}`,
+    const craft = {kind: "wonder", line: "changeling", name: r.kind === "treasure" ? `Craft a Treasure of ${C.ARTS[o.art] ?? "an Art"} ${lvl}` : `Craft: ${r.name}`,
       attr: "dexterity", ability: "craft", diff: Math.min(10, craftDiff(scope, o)), goal: C.SCOPES[scope].goal + (r.better ? 2 : 0), interval: "week", delicate: false, delay: 0,
       opts: {...opts, scope, stuff: n(r.stuff)}, note: `${C.SCOPES[scope].label}; Dexterity + Crafts each week (${ref}).`};
+    // B5014: a Treasure's components, one for each level of the Art, are found first, each a stage of its own
+    if ( r.kind !== "treasure" ) return craft;
+    const finds = componentStages(lvl);
+    return {...craft, goal: finds[0].goal, attr: finds[0].attr, ability: finds[0].ability, stages: [...finds, {name: "Crafting", goal: craft.goal, attr: "dexterity", ability: "craft", diff: craft.diff}],
+      note: `${lvl} component${lvl === 1 ? "" : "s"} to find (Perception + Kenning at ${COMPONENT_FIND.diff} each week), then ${craft.note}`};
   },
 
   /** The wonder flag a finished work carries. */

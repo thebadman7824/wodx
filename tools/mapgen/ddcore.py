@@ -5,7 +5,7 @@ in buildings.py.
 Call init(seed, asset list) first: it sets the one random generator every step draws from, so a seed always gives
 the same map.
 """
-import json, math, random, re
+import json, math, os, random, re
 import stock as STOCK
 
 CELL = 256                    # Dungeondraft pixels per grid square
@@ -19,12 +19,17 @@ PACKS = {   # id: (name, version)
 R = random.Random(0)
 SEED = 0
 ASSETS = []
+REGION_LISTS = [os.environ.get("WODX_JAPAN_ASSETS", "/mnt/project-files/dd-assets-japan-paths.txt")]
 
 def init(seed, asset_list):
     """Set the seed and read the asset list (every asset path in the packs, one a line). Returns the generator."""
     global R, ASSETS, SEED
     R, SEED = random.Random(seed), seed
-    ASSETS = list(dict.fromkeys(l.strip() for f in str(asset_list).split(",") if f for l in open(f, encoding="utf-8-sig") if "/textures/" in l))
+    files = [f for f in str(asset_list).split(",") if f]
+    # Ben's own region packs (Tom Cartos' Feudal Japan town, castle, inn, gardens and culture) ride along with any list:
+    # their pictures carry their region, so only a town in that region draws them
+    files += [f for f in REGION_LISTS if os.path.exists(f) and f not in files]
+    ASSETS = list(dict.fromkeys(l.strip() for f in files for l in open(f, encoding="utf-8-sig") if "/textures/" in l))
     USED.clear()
     LIGHTS.clear()
     return R

@@ -531,3 +531,6 @@ export function weekTowns(st, {now = 0} = {}) {
   }
   return {state: s, rows};
 }
+
+/** B5012: a medicine (WoDX Library) eases the weekly Stamina roll by 1 for a week. */
+export const REMEDY_EASE = 1, REMEDY_WEEK = 7 * 24 * 3600;
