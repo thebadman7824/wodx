@@ -71,7 +71,8 @@ export async function run() {
       await ear.update({"system.advantages.willpower.permanent": 0, "system.advantages.willpower.temporary": 0, "flags.wodx-senses.sight": "heightened"});
       Hooks.callAll("wodxInteractablesNoise", {noise: "loud", scene: canvas.scene.id, heard: [(te.document ?? te).uuid]});
       const dazed = await waitFor(() => ear.statuses?.has?.("wodx-dazed"), 8000);
-      G.ok("5 senses overwhelmed", !!dazed, {statuses: [...(ear.statuses ?? [])]});
+      const senses = !!game.modules.get("wodx-senses")?.active;
+      G.ok("5 senses overwhelmed", !!dazed, {senses, statuses: [...(ear.statuses ?? [])]});
     });
 
     await G.step("6 heartsick", async () => {
