@@ -1,3 +1,6 @@
+---
 bump: minor
-effect: api.look.goods() hands other modules the goods list, so WoDX Chronicle's signature cards name a good's kind and substance again
-visible: a signature drink or drug card shows what the good is, not only its name
+effect: Chronicle's signature cards name a good's kind and substance again, read from the new api.look.goods()
+visible: a signature drink or drug card shows what kind of good it is, not only its name
+---
+New api.look.goods(): the goods list the look already loads, for other modules (B6203).
