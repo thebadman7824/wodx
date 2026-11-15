@@ -52,7 +52,8 @@ test("a chronicle opens in 1197 with a household of every kind", async () => {
   await JournalEntry.create({name: "Rothenstein notes", pages: [{name: "One", type: "text", text: {content: "<p>Kept</p>"}}]});
   cast = {elder: elder.id, ghoul: ghoul.id, mortal: mortal.id};
   assert.equal(chron().eras.activeEra().profile.id, "dark-ages");
-  assert.deepEqual(chron().events.fired(), []);
+  // the world timeline (B5920) starts in 1197; no book event has happened yet
+  assert.deepEqual(chron().events.fired().filter(id => !id.startsWith("wh-")), []);
 });
 
 for ( const [year, era] of STEPS ) {

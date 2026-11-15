@@ -124,10 +124,11 @@ test("first check records the past silently; crossing an event posts a card", as
   await Hooks.callAll("ready");
   await mock.settle();
   const api = game.modules.get(M).api;
-  assert.deepEqual(game.settings.get(M, "eventsFired"), []);
+  // the world timeline (B5920) has events from 1197; the book events start later
+  assert.deepEqual(game.settings.get(M, "eventsFired").filter(id => !id.startsWith("wh-")), []);
   assert.ok(!mock.log.chat.some(c => /The world turns/.test(c.content)));
   const seen = [];
-  Hooks.on("wodxEventFired", ev => seen.push(ev.id));
+  Hooks.on("wodxEventFired", ev => { if ( !ev.id.startsWith("wh-") ) seen.push(ev.id); });
   await game.time.set(date(1348, 1, 1));
   await api.events.check();
   assert.deepEqual(seen, ["black-death"]);
@@ -144,6 +145,16 @@ test("a time skip posts one card for every event it crosses", async () => {
   assert.equal(cards.length, 1);
   assert.match(cards[0].content, /Convention of Thorns/);
   assert.match(cards[0].content, /during Pass the Years/);
+  // the world timeline (B5920 to B5922): twelve pieces of news at most, the rest counted; the hidden story whispered
+  assert.ok((cards[0].content.match(/<li>/g) ?? []).length <= 12 + 20, "the card stays short");
+  assert.match(cards[0].content, /more pieces? of news from these parts/);
+  const hidden = mock.log.chat.slice(before).filter(c => /Behind the curtain/.test(c.content));
+  assert.equal(hidden.length, 1);
+  assert.ok(hidden[0].whisper?.length, "whispered to the Storyteller");
+  const {default: WH} = await import("../../modules/wodx-chronicle/data/world-history.mjs");
+  const secret = WH.events.filter(e => e.hidden && e.year < 1500).map(e => e.name);
+  const leak = secret.filter(n => cards[0].content.includes(`: ${n}.</strong>`));
+  assert.deepEqual(leak, [], cards[0].content.slice(0, 3000));
   const rules = game.journal.find(j => j.getFlag(M, "kind") === "chronicle-rules");
   await api.eras.refreshRulesJournal(); await mock.settle();
   assert.match(rules.pages.getName("Dated events").text.content, /Happened/);
