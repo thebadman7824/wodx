@@ -262,15 +262,31 @@ export const BURDENS = [
 ];
 export const burdenOf = v => BURDENS[Math.max(0, Math.min(BURDENS.length - 1, Math.round(Number(v) || 0)))];
 export const LOAD_SINKS = 4;
-export function swimLoad({armorPenalty = 0, burden = 0, strength = 2, potence = 0} = {}) {
-  const armor = Math.max(0, Math.round(Number(armorPenalty) || 0)), carried = burdenOf(burden).id;
+/**
+ * B6085: the gear a character has on them, by its weight in WoDX Library, against what their Strength lifts on the
+ * VtDA20 chart: up to a quarter of it is nothing that matters, up to half a pack, up to all of it a heavy load, past
+ * it all they can lift. Worn armor is left out (its Dexterity penalty already counts). Strength is in the chart, so
+ * it takes nothing more off this.
+ */
+export function weighedBurden(kg = 0, lift = 0) {
+  const w = Math.max(0, Number(kg) || 0), l = Math.max(0, Number(lift) || 0);
+  if ( !w || !l ) return 0;
+  return w > l ? 3 : w > l / 2 ? 2 : w > l / 4 ? 1 : 0;
+}
+export function swimLoad({armorPenalty = 0, burden = 0, strength = 2, potence = 0, gearKg = 0, liftKg = 0} = {}) {
+  const armor = Math.max(0, Math.round(Number(armorPenalty) || 0)), hand = burdenOf(burden).id;
   const might = (Number(strength) || 0) + (Number(potence) || 0);
   const off = might >= 7 ? 2 : might >= 4 ? 1 : 0;
-  const steps = Math.max(0, armor + carried - off);
+  const weighed = weighedBurden(gearKg, liftKg);
+  // The higher of the burden set by hand (Strength takes off steps) and the gear's weight (Strength already counted)
+  const byHand = Math.max(0, armor + hand - off), byWeight = Math.max(0, armor - off) + weighed;
+  const fromGear = weighed > 0 && byWeight > byHand;
+  const steps = Math.max(byHand, byWeight), carried = fromGear ? weighed : hand;
   const parts = [];
   if ( armor ) parts.push(`armor ${armor}`);
-  if ( carried ) parts.push(burdenOf(carried).label.toLowerCase());
-  if ( off && (armor || carried) ) parts.push(`strength takes off ${Math.min(off, armor + carried)}`);
+  if ( fromGear ) parts.push(`${Math.round((Number(gearKg) || 0) * 10) / 10} kg of gear`);
+  else if ( hand ) parts.push(burdenOf(hand).label.toLowerCase());
+  if ( off && (armor || (!fromGear && hand)) ) parts.push(`strength takes off ${Math.min(off, armor + (fromGear ? 0 : hand))}`);
   const sinks = steps >= LOAD_SINKS;
   return {steps, armor, burden: carried, sinks, factor: sinks ? 0 : 1 - steps * 0.25, diff: Math.min(3, steps), parts,
     note: !steps ? "" : sinks ? "too much weight to swim with: they go under until they let something go"
