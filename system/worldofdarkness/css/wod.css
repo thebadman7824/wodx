@@ -3085,3 +3085,14 @@ input.sheet-infoWidth {
   margin-top: auto;
   border-top: 1px solid var(--main-full-color);
 }
+/* WoDX fork (B6111): a line sheet that runs on ApplicationV2 keeps the old window's inner spacing, scrolls as it did,
+   and its part (the template's form, now a div) fills the window */
+.wod20.wod-legacy-v2 .window-content {
+  padding: 8px;
+  overflow: hidden auto;
+}
+
+.wod20.wod-legacy-v2 .window-content > .wod-legacy-form {
+  flex: 1;
+  min-height: 0;
+}

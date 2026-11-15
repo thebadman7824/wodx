@@ -2,7 +2,7 @@
 /**
  * The PC job runner (B4100-B4109). Runs on Ben's PC, takes PC jobs straight from GitHub issues (label pc-job, opened
  * by the owner's account; format in jobs.mjs) and runs them on the testbed lanes side by side, one job per lane, in
- * priority order, with no thread or coordinator passing them along. Results go back to the issue as a comment and the
+ * priority order (a waiting job gains a step each hour, B6490), with no thread or coordinator passing them along. Results go back to the issue as a comment and the
  * issue is closed with pc-done or pc-failed.
  *
  *   node tools/pcq/runner.mjs [--once] [--dry] [--no-update]         (started by run-runner.ps1, which restarts it after updates)
@@ -346,12 +346,17 @@ async function status(queue) {
 const MY_SHA = spawnSync("git", ["rev-parse", "HEAD"], {cwd: ROOT, encoding: "utf8"}).stdout.trim();
 // A busy runner stops taking new jobs once an update is due ("draining") and exits when the last job ends, so an update
 // never waits for a quiet moment that may not come.
-let draining = false;
+let draining = false, drainSince = 0, deferUntilIdle = false;
+// B6353: a drain waits at most DRAIN_MIN minutes. A 100-gate touched run once held 19 queued jobs (four of them p1) for
+// most of an hour behind it; past the limit the runner takes jobs again and updates the next time it is idle (and at
+// the nightly lane reset, which restarts it anyway).
+const DRAIN_MIN = Number(conf.drainMinutes ?? 10);
 async function updateDue() {
   if ( args.includes("--no-update") ) return false;
+  if ( deferUntilIdle ) return !active.size;
   const d = await git(["diff", "--quiet", MY_SHA, "origin/main", "--", "tools/pcq", "tools/lanes", "tools/harness/gate-two.mjs"]);
   if ( d.status !== 1 ) return false;
-  if ( !draining ) log("main changed the runner; taking no new jobs until the running ones end");
+  if ( !draining ) { log(`main changed the runner; taking no new jobs until the running ones end (at most ${DRAIN_MIN} min)`); drainSince = Date.now(); }
   draining = true;
   return !active.size;
 }
@@ -369,6 +374,11 @@ let light = 0, lastFetch = 0, lastSweep = 0, sweeping = false, drawing = false;
 for ( ;; ) {
   try {
     if ( draining && !active.size && !drawing ) { log("exiting for an update"); process.exit(75); }
+    if ( draining && Date.now() - drainSince > DRAIN_MIN * 60000 ) {
+      log(`the update has waited ${DRAIN_MIN} min on ${active.size} running job(s); taking jobs again, updating when idle`);
+      draining = false; deferUntilIdle = true;
+    }
+    if ( deferUntilIdle && !active.size && !drawing ) { log("idle: exiting for the update"); process.exit(75); }
     if ( !draining && Date.now() - lastFetch > 5 * 60000 ) { await git(["fetch", "-q", "origin"]); lastFetch = Date.now(); if ( await updateDue() ) { log("main changed the runner; exiting for an update"); process.exit(75); } }
     if ( fs.existsSync(path.join(HOME, "runner-off")) ) {
       if ( !active.size && !drawing ) { log("runner-off found and nothing running; stopping"); process.exit(0); }

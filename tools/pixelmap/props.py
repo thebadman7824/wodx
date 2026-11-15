@@ -19,6 +19,8 @@ OPEN = "auto"            # "closed", "open", "none" (left out), or "auto" (windo
 REC = None               # a scene.Recorder while a scene is recorded
 CUTTING = False          # True while the recorder draws one openable in one state
 _PROBE = None
+SEGS = []                # the scene's wall lines (squares), so things hung outside a wall keep clear of others
+OPENS = []               # its doors and windows: (x0, y0, x1, y1, kind)
 
 
 class _Defer(Exception):
@@ -510,8 +512,26 @@ def _open_crate(m, X, Y, s, goods, lid="w"):
 
 
 def hay(m, x, y, r=26):
-    """A heap of loose hay with a pitchfork stuck in it."""
+    """A heap of loose hay with a pitchfork stuck in it. From r 60 up, a field stack: a tall round rick built about a
+    pole, its straw combed down the sides, domed and lit from the north-west, with loose hay round its foot."""
     d = m.d; cx, cy = P(x), P(y); S = R["straw"]; rng = m.rng
+    if r >= 60:
+        m.shade((cx - r + r * .3, cy - r + r * .38, cx + r + r * .3, cy + r + r * .38), kind="ellipse", f=.6)
+        for _ in range(int(r * 1.6)):                                             # loose hay trodden round the foot
+            a = rng.uniform(0, 6.28); t = r * rng.uniform(1.0, 1.22); x_, y_ = cx + math.cos(a) * t, cy + math.sin(a) * t; b = a + rng.uniform(-.6, .6)
+            d.line([x_, y_, x_ + math.cos(b) * 6, y_ + math.sin(b) * 6], fill=S[rng.integers(1, 4)])
+        m.dome(cx, cy, r, "straw")
+        for _ in range(int(r * r * .12)):                                         # straw combed down from the crown
+            a = rng.uniform(0, 6.28); t = rng.uniform(.15, .97) * r; x_, y_ = cx + math.cos(a) * t, cy + math.sin(a) * t
+            lit = (x_ - cx) + (y_ - cy) < -r * .2; L_ = rng.uniform(5, 10)
+            d.line([x_, y_, x_ + math.cos(a) * L_, y_ + math.sin(a) * L_], fill=S[4] if lit else S[1] if (x_ - cx) + (y_ - cy) > r * .3 else S[2])
+        for k in range(3):                                                        # ropes weighted over the top
+            a = k * 2.09 + .3; d.line([cx, cy, cx + math.cos(a) * r * .95, cy + math.sin(a) * r * .95], fill=R["dwood"][2], width=2)
+        m.disc(cx, cy, max(6, r // 12), "dwood", 2)                               # the stack pole's top
+        hx, hy = cx + r * 1.05, cy + r * .45                                      # a fork leant at the foot
+        d.line([hx, hy, hx + 36, hy - 26], fill=OUT, width=3); d.line([hx, hy, hx + 36, hy - 26], fill=R["wood"][4])
+        for k in (-4, 0, 4): d.line([hx + k * .6, hy + k * .8, hx - 7 + k * .6, hy + 6 + k * .8], fill=R["iron"][4])
+        return
     m.shade((cx - r + 3, cy - r * .7 + 5, cx + r + 5, cy + r * .7 + 7), kind="ellipse", f=.58)
     d.ellipse([cx - r, cy - r * .7, cx + r, cy + r * .7], fill=S[1], outline=OUT); d.ellipse([cx - r + 3, cy - r * .7 + 2, cx + r - 6, cy + r * .7 - 6], fill=S[2]); d.ellipse([cx - r * .6, cy - r * .5, cx + r * .2, cy], fill=S[3])
     for _ in range(int(r * 2.4)):
@@ -523,7 +543,7 @@ def hay(m, x, y, r=26):
 
 
 @openable
-def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True):
+def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True, glass=True):
     """A window one can name from above: the wall cut through to a pale sill between two jambs, a lattice of bars
     across the opening, two plank shutters swung open against the outside of the wall, and daylight on the floor within."""
     from PIL import Image, ImageDraw
@@ -535,7 +555,8 @@ def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True):
     def poly(pts, **kw): d.polygon([pt(u, v) for u, v in pts], **kw)
     W_, Dk, I = R["wood"], R["dwood"], R["iron"]
     _opening(x0, y0, x1, y1, "shutter", centre, True)
-    c_ = [pt(-L // 2 - 12, -t - 100), pt(L + L // 2 + 12, t + 24)]
+    half = L // 2 - 1
+    c_ = [pt(-L // 2 - 12, -t - 100), pt(L + L // 2 + 12, t + half + 10)]
     state = _state("window", (min(c_[0][0], c_[1][0]), min(c_[0][1], c_[1][1]), max(c_[0][0], c_[1][0]), max(c_[0][1], c_[1][1])), auto="open")
     if state is None: return
     light = light and state == "open"
@@ -549,6 +570,8 @@ def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True):
         a = a * (1 + k * np.array([.30, .30, .22], np.float32)) + k * np.array([8, 9, 6], np.float32)
         m.img.paste(Image.fromarray(a.clip(0, 255).astype(np.uint8)), (X0, Y0))
     G = [(34, 52, 72), (62, 94, 118), (104, 144, 164), (160, 196, 204), (226, 240, 240)]              # glass, dark to glint
+    if not glass:                                                                # before glass reached a house: the dark of the room through the hole
+        G = [(14, 10, 14), (24, 18, 22), (30, 22, 26), (36, 28, 30), (44, 34, 34)]
     Sh = R["red"]
     rect(0, -t, L, t, fill=W_[2], outline=OUT)                                   # the frame, set through the wall
     rect(1, -t + 1, L - 1, -t + 2, fill=tone(W_[4], 20)); rect(1, t - 2, L - 1, t - 1, fill=W_[1])
@@ -559,30 +582,73 @@ def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True):
         rect(u0, v0, u1, v1, fill=G[1])
         poly([(u0, v0), (u1 - 4, v0), (u0, v1 - 3)], fill=G[2])
         poly([(u0, v0), (u0 + (u1 - u0) * .45, v0), (u0, v0 + (v1 - v0) * .5)], fill=G[3])
-        (xa, ya), (xb, yb) = pt(u0 + 3, v1 - 5), pt(u0 + 3 + (v1 - v0) - 8, v0 + 3); d.line([xa, ya, xb, yb], fill=G[4], width=2)
-        (xa, ya), (xb, yb) = pt(u0 + 10, v1 - 4), pt(u0 + 10 + (v1 - v0) - 12, v0 + 8); d.line([xa, ya, xb, yb], fill=G[3])
+        if glass:
+            (xa, ya), (xb, yb) = pt(u0 + 3, v1 - 5), pt(u0 + 3 + (v1 - v0) - 8, v0 + 3); d.line([xa, ya, xb, yb], fill=G[4], width=2)
+            (xa, ya), (xb, yb) = pt(u0 + 10, v1 - 4), pt(u0 + 10 + (v1 - v0) - 12, v0 + 8); d.line([xa, ya, xb, yb], fill=G[3])
         if i: rect(u0 - 3, -t + 4, u0 - 1, t - 4, fill=W_[3], outline=OUT)       # a wooden mullion between panes
-    half = L // 2 - 1
-    if state == "closed":                                                        # both shutters swung shut over the outside of the glass, barred
-        rect(-2, 1, L + 2, t + 7, fill=Sh[2], outline=OUT); rect(-1, 2, L + 1, 3, fill=Sh[3])
-        for k_ in range(1, 10): u = -2 + (L + 4) * k_ // 10; rect(u, 3, u, t + 6, fill=Sh[0])                  # their planks
-        rect(L // 2 - 1, 1, L // 2 + 1, t + 7, fill=OUT)                                                        # where the two leaves meet
-        for hinge, sgn in ((-2, 1), (L + 2, -1)):
-            (xa, ya), (xb, yb) = pt(hinge + sgn * 4, t + 5), pt(hinge + sgn * (half - 3), 4); d.line([xa, ya, xb, yb], fill=Sh[1], width=2)
-            rect(hinge - 2, t - 1, hinge + 2, t + 4, fill=I[3], outline=OUT)
-        rect(L // 2 - 14, t + 2, L // 2 + 14, t + 4, fill=I[3], outline=OUT); rect(L // 2 - 13, t + 2, L // 2 + 13, t + 2, fill=I[4])   # the iron bar across
+    SH = 12                                                                      # a shutter's depth as drawn, out from the wall face
+    if state == "closed":                                                        # both leaves swung shut against the outside face of the wall, barred
+        o0, o1 = t + 1, t + 1 + SH - 4
+        rect(-2, o0, L + 2, o1, fill=Sh[2], outline=OUT); rect(-1, o0 + 1, L + 1, o0 + 2, fill=Sh[3])
+        for k_ in range(1, 10): u = -2 + (L + 4) * k_ // 10; rect(u, o0 + 2, u, o1 - 1, fill=Sh[0])            # their planks
+        rect(L // 2 - 1, o0, L // 2 + 1, o1, fill=OUT)                                                          # where the two leaves meet
+        for hinge in (-2, L + 2): rect(hinge - 2, o0, hinge + 2, o0 + 4, fill=I[3], outline=OUT)                # the hinges at the frame
+        rect(L // 2 - 14, o1 - 4, L // 2 + 14, o1 - 2, fill=I[3], outline=OUT); rect(L // 2 - 13, o1 - 4, L // 2 + 13, o1 - 4, fill=I[4])   # the iron bar across
         for i in range(n):                                                                                      # the glass behind goes dark: no daylight comes in
-            u0, u1 = int(5 + i * pw) + 1, int(5 + (i + 1) * pw) - 1; rect(u0, -t + 5, u1, -1, fill=G[0])
+            u0, u1 = int(5 + i * pw) + 1, int(5 + (i + 1) * pw) - 1; rect(u0, -t + 5, u1, t - 5, fill=G[0])
         return
-    for hinge, sgn in ((1, -1), (L - 1, 1)):                                     # shutters thrown open flat along the outside of the wall
-        (xa, ya), (xb, yb) = pt(hinge, t + 1), pt(hinge + sgn * half, t + 13)
-        m.shade((min(xa, xb) + 2, min(ya, yb) + 3, max(xa, xb) + 4, max(ya, yb) + 5), f=.58)
-        rect(hinge, t + 1, hinge + sgn * half, t + 13, fill=Sh[2], outline=OUT)
-        rect(hinge + sgn, t + 2, hinge + sgn * (half - 1), t + 3, fill=Sh[3])
-        for k_ in range(1, 5): u = hinge + sgn * half * k_ // 5; rect(u, t + 3, u, t + 12, fill=Sh[0])       # its planks
-        (xa, ya), (xb, yb) = pt(hinge + sgn * 4, t + 11), pt(hinge + sgn * (half - 4), t + 4); d.line([xa, ya, xb, yb], fill=Sh[1], width=2)   # the brace
-        for k_ in (.2, .8): u = hinge + sgn * int(half * k_); rect(u - 1, t + 2, u + 1, t + 12, fill=I[2]); rect(u, t + 4, u, t + 4, fill=I[4])
+    room = _face_room(ax, ay, L, horiz, out, t, SH)
+    for (hinge, sgn), free in zip(((1, -1), (L - 1, 1)), room):
+        if free >= half + 2:                                                     # thrown open flat along the outside of the wall
+            (xa, ya), (xb, yb) = pt(hinge, t + 1), pt(hinge + sgn * half, t + SH + 1)
+            m.shade((min(xa, xb) + 2, min(ya, yb) + 3, max(xa, xb) + 4, max(ya, yb) + 5), f=.58)
+            rect(hinge, t + 1, hinge + sgn * half, t + SH + 1, fill=Sh[2], outline=OUT)
+            rect(hinge + sgn, t + 2, hinge + sgn * (half - 1), t + 3, fill=Sh[3])
+            for k_ in range(1, 5): u = hinge + sgn * half * k_ // 5; rect(u, t + 3, u, t + SH, fill=Sh[0])        # its planks
+            (xa, ya), (xb, yb) = pt(hinge + sgn * 4, t + SH - 1), pt(hinge + sgn * (half - 4), t + 4); d.line([xa, ya, xb, yb], fill=Sh[1], width=2)   # the brace
+            for k_ in (.2, .8): u = hinge + sgn * int(half * k_); rect(u - 1, t + 2, u + 1, t + SH, fill=I[2]); rect(u, t + 4, u, t + 4, fill=I[4])
+        else:                                                                    # no room along the wall (a corner or a wall in the way): it stands open square to the wall
+            a, b = hinge, hinge + sgn * 7
+            (xa, ya), (xb, yb) = pt(a, t + 1), pt(b, t + half + 1)
+            m.shade((min(xa, xb) + 2, min(ya, yb) + 3, max(xa, xb) + 4, max(ya, yb) + 5), f=.58)
+            rect(a, t + 1, b, t + half + 1, fill=Sh[2], outline=OUT); rect(a + sgn, t + 2, a + sgn, t + half, fill=Sh[3])
+            for k_ in (.2, .8): v = t + 1 + int(half * k_); rect(a, v - 1, b, v + 1, fill=I[2])
         rect(hinge - 2, t - 1, hinge + 2, t + 3, fill=I[3], outline=OUT)                                       # the hinge at the frame
+
+
+def _face_room(ax, ay, L, horiz, out, t, depth):
+    """How far (pixels) each shutter leaf can lie flat along the outside face of its wall, from its jamb toward the
+    start and toward the end of the window: to the corner where this wall's run ends, or to a wall that crosses the
+    strip of ground outside. Without the scene's lines, all the room it wants."""
+    if not SEGS: return (10 ** 6, 10 ** 6)
+    segs = [(P(a), P(b), P(c), P(e)) for a, b, c, e in SEGS]
+    line, a0, a1 = (ay, ax, ax + L) if horiz else (ax, ay, ay + L)
+    def along(s): return (s[1] == s[3] and abs(s[1] - line) <= 2) if horiz else (s[0] == s[2] and abs(s[0] - line) <= 2)
+    def span(s): return sorted((s[0], s[2])) if horiz else sorted((s[1], s[3]))
+    lo, hi = a0, a1; grew = True
+    while grew:                                                                  # the run of this wall the window is set in
+        grew = False
+        for s in segs:
+            if not along(s): continue
+            p, q = span(s)
+            if p <= hi + 2 and q >= lo - 2 and (p < lo or q > hi): lo, hi = min(lo, p), max(hi, q); grew = True
+    lo, hi = lo - t, hi + t                                                      # its outside face runs on round the corner post
+    for o in OPENS:                                                              # a door's way stays clear; two windows share the wall between them
+        sg = tuple(P(v) for v in o[:4])
+        if not along(sg): continue
+        p, q = span(sg)
+        if q <= a0 + 1 and q > lo: lo = max(lo, q if o[4] != "shutter" else (q + a0) // 2)
+        elif p >= a1 - 1 and p < hi: hi = min(hi, p if o[4] != "shutter" else (p + a1) // 2)
+    v0, v1 = sorted((line + out * (t + 1), line + out * (t + depth + 2)))        # the strip of ground the open leaves lie on
+    for s in segs:
+        if along(s) or (s[0] == s[2]) == (s[1] == s[3]): continue
+        cross = (s[0] == s[2]) if horiz else (s[1] == s[3])
+        if not cross: continue
+        pos = s[0] if horiz else s[1]; p, q = (sorted((s[1], s[3])) if horiz else sorted((s[0], s[2])))
+        if q + t <= v0 or p - t >= v1: continue                                  # it does not reach out across the strip
+        if pos < a0: lo = max(lo, pos + t)
+        elif pos > a1: hi = min(hi, pos - t)
+    return (a0 + 1 - lo, hi - (a1 - 1))
 
 
 

@@ -8,6 +8,7 @@
  *   A Fallen in a host  Demon: The Fallen (printed = pdf - 1)
  *   The Second Breath   Kindred of the East (the offset drifts; pdf pages are given)
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 const n = v => Math.max(0, Math.trunc(Number(v) || 0));
 
 /* ------------------------------------------------------------------ */
@@ -122,7 +123,7 @@ export const HOST_TARGETS = {ordinary: {label: "An ordinary person", diff: 8}, t
 export function possession(target, dice = []) {
   const T = HOST_TARGETS[target] ?? HOST_TARGETS.ordinary;
   if ( T.diff === null ) return {taken: true, successes: null, botch: false, diff: null};
-  const hits = dice.filter(d => d >= T.diff).length, ones = dice.filter(d => d === 1).length;
+  const {raw: hits, ones} = TERMS.successes(dice, T.diff);
   const net = hits - ones;
   return {taken: net > 0, successes: Math.max(0, net), botch: hits === 0 && ones > 0, diff: T.diff};
 }

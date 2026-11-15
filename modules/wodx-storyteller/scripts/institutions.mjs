@@ -22,9 +22,9 @@ import {lawOf} from "../../wodx-chronicle/scripts/law-rules.mjs";
 import {sweepSeats} from "../../wodx-chronicle/scripts/law-regime-rules.mjs";
 import {influenceOf} from "./ventures.mjs";
 import * as Reach from "./reach.mjs";
+import {MONTH} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const T_CLIMB = `${MOD}.climb`, T_LEVER = `${MOD}.lever`;
-const MONTH = 30 * 86400;
 const now = () => game.time?.worldTime ?? 0;
 const yearNow = () => { try { return Number(chron()?.eras?.currentYear?.()) || 1197; } catch (e) { return 1197; } };
 const all = c => (c ? [...(c.contents ?? c)] : []);

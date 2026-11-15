@@ -1,6 +1,7 @@
 import {MODULE_ID, esc, setting} from "./util.mjs";
 import {searchBox} from "./search.mjs";
 import {LANGUAGES, linguisticsAllows, languagesFromMerits, understands, scramble, parseInCommand, norm, allowance, listAllowed, kinOf, GIST} from "./languages-rules.mjs";
+import * as TERMS from "./terms.mjs";
 
 /**
  * Languages in chat. Each character keeps the languages it speaks (flags["wodx-chronicle"].languages, the first one
@@ -151,7 +152,7 @@ async function tryGist(message, actor, lang, kin) {
   const dice = Math.max(1, int + (ling || acad));
   const roll = await new Roll(`${dice}d10`).evaluate();
   const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
-  const net = faces.filter(f => f >= GIST.difficulty).length - faces.filter(f => f === 1).length;
+  const net = TERMS.margin(faces, GIST.difficulty);
   if ( net > 0 ) gistRead.add(message.id);
   await ChatMessage.create({whisper: [game.user.id, ...game.users.filter(u => u.isGM).map(u => u.id)], speaker: ChatMessage.getSpeaker({actor}),
     content: `<div class="wodx-card"><p>${esc(actor.name)} listens for the ${esc(lang)} through ${esc(kin)}: Intelligence + ${ling ? "Linguistics" : "Academics"} (difficulty ${GIST.difficulty}): ${faces.join(", ")}.</p><p>${net > 0 ? "The gist comes through." : "Too far from the tongue they know."}</p></div>`});

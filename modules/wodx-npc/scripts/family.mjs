@@ -8,12 +8,13 @@ import * as F from "./family-rules.mjs";
 import * as H from "./hearts-rules.mjs";
 import * as HEARTS from "./hearts.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {DAY, YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
 const SOCKET = `module.${MOD}`;
 const ASK_CHILD = "wodx-npc.family-child";
 const GROW = "wodx-npc.family-grow";
-const YEAR_SECONDS = 365.25 * 86400;
+const YEAR_SECONDS = YEAR;
 const WEDDING = "wodx-npc.family-wedding";
 const chron = () => game.modules.get("wodx-chronicle")?.api ?? null;
 const isActiveGM = () => game.user?.isGM && game.users.activeGM?.id === game.user.id;
@@ -115,7 +116,7 @@ export async function birth(aLike, {outcome = ""} = {}) {
   }
   const made = await HEARTS.haveChild(mother, other ?? mother, {lines: other ? null : [HEARTS.lineOf(mother), rec.with?.line || "mortal"]});
   const child = made?.child ?? null;
-  const restUntil = (Number(game.time.worldTime) || 0) + Math.round(rest.weeks * 7 * 86400) + (result === "hard" ? F.HARD_BIRTH.restMonths * F.MONTH_SECONDS : 0);
+  const restUntil = (Number(game.time.worldTime) || 0) + Math.round(rest.weeks * 7 * DAY) + (result === "hard" ? F.HARD_BIRTH.restMonths * F.MONTH_SECONDS : 0);
   await mother.setFlag(MOD, "lyingIn", {until: restUntil, label: rest.label, hard: result === "hard"});
   const lines = [child ? `${child.name} is born.` : "The child is born.", `Then ${rest.label}, about ${rest.weeks} weeks.`];
   if ( result === "hard" ) {
@@ -123,7 +124,7 @@ export async function birth(aLike, {outcome = ""} = {}) {
     try { await game.modules.get("wodx-combat")?.api?.applyDamage?.(mother, "bashing", F.HARD_BIRTH.levels); } catch (e) { console.warn(`${MOD} | hard birth`, e); }
     lines.push(`A hard birth: ${F.HARD_BIRTH.levels} bashing health levels, marked, and about ${F.HARD_BIRTH.restMonths} more months of rest.`);
   }
-  try { await game.modules.get("wodx-chronicle")?.api?.applyTimed?.(mother, {name: "Lying in", description: `${rest.label}${result === "hard" ? ", after a hard birth" : ""}`, duration: {kind: "time", seconds: Math.max(86400, restUntil - (Number(game.time.worldTime) || 0))}, key: "wodx-npc-lying-in", source: "WoDX NPC family"}); }
+  try { await game.modules.get("wodx-chronicle")?.api?.applyTimed?.(mother, {name: "Lying in", description: `${rest.label}${result === "hard" ? ", after a hard birth" : ""}`, duration: {kind: "time", seconds: Math.max(DAY, restUntil - (Number(game.time.worldTime) || 0))}, key: "wodx-npc-lying-in", source: "WoDX NPC family"}); }
   catch (e) { console.warn(`${MOD} | lying in`, e); }
   await ChatMessage.create({whisper: [...new Set([...ownersOf(mother), ...(other ? ownersOf(other) : [])])], speaker: {alias: "WoDX"}, flags: {[MOD]: {birth: rec.id}},
     content: card(`${mother.name} gives birth`, lines)});
@@ -389,7 +390,7 @@ export async function answer(aLike, bLike, say, {roll = null} = {}) {
   try { objection = say2.need ? SR?.rules?.matchObjection?.(SR.rank(a), SR.rank(b), year) ?? "" : ""; } catch (e) { objection = ""; }
   const law = H.marriageLaw(region, year, sphere);
   const wait = F.waitingFor(law, sphere, year);
-  const due = (Number(game.time.worldTime) || 0) + wait.days * 86400;
+  const due = (Number(game.time.worldTime) || 0) + wait.days * DAY;
   await a.setFlag(MOD, "proposal", {...rec, stage: "waiting", due, wait: wait.label, objection, who: say2.who});
   await ChatMessage.create({whisper: owners, speaker: {alias: "WoDX"}, flags: {[MOD]: {proposal: rec.id}},
     content: card(`${b.name} says yes`, [`Who must agree: ${say2.who}.${objection ? ` ${objection}` : ""}`, `Next: ${wait.label}, about ${wait.days} days on the clock. Then the wedding.`])});

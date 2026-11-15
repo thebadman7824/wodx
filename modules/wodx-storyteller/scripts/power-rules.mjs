@@ -21,10 +21,9 @@
  *   Caern      W20 (caern-rules.mjs, B3470-B3476): the Garou kind on the same register.
  */
 import * as C from "./caern-rules.mjs";
+import {DAY, MONTH, WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY, MONTH, WEEK};
 
-export const DAY = 86400;
-export const WEEK = 7 * DAY;
-export const MONTH = 30 * DAY;
 export const SEASON = 91 * DAY;
 export const LOG_CAP = 30;
 

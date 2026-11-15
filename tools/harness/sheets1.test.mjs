@@ -58,7 +58,7 @@ test("tracks, dots, paths", () => {
 });
 
 test("wiring: each sheet extends the system's own, replaces only Core (and the fae's Dreaming), follows the era", () => {
-  for ( const b of ["ChangelingActorSheet", "MageActorSheet", "HunterActorSheet", "WerewolfActorSheet", "VampireActorSheet", "MortalActorSheet"] ) assert.match(main, new RegExp(`wodxSheet\\(${b}`));
+  for ( const b of ["ChangelingActorSheet", "MageActorSheet", "HunterActorSheet", "WerewolfActorSheet", "VampireActorSheet", "MortalActorSheet"] ) assert.match(main, new RegExp(`pick\\("[A-Za-z]+", ${b}, ${b}V2\\)`)); // B6114: over the old-engine sheet or its ApplicationV2 twin
   assert.match(main, /\.tab\.core/); assert.match(main, /page2Tab/);
   assert.match(main, /isFaeDA\(actor\)/); assert.match(main, /isMageDA\(actor\)/);
   const t = ["core.hbs", "block.hbs", "page2.hbs"].map(f => readFileSync(join(root, "modules/wodx-sheets/templates", f), "utf8")).join("\n");

@@ -25,8 +25,9 @@
  * years and house figures before; the rest are house figures by year, kept to Moravia's dates as the travel rules are:
  * bicycles from 1885, motor cars from 1900, motorcycles and motorboats from 1910, faster ones on the Future Darkness branch.
  */
+import {TURN_SECONDS} from "../../wodx-chronicle/scripts/terms.mjs";
+export {TURN_SECONDS};
 
-export const TURN_SECONDS = 3;
 export const FLAT_OUT = 3;
 export const EDGE_PER = 10;
 export const EDGE_MAX = 3;
@@ -82,7 +83,18 @@ export const WAYS = {
   chimera:    {label: "On a chimerical steed", pool: ["dexterity", "ride"], hooves: true, mounted: true, mount: "chimera", thrown: true, speed: () => 55},
   stygian:    {label: "On a Stygian steed", pool: ["dexterity", "ride"], hooves: true, mounted: true, mount: "stygian", thrown: true, speed: () => 75},
   camel:      {label: "On a camel", pool: ["dexterity", "ride"], hooves: true, mounted: true, mount: "camel", thrown: true, speed: () => 40},
-  gryphon:    {label: "On a gryphon", pool: ["dexterity", "ride"], hooves: true, air: true, mounted: true, mount: "gryphon", thrown: true, speed: () => 65}
+  gryphon:    {label: "On a gryphon", pool: ["dexterity", "ride"], hooves: true, air: true, mounted: true, mount: "gryphon", thrown: true, speed: () => 65},
+  // B6071 (house figures): a dog team keeps about 10 mph for hours and a horse sleigh trots faster; the snow machines'
+  // chart follows the motor sledges, propeller sledges and snowmobiles of their years. snow: only on snow or ice.
+  sled:       {label: "By sled or sleigh", pool: ["dexterity", "ride"], snow: true, mounted: true, mount: "sled", speed: () => 20},
+  snowmobile: {label: "By snow machine", pool: ["dexterity", "drive"], snow: true, motor: true, mounted: true, mount: "snowmobile", from: 1910,
+    chart: [[1910, 10, 20, 2], [1935, 25, 45, 3], [1960, 30, 55, 4], [1990, 50, 90, 5], [2040, 60, 100, 6]]},
+  // B6072: trains and trams run on their rails only, so a chase by rail is a chase along the line (rails, or a tram's
+  // street); their Maneuver is the book's lowest, 1: they cannot swerve.
+  train:      {label: "By train", pool: ["dexterity", "drive"], rails: true, motor: true, mounted: true, mount: "train", from: 1825,
+    chart: [[1825, 15, 30, 1], [1850, 30, 50, 1], [1900, 45, 75, 1], [1935, 60, 100, 1], [1960, 70, 100, 1], [1990, 100, 180, 1], [2040, 150, 300, 1]]},
+  tram:       {label: "By tram", pool: ["dexterity", "drive"], rails: true, streets: true, motor: true, mounted: true, mount: "tram", from: 1860,
+    chart: [[1860, 5, 8, 1], [1895, 10, 20, 1], [1930, 15, 30, 1], [1960, 20, 40, 1], [2040, 25, 45, 1]]}
 };
 
 /**
@@ -107,7 +119,12 @@ export const BODIES = {
   balloon:    {rows: [[1783, 4, 4], [1900, 4, 8]], shelter: true, full: true},
   plane:      {rows: [[1909, 2, 3], [1935, 5, 6]], mass: 1, shelter: true, full: true},
   helicopter: {rows: [[1945, 3, 4], [1960, 4, 6]], mass: 1, shelter: true, full: true},
-  jet:        {rows: [[1944, 8, 15]], mass: 1, shelter: true, full: true}
+  jet:        {rows: [[1944, 8, 15]], mass: 1, shelter: true, full: true},
+  // B6071, B6072 (house figures, after the lorries for rail): a sled is a cart without wheels; a closed snow coach shelters
+  sled:       {rows: [[0, 1, 3]]},
+  snowmobile: {rows: [[1910, 2, 4], [1935, 3, 5], [1960, 2, 3], [1990, 3, 4]], mass: 1},
+  train:      {rows: [[1825, 6, 10], [1900, 10, 20], [1960, 12, 25]], mass: 8, guard: 3, shelter: true},
+  tram:       {rows: [[1860, 3, 6], [1895, 5, 10], [1960, 6, 12]], mass: 5, guard: 2, shelter: true}
 };
 /** A way's body in a year: {durability, structure, mass, guard, shelter, full}, or null (on foot, a beast). */
 export function bodyOf(way, year) {
@@ -131,8 +148,13 @@ export const GROUNDS = {
   crowd:   {label: "A crowd or a market", diff: 1, wheelDiff: 2, cap: {hooves: 10, wheels: 10}, shuts: ["boat", "motorboat"], cover: true},
   rough:   {label: "Rough ground or woods", diff: 1, cap: {hooves: 25, light: 15, wheels: 20}, shuts: ["cart", "carriage", "car", "truck", "boat", "motorboat"], cover: true},
   indoors: {label: "Indoors, alleys or rooftops", diff: 1, cap: {}, shuts: ["horse", "mule", "cart", "carriage", "car", "boat", "motorboat", "bicycle", "motorbike", "truck", "armoured", "tank", "balloon", "plane", "helicopter", "jet", "ghoulhorse", "szlachta", "chimera", "stygian", "gryphon", "camel"], cover: true},
-  water:   {label: "A river or a lake", diff: 0, cap: {}, shuts: ["foot", "horse", "mule", "cart", "carriage", "bicycle", "car", "motorbike", "truck", "armoured", "tank", "ghoulhorse", "szlachta", "chimera", "stygian", "camel"], cover: false}
+  water:   {label: "A river or a lake", diff: 0, cap: {}, shuts: ["foot", "horse", "mule", "cart", "carriage", "bicycle", "car", "motorbike", "truck", "armoured", "tank", "ghoulhorse", "szlachta", "chimera", "stygian", "camel"], cover: false},
+  // B6071, B6072: deep snow or ice, where runners and tracks go best and wheels and hooves labour; a railway line
+  snow:    {label: "Deep snow or ice", diff: 1, wheelDiff: 2, cap: {hooves: 20, light: 8, wheels: 15}, shuts: ["boat", "motorboat", "bicycle"], cover: false},
+  rails:   {label: "A railway line", diff: 0, cap: {hooves: 30, wheels: 20}, shuts: ["boat", "motorboat"], cover: false}
 };
+/** B6071, B6072: ways that go only on some grounds: runners on snow, trains on their rails, trams on rails or streets. */
+export const ONLY_ON = {sled: ["snow"], snowmobile: ["snow"], train: ["rails"], tram: ["rails", "streets"]};
 export const groundKind = k => (GROUNDS[k] ? k : "streets");
 
 /** Before street lamps and headlights (1900, as the travel rules), a chase at night is +1 for hooves and wheels. */
@@ -197,7 +219,7 @@ export function speedOf(r, ground, year) {
 }
 
 /** Whether a way can go on that ground. */
-export const canGo = (way, ground) => !GROUNDS[groundKind(ground)].shuts.includes(way);
+export const canGo = (way, ground) => ONLY_ON[way] ? ONLY_ON[way].includes(groundKind(ground)) : !GROUNDS[groundKind(ground)].shuts.includes(way);
 
 /**
  * 0.35.0: a mount or vehicle in a fight, outside any chase (for WoDX Combat's movement). kind: the Interactables mount
@@ -208,7 +230,9 @@ export const canGo = (way, ground) => !GROUNDS[groundKind(ground)].shuts.include
 export function rideInFight(kind, year, ground = "streets") {
   const way = Object.keys(WAYS).find(k => WAYS[k].mount && WAYS[k].mount === kind);
   if ( !way ) return null;
-  const W = WAYS[way], g = W.water ? "water" : groundKind(ground);
+  // a boat is always on the water; a sled on snow and a train on its line (B6071, B6072): the token stands where it can go
+  const g0 = groundKind(ground), W = WAYS[way];
+  const g = W.water ? "water" : ONLY_ON[way] && !ONLY_ON[way].includes(g0) ? ONLY_ON[way][0] : g0;
   const sp = canGo(way, g) ? speedOf({way}, g, year) : {yards: 0, capped: true};
   const ch = chartOf(way, year), body = bodyOf(way, year);
   return {way, ground: g, yards: sp.yards, capped: sp.capped, saddle: !!W.thrown, hooves: !!W.hooves, motor: !!W.motor, water: !!W.water, air: !!W.air,
@@ -237,10 +261,12 @@ export function rollFor(r, ground, {night = false, year = 0} = {}) {
   const parts = [];
   let diff = 6;
   // B4790: aircraft are above the ground: it adds nothing to their rolls
-  const g = W.air ? 0 : (W.wheels || W.motor) && G.wheelDiff !== undefined ? G.wheelDiff : G.diff;
+  // B6071, B6072: runners on the snow and wheels on their own rails take nothing from the ground they are made for
+  const own = ONLY_ON[r.way]?.includes(groundKind(ground));
+  const g = W.air || own ? 0 : (W.wheels || W.motor) && G.wheelDiff !== undefined ? G.wheelDiff : G.diff;
   if ( g ) { diff += g; parts.push(`${G.label.toLowerCase()} +${g}`); }
   if ( r.flatOut ) { diff += FLAT_OUT; parts.push(`flat out +${FLAT_OUT}`); }
-  const dark = night && (W.hooves || W.wheels) && (Number(year) || 0) < LIT_FROM;
+  const dark = night && (W.hooves || W.wheels || W.snow) && (Number(year) || 0) < LIT_FROM;
   if ( dark ) { diff += 1; parts.push("unlit at night +1"); }
   const ch = chartOf(r.way, year);
   return {attr: W.pool[0], ability: W.pool[1], diff: Math.min(10, diff), parts, cap: ch ? ch.maneuver : null};

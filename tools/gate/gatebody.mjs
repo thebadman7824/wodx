@@ -118,8 +118,8 @@ export async function run() {
     });
     await step("the Body tab", async () => {
       await A.sheet.render(true);
-      await until(() => A.sheet.element?.querySelector?.(".tab.wodxbody") ?? A.sheet.element?.[0]?.querySelector?.(".tab.wodxbody"), 6000);
-      const root = A.sheet.element?.querySelector ? A.sheet.element : A.sheet.element?.[0];
+      await until(() => A.sheet.element?.querySelector?.(".tab.wodxbody") ?? (A.sheet.element instanceof HTMLElement ? A.sheet.element : A.sheet.element?.[0])?.querySelector?.(".tab.wodxbody"), 6000);
+      const root = A.sheet.element?.querySelector ? A.sheet.element : (A.sheet.element instanceof HTMLElement ? A.sheet.element : A.sheet.element?.[0]);
       const tab = root?.querySelector(".tab.wodxbody");
       ok("the Body tab", !!tab && /Left hand/.test(tab.textContent) && !!tab.querySelector(".wodx-body-shape"), {found: !!tab});
       await A.sheet.close();

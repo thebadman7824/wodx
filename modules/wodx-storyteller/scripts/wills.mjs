@@ -13,6 +13,8 @@ import {MOD, esc, chron, npc, isActiveGM} from "./core.mjs";
 import * as Money from "./money.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {ratingsOf, ratingFrom} from "../../wodx-chronicle/scripts/when-rules.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const T = {estate: `${MOD}.estate`, falseHeir: `${MOD}.false-heir`};
 const yearAt = t => getEngine().timeToDate(Number(t) || 0).year;
@@ -86,7 +88,7 @@ export async function onDeath(dead) {
 export async function onSkipEnd(info = {}) {
   if ( !isActiveGM() ) return;
   // Storyteller 0.65.1: whole years of time passed, so a short skip over New Year does not count as a year
-  const years = Math.floor((Number(info.to) - Number(info.from)) / (365.25 * 86400)) || 0;
+  const years = Math.floor((Number(info.to) - Number(info.from)) / (365.25 * DAY)) || 0;
   const n = WR.passingsFor(years);
   if ( n < 1 ) return;
   for ( const a of game.actors.filter(x => willOf(x).hidden && undying(x) && !diedOf(x)) ) {
@@ -103,7 +105,7 @@ async function rollPassings(a, times) {
   for ( let i = 0; i < times; i++ ) {
     const roll = await new Roll(`${pool}d10`).evaluate();
     const faces = roll.dice[0].results.map(x => x.result);
-    const hits = faces.filter(f => f >= WR.FALSE_HEIR.difficulty).length, ones = faces.filter(f => f === 1).length;
+    const {raw: hits, ones} = TERMS.successes(faces, WR.FALSE_HEIR.difficulty);
     const net = hits - ones;
     out.push(net > 0 ? "clean" : hits === 0 && ones > 0 ? "botch" : "trail");
   }

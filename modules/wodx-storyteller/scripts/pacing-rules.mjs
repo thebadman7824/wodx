@@ -8,8 +8,8 @@
  * log has a fight, a frenzy, a death or torpor, a breach of the Masquerade, Diablerie or an encounter on the road in
  * it. A night with none of those is quiet, whether or not anyone played it.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
-const DAY = 86400;
 export const FIGHT_TEXT = "A fight began";
 const HARD_ATTENTION = new Set(["A frenzy", "A death or torpor", "A Masquerade breach", "Diablerie"]);
 

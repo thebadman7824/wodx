@@ -340,7 +340,7 @@
 1519|H|mor|AM|Veracruz|war,exploration,empire|Cortes lands|Hernan Cortes lands on the Gulf coast with some five hundred soldiers, marches inland and enters Tenochtitlan as a guest.
 1520|H|mor|AM|Tenochtitlan|plague,death,uprising|Smallpox and the Night of Sorrows|The Mexica drive the Spaniards out with great loss, and smallpox then kills a large part of the city.
 1521|H|mor|AM|Tenochtitlan|siege,war,empire|Tenochtitlan falls|After a siege of three months Cortes and the Tlaxcalan allies take the ruined city.
-1521|W|wra|AM|Tenochtitlan|plague,occult|The dead of the conquest|The house reading has the plagues and the siege fill the lands of the dead beyond anything their keepers can bear; the wraiths' books tell of a Dark Kingdom of the Americas broken in these years.
+1521|W|wra|AM|Tenochtitlan|plague,occult|The dead of the conquest|The house reading has heretic wraiths fleeing the Stygian inquisitors cross the sea with the sailors and fall on the Dark Kingdom of Obsidian in the years of the conquest, while the plague and the siege dead swell the storm; the kingdom's few survivors withdraw to Mictlan, deep in the Tempest.
 1527|H|mor|AM|Quito|plague,death,crown|Huayna Capac dies|The Inca emperor dies of a sickness that runs ahead of the Spaniards, and two sons fight over the empire.
 1531|H|mor|AM|Tepeyac|faith|Our Lady of Guadalupe|By the church's account a Nahua convert sees the Virgin on the hill of Tepeyac outside Mexico City.
 1532|H|mor|AM|Cajamarca|war,massacre,crown|Cajamarca|Pizarro seizes the Inca Atahualpa in the square of Cajamarca and kills thousands of the escort.

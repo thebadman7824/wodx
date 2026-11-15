@@ -223,9 +223,11 @@ export function propose(v, ctx) {
   }
   // B5391: Ben's pick (15 November 2026): a Fetter that names a town is checked against the town over time; a town
   // sacked, thrown down by a quake or left in ruin across the years takes the place with it, and a Harrowing follows
-  if ( v.line === "wraith" ) for ( const f of v.fetters ?? [] ) {
+  // B6104: a sealed Fetterguard keeps the first Fetters it holds likenesses of from that harm (Wraith 20th p. 428)
+  if ( v.line === "wraith" ) for ( const [i, f] of (v.fetters ?? []).entries() ) {
     if ( (v.deadNames ?? []).some(d => d && String(f.name ?? "").toLowerCase().includes(String(d).toLowerCase())) ) continue;
     const gone = placeGone(f.name, v.towns ?? [], ctx.fromYear, ctx.toYear);
+    if ( gone && i < (Number(v.fetterguard) || 0) ) { notes.push(`The Fetter "${f.name}" is unharmed although ${gone.why}: its likeness is sealed in the Fetterguard (Wraith 20th p. 428)`); continue; }
     if ( gone ) add("adv.fetterLost", `The Fetter "${f.name}" is lost`, `${gone.why}: the place is gone, and a Harrowing follows (Wraith 20th pp. 49, 308).`, true, {itemId: f.id, who: gone.town, why: `${gone.why}, and the place with it`});
   }
   if ( v.line === "wraith" && eraChanges ) notes.push("Fetters that name a town are checked against the town over time: a town sacked, quaked or in ruin takes the place with it (Wraith 20th p. 49)");

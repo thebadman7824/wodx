@@ -16,6 +16,7 @@
  * ambush's first blow).
  */
 import * as S from "./start-rules.js";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-combat";
 const SOCKET = `module.${MOD}`;
@@ -153,7 +154,7 @@ function cardHtml(d, sc) {
 /*  Frenzy and attacks outside a fight                                 */
 /* ------------------------------------------------------------------ */
 
-const yardsPer = () => { const u = String(canvas?.scene?.grid?.units ?? "").toLowerCase(); return ["ft", "feet", "foot", "'"].includes(u) ? 3 : 1; };
+const yardsPer = () => TERMS.unitsPerYard(canvas?.scene?.grid?.units ?? "yd");
 const yards = (a, b) => { try { return canvas.grid.measurePath([a.center, b.center]).distance / yardsPer(); } catch (e) { return null; } };
 const inFight = doc => (game.combats?.contents ?? []).some(c => c.started && c.combatants.some(x => x.tokenId === doc.id));
 const down = actor => { const h = actor?.system?.health?.damage ?? {}; return (Number(h.bashing) || 0) + (Number(h.lethal) || 0) + (Number(h.aggravated) || 0) >= 7; };

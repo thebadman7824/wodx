@@ -92,8 +92,10 @@ export function build({MOD, esc, isActiveGM, chron}) {
 
   async function now() {
     cal ??= await import("../../wodx-chronicle/scripts/calendar.mjs");
-    const lat = (() => { try { return game.settings.get("wodx-chronicle", "latitude"); } catch (e) { return 50; } })();
-    try { return cal.describeTime(game.time.worldTime, lat); } catch (e) { return {hour: 12, year: year()}; }
+    // B6185: the street's own sun and hour (a scene far from home), through the shared terms
+    const T = game.modules.get("wodx-chronicle")?.api?.terms;
+    const p = T?.placeNow ? T.placeNow(null) : {time: game.time.worldTime, latitude: (() => { try { return game.settings.get("wodx-chronicle", "latitude"); } catch (e) { return 50; } })()};
+    try { return cal.describeTime(p.time, p.latitude); } catch (e) { return {hour: 12, year: year()}; }
   }
   function streetOf(scene) {
     let here = null;
@@ -237,7 +239,7 @@ export function build({MOD, esc, isActiveGM, chron}) {
       let town = null;
       try { town = game.modules.get("wodx-storyteller")?.api?.upkeep?.towns?.ofScene?.(scene) ?? null; } catch (e) { town = null; }
       const people = Math.min(num(max) > 0 ? num(max) : PR.MAX_CAP, Math.round(PR.crowdSize({year: time.year || year(), hour: time.hour, area: street.area, density: crowd.density, max, place}) * PR.townCrowd(town)
-        * PR.herdCrowd(PR.herdStageAt(scene.flags?.["wodx-storyteller"]?.herd, game.time.worldTime), time.hour)));
+        * PR.herdCrowd(PR.herdStageAt(scene.flags?.["wodx-storyteller"]?.herd, game.time.worldTime), typeof time.isNight === "boolean" ? time.isNight : time.hour)));
       const beasts = crowd.animals ? PR.animalCount({year: time.year || year(), hour: time.hour, area: street.area, density: crowd.density, max, people, place}) : 0;
       const nP = left.filter(t => !flagOf(t).animal).length, nA = left.filter(t => flagOf(t).animal).length;
       const make = [];

@@ -2,6 +2,9 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.110.1 (Shared terms (B6180-B6199): a manhunt's patrols go out by the sun's night where the culprit is, and the day knock at a known haven only comes in daylight; a Kuei-jin is a day sleeper for the law too; a convened scene is released by the Storyteller's own End the scene, not by a new map; every dice count holds the difficulty to 2-10; time units, health levels and player characters come from WoDX Chronicle's shared terms. In battle the Exalted fight as their own kind, not as mummies)
+- 0.110.0 (Closed shelves give their dice (B6026): the card promised two dice on research for a season but nothing read the flag. It is now a roll effect lasting 90 days)
+- 0.109.1 (WoDX Storyteller travelPlaces (B6043). Before, the first scene with a travel flag made only flagged scenes count as places; a card scene carries a travel flag so its trip runs over the country map, and would have hidden every unmarked scene from the Travel window)
 - 0.109.0 (NPCs make their own wonders (B5970 to B5974), behind the world setting "Wonders: NPCs make their own" (on), and only in lines whose crafting switch is on)
 - 0.108.0 (The primer for a scene far from home (B5940 to B5942): the players' primer follows the active scene's land as well as the homeland)
 - 0.107.0 (Market goods by region, at the Market Goods Desk's recommended picks: imports dearer the farther they came (B5930), the land's own goods cheaper (B5931), each way of life's trade by kind of goods, fading with world trade from 1900 to 2000 (B5932), caravans naming up to two real goods of the sending land for each kind (B5933), world timeline news that moves the markets (B5934), and the price saying why (B5935). A setting, Prices know where goods come from, turns it all off (B5936))

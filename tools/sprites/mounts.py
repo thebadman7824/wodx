@@ -3,10 +3,10 @@
 #   python3 mounts.py --samples <out folder>  labelled sample sheets with riders aboard, for looking over
 # A look's sheet is its frames across by four facings down (back, left, front, right), painted in three key ramps that
 # the game swaps for one of the look's colour schemes. Each look carries its seats: where a rider's frame stands on it.
-import sys, os, json, numpy as np
+import sys, os, json, math, numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from mountkit import *
-import mount_motor as MM, mount_beasts as MB, mount_land as ML, mount_air as MA
+import mount_motor as MM, mount_beasts as MB, mount_land as ML, mount_air as MA, mount_snow as MS, mount_rail as MR
 
 ROWS = ('up', 'left', 'down', 'right')
 BG = (74, 84, 70)
@@ -36,6 +36,11 @@ KINDS = {
     'boat': (ML.boats, _of(ML.boat), 2, 14, 'Rowing boats'), 'motorboat': (ML.motorboats, _of(ML.boat), 2, 14, 'Motorboats'),
     'balloon': (MA.balloons, _of(MA.balloon), 2, 10, 'Balloons and airships'), 'plane': (MA.planes, _of(MA.plane), 2, 10, 'Aeroplanes'),
     'helicopter': (MA.helicopters, _of(MA.helicopter), 2, 10, 'Helicopters'), 'jet': (MA.jets, _of(MA.jet), 2, 10, 'Jets'),
+    # B6070: snow and rail
+    'sled': (MS.sleds, lambda look, f: MS.sled(look[3], f), 8, 10, 'Sleds and sleighs'),
+    'snowmobile': (MS.snowmobiles, _motor(MS.snow_side, MS.snow_end, 256, 112), 2, 9, 'Snow machines'),
+    'train': (MR.trains, lambda look, f: MR.train(look[3], f * math.pi / 4), 2, 12, 'Trains'),
+    'tram': (MR.trams, lambda look, f: MR.tram(look[3], f), 2, 12, 'Trams'),
 }
 
 # ---- colour schemes: paint or coat (a), trim or mane (b), cloth or stripe (c) ----
@@ -104,6 +109,29 @@ SCHEMES = {
     'dream': [S('moon', 'Moonlit', (190, 200, 226), (236, 226, 160), (90, 60, 150)), S('night', 'Night', (40, 36, 70), (150, 60, 160), (40, 120, 130)), S('rose', 'Rose', (226, 170, 190), (250, 240, 220), (150, 60, 100)),
               S('leaf', 'Leaf', (90, 150, 90), (220, 200, 90), (120, 70, 40)), S('ember', 'Ember', (60, 30, 30), (230, 110, 40), (120, 30, 30))],
     'dead': [S('pale', 'Pale', (178, 186, 190), (90, 110, 130), (40, 40, 50)), S('iron', 'Iron', (80, 84, 92), (40, 44, 52), (110, 110, 120)), S('ash', 'Ash', (130, 126, 122), (60, 58, 60), (40, 40, 50))],
+    'sledwood': [S('plain', 'Bare wood', (150, 112, 70), (150, 40, 36), (150, 130, 96)), S('tarred', 'Tarred', (72, 56, 46), (180, 150, 60), (120, 100, 80)), S('red', 'Red', (150, 44, 38), (210, 180, 70), (190, 176, 144)),
+                 S('blue', 'Blue', (50, 76, 120), (200, 60, 50), (200, 190, 160)), S('green', 'Green', (60, 94, 64), (210, 180, 70), (176, 150, 110))],
+    'sleigh': [S('red', 'Red and gold', (156, 36, 36), (210, 176, 70), (60, 50, 70)), S('black', 'Black and gold', _BLACK, (200, 164, 60), (120, 30, 40)), S('green', 'Green and gold', (40, 90, 60), (200, 164, 60), (120, 30, 40)),
+               S('blue', 'Blue and silver', (40, 60, 120), (210, 210, 214), (150, 40, 40)), S('white', 'White and blue', (220, 216, 206), (40, 60, 130), (150, 40, 40)), S('maroon', 'Maroon', (104, 28, 36), (200, 164, 60), _TAN)],
+    'sledrace': [S('blue', 'Blue', (40, 80, 160), _BLACK, (220, 60, 40)), S('red', 'Red', (190, 40, 36), _BLACK, (40, 80, 160)), S('yellow', 'Yellow', (220, 186, 50), _BLACK, (40, 40, 44)), S('green', 'Green', (50, 130, 80), _BLACK, (220, 120, 40))],
+    'snowpaint': [S('red', 'Red', (176, 40, 36), _WHITE, _CREAM), S('yellow', 'Yellow', (214, 176, 50), _BLACK, _CREAM), S('orange', 'Orange', (214, 110, 40), _BLACK, _CREAM), S('olive', 'Olive drab', (86, 92, 58), (56, 60, 40), (140, 130, 96)),
+                  S('white', 'White', _WHITE, (180, 40, 36), _GREY), S('blue', 'Blue', (40, 70, 130), _WHITE, _CREAM)],
+    'railearly': [S('green', 'Green and black', (60, 100, 60), (40, 38, 40), (200, 180, 120)), S('yellow', 'Yellow and black', (210, 176, 60), (40, 38, 40), (60, 60, 60)), S('blue', 'Blue', (50, 76, 130), (150, 40, 36), (200, 190, 160)),
+                  S('maroon', 'Maroon', (110, 34, 38), (40, 38, 40), (200, 180, 120))],
+    'railvict': [S('green', 'Brunswick green', (36, 80, 54), (150, 40, 36), (120, 70, 40)), S('maroon', 'Midland red', (130, 36, 34), (40, 38, 40), (190, 170, 120)), S('black', 'Lined black', (46, 44, 48), (170, 40, 40), (120, 70, 40)),
+                 S('blue', 'Royal blue', (40, 60, 130), (40, 38, 40), (200, 190, 160)), S('brown', 'Chocolate and cream', (100, 64, 44), (40, 38, 40), (224, 214, 186)), S('olive', 'Olive', (96, 100, 60), (150, 40, 36), (176, 150, 110))],
+    'railgoods': [S('black', 'Black', (46, 44, 48), (150, 40, 36), (110, 100, 90)), S('grey', 'Grey', (110, 112, 116), (60, 60, 66), (150, 130, 100)), S('brown', 'Bauxite', (130, 72, 52), (50, 46, 46), (170, 160, 140)),
+                  S('green', 'Green', (50, 86, 60), (50, 46, 46), (160, 150, 120)), S('red', 'Red oxide', (140, 50, 40), (50, 46, 46), (200, 190, 170))],
+    'railstream': [S('blue', 'Garter blue', (40, 70, 140), (200, 200, 200), (224, 214, 186)), S('silver', 'Silver and red', (176, 180, 186), (170, 40, 36), (176, 180, 186)), S('green', 'Green and gold', (40, 96, 64), (210, 180, 70), (224, 214, 186)),
+                   S('red', 'Red and cream', (170, 40, 36), (224, 214, 186), (224, 214, 186)), S('black', 'Black and gold', (46, 44, 48), (210, 180, 70), (110, 30, 36))],
+    'railmodern': [S('blue', 'Blue and grey', (40, 70, 130), (220, 200, 60), (190, 192, 196)), S('red', 'Red and white', (190, 40, 36), _WHITE, (220, 220, 216)), S('green', 'Green', (40, 110, 70), _WHITE, (200, 200, 196)),
+                   S('white', 'White and red', _WHITE, (190, 40, 36), (200, 200, 204)), S('yellow', 'Yellow and blue', (220, 186, 50), (40, 70, 130), (200, 200, 196)), S('silver', 'Silver', (176, 180, 186), (40, 70, 130), (200, 200, 204))],
+    'railfuture': [S('white', 'White', (226, 230, 232), (60, 200, 210), (60, 66, 76)), S('graphite', 'Graphite', (64, 68, 78), (230, 120, 40), (40, 42, 50)), S('teal', 'Teal', (40, 130, 136), _WHITE, (40, 42, 50)),
+                   S('red', 'Red', (180, 40, 40), _WHITE, (40, 42, 50)), S('silver', 'Silver', (180, 184, 190), (110, 70, 160), (40, 42, 50))],
+    'tram': [S('cream', 'Cream and maroon', (224, 214, 186), (110, 30, 38), (110, 30, 38)), S('red', 'Red and cream', (160, 36, 34), (224, 214, 186), (224, 214, 186)), S('green', 'Green and cream', (40, 90, 60), (224, 214, 186), (224, 214, 186)),
+             S('blue', 'Blue and white', (40, 60, 120), _WHITE, _WHITE), S('yellow', 'Yellow', (220, 180, 60), (60, 50, 46), (110, 30, 38)), S('brown', 'Varnished teak', (150, 100, 56), (210, 180, 90), (224, 214, 186))],
+    'trammodern': [S('red', 'Red and white', (190, 40, 36), _WHITE, _WHITE), S('yellow', 'Yellow', (226, 190, 50), (60, 60, 66), _WHITE), S('blue', 'Blue', (40, 80, 150), _WHITE, _WHITE), S('green', 'Green', (50, 130, 80), _WHITE, _WHITE),
+                   S('white', 'White and grey', _WHITE, (90, 92, 98), (90, 92, 98)), S('orange', 'Orange', (226, 120, 40), _WHITE, _WHITE)],
     'gryphon': [S('gold', 'Golden', (176, 136, 80), (226, 220, 204), (150, 40, 40)), S('dark', 'Dark', (96, 70, 50), (60, 50, 46), (40, 60, 110)), S('snow', 'Snowy', (214, 210, 200), (236, 234, 226), (60, 110, 70)),
                 S('red', 'Red', (150, 80, 50), (200, 160, 90), (40, 60, 40))],
 }
@@ -128,10 +156,13 @@ def sheet(fr):
     return out
 
 
-def write(out):
+def write(out, only=None):
+    """only: redraw just these kinds and keep the rest of the list as it stands in mounts.json"""
+    keep = json.load(open(f'{out}/mounts.json'))['kinds'] if only else {}
     man = dict(version=1, rows=list(ROWS), keys=dict(a=KA, b=KB, c=KC), schemes={k: [dict(id=s['id'], label=s['label'], **{q: [list(t) for t in v] for q, v in ramps(s).items()}) for s in v] for k, v in SCHEMES.items()}, kinds={})
     total = 0
     for kind, (looks, _, n, foot, label) in KINDS.items():
+        if only and kind not in only and kind in keep: man['kinds'][kind] = keep[kind]; continue
         os.makedirs(f'{out}/{kind}', exist_ok=True); entry = dict(label=label, frames=n, looks=[])
         for i, look in enumerate(looks()):
             fr = frames_of(kind, look); h, w = fr[0][0]['right'].shape[:2]; im = sheet(fr)
@@ -176,7 +207,31 @@ def _text(img, x, y, s, col=INK, big=False):
     d.text((x, y), s, fill=col, font=f)
 
 
+def sample_wide(kind, out, name, scale=1):
+    """one look a row, for the long kinds (trains, trams): the side, then the head and the tail end on"""
+    looks = KINDS[kind][0](); rows = []
+    sc_i = 0
+    for l in looks:
+        faces, seats = frames_of_first(kind, l); sc = SCHEMES[l[-1]]; s = sc[sc_i % len(sc)]; sc_i += 1
+        side = _cell(faces, seats, 'right', s); down = _cell(faces, seats, 'down', s); up = _cell(faces, seats, 'up', s)
+        def crop(c):
+            a = np.nonzero((c[..., :3] != BG).any(2).any(1))[0]; xs = np.nonzero((c[..., :3] != BG).any(2).any(0))[0]
+            return c[max(0, a.min() - 6):a.max() + 4, max(0, xs.min() - 6):xs.max() + 6]
+        rows.append((l, s, crop(side), crop(down), crop(up)))
+    W = max(r[2].shape[1] + r[3].shape[1] + r[4].shape[1] for r in rows) + 60
+    H = 40 + sum(max(r[2].shape[0], r[3].shape[0]) + 24 for r in rows)
+    img = Image.new('RGBA', (W, H), BG + (255,)); _text(img, 8, 4, KINDS[kind][4], big=True); y = 40
+    for l, s, a, b, c in rows:
+        h = max(a.shape[0], b.shape[0], c.shape[0]); x = 10
+        for im in (a, b, c): img.alpha_composite(Image.fromarray(im), (x, y + h - im.shape[0])); x += im.shape[1] + 20
+        _text(img, 12, y + h + 4, f"from {l[0]}: {l[2]} ({s['label']})", DIM); y += h + 24
+    full = img.convert('RGB')
+    if scale != 1: full = full.resize((int(W * scale), int(H * scale)), Image.NEAREST)
+    full.save(f'{out}/{name}.png', optimize=True); print(name, full.size)
+
+
 def sample(kinds, out, name, title):
+    if kinds[0] in ('train', 'tram'): return sample_wide(kinds[0], out, name)
     """one picture: for each kind, a row per era with every style (riders aboard, colours varied), then one look in every colour and its four facings"""
     blocks = []
     for kind in kinds:
@@ -221,6 +276,7 @@ SAMPLES = [
     ('03-carts', ['cart']), ('04-carriages', ['carriage']), ('05-bicycles-motorcycles', ['bicycle', 'motorbike']), ('06-motor-cars', ['car']), ('07-lorries', ['truck']),
     ('08-armoured-cars', ['armoured']), ('09-tanks', ['tank']), ('10-boats', ['boat', 'motorboat']), ('11-balloons-airships', ['balloon']), ('12-aeroplanes', ['plane']),
     ('13-helicopters', ['helicopter']), ('14-jets', ['jet']),
+    ('15-sleds-sleighs', ['sled']), ('16-snow-machines', ['snowmobile']), ('17-trains', ['train']), ('18-trams', ['tram']),
 ]
 
 if __name__ == '__main__':
@@ -229,4 +285,4 @@ if __name__ == '__main__':
         for name, kinds in SAMPLES:
             if len(sys.argv) > 3 and not any(a in name for a in sys.argv[3:]): continue
             sample(kinds, sys.argv[2], name, name)
-    else: write(sys.argv[1])
+    else: write(sys.argv[1], sys.argv[3:] if len(sys.argv) > 2 and sys.argv[2] == '--only' else None)

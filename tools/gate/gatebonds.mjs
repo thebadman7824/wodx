@@ -79,7 +79,7 @@ export async function run() {
       await wraith.sheet.render(true);
       await sleep(1500);
       // Sheets are Application V1: element is a jQuery object
-      const el = wraith.sheet.element?.[0] ?? wraith.sheet.element;
+      const el = (wraith.sheet.element instanceof HTMLElement ? wraith.sheet.element : wraith.sheet.element?.[0]);
       const html = el?.querySelector?.(".tab.wodxties")?.innerHTML ?? el?.innerHTML ?? "";
       ok("7. the Relationships tab shows what the Fetter does", /wodx-tie-rule/.test(html) && /Harrowing/.test(html));
       await wraith.sheet.close();

@@ -140,7 +140,7 @@ async function runGate(K) {
     const SH = game.modules.get("wodx-sheets");
     V.preview("beginner"); await sleep(200);
     await actor.sheet.render(true); await sleep(1500);
-    let sh = actor.sheet.element?.[0] ?? actor.sheet.element;
+    let sh = (actor.sheet.element instanceof HTMLElement ? actor.sheet.element : actor.sheet.element?.[0]);
     const qr = [...(sh?.querySelectorAll(".wodx-quickrolls button.wodx-quick") ?? [])];
     ok("13. quick rolls", !foundry.utils.isNewerVersion("0.19.0", SH?.version ?? "0") && qr.length === 5 && !!sh.querySelector(".wodx-quick-power"),
       {sheets: SH?.version, buttons: qr.map(b => b.textContent.trim())});
@@ -167,7 +167,7 @@ async function runGate(K) {
     await actor.sheet.close(); await sleep(300);
     V.preview("full"); await sleep(200);
     await actor.sheet.render(true); await sleep(1500);
-    sh = actor.sheet.element?.[0] ?? actor.sheet.element;
+    sh = (actor.sheet.element instanceof HTMLElement ? actor.sheet.element : actor.sheet.element?.[0]);
     const plainFull = !sh?.querySelector(".wodx-quickrolls, .wodx-showall, .wodx-tab-more");
     await actor.sheet.close();
     ok("16. hover help, and Full view untouched", /dodge/i.test(help) && plainFull, {help, plainFull});

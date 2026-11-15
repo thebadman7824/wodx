@@ -218,78 +218,81 @@ Hooks.once("init", async function() {
 	// Register sheet application classes
 	foundry.documents.collections.Actors.unregisterSheet('core', foundry.appv1.sheets.ActorSheet)
 
+	// WoDX fork (B6112): a line listed in LINES_V2 gets its sheet on ApplicationV2; the others keep the old engine
+	const lineSheet = (type, v1, v2) => (actorSheets.onV2(type) ? v2 : v1);
+
 	foundry.documents.collections.Actors.registerSheet("WoD", actorSheets.PCActorSheet, {
 		types: ["PC"],
 		makeDefault: true
 	});
 
-	foundry.documents.collections.Actors.registerSheet("WoD", actorSheets.MortalActorSheet, {
+	foundry.documents.collections.Actors.registerSheet("WoD", lineSheet("Mortal", actorSheets.MortalActorSheet, actorSheets.MortalActorSheetV2), {
 		label: game.i18n.localize("wod.sheet.mortal"),
 		types: ["Mortal"],
 		makeDefault: true
 	});
 
-	foundry.documents.collections.Actors.registerSheet("WoD", actorSheets.WerewolfActorSheet, {
+	foundry.documents.collections.Actors.registerSheet("WoD", lineSheet("Werewolf", actorSheets.WerewolfActorSheet, actorSheets.WerewolfActorSheetV2), {
 		label: game.i18n.localize("wod.sheet.werewolf"),
 		types: ["Werewolf"],
 		makeDefault: true
 	});	
 
-	foundry.documents.collections.Actors.registerSheet("WoD", actorSheets.MageActorSheet, {
+	foundry.documents.collections.Actors.registerSheet("WoD", lineSheet("Mage", actorSheets.MageActorSheet, actorSheets.MageActorSheetV2), {
 		label: game.i18n.localize("wod.sheet.mage"),
 		types: ["Mage"],
 		makeDefault: true
 	});
 
-	foundry.documents.collections.Actors.registerSheet("WoD", actorSheets.VampireActorSheet, {
+	foundry.documents.collections.Actors.registerSheet("WoD", lineSheet("Vampire", actorSheets.VampireActorSheet, actorSheets.VampireActorSheetV2), {
 		label: game.i18n.localize("wod.sheet.vampire"),
 		types: ["Vampire"],
 		makeDefault: true
 	});
 	
-	foundry.documents.collections.Actors.registerSheet("WoD", actorSheets.ChangelingActorSheet, {
+	foundry.documents.collections.Actors.registerSheet("WoD", lineSheet("Changeling", actorSheets.ChangelingActorSheet, actorSheets.ChangelingActorSheetV2), {
 		label: game.i18n.localize("wod.sheet.changeling"),
 		types: ["Changeling"],
 		makeDefault: true
 	});
 
-	foundry.documents.collections.Actors.registerSheet("WoD", actorSheets.HunterActorSheet, {
+	foundry.documents.collections.Actors.registerSheet("WoD", lineSheet("Hunter", actorSheets.HunterActorSheet, actorSheets.HunterActorSheetV2), {
 		label: game.i18n.localize("wod.sheet.hunter"),
 		types: ["Hunter"],
 		makeDefault: true
 	});
 
-	foundry.documents.collections.Actors.registerSheet("WoD", actorSheets.DemonActorSheet, {
+	foundry.documents.collections.Actors.registerSheet("WoD", lineSheet("Demon", actorSheets.DemonActorSheet, actorSheets.DemonActorSheetV2), {
 		label: game.i18n.localize("wod.sheet.demon"),
 		types: ["Demon"],
 		makeDefault: true
 	});
 
-	foundry.documents.collections.Actors.registerSheet("WoD", actorSheets.WraithActorSheet, {
+	foundry.documents.collections.Actors.registerSheet("WoD", lineSheet("Wraith", actorSheets.WraithActorSheet, actorSheets.WraithActorSheetV2), {
 		label: game.i18n.localize("wod.sheet.wraith"),
 		types: ["Wraith"],
 		makeDefault: true
 	});
 
-	foundry.documents.collections.Actors.registerSheet("WoD", actorSheets.MummyActorSheet, {
+	foundry.documents.collections.Actors.registerSheet("WoD", lineSheet("Mummy", actorSheets.MummyActorSheet, actorSheets.MummyActorSheetV2), {
 		label: game.i18n.localize("wod.sheet.mummy"),
 		types: ["Mummy"],
 		makeDefault: true
 	});
 
-	foundry.documents.collections.Actors.registerSheet("WoD", actorSheets.ExaltedActorSheet, {
+	foundry.documents.collections.Actors.registerSheet("WoD", lineSheet("Exalted", actorSheets.ExaltedActorSheet, actorSheets.ExaltedActorSheetV2), {
 		label: game.i18n.localize("wod.sheet.exalted"),
 		types: ["Exalted"],
 		makeDefault: true
 	});
 
-	foundry.documents.collections.Actors.registerSheet("WoD", actorSheets.ChangingBreedActorSheet, {
+	foundry.documents.collections.Actors.registerSheet("WoD", lineSheet("Changing Breed", actorSheets.ChangingBreedActorSheet, actorSheets.ChangingBreedActorSheetV2), {
 		label: game.i18n.localize("wod.sheet.breed"),
 		types: ["Changing Breed"],
 		makeDefault: true
 	});
 
-	foundry.documents.collections.Actors.registerSheet("WoD", actorSheets.CreatureActorSheet, {
+	foundry.documents.collections.Actors.registerSheet("WoD", lineSheet("Creature", actorSheets.CreatureActorSheet, actorSheets.CreatureActorSheetV2), {
 		label: game.i18n.localize("wod.sheet.creature"),
 		types: ["Creature"],
 		makeDefault: true

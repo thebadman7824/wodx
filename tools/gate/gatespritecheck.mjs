@@ -136,6 +136,8 @@ export async function run() {
       // the next hours: off to the tavern
       await smith.update({[`flags.${NPC}.routine.blocks`]: [day({place: inn.uuid, activity: "rest"})]});
       await sleep(300);
+      // the whole way in view, so the walk is animated on this screen (a fresh lane's first walk off-screen can be placed at once)
+      await canvas.pan({x: 11 * g, y: 7 * g, scale: 0.6}); await sleep(400);
       const from = {x: tok.x, y: tok.y};
       const turned = [];
       let movingSeen = 0, how = null;

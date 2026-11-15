@@ -6,6 +6,7 @@ import * as P from "./perception-rules.mjs";
 import * as Q from "./quiet-rules.mjs";
 import {quietOn} from "./quiet.mjs";
 import {resource, detectProfile} from "../../wodx-actions/scripts/profiles.js";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-senses";
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
@@ -122,7 +123,7 @@ export function trailSteps() {
   const me = sniffer();
   if ( !me || setting("trails") === false ) return [];
   const g = canvas.grid?.size ?? 100, dist = Number(canvas.scene?.grid?.distance) || 5, units = canvas.scene?.grid?.units ?? "ft";
-  const pxPerYard = /m|meter|metre|yd|yard/i.test(units) ? g / dist : g / (dist / 3);
+  const pxPerYard = g / (dist / TERMS.unitsPerYard(units));
   const skip = [me.id, ...(canvas.tokens?.placeables ?? []).filter(t => (t.document.hidden && !game.user.isGM) || (concealedFromMe(t) && !seenByMe(t))).map(t => t.id)];
   return P.stepsInReach(trails, me.center, {now: game.time.worldTime, pxPerYard, reachYards: P.smellYards(1), skip});
 }

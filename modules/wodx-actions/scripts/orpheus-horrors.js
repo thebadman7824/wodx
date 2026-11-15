@@ -4,6 +4,7 @@
  * Willpower), how long it runs, one line per Vitality level (0 to 5), and results(): the effects-card items for a use.
  * Pure: no Foundry calls.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 const n = v => Number(v) || 0;
 const turns = k => ({ label: `${k + 1} turn${k ? "s" : ""}`, timed: { kind: "rounds", rounds: k + 1 } });
 const scene = () => ({ label: "the scene", timed: { kind: "scene" } });
@@ -71,7 +72,7 @@ export const HORROR_FX = {
             "The host blacks out and the rider moves with the host's own skill.", "Deep possession: the host remembers nothing.", "Complete control; knocking the host out does not end it."],
         results(k, s, base) {
             const cap = Math.min(s, k + 1), lab = ["one turn", "one minute", "the scene", "a day", "as long as wanted"][Math.min(4, cap - 1)];
-            const timed = [{ kind: "rounds", rounds: 1 }, { kind: "time", seconds: 60 }, { kind: "scene" }, { kind: "time", seconds: 86400 }, { kind: "time", seconds: 7 * 86400 }][Math.min(4, cap - 1)];
+            const timed = [{ kind: "rounds", rounds: 1 }, { kind: "time", seconds: 60 }, { kind: "scene" }, { kind: "time", seconds: DAY }, { kind: "time", seconds: 7 * DAY }][Math.min(4, cap - 1)];
             return [{ key: "possess", who: "one", out: { ...base, kind: "timed", name: "Possessed", timed, duration: lab, text: `Possessed for ${lab}${cap >= 5 ? " (shown on the token for a week)" : ""} (${cap} success${cap === 1 ? "" : "es"} count at ${k} Vitality)` } }];
         }
     },

@@ -12,6 +12,7 @@ finish() writes, in the folder given (named after its last part):
     <name>.png        the map with every openable left out (no leaf in a doorway, no shutters, no chest), daylight paint
     art/<id>-<state>.png   each openable in each state (closed, open), transparent round it, all the same size
     <name>.dd2vtt     Universal VTT: size, walls (split where doors and windows are), portals; what mapimport.mjs reads
+    roofs/<id>.png    each roof (B5743), to lay over its building as a roof tile; listed under "roofs" in the sidecar
     <name>.wodx.json  the WoDX sidecar (WoDX Interactables adopt-rules.mjs): openings with their pictures, containers
                       with theirs, lights, regions, and every named object in "key" (what a player would call it, where)
 In Foundry, mapimport.mjs makes the scene and its walls, and adopting the sidecar lays a tile over each openable whose
@@ -43,7 +44,8 @@ class Recorder:
         self.name, self.cells, self.seed, self.place = name, tuple(cells), seed, place
         self.m = Map(cells[0], cells[1], seed=seed)
         self.walls, self.things, self.lights, self.regions, self.key, self.ids = [], [], [], [], [], set()
-        props.REC = self
+        self.roofs = []
+        props.REC = self; props.SEGS = []; props.OPENS = []
 
     # ---- recording ----
     def _id(self, base):
@@ -53,7 +55,7 @@ class Recorder:
 
     def wall(self, x0, y0, x1, y1, th=26, kind="wood"):
         """A wall drawn and kept as a Foundry wall (squares, along its middle line)."""
-        self.m.wall(x0, y0, x1, y1, th=th, kind=kind); self.walls.append((x0, y0, x1, y1))
+        self.m.wall(x0, y0, x1, y1, th=th, kind=kind); self.walls.append((x0, y0, x1, y1)); props.SEGS.append((x0, y0, x1, y1))
 
     def note(self, name, x, y):
         """A named object at a square: the key a player's eye and later game logic read."""
@@ -64,6 +66,7 @@ class Recorder:
         o = {"kind": kind, "box": box, "draw": draw, "label": label, "flags": flags or {}, "opening": opening,
              "id": self._id(label)}
         self.things.append(o)
+        if opening: props.OPENS.append(tuple(opening["c"]) + (opening["kind"],))
         x0, y0, x1, y1 = box; self.note(label, (x0 + x1) / 2 / T, (y0 + y1) / 2 / T)
 
     def light(self, id_, label, rect, dim=3, bright=1, color="#ff9a3c", kind="torch", on=True):
@@ -73,6 +76,10 @@ class Recorder:
 
     def region(self, id_, label, rect, place):
         self.regions.append({"id": self._id(id_), "label": label, "rect": list(rect), "place": {"kind": place}})
+
+    def roof(self, id_, label, rect, kind="shingle", smoke=None):
+        """A roof over a building (roofs.py): rect in squares, eaves and all; smoke, the hearth's (x, y) for its hole."""
+        self.roofs.append({"id": self._id(id_), "label": label, "rect": [round(v, 3) for v in rect], "kind": kind, "smoke": smoke})
 
     # ---- writing ----
     def _cut(self, o, art):
@@ -134,6 +141,15 @@ class Recorder:
                 fl = {"container": True, "items": "", "fillPlace": "home", **CONTAINER.get(o["kind"], {"kind": "box", "lock": "none"}), **o["flags"]}
                 features.append({"id": o["id"], "label": o["label"], "rect": rect, "flags": fl, "art": paths})
         features += self.lights
+        roofs = []
+        if self.roofs:
+            import roofs as RF
+            rd = os.path.join(outdir, "roofs"); os.makedirs(rd, exist_ok=True)
+            for f in os.listdir(rd):
+                if f.endswith(".png"): os.remove(os.path.join(rd, f))
+            for k, r in enumerate(self.roofs):
+                RF.draw(r["rect"], r["kind"], seed=self.seed + k, smoke=r["smoke"]).save(os.path.join(rd, f"{r['id']}.png"), optimize=True)
+                roofs.append({"id": r["id"], "label": r["label"], "rect": r["rect"], "art": f"roofs/{r['id']}.png"})
         self.m.save(os.path.join(outdir, f"{name}.png"))
         W, H = self.cells
         vtt = {"format": 0.3, "resolution": {"map_origin": {"x": 0, "y": 0}, "map_size": {"x": W, "y": H}, "pixels_per_grid": T},
@@ -145,6 +161,7 @@ class Recorder:
         json.dump(vtt, open(os.path.join(outdir, f"{name}.dd2vtt"), "w"), indent=1)
         side = {"format": "wodx-map", "version": 1, "name": self.name, "map": f"{name}.png", "cells": [W, H], "seed": self.seed,
                 **({"place": {"kind": self.place}} if self.place else {}), "drawer": "tools/pixelmap",
-                "openings": openings, "features": features, "regions": self.regions, "key": self.key}
+                "openings": openings, "features": features, "regions": self.regions, "key": self.key,
+                **({"roofs": roofs} if roofs else {})}
         json.dump(side, open(os.path.join(outdir, f"{name}.wodx.json"), "w"), indent=1)
         return side
