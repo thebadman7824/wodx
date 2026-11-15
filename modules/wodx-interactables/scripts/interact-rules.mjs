@@ -75,7 +75,9 @@ export const CONTAINERS = {
   cabinet: {label: "Cabinet or wardrobe", material: "wood"},
   drawers: {label: "Desk or filing drawers", material: "wood"},
   strongbox: {label: "Strongbox", material: "ironbound"},
-  safe: {label: "Safe", material: "steel"}
+  safe: {label: "Safe", material: "steel"},
+  // B6086: loose gear set down on the ground, drawn as a heap; no lid, no lock
+  pile: {label: "Gear on the ground", material: "wood"}
 };
 /** At most this many things in one container. */
 export const MAX_ITEMS = 50;
@@ -279,7 +281,14 @@ export const MOUNTS = {
   stygian: {label: "Stygian steed", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 1, thrown: true, noise: "quiet", beast: true,
     only: ["wraith", "spirit"], onlyNote: "One of Charon's horses of the dead: only the dead ride it (Wraith 20th p. 31)."},
   camel: {label: "Camel", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 2, thrown: true, noise: "quiet", beast: true},
-  gryphon: {label: "Gryphon or hippogryph", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 1, min: 3, thrown: true, air: true, noise: "loud", beast: true}
+  gryphon: {label: "Gryphon or hippogryph", verb: "Mount it", reins: "in the saddle", skill: "ride", attr: "dexterity", seats: 1, min: 3, thrown: true, air: true, noise: "loud", beast: true},
+  // B6070 to B6072: snow and rail (house rules). A sled or a sleigh is driven as a cart is, with Ride (Animal Ken would
+  // fit a dog team too, but the carts set the rule); snow machines and trains take Drive. A train or a tram cannot be
+  // worked at all without two dots of Drive: a footplate is learned, not guessed (min, as the lorries have it).
+  sled: {label: "Sled or sleigh", verb: "Take the reins", reins: "at the reins", skill: "ride", attr: "dexterity", seats: 4, noise: "quiet", snow: true},
+  snowmobile: {label: "Snow machine", verb: "Drive it", reins: "at the controls", skill: "drive", attr: "dexterity", seats: 2, from: 1910, min: 1, noise: "loud", snow: true},
+  train: {label: "Railway train", verb: "Take the controls", reins: "on the footplate", skill: "drive", attr: "dexterity", seats: 40, from: 1825, min: 2, noise: "loud", rails: true},
+  tram: {label: "Tram or streetcar", verb: "Take the controls", reins: "at the controls", skill: "drive", attr: "dexterity", seats: 40, from: 1860, min: 2, noise: "loud", rails: true}
 };
 /**
  * B4966: riding the animal itself. A creature's sheet can be ridden when its actor (or its token) carries
@@ -849,6 +858,14 @@ export function parseItems(text) {
   return lines.map(l => String(l ?? "").trim()).filter(Boolean).slice(0, MAX_ITEMS);
 }
 
+/** "3 things, about 12 kg": the count, and the weight when WoDX Library has put one on (o.kg, B6087). */
+export function kgPart(o) {
+  const n = o.items.length, c = n === 1 ? "one thing" : `${n} things`;
+  const kg = Number(o.kg);
+  if ( !Number.isFinite(kg) || o.kg === null || o.kg === undefined ) return c;
+  return `${c}, ${kg <= 0 ? "weighing nothing to speak of" : kg < 1 ? "under a kilo" : `about ${kg >= 10 ? Math.round(kg) : Math.round(kg * 10) / 10} kg`}`;
+}
+
 /** A short name for an interactable: "Locked iron-bound door", "Open window". */
 export function nameOf(o, era = {}) {
   if ( o.cover ) return Cover.coverTitle(o);
@@ -892,6 +909,7 @@ export function nameOf(o, era = {}) {
     return o.armed ? `${T.label} (${g})` : `Disarmed ${T.label.toLowerCase()} (${g})`;
   }
   if ( o.breakable && !o.door ) return `${WALLS[o.breakable].label} wall`;
+  if ( o.container && o.kind === "pile" ) return `${o.title || "Gear on the ground"}${o.items.length && !o.taken ? ` (${kgPart(o)})` : ", gone"}`;
   if ( o.container ) {
     const st = o.ds === "open" ? (o.items.length && !o.taken ? "Open" : "Open, empty") : o.ds === "locked" ? "Locked" : "Closed";
     const m = ["wood", "steel"].includes(o.material) || (o.kind === "strongbox" && o.material === "ironbound") ? "" : ` ${MATERIALS[o.material].label.toLowerCase()}`;
@@ -1011,11 +1029,16 @@ function hackOption(o, ch) {
 /** A chest, cabinet, strongbox or safe: open it, take what is inside, pick or force its lock, beat its keypad. */
 function containerOptions(o, ch) {
   const out = [];
+  // B6086: a pile of loose gear is picked up, nothing else
+  if ( o.kind === "pile" ) {
+    if ( o.items.length && !o.taken ) out.push({id: "take", label: `Pick it up (${kgPart(o)})`, roll: null, seconds: TURN, noise: {success: "silent"}, note: o.items.slice(0, 6).join(", ") + (o.items.length > 6 ? ", ..." : "")});
+    return out;
+  }
   const name = CONTAINERS[o.kind].label.toLowerCase().split(" ")[0];
   const isOpen = o.ds === "open", locked = o.ds === "locked";
   const strength = (Number(ch.strength) || 0) + (Number(ch.potence) || 0);
   if ( isOpen ) {
-    if ( o.items.length && !o.taken ) out.push({id: "take", label: `Take what is inside (${o.items.length === 1 ? "one thing" : `${o.items.length} things`})`, roll: null, seconds: TURN, noise: {success: "silent"}});
+    if ( o.items.length && !o.taken ) out.push({id: "take", label: `Take what is inside (${kgPart(o)})`, roll: null, seconds: TURN, noise: {success: "silent"}});
     out.push({id: "close", label: `Close the ${name}`, roll: null, seconds: TURN, noise: {success: "quiet"}});
   } else if ( !locked ) out.push({id: "open", label: `Open the ${name}`, roll: null, seconds: TURN, noise: {success: "quiet"}});
   if ( ((ch.hasKey && o.keyName) || ch.opensFor) && !isOpen ) out.push({id: locked ? "unlock" : "lock", label: ch.hasKey && o.keyName ? (locked ? "Unlock it with the key" : "Lock it with the key") : (locked ? "Unlock it (it opens for you)" : "Lock it (it opens for you)"), roll: null, seconds: TURN, noise: {success: "quiet"}});

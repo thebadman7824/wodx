@@ -98,7 +98,7 @@ export async function run() {
     });
     await step("the Body tab draws the doll", async () => {
       await A.sheet.render(true);
-      const root = () => A.sheet.element?.querySelector ? A.sheet.element : A.sheet.element?.[0];
+      const root = () => A.sheet.element?.querySelector ? A.sheet.element : (A.sheet.element instanceof HTMLElement ? A.sheet.element : A.sheet.element?.[0]);
       await until(() => root()?.querySelector?.(".tab.wodxbody canvas.wodx-doll[data-drawn]"), 8000);
       const cv = root()?.querySelector(".tab.wodxbody canvas.wodx-doll");
       let lit = 0;
@@ -117,7 +117,7 @@ export async function run() {
       await st.add(A, {source: "scar", part: "legs", what: "Left leg lost", feature: "lost", lostPart: "leg-l"});
       await st.add(A, {source: "scar", part: "legs", what: "A wooden leg", feature: "prosthetic", lostPart: "leg-l"});
       await A.sheet.render(true);
-      const root = () => A.sheet.element?.querySelector ? A.sheet.element : A.sheet.element?.[0];
+      const root = () => A.sheet.element?.querySelector ? A.sheet.element : (A.sheet.element instanceof HTMLElement ? A.sheet.element : A.sheet.element?.[0]);
       await until(() => root()?.querySelector?.(".tab.wodxbody canvas.wodx-doll"), 8000);
       const spec = JSON.parse(root()?.querySelector(".tab.wodxbody canvas.wodx-doll")?.dataset.spec ?? "{}");
       await A.sheet.close();

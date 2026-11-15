@@ -6,10 +6,25 @@ from px import R, T, OUT
 from bits import dist, curve
 
 
-def ground(m, roads=(), brooks=(), wide=52):
-    """Lay the grass, then each road (a list of points in squares) and each brook. Returns the distance fields
-    (road, brook), in pixels from the road's edge and the brook's middle, for placing trees and bridges."""
-    a = m.grass(m.H, m.W); wob = (m.noise(m.H, m.W, 34) - .5) * .5 + (m.noise(m.H, m.W, 8) - .5) * .28
+def forest_floor(m):
+    """The floor of a wood: dark earth under fallen leaves and needles, moss and thin grass where light gets in,
+    twigs here and there. Quiet patches and busy ones, as grass has."""
+    g = m.grass(m.H, m.W).astype(np.float32); e = m.dirt(m.H, m.W).astype(np.float32)
+    k = np.clip((m.noise(m.H, m.W, 150) - .4) * 1.6, 0, .8)[..., None]                  # where the canopy keeps the grass off
+    a = (g * (1 - k) + e * .8 * k).astype(np.uint8)
+    rng = m.rng; n = m.H * m.W // 140
+    ys, xs = rng.integers(2, m.H - 3, n), rng.integers(2, m.W - 3, n)
+    busy = m.noise(m.H, m.W, 40)[ys, xs] > .45; ys, xs = ys[busy], xs[busy]
+    pal = np.array([R["red"][1], R["red"][2], R["straw"][1], R["straw"][2], R["dirt"][3], R["leaf"][1]], np.uint8)
+    c = pal[rng.integers(0, len(pal), len(ys))]
+    a[ys, xs] = c; a[ys, xs + 1] = c; a[ys + 1, xs] = (c * .8).astype(np.uint8)       # leaves in 3-pixel clusters
+    return a
+
+
+def ground(m, roads=(), brooks=(), wide=52, floor="grass"):
+    """Lay the grass (or a wood's floor), then each road (a list of points in squares) and each brook. Returns the
+    distance fields (road, brook), in pixels from the road's edge and the brook's middle, for placing trees."""
+    a = m.grass(m.H, m.W) if floor == "grass" else forest_floor(m); wob = (m.noise(m.H, m.W, 34) - .5) * .5 + (m.noise(m.H, m.W, 8) - .5) * .28
     big = np.full((m.H, m.W), 1e9, np.float32); dt, db = big.copy(), big.copy()
     for pts, half in roads:
         dt = np.minimum(dt, dist(curve(pts), m.W, m.H) - half + wob * 46)
@@ -34,6 +49,13 @@ def ground(m, roads=(), brooks=(), wide=52):
         wa[lv > .93] = R["water"][4]; wa[(lv > .93) & (m.noise(m.H, m.W, 6) > .5)] = R["water"][3]
         a[water] = wa[water]
     m.put(a, 0, 0)
+    if floor != "grass":                                                               # twigs, off the roads and out of the water
+        rng = m.rng
+        for _ in range(m.H * m.W // 9000):
+            x_, y_ = int(rng.integers(4, m.W - 30)), int(rng.integers(4, m.H - 30))
+            if dt[y_, x_] < 4 or db[y_, x_] < wide + 14: continue
+            b = rng.uniform(0, 3.14); L = rng.integers(8, 20)
+            m.d.line([x_, y_, x_ + math.cos(b) * L, y_ + math.sin(b) * L], fill=R["dwood"][1])
     return dt, db
 
 

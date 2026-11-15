@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6060
+Next free block: B6220
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -306,7 +306,7 @@ Next free block: B6060
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5680-B5709 | NPC Motives Desk: every NPC action has a reason and a follow-through (used B5680-B5703) | NPC, Storyteller |
 | B5710-B5729 | Aftercare of the carried (Aftercare Desk a1-a12) (used B5710-B5721) | NPC |
-| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5738) | tools |
+| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5748) | tools |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 | B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
 | B5800-B5809 | NPC Aftercare Desk: what comes after each NPC action (used B5800-B5806) | NPC, Chronicle |
@@ -331,6 +331,12 @@ Next free block: B6060
 | B6000-B6019 | Rituals and powers that really work: every effect read by a roll, soak, token or map system (used B6000-B6018) | Actions, Combat |
 | B6040-B6049 | Lone Chronicle step 4: the director, experience from the night's log, the recap (used B6040-B6049) | Solo |
 | B6050-B6059 | gate7b fresh arena each run (used B6050-B6051) | tools (gates) |
+| B6070-B6079 | Snow vehicles, trains and trams (rules and sprites), and a quality pass on the vehicle sprites (used B6070-B6076) | Interactables, Paperdoll, Combat |
+| B6080-B6099 | Weights for loose gear and container contents, and loose gear on the map (used B6080-B6089) | Library, Interactables, Combat |
+| B6100-B6109 | Wraith 20th named Artifacts (forge, Skin, Spectre) and souled relics on the crafting table, with real Use powers and looks (used B6100-B6104) | Library, Creation |
+| B6110-B6129 | Line sheets move to ApplicationV2 (the newer sheet engine), one line at a time (used B6110-B6114) | System fork, Sheets, Chronicle |
+| B6130-B6139 | The eight held-back world timeline readings after the book check (used B6130-B6132) | Chronicle |
+| B6210-B6219 | gatevehicles plays in a year with cars (used B6210) | tools (gates) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9392,6 +9398,56 @@ Tools. After Ben's review of the samples, every object was measured against the 
 
 Reverse: none needed.
 
+## B5739. The wood's own pieces, and the Forest Road redrawn on its old scene (2026-11-15)
+Tools. tools/pixelmap/wilds.py draws what a wood needs, each one recognisable from straight above: stumps, a camp fire with seats round it, ridge tents (guy ropes to pegs, door tied back), charcoal kilns that smoke and glow at their vents, boulders, a rock scarp (lit lip, broken face, scree at the foot), felled trunks, ladders and a lean-to. land.py gains a forest floor and buildings.py a plain log hut. maps/forest_road.py is the first valley map of the Whole World redraw (r1 to r3): The Forest Road, 66 by 46, with every wall, door, window, light and exit on the old scene's own squares (read from the testbed export), so its notes and Ways still fit. The old map's unlabelled square at the fork is drawn as a wayside shrine.
+
+Reverse: remove the files; the old map picture stays on the scene until the new one is put on.
+
+## B5740. The High Woods redrawn on its old scene (2026-11-15)
+Tools. maps/high_woods.py redraws The High Woods (66 by 48) with every wall, door, window, light and exit on the old scene's own squares. wilds.py gains what it needs, each drawn to be named by sight: an open hearth on a slab, gnawed bones, a warning rope with a cow-bell, a pit trap drawn to be hard but not impossible to spot (its note asks for Perception), animal pelts by kind, drying racks hung with skins, a wolf den under heaped boulders, a blackthorn thicket, a boar's mud wallow and a hunting bow. The old map's paired dashed lines by both lodges are drawn as hide-drying racks.
+
+Reverse: remove the map file and the new pieces; nothing else uses them.
+
+## B5741. A whole map draws in about 2 minutes (2026-11-15)
+Tools. Laying one road took about 3 minutes on a 66 by 48 map because its distance field was worked out over the whole picture for every piece of the line. bits.dist now works only within 900 px of each piece (everything farther reads as far, which is all any caller asks), and polygon shadows work over their own shape's box. The Forest Road went from 12 minutes to about 2; the pictures come out the same.
+
+Reverse: none needed.
+
+## B5742. The Ruins of Altenhof redrawn on its old scene (2026-11-15)
+Tools. maps/altenhof.py redraws The Ruins of Altenhof (58 by 46) on the old scene's walls, door, windows, lights and exit. The broken curtain wall and the roofless hall stand where the old walls stood, with fallen stone at every broken end and grass up through the hall's flags; Lady Adelheid's chamber is whole, with the curtained bed made up and three fresh candles burning; the dry well shows a glint at the bottom; the fallen tower is a broken ring of footing heaped with its stones, with steps going down between them. The old map's table with two candles in the roofless south-west room is drawn as a chapel's altar.
+
+Reverse: remove the map file.
+
+## B5743. Every redrawn building gets its own roof picture (2026-11-15)
+Tools. The old scenes lay a roof tile over each roofed building, so putting a new map under an old roof would leave old art showing. The recorder now takes rec.roof(id, label, rect, kind, smoke): roofs.py draws it (split oak shingles weathered silver-brown, combed thatch with a turf ridge, or stone slates), seen from above with the sunny slope lit, the ridge, the eaves and a smoke hole over a hearth. Each is written to roofs/<id>.png and listed under "roofs" in the sidecar with its rect, which matches the old tile's rect, so the swap only changes the picture. The five roofs on the three maps so far are done.
+
+Reverse: drop the roofs; the old roof tiles stay.
+
+## B5744. Lower Town, the Market Square, redrawn on its old scene (2026-11-15)
+Tools. maps/lt_market.py redraws the Lower Town market (64 by 44) with all 141 walls, 32 doors, 36 windows and 8 fences on the old scene's own squares, and a new roof picture for each of its 13 roof tiles. Every building is furnished for its trade, so a player can name it by sight: the inn's tables and hearth, the bakery's oven, horse stalls with mangers, the chandler's candles, the butcher's block, hams hanging in the smokehouse, the surgeon's table, the apothecary's jars on shelves, the hatter's hats, the general store's sacks and crates. town.py adds the town's own pieces: cobbles with straw and puddles, market stalls under striped awnings with their goods along the front, lantern posts that cast real light, the market cross on its steps, horse stalls, and woven hurdle fences. The old map's narrow building with a hearth is drawn as a smokehouse and its small fenced square as a sheep pen.
+
+Reverse: remove the map file and town.py; nothing else uses them.
+
+## B5745. Lower Town, Craftsmen's Lane, redrawn on its old scene (2026-11-15)
+Tools. maps/lt_crafts.py redraws Craftsmen's Lane (66 by 40) with all 110 walls, 20 doors, 37 windows and 4 fences on the old scene's own squares, and a new roof picture for each of its 10 roof tiles. Each workshop is furnished so a player can name it by sight: horse stalls in the stables; the forge with its bellows, the anvil, the quench trough and horseshoes in the smithy; staves, hoops, new casks and the bending fire in the cooperage; four looms with cloth on them and bolts of cloth in the Weavers' Hall; dye vats in four colours, a kettle on the fire and lines of dyed cloth in the dyers' yard; the mash tun, the cooling tun and the furnace with its copper in the Brewhouse. The Shuttered House's day-rest room has no window and a bar on its door, as the scene's note says. town.py gains the forge, anvil, loom, vat, staves, hoops, handcart, dye line, brew furnace and horseshoes. The town ditch runs down the east side under a plank bridge.
+
+Reverse: remove the map file and the new pieces; nothing else uses them.
+
+## B5746. Every redrawn map is furnished so it looks lived in (2026-11-15)
+Tools. The sample maps looked bare, so the drawer gains dress.py. Once a map's own furniture is down, it fills each room, yard, street and stretch of wood with the furnishings of its kind of place. Furniture goes square along the walls first: shelves set with crockery, cupboards, benches, chests, stacked crates, rows of casks and sacks, woodpiles, workbenches with tools, tool racks, spinning wheels, sawhorses, grindstones and beds. Then come the small things of daily use: baskets, buckets, pots, kindling, brooms, rag rugs, boots, cloaks on pegs, stools, straw, dung, shavings, ferns, fallen branches and toadstools. Each trade has its own list (home, shop, store, hall, stable, joinery, smith, craft, dye, brew, market, street, yard, camp, wood, ruin), so a weaving hall gets wheels and baskets of wool, not sawhorses. Rooms are found by flooding between the map's own wall, door and window lines. A piece is laid only where the picture is still bare floor or ground and clear of anything that opens, so nothing lands on furniture, walls or doors. Every piece is drawn at true size, to be named by sight. The five maps drawn so far (Forest Road, High Woods, Altenhof, Lower Town Market, Craftsmen's Lane) are all re-dressed; the market square also gets more stalls and goods set out on cloths.
+
+Reverse: drop the dress() calls from the maps; the maps draw as before.
+
+## B5747. Furnishings face their rooms, show what they are, and fill the rooms (2026-11-15)
+Tools. Following review of the first furnishing pass, three fixes. First, every piece that has a front now faces the room it serves. dress.turned() draws a piece facing south on a scratch map and turns it to face north, east or west, with its shadow and any glow it throws. Oven mouths, dresser and chest fronts, bench seats, tool racks and peg rails all face out from their wall, and beds stand head to the wall. The market's three ovens, which faced their walls, now open on the kitchen, the bakehouse and the hall. Second, the pieces are drawn in more detail so each can be named by sight. These include a dresser with plates in its rack and jugs on top, a joiner's bench with a vice, saw, plane, mallet and chisels, a tool rack hung with spade, rake, fork, sickle, axe and rope, and a peg rail with cloak, hat, satchel and belt. There are also a spinning wheel with its flyer, distaff and treadle, a straw pallet with bolster and blanket, a butter churn, a hand quern, a wash tub with washboard, a table with stools drawn up, braided rag rugs and a three-legged pot with its bail and ladle. Third, rooms are fuller: more furniture along every wall and more things on the floor. No room gets more than one rug, wheel or dresser, and jugs and cups stay off the floor. All five maps are re-drawn with it.
+
+Reverse: return dress.py and the three oven calls to B5746.
+
+## B5748. Window shutters stay outside the wall (2026-11-15)
+Tools. Following review, shutters no longer clip into the walls. Shut, the two leaves now lie against the outside face of the wall with their planks, hinges and iron bar, where before they were drawn halfway into the wall itself. Open, each leaf still lies flat along the outside face, but only where there is room. The drawer now knows the scene's walls, doors and windows, so a leaf stops short of the building's corner, of a wall that crosses the ground outside, of a doorway, and of the next window's leaf (two windows share the wall between them). Where a leaf has no room to lie flat, it stands open square to the wall instead. All eight maps were re-drawn, and a check of every shutter picture, open and shut, finds none on a wall: 120 windows, where before every shut shutter overlapped its wall.
+
+Reverse: return props.window and the recorder's line list to B5747.
+
 ## B5750. Witness reactions given by a window act on the map (2026-11-15)
 WoDX Actions. The witness step takes results already rolled (the Delirium check, a demon's Revelation) and acts them out: a frozen witness is Immobilized for the scene, a fleeing one runs, a fighting one starts a fight; those who keep it go on the Masquerade record. With no revealed actor on the map, nothing is recorded against anyone.
 
@@ -10140,3 +10196,178 @@ suggestion for that step. The runner's flight from a far foe has nowhere to go, 
 first, which walks it round the wall to the hero.
 
 Reverse: keep the arena between runs again, drop the scene's mode and take the first attack or flight.
+
+## B6070. Sleds, snow machines, trains and trams are mounts (2026-11-15)
+WoDX Interactables. Four new MOUNTS kinds, so they can be tiles and Vehicle sheets: sled (Sled or sleigh, Ride, any year, 4 seats), snowmobile (Snow machine, Drive, from 1910, 2 seats), train (Railway train, Drive, from 1825, 40 seats, cannot be worked below Drive 2) and tram (Tram or streetcar, Drive, from 1860, 40 seats, Drive 2). House rules; logged in PENDING-REVIEW.
+
+Reverse: remove the four entries from MOUNTS.
+
+## B6071. Deep snow or ice (2026-11-15)
+WoDX Interactables chase-rules. A new ground "snow": +1 difficulty, +2 for wheels and motors, hooves capped at 20 yards a turn, wheels 15, bicycles shut out. Sleds and snow machines go only on snow (ONLY_ON) and take no difficulty from it. Sled speed 20 yards a turn; the snow machines' chart by year (1910 to 2040). In a fight (rideInFight) a sled or a snow machine always stands on snow. A fall onto snow is 1 die (WoDX Combat FALL_DICE).
+
+Reverse: remove snow from GROUNDS and ONLY_ON, and from FALL_DICE.
+
+## B6072. A railway line (2026-11-15)
+WoDX Interactables chase-rules. A new ground "rails"; trains go only there, trams on rails or town streets. Charts by year with Maneuver 1 (they cannot swerve). Bodies: trains durability 6 to 12, structure 10 to 25, ram mass 8; trams 3 to 6, 6 to 12, mass 5. Headlights from 1900 as other motor vehicles, the big cone. A fall onto the line is 4 dice.
+
+Reverse: remove rails from GROUNDS, ONLY_ON, BODIES and WAYS.
+
+## B6073. Train and tram sprites at true length (2026-11-15)
+WoDX Paperdoll, tools/sprites/mount_rail.py. A train's look is its engine (with tender) and its first coach or wagon laid end to end at 37 pixels to the metre, so a train is up to 30 squares long and a tram up to 22; every sheet stays within 4096 pixels a side. Looks: 1825 pioneer, coal train, horse wagonway; 1850 American, European passenger, goods; 1900 express, tank engine, heavy goods; 1935 streamlined express, diesel railcar, electric engine; 1960 diesel, electric train, diesel freight; 1990 high-speed, regional, container freight; 2040 magnetic train, driverless shuttle, freight pod. Trams 1860 to 2040 (horse trams, electric with trolley poles, double-deck, streamlined, articulated, low-floor, driverless). Drawn side on with four facings like every mount, so the riders' own figures show.
+
+Reverse: drop the train and tram kinds from tools/sprites/mounts.py and rewrite the sheets.
+
+## B6074. Sled and sleigh sprites (2026-11-15)
+tools/sprites/mount_snow.py. Dog sleds (six or eight dogs in pairs, the musher standing on the runners), reindeer sledges, horse sledges with logs, hay or crates, painted sleighs with scrolls and bells, troikas with the arch over the shaft horse, cutters, bob sleighs; the team drawn from the beast rig with collars, traces and reins to the bit.
+
+Reverse: drop the sled kind.
+
+## B6075. Snow machine sprites (2026-11-15)
+tools/sprites/mount_snow.py. Motor sledges and propeller sledges from 1910, snow coaches and snowcats from 1935, snowmobiles from 1960, sport and touring snowmobiles from 1990, electric ones from 2040.
+
+Reverse: drop the snowmobile kind.
+
+## B6076. Quality pass on the vehicle sprites (2026-11-15)
+tools/sprites. Every ramp shifts hue (shadows cooler, lights warmer), as the pixel art rules ask; tanks and armoured cars get plate seams, a lit top edge, a stowage box, a tow cable, return rollers on the track's top run, and the 1916 tanks their sponson with its gun or machine gun in plain sight.
+
+Reverse: restore ramp() in mountkit.py and drop _plates and the sponson in mount_motor.py.
+
+## B6080. Every thing has a weight (2026-11-15)
+WoDX Library (weight-rules.mjs, weight.mjs, api.weight). An item, a good from Everyday goods or a line in a container weighs something in kilograms. The Storyteller's own figure on an item (flag wodx-library.kg) wins; then about 250 named figures (an anvil 100 kg, a saddle 12, a musket 5, a sword 1.5, a knife 0.3); then a figure for the kind of good and how well it hides (V20's concealment steps), from a pocketful to a thing that cannot be hidden. Installed cyberware, implants and bioware are part of the body and add nothing; loose, a limb weighs 4 kg. Traits, powers and notes weigh nothing. The books give no weights for gear, so all are house figures. This replaces the Examine rule that WoDX keeps no weights (B5080 said so too). Examine still shows no weight.
+
+Reverse: remove api.weight from WoDX Library main.mjs; Interactables then counts a kilo a thing again and Combat uses the hand-set burden alone.
+
+## B6081. Weights by the year (2026-11-15)
+WoDX Library. A thing whose make changed weighs what it weighed that year, written as stages ("2.3>1960:0.6>1995:0.25" for a walkie-talkie). Armor goes by its lethal soak: iron, leather and mail before 1900 (soak 4 is 18 kg, full plate 25), aramid and ceramic from 1900 (soak 3 is 5 kg), and Future Darkness composites from 2050 (a third lighter). Shields are 5 kg of wood and iron before 1900, 3.5 of polycarbonate after. Guns and gadgets lose a fifth from 2050. The year is the chronicle's.
+
+Reverse: edit ARMOR_OLD, ARMOR_NEW, MODERN_FROM, FUTURE_FROM, FUTURE_LIGHTER and the staged NAMED entries in weight-rules.mjs.
+
+## B6082. Counts weigh (2026-11-15)
+WoDX Library. "silver pennies (7)" and "7 silver pennies" weigh seven pennies; a name WoDX does not know weighs half a kilo.
+
+Reverse: edit readCount and PLAIN_KG in weight-rules.mjs.
+
+## B6083. A container weighs what is in it (2026-11-15)
+WoDX Interactables. A chest, crate, barrel, sack, cabinet, desk, strongbox or safe weighs its empty weight (B5080) plus the real weight of what is inside, in place of a kilo a thing. Once its contents are taken, they weigh nothing. The Storyteller's own weight on a tile is the whole thing. The Carry and drag menu names it ("About 130 kg (30 and 100 inside)") and the Interact menu's Take line names the weight of what is inside.
+
+Reverse: pass the count back to H.thingOf in haul.mjs thingOf.
+
+## B6084. A body weighs what is on it (2026-11-15)
+WoDX Interactables. A fallen character weighs their body (B5071) plus everything on their sheet that is carried, worn armor included: a knight in mail is 18 kg heavier to carry than one in a shirt. The Carry option says how much of it is gear.
+
+Reverse: drop the gear part of bodyWeight in haul.mjs.
+
+## B6085. A swimmer is weighed down by what they carry (2026-11-15)
+WoDX Combat. The swimmer's load (B2443) also reads the weight of the gear on the character, worn armor left out (its Dexterity penalty counts already), against what their Strength and Potence lift on the VtDA20 chart: up to a quarter is nothing that matters, up to half a pack, up to all of it a heavy load, past it all they can lift. The higher of that and the burden set by hand counts. Strength is in the chart, so it takes nothing more off the gear. The swim note names the kilos. Setting gear down lightens it.
+
+Reverse: drop gearKg and liftKg from loadOf in movement.js.
+
+## B6086. Loose gear on the map (2026-11-15)
+WoDX Interactables (loose.mjs, loose-rules.mjs). Set gear down here, on the Carry and drag menu, lets a character tick things on their sheet and put them on the ground where they stand. They leave the sheet and become a pile of gear on that square (a tile with no picture); more set down on the same square joins it. Anyone in reach picks the pile up from the Interact menu, and gets the items back exactly as they were, with their own settings. A heavy pile is hauled like a sack, at its real weight. A pile that has been picked up is gone from the map and the menus. A player's choice goes to the Storyteller's client, as hauling does.
+
+Reverse: drop the setdown option in haul.mjs and the pile kind in interact-rules.mjs CONTAINERS.
+
+## B6087. The heap is drawn (2026-11-15)
+WoDX Interactables. Each pile is drawn on the map as a heap of pixel blocks, one for each thing, coloured by what it is made of (steel, iron, wood, leather, cloth, paper, gold, glass), wider and taller the more it weighs, with a shadow under it. It is drawn with the floor, under the tokens, so the scene's lighting darkens it at night. Players see it where their token can see it; the Storyteller also sees its weight under it. The heap shrinks or goes when things are taken.
+
+Reverse: drop the drawing part of loose.mjs.
+
+## B6088. What can be set down (2026-11-15)
+WoDX Interactables. Items, armor, weapons and fetishes. Natural weapons, installed cyberware, traits, powers and notes stay on the sheet. Armor set down is no longer worn.
+
+Reverse: edit PUT_DOWN and canSetDown in loose-rules.mjs.
+
+## B6089. Every era and the lone player (2026-11-15)
+All three modules. The weights follow the chronicle's year from 1197 to the World of Future Darkness (B6081); piles need no approval, so a lone player's character sets down and picks up gear with no Storyteller at the table, and the Storyteller's client does the work.
+
+Reverse: none needed.
+
+## B6100. The named Artifacts of Wraith 20th are made at the soulforge (2026-11-15)
+WoDX Library data/wonders-wraith.mjs and scripts/wonders-wraith.mjs. The Master Plan item (Wraith artifacts, every era) is
+built from Wraith 20th pp. 425-431: Bell of Summoning, masks of office, Redeyes, Scribbler's Pen, Soulfire Mask, Soulfire
+Lantern, Star of the East, Candelabra of Souls, eMap, Stygian steel armor, Stygian Wall Flies, Living Chains and the
+Fetterguard from the forges; Beasthide, Bloodwebs, Shroudripper gloves, the Wail Tongue and the Guardian Orb from slain
+plasmics; Forgebait, the Memory Net and the Bean Nighe Caul for Spectres; and a souled relic fitted for a soulfire
+crystal (p. 428). Left off: Instant Nihils (no maker known, p. 425), the Spectre-altered relics (Lucky's Mr. Bunny, the
+Maggot Revolver) and the named relics of pp. 423-425, which are found, not made. Every summary is in WoDX's own words
+with its page; the book overlap check finds no run of eight words. The two open rows stay.
+
+Reverse: drop NAMED from ALL in wonders-wraith.mjs.
+
+## B6101. The forge's goal follows the Artifact's level (2026-11-15)
+House rule: 2 + 2 successes a level (4 for level 1, 12 for level 5), at the forge's own difficulty, the soulfire's Pathos
+half the goal rounded up as before (one more after Stygia's fall). A re-forged obolus adds to it as for any Artifact.
+Skin Artifacts need a slain plasmic (the Storyteller's say), must be fed 2 Pathos a day or go dull, and a day and 4
+Pathos wake them (p. 428); a botch with one adds a temporary Angst. The eMap waits for the Electron Highway: from 1970
+(house). Item powers gain costs (more than one trait paid) and onBotch.add.
+
+Reverse: change goalFor in data/wonders-wraith.mjs; drop SKIN_POWERS and skinBotch.
+
+## B6102. What shows when an Artifact is used (2026-11-15)
+WoDX Library wonder-use.mjs. Every item power may name a look (the figure's casting move through wodxPowerShown, read by
+WoDX Paperdoll), a token look (alpha and light, put back by a later power or the Undo) and a light that stays on the map
+(made on the active Storyteller's computer through the Library socket, flagged wonderLight). A failed roll shows nothing.
+
+Reverse: drop showPower and onWonderSocket from wonder-use.mjs and the socket line in use.mjs.
+
+## B6103. Spectres feed the soulfire with Angst (2026-11-15)
+House rule: a sheet whose variant names a Spectre or the Shadow is a Spectre maker; only Spectres make Spectre
+Artifacts (p. 430), and they burn Angst for the soulfire where a wraith burns Pathos. The books give Spectres Angst as
+their fuel; no page says how they forge.
+
+Reverse: make fuelOf return Pathos for everyone.
+
+## B6104. A sealed Fetterguard keeps Fetters from their town's fall (2026-11-15)
+WoDX Creation advance.mjs and advance-rules.mjs. A Fetterguard whose Seal has run, not spent, keeps as many of the
+wraith's place Fetters as it holds likenesses (in sheet order) when their town is sacked, quaked or ruined across the
+years; the change list says so instead of losing them. A Fetter that names a person who has died is still lost: the
+box keeps harm off a Fetter, it does not keep a mortal alive (house reading of p. 428).
+
+Reverse: drop the fetterguard line in advance.mjs and the check in advance-rules.mjs.
+
+## B6110. One code base per line sheet, on either engine (2026-11-15)
+System fork. Each line sheet's class (Mortal and the eleven lines over it) is now a mixin applied twice: over the old engine's ActorSheet (the class it always was) and over LegacyActorSheetV2. Both keep the same class name, so the sheet id (WoD.VampireActorSheet) and render hooks named after the class stay the same.
+
+Reverse: take the line out of LINES_V2 (B6112); the old-engine class is still there.
+
+## B6111. The bridge: LegacyActorSheetV2 (2026-11-15)
+System fork, module/actor/template/legacy-sheet-v2.js. HandlebarsApplicationMixin(ActorSheetV2) with one part, the line's own template. It gives the line code what the old engine gave: getData with the old context, _renderInner (WoDX Sheets wraps it), activateListeners(html) with jQuery after each render, the tabs from defaultOptions, options.editable, activateTab, and the document as "object". The template's form root becomes a div with the same classes (the window is the form now). {{editor}} boxes become always-open prose-mirror editors on the same field, saving on focus loss and on close; the profile image opens the file picker; a change saves the whole form minus active-effect overrides, as before; the open tab and scroll positions survive a redraw. The old window's 8 px inner spacing and scrolling are kept in wod.css.
+
+Reverse: remove the file and the V2 exports; nothing else depends on it while LINES_V2 is empty.
+
+## B6112. Which lines are moved: LINES_V2 (2026-11-15)
+System fork, module/actor/template/lines-v2.js, read by wod.js and WoDX Sheets. Lines move one at a time, each gated on the testbed (gatesheetv2 plus the sheet gates, fit-audit and gateuisnap) before the next. Mummy goes first: a small line that still has a WoDX book sheet over it, so both layers are tested.
+
+Reverse: remove a type from the set.
+
+## B6113. System hooks follow the moved sheets (2026-11-15)
+System fork, hooks.js. The language, line, font and dark-mode classes the old sheets got from renderActorSheet are applied from renderLegacyActorSheetV2 too, and the PC sheet's renderActorSheetV2 handler skips the moved line sheets so it does not strip their line class.
+
+Reverse: drop the two hook lines.
+
+## B6114. Modules follow the moved sheets (2026-11-15)
+WoDX Sheets builds its sheet over the V2 class for a moved line (same name), adds the Gender line and the Sheet tools button from renderLegacyActorSheetV2 (on V2 the button opens the title bar's own menu, which already names every control), and adds Print and History as V2 header controls. WoDX Chronicle's player guide counts opening a moved sheet. Header buttons from other modules already had V2 versions.
+
+Reverse: the hooks are additive; remove them with the line from LINES_V2.
+
+## B6130. The held readings go in, worded as the books back them (2026-11-15)
+WoDX Chronicle, tools/timeline/build-world-history.mjs. WAITING is empty. The book check (project files global-world/book-check-readings.md, finished in the cloud from the OCR text) settled each card. 1521: Wraith 20th (pdf 101, 512 to 517) breaks the Dark Kingdom of Obsidian through the heretics' Flaying and the storm after it, so the card names the Flaying, with the plague and siege dead as the background, and the survivors' Mictlan. 1692: Verbena Revised (pdf 43) keeps the Verbena out of the trials; no book has hunters and mages blaming each other, so that part is gone. 1791: Wraith 20th (pdf 521) has Les Invisibles fan the slave revolts and the Mirrorlands battered by storms and Baka; the lwa among the rebels "by both sides" had no book and is gone. 1885: Wraith 20th (pdf 517 to 518, the Bush of Ghosts behind a false Ivory Queen) and Kindred of the Ebony Kingdom (pdf 16, Laibon fighting the Portuguese around 1540) back a continent already held. 1890: the Wendigo tribebook (pdf 28, 50 to 51) backs Garou among the Ghost Dancers. 1994: Kindred of the Ebony Kingdom (pdf 168) keeps the genocide mortal with elders using the chaos, and A World of Rage (pdf 94 to 95) has the Wyrm feed on it; no book ties it to the lands of the dead, so the card no longer says so and is renamed The killing in Rwanda.
+
+Reverse: put the eight year|title keys back in WAITING and rebuild.
+
+## B6131. The Croatan card stays out: the book event tells it (2026-11-15)
+WoDX Chronicle. The 1589 card agrees with the books (Past Lives pdf 66 to 70 gives the year), but the book event croatan already fires on that date with the same story, so the card joins TOLD_BY_BOOK and nothing fires twice.
+
+Reverse: remove "1589|The Croatan" from TOLD_BY_BOOK.
+
+## B6132. The 1830 card is the Squattocracy, not the start of the War of Tears (2026-11-15)
+WoDX Chronicle. Rage Across Australia (pdf 20 to 21) has the Wyrm's agents hold much of the colony's economy by 1830 and form the Squatters' Council, while the Bunyip withdraw inland; its War of Tears (pdf 23 to 24) is a single year of killing, told later in the book, and Past Lives (pdf 70) sets the Bunyip's last stand in 1937. The card no longer starts the war in 1830. It tells the Squattocracy instead, and the war stays the book event war-of-tears at 1899 (W20, era advancement's lost-tribe year), whose date note now names Rage Across Australia and Past Lives so the Storyteller can move it to 1937.
+
+Reverse: restore the 1830 line "The War of Tears begins" in r3/age-of-reason.txt; move war-of-tears to 1937 in data/events.mjs to follow Past Lives.
+
+## B6210. gatevehicles plays in a year that has cars (2026-11-15)
+Gates. gatevehicles read the year from the clock. After other gates the clock could stand before the motor car, so
+the aeroplane step read "No motor car yet" and the ram missed. When the year is before 1950 the run now moves the
+clock to 1995 and notes the move. The kit puts the clock back after.
+
+Reverse: drop the move and play in whatever year the clock shows.

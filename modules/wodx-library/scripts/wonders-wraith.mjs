@@ -9,8 +9,14 @@
  * The goal, difficulty and Pathos come from WoDX Actions soulforge-rules.js, so the forge window and this table never
  * disagree. As with the Gnosis for a fetish, the soulfire's Pathos and an Artificer's pledged Corpus level are paid
  * when the long task ends (B3721), so a request the Storyteller turns down costs nothing.
+ *
+ * B6100-B6109: the named Artifacts of Wraith 20th pp. 425-431 (data/wonders-wraith.mjs) join the two open rows. Each is
+ * an Artifact at the forge with a goal set by its level (2 + 2 a level, house), and the finished item carries its
+ * powers for the Use window: the Pathos it holds, what a use costs, the look on the map. Skin Artifacts need a slain
+ * plasmic; Spectre Artifacts are made only by Spectres, who feed the soulfire with Angst (house).
  */
 import * as SF from "../../wodx-actions/scripts/soulforge-rules.js";
+import * as D from "../data/wonders-wraith.mjs";
 import {registerLine} from "./wonder-registry.mjs";
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -24,7 +30,20 @@ export const WRAITH_WONDERS = [
   {key: "reworked-relic", name: "A reworked relic", line: "wraith", kind: "artifact", product: "relic", house: true,
     spirit: "", does: "A relic from the Skinlands reworked at the forges so it serves the dead, such as a ghost pistol made to fire Underworld rounds. It counts as an Artifact.", book: WR20, pdf: 109, page: 44}
 ];
-const BY = Object.fromEntries(WRAITH_WONDERS.map(w => [w.key, w]));
+/** The named Artifacts, as table rows: a forge product, and what the finished thing does (B6100). */
+export const NAMED = D.ROWS.map(r => ({...r, product: r.fromRelic ? "relic" : "artifact", house: true, spirit: ""}));
+const ALL = [...WRAITH_WONDERS, ...NAMED];
+const BY = Object.fromEntries(ALL.map(w => [w.key, w]));
+const KIND_LABEL = {forge: "Artifact", skin: "Skin Artifact", spectre: "Spectre Artifact", relic: "souled relic"};
+
+/** A Spectre's sheet: a wraith whose variant names a Spectre or the Shadow (as WoDX Actions' profiles read it). */
+export function spectreOf(a = {}) {
+  const v = a.system?.settings?.variant ?? a.system?.variant ?? "";
+  const txt = typeof v === "string" ? v : Object.values(v ?? {}).filter(x => typeof x === "string").join(" ");
+  return /spectre|shadow/i.test(txt) || !!a.flags?.["wodx-actions"]?.spectre;
+}
+/** The trait a maker burns in the soulfire: Pathos, or a Spectre's Angst (house, B6103). */
+export const fuelOf = m => (m?.kind === "spectre" ? {path: D.ANGST, name: "Angst"} : {path: D.PATHOS, name: "Pathos"});
 
 /** Does the sheet name the Artificers' Guild (a feature, a background, a note)? The forge window's own test. */
 export const artificerOf = (a = {}) => (a.items ?? []).some(i => /artificer/i.test(String(i?.name ?? ""))) || /artificer/i.test(String(a.system?.bio?.guild ?? a.system?.guild ?? ""));
@@ -39,7 +58,11 @@ function craftsOf(a = {}) {
 export function planOf(w, m = {}, o = {}) {
   const artificer = o.artificer === undefined ? !!m.artificer : !!o.artificer;
   const source = w?.product === "relic" ? "relic" : (SF.SOURCES[o.source] ? o.source : "soul");
-  return SF.plan({product: w?.product, source, artificer, year: n(m.year) || null, dexterity: m.dexterity, crafts: m.crafts});
+  const pl = SF.plan({product: w?.product, source, artificer, year: n(m.year) || null, dexterity: m.dexterity, crafts: m.crafts});
+  if ( !pl.ok || !w?.level ) return pl;
+  // B6101: a named Artifact's goal follows its level; a re-forged obolus still makes it harder
+  const goal = D.goalFor(w.level) + (pl.goal - SF.PRODUCTS[w.product].goal);
+  return {...pl, goal, pathos: SF.soulfireCost(goal, n(m.year) || null)};
 }
 
 export const wraithKit = {
@@ -55,25 +78,29 @@ export const wraithKit = {
 
   factsFrom(a = {}, ctx = {}) {
     const s = a.system ?? {}, adv = s.advantages ?? {};
-    return {profile: ctx.profile ?? "mortal", artificer: artificerOf(a), pathos: n(adv.pathos?.temporary), corpus: n(adv.corpus?.max),
+    return {profile: ctx.profile ?? "mortal", spectre: spectreOf(a), artificer: artificerOf(a), pathos: n(adv.pathos?.temporary), angst: n(adv.angst?.temporary), corpus: n(adv.corpus?.max),
       willpower: n(adv.willpower?.permanent), dexterity: n(s.attributes?.dexterity?.value), crafts: craftsOf(a), year: n(ctx.year)};
   },
-  makerOf: f => ({...f, kind: f?.profile === "wraith" ? "wraith" : null}),
-  listFor: m => (m?.kind === "wraith" ? WRAITH_WONDERS : []),
+  makerOf: f => ({...f, kind: f?.spectre && ["wraith", "spirit"].includes(f?.profile) ? "spectre" : f?.profile === "wraith" ? "wraith" : null}),
+  listFor: m => (m?.kind === "spectre" ? ALL : m?.kind === "wraith" ? ALL.filter(w => w.kind !== "spectre") : []),
 
   blockers(w, m, o = {}) {
     if ( !w ) return ["no such item"];
-    if ( m?.kind !== "wraith" ) return ["only wraiths work the soulforges"];
+    if ( m?.kind !== "wraith" && m?.kind !== "spectre" ) return ["only wraiths work the soulforges"];
+    if ( w.kind === "spectre" && m.kind !== "spectre" ) return ["only Spectres know how to make this"];
+    if ( w.from && n(m.year) && n(m.year) < w.from ) return [`not before ${w.from}: ${w.fromWhy ?? "it is not known yet"}`];
     const pl = planOf(w, m, o);
     if ( !pl.ok ) return [pl.why];
-    const out = [];
-    if ( n(m.pathos) < pl.pathos ) out.push(`needs ${pl.pathos} Pathos for the soulfire and has ${n(m.pathos)}`);
+    const out = [], fuel = fuelOf(m), have = m.kind === "spectre" ? n(m.angst) : n(m.pathos);
+    if ( have < pl.pathos ) out.push(`needs ${pl.pathos} ${fuel.name} for the soulfire and has ${have}`);
     if ( pl.selfCost && n(m.corpus) <= 1 ) out.push("has no Corpus left to pledge");
     return out;
   },
   cautions(w, m = {}) {
     const out = [];
     if ( w?.product === "relic" ) out.push("The forger must hold the relic; the Storyteller says whether they do.");
+    if ( w?.kind === "skin" ) out.push("A Skin Artifact is cut from a slain plasmic; the Storyteller says whether the forger has the carcass. Once made it must be fed 2 Pathos a day.");
+    for ( const c of w?.cautions ?? [] ) out.push(c);
     if ( SF.forgesIn(n(m.year) || null).key === "stygia" && !m.artificer ) out.push("Outside the Artificers' Guild this is illicit under Stygia's law, and the Storyteller hears of it.");
     out.push("The dice, the time and the Pathos are WoDX's own (logged for review).");
     return out;
@@ -88,11 +115,13 @@ export const wraithKit = {
     const pl = planOf(w, m, o);
     if ( !pl.ok ) return null;
     return {...SF.taskOf(pl, {name: `Soulforge: ${w.name.replace(/^(A|An) /, "")}`}), line: "wraith", spend: pl.pathos,
-      opts: {source: pl.source, pledge: !!pl.selfCost, artificer: o.artificer === undefined ? !!m?.artificer : !!o.artificer, illicit: !!pl.illicit}};
+      opts: {source: pl.source, pledge: !!pl.selfCost, artificer: o.artificer === undefined ? !!m?.artificer : !!o.artificer, illicit: !!pl.illicit,
+        fuel: fuelOf(m).path}};
   },
 
   /** The forge's own item, marked as a wonder so either module can tell what made it (B3722). */
   itemsFor(w, {maker = "", at = 0} = {}) {
+    if ( w?.level ) return namedItems(w, {maker, at});
     const d = w ? SF.itemData(w.product, {maker: String(maker)}) : null;
     if ( !d ) return [];
     const ref = `${w.book}, pdf ${w.pdf}`;
@@ -105,7 +134,8 @@ export const wraithKit = {
   /** The soulfire's Pathos, and an Artificer's own plasm: a Corpus level for good (B3721). Paid whatever the outcome. */
   costs(w, t = {}) {
     const out = [];
-    if ( n(t.spend) ) out.push({path: "system.advantages.pathos.temporary", amount: n(t.spend), floor: 0, label: `${n(t.spend)} Pathos burned in the soulfire.`});
+    const fuel = t.opts?.fuel === D.ANGST ? {path: D.ANGST, name: "Angst"} : {path: D.PATHOS, name: "Pathos"};
+    if ( n(t.spend) ) out.push({path: fuel.path, amount: n(t.spend), floor: 0, label: `${n(t.spend)} ${fuel.name} burned in the soulfire.`});
     if ( t.opts?.pledge ) out.push({path: "system.advantages.corpus.max", amount: 1, floor: 1, cap: "system.advantages.corpus.temporary", label: "A Corpus level pledged to the forge, gone for good."});
     return out;
   },
@@ -114,10 +144,36 @@ export const wraithKit = {
     if ( status === "done" ) return ["Soulsteel and plasm, hard and lasting. It moans now and then."];
     return [];
   },
-  label: w => w.name,
-  detail: (w, t = {}) => `From: ${SF.SOURCES[t.opts?.source]?.label ?? "a soul"}.${t.opts?.artificer ? " Of the Artificers' Guild." : ""}${t.opts?.illicit ? " Illicit under Stygia's law." : ""} ${t.goal} successes at difficulty ${t.diff} (Dexterity + Crafts), a roll a week; ${n(t.spend)} Pathos for the soulfire when it ends.`,
+  label: w => (w.level ? `${w.name} (level ${w.level} ${KIND_LABEL[w.kind] ?? "Artifact"})` : w.name),
+  detail: (w, t = {}) => `${w?.level ? `${w.does} ` : ""}From: ${SF.SOURCES[t.opts?.source]?.label ?? "a soul"}.${t.opts?.artificer ? " Of the Artificers' Guild." : ""}${t.opts?.illicit ? " Illicit under Stygia's law." : ""} ${t.goal} successes at difficulty ${t.diff} (Dexterity + Crafts), a roll a week; ${n(t.spend)} ${t.opts?.fuel === D.ANGST ? "Angst" : "Pathos"} for the soulfire when it ends.`,
   intro: m => `Pathos ${n(m.pathos)}, Dexterity + Crafts ${n(m.dexterity) + n(m.crafts)} dice${m.artificer ? ", of the Artificers' Guild" : ""}.`,
   approvalText: "is the soul or relic to hand?"
 };
+
+/** The items a named Artifact becomes: its own thing with powers, or a weapon and its armor (B6102). */
+export function namedItems(w, {maker = "", at = 0} = {}) {
+  const ref = `${w.book} p. ${w.page}, pdf ${w.pdf}`;
+  const flag = {...structuredClone(w.flag ?? {}), key: w.key, line: "wraith", kind: w.kind, maker: String(maker), at: n(at), ref, does: w.does, level: w.level};
+  if ( flag.pool ) flag.pool.value = Math.min(n(flag.pool.max), n(flag.pool.value));
+  const desc = `<p>${w.kind === "spectre" ? "Made by a Spectre" : "Soulforged"}${maker ? ` by ${String(maker).replace(/[<>&]/g, "")}` : ""}. A level ${w.level} ${KIND_LABEL[w.kind] ?? "Artifact"}.</p>` + para(w.does) + para(`${ref}.`);
+  const flags = {"wodx-actions": {soulforged: {product: w.product, maker: String(maker), named: w.key}}, "wodx-library": {wonder: flag}};
+  const out = [];
+  if ( w.weapon ) {
+    const x = w.weapon;
+    out.push({name: w.name, type: "Melee Weapon", img: "icons/svg/sword.svg", flags,
+      system: {description: desc, reference: ref, difficulty: 6, isequipped: false, conceal: x.conceal ?? "N",
+        damage: {attribute: "strength", bonus: n(x.damage), type: x.type ?? "lethal", isrollable: true},
+        attack: {attribute: "dexterity", ability: x.ability ?? "melee", accuracy: n(x.accuracy), isrollable: true}}});
+  }
+  if ( w.armor ) {
+    const x = w.armor, own = !w.weapon;
+    out.push({name: x.name ?? w.name, type: "Armor", img: "icons/svg/shield.svg",
+      flags: own ? flags : {"wodx-actions": {soulforged: {product: w.product, maker: String(maker), named: w.key}}},
+      system: {description: own ? desc : para(`Worn with ${w.name}.`) + para(`${ref}. ${x.house ?? ""}`), reference: ref, isequipped: false,
+        soak: {bashing: n(x.soak), lethal: n(x.soak), aggravated: n(x.soak)}, dexpenalty: n(x.penalty)}});
+  }
+  if ( !out.length ) out.push({name: w.name.replace(/^A /, "").replace(/^./, c => c.toUpperCase()), type: "Item", img: "icons/svg/item-bag.svg", flags, system: {description: desc, reference: ref}});
+  return out;
+}
 
 registerLine("wraith", wraithKit);

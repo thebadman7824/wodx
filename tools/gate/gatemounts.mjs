@@ -167,6 +167,32 @@ export async function run() {
         {rugged: a, frame: f ? {w: f.width, h: f.height} : null, taxi: b, worn: c, driver: r});
       await tv.update({[`flags.${IX}.driver`]: null});
     });
+
+    await G.step("12. snow and rail: a sleigh, a snow machine, a train and a tram are drawn (B6073)", async () => {
+      if ( !MR.looksOf("train").length ) return G.ok("12. snow and rail: a sleigh, a snow machine, a train and a tram are drawn (B6073)", true, {skipped: "no train looks in this WoDX Paperdoll"});
+      const want = [["sled", "1600-troika"], ["snowmobile", "1960-snowmobile"], ["train", "1900-express"], ["tram", "1895-electric"]];
+      const tiles = await scene.createEmbeddedDocuments("Tile", want.map(([kind], i) => ({x: (2 + i * 6) * g, y: 14 * g, width: 2 * g, height: g, texture: {src: "icons/svg/wing.svg"},
+        flags: {[IX]: {mount: true, mountKind: kind, title: `Gate ${kind}`}}})));
+      const got = [];
+      for ( const [i, tile] of tiles.entries() ) {
+        const [kind, id] = want[i];
+        await waitFor(() => tile?.object?.mesh, 10000);
+        await MA.setLook(tile, {look: id});
+        await waitFor(() => MA.showing(tile)?.look === id, 20000);
+        const look = MR.looksOf(kind).find(l => l.id === id), f = tile.object.mesh.texture?.frame;
+        got.push({kind, look: MA.showing(tile)?.look, frame: f ? [f.width, f.height] : null, want: look ? [look.w, look.h] : null, mesh: near(tile.object.mesh.width, (look?.w ?? 0) * k, 3)});
+      }
+      // the driver takes the train's footplate and shows in the cab
+      const [, , train] = tiles;
+      await train.update({[`flags.${IX}.driver`]: {a: driver.id, t: td.uuid, n: driver.name, dx: 0, dy: 0}});
+      await waitFor(() => MA.showing(td)?.on === train.uuid, 8000);
+      const r = MA.showing(td);
+      await train.update({[`flags.${IX}.driver`]: null});
+      const fig = ix?.vehicles?.rules?.figures?.({kind: "train", built: 1910});
+      G.ok("12. snow and rail: a sleigh, a snow machine, a train and a tram are drawn (B6073)",
+        got.every(x => x.look && x.frame && x.want && x.frame[0] === x.want[0] && x.frame[1] === x.want[1] && x.mesh) && r && !r.hidden && (!fig || fig.chart?.maneuver === 1),
+        {got, driver: r, figures: fig ? {label: fig.label, chart: fig.chart, body: fig.body} : null});
+    });
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }
   finally { return G.finish(); }
 }

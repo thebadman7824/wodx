@@ -17,10 +17,19 @@ in this public repository and, later, be drawn inside Foundry.
 | `props.py` | Furniture and goods, each drawn to be named at a glance. Doors, windows, chests, casks, crates and sacks are *openables*. |
 | `scene.py` | The recorder: notes walls, openables, lights and regions while a map is drawn, then writes everything Foundry needs. |
 | `bits.py` | Distance fields and smooth lines for paths and streams. |
+| `roofs.py` | Roof pictures (shingle, thatch, slate) laid over a building as its roof tile; the recorder writes them to `roofs/` (B5743). |
+| `dress.py` | Furnishing: fills each room, yard, street and wood with furniture along the walls and the small things of daily use for its trade, only on bare floor (B5746). Call `snap(m)` once the ground is laid, then `rooms()` or `dress()` after the map's own furniture. |
+| `town.py` | A town's own pieces: cobbles, market stalls, lantern posts, the market cross, horse stalls, hurdle fences, hats, hams and jars (B5744); forge, anvil, loom, vats, staves, hoops, handcart, dye lines and brew furnace (B5745). |
 | `buildings.py` | Whole buildings laid out the same way each time: the log cottage and the timber chapel (B5737). |
-| `land.py` | Open ground: grass, roads, brooks, ploughed strips, a plank bridge, scattered trees. |
+| `land.py` | Open ground: grass or a forest floor, roads, brooks, ploughed strips, a plank bridge, scattered trees. |
+| `wilds.py` | The wood's pieces: stumps, camp fires, tents, charcoal kilns, boulders, rock scarps, felled trunks, ladders, a lean-to (B5739); hearths, bones, a warning rope and bell, a pit trap, pelts, drying racks, a den, a thicket, a wallow, a bow (B5740). |
 | `maps/farmhouse.py` | The first map: a three-room timber farmhouse and its yard, 20 by 14 squares. |
 | `maps/village.py`, `maps/road.py` | Sample maps: a village of about 1200 (40 by 28) and a country road (36 by 20). They write to `out/` unless given a folder. |
+| `maps/forest_road.py` | The Forest Road (66 by 46), the first valley map redrawn on its old scene's walls, lights and exits (B5739). |
+| `maps/high_woods.py` | The High Woods (66 by 48): the hermit's lodge, the wolf den, the game-reeve's lodge and the boar's thicket (B5740). |
+| `maps/altenhof.py` | The Ruins of Altenhof (58 by 46): the broken manor, Lady Adelheid's chamber, the dry well and the fallen tower (B5742). |
+| `maps/lt_market.py` | Lower Town, the Market Square (64 by 44): fourteen buildings each furnished for its trade, ten stalls, the market cross and the well (B5744). |
+| `maps/lt_crafts.py` | Lower Town, Craftsmen's Lane (66 by 40): stables, smithy, cooperage, Weavers' Hall, the Shuttered House, the dyers and their yard, the Brewhouse and three cottages (B5745). |
 
 ## Making a map
 

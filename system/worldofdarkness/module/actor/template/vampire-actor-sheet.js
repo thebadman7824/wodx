@@ -1,8 +1,9 @@
-import { default as MortalActorSheet } from "./mortal-actor-sheet.js";
+import { default as MortalActorSheet, MortalActorSheetV2 } from "./mortal-actor-sheet.js";
 import ActionHelper from "../../scripts/action-helpers.js";
 import CreateHelper from "../../scripts/create-helpers.js";
 
-export default class VampireActorSheet extends MortalActorSheet {
+/** The Vampire sheet's code, on either sheet engine (B6110): over the Mortal sheet of the old engine or of ApplicationV2. */
+export const VampireSheetMixin = Base => class extends Base {
 	
 	/** @override */
 	static get defaultOptions() {
@@ -12,8 +13,8 @@ export default class VampireActorSheet extends MortalActorSheet {
 		});
 	}
   
-	constructor(actor, options) {
-		super(actor, options);
+	constructor(...args) {
+		super(...args);
 	}
 
 	/** @override */
@@ -162,7 +163,15 @@ export default class VampireActorSheet extends MortalActorSheet {
 			}
 		});		
 	}
-}
+};
+
+const VampireActorSheet = VampireSheetMixin(MortalActorSheet);
+Object.defineProperty(VampireActorSheet, "name", { value: "VampireActorSheet" });
+export default VampireActorSheet;
+
+/** The same sheet on ApplicationV2 (B6110), used for the lines listed in LINES_V2 (wod.js). */
+export const VampireActorSheetV2 = VampireSheetMixin(MortalActorSheetV2);
+Object.defineProperty(VampireActorSheetV2, "name", { value: "VampireActorSheet" }); // the same name: the sheet keeps its id (WoD.VampireActorSheet) and its render hooks
 
 async function calculteMaxDiscipline(selectedGeneration) {
 	let disciplineMax = 5;

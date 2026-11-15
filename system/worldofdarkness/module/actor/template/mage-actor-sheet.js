@@ -1,10 +1,11 @@
-import { default as MortalActorSheet } from "./mortal-actor-sheet.js";
+import { default as MortalActorSheet, MortalActorSheetV2 } from "./mortal-actor-sheet.js";
 import ActionHelper from "../../scripts/action-helpers.js";
 import { calculateQuintessenceChange, calculateParadoxChange } from "../../scripts/action-helpers.js";
 import CreateHelper from "../../scripts/create-helpers.js";
 import BonusHelper from "../../scripts/bonus-helpers.js";
 
-export default class MageActorSheet extends MortalActorSheet {
+/** The Mage sheet's code, on either sheet engine (B6110): over the Mortal sheet of the old engine or of ApplicationV2. */
+export const MageSheetMixin = Base => class extends Base {
 	
 	/** @override */
 	static get defaultOptions() {
@@ -14,8 +15,8 @@ export default class MageActorSheet extends MortalActorSheet {
 		});
 	}
   
-	constructor(actor, options) {
-		super(actor, options);
+	constructor(...args) {
+		super(...args);
 	}
 
 	/** @override */
@@ -235,7 +236,15 @@ export default class MageActorSheet extends MortalActorSheet {
 		actorData.system.settings.isupdated = false;
 		await this.actor.update(actorData);
 	}
-}
+};
+
+const MageActorSheet = MageSheetMixin(MortalActorSheet);
+Object.defineProperty(MageActorSheet, "name", { value: "MageActorSheet" });
+export default MageActorSheet;
+
+/** The same sheet on ApplicationV2 (B6110), used for the lines listed in LINES_V2 (wod.js). */
+export const MageActorSheetV2 = MageSheetMixin(MortalActorSheetV2);
+Object.defineProperty(MageActorSheetV2, "name", { value: "MageActorSheet" }); // the same name: the sheet keeps its id (WoD.MageActorSheet) and its render hooks
 
 function parseCounterStates(states) {
 	return states.split(",").reduce((obj, state) => {

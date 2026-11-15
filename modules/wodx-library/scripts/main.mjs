@@ -11,6 +11,7 @@ import {setupFaith, faithApi} from "./faith-use.mjs";
 import * as HR from "./house-rules.mjs";
 import {setupHygiene} from "./hygiene-use.mjs";
 import "./wonder-lines.mjs";
+import {setupWeight} from "./weight.mjs";
 
 /**
  * WoDX Library: gear by era. The weapons, armor and cyberware of each era's books (with their pages), in a world
@@ -21,7 +22,7 @@ import "./wonder-lines.mjs";
 const MOD = G.MOD;
 const PACK_NAME = "wodx-gear";
 const PACK_LABEL = "WoDX · Gear by era";
-export const VERSION = "0.46.0";
+export const VERSION = "0.48.0";
 const ApplicationV2 = foundry.applications.api.ApplicationV2;
 const esc = s => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 
@@ -187,6 +188,8 @@ Hooks.once("ready", async () => {
     manual: {open: Sh.openManual, ensure: Sh.ensureManual, page: Sh.openManualPage}, glossary: {open: Sh.openGlossary, ensure: Sh.ensureGlossary}, changelog: {open: Sh.openChangelog, ensure: Sh.ensureChangelog}};
   try { await setupExamine(); game.modules.get(MOD).api.examine = examineApi(); } catch (err) { console.warn("WoDX Library | Examine could not start", err); }
   try { await setupUse(); game.modules.get(MOD).api.use = useApi(); game.modules.get(MOD).api.arms = armsApi(); setupFaith(); game.modules.get(MOD).api.faith = faithApi(); game.modules.get(MOD).api.house = {roadKit: HR.roadKit}; } catch (err) { console.warn("WoDX Library | Use could not start", err); }
+  // B6080: what things weigh, for containers, piles of loose gear, bodies and swimmers (weight.mjs)
+  try { game.modules.get(MOD).api.weight = await setupWeight(); } catch (err) { console.warn("WoDX Library | weights could not start", err); }
   try { setupHygiene(); } catch (err) { console.warn("WoDX Library | washing could not start", err); }
   // B3795: cyberware in the body (bonus rows while installed, Humanity on install)
   try { setupGearInstall(); game.modules.get(MOD).api.cyber = gearInstallApi(); } catch (err) { console.warn("WoDX Library | cyberware could not start", err); }
