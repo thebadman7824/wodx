@@ -198,9 +198,13 @@ const P = {
   javanese: {
     m: "Slamet, Joko, Bambang, Agus, Sutrisno, Wahyu, Budi, Hadi, Sugeng, Teguh, Wiranto, Purnomo, Suparman, Harjo, Darmo, Kusno",
     f: "Sri, Siti, Wati, Endang, Sulastri, Ningsih, Lestari, Dewi, Kartini, Rukmini, Sumiati, Tuti, Yanti, Ratna, Wulan, Ayu"},
+  // Raised to 300 names (B5190): the Malacca court, the Hikayat heroes and the village names of the old Malay world,
+  // then the names of modern Malaysia and Brunei; bin or binti the father throughout
   malay: {
-    m: "Ahmad, Ismail, Hassan, Ibrahim, Osman, Yusof, Abdullah, Rahman, Hamzah, Zainal, Razak, Kassim",
-    f: "Aminah, Fatimah, Zainab, Halimah, Salmah, Rokiah, Noraini, Siti, Aishah, Mariam, Rohani, Zaleha",
+    m: {old: "Parameswara, Iskandar, Muzaffar, Mansur, Alauddin, Mahmud, Ahmad, Muhammad, Sulaiman, Tuah, Jebat, Kasturi, Lekir, Lekiu, Perak, Mutahir, Badang, Nila Utama, Lebar Daun, Abdul Jalil, Abdul Jamil, Ibrahim, Ismail, Hassan, Husain, Ali, Umar, Usman, Yusuf, Daud, Musa, Isa, Yaakub, Harun, Ishak, Idris, Ilyas, Yunus, Zakaria, Salleh, Hamid, Kassim, Hamzah, Abdullah, Abu Bakar, Jaafar, Talib, Zainal Abidin, Mat, Awang, Lela, Kudin, Lambak, Leman, Jusoh, Ngah, Hitam, Putih, Mamat, Seman, Senik, Bakar, Lazim, Sulong, Kulup, Busu, Uda, Ujang, Bujang, Yahya, Bahaman, Mat Kilau, Said, Mat Salleh, Kadir, Latif, Wahab, Majid, Rahim, Karim, Ghani, Halim",
+      new: "Ahmad, Ismail, Hassan, Ibrahim, Osman, Yusof, Abdullah, Rahman, Hamzah, Zainal, Razak, Kassim, Mahathir, Anwar, Najib, Muhyiddin, Ismail Sabri, Abdul Rahman, Hussein, Abdul Razak, Muhammad Hafiz, Mohd Faizal, Azman, Azhar, Aziz, Fauzi, Firdaus, Hafiz, Hakim, Hairul, Hisham, Idham, Izwan, Jamal, Kamal, Khairul, Mazlan, Mohd Nor, Nazri, Noor Azman, Rizal, Rosli, Roslan, Rashid, Shahrul, Shafie, Sufian, Syafiq, Syahmi, Taufik, Zaki, Zulkifli, Zulkarnain, Amir, Aiman, Danial, Farid, Faris, Haziq, Irfan, Imran, Luqman, Naim, Nasir, Rafiq, Ridhwan, Saiful, Shahrizal, Shamsul, Hafizuddin, Azlan, Adnan, Fadzil, Mokhtar, Nizam, Kamaruddin, Ramli, Sabri, Johari, Jamaluddin, Effendi, Fuad, Hanafi, Helmi, Lokman, Marzuki, Nordin, Rosmadi, Saari, Shukri, Yazid, Zahid"},
+    f: {old: "Fatimah, Teja, Li Po, Sri Beni, Mahsuri, Kembang, Kudu, Anum, Melor, Melati, Mawar, Cempaka, Kenanga, Seroja, Kemboja, Delima, Embun, Bulan, Bintang, Intan, Mas, Mayang, Dara, Dayang, Esah, Minah, Timah, Jah, Som, Yam, Senah, Tijah, Khatijah, Maimunah, Aminah, Zainab, Halimah, Salmah, Mariam, Aishah, Rahmah, Hasnah, Kalsom, Ramlah, Saodah, Rugayah, Safiah, Habibah, Hawa, Hajar, Sarah, Asiah, Zubaidah, Rabiah, Hamidah, Jamilah, Khadijah, Rubiah, Nafisah, Puteh, Bongsu, Mek",
+      new: "Aminah, Fatimah, Zainab, Halimah, Salmah, Rokiah, Noraini, Siti, Aishah, Mariam, Rohani, Zaleha, Nurul Aina, Nur Aisyah, Nurul Izzah, Siti Nurhaliza, Azizah, Rosmah, Nor Hayati, Norliza, Norhaslinda, Nurul Huda, Nur Syafiqah, Nur Atiqah, Nur Fatihah, Nurin, Aina, Alya, Aqilah, Amira, Anis, Aisyah, Balqis, Damia, Dhia, Farah, Fatin, Hana, Haslina, Hasliza, Ilyana, Izzati, Liyana, Maisarah, Marlina, Mazlina, Nabila, Nadia, Najwa, Natasha, Norashikin, Norazlina, Rafidah, Raihana, Rosnah, Rozita, Ruzana, Safura, Shahirah, Suhaila, Suraya, Syahirah, Syazwani, Wardah, Yasmin, Zahirah, Zarina, Zulaikha, Zuraida, Ainul, Hidayah, Faridah, Azura, Fauziah, Hartini, Juliana, Kartika, Maznah, Noriah, Puspa, Rahimah, Salina, Sabariah, Umi Kalthum"},
     child: ["bin", "binti", 1]},
   // The Moro of Mindanao and Sulu: the Maguindanao, Maranao, Tausug and their sultanates (B5000), from the court
   // genealogies (tarsila) and the Spanish and American records, then the family names of the Bangsamoro since
@@ -342,6 +346,6 @@ export const GIVEN_ONLY = new Set(["new-england-algonquian", "powhatan", "lakota
 /** Every people named here. */
 export const WORLD_PEOPLES = [...Object.keys(P), ...Object.keys(BUILT)];
 /** Peoples raised to at least 300 distinct names (Ben 2026-11-13, B3310 on): one at a time, the biggest homelands first. */
-export const RAISED = ["chinese", "hindi", "arabic", "armenian", "thai"];
+export const RAISED = ["chinese", "hindi", "arabic", "armenian", "thai", "malay"];
 /** Every distinct name a people of P has, given and family, all ages. */
 export const namesOf = origin => new Set(["m", "f", "fam"].flatMap(k => lists(P[origin]?.[k] ?? {}).flatMap(([, s]) => split(s).flatMap(x => x.split("/")))));
