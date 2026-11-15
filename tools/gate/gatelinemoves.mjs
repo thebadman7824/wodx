@@ -66,11 +66,11 @@ export async function run() {
       Hooks.callAll("wodxPowerShown", vamp, {power: "Unseen Presence", group: "Obfuscate", line: "Vampire", token: tv.uuid});
       await waitFor(() => tv.flags?.[PD]?.veil?.kind === "unseen", 5000);
       await sleep(400);
-      const hidden = tv.flags?.[PD]?.veil?.kind === "unseen", alpha = tv.object?.mesh?.alpha;
+      const hidden = tv.flags?.[PD]?.veil?.kind === "unseen", alpha = A.faded(tv.object);
       Hooks.callAll("wodxPowerShown", vamp, {power: "Unseen Presence", group: "Obfuscate", line: "Vampire", token: tv.uuid});
       await waitFor(() => !tv.flags?.[PD]?.veil, 5000);
       await sleep(400);
-      G.ok("5. Obfuscate", hidden && alpha > 0 && alpha < .5 && !tv.flags?.[PD]?.veil && tv.object?.mesh?.alpha > .9, {hidden, alpha, back: tv.object?.mesh?.alpha});
+      G.ok("5. Obfuscate", hidden && alpha > 0 && alpha < .5 && !tv.flags?.[PD]?.veil && A.faded(tv.object) === 1, {hidden, alpha, back: A.faded(tv.object)});
     });
 
     await G.step("6. the howl", async () => {

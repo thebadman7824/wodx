@@ -458,17 +458,27 @@ function applyLooks(token, now) {
   if ( f.act?.look && LR.LOOK_HOLD.includes(f.act.look) && f.act.name ) kinds.push([f.act.look, now]);
   if ( token.actor?.type === "Wraith" ) kinds.push(["drift", now]);
   if ( !kinds.length ) {
-    if ( touched.has(token.id) ) { touched.delete(token.id); m.pivot?.set?.(0, 0); m.tint = doc.texture?.tint ?? 0xffffff; m.alpha = doc.alpha ?? 1; marks(token, [], now); }
+    if ( touched.has(token.id) ) { touched.delete(token.id); m.pivot?.set?.(0, 0); m.tint = doc.texture?.tint ?? 0xffffff; fade(token, 1); marks(token, [], now); }
     return;
   }
   touched.add(token.id);
   let alpha = 1, tint = null, dy = 0, dx = 0;
   for ( const [k, t] of kinds ) { const o = LR.lookAt(k, t, {own}); alpha *= o.alpha; if ( o.tint !== null ) tint = o.tint; dy += o.dy; dx += o.dx; }
   const h = Math.abs(m.height) || 1, sx = Math.abs(m.scale?.x) || 1, sy = Math.abs(m.scale?.y) || 1;
-  m.alpha = alpha * (doc.alpha ?? 1) * (doc.hidden ? .5 : 1);
+  fade(token, alpha);   // a filter of its own, as Foundry sets the figure's own alpha again whenever it redraws the token
   m.tint = tint ?? doc.texture?.tint ?? 0xffffff;
   m.pivot?.set?.(-dx / sx, -(dy * h * .55) / sy);   // the figure fills about the lower half of its frame
   marks(token, kinds.map(([k, t]) => [k, t]).filter(([k]) => ["halo", "ring", "motes", "smoke", "wings", "sparks", "glyph"].includes(k)), now);
+}
+/* How faint a look leaves the figure: an alpha filter on the figure that only this module sets (1 takes it off). */
+const fades = new Map();
+function fade(token, a) {
+  const m = token.mesh; if ( !m ) return;
+  let f = fades.get(token.id);
+  if ( a >= .999 ) { if ( f ) { m.filters = (m.filters ?? []).filter(x => x !== f); if ( !m.filters.length ) m.filters = null; fades.delete(token.id); } return; }
+  if ( !f ) { f = new PIXI.AlphaFilter(a); fades.set(token.id, f); }
+  if ( !(m.filters ?? []).includes(f) ) m.filters = [...(m.filters ?? []), f];
+  f.alpha = a;
 }
 /* The drawn marks of a look, on a small canvas child of the token, in step with the figure. */
 function marks(token, kinds, now) {
@@ -718,4 +728,4 @@ export async function dress(scene = canvas.scene) {
   return n;
 }
 
-export const spriteApi = {flash, veil, lineWanted, looksOn: t => [...(looks.get(t?.id ?? t) ?? [])].map(l => l.kind), marked: t => !!marked.get(t?.id ?? t), seemingFor, shiftByStages, covered: t => { const c = covers.get(typeof t === "string" ? t : (t?.object?.id ?? t?.id)); return c && !c.destroyed ? {tint: c.tint, visible: c.visible, width: c.width} : null; }, ageOf, markChild, give, clear, pick, play, pose, rise, settle, lifeOf, roster, saveRoster, loadOwn, dress, own: id => SR.isOwn(SR.ownName(id)) ? SR.ownName(id) : null, squares: name => SR.squaresOf(name), fxFor: SR.fxFor, glowing: id => { const g = glows.get(id); return g && !g.destroyed ? {visible: g.visible, width: g.width, height: g.height, x: g.position.x, y: g.position.y} : null; }, acts: name => [...(SR.ACTS[name] ?? [])], playing: id => acts.get(typeof id === "string" ? id : (id?.document?.id ?? id?.id)), names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};
+export const spriteApi = {flash, veil, lineWanted, faded: t => fades.get(t?.id ?? t)?.alpha ?? 1, looksOn: t => [...(looks.get(t?.id ?? t) ?? [])].map(l => l.kind), marked: t => !!marked.get(t?.id ?? t), seemingFor, shiftByStages, covered: t => { const c = covers.get(typeof t === "string" ? t : (t?.object?.id ?? t?.id)); return c && !c.destroyed ? {tint: c.tint, visible: c.visible, width: c.width} : null; }, ageOf, markChild, give, clear, pick, play, pose, rise, settle, lifeOf, roster, saveRoster, loadOwn, dress, own: id => SR.isOwn(SR.ownName(id)) ? SR.ownName(id) : null, squares: name => SR.squaresOf(name), fxFor: SR.fxFor, glowing: id => { const g = glows.get(id); return g && !g.destroyed ? {visible: g.visible, width: g.width, height: g.height, x: g.position.x, y: g.position.y} : null; }, acts: name => [...(SR.ACTS[name] ?? [])], playing: id => acts.get(typeof id === "string" ? id : (id?.document?.id ?? id?.id)), names: () => ({...SR.SHEETS}), state: id => states.get(id), rules: SR};
