@@ -136,5 +136,4 @@ test("the window, the menus, Combat's soak and the NPC choice are wired", () => 
   assert.match(cm, /R\.sheetBonus\(actor\?\.items, "soak_buff", type\)/);
   assert.match(cm, /setting\("autoApply"\) \|\| fd\.apply/);
   assert.match(f, /soakAndApply\?\.\(tg\[0\], \{ apply: true/);
-  assert.match(f, /soakAndApply\?\.\(tg\[0\], \{ apply: true/);
 });
