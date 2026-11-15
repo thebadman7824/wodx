@@ -2018,6 +2018,19 @@ export function holdOfActor(actor) {
     const list = conditionsOf(actor);
     return AU.holdOf(list.map(c => c.id), Object.fromEntries(list.map(c => [c.id, c.name])));
 }
+// B6031: WoDX's Incapacitated status follows the health track (it was only ever set by hand): on when the track fills
+// for a body that falls unconscious rather than into torpor or death, off once it heals below the full track.
+Hooks.on("updateActor", (actor, change) => {
+    if (!isActiveGM() || !foundry.utils.hasProperty(change ?? {}, "system.health.damage") || corpusTrack(actor)) return;
+    const K = chronicle()?.conditions;
+    if (!K?.setCondition || !K.getCondition?.("incapacitated")) return;
+    try { if (!setting("statusEffects")) return; } catch (e) { return; }
+    const t = healthTrack(actor), c = R.condition(t.damage, t.max, getKind(actor));
+    const want = c.key === "unconscious", has = !!K.hasCondition(actor, "incapacitated"), mine = !!actor.getFlag(MOD, "incapAuto");
+    // Healing lifts only the mark this hook set; one the Storyteller or a power set stays
+    if (want && !has) K.setCondition(actor, "incapacitated", true).then(() => actor.setFlag(MOD, "incapAuto", true)).catch(e => console.warn(`${MOD} | incapacitated`, e));
+    else if (!want && has && mine) K.setCondition(actor, "incapacitated", false).then(() => actor.unsetFlag(MOD, "incapAuto")).catch(e => console.warn(`${MOD} | incapacitated`, e));
+});
 // B6020: a player's token held by a condition (held, staked, torpor, asleep...) does not move, in a fight or out of one.
 // The Storyteller moves any token freely. World setting "Conditions hold the token" turns it off.
 Hooks.on("preUpdateToken", (doc, changes, options) => {

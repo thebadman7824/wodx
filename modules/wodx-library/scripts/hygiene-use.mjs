@@ -14,6 +14,7 @@ export async function wash(actor, item) {
   const res = H.washResult(item.name, marksOf(actor));
   for ( const m of res.clears ) await conds()?.setCondition?.(actor, m, false);
   if ( res.groomed ) await actor.setFlag(MOD, "groomed", H.nightOf(game.time?.worldTime));
+  if ( H.isCleaner(item.name) ) await actor.setFlag(MOD, "washed", H.nightOf(game.time?.worldTime));
   const content = `<div class="wodx-card wlib-use-card"><p><b>${esc(actor.name)} uses ${esc(item.name)}</b></p><p>${esc(res.line)}</p></div>`;
   await ChatMessage.create({content, speaker: ChatMessage.getSpeaker({actor})});
   return res;
@@ -37,4 +38,28 @@ export function setupHygiene() {
     if ( conds()?.hasCondition?.(actor, "bloody") ) return;
     conds()?.setCondition?.(actor, "bloody", true);
   });
+  // B6033: Filthy is put on in play, not only by hand: a fall in the wet outdoors, or a week unwashed (living bodies only)
+  Hooks.on("createActiveEffect", (effect, opts, userId) => {
+    if ( userId !== game.user.id || !effect.statuses?.has?.("wodx-knockdown") ) return;
+    const actor = effect.parent;
+    if ( !actor || conds()?.hasCondition?.(actor, "filthy") || /^(wraith|spirit|group)$/i.test(String(actor.type ?? "")) ) return;
+    let tags = [], outdoor = true;
+    try { const W = game.modules.get("wodx-atmosphere")?.active ? game.modules.get("wodx-atmosphere").api?.weather : null; tags = W?.now?.()?.tags ?? []; outdoor = W?.isOutdoor?.(canvas?.scene) !== false; } catch (e) { tags = []; }
+    if ( H.fallDirties(tags, outdoor) ) conds()?.setCondition?.(actor, "filthy", true)?.catch?.(() => null);
+  });
+  Hooks.on("updateWorldTime", worldTime => {
+    const gm = game.users?.activeGM;
+    if ( !game.user.isGM || (gm && gm.id !== game.user.id) ) return;
+    const night = H.nightOf(worldTime);
+    if ( night === lastNight ) return;
+    lastNight = night;
+    for ( const a of game.actors ?? [] ) {
+      if ( !a.hasPlayerOwner || conds()?.hasCondition?.(a, "filthy") ) continue;
+      const washed = a.getFlag(MOD, "washed");
+      if ( washed === undefined || washed === null ) { a.setFlag(MOD, "washed", night).catch(() => null); continue; }
+      const living = !/vampire|kindred|wraith|mummy|spirit/i.test(`${a.type} ${a.system?.kind ?? ""}`);
+      if ( H.unwashedTooLong(washed, worldTime, living) ) conds()?.setCondition?.(a, "filthy", true)?.catch?.(() => null);
+    }
+  });
 }
+let lastNight = null;

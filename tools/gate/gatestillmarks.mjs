@@ -1,5 +1,5 @@
 /**
- * Re-audit gate (B6020-B6026), in Foundry, in rothenstein-wodx, as Gamemaster Test:
+ * Re-audit gate (B6020-B6034), in Foundry, in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatestillmarks.mjs?${Date.now()}`)).run()
  * Makes its own actor and removes it; never moves the clock; starts no fight.
  *   1. the setting "Conditions hold the token" is there and on; Combat's movementFor, holdOfActor and traitRoll are up
@@ -7,6 +7,8 @@
  *   3. a roll effect on every roll (-2 dice, as feeding against the blood's law gives) lowers the attack and the defence
  *   4. a WoDX mark that lasts the scene shows on the token (showIcon ALWAYS), not only on the sheet
  *   5. Crippled limb makes the attack harder; Branded, Filthy and Bloody carry a social difficulty
+ *   6. a mortal beaten to a full track of bashing gets Incapacitated by itself, and loses it on healing (B6031)
+ *   7. a timed effect with the Obfuscated or Sneaking condition puts that status on the token (B6030, B6034)
  * Result: Data/wodx-gate/gatestillmarks-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -54,6 +56,27 @@ export async function run() {
       await K.setCondition(a, "crippled", false);
       const soc = ["filthy", "bloody", "branded"].map(id => K.getCondition(id)?.mods?.socialDiff ?? null);
       G.ok("5. crippled, branded, filthy, bloody have rules", crip === base + 2 && soc.slice(0, 2).every(v => v === 1) && (soc[2] === 1 || soc[2] === null), {base, crip, soc});
+    });
+
+    await G.step("6. incapacitated follows the health track", async () => {
+      const wait = () => new Promise(r => setTimeout(r, 600));
+      const max = Object.values(a.system?.health ?? {}).filter(v => v && typeof v === "object" && "total" in v).reduce((s, v) => s + (Number(v.total) || 0), 0) || 7;
+      await a.update({"system.health.damage.bashing": max + 2}); await wait();
+      const on = !!K.hasCondition(a, "incapacitated");
+      await a.update({"system.health.damage.bashing": 0}); await wait();
+      const off = !K.hasCondition(a, "incapacitated");
+      G.ok("6. incapacitated follows the health track", on && off, {on, off, max});
+    });
+
+    await G.step("7. obfuscated and sneaking reach the token", async () => {
+      const got = {};
+      for ( const id of ["obfuscated", "sneaking"] ) {
+        if ( !K.getCondition(id) ) { got[id] = "not registered"; continue; }
+        const e = await X.applyTimed(a, {name: `Gate ${id}`, condition: id, duration: {kind: "scene"}, key: `gate-still-${id}`, source: "gate"});
+        got[id] = !!a.statuses?.has?.(`wodx-${id}`) && !!K.hasCondition(a, id);
+        await e?.delete?.();
+      }
+      G.ok("7. obfuscated and sneaking reach the token", got.obfuscated === true && got.sneaking === true, got);
     });
   } finally { return G.finish(); }
 }
