@@ -17,6 +17,7 @@ import DemonActorSheet, { DemonActorSheetV2 } from "../../../systems/worldofdark
 import MummyActorSheet, { MummyActorSheetV2 } from "../../../systems/worldofdarkness/module/actor/template/mummy-actor-sheet.js";
 import { onV2 } from "../../../systems/worldofdarkness/module/actor/template/lines-v2.js";
 import * as BG from "./beginner.mjs";
+import * as SK from "./skins.mjs";
 import { isDA as isFaeDA } from "../../wodx-actions/scripts/fae-da.js";
 import { isDA as isMageDA } from "../../wodx-actions/scripts/mage-da.js";
 import * as FR from "../../wodx-actions/scripts/fae-da-rules.js";
@@ -446,7 +447,8 @@ const LABELS = {
 };
 
 // The line skins (B91 to B94): WoDX's own fonts, papers and rules on every sheet, or the system's look as it ships
-const skinOn = v => document.body.classList.toggle("wodx-skin", v !== "system");
+// Each line's skin loads when one of its sheets opens (B6060)
+const skinOn = v => { document.body.classList.toggle("wodx-skin", v !== "system"); if (v !== "system") SK.dressAll(); };
 
 // The title bar (layout pass): the buttons show as icons so the name always fits; each keeps its words as a tooltip
 /** Names for the title bar buttons that carry no words of their own. */
@@ -563,24 +565,63 @@ function natureRow(app, html) {
 }
 Hooks.on("renderActorSheet", natureRow);
 
-// B6114: on a line sheet that runs on ApplicationV2 the title bar already shows icon buttons with their names on
-// hover, and keeps the rest in its own menu (the three dots), which lists every control by name. The Sheet tools button
-// opens that menu, so it does the same job it does on the old sheets.
+// B6114: on a line sheet that runs on ApplicationV2 the Sheet tools button opens the same named list as on the old
+// sheets: the icon buttons in the title bar, then every control of the window's own menu (the three dots), by name.
+function sheetToolsEntries(app, header, self) {
+  const out = [];
+  for (const b of header.querySelectorAll("button.header-control, a.header-control")) {
+    if (b === self || b.dataset.action === "close" || b.dataset.action === "toggleControls" || b.offsetParent === null) continue;
+    const words = b.dataset.tooltip || b.getAttribute("aria-label") || (b.textContent ?? "").trim();
+    const fa = [...b.classList].filter(c => c.startsWith("fa"));
+    const icon = b.querySelector("i")?.outerHTML ?? (fa.length ? `<i class="${fa.join(" ")}"></i>` : "");
+    if (words) out.push({words: game.i18n.localize(words), icon, run: () => b.click()});
+  }
+  let controls = [];
+  try { controls = [...(app._headerControlButtons?.() ?? [])]; } catch (e) { /* none */ }
+  for (const c of controls) {
+    if (!c?.label || out.some(o => o.words === game.i18n.localize(c.label))) continue;
+    out.push({words: game.i18n.localize(c.label), icon: c.icon ? `<i class="${c.icon}"></i>` : "", run: ev => {
+      if (typeof c.onClick === "function") return c.onClick.call(app, ev);
+      const h = app.options?.actions?.[c.action];
+      const fn = typeof h === "function" ? h : h?.handler;
+      return fn?.call(app, ev, ev.currentTarget);
+    }});
+  }
+  return out;
+}
+
 function sheetToolsButtonV2(app) {
   const win = app?.element, header = win?.querySelector?.(".window-header");
   if (!app?.isLegacyBridge || !header || header.querySelector(".wodx-sheet-tools")) return;
   let when = "always";
   try { when = game.settings.get(MOD, "sheetTools"); } catch (e) { /* the default */ }
   if (when === "off" || (when === "beginner" && !BG.beginner())) return;
-  const toggle = header.querySelector('[data-action="toggleControls"]');
-  if (!toggle) return;
   const b = document.createElement("button");
   b.type = "button";
   b.className = `header-control icon wodx-sheet-tools${BG.beginner() ? " wodx-worded" : ""}`;
   b.dataset.tooltip = "Sheet tools: the buttons up here, with their names";
   b.setAttribute("aria-label", "Sheet tools");
   b.innerHTML = `<i class="fa-solid fa-list-ul" aria-hidden="true"></i>${BG.beginner() ? "<span>Sheet tools</span>" : ""}`;
-  b.addEventListener("click", ev => { ev.preventDefault(); ev.stopPropagation(); toggle.click(); });
+  b.addEventListener("click", ev => {
+    ev.preventDefault(); ev.stopPropagation();
+    document.querySelector(".wodx-sheet-tools-list")?.remove();
+    const list = document.createElement("div");
+    list.className = "wodx-sheet-tools-list wodx";
+    list.setAttribute("role", "menu");
+    for (const e of sheetToolsEntries(app, header, b)) {
+      const item = document.createElement("button");
+      item.type = "button"; item.setAttribute("role", "menuitem");
+      item.innerHTML = `${e.icon} `;
+      item.append(document.createTextNode(e.words));
+      item.addEventListener("click", ce => { ce.preventDefault(); list.remove(); e.run(ce); });
+      list.append(item);
+    }
+    const r = b.getBoundingClientRect();
+    list.style.top = `${Math.round(r.bottom + 4)}px`; list.style.left = `${Math.round(Math.max(4, r.left))}px`;
+    document.body.append(list);
+    const away = e => { if (!list.contains(e.target)) { list.remove(); document.removeEventListener("pointerdown", away, true); } };
+    setTimeout(() => document.addEventListener("pointerdown", away, true), 0);
+  });
   const title = header.querySelector(".window-title");
   title ? title.after(b) : header.prepend(b);
 }
@@ -602,6 +643,7 @@ Hooks.once("init", async () => {
     choices: { wodx: "WoDX line skins", system: "The system's own look" },
     onChange: skinOn
   });
+  SK.setup();
   skinOn(game.settings.get(MOD, "sheetLook"));
   const reg = foundry.documents.collections.Actors;
   for (const [type, cls] of [["Changeling", WodxChangelingSheet], ["Mage", WodxMageSheet], ["Hunter", WodxHunterSheet], ["Werewolf", WodxWerewolfSheet], ["Vampire", WodxVampireSheet], ["Mortal", WodxMortalSheet],
@@ -612,6 +654,6 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.22.2", extras: X, rules: SR, sheetFor, viewFor, sheetRollMods: SROLL.modsFor,
+  game.modules.get(MOD).api = { version: "0.23.1", extras: X, rules: SR, sheetFor, viewFor, skins: { loaded: SK.loaded, linesOf: SK.linesOf, load: SK.load, report: SK.report }, sheetRollMods: SROLL.modsFor,
     anachronism: { check: AN.check, scan: AN.scan, report: AN.report, keep: AN.keep, scanMaps: AN.scanMaps, mapThings: AN.mapThings, keepThing: AN.keepThing, showThing: AN.showThing, everything: AN.everything, bringForward: AN.bringForward, undoForward: AN.undoForward } };
 });

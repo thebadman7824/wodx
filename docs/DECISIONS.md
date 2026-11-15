@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6500
+Next free block: B6530
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -332,6 +332,7 @@ Next free block: B6500
 | B6020-B6039 | Re-audit of marks and flags that nothing reads (non-power systems) (used B6020-B6034) | Combat, Chronicle, Actions, Storyteller |
 | B6040-B6049 | Lone Chronicle step 4: the director, experience from the night's log, the recap (used B6040-B6049) | Solo |
 | B6050-B6059 | gate7b fresh arena each run (used B6050-B6051) | tools (gates) |
+| B6060-B6069 | Split the line skins stylesheet: each line's skin loads only when needed (used B6060-B6063) | Sheets |
 | B6070-B6079 | Snow vehicles, trains and trams (rules and sprites), and a quality pass on the vehicle sprites (used B6070-B6076) | Interactables, Paperdoll, Combat |
 | B6080-B6099 | Weights for loose gear and container contents, and loose gear on the map (used B6080-B6089) | Library, Interactables, Combat |
 | B6100-B6109 | Wraith 20th named Artifacts (forge, Skin, Spectre) and souled relics on the crafting table, with real Use powers and looks (used B6100-B6104) | Library, Creation |
@@ -340,10 +341,18 @@ Next free block: B6500
 | B6180-B6199 | Shared terms: one meaning for time, dice, health, distance, eras and who is who across every module (used B6180-B6199) | Chronicle, Actions, Combat, Creation, Interactables, Library, NPC, Otherworlds, Paperdoll, Senses, Sheets, Solo, Storyteller, Targeting, Atmosphere |
 | B6210-B6219 | gatevehicles plays in a year with cars (used B6210) | tools (gates) |
 | B6220-B6229 | The night's work: one Undo for a night of the Storyteller's Hand (Ben's desk pick hd1, 15 November 2026) (used B6220-B6226) | Chronicle, Solo |
+| B6240-B6249 | Load less on players' machines, and the Monday decisions archive (stale design desk 2026-11-15 f1, f2) (used B6240-B6244) | tools |
 | B6250-B6259 | Names follow each year's customs (Improvement Desk nm1) (used B6250-B6253) | Creation, NPC |
 | B6260-B6269 | Real recorded cues: Freesound CC0/CC BY sounds for dawn, dusk, notice, birdsong, cock-crow and heartbeat, by era and faith (used B6260-B6263) | Atmosphere |
+| B6300-B6309 | Every line level with vampires in shared modules (Actions, Combat) (used B6300-B6308) | Actions, Combat |
+| B6310-B6319 | Every line equal in WoDX NPC (parity with the Kindred-only tools) (used B6310-B6319) | NPC |
+| B6320-B6329 | Every line equal in WoDX Storyteller (parity with the Kindred-only tools) (used B6320-B6328) | Storyteller |
 | B6350-B6359 | gate kit yearAtLeast, gatearms and gateplayerextras (used B6350-B6353) | tools (gates) |
+| B6450-B6459 | Every line equal in WoDX NPC: checks that only printed now roll and apply (used B6450-B6453) | NPC |
 | B6490-B6499 | pc queue ageing (used B6490) | tools (pcq) |
+| B6500-B6509 | lanes ignore the dawn and dusk move and session id (used B6500) | tools (lanes) |
+| B6510-B6519 | Map generator licence label: the town layout port is GPL-3.0 (used B6510) | tools/mapgen |
+| B6520-B6529 | Graphics card heat watch in the PC runner (used B6520) | tools (pcq) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10279,6 +10288,26 @@ first, which walks it round the wall to the hero.
 
 Reverse: keep the arena between runs again, drop the scene's mode and take the first attack or flight.
 
+## B6060. The line skins load line by line (2026-11-15)
+WoDX Sheets. tools/skins/build-skins.mjs now writes styles/wodx-skins.css (the fonts and the loading rule, on every page through module.json), styles/skins/<line>.css (one per line in skins-data.mjs) and scripts/skins-index.mjs (the lines in order, with the window selector each one dresses). scripts/skins.mjs listens to renderApplication and renderApplicationV2, matches the sheet's window against the index, and adds each needed file once. The harness checks the split adds up to the single stylesheet rule for rule (buildCss is kept for that), and tools/harness/skins-split-check.mjs compares the two in Chromium picture for picture. Part of the Live performance item for slower machines.
+
+Reverse: put "styles/skins/*.css" back as one file by making build-skins.mjs write buildCss() to styles/wodx-skins.css again and drop the SK.setup() call in main.mjs.
+
+## B6061. Same cascade, no flash (2026-11-15)
+WoDX Sheets. Each line file goes in straight after styles/wodx-skins.css and after any earlier line, so the order against wodx-layout.css and other modules is the one the single file had. A sheet whose file is still loading carries wodx-wait-skin, which hides its page (not its title bar) until the file loads, fails, or 4 seconds pass.
+
+Reverse: drop the wait rule from build-skins.mjs and the class from scripts/skins.mjs; sheets would show the system's look for a moment on first open.
+
+## B6062. Skins off loads nothing (2026-11-15)
+WoDX Sheets. With Sheet look set to the system's own look no line file loads; switching back to WoDX dresses every open sheet at once.
+
+Reverse: none needed; a world that never uses the skins simply never fetches them.
+
+## B6063. A line file follows the core sheet into its cascade layer (2026-11-15)
+WoDX Sheets. On the testbed Foundry brings module stylesheets in as @imports into a cascade layer, not as <link>s, so the first loader found no core sheet and added nothing. The loader now walks document.styleSheets to find the core sheet however it came in: after a <link> it adds a <link>; after an @import it imports the line file into the same sheet, straight after the core sheet and the earlier lines, into the same layer (a <style> of its own if that sheet will not take one). A watch on the page dresses any sheet window the render hooks miss. tools/harness/skins-split-check.mjs proves both ways picture for picture, and gateskinsplit checks the layer and order in Foundry.
+
+Reverse: drop the @import branch in scripts/skins.mjs; line files would then sit outside the layer and win over layered styles they used to lose to.
+
 ## B6070. Sleds, snow machines, trains and trams are mounts (2026-11-15)
 WoDX Interactables. Four new MOUNTS kinds, so they can be tiles and Vehicle sheets: sled (Sled or sleigh, Ride, any year, 4 seats), snowmobile (Snow machine, Drive, from 1910, 2 seats), train (Railway train, Drive, from 1825, 40 seats, cannot be worked below Drive 2) and tram (Tram or streetcar, Drive, from 1860, 40 seats, Drive 2). House rules; logged in PENDING-REVIEW.
 
@@ -10589,6 +10618,31 @@ WoDX Solo. A sixth Storyteller tool, The night's work: the player's window asks 
 
 Reverse: take the night entry out of ST_TOOLS in solo-rules.mjs.
 
+## B6240. The world timeline loads on the Storyteller's client only (2026-11-15)
+WoDX Chronicle. The world timeline (data/world-history.mjs), the future events and the future world (about 1.2 MB together) are no longer imported when the world starts. The Storyteller's client starts loading them at init and waits for them before WoDX Chronicle tells the other modules it is ready, so everything that runs there sees the whole list as before. A player's client reads has() and fired() from the fired list the Storyteller's client keeps in a world setting, and reads the Dated events page and the news cards the Storyteller's client writes, so it loses nothing it shows. The few things that can run on a player's client and read the list itself (a Malkavian's glimpse, a long torpor's wake report, a blood hunt's date, the first night forecast) await events.load() first, so on that client the timeline loads the first time one of them is used. Until it loads, list() holds the book events alone. Ben picked this on the stale design desk (2026-11-15 f1).
+
+Reverse: put the three static imports back at the top of scripts/events.mjs and drop load().
+
+## B6241. The Threads of Fate cards load on first use (2026-11-15)
+WoDX Storyteller. The hook cards (data/threads-cards.mjs, about 290 KB) load the first time the weave runs, a storyline opens or ends, or the Threads of Fate window opens. All of these run on the Storyteller's client only, so a player's client never fetches the cards. api.threads.cards reads the loaded deck; api.threads.loadCards() loads it.
+
+Reverse: import CARDS statically again in scripts/threads.mjs.
+
+## B6242. The People name lists load on first use (2026-11-15)
+WoDX Creation and WoDX NPC. The People tables (data/people.mjs, data/people-world.mjs and each people's own file, about 600 KB) and their rules load the first time a person is made. The Storyteller's client loads them once WoDX Chronicle is ready, so the shipped tables still bring the world's Roll Tables up to date; a player's client never makes people and never fetches them. Before they are registered, a client draws from the world's installed Roll Tables, which hold the same names. Who puts the family name first and the Haudenosaunee clan pattern move to the small data/people-order.mjs, which WoDX NPC reads without the lists; the feminine family names reach NPC households through api.people.feminine() once loaded, and the households window awaits api.people.load() first.
+
+Reverse: import the tables statically again in scripts/people.mjs and FEMININE in resident-rules.mjs.
+
+## B6243. Decision text more than a month old moves to docs/archive each Monday (2026-11-15)
+tools/docs/archive-decisions.mjs. Each Monday, with the build log, the decisions in docs/DECISIONS.md more than a month old (a "## B" heading and its lines, dated by its heading or the one above; or a dated row of the early table) move to docs/archive/decisions-<year>-<month>.md. A move, never a deletion: the archive file is written first, nothing is written twice, and a test checks every line is kept. The index of blocks stays at the top of DECISIONS.md, and each block whose text moved names its file ("text in decisions-2026-11", with "the rest in this file" when only part moved). The checks that look a decision up (the referee, rules clashes, fragments and index tests) read the archive files too. Nothing is due until 9 December 2026. Ben picked this on the stale design desk (2026-11-15 f2).
+
+Reverse: stop running the script on Mondays; to bring text back, move the sections from the archive file into DECISIONS.md and drop the "(text in ...)" notes.
+
+## B6244. The build log archive run moves the old decisions too, and the two-browser gates count every file (2026-11-15)
+tools/docs/archive-build-log.mjs ends each run, --dry included, by running tools/docs/archive-decisions.mjs with the same options, so the existing Monday docs archive task moves the decisions more than a month old with no change to the task (B6243). tools/harness/gate-two.mjs enlarges each browser's resource timing list before the game loads: the browser keeps 250 entries by default, and a full list hid the timeline files even on the Storyteller's client, so the player load measure (gateplayerload) undercounted. That gate now fails when the list is full, or when the Storyteller's measure does not show the timeline, so an empty "nothing heavy" on the player's side means something.
+
+Reverse: drop the import at the end of main() in archive-build-log.mjs, and the addInitScript line in gate-two.mjs.
+
 ## B6250. Name customs by year, with sources, only where a source dates them (2026-11-15)
 WoDX Creation, data/name-customs.mjs. Each people has stages (given, byname, settling, family) by year, a noble year where the nobility bore inherited names earlier, and the source. Dated laws: the Habsburg patent for Jews (23 July 1787), Japan (edicts of 1870 and 1875), the Netherlands (decree of 18 August 1811), Sweden (Name Ordinance of 1901), Hawaii (Act to Regulate Names, 1860), the Philippines (Clavería decree, 1849), Thailand (Surname Act, 1913), Iran (civil registration, 1925), Turkey (Surname Law, 21 June 1934). Peoples with no dated source keep their tables as they are and are listed as open.
 
@@ -10637,6 +10691,180 @@ generated thump plays until the file is decoded and wherever there is none.
 
 Reverse: delete heart.ogg.
 
+## B6300. The Kindred menu's line-agnostic tools go on every line's menu (2026-11-15)
+WoDX Actions. Downtime on Backgrounds, healing with time (lines that heal as the living do and lacked it: Changeling, Fae of the Dark Ages, Demon, Mummy, Orpheus), Seduction (Werewolf, Mage, Dark Ages Mage) and the Storyteller's New night, End of story, Witnesses and Sky and sun are added to each line's menu from one table (profile-menus SHARED_TOOLS and SHARED_FOR). Spirits and beasts get only the Storyteller's tools. Kept Kindred-only: Hunt, Feed, Spend blood, Blood Oath, Prestation, Blood Hunt, Golconda, sun and haven, torpor, diablerie, the Road, daytime pool caps.
+
+Reverse: empty SHARED_FOR in modules/wodx-actions/scripts/profile-menus.js.
+
+## B6301. The witness window is named for the one seen (2026-11-15)
+WoDX Actions. The same breach records already serve every line's secret (witness-rules SECRETS); the window is titled Masquerade for a Kindred and Witnesses for anyone else.
+
+Reverse: set the title back to "Masquerade" in kindred.js masquerade().
+
+## B6302. A Kuei-jin is staked by its Chi aspect (2026-11-15)
+WoDX Combat. Kindred of the East (pdf pp. 11, 73): a stake does not paralyze a Kuei-jin as such; Yin is held by wood as a Kindred is, Yang by a metal blade or shaft at least a foot long through the heart (not bullets or arrows), Balance by neither. A long metal weapon is read from the weapon's name (rules LONG_METAL). A Kuei-jin whose aspect is not yet set follows the Cainite rule.
+
+Reverse: drop the chi and metal arguments at the followOn call in modules/wodx-combat/scripts/main.js.
+
+## B6303. A new story rolls Garou Rage on one die (2026-11-15)
+WoDX Actions. DA:W p. 91 and W20 p. 145: at the start of each story the player rolls a die for the character's Rage. End of story does it for every shapechanger whose Rage comes from the moon (Moon Rage setting on), capped at permanent Rage; the books let the Storyteller go past it, which stays a hand edit.
+
+Reverse: remove the gx().newStory line in endStory (modules/wodx-actions/scripts/main.js).
+
+## B6304. The long roads out for the other lines (2026-11-15)
+WoDX Chronicle (roads.mjs, roads-rules.mjs), setting podRoads, on by default. Transcendence for wraiths, the Road Back for the Kuei-jin and Redemption for demons, shown in the feature window beside Golconda. Every end goes through the approval queue, so a lone player's automation level decides as for any proposal; each is asked once per state.
+
+Reverse: turn off "Transcendence, the Road Back and Redemption" in WoDX Chronicle's settings.
+
+## B6305. Transcendence: the Eight Truths (2026-11-15)
+Wraith 20th pp. 297-300: there is no mechanical path; the Eight Truths of the Tomes of Golden Light are the steps, each judged by the Storyteller (a player asks through the queue). A rise in permanent Angst undoes Conquer the Shadow. With all eight and permanent Angst below permanent Willpower the Storyteller may let the wraith go: the token flares and fades from every map, flag wodx-actions.transcended, and New night and End of story leave them out. The Storyteller can bring them back from the feature window. The Angst-below-Willpower test is a house reading of "conquer the Shadow".
+
+Reverse: change transcendReady in roads-rules.mjs.
+
+## B6306. The Road Back: bodhisattva and arhat (2026-11-15)
+Kindred of the East pdf pp. 30-31: the road is the Dharma on the sheet. At Dharma 9 the Storyteller may recognise a bodhisattva (the heading's number is unreadable in the scan; 9 chosen, after Ancestor at 7); below 9 the rank is lost. At Dharma 10 a bodhisattva may become an arhat and leave the chronicle as a transcended wraith does.
+
+Reverse: change BODHISATTVA_DHARMA in roads-rules.mjs.
+
+## B6307. The bodhisattva's communion with the spirit worlds (2026-11-15)
+WoDX Actions kote.js: a bodhisattva's Ghostsight and spirit speech cost no Chi and need no roll. Ghostsight that works (for anyone) sets flag yinSight for an hour of the clock. WoDX Otherworlds veil-looks reads both (sightsOf): the Shroud mist shows where it is thin, and a bodhisattva also sees the Gauntlet shimmer.
+
+Reverse: drop the sights argument in veil-looks.mjs veilNow.
+
+## B6308. Redemption: an angel until Torment rises (2026-11-15)
+Demon: The Fallen p. 160: permanent Torment 0 lets the Storyteller approve redemption (flag wodx-actions.redeemed, a soft light on the token). Holy ground and objects do not harm the redeemed (demon.js holy); the first Torment gained ends it and puts the light out. That holy ground spares an angel, and that a sin ends grace, are house readings.
+
+Reverse: drop the redeemed checks in modules/wodx-actions/scripts/demon.js.
+
+## B6310. One key per line in WoDX NPC (2026-11-15)
+WoDX NPC lines-rules.mjs gives every sheet one key: vampire, kuei-jin (a Vampire sheet with the variant kindredeast), ghoul, revenant, werewolf, fera (Changing Breed), kinfolk, mage, sorcerer, changeling, kinain, wraith, hunter, mummy, demon, mortal, creature, exalted. The keys and families match WoDX Creation's all-lines helper (lines.mjs, B6270), which wins when it is loaded. Hearts, trust, legacy, servants, residents and the family tree read it, so a Kuei-jin is no longer taken for Kindred (no Auspex, no unknown sire, no ghouls) and a Fera no longer for a mortal. A wraith finds a hidden loyalty with Lifesight (Wraith 20th pdf p. 85).
+
+Reverse: hearts.mjs lineOf back to reading the sheet type alone.
+
+## B6311. Lovers of every line (2026-11-15)
+WoDX NPC hindrance: a Kuei-jin with Dharma 3 or less, or a demon with Torment 7 or more, holds a lover at no more than Fond. Mummies, demons and hunters add their own notes. WoDX reading of Kindred of the East, Demon: the Fallen, Mummy: the Resurrection and Hunter: the Reckoning.
+
+Reverse: drop the B6311 lines in hearts-rules hindrance.
+
+## B6312. Every secret-keeping line's household (2026-11-15)
+WoDX NPC masqueradeRisk counts the mortals in a Kuei-jin's house (their own secrecy) and in a Garou's or Fera's home (the Veil). Kinfolk know the truth, so they do not count (W20 pdf p. 140). The month's household card names the line's own secret. The Kindred's words are unchanged.
+
+Reverse: masqueradeRisk back to vampires only.
+
+## B6313. Harm to a loved one, by line (2026-11-15)
+WoDX NPC weakSpotChecks: a Kuei-jin's P'o stirs (Hun, or the Shadow Soul rises: Kindred of the East pdf 82-84). A wraith's Shadow feeds on the fear (a point of Angst). A demon lashes out in its Torment, and a death by its own hand asks a Virtue roll or a point of temporary Torment (Demon: the Fallen pdf 162). A mummy's grief carries into its next death. The difficulties match the Kindred's (house).
+
+Reverse: drop the B6313 rows.
+
+## B6314. Kuei-jin in Fates (2026-11-15)
+WoDX NPC Fates reads a Vampire sheet with the variant kindredeast as a Kuei-jin. It does not age, dies at the Kindred's rate, and is sent down to the hells of the Yama Kings. It is never Embraced, never commits diablerie on the Kindred and makes no brood. The Kuei-jin are sent back by the Yama Kings, not made by an Embrace (Kindred of the East).
+
+Reverse: fatesLine back to the type table.
+
+## B6315. Every line mends with its own power (2026-11-15)
+WoDX NPC aftercare and carry-aftercare (line-mend.mjs): after a fight and when tended at home, an NPC spends its own pool on its wounds.
+- A Kindred spends blood, a point a level, keeping two. A ghoul does the same keeping one (V20 pdf 129).
+- A Kuei-jin spends Chi, Yang before Yin: a point a level, five for an aggravated one, keeping two (Kindred of the East Companion pdf 32).
+- A wraith spends Pathos: one point mends two bashing or one lethal level, and nothing mends aggravated (Wraith 20th pdf 360).
+- A demon spends Faith: one point mends all bashing, then one a lethal level, and nothing mends aggravated (Demon: the Fallen pdf 172). It keeps one.
+
+The reserves are house rules. A floating word over the token shows the mend.
+
+Reverse: aftercare lineMend back to bloodMend (Kindred only).
+
+## B6316. Garou and Fera NPCs regenerate (2026-11-15)
+WoDX NPC mendTick heals a Garou or Fera NPC with WoDX Actions healPlan (regeneration) instead of at a mortal's pace. A floating word shows it.
+
+Reverse: drop the B6316 branch in mendTick.
+
+## B6317. Households serve masters of every line (2026-11-15)
+WoDX NPC residents: a household can serve any master, not only a Cainite.
+- A Kindred's household are ghouls, as before.
+- A Garou's or Fera's are Kinfolk (W20 pdf 140).
+- A Kuei-jin's are a blood cult (Kindred of the East pdf 11: no ghouls).
+- A demon's are thralls by pact (Demon: the Fallen pdf 157).
+- A mummy's are a cult.
+- A changeling's are enchanted (C20 pdf 461).
+- A Technocrat's are conditioned agents (M20 pdf 606).
+
+Each resident is bound with WoDX NPC servants, so the bond's ring and rules apply.
+
+Reverse: the residents window back to Cainites only.
+
+## B6318. A Kuei-jin's cult keeps the house by day (2026-11-15)
+WoDX NPC servantDuty: a Kuei-jin's cultist or retainer attends the master's house by day while it rests, as a Kindred's ghoul does.
+
+Reverse: drop the B6318 line in duty-rules.
+
+## B6319. NPCs of every line refill their own pools (2026-11-15)
+WoDX NPC line-refill.mjs, setting npcRefill (on): once a night, on the Storyteller's client.
+- Shapechangers, mages and mummies: WoDX Actions already rolls a daily refill (meditation for Gnosis, W20 p. 146; the day's draw of Quintessence, M20 p. 330; a day in the haven for Sekhem) for any character marked in its dialog. An NPC is marked once here (flag refillMarked), so a Storyteller who clears the mark is not overridden.
+- Changelings: Sanctuary, the freehold's rating in Glamour for a night there (C20 p. 259); without Holdings, Dreamers give one Reverie a week, Manipulation + Expression at 6 (C20 pp. 169, 259-264). WoDX reading: Expression stands for the art used to inspire.
+- Wraiths: the strongest Passion rolled at 6 once a night, as lived in the NPC's round (Wraith 20th pdf 370); Memoriam at 8 once a week, the book's once a session (pdf 180).
+- Demons with no thralls: reaping, Willpower at 7 against an ordinary mortal's Willpower 3 at 7, a Faith on a win (Demon p. 250). Thralls already offer Faith at dawn in WoDX Actions.
+- Kept: the Kindred and Kuei-jin (their hunt), hunters (Conviction back each story in WoDX Actions), mortals and ghouls.
+- Visible: the gain floats over the token in the pool's colour; one card a night whispered to the Storyteller.
+
+Reverse: turn off npcRefill; refillMarked NPCs keep the Actions marks until cleared in their dialogs.
+
+## B6320. Every line's pools on the dashboard (2026-11-15)
+WoDX Storyteller dashboard-rules linePools: each party row lists the line's own pools, as the Kindred's blood was listed.
+- Kuei-jin: Yang Chi and Yin Chi, with no blood pool.
+- Garou and Fera: Rage and Gnosis.
+- Mage: Quintessence and Paradox.
+- Changeling: Glamour and Banality.
+- Wraith: Pathos, Corpus and Angst.
+- Hunter: Conviction.
+- Mummy: Sekhem.
+- Demon: Faith and Torment.
+
+The row that sorts first is the one lowest on any pool it spends. Pools that rise against the character (Paradox, Banality, Angst, Torment) do not count for sorting.
+
+Reverse: drop pools from partyRow.
+
+## B6321. A Kuei-jin pays Chi to rise between nights (2026-11-15)
+WoDX Storyteller betweenPlan: a Kuei-jin spends a point of Chi a night to rise (Kindred of the East pdf 127), from the larger pool first, under the same setting as the Kindred's nightly blood. Undo puts it back.
+
+Reverse: drop the B6321 branch.
+
+When WoDX Actions' day sleep is on, its rising already pays the last night's Chi (riseAuto), so the card counts one night fewer and never charges it twice.
+
+## B6322. Rage between nights stays with WoDX Actions (2026-11-15)
+WoDX Actions' moonRise already gives moon Rage at nightfall and after every time skip (setting moonRage), so the between-nights card adds no Rage of its own; counting it here would give it twice.
+
+## B6323. Ties from every line's Backgrounds (2026-11-15)
+WoDX Storyteller ties: Dreamers (C20 pdf 170), a Haunt (Wraith 20th p. 143), Pacts (Demon: the Fallen pdf 161), a Cult (Mummy: the Resurrection) and a dragon nest (Kindred of the East pdf 18) come due every 30 days, each with what happens when it lapses. The month is a house figure.
+
+Reverse: drop the five TIE_KINDS rows and their BACKGROUND_TIES entries.
+
+## B6324. Stakes in battle follow the Kuei-jin's aspect, and hold (2026-11-15)
+WoDX Storyteller battles: a blow that pins a Kindred pins a Kuei-jin only when it is aspected to Yin or Yang (Kindred of the East pdf 73). A Balanced Kuei-jin, Yin and Yang within a point of each other (pdf 72), is not pinned. A pinned character gets WoDX Chronicle's Staked condition, so the stake does something; the card used to say torpor and nothing followed.
+
+Reverse: counterResult's cainite back to the sheet type, and drop the setCondition call.
+
+## B6325. Story threads for every line (2026-11-15)
+WoDX Storyteller threads: any supernatural line at the table draws the mortal threads as well, not the Kindred alone. A Kuei-jin and a Fera are read as their own lines.
+
+Reverse: back to vampires only.
+
+## B6326. A Kuei-jin prelude: the Second Breath (2026-11-15)
+WoDX Storyteller preludes: a Kuei-jin gets its own prelude in place of the Embrace: the life, the hells below, the climb back, the first stolen breath, and who finds the newly returned (Kindred of the East). The words are WoDX's own.
+
+Reverse: drop PRELUDES["kuei-jin"] and preludeFor.
+
+## B6327. An untended tie does something once the Storyteller approves (2026-11-15)
+WoDX Storyteller checkTies: a tie that comes due and costs something goes to the approvals queue (type tieLapse); approving applies it on the sheet and starts the tie's clock again.
+- A Fetter or Passion: the neglect check is rolled, its rating at 9; failure costs a dot, a botch two; at nothing the card says a Harrowing follows (Wraith 20th pdf 371, 374; the books leave the call to the Storyteller, hence the approval).
+- A Background that is people or a place (Herd, Domain, Allies, Contacts, Retainers, Kinfolk, Mentor, Node, Chantry, Holdings, Dreamers, Haunt, Pacts, Cult, Dragon Nest): it loses a dot (WoDX reading: one dot a lapse).
+- Kept: the domitor's vitae (WoDX Actions ghoul withdrawal), a caern and custom ties.
+
+Reverse: drop the T_LAPSE proposal in checkTies.
+
+## B6328. The tie rows read against the books (2026-11-15)
+Checked page by page: the Dreamers Background is C20 pdf 170, where each dot is one automatic success on the first Reverie roll, so an untended Dreamer costs that dot and that success; the lapse no longer claims Banality, which the book does not give. The tie's suggested act is a visit or a Reverie: a Rhapsody burns the Dreamer out for good (C20 pdf 174), so it never tends one. Pacts are Demon: the Fallen pdf 161, the Haunt Background Wraith 20th p. 143. The 30-day clocks and the dot a lapse remain WoDX readings (logged in PENDING-REVIEW).
+
+Reverse: the three TIE_KINDS lines back to their earlier wording.
+
 ## B6350. The gate kit moves an early clock to a year a gate needs (2026-11-15)
 Gates. The kit gains yearAtLeast(min): when the clock stands before the year given, the run moves it to 1995 and notes
 the move, and cleanup puts it back. gatevehicles now uses it (B6210 had done the same by hand). gatearms uses it with
@@ -10660,6 +10888,40 @@ at the nightly lane reset.
 
 Reverse: drop drainMinutes and wait for every job again; --recycle 0 by default; drop yearAtLeast and go back to the hand-written move in gatevehicles; want exactly six again.
 
+The owner asked on 2026-11-15 whether the new systems do something rather than only say so. Four did not; three are in WoDX NPC (the fourth, ties, is B6327 in WoDX Storyteller).
+
+## B6450. A loved one hurt, taken or dead: the check is rolled and applied (2026-11-15)
+WoDX NPC hearts tellLoved: each check that names a roll is rolled for the one who loves them, and a failure lands on the sheet, with the roll on the card and a word over the token.
+- Kindred: WoDX Actions autoBeast with the provocation "loved one in danger" (V20).
+- Garou and Fera: permanent Rage at 7 (6 for a spouse, child or lover); four successes and the Garou frenzies (W20 p. 262). The same at 6 on a death.
+- Kuei-jin: Hun against the P'o rating; a failure and the Shadow Soul rises, marked as a frenzy (Kindred of the East pdf 82-84).
+- Wraith: Willpower at 6 or 7, or a point of temporary Angst. Demon: Willpower, or a point of temporary Torment. Others: Willpower, or a point of temporary Willpower.
+- Changeling, on a death: Willpower at 7, or a point of temporary Banality.
+- Dropped: the lines that only said something may happen (a mummy's grief carrying over, a wraith's Passion fading, the Kuei-jin's and demon's "if their own hand caused it"): nothing could tell the cause, and the grief roll already covers every line.
+
+Reverse: drop the roll fields in hearts-rules weakSpotChecks.
+
+## B6451. A household that talks starts a rumour (2026-11-15)
+WoDX NPC hearts onMonth: each month a secret-keeping master (Kindred, Kuei-jin, Garou) with mortals under the roof rolls one die; at or under the household's risk (1, or 2 with three or more) someone talks and a true rumour about the master starts through WoDX Storyteller's rumours. WoDX reading: the books leave a breach to the Storyteller; 1 or 2 in 10 a month is WoDX's figure (PENDING-REVIEW).
+
+Reverse: drop householdTalks from onMonth.
+
+## B6452. Looking someone over seeks a hidden loyalty (2026-11-15)
+WoDX NPC trust: when a character looks someone over (WoDX Actions' Look over, hook wodxLookOver) with any success, and the one looked at has a hidden loyalty, the best sense of the viewer's line is rolled on the viewer's own client: Auspex Telepathy, Truth of Gaia, Mind 1, Discern find the side on any success; Lifesight, Kenning, Aura Perception and Empathy show only a lie, and find the side on three or more successes (WoDX reading, PENDING-REVIEW), a hint on one or two. A find marks the loyalty found (foundSide, through the Storyteller's client by socket), so the hidden tie shows in the finder's Relationships tab.
+
+Reverse: drop the wodxLookOver listener in trust.mjs.
+
+## B6453. The refills and loved-one checks read against the books (2026-11-15)
+Each rule was checked on the page; three were wrong and are fixed, two are dropped.
+- Reverie (C20 pdf 170, 262-263): first Perception + Kenning at 8, each Dreamers dot an automatic success, sets the time with the Dreamer (one success a month, two a fortnight, three a week, four a day, five a few hours); then Manipulation + the best of Empathy, Performance, Leadership and Intimidation at 6 gives a Glamour a success. A failure means another week; a botch blocks the Dreamer for a month (WoDX reading) and the study starts over. It was one Manipulation + Expression roll a week.
+- A Garou's loved one (W20 pdf 263-264): the Rage roll is permanent Rage at the moon's difficulty (new 8 to full 4, one less for the auspice's moon or in Crinos, the rank's step), the rank's need for a frenzy and six successes the Thrall of the Wyrm, through WoDX Actions' own garou rules. It was a fixed 6 or 7.
+- A Kuei-jin's loved one (Kindred of the East pdf 138): fire soul is Yin against the P'o, both at 6, up to five turns, two successes deciding, through WoDX Actions' kote rules; a lapse is frenzy for the scene. It was Hun against the P'o, which is the shadow soul roll.
+- Dropped: a demon's Torment for fear over a loved one (Demon pdf 162: Torment comes from sins against a Virtue), now the plain Willpower check; a changeling's Banality from grief (C20 pdf 268 counts sorrow and loss among the feelings that carry Glamour; the Banality triggers on pdf 270 do not include it).
+- Confirmed as written: Sanctuary (C20 pdf 260), a Passion at 6 (Wraith 20th pdf 370), Memoriam at 8 (pdf 180), reaping at Willpower 7 against the mortal's (Demon pdf 251), Gnosis by meditation (W20 pdf 148), Pathos and Faith healing (Wraith 20th pdf 360, Demon pdf 172), Kuei-jin cannot make ghouls (Kindred of the East pdf 11). Page refs corrected: V20 healing pdf 276, Demon pacts pdf 161, M20 Quintessence at a Node p. 332, Lifesight Perception + Empathy at 5 (Wraith 20th pdf 191). A demon's reaping roll uses permanent Willpower (Demon pdf 163).
+- WoDX readings, not the books': Memoriam once a week (the book says once a session), reaping once a night for a demon with no thralls, a passion lived each night, the wraith's Willpower roll against Angst (pdf 301 names turmoil and helplessness as Angst sources but gives no roll), the Willpower worry for other lines.
+
+Reverse: the earlier refillSteps and weakSpotChecks rolls.
+
 ## B6490. A waiting PC job gains a priority step each hour (2026-11-15)
 PC runner. The queue ran strictly by priority, so a p5 job (#1547, nine sheet gates) sat at the head of the queue for
 over three and a half hours while newer p1 and p3 jobs took every free lane. A job now gains one priority step for
@@ -10667,3 +10929,21 @@ each full hour it has waited, never past 1; ties still go to the older issue. A 
 hours, and a p3 job within two.
 
 Reverse: sort by the priority given alone.
+
+## B6500. Lane drift checks pass over the session id and the once-per-world dawn and dusk move (2026-11-15)
+PC lanes. Lane 4 reported DRIFT on job 1637 right after a reset from its clean copy, and no gate ran. Two world
+settings had changed on their own: the session id that WoDX Actions sets when a GM first loads, and dawnDusk, which
+the once-per-world move to dawn and dusk by themselves (B4895) changes. That move runs again on every reset because the
+clean copies predate it. The drift check now passes over sessionId, dawnDusk, sunDamage and autoDayV1. A fresh clean
+copy (`lanes.mjs snapshot --from 1`, which Ben runs) would also clear it.
+
+Reverse: take the four settings out of ignoreSettings in tools/lanes/lanes.json.
+
+## B6510. The town layout port is under GPL-3.0, not CC0 (2026-11-15)
+tools/mapgen/layout.py said the Medieval Fantasy City Generator it is ported from was released CC0, and B576 said the same. The source repository (github.com/watabou/TownGeneratorOS) carries GPL-3.0. Because the port follows the original step for step, layout.py is a derivative work and keeps GPL-3.0, as does the street plan organic.py takes from it. The file headers, tools/mapgen/MFCG-CREDIT.md, NOTICE.md and the Interactables checklist now say so. No code or map output changed.
+Reverse: none needed; the label follows the source's licence. If the layout is ever rewritten from scratch without the original's code, drop the credit file and the NOTICE line.
+
+## B6520. The PC runner watches the graphics card heat (2026-11-15)
+tools/pcq. The image model keeps the graphics card busy for hours, with no power cap. The runner reads nvidia-smi once a minute and writes one line to logs/gpu-YYYY-MM-DD.csv in its folder. That line holds the core heat, the memory heat where the card reports it, the power, the fan, the load and the memory in use. If the core stays above 83 C for 5 minutes, or the memory stays above 100 C, it opens a pc-alert issue so the Storyteller hears of it. The alert closes after 10 minutes under 78 C core and 95 C memory. The limits are in tools/pcq/gpu.mjs and covered by tools/harness/pcq.test.mjs.
+
+Reverse: remove the gpuCheck call from the runner loop.

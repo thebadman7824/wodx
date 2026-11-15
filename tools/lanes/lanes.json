@@ -5,8 +5,9 @@
   "knownGood": "D:/WoDX/testbed-known-good",
   "backups": "D:/WoDX/Backups",
   "lockMaxMinutes": 180,
-  "_ignoreSettings": "World settings that change on their own while a world is open (a lease, the sky, applied weather, the healing clock, the last time a GM client was ready), and the first-run notes the effects modules write when a GM first loads the world (B4701).",
+  "_ignoreSettings": "World settings that change on their own while a world is open (a lease, the sky, applied weather, the healing clock, the last time a GM client was ready, the session id a GM sets on first load), the once-per-world move of dawn, dusk and the sun to happening by themselves (B4895), which runs again on every lane reset because the clean copies predate it (B6500), and the first-run notes the effects modules write when a GM first loads the world (B4701).",
   "ignoreSettings": ["oh-you-dead.writerLease", "wodx-actions.sky", "wodx-atmosphere.applied", "wodx-actions.healClock", "wodx-actions.lastGmReady",
+    "wodx-actions.sessionId", "wodx-actions.dawnDusk", "wodx-actions.sunDamage", "wodx-actions.autoDayV1",
     "fxmaster.legacyCleanupVersion", "fxmaster.releaseMessage", "sequencer.update-notice-shown-version", "tokenmagic.presets"],
   "lanes": [
     {"id": 1, "port": 30000, "dataPath": "%LOCALAPPDATA%/FoundryVTT", "autoReset": false},

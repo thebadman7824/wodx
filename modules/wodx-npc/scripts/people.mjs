@@ -1,4 +1,5 @@
 import * as TR from "./ties-rules.mjs";
+import * as LM from "./line-mend.mjs";
 import * as SX from "./secrets-rules.mjs";
 import * as OP from "./opinion-rules.mjs";
 import {ratingsOf, ratingFrom} from "../../wodx-chronicle/scripts/when-rules.mjs";
@@ -66,7 +67,7 @@ export function build({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry}) {
   const kidsHtml = kids => (kids?.length ? `<ul>${kids.map(k => `<li>${nodeHtml(k)}${kidsHtml(k.kids)}</li>`).join("")}</ul>` : "");
   function treeHtml(actor) {
     const names = Object.fromEntries(game.actors.map(x => [x.id, x.name]));
-    const t = TR.treeFor(actor.id, allEdges(), {viewer: viewerFor(), names, isVampire: id => game.actors.get(id)?.type === "Vampire"});
+    const t = TR.treeFor(actor.id, allEdges(), {viewer: viewerFor(), names, isVampire: id => LM.keyOf(game.actors.get(id)) === "vampire"}); // B6310: a Kuei-jin has no sire to leave unknown
     const rootNode = {id: actor.id, name: actor.name};
     const lines = t.lines.map(L => {
       // Oldest first, down to this person, then theirs below

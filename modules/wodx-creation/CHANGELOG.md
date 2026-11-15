@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.79.2 (The People tables and name lists (about 600 KB) load the first time a person is made: on the Storyteller's client once WoDX Chronicle is ready, never on a player's. api.people.load(), loaded() and feminine() are new, and data/people-order.mjs holds who puts the family name first and the clan pattern. The first night forecast awaits the world timeline (B6240, B6242))
 - 0.79.1 (Shared terms (B6180-B6199): a time skip converts a vampire's Road, a Dark Ages mage and an inquisitor when the era profile leaves the Dark Ages rules (into the Victorian Age), the same step at which the Dark Ages Abilities convert, instead of at 1450 while the sheet still plays by Roads; dice counts, time units and player characters come from WoDX Chronicle's shared terms)
 - 0.79.0 (Names by year (desk nm1, B6250 to B6253): data/name-customs.mjs gives each people the stages its names went through (byname, father's name, settling, family name, or one name alone) with the year of each law or change and its source; people-rules applies the stage for the chronicle's exact year, draws a family name from the next age's list where a law fixed one early, and marks whether the name passes down. Seeds keep their people: only the name changes)
 - 0.78.0 (The Fetterguard guards Fetters (B6104): a sealed Fetterguard made at the soulforge keeps the Fetters it holds from their town's fall across the years (Wraith 20th p. 428))

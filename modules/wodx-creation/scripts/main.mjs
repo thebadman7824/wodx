@@ -98,7 +98,9 @@ function start() {
     lifepath: actor => lifepath.LifepathApp.openFor(actor), lifepathOf: lifepath.lifepathOf, lifepathRules, makeLifepathPeople: lifepath.makePeople,
     lifepathThreads: actor => threadsOf(lifepath.lifepathOf(actor)),
     archive: {open: () => archive.ArchiveApp.open(), candidates: archive.candidates, archive: archive.archive, restore: archive.restore, whereIs: archive.whereIs, dueNow: archive.dueNow, autoTick: archive.autoTick},
-    people: {open: () => people.PeopleApp.open(), generate: people.generate, create: people.createPeople}
+    people: {open: () => people.PeopleApp.open(), generate: people.generate, create: people.createPeople,
+      // B6242: the People tables load on first use; load() resolves when they are in
+      load: () => people.load(), loaded: () => !!people.loaded(), feminine: people.feminine}
   };
   game.modules.get(MODULE_ID).api = api;
   game.wodx = Object.assign(game.wodx ?? {}, {creation: api});

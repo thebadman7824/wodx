@@ -456,12 +456,19 @@ export function build(ctx) {
           <div class="form-group"><label>The local Wall</label><input type="number" name="wall" min="1" max="10" value="6"/></div></form>`;
         return dialog(`Sight and spirit: ${actor.name}`, content, "Roll", async fd => {
             let r, title, body = "";
+            // B6307: a bodhisattva is in communion with the spirit worlds: Ghostsight and spirit speech need no Chi and no roll (KotE pdf p. 31)
+            if (actor.getFlag?.(MOD, "bodhisattva") && (fd.k === "ghost" || fd.k === "speech")) {
+                if (fd.k === "ghost") await ctx.setFlag(actor, "yinSight", { until: (game.time?.worldTime ?? 0) + 3600, by: "bodhisattva" });
+                return post(actor, `${actor.name}: ${fd.k === "ghost" ? "the Yin World" : "a spirit answers"}`, `<div class="vta-res good">${fd.k === "ghost" ? "As a bodhisattva, the Yin World is open to them for the scene, without Chi or a roll." : "As a bodhisattva, the spirit hears and answers, without a roll."}</div><div class="wodx-quiet">${REF} pp. 86, 88–91</div>`);
+            }
             if (fd.k === "ghost" || fd.k === "life") {
                 const kind = fd.k === "ghost" ? "yin" : "yang";
                 if (i.chi[kind] < 1) { notify(`${actor.name} has no ${KIND[kind]} Chi.`); return null; }
                 await setChi(actor, { [kind]: i.chi[kind] - 1 });
                 r = await rollPool(ctx.attr(actor, "perception") + n(ctx.findAbility?.(actor, fd.k === "ghost" ? "occult" : "empathy")?.value), fd.k === "ghost" ? Math.min(10, n(fd.wall) + 2) : 9);
                 title = fd.k === "ghost" ? "Perception + Occult" : "Perception + Empathy";
+                // B6307: Ghostsight that works shows the Shroud's mist on the map for the scene (Otherworlds veil-looks reads yinSight)
+                if (fd.k === "ghost" && r.successes) await ctx.setFlag(actor, "yinSight", { until: (game.time?.worldTime ?? 0) + 3600, by: "ghostsight" });
                 body = `<div class="vta-res">${r.successes ? (fd.k === "ghost" ? "The Yin World shows itself for the scene." : `Auras flare; hunting is ${r.successes} easier.`) : "Nothing clear."}</div>`;
             } else if (fd.k === "senses" || fd.k === "speech") {
                 r = await rollPool(i.v.hun, fd.k === "senses" ? 6 : n(fd.wall));

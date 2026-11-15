@@ -13,6 +13,7 @@ import * as W from "./servant-world-rules.mjs";
 import * as SR from "./servant-rules.mjs";
 import * as SV from "./servants.mjs";
 import * as DU from "./duty-rules.mjs";
+import * as LR from "./lines-rules.mjs";
 
 const MOD = "wodx-npc";
 const num = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
@@ -139,9 +140,10 @@ async function socialClock() {
 /* x4: NPC masters keep servants */
 function lineOf(a) {
   if ( !a ) return "";
-  if ( a.type === "Vampire" && /kindred of the east|kuei/i.test(String(a.system?.settings?.variant ?? a.system?.variant ?? "")) ) return "kuei-jin";
-  return W.LINE_OF_TYPE[a.type] ?? "";
+  // B6310: the all-lines key; a Kuei-jin (variant kindredeast) keeps a cult, never ghouls, and a Fera keeps Kinfolk as the Garou do
+  return W.keeperLine(LR.lineKey(a, linesApi()));
 }
+const linesApi = () => { try { return game.modules.get("wodx-creation")?.active ? game.modules.get("wodx-creation").api?.lines ?? null : null; } catch (e) { return null; } };
 const discOf = a => Object.fromEntries((a.items ?? []).filter(i => i.type === "Power" && /discipline/i.test(String(i.system?.type ?? ""))).map(i => [String(i.name).toLowerCase(), num(i.system?.value)]));
 export async function keeperTurn({force = false, only = null} = {}) {
   if ( !isActiveGM() || (!force && setting("npcKeepers") === false) ) return null;

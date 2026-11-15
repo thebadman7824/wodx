@@ -6,6 +6,7 @@ import * as TW from "./twist-rules.mjs";
 import * as Fronts from "./fronts.mjs";
 import {watched} from "./signature-rules.mjs";
 import {isQuiet} from "./quiet.mjs";
+import * as Roads from "./roads.mjs";
 import {DAY} from "./terms.mjs";
 
 /**
@@ -533,7 +534,7 @@ function onFirstNight(actor) {
 /* ---------------- the feature window's part ---------------- */
 
 /** Whether the feature window has anything of these four for an actor. */
-export const wants = a => !!a && ((lineOn("podGolconda") && isKindred(a)) || (lineOn("podChains") && a.hasPlayerOwner && !a.flags?.[MODULE_ID]?.goal));
+export const wants = a => !!a && ((lineOn("podGolconda") && isKindred(a)) || Roads.wants(a) || (lineOn("podChains") && a.hasPlayerOwner && !a.flags?.[MODULE_ID]?.goal));
 /** {body, buttons, handle(pick)} for the signature window. */
 export function section(a) {
   let body = "";
@@ -547,6 +548,9 @@ export function section(a) {
       if ( game.user.isGM ) buttons.push({action: "pod:step", label: "A step on the road"});
     } else buttons.push({action: "pod:seek", label: "Seek Golconda"});
   }
+  // B6304: Transcendence, the Road Back and Redemption (roads.mjs)
+  const rd = Roads.section(a);
+  body += rd.body; buttons.push(...rd.buttons);
   if ( lineOn("podChains") ) {
     if ( goal ) body += `<h4>Opening goal</h4><p>${esc(goal.label)}.</p>`;
     else goals(a).forEach(g => buttons.push({action: `pod:goal:${g.key}`, label: `Goal: ${g.label}`}));
@@ -554,6 +558,7 @@ export function section(a) {
   return {body, buttons};
 }
 export async function handle(a, pick, ask) {
+  if ( String(pick).startsWith("road:") ) return Roads.handle(a, pick);
   if ( pick === "pod:seek" ) return seek(a);
   if ( pick === "pod:mentor" ) { const f = await ask("A mentor", [{name: "m", label: "The mentor's name (blank for none)", value: golOf(a)?.mentor ?? ""}]); return f ? setMentor(a, f.m) : null; }
   if ( pick === "pod:step" ) { const f = await ask("A step on the road", [{name: "why", label: "What the seeker did or learned", value: "A test of the road passed"}]); return f ? golcondaStep(a, 1, f.why || "A test of the road passed") : null; }

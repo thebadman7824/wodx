@@ -577,7 +577,9 @@ export function build(ctx) {
     }
 
     async function masquerade(actor = null) {
-        if (!game.user.isGM) return ctx.notify("The Storyteller keeps the Masquerade records.");
+        if (!game.user.isGM) return ctx.notify("The Storyteller keeps the records of who saw what.");
+        // B6301: the same records serve every line; the window is named for the secret of the one who was seen
+        const title = !actor || P.detectProfile(actor) === "kindred" ? "Masquerade" : "Witnesses";
         const list = MASQJ.entries();
         const targets = [...(game.user.targets ?? [])].map(t => t.actor).filter(Boolean);
         const open = [];
@@ -585,14 +587,14 @@ export function build(ctx) {
         const content = `<form>
           <fieldset><legend>Record what was seen</legend>
             <div class="form-group"><label>Who was seen</label><input type="text" name="by" value="${esc(actor?.name ?? "")}"/></div>
-            <div class="form-group"><label>What</label><input type="text" name="event" placeholder="fed in the open, used a Discipline, walked away from a killing blow…"/></div>
+            <div class="form-group"><label>What</label><input type="text" name="event" placeholder="used a power in the open, changed shape, walked away from a killing blow…"/></div>
             <p class="vta-note">Witnesses: the targeted tokens (${targets.length ? targets.map(t => esc(t.name)).join(", ") : "none targeted"}).</p></fieldset>
           <fieldset><legend>Or update a witness (${open.length} still remember)</legend>
             ${open.length > 5 ? searchBox("select[name=w]", "Search witnesses…", "Search witnesses") : ""}
             <div class="form-group"><select name="w"><option value="">— none —</option>${open.map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join("")}</select></div>
             <div class="form-group"><label>Now</label><select name="state">${Object.entries(K.WITNESS_STATES).filter(([k]) => k !== "saw").map(([k, l]) => `<option value="${k}">${esc(l)}</option>`).join("")}</select></div>
             <div class="form-group"><label>Note</label><input type="text" name="note"/></div></fieldset></form>`;
-        return dialog("Masquerade", content, "Record", async fd => {
+        return dialog(title, content, "Record", async fd => {
             if (fd.w) {
                 const [i, j] = String(fd.w).split(":").map(Number);
                 const L = MASQJ.entries();

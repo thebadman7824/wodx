@@ -947,6 +947,21 @@ export function build(ctx) {
         return lines;
     }
 
+    /**
+     * A new story (B6303): each shapechanger's Rage is rolled afresh on one die, up to the permanent rating
+     * (DA:W p. 91; W20 p. 145). Fera whose Rage does not come from the moon, or who have none, are left alone.
+     * Returns a line for the end-of-story card, or "".
+     */
+    async function newStory(a) {
+        if (!a || !isShifter(a) || !setting("moonRage")) return "";
+        const i = info(a);
+        if (i.fera?.rage === false || (i.fera?.rageAt && i.fera.rageAt !== "moon") || i.rage.perm <= 0) return "";
+        const r = await new Roll("1d10").evaluate();
+        const to = G.newStoryRage(r.total, i.rage.perm);
+        if (to !== i.rage.temp) await a.update({ "system.advantages.rage.temporary": to });
+        return `${a.name}: Rage rolled for the new story (${r.total}): ${i.rage.temp} → ${to} (${basis() === "daw" ? "DA:W p. 91" : "W20 p. 145"})`;
+    }
+
     /** Each new round (active GM): shapechangers in the fight regenerate. */
     async function regenRound(combat) {
         if (!isActiveGM() || !setting("autoRegen")) return [];
@@ -999,7 +1014,7 @@ export function build(ctx) {
             set: g?.book === "W20 CB" ? "fera" : g?.book === "W20" ? "w20" : "gift", id: g?.book === "W20" ? (g?.kw ?? "") : (g?.id ?? "") }; });
     }
     return { powersFor, shift, rageRoll, enterFrenzy, endFrenzy, spendRage, remainActive, remainActiveAuto, meditate, meditateDaily, useGift, learnGift, performRite, summonSpirit, useFetish,
-        awardRenown, applyRenown, accomplishment, battleScar, deliriumCheck, curse, kinfolk, chiminage, moonRise, regenRound, embracePain, onChatButton, setForm, info };
+        awardRenown, applyRenown, accomplishment, battleScar, deliriumCheck, curse, kinfolk, chiminage, moonRise, newStory, regenRound, embracePain, onChatButton, setForm, info };
 }
 
 /** Settings this part adds (registered by main.js). */
