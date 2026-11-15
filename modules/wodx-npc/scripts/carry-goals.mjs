@@ -14,6 +14,7 @@
  *             leave it (the tokens are hidden, the body's token keeps flags.wodx-npc.carriedOff)
  */
 import * as G from "./carry-goal-rules.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const IX = "wodx-interactables";
 const TYPE = "npc-capture";
@@ -184,7 +185,7 @@ export function build({MOD, esc, gmIds, chron, routines, factions, HAUL, isActiv
         else out.push(t);
       }
       // a trip that arrived more than a week ago is done with
-      await game.settings.set(MOD, "carryTrips", out.filter(t => !(t.arrived && game.time.worldTime - t.due > 7 * 86400)));
+      await game.settings.set(MOD, "carryTrips", out.filter(t => !(t.arrived && game.time.worldTime - t.due > 7 * DAY)));
     } finally { tripBusy = false; }
   }
 

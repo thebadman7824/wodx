@@ -10,8 +10,9 @@
  * A signal stays live for a while by its weight, then drops off. A storyline that grows from a signal marks it used,
  * so the same signal does not open two storylines. Every figure here is a house reading.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY};
 
-export const DAY = 86400;
 /** How long a signal stays live, by weight. */
 export const TTL = {1: 14 * DAY, 2: 28 * DAY, 3: 56 * DAY};
 /** The most signals the board keeps; the oldest light ones go first. */

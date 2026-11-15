@@ -95,6 +95,10 @@ function registerSettings() {
     s("turnMoves", "Moves out of turn",
         "In a fight, players move a character's token only on that character's turn (a character holding the action steps in first). The Storyteller can always move any token, for a dodge, a shove or a fall.",
         String, "off", { choices: CR.TURN_MOVES });
+    // B6020
+    s("conditionsHold", "Conditions hold the token",
+        "A player cannot move the token of a character who is Held, Completely immobilized, Staked, in Torpor, Incapacitated or Asleep, in a fight or out of one; Numbed moves at three-quarter pace. The Storyteller moves any token freely.",
+        Boolean, true);
 }
 const setting = k => game.settings.get(MOD, k);
 const countShots = () => { try { return !!game.settings.get(MOD, "countShots"); } catch (e) { return false; } };
@@ -713,7 +717,7 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
     <div class="form-group"><label>Defender: defense # this turn (full defense)</label><select name="defIndex" data-fixed>
       <option value="auto" selected>Automatic: count this turn's defenses</option><option value="0">First (full pool)</option><option value="1">Second (-1 die)</option><option value="2">Third (-2)</option><option value="3">Fourth (-3)</option></select></div>
     <div class="form-group"><label>Defender extra dice / difficulty</label>
-       <input type="number" name="defDice" value="0" style="width:4em"/> <input type="number" name="defDiff" value="${target ? defenseDiffOf(target) : 0}" style="width:4em"/></div>
+       <input type="number" name="defDice" value="${target ? defenseDiceOf(target) : 0}" style="width:4em"/> <input type="number" name="defDiff" value="${target ? defenseDiffOf(target) : 0}" style="width:4em"/></div>
     ${tCel ? `<div class="form-group"><label><input type="checkbox" name="defCel" checked/> Defender Celerity ${tCel} (adds dice; dodge arrows normally)</label></div>` : ""}
     ${tFort ? `<div class="form-group"><label>Fortitude ${tFort}: spend 1 blood to soak automatically</label><select name="fortBlood" data-fixed>
        <option value="auto" selected>Automatic: ${esc(AU.SOAK_POLICIES[soakPolicy(target)])}</option><option value="yes">Spend</option><option value="no">Don't spend</option></select></div>` : ""}
@@ -1979,8 +1983,8 @@ Hooks.once("init", () => {
     const mounted = MTD.setupMounted({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall, markFollow });
     const vehicles = VH.setupVehicles({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall });
     FTime.setupFightTime();
-    const api = { body, movement, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.43.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+    const api = { body, movement, holdOfActor, traitRoll, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.44.1", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, followOn: R.followOn, markFollow, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -2012,8 +2016,37 @@ export function movementFor(actor) {
     const woundIndex = num(dmg.bashing) + num(dmg.lethal) + num(dmg.aggravated);
     // Protean's Shape of the Beast (wolf or rat) doubles the running speed (VtDA20 p. 241); the effect comes from Use a Discipline
     const doubleRun = [...(actor?.effects ?? [])].some(e => /^shape of the beast\b/i.test(e.name ?? ""));
-    return AU.movement({ dexterity: attr(actor, "dexterity"), celerity: discipline(actor, "Celerity"), woundIndex, doubleRun });
+    const hold = holdOfActor(actor);
+    return AU.movement({ dexterity: attr(actor, "dexterity"), celerity: discipline(actor, "Celerity"), woundIndex, doubleRun, still: hold.still, pace: hold.pace });
 }
+/** B6020-B6021: what the actor's WoDX conditions do to its movement: {still, pace}. */
+export function holdOfActor(actor) {
+    const list = conditionsOf(actor);
+    return AU.holdOf(list.map(c => c.id), Object.fromEntries(list.map(c => [c.id, c.name])));
+}
+// B6031: WoDX's Incapacitated status follows the health track (it was only ever set by hand): on when the track fills
+// for a body that falls unconscious rather than into torpor or death, off once it heals below the full track.
+Hooks.on("updateActor", (actor, change) => {
+    if (!isActiveGM() || !foundry.utils.hasProperty(change ?? {}, "system.health.damage") || corpusTrack(actor)) return;
+    const K = chronicle()?.conditions;
+    if (!K?.setCondition || !K.getCondition?.("incapacitated")) return;
+    try { if (!setting("statusEffects")) return; } catch (e) { return; }
+    const t = healthTrack(actor), c = R.condition(t.damage, t.max, getKind(actor));
+    const want = c.key === "unconscious", has = !!K.hasCondition(actor, "incapacitated"), mine = !!actor.getFlag(MOD, "incapAuto");
+    // Healing lifts only the mark this hook set; one the Storyteller or a power set stays
+    if (want && !has) K.setCondition(actor, "incapacitated", true).then(() => actor.setFlag(MOD, "incapAuto", true)).catch(e => console.warn(`${MOD} | incapacitated`, e));
+    else if (!want && has && mine) K.setCondition(actor, "incapacitated", false).then(() => actor.unsetFlag(MOD, "incapAuto")).catch(e => console.warn(`${MOD} | incapacitated`, e));
+});
+// B6020: a player's token held by a condition (held, staked, torpor, asleep...) does not move, in a fight or out of one.
+// The Storyteller moves any token freely. World setting "Conditions hold the token" turns it off.
+Hooks.on("preUpdateToken", (doc, changes, options) => {
+    if (game.user.isGM || !("x" in changes || "y" in changes) || options?.wodxMove === false || !doc.actor) return;
+    try { if (setting("conditionsHold") === false) return; } catch (e) { /* not registered yet */ }
+    const h = holdOfActor(doc.actor);
+    if (!h.still) return;
+    ui.notifications.warn(`${doc.name} cannot move: ${h.still}.`);
+    return false;
+});
 const roundTag = () => { const c = game.combat; return c?.started ? `${c.id}:${c.round}` : null; };
 /** {yards, limits} moved this turn by a token in the running fight, or null. */
 function movedThisRound(tok) {
@@ -2440,7 +2473,7 @@ export async function quickAttack({ attacker: a = null, target: t = null, weapon
         if (!target) { ui.notifications.warn("WoDX Combat: target someone for the quick attack."); return results; }
         const cm = conditionMods(attacker, target);
         const fd = { weapon: "auto", maneuver: "normal", targeting: "none", range: "short", flank: "auto", multi: "auto", opponents: 1, oppAuto: true,
-            extraDice: cm.attackerDice, extraDiff: cm.attackerDiff, extraDmg: 0, defense: "auto", defIndex: "auto", defDice: 0,
+            extraDice: cm.attackerDice, extraDiff: cm.attackerDiff, extraDmg: 0, defense: "auto", defIndex: "auto", defDice: defenseDiceOf(target),
             defDiff: defenseDiffOf(target), defCel: discipline(target, "Celerity") > 0,
             celDice: setting("celerityDice"), fortBlood: "auto", soakBonus: 0, atkKind: "auto", profile: "auto" };
         try {
@@ -2513,6 +2546,11 @@ export function conditionMods(attacker, target) {
         out.attackerDiff += mv.diff;
         out.notes = [...(out.notes ?? []), ...mv.notes.map(n => `${n} (house rule)`), ...(mv.blocked ? [`Cannot attack: ${mv.blocked}`] : [])];
     } catch (e) { /* movement off */ }
+    // B6022: the attacker's merits, flaws, fevers, drink and other roll effects (WoDX Chronicle traits) count on the attack
+    try {
+        const tm = traitRoll(attacker, ["attack", "combat"]);
+        if (tm.dice || tm.diff) { out.attackerDice += tm.dice; out.attackerDiff += tm.diff; out.notes = [...(out.notes ?? []), ...tm.parts.map(p => `${attacker.name}: ${p}`)]; }
+    } catch (e) { /* no traits */ }
     // B4885: someone held as a shield by a WoDX NPC hostage-taker makes every attack on them 2 harder (house rule)
     try {
         const sh = shieldOf(target);
@@ -2535,7 +2573,21 @@ export function shieldOf(actor) {
 function defenseDiffOf(target) {
     let d = chronicle()?.conditions?.defenseDifficulty?.(target) ?? 0;
     try { d += MVJ.defenseMods(target).diff; } catch (e) { /* movement off */ }
+    d += traitRoll(target, ["defense", "combat", "dodge"]).diff;
     return d;
+}
+/** B6022: the defender's roll effects in dice (a fever's -1 die, a night's -2 for feeding against the blood's law). */
+function defenseDiceOf(target) {
+    return target ? traitRoll(target, ["defense", "combat", "dodge"]).dice : 0;
+}
+/** B6022: an actor's roll effects for these tags from WoDX Chronicle traits: {dice, diff, parts}. */
+export function traitRoll(actor, tags) {
+    const T = chronicle()?.traits;
+    if (!T?.effects || !actor) return { dice: 0, diff: 0, parts: [] };
+    try {
+        const list = T.effects(actor, { channel: "roll", tags });
+        return T.rules?.sumEffects ? T.rules.sumEffects(list) : list.reduce((o, e) => ({ dice: o.dice + (Number(e.dice) || 0), diff: o.diff + (Number(e.diff) || 0), parts: [...o.parts, e.name] }), { dice: 0, diff: 0, parts: [] });
+    } catch (e) { return { dice: 0, diff: 0, parts: [] }; }
 }
 
 /** Dazed when one attack does more than Stamina after soak; Stamina + 2 for the supernatural (V20 Dark Ages p. 348). */

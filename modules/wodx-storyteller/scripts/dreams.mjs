@@ -2,6 +2,8 @@ import * as D from "./dreams-rules.mjs";
 import {MOD, esc, chron, isActiveGM, setting, mutate} from "./core.mjs";
 import {getEngine, describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 /**
  * Dreams and visions you write: scheduled by the Storyteller, released by the clock as a journal that only the
@@ -87,7 +89,7 @@ export function holdsSource(actor, source) {
 /** The time of today's sleep hour on the chronicle's calendar. */
 function todaySleep(t = now()) {
   try { const e = getEngine(), d = e.timeToDate(t); return e.dateToTime({year: d.year, month: d.month, day: d.day, hour: D.DEFAULT_HOUR, minute: 0}); }
-  catch (e) { return Math.floor(t / 86400) * 86400 + D.DEFAULT_HOUR * 3600; }
+  catch (e) { return Math.floor(t / DAY) * DAY + D.DEFAULT_HOUR * 3600; }
 }
 const SLEEP_FLAG = "sleepSeen";
 const NIGHTMARE_FX = "Nightmares";
@@ -113,7 +115,7 @@ async function nightmares(actor) {
   const wp = Math.max(1, Number(s.willpower?.temporary ?? s.advantages?.willpower?.temporary ?? s.willpower?.permanent ?? 1) || 1);
   const roll = await new Roll(`${wp}d10`).evaluate();
   const faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
-  const succ = faces.filter(f => f >= D.NIGHTMARES.difficulty).length, ones = faces.filter(f => f === 1).length;
+  const {raw: succ, ones} = TERMS.successes(faces, D.NIGHTMARES.difficulty);
   const r = D.nightmareResult(Math.max(0, succ - ones), succ === 0 && ones > 0);
   if ( r.lose ) await actor.createEmbeddedDocuments("ActiveEffect", [{name: NIGHTMARE_FX, img: "icons/svg/sleep.svg", description: r.words,
     flags: {[MOD]: {[SLEEP_FLAG]: true, diceLess: r.lose}}}]);

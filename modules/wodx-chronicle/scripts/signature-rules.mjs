@@ -224,7 +224,7 @@ export function glimpseFor(ev, days, seed = 0) {
 }
 
 /** One glimpse a night: true if the last one was taken on an earlier night (night = whole days of world time, at noon). */
-export const mayGlimpse = (last, now) => last == null || Math.floor((n(now) - 43200) / 86400) > Math.floor((n(last) - 43200) / 86400);
+export const mayGlimpse = (last, now) => last == null || Math.floor((n(now) - 43200) / DAY) > Math.floor((n(last) - 43200) / DAY);
 
 /* ---------------- Tzimisce: native soil ---------------- */
 

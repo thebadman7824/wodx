@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.33.1 (Shared terms (B6180-B6199): time units, dice counts, health levels, distance, eras, lines and player characters come from WoDX Chronicle's shared terms instead of a copy of this module's own)
 - 0.33.0 (Say or Do: the Avatar Storm and Net combat now hurt (B5820-B5821))
 - 0.32.0 (Time in the Labyrinth is drawn each journey from its own table, from an hour here for each day there to a month here (B5179))
 - 0.31.0 (A still aura for Golconda (B5095; a house reading))

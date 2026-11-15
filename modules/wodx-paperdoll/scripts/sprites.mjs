@@ -7,6 +7,7 @@ import * as SR from "./sprite-rules.mjs";
 import * as LR from "./line-rules.mjs";
 import * as FG from "./figure-rules.mjs";
 import {healthLevel, randomLook} from "./doll-rules.mjs";
+import {YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
 const MOD = "wodx-paperdoll";
 const states = new Map(), bases = new Map(), frames = new Map(), acts = new Map(), glows = new Map(), strides = new Map(), rides = new Map();
 /** Who sits on a mount or in a vehicle just now (mounts.mjs keeps it): token id -> {facing, pose, moving}. */
@@ -652,7 +653,7 @@ export async function loadOwn() {
 }
 
 /* ---- children (B3480): the age the body shows, and the age floor's mark for a figure drawn as a child ---- */
-const YEAR_SECONDS = 365.2425 * 86400;
+const YEAR_SECONDS = YEAR;
 /**
  * The body's age in years ({age, minor}): from the birth year in the year shown, or, for Kindred and the walking dead,
  * the age at which the body stopped. minor is the age floor's own answer (WoDX Chronicle), or under 18 when it is off.

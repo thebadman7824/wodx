@@ -36,14 +36,14 @@ export async function run() {
   });
 
   await step("a WoDX sheet's Core tab is the book's sheet (and its add-item button) only", async () => {
-    const core = wodx.sheet.element[0].querySelector(".tab.core");
+    const core = (wodx.sheet.element instanceof HTMLElement ? wodx.sheet.element : wodx.sheet.element?.[0]).querySelector(".tab.core");
     ok("a WoDX sheet's Core tab is the book's sheet (and its add-item button) only", !!core?.querySelector(".wodx-book") && [...core.children].every(c => c.classList.contains("wodx-book") || c.classList.contains("item-create")),
       { book: !!core?.querySelector(".wodx-book"), children: [...(core?.children ?? [])].map(c => c.className) });
   });
 
   await step("a sheet in the system's own layout still draws its Core tab", async () => {
     if (!plain) { ok("a sheet in the system's own layout still draws its Core tab", true, { skipped: "no actor shows the system layout in this era" }); return; }
-    const core = plain.sheet.element[0].querySelector(".tab.core");
+    const core = (plain.sheet.element instanceof HTMLElement ? plain.sheet.element : plain.sheet.element?.[0]).querySelector(".tab.core");
     ok("a sheet in the system's own layout still draws its Core tab", !core.querySelector(".wodx-book") && core.querySelectorAll(".resource-value, .attribute, [data-key]").length > 5,
       { marks: core.querySelectorAll(".resource-value, .attribute, [data-key]").length });
   });

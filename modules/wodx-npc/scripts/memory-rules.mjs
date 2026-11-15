@@ -11,9 +11,10 @@
  * player character goes to the Storyteller's approval queue first. Undying NPCs keep a grudge as long as it lasts;
  * a mortal's passes to the heirs through feuds when they die (B3349). The weights, fades and moves are house figures.
  */
+import {DAY, YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
+export {YEAR};
 
-export const YEAR = 365 * 86400;
-export const SEASON = 91 * 86400;
+export const SEASON = 91 * DAY;
 /** Notes kept per character, newest last. */
 export const KEEP = 24;
 

@@ -18,8 +18,9 @@
  * - People who live in a blighted place take on taint, three steps, and at the last a Bane may ride them: that is
  *   only ever proposed to the Storyteller.
  */
+import {WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
+export {WEEK};
 
-export const WEEK = 7 * 86400;
 export const MAX = 10;
 export const HELLHOLE_FLOOR = 7;
 

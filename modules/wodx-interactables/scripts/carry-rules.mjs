@@ -10,6 +10,7 @@
  * The state lives on the token: flags.wodx-interactables.carried = {kind, lit, left (seconds of fuel), since (world
  * time it was last lit or checked), low (the burning-low note was given), before (the token's own light, to put back)}.
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** Radii in yards; angle in degrees (360 = all round). from/to: the years it can be had. */
 export const CARRIED = {
@@ -38,9 +39,8 @@ export function fuelFor(kind, year) {
 /** Yards in a scene's own units. */
 export function toUnits(yards, units) {
   const u = String(units ?? "ft").toLowerCase();
-  if ( /^(m|meter|metre|meters|metres)$/.test(u) ) return Math.round(yards * 0.9144 * 10) / 10;
-  if ( /^(yd|yard|yards)$/.test(u) ) return yards;
-  return yards * 3;
+  // B6186: a metre counts as a yard, as the books have it (terms.mjs)
+  return Math.round(TERMS.fromYards(yards, u) * 10) / 10;
 }
 
 /** The token light data for a lit carried light, in a scene's units. */

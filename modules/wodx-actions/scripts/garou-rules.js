@@ -4,6 +4,7 @@
  * "w20" = Werewolf 20th elsewhere. Fera follow W20 Changing Breeds in every era.
  * Mechanics only; page references in data/garou.json and docs/research/6b-werewolf-notes.md.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const FORMS = ["homid", "glabro", "crinos", "hispo", "lupus"];
 /** Shift difficulty is that of the form being left (W20 p. 285; DA:W pp. 106–107). */
@@ -323,10 +324,10 @@ export function giftDuration(code, successes = 1) {
         case "turns": return { kind: "rounds", rounds: s };
         case "minutes": return { kind: "time", seconds: 60 * s };
         case "hours": return { kind: "time", seconds: 3600 * s };
-        case "day": return { kind: "time", seconds: 86400 };
-        case "days": return { kind: "time", seconds: 86400 * s };
-        case "week": return { kind: "time", seconds: 7 * 86400 };
-        case "months": return { kind: "time", seconds: 30 * 86400 * s };
+        case "day": return { kind: "time", seconds: DAY };
+        case "days": return { kind: "time", seconds: DAY * s };
+        case "week": return { kind: "time", seconds: 7 * DAY };
+        case "months": return { kind: "time", seconds: 30 * DAY * s };
         default: return null;
     }
 }

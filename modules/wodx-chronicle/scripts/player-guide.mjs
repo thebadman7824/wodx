@@ -53,6 +53,8 @@ export function installGuide() {
   if ( game.user.isGM ) return;
   const mine = a => a?.isOwner && !game.user.isGM;
   Hooks.on("renderActorSheet", app => { if ( mine(app.actor) ) tick("sheet"); });
+  // B6114: the line sheets that run on ApplicationV2 count too
+  Hooks.on("renderLegacyActorSheetV2", app => { if ( mine(app.actor) ) tick("sheet"); });
   Hooks.on("createChatMessage", m => {
     if ( m.author?.id !== game.user.id ) return;
     const gms = new Set(game.users.filter(u => u.isGM).map(u => u.id));

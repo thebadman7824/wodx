@@ -21,6 +21,7 @@
  */
 import * as A from "./carry-aftercare-rules.mjs";
 import * as SX from "./secrets-rules.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 const IX = "wodx-interactables", ACT = "wodx-actions";
 // WoDX Interactables' container kinds (interact-rules.mjs CONTAINERS), named here so NPC runs without it
 const CONTAINERS = {chest: {label: "Chest"}, box: {label: "Box or casket"}, cabinet: {label: "Cabinet or wardrobe"}, drawers: {label: "Desk or filing drawers"}, strongbox: {label: "Strongbox"}, safe: {label: "Safe"}, pile: {label: "Gear on the ground"}};
@@ -43,7 +44,7 @@ export function build({MOD, esc, gmIds, chron, factions, routines, people, MEMOR
   const stat = (a, group, k) => num(a?.system?.[group]?.[k]?.value);
   const powerDots = (a, re) => Math.max(0, ...[...(a?.items ?? [])].filter(i => i.type === "Power" && re.test(i.name ?? "")).map(i => num(i.system?.value)));
   const damageOf = a => ({bashing: num(a?.system?.health?.damage?.bashing), lethal: num(a?.system?.health?.damage?.lethal), aggravated: num(a?.system?.health?.damage?.aggravated)});
-  const levels = a => { const h = a?.system?.health ?? {}; const t = ["bruised", "hurt", "injured", "wounded", "mauled", "crippled", "incapacitated"].reduce((s, k) => s + (Number(h[k]?.total ?? h[k]?.value) || 1), 0); return t || 7; };
+  const levels = a => { const h = a?.system?.health ?? {}; const t = TERMS.HEALTH_LEVELS.reduce((s, k) => s + (Number(h[k]?.total ?? h[k]?.value) || 1), 0); return t || 7; };
   const ownersOf = a => game.users.filter(u => !u.isGM && a?.testUserPermission?.(u, "OWNER")).map(u => u.id);
   const yearNow = () => { try { return Number(chron()?.eras?.currentYear?.()) || 1197; } catch (e) { return 1197; } };
   const tokenOf = (uuid, actorId) => {

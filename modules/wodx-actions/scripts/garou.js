@@ -19,6 +19,7 @@ import * as EF from "./effects.js";
 import * as BR from "./book-rituals.js";
 import { outcomesOf } from "./mage-da-effects.js";
 import * as FOM from "./fomor.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const DATA = {};
@@ -433,7 +434,7 @@ export function build(ctx) {
      */
     async function meditateDaily() {
         if (!isActiveGM()) return [];
-        const today = Math.floor(game.time.worldTime / 86400), week = Math.floor(today / 7);
+        const today = Math.floor(game.time.worldTime / DAY), week = Math.floor(today / 7);
         const out = [];
         for (const actor of game.actors ?? []) {
             const plan = actor.getFlag?.(MOD, "meditates");
@@ -457,7 +458,7 @@ export function build(ctx) {
 
     async function meditate(actor) {
         const i = info(actor);
-        const today = Math.floor(game.time.worldTime / 86400), week = Math.floor(today / 7);
+        const today = Math.floor(game.time.worldTime / DAY), week = Math.floor(today / 7);
         const log = actor.getFlag?.(MOD, "meditation") ?? {};
         if (log.day === today) return ctx.notify("Once a day.");
         const earlier = log.week === week ? n(log.count) : 0;

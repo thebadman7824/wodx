@@ -32,7 +32,8 @@ export async function newScene(why = "A new scene") {
 }
 
 /** The clock, the fight and the scene, for the period keys. */
-export const ctxNow = () => ({worldTime: game.time?.worldTime ?? 0, combat: game.combat?.started ? game.combat : null, scene: sceneNo()});
+export const ctxNow = () => ({worldTime: game.time?.worldTime ?? 0, combat: game.combat?.started ? game.combat : null, scene: sceneNo(),
+  turnSeconds: chronicle()?.terms?.turnSeconds?.() ?? 3});
 
 /* ---------------- Uses ---------------- */
 
@@ -167,10 +168,8 @@ export function register() {
 export function setup() {
   const C = chronicle();
   try { C?.registerCondition?.(L.DRAINED); } catch (e) { console.warn("WoDX | Drained", e); }
-  Hooks.on("wodxEndScene", () => { newScene("The scene ends").catch(e => console.error("WoDX | scene count", e)); });
-  Hooks.on("updateScene", (scene, changes) => {
-    if ( changes?.active === true ) newScene("A new map").catch(e => console.error("WoDX | scene count", e));
-  });
+  // B6190: WoDX Chronicle fires wodxEndScene for the End the scene button and for a new active map alike
+  Hooks.on("wodxEndScene", (o = {}) => { newScene(o?.map ? "A new map" : "The scene ends").catch(e => console.error("WoDX | scene count", e)); });
   Hooks.on("deleteActiveEffect", effect => {
     if ( !effect.getFlag?.(MOD, "drainOnEnd") ) return;
     const actor = effect.parent;

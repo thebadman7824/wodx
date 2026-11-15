@@ -11,10 +11,14 @@
  *   - another line's entries need Intelligence + Occult of 6;
  *   - a ghoul reads vampire entries, and a revenant too, as their own line at 2 more.
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** The first year each Encyclopaedia era is in play. An entry tagged only with later eras has not happened yet. */
 export const ERA_FROM = {"mythic": -10000, "living-gods": -3000, "ancient": -2000, "classical": -800, "dark-ages": 800, "renaissance": 1450,
   "victorian": 1837, "wild-west": 1850, "great-war": 1914, "modern": 1950, "time-of-judgment": 1999, "future-darkness": 2023};
+// B6195: a tag that is also a WoDX era is in play no later than that era's profile begins (Future Darkness from 2010, not 2023);
+// a wiki era wider than the profile (Dark Ages lore from 800) keeps its earlier year
+for ( const [k, v] of Object.entries(ERA_FROM) ) { const e = TERMS.eraById(k); if ( e ) ERA_FROM[k] = Math.min(v, e.start); }
 /** Which Encyclopaedia lines count as a character's own. */
 export const OWN = {vampire: ["vampire"], ghoul: ["vampire"], revenant: ["vampire"], werewolf: ["werewolf", "fera"], mage: ["mage"],
   changeling: ["changeling"], wraith: ["wraith", "orpheus"], hunter: ["hunter"], mummy: ["mummy"], demon: ["demon"], mortal: []};

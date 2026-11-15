@@ -1,8 +1,9 @@
-import { default as MortalActorSheet } from "./mortal-actor-sheet.js";
+import { default as MortalActorSheet, MortalActorSheetV2 } from "./mortal-actor-sheet.js";
 import ActionHelper from "../../scripts/action-helpers.js";
 import CreateHelper from "../../scripts/create-helpers.js";
 
-export default class CreatureActorSheet extends MortalActorSheet {
+/** The Creature sheet's code, on either sheet engine (B6110): over the Mortal sheet of the old engine or of ApplicationV2. */
+export const CreatureSheetMixin = Base => class extends Base {
 	
 	/** @override */
 	static get defaultOptions() {
@@ -12,8 +13,8 @@ export default class CreatureActorSheet extends MortalActorSheet {
 		});
 	}
   
-	constructor(actor, options) {
-		super(actor, options);
+	constructor(...args) {
+		super(...args);
 
 		this.isCharacter = false;
 	}
@@ -182,4 +183,12 @@ export default class CreatureActorSheet extends MortalActorSheet {
 			await this.actor.update(actorData);
 		}
 	}
-}
+};
+
+const CreatureActorSheet = CreatureSheetMixin(MortalActorSheet);
+Object.defineProperty(CreatureActorSheet, "name", { value: "CreatureActorSheet" });
+export default CreatureActorSheet;
+
+/** The same sheet on ApplicationV2 (B6110), used for the lines listed in LINES_V2 (wod.js). */
+export const CreatureActorSheetV2 = CreatureSheetMixin(MortalActorSheetV2);
+Object.defineProperty(CreatureActorSheetV2, "name", { value: "CreatureActorSheet" }); // the same name: the sheet keeps its id (WoD.CreatureActorSheet) and its render hooks

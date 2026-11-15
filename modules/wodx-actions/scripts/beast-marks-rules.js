@@ -21,9 +21,9 @@
  *                    blood. The book gives it as a rumour with no system: the trigger is the book's, the effect a house
  *                    rule (docs/PENDING-REVIEW.md).
  */
+import {CALENDAR_MONTH as MONTH, YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
-const YEAR = 365.25 * 86400, MONTH = YEAR / 12;
 
 /* ------------------------------------------------------------------ */
 /*  The Beast takes the token                                          */
@@ -138,6 +138,16 @@ export const catchUpXp = dots => Math.max(1, n(dots));
 export const catchUpMonths = years => Math.max(1, Math.ceil(n(years) / 100));
 /** House: while behind, rolls with the Ability are one harder; an old tongue is understood only for the gist (Intelligence + Linguistics, 7). */
 export const BEHIND_DIFFICULTY = 1;
+/**
+ * B6025: the roll effects of waking behind the age, from the longSleep flag: +BEHIND_DIFFICULTY on rolls that use an
+ * Ability still behind ({key} list), until the Storyteller marks it caught up. tags: the roll's tags.
+ */
+export function behindEffects(sleep, tags = []) {
+    const want = new Set((tags ?? []).map(t => String(t).toLowerCase()));
+    if (!sleep?.behind?.length || !want.size) return [];
+    return sleep.behind.filter(b => want.has(String(b.key ?? "").toLowerCase()))
+        .map(b => ({ key: "behind-age", name: `Behind the age (${b.key})`, dice: 0, diff: BEHIND_DIFFICULTY, note: "" }));
+}
 export const OLD_TONGUE_GIST = { attr: "intelligence", ability: "linguistics", difficulty: 7 };
 
 /* ------------------------------------------------------------------ */

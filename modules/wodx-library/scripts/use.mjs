@@ -494,6 +494,7 @@ export async function setupUse() {
   game.socket?.on(SOCKET, onSocket);
   game.socket?.on(SOCKET, AU.onArmsSocket);
   game.socket?.on(SOCKET, GU.onGambleSocket);
+  game.socket?.on(SOCKET, op => WU.onWonderSocket(op).catch(e => console.warn("WoDX Library | wonder light", e)));
   Hooks.on("createItem", onCreateItem);
   const can = it => !!it && it.isOwner;
   Hooks.on("getHeaderControlsItemSheetV2", (app, controls) => {

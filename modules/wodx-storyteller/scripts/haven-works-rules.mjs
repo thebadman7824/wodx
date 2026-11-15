@@ -15,8 +15,9 @@
  * The books give Domain, Chantry, Sanctum, caern and Holdings ratings (V20 pdf 121, M20 pdf 302 and 325, W20 pdf
  * 250-255, C20 pdf 172); prices, traces and odds here are house figures.
  */
+import {DAY, MONTH, YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY, MONTH, YEAR};
 
-export const DAY = 86400, MONTH = 30 * DAY, YEAR = 365 * DAY;
 /** A trace left by the works fades by half every this long. */
 export const TRACE_HALF = YEAR / 2;
 /** Months between probes by one rival on one haven. */

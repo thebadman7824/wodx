@@ -1,0 +1,60 @@
+{
+  "about": "Recorded cues for WoDX Atmosphere (B6260-B6264). Each slot lists Freesound sounds in order of preference; fetch-cues.mjs takes the first one whose page says CC0 or CC BY, cuts it to len seconds from its first sound, fades the end and levels it. Picked by title and description only: listen on the testbed and change the order here. faith: the slot plays where the land keeps that faith (kits-rules.mjs CUE_FAITHS).",
+  "slots": [
+    {"kit": "common", "cue": "birds", "len": 8, "ids": [578523, 573080, 57620, 341675, 165516], "why": "A dawn chorus of European songbirds, heard in every era"},
+    {"kit": "common", "cue": "cock", "len": 5, "ids": [384188, 435506, 233167, 383930, 60142], "why": "A farmyard rooster, heard in every era"},
+    {"kit": "common", "cue": "heart", "len": 0.9, "ids": [485076, 254365, 62912, 455089, 535478], "why": "One real heartbeat (both sounds), for the Beast's hunger"},
+
+    {"kit": "dark-ages", "cue": "dawn", "len": 7, "ids": [19315, 560988, 425172, 160689, 252789], "why": "A single church bell tolling for the first office"},
+    {"kit": "dark-ages", "cue": "dusk", "len": 7, "ids": [160689, 252789, 19315, 425172], "why": "A church bell at vespers"},
+    {"kit": "dark-ages", "cue": "notice", "len": 2.5, "ids": [339813, 200318, 479978], "why": "One stroke of a hand bell"},
+
+    {"kit": "long-night", "cue": "dawn", "len": 7, "ids": [180329, 857927, 857912], "why": "A low, lone bell in an emptied town"},
+    {"kit": "long-night", "cue": "dusk", "len": 7, "ids": [857927, 857912, 180329], "why": "A deep bell tolling the dead"},
+    {"kit": "long-night", "cue": "notice", "len": 2.5, "ids": [339816, 339813, 200318], "why": "One stroke of a hand bell"},
+
+    {"kit": "renaissance", "cue": "dawn", "len": 7, "ids": [560988, 425172, 19315], "why": "Church bells over a town"},
+    {"kit": "renaissance", "cue": "dusk", "len": 7, "ids": [425172, 160689, 19315], "why": "A church bell at evening"},
+    {"kit": "renaissance", "cue": "notice", "len": 2.5, "ids": [339819, 339816, 200318], "why": "One stroke of a hand bell"},
+
+    {"kit": "age-of-reason", "cue": "dawn", "len": 7, "ids": [127099, 210987, 108249], "why": "A longcase clock striking in a quiet house"},
+    {"kit": "age-of-reason", "cue": "dusk", "len": 7, "ids": [210987, 127099, 108249], "why": "A chiming clock at evening"},
+    {"kit": "age-of-reason", "cue": "notice", "len": 2.5, "ids": [479978, 200318, 339813], "why": "A brass bell rung once"},
+
+    {"kit": "victorian", "cue": "dawn", "len": 7, "ids": [78405, 438212, 108249], "why": "A clock tower striking over the streets"},
+    {"kit": "victorian", "cue": "dusk", "len": 7, "ids": [433773, 120805, 438212], "why": "The Albert Clock in Belfast (1869) striking"},
+    {"kit": "victorian", "cue": "notice", "len": 2.5, "ids": [479978, 200318, 339813], "why": "A brass servants' bell"},
+
+    {"kit": "wild-west", "cue": "dawn", "len": 6, "ids": [366779, 97796, 131647], "why": "A ranch dinner triangle calling breakfast"},
+    {"kit": "wild-west", "cue": "dusk", "len": 7, "ids": [188240, 407394, 71778], "why": "A steam locomotive's whistle"},
+    {"kit": "wild-west", "cue": "notice", "len": 2, "ids": [131647, 366779], "why": "One strike of a triangle"},
+
+    {"kit": "great-war", "cue": "dawn", "len": 7, "ids": [438633, 62050], "why": "A bugle call in camp"},
+    {"kit": "great-war", "cue": "dusk", "len": 8, "ids": [61811, 62050, 62309, 236953], "why": "The Last Post on a bugle"},
+    {"kit": "great-war", "cue": "notice", "len": 2, "ids": [15481, 112773, 483336], "why": "A telegraph key clicking"},
+
+    {"kit": "mid-century", "cue": "dawn", "len": 5, "ids": [141287, 78562, 102435], "why": "A twin-bell wind-up alarm clock"},
+    {"kit": "mid-century", "cue": "notice", "len": 2.5, "ids": [456433, 28353], "why": "A Western Electric 500 telephone bell"},
+
+    {"kit": "modern", "cue": "dawn", "len": 8, "ids": [625333, 578523], "why": "Birds over a waking city"},
+    {"kit": "modern", "cue": "dusk", "len": 7, "ids": [63842, 64544, 63220], "why": "Tawny owls as the light goes"},
+    {"kit": "modern", "cue": "notice", "len": 2, "ids": [393333, 163730, 41629], "why": "A doorbell"},
+
+    {"kit": "future-darkness", "cue": "dawn", "len": 4, "ids": [347217, 816010, 493696], "why": "A public-address chime before an announcement"},
+    {"kit": "future-darkness", "cue": "dusk", "len": 4, "ids": [347216, 493696, 816010], "why": "A quick public-address chime"},
+    {"kit": "future-darkness", "cue": "notice", "len": 1.5, "ids": [140834, 449685, 264823], "why": "A machine's beep"},
+
+    {"kits": ["dark-ages", "victorian", "wild-west", "great-war", "modern"], "cue": "dawn", "faith": "islamic", "len": 9, "ids": [44465, 807484, 178382, 161185], "why": "The call to prayer at dawn"},
+    {"kits": ["dark-ages", "victorian", "wild-west", "great-war", "modern"], "cue": "dusk", "faith": "islamic", "len": 9, "ids": [331518, 807484, 178382], "why": "The call to prayer at sunset"},
+    {"kits": ["dark-ages", "victorian", "wild-west", "great-war", "modern"], "cue": "dawn", "faith": "orthodox", "len": 8, "ids": [669805], "why": "The semantron of Mount Athos calling the monks"},
+    {"kits": ["dark-ages", "victorian", "wild-west", "great-war", "modern"], "cue": "dusk", "faith": "orthodox", "len": 8, "ids": [669805], "why": "The semantron at evening"},
+    {"kits": ["dark-ages", "victorian", "wild-west", "great-war", "modern"], "cue": "dawn", "faith": "hindu", "len": 6, "ids": [439477, 78974], "why": "A conch blown at the dawn worship"},
+    {"kits": ["dark-ages", "victorian", "wild-west", "great-war", "modern"], "cue": "dusk", "faith": "hindu", "len": 6, "ids": [78974, 439477], "why": "A conch at the evening lamps"},
+    {"kits": ["dark-ages", "victorian", "wild-west", "great-war", "modern"], "cue": "dawn", "faith": "chinese", "len": 8, "ids": [397352, 516051, 259997], "why": "The morning bell of a temple"},
+    {"kits": ["dark-ages", "victorian", "wild-west", "great-war", "modern"], "cue": "dusk", "faith": "chinese", "len": 7, "ids": [13786, 193040], "why": "The evening gong of a temple"},
+    {"kits": ["dark-ages", "victorian", "wild-west", "great-war", "modern"], "cue": "dawn", "faith": "tibetan", "len": 8, "ids": [192680, 65858], "why": "Long monastery horns at dawn"},
+    {"kits": ["dark-ages", "victorian", "wild-west", "great-war", "modern"], "cue": "dusk", "faith": "tibetan", "len": 8, "ids": [217228, 65861, 65865, 192680, 65858], "why": "Monastery horns at evening"},
+    {"kits": ["dark-ages", "victorian", "wild-west", "great-war", "modern"], "cue": "dawn", "faith": "theravada", "len": 7, "ids": [91196, 516051], "why": "A temple prayer bell"},
+    {"kits": ["dark-ages", "victorian", "wild-west", "great-war", "modern"], "cue": "dusk", "faith": "theravada", "len": 7, "ids": [423401, 91196], "why": "Temple bells at evening"}
+  ]
+}

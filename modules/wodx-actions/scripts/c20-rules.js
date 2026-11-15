@@ -2,6 +2,7 @@
  * WoDX Actions — Changeling 20th, the pure rules (Phase 6h, later eras). No Foundry here: the harness tests them.
  * Mechanics from Changeling: The Dreaming 20th Anniversary Edition, in WoDX's words, with printed page numbers.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const REF = "Changeling 20th";
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
@@ -167,7 +168,7 @@ export const undone = banality => n(banality) >= 10;
 /*  Chimerical healing (B4993)                                         */
 /* ------------------------------------------------------------------ */
 
-const H = 3600, DAY = 86400;
+const H = 3600;
 /** C20's Chimerical Healing Times (pp. 290-291), seconds for the level being healed (Bruised to Incapacitated). */
 export const CHIM_HEAL = {
     bashing: [0.5 * H, 0.5 * H, H, H, H, 3 * H, 6 * H],
