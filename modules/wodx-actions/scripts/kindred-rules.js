@@ -381,7 +381,7 @@ export function downtimeResult(kind, successes, botch) {
 
 /** Who counts as a Masquerade witness: the living who don't already know (mortals, hunters, mages, creatures). */
 export const WITNESS_PROFILES = ["mortal", "hunter", "mage", "beast"];
-export const WITNESS_STATES = { saw: "Saw it", forgot: "Made to forget (Dominate)", convinced: "Talked round", silenced: "Silenced", told: "Told others", ghoul: "Bound as a ghoul" };
+export const WITNESS_STATES = { saw: "Saw it", forgot: "Made to forget (Dominate)", convinced: "Talked round", silenced: "Silenced", told: "Told others", ghoul: "Bound as a ghoul", dream: "Remembers it as a dream (Enchantment ran out)" };
 
 /* ------------------------------------------------------------------ */
 /*  Golconda (Ben's Golconda Desk, B5090-B5099)                         */

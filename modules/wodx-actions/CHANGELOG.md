@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.98.0 (Servants and bonds, step two: Dominate Conditioning, Enchantment and the Parted Mists, oaths broken by an attack, demon pacts with gifts, Celestial and True Names, wraith Thralls and Puppeteer consorts (B5112-B5119))
 - 3.97.0 (Strengthening the Demon and a fomor's Numbing are playable: Chi'iu Muh's Strengthening the Demon (Kindred of the East Companion p. 74) in the Spend Chi window, and Numbing (W20 p. 436) under Fomor power in the mortal launcher; both pay their after-costs by themselves (B5161, B5162))
 - 3.96.0 (Ghouled animals, step four (B5132): the Use a Discipline window reads WoDX Creation's animal ghouls)
 - 3.95.1 (The court's Blood Hunt check at each faction turn writes every Kindred's "looked at" time in one batch, not one write per actor, so it no longer stalls for half a minute in a world full of Kindred (B5620); Calling or lifting a Blood Hunt turns the court's Kindred twenty at a time instead of one after another, so a big court no longer holds the faction turn for half a minute (B5630))

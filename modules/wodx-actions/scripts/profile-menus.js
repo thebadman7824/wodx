@@ -29,7 +29,7 @@ export const MENUS = {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:seduction", "Seduction", "fa-heart"], ["api:hunt", "Hunt", "fa-paw"]]],
             ["Blood", [["api:feed", "Feed on target", "fa-tint"], ["api:spendBlood", "Spend blood", "fa-heartbeat"], ["api:bloodOath", "Blood Oath", "fa-link"]]],
-            ["Disciplines and Road", [["api:useDiscipline", "Use a Discipline", "fa-hand-sparkles"], ["api:setRoad", "Road and Path", "fa-road"], ["api:downtime", "Downtime and domain", "fa-hourglass-half"]]],
+            ["Disciplines and Road", [["api:useDiscipline", "Use a Discipline", "fa-hand-sparkles"], ["api:conditioning", "Dominate Conditioning", "fa-user-lock"], ["api:setRoad", "Road and Path", "fa-road"], ["api:downtime", "Downtime and domain", "fa-hourglass-half"]]],
             ["The Beast", [["api:frenzy", "Frenzy", "fa-fire-alt"], ["api:rotschreck", "Rötschreck", "fa-running"], ["api:endFrenzy", "End frenzy", "fa-hand-paper"], ["api:sin", "Sin / degeneration", "fa-balance-scale"], ["api:diablerieMarks", "Marks of diablerie", "fa-eye"]]],
             ["Night and day", [["api:daytime", "Awaken by day", "fa-sun"], ["api:hazard", "Sun / fire / fall", "fa-burn"], ["api:sunAndHaven", "Sun and haven", "fa-house-user"], ["api:torpor", "Torpor", "fa-bed"], ["api:diablerie", "Diablerie", "fa-skull"]]],
             ["Court and chronicle (GM)", [["api:boons", "Prestation (boons)", "fa-handshake"], ["api:bloodHunt", "Blood Hunt", "fa-crosshairs"], ["api:masquerade", "Masquerade and witnesses", "fa-mask"], ["api:skyAndSun", "Sky and sun", "fa-cloud-sun"], ["api:endStory", "End of story", "fa-book"]]],
@@ -47,7 +47,7 @@ export const MENUS = {
     mortal: {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:seduction", "Seduction", "fa-heart"], ["api:kinfolk", "Kinfolk", "fa-users"]]],
-            ["Faith and the uncanny", [["api:imbue", "The Imbuing (GM, 1999 on)", "fa-bolt"], ["api:trueFaith", "True Faith", "fa-cross"], ["api:numina", "Psychic Numina", "fa-eye"], ["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"], ["api:fomorPower", "Fomor power (Numbing)", "fa-biohazard"]]],
+            ["Faith and the uncanny", [["api:imbue", "The Imbuing (GM, 1999 on)", "fa-bolt"], ["api:trueFaith", "True Faith", "fa-cross"], ["api:numina", "Psychic Numina", "fa-eye"], ["api:hedgeMagic", "Hedge magic (Sorcerer)", "fa-book-open"], ["api:pactGift", "A pact gift", "fa-file-signature"], ["api:knownNames", "Names known", "fa-signature"], ["api:pressName", "Call by a True Name", "fa-bullhorn"], ["api:fomorPower", "Fomor power (Numbing)", "fa-biohazard"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:healing", "Healing", "fa-band-aid"], ["rules:mortal", "Mortal rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
@@ -115,7 +115,7 @@ export const MENUS = {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:seduction", "Seduction / glamour", "fa-heart"]]],
             ["Glamour", [["cantrip", "Weave a cantrip", "fa-wand-magic-sparkles"], ["api:c20Unleash", "Unleash an Art", "fa-bolt"], ["api:c20Invoke", "Invoke the Wyrd or the Autumn", "fa-mask"],
-                ["api:c20Epiphany", "Epiphany (gather Glamour)", "fa-star"], ["api:c20Place", "This place: freehold, glade or the Dreaming (GM)", "fa-tree"], ["uses:glamour", "Glamour", "fa-coins"]]],
+                ["api:c20Epiphany", "Epiphany (gather Glamour)", "fa-star"], ["api:c20Place", "This place: freehold, glade or the Dreaming (GM)", "fa-tree"], ["api:enchant", "Enchant a mortal", "fa-wand-sparkles"], ["api:partedMists", "The Parted Mists", "fa-cloud-sun"], ["uses:glamour", "Glamour", "fa-coins"]]],
             ["Banality", [["api:c20Trigger", "A Banality trigger", "fa-cloud"], ["api:c20Mists", "The Mists (memory)", "fa-smog"], ["api:c20Everyday", "Everyday Banality (GM)", "fa-building"], ["api:oaths", "Oaths sworn and broken", "fa-handshake"], ["uses:banality", "Banality", "fa-cloud-rain"]]],
             ["Danger", [["api:c20Bedlam", "Nightmare and Bedlam", "fa-dizzy"], ["api:c20ColdIron", "Struck by cold iron", "fa-burn"], ["api:hazard", "Fire / fall", "fa-fire"], ["rules:fae", "Changeling rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
@@ -125,7 +125,7 @@ export const MENUS = {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:useArcanos", "Use an Arcanos", "fa-ghost"]]],
             ["Passions and Fetters", [["api:passion", "Passion", "fa-heart"], ["api:fetter", "Fetter", "fa-link"], ["api:memoriam", "Memoriam", "fa-book-dead"], ["uses:pathos", "Pathos", "fa-fire-alt"]]],
-            ["Corpus", [["api:healCorpus", "Heal Corpus", "fa-band-aid"], ["api:caul", "The Caul", "fa-baby"], ["api:soulforge", "Soulforge (a long task)", "fa-hammer"]]],
+            ["Corpus", [["api:healCorpus", "Heal Corpus", "fa-band-aid"], ["api:caul", "The Caul", "fa-baby"], ["api:soulforge", "Soulforge (a long task)", "fa-hammer"], ["api:chainThrall", "Hold a Thrall", "fa-link"]]],
             ["The Shadow", [["api:shadow", "The Shadow (Shadowguide)", "fa-mask"], ["api:shadowWhisper", "Whisper", "fa-comment-dots"], ["api:harrowing", "Harrowing", "fa-skull"], ["api:shadowguide", "Assign the Shadowguide (GM)", "fa-user-secret"]]],
             ["Danger", [["api:hazard", "Fire / fall", "fa-burn"], ["api:hysteria", "Hysteria (GM)", "fa-exclamation-triangle"], ["api:maelstrom", "The Maelstrom (GM)", "fa-wind"], ["rules:wraith", "Wraith rules", "fa-book"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
@@ -152,9 +152,9 @@ MENUS.demon = {
     sections: [
         ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"], ["api:seduction", "Seduction", "fa-heart"]]],
         ["Faith", [["api:demonEvoke", "Evoke (a lore)", "fa-hand-sparkles"], ["api:demonForm", "The apocalyptic form", "fa-dragon"], ["api:demonRevelation", "Revelation (a witness)", "fa-eye"],
-            ["api:demonReap", "Reap Faith", "fa-hand-holding"], ["api:demonThralls", "Thralls and pacts", "fa-users"], ["api:demonHeal", "Heal with Faith", "fa-band-aid"]]],
+            ["api:demonReap", "Reap Faith", "fa-hand-holding"], ["api:demonThralls", "Thralls and pacts", "fa-users"], ["api:demonPact", "Seal a pact (target)", "fa-file-signature"], ["api:demonHeal", "Heal with Faith", "fa-band-aid"]]],
         ["Torment", [["api:demonSin", "A sin (Virtue at 8)", "fa-balance-scale"], ["api:demonKindness", "An act of kindness", "fa-dove"], ["uses:torment", "Torment", "fa-fire"]]],
-        ["Danger", [["api:demonHoly", "Holy ground / sacred object", "fa-cross"], ["api:demonName", "A name is spoken", "fa-comment"], ["api:demonIllusion", "See through illusion", "fa-low-vision"],
+        ["Danger", [["api:demonHoly", "Holy ground / sacred object", "fa-cross"], ["api:demonName", "A name is spoken", "fa-comment"], ["api:knownNames", "Names known", "fa-signature"], ["api:pressName", "Call by a True Name", "fa-bullhorn"], ["api:demonIllusion", "See through illusion", "fa-low-vision"],
             ["api:hazard", "Fire / fall", "fa-burn"], ["rules:demon", "Demon rules", "fa-book"]]],
         ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
     ]
