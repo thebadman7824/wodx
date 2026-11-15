@@ -12,6 +12,7 @@
  *                  success (per), or seconds
  */
 import * as M from "./mage-da-rules.js";
+import { stOutcomes } from "./effects-rules.js";
 
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 
@@ -22,6 +23,12 @@ export const N = (kw = "sense") => ({kw, kind: "note", who: "self"});
 export const S = (kw = "free") => ({kw, kind: "st", who: "self"});
 export const MV = () => ({kw: "move", kind: "move", who: "self"});
 /** Healing: levels per success (lethal then bashing, or aggravated only). */
+/** B5780: an effect WoDX works out itself (a path laid, a memory changed, a vision sent): act names the kind on the effects card. */
+/** B5791: any keyword's own outcome (effects-rules), with its flavour: K("weather", "self", {weather: "fog"}). */
+export const K = (kw, who = "self", ctx = {}) => ({kw, kind: "kw", who, ctx});
+/** B5791: points into a pool (Sekhem, Willpower): per a success, or per once when fixed. */
+export const P = (pool, per = 1, who = "self", o = {}) => ({kw: "charge", kind: "pool", pool, per, who, fixed: !!o.fixed});
+export const A = (kw, act, o = {}) => ({kw, kind: "act", act, who: o.who ?? "one", lasts: o.lasts ?? "scene", ...o});
 export const HL = (per, o = {}) => ({kw: "mend", kind: "heal", per, aggravated: !!o.aggravated, who: o.who ?? "one", ask: !!o.ask});
 
 /** By rote id. */
@@ -102,7 +109,23 @@ export function daOutcomes(rote, successes) {
 export function outcomesOf(spec, base, successes, text = "") {
   const s = n(successes);
   if ( !spec || s < 1 ) return [];
+  // B5780: a chain of keywords: each part lands in turn
+  if ( Array.isArray(spec) ) return spec.flatMap(x => outcomesOf(x, base, s, text));
   switch ( spec.kind ) {
+    case "act": {
+      const d = lastsFor(spec.lasts, s);
+      const {kw, kind, act, who, lasts, ...rest} = spec;
+      return [{key: kw, who, out: {...base, kind: act, ...rest, timed: d.timed, duration: d.label, successes: s, text: `${s} success${s === 1 ? "" : "es"}: ${text}`}}];
+    }
+    case "kw": {
+      const [r] = stOutcomes([spec.kw], {strength: s, step: 2, ctx: spec.ctx ?? {}});
+      if ( !r?.out ) return [];
+      return [{key: spec.kw, who: spec.who, out: {...base, ...r.out, label: base.label ?? r.out.label, source: base.source ?? r.out.source, text: `${s} success${s === 1 ? "" : "es"}: ${r.out.text}`}}];
+    }
+    case "pool": {
+      const pts = spec.fixed ? spec.per : spec.per * s;
+      return [{key: "charge", who: spec.who, out: {...base, kind: "pool", pool: spec.pool, points: pts, text: `${pts} ${spec.pool} point${pts === 1 ? "" : "s"}`}}];
+    }
     case "harm": {
       const lv = spec.fixed ? spec.per : spec.per * s;
       const list = [{key: spec.kw, who: spec.who, ask: !!spec.ask, out: {...base, kind: "damage", levels: lv, type: spec.type, soak: spec.soak,
