@@ -1,7 +1,7 @@
 /**
  * NPCs make their own wonders (B5970 to B5974), in rothenstein-wodx (the testing world), as Gamemaster Test:
  *   await (await import(`/wodx-gate/gatenpcmakers.mjs?${Date.now()}`)).run()
- * Makes a Tremere NPC who knows the Principal Focus of Vitae Infusion and a second NPC Tremere without any ritual; turns
+ * Makes a Tremere NPC who knows the Principal Focus of Vitae Infusion and the Blood Contract, and a second NPC Tremere without any ritual; turns
  * craftKindred on for the run. The clock does not move: the monthly look is forced, and the work is finished through
  * the wodxTaskDone hook the long tasks fire.
  *   1. the monthly look starts the able NPC's work as a long task, with no approval card, and tells the Storyteller
@@ -28,7 +28,8 @@ export async function run() {
     const sys = {"system.advantages.bloodpool.temporary": 10, "system.advantages.willpower.permanent": 6, "system.advantages.willpower.temporary": 5, "system.attributes.intelligence.value": 3, "system.abilities.occult.value": 3};
     const [able, unable] = await G.make(Actor, [{name: "WoDX gate: maker Tremere", type: "Vampire"}, {name: "WoDX gate: no rituals", type: "Vampire"}]);
     await able.update(sys); await unable.update(sys);
-    await able.createEmbeddedDocuments("Item", [power("Thaumaturgy", "wod.types.discipline", 3), power("Principal Focus of Vitae Infusion", "wod.types.ritual")]);
+    // Vitae Infusion is a V20 ritual and the Blood Contract is in both books, so the maker has work in any era
+    await able.createEmbeddedDocuments("Item", [power("Thaumaturgy", "wod.types.discipline", 5), power("Principal Focus of Vitae Infusion", "wod.types.ritual"), power("Blood Contract", "wod.types.ritual")]);
     const tasksOf = a => Object.values(game.actors.get(a.id)?.flags?.[ST]?.tasks ?? {}).filter(t => t?.wonder);
     let started = [];
 
