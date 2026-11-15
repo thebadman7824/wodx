@@ -27,7 +27,9 @@ const COLLECTIONS = ["actors", "items", "scenes", "journal", "tables", "macros",
 export function inOrder(docs, data) {
   const left = [...docs];
   return data.map(d => {
-    const i = left.findIndex(x => x.name === d.name);
+    let i = left.findIndex(x => x.name === d.name);
+    // A document with no name of its own (a Combat) is matched by its place among the nameless (B6202)
+    if ( i < 0 && (d.name ?? "") === "" ) i = left.findIndex(x => (x.name ?? "") === "" || x.documentName === "Combat");
     return i >= 0 ? left.splice(i, 1)[0] : undefined;
   });
 }
