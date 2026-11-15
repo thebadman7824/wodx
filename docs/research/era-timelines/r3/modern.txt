@@ -334,7 +334,7 @@
 1991-5|H|mor|AF|Addis Ababa|war,revolution|The Derg falls|Rebel armies enter Addis Ababa, and Eritrea goes its own way.
 1993-10|H|mor|AF|Mogadishu|battle,war|The battle of Mogadishu|Two American helicopters are shot down in a raid, and a day of street fighting kills eighteen Americans and hundreds of Somalis.
 1994-4|H|mor|AF|Kigali|massacre,war,media|The genocide in Rwanda|After the president's plane is shot down, soldiers, militias and neighbours kill some eight hundred thousand Tutsi and moderate Hutu in a hundred days.
-1994-4|W|wra|AF|Kigali|massacre,occult|The Shadowlands of Rwanda|The house reading has the hundred days drown the African lands of the dead in new wraiths faster than any power there can gather them.
+1994-4|W|vam,wer,wra|AF|Kigali|massacre,occult|The killing in Rwanda|The house reading keeps the hundred days a mortal crime: no Laibon brought them about, though some elders use the chaos to strike at a weakened magaji, and the Wyrm feeds on the killing.
 1994-4|H|mor|AF|Pretoria|law,founding,revolution|South Africa votes|South Africans of every colour queue for days to vote, and Mandela becomes president.
 1995-5|H|mor|AF|Kikwit|plague,death|Ebola in Kikwit|Ebola kills about two hundred and fifty people in a town in Zaire.
 1995-11|H|mor|AF|Port Harcourt|death,law,industry|Saro-Wiwa hanged|Nigeria's military government hangs the writer Ken Saro-Wiwa and eight other Ogoni who campaigned against the oil companies.

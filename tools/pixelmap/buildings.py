@@ -88,3 +88,29 @@ def chapel(rec, x, y, w=8, h=5, name="Chapel", glass=False):
     for px_, py_ in ((x, y), (X1, y), (x, y + h), (X1, y + h)): m.post(px_, py_, 30)
     rec.region(f"{name}-church", name, (x, y, w, h), "church")
     return cx, cy
+
+
+def hut(rec, x, y, w, h, doors=(), windows=(), floor="earth", name="Hut", place="home", glass=False, woodpile=None):
+    """A plain log hut whose contents the map draws itself. doors and windows: (side, offset in squares from the
+    wall's west or north end), side one of n s e w. Draw the floor first with this, the furniture after, then call
+    the returned finish() to put up the walls, doors and windows over it."""
+    m = rec.m; cx, cy = x + w / 2, y + h / 2
+    _floor(m, x, y, w, h, floor)
+
+    def finish():
+        _walls(rec, x, y, w, h)
+        for side, off in doors:
+            if side in "ns":
+                yy = y if side == "n" else y + h; pr.door(m, x + off, yy, x + off + 1, yy, TH, centre=(cx, cy), swing=-1, hinge="a", exterior=True, name=f"Door ({name})")
+            else:
+                xx = x if side == "w" else x + w; pr.door(m, xx, y + off, xx, y + off + 1, TH, centre=(cx, cy), swing=-1, hinge="a", exterior=True, name=f"Door ({name})")
+        for side, off in windows:
+            if side in "ns":
+                yy = y if side == "n" else y + h; pr.window(m, x + off, yy, x + off + .8, yy, th=TH, centre=(cx, cy), glass=glass, name=f"Window ({name})")
+            else:
+                xx = x if side == "w" else x + w; pr.window(m, xx, y + off, xx, y + off + .8, th=TH, centre=(cx, cy), glass=glass, name=f"Window ({name})")
+        for px_, py_ in ((x, y), (x + w, y), (x, y + h), (x + w, y + h)): m.post(px_, py_, 30)
+        if woodpile:
+            lx, ly, lw, lh = woodpile; pr.logpile(m, lx, ly, lw, lh, upright=lh > lw); rec.note("woodpile", lx + lw / 2, ly + lh / 2)
+        rec.region(f"{name}-{place}", name, (x, y, w, h), place)
+    return finish
