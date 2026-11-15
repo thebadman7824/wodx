@@ -57,6 +57,11 @@ must make sense"), and add a row for each new kind of thing.
 | Lantern post | lantern 1 ft on a post | 0.2 across |
 | Hurdle fence | 4 ft high, a hand thick | drawn 0.15 wide so it reads |
 | Market cross steps | 9 ft square | 1.8 by 1.8 |
+| Floor loom | about 9 by 6 ft with its bench | 1.9 by 1.3 |
+| Dye vat in the yard | 8 ft across | 1.6 across |
+| Mash tun | 8 to 9 ft across | 1.7 across |
+| Smith's forge | 8 by 6 ft | 1.6 by 1.2 |
+| Handcart | 4 by 6 ft, shafts beyond | 0.7 by 1.2 |
 
 ## Point of view and colour
 
