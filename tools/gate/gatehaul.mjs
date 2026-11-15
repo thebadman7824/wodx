@@ -22,6 +22,8 @@ const IX = "wodx-interactables";
 const body = (name, {str = 2, dex = 3, sta = 2, athletics = 0, melee = 0} = {}) => ({name, type: "Mortal",
   system: {attributes: {strength: {value: str, total: str}, dexterity: {value: dex, total: dex}, stamina: {value: sta, total: sta}}, abilities: {athletics: {value: athletics}, melee: {value: melee}}}});
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+/** Move a token and wait for it to stand there; -> where it stands (in the result, so a stuck move shows). */
+const moveTo = async (doc, x, y) => { await doc.update({x, y}); await waitFor(() => Math.round(doc.x) === x && Math.round(doc.y) === y, 4000); return [doc.x, doc.y]; };
 const text = html => String(html ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
 
 export async function run() {
@@ -80,15 +82,15 @@ export async function run() {
 
     await G.step("5. dragged and bleeding", async () => {
       await dora.update({"system.health.damage.lethal": 7});
-      await td.update({x: 300, y: 1000});
-      await tc.update({x: 400, y: 1000});
+      const dAt = await moveTo(td, 300, 1000);
+      const cAt = await moveTo(tc, 400, 1000);
       await waitFor(() => hx().fallenOf(td).down, 4000);
       const r = await hx().take(tc, td, "drag");
       await tc.update({x: 800, y: 1000});
       const trail = await waitFor(() => scene.drawings.some(d => d.flags?.[IX]?.trail?.kind === "blood"), 10000);
       const clue = scene.tiles.some(t => t.flags?.[IX]?.clueKind === "trail");
       const behind = Math.round(td.x) === 700 && Math.round(td.y) === 1000;
-      G.ok("5. dragged and bleeding", r?.ok && r.mode === "drag" && trail && clue && behind, {r, at: [td.x, td.y], trail, clue});
+      G.ok("5. dragged and bleeding", r?.ok && r.mode === "drag" && trail && clue && behind, {r, at: [td.x, td.y], dAt, cAt, cira: [tc.x, tc.y], trail, clue});
     });
 
     await G.step("6. knocked down, it drops", async () => {
@@ -103,22 +105,20 @@ export async function run() {
       {x: 1300, y: 700, width: 100, height: 100, texture: {src: "icons/svg/door-exit.svg"}, flags: {[IX]: {hide: true, hideKind: "wardrobe", title: "Gate haul wardrobe"}}},
       {x: 1700, y: 1200, width: 100, height: 100, texture: {src: "icons/svg/padlock.svg"}, flags: {[IX]: {container: true, kind: "safe", title: "Gate haul safe"}}}]);
     await G.step("7. a chest drawn into the map", async () => {
-      await te.update({x: 1200, y: 200});
-      await sleep(400);
+      const e0 = await moveTo(te, 1200, 200);
       const r = await hx().take(te, scene.tiles.get(chest.id), "push");
-      await te.update({x: 1100, y: 200});
+      const e1 = await moveTo(te, 1100, 200);
       const moved = await waitFor(() => Math.round(scene.tiles.get(chest.id)?.x) === 1200, 10000);
       const t = scene.tiles.get(chest.id);
       const pic = !!t?.texture?.src && !!t.flags?.[IX]?.haulHome;
       const floor = scene.tiles.some(x => x.flags?.[IX]?.haulFloorOf === chest.id);
-      G.ok("7. a chest drawn into the map", r?.ok && moved && pic && floor, {r, x: t?.x, src: t?.texture?.src, home: t?.flags?.[IX]?.haulHome, floor});
+      G.ok("7. a chest drawn into the map", r?.ok && moved && pic && floor, {r, x: t?.x, src: t?.texture?.src, home: t?.flags?.[IX]?.haulHome, floor, e0, e1, eli: [te.x, te.y]});
       await hx().release(te);
     });
 
     await G.step("8. a doorway barricaded", async () => {
       const [door] = await scene.createEmbeddedDocuments("Wall", [{c: [1500, 700, 1500, 800], door: 1, ds: 1}]);
-      await te.update({x: 1200, y: 700});
-      await sleep(400);
+      const e0 = await moveTo(te, 1200, 700);
       const r = await hx().take(te, scene.tiles.get(wardrobe.id), "push");
       await te.update({x: 1400, y: 700});
       const blocked = await waitFor(() => !!scene.tiles.get(wardrobe.id)?.flags?.[IX]?.barricade, 10000);
@@ -129,7 +129,7 @@ export async function run() {
       await waitFor(() => shooter?.object && mark?.object);
       const cov = game.modules.get(IX).api.coverOnShot(shooter, mark);
       const still = !!scene.tiles.get(wardrobe.id)?.flags?.[IX]?.barricade;
-      G.ok("8. a doorway barricaded", r?.ok && blocked && still && !!wall && Number(wall.move) > 0 && door?.id && cov.diff >= 2, {r, wall: wall ? {move: wall.move, c: wall.c} : null, cov, still});
+      G.ok("8. a doorway barricaded", r?.ok && blocked && still && !!wall && Number(wall.move) > 0 && door?.id && cov.diff >= 2, {r, e0, wall: wall ? {move: wall.move, c: wall.c} : null, cov, still});
     });
 
     await G.step("9. a safe will not budge for one", async () => {

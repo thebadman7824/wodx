@@ -340,11 +340,27 @@ function cannotHold(doc) {
   return "";
 }
 
+/*
+ * One change at a time: a carrier's move, setting a load down, a status that drops it and a struggle all read and
+ * write the same flags, so they run in turn on the active Storyteller. Code already in the queue calls the *Now forms.
+ */
+let chain = Promise.resolve();
+function serial(fn) {
+  const run = chain.then(fn);
+  chain = run.catch(() => null);
+  return run;
+}
+export const take = (...a) => serial(() => takeNow(...a));
+export const release = (...a) => serial(() => releaseNow(...a));
+export const struggle = (...a) => serial(() => struggleNow(...a));
+export const onMoved = (...a) => serial(() => onMovedNow(...a));
+const onActorChanged = (...a) => serial(() => onActorChangedNow(...a));
+
 /**
  * Take hold. doc: the one taking hold; target: a token (a fallen character) or a tile (a thing); want: "carry" or
  * "drag" for a body, "push" or "haul" for a thing. Active Storyteller only. -> {ok, why, mode}
  */
-export async function take(doc, target, want = "") {
+async function takeNow(doc, target, want = "") {
   doc = docOf(doc); target = docOf(target);
   if ( !isActiveGM() ) return request("take", {who: doc?.uuid, what: target?.uuid, want});
   const why = cannotHold(doc);
@@ -410,7 +426,7 @@ async function lay(body, holder, mode, from) {
  * Let go. onto: null (the ground), or a tile id (a mount or vehicle: aboard; a bed or a table: on it). drop: it fell
  * (knocked down, dazed). -> {ok, why}
  */
-export async function release(doc, {onto = null, drop = false, quiet = false} = {}) {
+async function releaseNow(doc, {onto = null, drop = false, quiet = false} = {}) {
   doc = docOf(doc);
   if ( !isActiveGM() ) return request("release", {who: doc?.uuid, onto});
   const h = holdingOf(doc);
@@ -461,7 +477,7 @@ export async function release(doc, {onto = null, drop = false, quiet = false} = 
 /** Let everyone go of a load (a Storyteller moved it by hand, it was destroyed). */
 async function freeLoad(target, why = "") {
   const rec = haulOf(target);
-  for ( const b of rec?.by ?? [] ) { const d = sync(b.t); if ( d ) await release(d, {quiet: true}); }
+  for ( const b of rec?.by ?? [] ) { const d = sync(b.t); if ( d ) await releaseNow(d, {quiet: true}); }
   if ( why ) await card(target, "Let go", esc(why));
 }
 
@@ -495,7 +511,7 @@ function stairsOnWay(scene, a, b) {
 
 const busy = new Set();
 /** Active Storyteller: a token moved. Its load follows; a body that moved on its own struggles or is let go. */
-export async function onMoved(doc, changes, options = {}, userId = null) {
+async function onMovedNow(doc, changes, options = {}, userId = null) {
   if ( options?.wodxHaul || !isActiveGM() ) return;
   if ( !("x" in (changes ?? {}) || "y" in (changes ?? {})) ) return;
   if ( busy.has(doc.uuid) ) return;
@@ -512,7 +528,7 @@ export async function onMoved(doc, changes, options = {}, userId = null) {
     if ( !me ) { await doc.update(unset(`flags.${MOD}.hauling`)); return; }
     const L = loadOf(target);
     if ( rec.kind === "body" ) {
-      if ( !L.move.budge ) { await release(doc, {quiet: true}); await card(doc, "Too heavy", `<b>${esc(doc.name)}</b> cannot move ${esc(target.name)} (${esc(L.move.note)}) and lets go.`); return; }
+      if ( !L.move.budge ) { await releaseNow(doc, {quiet: true}); await card(doc, "Too heavy", `<b>${esc(doc.name)}</b> cannot move ${esc(target.name)} (${esc(L.move.note)}) and lets go.`); return; }
       const g = sizeOf(doc.parent);
       const from = {x: num(changes.x ?? doc.x) + g / 2, y: num(changes.y ?? doc.y) + g / 2};
       // only the first of a team leads the body; the others keep beside it
@@ -531,7 +547,7 @@ export async function onMoved(doc, changes, options = {}, userId = null) {
       return g;
     };
     if ( !L.move.budge ) {
-      if ( game.users.get(userId)?.isGM ) { await release(doc, {quiet: true}); return; }
+      if ( game.users.get(userId)?.isGM ) { await releaseNow(doc, {quiet: true}); return; }
       return back(`strains at it, but it will not budge: ${L.move.note}.`);
     }
     if ( L.wheels && stairsOnWay(doc.parent, {x: was.x + num(target.width) / 2, y: was.y + num(target.height) / 2}, {x: at.x + num(target.width) / 2, y: at.y + num(target.height) / 2}) )
@@ -576,10 +592,10 @@ async function movedWhileCarried(body, userId) {
     await lay(body, lead, loadOf(body).move.mode, null);
     return card(body, "Still carried", `<b>${esc(body.name)}</b> is ${esc(fallenOf(body).why)} and cannot struggle.`, {whisper: [userId, ...gmIds()]});
   }
-  return struggle(body, {moved: true});
+  return struggleNow(body, {moved: true});
 }
 /** Struggle free: Strength + Athletics at 6 against the carrier's Strength at 6 (B5078). */
-export async function struggle(body, {moved = false} = {}) {
+async function struggleNow(body, {moved = false} = {}) {
   body = docOf(body);
   if ( !isActiveGM() ) return request("struggle", {who: body?.uuid});
   const rec = haulOf(body), lead = sync(rec?.by?.[0]?.t);
@@ -618,7 +634,7 @@ function tokensFor(actor) {
 const DROPS = ["wodx-knockdown", "wodx-dazed", "stun", "prone"];
 const woken = new Set();
 /** Active Storyteller: an actor's statuses or health changed. */
-async function onActorChanged(actor) {
+async function onActorChangedNow(actor) {
   if ( !isActiveGM() || !actor ) return;
   // Only this actor's own tokens, and only one that holds something or is held: every other change costs nothing
   for ( const t of tokensFor(actor) ) {
@@ -627,7 +643,7 @@ async function onActorChanged(actor) {
     // A carrier knocked down, dazed or stunned, or down themselves, drops the load
     if ( holdingOf(t) && (DROPS.some(s => st.has(s)) || fallenOf(t).down) ) {
       const what = holdingOf(t).n;
-      await release(t, {drop: true, quiet: true});
+      await releaseNow(t, {drop: true, quiet: true});
       await card(t, "Dropped", `<b>${esc(t.name)}</b> ${fallenOf(t).down ? "goes down" : "is knocked off balance"} and drops ${esc(what)}.`);
       continue;
     }
