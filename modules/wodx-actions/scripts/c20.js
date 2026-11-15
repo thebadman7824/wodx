@@ -13,6 +13,7 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: c20-rules.js.
  */
+import * as NPW from "./npc-power-rules.js";
 import * as LIM from "./limits.js";
 import * as C from "./c20-rules.js";
 import { floatOver } from "./daysleep.js";
@@ -404,5 +405,16 @@ export function build(ctx) {
           <div class="form-group"><label><input type="checkbox" name="dreaming"${p.dreaming ? " checked" : ""}/> In the Dreaming</label></div></form>`, "Save",
             async fd => scene.setFlag(MOD, "place", { ...p, freehold: !!fd.freehold, dreaming: !!fd.dreaming }));
     }
-    return { placeDialog, healChimerical, info, cantrip, unleash, invoke, trigger: triggerDialog, epiphany, bedlam, coldIron, mists, nightmare, banality, rules: C };
+    /** B5674: the named cantrips an NPC changeling may weave by itself (main.js npcPowers), with the Realm it knows best for a person. */
+    function powersFor(actor) {
+        const i = info(actor);
+        if (i.closed?.all || i.glamour.temp < 1) return [];
+        const realm = ["actor", "fae"].map(r => [r, n(i.realms[r])]).sort((a, b) => b[1] - a[1])[0];
+        const fill = realm && realm[1] > 0 ? { [`r-${realm[0]}`]: String(Math.min(5, realm[1])) } : {};
+        return Object.keys(C.ARTS).flatMap(a => CA.cantripsOf(a, n(i.arts[a]))).filter(k => i.closed?.art !== k.art).map(k => ({
+            use: "useCantrip", field: "power", value: k.id, fill, name: cantripName(k.id), disc: C.ARTS[k.art]?.label ?? k.art, level: k.level, set: "cantrip", id: k.id,
+            keywords: NPW.keysOf(CA.cantripResults(k.id, 3, { willpower: i.willpower.perm, glamour: i.glamour.perm }, { name: cantripName(k.id) })) })).filter(p => p.keywords.length);
+    }
+
+    return { powersFor, placeDialog, healChimerical, info, cantrip, unleash, invoke, trigger: triggerDialog, epiphany, bedlam, coldIron, mists, nightmare, banality, rules: C };
 }
