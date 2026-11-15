@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5850
+Next free block: B5880
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -311,6 +311,7 @@ Next free block: B5850
 | B5820-B5829 | Say or Do: systems that only posted text now act, second batch (used B5820-B5826) | Otherworlds, Senses, Chronicle, Storyteller, NPC |
 | B5830-B5839 | Gate failures on main, round two; run-gate names failed steps (used B5830-B5831) | tools (gates, lanes) |
 | B5840-B5849 | Gates traced by name: gate6b, gateconsensus, gatemounts (used B5840) | tools (gates) |
+| B5870-B5879 | Dates as each land tells them: the player's clock by the local reckoning (used B5870-B5873) | Chronicle, Atmosphere |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9451,3 +9452,23 @@ right, so the step went on before the first move had finished and the move down 
 is now waited out.
 
 Reverse: drop the three set-ups.
+
+## B5870. The clock tells the date in the count of the scene's land (2026-11-15)
+WoDX Chronicle, reckoning-rules.mjs and the new local-reckoning-rules.mjs. The era reckoning house rule told every date "in the year of Our Lord", even in Cairo or Kyoto. reckon() now takes the year kept where the scene stands (church.on() gives its faith and region, by the same order as the holy days of B2537: the scene's pick, the scene's region, the chronicle's pick, the homeland) and tells the date in that count. The Western church year is unchanged. The Storyteller's Chronicle Clock shows a "Players hear" line with the player's words. The opening card of WoDX Atmosphere reads the same rule. The Master Plan and docs/GLOBAL.md listed calendars outside the Western reckoning as open.
+
+Reverse: pass faith "western" to reckon() in clock-app.mjs and in WoDX Atmosphere's openingCard.
+
+## B5871. The counts (2026-11-15)
+House readings of how each people told the year: Orthodox lands from the Creation of the World (the Byzantine year from 1 September, 5508 or 5509 before Christ) until 1700 in Russia and Siberia (Peter's reform) and 1821 in the Aegean, then the Julian date marked Old Style; the Hijra year by the counted calendar of B2537; the Hebrew year from the Creation by the fixed calendar; the Chinese year by the sixty-year cycle of stems and branches with its animal (Korean words in Korea; in Japan the animal before 1868 and the emperor's era from 1868); Tibet by element and animal from Losar, months counted by new moons from it; north India by the Vikrama year from Chaitra with the bright and dark halves; the islands (Nusantara) by the Saka year; the Buddhist south by the year of the Buddha (Buddha year = AD + 543, the Thai count) and the Thai month numbers (the fifth month is Chaitra); a count of their own by the night of the moon and the season by the chronicle's latitude. Nothing in the game books sets these; they are calendar history in WoDX's own words.
+
+Reverse: edit ownYear and ownDay in local-reckoning-rules.mjs.
+
+## B5872. When the civil date takes over (2026-11-15)
+Each land's count leads until it took up the Gregorian date for everyday use (CIVIL_FROM): Russia 1918, the Aegean 1923, the Balkans 1919; Turkey 1926, Egypt 1875, the Levant 1918, the Maghreb 1912, Persia 1925, Central Asia 1920, West and East Africa 1900, Arabia never; China 1912 (told by the years of the Republic until 1949), Korea 1896, Japan 1873 (told by the emperor's era); Tibet 1951; India 1858; the Buddhist south 1889 (told by the year of the Buddha); the Jewish year 1800 (emancipation, a house date). From then the civil date leads and the old count follows in brackets. Persia's solar Hijri year from 1925 is not reckoned; its date shows the civil date with the lunar Hijra in brackets.
+
+Reverse: edit CIVIL_FROM in local-reckoning-rules.mjs.
+
+## B5873. The hour before clocks (2026-11-15)
+Before striking clocks, the hour is told as the land told it: the lands of Islam by the five prayers (dawn, noon, afternoon, sunset and night, from the scene's sunrise and sunset), the lands of the Chinese year by the twelve double hours (the hour of the Rat from 23:00), India and the Buddhist south by the four watches of the day and four of the night, and Tibet, the Jewish year and peoples with a count of their own by the sun's course. The Western and Eastern churches keep the canonical hours. Striking clocks reach the lands outside Christendom in 1700 instead of 1350 (a house reading: clocks were rare outside Europe before then). Railway time from 1840 and the Future Darkness readout stay the same everywhere.
+
+Reverse: set CLOCKS_ABROAD to 1350 and have landTime return null.
