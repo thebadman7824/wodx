@@ -13,6 +13,7 @@ from px import R, T
 import props as pr
 import land
 import wilds as wl
+import dress as dr
 import buildings as B
 from scene import Recorder
 
@@ -25,6 +26,7 @@ trail = [(42.0, 28.0), (43.4, 24.6), (45.2, 21.4), (46.0, 19.4)]               #
 burner = [(5.8, 7.9), (6.4, 10.5), (7.4, 14.6)]
 work = [(13.0, 17.0), (14.4, 24.0), (15.8, 32.5)]
 dt, db = land.ground(m, roads=[(road, 118), (grove, 80), (trail, 18), (burner, 30), (work, 44)], floor="forest")
+dr.snap(m)
 
 # ---- the abandoned charcoal burner's hut, north-west: nobody has lived here for a while ----
 fin = B.hut(rec, 3.4, 3.4, 5.0, 4.2, doors=[("s", 1.9)], name="Abandoned burner's hut")          # it has no window
@@ -39,10 +41,12 @@ pr.bench(m, 3.6, 5.5, .34, 1.4); pr.stool(m, 4.6, 6.8); note("bench", 3.77, 6.2)
 pr.shelf(m, 7.8, 4.9, .44, 1.5, ["jug", "bowl", "pot"]); note("shelf", 8.0, 5.6)
 for lx, ly in ((4.2, 7.2), (7.4, 7.1), (6.9, 4.8)):                                  # dead leaves blown in under the door
     for k in range(14): m.d.rectangle([lx * T + (k * 37) % 60 - 30, ly * T + (k * 23) % 30 - 15, lx * T + (k * 37) % 60 - 27, ly * T + (k * 23) % 30 - 13], fill=R["red"][2] if k % 3 else R["straw"][2])
+rec.roof("burners-hut-roof", "Roof (abandoned burner's hut)", (2.88, 2.88, 6.0625, 5.25), "thatch", smoke=(5.9, 5.5))
 rec.light("Burner's hearth", "Hearth in the burner's hut", (5.42, 5.03, 1, 1), dim=4, bright=1, color="#ff9a40", kind="fire", on=False)
 fin()
 
 # ---- the woodcutters' hut, south-west: eight bunks, a lamp burning ----
+rec.roof("woodcutters-hut-roof", "Roof (woodcutters' hut)", (7.48, 29.48, 8.0625, 6.05), "shingle")
 fin = B.hut(rec, 8.0, 30.0, 7.0, 5.0, doors=[("e", 2.0)], windows=[("n", 3.1), ("s", 3.1), ("w", 2.1)], floor="planks", name="Woodcutters' hut")
 for k, bx in enumerate((9.0, 12.15, 13.4)): pr.bed(m, bx, 30.2, .85, 1.35, head="n", cloth=("blue", "red", "green")[k])
 for k, bx in enumerate((8.6, 9.75, 10.9, 12.05)): pr.bed(m, bx, 33.5, .85, 1.35, head="s", cloth=("green", "blue", "red", "blue")[k])
@@ -120,6 +124,12 @@ def clear(x, y, r):
     return dt[py_, px_] < r * T * .45
 
 
+# ---- dressing (B5746): the huts, the woodcutters' yard, the camp and the wood floor ----
+dr.dress(m, rec, (3.4, 3.4, 5.0, 4.2), "camp", n=9)
+dr.dress(m, rec, (8.0, 30.0, 7.0, 5.0), "home")
+dr.dress(m, rec, (9.0, 28.4, 16.0, 15.6), "yard", n=24); dr.dress(m, rec, (9.0, 28.4, 16.0, 15.6), "joinery", n=10)
+dr.dress(m, rec, (45.4, 1.4, 16.6, 18.4), "camp", n=30)
+dr.dress(m, rec, (0, 0, W, H), "wood", n=170)
 oak = (46.9, 21.6)                                                                   # the lookout's oak over the trail
 shrine(33.0, 23.85)
 land.trees(m, W, H, lambda x, y, r: clear(x, y, r) or math.hypot(x - oak[0], y - oak[1]) < 3.2 + r * .5, n=1500, fir=.5, gap=.6)

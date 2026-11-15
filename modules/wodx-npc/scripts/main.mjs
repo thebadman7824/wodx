@@ -63,7 +63,7 @@ import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.100.0";
+const VERSION = "0.101.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);

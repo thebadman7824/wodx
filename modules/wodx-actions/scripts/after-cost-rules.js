@@ -48,7 +48,7 @@ export function effectMatches(entry, effectName = "", powerName = "") {
 /** The conditions the costs put on (B4924). mods follow WoDX Chronicle: ownDiffVision, noAction; socialDiff is read by Actions' social rolls. */
 export const CONDITIONS = {
   asleep: {id: "asleep", name: "Asleep", img: "icons/svg/sleep.svg", source: "WoDX after-cost", summary: "Deep sleep: no actions until it ends.", mods: {noAction: true, noDefense: true}},
-  ravenous: {id: "ravenous", name: "Ravenous", img: "icons/svg/tankard.svg", source: "W20 p. 177", summary: "Wakes starving: must eat before anything else.", mods: {}},
+  ravenous: {id: "ravenous", name: "Ravenous", img: "icons/svg/tankard.svg", source: "W20 p. 177", summary: "Wakes starving: must eat before anything else; until then +1 difficulty in a fight and on social rolls (WoDX house reading, B6028).", mods: {ownDiff: 1, socialDiff: 1}},
   habits: {id: "animal-habits", name: "Animal habits", img: "icons/svg/pawprint.svg", source: "VtDA p. 192", summary: "The beast's tics show: +1 difficulty on Social rolls (WoDX house reading).", mods: {socialDiff: 1}},
   blurred: {id: "blurred-sight", name: "Blurred sight", img: "icons/svg/blind.svg", source: "W20 Changing Breeds p. 241", summary: "+2 difficulty on sight-based rolls for the scene.", mods: {ownDiffVision: 2}},
   numbed: {id: "numbed", name: "Numbed", img: "icons/svg/frozen.svg", source: "VtDA p. 275", summary: "Dexterity -1 and three-quarter movement for a turn.", mods: {}}

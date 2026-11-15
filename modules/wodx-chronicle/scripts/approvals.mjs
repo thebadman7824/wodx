@@ -1,6 +1,7 @@
 import {esc, emit, isActiveGM, rule, setting, setSetting} from "./util.mjs";
 import {searchBox} from "./search.mjs";
 import * as QR from "./approvals-rules.mjs";
+import {record as recordNight} from "./nightwork.mjs";
 
 /**
  * One approval queue for everything automation (or a player) proposes.
@@ -169,6 +170,32 @@ export async function undoAuto(id) {
   return true;
 }
 
+/**
+ * B6224: the night's work takes back an approval whose kind keeps its own Undo but changed nothing the list could see
+ * (any approved entry, not only one approved on its own). Marks it undone so its card's Undo does nothing after.
+ */
+export async function undoById(id) {
+  if ( !game.user.isGM ) return false;
+  const entry = freshQueue().history.find(h => h.id === id);
+  const h = entry ? handlers.get(entry.type) : null;
+  if ( !entry || entry.verdict !== "approve" || entry.undone || typeof h?.undo !== "function" ) return false;
+  await h.undo(entry);
+  await markTakenBack([id]);
+  return true;
+}
+
+/** Mark approvals taken back by the night's work, so the Undo on their own cards does not take them back twice. */
+export async function markTakenBack(ids = []) {
+  if ( !game.user.isGM || !ids.length ) return 0;
+  return serial(async () => {
+    const q = freshQueue();
+    let n = 0;
+    for ( const e of q.history ) if ( ids.includes(e.id) && !e.undone ) { e.undone = true; n++; }
+    if ( n ) await setSetting("approvals", q);
+    return n;
+  });
+}
+
 /** Turn a standing rule on or off for a type: true approves on sight, "small" only small ones, false none. */
 export async function setAuto(type, on) {
   const a = {...autoRules()};
@@ -202,7 +229,9 @@ export async function decide(id, verdict, note = "", {auto = false} = {}) {
 
   const handler = handlers.get(entry.type);
   try {
-    if ( verdict === "approve" ) await handler?.approve?.(entry);
+    // B6220: what an approval sets going is one piece of the Hand's work, listed in the night's work with its Undo
+    if ( verdict === "approve" ) await recordNight(entry.title, () => handler?.approve?.(entry), {kind: auto ? "auto" : "approved",
+      source: handler?.label ?? entry.type, approvalId: entry.id, handlerUndo: typeof handler?.undo === "function"});
     else await handler?.reject?.(entry);
   } catch (err) {
     console.error(`WoDX | The ${entry.type} handler failed`, err);

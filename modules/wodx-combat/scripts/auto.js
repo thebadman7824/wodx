@@ -79,16 +79,32 @@ export function toYards(distance, units = "ft") {
  * (p. 202); an animal form that doubles running speed doubles the run (p. 241). Wounds (p. 351): Injured halves the
  * run, Wounded walks only, Mauled 3, Crippled 1, Incapacitated 0. woundIndex: levels marked (0 unhurt … 7).
  */
-export function movement({ dexterity = 2, celerity = 0, woundIndex = 0, doubleRun = false } = {}) {
+export function movement({ dexterity = 2, celerity = 0, woundIndex = 0, doubleRun = false, still = "", pace = 1 } = {}) {
     let walk = 7 + celerity, jog = 12 + dexterity + celerity, run = 20 + 3 * dexterity + celerity;
     if (doubleRun) run *= 2;
     let note = "";
+    // B6020: a condition that holds the body (held, staked, torpor, asleep...) leaves no movement at all
+    if (still) return { walk: 0, jog: 0, run: 0, attackAfter: 0, note: `${still}: cannot move` };
+    // B6021: Numbed and the like move at a fraction of their pace (three-quarters, VtDA p. 275)
+    if (pace > 0 && pace < 1) { walk = Math.floor(walk * pace); jog = Math.floor(jog * pace); run = Math.floor(run * pace); note = `${Math.round(pace * 100)}% pace`; }
     if (woundIndex >= 7) { walk = jog = run = 0; note = "Incapacitated: cannot move"; }
     else if (woundIndex === 6) { walk = jog = run = 1; note = "Crippled: crawls a yard"; }
     else if (woundIndex === 5) { walk = jog = run = 3; note = "Mauled: hobbles 3 yards"; }
     else if (woundIndex === 4) { jog = run = walk; note = "Wounded: may only walk"; }
     else if (woundIndex === 3) { run = Math.floor(run / 2); jog = Math.min(jog, run); note = "Injured: half running speed"; }
     return { walk, jog, run, attackAfter: Math.floor(run / 2), note };
+}
+/** B6020: the conditions that hold a body where it is (WoDX Chronicle ids). */
+export const STILL_CONDITIONS = ["held", "immobilized", "staked", "torpor", "incapacitated", "asleep"];
+/** B6021: the conditions that slow a body, and the pace they leave. */
+export const SLOW_CONDITIONS = { numbed: 0.75 };
+/** From the condition ids an actor has: {still: name or "", pace}. names maps id to the shown name. */
+export function holdOf(ids = [], names = {}) {
+    const set = new Set(ids);
+    const s = STILL_CONDITIONS.find(id => set.has(id));
+    let pace = 1;
+    for (const [id, f] of Object.entries(SLOW_CONDITIONS)) if (set.has(id)) pace = Math.min(pace, f);
+    return { still: s ? (names[s] ?? s) : "", pace };
 }
 /** How far she has gone this turn: "walk" | "jog" | "run" | "over". */
 export function pace(yards, m) {

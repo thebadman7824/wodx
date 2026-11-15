@@ -262,7 +262,10 @@ export const ST_TOOLS = [
   {id: "check", label: "Check the systems", icon: "fa-solid fa-stethoscope",
     hint: "Which WoDX parts are running, whether the switch still holds, what waits for a Storyteller and any errors on the seat."},
   {id: "hidden", label: "What is hidden here", icon: "fa-solid fa-user-secret",
-    hint: "The hidden tokens on your scene, with where they stand."}
+    hint: "The hidden tokens on your scene, with where they stand."},
+  // B6226: the night's work, everything the seat and the Hand did by themselves, with one Undo
+  {id: "night", label: "The night's work", icon: "fa-solid fa-clock-rotate-left",
+    hint: "Everything the Hand did by itself since a time you pick, and one Undo for what you tick. It warns where you changed the same thing since."}
 ];
 export const ST_OFF = () => ({on: false, userId: null, at: 0});
 export const normSt = s => ({on: s?.on === true, userId: s?.userId ? String(s.userId) : null, at: Number(s?.at) || 0});

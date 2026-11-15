@@ -77,7 +77,9 @@ export const CONTAINERS = {
   cabinet: {label: "Cabinet or wardrobe", material: "wood"},
   drawers: {label: "Desk or filing drawers", material: "wood"},
   strongbox: {label: "Strongbox", material: "ironbound"},
-  safe: {label: "Safe", material: "steel"}
+  safe: {label: "Safe", material: "steel"},
+  // B6086: loose gear set down on the ground, drawn as a heap; no lid, no lock
+  pile: {label: "Gear on the ground", material: "wood"}
 };
 /** At most this many things in one container. */
 export const MAX_ITEMS = 50;
@@ -858,6 +860,14 @@ export function parseItems(text) {
   return lines.map(l => String(l ?? "").trim()).filter(Boolean).slice(0, MAX_ITEMS);
 }
 
+/** "3 things, about 12 kg": the count, and the weight when WoDX Library has put one on (o.kg, B6087). */
+export function kgPart(o) {
+  const n = o.items.length, c = n === 1 ? "one thing" : `${n} things`;
+  const kg = Number(o.kg);
+  if ( !Number.isFinite(kg) || o.kg === null || o.kg === undefined ) return c;
+  return `${c}, ${kg <= 0 ? "weighing nothing to speak of" : kg < 1 ? "under a kilo" : `about ${kg >= 10 ? Math.round(kg) : Math.round(kg * 10) / 10} kg`}`;
+}
+
 /** A short name for an interactable: "Locked iron-bound door", "Open window". */
 export function nameOf(o, era = {}) {
   if ( o.cover ) return Cover.coverTitle(o);
@@ -901,6 +911,7 @@ export function nameOf(o, era = {}) {
     return o.armed ? `${T.label} (${g})` : `Disarmed ${T.label.toLowerCase()} (${g})`;
   }
   if ( o.breakable && !o.door ) return `${WALLS[o.breakable].label} wall`;
+  if ( o.container && o.kind === "pile" ) return `${o.title || "Gear on the ground"}${o.items.length && !o.taken ? ` (${kgPart(o)})` : ", gone"}`;
   if ( o.container ) {
     const st = o.ds === "open" ? (o.items.length && !o.taken ? "Open" : "Open, empty") : o.ds === "locked" ? "Locked" : "Closed";
     const m = ["wood", "steel"].includes(o.material) || (o.kind === "strongbox" && o.material === "ironbound") ? "" : ` ${MATERIALS[o.material].label.toLowerCase()}`;
@@ -1020,11 +1031,16 @@ function hackOption(o, ch) {
 /** A chest, cabinet, strongbox or safe: open it, take what is inside, pick or force its lock, beat its keypad. */
 function containerOptions(o, ch) {
   const out = [];
+  // B6086: a pile of loose gear is picked up, nothing else
+  if ( o.kind === "pile" ) {
+    if ( o.items.length && !o.taken ) out.push({id: "take", label: `Pick it up (${kgPart(o)})`, roll: null, seconds: TURN, noise: {success: "silent"}, note: o.items.slice(0, 6).join(", ") + (o.items.length > 6 ? ", ..." : "")});
+    return out;
+  }
   const name = CONTAINERS[o.kind].label.toLowerCase().split(" ")[0];
   const isOpen = o.ds === "open", locked = o.ds === "locked";
   const strength = (Number(ch.strength) || 0) + (Number(ch.potence) || 0);
   if ( isOpen ) {
-    if ( o.items.length && !o.taken ) out.push({id: "take", label: `Take what is inside (${o.items.length === 1 ? "one thing" : `${o.items.length} things`})`, roll: null, seconds: TURN, noise: {success: "silent"}});
+    if ( o.items.length && !o.taken ) out.push({id: "take", label: `Take what is inside (${kgPart(o)})`, roll: null, seconds: TURN, noise: {success: "silent"}});
     out.push({id: "close", label: `Close the ${name}`, roll: null, seconds: TURN, noise: {success: "quiet"}});
   } else if ( !locked ) out.push({id: "open", label: `Open the ${name}`, roll: null, seconds: TURN, noise: {success: "quiet"}});
   if ( ((ch.hasKey && o.keyName) || ch.opensFor) && !isOpen ) out.push({id: locked ? "unlock" : "lock", label: ch.hasKey && o.keyName ? (locked ? "Unlock it with the key" : "Lock it with the key") : (locked ? "Unlock it (it opens for you)" : "Lock it (it opens for you)"), roll: null, seconds: TURN, noise: {success: "quiet"}});

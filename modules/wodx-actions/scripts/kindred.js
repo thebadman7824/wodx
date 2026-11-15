@@ -258,7 +258,9 @@ export function build(ctx) {
             if (PE.isPath(p.d) && successes > 0 && p.r && EF.isOn()) { fx = EF.pathPlan(actor, p, successes); body += fx.html; }
             const dur = successes > 0 && !PE.PATH_EFFECTS[p.id] ? K.discDuration(p.t, successes) : null;
             if (dur && chronicle()?.applyTimed && actor.isOwner) {
-                await chronicle().applyTimed(actor, { name: p.n, img: "icons/svg/aura.svg", description: p.e, duration: dur, source: `${p.book ?? "VtDA20"} p. ${p.p}`, key: `disc-${p.id}` });
+                await chronicle().applyTimed(actor, { name: p.n, img: "icons/svg/aura.svg", description: p.e, duration: dur, source: `${p.book ?? "VtDA20"} p. ${p.p}`, key: `disc-${p.id}`,
+                    // B6034: Obfuscate sets the Obfuscated condition, which Senses and targeting read
+                    ...(/obfuscate/i.test(String(p.d ?? "")) ? { condition: "obfuscated" } : {}) });
                 body += `<div class="vta-note">Shown on the token until it ends (${esc(K.DURATION_TEXT[p.t] ?? "")}).</div>`;
             }
             // The Forgetful Mind on a witness: the Masquerade ledger marks them as made to forget

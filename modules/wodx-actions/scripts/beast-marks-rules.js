@@ -138,6 +138,16 @@ export const catchUpXp = dots => Math.max(1, n(dots));
 export const catchUpMonths = years => Math.max(1, Math.ceil(n(years) / 100));
 /** House: while behind, rolls with the Ability are one harder; an old tongue is understood only for the gist (Intelligence + Linguistics, 7). */
 export const BEHIND_DIFFICULTY = 1;
+/**
+ * B6025: the roll effects of waking behind the age, from the longSleep flag: +BEHIND_DIFFICULTY on rolls that use an
+ * Ability still behind ({key} list), until the Storyteller marks it caught up. tags: the roll's tags.
+ */
+export function behindEffects(sleep, tags = []) {
+    const want = new Set((tags ?? []).map(t => String(t).toLowerCase()));
+    if (!sleep?.behind?.length || !want.size) return [];
+    return sleep.behind.filter(b => want.has(String(b.key ?? "").toLowerCase()))
+        .map(b => ({ key: "behind-age", name: `Behind the age (${b.key})`, dice: 0, diff: BEHIND_DIFFICULTY, note: "" }));
+}
 export const OLD_TONGUE_GIST = { attr: "intelligence", ability: "linguistics", difficulty: 7 };
 
 /* ------------------------------------------------------------------ */

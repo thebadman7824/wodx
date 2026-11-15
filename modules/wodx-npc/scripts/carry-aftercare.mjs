@@ -24,7 +24,7 @@ import * as SX from "./secrets-rules.mjs";
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 const IX = "wodx-interactables", ACT = "wodx-actions";
 // WoDX Interactables' container kinds (interact-rules.mjs CONTAINERS), named here so NPC runs without it
-const CONTAINERS = {chest: {label: "Chest"}, box: {label: "Box or casket"}, cabinet: {label: "Cabinet or wardrobe"}, drawers: {label: "Desk or filing drawers"}, strongbox: {label: "Strongbox"}, safe: {label: "Safe"}};
+const CONTAINERS = {chest: {label: "Chest"}, box: {label: "Box or casket"}, cabinet: {label: "Cabinet or wardrobe"}, drawers: {label: "Desk or filing drawers"}, strongbox: {label: "Strongbox"}, safe: {label: "Safe"}, pile: {label: "Gear on the ground"}};
 const FATE = "npc-prisoner-fate", BLOOD = "npc-torpor-blood", TALK = "npc-prisoner-talk";
 
 export function build({MOD, esc, gmIds, chron, factions, routines, people, MEMORY, isActiveGM, carryGoals, st}) {
@@ -186,7 +186,7 @@ export function build({MOD, esc, gmIds, chron, factions, routines, people, MEMOR
     const sc = p?.scene ?? scene;
     const b = p?.region?.shapes?.[0];
     const inside = t => !b || (num(t.x) >= num(b.x) && num(t.x) <= num(b.x) + num(b.width) && num(t.y) >= num(b.y) && num(t.y) <= num(b.y) + num(b.height));
-    const box = [...(sc?.tiles ?? [])].filter(t => CONTAINERS[t.flags?.[IX]?.kind]).sort((a, c) => Number(inside(c)) - Number(inside(a)))[0] ?? null;
+    const box = [...(sc?.tiles ?? [])].filter(t => CONTAINERS[t.flags?.[IX]?.kind] && t.flags[IX].kind !== "pile").sort((a, c) => Number(inside(c)) - Number(inside(a)))[0] ?? null;
     if ( box ) {
       const was = String(box.flags?.[IX]?.items ?? "").split("\n").map(x => x.trim()).filter(Boolean);
       await box.update({[`flags.${IX}.items`]: [...was, ...lines].join("\n"), [`flags.${IX}.taken`]: false});

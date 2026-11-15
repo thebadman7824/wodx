@@ -30,7 +30,12 @@
  *   transfer?: {from, to, amount, need?: {path, min}, cap?}  from/to: "item" or "actor:<dot path>"; amount "successes"
  *                                      moves one a success of the power's roll; cap: an actor dot path whose number the
  *                                      receiving actor trait may not pass (a Sekhem rating, B3709), or a plain number
- *   uses?: n (this power's own limit), gm?: true (only the Storyteller runs it), consume?: true (spends the item)}
+ *   uses?: n (this power's own limit), gm?: true (only the Storyteller runs it), consume?: true (spends the item)
+ *   costs?: [{path, amount, label}]               more the user's actor pays besides spend (Pathos and Willpower to attune, B6101)
+ *   onBotch.add?: true                            the botch adds to the actor trait instead of taking (a Skin Artifact's Angst, B6101)
+ *   look?: {fx}                                   the user's figure plays its casting move with that effect sheet (B6102)
+ *   token?: {set: {alpha, light}} | {restore: true}  the user's token changes on the map, and changes back (a lantern's shadow, B6102)
+ *   place?: {light: {color, bright, dim, label}}  the Storyteller's computer sets a light on the map where the user stands (B6102)}
  * A transfer power gets a reverse button of its own (`<id>~back`) when `back` is set: {label}.
  */
 import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
@@ -86,6 +91,7 @@ export function pathsOf(power = {}) {
   if ( power.transfer ) { add(power.transfer.from); add(power.transfer.to); if ( power.transfer.need ) out.add(power.transfer.need.path); if ( typeof power.transfer.cap === "string" ) out.add(power.transfer.cap); }
   if ( power.drawback ) out.add(power.drawback.path);
   if ( power.onBotch ) out.add(power.onBotch.path);
+  for ( const c of power.costs ?? [] ) if ( c?.path ) out.add(c.path);
   if ( power.roll?.path ) add(power.roll.path);
   return [...out];
 }
@@ -111,6 +117,10 @@ export function blockersOf(power, {flag = {}, values = {}, isGM = false, now = n
   if ( power.spend ) {
     const have = read(values, power.spend.pool);
     if ( have < n(power.spend.amount) ) out.push(`needs ${n(power.spend.amount)} ${refOf(power.spend.pool).on === "item" ? (pool?.label ?? "points") : "points"}, has ${have}`);
+  }
+  for ( const c of power.costs ?? [] ) {
+    const have = read(values, `actor:${c.path}`);
+    if ( c?.path && have < n(c.amount) ) out.push(`needs ${n(c.amount)} ${c.name ?? c.path.split(".").slice(-2, -1)[0] ?? "points"}, has ${have}`);
   }
   if ( power.uses && n(flag?.used?.[power.id]) >= n(power.uses) ) out.push("this power is used up");
   if ( flag?.uses && n(flag.uses.value) <= 0 ) out.push("no charges left");
@@ -188,10 +198,16 @@ export function plan(power, {flag = {}, values = {}, roll = null, max = {}, now 
     set(`actor:${d.path}`, Math.min(cap, from + n(d.amount)));
     lines.push(d.label ?? `${n(d.amount)} added to ${d.path}.`);
   }
+  for ( const c of power.costs ?? [] ) {
+    if ( !c?.path || !n(c.amount) ) continue;
+    const from = read(values, `actor:${c.path}`);
+    set(`actor:${c.path}`, Math.max(0, from - n(c.amount)));
+    lines.push(c.label ?? `${n(c.amount)} ${c.name ?? "points"} paid.`);
+  }
   if ( power.onBotch && roll?.botch && n(power.onBotch.amount) ) {
     const b = power.onBotch, from = read(values, `actor:${b.path}`);
-    set(`actor:${b.path}`, Math.max(0, from - n(b.amount)));
-    lines.push(b.label ?? `${n(b.amount)} lost to the botch.`);
+    set(`actor:${b.path}`, b.add ? Math.min(n(b.max) || 10, from + n(b.amount)) : Math.max(0, from - n(b.amount)));
+    lines.push(b.label ?? `${n(b.amount)} ${b.add ? "gained from" : "lost to"} the botch.`);
   }
   if ( power.uses ) {
     const used = n(flag?.used?.[power.id]);
@@ -216,7 +232,9 @@ export function plan(power, {flag = {}, values = {}, roll = null, max = {}, now 
     item["flags.wodx-library.wonder.spent"] = true;
     lines.push(flag?.spentText ?? "It is spent.");
   }
-  return {item, actor, undo: {item: undoItem, actor: undoActor}, lines, spent, failed};
+  // B6102: what the map and the figure show; a failed roll shows nothing but the attempt
+  const show = failed ? {} : {fx: power.look?.fx ?? null, token: power.token ?? null, place: power.place ?? null};
+  return {item, actor, undo: {item: undoItem, actor: undoActor}, lines, spent, failed, show};
 }
 
 /** The item update that sets its pool, clamped to 0..max (for charging a periapt at a node and the like). */
