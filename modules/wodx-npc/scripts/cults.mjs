@@ -18,6 +18,7 @@
  * Players act by socket; the Storyteller's client writes. Everything is off until the world setting cultsOn is set.
  */
 import * as C from "./cult-rules.mjs";
+import * as DU from "./duty-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export function build(ctx) {
@@ -140,15 +141,15 @@ export function build(ctx) {
     return true;
   }
 
-  async function createFrom(actorId, place, kind, {npc = false, name = ""} = {}) {
+  async function createFrom(actorId, place, kind, {npc = false, name = "", why = null} = {}) {
     const a = game.actors.get(actorId);
     if ( !a ) return null;
     const awe = aweOf(a);
     const p = awe.places[place.key] ?? C.normPlace({key: place.key, name: place.name, pts: C.FORM_AT, touched: 5, themes: Object.fromEntries((C.CULT_KINDS[kind]?.favours ?? []).map((t, i) => [t, 3 - i]))});
-    const cult = C.newCult({id: foundry.utils.randomID(), founder: {id: a.id, name: a.name, npc}, kind, place, awePlace: p, now: now(), year: yearNow(), name});
+    const cult = {...C.newCult({id: foundry.utils.randomID(), founder: {id: a.id, name: a.name, npc}, kind, place, awePlace: p, now: now(), year: yearNow(), name}), why: why ?? C.npcCultKind(whatText(a), yearNow())?.why ?? null};
     await mutate(cur => [...cur, cult]);
     if ( awe.places[place.key] ) { awe.places[place.key] = {...awe.places[place.key], pts: 0}; await saveAwe(a, awe); }
-    await card(`<p><b>${esc(cult.name)}</b>: ${esc(cult.log.at(-1)?.text ?? "")}</p>`);
+    await card(`<p><b>${esc(cult.name)}</b>: ${esc(cult.log.at(-1)?.text ?? "")}</p>${cult.why ? `<p class="wodx-quiet">Why: ${esc(cult.why)}. It ${esc(DU.PURPOSE[cult.kind] ?? "serves its founder")}.</p>` : ""}`);
     Hooks.callAll("wodxCultFormed", {cult, founder: a});
     return cult;
   }
@@ -157,16 +158,91 @@ export function build(ctx) {
     const reg = chron()?.registerApprovalHandler;
     if ( !reg ) return;
     reg(T.form, {label: "A following gathers", approve: async e => { const c = await createFrom(e.data.actorId, e.data.place, e.data.kind); return c ? `${c.name} founded` : "The founder is gone"; }, reject: async () => "No following gathers"});
-    reg(T.npc, {label: "An NPC gathers a cult", approve: async e => { const c = await createFrom(e.data.actorId, e.data.place, e.data.kind, {npc: true}); return c ? `${c.name} founded` : "The NPC is gone"; }, reject: async () => "No cult"});
+    reg(T.npc, {label: "An NPC gathers a cult", approve: async e => { const c = await createFrom(e.data.actorId, e.data.place, e.data.kind, {npc: true, why: e.data.why}); return c ? `${c.name} founded` : "The NPC is gone"; }, reject: async () => "No cult"});
     reg(T.split, {label: "A cult splits", approve: async e => {
       let made = null;
       await mutate(cur => { const i = cur.findIndex(c => c.id === e.data.cultId); if ( i < 0 ) return null; const s = C.split(cur[i], {id: foundry.utils.randomID(), now: now()}); made = s.rival; const out = [...cur]; out[i] = s.rest; out.push(s.rival); return out; });
       return made ? `${made.name} breaks away` : "The cult is gone";
     }, reject: async () => "They hold together"});
     reg(T.raid, {label: "A cult is raided", approve: async e => {
+      // B5694 (e3): the watch or the Church go to the meeting place, and a fight starts with anyone there
+      const c0 = list().find(c => c.id === e.data.cultId);
+      let at = "";
+      try { at = await raidPlace(c0); } catch (er) { console.error(`${MOD} | cult raid`, er); }
       await mutate(cur => cur.map(c => (c.id === e.data.cultId ? C.raided(c, {now: now()}) : c)));
-      return "Raided";
+      return `Raided${at}`;
     }, reject: async () => "Nobody moves yet"});
+  }
+
+  /** e3: send the raiders to the meeting place, near the founder or one of the faithful if they are there. */
+  async function raidPlace(c) {
+    const scene = c?.place?.key ? fromUuidSync(c.place.key) : null;
+    if ( !scene || scene.documentName !== "Scene" ) return "";
+    const ids = new Set([c.founder?.id, ...(c.named ?? []).map(m => m.id)].filter(Boolean));
+    const near = scene.tokens.find(t => ids.has(t.actorId) && !t.hidden) ?? null;
+    const kind = DU.raidForce(yearNow());
+    const made = await st()?.reach?.send?.({kind, scene, near, hostile: !!near, why: `a raid on ${c.name}`, flag: {cult: c.id}});
+    return made?.length ? ` at ${scene.name}: ${made.length} came${near ? `, and found ${near.name}` : ""}` : "";
+  }
+
+  /* B5692 (e1), B5693 (e2): what an NPC's cult does for its founder each week, and the faithful seen on the map */
+  const tagged = sc => { if ( !sc ) return null; const r = [...(sc.regions ?? [])].find(x => x.flags?.[MOD]?.place?.kind); return r?.uuid ?? (sc.flags?.[MOD]?.place?.kind ? sc.uuid : null); };
+  const inAnyCult = id => list().some(c => !c.ended && (c.founder?.id === id || c.named.some(m => m.id === id)));
+  /** Set a Background the cult gives on the founder's sheet; one the Storyteller set higher by hand stands. True when changed. */
+  async function syncBackground(a, name, dots, cultId) {
+    const items = [...(a.items ?? [])].filter(i => i.type === "Feature" && i.system?.type === "wod.types.background" && String(i.name).toLowerCase() === name.toLowerCase());
+    const mine = items.find(i => i.flags?.[MOD]?.fromCult), hand = items.find(i => !i.flags?.[MOD]?.fromCult);
+    if ( hand && (Number(hand.system?.value) || 0) >= dots ) return false;
+    if ( mine ) { if ( (Number(mine.system?.value) || 0) === dots ) return false; await mine.update({"system.value": dots}); return true; }
+    await a.createEmbeddedDocuments("Item", [{name, type: "Feature", system: {type: "wod.types.background", value: dots}, flags: {[MOD]: {fromCult: cultId}}}]);
+    return true;
+  }
+  async function serve(c) {
+    const lines = [], a = founderOf(c);
+    const scene = c.place?.key ? fromUuidSync(c.place.key) : null;
+    // The faithful: named from the mortals of the place, up to six, the first of them ordained as the inner circle allows
+    let cult = c;
+    const want = DU.recruitWanted(cult.members, cult.named.length);
+    if ( want && scene?.documentName === "Scene" ) {
+      const pool = [...scene.tokens].map(t => t.actor).filter(x => x && x.type === "Mortal" && !x.hasPlayerOwner && !x.flags?.[MOD]?.passerbyBase && !inAnyCult(x.id));
+      for ( const m of [...new Map(pool.map(x => [x.id, x])).values()].slice(0, want) ) {
+        const rank = cult.named.filter(x => x.rank === "ordained").length < C.innerRoom(cult.members) ? "ordained" : "initiate";
+        cult = C.ordain(cult, {id: m.id, name: m.name}, rank) ?? C.ordain(cult, {id: m.id, name: m.name}, "initiate") ?? cult;
+      }
+      if ( cult.named.length > c.named.length ) lines.push(`${cult.named.length - c.named.length} of the faithful are now known by name`);
+    }
+    // e2: one evening a week at the meeting place
+    const place = tagged(scene?.documentName === "Scene" ? scene : null), day = DU.worshipDay(cult.id);
+    const R = game.modules.get(MOD)?.api?.routines;
+    for ( const m of cult.named ) { const x = game.actors.get(m.id); if ( x && place && R?.setDuty ) await R.setDuty(x, `cult-${cult.id}`, DU.worshipDuty(place, cult.name, day)); }
+    if ( !a || !cult.founder?.npc ) return {cult, lines};
+    // e1: what the cult is for
+    const sv = DU.cultServes(cult.kind, C.dotsFor(cult.kind, cult.members, cult.ordained));
+    // The cult stands for a Background on the founder's sheet (V20 p. 114 Herd, M20 p. 310 Cult), so the founder's own rolls use it
+    if ( sv.herd && await syncBackground(a, "Herd", sv.herd, cult.id) ) lines.push(`feeds ${a.name} as Herd ${sv.herd}`);
+    if ( sv.dice && await syncBackground(a, "Cult", sv.dice, cult.id) ) lines.push(`adds ${sv.dice} ${sv.dice === 1 ? "die" : "dice"} to ${a.name}'s rites (Cult ${sv.dice})`);
+    if ( sv.bind ) {
+      const SV = game.modules.get(MOD)?.api?.servants;
+      for ( const m of cult.named.filter(x => x.rank === "ordained") ) {
+        const x = game.actors.get(m.id);
+        if ( !x ) continue;
+        if ( sv.bind === "blood" ) { if ( !x.flags?.["wodx-creation"]?.lineage?.bonds?.[a.id] ) { await x.update({[`flags.wodx-creation.lineage.bonds.${a.id}`]: {name: a.name, drinks: 1, last: now()}}); lines.push(`${x.name} drinks of ${a.name}`); } }
+        else if ( SV?.bind && !(SV.records?.(x) ?? []).some(r => r.master === a.id && r.kind === sv.bind) ) { await SV.bind(x, a, sv.bind, {step: 1, quiet: true, flash: false}); lines.push(`${x.name} is bound to ${a.name}`); }
+      }
+    }
+    if ( sv.taint && scene?.documentName === "Scene" ) {
+      const cor = game.modules.get("wodx-otherworlds")?.api?.corruption;
+      if ( cor?.of && cor?.set ) { const p = cor.of(scene); await cor.set(scene, {...p, level: Math.min(10, (Number(p.level) || 0) + sv.taint)}); lines.push(`the Wyrm's taint deepens at ${scene.name}`); }
+    }
+    if ( sv.influence ) {
+      const F = game.modules.get(MOD)?.api?.factions;
+      const fac = (F?.state?.()?.factions ?? []).find(f => f.leader === a.id || (f.members ?? []).includes(a.id));
+      if ( fac && (Number(fac.assets?.influence?.church) || 0) < sv.influence ) {
+        await F.mutate(s2 => { const f = s2.factions.find(x => x.id === fac.id); if ( f ) { f.assets.influence = {...(f.assets.influence ?? {}), church: Math.min(5, (Number(f.assets.influence?.church) || 0) + 1)}; } return {state: s2}; });
+        lines.push(`${fac.name} gains a dot of Influence over the faithful`);
+      }
+    }
+    return {cult, lines};
   }
 
   async function card(html) {
@@ -202,6 +278,7 @@ export function build(ctx) {
         }
         if ( c.ended ) break;
       }
+      if ( !c.ended && due ) { try { const r = await serve(c); c = r.cult; lines.push(...r.lines.map(l => `${l[0].toUpperCase()}${l.slice(1)}.`)); } catch (er) { console.error(`${MOD} | cult serves`, er); } }
       if ( quiet ) c = C.quietYears(c, quiet, {undying: undying(founderOf(c)), founderGone: gone, now: t});
       next.push(c);
       if ( lines.length ) cards.push(`<p><b>${esc(c.name)}</b>: ${lines.map(esc).join(" ")}</p>`);
@@ -241,7 +318,7 @@ export function build(ctx) {
       if ( !hit || Math.random() >= C.NPC_FOUND_CHANCE ) continue;
       const tok = tokenOf(a), place = placeOf(tok);
       if ( !place ) continue;
-      await chron()?.propose?.({type: T.npc, key: `cult-npc:${a.id}`, title: `${a.name} gathers ${C.CULT_KINDS[hit.kind].word(y)}`, detail: `${hit.why}, at ${place.name}.`, data: {actorId: a.id, place, kind: hit.kind}});
+      await chron()?.propose?.({type: T.npc, key: `cult-npc:${a.id}`, title: `${a.name} gathers ${C.CULT_KINDS[hit.kind].word(y)}`, detail: `${hit.why}, at ${place.name}.`, data: {actorId: a.id, place, kind: hit.kind, why: hit.why}});
       n++;
     }
     return n;
@@ -456,5 +533,5 @@ export function build(ctx) {
     return dlg;
   }
 
-  return {registerSettings, registerHandler, hooks, open, addDeed, preach, gather, ask, ordain, dissolve, runTurns, npcMonth, list, aweOf, audience, kindFor, lineOf, rules: C, types: T};
+  return {serve, raidPlace, registerSettings, registerHandler, hooks, open, addDeed, preach, gather, ask, ordain, dissolve, runTurns, npcMonth, list, aweOf, audience, kindFor, lineOf, rules: C, types: T};
 }

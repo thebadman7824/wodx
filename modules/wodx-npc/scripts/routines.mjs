@@ -27,6 +27,7 @@ import * as AN from "./animal-rules.mjs";
 import * as MR from "./mortal-rules.mjs";
 import * as FW from "./follow-rules.mjs";
 import * as HN from "./hunt-npc-rules.mjs";
+import * as DU from "./duty-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export const REACTION = "reaction";
@@ -150,7 +151,16 @@ export function build(ctx) {
     const faith = (own && r.faith) || res.faith || here?.faith || "western";
     return {faith, region: here?.region ?? null};
   }
-  const blocksFor = actor => { const y = yearNow(); return R.blocksOf(routineOf(actor), profileFor(actor).template, y, keepOf(actor, y)); };
+  // B5692-B5698: duties (worship, a master's haven, a faction's watch) laid over the NPC's own hours
+  const blocksFor = actor => { const y = yearNow(); return DU.withDuties(R.blocksOf(routineOf(actor), profileFor(actor).template, y, keepOf(actor, y)), flag(actor, "duties"), game.time?.worldTime ?? 0); };
+  /** Give an NPC a duty (or take it away with null); an NPC with no routine gets its kind's own hours to lay it on. */
+  async function setDuty(actor, key, duty) {
+    if ( !game.user.isGM || !actor || actor.hasPlayerOwner ) return null;
+    if ( !duty ) return flag(actor, "duties")?.[key] ? actor.update({[`flags.${MOD}.duties.-=${key}`]: null}) : null;
+    const up = {[`flags.${MOD}.duties.${key}`]: duty};
+    if ( !routineOf(actor)?.on ) up[`flags.${MOD}.routine`] = {...(routineOf(actor) ?? {}), on: true, roles: routineOf(actor)?.roles ?? {}};
+    return actor.update(up);
+  }
   // The hidden passer-by actors (0.27.0) keep no routine and join no household or faction
   const allActors = () => (game.actors?.contents ?? [...(game.actors?.values?.() ?? [])]).filter(a => !a.flags?.[MOD]?.passerbyBase);
   const routineNpcs = () => allActors().filter(a => !a.hasPlayerOwner && routineOf(a)?.on);
@@ -1203,7 +1213,10 @@ export function build(ctx) {
       await goTo(tok, prey, null);
       caught = true; vessel = prey; how = `leads ${prey.name} aside`;
     } else if ( F?.hunt ) {
-      const r = await F.hunt(actor, w.place, {method: HN.bestMethod(F.huntPools?.(actor) ?? {}), hours: HN.huntHours(w.since, t)});
+      // B5695 (g3): a servant who attends brings a vessel (a blood cult is Herd on the sheet already, B5692)
+      const attended = routineNpcs().some(s => Object.keys(flag(s, "duties") ?? {}).some(k => k === `serve:${actor.id}`));
+      const extra = attended ? DU.VESSEL_DIE : 0;
+      const r = await F.hunt(actor, w.place, {method: HN.bestMethod(F.huntPools?.(actor) ?? {}), hours: HN.huntHours(w.since, t), extra});
       caught = !!r?.caught; botch = !!r?.botch;
       how = caught ? "finds prey" : botch ? "botches the hunt" : "finds nothing";
     } else return null;
@@ -1708,7 +1721,7 @@ export function build(ctx) {
     });
   }
 
-  return {goTo, goAway, resolveHunt, checkChallenges, releaseHostages, walkBeats, onTrigger, raiseAlarmFull, carryAlarm, deliverCarries, undoCarry, noteMark, repairMarks, undoRepairCard, raiseAlarm, alertOf, alertLevel, onMapEvent, checkAlerts, undoAlarmCard, syncZones, alertRules: AR, registerSettings, registerBehavior, hooks, tick, idle, planScene, listPlaces, routineOf, whereOf, blocksFor, keepOf, routineNpcs, describer, loadCalendar,
+  return {setDuty, goTo, goAway, resolveHunt, checkChallenges, releaseHostages, walkBeats, onTrigger, raiseAlarmFull, carryAlarm, deliverCarries, undoCarry, noteMark, repairMarks, undoRepairCard, raiseAlarm, alertOf, alertLevel, onMapEvent, checkAlerts, undoAlarmCard, syncZones, alertRules: AR, registerSettings, registerBehavior, hooks, tick, idle, planScene, listPlaces, routineOf, whereOf, blocksFor, keepOf, routineNpcs, describer, loadCalendar,
     watchFoes, onAttitude, applyItems, undoSnap, acceptRoutineCard, undoRoutineCard, react, doReaction, acceptReactionCard, undoReactionCard, checkStays, matchOwners,
     editRoutine, openPlaces: () => PlacesAppClass().open(), PlacesAppClass, modeOf, downState, entranceOf, freeCellsIn, walkTo, reactionType, bookNow, noticeBy};
 }

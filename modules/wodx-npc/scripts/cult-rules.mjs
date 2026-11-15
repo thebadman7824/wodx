@@ -288,6 +288,7 @@ export function normCult(c = {}) {
     attention: Math.max(0, n(c.attention)), quiet: Math.max(0, Math.round(n(c.quiet))), lastTurn: n(c.lastTurn), band: EXPOSURE_BANDS.some(b => b.key === c.band) ? c.band : "hidden",
     ended: c.ended ? {at: n(c.ended.at), why: str(c.ended.why, 200)} : null, parent: c.parent ? str(c.parent, 40) : null,
     faction: c.faction ? str(c.faction, 40) : null,
+    why: c.why ? str(c.why, 200) : null,
     log: (Array.isArray(c.log) ? c.log : []).slice(-40).map(e => ({at: n(e.at), text: str(e.text, 240)}))
   };
 }

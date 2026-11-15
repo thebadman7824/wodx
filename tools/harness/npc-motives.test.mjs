@@ -158,3 +158,63 @@ test("part two is wired to the world", () => {
   for ( const k of ["boon", "seat", "venture", "kin", "violence"] ) assert.match(m, new RegExp(`case "${k}"`), `the ${k} move acts`);
   assert.match(w, /knowAndAct\(/, "recognition acts");
 });
+
+// Part three: e1-e3, g3-g6 (B5692-B5698)
+const DU = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/duty-rules.mjs")));
+const FR = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/fates-rules.mjs")));
+
+test("duties lie over the NPC's own hours and lapse", () => {
+  const own = [{from: 0, to: 24, place: "home", activity: "rest"}];
+  const d = DU.withDuties(own, {a: {from: 19, to: 23, place: "p", activity: "pray"}, b: {place: "q", activity: "patrol", until: 100}}, 50);
+  assert.equal(d.length, 3); assert.equal(d[0].duty, true); assert.equal(d.at(-1).place, "home");
+  assert.equal(DU.withDuties(own, {b: {place: "q", activity: "patrol", until: 100}}, 100).length, 1, "a duty past its time lapses");
+  assert.ok(!("until" in d[1]), "the block carries no bookkeeping");
+});
+
+test("e1-e3: what a cult does, when it meets, who raids it", () => {
+  assert.deepEqual(DU.cultServes("blood", 3), {herd: 3, bind: "blood", dice: 0, taint: 0, influence: 0});
+  assert.equal(DU.cultServes("thralls", 2).bind, "pact");
+  assert.equal(DU.cultServes("cult", 2).dice, 2);
+  assert.equal(DU.cultServes("wyrm", 1).taint, 1);
+  assert.equal(DU.cultServes("sect", 2).influence, 2);
+  for ( const k of ["blood", "thralls", "cult", "wyrm", "sect", "netaru", "kuei"] ) assert.ok(DU.PURPOSE[k], `a purpose for ${k}`);
+  const day = DU.worshipDay("c1");
+  assert.ok(day >= 0 && day <= 6); assert.equal(DU.worshipDay("c1"), day, "the same night each week");
+  assert.deepEqual(DU.worshipDuty("p", "The Circle", 3).days, [3]);
+  assert.equal(DU.recruitWanted(20, 2), 4); assert.equal(DU.recruitWanted(3, 0), 3);
+  assert.equal(DU.raidForce(1400), "purge"); assert.equal(DU.raidForce(1890), "patrol");
+});
+
+test("g3, g4, g6: servants, fetching, a faction's guard", () => {
+  assert.equal(DU.servantDuty("blood", "haven", "vampire").when, "day", "a ghoul keeps the haven by day");
+  assert.equal(DU.servantDuty("pact", "home", "demon").from, 18, "a thrall comes in the evening");
+  assert.equal(DU.servantDuty("blood", null), null);
+  assert.equal(DU.fetchAnswer({person: true, step: 0}), "comes");
+  assert.equal(DU.fetchAnswer({person: true, step: -1}), "refuses");
+  assert.equal(DU.fetchAnswer({person: false}), "carried");
+  assert.ok(DU.REFUSALS.includes(DU.refusal("x")));
+  const g = DU.guardDuty("p", DU.guardUntil(0));
+  assert.equal(g.activity, "patrol"); assert.equal(g.until, 7 * 86400);
+});
+
+test("g5: an Embrace has a reason, and some are made without leave", () => {
+  assert.equal(DU.embraceReason("sabbat", "", 0.1), "pack");
+  assert.equal(DU.embraceReason("camarilla", "Gallant", 0.2), "love", "the Nature leans");
+  for ( const s of ["camarilla", "sabbat", "anarch", "independent", "court", "none", "unknown"] ) assert.ok(DU.EMBRACE_REASONS[DU.embraceReason(s, "", 0.77)], s);
+  assert.equal(DU.withoutLeave("camarilla", 0.1, ""), true);
+  assert.equal(DU.withoutLeave("camarilla", 0.1, "Prince of Prague"), false, "a Prince needs no leave");
+  assert.equal(DU.withoutLeave("sabbat", 0.1), false);
+  assert.equal(FR.EMBRACE_REASONS.pack, DU.EMBRACE_REASONS.pack);
+});
+
+test("part three is wired to the world", () => {
+  const r = src("modules/wodx-npc/scripts/routines.mjs"), c = src("modules/wodx-npc/scripts/cults.mjs");
+  assert.match(r, /DU\.withDuties\(R\.blocksOf/, "duties reach the routine");
+  assert.match(c, /await serve\(c\)/, "the weekly turn serves the founder");
+  assert.match(c, /syncBackground\(a, "Herd"/, "a blood cult is Herd on the sheet");
+  assert.match(c, /raidPlace\(c0\)/, "a raid goes to the meeting place");
+  assert.match(src("modules/wodx-npc/scripts/servant-world.mjs"), /attendAll\(masters\)/, "servants attend");
+  assert.match(src("modules/wodx-npc/scripts/orders.mjs"), /DU\.fetchAnswer/, "a fetch brings back");
+  assert.match(src("modules/wodx-npc/scripts/fates-rules.mjs"), /embraceReason\(/, "an Embrace has a reason");
+  assert.match(src("modules/wodx-npc/scripts/factions.mjs"), /postGuard\(c\)/, "a guard is posted");
+});

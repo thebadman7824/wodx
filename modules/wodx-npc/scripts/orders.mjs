@@ -12,6 +12,7 @@
  * to the approval queue instead. While an order holds, the NPC's routine is paused (reason "order"). Followers walk
  * after their leader stops moving, on the Storyteller's client only; players' clients do nothing but send the request.
  */
+import * as DU from "./duty-rules.mjs";
 import * as O from "./order-rules.mjs";
 import * as SV from "./servants.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
@@ -302,6 +303,9 @@ export function build(ctx) {
           if ( !o || o.leader !== leaderDoc.actorId || !(o.kind === "follow" || (o.kind === "fetch" && o.stage === "back")) ) continue;
           if ( routines?.downState?.(t.actor) ) continue;
           await stepBeside(t, leaderDoc);
+          // g4: a thing it fetched comes along in its hands
+          const carried = o.kind === "fetch" && o.carry ? leaderDoc.parent.tokens.get(o.carry) : null;
+          if ( carried ) await carried.update({x: t.x, y: t.y});
         }
       } catch (e) { console.error(`${MOD} | orders`, e); }
     }, 600));
@@ -312,7 +316,26 @@ export function build(ctx) {
     const target = scene.tokens.get(o?.target);
     if ( target && tok ) await stepBeside(tok, target);
     await npc.update({[`flags.${MOD}.order.stage`]: "back"});
-    await ChatMessage.create({content: `<div class="wodx-card wnpc-order"><p><b>${esc(npc.name)}</b> reaches ${esc(target?.name ?? "the one pointed at")}. What it learns or brings back is the Storyteller's to say.</p></div>`,
+    // B5696 (g4): a person who regards the master well enough comes back too; one who does not says so; a thing is carried
+    const master = o?.leader ? game.actors.get(o.leader) : null;
+    const person = !!target?.actor && !!target.actor.system?.attributes;
+    let step = 0;
+    try { step = Number(attitude?.()?.of?.(target?.actor, master)?.step) || 0; } catch (e) { step = 0; }
+    const answer = target ? DU.fetchAnswer({person, step}) : null;
+    let said = `reaches ${target?.name ?? "the one pointed at"}`;
+    if ( answer === "comes" && target.actor && !target.actor.hasPlayerOwner && master ) {
+      await target.actor.update({[`flags.${MOD}.order`]: {kind: "follow", leader: master.id, fetched: true, since: game.time.worldTime}});
+      said += ` and brings them back`;
+    } else if ( answer === "comes" ) said += ` and asks them to come`;
+    else if ( answer === "refuses" ) {
+      const line = DU.refusal(`${target.id}:${npc.id}`);
+      try { await game.modules.get(MOD)?.api?.talk?.say?.(target, line); } catch (e) { /* no bubbles */ }
+      said += `, who will not come: "${line}"`;
+    } else if ( answer === "carried" ) {
+      await npc.update({[`flags.${MOD}.order.carry`]: target.id});
+      said += ` and picks it up`;
+    }
+    await ChatMessage.create({content: `<div class="wodx-card wnpc-order"><p><b>${esc(npc.name)}</b> ${esc(said)}.</p></div>`,
       whisper: gmIds(), speaker: {alias: "An order"}});
     const l = leaderToken(npc, scene);
     if ( l ) queueFollow(l);
@@ -499,6 +522,6 @@ export function build(ctx) {
     });
   }
 
-  return {registerSettings, hooks, registerHandler, give, send, clear, openOrders, followersFor, orderOf, servesOf, stepBeside, sentries, loyaltyFor,
+  return {doFetch, registerSettings, hooks, registerHandler, give, send, clear, openOrders, followersFor, orderOf, servesOf, stepBeside, sentries, loyaltyFor,
     onTaskDone, onChase, onBreach, driftFor, setHelper, rules: O};
 }
