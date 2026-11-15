@@ -21,7 +21,8 @@
  *   8. the long dead go by themselves: with "Archive the long dead by itself" at ten years, someone dead eleven years
  *      leaves the world when the clock moves a day (the kit puts the clock back), the compendium entry is there, and a
  *      journal's link points at it; brought back, the link points at the world again
- *   9. Show all wears the same frame, shade and text colour as the other WoDX buttons, on light and dark sheets
+ *   9. Show all and the Nature row on a system sheet wear the same frame, shade and text colour as the other WoDX
+ *      buttons, on light and dark sheets
  *  10. clean up (the kit)
  * Result: Data/wodx-gate/gatetruthsheets-result.json.
  */
@@ -254,15 +255,16 @@ export async function run() {
         const host = document.createElement("div");
         host.className = `wod20 wod-sheet${dark ? " wod-theme-dark" : ""}`;
         host.style.cssText = "position:fixed;left:-2000px;top:0;";
-        host.innerHTML = `<div class="wodx-quickrolls"><button type="button">Roll</button></div><button type="button" class="wodx-showall">Show all</button>`;
+        host.innerHTML = `<div class="wodx-quickrolls"><button type="button">Roll</button></div><button type="button" class="wodx-showall">Show all</button><div class="wodx-actions-row wodx-system-row"><button type="button" class="wodx-roll">Nature</button></div>`;
         document.body.append(host);
         const pick = el => { const c = getComputedStyle(el); return {bg: c.backgroundColor, border: c.borderTopColor, width: c.borderTopWidth, radius: c.borderTopLeftRadius, color: c.color}; };
-        const out = {quick: pick(host.querySelector(".wodx-quickrolls button")), all: pick(host.querySelector(".wodx-showall"))};
+        const out = {quick: pick(host.querySelector(".wodx-quickrolls button")), all: pick(host.querySelector(".wodx-showall")), nature: pick(host.querySelector(".wodx-system-row button"))};
         host.remove();
         return out;
       };
       const light = look(false), dark = look(true);
-      const same = o => ["bg", "border", "width", "radius", "color"].every(k => o.quick[k] === o.all[k]);
+      // B6484: the Nature row on the system's own sheets wears the same look
+      const same = o => ["bg", "border", "width", "radius", "color"].every(k => o.quick[k] === o.all[k] && o.quick[k] === o.nature[k]);
       G.ok("9. Show all wears the WoDX button's frame and colours", same(light) && same(dark) && dark.all.bg !== "rgba(0, 0, 0, 0)", {light, dark});
     });
   } catch (e) {
