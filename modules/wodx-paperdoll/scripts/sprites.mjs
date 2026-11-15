@@ -386,7 +386,8 @@ export function startSprites() {
   Hooks.on("wodxInteractableWorked", onWorked);
   Hooks.on("createChatMessage", onSpoken);
   loadOwn();
-  globalThis.setInterval?.(() => { settle().catch(e => console.warn(`${MOD} | routine poses`, e)); }, 2500);
+  const every = globalThis.setInterval?.(() => { settle().catch(e => console.warn(`${MOD} | routine poses`, e)); }, 2500);
+  every?.unref?.();   // under Node (the test stand-in) the timer must not keep the process alive
   Hooks.on("canvasReady", () => { states.clear(); glows.clear(); strides.clear(); acts.clear();
     // whoever lay fallen or dead when the scene was last seen still lies there
     for ( const t of canvas.tokens?.placeables ?? [] ) { const a = t.document.flags?.[MOD]?.act, n = t.document.flags?.[MOD]?.sprite;
