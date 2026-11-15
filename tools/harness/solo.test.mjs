@@ -492,9 +492,9 @@ test("arrival: the steps, the lines and a typed name", () => {
 
 test("arrival.mjs: the seat makes the character, assigns it, places its token and brings the player there", async () => {
   const src = readFileSync(join(root, "modules/wodx-solo/scripts/arrival.mjs"), "utf8");
-  for ( const k of ["\"ask.arrive\"", "\"ask.arrive.make\"", "\"arrive.pick\"", "\"arrive.ready\"", "pullToScene", "wodxSolo.arrived", "api?.wizard"] ) assert.ok(src.includes(k), `arrival.mjs has ${k}`);
+  for ( const k of ["\"ask.arrive\"", "\"ask.arrive.make\"", "\"arrive.pick\"", "\"arrive.ready\"", "pullToScene", "wodxSoloArrived", "api?.wizard"] ) assert.ok(src.includes(k), `arrival.mjs has ${k}`);
   const guide = readFileSync(join(root, "modules/wodx-chronicle/scripts/player-guide.mjs"), "utf8");
-  assert.ok(/soloWaits\(\)\s*\)\s*\{\s*Hooks\.once\("wodxSolo\.arrived"/.test(guide), "the first-night tour waits for the token in solo play");
+  assert.ok(/soloWaits\(\)\s*\)\s*\{\s*Hooks\.once\("wodxSoloArrived"/.test(guide), "the first-night tour waits for the token in solo play");
   assert.ok(guide.indexOf("soloWaits()") < guide.indexOf("put({offered: true})"), "the tour is not marked offered before the token is there");
   const panel = readFileSync(join(root, "modules/wodx-solo/scripts/panel.mjs"), "utf8");
   assert.ok(panel.includes("ARRIVE_UI.html?.()") && panel.includes("arrive: () => ARRIVE_UI.open?.()"), "the panel offers Make my character");

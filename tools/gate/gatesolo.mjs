@@ -263,7 +263,7 @@ async function player(ids) {
   await step("9f. arrival", async () => {
     if ( !S()?.arrival ) return ok("9f. arrival", false, {error: "no arrival in this version"});
     let got = null;
-    Hooks.once("wodxSolo.arrived", d => { got = d; });
+    Hooks.once("wodxSoloArrived", d => { got = d; });
     S().panel.ask("ask.arrive");
     const came = await until(() => !!got, 10000);
     const el = foundry.applications.instances?.get?.("wodx-solo-panel")?.element;

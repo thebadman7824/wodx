@@ -11,7 +11,7 @@
  *                it, its token is linked) and assigns it to them. The character wizard then opens on it.
  *   the token    a character with no token on any scene gets one at the landing's way in; the seat brings the player
  *                to the token's scene, and the player's screen centres on it.
- * Once the token is there, Hooks "wodxSolo.arrived" fires on the player's client; Chronicle's first-night tour waits
+ * Once the token is there, Hooks "wodxSoloArrived" fires on the player's client; Chronicle's first-night tour waits
  * for it in solo play, so its steps (move, roll and the rest) have a token to work on.
  *
  *   setting wodx-solo.landing  String   the scene chosen as the landing
@@ -148,7 +148,7 @@ async function ready({actorId, sceneId, tokenId, made} = {}) {
   const actor = game.actors.get(actorId);
   if ( made && actor ) game.modules.get("wodx-creation")?.api?.wizard?.(actor);
   if ( SoloPanel && foundry.applications.instances?.get?.("wodx-solo-panel")?.rendered ) SoloPanel.open();
-  Hooks.callAll("wodxSolo.arrived", {actor, sceneId, tokenId, made: !!made});
+  Hooks.callAll("wodxSoloArrived", {actor, sceneId, tokenId, made: !!made});
 }
 
 /* ------------------------------------------------------------------ */

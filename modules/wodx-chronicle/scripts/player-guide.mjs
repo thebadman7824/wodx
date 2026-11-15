@@ -80,7 +80,7 @@ async function offer() {
   const g = get();
   if ( !on || g.offered ) return;
   // In solo play the tour waits until the player's token is on the map: WoDX Solo makes it and says so (B5144)
-  if ( soloWaits() ) { Hooks.once("wodxSolo.arrived", () => offer()); return; }
+  if ( soloWaits() ) { Hooks.once("wodxSoloArrived", () => offer()); return; }
   await put({offered: true});
   const yes = await DialogV2.confirm({classes: ["wodx", "wodx-dialog"], window: {title: "Your first night"}, rejectClose: false,
     content: "<p>A short tour of six steps: your sheet, a roll, moving, the chat, asking the Storyteller and the X-card. Each one lights up where to look. Take it now?</p><p class=\"wodx-quiet\">You can take it later from the question-mark button, What can I do now?</p>",
