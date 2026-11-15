@@ -10,7 +10,7 @@
  *   4. a fifth-level power: once a scene by the house rule, and its user is Drained (+1 difficulty) until the scene ends
  *   5. a power window greys out the used power and says why
  *   6. an NPC's powers carry uses (attack, hold, ...) and whether they show
- *   7. (added with the NPC choice: an obvious power waits while mortals watch, and is used when cornered)
+ *   7. the NPC's choice: an obvious power waits while mortals watch, and is used when the NPC is cornered
  *   8. the NPC rolls its chosen power by itself: a card in chat, no window left open
  *   9. after-costs: Blinding Spittle's blindness ends and Blurred sight follows for the scene
  *  10. after-costs: Survivor wears off and its werewolf falls Asleep (the token dimmed)
@@ -102,8 +102,18 @@ export async function run() {
         {n: powers.length, sample: powers.slice(0, 6).map(p => ({name: p.name, uses: p.uses, obvious: p.obvious}))});
     });
 
+    await G.step("7. obvious powers wait while mortals watch, unless cornered", async () => {
+      const PP = await import(`/modules/wodx-npc/scripts/power-pick-rules.mjs?${Date.now()}`);
+      const st = {hasTarget: true, wounds: 0, boosted: true, mortalsSee: true};
+      const watched = PP.pick(powers, st), cornered = PP.pick(powers, {...st, cornered: true});
+      const anyObvious = powers.some(p => p.obvious && p.uses.some(u => ["attack", "hold"].includes(u)));
+      G.ok("7. obvious powers wait while mortals watch, unless cornered", !!watched && !watched.power.obvious && (!anyObvious || !!cornered),
+        {watched: watched?.power?.name, cornered: cornered?.power?.name, anyObvious});
+    });
+
     await G.step("8. the NPC rolls its chosen power by itself", async () => {
-      const pk = {power: powers.find(p => p.uses.includes("attack") || p.uses.includes("hold")) ?? powers[0], use: "attack"};
+      const PP = await import(`/modules/wodx-npc/scripts/power-pick-rules.mjs?${Date.now()}`);
+      const pk = PP.pick(powers, {hasTarget: true, wounds: 0, boosted: true});
       const since = Date.now();
       const open = () => Object.values(foundry.applications.instances ? Object.fromEntries(foundry.applications.instances) : {})
         .filter(a => a.element?.isConnected && /Discipline/i.test(a.title ?? a.options?.window?.title ?? ""));
