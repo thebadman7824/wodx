@@ -51,12 +51,13 @@ export function gate(name, {stepTimeout = 30000} = {}) {
   const ok = (step, pass, detail = {}) => { R.steps.push({name: step, pass: !!pass, ...detail}); return !!pass; };
 
   /** A step that throws, or waits on a window or a roll for longer than stepTimeout, fails instead of holding the lane;
-   * windows it opened are closed. */
-  async function step(stepName, fn) {
+   * windows it opened are closed. A step that must wait on slow world work (the tables catching up after a lane reset)
+   * may pass its own {timeout}. */
+  async function step(stepName, fn, {timeout = stepTimeout} = {}) {
     const open = () => [...new Set([...(foundry.applications.instances?.values?.() ?? []), ...Object.values(ui.windows)])];
     const had = new Set(open());
     let timer;
-    const late = new Promise((_, no) => { timer = setTimeout(() => no(new Error(`timed out after ${Math.round(stepTimeout / 1000)} s`)), stepTimeout); });
+    const late = new Promise((_, no) => { timer = setTimeout(() => no(new Error(`timed out after ${Math.round(timeout / 1000)} s`)), timeout); });
     try { await Promise.race([fn(), late]); }
     catch (e) {
       ok(stepName, false, {error: e?.message ?? String(e), stack: String(e?.stack ?? "").split("\n").slice(0, 3).join(" | ")});
