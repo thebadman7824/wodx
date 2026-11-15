@@ -1,6 +1,0 @@
----
-bump: minor
-effect: the eleven Demon evocations that only printed text now act: Alter Memory puts Memory altered on the sheet (an NPC forgets the demon), Send Vision whispers the vision and marks the sheet, Hand of Faith turns another demon's evocation back on its user, The Mark of the Celestials marks the bearer and turns NPCs who meet them, Cleanse purges poison and sickness, Touch from Afar reaches anyone on any scene, the four Paths lay, hide, seal or warp a path on the map, Manipulate Inertia hurts and wards, and NPC demons throw the fire evocations; NPC demons wipe the memories of mortal witnesses after a fight; the Sense keyword lays a detection sense on the caster's token, the Know keyword finds out a secret (a hook in the Ledger) or pins a clue on the case board; every book ritual and every Hekau ritual now applies something (weather, Sekhem, things made, bindings, curses, sight)
-visible: a laid path shows on the map as two gold regions that carry a token from one to the other; a mark shows as an aura on the bearer's token; hidden figures within range show on the map while Sense runs; the weather on the scene changes when a weather ritual is cast
----
-Demon evocations that work, NPC demons covering their tracks, and rituals and the Sense and Know keywords with a tangible effect (B5780-B5792).
