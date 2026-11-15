@@ -250,7 +250,7 @@ Next free block: B6000
 | B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
 | B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5127) | NPC, Combat, Actions |
 | B5130-B5139 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5130-B5137) | Creation, Actions, NPC |
-| B5140-B5149 | Solo arrival: landing scene, character with token on first login (used B5140-B5148) | Solo |
+| B5140-B5149 | Solo arrival: landing scene, character with token on first login (used B5140-B5144) | Solo, Chronicle |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 | B5160-B5169 | Playable Strengthening the Demon and fomor Numbing (used B5160-B5162) | Combat, Actions |
 | B5170-B5179 | Storyteller's Hand round two: Martyr, Marauders, the winds, holy ground, Untamable, feeding flaws, Berserker, flight, blackmail, the stimulant crash (used B5170-B5179) | Actions, Chronicle, Interactables, Library, NPC, Storyteller |
@@ -8648,21 +8648,6 @@ Reverse: remove placeToken and the pull from arrival.mjs.
 WoDX Chronicle. The tour is offered once, on the first join, and was used up on a solo login with no token to move. With The Lone Chronicle on, it now waits until the player's character has a token on the scene they view, and is offered when Solo's arrival fires its hook. At a shared table nothing changes.
 
 Reverse: remove soloWaits from player-guide.mjs.
-
-## B5146. An actor every player owns by default is nobody's character (2026-11-15)
-WoDX Solo. The first walk in the solo world found the new player handed an old gate-test actor that every player owns by default, so the arrival window never showed. The player's character is now the assigned one (unless it is owned only by default) or one the player is named owner of. The panel, I am stuck and arrival all read it this way. Nothing is deleted: the old test actors stay for Ben to clear.
-
-Reverse: drop ownsByName from characterOf in panel.mjs.
-
-## B5147. Foundry's welcome scene gives way to the landing (2026-11-15)
-WoDX Solo. The landing is made active when nothing is active, the active scene has no map, it is Foundry's own welcome scene, or no player's character stands on it. The welcome scene is never picked as the landing.
-
-Reverse: edit mayReplaceActive and isCoreScene in solo-rules.mjs.
-
-## B5148. The first-login walk fails a hung step instead of hanging (2026-11-15)
-Tools. tools/solo/walk.mjs gives each step 90 seconds and notes who the player is right after the join, so a window nobody answers shows up as a failed step with a screenshot.
-
-Reverse: remove the limit in walk.mjs step().
 
 ## B5150. The Philippines a region of its own (2026-11-15)
 WoDX Chronicle and Storyteller. Ben asked to build out the Philippines. The islands leave the Malay world and become the 45th world region, "The Philippines (Manila, the Visayas, Mindanao and Sulu)", with Manila as its city, the tropical wet climate and the Philippine money region. The world map gives it the squares north of 4.5 degrees and east of 119.5 (with Palawan) that were the Malay world's; the map builder cuts the country out by name on its next run. The region's letter comes last so no older square changes. Taken as recommended; logged in PENDING-REVIEW.
