@@ -7,7 +7,8 @@
  *     a. WoDX Chronicle's world timeline is in on the Storyteller's client (events.loaded(), the world eras, thousands
  *        of events), and the Dated events page of Chronicle Rules is written
  *     b. the Threads of Fate cards and the People tables load when first asked for, and a person is made
- *     c. the Storyteller's client measures what it loaded at start (module files and bytes)
+ *     c. the Storyteller's client measures what it loaded at start (module files and bytes), and the measure sees the
+ *        timeline files there (gate-two.mjs enlarges the browser's timing buffer, which holds 250 files by default)
  *   "player" (Player Test, a fresh browser with nothing cached):
  *     d. none of the large tables were fetched at start: world-history, future-events, future-world, threads-cards,
  *        people-world, data/people.mjs
@@ -26,13 +27,16 @@ const HEAVY = ["wodx-chronicle/data/world-history.mjs", "wodx-chronicle/data/fut
 
 /** What this browser fetched from the WoDX modules since it opened the game. */
 function measure() {
-  const rs = performance.getEntriesByType("resource").filter(r => /\/modules\/wodx-/.test(r.name));
+  const all = performance.getEntriesByType("resource");
+  const rs = all.filter(r => /\/modules\/wodx-/.test(r.name));
   const nav = performance.getEntriesByType("navigation")[0];
   const scripts = rs.filter(r => /\.(m?js)(\?|$)/.test(r.name));
   return {files: rs.length, scripts: scripts.length,
     bytes: rs.reduce((n, r) => n + (r.decodedBodySize || 0), 0), sent: rs.reduce((n, r) => n + (r.encodedBodySize || 0), 0),
     lastScriptMs: Math.round(Math.max(0, ...scripts.map(r => r.responseEnd))), domLoadedMs: Math.round(nav?.domContentLoadedEventEnd ?? 0),
-    heavy: HEAVY.filter(h => rs.some(r => r.name.includes(`/modules/${h}`)))};
+    heavy: HEAVY.filter(h => rs.some(r => r.name.includes(`/modules/${h}`))), entries: all.length,
+    // The browser stops writing timings when its buffer (250 by default) is full, and then files go uncounted
+    full: all.length === 250};
 }
 const pageText = () => {
   const j = game.journal.find(x => x.flags?.["wodx-chronicle"]?.kind === "chronicle-rules" || x.name === "Chronicle Rules");
@@ -85,7 +89,10 @@ async function setup() {
     const person = P?.generate?.({batch: "gate-playerload", row: 0});
     ok("b. the cards and the People tables load on first use", (S?.cards?.length ?? 0) > 50 && !!person?.name, {cards: S?.cards?.length ?? 0, person: person?.name ?? null});
   });
-  ok("c. the Storyteller's start-up measure", true, {measure: gmMeasure});
+  // The measure must see what the Storyteller's client loads at start (the timeline), or a "nothing heavy" on the
+  // player's side proves nothing
+  const timeline = HEAVY.slice(0, 3);
+  ok("c. the Storyteller's start-up measure sees the timeline", !gmMeasure.full && timeline.every(h => gmMeasure.heavy.includes(h)), {measure: gmMeasure});
   const fired = C().events.fired();
   return {user: user.id, steps, gmMeasure, fired: fired.length, firedSample: fired.slice(-20), page: pageText().slice(0, 4000), year: C().eras?.currentYear?.() ?? null};
 }
@@ -97,7 +104,7 @@ async function player(ids) {
   const ok = (name, pass, detail = {}) => steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message}); } };
   const m = measure();
-  ok("d. no large table was fetched at start", m.heavy.length === 0, {heavy: m.heavy});
+  ok("d. no large table was fetched at start", !m.full && m.heavy.length === 0, {heavy: m.heavy, entries: m.entries, full: m.full});
   await step("e. what a player sees is still there", async () => {
     const ev = C().events, fired = ev.fired();
     const same = fired.length === ids.fired && ids.firedSample.every(id => ev.has(id));
