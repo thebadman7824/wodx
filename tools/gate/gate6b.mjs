@@ -257,16 +257,22 @@ async function runGate(K) {
             if (form(T) !== "crinos") { answer(r => { set(r, "form", "crinos"); set(r, "how", "rage"); }); await A().shiftForm({ actor: { actor: T } }); await sleep(800); }
             const target = (d, on) => d.object?.setTarget(on, { releaseOthers: false, groupSelection: true });
             for (const t of [...game.user.targets]) t.setTarget(false, { releaseOthers: false });
-            let hTok = canvas.scene.tokens.find(t => t.actorId === H.id);
-            if (!hTok) { const g = canvas.scene.grid.size; [hTok] = await canvas.scene.createEmbeddedDocuments("Token", [(await H.getTokenDocument({ x: canvas.scene.dimensions.sceneX + 200, y: canvas.scene.dimensions.sceneY + 200 + g * 2 })).toObject()]); await sleep(500); }
+            // A Kinfolk witness of the gate's own: Hedda may already have had her First Change in an earlier run
+            const [kin] = await Actor.createDocuments([{ name: "Gate 6b Kinfolk", type: "Mortal", flags: { world: { wodx: { kinfolk: true } } } }]);
+            const g = canvas.scene.grid.size;
+            const [hTok] = await canvas.scene.createEmbeddedDocuments("Token", [(await kin.getTokenDocument({ x: canvas.scene.dimensions.sceneX + 200, y: canvas.scene.dimensions.sceneY + 200 + g * 2 })).toObject()]);
+            await sleep(500);
             for (const d of [tok[M.name], tok[F.name], hTok]) target(d, true); await sleep(300);
             R.targets = [...game.user.targets].map(t => t.name);
             answer(() => {});
             // The witnesses are passed in, not only targeted: a token drawn a moment ago may not take a target yet
             const n = game.messages.size; await A().delirium({ tokens: [tok[M.name], tok[F.name], hTok].filter(Boolean) }); const m = await untilMsg(n);
             const t = text(m);
-            ok("the Delirium", /Kinfolk, untouched/.test(t) && /Miller/.test(t) && /Father Anselm/.test(t) && m.whisper?.length > 0, { card: t.slice(0, 400) });
+            ok("the Delirium", /Kinfolk, untouched/.test(t) && /Miller/.test(t) && /Father Anselm/.test(t) && m.whisper?.length > 0, { card: t.slice(0, 400), kinToken: !!hTok });
             for (const t of [...game.user.targets]) t.setTarget(false, { releaseOthers: false });
+            R.hTok = !!hTok;
+            if (hTok) await hTok.delete();
+            await kin.delete();
         });
 
         /* 12. The First Change */
