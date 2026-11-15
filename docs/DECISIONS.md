@@ -333,6 +333,7 @@ Next free block: B6220
 | B6050-B6059 | gate7b fresh arena each run (used B6050-B6051) | tools (gates) |
 | B6070-B6079 | Snow vehicles, trains and trams (rules and sprites), and a quality pass on the vehicle sprites (used B6070-B6076) | Interactables, Paperdoll, Combat |
 | B6080-B6099 | Weights for loose gear and container contents, and loose gear on the map (used B6080-B6089) | Library, Interactables, Combat |
+| B6100-B6109 | Wraith 20th named Artifacts (forge, Skin, Spectre) and souled relics on the crafting table, with real Use powers and looks (used B6100-B6104) | Library, Creation |
 | B6130-B6139 | The eight held-back world timeline readings after the book check (used B6130-B6132) | Chronicle |
 | B6210-B6219 | gatevehicles plays in a year with cars (used B6210) | tools (gates) |
 <!-- decision-index:end -->
@@ -10274,6 +10275,49 @@ Reverse: edit PUT_DOWN and canSetDown in loose-rules.mjs.
 All three modules. The weights follow the chronicle's year from 1197 to the World of Future Darkness (B6081); piles need no approval, so a lone player's character sets down and picks up gear with no Storyteller at the table, and the Storyteller's client does the work.
 
 Reverse: none needed.
+
+## B6100. The named Artifacts of Wraith 20th are made at the soulforge (2026-11-15)
+WoDX Library data/wonders-wraith.mjs and scripts/wonders-wraith.mjs. The Master Plan item (Wraith artifacts, every era) is
+built from Wraith 20th pp. 425-431: Bell of Summoning, masks of office, Redeyes, Scribbler's Pen, Soulfire Mask, Soulfire
+Lantern, Star of the East, Candelabra of Souls, eMap, Stygian steel armor, Stygian Wall Flies, Living Chains and the
+Fetterguard from the forges; Beasthide, Bloodwebs, Shroudripper gloves, the Wail Tongue and the Guardian Orb from slain
+plasmics; Forgebait, the Memory Net and the Bean Nighe Caul for Spectres; and a souled relic fitted for a soulfire
+crystal (p. 428). Left off: Instant Nihils (no maker known, p. 425), the Spectre-altered relics (Lucky's Mr. Bunny, the
+Maggot Revolver) and the named relics of pp. 423-425, which are found, not made. Every summary is in WoDX's own words
+with its page; the book overlap check finds no run of eight words. The two open rows stay.
+
+Reverse: drop NAMED from ALL in wonders-wraith.mjs.
+
+## B6101. The forge's goal follows the Artifact's level (2026-11-15)
+House rule: 2 + 2 successes a level (4 for level 1, 12 for level 5), at the forge's own difficulty, the soulfire's Pathos
+half the goal rounded up as before (one more after Stygia's fall). A re-forged obolus adds to it as for any Artifact.
+Skin Artifacts need a slain plasmic (the Storyteller's say), must be fed 2 Pathos a day or go dull, and a day and 4
+Pathos wake them (p. 428); a botch with one adds a temporary Angst. The eMap waits for the Electron Highway: from 1970
+(house). Item powers gain costs (more than one trait paid) and onBotch.add.
+
+Reverse: change goalFor in data/wonders-wraith.mjs; drop SKIN_POWERS and skinBotch.
+
+## B6102. What shows when an Artifact is used (2026-11-15)
+WoDX Library wonder-use.mjs. Every item power may name a look (the figure's casting move through wodxPowerShown, read by
+WoDX Paperdoll), a token look (alpha and light, put back by a later power or the Undo) and a light that stays on the map
+(made on the active Storyteller's computer through the Library socket, flagged wonderLight). A failed roll shows nothing.
+
+Reverse: drop showPower and onWonderSocket from wonder-use.mjs and the socket line in use.mjs.
+
+## B6103. Spectres feed the soulfire with Angst (2026-11-15)
+House rule: a sheet whose variant names a Spectre or the Shadow is a Spectre maker; only Spectres make Spectre
+Artifacts (p. 430), and they burn Angst for the soulfire where a wraith burns Pathos. The books give Spectres Angst as
+their fuel; no page says how they forge.
+
+Reverse: make fuelOf return Pathos for everyone.
+
+## B6104. A sealed Fetterguard keeps Fetters from their town's fall (2026-11-15)
+WoDX Creation advance.mjs and advance-rules.mjs. A Fetterguard whose Seal has run, not spent, keeps as many of the
+wraith's place Fetters as it holds likenesses (in sheet order) when their town is sacked, quaked or ruined across the
+years; the change list says so instead of losing them. A Fetter that names a person who has died is still lost: the
+box keeps harm off a Fetter, it does not keep a mortal alive (house reading of p. 428).
+
+Reverse: drop the fetterguard line in advance.mjs and the check in advance-rules.mjs.
 
 ## B6130. The held readings go in, worded as the books back them (2026-11-15)
 WoDX Chronicle, tools/timeline/build-world-history.mjs. WAITING is empty. The book check (project files global-world/book-check-readings.md, finished in the cloud from the OCR text) settled each card. 1521: Wraith 20th (pdf 101, 512 to 517) breaks the Dark Kingdom of Obsidian through the heretics' Flaying and the storm after it, so the card names the Flaying, with the plague and siege dead as the background, and the survivors' Mictlan. 1692: Verbena Revised (pdf 43) keeps the Verbena out of the trials; no book has hunters and mages blaming each other, so that part is gone. 1791: Wraith 20th (pdf 521) has Les Invisibles fan the slave revolts and the Mirrorlands battered by storms and Baka; the lwa among the rebels "by both sides" had no book and is gone. 1885: Wraith 20th (pdf 517 to 518, the Bush of Ghosts behind a false Ivory Queen) and Kindred of the Ebony Kingdom (pdf 16, Laibon fighting the Portuguese around 1540) back a continent already held. 1890: the Wendigo tribebook (pdf 28, 50 to 51) backs Garou among the Ghost Dancers. 1994: Kindred of the Ebony Kingdom (pdf 168) keeps the genocide mortal with elders using the chaos, and A World of Rage (pdf 94 to 95) has the Wyrm feed on it; no book ties it to the lands of the dead, so the card no longer says so and is renamed The killing in Rwanda.
