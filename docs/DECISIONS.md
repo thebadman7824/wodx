@@ -306,7 +306,7 @@ Next free block: B6060
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5680-B5709 | NPC Motives Desk: every NPC action has a reason and a follow-through (used B5680-B5703) | NPC, Storyteller |
 | B5710-B5729 | Aftercare of the carried (Aftercare Desk a1-a12) (used B5710-B5721) | NPC |
-| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5738) | tools |
+| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5739) | tools |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 | B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
 | B5800-B5809 | NPC Aftercare Desk: what comes after each NPC action (used B5800-B5806) | NPC, Chronicle |
@@ -9391,6 +9391,11 @@ Reverse: remove the files; nothing else uses them yet.
 Tools. After Ben's review of the samples, every object was measured against the 5 ft square: beds were 10 ft long and are now 7, tree crowns grow to 14 to 23 ft, field strips are wide enough to read as fields, the cart is a farm cart's size, and a field haystack is drawn as a domed rick about 11 ft across. RULES.md keeps the size table.
 
 Reverse: none needed.
+
+## B5739. The wood's own pieces, and the Forest Road redrawn on its old scene (2026-11-15)
+Tools. tools/pixelmap/wilds.py draws what a wood needs, each one recognisable from straight above: stumps, a camp fire with seats round it, ridge tents (guy ropes to pegs, door tied back), charcoal kilns that smoke and glow at their vents, boulders, a rock scarp (lit lip, broken face, scree at the foot), felled trunks, ladders and a lean-to. land.py gains a forest floor and buildings.py a plain log hut. maps/forest_road.py is the first valley map of the Whole World redraw (r1 to r3): The Forest Road, 66 by 46, with every wall, door, window, light and exit on the old scene's own squares (read from the testbed export), so its notes and Ways still fit. The old map's unlabelled square at the fork is drawn as a wayside shrine.
+
+Reverse: remove the files; the old map picture stays on the scene until the new one is put on.
 
 ## B5750. Witness reactions given by a window act on the map (2026-11-15)
 WoDX Actions. The witness step takes results already rolled (the Delirium check, a demon's Revelation) and acts them out: a frozen witness is Immobilized for the scene, a fleeing one runs, a fighting one starts a fight; those who keep it go on the Masquerade record. With no revealed actor on the map, nothing is recorded against anyone.
