@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.51.0 (Pictures for each state from a map's sidecar (B5733): a feature or opening may carry `art` and `artRect`; adopting lays a tile with the shut picture over each container and a tile that follows each door and window's wall, so the map shows what is open and what is shut)
 - 0.50.0 (Carrying the fallen and moving large things (B5070-B5086, Ben's Carry Bodies Desk): anyone next to a character who is down carries them (under the VtDA20 lifting chart) or drags them (over it), alone or together; furniture, carts and stores are pushed, pulled or hauled by the same chart, with a roll each turn up to two steps over it and help from others past that. Wheels halve the load. A carried character who wakes can struggle free. A thing left in a doorway blocks it and is good cover. Setting "Carrying the fallen and moving large things"; tile settings Weight, On wheels and Fixed in place)
 - 0.49.1 (Ghouled animals: a ridden beast's Potence counts toward its Strength, next to its Celerity, which already counted)
 - 0.49.0 (Bicycles as a tile, and mounts out of the books: ghouled horses, fleshcrafted steeds, chimerical steeds, Stygian steeds and gryphons (B4960-B4964); Riding the animal itself: a "mountable" tag on creatures, guessed from the name, set in the token's config (B4966, B4967); Vehicles get their own sheet: a module-defined kind of actor, ridden and driven as a token (B4968, B4969))

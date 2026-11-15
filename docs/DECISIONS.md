@@ -304,6 +304,7 @@ Next free block: B5840
 | B5660-B5669 | Child proportions, drawn poses by routine, animal legs (used B5660-B5668) | Paperdoll |
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5680-B5709 | NPC Motives Desk: every NPC action has a reason and a follow-through (used B5680-B5703) | NPC, Storyteller |
+| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5736) | Interactables, tools |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 | B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
 | B5800-B5809 | NPC Aftercare Desk: what comes after each NPC action (used B5800-B5806) | NPC, Chronicle |
@@ -9224,6 +9225,41 @@ Reverse: drop the found() call in foundCard in factions.mjs.
 WoDX Storyteller (desk h5). When a body is first found, drained of blood or savaged, the region's hunters' pressure rises by one, or two before 1700 and from 1986 (the years when the finding itself names something unnatural: a curse or witchcraft, a file that reaches the wrong people). From 1840, the age of the police surgeon, the body is taken to the morgue (hidden on the map), and the hunters claim it on their next turn: each file in the region grows, and a supernatural's body counts as proof (B5699). A mortal townsperson can be the first to find a body, as a player's character can. House reading.
 
 Reverse: drop bodyFound() from found() and claimMorgue() from turn().
+
+## B5730. The pixel map drawer lives in tools/pixelmap (2026-11-15)
+Tools. WoDX's own maps are drawn by code in our own pixel art (the Whole World desk, choices x1 and t1): 94 art pixels to a 5 ft square at one screen pixel each, the grain of the character sprites, in the World of Darkness palette, painted in daylight colours for the clock to darken. No pack pictures, so the art can ship in the public repository. The 47 pixel look picked first on the desk is kept behind PIXELMAP_COARSE=1; the finer grain is what Ben directed the samples toward.
+
+Reverse: delete tools/pixelmap; maps fall back to the Dungeondraft route.
+
+## B5731. One drawing writes the picture, the walls and the sidecar (2026-11-15)
+Tools. A Recorder (scene.py) notes walls, doors, windows, containers, lights, regions and every named object while the map is drawn, and writes the picture, a Universal VTT file that tools/gate/mapimport.mjs already reads (walls cut where the openings are, a door wall at each), and a WoDX sidecar for "Adopt a generated map". The sidecar's `key` lists what a player would call each object and its square, for action logic and world effects later. No Dungeondraft step.
+
+Reverse: write the sidecar by hand.
+
+## B5732. Openables are drawn once per state, not into the map (2026-11-15)
+Tools. Doors, shutters, chests, casks, crates and sacks are left out of the map's picture. Each is drawn over the finished map once shut and once open, and only the pixels it changed are kept, so each state is a picture of its own the same size. A doorway keeps its threshold, jambs and scraped arc in the map; only the leaf moves.
+
+Reverse: draw them into the picture in one state (props.OPEN).
+
+## B5733. A sidecar can give pictures for each state (2026-11-15)
+WoDX Interactables. A feature or opening in the sidecar may carry `art` ({state: file beside the map}) and `artRect`. Adopting the map lays the container's tile with its shut picture and the state art, and gives each door and window a tile that follows its door wall, so the picture swaps for every player when it is opened or shut (the follower and state-picture machinery of states.mjs). Shutters start open by day. Paths must be png or webp files under the map's folder; anything else is left out with a plain note. Undo removes the picture tiles.
+
+Reverse: drop `art` from the sidecar; tiles go back to having no picture.
+
+## B5734. The drawing rules are a file beside the drawer (2026-11-15)
+Tools. tools/pixelmap/RULES.md holds Ben's critiques and the pixel-art technique: above all, draw every object for the player characters' eyes, since players only use what they can recognise, and show each thing's state.
+
+Reverse: none needed.
+
+## B5735. The farmhouse is the drawer's first map and the gate's fixture (2026-11-15)
+Tools. tools/pixelmap/maps/farmhouse.py writes tools/gate/fixtures/pixel-farmhouse: 5 doors, 7 windows, 14 containers with shut and open pictures, the oven's light and the house as a home. gatepixelmap imports it on a lane, adopts it, and opens and shuts a door, a shutter and a chest to see the pictures change.
+
+Reverse: remove the fixture and the gate.
+
+## B5736. A touched gate run reads the gate list from the branch under test (2026-11-15)
+Tools. run-gate.mjs --touched and --all built the gate list from the PC's own copy of the repository, so a gate new on the branch (gatepixelmap in job #1400) was silently left out. Both now read tools/gate, the module graph and the per-gate timeouts from the --repo checkout.
+
+Reverse: none needed.
 
 ## B5750. Witness reactions given by a window act on the map (2026-11-15)
 WoDX Actions. The witness step takes results already rolled (the Delirium check, a demon's Revelation) and acts them out: a frozen witness is Immobilized for the scene, a fleeing one runs, a fighting one starts a fight; those who keep it go on the Masquerade record. With no revealed actor on the map, nothing is recorded against anyone.

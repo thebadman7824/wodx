@@ -1,0 +1,1003 @@
+{
+ "format": "wodx-map",
+ "version": 1,
+ "name": "Farmhouse",
+ "map": "pixel-farmhouse.png",
+ "cells": [
+  20,
+  14
+ ],
+ "seed": 77,
+ "place": {
+  "kind": "yard"
+ },
+ "drawer": "tools/pixelmap",
+ "openings": [
+  {
+   "id": "front-door",
+   "label": "Front door",
+   "c": [
+    7,
+    10,
+    8,
+    10
+   ],
+   "inside": [
+    10,
+    6.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/front-door-closed.png",
+    "open": "art/front-door-open.png"
+   },
+   "artRect": [
+    7.011,
+    9.032,
+    0.915,
+    1.106
+   ],
+   "startOpen": false
+  },
+  {
+   "id": "store-door",
+   "label": "Store door",
+   "c": [
+    16,
+    8,
+    16,
+    9
+   ],
+   "inside": [
+    10,
+    6.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/store-door-closed.png",
+    "open": "art/store-door-open.png"
+   },
+   "artRect": [
+    15.872,
+    8.085,
+    1.106,
+    0.915
+   ],
+   "startOpen": false
+  },
+  {
+   "id": "chamber-door",
+   "label": "Chamber door",
+   "c": [
+    11,
+    4.4,
+    11,
+    5.4
+   ],
+   "inside": [
+    10,
+    6.5
+   ],
+   "barInside": false,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/chamber-door-closed.png",
+    "open": "art/chamber-door-open.png"
+   },
+   "artRect": [
+    10.872,
+    4.489,
+    1.106,
+    0.915
+   ],
+   "startOpen": false
+  },
+  {
+   "id": "door-to-the-store",
+   "label": "Door to the store",
+   "c": [
+    11,
+    8.1,
+    11,
+    9.1
+   ],
+   "inside": [
+    10,
+    6.5
+   ],
+   "barInside": false,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/door-to-the-store-closed.png",
+    "open": "art/door-to-the-store-open.png"
+   },
+   "artRect": [
+    10.032,
+    8.106,
+    1.106,
+    0.915
+   ],
+   "startOpen": false
+  },
+  {
+   "id": "door-between-chamber-and-store",
+   "label": "Door between chamber and store",
+   "c": [
+    13.2,
+    7,
+    14.2,
+    7
+   ],
+   "inside": [
+    10,
+    6.5
+   ],
+   "barInside": false,
+   "flags": {
+    "kind": "door",
+    "material": "wood",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/door-between-chamber-and-store-closed.png",
+    "open": "art/door-between-chamber-and-store-open.png"
+   },
+   "artRect": [
+    13.213,
+    6.032,
+    0.915,
+    1.106
+   ],
+   "startOpen": false
+  },
+  {
+   "id": "window",
+   "label": "Window",
+   "c": [
+    5,
+    10,
+    6,
+    10
+   ],
+   "inside": [
+    10,
+    6.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/window-closed.png",
+    "open": "art/window-open.png"
+   },
+   "artRect": [
+    4.521,
+    8.883,
+    2.0,
+    1.447
+   ],
+   "startOpen": true
+  },
+  {
+   "id": "window-2",
+   "label": "Window",
+   "c": [
+    9.4,
+    10,
+    10.4,
+    10
+   ],
+   "inside": [
+    10,
+    6.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/window-2-closed.png",
+    "open": "art/window-2-open.png"
+   },
+   "artRect": [
+    8.926,
+    8.883,
+    2.0,
+    1.447
+   ],
+   "startOpen": true
+  },
+  {
+   "id": "window-3",
+   "label": "Window",
+   "c": [
+    7.6,
+    3,
+    8.6,
+    3
+   ],
+   "inside": [
+    10,
+    6.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/window-3-closed.png",
+    "open": "art/window-3-open.png"
+   },
+   "artRect": [
+    7.117,
+    2.723,
+    2.0,
+    1.404
+   ],
+   "startOpen": true
+  },
+  {
+   "id": "window-4",
+   "label": "Window",
+   "c": [
+    12.9,
+    3,
+    13.9,
+    3
+   ],
+   "inside": [
+    10,
+    6.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/window-4-closed.png",
+    "open": "art/window-4-open.png"
+   },
+   "artRect": [
+    12.426,
+    2.723,
+    2.0,
+    1.404
+   ],
+   "startOpen": true
+  },
+  {
+   "id": "window-5",
+   "label": "Window",
+   "c": [
+    4,
+    5.8,
+    4,
+    6.8
+   ],
+   "inside": [
+    10,
+    6.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/window-5-closed.png",
+    "open": "art/window-5-open.png"
+   },
+   "artRect": [
+    3.723,
+    5.319,
+    1.404,
+    2.011
+   ],
+   "startOpen": true
+  },
+  {
+   "id": "window-6",
+   "label": "Window",
+   "c": [
+    16,
+    4.4,
+    16,
+    5.4
+   ],
+   "inside": [
+    10,
+    6.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/window-6-closed.png",
+    "open": "art/window-6-open.png"
+   },
+   "artRect": [
+    14.883,
+    3.926,
+    1.436,
+    2.011
+   ],
+   "startOpen": true
+  },
+  {
+   "id": "window-7",
+   "label": "Window",
+   "c": [
+    12.4,
+    10,
+    13.4,
+    10
+   ],
+   "inside": [
+    10,
+    6.5
+   ],
+   "barInside": true,
+   "flags": {
+    "kind": "shutter",
+    "material": "wood",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/window-7-closed.png",
+    "open": "art/window-7-open.png"
+   },
+   "artRect": [
+    11.926,
+    8.883,
+    2.0,
+    1.447
+   ],
+   "startOpen": true
+  }
+ ],
+ "features": [
+  {
+   "id": "red-painted-chest",
+   "label": "Red painted chest",
+   "rect": [
+    5.383,
+    8.968,
+    0.968,
+    0.883
+   ],
+   "flags": {
+    "container": true,
+    "items": "",
+    "fillPlace": "home",
+    "kind": "chest",
+    "lock": "cheap"
+   },
+   "art": {
+    "closed": "art/red-painted-chest-closed.png",
+    "open": "art/red-painted-chest-open.png"
+   }
+  },
+  {
+   "id": "water-cask",
+   "label": "Water cask",
+   "rect": [
+    10.128,
+    9.085,
+    0.894,
+    0.713
+   ],
+   "flags": {
+    "container": true,
+    "items": "",
+    "fillPlace": "home",
+    "kind": "box",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/water-cask-closed.png",
+    "open": "art/water-cask-open.png"
+   }
+  },
+  {
+   "id": "sauerkraut-crock",
+   "label": "Sauerkraut crock",
+   "rect": [
+    9.511,
+    9.266,
+    0.723,
+    0.543
+   ],
+   "flags": {
+    "container": true,
+    "items": "",
+    "fillPlace": "home",
+    "kind": "box",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/sauerkraut-crock-closed.png",
+    "open": "art/sauerkraut-crock-open.png"
+   }
+  },
+  {
+   "id": "blue-painted-chest",
+   "label": "Blue painted chest",
+   "rect": [
+    14.585,
+    5.362,
+    1.011,
+    0.894
+   ],
+   "flags": {
+    "container": true,
+    "items": "",
+    "fillPlace": "home",
+    "kind": "chest",
+    "lock": "cheap"
+   },
+   "art": {
+    "closed": "art/blue-painted-chest-closed.png",
+    "open": "art/blue-painted-chest-open.png"
+   }
+  },
+  {
+   "id": "cask-of-grain",
+   "label": "Cask of grain",
+   "rect": [
+    11.16,
+    7.16,
+    0.734,
+    0.904
+   ],
+   "flags": {
+    "container": true,
+    "items": "",
+    "fillPlace": "home",
+    "kind": "box",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/cask-of-grain-closed.png",
+    "open": "art/cask-of-grain-open.png"
+   }
+  },
+  {
+   "id": "cask-of-grain-2",
+   "label": "Cask of grain",
+   "rect": [
+    11.915,
+    7.16,
+    0.734,
+    0.904
+   ],
+   "flags": {
+    "container": true,
+    "items": "",
+    "fillPlace": "home",
+    "kind": "box",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/cask-of-grain-2-closed.png",
+    "open": "art/cask-of-grain-2-open.png"
+   }
+  },
+  {
+   "id": "cask-of-apples",
+   "label": "Cask of apples",
+   "rect": [
+    12.702,
+    7.149,
+    0.851,
+    0.67
+   ],
+   "flags": {
+    "container": true,
+    "items": "",
+    "fillPlace": "home",
+    "kind": "box",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/cask-of-apples-closed.png",
+    "open": "art/cask-of-apples-open.png"
+   }
+  },
+  {
+   "id": "water-cask-2",
+   "label": "Water cask",
+   "rect": [
+    11.191,
+    8.245,
+    0.766,
+    0.585
+   ],
+   "flags": {
+    "container": true,
+    "items": "",
+    "fillPlace": "home",
+    "kind": "box",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/water-cask-2-closed.png",
+    "open": "art/water-cask-2-open.png"
+   }
+  },
+  {
+   "id": "grain-sack",
+   "label": "Grain sack",
+   "rect": [
+    14.968,
+    7.234,
+    0.691,
+    0.638
+   ],
+   "flags": {
+    "container": true,
+    "items": "",
+    "fillPlace": "home",
+    "kind": "box",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/grain-sack-closed.png",
+    "open": "art/grain-sack-open.png"
+   }
+  },
+  {
+   "id": "grain-sack-2",
+   "label": "Grain sack",
+   "rect": [
+    14.181,
+    7.234,
+    0.713,
+    0.681
+   ],
+   "flags": {
+    "container": true,
+    "items": "",
+    "fillPlace": "home",
+    "kind": "box",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/grain-sack-2-closed.png",
+    "open": "art/grain-sack-2-open.png"
+   }
+  },
+  {
+   "id": "grain-sack-3",
+   "label": "Grain sack",
+   "rect": [
+    14.979,
+    7.883,
+    0.681,
+    0.66
+   ],
+   "flags": {
+    "container": true,
+    "items": "",
+    "fillPlace": "home",
+    "kind": "box",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/grain-sack-3-closed.png",
+    "open": "art/grain-sack-3-open.png"
+   }
+  },
+  {
+   "id": "grain-sack-4",
+   "label": "Grain sack",
+   "rect": [
+    14.266,
+    7.83,
+    0.691,
+    0.67
+   ],
+   "flags": {
+    "container": true,
+    "items": "",
+    "fillPlace": "home",
+    "kind": "box",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/grain-sack-4-closed.png",
+    "open": "art/grain-sack-4-open.png"
+   }
+  },
+  {
+   "id": "crate-of-apples",
+   "label": "Crate of apples",
+   "rect": [
+    14.277,
+    9.298,
+    0.809,
+    0.489
+   ],
+   "flags": {
+    "container": true,
+    "items": "",
+    "fillPlace": "home",
+    "kind": "box",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/crate-of-apples-closed.png",
+    "open": "art/crate-of-apples-open.png"
+   }
+  },
+  {
+   "id": "crate-of-jars",
+   "label": "Crate of jars",
+   "rect": [
+    15.223,
+    9.064,
+    0.532,
+    0.713
+   ],
+   "flags": {
+    "container": true,
+    "items": "",
+    "fillPlace": "home",
+    "kind": "box",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/crate-of-jars-closed.png",
+    "open": "art/crate-of-jars-open.png"
+   }
+  },
+  {
+   "id": "bake-oven",
+   "label": "The bake oven",
+   "rect": [
+    4.14,
+    3.14,
+    1.4,
+    1.4
+   ],
+   "flags": {
+    "light": true,
+    "lightKind": "torch",
+    "title": "The bake oven"
+   },
+   "light": {
+    "dim": 4,
+    "bright": 1.5,
+    "color": "#ff9a3c",
+    "on": true
+   }
+  }
+ ],
+ "regions": [
+  {
+   "id": "house",
+   "label": "Farmhouse",
+   "rect": [
+    4,
+    3,
+    12,
+    7
+   ],
+   "place": {
+    "kind": "home"
+   }
+  }
+ ],
+ "key": [
+  {
+   "name": "rug",
+   "x": 7.8,
+   "y": 6.25
+  },
+  {
+   "name": "table",
+   "x": 7.8,
+   "y": 6.25
+  },
+  {
+   "name": "bench",
+   "x": 7.8,
+   "y": 5.4
+  },
+  {
+   "name": "bench",
+   "x": 7.8,
+   "y": 7.08
+  },
+  {
+   "name": "stool",
+   "x": 9.35,
+   "y": 6.25
+  },
+  {
+   "name": "bed",
+   "x": 4.72,
+   "y": 8.8
+  },
+  {
+   "name": "Red painted chest",
+   "x": 5.86,
+   "y": 9.4
+  },
+  {
+   "name": "shelf of crockery and food",
+   "x": 9.55,
+   "y": 3.4
+  },
+  {
+   "name": "firewood",
+   "x": 6.2,
+   "y": 3.45
+  },
+  {
+   "name": "Water cask",
+   "x": 10.45,
+   "y": 9.4
+  },
+  {
+   "name": "Sauerkraut crock",
+   "x": 9.74,
+   "y": 9.5
+  },
+  {
+   "name": "water bucket",
+   "x": 8.6,
+   "y": 9.45
+  },
+  {
+   "name": "wall bench with a sheepskin",
+   "x": 10.68,
+   "y": 6.8
+  },
+  {
+   "name": "wool basket and spindle",
+   "x": 4.6,
+   "y": 6.3
+  },
+  {
+   "name": "stool",
+   "x": 5.25,
+   "y": 6.75
+  },
+  {
+   "name": "rug",
+   "x": 12.65,
+   "y": 4.95
+  },
+  {
+   "name": "great bed",
+   "x": 15.07,
+   "y": 4.3
+  },
+  {
+   "name": "Blue painted chest",
+   "x": 15.09,
+   "y": 5.8
+  },
+  {
+   "name": "cot",
+   "x": 12.07,
+   "y": 6.32
+  },
+  {
+   "name": "small table with a candle",
+   "x": 13.05,
+   "y": 3.5
+  },
+  {
+   "name": "shelf of linen",
+   "x": 11.42,
+   "y": 3.75
+  },
+  {
+   "name": "Cask of grain",
+   "x": 11.5,
+   "y": 7.5
+  },
+  {
+   "name": "Cask of grain",
+   "x": 12.26,
+   "y": 7.5
+  },
+  {
+   "name": "Cask of apples",
+   "x": 13.0,
+   "y": 7.45
+  },
+  {
+   "name": "Water cask",
+   "x": 11.45,
+   "y": 8.5
+  },
+  {
+   "name": "Grain sack",
+   "x": 15.33,
+   "y": 7.5
+  },
+  {
+   "name": "Grain sack",
+   "x": 14.53,
+   "y": 7.5
+  },
+  {
+   "name": "Grain sack",
+   "x": 15.33,
+   "y": 8.15
+  },
+  {
+   "name": "Grain sack",
+   "x": 14.63,
+   "y": 8.1
+  },
+  {
+   "name": "shelf of stores",
+   "x": 13.1,
+   "y": 9.7
+  },
+  {
+   "name": "Crate of apples",
+   "x": 14.69,
+   "y": 9.43
+  },
+  {
+   "name": "Crate of jars",
+   "x": 15.36,
+   "y": 9.43
+  },
+  {
+   "name": "baskets of onions and turnips",
+   "x": 13.9,
+   "y": 8.85
+  },
+  {
+   "name": "hay and pitchfork",
+   "x": 11.75,
+   "y": 9.05
+  },
+  {
+   "name": "bake oven",
+   "x": 4.84,
+   "y": 3.84
+  },
+  {
+   "name": "Front door",
+   "x": 7.5,
+   "y": 10.0
+  },
+  {
+   "name": "Store door",
+   "x": 16.0,
+   "y": 8.5
+  },
+  {
+   "name": "Chamber door",
+   "x": 11.0,
+   "y": 4.9
+  },
+  {
+   "name": "Door to the store",
+   "x": 11.0,
+   "y": 8.6
+  },
+  {
+   "name": "Door between chamber and store",
+   "x": 13.7,
+   "y": 7.0
+  },
+  {
+   "name": "Window",
+   "x": 5.5,
+   "y": 9.6
+  },
+  {
+   "name": "Window",
+   "x": 9.9,
+   "y": 9.6
+  },
+  {
+   "name": "Window",
+   "x": 8.1,
+   "y": 3.4
+  },
+  {
+   "name": "Window",
+   "x": 13.4,
+   "y": 3.4
+  },
+  {
+   "name": "Window",
+   "x": 4.4,
+   "y": 6.3
+  },
+  {
+   "name": "Window",
+   "x": 15.6,
+   "y": 4.9
+  },
+  {
+   "name": "Window",
+   "x": 12.9,
+   "y": 9.6
+  },
+  {
+   "name": "washing line",
+   "x": 5.45,
+   "y": 11.85
+  },
+  {
+   "name": "woodpile",
+   "x": 3.2,
+   "y": 5.1
+  },
+  {
+   "name": "chopping block and axe",
+   "x": 3.15,
+   "y": 6.95
+  },
+  {
+   "name": "well",
+   "x": 2.6,
+   "y": 11.4
+  },
+  {
+   "name": "kitchen garden",
+   "x": 12.4,
+   "y": 13.0
+  },
+  {
+   "name": "wattle fence",
+   "x": 15.67,
+   "y": 13.0
+  },
+  {
+   "name": "bench",
+   "x": 9.05,
+   "y": 10.55
+  },
+  {
+   "name": "water trough",
+   "x": 17.53,
+   "y": 6.9
+  },
+  {
+   "name": "herbs and onions on the beam",
+   "x": 8.7,
+   "y": 9.75
+  }
+ ]
+}
