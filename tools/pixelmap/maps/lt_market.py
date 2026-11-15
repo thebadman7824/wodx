@@ -147,7 +147,7 @@ for tx, ty in ((4.2, 4.1), (4.0, 6.2), (4.0, 8.2), (8.0, 2.2), (7.2, 4.8), (10.3
 note("tables and stools", 6, 6)
 pr.bench(m, 3.6, 9.65, 1.9, .34); note("bench", 4.5, 9.8)
 pr.shelf(m, 13.0, 2.0, 1.8, .44, ["plates", "bowl", "jug", "plates"]); note("shelf of plates", 13.9, 2.2)
-m.oven(14.6, 1.8, 1.4, 1.2, side="s"); rec.light("Oven (the inn)", "The inn's oven", (14.6, 1.8, 1.4, 1.2), dim=4, bright=1.5); note("oven", 15.3, 2.4)
+dr.oven(m, 14.6, 1.8, 1.4, 1.2, "s"); rec.light("Oven (the inn)", "The inn's oven", (14.6, 1.8, 1.4, 1.2), dim=4, bright=1.5); note("oven", 15.3, 2.4)
 m.table(14.6, 3.6, 1.8, .9, things=True); note("kitchen table", 15.5, 4.05)
 pr.crate(m, 12.5, 2.9, 44, goods="apples", name="Crate (inn kitchen)")
 pr.barrel(m, 16.9, 5.7, 21, holds="water", name="Water cask (inn kitchen)"); pr.barrel(m, 17.6, 5.7, 21, holds="grain", name="Flour cask (inn kitchen)")
@@ -172,7 +172,7 @@ for k in range(3): d.line([2.4 * T + k * 30, 16.0 * T, 2.4 * T + k * 30 + 40, 16
 note("harness on pegs", 2.9, 16.1)
 
 # ---- the bakery ----
-m.oven(25.1, 2.5, 2.1, 2.1, side="w"); rec.light("Bake oven (bakery)", "The bake oven", (25.1, 2.5, 2.1, 2.1), dim=5, bright=1.5); note("bake oven", 26.15, 3.55)
+dr.oven(m, 25.1, 2.5, 2.1, 2.1, "w"); rec.light("Bake oven (bakery)", "The bake oven", (25.1, 2.5, 2.1, 2.1), dim=5, bright=1.5); note("bake oven", 26.15, 3.55)
 m.table(21.4, 3.5, 2.2, 1.0, things=False); note("kneading trough", 22.5, 4.0)
 for k in range(3): pr.sack(m, 21.0 + k * .5, 2.75, 19, name="Flour sack (bakery)")
 pr.barrel(m, 20.95, 4.95, 20, holds="water", name="Water cask (bakery)")
@@ -197,7 +197,7 @@ d.rectangle([34.9 * T, 6.0 * T, 36.6 * T, 7.6 * T], fill=R["dwood"][1], outline=
 for k in range(6): d.line([34.9 * T + 4, 6.0 * T + 8 + k * 22, 36.6 * T - 4, 6.0 * T + 8 + k * 22], fill=R["dwood"][3], width=4)
 note("stairs up", 35.75, 6.8)
 m.table(38.3, 6.1, 1.2, .7, things=False); pr.stool(m, 38.6, 6.9)
-m.oven(39.4, 6.9, 1.0, 1.0, side="w"); light(39.99, 7.34, "Stove (Graff's hall)", "fire", 5, "#ff9a40"); note("stove", 39.9, 7.4)
+dr.oven(m, 39.5, 6.85, 1.05, 1.05, "w"); light(39.99, 7.34, "Stove (Graff's hall)", "fire", 5, "#ff9a40"); note("stove", 39.9, 7.4)
 for k in range(5): pr.barrel(m, 40.1, 5.9 + k * .62, 20, holds=("water", "grain")[k % 2], name="Cask (Graff's hall)")
 pr.shelf(m, 34.4, 8.5, 1.6, .44, ["linen", "linen", "jug"]); light(34.25, 7.28, "Candle (Graff's hall)")
 
