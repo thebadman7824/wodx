@@ -10,6 +10,7 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: mummy-rules.js.
  */
+import * as NPW from "./npc-power-rules.js";
 import * as LIM from "./limits.js";
 import * as M from "./mummy-rules.js";
 import { floatOver } from "./daysleep.js";
@@ -297,5 +298,16 @@ export function build(ctx) {
         }
     }
 
-    return { info, cast, regain, balance, offense, resurrect, veil, setup, daily, isMummy, rules: M };
+    /** B5661: the named Hekau an NPC mummy may cast by itself (main.js npcPowers). */
+    function powersFor(actor) {
+        const i = info(actor);
+        if (!i.inWeb && i.sekhem.pool === 0) return [];
+        return Object.keys(M.HEKAU).flatMap(p => MH.spellsOf(p, n(i.hekau[p]))).filter(k => n(MH.SPELLS[k].cost) <= i.sekhem.pool).map(k => {
+            const s = MH.SPELLS[k];
+            return { use: "useHekau", field: "named", value: k, name: s.name, disc: M.HEKAU[s.path]?.label ?? s.path, level: s.level, set: "hekau", id: k,
+                keywords: NPW.keysOf(MH.hekauResults(k, 3, { name: s.name })) };
+        }).filter(p => p.keywords.length);
+    }
+
+    return { powersFor, info, cast, regain, balance, offense, resurrect, veil, setup, daily, isMummy, rules: M };
 }

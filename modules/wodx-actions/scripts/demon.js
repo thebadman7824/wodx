@@ -13,6 +13,7 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: demon-rules.js.
  */
+import * as NPW from "./npc-power-rules.js";
 import * as LIM from "./limits.js";
 import * as D from "./demon-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -469,5 +470,13 @@ export function build(ctx) {
         }
     }
 
-    return { info, evoke, form, revelation, reap, thralls, sin, kindness, heal, holy, named, illusion, daily, faith, torment, isDemon, rules: D };
+    /** B5666: the evocations of the Lores an NPC demon knows, to use by itself (main.js npcPowers). */
+    function powersFor(actor) {
+        const i = info(actor);
+        if (i.faith.temp < 1) return [];
+        return D.evocationsKnown(i.lores).map(e => ({ use: "useEvocation", field: "evo", value: `${e.lore}:${e.level}`, name: e.name, disc: D.LORES[e.lore]?.label ?? e.lore, level: e.level, set: "evocation", id: `${e.lore}:${e.level}`,
+            keywords: NPW.keysOf(DE.evocationResults(e.lore, e.level, 3, { faith: i.faith.perm, name: e.name })) })).filter(p => p.keywords.length);
+    }
+
+    return { powersFor, info, evoke, form, revelation, reap, thralls, sin, kindness, heal, holy, named, illusion, daily, faith, torment, isDemon, rules: D };
 }

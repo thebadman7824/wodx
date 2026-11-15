@@ -530,5 +530,13 @@ export function build(ctx) {
         }
     }
 
-    return { info, sheet, cast, unleash, counter, echo, mists, mien, keepOath, rest, coldIron, onButton, daily, clockNow, isDA, rules: F };
+    /** B5665: the cantrips an NPC fae has written down, to cast by itself (main.js npcPowers). */
+    function powersFor(actor) {
+        if (!isDA(actor)) return [];
+        const i = info(actor);
+        return (i.cantrips ?? []).map((c, k) => ({ c, k })).filter(({ c }) => (c.kw ?? []).length).map(({ c, k }) => ({
+            use: "useFaeCantrip", field: "c", value: String(k), name: c.name ?? `Cantrip ${k + 1}`, disc: F.DOMINIONS[c.dominion]?.label ?? c.dominion, level: n(c.level), set: "faecantrip", id: `fc-${k}`, keywords: c.kw }));
+    }
+
+    return { powersFor, info, sheet, cast, unleash, counter, echo, mists, mien, keepOath, rest, coldIron, onButton, daily, clockNow, isDA, rules: F };
 }
