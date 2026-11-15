@@ -41,7 +41,7 @@ export async function run() {
   const S = game.modules.get(ST)?.api, C = game.modules.get(CH)?.api, A = game.modules.get(AT)?.api;
   const has = (m, k) => game.settings.settings.has(`${m}.${k}`);
   const KEEP = [[ST, "personal"], [ST, "log"], [ST, "convened"], [ST, "waysConfirm"], [ST, "nightDraw"], [ST, "nightDrawn"], [ST, "reachOn"],
-    [ST, "hardship"], [ST, "longTasks"], [ST, "townTurn"], [ST, "townState"], [CH, "podCities"], ["wodx-library", "craftGarou"], ["wodx-library", "craftKinfolk"], [CH, "autoApprove"], [CH, "hold"], [CH, "lawHeatOn"], [CH, "lawHeat"], [AT, "lightFromClock"], [AT, "sceneEffects"],
+    [ST, "hardship"], [ST, "longTasks"], [ST, "townTurn"], [ST, "townState"], [ST, "markets"], [CH, "podCities"], ["wodx-library", "craftGarou"], ["wodx-library", "craftKinfolk"], [CH, "autoApprove"], [CH, "hold"], [CH, "lawHeatOn"], [CH, "lawHeat"], [AT, "lightFromClock"], [AT, "sceneEffects"],
     ["wodx-actions", "traitRolls"]].filter(([m, k]) => has(m, k));
   const keep = KEEP.map(([m, k]) => [m, k, foundry.utils.deepClone(game.settings.get(m, k))]);
   const pending0 = new Set((C?.approvals?.pending?.() ?? []).map(p => p.id));
@@ -278,9 +278,15 @@ export async function run() {
 
     await G.step("12. a building raised: the town is glad of it", async () => {
       const T = S.upkeep?.towns, M = S.upkeep?.money;
-      const sc = [...game.scenes].find(x => T?.ofScene?.(x)?.id);
-      if ( !sc ) return G.ok("12. a building raised: the town is glad of it", false, {why: "no scene here belongs to a market town"});
-      const town = T.ofScene(sc).id;
+      // B6440: the gate makes its own market town: a scene the Markets list names (markets.scenes) with its town's
+      // condition in townState, as the Markets and Towns windows keep them (both settings are put back from KEEP)
+      const sc = await G.make(Scene, {name: "WoDX gate: truthst market town", width: 1400, height: 1000, padding: 0, grid: {size: 100, type: 1}, navigation: false});
+      const town = "wodx-gate-truthst-town";
+      const mk = foundry.utils.deepClone(game.settings.get(ST, "markets") ?? {});
+      await game.settings.set(ST, "markets", {...mk, markets: [...(mk.markets ?? []).filter(m => m?.id !== town), {id: town, name: "WoDX gate: truthst town", scenes: [sc.id]}]});
+      const ts = foundry.utils.deepClone(game.settings.get(ST, "townState") ?? {});
+      await game.settings.set(ST, "townState", {...ts, towns: {...(ts.towns ?? {}), [town]: T.rules.newTown({id: town, scenes: [sc.id]}, {prosperity: 2})}});
+      if ( T?.ofScene?.(sc)?.id !== town ) return G.ok("12. a building raised: the town is glad of it", false, {why: "the gate's market town is not read as the scene's town", town: T?.ofScene?.(sc) ?? null});
       await set(ST, "townTurn", "auto");
       await set(CH, "podCities", false);
       const pros = () => Number(T.state().towns?.[town]?.prosperity ?? NaN);

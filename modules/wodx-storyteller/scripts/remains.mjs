@@ -102,10 +102,15 @@ export async function onMoved(tok, changes) {
   for ( const body of tok.parent?.tokens ?? [] ) {
     const r = remainsOf(body);
     if ( !r || body.hidden || body.id === tok.id || r.found.includes(pc.id) || (townsfolk && r.found.length) || squares(tok, body, tok.parent) > reach() ) continue;
-    out.push(await found(body, pc));
+    // B6439: a move is heard twice (updateToken and moveToken); one finding a body and finder, and one townsman a body
+    const key = townsfolk ? `${body.uuid}|town` : `${body.uuid}|${pc.id}`;
+    if ( finding.has(key) ) continue;
+    finding.add(key);
+    try { out.push(await found(body, pc)); } finally { finding.delete(key); }
   }
   return out;
 }
+const finding = new Set();
 
 /** A character comes upon a body: the Storyteller's card, and heat for a fresh one. */
 export async function found(body, pc) {
@@ -141,6 +146,9 @@ function onDead(effect) {
 export function registerRemainsHooks() {
   Hooks.on("createActiveEffect", effect => { try { onDead(effect); } catch (e) { console.error(`${MOD} | remains`, e); } });
   Hooks.on("updateToken", (doc, changes) => { onMoved(doc, changes).catch(e => console.error(`${MOD} | remains`, e)); });
+  // B6439: from Foundry 13 a move ends in moveToken, after the update's workflow (a move paused or carried on by a
+  // region, or sent through TokenDocument#move, reaches its end there); the finding is the same, once
+  Hooks.on("moveToken", doc => { onMoved(doc, {x: doc.x, y: doc.y}).catch(e => console.error(`${MOD} | remains`, e)); });
   Hooks.on("wodxSkipEnd", () => { tick().catch(e => console.error(`${MOD} | remains`, e)); });
   Hooks.on("updateWorldTime", () => { try { if ( chron()?.isSkipping?.() ) return; } catch (e) { /* no Chronicle */ } tick().catch(e => console.error(`${MOD} | remains`, e)); });
 }

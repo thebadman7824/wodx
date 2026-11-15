@@ -129,7 +129,9 @@ export async function run() {
       const rose = await waitFor(() => (st().hunters.state().regions[region]?.pressure ?? 0) > p0, 8000);
       const p1 = st().hunters.state().regions[region]?.pressure ?? 0;
       G.ok("6. pressure rose", marked && rose, {marked, cause: vic()?.flags?.[ST]?.remains?.cause ?? null, found: vic()?.flags?.[ST]?.remains?.found ?? [], p0, p1,
-        morgue: vic()?.flags?.[ST]?.remains?.morgue ?? null});
+        morgue: vic()?.flags?.[ST]?.remains?.morgue ?? null,
+        finder: (() => { const t = sc.tokens.get(tf.id); return {x: t?.x, y: t?.y, hidden: !!t?.hidden, pc: !!t?.actor?.hasPlayerOwner, type: t?.actor?.type, activeGM: game.users.activeGM?.id === game.user.id}; })(),
+        body: {x: vic()?.x, y: vic()?.y, hidden: !!vic()?.hidden}});
     });
 
     await G.step("7. a body carried off as proof eases the region", async () => {
