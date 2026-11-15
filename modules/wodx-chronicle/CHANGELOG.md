@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.123.3 (Ghouled animals follow-up: the monthly need skips the spans of time skips)
 - 0.123.2 (Emptied tables are refilled (B5641))
 - 0.123.1 (The domitor's feeding (B4983) is offered again while the monthly need (B5050) runs by itself; a declined feeding waits for the next month)
 - 0.123.0 (The Storyteller's Hand, round two: the Martyr's Take the wound button, a Marauder's shifting aura, Infectious Bite, Conspicuous Consumption and Berserker that land by themselves, and blackmail as a law heat deed (B5171, B5172, B5175, B5177))
