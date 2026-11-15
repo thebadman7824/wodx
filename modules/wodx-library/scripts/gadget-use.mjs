@@ -23,11 +23,35 @@ export async function plant(actor, item) {
     return card(actor, `${actor.name} plants ${item.name}`, crop.crop ? `In the ground: ready to harvest in ${crop.days} days.` : `In the ground: it takes ${crop.days} days to bear.`);
   }
   if ( st.state === "growing" ) return card(actor, `${item.name} is growing`, `${st.daysLeft} day${st.daysLeft === 1 ? "" : "s"} until it is ready.`);
-  if ( !crop.crop ) { await item.delete(); return card(actor, `${actor.name}'s ${item.name} has grown`, "Grown and bearing: it stands where it was planted."); }
+  return harvest(actor, item, crop);
+}
+
+async function harvest(actor, item, crop) {
+  if ( !crop.crop ) { await item.delete(); return card(actor, `${actor.name}'s ${item.name} has grown`, "Grown and bearing: it stands where it was planted.", {whisper: ownersOf(actor)}); }
   await actor.createEmbeddedDocuments("Item", [{name: crop.crop, type: "Item", flags: {"wodx-sheets": {qty: crop.n}}}]);
   await item.delete();
-  return card(actor, `${actor.name} harvests ${item.name}`, `${crop.n} × ${crop.crop} into Possessions.`);
+  return card(actor, `${actor.name} harvests ${item.name}`, `${crop.n} × ${crop.crop} into Possessions.`, {whisper: ownersOf(actor)});
 }
+
+/**
+ * B6177: the clock ripens what was planted. When the days are past, the crop comes into Possessions by itself (the
+ * Storyteller's client, on each move of the clock), so no second Use is needed. Returns the items harvested.
+ */
+export async function ripenTick(t = now()) {
+  if ( !(game.user?.isGM && game.users.activeGM?.id === game.user.id) ) return [];
+  const out = [];
+  for ( const a of game.actors ?? [] ) for ( const it of [...(a.items ?? [])] ) {
+    const planted = it.flags?.[MOD]?.planted;
+    if ( !planted ) continue;
+    const crop = D.cropOf(it.name);
+    if ( !crop || D.plantState(planted, crop, t).state !== "ready" || RIPENING.has(it.uuid) ) continue;
+    RIPENING.add(it.uuid);
+    try { await harvest(a, it, crop); out.push(it.id); } catch (e) { console.warn(`${MOD} | harvest`, e); }
+    finally { RIPENING.delete(it.uuid); }
+  }
+  return out;
+}
+const RIPENING = new Set();
 
 /** Strike a light: the first unlit light the character carries is lit. lightIt(actor, item, good) is Use's own. */
 export async function strike(actor, item, {lights, lightIt}) {

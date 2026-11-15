@@ -190,6 +190,20 @@ export function forEra(items, eraId, where = null) {
     .sort((a, b) => (order[a.type] - order[b.type]) || a.name.localeCompare(b.name));
 }
 
+/**
+ * B6177: the book item a free-text name means ("Battle-Ax", "a battle-axe", "Pistol, Hvy."), for a long task that
+ * makes one: the same name with or without a leading article and in any case, the era's own first. null if none.
+ */
+const bareName = s => String(s ?? "").toLowerCase().replace(/\s*\((?:fine|masterwork|poor|crude|plain)\)\s*$/, "").replace(/^(?:a|an|the)\s+/, "").replace(/axe\b/g, "ax").replace(/\s+/g, " ").trim();
+export function byName(items = [], name = "", eraId = null) {
+  const want = bareName(name);
+  if ( !want ) return null;
+  const hits = items.filter(i => bareName(i.name) === want);
+  if ( !hits.length ) return null;
+  const id = ERA_LIKE[eraId] ?? eraId;
+  return hits.find(i => (i.flags?.[MOD]?.eras ?? []).some(e => e === eraId || e === id)) ?? hits[0];
+}
+
 /** A one-line summary as the sheet's Combat box shows it. */
 export function summary(i) {
   const s = i.system ?? {};

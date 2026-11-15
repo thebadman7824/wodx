@@ -92,6 +92,19 @@ export async function give(actors, names) {
   return out;
 }
 
+/**
+ * B6177: the book's item for a name, as data to make a copy from (no id), or null: Gear by era first (the era's own
+ * item when there are several), so a long task that makes "a Battle-Ax" makes the weapon WoDX Combat reads.
+ */
+export async function itemByName(name, {era = eraNow()} = {}) {
+  const data = await gear();
+  const hit = G.byName(data.items ?? [], name, era);
+  if ( !hit ) return null;
+  const out = foundry.utils.deepClone(hit);
+  delete out._id;
+  return out;
+}
+
 export class GearApp extends ApplicationV2 {
   static DEFAULT_OPTIONS = {
     id: "wodx-gear",
@@ -182,7 +195,7 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", async () => {
-  game.modules.get(MOD).api = {version: VERSION, rules: G, gear, installPack, give, open: era => GearApp.open(era),
+  game.modules.get(MOD).api = {version: VERSION, rules: G, gear, installPack, give, itemByName, open: era => GearApp.open(era),
     library: {open: () => Sh.LibraryApp.open(), install: Sh.installShelves, catalogue: Sh.catalogue, rules: SR},
     manual: {open: Sh.openManual, ensure: Sh.ensureManual, page: Sh.openManualPage}, glossary: {open: Sh.openGlossary, ensure: Sh.ensureGlossary}, changelog: {open: Sh.openChangelog, ensure: Sh.ensureChangelog}};
   try { await setupExamine(); game.modules.get(MOD).api.examine = examineApi(); } catch (err) { console.warn("WoDX Library | Examine could not start", err); }

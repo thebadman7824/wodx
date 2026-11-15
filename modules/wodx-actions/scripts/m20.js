@@ -99,7 +99,10 @@ export function build(ctx) {
             // B4874: the caster's features on a casting (a House's fire, a choir's voices): magick, each Sphere, and fire for Forces that harms
             const tm = TH.traitMods(actor, ["magick", ...used.map(x => x.sphere), ...(fd.dmg && used.some(x => x.sphere === "forces") ? ["fire"] : [])]);
             plan.dice = Math.max(1, plan.dice + (tm.dice || 0));
-            plan.difficulty = Math.max(3, Math.min(10, plan.difficulty + (tm.diff || 0)));
+            // B6177: a target's ward, Magic Resistance or (for Mind) Iron Will makes magick on them harder, as it does a Discipline
+            const target = [...(game.user?.targets ?? [])][0]?.actor ?? null;
+            const rm = target && target !== actor ? TH.resistMods(target, ["magic", ...(used.some(x => x.sphere === "mind") ? ["mind"] : [])], actor) : { diff: 0, parts: [] };
+            plan.difficulty = Math.max(3, Math.min(10, plan.difficulty + (tm.diff || 0) + (rm.diff || 0)));
             const r = await rollPool(plan.dice, plan.difficulty + lim.diff, { willpower: wp });
             await lim.done({ successes: r.botch ? 0 : r.successes });
             const d = M.degree(r, plan.need);
@@ -112,7 +115,7 @@ export function build(ctx) {
             const fortune = sg.age.key === "crusade" ? await fortuneRoll(actor) : null;
             const label = used.map(x => `${cap(x.sphere)} ${x.level}`).join(" / ");
             let body = rollBlock(`Arete ${plan.dice}`, r, [`${label}: ${(W[fd.kind] ?? M.KINDS[fd.kind].label).toLowerCase()} (${plan.base}${plan.net ? `, ${plan.net > 0 ? "+" : ""}${plan.net}` : ""})`, ...(plan.capped ? ["modifiers capped at ±3"] : []),
-                ...(plan.quintUsed ? [`${plan.quintUsed} Quintessence`] : []), ...(plan.over ? [`+${plan.over} needed: past difficulty 10`] : []), ...(wp ? ["Willpower"] : []), ...(tm.parts ?? [])]);
+                ...(plan.quintUsed ? [`${plan.quintUsed} Quintessence`] : []), ...(plan.over ? [`+${plan.over} needed: past difficulty 10`] : []), ...(wp ? ["Willpower"] : []), ...(tm.parts ?? []), ...(rm.parts ?? [])]);
             body += `<div class="vta-big ${d.key === "botch" ? "bad" : d.key === "success" || d.key === "extraordinary" ? "good" : ""}">${r.successes} of ${plan.need}: ${esc(d.text)}.</div>`;
             const fx = kw && r.successes && !r.botch ? EF.plan(actor, form, r.successes, { used, feat: n(fd.feat), age: sg.age.key }) : null;
             if (fx?.got?.ok || fx?.items?.length) body += fx.html;
