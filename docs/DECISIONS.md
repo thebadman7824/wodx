@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5890
+Next free block: B5900
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -316,6 +316,7 @@ Next free block: B5890
 | B5860-B5869 | gates after other gates, approval queue one change at a time (used B5860-B5861) | tools (gates), wodx-chronicle |
 | B5870-B5879 | Dates as each land tells them: Persia's solar year and a character's own count (used B5870-B5876) | Chronicle, Atmosphere |
 | B5880-B5889 | Era primers by region: what everyone knows, by the homeland's way of life (used B5880-B5882) | Storyteller |
+| B5890-B5899 | Future Darkness world news by region: the Americas, Africa and Oceania after 2023 (used B5890-B5892) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9603,3 +9604,18 @@ Reverse: remove the two hooks at the end of setup.mjs.
 tools/gate/gateworldprimers.mjs moves the homeland to Egypt and back and checks the page follows, and that the Storyteller's own page is kept.
 
 Reverse: delete the gate.
+
+## B5890. The Americas, Africa and Oceania after 2023 are house history around the approved timeline (2026-11-15)
+WoDX Chronicle. The Cyberpunk 2020 books say nothing of these regions after 2020, so the 85 new events in docs/research/era-timelines/r3/future-darkness.txt (the Americas 45, Africa 24, Oceania 16, 2024 to 2099) are WoDX's own. Each is either the side of an approved Future Darkness event that ordinary people see (the Sacramento registry office in 2027 for the registration law, the fires at the Pacific Northwest preserve in 2039 for the tribe war, the dead-zone killings in 2080) or plain history of the region in that world (the Sahel drought, the Confederation's charter, Tuvalu under the sea). None moves an approved event; the daily deconfliction check finds nothing new. They ship with the rest of the branch's world history (384 events of kind F) in data/future-world.mjs, built by tools/wofd/build-future-world.mjs. Before this the round-three world timeline lived only in the research folder.
+
+Reverse: remove FUTURE_WORLD from EVENTS in scripts/events.mjs.
+
+## B5891. A regional event happens everywhere on its date; only its news is local (2026-11-15)
+WoDX Chronicle. An event with a region fires on its date whatever the homeland (has() is true, the hook runs), so changing the homeland never floods a card with old news. The card tells it only where the news is heard: the homeland's part of the world and the part the active scene stands in (events-rules.mjs newsCodes; Moravia hears Europe's news too). A Malkavian's glimpse and the Legends record follow the same test, so neither speaks of a far-off land's news.
+
+Reverse: make heardIn return true.
+
+## B5892. Old and far-off news is counted on the card, not told (2026-11-15)
+WoDX Chronicle. A card lists the news heard here from the last year; news heard here but older than a year (a world just switched to the branch, a homeland just changed) and news from elsewhere are counted in one line that points to the Dated events page, which lists every event with its place. A time skip still tells everything heard here, as it did.
+
+Reverse: drop the older count in newsFor.
