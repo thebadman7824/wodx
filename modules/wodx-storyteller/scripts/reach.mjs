@@ -50,11 +50,15 @@ const reachState = () => ({patrols: {}, ...(setting("reachState") ?? {})});
 export function whereIs(actorId) {
   if ( !actorId ) return null;
   const viewed = new Set(all(game.users).filter(u => u.active && !u.isGM).map(u => u.viewedScene).filter(Boolean));
-  const scenes = all(game.scenes).filter(s => all(s.tokens).some(t => t.actorId === actorId));
+  // B6165: a token the law took (hidden, lawTaken) is in custody, not on the map
+  const here = t => t.actorId === actorId && !takenBy(t);
+  const scenes = all(game.scenes).filter(s => all(s.tokens).some(here));
   const scene = scenes.find(s => viewed.has(s.id)) ?? scenes.find(s => s.active) ?? scenes[0];
   if ( !scene ) return null;
-  return {scene, token: all(scene.tokens).find(t => t.actorId === actorId)};
+  return {scene, token: all(scene.tokens).find(here)};
 }
+/** B6165: the law's mark on a culprit's token it took away (hidden until the court lets them go or the term ends). */
+export const takenBy = t => !!(t?.flags?.[MOD]?.lawTaken && t.hidden);
 /** A day sleeper's haven scene, if WoDX knows one and the actor's token is there. */
 function havenWith(actorId) {
   const list = game.modules.get(MOD)?.api?.havens?.list?.() ?? [];
@@ -210,11 +214,35 @@ export async function answer(d, message = null) {
     if ( !has && a ) { try { await L?.add?.(a, "tax", {scene}); } catch (e) { /* no heat */ } }
     try { await L?.arrest?.(d.actor, d.region); } catch (e) { console.warn(`${MOD} | arrest`, e); }
   }
-  // They go with the law: the culprit's token and the watch leave the scene
-  const gone = [...d.tokens, ...(d.mode === "summon" ? [] : [d.token])];
-  if ( scene ) await sendAway(scene.id, gone);
+  // They go with the law: the watch leave the scene, and the culprit's token is hidden (B6165), not deleted, so time
+  // served (Chronicle's law-punish comeBack), a death sentence or a not-guilty verdict still find it
+  if ( scene ) {
+    await sendAway(scene.id, d.tokens);
+    if ( d.mode !== "summon" ) await takeAway(scene, d.token, d);
+  }
   return "yield";
 }
+
+/** B6165: hide the culprit's token and mark it lawTaken. */
+export async function takeAway(scene, tokenId, d = {}) {
+  const t = scene?.tokens.get(tokenId);
+  if ( !t || !game.user.isGM ) return false;
+  await t.update({hidden: true, [`flags.${MOD}.lawTaken`]: {at: now(), region: d.region ?? null, mode: d.mode ?? "arrest"}});
+  return true;
+}
+
+/** B6165: the court lets them go: every token the law took for this actor comes back on the map. */
+export async function letGo(actorId) {
+  if ( !isActiveGM() || !actorId ) return 0;
+  let n = 0;
+  for ( const sc of all(game.scenes) ) {
+    const ids = all(sc.tokens).filter(t => t.actorId === actorId && takenBy(t)).map(t => t.id);
+    if ( ids.length ) { await sc.updateEmbeddedDocuments("Token", ids.map(_id => ({_id, hidden: false, [`flags.${MOD}.lawTaken`]: null}))); n += ids.length; }
+  }
+  return n;
+}
+/** B6165: which sentences let the culprit walk out: all but time (law-punish hides and brings back) and death. */
+export const freedBy = (p = {}) => !!p.mercy || !["time", "death"].includes(p.mark?.kind ?? "");
 
 /** Chronicle's heat reached a stage. */
 async function onStage(p = {}) {
@@ -410,6 +438,13 @@ export async function projectDone(actor, task) {
 
 export function registerReachHooks() {
   Hooks.on("wodxLawStage", p => { onStage(p).catch(e => console.error(`${MOD} | law stage`, e)); });
+  // B6165: not guilty, mercy or a sentence served on the spot (a fine, a flogging, a brand, outlawry) frees the culprit
+  Hooks.on("wodxVerdict", p => { if ( p?.actor && !p.guilty ) letGo(p.actor).catch(e => console.error(`${MOD} | let go`, e)); });
+  Hooks.on("wodxSentence", p => { if ( p?.actor && freedBy(p) ) letGo(p.actor).catch(e => console.error(`${MOD} | let go`, e)); });
+  // a token shown again by anyone (Chronicle's comeBack after time served, a pardon, the Storyteller) loses the mark
+  Hooks.on("updateToken", (t, change) => {
+    if ( change?.hidden === false && t.flags?.[MOD]?.lawTaken && isActiveGM() ) t.update({[`flags.${MOD}.lawTaken`]: null}).catch(() => {});
+  });
   Hooks.on("updateWorldTime", () => { try { if ( chron()?.isSkipping?.() ) return; } catch (e) { /* no Chronicle */ } patrols().catch(e => console.error(`${MOD} | patrols`, e)); if ( isActiveGM() && on() ) helpArrives().catch(e => console.error(`${MOD} | help`, e)); });
   Hooks.on("renderChatMessageHTML", (message, el) => {
     const html = el?.[0] ?? el;
@@ -443,4 +478,4 @@ export async function onRequest(p = {}) {
   return answer({...d, choice: p.choice === "resist" ? "resist" : "yield"}, message);
 }
 
-export const api = () => ({send, sendAway, whereIs, road, raid, lawCome, answer, patrols, callHelp, helpArrives, lever, writeBack, projectDone, rules: R});
+export const api = () => ({send, sendAway, takeAway, letGo, takenBy, whereIs, road, raid, lawCome, answer, patrols, callHelp, helpArrives, lever, writeBack, projectDone, rules: R});

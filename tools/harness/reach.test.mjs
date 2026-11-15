@@ -120,3 +120,35 @@ test("an institution seat can be taken", () => {
   const r = I.unseat(inst, "a");
   assert.equal(r.removed, 1); assert.equal(I.bestSeat(r.inst, "a"), null);
 });
+
+test("the watch's arrest hides the culprit's token and the court brings it back (B6165)", () => {
+  const s = src("modules/wodx-storyteller/scripts/reach.mjs");
+  // the watch's own tokens go; the culprit's is hidden and marked, not deleted
+  assert.match(s, /await sendAway\(scene\.id, d\.tokens\);\s*\n\s*if \( d\.mode !== "summon" \) await takeAway\(scene, d\.token, d\);/);
+  assert.doesNotMatch(s, /\.\.\.\(d\.mode === "summon" \? \[\] : \[d\.token\]\)/);
+  assert.match(s, /hidden: true, \[`flags\.\$\{MOD\}\.lawTaken`\]/);
+  // not guilty, mercy and sentences served on the spot let them go; time and death keep them
+  assert.match(s, /Hooks\.on\("wodxVerdict", p => \{ if \( p\?\.actor && !p\.guilty \) letGo/);
+  const freed = new Function(`return ${/export const freedBy = (\(p = \{\}\) => [^;]+);/.exec(s)[1]}`)();
+  assert.equal(freed({mercy: true}), true);
+  assert.equal(freed({mark: {kind: "fine"}}), true);
+  assert.equal(freed({mark: {kind: "brand"}}), true);
+  assert.equal(freed({mark: {kind: "time"}}), false);
+  assert.equal(freed({mark: {kind: "death"}}), false);
+  // Chronicle's time served counts the token the watch took, so comeBack shows it
+  assert.match(src("modules/wodx-chronicle/scripts/law-punish.mjs"), /!t\.hidden \|\| t\.flags\?\.\["wodx-storyteller"\]\?\.lawTaken/);
+});
+
+test("a Way lets a convened character through and the call goes along (B6166)", () => {
+  const s = src("modules/wodx-storyteller/scripts/core.mjs");
+  assert.match(s, /if \( called && !approved && !way \) return \{ok: false/);
+  assert.match(s, /mutate\("convened", cur => \(cur\?\.\[actorId\] \? \{value: \{\.\.\.cur, \[actorId\]: \{\.\.\.cur\[actorId\], scene: plan\.dest\.scene\.id\}\}\}/);
+});
+
+test("the hunters' proof: npc().orderCarry and the uuid the carry hook sends (B6167)", () => {
+  const s = src("modules/wodx-storyteller/scripts/hunt-follow.mjs");
+  assert.match(s, /const carry = npc\(\)\?\.orderCarry \?\? null;/);
+  assert.match(s, /if \( r\?\.ok \) return p;/);
+  assert.match(s, /typeof ref === "string" \? await fromUuid\(ref\)/);
+  assert.match(src("modules/wodx-npc/scripts/main.mjs"), /orderCarry, carryGoals/, "WoDX NPC's api has orderCarry at its top");
+});

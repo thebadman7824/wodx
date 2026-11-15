@@ -372,7 +372,10 @@ export async function travel({actorId, destId, userId = null, approved = false, 
   if ( !isActiveGM() ) return {ok: false, why: "Only the Storyteller's client moves tokens."};
   const actor = game.actors.get(actorId);
   if ( !actor ) return {ok: false, why: "That character is gone."};
-  if ( convenedMap()[actorId] && !approved ) return {ok: false, why: "This character is in a scene the Storyteller called. Travel waits until it ends."};
+  // B6166: a Way (a door, a gate, a stair) is part of the called scene's place, so a convened character may walk it;
+  // only a trip by the travel window waits until the scene ends
+  const called = convenedMap()[actorId];
+  if ( called && !approved && !way ) return {ok: false, why: "This character is in a scene the Storyteller called. Travel waits until it ends."};
   const plan = planTrip(actor, destId, {mode, pace, lodging, way});
   if ( !plan ) return {ok: false, why: "That place is not open for travel."};
   const sched = plan.sched, owed = sched ? sched.cost + sched.fare : 0;
@@ -394,6 +397,8 @@ export async function travel({actorId, destId, userId = null, approved = false, 
     else paid = ` ${moneyWords(owed, plan.year)} for the trip was not paid.`;
   }
   const tok = await moveToScene(actor, plan.dest.scene, {from: plan.from, at: way?.at ?? null});
+  // B6166: the convened record goes with them, so the call (and its release) follows the character to the new scene
+  if ( called && plan.dest.scene ) await mutate("convened", cur => (cur?.[actorId] ? {value: {...cur, [actorId]: {...cur[actorId], scene: plan.dest.scene.id}}} : null));
   if ( plan.minutes ) await advancePersonal(actorId, plan.minutes * 60);
   const route = plan.trip?.by === "map" ? ` The way: ${Country.legLines(plan.trip, x => W.spanLabel(x)).join("; ")}.` : "";
   const halts = sched?.stops?.length ? ` Stops: ${sched.stops.map(x => `${x.why} at ${x.at}`).join("; ")}.` : "";

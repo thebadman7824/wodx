@@ -201,7 +201,9 @@ export async function tick({force = false} = {}) {
         };
         let dice = poolFor(a, R.rollingAs(t));
         const iron = ironLegion(a);
-        if ( await payNow() ) while ( due-- > 0 && t.status === "open" ) {
+        // B6167: a complication's delay pushes t.next on; in a catch-up tick after a time skip the rolls stop once the
+        // next one lies in the future, so the delay is kept and not rolled through
+        if ( await payNow() ) while ( due-- > 0 && t.status === "open" && R.dueRolls(t, t0) > 0 ) {
           // B3689: costs paid on each roll; without them the work waits
           let adds = 0;
           if ( t.perRoll.length ) {

@@ -89,7 +89,8 @@ async function carryOut(actor, mark, info) {
 async function sendAway(actor, mark) {
   const hidden = [];
   for ( const sc of game.scenes ) {
-    const ids = sc.tokens.filter(t => t.actorId === actor.id && !t.hidden).map(t => t.id);
+    // B6165: a token WoDX Storyteller's watch already took (hidden, lawTaken) counts too, so comeBack shows it again
+    const ids = sc.tokens.filter(t => t.actorId === actor.id && (!t.hidden || t.flags?.["wodx-storyteller"]?.lawTaken)).map(t => t.id);
     if ( ids.length ) { await sc.updateEmbeddedDocuments("Token", ids.map(_id => ({_id, hidden: true}))); hidden.push({scene: sc.id, ids}); }
   }
   await actor.setFlag(MODULE_ID, "lawAway", {until: mark.until, mark: mark.id, region: mark.region, hidden});

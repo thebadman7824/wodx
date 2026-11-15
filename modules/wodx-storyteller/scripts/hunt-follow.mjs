@@ -86,9 +86,11 @@ export async function proof(body, by = null, {region = null} = {}) {
     await card(`${name} is burned where it lies`, `${by?.name ?? "The hunters"} set the body alight. ${H_?.bodiesAt?.(region)?.[0]?.label ?? "The hunters"} have their proof; their file on that kind rises.`, {proof: {token: body.uuid}});
     return p;
   }
-  const carry = npc()?.carry?.orderCarry ?? npc()?.orders?.orderCarry ?? null;
+  // B6167: WoDX NPC's api is npc().orderCarry, and it answers {ok, later, text}: only a carry that took hold (or waits
+  // for the hunter's turn in a fight) skips the walk-and-hide below
+  const carry = npc()?.orderCarry ?? null;
   if ( carry && by?.object && body.object ) {
-    try { const r = await carry(by.object, body.object, {intent: "proof", faction: "hunters", place: p.to}); if ( r ) return p; } catch (e) { console.warn(`${MOD} | proof carry`, e); }
+    try { const r = await carry(by.object, body.object, {intent: "proof", faction: "hunters", place: p.to}); if ( r?.ok ) return p; } catch (e) { console.warn(`${MOD} | proof carry`, e); }
   }
   // No carrying here: the hunter goes to the body, then leaves with it
   if ( onView(scene) && by?.object && body.object ) { try { await routines()?.goTo?.(by.object, body.object, null); } catch (e) { /* no way */ } }
@@ -102,7 +104,9 @@ export async function proof(body, by = null, {region = null} = {}) {
 /** WoDX NPC's carrying: a body carried off as proof. */
 async function onBodyTaken(p = {}) {
   if ( !isActiveGM() || p.intent !== "proof" ) return;
-  const body = p.body?.document ?? p.body ?? null;
+  // B6167: the hook's body is the token's uuid (WoDX NPC carry-goals.mjs), not the document
+  const ref = p.body?.document ?? p.body ?? null;
+  const body = typeof ref === "string" ? await fromUuid(ref).catch(() => null) : ref;
   await proofEffects({region: hunters()?.regionAt?.(body?.parent ?? canvas?.scene), kind: String(baseOf(body?.actor)?.type ?? "") || null, name: body?.name ?? "a body"});
 }
 
