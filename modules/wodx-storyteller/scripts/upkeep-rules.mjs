@@ -28,6 +28,12 @@ export const TIE_KINDS = {
   node: {label: "A Node", days: 30, lapse: "A Node nobody watches draws visitors: rival mages, spirits or werewolves may claim it, and its Quintessence and Tass go to whoever comes (M20 p. 320).", act: "Places of power: take Quintessence or Tass"},
   chantry: {label: "Chantry or Construct", days: 30, lapse: "A member who skips the errands and chores owed loses standing; a member who quits takes their pool points away (M20 p. 309).", act: "Duties at the chantry"},
   freehold: {label: "A freehold (Holdings)", days: 30, lapse: "An untended balefire in a dull place fades a rank each season (Places of power).", act: "Places of power: dream by the balefire"},
+  // B6323: the other lines' own ties, from their Backgrounds (in WoDX's words)
+  dreamers: {label: "Dreamers", days: 30, lapse: "Dreamers who are not visited stop dreaming for the changeling: a Dreamers dot is lost, and with it a success on each Reverie (C20 pdf 170).", act: "A visit, or a Reverie with them"},
+  haunt: {label: "A Haunt", days: 30, lapse: "A Haunt left to itself draws other wraiths and Spectres, and the Shroud there thickens again (Wraith 20th p. 143, the Haunt Background).", act: "Time at the Haunt"},
+  pacts: {label: "Pacts with thralls", days: 30, lapse: "A thrall the demon does not see drifts: the pact's Faith comes slower, and another may court them (Demon: the Fallen pdf 161).", act: "A visit to the thralls"},
+  cult: {label: "A cult", days: 30, lapse: "A cult that is not led splits or drifts: fewer hands to keep the vessel between lives (Mummy: the Resurrection, Cult).", act: "A rite with the cult"},
+  nest: {label: "A dragon nest", days: 30, lapse: "A dragon nest no one guards draws spirits, rivals and the Wan Kuei of other courts to its Chi (Kindred of the East pdf p. 18).", act: "Time at the nest"},
   custom: {label: "Other", days: 30, lapse: "The Storyteller decides.", act: ""}
 };
 
@@ -35,7 +41,8 @@ export const TIE_KINDS = {
 export const BACKGROUND_TIES = [
   [/^herd/, "herd"], [/^domain|^hunting grounds/, "domain"], [/^retainer/, "people"], [/^allies|^ally/, "people"],
   [/^contacts?/, "people"], [/^kinfolk/, "kinfolk"], [/^mentor/, "mentor"], [/^dependents?/, "people"],
-  [/^node\b/, "node"], [/^chantry|^construct\b/, "chantry"], [/^holdings?\b|^freehold/, "freehold"]
+  [/^node\b/, "node"], [/^chantry|^construct\b/, "chantry"], [/^holdings?\b|^freehold/, "freehold"],
+  [/^dreamers?\b/, "dreamers"], [/^haunt\b/, "haunt"], [/^pacts?\b/, "pacts"], [/^cult\b/, "cult"], [/^dragon nest/, "nest"]
 ];
 
 export function tieKindOfBackground(name) {
@@ -124,8 +131,9 @@ export function nightsBetween(from, to) {
  * @param {object} c  {name, vampire, torpor, golconda, blood: {value, max}, willpower: {temp, perm}, wounded}
  * @param {object} o  {nights, willpowerMode: "night"|"story"|"off", nightlyBlood, lastNightHandled}
  *   lastNightHandled: the nightfall card's New Night will settle the last night, so count one fewer
+ *   riseChiPaid: WoDX Actions' day sleep pays a Kuei-jin's Chi on rising, so the last night is already paid
  */
-export function betweenPlan(c = {}, {nights = 0, willpowerMode = "night", nightlyBlood = true, lastNightHandled = false} = {}) {
+export function betweenPlan(c = {}, {nights = 0, willpowerMode = "night", nightlyBlood = true, lastNightHandled = false, riseChiPaid = false} = {}) {
   const lines = [], delta = {};
   const n = Math.max(0, Math.floor(num(nights)) - (lastNightHandled ? 1 : 0));
   if ( n <= 0 ) return {nights: 0, lines, delta};
@@ -138,6 +146,21 @@ export function betweenPlan(c = {}, {nights = 0, willpowerMode = "night", nightl
         warn: after <= 0 ? "No blood left: ravenous, frenzy likely. Feed with the Hunt button." : (cost > b ? "It would have cost more than the pool holds: the Storyteller decides whether they fed." : null)});
     }
   }
+  // B6321: a Kuei-jin spends a point of Chi to rise each night (Kindred of the East pdf 127), the larger pool first
+  // When WoDX Actions' day sleep is on, its rising (riseAuto) already pays the last night's Chi, so count one fewer
+  const nk = riseChiPaid && !lastNightHandled ? n - 1 : n;
+  if ( c.kueijin && !c.torpor && nightlyBlood && nk > 0 ) {
+    const yang = num(c.chi?.yang), yin = num(c.chi?.yin), have = yang + yin, cost = Math.min(nk, have);
+    {
+      let left = cost, dy = 0, di = 0, y = yang, i = yin;
+      while ( left > 0 ) { if ( y >= i && y > 0 ) { y--; dy--; } else if ( i > 0 ) { i--; di--; } else break; left--; }
+      if ( dy ) delta.yangchi = dy;
+      if ( di ) delta.yinchi = di;
+      lines.push({key: "chi", text: `Rising costs ${nk} Chi over ${nk} ${nk === 1 ? "night" : "nights"}: Yang ${yang} to ${yang + dy}, Yin ${yin} to ${yin + di}.`,
+        warn: nk > have ? "It would have cost more Chi than the pools hold: the Storyteller decides whether they fed." : (y + i <= 0 ? "No Chi left: hungry. Feed with the Hunt button." : null)});
+    }
+  }
+  // B6322: a shapechanger's Rage is not added here: WoDX Actions' moonRise already gives moon Rage after every skip
   if ( !c.torpor && willpowerMode === "night" ) {
     const t = num(c.willpower?.temp), p = num(c.willpower?.perm), to = Math.min(p, t + n);
     if ( to > t ) { delta.willpower = to - t; lines.push({key: "willpower", text: `Willpower comes back one a night: ${t} to ${to}.`}); }
@@ -235,3 +258,19 @@ export function outbreakFor(year) {
   const y = num(year);
   return OUTBREAKS.find(o => y >= o.from && y <= o.to) ?? null;
 }
+
+/**
+ * B6327: what a tie that lapses does once the Storyteller approves, so the "needs tending" card is not only words.
+ * neglect  a Fetter or Passion: its rating rolled at 9; failure costs a dot, a botch two; at nothing the wraith falls
+ *          into a Harrowing (Wraith 20th pdf 371, 374: the Storyteller calls for the roll, hence the approval)
+ * dot      a Background that is people or a place: it loses a dot (the books leave a neglected Background to the
+ *          Storyteller; WoDX reading: one dot a lapse, on approval)
+ * The domitor's vitae (WoDX Actions ghoul withdrawal), a caern and custom ties keep their own handling.
+ */
+export const LAPSE_NEGLECT = new Set(["fetter", "passion"]);
+export const LAPSE_DOT = new Set(["herd", "domain", "people", "kinfolk", "mentor", "node", "chantry", "freehold", "dreamers", "haunt", "pacts", "cult", "nest"]);
+export const lapseAction = kind => LAPSE_NEGLECT.has(kind) ? "neglect" : LAPSE_DOT.has(kind) ? "dot" : null;
+/** The sheet item a derived tie came from (tieKey(kind, item id)), or null. */
+export const itemIdOfTie = (key, kind) => (String(key ?? "").startsWith(`${kind}-`) ? String(key).slice(kind.length + 1) : null);
+/** Dots a neglect roll takes: none on a success, one on a failure, two on a botch. */
+export const neglectDrop = ({successes = 0, botch = false} = {}) => (botch ? 2 : num(successes) > 0 ? 0 : 1);

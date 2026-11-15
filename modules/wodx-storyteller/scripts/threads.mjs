@@ -56,15 +56,20 @@ const save = fn => mutate("threadsState", cur => ({value: fn({open: [], done: []
 
 /* ---- The table now ---- */
 
-const LINE_RX = [["kuei-jin", /kuei|cathayan/i], ["vampire", /vampire|ghoul/i], ["werewolf", /werewolf|garou|kinfolk|fera/i], ["mage", /mage|sorcerer/i],
+const LINE_RX = [["kuei-jin", /kuei|cathayan/i], ["vampire", /vampire|ghoul/i], ["werewolf", /werewolf|garou|kinfolk|fera|changing breed/i], ["mage", /mage|sorcerer/i],
   ["changeling", /changeling|kithain|kinain/i], ["wraith", /wraith/i], ["hunter", /hunter/i], ["mummy", /mummy/i], ["demon", /demon/i], ["mortal", /mortal|human/i]];
-const lineOfActor = a => { const t = String(a?.type ?? ""); for ( const [l, rx] of LINE_RX ) if ( rx.test(t) ) return l; return "mortal"; };
+// B6325: a Kuei-jin is a Vampire sheet with the variant kindredeast, a Fera a Changing Breed sheet
+const lineOfActor = a => {
+  if ( /vampire/i.test(String(a?.type ?? "")) && String(a?.system?.settings?.variant ?? "").toLowerCase() === "kindredeast" ) return "kuei-jin";
+  const t = String(a?.type ?? ""); for ( const [l, rx] of LINE_RX ) if ( rx.test(t) ) return l; return "mortal";
+};
 const pcs = () => all(game.actors).filter(isPC);
 
 /** The context the weave reads: year, region, lines at the table, the Future Darkness branch, Session Zero cuts, chains running. */
 export function context() {
   const lines = [...new Set(pcs().map(lineOfActor))];
-  if ( lines.includes("vampire") && !lines.includes("mortal") ) lines.push("mortal");
+  // B6325: every line that lives among mortals draws on mortal threads too, not the Kindred alone
+  if ( lines.some(l => l !== "mortal") && !lines.includes("mortal") ) lines.push("mortal");
   let cut = [];
   try { cut = T.cutsFrom(getLinesVeils().filter(e => e?.kind === "line").map(e => e.text)); } catch (e) { cut = []; }
   let chains = [];

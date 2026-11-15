@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6510
+Next free block: B6520
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -345,9 +345,11 @@ Next free block: B6510
 | B6250-B6259 | Names follow each year's customs (Improvement Desk nm1) (used B6250-B6253) | Creation, NPC |
 | B6260-B6269 | Real recorded cues: Freesound CC0/CC BY sounds for dawn, dusk, notice, birdsong, cock-crow and heartbeat, by era and faith (used B6260-B6263) | Atmosphere |
 | B6300-B6309 | Every line level with vampires in shared modules (Actions, Combat) (used B6300-B6308) | Actions, Combat |
+| B6320-B6329 | Every line equal in WoDX Storyteller (parity with the Kindred-only tools) (used B6320-B6328) | Storyteller |
 | B6350-B6359 | gate kit yearAtLeast, gatearms and gateplayerextras (used B6350-B6353) | tools (gates) |
 | B6490-B6499 | pc queue ageing (used B6490) | tools (pcq) |
 | B6500-B6509 | lanes ignore the dawn and dusk move and session id (used B6500) | tools (lanes) |
+| B6510-B6519 | Map generator licence label: the town layout port is GPL-3.0 (used B6510) | tools/mapgen |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10731,6 +10733,64 @@ Demon: The Fallen p. 160: permanent Torment 0 lets the Storyteller approve redem
 
 Reverse: drop the redeemed checks in modules/wodx-actions/scripts/demon.js.
 
+## B6320. Every line's pools on the dashboard (2026-11-15)
+WoDX Storyteller dashboard-rules linePools: each party row lists the line's own pools, as the Kindred's blood was listed.
+- Kuei-jin: Yang Chi and Yin Chi, with no blood pool.
+- Garou and Fera: Rage and Gnosis.
+- Mage: Quintessence and Paradox.
+- Changeling: Glamour and Banality.
+- Wraith: Pathos, Corpus and Angst.
+- Hunter: Conviction.
+- Mummy: Sekhem.
+- Demon: Faith and Torment.
+
+The row that sorts first is the one lowest on any pool it spends. Pools that rise against the character (Paradox, Banality, Angst, Torment) do not count for sorting.
+
+Reverse: drop pools from partyRow.
+
+## B6321. A Kuei-jin pays Chi to rise between nights (2026-11-15)
+WoDX Storyteller betweenPlan: a Kuei-jin spends a point of Chi a night to rise (Kindred of the East pdf 127), from the larger pool first, under the same setting as the Kindred's nightly blood. Undo puts it back.
+
+Reverse: drop the B6321 branch.
+
+When WoDX Actions' day sleep is on, its rising already pays the last night's Chi (riseAuto), so the card counts one night fewer and never charges it twice.
+
+## B6322. Rage between nights stays with WoDX Actions (2026-11-15)
+WoDX Actions' moonRise already gives moon Rage at nightfall and after every time skip (setting moonRage), so the between-nights card adds no Rage of its own; counting it here would give it twice.
+
+## B6323. Ties from every line's Backgrounds (2026-11-15)
+WoDX Storyteller ties: Dreamers (C20 pdf 170), a Haunt (Wraith 20th p. 143), Pacts (Demon: the Fallen pdf 161), a Cult (Mummy: the Resurrection) and a dragon nest (Kindred of the East pdf 18) come due every 30 days, each with what happens when it lapses. The month is a house figure.
+
+Reverse: drop the five TIE_KINDS rows and their BACKGROUND_TIES entries.
+
+## B6324. Stakes in battle follow the Kuei-jin's aspect, and hold (2026-11-15)
+WoDX Storyteller battles: a blow that pins a Kindred pins a Kuei-jin only when it is aspected to Yin or Yang (Kindred of the East pdf 73). A Balanced Kuei-jin, Yin and Yang within a point of each other (pdf 72), is not pinned. A pinned character gets WoDX Chronicle's Staked condition, so the stake does something; the card used to say torpor and nothing followed.
+
+Reverse: counterResult's cainite back to the sheet type, and drop the setCondition call.
+
+## B6325. Story threads for every line (2026-11-15)
+WoDX Storyteller threads: any supernatural line at the table draws the mortal threads as well, not the Kindred alone. A Kuei-jin and a Fera are read as their own lines.
+
+Reverse: back to vampires only.
+
+## B6326. A Kuei-jin prelude: the Second Breath (2026-11-15)
+WoDX Storyteller preludes: a Kuei-jin gets its own prelude in place of the Embrace: the life, the hells below, the climb back, the first stolen breath, and who finds the newly returned (Kindred of the East). The words are WoDX's own.
+
+Reverse: drop PRELUDES["kuei-jin"] and preludeFor.
+
+## B6327. An untended tie does something once the Storyteller approves (2026-11-15)
+WoDX Storyteller checkTies: a tie that comes due and costs something goes to the approvals queue (type tieLapse); approving applies it on the sheet and starts the tie's clock again.
+- A Fetter or Passion: the neglect check is rolled, its rating at 9; failure costs a dot, a botch two; at nothing the card says a Harrowing follows (Wraith 20th pdf 371, 374; the books leave the call to the Storyteller, hence the approval).
+- A Background that is people or a place (Herd, Domain, Allies, Contacts, Retainers, Kinfolk, Mentor, Node, Chantry, Holdings, Dreamers, Haunt, Pacts, Cult, Dragon Nest): it loses a dot (WoDX reading: one dot a lapse).
+- Kept: the domitor's vitae (WoDX Actions ghoul withdrawal), a caern and custom ties.
+
+Reverse: drop the T_LAPSE proposal in checkTies.
+
+## B6328. The tie rows read against the books (2026-11-15)
+Checked page by page: the Dreamers Background is C20 pdf 170, where each dot is one automatic success on the first Reverie roll, so an untended Dreamer costs that dot and that success; the lapse no longer claims Banality, which the book does not give. The tie's suggested act is a visit or a Reverie: a Rhapsody burns the Dreamer out for good (C20 pdf 174), so it never tends one. Pacts are Demon: the Fallen pdf 161, the Haunt Background Wraith 20th p. 143. The 30-day clocks and the dot a lapse remain WoDX readings (logged in PENDING-REVIEW).
+
+Reverse: the three TIE_KINDS lines back to their earlier wording.
+
 ## B6350. The gate kit moves an early clock to a year a gate needs (2026-11-15)
 Gates. The kit gains yearAtLeast(min): when the clock stands before the year given, the run moves it to 1995 and notes
 the move, and cleanup puts it back. gatevehicles now uses it (B6210 had done the same by hand). gatearms uses it with
@@ -10770,3 +10830,7 @@ clean copies predate it. The drift check now passes over sessionId, dawnDusk, su
 copy (`lanes.mjs snapshot --from 1`, which Ben runs) would also clear it.
 
 Reverse: take the four settings out of ignoreSettings in tools/lanes/lanes.json.
+
+## B6510. The town layout port is under GPL-3.0, not CC0 (2026-11-15)
+tools/mapgen/layout.py said the Medieval Fantasy City Generator it is ported from was released CC0, and B576 said the same. The source repository (github.com/watabou/TownGeneratorOS) carries GPL-3.0. Because the port follows the original step for step, layout.py is a derivative work and keeps GPL-3.0, as does the street plan organic.py takes from it. The file headers, tools/mapgen/MFCG-CREDIT.md, NOTICE.md and the Interactables checklist now say so. No code or map output changed.
+Reverse: none needed; the label follows the source's licence. If the layout is ever rewritten from scratch without the original's code, drop the credit file and the NOTICE line.
