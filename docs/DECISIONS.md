@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6220
+Next free block: B6230
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -338,6 +338,7 @@ Next free block: B6220
 | B6110-B6129 | Line sheets move to ApplicationV2 (the newer sheet engine), one line at a time (used B6110-B6114) | System fork, Sheets, Chronicle |
 | B6130-B6139 | The eight held-back world timeline readings after the book check (used B6130-B6132) | Chronicle |
 | B6210-B6219 | gatevehicles plays in a year with cars (used B6210) | tools (gates) |
+| B6220-B6229 | The night's work: one Undo for a night of the Storyteller's Hand (Ben's desk pick hd1, 15 November 2026) (used B6220-B6226) | Chronicle, Solo |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10447,3 +10448,38 @@ the aeroplane step read "No motor car yet" and the ram missed. When the year is 
 clock to 1995 and notes the move. The kit puts the clock back after.
 
 Reverse: drop the move and play in whatever year the clock shows.
+
+## B6220. The Hand's work is written down as document changes, not read from each card's Undo (2026-11-15)
+WoDX Chronicle. The desk said the batch Undo would use the Undo each card already keeps. Those Undos come in more than a dozen forms across eight modules, and most kinds of approval keep none, so a list built on them would miss most of the night. Instead, while a piece of the Hand's work is open, every change the Storyteller's client makes to actors, actor deltas, items, effects, tokens, tiles, drawings, lights, sounds, notes, regions, walls, templates, scenes, journals, tables, fights and world settings is kept with its old and new values (nightwork-rules.mjs, nightwork.mjs), and each card it posts is noted. Undo puts those back. A kind of approval whose work changed nothing the list can see but which keeps its own Undo is taken back with that Undo. Settings never taken back: the clock and core, the night's work itself, the approval queue, the Lone Chronicle seat's records, the session timer and mark.
+
+Reverse: take nightwork.registerNightHooks out of main.mjs; nothing else is written down.
+
+## B6221. What counts as the Hand's work (2026-11-15)
+WoDX Chronicle. Three things open a piece of work: an approval carried out (decide() runs the kind's approve inside record(), whether approved on its own or by the Storyteller), the world's time moving (a "Time passed" piece stays open while the clock's listeners keep changing things, closing after 4 quiet seconds and 90 seconds at most), and the Lone Chronicle seat's choices (B6225). Other modules can wrap their own automatic work with api.nightwork.record(label, fn) or begin/end. A token walked by hand in the seconds after the clock moved is left out; other changes the Storyteller makes in those seconds are listed and can be unticked.
+
+Reverse: drop the updateWorldTime hook in nightwork.mjs to list only approvals and the seat.
+
+## B6222. Newest first, read against the world at each step (2026-11-15)
+WoDX Chronicle. One Undo takes every ticked piece's changes newest first. Each change is checked against the world at the moment it is taken back, so when two ticked pieces changed the same field, the newer is put back first and the older then sees its own value and puts the first value back.
+
+Reverse: none needed; this is the only order that gives back the oldest value.
+
+## B6223. Changed since: kept by default, with a warning that names the player (2026-11-15)
+WoDX Chronicle. A field that no longer holds what the Hand left there was changed since. The list warns of it on the piece's row and names the player when a player's client made the change (the Storyteller's own later changes are named "you"; a later piece of the Hand's own work is shown without a warning). The window's default keeps such fields as they are now and puts back the rest; "Put it back as it was before the Hand anyway" overwrites them too. A document the Hand made that a player has changed since is kept rather than removed under the default.
+
+Reverse: change the radio's default in nightwork-rules.mjs listHTML and NightApp.keep.
+
+## B6224. Limits: 30 days, 300 pieces, 1,000 changes a piece (2026-11-15)
+WoDX Chronicle. The list is a world setting (nightWork), so it keeps the newest 300 pieces of work from the last 30 days, about 1.5 MB at most. A piece with more than 1,000 changes (a long time skip) is kept as "too much to keep" and is not offered for Undo; a single change over 150 KB is left out of its piece and counted, and the rest can still be taken back. Bookkeeping that follows every change (WoDX Sheets' history strip and window state) is never written down. An approval taken back here is marked undone in the approval queue's history, and one taken back from its own card shows as taken back in the list (approvals.mjs undoById, markTakenBack). The Hand's cards lose their buttons and say they were taken back.
+
+Reverse: change CAPS in nightwork-rules.mjs.
+
+## B6225. The Lone Chronicle seat's choices are the Hand's work (2026-11-15)
+WoDX Solo. Each button the seat presses on a card and each window choice it makes for the absent Storyteller opens a piece of work named after the card and the choice (seatClick in main.mjs), so the lone player can take back a choice the seat got wrong.
+
+Reverse: call el.click() directly again in onMessage and onDialog.
+
+## B6226. The night's work in the lone player's Storyteller tools (2026-11-15)
+WoDX Solo. A sixth Storyteller tool, The night's work: the player's window asks the seat for the list (ask.st.night) and sends the ticked pieces back (ask.st.nightUndo); the seat carries out the Undo, logs it and tells the player what was done. The player's own changes since are warned of in the same way.
+
+Reverse: take the night entry out of ST_TOOLS in solo-rules.mjs.
