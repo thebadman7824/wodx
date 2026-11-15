@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5880
+Next free block: B5890
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -315,6 +315,7 @@ Next free block: B5880
 | B5850-B5859 | gate6i clear track, gatepassing finds its card (used B5850) | tools (gates) |
 | B5860-B5869 | gates after other gates, approval queue one change at a time (used B5860-B5861) | tools (gates), wodx-chronicle |
 | B5870-B5879 | Dates as each land tells them: Persia's solar year and a character's own count (used B5870-B5876) | Chronicle, Atmosphere |
+| B5880-B5889 | Era primers by region: what everyone knows, by the homeland's way of life (used B5880-B5882) | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9587,3 +9588,18 @@ Reverse: drop countOf from clock-app.mjs and WoDX Atmosphere's openingCard.
 tools/gate/gatefaith.mjs made three goods in one batch and took them in the order asked; Foundry does not keep that order, so the beads, the charm and the astrolabe could swap and steps 1 and 4 failed on a lane. Each good is now found by its name, and the divining card is the newest matching message rather than one of the last two.
 
 Reverse: restore the list order in gatefaith.mjs.
+
+## B5880. What everyone knows follows the homeland's way of life (2026-11-15)
+WoDX Storyteller, data/primers-world.mjs and setup-rules.mjs playerPrimer(). The era primers were written for Western Christendom ("Europe lives by the feudal order"), and docs/GLOBAL.md listed primers by region as open. Where the homeland's way of life (WoDX Chronicle's sphereFor, B2670) is not Western Christendom and the year is 1197 or later, the players' page shows that way of life's lines for the period instead, with its name above them. Five periods: to 1449, 1450 to 1799, 1800 to 1913, 1914 to 1999, and 2000 on with the Future Darkness. A way of life that ends in WoDX's history (the Andes and Mesoamerica after the conquest) keeps its last period, though by then those lands follow Western Christendom anyway. Prologue years before 1197 keep the era's own lines. The lines are plain history in WoDX's words, as an ordinary person of the land would know it: no metaplot of the game lines. The Storyteller's era page is unchanged.
+
+Reverse: pass no sphere to playerPrimer in setup.mjs.
+
+## B5881. The primer is written again as the chronicle moves (2026-11-15)
+WoDX Storyteller, setup.mjs refreshPrimer(). The primer journal was written once, at setup. Now the active Storyteller rewrites its page "What everyone knows" when an era is applied (wodxEraApplied) or the homeland setting changes, for the year and homeland of that moment, and renames the journal for the era. Only the page the setup made is touched; any other page the Storyteller added stays. The Storyteller API carries setup.refreshPrimer().
+
+Reverse: remove the two hooks at the end of setup.mjs.
+
+## B5882. Gate gateworldprimers (2026-11-15)
+tools/gate/gateworldprimers.mjs moves the homeland to Egypt and back and checks the page follows, and that the Storyteller's own page is kept.
+
+Reverse: delete the gate.
