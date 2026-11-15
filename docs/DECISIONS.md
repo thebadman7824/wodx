@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5590
+Next free block: B5600
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -289,6 +289,7 @@ Next free block: B5590
 | B5560-B5569 | Names raised to 300, Maori (used B5560) | Creation |
 | B5570-B5579 | Names raised to 300, Sephardi (used B5570) | Creation |
 | B5580-B5589 | Names raised to 300, Mizrahi (used B5580) | Creation |
+| B5590-B5599 | Recheck: gates not on main (used B5590) | tools (PC job queue) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8541,3 +8542,12 @@ Reverse: restore the sephardi entry in data/people-world.mjs and drop sephardi f
 WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Mizrahi list grows from 138 names to 424: more names from the Cairo Geniza, Baghdad, Persia, Yemen and the Maghreb, with more town names before 1800 and family names after; the harness check for modern family names is drawn from 400 people instead of 100, as the longer list makes each name rarer. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: restore the mizrahi entry in data/people-world.mjs and drop mizrahi from RAISED.
+
+## B5590. A gate that is not on main yet is the change's to fix (2026-11-15)
+PC job queue. The recheck (B4610) runs a failing gate again on main and says "fails on main too: not this change's
+fault" when it fails there. A gate that the change adds is not on main, so it always failed there and was marked
+not the change's fault: gatehaul and gateanimalkeepers were both marked this way on 15 November. The runner now
+checks main for `tools/gate/<gate>.mjs` first and calls such a gate "NEW with this change: the gate is not on main
+yet, so this change must fix it".
+
+Reverse: drop the notOnMain set in runner.mjs recheck().
