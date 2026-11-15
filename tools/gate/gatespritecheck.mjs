@@ -24,8 +24,7 @@ const rect = (s, j, i, w, h) => ({type: "rectangle", x: j * s, y: i * s, width: 
 /* A picture of the map round a point, as the Storyteller sees it, saved beside the result. */
 async function shot(name, at, scale = 1.4) {
   try {
-    await canvas.pan({x: at.x, y: at.y, scale});
-    await sleep(350);
+    if ( at ) { await canvas.pan({x: at.x, y: at.y, scale}); await sleep(350); }
     const app = canvas.app, v = app.view ?? app.canvas;
     app.renderer.render(app.stage);
     const c = document.createElement("canvas");
@@ -53,21 +52,22 @@ export async function run() {
 
     await G.step("1. four figures walk four ways", async () => {
       const [walker] = await G.make(Actor, [{name: "Gate Sprite Walker", type: "Mortal"}]);
-      const ways = {up: [0, -2], down: [0, 2], left: [-2, 0], right: [2, 0]}, start = {up: [5, 6], down: [8, 3], left: [13, 4], right: [15, 4]};
+      const ways = {up: [0, -4], down: [0, 4], left: [-4, 0], right: [4, 0]}, start = {up: [5, 6], down: [8, 3], left: [13, 4], right: [15, 4]};
       const toks = await G.tokens(scene, Object.keys(ways).map(w => ({actor: walker, x: start[w][0], y: start[w][1], name: `Walker ${w}`, actorLink: false})));
       await waitFor(() => toks.every(t => t?.object?.mesh));
       const sheets = ["townsman-1888", "lady-1888", "townsman-1888", "lady-1888"];
       for ( const [i, t] of toks.entries() ) await A.give(t, sheets[i]);
       await sleep(1500);
       const before = toks.map(facingShown);
+      await canvas.pan({x: 11 * g, y: 5 * g, scale: 0.9}); await sleep(300);
       // all four set off at once, as a player drags a token: Foundry slides them, the figure steps and turns
       Object.keys(ways).forEach((w, i) => toks[i].update({x: toks[i].x + ways[w][0] * g, y: toks[i].y + ways[w][1] * g}));
-      await sleep(450);
+      await sleep(180);
+      pics.push(await shot("1-walking", null));   // mid-stride, the view already in place
       const during = toks.map(t => ({row: facingShown(t), moving: !!A.state(t.id)?.moving, col: Math.round((t.object?.mesh?.texture?.frame?.x ?? -1) / SR.FRAME_W)}));
-      pics.push(await shot("1-walking", {x: 11 * g, y: 5 * g}));
       await sleep(2500);
       const after = toks.map(facingShown);
-      pics.push(await shot("1-stopped", {x: 11 * g, y: 5 * g}));
+      pics.push(await shot("1-stopped", null));
       const want = Object.keys(ways);
       G.ok("1. the walk row of the way it goes, while walking", during.every((d, i) => d.row === want[i] && d.moving), {before, during});
       G.ok("1. and it keeps facing that way when it stops", after.every((f, i) => f === want[i]), {after});
@@ -128,7 +128,8 @@ export async function run() {
       const sat = await waitFor(() => ["stool", "seat", "sit"].includes(tok?.flags?.[PD]?.act?.name), 15000).then(() => tok.flags[PD].act.name, () => tok?.flags?.[PD]?.act?.name ?? null);
       await sleep(1600);
       pics.push(await shot("3-sitting", {x: tok.x + g / 2, y: tok.y + g / 2}, 2));
-      G.ok("3. the routine brings the token in wearing its sprite", placed && wears === "townsman-1888", {placed, wears});
+      await waitFor(() => tok.texture?.src === SR.stillPath("townsman-1888"), 5000).catch(() => null);
+      G.ok("3. the routine brings the token in wearing its sprite, at the sprite's size", placed && wears === "townsman-1888" && tok.texture?.scaleX === SR.TOKEN.scaleX, {placed, wears, scale: tok.texture?.scaleX});
       G.ok("3. at work its hands move", work && where1 === "work" && f1 !== f2, {where: where1, act: work, frames: [f1, f2]});
       G.ok("3. it walks to the tavern facing the way it goes", turned.length >= 1 && turned.includes("right"), {turned});
       G.ok("3. and sits down there", ["stool", "seat", "sit"].includes(sat), {sat, where: smith.flags?.[NPC]?.where?.activity});
@@ -148,7 +149,7 @@ export async function run() {
       try {
         await ix.attempt(tt.object, wall.id, "listen", {fd: {bonus: 0, extraDiff: 0}});
         await waitFor(() => heard, 15000).catch(() => null);
-        await waitFor(() => A.playing(tt.id)?.act === "search", 5000).catch(() => null);
+        await waitFor(() => A.playing(tt.id)?.act === "search" && (tt.object?.mesh?.texture?.baseTexture?.width ?? tt.object?.mesh?.texture?.source?.width) === SR.FRAME_W * SR.ACT_FRAMES, 5000).catch(() => null);
       } finally { Hooks.off("wodxInteractableWorked", h); }
       const playing = A.playing(tt.id)?.act ?? null, sheet = tt.object?.mesh?.texture?.baseTexture?.width ?? tt.object?.mesh?.texture?.source?.width;
       pics.push(await shot("4-listening", {x: tt.x + g, y: tt.y + g / 2}, 2));
@@ -159,6 +160,7 @@ export async function run() {
     await G.step("5. a drawn sprite of its own goes on by itself", async () => {
       // a stand-in manifest: one character "drawn", its sheets the test townsman's (copied paths are not needed: the flag and the picture path are checked)
       const [own] = await G.make(Actor, [{name: "Gate Sprite Own", type: "Mortal"}]);
+      await A.loadOwn();   // the start-up learning must be over, or it would wipe the stand-in below
       const kept = A.names();
       SR.learn("modules/wodx-paperdoll/sprites/proto", {sprites: {[own.id]: {name: "Gate own", acts: ["sit"], stand: true}}});
       try {

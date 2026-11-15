@@ -19,11 +19,17 @@ export function registerSpriteSettings() {
     hint: "Tokens given a sprite face the way they move and step as they go. Off: they show the still figure.", type: Boolean, default: true});
   game.settings.register(MOD, "spriteLife", {scope: "world", config: true, name: "Figures live their routine on the map",
     hint: "A character with a routine (WoDX NPC) sleeps lying down, sits at rest, works with the hands, kneels at prayer, drinks seated and carries a load on errands; beasts graze and lie down. They get up when they walk. Off: everyone stands.", type: Boolean, default: true});
-  // B6144: the Storyteller asks the PC to draw everyone's sprite, from inside the game
-  game.settings.registerMenu(MOD, "spriteDraw", {name: "Draw sprites", label: "Draw sprites now", icon: "fa-solid fa-person-walking",
-    hint: "Writes every character of the world for the sprite batch and asks the PC sprite drawer to draw the ones that are new or changed. Tokens put the new sprites on by themselves when it is done.", type: DrawMenu, restricted: true});
   game.settings.register(MOD, "spriteDress", {scope: "world", config: true, name: "Tokens wear their character's drawn sprite",
     hint: "When a character has a sprite of its own (drawn by the sprite batch), every token of it on a map wears that sprite at once, also the ones a routine brings in. Off: the Storyteller gives sprites from the token's buttons.", type: Boolean, default: true});
+  // B6144: the Storyteller asks the PC to draw everyone's sprite, from inside the game. Foundry wants an application
+  // class for a menu: this one only opens the confirming window.
+  try {
+    const AppV2 = foundry.applications?.api?.ApplicationV2;
+    const DrawMenu = AppV2 ? class extends AppV2 { async render() { drawDialog().catch(e => console.warn(`${MOD} | draw sprites`, e)); return this; } }
+      : class { render() { drawDialog().catch(e => console.warn(`${MOD} | draw sprites`, e)); return this; } };
+    game.settings.registerMenu(MOD, "spriteDraw", {name: "Draw sprites", label: "Draw sprites now", icon: "fa-solid fa-person-walking",
+      hint: "Writes every character of the world for the sprite batch and asks the PC sprite drawer to draw the ones that are new or changed. Tokens put the new sprites on by themselves when it is done.", type: DrawMenu, restricted: true});
+  } catch (e) { console.warn(`${MOD} | draw sprites menu`, e); }
 }
 /* B6140: a token of a character the batch drew wears that sprite by itself, on the Storyteller's computer */
 const dressOn = () => { try { return game.settings.get(MOD, "spriteDress") !== false; } catch (e) { return true; } };
@@ -79,6 +85,8 @@ function tick() {
     }
     else if ( a ) {
       // a pose that goes round (working, grazing) starts over for as long as the figure stays at it (B5664)
+      // a move whose sheet is still loading starts when it has loaded (for two seconds at most), so the first play is seen whole
+      if ( !a.up && !a.held && !base(name, a.act) && now - (a.asked ??= now) < 2000 ) a.start = now;
       const col = st.moving ? null : SR.actFrame(a.loop ? (now - a.start) % SR.actTotal(a.act) : now - a.start, a.act);
       if ( col === null && a.hold && !st.moving ) a.held = true;
       else if ( col === null ) acts.delete(token.id);
@@ -700,7 +708,6 @@ export async function markChild(actor, growth) {
 }
 
 /* ---- drawing from inside the game (B6144): roster and request out, the PC runner draws, status.json back ---- */
-class DrawMenu { render() { drawDialog().catch(e => console.warn(`${MOD} | draw sprites`, e)); return this; } close() { return this; } }
 const readOwn = async file => { try { const r = await fetch(`${ownFolder()}/${file}?t=${Date.now()}`, {cache: "no-store"}); return r.ok ? r.json() : null; } catch (e) { return null; } };
 let watching = null;
 /** The window: how many characters there are and how many already have a sprite, and the button that asks. */
@@ -777,7 +784,11 @@ function autoDress() {
   dress(canvas.scene).catch(e => console.warn(`${MOD} | dress`, e));
 }
 function onTokenMade(doc) {
-  if ( !on() || !dressOn() || !mine() || doc?.flags?.[MOD]?.sprite ) return;
+  if ( !on() || !mine() ) return;
+  // a token made from a prototype that carried a sprite but not its size and picture is fitted at once
+  const has = doc?.flags?.[MOD]?.sprite;
+  if ( has ) { if ( SR.SHEETS[has] && doc.texture?.src !== SR.stillPath(has) ) give(doc, has).catch(e => console.warn(`${MOD} | dress`, e)); return; }
+  if ( !dressOn() ) return;
   const name = SR.ownName(doc.actorId);
   if ( SR.isOwn(name) ) give(doc, name).catch(e => console.warn(`${MOD} | dress`, e));
 }
