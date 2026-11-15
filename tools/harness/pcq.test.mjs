@@ -7,6 +7,7 @@ import path from "node:path";
 import {spawnSync} from "node:child_process";
 import {parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, issueBody} from "../pcq/jobs.mjs";
 import {preflight} from "../pcq/submit.mjs";
+import * as gpu from "../pcq/gpu.mjs";
 
 const LANES = [2, 3, 4, 5, 6];
 const lanesCfg = JSON.parse(fs.readFileSync(new URL("../lanes/lanes.json", import.meta.url)));
@@ -175,4 +176,18 @@ test("failing gates and recheck verdicts", async () => {
   assert.match(recheckVerdicts(["gatea"], "gatea: 1/2 passed", null)[0].verdict, /fails alone too/);
   // B5590: a gate the change adds fails on main only because it is not there: that is the change's to fix.
   assert.match(recheckVerdicts(["gatea"], "gatea: 1/2 passed", "gatea: ERROR no such gate", new Set(["gatea"]))[0].verdict, /NEW with this change: the gate is not on main/);
+});
+
+// Graphics card heat watch.
+test("gpu line parses and N/A memory is null", () => {
+  const r = gpu.parseLine("2026/11/15 22:30:00.000, 72, N/A, 250.51, 73, 98, 8400");
+  assert.equal(r.core, 72); assert.equal(r.memory, null); assert.equal(r.watts, 250.51);
+  assert.equal(gpu.parseLine("garbage"), null);
+});
+test("gpu alert only after the heat holds, clears after it cools", () => {
+  const w = gpu.watcher(), m = 60000, hot = {core: 86, memory: null}, ok = {core: 70, memory: null};
+  assert.equal(w(hot, 0), null); assert.equal(w(hot, 4 * m), null); assert.equal(w(hot, 5 * m), "hot");
+  assert.equal(w(hot, 6 * m), null); assert.equal(w(ok, 7 * m), null); assert.equal(w(ok, 17 * m), "cool");
+  const w2 = gpu.watcher(); w2(hot, 0); w2(ok, m); assert.equal(w2(hot, 2 * m), null); assert.equal(w2(hot, 6 * m), null);
+  const w3 = gpu.watcher(); w3({core: 70, memory: 104}, 0); assert.equal(w3({core: 70, memory: 104}, 5 * m), "hot");
 });

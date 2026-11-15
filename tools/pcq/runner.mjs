@@ -22,7 +22,7 @@
  * - A runner that stopped mid-job: on start, issues still marked pc-running are queued again.
  * - Status: the issue labelled pc-status shows each lane, the queue and the last results, updated every 2 minutes,
  *   so any thread can see the runner is alive.
- * Every hour it also sweeps stale pull requests (sweep.mjs, B4110).
+ * Every hour it also sweeps stale pull requests (sweep.mjs, B4110). Every minute it logs the graphics card heat (gpu.mjs).
  * Never touches lane 1 or the Live world; writes nothing to the shared project folder.
  */
 import fs from "node:fs";
@@ -33,6 +33,7 @@ import {fileURLToPath} from "node:url";
 import {OWNER, REPO_NAME, LABEL, LANE_KINDS, parseBody, validate, order, gateArgs, isInfraFault, laneClashes, fit, failingGates, recheckVerdicts} from "./jobs.mjs";
 import {loadConfig, getLane, lockState, isUp, readJson} from "../lanes/lib.mjs";
 import {sweep, HOUR} from "./sweep.mjs";
+import * as gpu from "./gpu.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)), ROOT = path.resolve(HERE, "../..");
 const args = process.argv.slice(2), DRY = args.includes("--dry"), ONCE = args.includes("--once");
@@ -369,6 +370,14 @@ for ( const i of await openIssues(LABEL.running) ) {
   await comment(i.number, "The runner restarted while this ran; it will run again from the start.").catch(() => {});
 }
 let light = 0, lastFetch = 0, lastSweep = 0, sweeping = false;
+let lastGpu = 0; const gpuWatch = gpu.watcher();
+function gpuCheck() {
+  if ( Date.now() - lastGpu < 60000 ) return null;
+  lastGpu = Date.now();
+  const g = gpu.read(); if ( !g?.reading ) return null;
+  fs.appendFileSync(path.join(LOGS, `gpu-${new Date().toISOString().slice(0, 10)}.csv`), g.raw + "\n");
+  return {r: g.reading, change: gpuWatch(g.reading)};
+}
 for ( ;; ) {
   try {
     if ( draining && !active.size ) { log("exiting for an update"); process.exit(75); }
@@ -389,6 +398,11 @@ for ( ;; ) {
         .then(r => log(`sweep: ${r.rows.length} open, ${r.stuck} stuck, ${r.red} red, ${r.fixed} moved on`))
         .catch(e => log(`sweep failed: ${e.message}`)).finally(() => { sweeping = false; });
     }
+    // Graphics card heat (B6520): log each minute, alert when it stays hot.
+    const g = gpuCheck();
+    if ( g?.change === "hot" ) await alert("gpu", `graphics card running hot (core ${g.r.core} C${g.r.memory !== null ? `, memory ${g.r.memory} C` : ""})`,
+      `Over ${gpu.GPU_LIMITS.core} C core${g.r.memory !== null ? ` or ${gpu.GPU_LIMITS.memory} C memory` : ""} for ${gpu.GPU_LIMITS.hotMinutes} minutes. Power ${g.r.watts} W, fan ${g.r.fan}%, load ${g.r.util}%. Log: logs/gpu-*.csv in the runner folder.`);
+    else if ( g?.change === "cool" ) await recovered("gpu");
     for ( const id of LANES ) await healthCheck(id);
     const issues = await openIssues(LABEL.job);
     const openNums = new Set(issues.map(i => i.number));
