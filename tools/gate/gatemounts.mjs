@@ -13,6 +13,8 @@
  *   8. "keep its own picture" gives the tile its icon back
  *   9. the picker on the tile's buttons lists the shapes and the colours
  *  10. a creature marked as a horse (when WoDX Interactables rides beasts) shows a horse, and its rider sits astride
+ *  11. a vehicle on its own sheet shows the shape of its kind, year and style in its sheet's paint, changes when the
+ *      style changes, and seats its driver (B4977)
  * Result: Data/wodx-gate/gatemounts-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -136,6 +138,28 @@ export async function run() {
       const r = MA.showing(td);
       G.ok("10. a ridden beast", s?.kind === "horse" && r?.pose === "ride" && !r.hidden && r.y < tb.object.center.y, {beast: s, rider: r});
       await tb.update({[`flags.${IX}.driver`]: null});
+    });
+
+    await G.step("11. a vehicle on its own sheet", async () => {
+      const VT = ix?.vehicles?.rules?.VEHICLE_TYPE;
+      if ( !VT ) return G.ok("11. a vehicle on its own sheet", true, {skipped: "this WoDX Interactables has no vehicle sheets yet"});
+      const [veh] = await G.make(Actor, [{name: "Gate Mounts Motor", type: VT, system: {kind: "car", built: 1995, colour: "red", style: "rugged"}}]);
+      const [tv] = await G.tokens(scene, [{actor: veh, x: 8, y: 12}]);
+      await waitFor(() => tv?.object?.mesh);
+      await waitFor(() => MA.showing(tv)?.look === "1990-fourbyfour", 15000);
+      const a = MA.showing(tv), look = MR.looksOf("car").find(l => l.id === "1990-fourbyfour"), f = tv.object.mesh.texture?.frame;
+      await veh.update({"system.style": "taxi", "system.colour": ""});
+      await waitFor(() => MA.showing(tv) && MA.showing(tv).look !== "1990-fourbyfour", 15000);
+      const b = MA.showing(tv);
+      await veh.update({"system.style": "worn"});
+      await waitFor(() => MA.showing(tv)?.scheme === "rust", 15000);
+      const c = MA.showing(tv);
+      await tv.update({[`flags.${IX}.driver`]: {a: driver.id, t: td.uuid, n: driver.name, dx: 0, dy: 0}});
+      await waitFor(() => MA.showing(td)?.on === tv.uuid, 8000);
+      const r = MA.showing(td);
+      G.ok("11. a vehicle on its own sheet", a?.kind === "car" && a.scheme === "red" && f?.width === look.w && f?.height === look.h && b?.look === "1990-sedan" && c?.scheme === "rust" && r?.pose === "sit" && !r.hidden,
+        {rugged: a, frame: f ? {w: f.width, h: f.height} : null, taxi: b, worn: c, driver: r});
+      await tv.update({[`flags.${IX}.driver`]: null});
     });
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }
   finally { return G.finish(); }

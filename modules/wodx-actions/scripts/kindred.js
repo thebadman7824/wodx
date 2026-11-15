@@ -32,6 +32,7 @@ import * as DR from "./demon-rules.js";
 import * as BR from "./book-rituals.js";
 import * as DSX from "./daysleep.js";
 import * as DSR from "./daysleep-rules.js";
+import * as FOM from "./fomor.js";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -580,7 +581,7 @@ export function build(ctx) {
     /** An onlooker as the witness rules see it, from a token or an actor. */
     function onlookerOf(x) {
         const actor = x?.actor ?? x;
-        return { actor, tok: x?.actor ? x : null, profile: P.detectProfile(actor), knows: P.worldFlag(actor, "knows") ?? null, kinfolk: !!P.worldFlag(actor, "kinfolk") };
+        return { actor, tok: x?.actor ? x : null, profile: P.detectProfile(actor), knows: P.worldFlag(actor, "knows") ?? null, kinfolk: !!P.worldFlag(actor, "kinfolk") || FOM.immune(actor) };
     }
     /** The place a token stands in: a WoDX NPC region tag, else the scene's ({kind, masq, uuid}) or null. */
     function placeOf(tokenLike) {

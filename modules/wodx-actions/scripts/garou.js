@@ -16,6 +16,7 @@ import { aim } from "./aim.js";
 import * as EF from "./effects.js";
 import * as BR from "./book-rituals.js";
 import { outcomesOf } from "./mage-da-effects.js";
+import * as FOM from "./fomor.js";
 
 const MOD = "wodx-actions";
 const DATA = {};
@@ -165,6 +166,8 @@ export function build(ctx) {
         if (!cost) return "";
         if (res === "willpower") { if (!(await spendWillpower(actor, cost))) return false; return `${actor.name} spends ${cost} Willpower.`; }
         const r = P.resource(actor, res);
+        // B5619: Gifted Fomor pays a Gift's Rage or Gnosis with Willpower (W20 p. 434)
+        if (!r.ok && FOM.giftStandIn(actor)) { if (!(await spendWillpower(actor, cost))) return false; return `${actor.name} spends ${cost} Willpower in place of ${res === "rage" ? "Rage" : "Gnosis"} (Gifted Fomor).`; }
         if (!r.ok) { ctx.notify(`${actor.name} has no ${r.label} on the sheet.`); return false; }
         if (r.value < cost) { ctx.notify(`${actor.name} has only ${r.value} ${r.label}.`); return false; }
         if (!setting("spendResources")) return `${r.label}: spend ${cost} (not deducted: setting off)`;
@@ -808,7 +811,8 @@ export function build(ctx) {
 
     /* ---------------- The Delirium, the Curse, Kinfolk ---------------- */
 
-    function isKinfolk(a) { return !!P.worldFlag(a, "kinfolk"); }
+    // B5619: a fomor with Immunity to the Delirium is untouched, as Kinfolk are (W20 p. 434)
+    function isKinfolk(a) { return !!P.worldFlag(a, "kinfolk") || FOM.immune(a); }
     const HUMAN = ["mortal", "hunter", "ghoul"];
 
     async function deliriumCheck({ tokens: given = null } = {}) {
