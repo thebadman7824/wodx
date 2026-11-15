@@ -3,7 +3,10 @@
  *   await (await import(`/wodx-gate/gatesheet1.mjs?${Date.now()}`)).run()
  * Opens the 6g test changeling's sheet, checks the book's sections, clicks a Dominion dot, a Mists dot and box, and a
  * missing Ability's dot, then puts the traits back. Opens the sheet unlocked (permanent dots move only then) and
- * puts the lock back after. Leaves the sheet open for a look. Deletes only the test Ability it adds. Result: Data/wodx-gate/gatesheet1-result.json.
+ * puts the lock back after. Leaves the sheet open for a look. Deletes only the test Ability it adds.
+ * The last step (B6175) makes a mortal of its own ("Gate sheet1 roller"), puts a -1 die Dexterity effect on it through
+ * WoDX Chronicle, clicks Dexterity on its sheet and Roll in the system's window, and reads the dice the card rolled;
+ * the mortal is deleted after. Result: Data/wodx-gate/gatesheet1-result.json.
  */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const ACT = "wodx-actions";
@@ -68,6 +71,30 @@ export async function run() {
   await step("a modern changeling gets the Changeling 20th sheet, not the Dark Ages one", async () => {
     const pk = game.actors.find(x => x.name === "Jamilah (6h, pooka wilder)");
     ok("a modern changeling gets the Changeling 20th sheet, not the Dark Ages one", pk && pk.sheet.wodxId === "c20", { sheet: pk?.sheet?.wodxId });
+  });
+  await step("a click on Dexterity rolls with WoDX's parts on it", async () => {
+    const T = game.modules.get("wodx-chronicle")?.api?.traits;
+    const roller = await Actor.create({ name: "Gate sheet1 roller", type: "Mortal" });
+    try {
+      await roller.update({ "system.attributes.dexterity.value": 4 });
+      await T.addBite(roller, { key: "gate-sheet1", name: "Gate shakes", tags: ["dexterity"], dice: -1, duration: { kind: "time", seconds: 3600 }, source: "gatesheet1" });
+      const rs = roller.sheet; await rs.render(true);
+      await until(() => rs.rendered && rs.element?.[0]?.querySelector("label.vrollable[data-attribute='true'][data-key='dexterity']"));
+      const t0 = Date.now();
+      rs.element[0].querySelector("label.vrollable[data-attribute='true'][data-key='dexterity']").click();
+      let dlg = null;
+      await until(() => (dlg = Object.values(ui.windows).find(w => w.constructor?.name === "DialogGeneralRoll" && w.actor?.id === roller.id && w.rendered)));
+      (dlg?.element?.[0] ?? dlg?.element)?.querySelector(".actionbutton")?.click();
+      let m = null;
+      await until(() => (m = game.messages.contents.filter(x => (x.timestamp ?? 0) >= t0 && x.speaker?.actor === roller.id).at(-1)), 8000);
+      const mods = m?.flags?.["wodx-sheets"]?.rollMods ?? null;
+      const W = CONFIG.worldofdarkness, explodes = W?.useexplodingDice && ["always", "nospeciality"].includes(W?.explodingDice);
+      const faces = (m?.rolls ?? []).map(r => Number(r.total));
+      const rolled = faces.length - (explodes ? faces.filter(f => f === 10).length : 0);
+      const dex = Number(roller.system.attributes.dexterity.total ?? roller.system.attributes.dexterity.value);
+      ok("a click on Dexterity rolls with WoDX's parts on it", !!m && mods?.dice === -1 && rolled === dex - 1 && /WoDX:/.test(m.content), { dex, rolled, mods, card: !!m });
+      await rs.close(); await dlg?.close?.();
+    } finally { await roller.delete(); }
   });
   await a.setFlag(ACT, "daFae", keep);
   if (wasLocked !== undefined) { sheet.locked = wasLocked; if (sheet.rendered) await sheet.render(false); }

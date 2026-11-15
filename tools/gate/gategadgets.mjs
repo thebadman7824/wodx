@@ -1,13 +1,15 @@
 /**
  * WoDX Library gate: seeds, fire-lighters and timepieces (B3911), in Foundry, in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gategadgets.mjs?${Date.now()}`)).run()
- * Makes its own scene, actor and token and removes them; never moves the clock (a planting is aged by its flag).
- *   1. seed potatoes planted are growing; once their days are past, Use harvests 8 potatoes into Possessions
+ * Makes its own scene, actor and token and removes them. Moves the clock past the planting's days and the kit puts
+ * it back after.
+ *   1. seed potatoes planted are growing; once the clock passes their days they are harvested by themselves: 8
+ *      potatoes in Possessions, no second Use (B6177)
  *   2. a match lights the tallow candle the character carries (the token carries a light)
  *   3. a wristwatch tells the hour on a card to its owner
  * Result: Data/wodx-gate/gategadgets-result.json.
  */
-import {gate} from "./kit.mjs";
+import {gate, waitFor} from "./kit.mjs";
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
@@ -24,11 +26,12 @@ export async function run() {
     await G.step("1. plant and harvest", async () => {
       await lib.use.run(seeds, "plant", a);
       const growing = !!a.items.get(seeds.id)?.flags?.["wodx-library"]?.planted;
-      await a.items.get(seeds.id).setFlag("wodx-library", "planted", {at: game.time.worldTime - 101 * 86400});
-      await lib.use.run(a.items.get(seeds.id), "plant", a);
-      await wait(300);
+      const days = (await import("/modules/wodx-library/scripts/gadget-rules.mjs")).cropOf("seed potatoes")?.days ?? 101;
+      // the clock moves past the days; the Storyteller's client harvests on the time change
+      await game.time.advance(days * 86400 + 3600);
+      await waitFor(() => !a.items.get(seeds.id) && a.items.some(i => i.name === "potatoes"), 8000);
       const crop = a.items.find(i => i.name === "potatoes");
-      G.ok("1. plant and harvest", growing && !a.items.get(seeds.id) && Number(crop?.flags?.["wodx-sheets"]?.qty) === 8, {growing, gone: !a.items.get(seeds.id), qty: crop?.flags?.["wodx-sheets"]?.qty ?? null});
+      G.ok("1. plant and harvest", growing && !a.items.get(seeds.id) && Number(crop?.flags?.["wodx-sheets"]?.qty) === 8, {growing, days, gone: !a.items.get(seeds.id), qty: crop?.flags?.["wodx-sheets"]?.qty ?? null});
     });
 
     await G.step("2. a match lights the candle", async () => {
