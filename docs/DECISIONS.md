@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5680
+Next free block: B5780
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -300,7 +300,9 @@ Next free block: B5680
 | B5630-B5639 | Blood hunts: court Kindred turn in batches (used B5630) | Actions |
 | B5640-B5649 | German names before 1900, and refilling emptied tables (used B5640-B5641) | Creation, Chronicle |
 | B5650-B5659 | Spirit Charms: the W20 Charms play from a Charm window (used B5650-B5657) | Actions, Combat |
+| B5660-B5669 | Child proportions, drawn poses by routine, animal legs (used B5660-B5668) | Paperdoll |
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
+| B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8945,6 +8947,52 @@ WoDX Actions. The NPC power choice offers a spirit's Charms by their effect keyw
 
 Reverse: drop the spirit branch in npcPowers.
 
+## B5660. Beasts' legs are built by kind (2026-11-15)
+WoDX Paperdoll, tools/sprites/beast.py. Every four-legged kind used the wolf's leg, so cattle, horses, pigs and sheep stood on a dog's bent hind legs and paws. Each kind now names its leg: `hoof` (a knee low on the foreleg, the hock high and pointing back, a thin cannon bone, a dark hoof), `pad` (the thick columns and flat feet of bears and mammoths) or `paw` (dogs, cats, small beasts and the clawed beasts of legend). The walk is a four-beat walk: a hind foot, then the fore foot of the same side a quarter of the stride later. The mount sheets were drawn again from the same rig, so ridden horses, mules and camels have the same legs.
+
+Reverse: set `leg='paw'` for every kind and put the two-beat phases back in `side()`.
+
+## B5661. A standing frame (2026-11-15)
+A walk cycle has no frame with every foot down, so a still figure seen from the side showed a lifted leg. Every sheet the batch draws now carries a standing frame as a ninth column after the eight of the walk, and the manifest marks it (`stand: true`). The game shows that column when the token is not moving (sprite-rules `frameOf(st, grid, stand)`), and column 0 as before for a sheet without one.
+
+Reverse: drop the ninth column in batch.py `run()` and `STAND` in sprite-rules.mjs.
+
+## B5662. Beasts graze and lie down (2026-11-15)
+The beast rig takes a pose: the head comes down to the ground with the muzzle tipped (grazing, a loop) or the body comes down with the legs folded under it (lying, held). Sheets `graze` and `lie`, six frames by four facings.
+
+Reverse: remove `posed()` from beast.py and the two names from `BEAST_LIFE`.
+
+## B5663. Children have a child's proportions (2026-11-15)
+The child bands of B3480 squeezed the whole figure below the chin by one factor, which gave a small adult. Each band now gives the legs their own share of the height below the chin (0.50 for the smallest, 0.63 for the grown) and the trunk the rest; the head keeps nearly its full width and the shoulders come in. Heights by band are unchanged, so nothing that reads a child's size changes. The sample map of 15 November had shrunk grown figures instead of passing `growth`; that was the sample's mistake, not the game's.
+
+Reverse: one factor below the chin again in child.py `Warp`.
+
+## B5664. Poses are drawn, not made from the walk (2026-11-15)
+Sitting and kneeling were made by squashing the standing frame. wear.py now draws a pose joint by joint (`pose_at`, `posed`): on a seat, on a stool of its own, on the ground, kneeling with the hands together, seated with a cup, working with the hands, kneeling to tend, hoeing, and the walk with a sack in the arms (`carry`, a way of going). Asleep is the figure seen from above under a blanket, eyes shut, one row for each way the head can point. Long garments lie over bent legs and never hang below the ground. Children take every pose. Working, tending, hoeing, drinking and grazing go round for as long as the figure stays at them.
+
+Reverse: drop `PA.drawn()` from batch.py; the squashed sit and kneel return.
+
+## B5665. Figures live their routine on the map (2026-11-15)
+World setting `spriteLife`, on by default. The active Storyteller's computer looks every few seconds at each sprite token whose character has a WoDX NPC routine and, once the token has come to rest, gives it the pose of what the routine says it is doing: asleep lying down (along a bed when one is beside it), at rest on a seat beside it, else on a stool indoors or on the ground in the open, at work with the hands (hoeing in a yard, a park or the wilds), at prayer kneeling, drinking seated, and on an errand carrying a load as it walks. Beasts graze, and lie down to rest or sleep. A figure gets up when it walks. A pose given by hand, a figure in a fight and one fallen or dead are left alone. A seat or a bed is told by the name of a tile's picture, or by the tile flag `flags.wodx-paperdoll.furniture` ("bench", "bed"), with `flags.wodx-paperdoll.head` for the end the pillow is at. A lone player, who is their own Storyteller, sees the same.
+
+Reverse: turn the setting off, or remove `settle()` from sprites.mjs.
+
+## B5666. Getting up is played, not snapped (2026-11-15)
+
+A figure that sat, knelt or lay down used to jump straight back to standing. When the pose is let go (it walks off, the routine moves on, or someone helps it up), the way down is now played backwards in a little under half a second, on every screen, before the walk or the standing frame takes over. Sprite-rules `RISES` lists the poses a figure gets up from and `upFrame(t)` gives the frame.
+
+Reverse: drop the `up` branch in sprites.mjs `tick()` and the `RISES` check in `onTokenUpdate()`.
+
+## B5667. The blanket is the bed's (2026-11-15)
+
+A sleeper was always drawn under the same grey-brown blanket. Every sheet with `sleep` now has a `sleepcover` sheet beside it: the blanket alone, near white. When a routine puts a figure to sleep in a bed, the bed's colour goes on the pose (`act.blanket`) and every screen lays the cover over the sleeper tinted to it. The colour is the tile flag `flags.wodx-paperdoll.blanket` ("#rrggbb") when the map maker set one; otherwise it is read once from the bed picture itself (the commonest colour of its middle, sprite-rules `blanketOf`). A sleeper with no bed keeps the drawn blanket.
+
+Reverse: drop the `cover()` call in sprites.mjs `tick()`; the drawn blanket shows as before.
+
+## B5668. Every four-legged animal gets the straight hind leg (B5660 widened)
+
+Ben saw the hind legs bend forward under the belly. The hock now sits back under the rump and the cannon bone hangs straight to the hoof or paw, trailing as the foot lifts. The same fix went into the Garou Lupus and Hispo rig (wolf.py), whose test sheets were drawn again. Mounts and every monster or beast the batch draws are on the beast rig, so they take it at the next batch. The Crinos keeps its upright war-form legs, and birds, bats, snakes and spiders have no hock.
+
 ## B5670. Every line's NPCs choose their own powers (2026-11-15)
 WoDX Actions. Ben asked for the rest of the lines to get a power system for NPCs (2026-11-15 04:25Z). Each line's builder now has powersFor(actor): the powers the NPC knows, each with the effect keywords its own effects card gives (npc-power-rules.js keysOf), so the NPC choice picks one to attack, hold, heal, guard, flee, call or boost. autoPower fills the line's own window and rolls it, so the pool is paid, the roll is made and the effect lands exactly as a player's use would. A power whose card gives no keyword is left to the Storyteller.
 
@@ -8968,3 +9016,48 @@ A Kuei-jin's Disciplines are no longer read as Kindred Disciplines for the NPC c
 
 ## B5677. Inquisitors: the book's Blessings on the sheet (2026-11-15)
 A Blessing on the sheet counts with or without the Virtue in brackets after its name.
+
+## B5750. Witness reactions given by a window act on the map (2026-11-15)
+WoDX Actions. The witness step takes results already rolled (the Delirium check, a demon's Revelation) and acts them out: a frozen witness is Immobilized for the scene, a fleeing one runs, a fighting one starts a fight; those who keep it go on the Masquerade record. With no revealed actor on the map, nothing is recorded against anyone.
+
+Reverse: drop the `given` option; the windows post their table again.
+
+## B5751. Revelation acts on the targeted mortals (2026-11-15)
+WoDX Actions. The Revelation window reads the targeted token's Willpower and hands its reaction to the witness step (B5750).
+
+Reverse: remove the witness call after the card.
+
+## B5752. A lost Harrowing costs what was at stake (2026-11-15)
+WoDX Actions. A Passion's Harrowing lost takes the quarry Passion to 0 and tests another Passion (rolled at 5, down 1 on failure); a Fetter's loses a dot; other kinds add a permanent Angst on a loss; a lost Destruction Harrowing offers the Storyteller a button to turn the wraith Spectre (hostile, darkened, logged). The wraith's token fades while the Harrowing runs and comes back after. House reading of Wraith 20th's Harrowing outcomes where the book leaves the amount to the Storyteller.
+
+Reverse: remove payHarrowing and harrowedLook.
+
+## B5753. Summoning a spirit brings one (2026-11-15)
+WoDX Actions. A Garou's spirit summons with Gnosis successes brings a spirit through the summons layer beside the summoner for the scene: a called one when the attitude roll holds, a wild one on 2 successes or less, a Bane on a botch.
+
+Reverse: drop the SUM.bring call.
+
+## B5754. The Curse takes dice off social rolls with mortals (2026-11-15)
+WoDX Actions. A Garou's social roll against a mortal, hunter or ghoul loses the Curse dice by permanent Rage (W20), shown as a part of the pool.
+
+Reverse: remove the curse part in social().
+
+## B5755. A lost Kuei-jin soul contest sets the state (2026-11-15)
+WoDX Actions. Lost to the fire soul: frenzy; to the wave soul: the Fear (rotschreck); to the shadow soul: a new "shadow soul" condition, each for the scene.
+
+Reverse: remove the timed condition after the contest.
+
+## B5756. A won Forbiddance makes the being afraid (2026-11-15)
+WoDX Actions. A won Forbiddance on a targeted being sets a "forbidden" condition and Afraid for the scene: an NPC runs from the mummy.
+
+Reverse: remove the timed effect.
+
+## B5757. The resource Uses window does the use (2026-11-15)
+WoDX Actions. Willpower's automatic success and ignored wounds wait on the character for the next roll; vitae heals bashing then lethal damage, or adds a held Physical die; Rage gives extra actions in a running fight, takes the Dazed mark off, or opens Change form; Glamour heals; stepping sideways opens the Otherworlds window.
+
+Reverse: drop the fifth element of each USES row and carryOut.
+
+## B5758. Kindred Background downtime brings what it says (2026-11-15)
+WoDX Actions. Resources: money into the purse, a week of a month's allowance per success (house reading). Contacts: current rumours named, up to the successes. Influence: a boon owed by the institution in the Prestation journal. Retainers: servants named and their orders opened. Domain or Hunting Grounds with no success: a rival feeds there (the herd thins). A botch starts a rumour about the character.
+
+Reverse: remove downtimeDoes.
