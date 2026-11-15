@@ -45,11 +45,13 @@ let deps = {}; // {characterFor, describeTile, mapEvent, noiseAt, rules}
 /*  Reading the board                                                  */
 /* ------------------------------------------------------------------ */
 
+/** Where a document stands in the database: a token that is still being animated there reads its old place otherwise. */
+const SX = d => num(d?._source?.x ?? d?.x), SY = d => num(d?._source?.y ?? d?.y);
 const centreOf = doc => {
   const g = sizeOf(doc?.parent);
-  return {x: num(doc?.x) + num(doc?.width || 1) * g / 2, y: num(doc?.y) + num(doc?.height || 1) * g / 2};
+  return {x: SX(doc) + num(doc?.width || 1) * g / 2, y: SY(doc) + num(doc?.height || 1) * g / 2};
 };
-const rectOf = t => ({x: num(t.x), y: num(t.y), w: num(t.width), h: num(t.height)});
+const rectOf = t => ({x: SX(t), y: SY(t), w: num(t.width), h: num(t.height)});
 const toRect = (p, r) => Math.hypot(Math.max(r.x - p.x, 0, p.x - (r.x + r.w)), Math.max(r.y - p.y, 0, p.y - (r.y + r.h)));
 /** Within reach: next to it (a square and a half, centre to edge, past the character's own half square). */
 function inReach(tokDoc, other) {
@@ -195,17 +197,17 @@ function hear(tokDoc, noise, label) {
 function float(doc, text) {
   try {
     if ( doc?.parent?.id !== canvas?.scene?.id ) return;
-    const p = doc.documentName === "Token" ? (doc.object?.center ?? centreOf(doc)) : {x: num(doc.x) + num(doc.width) / 2, y: num(doc.y) + num(doc.height) / 2};
+    const p = doc.documentName === "Token" ? (doc.object?.center ?? centreOf(doc)) : {x: SX(doc) + num(doc.width) / 2, y: SY(doc) + num(doc.height) / 2};
     canvas.interface?.createScrollingText?.(p, text, {anchor: CONST.TEXT_ANCHOR_POINTS?.TOP, fontSize: 22, fill: "#ffe8c0", stroke: 0x000000, strokeThickness: 4, duration: 2200});
   } catch (e) { /* no canvas */ }
 }
 /** Put a token on a spot: a plain move first; past a wall, a displacement (as WoDX NPC's Undo does). */
 async function place(doc, pos) {
   try { await doc.update({x: Math.round(pos.x), y: Math.round(pos.y)}, MOVE); } catch (e) { /* the move below */ }
-  if ( (Math.round(doc.x) !== Math.round(pos.x) || Math.round(doc.y) !== Math.round(pos.y)) && typeof doc.move === "function" && CONFIG.Token?.movement?.actions?.displace ) {
+  if ( (Math.round(SX(doc)) !== Math.round(pos.x) || Math.round(SY(doc)) !== Math.round(pos.y)) && typeof doc.move === "function" && CONFIG.Token?.movement?.actions?.displace ) {
     try { await doc.move([{x: Math.round(pos.x), y: Math.round(pos.y), action: "displace"}], {animate: false, ...MOVE}); } catch (e) { /* stays */ }
   }
-  if ( Math.round(doc.x) !== Math.round(pos.x) || Math.round(doc.y) !== Math.round(pos.y) ) await doc.update({x: Math.round(pos.x), y: Math.round(pos.y)}, {...MOVE, animate: false, teleport: true}).catch(() => null);
+  if ( Math.round(SX(doc)) !== Math.round(pos.x) || Math.round(SY(doc)) !== Math.round(pos.y) ) await doc.update({x: Math.round(pos.x), y: Math.round(pos.y)}, {...MOVE, animate: false, teleport: true}).catch(() => null);
 }
 /** A body's top-left for its centre at p. */
 const topLeft = (doc, p) => { const g = sizeOf(doc.parent); return {x: p.x - num(doc.width || 1) * g / 2, y: p.y - num(doc.height || 1) * g / 2}; };
@@ -383,7 +385,7 @@ async function takeNow(doc, target, want = "") {
     if ( target.flags?.[MOD]?.restsOn ) await target.update(unset(`flags.${MOD}.restsOn`), MOVE);
   }
   const prior = haulOf(target);
-  const by = [...(prior?.by ?? []), {t: doc.uuid, n: doc.name, dx: num(target.x) - num(doc.x), dy: num(target.y) - num(doc.y)}];
+  const by = [...(prior?.by ?? []), {t: doc.uuid, n: doc.name, dx: SX(target) - SX(doc), dy: SY(target) - SY(doc)}];
   const kind = isBody ? "body" : "thing";
   const before = prior?.before ?? (isBody ? {rotation: num(target.rotation), alpha: target.alpha ?? 1} : null);
   const w = isBody ? (want === "drag" ? "drag" : "carry") : (want === "haul" ? "haul" : "push");
@@ -449,20 +451,20 @@ async function releaseNow(doc, {onto = null, drop = false, quiet = false} = {}) 
     await target.update({...unset(`flags.${MOD}.haul`), alpha: before.alpha ?? 1, rotation: tile && !tf.mount ? 90 : num(before.rotation)}, MOVE);
     if ( tile && tf.mount ) {
       // Aboard: a passenger who goes where the mount or vehicle goes (laid: nobody at the reins is kept from pushing it)
-      const pos = {x: num(tile.x) + num(tile.width) / 2, y: num(tile.y) + num(tile.height) / 2};
+      const pos = {x: SX(tile) + num(tile.width) / 2, y: SY(tile) + num(tile.height) / 2};
       await place(target, topLeft(target, pos));
       const riders = (Array.isArray(tf.riders) ? tf.riders : []).filter(r => r.t !== target.uuid);
-      riders.push({a: target.actorId, t: target.uuid, n: target.name, dx: num(target.x) - num(tile.x), dy: num(target.y) - num(tile.y), laid: true});
+      riders.push({a: target.actorId, t: target.uuid, n: target.name, dx: SX(target) - SX(tile), dy: SY(target) - SY(tile), laid: true});
       await tile.update({[`flags.${MOD}.riders`]: riders});
       where = `aboard the ${(thingOf(tile)?.label ?? deps.rules?.MOUNTS?.[tf.mountKind]?.label ?? "vehicle").toLowerCase()}`;
     } else if ( tile ) {
-      await place(target, topLeft(target, {x: num(tile.x) + num(tile.width) / 2, y: num(tile.y) + num(tile.height) / 2}));
+      await place(target, topLeft(target, {x: SX(tile) + num(tile.width) / 2, y: SY(tile) + num(tile.height) / 2}));
       await target.update({[`flags.${MOD}.restsOn`]: tile.id}, MOVE);
       where = `on the ${thingOf(tile)?.label ?? "furniture"}`;
-    } else if ( Math.hypot(num(target.x) - num(doc.x), num(target.y) - num(doc.y)) < 2 ) {
+    } else if ( Math.hypot(SX(target) - SX(doc), SY(target) - SY(doc)) < 2 ) {
       // set down beside the carrier, not on their square
       const g = sizeOf(target.parent);
-      await place(target, {x: num(doc.x) + g, y: num(doc.y)});
+      await place(target, {x: SX(doc) + g, y: SY(doc)});
     }
   } else {
     await target.update(unset(`flags.${MOD}.haul`));
@@ -538,7 +540,7 @@ async function onMovedNow(doc, changes, options = {}, userId = null) {
       return;
     }
     // A thing: it goes where its holder goes, at the offset it was taken hold at
-    const was = {x: num(target.x), y: num(target.y)}, at = {x: num(doc.x) + num(me.dx), y: num(doc.y) + num(me.dy)};
+    const was = {x: SX(target), y: SY(target)}, at = {x: SX(doc) + num(me.dx), y: SY(doc) + num(me.dy)};
     const back = async (why, roll = null) => {
       const g = sizeOf(doc.parent);
       await place(doc, {x: was.x - num(me.dx), y: was.y - num(me.dy)});
@@ -566,11 +568,11 @@ async function onMovedNow(doc, changes, options = {}, userId = null) {
     for ( const b of rec.by ) {
       if ( b.t === doc.uuid ) continue;
       const o = sync(b.t);
-      if ( o ) await place(o, {x: num(o.x) + step.x, y: num(o.y) + step.y});
+      if ( o ) await place(o, {x: SX(o) + step.x, y: SY(o) + step.y});
     }
     for ( const r of target.flags?.[MOD]?.riders ?? [] ) {
       const o = sync(r.t);
-      if ( o && o.parent?.id === doc.parent?.id ) await place(o, {x: num(target.x) + num(r.dx), y: num(target.y) + num(r.dy)});
+      if ( o && o.parent?.id === doc.parent?.id ) await place(o, {x: SX(target) + num(r.dx), y: SY(target) + num(r.dy)});
     }
     if ( newTurn ) {
       const noise = H.noiseOf({kind: "thing", mode: L.move.mode, kg: L.kg, wheels: L.wheels});
@@ -605,7 +607,7 @@ async function struggleNow(body, {moved = false} = {}) {
   const win = !mine.botch && H.struggleWins(mine.successes, theirs.botch ? 0 : theirs.successes);
   const line = `Strength + Athletics ${esc(diceText(mine))} against ${esc(lead.name)}'s Strength ${esc(diceText(theirs))}.`;
   if ( win ) {
-    const pos = {x: num(body.x), y: num(body.y)};
+    const pos = {x: SX(body), y: SY(body)};
     await freeLoad(body);
     if ( moved ) await place(body, pos);
     await card(body, "Struggles free", `<b>${esc(body.name)}</b> twists out of ${esc(lead.name)}'s grip. <span class="wodx-quiet">${line}</span>`);
