@@ -143,7 +143,8 @@ function tick() {
       let seat = MR.seatOf(L.look, st.facing, i);
       // B6146: coming toward the viewer, a rider astride sits behind the beast's head and chest: drawn whole, the mount laid over it
       const behind = st.facing === "down" && seat.pose === "ride" && !L.own && !!m.texture;
-      if ( behind ) seat = {...seat, cut: MR.RIDER.h};
+      // a beast's head stands as high as the rider's chest: the rider sits a little higher in the picture so head and shoulders show
+      if ( behind ) seat = {...seat, cut: MR.RIDER.h, y: seat.y - (["bicycle", "motorbike"].includes(L.kind) ? 0 : 6)};
       const p = MR.seatPoint(L.look, seat, ground, k), d = MR.riderDraw(seat, p, k);
       if ( behind && !d.hidden ) { fronts.set(key, {tok, m}); }
       const rk = tok.document.uuid; seen.add(rk); held.set(rk, tok);
