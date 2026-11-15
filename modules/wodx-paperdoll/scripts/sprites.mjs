@@ -266,7 +266,11 @@ function onActorUpdate(actor, change) {
         if ( t.actor === actor && f.sprite && !(f.act?.hold && !SR.STAY.includes(f.act.name)) && SR.hasAct(f.sprite, "fall") ) play(t.document, "fall").catch(() => null); } }, 900);
     return;
   }
-  for ( const t of canvas.tokens?.placeables ?? [] ) if ( t.actor === actor && t.document.flags?.[MOD]?.act?.hold && !SR.STAY.includes(t.document.flags[MOD].act.name) ) rise(t.document).catch(() => null);
+  for ( const t of canvas.tokens?.placeables ?? [] ) if ( t.actor === actor && t.document.flags?.[MOD]?.act?.hold && !SR.STAY.includes(t.document.flags[MOD].act.name) ) {
+    // a mummy come back from death sits up out of its sarcophagus (B5816); anyone else just gets up
+    const sp = t.document.flags[MOD].sprite;
+    (actor.type === "Mummy" && SR.hasAct(sp, "situp") ? play(t.document, "situp") : rise(t.document)).catch(() => null);
+  }
 }
 
 /* Things that happen in the game play their move by themselves (B2612): feeding, a change of form, a line spoken in character. */
@@ -492,7 +496,9 @@ function lineWanted(doc) {
   const near = [...(doc.parent?.tiles ?? [])].filter(t => doc.x + g > t.x - g * .35 && doc.x < t.x + t.width + g * .35 && doc.y + g > t.y - g * .35 && doc.y < t.y + t.height + g * .35);
   const coffin = near.some(t => /coffin|sarcophag|casket|crypt/i.test(`${t.flags?.[MOD]?.furniture ?? ""} ${t.texture?.src ?? ""}`));
   const kind = doc.parent?.flags?.["wodx-npc"]?.place?.kind ?? doingOf(doc)?.place ?? null;
+  const corpus = actor.system?.advantages?.corpus?.temporary;   // a Wraith with no Corpus left lies in Slumber (B5817)
   return LR.lineHold({daySleep: !!fa.daySleep, torpor: !!fa.torpor, frenzy: actor.system?.conditions?.isfrenzy === true, need: doc.flags?.[MOD]?.need === true,
+    slumber: actor.type === "Wraith" && corpus !== undefined && Number(corpus) <= 0,
     has: SR.ACTS[name] ?? [], coffin, open: SR.OPEN_PLACES.includes(kind)});
 }
 /* A Garou changes form by stages, each form shown in turn (B5813). */

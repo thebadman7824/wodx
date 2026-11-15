@@ -770,7 +770,7 @@ def asleep(d,blanket='#8a8170',cover=False):
 # character is doing. Each is a six-frame sheet; LINE_LOOP ones go round while the figure stays at them, the rest hold the last frame. ----
 _P.update(
  frenzy=dict(dy=7,lean=6,sl=(((55,73),(48,84.5)),((45,73.5),(40,84.5))),sa=(((5,5),(11,1)),((4,6),(10,3))),fl=(5.2,74,4.6,84.5),fa=(((4,6),(5.5,-1)),((4,6),(5.5,-1)))),
- swoon=dict(dy=2,lean=-3,sl=_ST['sl'],sa=(((-.5,10),(-1.5,19)),((-.5,10),(-1.2,19))),fl=_ST['fl'],fa=(((3,9),(4.5,17.5)),((3,9),(4.5,17.5)))),
+ swoon=dict(_P['sit'],lean=-4.5,sa=(((-.5,10),(-1.5,19)),((-.5,10),(-1.2,19))),fa=(((3,9),(4.5,17.5)),((3,9),(4.5,17.5)))),   # sags down to sit slumped on the ground, arms hanging
  embrace=dict(dy=0,lean=4,sl=_ST['sl'],sa=(((6,4),(9,8)),((6,4),(10,6))),fl=_ST['fl'],fa=(((3,7),(-4.5,6)),((3,7),(-4.5,6)))),
  cup=dict(dy=0,lean=-2.5,sl=_ST['sl'],sa=(((6,0),(5,-8)),((5.5,0),(4.5,-8))),fl=_ST['fl'],fa=(((4,4),(-2.4,-8)),((4,4),(-2.4,-8)))),
  dance=dict(dy=0,lean=0,sl=_ST['sl'],sa=_ST['sa'],fl=_ST['fl'],fa=_ST['fa']),
@@ -789,7 +789,7 @@ _P.update(
  situp=dict(_P['sit']),
 )
 _EARLY_POSE_AT=pose_at
-_IN=dict(frenzy=[0,.5,1,1,1,1],swoon=[0,.4,.8,1,1,1],embrace=[0,.5,1,1,1,1],cup=[0,.5,1,1,1,1],pray=[0,.5,1,1,1,1],staff=[0,.5,1,1,1,1],
+_IN=dict(frenzy=[0,.5,1,1,1,1],swoon=[0,.25,.55,.85,1,1],embrace=[0,.5,1,1,1,1],cup=[0,.5,1,1,1,1],pray=[0,.5,1,1,1,1],staff=[0,.5,1,1,1,1],
          pour=[0,.5,1,1,1,1],meditate=_DOWN,ritual=[0,.4,.8,1,1,1],brandish=[0,.5,1,1,1,1],brace=_DOWN,study=_DOWN,hekau=[0,.5,1,1,1,1],situp=[1]*6)
 LINE_POSED=('frenzy','swoon','embrace','cup','dance','pray','staff','device','cards','pour','meditate','ritual','brandish','brace','study','quaff','shake','hekau','situp')
 LINE_LOOP=('frenzy','dance','device','cards','study','quaff','shake','meditate')
@@ -859,6 +859,7 @@ def line_posed(d,name):
         p=pose_at(name,i); r=side(dd,0,None,p)
         for row,im in ((0,front(dd,0,True,None,p)),(1,r[:,::-1]),(2,front(dd,0,False,None,p)),(3,r)): sh[row*SH:(row+1)*SH,i*S:(i+1)*S]=im
     return sh
+LINING=((168,40,48),(150,32,42))   # the red satin a coffin is lined with, so a dark-clad sleeper stands out
 def rest_in(d,where='coffin'):
     """the Kindred's day's sleep, seen from above (B5811): on the back with the arms crossed, eyes shut. 'coffin': in an open coffin;
     'earth': in the ground with only the face showing. Rows are the way the head points, like the sleeper's; frames 0 and 1 lie down"""
@@ -871,7 +872,7 @@ def rest_in(d,where='coffin'):
         for y in range(y0,y1+1):
             wy=hw if y<top+int((bot-top)*.3) else max(hw-3,int(hw-(y-top-(bot-top)*.3)*.18))
             for x in range(mid-wy,mid+wy+1):
-                e=x in(mid-wy,mid+wy) or y in(y0,y1); out[y,x]=(*(ink if e else cr[1] if abs(x-mid)>wy-3 else cr[0]),255)
+                e=x in(mid-wy,mid+wy) or y in(y0,y1); out[y,x]=(*(ink if e else cr[2] if abs(x-mid)>wy-3 else LINING[(x+y)%2]),255)
         m=lie[...,3]>0; out[m]=lie[m]
     else:
         out=lie.copy(); so=RP['soil']; neck=top+int((bot-top)*.24); rng=np.random.default_rng(7)
