@@ -195,9 +195,17 @@ function toughness(actor) {
     try { t = chronicle()?.traits?.toughness?.(actor) ?? null; } catch (e) { t = null; }
     // B3802: a Pain Editor (WoDX Library cyberware) eases the wound penalty as High Pain Tolerance does
     const ease = num(cyber(actor)?.body?.ease);
-    if (!ease) return t;
-    const base = t ?? { bruised: 0, shift: 0, ease: 0, silver: false, names: [] };
-    return { ...base, ease: Math.max(num(base.ease), ease), names: [...(base.names ?? []), ...(cyber(actor)?.names ?? []).filter(n => /pain editor/i.test(n))] };
+    if (ease) {
+        const base = t ?? { bruised: 0, shift: 0, ease: 0, silver: false, names: [] };
+        t = { ...base, ease: Math.max(num(base.ease), ease), names: [...(base.names ?? []), ...(cyber(actor)?.names ?? []).filter(n => /pain editor/i.test(n))] };
+    }
+    // B5160: a condition that numbs the body (a fomor's Numbing) adds Bruised levels and eases wound penalties while it lasts
+    const cm = R.conditionBody(conditionsOf(actor));
+    return cm ? R.mergeBody(t, cm) : t;
+}
+
+function conditionsOf(actor) {
+    try { return chronicle()?.conditions?.conditionsOf?.(actor) ?? []; } catch (e) { return []; }
 }
 
 /** B3800: what installed cyberware gives the character (WoDX Library api.cyber.installedFx), or null. */
