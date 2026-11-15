@@ -12,7 +12,8 @@
  *   8. Unseen Presence used through the effects card puts Obfuscated on the token (B6034)
  *   9. knocked down outdoors in rain: Filthy; the same fall in dry weather: clean (B6033)
  *  10. a player's character seven nights unwashed turns Filthy when the clock moves; one washed tonight stays clean (B6033)
- *  11. lethal wounds adding up on the right arm cripple it, and the Crippled mark draws on the token on the map (B6032)
+ *  11. two lethal blows adding up on the right arm cripple it, and the Crippled mark draws on the token on the map (B6032);
+ *      healing the levels takes the mark off again
  * Result: Data/wodx-gate/gatestillmarks-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -148,10 +149,15 @@ export async function run() {
       const [tok] = await G.tokens(s, [{actor: a, x: 3, y: 3}]);
       await wait(500);
       const icons0 = tok.object?.effects?.children?.length ?? 0, t1 = Date.now();
-      // the damage lands on the track first, then the same call the attack card makes: three lethal levels on the right arm
-      const ta = tok.actor ?? a; // the attack card works on the token's actor, as play does
-      await ta.update({"system.health.damage.lethal": 3});
-      await BD.recordWound(ta, {location: {id: "arm-r", label: "Right arm"}, type: "lethal", levels: 3}, {before: {lethal: 0}, after: {lethal: 3}, effType: "lethal"}, null);
+      // two blows of two lethal levels each on the right arm: the damage lands on the track, then the attack card records
+      // where (recordWound); wounds that add up to three on one part cripple it (B2903). A single blow of three takes the
+      // attack's own maiming path instead.
+      const ta = tok.actor ?? a;
+      await ta.update({"system.health.damage.lethal": 2});
+      await BD.recordWound(ta, {location: {id: "arm-r", label: "Right arm"}, type: "lethal", levels: 2}, {before: {lethal: 0}, after: {lethal: 2}, effType: "lethal"}, null);
+      await wait(300);
+      await ta.update({"system.health.damage.lethal": 4});
+      await BD.recordWound(ta, {location: {id: "arm-r", label: "Right arm"}, type: "lethal", levels: 2}, {before: {lethal: 2}, after: {lethal: 4}, effType: "lethal"}, null);
       await waitFor(() => [...ta.effects].some(e => e.flags?.["wodx-combat"]?.crippled), 5000).catch(() => null);
       await wait(400);
       const fx = [...ta.effects].find(e => e.flags?.["wodx-combat"]?.crippled === "arm-r");
@@ -163,7 +169,10 @@ export async function run() {
       const card = [...game.messages].some(m => (m.timestamp ?? 0) >= t1 && m.flags?.["wodx-combat"]?.maim?.part === "arm-r");
       G.ok("11. a crippled arm shows on the token", !!fx && (want === undefined || fx.showIcon === want) && temp && icons1 > icons0 && card,
         {hl, fx: !!fx, showIcon: fx?.showIcon, want, temp, icons0, icons1, card, seen, tokFx, linked: tok.actorLink});
+      // healed: the levels leave the track, the Crippled mark goes by itself
       await ta.update({"system.health.damage.lethal": 0});
+      const healed = await waitFor(() => ![...ta.effects].some(e => e.flags?.["wodx-combat"]?.crippled), 5000);
+      G.ok("11b. the crippled arm heals with its levels", healed, {left: [...ta.effects].map(e => e.name)});
     });
   } finally { return G.finish(); }
 }
