@@ -21,6 +21,8 @@ export async function run() {
   const G = gate("gateghoulneed");
   const N = () => game.modules.get(MOD)?.api?.ghoulNeed;
   const C = () => game.modules.get("wodx-creation")?.api;
+  // a token's tint and alpha animate on the canvas, so read what was saved, not the frame being drawn
+  const srcTint = t => String(t._source?.texture?.tint ?? t.texture?.tint ?? "").toLowerCase();
   const pool = a => Number(a.system.advantages?.bloodpool?.temporary) || 0;
   const setBack = (a, months, extra = {}) => a.update({[`flags.${MOD}.ghoulNeed`]: {fedAt: game.time.worldTime - (months * MONTH) - 3600, warned: 0, ...extra}, [`flags.${MOD}.sig.ghoul`]: null});
   try {
@@ -50,7 +52,7 @@ export async function run() {
       await setBack(hound, 2);
       await N().check(hound);
       const pot = C().data.disciplinesOf(hound).find(d => /potence/i.test(d.name))?.value ?? null;
-      const tint = String(th.texture?.tint ?? "").toLowerCase();
+      const tint = srcTint(th);
       G.ok("2. the hound loses a dot and greys", pool(hound) === 0 && pot === 0 && tint === "#8a8a8a", {pool: pool(hound), potence: pot, tint});
     });
 
@@ -58,7 +60,7 @@ export async function run() {
       await C().giveVitae(hound, vamp, {points: 2, time: game.time.worldTime + 1});
       await new Promise(r => setTimeout(r, 500));
       const st = hound.flags?.[MOD]?.ghoulNeed ?? {};
-      const tint = String(th.texture?.tint ?? "").toLowerCase();
+      const tint = srcTint(th);
       G.ok("3. a drink starts the month again and brings the colour back", st.warned === 0 && !st.emptySince && tint !== "#8a8a8a" && pool(hound) === 2, {st, tint});
     });
 
@@ -67,7 +69,7 @@ export async function run() {
       await setBack(hound, 1, {warned: 1, emptySince: game.time.worldTime - (60 * 7 * 86400)});
       await N().check(hound);
       const st = hound.flags?.[MOD]?.ghoulNeed ?? {};
-      G.ok("4. long past its span, an animal turns to dust", st.dust === true && Number(th.alpha) < 0.5, {st, alpha: th.alpha});
+      G.ok("4. long past its span, an animal turns to dust", st.dust === true && Number(th._source?.alpha ?? th.alpha) < 0.5, {st, alpha: th._source?.alpha ?? th.alpha});
     });
 
     await G.step("5. a craving botch goes for the nearest person", async () => {
