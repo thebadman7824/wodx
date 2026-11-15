@@ -2,7 +2,6 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
-- 3.103.0 (Bindings hold the token, and pact gifts do what they give (B5793, B5795); Demon evocations that work, NPC demons covering their tracks, and rituals and the Sense and Know keywords with a tangible effect (B5780-B5792))
 - 3.102.0 (Say or Do: thirteen windows that used to only post a card now carry out what the card says (B5750-B5758))
 - 3.101.0 (NPC power choice for the other lines: mummies, mages of both eras, changelings and Dark Ages fae, demons, Kuei-jin, Orpheus projectors and inquisitors choose and use their own powers by themselves, as Kindred, Garou, wraiths, hunters, fomor and spirits already did (B5670-B5679). Hekau rituals, which take hours, are never chosen in a fight)
 - 3.100.0 (Spirit Charms: all 32 Charms of W20 pp. 366-368 play from a Spirit Charms window, in WoDX's own words with their pages, and NPC spirits choose their own (B5650-B5659). A Creature made as a spirit now has the spirit menu)
