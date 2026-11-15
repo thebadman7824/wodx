@@ -86,6 +86,8 @@ export async function run() {
       {name: "Gate Line Demon Two", type: "Demon", system: {advantages: {faith: {temporary: 1, permanent: 5, max: 10}, willpower: {temporary: 6, permanent: 6}}}},
       {name: "Gate Line Mage", type: "Mage"}
     ]);
+    // the sheets' own willpower, set after creation and read back in the step's data
+    await game.actors.get(de2.id).update({"system.advantages.willpower.permanent": 6, "system.advantages.willpower.temporary": 6});
     const R = () => api().lines.refill;
     const night = Math.floor((game.time.worldTime - 18 * 3600) / 86400) + 9000;
 
@@ -105,7 +107,7 @@ export async function run() {
       const p1 = R().sheet(wr2).pathos.temp, f1 = R().sheet(de2).faith.temp;
       G.ok("8. Pathos and Faith", w.some(x => x.word === "Passion") && d.some(x => x.word === "Reaping") && p1 >= p0 && f1 >= f0
         && game.actors.get(wr2.id).getFlag(MOD, "refill")?.night === night && p1 - p0 === (w.find(x => x.word === "Passion")?.gained ?? -1),
-        {wraith: {p0, p1, w}, demon: {f0, f1, d}});
+        {wraith: {p0, p1, w}, demon: {f0, f1, d, line: api().lines.of?.(game.actors.get(de2.id)), sheet: R().sheet(game.actors.get(de2.id)), adv: game.actors.get(de2.id)?.system?.advantages?.faith, wp: game.actors.get(de2.id)?.system?.advantages?.willpower, thralls: game.actors.get(de2.id)?.flags?.["wodx-actions"]?.demon?.thralls ?? null}});
     });
 
     await G.step("9. marked for the daily rolls", async () => {
@@ -121,6 +123,7 @@ export async function run() {
       {name: "Gate Line Spy", type: "Mortal", system: {advantages: {willpower: {permanent: 3, temporary: 3}}}}
     ]);
     await lw.setFlag("wodx-sheets", "ties", [{uuid: `Actor.${lv.id}`, name: lv.name, role: "lover"}]);
+    await game.actors.get(lw.id).update({"system.advantages.willpower.permanent": 3, "system.advantages.willpower.temporary": 3});
     const angstOf = () => Number(game.actors.get(lw.id)?.system?.advantages?.angst?.temporary) || 0;
 
     await G.step("10. the loved-one check is rolled", async () => {
@@ -129,10 +132,10 @@ export async function run() {
       const a0 = angstOf();
       const told = await api().hearts.tell(game.actors.get(lv.id), "harm");
       const mine = (told ?? []).find(t => t.to === lw.id);
-      const r = mine?.rolled?.find(x => x.fail === "angst");
+      const r = mine?.rolled?.find(x => x.fail === "angst" && x.made);
       const a1 = angstOf();
       await game.settings.set(MOD, "heartCards", prev);
-      G.ok("10. the loved-one check is rolled", !!r && a1 === a0 + (r.failed ? 1 : 0), {a0, a1, rolled: mine?.rolled ?? null});
+      G.ok("10. the loved-one check is rolled", !!r && a1 === a0 + (r.failed ? 1 : 0), {a0, a1, rolled: mine?.rolled ?? null, checks: mine?.checks?.map(c => c.roll ?? null) ?? null, line: api().lines.of?.(game.actors.get(lw.id)), wp: game.actors.get(lw.id)?.system?.advantages?.willpower});
     });
 
     await G.step("11. Lifesight seeks the hidden loyalty", async () => {

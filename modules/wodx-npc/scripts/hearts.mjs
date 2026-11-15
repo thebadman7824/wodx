@@ -298,10 +298,11 @@ export async function tellLoved(victim, ev) {
     const lines = checks.map(c => c.text), rolls = [], rolled = [];
     // B6450: the checks are rolled for them, and a failure lands on the sheet
     for ( const c of checks.filter(x => x.roll) ) {
-      const r = await lovedRoll(who, c.roll).catch(err => { console.warn(`${MOD} | loved-one check`, err); return null; });
+      let error = null;
+      const r = await lovedRoll(who, c.roll).catch(err => { console.warn(`${MOD} | loved-one check`, err); error = String(err?.message ?? err); return null; });
       if ( r?.line ) lines.push(r.line);
       if ( r?.roll ) rolls.push(r.roll);
-      if ( r ) rolled.push({fail: c.roll.fail ?? null, failed: !!r.failed});
+      rolled.push({fail: c.roll.fail ?? null, failed: !!r?.failed, made: !!r, ...(error ? {error} : {})});
     }
     if ( ev === "death" ) { const g = await grieve(who, e.kind); if ( g ) { lines.push(g.line); rolls.push(g.roll); } }
     // B5804 (n5): an NPC mourns on the map by its faith
