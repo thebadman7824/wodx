@@ -5,6 +5,7 @@ import {getEngine, describeTime} from "./calendar.mjs";
 import * as events from "./events.mjs";
 import * as S from "./signature-rules.mjs";
 import * as POD from "./pod.mjs";
+import {registerTokenLook} from "./token-looks.mjs";
 
 /**
  * WoDX Chronicle 0.30.0: signature features on the Foundry side (Splat Features Desk, Vampire first). Rules in
@@ -1238,6 +1239,8 @@ export function registerSignatureHooks() {
   // B4875-B4877: the features that used to wait on the Storyteller
   Hooks.on("deleteCombat", c => { devilTiger(c).catch(e => console.error(`${MODULE_ID} | Devil-Tiger`, e)); });
   Hooks.on("wodxDamageApplied", (a, d = {}) => { craving(a, d).catch(e => console.error(`${MODULE_ID} | craving`, e)); });
+  Hooks.on("wodxDamageApplied", (a, d = {}) => { martyr(a, d).catch(e => console.error(`${MODULE_ID} | Martyr`, e)); });
+  try { registerTokenLook("signatures.marauder", marauderLook); } catch (e) { console.warn(`${MODULE_ID} | Marauder look`, e); }
   Hooks.on("createToken", t => { bunyip(t).catch(e => console.error(`${MODULE_ID} | Bunyip`, e)); });
   Hooks.on("wodxAttitude", p => { shame(p).catch(e => console.error(`${MODULE_ID} | Hakken`, e)); });
   Hooks.on("wodxTrade", p => { piskie(p).catch(e => console.error(`${MODULE_ID} | Piskie`, e)); });
@@ -1346,6 +1349,34 @@ async function craving(victim, d) {
     if ( !g || g.id === victim.id || !isFeature(g, "ghoul") || squaresApart(vt, t) > S.CRAVING_REACH ) continue;
     await featureRoll(g, "the craving", virtue(g, "selfcontrol"), S.FEATURE_ROLLS.craving.diff, `${victim.name}'s blood is spilled close by.`);
   }
+}
+/**
+ * B5171: a Martyr beside someone just hurt may take the wound instead: a button for the Martyr's player puts the
+ * victim's health back and the same levels on the Martyr (Hunter: the Reckoning, the creeds; house reading).
+ */
+async function martyr(victim, d = {}) {
+  if ( !isActiveGM() || !on() || !victim || !(Number(d.levels) > 0) || !d.before || !d.type ) return;
+  const vt = tokenOf(victim);
+  if ( !vt ) return;
+  const m = (vt.parent?.tokens ?? []).find(t => t.actor && t.actor.id !== victim.id && hasRow(t.actor, "martyr") && squaresApart(vt, t) <= 1)?.actor;
+  if ( !m ) return;
+  fired(m, "martyr");
+  await card(`${m.name} can take the wound`, `<p>${esc(victim.name)} takes ${Number(d.levels)} ${esc(d.type)}. ${esc(m.name)} stands beside them and can take it instead.</p>`,
+    {whisper: ownerIds(m), act: {key: "martyr", label: "Take the wound", who: "owner", uuid: m.uuid, data: {to: victim.uuid, by: m.uuid, before: d.before, type: d.type, levels: Number(d.levels)}}});
+}
+ACTS.martyr = async ({to, by, before, type, levels}) => {
+  const v = await fromUuid(to), m = await fromUuid(by), C = game.wodxCombat;
+  const va = v?.actor ?? v, ma = m?.actor ?? m;
+  if ( !va || !ma || !C?.setDamage || !C?.applyDamage ) return;
+  await C.setDamage(va, before);
+  await C.applyDamage(ma, type, levels);
+  await card(`${ma.name} takes the wound`, `<p>${esc(ma.name)} takes ${levels} ${esc(type)} meant for ${esc(va.name)}, whose wounds go back as they were.</p>`, {whisper: []});
+};
+/** B5172: a Marauder bends the world around it: a shifting, flickering aura on its token. */
+function marauderLook(token) {
+  const a = token?.actor;
+  if ( !a || !on() || !rowsOf(a).some(r => r.key === "marauder") ) return null;
+  return {aura: {color: 0xc04cff, radius: 1.2, alpha: 0.3}, flicker: true, tint: 0xf0d8ff};
 }
 /** A Bunyip spirit or relic comes onto a scene: the Garou there feel the old shame (a Harano test). */
 async function bunyip(token) {

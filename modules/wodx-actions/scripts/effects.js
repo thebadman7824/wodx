@@ -406,6 +406,10 @@ const tokenOf = d => (d?.documentName === "Token" ? d : actorOf(d)?.getActiveTok
 
 /** Apply one item. Returns an undo record, or {note} when nothing could change. */
 export async function applyItem(item, casterName = "the caster") {
+  // B5174: an Untamable target shrugs off Domination and the Gifts that command (W20 p. 476)
+  const ta = actorOf(docOf(item?.target));
+  if ( ta && E.untamableStops(item?.out?.label ?? item?.out?.name) && (chron()?.traits?.has?.(ta, "untamable") ?? 0) > 0 )
+    return {note: `${ta.name} is Untamable: ${item.out.label ?? "the power"} finds no hold.`};
   const rec = await applyCore(item, casterName);
   // B4838: an each-turn rule on any other kind of result (a thing made, a hold, a boost) gets a timed effect of its own
   const et = item?.out?.everyTurn;

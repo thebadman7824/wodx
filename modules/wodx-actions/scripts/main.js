@@ -1720,7 +1720,7 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
     if (pexHit === true) html += `<div class="vta-warn">Prey Exclusion: ${esc(vesselActor?.name ?? "the vessel")} is one of the forbidden. Frenzy at once, and a roll of the Road or Humanity at difficulty 7.</div><button type="button" class="vta-btn" data-kx="frenzy" data-actor="${esc(actor.uuid)}" data-arg="physical">Frenzy</button>`;
     else if (pexHit === null) { const prey = drunk > 0 ? TH.preyNote(actor) : ""; if (prey) html += `<div class="vta-warn">${esc(prey)}</div>`; }
     // Chronicle 0.22.0: flaws that bite on feeding go to the Storyteller's queue (Infectious Bite and the like)
-    if (drunk > 0) { try { game.modules.get("wodx-chronicle")?.api?.traits?.prompt?.(actor, "feed", { at: `${vesselActor?.id ?? vesselType}:${Math.floor(game.time.worldTime)}` }); } catch (e) { /* no traits */ } }
+    if (drunk > 0) { try { game.modules.get("wodx-chronicle")?.api?.traits?.prompt?.(actor, "feed", { at: `${vesselActor?.id ?? vesselType}:${Math.floor(game.time.worldTime)}`, vessel: vesselActor?.uuid ?? null }); } catch (e) { /* no traits */ } }
     const faeVessel = vesselType === "fae" || (vesselActor && P.detectProfile(vesselActor) === "fae");
     const high = faeVessel && isVampire(actor) ? R.faeBloodHigh(drunk) : null;
     if (high) html += `<div class="vta-warn">${esc(high.note)}</div>`;

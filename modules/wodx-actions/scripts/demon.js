@@ -203,6 +203,20 @@ export function build(ctx) {
                     fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
                 }
             }
+            // B5173: the Lore of the Winds at three dots or more rouses the night's wind over the whole place, a storm at five
+            // (WoDX Atmosphere; house reading of the Scourges' lore)
+            if (works && lore === "winds" && e.level >= 3) {
+                const AT = game.modules.get("wodx-atmosphere")?.active ? game.modules.get("wodx-atmosphere").api?.weather : null;
+                const w = EF.E?.WEATHER_SET?.[e.level >= 5 ? "storm" : "wind"];
+                if (AT?.set && AT?.night && w) {
+                    try {
+                        const jdn = AT.night();
+                        const prev = game.settings.get("wodx-atmosphere", "overrides")?.[jdn] ?? {};
+                        await AT.set(jdn, { ...prev, ...w.day });
+                        notes.push(`${w.label} rises over the place tonight.`);
+                    } catch (er) { console.warn("WoDX | winds", er); }
+                }
+            }
             if (works && lingers) {
                 const until = (game.time?.worldTime ?? 0) + DE.lingerSeconds(lore, e.level, i.faith.perm);
                 await saveFlag(actor, { running: [...running(actor), { id: `${lore}:${e.level}`, name: e.name, until }] });

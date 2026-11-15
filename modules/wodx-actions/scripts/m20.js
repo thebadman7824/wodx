@@ -97,7 +97,10 @@ export function build(ctx) {
             plan.difficulty = Math.max(3, Math.min(10, plan.difficulty + (tm.diff || 0)));
             const r = await rollPool(plan.dice, plan.difficulty, { willpower: wp });
             const d = M.degree(r, plan.need);
-            const px = M.paradoxGained(fd.kind, plan.highest, r.botch);
+            // B5172: Paradox spirits shy from a Marauder, so its magick draws none (M20, the Marauders; WoDX Chronicle's feature)
+            const marauder = (() => { try { return !!game.modules.get("wodx-chronicle")?.api?.signatures?.allRowsOf?.(actor)?.some(x => x.key === "marauder"); } catch (e) { return false; } })();
+            const shed = marauder ? M.paradoxGained(fd.kind, plan.highest, r.botch) : 0;
+            const px = marauder ? 0 : M.paradoxGained(fd.kind, plan.highest, r.botch);
             const after = px ? await setParadox(actor, info(actor).paradox + px) : null;
             await saveFlag(actor, { lastMagick: game.time?.worldTime ?? 0, ...(String(fd.style ?? "").trim() ? { style: String(fd.style).trim() } : {}) });
             const fortune = sg.age.key === "crusade" ? await fortuneRoll(actor) : null;
@@ -112,6 +115,7 @@ export function build(ctx) {
                     : `<div class="vta-res">Duration: ${M.duration(r.successes)}.</div>`;
             }
             if (px) body += `<div class="vta-note">+${px} ${sg.age.key === "crusade" ? "Scourge" : "Paradox"} (${after.paradox})${after.quintLost ? `; it cancels ${after.quintLost} Quintessence on the wheel` : ""}.${after.paradox > 5 ? " Past five: the Storyteller may roll a backlash." : ""}${M.overload(after.paradox) ? " Twenty or more: an intense Quiet, a crack in reality, or worse." : ""}</div>`;
+            if (shed) body += `<div class="vta-note">Madness shields it: the ${shed} Paradox this would draw does not come.</div>`;
             if (fortune) body += fortune.html;
             if (r.botch && sg.age.key !== "crusade") body += `<div class="vta-note">To stave off the backlash: ${esc(M.STAVE)}.</div>`;
             body += `<div class="wodx-quiet">${sg.age.key === "crusade" ? `Sorcerers Crusade pdf pp. 244–249; ${REF} pp. 501–504 for the feats` : `${REF} pp. 501–504`}</div>`;

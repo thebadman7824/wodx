@@ -87,7 +87,7 @@ const unsetKey = path => {
 
 function registerSettings() {
   game.settings.register(MOD, "chaseAuto", {
-    name: "Chases run by themselves", hint: "A chase rolls a turn every few seconds on its own, and ends by itself: a catch opens a fight through WoDX Combat, and a quarry who gets away is gone. An NPC who flees a fight with foes close behind starts one. The Storyteller's window can still roll, undo and end it.",
+    name: "Chases run by themselves", hint: "A chase rolls a turn every few seconds on its own, and ends by itself: a catch opens a fight through WoDX Combat, and a quarry who gets away is gone. Anyone who flees a fight with foes close behind starts one: an NPC who runs, or a player character who breaks more than eight yards clear of the NPCs beside them. The Storyteller's window can still roll, undo and end it.",
     scope: "world", config: true, type: Boolean, default: true
   });
   game.settings.register(MOD, "doorClick", {
@@ -1182,6 +1182,8 @@ export async function onTokenMoved(tokDoc, changes = {}, {userId = null, held = 
   const tr = await traitTriggers(tokDoc, actor, scene, from, to, pos, userId);
   if ( tr?.hold ) return [tr.msg];
   await carryAboard(tokDoc, scene, from, to, pos);
+  // B5176: a player character breaking away from a fight is chased
+  try { await game.modules.get(MOD)?.api?.chase?.pcMoved?.(tokDoc, from, to); } catch (e) { console.warn(`${MOD} | chase`, e); }
   // Walking out of a hiding place ends the hiding
   for ( const doc of tilesOf(scene) ) {
     const occ = doc.flags?.[MOD]?.hide ? (doc.flags[MOD].occupants ?? []) : [];
@@ -1354,6 +1356,17 @@ async function fearOfFire(scene, tokDoc, actor, p) {
     feared.add(key);
     await game.modules.get("wodx-actions")?.api?.rotschreckAuto?.({actor, provocation: R.FEAR_OF_FIRE[o.size] ?? "torch", why: `Close to ${o.title || "a fire"}`});
   }
+}
+/** B5170: the holy ground a token stands on (a sacred tile that hallows its ground and is not desecrated), or null. */
+export function holyUnder(tokDoc) {
+  const scene = tokDoc?.parent;
+  if ( !scene ) return null;
+  const p = centerOf(tokDoc, scene);
+  for ( const doc of tilesOf(scene) ) {
+    const o = describeTile(doc);
+    if ( o && R.holyGround(o) && inRect(p, rectOf(doc)) ) return {doc, o};
+  }
+  return null;
 }
 /** Active GM: a card for a hazard hurting a character, with Undo. why: "enters" or "turn". */
 export async function hazardCard(tokDoc, actor, doc, o, why = "enters") {
@@ -1963,7 +1976,7 @@ Hooks.once("init", () => {
     editable: [{key: "KeyI"}], onDown: () => { openInteract().catch(e => console.error(`${MOD} |`, e)); return true; }
   });
   if ( !installDoorClick() ) console.warn(`${MOD} | the door-click shortcut is off: this Foundry has no door control class to extend.`);
-  game.modules.get(MOD).api = {version: VERSION, rules: R, coverOnShot, fill: {open: Fill.fillDialog, draw: Fill.drawFor, index: Fill.gearIndex, guess: Fill.guessFor, rules: FillRules}, describeWall, describeTile, lightsOf, useRoom, sunUp, _roomEffects: roomEffects, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, labelsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, noiseAt, optionSummary, configHtml};
+  game.modules.get(MOD).api = {version: VERSION, rules: R, coverOnShot, fill: {open: Fill.fillDialog, draw: Fill.drawFor, index: Fill.gearIndex, guess: Fill.guessFor, rules: FillRules}, describeWall, describeTile, lightsOf, useRoom, sunUp, _roomEffects: roomEffects, setConcealed, describeObj, tileConfigHtml, searchableTraps, springOn, trapsOnPath, onTokenMoved, hazardsOnPath, labelsOnPath, hazardsAt, hazardOn, hazardCard, onTurnStart, holyCard, holyUnder, watchTarget, peopleIn, mapEvent, carryAboard, fallOn, characterFor, interactablesFor, openInteract, attempt, applyAsk, undoCard, hearersOf, noiseAt, optionSummary, configHtml};
   game.modules.get(MOD).api.states = setupStates({describeObj, describeWall, describeTile, objectIn, rules: R});
   game.modules.get(MOD).api.living = setupLiving();
   game.modules.get(MOD).api.carry = setupCarry();

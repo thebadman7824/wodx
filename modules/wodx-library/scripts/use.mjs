@@ -150,6 +150,12 @@ async function landDose(patient, state, eff, made) {
     await patient.update({[`flags.${MOD}.remedyAt`]: now()});
     out.push(wounded ? "The pain eases: 1 die back on every roll for the scene, and a sickness's next week is easier." : "A sickness's next weekly roll is easier.");
   }
+  // B5178: the stimulant's crash comes about an hour later, by itself (crashTick)
+  if ( state === "stimulant" ) {
+    const c = U.crashOf({scale: eff.scale ?? "", strength});
+    await patient.update({[`flags.${MOD}.crash`]: {at: now() + c.after, lasts: c.lasts}});
+    out.push("Wide awake for now; the crash comes in about an hour.");
+  }
   if ( state === "sedative" ) {
     const r = await AU.rollPool(statOf(patient, "stamina"), U.SEDATIVE_SLEEP.diff);
     if ( r.successes > 0 ) out.push(`Fights off sleep (Stamina at ${U.SEDATIVE_SLEEP.diff}).`);
@@ -460,7 +466,30 @@ async function onCreateItem(item, opts, userId) {
   await tellPrivately(item.parent, `${item.parent.name} and ${item.name}`, `${L.missingLine(["vessel"])} The Storyteller decides whether it can be carried.`);
 }
 
+/** B5178: when the world clock passes a waiting crash, the character crashes: 1 die off every roll until sleep. */
+export async function crashTick(t = now()) {
+  if ( !(game.user?.isGM && game.users.activeGM?.id === game.user.id) ) return [];
+  const T = chronTraits(), out = [];
+  for ( const a of game.actors ) {
+    const f = a.flags?.[MOD]?.crash;
+    if ( !U.crashDue(f, t) ) continue;
+    await a.unsetFlag(MOD, "crash");
+    await T?.addBite?.(a, {key: U.CRASH.key, name: U.CRASH.name, tags: U.CRASH.tags, dice: U.CRASH.dice, duration: {kind: "time", seconds: Number(f.lasts) || U.CRASH.lasts}, source: "WoDX Library"});
+    const users = game.users.filter(u => u.isGM || a.testUserPermission?.(u, "OWNER")).map(u => u.id);
+    await ChatMessage.create({whisper: users, speaker: {alias: a.name}, content: `<div class="wodx-card"><p><b>${esc(a.name)} crashes</b></p><p>The stimulant wears off: 1 die off every roll until ${esc(a.name)} sleeps.</p></div>`});
+    out.push(a.id);
+  }
+  return out;
+}
+/** B5178: sleep ends the crash. */
+export async function sleptOff(a) {
+  const key = `wodx-trait-bite:${U.CRASH.key}`;
+  const ids = (a?.effects ?? []).filter(e => e.flags?.["wodx-chronicle"]?.timed?.key === key).map(e => e.id);
+  if ( ids.length && a.isOwner ) await a.deleteEmbeddedDocuments("ActiveEffect", ids);
+  return ids.length;
+}
 export async function setupUse() {
+  Hooks.on("updateWorldTime", t => { crashTick(t).catch(e => console.error(`${MOD} | crash`, e)); });
   await load();
   game.socket?.on(SOCKET, onSocket);
   game.socket?.on(SOCKET, AU.onArmsSocket);
@@ -481,4 +510,4 @@ export async function setupUse() {
   });
 }
 
-export const useApi = () => ({open: openUse, run, read, abilities: abilitiesOfItem, rules: U, links: L, missing: whatIsMissing, lineOf: lineOfActor});
+export const useApi = () => ({open: openUse, run, read, abilities: abilitiesOfItem, rules: U, links: L, missing: whatIsMissing, lineOf: lineOfActor, crashTick, sleptOff});
