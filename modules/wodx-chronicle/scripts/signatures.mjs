@@ -413,6 +413,8 @@ export async function glimpse(actorOrId) {
 }
 /** A riddle about the next dated event, kept so that the Storyteller hears when it comes true (Malkavian, Stargazer). */
 async function giveGlimpse(a, sig, {field, title, quiet}) {
+  // B6240: on a player's client the world timeline loads the first time a glimpse is asked for
+  try { await events.load(); } catch (e) { /* the book events alone */ }
   const nx = nextEvent();
   const g = nx ? S.glimpseFor(nx.ev, nx.days, S.seedOf(a.id, nx.ev.id, Math.floor(now() / DAY))) : {theme: "none", text: quiet};
   sig[field] = now();
