@@ -133,6 +133,8 @@ export async function run() {
       for ( let i = 0; i < 8 && !/takes it/.test(card); i++ ) {
         const [res] = await C.quickAttack({attacker: td.object, target: tf.object, weaponId: "vehicle:ram"}).catch(() => []);
         card = text(res?.message?.content ?? "");
+        // a miss is taken back, so the next try is not a second attack this turn (multiple actions)
+        if ( !/takes it/.test(card) ) await res?.message?.delete?.().catch(() => null);
         await sleep(300);
       }
       G.ok("8. a real ram", /Ram with the/.test(card) && /second car takes it/i.test(card) && /that rammed/.test(card), {card: card.slice(0, 700)});
