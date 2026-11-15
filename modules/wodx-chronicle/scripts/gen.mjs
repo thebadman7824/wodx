@@ -92,6 +92,8 @@ function allTables() {
     // A table its module no longer ships (its eras or cultures were split), left as installed: it would shadow the
     // shipped tables that replaced it, so it stands aside. A table the Storyteller edited still wins.
     if ( retired(f, d, shippedKeys) ) continue;
+    // A table with no results at all (an update cut off midway) stands aside too, so the shipped names are drawn (B5641)
+    if ( !d.results.length && f.source && SOURCES.has(f.source) && shippedKeys.has(tableKey(d)) ) continue;
     seen.add(tableKey(d));
     defs.push(d);
   }
@@ -155,7 +157,9 @@ async function doInstall() {
       const f = have.getFlag(MODULE_ID, "table");
       if ( f.shipped === shipped ) return;
       const now = contentHash([...have.results].map(r => ({text: textOf(r), weight: r.weight})));
-      if ( now === f.shipped ) {
+      // A table left with no results (an update cut off between clearing and refilling) is refilled, not kept as
+      // the Storyteller's own edit (B5641)
+      if ( now === f.shipped || (!have.results.size && d.results.length) ) {
         await have.deleteEmbeddedDocuments("TableResult", have.results.map(r => r.id));
         await have.createEmbeddedDocuments("TableResult", results);
         await have.update({formula: `1d${ranged.at(-1)?.range[1] ?? 1}`, [`flags.${MODULE_ID}.table`]: flag});

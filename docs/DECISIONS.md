@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5640
+Next free block: B5650
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -297,6 +297,7 @@ Next free block: B5640
 | B5600-B5609 | Names made by pattern for the short lists (used B5600) | Creation |
 | B5620-B5629 | Gates failing on main: court hunts batch write, gate-interact steps (used B5620-B5621) | Actions, gates |
 | B5630-B5639 | Blood hunts: court Kindred turn in batches (used B5630) | Actions |
+| B5640-B5649 | German names before 1900, and refilling emptied tables (used B5640-B5641) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8760,3 +8761,13 @@ separate actor update, so with a big court calling and lifting one hunt took mor
 still timed out after B5620). They now run twenty at a time; each update is to a different actor.
 
 Reverse: go back to the plain for loops.
+
+## B5640. German names before 1900 raised to 50 a list (2026-11-15)
+WoDX Creation. The testbed gate found the German lists for Bohemia before 1900 still short (12 to 28 names a list) after the modern German list was raised to 300 (B5540). Each list now holds 49 to 62 recorded German names of its age: Hohenstaufen and later medieval nobles, clergy and townsfolk; Reformation and Baroque church books; nineteenth century parish records. All recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the six German lists in data/people.mjs.
+
+## B5641. An emptied table is refilled (2026-11-15)
+WoDX Chronicle. A Roll Table whose update was cut off between clearing and refilling was left with no results, then kept for good as if the Storyteller had edited it, so every Japanese name draw on one testbed lane came up empty. Now a table with no results is refilled at start-up, and until then the shipped names are drawn in its place. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: drop the two empty-table checks in scripts/gen.mjs.
