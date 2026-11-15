@@ -254,8 +254,11 @@ export function build(ctx) {
   }
   async function foundCard(c) {
     const s = state(), n = names(s);
+    // B5702 (h4): the one found goes into the region's file
+    let filed = false;
+    try { const a = game.actors.get(c.actor); if ( a ) filed = !!(await game.modules.get("wodx-storyteller")?.api?.hunters?.follow?.found?.(a, {by: n.faction(c.faction)})); } catch (e) { console.warn(`${MOD} | found`, e); }
     return ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX factions"}, content: `<div class="wodx-card wnpc wnpc-faction"><h3>${esc(n.faction(c.faction))} has found someone</h3>
-      <p>${esc(n.actor(c.actor))}, of ${esc(n.faction(c.target))}. What the hunters do now is yours to play; WoDX changes nothing.</p></div>`});
+      <p>${esc(n.actor(c.actor))}, of ${esc(n.faction(c.target))}. ${filed ? "They go into the region's hunters' file, and the hunters there stir; a deep enough file brings a raid." : "What the hunters do now is yours to play."}</p></div>`});
   }
   function proposeChanges(title, detail, changes, {key = null, kind = "turn", extra = {}} = {}) {
     return chron()?.propose?.({type: TYPE, key, title, detail, data: {kind, changes, ...extra}});

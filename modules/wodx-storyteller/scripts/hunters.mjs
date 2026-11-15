@@ -13,11 +13,13 @@
  *   Stored     world setting wodx-storyteller.hunterState {regions: {id: {pressure, since, last, stage, files,
  *              acted, log}}, lastTurn, trail}.
  *   Hooks out  wodxHunterStage {region, stage, before, pressure}.
+ *   After      hunt-follow.mjs (B5699-B5703): proof taken, raids followed through, the investigator on the map, the morgue.
  * Nothing runs on players' machines, and players never see the hunters' files.
  */
 import * as H from "./hunters-rules.mjs";
 import * as Reach from "./reach-rules.mjs";
 import * as TownLooks from "./town-looks.mjs";
+import {huntFollowApi} from "./hunt-follow.mjs";
 import {MOD, esc, isActiveGM, setting, chron, npc, log} from "./core.mjs";
 import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
@@ -30,6 +32,7 @@ const held = () => { try { return !!chron()?.isHeld?.(); } catch (e) { return fa
 const skipping = () => { try { return !!chron()?.isSkipping?.(); } catch (e) { return false; } };
 const futureBranch = () => { try { return !!game.settings.get("wodx-chronicle", "rule.futureBranch"); } catch (e) { return false; } };
 const on = () => setting("hunterPressure") !== false;
+const follow = () => game.modules.get(MOD)?.api?.hunters?.follow ?? null;
 
 export function registerHunterSettings() {
   game.settings.register(MOD, "hunterPressure", {name: "Hunters across the region (house rule)", hint: "Hot hunting grounds, breaches with witnesses, descriptions going round and a failing Veil raise the pressure of the era's hunters on the whole region. They watch, keep files on culprits, follow them to other lands and at the worst move against them. Storyteller cards and the approval queue only.",
@@ -39,6 +42,15 @@ export function registerHunterSettings() {
 
 export const state = () => H.normState(setting("hunterState"));
 async function save(s) { await game.settings.set(MOD, "hunterState", H.normState(s)); }
+
+/** Change one region's record (fn: region => region) and save. NPC Motives Desk part four (B5699-B5703). */
+export async function mutate(regionId, fn) {
+  if ( !isActiveGM() || !on() || !regionId ) return null;
+  const s = state();
+  s.regions[regionId] = H.normRegion(fn(H.cooled(s.regions[regionId] ?? {}, now())) ?? s.regions[regionId]);
+  await save(s);
+  return s.regions[regionId];
+}
 
 /** The region a scene stands in (its own pick, else the homeland). */
 export function regionAt(scene = canvas?.scene) {
@@ -214,6 +226,8 @@ export async function turn({force = false} = {}) {
     s.lastTurn = force && s.lastTurn !== null ? s.lastTurn : (s.lastTurn === null ? t : s.lastTurn + due * H.TURN_DAYS * H.DAY);
     await save(s);
     await report(events, s);
+    // B5703 (h5): the morgue's dead are claimed
+    try { await follow()?.claimMorgue?.(); } catch (e) { console.warn(`${MOD} | morgue`, e); }
     return turns;
   } finally { running = false; }
 }
@@ -272,6 +286,8 @@ async function approve(entry) {
     try { await game.modules.get(MOD)?.api?.reach?.raid?.({region: d.region, kind: d.kind, file: d.file ?? (also[0] ? {id: also[0]} : null), also}); } catch (err) { console.warn(`${MOD} | raid`, err); }
   }
   if ( d.kind === "investigator" ) {
+    // B5701 (h3): the investigator comes to the town map and walks it
+    try { await follow()?.investigator?.(d.region); } catch (err) { console.warn(`${MOD} | investigator`, err); }
     const files = Object.keys(state().regions[d.region]?.files ?? {});
     const w = npc()?.wanted;
     for ( const desc of w?.list?.() ?? [] ) if ( files.includes(desc.of) && !desc.dropped ) { try { await w.spreadNow(desc.id); } catch (err) { /* gone */ } }
@@ -366,4 +382,4 @@ export function registerHunterHooks() {
   });
 }
 
-export const api = () => ({open, here, regionAt, bodiesAt, add, turn, forget, filesOn, state, stageDiff, rules: H});
+export const api = () => ({follow: huntFollowApi(), open, here, regionAt, bodiesAt, add, mutate, turn, forget, filesOn, state, stageDiff, rules: H});
