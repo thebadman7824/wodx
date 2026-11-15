@@ -76,7 +76,10 @@ async function apply() {
   const autoNow = foundry.utils.deepClone(read(CHRON, "autoApprove") ?? {});
   // A player's own ruling always waits, as Chronicle says (B3521)
   const turnOn = R.autoPlan(ap?.types?.() ?? [], autoNow, NEVER_AUTO);
-  for ( const t of turnOn ) await ap.setAuto(t, true);
+  // One write for every standing approval: one write a kind took longer than the switch may, once there were 80 kinds
+  if ( turnOn.length && read(CHRON, "autoApprove") !== undefined ) {
+    await game.settings.set(CHRON, "autoApprove", {...autoNow, ...Object.fromEntries(turnOn.map(t => [t, true]))});
+  } else for ( const t of turnOn ) await ap.setAuto(t, true);
   if ( fresh ) {
     await game.settings.set(MOD, "before", {at: Date.now(), settings: plan.changes.map(({mod, key, from, to}) => ({mod, key, from, to})), auto: autoNow});
   } else if ( plan.changes.length ) {
