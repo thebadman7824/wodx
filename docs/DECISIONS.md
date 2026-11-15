@@ -306,7 +306,7 @@ Next free block: B6020
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5680-B5709 | NPC Motives Desk: every NPC action has a reason and a follow-through (used B5680-B5703) | NPC, Storyteller |
 | B5710-B5729 | Aftercare of the carried (Aftercare Desk a1-a12) (used B5710-B5721) | NPC |
-| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5736) | Interactables, tools |
+| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5738) | tools |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 | B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
 | B5800-B5809 | NPC Aftercare Desk: what comes after each NPC action (used B5800-B5806) | NPC, Chronicle |
@@ -9377,6 +9377,16 @@ Reverse: remove the fixture and the gate.
 
 ## B5736. A touched gate run reads the gate list from the branch under test (2026-11-15)
 Tools. run-gate.mjs --touched and --all built the gate list from the PC's own copy of the repository, so a gate new on the branch (gatepixelmap in job #1400) was silently left out. Both now read tools/gate, the module graph and the per-gate timeouts from the --repo checkout.
+
+Reverse: none needed.
+
+## B5737. Whole buildings and open ground for the pixel drawer, and two sample maps (2026-11-15)
+Tools. tools/pixelmap/buildings.py draws a one-room log cottage (oven in a back corner, bed, painted chest, table and benches by the front window, a door and three shuttered windows, all recorded as walls, openings, a light and a home) and a small timber chapel; land.py lays grass, rutted roads, brooks, ploughed strips by crop, a plank bridge and trees that keep clear of what was built. maps/village.py (a Moravian village of about 1200, 40 by 28 squares) and maps/road.py (a country road with a ford, a wayside cross and a cart, 36 by 20) are the samples sent to Ben before the larger map work.
+
+Reverse: remove the files; nothing else uses them yet.
+
+## B5738. Every object at its true size (2026-11-15)
+Tools. After Ben's review of the samples, every object was measured against the 5 ft square: beds were 10 ft long and are now 7, tree crowns grow to 14 to 23 ft, field strips are wide enough to read as fields, the cart is a farm cart's size, and a field haystack is drawn as a domed rick about 11 ft across. RULES.md keeps the size table.
 
 Reverse: none needed.
 
