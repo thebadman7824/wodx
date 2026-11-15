@@ -20,12 +20,13 @@ import * as AR from "./adaptive-rules.mjs";
 import * as PR from "./print-rules.mjs";
 import * as OR from "./opening-rules.mjs";
 import {reckon} from "../../wodx-chronicle/scripts/reckoning-rules.mjs";
+import {countOf} from "../../wodx-chronicle/scripts/local-reckoning-rules.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import * as Mood from "./mood.mjs";
 
 const MOD = "wodx-atmosphere";
-const VERSION = "0.16.0";
+const VERSION = "0.16.2";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
 const setSetting = (k, v) => game.settings.set(MOD, k, v);
@@ -1220,9 +1221,15 @@ function openingCard(scene) {
   try { reck = game.settings.get("wodx-chronicle", "rule.eraReckoning") !== false; } catch (e) { reck = true; }
   if ( reck ) {
     let church = null, eraId = "";
-    try { church = chron()?.church?.on?.(t) ?? null; } catch (e) { church = null; }
+    try { church = chron()?.church?.on?.(t, {scene}) ?? null; } catch (e) { church = null; } // B5870: the land of the scene opened
     try { eraId = chron()?.eras?.activeEra?.()?.profile?.id ?? ""; } catch (e) { eraId = ""; }
-    told = reckon(t, {church, eraId});
+    // B5870: church carries the faith and region of the scene; B5875: a player's character may keep its own count
+    let faith = null;
+    try {
+      const mine = !game.user.isGM ? game.user.character : null;
+      if ( mine && church ) { const c = countOf(mine.flags?.["wodx-chronicle"] ?? {}, mine.flags?.["wodx-creation"]?.lifepath ?? null, church.faith ?? "western"); if ( c.faith !== church.faith ) faith = c.faith; }
+    } catch (e) { faith = null; }
+    told = reckon(t, faith ? {church: {...church, day: null}, faith, region: church?.region, eraId, latitude: lat} : {church, eraId, latitude: lat});
   }
   let weather = "";
   try { weather = now()?.label ?? ""; } catch (e) { weather = ""; }

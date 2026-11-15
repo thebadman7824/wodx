@@ -1,3 +1,5 @@
+import * as LR from "./line-rules.mjs";
+export {LINE_LABELS} from "./line-rules.mjs";
 /**
  * Sprite tokens, the rules with no Foundry in them: a sheet is 8 walk frames across and 4 facings down, each frame
  * 96 by 112 pixels, drawn by our own code (docs/DECISIONS.md B2560). A token turns to the way it moves and steps
@@ -79,24 +81,24 @@ export const ACT_TOTAL = ACT_MS.reduce((a, b) => a + b, 0);
 /* Besides its attacks, every sprite can take a blow, dodge, fall and die (B2588): those sheets are made from its walk. */
 export const REACTS = ["hit", "dodge", "fall", "die", "block", "parry"];
 /** Moves whose last frame stays on the map until the figure is helped up. */
-export const HOLD = ["fall", "die", "sit", "kneel", "seat", "stool", "sleep", "lie", "sup", "work", "tend", "dig", "graze"];
+export const HOLD = ["fall", "die", "sit", "kneel", "seat", "stool", "sleep", "lie", "sup", "work", "tend", "dig", "graze", ...LR.LINE_HOLD];
 /* Things a figure does that are not blows (B2610): it sits or kneels and stays so, looks about, speaks, feeds, changes form. Made from its walk. */
 export const POSES = ["sit", "kneel", "search", "talk", "feed", "shift", "pick"];
 /** Poses a figure leaves by itself as soon as it walks off. */
-export const STAY = ["sit", "kneel", "seat", "stool", "sleep", "lie", "sup", "work", "tend", "dig", "graze"];
+export const STAY = ["sit", "kneel", "seat", "stool", "sleep", "lie", "sup", "work", "tend", "dig", "graze", ...LR.LINE_HOLD];
 /* Everyday life, drawn joint by joint for people (B5664): on a seat, on a stool of its own, asleep, a cup to the mouth, at work
    with the hands, kneeling to a hearth or a bed of herbs, hoeing. And for the four-legged (B5662): grazing, lying down. */
 export const LIFE = ["seat", "stool", "sleep", "sup", "work", "tend", "dig"];
 export const BEAST_LIFE = ["graze", "lie"];
 /** Poses that go round and round for as long as the figure keeps at it. */
-export const LOOP = ["sup", "work", "tend", "dig", "graze"];
-const OWN_MOVES = [...REACTS, ...POSES, ...LIFE, ...BEAST_LIFE];
-const PEOPLE_MOVES = [...REACTS, ...POSES, ...LIFE];
+export const LOOP = ["sup", "work", "tend", "dig", "graze", ...LR.LINE_LOOP];
+const OWN_MOVES = [...REACTS, ...POSES, ...LIFE, ...BEAST_LIFE, ...Object.keys(LR.LINE_LABELS)];
+const PEOPLE_MOVES = [...REACTS, ...POSES, ...LIFE, "swoon"];
 export const ACTS = {
-  "kindred-elder-1888": ["claw", "cast", ...PEOPLE_MOVES],
-  "garou-homid": ["claw", ...PEOPLE_MOVES],
+  "kindred-elder-1888": ["claw", "cast", ...PEOPLE_MOVES, "frenzy", "embrace", "daysleep", "earthsleep"],
+  "garou-homid": ["claw", ...PEOPLE_MOVES, "cup", "dance"],
   "garou-crinos": ["claw", ...REACTS, ...POSES],
-  "garou-lupus": ["bite", ...REACTS, ...POSES],
+  "garou-lupus": ["bite", ...REACTS, ...POSES, "howl"],
   "townsman-1888": ["claw", "shot", ...PEOPLE_MOVES],
   "lady-1888": ["thrust", ...PEOPLE_MOVES]
 };
@@ -104,14 +106,14 @@ export const ACT_LABELS = {claw: "Strike with the hand", cast: "Work a power", s
   hit: "Take a blow", dodge: "Dodge", fall: "Fall", die: "Die", block: "Block", parry: "Parry",
   seat: "Sit on a seat", stool: "Sit on a stool", sleep: "Lie down to sleep", sup: "Sit and drink", work: "Work with the hands", tend: "Kneel and tend",
   dig: "Hoe the ground", graze: "Graze", lie: "Lie down",
-  sit: "Sit on the ground", kneel: "Kneel", search: "Look about", talk: "Speak", feed: "Feed", shift: "Change form", pick: "Work at a lock"};
+  sit: "Sit on the ground", kneel: "Kneel", search: "Look about", talk: "Speak", feed: "Feed", shift: "Change form", pick: "Work at a lock", ...LR.LINE_LABELS};
 /** How much longer than a blow a move takes: looking about and feeding are slow, speech and a change of form unhurried. */
 export const ACT_SLOW = {search: 2.6, pick: 2.6, feed: 2.2, talk: 1.8, shift: 1.7, sit: 1.2, kneel: 1.2, seat: 1.2, stool: 1.2, sleep: 1.6, lie: 1.6,
-  sup: 4, work: 2.2, tend: 2.6, dig: 2.4, graze: 4.5};
+  sup: 4, work: 2.2, tend: 2.6, dig: 2.4, graze: 4.5, ...LR.LINE_SLOW};
 /** The sheet of a sleeper's blanket alone, tinted in the game to the colour of the bed (B5667). Every sheet with "sleep" has one. */
 export const COVER = "sleepcover";
 /** Poses a figure gets up from: the way down is played backwards (B5666). */
-export const RISES = ["seat", "stool", "sit", "kneel", "sleep", "lie"];
+export const RISES = ["seat", "stool", "sit", "kneel", "sleep", "lie", ...LR.LINE_RISES];
 export const UP_MS = 420;
 /** The column shown t thousandths of a second into getting up; null once the figure is up. */
 export const upFrame = t => t < 0 || t >= UP_MS ? null : ACT_FRAMES - 1 - Math.min(ACT_FRAMES - 1, Math.floor(t / UP_MS * ACT_FRAMES));
@@ -249,8 +251,26 @@ export const hasStand = name => STAND[name] === true;
 /** The token size a sprite asks for: {width, height} in squares, or null when it fits one square. */
 export const squaresOf = name => SQUARES[name] ? {width: SQUARES[name], height: SQUARES[name]} : null;
 /** Take in a batch's manifest: every sprite in it becomes "own-<actor id>". Returns how many were learned. */
+/** A Garou's sprite for each form, by its homid sprite; a changeling's mortal seeming; the sprite another one belongs to. */
+export const FORMS_OF = {};
+export const SEEMING = {};
+export const OF = {};
+/** The homid sprite a form's sprite belongs to (itself when it is the homid). */
+export const homidOf = name => OF[name] ?? name;
+/** The sprite of a Garou in a form, or null when it has none drawn. */
+export function formSprite(name, form) {
+  const h = homidOf(name);
+  if ( form === "homid" ) return h;
+  return FORMS_OF[h]?.[form] ?? null;
+}
+/** The form a sprite shows. */
+export function formShown(name) {
+  const h = homidOf(name);
+  if ( h === name ) return "homid";
+  return Object.entries(FORMS_OF[h] ?? {}).find(([, n]) => n === name)?.[0] ?? null;
+}
 export function learn(folder, manifest) {
-  for ( const k of Object.keys(OWN) ) { delete OWN[k]; delete SHEETS[k]; delete ACTS[k]; delete GAIT[k]; delete SQUARES[k]; delete STAND[k]; }
+  for ( const k of Object.keys(OWN) ) { delete OWN[k]; delete SHEETS[k]; delete ACTS[k]; delete GAIT[k]; delete SQUARES[k]; delete STAND[k]; delete FORMS_OF[k]; delete SEEMING[k]; delete OF[k]; }
   let n = 0;
   for ( const [id, e] of Object.entries(manifest?.sprites ?? {}) ) {
     if ( !/^[A-Za-z0-9]+$/.test(id) ) continue;
@@ -261,6 +281,10 @@ export function learn(folder, manifest) {
     GAIT[name] = (Array.isArray(e?.gaits) ? e.gaits : []).filter(g => GAITS.includes(g) || g === CARRY);
     if ( e?.stand === true ) STAND[name] = true;
     const sq = Number(e?.squares); if ( Number.isInteger(sq) && sq > 1 && sq <= 8 ) SQUARES[name] = sq;
+    // a Garou's other forms and a changeling's mortal seeming are sprites of their own (B5813, B5819)
+    if ( e?.forms && typeof e.forms === "object" ) FORMS_OF[name] = Object.fromEntries(Object.entries(e.forms).filter(([f, i]) => LR.FORMS.includes(f) && /^[A-Za-z0-9]+$/.test(i)).map(([f, i]) => [f, ownName(i)]));
+    if ( /^[A-Za-z0-9]+$/.test(e?.seeming ?? "") ) SEEMING[name] = ownName(e.seeming);
+    if ( /^[A-Za-z0-9]+$/.test(e?.of ?? "") ) OF[name] = ownName(e.of);
     n++;
   }
   return n;
@@ -283,6 +307,7 @@ export function rosterOf(c = {}) {
   if ( out.kind === "person" ) {
     // what it is, for the looks of the fae and of ghosts (B2614): the sheet's line and, for a changeling, its kith
     if ( c.type ) out.line = String(c.type);
+    if ( c.variant ) out.variant = String(c.variant);   // a ghoul on a Mortal sheet (B5810)
     // a child is drawn shorter, with a larger head (B3480); the band comes from figure-rules growthOf
     if ( ["youth", "young", "child", "small"].includes(c.growth) ) out.growth = c.growth;
     const kith = String(c.kith ?? "").split(".").pop().trim();

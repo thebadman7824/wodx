@@ -6,9 +6,9 @@
 import sys, os, re, json, hashlib, zlib, numpy as np
 from PIL import Image
 import wear as Wr, beast as B, critter as Cr, items as It
-import proto_attacks as PA, monster as M, child as Ch
+import proto_attacks as PA, monster as M, child as Ch, forms as Fm
 S,SH=Wr.S,Wr.SH
-VERSION=12
+VERSION=13
 POINTED=re.compile(r'spear|pike|lance|javelin|rapier|dagger|knife|stiletto|stake|fork|bayonet|kris|katar|halberd|glaive')
 ANIMALS=[(r'gray alpha.s cub|wolf cub','wolf_cub'),(r'gray alpha','wolf_alpha'),(r'winter wolf','wolf_winter'),(r'wolf','wolf'),(r'hound','hound'),(r'dog, small','dog_small'),(r'dog, large|mastiff','mastiff'),(r'dog','dog_medium'),
  (r'bobcat|lynx','bobcat'),(r'leopard|panther','leopard'),(r'tiger','tiger'),(r'lion','lion'),(r'\bcat\b','cat'),(r'warhorse','warhorse'),(r'horse, large','horse_large'),(r'horse, small|pony','pony'),(r'horse','horse'),(r'mule|donkey','mule'),
@@ -193,8 +193,35 @@ def _draw(a):
     if ghost: sheets['']=PA.way(sheets[''],'glide')
     sheets.update(PA.extras(sheets[''],a.get('death') if a.get('death') in('die','ash','fade') else 'die'))
     sheets.update(PA.drawn(spec))   # drawn joint by joint: these replace the sit and kneel made from the walk
+    sheets.update(line_sheets(spec,a))   # the moves only its line has (B5810)
     if post: sheets={k:M.post(v,**post) for k,v in sheets.items()}
     return sheets,'person'+(':fae' if up else ':ghost' if ghost else ''),notes
+# The moves each line is drawn with (B5810 to B5819), by the sheet's type; everyone can swoon when fed on.
+LINE_MOVES={'vampire':('frenzy','embrace'),'werewolf':('cup','dance'),'mage':('pray','staff','device','cards','pour','meditate','ritual'),
+            'hunter':('brandish','brace','study','pray'),'mummy':('situp','hekau'),'mortal':(),'ghoul':('shake','quaff'),'demon':(),'changeling':(),'wraith':()}
+def line_of(a):
+    l=str(a.get('line') or '').lower().strip()
+    if l=='mortal' and str(a.get('variant') or '').lower()=='ghoul': return 'ghoul'
+    return l
+def line_sheets(spec,a):
+    line=line_of(a); d=Wr.fig(**spec); out={'swoon':Wr.line_posed(d,'swoon')}
+    for n in LINE_MOVES.get(line,()): out[n]=Wr.line_posed(d,n)
+    if line=='vampire': out['daysleep']=Wr.rest_in(d,'coffin'); out['earthsleep']=Wr.rest_in(d,'earth')
+    return out
+def fur_of(a):
+    """a Garou's fur: its hair colour, else a wolf grey"""
+    h=str(a.get('fur') or a.get('hair') or '')
+    return tuple(int(h[i:i+2],16) for i in (0,2,4)) if re.fullmatch(r'[0-9a-fA-F]{6}',h) else (104,96,88)
+def others(a):
+    """the other sprites a character has (B5813, B5819): a Garou's four other forms, a changeling's mortal seeming. {suffix: (sheets, label)}"""
+    line=line_of(a); out={}
+    if line=='werewolf' and (a.get('kind') or 'person')=='person':
+        spec,held,worn,notes=person(a); fs=Fm.sheets(spec,fur_of(a))
+        for f,suf in (('glabro','g'),('crinos','c'),('hispo','h'),('lupus','l')): out[suf]=(fs[f],'form:'+f)
+    if line=='changeling':
+        b=dict(a,line='mortal',kith=''); sh,label,notes=_draw1(b)
+        if sh: out['m']=(sh,'seeming:mortal')
+    return out
 def key(a): return hashlib.sha1(json.dumps([VERSION,a],sort_keys=True).encode()).hexdigest()[:16]
 def run(roster,out,every=False):
     os.makedirs(out,exist_ok=True); mf=os.path.join(out,'manifest.json')
@@ -203,7 +230,11 @@ def run(roster,out,every=False):
         i=re.sub(r'[^A-Za-z0-9]','',str(a.get('id','')))
         if not i: continue
         k=key(a); was=(old.get('sprites') or {}).get(i)
-        if was and was.get('key')==k and not every and os.path.exists(os.path.join(out,i+'.png')): man['sprites'][i]=was; skipped+=1; continue
+        if was and was.get('key')==k and not every and os.path.exists(os.path.join(out,i+'.png')):
+            man['sprites'][i]=was; skipped+=1
+            for oi,oe in (old.get('sprites') or {}).items():
+                if oe.get('of')==i: man['sprites'][oi]=oe   # its other forms and seeming go with it
+            continue
         try: sheets,label,notes,sq=draw(a)
         except Exception as e: sheets,label,notes,sq=None,None,['could not be drawn: %s'%e],1
         if not sheets: report.append((a.get('name'),notes)); continue
@@ -213,7 +244,18 @@ def run(roster,out,every=False):
         for act,sh in sheets.items():
             Image.fromarray(np.ascontiguousarray(sh),'RGBA').save(os.path.join(out,i+('.'+act if act else '')+'.png'),optimize=True)
         walk=sheets['']; Image.fromarray(np.ascontiguousarray(walk[2*SH:3*SH,0:S]),'RGBA').save(os.path.join(out,i+'-still.png'))
-        man['sprites'][i]={'name':a.get('name'),'key':k,'look':label,'acts':[m for m in sheets if m and m not in PA.GAITS+PA.WAYS+('carry',)],'gaits':[m for m in sheets if m in PA.GAITS+PA.WAYS+('carry',)],'squares':sq,'notes':notes,**({'stand':True} if stand is not None else {})}; drawn+=1
+        more={}
+        try: more=others(a)
+        except Exception as e: notes=list(notes or [])+['other forms could not be drawn: %s'%e]
+        for suf,(osh,olab) in more.items():
+            ostand=osh.pop('stand',None)
+            if ostand is not None and ostand.shape[0]==osh[''].shape[0]: osh['']=np.concatenate([osh[''],ostand],1)
+            else: ostand=None
+            for act,sh in osh.items(): Image.fromarray(np.ascontiguousarray(sh),'RGBA').save(os.path.join(out,i+suf+('.'+act if act else '')+'.png'),optimize=True)
+            Image.fromarray(np.ascontiguousarray(osh[''][2*SH:3*SH,0:S]),'RGBA').save(os.path.join(out,i+suf+'-still.png'))
+            man['sprites'][i+suf]={'name':'%s (%s)'%(a.get('name'),olab.split(':')[1]),'key':k,'look':olab,'of':i,'acts':[m for m in osh if m and m not in PA.GAITS+PA.WAYS+('carry',)],
+                'gaits':[m for m in osh if m in PA.GAITS+PA.WAYS+('carry',)],'squares':sq if olab!='form:crinos' and olab!='form:hispo' else max(sq,2),'notes':[],**({'stand':True} if ostand is not None else {})}
+        man['sprites'][i]={'name':a.get('name'),'key':k,'look':label,**({'forms':{f:i+s_ for f,s_ in (('glabro','g'),('crinos','c'),('hispo','h'),('lupus','l')) if s_ in more}} if 'g' in more else {}),**({'seeming':i+'m'} if 'm' in more else {}),'acts':[m for m in sheets if m and m not in PA.GAITS+PA.WAYS+('carry',)],'gaits':[m for m in sheets if m in PA.GAITS+PA.WAYS+('carry',)],'squares':sq,'notes':notes,**({'stand':True} if stand is not None else {})}; drawn+=1
         if notes: report.append((a.get('name'),notes))
     json.dump(man,open(mf,'w'),indent=1,sort_keys=True)
     return drawn,skipped,report

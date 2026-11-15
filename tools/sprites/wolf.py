@@ -5,8 +5,12 @@ S,SH=K.S,K.SH
 GREY=[(34,30,30),(70,64,60),(104,96,88),(138,128,116),(170,160,146)]
 PALE=[(34,30,30),(112,104,94),(150,140,126),(184,174,158),(208,200,186)]
 def T(s,ox=48): return lambda x,y:(ox+x*s,87+y*s)
-def side(f,s=1.0,heavy=1.0,ramp=GREY,teeth=False):
-    cv=K.Cv(); ph=f/8*2*math.pi; P=T(s,47); r=lambda v:v*s*heavy; bob=-abs(math.sin(ph))*.6
+def side(f,s=1.0,heavy=1.0,ramp=GREY,teeth=False,up=0.0):
+    """up: 0 to 1, the head lifted and the muzzle to the sky (the howl, B5812); the feet stay planted while it howls"""
+    cv=K.Cv(); ph=f/8*2*math.pi if not up else 0.0; P=T(s,47); r=lambda v:v*s*heavy; bob=-abs(math.sin(ph))*.6
+    an=-math.radians(62)*up; ca,sa=math.cos(an),math.sin(an); nx,ny=12,-30
+    def Q(x,y):
+        dx,dy=x-nx,y-ny; return P(nx+dx*ca-dy*sa,ny+dx*sa+dy*ca)
     def fore(p,dark,g):
         sw=math.sin(p); lift=max(0,math.cos(p))*2.5
         cv.capsule(P(9,-21+bob),P(8+sw*2.5,-12.5+bob),r(2.8),r(2.0),ramp=ramp,fur=.6*s,seed=1,dark=dark,g=g); cv.capsule(P(8+sw*2.5,-12.5+bob),P(8+sw*6,-2-lift),r(1.9),r(1.5),ramp=ramp,dark=dark,g=g)
@@ -20,15 +24,15 @@ def side(f,s=1.0,heavy=1.0,ramp=GREY,teeth=False):
     fore(ph+math.pi,1,'f1'); hind(ph,1,'h1')
     cv.capsule(P(7,-25+bob),P(-9,-24.5+bob),r(7),r(5.6),ramp=ramp,fur=1.2*s,seed=5,g='body')
     cv.capsule(P(2,-20+bob),P(-6,-21+bob),r(3.2),r(2.6),ramp=PALE,fur=.8*s,seed=6,g='body')
-    cv.capsule(P(9,-28+bob),P(16,-35+bob),r(5.2),r(4.0),ramp=ramp,fur=1.6*s,seed=7,g='body')
+    cv.capsule(P(9,-28+bob),Q(16,-35+bob),r(5.2),r(4.0),ramp=ramp,fur=1.6*s,seed=7,g='body')
     hind(ph+math.pi,0,'h0'); fore(ph,0,'f0')
-    cv.capsule(P(18,-37+bob),P(19.5,-37+bob),r(4.2),r(3.8),ramp=ramp,fur=.8*s,seed=8,g='head')
-    cv.capsule(P(20,-36.5+bob),P(27.5,-34.5+bob),r(2.8),r(1.6),ramp=ramp,g='head'); cv.capsule(P(20,-34.6+bob),P(26,-33.2+bob),r(1.5),r(1.0),ramp=PALE,g='jaw')
-    cv.capsule(P(16.5,-40+bob),P(15.5,-45.5+bob),r(1.7),r(.5),ramp=ramp,g='ear')
-    for xy in ((28.6,-35.2),): cv.px(*P(xy[0],xy[1]+bob),K.NOSE)
-    cv.px(*P(21.4,-38.4+bob),K.EYE)
+    cv.capsule(Q(18,-37+bob),Q(19.5,-37+bob),r(4.2),r(3.8),ramp=ramp,fur=.8*s,seed=8,g='head')
+    cv.capsule(Q(20,-36.5+bob),Q(27.5,-34.5+bob),r(2.8),r(1.6),ramp=ramp,g='head'); cv.capsule(Q(20,-34.6+bob),Q(26,-33.2+bob),r(1.5),r(1.0),ramp=PALE,g='jaw')
+    cv.capsule(Q(16.5,-40+bob),Q(15.5,-45.5+bob),r(1.7),r(.5),ramp=ramp,g='ear')
+    for xy in ((28.6,-35.2),): cv.px(*Q(xy[0],xy[1]+bob),K.NOSE)
+    cv.px(*Q(21.4,-38.4+bob),K.EYE)
     if teeth:
-        for x in (22,24,26): cv.px(*P(x,-33.6+bob),K.TOOTH)
+        for x in (22,24,26): cv.px(*Q(x,-33.6+bob),K.TOOTH)
     cv.outline(); return cv.c
 def front(f,s=1.0,heavy=1.0,ramp=GREY,back=False,teeth=False):
     cv=K.Cv(); ph=f/8*2*math.pi; P=T(s); r=lambda v:v*s*heavy; bob=-abs(math.sin(ph))*.6
@@ -58,4 +62,15 @@ def sheet(s=1.0,heavy=1.0,ramp=GREY,teeth=False):
     for f in range(8):
         r=side(f,s,heavy,ramp,teeth)
         for row,im in ((0,front(f,s,heavy,ramp,True)),(1,r[:,::-1]),(2,front(f,s,heavy,ramp,False,teeth)),(3,r)): sh[row*SH:(row+1)*SH,f*S:(f+1)*S]=im
+    return sh
+def howl(s=1.0,heavy=1.0,ramp=GREY):
+    """the howl, six frames by four facings (B5812): the head comes up to the sky and stays; seen from in front or behind the
+    muzzle points up"""
+    sh=np.zeros((4*SH,6*S,4),np.uint8)
+    for i,u in enumerate((0,.4,.8,1,1,1)):
+        r=side(0,s,heavy,ramp,False,u); fr=front(0,s,heavy,ramp,False); bk=front(0,s,heavy,ramp,True)
+        if u>.5:
+            from PIL import Image as _I
+            fr=np.array(_I.fromarray(fr).transform(fr.shape[1::-1],_I.AFFINE,(1,0,0,0,1,1.5*u),resample=_I.NEAREST))
+        for row,im in ((0,bk),(1,r[:,::-1]),(2,fr),(3,r)): sh[row*SH:(row+1)*SH,i*S:(i+1)*S]=im
     return sh

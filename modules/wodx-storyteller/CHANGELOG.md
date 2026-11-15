@@ -2,6 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.105.0 (Era primers by region (B5880-B5882): the players' primer used to describe feudal Europe wherever the chronicle stood. A homeland that follows another way of life (the Eastern church, the lands of Islam, India, China and Korea, Japan, mainland Southeast Asia, Tibet, the Malay world, the Sahel, the Swahili coast and Ethiopia, southern and central Africa, Mesoamerica, the Andes, Polynesia, the far north) now gets two or three paragraphs of what everyone there knows, for five periods from 1197 to the Future Darkness. The page is written again when an era is applied or the homeland changes; the Storyteller's own pages in the journal stay as they are)
+- 0.104.1 (B5089: the captive's rumour)
 - 0.104.0 (NPC Motives Desk, part four (B5699-B5703). hunt-follow-rules.mjs and hunt-follow.mjs; an Investigator extra; hunters.mutate; harness hunt-follow.test.mjs, gate gatehuntfollow; For WoDX NPC's grudge moves (B5690): venture-rules LOSS.spoiled and touched("spoiled", {actor}))
 - 0.103.0 (Say or Do: project complications act, and towns gain from new buildings (B5824-B5825))
 - 0.102.1 (Sleep marked in Hardship ends a stimulant's crash (B5178))

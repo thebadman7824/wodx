@@ -149,12 +149,14 @@ export async function run() {
       await scene.createEmbeddedDocuments("Region", [{name: "Gate trigger", shapes: [{type: "rectangle", x: 1200, y: 1200, width: 300, height: 300, rotation: 0}],
         behaviors: [{type: `${NPC}.trigger`, name: "Trigger", system: {label: "the gate trigger", does: "note", who: "anyone", once: true, fired: false}}]}]);
       await sleep(400);
-      const n = events.length;
+      const n = events.length, m0 = game.messages.size;
       await tb.update({x: 1300, y: 1300}, {animate: false});
       const ev = await until(() => events.slice(n).find(e => e.kind === "trigger"), 5000);
-      await sleep(500);
-      const note = game.messages.contents.slice(-6).some(m => /reached the gate trigger/.test(m.content));
-      const beh = scene.regions.find(r => r.name === "Gate trigger")?.behaviors?.contents?.[0] ?? null;
+      // B5860: other cards (witnesses, alerts) can follow the note, so look at every card since the move, and give the mark time
+      const note = !!await until(() => game.messages.contents.slice(m0).some(m => /reached the gate trigger/.test(m.content)), 5000);
+      const fired = () => scene.regions.find(r => r.name === "Gate trigger")?.behaviors?.contents?.[0] ?? null;
+      await until(() => fired()?.system?.fired === true, 5000);
+      const beh = fired();
       ok("9. walking into a WoDX: Trigger region sends one trigger event and a note, and marks it set off", !!ev && note && beh?.system?.fired === true,
         {ev, note, fired: beh?.system?.fired ?? null, count: events.slice(n).filter(e => e.kind === "trigger").length});
     });

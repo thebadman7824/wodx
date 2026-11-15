@@ -253,6 +253,10 @@ export function scoreOptions(profile, state) {
   const ride = boardOption(state, out, p);
   if ( ride ) out.push(ride);
 
+  // B5077: carry off a fallen ally, hide a body, take a captive
+  const carry = carryOption(state, out, p);
+  if ( carry ) out.push(carry);
+
   return out.sort((a, b) => b.score - a.score).map(o => ({...o, score: Math.round(o.score * 10) / 10}));
 }
 
@@ -402,11 +406,77 @@ export function boardOption(state = {}, options = [], p = {}) {
 }
 const TIMID_BELOW = 0.5;
 
+/**
+ * B5077 (Ben's Carry Bodies Desk, c8): an NPC takes up the fallen by itself. state.fallen: the characters down near it,
+ * [{id, name, ally, foe, rival, hostile (a player character against it), dead, distance (yards), canMove (the lifting chart
+ * lets this NPC shift them), mode ("carry" or "drag")}]; state.self.holding: {id, name, intent} for one it already holds;
+ * state.noCarry: the Behaviour window's "Leaves the fallen where they lie"; state.carryOrder: the token id of one it was asked
+ * to carry (B5079, WoDX Solo), which goes first.
+ *   - rescue: when it would retreat (the flight is its best option, or it is past its wounds), an ally down within a run is
+ *     carried or dragged off, a little above the flight itself (loyalty adds);
+ *   - hide: the masquerade tactic, mortals about and no foe in reach: a body is dragged away from their eyes;
+ *   - capture: no foe standing in reach, a fallen rival, enemy or hostile player character is taken captive (cunning adds,
+ *     the "alive" tactic more); a timid NPC (aggression under a half) leaves them unless it has that tactic.
+ * One it already holds: it keeps going with them, unless a foe it means to fight is in reach. Animals do none of it.
+ * -> {action: "carry", target, intent, want, score, why}, or null
+ */
+export function carryOption(state = {}, options = [], p = {}) {
+  const s = state.self ?? {};
+  if ( state.noCarry || s.animal || s.surrendered || s.inFrenzy || s.atWheel ) return null;
+  const tac = t => (p.tactics ?? []).includes(t);
+  const enemies = (state.enemies ?? []).filter(e => e.visible !== false);
+  const inReach = enemies.filter(e => e.reach && !e.down);
+  const best = [...options].sort((a, b) => b.score - a.score)[0] ?? null;
+  const flee = options.find(o => o.action === "flee");
+  const retreating = (best?.action === "flee") || Number(s.wounds ?? 0) >= Number(p.fleeAt ?? 99);
+  const loyal = Number(p.loyalty ?? 1), cunning = Number(p.cunning ?? 1), aggression = Number(p.aggression ?? 1);
+  const witnesses = Number(state.witnesses ?? 0);
+  const WORD = {rescue: "carries off", hide: "hides", capture: "takes captive"};
+  if ( s.holding ) {
+    const h = s.holding, fightNow = inReach.length && aggression >= TIMID_BELOW && !retreating && h.intent !== "rescue";
+    if ( fightNow ) return null;
+    const sc = (h.intent === "rescue" ? 3 + loyal : 3 + cunning) + (retreating ? 2 : 0);
+    return {action: "carry", target: h.id, intent: h.intent ?? "rescue", want: "", score: sc, why: `keeps hold of ${h.name} and goes on (${WORD[h.intent] ?? "carries off"})`};
+  }
+  const how = f => (f.mode === "drag" ? "drag" : "carry");
+  // B5079: a companion told to carry someone (the Lone Chronicle's watcher or the panel) does, from as far as it can see them
+  const ordered = state.carryOrder ? (state.fallen ?? []).find(f => f && f.id === state.carryOrder && f.canMove !== false) : null;
+  if ( ordered ) return {action: "carry", target: ordered.id, intent: "rescue", want: how(ordered), score: 9, why: `asked to carry ${ordered.name} to safety`};
+  const near = (state.fallen ?? []).filter(f => f && f.canMove !== false && Number.isFinite(Number(f.distance)) && Number(f.distance) <= Math.max(2, Number(s.run) || 0))
+    .sort((a, b) => a.distance - b.distance);
+  if ( !near.length ) return null;
+  // rescue
+  const ally = near.find(f => f.ally);
+  if ( ally && retreating ) {
+    const base = flee?.score ?? best?.score ?? 3;
+    return {action: "carry", target: ally.id, intent: "rescue", want: how(ally), score: base + 0.5 + 0.5 * loyal,
+      why: `retreating, with ${ally.name} down ${Math.round(ally.distance)} yards off: ${how(ally) === "carry" ? "carries" : "drags"} them away`};
+  }
+  if ( ally && !inReach.length && loyal >= 1 ) {
+    return {action: "carry", target: ally.id, intent: "rescue", want: how(ally), score: 2 + loyal,
+      why: `no foe in reach and ${ally.name} is down: gets them out of the fight`};
+  }
+  // hide a body from mortal eyes
+  if ( tac("masquerade") && witnesses > 0 && !inReach.length ) {
+    const body = near.find(f => f.dead) ?? near[0];
+    return {action: "carry", target: body.id, intent: "hide", want: "drag", score: 3 + cunning + (body.dead ? 1 : 0),
+      why: `${witnesses} mortal witness${witnesses === 1 ? "" : "es"} about: drags ${body.name} out of their sight`};
+  }
+  // take a captive
+  const prey = near.find(f => !f.dead && !f.asked && (f.foe || f.rival || f.hostile));
+  if ( prey && !inReach.length && !retreating && (aggression >= 0.5 || tac("alive")) ) {
+    const who = prey.hostile ? "a hostile player character" : prey.rival ? "a rival" : "an enemy";
+    return {action: "carry", target: prey.id, intent: "capture", want: how(prey), score: 2 + cunning + (tac("alive") ? 2 : 0) + (prey.hostile ? 0.5 : 0),
+      why: `no foe standing in reach; ${prey.name}, ${who}, is down: takes them captive`};
+  }
+  return null;
+}
+
 /** The actions WoDX can carry out by itself; the rest need the Storyteller's roll or choice. */
-export const SELF_ACTING = ["attack", "shoot", "flee", "defend", "wait", "search", "surrender", "board"];
+export const SELF_ACTING = ["attack", "shoot", "flee", "defend", "wait", "search", "surrender", "board", "carry"];
 export const ACTION_LABEL = {attack: "Attack", shoot: "Shoot", flee: "Flee", defend: "Full defence", willpower: "Attack, spending Willpower",
   frenzy: "Frenzy check", power: "Use a power", call: "Call for help", wait: "Wait", search: "Search for the unseen",
-  surrender: "Surrender", hostage: "Take a hostage", board: "Get into a vehicle"};
+  surrender: "Surrender", hostage: "Take a hostage", board: "Get into a vehicle", carry: "Carry off"};
 
 /** Auto mode acts on the best option it can carry out itself; a better one that needs the Storyteller stops it. */
 export function autoChoice(options) {

@@ -21,6 +21,18 @@ export function registerHandler(type, handler) {
   handlers.set(type, handler);
 }
 
+/**
+ * B5861: every change to the queue reads, edits and writes the whole setting, so two at once lost one of them (a
+ * proposal made while a clock hook queued its own was dropped). Each change now waits for the one before it.
+ */
+let queueTail = Promise.resolve();
+function serial(fn) {
+  const run = queueTail.then(fn, fn);
+  queueTail = run.catch(() => {});
+  return run;
+}
+const freshQueue = () => foundry.utils.deepClone(setting("approvals") ?? {pending: [], history: []});
+
 export function pending() {
   return setting("approvals")?.pending ?? [];
 }
@@ -69,23 +81,26 @@ const lightTouch = () => { try { return !!rule("lightTouch"); } catch (e) { retu
 /** Active GM: add a proposal to the queue, approve it under a standing rule, or hold it back past the NPC cap. */
 export async function addToQueue(entry) {
   if ( !isActiveGM() ) return;
-  const q = foundry.utils.deepClone(setting("approvals") ?? {pending: [], history: []});
-  q.held ??= [];
-  if ( entry.key && (q.pending.some(p => p.key === entry.key) || q.held.some(p => p.key === entry.key)) ) return;
   const rules = autoRules();
   let small = false;
   if ( rules[entry.type] === "small" ) {
     try { small = (await handlers.get(entry.type)?.small?.(entry)) === true; } catch (e) { console.warn("WoDX | small rule", entry.type, e); }
   }
-  const route = QR.routeProposal(entry.type, {auto: rules, cap: npcCap(), used: npcUsed, lightTouch: lightTouch(), small});
-  if ( route === "hold" ) {
-    q.held.push(entry);
+  const route = await serial(async () => {
+    const q = freshQueue();
+    q.held ??= [];
+    if ( entry.key && (q.pending.some(p => p.key === entry.key) || q.held.some(p => p.key === entry.key)) ) return null;
+    const r = QR.routeProposal(entry.type, {auto: rules, cap: npcCap(), used: npcUsed, lightTouch: lightTouch(), small});
+    if ( r === "hold" ) q.held.push(entry);
+    else {
+      if ( QR.isNpcType(entry.type) ) npcUsed++;
+      q.pending.push(entry);
+    }
     await setSetting("approvals", q);
-    return "held";
-  }
-  if ( QR.isNpcType(entry.type) ) npcUsed++;
-  q.pending.push(entry);
-  await setSetting("approvals", q);
+    return r;
+  });
+  if ( route === null ) return;
+  if ( route === "hold" ) return "held";
   if ( route === "auto" ) {
     await decide(entry.id, "approve", "", {auto: true});
     await autoCard(entry, small);
@@ -107,13 +122,15 @@ export async function decideMany(verdict, {except = [], ids = null} = {}) {
 /** Put the held-back NPC proposals into the queue after all. */
 export async function releaseHeld() {
   if ( !game.user.isGM ) return 0;
-  const q = foundry.utils.deepClone(setting("approvals") ?? {pending: [], history: []});
-  const held = q.held ?? [];
-  if ( !held.length ) return 0;
-  q.pending.push(...held);
-  q.held = [];
-  await setSetting("approvals", q);
-  return held.length;
+  return serial(async () => {
+    const q = freshQueue();
+    const held = q.held ?? [];
+    if ( !held.length ) return 0;
+    q.pending.push(...held);
+    q.held = [];
+    await setSetting("approvals", q);
+    return held.length;
+  });
 }
 export const held = () => setting("approvals")?.held ?? [];
 
@@ -137,13 +154,17 @@ async function autoCard(entry, small) {
 /** The Undo button on an "approved on its own" card. GM only; each entry is taken back once. */
 export async function undoAuto(id) {
   if ( !game.user.isGM ) return false;
-  const q = foundry.utils.deepClone(setting("approvals") ?? {pending: [], history: []});
-  const entry = q.history.find(h => h.id === id);
+  const entry = freshQueue().history.find(h => h.id === id);
   const h = entry ? handlers.get(entry.type) : null;
   if ( !entry || !entry.auto || entry.undone || typeof h?.undo !== "function" ) return false;
   await h.undo(entry);
-  entry.undone = true;
-  await setSetting("approvals", q);
+  await serial(async () => {
+    const q = freshQueue();
+    const e = q.history.find(x => x.id === id);
+    if ( !e ) return;
+    e.undone = true;
+    await setSetting("approvals", q);
+  });
   ui.notifications.info(`Taken back: ${entry.title}`);
   return true;
 }
@@ -163,17 +184,21 @@ export async function setAuto(type, on) {
  */
 export async function decide(id, verdict, note = "", {auto = false} = {}) {
   if ( !game.user.isGM ) return;
-  const q = foundry.utils.deepClone(setting("approvals") ?? {pending: [], history: []});
-  const index = q.pending.findIndex(p => p.id === id);
-  if ( index < 0 ) return;
-  const [entry] = q.pending.splice(index, 1);
-  entry.verdict = verdict;
-  entry.note = note;
-  entry.decidedAt = Date.now();
-  if ( auto ) entry.auto = true;
-  q.history.unshift(entry);
-  q.history = q.history.slice(0, HISTORY_LIMIT);
-  await setSetting("approvals", q);
+  const entry = await serial(async () => {
+    const q = freshQueue();
+    const index = q.pending.findIndex(p => p.id === id);
+    if ( index < 0 ) return null;
+    const [e] = q.pending.splice(index, 1);
+    e.verdict = verdict;
+    e.note = note;
+    e.decidedAt = Date.now();
+    if ( auto ) e.auto = true;
+    q.history.unshift(e);
+    q.history = q.history.slice(0, HISTORY_LIMIT);
+    await setSetting("approvals", q);
+    return e;
+  });
+  if ( !entry ) return;
 
   const handler = handlers.get(entry.type);
   try {
@@ -202,13 +227,17 @@ function controlsOf(p) {
 /** Change a waiting proposal's data, title or detail (GM only), and redraw the queue (B3521). */
 export async function updatePending(id, patch = {}) {
   if ( !game.user.isGM ) return null;
-  const q = foundry.utils.deepClone(setting("approvals") ?? {pending: [], history: []});
-  const e = q.pending.find(p => p.id === id);
+  const e = await serial(async () => {
+    const q = freshQueue();
+    const x = q.pending.find(p => p.id === id);
+    if ( !x ) return null;
+    if ( patch.data ) x.data = patch.data;
+    if ( typeof patch.title === "string" ) x.title = patch.title.slice(0, 200);
+    if ( typeof patch.detail === "string" ) x.detail = patch.detail.slice(0, 2000);
+    await setSetting("approvals", q);
+    return x;
+  });
   if ( !e ) return null;
-  if ( patch.data ) e.data = patch.data;
-  if ( typeof patch.title === "string" ) e.title = patch.title.slice(0, 200);
-  if ( typeof patch.detail === "string" ) e.detail = patch.detail.slice(0, 2000);
-  await setSetting("approvals", q);
   ApprovalsApp.refresh();
   return e;
 }
