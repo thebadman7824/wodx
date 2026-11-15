@@ -306,7 +306,7 @@ Next free block: B6140
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5680-B5709 | NPC Motives Desk: every NPC action has a reason and a follow-through (used B5680-B5703) | NPC, Storyteller |
 | B5710-B5729 | Aftercare of the carried (Aftercare Desk a1-a12) (used B5710-B5721) | NPC |
-| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5739) | tools |
+| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5743) | tools |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 | B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
 | B5800-B5809 | NPC Aftercare Desk: what comes after each NPC action (used B5800-B5806) | NPC, Chronicle |
@@ -9398,6 +9398,26 @@ Reverse: none needed.
 Tools. tools/pixelmap/wilds.py draws what a wood needs, each one recognisable from straight above: stumps, a camp fire with seats round it, ridge tents (guy ropes to pegs, door tied back), charcoal kilns that smoke and glow at their vents, boulders, a rock scarp (lit lip, broken face, scree at the foot), felled trunks, ladders and a lean-to. land.py gains a forest floor and buildings.py a plain log hut. maps/forest_road.py is the first valley map of the Whole World redraw (r1 to r3): The Forest Road, 66 by 46, with every wall, door, window, light and exit on the old scene's own squares (read from the testbed export), so its notes and Ways still fit. The old map's unlabelled square at the fork is drawn as a wayside shrine.
 
 Reverse: remove the files; the old map picture stays on the scene until the new one is put on.
+
+## B5740. The High Woods redrawn on its old scene (2026-11-15)
+Tools. maps/high_woods.py redraws The High Woods (66 by 48) with every wall, door, window, light and exit on the old scene's own squares. wilds.py gains what it needs, each drawn to be named by sight: an open hearth on a slab, gnawed bones, a warning rope with a cow-bell, a pit trap drawn to be hard but not impossible to spot (its note asks for Perception), animal pelts by kind, drying racks hung with skins, a wolf den under heaped boulders, a blackthorn thicket, a boar's mud wallow and a hunting bow. The old map's paired dashed lines by both lodges are drawn as hide-drying racks.
+
+Reverse: remove the map file and the new pieces; nothing else uses them.
+
+## B5741. A whole map draws in about 2 minutes (2026-11-15)
+Tools. Laying one road took about 3 minutes on a 66 by 48 map because its distance field was worked out over the whole picture for every piece of the line. bits.dist now works only within 900 px of each piece (everything farther reads as far, which is all any caller asks), and polygon shadows work over their own shape's box. The Forest Road went from 12 minutes to about 2; the pictures come out the same.
+
+Reverse: none needed.
+
+## B5742. The Ruins of Altenhof redrawn on its old scene (2026-11-15)
+Tools. maps/altenhof.py redraws The Ruins of Altenhof (58 by 46) on the old scene's walls, door, windows, lights and exit. The broken curtain wall and the roofless hall stand where the old walls stood, with fallen stone at every broken end and grass up through the hall's flags; Lady Adelheid's chamber is whole, with the curtained bed made up and three fresh candles burning; the dry well shows a glint at the bottom; the fallen tower is a broken ring of footing heaped with its stones, with steps going down between them. The old map's table with two candles in the roofless south-west room is drawn as a chapel's altar.
+
+Reverse: remove the map file.
+
+## B5743. Every redrawn building gets its own roof picture (2026-11-15)
+Tools. The old scenes lay a roof tile over each roofed building, so putting a new map under an old roof would leave old art showing. The recorder now takes rec.roof(id, label, rect, kind, smoke): roofs.py draws it (split oak shingles weathered silver-brown, combed thatch with a turf ridge, or stone slates), seen from above with the sunny slope lit, the ridge, the eaves and a smoke hole over a hearth. Each is written to roofs/<id>.png and listed under "roofs" in the sidecar with its rect, which matches the old tile's rect, so the swap only changes the picture. The five roofs on the three maps so far are done.
+
+Reverse: drop the roofs; the old roof tiles stay.
 
 ## B5750. Witness reactions given by a window act on the map (2026-11-15)
 WoDX Actions. The witness step takes results already rolled (the Delirium check, a demon's Revelation) and acts them out: a frozen witness is Immobilized for the scene, a fleeing one runs, a fighting one starts a fight; those who keep it go on the Masquerade record. With no revealed actor on the map, nothing is recorded against anyone.
