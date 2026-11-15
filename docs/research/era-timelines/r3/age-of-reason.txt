@@ -356,7 +356,7 @@
 1680|H|mor|AM|Santa Fe|uprising,faith|The Pueblo Revolt|The Pueblo towns rise on one day under Popé, kill the friars and drive the Spanish out of New Mexico for twelve years.
 1682|H|mor|AM|Mississippi River|exploration,empire|La Salle at the river's mouth|La Salle reaches the Gulf by the Mississippi and claims the whole valley for France.
 1692|H|mor|AM|Salem|persecution,occult,law|The Salem trials|Nineteen people are hanged for witchcraft in Massachusetts on the word of afflicted girls.
-1692|W|hun,mag|AM|Salem|persecution,occult|What was at Salem|The house reading has almost none of the accused hold any power; the hunters' and mages' books both treat Salem as a warning about fear, and each blames the other's kind.
+1692|W|hun,mag|AM|Salem|persecution,occult|What was at Salem|The house reading has almost none of the accused hold any power; the Verbena take no part in the trials, and only later does Salem become a gathering place for their kind.
 1692|H|mor|AM|Port Royal|quake,disaster,sea|Port Royal sinks|An earthquake drops most of the pirate port of Jamaica into the harbour.
 1693|H|mor|AM|Minas Gerais|industry,money,migration|Gold in Brazil|Gold is found in the hills behind Rio, and half a million people cross the ocean in the rush that follows.
 1695|H|mor|AM|Palmares|war,uprising,death|Palmares falls|The last leader of the great settlement of escaped slaves in Brazil, Zumbi, is hunted down and killed.
@@ -377,7 +377,7 @@
 1781|H|mor|AM|Yorktown|siege,war|Yorktown|A British army surrenders to American and French forces in Virginia.
 1787|H|mor|AM|Philadelphia|law,founding|A constitution|Delegates in Philadelphia write a federal constitution that counts an enslaved person as three fifths of a free one.
 1791|H|mor|AM|Saint-Domingue|uprising,revolution,faith|The night at Bois Caiman|After a ceremony in the woods the enslaved of the northern plain of Saint-Domingue rise and burn the sugar estates.
-1791|W|wra,mag|AM|Saint-Domingue|occult,revolution|The dead walk with the living|The house reading has the lwa and the dead of the plantations counted among the rebels by both sides; the island's Shadowlands stay restless for two centuries.
+1791|W|wra,mag|AM|Saint-Domingue|occult,revolution|The dead walk with the living|The house reading has the Caribbean dead, Les Invisibles, who kept the old rites alive among the enslaved, fan the revolt; the island's Shadowlands stay restless, battered by storms and by Baka, for two centuries.
 1803|H|mor|AM|New Orleans|treaty,empire,money|The Louisiana Purchase|France, having lost an army in Saint-Domingue, sells the Mississippi valley to the United States.
 1804|H|mor|AM|Haiti|founding,revolution,massacre|Haiti|Dessalines declares the independence of Haiti, the first state founded by people who freed themselves from slavery.
 1804|H|mor|AM|Saint Louis|exploration,travel|Lewis and Clark|An army expedition sets out up the Missouri to find a way to the Pacific.
@@ -446,7 +446,7 @@
 1818|H|mor|OC|Aotearoa|war,massacre,migration|The Musket Wars|Northern Maori armed with muskets raid the length of Aotearoa; tens of thousands die or are enslaved in twenty years.
 1819|H|mor|OC|Hawaii|faith,law,crown|The kapu broken|After Kamehameha's death the royal women eat with the young king in public, and the old religious law ends.
 1830|H|mor|OC|Tasmania|war,persecution,migration|The Black Line|Two thousand settlers and soldiers sweep across Tasmania to drive its Aboriginal people into a peninsula; the survivors are later exiled to an island.
-1830|W|wer|OC|Australia|occult,war,massacre|The War of Tears begins|The house reading puts in these decades the first killings of the Bunyip by Garou who came with the settlers, the war that the tribes later mourn.
+1830|W|wer|OC|Australia|occult,empire|The Squattocracy|The house reading has servants of the Wyrm among the richest graziers form a Squatters' Council to push into the interior; the Bunyip and the land's peoples withdraw before them, and the Garou who came with the settlers grow bitter at a tribe that will not speak to them.
 1835|H|mor|OC|Melbourne|founding,treaty|Batman's treaty|A grazier from Tasmania claims to buy the land where Melbourne stands from Kulin elders; the governor voids the deal.
 1835|H|mor|OC|Waitangi|founding,law|The United Tribes|Northern Maori chiefs sign a declaration of the independence of New Zealand.
 1836|H|mor|OC|Adelaide|founding|South Australia|A colony without convicts is proclaimed at Adelaide.
