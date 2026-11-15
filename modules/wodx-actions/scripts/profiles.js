@@ -209,7 +209,7 @@ export function readForm(root) {
  */
 export function fit(app) {
     try {
-        const el = app?.element?.[0] ?? app?.element;
+        const el = app?.element instanceof HTMLElement ? app.element : (app?.element?.[0] ?? app?.element);
         if (!el?.getBoundingClientRect) return;
         const vh = window.innerHeight, margin = 12;
         const h = el.getBoundingClientRect().height;
