@@ -24,6 +24,8 @@
  */
 
 import {parseWhen} from "../../wodx-chronicle/scripts/when-rules.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** Asked of anyone, always on the menu. */
 export const LOCAL = {news: "News", rumours: "Rumours", work: "Work", directions: "Directions"};
@@ -191,7 +193,7 @@ export function greetFor(chain = [], check = null) {
  * time of their last call to this character (or null); now: world time; chance: 0 to 1; roll: 0 to 1. One call a
  * character a day of game time, and only if the roll comes under the chance. Returns true or false.
  */
-export const PASS_GAP = 86400;
+export const PASS_GAP = DAY;
 export function mayCallOut({last = null, now = 0, chance = 0.5, roll = 0} = {}) {
   if ( last !== null && last !== undefined && Number.isFinite(Number(last)) && now - Number(last) < PASS_GAP && now >= Number(last) ) return false;
   return Number(roll) < Math.max(0, Math.min(1, Number(chance) || 0));
@@ -239,15 +241,8 @@ export const dropLearned = (learned = [], drop = []) => { const d = new Set((dro
 
 /** The span of years stock talk speaks for. branch: "future" on the Future Darkness branch. */
 export function eraBand(year, branch = "") {
-  const y = Number(year);
-  if ( branch === "future" && y >= 2026 ) return "future";
-  if ( !Number.isFinite(y) ) return "modern";
-  if ( y < 1500 ) return "medieval";
-  if ( y < 1800 ) return "earlymodern";
-  if ( y < 1900 ) return "nineteenth";
-  if ( y < 1980 ) return "twentieth";
-  if ( y < 2026 ) return "modern";
-  return "future";
+  // B6194: the era profiles' years (terms.speechBand), so speech turns with the era the table plays
+  return TERMS.speechBand(year, branch);
 }
 
 /** How the NPC regards the character, from a step of -3 to +3. */
@@ -417,7 +412,7 @@ export function smallTalk(small, keys = [], {seed = 0, feast = ""} = {}) {
 export function rememberOf(last, now) {
   const l = Number(last), n = Number(now);
   if ( !Number.isFinite(l) || !Number.isFinite(n) || n < l ) return null;
-  const days = (n - l) / 86400;
+  const days = (n - l) / DAY;
   return days <= 30 ? "soon" : days > 365 ? "long" : null;
 }
 

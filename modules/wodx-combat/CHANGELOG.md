@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.44.1 (Shared terms (B6180-B6199): time units, dice counts, health levels, distance, eras, lines and player characters come from WoDX Chronicle's shared terms instead of a copy of this module's own)
 - 3.44.0 (Conditions hold the token, and roll effects reach the fight (B6020-B6022): the conditions that hold a body now stop its movement in a fight and out of one (setting "Conditions hold the token"), Numbed slows it, and the attack and defence pools read WoDX Chronicle's roll effects, which until now only Actions and social rolls read; Incapacitated follows the health track and crippled limbs show on the token (B6031, B6032))
 - 3.43.0 (A swimmer is weighed down by what they carry (B6085), by WoDX Library's weights: the higher of that and the burden set by hand counts)
 - 3.42.1 (A fall from a mount or vehicle onto deep snow is 1 die, onto a railway line 4 (B6072))

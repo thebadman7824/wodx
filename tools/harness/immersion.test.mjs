@@ -30,7 +30,7 @@ test("carried light: kinds follow the year, and fuel follows the kind", () => {
 test("carried light: radii in the scene's units", () => {
   assert.equal(C.lightData("torch", "ft").dim, 39);
   assert.equal(C.lightData("torch", "yd").dim, 13);
-  assert.equal(C.lightData("torch", "m").dim, 11.9);
+  assert.equal(C.lightData("torch", "m").dim, 13, "a metre counts as a yard (V20 pdf 290)");
   assert.equal(C.lightData("electric", "ft").angle, 60);
   assert.equal(C.lightData("bad", "ft"), null);
 });

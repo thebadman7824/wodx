@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.101.1 (Shared terms (B6180-B6199): a ghoul on a Mortal sheet of the system's ghoul variant now counts as a ghoul for loved ones and legacies (it read as a mortal), a Kuei-jin as a Kuei-jin; the herd on a street thins at night by the sun where the scene stands, not from 19:00 by the clock; every dice count holds the difficulty to 2-10; a pregnancy is due nine calendar months on. Time units, health levels and distance come from WoDX Chronicle's shared terms. NPCs' stock speech turns with the era profiles (the Renaissance register from 1450, the Victorian from 1837, mid-century from 1919), and on the Future Darkness branch speaks its era from 2010)
 - 0.101.0 (Household names by year (B6252): nameHousehold reads the People generator's name custom; where the master's name is a byname of their own, kin do not share it and children take the father's name where the people's list gives that form)
 - 0.100.1 (A captive's things are never put into a pile of loose gear on the ground (B6086); they still go into a chest, a cabinet or the stores)
 - 0.100.0 (Grieving: heartbreak takes a social die for a week (B5991))

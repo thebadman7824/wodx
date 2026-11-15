@@ -9,6 +9,7 @@
  * gains for what the prelude showed. House rules (B1610 to B1614); the book check looks for V20's own advice on
  * changes after the prelude.
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const PRELUDE_BUDGET = 3;
 
@@ -65,7 +66,8 @@ export function buildScenes({story = [], parts = [], short = false, name = ""} =
 
 /** Successes on a roll: dice at or above the difficulty, ones cancel (V20). */
 export function successes(dice = [], difficulty = 6) {
-  return dice.filter(d => d >= difficulty).length - dice.filter(d => d === 1).length;
+  const r = TERMS.successes(dice, difficulty);
+  return r.raw - r.ones;
 }
 
 /** The record of a prelude, cleaned: {scene, short, log: [{at, scene, kind, text, undo}], spent, written}. */

@@ -5,6 +5,7 @@ import * as P from "./pod-rules.mjs";
 import * as TW from "./twist-rules.mjs";
 import * as Fronts from "./fronts.mjs";
 import {watched} from "./signature-rules.mjs";
+import {DAY} from "./terms.mjs";
 
 /**
  * WoDX Chronicle 0.37.0: four ideas taken from the Princes of Darkness mod, rebuilt on WoDX's own systems.
@@ -35,7 +36,6 @@ import {watched} from "./signature-rules.mjs";
  * Each switch starts off. The city of a scene is its flag wodx-chronicle.city, or the setting podCity.
  */
 
-const DAY = 86400;
 const T_TEACH = `${MODULE_ID}.podTeach`;
 const T_GRANT = `${MODULE_ID}.podGolcondaGrant`;
 const T_LP = `${MODULE_ID}.podLifepath`;

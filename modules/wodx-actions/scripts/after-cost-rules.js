@@ -6,8 +6,9 @@
  * match: other names the lasting effect may carry (a power's effect is often named for what it does).
  */
 import {slug} from "./limit-rules.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
-const H = 3600, DAY = 86400;
+const H = 3600;
 
 export const AFTER = [
   {name: "survivor", page: "W20 p. 177", on: "self", cost: {kind: "sleep", seconds: 8 * H, then: "ravenous"},

@@ -2,6 +2,7 @@
  * WoDX Combat — the pure parts of the automatic options (3.4.0): facing, counting this round's actions and defenses,
  * the Fortitude soak policy, and when a resource is worth spending. No Foundry calls here, so the harness can test it.
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 /**
  * Which side of the target the attacker stands on, from the target token's rotation (Foundry: 0 = the art upright,
@@ -69,11 +70,8 @@ export const inReach = (reachD, unit = 5) => reachD !== null && reachD <= unit *
 
 /** Scene distance → yards (VtDA20 counts yards or meters; feet are a third of a yard). */
 export function toYards(distance, units = "ft") {
-    const u = String(units ?? "").toLowerCase().trim();
-    if (["ft", "feet", "foot", "'"].includes(u)) return distance / 3;
-    if (["mi", "mile", "miles"].includes(u)) return distance * 1760;
-    if (["km"].includes(u)) return distance * 1000;
-    return distance; // yd, m, or unnamed: one to one
+    // B6186: the one conversion for every module (terms.mjs)
+    return TERMS.toYards(distance, units);
 }
 
 /**

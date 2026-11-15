@@ -25,9 +25,10 @@
  *    actor: {pc, name, kind, fields: {clan, tribe, ...}, factions: [], items: [], codex: [], conditions: [], traits: {...}}}
  * Text is compared without case. A test that needs a character fails when there is none.
  */
+import * as TERMS from "./terms.mjs";
 
 /** Health-track levels by name (the order of V20's health chart), for "wounds >= mauled". 0 is unhurt. */
-export const WOUND_LEVELS = {unhurt: 0, bruised: 1, hurt: 2, injured: 3, wounded: 4, mauled: 5, crippled: 6, incapacitated: 7};
+export const WOUND_LEVELS = TERMS.LEVEL_INDEX;
 
 /** Pools and ratings a test can compare. The key is what the Storyteller writes; aliases point to it. */
 export const TRAITS = {
@@ -43,7 +44,7 @@ export const STANDING_WORDS = {hunted: -3, hostile: -2, distrusted: -1, unknown:
 /** What a character can be, as WoDX Combat names it. */
 export const KINDS = ["kindred", "ghoul", "mortal", "lupine", "mage", "fae", "wraith", "hunter", "demon", "mummy", "spirit", "beast", "exalted"];
 const KIND_ALIAS = {vampire: "kindred", cainite: "kindred", werewolf: "lupine", garou: "lupine", shifter: "lupine", changeling: "fae", kithain: "fae",
-  ghost: "wraith", fallen: "demon", revenant: "ghoul", kuei: "exalted", "kuei-jin": "exalted", creature: "beast", animal: "beast", human: "mortal"};
+  ghost: "wraith", fallen: "demon", revenant: "ghoul", kuei: "kindred", "kuei-jin": "kindred", creature: "beast", animal: "beast", human: "mortal"};
 
 /** Fields on the character the Storyteller can name: "clan Tremere, Ventrue". */
 export const FIELDS = {clan: "Clan", tribe: "Tribe", breed: "Breed", auspice: "Auspice", tradition: "Tradition or faction of a mage", kith: "Kith",

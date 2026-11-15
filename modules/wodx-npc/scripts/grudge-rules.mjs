@@ -3,9 +3,9 @@
  * The pure part; memory.mjs and wanted.mjs act on the world. The books give no rules for either; every figure is a
  * house reading (docs/PENDING-REVIEW.md).
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
-const DAY = 86400;
 
 /** g1 boon: a boon called in falls due within the week. */
 export const BOON_DAYS = 7;

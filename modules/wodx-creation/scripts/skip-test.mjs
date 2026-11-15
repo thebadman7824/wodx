@@ -4,6 +4,7 @@ import {giveVitae} from "./change-of-state.mjs";
 import {setChronology} from "./lineage.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {bondStage} from "./rules.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 /**
  * The Phase 4 gate: 1197 to 2025 in steps, accepting each plan as proposed, then checking that nothing was lost
@@ -43,7 +44,7 @@ export async function makeCast(folder) {
   const t0 = game.time.worldTime;
   await giveVitae(ghoul, elder, {points: 5, time: t0});
   await giveVitae(thrall, elder, {points: 1, time: t0});
-  await giveVitae(thrall, elder, {points: 1, time: t0 + 86400});
+  await giveVitae(thrall, elder, {points: 1, time: t0 + DAY});
   return {elder, smith, ward, ghoul, thrall};
 }
 

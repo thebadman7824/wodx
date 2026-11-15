@@ -1,4 +1,5 @@
 import {MODULE_ID, SOCKET, isActiveGM, rule, setting, log} from "./util.mjs";
+import {termsApi} from "./terms-live.mjs";
 import {registerSettings} from "./settings.mjs";
 import * as tokenLooks from "./token-looks.mjs";
 import {makeCalendarClass, makeCalendarConfig, setReform, EPOCH_YEAR} from "./calendar.mjs";
@@ -228,6 +229,8 @@ Hooks.once("ready", async () => {
 
   age.listen();
   const api = {
+    // B6180-B6199: one meaning for the words every module uses (time, dice, health, distance, eras, who is who)
+    terms: termsApi(),
     // B3210: the age floor of 18 for anything romantic or sexual
     age: {minor: age.minor, romance: age.romance, allow: age.allowRomance, rules: age.rules},
     // B3500: one gender for every module; forRules is "" for every player character

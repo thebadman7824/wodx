@@ -58,14 +58,17 @@ export function build(ctx) {
     const asleep = a => a?.getFlag?.(MOD, "daySleep") ?? null;
 
     /** The clock's sun: {isNight, toDusk, timeLabel}. isNight null when the Chronicle is missing. */
-    async function sunClock(now = game.time.worldTime) {
+    async function sunClock(now = game.time.worldTime, scene = null) {
         try {
             const cal = await import("../../wodx-chronicle/scripts/calendar.mjs");
-            const lat = game.settings.get("wodx-chronicle", "latitude");
-            const t = cal.describeTime(now, lat);
-            return { isNight: t.isNight, toDusk: cal.secondsToNextDusk(now, lat), timeLabel: t.timeLabel ?? "" };
+            // B6185: the sun where the sleeper lies (a scene's own latitude and hour), through the shared terms
+            const T = game.modules.get("wodx-chronicle")?.api?.terms;
+            const p = T?.placeNow ? T.placeNow(scene, now) : { time: now, latitude: game.settings.get("wodx-chronicle", "latitude") };
+            const t = cal.describeTime(p.time, p.latitude);
+            return { isNight: t.isNight, toDusk: cal.secondsToNextDusk(p.time, p.latitude), timeLabel: t.timeLabel ?? "" };
         } catch (e) { return { isNight: null, toDusk: null, timeLabel: "" }; }
     }
+    const sceneOfActor = a => a?.token?.parent ?? a?.getActiveTokens?.()?.[0]?.document?.parent ?? null;
 
     /** Show it over every token of the actor on the scene, for everyone. */
     function float(a, word, color) {
@@ -155,12 +158,16 @@ export function build(ctx) {
     }
     async function tickNow({ edge = null } = {}) {
         if (!on()) return [];
-        const sun = await sunClock();
-        if (sun.isNight === null) return [];
+        const sunHome = await sunClock();
+        if (sunHome.isNight === null) return [];
         const now = game.time.worldTime;
         const rows = [];
+        const suns = new Map();
         for (const a of ctx.clockActors()) {
             if (!isKindred(a) || a.getFlag?.(MOD, "torpor")) continue;
+            const where = sceneOfActor(a);
+            if (where && !suns.has(where.id)) suns.set(where.id, await sunClock(now, where));
+            const sun = (where && suns.get(where.id)?.isNight !== null ? suns.get(where.id) : null) ?? sunHome;
             const s = asleep(a);
             if (s) {
                 const due = s.wakeAt === null || s.wakeAt === undefined ? sun.isNight : now >= n(s.wakeAt);
@@ -170,7 +177,7 @@ export function build(ctx) {
             }
             const day = a.getFlag?.(MOD, "daytime");
             if (day) {
-                if (day.until === undefined || day.until === null) { await setFlag(a, "daytime", { ...day, until: DS.awakeUntil(now, day.turns === "scene" ? "scene" : day.turns) }); continue; }
+                if (day.until === undefined || day.until === null) { await setFlag(a, "daytime", { ...day, until: DS.awakeUntil(now, day.turns === "scene" ? "scene" : day.turns, game.modules.get("wodx-chronicle")?.api?.terms?.turnSeconds?.()) }); continue; }
                 if (!DS.daytimeSpent(day, now)) continue;
                 await setFlag(a, "daytime", null);
             }
@@ -179,7 +186,7 @@ export function build(ctx) {
             const t = vig ? await vigil(a, sun) : await fallAsleep(a, sun);
             if (t) rows.push({ actor: a, text: t });
         }
-        await report(rows, edge, sun);
+        await report(rows, edge, sunHome);
         return rows;
     }
 

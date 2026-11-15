@@ -9,8 +9,9 @@
  *              was, how and when they died, and what they make of a body drained of blood. It grows with the centuries,
  *              from the priest and the neighbours to DNA and the scanners of the Future Darkness.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+export {DAY};
 
-export const DAY = 86400;
 export const MAX_DAYS = 400;
 
 export const STAGES = [

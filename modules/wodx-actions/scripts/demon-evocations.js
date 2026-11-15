@@ -6,6 +6,7 @@
  * Pure: no Foundry calls. Also the apocalyptic form's powers by name (FORM_POWERS).
  */
 import { H, T, C, N, S, MV, HL, A, outcomesOf } from "./mage-da-effects.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const E = (fx, lasts, range, high, spec = null, highSpec = null) => ({ fx, lasts, range, high, spec, highSpec });
 
@@ -249,7 +250,7 @@ export const evocationCard = (lore, level) => EVOCATIONS[`${lore}:${level}`] ?? 
 export function faithLasts(lasts, faith) {
     const f = Math.max(1, Number(faith) || 1);
     if (lasts === "FT") return { label: `${f} turn${f === 1 ? "" : "s"}`, timed: { kind: "rounds", rounds: f } };
-    if (lasts === "FD") return { label: `${f} day${f === 1 ? "" : "s"}`, timed: { kind: "time", seconds: f * 86400 } };
+    if (lasts === "FD") return { label: `${f} day${f === 1 ? "" : "s"}`, timed: { kind: "time", seconds: f * DAY } };
     if (lasts === "T1") return { label: "1 turn", timed: { kind: "rounds", rounds: 1 } };
     return null;
 }
@@ -293,8 +294,8 @@ export function lingerSeconds(lore, level, faith = 1) {
     if (!c) return 0;
     const f = Math.max(1, Number(faith) || 1);
     if (/Faith turns/i.test(c.lasts)) return f * 6;
-    if (/Faith days/i.test(c.lasts)) return f * 86400;
-    if (/day/i.test(c.lasts)) return 86400;
+    if (/Faith days/i.test(c.lasts)) return f * DAY;
+    if (/day/i.test(c.lasts)) return DAY;
     return 3600;
 }
 

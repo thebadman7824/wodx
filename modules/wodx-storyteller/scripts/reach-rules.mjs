@@ -6,6 +6,7 @@
  * The people sent are the quick extras of kits-rules.mjs (house figures, from the books' weapon charts). Which extras,
  * how many and the lever readings are house readings (docs/PENDING-REVIEW.md).
  */
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 export const early = year => !(num(year) >= 1600);
@@ -65,9 +66,8 @@ export function roadPlan(text = "", year = 1197) {
 
 /* ---- the law (w5) ---- */
 
-/** Hours of the day the night patrols go out (a manhunt), and the day hours a vampire's haven is knocked up. */
-export const NIGHT_FROM = 20, NIGHT_TO = 5, DAY_FROM = 9, DAY_TO = 16;
-export const isNightHour = h => num(h) >= NIGHT_FROM || num(h) < NIGHT_TO;
+/** The day hours a vampire's haven is knocked up (working hours; the night itself is the sun's, terms.isNightAt). */
+export const DAY_FROM = 9, DAY_TO = 16;
 export const isDayHour = h => num(h) >= DAY_FROM && num(h) < DAY_TO;
 /** Lines who sleep by day and can be taken at the haven then. */
 export const DAY_SLEEPERS = ["vampire"];
@@ -76,12 +76,14 @@ export const DAY_SLEEPERS = ["vampire"];
  * What the law does at a stage (law-heat-rules STAGES keys): "come" (the watch come to the culprit's scene) when Wanted (warrant) or a manhunt is
  * first reached; through a manhunt "patrol" each night, and "haven" by day for a day sleeper whose haven is known.
  */
-export function lawMove(stage, {crossed = false, line = "mortal", hour = 12, havenKnown = false} = {}) {
+export function lawMove(stage, {crossed = false, line = "mortal", hour = 12, havenKnown = false, night = null, time = null, latitude = 50} = {}) {
   if ( stage !== "warrant" && stage !== "manhunt" ) return null;
   if ( crossed ) return "come";
   if ( stage !== "manhunt" ) return null;
-  if ( DAY_SLEEPERS.includes(line) && havenKnown && isDayHour(hour) ) return "haven";
-  if ( isNightHour(hour) ) return "patrol";
+  // B6185: night is sunset to sunrise where the scene is (passed in); else the sun for the time given, else for the hour
+  const dark = typeof night === "boolean" ? night : !!TERMS.isNightAt(time ?? num(hour) * TERMS.HOUR, latitude);
+  if ( DAY_SLEEPERS.includes(line) && havenKnown && !dark && isDayHour(hour) ) return "haven";
+  if ( dark ) return "patrol";
   return null;
 }
 /** One patrol a culprit a day: the day number a patrol last went out is kept, and this says if one is due. */

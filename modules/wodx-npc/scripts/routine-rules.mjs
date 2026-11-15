@@ -18,6 +18,8 @@
 import {ANIMAL_PRESETS, ANIMAL_DEFAULT_PRESET} from "./animal-rules.mjs";
 import {MORTAL_PRESETS, MORTAL_DEFAULT_PRESET} from "./mortal-rules.mjs";
 import {SUPERNATURAL_PRESETS, SUPERNATURAL_DEFAULT_PRESET} from "./supernatural-rules.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const ACTIVITIES = {
   sleep: "Sleeping", rest: "At rest", work: "At work", pray: "At prayer", drink: "Drinking", patrol: "On watch",
@@ -561,7 +563,7 @@ export function blockAt(blocks, time, describe, from = 0) {
     // NPC 0.50.0: a block laid on the sun (the prayers) reads the day's sunrise and sunset to the minute
     if ( b.sun ? !inSun(b, d) : !hourIn(b, d.hour) ) continue;
     // The part of a block after midnight belongs to the day it started on
-    const day = !b.sun && wraps(b) && d.hour < b.to ? (yesterday ??= describe(time - 86400)) : d;
+    const day = !b.sun && wraps(b) && d.hour < b.to ? (yesterday ??= describe(time - DAY)) : d;
     if ( Array.isArray(b.days) && b.days.length && !b.days.includes(day.dayOfWeek) ) continue;
     if ( b.feast === "only" && !day.feast ) continue;
     if ( b.feast === "not" && day.feast ) continue;
@@ -727,7 +729,7 @@ export function conditionsMet(conds, sit, match = "any") {
 /** Successes on a roll of dice d10s against a difficulty, with 1s cancelling (V20). rng: () => [0, 1). */
 export function rollSuccesses(pool, diff, rng = Math.random) {
   const dice = Array.from({length: Math.max(0, pool)}, () => 1 + Math.floor(rng() * 10));
-  const hits = dice.filter(d => d >= diff).length, ones = dice.filter(d => d === 1).length;
+  const {raw: hits, ones} = TERMS.successes(dice, diff);
   return {dice, successes: hits - ones, botch: hits === 0 && ones > 0};
 }
 

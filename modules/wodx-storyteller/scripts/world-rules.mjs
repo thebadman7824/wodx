@@ -18,11 +18,12 @@
 
 import * as Road from "./road-rules.mjs";
 import * as Country from "./country-rules.mjs";
+import {HOUR} from "../../wodx-chronicle/scripts/terms.mjs";
+export {HOUR};
 const ROAD_KINDS = Object.keys(Road.ROADS);
 
 export const LOG_VERSION = 1;
 export const LOG_CAP = 1500;
-export const HOUR = 3600;
 
 /** What a log entry can be. Fixed list. */
 export const KINDS = {

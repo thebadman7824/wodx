@@ -10,12 +10,13 @@
  *   Divine with it: Perception + Occult at difficulty 7; the successes say how clear the signs are, and the
  *     Storyteller is asked to answer that many questions in a sentence each.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 export const PRAY_DIFF = 8;
 export const DIVINE_DIFF = 7;
 export const WARD_DIFF = 1;
 
 /** The night a world time falls in (a day counted from noon, so a night is one count). */
-export const nightOf = worldTime => Math.floor(((Number(worldTime) || 0) - 43200) / 86400);
+export const nightOf = worldTime => Math.floor(((Number(worldTime) || 0) - 43200) / DAY);
 
 /** A prayer without True Faith: {ok, willpower, line}. prayedNight: the night the character last prayed. */
 export function prayResult({successes = 0, botch = false} = {}, {temporary = 0, permanent = 0, prayedNight = null, night = 0} = {}) {

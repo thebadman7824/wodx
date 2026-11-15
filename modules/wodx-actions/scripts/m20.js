@@ -17,6 +17,7 @@ import { aim, castIntent } from "./aim.js";
 import * as C from "./consensus-rules.js";
 import * as EF from "./effects.js";
 import * as TH from "./trait-hooks.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -220,7 +221,7 @@ export function build(ctx) {
     async function shedAll(actors = game.actors?.filter?.(a => a.type === "Mage") ?? []) {
         await drawAll(actors);
         if (age().key === "crusade") return purifyAll(actors); // in the Crusade the Scourge is cleared by meditation, not by time
-        const now = game.time?.worldTime ?? 0, week = 7 * 86400;
+        const now = game.time?.worldTime ?? 0, week = 7 * DAY;
         for (const a of actors) {
             const i = info(a);
             if (!i.paradox || i.paradox >= 5 || i.paradox <= i.paradoxPerm) continue;
@@ -241,7 +242,7 @@ export function build(ctx) {
             const i = info(a), p = i.f.purifying;
             if (!p) continue;
             if (n(i.f.lastMagick) > n(p.since)) { await saveFlag(a, { purifying: null }); await post(a, `${a.name}'s meditation is broken`, `<div class="vta-res bad">Magick was worked during the days of meditation; the Scourge stays and the days must begin again.</div><div class="wodx-quiet">Sorcerers Crusade pdf p. 249</div>`); continue; }
-            if (now - n(p.since) < n(p.days) * 86400) continue;
+            if (now - n(p.since) < n(p.days) * DAY) continue;
             await setParadox(a, i.paradoxPerm);
             await saveFlag(a, { purifying: null, lastShed: now });
             floatOver(a, "Purified", "#fff3b0");
@@ -254,7 +255,7 @@ export function build(ctx) {
      */
     async function drawAll(actors) {
         if (ctx.setting?.("autoQuintessence") === false) return;
-        const day = Math.floor((game.time?.worldTime ?? 0) / 86400);
+        const day = Math.floor((game.time?.worldTime ?? 0) / DAY);
         for (const a of actors) {
             const i = info(a), plan = i.f.draws;
             if (!plan || i.f.drawDay === day) continue;
