@@ -766,3 +766,128 @@ def asleep(d,blanket='#8a8170',cover=False):
     sitp=posed(d,'sit')
     for row in range(4): sh[row*SH:(row+1)*SH,0:S]=sitp[row*SH:(row+1)*SH,S:2*S]; sh[row*SH:(row+1)*SH,S:2*S]=sitp[row*SH:(row+1)*SH,4*S:5*S]
     return sh
+# ---- moves only one line has (B5810 to B5819): drawn joint by joint like the everyday poses, so a player can tell by sight what a
+# character is doing. Each is a six-frame sheet; LINE_LOOP ones go round while the figure stays at them, the rest hold the last frame. ----
+_P.update(
+ frenzy=dict(dy=7,lean=6,sl=(((55,73),(48,84.5)),((45,73.5),(40,84.5))),sa=(((5,5),(11,1)),((4,6),(10,3))),fl=(5.2,74,4.6,84.5),fa=(((4,6),(5.5,-1)),((4,6),(5.5,-1)))),
+ swoon=dict(dy=2,lean=-3,sl=_ST['sl'],sa=(((-.5,10),(-1.5,19)),((-.5,10),(-1.2,19))),fl=_ST['fl'],fa=(((3,9),(4.5,17.5)),((3,9),(4.5,17.5)))),
+ embrace=dict(dy=0,lean=4,sl=_ST['sl'],sa=(((6,4),(9,8)),((6,4),(10,6))),fl=_ST['fl'],fa=(((3,7),(-4.5,6)),((3,7),(-4.5,6)))),
+ cup=dict(dy=0,lean=-2.5,sl=_ST['sl'],sa=(((6,0),(5,-8)),((5.5,0),(4.5,-8))),fl=_ST['fl'],fa=(((4,4),(-2.4,-8)),((4,4),(-2.4,-8)))),
+ dance=dict(dy=0,lean=0,sl=_ST['sl'],sa=_ST['sa'],fl=_ST['fl'],fa=_ST['fa']),
+ pray=dict(dy=0,lean=.5,sl=_ST['sl'],sa=(((3,7),(6,1)),((2.5,7),(5.5,1))),fl=_ST['fl'],fa=(((1.6,8),(-5.6,1.5)),((1.6,8),(-5.6,1.5)))),
+ staff=dict(dy=0,lean=0,sl=_ST['sl'],sa=(((4,-1),(7,-8)),((0,9.5),(.4,18.5))),fl=_ST['fl'],fa=(((3,-1),(2,-9)),((1.4,9),(1.2,17.5)))),
+ device=dict(dy=0,lean=1.5,sl=_ST['sl'],sa=(((2,9),(7,7)),((1.5,9),(6.5,7))),fl=_ST['fl'],fa=(((1.6,9),(-3,8)),((1.6,9),(-3,8)))),
+ pour=dict(dy=0,lean=0,sl=_ST['sl'],sa=(((4,4),(9,0)),((3,7),(8,5))),fl=_ST['fl'],fa=(((3,4),(1,-4)),((1.6,8),(-2,6)))),
+ meditate=dict(dy=25,lean=0,sl=(((57,82),(50,85)),((55.5,82),(49,85))),sa=(((1.5,9),(7,12)),((1,9),(6.5,12))),fl=(8.5,82.5,1.5,85.2),fa=(((2.6,8.5),(5.5,13)),((2.6,8.5),(5.5,13)))),
+ ritual=dict(dy=0,lean=-.5,sl=(((48.5,71),(50,84.5)),((45.5,71),(44,84.5))),sa=(((3,0),(7,-7)),((2,1),(6,-6))),fl=(4.6,71,5.6,84.5),fa=(((7,-1),(14,-4)),((7,-1),(14,-4)))),
+ brandish=dict(dy=0,lean=1,sl=(((50,71),(52,84.5)),((45,71),(43.5,84.5))),sa=(((7,0),(14,-4)),((1,9),(1,18))),fl=(3.8,71,4,84.5),fa=(((1.5,3),(0,-6)),((1.4,9),(1.2,17.5)))),
+ brace=dict(_P['kneel'],lean=3,sa=(((5,6),(10,6)),((4,7),(9,7))),fa=(((2.6,7.5),(-1.5,6)),((2.6,7.5),(-1.5,6)))),
+ study=dict(_P['tend'],lean=7),
+ quaff=dict(dy=0,lean=-1,sl=_ST['sl'],sa=(((4,6),(6.5,-3.5)),((0,9.5),(.6,18.5))),fl=_ST['fl'],fa=(((2,7),(-3.5,-2.5)),((1.4,9),(1.2,17.5)))),
+ shake=dict(dy=1,lean=2.5,sl=_ST['sl'],sa=(((3,7),(6,2)),((2.5,7),(5.5,2.5))),fl=_ST['fl'],fa=(((1.8,8),(-4.5,2)),((1.8,8),(-4.5,2)))),
+ hekau=dict(dy=0,lean=.5,sl=_ST['sl'],sa=(((6,1),(13,0)),((0,9.5),(.6,18.5))),fl=_ST['fl'],fa=(((1.5,3),(1,-5)),((1.4,9),(1.2,17.5)))),
+ situp=dict(_P['sit']),
+)
+_EARLY_POSE_AT=pose_at
+_IN=dict(frenzy=[0,.5,1,1,1,1],swoon=[0,.4,.8,1,1,1],embrace=[0,.5,1,1,1,1],cup=[0,.5,1,1,1,1],pray=[0,.5,1,1,1,1],staff=[0,.5,1,1,1,1],
+         pour=[0,.5,1,1,1,1],meditate=_DOWN,ritual=[0,.4,.8,1,1,1],brandish=[0,.5,1,1,1,1],brace=_DOWN,study=_DOWN,hekau=[0,.5,1,1,1,1],situp=[1]*6)
+LINE_POSED=('frenzy','swoon','embrace','cup','dance','pray','staff','device','cards','pour','meditate','ritual','brandish','brace','study','quaff','shake','hekau','situp')
+LINE_LOOP=('frenzy','dance','device','cards','study','quaff','shake','meditate')
+def pose_at(name,i):
+    if name=='cards': p=_EARLY_POSE_AT('tend',i); p['name']='cards'; p['prop']=('cards',1); return p
+    if name not in LINE_POSED: return _EARLY_POSE_AT(name,i)
+    p=dict(_P[name]); p['name']=name; p['prop']=None
+    t=_IN.get(name)
+    if t: t=t[i]; p={k:(_mix(_ST[k],p[k],t) if k in _ST else p[k]) for k in p}; p['name']=name; p['prop']=None
+    u=[0,1,0,-1,0,1][i]
+    def arms(dx,dy,both=True,far=None):
+        a=p['sa']; f=p['fa']; fr=-1 if far is None else far
+        p['sa']=((a[0][0],(a[0][1][0]+dx,a[0][1][1]+dy)),(a[1][0],(a[1][1][0]+dx*fr,a[1][1][1]+dy*fr)) if both else a[1])
+        p['fa']=((f[0][0],(f[0][1][0]+dx*.6,f[0][1][1]+dy)),(f[1][0],(f[1][1][0]+dx*.6*fr,f[1][1][1]+dy*fr)) if both else f[1])
+    if name=='frenzy' and i>=2: p['dy']+=(1 if u>0 else 0); arms(1.2*u,-1.2*u)
+    if name=='shake': arms(.6*(1 if i%2 else -1),.4*(1 if i%2 else -1),True,1)
+    if name=='device': arms(0,.8*(1 if i%2 else -1),True,-1); p['prop']=('slab',1)
+    if name=='study': arms(1.2*u,0,True,-1); p['prop']=('clue',1)
+    if name=='quaff': p['prop']=('vial',[0,.5,1,1,.5,0][i]); q=[0,.5,1,1,.5,0][i]; a=p['sa']; p['sa']=((_mix(_ST['sa'][0][0],a[0][0],q),_mix(_ST['sa'][0][1],a[0][1],q)),a[1])
+    if name=='dance':
+        up=((2,-5),(3,-13)); dn=_ST['sa'][0]
+        if i%2: p['sa']=(up,dn); p['fa']=(((4,-3),(5,-11)),_ST['fa'][1])
+        else: p['sa']=(dn,up); p['fa']=(_ST['fa'][0],((4,-3),(5,-11)))
+        p['dy']=-1 if i%2 else 0
+    if name=='meditate' and i>=3: p['dy']+=(0 if i%2 else -.6)
+    if name=='staff' and t: p['prop']=('staff',t)
+    if name=='pour' and t: p['prop']=('vial',1.4)
+    if name=='brandish' and t: p['prop']=('cross',t)
+    if name=='brace' and t: p['prop']=('stake',t)
+    if name=='situp':
+        q=[0,.25,.5,.75,1,1][i]; p['lean']=_mix(-11,-1.5,q); p['dy']=_mix(31,25,q); p['prop']=('sarcophagus',1)
+    return p
+_EARLY_PROP=_prop
+C.update(holy=(196,170,96),slab=(40,44,52),soil=(92,70,48),coffin=(58,40,30),sand=(196,176,130),vial=(150,40,40))
+RP.update({k:ramp(C[k]) for k in ('holy','slab','soil','coffin','sand','vial')})
+def _prop(cv,p,view,dy,cx,hands=None,when='pre'):
+    if not p or not p.get('prop'): return
+    k,u=p['prop']
+    if k not in('slab','clue','vial','staff','cross','stake','cards','sarcophagus'): return _EARLY_PROP(cv,p,view,dy,cx,hands,when)
+    if k=='sarcophagus' and when=='pre':
+        x0=cx+(4 if view=='s' else 0); w_=14 if view=='s' else 9
+        cv.capsule((x0-w_,80),(x0+w_,80),5.4,5.4,ramp=RP['stone'],g='sarc'); return
+    if k=='cards' and when==('post' if view=='f' else 'pre'):   # facing the viewer the cards lie in front of the knees, so they are drawn over
+        for j,ox in enumerate((-5,0,5)):
+            x=cx+(9 if view=='s' else ox); y=85.2 if view=='s' else 89.4 if view=='f' else 87
+            if view=='s': x+=ox*.5
+            cv.capsule((x-1.2,y),(x+1.2,y),.9,.9,ramp=RP['bone'],g='card%d'%j)
+        return
+    if when!='post' or not hands: return
+    hx,hy=hands
+    if k=='slab' and view!='b': cv.capsule((hx-1.6,hy-1),(hx+1.6,hy-1),1.6,1.4,ramp=RP['slab'],g='slab'); cv.px(hx,hy-1.4,(120,200,230))
+    if k=='clue': cv.capsule((hx,hy-.6),(hx+.5,hy-.6),.9,.9,ramp=RP['brass'],g='clue')
+    if k=='vial' and u>0: cv.capsule((hx+(1 if view=='s' else 0),hy-2.4),(hx+(1 if view=='s' else 0),hy-.4),1.0,1.1,ramp=RP['vial'],g='vial')
+    if k=='staff' and u>.3: held(cv,(hx,hy+8),(0,-1),[('c',-14,10,.8,.8,'wood'),('b',11,1.6,'holy')],'W')
+    if k=='cross' and u>.3:
+        cv.capsule((hx,hy-6),(hx,hy+1),.8,.8,ramp=RP['holy'],g='crossv'); cv.capsule((hx-2.6,hy-3.6),(hx+2.6,hy-3.6),.8,.8,ramp=RP['holy'],g='crossh')
+    if k=='stake' and u>.3:
+        d_=(.72,-.7) if view=='s' else (0,-1)
+        held(cv,(hx,hy),d_,[('c',-8,18,.9,.8,'wood'),('c',18,22,.9,.2,'wood')],'W')
+def line_posed(d,name):
+    """a line move as a six-frame sheet (B5810): the figure drawn in that pose. A Kindred in frenzy gets red eyes"""
+    if name=='frenzy': d=dict(d,eyes=(200,30,30))
+    if name=='swoon': pass
+    sh=np.zeros((4*SH,6*S,4),np.uint8)
+    for i in range(6):
+        dd=dict(d,shut=True) if name in('swoon','meditate') and i>=3 else d
+        p=pose_at(name,i); r=side(dd,0,None,p)
+        for row,im in ((0,front(dd,0,True,None,p)),(1,r[:,::-1]),(2,front(dd,0,False,None,p)),(3,r)): sh[row*SH:(row+1)*SH,i*S:(i+1)*S]=im
+    return sh
+def rest_in(d,where='coffin'):
+    """the Kindred's day's sleep, seen from above (B5811): on the back with the arms crossed, eyes shut. 'coffin': in an open coffin;
+    'earth': in the ground with only the face showing. Rows are the way the head points, like the sleeper's; frames 0 and 1 lie down"""
+    p=dict(_ST); p.update(name='crossed',prop=None,fa=(((2.4,7),(-6.5,4)),((2.4,7),(-6.5,5.4))))
+    lie=front(dict(d,shut=True,held=None,off=None,stow=None),0,False,None,p)
+    ys,xs=np.nonzero(lie[...,3]); top,bot=ys.min(),ys.max(); mid=(xs.min()+xs.max())//2; hw=max(9,int((xs.max()-xs.min())*.5)+3)
+    out=np.zeros_like(lie)
+    if where=='coffin':
+        cr=RP['coffin']; y0=top-3; y1=bot+3; ink=d['ink']
+        for y in range(y0,y1+1):
+            wy=hw if y<top+int((bot-top)*.3) else max(hw-3,int(hw-(y-top-(bot-top)*.3)*.18))
+            for x in range(mid-wy,mid+wy+1):
+                e=x in(mid-wy,mid+wy) or y in(y0,y1); out[y,x]=(*(ink if e else cr[1] if abs(x-mid)>wy-3 else cr[0]),255)
+        m=lie[...,3]>0; out[m]=lie[m]
+    else:
+        out=lie.copy(); so=RP['soil']; neck=top+int((bot-top)*.24); rng=np.random.default_rng(7)
+        for y in range(neck,bot+3):
+            for x in range(mid-hw,mid+hw+1):
+                if abs(x-mid)>hw-1-((y-neck)<2)*2: continue
+                out[y,x]=(*so[int(rng.integers(0,4))],255)
+        for y in range(top-1,neck):
+            for x in range(mid-hw,mid+hw+1):
+                if abs(x-mid)>hw-1 or out[y,x,3]: continue
+                if abs(x-mid)>hw-4: out[y,x]=(*so[int(rng.integers(0,3))],255)
+    from PIL import Image
+    im=Image.fromarray(out,'RGBA').crop((0,max(0,top-4),S,min(SH,bot+5))); sh=np.zeros((4*SH,6*S,4),np.uint8); cyc=78
+    for row,rot in ((0,0),(1,90),(2,180),(3,270)):
+        q=im.rotate(rot,expand=True) if rot else im; cell=Image.new('RGBA',(S,SH),(0,0,0,0)); cell.paste(q,(48-q.width//2,min(SH-q.height,max(0,cyc-q.height//2)))); cell=np.array(cell)
+        for i in range(2,6): sh[row*SH:(row+1)*SH,i*S:(i+1)*S]=cell
+    sitp=posed(d,'sit')
+    for row in range(4): sh[row*SH:(row+1)*SH,0:S]=sitp[row*SH:(row+1)*SH,S:2*S]; sh[row*SH:(row+1)*SH,S:2*S]=sitp[row*SH:(row+1)*SH,4*S:5*S]
+    return sh
