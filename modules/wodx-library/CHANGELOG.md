@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.48.0 (Wraith Artifacts on the crafting table (B6100-B6103): the named Artifacts of Wraith 20th pp. 425-431 (thirteen of the forges, five Skin Artifacts, three Spectre Artifacts and the souled relic) join the soulforged Artifact and reworked relic. The forge's goal follows the level (2 + 2 a level), Skin Artifacts must be fed 2 Pathos a day and add Angst on a botch, Spectre Artifacts are made only by Spectres, who pay the soulfire in Angst, and the eMap is made only from 1970. Item powers gain extra costs, a botch that adds, the figure's look, the token's look and a light the Storyteller's computer places)
 - 0.47.0 (What things weigh (B6080 to B6082): api.weight gives an item, a good or a container line its weight, from the Storyteller's own figure, about 250 named figures, or the kind and size of the thing, with makes that change over the centuries (armor of iron before 1900, aramid after, Future Darkness composites from 2050) and counts ("silver pennies (7)"))
 - 0.46.0 (Whether remains are truly holy is rolled once, Faith against 8, when they are picked (B5390); A stimulant now crashes about an hour after it is taken: one die off every roll until the character sleeps, at most a day (B5178))
 - 0.45.0 (The Philippines in the goods by place (B5152))

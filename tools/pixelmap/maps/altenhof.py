@@ -15,6 +15,7 @@ from px import R, T, OUT
 import props as pr
 import land
 import wilds as wl
+import dress as dr
 import buildings as B
 from scene import Recorder
 
@@ -26,6 +27,7 @@ court = [(40.6, 25.0), (37.4, 24.0), (34.6, 21.6), (33.0, 17.6)]                
 dt, db = land.ground(m, roads=[(road, 66), (court, 26)], floor="forest")
 X0, Y0, X1, Y1 = int(12 * T), int(6 * T), int(40 * T), int(40 * T)                     # the court inside the curtain: rough grass
 g = m.grass(Y1 - Y0, X1 - X0); keep = dt[Y0:Y1, X0:X1] >= 0; m.put(g, X0, Y0, mask=keep)
+dr.snap(m)
 
 # ---- floors: the roofless hall's flags under fallen stone, the chamber's boards, the chapel's flags ----
 B._floor(m, 16, 10, 16, 12, "flags"); B._floor(m, 22, 22, 10, 8, "planks"); B._floor(m, 14, 26, 6, 10, "flags")
@@ -149,6 +151,11 @@ def clear(x, y, r):
     return dt[py_, px_] < r * T * .4
 
 
+# ---- dressing (B5746): what lies about the ruin, the chamber kept as a home, the wood floor ----
+dr.rooms(m, rec, (22, 22, 10, 8), WALLS, "home")
+dr.dress(m, rec, (16, 10, 16, 12), "ruin", n=26); dr.dress(m, rec, (14, 26, 6, 10), "ruin", n=8)
+dr.dress(m, rec, (12, 6, 28, 34), "ruin", n=40)
+dr.dress(m, rec, (0, 0, W, H), "wood", n=150)
 land.trees(m, W, H, clear, n=1500, fir=.4, gap=.56)
 for hx, hy, hr, cone in getattr(m, "hearths", []): m.glow(hx, hy, hr, cone=cone, power=.55); m.glow(hx, hy, 70, power=.5)
 rec.region("chamber", "Lady Adelheid's chamber", (22, 22, 10, 8), "home")
