@@ -187,6 +187,8 @@ export async function run() {
     await G.step("13. a fomor's Numbing: more levels, no penalty, and death when it ends past Incapacitated", async () => {
       const [fo] = await G.make(Actor, [{name: "Gate Limits Fomor", type: "Mortal", system: {attributes: {stamina: {value: 5}}, advantages: {willpower: {permanent: 9, temporary: 9}}},
         items: [{name: "Numbing", type: "Power", system: {type: "wod.types.power", value: 1}}]}]);
+      // The system's sheet can prepare a new mortal to Willpower 0: set the traits after creation
+      await fo.update({"system.advantages.willpower.permanent": 9, "system.advantages.willpower.temporary": 9, "system.attributes.stamina.value": 5});
       const [ft] = await G.tokens(scene, [{actor: fo, x: 14, y: 8}]);
       const body = () => live(ft);
       const max0 = Number(body().system?.traits?.health?.totalhealthlevels?.max) || 7;
