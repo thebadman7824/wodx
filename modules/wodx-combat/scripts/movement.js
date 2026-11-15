@@ -40,6 +40,21 @@ export const abilitiesOf = actor => {
   return ab;
 };
 
+/**
+ * B5072-B5074: what a character holds, as WoDX Interactables tells it: carrying or dragging a body, pushing, pulling or
+ * hauling a thing. {mode, factor, hands, free, dodge, note, budge} or {carried, by}, or null.
+ */
+export function haulOf(tok) {
+  const doc = docOf(tok);
+  if ( !doc ) return null;
+  try {
+    const ix = game.modules.get("wodx-interactables");
+    return (ix?.active ? ix.api?.haul?.burdenOf?.(doc) : null) ?? null;
+  } catch (e) { return null; }
+}
+/** The same for an actor, through its token on the viewed scene. */
+export const haulOfActor = actor => { const t = tokensOf(actor); const sid = globalThis.canvas?.scene?.id; return haulOf(t.find(x => (x.parent?.id ?? x.document?.parent?.id) === sid) ?? t[0] ?? null); };
+
 /** The mount or vehicle a token is on, as WoDX Interactables tells it (movement-rules rideMove), or null. */
 export function rideOf(tok) {
   const doc = docOf(tok);
@@ -276,7 +291,13 @@ export function moveCheck(doc, changes, base) {
   const inWater = w?.kind === "deep" && !ab.waterwalk && mode !== "fly";
   const m = inWater ? "swim" : mode;
   const load = inWater ? loadOf(actor) : null;
-  const limit = m === "walk" ? null : MV.speedFor(m, base, ab, {athletics, jumpYards: Number(jump?.yards) || 0, load});
+  let limit = m === "walk" ? null : MV.speedFor(m, base, ab, {athletics, jumpYards: Number(jump?.yards) || 0, load});
+  // B5072, B5081: half pace carrying or pushing, a quarter dragging or straining at something heavy
+  const hb = haulOf(doc);
+  if ( hb && !hb.carried && Number(hb.factor) > 0 ) {
+    limit = Math.max(1, Math.floor((limit === null ? Number(base.run) || 0 : limit) * hb.factor));
+    return {mode: m === "walk" ? "haul" : m, limit, cost: w?.kind === "shallow" && mode !== "fly" ? MV.SHALLOW_COST : 1, refuse: "", jumped: mode === "jump", note: hb.note};
+  }
   return {mode: m, limit, cost: w?.kind === "shallow" && mode !== "fly" ? MV.SHALLOW_COST : 1, refuse: "", jumped: mode === "jump",
     note: load?.steps ? (load.sinks ? "too much weight to swim" : "weighed down") : ""};
 }
@@ -365,7 +386,11 @@ export function rideCapOf(attacker, dots = 0, name = "", {attackerTok = null} = 
 /** The defender's own stance on a dodge: a difficulty change and its note. */
 export function defenseMods(target) {
   const st = stanceOfActor(target), r = MV.rollStance(st, ["dodge"], {load: ["swimming", "under"].includes(st) ? loadOf(target) : null});
-  return {diff: r.diff, notes: r.parts.map(p => `${target?.name ?? "Target"}: ${p} on a dodge`), stance: st};
+  const notes = r.parts.map(p => `${target?.name ?? "Target"}: ${p} on a dodge`);
+  // B5074: a burden makes a dodge harder; letting go of it is free
+  const hb = haulOfActor(target);
+  if ( hb && !hb.carried && hb.dodge ) notes.push(`${target?.name ?? "Target"}: ${hb.note}, +${hb.dodge} on a dodge (house rule)`);
+  return {diff: r.diff + (hb && !hb.carried ? Number(hb.dodge) || 0 : 0), notes, stance: st};
 }
 /** A plain roll's changes: kinds from the roll's pool (stealth, perception, dexterity). */
 export function rollMods(actor, kinds = []) {

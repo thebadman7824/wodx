@@ -67,7 +67,8 @@ export async function run() {
 
     await mage.update({"system.paradox.temporary": 4, "system.paradox.permanent": 1});
     // Press the dialog's Done button for the gate
-    const hk = Hooks.on("renderDialogV2", app => setTimeout(() => app.element?.querySelector?.("[data-action=ok]")?.click(), 100));
+    // B4992 made "begin now, clear it on the clock" the default; this step tests the at-once purify, so it is unticked
+    const hk = Hooks.on("renderDialogV2", app => setTimeout(() => { const c = app.element?.querySelector?.("input[name=clock]"); if ( c ) c.checked = false; app.element?.querySelector?.("[data-action=ok]")?.click(); }, 100));
     try { await A.m20Purify({actor: mage}); } finally { Hooks.off("renderDialogV2", hk); }
     await sleep(400);
     ok("6. purify", mage.system.paradox.temporary === 1, {paradox: mage.system.paradox.temporary});

@@ -44,10 +44,11 @@ const args = process.argv.slice(2);
 const opt = k => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : null; };
 const valued = new Set(["lane", "wait", "repo", "channel", "base", "shard", "report", "lanes", "gate-timeout", "step-timeout", "max-minutes"]);
 let gates = args.filter((a, i) => !a.startsWith("--") && !(i > 0 && valued.has(args[i - 1].slice(2))));
-if ( args.includes("--all") ) gates.push(...Object.keys(gateMap()));
+const gateRoot = path.resolve(opt("repo") ?? REPO);   // the checkout under test: a gate new on the branch is only there
+if ( args.includes("--all") ) gates.push(...Object.keys(gateMap(gateRoot)));
 if ( args.includes("--touched") ) {
-  const t = touched(changedPaths(opt("base") ?? "origin/main", path.resolve(opt("repo") ?? REPO)));
-  const list = gatesFor(t.modules, t.gates);
+  const t = touched(changedPaths(opt("base") ?? "origin/main", gateRoot), {root: gateRoot});
+  const list = gatesFor(t.modules, t.gates, gateMap(gateRoot));
   console.log(`Touched modules: ${t.modules.join(", ") || "none"}; ${list.length} gate(s) to run.`);
   if ( !list.length && !gates.length ) { console.log("Nothing in this change needs a gate."); process.exit(0); }
   gates.push(...list);
@@ -89,7 +90,7 @@ const only = opt("lane") ? [String(opt("lane"))] : null;
 const waitMin = Number(opt("wait") ?? 0);
 
 const gateMin = Number(opt("gate-timeout") ?? 15), stepSec = Number(opt("step-timeout") ?? 45);
-const perGate = loadExtra().timeouts ?? {};
+const perGate = loadExtra(gateRoot).timeouts ?? {};
 const limitOf = g => Number(perGate[g] ?? gateMin) * 60000;
 const maxMs = Number(opt("max-minutes") ?? 0) * 60000 || (15 * 60000 + gates.reduce((t, g) => t + limitOf(g) + 120000, 0));
 /** Rejects when p has not settled in ms (B3089). */
@@ -162,7 +163,7 @@ try {
       // B3086: each gate starts from the world as it was before it. World settings it changed are put back, settings
       // it added are removed, and on a lane that is reset every night (autoReset) the documents it left are deleted.
       const run = page.evaluate(async ({gate, ignore, cleanDocs, limit, stepMs}) => {
-        const t0 = game.time.worldTime, paused = game.paused;
+        const t0 = game.time.worldTime, paused = game.paused, startedAt = Date.now();
         const activeId = game.scenes.active?.id ?? null, viewedId = canvas?.scene?.id ?? null;
         const skip = k => ignore.some(p => p.endsWith("*") ? k.startsWith(p.slice(0, -1)) : k === p);
         const store = () => [...(game.settings.storage.get("world")?.contents ?? game.settings.storage.get("world")?.values?.() ?? [])];
@@ -194,6 +195,17 @@ try {
         }
         catch (e) { error = e?.message ?? String(e); }
         finally { clearTimeout(timer); clearInterval(sweep); }
+        // B5830: a gate that does not name its failed steps in the summary (the older gates) has them read from its
+        // result file, so a failure on a lane can be fixed without going back to the PC for the file.
+        const tally = typeof summary === "string" ? /(\d+)\s*\/\s*(\d+)\s+passed/.exec(summary) : null;
+        if ( tally && tally[1] !== tally[2] && !/failed:/.test(summary) ) {
+          try {
+            const res = await (await fetch(`/wodx-gate/${gate}-result.json?${Date.now()}`, {cache: "no-store"})).json();
+            const fresh = !res?.started || Date.parse(res.started) >= startedAt - 5000;
+            const bad = fresh ? (res?.steps ?? []).filter(st => !st.pass).map(({name, pass, ...d}) => `${name} ${JSON.stringify(d).slice(0, 300)}`) : [];
+            if ( bad.length ) summary += `; failed: ${bad.join("; ")}`.slice(0, 900);
+          } catch (e) { /* no result file */ }
+        }
         // Writes a gate set off just before it ended (an approval queued by a hook) land first, then are put back.
         await new Promise(r => setTimeout(r, 1500));
         const moved = game.time.worldTime - t0;

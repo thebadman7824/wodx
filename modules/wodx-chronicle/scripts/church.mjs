@@ -48,7 +48,7 @@ export function on(date, opts = {}) {
   const c = F.faithDay(faith, date, {extra: extra(), region});
   let active = false;
   try { active = !!rule("feastFast"); } catch (e) { active = false; }
-  const out = {...c, faith, calendar: F.FAITHS[faith]?.year ?? "Church year", active, label: R.churchLabel(c)};
+  const out = {...c, faith, region, calendar: F.FAITHS[faith]?.year ?? "Church year", active, label: R.churchLabel(c)};
   if ( opts.others ) { try { out.others = F.otherDays(date, faith); } catch (e) { out.others = []; } }
   return out;
 }

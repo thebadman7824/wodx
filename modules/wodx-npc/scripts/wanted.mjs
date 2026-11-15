@@ -13,6 +13,9 @@
  * Everything is the active Storyteller's; players never see a description or a test.
  */
 import * as W from "./wanted-rules.mjs";
+import * as GR from "./grudge-rules.mjs";
+import * as FW from "./follow-rules.mjs";
+import * as MR from "./mortal-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export function build(ctx) {
@@ -237,8 +240,48 @@ export function build(ctx) {
           <p>A ${best.m.level} match: ${esc(best.m.why)}. Roll ${esc(roll.text)} for ${esc(t.name)}.</p>
           <p class="wodx-quiet">Only you see this. On a success they know them: they may call the watch, follow, or keep it to themselves.</p>
           <button type="button" data-action="wnpc-wanted-alarm">Raise the alarm here</button></div>`});
+      // B5691 (g2): the roll is made for them, and on a success they act by their kind
+      try { out.at(-1).acted = await knowAndAct(t, iTok, a, culprit, best.d, roll, tpl); } catch (e) { console.error(`${MOD} | wanted`, e); }
     }
     return out;
+  }
+
+  const attr = (a, k) => Number(a?.system?.attributes?.[k]?.total ?? a?.system?.attributes?.[k]?.value) || 0;
+  const abil = (a, k) => {
+    const f = a?.system?.abilities?.[k];
+    if ( f?.value !== undefined ) return Number(f.value) || 0;
+    return Number([...(a?.items ?? [])].find(i => ["Ability", "Trait"].includes(i.type) && (i.system?.id === k || String(i.name).toLowerCase() === k))?.system?.value) || 0;
+  };
+  /** g2: roll Perception + Alertness for the one who may know them, then challenge, tell, or keep it as a hold. */
+  async function knowAndAct(tok, iTok, a, culprit, desc, roll, tpl) {
+    const pool = Math.max(1, attr(a, "perception") + abil(a, "alertness"));
+    const r = await new Roll(`${pool}d10cs>=${roll.difficulty}`).evaluate();
+    const ones = r.dice[0]?.results?.filter(x => x.result === 1).length ?? 0, net = r.total - ones;
+    await r.toMessage({speaker: {alias: tok.name}, flavor: `${roll.text}: does ${tok.name} know them?`}, {rollMode: "gmroll"});
+    if ( net <= 0 ) return "no";
+    const prof = (() => { try { return profileFor?.(a, {phases: false}) ?? {}; } catch (e) { return {}; } })();
+    const key = (() => { const own = worldActor(a)?.getFlag?.(MOD, "archetype"); return MR.MORTALS[own] ? own : MR.guessMortal(a.name); })();
+    const act = GR.knowsAct({servant: false, keeper: FW.isKeeper(prof) || tpl === "guard", criminal: MR.MORTALS[key]?.group === "criminal"});
+    const data = {watcher: tok.document.uuid, intruder: iTok.document.uuid, region: null, scene: canvas.scene.uuid, head: "", why: "", lines: [], mode: "auto", trigger: "known"};
+    let text = "";
+    if ( act === "challenge" ) {
+      text = (await routines?.doReaction?.({...data, options: [{action: "challenge", score: 9, why: "knows them from the description"}]}, 0))?.text ?? "";
+      // The law comes where the law is on
+      try {
+        const reg = chron()?.world?.here?.(canvas.scene)?.id ?? null;
+        const st = game.modules.get("wodx-storyteller")?.api;
+        if ( reg && st?.reach?.lawCome ) { await st.reach.lawCome({actorId: culprit.id, region: reg, mode: "arrest", why: `${tok.name} knows them from the description going round`}); text += " The law is sent for."; }
+      } catch (e) { /* law off */ }
+    } else if ( act === "tell" ) {
+      text = (await routines?.doReaction?.({...data, options: [{action: "report", score: 9, why: "knows them from the description"}]}, 0))?.text ?? "";
+    } else if ( act === "hold" ) {
+      const sec = game.modules.get(MOD)?.api?.secrets;
+      const s = await sec?.add?.(culprit, {kind: "crime", text: `Was the one behind ${desc.what || "what the description tells of"}`, weight: 1});
+      if ( s ) await sec.reveal(culprit, s.id, worldActor(a), {how: "knew them from the description going round"});
+      text = `${tok.name} keeps quiet, and keeps what they know as a hold over ${culprit.name}.`;
+    }
+    if ( text ) await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), content: `<div class="wodx-card wnpc-wanted"><p><b>${esc(tok.name)} knows ${esc(culprit.name)}.</b> ${esc(text)}</p></div>`});
+    return act;
   }
 
   /* ---------------- The Storyteller's list ---------------- */
@@ -302,6 +345,6 @@ export function build(ctx) {
     });
   }
 
-  return {registerSettings, hooks, write, drop, spreadNow, list, openList, test, onBreach, onMapEvent, onCombatEnd, ofActor: (id, t = now()) => W.of(list(), id, t), rules: W,
+  return {knowAndAct, registerSettings, hooks, write, drop, spreadNow, list, openList, test, onBreach, onMapEvent, onCombatEnd, ofActor: (id, t = now()) => W.of(list(), id, t), rules: W,
     dress: {of: dressOf, set: setDress, foreignAt, blendDiff, dialog: dressDialog}};
 }
