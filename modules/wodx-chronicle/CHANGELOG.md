@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.121.0 (A ghoul's monthly need, carried out by itself (B5050 to B5054), for human and animal ghouls alike, the Storyteller's as well as the players'. Before, the Clan features card only asked someone to take a blood point away; now the sheet changes, the craving is rolled (V20 Dark Ages p. 401: Self-Control at difficulty 7, Willpower for an animal) and a botch sends out the wodxGhoulCraving hook. New world setting "Ghouls need vitae each month", on by default; with it off the old card comes back. Animal ghouls on Creature sheets carry the ghoul row)
 - 0.120.1 (Shipped tables written eight at a time (B5340))
 - 0.120.0 (The Philippines becomes a world region of its own (B5150 to B5152))
 - 0.119.0 (Timed roll effects for other modules (B5012); Clan, tribe, kith and creed features act by themselves (B4874-B4878, Ben's Storyteller's Hand picks s1-s5): what a card used to leave for the Storyteller to give or count is given, rolled or counted at once, with Undo, or waits in the approval queue when no Storyteller is connected. Setting "Features give their points by themselves" (on). New api signatures.soakFor; Merits and flaws that came into play only as a card now bite (B4879): the approval queue's card says what was rolled and what happened)

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5390
+Next free block: B5480
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -240,7 +240,7 @@ Next free block: B5390
 | B5000-B5009 | Moro names (used B5000-B5002) | Creation, Chronicle |
 | B5010-B5029 | The Storyteller's Hand, part three: fire, noticing, and the rest of the desk acts by itself (Ben's desk picks, 14 November 2026) (used B5010-B5024) | Interactables, Actions, Senses, Library, Chronicle, Storyteller, Otherworlds, Creation |
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
-| B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5049) | Creation, Chronicle, NPC, Sheets, Actions, Combat |
+| B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5057) | Creation, Chronicle, NPC, Sheets, Actions, Combat |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 | B5180-B5189 | Names raised to 300, Thai (used B5180) | Creation |
 | B5190-B5199 | Names raised to 300, Malay (used B5190) | Creation |
@@ -263,6 +263,14 @@ Next free block: B5390
 | B5360-B5369 | Names raised to 300, Korean (used B5360) | Creation |
 | B5370-B5379 | Names raised to 300, Mande (used B5370) | Creation |
 | B5380-B5389 | Names raised to 300, Zulu (used B5380) | Creation |
+| B5400-B5409 | Names raised to 300, Hungarian (used B5400) | Creation |
+| B5410-B5419 | Names raised to 300, Persian (used B5410) | Creation |
+| B5420-B5429 | Names raised to 300, Yoruba (used B5420) | Creation |
+| B5430-B5439 | Names raised to 300, Portuguese (used B5430) | Creation |
+| B5440-B5449 | Names raised to 300, Dutch (used B5440) | Creation |
+| B5450-B5459 | Names raised to 300, Irish (used B5450) | Creation |
+| B5460-B5469 | Names raised to 300, Greek (used B5460) | Creation |
+| B5470-B5479 | Names raised to 300, Polish (used B5470) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7952,6 +7960,46 @@ WoDX Creation. A vampire within a square and a half of a mortal, ghoul or animal
 
 Reverse: registerFeedVitae in main.mjs.
 
+## B5050. The monthly need happens by itself (2026-11-14)
+WoDX Chronicle. Each month a ghoul goes unfed takes its month's vitae off the sheet (1, or an animal's by size, B5044); with the pool empty, one Discipline dot a month, Potence last (Kindred of the Ebony Kingdom p. 186 fills in where V20 Dark Ages p. 400 only says the powers fade). Covers human ghouls too. Setting ghoulNeed, on by default. Desk item 12.
+
+Reverse: switch "Ghouls need vitae each month" off; the old card comes back.
+
+## B5051. The craving is rolled (2026-11-14)
+WoDX Chronicle. Each new month unfed, Self-Control at difficulty 7 (Willpower for an animal, B5046), V20 Dark Ages p. 401. Held, craves, or a botch (must drink at once); the hook wodxGhoulCraving carries the result for WoDX NPC. Desk item 12.
+
+Reverse: drop rollCraving from ghoul-need.mjs.
+
+## B5052. An animal catches up with its years (2026-11-14)
+WoDX Chronicle. With its vitae gone, an animal ghoul ages a year a week until it has caught up with the years it held off. Past its span (B5045) it dies; past twice its span it turns to dust. House pace: V20 Dark Ages p. 400 says only that it comes quickly. Desk item 13.
+
+Reverse: R.ageing and its use in check().
+
+## B5053. Shown on the token (2026-11-14)
+WoDX Chronicle. Red "-1 vitae" rises each month; an empty ghoul's tokens grey (the old tint is kept on the token); dead of age takes the dead mark; dust fades the token to a faint grey. Desk item 26.
+
+Reverse: tint() and float() in ghoul-need.mjs.
+
+## B5054. A drink from the domitor starts the month again (2026-11-14)
+WoDX Chronicle and WoDX Creation. Give vitae and Feed vitae from the domitor call the Clan features' ghoulFed, whose wodxGhoulFix hook resets the need and brings the token's colour back. Animal ghouls on Creature sheets carry the ghoul row.
+
+Reverse: the ghoulFed call in WoDX Creation's giveVitae.
+
+## B5055. A bound animal ghoul's loyalty floor (2026-11-14)
+WoDX NPC. Loyalty drift never takes a blood-bound animal ghoul below Friendly (1) unless it was fed on by its master or went two months or more unfed (Kindred of the Ebony Kingdom p. 185). The floor never raises an attitude already under it. Desk item 10.
+
+Reverse: drift's animal and bound options in order-rules.mjs.
+
+## B5056. Animal ghoul frenzy (2026-11-14)
+WoDX NPC. With five or more vitae in it (V20 Dark Ages p. 401), an animal ghoul in a fight may frenzy when badly hurt (3 or more levels), cornered, or when its master is attacked in sight. It rolls Willpower at difficulty 6, with no easier difficulty for animals (Ben's pick); failing puts on WoDX Chronicle's frenzy condition. Desk item 14.
+
+Reverse: the animalGhoul block in scoreOptions.
+
+## B5057. A craving botch goes for the nearest person (2026-11-14)
+WoDX NPC. When a Storyteller's ghoul botches its craving roll (B5051), its token moves next to the nearest living mortal on the scene and the Storyteller is told it means to drink. Player characters' ghouls are left to their players. Desk item 12.
+
+Reverse: the wodxGhoulCraving hook in main.mjs.
+
 ## B5150. The Philippines a region of its own (2026-11-15)
 WoDX Chronicle and Storyteller. Ben asked to build out the Philippines. The islands leave the Malay world and become the 45th world region, "The Philippines (Manila, the Visayas, Mindanao and Sulu)", with Manila as its city, the tropical wet climate and the Philippine money region. The world map gives it the squares north of 4.5 degrees and east of 119.5 (with Palawan) that were the Malay world's; the map builder cuts the country out by name on its next run. The region's letter comes last so no older square changes. Taken as recommended; logged in PENDING-REVIEW.
 
@@ -8093,3 +8141,43 @@ Reverse: restore the mande entry in data/people-world.mjs and drop mande from RA
 WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Zulu list grows from 48 names to 402: old names of the kings, royal women, councillors and captains of the Zulu kingdom and its neighbours, later names of KwaZulu-Natal, and over a hundred clan names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: restore the zulu entry in data/people-world.mjs and drop zulu from RAISED.
+
+## B5400. Hungarian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Hungarian list grows from 50 names to 411: old names of kings, chieftains, lords, captains and townsfolk from Árpád, Angevin, Hunyadi and Transylvanian records with the old noble and town family names, then names and family names of modern Hungary. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the hungarian entry in data/people-world.mjs and drop hungarian from RAISED.
+
+## B5410. Persian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Persian list grows from 50 names to 444: old names of kings and heroes of the old tales and of Samanid, Seljuk, Safavid and Qajar rulers, ministers, poets and royal women, a town name as the family name until the surname law of 1925, then modern Iranian names and surnames. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the persian entry in data/people-world.mjs and drop persian from RAISED.
+
+## B5420. Yoruba names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Yoruba list grows from 51 names to 382: old names of the alaafin, obas, war chiefs and royal and market women of Oyo, Ife, Ibadan, Abeokuta and Lagos, then Yoruba, church and Muslim names since, with a longer list of family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the yoruba entry in data/people-world.mjs and drop yoruba from RAISED.
+
+## B5430. Portuguese names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Portuguese list grows from 54 names to 383: old names of kings, queens, captains, navigators and townsfolk of the Burgundian and Avis records, then names of modern Portugal, and a longer list of family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the portuguese entry in data/people-world.mjs and drop portuguese from RAISED.
+
+## B5440. Dutch names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Dutch list grows from 54 names to 468: old names of counts, regents, painters, seafarers and townsfolk of Holland and the Republic, with a father's name (Janszoon, Jansdochter) or a house or place name as the family name before the register of 1811, then modern Dutch names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the dutch entry in data/people-world.mjs and drop dutch from RAISED.
+
+## B5450. Irish names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Irish list grows from 55 names to 527: old names of kings, lords, poets, saints and women of the annals with the family name in Irish (Ó or Mac, Ní or Nic for a woman), then modern Irish names with the English forms of the family names used since the 18th century. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the irish entry in data/people-world.mjs and drop irish from RAISED.
+
+## B5460. Greek names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Greek list grows from 56 names to 472: old names of emperors, empresses, saints, scholars and great houses of Byzantium and the Greek lands under Venice and the Ottomans, then names of modern Greece, with a woman's family name in its own form. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the greek entry in data/people-world.mjs and drop greek from RAISED.
+
+## B5470. Polish names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Polish list grows from 58 names to 435: old names of Piast and Jagiellonian kings and dukes, knights, magnates and townsfolk, then names of modern Poland, with a woman's family name in its own form. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the polish entry in data/people-world.mjs and drop polish from RAISED.

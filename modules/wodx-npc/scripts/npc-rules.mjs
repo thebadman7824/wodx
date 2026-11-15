@@ -225,6 +225,16 @@ export function scoreOptions(profile, state) {
     if ( sc > 0 ) out.push({action: "frenzy", score: sc * (0.6 + p.berserk / 2), why: `the Beast pushes: ${r.join("; ")}`});
   }
 
+  // B5056: an animal ghoul with five or more points in it can frenzy (V20 Dark Ages p. 401), on an animal's triggers:
+  // badly hurt, cornered, or its master attacked in sight (Kindred of the Ebony Kingdom p. 185)
+  if ( s.animalGhoul && !s.inFrenzy && Number(s.blood ?? 0) >= 5 ) {
+    const r = [];
+    if ( s.wounds >= 3 ) r.push("badly hurt");
+    if ( outnumbered && enemies.some(e => e.reach) ) r.push("cornered");
+    if ( allies.some(a => a.isDomitor && (a.attackerIds ?? []).length) ) r.push("its master is attacked");
+    if ( r.length ) out.push({action: "frenzy", animal: true, score: (2 + 1.5 * r.length) * (0.6 + p.berserk / 2), why: `the blood in it rises: ${r.join("; ")}`});
+  }
+
   // A power (Discipline, Gift, Arcanos, Numen, Edge): the Storyteller picks which
   if ( s.hasPowers && p.power > 0 && enemies.length ) {
     out.push({action: "power", score: 1.5 * p.power + (p.cunning > 1 ? 0.5 : 0) - (hiding ? 3 : 0),
