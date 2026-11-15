@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.65.0 (Akan names raised to 300 (B5310); Romanian names raised to 300 (B5300); Serbian names raised to 300 (B5330); Tibetan names raised to 300 (B5290); Vietnamese names raised to 300 (B5320))
 - 0.64.0 (Amharic names raised to 300 (B5280); Hawaiian names raised to 300 (B5270); Javanese names raised to 300 (B5250); Nahua names raised to 300 (B5230); Quechua names raised to 300 (B5200); Steppe names raised to 300 (B5220); Swahili names raised to 300 (B5260); Tamil names raised to 300 (B5240))
 - 0.63.0 (Malay names raised to 300 (B5190))
 - 0.62.0 (Thai names raised to 300 (B5180))
