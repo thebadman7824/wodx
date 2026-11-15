@@ -239,6 +239,18 @@ async function questionAct(item, casterName, h, caster, a) {
 const pathRegions = scene => [...(scene?.regions ?? [])].filter(r => r.flags?.[MOD]?.[PATH_FLAG]);
 /** A teleport behaviour's destinations as an array (Foundry keeps them in a Set). */
 export const destsOf = b => [...(b?.system?.destinations ?? [])];
+/**
+ * B6445: does a destination name this region? Foundry may keep it whole ("Scene.<id>.Region.<id>") or relative to its
+ * scene (".Region.<id>", as WoDX Otherworlds' resolveRegion reads it), so the region is matched by its ids.
+ */
+export function namesRegion(uuid, region) {
+  if ( !region ) return false;
+  if ( uuid === region.uuid ) return true;
+  const m = String(uuid ?? "").match(/^(?:Scene\.([^.]+))?\.?Region\.([^.]+)$/);
+  return !!m && m[2] === region.id && (!m[1] || !region.parent?.id || m[1] === region.parent.id);
+}
+/** Does this teleport behaviour lead into the region? */
+export const leadsTo = (b, region) => destsOf(b).some(d => namesRegion(d, region));
 
 async function pathAct(item, casterName, h, caster) {
   const o = item.out ?? {}, scene = canvas?.scene;
@@ -268,8 +280,9 @@ async function pathAct(item, casterName, h, caster) {
   if ( !all.length ) return {note: `${o.label}: no path on this scene to work on`};
   const pick = all.length === 1 ? all[0] : h.docOf(await h.choose(`Which path does ${casterName} ${o.op}?`, all.map(r => [r.uuid, r.name])));
   if ( !pick ) return {note: `${o.label}: no path chosen`};
-  // B6445: a teleport behaviour's destinations are a Set (no includes), so they are spread before the look-up
-  const twin = all.find(r => r.id !== pick.id && r.behaviors?.some?.(b => destsOf(b).includes(pick.uuid)));
+  // B6445: a teleport behaviour's destinations are a Set (no includes), whole or relative uuids, so they are spread
+  // and matched by the region's ids
+  const twin = all.find(r => r.id !== pick.id && r.behaviors?.some?.(b => leadsTo(b, pick)));
   const both = [pick, twin].filter(Boolean);
   if ( o.op === "conceal" ) {
     const prev = both.map(r => ({uuid: r.uuid, visibility: r.visibility}));
@@ -290,9 +303,13 @@ async function pathAct(item, casterName, h, caster) {
     const b = pick.behaviors.find(x => x.type === "teleportToken");
     if ( !b ) return {note: `${o.label}: that region carries no one`};
     const prev = [{uuid: b.uuid, destinations: destsOf(b)}];
-    await b.update({"system.destinations": [to === "loop" ? pick.uuid : to]});
+    const dest = to === "loop" ? pick.uuid : to;
+    await b.update({"system.destinations": [dest]});
+    // B6445: what Foundry kept, for the record (a gate reads it when the warp does not show)
+    const kept = destsOf(pick.behaviors.get?.(b.id) ?? b);
+    if ( !kept.some(d => d === dest || namesRegion(d, h.docOf(dest))) ) console.warn(`WoDX | ${o.label}: the path was not warped`, {dest, kept});
     const eff = await ends({op: "warp", prev});
-    return {pathPrev: prev, effect: eff?.uuid ?? null};
+    return {pathPrev: prev, effect: eff?.uuid ?? null, warp: {to: dest, kept}};
   }
   return {note: `${o.label}: ${o.text}`};
 }

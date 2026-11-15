@@ -163,7 +163,11 @@ export async function run() {
         const root = el?.querySelector ? el : app.element;
         if ( root?.querySelector?.("select[name=pick]") ) setTimeout(() => root.querySelector("button[data-action=ok]")?.click(), 50);
       });
-      const seen = {};
+      const seen = {}, detail = {told: []};
+      // what Foundry or WoDX says while the path is worked (a refused update shows as an error notice)
+      const said = {error: ui.notifications.error, warn: ui.notifications.warn};
+      ui.notifications.error = function(m, ...r) { detail.told.push(`error: ${m}`); return said.error.call(this, m, ...r); };
+      ui.notifications.warn = function(m, ...r) { detail.told.push(`warn: ${m}`); return said.warn.call(this, m, ...r); };
       try {
         const LAYER = CONST.REGION_VISIBILITY?.LAYER ?? 0;
         const c = await A.effects.apply(item(evo("paths", 3), demon), "Gate Evo Demon");
@@ -175,13 +179,22 @@ export async function run() {
         seen.closed = await waitFor(() => tps().length === 2 && tps().every(b => b.disabled), 4000);
         await undo(cl);
         seen.open = await waitFor(() => tps().every(b => !b.disabled), 4000);
-        const before = tps().map(b => [...(b.system?.destinations ?? [])].join());
+        // B6445: a destination may be kept whole ("Scene.<id>.Region.<id>") or relative (".Region.<id>"), so each is
+        // read as the region it names
+        const raw = () => tps().map(b => [...(b.system?.destinations ?? [])]);
+        const regionOf = d => String(d ?? "").match(/Region\.([^.]+)$/)?.[1] ?? String(d);
+        const ids = () => tps().map(b => [...(b.system?.destinations ?? [])].map(regionOf).sort().join());
+        const before = ids();
+        detail.before = raw();
         const w = await A.effects.apply(item(evo("paths", 5), demon), "Gate Evo Demon");
-        seen.warped = await waitFor(() => tps().some(b => [...(b.system?.destinations ?? [])].includes(b.parent?.uuid)), 4000);
+        detail.rec = {keys: Object.keys(w ?? {}), note: w?.note ?? null, warp: w?.warp ?? null};
+        seen.warped = await waitFor(() => tps().some(b => [...(b.system?.destinations ?? [])].map(regionOf).includes(b.parent?.id)), 4000);
+        detail.warped = raw();
         await undo(w);
-        seen.back = await waitFor(() => tps().map(b => [...(b.system?.destinations ?? [])].join()).join("|") === before.join("|"), 4000);
-      } finally { Hooks.off("renderDialogV2", pickHook); await undo(lay); }
-      G.ok("12. Lore of Paths: conceal, close and warp a laid path", Object.values(seen).length === 6 && Object.values(seen).every(Boolean), seen);
+        seen.back = await waitFor(() => ids().join("|") === before.join("|"), 4000);
+        detail.after = raw();
+      } finally { Hooks.off("renderDialogV2", pickHook); ui.notifications.error = said.error; ui.notifications.warn = said.warn; await undo(lay); }
+      G.ok("12. Lore of Paths: conceal, close and warp a laid path", Object.values(seen).length === 6 && Object.values(seen).every(Boolean), {...seen, ...(Object.values(seen).every(Boolean) ? {} : {detail})});
     });
 
     // 13-14: the evocation window itself, as play runs it (dice forced to 10s while the card applies)

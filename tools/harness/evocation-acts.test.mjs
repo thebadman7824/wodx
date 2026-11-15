@@ -134,3 +134,17 @@ test("B6445: a path's other end is found through a Set of destinations", () => {
   assert.deepEqual(ACT.destsOf({system: {destinations: ["x"]}}), ["x"]);
   assert.deepEqual(ACT.destsOf(null), []);
 });
+
+test("B6445: a path's end is matched whole or relative to its scene", async () => {
+  const region = {id: "a", uuid: "Scene.s.Region.a", parent: {id: "s"}};
+  assert.equal(ACT.namesRegion("Scene.s.Region.a", region), true);
+  assert.equal(ACT.namesRegion(".Region.a", region), true);
+  assert.equal(ACT.namesRegion("Region.a", region), true);
+  assert.equal(ACT.namesRegion("Scene.t.Region.a", region), false);
+  assert.equal(ACT.namesRegion(".Region.b", region), false);
+  assert.equal(ACT.leadsTo({system: {destinations: new Set([".Region.a"])}}, region), true);
+  assert.equal(ACT.leadsTo({system: {destinations: new Set(["Scene.s.Region.b"])}}, region), false);
+  const src = (await import("node:fs")).readFileSync(new URL("../../modules/wodx-actions/scripts/acts.js", import.meta.url), "utf8");
+  assert.match(src, /r\.behaviors\?\.some\?\.\(b => leadsTo\(b, pick\)\)/);
+  assert.match(src, /warp: \{to: dest, kept\}/);
+});

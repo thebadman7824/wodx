@@ -496,12 +496,13 @@ export function build(ctx) {
         if (!list.length) return ctx.notify(`${actor.name} knows no Gifts. Use "Learn a Gift" first.`);
         let tgt = targetActorOf();
         const rows = list.map(it => { const g = giftData(it); return [it.id, `${it.name}${g ? ` (${g.l})` : ""}`]; });
-        const content = `<form class="wodx-gift"><p><b>${esc(actor.name)}</b>${tgt ? `<span class="wodx-hdr-tgt"> → target <b>${esc(tgt.name)}</b></span>` : ""}</p>
+        // B6448: a div, not a form: the dialog wraps the content in its own form, and a form inside a form is dropped
+        const content = `<div class="wodx-gift"><p><b>${esc(actor.name)}</b>${tgt ? `<span class="wodx-hdr-tgt"> → target <b>${esc(tgt.name)}</b></span>` : ""}</p>
           <div class="form-group"><label>Gift</label>${rows.length > 5 ? searchBox("select[name=gift]", "Search Gifts…", "Search Gifts") : ""}<select name="gift" data-fixed>${rows.map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join("")}</select></div>
           <div class="wodx-gift-info vta-note"></div>
           <div class="form-group"><label>Difficulty</label><input type="number" name="diff" value="6"/></div>
           <div class="form-group"><label>Extra points (variable costs)</label><input type="number" name="extra" value="0" min="0"/></div>
-          <div class="form-group"><label>Bonus dice</label><input type="number" name="bonus" value="0"/></div></form>`;
+          <div class="form-group"><label>Bonus dice</label><input type="number" name="bonus" value="0"/></div></div>`;
         const i = info(actor);
         let gauntlet = null;
         try {

@@ -118,7 +118,8 @@ export async function run() {
       seen.object?.setTarget?.(true, {releaseOthers: true});
       const hook = Hooks.on("renderDialogV2", async (app, el) => {
         const root = el instanceof HTMLElement ? el : el?.[0];
-        if ( !root?.querySelector?.("form.wodx-gift") ) return;
+        // B6448: the Gift window by its fields (a form inside the dialog's own form is dropped, so no form.wodx-gift)
+        if ( !root?.querySelector?.('.wodx-gift, select[name="gift"]') || !root.querySelector('[name="diff"]') ) return;
         await wait(200);
         const d = root.querySelector('[name="diff"]'); if ( d ) { d.value = "6"; d.dispatchEvent(new Event("change", {bubbles: true})); }
         root.querySelector('button[data-action="ok"]')?.click();
