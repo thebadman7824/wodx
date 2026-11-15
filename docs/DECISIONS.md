@@ -247,6 +247,7 @@ Next free block: B5480
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5064) | Creation, NPC, Actions |
 | B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
+| B5170-B5179 | Storyteller's Hand round two: Martyr, Marauders, the winds, holy ground, Untamable, feeding flaws, Berserker, flight, blackmail, the stimulant crash (used B5170-B5179) | Actions, Chronicle, Interactables, Library, NPC, Storyteller |
 | B5180-B5189 | Names raised to 300, Thai (used B5180) | Creation |
 | B5190-B5199 | Names raised to 300, Malay (used B5190) | Creation |
 | B5200-B5209 | Names raised to 300, Quechua (used B5200) | Creation |
@@ -268,6 +269,7 @@ Next free block: B5480
 | B5360-B5369 | Names raised to 300, Korean (used B5360) | Creation |
 | B5370-B5379 | Names raised to 300, Mande (used B5370) | Creation |
 | B5380-B5389 | Names raised to 300, Zulu (used B5380) | Creation |
+| B5390-B5399 | Storyteller's Hand leftovers desk: relic holiness and place Fetters (used B5390-B5391) | Library, Creation |
 | B5400-B5409 | Names raised to 300, Hungarian (used B5400) | Creation |
 | B5410-B5419 | Names raised to 300, Persian (used B5410) | Creation |
 | B5420-B5429 | Names raised to 300, Yoruba (used B5420) | Creation |
@@ -8252,6 +8254,56 @@ WoDX Creation and Storyteller. The lifepath has the Philippines under Asia, with
 
 Reverse: drop the philippines entries in data/lifepath-local-asia.mjs, data/lifepath-events-asia.mjs and the r-philippines cards.
 
+## B5170. Holy ground lifts Faith by one (2026-11-15)
+WoDX Actions and Interactables. A Mortal with the faithful feature, standing on a sacred tile that hallows its ground and is not desecrated, counts Faith one higher (at most 10) for rolls that read it. Faith lost still comes off the sheet value. House reading of the feature text.
+
+Reverse: drop onHoly from faithOf in hunter.js.
+
+## B5171. A Martyr can take a nearby wound (2026-11-15)
+WoDX Chronicle. When someone takes damage within one square of a token with the Martyr feature, the Martyr's player gets a Take the wound button: the victim's track goes back and the Martyr takes the same levels and type. House reading.
+
+Reverse: remove the wodxDamageApplied listener in signatures.mjs.
+
+## B5172. Marauders draw no Paradox and shimmer (2026-11-15)
+WoDX Actions and Chronicle. A Marauder's magick draws no Paradox (Madness shields it, M20), and its token carries a shifting violet aura.
+
+Reverse: remove the marauder check in m20.js cast and the token look.
+
+## B5173. The Lore of the Winds raises the weather (2026-11-15)
+WoDX Actions. A Scourge's evocation of the Lore of the Winds at three or four dots sets wind over the place for the night, at five a storm, through the Atmosphere weather override. House reading of the lore's reach.
+
+Reverse: drop the winds branch in demon.js.
+
+## B5174. Untamable shrugs off commanding powers (2026-11-15)
+WoDX Actions. A target with Untamable takes no hold from Domination and the commanding Gifts (Roll Over, Mastery and the like), as W20 describes; the card says so.
+
+Reverse: drop the untamable check at the top of applyItem.
+
+## B5175. Infectious Bite, Conspicuous Consumption and Berserker land by themselves (2026-11-15)
+WoDX Chronicle. On the approved trait prompt: Infectious Bite gives the vessel a 2 in 10 chance of disease, a week at one die off every roll; Conspicuous Consumption kills a mortal vessel; Berserker gives the player a Go berserk button that puts the character in frenzy (wound penalties ignored). Chance and length are house figures.
+
+Reverse: remove the three BITES rows.
+
+## B5176. Fleeing a fight starts a chase (2026-11-15)
+WoDX Interactables. In a fight with chases on automatic, a player character who was within 3 yards of an NPC combatant and ends a move more than 8 yards from all of them starts a chase, as an NPC's flight already did. House distances.
+
+Reverse: remove the pcMoved call in onTokenMoved.
+
+## B5177. A blackmailed person who strikes back by word tells the law (2026-11-15)
+WoDX Chronicle and NPC. A strike back by rumour or a tip to hunters also adds a named blackmail deed (gravity 2) to the blackmailer's law heat where they are.
+
+Reverse: drop the extortion deed and the heat call in strikeBacks.
+
+## B5178. A stimulant crashes (2026-11-15)
+WoDX Library and Storyteller. About an hour after a stimulant (half that for a weak dose, twice for a strong one) the character crashes: one die off every roll until marked as slept, at most a day. House reading of the Wired text.
+
+Reverse: drop the crash flag and crashTick.
+
+## B5179. The Labyrinth's time is drawn (2026-11-15)
+WoDX Otherworlds. Ben's pick on the leftovers desk: each Labyrinth journey draws a d10 against its own table, from an hour here for each day there to a month here, and the world clock moves by that, as the Far Dreaming's does. Wraith 20th p. 307 leaves it to the Storyteller; the table is a house reading.
+
+Reverse: set REALM_TIME.labyrinth back to rule "storyteller".
+
 ## B5180. Thai names raised to 300 (2026-11-15)
 WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Thai list grows from 24 names to 361: the kings, nobles and commoners of Sukhothai and Ayutthaya given alone before the surname act of 1913, modern given names after, and the family names chosen since. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
 
@@ -8373,6 +8425,16 @@ Reverse: restore the mande entry in data/people-world.mjs and drop mande from RA
 WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Zulu list grows from 48 names to 402: old names of the kings, royal women, councillors and captains of the Zulu kingdom and its neighbours, later names of KwaZulu-Natal, and over a hundred clan names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: restore the zulu entry in data/people-world.mjs and drop zulu from RAISED.
+
+## B5390. Whether remains are holy is rolled (2026-11-15)
+WoDX Library. Ben's pick on the leftovers desk: when an order picks remains to enshrine, the order member's Faith rating is rolled once against difficulty 8, with dice seeded by the thing and the maker so picking again gives the same answer. On a success the rites start with no judgement from the Storyteller; with none the remains are not truly holy and cannot be enshrined. House reading of V20 Dark Ages, where Holy Artifacts arise on their own.
+
+Reverse: drop the holyRoll blocker in wonders-hunter.mjs.
+
+## B5391. A place Fetter goes with its town (2026-11-15)
+WoDX Creation. Ben's pick: when the era moves on, a wraith's Fetter that names a town (in WoDX Storyteller's towns over time) is lost if that town was sacked or thrown down by an earthquake in the years crossed, or lies in ruin at the end (no people, or prosperity under a half). The Fetter goes and a Harrowing follows, as for a Fetter whose person has died (Wraith 20th pp. 49, 308).
+
+Reverse: drop the placeGone loop in advance-rules.mjs.
 
 ## B5400. Hungarian names raised to 300 (2026-11-15)
 WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Hungarian list grows from 50 names to 411: old names of kings, chieftains, lords, captains and townsfolk from Árpád, Angevin, Hunyadi and Transylvanian records with the old noble and town family names, then names and family names of modern Hungary. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.

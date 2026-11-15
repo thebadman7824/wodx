@@ -302,12 +302,24 @@ export function build(ctx) {
 
     /* ---------------- True Faith ---------------- */
 
-    function faithOf(actor) {
+    function baseFaith(actor) {
         const f = actor.system?.advantages?.faith;
         const fromSheet = n(f?.permanent ?? f?.value ?? f?.temporary);
         if (fromSheet) return fromSheet;
         if (isInquisitor(actor)) return H.STAGE_FAITH[stage(inq(actor))];
         return n(actor.getFlag(MOD, "trueFaith"));
+    }
+    /** B5170: on holy ground the faithful's Faith counts one higher (WoDX Chronicle's feature for Mortals with True Faith). */
+    function onHoly(actor) {
+        try {
+            if (!game.modules.get("wodx-chronicle")?.api?.signatures?.allRowsOf?.(actor)?.some(r => r.key === "faithful")) return false;
+            const tok = actor.getActiveTokens?.()[0]?.document;
+            return !!(tok && game.modules.get("wodx-interactables")?.api?.holyUnder?.(tok));
+        } catch (e) { return false; }
+    }
+    function faithOf(actor) {
+        const f = baseFaith(actor);
+        return f > 0 && onHoly(actor) ? Math.min(10, f + 1) : f;
     }
 
     async function trueFaith(actor) {
@@ -316,7 +328,7 @@ export function build(ctx) {
         const tgt = [...(game.user.targets ?? [])][0]?.actor ?? null;
         const tw = tgt ? (rules === "da20" ? n(tgt.system?.advantages?.willpower?.temporary) : n(tgt.system?.advantages?.willpower?.permanent)) : 0;
         const powers = H.faithPowers(rules, rating);
-        const content = `<form><p><b>${esc(actor.name)}</b>: True Faith ${rating}${isInquisitor(actor) && !n(actor.system?.advantages?.faith?.permanent) ? " (their inquisitor's stage)" : ""}; ${rules === "da20" ? "the Dark Ages rules (V20 Dark Ages pp. 392–395)" : "The Hunters Hunted II rules (pp. 83–85)"}.${tgt ? ` Target ${esc(tgt.name)}, Willpower ${tw}.` : ""}</p>
+        const content = `<form><p><b>${esc(actor.name)}</b>: True Faith ${rating}${rating > baseFaith(actor) ? " (one higher on holy ground)" : ""}${isInquisitor(actor) && !n(actor.system?.advantages?.faith?.permanent) ? " (their inquisitor's stage)" : ""}; ${rules === "da20" ? "the Dark Ages rules (V20 Dark Ages pp. 392–395)" : "The Hunters Hunted II rules (pp. 83–85)"}.${tgt ? ` Target ${esc(tgt.name)}, Willpower ${tw}.` : ""}</p>
           <ul class="wodx-quiet">${powers.map(([k, t]) => `<li>${k ? "•".repeat(k) : "Always"}: ${esc(t)}</li>`).join("")}</ul>
           <div class="form-group"><label>What</label><select name="k" data-fixed><option value="repel">Repel the creature (1 Willpower)</option><option value="resist">Resist a power (1 Willpower)</option><option value="loss">Acting against their faith (Conscience at 9)</option><option value="set">Set the rating (if the sheet has no field)</option></select></div>
           <div class="form-group"><label>Creature's Willpower / the power's successes</label><input type="number" name="cw" value="${tw || 6}" min="1" max="10" style="width:4em"/> <input type="number" name="ps" value="0" min="0" style="width:4em"/> <label><input type="checkbox" name="daim"/> Daimoinon</label></div>
@@ -327,8 +339,9 @@ export function build(ctx) {
             if (fd.k === "loss") {
                 const r = await rollPool(virtues(actor).conscience.value, H.FAITH_LOSS_DIFFICULTY);
                 const lost = !(r.successes > 0 && !r.botch);
-                if (lost) { if (n(actor.system?.advantages?.faith?.permanent)) await updateActor(actor, { "system.advantages.faith.permanent": rating - 1 }); else await ctx.setFlag(actor, "trueFaith", rating - 1); }
-                return post(actor, `${actor.name}: a test of faith`, rollBlock("Conscience", r) + `<div class="vta-res ${lost ? "bad" : "good"}">${lost ? `True Faith ${rating} → ${rating - 1}.` : "The faith holds."}</div>`, [r.roll]);
+                const base = baseFaith(actor);
+                if (lost) { if (n(actor.system?.advantages?.faith?.permanent)) await updateActor(actor, { "system.advantages.faith.permanent": base - 1 }); else await ctx.setFlag(actor, "trueFaith", base - 1); }
+                return post(actor, `${actor.name}: a test of faith`, rollBlock("Conscience", r) + `<div class="vta-res ${lost ? "bad" : "good"}">${lost ? `True Faith ${base} → ${base - 1}.` : "The faith holds."}</div>`, [r.roll]);
             }
             if (!(await spendWillpower(actor, 1))) return null;
             if (fd.k === "repel") {
