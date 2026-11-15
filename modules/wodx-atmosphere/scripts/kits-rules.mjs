@@ -7,8 +7,8 @@
  *   Music       moods (calm, tension, combat, sorrow, wonder), one Foundry playlist each, built from the files in
  *               the kit's folder or chosen from the world's own playlists (Rothenstein's score, for the Dark Ages)
  *   Ambience    one loop per kind of place (the twelve kinds WoDX NPC tags) and per weather, picked for the scene
- *   Sounds      short cues for dawn, dusk and a notice, and birdsong and cock-crow before sunrise; procedural ones ship
- *               with the module, a kit folder can replace them
+ *   Sounds      short cues for dawn, dusk and a notice, and birdsong and cock-crow before sunrise; generated ones ship
+ *               with the module as the fallback, recorded ones (tools/atmosphere/fetch-cues.mjs) fill the kit folders
  *   Map colour  a light colour grade on the map for each era (sepia gaslight, drained plague years, neon future)
  *   Handouts    journal page templates in the era's style: manuscript, notice, broadside, newspaper, telegram and more
  *
@@ -31,6 +31,38 @@ export const WEATHER_LOOPS = ["thunder", "gale", "downpour", "rain", "snow", "wi
 export const CUES = {dawn: "Dawn is close", dusk: "Sunset", notice: "Something needs the Storyteller", birds: "Birdsong before dawn", cock: "Cock-crow before dawn"};
 /** Cues that sound the same in every era: they ship once, in sounds/common, and a kit folder can still replace them. */
 export const COMMON_CUES = ["birds", "cock"];
+/**
+ * Recorded cues (B6260-B6262). A kit folder's sounds/ may hold a cue for the faith of the land the scene stands in,
+ * named <cue>-<faith>: the call to prayer in the lands of Islam, the semantron in Orthodox lands, the temple bell and
+ * drum of the Buddhist and Chinese lands, the conch in India. A plain <cue> is the kit's own for every other land.
+ * The folder wodx-kits/common/sounds/ holds what every era shares: birdsong, cock-crow and the heartbeat (heart).
+ */
+export const CUE_FAITHS = ["orthodox", "islamic", "jewish", "hindu", "theravada", "tibetan", "chinese"];
+export const COMMON_KIT = "common";
+/** The names a cue is looked up by, nearest first: the faith's own, then the plain one. */
+export function cueKeys(cue, faith) {
+  return (faith && CUE_FAITHS.includes(faith)) ? [`${cue}-${faith}`, cue] : [cue];
+}
+/**
+ * The recorded file for a cue from the kit folders' index ({kit: {cues: {key: path}}}), or null when no kit has one
+ * (the module's generated cue plays then). The faith's own cue anywhere in the chain wins over a plain one; the common
+ * folder comes last.
+ */
+export function cueFile(index, chain, cue, faith) {
+  const kits = [...(chain ?? []), COMMON_KIT];
+  for ( const key of cueKeys(cue, faith) ) for ( const k of kits ) {
+    const f = index?.[k]?.cues?.[key];
+    if ( f ) return f;
+  }
+  return null;
+}
+/** A kit folder sound's cue key from its name: "dawn", "dawn islamic" (dawn-islamic.ogg) or "heart"; else null. */
+export function cueKeyOf(name) {
+  const [cue, faith, ...rest] = String(name).toLowerCase().split(" ");
+  if ( rest.length ) return null;
+  if ( !faith ) return (CUES[cue] || cue === "heart") ? cue : null;
+  return (CUES[cue] && CUE_FAITHS.includes(faith)) ? `${cue}-${faith}` : null;
+}
 
 /**
  * Dawn dread, the mirror of the Sunset cue: the last half hour before sunrise.
@@ -287,7 +319,7 @@ export function sortFiles(kit, files, root = "wodx-kits") {
       const k = key.split(" ")[0];
       if ( PLACE_KINDS.includes(k) || WEATHER_LOOPS.includes(k) ) out.ambience[k] ??= p;
       else out.other.push(p);
-    } else if ( rel[0] === "sounds" && CUES[key] ) out.cues[key] = p;
+    } else if ( rel[0] === "sounds" && cueKeyOf(key) ) out.cues[cueKeyOf(key)] = p;
     else out.other.push(p);
   }
   for ( const m of Object.keys(out.music) ) out.music[m].sort();

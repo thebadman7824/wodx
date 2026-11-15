@@ -16,7 +16,8 @@
  *   6. light from the clock: the scene's darkness matches the sun, the moon and the clouds now
  *   7. WoDX Senses hears of the fog: the answer carries the fog tag, and sight is harder out of doors
  *   8. the era kit: the kit for the era in force, and the map grade on the board
- *   9. the cues: the kit's notice cue is there and plays
+ *   9. the cues: the kit's notice cue is there and plays; a recorded cue for the land's faith wins over the kit's, and
+ *      the generated one plays where no kit folder has a recording
  *  10. a telegram handout is made in the era's style
  *  11. building the kit's playlists is planned without changing anything
  *  12. Start a chronicle: the plan, then a run without moving the clock makes the Storyteller screen and the primer once
@@ -138,7 +139,16 @@ export async function run() {
       let played = false;
       // Playback can wait for a first click (a headless browser never gives one), so only the start of the call is checked
       try { const s = A.kit.cue("notice"); played = s !== null || get(MOD, "cues") === false; Promise.resolve(s).catch(() => null); } catch (e) { played = false; }
-      ok("9 cues", r.ok && played, {status: r.status, shipped});
+      // B6260-B6262: a recorded cue for the land's faith wins, then the kit's own, then the generated one shipped
+      let rec = true;
+      if ( typeof A.kit.cueSrc === "function" ) {
+        const idx = {"dark-ages": {cues: {dawn: "wodx-kits/dark-ages/sounds/dawn.ogg", "dawn-islamic": "wodx-kits/dark-ages/sounds/dawn-islamic.ogg"}}, common: {cues: {birds: "wodx-kits/common/sounds/birds.ogg"}}};
+        rec = A.kit.cueSrc("dawn", {kit: "renaissance", faith: "islamic", index: idx}) === "wodx-kits/dark-ages/sounds/dawn-islamic.ogg"
+          && A.kit.cueSrc("dawn", {kit: "renaissance", faith: "western", index: idx}) === "wodx-kits/dark-ages/sounds/dawn.ogg"
+          && A.kit.cueSrc("birds", {kit: "victorian", faith: null, index: idx}) === "wodx-kits/common/sounds/birds.ogg"
+          && A.kit.cueSrc("dusk", {kit: "victorian", faith: "islamic", index: {}}) === `modules/${MOD}/sounds/victorian/dusk.ogg`;
+      }
+      ok("9 cues", r.ok && played && rec, {status: r.status, shipped, rec});
     });
     await step("10 handout", async () => {
       const j = await A.handout({template: "telegram", title: "WoDX gate: To the station master", body: "Come at once.\n\nStop.", from: "L.", date: "3 May 1915"});

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6260
+Next free block: B6270
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -340,6 +340,7 @@ Next free block: B6260
 | B6210-B6219 | gatevehicles plays in a year with cars (used B6210) | tools (gates) |
 | B6220-B6229 | The night's work: one Undo for a night of the Storyteller's Hand (Ben's desk pick hd1, 15 November 2026) (used B6220-B6226) | Chronicle, Solo |
 | B6250-B6259 | Names follow each year's customs (Improvement Desk nm1) (used B6250-B6253) | Creation, NPC |
+| B6260-B6269 | Real recorded cues: Freesound CC0/CC BY sounds for dawn, dusk, notice, birdsong, cock-crow and heartbeat, by era and faith (used B6260-B6263) | Atmosphere |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10504,3 +10505,31 @@ Reverse: remove the `own` branch in nameHousehold.
 WoDX Creation, people-rules customLine, one quiet line on the generated sheet.
 
 Reverse: drop customLine from noteOf.
+
+## B6260. Recorded cues live in the kit folders, the generated ones stay as the fallback (2026-11-15)
+WoDX Atmosphere. Ben asked for every generated sound to be swapped for a real recording where possible. The recordings
+go in the Data folder's wodx-kits (each kit's sounds/, and a new common/sounds/ for what every era shares), fetched on
+the PC by tools/atmosphere/fetch-cues.mjs, since the cloud cannot reach Freesound and kit audio has stayed out of the
+public repo. The 26 generated cues and the browser-made heartbeat are kept and play wherever no recording is found.
+
+Reverse: delete the kit folders' sounds; nothing else changes.
+
+## B6261. Freesound CC0 and CC BY only, picked per era (2026-11-15)
+WoDX Atmosphere. tools/atmosphere/real-cues.json lists each slot's Freesound sounds in order; the tool takes the
+first whose page names CC0 or CC BY and refuses BY-NC, Sampling+ and unclear pages. Each file is cut from its first
+sound to the slot's length, faded and levelled; credits.json records the author, licence, page and what was changed.
+
+Reverse: edit the ids in real-cues.json and run the tool again.
+
+## B6262. Dawn and sunset by the faith of the scene's land (2026-11-15)
+WoDX Atmosphere. A cue is looked up as <cue>-<faith> first (orthodox, islamic, jewish, hindu, theravada, tibetan,
+chinese, from WoDX Chronicle's faith of the scene's land and year), then as the plain cue, through the kit's chain,
+then the common folder, then the generated sound. Building a kit's playlists also reads the common folder.
+
+Reverse: drop the faith from cueSrc in main.mjs.
+
+## B6263. A recorded heartbeat (2026-11-15)
+WoDX Atmosphere. common/sounds/heart.ogg holds one whole beat; it plays once per beat at the heartbeat's volume. The
+generated thump plays until the file is decoded and wherever there is none.
+
+Reverse: delete heart.ogg.
