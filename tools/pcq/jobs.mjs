@@ -97,10 +97,19 @@ export function validate(raw, laneIds = []) {
   return {job: j};
 }
 
-/** Queue order: priority first, then the older issue. Skips jobs waiting on an open issue (after). */
-export function order(jobs, openNumbers = new Set()) {
+/**
+ * Queue order: priority first, then the older issue. Skips jobs waiting on an open issue (after).
+ * B6490: a job gains one priority step for each hour it has waited (never past 1), so a p5 job is not passed over all
+ * day by newer p1 and p3 jobs. A job's wait counts from its issue's created_at; `now` is for tests.
+ */
+export function effectivePrio(j, now = Date.now()) {
+  const made = Date.parse(j.issue?.created_at ?? j.created_at ?? "");
+  const hours = Number.isFinite(made) ? Math.max(0, Math.floor((now - made) / 3600000)) : 0;
+  return Math.max(1, j.job.prio - hours);
+}
+export function order(jobs, openNumbers = new Set(), now = Date.now()) {
   return jobs.filter(j => !(j.job.after && openNumbers.has(j.job.after)))
-    .sort((a, b) => a.job.prio - b.job.prio || a.number - b.number);
+    .sort((a, b) => effectivePrio(a, now) - effectivePrio(b, now) || a.number - b.number);
 }
 
 /**
