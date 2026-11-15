@@ -563,9 +563,11 @@ reg("coalfurnace", coalfurnace, "victorian", "gravity 'octopus' furnaces with ja
 
 def waterheater(tm, x, y, w, h, st, v, c):
     """A water heater from above, on its wall. Victorian and Great War: a copper bath geyser, its domed top and
-    the flue rising from it, the gas tap and swivel spout. Mid-Century and Modern: a round enamelled storage tank
-    with its flue hood, the gas control and its pipes, or an electric tank with its thermostat cover; a slim
-    tankless box late on. Future Darkness: a sealed slab with a lit gauge. On: the burner's glow or the lamp."""
+    the flue rising from it, the gas tap and swivel spout. Great War: a riveted gas circulator tank on its wall bar,
+    the flue pipe going up and the burner door below. Mid-Century: a round enamelled storage tank with its flue
+    hood, the gas control and its pipes, or an electric tank with its thermostat cover, or a slim tankless box.
+    Modern: a wall-hung combi boiler with its round flue, control strip and the pipes going down, an unvented
+    cylinder with its red expansion vessel, or a tankless box. Future Darkness: a sealed slab with a lit gauge. On: the burner's glow or the lamp."""
     d = tm.d; X0, Y0, X1, Y1 = box_px(x, y, w, h, 1); W, H = X1 - X0, Y1 - Y0; p = c.per; m = mk(c, 5); L = c.liv
     cx, cy, r = X0 + W / 2, Y0 + H / 2 - 1, min(W, H) / 2 - 2; lit = c.on and not c.broken
     if p == "V":
@@ -580,7 +582,35 @@ def waterheater(tm, x, y, w, h, st, v, c):
         d.ellipse([X0 + 1, Y1 - 6, X0 + 7, Y1], fill=BRASS[3], outline=OUT)
         if lit: d.arc([cx - r + 5, cy - r + 5, cx + r - 5, cy + r - 5], 20, 160, fill=(255, 170, 60), width=2)
         if c.w >= 4: d.ellipse([cx - r + 7, cy - r + 7, cx - r + 12, cy - r + 12], fill=BRASS[4])
-    elif p in "GMN" and m != 4:
+    elif p == "G":                                                                                          # a riveted gas circulator tank
+        ox = (-5, 5, 0, -5, 5)[m]; lv = int(v.get("livery", 0)) % 6; r = r - (0, 3, 1, 4, 2)[m]
+        if m % 2 == 0: d.rectangle([X0 + 2, Y0, X1 - 2, Y0 + 4], fill=IRON[2], outline=OUT)                 # its wall bracket bar
+        else:
+            for q in (X0 + 3, X1 - 7): d.rectangle([q, Y0, q + 4, cy], fill=IRON[2], outline=OUT)            # or two wall straps
+        if lv % 3 == 1: d.rectangle([cx - r - 3, cy - 4, cx + r + 3, cy + 4], fill=IRON[1], outline=OUT)      # a band round it
+        d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=L[2], outline=OUT)
+        for k in range(12):
+            a = k * math.pi / 6; d.point((cx + (r - 2) * math.cos(a), cy + (r - 2) * math.sin(a)), fill=L[4])      # its rivets
+        d.line([cx - r + 1, cy, cx + r - 1, cy], fill=L[0])                                                  # the seam
+        d.rectangle([cx + ox - 3, cy - r - 1, cx + ox + 3, cy - r + 7], fill=IRON[1], outline=OUT)            # the flue pipe going up
+        d.rectangle([cx - 6, Y1 - 5, cx + 6, Y1], fill=IRON[2], outline=OUT)                                 # the burner's door
+        if lit: d.rectangle([cx - 4, Y1 - 3, cx + 4, Y1 - 2], fill=(255, 150, 50))
+        if m >= 3 or lv % 3 == 2: d.line([X0 + 1, cy + 3, cx - r, cy + 3], fill=BRASS[2], width=2)          # the gas cock's pipe
+        if lv % 2: dial(d, cx + r - 4, cy + 4, 3)                                                               # a thermometer
+        if m == 2: d.line([cx + r, cy - 2, X1 - 1, Y1 - 2], fill=COPPER[2], width=3)                           # the hot pipe off to the bath
+    elif p == "N" and m != 4:                                                                               # a wall-hung combi boiler or an unvented cylinder
+        if m == 3:
+            d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=WHITE[2], outline=OUT); d.ellipse([cx - r + 3, cy - r + 3, cx + r - 3, cy + r - 3], outline=WHITE[1])
+            d.ellipse([X0, Y1 - 10, X0 + 9, Y1 - 1], fill=(200, 40, 40), outline=OUT)                          # the expansion vessel
+            d.rectangle([cx - 3, cy - 2, cx + 3, cy + 2], fill=L[2], outline=OUT); lamp(d, cx, cy + 6, (240, 80, 50), lit, 1)
+        else:
+            bx = (2, 1, 4)[m]
+            case(d, X0 + bx, Y0 + 2, X1 - bx, Y1 - 5, L, r=2)                                                  # the boiler's case
+            d.ellipse([cx - 4, Y0 + 3, cx + 4, Y0 + 11], fill=WHITE[1], outline=OUT); d.ellipse([cx - 2, Y0 + 5, cx + 2, Y0 + 9], fill=(40, 40, 44))   # the round flue
+            d.rectangle([X0 + bx + 3, Y1 - 10, X1 - bx - 3, Y1 - 6], fill=(40, 42, 46), outline=OUT)          # its control strip
+            d.rectangle([X0 + bx + 5, Y1 - 9, X0 + bx + 11, Y1 - 7], fill=(110, 230, 160) if lit else (40, 70, 60))
+            for k in (-8, -4, 0, 4, 8): d.line([cx + k, Y1 - 5, cx + k, Y1], fill=COPPER[2], width=2)            # its pipes down to the floor
+    elif p in "MN" and m != 4:
         d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=L[2], outline=OUT); d.ellipse([cx - r + 2, cy - r + 2, cx + r - 3, cy + r - 3], outline=L[3])
         if m % 2 == 0:                                                                                      # gas: the flue hood
             d.ellipse([cx - 6, cy - 6, cx + 6, cy + 6], fill=STEEL[2], outline=OUT); d.ellipse([cx - 3, cy - 3, cx + 3, cy + 3], fill=(30, 30, 34))
@@ -588,7 +618,7 @@ def waterheater(tm, x, y, w, h, st, v, c):
         else:                                                                                               # electric: the thermostat box
             d.rectangle([cx - 5, cy - 3, cx + 5, cy + 3], fill=L[0], outline=OUT); lamp(d, cx, cy + 7, (240, 80, 50), lit, 2)
         for k, col in ((-6, (60, 90, 200)), (6, (200, 50, 40))): d.line([cx + k, Y0 - 1, cx + k, cy - r + 3], fill=COPPER[2], width=3); d.point((cx + k, Y0 + 1), fill=col)
-    elif p in "GMN":                                                                                        # tankless box
+    elif p in "MN":                                                                                         # tankless box
         case(d, X0 + 6, Y0 + 3, X1 - 6, Y1 - 3, L, r=2); d.rectangle([cx - 5, cy + 2, cx + 5, cy + 7], fill=(30, 40, 40), outline=OUT)
         if lit: d.rectangle([cx - 3, cy + 4, cx + 2, cy + 5], fill=(110, 230, 160))
         for k in (-6, 0, 6): d.line([cx + k, Y1 - 3, cx + k, Y1], fill=COPPER[2], width=2)
@@ -1428,14 +1458,31 @@ reg("printer", printer, "mid-century", "desk printers of about 16 to 24 by 12 to
 def switchboard(tm, x, y, w, h, st, v, c):
     """A telephone switchboard from above, its back to the wall: the tall cabinet of jacks behind, the keyshelf in
     front with its rows of cord plugs and keys, and the cords. Victorian: a varnished wooden magneto board with
-    drop shutters and brass. Great War: a wooden lamp board in sections, one for each operator. Mid-Century: a grey
-    steel or wooden cord board with its lamps. In use: the cords up in the jacks, lamps lit; idle: the plugs all
+    drop shutters and brass. Great War: a wooden lamp board in sections, one for each operator. Mid-Century: a long
+    one-piece console, a low lamp cabinet behind a sloped desk with rows of lever keys, a dial and a headset at
+    each position. In use: the cords up in the jacks, lamps lit; idle: the plugs all
     sat in their rows."""
     d = tm.d; X0, Y0, X1, Y1 = box_px(x, y, w, h, 0); W, H = X1 - X0, Y1 - Y0; p = c.per; m = mk(c, 5); L = c.liv
     lv = int(v.get("livery", 0)) % 6; on = c.on and not c.broken
     Cb = (CABWOOD[lv] if m in (0, 1, 3) else L) if p == "V" else CABWOOD[lv] if (p == "G" and m % 2) else (L if p == "G" else (L if m % 2 == 0 else CABWOOD[lv]))
     ns = (2, 3, 2, 3, 4)[m] if p != "V" else 1 + m % 2
     sw = (W - 2) / ns
+    if p == "M":                                                                                           # one long steel console, a low lamp cabinet
+        top = Y0 + H * (.22 + .04 * (m % 3))
+        case(d, X0 + 1, Y0 + 1, X1 - 1, top, Cb)
+        d.rectangle([X0 + 3, top - 4, X1 - 3, top], fill=(36, 36, 40))                                        # the lamp strip
+        for k in range(int(X0) + 5, int(X1) - 4, 3): d.point((k, top - 2), fill=(250, 210, 90) if on and k % 4 == 0 else (90, 84, 70))
+        case(d, X0 + 1, top + 1, X1 - 1, Y1 - 1, ramp((56, 58, 62), 10) if m % 2 else ramp((150, 140, 120), 12), r=2)   # the sloped desk, one piece
+        for i in range(ns):
+            sx0, sx1 = X0 + 1 + i * sw, X0 + i * sw + sw
+            for k in range(int(sx0) + 4, int(sx1) - 10, 4):
+                d.rectangle([k, top + 4, k + 1, top + 9], fill=(30, 30, 30))                                 # lever keys
+                if on and (k // 4 + i) % 2 == 0: d.line([k, top + 4, k + 1, top + 1], fill=[(200, 60, 40), (60, 90, 170)][k % 2])
+            dial(d, sx1 - 6, Y1 - 7, 4)                                                                       # each position's dial
+            d.ellipse([sx0 + 3, Y1 - 9, sx0 + 10, Y1 - 3], fill=(30, 30, 30), outline=OUT)                   # its headset laid down
+            if i: d.line([sx0, top + 2, sx0, Y1 - 2], fill=OUT)
+        if c.broken: d.line([X0 + 20, top + 6, X0 + 24, Y1 + 2], fill=(200, 60, 40)); d.line([X0 + 30, top + 6, X0 + 36, Y1 + 1], fill=(40, 40, 40))
+        return
     for i in range(ns):
         sx0, sx1 = X0 + 1 + i * sw, X0 + i * sw + sw
         case(d, sx0, Y0 + 1, sx1, Y0 + H * .42, Cb)                                                         # the jack cabinet's top
@@ -1666,8 +1713,9 @@ reg("trafficlight", trafficlight, "mid-century", "signal heads about 1 ft square
 def firealarm(tm, x, y, w, h, st, v, c):
     """A fire alarm on its wall, from above: its backing plate, the round gong or sounder standing out and the call
     point or pull box beside it. Victorian: a brass, nickel or japanned gong on a varnished board with a pull handle
-    on its chain. Great War: a red gong and a cast pull box with its little glass. Mid-Century: a red or chrome bell
-    and a round break-glass box. Modern: a square red call point and a red or white sounder with its beacon.
+    on its chain. Great War: a red gong and a cast pull box with its little glass. Mid-Century: a big domed bell,
+    red, chrome or brass, and a round break-glass box fixed straight on the wall with the conduit between. Modern: a
+    square red call point and a square sounder with its beacon, no board.
     Future Darkness: a dark sounder plate with a lit ring. Ringing: the lamp lit and the glass broken."""
     d = tm.d; X0, Y0, X1, Y1 = box_px(x, y, w, h, 0); W, H = X1 - X0, Y1 - Y0; p = c.per; m = mk(c, 5)
     lv = int(v.get("livery", 0)) % 6; ring = c.on
@@ -1677,6 +1725,26 @@ def firealarm(tm, x, y, w, h, st, v, c):
     gong = {"V": [BRASS, CHROME, IRON, COPPER, BRZ][m], "G": [RED, BRASS, CHROME, BLK, BRZ][m], "M": [RED, CHROME, BRASS, BLK, CRM][m],
             "N": [RED, WHITE, RED, CHROME, WHITE][m], "F": [ramp((40, 40, 46), 10), RED, WHITE, BLK, ramp((90, 30, 40), 12)][m]}[p]
     left = m % 2 == 0
+    if p in "MN":                                                                                          # bell and call point fixed straight on the wall
+        d.line([X0 + 1, Y0 + 1, X1 - 1, Y0 + 1], fill=GRY[1], width=2)                                         # the conduit along the wall
+        lv3 = lv % 3; bw = (12, 9, 11, 10, 8)[m]
+        if m in (1, 3): bx0, gx0 = (gx := X0 + W / 2 - bw - 1) + bw + 2, gx                                  # bell and box side by side in the middle
+        else: bx0, gx0 = (X1 - 8, X0) if left else (X0, X1 - bw)
+        if lv3 == 1: d.line([bx0 + 4, Y0, bx0 + 4, Y1], fill=GRY[2], width=2)                                    # a conduit drop to the box
+        if lv3 == 2: d.rectangle([X0 + W / 2 - 3, Y0 + 2, X0 + W / 2 + 3, Y1 - 2], fill=(230, 232, 228), outline=OUT)   # a little FIRE sign
+        if p == "M":
+            d.ellipse([gx0, Y0, gx0 + bw, Y1], fill=gong[2], outline=OUT); d.ellipse([gx0 + bw / 2 - 2, Y0 + 2, gx0 + bw / 2 + 2, Y1 - 3], fill=gong[1]); d.point((gx0 + 3, Y0 + 2), fill=gong[4])   # the big domed bell
+            if m == 4: d.rectangle([gx0 + bw, Y0 + 2, gx0 + bw + 2, Y1 - 3], fill=IRON[2])                         # its striker box
+            d.ellipse([bx0, Y0 + 1, bx0 + 8, Y1 - 1], fill=RED[2], outline=OUT); d.ellipse([bx0 + 2, Y0 + 2, bx0 + 6, Y1 - 3], fill=(220, 230, 236) if not ring else (60, 40, 40))   # the round break-glass
+        else:
+            if m == 2: d.ellipse([gx0, Y0, gx0 + bw, Y1 - 1], fill=gong[2], outline=OUT)                        # a round sounder
+            else: d.rectangle([gx0 + 1, Y0, gx0 + bw, Y1 - 1], fill=gong[2], outline=OUT)                         # the square sounder
+            bc = gx0 + (bw / 2 if m != 4 else bw - 3)
+            d.rectangle([bc - 2, Y0 + 1, bc + 2, Y1 - 3], fill=(250, 80, 60) if ring else (150, 50, 46))        # its beacon
+            d.rectangle([bx0, Y0, bx0 + 8, Y1 - 1], fill=RED[2], outline=OUT); d.rectangle([bx0 + 2, Y0 + 1, bx0 + 6, Y1 - 3], fill=(230, 232, 236) if not ring else (60, 40, 40))   # the square call point
+            if m == 3: d.rectangle([bx0 - 1, Y0, bx0 + 9, Y1], outline=(200, 220, 230))                            # its clear hinged guard
+        if ring: return [(X0 + W / 2, Y1 + 4, 14, (1.5, .7, .6))]
+        return
     d.rectangle([X0, Y0, X1, Y1 - 1], fill=plate[2], outline=OUT); d.line([X0 + 1, Y0 + 1, X1 - 1, Y0 + 1], fill=plate[4])   # the backing board
     gx0 = X0 + 1 if left else X1 - 10; bx0 = X1 - 8 if left else X0 + 1
     d.line([X0 + 9, Y1 - 3, X1 - 9, Y1 - 3], fill=(GRY if p != "V" else BRASS)[1])                               # the conduit or bell wire
@@ -1702,7 +1770,7 @@ def extinguisher(tm, x, y, w, h, st, v, c):
     """A fire extinguisher from above on its wall bracket: the round body, the valve and its handle on top, the
     hose curled round. Great War: a copper or brass soda-acid one with its domed cap. Mid-Century: a red one, or the
     chrome and brass kind. Modern: red with the band of its kind (cream foam, black gas, blue powder, red water,
-    green). Future Darkness: a dark grey cylinder with a lit band. Broken: knocked down, lying on its side."""
+    green), under its fire point sign, with a squeeze lever and the hose clipped down to its nozzle. Future Darkness: a dark grey cylinder with a lit band. Broken: knocked down, lying on its side."""
     d = tm.d; X0, Y0, X1, Y1 = box_px(x, y, w, h, 0); W, H = X1 - X0, Y1 - Y0; p = c.per; m = mk(c, 5)
     lv = int(v.get("livery", 0)) % 6; cx, cy = X0 + W / 2, Y0 + H / 2
     body = {"G": [COPPER, BRASS, RED, CHROME, ramp((40, 40, 44), 10), ramp((150, 100, 50), 16)], "M": [RED, CHROME, BRASS, ramp((210, 200, 170), 10), ramp((40, 40, 44), 10), ramp((40, 80, 170), 14)],
@@ -1715,7 +1783,13 @@ def extinguisher(tm, x, y, w, h, st, v, c):
     d.rectangle([cx - 4, Y0, cx + 4, Y0 + 2], fill=STEEL[1], outline=OUT)                                     # the bracket
     if p == "F" and m % 2: case(d, cx - r, cy - r, cx + r, cy + r, body, r=2)
     else: d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=body[2], outline=OUT)
-    if p == "N": d.ellipse([cx - r + 1, cy - r + 1, cx + r - 1, cy + r - 1], outline=band, width=2)
+    if p == "N":
+        d.ellipse([cx - r + 1, cy - r + 1, cx + r - 1, cy + r - 1], outline=band, width=2)
+        d.rectangle([X0, Y0, X1, Y0 + 3], fill=(230, 232, 228), outline=OUT); d.rectangle([X0 + 2, Y0 + 1, X0 + 5, Y0 + 2], fill=(200, 40, 40))   # its fire point sign
+        d.rectangle([cx - 2, cy - 3, cx + 2, cy + 3], fill=(30, 30, 30), outline=OUT)                        # the valve head
+        d.line([cx - 1, cy, cx + r, cy - 2], fill=(20, 20, 20), width=2)                                        # the squeeze lever
+        d.line([cx, cy + 3, cx - r + 1, Y1 - 1], fill=(20, 20, 20), width=2); d.rectangle([cx - r - 1, Y1 - 3, cx - r + 3, Y1], fill=(30, 30, 30))   # the hose and nozzle
+        return
     if p == "F": d.ellipse([cx - r + 1, cy - r + 1, cx + r - 1, cy + r - 1], outline=GLOW[1] if c.on else GLOW[0], width=1)
     if p == "G": d.ellipse([cx - 3, cy - 3, cx + 3, cy + 3], fill=body[4], outline=OUT)
     else:
