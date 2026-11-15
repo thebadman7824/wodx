@@ -66,7 +66,7 @@ for oid, dx, dy in (("bowl", .1, .08), ("bowl", 1.05, .32), ("loaf", .5, .12), (
 put(rec, "bench", 6.95, 5.5, w=6, d=1.25); put(rec, "bench", 6.95, 6.52, w=6, d=1.25)
 put(rec, "stool", 8.35, 6.0)
 wall_put(rec, "bed", Wst, 8.65, MAIN, w=4.5, d=6.5, var="blue")
-wall_put(rec, "chest", S_, 6.45, MAIN, w=4, d=2, var="red", name="Red painted chest")
+wall_put(rec, "chest", S_, 6.45, MAIN, w=4, d=2, name="Iron-bound chest")
 put(rec, "cask", 9.65, 9.25, face="n", var="water", name="Water cask")
 put(rec, "cask", 9.15, 9.35, face="n", w=1.75, d=1.75, var="kraut", name="Sauerkraut crock")
 put(rec, "bucket", 8.65, 9.45, name="Water bucket")
@@ -77,7 +77,7 @@ put(rec, "broom", 9.8, 3.8, face="e")
 
 # ---- chamber ----
 wall_put(rec, "bed", N, 15.0, CHAMBER, w=5, d=6.75, var="red", name="Great bed")
-wall_put(rec, "chest", E_, 6.2, CHAMBER, w=4.25, d=2, var="blue", name="Blue painted chest")
+wall_put(rec, "chest", E_, 6.2, CHAMBER, w=4.25, d=2, name="Linen chest")
 wall_put(rec, "bed-narrow", MID, 6.15, CHAMBER, w=3.25, d=6.25, var="green", name="Cot")
 st_ = wall_put(rec, "table-small", N, 12.05, CHAMBER, w=3.25, d=2.25, name="Small table")
 put(rec, "candle", st_.x + .26, st_.y + .2, on=st_)

@@ -17,6 +17,8 @@ import wilds as wl
 import dress as dr
 from px import R, T, OUT
 from library.core import add, YEAR_END
+from library import house as hs
+AGE6 = hs.looks("medieval", "early modern", "1800s", "1900s", "modern", "Future Darkness")
 
 E = YEAR_END
 HOME = ("home", "hall", "inn")
@@ -30,36 +32,45 @@ def rpx(w, h, k=.5): return int(min(w, h) * T * k)
 
 
 # ---------------------------------------------------------------- furniture
-add("table", "table", "furniture", ((5, 7.5), (2.5, 3.25)), lambda tm, x, y, w, h, st, v: tm.table(x, y, w, h, things=False),
+add("table", "table", "furniture", ((5, 7.5), (2.5, 3.25)), hs.table, looks=AGE6,
     tags=HOME + ("kitchen", "shop", "work"), ref="boarded and trestle tables of the 13th to 16th c., 5 1/2 to 7 ft by 2 1/2 to 3 ft")
 add("table-laid", "table laid for a meal", "furniture", ((6.5, 8), (5, 6)), lambda tm, x, y, w, h, st, v: dr.t_table(tm, x, y, w, h),
     front=True, tags=HOME + ("kitchen",), ref="a 6 ft table with stools drawn up on three sides")
-add("table-long", "long table", "furniture", ((8, 12), (2.5, 3.25)), lambda tm, x, y, w, h, st, v: tm.table(x, y, w, h, things=False),
+add("table-long", "long table", "furniture", ((8, 12), (2.5, 3.25)), hs.table, looks=AGE6,
     tags=("hall", "inn", "refectory"), ref="hall boards on trestles, 8 to 12 ft")
-add("table-small", "small table", "furniture", ((2.5, 3.75), (2, 2.75)), lambda tm, x, y, w, h, st, v: tm.table(x, y, w, h, things=False),
+add("table-small", "small table", "furniture", ((2.5, 3.75), (2, 2.75)), hs.table, looks=AGE6,
     tags=HOME + ("chamber",), ref="side tables and stands, 2 1/2 to 3 1/2 ft")
 add("bench", "bench", "furniture", ((4, 8), (1, 1.5)), lambda tm, x, y, w, h, st, v: pr.bench(tm, x, y, w, h),
     tags=HOME + ("kitchen", "street", "yard", "work"), ref="plank benches, a seat 12 to 16 in deep")
 add("stool", "stool", "furniture", (1.5, 1.5), lambda tm, x, y, w, h, st, v: pr.stool(tm, x + w / 2, y + h / 2, rpx(w, h, .4)),
     tags=HOME + ("kitchen", "work", "craft"), ref="three-legged stools, a seat about 12 in across, the legs splayed past it")
-add("bed", "bed", "furniture", ((4, 5), (6.25, 7)), lambda tm, x, y, w, h, st, v: pr.bed(tm, x, y, w, h, head="n", cloth=v.get("cloth", "red")),
+add("bed", "bed", "furniture", ((4, 5), (6.25, 7)), hs.bed, looks=AGE6,
     front=True, clear=1.5, mount="wall", tags=("home", "chamber", "inn"),
     variants={"red": {"cloth": "red"}, "blue": {"cloth": "blue"}, "green": {"cloth": "green"}, "linen": {"cloth": "linen"}},
     ref="bedsteads for two in inventories and surviving box beds, 4 to 5 ft wide, 6 to 6 1/2 ft long inside")
-add("bed-narrow", "narrow bed", "furniture", ((3, 3.75), (6, 6.75)), lambda tm, x, y, w, h, st, v: pr.bed(tm, x, y, w, h, head="n", cloth=v.get("cloth", "green")),
+add("bed-narrow", "narrow bed", "furniture", ((3, 3.75), (6, 6.75)), hs.bed, looks=AGE6,
     front=True, clear=1.5, mount="wall", tags=("home", "chamber", "inn", "barracks"),
     variants={"green": {"cloth": "green"}, "red": {"cloth": "red"}, "blue": {"cloth": "blue"}}, ref="single bedsteads and cots, about 3 by 6 ft")
 add("pallet", "straw pallet", "furniture", ((2.75, 3.5), (5.75, 6.5)), lambda tm, x, y, w, h, st, v: dr.t_pallet(tm, x, y, w, h),
     front=True, mount="wall", tags=("home", "stable", "camp", "barracks"), ref="a ticking bag stuffed with straw, laid on the floor")
 add("chest", "chest", "container", ((3.5, 5), (1.5, 2.25)),
-    lambda tm, x, y, w, h, st, v: pr.painted_chest(tm, x, y, w, h, paint=v.get("paint", "dwood"), state=st if st != "one" else "closed"),
+    hs.chest, looks=AGE6,
     front=True, clear=1.5, back=1.5, mount="wall", states=("closed", "open"), openable="chest", tags=("home", "chamber", "store", "shop"),
-    variants={"plain": {"paint": "dwood"}, "red": {"paint": "red"}, "blue": {"paint": "blue"}, "green": {"paint": "green"}},
+    variants={"plain": {}, "red": {"paint": "red"}, "blue": {"paint": "blue"}, "green": {"paint": "green"}},
     ref="boarded and painted chests of the 14th to 19th c., 3 1/2 to 5 ft long, 1 1/2 to 2 ft deep; the lid needs 1 1/2 ft behind to open")
 add("dresser", "dresser with plates", "furniture", ((4.5, 6.5), (1.5, 2.25)), lambda tm, x, y, w, h, st, v: dr.t_dresser(tm, x, y, w, h),
     front=True, clear=2, mount="wall", eras=(1550, E), tags=("home", "kitchen", "inn"), ref="open-shelved dressers from the later 16th c., 5 to 6 ft long, 18 to 24 in deep")
-add("cupboard", "cupboard", "furniture", ((3.5, 5.5), (1.5, 2.25)), lambda tm, x, y, w, h, st, v: dr.f_cupboard(tm, P(x), P(y), P(x + w), P(y + h), 1.0, True),
-    front=True, clear=2, mount="wall", tags=("home", "kitchen", "chamber", "shop", "sacristy"), ref="aumbries and press cupboards, 3 1/2 to 5 ft wide")
+add("cupboard", "cupboard", "furniture", ((3.5, 5.5), (1.5, 2.25)), hs.cupboard, looks=AGE6, states=("closed", "open"), openable="chest",
+    front=True, clear=2, mount="wall", tags=("home", "kitchen", "chamber", "shop", "sacristy"), ref="aumbries and press cupboards, 3 1/2 to 5 ft wide; wardrobes 20 to 24 in deep; the doors need 2 ft before them")
+add("chair", "chair", "furniture", ((1.5, 2.25), (1.5, 2.25)), hs.chair, looks=hs.looks("early modern", "1800s", "1900s", "modern", "Future Darkness", start=1),
+    front=True, clear=1.5, eras=(1450, E), tags=HOME + ("kitchen", "chamber", "shop", "office"),
+    ref="joined chairs from the 15th c., Windsor and bentwood chairs, a seat 16 to 20 in square, the back 18 to 24 in wide")
+add("armchair", "armchair", "furniture", ((2.5, 3.25), (2.5, 3.25)), hs.armchair, looks=hs.looks("1800s", "1900s", "modern", "Future Darkness", start=2),
+    front=True, clear=2, eras=(1781, E), tags=("home", "parlour", "chamber", "inn", "office"),
+    variants={"plain": {}, "red": {"cloth": "red"}, "green": {"cloth": "green"}, "blue": {"cloth": "blue"}}, ref="upholstered easy chairs from the 18th c., 2 1/2 to 3 ft each way")
+add("sofa", "sofa", "furniture", ((5, 7.5), (2.75, 3.25)), hs.armchair, looks=hs.looks("1800s", "1900s", "modern", "Future Darkness", start=2),
+    front=True, clear=2, eras=(1781, E), tags=("home", "parlour", "inn", "office"),
+    variants={"plain": {}, "red": {"cloth": "red"}, "green": {"cloth": "green"}, "blue": {"cloth": "blue"}}, ref="sofas and settees from the later 18th c., 5 to 7 ft by about 3 ft")
 add("shelf", "wall shelf", "furniture", ((3, 8), (1, 1.5)),
     lambda tm, x, y, w, h, st, v: pr.shelf(tm, x, y, w, h, v.get("goods") or dr.shelfgoods(tm.rng.random())[:max(2, int(w * 3))]),
     front=True, clear=1.5, mount="wall", tags=("home", "kitchen", "store", "shop", "craft"),

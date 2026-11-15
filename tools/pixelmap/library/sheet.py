@@ -88,5 +88,12 @@ def main(outdir, groups=None):
     return out
 
 
+def batch(outdir, name, ids, width=2400):
+    """One sheet for a chosen set of objects (a review batch), in the order given."""
+    os.makedirs(outdir, exist_ok=True); return group_sheet(name, [CATALOGUE[i] for i in ids], outdir, width)
+
+
 if __name__ == "__main__":
-    for p in main(sys.argv[1], sys.argv[2:] or None): print(p)
+    if len(sys.argv) > 3 and sys.argv[2] == "--ids": print(batch(sys.argv[1], sys.argv[3], sys.argv[4].split(",")))
+    else:
+        for p in main(sys.argv[1], sys.argv[2:] or None): print(p)

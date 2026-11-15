@@ -78,6 +78,9 @@ class Half:
         x0, y0, x1, y1 = s.c(xy)
         if x1 > x0 and y1 > y0: s.d.arc([x0, y0, x1, y1], a0, a1, **s.w(kw))
     def pieslice(s, xy, a0, a1, **kw): s.d.pieslice(s.c(xy), a0, a1, **s.w(kw))
+    def rounded_rectangle(s, xy, r=0, **kw):
+        x0, y0, x1, y1 = s.c(xy); x0, x1 = min(x0, x1), max(x0, x1); y0, y1 = min(y0, y1), max(y0, y1)
+        r = max(0, min(round(r / Q), (x1 - x0) // 2, (y1 - y0) // 2)); s.d.rounded_rectangle([x0, y0, x1, y1], r, **s.w(kw))
 
 
 class Map:

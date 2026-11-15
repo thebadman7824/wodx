@@ -388,13 +388,13 @@
  ],
  "features": [
   {
-   "id": "red-painted-chest",
-   "label": "Red painted chest",
+   "id": "iron-bound-chest",
+   "label": "Iron-bound chest",
    "rect": [
-    6.053,
-    9.074,
-    0.766,
-    0.67
+    6.043,
+    9.085,
+    0.787,
+    0.521
    ],
    "flags": {
     "container": true,
@@ -404,8 +404,8 @@
     "lock": "cheap"
    },
    "art": {
-    "closed": "art/red-painted-chest-closed.png",
-    "open": "art/red-painted-chest-open.png"
+    "closed": "art/iron-bound-chest-closed.png",
+    "open": "art/iron-bound-chest-open.png"
    }
   },
   {
@@ -451,13 +451,13 @@
    }
   },
   {
-   "id": "blue-painted-chest",
-   "label": "Blue painted chest",
+   "id": "linen-chest",
+   "label": "Linen chest",
    "rect": [
-    15.074,
-    5.809,
-    0.67,
-    0.819
+    15.085,
+    5.798,
+    0.521,
+    0.84
    ],
    "flags": {
     "container": true,
@@ -467,8 +467,8 @@
     "lock": "cheap"
    },
    "art": {
-    "closed": "art/blue-painted-chest-closed.png",
-    "open": "art/blue-painted-chest-open.png"
+    "closed": "art/linen-chest-closed.png",
+    "open": "art/linen-chest-open.png"
    }
   },
   {
@@ -865,7 +865,7 @@
    "y": 8.65
   },
   {
-   "name": "Red painted chest",
+   "name": "Iron-bound chest",
    "x": 6.45,
    "y": 9.31
   },
@@ -915,7 +915,7 @@
    "y": 3.87
   },
   {
-   "name": "Blue painted chest",
+   "name": "Linen chest",
    "x": 15.31,
    "y": 6.2
   },
