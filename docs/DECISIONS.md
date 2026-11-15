@@ -239,6 +239,7 @@ Next free block: B5480
 | B4910-B4919 | Rothenstein Rebuilt: book one fronts, roles and clue carriers (spine part two) (used B4910-B4917) | Chronicle |
 | B4920-B4949 | Power limits after Princes of Darkness: one scene count, use limits, Drained, after-costs, NPC power choice (used B4920-B4929) | Actions, NPC |
 | B4950-B4959 | Tuareg names (used B4950-B4952) | Creation, Chronicle |
+| B4970-B4979 | Mount and vehicle sprites with riders, by era, shape and colour (used B4970-B4976) | Paperdoll |
 | B4980-B4999 | The Automation Desk: player actions that follow the rules by themselves, every line (used B4980-B4999) | Actions, Chronicle |
 | B5000-B5009 | Moro names (used B5000-B5002) | Creation, Chronicle |
 | B5010-B5029 | The Storyteller's Hand, part three: fire, noticing, and the rest of the desk acts by itself (Ben's desk picks, 14 November 2026) (used B5010-B5024) | Interactables, Actions, Senses, Library, Chronicle, Storyteller, Otherworlds, Creation |
@@ -7890,6 +7891,41 @@ Reverse: edit the tuareg entry in data/people-world.mjs.
 WoDX Creation. A Tuareg is "ag" (son of) or "welet" (daughter of) the father's name, then and now; no family names.
 
 Reverse: give the tuareg entry a fam list.
+
+## B4970. Every mount and vehicle has drawn looks (2026-11-14)
+WoDX Paperdoll. Each of the 22 kinds of mount has looks drawn by the sprite rig (tools/sprites/mounts.py and its mount_*.py painters): the same five-tone ramps, dark outline, top light and scale as the people and the beasts, own art. A look is a sheet of its frames across by four facings down. It is painted in three key ramps (paint or coat, trim or mane, cloth or stripe) that the game replaces with one of the look's colour schemes on each computer, so one sheet serves every colour. The list (sprites/mounts/mounts.json) names every look's year, shape, schemes and seats. Other games with many vehicle shapes and colours were looked at for the idea only (a body, its era and its paint as separate choices); no outside art is used.
+
+Reverse: turn off "Mounts and vehicles are drawn as sprites", or remove startMounts() from main.mjs.
+
+## B4971. The look follows the year (2026-11-14)
+WoDX Paperdoll. A mount shows the latest era of its kind that is not after its year: the year a vehicle's sheet says it was built, else the chronicle's year, so a cart or a car on an old map changes as the chronicle moves on. Within the era the shape and the colours are chosen by chance, the same every time for the same thing. A vehicle sheet's colour is matched to the nearest scheme. The Storyteller's pick on the palette button (a shape, colours) wins over both.
+
+Reverse: pick a shape on the mount, which holds it whatever the year.
+
+## B4972. Riders are drawn in the seats (2026-11-14)
+WoDX Paperdoll. Whoever is at the reins or aboard (WoDX Interactables keeps them on the mount) is drawn in a seat of the look with their own figure, turned as the mount is turned: whole and with folded legs in a saddle, from the waist up on a bench, head and shoulders behind a window. The first seat is the driver's. Riders beyond the seats drawn, and those a closed body hides from that side, are not drawn while aboard. Only the picture moves: each token stays where WoDX Interactables put it.
+
+Reverse: remove the riders loop in mounts.mjs tick().
+
+## B4973. Sizes (2026-11-14)
+WoDX Paperdoll. Mounts are drawn to the people's scale (37 pixels to the metre; a person's frame of 112 rows stands two squares tall). Nothing is drawn wider than eight squares, so airships, airliners and jets are smaller than life. The picture stands on the tile's or token's bottom edge and may reach beyond its box; the box itself, and so what a click selects and what blocks the way, is unchanged.
+
+Reverse: redraw with other frame sizes in tools/sprites and run mounts.py.
+
+## B4974. Nothing is saved but the picks (2026-11-14)
+WoDX Paperdoll. The look is worked out and drawn on each computer; the tile or token keeps its own picture underneath and gets it back when the setting goes off or "Keep its own picture" is ticked. Only the Storyteller's picks are saved (flags.wodx-paperdoll.mount).
+
+Reverse: nothing to undo on the documents.
+
+## B4975. A beast with its own sprite keeps it (2026-11-14)
+WoDX Paperdoll. A creature that can be ridden and already wears a sprite of its own (the bestiary's, a character's) keeps that figure; its riders sit where the kind's first look seats them. A ridden creature with only a flat picture shows the kind's look.
+
+Reverse: drop the own branch in mounts.mjs tick().
+
+## B4976. The Future Darkness looks (2026-11-14)
+WoDX Paperdoll. Nine looks from 2023, the first year past the main timeline, so they show only on the Future Darkness branch: two ducted-fan flying cars, a tilt-rotor transport and an autogyro (with the helicopters), a hover bike, a combat hovercraft, an armoured cab, a tracked capsule and an airship liner. They join the row before them instead of replacing it, so the ordinary machines of the day are still seen beside them, and give way to the 2040 row. They follow the vehicles the near-future game books we hold describe (the research note lists the books and pages), drawn fresh under plain names; no figures are taken over, as the looks change nothing in the rules.
+
+Reverse: remove the looks marked adds in tools/sprites/mount_*.py and run mounts.py.
 
 ## B4980. The Beast's checks roll by themselves (2026-11-14)
 WoDX Actions. When a wound, hunger, the sight of blood, fire or the sun provokes the Beast, the frenzy or Rötschreck check is rolled by itself with the same difficulty the dialog would use (dawn dread, fire steps, Merits and Flaws). It repeats each turn while the result holds, up to eight turns. Willpower is spent to hold only when the character is marked to in the check's dialog. Characters on Golconda, in torpor or already in frenzy are skipped. Setting "Frenzy and Rötschreck by themselves", on by default (Ben's v2 pick).

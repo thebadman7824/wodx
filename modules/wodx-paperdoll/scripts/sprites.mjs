@@ -8,6 +8,8 @@ import * as FG from "./figure-rules.mjs";
 import {healthLevel, randomLook} from "./doll-rules.mjs";
 const MOD = "wodx-paperdoll";
 const states = new Map(), bases = new Map(), frames = new Map(), acts = new Map(), glows = new Map(), strides = new Map(), rides = new Map();
+/** Who sits on a mount or in a vehicle just now (mounts.mjs keeps it): token id -> {facing, pose, moving}. */
+export const seated = new Map();
 let ticking = false;
 const on = () => { try { return game.settings.get(MOD, "sprites") !== false; } catch (e) { return true; } };
 
@@ -70,9 +72,13 @@ function tick() {
       }
     }
     if ( !acts.has(token.id) && glows.has(token.id) ) glow(token, null);
+    // aboard a mount or a vehicle (B4970): turned as it is turned, legs folded when the seat is a saddle
+    const seat = seated.get(token.id);
+    if ( seat ) st = {...st, facing: seat.facing};
     states.set(token.id, st);
+    if ( !tex && seat?.pose === "ride" && !a ) { const g = SR.gaitFor(name, {action: "walk", riding: true}); if ( g === "ride" ) tex = frame(name, SR.frameOf(st, grid), g); }
     if ( !tex && st.moving ) {
-      const gait = SR.gaitFor(name, {action: token.document.movementAction ?? "walk", squares: strides.get(token.id) ?? 0, riding: rides.get(token.id) === true});
+      const gait = SR.gaitFor(name, {action: token.document.movementAction ?? "walk", squares: strides.get(token.id) ?? 0, riding: rides.get(token.id) === true && seat?.pose !== "sit"});
       if ( gait ) tex = frame(name, SR.frameOf(st, grid), gait);
     }
     tex ??= frame(name, SR.frameOf(st, grid));
