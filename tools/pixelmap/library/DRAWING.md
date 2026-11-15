@@ -12,6 +12,19 @@ once: "a cradle", "a Torah ark", "a jukebox". If it would take a second look, ad
 rockers, the curtain and doors, the record window and chrome. Shape first, then the one or two details that only that
 thing has, then its colours. The silhouette must name it even in grey.
 
+## Identity first (the owner's review, 2026-11-15)
+
+The owner marked most of the first seating desk "a player could not name it". The ones kept each had one part that
+names the thing from straight above (an armchair's arms and back making a U). So, for every object:
+- Before drawing, write down the two or three parts that must show from above for a stranger to name it (a chair: the
+  back rail along one edge, the seat, the leg ends at the corners; a stool: a seat with leg ends and no back). Every
+  variation in every era must show those parts plainly. Variation comes after, and never hides or replaces them.
+- Never put a different object under the name. A floor cloth with trays is a sufra, not a table; if a region used
+  something else for the job, it is a separate object in the census, and the lead adds it.
+- Decoration (pattern, colour, inlay) is the last thing added and stays small. Do not paint pattern over the whole
+  surface to make variations differ: differ by form, parts, material and fittings.
+- A blind naming test now runs before any desk: a checker shown only the picture, with no name, must say what it is.
+
 ## The contract
 
 A family module defines its objects with `library.core.define`:

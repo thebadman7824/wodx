@@ -64,7 +64,7 @@ def candidates(place, room, year, wealth, style):
         if not w or not _years_ok(row, year) or not (sp.eras[0] <= year <= sp.eras[1]): continue
         lo, _, hi = row.wealth.partition("-")
         if not (int(lo) <= wealth <= int(hi or lo)): continue
-        if row.styles != "*" and style not in row.styles.split(","): continue
+        if row.styles != "*" and not any(s.split("@")[0] == style and ("@" not in s or int(s.split("@")[1]) <= year) for s in row.styles.split(",")): continue
         out.append((row, w))
     return sorted(out, key=lambda t: -t[1])
 

@@ -11,7 +11,8 @@ A row:  O(id, name, family, size, tag, years, where, wealth, styles, mount, note
   years    "from-to" (a year, or "" for open), the years the thing is found at all
   where    "room weight, ..." rooms from ROOMS, or a kind of place meaning any room of it (weight 1 rare, 2 usual, 3 nearly always)
   wealth   "lo-hi" on WEALTH: who owns one
-  styles   "*" for every region, else style families from STYLES that have their own kind of it
+  styles   "*" for every region, else style families from STYLES that have their own kind of it; "africa@1652" means
+           that family only from that year
   mount    floor | wall | centre | outdoor | on (on a table or shelf) | opening | ceiling
 """
 from collections import namedtuple
@@ -784,8 +785,8 @@ o("vent", "air vent or grate", "machines", "2 x 1", "", "1880-", "office 1, lab 
 o("waterlily", "water lilies on the water", "outdoor", "3 x 3", "", "-", "riverbank 2, park 2, garden 1, woods 1", "0-5", "*", mount="outdoor")
 o("weathervane", "weather vane", "decor", "2 x 2", "", "-", "roof 2, tower 2, barn 1, farmyard 1", "1-5", "*", mount="outdoor")
 o("wildplants", "patch of wild flowers", "outdoor", "3 x 3", "", "-", "field 2, woods 1, riverbank 1, park 1, churchyard 1", "0-5", "*", mount="outdoor")
-o("winch", "winch or capstan", "machines", "3 x 3", "", "-", "gate 2, bailey 2, quay 2, boat 1, tower 1, mill 1", "1-5", "*", mount="floor")
-o("windmill", "windmill", "machines", "20 x 20", "", "1180-", "mill 3, field 1, farmyard 1", "1-4", "*", mount="outdoor")
+o("winch", "winch or capstan", "machines", "3 x 3", "", "-", "gate 2, bailey 2, quay 2, boat 1, tower 1, mill 1", "1-5", "central,atlantic,northern,mediterranean,islamic,steppe,southasia,eastasia,seasia,africa,americas@1492,oceania@1770,polar@1600", mount="floor")
+o("windmill", "windmill", "machines", "40 x 40", "", "1180-", "mill 3, field 1, farmyard 1", "1-4", "central,atlantic,northern,mediterranean,islamic,steppe,eastasia,southasia@1600,seasia@1600,africa@1652,americas@1600,oceania@1790,polar@1700", mount="outdoor", note="size with the sails turning")
 o("windturbine", "small wind turbine", "machines", "6 x 6", "", "1887-", "roof 1, farmyard 2, field 1, yard 1", "1-5", "*", mount="outdoor")
 o("wreath", "wreath", "decor", "1.5 x 0.5", "", "-", "hall 1, nave 1, chancel 1, churchyard 1, parlour 1", "1-5", "*", mount="wall")
 
@@ -861,7 +862,7 @@ def check():
             if room not in rooms: bad.append(f"{r.id}: unknown room {room}")
         if r.styles != "*":
             for s in r.styles.split(","):
-                if s not in STYLES: bad.append(f"{r.id}: unknown style {s}")
+                if s.split("@")[0] not in STYLES or ("@" in s and not s.split("@")[1].isdigit()): bad.append(f"{r.id}: unknown style {s}")
         if r.tag and r.tag.split(":")[0] not in fams: bad.append(f"{r.id}: unknown tag {r.tag}")
         a, _, b = r.years.partition("-")
         for v in (a, b):

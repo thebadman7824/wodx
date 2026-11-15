@@ -58,8 +58,9 @@ def wealth_range(oid):
 def styles_for(oid, era=None):
     """The style families that have their own look of it ("*" in the census: every family)."""
     row = _ROW.get(oid)
-    st = list(STYLES) if (not row or row.styles == "*") else row.styles.split(",")
-    return st
+    if not row or row.styles == "*": return list(STYLES)
+    end = era_span(era)[1] if era else 9999
+    return [s.split("@")[0] for s in row.styles.split(",") if "@" not in s or int(s.split("@")[1]) <= end]  # "africa@1652": from that year
 
 
 def axes(oid, era):
