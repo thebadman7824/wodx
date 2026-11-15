@@ -63,6 +63,10 @@ must make sense"), and add a row for each new kind of thing.
 | Smith's forge | 8 by 6 ft | 1.6 by 1.2 |
 | Handcart | 4 by 6 ft, shafts beyond | 0.7 by 1.2 |
 
+## The object library
+- Every object comes from `library/catalogue.py` and is placed with `library.put()` or `library.by_wall()` (B6330-B6338): one true size, one front, one wall rule for each, checked when the map is finished. A new kind of thing is added to the catalogue first, with the source of its size.
+- Walls first, then doors and windows, then objects. Anything with a front faces the room it serves; anything against a wall sits a hand's breadth off its face, never in it. Shutters, open or shut, lie wholly outside the wall.
+
 ## Furnishing
 - No room, yard or road is left bare: after a map's own furniture, dress it with dress.py for its trade (B5746).
   Furniture along the walls first, then small things; walkways to every door stay clear.

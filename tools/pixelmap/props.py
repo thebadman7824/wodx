@@ -497,6 +497,12 @@ def _open_crate(m, X, Y, s, goods, lid="w"):
             d.ellipse([x_ - 4, y_ - 4, x_ + 4, y_ + 4], fill=(150, 46, 38) if i % 3 else (120, 140, 52), outline=OUT); d.point((x_ - 2, y_ - 2), fill=(214, 150, 120)); d.point((x_, y_ - 4), fill=R["dwood"][1])
         else:                                                                    # earthen jars stoppered with wax
             d.ellipse([x_ - 4, y_ - 4, x_ + 4, y_ + 4], fill=R["clay"][3], outline=OUT); d.ellipse([x_ - 2, y_ - 2, x_ + 2, y_ + 2], fill=(200, 176, 96))
+    if lid == "s":                                                               # the lid leant against the south side, toward the room (B6331)
+        ly = Y + s - 4; m.shade((X + 4, ly + 2, X + s + 4, ly + 20), f=.6)
+        d.rectangle([X + 2, ly, X + s - 2, ly + 14], fill=W[3], outline=OUT)
+        for k in (1, 2, 3): d.line([X + 2 + k * 10, ly + 1, X + 2 + k * 10, ly + 13], fill=W[1])
+        for bx_ in (X + 6, X + s - 10): d.rectangle([bx_, ly + 1, bx_ + 3, ly + 13], fill=R["dwood"][2], outline=OUT)
+        d.line([X + 3, ly + 1, X + s - 3, ly + 1], fill=W[4]); return
     if lid == "n":                                                               # the lid leant against the north side
         ly = Y - 22; m.shade((X + 4, ly + 2, X + s + 4, ly + 22), f=.6)
         d.rectangle([X + 2, ly, X + s - 2, ly + 16], fill=W[3], outline=OUT)
@@ -601,7 +607,7 @@ def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True, glass=True):
     for (hinge, sgn), free in zip(((1, -1), (L - 1, 1)), room):
         if free >= half + 2:                                                     # thrown open flat along the outside of the wall
             (xa, ya), (xb, yb) = pt(hinge, t + 1), pt(hinge + sgn * half, t + SH + 1)
-            m.shade((min(xa, xb) + 2, min(ya, yb) + 3, max(xa, xb) + 4, max(ya, yb) + 5), f=.58)
+            m.shade(_outside((min(xa, xb) + 2, min(ya, yb) + 3, max(xa, xb) + 4, max(ya, yb) + 5), ax, ay, horiz, out, t), f=.58)
             rect(hinge, t + 1, hinge + sgn * half, t + SH + 1, fill=Sh[2], outline=OUT)
             rect(hinge + sgn, t + 2, hinge + sgn * (half - 1), t + 3, fill=Sh[3])
             for k_ in range(1, 5): u = hinge + sgn * half * k_ // 5; rect(u, t + 3, u, t + SH, fill=Sh[0])        # its planks
@@ -610,10 +616,22 @@ def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True, glass=True):
         else:                                                                    # no room along the wall (a corner or a wall in the way): it stands open square to the wall
             a, b = hinge, hinge + sgn * 7
             (xa, ya), (xb, yb) = pt(a, t + 1), pt(b, t + half + 1)
-            m.shade((min(xa, xb) + 2, min(ya, yb) + 3, max(xa, xb) + 4, max(ya, yb) + 5), f=.58)
+            m.shade(_outside((min(xa, xb) + 2, min(ya, yb) + 3, max(xa, xb) + 4, max(ya, yb) + 5), ax, ay, horiz, out, t), f=.58)
             rect(a, t + 1, b, t + half + 1, fill=Sh[2], outline=OUT); rect(a + sgn, t + 2, a + sgn, t + half, fill=Sh[3])
             for k_ in (.2, .8): v = t + 1 + int(half * k_); rect(a, v - 1, b, v + 1, fill=I[2])
         rect(hinge - 2, t - 1, hinge + 2, t + 3, fill=I[3], outline=OUT)                                       # the hinge at the frame
+
+
+def _outside(box, ax, ay, horiz, out, t):
+    """A shutter's shadow kept on the ground outside: it never darkens the top of the wall (B6334)."""
+    x0, y0, x1, y1 = box
+    if horiz:
+        if out < 0: y1 = min(y1, ay - t)
+        else: y0 = max(y0, ay + t + 1)
+    else:
+        if out < 0: x1 = min(x1, ax - t)
+        else: x0 = max(x0, ax + t + 1)
+    return (x0, y0, x1, y1)
 
 
 def _face_room(ax, ay, L, horiz, out, t, depth):
