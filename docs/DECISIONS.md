@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6510
+Next free block: B6520
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -349,6 +349,7 @@ Next free block: B6510
 | B6350-B6359 | gate kit yearAtLeast, gatearms and gateplayerextras (used B6350-B6353) | tools (gates) |
 | B6490-B6499 | pc queue ageing (used B6490) | tools (pcq) |
 | B6500-B6509 | lanes ignore the dawn and dusk move and session id (used B6500) | tools (lanes) |
+| B6510-B6519 | Map generator licence label: the town layout port is GPL-3.0 (used B6510) | tools/mapgen |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10829,3 +10830,7 @@ clean copies predate it. The drift check now passes over sessionId, dawnDusk, su
 copy (`lanes.mjs snapshot --from 1`, which Ben runs) would also clear it.
 
 Reverse: take the four settings out of ignoreSettings in tools/lanes/lanes.json.
+
+## B6510. The town layout port is under GPL-3.0, not CC0 (2026-11-15)
+tools/mapgen/layout.py said the Medieval Fantasy City Generator it is ported from was released CC0, and B576 said the same. The source repository (github.com/watabou/TownGeneratorOS) carries GPL-3.0. Because the port follows the original step for step, layout.py is a derivative work and keeps GPL-3.0, as does the street plan organic.py takes from it. The file headers, tools/mapgen/MFCG-CREDIT.md, NOTICE.md and the Interactables checklist now say so. No code or map output changed.
+Reverse: none needed; the label follows the source's licence. If the layout is ever rewritten from scratch without the original's code, drop the credit file and the NOTICE line.
