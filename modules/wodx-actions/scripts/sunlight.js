@@ -75,8 +75,12 @@ export function build(ctx) {
             const t = cal.describeTime(time, lat);
             const g = cm.jdnToGregorian(t.jdn);
             const doy = t.jdn - cm.gregorianToJDN(g.year, 1, 1) + 1;
-            const pos = S.sunPosition(lat, S.declination(doy), t.hour + t.minute / 60);
-            return { ...pos, phase: S.phaseOfSun(pos.altitude), dateLabel: t.dateLabel, timeLabel: t.timeLabel, toDawn: cal.secondsToNextDawn(time, lat), isNight: t.isNight };
+            const pos = S.sunPosition(lat, S.declination(doy), t.hour + t.minute / 60 + (t.second ?? 0) / 3600);
+            // B6381: one line between night and day: the clock's isNight (the sun's altitude against -0.833 degrees, to
+            // the second) decides night; the sun's height then sets twilight or full day
+            const own = S.phaseOfSun(pos.altitude);
+            const phase = t.isNight === true ? "night" : t.isNight === false && own === "night" ? "twilight" : own;
+            return { ...pos, phase, dateLabel: t.dateLabel, timeLabel: t.timeLabel, toDawn: cal.secondsToNextDawn(time, lat), isNight: t.isNight };
         } catch (e) {
             return { altitude: -90, azimuth: 0, phase: "night", dateLabel: "", timeLabel: "", toDawn: null, isNight: true, unknown: true };
         }

@@ -79,6 +79,30 @@ export const boutLive = (bout, now) => !!bout?.keys?.length && Number(now) - Num
  * active: a scene just made active, which ends a bout begun on another one. A bout from before B6161 has no
  * sceneId: any scene's end, or any change of scene, ends it.
  */
+/**
+ * B6386: a bout's held move at the start of the bearer's turn in a fight (Phobia: flee or freeze). bout: the bout
+ * flag; turnKey: the fight, round and combatant; courage: the roll {successes, botch} or null. Returns null when the
+ * bout has no held move or this turn was already read, else {lose, line}: lose the turn's action unless Courage
+ * succeeds.
+ */
+export function heldMoveTurn(bout, turnKey, courage = null) {
+  const key = (bout?.keys ?? []).find(k => TABLE[k]?.held);
+  if ( !key || !turnKey || bout?.heldTurn === turnKey ) return null;
+  const ok = !!courage && Number(courage.successes) > 0 && !courage.botch;
+  return {key, lose: !ok, line: ok ? "Courage holds: they stand their ground this turn." : "They flee or freeze, and lose this turn's action."};
+}
+
+/**
+ * B6384, data version 2 of WoDX Chronicle: a bout flag written before B6161 has no sceneId, so any scene's end or any
+ * other scene made active ended it. The step gives it the scene the character's token stands on (sceneOfToken), else
+ * the active scene. Returns the new flag, or null when nothing changes (no bout, or a scene already named).
+ */
+export function boutWithScene(bout, {sceneOfToken = null, active = null} = {}) {
+  if ( !bout || typeof bout !== "object" || bout.sceneId ) return null;
+  const sceneId = sceneOfToken ?? active ?? null;
+  return sceneId ? {...bout, sceneId} : null;
+}
+
 export function boutEndsWithScene(bout = {}, {ended, active} = {}) {
   const at = bout?.sceneId ?? null;
   if ( active !== undefined ) return !at || at !== active;

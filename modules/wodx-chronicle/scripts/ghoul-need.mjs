@@ -13,7 +13,7 @@
 import {MODULE_ID, esc, isActiveGM} from "./util.mjs";
 import * as R from "./ghoul-need-rules.mjs";
 import {getEngine} from "./calendar.mjs";
-import {isSkipping} from "./skip.mjs";
+import {isQuiet} from "./quiet.mjs";
 import {offerFeed} from "./signatures.mjs";
 
 const FLAG = "ghoulNeed";
@@ -181,7 +181,7 @@ export async function fed(a, t = now()) {
 
 let last = -1, busy = false;
 export async function tick({force = false} = {}) {
-  if ( !on() || !isActiveGM() || busy || isSkipping() ) return;
+  if ( !on() || !isActiveGM() || busy || isQuiet() ) return;
   const t = now(), day = Math.floor(t / DAY);
   if ( day === last && !force ) return;
   last = day; busy = true;
@@ -191,6 +191,8 @@ export async function tick({force = false} = {}) {
 
 export function registerGhoulNeedHooks() {
   Hooks.on("updateWorldTime", () => { tick().catch(e => console.error(`${MODULE_ID} | ghoul need`, e)); });
+  // B6380: Light-touch mode held the month's need; it is read once when the mode ends
+  Hooks.on("wodxLightTouchEnd", () => { tick({force: true}).catch(e => console.error(`${MODULE_ID} | ghoul need`, e)); });
   Hooks.on("wodxSkipEnd", info => { if ( isActiveGM() ) noteSkip(info).catch(e => console.error(`${MODULE_ID} | ghoul need`, e)); });
   Hooks.on("wodxGhoulFix", e => { if ( e?.drank && isActiveGM() ) fed(e.actor).catch(err => console.error(`${MODULE_ID} | ghoul need`, err)); });
 }

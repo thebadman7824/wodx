@@ -7,7 +7,7 @@ import * as S from "./signature-rules.mjs";
 import * as POD from "./pod.mjs";
 import {registerTokenLook} from "./token-looks.mjs";
 import {on as ghoulNeedOn, isGhoul as needIsGhoul} from "./ghoul-need.mjs";
-import {isSkipping} from "./skip.mjs";
+import {isQuiet} from "./quiet.mjs";
 
 /**
  * WoDX Chronicle 0.30.0: signature features on the Foundry side (Splat Features Desk, Vampire first). Rules in
@@ -241,7 +241,7 @@ export async function museSeen(actorOrId, museId, how = "see") {
 let lastTick = -1;
 export async function tick({force = false, settle = false} = {}) {
   // B6162: a time skip or a hold waits; the skip's end settles it once (settle)
-  if ( !on() || !isActiveGM() || (!settle && isSkipping()) ) return;
+  if ( !on() || !isActiveGM() || (!settle && isQuiet()) ) return;
   const t = now(), day = Math.floor(t / 86400);
   if ( day === lastTick && !force ) return;
   lastTick = day;
@@ -1301,6 +1301,7 @@ export function registerSignatureHooks() {
   Hooks.on("updateToken", onToken);
   Hooks.on("updateWorldTime", () => tick());
   Hooks.on("wodxSkipEnd", () => tick({settle: true}));
+  Hooks.on("wodxLightTouchEnd", () => tick({settle: true}));
   Hooks.on("renderChatMessageHTML", (message, el) => {
     const root = el?.[0] ?? el, a = root?.querySelector?.("[data-wct-sig-act]");
     if ( a ) { if ( !mayPress(message.flags?.[MODULE_ID]?.sigAct) ) a.remove(); else a.addEventListener("click", () => runAct(message)); }

@@ -14,7 +14,7 @@ import * as P from "./law-punish-rules.mjs";
 import {standingFor} from "./law-standing.mjs";
 import {declareWanted} from "./law-heat.mjs";
 import {applyTimed} from "./timed.mjs";
-import {isSkipping} from "./skip.mjs";
+import {isQuiet} from "./quiet.mjs";
 
 const yearNow = () => { try { return currentYear(); } catch (e) { return 1197; } };
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
@@ -112,7 +112,7 @@ async function comeBack(actor, why = "The sentence is served") {
 /** B5990: at each move of the clock, those whose time is up come back. */
 export async function releaseServed(year = yearNow(), {settle = false} = {}) {
   // B6162: a time skip or a hold waits; the skip's end lets them out once (settle)
-  if ( !isActiveGM() || (!settle && isSkipping()) ) return [];
+  if ( !isActiveGM() || (!settle && isQuiet()) ) return [];
   const out = [];
   // B6427: one prisoner whose return fails (a scene or token gone wrong) does not keep the others in
   for ( const a of game.actors ) {
@@ -161,6 +161,7 @@ export function registerPunishHooks() {
   Hooks.on("wodxVerdict", p => { if ( p?.guilty ) sentenceCard(p).catch(e => console.error("WoDX | sentence", e)); });
   Hooks.on("updateWorldTime", () => { releaseServed().catch(e => console.error("WoDX | sentence served", e)); });
   Hooks.on("wodxSkipEnd", () => { releaseServed(yearNow(), {settle: true}).catch(e => console.error("WoDX | sentence served", e)); });
+  Hooks.on("wodxLightTouchEnd", () => { releaseServed(yearNow(), {settle: true}).catch(e => console.error("WoDX | sentence served", e)); });
   Hooks.once("ready", () => { releaseServed().catch(() => null); });
   // B6163: Branded is a token status from the start, not only after the first brand. At ready the Chronicle api is
   // not set yet, so it is registered when Chronicle says it is ready.

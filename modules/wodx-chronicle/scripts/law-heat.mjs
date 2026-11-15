@@ -13,6 +13,7 @@ import {currentYear} from "./eras.mjs";
 import * as L from "./law-rules.mjs";
 import * as H from "./law-heat-rules.mjs";
 import * as place from "./place.mjs";
+import {isLightTouch, holdLaw} from "./quiet.mjs";
 const traitHas = (a, k) => Number(game.modules.get(MODULE_ID)?.api?.traits?.has?.(a, k)) || 0;
 
 export function registerHeatSettings() {
@@ -58,12 +59,31 @@ export async function addDeed(actor, deed, {scene = globalThis.canvas?.scene, na
   const res = H.addDeed(s.regions[region][actor.id] ?? {}, {deed, law, now: now(), named, witnesses, where: scene?.name ?? "", id: actor.id, name: actor.name, line: actorLine(actor)});
   s.regions[region][actor.id] = res.entry;
   await save(s);
-  if ( res.crossed ) {
-    await stageCard(actor, region, res, law);
-    // B4865: WoDX Storyteller sends the watch at Wanted and a manhunt (reach.mjs); the card's buttons stay
-    Hooks.callAll("wodxLawStage", {actor: actor.id, region, stage: res.crossed.key, crossed: true, deed});
-  }
+  // B4865: WoDX Storyteller sends the watch at Wanted and a manhunt (reach.mjs); the card's buttons stay
+  if ( res.crossed ) await sendStage(actor, region, res.crossed.key, deed);
   return other ? {...res, otherSelf: true} : res;
+}
+
+/**
+ * A stage crossed: the Storyteller's card and the watch (wodxLawStage). B6380: in Light-touch mode both wait, and come
+ * when the mode ends if the heat is still at that stage or past it (playHeld); the heat itself is kept as it rose.
+ */
+async function sendStage(actor, region, stage, deed) {
+  if ( isLightTouch() ) { await holdLaw({actor: actor.id, region, stage, deed, at: now()}); return; }
+  const e = state().regions[region]?.[actor.id];
+  if ( !e ) return;
+  const law = L.lawOf(region, yearNow());
+  await stageCard(actor, region, {entry: e, crossed: H.STAGES.find(x => x.key === stage) ?? H.stageOf(H.cooled(e, now(), law))}, law);
+  Hooks.callAll("wodxLawStage", {actor: actor.id, region, stage, crossed: true, deed});
+}
+
+/** Light-touch mode ended: a held stage is sent if the heat (cooled to now) is still there; it is dropped if not. */
+export async function playHeld({actor: id, region, stage, deed} = {}) {
+  const actor = game.actors.get(id), h = actor ? of(id, region) : null;
+  const want = H.STAGES.find(x => x.key === stage);
+  if ( !actor || !h || !want || h.heat < want.min ) return false;
+  await sendStage(actor, region, h.stage?.key ?? stage, deed);
+  return true;
 }
 
 async function stageCard(actor, region, res, law) {
@@ -90,8 +110,7 @@ export async function declareWanted(actor, region, why = "") {
   s.regions[region][actor.id] = entry;
   await save(s);
   const res = {entry, before, after: min, crossed: H.stageOf(min)};
-  await stageCard(actor, region, res, law);
-  Hooks.callAll("wodxLawStage", {actor: actor.id, region, stage: res.crossed.key, crossed: true, deed: "sentence"});
+  await sendStage(actor, region, res.crossed.key, "sentence");
   return res;
 }
 

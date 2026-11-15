@@ -445,7 +445,10 @@ export function registerReachHooks() {
   Hooks.on("updateToken", (t, change) => {
     if ( change?.hidden === false && t.flags?.[MOD]?.lawTaken && isActiveGM() ) t.update({[`flags.${MOD}.lawTaken`]: null}).catch(() => {});
   });
-  Hooks.on("updateWorldTime", () => { try { if ( chron()?.isSkipping?.() ) return; } catch (e) { /* no Chronicle */ } patrols().catch(e => console.error(`${MOD} | patrols`, e)); if ( isActiveGM() && on() ) helpArrives().catch(e => console.error(`${MOD} | help`, e)); });
+  // B6380: patrols and calls for help wait through a skip, a hold or Chronicle's Light-touch mode, and come once at its end
+  const lawTick = () => { patrols().catch(e => console.error(`${MOD} | patrols`, e)); if ( isActiveGM() && on() ) helpArrives().catch(e => console.error(`${MOD} | help`, e)); };
+  Hooks.on("updateWorldTime", () => { try { const c = chron(); if ( c?.isQuiet?.() ?? c?.isSkipping?.() ) return; } catch (e) { /* no Chronicle */ } lawTick(); });
+  Hooks.on("wodxLightTouchEnd", lawTick);
   Hooks.on("renderChatMessageHTML", (message, el) => {
     const html = el?.[0] ?? el;
     const away = message.flags?.[MOD]?.reachAway;

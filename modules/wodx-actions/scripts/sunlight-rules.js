@@ -27,7 +27,7 @@ export function sunPosition(latitude, decl, hours) {
     return { altitude, azimuth: ((az % 360) + 360) % 360 };
 }
 
-/** Day, twilight (the sun just up: faint light), or night. Sunrise and sunset are at −0.833°. */
+/** Day, twilight (the sun just up: faint light), or night. Sunrise and sunset are at −0.833° (WoDX Chronicle calendar-math SUN_UP, B6381). */
 export function phaseOfSun(altitude) {
     if (altitude <= -0.833) return "night";
     if (altitude < 6) return "twilight";

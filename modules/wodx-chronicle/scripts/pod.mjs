@@ -5,7 +5,7 @@ import * as P from "./pod-rules.mjs";
 import * as TW from "./twist-rules.mjs";
 import * as Fronts from "./fronts.mjs";
 import {watched} from "./signature-rules.mjs";
-import {isSkipping} from "./skip.mjs";
+import {isQuiet} from "./quiet.mjs";
 
 /**
  * WoDX Chronicle 0.37.0: four ideas taken from the Princes of Darkness mod, rebuilt on WoDX's own systems.
@@ -663,11 +663,12 @@ export function registerPodHooks() {
   let last = 0;
   // B6162: story chains, the saga, fronts and Golconda teaching wait through a time skip or a hold; the skip's end
   // runs them once (settle)
-  const tick = ({settle = false} = {}) => { if ( !isActiveGM() || (!settle && isSkipping()) || (!settle && Date.now() - last < 2000) ) return; last = Date.now();
+  const tick = ({settle = false} = {}) => { if ( !isActiveGM() || (!settle && isQuiet()) || (!settle && Date.now() - last < 2000) ) return; last = Date.now();
     dealChains().then(() => lifepathTick()).then(() => sagaTick()).then(() => Fronts.frontTick()).catch(e => console.error(`${MODULE_ID} | story chains`, e));
     if ( lineOn("podGolconda") ) teachTick().catch(e => console.error(`${MODULE_ID} | Golconda`, e)); };
   Hooks.on("updateWorldTime", () => tick());
   Hooks.on("wodxSkipEnd", () => tick({settle: true}));
+  Hooks.on("wodxLightTouchEnd", () => tick({settle: true}));
   Hooks.on("renderChatMessageHTML", (message, el) => {
     const root = el?.[0] ?? el;
     const a = root?.querySelector?.("[data-wct-pod-act]");

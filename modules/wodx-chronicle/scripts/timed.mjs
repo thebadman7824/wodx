@@ -155,10 +155,13 @@ export async function onSceneChange(newSceneId) {
 
 export function registerTimedHooks() {
   Hooks.on("updateWorldTime", () => {
-    if ( game.modules.get(MODULE_ID)?.api?.isSkipping?.() ) return;
+    // B6380: a time skip, a hold or Light-touch mode: the sweep waits and runs once at the end
+    const api = game.modules.get(MODULE_ID)?.api;
+    if ( api?.isQuiet?.() ?? api?.isSkipping?.() ) return;
     sweepTime().catch(err => console.error("WoDX |", err));
   });
   Hooks.on("wodxSkipEnd", () => sweepTime().catch(err => console.error("WoDX |", err)));
+  Hooks.on("wodxLightTouchEnd", () => sweepTime().catch(err => console.error("WoDX |", err)));
   Hooks.on("updateCombat", (combat, changes) => {
     if ( "round" in (changes ?? {}) ) sweepRounds(combat).catch(err => console.error("WoDX |", err));
   });
