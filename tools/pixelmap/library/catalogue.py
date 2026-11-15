@@ -134,7 +134,7 @@ add("window-glazed", "glazed window", "opening", (5, 1), None, mount="opening", 
 # ---------------------------------------------------------------- containers and goods
 add("cask", "cask", "container", ((1.75, 2.5), (1.75, 2.5)),
     lambda tm, x, y, w, h, st, v: pr.barrel(tm, x + w / 2, y + h / 2, rpx(w, h, .48), holds=v.get("holds", "water"), head="s", state=st if st != "one" else "closed"),
-    front=True, clear=1, states=("closed", "open"), openable="barrel", tags=("store", "kitchen", "brew", "shop", "inn", "cellar", "street"),
+    front=True, clear=1, mount="floor", states=("closed", "open"), openable="barrel", tags=("store", "kitchen", "brew", "shop", "inn", "cellar", "street"),
     variants={"water": {"holds": "water"}, "grain": {"holds": "grain"}, "apples": {"holds": "apples"}, "kraut": {"holds": "kraut"}},
     ref="standing casks 2 to 2 1/2 ft across; the head, lifted out, leans in front")
 add("crate", "crate", "container", ((2, 2.75), (2, 2.75)),

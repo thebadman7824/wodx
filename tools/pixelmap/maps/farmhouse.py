@@ -86,8 +86,9 @@ put(rec, "rug", 12.2, 4.35, w=7, d=4.5, var="blue")
 put(rec, "boots", 13.9, 3.35)
 
 # ---- store ----
-wall_put(rec, "casks", STORE, 12.25, STOREROOM, w=4.5, name="Casks of grain and apples")
-for x in (14.4, 14.9): put(rec, "sack", x, 7.2, w=2.25, d=1.75, name="Grain sack")
+for at, hd in ((11.48, "grain"), (11.98, "grain"), (12.48, "apples")):
+    wall_put(rec, "cask", STORE, at, STOREROOM, w=2.25, d=2.25, var=hd, name={"grain": "Cask of grain", "apples": "Cask of apples"}[hd])
+for x, y in ((14.4, 7.2), (14.9, 7.2), (14.4, 7.6), (14.9, 7.6)): put(rec, "sack", x, y, w=2.25, d=1.75, name="Grain sack")
 wall_put(rec, "shelf", S_, 14.3, STOREROOM, w=6, var="stores", name="Shelf of stores")
 put(rec, "crate", 11.2, 9.3, face="n", var="apples", name="Crate of apples"); put(rec, "crate", 11.75, 9.3, face="n", var="jars", name="Crate of jars")
 put(rec, "basket", 13.05, 8.35, var="onions", name="Basket of onions"); put(rec, "basket", 13.45, 8.65, w=1.5, d=1.5, var="turnips", name="Basket of turnips")

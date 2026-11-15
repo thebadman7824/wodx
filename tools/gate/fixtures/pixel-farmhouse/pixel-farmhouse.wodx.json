@@ -472,6 +472,69 @@
    }
   },
   {
+   "id": "cask-of-grain",
+   "label": "Cask of grain",
+   "rect": [
+    11.266,
+    7.202,
+    0.479,
+    0.649
+   ],
+   "flags": {
+    "container": true,
+    "items": "",
+    "fillPlace": "home",
+    "kind": "box",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/cask-of-grain-closed.png",
+    "open": "art/cask-of-grain-open.png"
+   }
+  },
+  {
+   "id": "cask-of-grain-2",
+   "label": "Cask of grain",
+   "rect": [
+    11.766,
+    7.213,
+    0.479,
+    0.638
+   ],
+   "flags": {
+    "container": true,
+    "items": "",
+    "fillPlace": "home",
+    "kind": "box",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/cask-of-grain-2-closed.png",
+    "open": "art/cask-of-grain-2-open.png"
+   }
+  },
+  {
+   "id": "cask-of-apples",
+   "label": "Cask of apples",
+   "rect": [
+    12.266,
+    7.202,
+    0.479,
+    0.649
+   ],
+   "flags": {
+    "container": true,
+    "items": "",
+    "fillPlace": "home",
+    "kind": "box",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/cask-of-apples-closed.png",
+    "open": "art/cask-of-apples-open.png"
+   }
+  },
+  {
    "id": "grain-sack",
    "label": "Grain sack",
    "rect": [
@@ -496,9 +559,9 @@
    "id": "grain-sack-2",
    "label": "Grain sack",
    "rect": [
-    14.947,
+    14.957,
     7.234,
-    0.436,
+    0.426,
     0.426
    ],
    "flags": {
@@ -511,6 +574,48 @@
    "art": {
     "closed": "art/grain-sack-2-closed.png",
     "open": "art/grain-sack-2-open.png"
+   }
+  },
+  {
+   "id": "grain-sack-3",
+   "label": "Grain sack",
+   "rect": [
+    14.457,
+    7.628,
+    0.426,
+    0.426
+   ],
+   "flags": {
+    "container": true,
+    "items": "",
+    "fillPlace": "home",
+    "kind": "box",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/grain-sack-3-closed.png",
+    "open": "art/grain-sack-3-open.png"
+   }
+  },
+  {
+   "id": "grain-sack-4",
+   "label": "Grain sack",
+   "rect": [
+    14.957,
+    7.628,
+    0.426,
+    0.426
+   ],
+   "flags": {
+    "container": true,
+    "items": "",
+    "fillPlace": "home",
+    "kind": "box",
+    "lock": "none"
+   },
+   "art": {
+    "closed": "art/grain-sack-4-closed.png",
+    "open": "art/grain-sack-4-open.png"
    }
   },
   {
@@ -556,7 +661,7 @@
    }
   },
   {
-   "id": "cask-of-grain",
+   "id": "cask-of-grain-3",
    "label": "Cask of grain",
    "rect": [
     15.362,
@@ -572,8 +677,8 @@
     "lock": "none"
    },
    "art": {
-    "closed": "art/cask-of-grain-closed.png",
-    "open": "art/cask-of-grain-open.png"
+    "closed": "art/cask-of-grain-3-closed.png",
+    "open": "art/cask-of-grain-3-open.png"
    }
   },
   {
@@ -845,9 +950,19 @@
    "y": 3.5
   },
   {
-   "name": "Casks of grain and apples",
-   "x": 12.25,
-   "y": 7.42
+   "name": "Cask of grain",
+   "x": 11.48,
+   "y": 7.41
+  },
+  {
+   "name": "Cask of grain",
+   "x": 11.98,
+   "y": 7.41
+  },
+  {
+   "name": "Cask of apples",
+   "x": 12.48,
+   "y": 7.41
   },
   {
    "name": "Grain sack",
@@ -858,6 +973,16 @@
    "name": "Grain sack",
    "x": 15.13,
    "y": 7.38
+  },
+  {
+   "name": "Grain sack",
+   "x": 14.63,
+   "y": 7.77
+  },
+  {
+   "name": "Grain sack",
+   "x": 15.13,
+   "y": 7.77
   },
   {
    "name": "Shelf of stores",
