@@ -2,13 +2,17 @@
  * WoDX Sheets gate: line skins load line by line (B6060 to B6062), in Foundry, in rothenstein-wodx, as Gamemaster Test:
  *   await (await import(`/wodx-gate/gateskinsplit.mjs?${Date.now()}`)).run()
  * Makes one scratch character of each line the system has and opens each sheet. Never moves the clock.
- *   1. the page starts with only the core skins sheet: no line file comes from module.json
+ *   1. the page has the core skins sheet, and no line file came in with module.json
  *   2. each sheet gets its own line's skin: the file loads, the paper is drawn, and the page is not left waiting
- *   3. the line files sit after the core sheet and before the layout sheet, in the generator's order
+ *   3. the line files sit straight after the core sheet, before the layout sheet, in the generator's order, in the
+ *      core sheet's cascade layer (B6063)
  *   4. with Sheet look set to the system's look the papers go, and back on WoDX they return
  * Result: Data/wodx-gate/gateskinsplit-result.json.
  */
 import {gate} from "./kit.mjs";
+import {SKINS} from "/modules/wodx-sheets/scripts/skins-index.mjs";
+
+const SK_ORDER = SKINS.map(s => s.id);
 
 const TYPES = ["Vampire", "Werewolf", "Mage", "Changeling", "Wraith", "Hunter", "Demon", "Mummy", "Mortal", "Creature"];
 
@@ -19,16 +23,28 @@ export async function run() {
   const elOf = sheet => sheet?.element instanceof HTMLElement ? sheet.element : sheet?.element?.[0] ?? null;
   const papered = win => /data:image\/svg/.test(getComputedStyle(win.querySelector(".window-content")).backgroundImage);
   const look = game.settings.get("wodx-sheets", "sheetLook");
+  // Every stylesheet in cascade order, however it came in (a <link>, a <style>, or an @import into a layer)
+  const sheets = () => {
+    const out = [];
+    const walk = (sh, layer) => {
+      if (sh.href) out.push({href: sh.href, layer, line: /styles\/skins\/([a-z0-9-]+)\.css/.exec(sh.href)?.[1] ?? null});
+      let rules = []; try { rules = [...sh.cssRules]; } catch { /* another origin */ }
+      for ( const r of rules ) if ( r instanceof CSSImportRule && r.styleSheet ) walk(r.styleSheet, r.layerName ?? null);
+    };
+    for ( const sh of document.styleSheets ) walk(sh, null);
+    return out;
+  };
   try {
     await G.scene();
     const actors = await G.make(Actor, TYPES.map(type => ({name: `Gate Skin Split ${type}`, type})));
     if ( look !== "wodx" ) await game.settings.set("wodx-sheets", "sheetLook", "wodx");
 
-    await G.step("1. only the core sheet on every page", async () => {
-      const links = [...document.querySelectorAll('link[rel="stylesheet"]')].map(l => l.getAttribute("href") ?? "");
-      const core = links.filter(h => h.includes("wodx-sheets/styles/wodx-skins.css")).length;
-      const fromModule = [...document.querySelectorAll('link[href*="wodx-sheets/styles/skins/"]')].filter(l => !l.dataset.wodxSkin).length;
-      G.ok("1. only the core sheet on every page", !!S() && core === 1 && fromModule === 0, {core, fromModule, api: !!S()});
+    await G.step("1. the core sheet, and no line file from module.json", async () => {
+      const all = sheets(), rep = S()?.report?.() ?? null;
+      const core = all.filter(x => x.href.includes("wodx-sheets/styles/wodx-skins.css")).length;
+      const lines = all.filter(x => x.line).map(x => x.line), mine = S()?.loaded?.() ?? [];
+      const stray = lines.filter(id => !mine.includes(id) && !(rep?.failed ?? []).includes(id));
+      G.ok("1. the core sheet, and no line file from module.json", !!S() && core === 1 && !stray.length, {core, lines, stray, rep});
     });
 
     await G.step("2. each sheet wears its own line's skin", async () => {
@@ -44,20 +60,19 @@ export async function run() {
         await sheet.close();
       }
       const bad = rows.filter(r => !r.lines.length || !r.loaded || r.waiting || !r.papered);
-      G.ok("2. each sheet wears its own line's skin", bad.length === 0, {rows, bad: bad.map(r => r.type)});
+      G.ok("2. each sheet wears its own line's skin", bad.length === 0, {bad: bad.map(r => r.type), rep: S().report(), rows});
     });
 
     await G.step("3. the line files keep the single stylesheet's order", async () => {
-      const links = [...document.querySelectorAll('link[rel="stylesheet"]')];
-      const at = f => links.findIndex(f);
-      const core = at(l => (l.getAttribute("href") ?? "").includes("wodx-sheets/styles/wodx-skins.css"));
-      const layout = at(l => (l.getAttribute("href") ?? "").includes("wodx-sheets/styles/wodx-layout.css"));
-      const skins = links.map((l, i) => [l, i]).filter(([l]) => l.dataset.wodxSkin);
-      const orders = skins.map(([l]) => +l.dataset.order);
-      const sorted = orders.every((o, i) => !i || orders[i - 1] < o);
-      const between = skins.every(([, i]) => i > core && (layout < 0 || i < layout));
-      const next = skins.every(([, i], k) => i === core + 1 + k);
-      G.ok("3. the line files keep the single stylesheet's order", skins.length > 0 && sorted && between && next, {core, layout, skins: skins.map(([l, i]) => `${i}:${l.dataset.wodxSkin}`)});
+      const all = sheets(), order = id => SK_ORDER.indexOf(id);
+      const core = all.findIndex(x => x.href.includes("wodx-sheets/styles/wodx-skins.css"));
+      const layout = all.findIndex(x => x.href.includes("wodx-sheets/styles/wodx-layout.css"));
+      const lines = all.map((x, i) => ({...x, i})).filter(x => x.line);
+      const sorted = lines.every((x, k) => !k || order(lines[k - 1].line) < order(x.line));
+      const next = lines.every((x, k) => x.i === core + 1 + k) && (layout < 0 || layout > core + lines.length);
+      const sameLayer = lines.every(x => x.layer === all[core]?.layer);
+      G.ok("3. the line files keep the single stylesheet's order", lines.length > 0 && sorted && next && sameLayer,
+        {core, layout, layer: all[core]?.layer ?? null, lines: lines.map(x => `${x.i}:${x.line}:${x.layer ?? "-"}`)});
     });
 
     await G.step("4. the Sheet look setting still switches them", async () => {

@@ -68,8 +68,16 @@ const STYLE = `<style>body{margin:0;padding:12px;background:#777;display:grid;gr
 .sub{font-size:18px;font-weight:normal}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;border:1px solid currentColor;margin-left:2px}.dot.on{background:currentColor}
 .sheet-banner{height:34px;line-height:34px;font-size:24px}.sheet-banner-small{height:30px;line-height:30px;font-size:20px}.note{font-size:13px}.col{width:260px}</style>`;
 // Both pages carry the layout sheet after the skins, as module.json orders them, so a cascade slip would show
-const head = skins => `<!doctype html><html><head><meta charset="utf-8">${[...sysCss, skins, "/modules/wodx-sheets/styles/wodx-layout.css"].map(h => `<link rel="stylesheet" href="${h}">`).join("")}${STYLE}</head>`;
-const page = (split, dark, on) => `${head(split ? "/modules/wodx-sheets/styles/wodx-skins.css" : WHOLE)}<body class="${on ? "wodx-skin" : ""}">${sheets(dark)}
+// Two ways a page may bring the stylesheets in: <link>s, or @imports into cascade layers (B6063)
+const head = (skins, how) => {
+  const mods = [skins, "/modules/wodx-sheets/styles/wodx-layout.css"];
+  if (how === "links") return `<!doctype html><html><head><meta charset="utf-8">${[...sysCss, ...mods].map(h => `<link rel="stylesheet" href="${h}">`).join("")}${STYLE}</head>`;
+  const sys = sysCss.slice(0, -1), chron = sysCss.at(-1);
+  return `<!doctype html><html><head><meta charset="utf-8"><style>@layer system, modules;
+${sys.map(h => `@import url("${h}") layer(system);`).join("\n")}
+${[chron, ...mods].map(h => `@import url("${h}") layer(modules);`).join("\n")}</style>${STYLE}</head>`;
+};
+const page = (split, dark, on, how) => `${head(split ? "/modules/wodx-sheets/styles/wodx-skins.css" : WHOLE, how)}<body class="${on ? "wodx-skin" : ""}">${sheets(dark)}
 ${split ? `<script type="module">
 import * as SK from "/modules/wodx-sheets/scripts/skins.mjs";
 window.__split = (async () => { for (const w of [...document.querySelectorAll(".wod-sheet")].reverse()) await SK.dress(w); return SK.loaded(); })();
@@ -86,12 +94,12 @@ const styles = PROPS => [...document.querySelectorAll(".application")].map(a => 
 const browser = await chromium.launch();
 const ctx = await browser.newContext({deviceScaleFactor: 1, viewport: {width: 1850, height: 1000}});
 const faults = [], report = [];
-for ( const on of [true, false] ) for ( const dark of [false, true] ) {
-  const tag = `${on ? "wodx" : "system"}-${dark ? "dark" : "light"}`;
+for ( const how of ["links", "layers"] ) for ( const on of [true, false] ) for ( const dark of [false, true] ) {
+  const tag = `${how}-${on ? "wodx" : "system"}-${dark ? "dark" : "light"}`;
   const got = {};
   for ( const split of [false, true] ) {
     const path = `/__${tag}-${split ? "split" : "whole"}.html`;
-    pages[path] = page(split, dark, on);
+    pages[path] = page(split, dark, on, how);
     const p = await ctx.newPage();
     const fetched = [];
     p.on("request", r => { const m = /styles\/skins\/([a-z]+)\.css/.exec(r.url()); if (m) fetched.push(m[1]); });
@@ -101,7 +109,14 @@ for ( const on of [true, false] ) for ( const dark of [false, true] ) {
     await p.waitForTimeout(300);
     const png = await p.screenshot({path: join(out, `${tag}-${split ? "split" : "whole"}.png`), fullPage: true});
     got[split ? "split" : "whole"] = {png, css: await p.evaluate(styles, PROPS), loaded, fetched,
-      order: await p.evaluate(() => [...document.querySelectorAll("link[rel=stylesheet]")].map(l => l.dataset.wodxSkin ?? l.getAttribute("href").split("/").pop()))};
+      order: await p.evaluate(() => {
+        // Every stylesheet in cascade order, by file name (a line file by its line)
+        const name = h => { const m = /styles\/skins\/([a-z]+)\.css/.exec(h ?? ""); return m ? m[1] : (h ?? "").split("/").pop(); };
+        const out = [];
+        const walk = sh => { if (sh.href) out.push(name(sh.href)); let r = []; try { r = [...sh.cssRules]; } catch {} for (const x of r) if (x instanceof CSSImportRule && x.styleSheet) walk(x.styleSheet); };
+        for (const sh of document.styleSheets) walk(sh);
+        return out;
+      }), report: await p.evaluate(async () => { try { return (await import("/modules/wodx-sheets/scripts/skins.mjs")).report(); } catch { return null; } })};
     await p.close();
   }
   const {whole, split} = got;
@@ -115,7 +130,7 @@ for ( const on of [true, false] ) for ( const dark of [false, true] ) {
   const coreAt = split.order.indexOf("wodx-skins.css"), layoutAt = split.order.indexOf("wodx-layout.css");
   const placeOk = split.order.slice(coreAt + 1, layoutAt).length === skinOrder.length;
   const waiting = split.css.filter(c => c.waiting).map(c => c.key);
-  report.push({tag, pixelsSame: same, styleDiffs: diffs, loaded: split.loaded, fetched: split.fetched, linkOrder: split.order, waiting});
+  report.push({tag, how: split.report?.how, layer: split.report?.layer, pixelsSame: same, styleDiffs: diffs, loaded: split.loaded, fetched: split.fetched, linkOrder: split.order, waiting});
   if (!same) faults.push(`${tag}: the pictures differ`);
   if (diffs.length) faults.push(`${tag}: computed styles differ on ${diffs.join(", ")}`);
   if (!loadedOk) faults.push(`${tag}: loaded ${split.loaded.join(",")} but wanted ${wantLoaded.join(",")}`);
@@ -126,6 +141,6 @@ for ( const on of [true, false] ) for ( const dark of [false, true] ) {
 await browser.close();
 server.close();
 writeFileSync(join(out, "skins-split-report.json"), JSON.stringify(report, null, 1));
-for ( const r of report ) console.log(`${r.tag}: pixels ${r.pixelsSame ? "same" : "DIFFER"}, style diffs ${r.styleDiffs.length}, loaded ${r.loaded.length}, waiting ${r.waiting.length}`);
+for ( const r of report ) console.log(`${r.tag} (${r.how ?? "-"}${r.layer ? ` ${r.layer}` : ""}): pixels ${r.pixelsSame ? "same" : "DIFFER"}, style diffs ${r.styleDiffs.length}, loaded ${r.loaded.length}, waiting ${r.waiting.length}`);
 console.log(faults.length ? `FAIL\n${faults.join("\n")}` : `PASS: the split skins draw exactly as the single stylesheet did (pictures in ${out})`);
 process.exit(faults.length ? 1 : 0);
