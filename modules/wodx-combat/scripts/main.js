@@ -420,6 +420,11 @@ function soakOpts(actor, profile) {
     if (profile === "mortal") {
         try { const f = game.wodxActions?.fomor?.soakOf?.(actor); return f?.lethalSoak ? { lethalSoak: true, lethalWhy: f.why } : {}; } catch (e) { return {}; }
     }
+    // B5650: a spirit soaks with its Willpower (W20 p. 366, Spirits in Combat); a Creature spirit has no real Stamina
+    if (profile === "spirit" && actor?.type === "Creature") {
+        const wp = Number(actor.system?.advantages?.willpower?.permanent ?? actor.system?.willpower?.permanent) || 0;
+        return wp ? { stamina: wp } : {};
+    }
     if (profile !== "fae") return {};
     try {
         const f = game.wodxActions?.faeSoak?.(actor);
@@ -1731,7 +1736,9 @@ export async function soakAndApply(tok, fd) {
     if (fd.soak) {
         const arm = armor(actor);
         sp = R.soakPool({ profile, damageType: type, stamina: attr(actor, "stamina"), fortitude: discipline(actor, "Fortitude"),
-            armor: fd.noArmor ? 0 : (arm[type] ?? 0), fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane, bonus: fd.soakBonus,
+            armor: fd.noArmor ? 0 : (arm[type] ?? 0), fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane,
+            // B5650: the sheet's soak rows count here too, as they do for a blow (B3800): Armor, Armored Hide
+            bonus: num(fd.soakBonus) + R.sheetBonus(actor?.items, "soak_buff", type),
             aggSoak: garouRules()?.isShifter?.(actor) ? garouRules().aggSoak(actor) : true, ...soakOpts(actor, profile) });
         if (sb) sp.notes.push(sb.note);
         if (fd.fortBlood && sp.autoSoak) await spend(actor, 0, 1);
@@ -1759,7 +1766,8 @@ export async function soakAndApply(tok, fd) {
     html += `</div>`;
     const data = { target: actor.uuid, targetToken: tok.document?.uuid ?? null, type, levels: left.levels, applied: false, fireSun: !!fd.fireSun };
     const msg = await postCard(tok.document ? tok : null, actor, html, rolls, data);
-    if (setting("autoApply") && left.levels) await applyFromMessage(msg, "main");
+    // B5650: a power whose harm the book applies outright (a spirit's Blast, a fomor's splash) asks for it with apply: true
+    if ((setting("autoApply") || fd.apply) && left.levels) await applyFromMessage(msg, "main");
     if (dazed && setting("statusEffects")) await markDazed(actor);
     return { levels: left.levels, dazed, message: msg };
 }
@@ -1919,7 +1927,7 @@ Hooks.once("init", () => {
     const vehicles = VH.setupVehicles({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall });
     FTime.setupFightTime();
     const api = { body, movement, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.39.1", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.40.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, followOn: R.followOn, markFollow, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;

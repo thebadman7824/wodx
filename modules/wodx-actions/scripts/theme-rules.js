@@ -106,7 +106,7 @@ export const MENU_PLAN = {
         st: ["api:c20Mists", "api:c20Everyday"],
         scene: ["api:endScene", "api:voices", "rules:fae"]
     },
-    spirit: { act: ["action", "api:quickCheck", "api:withPerson", "uses:essence"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] },
+    spirit: { act: ["action", "api:quickCheck", "api:withPerson", "api:spiritCharm", "uses:essence"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices"] },
     beast: { act: ["action", "api:quickCheck", "api:withPerson", "preset:trackscent", "preset:sneaking"], resist: ["api:hazard"], recover: ["uses:willpower"], scene: ["api:endScene", "api:voices", "rules:beast"] },
     /** Kindred of the East (3.10.0). */
     kote: {
@@ -211,6 +211,7 @@ export const DESC = {
     "api:numina": "Psychic Numina: the roll for each power",
     "api:hedgeMagic": "Sorcery: a spell or a ritual on a path",
     "api:fomorPower": "Fomor powers from the book: armored hides, claws, Numbing, the Wyrm's gaze and the rest",
+    "api:spiritCharm": "Spirit Charms from the book: Blast, Armor, Materialize, Possession and the rest",
     "api:relic": "Call on a holy relic",
     "api:sinGod": "A sin against God: the Piety roll",
     "api:healing": "Heal wounds with time, care or medicine",

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5650
+Next free block: B5780
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -247,7 +247,7 @@ Next free block: B5650
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5064) | Creation, NPC, Actions |
 | B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
-| B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5119) | NPC, Combat, Actions |
+| B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5127) | NPC, Combat, Actions |
 | B5130-B5139 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5130-B5137) | Creation, Actions, NPC |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 | B5160-B5169 | Playable Strengthening the Demon and fomor Numbing (used B5160-B5162) | Combat, Actions |
@@ -299,6 +299,9 @@ Next free block: B5650
 | B5620-B5629 | Gates failing on main: court hunts batch write, gate-interact steps (used B5620-B5621) | Actions, gates |
 | B5630-B5639 | Blood hunts: court Kindred turn in batches (used B5630) | Actions |
 | B5640-B5649 | German names before 1900, and refilling emptied tables (used B5640-B5641) | Creation, Chronicle |
+| B5650-B5659 | Spirit Charms: the W20 Charms play from a Charm window (used B5650-B5657) | Actions, Combat |
+| B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
+| B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8422,6 +8425,41 @@ WoDX Actions. Applying an effect now calls the `wodxEffectApplied` hook with the
 
 Reverse: remove the hook call.
 
+## B5120. Fomori powers and masters (2026-11-15)
+WoDX NPC. When the Storyteller approves a Bane riding someone (WoDX Otherworlds), the new fomor gets one to three powers from the list WoDX Actions plays (W20 pp. 430 to 439, B5610-B5619), put on the sheet as Power items named the way WoDX Actions reads them, so its Fomor power window and always-on effects (Rage for Berserker, lethal soak for Armored Skin) take them up. The fomor serves the nearest Black Spiral Dancer, else the founder of a Wyrm cult; Pentex only from 1900. The Storyteller gets a card. Desk item w1.
+
+Reverse: drop the updateActor listener in servant-world.mjs.
+
+## B5121. The Retinue starts enchanted (2026-11-15)
+WoDX NPC. When a changeling's Retinue background makes people real, each starts with a lasting Enchantment toward the changeling. Desk item c3.
+
+Reverse: drop the updateItem listener.
+
+## B5122. Mummy cults keep the vessel (2026-11-15)
+WoDX NPC. When a mummy dies, its cult (those bound to it as cultists, and the named members of cults it founded) are given the guard order beside the body where they stand on the scene, are marked as keeping the vessel, and the Storyteller gets a card. A cult left untended twelve weeks loses a step; a mistreated one turns (house readings). Desk item u1.
+
+Reverse: drop the wodxDamageApplied listener and cultDrift.
+
+## B5123. Social Conditioning programmes (2026-11-15)
+WoDX NPC. The followers window gains "Social Conditioning…" for the Storyteller. It starts a programme on the targeted subject, run by a group that exists in the year (the Order of Reason from 1325 at the weekly pace, the Union from 1900 daily, Nephandi every two days), and asks the player's yes for a player character. From then on, while the master is an NPC, each stage rolls by itself when its time comes. Desk item m1.
+
+Reverse: drop openSocial and the clock.
+
+## B5124. NPC masters keep servants by era (2026-11-15)
+WoDX NPC. Once a month of world time (setting "NPC masters keep servants"), up to 40 NPC masters each keep what their line keeps in that year: Kindred blood-bound ghouls, Dominate 4 elders conditioned retainers, Technocrats conditioned agents, Garou Kinfolk, demons thralls, Hierarchy wraiths Thralls, mummies and Kuei-jin courts cults, changelings enchanted mortals. Recruits are unbound mortal NPCs on the master's own scene (or, for a master with no token, mortals with none). The first month starts when the world first sees the clock move, so nobody is bound the moment the module arrives. The Storyteller gets one card with an Undo all button. Kuei-jin never make ghouls. Desk items x4 and k2.
+
+Reverse: turn the setting off.
+
+## B5125. Approvals that do the work, and lone play (2026-11-15)
+WoDX NPC and WoDX Actions. Every servant step that needs the Storyteller (a player's bond, a scene of Conditioning, the Parted Mists, an oath broken by an attack, a pact, a True Name call) waits on one approval card, and approving does all of it at once. With the Solo Storyteller tools on, the lone player's standing approval covers them all, and NPC results (keepers, programmes, cults, fomori) apply by themselves. Desk item x5.
+
+Reverse: none needed; each handler can be unregistered on its own.
+
+## B5127. Servants take the master's experience (2026-11-15)
+WoDX NPC. When a player character's bond takes hold of an NPC who is nobody's ally yet, the NPC becomes that character's ally in WoDX Creation, paid by the patron. The Experience window then raises the servant's traits at the servant's own line's costs, so a fomor cannot buy Disciplines. When the last bond to that master ends, the ally record WoDX made is taken away. Desk item x6.
+
+Reverse: drop the wodxBond listener.
+
 ## B5130. The domitor's clan weakness in the beast (2026-11-14)
 WoDX Creation, WoDX NPC. With five or more points of its domitor's blood an animal ghoul shows the clan's weakness, only where it fits a beast (V20 Dark Ages p. 401): Nosferatu hideous, Lasombra no reflection, Followers of Set shun the sun, Brujah and Gangrel quick to rage (frenzy one harder), Malkavian odd ways, Ventrue picky, Toreador entranced. Shown as an effect on the token. Desk item 8.
 
@@ -8867,3 +8905,112 @@ Reverse: restore the six German lists in data/people.mjs.
 WoDX Chronicle. A Roll Table whose update was cut off between clearing and refilling was left with no results, then kept for good as if the Storyteller had edited it, so every Japanese name draw on one testbed lane came up empty. Now a table with no results is refilled at start-up, and until then the shipped names are drawn in its place. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: drop the two empty-table checks in scripts/gen.mjs.
+
+## B5650. Every W20 spirit Charm plays itself (2026-11-15)
+WoDX Actions. Ben asked which NPCs had no power system (2026-11-15 02:16Z). All 32 Charms on W20 pp. 366-368 are in spirit-charms.js, in WoDX's own words with their pages. A Power of the Charm type named after one is the spirit's Charm; the Spirit Charms window pays the Essence, makes the roll on Rage, Gnosis or Willpower, and applies the Charm (charms.js). A Creature made as a spirit (the system's spirit variant) is now read as a spirit, in Actions and in Combat.
+
+Reverse: delete spirit-charms.js and charms.js, and the spirit-variant line in both profiles.js.
+
+## B5651. A Charm's time ends by itself (2026-11-15)
+WoDX Actions. What a Charm does for a while (Armor's and Swift Flight's rows, a token's name or way of moving, lights put out, Spirit Static's Gauntlet, Freeze's lost Rage, Calcify's lost dots, Solidify Reality's levels) is a Chronicle timed effect whose end puts it back (wodx-actions.charmOff).
+
+Reverse: drop the reverter; the Storyteller takes the changes off by hand.
+
+## B5652. House numbers where the book gives none (2026-11-15)
+WoDX Actions. Cleanse the Blight rolls at 7 when the blight's strength is not known; Freeze and Umbraquake reach everyone within 10 yards; Blighted Touch resists at Willpower 6 and lasts three hours; Calcify lasts the scene; Updraft holds the target up for 3 turns; Flood's town-wide water costs 3 Essence and needs Gnosis 6. All in PENDING-REVIEW.
+
+Reverse: change the numbers in spirit-charms.js.
+
+## B5653. Charms that need the wiring of the modern world wait for it (2026-11-15)
+WoDX Actions. Control Electrical Systems and Short Out are greyed out before 1880 (the Chronicle's year); in play they switch or put out the scene's lights within 20 yards.
+
+Reverse: drop the era field on the two Charms.
+
+## B5654. The world-sized Charms use the world systems (2026-11-15)
+WoDX Actions. Flood, Create Fires, Shatter Glass and Cleanse the Blight put world results on the effects card (deep water, fire, broken ground, a cleansing; a town flood or fire waits for the Storyteller); Create Wind sets the weather; Freeze brings snow and Umbraquake shakes the screen through Chronicle's looks; Spirit Static and Materialize work with Otherworlds' Gauntlet; Open Moon Bridge makes a Moon Path between two scenes.
+
+Reverse: remove the world lists and the does handlers.
+
+## B5655. Possession and a blight from a botch last until removed (2026-11-15)
+WoDX Actions. Possession is permanent by the book: the target gets a Possessed effect with no end and the spirit's token is hidden; a botched Blighted Touch roll leaves a Blighted effect with no end. The Storyteller deletes them when the spirit is driven out or the soul is healed.
+
+Reverse: give both a scene's duration.
+
+## B5656. Spirits soak with Willpower (2026-11-15)
+WoDX Combat. A Creature spirit soaks with its Willpower (W20 p. 366); harm applied straight from a power (soakAndApply) now counts the sheet's soak rows, as a blow already did (B3800).
+
+Reverse: drop the spirit branch in soakOpts and the sheet bonus in soakAndApply.
+
+## B5657. NPC spirits choose their Charms (2026-11-15)
+WoDX Actions. The NPC power choice offers a spirit's Charms by their effect keywords (Blast to attack, Armor to guard, Healing to heal, Re-form to escape), leaving out what it cannot pay for or what the era does not allow.
+
+Reverse: drop the spirit branch in npcPowers.
+
+## B5670. Every line's NPCs choose their own powers (2026-11-15)
+WoDX Actions. Ben asked for the rest of the lines to get a power system for NPCs (2026-11-15 04:25Z). Each line's builder now has powersFor(actor): the powers the NPC knows, each with the effect keywords its own effects card gives (npc-power-rules.js keysOf), so the NPC choice picks one to attack, hold, heal, guard, flee, call or boost. autoPower fills the line's own window and rolls it, so the pool is paid, the roll is made and the effect lands exactly as a player's use would. A power whose card gives no keyword is left to the Storyteller.
+
+Reverse: drop the powersFor functions and the line() rows in main.js npcPowers.
+
+## B5671. Mummies: Hekau spells only, paid from Sekhem (2026-11-15)
+The named spells of the paths the mummy knows, with a Sekhem cost it can still pay. Rituals take hours and are never chosen in a fight.
+
+## B5672. Mages: rotes of the era's own magic (2026-11-15)
+A Dark Ages mage offers the fellowship's rotes its Pillars reach; a modern mage offers its saved rotes whose Spheres it knows (the rote's own keywords).
+
+## B5673. Changelings: named cantrips with the Realm known best (2026-11-15)
+A changeling of the later eras offers the cantrips its Arts reach, and the window fills the Actor or Fae Realm it knows best. Nothing is offered while it has no Glamour or the Dreaming is closed to it. A Dark Ages fae offers the cantrips written on its sheet with what they do in brackets.
+
+## B5674. Demons: the evocations of their Lores, while Faith lasts (2026-11-15)
+
+## B5675. Kuei-jin: the named powers of their Chi Disciplines (2026-11-15)
+A Kuei-jin's Disciplines are no longer read as Kindred Disciplines for the NPC choice.
+
+## B5676. Orpheus: Horrors with one Vitality put in (2026-11-15)
+
+## B5677. Inquisitors: the book's Blessings on the sheet (2026-11-15)
+A Blessing on the sheet counts with or without the Virtue in brackets after its name.
+
+## B5750. Witness reactions given by a window act on the map (2026-11-15)
+WoDX Actions. The witness step takes results already rolled (the Delirium check, a demon's Revelation) and acts them out: a frozen witness is Immobilized for the scene, a fleeing one runs, a fighting one starts a fight; those who keep it go on the Masquerade record. With no revealed actor on the map, nothing is recorded against anyone.
+
+Reverse: drop the `given` option; the windows post their table again.
+
+## B5751. Revelation acts on the targeted mortals (2026-11-15)
+WoDX Actions. The Revelation window reads the targeted token's Willpower and hands its reaction to the witness step (B5750).
+
+Reverse: remove the witness call after the card.
+
+## B5752. A lost Harrowing costs what was at stake (2026-11-15)
+WoDX Actions. A Passion's Harrowing lost takes the quarry Passion to 0 and tests another Passion (rolled at 5, down 1 on failure); a Fetter's loses a dot; other kinds add a permanent Angst on a loss; a lost Destruction Harrowing offers the Storyteller a button to turn the wraith Spectre (hostile, darkened, logged). The wraith's token fades while the Harrowing runs and comes back after. House reading of Wraith 20th's Harrowing outcomes where the book leaves the amount to the Storyteller.
+
+Reverse: remove payHarrowing and harrowedLook.
+
+## B5753. Summoning a spirit brings one (2026-11-15)
+WoDX Actions. A Garou's spirit summons with Gnosis successes brings a spirit through the summons layer beside the summoner for the scene: a called one when the attitude roll holds, a wild one on 2 successes or less, a Bane on a botch.
+
+Reverse: drop the SUM.bring call.
+
+## B5754. The Curse takes dice off social rolls with mortals (2026-11-15)
+WoDX Actions. A Garou's social roll against a mortal, hunter or ghoul loses the Curse dice by permanent Rage (W20), shown as a part of the pool.
+
+Reverse: remove the curse part in social().
+
+## B5755. A lost Kuei-jin soul contest sets the state (2026-11-15)
+WoDX Actions. Lost to the fire soul: frenzy; to the wave soul: the Fear (rotschreck); to the shadow soul: a new "shadow soul" condition, each for the scene.
+
+Reverse: remove the timed condition after the contest.
+
+## B5756. A won Forbiddance makes the being afraid (2026-11-15)
+WoDX Actions. A won Forbiddance on a targeted being sets a "forbidden" condition and Afraid for the scene: an NPC runs from the mummy.
+
+Reverse: remove the timed effect.
+
+## B5757. The resource Uses window does the use (2026-11-15)
+WoDX Actions. Willpower's automatic success and ignored wounds wait on the character for the next roll; vitae heals bashing then lethal damage, or adds a held Physical die; Rage gives extra actions in a running fight, takes the Dazed mark off, or opens Change form; Glamour heals; stepping sideways opens the Otherworlds window.
+
+Reverse: drop the fifth element of each USES row and carryOut.
+
+## B5758. Kindred Background downtime brings what it says (2026-11-15)
+WoDX Actions. Resources: money into the purse, a week of a month's allowance per success (house reading). Contacts: current rumours named, up to the successes. Influence: a boon owed by the institution in the Prestation journal. Retainers: servants named and their orders opened. Domain or Hunting Grounds with no success: a rival feeds there (the herd thins). A botch starts a rumour about the character.
+
+Reverse: remove downtimeDoes.

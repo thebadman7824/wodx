@@ -134,7 +134,7 @@ export const MENUS = {
     spirit: {
         sections: [
             ["Roll", [["action", "Any roll / dramatic system", "fa-dice-d10"], ["api:quickCheck", "Common checks", "fa-search"], ["api:withPerson", "With this person", "fa-comments"]]],
-            ["Essence", [["uses:essence", "Essence", "fa-sparkles"]]],
+            ["Charms", [["api:spiritCharm", "Spirit Charms", "fa-wind"], ["uses:essence", "Essence", "fa-sparkles"]]],
             ["Scene", [["api:endScene", "End scene", "fa-flag-checkered"], WILL]]
         ]
     },
@@ -219,31 +219,31 @@ export const EXTRA_PRESETS = {
 /** Resource uses: [label, cost, roll?, note]. roll = { pool: resource id | "attr+ability", diff }. */
 export const USES = {
     willpower: { title: "Willpower", uses: [
-        ["Automatic success on a roll", 1, null, "One Willpower point = one automatic success (cannot be canceled by 1s). One per turn."],
-        ["Ignore wound penalties for one turn", 1, null, "VtDA20 printed p. 339 (pdf 340)."],
+        ["Automatic success on a roll", 1, null, "One Willpower point = one automatic success (cannot be canceled by 1s). One per turn. Held for your next roll.", "hold:wp"],
+        ["Ignore wound penalties for one turn", 1, null, "VtDA20 printed p. 339 (pdf 340). Held for your next roll.", "hold:wounds"],
         ["Resist Dominate / compulsion", 1, null, "Per the power; roll Willpower if the rule asks."],
         ["Regain Willpower (rest / ST award)", -1, null, "Cost -1 adds a point."]
     ] },
     blood: { title: "Vitae", uses: [
-        ["Heal bashing or lethal damage (1 vitae per level)", 1, null, "Ghouls and revenants heal as the Storyteller allows (G&R)."],
-        ["Increase a Physical Attribute (+1 die)", 1, null, "For one action or turn."]
+        ["Heal bashing or lethal damage (1 vitae per level)", 1, null, "Each point heals one level, bashing first. Ghouls and revenants heal as the Storyteller allows (G&R).", "heal"],
+        ["Increase a Physical Attribute (+1 die)", 1, null, "+1 die a point on your next Strength, Dexterity or Stamina roll.", "hold:physical"]
     ] },
     rage: { title: "Rage", uses: [
-        ["Extra action (declare at the start of the turn)", 1, null, "Max Rage spent for actions per turn = half permanent Rage. Rage and Gnosis cannot both be used in one turn. (W20 p. 144, 266)"],
-        ["Change form instantly (no Stamina + Primal-Urge roll)", 1, null, "W20 p. 144, 285."],
-        ["Ignore being stunned", 1, null, "Lost more health levels than Stamina in one turn: W20 p. 144."],
+        ["Extra action (declare at the start of the turn)", 1, null, "Max Rage spent for actions per turn = half permanent Rage. Rage and Gnosis cannot both be used in one turn. (W20 p. 144, 266) The fight gives the extra action this turn.", "extra"],
+        ["Change form instantly (no Stamina + Primal-Urge roll)", 1, null, "W20 p. 144, 285. Opens Change form, which spends the Rage.", "route:shift"],
+        ["Ignore being stunned", 1, null, "Lost more health levels than Stamina in one turn: W20 p. 144. Takes the Dazed mark off.", "unstun"],
         ["Remain active below Incapacitated (Rage roll, diff 8)", 0, { pool: "rage", diff: 8 }, "Each success heals a health level of any type; once per scene; leaves a Battle Scar; frenzy risk. (W20 p. 144)"],
         ["Rage roll (frenzy test)", 0, { pool: "rage", diff: 6 }, "4 or more successes: the Garou enters frenzy (W20 p. 144, 261). Difficulty depends on provocation."],
         ["Regain Rage (provocation / the moon)", -1, null, "Cost -1 adds a point."]
     ] },
     gnosis: { title: "Gnosis", uses: [
         ["Activate a Gift or fetish", 1, null, "Spend 1 Gnosis (some Gifts ask for none). Not in the same turn as Rage."],
-        ["Step sideways (Gnosis roll, diff = Gauntlet)", 0, { pool: "gnosis", diff: 6 }, "Difficulty = local Gauntlet (caern 3, city up to 8)."],
+        ["Step sideways (Gnosis roll, diff = Gauntlet)", 0, { pool: "gnosis", diff: 6 }, "Difficulty = local Gauntlet (caern 3, city up to 8). Opens the crossing, which rolls against this place's Gauntlet.", "route:sideways"],
         ["Spirit bargain: gain Gnosis", -1, null, "Cost -1 adds a point."]
     ] },
     glamour: { title: "Glamour", uses: [
         ["Wyrd cantrip (use the cantrip button)", 1, null, "Chimerical cantrips cost nothing; Wyrd cantrips cost 1 Glamour (Changeling 20th)."],
-        ["Heal a health level [house]", 1, null, "Storyteller's option."],
+        ["Heal a health level [house]", 1, null, "Storyteller's option. Each point heals one level, bashing first.", "heal"],
         ["Reap Glamour (Rapture / dreamers)", -1, null, "Cost -1 adds a point."]
     ] },
     banality: { title: "Banality", uses: [
@@ -342,6 +342,42 @@ export function build(ctx) {
         return { dice: r.perm || r.max || r.value, label: r.label };
     }
 
+    /** B5757: what a resource use does once paid. hold:* waits on the character for the next roll (main.js resolveAction). */
+    async function carryOut(actor, key, points) {
+        if (!key || !points) return "";
+        if (key.startsWith("hold:")) {
+            const k = key.slice(5), held = { ...(actor.getFlag("wodx-actions", "held") ?? {}) };
+            held[k] = num(held[k]) + (k === "physical" ? points : 1);
+            held.at = game.time?.worldTime ?? 0;
+            await actor.setFlag("wodx-actions", "held", held);
+            return k === "wp" ? "An automatic success waits for the next roll." : k === "wounds" ? "The next roll ignores wound penalties." : `+${held[k]} die on the next Physical roll.`;
+        }
+        if (key === "heal") {
+            const C = game.wodxCombat;
+            if (!C?.healDamage) return "Heal it on the sheet (WoDX Combat is off).";
+            const d = actor.system?.health?.damage ?? {};
+            let left = points, out = [];
+            for (const type of ["bashing", "lethal"]) {
+                const k = Math.min(left, num(d[type])); if (!k) continue;
+                await C.healDamage(actor, type, k); left -= k; out.push(`${k} ${type}`);
+            }
+            return out.length ? `Healed ${out.join(" and ")}.` : "No bashing or lethal damage to heal.";
+        }
+        if (key === "extra") {
+            const c = game.combat;
+            if (!c?.started) return "No fight running: the extra action is for the next turn of a fight.";
+            const k = `${c.id}:${c.round}`, prev = actor.getFlag("wodx-actions", "extraActions");
+            await actor.setFlag("wodx-actions", "extraActions", { key: k, n: (prev?.key === k ? num(prev.n) : 0) + points });
+            return `${points} extra action${points === 1 ? "" : "s"} this turn.`;
+        }
+        if (key === "unstun") {
+            if (!actor.statuses?.has?.("wodx-dazed")) return "Not dazed.";
+            await actor.toggleStatusEffect?.("wodx-dazed", { active: false });
+            return "Shakes off the daze.";
+        }
+        return "";
+    }
+
     /** "Use a resource" dialog. */
     async function uses(actor, resId) {
         const def = USES[resId];
@@ -355,8 +391,12 @@ export function build(ctx) {
           <p class="vta-note vta-use-note">${esc(def.uses[0][3] ?? "")}</p></form>`;
         return ctx.dialog(`${def.title}: ${actor.name}`, content, "Use", async fd => {
             const u = def.uses[num(fd.use)];
+            // B5757: a use another window does properly opens that window (it pays there)
+            const doKey = String(u[4] ?? "");
+            if (doKey === "route:shift") return API?.shift?.({ actor });
+            if (doKey === "route:sideways") { const ow = game.modules.get("wodx-otherworlds")?.api; if (ow?.stepSideways) return ow.stepSideways(); ctx.notify("WoDX Otherworlds is off: step sideways by hand."); return null; }
             const note = await pay(actor, resId, fd.cost);
-            if (note === false) return null;
+            if (note === false || note === null) return null;
             let body = note ? `<div class="vta-parts">${esc(note)}</div>` : "";
             const rolls = [];
             if (u[2]) {
@@ -366,6 +406,9 @@ export function build(ctx) {
                 body += rollBlock(`${pool.label} roll`, rr, [`${pool.label} ${pool.dice}`, fd.bonus ? `bonus ${fd.bonus}` : ""].filter(Boolean));
             }
             if (u[3]) body += `<div class="vta-note">${esc(u[3])}</div>`;
+            // B5757: the use itself happens
+            const done = await carryOut(actor, doKey, Math.max(0, num(fd.cost)));
+            if (done) body += `<div class="vta-res good">${esc(done)}</div>`;
             return post(actor, `${actor.name}: ${esc(u[0])}`, body, rolls);
         }, {
             render: root => {

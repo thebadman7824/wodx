@@ -13,6 +13,7 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: demon-rules.js.
  */
+import * as NPW from "./npc-power-rules.js";
 import * as LIM from "./limits.js";
 import * as D from "./demon-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -324,16 +325,25 @@ export function build(ctx) {
     /* -- Revelation, a witness -------------------------------------- */
     async function revelation(actor) {
         const i = info(actor);
+        // B5751: a targeted witness fills the window, and its reaction happens on the map through the witness step
+        const wt = [...(game.user.targets ?? [])].find(t => t.actor && t.actor !== actor) ?? null;
+        const wwp = n(wt?.actor?.system?.advantages?.willpower?.permanent) || 3;
         const content = `<form><p>${esc(revealLine(i.spent))}</p>
-          <div class="form-group"><label>A witness's Willpower (rolled against Faith ${i.faith.perm})</label><input type="number" name="wp" min="1" max="10" value="3"/></div>
-          <div class="form-group"><label>Witness's name</label><input type="text" name="who" value=""/></div></form>`;
+          <div class="form-group"><label>A witness's Willpower (rolled against Faith ${i.faith.perm})</label><input type="number" name="wp" min="1" max="10" value="${wwp}"/></div>
+          <div class="form-group"><label>Witness's name</label><input type="text" name="who" value="${esc(wt?.name ?? "")}"/></div>
+          ${wt ? `<p class="vta-note">${esc(wt.name)} is targeted: what they do shows on the map.</p>` : `<p class="vta-note">Target the witness's token for it to act on the map.</p>`}</form>`;
         return dialog(`Revelation: ${actor.name}`, content, "Roll for the witness", async fd => {
             const r = await rollPool(n(fd.wp), Math.max(2, i.faith.perm || 6));
             const re = D.mortalReaction(r);
             const who = fd.who || "The witness";
             const body = rollBlock(`${esc(who)}: Willpower`, r) + `<div class="vta-res ${re.key === "copes" ? "" : "bad"}">${esc(who)} ${esc(re.text)}.</div>`
                 + `<div class="vta-note">${esc(D.visageLook(i.torment.perm, i.willpower.perm) === "glorious" ? "What they see is glorious." : D.visageLook(i.torment.perm, i.willpower.perm) === "nightmarish" ? "What they see is a nightmare." : "What they see is awful or wondrous, by their own lights.")} A Revelation alone never reaps Faith.</div><div class="wodx-quiet">${REF} pp. 253–254</div>`;
-            return post(actor, `${actor.name}: Revelation`, body, [r.roll].filter(Boolean));
+            const m = await post(actor, `${actor.name}: Revelation`, body, [r.roll].filter(Boolean));
+            if (wt) {
+                const id = wt.document?.id ?? wt.id;
+                try { await ctx.api?.()?.witnessStep?.({ actor, tokens: [wt], secret: "demon", event: "the apocalyptic form", given: { [id]: { reaction: re.key, reveal: re.key } } }); } catch (e) { console.warn("WoDX | Revelation", e); }
+            }
+            return m;
         });
     }
 
@@ -469,5 +479,13 @@ export function build(ctx) {
         }
     }
 
-    return { info, evoke, form, revelation, reap, thralls, sin, kindness, heal, holy, named, illusion, daily, faith, torment, isDemon, rules: D };
+    /** B5676: the evocations of the Lores an NPC demon knows, to use by itself (main.js npcPowers). */
+    function powersFor(actor) {
+        const i = info(actor);
+        if (i.faith.temp < 1) return [];
+        return D.evocationsKnown(i.lores).map(e => ({ use: "useEvocation", field: "evo", value: `${e.lore}:${e.level}`, name: e.name, disc: D.LORES[e.lore]?.label ?? e.lore, level: e.level, set: "evocation", id: `${e.lore}:${e.level}`,
+            keywords: NPW.keysOf(DE.evocationResults(e.lore, e.level, 3, { faith: i.faith.perm, name: e.name })) })).filter(p => p.keywords.length);
+    }
+
+    return { powersFor, info, evoke, form, revelation, reap, thralls, sin, kindness, heal, holy, named, illusion, daily, faith, torment, isDemon, rules: D };
 }

@@ -11,6 +11,7 @@
  * Built by main.js with its helpers (ctx). Pure rules: hunter-rules.js.
  */
 
+import * as NPW from "./npc-power-rules.js";
 import * as LIM from "./limits.js";
 import { spendTime } from "./spend-time.js";
 import * as H from "./hunter-rules.js";
@@ -503,7 +504,16 @@ export function build(ctx) {
         });
     }
 
-    return { ghoulBlood, hedgeMagic, inq, isInquisitor, inquisitorSheet, setConviction, spendConv, blessing, virtueRoll, sin, prayer, relic, cashIn, newStory, faithOf, trueFaith, numina, lineNow };
+    /** B5679: the Blessings on an NPC inquisitor's sheet that the book's list knows, to use by itself (main.js npcPowers). */
+    function powersFor(actor) {
+        if (!isInquisitor(actor) || inq(actor).conviction < 1) return [];
+        const slug = s => String(s ?? "").toLowerCase().replace(/[^a-z]/g, "");
+        const mine = new Set(blessingsOn(actor).map(b => slug(b.name)));
+        return IB.BLESSINGS.filter(b => mine.has(slug(b.name)) || mine.has(slug(b.name.replace(/\s*\([^)]*\)\s*$/, "")))).map(b => ({ use: "useBlessing", field: "bk", value: b.id, name: b.name, level: 1, set: "blessing", id: b.id,
+            keywords: NPW.keysOf(IB.blessingResults(b.id, 3)) })).filter(p => p.keywords.length);
+    }
+
+    return { powersFor, ghoulBlood, hedgeMagic, inq, isInquisitor, inquisitorSheet, setConviction, spendConv, blessing, virtueRoll, sin, prayer, relic, cashIn, newStory, faithOf, trueFaith, numina, lineNow };
 }
 
 export function registerSettings() {
