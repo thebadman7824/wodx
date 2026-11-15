@@ -164,3 +164,21 @@ test("cults: awe keyed by scene uuid survives the flag (stored as a list, keyed 
   const cults = src("modules/wodx-npc/scripts/cults.mjs");
   assert.doesNotMatch(cults, /setFlag\(MOD, "awe", (res\.awe|awe)\)/, "awe goes through saveAwe, never as a keyed object");
 });
+
+test("a gathering gives what the cult promises, once a week (B5960 to B5964)", async () => {
+  const C = await import("../../modules/wodx-npc/scripts/cult-rules.mjs");
+  assert.deepEqual(C.gatheringGift("thralls", 4), {pool: "faith", path: "system.advantages.faith", gain: 4, label: "Faith", cap: 10});
+  assert.equal(C.gatheringGift("dreamers", 3).gain, 3);
+  const w = C.gatheringGift("remembrance", 3, [8, 1, 10]);
+  assert.equal(w.gain, 1, "two successes less a one");
+  assert.equal(C.gatheringGift("remembrance", 2, [1, 1]).gain, 0);
+  assert.equal(C.gatheringGift("blood", 3), null, "Herd feeds by the hunt, not at a gathering");
+  assert.equal(C.gatheringGift("thralls", 0), null);
+  assert.equal(C.poolAfter(5, 6, 4), 6, "capped by the permanent rating");
+  assert.equal(C.poolAfter(0, 0, 3), 3);
+  assert.ok(C.giftReady({lastGift: 0}, 10));
+  assert.ok(!C.giftReady({lastGift: 100}, 100 + C.WEEK - 1));
+  assert.ok(C.giftReady({lastGift: 100}, 100 + C.WEEK));
+  assert.equal(C.normCult({lastGift: 55}).lastGift, 55);
+  for ( const [kind, bg] of Object.entries(C.SHEET_BG) ) assert.equal(C.CULT_KINDS[kind].bg.split(" ")[0], bg, kind);
+});
