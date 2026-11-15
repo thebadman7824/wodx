@@ -34,7 +34,8 @@
       "wodx-combat",
       "wodx-chronicle",
       "wodx-actions",
-      "wodx-storyteller"
+      "wodx-storyteller",
+      "wodx-library"
     ]
   },
   "remove": {},
