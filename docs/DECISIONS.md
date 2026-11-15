@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5220
+Next free block: B5290
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -244,7 +244,15 @@ Next free block: B5220
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 | B5180-B5189 | Names raised to 300, Thai (used B5180) | Creation |
 | B5190-B5199 | Names raised to 300, Malay (used B5190) | Creation |
+| B5200-B5209 | Names raised to 300, Quechua (used B5200) | Creation |
 | B5210-B5219 | PC runner watchdog (used B5210-B5212) | tools (PC job queue) |
+| B5220-B5229 | Names raised to 300, Steppe (used B5220) | Creation |
+| B5230-B5239 | Names raised to 300, Nahua (used B5230) | Creation |
+| B5240-B5249 | Names raised to 300, Tamil (used B5240) | Creation |
+| B5250-B5259 | Names raised to 300, Javanese (used B5250) | Creation |
+| B5260-B5269 | Names raised to 300, Swahili (used B5260) | Creation |
+| B5270-B5279 | Names raised to 300, Hawaiian (used B5270) | Creation |
+| B5280-B5289 | Names raised to 300, Amharic (used B5280) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7964,6 +7972,11 @@ WoDX Creation. Ben asked for every list under 300 names to be filled out (15 Nov
 
 Reverse: restore the malay entry in data/people-world.mjs and drop malay from RAISED.
 
+## B5200. Quechua names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Quechua list grows from 25 names to 335: the Inca kings, queens and captains and the Quechua names of the Tawantinsuyu before the conquest, then a church name and a Quechua family name from the viceroyalty on. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the quechua entry in data/people-world.mjs and drop quechua from RAISED.
+
 ## B5210. A watchdog on the PC starts the runner again when it dies (2026-11-15)
 PC job queue. The runner and its wrapper were ended three times on 14 and 15 November with nothing in the log, and
 the pc-heartbeat schedule (B4700) did not notice: GitHub ran that schedule once in seven hours, so the queue sat
@@ -7985,3 +7998,38 @@ PC job queue. The pc-heartbeat workflow is kept: when GitHub does run it, it sti
 off or asleep, which the watchdog cannot report.
 
 Reverse: delete .github/workflows/pc-heartbeat.yml.
+
+## B5220. Steppe names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Steppe list grows from 28 names to 311: the khans, queens and captains of the Mongol and Kipchak steppe in the old ages, then the names of Mongolia and the Kazakh steppe, given alone. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the steppe entry in data/people-world.mjs and drop steppe from RAISED.
+
+## B5230. Nahua names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Nahua list grows from 28 names to 320: the tlatoque, captains and calendar names of the Mexica, Acolhua and Tlaxcalteca before 1521, then a church name and a Nahuatl or Spanish family name from New Spain on. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the nahua entry in data/people-world.mjs and drop nahua from RAISED.
+
+## B5240. Tamil names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Tamil list grows from 32 names to 308: the Chola, Pandya and Pallava kings and queens, the Sangam poets and saints and village names of old, then modern Tamil names, given alone. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the tamil entry in data/people-world.mjs and drop tamil from RAISED.
+
+## B5250. Javanese names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Javanese list grows from 32 names to 308: the kings, queens, saints and poets of Singhasari, Majapahit, Demak and Mataram, the wayang heroines and village names of old Java, then modern Javanese names, one name each. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the javanese entry in data/people-world.mjs and drop javanese from RAISED.
+
+## B5260. Swahili names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Swahili list grows from 32 names to 311: the sultans, poets and traders of Kilwa, Mombasa, Lamu and Zanzibar and the Mwana names of the coast, then modern Tanzanian and Kenyan names, bin or binti the father throughout. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the swahili entry in data/people-world.mjs and drop swahili from RAISED.
+
+## B5270. Hawaiian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Hawaiian list grows from 32 names to 308: the aliʻi of the island kingdoms and the heroines of the chants in the old ages, then Hawaiian church and modern names and family names taken from a father's name after the 1860 law. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the hawaiian entry in data/people-world.mjs and drop hawaiian from RAISED.
+
+## B5280. Amharic names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Amharic list grows from 34 names to 301: the Zagwe and Solomonic kings and queens, the saints and the court of Gondar in the old ages, then modern Ethiopian names, the father's name second. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the amharic entry in data/people-world.mjs and drop amharic from RAISED.
