@@ -52,6 +52,11 @@ must make sense"), and add a row for each new kind of thing.
 | Open hearth on its slab | about 5 ft | 1.0 to 1.1 squares |
 | Boar wallow | 10 to 15 ft across | 3.0 by 2.0 |
 | Den boulders | 8 to 12 ft each | 1.6 to 2.4 squares |
+| Market stall | 13 by 6 ft | 2.7 by 1.2 squares |
+| Horse stall | 7 by 10 ft | 1.5 by 2.0 |
+| Lantern post | lantern 1 ft on a post | 0.2 across |
+| Hurdle fence | 4 ft high, a hand thick | drawn 0.15 wide so it reads |
+| Market cross steps | 9 ft square | 1.8 by 1.8 |
 
 ## Point of view and colour
 
