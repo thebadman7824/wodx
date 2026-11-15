@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5970
+Next free block: B5980
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -324,6 +324,7 @@ Next free block: B5970
 | B5940-B5949 | Primers for a scene far from home (used B5940-B5942) | Storyteller |
 | B5950-B5959 | Weather history by part of the world (used B5950-B5955) | Atmosphere |
 | B5960-B5969 | Cults that give what they promise (used B5960-B5964) | NPC |
+| B5970-B5979 | NPCs make their own wonders (used B5970-B5974) | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9871,3 +9872,28 @@ Reverse: drop the line.
 Blood and Kuei-jin cults feed through Herd at the hunt, and the mage's cult, the Netaru and a Wyrm cult add their dots to rites, so their gatherings add no pool.
 
 Reverse: give them a gatheringGift row.
+
+## B5970. A monthly look over the NPCs who could make something (2026-11-15)
+WoDX Storyteller wonders.mjs npcMonth, on the active Storyteller's client when the clock passes a month (and after a time skip). An NPC who is not a player's, not a passer-by's stand-in and not a group, and who can make something in a line whose crafting switch is on (WoDX Library's wonder kits), is a candidate.
+
+Reverse: turn off "Wonders: NPCs make their own".
+
+## B5971. A few start work, by chance (2026-11-15)
+npc-makers-rules.mjs. Each able NPC has a one in three chance a month to start, at most three a month, one piece of work at a time. The row is picked at random among those the kit's own blockers let through, with the plainest options (no Gnosis spent, then 1, then 2). A house reading.
+
+Reverse: PER_MONTH = 0.
+
+## B5972. No approval card for an NPC's work (2026-11-15)
+An NPC's work starts as the Storyteller's would, approved, with no notice on screen; the Storyteller gets one card naming the makers and their work. The long task runs on its own and the finished item goes on the NPC's sheet as it does for a player.
+
+Reverse: start with approved false and an approval proposal.
+
+## B5973. A world setting, on by default (2026-11-15)
+"Wonders: NPCs make their own" (world, default on). It does nothing in a line whose crafting switch is off, so the Live world, where those switches are off, sees nothing.
+
+Reverse: default false.
+
+## B5974. The api for gates (2026-11-15)
+api.wonders.npcMonth({force, rand, only}) runs the look now (force does not move the month's mark), for chosen actors.
+
+Reverse: drop the option.

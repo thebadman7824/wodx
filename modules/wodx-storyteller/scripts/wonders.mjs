@@ -13,6 +13,7 @@
  */
 import {MOD, esc, isActiveGM, chron, log, isPC} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as NM from "./npc-makers-rules.mjs";
 
 const T_WONDER = `${MOD}.wonder`;
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
@@ -127,7 +128,7 @@ export async function start(a, key, opts = {}) {
   if ( ask ) await chron()?.approvals?.propose?.({type: T_WONDER, key: `wonder.${a.id}.${t.id}`, title: `${a.name}: ${t.name}`,
     detail: `${w.does} ${kit.detail?.(w, t, m) ?? `Difficulty ${t.diff}.`} ${kit.cautions(w, m).join(" ")}`.trim(),
     data: {actorId: a.id, taskId: t.id}});
-  else ui.notifications.info(`${a.name}: ${t.name} is set up${t.delay ? `; the roll comes after ${t.delay} days of preparation` : ""}.`);
+  else if ( !opts.quiet ) ui.notifications.info(`${a.name}: ${t.name} is set up${t.delay ? `; the roll comes after ${t.delay} days of preparation` : ""}.`);
   return t;
 }
 
@@ -183,8 +184,57 @@ async function finished({actor: a, task: t} = {}) {
   await log({kind: "task", actor: isPC(a) ? a.id : null, name: a.name, text: `${a.name}: ${t.name}. ${lines.join(" ")}`});
 }
 
-export function registerWonderHooks() {
-  Hooks.on("wodxTaskDone", e => { finished(e).catch(err => console.error(`${MOD} | wonders`, err)); });
+/* ---- B5970: NPCs make their own ---- */
+
+export function registerWonderSettings() {
+  game.settings.register(MOD, "npcMakers", {name: "Wonders: NPCs make their own", hint: "Once a month of world time, a few NPCs who know the rites start making a fetish, talen, talisman or other item of their line as a long task (only for lines whose crafting switch is on). The finished item goes on their sheet, and the Storyteller gets a card.",
+    scope: "world", config: true, type: Boolean, default: true});
+  game.settings.register(MOD, "npcMakersLast", {scope: "world", config: false, type: Number, default: 0});
+}
+const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
+/** NPCs who could make something now: not a player's, not a passer-by's stand-in, not already at such work. */
+async function makerCandidates(only = null) {
+  const T = await tasks();
+  const out = [];
+  for ( const a of game.actors ) {
+    if ( only && !only.includes(a.id) ) continue;
+    if ( isPC(a) || a.flags?.["wodx-npc"]?.passerbyBase || /group/i.test(String(a.type ?? "")) ) continue;
+    let got = [];
+    try { got = linesFor(a); } catch (e) { got = []; }
+    if ( !got.length ) continue;
+    const busy = Object.values(T.rawTasks(a) ?? {}).some(t => t?.wonder && !t.made && !["done", "ruined", "failed"].includes(t.status));
+    const works = [];
+    for ( const {kit, maker, rows} of got ) for ( const w of rows ) {
+      const opts = NM.optsFor(o => kit.blockers(w, maker, o));
+      works.push({line: kit.line, key: w.key, opts: opts ?? {}, blocked: !opts});
+    }
+    out.push({id: a.id, busy, works});
+  }
+  return out;
+}
+/** The monthly look: starts work for a few able NPCs and tells the Storyteller. force: run now whatever the date; only: actor ids. */
+export async function npcMonth({force = false, rand = Math.random, only = null} = {}) {
+  if ( !isActiveGM() || (setting("npcMakers") === false && !force) ) return [];
+  const now = game.time?.worldTime ?? 0;
+  if ( !force && !NM.due(setting("npcMakersLast"), now) ) return [];
+  if ( !force ) await game.settings.set(MOD, "npcMakersLast", now);
+  const picks = NM.chooseWork(await makerCandidates(only), rand);
+  const started = [];
+  for ( const p of picks ) {
+    const a = game.actors.get(p.id);
+    const t = a ? await start(a, p.key, {...p.opts, line: p.line, quiet: true}) : null;
+    if ( t ) started.push({actor: a.id, name: a.name, task: t.name, taskId: t.id});
+  }
+  if ( started.length ) await ChatMessage.create({speaker: {alias: "Storyteller"}, whisper: gmIds(),
+    content: `<div class="wodx-card wst-wonder-card wst-npc-makers"><h3><i class="fa-solid fa-hammer"></i> NPCs at work</h3><ul data-fixed>${started.map(s => `<li>${esc(s.name)}: ${esc(s.task)}</li>`).join("")}</ul><p class="wodx-quiet">Each is a long task; the item goes on the maker's sheet when it is done.</p></div>`});
+  return started;
 }
 
-export const wondersApi = () => ({open: makeDialog, start, available, maker: makerFacts, linesFor});
+export function registerWonderHooks() {
+  Hooks.on("wodxTaskDone", e => { finished(e).catch(err => console.error(`${MOD} | wonders`, err)); });
+  const look = () => { try { if ( chron()?.isSkipping?.() ) return; } catch (e) { /* no Chronicle */ } npcMonth().catch(err => console.error(`${MOD} | NPC makers`, err)); };
+  Hooks.on("updateWorldTime", look);
+  Hooks.on("wodxSkipEnd", () => { npcMonth().catch(err => console.error(`${MOD} | NPC makers`, err)); });
+}
+
+export const wondersApi = () => ({open: makeDialog, start, available, maker: makerFacts, linesFor, npcMonth, npcRules: NM});

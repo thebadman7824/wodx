@@ -114,6 +114,7 @@ Hooks.once("init", () => {
   Setup.registerSetupSettings();
   Builder.registerBuilderSettings();
   Ways.registerWaySettings();
+  Wonders.registerWonderSettings();
   Ways.registerWayBehavior();
   Night.registerNightSettings();
   Dreams.registerDreamSettings();
