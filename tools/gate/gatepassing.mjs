@@ -80,8 +80,9 @@ export async function run() {
       await game.settings.set(ST, "heat", false);
       const before = game.messages.size;
       await S().remains.found(body, actors[1]);
-      const msg = newestMessage();
-      ok("4 a body found", game.messages.size === before + 1 && !!msg?.flags?.[ST]?.remains && (body.flags[ST].remains.found ?? []).includes(actors[1].id),
+      // The finding card is found by its flag: other cards (a witness, a rumour) may follow it
+      const msg = game.messages.contents.slice(before).find(m => m.flags?.[ST]?.remains);
+      ok("4 a body found", game.messages.size > before && !!msg && (body.flags[ST].remains.found ?? []).includes(actors[1].id),
         {text: msg?.content?.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").slice(0, 300)});
       await msg?.delete();
     });
