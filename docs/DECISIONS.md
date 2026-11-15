@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5480
+Next free block: B5540
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -278,6 +278,12 @@ Next free block: B5480
 | B5450-B5459 | Names raised to 300, Irish (used B5450) | Creation |
 | B5460-B5469 | Names raised to 300, Greek (used B5460) | Creation |
 | B5470-B5479 | Names raised to 300, Polish (used B5470) | Creation |
+| B5480-B5489 | Names raised to 300, English (used B5480) | Creation |
+| B5490-B5499 | Names raised to 300, French (used B5490) | Creation |
+| B5500-B5509 | Names raised to 300, Spanish (used B5500) | Creation |
+| B5510-B5519 | Names raised to 300, Italian (used B5510) | Creation |
+| B5520-B5529 | Names raised to 300, Japanese (used B5520) | Creation |
+| B5530-B5539 | Names raised to 300, Russian (used B5530) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8475,3 +8481,33 @@ Reverse: restore the greek entry in data/people-world.mjs and drop greek from RA
 WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Polish list grows from 58 names to 435: old names of Piast and Jagiellonian kings and dukes, knights, magnates and townsfolk, then names of modern Poland, with a woman's family name in its own form. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: restore the polish entry in data/people-world.mjs and drop polish from RAISED.
+
+## B5480. English names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The English list grows from 81 names to 501: old names from Domesday, manor, poll-tax and parish records, then names of the industrial and modern ages, with more family names of trade, place and father's name. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the english entry in data/people-world.mjs and drop english from RAISED.
+
+## B5490. French names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The French list grows from 78 names to 416: old names from charters, tax rolls and parish registers, then names of the industrial and modern ages, with more family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the french entry in data/people-world.mjs and drop french from RAISED.
+
+## B5500. Spanish names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Spanish list grows from 82 names to 437: old names of the Castilian, Aragonese and Navarrese chronicles, charters and town records, then names of the industrial and modern ages, with more family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the spanish entry in data/people-world.mjs and drop spanish from RAISED.
+
+## B5510. Italian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Italian list grows from 78 names to 474: old names of the communes, signorie and city registers, then names of the industrial and modern ages, with more family names including the great houses. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the italian entry in data/people-world.mjs and drop italian from RAISED.
+
+## B5520. Japanese names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Japanese list grows from 88 names to 550: old names of warriors, lords, monks, artists and village and town folk, then names of the Meiji years and since, with more family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the japanese entry in data/people-world.mjs and drop japanese from RAISED.
+
+## B5530. Russian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Russian list grows from 91 names to 499: old names of princes, boyars, monks, merchants and townsfolk of the Rus chronicles and the Muscovite records, then names of the Empire and since, with a woman's family name in its own form. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the russian entry in data/people-world.mjs and drop russian from RAISED.
