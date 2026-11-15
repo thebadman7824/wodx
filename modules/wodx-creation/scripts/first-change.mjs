@@ -5,7 +5,7 @@
  * Rules data comes from WoDX Actions (data/garou.json and the Gift library).
  */
 import {MODULE_ID, esc, lineOf, lineage, keepLifepath} from "./actor-data.mjs";
-import {setLineage, setChronology, writeLineageJournal, dateLabel} from "./lineage.mjs";
+import {setLineage, setChronology, writeLineageJournal, dateLabel, handOver} from "./lineage.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 const BEFORE_FOLDER = "WoDX · Before the First Change";
@@ -120,6 +120,7 @@ export async function firstChange(mortal, {breed = "homid", auspice = "ragabash"
   const folder = game.folders.find(f => f.type === "Actor" && f.name === BEFORE_FOLDER)
     ?? await Folder.create({name: BEFORE_FOLDER, type: "Actor", flags: {[MODULE_ID]: {kind: "before-first-change"}}});
   await mortal.update({folder: folder.id});
+  await handOver(mortal, wolf);
 
   let moved = 0;
   if ( moveTokens ) {

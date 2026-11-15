@@ -27,6 +27,21 @@ export async function setChronology(actor, changes) {
   return actor.setFlag(MODULE_ID, "chronology", next);
 }
 
+/**
+ * B6176: after a change of state (the Embrace, death into a wraith, an Awakening and the rest), each player whose
+ * assigned character was the old sheet gets the new one, so "my character" means the new actor. Returns how many.
+ */
+export async function handOver(old, made) {
+  if ( !old?.id || !made?.id || !game.user?.isGM ) return 0;
+  let n = 0;
+  for ( const u of game.users ?? [] ) {
+    const cur = u.character?.id ?? u.character ?? null;
+    if ( cur !== old.id ) continue;
+    try { await u.update({character: made.id}); n++; } catch (e) { console.warn("WoDX Creation | hand over the character", e); }
+  }
+  return n;
+}
+
 /** Record a drink of a vampire's blood. Returns the new bond stage. */
 export async function recordDrink(actor, regnant, time = game.time.worldTime, step = 1) {
   const l = lineage(actor);
@@ -43,10 +58,19 @@ export async function recordDrink(actor, regnant, time = game.time.worldTime, st
 
 export const ordinal = n => `${n}${(n % 100 >= 11 && n % 100 <= 13) ? "th" : ({1: "st", 2: "nd", 3: "rd"}[n % 10] ?? "th")}`;
 const ref = actor => (actor ? `@UUID[Actor.${actor.id}]{${esc(actor.name)}}` : "");
+// B6179: a sire, domitor or former self moved to the archive of the dead links to its entry there, not to a world
+// actor that is gone
+const archivedRef = link => {
+  if ( !link?.id ) return "";
+  try {
+    const r = (game.settings.get(MODULE_ID, "archived") ?? {})[link.id];
+    return r ? `@UUID[Compendium.world.wodx-archive.Actor.${link.id}]{${esc(r.name ?? link.name ?? "")}}` : "";
+  } catch { return ""; }
+};
 const nameOf = (link, actors) => {
   if ( !link ) return "";
   const a = link.id ? actors.get(link.id) : null;
-  return a ? ref(a) : esc(link.name ?? "");
+  return a ? ref(a) : (archivedRef(link) || esc(link.name ?? ""));
 };
 
 /** Sire of a vampire: the WoDX lineage first, else the sheet's free-text Sire field matched to an actor by name. */

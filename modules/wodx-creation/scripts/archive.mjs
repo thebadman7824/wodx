@@ -101,6 +101,7 @@ export async function archive(ids) {
   await game.settings.set(MODULE_ID, "archived", record);
   if ( safe.length ) await DocClass.deleteDocuments(safe.map(a => a.id));
   await writeIndex(pack);
+  await relinkLineage();
   return {archived: safe.map(a => ({id: a.id, name: a.name})), kept};
 }
 
@@ -124,7 +125,14 @@ export async function restore(ids) {
   }
   await game.settings.set(MODULE_ID, "archived", record);
   await writeIndex(pack);
+  await relinkLineage();
   return {restored};
+}
+
+/** B6179: the lineage journal is written again, so its links follow an actor into the archive and back. */
+async function relinkLineage() {
+  if ( !game.journal?.find?.(j => j.getFlag?.(MODULE_ID, "kind") === "lineage") ) return;
+  try { await (await import("./lineage.mjs")).writeLineageJournal(); } catch (e) { console.warn("WoDX Creation | lineage links", e); }
 }
 
 /** Look up an id that may have gone to the archive: the world actor, else the archive's entry. */
