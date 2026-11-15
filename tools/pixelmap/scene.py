@@ -45,7 +45,7 @@ class Recorder:
         self.m = Map(cells[0], cells[1], seed=seed)
         self.walls, self.things, self.lights, self.regions, self.key, self.ids = [], [], [], [], [], set()
         self.roofs = []
-        props.REC = self
+        props.REC = self; props.SEGS = []; props.OPENS = []
 
     # ---- recording ----
     def _id(self, base):
@@ -55,7 +55,7 @@ class Recorder:
 
     def wall(self, x0, y0, x1, y1, th=26, kind="wood"):
         """A wall drawn and kept as a Foundry wall (squares, along its middle line)."""
-        self.m.wall(x0, y0, x1, y1, th=th, kind=kind); self.walls.append((x0, y0, x1, y1))
+        self.m.wall(x0, y0, x1, y1, th=th, kind=kind); self.walls.append((x0, y0, x1, y1)); props.SEGS.append((x0, y0, x1, y1))
 
     def note(self, name, x, y):
         """A named object at a square: the key a player's eye and later game logic read."""
@@ -66,6 +66,7 @@ class Recorder:
         o = {"kind": kind, "box": box, "draw": draw, "label": label, "flags": flags or {}, "opening": opening,
              "id": self._id(label)}
         self.things.append(o)
+        if opening: props.OPENS.append(tuple(opening["c"]) + (opening["kind"],))
         x0, y0, x1, y1 = box; self.note(label, (x0 + x1) / 2 / T, (y0 + y1) / 2 / T)
 
     def light(self, id_, label, rect, dim=3, bright=1, color="#ff9a3c", kind="torch", on=True):

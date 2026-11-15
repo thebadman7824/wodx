@@ -72,8 +72,16 @@ export function loadOf(actor) {
   if ( ab.phase ) return MV.swimLoad();
   let potence = 0;
   try { potence = Number(D.discipline?.(actor, "Potence")) || 0; } catch (e) { potence = 0; }
+  const strength = D.attr(actor, "strength");
+  // B6085: what they have on them weighs, by WoDX Library's weights and WoDX Interactables' lifting chart
+  let gearKg = 0, liftKg = 0;
+  try {
+    const W = game.modules.get("wodx-library")?.active ? game.modules.get("wodx-library").api?.weight : null;
+    const hr = game.modules.get("wodx-interactables")?.active ? game.modules.get("wodx-interactables").api?.haul?.rules : null;
+    if ( W?.ready && hr?.liftKg ) { gearKg = W.actorKg(actor).carried; liftKg = hr.liftKg((Number(strength) || 0) + potence); }
+  } catch (e) { gearKg = 0; }
   return MV.swimLoad({armorPenalty: D.armorPenalty?.(actor) ?? 0, burden: actor.getFlag?.(D.MOD, "load") ?? actor.flags?.[D.MOD]?.load ?? 0,
-    strength: D.attr(actor, "strength"), potence});
+    strength, potence, gearKg, liftKg});
 }
 
 /** The regions holding a point on a scene. */
