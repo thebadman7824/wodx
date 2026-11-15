@@ -86,10 +86,14 @@ export const WORLD_REGIONS = {
     medieval: "khmer 45, vietnamese 30, thai 25", "early-modern": "thai 40, vietnamese 38, khmer 22",
     industrial: "vietnamese 40, thai 40, khmer 12, chinese 8"}),
   "nusantara": R("The Malay world (Java, Malacca, the Spice Islands)", "other", -6.2, 106.8, "tropical-wet", "malay", {
-    // The Philippine islands in the same mix: the Tagalog, Visayan and Ilocano peoples (B4750)
-    // and the Moro sultanates of Mindanao and Sulu (B5000)
-    medieval: "javanese 50, malay 33, filipino 13, moro 4", "early-modern": "javanese 48, malay 32, filipino 11, moro 4, dutch 3, chinese 2",
-    industrial: "javanese 47, malay 30, filipino 11, moro 3, chinese 5, dutch 4", modern: "javanese 49, malay 31, filipino 11, moro 3, chinese 6"}),
+    // The Philippine islands left for a region of their own (B5150); the Tausug and Bajau of the Sabah coast stay (B5000)
+    medieval: "javanese 58, malay 40, moro 2", "early-modern": "javanese 55, malay 38, moro 2, dutch 3, chinese 2",
+    industrial: "javanese 53, malay 36, moro 2, chinese 5, dutch 4", modern: "javanese 55, malay 37, moro 2, chinese 6"}),
+  // The Philippine islands (B5150): the Tagalog, Visayan and Ilocano barangays (B4750) and the Moro sultanates of
+  // Mindanao and Sulu (B5000), with the Chinese of the junk trade; Spain from 1565, the Americans from 1898
+  "philippines": R("The Philippines (Manila, the Visayas, Mindanao and Sulu)", "other", 14.6, 121.0, "tropical-wet", "philippine", {
+    medieval: "filipino 78, moro 17, chinese 5", "early-modern": "filipino 74, moro 14, chinese 8, spanish 4",
+    industrial: "filipino 77, moro 10, chinese 8, spanish 4, english 1", modern: "filipino 85, moro 8, chinese 6, english 1"}),
   // Africa south of the Sahara
   "west-africa": R("West Africa (Mali, Songhai, the Akan and Yoruba kingdoms)", "other", 12.6, -8.0, "savanna", "west-african", {
     // The Tuareg of the Aïr and the Niger bend at the desert edge (B4950)
@@ -241,7 +245,7 @@ export const REGION_SPHERE = {
   "russia": ORT, "aegean": [[-9999, "orthodox"], [1453, "islamic"], [1830, "orthodox"]], "siberia": settled("northern", 1600).map(([y, s]) => [y, s === "latin" ? "orthodox" : s]),
   "anatolia": ISL, "levant": ISL, "egypt": ISL, "arabia": ISL, "maghreb": ISL, "persia": ISL, "central-asia": ISL,
   "tibet-himalaya": [[-9999, "tibetan"]], "india": [[-9999, "indic"]], "china": [[-9999, "sinic"]], "korea": [[-9999, "sinic"]],
-  "japan": [[-9999, "japanese"]], "southeast-asia": [[-9999, "theravada"]], "nusantara": [[-9999, "malay"]],
+  "japan": [[-9999, "japanese"]], "southeast-asia": [[-9999, "theravada"]], "nusantara": [[-9999, "malay"]], "philippines": [[-9999, "malay"], [1571, "latin"]],
   "west-africa": [[-9999, "sahel"]], "east-africa": [[-9999, "swahili"]], "southern-africa": settled("bantu", 1652),
   "central-africa": [[-9999, "bantu"]],
   "canada": settled("northern", 1608), "north-america-east": settled("northern", 1607), "north-america-west": settled("northern", 1769),

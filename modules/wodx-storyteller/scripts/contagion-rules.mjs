@@ -36,8 +36,8 @@ const round3 = v => Math.round(v * 1000) / 1000;
 
 const OLD_WORLD = ["moravia", "german-lands", "british-isles", "france", "iberia", "italy", "low-countries", "scandinavia", "poland-baltic",
   "carpathians-balkans", "russia", "aegean", "anatolia", "levant", "egypt", "arabia", "maghreb", "persia", "central-asia", "siberia",
-  "tibet-himalaya", "india", "china", "japan", "korea", "southeast-asia", "nusantara", "west-africa", "east-africa", "southern-africa", "central-africa"];
-const WARM_WET = ["west-africa", "central-africa", "east-africa", "india", "southeast-asia", "nusantara", "caribbean", "brazil", "mexico", "andes",
+  "tibet-himalaya", "india", "china", "japan", "korea", "southeast-asia", "nusantara", "philippines", "west-africa", "east-africa", "southern-africa", "central-africa"];
+const WARM_WET = ["west-africa", "central-africa", "east-africa", "india", "southeast-asia", "nusantara", "philippines", "caribbean", "brazil", "mexico", "andes",
   "egypt", "italy", "levant", "china", "southern-africa", "north-america-east", "pacific-islands", "australia"];
 
 /**
@@ -424,7 +424,7 @@ export const HISTORY = [
   {id: "yf-1800", disease: "yellow-fever", name: "Fever in Cádiz", last: 2, note: "A ship from the Americas brings it.", at: [["iberia", 1800]]},
   {id: "typhus-1812", disease: "typhus", name: "The fever of the retreat", last: 2, note: "The great army dies of lice and cold.", at: [["russia", 1812], ["poland-baltic", 1813], ["german-lands", 1813]]},
   {id: "cholera-1817", disease: "cholera", name: "Cholera", last: 6, note: "A sickness out of Bengal runs along the trade roads.",
-    at: [["india", 1817], ["southeast-asia", 1820], ["nusantara", 1821], ["china", 1820], ["persia", 1821], ["arabia", 1821], ["levant", 1822], ["east-africa", 1821]]},
+    at: [["india", 1817], ["southeast-asia", 1820], ["nusantara", 1821], ["philippines", 1820], ["china", 1820], ["persia", 1821], ["arabia", 1821], ["levant", 1822], ["east-africa", 1821]]},
   {id: "cholera-1830", disease: "cholera", name: "Cholera", last: 3, note: "The blue death follows the rivers and the poor quarters.",
     at: [["russia", 1830], ["poland-baltic", 1831], ["moravia", 1831], ["german-lands", 1831], ["carpathians-balkans", 1831], ["british-isles", 1832], ["france", 1832],
       ["low-countries", 1832], ["canada", 1832], ["north-america-east", 1832], ["mexico", 1833], ["iberia", 1833], ["italy", 1835], ["egypt", 1831]]},
@@ -445,12 +445,12 @@ export const HISTORY = [
     at: [["north-america-east", 1918], ["north-america-west", 1918], ["canada", 1918], ["france", 1918], ["british-isles", 1918], ["iberia", 1918], ["italy", 1918],
       ["german-lands", 1918], ["moravia", 1918], ["poland-baltic", 1918], ["russia", 1918], ["scandinavia", 1918], ["india", 1918], ["china", 1918], ["japan", 1918],
       ["west-africa", 1918], ["southern-africa", 1918], ["east-africa", 1918], ["brazil", 1918], ["mexico", 1918], ["andes", 1919], ["southern-cone", 1919],
-      ["australia", 1919], ["aotearoa", 1918], ["pacific-islands", 1918], ["arctic", 1918], ["persia", 1918], ["levant", 1918], ["egypt", 1918], ["nusantara", 1918],
+      ["australia", 1919], ["aotearoa", 1918], ["pacific-islands", 1918], ["arctic", 1918], ["persia", 1918], ["levant", 1918], ["egypt", 1918], ["nusantara", 1918], ["philippines", 1918],
       ["southeast-asia", 1918], ["korea", 1918], ["anatolia", 1918], ["aegean", 1918], ["carpathians-balkans", 1918], ["low-countries", 1918], ["maghreb", 1918]]},
   {id: "typhus-1945", disease: "typhus", name: "Typhus in the camps", last: 1, note: "Lice and hunger in the ruins at the war's end.", at: [["german-lands", 1945], ["poland-baltic", 1945]]},
   {id: "flu-1957", disease: "influenza", name: "The Asian flu", last: 1, note: "A new strain; schools close for weeks.",
     at: [["china", 1957], ["southeast-asia", 1957], ["india", 1957], ["japan", 1957], ["british-isles", 1957], ["north-america-east", 1957], ["german-lands", 1957], ["moravia", 1957], ["russia", 1957]]},
-  {id: "cholera-1961", disease: "cholera", name: "Cholera", last: 4, note: "A new strain out of the islands.", at: [["nusantara", 1961], ["southeast-asia", 1962], ["india", 1964], ["persia", 1965], ["west-africa", 1970]]},
+  {id: "cholera-1961", disease: "cholera", name: "Cholera", last: 4, note: "A new strain out of the islands.", at: [["nusantara", 1961], ["philippines", 1961], ["southeast-asia", 1962], ["india", 1964], ["persia", 1965], ["west-africa", 1970]]},
   {id: "flu-1968", disease: "influenza", name: "The Hong Kong flu", last: 1, note: "Soldiers coming home carry it.",
     at: [["china", 1968], ["southeast-asia", 1968], ["north-america-east", 1968], ["north-america-west", 1968], ["british-isles", 1969], ["france", 1969], ["german-lands", 1969]]},
   {id: "ebola-1976", disease: "ebola", name: "A fever by the river", last: 1, note: "A mission hospital becomes the place where it spreads.", at: [["central-africa", 1976], ["east-africa", 1976], ["central-africa", 1995]]},
@@ -465,7 +465,7 @@ export const HISTORY = [
   {id: "cholera-2010", disease: "cholera", name: "Cholera", last: 3, note: "After the earthquake, in the camps.", at: [["caribbean", 2010]]},
   {id: "ebola-2014", disease: "ebola", name: "Ebola", last: 2, note: "It reaches the crowded cities for the first time.", at: [["west-africa", 2014]]},
   {id: "covid-2020", disease: "coronavirus", name: "The coronavirus pandemic", last: 3, note: "Lockdowns, empty streets and masks in every shop.",
-    at: [["china", 2019], ...["japan", "korea", "southeast-asia", "nusantara", "india", "persia", "levant", "anatolia", "aegean", "italy", "iberia", "france", "german-lands", "moravia",
+    at: [["china", 2019], ...["japan", "korea", "southeast-asia", "nusantara", "philippines", "india", "persia", "levant", "anatolia", "aegean", "italy", "iberia", "france", "german-lands", "moravia",
       "low-countries", "british-isles", "scandinavia", "poland-baltic", "carpathians-balkans", "russia", "egypt", "maghreb", "arabia", "west-africa", "east-africa",
       "southern-africa", "central-africa", "canada", "north-america-east", "north-america-west", "mexico", "caribbean", "andes", "brazil", "southern-cone",
       "australia", "aotearoa", "pacific-islands", "central-asia", "siberia", "tibet-himalaya", "arctic"].map(r => [r, 2020])]}

@@ -22,7 +22,7 @@ import {LOCAL_WORLD} from "./lifepath-local-world.mjs";
 
 export const CONTINENTS = [
  ["Europe", ["moravia","german-lands","british-isles","france","iberia","italy","low-countries","scandinavia","poland-baltic","carpathians-balkans","russia","aegean"]],
- ["Asia", ["anatolia","levant","arabia","persia","central-asia","siberia","tibet-himalaya","india","china","japan","korea","southeast-asia","nusantara"]],
+ ["Asia", ["anatolia","levant","arabia","persia","central-asia","siberia","tibet-himalaya","india","china","japan","korea","southeast-asia","nusantara","philippines"]],
  ["Africa", ["egypt","maghreb","west-africa","east-africa","southern-africa","central-africa"]],
  ["North America", ["canada","north-america-east","north-america-west","mexico","caribbean"]],
  ["South America", ["andes","brazil","southern-cone"]],

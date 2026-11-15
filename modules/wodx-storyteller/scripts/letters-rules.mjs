@@ -61,7 +61,7 @@ export const REGION_LINES = {
   "anatolia": LN(1840, 1855, 1909), "levant": LN(1840, 1861, 1910), "egypt": LN(1865, 1856, 1884), "arabia": LN(1882, 1900, 1934),
   "maghreb": LN(1835, 1854, 1890), "persia": LN(1874, 1864, 1910), "central-asia": LN(1870, 1873, 1925), "siberia": LN(1700, 1869, 1920),
   "tibet-himalaya": LN(1910, 1904, 1950), "india": LN(1837, 1851, 1882), "china": LN(1400, 1881, 1900), "japan": LN(1663, 1869, 1890),
-  "korea": LN(1884, 1885, 1902), "southeast-asia": LN(1850, 1870, 1890), "nusantara": LN(1746, 1856, 1882), "west-africa": LN(1880, 1886, 1910),
+  "korea": LN(1884, 1885, 1902), "southeast-asia": LN(1850, 1870, 1890), "nusantara": LN(1746, 1856, 1882), "philippines": LN(1767, 1873, 1890), "west-africa": LN(1880, 1886, 1910),
   "central-africa": LN(1890, 1910, 1930), "east-africa": LN(1890, 1890, 1910), "southern-africa": LN(1792, 1860, 1882), "canada": LN(1755, 1847, 1878),
   "north-america-east": LN(1692, 1844, 1878), "north-america-west": LN(1850, 1861, 1880), "mexico": LN(1580, 1851, 1882), "caribbean": LN(1760, 1870, 1885),
   "andes": LN(1570, 1870, 1888), "brazil": LN(1663, 1857, 1883), "southern-cone": LN(1748, 1857, 1881), "australia": LN(1809, 1854, 1880),
