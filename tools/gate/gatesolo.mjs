@@ -75,6 +75,11 @@ async function setup() {
   const ok = (name, pass, detail = {}) => steps.push({name, pass: !!pass, ...detail});
   const step = async (name, fn) => { try { await fn(); } catch (e) { ok(name, false, {error: e.message, stack: String(e.stack).split("\n").slice(0, 3).join(" | ")}); } };
   const R = S()?.rules;
+  // Chronicle gives an unseeded world its start level 1.5 s after a Storyteller loads (B4860). A lane reset from its
+  // snapshot is unseeded, so the seed would otherwise land in the middle of this setup and the switch would find its
+  // settings already set, and never put them back. Wait for it, then read the values to restore.
+  if ( game.settings.settings.has(`${CHRON}.automationSeeded`) ) await until(() => read(CHRON, "automationSeeded") === true, 8000);
+  await sleep(500);
   const ids = {since: Date.now(), t0: game.time.worldTime, back: canvas.scene?.id ?? null, steps,
     wasOn: !!read(MOD, "on"), wait: read(MOD, "wait"), act: read(MOD, "act"),
     before: (R?.PRESET ?? []).map(p => ({mod: p.mod, key: p.key, value: read(p.mod, p.key)})), auto: foundry.utils.deepClone(read(CHRON, "autoApprove") ?? {})};
