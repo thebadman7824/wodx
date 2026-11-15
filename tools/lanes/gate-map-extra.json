@@ -29,6 +29,24 @@
       "wodx-npc",
       "wodx-actions",
       "wodx-chronicle"
+    ],
+    "gateapipaths": [
+      "wodx-actions",
+      "wodx-atmosphere",
+      "wodx-chronicle",
+      "wodx-combat",
+      "wodx-creation",
+      "wodx-interactables",
+      "wodx-library",
+      "wodx-npc",
+      "wodx-otherworlds",
+      "wodx-paperdoll",
+      "wodx-senses",
+      "wodx-sheets",
+      "wodx-solo",
+      "wodx-storyteller",
+      "wodx-targeting",
+      "wodx-voices"
     ]
   },
   "remove": {},
