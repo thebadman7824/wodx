@@ -1,6 +1,7 @@
 import {findClan, clanDisciplines, generationRow, ghoulDisciplineCap, ghoulCanLearn, xpCost, traitMax, KINDS} from "./rules.mjs";
 import {XP} from "../data/vampire.mjs";
 import * as AG from "./animal-ghoul-rules.mjs";
+import * as AS from "./animal-stock-rules.mjs";
 
 export const MODULE_ID = "wodx-creation";
 export const DISCIPLINE = "wod.types.discipline";
@@ -192,7 +193,7 @@ export function purchaseOptions(actor) {
   const {available} = xpTotals(payerOf(actor));
   const out = [];
   const add = (kind, key, label, current, extra = {}) => {
-    const max = traitMax({line, kind, generation: gen, domitorGeneration: domitorGen});
+    const max = traitMax({line, kind, generation: gen, domitorGeneration: domitorGen, golconda: !!actor?.flags?.["wodx-actions"]?.golconda});
     const cost = xpCost({line, kind, current, discipline: extra.discipline});
     let reason = "";
     if ( cost === null ) reason = "Not available to this character";
@@ -234,7 +235,29 @@ export function purchaseOptions(actor) {
     add("road", "path", label, Number(p.permanent) || 0);
   }
   if ( sys.advantages?.willpower ) add("willpower", "willpower", "Willpower", Number(sys.advantages.willpower.permanent) || 0);
+  // B5060: an animal ghoul's next step of training, at the house costs
+  if ( beast ) { const t = trainingOption(actor, available); if ( t ) out.push(t); }
   return out;
+}
+
+/** The next step of training for an animal ghoul, as a purchase (B5060). */
+export function trainingOption(actor, available = xpTotals(payerOf(actor)).available) {
+  const kind = animalKindOf(actor);
+  const now = AS.trainingOf(actor.getFlag?.(MODULE_ID, "animal"));
+  const next = AS.nextTraining(kind, now);
+  if ( !next ) return null;
+  const cost = AS.TRAINING[next].xp;
+  const reason = cost > available ? `Needs ${cost} experience; ${available} available` : "";
+  return {kind: "training", key: next, label: `Training: ${AS.TRAINING[next].label.toLowerCase()}`, current: AS.TRAINING[now].rank, next: AS.TRAINING[next].rank,
+    cost, max: 2, ok: !reason, reason};
+}
+
+/** Train an animal one step: the bracket traits, war's Brawl, and the mark on the sheet (B5059). */
+export async function applyTraining(actor, level) {
+  const kind = animalKindOf(actor);
+  if ( !kind || !AS.TRAINING[level] ) return null;
+  const mark = actor.getFlag?.(MODULE_ID, "animal") ?? {};
+  return actor.update({...AS.trainingPatch(actor.system ?? {}, kind, level), [`flags.${MODULE_ID}.animal`]: {...mark, kind, training: level}});
 }
 
 /** Cost and checks for a Discipline the character does not have yet. */
@@ -271,6 +294,7 @@ export function newAbilityOption(actor, name, group = "skill") {
 
 /** Re-check a purchase against the actor as it is now. Returns the option or null. */
 export function recheck(actor, purchase) {
+  if ( purchase.kind === "training" ) { const t = trainingOption(actor); return t && t.key === purchase.key ? t : null; }
   if ( purchase.kind === "newDiscipline" ) return newDisciplineOption(actor, purchase.label);
   if ( purchase.kind === "newAbility" ) return newAbilityOption(actor, purchase.label, purchase.group);
   return purchaseOptions(actor).find(o => o.kind === purchase.kind && o.key === purchase.key) ?? null;
@@ -296,6 +320,8 @@ export async function applyPurchase(actor, option) {
         [`system.advantages.virtues.${option.key}.temporary`]: next});
     case "road":
       return actor.update({"system.advantages.path.permanent": next, "system.advantages.path.value": next});
+    case "training":
+      return applyTraining(actor, option.key);
     case "willpower":
       return actor.update({"system.advantages.willpower.permanent": next,
         "system.advantages.willpower.temporary": Math.min(next, (Number(actor.system.advantages.willpower.temporary) || 0) + 1)});

@@ -6,6 +6,7 @@
  * World setting "Magic that applies itself": Automatic (on, except in the Live world), On, Off. Rules: effects-rules.js.
  */
 import * as E from "./effects-rules.js";
+import * as KRG from "./kindred-rules.js";
 import * as DAE from "./mage-da-effects.js";
 import * as PE from "./path-effects.js";
 import * as PW from "./power-effects.js";
@@ -14,6 +15,7 @@ import * as SUM from "./summons.js";
 import * as SR from "./summon-rules.js";
 import * as TR from "./turn-rules.js";
 import * as TURN from "./turns.js";
+import * as LIM from "./limits.js";
 import { ask } from "./profiles.js";
 import { BOOK_RITUALS, bookRitual, ritualResults } from "./book-rituals.js";
 export { E, W };
@@ -341,6 +343,11 @@ export function planOf(actor, results, successes, power = null) {
     const self = r.who === "self" || t.self;
     for ( const d of docs ) {
       const a = d?.actor ?? d;
+      // B5093: the powers that name Golconda cannot reach a vampire in it (V20 pp. 158, 161, 177; V20 Dark Ages p. 220)
+      if ( power?.name && a?.flags?.[MOD]?.golconda && KRG.beyondGolconda(power.name) ) {
+        items.push({key: r.key, out: {...r.out, label: r.out.label, text: `${a.name ?? "The target"} is in Golconda, beyond this power's reach, and never knows it was tried`}, target: d?.uuid ?? null, name: d?.name ?? a?.name ?? "", route: "off", golconda: true});
+        continue;
+      }
       let route = !isOn() ? "off" : r.st ? "st" : E.route(r.key, {self, playerCharacter: !!a?.hasPlayerOwner, count: docs.length, need: 0}, r.out);
       if ( r.ask && route === "auto" ) route = "queue";
       if ( route === "auto" && r.out.kind === "move" ) route = "pick";
@@ -349,14 +356,16 @@ export function planOf(actor, results, successes, power = null) {
       if ( r.key === "summon" && isOn() ) route = actor?.hasPlayerOwner ? "queue" : "auto";
       const rs = !self && r.key !== "summon" ? (r.out?.resist === null ? null : E.resistOf(r.key, r.out?.resist ? {resist: r.out.resist} : null)) : null;
       const out = rs && !r.out?.resist ? {...r.out, resist: {pool: rs.pool, diff: rs.diff}} : r.out;
-      items.push({key: r.key, out, target: d?.uuid ?? null, name: d?.name ?? a?.name ?? "", route, ...(r.key === "summon" ? {caster: actor?.uuid ?? null} : {})});
+      items.push({key: r.key, out, target: d?.uuid ?? null, name: d?.name ?? a?.name ?? "", route, ...(r.key === "summon" ? {caster: actor?.uuid ?? null} : {}),
+        // B4925, B4928: the power and its user, for a won resistance's bar (Compel Soul) and the resist card's breakdown
+        ...(power?.name ? {power: power.name, by: actor?.uuid ?? null, successes: n(successes)} : {})});
       if ( r.key === "summon" ) break; // one summoning, however many targets the caster has picked
     }
   }
   const word = {auto: "applies", queue: "waits in the approval queue", st: "is the Storyteller's call", off: "is for the Storyteller to apply", pick: "goes where the Storyteller clicks",
     area: "waits for the Storyteller to place it"};
   const html = `<div class="vta-res wodx-effects"><b>What it does</b><ul>${items.map(i =>
-    `<li><b>${esc(i.out.label)}</b> on ${esc(i.name)}: ${esc(String(i.out.text).slice(0, 220))}. <span class="wodx-quiet">It ${word[i.route]}.</span></li>`).join("")}</ul></div>`;
+    `<li><b>${esc(i.out.label)}</b> on ${esc(i.name)}: ${esc(String(i.out.text).slice(0, 220))}. <span class="wodx-quiet">${i.golconda ? "It does not take hold." : `It ${word[i.route]}.`}</span></li>`).join("")}</ul></div>`;
   return {items, html};
 }
 
@@ -1071,8 +1080,12 @@ export async function resistItem(msg, i) {
   const res = countSuccesses(faces, n(R.diff));
   const won = res.successes > 0;
   const what = item.key === "hold" ? (won ? "breaks free" : "cannot break free this turn") : won ? `throws off ${item.out.label}` : `cannot throw off ${item.out.label}`;
+  // B4928: the whole roll shows: the pool's parts, each die, the ones that cancel, and the power's own successes.
+  // An NPC's resisting roll goes to the Storyteller alone (standing rule 19).
+  const bd = SR.breakdown({parts: SUM.poolParts(a, pool), dice, diff: n(R.diff), faces, successes: res.successes, botch: res.botch, against: item.successes ?? null});
   await ChatMessage.create({speaker: {alias: a.name}, rolls: [roll], ...(a.hasPlayerOwner ? {} : {whisper: game.users.filter(u => u.isGM).map(u => u.id), blind: true}),
-    content: `<div class="wodx-card"><p><b>${esc(a.name)}</b> rolls ${dice} dice at ${n(R.diff)} against ${esc(data.caster ?? "the caster")}'s ${esc(item.out.label)}: ${res.botch ? "a botch" : `${res.successes} success${res.successes === 1 ? "" : "es"}`}, and ${esc(what)}.</p></div>`});
+    content: `<div class="wodx-card"><p><b>${esc(a.name)}</b> rolls against ${esc(data.caster ?? "the caster")}'s ${esc(item.out.label)}, and ${esc(what)}.</p>
+      <p class="wodx-quiet">${esc(bd.pool)}</p><p>${bd.faces.map(f => `<span class="vta-die ${f.mark}">${f.v}</span>`).join(" ")}</p><p>${esc(bd.result)}</p></div>`});
   if ( game.user.isGM ) return resolveResist(msg, i, won);
   game.socket.emit(`module.${MOD}`, {action: "effectResisted", msg: msg.id, i, won, user: game.user.id});
   return won;
@@ -1084,6 +1097,11 @@ export async function resolveResist(msg, i, won) {
   const data = msg.flags?.[MOD];
   const item = data?.items?.[i];
   if ( !item ) return null;
+  // B4925: a ghost that beats Compel Soul is safe from all of that vampire's Necromancy tonight (VtDA p. 287)
+  if ( won && /compel soul/i.test(item.power ?? item.out?.label ?? "") && item.by ) {
+    const by = actorOf(docOf(item.by)), tgt = actorOf(docOf(item.target));
+    if ( by && tgt ) await LIM.lostTo(by, {name: "Compel Soul", disc: "Necromancy"}, tgt).catch(e => console.warn("WoDX | Compel Soul", e));
+  }
   if ( won && ENDS_ON_RESIST.has(item.key) ) {
     // B4839: tearing free of a bite costs the one who tears loose (Clenched Jaw)
     const brk = item.out?.everyTurn?.onBreak?.damage;

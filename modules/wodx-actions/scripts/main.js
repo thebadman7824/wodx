@@ -61,6 +61,9 @@ import * as BLX from "./banal-life.js";
 import * as EFX from "./effects.js";
 import * as SUM from "./summons.js";
 import * as TURN from "./turns.js";
+import * as LIM from "./limits.js";
+import * as AFC from "./after-costs.js";
+import * as NPW from "./npc-power-rules.js";
 import * as PK from "./power-keywords.js";
 import * as BR from "./book-rituals.js";
 import * as ZR from "./m20-rules.js";
@@ -70,6 +73,7 @@ import * as SOR from "./social-rules.js";
 import * as TRR from "./trade-rules.js";
 import * as SOD from "./social.js";
 import * as TH from "./trait-hooks.js";
+import * as DSL from "./daysleep.js";
 import * as DH from "./deeper-hooks.js";
 import * as DPR from "./deeper-rules.js";
 import * as KF from "./feeding-rules.js";
@@ -282,6 +286,8 @@ function isResponsibleGM() {
     return gm?.id === game.user.id;
 }
 async function onSocket(p) {
+    // B4896: a word over a token (falls asleep, rises, burns) on every client
+    if (p?.action === "float") return DSL.floatLocal(p);
     if (!isResponsibleGM()) return;
     if (p.action === "kx" && !p.uuid) return kx().onSocket(p);
     // B4822: a player sends their summons away
@@ -407,6 +413,7 @@ async function readFace({ actor, npc, lie = false } = {}) {
     else game.socket.emit(SOCKET, { action: "straightFace", data: hidden });
     return res;
 }
+const AUTO_HIDE = new Set();
 async function post(actor, title, body, rolls = [], data = null) {
     let flav = "", mode = "off";
     try { mode = setting("flavorText"); } catch (e) { mode = "all"; }
@@ -422,6 +429,8 @@ async function post(actor, title, body, rolls = [], data = null) {
     const content = TR.cardLayout({ title, body: `${body}${mode === "all" ? F.html(flav) : ""}`, line, changes });
     if (flav && mode === "gm") ChatMessage.create({ content: `<div class="vta-card">${F.html(flav)}</div>`, whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: { alias: "WoDX" } });
     const md = { speaker: ChatMessage.getSpeaker({ actor }), content, rolls: rolls.filter(Boolean) };
+    // B4981: a check rolled by itself for a Storyteller's character is the Storyteller's only (standing rule 19)
+    if (actor && AUTO_HIDE.has(actor.id)) { md.whisper = game.users.filter(u => u.isGM).map(u => u.id); md.blind = true; }
     if (rolls.filter(Boolean).length) { md.sound = CONFIG.sounds.dice; if (GEN() < 12) md.type = CONST.CHAT_MESSAGE_TYPES.ROLL; }
     // Cards with prompt buttons (sin, witnesses, Rötschreck after sunlight) need the module's flag to be bound
     if (!data && /data-(kx|sx|wx|vx)=/.test(content)) data = { kind: "buttons" };
@@ -527,6 +536,40 @@ async function dialog(title, content, label, callback, { width = 460, render = n
         return out;
     }
     catch (e) { console.error(e); ui.notifications.error(`WoDX Actions: ${e.message}`); return null; }
+}
+
+/**
+ * B4926: the powers an NPC may choose by itself, with what each is for (attack, hold, heal, guard, escape, call, boost),
+ * whether mortals would see it, and whether its limits leave it free now. Lines whose windows fill themselves:
+ * Disciplines, Gifts, Arcanoi and edges.
+ */
+function npcPowers(actor) {
+    if (!actor) return [];
+    const kind = P.detectProfile(actor);
+    const from = [];
+    try { if (["kindred", "ghoul"].includes(kind) || actor.items.some(i => i.type === "Power" && /discipline/i.test(i.system?.type ?? ""))) from.push(...kx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
+    try { if (kind === "lupine" || actor.items.some(i => i.type === "Power" && /gift/i.test(i.system?.type ?? ""))) from.push(...gx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
+    try { if (kind === "wraith" || kind === "spectre") from.push(...wx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
+    try { if (kind === "hunter") from.push(...rx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
+    const bySlug = n => { for (const set of Object.keys(PK.LINE_KEYWORDS)) { const k = PK.keywordsOf(set, PK.slugOf(n)); if (k?.keywords?.length) return k; } return null; };
+    return from.map(p => {
+        const kw = (p.id && PK.keywordsOf(p.set, p.id)) || bySlug(p.name) || { keywords: [] };
+        const t = NPW.tagsOf(kw.keywords ?? []);
+        const st = LIM.stateOf(actor, p, []);
+        return { ...p, keywords: kw.keywords ?? [], uses: t.uses, obvious: t.obvious, free: st.ok, why: st.why };
+    }).filter(p => p.uses.length);
+}
+
+/**
+ * B4926: an NPC uses a power by itself: its window fills itself with the power chosen and rolls as if sent.
+ * The target goes up first so the window's own aim and difficulty read it.
+ */
+async function autoPower(actor, pick, { target = null } = {}) {
+    if (!actor || !pick?.use) return null;
+    if (target) { for (const t of game.user.targets ?? []) t.setTarget(false, { releaseOthers: false }); target.setTarget?.(true, { releaseOthers: true, groupSelection: false }); }
+    P.autoNext({ [pick.field]: pick.value });
+    const call = { useDiscipline: a => kx().useDiscipline(a), useGift: a => gx().useGift(a), useArcanos: a => wx().useArcanos(a), useEdge: a => rx().useEdge(a) }[pick.use];
+    return call ? call(actor) : null;
 }
 
 function resolveActor(a) {
@@ -655,6 +698,8 @@ function pickPool(actor, pools) {
 export async function action({ actor: a, preset = "" } = {}) {
     const actor = needActor(a);
     if (!actor) return;
+    // B4890: asleep for the day, a Cainite does nothing until woken (Awaken by day) or the sun sets
+    if (flag(actor, "daySleep") && !game.user.isGM) return ui.notifications.warn(`${actor.name} is asleep for the day. Use Awaken by day if something rouses them.`);
     const target = targetActor();
     const rd = road(actor);
     const day = !!flag(actor, "daytime") && !flag(actor, "daytime")?.uncapped;
@@ -1100,8 +1145,10 @@ export async function frenzy({ actor: a, provocation = "physical", difficulty = 
       <div class="form-group"><label>Difficulty (custom)</label><input type="number" name="diff" value="${difficulty ?? 6}"/></div>
       <div class="form-group"><label>Difficulty modifier (drugs –1, Intimidation powers +n…)</label><input type="number" name="mod" value="0"/></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div>
+      <div class="form-group"><label><input type="checkbox" name="wpAuto" ${flag(actor, "beastWillpower") ? "checked" : ""}/> When these checks roll by themselves, spend Willpower if there is any</label></div>
     </form>`;
     return dialog(`${v.selfcontrol.isInstinct ? "Instinct" : "Frenzy"} check`, content, "Roll", async fd => {
+        await setFlag(actor, "beastWillpower", fd.wpAuto ? true : null);
         if (golconda) return post(actor, `${actor.name} resists frenzy`, `<div class="vta-big good">Golconda: the Beast is mastered: no frenzy.</div>`);
         const p = R.FRENZY_PROVOCATIONS[fd.prov];
         let diff = p?.diff ?? fd.diff;
@@ -1128,8 +1175,10 @@ export async function rotschreck({ actor: a, provocation = "torch" } = {}) {
       <div class="form-group"><label>Difficulty (custom)</label><input type="number" name="diff" value="6"/></div>
       <div class="form-group"><label>Difficulty modifier</label><input type="number" name="mod" value="${dawn}"/></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div>
+      <div class="form-group"><label><input type="checkbox" name="wpAuto" ${flag(actor, "beastWillpower") ? "checked" : ""}/> When these checks roll by themselves, spend Willpower if there is any</label></div>
     </form>`;
     return dialog("Rötschreck check", content, "Roll", async fd => {
+        await setFlag(actor, "beastWillpower", fd.wpAuto ? true : null);
         if (flag(actor, "golconda")) return post(actor, `${actor.name} faces the flame`, `<div class="vta-big good">Golconda: immune to Rötschreck.</div>`);
         if (actor.system?.conditions?.isfrenzy && flag(actor, "frenzyType") !== "fear")
             return post(actor, `${actor.name} faces the flame`, `<div class="vta-big">Already in frenzy: immune to Rötschreck (V20 Dark Ages p. 357).</div>`);
@@ -1146,6 +1195,7 @@ export async function rotschreck({ actor: a, provocation = "torch" } = {}) {
 export async function rotschreckAuto({ actor: a, provocation = "torch", why = "" } = {}) {
     const actor = needActor(a);
     if (!actor || !isVampire(actor) || flag(actor, "golconda") || actor.system?.conditions?.isfrenzy) return null;
+    if (!fearOnce(actor)) return null;
     let dawn = 0;
     try { const at = game.modules.get("wodx-atmosphere"); dawn = at?.active ? Number(at.api?.dread?.rotschreck?.()) || 0 : 0; } catch (e) { dawn = 0; }
     const p = R.ROTSCHRECK_PROVOCATIONS[provocation] ?? R.ROTSCHRECK_PROVOCATIONS.torch;
@@ -1200,6 +1250,102 @@ async function beastRoll(actor, d, msg = null) {
     }
     if (msg) await markUsed(msg);
     return post(actor, `${actor.name}: ${fear ? "Rötschreck" : d.kind === "instinct" ? "Instinct" : "Frenzy"} check`, body, [r.roll], data);
+}
+
+/**
+ * B4980-B4981: frenzy and Rötschreck checks rolled by themselves when something provokes them. The difficulty is
+ * worked out as the dialogs do; Willpower is spent when the character is marked to (the dialogs' "when these checks
+ * roll by themselves" box). Holding the Beast off rolls again each turn until it subsides or breaks free (V20 p. 297).
+ * A Storyteller's character's rolls go to the Storyteller only.
+ */
+/**
+ * One Rötschreck for one burn: the sun's card, the wound card and WoDX Interactables' fire may each ask for it within
+ * the same moment. The first asks; the rest in the next few seconds are dropped. claimFear holds the place for a caller
+ * (the sun) that rolls after the damage it applies.
+ */
+const FEAR_AT = new Map();
+export function claimFear(actor) { if (actor?.id) FEAR_AT.set(actor.id, Date.now()); }
+export function fearOnce(actor, { claimed = false, ms = 4000 } = {}) {
+    if (!actor?.id) return true;
+    if (claimed) { FEAR_AT.set(actor.id, Date.now()); return true; }
+    const t = FEAR_AT.get(actor.id);
+    if (t && Date.now() - t < ms) return false;
+    FEAR_AT.set(actor.id, Date.now());
+    return true;
+}
+
+export async function autoBeast({ actor: a, kind = "frenzy", provocation = null, claimed = false } = {}) {
+    const actor = a?.actor ?? a;
+    if (!actor || !isVampire(actor) || flag(actor, "torpor")) return null;
+    const fear = kind === "fear";
+    if (flag(actor, "golconda")) return null;
+    if (fear && !fearOnce(actor, { claimed })) return null;
+    if (fear && actor.system?.conditions?.isfrenzy && flag(actor, "frenzyType") !== "fear") return null;
+    if (!fear && actor.system?.conditions?.isfrenzy) return null;
+    const v = virtues(actor);
+    let diff, prov, traitDice = 0, traitParts = [];
+    if (fear) {
+        const p = R.ROTSCHRECK_PROVOCATIONS[provocation] ?? R.ROTSCHRECK_PROVOCATIONS.torch;
+        let dawn = 0;
+        try { const at = game.modules.get("wodx-atmosphere"); dawn = at?.active ? Number(at.api?.dread?.rotschreck?.()) || 0 : 0; } catch (e) { dawn = 0; }
+        diff = R.clampDifficulty(n0(p?.diff ?? 6) + dawn + DH.fireStep(actor));
+        prov = p?.label ?? "Fire";
+    } else {
+        const p = R.FRENZY_PROVOCATIONS[provocation] ?? R.FRENZY_PROVOCATIONS.physical;
+        let d0 = p?.diff ?? 6;
+        if (provocation === "atrocity") d0 = 9 - v.conscience.value;
+        const tm = TH.traitMods(actor, ["frenzy"]);
+        const fire = DH.fireStep(actor);
+        diff = R.clampDifficulty(d0 + tm.diff + fire);
+        traitDice = tm.dice; traitParts = fire ? [...(tm.parts ?? []), `Open fire here +${fire} diff`] : tm.parts;
+        prov = p?.label ?? "Frenzy";
+    }
+    const hide = !actor.hasPlayerOwner;
+    if (hide) AUTO_HIDE.add(actor.id);
+    try {
+        let d = { kind: fear ? "fear" : v.selfcontrol.isInstinct ? "instinct" : "frenzy", diff, prov: `${prov} (rolled by itself)`, wp: !!flag(actor, "beastWillpower") && willpower(actor).temp > 0, total: 0, traitDice, traitParts };
+        let msg = null;
+        for (let i = 0; i < 8; i++) {
+            msg = await beastRoll(actor, d);
+            const f = msg?.flags?.[MOD];
+            if (f?.kind !== "beast") break;
+            d = { ...f.d, wp: false };
+        }
+        return msg;
+    } finally { AUTO_HIDE.delete(actor.id); }
+}
+const n0 = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
+
+/**
+ * B4982: rising from torpor when its time is up: a blood point and the Road at 8 by itself; on a failure, the next
+ * night tries again. With no blood, the Storyteller is told the body needs feeding first.
+ */
+export async function autoTorporRise({ actor: a } = {}) {
+    const actor = a?.actor ?? a;
+    const t = actor ? flag(actor, "torpor") : null;
+    if (!t) return null;
+    const rd = road(actor), b = blood(actor);
+    const hide = !actor.hasPlayerOwner;
+    if (hide) AUTO_HIDE.add(actor.id);
+    try {
+        if (b.value < 1) {
+            await setFlag(actor, "torpor", { ...t, retryAt: game.time.worldTime + 86400 });
+            return post(actor, `${actor.name} cannot rise`, `<div class="vta-big bad">No blood in the body: no rising until someone feeds them.</div>`);
+        }
+        await changeBlood(actor, -1);
+        const r = await rollPool(rd.value, 8);
+        let html = rollBlock(`${rd.name} (1 blood spent)`, r);
+        if (r.successes) {
+            await setFlag(actor, "torpor", null); await statusEffect(actor, "unconscious", false); await condition(actor, "torpor", false);
+            await kx().logEvent(actor, "Rises from torpor.", "torpor");
+            await dm().wake(actor, t?.since);
+            html += `<div class="vta-big good">${esc(actor.name)} rises: Crippled; heal or hunt at once.</div>`;
+        } else {
+            await setFlag(actor, "torpor", { ...t, retryAt: game.time.worldTime + 86400 });
+            html += `<div class="vta-big bad">${esc(actor.name)} sleeps on. The next night brings another try.</div>`;
+        }
+        return post(actor, `${actor.name} tries to rise from torpor`, html, [r.roll]);
+    } finally { AUTO_HIDE.delete(actor.id); }
 }
 
 export async function endFrenzy({ actor: a } = {}) {
@@ -2137,8 +2283,10 @@ export async function daytime({ actor: a } = {}) {
         html += `<div class="vta-big ${res.awake ? "good" : "bad"}">${res.text}</div>`;
         if (res.awake) {
             if (!sm.light) html += `<div class="vta-note">While active by day, no dice pool may exceed the Road rating (${rd.value}). Enabled on the Action dialog.</div>`;
-            await setFlag(actor, "daytime", { turns: res.turns === Infinity ? "scene" : res.turns, ...(sm.light ? { uncapped: true } : {}) });
+            await setFlag(actor, "daytime", { turns: res.turns === Infinity ? "scene" : res.turns, until: game.time.worldTime + (res.turns === Infinity ? 3600 : res.turns * 3), ...(sm.light ? { uncapped: true } : {}) });
         }
+        // B4892: the day's sleep follows the roll (awake: the marker comes off; a botch: deep sleep until sundown)
+        try { await kx().daySleep().afterAwakening(actor, { awake: res.awake, botch: !!r?.botch }); } catch (e) { console.warn("WoDX | day sleep", e); }
         return post(actor, `${actor.name} stirs by day`, html, rolls);
     });
 }
@@ -2322,7 +2470,8 @@ export async function newNight({ actors } = {}) {
             await nagarajaPenalty(actor, ns.debt);
             if (ns.debt) bits.push(`no flesh: ${ns.debt} di${ns.debt === 1 ? "e" : "ce"} off Physical pools`);
         }
-        if (!inTorpor) {
+        if (!inTorpor && untrainedBeast(actor)) bits.push("untrained: wins back no Willpower");
+        else if (!inTorpor) {
             const w = willpower(actor);
             const to = KR.willpowerAfter(setting("willpowerRecovery"), w.temp, w.perm, "night");
             if (to > w.temp) { upd["system.advantages.willpower.temporary"] = to; bits.push(`Willpower ${w.temp} → ${to}`); }
@@ -2347,18 +2496,23 @@ export async function newNight({ actors } = {}) {
     return post(null, "A new night", `<ul>${lines.join("")}</ul>${setting("willpowerRecovery") === "off" ? "" : `<p class="wodx-quiet">Willpower: ${setting("willpowerRecovery") === "night" ? "one a night (VtDA20 printed p. 340)" : "all at the end of a story"}.</p>`}`);
 }
 
+/** B5059: an animal recorded as untrained keeps no Willpower it spends (V20 Dark Ages p. 396). */
+const untrainedBeast = actor => actor?.flags?.["wodx-creation"]?.animal?.training === "untrained";
+
 /** The end of a story: Willpower returns in full (unless the setting is off). */
 export async function endStory({ actors } = {}) {
     if (!game.user.isGM) return ui.notifications.warn("End of story is for the GM.");
     const list = actors ?? game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner);
     const lines = [];
     for (const actor of list) {
+        if (untrainedBeast(actor)) { lines.push(`<li><b>${esc(actor.name)}</b>: untrained, so it wins back no Willpower (V20 Dark Ages p. 396)</li>`); continue; }
         const w = willpower(actor);
         const to = KR.willpowerAfter(setting("willpowerRecovery"), w.temp, w.perm, "story");
         if (to > w.temp) { await actor.update({ "system.advantages.willpower.temporary": to }); lines.push(`<li><b>${esc(actor.name)}</b>: Willpower ${w.temp} → ${to}</li>`); }
         const c = await hx().newStory(actor);
         if (c) lines.push(`<li>${esc(c)} (a new story, Dark Ages: Inquisitor p. 160)</li>`);
-        if (actor.type === "Hunter" && HX.lineNow() === "reckoning") {
+        // B4997: any imbued with a creed (a Hunter sheet or another type marked in Hunter traits) goes back to the creed's level
+        if ((actor.type === "Hunter" || rx().info(actor).creed) && HX.lineNow() === "reckoning") {
             const ri = rx().info(actor), start = ri.creedDef?.conviction;
             if (start && ri.conviction < start) { await rx().setConviction(actor, start); lines.push(`<li><b>${esc(actor.name)}</b>: Conviction ${ri.conviction} → ${start} (Hunter: The Reckoning p. 138)</li>`); }
         }
@@ -2621,7 +2775,7 @@ function sox() {
 let CXE = null;
 /** Changelings of the later eras (3.9.0, Phase 6h). */
 function cx() {
-    return CXE ??= CXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, background, spendWillpower, notify: m => ui.notifications.warn(m), crowdNear, crowdRules });
+    return CXE ??= CXD.build({ setting, post, rollPool, rollBlock, dialog, setFlag, updateActor, background, spendWillpower, notify: m => ui.notifications.warn(m), crowdNear, crowdRules });
 }
 
 let DXE = null;
@@ -2636,7 +2790,7 @@ function dx() {
 let UXE = null;
 /** The Reborn (3.10.0, Phase 6k). */
 function ux() {
-    return UXE ??= UXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, attr, findAbility, background, spendWillpower, healthTrack, setDamage, applyDamage, notify: m => ui.notifications.warn(m),
+    return UXE ??= UXD.build({ setting, post, rollPool, rollBlock, dialog, setFlag, updateActor, attr, findAbility, background, spendWillpower, healthTrack, setDamage, applyDamage, notify: m => ui.notifications.warn(m),
         traits: a => [...ATTRS.map(k => ({ key: k, label: game.i18n.localize(a.system?.attributes?.[k]?.label || k) || k, value: attr(a, k) })),
             ...abilityList(a).map(x => ({ key: x.key, label: x.name, value: x.value }))] });
 }
@@ -2644,7 +2798,7 @@ function ux() {
 let OXE = null;
 /** The crucible (3.10.0, Phase 6l). */
 function ox() {
-    return OXE ??= OXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, attr, findAbility, spendWillpower, healthTrack, setDamage, applyDamage, notify: m => ui.notifications.warn(m),
+    return OXE ??= OXD.build({ setting, post, rollPool, rollBlock, dialog, setFlag, updateActor, attr, findAbility, spendWillpower, healthTrack, setDamage, applyDamage, notify: m => ui.notifications.warn(m),
         traits: a => [...ATTRS.map(k => ({ key: k, label: game.i18n.localize(a.system?.attributes?.[k]?.label || k) || k, value: attr(a, k) })),
             ...abilityList(a).map(x => ({ key: x.key, label: x.name, value: x.value }))] });
 }
@@ -2652,7 +2806,7 @@ function ox() {
 let ZXE = null;
 /** Mages of the later eras (3.11.0, Phase 6m). */
 function zx() {
-    return ZXE ??= ZXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, spendWillpower, notify: m => ui.notifications.warn(m),
+    return ZXE ??= ZXD.build({ setting, post, rollPool, rollBlock, dialog, setFlag, updateActor, spendWillpower, notify: m => ui.notifications.warn(m),
         observersOf: a => { const t = a?.getActiveTokens?.()[0]; return t ? kx().observersOf(t, { secret: "mage", exclude: [a.id] }) : null; }, revealed: (a, o) => kx().revealed(a, o),
         quiet: () => qtx() });
 }
@@ -2697,7 +2851,7 @@ const withActor = f => async (o = {}) => {
 let SXE = null;
 /** The sunlight system (3.3.0). */
 function sx() {
-    return SXE ??= SX.build({ post, rollPool, rollBlock, dialog, setting, setFlag, attr, discipline, applyDamage, healthText,
+    return SXE ??= SX.build({ post, rollPool, rollBlock, dialog, setting, setFlag, attr, discipline, applyDamage, healthText, statusEffect, autoBeast: o => autoBeast(o), claimFear: a => claimFear(a), kotSunAuto: (a, o) => qx().sunAuto(a, o),
         logEvent: (a, t, k) => kx().logEvent(a, t, k), notify: m => ui.notifications.warn(m),
         clockActors: () => { const on = new Set((game.scenes?.active?.tokens ?? []).map(t => t.actor).filter(Boolean)); return [...new Set([...on, ...game.actors.filter(a => a.type !== "Group" && a.hasPlayerOwner)])]; } });
 }
@@ -3003,12 +3157,12 @@ async function createMacros() {
 async function gainDerangement(actor, cause, why) {
     try { return await game.modules.get("wodx-chronicle")?.api?.derangements?.gain?.(actor, cause, why); } catch (e) { console.warn("WoDX Actions | derangement", e); return null; }
 }
-const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, rotschreckAuto, endFrenzy, sin, daytime, torpor, hazard,
+const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, rotschreckAuto, endFrenzy, sin, daytime, torpor, hazard, autoBeast, autoTorporRise,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.92.0", summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.94.0", npcPowers, autoPower, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
-    m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Place: () => zx().placeDialog(), m20Quiet: withActor(a => qtx().panel(a)), quiet: { state: a => qtx().state(resolveActor(a)), act: (a, fd) => qtx().act(resolveActor(a), fd), rules: QR, onRefreshToken: QX.onRefreshToken }, consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
+    m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Draw: withActor(a => zx().drawDialog(a)), m20Place: () => zx().placeDialog(), m20Quiet: withActor(a => qtx().panel(a)), quiet: { state: a => qtx().state(resolveActor(a)), act: (a, fd) => qtx().act(resolveActor(a), fd), rules: QR, onRefreshToken: QX.onRefreshToken }, consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
     // Dark Ages mages (3.7.0)
     daCast: withActor(a => mx().cast(a)), daMage: withActor(a => mx().sheet(a)), daQuintessence: withActor(a => mx().quintessence(a)),
     daCountermagic: withActor(a => mx().counter(a)), daGuide: withActor(a => mx().guide(a)), daCertamen: withActor(a => mx().certamen(a)),
@@ -3024,13 +3178,13 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     // Changelings of the later eras (3.9.0)
     c20Cantrip: withActor(a => cx().cantrip(a)), c20Unleash: withActor(a => cx().unleash(a)), c20Invoke: withActor(a => cx().invoke(a)),
     c20Trigger: withActor(a => cx().trigger(a)), c20Epiphany: withActor(a => cx().epiphany(a)), c20Bedlam: withActor(a => cx().bedlam(a)),
-    c20ColdIron: withActor(a => cx().coldIron(a)), c20Mists: withActor(a => cx().mists(a)), c20Info: a => cx().info(resolveActor(a)), c20Everyday: () => blx().panel(), everydayBanality: { endScene: sc => blx().endScene(sc), panel: () => blx().panel(), rules: BLX },
+    c20ColdIron: withActor(a => cx().coldIron(a)), c20Mists: withActor(a => cx().mists(a)), c20Place: () => cx().placeDialog(), c20Info: a => cx().info(resolveActor(a)), c20Everyday: () => blx().panel(), everydayBanality: { endScene: sc => blx().endScene(sc), panel: () => blx().panel(), rules: BLX },
     demonEvoke: withActor(a => dx().evoke(a)), demonForm: withActor(a => dx().form(a)), demonRevelation: withActor(a => dx().revelation(a)), demonReap: withActor(a => dx().reap(a)),
     demonThralls: withActor(a => dx().thralls(a)), demonSin: withActor(a => dx().sin(a)), demonKindness: withActor(a => dx().kindness(a)), demonHeal: withActor(a => dx().heal(a)),
     demonHoly: withActor(a => dx().holy(a)), demonName: withActor(a => dx().named(a)), demonIllusion: withActor(a => dx().illusion(a)), demonInfo: a => dx().info(resolveActor(a)),
     demonDaily: () => dx().daily(), demonRules: DR, isDemon: a => DXD.isDemon(resolveActor(a)),
     kotFeed: withActor(a => qx().feed(a)), kotSpend: withActor(a => qx().spend(a)), kotNature: withActor(a => qx().nature(a)), kotDharma: withActor(a => qx().dharmaRoll(a)),
-    kotDemon: withActor(a => qx().demon(a)), kotRise: withActor(a => qx().rise(a)), kotSun: withActor(a => qx().sun(a)), kotHeal: withActor(a => qx().heal(a)),
+    kotDemon: withActor(a => qx().demon(a)), kotRise: withActor(a => qx().rise(a)), kotRiseAuto: a => qx().riseAuto(resolveActor(a) ?? a), kotSunAuto: (a, o) => qx().sunAuto(resolveActor(a) ?? a, o), kotSun: withActor(a => qx().sun(a)), kotHeal: withActor(a => qx().heal(a)),
     kotSight: withActor(a => qx().sight(a)), kotSetup: withActor(a => qx().setup(a)), kotInfo: a => qx().info(resolveActor(a)), kotRules: KER, isKotE: a => KXD.isKotE(resolveActor(a)),
     mummyCast: withActor(a => ux().cast(a)), mummySekhem: withActor(a => ux().regain(a)), mummyBalance: withActor(a => ux().balance(a)), mummyOffense: withActor(a => ux().offense(a)),
     mummyResurrect: withActor(a => ux().resurrect(a)), mummyVeil: withActor(a => ux().veil(a)), mummySetup: withActor(a => ux().setup(a)), mummyInfo: a => ux().info(resolveActor(a)),
@@ -3040,7 +3194,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     shift: withActor(a => GX.isShifter(a) ? gx().shift(a) : pm().shift(a)), regen: (o = {}) => pm().regen(o.actor ?? resolveActor()),
     // Werewolf and Fera (Phase 6b)
     shiftForm: withActor(a => gx().shift(a)), rageRoll: withActor((a, o) => gx().rageRoll(a, o)), spendRage: withActor(a => gx().spendRage(a)),
-    garouEndFrenzy: withActor(a => gx().endFrenzy(a)), remainActive: withActor(a => gx().remainActive(a)), meditate: withActor(a => gx().meditate(a)),
+    garouEndFrenzy: withActor(a => gx().endFrenzy(a)), remainActive: withActor(a => gx().remainActive(a)), remainActiveAuto: withActor(a => gx().remainActiveAuto(a)), meditate: withActor(a => gx().meditate(a)),
     useGift: withActor(a => gx().useGift(a)), learnGift: withActor(a => gx().learnGift(a)), performRite: withActor(a => gx().performRite(a)),
     summonSpirit: withActor(a => gx().summonSpirit(a)), useFetish: withActor(a => gx().useFetish(a)), accomplishment: withActor(a => gx().accomplishment(a)),
     battleScar: withActor(a => gx().battleScar(a)), curse: withActor(a => gx().curse(a)), kinfolk: withActor(a => gx().kinfolk(a)),
@@ -3061,7 +3215,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     crowdNear: a => crowdNear(resolveActor(a)), crowdRules,
     observersOf: (t, o) => kx().observersOf(t, o), revealed: (a, o) => kx().revealed(resolveActor(a), o), placeOf: t => kx().placeOf(t), witnessRules: WRR,
     history: (a, text, kind) => kx().logEvent(a, text, kind), roadOf: a => KX.roadOf(a), healPlan: (a, seconds) => kx().healPlan(a, seconds),
-    healAll: seconds => kx().healAll(seconds), clock: () => kx().onClock(), enterTorpor: (a, o) => kx().enterTorpor(a, o),
+    healAll: seconds => kx().healAll(seconds), clock: () => kx().onClock(), daySleep: () => kx().daySleep(), enterTorpor: (a, o) => kx().enterTorpor(a, o),
     sunlit: t => kx().sunlit(t), setSceneLight: (scene, light) => (scene ?? canvas.scene)?.setFlag(MOD, "light", light),
     kindredRules: KR, disciplines: () => KX.DATA.disc, roads: () => KX.DATA.roads,
     // The sunlight system (3.3.0)
@@ -3089,6 +3243,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
 
 Hooks.once("init", () => {
     registerSettings();
+    LIM.register();
     EFX.setup();
     SUM.setup();
     TURN.setup();
@@ -3146,6 +3301,9 @@ Hooks.once("ready", async () => {
         EFX.registerHandler(chronicle() ?? game.modules.get("wodx-chronicle")?.api);
         // Summoned beings: their timer's end and their token look (B4820)
         SUM.connect(chronicle() ?? game.modules.get("wodx-chronicle")?.api);
+        // B4920-B4923: the one scene count, power use limits and Drained
+        try { LIM.setup();
+        AFC.setup(); } catch (e) { console.error("WoDX | limits", e); }
         // Lifted and planted items, and being caught at it (3.21.0)
         try { sox().registerHandlers(); } catch (e) { console.error("WoDX | social", e); }
     };
@@ -3161,11 +3319,50 @@ Hooks.once("ready", async () => {
     await KX.loadData();
     await WX.loadData();
     garouHooks();
+    golcondaHooks();
     frenzyHooks();
     try { dm().registerAutoHunts(); } catch (e) { console.warn("WoDX | auto hunts", e); }
     kindredHooks();
+    autoDayOnce().catch(e => console.warn("WoDX | day and night by themselves", e));
     await createMacros();
 });
+
+/**
+ * Golconda (Ben's Golconda Desk, B5090-B5092): while it is held, Traits may reach 10 whatever the Generation; it ends
+ * by itself when the Road falls below 7 or Conscience below 4 (V20 Dark Ages p. 359), with a card and a word over the
+ * token, and the Generation's limits come back.
+ */
+async function golcondaCaps(actor, on) {
+    if (!isVampire(actor)) return;
+    const max = KR.golcondaTraitMax(on, R.generation(generationOf(actor)).maxTrait);
+    const upd = {};
+    if (num(actor.system?.abilities?.defaultmaxvalue) !== max) upd["system.abilities.defaultmaxvalue"] = max;
+    if (num(actor.system?.powers?.defaultmaxvalue) !== max) upd["system.powers.defaultmaxvalue"] = max;
+    if (Object.keys(upd).length) await actor.update(upd, { wodxGolconda: true });
+}
+export async function golcondaCheck(actor) {
+    if (!actor || !flag(actor, "golconda")) return null;
+    const rd = road(actor), v = virtues(actor);
+    if (KR.golcondaHolds({ road: rd.value, conscience: v.conscience.value })) return null;
+    await actor.unsetFlag(MOD, "golconda");
+    await actor.setFlag(MOD, "golcondaLost", { at: game.time?.worldTime ?? 0, road: rd.value, conscience: v.conscience.value });
+    await golcondaCaps(actor, false);
+    DSL.floatOver(actor, "Golconda lost", "#b8b8c8");
+    const ids = [...new Set([...game.users.filter(u => u.isGM).map(u => u.id), ...game.users.filter(u => !u.isGM && actor.testUserPermission?.(u, "OWNER")).map(u => u.id)])];
+    await ChatMessage.create({ content: `<div class="vta-card"><h3>${esc(actor.name)} falls from Golconda</h3><p>${esc(rd.name)} ${rd.value}, ${esc(v.conscience.label)} ${v.conscience.value}: below the purity Golconda asks (7 and 4). The Beast stirs again: frenzy and Rötschreck return, blood is lost each night, and the Generation's limits on Traits return. The road may be walked again.</p><p class="wodx-quiet">V20 Dark Ages p. 359</p></div>`,
+        whisper: ids, speaker: { alias: "WoDX" } });
+    return true;
+}
+function golcondaHooks() {
+    Hooks.on("updateActor", (actor, changes, options) => {
+        if (!isResponsibleGM() || options?.wodxGolconda || setting("golcondaRules") === false) return;
+        const f = changes?.flags?.[MOD] ?? {};
+        if (f.golconda === true) golcondaCaps(actor, true).catch(e => console.warn("WoDX | Golconda", e));
+        else if ("-=golconda" in f || f.golconda === false || f.golconda === null) golcondaCaps(actor, false).catch(e => console.warn("WoDX | Golconda", e));
+        if (flag(actor, "golconda") && (foundry.utils.hasProperty(changes, "system.advantages.path") || foundry.utils.hasProperty(changes, "system.advantages.virtues")))
+            golcondaCheck(actor).catch(e => console.warn("WoDX | Golconda", e));
+    });
+}
 
 /** Werewolf and Fera hooks: moon Rage at nightfall (B40), regeneration each round, Embrace Pain (Dark Ages). */
 function garouHooks() {
@@ -3173,7 +3370,7 @@ function garouHooks() {
     Hooks.on("updateWorldTime", () => {
         if (moonBusy || !game.user.isGM || chronicle()?.isSkipping?.()) return;
         moonBusy = true;
-        gx().moonRise().catch(e => console.error("WoDX |", e)).finally(() => { moonBusy = false; });
+        gx().moonRise().then(() => setting("autoMeditate") !== false ? gx().meditateDaily() : null).catch(e => console.error("WoDX |", e)).finally(() => { moonBusy = false; });
     });
     Hooks.on("wodxSkipEnd", () => { if (game.user.isGM) gx().moonRise().catch(e => console.error("WoDX |", e)); });
     const lastRound = new Map();
@@ -3193,6 +3390,20 @@ function garouHooks() {
     });
 }
 
+/**
+ * B4895: once per world, dawn and dusk and the sun's burns move from buttons to happening by themselves (Ben,
+ * 14 November 2026). A world that chose "Off" keeps it; the Storyteller can set the buttons back in the settings.
+ */
+async function autoDayOnce() {
+    if (!isResponsibleGM() || setting("autoDayV1")) return;
+    const moved = [];
+    if (setting("dawnDusk") === "prompt") { await game.settings.set(MOD, "dawnDusk", "auto"); moved.push("New Night runs by itself at dusk"); }
+    if (setting("sunDamage") === "prompt") { await game.settings.set(MOD, "sunDamage", "apply"); moved.push("the sun's burns are rolled and applied"); }
+    await game.settings.set(MOD, "autoDayV1", true);
+    if (moved.length) await ChatMessage.create({ content: `<div class="vta-card"><h3>Day and night by themselves</h3><p>From now on ${moved.join(", and ")}. Cainites also sleep by day and rise at their own hour. Each can be set back to buttons in WoDX Actions' settings.</p></div>`,
+        whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: { alias: "WoDX" } });
+}
+
 /** Kindred and general hooks (3.2.0): the clock (healing, dawn, dusk, torpor), wounds, blood, Combat's damage, the Delirium. */
 function kindredHooks() {
     let busy = false;
@@ -3207,11 +3418,24 @@ function kindredHooks() {
         sx().onClock(Number(dt) || 0).catch(e => console.error("WoDX |", e));
     });
     // Dark Ages mages: Twilight and Brandings fade with abstinence (3.7.0)
-    let fadeBusy = false;
-    Hooks.on("updateWorldTime", () => {
-        if (fadeBusy || !game.user.isGM || chronicle()?.isSkipping?.()) return;
+    // One run at a time; a move of the clock during a run gets one more run after it, so the newest time is never dropped.
+    // Each routine runs on its own, so one that fails does not stop the rest.
+    let fadeBusy = false, fadeAgain = false;
+    const clockRoutines = [() => mx().fadeAll(), () => fx().daily(), () => dx().daily(), () => ux().daily(), () => zx().shedAll(),
+        () => wx().restAll(), () => ox().restAll(), () => cx().healChimerical()];
+    async function fadeRun() {
         fadeBusy = true;
-        mx().fadeAll().then(() => fx().daily()).then(() => dx().daily()).then(() => ux().daily()).then(() => zx().shedAll()).catch(e => console.error("WoDX |", e)).finally(() => { fadeBusy = false; });
+        try {
+            do {
+                fadeAgain = false;
+                for (const r of clockRoutines) { try { await r(); } catch (e) { console.error("WoDX |", e); } }
+            } while (fadeAgain && !chronicle()?.isSkipping?.());
+        } finally { fadeBusy = false; }
+    }
+    Hooks.on("updateWorldTime", () => {
+        if (!game.user.isGM || chronicle()?.isSkipping?.()) return;
+        if (fadeBusy) { fadeAgain = true; return; }
+        fadeRun();
     });
     const sunRound = new Map();
     Hooks.on("updateCombat", (combat, changed) => {
@@ -3219,6 +3443,7 @@ function kindredHooks() {
         if (combat.round <= (sunRound.get(combat.id) ?? 0)) return;
         sunRound.set(combat.id, combat.round);
         sx().onRound(combat).catch(e => console.error("WoDX |", e));
+        kx().daySleep().onRound(combat).catch(e => console.error("WoDX |", e));
     });
     // B3562: the Beast takes a frenzied player character's turn (setting beastToken)
     Hooks.on("updateCombat", (combat, changed) => {
@@ -3256,7 +3481,8 @@ function kindredHooks() {
         const before = options?.wodxHealthBefore?.corpus ?? {};
         wx().onCorpus(actor, { bashing: num(before.bashing), lethal: num(before.lethal), aggravated: num(before.aggravated) }, actor.system.health.damage.corpus).catch(e => console.error("WoDX |", e));
     });
-    Hooks.on("wodxEndScene", () => { if (game.user.isGM && game.users.activeGM?.id === game.user.id) wx().newScene({ quiet: true }).catch(e => console.error("WoDX |", e)); });
+    // B4920: Passions and Hysteria reset on the one scene count (End the scene or a new active map)
+    Hooks.on("wodxNewScene", () => { if (game.user.isGM && game.users.activeGM?.id === game.user.id) wx().newScene({ quiet: true }).catch(e => console.error("WoDX |", e)); });
     // B5021: the storm's harm comes once a scene on its own, on arriving at a scene and at each new scene
     Hooks.on("canvasReady", () => { setTimeout(() => wx().autoStorm().catch(e => console.error("WoDX | Maelstrom", e)), 1500); });
     wx().onReady().catch(e => console.error("WoDX |", e));

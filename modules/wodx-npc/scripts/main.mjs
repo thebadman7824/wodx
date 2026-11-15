@@ -53,7 +53,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.85.0";
+const VERSION = "0.88.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -278,6 +278,7 @@ export function readFight(tok, combat = game.combat) {
   const state = {
     self: {kind, wounds: wounds(actor), willpower: num(adv.willpower?.temporary), blood: num(adv.bloodpool?.temporary), bloodMax: num(adv.bloodpool?.max),
       selfcontrol: num(adv.virtues?.selfcontrol?.permanent) || 3, rage: num(adv.rage?.temporary), rageMax: num(adv.rage?.permanent),
+      animalGhoul: !!(actor.flags?.["wodx-creation"]?.animalGhoul || (actor.flags?.["wodx-creation"]?.animal && s.settings?.variant === "ghoul")),
       hasPowers: actor.items.some(i => i.type === "Power"), inFrenzy: !!s.conditions?.isfrenzy || !!chron()?.conditions?.hasCondition?.(actor, "frenzy"),
       rotschreck: !!chron()?.conditions?.hasCondition?.(actor, "rotschreck"),
       // A Fear keyword from WoDX Actions (Traits With Teeth step 5): the NPC keeps away and flees
@@ -531,6 +532,21 @@ async function undo(snap) {
   }
 }
 
+/**
+ * B5056: an animal ghoul's frenzy check: Willpower at difficulty 6 (an animal has no Self-Control, B5046; no easier
+ * difficulty for animals, Ben's pick). Fails: WoDX Chronicle's frenzy condition goes on and shows on the token.
+ */
+async function animalFrenzy(tok) {
+  const actor = tok.actor;
+  const dice = Math.max(1, num(actor.system?.advantages?.willpower?.permanent) || 1);
+  const roll = await new Roll(`${dice}d10`).evaluate();
+  const faces = roll.dice?.[0]?.results?.map(r => r.result) ?? [];
+  const net = faces.filter(f => f >= 6).length - faces.filter(f => f === 1).length;
+  const holds = net > 0;
+  if ( !holds ) { try { await chron()?.conditions?.setCondition?.(actor, "frenzy", true); } catch (e) { console.warn(`${MOD} | frenzy`, e); } }
+  return {done: true, text: `${tok.name} fights the blood in it: Willpower ${dice} dice at 6 (${faces.join(", ")}). ${holds ? "It holds." : "It frenzies."}`};
+}
+
 /** Carry out one option. Returns {done, text}. */
 async function execute(tok, opt) {
   const actor = tok.actor;
@@ -601,6 +617,7 @@ async function execute(tok, opt) {
       await tok.document.setFlag(MOD, "fullDefense", `${game.combat?.id}:${game.combat?.round}`);
       return {done: true, text: `${tok.name} goes on full defence: no attack this turn, and WoDX Combat meets every attack on them with their best dodge, block or parry.`};
     case "frenzy":
+      if ( opt.animal ) return animalFrenzy(tok);
       if ( C().getKind(actor) === "lupine" ) await A()?.rageRoll?.({actor});
       else await A()?.frenzy?.({actor});
       return {done: true, text: `Frenzy check for ${tok.name}.`};
@@ -1146,6 +1163,27 @@ Hooks.on("getSceneControlButtons", controls => {
   tokens.tools.wodxCrowd = {name: "wodxCrowd", title: "Passers-by (people and animals walking through this scene)", icon: "fa-solid fa-people-group", order: 113,
     button: true, visible: game.user.isGM, onChange: () => passersby.openCrowd()};
 });
+/**
+ * B5057: a Storyteller's ghoul that botches its craving roll (WoDX Chronicle B5051) goes for the nearest living person
+ * on its scene: its token moves next to them and the Storyteller is told it means to drink.
+ */
+Hooks.on("wodxGhoulCraving", async e => {
+  try {
+    if ( !isActiveGM() || e?.result !== "botch" || !e.actor || e.actor.hasPlayerOwner ) return;
+    const tok = canvas?.tokens?.placeables?.find(t => t.actor?.id === e.actor.id);
+    if ( !tok ) return;
+    const prey = canvas.tokens.placeables.filter(t => t !== tok && t.actor && !t.document.hidden && (C()?.getKind?.(t.actor) ?? "mortal") === "mortal"
+      && !t.actor.statuses?.has?.("dead") && t.actor.flags?.["wodx-creation"]?.animalGhoul !== true)
+      .sort((a, b) => (yardsBetween(tok, a) ?? 1e9) - (yardsBetween(tok, b) ?? 1e9))[0];
+    if ( !prey ) return;
+    const g = canvas.grid.size;
+    const dx = Math.sign(tok.document.x - prey.document.x) * g, dy = Math.sign(tok.document.y - prey.document.y) * g;
+    await tok.document.update({x: prey.document.x + dx, y: prey.document.y + dy});
+    await ChatMessage.create({speaker: {alias: "Behaviour"}, whisper: gmIds(),
+      content: `<div class="wodx-card"><p><b>${esc(tok.name)}</b> cannot hold back the craving and goes for ${esc(prey.name)} to drink (V20 Dark Ages p. 401).</p></div>`});
+  } catch (err) { console.error(`${MOD} | craving`, err); }
+});
+
 Hooks.on("renderTokenHUD", (hud, html) => {
   if ( !game.user.isGM ) return;
   const root = html instanceof HTMLElement ? html : html[0];

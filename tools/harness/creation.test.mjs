@@ -424,6 +424,41 @@ test("ghouled animals: a player character's animal ghoul is that character's all
   assert.equal(api().data.payerOf(hound), pcVamp);
 });
 
+test("ghouled animals: training bought with experience, and a Retainers dot made into a beast (B5059 to B5062)", async () => {
+  const d = api().data;
+  const pcVamp = new Actor(vampireData("Ludmila", "Ventrue", 10, [["Dominate", 2]]));
+  pcVamp.ownership = {default: 0, p1: 3};
+  const horse = new Actor(animalData("Ludmila's courser"));
+  for ( const a of [pcVamp, horse] ) game.actors.set(a.id, a);
+  await api().giveVitae(horse, pcVamp, {points: 3});
+  await api().award([pcVamp], 20, "test");
+  const t = d.purchaseOptions(horse).find(o => o.kind === "training");
+  assert.equal(t?.key, "trained");
+  assert.equal(t.cost, 5);
+  await d.applyPurchase(horse, t);
+  assert.equal(horse.flags[M].animal.training, "trained");
+  assert.equal(horse.system.abilities.brawl.value, 3, "a trained horse's Brawl 3 (V20 Dark Ages p. 398)");
+  assert.equal(horse.flags[M].animal.kind, "horse", "the kind stays");
+  assert.equal(d.purchaseOptions(horse).find(o => o.kind === "training")?.key, "war");
+  // a Retainers dot made into a beast: traits, breed, bond, full pool, owners
+  await pcVamp.createEmbeddedDocuments("Item", [{name: "Retainers", type: "Feature", system: {type: "wod.types.background", value: 3}}]);
+  assert.equal(api().animals.dotsLeft(pcVamp), 3);
+  const create = Actor.create;
+  Actor.create = async data => { const a = new Actor({...data, system: structuredClone(animalData("x").system), items: []}); game.actors.set(a.id, a); return a; };
+  try {
+    const dog = await api().animals.makeBeast(pcVamp, {kind: "guard-dog", breed: "mastiff", training: "trained", dots: 2, name: ""});
+    assert.equal(dog.name, "Mastiff");
+    assert.equal(dog.system.attributes.strength.value, 4, "medium dog 3, mastiff +1");
+    assert.equal(dog.system.advantages.bloodpool.max, 6);
+    assert.equal(dog.system.advantages.bloodpool.temporary, 6, "fed full");
+    assert.equal(dog.flags[M].lineage.bonds[pcVamp.id].drinks, 3, "the full oath");
+    assert.deepEqual(d.disciplinesOf(dog).map(x => `${x.name} ${x.value}`).sort(), ["Fortitude 1", "Potence 1"], "a second dot adds Fortitude");
+    assert.equal(dog.ownership.p1, 3, "the player owns it");
+    assert.equal(api().animals.dotsLeft(pcVamp), 1);
+    assert.equal(api().animals.training(dog), "trained");
+  } finally { Actor.create = create; }
+});
+
 test("no error notifications", () => {
   assert.deepEqual(mock.log.notifications.filter(([l]) => l === "error"), []);
 });

@@ -6,6 +6,7 @@ import * as events from "./events.mjs";
 import * as S from "./signature-rules.mjs";
 import * as POD from "./pod.mjs";
 import {registerTokenLook} from "./token-looks.mjs";
+import {on as ghoulNeedOn} from "./ghoul-need.mjs";
 
 /**
  * WoDX Chronicle 0.30.0: signature features on the Foundry side (Splat Features Desk, Vampire first). Rules in
@@ -22,7 +23,8 @@ import {registerTokenLook} from "./token-looks.mjs";
  */
 
 const FLAG = "sig", CFLAG = "corruption", FIRED = "sigFired", OFF = "sigOff";
-const T_FAMILY = `${MODULE_ID}.sigFamily`;
+const T_FAMILY = `${MODULE_ID}.sigFamily`, T_GHOULFEED = `${MODULE_ID}.sigGhoulFeed`;
+const n = v => Number(v) || 0;
 const T_CORRUPT = `${MODULE_ID}.sigCorrupt`, T_CAUSE = `${MODULE_ID}.sigCause`, T_VICE = `${MODULE_ID}.sigVice`;
 const lineOn = k => { try { return !!game.settings.get(MODULE_ID, k); } catch (e) { return false; } };
 /** Any line's features on. Which rows an actor gets is decided per line in rowsOf. */
@@ -115,6 +117,8 @@ export function allRowsOf(actor) {
   if ( actor.flags?.world?.wodx?.kinfolk ) return lineOn("sigWerewolf") ? [S.KINFOLK] : [];
   if ( !lineOn("sigVampire") ) return [];
   const kind = kindName(actor);
+  // B5054: an animal ghoul on a Creature sheet carries the ghoul row too
+  if ( actor.flags?.["wodx-creation"]?.animalGhoul ) return [S.GHOUL];
   if ( /ghoul|revenant/.test(kind) ) return [S.familyRow([actor.flags?.[MODULE_ID]?.family, ...clanNames(actor), actor.system?.custom?.family].filter(Boolean), foundedFamilies()) ?? S.GHOUL];
   if ( !/kindred|vampire/.test(kind) && !clanNames(actor).length ) return [];
   const r = S.vampireRow(clanNames(actor));
@@ -706,6 +710,8 @@ export async function ghoulFed(actorOrId) {
 async function ghoulTick(a, t) {
   const row = rowOf(a);
   if ( !on() || row?.feature !== "ghoul" || row.revenant ) return;
+  // B5050: the monthly need now happens by itself (ghoul-need.mjs); this card only stands in when that is switched off
+  if ( ghoulNeedOn() ) return;
   const sig = sigOf(a), g = sig.ghoul ?? {fedAt: t, warned: 0};
   if ( !sig.ghoul ) { sig.ghoul = g; await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig}); return; }
   const m = S.monthsUnfed(g.fedAt, t);
@@ -715,6 +721,29 @@ async function ghoulTick(a, t) {
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
   Hooks.callAll("wodxGhoulFix", {actor: a, drank: false, months: m});
   await cardFor(a, "ghoul", `${a.name}: no vitae`, `<p>${m} month${m === 1 ? "" : "s"} without a drink from the domitor: take away ${m === 1 ? "a blood point" : "another blood point"}. With none left, the years held off begin to come back.</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
+  // B4983: the domitor is on the same scene: the Storyteller approves the feeding, and then it happens
+  const dom = domitorOf(a);
+  const here = new Set((game.scenes?.active?.tokens ?? []).map(tk => tk.actorId));
+  if ( dom && here.has(a.id) && here.has(dom.id) && n(dom.system?.advantages?.bloodpool?.temporary) > 0 )
+    await propose({type: T_GHOULFEED, key: `ghoulfeed:${a.id}:${m}`, title: `${dom.name} feeds ${a.name}`, detail: `${a.name} has gone ${m} month${m === 1 ? "" : "s"} without vitae and ${dom.name} is here. Approve and a blood point passes from domitor to ghoul (V20 Dark Ages p. 397).`, data: {ghoul: a.id, domitor: dom.id}});
+}
+/** The ghoul's domitor (WoDX Creation's lineage), as an actor, or null. */
+function domitorOf(a) {
+  const l = a?.flags?.["wodx-creation"]?.lineage, id = typeof l?.domitor === "object" ? l?.domitor?.id : l?.domitor;
+  return id ? game.actors?.get?.(id) ?? null : null;
+}
+/** An approved feeding: a blood point from the domitor to the ghoul, the month starts again, and a card says so. */
+async function applyGhoulFeed({ghoul, domitor} = {}) {
+  const g = game.actors.get(ghoul), d = game.actors.get(domitor);
+  if ( !g || !d ) return null;
+  const db = n(d.system?.advantages?.bloodpool?.temporary);
+  if ( db < 1 ) return null;
+  await d.update({"system.advantages.bloodpool.temporary": db - 1});
+  const gb = g.system?.advantages?.bloodpool;
+  if ( gb ) await g.update({"system.advantages.bloodpool.temporary": Math.min(n(gb.max) || 10, n(gb.temporary) + 1)});
+  await ghoulFed(g);
+  await cardFor(g, "ghoul", `${g.name} drinks`, `<p>${esc(d.name)} gives ${esc(g.name)} a blood point of vitae. The month starts again.</p>`, {whisper: [...new Set([...ownerIds(g), ...ownerIds(d)])]});
+  return true;
 }
 /** Found a revenant family in play: the Storyteller's is kept at once, a player's goes to the queue. */
 export async function foundFamily(data = {}) {
@@ -1227,6 +1256,7 @@ export function registerSignatureHooks() {
     if ( a && sig.cause ) { sig.cause.approved = true; await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig}); }
   }});
   registerHandler(T_FAMILY, {label: "A new revenant family", approve: e => saveFamily(e.data ?? {})});
+  registerHandler(T_GHOULFEED, {label: "A domitor feeds a ghoul", approve: e => applyGhoulFeed(e.data ?? {})});
   registerHandler(T_VICE, {label: "Name a Setite victim's vice", approve: e => setVice(e.data?.npc, e.data?.by, e.data?.vice)});
   Hooks.on("wodxSocial", onSocial);
   Hooks.on("wodxTrade", onTrade);
