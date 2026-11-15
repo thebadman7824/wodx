@@ -155,7 +155,10 @@ export async function run() {
       const ta = tok.actor ?? a;
       await ta.update({"system.health.damage.lethal": 2});
       await BD.recordWound(ta, {location: {id: "arm-r", label: "Right arm"}, type: "lethal", levels: 2}, {before: {lethal: 0}, after: {lethal: 2}, effType: "lethal"}, null);
-      await wait(300);
+      await wait(1200);
+      // the icons the token draws after the first blow (Bloody comes on with it): the second must add the Crippled one
+      const iconsMid = tok.object?.effects?.children?.length ?? 0;
+      const srcs = () => (tok.object?.effects?.children ?? []).map(c => String(c.texture?.baseTexture?.resource?.src ?? c.texture?.source?.resource?.src ?? c.texture?.source?.label ?? c.texture?.label ?? ""));
       await ta.update({"system.health.damage.lethal": 4});
       await BD.recordWound(ta, {location: {id: "arm-r", label: "Right arm"}, type: "lethal", levels: 2}, {before: {lethal: 2}, after: {lethal: 4}, effType: "lethal"}, null);
       await waitFor(() => [...ta.effects].some(e => e.flags?.["wodx-combat"]?.crippled), 5000).catch(() => null);
@@ -167,8 +170,9 @@ export async function run() {
       const temp = !!fx && ta.temporaryEffects.some(e => e.id === fx.id);
       const icons1 = tok.object?.effects?.children?.length ?? 0;
       const card = [...game.messages].some(m => (m.timestamp ?? 0) >= t1 && m.flags?.["wodx-combat"]?.maim?.part === "arm-r");
-      G.ok("11. a crippled arm shows on the token", !!fx && (want === undefined || fx.showIcon === want) && temp && icons1 > icons0 && card,
-        {hl, fx: !!fx, showIcon: fx?.showIcon, want, temp, icons0, icons1, card, seen, tokFx, linked: tok.actorLink});
+      const drawn = srcs();
+      G.ok("11. a crippled arm shows on the token", !!fx && (want === undefined || fx.showIcon === want) && icons1 > iconsMid && card,
+        {hl, fx: !!fx, showIcon: fx?.showIcon, want, temp, icons0, iconsMid, icons1, card, bones: drawn.some(x => /bones/.test(x)), drawn: drawn.slice(0, 8), tokFx, linked: tok.actorLink});
       // healed: the levels leave the track, the Crippled mark goes by itself
       await ta.update({"system.health.damage.lethal": 0});
       const healed = await waitFor(() => ![...ta.effects].some(e => e.flags?.["wodx-combat"]?.crippled), 5000);
