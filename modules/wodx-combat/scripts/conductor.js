@@ -52,7 +52,9 @@ const turnKey = combat => combat?.combatant ? `${combat.id}:${combat.round}:${co
 const heldFlag = (c, combat) => { const h = c?.getFlag(MOD, "held"); return h && h.combatId === combat.id && h.round === combat.round; };
 const declaredExtra = (c, combat) => { const f = c?.getFlag(MOD, "extra"); return f && f.key === `${combat.id}:${combat.round}` ? Number(f.n) || 0 : 0; };
 const rageExtra = (actor, combat) => { const f = actor?.getFlag?.("wodx-actions", "extraActions"); return combat && f?.key === `${combat.id}:${combat.round}` ? Number(f.n) || 0 : 0; };
-const extraOf = (c, combat) => declaredExtra(c, combat) + rageExtra(c.actor, combat);
+// B6012: a Hasten from a power or ritual gives its extra actions each turn while it lasts (WoDX Actions power-mods)
+const hastenExtra = actor => { try { return Math.max(0, Number(game.modules.get("wodx-actions")?.api?.powerMods?.of?.(actor, { actions: true })?.dice) || 0); } catch (e) { return 0; } };
+const extraOf = (c, combat) => declaredExtra(c, combat) + rageExtra(c.actor, combat) + hastenExtra(c.actor);
 const level = () => { try { return setting("turnConductor"); } catch (e) { return "off"; } };
 const NO_ACTION = ["dazed", "incapacitated", "torpor", "staked", "immobilized"];
 function cannotAct(c) {

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6000
+Next free block: B6020
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -306,7 +306,7 @@ Next free block: B6000
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5680-B5709 | NPC Motives Desk: every NPC action has a reason and a follow-through (used B5680-B5703) | NPC, Storyteller |
 | B5710-B5729 | Aftercare of the carried (Aftercare Desk a1-a12) (used B5710-B5721) | NPC |
-| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5736) | Interactables, tools |
+| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5738) | tools |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 | B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
 | B5800-B5809 | NPC Aftercare Desk: what comes after each NPC action (used B5800-B5806) | NPC, Chronicle |
@@ -328,6 +328,7 @@ Next free block: B6000
 | B5970-B5979 | NPCs make their own wonders (used B5970-B5974) | Storyteller |
 | B5980-B5989 | Lone Chronicle step 3: the oracle, the Leads page and night encounters on the map (used B5980-B5985) | Solo |
 | B5990-B5999 | Say or Do: full sentences and grieving (Ben's picks on law sentences and heartbreak) (used B5990-B5992) | Chronicle, NPC, Actions |
+| B6000-B6019 | Rituals and powers that really work: every effect read by a roll, soak, token or map system (used B6000-B6018) | Actions, Combat |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9379,6 +9380,16 @@ Tools. run-gate.mjs --touched and --all built the gate list from the PC's own co
 
 Reverse: none needed.
 
+## B5737. Whole buildings and open ground for the pixel drawer, and two sample maps (2026-11-15)
+Tools. tools/pixelmap/buildings.py draws a one-room log cottage (oven in a back corner, bed, painted chest, table and benches by the front window, a door and three shuttered windows, all recorded as walls, openings, a light and a home) and a small timber chapel; land.py lays grass, rutted roads, brooks, ploughed strips by crop, a plank bridge and trees that keep clear of what was built. maps/village.py (a Moravian village of about 1200, 40 by 28 squares) and maps/road.py (a country road with a ford, a wayside cross and a cart, 36 by 20) are the samples sent to Ben before the larger map work.
+
+Reverse: remove the files; nothing else uses them yet.
+
+## B5738. Every object at its true size (2026-11-15)
+Tools. After Ben's review of the samples, every object was measured against the 5 ft square: beds were 10 ft long and are now 7, tree crowns grow to 14 to 23 ft, field strips are wide enough to read as fields, the cart is a farm cart's size, and a field haystack is drawn as a domed rick about 11 ft across. RULES.md keeps the size table.
+
+Reverse: none needed.
+
 ## B5750. Witness reactions given by a window act on the map (2026-11-15)
 WoDX Actions. The witness step takes results already rolled (the Delirium check, a demon's Revelation) and acts them out: a frozen witness is Immobilized for the scene, a fleeing one runs, a fighting one starts a fight; those who keep it go on the Masquerade record. With no revealed actor on the map, nothing is recorded against anyone.
 
@@ -9970,3 +9981,98 @@ Reverse: remove brand() in law-punish.mjs; put Heartsick back in hearts.mjs; dro
 WoDX Chronicle, Storyteller. A death sentence holds the condemned and calls WoDX Storyteller's raid (reach.lawCome) to arrest them where they stand; the player chooses to go or resist.
 
 Reverse: remove the lawCome call in carryOut.
+
+## B6000. A power's numbers ride in its timed effect (2026-11-15)
+WoDX Actions. A Ward, Boost, Blessing, Curse, Calm or Hasten keeps its dice, kind, shift or actions in the WoDX Chronicle timed data (power-mods.js timedData), and a token look shows it: blue shimmer, gold glow, purple flicker. Before, the effect carried a name only.
+
+Reverse: drop the data argument in effects.js applyCore and the tokenLooks register.
+
+## B6001. Powers count on every roll with the traits (2026-11-15)
+WoDX Actions trait-hooks traitMods adds what the powers on the roller do to the roll's tags (power-mods modsFrom).
+
+Reverse: remove powerPart from traitMods.
+
+## B6002. A Blessing or Curse is spent on the next roll (2026-11-15)
+House reading of the Fortune keyword's "next roll": the roll, attack or frenzy check that used it deletes the effect.
+
+Reverse: drop TH.spendOnce calls and the once flag.
+
+## B6003. A Calm eases frenzy, a Rousing makes it harder (2026-11-15)
+Fear with the calm flavour: resisting frenzy is up to 3 easier while it lasts; roused, up to 3 harder. Its own key (wodx-effect-calm), so it never holds the token away as a Fear does.
+
+Reverse: restore the old outcome text in effects-rules fear.
+
+## B6004. WoDX Combat reads them (2026-11-15)
+Attack pool: Boost dice and Fortune difficulty; soak: Ward armour (the stronger Ward, only against its named harm) and soak Boost; Initiative: Initiative Boost.
+
+Reverse: remove powerModsOf calls in wodx-combat main.js.
+
+## B6005. Sway, Bind and Possess on NPCs (2026-11-15)
+Sway is a timed Swayed effect (an NPC warms one step; a player character's moves go to the Storyteller, binds.js). Bind warms an NPC two steps toward the binder. Possess on an NPC gives the possessor's players ownership of it while it lasts, handed back at the end or on Undo.
+
+Reverse: moodDelta bind line, possessFor in effects.js, sway back to a note.
+
+## B6006. Imbue makes a charged item (2026-11-15)
+An Imbue result is a made item, real for good, flagged imbued with the power and caster.
+
+Reverse: imbue back to the default note.
+
+## B6007. Place moves the Gauntlet, Shroud or Banality (2026-11-15)
+Through WoDX Otherworlds drift (lever): thins by 1 (2 at strength 4+), "place:thick" thickens; "place:shroud" and "place:banality" pick the track. A fog look when it thins, a calm look when it thickens. House reading.
+
+Reverse: place back to the default note.
+
+## B6008. Manifest shows the being on this side (2026-11-15)
+The token is unhidden, pale (alpha 0.8) and on the scene's physical level while it lasts.
+
+Reverse: remove manifestOf.
+
+## B6009. Banish and Work act (2026-11-15)
+Banish ends WoDX timed powers on the target (restored on Undo); with none, a being from beyond goes back across and anything else is driven off from the caster, 10 feet a success. Work toggles the nearest door within 3 squares (a locked door is broken open).
+
+Reverse: banishCore and workCore in effects.js.
+
+## B6010. Ritual flavours (2026-11-15)
+Flavours join with "+"; a Ward flavour names its harm (ward:fire, ward:sunlight); a Boost flavour names its roll; a self-cast Calm needs no target. Ritual keyword fixes: Blood Rush fear:calm, Chill of Oblivion ward:fire, Defense of the Sacred Haven ward:sunlight, Firewalker ward:fire, Flesh of Fiery Touch harm, Essence of Longing boost:social, Scarab of Death ward, Scouring Oblivion mend, Rite of Ostracism boost:sap+social, Esilio, Nightmare Drums and Candle of Haunting place:shroud, Dedicate the Haven and the Shrouded Glen place:thick.
+
+Reverse: the k lists in book-rituals.js.
+
+## B6011. Spec timed results carry their numbers (2026-11-15)
+mage-da-effects timedNumbers: Ward and Boost dice a success (5 at most), Fortune shift (3 at most), Night Sight on the token, Rise 5 feet a success.
+
+Reverse: remove timedNumbers.
+
+## B6012. Hasten gives extra actions (2026-11-15)
+WoDX Combat's conductor counts a Hasten's actions in the extra pass; a Slow costs 2 Initiative a step (house rule).
+
+Reverse: hastenExtra in conductor.js.
+
+## B6013. An Illusion stands on the map (2026-11-15)
+A pale figure Tile by the target or where the Storyteller clicks, removed when it ends or on Undo.
+
+Reverse: illusionTile.
+
+## B6014. Flavoured ritual keywords reached the card (2026-11-15)
+book-rituals ritualResults and bookRitual dropped any keyword with a flavour ("fortune:curse", "charge:drain"), so the caster's card and the Storyteller's window lost them. Fixed.
+
+Reverse: none needed.
+
+## B6015. Guard: every applying power is read (2026-11-15)
+tools/powers/read-rules.mjs says which system reads each result kind and timed key; the inventory marks each power read, partly, told, unread or direct; tools/harness/power-reads.test.mjs fails on any unread and checks each reader is still in the code.
+
+Reverse: delete the test.
+
+## B6016. Spec timed results of keywords with their own kind act as that kind (2026-11-15)
+A T() spec for summon, make, weather, light, move, sideways, banish, place, work, charge, know, sense, harm, trip, imbue, mend or hold works as the keyword does (a summoning, an item, the weather), for the spec's time; before, it was a named marker.
+
+Reverse: OWN_KIND in mage-da-effects.js.
+
+## B6017. The Golem of the 72 Names is a real summoning (2026-11-15)
+Utterance of the 72 Names (DA Mage Grimoire p. 58) now calls one golem with its own profile: Strength 10, Dexterity 2, Stamina 8, ten health levels, 4 armour dice, Willpower 3, simple orders, lasting until it is broken. Before, it was a named marker. A spec's own name also stays on a result of its own kind (Tracked by a spirit).
+
+Reverse: the mage-dark-ages|utterance-of-the-72-names entry in summon-specs.js.
+
+## B6018. A Forbiddance and shadow soul do what they say (2026-11-15)
+A mummy's won Forbiddance marks the mummy as the one feared (a player's token cannot go nearer) and the one the being cannot strike: WoDX Combat refuses its attacks on that mummy, by hand or by the NPC. A Kuei-jin's shadow soul hands the body to the P'o: each move the player makes goes to the Storyteller to allow or refuse, as a command's does; in a Lone Chronicle the move stands with a reminder.
+
+Reverse: forbiddenFrom in wodx-combat main.js, the bindBy/forbiddenBy flags in mummy.js, the shadow soul line in binds.js bindingsOn.
