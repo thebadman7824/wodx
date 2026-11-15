@@ -41,6 +41,13 @@ must make sense"), and add a row for each new kind of thing.
 | Tree crown, field tree | 14 to 23 ft across | 2.8 to 4.6 squares |
 | Field strip | at least 8 ft wide on the map | 170 px rows |
 | Wayside cross base | about 3 ft | 60 px |
+| Ridge tent | 12 by 7 ft | 2.4 by 1.4 squares |
+| Charcoal kiln (earth mound) | 15 to 20 ft across | radius 150 to 190 px |
+| Lean-to | 15 by 9 ft | 3.0 by 1.8 |
+| Tree stump | about 2 ft | radius 18 to 20 px |
+| Boulder | 3 to 5 ft | 0.6 to 1.0 squares |
+| Ladder | 16 in between the rails | 26 px wide |
+| Wayside shrine (roofed) | about 4 1/2 ft | 0.9 squares |
 
 ## Point of view and colour
 
