@@ -141,7 +141,11 @@ export async function run() {
       const from = {x: tok.x, y: tok.y};
       const turned = [];
       let movingSeen = 0, how = null;
-      const watch = setInterval(() => { const f = facingShown(tok); if ( A.state(tok.id)?.moving ) { movingSeen++; if ( f && turned.at(-1) !== f ) turned.push(f); } }, 40);
+      const seenAt = new Set(); let samples = 0, stateSeen = 0;
+      const watch = setInterval(() => {
+        samples++; const o = tok.object; if ( o ) seenAt.add(`${Math.round(o.position.x)},${Math.round(o.position.y)}`);
+        if ( A.state(tok.id) ) stateSeen++;
+        const f = facingShown(tok); if ( A.state(tok.id)?.moving ) { movingSeen++; if ( f && turned.at(-1) !== f ) turned.push(f); } }, 40);
       try {
         const r = await R.tick("walk", {scene, post: true});
         how = {items: (r?.items ?? []).filter(i => i?.tokenId === tok.id).map(i => `${i.type}:${i.status}`), moved: tok.x !== from.x || tok.y !== from.y, walk: api.lastWalk?.() ?? null};
@@ -156,7 +160,7 @@ export async function run() {
       await waitFor(() => tok.texture?.src === SR.stillPath("townsman-1888"), 5000).catch(() => null);
       G.ok("3. the routine brings the token in wearing its sprite, at the sprite's size", placed && wears === "townsman-1888" && tok.texture?.scaleX === SR.TOKEN.scaleX, {placed, wears, scale: tok.texture?.scaleX});
       G.ok("3. at work its hands move", work && where1 === "work" && f1 !== f2, {where: where1, act: work, frames: [f1, f2]});
-      G.ok("3. it walks to the tavern facing the way it goes", turned.length >= 1 && turned.includes("right"), {turned, movingSeen, from, to: {x: tok.x, y: tok.y}, how});
+      G.ok("3. it walks to the tavern facing the way it goes", turned.length >= 1 && turned.includes("right"), {turned, movingSeen, samples, stateSeen, places: seenAt.size, animating: !!tok.object?.movementAnimationPromise, from, to: {x: tok.x, y: tok.y}, how});
       G.ok("3. and sits down there", ["stool", "seat", "sit"].includes(sat), {sat, where: smith.flags?.[NPC]?.where?.activity});
       // B6145: a walk with autoRotate turns the token, but the figure stays upright (the stool under it, not beside it)
       const rot = {doc: tok?.rotation ?? null, drawn: tok?.object?.mesh?.rotation ?? null};
