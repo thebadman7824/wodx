@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5540
+Next free block: B5610
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -284,6 +284,13 @@ Next free block: B5540
 | B5510-B5519 | Names raised to 300, Italian (used B5510) | Creation |
 | B5520-B5529 | Names raised to 300, Japanese (used B5520) | Creation |
 | B5530-B5539 | Names raised to 300, Russian (used B5530) | Creation |
+| B5540-B5549 | Names raised to 300, German (used B5540) | Creation |
+| B5550-B5559 | Names raised to 300, Norse (used B5550) | Creation |
+| B5560-B5569 | Names raised to 300, Maori (used B5560) | Creation |
+| B5570-B5579 | Names raised to 300, Sephardi (used B5570) | Creation |
+| B5580-B5589 | Names raised to 300, Mizrahi (used B5580) | Creation |
+| B5590-B5599 | Recheck: gates not on main (used B5590) | tools (PC job queue) |
+| B5600-B5609 | Names made by pattern for the short lists (used B5600) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8511,3 +8518,42 @@ Reverse: restore the japanese entry in data/people-world.mjs and drop japanese f
 WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Russian list grows from 91 names to 499: old names of princes, boyars, monks, merchants and townsfolk of the Rus chronicles and the Muscovite records, then names of the Empire and since, with a woman's family name in its own form. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: restore the russian entry in data/people-world.mjs and drop russian from RAISED.
+
+## B5540. German names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The German list grows from 56 names to 313: names and family names of modern Germany; the older eras keep the German lists in data/people.mjs. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the german entry in data/people-world.mjs and drop german from RAISED.
+
+## B5550. Norse names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Norse list grows from 95 names to 533: old names of kings, jarls, bishops, farmers and townsfolk of the sagas, runestones, charters and tax rolls with a father's name as the family name, then names and family names of the modern Nordic lands. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the norse entry in data/people-world.mjs and drop norse from RAISED.
+
+## B5560. Maori names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Maori list grows from 64 names to 359: old names of ancestors, navigators and chiefs of the canoe and tribal traditions, then names of the 19th century chiefs and prophets, church names and modern names, with family names from the 19th century on. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the maori entry in data/people-world.mjs and drop maori from RAISED.
+
+## B5570. Sephardi names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Sephardi list grows from 140 names to 388: more names from the aljama and notarial records of Castile, Aragon and Portugal, then Ladino and Portuguese Nation names and family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the sephardi entry in data/people-world.mjs and drop sephardi from RAISED.
+
+## B5580. Mizrahi names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Mizrahi list grows from 138 names to 424: more names from the Cairo Geniza, Baghdad, Persia, Yemen and the Maghreb, with more town names before 1800 and family names after; the harness check for modern family names is drawn from 400 people instead of 100, as the longer list makes each name rarer. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the mizrahi entry in data/people-world.mjs and drop mizrahi from RAISED.
+
+## B5590. A gate that is not on main yet is the change's to fix (2026-11-15)
+PC job queue. The recheck (B4610) runs a failing gate again on main and says "fails on main too: not this change's
+fault" when it fails there. A gate that the change adds is not on main, so it always failed there and was marked
+not the change's fault: gatehaul and gateanimalkeepers were both marked this way on 15 November. The runner now
+checks main for `tools/gate/<gate>.mjs` first and calls such a gate "NEW with this change: the gate is not on main
+yet, so this change must fix it".
+
+Reverse: drop the notOnMain set in runner.mjs recheck().
+
+## B5600. Names made by pattern where the records show the rule (2026-11-15)
+WoDX Creation. Ben asked (15 November 2026) whether lists under 300 names could be filled with names made from how the names were formed, and approved the plan: recorded names first, made names only where the records show the rule. Ten peoples qualify: the Lakota, Cheyenne, Mandan, Hidatsa, Arikara, Pawnee, Crow, Blackfoot, Arapaho and Kiowa, whose recorded own names are two-part names in translation (a describing word and a thing, as Red Cloud; a number and things, as Two Crows; women's names often ending in Woman). New names join only parts that the same people's records hold, from a fixed list of English describing words and things, so a word in the people's own language, a nation's name or a title never becomes a part. Peoples with no recorded women's own names get no made women's names. The made names sit in Roll Tables of their own ("made by pattern", data/people-patterned.mjs, written by tools/names/pattern-names.mjs) and are drawn a third as often as the recorded own names. The other 26 short lists (Tuareg, Moro, Banyarwanda, Sami, Khmer, Amazigh, Maya, the Haudenosaunee, Algonquian, Southwest, Basin, Northwest Coast, Cree, Anishinaabe, Inuit, Taíno, Aboriginal, Kongo, Luba, Ganda, Filipino and the Comanche and Diné) are single names in the people's own language with no rule in the records that could make more without inventing words, so nothing is made for them. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: empty PATTERNED in data/people-patterned.mjs.
