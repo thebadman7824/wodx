@@ -134,6 +134,7 @@ export async function divorce(aLike, bLike, {region = regionNow(), year = yearNo
     await x.setFlag(MOD, "marriages", (x.flags?.[MOD]?.marriages ?? []).map(m => m.with?.id === y.id && !m.ended ? {...m, ended: game.time.worldTime, how: "divorce"} : m));
     await dropHandTie(x, y, "spouse");
   }
+  Hooks.callAll("wodxDivorced", {a, b});
   return {ok: true, law};
 }
 
@@ -286,6 +287,8 @@ async function tellLoved(victim, ev) {
     if ( !checks.length ) continue;
     const lines = checks.map(c => c.text), rolls = [];
     if ( ev === "death" ) { const g = await grieve(who, e.kind); if ( g ) { lines.push(g.line); rolls.push(g.roll); } }
+    // B5804 (n5): an NPC mourns on the map by its faith
+    if ( ev === "death" && !who.hasPlayerOwner ) { try { const m = await api()?.aftercare?.mourn?.(who, victim); if ( m ) lines.push(`In mourning: ${m.words}, ${m.days} days.`); } catch (err) { console.warn(`${MOD} | mourning`, err); } }
     await ChatMessage.create({whisper: ownersOf(who), speaker: {alias: who.name}, flags: {[MOD]: {heartCard: true}}, rolls,
       content: card(`${victim.name} ${ev === "death" ? "is dead" : ev === "taken" ? "is taken" : "is hurt"}`, lines)});
     out.push({to: who.id, checks});

@@ -68,7 +68,7 @@ export function personOf(actor, year) {
     // A Path of 0 on a sheet nobody filled in is taken as the usual 7 (B3267); a true 0 is a wight's, rare in play
     road: [num(s.advantages?.path?.permanent), num(s.advantages?.humanity?.permanent)].find(v => v !== null && v > 0) ?? 7,
     sectText: s.sect ?? "", rise: line === "garou" ? num(s.renown?.rank) : line === "mage" ? num(s.advantages?.arete?.permanent) : 0,
-    torpor: tp, keep: !!actor.flags?.[MOD]?.fates?.keep, office: officeOf(actor, year), clan: s.clan ?? ""});
+    torpor: tp, keep: !!actor.flags?.[MOD]?.fates?.keep, office: officeOf(actor, year), clan: s.clan ?? "", nature: s.nature ?? ""});
 }
 
 /** The NPCs who live off-screen: supernatural, no player owner, not dead, not a kept copy. */
@@ -148,7 +148,12 @@ export async function apply(d) {
   // Brood: new records, and the end state of the old ones
   const s = broodStore();
   s.records ??= {};
-  for ( const b of d.brood ?? [] ) s.records[b.id] = {...b, name: nameFor(b)};
+  for ( const b of d.brood ?? [] ) {
+    s.records[b.id] = {...b, name: nameFor(b)};
+    // g5: an Embrace made without leave is a secret on the sire that others can find
+    const sire = b.noLeave ? game.actors.get(b.sireId) : null;
+    if ( sire ) { try { await game.modules.get(MOD)?.api?.secrets?.add?.(sire, {kind: "childe", text: `Embraced ${s.records[b.id].name} in ${b.year} without leave`, weight: 2}); } catch (e) { /* no secrets */ } }
+  }
   for ( const p of d.people ?? [] ) if ( s.records[p.id] ) Object.assign(s.records[p.id], {dead: p.dead, torpor: p.torpor, generation: p.generation, rise: p.rise});
   await saveBrood(s);
   return `${n} NPC${n === 1 ? "" : "s"} changed; ${(d.brood ?? []).length} new childer, cubs, apprentices or fosterlings kept as records`;
@@ -170,8 +175,10 @@ export async function bring(id) {
   const now = game.time.worldTime, madeAt = Math.max(0, now - (yearAt(now) - b.year) * YEAR_SECONDS);
   const data = {name: b.name, type: SHEET[b.line] ?? "Mortal",
     flags: {"wodx-creation": {chronology: {bornYear: b.born, ...(b.line === "vampire" ? {embraced: madeAt} : {})},
-      lineage: b.line === "vampire" ? {sire: {id: b.sireId, name: b.sireName}} : {}}, [MOD]: {fates: {brood: b.id}}}};
-  if ( b.line === "vampire" && b.generation ) data.system = {generation: b.generation, ...(b.sect ? {sect: b.sect} : {})};
+      lineage: b.line === "vampire" ? {sire: {id: b.sireId, name: b.sireName}} : {}}, [MOD]: {fates: {brood: b.id, reason: b.reason ?? null}}}};
+  // g5: the reason for the Embrace shows on the childe's sheet
+  if ( b.reason ) data.system = {...(data.system ?? {}), notes: `${b.sireName || "The sire"} made this childe in ${b.year} ${F.EMBRACE_REASONS?.[b.reason] ?? ""}${b.noLeave ? ", without leave" : ""}.`};
+  if ( b.line === "vampire" && b.generation ) data.system = {...(data.system ?? {}), generation: b.generation, ...(b.sect ? {sect: b.sect} : {})};
   const a = await Actor.create(data);
   if ( a ) { b.actorId = a.id; await saveBrood(s); }
   return a;

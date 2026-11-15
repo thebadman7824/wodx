@@ -25,6 +25,9 @@ import * as AR from "./alert-rules.mjs";
 import * as FR from "./fight-rules.mjs";
 import * as AN from "./animal-rules.mjs";
 import * as MR from "./mortal-rules.mjs";
+import * as FW from "./follow-rules.mjs";
+import * as HN from "./hunt-npc-rules.mjs";
+import * as DU from "./duty-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 export const REACTION = "reaction";
@@ -148,7 +151,16 @@ export function build(ctx) {
     const faith = (own && r.faith) || res.faith || here?.faith || "western";
     return {faith, region: here?.region ?? null};
   }
-  const blocksFor = actor => { const y = yearNow(); return R.blocksOf(routineOf(actor), profileFor(actor).template, y, keepOf(actor, y)); };
+  // B5692-B5698: duties (worship, a master's haven, a faction's watch) laid over the NPC's own hours
+  const blocksFor = actor => { const y = yearNow(); return DU.withDuties(R.blocksOf(routineOf(actor), profileFor(actor).template, y, keepOf(actor, y)), flag(actor, "duties"), game.time?.worldTime ?? 0); };
+  /** Give an NPC a duty (or take it away with null); an NPC with no routine gets its kind's own hours to lay it on. */
+  async function setDuty(actor, key, duty) {
+    if ( !game.user.isGM || !actor || actor.hasPlayerOwner ) return null;
+    if ( !duty ) return flag(actor, "duties")?.[key] ? actor.update({[`flags.${MOD}.duties.-=${key}`]: null}) : null;
+    const up = {[`flags.${MOD}.duties.${key}`]: duty};
+    if ( !routineOf(actor)?.on ) up[`flags.${MOD}.routine`] = {...(routineOf(actor) ?? {}), on: true, roles: routineOf(actor)?.roles ?? {}};
+    return actor.update(up);
+  }
   // The hidden passer-by actors (0.27.0) keep no routine and join no household or faction
   const allActors = () => (game.actors?.contents ?? [...(game.actors?.values?.() ?? [])]).filter(a => !a.flags?.[MOD]?.passerbyBase);
   const routineNpcs = () => allActors().filter(a => !a.hasPlayerOwner && routineOf(a)?.on);
@@ -475,7 +487,7 @@ export function build(ctx) {
     if ( !isActiveGM() ) return null;
     await loadCalendar();
     const t = game.time.worldTime, describeBy = describers(), places = listPlaces();
-    const npcs = routineNpcs(), computed = new Map(), updates = [], reports = [];
+    const npcs = routineNpcs(), computed = new Map(), updates = [], reports = [], hunts = [];
     // Domitors first, so a ghoul can follow theirs
     const order = [...npcs].sort((a, b) => (domitorOf(a) ? 1 : 0) - (domitorOf(b) ? 1 : 0));
     for ( const actor of order ) {
@@ -494,18 +506,27 @@ export function build(ctx) {
         const k = `${actor.id}:missing:${r.missing}`;
         if ( !reported.has(k) ) { reported.add(k); reports.push(`${actor.name}'s ${R.ROLES[r.missing]?.label?.toLowerCase() ?? "place"} is no longer a tagged place: set it again in their routine`); }
       }
+      // B5687 (r1): a Kindred or Kuei-jin NPC's hunting hours end in a meal or in hunger
+      if ( HN.huntEnded(w, r.block) && HN.feedsOn(sheetOf(actor)) && !actor.hasPlayerOwner ) hunts.push({actor, where: {...w}});
       if ( w.place !== r.place || w.index !== r.index || w.reported ) {
         updates.push({_id: actor.id, [`flags.${MOD}.where`]: {place: r.place, index: r.index, activity: r.block?.activity ?? null, label: r.block?.label ?? "", since: t, reported: null}});
       }
     }
     if ( updates.length ) await Actor.updateDocuments(updates);
+    const fed = [];
+    for ( const h of hunts ) fed.push(await resolveHunt(h.actor, h.where, t).catch(e => { console.error(`${MOD} | hunt`, e); return null; }));
+    if ( fed.some(Boolean) ) await ChatMessage.create({speaker: {alias: "WoDX routines"}, whisper: gmIds(),
+      content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">The night's hunting</h3></header><div class="vta-body"><ul>${fed.filter(Boolean).map(r => `<li>${esc(r)}</li>`).join("")}</ul></div></div>`});
     if ( reports.length ) await ChatMessage.create({speaker: {alias: "WoDX routines"}, whisper: gmIds(),
       content: `<div class="vta-card wodx-x wnpc"><header class="vta-head"><h3 style="${H3}">Routines need you</h3></header><div class="vta-body"><ul>${reports.map(r => `<li>${esc(r)}</li>`).join("")}</ul></div></div>`});
-    if ( !scene || !canvas?.ready || canvas.scene?.id !== scene.id ) return {updates, items: []};
+    if ( !scene || !canvas?.ready || canvas.scene?.id !== scene.id ) return {updates, items: [], fed};
     const items = planScene(scene, places, how === "walk" || how === "resume" ? "walk" : "jump", t);
     const card = post ? await postRoutineCard(scene, items, how, t) : null;
     if ( how === "walk" || how === "resume" ) await checkStays(scene, t);
-    return {updates, items, card};
+    // B5686 (r3): the watch walks its beat
+    let beats = [];
+    if ( how === "walk" ) beats = await walkBeats(scene, t).catch(e => { console.error(`${MOD} | beats`, e); return []; });
+    return {updates, items, card, beats, fed};
   }
 
   let timer = null, pendingDelta = 0, running = Promise.resolve();
@@ -541,6 +562,7 @@ export function build(ctx) {
   }
   async function onCombatEnd(combat) {
     if ( !isActiveGM() ) return;
+    await releaseHostages(combat).catch(e => console.error(`${MOD} | hostages`, e));
     const ups = routineNpcs().filter(a => flag(a, "paused")?.combatId === combat.id).map(a => ({_id: a.id, ...unsetKey(`flags.${MOD}.paused`)}));
     if ( !ups.length ) return;
     await Actor.updateDocuments(ups);
@@ -698,7 +720,9 @@ export function build(ctx) {
       seenThrough: dz.seenThrough,
       wraith: ctx.C?.()?.getKind?.(intruder) === "wraith", alone: aloneNow(doc), month: d.month};
     const cond = R.conditionsMet(listOf(system.conditions), sit, system.match);
-    if ( !cond.met ) return null;
+    // B5680 (m1): told to go a while ago and still here: that counts whatever the region's conditions say
+    const told = challengeOf(scene, region.uuid, doc.id, t);
+    if ( !cond.met && !told ) return null;
     // The watchers in view
     const listed = names(system.names);
     const tokNow = canvas.tokens.get(doc.id);
@@ -730,14 +754,15 @@ export function build(ctx) {
     const w = seen[0];
     const near = seen.slice(1).concat(looks.filter(l => !l.noticed)).filter(l => (ctx.yardsBetween(w.tok, l.tok) ?? 999) <= VOICE_YARDS).length;
     const home = Object.entries(routineOf(w.actor)?.roles ?? {}).some(([, v]) => placeIds.includes(v));
-    return reactionCard({wTok: w.tok, wActor: w.actor, sit, near, home, forced: system.response, forcedWhy: "set on this region", head, why, lines: lineList,
-      scene, intruder: doc.uuid, region: region.uuid, trigger});
+    return reactionCard({wTok: w.tok, wActor: w.actor, sit, near, home, forced: told ? null : system.response, forcedWhy: "set on this region", head, why: told ? [why, "told to go, and still here"].filter(Boolean).join("; ") : why, lines: lineList,
+      scene, intruder: doc.uuid, region: region.uuid, trigger, told});
   }
 
   /** The reaction card for one watcher, in the NPC's mode: a suggestion, or done at once in Auto with Undo. */
-  async function reactionCard({wTok, wActor, sit, near = 0, home = false, forced = null, forcedWhy = "", head, why = "", lines = [], scene, intruder, region = null, trigger, event = null}) {
+  async function reactionCard({wTok, wActor, sit, near = 0, home = false, forced = null, forcedWhy = "", head, why = "", lines = [], scene, intruder, region = null, trigger, event = null, told = null}) {
     const prof = profileFor(wTok.actor);
     let options = R.pickReaction(prof, {...sit, alliesNear: near, homeGround: home, hungry: AN.isHungry(prof, sit.month)});
+    if ( told ) options = FW.escalate(options, prof);
     if ( forced && forced !== "profile" ) {
       const f0 = options.find(o => o.action === forced) ?? {action: forced, score: 99, why: forcedWhy};
       options = [{...f0, why: `${forcedWhy}; ${f0.why}`}, ...options.filter(o => o !== f0)];
@@ -886,13 +911,17 @@ export function build(ctx) {
     if ( !isActiveGM() ) return;
     for ( const scene of game.scenes ?? [] ) if ( (flag(scene, "marks") ?? []).length ) await repairMarks(scene);
     await deliverCarries();
+    if ( canvas?.ready && canvas.scene ) await checkChallenges(canvas.scene, game.time.worldTime).catch(e => console.error(`${MOD} | challenges`, e));
     // NPC 0.23.0: word that someone carried to the watch arrives, and the place goes on alarm
     for ( const scene of game.scenes ?? [] ) {
       const reps = flag(scene, "reports") ?? [];
       if ( !reps.length ) continue;
-      const now = game.time.worldTime, due = reps.filter(r => r.at <= now), left = reps.filter(r => r.at > now);
+      const now = game.time.worldTime, left = reps.filter(r => r.at > now);
+      // B5683 (m4): an informer who was stopped (down, or held) on the way never gets the word there
+      const stopped = r => { const a = r.byId ? game.actors.get(r.byId) : null; return !!a && !FW.reportArrives(r, {down: !!downState(a), held: !!chron()?.conditions?.hasCondition?.(a, "held")}); };
+      const due = reps.filter(r => r.at <= now && !stopped(r));
+      if ( reps.length !== left.length ) await scene.update(left.length ? {[`flags.${MOD}.reports`]: left} : unsetKey(`flags.${MOD}.reports`));
       if ( !due.length ) continue;
-      await scene.update(left.length ? {[`flags.${MOD}.reports`]: left} : unsetKey(`flags.${MOD}.reports`));
       const prev = flag(scene, "alert") ?? null;
       const full = await raiseAlarmFull(scene, `${due.map(r => r.by).join(", ")} told what they saw`);
       await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(), flags: {[MOD]: {alarmCard: {scene: scene.uuid, prev, carry: full?.carry ?? null}}},
@@ -1044,6 +1073,170 @@ export function build(ctx) {
       + `<p class="wodx-quiet">The Storyteller speaks for the NPC.</p></div></div>`;
   }
 
+  /* ---- B5680-B5686: what comes after the first reaction (NPC Motives Desk m1-m5) ---- */
+  const mem = () => game.modules.get(MOD)?.api?.memory ?? null;
+  /** A fresh challenge of this intruder in this region, from the scene's record, or null. */
+  function challengeOf(scene, regionUuid, tokenId, t) {
+    const c = (flag(scene, "challenges") ?? []).find(x => x.region === regionUuid && x.intruder === tokenId);
+    return FW.challengeFresh(c, t) ? c : null;
+  }
+  async function recordChallenge(scene, regionUuid, tokenId, by, t) {
+    if ( !scene?.setFlag || !regionUuid || !tokenId ) return;
+    const keep = (flag(scene, "challenges") ?? []).filter(x => FW.challengeFresh(x, t) && !(x.region === regionUuid && x.intruder === tokenId));
+    await scene.setFlag(MOD, "challenges", [...keep, {region: regionUuid, intruder: tokenId, by: by?.name ?? "", at: t}]);
+  }
+  /** m1: intruders who were told to go and are still in the place once the grace has run out meet the next step. */
+  async function checkChallenges(scene, t) {
+    const list = flag(scene, "challenges") ?? [];
+    if ( !list.length ) return;
+    const type = reactionType();
+    const due = list.filter(c => FW.challengeDue(c, t));
+    const next = list.filter(c => FW.challengeFresh(c, t)).map(c => (due.includes(c) ? {...c, acted: true} : c));
+    if ( next.length !== list.length || due.length ) await scene.setFlag(MOD, "challenges", next);
+    for ( const c of due ) {
+      const region = fromUuidSync(c.region), doc = scene.tokens.get(c.intruder);
+      const b = region?.behaviors?.find?.(x => x.type === type && !x.disabled);
+      if ( b && doc && doc.regions?.has?.(region) ) await react(b.system, region, doc, "stay");
+    }
+  }
+  /** The NPC's home region on this scene, if it has one there. */
+  function homeHere(tok) {
+    const a = tok?.actor?.isToken ? (tok.actor.baseActor ?? game.actors.get(tok.actor.id)) : tok?.actor;
+    const id = routineOf(a)?.roles?.home ?? routineOf(a)?.roles?.haven ?? null;
+    const p = id ? listPlaces().find(x => x.id === id && x.region && x.scene?.id === canvas.scene?.id) : null;
+    return p?.region ?? null;
+  }
+  /** Walk a token to the nearest free cell of a region. */
+  async function walkToRegion(tok, region, snap) {
+    const cell = freeCellsIn(region, tok, ctx.cellOf(tok), busyCells([tok.id]))[0];
+    if ( !cell ) return false;
+    snap?.moved?.push({uuid: tok.document.uuid, x: tok.document.x, y: tok.document.y});
+    await walkTo(tok, cell);
+    return true;
+  }
+  /** m2, m5: make for home on this map, else run from the trouble. Returns "home", "away" or "". */
+  async function goAway(tok, from, snap) {
+    if ( !onGrid() ) return "";
+    const home = homeHere(tok);
+    if ( home && !tok.document.regions?.has?.(home) && await walkToRegion(tok, home, snap) ) return "home";
+    snap?.moved?.push({uuid: tok.document.uuid, x: tok.document.x, y: tok.document.y});
+    const run = C()?.movementFor?.(tok.actor)?.run ?? 20;
+    const map = NR.reachable(ctx.cellOf(tok), ctx.passableFor(tok), ctx.cellsFor(run * 3), {neighbors: ctx.stepsFor()});
+    const cell = NR.fleeCell(map, from ? [ctx.cellOf(from)] : []);
+    const path = cell ? NR.pathTo(cell) : null;
+    if ( path && path.length > 1 ) { await ctx.walk(tok, corners(path)); return "away"; }
+    return "";
+  }
+  /** m3, m2: walk up to someone (to speaking distance). */
+  async function goTo(tok, to, snap) {
+    if ( !onGrid() || !to ) return false;
+    const way = ctx.approach(tok, to);
+    if ( !way?.path ) return false;
+    snap?.moved?.push({uuid: tok.document.uuid, x: tok.document.x, y: tok.document.y});
+    await ctx.walk(tok, corners(way.path));
+    return true;
+  }
+  /** m4: where an informer goes to tell: a watch-house on this map, else the way in. */
+  function watchHouseHere() {
+    const p = listPlaces().find(x => x.region && x.scene?.id === canvas.scene?.id && x.kind === "gate");
+    return p?.region ?? entranceOf(canvas.scene);
+  }
+  /** c1: when a fight ends, every hostage taken in it is let go, makes for home and remembers who seized them. */
+  async function releaseHostages(combat) {
+    const scene = combat?.scene ?? game.scenes.get(combat?.scene?.id ?? combat?._source?.scene) ?? canvas.scene;
+    if ( !scene ) return [];
+    const takers = [...scene.tokens].map(d => ({id: d.id, hostage: d.flags?.[MOD]?.hostage ?? null}));
+    const out = [];
+    for ( const {taker, hostage} of FW.hostagesOf(takers, combat?.id ?? null) ) {
+      const td = scene.tokens.get(taker), hd = scene.tokens.get(hostage);
+      if ( td ) await td.unsetFlag(MOD, "hostage");
+      if ( !hd?.actor ) continue;
+      try { await chron()?.conditions?.setCondition?.(hd.actor, "held", false); } catch (e) { /* no conditions */ }
+      try { if ( td?.actor ) await mem()?.remember?.(hd.actor, td.actor, {kind: "harm", text: "Seized them as a shield in a fight", seen: true}); } catch (e) { /* memory off */ }
+      if ( scene.id === canvas.scene?.id && hd.object ) await goAway(hd.object, td?.object ?? null, null);
+      out.push(`${hd.name} is let go${td ? ` by ${td.name}` : ""} and runs for home`);
+    }
+    if ( out.length ) await ChatMessage.create({speaker: {alias: "WoDX"}, whisper: gmIds(),
+      content: `<div class="vta-card wodx-x wnpc"><div class="vta-body"><p>${esc(out.join("; "))}. They will remember who held them.</p></div></div>`});
+    return out;
+  }
+  /** r3: guards on a watch block walk between the tagged places of the map in view, a stop every quarter hour; on the hour they are back at the post. Auto mode only. */
+  async function walkBeats(scene, t) {
+    if ( !scene || canvas.scene?.id !== scene.id || !onGrid() ) return [];
+    const here = listPlaces().filter(p => p.region && p.scene?.id === scene.id);
+    if ( here.length < 2 || FW.atPostNow(t) ) return [];
+    const moved = [];
+    for ( const tok of canvas.tokens.placeables ) {
+      const a = tok.actor?.isToken ? (tok.actor.baseActor ?? game.actors.get(tok.actor.id)) : tok.actor;
+      if ( !a || a.hasPlayerOwner || !routineOf(a)?.on || modeOf(a, scene) !== "auto" || paused(a, t) || downState(a) || game.combat?.combatants?.some?.(c => c.tokenId === tok.id) ) continue;
+      const w = whereOf(a);
+      if ( w?.activity !== "patrol" || !FW.beatDue(flag(a, "beat")?.at ?? null, t) ) continue;
+      const at = here.find(p => tok.document.regions?.has?.(p.region))?.id ?? null;
+      const next = FW.nextBeat(here.map(p => p.id), w.place, at, Math.floor(t / FW.BEAT_SECONDS));
+      const p = here.find(x => x.id === next);
+      await a.setFlag(MOD, "beat", {at: t, to: next ?? null});
+      if ( p && await walkToRegion(tok, p.region, null) ) moved.push(`${tok.name} walks the beat to ${p.name}`);
+    }
+    return moved;
+  }
+
+  /* r1 (B5687): the night's hunt, rolled when the hunting block ends */
+  const sheetOf = a => ({type: a?.type, bloodMax: num(a?.system?.advantages?.bloodpool?.max), yangMax: num(a?.system?.advantages?.yangchi?.permanent ?? a?.system?.advantages?.yangchi?.max)});
+  const facs = () => game.modules.get(MOD)?.api?.factions ?? null;
+  /** People on this map to lead aside, as the rules want them. */
+  function preyHere(tok) {
+    const list = [];
+    for ( const o of canvas.tokens.placeables ) {
+      if ( o.id === tok.id || !o.actor || o.document.hidden ) continue;
+      const pb = o.document.getFlag(MOD, "passerby");
+      const mortal = (C()?.getKind?.(o.actor) ?? "mortal") === "mortal" && o.actor.type === "Mortal";
+      const near = canvas.tokens.placeables.filter(x => x.id !== o.id && x.id !== tok.id && x.actor && !x.document.getFlag(MOD, "passerby") && ctx.yardsBetween(o, x) <= 10).length;
+      list.push({id: o.id, passerby: !!pb, animal: !!pb?.animal, mortal, player: !!o.actor.hasPlayerOwner, alone: near === 0});
+    }
+    return list;
+  }
+  /** Roll (or, with prey on the map, take) one NPC's meal at the end of its hunt. Returns a line for the card, or null. */
+  async function resolveHunt(actor, w, t) {
+    const feeds = HN.feedsOn(sheetOf(actor));
+    if ( !feeds ) return null;
+    const path = feeds === "chi" ? "system.advantages.yangchi" : "system.advantages.bloodpool";
+    const pool = foundry.utils.getProperty(actor, path) ?? {};
+    const before = {now: num(pool.temporary), max: feeds === "chi" ? num(pool.permanent ?? pool.max) : num(pool.max)};
+    const F = facs();
+    // Prey on the map where the hunter walks: led aside, as a player would, instead of a roll
+    const onMap = canvas?.ready && (listPlaces().find(p => p.id === w.place)?.scene?.id ?? (String(w.place).startsWith("Scene.") ? String(w.place).split(".")[1] : null)) === canvas.scene?.id;
+    const tok = onMap ? canvas.tokens.placeables.find(x => x.actor && (x.actor.id === actor.id || x.actor.baseActor?.id === actor.id)) : null;
+    let caught = false, botch = false, vessel = null, how = "";
+    const preyId = tok && onGrid() ? HN.preyOnMap(preyHere(tok), feeds) : null;
+    if ( preyId ) {
+      const prey = canvas.tokens.get(preyId);
+      await goTo(tok, prey, null);
+      caught = true; vessel = prey; how = `leads ${prey.name} aside`;
+    } else if ( F?.hunt ) {
+      // B5695 (g3): a servant who attends brings a vessel (a blood cult is Herd on the sheet already, B5692)
+      const attended = routineNpcs().some(s => Object.keys(flag(s, "duties") ?? {}).some(k => k === `serve:${actor.id}`));
+      const extra = attended ? DU.VESSEL_DIE : 0;
+      const r = await F.hunt(actor, w.place, {method: HN.bestMethod(F.huntPools?.(actor) ?? {}), hours: HN.huntHours(w.since, t), extra});
+      caught = !!r?.caught; botch = !!r?.botch;
+      how = caught ? "finds prey" : botch ? "botches the hunt" : "finds nothing";
+    } else return null;
+    if ( caught ) {
+      const die = (await new Roll("1d10").evaluate()).total;
+      const m = HN.meal(before, die);
+      const ups = {[`${path}.temporary`]: m.after, [`flags.${MOD}.-=hungry`]: null};
+      await actor.update(ups);
+      // The vessel gives what was taken (a passer-by's own pool, so a second feeding finds less)
+      if ( vessel?.actor && m.taken ) {
+        const vb = num(vessel.actor.system?.advantages?.bloodpool?.temporary);
+        await vessel.actor.update({"system.advantages.bloodpool.temporary": Math.max(0, vb - m.taken)}).catch(() => null);
+      }
+      return `${actor.name} ${how} and takes ${m.taken} ${feeds === "chi" ? "Chi" : "blood"} (${m.after} of ${before.max})`;
+    }
+    await actor.setFlag(MOD, "hungry", {since: t});
+    if ( botch ) await F?.reportBreach?.({severity: 1, place: w.place, by: actor.id, event: HN.botchTale(actor.name, feeds)}).catch(e => console.error(`${MOD} | breach`, e));
+    return `${actor.name} ${how} and goes hungry${botch ? "; someone saw, and the talk begins" : ""}`;
+  }
+
   /** Carry out response k of a reaction. Returns {text, snap}. */
   async function doReaction(data, k) {
     const o = data.options[k];
@@ -1067,7 +1260,8 @@ export function build(ctx) {
           if ( way.path ) { await ctx.walk(w, corners(way.path)); moved = ` and goes to them`; }
         }
         await pause([w.actor]);
-        return {text: `${w.name} challenges ${i?.name ?? "them"}${moved}.`, snap};
+        if ( i && data.region ) await recordChallenge(canvas.scene, data.region, i.id, w, t);
+        return {text: `${w.name} challenges ${i?.name ?? "them"}${moved}.${i && data.region ? " If they are still here in ten minutes, it goes further." : ""}`, snap};
       }
       case "alarm": {
         const heard = canvas.tokens.placeables.filter(t2 => t2.id !== w.id && t2.actor && !t2.actor.hasPlayerOwner && (ctx.yardsBetween(w, t2) ?? 999) <= VOICE_YARDS);
@@ -1075,7 +1269,17 @@ export function build(ctx) {
         const sc = canvas.scene;
         snap.alert = {scene: sc.uuid, prev: flag(sc, "alert") ?? null};
         snap.alert.carry = (await raiseAlarmFull(sc, `${w.name} raised it`))?.carry ?? null;
-        return {text: `${w.name} raises the alarm.${heard.length ? ` ${heard.map(h => h.name).join(", ")} hear it.` : " Nobody is within call."} ${sc.name} is on alarm for an hour.`, snap};
+        // B5681 (m2): the bold come to the trouble, the timid get away from it
+        const come = [], go = [];
+        const sitNow = {supernatural: !!(i && ctx.obvious(i.actor)), weapon: !!(i && weaponOut(i.actor))};
+        for ( const h of heard ) {
+          if ( downState(base(h.actor)) || game.combat?.combatants?.some?.(c => c.tokenId === h.id) ) continue;
+          const how = FW.hearAlarm(profileFor(h.actor), sitNow);
+          if ( how === "come" && await goTo(h, i ?? w, snap) ) come.push(h.name);
+          else if ( how === "go" && await goAway(h, i ?? w, snap) ) go.push(h.name);
+        }
+        const moves = `${come.length ? ` ${come.join(", ")} come${come.length === 1 ? "s" : ""} running.` : ""}${go.length ? ` ${go.join(", ")} get${go.length === 1 ? "s" : ""} away.` : ""}`;
+        return {text: `${w.name} raises the alarm.${heard.length ? ` ${heard.map(h => h.name).join(", ")} hear it.` : " Nobody is within call."}${moves} ${sc.name} is on alarm for an hour.`, snap};
       }
       case "send": {
         const scene = canvas.scene;
@@ -1092,7 +1296,14 @@ export function build(ctx) {
           if ( made ) { snap.created.push(made.uuid); for ( const c of ctx.cellsAt(arr.shape, arr.cell) ) busy.add(`${c.i},${c.j}`); }
         }
         await pause([w.actor, ...helpers]);
-        return {text: `${w.name} sends for help: ${helpers.map(a => a.name).join(" and ")} come${helpers.length === 1 ? "s" : ""}.`, snap};
+        // B5682 (m3): help walks to the trouble and challenges whoever caused it
+        let reached = 0;
+        if ( i ) {
+          await new Promise(r => setTimeout(r, 150));
+          for ( const u of snap.created ) { const d = await fromUuid(u); if ( d?.object && await goTo(d.object, i, null) ) reached++; }
+          if ( reached && data.region ) await recordChallenge(canvas.scene, data.region, i.id, w, t);
+        }
+        return {text: `${w.name} sends for help: ${helpers.map(a => a.name).join(" and ")} come${helpers.length === 1 ? "s" : ""}${reached ? ` and go${helpers.length === 1 ? "es" : ""} straight to ${i.name}` : ""}.`, snap};
       }
       case "report": {
         // NPC 0.23.0 (B1007): the place goes on alarm when the word reaches the watch, a couple of hours from now
@@ -1100,19 +1311,28 @@ export function build(ctx) {
         const sc = canvas.scene, prev = flag(sc, "reports") ?? [];
         snap.reports = {scene: sc.uuid, prev};
         const at = t + MR.REPORT_HOURS * 3600;
-        await sc.setFlag(MOD, "reports", [...prev, {at, by: w.name, about: i?.name ?? "someone"}]);
-        return {text: `${w.name} says nothing now, and will tell someone what they saw about ${i?.name ?? "them"} within ${MR.REPORT_HOURS} hours.`, snap};
+        await sc.setFlag(MOD, "reports", [...prev, {at, by: w.name, byId: base(w.actor)?.id ?? null, about: i?.name ?? "someone", aboutId: i?.actor?.id ?? null}]);
+        // B5683 (m4): they slip off to tell, where players can see them go (and stop them)
+        const to = watchHouseHere();
+        const went = to && !w.document.regions?.has?.(to) ? await walkToRegion(w, to, snap) : (await goAway(w, i, snap)) !== "";
+        return {text: `${w.name} says nothing now${went ? " and slips away" : ""}, and will tell someone what they saw about ${i?.name ?? "them"} within ${MR.REPORT_HOURS} hours, unless they are stopped first.`, snap};
       }
       case "flee": {
         await pause([w.actor]);
         if ( !onGrid() ) return {text: `${w.name} flees (move the token by hand).`, snap};
-        snap.moved.push({uuid: w.document.uuid, x: w.document.x, y: w.document.y});
-        const run = C()?.movementFor?.(w.actor)?.run ?? 20;
-        const map = NR.reachable(ctx.cellOf(w), ctx.passableFor(w), ctx.cellsFor(run * 3), {neighbors: ctx.stepsFor()});
-        const cell = NR.fleeCell(map, i ? [ctx.cellOf(i)] : []);
-        const path = cell ? NR.pathTo(cell) : null;
-        if ( path && path.length > 1 ) await ctx.walk(w, corners(path));
-        return {text: path?.length > 1 ? `${w.name} flees.` : `${w.name} has nowhere to run.`, snap};
+        // B5684 (m5): make for home, remember who frightened them, and the kind who talk tell someone
+        const where = await goAway(w, i, snap);
+        let more = "";
+        if ( i?.actor ) {
+          try { await mem()?.remember?.(w.actor, i.actor, {kind: "cold", text: "Frightened them off", seen: false}); } catch (e) { /* memory off */ }
+          if ( FW.tellsAfterFleeing(profileFor(w.actor)) ) {
+            const sc = canvas.scene, prev = flag(sc, "reports") ?? [];
+            snap.reports ??= {scene: sc.uuid, prev};
+            await sc.setFlag(MOD, "reports", [...prev, {at: t + MR.REPORT_HOURS * 3600, by: w.name, byId: base(w.actor)?.id ?? null, about: i.name, aboutId: i.actor.id}]);
+            more = ` They will tell someone about ${i.name}.`;
+          }
+        }
+        return {text: (where === "home" ? `${w.name} runs for home.` : where ? `${w.name} flees.` : `${w.name} has nowhere to run.`) + more, snap};
       }
       case "fight": {
         if ( !i ) return {text: "The intruder is gone.", snap};
@@ -1501,7 +1721,7 @@ export function build(ctx) {
     });
   }
 
-  return {onTrigger, raiseAlarmFull, carryAlarm, deliverCarries, undoCarry, noteMark, repairMarks, undoRepairCard, raiseAlarm, alertOf, alertLevel, onMapEvent, checkAlerts, undoAlarmCard, syncZones, alertRules: AR, registerSettings, registerBehavior, hooks, tick, idle, planScene, listPlaces, routineOf, whereOf, blocksFor, keepOf, routineNpcs, describer, loadCalendar,
+  return {setDuty, goTo, goAway, resolveHunt, checkChallenges, releaseHostages, walkBeats, onTrigger, raiseAlarmFull, carryAlarm, deliverCarries, undoCarry, noteMark, repairMarks, undoRepairCard, raiseAlarm, alertOf, alertLevel, onMapEvent, checkAlerts, undoAlarmCard, syncZones, alertRules: AR, registerSettings, registerBehavior, hooks, tick, idle, planScene, listPlaces, routineOf, whereOf, blocksFor, keepOf, routineNpcs, describer, loadCalendar,
     watchFoes, onAttitude, applyItems, undoSnap, acceptRoutineCard, undoRoutineCard, react, doReaction, acceptReactionCard, undoReactionCard, checkStays, matchOwners,
     editRoutine, openPlaces: () => PlacesAppClass().open(), PlacesAppClass, modeOf, downState, entranceOf, freeCellsIn, walkTo, reactionType, bookNow, noticeBy};
 }
