@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6530
+Next free block: B6580
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -353,6 +353,7 @@ Next free block: B6530
 | B6500-B6509 | lanes ignore the dawn and dusk move and session id (used B6500) | tools (lanes) |
 | B6510-B6519 | Map generator licence label: the town layout port is GPL-3.0 (used B6510) | tools/mapgen |
 | B6520-B6529 | Graphics card heat watch in the PC runner (used B6520) | tools (pcq) |
+| B6570-B6579 | Book check: Senses page refs and the eight World of Darkness timeline cards (used B6570-B6576) | Senses, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10947,3 +10948,38 @@ Reverse: none needed; the label follows the source's licence. If the layout is e
 tools/pcq. The image model keeps the graphics card busy for hours, with no power cap. The runner reads nvidia-smi once a minute and writes one line to logs/gpu-YYYY-MM-DD.csv in its folder. That line holds the core heat, the memory heat where the card reports it, the power, the fan, the load and the memory in use. If the core stays above 83 C for 5 minutes, or the memory stays above 100 C, it opens a pc-alert issue so the Storyteller hears of it. The alert closes after 10 minutes under 78 C core and 95 C memory. The limits are in tools/pcq/gpu.mjs and covered by tools/harness/pcq.test.mjs.
 
 Reverse: remove the gpuCheck call from the runner loop.
+
+## B6570. The lowest difficulty is 2, and the difficulty words are V20's (2026-11-15)
+WoDX Senses. V20 core pdf 257 / printed 249 says a difficulty is always between 2 and 10, so a sense roll's difficulty stops at 2, not 3 (the earlier page note said V20 gave no floor, which was wrong). The quiet interface's words follow the same chart, so 3 is now trivial and 4 easy (they were easy and a house word, routine); 2 shares the word for 3 and 10 stays "all but impossible".
+
+Reverse: Set FLOOR in wodx-senses/scripts/senses-rules.mjs to 3 and edit DIFFICULTY_WORDS in quiet-rules.mjs.
+
+## B6571. The Gift Heightened Senses in Crinos (2026-11-15)
+WoDX Senses. W20 pdf 160-161 / printed 158-159 gives -3 to Perception difficulties in Crinos, Hispo and Lupus and -2 in Homid and Glabro. Crinos was counted at -2; it is now -3.
+
+Reverse: Drop the crinos test from the Gift line in powersFor (senses-rules.mjs).
+
+## B6572. Overwhelmed senses daze, they do not deafen (2026-11-15)
+WoDX Senses. V20 pdf 142 / printed 134: a sudden event calls for Willpower at 4 or more, higher for a stronger source, and a failure leaves the character oblivious to the surroundings for a turn or two. The house numbers of B2901 stay (difficulty 6 for a loud noise or a gun nearby, one turn), and the card and the timed effect now say the character is overwhelmed rather than deafened. The book's separate hour of blindness or deafness from a very strong stimulus is not built (B6573).
+
+Reverse: Edit overloadText in sight-rules.mjs and the applyTimed description in sight.mjs.
+
+## B6573. What the Senses book check left open (2026-11-15)
+WoDX Senses. Not built yet, logged in docs/PENDING-REVIEW.md: the Gift Heightened Senses needs a Gnosis point for a scene (W20 pdf 161) but is counted whenever the werewolf has it; heightening one sense alone (V20 pdf 143); Heightened Senses lowering the pitch-darkness penalty from +2 to +1 (V20 pdf 143, a WoDX Combat change); a very strong stimulus blinding or deafening for an hour (V20 pdf 142); a Deathsight weak spot giving -1 to hit (Wraith 20 pdf 191). Page refs for all of it are in docs/research/senses-refs.md.
+
+Reverse: Nothing to reverse; these are notes.
+
+## B6574. The eight World of Darkness timeline cards, checked again from the cloud book text (2026-11-15)
+WoDX Chronicle. Every book in the cloud text that names a card's subject was searched and the hits read. Five cards stand as they were: 1521 Tenochtitlan (Wraith 20 pdf 101, 514-515), 1791 Saint-Domingue (Wraith 20 pdf 520-521; Sorcerers Crusade Revised pdf 34), 1885 the Congo (Wraith 20 pdf 517-518; Kindred of the Ebony Kingdom pdf 15-16, 161), 1994 Rwanda (Kindred of the Ebony Kingdom pdf 168; the Wyrm's part now has books too: A World of Rage pdf 95-96, the Corax breedbook pdf 46) and 1692 Salem, which could not be checked here (see B6576). Three are reworded to the books (B6575).
+
+Reverse: Nothing to reverse; this is the record of the check.
+
+## B6575. Three cards follow the books more closely (2026-11-15)
+WoDX Chronicle. 1890, the Ghost Dance: the Wendigo tribebook (Revised, pdf 28-29) has the Garou arrive too late at Wounded Knee and fight the soldiers in the blizzard after, and the Garou camp of the Ghost Dance forms only after 1890 (pdf 50), so the card no longer has Garou dying among the dancers. 1830, the Squattocracy: Rage Across Australia (pdf 21-22) has only a few of the graziers knowingly serve the Wyrm, and the Bunyip fight back with drought, flood and fire rather than only withdraw. 1589, the Croatan (left out of the game in favour of the book event, B6131): the rite banishes the Eater-of-Souls (W20 pdf 42; Werewolf: The Wild West pdf 60; Past Lives pdf 66) rather than binding it.
+
+Reverse: Put the old wording back in r3 renaissance.txt, age-of-reason.txt, victorian.txt and events-2026-11-12r3.json, then run node tools/timeline/build-world-history.mjs.
+
+## B6576. Salem waits on a book the cloud does not have (2026-11-15)
+WoDX Chronicle. The 1692 Salem card rests on Verbena (Revised) pdf 43, read on the PC on 13 November 2026. That book, and the other Mage Revised tradition books, are not in the cloud book text, and no other book there says more about Salem than naming the trials as a model witch-hunt (Archons and Templars). The card stays as it is; a books-find job can confirm the page.
+
+Reverse: Nothing to reverse.

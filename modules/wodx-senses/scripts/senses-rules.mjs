@@ -76,7 +76,8 @@ export const STEPS = {
   dim: 1, dark: 2, crowd: 1, storm: 1, door: 1, wind: 1, masked: 1, fog: 2, mist: 1
 };
 export const BASE_DIFFICULTY = 6;
-export const FLOOR = 3;
+/** V20 core pdf 257 / printed 249: a difficulty is always between 2 and 10 (B6570). */
+export const FLOOR = 2;
 
 /**
  * The difficulty for one sense, and why. ctx: {light, crowd, sky, indoor, door, masked, wx (weather tags), heavy}. powers: see powersFor().
@@ -135,7 +136,8 @@ export function powersFor(t = {}) {
   // A vampire's beast shape (Shape of the Beast): wolf Perception -2 difficulty, bat hearing -3 (V20 p. 200; VtDA20 p. 241)
   if ( t.body === "wolf" && !wolf ) mods.push({label: "Wolf's senses (Shape of the Beast)", n: 2});
   if ( t.body === "bat" ) mods.push({label: "Bat's hearing (Shape of the Beast)", n: 3, senses: ["sound"]});
-  if ( t.heightened ) mods.push({label: "Heightened Senses (Gift)", n: wolf ? 3 : 2});
+  // W20 pdf 160-161 / printed 158-159: -2 in Homid and Glabro, -3 in Crinos, Hispo and Lupus (B6571)
+  if ( t.heightened ) mods.push({label: "Heightened Senses (Gift)", n: (wolf || t.form === "crinos") ? 3 : 2});
   if ( t.eyesOfCat ) darkSight = "Eyes of the Cat";
   // B3799: cyberware (WoDX Library api.cyber.installedFx): {dark, mods: [{label, n, senses}]}
   if ( t.gear?.dark && !darkSight ) darkSight = t.gear.dark;
