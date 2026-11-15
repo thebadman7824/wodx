@@ -22,6 +22,7 @@
  */
 
 import * as ACTS from "./acts.js";
+import * as BIND from "./binds.js";
 import { spendTime } from "./spend-time.js";
 import * as R from "./rules.js";
 import * as P from "./profiles.js";
@@ -298,6 +299,8 @@ async function onSocket(p) {
     if (p.action === "kx" && !p.uuid) return kx().onSocket(p);
     // B4822: a player sends their summons away
     if (p.action === "summonDismiss") return SUM.onDismissRequest(p);
+    // B5793: a bound player character's move, for the Storyteller to allow
+    if (p.action === "bindMove") return BIND.onMoveRequest(p);
     // B4831: a player's resistance roll against an effect card item
     if (p.action === "effectResisted") return EFX.resolveResist(game.messages.get(p.msg), Number(p.i), !!p.won);
     // B3133: a player's codex entry spent on research (the codex journal is the Storyteller's)

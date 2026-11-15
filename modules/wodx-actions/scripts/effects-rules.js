@@ -247,6 +247,11 @@ export const KINDS = ["any", "fire", "sunlight", "silver", "faith", "spirits", "
  * the token (Ben's pick on the Notes Gaps Desk, g3: the binding card only).
  */
 export const BINDING_KEYS = ["fear", "sway", "possess", "bind", "hold"];
+/** B5793: what each binding does to the bound character's token (binds.js), for the binding card. */
+export const BIND_HOLDS = {
+  hold: "Your token does not move while it holds.", possess: "Your token does not move for you: the one who possesses the body moves it.",
+  fear: "Your token cannot go nearer the one you fear.", sway: "Each move you make goes to the Storyteller, who allows it or not.",
+  bind: "Each move you make goes to the Storyteller, who allows it or not."};
 export function bindingOf(item = {}, {caster = "", power = ""} = {}) {
   const key = item?.key, o = item?.out ?? {};
   if ( !BINDING_KEYS.includes(key) || !KEYWORDS[key] ) return null;

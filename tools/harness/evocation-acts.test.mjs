@@ -98,3 +98,31 @@ test("B5791: the K and P spec kinds", () => {
   const n = MH.hekauResults("name-the-secret", 2, {name: "Name the Secret"}).map(r => r.out.kind);
   assert.deepEqual(n, ["question", "timed"]);
 });
+
+test("B5793: a binding holds the bound character's token", async () => {
+  const B = await import("../../modules/wodx-actions/scripts/binds.js");
+  const fx = key => ({flags: {"wodx-chronicle": {timed: {key: `wodx-effect-${key}`}}, "wodx-actions": {bindBy: "x"}}, name: key});
+  assert.deepEqual(B.bindingsOn({effects: [fx("hold"), {name: "Other"}]}).map(b => b.rule), ["still"]);
+  assert.deepEqual(B.bindingsOn({effects: [{...fx("fear"), disabled: true}]}), []);
+  const from = {x: 0, y: 0}, feared = [{x: 1000, y: 0}];
+  assert.equal(B.judgeMove(B.bindingsOn({effects: [fx("hold")]}), {from, to: {x: 100, y: 0}}).ok, false);
+  const fear = B.bindingsOn({effects: [fx("fear")]});
+  assert.equal(B.judgeMove(fear, {from, to: {x: 500, y: 0}, feared}).ok, false);
+  assert.equal(B.judgeMove(fear, {from, to: {x: -500, y: 0}, feared}).ok, true);
+  const cmd = B.judgeMove(B.bindingsOn({effects: [fx("sway")]}), {from, to: {x: 100, y: 0}});
+  assert.equal(cmd.ok, false);
+  assert.equal(cmd.ask, true);
+  assert.equal(B.judgeMove([], {from, to: {x: 100, y: 0}}).ok, true);
+});
+
+test("B5795: a pact gift does what it gives", async () => {
+  const R = await import("../../modules/wodx-actions/scripts/servant-actions-rules.js");
+  const [g] = R.giftItems([{k: "evocation", level: 2}], {demon: "Dagon", demonId: "d1"});
+  assert.equal(g.flags["wodx-actions"].pactGift.demonId, "d1");
+  assert.equal(g.flags["wodx-actions"].pactGift.level, 2);
+  const fs = await import("node:fs");
+  const src = fs.readFileSync(new URL("../../modules/wodx-actions/scripts/servant-actions.js", import.meta.url), "utf8");
+  assert.match(src, /DE\.evocationResults\(pick\.e\.lore, pick\.e\.level, s/);
+  assert.match(src, /data = \{kind: "effects", caster: actor\.name, items\}/);
+  assert.doesNotMatch(src, /"it answers" : "nothing comes"/);
+});

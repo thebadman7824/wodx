@@ -9,6 +9,7 @@
  *   7. Know: a secret the target keeps is found out by the caster
  *   8. Talking to a beast needs a Speak power; with one running, the beast listens
  *   9. A Hekau ritual (Simple Weather Magic) and a book ritual (Voice of the Jackal) give results that change the game
+ *  10. A binding holds the token: the hook is on, Hold stops a move, Fear stops going nearer, a command asks
  * Result: Data/wodx-gate/gateevocations-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -120,6 +121,18 @@ export async function run() {
       const j = PW.powerOutcomes({keywords: kw}, 2, {label: "Voice of the Jackal", hasTarget: true}).results;
       G.ok("9. Hekau and book rituals give results that change the game", w[0]?.out?.kind === "weather" && j.some(x => x.out?.name === "Cursed"),
         {weather: w[0]?.out?.kind, jackal: j.map(x => x.out?.kind)});
+    });
+
+    await G.step("10. A binding holds the token", async () => {
+      const B = await import("/modules/wodx-actions/scripts/binds.js");
+      const fx = key => ({flags: {"wodx-chronicle": {timed: {key: `wodx-effect-${key}`}}}, name: key});
+      const from = {x: 0, y: 0}, feared = [{x: 1000, y: 0}];
+      const hold = B.judgeMove(B.bindingsOn({effects: [fx("hold")]}), {from, to: {x: 100, y: 0}});
+      const fear = B.judgeMove(B.bindingsOn({effects: [fx("fear")]}), {from, to: {x: 500, y: 0}, feared});
+      const cmd = B.judgeMove(B.bindingsOn({effects: [fx("sway")]}), {from, to: {x: 100, y: 0}});
+      let setting = null;
+      try { setting = game.settings.get(MOD, "bindingsHold"); } catch (e) { setting = null; }
+      G.ok("10. A binding holds the token", setting === true && !hold.ok && !fear.ok && cmd.ask === true, {setting});
     });
   } catch (e) {
     G.R.errors.push(String(e?.message ?? e));

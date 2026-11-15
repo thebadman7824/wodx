@@ -6,6 +6,7 @@
  * World setting "Magic that applies itself": Automatic (on, except in the Live world), On, Off. Rules: effects-rules.js.
  */
 import * as ACT from "./acts.js";
+import * as BIND from "./binds.js";
 import * as E from "./effects-rules.js";
 import * as KRG from "./kindred-rules.js";
 import * as DAE from "./mage-da-effects.js";
@@ -434,8 +435,14 @@ export async function applyItem(item, casterName = "the caster") {
     const uuid = a ? await TURN.attach(a, et, {label: item.out.label ?? item.out.name ?? "A power", by: casterName}) : null;
     if ( uuid ) rec.everyEffect = uuid;
   }
-  // B3528: a mind or body binding on a player character gets the player a binding card (no hold on the token)
+  // B3528: a mind or body binding on a player character gets the player a binding card; B5793: the binding's effect
+  // remembers who bound them, so Fear keeps the token from going nearer that one (binds.js)
   try { await bindingCard(item, casterName); } catch (e) { console.warn("WoDX | binding card", e); }
+  try {
+    const byA = item?.by ?? item?.caster ?? item?.casterUuid;
+    const by = byA ? actorOf(docOf(byA)) : null;
+    if ( by && rec?.effect && BIND.RULE[item?.key] ) await fromUuidSync(rec.effect)?.setFlag?.(MOD, "bindBy", by.id);
+  } catch (e) { console.warn("WoDX | binding by", e); }
   // Traits With Teeth step 5: Sway and Fear move an NPC's regard for the caster (WoDX NPC), undone with the rest
   try {
     const mood = await moodAfter(item, casterName);
@@ -457,7 +464,7 @@ export async function bindingCard(item, casterName = "the caster", {actor = null
     content: `<div class="wodx-card wodx-binding"><h3><i class="fa-solid fa-link"></i> ${esc(a.name)} is bound</h3>
       <p><b>${esc(b.label)}</b>, from ${esc(b.by)}: ${esc(b.command)}.</p>
       <p>It lasts ${esc(b.lasts)}. Resisting: ${esc(b.resist)}.</p>
-      <p class="wodx-quiet">Play the character as bound until it ends or the Storyteller lifts it. Nothing holds your token; the Storyteller rules on what you try.</p></div>`});
+      <p class="wodx-quiet">Play the character as bound until it ends or the Storyteller lifts it. ${E.BIND_HOLDS[b.key] ?? "The Storyteller rules on what you try."}</p></div>`});
 }
 
 /** Sway (not Awe) on an NPC: one step warmer toward the caster; Fear (Afraid): one step colder. Returns the undo record. */
@@ -993,6 +1000,7 @@ export async function placeItem(msg, index, at = undefined) {
 }
 
 export function setup() {
+  BIND.setup();
   game.settings.register(MOD, "effectsApply", {
     name: "Magic that applies itself", hint: "Mage 20th castings with effect keywords change health, Quintessence, timed effects, light, height and place on their own, with Undo; areas work on whoever enters; the rest goes to the approval queue. Automatic: on, except in the Live world.",
     scope: "world", config: true, type: String, default: "auto", choices: {auto: "Automatic", on: "On", off: "Off"}
