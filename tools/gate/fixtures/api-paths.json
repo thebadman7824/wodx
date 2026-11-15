@@ -558,7 +558,7 @@
    "modules/wodx-combat/scripts/main.js:2624",
    "modules/wodx-library/scripts/arms-use.mjs:146",
    "modules/wodx-library/scripts/hygiene-use.mjs:9",
-   "modules/wodx-npc/scripts/main.mjs:1014"
+   "modules/wodx-npc/scripts/main.mjs:1024"
   ]
  },
  {
@@ -627,7 +627,7 @@
    "modules/wodx-npc/scripts/fates.mjs:121",
    "modules/wodx-npc/scripts/fates.mjs:140",
    "modules/wodx-npc/scripts/main.mjs:617",
-   "modules/wodx-npc/scripts/main.mjs:858",
+   "modules/wodx-npc/scripts/main.mjs:865",
    "modules/wodx-storyteller/scripts/sick-looks.mjs:28"
   ]
  },
@@ -1385,7 +1385,7 @@
    "modules/wodx-npc/scripts/fates.mjs:188",
    "modules/wodx-npc/scripts/kin.mjs:172",
    "modules/wodx-npc/scripts/legacy.mjs:211",
-   "modules/wodx-npc/scripts/main.mjs:1320",
+   "modules/wodx-npc/scripts/main.mjs:1330",
    "modules/wodx-npc/scripts/servants.mjs:410",
    "modules/wodx-npc/scripts/servants.mjs:416",
    "modules/wodx-otherworlds/scripts/crossing.mjs:382",
@@ -1848,7 +1848,7 @@
    "modules/wodx-interactables/scripts/main.mjs:1999",
    "modules/wodx-interactables/scripts/stock.mjs:18",
    "modules/wodx-npc/scripts/main.mjs:152",
-   "modules/wodx-npc/scripts/main.mjs:1121"
+   "modules/wodx-npc/scripts/main.mjs:1131"
   ]
  },
  {
@@ -5050,7 +5050,7 @@
    "setTargets"
   ],
   "uses": [
-   "modules/wodx-npc/scripts/main.mjs:804"
+   "modules/wodx-npc/scripts/main.mjs:811"
   ]
  }
 ]
