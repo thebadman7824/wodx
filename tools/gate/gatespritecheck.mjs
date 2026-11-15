@@ -52,25 +52,36 @@ export async function run() {
 
     await G.step("1. four figures walk four ways", async () => {
       const [walker] = await G.make(Actor, [{name: "Gate Sprite Walker", type: "Mortal"}]);
-      const ways = {up: [0, -4], down: [0, 4], left: [-4, 0], right: [4, 0]}, start = {up: [5, 6], down: [8, 3], left: [13, 4], right: [15, 4]};
+      const ways = {up: [0, -2], down: [0, 2], left: [-2, 0], right: [2, 0]}, start = {up: [5, 7], down: [8, 2], left: [13, 4], right: [15, 4]};
+      const back = {up: "down", down: "up", left: "right", right: "left"};
       const toks = await G.tokens(scene, Object.keys(ways).map(w => ({actor: walker, x: start[w][0], y: start[w][1], name: `Walker ${w}`, actorLink: false})));
       await waitFor(() => toks.every(t => t?.object?.mesh));
       const sheets = ["townsman-1888", "lady-1888", "townsman-1888", "lady-1888"];
       for ( const [i, t] of toks.entries() ) await A.give(t, sheets[i]);
       await sleep(1500);
-      const before = toks.map(facingShown);
       await canvas.pan({x: 11 * g, y: 5 * g, scale: 0.9}); await sleep(300);
-      // all four set off at once, as a player drags a token: Foundry slides them, the figure steps and turns
-      Object.keys(ways).forEach((w, i) => toks[i].update({x: toks[i].x + ways[w][0] * g, y: toks[i].y + ways[w][1] * g}));
-      await sleep(180);
-      pics.push(await shot("1-walking", null));   // mid-stride, the view already in place
-      const during = toks.map(t => ({row: facingShown(t), moving: !!A.state(t.id)?.moving, col: Math.round((t.object?.mesh?.texture?.frame?.x ?? -1) / SR.FRAME_W)}));
-      await sleep(2500);
-      const after = toks.map(facingShown);
-      pics.push(await shot("1-stopped", null));
       const want = Object.keys(ways);
-      G.ok("1. the walk row of the way it goes, while walking", during.every((d, i) => d.row === want[i] && d.moving), {before, during});
-      G.ok("1. and it keeps facing that way when it stops", after.every((f, i) => f === want[i]), {after});
+      // watch every 40 ms: the rows shown while each figure walks, and one picture once all four are mid-stride
+      const watchWalk = async (go, file) => {
+        const seen = toks.map(() => new Set()), walked = toks.map(() => 0);
+        let pic = null;
+        const timer = setInterval(() => toks.forEach((t, i) => { if ( A.state(t.id)?.moving ) { walked[i]++; const f = facingShown(t); if ( f ) seen[i].add(f); } }), 40);
+        try {
+          go();
+          for ( let k = 0; k < 75; k++ ) { await sleep(40); if ( !pic && toks.every(t => A.state(t.id)?.moving) ) pic = await shot(file, null); }
+          await sleep(1500);
+        } finally { clearInterval(timer); }
+        return {seen: seen.map(x => [...x]), walked, pic, after: toks.map(facingShown)};
+      };
+      // a short move by a plain update (as a macro or a routine step does it)
+      const one = await watchWalk(() => want.forEach((w, i) => toks[i].update({x: toks[i].x + ways[w][0] * g, y: toks[i].y + ways[w][1] * g})), "1-walking");
+      pics.push(one.pic ?? "no picture: never all mid-stride at once");
+      pics.push(await shot("1-stopped", null));
+      // a longer move back by Foundry's own movement, as a player's drag makes it
+      const two = await watchWalk(() => want.forEach((w, i) => { const to = {x: toks[i].x - ways[w][0] * 2 * g, y: toks[i].y - ways[w][1] * 2 * g}; (toks[i].move ? toks[i].move([{...to, action: "walk"}]) : toks[i].update(to)); }), "1-walking-back");
+      if ( two.pic ) pics.push(two.pic);
+      G.ok("1. a short move: each walks showing the row of its way", one.seen.every((f, i) => f.length === 1 && f[0] === want[i] && one.walked[i] > 0) && one.after.every((f, i) => f === want[i]), one);
+      G.ok("1. a dragged move of four squares back: each turns round and walks the other way", two.seen.every((f, i) => f.includes(back[want[i]]) && two.walked[i] > 0) && two.after.every((f, i) => f === back[want[i]]), two);
     });
 
     await G.step("2. a rider and the horse turn together", async () => {
@@ -165,7 +176,7 @@ export async function run() {
       SR.learn("modules/wodx-paperdoll/sprites/proto", {sprites: {[own.id]: {name: "Gate own", acts: ["sit"], stand: true}}});
       try {
         const [t1] = await G.tokens(scene, [{actor: own, x: 2, y: 13}]);
-        const on1 = await waitFor(() => t1.flags?.[PD]?.sprite === `own-${own.id}`, 8000).then(() => true, () => false);
+        const on1 = await waitFor(() => t1.flags?.[PD]?.sprite === `own-${own.id}` && t1.texture.src === SR.stillPath(`own-${own.id}`), 8000).then(() => true, () => false);
         G.ok("5. a token made later wears it at once", on1 && t1.texture.src === SR.stillPath(`own-${own.id}`), {sprite: t1.flags?.[PD]?.sprite ?? null, src: t1.texture.src});
         await A.clear(t1);
         const n = await A.dress(scene);
