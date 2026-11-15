@@ -171,6 +171,9 @@ for ( const [id, h] of Object.entries(O.HORRORS) ) {
 /* -- Kindred of the East: the Disciplines power by power (kote.js Spend Chi) */
 for ( const p of KA.POWERS ) {
   const res = KA.artResults(p.id, 2);
+  // B5161: a power that plays itself (Strengthening the Demon) has no effects spec: it changes the Demon Chi directly
+  if ( p.stoke ) { add("Kuei-jin (KotE)", KA.ART_LABEL[p.art], p.name, { src: p, status: "applies", kw: ["boost"], page: `${p.book} p. ${p.p}`,
+    how: "Spend Chi: the roll raises Demon Chi for a turn a success, then the stoked points fade and the Hun roll follows" }); continue; }
   add("Kuei-jin (KotE)", KA.ART_LABEL[p.art], p.name, { src: p, status: res.some(r => !["note", "st"].includes(r.out?.kind) && !r.st) ? "applies" : "card", kw: [p.spec.kw],
     page: `KotE p. ${p.p}`, how: "Spend Chi: the named power fills the Chi, pool and difficulty, and the effects card carries the result" });
 }

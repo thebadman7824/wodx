@@ -202,7 +202,7 @@ export async function run() {
       await wait(400);
       const pen = Number(body().system?.health?.damage?.woundpenalty) || 0;
       await CH.timed.endFor(body(), {key: "wodx-fomor-numbing"});
-      await waitFor(() => body().statuses?.has?.("dead"), 6000);
+      await waitFor(() => body().statuses?.has?.("dead") && scene.tokens.get(ft.id)?.alpha === 0.25, 6000);
       const dead = !!body().statuses?.has?.("dead"), alpha = scene.tokens.get(ft.id)?.alpha;
       G.ok("13. a fomor's Numbing: more levels, no penalty, and death when it ends past Incapacitated", numb && max1 === max0 + 3 && pen === 0 && dead && alpha === 0.25,
         {numb, max0, max1, pen, dead, alpha});
