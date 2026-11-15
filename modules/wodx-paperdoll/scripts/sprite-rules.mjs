@@ -149,7 +149,8 @@ export function workFor(name, action = "") {
   const a = String(action ?? "");
   if ( ["pick", "hack", "disarm", "key", "unlock", "jam"].includes(a) ) return hasAct(name, "pick") ? "pick" : null;
   if ( ["smash", "breakIt", "breach", "force", "heave"].includes(a) ) return actOf(name, null);
-  if ( ["listen", "search", "look"].includes(a) ) return hasAct(name, "search") ? "search" : null;
+  if ( ["strike", "knockOver", "tearCurtain", "desecrate"].includes(a) ) return actOf(name, null);
+  if ( ["listen", "search", "look", "examine", "searchHide"].includes(a) ) return hasAct(name, "search") ? "search" : null;
   return null;
 }
 /* Ways of going (B2588): a sheet like the walk, for running and for going low. */

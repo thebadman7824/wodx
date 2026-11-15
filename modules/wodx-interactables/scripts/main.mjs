@@ -728,6 +728,8 @@ export async function applyAsk(msg) {
     });
     if ( op.roll && !rolls.length ) return fail("The card has no roll.");
     const out = R.resolve(o, op, rolls, {actorId: actor.id, actorName: actor.name, ...eraNow(), sunUp: SUN_UP, kept: ch.kept});
+    // B6141: whoever works at the door, the lock or the thing is seen doing it (a sprite token stoops, strikes or listens)
+    try { Hooks.callAll("wodxInteractableWorked", {token: tokDoc.uuid, action: op.id, thing: doc.id, scene: scene.id, result: out.result ?? null}); } catch (e) { console.warn(`${MOD} | worked`, e); }
     const tile = isTile(doc);
     const snap = {ds: tile ? null : doc.ds, flags: foundry.utils.deepClone(doc.flags?.[MOD] ?? {}), ...(tile ? {hidden: !!doc.hidden} : {})};
     const lines = [];
@@ -1062,6 +1064,7 @@ async function applySearch(msg, ask, tokDoc, scene) {
     {specialty: !!ask.specialty, willpower: !!ask.willpower}))[0] ?? {successes: 0, botch: false};
   const op = R.searchOption(characterFor(actor, center, null));
   const out = R.resolve({}, op, [roll], {actorId: actor.id});
+  try { Hooks.callAll("wodxInteractableWorked", {token: tokDoc.uuid, action: "search", thing: null, scene: scene.id, result: out.result ?? null}); } catch (e) { console.warn(`${MOD} | worked`, e); }
   const near = searchableTraps(center, scene);
   const finds = new Set(R.searchFinds(near.map(n => n.o), roll));
   const hit = near.filter(n => finds.has(n.o));

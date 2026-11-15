@@ -19,7 +19,11 @@ export function registerSpriteSettings() {
     hint: "Tokens given a sprite face the way they move and step as they go. Off: they show the still figure.", type: Boolean, default: true});
   game.settings.register(MOD, "spriteLife", {scope: "world", config: true, name: "Figures live their routine on the map",
     hint: "A character with a routine (WoDX NPC) sleeps lying down, sits at rest, works with the hands, kneels at prayer, drinks seated and carries a load on errands; beasts graze and lie down. They get up when they walk. Off: everyone stands.", type: Boolean, default: true});
+  game.settings.register(MOD, "spriteDress", {scope: "world", config: true, name: "Tokens wear their character's drawn sprite",
+    hint: "When a character has a sprite of its own (drawn by the sprite batch), every token of it on a map wears that sprite at once, also the ones a routine brings in. Off: the Storyteller gives sprites from the token's buttons.", type: Boolean, default: true});
 }
+/* B6140: a token of a character the batch drew wears that sprite by itself, on the Storyteller's computer */
+const dressOn = () => { try { return game.settings.get(MOD, "spriteDress") !== false; } catch (e) { return true; } };
 const lifeOn = () => { try { return game.settings.get(MOD, "spriteLife") !== false; } catch (e) { return true; } };
 
 const crisp = tex => { const b = tex?.baseTexture ?? tex?.source; if ( b ) b.scaleMode = globalThis.PIXI?.SCALE_MODES?.NEAREST ?? "nearest"; return tex; };
@@ -573,13 +577,15 @@ export function startSprites() {
   Hooks.on("wodxGhoulCraving", onCraving);
   Hooks.on("wodxInteractableWorked", onWorked);
   Hooks.on("createChatMessage", onSpoken);
+  Hooks.on("createToken", onTokenMade);
   loadOwn();
   const every = globalThis.setInterval?.(() => { settle().catch(e => console.warn(`${MOD} | routine poses`, e)); }, 2500);
   every?.unref?.();   // under Node (the test stand-in) the timer must not keep the process alive
   Hooks.on("canvasReady", () => { states.clear(); glows.clear(); strides.clear(); acts.clear();
     // whoever lay fallen or dead when the scene was last seen still lies there
     for ( const t of canvas.tokens?.placeables ?? [] ) { const a = t.document.flags?.[MOD]?.act, n = t.document.flags?.[MOD]?.sprite;
-      if ( a?.hold && SR.HOLD.includes(a.name) && SR.hasAct(n, a.name) ) { base(n, a.name); acts.set(t.id, {act: a.name, fx: null, blanket: SR.hexColour(a.blanket), hold: true, held: !SR.LOOP.includes(a.name), loop: SR.LOOP.includes(a.name), facing: SR.ROW[a.facing] !== undefined ? a.facing : null, start: SR.LOOP.includes(a.name) ? performance.now() : -Infinity}); } } canvas.app?.ticker?.remove(tick); canvas.app?.ticker?.add(tick); });
+      if ( a?.hold && SR.HOLD.includes(a.name) && SR.hasAct(n, a.name) ) { base(n, a.name); acts.set(t.id, {act: a.name, fx: null, blanket: SR.hexColour(a.blanket), hold: true, held: !SR.LOOP.includes(a.name), loop: SR.LOOP.includes(a.name), facing: SR.ROW[a.facing] !== undefined ? a.facing : null, start: SR.LOOP.includes(a.name) ? performance.now() : -Infinity}); } } canvas.app?.ticker?.remove(tick); canvas.app?.ticker?.add(tick);
+    autoDress(); });
   if ( globalThis.canvas?.ready ) canvas.app?.ticker?.add(tick);
 }
 
@@ -647,6 +653,7 @@ export async function loadOwn() {
     if ( !r.ok ) return SR.learn(ownFolder(), null);
     const n = SR.learn(ownFolder(), await r.json());
     bases.clear(); frames.clear();
+    autoDress();
     return n;
   } catch (e) { console.warn(`${MOD} | own sprites`, e); return 0; }
 }
@@ -712,9 +719,20 @@ export async function saveRoster() {
   return {path: `${ownFolder()}/roster.json`, actors: r.actors.length};
 }
 
+/* B6140: the scene in view is dressed when it opens and when the drawn sprites are learnt; a token made later is dressed as it comes. */
+function autoDress() {
+  if ( !on() || !dressOn() || !mine() || !globalThis.canvas?.ready ) return;
+  dress(canvas.scene).catch(e => console.warn(`${MOD} | dress`, e));
+}
+function onTokenMade(doc) {
+  if ( !on() || !dressOn() || !mine() || doc?.flags?.[MOD]?.sprite ) return;
+  const name = SR.ownName(doc.actorId);
+  if ( SR.isOwn(name) ) give(doc, name).catch(e => console.warn(`${MOD} | dress`, e));
+}
+
 /** Give every token of a scene its character's own sprite, where one was drawn and the token has none yet. */
 export async function dress(scene = canvas.scene) {
-  if ( !game.user?.isGM ) return 0;
+  if ( !game.user?.isGM || !scene ) return 0;
   let n = 0;
   for ( const t of scene?.tokens ?? [] ) {
     const name = SR.ownName(t.actorId);

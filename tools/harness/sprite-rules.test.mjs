@@ -211,6 +211,8 @@ test("defences, work at a lock, jumping and crawling (B2615, B2616)", () => {
   assert.equal(SR.defenceFor("nobody", "parry"), null);
   assert.equal(SR.workFor("townsman-1888", "pick"), "pick");
   assert.equal(SR.workFor("townsman-1888", "listen"), "search");
+  assert.equal(SR.workFor("townsman-1888", "examine"), "search", "B6141: a close look is a search");
+  assert.ok(!SR.isOwnMove(SR.workFor("townsman-1888", "strike")) && SR.workFor("townsman-1888", "strike"), "B6141: striking a thing is a blow");
   assert.ok(!SR.isOwnMove(SR.workFor("townsman-1888", "smash")), "force is a blow");
   assert.equal(SR.workFor("townsman-1888", "open"), null);
   assert.equal(SR.gaitFor("townsman-1888", {action: "jump"}), "jump");
