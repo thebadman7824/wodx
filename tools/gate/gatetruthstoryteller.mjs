@@ -19,6 +19,11 @@
  *      it is back on the map, shown, once the clock passes the term and a time skip ends with the world not held (B6165)
  *   9. taken by the watch, then found not guilty: the token is shown again where it stood (B6165)
  *  10. tired from no sleep (the needs flag hardship writes): a quick Persuade check rolls two dice fewer (B6169)
+ *  11. a downtime project ten hours behind meets trouble on its first roll: the work waits two days, and the catch-up
+ *      tick stops there instead of rolling through the delay (B6167)
+ *  12. a patron raises a building from the Cities window on a market town's map: the town's prosperity rises (B6164)
+ *  13. the Make something window: a Black Spiral Dancer is offered only the Wyrm's fetishes, a Fianna none of them, and
+ *      Kinfolk with Gnosis nothing until the Library's Kinfolk setting is on (B3680-B3681)
  * The world is held while the clock runs years for the law (nothing else reacts). It makes its own scenes, actors and
  * (when the testbed has none) a player, keeps and puts back every setting it touches, rejects the queue entries it
  * caused, deletes its cards, and the kit rewinds the clock. Result: Data/wodx-gate/gatetruthstoryteller-result.json.
@@ -36,7 +41,7 @@ export async function run() {
   const S = game.modules.get(ST)?.api, C = game.modules.get(CH)?.api, A = game.modules.get(AT)?.api;
   const has = (m, k) => game.settings.settings.has(`${m}.${k}`);
   const KEEP = [[ST, "personal"], [ST, "log"], [ST, "convened"], [ST, "waysConfirm"], [ST, "nightDraw"], [ST, "nightDrawn"], [ST, "reachOn"],
-    [ST, "hardship"], [CH, "autoApprove"], [CH, "hold"], [CH, "lawHeatOn"], [CH, "lawHeat"], [AT, "lightFromClock"], [AT, "sceneEffects"],
+    [ST, "hardship"], [ST, "longTasks"], [ST, "townTurn"], [ST, "townState"], [CH, "podCities"], ["wodx-library", "craftGarou"], ["wodx-library", "craftKinfolk"], [CH, "autoApprove"], [CH, "hold"], [CH, "lawHeatOn"], [CH, "lawHeat"], [AT, "lightFromClock"], [AT, "sceneEffects"],
     ["wodx-actions", "traitRolls"]].filter(([m, k]) => has(m, k));
   const keep = KEEP.map(([m, k]) => [m, k, foundry.utils.deepClone(game.settings.get(m, k))]);
   const pending0 = new Set((C?.approvals?.pending?.() ?? []).map(p => p.id));
@@ -240,6 +245,98 @@ export async function run() {
       await p.update({[`flags.${ST}.needs`]: {...(S.hardship?.of?.(p) ?? {}), tired: 2}});
       const tired = await dice();
       G.ok("10. tired: two dice off a quick check", rested.dice >= 3 && tired.dice === rested.dice - 2 && /Tired/.test(tired.parts ?? ""), {rested, tired});
+    });
+
+    /* ---- downtime: a complication's delay, and a building the town is glad of ---- */
+    await G.step("11. a complication's delay holds in a catch-up tick", async () => {
+      // held, so no tick of the clock's own runs beside the forced one
+      await set(CH, "hold", true);
+      await set(ST, "longTasks", true);
+      const [m] = await G.make(Actor, [{name: "WoDX gate: truthst maker", type: "Mortal"}]);
+      const t0 = game.time.worldTime;
+      const task = await S.tasks.save(m, {kind: "craft", name: "WoDX gate: truthst chest", dice: 0, goal: 100, interval: "hour", nights: 0});
+      // ten hours behind, as after a time skip: eleven rolls are due
+      await m.update({[`flags.${ST}.tasks.${task.id}.next`]: t0 - 10 * 3600});
+      const due = S.tasks.rules.dueRolls(S.tasks.of(m).find(x => x.id === task.id), t0);
+      // the first roll meets trouble, and the trouble is the craft's first (a material goes missing: the work waits two days)
+      const real = Math.random, since = Date.now();
+      Math.random = () => (/drawTrouble/.test(new Error().stack ?? "") ? 0 : real());
+      let ticked = [];
+      try {
+        for ( let i = 0; i < 10 && !ticked.some(x => x.actor === m.id); i++ ) { ticked = await S.tasks.tick({force: true}) ?? []; if ( !ticked.length ) await sleep(500); }
+      } finally { Math.random = real; }
+      const after = S.tasks.of(m).find(x => x.id === task.id);
+      const keys = (after?.complications ?? []).map(c => c.key);
+      G.ok("11. a complication's delay holds in a catch-up tick", due >= 10 && after?.rolls === 1 && keys.length === 1 && after.next > game.time.worldTime + 86400,
+        {due, rolls: after?.rolls, complications: keys, waitsHours: after ? Math.round((after.next - game.time.worldTime) / 3600) : null});
+      // the forced tick rolled any other character's work too: undo those cards
+      for ( const c of game.messages.filter(x => (x.timestamp ?? 0) >= since && x.flags?.[ST]?.tasks?.actor && x.flags[ST].tasks.actor !== m.id) ) {
+        try { await S.tasks.undo(c); } catch (e) { G.R.notes.push(`undo tasks: ${e?.message ?? e}`); }
+      }
+      await set(CH, "hold", false);
+    });
+
+    await G.step("12. a building raised: the town is glad of it", async () => {
+      const T = S.upkeep?.towns, M = S.upkeep?.money;
+      const sc = [...game.scenes].find(x => T?.ofScene?.(x)?.id);
+      if ( !sc ) return G.ok("12. a building raised: the town is glad of it", false, {why: "no scene here belongs to a market town"});
+      const town = T.ofScene(sc).id;
+      await set(ST, "townTurn", "auto");
+      await set(CH, "podCities", false);
+      const pros = () => Number(T.state().towns?.[town]?.prosperity ?? NaN);
+      // room to rise: a town already at its richest is set a step lower first (the setting is put back)
+      const top = T.rules.PROSPERITY.length - 1;
+      if ( !(pros() <= top - 0.5) ) {
+        const st = foundry.utils.deepClone(game.settings.get(ST, "townState"));
+        if ( st?.towns?.[town] ) { st.towns[town].prosperity = top - 1; await game.settings.set(ST, "townState", st); }
+      }
+      const before = pros();
+      await sc.view();
+      await waitFor(() => canvas?.ready && canvas.scene?.id === sc.id, 20000);
+      const [patron] = await G.make(Actor, [{name: "WoDX gate: truthst patron", type: "Mortal", prototypeToken: {actorLink: true}}]);
+      await M?.receive?.(patron, 100000, {note: "gate"});
+      // the Cities window's own Raise or restore
+      const app = C?.pod?.open?.();
+      await waitFor(() => !!document.querySelector("#wodx-pod [data-build] button[data-action='build']"), 5000);
+      const form = document.querySelector("#wodx-pod [data-build]");
+      if ( form ) {
+        form.querySelector("[name=patron]").value = patron.name;
+        form.querySelector("[name=building]").value = "WoDX gate: truthst chapel";
+        form.querySelector("button[data-action='build']").click();
+      }
+      // a town where player characters stand asks the Storyteller first: approve it, as the Storyteller would
+      const ask = () => (C.approvals.pending?.() ?? []).find(p => !pending0.has(p.id) && p.type === `${ST}.town` && p.data?.town?.id === town);
+      await waitFor(() => pros() > before || !!ask(), 10000);
+      const asked = ask();
+      if ( asked ) await C.approvals.decide(asked.id, "approve");
+      const rose = await waitFor(() => pros() > before, 8000);
+      try { await (app ?? foundry.applications.instances?.get?.("wodx-pod"))?.close?.(); } catch (e) { /* closed */ }
+      G.ok("12. a building raised: the town is glad of it", !!form && rose, {town, scene: sc.name, before, after: pros(), asked: !!asked});
+    });
+
+    await G.step("13. the fetish picker reads the maker's tribe and the Kinfolk setting", async () => {
+      const LIB = "wodx-library", L = game.modules.get(LIB)?.api?.wonders, kit = L?.kitFor?.("garou");
+      await set(LIB, "craftGarou", true);
+      await set(LIB, "craftKinfolk", false);
+      const wolf = (name, tribe) => ({name, type: "Werewolf", system: {tribe, advantages: {gnosis: {permanent: 5, temporary: 5}}}});
+      const [bsd, gaian, kin] = await G.make(Actor, [wolf("WoDX gate: truthst spiral", "Black Spiral Dancers"), wolf("WoDX gate: truthst fianna", "Fianna"),
+        {name: "WoDX gate: truthst kin", type: "Mortal", system: {advantages: {gnosis: {permanent: 2, temporary: 2}}}, flags: {world: {wodx: {kinfolk: "Fianna"}}}}]);
+      /** Open the Storyteller's own Make something window for an actor and read what it offers. */
+      const offered = async a => {
+        const was = new Set([...document.querySelectorAll(".wst-wonder")]);
+        const p = S.wonders.open(a.id);
+        const box = await waitFor(() => [...document.querySelectorAll(".wst-wonder")].find(el => !was.has(el)) ?? null, 3000);
+        const el = [...document.querySelectorAll(".wst-wonder")].find(x => !was.has(x));
+        const keys = el ? [...el.querySelectorAll("select[name=wonder] option")].map(o => String(o.value).split(":")[1]) : [];
+        if ( el ) { el.querySelector("button[data-action='cancel']")?.click(); await p; }
+        return {open: !!box, keys, bane: keys.filter(k => !!kit?.row?.(k)?.wyrm).length};
+      };
+      const spiral = await offered(bsd), garou = await offered(gaian), kinOff = await offered(kin);
+      await set(LIB, "craftKinfolk", true);
+      const kinOn = await offered(kin);
+      G.ok("13. the fetish picker reads the maker's tribe and the Kinfolk setting",
+        spiral.keys.length > 0 && spiral.bane === spiral.keys.length && garou.keys.length > 0 && garou.bane === 0 && !kinOff.open && kinOn.keys.length > 0,
+        {spiral, garou: {n: garou.keys.length, bane: garou.bane}, kinOff: kinOff.open, kinOn: kinOn.keys.length});
     });
   } catch (e) {
     G.R.errors.push(e?.message ?? String(e));

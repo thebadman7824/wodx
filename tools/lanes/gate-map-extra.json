@@ -64,7 +64,8 @@
       "wodx-atmosphere",
       "wodx-solo",
       "wodx-chronicle",
-      "wodx-npc"
+      "wodx-npc",
+      "wodx-library"
     ],
     "gatetruthnpc": [
       "wodx-npc",

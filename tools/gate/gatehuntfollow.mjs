@@ -5,12 +5,12 @@
  *   3. a raid that found nobody: one hunter stays to watch the place, the rest go (h2)
  *   4. an investigator comes to the town map, keeps a day among the market, tavern and church, and leaves (h3)
  *   5. someone a hunters' faction finds goes into the region's file (h4)
- *   6. a body found drained feeds the hunters (h5)
+ *   6. a vessel the Kiss drained dry is marked dead; a townsman walks up to the body; the hunters' pressure rises (h5, B6390)
  *   7. a body WoDX NPC's carrying took as proof (wodxBodyTaken with the token's uuid, as carry-goals.mjs sends it)
  *      eases the region's pressure by two (B6167)
  * Steps 1 and 7 read the region's pressure itself, not only a flag on the body.
  */
-import {gate} from "./kit.mjs";
+import {gate, waitFor} from "./kit.mjs";
 
 const ST = "wodx-storyteller";
 const st = () => game.modules.get(ST).api;
@@ -118,12 +118,18 @@ export async function run() {
 
     await G.step("6. a body found drained feeds the hunters", async () => {
       const [tv, tf] = await G.tokens(sc, [{actor: victim, x: 8, y: 8}, {actor: finder, x: 20, y: 8}]);
-      await st().remains.mark(tv, {cause: "drained"});
+      const vic = () => sc.tokens.get(tv.id);
+      // the Kiss drains the vessel dry (as WoDX Actions writes it), and the vessel is marked dead: a body drained of blood (B6390)
+      await vic().actor.setFlag("wodx-actions", "vesselBlood", {value: 0, at: game.time.worldTime});
+      await vic().actor.toggleStatusEffect("dead", {active: true});
+      const marked = await waitFor(() => vic()?.flags?.[ST]?.remains?.cause === "drained", 5000);
       const p0 = st().hunters.state().regions[region]?.pressure ?? 0;
-      await st().remains.found(sc.tokens.get(tv.id), finder);
+      // a townsman walks up to it
+      await sc.tokens.get(tf.id).update({x: 9 * S, y: 8 * S});
+      const rose = await waitFor(() => (st().hunters.state().regions[region]?.pressure ?? 0) > p0, 8000);
       const p1 = st().hunters.state().regions[region]?.pressure ?? 0;
-      G.ok("6. pressure rose", p1 > p0, {p0, p1});
-      void tf;
+      G.ok("6. pressure rose", marked && rose, {marked, cause: vic()?.flags?.[ST]?.remains?.cause ?? null, found: vic()?.flags?.[ST]?.remains?.found ?? [], p0, p1,
+        morgue: vic()?.flags?.[ST]?.remains?.morgue ?? null});
     });
 
     await G.step("7. a body carried off as proof eases the region", async () => {

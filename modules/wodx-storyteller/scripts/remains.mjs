@@ -133,7 +133,9 @@ function onDead(effect) {
   const actor = effect.parent;
   if ( !actor || actor.documentName !== "Actor" || actor.hasPlayerOwner ) return;
   const toks = actor.isToken ? [actor.token] : (canvas?.scene?.tokens?.contents ?? []).filter(t => t.actorId === actor.id && t.actorLink);
-  for ( const t of toks ) if ( t && !t.flags?.[MOD]?.remains ) mark(t).catch(e => console.error(`${MOD} | remains`, e));
+  // B6390: a vessel drained by the Kiss is a body drained of blood, which the hunters and the coroner care about
+  const cause = R.causeAtDeath(actor.flags?.["wodx-actions"], now());
+  for ( const t of toks ) if ( t && !t.flags?.[MOD]?.remains ) mark(t, cause === "unknown" ? {} : {cause}).catch(e => console.error(`${MOD} | remains`, e));
 }
 
 export function registerRemainsHooks() {
