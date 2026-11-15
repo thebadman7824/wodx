@@ -111,10 +111,14 @@ export async function run() {
       // the hold off, a short time skip: the skip's end lets them out
       await set(C_ID, "hold", false);
       await C().timeSkip(game.time.worldTime + 60, {label: "gate", eraHandled: true});
-      const back = await waitFor(() => tok()?.hidden === false && !game.actors.get(pr.id)?.getFlag(C_ID, "lawAway"), 8000);
+      // the skip's end starts every module's settling at once (Legends, the factions, signatures); in a world that
+      // other gates have run in, the prisoner's turn can come late, so the wait is long
+      const back = await waitFor(() => tok()?.hidden === false && !game.actors.get(pr.id)?.getFlag(C_ID, "lawAway"), 30000);
+      const after = {shown: tok() ? tok().hidden === false : "no token", away: game.actors.get(pr.id)?.getFlag(C_ID, "lawAway") ?? null,
+        year: C()?.eras?.currentYear?.() ?? null, skipping: game.settings.get(C_ID, "skipping") ?? null};
       await set(C_ID, "hold", true);
       G.ok("2. prison: off the map; a hold frees no one; the skip's end does", s.mark?.kind === "time" && gone && heldStill && back,
-        {region: s.region, offered: s.offered, punish: s.punish, until: s.mark?.until, gone, heldStill, back, error: s.error});
+        {region: s.region, offered: s.offered, punish: s.punish, until: s.mark?.until, gone, heldStill, back, ...(back ? {} : {after}), error: s.error});
     });
 
     await G.step("3. the domitor's feeding, default settings", async () => {

@@ -66,7 +66,10 @@ export async function run() {
       await sleep(600);
       const p1 = st().hunters.state().regions[region]?.pressure ?? 0;
       G.ok("1. their proof eases the region's pressure", carried || p1 < p0, {p0, p1, carried});
-      G.ok("1. the hunters leave the map", !sc.tokens.get(ta.id) && !sc.tokens.get(tb.id));
+      // gone, or (the one who carried the body off the edge) hidden: WoDX NPC keeps that token for the walk to the place
+      const left = id => { const t = sc.tokens.get(id); return !t || t.hidden; };
+      const where = id => { const t = sc.tokens.get(id); return t ? {hidden: t.hidden, hauling: t.flags?.["wodx-interactables"]?.hauling?.what ?? null} : "gone"; };
+      G.ok("1. the hunters leave the map", left(ta.id) && left(tb.id), {a: where(ta.id), b: where(tb.id)});
     });
 
     await G.step("2. a raid beaten off: the file rises", async () => {

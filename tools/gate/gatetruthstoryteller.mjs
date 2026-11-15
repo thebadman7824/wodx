@@ -102,13 +102,16 @@ export async function run() {
       await waitFor(() => canvas?.ready && canvas.scene?.id === b.id, 20000);
       await sleep(5500); // the Way lets a token that just arrived settle for five seconds
       const tb = () => b.tokens.find(t => t.actorId === w.id);
-      const r = way.to.shapes[0];
-      await tb()?.update({x: r.x - 400, y: r.y});
-      await sleep(800);
-      await tb()?.update({x: r.x, y: r.y});
+      // out of the end, toward the middle of the map (never off it: the end is on the scene's edge), then into its middle
+      const r = way.to.shapes[0], g = b.grid?.size ?? 100;
+      const rx = r.x + r.width / 2, ry = r.y + r.height / 2, side = rx < b.width / 2 ? 1 : -1;
+      await tb()?.update({x: Math.round(rx - g / 2 + side * 400), y: Math.round(ry - g / 2)});
+      await sleep(1500);
+      const away = !!tb() && !(Math.abs(tb().x + g / 2 - rx) < r.width / 2 && Math.abs(tb().y + g / 2 - ry) < r.height / 2);
+      await tb()?.update({x: Math.round(rx - g / 2), y: Math.round(ry - g / 2)});
       const back = await waitFor(() => onA(w.id), 10000);
       const rec = (game.settings.get(ST, "convened") ?? {})[w.id] ?? null;
-      G.ok("3. a convened character walks a house door", back && rec?.scene === a.id, {back, convened: rec});
+      G.ok("3. a convened character walks a house door", back && rec?.scene === a.id, {back, away, convened: rec});
       await S.release([w.id]);
     });
 
@@ -213,7 +216,8 @@ export async function run() {
       await set(ST, "hardship", true);
       await set("wodx-actions", "traitRolls", true);
       const [p] = await G.make(Actor, [{name: "WoDX gate: truthst sleepless", type: "Mortal"}]);
-      await p.update({"system.attributes.manipulation.value": 4});
+      // the sheet reads total before value: set both, as the sheet would after its recompute
+      await p.update({"system.attributes.manipulation.value": 4, "system.attributes.manipulation.total": 4});
       const dice = async () => {
         const since = Date.now();
         for ( const t of [...(game.user.targets ?? [])] ) { try { t.setTarget(false, {releaseOthers: false}); } catch (e) { /* none */ } }

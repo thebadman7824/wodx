@@ -114,7 +114,12 @@ export async function releaseServed(year = yearNow(), {settle = false} = {}) {
   // B6162: a time skip or a hold waits; the skip's end lets them out once (settle)
   if ( !isActiveGM() || (!settle && isSkipping()) ) return [];
   const out = [];
-  for ( const a of game.actors ) { const w = a.getFlag?.(MODULE_ID, "lawAway"); if ( w && P.servedBy(w, year) && await comeBack(a) ) out.push(a.id); }
+  // B6217: one prisoner whose return fails (a scene or token gone wrong) does not keep the others in
+  for ( const a of game.actors ) {
+    const w = a.getFlag?.(MODULE_ID, "lawAway");
+    if ( !w || !P.servedBy(w, year) ) continue;
+    try { if ( await comeBack(a) ) out.push(a.id); } catch (e) { console.error(`WoDX | sentence served: ${a.name}`, e); }
+  }
   return out;
 }
 

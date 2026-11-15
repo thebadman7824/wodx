@@ -90,7 +90,17 @@ export async function proof(body, by = null, {region = null} = {}) {
   // for the hunter's turn in a fight) skips the walk-and-hide below
   const carry = npc()?.orderCarry ?? null;
   if ( carry && by?.object && body.object ) {
-    try { const r = await carry(by.object, body.object, {intent: "proof", faction: "hunters", place: p.to}); if ( r?.ok ) return p; } catch (e) { console.warn(`${MOD} | proof carry`, e); }
+    let r = null;
+    try { r = await carry(by.object, body.object, {intent: "proof", faction: "hunters", place: p.to}); } catch (e) { console.warn(`${MOD} | proof carry`, e); }
+    // B6216: the hunter still leaves the map. Off the map's edge WoDX NPC hides the carrier and fires wodxBodyTaken (the
+    // proof's effects come from onBodyTaken); set down at its goal on this map, the carrier goes; a carry that stalled
+    // on the map lets go, and the walk-and-hide below takes the body
+    if ( r?.ok ) {
+      const t = scene.tokens.get(by.id);
+      if ( r.later || !t || t.hidden ) return p;
+      if ( r.arrived ) { await leave(scene, [t]); return p; }
+      try { await game.modules.get("wodx-interactables")?.api?.haul?.release?.(t, {quiet: true}); } catch (e) { /* nothing held */ }
+    }
   }
   // No carrying here: the hunter goes to the body, then leaves with it
   if ( onView(scene) && by?.object && body.object ) { try { await routines()?.goTo?.(by.object, body.object, null); } catch (e) { /* no way */ } }

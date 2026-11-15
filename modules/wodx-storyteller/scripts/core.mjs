@@ -299,7 +299,10 @@ function landing(scene, actor, at = null) {
   const w = (actor?.prototypeToken?.width ?? 1) * size, h = (actor?.prototypeToken?.height ?? 1) * size;
   const cx = t.x ?? ((d.sceneX ?? 0) + ((d.sceneWidth ?? scene.width ?? 1000) / 2));
   const cy = t.y ?? ((d.sceneY ?? 0) + ((d.sceneHeight ?? scene.height ?? 1000) / 2));
-  return {x: Math.round(cx - (w / 2)), y: Math.round(cy - (h / 2))};
+  // B6215: the spot stays on the map; a Way on the scene's edge offsets the company to either side of its end
+  const x0 = d.sceneX ?? 0, y0 = d.sceneY ?? 0, sw = d.sceneWidth ?? scene.width ?? 1000, sh = d.sceneHeight ?? scene.height ?? 1000;
+  const fit = (v, lo, span) => Math.max(lo, Math.min(lo + Math.max(0, span), v));
+  return {x: Math.round(fit(cx - (w / 2), x0, sw - w)), y: Math.round(fit(cy - (h / 2), y0, sh - h))};
 }
 
 /** Move a character's token to another scene (the active Storyteller). Returns the new token, or null. */
