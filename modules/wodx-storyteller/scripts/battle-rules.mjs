@@ -37,6 +37,7 @@
 import {normOffers, POSTS as DEED_POSTS} from "./battle-deeds.mjs";
 import {normAftermath} from "./battle-aftermath.mjs";
 import {normCampaign} from "./siege-works-rules.mjs";
+import * as WL from "./war-lands-rules.mjs";
 
 export const BATTLES_VERSION = 1;
 export const BATTLES_CAP = 200;
@@ -86,10 +87,13 @@ export const REALM_AGES = {
 };
 export const REALMS = {world: "The living world", umbra: "The Umbra", underworld: "The Underworld"};
 
-/** The age of war for a year, a branch ("classic" or "future") and a realm. */
-export function ageFor(year, {branch = "classic", realm = "world"} = {}) {
-  if ( REALM_AGES[realm] ) return REALM_AGES[realm];
+const AGE_BY_ID = Object.fromEntries(AGES.map(a => [a.id, a]));
+/** The age of war for a year, a branch ("classic" or "future"), a realm and a land (a WoDX Chronicle region, B5902, B5905). */
+export function ageFor(year, {branch = "classic", realm = "world", land = ""} = {}) {
+  if ( REALM_AGES[realm] ) return WL.realmFor(realm, land, REALM_AGES[realm]);
   const y = n(year) || 1197;
+  const own = land ? WL.landAge(land, y, AGE_BY_ID) : null;
+  if ( own ) return own;
   const fits = AGES.filter(a => y >= a.from && y <= a.to && (!a.branch || a.branch === branch));
   if ( !fits.length ) return y < AGES[0].from ? AGES[0] : AGES.find(a => a.id === "network");
   return fits.find(a => a.branch) ?? fits[0];
@@ -108,6 +112,8 @@ export const sizeStep = men => (SIZES.find(s => Math.max(1, n(men)) <= s.max) ??
 
 export const QUALITY = {1: "Levies, a mob", 2: "Militia, armed townsfolk", 3: "Trained soldiers", 4: "Veterans", 5: "The best of the age"};
 export const SUPERNATURAL = {0: "None", 1: "A ghoul or two, a hedge witch", 2: "A few Kindred, a mage, a Garou", 3: "A coterie, a pack or a cabal", 4: "Many: a war party, a sect's army", 5: "A host of them"};
+/** The supernatural steps named for a land (B5904); the weight of each step is the same everywhere. */
+export const supernaturalLabels = (land, year) => { const own = WL.supernaturalFor(land, year); return own ? {0: SUPERNATURAL[0], ...own} : SUPERNATURAL; };
 
 /**
  * Where a side stands. `bonus` is added to its weight when it defends there; `resolve` to its resolve. Old walls
@@ -157,8 +163,17 @@ export const UNIT_TYPES = {
   ghoulKnights: {label: "Ghoul knights", troops: 50, maneuver: 2, melee: 3, ranged: 0, defense: 2, sup: true},
   kinfolkWolves: {label: "Kinfolk wolves", troops: 10, maneuver: 4, melee: 2, ranged: 0, defense: 2, sup: true},
   garouPack: {label: "Garou pack", troops: 5, maneuver: 3, melee: 5, ranged: 1, defense: 3, sup: true},
-  knightsOfAcre: {label: "Knights of Acre", troops: 25, maneuver: 2, melee: 3, ranged: 1, defense: 4}
+  knightsOfAcre: {label: "Knights of Acre", troops: 25, maneuver: 2, melee: 3, ranged: 1, defense: 4},
+  // B5903: troops of other lands, WoDX figures on the book's scale (war-lands-rules.mjs)
+  ...WL.LAND_UNITS
 };
+/** The troops a form offers for a year and land: the land's own first, the book's, then other lands' (B5903). */
+export function unitsFor(year, land, keep = {}) {
+  const y = n(year) || 1197;
+  const all = Object.entries(UNIT_TYPES).map(([id, t]) => ({id, ...t}))
+    .filter(t => n(keep?.[t.id]) > 0 || ((!t.from || y >= t.from) && (!t.to || y <= t.to)));
+  return WL.forLand(all, land);
+}
 export const POOLS = ["maneuver", "melee", "ranged", "defense"];
 /** The actions an army can take in a turn (Spoils of War p. 45). Flanking needs wings, which WoDX's one-line army does not have. */
 export const ACTIONS = {melee: "Close and fight", ranged: "Shoot", withdraw: "Withdraw"};
@@ -252,6 +267,8 @@ export function normBattle(b = {}) {
     name: str(b.name) || (kind === "siege" ? "A siege" : "A battle"),
     place: str(b.place),
     realm: REALMS[b.realm] ? b.realm : "world",
+    // B5900: the land it is fought in (a WoDX Chronicle region); "" until known, then the scene's or the homeland's
+    land: str(b.land, 40),
     year: Math.round(n(b.year)) || null,
     branch: b.branch === "future" ? "future" : "classic",
     eventId: str(b.eventId, 80),
@@ -679,10 +696,12 @@ export function counterResult(successes, phaseNo, {cainite = false} = {}) {
 
 /** Dated events in the chronicle that look like wars, within `span` years of the year (for a quick start). */
 const WARLIKE = /\b(war|wars|battle|siege|besieg\w*|crusade|uprising|revolt|rebellion|invasion|invades?|sack(ed)?|campaign)\b/i;
-export function warEvents(events = [], year, span = 5) {
+export function warEvents(events = [], year, span = 5, {part = ""} = {}) {
   const y = n(year);
-  return events.filter(ev => ev && WARLIKE.test(`${ev.name ?? ""}`) && Math.abs(n(ev.year) - y) <= span)
-    .sort((a, b) => Math.abs(n(a.year) - y) - Math.abs(n(b.year) - y) || n(a.year) - n(b.year)).slice(0, 12);
+  // B5901: only this timeline's events (live), and those of the fight's part of the world first
+  const far = ev => (part && ev.region && ev.region !== part ? 1 : 0);
+  return events.filter(ev => ev && ev.live !== false && WARLIKE.test(`${ev.name ?? ""}`) && Math.abs(n(ev.year) - y) <= span)
+    .sort((a, b) => far(a) - far(b) || Math.abs(n(a.year) - y) - Math.abs(n(b.year) - y) || n(a.year) - n(b.year)).slice(0, 12);
 }
 
 /** The progress clock that mirrors a siege's breach (for WoDX Storyteller's clocks). */

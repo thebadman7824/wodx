@@ -53,7 +53,7 @@ export async function run() {
   const {getEngine} = await import(`/modules/${M}/scripts/calendar.mjs`);
   const at = (y, m, d) => getEngine().dateToTime({year: y, month: m, day: d, hour: 21});
   const keyOf = t => { const d = getEngine().timeToDate(t); return d.year * 10000 + d.month * 100 + d.day; };
-  const cards = () => game.messages.filter(m => !msgsBefore.has(m.id) && /wodx-events/.test(m.content ?? ""));
+  const cards = () => game.messages.filter(m => !msgsBefore.has(m.id) && /wodx-events/.test(m.content ?? "") && !/wodx-hidden-events/.test(m.content ?? ""));
   try {
     const mod = game.modules.get(M);
     ok("1. module", mod?.active && newer(mod.version, "0.5.0") && api?.events && api.events.list().length >= 25,
@@ -66,7 +66,7 @@ export async function run() {
     await game.time.set(at(1340, 1, 1)); await sleep(300);
     await game.settings.set(M, "eventsFired", api.events.list().filter(e => e.live && e.key <= 13400101).map(e => e.id));
     const seen = [];
-    const hook = Hooks.on("wodxEventFired", ev => seen.push(ev.id));
+    const hook = Hooks.on("wodxEventFired", ev => { if ( !String(ev.id).startsWith("wh-") ) seen.push(ev.id); });
     const n0 = cards().length;
     await game.time.set(at(1348, 1, 1)); await sleep(500); await check(); await sleep(300);
     Hooks.off("wodxEventFired", hook);

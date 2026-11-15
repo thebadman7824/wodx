@@ -3,6 +3,7 @@ import {getEngine} from "./calendar.mjs";
 import {searchBox} from "./search.mjs";
 import * as events from "./events.mjs";
 import * as L from "./legends-rules.mjs";
+import {inLegends} from "./events-rules.mjs";
 import * as LS from "./legend-standing-rules.mjs";
 import {propose, registerHandler} from "./approvals.mjs";
 import {officeTitle, polityFor} from "../../wodx-npc/scripts/politics-rules.mjs";
@@ -118,6 +119,7 @@ export function gather(prevSnap = null) {
   const year = today().year;
   const fired = events.fired();
   const byId = new Map(events.list().map(ev => [ev.id, ev]));
+  const codes = events.hereCodes();
   const nameOf = id => game.actors.get(id)?.name ?? other(CREATION, "archived", {})?.[id]?.name ?? "Someone";
   const titleOf = (f, key) => { try { return officeTitle(polityFor(f, year), key, f); } catch (e) { return key; } };
   const snap = {
@@ -127,7 +129,7 @@ export function gather(prevSnap = null) {
   const at = game.time.worldTime, d = today();
   const when = {at, ...d};
   const lines = [
-    ...L.eventLines(fired.map(id => byId.get(id)).filter(Boolean)),
+    ...L.eventLines(fired.map(id => byId.get(id)).filter(ev => ev && inLegends(ev) && events.heard(ev, codes))),
     ...L.actorLines(actorRows(), other(CREATION, "archived", {}), dateOf),
     ...L.ledgerLines(other(ST, "ledger", {entries: []})?.entries ?? [], dateOf),
     ...L.battleLines(other(ST, "battles", {list: []})?.list ?? [], dateOf),

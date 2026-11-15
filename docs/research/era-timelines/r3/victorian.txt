@@ -26,7 +26,7 @@
 1845|H|mor|EU|Ireland|famine,plague|The potato blight|Blight rots Ireland's potato crop; over the next five years a million die and another million leave.
 1845|W|wer,wra|EU|Ireland|famine,occult|The Hunger's dead|The house reading has Fianna caerns in the west cry out as the famine dead crowd the Shadowlands of Ireland.
 1845|H|mor|EU|Arctic|exploration,death|Franklin's expedition lost|Two Royal Navy ships seek the Northwest Passage and vanish; searches over decades find bones and tales of cannibalism.
-1846|H|mor|EU|London|law,trade|The Corn Laws repealed|Peel ends the tariffs on grain and splits his party; cheap bread wins over the landlords.
+1846|H|mor|EU|London|law,trade|The Corn Laws repealed|Peel ends the tariffs on grain and splits the Tories; cheap bread wins over the landlords.
 1846|H|mor|EU|Krakow|uprising|The Galician slaughter|A Polish noble rising in Galicia is turned when peasants kill hundreds of their lords, and Austria swallows Krakow.
 1846|H|mor|EU|Berlin|science|Neptune found|Galle finds the planet Neptune where mathematics said it would be.
 1846|H|mor|AS|Lahore|war,empire|The First Anglo-Sikh War|The Company fights the Sikh kingdom of the Punjab and takes its eastern lands.
@@ -47,12 +47,12 @@
 1849|H|mor|EU|Vilagos|war|Hungary surrenders|With Russian help, Austria crushes Hungary; the Hungarian army lays down its arms at Vilagos and thirteen generals are hanged.
 1849|H|mor|EU|Rome|revolution,war|The Roman Republic falls|French troops end Mazzini's Roman Republic and restore the pope; Garibaldi escapes.
 1849|H|mor|AS|Lahore|war,empire|The Punjab annexed|The second Sikh war ends with the Punjab annexed and the Koh-i-Noor sent to the queen.
-1850|H|mor|AS|Guangxi|uprising,faith|The Taiping rising|Hong Xiuquan, who believes himself Christ's younger brother, raises the Taiping; the war kills twenty million or more.
+1850|H|mor|AS|Guangxi|uprising,faith|The Taiping rising|Hong Xiuquan, who claims to be Christ's younger brother, raises the Taiping; the war kills twenty million or more.
 1850|W|kue|AS|Nanjing|war,occult|The Taiping and the Middle Kingdom|The house reading has the Kuei-jin courts of the south shaken as the Taiping burn temples and shrines across their lands.
 1850|H|mor|ME|Tabriz|faith,death|The Bab shot|The Bab is executed by firing squad at Tabriz; the first volley leaves the prisoner unhurt, and the faith grows.
 1850|H|mor|MO|Brno|law,founding|Brno a free city|Brno is made a statutory city and swallows its suburbs.
 1851|H|mor|EU|London|industry,building|The Great Exhibition|The Crystal Palace in Hyde Park shows the world's machines, and six million people come to see.
-1851|H|mor|EU|Paris|crown|The coup of December|Louis Napoleon closes the assembly and makes himself master of France; within a year he is emperor.
+1851|H|mor|EU|Paris|crown|The coup of December|Louis Napoleon closes the assembly and becomes master of France; within a year the Second Empire is proclaimed.
 1852|H|mor|EU|London|occult,media|Spiritualism reaches London|An American medium holds paid seances in London, and table rapping becomes the fashion of the drawing rooms.
 1852|H|mor|EU|Paris|crown|The Second Empire|Napoleon III is proclaimed emperor of the French.
 1853|H|mor|AS|Edo Bay|sea,empire|The black ships|Commodore Perry's steamships anchor off Edo and demand that Japan open its ports.
@@ -88,7 +88,7 @@
 1860|W|hun|EU|Rome|faith,occult|The Society of Leopold quiet|The house reading has the Inquisition's Society of Leopold shrunk to a few priests in Rome, keeping files no bishop reads.
 1861|H|mor|EU|Turin|crown|The Kingdom of Italy|Victor Emmanuel becomes king of Italy.
 1861|H|mor|EU|St Petersburg|law|The serfs freed|Alexander II frees twenty-three million serfs, though they must buy their land in debt.
-1861|H|mor|EU|London|death,crown|Prince Albert dies|The prince consort dies of typhoid, and the queen wears black for the rest of her life.
+1861|H|mor|EU|London|death,crown|Prince Albert dies|The prince consort dies of typhoid, and the queen wears black for the rest of the reign.
 1862|H|mor|EU|Berlin|crown|Bismarck|Bismarck becomes minister-president of Prussia and promises iron and blood.
 1862|H|mor|EU|Paris|art|Les Miserables|Victor Hugo publishes Les Miserables from exile.
 1862|H|mor|EU|Prague|founding,sport|The Sokol|Tyrs and Fugner found the Sokol gymnastic movement, and halls rise in every Czech and Moravian town.
@@ -122,14 +122,14 @@
 1869|H|mor|EU|Rome|faith|The First Vatican Council|The bishops meet in Rome and declare the pope infallible on faith and morals.
 1869|H|mor|EU|St Petersburg|science|The periodic table|Mendeleev arranges the elements in a table that predicts ones not yet found.
 1869|H|mor|AS|Bukhara|empire|Bukhara made a protectorate|The emir of Bukhara accepts Russian protection after defeat.
-1870|H|mor|EU|Sedan|battle,war|Sedan|The French emperor surrenders at Sedan with his army, and the Second Empire falls.
+1870|H|mor|EU|Sedan|battle,war|Sedan|The French emperor surrenders at Sedan with the army, and the Second Empire falls.
 1870|H|mor|EU|Paris|siege,famine|The siege of Paris|The Prussians ring Paris; the city eats its horses, its rats and the zoo animals.
 1870|W|vam|EU|Paris|siege,occult|The Toreador starve with the city|The house reading has the Toreador of Paris feeding thin as the siege drags on and blood grows as scarce as bread.
 1870|H|mor|EU|Rome|war|The breach of Porta Pia|Italian troops break into Rome through the Porta Pia, and the Papal States end.
 1871|H|mor|EU|Versailles|crown,empire|The German Empire|The king of Prussia is proclaimed German emperor in the Hall of Mirrors at Versailles.
 1871|H|mor|EU|Paris|revolution,massacre|The Paris Commune|Paris rules itself for ten weeks; in the bloody week of May the army kills thousands of Communards.
 1871|W|vam|EU|Paris|revolution,occult|The Commune's Brujah|The house reading has the Camarilla let the Commune burn to purge Brujah radicals, then blame the Sabbat for the fires.
-1871|H|mor|EU|Rome|crown|Rome the capital|Italy makes Rome its capital, and the pope shuts himself in the Vatican as a prisoner.
+1871|H|mor|EU|Rome|crown|Rome the capital|Italy makes Rome its capital, and the pope stays shut in the Vatican as a prisoner.
 1871|H|mor|EU|Berlin|faith,law|The Kulturkampf|Bismarck fights the Catholic Church over schools and priests.
 1872|H|mor|EU|Ireland|art,occult|Carmilla|Sheridan Le Fanu publishes Carmilla, a vampire tale of a countess and a lonely girl in Styria.
 1872|H|mor|ME|Damascus|death,faith|Abd al-Qadir in Damascus|The exiled Algerian emir, who saved thousands of Christians in 1860, lives on as a scholar in Damascus.
@@ -177,7 +177,7 @@
 1885|H|mor|EU|Slivnitsa|war,battle|The Serbo-Bulgarian War|Serbia attacks Bulgaria and is beaten at Slivnitsa within two weeks.
 1885|H|mor|ME|Khartoum|siege,war|Khartoum falls|The Mahdi's army storms Khartoum after a ten-month siege, and Gordon is killed two days before relief.
 1886|H|mor|EU|London|art|Jekyll and Hyde|Stevenson publishes The Strange Case of Dr Jekyll and Mr Hyde.
-1886|H|mor|EU|Bavaria|death,crown|The mad king drowns|Ludwig II of Bavaria is declared insane and found dead in Lake Starnberg with the doctor who certified him.
+1886|H|mor|EU|Bavaria|death,crown|The mad king drowns|Ludwig II of Bavaria is declared insane and found dead in Lake Starnberg with the doctor who certified the king.
 1886|H|mor|EU|Prague|crime,learning|The forged manuscripts|Masaryk and others show that the medieval Czech manuscripts of Dvur Kralove and Zelena Hora are forgeries.
 1887|H|mor|EU|London|crown|The Golden Jubilee|Victoria marks fifty years on the throne, and kings come to London.
 1887|H|mor|AS|Yellow River|flood|The Yellow River flood|The Yellow River breaks its dykes and floods the plain; perhaps a million die.
@@ -204,7 +204,7 @@
 1892|H|mor|AS|Bombay|founding,law|Indian members|The Indian Councils Act lets Indians sit on the legislative councils.
 1893|H|mor|EU|Corinth|building,sea|The Corinth Canal|A canal cut through rock opens across the isthmus of Corinth.
 1893|H|mor|EU|Prague|uprising,law|The Omladina trial|Young Czech radicals are tried and jailed, and Prague is placed under emergency law.
-1893|H|mor|EU|Prague|art|Dvorak's New World|Dvorak writes his symphony From the New World far from home.
+1893|H|mor|EU|Prague|art|Dvorak's New World|Dvorak writes the symphony From the New World far from home.
 1894|H|mor|EU|Paris|law,persecution|The Dreyfus affair|A Jewish army captain is falsely convicted of spying and sent to Devil's Island; France splits for twelve years.
 1894|H|mor|AS|Korea|war|The First Sino-Japanese War|Japan defeats China in Korea and at sea, and takes Taiwan.
 1894|H|mor|ME|Sasun|massacre|The Hamidian massacres|The sultan's irregulars kill Armenians in eastern Anatolia; over two years perhaps two hundred thousand die.
@@ -221,7 +221,7 @@
 1896|H|mor|AS|Bombay|plague|Plague in Bombay|Plague reaches Bombay and kills millions across India over the next two decades.
 1896|W|mag|AS|Tibet|occult,travel|The Akashic Brotherhood shut the doors|The house reading has the Akashics close Tibetan monasteries to Western seekers after Theosophists come asking.
 1897|H|mor|EU|London|crown|The Diamond Jubilee|Victoria celebrates sixty years with troops from every corner of the empire.
-1897|H|mor|EU|Westminster|art,occult|Dracula|Bram Stoker publishes Dracula: a Transylvanian count, his voyage to Whitby and the hunters who stop him.
+1897|H|mor|EU|Westminster|art,occult|Dracula|Bram Stoker publishes Dracula: a Transylvanian count, a voyage to Whitby and the hunters who stop the count.
 1897|W|vam,hun|EU|London|art,occult|The Tremere and Dracula|The house reading has the Tzimisce furious at the book, the Tremere amused, and every hunter in England reading it twice.
 1897|W|mag|EU|London|founding,science|The Technocracy named|The house reading follows Mage canon: the Order of Reason takes the name Technocratic Union at its 1897 convocation.
 1897|H|mor|EU|Basel|founding,faith|The Zionist Congress|Herzl gathers the first Zionist Congress in Basel.
@@ -232,7 +232,7 @@
 1898|H|mor|AS|Beijing|law,revolution|The Hundred Days|The Guangxu emperor orders sweeping reforms; the empress dowager stops them and holds the emperor prisoner.
 1898|H|mor|ME|Omdurman|battle,empire|Omdurman|Kitchener's machine guns destroy the Mahdist army outside Omdurman.
 1898|H|mor|ME|Jerusalem|travel,crown|The Kaiser in Jerusalem|Wilhelm II rides into Jerusalem through a gap cut in the wall.
-1898|H|mor|MO|Ivancice|art|Mucha's posters|Alfons Mucha of Ivancice, in Moravia, is the rage of Paris for his posters of Sarah Bernhardt.
+1898|H|mor|MO|Ivancice|art|Mucha's posters|Alfons Mucha of Ivancice, in Moravia, is the rage of Paris for posters of Sarah Bernhardt.
 1899|H|mor|MO|Polna|persecution,law|The Hilsner affair|A Jewish vagrant is convicted of ritual murder at Polna; Masaryk defends Hilsner and is called a traitor.
 1899|H|mor|AS|Shandong|uprising|The Boxers rise|The Society of Righteous and Harmonious Fists attacks missionaries and Chinese Christians in Shandong.
 1899|H|mor|EU|The Hague|treaty,law|The Hague Conference|The powers agree rules of war and found a court of arbitration.
@@ -307,13 +307,13 @@
 1911|H|mor|ME|Istanbul|fire|The fires of Istanbul|Great fires burn thousands of wooden houses in Istanbul.
 1912|H|mor|EU|Atlantic|sea,disaster|The Titanic sinks|The liner strikes an iceberg on its first voyage; over fifteen hundred die.
 1912|H|mor|EU|Balkans|war|The First Balkan War|Serbia, Bulgaria, Greece and Montenegro drive the Ottomans almost out of Europe.
-1912|H|mor|AS|Tokyo|crown,death|The Meiji emperor dies|The Meiji emperor dies and General Nogi and his wife follow in ritual suicide.
+1912|H|mor|AS|Tokyo|crown,death|The Meiji emperor dies|The Meiji emperor dies and General Nogi and Nogi's wife follow in ritual suicide.
 1912|H|mor|AS|Beijing|crown|The last emperor abdicates|The six-year-old Puyi gives up the throne, and China becomes a republic.
 1912|H|mor|EU|Stockholm|sport|The Stockholm Olympics|The Stockholm Games bring electric timing and a photo finish.
 1912|H|mor|MO|Brno|art|Expressionism in Brno|Brno's Czech and German artists hold rival shows, and the town's cafes argue about modern art.
 1912|H|mor|EU|Vlore|war,founding|Albania declares independence|Ismail Qemali proclaims an independent Albania at Vlore.
 1913|H|mor|EU|Balkans|war|The Second Balkan War|Bulgaria attacks its allies over Macedonia and loses.
-1913|H|mor|EU|Vienna|crime,war|The Redl affair|Colonel Redl, chief of Austrian counter-intelligence, is found to be a Russian spy and shoots himself.
+1913|H|mor|EU|Vienna|crime,war|The Redl affair|Colonel Redl, chief of Austrian counter-intelligence, is found to be a Russian spy and is left alone with a pistol.
 1913|H|mor|EU|Paris|art|The Rite of Spring|Stravinsky's ballet starts a riot in the theatre.
 1913|H|mor|EU|London|crime,law|Emily Davison at the Derby|A suffragette runs onto the course at the Derby and is killed by the king's horse.
 1913|H|mor|EU|Vienna|crime|Hitler and Stalin in Vienna|A failed painter and a Georgian revolutionary live in Vienna the same winter; Trotsky and Tito pass through too.
@@ -363,12 +363,12 @@
 1855|H|mor|AF|Zambezi|exploration,travel|The smoke that thunders|David Livingstone is shown the great falls of the Zambezi and names them for the queen.
 1856|H|mor|AF|Xhosaland|faith,famine,death|The cattle killing|A young prophetess tells the Xhosa to kill their cattle so that the ancestors will rise; tens of thousands starve.
 1867|H|mor|AF|Kimberley|industry,money,migration|Diamonds|A child finds a diamond near the Orange River, and the rush that follows remakes southern Africa.
-1868|H|mor|AF|Magdala|war,death,crown|Magdala|A British expedition storms Tewodros's mountain fortress to free hostages, and the emperor shoots himself.
+1868|H|mor|AF|Magdala|war,death,crown|Magdala|A British expedition storms Tewodros's mountain fortress to free hostages, and the emperor dies by suicide.
 1871|H|mor|AF|Ujiji|travel,media|Stanley finds Livingstone|A newspaper's correspondent finds the missing missionary on Lake Tanganyika.
 1873|H|mor|AF|Zanzibar|law,trade|The slave market closed|Under the guns of the British navy the sultan closes the slave market of Zanzibar; a cathedral is built on the site.
 1874|H|mor|AF|Kumasi|war,fire|Kumasi burned|A British expedition burns the Asante capital.
 1879|H|mor|AF|Isandlwana|battle,war,empire|Isandlwana|The Zulu army destroys a British column at Isandlwana; the kingdom is broken by the end of the year.
-1881|H|mor|AF|Sudan|faith,uprising,war|The Mahdi|A Sudanese holy man proclaims himself the Mahdi and raises the country against Egyptian rule.
+1881|H|mor|AF|Sudan|faith,uprising,war|The Mahdi|A Sudanese holy man claims to be the Mahdi and raises the country against Egyptian rule.
 1885|H|mor|AF|Congo|empire,founding,persecution|The Congo Free State|The powers recognise the king of the Belgians as the private owner of the Congo; millions die in the rubber terror that follows.
 1885|W|wer,vam|AF|Congo|occult,empire|The scramble|The house reading has every hidden power of Europe follow the flags into Africa and find the continent already held: by its own shapeshifters, its own undead and its own dead.
 1886|H|mor|AF|Johannesburg|industry,money,founding|Gold on the Rand|The richest goldfield in the world is found on the Witwatersrand.
@@ -391,7 +391,7 @@
 1863|H|mor|OC|Queensland|trade,persecution,crime|Blackbirding|Ships begin bringing Pacific islanders to Queensland's cane fields, many by trickery or force.
 1863|H|mor|OC|Waikato|war,empire|The Waikato invaded|An imperial army crosses into the lands of the Maori king, and millions of acres are confiscated.
 1874|H|mor|OC|Fiji|empire,treaty,plague|Fiji ceded|Cakobau cedes Fiji to Britain; measles brought home from a state visit to Sydney kills about a third of the Fijians the next year.
-1876|H|mor|OC|Hobart|death,persecution|Truganini dies|The woman the colonists call the last Tasmanian dies in Hobart; her people's descendants live on.
+1876|H|mor|OC|Hobart|death,persecution|Truganini dies|The woman the colonists call the last Tasmanian dies in Hobart; the descendants of Truganini's people live on.
 1880|H|mor|OC|Melbourne|crime,death,law|Ned Kelly hanged|The bushranger who fought the police in home-made armour is hanged in Melbourne.
 1884|H|mor|OC|New Guinea|empire|New Guinea divided|Germany takes the north-east of New Guinea and Britain the south-east.
 1893|H|mor|OC|Wellington|law|Votes for women|New Zealand is the first self-governing country where women vote for parliament.

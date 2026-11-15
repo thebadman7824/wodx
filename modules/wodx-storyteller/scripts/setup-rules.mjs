@@ -6,6 +6,7 @@
  * makes or updates, by a flag and never twice: the Storyteller screen, the era primer for the players, the group actor,
  * Session Zero and the Chronicle Rules (through WoDX Chronicle). A dry run shows the plan first.
  */
+import {worldPrimer} from "../data/primers-world.mjs";
 
 export const TEMPLATE_VERSION = 1;
 
@@ -165,10 +166,35 @@ export const PRIMERS = {
   }
 };
 
-/** The era primer for the players, as journal page HTML. profile: an era profile from WoDX Chronicle. */
-export function playerPrimer(profile) {
+/**
+ * The era primer for the players, as journal page HTML. profile: an era profile from WoDX Chronicle. B5880: where the
+ * homeland follows another way of life than Western Christendom (opts.sphere, WoDX Chronicle's sphereFor), and the year
+ * is 1197 or later, the players read what everyone knows there instead (data/primers-world.mjs).
+ */
+export function playerPrimer(profile, {sphere = null, sphereLabel = "", year = null} = {}) {
   const p = PRIMERS[profile?.id] ?? PRIMERS["dark-ages"];
-  return `<h2>${esc(profile?.name ?? "The era")}</h2>${ps(p.players)}<p class="wodx-quiet">The Storyteller can add to this page or change it.</p>`;
+  const y = Number(year ?? profile?.start ?? 1197);
+  const world = sphere && sphere !== "latin" && y >= 1197 ? worldPrimer(sphere, y) : null;
+  const where = world && sphereLabel ? `<p class="wodx-quiet">${esc(sphereLabel)}</p>` : "";
+  return `<h2>${esc(profile?.name ?? "The era")}</h2>${where}${ps(world ?? p.players)}<p class="wodx-quiet">The Storyteller can add to this page or change it.</p>`;
+}
+
+/**
+ * B5940: the primer for a scene far from home. When the active scene stands where another way of life holds than the
+ * homeland's, the players' primer gets a page "Where you are now" with what everyone knows there (latin: the era's
+ * own lines). At home, or with no scene placed, the page says so in a line. Returns {html, abroad, key}: key names the
+ * way of life the page speaks of, so the arrival card is posted once for each move.
+ */
+export const ABROAD_PAGE = "Where you are now";
+export function abroadPrimer(profile, {homeSphere = null, hereSphere = null, hereLabel = "", placeLabel = "", year = null} = {}) {
+  const y = Number(year ?? profile?.start ?? 1197);
+  if ( !hereSphere || hereSphere === homeSphere || y < 1197 ) {
+    return {abroad: false, key: "", html: `<h2>${esc(ABROAD_PAGE)}</h2><p>Among your own people. What everyone knows holds here.</p><p class="wodx-quiet">This page changes by itself when the scene stands in another land.</p>`};
+  }
+  const p = PRIMERS[profile?.id] ?? PRIMERS["dark-ages"];
+  const text = hereSphere === "latin" ? p.players : (worldPrimer(hereSphere, y) ?? p.players);
+  const where = [...new Set([placeLabel, hereLabel].filter(Boolean))].join(", ");
+  return {abroad: true, key: hereSphere, html: `<h2>${esc(ABROAD_PAGE)}${where ? `: ${esc(where)}` : ""}</h2><p class="wodx-quiet">Far from home. What people here take for granted:</p>${ps(text)}<p class="wodx-quiet">This page changes by itself when the scene stands in another land.</p>`};
 }
 
 /** The era page of the Storyteller screen. */

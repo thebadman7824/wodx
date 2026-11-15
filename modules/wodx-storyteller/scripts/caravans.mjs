@@ -12,10 +12,28 @@ import * as MK from "./market-rules.mjs";
 import * as Markets from "./markets.mjs";
 import * as Country from "./country-rules.mjs";
 import * as Rumours from "./rumours.mjs";
+import * as Money from "./money.mjs";
+import * as GP from "./goods-place-rules.mjs";
 import {MOD, esc, chron, isActiveGM, gmIds, setting, log, timeLabel, tripContext, travelOf, sceneName} from "./core.mjs";
 
 let KINDS = {};
 const label = k => String(KINDS[k] ?? k).toLowerCase();
+/**
+ * A caravan's load in words (B5933): each kind with up to two real goods of the sending land, "cloth and clothes
+ * (silk, a length of cotton for a sari)". Kinds alone where the land cannot be told or goods by place is off.
+ */
+function loadLabel(c) {
+  return k => {
+    try {
+      if ( setting("goodsByPlace") === false ) return label(k);
+      const a = MK.marketById(Markets.state(), c.from);
+      const year = Number(chron()?.eras?.currentYear?.()) || 0;
+      const here = a ? Money.placeHere({market: a, year}) : null;
+      const names = here ? GP.namedGoods(k, Money.goodsLoaded(), year, here.inUse, here, c.id) : [];
+      return names.length ? `${label(k)} (${names.join(", ")})` : label(k);
+    } catch (e) { return label(k); }
+  };
+}
 const now = () => game.time?.worldTime ?? 0;
 
 export function registerCaravanSettings() {
@@ -101,7 +119,7 @@ async function bringIn(c) {
   if ( d.changes.length ) await Markets.saveState(d.state);
   const lines = d.changes.map(x => `${label(x.kind)}: supply ${MK.SUPPLY[x.from].label.toLowerCase()} to ${MK.SUPPLY[x.to].label.toLowerCase()}`);
   await ChatMessage.create({speaker: {alias: "Markets"}, whisper: gmIds(),
-    content: `<div class="wodx-card wst-markets wst-caravan"><h3>A caravan comes in</h3><p>${esc(CR.describe(c, {kindLabel: label}))}, ${CR.daysOf(c)} ${CR.daysOf(c) === 1 ? "day" : "days"} on the road. It stands in ${esc(c.toName)} for ${CR.IN_TOWN_DAYS} days.</p>
+    content: `<div class="wodx-card wst-markets wst-caravan"><h3>A caravan comes in</h3><p>${esc(CR.describe(c, {kindLabel: loadLabel(c)}))}, ${CR.daysOf(c)} ${CR.daysOf(c) === 1 ? "day" : "days"} on the road. It stands in ${esc(c.toName)} for ${CR.IN_TOWN_DAYS} days.</p>
       ${lines.length ? `<ul>${lines.map(l => `<li>${esc(l)}</li>`).join("")}</ul>` : ""}<p class="wodx-quiet">House rules.</p></div>`});
   Hooks.callAll("wodxCaravan", {phase: "arrived", caravan: c, changes: d.changes});
 }
@@ -116,7 +134,7 @@ export async function loseCaravan(id, {by = null, quiet = false} = {}) {
   if ( l.changes.length ) await Markets.saveState(l.state);
   const c = r.caravan;
   if ( !quiet ) await ChatMessage.create({speaker: {alias: "Markets"}, whisper: gmIds(),
-    content: `<div class="wodx-card wst-markets wst-caravan"><h3>A caravan is lost</h3><p>${esc(CR.describe(c, {kindLabel: label}))} never arrives${by ? `: ${esc(by)}` : ""}.</p>
+    content: `<div class="wodx-card wst-markets wst-caravan"><h3>A caravan is lost</h3><p>${esc(CR.describe(c, {kindLabel: loadLabel(c)}))} never arrives${by ? `: ${esc(by)}` : ""}.</p>
       ${l.changes.length ? `<ul>${l.changes.map(x => `<li>${esc(x.name)}, ${esc(label(x.kind))}: price x${x.from} to x${x.to}</li>`).join("")}</ul>` : ""}<p class="wodx-quiet">House rules.</p></div>`});
   if ( setting("rumourNetwork") !== false ) {
     const tellers = (MK.marketById(Markets.state(), c.to)?.traders ?? []).map(t => t.actor).filter(a => game.actors.get(a));
@@ -145,7 +163,7 @@ export async function onTrip({actor = null, fromScene = null, destScene = null, 
   for ( const c of met ) {
     const same = c.from === a.id;
     await log({kind: "world", actor: actor?.id ?? null, name: actor?.name ?? null, place: b.name, attention: "A caravan on the road",
-      text: `${CR.describe(c, {kindLabel: label})} is on this road, ${same ? "going the same way" : "coming the other way"}, ${CR.whereWords(c, start, Country.LAND_WORDS)} when ${actor?.name ?? "the traveller"} sets out. Guard ${c.guard}.`});
+      text: `${CR.describe(c, {kindLabel: loadLabel(c)})} is on this road, ${same ? "going the same way" : "coming the other way"}, ${CR.whereWords(c, start, Country.LAND_WORDS)} when ${actor?.name ?? "the traveller"} sets out. Guard ${c.guard}.`});
   }
   return met;
 }
@@ -163,7 +181,7 @@ export function inTownScenes() {
 export async function caravansDialog() {
   if ( !game.user.isGM ) return;
   const st = state(), t = now();
-  const rows = st.list.map(c => `<tr><td>${esc(CR.describe(c, {kindLabel: label}))}</td><td>${esc(CR.whereWords(c, t, Country.LAND_WORDS))}</td>
+  const rows = st.list.map(c => `<tr><td>${esc(CR.describe(c, {kindLabel: loadLabel(c)}))}</td><td>${esc(CR.whereWords(c, t, Country.LAND_WORDS))}</td>
     <td>${c.state === "road" ? esc(timeLabel(c.arrive)) : c.state === "town" ? "Came in" : "Lost"}</td><td>${c.guard}</td>
     <td>${c.state === "road" ? `<button type="button" data-caravan-in="${esc(c.id)}">Bring it in</button> <button type="button" data-caravan-lost="${esc(c.id)}">Lost on the road</button>` : ""}</td></tr>`).join("");
   let pick = null;
@@ -183,6 +201,7 @@ export async function caravansDialog() {
 
 export async function setupCaravans() {
   try { KINDS = (await import("../../wodx-library/data/goods.mjs")).KINDS ?? {}; } catch (e) { KINDS = {}; }
+  try { await Money.goodsList(); } catch (e) { /* goods load later */ }
   let lastHour = -1;
   Hooks.on("updateWorldTime", () => {
     const hour = Math.floor(now() / 3600);
@@ -196,4 +215,4 @@ export async function setupCaravans() {
 }
 
 export const rules = CR;
-export const api = () => ({open: caravansDialog, state, on, depart, tick, lose: loseCaravan, arriveNow, remove, inTownScenes, onTrip, rules: CR});
+export const api = () => ({open: caravansDialog, state, on, describe: c => CR.describe(c, {kindLabel: loadLabel(c)}), depart, tick, lose: loseCaravan, arriveNow, remove, inTownScenes, onTrip, rules: CR});

@@ -114,15 +114,21 @@ export async function run() {
         // B3900: a reload takes its ball from Possessions, and a ball needs a powder horn
         {name: "a lead musket ball", type: "Item"}, {name: "a powder horn", type: "Item"}]);
       await gun.setFlag("wodx-combat", "powder", {wet: true, matchOut: true});
-      await game.wodxCombat.reload({actor: gunman, weaponId: gun.id});
-      const afterReload = gun.getFlag("wodx-combat", "powder");
-      await game.wodxCombat.lightMatch({actor: gunman, weaponId: gun.id});
-      const afterLight = gun.getFlag("wodx-combat", "powder");
+      // B5860: when this step fails only after other gates, the notices the two calls gave say why
+      const said = [], kinds = ["info", "warn", "error"], keep = Object.fromEntries(kinds.map(k => [k, ui.notifications[k]]));
+      for (const k of kinds) ui.notifications[k] = function (m, ...rest) { said.push(`${k}: ${m}`); return keep[k].call(this, m, ...rest); };
+      let backReload = null, backLight = null, afterReload = null;
+      try {
+        backReload = await game.wodxCombat.reload({actor: gunman, weaponId: gun.id}) ?? null;
+        afterReload = gunman.items.get(gun.id)?.getFlag("wodx-combat", "powder") ?? null;
+        backLight = await game.wodxCombat.lightMatch({actor: gunman, weaponId: gun.id}) ?? null;
+      } finally { for (const k of kinds) ui.notifications[k] = keep[k]; }
+      const afterLight = gunman.items.get(gun.id)?.getFlag("wodx-combat", "powder") ?? null;
       const locks = {arquebus: PW.gunLock({name: "Matchlock arquebus", ranged: true}, year)?.lock, musket1630: PW.gunLock({name: "Musket", ranged: true}, 1630)?.lock,
         musket1750: PW.gunLock({name: "Musket", ranged: true}, 1750)?.lock, glock: PW.gunLock({name: "Glock 17", ranged: true}, 1995)?.lock, bow: PW.gunLock({name: "Longbow", ranged: true}, 1400)};
       ok("7. black powder", afterReload?.wet === false && afterLight?.matchOut === false && locks.arquebus === "matchlock" && locks.musket1630 === "matchlock"
         && locks.musket1750 === "flintlock" && locks.glock === "cartridge" && locks.bow === null && game.settings.get("wodx-combat", "blackPowder") === true,
-        {afterReload, afterLight, locks});
+        {afterReload, afterLight, locks, said, backReload, backLight, gunThere: !!gunman.items.get(gun.id), items: gunman.items.size});
     });
     await step("8. other modules", async () => {
       const ids = ["wodx-chronicle", "wodx-npc", "wodx-actions", "wodx-combat", "wodx-storyteller", "wodx-atmosphere", "wodx-interactables", "wodx-senses"];

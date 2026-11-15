@@ -36,6 +36,8 @@
  * Stored on the battle as `campaign` (normCampaign); battle-rules.mjs keeps it through normBattle, applyStep and Undo.
  */
 
+import * as WL from "./war-lands-rules.mjs";
+
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 const int = (v, lo, hi, d) => clamp(Math.round(v === undefined || v === null || v === "" ? d : n(v)), lo, hi);
@@ -75,13 +77,14 @@ export const ENGINES = {
   howitzer: {label: "Heavy howitzer", damage: 22, diff: 1, from: 1914, to: 9999, house: true},
   bomber: {label: "Bombers", damage: 24, diff: 2, from: 1936, to: 9999, house: true},
   missile: {label: "Guided missiles", damage: 24, diff: 0, from: 1990, to: 9999, house: true},
-  railgun: {label: "Railgun battery", damage: 28, diff: 0, from: 2030, to: 9999, branch: "future", house: true}
+  railgun: {label: "Railgun battery", damage: 28, diff: 0, from: 2030, to: 9999, branch: "future", house: true},
+  ...WL.LAND_ENGINES
 };
 
 /** The engines an army of a year can build (and the branch for the Future Darkness ones). */
-export function enginesFor(year, branch = "classic") {
+export function enginesFor(year, branch = "classic", land = "") {
   const y = n(year) || 1197;
-  return Object.entries(ENGINES).filter(([, e]) => y >= e.from && y <= e.to && (!e.branch || e.branch === branch)).map(([id, e]) => ({id, ...e}));
+  return WL.forLand(Object.entries(ENGINES).filter(([, e]) => y >= e.from && y <= e.to && (!e.branch || e.branch === branch)).map(([id, e]) => ({id, ...e})), land);
 }
 
 /**
@@ -107,9 +110,10 @@ export const WALLS = {
   bastion: {label: "Bastion and curtain of a star fort", soak: 13, health: 45, cover: true, from: 1530, house: true},
   rampart: {label: "Earth rampart and ditch", soak: 11, health: 50, cover: true, from: 1600, house: true},
   bunker: {label: "Concrete bunker line", soak: 15, health: 45, cover: true, from: 1914, house: true},
-  ferro: {label: "Reinforced concrete and steel", soak: 18, health: 60, cover: true, from: 1940, house: true}
+  ferro: {label: "Reinforced concrete and steel", soak: 18, health: 60, cover: true, from: 1940, house: true},
+  ...WL.LAND_WALLS
 };
-export const wallsFor = year => Object.entries(WALLS).filter(([, w]) => !w.from || (n(year) || 1197) >= w.from).map(([id, w]) => ({id, ...w}));
+export const wallsFor = (year, land = "") => WL.forLand(Object.entries(WALLS).filter(([, w]) => !w.from || (n(year) || 1197) >= w.from).map(([id, w]) => ({id, ...w})), land);
 /** The walls a siege starts with by where the garrison stands (battle-rules.mjs POSITIONS). */
 export const WALL_OF_POSITION = {works: "palisade", town: "mediumWall", castle: "heavyWall", starfort: "bastion", bunker: "bunker"};
 
@@ -124,10 +128,11 @@ export const SUPPLY_LINES = {
   rail: {label: "The railway", share: 1, from: 1840},
   lorries: {label: "Lorries", share: 1, from: 1915},
   air: {label: "Airlift", share: 1, from: 1940},
-  drones: {label: "Drone convoys", share: 1, from: 2030, branch: "future"}
+  drones: {label: "Drone convoys", share: 1, from: 2030, branch: "future"},
+  ...WL.LAND_SUPPLY
 };
-export const supplyLinesFor = (year, branch = "classic") => Object.entries(SUPPLY_LINES)
-  .filter(([, s]) => (!s.from || (n(year) || 1197) >= s.from) && (!s.branch || s.branch === branch)).map(([id, s]) => ({id, ...s}));
+export const supplyLinesFor = (year, branch = "classic", land = "") => WL.forLand(Object.entries(SUPPLY_LINES)
+  .filter(([, s]) => (!s.from || (n(year) || 1197) >= s.from) && (!s.to || (n(year) || 1197) <= s.to) && (!s.branch || s.branch === branch)).map(([id, s]) => ({id, ...s})), land);
 
 /** Foraging difficulty (Spoils of War p. 40). */
 export const FORAGE_LAND = {4: "Rich farmland at harvest", 5: "Good farmland", 6: "Summer country", 7: "Poor or winter country", 8: "Land already stripped", 9: "A stripped desert"};
@@ -183,7 +188,10 @@ export function normCampaign(c) {
 }
 /** A fresh campaign for a siege, its walls from where the garrison stands. */
 export function blankCampaign(battle) {
-  return normCampaign({wall: {type: WALL_OF_POSITION[battle?.sides?.[1]?.position] ?? ""}, stores0: 14});
+  const pos = battle?.sides?.[1]?.position;
+  // B5907: a walled town or castle in a land with walls of its own starts with them
+  const own = battle?.land ? WL.landWall(battle.land, pos, battle.year) : null;
+  return normCampaign({wall: {type: own ?? WALL_OF_POSITION[pos] ?? ""}, stores0: 14});
 }
 
 /** The walls under siege: their table row, damage and how much of the breach clock that damage fills. */

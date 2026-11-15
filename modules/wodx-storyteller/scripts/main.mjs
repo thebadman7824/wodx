@@ -229,7 +229,7 @@ Hooks.once("ready", () => {
     wills: {of: Wills.willOf, save: Wills.saveWill, open: Wills.willDialog, estate: Wills.estateOf, law: Wills.lawAt, kin: Wills.kinOf, rules: WillRules},
     ledger: {open: () => Led.LedgerApp.open(), state: Led.ledger, save: Led.saveEntry, remove: Led.removeEntry, status: Led.setStatus, veil: Led.moveVeil, checkDue: Led.checkDue, heirOf: Led.heirOf, breach: Led.onBreach, syncTraits: Led.syncTraits},
     beatsDialog: A.beatsDialog, endSessionDialog: A.endSessionDialog, editBeat: A.editBeat, placesDialog: A.placesDialog, TrackerClass: A.TrackerClass,
-    setup: {open: Setup.openSetup, run: Setup.runSetup, have: Setup.have, enableModules: Setup.enableModules},
+    setup: {open: Setup.openSetup, run: Setup.runSetup, have: Setup.have, enableModules: Setup.enableModules, refreshPrimer: Setup.refreshPrimer, refreshAbroad: Setup.refreshAbroad},
     builder: {open: Builder.openBuilder, plan: Builder.plan, run: Builder.runStep, again: Builder.rerunStep, undo: Builder.undoStep, runAll: Builder.runAll, record: Builder.record, recipe: Builder.recipe, recipes: Builder.RECIPES, layWays: Builder.layWays, takeBackWays: Builder.takeBackWays},
     night: {pacing: Night.pacingNow, draw: Night.drawNight, propose: Night.proposeNight, approve: Night.approveNight, dialog: Night.nightDialog, now: Night.nightNow, layers: Night.layersInPlay, road: Night.roadEncounter, place: Night.placeEncounter, placeCard: Night.placeCard, placeFrom: Night.placeFromCard, peopleIn: Night.N.peopleIn},
     aid: {draw: Night.drawAid, propose: Night.proposeAid, approve: Night.approveAid, dialog: Night.aidDialog, fragments: Night.fragmentsFor, makeItem: Night.makeAidItem},

@@ -50,6 +50,18 @@ const send = sig => { post(sig).catch(e => console.error(`${MOD} | signals`, e))
 
 /* ---- What the hooks say, as signals ---- */
 
+/**
+ * World timeline news (B5925) only makes a signal when it is heard here and fresh: news from the far side of the world,
+ * or a year old by the time a time skip passes it, is no thread for a story here.
+ */
+function quietNews(ev) {
+  if ( !String(ev.id).startsWith("wh-") ) return false;
+  const api = chron()?.events;
+  try { if ( api?.heard && !api.heard(ev) ) return true; } catch (e) { /* heard */ }
+  const year = Number(chron()?.eras?.currentYear?.()) || 0;
+  return !!year && Number(ev.year) < year - 1;
+}
+
 /** Each listener: hook name and a function from its payload to a signal (or null). Exported for the gate. */
 export const LISTEN = {
   wodxFightStarted: ({combat} = {}) => {
@@ -65,10 +77,11 @@ export const LISTEN = {
   },
   wodxCultFormed: ({cult, founder} = {}) => ({key: `cult:${idOf(cult)}`, kind: "cult", weight: 2, what: `${cult?.name ?? "A cult"} gathers`, who: nameOf(founder), from: "cults"}),
   wodxCultNoticed: ({cult, band} = {}) => ({key: `cult:${idOf(cult)}`, kind: "cult", weight: band === "moved" ? 3 : 2, what: `${cult?.name ?? "A cult"} is ${band}`, from: "cults"}),
+  wodxCaptive: ({actor, name, factionName, placeName, text} = {}) => ({key: `captive:${actor}`, kind: "rumour", about: actor, weight: 2, who: name, where: placeName ?? "", what: text || `${name ?? "Someone"} is held prisoner${factionName ? ` by ${factionName}` : ""}`, from: "npc"}),
   wodxArrest: ({actor, name, region} = {}) => ({key: `arrest:${actor}`, kind: "arrest", about: actor, region, weight: 2, who: name, what: `${name ?? "Someone"} is arrested`, from: "law"}),
   wodxVerdict: ({actor, name, region, guilty} = {}) => ({key: `trial:${actor}`, kind: "trial", about: actor, region, weight: guilty ? 3 : 2, who: name, what: guilty ? "Found guilty" : "Set free", from: "law"}),
   wodxSentence: ({actor, region, mark} = {}) => ({key: `law:${actor}`, kind: "law", about: actor, region, weight: 2, what: `Sentenced${mark ? `: ${mark?.label ?? mark}` : ""}`, from: "law"}),
-  wodxEventFired: (ev = {}) => (ev?.id ? {key: `event:${ev.id}`, kind: "event", region: String(ev.region ?? ""), weight: 2, what: ev.summary || ev.name || "", from: "events"} : null),
+  wodxEventFired: (ev = {}) => (ev?.id && !quietNews(ev) ? {key: `event:${ev.id}`, kind: "event", region: String(ev.region ?? ""), weight: 2, what: ev.summary || ev.name || "", from: "events"} : null),
   wodxTown: ({town, kind, text, big, name, region} = {}) => ({key: `town:${town}:${kind}`, kind: "town", region, weight: big ? 3 : 1, where: name, what: text, from: "towns"}),
   wodxGrudgeMove: ({npc: n, character, move} = {}) => ({key: `grudge:${idOf(n)}:${idOf(character)}`, kind: "grudge", about: idOf(character), weight: 2, who: nameOf(n), what: String(move?.label ?? move?.kind ?? move ?? "A grudge moves"), from: "memory"}),
   wodxBattle: ({battle, step} = {}) => ({key: `war:${idOf(battle) || battle?.key || "battle"}`, kind: "war", region: String(battle?.region ?? ""), weight: 2, what: battle?.name ?? "A battle", where: battle?.where ?? "", from: "battles"}),

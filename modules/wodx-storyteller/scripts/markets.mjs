@@ -12,7 +12,8 @@
  */
 import * as MK from "./market-rules.mjs";
 import * as Money from "./money.mjs";
-import {MOD, esc, isActiveGM} from "./core.mjs";
+import * as GP from "./goods-place-rules.mjs";
+import {MOD, esc, isActiveGM, chron} from "./core.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 
 let KINDS = {};
@@ -60,9 +61,15 @@ async function editMarket(id = null) {
   const st = state();
   const m = id ? MK.marketById(st, id) : MK.normMarket({name: "New market"}, kindIds());
   if ( !m ) return;
+  await Money.goodsList();
   const scenes = game.scenes.contents;
   const sceneRows = scenes.map(s => `<li><label><input type="checkbox" name="scene.${s.id}"${m.scenes.includes(s.id) ? " checked" : ""}> ${esc(s.name)}</label></li>`).join("");
-  const kindRows = Object.entries(KINDS).map(([k, label]) => `<tr><td>${esc(label)}</td>
+  // the land's trade (B5932): what this market's way of life has cheap and pays dear for, on top of the index
+  const here = Money.placeHere({market: m}), year = Number(chron()?.eras?.currentYear?.()) || 0;
+  const trade = here ? GP.tradeOf(here.way, year) : null;
+  const tradeMark = k => { const f = here ? GP.landTrade(k, here.way, year) : 1; return f === 1 ? "" : ` <small class="wst-land-trade">(the land's trade x${f})</small>`; };
+  const tradeLine = trade ? `<p class="hint wst-land-trade-line">The land's own trade: ${esc(trade.cheap.map(k => String(KINDS[k] ?? k).toLowerCase()).join(", "))} cheap, ${esc(trade.dear.map(k => String(KINDS[k] ?? k).toLowerCase()).join(", "))} dear, on top of the index below. Goods brought from far off cost two or three times as much, the land's own goods a quarter less. House rules.</p>` : "";
+  const kindRows = Object.entries(KINDS).map(([k, label]) => `<tr><td>${esc(label)}${tradeMark(k)}</td>
     <td><input type="number" name="index.${k}" min="${MK.INDEX.min}" max="${MK.INDEX.max}" step="0.05" value="${MK.indexOf(m, k)}" aria-label="${esc(label)} price index"></td>
     <td><select name="supply.${k}" data-fixed aria-label="${esc(label)} supply">${opt(Object.fromEntries(Object.entries(MK.SUPPLY).map(([s, v]) => [s, v.label])), MK.supplyOf(m, k))}</select></td></tr>`).join("");
   const npcs = game.actors.filter(a => !a.hasPlayerOwner).sort((a, b) => a.name.localeCompare(b.name));
@@ -91,7 +98,7 @@ async function editMarket(id = null) {
       <h4>Trade and the week</h4><p class="hint">Each week linked markets trade: goods go where they are short, and prices meet part way (more in an age of railways). A market cut off (a siege, a quarantine) is left as it is by the weekly turn. House rules.</p>
       ${others.length ? `${others.length > 5 ? searchBox("ul.wst-market-links", "Search markets…", "Search markets") : ""}<div class="wst-scroll" style="max-height:120px"><ul class="wst-market-links">${linkRows}</ul></div>` : "<p class=\"hint\">No other market to trade with yet.</p>"}
       <label><input type="checkbox" name="cut"${m.cut ? " checked" : ""}> Cut off: the weekly turn leaves this market alone</label>
-      <h4>Prices and supply by category</h4><p class="hint">Price index: 1 is normal, 0.5 a glut, 3 a famine price. Supply thins or fills what traders restock: None, Short, Normal or Plenty. House rules.</p>
+      <h4>Prices and supply by category</h4><p class="hint">Price index: 1 is normal, 0.5 a glut, 3 a famine price. Supply thins or fills what traders restock: None, Short, Normal or Plenty. House rules.</p>${tradeLine}
       <div class="wst-scroll" style="max-height:260px"><table class="wst-market-kinds" data-fixed><thead><tr><th>Category</th><th>Price index</th><th>Supply</th></tr></thead><tbody>${kindRows}</tbody></table></div>
       <h4>Traders</h4><p class="hint">An NPC and the container that is their shop (a container with a stock list). The NPC's purse is the till: restocking costs half price.</p>
       ${npcs.length > 5 ? searchBox("table.wst-market-traders select", "Search NPCs…", "Search NPCs") : ""}<div class="wst-scroll" style="max-height:200px"><table class="wst-market-traders"><thead><tr><th>NPC</th><th>Shop</th><th>Till</th><th>Shop is</th></tr></thead><tbody>${traderRows}</tbody></table></div>

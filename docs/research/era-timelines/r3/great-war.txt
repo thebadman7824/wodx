@@ -1,5 +1,5 @@
 # The Great War, 1914 to 1918. year[-month]|kind|lines|region|place|tags|title|text
-1914-6|H|mor|EU|Sarajevo|terror,death|Sarajevo|In Sarajevo a young Bosnian Serb nationalist kills the heir to the Austrian throne, Franz Ferdinand, and his wife Sophie when their car stops on a side street.
+1914-6|H|mor|EU|Sarajevo|terror,death|Sarajevo|In Sarajevo a young Bosnian Serb nationalist kills the heir to the Austrian throne, Franz Ferdinand, and Sophie, Duchess of Hohenberg, when their car stops on a side street.
 1914-6|H|mor|MO|Konopiste|death,crown|Konopiste falls silent|The archduke's estate at Konopiste in Bohemia, with its rose garden and hunting trophies, is left without a master.
 1914-7|H|mor|EU|Vienna|war,law|The ultimatum to Serbia|Austria-Hungary sends Serbia demands written to be refused, and declares war when they are not all met.
 1914-7|H|mor|EU|Belgrade|war,siege|Belgrade shelled|Austrian monitors on the Danube shell Belgrade the night after war is declared.
@@ -8,7 +8,7 @@
 1914-8|H|mor|EU|London|war|Britain enters the war|Britain declares war when Germany invades Belgium, over a treaty the German chancellor calls a scrap of paper.
 1914-8|H|mor,all|MO|Brno|war|Moravia mobilises|The regiments of Brno, Olomouc, Kromeriz and Jihlava entrain for Galicia and Serbia amid flags and quiet dread.
 1914-8|H|mor|EU|Leuven|massacre,fire|The burning of Leuven|German troops burn the university library of Leuven and shoot civilians; the rape of Belgium becomes a byword.
-1914-8|H|mor|EU|Tannenberg|battle|Tannenberg|Hindenburg and Ludendorff encircle a Russian army in East Prussia; its general shoots himself.
+1914-8|H|mor|EU|Tannenberg|battle|Tannenberg|Hindenburg and Ludendorff encircle a Russian army in East Prussia; its general Samsonov dies by suicide.
 1914-8|H|mor|EU|Lorraine|battle|The Battle of the Frontiers|French infantry in red trousers attack into Lorraine and the Ardennes and lose over a quarter of a million men in weeks.
 1914-8|H|mor|EU|Mons|battle|Mons|The British Expeditionary Force meets the Germans at Mons and falls back; tales of the Angels of Mons follow.
 1914-8|W|wra,mag|EU|Mons|occult,battle|The Angels of Mons|The house reading lets soldiers' tale of the Angels of Mons be a real working, though no Tradition will say whose.
@@ -150,7 +150,7 @@
 1916|H|mor|MO|Brno|money,famine|The Brno hunger|Brno's workers queue for bread; the mills switch to army cloth, and women replace men in the factories.
 1916|H|mor|AS|Turkestan|uprising,massacre|The Central Asian revolt|Kazakhs and Kyrgyz rise against conscription for labour; Russian reprisals drive hundreds of thousands into China.
 1916|W|wer|AS|Issyk-Kul|uprising,occult|The steppe Garou|The house reading has the steppe Garou ride with the rebels against the tsar's labour draft.
-1916|H|mor|AS|Beijing|crown,death|Yuan Shikai's empire|Yuan Shikai declares himself emperor of China, the provinces revolt, and Yuan dies within months.
+1916|H|mor|AS|Beijing|crown,death|Yuan Shikai's empire|Yuan Shikai proclaims a new empire in China, the provinces revolt, and Yuan dies within months.
 1916|H|mor|EU|Zurich|art|Dada|Refugee artists open the Cabaret Voltaire in Zurich and start Dada.
 1916|W|mag|EU|Zurich|art,occult|Marauders in Zurich|The house reading has a Marauder loose among the Dadaists, and the Cult of Ecstasy work to keep the cabaret from going mad entirely.
 1916|H|mor|EU|Geneva|founding,law|The Czechoslovak National Council|Masaryk, Benes and Stefanik form the Czechoslovak National Council in Paris.
@@ -225,7 +225,7 @@
 1918-3|H|mor|EU|Picardy|battle|The Spring Offensive|Germany throws its armies from the east at the British in Picardy and gains forty miles in days.
 1918-3|H|mor|EU|Paris|war,science|The Paris gun|A German gun seventy-five miles away shells Paris; one shell kills eighty worshippers in a church on Good Friday.
 1918-3|H|mor|EU|Etaples|plague|The first flu wave|A mild influenza spreads through the crowded army camps in France, among them the great base at Etaples.
-1918-4|H|mor|EU|Lys|battle|The Lys|Germany attacks again on the Lys; Haig orders his men to fight with their backs to the wall.
+1918-4|H|mor|EU|Lys|battle|The Lys|Germany attacks again on the Lys; Haig orders the British army to fight with their backs to the wall.
 1918-4|H|mor|EU|Zeebrugge|sea,war|The Zeebrugge raid|The Royal Navy tries to block the submarine port at Zeebrugge with sunken ships.
 1918-4|H|mor|EU|Somme|death,war|The Red Baron shot down|Manfred von Richthofen is shot down and killed over the Somme.
 1918-4|H|mor|EU|Prague|founding,law|The oath of the nation|Czech writers and deputies swear an oath in Prague to stand together until independence.
@@ -239,7 +239,7 @@
 1918-6|H|mor|EU|Piave|battle|The Piave|Austria's last offensive fails on the flooded Piave.
 1918-6|H|mor|MO|Brno|money,famine|The flour runs out|Brno and Ostrava get almost no flour in the summer of 1918; workers strike and the army is sent in.
 1918-6|H|mor|EU|Paris|founding,law|France recognises the Czechs|France recognises the Czechoslovak National Council as the basis of a future government.
-1918-7|H|mor|EU|Ekaterinburg|massacre,crown|The Romanovs shot|The Bolsheviks shoot the former tsar, his family and servants in a cellar at Ekaterinburg.
+1918-7|H|mor|EU|Ekaterinburg|massacre,crown|The Romanovs shot|The Bolsheviks shoot the former tsar, the imperial family and the servants in a cellar at Ekaterinburg.
 1918-7|W|vam|EU|Ekaterinburg|crown,occult|The Ventrue and the Romanovs|The house reading has the old Ventrue of St Petersburg lose their ruling line in a night and blame the Brujah for it.
 1918-7|H|mor|EU|Marne|battle|The second Marne|The last German attack fails on the Marne, and the Allies strike back.
 1918-7|H|mor|EU|Kazan|war|The Czechs take Kazan|The Czech Legion takes Kazan and the Russian gold reserve.
@@ -267,7 +267,7 @@
 1918-11|H|mor|EU|Kiel|uprising,sea|The Kiel mutiny|German sailors refuse a last sortie, raise the red flag at Kiel, and revolution spreads through Germany.
 1918-11|H|mor|EU|Berlin|revolution,crown|The Kaiser goes|A republic is proclaimed in Berlin, and Wilhelm II goes into exile in the Netherlands.
 1918-11|H|mor|EU|Compiegne|treaty|The Armistice|Germany signs the armistice in a railway carriage at Compiegne; the guns stop at eleven on 11 November.
-1918-11|H|mor|EU|Vienna|crown,founding|Karl steps aside|Emperor Karl gives up his share of power in Austria; German Austria is proclaimed a republic.
+1918-11|H|mor|EU|Vienna|crown,founding|Karl steps aside|Emperor Karl gives up any share of power in Austria; German Austria is proclaimed a republic.
 1918-11|H|mor|EU|Warsaw|founding|Poland reborn|Pilsudski takes command in Warsaw, and Poland returns after a hundred and twenty-three years.
 1918-11|H|mor|EU|Prague|law,founding|Masaryk president|The new National Assembly elects Masaryk president of Czechoslovakia.
 1918-11|W|wra|EU|Flanders|death,occult|The armistice of the dead|The house reading has the Shadowlands of the Western Front left crowded with ghosts who do not believe it is over.
