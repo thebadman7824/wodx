@@ -480,3 +480,6 @@ export function rowsInUse({off = [], extra = ""} = {}) {
   const gone = new Set(off ?? []);
   return [...RIVALRIES.filter(r => !gone.has(r.id)), ...parseExtraRows(extra).rows];
 }
+
+/** B5098: a vampire in Golconda (WoDX Actions' flag) is drawn into no rivalry or feud fight (V20 pp. 299-300). */
+export const inGolconda = a => !!a?.flags?.["wodx-actions"]?.golconda;
