@@ -2986,12 +2986,14 @@ function gx() {
         api: () => API, notify: m => ui.notifications.warn(m) });
 }
 /** Find the actor, and dress the dialogs it opens in its line's look (6e) while the action runs. */
+// B6448: a bare Actor counts as {actor} (WoDX Library's prayer beads, a fomor's Gift and the gates call it so)
 const withActor = f => async (o = {}) => {
-    const a = needActor(o.actor);
+    const bare = typeof Actor !== "undefined" && o instanceof Actor;
+    const a = needActor(bare ? o : o?.actor);
     if (!a) return null;
     const prev = P.setLine(P.detectProfile(a));
     LEDGER.delete(a.id); // "what changed" counts from here
-    try { return await f(a, o); } finally { P.setLine(prev); }
+    try { return await f(a, bare ? {} : (o ?? {})); } finally { P.setLine(prev); }
 };
 
 let SXE = null;

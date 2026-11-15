@@ -59,6 +59,8 @@ export async function run() {
       {name: "Gate Holy Believer", type: "Hunter", flags: {"wodx-chronicle": {splat: "faithful"}, [AX]: {trueFaith: 3, faith: "islamic"}},
         system: {advantages: {willpower: {permanent: 6, temporary: 6}, virtues: {conscience: {permanent: 3}, selfcontrol: {permanent: 3}, courage: {permanent: 3}}}}},
       {name: "Gate Holy Demon", type: "Demon", system: {advantages: {torment: {permanent: 5, temporary: 5}, willpower: {permanent: 1, temporary: 1}}}}]);
+    // B6449: a new sheet works its Willpower out on creation (0 for a Hunter), and resisting a power costs 1
+    await hasan.update({"system.advantages.willpower.permanent": 6, "system.advantages.willpower.temporary": 6});
     const [tH, tD] = await G.tokens(scene, [{actor: hasan, x: 2, y: 3, actorLink: true}, {actor: demon, x: 2, y: 6, actorLink: true}]);
     await waitFor(() => tH?.object && tD?.object, 8000);
     // into the mosque, by a real move
