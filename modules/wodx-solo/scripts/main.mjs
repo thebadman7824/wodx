@@ -18,6 +18,7 @@
  *   the pause    a world opens paused; the seat starts it, since NPCs never act while it is paused
  *   the panel    the player's own buttons: time, travel, pause, I am stuck, the curtain (panel.mjs, 0.2.0)
  *   the tools    Storyteller tools the lone player may switch on from the panel, answered by the seat (st-tools.mjs, B4800)
+ *   arrival      a scene to land on, a character for a player with none and its token at the way in (arrival.mjs, B5140)
  *
  * It never acts in the Live world. Everything here runs on the active Storyteller's client, except the notice a
  * player gets when the seat is empty.
@@ -26,6 +27,7 @@ import * as R from "./solo-rules.mjs";
 import {NEVER_AUTO} from "../../wodx-chronicle/scripts/approvals-rules.mjs";
 import {registerPanelSettings, installPanel, panelApi} from "./panel.mjs";
 import {registerStSettings, installStTools, stApi} from "./st-tools.mjs";
+import {registerArrivalSettings, installArrival, arrivalApi} from "./arrival.mjs";
 
 const MOD = "wodx-solo";
 const CHRON = "wodx-chronicle";
@@ -252,11 +254,12 @@ Hooks.once("init", () => {
   game.settings.register(MOD, "log", {scope: "world", config: false, type: Object, default: R.blankLog()});
   registerPanelSettings();
   registerStSettings();
+  registerArrivalSettings();
 });
 
 Hooks.once("ready", () => {
   const api = {
-    rules: R, isOn, isSeat, apply, restore, panel: panelApi, st: stApi,
+    rules: R, isOn, isSeat, apply, restore, panel: panelApi, st: stApi, arrival: arrivalApi,
     log: {entries: () => (game.user.isGM ? entries() : []), add: log,
       stalls: (since = 0) => (game.user.isGM ? R.stallReport(entries(), since) : R.stallReport([], since)),
       clear: () => (game.user.isGM ? game.settings.set(MOD, "log", R.blankLog()) : null)}
@@ -272,6 +275,7 @@ Hooks.once("ready", () => {
   Hooks.on("updateUser", (u, ch) => { if ( "viewedScene" in (ch ?? {}) || ch?.active ) follow(u); });
   Hooks.on("userConnected", (u, on) => { if ( on && !u.isGM ) setTimeout(() => { unpause(`${u.name} arrived`).catch(() => {}); follow(u); }, 1500); });
   installStTools({isOn, isSeat, blocked, log, entries, get, read, findButton});
+  installArrival({isOn, isSeat, log, get});
 
   if ( game.user.isGM ) watchPlayer();
   if ( !isOn() ) return;

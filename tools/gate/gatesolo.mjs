@@ -20,6 +20,8 @@
  *    9d. Lift the curtain: the seat sends tonight's log and marks the night as seen
  *    9e. Storyteller tools (B4800): the player switches them on from the panel, sees the Storyteller's cards, gives
  *        the character the gate's item and 3 experience, opens Check the systems and What is hidden here, and switches them off
+ *    9f. arrival (B5140): the player asks to be brought in, and the seat answers with the character's token; the panel
+ *        offers no Make my character to a player who has one
  *   "finish" (Gamemaster Test):
  *    10. a fight between the character and the stranger: the character's turn is ended as a player would, and the
  *        stranger must then act with nobody at the Storyteller's hand
@@ -27,6 +29,8 @@
  *   10c. I am stuck, free my token: the character's token goes to the scene's way in
  *   10d. the switch sets fights to end by themselves
  *   10e. the tools stay safe: a Storyteller's ask is refused, they are off after the player's run, two players block them
+ *   10f. arrival makes a character (B5140): for a second gate player with none, the seat makes a Vampire the player
+ *        owns, assigns it, and puts its linked token at the landing's way in (the gate scene, chosen for the run)
  *    11. the stall report holds what waited
  *    12. the switch off: every setting and the standing approvals are back exactly as they were
  *    13. clean up; the clock has not moved
@@ -105,6 +109,9 @@ async function setup() {
   // The player plays the gate's character for the run, so the panel's asks never reach a real testbed character
   ids.userCharacter = user.character?.id ?? null;
   await user.update({character: pc.id});
+  // Arrival lands on the gate's scene for the run (B5140), never on a testbed map
+  ids.landingBefore = read(MOD, "landing");
+  if ( ids.landingBefore !== undefined ) await game.settings.set(MOD, "landing", scene.id);
   await game.settings.set(MOD, "wait", 2);
   await game.settings.set(MOD, "act", true);
   const WAIT = 2000 + 2500;
@@ -253,6 +260,17 @@ async function player(ids) {
     ok("9e. Storyteller tools", toggleShown && on && tools && eyes && eyesWin && given && xpGiven && check && hid && off,
       {toggleShown, on, tools, eyes, cards: api.st.cards().length, eyesWin, given, xpGiven, xpWas, check, checkRows, hidden: hid, off});
   });
+  await step("9f. arrival", async () => {
+    if ( !S()?.arrival ) return ok("9f. arrival", false, {error: "no arrival in this version"});
+    let got = null;
+    Hooks.once("wodxSolo.arrived", d => { got = d; });
+    S().panel.ask("ask.arrive");
+    const came = await until(() => !!got, 10000);
+    const el = foundry.applications.instances?.get?.("wodx-solo-panel")?.element;
+    const offersMake = !!el?.querySelector?.("[data-action=arrive]");
+    ok("9f. arrival", came && got?.tokenId === ids.tokens?.[0] && got?.sceneId === ids.scene && !offersMake,
+      {got: got ? {sceneId: got.sceneId, tokenId: got.tokenId, made: got.made} : null, offersMake});
+  });
   return steps;
 }
 
@@ -338,6 +356,24 @@ async function finish(ids, playerSteps) {
     ok("10e. the tools stay safe", gmRefused && offAfterPlayer && r === false, {gmRefused, offAfterPlayer, twoPlayers: r});
   });
 
+  await step("10f. arrival makes a character", async () => {
+    const ar = S()?.arrival;
+    if ( !ar ) return ok("10f. arrival makes a character", false, {error: "no arrival in this version"});
+    const second = await User.create({name: `${TAG} newcomer`, role: CONST.USER_ROLES.PLAYER});
+    ids.users = [second.id];
+    const actor = await ar.make(second.id, {name: `${TAG} newcomer's character`, line: "vampire"});
+    if ( actor?.id ) (ids.actors ??= []).push(actor.id);
+    const scene = game.scenes.get(ids.scene);
+    const tok = scene?.tokens?.find(t => t.actorId === actor?.id);
+    const want = rules.wayIn({initial: scene.initial, width: scene.width, height: scene.height, padding: scene.padding, grid: {size: scene.grid?.size}}, 1);
+    const again = await ar.make(second.id, {name: "twice", line: "mage"});
+    const twice = game.actors.filter(a => a.name === "twice").length;
+    for ( const a of game.actors.filter(a => a.name === "twice") ) await a.delete();
+    ok("10f. arrival makes a character", actor?.type === "Vampire" && actor.testUserPermission(second, "OWNER") && game.users.get(second.id)?.character?.id === actor.id
+      && !!tok && tok.actorLink && tok.x === want.x && tok.y === want.y && twice === 0,
+      {type: actor?.type, owner: actor?.testUserPermission?.(second, "OWNER"), assigned: game.users.get(second.id)?.character?.id === actor?.id, token: tok ? {x: tok.x, y: tok.y, linked: tok.actorLink} : null, want, secondTime: again ? "brought in" : null, twice});
+  });
+
   await step("11. the stall report", async () => {
     const rep = S().log.stalls(ids.since);
     R.stallReport = rep;
@@ -371,6 +407,8 @@ async function cleanup(ids, R) {
     const pu = game.users.get(ids?.user);
     if ( pu && ids && "userCharacter" in ids ) await pu.update({character: ids.userCharacter ?? null});
     for ( const id of ids?.actors ?? [] ) await game.actors.get(id)?.delete();
+    for ( const id of ids?.users ?? [] ) await game.users.get(id)?.delete();
+    if ( ids?.landingBefore !== undefined ) await game.settings.set(MOD, "landing", ids.landingBefore ?? "");
     for ( const id of ids?.items ?? [] ) await game.items.get(id)?.delete();
     if ( ids && "stBefore" in ids && game.settings.settings.has(`${MOD}.st`) ) await game.settings.set(MOD, "st", ids.stBefore ?? {on: false, userId: null, at: 0});
     const since = ids?.since ?? Date.now();
@@ -379,7 +417,7 @@ async function cleanup(ids, R) {
     const q = Q()?.pending?.().filter(p => String(p.title ?? "").startsWith(TAG)) ?? [];
     for ( const p of q ) await Q().decide(p.id, "reject");
     if ( ids && game.time.worldTime !== ids.t0 ) { R.notes.push(`the clock had moved by ${game.time.worldTime - ids.t0} s; put back`); await game.time.advance(ids.t0 - game.time.worldTime); }
-    const left = game.actors.filter(a => a.name.startsWith(TAG)).length + game.scenes.filter(s => s.name.startsWith(TAG)).length + game.items.filter(i => i.name.startsWith(TAG)).length;
+    const left = game.actors.filter(a => a.name.startsWith(TAG)).length + game.scenes.filter(s => s.name.startsWith(TAG)).length + game.items.filter(i => i.name.startsWith(TAG)).length + game.users.filter(u => u.name.startsWith(TAG)).length;
     ok("13. clean up", left === 0 && (!ids || game.time.worldTime === ids.t0) && !read(MOD, "on"), {left, clock: ids ? game.time.worldTime - ids.t0 : null});
   } catch (e) { ok("13. clean up", false, {error: e.message}); }
 }
