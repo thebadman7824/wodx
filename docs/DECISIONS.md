@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5980
+Next free block: B6000
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -325,6 +325,7 @@ Next free block: B5980
 | B5950-B5959 | Weather history by part of the world (used B5950-B5955) | Atmosphere |
 | B5960-B5969 | Cults that give what they promise (used B5960-B5964) | NPC |
 | B5970-B5979 | NPCs make their own wonders (used B5970-B5974) | Storyteller |
+| B5990-B5999 | Say or Do: full sentences and grieving (Ben's picks on law sentences and heartbreak) (used B5990-B5992) | Chronicle, NPC, Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9897,3 +9898,18 @@ Reverse: default false.
 api.wonders.npcMonth({force, rand, only}) runs the look now (force does not move the month's mark), for chosen actors.
 
 Reverse: drop the option.
+
+## B5990. Time served takes the character off the map (2026-11-15)
+WoDX Chronicle. Prison, hard labour and the other time sentences hide every token of the character on every scene and keep a lawAway flag with the year the time ends. When the clock reaches that year, or the sentence is pardoned, the tokens come back and the table is told. Replaces the Storyteller-only time served of B5823.
+
+Reverse: remove sendAway, comeBack and releaseServed in law-punish.mjs.
+
+## B5991. A brand shows; heartbreak takes a social die (2026-11-15)
+WoDX Chronicle, NPC, Actions. A brand sentence puts a Branded status on the character's token until every brand is pardoned. A broken heart that is neither borne nor botched leaves Grieving for seven days: one die fewer on social rolls (Actions reads the new socialDice mod), replacing the +1 difficulty Heartsick of B5826.
+
+Reverse: remove brand() in law-punish.mjs; put Heartsick back in hearts.mjs; drop socialDice.
+
+## B5992. The law comes for the condemned (2026-11-15)
+WoDX Chronicle, Storyteller. A death sentence holds the condemned and calls WoDX Storyteller's raid (reach.lawCome) to arrest them where they stand; the player chooses to go or resist.
+
+Reverse: remove the lawCome call in carryOut.
