@@ -33,6 +33,7 @@ import {registerStSettings, installStTools, stApi} from "./st-tools.mjs";
 import {registerArrivalSettings, installArrival, arrivalApi} from "./arrival.mjs";
 import {registerCarrySettings, installCarry, carryApi} from "./companions.mjs";
 import {registerWorldSettings, installWorld, worldApi} from "./world.mjs";
+import {installCard, cardApi} from "./card.mjs";
 
 const MOD = "wodx-solo";
 const CHRON = "wodx-chronicle";
@@ -269,7 +270,7 @@ Hooks.once("init", () => {
 
 Hooks.once("ready", () => {
   const api = {
-    rules: R, isOn, isSeat, apply, restore, panel: panelApi, st: stApi, arrival: arrivalApi, carry: carryApi, world: worldApi,
+    rules: R, isOn, isSeat, apply, restore, panel: panelApi, st: stApi, arrival: arrivalApi, carry: carryApi, world: worldApi, card: cardApi,
     log: {entries: () => (game.user.isGM ? entries() : []), add: log,
       stalls: (since = 0) => (game.user.isGM ? R.stallReport(entries(), since) : R.stallReport([], since)),
       clear: () => (game.user.isGM ? game.settings.set(MOD, "log", R.blankLog()) : null)}
@@ -288,6 +289,7 @@ Hooks.once("ready", () => {
   installArrival({isOn, isSeat, log, get});
   installCarry({isOn, isSeat, log, get});
   installWorld({isOn, isSeat, log, get});
+  installCard({isOn, isSeat, log, get});
 
   if ( game.user.isGM ) watchPlayer();
   if ( !isOn() ) return;

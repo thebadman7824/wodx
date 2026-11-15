@@ -1628,3 +1628,4 @@ Ben approved every entry that was waiting for review ("Approve on all pending re
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
+| 2026-11-15 | The Lone Chronicle, step 3: card scenes for places with no map (B6040 to B6044) | The country map's towns that stand in the character's year and have no scene; a card scene made once per town (dark ground, grid, a locked card drawing with the town, year and hour, weather, land, river, woods and road), reached by a Travel trip over the country map; Look around costs half an hour and may bring a town encounter onto the scene | Take "places" off PANEL in solo-rules.mjs, or edit cardLines and LOOK_MINUTES in card-rules.mjs |
