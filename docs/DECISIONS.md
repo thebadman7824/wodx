@@ -343,6 +343,7 @@ Next free block: B6500
 | B6240-B6249 | Load less on players' machines, and the Monday decisions archive (stale design desk 2026-11-15 f1, f2) (used B6240-B6243) | Chronicle, Storyteller, Creation, NPC, Actions, tools |
 | B6250-B6259 | Names follow each year's customs (Improvement Desk nm1) (used B6250-B6253) | Creation, NPC |
 | B6260-B6269 | Real recorded cues: Freesound CC0/CC BY sounds for dawn, dusk, notice, birdsong, cock-crow and heartbeat, by era and faith (used B6260-B6263) | Atmosphere |
+| B6300-B6309 | Every line level with vampires in shared modules (Actions, Combat) (used B6300-B6308) | Actions, Combat |
 | B6350-B6359 | gate kit yearAtLeast, gatearms and gateplayerextras (used B6350-B6353) | tools (gates) |
 | B6490-B6499 | pc queue ageing (used B6490) | tools (pcq) |
 <!-- decision-index:end -->
@@ -10657,6 +10658,51 @@ WoDX Atmosphere. common/sounds/heart.ogg holds one whole beat; it plays once per
 generated thump plays until the file is decoded and wherever there is none.
 
 Reverse: delete heart.ogg.
+
+## B6300. The Kindred menu's line-agnostic tools go on every line's menu (2026-11-15)
+WoDX Actions. Downtime on Backgrounds, healing with time (lines that heal as the living do and lacked it: Changeling, Fae of the Dark Ages, Demon, Mummy, Orpheus), Seduction (Werewolf, Mage, Dark Ages Mage) and the Storyteller's New night, End of story, Witnesses and Sky and sun are added to each line's menu from one table (profile-menus SHARED_TOOLS and SHARED_FOR). Spirits and beasts get only the Storyteller's tools. Kept Kindred-only: Hunt, Feed, Spend blood, Blood Oath, Prestation, Blood Hunt, Golconda, sun and haven, torpor, diablerie, the Road, daytime pool caps.
+
+Reverse: empty SHARED_FOR in modules/wodx-actions/scripts/profile-menus.js.
+
+## B6301. The witness window is named for the one seen (2026-11-15)
+WoDX Actions. The same breach records already serve every line's secret (witness-rules SECRETS); the window is titled Masquerade for a Kindred and Witnesses for anyone else.
+
+Reverse: set the title back to "Masquerade" in kindred.js masquerade().
+
+## B6302. A Kuei-jin is staked by its Chi aspect (2026-11-15)
+WoDX Combat. Kindred of the East (pdf pp. 11, 73): a stake does not paralyze a Kuei-jin as such; Yin is held by wood as a Kindred is, Yang by a metal blade or shaft at least a foot long through the heart (not bullets or arrows), Balance by neither. A long metal weapon is read from the weapon's name (rules LONG_METAL). A Kuei-jin whose aspect is not yet set follows the Cainite rule.
+
+Reverse: drop the chi and metal arguments at the followOn call in modules/wodx-combat/scripts/main.js.
+
+## B6303. A new story rolls Garou Rage on one die (2026-11-15)
+WoDX Actions. DA:W p. 91 and W20 p. 145: at the start of each story the player rolls a die for the character's Rage. End of story does it for every shapechanger whose Rage comes from the moon (Moon Rage setting on), capped at permanent Rage; the books let the Storyteller go past it, which stays a hand edit.
+
+Reverse: remove the gx().newStory line in endStory (modules/wodx-actions/scripts/main.js).
+
+## B6304. The long roads out for the other lines (2026-11-15)
+WoDX Chronicle (roads.mjs, roads-rules.mjs), setting podRoads, on by default. Transcendence for wraiths, the Road Back for the Kuei-jin and Redemption for demons, shown in the feature window beside Golconda. Every end goes through the approval queue, so a lone player's automation level decides as for any proposal; each is asked once per state.
+
+Reverse: turn off "Transcendence, the Road Back and Redemption" in WoDX Chronicle's settings.
+
+## B6305. Transcendence: the Eight Truths (2026-11-15)
+Wraith 20th pp. 297-300: there is no mechanical path; the Eight Truths of the Tomes of Golden Light are the steps, each judged by the Storyteller (a player asks through the queue). A rise in permanent Angst undoes Conquer the Shadow. With all eight and permanent Angst below permanent Willpower the Storyteller may let the wraith go: the token flares and fades from every map, flag wodx-actions.transcended, and New night and End of story leave them out. The Storyteller can bring them back from the feature window. The Angst-below-Willpower test is a house reading of "conquer the Shadow".
+
+Reverse: change transcendReady in roads-rules.mjs.
+
+## B6306. The Road Back: bodhisattva and arhat (2026-11-15)
+Kindred of the East pdf pp. 30-31: the road is the Dharma on the sheet. At Dharma 9 the Storyteller may recognise a bodhisattva (the heading's number is unreadable in the scan; 9 chosen, after Ancestor at 7); below 9 the rank is lost. At Dharma 10 a bodhisattva may become an arhat and leave the chronicle as a transcended wraith does.
+
+Reverse: change BODHISATTVA_DHARMA in roads-rules.mjs.
+
+## B6307. The bodhisattva's communion with the spirit worlds (2026-11-15)
+WoDX Actions kote.js: a bodhisattva's Ghostsight and spirit speech cost no Chi and need no roll. Ghostsight that works (for anyone) sets flag yinSight for an hour of the clock. WoDX Otherworlds veil-looks reads both (sightsOf): the Shroud mist shows where it is thin, and a bodhisattva also sees the Gauntlet shimmer.
+
+Reverse: drop the sights argument in veil-looks.mjs veilNow.
+
+## B6308. Redemption: an angel until Torment rises (2026-11-15)
+Demon: The Fallen p. 160: permanent Torment 0 lets the Storyteller approve redemption (flag wodx-actions.redeemed, a soft light on the token). Holy ground and objects do not harm the redeemed (demon.js holy); the first Torment gained ends it and puts the light out. That holy ground spares an angel, and that a sin ends grace, are house readings.
+
+Reverse: drop the redeemed checks in modules/wodx-actions/scripts/demon.js.
 
 ## B6350. The gate kit moves an early clock to a year a gate needs (2026-11-15)
 Gates. The kit gains yearAtLeast(min): when the clock stands before the year given, the run moves it to 1995 and notes
