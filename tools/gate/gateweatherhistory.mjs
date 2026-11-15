@@ -55,12 +55,12 @@ export async function run() {
       game.modules.get(AT).api.open();
       const want = today?.eraHard || today?.eraAge || "";
       const found = await waitFor(() => {
-        const el = document.querySelector(".watmo-era");
+        const el = document.querySelector(".watmo-body .watmo-era");
         return want ? !!el && el.textContent.includes(want.slice(0, 20)) : !!document.querySelector(".watmo-card, .window-app, .application");
       }, 8000);
       G.ok("5. the window names the age where the scene stands", !!today && found, {want, viewed: globalThis.canvas?.scene?.name});
       for ( const w of [...(foundry.applications?.instances?.values?.() ?? [])] ) {
-        if ( w?.element?.querySelector?.(".watmo-era") ) await w.close?.();
+        if ( w?.element?.querySelector?.(".watmo-body") ) await w.close?.();
       }
     });
   } finally {
