@@ -51,7 +51,8 @@ export async function run() {
       const p = crook.getFlag(MOD, "paused");
       G.ok("1. off the maps for the sentence", p?.reason === "sentence" && p.until > t0 + 300 * 86400 && !crook.getFlag(MOD, "duties")?.law, {p});
       await AC().onSentence({actor: crook.id, mercy: true});
-      G.ok("1. let go: home first", !crook.getFlag(MOD, "paused") && crook.getFlag(MOD, "duties")?.["home-first"]?.place === R("Home A"));
+      G.ok("1. let go: home first", !crook.getFlag(MOD, "paused") && crook.getFlag(MOD, "duties")?.["home-first"]?.place === R("Home A"),
+        {paused: crook.getFlag(MOD, "paused") ?? null, d: crook.getFlag(MOD, "duties") ?? null});
     });
 
     /** A fight with these tokens in it, deleted: WoDX NPC's deleteCombat hook does the aftercare, as when a fight ends in play. */
@@ -84,13 +85,17 @@ export async function run() {
       Hooks.callAll("wodxFed", {by: {uuid: groom.uuid, name: groom.name}, vessel: {uuid: vessel.uuid, name: vessel.name}, drunk: 3, willing: false, fought: false});
       const pb = () => sc.tokens.get(tVesselU.id).actor;
       Hooks.callAll("wodxFed", {by: {uuid: groom.uuid, name: groom.name}, vessel: {uuid: pb().uuid, name: pb().name}, drunk: 1, willing: false, fought: false});
-      await waitFor(() => dazed(vessel) && dazed(pb()), 6000);
+      // the wodxFed hook is not awaited: onFed sets the Daze first, then the kissed flag, then the duty, so wait for the end state
+      const resting = () => vessel.getFlag(MOD, "duties")?.kissed?.place === R("Home B") && !!vessel.getFlag(MOD, "kissed");
+      await waitFor(() => dazed(vessel) && dazed(pb()) && resting() && !!pb().getFlag(MOD, "kissed"), 6000);
       G.ok("3. Dazed", dazed(vessel) && dazed(pb()), {linked: dazed(vessel), unlinked: dazed(pb())});
-      G.ok("3. rests at home until morning", vessel.getFlag(MOD, "duties")?.kissed?.place === R("Home B") && !!vessel.getFlag(MOD, "kissed"));
+      G.ok("3. rests at home until morning", resting(), {kissed: vessel.getFlag(MOD, "kissed") ?? null, duty: vessel.getFlag(MOD, "duties")?.kissed ?? null, home: R("Home B")});
       // the clock runs past the Daze (ten minutes for a light drink): WoDX NPC's updateWorldTime hook lifts it
       await game.time.advance(20 * 60);
-      await waitFor(() => !dazed(pb()), 6000);
-      G.ok("3. an unlinked passer-by's Daze lifts on the clock", !dazed(pb()) && !pb().getFlag(MOD, "kissed"), {stillDazed: dazed(pb())});
+      // kissTick lifts the Daze, then clears the flag: wait for both
+      await waitFor(() => !dazed(pb()) && !pb().getFlag(MOD, "kissed"), 6000);
+      G.ok("3. an unlinked passer-by's Daze lifts on the clock", !dazed(pb()) && !pb().getFlag(MOD, "kissed"),
+        {stillDazed: dazed(pb()), kissed: pb().getFlag(MOD, "kissed") ?? null, now: game.time.worldTime});
     });
 
     await G.step("4. mourning", async () => {
@@ -103,14 +108,14 @@ export async function run() {
 
     await G.step("5. a robber's night out", async () => {
       await AC().spree(robber);
-      G.ok("5. at the tavern until morning", robber.getFlag(MOD, "duties")?.spree?.place === R("Tavern"));
+      G.ok("5. at the tavern until morning", robber.getFlag(MOD, "duties")?.spree?.place === R("Tavern"), {d: robber.getFlag(MOD, "duties") ?? null});
     });
 
     await G.step("6. married NPCs share a home", async () => {
       await AC().onMarried({a: groom, b: bride});
       G.ok("6. the bride's home is now the groom's", bride.getFlag(MOD, "routine")?.roles?.home === R("Home A"), {roles: bride.getFlag(MOD, "routine")?.roles});
       await AC().onDivorced({a: groom, b: bride});
-      G.ok("6. a divorce moves them back", bride.getFlag(MOD, "routine")?.roles?.home === R("Home B"));
+      G.ok("6. a divorce moves them back", bride.getFlag(MOD, "routine")?.roles?.home === R("Home B"), {roles: bride.getFlag(MOD, "routine")?.roles});
     });
   } finally {
     for ( const id of combats ) { try { await game.combats.get(id)?.delete(); } catch (e) { /* gone */ } }
