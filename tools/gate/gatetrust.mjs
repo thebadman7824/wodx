@@ -97,7 +97,7 @@ export async function run() {
       await pc.sheet.render(true);
       await sleep(1500);
       // Sheets are Application V1: element is a jQuery object
-      const el = pc.sheet.element?.[0] ?? pc.sheet.element;
+      const el = (pc.sheet.element instanceof HTMLElement ? pc.sheet.element : pc.sheet.element?.[0]);
       const html = el?.querySelector?.(".tab.wodxties")?.innerHTML ?? el?.innerHTML ?? "";
       ok("8. the Relationships tab shows the trust word", /Inclined to trust/.test(html));
       await pc.sheet.close();

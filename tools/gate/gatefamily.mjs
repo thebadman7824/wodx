@@ -88,7 +88,7 @@ export async function run() {
       await ana.setFlag("wodx-sheets", "ties", [{uuid: bo.uuid, name: bo.name, role: "spouse"}]);
       await ana.sheet.render(true);
       await sleep(1200);
-      const el = ana.sheet.element?.[0] ?? ana.sheet.element;
+      const el = (ana.sheet.element instanceof HTMLElement ? ana.sheet.element : ana.sheet.element?.[0]);
       const fam4 = el?.querySelector?.(".wodx-tie-family")?.textContent ?? "";
       const btn = !!el?.querySelector?.('.wodxties [data-act="tie-child"]');
       await ana.sheet.close();

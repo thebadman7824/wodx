@@ -156,7 +156,7 @@ export async function openHistory(actor) {
 /* -------------------------------------------------------------- */
 
 export function printSheet(sheet) {
-  const el = sheet.element?.[0] ?? sheet.element;
+  const el = sheet.element instanceof HTMLElement ? sheet.element : sheet.element?.[0]; // a V2 form's [0] is its first control (B6114)
   if ( !el ) return;
   const w = window.open("", "_blank", "width=900,height=1100");
   if ( !w ) return ui.notifications.warn("The browser stopped the print window. Allow pop-ups for this page.");
@@ -769,5 +769,16 @@ export function setup() {
     if ( !sheet.constructor?.name?.startsWith?.("Wodx") ) return;
     buttons.unshift({ label: "Print", class: "wodx-print", icon: "fa-solid fa-print", onclick: () => printSheet(sheet) });
     if ( sheet.actor.isOwner ) buttons.unshift({ label: "History", class: "wodx-history-btn", icon: "fa-solid fa-clock-rotate-left", onclick: () => openHistory(sheet.actor) });
+  });
+  // B6114: the same two on a WoDX sheet that runs on ApplicationV2 (they sit in the title bar's menu)
+  Hooks.on("getHeaderControlsActorSheetV2", (sheet, controls) => {
+    if ( !sheet.isLegacyBridge || !sheet.constructor?.name?.startsWith?.("Wodx") ) return;
+    const add = (action, c) => {
+      if ( controls.some(x => x.action === action) ) return;
+      if ( sheet.options?.actions ) sheet.options.actions[action] = c.onClick;
+      controls.unshift({ action, ...c });
+    };
+    add("wodxPrint", { label: "Print", icon: "fa-solid fa-print", onClick: () => printSheet(sheet) });
+    if ( sheet.actor.isOwner ) add("wodxHistory", { label: "History", icon: "fa-solid fa-clock-rotate-left", onClick: () => openHistory(sheet.actor) });
   });
 }

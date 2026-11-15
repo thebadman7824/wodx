@@ -1,8 +1,9 @@
-import { default as MortalActorSheet } from "./mortal-actor-sheet.js";
+import { default as MortalActorSheet, MortalActorSheetV2 } from "./mortal-actor-sheet.js";
 import ActionHelper from "../../scripts/action-helpers.js"
 import CreateHelper from "../../scripts/create-helpers.js";
 
-export default class ChangingBreedActorSheet extends MortalActorSheet {
+/** The ChangingBreed sheet's code, on either sheet engine (B6110): over the Mortal sheet of the old engine or of ApplicationV2. */
+export const ChangingBreedSheetMixin = Base => class extends Base {
 	
 	/** @override */
 	static get defaultOptions() {
@@ -12,8 +13,8 @@ export default class ChangingBreedActorSheet extends MortalActorSheet {
 		});
 	}
   
-	constructor(actor, options) {
-		super(actor, options);
+	constructor(...args) {
+		super(...args);
 	}
 
 	/** @override */
@@ -199,4 +200,12 @@ export default class ChangingBreedActorSheet extends MortalActorSheet {
 		actorData.system.settings.isupdated = false;
 		await this.actor.update(actorData);
 	}
-}
+};
+
+const ChangingBreedActorSheet = ChangingBreedSheetMixin(MortalActorSheet);
+Object.defineProperty(ChangingBreedActorSheet, "name", { value: "ChangingBreedActorSheet" });
+export default ChangingBreedActorSheet;
+
+/** The same sheet on ApplicationV2 (B6110), used for the lines listed in LINES_V2 (wod.js). */
+export const ChangingBreedActorSheetV2 = ChangingBreedSheetMixin(MortalActorSheetV2);
+Object.defineProperty(ChangingBreedActorSheetV2, "name", { value: "ChangingBreedActorSheet" }); // the same name: the sheet keeps its id (WoD.ChangingBreedActorSheet) and its render hooks
