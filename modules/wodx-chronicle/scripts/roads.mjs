@@ -28,13 +28,23 @@ export function lineOf(a) {
   if ( !a ) return null;
   return R.roadLine({type: a.type, variant: a.system?.settings?.variant ?? "", hastorment: !!a.system?.settings?.hastorment});
 }
-function angstPerm(a) {
-  const it = (a?.items ?? []).find(i => i.type === "Advantage" && i.system?.id === "angst");
-  return n(it?.system?.permanent ?? a?.system?.advantages?.angst?.permanent) || n(a?.getFlag?.(ACT, "angstPermanent"));
+/** Permanent rating of an advantage. The system keeps advantages as Advantage items and copies each item into
+ *  system.advantages[id] during prepare, so the item's system.permanent is the truth; older sheets keep a plain
+ *  {permanent} node, and the flag is the Storyteller's override when neither exists. */
+export function advPerm(a, id, flag = null) {
+  const it = (a?.items ?? []).find(i => i.type === "Advantage" && String(i.system?.id ?? i.name ?? "").toLowerCase() === id);
+  const node = a?.system?.advantages?.[id];
+  const v = it?.system?.permanent ?? node?.system?.permanent ?? node?.permanent;
+  if ( v !== undefined && v !== null && v !== "" ) return n(v);
+  return flag ? n(a?.getFlag?.(ACT, flag)) : 0;
 }
-const willPerm = a => n(a?.system?.advantages?.willpower?.permanent);
-const dharmaOf = a => n(a?.system?.advantages?.dharma?.permanent);
-const tormentOf = a => n(a?.system?.advantages?.torment?.permanent);
+function angstPerm(a) {
+  const f = a?.getFlag?.(ACT, "angstPermanent");
+  return (f !== undefined && f !== null) ? n(f) : advPerm(a, "angst");
+}
+const willPerm = a => advPerm(a, "willpower");
+const dharmaOf = a => advPerm(a, "dharma");
+const tormentOf = a => advPerm(a, "torment");
 
 async function card(a, title, body, {all = false} = {}) {
   return ChatMessage.create({content: `<div class="wodx-card wct-pod"><h3>${esc(title)}</h3>${body}</div>`, speaker: {alias: "Chronicle"},

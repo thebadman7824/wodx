@@ -31,6 +31,15 @@ export async function run() {
       {name: "Gate Roads Jade", type: "Vampire", system: {settings: {variant: "kindredeast"}, advantages: {dharma: {permanent: 6}}}},
       {name: "Gate Roads Fallen", type: "Demon", system: {settings: {hastorment: true}, advantages: {torment: {permanent: 1, temporary: 0}}}}
     ]);
+    // Advantages live as Advantage items; write the item when there is one, as the sheet does.
+    const setAdv = async (a, id, perm) => {
+      const it = a.items.find(i => i.type === "Advantage" && String(i.system?.id ?? "").toLowerCase() === id);
+      if ( it ) return it.update({"system.permanent": perm});
+      return a.update({[`system.advantages.${id}.permanent`]: perm});
+    };
+    await setAdv(ghost, "willpower", 6);
+    await setAdv(dem, "torment", 1);
+    await sleep(300);
     const [, tg] = await G.tokens(scene, [{actor: wolf, x: 2, y: 2}, {actor: ghost, x: 4, y: 2}, {actor: kj, x: 6, y: 2}, {actor: dem, x: 8, y: 2}]);
 
     await G.step("1. every line's menu has the shared tools", async () => {
@@ -74,7 +83,7 @@ export async function run() {
     });
 
     await G.step("5. a bodhisattva sees across the Shroud; lower Dharma takes it away", async () => {
-      await kj.update({"system.advantages.dharma.permanent": 9});
+      await setAdv(kj, "dharma", 9);
       await sleep(500);
       const p = mine("roadBodhisattva", kj.id)[0];
       if ( p ) await chron().approvals.decide(p.id, "approve", "gateroads");
@@ -82,13 +91,13 @@ export async function run() {
       const V = await import(`/modules/wodx-otherworlds/scripts/veil-look-rules.mjs?${Date.now()}`);
       const sees = V.sightsOf(kj.flags[ACT] ?? {}, game.time.worldTime).includes("shroud");
       const was = kj.getFlag(ACT, "bodhisattva") === true;
-      await kj.update({"system.advantages.dharma.permanent": 7});
+      await setAdv(kj, "dharma", 7);
       await sleep(500);
       G.ok("5. a bodhisattva sees across the Shroud; lower Dharma takes it away", was && sees && !kj.getFlag(ACT, "bodhisattva"), {queued: !!p, was, sees});
     });
 
     await G.step("6. Torment 0 offers redemption; Torment gained makes them fall", async () => {
-      await dem.update({"system.advantages.torment.permanent": 0});
+      await setAdv(dem, "torment", 0);
       await sleep(500);
       const p = mine("roadRedeem", dem.id)[0];
       if ( p ) await chron().approvals.decide(p.id, "approve", "gateroads");

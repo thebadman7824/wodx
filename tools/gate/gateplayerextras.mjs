@@ -64,7 +64,9 @@ export async function run() {
     const next = panel?.querySelector(".wsolo-next")?.textContent?.trim() ?? "";
     const more = panel?.querySelectorAll("details.wsolo-more button[data-id]").length ?? 0;
     await foundry.applications.instances.get("wodx-solo-panel")?.close();
-    ok("3. solo panel", /What happens next/.test(next) && more === 6, {next, more});
+    // Every Solo panel entry sits under More (the list grew with the Lone Chronicle steps)
+    const SR = await import(`/modules/wodx-solo/scripts/solo-rules.mjs?${Date.now()}`);
+    ok("3. solo panel", /What happens next/.test(next) && more === SR.PANEL.length, {next, more, want: SR.PANEL.length});
 
     const CR = await import(`/modules/wodx-interactables/scripts/case-rules.mjs?${Date.now()}`);
     const cards = CR.starterBoard().cards.map(c => c.title);
