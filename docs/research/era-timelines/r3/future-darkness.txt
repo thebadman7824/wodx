@@ -368,3 +368,91 @@
 2021|F|mor|AM|Houston|building,exploration|Chryse Base|The American base on the Chryse plain of Mars is finished.
 2022|F|mor|AF|Kilimanjaro|war,revolution|The seven-hour war|A second orbital colony declares its independence, and after a war of about seven hours the Europeans let it go and keep only the Crystal Palace and one station.
 2023|F|mor|AM|Houston|exploration,science|A crew for Jupiter|The Americans begin regular flights to Mars and send a crewed survey to Jupiter; it arrives two years later, amid talk of steady radio signals from the planet.
+# The Americas, Africa and Oceania, 2024 to 2099 (B5890). The books say nothing of these regions after 2020, so this is
+# house history written around the approved timeline: each event is the side of a line's event that ordinary people see,
+# or the plain history of the region in that world. Nothing here moves an approved event.
+2024|F|mor|AM|Night City|crime,media|Body-cam footage on the street|Footage from the city's cyberpsycho squads becomes a trade of its own in the Combat Zone, and the strangest clips sell for the most.
+2025-9|F|mor|AM|Washington|law,terror|The emergency sitting|After the leaks Congress sits through the night and passes an emergency powers act; the National Guard is sent to watch the blood banks.
+2026|F|mor|AM|Austin|law,crown|Thermal cameras on the Texas border|The Free State of Texas puts thermal cameras at every crossing and turns back anyone who reads cold.
+2027|F|mor|AM|Sacramento|law|The first registry office|Sacramento opens an office where the undead may sign the new register, and on its first night a quiet queue forms outside.
+2027|F|mor|AM|Manaus|trade,migration|The Amazon parks fenced|Biotechnica fences its new preserve on the Amazon and moves the river towns inside the wire out by barge.
+2028|F|mor|AM|Night City|crime,uprising|Bounty crews with thermal goggles|Gangs with thermal goggles hunt the unregistered through the Combat Zone for the bounty, and not every body they bring in was cold.
+2029|F|mor|AM|Des Moines|migration,famine|Into the dead zones|Families with nothing left walk into the empty Midwest, where no state or corporation bothers to collect, and nomad packs guide them along the old roads.
+2030|F|mor|AM|Mexico City|weather,disaster|Mexico City's wells run dry|The aquifer under Mexico City gives out, and water is rationed by district with soldiers at the standpipes.
+2031|F|mor|AM|Panama|sea,trade|The Canal deepened|The United States deepens the Canal for the new cargo hulls, and the Central American Union taxes every ship that waits in its waters.
+2033|F|mor|AM|New Orleans|storm,flood|New Orleans left to the water|The hurricane season drowns New Orleans for the last time, and the federal government declines to pump it out again.
+2034|F|mor|AM|Night City|trade,law|Bottled blood behind the counter|Licensed donor blood goes on sale in Night City's drugstores, locked in a chilled case beside the painkillers.
+2035|F|mor|AM|Montreal|crown,law|Quebec goes its own way|Quebec votes to leave Canada, and Ottawa lets it go without a shot fired.
+2036|F|mor|AM|Brasília|war,crown|The generals take Brazil|After ten years of war among the states, a junta in Brasília holds the whole of Brazil.
+2037|F|mor|AM|Bogotá|crime,money|The cartels incorporate|The old cartels of the Andes register as corporations and take seats on the boards in Lima and Bogotá.
+2038|F|mor|AM|Anchorage|sea,trade|The northern passage open all year|The Arctic sea route stays free of ice the whole year round, and the Free State of Alaska grows rich on its tolls.
+2039|F|mor|AM|Portland|fire,terror|Fires at the preserve fence|The edges of the Pacific Northwest preserve burn through the summer, and the newsfeeds blame eco-terrorists no one can name.
+2040|F|mor|AM|Tegucigalpa|faith,migration|Neighbours who walk at dusk|In the towns of Central America people talk of pale neighbours who come out at dusk and eat a little at the family table; some priests bless them and some bar the church door.
+2041|F|mor|AM|San Francisco|science,money|Luck sold in a box|Gadgets that make the buyer lucky go on sale in the shops of the Free States, and people who buy them swear they work.
+2042|F|mor|AM|Santiago|quake,disaster|The Santiago earthquake|A great earthquake brings down half of Santiago's towers, and the junta's soldiers dig for the rich first.
+2043|F|mor|AM|Lima|war,weather|The water war of the Andes|With the glaciers gone, Lima and La Paz go to war over the rivers that are left.
+2044|F|mor|AM|Night City|treaty,law|The Accord signed in Night City|The city council puts its seal on the Night City Accord, and the feeds show the marks of registered Kindred, pack leaders and hunters on one page.
+2045|F|mor|AM|Detroit|industry,uprising|The last plant in Detroit|The last car plant in Detroit closes, and its workers burn the robot lines before the guards arrive.
+2047|F|mor|AM|New York|flood,sea|The sea comes over the Manhattan wall|A storm surge tops the sea wall, and lower Manhattan is abandoned to the tide.
+2048|F|mor|AM|Houston|industry,law|Night shifts at the Houston docks|The orbital docks at Houston hire registered Kindred for the night shift, and the day crews go home before dark.
+2050|F|mor|AM|Rio de Janeiro|uprising,law|The free hills of Rio|The hillside districts of Rio de Janeiro throw out the junta's police and run themselves as free communes.
+2053|F|mor|AM|Winnipeg|weather,famine|Canada feeds the continent|Farms move north onto the thawed ground of the old tundra, and Canadian grain feeds the drought-struck south.
+2055|F|mor|AM|Seattle|money,law|A buyer no one knows|A holding company nobody has heard of buys the preserve parks of the Pacific Northwest, and the rangers' pay doubles overnight.
+2057|F|mor|AM|Cusco|crime,occult|Tomb robbers in the Andes|Corporate crews dig through the old tombs of the Andes with scanners, and the villages above them post armed watches.
+2059|F|mor|AM|Tijuana|crime,trade|The alchemy trade on the border|A street drug brewed from thin blood floods across the border at Tijuana, sold on the Net like any other high.
+2061|F|mor|AM|Buenos Aires|money,treaty|The southern union|Argentina, Chile and Uruguay join in one union with a single currency, the first peace the southern cone has known in thirty years.
+2063|F|mor|AM|Vancouver|treaty,law|The Accord comes north|Vancouver and Seattle sign Accords of their own on the Night City pattern.
+2065|F|mor|AM|Phoenix|weather,migration|Phoenix given up to the heat|Summers too hot to live through empty Phoenix, and its last people leave for the north in convoys.
+2068|F|mor|AM|Asheville|art,death|The hollows go quiet|Old storytellers in the Appalachians say the hollows have gone quiet, and the summer fairs that kept the old tales stop for want of anyone to come.
+2070|F|mor|AM|Panama|war,uprising|The Canal Zone given up|After a two-year siege the United States hands the Canal Zone to the Central American Union, and the last Marines sail home.
+2075|F|mor|AM|Night City|building,industry|A city under one roof|Night City's tallest arcology is finished: a hundred thousand people under one roof, who never need to step outside.
+2078|F|mor|AM|Manaus|plague,disaster|Black water on the Amazon|The river towns beside the Amazon preserve fall sick and the water runs black; the preserve's owners blame the towns.
+2080|F|mor|AM|Kansas City|massacre,death|The dead-zone killings|Whole towns in the dead zones of Kansas and Nebraska are found drained of blood in a single week, and the feeds show it to the world.
+2083|F|mor|AM|Brasília|revolution,crown|The junta falls|The generals' rule in Brasília collapses after forty-seven years, and Brazil's states go their own ways again.
+2086|F|mor|AM|Night City|crime,terror|Three murders and a broken Accord|Murders in Night City and two other cities break their Accords in the same week, and the feeds blame a different line for each killing.
+2088|F|mor|AM|Miami|sea,migration|The Florida coast abandoned|The last towns on Florida's southern coast are given up to the sea, and Miami's towers stand in water to the third floor.
+2090|F|mor|AM|Mexico City|faith|The great pilgrimages|Millions walk to the shrine of Guadalupe in a single December, and the bishops cannot say what the crowds are praying against.
+2095|F|mor|AM|Kansas City|faith,media|The preachers of the dead zones|Preachers in the dead zones read the signs of the last nights off the newsfeeds, and their tent meetings fill every night.
+2097|F|mor|AM|Sacramento|media,science|A state split down the middle|Polls in the Free States find people split evenly between those who believe in magic and those who believe only in machines.
+2098|F|mor|AM|Night City|uprising,law|Curfew in Night City|With the last Accord gone, the council puts Night City under curfew, and the arcology doors stay shut from dusk to dawn.
+2099|F|mor|AM|Night City|faith,occult|Night City's last year|Night City goes into the year of judgement with its towers lit all night and its streets empty.
+2024|F|mor|AF|Nairobi|science,trade|The equator spaceports at full stretch|The spaceports along Africa's equator send more cargo into orbit this year than the rest of the world together.
+2025|F|mor|AF|Lagos|faith,media|The leaks reach Lagos|When the leaks come out, crowds fill Lagos's churches and mosques through the night, and the preachers have never had so many listeners.
+2026|F|mor|AF|Kilimanjaro|building,science|The second track on the mountain|A second launch track is laid up Kilimanjaro's flank beside the first, and the mountain's towns double in a year.
+2027|F|mor|AF|Kinshasa|migration,law|The Hireout ends|The European Space Agency stops hiring whole townships for orbit, and the families left behind in central Africa wait on word from children they will not see again.
+2029|F|mor|AF|Khartoum|weather,famine|The Sahel dries out|Drought runs across the Sahel from Dakar to Khartoum, and the Nile runs lower than anyone living has seen.
+2031|F|mor|AF|Addis Ababa|treaty,crown|The Confederation's charter|The Pan-African Confederation signs its charter at Addis Ababa and names the city its seat.
+2033|F|mor|AF|Tunis|uprising,empire|The Maghreb throws out Brussels|Tunis, Algiers and Rabat send the European governors home while Europe is busy with its purge.
+2035|F|mor|AF|Johannesburg|crown,war|The Southern Compact|The warlords of the south stop fighting one another and swear a compact at Johannesburg, against the Confederation in the north.
+2038|F|mor|AF|Lagos|building,industry|Lagos builds upward|The first arcology in Africa rises over the Lagos lagoon, built by Confederation money and orbital steel.
+2040|F|mor|AF|Sahara|science,industry|Power from the Sahara|Sun fields across the Sahara send power north under the sea, and the crusade's cities in Europe buy it at whatever price the Confederation asks.
+2043|F|mor|AF|Mombasa|sea,trade|Mombasa's orbital port|Mombasa becomes the sea port for the equator's launch tracks, and its harbour is never empty.
+2047|F|mor|AF|Kampala|plague|The lake fever|A new fever spreads round Lake Victoria; the Confederation closes the lake ports for a year.
+2050|F|mor|AF|Kilimanjaro|exploration,science|Africa's own crew for Mars|The first crew of the Confederation leaves for Mars from the Kilimanjaro track.
+2053|F|mor|AF|Dakar|migration,persecution|Refugees from the crusade|Dakar's harbour fills with families fleeing the crusade's courts in Europe, and the city opens a camp on the dunes for them.
+2057|F|mor|AF|Meroë|crime,occult|Scanners in the Nubian pyramids|Corporate crews come to the pyramids of Nubia with scanners and drills, and the desert villages learn to say nothing.
+2060|F|mor|AF|Lake Victoria|disaster,flood|The dam above Jinja breaks|The great dam at Jinja gives way, and the flood runs down the White Nile for a month.
+2064|F|mor|AF|Addis Ababa|money,law|The Confederation's own money|The Confederation prints a currency of its own, backed by launch contracts, and the euro stops being taken in the markets of the south.
+2068|F|mor|AF|Lagos|faith|Revival in the stadiums|Revival meetings in Lagos fill the stadiums every night, and the healers who speak at them draw crowds from across the coast.
+2072|F|mor|AF|Cape Town|weather,sea|The Cape storms|Storms off the Cape close the southern sea route for half of every year.
+2077|F|mor|AF|Kinshasa|building,industry|The great Congo dam|The great dam on the Congo is finished, and its power runs the equator's launch tracks without a drop of oil.
+2082|F|mor|AF|Nairobi|uprising,science|The spaceport strike|The families of the orbital crews strike at the Nairobi spaceport, and no cargo leaves the ground for forty days.
+2088|F|mor|AF|Timbuktu|learning|The Timbuktu copies|Scholars copy the last of the old manuscripts of Timbuktu into orbital stores before the sand takes the libraries.
+2094|F|mor|AF|Nairobi|migration,exploration|Passage to orbit|Families sell everything for a seat to orbit, and the launch tracks run day and night.
+2099|F|mor|AF|Kilimanjaro|faith,travel|The last launch from the mountain|The Kilimanjaro track keeps launching into the year of judgement; the crews say they would rather be in the sky when it comes.
+2024|F|mor|OC|Sydney|money,trade|Sydney sold again|A Japanese consortium buys Sydney's harbour and docks outright from the bankrupt federal government.
+2026|F|mor|OC|Hobart|crown,law|Tasmania leaves|Tasmania votes again on leaving Australia, and this time the vote carries.
+2029|F|mor|OC|Perth|money,industry|West Australia's oil runs out|The North West Shelf runs dry, and the Republic of West Australia turns its money to orbital launch sites in the desert.
+2032|F|mor|OC|Port Moresby|uprising,war|The Papuan rising|The Highlands rise against Indonesian rule, and Australia sends them guns across the Torres Strait.
+2036|F|mor|OC|Maralinga|disaster,science|The grey dust spreads|The fenced zone round Maralinga grows by a day's walk, and the desert inside turns to fine grey dust.
+2039|F|mor|OC|Funafuti|sea,migration|Tuvalu under the sea|The last people of Tuvalu leave their drowned atolls for New Zealand.
+2042|F|mor|OC|Honolulu|law,crown|Oahu's soldiers go home|The military government on Oahu stands down, and Hawaii declares itself a Free State on the American pattern.
+2045|F|mor|OC|Hayman Island|building,science|The towers on Hayman Island|The orbital companies raise launch towers on Hayman Island, and Queensland's fishing boats keep well clear.
+2050|F|mor|OC|Port Moresby|treaty,crown|Papua New Guinea free again|Indonesia gives up Papua New Guinea, and its government comes home from Wellington after forty-one years.
+2054|F|mor|OC|Adelaide|weather,disaster|The year without rain|Not a drop falls on Adelaide for a year, and only the sea-water plant keeps the city alive.
+2063|F|mor|OC|Sydney|treaty,law|Sydney signs an Accord|Sydney signs an Accord on the Night City pattern, the first city of the southern hemisphere to do so.
+2067|F|mor|OC|Alice Springs|weather,migration|The centre emptied|The heat empties the towns of Australia's centre, and Alice Springs is left to the road trains passing through.
+2073|F|mor|OC|Suva|storm,disaster|The Fiji cyclone|The worst cyclone on record flattens Suva and sweeps the outer islands bare.
+2081|F|mor|OC|McMurdo|exploration,trade|The ice opened to the drills|The Antarctic treaty lapses, and corporate drill crews go down onto the ice.
+2089|F|mor|OC|Auckland|faith|Auckland's prayers|New Zealand's churches stay open day and night, and the people of the Pacific who came there over sixty years pray in a dozen tongues.
+2096|F|mor|OC|Ceduna|disaster,science|The grey dust reaches the sea|The grey dust from Maralinga reaches the coast of the Great Australian Bight, and the town of Ceduna is evacuated.
