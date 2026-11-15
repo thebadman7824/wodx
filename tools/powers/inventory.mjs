@@ -60,7 +60,7 @@ const WANT_TEXT = process.argv.includes("--text");
 const textOf = (v, depth = 0) => v == null || depth > 4 ? "" : typeof v === "string" ? v : Array.isArray(v) ? v.map(x => textOf(x, depth + 1)).join(" ")
   : typeof v === "object" ? Object.values(v).map(x => textOf(x, depth + 1)).join(" ") : "";
 const add = (line, group, name, o = {}) => rows.push({ line, group, name, status: o.status ?? "none", kw: o.kw ?? [], page: o.page ?? "", how: o.how ?? "", passive: !!o.passive,
-  ...(WANT_TEXT ? { text: textOf(o.src).replace(/\s+/g, " ").trim() } : {}) });
+  ...(WANT_TEXT ? { text: textOf(o.src).replace(/\s+/g, " ").trim() } : {}) }) && Object.defineProperty(rows.at(-1), "src", { value: o.src, enumerable: false });
 
 /* -- Vampire: V20 Dark Ages Disciplines (kindred.js Use a Discipline) */
 const disc = J("disciplines-daw.json").powers;
@@ -204,7 +204,13 @@ for ( const g of J("gifts-fera.json").gifts ) {
   add("Werewolf (Changing Breeds)", `Gifts: ${g.breed}${g.sub ? ` (${g.sub})` : ""}`, `${"•".repeat(g.l)} ${g.n}`, { src: g, status: st, kw: [g.spec.kw], page: `W20 CB p. ${g.p}`,
     how: `Use a Gift: the breed's own library entry sets the pool, cost and difficulty${st === "applies" ? `; effects card ${g.spec.kind}` : "; the card says what it does"}` });
 }
-const out = { made: new Date().toISOString(), counts: {}, byLine: {}, rows };
+/* B6015: is what each applying power puts on the card read by any system, or only a marker? (read-rules.mjs) */
+const RR = await import(pathToFileURL(path.join(ROOT, "tools/powers/read-rules.mjs")).href);
+const kwOutcome = (k, ctx = {}) => (E.KEYWORDS[k] ? E.outcome(k, { ok: true, strength: 3, duration: 1, targets: 0 }, ctx) : null);
+const specOutcomes = sp => { try { return DAE.outcomesOf(sp, { label: "x", source: "" }, 3, ""); } catch (e) { return null; } };
+for ( const r of rows ) r.read = r.status === "applies" ? RR.powerRead(r, kwOutcome, specOutcomes) : null;
+const out = { made: new Date().toISOString(), counts: {}, reads: {}, byLine: {}, rows };
+for ( const r of rows ) if ( r.read ) out.reads[r.read] = (out.reads[r.read] ?? 0) + 1;
 for ( const r of rows ) {
   out.counts[r.status] = (out.counts[r.status] ?? 0) + 1;
   const b = out.byLine[r.line] ??= { total: 0, applies: 0, card: 0, roll: 0, none: 0, kw: 0 };
@@ -212,5 +218,6 @@ for ( const r of rows ) {
 }
 const arg = k => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
 if ( arg("--out") ) fs.writeFileSync(arg("--out"), JSON.stringify(out, null, 1));
-console.log(`${rows.length} powers:`, out.counts);
+console.log(`${rows.length} powers:`, out.counts, "applying, read by the game:", out.reads);
+if ( process.argv.includes("--unread") ) for ( const r of rows ) if ( ["unread", "partly"].includes(r.read) ) console.log(r.read.padEnd(7), r.line.padEnd(26), r.name, JSON.stringify(r.kw));
 if ( process.argv.includes("--summary") ) for ( const [l, b] of Object.entries(out.byLine) ) console.log(l.padEnd(26), JSON.stringify(b));

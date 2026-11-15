@@ -64,15 +64,15 @@ export function lookFor(kind, year, pick = {}) {
  * no shape of its own: it takes rusted paint where the sheet names no colour.
  */
 export const FINISH = {
-  fine: ["saloon", "sedan", "brougham", "landau", "berline", "victoria", "tourer", "executive", "business", "cruiser", "roadster", "ladies", "airliner", "launch"],
-  luxury: ["saloon", "brougham", "landau", "berline", "coach", "tourer", "executive", "business", "cruiser", "airship", "liner", "airliner", "launch"],
-  rugged: ["fourbyfour", "field", "trail", "mountain", "bush", "mrap", "wagon", "halftrack", "utility", "rib", "work", "whaler", "despatch"],
-  sporting: ["sport", "roadster", "coupe", "racer", "cafe", "speed", "aerobatic", "bmx", "chariot", "calash", "runabout", "foil", "swift", "dart"],
-  working: ["estate", "delivery", "cargo", "work", "flat", "tipper", "tanker", "covered", "utility", "cart", "wagon", "wain", "combination", "courier", "turboprop", "floatplane", "skiff", "punt", "hatch"],
-  official: ["police", "patrol", "despatch", "sedan", "saloon", "rescue", "riot", "stage", "stagecoach", "courier", "scout", "roadster", "launch"],
+  fine: ["sleigh", "cutter", "saloon", "sedan", "brougham", "landau", "berline", "victoria", "tourer", "executive", "business", "cruiser", "roadster", "ladies", "airliner", "launch"],
+  luxury: ["troika", "sleigh", "express", "streamliner", "highspeed", "maglev", "saloon", "brougham", "landau", "berline", "coach", "tourer", "executive", "business", "cruiser", "airship", "liner", "airliner", "launch"],
+  rugged: ["snowcat", "motorsledge", "dogsled", "utility", "fourbyfour", "field", "trail", "mountain", "bush", "mrap", "wagon", "halftrack", "utility", "rib", "work", "whaler", "despatch"],
+  sporting: ["racing", "sport", "sport", "roadster", "coupe", "racer", "cafe", "speed", "aerobatic", "bmx", "chariot", "calash", "runabout", "foil", "swift", "dart"],
+  working: ["sledge", "goods", "freight", "utility", "touring", "estate", "delivery", "cargo", "work", "flat", "tipper", "tanker", "covered", "utility", "cart", "wagon", "wain", "combination", "courier", "turboprop", "floatplane", "skiff", "punt", "hatch"],
+  official: ["aerosan", "snowcoach", "police", "patrol", "despatch", "sedan", "saloon", "rescue", "riot", "stage", "stagecoach", "courier", "scout", "roadster", "launch"],
   hearse: ["estate", "brougham", "berline", "covered", "tonneau"],
-  taxi: ["cab", "hansom", "sedan", "saloon", "tonneau", "brougham", "compact", "flyingcar"],
-  armoured: ["armedcab", "mrap", "heavy", "field", "fourbyfour", "gunship", "turret", "carrier"],
+  taxi: ["shuttle", "cab", "hansom", "sedan", "saloon", "tonneau", "brougham", "compact", "flyingcar"],
+  armoured: ["aerosan", "armedcab", "mrap", "heavy", "field", "fourbyfour", "gunship", "turret", "carrier"],
   custom: ["chopper", "sport", "roadster", "coupe", "cafe", "bmx", "pod"]
 };
 

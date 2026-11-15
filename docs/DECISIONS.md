@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6000
+Next free block: B6140
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -306,7 +306,7 @@ Next free block: B6000
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5680-B5709 | NPC Motives Desk: every NPC action has a reason and a follow-through (used B5680-B5703) | NPC, Storyteller |
 | B5710-B5729 | Aftercare of the carried (Aftercare Desk a1-a12) (used B5710-B5721) | NPC |
-| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5736) | Interactables, tools |
+| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5745) | tools |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 | B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
 | B5800-B5809 | NPC Aftercare Desk: what comes after each NPC action (used B5800-B5806) | NPC, Chronicle |
@@ -328,6 +328,11 @@ Next free block: B6000
 | B5970-B5979 | NPCs make their own wonders (used B5970-B5974) | Storyteller |
 | B5980-B5989 | Lone Chronicle step 3: the oracle, the Leads page and night encounters on the map (used B5980-B5985) | Solo |
 | B5990-B5999 | Say or Do: full sentences and grieving (Ben's picks on law sentences and heartbreak) (used B5990-B5992) | Chronicle, NPC, Actions |
+| B6000-B6019 | Rituals and powers that really work: every effect read by a roll, soak, token or map system (used B6000-B6018) | Actions, Combat |
+| B6040-B6049 | Lone Chronicle step 4: the director, experience from the night's log, the recap (used B6040-B6049) | Solo |
+| B6050-B6059 | gate7b fresh arena each run (used B6050-B6051) | tools (gates) |
+| B6070-B6079 | Snow vehicles, trains and trams (rules and sprites), and a quality pass on the vehicle sprites (used B6070-B6076) | Interactables, Paperdoll, Combat |
+| B6130-B6139 | The eight held-back world timeline readings after the book check (used B6130-B6132) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9379,6 +9384,51 @@ Tools. run-gate.mjs --touched and --all built the gate list from the PC's own co
 
 Reverse: none needed.
 
+## B5737. Whole buildings and open ground for the pixel drawer, and two sample maps (2026-11-15)
+Tools. tools/pixelmap/buildings.py draws a one-room log cottage (oven in a back corner, bed, painted chest, table and benches by the front window, a door and three shuttered windows, all recorded as walls, openings, a light and a home) and a small timber chapel; land.py lays grass, rutted roads, brooks, ploughed strips by crop, a plank bridge and trees that keep clear of what was built. maps/village.py (a Moravian village of about 1200, 40 by 28 squares) and maps/road.py (a country road with a ford, a wayside cross and a cart, 36 by 20) are the samples sent to Ben before the larger map work.
+
+Reverse: remove the files; nothing else uses them yet.
+
+## B5738. Every object at its true size (2026-11-15)
+Tools. After Ben's review of the samples, every object was measured against the 5 ft square: beds were 10 ft long and are now 7, tree crowns grow to 14 to 23 ft, field strips are wide enough to read as fields, the cart is a farm cart's size, and a field haystack is drawn as a domed rick about 11 ft across. RULES.md keeps the size table.
+
+Reverse: none needed.
+
+## B5739. The wood's own pieces, and the Forest Road redrawn on its old scene (2026-11-15)
+Tools. tools/pixelmap/wilds.py draws what a wood needs, each one recognisable from straight above: stumps, a camp fire with seats round it, ridge tents (guy ropes to pegs, door tied back), charcoal kilns that smoke and glow at their vents, boulders, a rock scarp (lit lip, broken face, scree at the foot), felled trunks, ladders and a lean-to. land.py gains a forest floor and buildings.py a plain log hut. maps/forest_road.py is the first valley map of the Whole World redraw (r1 to r3): The Forest Road, 66 by 46, with every wall, door, window, light and exit on the old scene's own squares (read from the testbed export), so its notes and Ways still fit. The old map's unlabelled square at the fork is drawn as a wayside shrine.
+
+Reverse: remove the files; the old map picture stays on the scene until the new one is put on.
+
+## B5740. The High Woods redrawn on its old scene (2026-11-15)
+Tools. maps/high_woods.py redraws The High Woods (66 by 48) with every wall, door, window, light and exit on the old scene's own squares. wilds.py gains what it needs, each drawn to be named by sight: an open hearth on a slab, gnawed bones, a warning rope with a cow-bell, a pit trap drawn to be hard but not impossible to spot (its note asks for Perception), animal pelts by kind, drying racks hung with skins, a wolf den under heaped boulders, a blackthorn thicket, a boar's mud wallow and a hunting bow. The old map's paired dashed lines by both lodges are drawn as hide-drying racks.
+
+Reverse: remove the map file and the new pieces; nothing else uses them.
+
+## B5741. A whole map draws in about 2 minutes (2026-11-15)
+Tools. Laying one road took about 3 minutes on a 66 by 48 map because its distance field was worked out over the whole picture for every piece of the line. bits.dist now works only within 900 px of each piece (everything farther reads as far, which is all any caller asks), and polygon shadows work over their own shape's box. The Forest Road went from 12 minutes to about 2; the pictures come out the same.
+
+Reverse: none needed.
+
+## B5742. The Ruins of Altenhof redrawn on its old scene (2026-11-15)
+Tools. maps/altenhof.py redraws The Ruins of Altenhof (58 by 46) on the old scene's walls, door, windows, lights and exit. The broken curtain wall and the roofless hall stand where the old walls stood, with fallen stone at every broken end and grass up through the hall's flags; Lady Adelheid's chamber is whole, with the curtained bed made up and three fresh candles burning; the dry well shows a glint at the bottom; the fallen tower is a broken ring of footing heaped with its stones, with steps going down between them. The old map's table with two candles in the roofless south-west room is drawn as a chapel's altar.
+
+Reverse: remove the map file.
+
+## B5743. Every redrawn building gets its own roof picture (2026-11-15)
+Tools. The old scenes lay a roof tile over each roofed building, so putting a new map under an old roof would leave old art showing. The recorder now takes rec.roof(id, label, rect, kind, smoke): roofs.py draws it (split oak shingles weathered silver-brown, combed thatch with a turf ridge, or stone slates), seen from above with the sunny slope lit, the ridge, the eaves and a smoke hole over a hearth. Each is written to roofs/<id>.png and listed under "roofs" in the sidecar with its rect, which matches the old tile's rect, so the swap only changes the picture. The five roofs on the three maps so far are done.
+
+Reverse: drop the roofs; the old roof tiles stay.
+
+## B5744. Lower Town, the Market Square, redrawn on its old scene (2026-11-15)
+Tools. maps/lt_market.py redraws the Lower Town market (64 by 44) with all 141 walls, 32 doors, 36 windows and 8 fences on the old scene's own squares, and a new roof picture for each of its 13 roof tiles. Every building is furnished for its trade, so a player can name it by sight: the inn's tables and hearth, the bakery's oven, horse stalls with mangers, the chandler's candles, the butcher's block, hams hanging in the smokehouse, the surgeon's table, the apothecary's jars on shelves, the hatter's hats, the general store's sacks and crates. town.py adds the town's own pieces: cobbles with straw and puddles, market stalls under striped awnings with their goods along the front, lantern posts that cast real light, the market cross on its steps, horse stalls, and woven hurdle fences. The old map's narrow building with a hearth is drawn as a smokehouse and its small fenced square as a sheep pen.
+
+Reverse: remove the map file and town.py; nothing else uses them.
+
+## B5745. Lower Town, Craftsmen's Lane, redrawn on its old scene (2026-11-15)
+Tools. maps/lt_crafts.py redraws Craftsmen's Lane (66 by 40) with all 110 walls, 20 doors, 37 windows and 4 fences on the old scene's own squares, and a new roof picture for each of its 10 roof tiles. Each workshop is furnished so a player can name it by sight: horse stalls in the stables; the forge with its bellows, the anvil, the quench trough and horseshoes in the smithy; staves, hoops, new casks and the bending fire in the cooperage; four looms with cloth on them and bolts of cloth in the Weavers' Hall; dye vats in four colours, a kettle on the fire and lines of dyed cloth in the dyers' yard; the mash tun, the cooling tun and the furnace with its copper in the Brewhouse. The Shuttered House's day-rest room has no window and a bar on its door, as the scene's note says. town.py gains the forge, anvil, loom, vat, staves, hoops, handcart, dye line, brew furnace and horseshoes. The town ditch runs down the east side under a plank bridge.
+
+Reverse: remove the map file and the new pieces; nothing else uses them.
+
 ## B5750. Witness reactions given by a window act on the map (2026-11-15)
 WoDX Actions. The witness step takes results already rolled (the Delirium check, a demon's Revelation) and acts them out: a frozen witness is Immobilized for the scene, a fleeing one runs, a fighting one starts a fight; those who keep it go on the Masquerade record. With no revealed actor on the map, nothing is recorded against anyone.
 
@@ -9970,3 +10020,209 @@ Reverse: remove brand() in law-punish.mjs; put Heartsick back in hearts.mjs; dro
 WoDX Chronicle, Storyteller. A death sentence holds the condemned and calls WoDX Storyteller's raid (reach.lawCome) to arrest them where they stand; the player chooses to go or resist.
 
 Reverse: remove the lawCome call in carryOut.
+
+## B6000. A power's numbers ride in its timed effect (2026-11-15)
+WoDX Actions. A Ward, Boost, Blessing, Curse, Calm or Hasten keeps its dice, kind, shift or actions in the WoDX Chronicle timed data (power-mods.js timedData), and a token look shows it: blue shimmer, gold glow, purple flicker. Before, the effect carried a name only.
+
+Reverse: drop the data argument in effects.js applyCore and the tokenLooks register.
+
+## B6001. Powers count on every roll with the traits (2026-11-15)
+WoDX Actions trait-hooks traitMods adds what the powers on the roller do to the roll's tags (power-mods modsFrom).
+
+Reverse: remove powerPart from traitMods.
+
+## B6002. A Blessing or Curse is spent on the next roll (2026-11-15)
+House reading of the Fortune keyword's "next roll": the roll, attack or frenzy check that used it deletes the effect.
+
+Reverse: drop TH.spendOnce calls and the once flag.
+
+## B6003. A Calm eases frenzy, a Rousing makes it harder (2026-11-15)
+Fear with the calm flavour: resisting frenzy is up to 3 easier while it lasts; roused, up to 3 harder. Its own key (wodx-effect-calm), so it never holds the token away as a Fear does.
+
+Reverse: restore the old outcome text in effects-rules fear.
+
+## B6004. WoDX Combat reads them (2026-11-15)
+Attack pool: Boost dice and Fortune difficulty; soak: Ward armour (the stronger Ward, only against its named harm) and soak Boost; Initiative: Initiative Boost.
+
+Reverse: remove powerModsOf calls in wodx-combat main.js.
+
+## B6005. Sway, Bind and Possess on NPCs (2026-11-15)
+Sway is a timed Swayed effect (an NPC warms one step; a player character's moves go to the Storyteller, binds.js). Bind warms an NPC two steps toward the binder. Possess on an NPC gives the possessor's players ownership of it while it lasts, handed back at the end or on Undo.
+
+Reverse: moodDelta bind line, possessFor in effects.js, sway back to a note.
+
+## B6006. Imbue makes a charged item (2026-11-15)
+An Imbue result is a made item, real for good, flagged imbued with the power and caster.
+
+Reverse: imbue back to the default note.
+
+## B6007. Place moves the Gauntlet, Shroud or Banality (2026-11-15)
+Through WoDX Otherworlds drift (lever): thins by 1 (2 at strength 4+), "place:thick" thickens; "place:shroud" and "place:banality" pick the track. A fog look when it thins, a calm look when it thickens. House reading.
+
+Reverse: place back to the default note.
+
+## B6008. Manifest shows the being on this side (2026-11-15)
+The token is unhidden, pale (alpha 0.8) and on the scene's physical level while it lasts.
+
+Reverse: remove manifestOf.
+
+## B6009. Banish and Work act (2026-11-15)
+Banish ends WoDX timed powers on the target (restored on Undo); with none, a being from beyond goes back across and anything else is driven off from the caster, 10 feet a success. Work toggles the nearest door within 3 squares (a locked door is broken open).
+
+Reverse: banishCore and workCore in effects.js.
+
+## B6010. Ritual flavours (2026-11-15)
+Flavours join with "+"; a Ward flavour names its harm (ward:fire, ward:sunlight); a Boost flavour names its roll; a self-cast Calm needs no target. Ritual keyword fixes: Blood Rush fear:calm, Chill of Oblivion ward:fire, Defense of the Sacred Haven ward:sunlight, Firewalker ward:fire, Flesh of Fiery Touch harm, Essence of Longing boost:social, Scarab of Death ward, Scouring Oblivion mend, Rite of Ostracism boost:sap+social, Esilio, Nightmare Drums and Candle of Haunting place:shroud, Dedicate the Haven and the Shrouded Glen place:thick.
+
+Reverse: the k lists in book-rituals.js.
+
+## B6011. Spec timed results carry their numbers (2026-11-15)
+mage-da-effects timedNumbers: Ward and Boost dice a success (5 at most), Fortune shift (3 at most), Night Sight on the token, Rise 5 feet a success.
+
+Reverse: remove timedNumbers.
+
+## B6012. Hasten gives extra actions (2026-11-15)
+WoDX Combat's conductor counts a Hasten's actions in the extra pass; a Slow costs 2 Initiative a step (house rule).
+
+Reverse: hastenExtra in conductor.js.
+
+## B6013. An Illusion stands on the map (2026-11-15)
+A pale figure Tile by the target or where the Storyteller clicks, removed when it ends or on Undo.
+
+Reverse: illusionTile.
+
+## B6014. Flavoured ritual keywords reached the card (2026-11-15)
+book-rituals ritualResults and bookRitual dropped any keyword with a flavour ("fortune:curse", "charge:drain"), so the caster's card and the Storyteller's window lost them. Fixed.
+
+Reverse: none needed.
+
+## B6015. Guard: every applying power is read (2026-11-15)
+tools/powers/read-rules.mjs says which system reads each result kind and timed key; the inventory marks each power read, partly, told, unread or direct; tools/harness/power-reads.test.mjs fails on any unread and checks each reader is still in the code.
+
+Reverse: delete the test.
+
+## B6016. Spec timed results of keywords with their own kind act as that kind (2026-11-15)
+A T() spec for summon, make, weather, light, move, sideways, banish, place, work, charge, know, sense, harm, trip, imbue, mend or hold works as the keyword does (a summoning, an item, the weather), for the spec's time; before, it was a named marker.
+
+Reverse: OWN_KIND in mage-da-effects.js.
+
+## B6017. The Golem of the 72 Names is a real summoning (2026-11-15)
+Utterance of the 72 Names (DA Mage Grimoire p. 58) now calls one golem with its own profile: Strength 10, Dexterity 2, Stamina 8, ten health levels, 4 armour dice, Willpower 3, simple orders, lasting until it is broken. Before, it was a named marker. A spec's own name also stays on a result of its own kind (Tracked by a spirit).
+
+Reverse: the mage-dark-ages|utterance-of-the-72-names entry in summon-specs.js.
+
+## B6018. A Forbiddance and shadow soul do what they say (2026-11-15)
+A mummy's won Forbiddance marks the mummy as the one feared (a player's token cannot go nearer) and the one the being cannot strike: WoDX Combat refuses its attacks on that mummy, by hand or by the NPC. A Kuei-jin's shadow soul hands the body to the P'o: each move the player makes goes to the Storyteller to allow or refuse, as a command's does; in a Lone Chronicle the move stands with a reminder.
+
+Reverse: forbiddenFrom in wodx-combat main.js, the bindBy/forbiddenBy flags in mummy.js, the shadow soul line in binds.js bindingsOn.
+
+## B6040. Places with no map are the country map's towns (2026-11-15)
+WoDX Solo card-rules.mjs cardTowns. The panel's Places with no map lists the towns of WoDX Storyteller's country map (data/country.mjs) that stand in the character's own year and have no scene set at the town itself. A town that gains a map later is gone to on that map. The list has a search box.
+
+Reverse: take "places" off solo-rules.mjs PANEL.
+
+## B6041. A card scene is made once per town and kept (2026-11-15)
+The seat makes a plain scene for the town the first time a character goes there: a dark square of ground with a grid and light, flag wodx-solo.card (the town id) and wodx-solo.encounters town, set at the town on the country map so the trip there is the Travel window's own country-map trip, with its hours, fares, stops and road encounters. It is kept for the next visit and can be given a map later. Nothing is deleted.
+
+Reverse: delete the card scenes by hand; the next visit makes a new one.
+
+## B6042. The card says where the character is (2026-11-15)
+A locked drawing in the middle of the card scene, written again on every arrival and every look: the town, the year, day and hour on the character's own clock, the weather (WoDX Atmosphere), the land from the country map (its name and kind), the nearest river and which way it lies, how wooded the land is in that age, and the best road in. The same words go to the player as a card in the chat. The character's token stands below the card.
+
+Reverse: remove writeCard from card.mjs; the scene stays plain.
+
+## B6043. A card scene is always a travel place, never a marked one (2026-11-15)
+WoDX Storyteller travelPlaces. A card scene carries a travel flag for its country-map spot; it does not count as a scene the Storyteller marked, so a world with no marked scenes keeps listing every scene, and a world with marked scenes lists the card scenes too.
+
+Reverse: drop isCard from travelPlaces.
+
+## B6044. Look around costs half an hour and may bring people (2026-11-15)
+On a card scene, Places with no map offers Look around: half an hour on the character's own clock, then a town encounter is drawn as at night (no chance roll, by day or night) and its people stand on the card scene a few squares off, in plain sight. When none comes, the player is told nobody comes near. House rule: no book gives a solo look-about.
+
+Reverse: take the "look" choice out of showPlaces in card.mjs.
+
+## B6045. The director brings one or two live things a night (2026-11-15, Ben's pick sp18)
+WoDX Solo director-rules.mjs. Once a night, at dusk on the seat, the director gathers what is already live for the character: the flaws and merits that pull trouble (WoDX Chronicle traits), a storyline's next beat (Threads of Fate), open oaths, debts, boons and aims in the Ledger, the Storyteller's own clocks the player may see, and a sign drawn from the story aids. A hard night just past, or three hard of the last four, is a rest (light things only); two quiet nights or more is pressure (two things, heavy ones first); else steady (one). The trouble dial takes one off (Quiet) or adds one (Often), from 1 to 3. Nothing is brought again within three nights, and each kind comes once before any comes twice. House rule after the pacing note (B1714) and the trouble dial (B1604).
+
+Reverse: turn off "The director brings the night's trouble".
+
+## B6046. What the director brings does something (2026-11-15)
+Each thing comes as a card to the player and the Storyteller, flagged as a story aid so it is on the Leads page, and goes in the Storyteller's log. A clock it brings moves a step. Under pressure the first heavy thing also brings people onto the character's scene, as a night encounter does. "I am stuck: bring me a lead" now asks the director for one light thing at once, and falls back to a foreshadowing.
+
+Reverse: drop the people and clock lines from bring in director.mjs; panel.mjs's stuck lead goes back to the foreshadowing.
+
+## B6047. Experience in the morning, from the log (2026-11-15, Ben's pick sp20)
+In the morning after a night (before noon), the seat awards the lone player's character from the line's own list in the book (WoDX Storyteller wrapup-rules.mjs, the session and story reasons, with the Dark Ages list before 1500), ticking only what the log shows: took part (anything the character did, the oracle included), real danger (an encounter, a fight, a breach, a frenzy, a death or torpor that night), learned something (the oracle asked, or a place seen for the first time) and a goal reached (a Ledger oath, debt, boon or aim marked kept that night). At most 5 a night (V20 pp. 123-124: 1 to 5 a session). It goes on the sheet through WoDX Creation's award, with its date and log page. Anything the log cannot judge (acting, heroism) is left out, so awards run low, as the desk said.
+
+Reverse: turn off "Experience at the end of each night", or change XP_NIGHT_MAX.
+
+## B6048. One award a night (2026-11-15)
+Each character's night is awarded once (setting wodx-solo.awarded). A long sleep through several nights awards only the night the morning follows.
+
+Reverse: clear wodx-solo.awarded to award a night again.
+
+## B6049. The recap when the player comes back (2026-11-15, Ben's pick sp27)
+When the lone player logs in, the seat whispers "Last night": the entries about the character in the night just gone, oldest first (travel, solo acts, encounters, the director's things, the award, the oracle's answers), in their own words. Asks and the seat's own log stay out. At most twelve lines; the rest are counted. Once per player per night.
+
+Reverse: remove the userConnected hook in director.mjs.
+
+## B6050. gate7b builds a fresh arena every run (2026-11-15)
+Gates. gate7b kept its arena scene and tokens between runs, so the tokens carried wounds, a frenzy and moves from one
+run into the next and into the lane snapshots; the plan steps passed on one lane and failed on another. The gate now
+removes any old arena and its fight, starts each token's sheet unhurt and out of frenzy, and removes the arena after.
+
+## B6051. gate7b asks for a suggestion on its plan step and walks the runner by its attack (2026-11-15)
+Gates. The world's NPC mode can be Auto, so the plan step's card was already played; the arena now asks for a
+suggestion for that step. The runner's flight from a far foe has nowhere to go, so the wall step takes its attack
+first, which walks it round the wall to the hero.
+
+Reverse: keep the arena between runs again, drop the scene's mode and take the first attack or flight.
+
+## B6070. Sleds, snow machines, trains and trams are mounts (2026-11-15)
+WoDX Interactables. Four new MOUNTS kinds, so they can be tiles and Vehicle sheets: sled (Sled or sleigh, Ride, any year, 4 seats), snowmobile (Snow machine, Drive, from 1910, 2 seats), train (Railway train, Drive, from 1825, 40 seats, cannot be worked below Drive 2) and tram (Tram or streetcar, Drive, from 1860, 40 seats, Drive 2). House rules; logged in PENDING-REVIEW.
+
+Reverse: remove the four entries from MOUNTS.
+
+## B6071. Deep snow or ice (2026-11-15)
+WoDX Interactables chase-rules. A new ground "snow": +1 difficulty, +2 for wheels and motors, hooves capped at 20 yards a turn, wheels 15, bicycles shut out. Sleds and snow machines go only on snow (ONLY_ON) and take no difficulty from it. Sled speed 20 yards a turn; the snow machines' chart by year (1910 to 2040). In a fight (rideInFight) a sled or a snow machine always stands on snow. A fall onto snow is 1 die (WoDX Combat FALL_DICE).
+
+Reverse: remove snow from GROUNDS and ONLY_ON, and from FALL_DICE.
+
+## B6072. A railway line (2026-11-15)
+WoDX Interactables chase-rules. A new ground "rails"; trains go only there, trams on rails or town streets. Charts by year with Maneuver 1 (they cannot swerve). Bodies: trains durability 6 to 12, structure 10 to 25, ram mass 8; trams 3 to 6, 6 to 12, mass 5. Headlights from 1900 as other motor vehicles, the big cone. A fall onto the line is 4 dice.
+
+Reverse: remove rails from GROUNDS, ONLY_ON, BODIES and WAYS.
+
+## B6073. Train and tram sprites at true length (2026-11-15)
+WoDX Paperdoll, tools/sprites/mount_rail.py. A train's look is its engine (with tender) and its first coach or wagon laid end to end at 37 pixels to the metre, so a train is up to 30 squares long and a tram up to 22; every sheet stays within 4096 pixels a side. Looks: 1825 pioneer, coal train, horse wagonway; 1850 American, European passenger, goods; 1900 express, tank engine, heavy goods; 1935 streamlined express, diesel railcar, electric engine; 1960 diesel, electric train, diesel freight; 1990 high-speed, regional, container freight; 2040 magnetic train, driverless shuttle, freight pod. Trams 1860 to 2040 (horse trams, electric with trolley poles, double-deck, streamlined, articulated, low-floor, driverless). Drawn side on with four facings like every mount, so the riders' own figures show.
+
+Reverse: drop the train and tram kinds from tools/sprites/mounts.py and rewrite the sheets.
+
+## B6074. Sled and sleigh sprites (2026-11-15)
+tools/sprites/mount_snow.py. Dog sleds (six or eight dogs in pairs, the musher standing on the runners), reindeer sledges, horse sledges with logs, hay or crates, painted sleighs with scrolls and bells, troikas with the arch over the shaft horse, cutters, bob sleighs; the team drawn from the beast rig with collars, traces and reins to the bit.
+
+Reverse: drop the sled kind.
+
+## B6075. Snow machine sprites (2026-11-15)
+tools/sprites/mount_snow.py. Motor sledges and propeller sledges from 1910, snow coaches and snowcats from 1935, snowmobiles from 1960, sport and touring snowmobiles from 1990, electric ones from 2040.
+
+Reverse: drop the snowmobile kind.
+
+## B6076. Quality pass on the vehicle sprites (2026-11-15)
+tools/sprites. Every ramp shifts hue (shadows cooler, lights warmer), as the pixel art rules ask; tanks and armoured cars get plate seams, a lit top edge, a stowage box, a tow cable, return rollers on the track's top run, and the 1916 tanks their sponson with its gun or machine gun in plain sight.
+
+Reverse: restore ramp() in mountkit.py and drop _plates and the sponson in mount_motor.py.
+## B6130. The held readings go in, worded as the books back them (2026-11-15)
+WoDX Chronicle, tools/timeline/build-world-history.mjs. WAITING is empty. The book check (project files global-world/book-check-readings.md, finished in the cloud from the OCR text) settled each card. 1521: Wraith 20th (pdf 101, 512 to 517) breaks the Dark Kingdom of Obsidian through the heretics' Flaying and the storm after it, so the card names the Flaying, with the plague and siege dead as the background, and the survivors' Mictlan. 1692: Verbena Revised (pdf 43) keeps the Verbena out of the trials; no book has hunters and mages blaming each other, so that part is gone. 1791: Wraith 20th (pdf 521) has Les Invisibles fan the slave revolts and the Mirrorlands battered by storms and Baka; the lwa among the rebels "by both sides" had no book and is gone. 1885: Wraith 20th (pdf 517 to 518, the Bush of Ghosts behind a false Ivory Queen) and Kindred of the Ebony Kingdom (pdf 16, Laibon fighting the Portuguese around 1540) back a continent already held. 1890: the Wendigo tribebook (pdf 28, 50 to 51) backs Garou among the Ghost Dancers. 1994: Kindred of the Ebony Kingdom (pdf 168) keeps the genocide mortal with elders using the chaos, and A World of Rage (pdf 94 to 95) has the Wyrm feed on it; no book ties it to the lands of the dead, so the card no longer says so and is renamed The killing in Rwanda.
+
+Reverse: put the eight year|title keys back in WAITING and rebuild.
+
+## B6131. The Croatan card stays out: the book event tells it (2026-11-15)
+WoDX Chronicle. The 1589 card agrees with the books (Past Lives pdf 66 to 70 gives the year), but the book event croatan already fires on that date with the same story, so the card joins TOLD_BY_BOOK and nothing fires twice.
+
+Reverse: remove "1589|The Croatan" from TOLD_BY_BOOK.
+
+## B6132. The 1830 card is the Squattocracy, not the start of the War of Tears (2026-11-15)
+WoDX Chronicle. Rage Across Australia (pdf 20 to 21) has the Wyrm's agents hold much of the colony's economy by 1830 and form the Squatters' Council, while the Bunyip withdraw inland; its War of Tears (pdf 23 to 24) is a single year of killing, told later in the book, and Past Lives (pdf 70) sets the Bunyip's last stand in 1937. The card no longer starts the war in 1830. It tells the Squattocracy instead, and the war stays the book event war-of-tears at 1899 (W20, era advancement's lost-tribe year), whose date note now names Rage Across Australia and Past Lives so the Storyteller can move it to 1937.
+
+Reverse: restore the 1830 line "The War of Tears begins" in r3/age-of-reason.txt; move war-of-tears to 1937 in data/events.mjs to follow Past Lives.

@@ -10,6 +10,8 @@
  *     Iron Will against mind powers, Magic Resistance against magic).
  * Player characters and NPCs are read the same way.
  */
+import * as PM from "./power-mods.js";
+
 const NONE = Object.freeze({ dice: 0, diff: 0, parts: [] });
 
 function traits() {
@@ -29,13 +31,32 @@ export function tagsFor(...keys) {
 }
 
 export function traitMods(actor, tags = [], { target = null, moon = null } = {}) {
+    // B6001: the powers and rituals on the roller (a Boost, a Blessing or Curse, a Calm) count with the traits
+    const pw = powerPart(actor, tags);
     const T = traits();
-    if (!T || !actor || !tags.length) return NONE;
+    if (!T || !actor || !tags.length) return pw ?? NONE;
     try {
         const against = target ? T.kindOf(target) : null;
         const list = T.effects(actor, { channel: "roll", tags, against, moon: moon ?? (tags.includes("frenzy") ? moonNow() : "") });
-        return T.rules.sumEffects(list);
-    } catch (e) { console.warn("WoDX Actions | trait effects", e); return NONE; }
+        const s = T.rules.sumEffects(list);
+        return pw ? { dice: s.dice + pw.dice, diff: s.diff + pw.diff, parts: [...s.parts, ...pw.parts], once: pw.once } : s;
+    } catch (e) { console.warn("WoDX Actions | trait effects", e); return pw ?? NONE; }
+}
+
+/** The powers part of a roll (power-mods.js), or null when there is none. The tags of the pool name the kind of roll. */
+function powerPart(actor, tags = []) {
+    if (!actor || !tags.length) return null;
+    try {
+        const r = PM.powerMods(actor, { tags: [...tags, ...physicalOf(tags)], frenzy: tags.includes("frenzy") });
+        return r.dice || r.diff ? r : null;
+    } catch (e) { console.warn("WoDX Actions | power effects on the roll", e); return null; }
+}
+/** A Dexterity or Stamina roll counts as Physical for a Boost; Strength too. */
+const physicalOf = tags => (tags.some(t => ["strength", "dexterity", "stamina", "athletics", "brawl", "melee", "dodge"].includes(t)) ? ["physical"] : []);
+/** B6002: after the dice are thrown, the Blessing or Curse that roll used is spent. */
+export async function spendOnce(actor, mods) {
+    if (!mods?.once?.length) return 0;
+    return PM.consumeOnce(actor, mods.once);
 }
 
 export function resistMods(target, tags = [], actor = null) {

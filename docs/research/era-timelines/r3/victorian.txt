@@ -370,7 +370,7 @@
 1879|H|mor|AF|Isandlwana|battle,war,empire|Isandlwana|The Zulu army destroys a British column at Isandlwana; the kingdom is broken by the end of the year.
 1881|H|mor|AF|Sudan|faith,uprising,war|The Mahdi|A Sudanese holy man claims to be the Mahdi and raises the country against Egyptian rule.
 1885|H|mor|AF|Congo|empire,founding,persecution|The Congo Free State|The powers recognise the king of the Belgians as the private owner of the Congo; millions die in the rubber terror that follows.
-1885|W|wer,vam|AF|Congo|occult,empire|The scramble|The house reading has every hidden power of Europe follow the flags into Africa and find the continent already held: by its own shapeshifters, its own undead and its own dead.
+1885|W|wer,vam,wra|AF|Congo|occult,empire|The scramble|The house reading has every hidden power of Europe follow the flags into Africa and find the continent already held: by its own shapeshifters, by Laibon who fought the Portuguese centuries before, and by the dead of the Bush of Ghosts behind a false Ivory Queen.
 1886|H|mor|AF|Johannesburg|industry,money,founding|Gold on the Rand|The richest goldfield in the world is found on the Witwatersrand.
 1893|H|mor|AF|Bulawayo|war,empire,industry|The Matabele war|A chartered company's column with machine guns takes the Ndebele capital.
 1896|H|mor|AF|Adwa|battle,war,empire|Adwa|The army of Menelik the Second destroys an Italian army at Adwa, and Ethiopia stays free.

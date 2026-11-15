@@ -510,8 +510,26 @@ def _open_crate(m, X, Y, s, goods, lid="w"):
 
 
 def hay(m, x, y, r=26):
-    """A heap of loose hay with a pitchfork stuck in it."""
+    """A heap of loose hay with a pitchfork stuck in it. From r 60 up, a field stack: a tall round rick built about a
+    pole, its straw combed down the sides, domed and lit from the north-west, with loose hay round its foot."""
     d = m.d; cx, cy = P(x), P(y); S = R["straw"]; rng = m.rng
+    if r >= 60:
+        m.shade((cx - r + r * .3, cy - r + r * .38, cx + r + r * .3, cy + r + r * .38), kind="ellipse", f=.6)
+        for _ in range(int(r * 1.6)):                                             # loose hay trodden round the foot
+            a = rng.uniform(0, 6.28); t = r * rng.uniform(1.0, 1.22); x_, y_ = cx + math.cos(a) * t, cy + math.sin(a) * t; b = a + rng.uniform(-.6, .6)
+            d.line([x_, y_, x_ + math.cos(b) * 6, y_ + math.sin(b) * 6], fill=S[rng.integers(1, 4)])
+        m.dome(cx, cy, r, "straw")
+        for _ in range(int(r * r * .12)):                                         # straw combed down from the crown
+            a = rng.uniform(0, 6.28); t = rng.uniform(.15, .97) * r; x_, y_ = cx + math.cos(a) * t, cy + math.sin(a) * t
+            lit = (x_ - cx) + (y_ - cy) < -r * .2; L_ = rng.uniform(5, 10)
+            d.line([x_, y_, x_ + math.cos(a) * L_, y_ + math.sin(a) * L_], fill=S[4] if lit else S[1] if (x_ - cx) + (y_ - cy) > r * .3 else S[2])
+        for k in range(3):                                                        # ropes weighted over the top
+            a = k * 2.09 + .3; d.line([cx, cy, cx + math.cos(a) * r * .95, cy + math.sin(a) * r * .95], fill=R["dwood"][2], width=2)
+        m.disc(cx, cy, max(6, r // 12), "dwood", 2)                               # the stack pole's top
+        hx, hy = cx + r * 1.05, cy + r * .45                                      # a fork leant at the foot
+        d.line([hx, hy, hx + 36, hy - 26], fill=OUT, width=3); d.line([hx, hy, hx + 36, hy - 26], fill=R["wood"][4])
+        for k in (-4, 0, 4): d.line([hx + k * .6, hy + k * .8, hx - 7 + k * .6, hy + 6 + k * .8], fill=R["iron"][4])
+        return
     m.shade((cx - r + 3, cy - r * .7 + 5, cx + r + 5, cy + r * .7 + 7), kind="ellipse", f=.58)
     d.ellipse([cx - r, cy - r * .7, cx + r, cy + r * .7], fill=S[1], outline=OUT); d.ellipse([cx - r + 3, cy - r * .7 + 2, cx + r - 6, cy + r * .7 - 6], fill=S[2]); d.ellipse([cx - r * .6, cy - r * .5, cx + r * .2, cy], fill=S[3])
     for _ in range(int(r * 2.4)):
@@ -523,7 +541,7 @@ def hay(m, x, y, r=26):
 
 
 @openable
-def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True):
+def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True, glass=True):
     """A window one can name from above: the wall cut through to a pale sill between two jambs, a lattice of bars
     across the opening, two plank shutters swung open against the outside of the wall, and daylight on the floor within."""
     from PIL import Image, ImageDraw
@@ -549,6 +567,8 @@ def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True):
         a = a * (1 + k * np.array([.30, .30, .22], np.float32)) + k * np.array([8, 9, 6], np.float32)
         m.img.paste(Image.fromarray(a.clip(0, 255).astype(np.uint8)), (X0, Y0))
     G = [(34, 52, 72), (62, 94, 118), (104, 144, 164), (160, 196, 204), (226, 240, 240)]              # glass, dark to glint
+    if not glass:                                                                # before glass reached a house: the dark of the room through the hole
+        G = [(14, 10, 14), (24, 18, 22), (30, 22, 26), (36, 28, 30), (44, 34, 34)]
     Sh = R["red"]
     rect(0, -t, L, t, fill=W_[2], outline=OUT)                                   # the frame, set through the wall
     rect(1, -t + 1, L - 1, -t + 2, fill=tone(W_[4], 20)); rect(1, t - 2, L - 1, t - 1, fill=W_[1])
@@ -559,8 +579,9 @@ def window(m, x0, y0, x1, y1, th=26, centre=(10, 6.5), light=True):
         rect(u0, v0, u1, v1, fill=G[1])
         poly([(u0, v0), (u1 - 4, v0), (u0, v1 - 3)], fill=G[2])
         poly([(u0, v0), (u0 + (u1 - u0) * .45, v0), (u0, v0 + (v1 - v0) * .5)], fill=G[3])
-        (xa, ya), (xb, yb) = pt(u0 + 3, v1 - 5), pt(u0 + 3 + (v1 - v0) - 8, v0 + 3); d.line([xa, ya, xb, yb], fill=G[4], width=2)
-        (xa, ya), (xb, yb) = pt(u0 + 10, v1 - 4), pt(u0 + 10 + (v1 - v0) - 12, v0 + 8); d.line([xa, ya, xb, yb], fill=G[3])
+        if glass:
+            (xa, ya), (xb, yb) = pt(u0 + 3, v1 - 5), pt(u0 + 3 + (v1 - v0) - 8, v0 + 3); d.line([xa, ya, xb, yb], fill=G[4], width=2)
+            (xa, ya), (xb, yb) = pt(u0 + 10, v1 - 4), pt(u0 + 10 + (v1 - v0) - 12, v0 + 8); d.line([xa, ya, xb, yb], fill=G[3])
         if i: rect(u0 - 3, -t + 4, u0 - 1, t - 4, fill=W_[3], outline=OUT)       # a wooden mullion between panes
     half = L // 2 - 1
     if state == "closed":                                                        # both shutters swung shut over the outside of the glass, barred
