@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.49.1 (Ghouled animals: a ridden beast's Potence counts toward its Strength, next to its Celerity, which already counted)
 - 0.49.0 (Bicycles as a tile, and mounts out of the books: ghouled horses, fleshcrafted steeds, chimerical steeds, Stygian steeds and gryphons (B4960-B4964); Riding the animal itself: a "mountable" tag on creatures, guessed from the name, set in the token's config (B4966, B4967); Vehicles get their own sheet: a module-defined kind of actor, ridden and driven as a token (B4968, B4969))
 - 0.48.0 (A player character fleeing a fight starts a chase on its own, as an NPC's flight already did; holy ground is readable for other modules (B5170, B5176))
 - 0.47.0 (Calls that reach someone (B4883); Chases and restocking on their own (B4887, B4888); A botched look at a clue misleads (B5016); Fire calls up the Red Fear (B5010) and a look shows who is there (B4889))
