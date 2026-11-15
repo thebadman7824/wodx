@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.74.0 (Mizrahi names raised to 300 (B5580); Sephardi names raised to 300 (B5570))
 - 0.73.0 (German names raised to 300 (B5540); Maori names raised to 300 (B5560); Norse names raised to 300 (B5550))
 - 0.72.0 (English names raised to 300 (B5480); French names raised to 300 (B5490); Italian names raised to 300 (B5510); Japanese names raised to 300 (B5520); Russian names raised to 300 (B5530); Spanish names raised to 300 (B5500))
 - 0.71.0 (A Fetter that is a place is checked against the town over time when the era moves on (B5391))

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5570
+Next free block: B5590
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -287,6 +287,8 @@ Next free block: B5570
 | B5540-B5549 | Names raised to 300, German (used B5540) | Creation |
 | B5550-B5559 | Names raised to 300, Norse (used B5550) | Creation |
 | B5560-B5569 | Names raised to 300, Maori (used B5560) | Creation |
+| B5570-B5579 | Names raised to 300, Sephardi (used B5570) | Creation |
+| B5580-B5589 | Names raised to 300, Mizrahi (used B5580) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8529,3 +8531,13 @@ Reverse: restore the norse entry in data/people-world.mjs and drop norse from RA
 WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Maori list grows from 64 names to 359: old names of ancestors, navigators and chiefs of the canoe and tribal traditions, then names of the 19th century chiefs and prophets, church names and modern names, with family names from the 19th century on. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: restore the maori entry in data/people-world.mjs and drop maori from RAISED.
+
+## B5570. Sephardi names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Sephardi list grows from 140 names to 388: more names from the aljama and notarial records of Castile, Aragon and Portugal, then Ladino and Portuguese Nation names and family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the sephardi entry in data/people-world.mjs and drop sephardi from RAISED.
+
+## B5580. Mizrahi names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Mizrahi list grows from 138 names to 424: more names from the Cairo Geniza, Baghdad, Persia, Yemen and the Maghreb, with more town names before 1800 and family names after; the names gate sample for modern family names is drawn from 400 people instead of 100, as the longer list makes each name rarer. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the mizrahi entry in data/people-world.mjs and drop mizrahi from RAISED.
