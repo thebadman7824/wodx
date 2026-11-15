@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 3.96.0 (Strengthening the Demon and a fomor's Numbing are playable: Chi'iu Muh's Strengthening the Demon (Kindred of the East Companion p. 74) in the Spend Chi window, and Numbing (W20 p. 436) under Fomor power in the mortal launcher; both pay their after-costs by themselves (B5161, B5162))
 - 3.95.0 (The Storyteller's Hand, round two: holy ground lifts Faith by one for the faithful, a Marauder's magick draws no Paradox, Untamable shrugs off commanding powers, and the Lore of the Winds at three dots or more raises the wind or a storm for the night (B5170, B5172-B5174))
 - 3.94.0 (Ben's Power Limits Desk picks a1, b1, b2 and c1 (22:44Z) and After-Cost Desk picks (22:59Z), 14 November 2026. New limit-rules.js, limits.js, after-cost-rules.js and after-costs.js; the werewolf and wraith once-a-scene counts move onto the one scene count. api limits {state, gate, decorate, lostTo, clear, sceneNo, newScene, isDrained, rules, afterCosts}, plus npcPowers and autoPower for WoDX NPC)
 - 3.93.1 (Ghouled animals, step three (B5059): animals that have not been trained keep no Willpower they spend (V20 Dark Ages p. 396))
