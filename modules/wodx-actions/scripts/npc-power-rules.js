@@ -22,5 +22,5 @@ export function tagsOf(keywords = []) {
   return {uses, obvious: keywords.some(k => OBVIOUS.has(k))};
 }
 
-/** B5660: the effect keywords a line's own results give (the effects card's keys), for the NPC power choice. */
+/** B5670: the effect keywords a line's own results give (the effects card's keys), for the NPC power choice. */
 export const keysOf = (results = []) => [...new Set((results ?? []).map(r => r?.key).filter(k => k && k !== "world"))];

@@ -298,7 +298,7 @@ export function build(ctx) {
         }
     }
 
-    /** B5661: the named Hekau an NPC mummy may cast by itself (main.js npcPowers). */
+    /** B5671: the named Hekau an NPC mummy may cast by itself (main.js npcPowers). */
     function powersFor(actor) {
         const i = info(actor);
         if (!i.inWeb && i.sekhem.pool === 0) return [];

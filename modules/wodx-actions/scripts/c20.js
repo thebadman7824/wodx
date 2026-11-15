@@ -405,7 +405,7 @@ export function build(ctx) {
           <div class="form-group"><label><input type="checkbox" name="dreaming"${p.dreaming ? " checked" : ""}/> In the Dreaming</label></div></form>`, "Save",
             async fd => scene.setFlag(MOD, "place", { ...p, freehold: !!fd.freehold, dreaming: !!fd.dreaming }));
     }
-    /** B5664: the named cantrips an NPC changeling may weave by itself (main.js npcPowers), with the Realm it knows best for a person. */
+    /** B5674: the named cantrips an NPC changeling may weave by itself (main.js npcPowers), with the Realm it knows best for a person. */
     function powersFor(actor) {
         const i = info(actor);
         if (i.closed?.all || i.glamour.temp < 1) return [];

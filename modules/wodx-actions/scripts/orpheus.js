@@ -287,7 +287,7 @@ export function build(ctx) {
         if (lines.length) await ChatMessage.create({ content: `<div class="vta-card"><h3>Rest</h3><ul>${lines.map(l => `<li>${l}</li>`).join("")}</ul><p class="wodx-quiet">${REF} pp. 191–192</p></div>`, whisper: game.users.filter(u => u.isGM).map(u => u.id), speaker: { alias: "WoDX" }, flags: { [MOD]: { info: true } } });
         return lines;
     }
-    /** B5668: the Horrors an NPC projector or spook may use by itself (main.js npcPowers), with one Vitality put in. */
+    /** B5678: the Horrors an NPC projector or spook may use by itself (main.js npcPowers), with one Vitality put in. */
     function powersFor(actor) {
         if (!isOrpheus(actor)) return [];
         const i = info(actor);

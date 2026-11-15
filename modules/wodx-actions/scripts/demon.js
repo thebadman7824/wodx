@@ -470,7 +470,7 @@ export function build(ctx) {
         }
     }
 
-    /** B5666: the evocations of the Lores an NPC demon knows, to use by itself (main.js npcPowers). */
+    /** B5676: the evocations of the Lores an NPC demon knows, to use by itself (main.js npcPowers). */
     function powersFor(actor) {
         const i = info(actor);
         if (i.faith.temp < 1) return [];

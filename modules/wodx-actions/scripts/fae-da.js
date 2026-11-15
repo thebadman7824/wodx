@@ -530,7 +530,7 @@ export function build(ctx) {
         }
     }
 
-    /** B5665: the cantrips an NPC fae has written down, to cast by itself (main.js npcPowers). */
+    /** B5675: the cantrips an NPC fae has written down, to cast by itself (main.js npcPowers). */
     function powersFor(actor) {
         if (!isDA(actor)) return [];
         const i = info(actor);

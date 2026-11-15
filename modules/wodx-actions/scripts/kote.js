@@ -479,7 +479,7 @@ export function build(ctx) {
         });
     }
 
-    /** B5667: the named powers of the Kuei-jin's Disciplines, for an NPC to use by itself (main.js npcPowers). */
+    /** B5677: the named powers of the Kuei-jin's Disciplines, for an NPC to use by itself (main.js npcPowers). */
     function powersFor(actor) {
         const arts = (actor.items ?? []).filter(x => x.type === "Power" && /types\.discipline$/.test(String(x.system?.type ?? "")));
         return arts.flatMap(it => KA.powersOf(KA.artKeyOf(it.name), n(it.system?.value)).map(p => ({ use: "useChiArt", field: "art", value: it.id, fill: { pw: p.id }, name: p.name, disc: it.name, level: p.l, set: "chiart", id: p.id,

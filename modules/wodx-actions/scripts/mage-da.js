@@ -527,7 +527,7 @@ export function build(ctx) {
         }
     }
 
-    /** B5662: the fellowship's rotes an NPC mage may cast by itself (main.js npcPowers). */
+    /** B5672: the fellowship's rotes an NPC mage may cast by itself (main.js npcPowers). */
     function powersFor(actor) {
         const i = info(actor);
         if (!i.fellowship) return [];

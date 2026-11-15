@@ -14,7 +14,7 @@ import * as IB from "../../modules/wodx-actions/scripts/inq-blessings.js";
 const src = p => fs.readFileSync(new URL(`../../${p}`, import.meta.url), "utf8");
 const usable = list => list.filter(k => NPW.tagsOf(k).uses.length).length;
 
-/* B5660-B5669: NPCs of every other line choose their own powers */
+/* B5670-B5679: NPCs of every other line choose their own powers */
 test("keysOf: the effects card's keys, once each, the world row left out", () => {
   assert.deepEqual(NPW.keysOf([{key: "harm"}, {key: "harm"}, {key: "world"}, {key: "fear"}, {}]), ["harm", "fear"]);
   assert.deepEqual(NPW.keysOf(null), []);

@@ -284,7 +284,7 @@ export function build(ctx) {
         return true;
     }
 
-    /** B5663: the saved rotes an NPC mage may cast by itself (main.js npcPowers): the window's own rote list, by place. */
+    /** B5673: the saved rotes an NPC mage may cast by itself (main.js npcPowers): the window's own rote list, by place. */
     function powersFor(actor) {
         const i = info(actor);
         return EF.rotesOf(actor).map((r, k) => ({ r, k })).filter(({ r }) => (r.keywords ?? []).length && Object.entries(r.spheres ?? {}).every(([s, v]) => n(i.spheres[s]) >= n(v)))

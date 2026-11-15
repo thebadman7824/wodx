@@ -561,7 +561,7 @@ function npcPowers(actor) {
     try { if (FOM.isFomor(actor)) from.push(...fmx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
     // B5657: spirits choose their own Charms
     try { if (CHM.isSpirit(actor)) from.push(...chmx().powersFor(actor)); } catch (e) { console.warn("WoDX | npc powers", e); }
-    // B5660: the other lines choose their own powers: Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors, Blessings
+    // B5670: the other lines choose their own powers: Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors, Blessings
     const line = (test, get) => { try { if (test()) from.push(...get()); } catch (e) { console.warn("WoDX | npc powers", e); } };
     line(() => UXD.isMummy(actor), () => ux().powersFor(actor));
     line(() => kind === "mage" && MXD.isDA(actor), () => mx().powersFor(actor));
