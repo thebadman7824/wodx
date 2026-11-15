@@ -20,12 +20,11 @@ export const ERAS = ["dark-ages", "long-night", "renaissance", "age-of-reason", 
 const REGIONS = new Set(["MO", "EU", "ME", "AS", "AF", "AM", "OC"]);
 const LINES = {mor: "mortal", vam: "vampire", wer: "werewolf", mag: "mage", wra: "wraith", cha: "changeling", hun: "hunter", mum: "mummy",
   kue: "kote", dem: "demon", all: "all"};
-/** The house readings waiting on the book check (year and title), kept out until it lands. */
-export const WAITING = new Set(["1521|The dead of the conquest", "1589|The Croatan", "1692|What was at Salem", "1791|The dead walk with the living",
-  "1830|The War of Tears begins", "1890|The Ghost Dance", "1885|The scramble", "1994|The Shadowlands of Rwanda"]);
+/** House readings held back for a book check (B5926). The check landed (B6130 to B6136): none is held now. */
+export const WAITING = new Set([]);
 
 /** House readings the book events (data/events.mjs) already tell, kept out so nothing fires twice (B5926): year|title to the book event. */
-export const TOLD_BY_BOOK = {"1350|The Shattering": "shattering", "1435|The Camarilla founded": "camarilla", "1444|Cappadocius falls": "cappadocians",
+export const TOLD_BY_BOOK = {"1350|The Shattering": "shattering", "1435|The Camarilla founded": "camarilla", "1589|The Croatan": "croatan", "1444|Cappadocius falls": "cappadocians",
   "1466|The Grand Convocation ends": "grand-convocation", "1486|The first Conclave": "first-conclave", "1493|The Convention of Thorns": "thorns",
   "1600|The Third Great Maelstrom": "third-great-maelstrom", "1897|The Technocracy named": "technocracy", "1969|The Resurgence": "resurgence",
   "1998|Doissetep falls": "doissetep", "1999|The Week of Nightmares": "week-of-nightmares", "1999|The Sixth Great Maelstrom": "sixth-great-maelstrom",

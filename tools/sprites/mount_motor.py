@@ -2,6 +2,7 @@
 # era and style is a row of figures, not its own drawing. Sizes are in pixels at 37 to the metre; x runs from the tail
 # to the nose, y up from the ground.
 import math
+import numpy as np
 from mountkit import *
 
 
@@ -330,6 +331,35 @@ def _track(t, X, Y, x0, x1, h, r, ph, rise=0, rhomb=None):
         t.wheel(X(cx), Y(r * .9 + 1), r * .82, 'disc', ph, hub=KA)
     t.ell(X(x0 + r * .8), Y(r + rise + 1), r * .55, r * .55, IRON, 2); t.ell(X(x1 - r * .8), Y(r + rise + 1), r * .55, r * .55, IRON, 2)
     for x in range(int(x0) + r + int(ph * 3) % 5, int(x1) - r, 5): t.px(X(x), Y(0), IRON, 3)
+    # B6076: the top run of the track on its return rollers, and the track's links along the top
+    if h > 10:
+        for i in range(1, max(2, n // 2)):
+            rx = x0 + (x1 - x0) * i / max(2, n // 2)
+            t.ell(X(rx), Y(h - 2), 2.2, 2.2, STEEL, 2)
+        for x in range(int(x0 + r * .6) + int(ph * 3) % 4, int(x1 - r * .6), 4): t.px(X(x), Y(h), IRON, 3)
+
+
+def _plates(t, hull, p):
+    """B6076: armour plate seams a tone darker, a lit top edge, and a stowage box: so the hull reads as welded plate, not a blob"""
+    ys, xs = np.nonzero(hull)
+    if not len(xs): return
+    x0, x1 = xs.min(), xs.max(); y0 = ys.min()
+    top = np.where(hull.any(0), hull.argmax(0), 0)
+    for x in range(x0 + 34, x1 - 20, 46):
+        col = np.nonzero(hull[:, x])[0]
+        if len(col) > 8:
+            for y in range(col.min() + 3, col.max() - 2): t.c[y, x, :3] = KA[1]
+    for x in range(x0 + 2, x1 - 1):
+        if hull[:, x].any(): t.c[top[x], x, :3] = KA[4]
+    # a stowage box near the tail, and a tow cable along the flank
+    bx = x0 + 10
+    if hull[:, bx + 14].any():
+        by = top[bx + 8] + 4
+        t.rect(bx, by + 8, bx + 18, by, KB, 2, vol=(1, 1), edge=1)
+    mid = (top + 0)
+    cy = int(np.median([mid[x] for x in range(x0 + 4, x1 - 4) if hull[:, x].any()])) + 10
+    for x in range(x0 + 34, x1 - 30, 2):
+        if hull[cy, x]: t.c[cy + (x // 6) % 2, x, :3] = IRON[2]
 
 
 def armour_side(p, FW, FH, ph=0):
@@ -340,9 +370,16 @@ def armour_side(p, FW, FH, ph=0):
     for xa in p['wheels']: t.ell(X(xa) + 2, Y(r) - 1, r, r, TYRE, 1)
     if p['tracks'] and not p['tracks'].get('rhomb'):
         tr = p['tracks']; _track(t, X, Y, tr['x0'], tr['x1'], tr['h'], tr.get('r', 8), ph, tr.get('rise', 0))
-    t.poly([(X(x), Y(y)) for x, y in p['hull']], KA, 2, vol=(2, 3), edge=1)
+    hull = t.poly([(X(x), Y(y)) for x, y in p['hull']], KA, 2, vol=(2, 3), edge=1)
+    _plates(t, hull, p)
     if p['tracks'] and p['tracks'].get('rhomb'):
         _track(t, X, Y, 0, L, 0, 0, ph, rhomb=p['tracks']['rhomb'])
+        # B6076: the sponson on the flank, with its gun or machine gun, and a row of rivets; the books' first tanks show it
+        hh = max(y for x, y in p['hull'])
+        t.rect(X(L * .38), Y(hh * .62), X(L * .6), Y(hh * .3), KA, 2, vol=(2, 2), edge=1)
+        for x in range(int(L * .38) + 3, int(L * .6) - 1, 5): t.px(X(x), Y(hh * .62) + 2, KA, 4)
+        if p.get('sponson', 'gun') == 'gun': t.line([(X(L * .6), Y(hh * .46)), (X(L * .6 + 22), Y(hh * .46))], IRON, 2, w=3)
+        elif p.get('sponson') == 'mg': t.line([(X(L * .6), Y(hh * .46)), (X(L * .6 + 12), Y(hh * .46))], IRON, 1, w=1)
     for e in p['extras']:
         k = e[0]
         if k == 'rect': t.rect(X(e[1]), Y(e[2]), X(e[3]), Y(e[4]), e[5], 2, vol=(1, 1), edge=1)
@@ -455,7 +492,7 @@ def tanks():
     out = []
     rh = [(10, 0), (0, 22), (16, 62), (150, 70), (214, 44), (222, 26), (196, 0)]
     for sid, label, ex in (('male', 'Gun tank', (('rect', 92, 44, 128, 22, KA), ('line', 126, 34, 150, 34, IRON, 3))), ('female', 'Machine-gun tank', (('rect', 92, 44, 124, 24, KA), ('line', 122, 38, 136, 38, IRON, 1), ('line', 122, 30, 136, 30, IRON, 1))), ('supply', 'Supply tank', (('rect', 60, 78, 130, 68, WOOD),))):
-        out.append((1916, sid, label, A(L=222, w=104, tracks=dict(rhomb=rh, h=60, eh=58), hull=[(60, 60), (60, 74), (118, 76), (120, 62)], hatch=(90, 75), extras=(('slit', 108, 70, 8),) + ex, seats=8, front=dict(nose=36, slits=(-8, 8))), 'army'))
+        out.append((1916, sid, label, A(L=222, w=104, tracks=dict(rhomb=rh, h=60, eh=58), hull=[(60, 60), (60, 74), (118, 76), (120, 62)], hatch=(90, 75), extras=(('slit', 108, 70, 8),) + ex, seats=8, front=dict(nose=36, slits=(-8, 8)), sponson={'male': 'gun', 'female': 'mg'}.get(sid, 'none')), 'army'))
     def T(L, th, hull, tur, gun, w=88, **k):
         return A(L=L, w=w, tracks=dict(x0=2, x1=L - 2, h=th, r=k.pop('tr', 8), rise=k.pop('rise', 4)), hull=hull, turret=tur, gun=gun, front=dict(nose=th + 8, slits=(-10,)), **k)
     out += [

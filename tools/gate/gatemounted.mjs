@@ -12,6 +12,7 @@
  *   6. a bow from a trotting horse: +4 in place of the saddle's +1, with the note
  *   7. an untrained lance charge: the jolt runs back to the rider, and the target must stand against it
  *   8. a real attack on a rider: the card carries the saddle roll after a hit
+ *   9. a fall into deep snow: on a snow scene the fall rolls 1 die, not the road's 3 (B6072)
  * Result: Data/wodx-gate/gatemounted-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -115,6 +116,16 @@ export async function run() {
         if ( !M().rideFor(foe, tb) ) break;
       }
       G.ok("8. a real attack on a rider", /Keeping the saddle|unhorsed|knocked out of the saddle/.test(card), {card: card.slice(0, 600)});
+    });
+    await G.step("9. a fall into deep snow", async () => {
+      await scene.update({[`flags.${IX}.ground`]: "snow"});
+      await nag.update({x: tc.x, y: tc.y, [`flags.${IX}.driver`]: seat(tc, {x: tc.x, y: tc.y})});
+      await waitFor(() => !!M().rideFor(weak, tc), 4000);
+      let r = null;
+      for ( let i = 0; i < 6 && !(r?.thrown); i++ ) r = await M().saddleTest(weak, {diff: 10, riderTok: tc});
+      const t = text((r?.lines ?? []).join(" "));
+      await r?.apply();
+      G.ok("9. a fall into deep snow", !!r?.thrown && /1 dice on snow/.test(t), {thrown: !!r?.thrown, lines: r?.lines?.map(text)});
     });
     if ( combat ) await combat.delete().catch(() => {});
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }

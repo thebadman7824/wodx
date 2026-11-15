@@ -49,7 +49,7 @@ export async function run() {
       const [lan] = await give("soulfire-lantern");
       const a0 = num(tok.alpha);
       const r = await WU.run(lan, "wonder:hide", w);
-      await waitFor(() => num(tok.alpha) < 0.5, 5000).catch(() => null);
+      await waitFor(() => Math.abs(num(tok.alpha) - 0.25) < 0.01, 5000).catch(() => null);
       const faded = num(tok.alpha), glow = num(tok.light?.dim), pool = num(lan.flags[LIB].wonder.pool.value);
       await WU.run(lan, "wonder:lower", w);
       await waitFor(() => num(tok.alpha) === a0, 5000).catch(() => null);
@@ -59,7 +59,7 @@ export async function run() {
       const card = [...game.messages].filter(m => m.flags?.[LIB]?.wonderUndo?.item === lan.uuid).sort((x, y) => x.timestamp - y.timestamp).at(-1);
       await WU.undo(card);
       await waitFor(() => num(tok.alpha) === a0, 5000).catch(() => null);
-      G.ok("2. lantern", !!r && faded === 0.25 && glow > 0 && pool === 9 && back === a0 && num(tok.alpha) === a0 && num(lan.flags[LIB].wonder.pool.value) === 9,
+      G.ok("2. lantern", !!r && Math.abs(faded - 0.25) < 0.01 && glow > 0 && pool === 9 && back === a0 && num(tok.alpha) === a0 && num(lan.flags[LIB].wonder.pool.value) === 9,
         {a0, faded, glow, pool, back, afterUndo: num(tok.alpha), poolAfterUndo: lan.flags[LIB].wonder.pool.value});
     });
 

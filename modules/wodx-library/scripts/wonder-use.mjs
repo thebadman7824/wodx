@@ -91,14 +91,14 @@ async function showPower(item, actor, power, show = {}) {
   if ( show.token && tok?.isOwner ) {
     const was = flagOf(item)?.tokenWas;
     if ( show.token.restore ) {
-      if ( was ) { await tok.update({alpha: was.alpha ?? 1, light: was.light ?? {}}); await item.update({[`flags.${MOD}.${P.FLAG}.tokenWas`]: null}); }
+      if ( was ) { await tok.update({alpha: was.alpha ?? 1, light: was.light ?? {}}, {animate: false}); await item.update({[`flags.${MOD}.${P.FLAG}.tokenWas`]: null}); }
     } else if ( show.token.set ) {
       tokenWas = {alpha: tok.alpha ?? 1, light: tok.light?.toObject?.() ?? foundry.utils.deepClone(tok.light ?? {})};
       if ( !was ) await item.update({[`flags.${MOD}.${P.FLAG}.tokenWas`]: tokenWas});
       const up = {};
       if ( show.token.set.alpha !== undefined ) up.alpha = n(show.token.set.alpha);
       if ( show.token.set.light ) up.light = show.token.set.light;
-      await tok.update(up);
+      await tok.update(up, {animate: false});
     }
   }
   if ( show.place?.light && tok ) {
@@ -167,7 +167,7 @@ export async function undoCard(message) {
   if ( !(game.user.isGM || actor?.isOwner) ) { ui.notifications.warn("Only the Storyteller or the character's player can undo this."); return false; }
   if ( item && (Object.keys(u.itemData ?? {}).length || u.bonuslist) ) await item.update({...u.itemData, ...(u.bonuslist ? {"system.bonuslist": u.bonuslist} : {})});
   if ( actor && Object.keys(u.actorData ?? {}).length ) await actor.update(u.actorData);
-  if ( u.token && u.tokenData ) { const t = await fromUuid(u.token); if ( t?.isOwner ) await t.update({alpha: u.tokenData.alpha ?? 1, light: u.tokenData.light ?? {}}); if ( item ) await item.update({[`flags.${MOD}.${P.FLAG}.tokenWas`]: null}); }
+  if ( u.token && u.tokenData ) { const t = await fromUuid(u.token); if ( t?.isOwner ) await t.update({alpha: u.tokenData.alpha ?? 1, light: u.tokenData.light ?? {}}, {animate: false}); if ( item ) await item.update({[`flags.${MOD}.${P.FLAG}.tokenWas`]: null}); }
   if ( message.isOwner || game.user.isGM ) await message.update({[`flags.${MOD}.wonderUndo.done`]: true, content: message.content.replace(/<button[^>]*wlib-wonder-undo[^>]*>Undo<\/button>/, "<p><i>Undone.</i></p>")});
   return true;
 }
