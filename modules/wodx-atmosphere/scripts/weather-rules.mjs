@@ -241,20 +241,140 @@ export function climateForRegion(region) {
 }
 
 /**
- * How much warmer or colder an era runs than the 20th-century normal (°C), and how much stormier. Rounded figures from
- * the climate history of Europe and North America: the medieval warm spell, the Little Ice Age (deepest in the Maunder
- * low), the year without a summer (1816), and the warming since 1980. Past 2025 the trend goes on, for Future Darkness.
+ * How strongly each climate feels the long swings of the climate's history (0.17.0, B5950). The Little Ice Age and the
+ * medieval warm spell were deepest around the North Atlantic and the far north, milder inland in Asia, faint in the
+ * tropics and the south. Warming since 1980 runs fastest at the poles. Rounded figures for play.
  */
-export function eraShift(year, month = 7) {
+export const ERA_WEIGHT = {
+  "central-europe": 1, "maritime-europe": 1, "northern-europe": 1.1, "american-east": 1, "great-plains": 0.8,
+  "boreal": 1, "polar": 1.2, "steppe": 0.9, "inner-asia": 0.7, "north-east-asia": 0.8, "east-asia-humid": 0.6,
+  "high-plateau": 0.6, "mediterranean": 0.6, "desert": 0.5, "hot-desert": 0.4, "monsoon": 0.3, "tropical-seasonal": 0.3,
+  "tropical-wet": 0.25, "savanna": 0.3, "east-african-coast": 0.25, "highland-tropics": 0.35, "andes": 0.4,
+  "caribbean": 0.3, "brazil-coast": 0.3, "pacific-islands": 0.2, "southern-africa": 0.4, "australia-southeast": 0.4,
+  "aotearoa": 0.5, "antarctic": 0.5
+};
+const WARM_WEIGHT = {"polar": 2, "boreal": 1.5, "antarctic": 1.3, "northern-europe": 1.2, "pacific-islands": 0.8, "tropical-wet": 0.8};
+/** Climates south of the equator: their summer is December to February. */
+export const SOUTHERN = new Set(["southern-africa", "australia-southeast", "aotearoa", "antarctic", "brazil-coast", "andes"]);
+
+/** The long ages, by year: each warmer or colder than the 20th-century normal, before the weight above. */
+export const AGES = [
+  {from: 0, to: 1299, t: 0.3, name: "The medieval warm spell", line: "The tail of the medieval warm spell: mild winters and long summers."},
+  {from: 1300, to: 1644, t: -0.5, name: "The Little Ice Age", line: "The Little Ice Age: hard winters and late springs."},
+  {from: 1645, to: 1715, t: -1.0, name: "The Maunder low", line: "The depth of the Little Ice Age: rivers freeze and harvests fail."},
+  {from: 1716, to: 1849, t: -0.5, name: "The Little Ice Age", line: "The Little Ice Age: hard winters and late springs."},
+  {from: 1850, to: 1979, t: 0, name: "", line: ""},
+  {from: 1980, to: 2025, t: 0.7, name: "The warming", line: "The warming: hotter summers and milder winters than the old folk knew."}
+];
+
+/**
+ * Hard years in one part of the world: eruptions, droughts and wet years from the climate's history. Each lists the
+ * regions (WoDX Chronicle's world regions) or climates it touched, the months it held (the local months; "summer" is
+ * worked out for each hemisphere), and how much colder or warmer (t, °C), how much wetter or drier (wet, times the
+ * month's share of wet days) and how much stormier it ran. A region or climate left out is untouched.
+ */
+const SUMMER = "summer", WINTER = "winter", ALL = "all";
+export const EPISODES = [
+  {id: "samalas", from: 1258, to: 1259, months: ALL, t: -0.8, wet: 1.15, all: true,
+    name: "The dim years after a far eruption", line: "A far mountain burst, and the sun is pale: cold rain spoils the harvest."},
+  {id: "anasazi", from: 1276, to: 1299, months: ALL, wet: 0.6, t: 0.4, regions: ["north-america-west", "mexico"], climates: ["desert"],
+    name: "The great drought of the dry west", line: "The rains have failed for years: springs dry up and fields go to dust."},
+  {id: "great-famine", from: 1315, to: 1317, months: ALL, wet: 1.35, t: -0.5, storms: 1.2,
+    regions: ["british-isles", "france", "low-countries", "german-lands", "moravia", "poland-baltic", "scandinavia"], climates: ["central-europe", "maritime-europe", "northern-europe"],
+    name: "The great rains", line: "It has rained since spring: grain rots in the field and famine walks the roads."},
+  {id: "cocoliztli", from: 1540, to: 1581, months: ALL, wet: 0.7, t: 0.4, regions: ["mexico"], climates: ["highland-tropics"],
+    name: "The great drought of New Spain", line: "Year after year of drought: the lakes shrink and sickness follows the dust."},
+  {id: "huaynaputina", from: 1601, to: 1602, months: ALL, t: -1.0, wet: 1.25, storms: 1.1,
+    regions: ["russia", "poland-baltic", "scandinavia", "german-lands", "moravia", "central-asia", "siberia", "china", "korea", "japan", "andes"], climates: ["steppe", "central-europe", "northern-europe", "boreal"],
+    name: "The cold years after the eruption in Peru", line: "Frost in summer and endless rain: the grain will not ripen and the price of bread climbs."},
+  {id: "ming-drought", from: 1637, to: 1643, months: ALL, wet: 0.6, t: 0.3, regions: ["china", "korea"], climates: ["north-east-asia"],
+    name: "The great drought of the late Ming", line: "No rain for years: locusts rise from the dry fields and the villages empty."},
+  {id: "laki-summer", from: 1783, to: 1783, months: [6, 7, 8], t: 1.5, storms: 1.4,
+    regions: ["british-isles", "france", "low-countries", "german-lands", "moravia", "poland-baltic", "scandinavia", "italy"], climates: ["central-europe", "maritime-europe", "northern-europe"],
+    name: "The summer of the dry fog", line: "A sulphur haze from the north hangs over the land: the sun is red at noon, the heat is close and thunder rolls."},
+  {id: "laki-winter", from: 1783, to: 1784, months: [12, 1, 2], t: -2.5,
+    regions: ["british-isles", "france", "low-countries", "german-lands", "moravia", "poland-baltic", "scandinavia", "north-america-east", "canada"], climates: ["central-europe", "maritime-europe", "northern-europe", "american-east"],
+    when: (y, m) => (y === 1783 && m === 12) || (y === 1784 && m <= 2),
+    name: "The hard winter after the dry fog", line: "The coldest winter in memory: rivers freeze to the bottom and the thaw floods the towns."},
+  {id: "tambora", from: 1816, to: 1816, months: [5, 6, 7, 8, 9], t: -2.5, wet: 1.2,
+    regions: ["british-isles", "france", "low-countries", "german-lands", "moravia", "poland-baltic", "carpathians-balkans", "italy", "iberia", "scandinavia", "north-america-east", "canada", "china"], climates: ["central-europe", "maritime-europe", "northern-europe", "american-east"],
+    name: "The year without a summer", line: "Snow in June and frost in August: the year without a summer, and hunger to follow."},
+  {id: "tambora-near", from: 1815, to: 1816, months: ALL, t: -0.8, regions: ["nusantara", "philippines", "southeast-asia", "australia"], climates: ["tropical-wet"],
+    name: "The ash years", line: "Ash from the great eruption in the islands veils the sun: cool, grey and strange."},
+  {id: "great-drought", from: 1876, to: 1878, months: ALL, wet: 0.5, t: 0.5, regions: ["india", "china", "brazil", "southern-africa", "egypt"], climates: ["monsoon"],
+    name: "The great drought", line: "The rains have failed: wells dry up, the fields crack and the famine roads are full."},
+  {id: "krakatoa", from: 1884, to: 1884, months: ALL, t: -0.4, all: true,
+    name: "The red sunsets after Krakatoa", line: "Since the eruption in the islands the sunsets burn red and the year runs cool."},
+  {id: "india-famines", from: 1896, to: 1900, months: [6, 7, 8, 9], wet: 0.65, t: 0.5, regions: ["india"], climates: ["monsoon"],
+    name: "The failed monsoons", line: "The monsoon came late and weak: the rice fails and the famine camps fill."},
+  {id: "dust-bowl", from: 1930, to: 1939, months: ALL, wet: 0.65, t: 0.8, storms: 1.3, regions: ["north-america-west"], climates: ["great-plains"],
+    name: "The dust years", line: "The dust years: black blizzards of topsoil roll across the plains and roofs bury in drifts."},
+  {id: "sahel-drought", from: 1968, to: 1985, months: ALL, wet: 0.7, t: 0.4, regions: ["west-africa"], climates: ["savanna"],
+    name: "The Sahel drought", line: "The long drought of the Sahel: the herds die, the desert creeps south and the wells go deep."},
+  {id: "ethiopia-drought", from: 1983, to: 1985, months: ALL, wet: 0.65, t: 0.3, regions: ["east-africa"], climates: ["east-african-coast"],
+    name: "The highland drought", line: "The rains failed in the highlands: the harvest is lost and the relief camps grow."},
+  {id: "pinatubo", from: 1992, to: 1992, months: ALL, t: -0.4, all: true,
+    name: "The cool year after Pinatubo", line: "Haze from the eruption in the islands: a cool year, with vivid dusks."}
+];
+
+const inMonths = (ep, month, climate) => {
+  if ( ep.months === ALL ) return true;
+  const south = SOUTHERN.has(climate);
+  if ( ep.months === SUMMER ) return south ? [12, 1, 2].includes(month) : [6, 7, 8].includes(month);
+  if ( ep.months === WINTER ) return south ? [6, 7, 8].includes(month) : [12, 1, 2].includes(month);
+  return ep.months.includes(month);
+};
+/** Whether a hard year touches a place and month: by its world region when known, else by its climate. */
+export function episodeApplies(ep, year, month, {climate = DEFAULT_CLIMATE, region = null} = {}) {
+  if ( year < ep.from || year > ep.to ) return false;
+  if ( ep.when ? !ep.when(year, month) : !inMonths(ep, month, climate) ) return false;
+  if ( ep.all ) return true;
+  if ( region && ep.regions ) return ep.regions.includes(region);
+  return !!ep.climates?.includes(climate);
+}
+/** The age a year falls in. */
+export const ageOf = year => AGES.find(a => year >= a.from && year <= a.to) ?? null;
+
+/**
+ * How much warmer or colder an era runs than the 20th-century normal (°C), how much stormier and how much wetter, where.
+ * year, month; place: {climate, region} (WoDX Chronicle's world region id). Left out, the place is central Europe,
+ * as before 0.17.0. Returns {t, storms, wet, age, episodes: [{id, name, line}]}.
+ *   The long ages: the medieval warm spell, the Little Ice Age (deepest in the Maunder low), the warming since 1980, and
+ *   past 2025 the trend goes on, for Future Darkness, faster near the poles. Each is weighted by the climate.
+ *   Hard years: eruptions, droughts and wet years where they struck (EPISODES).
+ */
+export function eraShift(year, month = 7, place = {}) {
   const y = Number(year) || 1900;
-  let t = 0, storms = 1;
-  if ( y < 1300 ) t = 0.3;
-  else if ( y < 1850 ) t = (y >= 1645 && y <= 1715) ? -1.0 : -0.5;
-  else if ( y < 1980 ) t = 0;
-  else if ( y <= 2025 ) t = 0.7;
-  else { t = Math.min(3, 0.7 + (y - 2025) * 0.03); storms = 1.3; }
-  if ( y === 1816 && month >= 5 && month <= 9 ) t -= 2.5;
-  return {t, storms};
+  const climate = CLIMATES[place?.climate] ? place.climate : DEFAULT_CLIMATE;
+  const region = place?.region ?? null;
+  const w = ERA_WEIGHT[climate] ?? 1;
+  let t = 0, storms = 1, wet = 1, age = null;
+  if ( y <= 2025 ) {
+    const a = ageOf(y);
+    if ( a ) { t = a.t * (a.t > 0 && y >= 1980 ? (WARM_WEIGHT[climate] ?? 1) : w); age = a.name ? {name: a.name, line: a.line} : null; }
+  } else {
+    t = Math.min(3, 0.7 + (y - 2025) * 0.03) * (WARM_WEIGHT[climate] ?? 1);
+    storms = 1.3;
+    age = {name: "The hot century", line: "The hot century: storms come harder every year and the old seasons have slipped."};
+  }
+  const episodes = [];
+  for ( const ep of EPISODES ) {
+    if ( !episodeApplies(ep, y, month, {climate, region}) ) continue;
+    // A world-wide year is felt by the climate's weight; one aimed at a place is felt there in full
+    const k = ep.all ? Math.max(0.4, w) : 1;
+    t += (ep.t ?? 0) * k;
+    if ( ep.wet ) wet *= ep.wet;
+    if ( ep.storms ) storms *= ep.storms;
+    episodes.push({id: ep.id, name: ep.name, line: ep.line});
+  }
+  return {t: Math.round(t * 100) / 100, storms, wet, age, episodes};
+}
+
+/** The line or two the weather card gives for the year's climate where the scene stands, or "" in an ordinary year. */
+export function eraLine(year, month = 7, place = {}) {
+  const s = eraShift(year, month, place);
+  if ( s.episodes.length ) return s.episodes.map(e => e.line).join(" ");
+  return s.age?.line ?? "";
 }
 
 /* ------------------------------------------------------------------ */
@@ -329,7 +449,7 @@ export function feel(c) {
 function rawDay(seed, climate, jdn, chain, opts) {
   const C = CLIMATES[climate] ?? CLIMATES[DEFAULT_CLIMATE];
   const {month, year} = seasonOf(jdn);
-  const shift = eraShift(opts.year ?? year, month);
+  const shift = eraShift(opts.year ?? year, month, {climate, region: opts.region ?? null});
   const r = stream(seed, `wx:${climate}:day:${jdn}`);
   const anomaly = (noise(seed, `wx:${climate}:temp`, jdn / 4) - 0.5) * 10 + (noise(seed, `wx:${climate}:tfast`, jdn / 1.5) - 0.5) * 3;
   const mean = monthly(C.t, jdn) + shift.t + anomaly;
@@ -369,25 +489,41 @@ function rawDay(seed, climate, jdn, chain, opts) {
 
   const thunder = stormy && mean >= 10 && precip !== "snow";
   const leaves = !wet && (month === 10 || month === 11) && wind !== "calm" && rLeaves < 0.5;
-  return {jdn, climate, month, sky, precip, intensity, fog, wind, thunder, leaves, tempDay, tempNight, mean: round1(mean)};
+  // The year's climate in words: a hard year (an eruption, a drought, a wet year) where it struck, and the long age
+  const eraHard = shift.episodes.map(e => e.line).join(" ");
+  const eraAge = shift.age?.line ?? "";
+  const eraName = shift.episodes[0]?.name ?? shift.age?.name ?? "";
+  return {jdn, climate, month, sky, precip, intensity, fog, wind, thunder, leaves, tempDay, tempNight, mean: round1(mean), eraHard, eraAge, eraName};
+}
+
+/** The share of wet days on a day, with the hard years' droughts and wet spells (0.17.0). */
+function wetFn(C, climate, opts) {
+  const memo = new Map();
+  return d => {
+    const {month, year} = seasonOf(d);
+    const k = `${opts.year ?? year}:${month}`;
+    if ( !memo.has(k) ) memo.set(k, eraShift(opts.year ?? year, month, {climate, region: opts.region ?? null}).wet);
+    return monthly(C.wet, d) * memo.get(k);
+  };
 }
 
 /**
- * One day's weather. opts: {year} to set the era (defaults to the day's own year), override: a hand-set day to use as
+ * One day's weather. opts: {year} to set the era (defaults to the day's own year), region: the world region it stands in (0.17.0), override: a hand-set day to use as
  * it is. Returns {jdn, climate, month, sky, precip, intensity, fog, wind, thunder, leaves, tempDay, tempNight, mean,
  * snowLying, deepSnow, feel, moonHidden, effect, tags, label}.
  */
 export function weatherFor(seed, climate, jdn, opts = {}) {
   climate = CLIMATES[climate] ? climate : DEFAULT_CLIMATE;
   const C = CLIMATES[climate];
-  const chain = wetChain(seed, climate, jdn + 1, d => monthly(C.wet, d));
+  const wetOf = wetFn(C, climate, opts);
+  const chain = wetChain(seed, climate, jdn + 1, wetOf);
   let day;
   if ( opts.override ) day = {...rawDay(seed, climate, jdn, chain, opts), ...opts.override, jdn, climate, set: true};
   else day = rawDay(seed, climate, jdn, chain, opts);
   // Snow lies if it fell in the last ten days and no day since has been warm enough to melt it
   let lying = 0;
   for ( let d = jdn - 10; d <= jdn; d++ ) {
-    const x = d === jdn ? day : rawDay(seed, climate, d, chain.has(d) ? chain : wetChain(seed, climate, d + 1, q => monthly(C.wet, q)), opts);
+    const x = d === jdn ? day : rawDay(seed, climate, d, chain.has(d) ? chain : wetChain(seed, climate, d + 1, wetOf), opts);
     if ( x.precip === "snow" ) lying += x.intensity === "heavy" ? 3 : x.intensity === "moderate" ? 2 : 1;
     else if ( x.tempDay >= 4 ) lying = Math.max(0, lying - (x.tempDay >= 8 ? 4 : 2));
     if ( x.precip === "rain" && x.tempNight > 2 ) lying = Math.max(0, lying - 2);

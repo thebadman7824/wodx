@@ -122,6 +122,10 @@ export function climate(scene = viewed()) {
   try { region = game.settings.get("wodx-chronicle", "region"); } catch (e) { /* europe */ }
   return W.climateForRegion(region);
 }
+/** The world region a scene stands in (its own, else the homeland), for the climate's history; null without WoDX Chronicle. */
+function regionId(scene = viewed()) {
+  try { return chron()?.world?.here?.(scene)?.id ?? null; } catch (e) { return null; }
+}
 const seed = () => { try { return chron()?.gen?.seed?.() ?? "unseeded"; } catch (e) { return "unseeded"; } };
 const yearNow = () => { try { return timeAt()?.year ?? null; } catch (e) { return null; } };
 
@@ -136,10 +140,12 @@ const overKey = (jdn, scene) => { const r = abroad(scene); return r ? `${r.id}:$
 export function weatherOn(jdn, scene = viewed()) {
   if ( !Number.isFinite(jdn) ) return null;
   const r = abroad(scene), cl = climate(scene), sd = r ? `${seed()}|${r.id}` : seed();
+  const region = regionId(scene);
   const over = setting("overrides")?.[overKey(jdn, scene)] ?? null;
-  const key = `${sd}|${cl}|${jdn}|${over ? JSON.stringify(over) : ""}`;
+  const key = `${sd}|${cl}|${region ?? ""}|${jdn}|${over ? JSON.stringify(over) : ""}`;
   if ( cache.has(key) ) return cache.get(key);
-  const d0 = W.weatherFor(sd, cl, jdn, {override: over});
+  // 0.17.0: the world region sets which hard years of the climate's history it feels (B5950)
+  const d0 = W.weatherFor(sd, cl, jdn, {override: over, region});
   const d = (r && d0) ? {...d0, region: r.id, regionLabel: r.label} : d0;
   if ( cache.size > 60 ) cache.clear();
   cache.set(key, d);
@@ -243,7 +249,7 @@ function modifierList(day) {
 async function postWeather(day, {gm = true} = {}) {
   const t = timeAt();
   const head = gm ? "Tonight's weather" : "The weather tonight";
-  const content = `<div class="wodx-card watmo-card"><h3>${head}</h3><p>${esc(day.label)}</p>
+  const content = `<div class="wodx-card watmo-card"><h3>${head}</h3><p>${esc(day.label)}</p>${day.eraHard ? `<p class="watmo-era"><i class="fa-solid fa-volcano"></i> ${esc(day.eraHard)}</p>` : ""}
     ${gm ? `${modifierList(day) ? `<p class="wodx-quiet">Out of doors, house rules:</p>${modifierList(day)}` : ""}
     <p class="wodx-quiet">${day.set ? "Set by hand. " : ""}${day.regionLabel ? `Far from home: ${esc(day.regionLabel)}. ` : ""}${esc(W.CLIMATES[day.climate]?.label ?? "")}${t ? `, ${esc(t.dateLabel)}` : ""}.</p>
     <button type="button" data-watmo="open"><i class="fa-solid fa-cloud-moon"></i> Weather and atmosphere</button>` : ""}</div>`;
@@ -1055,6 +1061,7 @@ export function AtmosphereClass() {
         <section><h3>The weather</h3>
           ${today ? `<p><b>${esc(today.label)}</b></p>${modifierList(today) ? `<p class="wodx-quiet">Out of doors (house rules):</p>${modifierList(today)}` : ""}
           <p class="wodx-quiet">${today.regionLabel ? `This scene stands far from home: ${esc(today.regionLabel)}. ` : ""}Climate: ${esc(W.CLIMATES[climate()]?.label)}. Sunlight's sky: ${esc(SKY_WORDS[today.sky])}.</p>
+          ${(today.eraHard || today.eraAge) ? `<p class="watmo-era"><i class="fa-solid fa-volcano"></i> ${esc(today.eraHard || today.eraAge)}</p>` : ""}
           <table class="watmo-fc" data-fixed><tbody>${fc}</tbody></table>
           <div class="watmo-row"><button type="button" data-action="post"><i class="fa-solid fa-comment"></i> Tell the players</button>
           <button type="button" data-action="apply"><i class="fa-solid fa-rotate"></i> Apply to the scenes now</button></div>`
@@ -1163,7 +1170,7 @@ export async function prime() {
   try { CAL ??= await import("../../wodx-chronicle/scripts/calendar.mjs"); } catch (e) { console.warn(`${MOD} | no calendar`, e); }
   const api = {version: VERSION, open: () => AtmosphereApp.open(), mood: {ruleAt: Mood.ruleAt, rule: Mood.moodRule}, opening: {show: scene => { lastCard = null; openingCard(scene); }, rules: OR},
     weather: {now, on: weatherOn, night: nightJdn, set: setNight, apply: applyWeather, modifiers: d => W.modifiers(d ?? now()), climate, isOutdoor,
-      moonHidden: () => !!now()?.moonHidden},
+      moonHidden: () => !!now()?.moonHidden, post: (d = now(), {gm = true} = {}) => d ? postWeather(d, {gm}) : null, history: W.eraShift},
     kit: {current: currentKit, play: playMood, stop: stopMusic, build: buildPlaylists, ambience: applyAmbience, cue: playCue, grade: applyGrade, frame: drawFrame, frames: redrawFrames, frameFor: () => K.frameFor(currentKit())},
     walls: {muffle: muffleScene, changes: K.muffleChanges},
     themes: {play: playTheme, set: setTheme},
