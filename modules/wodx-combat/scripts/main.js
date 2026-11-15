@@ -2193,8 +2193,14 @@ export async function standUp(actor, combat = game.combat) {
 Hooks.on("updateCombat", (combat, changed) => {
     if (!isActiveGM() || !combat.started || !("turn" in (changed ?? {}) || "round" in (changed ?? {}))) return;
     try { if (!setting("standUpRoll")) return; } catch (e) { return; }
-    const c = combat.combatant, key = `${combat.id}:${combat.round}:${combat.turn}`;
-    if (!c?.actor || standSeen.has(key)) return;
+    const c = combat.combatant;
+    if (!c?.actor || !chronicle()?.conditions?.hasCondition?.(c.actor, "knockdown")) return;
+    // B6226: one roll per knockdown per turn start. The key names the knockdown itself, so a turn that came round
+    // with nobody down (the fight's first turn) or an earlier knockdown that was stood up from never blocks this one;
+    // Previous and Next turn on the same knockdown in the same turn do not roll again
+    const fx = [...(c.actor.effects ?? [])].find(e => e.statuses?.has?.("wodx-knockdown"));
+    const key = `${combat.id}:${combat.round}:${combat.turn}:${c.actor.id}:${fx?.id ?? "down"}`;
+    if (standSeen.has(key)) return;
     standSeen.add(key);
     standUp(c.actor, combat).catch(e => console.error("WoDX | stand up", e));
 });

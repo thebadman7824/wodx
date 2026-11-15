@@ -10,8 +10,8 @@
  *   2. B6151 the knockdown lasts past the end of the next turn (two new rounds, every roll failed: still down)
  *   3. B6151 a stand-up with Initiative rolled only at the start: up, Initiative 2 lower on the next turn, back after
  *   4. B6151 the same with Initiative rolled every turn: the next turn's roll is 2 lower than d10 + Dexterity + Wits
- *   5. B6152 full defence (WoDX NPC's flag): the token's own quick attack does not happen; its two dodges are the
- *      full pool and then one die less
+ *   5. B6152 full defence (WoDX NPC's flag): the token's own quick attack does not happen; its two defences (the best
+ *      the sheet allows: a block against a fist, at the same pool as a dodge) are the full pool and then one die less
  *   6. B6153 a pistol with no Ability on its sheet rolls Dexterity + Firearms, not Archery
  *   7. B6153 Numbing: three more health levels, the same after a wound taken while it lasts, back when it ends
  *   8. B6154 with the turn conductor off, Foundry's Next on the round's last turn gives a declared extra action its
@@ -149,12 +149,19 @@ export async function run() {
       const before = hurt(guard);
       const own = await C.quickAttack({attacker: tFoe.object, target: tG.object});
       const struck = (own ?? []).filter(Boolean).length > 0;
-      const [a1] = await C.quickAttack({attacker: tG.object, target: tFoe.object});
-      const [a2] = await C.quickAttack({attacker: tG.object, target: tFoe.object});
+      // The guard's blows are not applied: the guard stands at the foe's flank (+1 die), so the first blow lands, and a
+      // wound's penalty would take a second die off the next defence. The defence pool alone is what this step reads
+      await game.settings.set(CMB, "autoApply", false);
+      let a1, a2;
+      try {
+        [a1] = await C.quickAttack({attacker: tG.object, target: tFoe.object});
+        [a2] = await C.quickAttack({attacker: tG.object, target: tFoe.object});
+      } finally { await game.settings.set(CMB, "autoApply", true); }
       const d1 = n(a1?.defense?.dice), d2 = n(a2?.defense?.dice);
+      const full = n(foe.system.attributes.dexterity.total) + 2; // Dexterity + Athletics or Brawl, both 2
       const note = /full defence/i.test(a1?.message ? game.messages.get(a1.message.id)?.content ?? "" : "");
-      G.ok("5. B6152 full defence: no attack of its own, full dodge then one die less", !struck && hurt(guard) === before && d1 > 0 && d2 === d1 - 1 && note,
-        {struck, guardBefore: before, guardAfter: hurt(guard), d1, d2, note, types: [a1?.defense?.type, a2?.defense?.type]});
+      G.ok("5. B6152 full defence: no attack of its own, full dodge then one die less", !struck && hurt(guard) === before && d1 === full && d2 === d1 - 1 && note,
+        {struck, guardBefore: before, guardAfter: hurt(guard), full, d1, d2, note, types: [a1?.defense?.type, a2?.defense?.type], foeHurt: hurt(foe)});
     });
 
     await G.step("6. B6153 a pistol with no Ability rolls Firearms", async () => {
