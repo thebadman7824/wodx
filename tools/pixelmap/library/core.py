@@ -75,10 +75,18 @@ def add(id, name, group, ft, draw, **kw):
     CATALOGUE[id] = Spec(id, name, group, ft, draw, **kw); return CATALOGUE[id]
 
 
+OWNERS, CLASHES = {}, {}                                      # which family module drew each object; objects two modules drew
+
+
 def define(id, name=None, group=None, ft=None, draw=None, **kw):
     """Define or redefine an object (the family modules, B6346). An object already in the catalogue keeps every field
     not given; a new one takes its name, size and family from the census when they are not given (its usual size,
-    15 percent either way)."""
+    15 percent either way). Two family modules defining the same object is recorded in OWNERS clashes (a test fails)."""
+    import inspect
+    mod = inspect.stack()[1].frame.f_globals.get("__name__", "")
+    if mod.startswith("library.fam_") or mod.startswith("fam_"):
+        prev = OWNERS.setdefault(id, mod)
+        if prev != mod: CLASHES.setdefault(id, {prev}).add(mod)
     if id in CATALOGUE:
         sp = CATALOGUE[id]
         for k, v in dict(name=name, group=group, ft=ft, draw=draw, **kw).items():

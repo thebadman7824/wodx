@@ -17,6 +17,10 @@ class Catalogue(unittest.TestCase):
         from library import catalogue
         self.assertEqual(catalogue.FAILED, {}, f"family modules that failed to load: {catalogue.FAILED}")
 
+    def test_no_object_is_drawn_by_two_families(self):
+        from library.core import CLASHES
+        self.assertEqual(CLASHES, {}, f"objects defined by more than one family module: {CLASHES}")
+
     def test_every_object_is_described(self):
         for oid, sp in CATALOGUE.items():
             self.assertTrue(sp.ref, f"{oid} has no size reference"); self.assertTrue(sp.tags, f"{oid} has no rooms or trades")
