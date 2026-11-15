@@ -54,12 +54,13 @@ export async function run() {
 
     await G.step("1. modules", async () => {
       // The world's copies of the shipped tables catch up a moment after start-up; bring them up to date first, so an
-      // older installed mix (the West's industrial one before B3820) does not stand in for the new one
+      // older installed mix (the West's industrial one before B3820) does not stand in for the new one. With the name
+      // lists raised to 300 a reset lane has many tables to rewrite, so this step may take up to three minutes
       await gen().installTables?.();
       const med = results({era: "medieval", culture: WEST}, "people.origin");
       G.ok("1. Creation and Chronicle with the Plains peoples", game.modules.get(CR)?.active && game.modules.get(CH)?.active && med.includes("lakota"),
         {creation: game.modules.get(CR)?.version, chronicle: game.modules.get(CH)?.version, medieval: med});
-    });
+    }, {timeout: 180000});
 
     await G.step("2. who lives where", async () => {
       const med = results({era: "medieval", culture: WEST}, "people.origin"), east = results({era: "medieval", culture: EAST}, "people.origin");
