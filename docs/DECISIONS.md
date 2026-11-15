@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5780
+Next free block: B5840
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -304,6 +304,7 @@ Next free block: B5780
 | B5660-B5669 | Child proportions, drawn poses by routine, animal legs (used B5660-B5668) | Paperdoll |
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
+| B5830-B5839 | Gate failures on main, round two; run-gate names failed steps (used B5830-B5831) | tools (gates, lanes) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9147,3 +9148,19 @@ Reverse: drop the fifth element of each USES row and carryOut.
 WoDX Actions. Resources: money into the purse, a week of a month's allowance per success (house reading). Contacts: current rumours named, up to the successes. Influence: a boon owed by the institution in the Prestation journal. Retainers: servants named and their orders opened. Domain or Hunting Grounds with no success: a rival feeds there (the herd thins). A botch starts a rumour about the character.
 
 Reverse: remove downtimeDoes.
+
+## B5830. run-gate names the failed steps of the older gates (2026-11-15)
+Lanes. The kit's gates put their failed steps in the summary line, but the older gates (gate6b, gate6d, gate7d,
+gateconsensus and others) say only "17/18 passed", and their result files are gone after the next lane reset. When a
+summary has a shortfall and names no step, run-gate now reads the gate's result file, if it was written during this
+run, and adds "failed:" with each failed step and its detail.
+
+Reverse: drop the result-file read after mod.run().
+
+## B5831. gate6d reads three-digit versions; gate7d compares factions whatever the key order (2026-11-15)
+Gates. gate6d's version check was a regular expression that stopped matching at Actions 3.100.0. gate7d step 6
+compared the factions after Undo with a plain JSON.stringify, which fails when the keys come back in another order
+(the gatepolitics fault). Both are fixed, and the shared workflow notes now list these gotchas, along with the
+Foundry 14 rule to pass a fresh options object to each document update.
+
+Reverse: put the old checks back.
