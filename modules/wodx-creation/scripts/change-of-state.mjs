@@ -1,6 +1,8 @@
-import {MODULE_ID, esc, lineOf, lineage, generationOf, clanOf, clanNameOf, disciplinesOf, disciplineItem, vampireEra, eraProfile, keepLifepath} from "./actor-data.mjs";
+import {MODULE_ID, esc, lineOf, lineage, isAnimal, animalKindOf, allyOf, generationOf, clanOf, clanNameOf, disciplinesOf, disciplineItem, vampireEra, eraProfile, keepLifepath} from "./actor-data.mjs";
 import {childeGeneration, clanDisciplines, findClan, generationRow, ghoulBloodMax, bondStage} from "./rules.mjs";
 import {CLANS, EMBRACE, GHOUL} from "../data/vampire.mjs";
+import * as AG from "./animal-ghoul-rules.mjs";
+import {setAlly} from "./apps.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {setLineage, setChronology, recordDrink, writeLineageJournal, dateLabel, ordinal} from "./lineage.mjs";
 
@@ -136,24 +138,41 @@ const nightOf = time => Math.floor(((Number(time) || 0) - (NIGHT / 2)) / NIGHT);
  * there is one, is written to the ghoul's lineage. Used by giveVitae and by the People generator (7a).
  */
 export async function makeGhoul(mortal, {domitor = null, points = 1, time = game.time.worldTime} = {}) {
-  const max = ghoulBloodMax(0);
-  await mortal.update({
-    "system.settings.variant": "ghoul",
-    "system.settings.haspath": true,
+  // B5040, B5041: an animal keeps its own sheet; its pool is set by its size, not the human 10
+  const kind = isAnimal(mortal) ? animalKindOf(mortal) : null;
+  const max = kind ? AG.animalBloodMax(kind, 0) : ghoulBloodMax(0);
+  const creature = mortal.type === (CONFIG.worldofdarkness?.sheettype?.creature ?? "Creature");
+  const pool = {
     "system.settings.hasbloodpool": true,
-    "system.settings.hasvirtue": true,
     "system.settings.powers.hasdisciplines": true,
-    "system.settings.variantsheet": CONFIG.worldofdarkness?.sheettype?.vampire ?? "Vampire",
     "system.advantages.bloodpool.max": max,
     "system.advantages.bloodpool.perturn": GHOUL.perTurn,
     "system.advantages.bloodpool.temporary": Math.min(max, Math.max(0, Number(points) || 0))
+  };
+  if ( creature ) await mortal.update({...pool, "system.settings.powers.haspowers": true,
+    [`flags.${MODULE_ID}.animalGhoul`]: true, [`flags.${MODULE_ID}.animal`]: {kind}});
+  else await mortal.update({
+    ...pool,
+    "system.settings.variant": "ghoul",
+    // An animal has no Road or Virtues (V20 Dark Ages p. 396); Willpower stands in for Self-Control (B5046)
+    "system.settings.haspath": !kind,
+    "system.settings.hasvirtue": !kind,
+    "system.settings.variantsheet": CONFIG.worldofdarkness?.sheettype?.vampire ?? "Vampire",
+    ...(kind ? {[`flags.${MODULE_ID}.animal`]: {kind}} : {})
   });
   const potence = disciplinesOf(mortal).find(d => d.name.toLowerCase() === "potence");
   if ( !potence ) await mortal.createEmbeddedDocuments("Item", [disciplineItem("Potence", GHOUL.firstDrinkPotence)]);
   else if ( potence.value < GHOUL.firstDrinkPotence ) await mortal.items.get(potence.id).update({"system.value": 1, "system.level": 1});
   if ( domitor ) await setLineage(mortal, {domitor: {id: domitor.id, name: domitor.name}});
   await setChronology(mortal, {ghouled: time});
+  // B5048: a player character's animal ghoul is that character's ally, paid for from the domitor's experience
+  if ( kind && domitor?.hasPlayerOwner && !allyOf(mortal) && game.user?.isGM ) {
+    try { await setAlly(mortal, {patron: domitor, payer: "patron", observe: true}); } catch (e) { console.warn(`${MODULE_ID} |`, e); }
+  }
 }
+
+/** One line for the vitae card: what kind of beast it is and what it holds. */
+const animalNote = actor => { const k = animalKindOf(actor); return k ? `; ${AG.describe(k)}` : ""; };
 
 export async function giveVitae(drinker, regnant, {points = 1, time = game.time.worldTime, firstDouble = false} = {}) {
   if ( !game.user.isGM ) return null;
@@ -180,15 +199,19 @@ export async function giveVitae(drinker, regnant, {points = 1, time = game.time.
 
   const notes = [];
   let becameGhoul = false;
-  if ( lineOf(drinker) === "mortal" ) {
+  if ( lineOf(drinker) === "mortal" || (!lineOf(drinker) && isAnimal(drinker)) ) {
     becameGhoul = true;
     await makeGhoul(drinker, {domitor: regnant, points, time});
-    notes.push("becomes a ghoul and gains Potence 1");
+    notes.push(`becomes a ghoul and gains Potence 1${animalNote(drinker)}`);
   } else if ( lineOf(drinker) === "ghoul" ) {
     const pool = drinker.system.advantages?.bloodpool ?? {};
-    const max = Number(pool.max) || GHOUL.bloodMax;
+    const max = Number(pool.max) || (isAnimal(drinker) ? AG.animalBloodMax(animalKindOf(drinker)) : GHOUL.bloodMax);
     await drinker.update({"system.advantages.bloodpool.temporary": Math.min(max, (Number(pool.temporary) || 0) + (Number(points) || 0))});
     if ( !lineage(drinker).domitor ) await setLineage(drinker, {domitor: {id: regnant.id, name: regnant.name}});
+  }
+  // B5044: a drink from the domitor starts the ghoul's month again (WoDX Chronicle's monthly check)
+  if ( lineOf(drinker) === "ghoul" && lineage(drinker).domitor?.id === regnant.id ) {
+    try { await game.modules.get("wodx-chronicle")?.api?.signatures?.ghoulFed?.(drinker); } catch (e) { console.warn(`${MODULE_ID} |`, e); }
   }
   notes.push(oath ? `already sworn to ${oath[1].name}, so no new bond forms` : (sameNight ? `${stage.label} (a second drink the same night does not deepen the bond)` : stage.label));
 
@@ -273,15 +296,16 @@ export async function embraceDialog() {
 export async function vitaeDialog() {
   if ( !game.user.isGM ) return null;
   const {DialogV2} = foundry.applications.api;
-  const drinkers = game.actors.filter(a => lineOf(a) && !lineage(a).became).sort(byName);
+  const drinkers = game.actors.filter(a => (lineOf(a) || isAnimal(a)) && !lineage(a).became).sort(byName);
   const vampires = game.actors.filter(a => lineOf(a) === "vampire").sort(byName);
   if ( !vampires.length ) return ui.notifications.warn("There is no vampire to give blood.");
-  const pick = selectedActor(a => !!lineOf(a));
+  const pick = selectedActor(a => !!lineOf(a) || isAnimal(a));
   const result = await DialogV2.prompt({
     classes: ["wodx", "wodx-dialog"],
     window: {title: "Give vitae"},
     content: `
-      <p>A mortal who drinks becomes a ghoul and gains Potence 1 (V20 Dark Ages p. 399). Three drinks on three nights
+      <p>A mortal or an animal who drinks becomes a ghoul and gains Potence 1 (V20 Dark Ages p. 399); an animal holds
+        vitae by its size (V20 Dark Ages p. 401). Three drinks on three nights
         make a blood oath (V20 Dark Ages pp. 341–342).</p>
       <div class="form-group"><label>Who drinks</label>${searchBox("select[name=drinker]", "Search characters…", "Search who drinks")}<select name="drinker">${options(drinkers, pick?.id ?? drinkers[0]?.id)}</select></div>
       <div class="form-group"><label>Whose blood</label>${searchBox("select[name=regnant]", "Search vampires…", "Search whose blood")}<select name="regnant">${options(vampires, vampires[0].id)}</select></div>

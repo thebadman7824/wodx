@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5040
+Next free block: B5070
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -240,6 +240,7 @@ Next free block: B5040
 | B5000-B5009 | Moro names (used B5000-B5002) | Creation, Chronicle |
 | B5010-B5029 | The Storyteller's Hand, part three: fire, noticing, and the rest of the desk acts by itself (Ben's desk picks, 14 November 2026) (used B5010-B5024) | Interactables, Actions, Senses, Library, Chronicle, Storyteller, Otherworlds, Creation |
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
+| B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5049) | Creation, Chronicle, NPC, Sheets, Actions, Combat |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7878,3 +7879,53 @@ Reverse: edit the banyarwanda entry in data/people-world.mjs.
 WoDX Creation. From 1800 a Munyarwanda or Murundi carries a second, own Kinyarwanda or Kirundi name (Habimana, Uwimana, Nkurunziza) where other peoples carry a family name; it is the person's own and is not handed to the children.
 
 Reverse: drop fam from the banyarwanda entry.
+
+## B5040. An animal ghoul keeps its own sheet (2026-11-14)
+WoDX Creation. An animal is a Creature sheet of the plain variant, a Mortal sheet whose WoDX NPC template is an animal, or a sheet marked flags["wodx-creation"].animal. Drinking vitae switches on its blood pool and Disciplines and marks a Creature flags["wodx-creation"].animalGhoul; the Creature variant is left alone so the mountable tag and sheet stay. Desk item 1.
+
+Reverse: drop isAnimal from giveVitae; animals then only record a bond.
+
+## B5041. Blood pool by size (2026-11-14)
+WoDX Creation. V20 Dark Ages p. 401 over p. 396 and Kindred of the Ebony Kingdom p. 186 (Ben chose by size): tiny 1, small 3, dog-sized 6, human-sized 10, large 14, very large 20 (house). Desk item 3.
+
+Reverse: SIZES in animal-ghoul-rules.mjs.
+
+## B5042. Only Celerity, Fortitude and Potence; any trained animal may learn Celerity (2026-11-14)
+WoDX Creation. V20 Dark Ages p. 396 and p. 401; the Ebony Kingdom's Intelligence limit on Celerity is not used. The domitor's other Disciplines make no difference. Desk items 5 to 7.
+
+Reverse: animalCanLearn.
+
+## B5043. The century rule holds for animals (2026-11-14)
+WoDX Creation. One more point of vitae a century as a ghoul (V20 Dark Ages p. 400); Pass the Years shows it. Desk item 9.
+
+Reverse: animalBloodMax's century term.
+
+## B5044. One point a month, two for the very large (2026-11-14)
+WoDX Creation data, used by WoDX Chronicle's monthly check. Kindred of the Ebony Kingdom p. 186. Desk item 11.
+
+Reverse: SIZES monthly.
+
+## B5045. Natural life spans (2026-11-14)
+WoDX Creation. House figures per kind (rat 3, cat 15, dog 13, horse 28...). With the vitae gone an animal ghoul past its span dies, past twice its span turns to dust. Desk item 13.
+
+Reverse: KINDS span; Pass the Years then uses the human dust age of 100.
+
+## B5046. No Road or Virtues for animals; Willpower stands in for Self-Control (2026-11-14)
+WoDX Creation. A Mortal-sheet animal ghoul has no Road or Virtues switched on; rolls that ask for Self-Control use Willpower. Desk item 4.
+
+Reverse: makeGhoul's haspath and hasvirtue for animals.
+
+## B5047. Animals buy only Physical and Mental Attributes (2026-11-14)
+WoDX Creation. V20 Dark Ages p. 396: animals have no Social Attributes. Experience purchases skip them, and Virtues and Road. Desk item 17.
+
+Reverse: purchaseOptions' beast checks.
+
+## B5048. A player character's animal ghoul is that character's ally, paid from the domitor (2026-11-14)
+WoDX Creation. Standing rule 13 (players may spend XP on ghouls). Made an ally with payer "patron" and the domitor's owners as Observers. Costs are the ghoul costs (V20 Dark Ages p. 400). Desk item 17.
+
+Reverse: the setAlly call in makeGhoul.
+
+## B5049. Feed vitae on the token menu (2026-11-14)
+WoDX Creation. A vampire within a square and a half of a mortal, ghoul or animal can feed it a point. The Storyteller's feed is at once; a player's goes to the approval queue (type wodx-vitae) and happens by itself on approval or auto-approval. Red "Vitae" rises from the token. Desk item 2.
+
+Reverse: registerFeedVitae in main.mjs.
