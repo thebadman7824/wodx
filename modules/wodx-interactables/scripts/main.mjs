@@ -413,6 +413,10 @@ const NOISE_WORD = {silent: "silent", quiet: "quiet", loud: "loud"};
  * they are apart from the group (B1961). Returns {advanced (clock seconds), personal (for Undo), line}.
  */
 async function passTime(actor, seconds) {
+  // B6198: an attempt counted in turns (under a minute, whole turns of three seconds) takes the table's turn length
+  // (WoDX Combat's "Seconds a turn takes", through api.terms.turnSeconds)
+  const per = Number(game.modules.get("wodx-chronicle")?.api?.terms?.turnSeconds?.()) || TERMS.TURN_SECONDS;
+  if ( seconds > 0 && seconds < TERMS.MINUTE && seconds % TERMS.TURN_SECONDS === 0 ) seconds = (seconds / TERMS.TURN_SECONDS) * per;
   const time = game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller")?.api?.time : null;
   if ( time?.spend && actor?.hasPlayerOwner ) {
     try {

@@ -7,6 +7,7 @@
  * delicate task it ruins the work.
  */
 import {DAY, HOUR, MONTH, WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 export {DAY, HOUR, MONTH, WEEK};
 
 export const INTERVALS = {hour: {label: "Each hour", s: HOUR}, day: {label: "Each night or day", s: DAY},
@@ -236,9 +237,8 @@ export function recipeCheck(task, {year = 0, carried = []} = {}) {
 
 /** Count one roll (V20 Dark Ages pp. 322-323; the same in V20): 10s count twice with a specialty, each 1 cancels a success, a botch is no successes with a 1. */
 export function countFaces(faces, diff, {specialty = false} = {}) {
-  let raw = 0, ones = 0;
-  for ( const f of faces ) { if ( f === 1 ) ones++; if ( f >= diff ) raw += (specialty && f === 10) ? 2 : 1; }
-  return {successes: Math.max(0, raw - ones), botch: raw === 0 && ones > 0};
+  const r = TERMS.successes(faces, diff, {specialty});
+  return {successes: r.successes, botch: r.botch};
 }
 
 /** How many rolls are due by `now`: one per whole interval passed since `next` came due. */

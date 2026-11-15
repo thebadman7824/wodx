@@ -31,7 +31,7 @@ export const RULES = {
   /** A second's count of a day, week, 30 days or a year typed in place. */
   timeLiteral: t => count(t, /\b(?:86400|604800|2592000|31557600|31536000|31556952|2629746)\b/g),
   /** A dice count of its own: ones counted next to the hits. Use terms.successes (difficulty 2-10, a 10 always hits). */
-  diceCount: t => count(t, /(?:===\s*1\)?\.length|===\s*1\s*\)\s*ones\s*(?:\+\+|\+=)|\bones\s*(?:\+\+|\+=)[^\n]*|filter\(\s*(\w+)\s*=>\s*\1\s*===\s*1\s*\))/g),
+  diceCount: t => count(t, /(?:=>\s*\w+(?:\.result)?\s*===\s*1\s*\)\.length|===\s*1\s*\)\s*ones\s*(?:\+\+|\+=)|\bones\s*(?:\+\+|\+=)[^\n]*|filter\(\s*(\w+)\s*=>\s*\1\s*===\s*1\s*\))/g),
   /** The seven health levels typed out again. Use terms.HEALTH_LEVELS. */
   healthLevels: t => count(t, /["']bruised["']\s*,\s*["']hurt["']\s*,\s*["']injured["']|\["Bruised",\s*"0"\]/g),
   /** A distance conversion of its own: a units test or a yard-to-metre figure. Use terms.toYards / fromYards. */

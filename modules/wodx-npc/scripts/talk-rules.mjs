@@ -25,6 +25,7 @@
 
 import {parseWhen} from "../../wodx-chronicle/scripts/when-rules.mjs";
 import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** Asked of anyone, always on the menu. */
 export const LOCAL = {news: "News", rumours: "Rumours", work: "Work", directions: "Directions"};
@@ -240,15 +241,8 @@ export const dropLearned = (learned = [], drop = []) => { const d = new Set((dro
 
 /** The span of years stock talk speaks for. branch: "future" on the Future Darkness branch. */
 export function eraBand(year, branch = "") {
-  const y = Number(year);
-  if ( branch === "future" && y >= 2026 ) return "future";
-  if ( !Number.isFinite(y) ) return "modern";
-  if ( y < 1500 ) return "medieval";
-  if ( y < 1800 ) return "earlymodern";
-  if ( y < 1900 ) return "nineteenth";
-  if ( y < 1980 ) return "twentieth";
-  if ( y < 2026 ) return "modern";
-  return "future";
+  // B6194: the era profiles' years (terms.speechBand), so speech turns with the era the table plays
+  return TERMS.speechBand(year, branch);
 }
 
 /** How the NPC regards the character, from a step of -3 to +3. */

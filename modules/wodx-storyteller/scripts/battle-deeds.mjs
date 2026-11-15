@@ -39,10 +39,10 @@ export const groupOf = ageId => GROUP[ageId] ?? "medieval";
 
 /** WoDX Combat's kinds of being, gathered for the deed table: kindred, garou, mage, fae, wraith, hunter, other. */
 const KIND = {kindred: "kindred", ghoul: "mortal", mortal: "mortal", hunter: "hunter", lupine: "garou", mage: "mage", fae: "fae",
-  wraith: "wraith", spirit: "spirit", beast: "mortal", demon: "demon", mummy: "mummy", exalted: "mummy", "kuei-jin": "kuei-jin"};
+  wraith: "wraith", spirit: "spirit", beast: "mortal", demon: "demon", mummy: "mummy", exalted: "exalted", "kuei-jin": "kuei-jin"}; // B6197: the Exalted are their own kind (terms.LINES)
 export const kindGroup = kind => KIND[String(kind ?? "").toLowerCase()] ?? "mortal";
 /** Kinds whose deeds the living can see as more than human. */
-export const SUPERNATURAL_KINDS = ["kindred", "garou", "mage", "fae", "wraith", "spirit", "demon", "mummy", "kuei-jin"];
+export const SUPERNATURAL_KINDS = ["kindred", "garou", "mage", "fae", "wraith", "spirit", "demon", "mummy", "exalted", "kuei-jin"];
 
 /**
  * The deeds. post: a key of POSTS or "*" (any post); groups: the age groups it fits (none: every group of the living
@@ -102,7 +102,7 @@ export const DEEDS = [
   D("f-glamour", "*", "Wake the dreams of glory", "The fighters around you want a song and a legend; give them one.", ["charisma", "expression", "performance"], 6, "Your side fights like heroes of a tale", {kinds: ["fae"], groups: LIVING}),
   D("w-skin", "*", "Reach through the Shroud", "The Shroud is thin where so many die; a touch from the other side could turn a blade.", ["wits", "occult"], 7, "A blade turns, a horse shies, a gun jams", {kinds: ["wraith"], seen: true, groups: LIVING}),
   D("h-sense", "*", "Find the monster in their ranks", "Something on the other side is not human, and it is killing your people.", ["perception", "occult", "alertness"], 7, "The thing is found and faced", {kinds: ["hunter"], groups: LIVING}),
-  D("s-spirit", "*", "Call the spirits of war", "Spirits of slaughter gather over every battlefield; some can be bargained with.", ["charisma", "occult", "enigmas"], 7, "The spirits of war take a side", {kinds: ["spirit", "demon", "mummy"], seen: true, groups: LIVING})
+  D("s-spirit", "*", "Call the spirits of war", "Spirits of slaughter gather over every battlefield; some can be bargained with.", ["charisma", "occult", "enigmas"], 7, "The spirits of war take a side", {kinds: ["spirit", "demon", "mummy", "exalted"], seen: true, groups: LIVING})
 ];
 const BY_ID = new Map(DEEDS.map(d => [d.id, d]));
 export const deedById = id => BY_ID.get(id) ?? null;

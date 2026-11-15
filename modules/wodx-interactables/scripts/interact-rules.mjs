@@ -1653,9 +1653,9 @@ export function hears(noise, {yards = 0, walls = 0, asleep = false, perception =
   if ( noise === "loud" && !asleep ) return {inRange: true, hears: true};
   const diff = asleep ? 8 : 7;
   const dice = Math.max(1, perception + alertness);
-  let hits = 0, ones = 0;
-  for ( let k = 0; k < dice; k++ ) { const f = 1 + Math.floor(rng() * 10); if ( f >= diff ) hits++; if ( f === 1 ) ones++; }
-  return {inRange: true, hears: hits - ones > 0, roll: {dice, diff, successes: Math.max(0, hits - ones)}};
+  const faces = Array.from({length: dice}, () => 1 + Math.floor(rng() * 10));
+  const r = TERMS.successes(faces, diff);
+  return {inRange: true, hears: r.successes > 0, roll: {dice, diff, successes: r.successes}};
 }
 
 /** Clean a wall's WoDX settings from the config form. */

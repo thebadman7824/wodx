@@ -13,7 +13,8 @@
  *   6. a ghoul on the system's ghoul variant reads as a ghoul in WoDX NPC, a Kuei-jin as a Kuei-jin
  *   7. a metre is a yard in Combat, and a turn outside a fight is the table's turn length in Actions' limits
  *   8. every other WoDX module still answers
- *   9. Targeting, Interactables, Senses, Creation, Sheets, Paperdoll, Solo and Atmosphere read the same metre, era and health words
+ *   9. Targeting, Interactables, Senses, Creation, Sheets, Paperdoll, Solo and Atmosphere read the same metre, era and health words;
+ *      NPC speech and the Encyclopaedia follow the era profiles; the Exalted fight as their own kind
  * Result: Data/wodx-gate/gateterms-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -115,6 +116,8 @@ export async function run() {
         M("wodx-interactables/scripts/carry-rules.mjs"), M("wodx-senses/scripts/senses-rules.mjs"), M("wodx-creation/data/advance.mjs"),
         M("wodx-sheets/scripts/extras-rules.mjs"), M("wodx-paperdoll/scripts/doll-rules.mjs"), M("wodx-solo/scripts/solo-rules.mjs"),
         M("wodx-interactables/scripts/fill-rules.mjs")]);
+      const [talk, know, deeds] = await Promise.all([M("wodx-npc/scripts/talk-rules.mjs"), M("wodx-library/scripts/know-rules.mjs"),
+        M("wodx-storyteller/scripts/battle-deeds.mjs")]);
       const got = {
         targeting: tg?.shapeFromText?.("a 10-meter radius")?.size,
         carry: cr?.toUnits?.(10, "m"),
@@ -123,12 +126,16 @@ export async function run() {
         sheets: sh?.ERA_LIKE === T.ERA_LIKE || JSON.stringify(sh?.ERA_LIKE) === JSON.stringify(T.ERA_LIKE),
         fill: !intr?.ERA_LIKE || JSON.stringify(intr.ERA_LIKE) === JSON.stringify(T.ERA_LIKE),
         paperdoll: JSON.stringify(pd?.LEVELS) === JSON.stringify(T.HEALTH_LEVELS),
-        solo: so?.nightStart?.(T.DAY * 3, 3600)
+        solo: so?.nightStart?.(T.DAY * 3, 3600),
+        speech: [talk?.eraBand?.(1450), talk?.eraBand?.(2015, "future")],
+        encyclopaedia: know?.ERA_FROM?.["future-darkness"],
+        exalted: deeds?.kindGroup?.("exalted")
       };
       const ok = got.targeting === 10 && got.carry === 10 && got.senses[0] === "industrial" && got.senses[1] === "modern"
         && Array.isArray(got.creation) && got.creation.includes("renaissance") && got.creation.includes("age-of-reason")
         && got.sheets && got.fill && got.paperdoll && got.solo === T.DAY * 2 + 3600
-        && typeof game.modules.get("wodx-atmosphere")?.api === "object";
+        && typeof game.modules.get("wodx-atmosphere")?.api === "object"
+        && got.speech[0] === "earlymodern" && got.speech[1] === "future" && got.encyclopaedia === 2010 && got.exalted === "exalted";
       G.ok("9. the other modules read the same words", ok, got);
     });
 

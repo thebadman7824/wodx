@@ -6,6 +6,7 @@
  * Who may have a child together is decided first by Chronicle's age floor (B3210) and by hearts-rules childOf.
  */
 import {CALENDAR_MONTH} from "../../wodx-chronicle/scripts/terms.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const GESTATION_MONTHS = 9;
 /** The average Gregorian month in seconds, for a due date on the world clock. */
@@ -39,10 +40,8 @@ export const birthPool = (stamina = 1, care = "midwife") => Math.max(1, (Number(
 
 /** Count a d10 roll the V20 way: each die at or above the difficulty is a success, each 1 takes one away. */
 export function countDice(dice = [], difficulty = 6) {
-  let s = 0, ones = 0;
-  for ( const d of dice ) { if ( d === 1 ) ones++; else if ( d >= difficulty ) s++; }
-  const net = s - ones;
-  return {successes: Math.max(0, net), botch: s === 0 && ones > 0};
+  const r = TERMS.successes(dice, difficulty);
+  return {successes: r.successes, botch: r.botch};
 }
 /** A birth's outcome: a botch is a loss, no success is a hard birth, any success goes well. */
 export const birthOutcome = ({successes = 0, botch = false} = {}) => (botch ? "loss" : successes > 0 ? "well" : "hard");

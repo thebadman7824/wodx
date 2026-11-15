@@ -96,6 +96,13 @@ function registerSettings() {
 /* ------------------------------------------------------------------ */
 
 const latitude = () => { try { return Number(game.settings.get("wodx-chronicle", "latitude")) || 50.1; } catch (e) { return 50.1; } };
+/** B6196: the sun where a scene stands (its place's latitude and hour), the home sun when the scene has no place. */
+function sunHere(time, scene = globalThis.canvas?.scene ?? null) {
+  try { const p = chron()?.terms?.placeNow?.(scene, time); if ( p && Number.isFinite(Number(p.time)) ) return {time: Number(p.time), lat: Number.isFinite(Number(p.latitude)) ? Number(p.latitude) : latitude()}; } catch (e) { /* older Chronicle */ }
+  return {time, lat: latitude()};
+}
+const toDawnAt = (time, scene) => { const p = sunHere(time, scene); return CAL.secondsToNextDawn(p.time, p.lat); };
+const toDuskAt = (time, scene) => { const p = sunHere(time, scene); return CAL.secondsToNextDusk(p.time, p.lat); };
 const hoursOf = s => { const m = String(s ?? "").match(/(\d+):(\d+)/); return m ? Number(m[1]) + Number(m[2]) / 60 : null; };
 function timeAt(time = game.time.worldTime, scene = globalThis.canvas?.scene ?? null) {
   // A scene far from home keeps its own latitude and hour (WoDX Chronicle 0.39.0, B1969)
@@ -425,13 +432,13 @@ export function playCue(cue) {
 }
 function cuesForTime(time, delta) {
   if ( !CAL || !(delta > 0) || delta > 6 * 3600 || chron()?.isSkipping?.() ) return;
-  const prev = time - delta, lat = latitude();
+  const prev = time - delta;
   try {
-    const toDawn = CAL.secondsToNextDawn(prev, lat) - 1800;
+    const toDawn = toDawnAt(prev) - 1800;
     if ( toDawn > 0 && toDawn <= delta ) playCue("dawn");
-    const toDusk = CAL.secondsToNextDusk(prev, lat);
+    const toDusk = toDuskAt(prev);
     if ( toDusk > 0 && toDusk <= delta ) playCue("dusk");
-    if ( setting("dawnDread") ) for ( const c of K.dreadCuesCrossed(CAL.secondsToNextDawn(time, lat), delta) ) playCue(c);
+    if ( setting("dawnDread") ) for ( const c of K.dreadCuesCrossed(toDawnAt(time), delta) ) playCue(c);
   } catch (e) { /* no cue */ }
 }
 
@@ -651,7 +658,7 @@ export async function muffleScene(scene, on = true) {
 /** The dread now: {strength, minutes, birds, cock, rotschreck} in the last half hour before sunrise, else null. */
 export function dread(time = game.time.worldTime) {
   if ( !active || !CAL ) return null;
-  try { return K.dawnDread(CAL.secondsToNextDawn(time, latitude())); } catch (e) { return null; }
+  try { return K.dawnDread(toDawnAt(time)); } catch (e) { return null; }
 }
 /** The Rötschreck difficulty step dawn adds now (0 or 1); WoDX Actions reads it for its Rötschreck window. */
 export function dreadRotschreck(time) { return setting("dawnPressure") === false ? 0 : (dread(time)?.rotschreck ?? 0); }
@@ -675,7 +682,7 @@ export function dreadTick(time, delta) {
 let dreadCarded = null;
 async function dreadCard(time, delta) {
   if ( !isActiveGM() || setting("dawnPressure") === false || !CAL || chron()?.isSkipping?.() ) return;
-  const toDawn = CAL.secondsToNextDawn(time, latitude());
+  const toDawn = toDawnAt(time, game.scenes?.active ?? globalThis.canvas?.scene ?? null);
   if ( !K.dreadCuesCrossed(toDawn, delta).includes("cock") ) return;
   const night = Math.floor((time + toDawn) / DAY);
   if ( dreadCarded === night ) return;
@@ -1221,9 +1228,9 @@ function openingCard(scene) {
   try { on = game.settings.get(MOD, "openingCard") !== false; } catch (e) { on = true; }
   if ( !OR.wantsCard(scene, {last: lastCard, on}) ) return;
   lastCard = scene.id;
-  let told = null, dateLabel = "", lat = 50;
-  try { lat = game.settings.get("wodx-chronicle", "latitude"); } catch (e) { lat = 50; }
-  const t = describeTime(game.time.worldTime, lat);
+  let told = null, dateLabel = "";
+  const here = sunHere(game.time.worldTime, scene);
+  const t = describeTime(here.time, here.lat);
   dateLabel = `${t.dateLabel}, ${t.timeLabel}`;
   let reck = true;
   try { reck = game.settings.get("wodx-chronicle", "rule.eraReckoning") !== false; } catch (e) { reck = true; }
@@ -1237,7 +1244,7 @@ function openingCard(scene) {
       const mine = !game.user.isGM ? game.user.character : null;
       if ( mine && church ) { const c = countOf(mine.flags?.["wodx-chronicle"] ?? {}, mine.flags?.["wodx-creation"]?.lifepath ?? null, church.faith ?? "western"); if ( c.faith !== church.faith ) faith = c.faith; }
     } catch (e) { faith = null; }
-    told = reckon(t, faith ? {church: {...church, day: null}, faith, region: church?.region, eraId, latitude: lat} : {church, eraId, latitude: lat});
+    told = reckon(t, faith ? {church: {...church, day: null}, faith, region: church?.region, eraId, latitude: here.lat} : {church, eraId, latitude: here.lat});
   }
   let weather = "";
   try { weather = now()?.label ?? ""; } catch (e) { weather = ""; }

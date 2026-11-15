@@ -244,6 +244,22 @@ export const eraGroup = idOrYear => (typeof idOrYear === "number" ? eraAt(idOrYe
 export const darkAgesRules = id => ["darkages", "livinggods", "classical"].includes(eraById(id)?.rules);
 /** The eras before the modern world's electric light and wire: everything to the Age of Reason. */
 export const MEDIEVAL_YEAR_END = 1449;
+/**
+ * The span of years stock speech is written for (NPC talk and its grammar), on the era profiles' years: medieval to the
+ * Long Night, early modern to the Age of Reason, the nineteenth century to the Great War, the twentieth to 1989, modern
+ * after; "future" from the Future Darkness era on that branch, and past 2025 otherwise (the main timeline ends in 2022).
+ */
+export function speechBand(year, branch = "") {
+  const y = Number(year);
+  if ( !Number.isFinite(y) ) return "modern";
+  const g = eraGroup(y);
+  if ( g === "ancient" || g === "medieval" ) return "medieval";
+  if ( g === "early-modern" ) return "earlymodern";
+  if ( g === "industrial" ) return "nineteenth";
+  if ( g === "mid-century" ) return "twentieth";
+  if ( branch === "future" && y >= eraById("future-darkness").start ) return "future";
+  return y >= 2026 ? "future" : "modern";
+}
 
 /* -------------------------------------------- */
 /*  Who is who                                  */
