@@ -195,7 +195,9 @@ const mine = () => game.users?.activeGM?.id === game.user?.id;
 const may = tok => !!tok?.document?.isOwner;
 const spriteTokenOf = (actor, uuid = null) => {
   const toks = canvas.tokens?.placeables ?? [];
-  return (uuid ? toks.find(t => t.document.uuid === uuid) : null) ?? toks.find(t => t.actor === actor) ?? toks.find(t => actor?.uuid && t.actor?.uuid === actor.uuid) ?? null;
+  return (uuid ? toks.find(t => t.document.uuid === uuid) : null) ?? toks.find(t => t.actor === actor) ?? toks.find(t => actor?.uuid && t.actor?.uuid === actor.uuid)
+    // an unlinked token's own actor is a copy of the sheet's: the sheet's actor still finds it
+    ?? toks.find(t => actor?.id && !t.document.actorLink && t.document.actorId === actor.id) ?? null;
 };
 
 /** Every attack rolled in a fight, hit or miss, plays the move that fits the weapon. The computer that rolled it sends it. */
