@@ -789,6 +789,60 @@ o("windmill", "windmill", "machines", "20 x 20", "", "1180-", "mill 3, field 1, 
 o("windturbine", "small wind turbine", "machines", "6 x 6", "", "1887-", "roof 1, farmyard 2, field 1, yard 1", "1-5", "*", mount="outdoor")
 o("wreath", "wreath", "decor", "1.5 x 0.5", "", "-", "hall 1, nave 1, chancel 1, churchyard 1, parlour 1", "1-5", "*", mount="wall")
 
+
+# ================================================================ realms (B6461): the otherworlds' own objects, from the Cataclysm entries that are
+# not of this earth (its alien, nether, fungal, flesh and impossible things), each given its World of Darkness home: a realm of the Umbra, the
+# Underworld, the Dreaming or the Deep Umbra, or a place on earth where that realm leaks through. Rooms here are realm ids (realm-maps-rules.mjs)
+F = "realms"
+for rid, rname, rsize, rtag, ryears, rwhere, rw, rmount in (
+        # the Wyrm's blight
+        ("blighttree", "blighted fungal tree", "8 x 8", "hazard:fire", "-", "malfeas 3, scar 3, atrocity 1, woods 1, factory 1", "0-5", "outdoor"),
+        ("blightbloom", "spore-bloom of the blight", "3 x 3", "", "-", "malfeas 2, scar 2, woods 1, tunnel 1", "0-5", "outdoor"),
+        ("hivepod", "brood pod of a Wyrm hive", "3 x 3", "break:fragile", "-", "malfeas 2, scar 2, tunnel 1, cellar 1, factory 1", "0-5", "floor"),
+        ("hivenest", "paper or resin hive comb", "6 x 4", "hide:crawl", "-", "malfeas 2, scar 1, tunnel 1, woods 1, loft 1", "0-5", "wall"),
+        # flesh
+        ("fleshpod", "pulsing organ pod", "3 x 3", "", "-", "malfeas 2, atrocity 2, demon-abyss 2, feeding 1, dungeon 1", "0-5", "floor"),
+        ("fleshmaw", "toothed maw in the wall", "4 x 1.5", "hazard:sharp", "-", "malfeas 2, demon-abyss 2, atrocity 1, resting 1, dungeon 1", "0-5", "wall"),
+        ("fleshtubes", "breathing flesh tubes", "4 x 4", "", "-", "malfeas 2, demon-abyss 2, feeding 1", "0-5", "floor"),
+        ("impalestake", "impaling stake", "2 x 2", "hazard:sharp", "-", "atrocity 3, battleground 1, field 1, bailey 1, malfeas 1", "0-5", "outdoor"),
+        # the Underworld
+        ("spectregate", "Labyrinth archway", "8 x 2", "opening:gate", "-", "labyrinth 3, tempest 1, umbral-abyss 1, demon-abyss 1", "0-5", "floor"),
+        ("labyrinthstele", "Labyrinth stele", "2 x 1", "clue:writing", "-", "labyrinth 3, tempest 1, dark-kingdom 1", "0-5", "outdoor"),
+        ("oblivionchasm", "chasm of the void", "10 x 8", "trap:pit", "-", "tempest 2, labyrinth 2, umbral-abyss 3, demon-abyss 1", "0-5", "outdoor"),
+        ("maelstrommist", "Maelstrom mist bank", "10 x 6", "hide:shadows", "-", "tempest 3, far-shores 1, labyrinth 1, stygia 1", "0-5", "outdoor"),
+        # Paradox and the Deep Umbra
+        ("paradoxflaw", "fault in the shape of things", "4 x 4", "hazard:shock", "-", "paradox-realm 3, deep-umbra 1, shard-realm 1, lab 1, laboratory 1", "0-5", "floor"),
+        ("paradoxglass", "scarlet realm glass", "4 x 3", "hazard:sharp", "-", "shard-realm 2, paradox-realm 2, horizon-realm 1", "0-5", "outdoor"),
+        ("voidpatch", "patch of open void", "4 x 4", "trap:pit", "-", "deep-umbra 3, paradox-realm 1, flux 1", "0-5", "outdoor"),
+        ("umbralflora", "deep-world growth", "6 x 6", "climb:tree", "-", "deep-umbra 2, flux 3, shard-realm 1, horizon-realm 1, pangaea 1", "0-5", "outdoor"),
+        ("lumincrystal", "glowing realm crystal", "3 x 3", "light:lamp", "-", "deep-umbra 2, shard-realm 2, horizon-realm 2, erebus 1, caern 1", "0-5", "outdoor"),
+        ("moonpool", "still moon pool", "6 x 6", "sacred:node", "-", "aetherial 2, deep-umbra 1, wolfhome 1, caern 1, legendary 1", "0-5", "outdoor"),
+        ("coralspire", "coral spire of a far world", "4 x 4", "", "2100-", "deep-umbra 2, flux 1", "0-5", "outdoor"),
+        # the machine realms and the Technocracy's far future
+        ("scrapspire", "scrap-metal spire", "6 x 6", "climb:wall", "-", "autochthonia 3, cyberrealm 2, scar 1", "0-5", "outdoor"),
+        ("wiregrass", "wire grass", "4 x 4", "hazard:shock", "-", "autochthonia 2, cyberrealm 3, digital-web 1", "0-5", "outdoor"),
+        ("cyborgremains", "remains of a cyborg", "6 x 2", "clue:object", "2030-", "autochthonia 2, cyberrealm 1, lab 1, alley 1, battleground 1", "0-5", "floor"),
+        ("powerpylon", "humming power pylon", "3 x 3", "hazard:shock", "2030-", "autochthonia 2, lab 2, control 1, horizon-realm 1", "3-5", "floor"),
+        ("translocator", "translocation pad", "6 x 6", "", "2040-", "lab 2, control 1, horizon-realm 1, deep-umbra 1", "4-5", "floor"),
+        ("riotfoam", "hardened riot foam", "4 x 4", "cover:barricade", "2015-", "street 1, gate 1, cell 1, lab 1", "0-5", "floor"),
+        ("voidshipconsole", "voidship helm console", "6 x 3", "", "1900-", "cabin 2, control 1, deep-umbra 1", "4-5", "wall"),
+        ("voidshipseat", "voidship crash couch", "3 x 6", "", "1900-", "cabin 3, deep-umbra 1", "3-5", "floor"),
+        ("voidshipdrive", "voidship drive or thruster", "8 x 8", "hazard:fire", "1900-", "cabin 1, deep-umbra 1, lab 1", "4-5", "floor"),
+        # the Dreaming
+        ("chimericaltree", "chimerical tree with glass fruit", "10 x 10", "climb:tree", "-", "far-dreaming 3, deep-dreaming 2, arcadia-gateway 2, summer-country 2, dream-zone 1", "0-5", "outdoor"),
+        ("chimericalbloom", "chimerical flowers", "3 x 3", "", "-", "far-dreaming 3, arcadia-gateway 2, summer-country 2, dream-zone 1, garden 1", "0-5", "outdoor"),
+        ("sweetrock", "boulder of rock candy", "4 x 4", "cover:barricade", "-", "far-dreaming 2, dream-zone 2", "0-5", "outdoor"),
+        ("sweetpool", "pool of molten chocolate", "8 x 6", "", "-", "far-dreaming 1, dream-zone 1", "0-5", "outdoor"),
+        # realm stones and the primal world
+        ("realmheart", "heart-stone of a realm", "4 x 4", "sacred:node", "-", "aetherial 3, legendary 2, horizon-realm 2, summer-country 1", "0-5", "centre"),
+        ("moonbridgestone", "moon bridge stone", "3 x 3", "sacred:caern", "-", "aetherial 2, wolfhome 2, legendary 1, caern 2", "0-5", "outdoor"),
+        ("bronzepillar", "giant bronze pillar", "6 x 6", "", "-", "legendary 2, aetherial 1, horizon-realm 1, duat 1", "0-5", "outdoor"),
+        ("shellshelter", "megafauna-shell shelter", "10 x 8", "hide:crawl", "-", "pangaea 3", "0-5", "outdoor"),
+        ("tomblock", "tomb lock or ward lever", "2 x 1", "trap:tripwire", "-", "duat 3, crypt 1, sanctum 1, labyrinth 1, dungeon 1", "0-5", "wall"),
+        ("missilewreck", "wrecked missile", "8 x 30", "cover:wall", "1944-", "battleground 2, field 1, silo 1", "0-5", "outdoor"),
+        ):
+    o(rid, rname, F, rsize, rtag, ryears, rwhere, rw, "*", rmount)
+
 def rows(family=None):
     return [r for r in CENSUS if family is None or r.family == family]
 
@@ -830,6 +884,11 @@ ROOMS["gate"] += ["silo"]
 ROOMS["workplace"] += ["reactor", "pool", "oilfield"]
 ROOMS["park"] += ["green"]
 ROOMS["station"] += ["cabin"]
+# the otherworlds: each realm map (wodx-otherworlds realm-maps-rules.mjs REALMS) is a room of the place kind "realm"
+ROOMS["realm"] = ["aetherial", "arcadia-gateway", "atrocity", "battleground", "cyberrealm", "dream-zone", "erebus", "flux", "legendary", "malfeas", "pangaea",
+                  "scar", "summer-country", "wolfhome", "umbral-abyss", "horizon-realm", "shade-realm", "shard-realm", "paradox-realm", "deep-umbra",
+                  "digital-web", "autochthonia", "tempest", "stygia", "labyrinth", "far-shores", "dark-kingdom", "enoch", "far-dreaming", "deep-dreaming",
+                  "yomi", "yellow-springs", "duat", "demon-abyss"]
 ALL_ROOMS = sorted({r for v in ROOMS.values() for r in v})
 
 if __name__ == "__main__":
