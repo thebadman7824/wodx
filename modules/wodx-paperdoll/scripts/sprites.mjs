@@ -70,7 +70,7 @@ function tick() {
     const name = seemingFor(own);   // a changeling's mortal seeming for those who cannot see the fae mien (B5819)
     seen.add(token.id);
     const pos = {x: token.position.x, y: token.position.y};
-    let st = SR.step(states.get(token.id) ?? SR.start(pos), pos, grid, now);
+    let st = SR.step(states.get(token.id) ?? SR.start(pos), pos, grid, now, 140, !!token.movementAnimationPromise);
     let tex = null;
     const a = acts.get(token.id);
     if ( a?.up ) {

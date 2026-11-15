@@ -52,9 +52,11 @@ export const start = (pos, facing = "down") => ({x: pos.x, y: pos.y, facing, dis
  * A jump of three squares or more in one look is a placement, not a walk. A figure stands still again a moment
  * after the last movement.
  */
-export function step(st, pos, grid, now, rest = 140) {
+export function step(st, pos, grid, now, rest = 140, walking = false) {
   const dx = pos.x - st.x, dy = pos.y - st.y, d = Math.hypot(dx, dy);
-  if ( d >= grid * 3 ) return {...st, x: pos.x, y: pos.y, moving: false};
+  // a long leap between two looks is a token set down, unless Foundry is still walking it there (B6147: on a slow screen a
+  // walk can cover three squares between frames)
+  if ( d >= grid * 3 && !walking ) return {...st, x: pos.x, y: pos.y, moving: false};
   if ( d > 0.01 ) return {x: pos.x, y: pos.y, facing: facingOf(dx, dy, st.facing), dist: st.dist + d, last: now, moving: true};
   return {...st, moving: st.moving && now - st.last < rest};
 }
