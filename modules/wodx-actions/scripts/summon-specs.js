@@ -1609,6 +1609,33 @@ export const SPECS = {
   "page": "V20 p. 238",
   "note": "Unwrapped, it must be aimed and commanded that turn or it attacks the nearest being. Moves 30 yards, attacks against it at +3."
  },
+ "rituals-v20-dark-ages|samira-s-kihanah": {
+  "what": "spirit",
+  "profile": "called",
+  "count": {"by": "fixed", "fixed": 1, "max": 1},
+  "lasts": {"kind": "scene"},
+  "control": {"mode": "none"},
+  "page": "VtDA20 p. 307",
+  "note": "B5792: a djinn called into the metal item answers the caster's questions for the scene; it serves no other way."
+ },
+ "rituals-v20-dark-ages|eyes-of-the-abyss": {
+  "what": "elemental",
+  "profile": "servant",
+  "count": {"by": "fixed", "fixed": 1, "max": 1},
+  "lasts": {"kind": "scene"},
+  "control": {"mode": "direct"},
+  "page": "VtDA20 p. 271",
+  "note": "B5792: a tiny elemental of the Abyss, the caster's eyes in the shadows for the scene."
+ },
+ "rituals-w20|baptism-of-fire": {
+  "what": "spirit",
+  "profile": "servant",
+  "count": {"by": "fixed", "fixed": 1, "max": 1},
+  "lasts": {"kind": "hours", "n": 720},
+  "control": {"mode": "none"},
+  "page": "W20 p. 210",
+  "note": "B5792: a Kin-Fetch that watches over the marked child; more successes keep track of the child better."
+ },
  "rituals-v20-dark-ages|summon-guardian-spirit": {
   "what": "spirit",
   "profile": "servant",

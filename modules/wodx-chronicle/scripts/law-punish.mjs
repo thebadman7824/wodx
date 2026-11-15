@@ -12,6 +12,8 @@ import {currentYear} from "./eras.mjs";
 import * as L from "./law-rules.mjs";
 import * as P from "./law-punish-rules.mjs";
 import {standingFor} from "./law-standing.mjs";
+import {declareWanted} from "./law-heat.mjs";
+import {applyTimed} from "./timed.mjs";
 
 const yearNow = () => { try { return currentYear(); } catch (e) { return 1197; } };
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
@@ -41,14 +43,41 @@ export async function sentenceCard({actor: actorId, name, region, deeds = [], ye
 export async function sentence(info, punish) {
   if ( !game.user.isGM ) return null;
   const actor = game.actors.get(info.actorId);
-  if ( !punish ) { await ChatMessage.create({speaker: {alias: "The court"}, content: `<div class="wodx-card"><p>The court shows ${esc(info.name)} mercy.</p></div>`}); return null; }
+  if ( !punish ) { await ChatMessage.create({speaker: {alias: "The court"}, content: `<div class="wodx-card"><p>The court shows ${esc(info.name)} mercy.</p></div>`}); Hooks.callAll("wodxSentence", {actor: info.actorId, region: info.region, mark: null, mercy: true}); return null; }
   const mark = P.markFor(punish, {year: info.year, region: info.region, weight: info.weight, id: foundry.utils.randomID()});
   if ( actor ) await actor.setFlag(MODULE_ID, "lawMarks", [...marksOf(actor), mark].slice(-30));
-  const extra = mark.kind === "fine" ? " Take it from the purse with the money window." : mark.kind === "death" ? " The condemned is held for the sentence." : "";
+  const extra = actor ? await carryOut(actor, mark, info) : "";
   await ChatMessage.create({speaker: {alias: "The court"}, content: `<div class="wodx-card wodx-law-sentence"><h3>${esc(info.name)}: ${esc(mark.words)}</h3></div>`});
   if ( extra ) await ChatMessage.create({speaker: {alias: "The court"}, whisper: gmIds(), content: `<div class="wodx-card"><p class="hint">${esc(extra.trim())}</p></div>`});
   Hooks.callAll("wodxSentence", {actor: info.actorId, region: info.region, mark});
   return mark;
+}
+
+/**
+ * B5823: the sentence happens. A fine is taken from the purse at once (a month of a modest living for light deeds, more
+ * for graver ones; on credit when short: a house reading, the books give no sums for every land and age); outlawry and
+ * banishment put the character at Wanted in that land; a death sentence holds the condemned (Held for the scene) until
+ * the Storyteller plays it out. Returns the Storyteller's line.
+ */
+async function carryOut(actor, mark, info) {
+  if ( mark.kind === "fine" ) {
+    const M = game.modules.get("wodx-storyteller")?.api?.upkeep?.money;
+    if ( !M?.pay || !M?.rules?.allowance ) return "Take it from the purse with the money window (WoDX Storyteller's money is off).";
+    let region = "moravian"; try { region = game.settings.get("wodx-storyteller", "moneyRegion") || region; } catch (e) { /* default */ }
+    const amount = P.fineAmount(M.rules.allowance(2, info.year, region), info.weight);
+    const r = await M.pay(actor, amount, {credit: true, note: `Fined by the court (${info.region})`});
+    const text = M.rules.formatMoney ? M.rules.formatMoney(amount, M.rules.moneyFor?.(info.year, region)) : String(amount);
+    return r?.ok === false ? `The fine of ${text} could not be taken: the purse is ${r?.text ?? "too"} short, even on credit.` : `The fine of ${text} is taken from the purse.`;
+  }
+  if ( mark.kind === "outlaw" || mark.kind === "banished" ) {
+    const w = await declareWanted(actor, info.region, mark.words);
+    return w ? "A warrant is out in this land: the watch will come." : "";
+  }
+  if ( mark.kind === "death" ) {
+    await applyTimed(actor, {name: "Held for sentence", description: "Held by the court until the sentence is carried out", duration: {kind: "scene"}, condition: "held", key: "wodx-law-held", source: "WoDX Chronicle law"});
+    return "The condemned is held (Held for the scene) until you play the sentence out.";
+  }
+  return "";
 }
 
 /** Pardon a mark (the Storyteller). */

@@ -26,7 +26,8 @@ export const BASE = {caravan: 0.006, workshop: 0.003, house: 0.004};
 /** A bad week takes this share of the value, before Influence. */
 export const BAD_SHARE = {caravan: 0.25, workshop: 0.15, house: 0.2};
 /** A caravan of the venture's market lost on the road, a raid on its market, its trader going broke. */
-export const LOSS = {caravanLost: 0.3, raid: 0.1, traderBroke: 0.6};
+/** spoiled: an NPC with a grudge spoils one of the character's ventures (WoDX NPC, NPC Motives Desk g1, B5690). */
+export const LOSS = {caravanLost: 0.3, raid: 0.1, traderBroke: 0.6, spoiled: 0.25};
 /** A stake this many months of a plain wage or more is large. */
 export const LARGE_WAGES = 60;
 export const SEAT_WEEKS = 8;
@@ -267,7 +268,9 @@ export function hit(v, type, {influence = 0, now = 0, text = ""} = {}) {
   return {venture: n, lost};
 }
 /** Which open ventures a happening touches. */
-export function touched(state, type, {market = "", from = "", to = "", trader = ""} = {}) {
+export function touched(state, type, {market = "", from = "", to = "", trader = "", actor = ""} = {}) {
+  // B5690: a spoiled venture is the largest open one the character holds
+  if ( type === "spoiled" ) return openOf(state).filter(v => v.actor === actor).sort((a, b) => b.value - a.value).slice(0, 1);
   return openOf(state).filter(v => {
     if ( type === "caravanLost" ) return v.kind === "caravan" && (v.market === from || v.market === to);
     if ( type === "raid" ) return v.market === market && v.kind !== "caravan";

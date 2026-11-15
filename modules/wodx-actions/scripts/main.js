@@ -21,6 +21,8 @@
  *   profileMenu({actor})           the launcher shows a different menu for each actor type (v2.0)
  */
 
+import * as ACTS from "./acts.js";
+import * as BIND from "./binds.js";
 import { spendTime } from "./spend-time.js";
 import * as R from "./rules.js";
 import * as P from "./profiles.js";
@@ -297,6 +299,8 @@ async function onSocket(p) {
     if (p.action === "kx" && !p.uuid) return kx().onSocket(p);
     // B4822: a player sends their summons away
     if (p.action === "summonDismiss") return SUM.onDismissRequest(p);
+    // B5793: a bound player character's move, for the Storyteller to allow
+    if (p.action === "bindMove") return BIND.onMoveRequest(p);
     // B4831: a player's resistance roll against an effect card item
     if (p.action === "effectResisted") return EFX.resolveResist(game.messages.get(p.msg), Number(p.i), !!p.won);
     // B3133: a player's codex entry spent on research (the codex journal is the Storyteller's)
@@ -585,6 +589,26 @@ function npcPowers(actor) {
  * B4926: an NPC uses a power by itself: its window fills itself with the power chosen and rolls as if sent.
  * The target goes up first so the window's own aim and difficulty read it.
  */
+/** B5783: an NPC demon who knows Alter Memory uses it on each mortal on the scene, while its Faith lasts. */
+async function coverUp(combat) {
+    const scene = combat?.scene ?? canvas?.scene;
+    if (!scene) return [];
+    const done = [];
+    for (const cb of combat.combatants ?? []) {
+        const demon = cb.actor;
+        if (!demon || demon.hasPlayerOwner || !DXD.isDemon(demon)) continue;
+        const pick = (dx().powersFor(demon) ?? []).find(p => p.value === "humanity:5");
+        if (!pick) continue;
+        const mortals = scene.tokens.filter(t => t.actor && t.actorId !== demon.id && ["mortal", "hunter"].includes(P.detectProfile(t.actor)) && !t.actor.effects.some(e => e.name === "Memory altered"));
+        for (const t of mortals) {
+            if (Number(demon.system?.advantages?.faith?.temporary) < 1) break;
+            await autoPower(demon, pick, { target: t.object });
+            done.push(t.name);
+        }
+    }
+    return done;
+}
+
 async function autoPower(actor, pick, { target = null } = {}) {
     if (!actor || !pick?.use) return null;
     if (target) { for (const t of game.user.targets ?? []) t.setTarget(false, { releaseOthers: false }); target.setTarget?.(true, { releaseOthers: true, groupSelection: false }); }
@@ -3216,7 +3240,7 @@ async function gainDerangement(actor, cause, why) {
 }
 const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, rotschreckAuto, endFrenzy, sin, daytime, torpor, hazard, autoBeast, autoTorporRise,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.102.0", npcPowers, autoPower, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.103.0", npcPowers, autoPower, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Draw: withActor(a => zx().drawDialog(a)), m20Place: () => zx().placeDialog(), m20Quiet: withActor(a => qtx().panel(a)), quiet: { state: a => qtx().state(resolveActor(a)), act: (a, fd) => qtx().act(resolveActor(a), fd), rules: QR, onRefreshToken: QX.onRefreshToken }, consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
@@ -3299,7 +3323,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     innerVoice: withActor(a => vx().panel(a)), voices: () => vx().mine(), voiceRules: VR, voicePressure: a => vx().pressureOf(resolveActor(a)),
     voiceLive: a => vx().live(resolveActor(a)), voiceButton: b => vx().onChatButton(b), voiceSceneEnd: () => vx().onEndScene(), proposeVoice: (a, prop, note) => vx().propose(resolveActor(a), prop, note), imbue: withActor(a => rx().imbue(a)), reckoningRules: KRR,
     sinGod: withActor(a => hx().sin(a)), prayer: withActor(a => hx().prayer(a)), relic: withActor(a => hx().relic(a)), bankConviction: withActor(a => hx().cashIn(a)),
-    trueFaith: withActor(a => hx().trueFaith(a)), numina: withActor(a => hx().numina(a)), hedgeMagic: withActor(a => hx().hedgeMagic(a)), fomorPower: withActor(a => fmx().power(a)), spiritCharm: withActor(a => chmx().power(a)), charms: { use: (a, key, o) => chmx().use(resolveActor(a), key, o), of: a => CHM.charmsOf(resolveActor(a)), traits: a => CHM.traits(resolveActor(a)), isSpirit: a => CHM.isSpirit(a), rules: SCH }, fomor: { numbing: withActor(a => fmx().numbing(a)), use: (a, key) => fmx().use(resolveActor(a), key), settle: a => FOM.settle(resolveActor(a)), powersOf: a => FOM.fomorPowersOf(resolveActor(a)), pools: a => FOM.pools(resolveActor(a)), soakOf: a => FOM.soakOf(a), immune: a => FOM.immune(a), taintHidden: a => FOM.taintHidden(a), condition: FOM.NUMBING, rules: FP }, ghoulBlood: withActor(a => hx().ghoulBlood(a)), hunterLine: () => HX.lineNow(), hunterRules: HR };
+    trueFaith: withActor(a => hx().trueFaith(a)), numina: withActor(a => hx().numina(a)), hedgeMagic: withActor(a => hx().hedgeMagic(a)), fomorPower: withActor(a => fmx().power(a)), spiritCharm: withActor(a => chmx().power(a)), acts: { coverUp, markMeet: sc => ACTS.markMeet(sc ?? canvas?.scene), pathBack: d => ACTS.pathBack(d), markSpan: ACTS.markSpan, ailing: ACTS.AILING }, charms: { use: (a, key, o) => chmx().use(resolveActor(a), key, o), of: a => CHM.charmsOf(resolveActor(a)), traits: a => CHM.traits(resolveActor(a)), isSpirit: a => CHM.isSpirit(a), rules: SCH }, fomor: { numbing: withActor(a => fmx().numbing(a)), use: (a, key) => fmx().use(resolveActor(a), key), settle: a => FOM.settle(resolveActor(a)), powersOf: a => FOM.fomorPowersOf(resolveActor(a)), pools: a => FOM.pools(resolveActor(a)), soakOf: a => FOM.soakOf(a), immune: a => FOM.immune(a), taintHidden: a => FOM.taintHidden(a), condition: FOM.NUMBING, rules: FP }, ghoulBlood: withActor(a => hx().ghoulBlood(a)), hunterLine: () => HX.lineNow(), hunterRules: HR };
 
 Hooks.once("init", () => {
     registerSettings();
@@ -3364,6 +3388,8 @@ Hooks.once("ready", async () => {
         // B4920-B4923: the one scene count, power use limits and Drained
         try { LIM.setup();
         FOM.setup(); CHM.setup(); AFC.setup(); } catch (e) { console.error("WoDX | limits", e); }
+        // B5783: when a fight ends, an NPC demon with Alter Memory makes the mortals who saw it forget
+        Hooks.on("deleteCombat", c => { if (game.user.isGM && game.users.activeGM?.id === game.user.id) coverUp(c).catch(e => console.warn("WoDX | cover up", e)); });
         // Lifted and planted items, and being caught at it (3.21.0)
         try { sox().registerHandlers(); } catch (e) { console.error("WoDX | social", e); }
         // B5112-B5119: the Parted Mists, oaths broken by an attack, pacts, True Names

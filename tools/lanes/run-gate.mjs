@@ -163,7 +163,7 @@ try {
       // B3086: each gate starts from the world as it was before it. World settings it changed are put back, settings
       // it added are removed, and on a lane that is reset every night (autoReset) the documents it left are deleted.
       const run = page.evaluate(async ({gate, ignore, cleanDocs, limit, stepMs}) => {
-        const t0 = game.time.worldTime, paused = game.paused;
+        const t0 = game.time.worldTime, paused = game.paused, startedAt = Date.now();
         const activeId = game.scenes.active?.id ?? null, viewedId = canvas?.scene?.id ?? null;
         const skip = k => ignore.some(p => p.endsWith("*") ? k.startsWith(p.slice(0, -1)) : k === p);
         const store = () => [...(game.settings.storage.get("world")?.contents ?? game.settings.storage.get("world")?.values?.() ?? [])];
@@ -195,6 +195,17 @@ try {
         }
         catch (e) { error = e?.message ?? String(e); }
         finally { clearTimeout(timer); clearInterval(sweep); }
+        // B5830: a gate that does not name its failed steps in the summary (the older gates) has them read from its
+        // result file, so a failure on a lane can be fixed without going back to the PC for the file.
+        const tally = typeof summary === "string" ? /(\d+)\s*\/\s*(\d+)\s+passed/.exec(summary) : null;
+        if ( tally && tally[1] !== tally[2] && !/failed:/.test(summary) ) {
+          try {
+            const res = await (await fetch(`/wodx-gate/${gate}-result.json?${Date.now()}`, {cache: "no-store"})).json();
+            const fresh = !res?.started || Date.parse(res.started) >= startedAt - 5000;
+            const bad = fresh ? (res?.steps ?? []).filter(st => !st.pass).map(({name, pass, ...d}) => `${name} ${JSON.stringify(d).slice(0, 300)}`) : [];
+            if ( bad.length ) summary += `; failed: ${bad.join("; ")}`.slice(0, 900);
+          } catch (e) { /* no result file */ }
+        }
         // Writes a gate set off just before it ended (an approval queued by a hook) land first, then are put back.
         await new Promise(r => setTimeout(r, 1500));
         const moved = game.time.worldTime - t0;

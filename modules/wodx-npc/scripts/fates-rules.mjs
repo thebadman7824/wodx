@@ -17,6 +17,8 @@
  * books give no such tables. The Storyteller sees every result on one card and approves it before anything is written.
  */
 
+import {embraceReason, withoutLeave, EMBRACE_REASONS} from "./duty-rules.mjs";
+export {EMBRACE_REASONS};
 import {TORPOR} from "../../wodx-creation/data/time.mjs";
 
 /** The actor types that live off-screen, and the line each one follows. */
@@ -101,7 +103,7 @@ export function normPerson(p = {}) {
   return {id: String(p.id ?? ""), name: String(p.name ?? ""), line: String(p.line ?? ""), born: n(p.born), made: n(p.made),
     generation: n(p.generation), road: n(p.road) ?? 7, sect: p.sect ?? null, sectText: String(p.sectText ?? ""), rise: n(p.rise) ?? 0,
     torpor: p.torpor && n(p.torpor.to) !== null ? {from: n(p.torpor.from), to: n(p.torpor.to)} : null,
-    dead: !!p.dead, keep: !!p.keep, office: p.office ? String(p.office) : null, brood: !!p.brood, clan: String(p.clan ?? ""), sireId: p.sireId ?? null};
+    dead: !!p.dead, keep: !!p.keep, office: p.office ? String(p.office) : null, brood: !!p.brood, clan: String(p.clan ?? ""), sireId: p.sireId ?? null, nature: String(p.nature ?? "")};
 }
 
 const KIND_OF_BROOD = {vampire: "childe", garou: "cub", mage: "apprentice", changeling: "fosterling"};
@@ -192,8 +194,12 @@ export function live(peopleIn = [], fromYear, toYear, {rand = null, seed = "fate
         if ( !p.fresh && made < cap && (p.generation === null || p.generation < LAST_SIRING) && r() < over(EMBRACE[sect] ?? 0.01, n) ) {
           made++;
           const c = newBrood(p, year, "childe", {generation: p.generation === null ? null : p.generation + 1, sect, n: `${made}${Math.floor(r() * 46656).toString(36)}`});
+          // B5697 (g5): every Embrace has a reason, and in a court that asks for leave it may be made without it
+          c.reason = embraceReason(sect ?? "none", p.nature, r());
+          c.noLeave = withoutLeave(sect, r(), p.office);
           brood.push(c); people.push({...normPerson({...c, brood: true}), fresh: true});
-          say(p, year, "brood", `${BROOD_WORD.childe}${c.generation ? ` of the ${c.generation}th Generation` : ""}${sect === "camarilla" && !/prince/i.test(p.office ?? "") ? " with the Prince's leave" : ""}`, {brood: c.id});
+          const leave = c.noLeave ? " without leave, and keeps it hidden" : sect === "camarilla" && !/prince/i.test(p.office ?? "") ? " with the Prince's leave" : "";
+          say(p, year, "brood", `${BROOD_WORD.childe}${c.generation ? ` of the ${c.generation}th Generation` : ""} ${EMBRACE_REASONS[c.reason]}${leave}`, {brood: c.id, reason: c.reason, noLeave: c.noLeave});
         }
         continue;
       }

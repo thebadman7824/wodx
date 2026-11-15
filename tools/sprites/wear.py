@@ -36,6 +36,14 @@ def foot(cv,d,ank,sgn,g,sidev=False,dark=0):
             for xx in (-1,1): cv.px(x+xx,y+4.2,C['black'])
         if k=='sandal':
             for xx in (-1,0,1): cv.px(x+xx,y,rc(c)[2])
+def _draped(d,th,shk):
+    """the thigh and shin colours of a figure whose legs are bent under a long garment: the cloth lies over them"""
+    kind=d['top'][1]; L=LONG.get(kind,0); sl=skirtlen(d)
+    if L>=62: th=sk_=ramp(d['skin']) if kind in('bare','band','wrap') else rc(d['top'][0])
+    elif sl and d['legs'][1]!='loin': th=rc(d['legs'][0])
+    if L>=77: shk=th
+    elif sl and sl>=80: shk=rc(d['legs'][0])
+    return th,shk
 def skirtlen(d):
     k=d['legs'][1]; return {'skirt':70,'skirtlong':82,'kilt':66,'mini':62,'loin':63}.get(k)
 def hem(cv,x,y0,y1,r0,r1,rp,g,dark=0,sway=0):
@@ -373,19 +381,84 @@ def actdir(d,act,hs,back,cx,dy):
         sx,sy=cx+sg*d['sw'],41.5+dy; ex,ey=hx-sx,hy-sy; n=math.hypot(ex,ey) or 1; return (hx,hy),(ex/n,ey/n)
     if d['held'] and W[d['held']][0]=='bow' and name=='shot': return (hx,hy),(sg*.05,-1)
     return (hx,hy),((0,-1) if back else (sg*.12,.99))
-def front(d,f,back=False,act=None):
+# ---- drawn poses (B5664): a figure that sits, kneels, works, carries or stands still is drawn in that pose, joint by joint -------------
+W['hoe']=('pole',[('c',-10,22,.7,.7,'wood'),('c',21.5,21.6,1.1,.7,'iron',0,5)])
+def _mix(a,b,t): return tuple(_mix(p,q,t) for p,q in zip(a,b)) if isinstance(a,(tuple,list)) else a+(b-a)*t
+# Each pose: the hips' drop, the lean of the trunk, the knee and ankle of the near and the far leg seen from the side, elbow and wrist
+# of each arm from its shoulder, and the same seen from the front (knee and ankle out from the middle; elbow and wrist from the shoulder).
+_ST=dict(dy=0,lean=0,sl=(((47.5,71),(47.5,84.5)),((46.5,71),(46.5,84.5))),sa=(((0,9.5),(.8,18.5)),((0,9.5),(.4,18.5))),fl=(3.4,71,3.2,84.5),fa=(((1.4,9),(1.2,17.5)),((1.4,9),(1.2,17.5))))
+_P=dict(
+ stand=_ST,
+ seat=dict(dy=13,lean=0,sl=(((61,71.5),(61.5,84.5)),((59.5,71.5),(60,84.5))),sa=(((1,9),(8.5,13.5)),((.5,9),(7.5,13.5))),fl=(4.4,74,4.2,84.5),fa=(((1.4,8.5),(-1.8,14)),((1.4,8.5),(-1.8,14)))),
+ sit=dict(dy=25,lean=-1.5,sl=(((57,73),(65,84.5)),((55.5,73.5),(63,84.5))),sa=(((2,8),(9.5,8)),((1.5,8),(8.5,8.5))),fl=(7,74,5.4,84.5),fa=(((2.2,8),(-.5,10)),((2.2,8),(-.5,10)))),
+ kneel=dict(dy=13.5,lean=1,sl=(((49.5,84.6),(37,85)),((48.5,84.6),(36,85))),sa=(((3,7.5),(7,3.5)),((2.5,7.5),(6.5,3.5))),fl=(3.8,83.6,3.8,84.4),fa=(((1.6,8),(-5.6,4.5)),((1.6,8),(-5.6,4.5)))),
+ tend=dict(dy=13.5,lean=6,sl=(((49.5,84.6),(37,85)),((48.5,84.6),(36,85))),sa=(((4,8),(10.5,14)),((3.5,8),(9.5,14))),fl=(3.8,83.6,3.8,84.4),fa=(((1.8,8.5),(-2.6,15)),((1.8,8.5),(-2.6,15)))),
+ work=dict(dy=0,lean=1.5,sl=_ST['sl'],sa=(((3,8),(10,7)),((2.5,8),(9,7))),fl=_ST['fl'],fa=(((1.6,8.5),(-2.4,10)),((1.6,8.5),(-2.4,10)))),
+ dig=dict(dy=1,lean=5,sl=(((50,71.5),(51.5,84.5)),((45,71.5),(43,84.5))),sa=(((4,8),(9,13)),((3,8),(7,10))),fl=(4.2,71,4.6,84.5),fa=(((1.2,8.5),(-5,13)),((1.2,8.5),(-5.4,10)))),
+ carry=dict(dy=None,lean=0,sl=None,sa=(((2.5,8),(8.5,6)),((2,8),(7.5,6))),fl=None,fa=(((1.2,8.5),(-3.6,8.5)),((1.2,8.5),(-3.6,8.5)))),
+)
+_DOWN=[0,.4,.75,1,1,1]
+def pose_at(name,i):
+    """the pose for frame i of a pose sheet: 'stand' (one frame), 'seat' and 'stool' (on a seat; the stool brings its own), 'sit' (on the ground),
+    'kneel', 'sup' (seated, a cup to the mouth), 'work' (hands busy at a bench, an oven, a loom), 'tend' (kneeling to a hearth or a bed of herbs),
+    'dig' (a hoe in the field), 'carry' (the walk with a sack in the arms)"""
+    base={'stool':'seat','sup':'seat'}.get(name,name); p=dict(_P[base]); p['name']=name; p['prop']=None; t=1
+    if name in('seat','stool','sit','kneel'):
+        t=_DOWN[i]; p={k:(_mix(_ST[k],p[k],t) if k in _ST else p[k]) for k in p}
+    if name=='stool': p['prop']=('stool',t)
+    if name=='sup':
+        u=[0,.5,1,1,.5,0][i]; a=p['sa']; p['sa']=((_mix(a[0][0],(4,6),u),_mix(a[0][1],(6.5,-3.5),u)),a[1]); f=p['fa']; p['fa']=((_mix(f[0][0],(2,7),u),_mix(f[0][1],(-3.5,-2.5),u)),f[1]); p['prop']=('cup',u)
+    if name=='work':
+        u=[0,1,0,-1,0,1][i]; a=p['sa']; p['sa']=((a[0][0],(a[0][1][0],a[0][1][1]+2*u)),(a[1][0],(a[1][1][0],a[1][1][1]-2*u))); f=p['fa']; p['fa']=((f[0][0],(f[0][1][0],f[0][1][1]+2*u)),(f[1][0],(f[1][1][0],f[1][1][1]-2*u)))
+    if name=='tend':
+        u=[0,1,0,-1,0,1][i]; a=p['sa']; p['sa']=((a[0][0],(a[0][1][0]+2*u,a[0][1][1])),(a[1][0],(a[1][1][0]-2*u,a[1][1][1]))); f=p['fa']; p['fa']=((f[0][0],(f[0][1][0]+1.5*u,f[0][1][1])),(f[1][0],(f[1][1][0]-1.5*u,f[1][1][1])))
+    if name=='dig':
+        u=[1,.7,0,0,.3,.7][i]; a=p['sa']; up=((3,5),(9,3)); p['sa']=(_mix(a[0],up,u),_mix(a[1],((2,6),(6,2)),u)); f=p['fa']; p['fa']=(_mix(f[0],((1.2,7),(-5,4)),u),_mix(f[1],((1.2,7),(-5.4,2)),u)); p['lean']=5-3*u; p['prop']=('hoe',u)
+    if name=='carry': p['prop']=('sack',1)
+    return p
+class Lean:
+    """tips the trunk forward from the hips; a child's shape (child.Warp) is laid over it when there is one"""
+    def __init__(s,lean,hip,inner=None): s.L=lean; s.hip=hip; s.inner=inner
+    def sx(s,y): return s.L*min(1.7,max(0.0,(s.hip-y)/16.0))
+    def k(s,y): return s.inner.k(y) if s.inner else 1.0
+    def pt(s,x,y):
+        x=x+s.sx(y); return s.inner.pt(x,y) if s.inner else (x,y)
+def _prop(cv,p,view,dy,cx,hands=None,when='pre'):
+    """what a pose brings with it: the stool sat on (behind the legs), the cup, the hoe, the sack (over the hands)"""
+    if not p or not p.get('prop'): return
+    k,u=p['prop']
+    if k=='stool' and when=='pre' and u>.3:
+        wd=RP['dwood']; x0=cx-2 if view=='s' else cx
+        cv.capsule((x0-6.5,73),(x0+6.5,73),1.7,1.7,ramp=RP['wood'],g='stool')
+        for sx_ in (-5.5,5.5): cv.capsule((x0+sx_,75),(x0+sx_*1.15,86.2),1.0,1.0,ramp=wd,dark=1,g='stoolleg%d'%sx_)
+    if when!='post' or not hands: return
+    hx,hy=hands
+    if k=='cup': cv.capsule((hx+(1.2 if view=='s' else 0),hy-2.6),(hx+(1.2 if view=='s' else 0),hy-.6),1.5,1.4,ramp=RP['wood'],g='cup')
+    if k=='sack' and view!='b': cv.capsule((hx-(1 if view=='s' else 0),hy-4.5),(hx+(1.5 if view=='s' else 0),hy-1),4.4,4.8,ramp=RP['cord'],g='sack'); cv.px(hx,hy-9,RP['cord'][1]); cv.px(hx+1,hy-9,RP['cord'][1])
+    if k=='hoe':
+        a=R(150-95*u) if view=='s' else R(178)      # raised over the shoulder, then brought down ahead
+        uu=(math.sin(a),math.cos(a)) if view=='s' else (0.0,1.0 if u<.5 else .96)
+        if view=='s': held(cv,(hx,hy),(uu[0],-uu[1]) if u>.5 else (.86,.5),W['hoe'][1],'W')
+        else: held(cv,(hx,hy-10+10*(1-u)),(0,1) if view=='f' else (0,-1),W['hoe'][1],'W')
+def front(d,f,back=False,act=None,pose=None):
     cv=K.Cv(); ph=(f if not act else (0,0,0,1,1,0)[act[1]])/8*2*math.pi; cx=48; t=d['thin']; sw=d['sw']; kind=d['top'][1]; lk=d['legs'][1]; tr=ramp(d['skin']) if kind in('bare','band','wrap') else rc(d['top'][0]); sk=ramp(d['skin'])
     hr=ramp(H((d['hairover'] or d['hair'])[0])); st=(d['hairover'] or d['hair'])[1]; view='b' if back else 'f'
-    dy=round(abs(math.sin(ph))*-0.8); ov=d['over']
+    dy=round(abs(math.sin(ph))*-0.8); ov=d['over']; pz=pose
+    if pz and pz['dy'] is not None: dy=pz['dy']
+    if pz and pz['fl']: ph=0
+    GR=86.4 if pz else 999      # nothing a seated or kneeling figure wears hangs below the ground
     if Ch.band(growth=d.get('growth')): cv.w=Ch.Warp(d['growth'],Ch.NECK+dy)
+    if pz: d=dict(d,held=None,off=None,stow=None); _prop(cv,pz,view,dy,cx)
     stowed(cv,d,view,dy,'pre'); marks(cv,d,cx,0,dy,view,'pre')
-    if ov and ov[0]=='cloak' and not back: hem(cv,cx,42+dy,ov[2] if len(ov)>2 else 76,sw+1.6,sw+3.0,rc(ov[1]),'cloakb',1)
+    if ov and ov[0]=='cloak' and not back: hem(cv,cx,42+dy,min(GR,(ov[2] if len(ov)>2 else 76)+(dy if pz else 0)),sw+1.6,sw+3.0,rc(ov[1]),'cloakb',1)
     if d['off'] and back: shield(cv,d,cx-sw-2.5,53+dy,'b')
     hood=d['hat'] and d['hat'][0] in('hood','scarf','veilall')
     if st=='long' and not back and not hood: cv.capsule((cx,31+dy),(cx,41+dy),5.0,4.6,ramp=hr,dark=1)
     th,shk=legramps(d); w=legw(d)
+    if pz and pz['fl']: th,shk=_draped(d,th,shk)
     for sgn,p in ((-1,ph),(1,ph+math.pi)):
         lift=max(0,math.sin(p))*3.2; hip=(cx+sgn*3,57+dy); knee=(cx+sgn*3.4,71-lift*.7); ank=(cx+sgn*3.2,84.5-lift); g='L%d'%sgn
+        if pz and pz['fl']: fl=pz['fl']; knee=(cx+sgn*fl[0],fl[1]); ank=(cx+sgn*fl[2],fl[3])
         cv.capsule(hip,knee,3.3*t*w,2.6*t*w,ramp=th,g=g); cv.capsule(knee,ank,2.5*t*w,(1.9 if lk!='wide' else 2.3)*t*(w if lk=='wide' else 1),ramp=shk,g=g)
         foot(cv,d,ank,sgn,g)
     lr=rc(d['legs'][0])
@@ -393,8 +466,8 @@ def front(d,f,back=False,act=None):
     sl=skirtlen(d)
     if sl:
         if lk=='loin': cv.capsule((cx-2.4,55+dy),(cx+2.4,55+dy),3.8,3.8,ramp=sk,g='body'); cv.capsule((cx,55+dy),(cx,sl+dy),3.4,3.0,ramp=lr,g='loin')
-        else: hem(cv,cx,54+dy,sl+dy,6.0,6.0+(sl-54)*.07,lr,'body')
-    if kind in LONG and LONG[kind]>56: L=LONG[kind]; hem(cv,cx,53+dy,L+dy,5.0 if kind not in('robe','kimono','gown','dress') else 6.0,5.0+(L-53)*.06+(1 if kind in('robe','kimono','gown','dress') else 0),tr,'body')
+        else: hem(cv,cx,54+dy,min(GR,sl+dy),6.0,6.0+(sl-54)*.07,lr,'body')
+    if kind in LONG and LONG[kind]>56: L=LONG[kind]; hem(cv,cx,53+dy,min(GR,L+dy),5.0 if kind not in('robe','kimono','gown','dress') else 6.0,5.0+(L-53)*.06+(1 if kind in('robe','kimono','gown','dress') else 0),tr,'body')
     cv.capsule((cx-sw+2.4,41.5+dy),(cx+sw-2.4,41.5+dy),2.8,2.8,ramp=tr,g='body')
     cv.capsule((cx,43+dy),(cx,53+dy),(sw-.6)*t+(.5 if kind in('kvest','plate') else 0),(sw-1.8)*t+(.7 if kind in('kvest','plate') else 0),ramp=tr,g='body')
     px=cv.px
@@ -431,7 +504,7 @@ def front(d,f,back=False,act=None):
             if kind=='kimono': px(cx+x,52+dy,br[3]); px(cx+x,54+dy,br[1])
         if not back and kind!='kimono': px(cx,53+dy,RP['brass'][4])
     if ov and ov[0]=='apron' and not back:
-        ar=rc(ov[1]); cv.capsule((cx,47+dy),(cx,ov[2] if len(ov)>2 else 68),4.0,4.6,ramp=ar,g='apron')
+        ar=rc(ov[1]); cv.capsule((cx,47+dy),(cx,min(GR-3,(ov[2] if len(ov)>2 else 68)+(dy if pz else 0))),4.0,4.6,ramp=ar,g='apron')
         for sg in (-1,1):
             for y in (41,42,43,44): px(cx+sg*3,y+dy,ar[2])
     if d.get('susp') and not back:
@@ -445,20 +518,22 @@ def front(d,f,back=False,act=None):
         s=math.sin(p)*1.6; shd=(cx+sgn*sw,41.5+dy); el=(cx+sgn*(sw+1.4),50.5+dy+s*.5); wr=(cx+sgn*(sw+1.2),59+dy+s); g='A%d'%sgn
         if act and sgn==(-1 if not back else 1):
             fa=FACT[act[0]]; e=fa['el'][act[1]]; q=fa['wr'][act[1]]; el=(shd[0]+sgn*e[0],shd[1]+e[1]); wr=(shd[0]+sgn*q[0],shd[1]+q[1])
+        if pz:
+            e,q=pz['fa'][0 if sgn==(-1 if not back else 1) else 1]; el=(shd[0]+sgn*e[0],shd[1]+e[1]); wr=(shd[0]+sgn*q[0],shd[1]+q[1])
         cv.capsule(shd,el,2.4*t,2.0*t+(.5 if wide else 0),ramp=au,g=g); cv.capsule(el,wr,1.9*t+(.5 if wide else 0),1.6*t+(1.0 if wide else 0),ramp=af,g=g)
         if kind=='plate': cv.capsule((shd[0],shd[1]-.5),(shd[0]+sgn*.5,shd[1]+1),3.2,2.8,ramp=tr,g='P%d'%sgn)
         hand(cv,d,wr,g); hands[sgn]=(wr[0],wr[1]+1.5)
     if ov and ov[0] in('poncho','cape'):
-        L=ov[2] if len(ov)>2 else (58 if ov[0]=='poncho' else 52); cv.capsule((cx,41+dy),(cx,L+dy),sw+.8,sw+1.5+(L-41)*.12,ramp=rc(ov[1]),g='poncho')
+        L=ov[2] if len(ov)>2 else (58 if ov[0]=='poncho' else 52); cv.capsule((cx,41+dy),(cx,min(GR-4,L+dy)),sw+.8,sw+1.5+(L-41)*.12,ramp=rc(ov[1]),g='poncho')
     if ov and ov[0]=='cloak':
-        if back: hem(cv,cx,43+dy,(ov[2] if len(ov)>2 else 76),sw+1.2,sw+2.6,rc(ov[1]),'cloak')
+        if back: hem(cv,cx,43+dy,min(GR,(ov[2] if len(ov)>2 else 76)+(dy if pz else 0)),sw+1.2,sw+2.6,rc(ov[1]),'cloak')
         else: cv.capsule((cx-sw+1,41+dy),(cx+sw-1,41+dy),2.6,2.6,ramp=rc(ov[1]),g='mantle')
     cv.capsule((cx,36.5+dy),(cx,39+dy),1.9,2.1,ramp=sk,g='head'); neckwear(cv,d,cx,dy,view)
     cy=31.5+dy
     if hood: hoodpre(cv,d,cx,cy,dy,view)
     pid=cv.capsule((cx,cy-1),(cx,cy+1.2),4.1,3.7,ramp=sk if not back or st=='bald' else hr,g='head')
     if not back:
-        px(cx-2,cy+.4,d['eyes']); px(cx+2,cy+.4,d['eyes'])
+        px(cx-2,cy+.4,d['eyes'] if not d.get('shut') else sk[1]); px(cx+2,cy+.4,d['eyes'] if not d.get('shut') else sk[1])
         if d['beard']:
             br=ramp(H(d['beard']))
             for (x,y) in ((-3,2),(3,2),(-3,3),(-2,3),(2,3),(3,3),(-2,4),(-1,4),(0,4),(1,4),(2,4),(-1,5),(0,5),(1,5)): px(cx+x,cy+y,br[2])
@@ -471,6 +546,7 @@ def front(d,f,back=False,act=None):
     if st=='long' and back and not hood: cv.capsule((cx,cy+2),(cx,42+dy),4.6,4.2,ramp=hr)
     hoodpost(cv,d,cx,cy,view,pid); hat(cv,d,cx,cy,view,pid); face(cv,d,cx,cy,view); marks(cv,d,cx,cy,dy,view,'post')
     stowed(cv,d,view,dy,'post')
+    if pz: hl,hr_=hands[-1],hands[1]; main=hands[-1 if not back else 1]; _prop(cv,pz,view,dy,cx,((hl[0]+hr_[0])/2,(hl[1]+hr_[1])/2) if pz['prop'] and pz['prop'][0] in('sack','hoe') else main,'post')
     if d['off'] and not back: shield(cv,d,cx+sw+2.5,53+dy,'f')
     if d['held']:
         hs=hands[-1 if not back else 1]; a,u=carry(d,view,hs,dy)
@@ -551,11 +627,22 @@ def fx(c,d,act,tip,u,head,view='s'):
                 a=t/20*6.28; put(q[0]+math.cos(a)*5,q[1]+math.sin(a)*5,cols[1])
             for t in range(-3,4): put(q[0]+t,q[1],cols[2]); put(q[0],q[1]+t,cols[2])
             for k in range(n//2): put(*P(15+k,math.sin(k)),cols[0])
-def side(d,f,act=None):
+def side(d,f,act=None,pose=None):
     cv=K.Cv(); ph=(f if not act else ACTS[act[0]]['leg'][act[1]])/8*2*math.pi; lk=d['legs'][1]; kind=d['top'][1]; t=d['thin']; sk=ramp(d['skin']); tr=sk if kind in('bare','band','wrap') else rc(d['top'][0])
     longk=LONG.get(kind,0); amp=.45 if (longk>=77 or lk=='skirtlong') else .7 if (lk in('skirt','kilt') or longk>=62) else 1
-    k,dy=rig.kin(ph,False,amp); ov=d['over']; th,shk=legramps(d); w=legw(d); px=cv.px
-    if Ch.band(growth=d.get('growth')): cv.w=Ch.Warp(d['growth'],Ch.NECK+dy)
+    k,dy=rig.kin(ph,False,amp); ov=d['over']; th,shk=legramps(d); w=legw(d); px=cv.px; pz=pose; GR=86.4 if pz else 999
+    if pz:
+        if pz['dy'] is not None: dy=pz['dy']
+        d=dict(d,held=None,off=None,stow=None)
+    kid=Ch.Warp(d['growth'],Ch.NECK+dy) if Ch.band(growth=d.get('growth')) else None
+    cv.w=kid
+    if pz:
+        ln=Lean(pz['lean'],57+dy,kid); cv.w=ln; shf=(47+ln.sx(40.5+dy),40.5+dy); un=lambda q:(q[0]-ln.sx(q[1]),q[1])
+        for i in (0,1):
+            e,q=pz['sa'][i]; k[i]['arm']=[(47,40.5+dy),un((shf[0]+e[0],shf[1]+e[1])),un((shf[0]+q[0],shf[1]+q[1]))]
+            if pz['sl']: k[i]['leg']=[(47+(-.5 if i else .5),57+dy),pz['sl'][i][0],pz['sl'][i][1]]
+        if pz['sl']: th,shk=_draped(d,th,shk)
+        _prop(cv,pz,'s',dy,48)
     hr=ramp(H((d['hairover'] or d['hair'])[0])); st=(d['hairover'] or d['hair'])[1]; hood=d['hat'] and d['hat'][0] in('hood','scarf','veilall')
     au,af=armramps(d); wide=kind in('kimono','robe')
     def arm(pts,dark,g):
@@ -573,9 +660,9 @@ def side(d,f,act=None):
     sl=skirtlen(d)
     if sl:
         if lk=='loin': cv.capsule((47,53+dy),(47,57+dy),3.6,3.4,ramp=sk,g='body'); cv.capsule((49.5,54+dy),(50,sl+dy),1.4,1.2,ramp=lr,g='loin'); cv.capsule((44.5,54+dy),(44,sl-1+dy),1.4,1.2,ramp=lr,g='loin')
-        else: hem(cv,47,53+dy,sl+dy,3.8,3.8+(sl-53)*.07,lr,'body',0,math.sin(ph)*.6)
+        else: hem(cv,47,53+dy,min(GR,sl+dy) if not (pz and pz['sl']) else min(GR,57+dy+5),3.8,3.8+(sl-53)*.07,lr,'body',0,math.sin(ph)*.6)
     cv.capsule((47,41.5+dy),(47,52+dy),4.4*t+(.4 if kind in('kvest','plate') else 0),3.6*t+(.5 if kind in('kvest','plate') else 0),ramp=tr,g='body')
-    if longk>56: hem(cv,47,52+dy,longk+dy,3.5,3.5+(longk-52)*.06+(.6 if kind in('robe','kimono','gown','dress') else 0),tr,'body',0,math.sin(ph)*.6)
+    if longk>56: hem(cv,47,52+dy,min(GR,longk+dy) if not (pz and pz['sl']) else min(GR,57+dy+5),3.5,3.5+(longk-52)*.06+(.6 if kind in('robe','kimono','gown','dress') else 0),tr,'body',0,math.sin(ph)*.6)
     if kind=='band':
         for y in (44,45,46):
             for x in range(-4,5): px(47+x,y+dy,rc(d['top'][0])[2])
@@ -588,8 +675,8 @@ def side(d,f,act=None):
         br=rc(d['belt'] or 'leather')
         for x in range(-3,5): px(47+x,53+dy,br[2])
     stowed(cv,d,'s',dy,'pre')
-    if ov and ov[0]=='cloak': hem(cv,45,42+dy,(ov[2] if len(ov)>2 else 76),4.2,5.0,rc(ov[1]),'cloak',0,-1.5)
-    if ov and ov[0]=='apron': cv.capsule((50.6,46+dy),(51,(ov[2] if len(ov)>2 else 68)),1.5,1.5,ramp=rc(ov[1]),g='apron')
+    if ov and ov[0]=='cloak': hem(cv,45,42+dy,min(GR,(ov[2] if len(ov)>2 else 76)+(dy if pz else 0)),4.2,5.0,rc(ov[1]),'cloak',0,-1.5)
+    if ov and ov[0]=='apron': cv.capsule((50.6,46+dy),(51,min(GR-3,(ov[2] if len(ov)>2 else 68)+(dy if pz else 0)) if not (pz and pz['sl']) else 57+dy),1.5,1.5,ramp=rc(ov[1]),g='apron')
     stowed(cv,d,'s',dy,'post')
     if d.get('scab'): cv.capsule((46,54+dy),(40,67+dy),1.0,.8,ramp=rc(d['scab']),g='scab')
     cy=31.5+dy; cx=48
@@ -622,8 +709,9 @@ def side(d,f,act=None):
         if c in('pole','bow'): a,u=carry(d,'s',hs,dy); held(cv,a,u,W[d['held']][1],'W'); arm([sh,el,wr],0,'A0')
         else: arm([sh,el,wr],0,'A0'); a,u=carry(d,'s',hs,dy); held(cv,a,u,W[d['held']][1],'W')
     else: arm(k[0]['arm'],0,'A0')
+    if pz: wq=k[0]['arm'][2]; _prop(cv,pz,'s',dy,48,(wq[0]+.4,wq[1]+1.5),'post')
     if ov and ov[0] in('poncho','cape'):
-        L=ov[2] if len(ov)>2 else (58 if ov[0]=='poncho' else 52); cv.capsule((47,41+dy),(47,L+dy),4.6,5.0+(L-41)*.1,ramp=rc(ov[1]),g='poncho')
+        L=ov[2] if len(ov)>2 else (58 if ov[0]=='poncho' else 52); cv.capsule((47,41+dy),(47,min(GR-4,L+dy)),4.6,5.0+(L-41)*.1,ramp=rc(ov[1]),g='poncho')
     cv.outline(d['ink']); texture(cv,d)
     if act: W_=cv.w.pt if cv.w else (lambda x,y:(x,y)); fx(cv.c,d,act,W_(*tip),u,W_(cx,cy))
     return cv.c
@@ -632,4 +720,49 @@ def sheet(d):
     for f in range(8):
         r=side(d,f)
         for row,im in ((0,front(d,f,True)),(1,r[:,::-1]),(2,front(d,f)),(3,r)): sh[row*SH:(row+1)*SH,f*S:(f+1)*S]=im
+    return sh
+def stand(d):
+    """one frame for each facing of the figure standing still, both feet down (B5661)"""
+    sh=np.zeros((4*SH,S,4),np.uint8); p=pose_at('stand',0); r=side(d,0,None,p)
+    for row,im in ((0,front(d,0,True)),(1,r[:,::-1]),(2,front(d,0)),(3,r)): sh[row*SH:(row+1)*SH]=im
+    return sh
+POSED=('seat','stool','sit','kneel','sup','work','tend','dig')
+def posed(d,name):
+    """a pose sheet, six frames by four facings (B5664)"""
+    sh=np.zeros((4*SH,6*S,4),np.uint8)
+    for i in range(6):
+        p=pose_at(name,i); r=side(d,0,None,p)
+        for row,im in ((0,front(d,0,True,None,p)),(1,r[:,::-1]),(2,front(d,0,False,None,p)),(3,r)): sh[row*SH:(row+1)*SH,i*S:(i+1)*S]=im
+    return sh
+def carrying(d):
+    """the walk with a sack in the arms: eight frames by four facings"""
+    sh=np.zeros((4*SH,8*S,4),np.uint8); p=pose_at('carry',0)
+    for f in range(8):
+        r=side(d,f,None,p)
+        for row,im in ((0,front(d,f,True,None,p)),(1,r[:,::-1]),(2,front(d,f,False,None,p)),(3,r)): sh[row*SH:(row+1)*SH,f*S:(f+1)*S]=im
+    return sh
+COVER='#f2f0ec'   # the blanket of the cover sheet: near white, so the game can tint it to the bed's own colour (B5667)
+def asleep(d,blanket='#8a8170',cover=False):
+    """lying asleep under a blanket, seen from above: the row is the way the head points (up, left, down, right). Six frames: down to the
+    ground, then lying still with the eyes shut. cover=True gives the blanket alone, near white, for the game to lay over the
+    sleeper in the colour of the bed (the sleepcover sheet)"""
+    if cover: blanket=COVER
+    sh=np.zeros((4*SH,6*S,4),np.uint8); lie=front(dict(d,shut=True,held=None,off=None,stow=None),0); bl=rc(blanket); mask=np.zeros(lie.shape[:2],bool)
+    ys,xs=np.nonzero(lie[...,3]); top,bot=ys.min(),ys.max(); mid=(xs.min()+xs.max())//2; y0=top+int((bot-top)*.36)
+    hw=max(8,int((xs.max()-xs.min())*.5)+2)
+    for y in range(y0,bot+2):
+        for x in range(mid-hw,mid+hw+1):
+            if x in(mid-hw,mid+hw) and y in(y0,bot+1): continue
+            e=x in(mid-hw,mid+hw) or y in(y0,bot+1); mask[y,x]=True; lie[y,x]=(*(d['ink'] if e and y!=y0 else bl[4] if y==y0 else bl[3] if x<mid-hw//2 else bl[1] if x>mid+hw-3 else bl[2]),255)
+        if (y-y0)%7==6:
+            for x in range(mid-hw+1,mid+hw): lie[y,x,:3]=bl[1]
+    if cover: lie[~mask]=0
+    from PIL import Image
+    im=Image.fromarray(lie,'RGBA').crop((0,top,S,bot+2)); cyc=78
+    for row,rot in ((0,0),(1,90),(2,180),(3,270)):
+        q=im.rotate(rot,expand=True) if rot else im; cell=Image.new('RGBA',(S,SH),(0,0,0,0)); cell.paste(q,(48-q.width//2,min(SH-q.height,max(0,cyc-q.height//2)))); cell=np.array(cell)
+        for i in range(2,6): sh[row*SH:(row+1)*SH,i*S:(i+1)*S]=cell
+    if cover: return sh
+    sitp=posed(d,'sit')
+    for row in range(4): sh[row*SH:(row+1)*SH,0:S]=sitp[row*SH:(row+1)*SH,S:2*S]; sh[row*SH:(row+1)*SH,S:2*S]=sitp[row*SH:(row+1)*SH,4*S:5*S]
     return sh

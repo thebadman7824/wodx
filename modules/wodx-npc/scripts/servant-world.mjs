@@ -12,6 +12,7 @@
 import * as W from "./servant-world-rules.mjs";
 import * as SR from "./servant-rules.mjs";
 import * as SV from "./servants.mjs";
+import * as DU from "./duty-rules.mjs";
 
 const MOD = "wodx-npc";
 const num = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
@@ -173,13 +174,42 @@ export async function keeperTurn({force = false, only = null} = {}) {
       }
     }
   }
-  if ( made.length ) await card("NPC masters keep servants", `<ul>${made.map(x => `<li>${esc(x.sName)}: ${esc(SR.KINDS[x.kind]?.label ?? x.kind)} to ${esc(x.mName)}</li>`).join("")}</ul><p><button type="button" data-wnpc-keepers-undo>Undo all</button></p>`, {keepers: made});
+  // B5695 (g3): every bound servant of an NPC master keeps hours at the master's place
+  const attending = await attendAll(masters).catch(e => { console.error(`${MOD} | attend`, e); return []; });
+  if ( attending.length ) made.push(...attending.filter(x => !made.some(y => y.servant === x.servant && y.master === x.master)).map(x => ({...x, attend: true})));
+  if ( made.length ) await card("NPC masters keep servants", `<ul>${made.map(x => `<li>${esc(x.sName)}: ${x.attend ? `keeps hours at ${esc(x.mName)}'s place` : `${esc(SR.KINDS[x.kind]?.label ?? x.kind)} to ${esc(x.mName)}`}</li>`).join("")}</ul><p><button type="button" data-wnpc-keepers-undo>Undo all</button></p>`, {keepers: made});
   return made;
+}
+/** g3: the master's own place: its haven or home in its routine, else where it is now. */
+function masterPlace(m) {
+  const R = game.modules.get(MOD)?.api?.routines;
+  const roles = R?.routineOf?.(m)?.roles ?? {};
+  return roles.haven ?? roles.home ?? R?.whereOf?.(m)?.place ?? null;
+}
+/** g3: duties for every servant of these NPC masters. Returns the servants newly given hours. */
+export async function attendAll(masters = []) {
+  const R = game.modules.get(MOD)?.api?.routines, out = [];
+  if ( !R?.setDuty ) return out;
+  for ( const m of masters ) {
+    const place = masterPlace(m);
+    for ( const {actor: s, records} of SV.servantsOf(m) ) {
+      if ( s.hasPlayerOwner ) continue;
+      const kind = records[0]?.kind ?? "retainer";
+      const duty = DU.servantDuty(kind, place, lineOf(m));
+      const key = `serve:${m.id}`, had = s.flags?.[MOD]?.duties?.[key];
+      if ( !duty ) continue;
+      if ( had?.place === duty.place && had?.from === duty.from ) continue;
+      await R.setDuty(s, key, duty);
+      out.push({servant: s.id, master: m.id, kind, sName: s.name, mName: m.name});
+    }
+  }
+  return out;
 }
 async function undoKeepers(list = []) {
   for ( const x of list ) {
     const s = game.actors.get(x.servant);
     if ( !s ) continue;
+    if ( x.attend ) { await game.modules.get(MOD)?.api?.routines?.setDuty?.(s, `serve:${x.master}`, null); continue; }
     if ( x.kind === "blood" ) await s.update({[`flags.wodx-creation.lineage.bonds.-=${x.master}`]: null});
     else await SV.unbind(s, x.master, x.kind);
   }
@@ -219,4 +249,4 @@ export function listen() {
   });
 }
 
-export const api = {fomorise, openSocial, keeperTurn, undoKeepers, socialClock, onBond, rules: W};
+export const api = {attendAll, fomorise, openSocial, keeperTurn, undoKeepers, socialClock, onBond, rules: W};
