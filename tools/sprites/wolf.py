@@ -13,7 +13,7 @@ def side(f,s=1.0,heavy=1.0,ramp=GREY,teeth=False):
         cv.capsule(P(8+sw*6,-1.6-lift),P(10+sw*6,-1.4-lift),r(1.6),r(1.3),ramp=ramp,dark=dark,g=g)
     def hind(p,dark,g):
         sw=math.sin(p); lift=max(0,math.cos(p))*2.5
-        st=(-7+sw*2,-12.5+bob); hk=(-12.5+sw*4.5,-7-lift*.5); pw=(-10.5+sw*6.5,-2-lift)
+        st=(-8+sw*1.5,-14.6+bob); hk=(-12.4+sw*4.2+lift*.6,-7.6-lift*1.2); pw=(-12+sw*6-lift*1.0,-2-lift)   # the hock under the rump, the lower leg straight down to the paw (B5660)
         cv.capsule(P(-10,-21+bob),P(*st),r(3.8),r(2.6),ramp=ramp,fur=.8*s,seed=2,dark=dark,g=g); cv.capsule(P(*st),P(*hk),r(2.2),r(1.6),ramp=ramp,dark=dark,g=g); cv.capsule(P(*hk),P(*pw),r(1.5),r(1.4),ramp=ramp,dark=dark,g=g)
         cv.capsule(P(pw[0],pw[1]+.4),P(pw[0]+2,pw[1]+.6),r(1.6),r(1.3),ramp=ramp,dark=dark,g=g)
     cv.capsule(P(-13,-26+bob),P(-20,-21+bob+math.sin(ph)),r(2.6),r(2.4),ramp=ramp,fur=1.2*s,seed=3,g='tail'); cv.capsule(P(-20,-21+bob+math.sin(ph)),P(-25,-12+bob+math.sin(ph+1)*1.5),r(2.4),r(1.2),ramp=ramp,fur=1.2*s,seed=4,g='tail')
