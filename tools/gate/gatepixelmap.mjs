@@ -47,7 +47,7 @@ export async function run() {
     await G.step("2. adopted", async () => {
       if ( typeof X?.rules?.followerData !== "function" ) { G.ok("2. adopted", false, {error: "WoDX Interactables has no picture tiles (B5733)"}); return; }
       const text = await (await fetch(`/${DIR}pixel-farmhouse.wodx.json?${Date.now()}`, {cache: "no-store"})).text();
-      const got = await X.plan(scene, text);
+      const got = await X.plan(scene, text, {from: `/${DIR}pixel-farmhouse.wodx.json`});
       await X.apply(scene, got.p);
       followers = tilesOf(scene).filter(t => fl(t).follows);
       boxes = tilesOf(scene).filter(t => fl(t).container && fl(t).art);

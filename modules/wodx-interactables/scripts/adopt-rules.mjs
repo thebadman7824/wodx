@@ -218,7 +218,7 @@ export function openingFlags(o, c, fr) {
 }
 
 /** The folder a map's pictures sit in, from its scene's background ("a/b/map.png" gives "a/b/"); "" when it has none. */
-export const artBase = src => { const s = String(src ?? "").split("?")[0]; const i = s.lastIndexOf("/"); return i >= 0 ? s.slice(0, i + 1) : ""; };
+export const artBase = src => { const s = String(src ?? "").split("?")[0].replace(/^\/+/, ""); const i = s.lastIndexOf("/"); return i >= 0 ? s.slice(0, i + 1) : ""; };
 /** B5733: the pictures of an entry as full paths from the folder base. */
 export const artPaths = (art, base = "") => Object.fromEntries(Object.entries(art ?? {}).map(([k, v]) => [k, `${base}${v}`]));
 

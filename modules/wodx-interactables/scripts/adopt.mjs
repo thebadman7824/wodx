@@ -20,7 +20,7 @@ const unsetKey = path => {
 
 /** The file the generator would have written beside the map's picture, as a first guess for the picker. */
 function guessPath(scene) {
-  const src = scene?.background?.src ?? scene?.img ?? "";
+  const src = backgroundOf(scene);
   return src ? src.replace(/\.[^./]+$/, ".wodx.json") : "";
 }
 
@@ -56,13 +56,16 @@ export async function faithOf(scene) {
   } catch (e) { return null; }
 }
 
-/** Read a sidecar and work out the plan for a scene. Returns {sc, p, errors} or throws a plain message. */
-export async function planFor(scene, text) {
+/**
+ * Read a sidecar and work out the plan for a scene. Returns {sc, p, errors} or throws a plain message.
+ * from: the sidecar's own path; its pictures (art/...) sit beside it, so their paths are taken from its folder.
+ */
+export async function planFor(scene, text, {from = null} = {}) {
   const parsed = A.parseSidecar(text);
   if ( !parsed.ok ) throw new Error(parsed.errors.join(" "));
   const types = new Set(Object.keys(CONFIG.RegionBehavior?.dataModels ?? {}));
   const fr = A.frameOf(scene);
-  const p = A.plan(parsed.data, {walls: arr(scene.walls).map(plainOf), tiles: arr(scene.tiles).map(plainOf), lights: arr(scene.lights).map(plainOf), regions: arr(scene.regions).map(plainOf), artBase: A.artBase(backgroundOf(scene)), placeKind: scene.flags?.["wodx-npc"]?.place?.kind ?? null, faith: await faithOf(scene)}, fr, types);
+  const p = A.plan(parsed.data, {walls: arr(scene.walls).map(plainOf), tiles: arr(scene.tiles).map(plainOf), lights: arr(scene.lights).map(plainOf), regions: arr(scene.regions).map(plainOf), artBase: A.artBase(from || backgroundOf(scene)), placeKind: scene.flags?.["wodx-npc"]?.place?.kind ?? null, faith: await faithOf(scene)}, fr, types);
   return {sc: parsed.data, p, errors: parsed.errors};
 }
 
@@ -132,7 +135,7 @@ export async function adoptDialog(scene) {
   try { text = await (await fetch(path, {cache: "no-store"})).text(); }
   catch (e) { ui.notifications.warn(`The file could not be read: ${e.message}`); return null; }
   let got;
-  try { got = await planFor(scene, text); }
+  try { got = await planFor(scene, text, {from: path}); }
   catch (e) { ui.notifications.warn(e.message); return null; }
   const lines = A.summary(got.p);
   if ( !lines.length ) { ui.notifications.info("Everything in that file is already on this scene."); return null; }
