@@ -15,7 +15,7 @@
  *      8b. a mage marked to meditate draws the Avatar's rating in Quintessence (3)
  *      8c. a mummy marked to spend the day in Osiris's Blessing gains Sekhem past the Gift of Ra's one
  *      8d. an Orpheus projector rests back Vitality
- *   9. the Crusade's Scourge (B6379, B6430): with the chronicle set to the Burning Times, a mage withdrawn to meditate
+ *   9. the Crusade's Scourge (B6379, B6438): with the chronicle set to the Burning Times, a mage withdrawn to meditate
  *      for a point of Scourge is cleared by itself a day later; the era is put back
  *  10. Conviction at a story's end (B6379): in the Time of Judgment, the Storyteller's End of story sets an imbued
  *      mortal's Conviction back to the Defender creed's 3; the era and the story are put back

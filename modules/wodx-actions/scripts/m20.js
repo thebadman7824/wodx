@@ -34,7 +34,7 @@ export function build(ctx) {
         if (!get("consensusEra", true)) return C.AGES[2];
         let y = null;
         try { y = game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.() ?? null; } catch (e) { /* no chronicle */ }
-        // B6430: the era the Storyteller set wins when the clock's year lies outside it (a chronicle set in the Burning
+        // B6438: the era the Storyteller set wins when the clock's year lies outside it (a chronicle set in the Burning
         // Times keeps the Crusade's rules, as WoDX's hunters keep their era's line)
         try {
             const p = game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile;
