@@ -134,7 +134,9 @@ export function holds(actor, key) {
 /** Lucky: three rerolls of a failed roll in a story. The count is kept on the actor against the story's id. */
 export const LUCKY_PER_STORY = 3;
 const storyNow = () => { try { return game.settings.get("wodx-actions", "storyId") || "first"; } catch (e) { return "first"; } };
-/** B3919: Destiny and Fate (backgrounds) bank rerolls too: one a story for each dot, on the same count as Lucky. */
+/** B3919: Destiny and Fate (backgrounds) bank rerolls too: one a story for each dot, on the same count as Lucky.
+ *  B6159: the reroll is offered in the Any roll and Common checks windows only. Power, frenzy and sin rolls apply their
+ *  effect (blood, Gnosis, the frenzy state, a Road dot) the moment the dice land, so a reroll there would have to undo it. */
 export const FORTUNE_BACKGROUNDS = ["destiny", "fate"];
 const rating = (actor, key) => { const T = traits(); try { return Math.max(0, Number(T?.has?.(actor, key)) || 0); } catch (e) { return 0; } };
 export function rerollsPerStory(actor) {

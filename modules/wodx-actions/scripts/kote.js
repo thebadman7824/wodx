@@ -165,7 +165,7 @@ export function build(ctx) {
             let got = 1;
             if (n(fd.dice)) {
                 const r = await rollPool(n(fd.dice), n(fd.diff) + lim.diff); rolls.push(r.roll);
-                body += rollBlock(pw ? esc(pw.name) : it ? esc(it.name) : "The roll", r, lim.diff ? [`Drained +${lim.diff}`] : []);
+                body += rollBlock(pw ? esc(pw.name) : it ? esc(it.name) : "The roll", r, lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : []);
                 got = r.botch ? 0 : r.successes;
                 if (r.botch && i.temp.length) {
                     const ex = K.chiExplosion({ yin: i.v.yin, yang: i.v.yang, yinChi: i.chi.yin - (kind === "yin" ? n(fd.k) : 0), yangChi: i.chi.yang - (kind === "yang" ? n(fd.k) : 0) });

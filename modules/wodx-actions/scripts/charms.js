@@ -197,7 +197,7 @@ export function build(ctx) {
             rolls.push(r.roll);
             botch = !!r.botch;
             got = r.botch ? 0 : n(r.successes);
-            body += rollBlock(`${SC.rollLabel(c)}${actor.getFlag(MOD, "spiritStatic") ? " - 2 (Spirit Static)" : ""}`, r, lim.diff ? [`Drained +${lim.diff}`] : []);
+            body += rollBlock(`${SC.rollLabel(c)}${actor.getFlag(MOD, "spiritStatic") ? " - 2 (Spirit Static)" : ""}`, r, lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : []);
         }
         let fx = [];
         if (got > 0) {

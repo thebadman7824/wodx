@@ -152,7 +152,7 @@ export function build(ctx) {
             if (plan.cost && !(await glamour(actor, -plan.cost))) return null;
             const wp = !!fd.wp && await spendWillpower(actor, 1);
             const r = await rollPool(plan.dice, plan.difficulty + lim.diff, { willpower: wp });
-            if (lim.diff) plan.notes.push(`Drained +${lim.diff}`);
+            if (lim.diff) plan.notes.push((lim.label || `Drained +${lim.diff}`));
             const nmK = C.nightmareFrom(r.faces, plan.nightmareDice, r.botch);
             const nmNote = await nightmare(actor, nmK);
             const art = C.ARTS[fd.art];

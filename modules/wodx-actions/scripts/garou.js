@@ -542,7 +542,7 @@ export function build(ctx) {
                 const rr = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), n(fd.diff) + lim.diff);
                 rolls.push(rr.roll);
                 successes = rr.botch ? 0 : rr.successes;
-                body += rollBlock(pool.label, rr, [n(fd.bonus) ? `bonus ${fd.bonus}` : "", lim.diff ? `Drained +${lim.diff}` : ""].filter(Boolean));
+                body += rollBlock(pool.label, rr, [n(fd.bonus) ? `bonus ${fd.bonus}` : "", lim.diff ? (lim.label || `Drained +${lim.diff}`) : ""].filter(Boolean));
             }
             if (g) body += `<div class="vta-note">${esc(g.e)} <span class="wodx-quiet">(${giftRef(g)})</span></div>`;
             const dur = successes > 0 ? G.giftDuration(g?.t, successes) : null;

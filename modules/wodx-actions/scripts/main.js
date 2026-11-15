@@ -69,6 +69,7 @@ import * as SUM from "./summons.js";
 import * as TURN from "./turns.js";
 import * as LIM from "./limits.js";
 import * as AFC from "./after-costs.js";
+import * as ACR from "./after-cost-rules.js";
 import * as NPW from "./npc-power-rules.js";
 import * as PK from "./power-keywords.js";
 import * as BR from "./book-rituals.js";
@@ -746,8 +747,8 @@ function pickPool(actor, pools) {
 export async function action({ actor: a, preset = "" } = {}) {
     const actor = needActor(a);
     if (!actor) return;
-    // B4890: asleep for the day, a Cainite does nothing until woken (Awaken by day) or the sun sets
-    if (flag(actor, "daySleep") && !game.user.isGM) return ui.notifications.warn(`${actor.name} is asleep for the day. Use Awaken by day if something rouses them.`);
+    // B4890, B6156: asleep for the day (or out cold), a Cainite does nothing until woken (Awaken by day) or the sun sets
+    if (LIM.refuseIdle(actor)) return;
     const target = targetActor();
     const rd = road(actor);
     const day = !!flag(actor, "daytime") && !flag(actor, "daytime")?.uncapped;
@@ -901,6 +902,7 @@ function checkPoolText(actor, c) {
 export async function quickCheck({ actor: a, check = "notice", extraDiff: preDiff = 0, bonus: preBonus = 0, desc: preDesc = "", direct = false } = {}) {
     const actor = needActor(a);
     if (!actor) return;
+    if (LIM.refuseIdle(actor)) return; // B6156
     const target = targetActor();
     const day = !!flag(actor, "daytime") && !flag(actor, "daytime")?.uncapped;
     const first = CK.byKey(check) ?? CK.CHECKS[0];
@@ -1010,6 +1012,11 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
         const bm = dm().bearingMods(actor, target, fd, PRESETS[fd.preset]);
         if (bm) tm = { ...tm, diff: (tm.diff ?? 0) + bm.diff, parts: [...(tm.parts ?? []), ...bm.parts] };
     } catch (e) { console.warn("WoDX Actions | bearing", e); }
+    // B6157: the registered conditions on the roller (Drained, Blurred sight on a sight roll, Blinded...)
+    try {
+        const cm = LIM.conditionMods(actor, { sight: ACR.needsSight(fd) });
+        if (cm.diff || cm.parts.length) tm = { ...tm, diff: (tm.diff ?? 0) + cm.diff, parts: [...(tm.parts ?? []), ...cm.parts] };
+    } catch (e) { console.warn("WoDX Actions | conditions", e); }
     const built = R.actionPool({
         traitDice: tm.dice, traitDiff: tm.diff, traitParts: tm.parts,
         attribute: pool.attribute, attributeLabel: pool.attributeLabel,
@@ -1292,7 +1299,7 @@ async function beastRoll(actor, d, msg = null) {
         if (state.outcome === "resisted") body += `<div class="vta-big good">${state.total} successes accumulated: the ${fear ? "fear" : "Beast"} subsides.</div>`;
         else if (state.outcome === "holding") {
             body += `<div class="vta-big">Held off for ${state.turns} turn${state.turns === 1 ? "" : "s"} (${state.total}/5 successes). Roll again before then to keep resisting.</div>`;
-            data = { kind: "beast", actor: actor.uuid, d: { ...d, total: state.total, wp: false } };
+            data = { kind: "beast", actor: actor.uuid, d: { ...d, total: state.total, wp: false }, turns: state.turns };
             body += btn("beast", "Keep resisting");
         } else {
             enter = true;
@@ -1371,13 +1378,47 @@ export async function autoBeast({ actor: a, kind = "frenzy", provocation = null,
     if (hide) AUTO_HIDE.add(actor.id);
     try {
         let d = { kind: fear ? "fear" : v.selfcontrol.isInstinct ? "instinct" : "frenzy", diff, prov: `${prov} (rolled by itself)`, wp: !!flag(actor, "beastWillpower") && willpower(actor).temp > 0, total: 0, traitDice, traitParts };
+        // B6158: in a fight the Beast is held off turn by turn (V20 p. 297): each success holds it a turn, and the next
+        // roll comes on the bearer's own turn once those turns are spent (beastTurn). Outside a fight, the rolls follow at once.
+        const fight = fightOf(actor);
         let msg = null;
         for (let i = 0; i < 8; i++) {
             msg = await beastRoll(actor, d);
             const f = msg?.flags?.[MOD];
             if (f?.kind !== "beast") break;
             d = { ...f.d, wp: false };
+            if (fight) { await setFlag(actor, "beastHold", { combatId: fight.id, d, left: Math.max(1, n0(f.turns) || 1) }); break; }
         }
+        return msg;
+    } finally { AUTO_HIDE.delete(actor.id); }
+}
+/** The started fight the actor is in, or null. */
+function fightOf(actor) {
+    return game.combats?.find?.(c => c.started && c.combatants.some(cb => cb.actor === actor || (cb.actor?.id === actor.id && cb.token?.actorLink))) ?? null;
+}
+/**
+ * B6158: the bearer's turn in a fight while the Beast is held off: one turn of the hold is spent, and when none are
+ * left the check is rolled once more (the running total carries on). Active GM only.
+ */
+const BEAST_TURN = new Map();
+export async function beastTurn(combat) {
+    const actor = combat?.combatant?.actor;
+    const hold = actor ? flag(actor, "beastHold") : null;
+    if (!hold) return null;
+    const key = `${combat.round}:${combat.turn}`;
+    if (BEAST_TURN.get(combat.id) === key) return null;
+    BEAST_TURN.set(combat.id, key);
+    const fear = hold.d?.kind === "fear";
+    if (hold.combatId !== combat.id || flag(actor, "torpor") || flag(actor, "golconda") || (actor.system?.conditions?.isfrenzy && !fear)) { await setFlag(actor, "beastHold", null); return null; }
+    const left = n0(hold.left) - 1;
+    if (left > 0) { await setFlag(actor, "beastHold", { ...hold, left }); return null; }
+    const hide = !actor.hasPlayerOwner;
+    if (hide) AUTO_HIDE.add(actor.id);
+    try {
+        const msg = await beastRoll(actor, { ...hold.d, wp: false });
+        const f = msg?.flags?.[MOD];
+        if (f?.kind === "beast") await setFlag(actor, "beastHold", { combatId: combat.id, d: { ...f.d, wp: false }, left: Math.max(1, n0(f.turns) || 1) });
+        else await setFlag(actor, "beastHold", null);
         return msg;
     } finally { AUTO_HIDE.delete(actor.id); }
 }
@@ -1778,6 +1819,7 @@ async function savePalate(actor, rule, fd) {
 export async function feed({ actor: a, vessel: t, willing = false } = {}) {
     const actor = needActor(a);
     if (!actor) return;
+    if (LIM.refuseIdle(actor)) return; // B6156
     const vessel = targetActor(t);
     const tokDoc = vessel ? vesselTokenDoc(t, vessel) : null;
     const pbVessel = tokDoc?.flags?.["wodx-npc"]?.passerby?.vessel;
@@ -2097,6 +2139,7 @@ async function feedUndo(msg, d) {
 export async function spendBlood({ actor: a } = {}) {
     const actor = needActor(a);
     if (!actor) return;
+    if (LIM.refuseIdle(actor)) return; // B6156
     const b = blood(actor), dmg = healthTrack(actor).damage, rd = road(actor);
     const quick = flag(actor, "quickening") ?? {};
     const content = `<form>
@@ -3245,7 +3288,7 @@ async function gainDerangement(actor, cause, why) {
 }
 const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, rotschreckAuto, endFrenzy, sin, daytime, torpor, hazard, autoBeast, autoTorporRise,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    powerMods: { of: POWMOD.powerMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.104.0", npcPowers, autoPower, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    powerMods: { of: POWMOD.powerMods, spend: POWMOD.consumeOnce, rules: POWMOD }, getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.104.0", npcPowers, autoPower, cannotAct: LIM.cannotAct, refuseIdle: LIM.refuseIdle, noActionIds: ACR.NO_ACTION_IDS, conditionMods: LIM.conditionMods, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Draw: withActor(a => zx().drawDialog(a)), m20Place: () => zx().placeDialog(), m20Quiet: withActor(a => qtx().panel(a)), quiet: { state: a => qtx().state(resolveActor(a)), act: (a, fd) => qtx().act(resolveActor(a), fd), rules: QR, onRefreshToken: QX.onRefreshToken }, consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
@@ -3431,9 +3474,13 @@ Hooks.once("ready", async () => {
 async function golcondaCaps(actor, on) {
     if (!isVampire(actor)) return;
     const max = KR.golcondaTraitMax(on, R.generation(generationOf(actor)).maxTrait);
+    // B6155: the sheet reads system.settings.*.defaultmaxvalue (the system fork keeps 10 while the golconda flag is set);
+    // an older build wrote a stray number into the abilities map, which broke the sheet's ability loop, so it goes
     const upd = {};
-    if (num(actor.system?.abilities?.defaultmaxvalue) !== max) upd["system.abilities.defaultmaxvalue"] = max;
-    if (num(actor.system?.powers?.defaultmaxvalue) !== max) upd["system.powers.defaultmaxvalue"] = max;
+    for (const k of ["attributes", "abilities", "powers"])
+        if (num(actor.system?.settings?.[k]?.defaultmaxvalue) !== max) upd[`system.settings.${k}.defaultmaxvalue`] = max;
+    if (actor.system?.abilities && "defaultmaxvalue" in actor.system.abilities) upd["system.abilities.-=defaultmaxvalue"] = null;
+    if (actor.system?.powers && typeof actor.system.powers === "object" && "defaultmaxvalue" in actor.system.powers && typeof actor.system.powers.defaultmaxvalue !== "object") upd["system.powers.-=defaultmaxvalue"] = null;
     if (Object.keys(upd).length) await actor.update(upd, { wodxGolconda: true });
 }
 export async function golcondaCheck(actor) {
@@ -3502,11 +3549,13 @@ async function autoDayOnce() {
 
 /** Kindred and general hooks (3.2.0): the clock (healing, dawn, dusk, torpor), wounds, blood, Combat's damage, the Delirium. */
 function kindredHooks() {
-    let busy = false;
+    // B6159: a clock change that lands while onClock runs is not dropped: one more run follows (a dusk crossed then counts)
+    let busy = false, again = false;
     const tick = () => {
-        if (busy || !game.user.isGM || chronicle()?.isSkipping?.()) return;
-        busy = true;
-        kx().onClock().catch(e => console.error("WoDX |", e)).finally(() => { busy = false; });
+        if (!game.user.isGM || chronicle()?.isSkipping?.()) return;
+        if (busy) { again = true; return; }
+        busy = true; again = false;
+        kx().onClock().catch(e => console.error("WoDX |", e)).finally(() => { busy = false; if (again) { again = false; tick(); } });
     };
     Hooks.on("updateWorldTime", tick);
     Hooks.on("updateWorldTime", (wt, dt) => {
@@ -3545,6 +3594,7 @@ function kindredHooks() {
     Hooks.on("updateCombat", (combat, changed) => {
         if (!game.user.isGM || !(("turn" in (changed ?? {})) || ("round" in (changed ?? {})))) return;
         dm().onTurn(combat).catch(e => console.error("WoDX |", e));
+        if (isResponsibleGM()) beastTurn(combat).catch(e => console.error("WoDX | Beast held off", e));
     });
     Hooks.on("wodxSkipEnd", () => { busy = false; tick(); });
     Hooks.on("preUpdateActor", (actor, changes, options) => {
@@ -3583,10 +3633,10 @@ function kindredHooks() {
     Hooks.on("canvasReady", () => { setTimeout(() => wx().autoStorm().catch(e => console.error("WoDX | Maelstrom", e)), 1500); });
     wx().onReady().catch(e => console.error("WoDX |", e));
     // The inner voice (3.5.0): prompts when the pressure rises, the X-card, the scene's end, the approval queue
-    Hooks.on("preUpdateActor", actor => { try { vx().onPreUpdate(actor); } catch (e) { /* not a voiced line */ } });
-    Hooks.on("updateActor", actor => { vx().onUpdate(actor)?.catch?.(e => console.error("WoDX |", e)); });
-    Hooks.on("preUpdateItem", item => { if (item.parent instanceof Actor) try { vx().onPreUpdate(item.parent); } catch (e) { /* not voiced */ } });
-    Hooks.on("updateItem", item => { if (item.parent instanceof Actor) vx().onUpdate(item.parent)?.catch?.(e => console.error("WoDX |", e)); });
+    Hooks.on("preUpdateActor", (actor, changes, options) => { try { vx().onPreUpdate(actor, options); } catch (e) { /* not a voiced line */ } });
+    Hooks.on("updateActor", (actor, changes, options) => { vx().onUpdate(actor, options)?.catch?.(e => console.error("WoDX |", e)); });
+    Hooks.on("preUpdateItem", (item, changes, options) => { if (item.parent instanceof Actor) try { vx().onPreUpdate(item.parent, options); } catch (e) { /* not voiced */ } });
+    Hooks.on("updateItem", (item, changes, options) => { if (item.parent instanceof Actor) vx().onUpdate(item.parent, options)?.catch?.(e => console.error("WoDX |", e)); });
     Hooks.on("wodxXCard", () => { vx().onXCard()?.catch?.(e => console.error("WoDX |", e)); });
     Hooks.on("wodxEndScene", () => { vx().onEndScene()?.catch?.(e => console.error("WoDX |", e)); });
 

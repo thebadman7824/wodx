@@ -198,7 +198,7 @@ export function build(ctx) {
                 const dice = Math.max(0, attr(actor, at) + second(a, sec) + n(fd.bonus));
                 const r = await rollPool(dice, n(fd.diff) + lim.diff);
                 rolls.push(r.roll); faces = r.faces ?? []; successes = r.botch ? 0 : r.successes;
-                body += rollBlock(`${cap(at)} + ${sec && sec !== "arc" ? cap(sec) : a.d}`, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...(lim.diff ? [`Drained +${lim.diff}`] : [])]);
+                body += rollBlock(`${cap(at)} + ${sec && sec !== "arc" ? cap(sec) : a.d}`, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...(lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : [])]);
                 if (r.botch) body += `<div class="vta-warn">Botch: the art turns on the user (see the page); a gift to the Shadow.</div>`;
             }
             const angst = W.realmAngst(a.d, fd.realm, faces);

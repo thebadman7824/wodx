@@ -4,6 +4,7 @@
  */
 import * as L from "./limit-rules.js";
 import * as AFC from "./after-costs.js";
+import * as ACR from "./after-cost-rules.js";
 
 const MOD = "wodx-actions";
 const FLAG = "limits";
@@ -91,6 +92,8 @@ export function decorate(root, {actor, sel = "select[name=power]", powerOf}) {
  * Returns null when refused, else {diff, done}: diff is Drained's +1, and done({successes, fail}) files the use.
  */
 export async function gate(actor, power, {targets = null} = {}) {
+  // B6156: a sleeping or out-cold character uses no power (the Storyteller still may, to run a scene)
+  if ( refuseIdle(actor) ) return null;
   const tg = targets ?? targetActors();
   const st = stateOf(actor, power, tg);
   if ( !st.ok ) {
@@ -108,8 +111,10 @@ export async function gate(actor, power, {targets = null} = {}) {
   }
   const free = st.barred.length ? tg.filter(t => !st.barred.includes(t?.uuid)) : tg;
   if ( st.barred.length && st.ok ) ui.notifications?.info(`${st.why} Not on: ${tg.filter(t => st.barred.includes(t?.uuid)).map(t => t.name).join(", ")}.`);
+  // B6157: every registered condition's own difficulty (Drained among them), not only Drained
+  const cm = conditionMods(actor);
   return {
-    diff: drainedDiff(actor), free, why: st.why,
+    diff: cm.diff, label: cm.parts.join(", "), free, why: st.why,
     done: async ({successes = 1, fail = null} = {}) => {
       const failed = fail ?? !(successes > 0);
       await file(actor, power, {targets: tg, fail: failed});
@@ -176,4 +181,31 @@ export function setup() {
     const actor = effect.parent;
     if ( actor?.documentName === "Actor" && isActiveGM() ) setDrained(actor).catch(e => console.error("WoDX | Drained", e));
   });
+}
+
+/* ---------------- Acting at all, and the conditions on a roll (B6156, B6157) ---------------- */
+
+/** The registered conditions the actor has (WoDX Chronicle's registry); none when Chronicle is off. */
+export const condsOf = actor => { try { return chronicle()?.conditions?.conditionsOf?.(actor) ?? []; } catch (e) { return []; } };
+
+/** B6156: why the character cannot act now (asleep for the day, Asleep, Torpor, Incapacitated, staked), or "". */
+export const cannotAct = actor => !actor ? "" : ACR.cannotActWhy({name: actor.name, daySleep: !!actor.getFlag?.(MOD, "daySleep"), conds: condsOf(actor)});
+
+/** B6156: the one guard every WoDX Actions window calls. A player is refused with the reason; the Storyteller is not. */
+export function refuseIdle(actor) {
+  const why = cannotAct(actor);
+  if ( !why || game.user?.isGM ) return false;
+  ui.notifications?.warn(why);
+  return true;
+}
+
+/** B6157: what the actor's registered conditions add to its own roll; Drained counts even with WoDX Chronicle off. */
+export function conditionMods(actor, {sight = false} = {}) {
+  const conds = condsOf(actor);
+  const out = ACR.conditionRollMods(conds, {sight});
+  if ( isDrained(actor) && !conds.some(c => c.id === L.DRAINED.id) ) {
+    out.diff += drainedDiff(actor);
+    out.parts.push(`Drained +${drainedDiff(actor)}`);
+  }
+  return out;
 }

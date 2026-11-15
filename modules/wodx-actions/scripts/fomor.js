@@ -318,7 +318,7 @@ export function build(ctx) {
             const r = await rollPool(dice, n(p.diff) + n(lim.diff));
             rolls.push(r.roll);
             got = r.botch ? 0 : n(r.successes);
-            body += rollBlock(FP.rollLabel(p.roll), r, lim.diff ? [`Drained +${lim.diff}`] : []);
+            body += rollBlock(FP.rollLabel(p.roll), r, lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : []);
         }
         await actor.setFlag(MOD, "fomorUsed", FP.usedAfter(p, actor.getFlag(MOD, "fomorUsed") ?? {}, stamp()));
         let fx = [];
@@ -446,7 +446,7 @@ export function build(ctx) {
         if (!(await spendWillpower(actor, 1))) return null;
         const dice = n(attr(actor, "stamina")) + n(findAbility(actor, "medicine")?.value);
         const r = await rollPool(dice, 6 + n(lim.diff));
-        let body = rollBlock("Stamina + Medicine", r, lim.diff ? [`Drained +${lim.diff}`] : []);
+        let body = rollBlock("Stamina + Medicine", r, lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : []);
         const got = r.botch ? 0 : n(r.successes);
         if (got > 0) {
             await actor.setFlag(MOD, "numbTrack", n(actor.system?.traits?.health?.totalhealthlevels?.max) || 7);

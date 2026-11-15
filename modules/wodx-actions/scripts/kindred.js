@@ -175,6 +175,7 @@ export function build(ctx) {
     }
 
     async function useDiscipline(actor) {
+        if (LIM.refuseIdle(actor)) return null; // B6156: asleep for the day or out cold
         if (!DATA.disc) return ctx.notify("The Discipline library didn't load.");
         const sheet = sheetDisciplines(actor);
         const era = (() => { try { return game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { return null; } })();
@@ -248,7 +249,7 @@ export function build(ctx) {
                 const r = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), Math.min(10, n(fd.diff) + rm.diff + lim.diff), { specialty: fd.specialty });
                 rolls.push(r.roll);
                 successes = r.botch ? 0 : r.successes;
-                body += rollBlock(pool.label, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...rm.parts, ...(lim.diff ? [`Drained +${lim.diff}`] : [])], fd.specialty);
+                body += rollBlock(pool.label, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...rm.parts, ...(lim.diff ? [(lim.label || `Drained +${lim.diff}`)] : [])], fd.specialty);
                 if (r.botch) body += `<div class="vta-warn">Botch: the power turns on its user or fails badly (see the page).</div>`;
             }
             body += `<div class="vta-note">${esc(p.e)} <span class="wodx-quiet">(${p.book ?? "VtDA20"} p. ${p.p ?? "?"})</span></div>`;

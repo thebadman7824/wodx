@@ -231,7 +231,7 @@ export function build(ctx) {
             if (plan.cost > fromPool) plan.notes.push(`${plan.cost - fromPool} Faith drawn from the ravaged thralls`);
             const wp = !!fd.wp && await spendWillpower(actor, 1);
             const r = await rollPool(plan.dice, plan.difficulty + lim.diff, { willpower: wp, autoSuccesses: plan.autoSuccesses });
-            if (lim.diff) plan.notes.push(`Drained +${lim.diff}`);
+            if (lim.diff) plan.notes.push((lim.label || `Drained +${lim.diff}`));
             const out = D.evocationOutcome(r, { torment: i.torment.perm, chooseHigh: !!fd.dark, rule: i.rule });
             const notes = [];
             if (out.faithLoss) { await faith(actor, -1); notes.push("The botch costs a Faith point."); }

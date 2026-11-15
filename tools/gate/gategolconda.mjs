@@ -3,9 +3,9 @@
  *   await (await import(`/wodx-gate/gategolconda.mjs?${Date.now()}`)).run()
  * Makes its own scene and a vampire, and puts the settings back.
  *   1. the setting and the api
- *   2. granted Golconda: Traits may reach 10 on the sheet
+ *   2. granted Golconda: the sheet's maximum reads 10, and a Strength of 6 bought on the sheet stays
  *   3. the sun falls a step weaker (the card says so)
- *   4. the Road drops to 6: Golconda ends by itself, a card, and the Generation's limit returns
+ *   4. the Road drops to 6: Golconda ends by itself, a card, and the Generation's limit (5) returns, Strength with it
  *   5. the long road's readiness: Humanity 7 and Conscience 4 for the Grant button
  *   6. every other WoDX module still answers
  * Result: Data/wodx-gate/gategolconda-result.json.
@@ -32,11 +32,17 @@ export async function run() {
     await v.update({"system.generation": 12, "system.advantages.path.permanent": 8, "system.advantages.virtues.conscience.permanent": 4});
     await G.tokens(scene, [{actor: v, x: 3, y: 3}]);
 
+    // B6155: the sheet's own maximum (system.settings.*.defaultmaxvalue and each Attribute's max), and a bought dot that stays
+    const caps = () => ({attributes: Number(v.system?.settings?.attributes?.defaultmaxvalue), abilities: Number(v.system?.settings?.abilities?.defaultmaxvalue),
+      powers: Number(v.system?.settings?.powers?.defaultmaxvalue), strengthMax: Number(v.system?.attributes?.strength?.max)});
     await G.step("2. Traits to 10", async () => {
       await v.setFlag(MOD, "golconda", true);
-      await waitFor(() => Number(v.system?.abilities?.defaultmaxvalue) === 10, 5000);
-      G.ok("2. Traits to 10", Number(v.system?.abilities?.defaultmaxvalue) === 10 && Number(v.system?.powers?.defaultmaxvalue) === 10,
-        {abilities: v.system?.abilities?.defaultmaxvalue, powers: v.system?.powers?.defaultmaxvalue});
+      await waitFor(() => caps().abilities === 10 && caps().strengthMax === 10, 8000);
+      const up = caps();
+      await v.update({"system.attributes.strength.value": 6});
+      await new Promise(r => setTimeout(r, 1500)); // the system's recompute writes back after the update
+      const strength = Number(v.system?.attributes?.strength?.value);
+      G.ok("2. Traits to 10", up.attributes === 10 && up.abilities === 10 && up.powers === 10 && up.strengthMax === 10 && strength === 6, {up, strength});
     });
 
     await G.step("3. the sun a step weaker", async () => {
@@ -51,9 +57,10 @@ export async function run() {
       const since = Date.now();
       await v.update({"system.advantages.path.permanent": 6});
       const card = await waitFor(() => newestMessage(since, m => /falls from Golconda/.test(m.content ?? "")), 6000);
-      await waitFor(() => !v.getFlag(MOD, "golconda") && Number(v.system?.abilities?.defaultmaxvalue) !== 10, 5000);
-      G.ok("4. falls from Golconda", !!card && !v.getFlag(MOD, "golconda") && Number(v.system?.abilities?.defaultmaxvalue) !== 10,
-        {flag: v.getFlag(MOD, "golconda") ?? null, lost: v.getFlag(MOD, "golcondaLost") ?? null, max: v.system?.abilities?.defaultmaxvalue});
+      await waitFor(() => !v.getFlag(MOD, "golconda") && caps().strengthMax === 5, 8000);
+      await new Promise(r => setTimeout(r, 800));
+      G.ok("4. falls from Golconda", !!card && !v.getFlag(MOD, "golconda") && caps().abilities === 5 && caps().strengthMax === 5 && Number(v.system?.attributes?.strength?.value) === 5,
+        {flag: v.getFlag(MOD, "golconda") ?? null, lost: v.getFlag(MOD, "golcondaLost") ?? null, caps: caps(), strength: v.system?.attributes?.strength?.value});
     });
 
     await G.step("5. readiness for the Grant", async () => {
