@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.104.1 (B5089: the captive's rumour)
 - 0.104.0 (NPC Motives Desk, part four (B5699-B5703). hunt-follow-rules.mjs and hunt-follow.mjs; an Investigator extra; hunters.mutate; harness hunt-follow.test.mjs, gate gatehuntfollow; For WoDX NPC's grudge moves (B5690): venture-rules LOSS.spoiled and touched("spoiled", {actor}))
 - 0.103.0 (Say or Do: project complications act, and towns gain from new buildings (B5824-B5825))
 - 0.102.1 (Sleep marked in Hardship ends a stimulant's crash (B5178))
