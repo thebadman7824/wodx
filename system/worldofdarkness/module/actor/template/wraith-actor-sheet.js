@@ -1,9 +1,10 @@
-import { default as MortalActorSheet } from "./mortal-actor-sheet.js";
+import { default as MortalActorSheet, MortalActorSheetV2 } from "./mortal-actor-sheet.js";
 import ActionHelper from "../../scripts/action-helpers.js";
 import CreateHelper from "../../scripts/create-helpers.js";
 import { calculateHealth } from "../../scripts/health.js";
 
-export default class WraithActorSheet extends MortalActorSheet {
+/** The Wraith sheet's code, on either sheet engine (B6110): over the Mortal sheet of the old engine or of ApplicationV2. */
+export const WraithSheetMixin = Base => class extends Base {
 	
 	/** @override */
 	static get defaultOptions() {
@@ -13,8 +14,8 @@ export default class WraithActorSheet extends MortalActorSheet {
 		});
 	}
   
-	constructor(actor, options) {
-		super(actor, options);
+	constructor(...args) {
+		super(...args);
 	}
 
 	/** @override */
@@ -274,7 +275,15 @@ export default class WraithActorSheet extends MortalActorSheet {
 		await this.actor.update(actorData);
 		this.render();
 	}
-}
+};
+
+const WraithActorSheet = WraithSheetMixin(MortalActorSheet);
+Object.defineProperty(WraithActorSheet, "name", { value: "WraithActorSheet" });
+export default WraithActorSheet;
+
+/** The same sheet on ApplicationV2 (B6110), used for the lines listed in LINES_V2 (wod.js). */
+export const WraithActorSheetV2 = WraithSheetMixin(MortalActorSheetV2);
+Object.defineProperty(WraithActorSheetV2, "name", { value: "WraithActorSheet" }); // the same name: the sheet keeps its id (WoD.WraithActorSheet) and its render hooks
 
 function parseCounterStates(states) {
 	return states.split(",").reduce((obj, state) => {

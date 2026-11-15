@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6220
+Next free block: B6230
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -329,13 +329,16 @@ Next free block: B6220
 | B5980-B5989 | Lone Chronicle step 3: the oracle, the Leads page and night encounters on the map (used B5980-B5985) | Solo |
 | B5990-B5999 | Say or Do: full sentences and grieving (Ben's picks on law sentences and heartbreak) (used B5990-B5992) | Chronicle, NPC, Actions |
 | B6000-B6019 | Rituals and powers that really work: every effect read by a roll, soak, token or map system (used B6000-B6018) | Actions, Combat |
+| B6020-B6039 | Re-audit of marks and flags that nothing reads (non-power systems) (used B6020-B6034) | Combat, Chronicle, Actions, Storyteller |
 | B6040-B6049 | Lone Chronicle step 4: the director, experience from the night's log, the recap (used B6040-B6049) | Solo |
 | B6050-B6059 | gate7b fresh arena each run (used B6050-B6051) | tools (gates) |
 | B6070-B6079 | Snow vehicles, trains and trams (rules and sprites), and a quality pass on the vehicle sprites (used B6070-B6076) | Interactables, Paperdoll, Combat |
 | B6080-B6099 | Weights for loose gear and container contents, and loose gear on the map (used B6080-B6089) | Library, Interactables, Combat |
 | B6100-B6109 | Wraith 20th named Artifacts (forge, Skin, Spectre) and souled relics on the crafting table, with real Use powers and looks (used B6100-B6104) | Library, Creation |
+| B6110-B6129 | Line sheets move to ApplicationV2 (the newer sheet engine), one line at a time (used B6110-B6114) | System fork, Sheets, Chronicle |
 | B6130-B6139 | The eight held-back world timeline readings after the book check (used B6130-B6132) | Chronicle |
 | B6210-B6219 | gatevehicles plays in a year with cars (used B6210) | tools (gates) |
+| B6220-B6229 | The night's work: one Undo for a night of the Storyteller's Hand (Ben's desk pick hd1, 15 November 2026) (used B6220-B6226) | Chronicle, Solo |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10134,6 +10137,81 @@ A mummy's won Forbiddance marks the mummy as the one feared (a player's token ca
 
 Reverse: forbiddenFrom in wodx-combat main.js, the bindBy/forbiddenBy flags in mummy.js, the shadow soul line in binds.js bindingsOn.
 
+## B6020. Conditions that hold a body stop its token (2026-11-15)
+WoDX Combat. Held, Completely immobilized, Staked, Torpor, Incapacitated and Asleep leave no movement (movementFor) and a player's drag of the token is refused in a fight or out of one; the Storyteller moves any token. Before this, only power bindings held a token; the core conditions only changed attack dice. World setting "Conditions hold the token", default on.
+
+Reverse: set "Conditions hold the token" off, or drop the preUpdateToken hook and the still/pace arguments in auto.js movement.
+
+## B6021. Numbed moves at three-quarter pace (2026-11-15)
+WoDX Combat. Numbed (VtDA p. 275) already took a Dexterity point; its three-quarter movement was only on the card.
+
+Reverse: remove numbed from SLOW_CONDITIONS in auto.js.
+
+## B6022. Combat reads the roll effects of WoDX Chronicle traits (2026-11-15)
+WoDX Combat. Attack pools read traits.effects with tags attack and combat, defence with defense, combat and dodge. Effects tagged "all" (fever, drink and drugs, the night's feeding penalty) and any trait tagged for combat now count; before, only Actions and social rolls read them.
+
+Reverse: remove the traitRoll calls in conditionMods, defenseDiffOf and defenseDiceOf.
+
+## B6023. Timed marks show on the token (2026-11-15)
+WoDX Chronicle. applyTimed sets showIcon ALWAYS, so a scene or night mark (no rounds, no seconds) draws on the token. A caller may pass showIcon: false.
+
+Reverse: drop the showIcon line in timed.mjs.
+
+## B6024. The night's feeding penalty is a roll effect (2026-11-15)
+WoDX Actions. Feeding against the blood's law (a vessel not beaten in a fight, Willpower failed) puts a bite of -2 dice on every roll until dawn through traits.addBite; before, it was a named mark no roll read.
+
+Reverse: go back to the plain applyTimed mark in main.js.
+
+## B6025. Behind the age is a roll effect (2026-11-15)
+WoDX Actions. After a long torpor, each Ability listed as behind rolls at +1 difficulty (BEHIND_DIFFICULTY) until the Storyteller presses "caught up", through a traits roll source reading the longSleep flag. Old tongues stay with the Storyteller.
+
+Reverse: remove the addSource call in main.js.
+
+## B6026. Closed shelves give two dice for the season (2026-11-15)
+WoDX Storyteller. The institution's "closed shelves are open" answer now adds a bite of +2 dice on Academics, Investigation, Occult, Science, Medicine and Linguistics for 90 days. It applies wherever the character studies, a simplification of "there".
+
+Reverse: remove the addBite call in reach.mjs.
+
+## B6027. Crippled limb counts in a fight (2026-11-15)
+WoDX Chronicle. The Crippled limb status had no rule behind it (maimed parts have their own). It now gives +2 difficulty on the bearer's attacks and defence, since a status on the token names no limb.
+
+Reverse: set mods back to {} on crippled in conditions.mjs.
+
+## B6028. Ravenous is harder to act through (2026-11-15)
+WoDX Actions. Ravenous (W20 p. 177) only said "must eat first". It now gives +1 difficulty in a fight and on social rolls for its day, a house reading.
+
+Reverse: set mods back to {} on ravenous in after-cost-rules.js.
+
+## B6029. Branded, Filthy and Bloody are a step colder in talk (2026-11-15)
+WoDX Chronicle and Library. "Meets them a step colder" and "anyone who sees it" had no reader. Each now gives +1 difficulty on social rolls (socialDiff, read by Actions' social rolls).
+
+Reverse: set mods back to {} on branded (law-punish.mjs), filthy and bloody (hygiene-use.mjs).
+
+## B6030. A good hide or sneak roll sets Sneaking (2026-11-15)
+WoDX Actions. Sneaking was read by Senses, Combat and targeting but never set by a roll. A successful "Find a hiding place" or "Hold still and stay hidden" check now gives the roller Sneaking for the scene.
+
+Reverse: remove the sneak applyTimed in resolveAction (wodx-actions main.js).
+
+## B6031. Incapacitated follows the health track (2026-11-15)
+WoDX Combat. Incapacitated was only ever set by hand. It now turns on when the health track reaches Incapacitated and off when healing lifts it, unless the status-effects setting is off.
+
+Reverse: remove the updateActor incapacitated hook in wodx-combat main.js.
+
+## B6032. A crippled limb shows on the token (2026-11-15)
+WoDX Combat. The maimed-part effect was hidden on the token. It now always shows its icon.
+
+Reverse: drop showIcon from crippleEffect in body.js.
+
+## B6033. Mud, rain and a week unwashed make a body Filthy (2026-11-15)
+WoDX Library. Filthy had no way in. Being knocked down outdoors in rain, sleet or snow now sets it, and so does going seven nights without washing (player characters who are alive; a house rule). Washing clears it as before and records the night.
+
+Reverse: remove the knockdown and night hooks in hygiene-use.mjs.
+
+## B6034. Obfuscate sets Obfuscated (2026-11-15)
+WoDX Actions. Senses, targeting and Combat read the Obfuscated condition, but Obfuscate powers only set the Veiled effect. An Obfuscate Discipline use with a duration, and an Obfuscate veil on the effects card, now also set Obfuscated while it lasts.
+
+Reverse: remove the condition line from kindred.js and the isObfuscate map in effects.js powerPlan.
+
 ## B6040. Places with no map are the country map's towns (2026-11-15)
 WoDX Solo card-rules.mjs cardTowns. The panel's Places with no map lists the towns of WoDX Storyteller's country map (data/country.mjs) that stand in the character's own year and have no scene set at the town itself. A town that gains a map later is gone to on that map. The list has a search box.
 
@@ -10324,6 +10402,31 @@ box keeps harm off a Fetter, it does not keep a mortal alive (house reading of p
 
 Reverse: drop the fetterguard line in advance.mjs and the check in advance-rules.mjs.
 
+## B6110. One code base per line sheet, on either engine (2026-11-15)
+System fork. Each line sheet's class (Mortal and the eleven lines over it) is now a mixin applied twice: over the old engine's ActorSheet (the class it always was) and over LegacyActorSheetV2. Both keep the same class name, so the sheet id (WoD.VampireActorSheet) and render hooks named after the class stay the same.
+
+Reverse: take the line out of LINES_V2 (B6112); the old-engine class is still there.
+
+## B6111. The bridge: LegacyActorSheetV2 (2026-11-15)
+System fork, module/actor/template/legacy-sheet-v2.js. HandlebarsApplicationMixin(ActorSheetV2) with one part, the line's own template. It gives the line code what the old engine gave: getData with the old context, _renderInner (WoDX Sheets wraps it), activateListeners(html) with jQuery after each render, the tabs from defaultOptions, options.editable, activateTab, and the document as "object". The template's form root becomes a div with the same classes (the window is the form now). {{editor}} boxes become always-open prose-mirror editors on the same field, saving on focus loss and on close; the profile image opens the file picker; a change saves the whole form minus active-effect overrides, as before; the open tab and scroll positions survive a redraw. The old window's 8 px inner spacing and scrolling are kept in wod.css.
+
+Reverse: remove the file and the V2 exports; nothing else depends on it while LINES_V2 is empty.
+
+## B6112. Which lines are moved: LINES_V2 (2026-11-15)
+System fork, module/actor/template/lines-v2.js, read by wod.js and WoDX Sheets. Lines move one at a time, each gated on the testbed (gatesheetv2 plus the sheet gates, fit-audit and gateuisnap) before the next. Mummy goes first: a small line that still has a WoDX book sheet over it, so both layers are tested.
+
+Reverse: remove a type from the set.
+
+## B6113. System hooks follow the moved sheets (2026-11-15)
+System fork, hooks.js. The language, line, font and dark-mode classes the old sheets got from renderActorSheet are applied from renderLegacyActorSheetV2 too, and the PC sheet's renderActorSheetV2 handler skips the moved line sheets so it does not strip their line class.
+
+Reverse: drop the two hook lines.
+
+## B6114. Modules follow the moved sheets (2026-11-15)
+WoDX Sheets builds its sheet over the V2 class for a moved line (same name), adds the Gender line and the Sheet tools button from renderLegacyActorSheetV2 (on V2 the button opens the title bar's own menu, which already names every control), and adds Print and History as V2 header controls. WoDX Chronicle's player guide counts opening a moved sheet. Header buttons from other modules already had V2 versions.
+
+Reverse: the hooks are additive; remove them with the line from LINES_V2.
+
 ## B6130. The held readings go in, worded as the books back them (2026-11-15)
 WoDX Chronicle, tools/timeline/build-world-history.mjs. WAITING is empty. The book check (project files global-world/book-check-readings.md, finished in the cloud from the OCR text) settled each card. 1521: Wraith 20th (pdf 101, 512 to 517) breaks the Dark Kingdom of Obsidian through the heretics' Flaying and the storm after it, so the card names the Flaying, with the plague and siege dead as the background, and the survivors' Mictlan. 1692: Verbena Revised (pdf 43) keeps the Verbena out of the trials; no book has hunters and mages blaming each other, so that part is gone. 1791: Wraith 20th (pdf 521) has Les Invisibles fan the slave revolts and the Mirrorlands battered by storms and Baka; the lwa among the rebels "by both sides" had no book and is gone. 1885: Wraith 20th (pdf 517 to 518, the Bush of Ghosts behind a false Ivory Queen) and Kindred of the Ebony Kingdom (pdf 16, Laibon fighting the Portuguese around 1540) back a continent already held. 1890: the Wendigo tribebook (pdf 28, 50 to 51) backs Garou among the Ghost Dancers. 1994: Kindred of the Ebony Kingdom (pdf 168) keeps the genocide mortal with elders using the chaos, and A World of Rage (pdf 94 to 95) has the Wyrm feed on it; no book ties it to the lands of the dead, so the card no longer says so and is renamed The killing in Rwanda.
 
@@ -10345,3 +10448,38 @@ the aeroplane step read "No motor car yet" and the ram missed. When the year is 
 clock to 1995 and notes the move. The kit puts the clock back after.
 
 Reverse: drop the move and play in whatever year the clock shows.
+
+## B6220. The Hand's work is written down as document changes, not read from each card's Undo (2026-11-15)
+WoDX Chronicle. The desk said the batch Undo would use the Undo each card already keeps. Those Undos come in more than a dozen forms across eight modules, and most kinds of approval keep none, so a list built on them would miss most of the night. Instead, while a piece of the Hand's work is open, every change the Storyteller's client makes to actors, actor deltas, items, effects, tokens, tiles, drawings, lights, sounds, notes, regions, walls, templates, scenes, journals, tables, fights and world settings is kept with its old and new values (nightwork-rules.mjs, nightwork.mjs), and each card it posts is noted. Undo puts those back. A kind of approval whose work changed nothing the list can see but which keeps its own Undo is taken back with that Undo. Settings never taken back: the clock and core, the night's work itself, the approval queue, the Lone Chronicle seat's records, the session timer and mark.
+
+Reverse: take nightwork.registerNightHooks out of main.mjs; nothing else is written down.
+
+## B6221. What counts as the Hand's work (2026-11-15)
+WoDX Chronicle. Three things open a piece of work: an approval carried out (decide() runs the kind's approve inside record(), whether approved on its own or by the Storyteller), the world's time moving (a "Time passed" piece stays open while the clock's listeners keep changing things, closing after 4 quiet seconds and 90 seconds at most), and the Lone Chronicle seat's choices (B6225). Other modules can wrap their own automatic work with api.nightwork.record(label, fn) or begin/end. A token walked by hand in the seconds after the clock moved is left out; other changes the Storyteller makes in those seconds are listed and can be unticked.
+
+Reverse: drop the updateWorldTime hook in nightwork.mjs to list only approvals and the seat.
+
+## B6222. Newest first, read against the world at each step (2026-11-15)
+WoDX Chronicle. One Undo takes every ticked piece's changes newest first. Each change is checked against the world at the moment it is taken back, so when two ticked pieces changed the same field, the newer is put back first and the older then sees its own value and puts the first value back.
+
+Reverse: none needed; this is the only order that gives back the oldest value.
+
+## B6223. Changed since: kept by default, with a warning that names the player (2026-11-15)
+WoDX Chronicle. A field that no longer holds what the Hand left there was changed since. The list warns of it on the piece's row and names the player when a player's client made the change (the Storyteller's own later changes are named "you"; a later piece of the Hand's own work is shown without a warning). The window's default keeps such fields as they are now and puts back the rest; "Put it back as it was before the Hand anyway" overwrites them too. A document the Hand made that a player has changed since is kept rather than removed under the default.
+
+Reverse: change the radio's default in nightwork-rules.mjs listHTML and NightApp.keep.
+
+## B6224. Limits: 30 days, 300 pieces, 1,000 changes a piece (2026-11-15)
+WoDX Chronicle. The list is a world setting (nightWork), so it keeps the newest 300 pieces of work from the last 30 days, about 1.5 MB at most. A piece with more than 1,000 changes (a long time skip) is kept as "too much to keep" and is not offered for Undo; a single change over 150 KB is left out of its piece and counted, and the rest can still be taken back. Bookkeeping that follows every change (WoDX Sheets' history strip and window state) is never written down. An approval taken back here is marked undone in the approval queue's history, and one taken back from its own card shows as taken back in the list (approvals.mjs undoById, markTakenBack). The Hand's cards lose their buttons and say they were taken back.
+
+Reverse: change CAPS in nightwork-rules.mjs.
+
+## B6225. The Lone Chronicle seat's choices are the Hand's work (2026-11-15)
+WoDX Solo. Each button the seat presses on a card and each window choice it makes for the absent Storyteller opens a piece of work named after the card and the choice (seatClick in main.mjs), so the lone player can take back a choice the seat got wrong.
+
+Reverse: call el.click() directly again in onMessage and onDialog.
+
+## B6226. The night's work in the lone player's Storyteller tools (2026-11-15)
+WoDX Solo. A sixth Storyteller tool, The night's work: the player's window asks the seat for the list (ask.st.night) and sends the ticked pieces back (ask.st.nightUndo); the seat carries out the Undo, logs it and tells the player what was done. The player's own changes since are warned of in the same way.
+
+Reverse: take the night entry out of ST_TOOLS in solo-rules.mjs.
