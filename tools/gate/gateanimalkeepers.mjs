@@ -35,11 +35,17 @@ export async function run() {
       await C().giveVitae(dog, nos, {points: 6});
       await wait(() => [...dog.effects].some(e => e.getFlag("wodx-creation", "clanMark")));
       const fx = [...dog.effects].find(e => e.getFlag("wodx-creation", "clanMark"));
-      // the dog's token is unlinked, so look at the token's own actor; a status effect is what the token shows
-      const tokActor = td.actor ?? td.object?.actor;
-      await wait(() => [...(tokActor?.temporaryEffects ?? [])].some(e => e.getFlag?.("wodx-creation", "clanMark")));
-      const onToken = [...(tokActor?.temporaryEffects ?? [])].some(e => e.getFlag?.("wodx-creation", "clanMark"));
-      G.ok("1. the clan's mark at five points", !!fx?.name?.includes("Hideous") && onToken, {mark: fx?.name, onToken});
+      // the dog's token is linked to its sheet once it is a ghoul, and the mark's icon is set to show always
+      const ALWAYS = CONST.ACTIVE_EFFECT_SHOW_ICON?.ALWAYS;
+      const shown = () => {
+        const tokActor = td.actor ?? td.object?.actor;
+        const e = [...(tokActor?.effects ?? [])].find(x => x.getFlag?.("wodx-creation", "clanMark"));
+        return !!e && (ALWAYS === undefined ? [...(tokActor.temporaryEffects ?? [])].some(x => x.id === e.id) : e.showIcon === ALWAYS);
+      };
+      await wait(() => td.actorLink && shown());
+      const onToken = td.actorLink && shown();
+      G.ok("1. the clan's mark at five points", !!fx?.name?.includes("Hideous") && onToken,
+        {mark: fx?.name, linked: td.actorLink, showIcon: fx?.showIcon, temporary: fx?.isTemporary, onToken});
     });
 
     await G.step("2. the blood bar and the red eyes", async () => {

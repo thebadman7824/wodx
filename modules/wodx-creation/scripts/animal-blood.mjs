@@ -8,6 +8,9 @@
 import {MODULE_ID, isAnimalGhoul, clanOf, domitorOf} from "./actor-data.mjs";
 import * as AG from "./animal-ghoul-rules.mjs";
 
+/** The mark has no duration, so its icon is set to show on the token always (Foundry 13 and later). */
+const SHOW_ALWAYS = (() => { try { return CONST.ACTIVE_EFFECT_SHOW_ICON?.ALWAYS ?? null; } catch (e) { return null; } })();
+
 const MARK = "wodx-clan-mark";
 const isActiveGM = () => game.user?.isGM && game.users?.activeGM?.id === game.user.id;
 /** The red eyes: a small dim light that shows only in the dark. */
@@ -20,7 +23,11 @@ export async function syncMark(actor) {
   const clan = dom ? clanOf(dom)?.id ?? null : null;
   const mark = AG.clanMark(clan, Number(actor.system?.advantages?.bloodpool?.temporary) || 0);
   const have = [...(actor.effects ?? [])].find(e => e.getFlag?.(MODULE_ID, "clanMark"));
-  if ( mark && have?.getFlag(MODULE_ID, "clanMark") === clan ) return have;
+  if ( mark && have?.getFlag(MODULE_ID, "clanMark") === clan ) {
+    // a mark made before the icon was forced on gets it now
+    if ( SHOW_ALWAYS !== null && have.showIcon !== SHOW_ALWAYS ) await have.update({showIcon: SHOW_ALWAYS});
+    return have;
+  }
   if ( have ) await have.delete();
   if ( !mark ) {
     if ( actor.getFlag(MODULE_ID, "clanMark") ) await actor.unsetFlag(MODULE_ID, "clanMark");
@@ -29,7 +36,7 @@ export async function syncMark(actor) {
   await actor.setFlag(MODULE_ID, "clanMark", {clan, frenzy: mark.frenzy ?? 0});
   const [e] = await actor.createEmbeddedDocuments("ActiveEffect", [{name: `${dom.name}'s blood: ${mark.label}`, img: "icons/svg/blood.svg",
     description: `${mark.text} (V20 Dark Ages p. 401: five or more points of the domitor's blood bring the clan's weakness.)`,
-    statuses: [MARK], flags: {[MODULE_ID]: {clanMark: clan}}}]);
+    statuses: [MARK], ...(SHOW_ALWAYS !== null ? {showIcon: SHOW_ALWAYS} : {}), flags: {[MODULE_ID]: {clanMark: clan}}}]);
   return e;
 }
 
