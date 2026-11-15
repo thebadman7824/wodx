@@ -135,8 +135,10 @@ export function holds(actor, key) {
 export const LUCKY_PER_STORY = 3;
 const storyNow = () => { try { return game.settings.get("wodx-actions", "storyId") || "first"; } catch (e) { return "first"; } };
 /** B3919: Destiny and Fate (backgrounds) bank rerolls too: one a story for each dot, on the same count as Lucky.
- *  B6159: the reroll is offered in the Any roll and Common checks windows only. Power, frenzy and sin rolls apply their
- *  effect (blood, Gnosis, the frenzy state, a Road dot) the moment the dice land, so a reroll there would have to undo it. */
+ *  B6371: the reroll is offered in the Any roll and Common checks windows, every power window (limits.js decorate and
+ *  gate) and the frenzy, Rötschreck and sin windows. It is rolled inside the dice roller before the roll's effect is
+ *  worked out (blood, Gnosis, the frenzy state, a Road dot), so nothing has to be undone. Checks rolled by themselves
+ *  do not spend it. */
 export const FORTUNE_BACKGROUNDS = ["destiny", "fate"];
 const rating = (actor, key) => { const T = traits(); try { return Math.max(0, Number(T?.has?.(actor, key)) || 0); } catch (e) { return 0; } };
 export function rerollsPerStory(actor) {

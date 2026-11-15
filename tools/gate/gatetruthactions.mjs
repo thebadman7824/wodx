@@ -10,14 +10,22 @@
  *      a Strength of 6 bought on the sheet stays after the system's recompute; the Road falls to 6, Golconda ends by
  *      itself and Strength is back at the Generation's 5
  *   3. Blurred sight and Drained on the roller: a Notice check (sight) rolls at 6 + 2 + 1, a Balance check at 6 + 1
+ *   3b. Blurred sight on the roller: WoDX Senses' closer look at sight rolls 2 harder than the same look without it
  *   4. the clock moves to the middle of the day: the sleeper sleeps; as a player, Spend Blood, a Common check and a
  *      Discipline are refused (no window opens, blood and Willpower stay)
+ *   4b. still asleep, as a player: a step of the token is refused and WoDX Combat's attack window does not open
  *   5. two clock moves in a row to past the rising hour (the second lands while the first still runs): the sleeper
  *      rises, and a lethal level heals with blood
  *   6. a frenzy check in a fight is held turn by turn: one roll when the wound lands, none on the bearer's next turn
  *      (a success holds a turn), the next roll on the turn after, and the running total carries (dice forced to 10s)
  *   7. the inner voice: a sheet change carries the "before" pressure in the update's options (what the Storyteller's
  *      client reads when a player makes the change), and the voice is told the pressure grows
+ *   8. a clan's feeding law broken (B6370): a Salubri feeds on an unwilling vessel with the dice forced to 1s, the
+ *      Willpower roll fails, and the night's penalty takes 2 dice from the next Common check (the same pool as before
+ *      the feeding) and from what WoDX Combat reads for an attack; the era is Dark Ages for the step (its rule)
+ *   9. Lucky, Destiny and Fate (B6371): a Cainite with Destiny 2 rolls a frenzy check from its window with the box
+ *      ticked; the first roll comes up 1s (a botch: frenzy), it is rolled again at once (10s), the Beast is held off,
+ *      no frenzy, and one reroll of the story is spent
  * Result: Data/wodx-gate/gatetruthactions-result.json.
  */
 import {gate, waitFor, newestMessage} from "./kit.mjs";
@@ -35,6 +43,35 @@ async function fixDice(face) {
     if ( (await new Roll("1d10").evaluate()).dice[0].results[0].result === face ) return;
   }
   throw new Error(`could not fix the dice to ${face}`);
+}
+
+/** The randomUniform value that gives one face (both of Foundry's readings tried). */
+async function uFor(face) {
+  for ( const u of [(face - 0.5) / 10, 1 - (face - 0.5) / 10] ) {
+    CONFIG.Dice.randomUniform = () => u;
+    if ( (await new Roll("1d10").evaluate()).dice[0].results[0].result === face ) return u;
+  }
+  throw new Error(`no value gives a ${face}`);
+}
+
+/** Answer the next Actions window: fill the fields, press OK. */
+function answer(vals = {}) {
+  return new Promise(resolve => {
+    const id = Hooks.on("renderDialogV2", (app, el) => {
+      const root = el?.querySelector ? el : app.element;
+      if ( !root?.querySelector?.("form") ) return;
+      Hooks.off("renderDialogV2", id);
+      const seen = {};
+      for ( const f of root.querySelectorAll("input, select") ) if ( f.name ) seen[f.name] = f.type === "checkbox" ? f.checked : f.value;
+      for ( const [k, v] of Object.entries(vals) ) {
+        const f = root.querySelector(`[name=${k}]`);
+        if ( !f ) continue;
+        if ( f.type === "checkbox" ) f.checked = !!v; else f.value = String(v);
+      }
+      setTimeout(() => { root.querySelector("button[data-action=ok]")?.click(); resolve(seen); }, 50);
+    });
+    setTimeout(() => { Hooks.off("renderDialogV2", id); resolve(null); }, 10000);
+  });
 }
 
 export async function run() {
@@ -62,7 +99,7 @@ export async function run() {
       "system.advantages.virtues.selfcontrol.permanent": 2, "system.advantages.virtues.conscience.permanent": 4, "system.advantages.virtues.courage.permanent": 3,
       "system.advantages.willpower.permanent": 5, "system.advantages.willpower.temporary": 5};
     for ( const a of [saint, roller, sleeper, beast] ) await a.update({...base});
-    const [, , , tBeast, tOther] = await G.tokens(scene, [{actor: saint, x: 2, y: 2}, {actor: roller, x: 4, y: 2}, {actor: sleeper, x: 8, y: 8},
+    const [, tRoller, tSleeper, tBeast, tOther] = await G.tokens(scene, [{actor: saint, x: 2, y: 2}, {actor: roller, x: 4, y: 2}, {actor: sleeper, x: 8, y: 8},
       {actor: beast, x: 6, y: 2}, {actor: other, x: 7, y: 2}]);
     await wait(500);
     const blood = a => num(a.system?.advantages?.bloodpool?.temporary);
@@ -110,6 +147,23 @@ export async function run() {
       await C.conditions.setCondition(roller, "drained", false);
     });
 
+    await G.step("3b. Blurred sight reaches WoDX Senses' closer look", async () => {
+      const Sn = game.modules.get("wodx-senses")?.active ? game.modules.get("wodx-senses").api : null;
+      if ( !Sn?.answer ) { G.ok("3b. Blurred sight reaches WoDX Senses' closer look", false, {error: "WoDX Senses is off"}); return; }
+      const look = async () => {
+        await roller.unsetFlag("wodx-senses", "memory").catch(() => null); // a fresh look, not the remembered answer
+        const res = await Sn.answer({user: game.user.id, token: tRoller.uuid, sense: "sight", closer: true});
+        return res?.sections?.[0] ?? null;
+      };
+      const plain = await look();
+      await C.conditions.setCondition(roller, "blurred-sight", true);
+      await waitFor(() => roller.statuses?.has?.("wodx-blurred-sight"), 4000);
+      const blurred = await look();
+      await C.conditions.setCondition(roller, "blurred-sight", false);
+      G.ok("3b. Blurred sight reaches WoDX Senses' closer look", !!plain?.rolled && !!blurred?.rolled && (num(blurred.diff?.diff) - num(plain.diff?.diff) === 2 || num(blurred.diff?.diff) === 10)
+        && (blurred.diff?.parts ?? []).some(p => /Blurred sight/.test(p)), {plain: plain?.diff ?? null, blurred: blurred?.diff ?? null});
+    });
+
     const DS = A.daySleep?.();
     await G.step("4. asleep by day: a player's windows refuse", async () => {
       await sleeper.update({"system.health.damage.lethal": 1});
@@ -134,6 +188,27 @@ export async function run() {
       } finally { Hooks.off("renderDialogV2", hook); }
       G.ok("4. asleep by day: a player's windows refuse", !!asleep && opened === 0 && blood(sleeper) === b0 && wp(sleeper) === w0 && !!A.cannotAct(sleeper),
         {sun: s, opened, blood: [b0, blood(sleeper)], willpower: [w0, wp(sleeper)], why: A.cannotAct(sleeper)});
+    });
+
+    await G.step("4b. asleep by day: the token does not walk and makes no attack", async () => {
+      // A player's client for the whole move (the token's update reaches its preUpdate hook after an await)
+      const shadow = async fn => { Object.defineProperty(game.user, "isGM", {get: () => false, configurable: true}); try { return await fn(); } finally { delete game.user.isGM; } };
+      const x0 = tSleeper.x, warned = [];
+      const warn = ui.notifications.warn;
+      ui.notifications.warn = (m, ...r) => { warned.push(String(m)); return warn.call(ui.notifications, m, ...r); };
+      let attacked;
+      try {
+        await shadow(() => tSleeper.update({x: x0 + scene.grid.size}).catch(() => null));
+        // the attack's refusal comes before its first await, so the shadow is lifted at once; a window that opens is closed
+        Object.defineProperty(game.user, "isGM", {get: () => false, configurable: true});
+        let pr;
+        try { pr = game.wodxCombat?.attack?.({attacker: sleeper, target: tOther.object ?? tOther}) ?? null; } finally { delete game.user.isGM; }
+        attacked = await Promise.race([Promise.resolve(pr).then(r => r ?? null, () => null), wait(1500).then(() => "a window opened")]);
+        if ( attacked ) for ( const app of foundry.applications.instances?.values?.() ?? [] ) if ( /attack/i.test(app.title ?? "") ) app.close?.();
+      } finally { ui.notifications.warn = warn; }
+      await wait(400);
+      G.ok("4b. asleep by day: the token does not walk and makes no attack", !!sleeper.getFlag(MOD, "daySleep") && tSleeper.x === x0 && !attacked
+        && warned.filter(m => /asleep for the day/.test(m)).length >= 2, {x: [x0, tSleeper.x], attacked: !!attacked, warned});
     });
 
     await G.step("5. two clock moves at once: the sleeper still rises and heals", async () => {
@@ -191,6 +266,62 @@ export async function run() {
       } finally { Hooks.off("updateActor", hook); }
       const told = await waitFor(() => newestMessage(since, m => /grows/.test(m.content ?? "")), 6000);
       G.ok("7. the voice's before level rides in the update", carried !== undefined && !!told && blood(roller) === 1, {carried: carried ?? null, told: !!told, blood: blood(roller)});
+    });
+    await G.step("8. a broken feeding law takes 2 dice from the night's rolls", async () => {
+      const era0 = (() => { try { return game.settings.get("wodx-chronicle", "activeEra"); } catch (e) { return undefined; } })();
+      const [healer, vessel] = await G.make(Actor, [vamp("Gate TA Healer", {clan: "salubri"}), {name: "Gate TA Vessel", type: "Mortal"}]);
+      await healer.update({...base, "system.advantages.bloodpool.temporary": 6, "system.advantages.virtues.selfcontrol.permanent": 4,
+        "system.attributes.perception.value": 3, "system.attributes.perception.total": 3, "system.abilities.alertness.value": 2});
+      const [, tVessel] = await G.tokens(scene, [{actor: healer, x: 10, y: 4}, {actor: vessel, x: 11, y: 4}]);
+      await waitFor(() => !!tVessel?.object, 6000);
+      try {
+        if ( A.feedingRule?.(healer)?.unwilling !== "wpRoll" && era0 !== undefined ) await game.settings.set("wodx-chronicle", "activeEra", "dark-ages");
+        const rule = A.feedingRule?.(healer);
+        const diceOf = m => num(/(\d+) dice, diff/.exec(m?.content ?? "")?.[1]);
+        let since = Date.now();
+        await A.quickCheck({actor: healer, check: "notice", direct: true});
+        await waitFor(() => cardOf(since, healer, /dice, diff/), 6000);
+        const before = diceOf(cardOf(since, healer, /dice, diff/));
+        await fixDice(1); // the Willpower roll (6) fails
+        const p = answer({take: 1, willing: false});
+        await A.feed({actor: healer, vessel: tVessel.object});
+        await p;
+        CONFIG.Dice.randomUniform = dice;
+        const penalised = await waitFor(() => [...healer.effects].some(e => e.flags?.["wodx-chronicle"]?.timed?.key === A.powerMods?.rules?.KEYS?.penalty), 8000);
+        since = Date.now();
+        await A.quickCheck({actor: healer, check: "notice", direct: true});
+        await waitFor(() => cardOf(since, healer, /dice, diff/), 6000);
+        const after = diceOf(cardOf(since, healer, /dice, diff/));
+        const attack = num(A.powerMods?.of?.(healer, {tags: ["physical", "dexterity", "melee"]})?.dice);
+        G.ok("8. a broken feeding law takes 2 dice from the night's rolls", rule?.unwilling === "wpRoll" && !!penalised && before >= 3 && after === before - 2 && attack === -2,
+          {rule: rule?.unwilling ?? null, penalised, dice: [before, after], attack});
+      } finally {
+        CONFIG.Dice.randomUniform = dice;
+        if ( era0 !== undefined ) { try { await game.settings.set("wodx-chronicle", "activeEra", era0); } catch (e) { /* gone */ } }
+      }
+    });
+
+    await G.step("9. Destiny rolls a failed frenzy check again", async () => {
+      const [fated] = await G.make(Actor, [vamp("Gate TA Fated")]);
+      await fated.update({...base});
+      await fated.createEmbeddedDocuments("Item", [{name: "Destiny", type: "Feature", system: {type: "wod.types.background", value: 2}}]);
+      await wait(300);
+      const left0 = A.traitHooks?.luckyLeft?.(fated) ?? null;
+      const u1 = await uFor(1), u10 = await uFor(10);
+      let i = 0;
+      CONFIG.Dice.randomUniform = () => (i++ < 2 ? u1 : u10); // Self-Control 2: the first roll 1, 1; the second 10, 10
+      const since = Date.now();
+      try {
+        const p = answer({prov: "physical", lucky: true, wp: false});
+        await A.frenzy({actor: fated});
+        const seen = await p;
+        await waitFor(() => cardsOf(since, fated, /Frenzy check|Instinct check|rolled again/).length >= 1, 6000);
+        await wait(500);
+        const card = cardsOf(since, fated, /rolled again/)[0] ?? null;
+        const used = num(fated.getFlag(MOD, "lucky")?.used);
+        G.ok("9. Destiny rolls a failed frenzy check again", !!seen?.lucky && !!card && /2 successes|Held off/.test(card?.content ?? "") && !fated.system?.conditions?.isfrenzy && used === 1,
+          {offered: seen?.lucky ?? null, left0, card: !!card, used, isfrenzy: !!fated.system?.conditions?.isfrenzy});
+      } finally { CONFIG.Dice.randomUniform = dice; }
     });
     G.R.notes.push(`ran ${Math.round((Date.now() - t0) / 1000)} s`);
   } catch (e) {

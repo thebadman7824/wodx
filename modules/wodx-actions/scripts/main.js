@@ -385,8 +385,23 @@ async function rollPool(dice, difficulty, opts = {}) {
         if (GEN() < 12) await roll.evaluate({ async: true }); else await roll.evaluate();
         faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
     }
-    const res = R.countSuccesses(faces, diff, opts);
-    return { ...res, roll, faces, dice, difficulty: diff };
+    let res = R.countSuccesses(faces, diff, opts);
+    // B6371: a power window's gate (or the caller, opts.fortune) armed Lucky, Destiny or Fate: a failed roll is rolled
+    // again before anything is done with it, so the effect follows the roll that stands
+    const fa = opts.fortune ?? LIM.takeFortune();
+    let fortune = null;
+    if (fa && dice > 0 && (res.botch || !res.successes)) {
+        const lk = await TH.useLucky(fa);
+        if (lk) {
+            const first = faces;
+            roll = new Roll(`${dice}d10`);
+            if (GEN() < 12) await roll.evaluate({ async: true }); else await roll.evaluate();
+            faces = roll.dice[0]?.results?.map(r => r.result) ?? [];
+            res = R.countSuccesses(faces, diff, opts);
+            fortune = { first, name: TH.fortuneName(fa), left: lk.left };
+        }
+    }
+    return { ...res, roll, faces, dice, difficulty: diff, fortune };
 }
 function diceHtml(r, specialty = false) {
     if (!setting("showDice") || !r?.faces?.length) return "";
@@ -398,7 +413,8 @@ function resultLine(r, { degreeText = true } = {}) {
     return `<div class="vta-res good">${r.successes} success${r.successes === 1 ? "" : "es"}${degreeText ? `: ${R.degree(r.successes)}` : ""}</div>`;
 }
 function rollBlock(title, r, parts = [], specialty = false) {
-    return `<div class="vta-sec"><b>${title}</b>: ${r.dice} dice, diff ${r.difficulty}${parts.length ? `<div class="vta-parts">${parts.join(" · ")}</div>` : ""}${diceHtml(r, specialty)}${resultLine(r)}</div>`;
+    const again = r?.fortune ? `<div class="vta-note wodx-fortune">${esc(r.fortune.name)}: the first roll failed${setting("showDice") && r.fortune.first?.length ? ` (${r.fortune.first.join(", ")})` : ""} and is rolled again (${r.fortune.left} left this story).</div>` : "";
+    return `<div class="vta-sec"><b>${title}</b>: ${r.dice} dice, diff ${r.difficulty}${parts.length ? `<div class="vta-parts">${parts.join(" · ")}</div>` : ""}${again}${diceHtml(r, specialty)}${resultLine(r)}</div>`;
 }
 /**
  * 3.67.0 (B3444): read the face of someone speaking to the character. Perception + Empathy against their Manipulation +
@@ -1032,6 +1048,7 @@ function buildPool(actor, target, fd, pool = readPool(actor, fd.attr, fd.ability
 }
 
 async function resolveAction(actor, target, fd) {
+    LIM.takeFortune(); // B6371: this window spends Lucky itself (fd.lucky); no power window's leftover ticket
     const preset = PRESETS[fd.preset] ?? {};
     const pool = readPool(actor, fd.attr, fd.ability);
     const rd = road(actor);
@@ -1218,6 +1235,7 @@ export async function frenzy({ actor: a, provocation = "physical", difficulty = 
       <div class="form-group"><label>Difficulty (custom)</label><input type="number" name="diff" value="${difficulty ?? 6}"/></div>
       <div class="form-group"><label>Difficulty modifier (drugs –1, Intimidation powers +n…)</label><input type="number" name="mod" value="0"/></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div>
+      ${TH.luckyHtml(actor, esc)}
       <div class="form-group"><label><input type="checkbox" name="wpAuto" ${flag(actor, "beastWillpower") ? "checked" : ""}/> When these checks roll by themselves, spend Willpower if there is any</label></div>
     </form>`;
     return dialog(`${v.selfcontrol.isInstinct ? "Instinct" : "Frenzy"} check`, content, "Roll", async fd => {
@@ -1232,7 +1250,7 @@ export async function frenzy({ actor: a, provocation = "physical", difficulty = 
         const fire = DH.fireStep(actor);
         diff = R.clampDifficulty(diff + fd.mod + tm.diff + fire);
         try { await TH.spendOnce(actor, tm); } catch (e) { /* nothing spent */ }
-        return beastRoll(actor, { kind: v.selfcontrol.isInstinct ? "instinct" : "frenzy", diff, prov: p?.label ?? "Frenzy", wp: fd.wp, total: 0, traitDice: tm.dice, traitParts: fire ? [...(tm.parts ?? []), `Open fire here +${fire} diff`] : tm.parts });
+        return beastRoll(actor, { kind: v.selfcontrol.isInstinct ? "instinct" : "frenzy", diff, prov: p?.label ?? "Frenzy", wp: fd.wp, lucky: !!fd.lucky, total: 0, traitDice: tm.dice, traitParts: fire ? [...(tm.parts ?? []), `Open fire here +${fire} diff`] : tm.parts });
     });
 }
 
@@ -1249,6 +1267,7 @@ export async function rotschreck({ actor: a, provocation = "torch" } = {}) {
       <div class="form-group"><label>Difficulty (custom)</label><input type="number" name="diff" value="6"/></div>
       <div class="form-group"><label>Difficulty modifier</label><input type="number" name="mod" value="${dawn}"/></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div>
+      ${TH.luckyHtml(actor, esc)}
       <div class="form-group"><label><input type="checkbox" name="wpAuto" ${flag(actor, "beastWillpower") ? "checked" : ""}/> When these checks roll by themselves, spend Willpower if there is any</label></div>
     </form>`;
     return dialog("Rötschreck check", content, "Roll", async fd => {
@@ -1258,7 +1277,7 @@ export async function rotschreck({ actor: a, provocation = "torch" } = {}) {
             return post(actor, `${actor.name} faces the flame`, `<div class="vta-big">Already in frenzy: immune to Rötschreck (V20 Dark Ages p. 357).</div>`);
         const p = R.ROTSCHRECK_PROVOCATIONS[fd.prov];
         const diff = R.clampDifficulty((fd.prov === "custom" ? fd.diff : p.diff) + fd.mod + DH.fireStep(actor));  // B3132
-        return beastRoll(actor, { kind: "fear", diff, prov: p.label, wp: fd.wp, total: 0 });
+        return beastRoll(actor, { kind: "fear", diff, prov: p.label, wp: fd.wp, lucky: !!fd.lucky, total: 0 });
     });
 }
 
@@ -1283,7 +1302,8 @@ async function beastRoll(actor, d, msg = null) {
     const virtueVal = fear ? v.courage.value : v.selfcontrol.value;
     const vp = R.virtuePool(virtueVal, { road: rd.value || 10, blood: b.value, bloodLimited: !fear && isVampire(actor) });
     if (d.wp && !(await spendWillpower(actor, 1))) d.wp = false;
-    const r = await rollPool(Math.max(0, vp.dice + (d.traitDice || 0)), d.diff, { willpower: d.wp });
+    // B6371: a check rolled from its window may take Lucky, Destiny or Fate (ticked there); one rolled by itself does not
+    const r = await rollPool(Math.max(0, vp.dice + (d.traitDice || 0)), d.diff, { willpower: d.wp, fortune: d.lucky ? actor : (LIM.takeFortune(), null) });
     const vLabel = fear ? "Courage" : v.selfcontrol.label;
     let body = `<div class="vta-sub">${esc(d.prov)}</div>` + rollBlock(vLabel, r, [...(vp.caps.length ? [`capped by ${vp.caps.join(" and ")}`] : []), ...(d.traitParts || [])]);
     let state = null, enter = false, data = null;
@@ -1553,6 +1573,7 @@ export async function sin({ actor: a, level = null, desc = "" } = {}) {
       <div class="form-group"><label>On failure, lose</label><select name="lose">${opts([["road", "A Road dot"], ["conscience", `A ${v.conscience.label} dot`], ["selfcontrol", `A ${v.selfcontrol.label} dot`], ["courage", "A Courage dot"]], "road")}</select></div>
       <div class="form-group"><label><input type="checkbox" name="automatic"/> Automatic loss (e.g. murder on a Road that forbids it, diablerie)</label></div>
       <div class="form-group"><label><input type="checkbox" name="wp"/> Spend Willpower (+1 success)</label></div>
+      ${TH.luckyHtml(actor, esc)}
     </form>`;
     return dialog("Sin against the Road", content, "Roll", async fd => {
         fd.level = num(fd.level);
@@ -1564,9 +1585,10 @@ export async function sin({ actor: a, level = null, desc = "" } = {}) {
         else {
             if (fd.wp && !(await spendWillpower(actor, 1))) fd.wp = false;
             const vp = R.virtuePool(v.conscience.value, { road: rd.value || 10 });
-            const r = await rollPool(vp.dice, chk.difficulty, { willpower: fd.wp });
+            const pen = POWMOD.penaltyOf(actor); // B6370: a night's penalty reaches the sin's roll too
+            const r = await rollPool(Math.max(0, vp.dice + pen.dice), chk.difficulty, { willpower: fd.wp, fortune: fd.lucky ? actor : (LIM.takeFortune(), null) });
             rolls.push(r.roll);
-            body += rollBlock(v.conscience.label, r, [`base 6 + ${rd.value - fd.level} (Road ${rd.value} – sin ${fd.level})`].concat(chk.rawDifficulty > 10 ? ["capped at 10"] : []));
+            body += rollBlock(v.conscience.label, r, [`base 6 + ${rd.value - fd.level} (Road ${rd.value} – sin ${fd.level})`].concat(chk.rawDifficulty > 10 ? ["capped at 10"] : [], pen.parts));
             fail = r.successes === 0;
             if (r.botch) { body += `<div class="vta-note">Botch: a Derangement tied to the sin, drawn from those a sin leaves and written into the box.</div>`; await gainDerangement(actor, "sin", fd.desc ? `from the sin: ${String(fd.desc).slice(0, 60)}` : "from a sin botch"); }
         }
@@ -1912,7 +1934,8 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
         if (!r.successes) { nightPenalty = true; html += `<div class="vta-warn">-2 dice on every roll for the rest of the night (${esc(rule.page)}).</div>`; }
     }
     if (nightPenalty && setting("applyChanges") && actor.isOwner) {
-        try { await chronicle()?.applyTimed?.(actor, { name: `${rule.label}: -2 dice tonight`, img: "icons/svg/downgrade.svg", key: "wodx-actions.feedPenalty",
+        // B6370: the penalty is read by every roll (power-mods penalty: Any roll, Common checks, social, frenzy, powers, attacks, the sheet)
+        try { await chronicle()?.applyTimed?.(actor, { name: `${rule.label}: -2 dice tonight`, img: "icons/svg/downgrade.svg", key: POWMOD.KEYS.penalty, data: { dice: -2 },
             description: "Fed against the blood's law: -2 dice on every roll until dawn.", duration: { kind: "night" }, source: rule.page }); } catch (e) { console.warn("WoDX | feed penalty", e); }
     }
     let gorge = false;

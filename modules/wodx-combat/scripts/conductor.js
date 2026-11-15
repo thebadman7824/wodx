@@ -62,6 +62,8 @@ function cannotAct(c) {
     if (!a || c.isDefeated) return true;
     const cond = chron()?.conditions;
     if (NO_ACTION.some(id => cond?.hasCondition?.(a, id))) return true;
+    // B6372: WoDX Actions' own reasons: asleep for the day, its Asleep after-cost (api.cannotAct, api.noActionIds)
+    try { if (game.modules.get("wodx-actions")?.api?.cannotAct?.(a)) return true; } catch (e) { /* Actions off */ }
     // B6151: a failed stand-up from a knockdown spent this turn's action
     const lost = a.getFlag?.(MOD, "lostAction"), combat = c.parent ?? c.combat ?? null;
     if (lost && combat && lost.combat === combat.id && Number(lost.round) === Number(combat.round)) return true;

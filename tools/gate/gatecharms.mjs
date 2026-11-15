@@ -11,6 +11,10 @@
  *   9. Healing: a lethal level closes on the target
  *  10. an NPC spirit's power choice offers Blast to attack
  *  11. WoDX Combat reads the Creature spirit as a spirit, soaking with its Willpower
+ *  12. Umbraquake (B6375): the one standing near is knocked down (the condition) and takes bashing harm
+ *  13. Short Out (B6375): a light within 20 yards goes out (hidden) and comes back when the effect ends; in an era
+ *      before electric light the Charm is refused and the light stays (dice forced to 10s)
+ *  14. Re-form (B6375): the spirit's token leaves the map (hidden) on a Gnosis roll (dice forced to 10s)
  * Result: Data/wodx-gate/gatecharms-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -149,6 +153,44 @@ export async function run() {
       const WC = game.modules.get("wodx-combat")?.api;
       const kind = WC?.getProfile?.(body());
       G.ok("11. WoDX Combat: a Creature spirit soaks as a spirit", kind === "spirit", {kind});
+    });
+
+    const dice0 = CONFIG.Dice.randomUniform;
+    const tens = async () => {
+      for ( const u of [0.05, 0.95] ) { CONFIG.Dice.randomUniform = () => u; if ( (await new Roll("1d10").evaluate()).dice[0].results[0].result === 10 ) return; }
+    };
+    await body().createEmbeddedDocuments("Item", ["Umbraquake", "Short Out", "Re-form"].map(charm));
+    await G.step("12. Umbraquake: the one near is thrown down and hurt", async () => {
+      await A.limits?.clear?.(body());
+      await v().update({"system.health.damage.bashing": 0, "system.health.damage.aggravated": 0});
+      await tens();
+      try { await K.use(body(), "umbraquake"); } finally { CONFIG.Dice.randomUniform = dice0; }
+      const down = () => !!CH?.conditions?.hasCondition?.(v(), "knockdown") || [...(v()?.effects ?? [])].some(e => e.flags?.["wodx-chronicle"]?.timed?.key === "wodx-charm-quake");
+      await waitFor(() => down() && Number(v()?.system?.health?.damage?.bashing) > 0, 6000);
+      G.ok("12. Umbraquake: the one near is thrown down and hurt", down() && Number(v()?.system?.health?.damage?.bashing) > 0,
+        {down: down(), bashing: v()?.system?.health?.damage?.bashing});
+    });
+    await G.step("13. Short Out: the light nearby goes out", async () => {
+      await A.limits?.clear?.(body());
+      const [lamp] = await scene.createEmbeddedDocuments("AmbientLight", [{x: st.x + 150, y: st.y, config: {dim: 20, bright: 10}, flags: {world: {wodxGate: {gate: "gatecharms"}}}}]);
+      const year = (() => { try { return game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.() ?? null; } catch (e) { return null; } })();
+      const electric = !(Number(year) > 0 && Number(year) < 1880);
+      await tens();
+      try { await K.use(body(), "shortout"); } finally { CONFIG.Dice.randomUniform = dice0; }
+      const lit = () => !scene.lights.get(lamp.id)?.hidden;
+      await waitFor(() => electric ? !lit() : true, 6000);
+      const out = !lit();
+      let back = null;
+      if ( out ) { await CH.timed.endFor(body(), {key: "wodx-charm-shortout"}).catch(() => null); await waitFor(lit, 6000); back = lit(); }
+      await lamp.delete().catch(() => null);
+      G.ok("13. Short Out: the light nearby goes out", electric ? out && back === true : !out, {year, electric, out, back});
+    });
+    await G.step("14. Re-form: the spirit leaves the map", async () => {
+      await A.limits?.clear?.(body());
+      await tens();
+      try { await K.use(body(), "reform"); } finally { CONFIG.Dice.randomUniform = dice0; }
+      await waitFor(() => !!scene.tokens.get(st.id)?.hidden, 6000);
+      G.ok("14. Re-form: the spirit leaves the map", !!scene.tokens.get(st.id)?.hidden, {hidden: scene.tokens.get(st.id)?.hidden});
     });
   } catch (e) {
     G.R.errors.push(String(e?.message ?? e));

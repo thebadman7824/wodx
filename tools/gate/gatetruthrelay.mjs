@@ -12,6 +12,8 @@
  *     1. the attack fired wodxAttackRolled once on the Storyteller's client, and the bearer's sheath burned the
  *        player's fighter there: its health is 2 lethal worse than before the attack, besides step b
  *     2. the damage fired wodxDamageApplied once on the Storyteller's client, relayed, for the player's fighter
+ *     3. the fighter swore an oath of clasped hands to the bearer: the attack puts "breaks an oath" in the Storyteller's
+ *        approval queue (WoDX Actions' oath listener, which acts on the Storyteller's client only)
  *   then puts the dice and every setting back and removes what it made.
  * Result: Data/wodx-gate/gatetruthrelay-result.json. The clock never moves.
  */
@@ -58,6 +60,8 @@ async function setup() {
   const combat = await G.make(Combat, {scene: scene.id, active: true});
   await combat.createEmbeddedDocuments("Combatant", [tf, tb].map(t => ({tokenId: t.id, sceneId: scene.id, actorId: t.actorId})));
   await combat.startCombat();
+  // B6374: the fighter swore an oath of clasped hands with the bearer, so the attack should go to the Storyteller to break it
+  await fighter.setFlag("wodx-actions", "c20oaths", [{kind: "clasped", parties: [bearer.name], terms: "WoDX gate: never to raise a hand against the bearer"}]);
   await fixDice(2);
   const seen = {attack: [], damage: []};
   const hooks = [
@@ -108,6 +112,11 @@ async function finish(ids, playerSteps = []) {
       {fired: atk, lethal0: ids.lethal0, lethal: lethal(fighter), want: n(ids.lethal0) + 4});
     const dmg = seen.damage.filter(d => d.relayed && d.levels === 2 && d.type === "lethal");
     G.ok("2. the player's damage fires once on the Storyteller's client", dmg.length === 1, {fired: seen.damage});
+    // 3. the oath: the relayed attack reaches WoDX Actions' oath listener on this client, which asks the Storyteller
+    const key = `oath:${ids.fighter}:0`;
+    const ap = () => game.modules.get("wodx-chronicle")?.api?.approvals;
+    const asked = await waitFor(() => [...(ap()?.pending?.() ?? []), ...(ap()?.history?.() ?? [])].some(e => e.key === key), 6000);
+    G.ok("3. the player's attack on someone an oath protects asks the Storyteller", !!asked, {key});
   } catch (e) { G.R.errors.push(e?.message ?? String(e)); }
   finally {
     for ( const [h, id] of [["wodxAttackRolled", hooks[0]], ["wodxDamageApplied", hooks[1]]] ) Hooks.off(h, id);

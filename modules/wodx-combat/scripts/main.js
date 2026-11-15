@@ -788,6 +788,8 @@ function resolveTokens(attackerArg, targetArg) {
  * limit only shown, that last one is a warning (pastWalk), not a refusal.
  */
 function noAttackWhy(attacker, attackerTok) {
+    // B6372: asleep for the day or out cold (WoDX Actions api.cannotAct): a player makes no attack; the Storyteller still may
+    try { const idle = game.modules.get("wodx-actions")?.api?.cannotAct?.(attacker); if (idle && !game.user.isGM) return { why: String(idle).replace(/\.$/, "") }; } catch (e) { /* Actions off */ }
     const lost = attacker?.getFlag?.(MOD, "lostAction");
     if (lost && R.lostActionNow(lost, game.combats?.get?.(lost.combat))) return { why: `${attacker.name} failed to stand up and has lost this turn's action (V20 Dark Ages p. 348)` };
     const tok = attackerTok?.document ?? attackerTok ?? attacker?.getActiveTokens?.()?.[0]?.document ?? null;

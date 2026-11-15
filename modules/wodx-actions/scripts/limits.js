@@ -5,6 +5,8 @@
 import * as L from "./limit-rules.js";
 import * as AFC from "./after-costs.js";
 import * as ACR from "./after-cost-rules.js";
+import * as PM from "./power-mods.js";
+import * as TH from "./trait-hooks.js";
 
 const MOD = "wodx-actions";
 const FLAG = "limits";
@@ -80,6 +82,16 @@ export function decorate(root, {actor, sel = "select[name=power]", powerOf}) {
       if ( !o.textContent.endsWith(" (used)") ) o.textContent += " (used)";
     } else if ( st.barred.length ) o.title = st.why;
   }
+  // B6371: Lucky, Destiny and Fate: the same "roll again if it fails" as the Any roll window, on every power window
+  try {
+    FORTUNE_OFF.delete(actor.id);
+    const form = box.closest?.("form");
+    if ( form && !form.querySelector("[name=lucky]") && TH.luckyLeft(actor) ) {
+      const at = box.closest(".form-group") ?? box;
+      at.insertAdjacentHTML?.("afterend", TH.luckyHtml(actor, s => String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]))));
+      form.querySelector("[name=lucky]")?.addEventListener("change", ev => { if ( ev.target.checked ) FORTUNE_OFF.delete(actor.id); else FORTUNE_OFF.add(actor.id); });
+    }
+  } catch (e) { /* no form */ }
   // A window that opens on a used power moves to the first free one
   if ( box.selectedOptions?.[0]?.disabled ) {
     const free = [...box.options].find(o => !o.disabled);
@@ -91,7 +103,7 @@ export function decorate(root, {actor, sel = "select[name=power]", powerOf}) {
  * Before the roll: may the power be used? Players are refused with the reason; the Storyteller may allow it once.
  * Returns null when refused, else {diff, done}: diff is Drained's +1, and done({successes, fail}) files the use.
  */
-export async function gate(actor, power, {targets = null} = {}) {
+export async function gate(actor, power, {targets = null, penalty = true} = {}) {
   // B6156: a sleeping or out-cold character uses no power (the Storyteller still may, to run a scene)
   if ( refuseIdle(actor) ) return null;
   const tg = targets ?? targetActors();
@@ -109,12 +121,17 @@ export async function gate(actor, power, {targets = null} = {}) {
     await actor.unsetFlag(MOD, "powerDulled");
     ui.notifications?.info(`${actor.name}: ${dull.dice} dice fewer, dulled by ${dull.by ?? "a fomor"} (Homogeneity, W20 p. 434).`);
   }
+  armFortune(actor); // B6371
+  // B6370: a penalty on every roll (a broken feeding law, until dawn) takes its dice from this power's roll as well
+  // (penalty: false for a window that already reads it through its own roll effects, as M20 magick does)
+  const pen = penalty ? (() => { try { return PM.penaltyOf(actor); } catch (e) { return {dice: 0, parts: []}; } })() : {dice: 0, parts: []};
+  if ( pen.dice < 0 ) DULL = {dice: (DULL && Date.now() - DULL.at < 30000 ? DULL.dice : 0) - pen.dice, at: Date.now()};
   const free = st.barred.length ? tg.filter(t => !st.barred.includes(t?.uuid)) : tg;
   if ( st.barred.length && st.ok ) ui.notifications?.info(`${st.why} Not on: ${tg.filter(t => st.barred.includes(t?.uuid)).map(t => t.name).join(", ")}.`);
   // B6157: every registered condition's own difficulty (Drained among them), not only Drained
   const cm = conditionMods(actor);
   return {
-    diff: cm.diff, label: cm.parts.join(", "), free, why: st.why,
+    diff: cm.diff, label: [...cm.parts, ...pen.parts].join(", "), free, why: st.why,
     done: async ({successes = 1, fail = null} = {}) => {
       const failed = fail ?? !(successes > 0);
       await file(actor, power, {targets: tg, fail: failed});
@@ -123,6 +140,22 @@ export async function gate(actor, power, {targets = null} = {}) {
       if ( !failed ) await AFC.filed(actor, power, {targets: tg, successes}).catch(e => console.warn("WoDX | after-cost", e));
     }
   };
+}
+
+/**
+ * B6371: the reroll a power's roll may take (Lucky, Destiny, Fate): the gate arms it for the roll that follows, and
+ * the dice roller spends it only when that roll fails. The power's effect is worked out from the roll that stands,
+ * so nothing has to be undone. A window whose box was unticked leaves it unarmed.
+ */
+const FORTUNE_OFF = new Set();
+let FORTUNE = null;
+export function armFortune(actor) {
+  FORTUNE = actor && !FORTUNE_OFF.has(actor.id) && TH.luckyLeft(actor) ? {actor, at: Date.now()} : null;
+  return !!FORTUNE;
+}
+export function takeFortune() {
+  const f = FORTUNE; FORTUNE = null;
+  return f && Date.now() - f.at < 15000 ? f.actor : null;
 }
 
 /** B5618: the dice Homogeneity takes from the roll that follows a gate (once, within half a minute). */

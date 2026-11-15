@@ -9,6 +9,8 @@
  *   4. an attack on someone an oath binds you to breaks the oath at once
  *   5. a proposed Parted Mists spends the Glamour and makes the Enchantment last
  *   6. a proposed pact links the thrall and puts the gifts on the sheet
+ *   6b. the thrall calls on the pact gift (B6376): Willpower at its difficulty (dice forced to 10s), the effects card, and
+ *       once applied the gift's boost reaches the thrall's own rolls (WoDX Actions power effects)
  *   7. a True Name called brings the demon beside the caller on the map
  * Result: Data/wodx-gate/gateservants4-result.json.
  */
@@ -72,6 +74,30 @@ export async function run() {
       const th = game.actors.get(demon.id).getFlag("wodx-actions", "demon")?.thralls ?? [];
       const gifts = game.actors.get(mortal.id).items.filter(i => i.flags?.["wodx-actions"]?.pactGift);
       G.ok("6. a pact on sight", th.some(t => t.actorId === mortal.id) && gifts.length >= 1, {thralls: th.length, gifts: gifts.length});
+    });
+    await G.step("6b. the pact gift answers", async () => {
+      const A = game.wodxActions;
+      const dice0 = CONFIG.Dice.randomUniform;
+      for ( const u of [0.05, 0.95] ) { CONFIG.Dice.randomUniform = () => u; if ( (await new Roll("1d10").evaluate()).dice[0].results[0].result === 10 ) break; }
+      const since = Date.now();
+      const ok = new Promise(resolve => {
+        const id = Hooks.on("renderDialogV2", (app, el) => {
+          const root = el?.querySelector ? el : app.element;
+          if ( !root?.querySelector?.("form") ) return;
+          Hooks.off("renderDialogV2", id);
+          setTimeout(() => { root.querySelector("button[data-action=ok]")?.click(); resolve(true); }, 50);
+        });
+        setTimeout(() => resolve(false), 8000);
+      });
+      try { await A.pactGift({actor: game.actors.get(mortal.id)}); await ok; } finally { CONFIG.Dice.randomUniform = dice0; }
+      await wait(800);
+      const card = game.messages.filter(m => m.timestamp >= since && /calls on a pact gift/.test(m.content ?? "")).at(-1);
+      const items = card?.flags?.["wodx-actions"]?.items ?? [];
+      for ( const it of items ) await A.effects?.apply?.(it, mortal.name).catch(e => G.R.notes.push(`apply: ${e?.message ?? e}`));
+      await wait(600);
+      const m = game.actors.get(mortal.id);
+      const boost = Math.max(Number(A.powerMods?.of?.(m, {tags: ["charisma", "social"]})?.dice) || 0, Number(A.powerMods?.of?.(m, {tags: ["strength", "physical"]})?.dice) || 0);
+      G.ok("6b. the pact gift answers", !!card && items.length >= 1 && boost > 0, {card: !!card, items: items.length, boost});
     });
     await G.step("7. a True Name brings the demon to the map", async () => {
       await C.propose({type: "wodx-actions.pressName", key: `gate4:press:${mortal.id}`, title: "gate", data: {caller: mortal.id, demon: demon.id, cmd: "kneel", scene: scene.id}});
