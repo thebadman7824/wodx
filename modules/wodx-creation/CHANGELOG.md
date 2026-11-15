@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.71.0 (A Fetter that is a place is checked against the town over time when the era moves on (B5391))
 - 0.70.0 (Ghouled animals, step three (B5058 to B5064): traits for every animal kind from the V20 Dark Ages animals list (pp. 396 to 399), with house figures for the kinds it leaves out. Three steps of training: trained gives the traits the list puts in brackets, war-trained (horses, camels, elephants, guard dogs and hounds) adds a dot of Brawl and is the mark the mounts rules read to stop a horse shying. Training costs 5 experience, then 10, or runs as a long task (Manipulation + Animal Ken, difficulty 7, a roll a week). Breeds by year and land, from destriers and alaunts to Dobermanns and salukis. In the wizard's Backgrounds page a vampire picks the kind, land, breed and training for each Retainers dot; dots put together make one tougher beast with the Storyteller's leave)
 - 0.69.0 (Golconda lifts the Generation's limit on Traits (B5091, V20 Dark Ages p. 359))
 - 0.68.0 (Dutch names raised to 300 (B5440); Greek names raised to 300 (B5460); Irish names raised to 300 (B5450); Polish names raised to 300 (B5470); Portuguese names raised to 300 (B5430))
