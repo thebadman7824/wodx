@@ -8538,6 +8538,6 @@ WoDX Creation. Ben asked for every list under 300 names to be filled out (15 Nov
 Reverse: restore the sephardi entry in data/people-world.mjs and drop sephardi from RAISED.
 
 ## B5580. Mizrahi names raised to 300 (2026-11-15)
-WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Mizrahi list grows from 138 names to 424: more names from the Cairo Geniza, Baghdad, Persia, Yemen and the Maghreb, with more town names before 1800 and family names after; the names gate sample for modern family names is drawn from 400 people instead of 100, as the longer list makes each name rarer. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Mizrahi list grows from 138 names to 424: more names from the Cairo Geniza, Baghdad, Persia, Yemen and the Maghreb, with more town names before 1800 and family names after; the harness check for modern family names is drawn from 400 people instead of 100, as the longer list makes each name rarer. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: restore the mizrahi entry in data/people-world.mjs and drop mizrahi from RAISED.
