@@ -46,6 +46,7 @@ import * as VX from "./voice.js";
 import * as TR from "./theme-rules.js";
 import * as MXD from "./mage-da.js";
 import * as FXD from "./fae-da.js";
+import * as TRS from "./treasures.js";
 import * as CXD from "./c20.js";
 import * as DXD from "./demon.js";
 import * as DR from "./demon-rules.js";
@@ -2852,9 +2853,15 @@ function mx() {
 let FXE = null;
 /** Dark Ages fae (3.8.0, Phase 6g). */
 function fx() {
-    return FXE ??= FXD.build({ post, rollPool, rollBlock, dialog, setFlag, attr, background, findAbility, spendWillpower, notify: m => ui.notifications.warn(m),
+    return FXE ??= FXD.build({ post, rollPool, rollBlock, dialog, setFlag, attr, background, findAbility, spendWillpower, notify: m => ui.notifications.warn(m), imbue: (a, o) => trx().imbue(a, o),
         traits: a => [...ATTRS.map(k => ({ key: k, label: game.i18n.localize(a.system?.attributes?.[k]?.label || k) || k, value: attr(a, k) })),
             ...abilityList(a).map(x => ({ key: x.key, label: x.name, value: x.value }))] });
+}
+
+let TRE = null;
+/** B6560: faerie Treasures, every era. */
+function trx() {
+    return TRE ??= TRS.build({ post, rollPool, rollBlock, dialog, attr, findAbility, notify: m => ui.notifications.warn(m) });
 }
 
 let SOE = null;
@@ -3279,6 +3286,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     daCountermagic: withActor(a => mx().counter(a)), daGuide: withActor(a => mx().guide(a)), daCertamen: withActor(a => mx().certamen(a)),
     daMageInfo: a => mx().info(resolveActor(a)), daFade: () => mx().fadeAll(), daBacklashButton: (msg, what) => mx().onButton(msg, what),
     // Dark Ages fae (3.8.0)
+    treasureUse: withActor(a => trx().use(a)), treasureGive: withActor(a => trx().give(a)), treasureOath: withActor(a => trx().keepOath(a)), treasuresOf: a => TRS.treasuresOf(resolveActor(a)), treasureDaily: () => trx().daily(),
     daFae: withActor(a => fx().sheet(a)), daCantrip: withActor(a => fx().cast(a)), daUnleash: withActor(a => fx().unleash(a)),
     daCounter: withActor(a => fx().counter(a)), daEcho: withActor(a => fx().echo(a)), daMists: withActor(a => fx().mists(a)),
     daMien: withActor(a => fx().mien(a)), daOath: withActor(a => fx().keepOath(a)), daRest: withActor(a => fx().rest(a)),
@@ -3422,7 +3430,7 @@ Hooks.once("ready", async () => {
         SUM.connect(chronicle() ?? game.modules.get("wodx-chronicle")?.api);
         // B4920-B4923: the one scene count, power use limits and Drained
         try { LIM.setup();
-        FOM.setup(); CHM.setup(); AFC.setup(); } catch (e) { console.error("WoDX | limits", e); }
+        FOM.setup(); CHM.setup(); TRS.setup(); AFC.setup(); } catch (e) { console.error("WoDX | limits", e); }
         // B5783: when a fight ends, an NPC demon with Alter Memory makes the mortals who saw it forget
         Hooks.on("deleteCombat", c => { if (game.user.isGM && game.users.activeGM?.id === game.user.id) coverUp(c).catch(e => console.warn("WoDX | cover up", e)); });
         // Lifted and planted items, and being caught at it (3.21.0)
@@ -3549,7 +3557,7 @@ function kindredHooks() {
     // One run at a time; a move of the clock during a run gets one more run after it, so the newest time is never dropped.
     // Each routine runs on its own, so one that fails does not stop the rest.
     let fadeBusy = false, fadeAgain = false;
-    const clockRoutines = [() => mx().fadeAll(), () => fx().daily(), () => dx().daily(), () => ux().daily(), () => zx().shedAll(),
+    const clockRoutines = [() => mx().fadeAll(), () => fx().daily(), () => trx().daily(), () => dx().daily(), () => ux().daily(), () => zx().shedAll(),
         () => wx().restAll(), () => ox().restAll(), () => cx().healChimerical(), () => svx().enchantDaily()];
     async function fadeRun() {
         fadeBusy = true;
