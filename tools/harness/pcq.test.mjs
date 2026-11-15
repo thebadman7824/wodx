@@ -166,4 +166,6 @@ test("failing gates and recheck verdicts", async () => {
   assert.match(v[1].verdict, /passes alone/);
   assert.match(v[2].verdict, /NEW/);
   assert.match(recheckVerdicts(["gatea"], "gatea: 1/2 passed", null)[0].verdict, /fails alone too/);
+  // B5590: a gate the change adds fails on main only because it is not there: that is the change's to fix.
+  assert.match(recheckVerdicts(["gatea"], "gatea: 1/2 passed", "gatea: ERROR no such gate", new Set(["gatea"]))[0].verdict, /NEW with this change: the gate is not on main/);
 });
