@@ -78,8 +78,15 @@ async function setup() {
   // Chronicle gives an unseeded world its start level 1.5 s after a Storyteller loads (B4860). A lane reset from its
   // snapshot is unseeded, so the seed would otherwise land in the middle of this setup and the switch would find its
   // settings already set, and never put them back. Wait for it, then read the values to restore.
-  if ( game.settings.settings.has(`${CHRON}.automationSeeded`) ) await until(() => read(CHRON, "automationSeeded") === true, 8000);
-  await sleep(500);
+  // The seed marks the world seeded first and only then moves the level, writing the queue's standing rules last, so
+  // wait until the level, its base and the standing rules have stood still for 2.5 s as well.
+  if ( game.settings.settings.has(`${CHRON}.automationSeeded`) ) {
+    await until(() => read(CHRON, "automationSeeded") === true, 8000);
+    const snap = () => JSON.stringify([read(CHRON, "automationLevel"), read(CHRON, "automationBase")?.at ?? null, read(CHRON, "autoApprove") ?? {}]);
+    let last = snap(), since = Date.now();
+    const end = Date.now() + 20000;
+    while ( Date.now() < end && Date.now() - since < 2500 ) { await sleep(250); const now = snap(); if ( now !== last ) { last = now; since = Date.now(); } }
+  }
   const ids = {since: Date.now(), t0: game.time.worldTime, back: canvas.scene?.id ?? null, steps,
     wasOn: !!read(MOD, "on"), wait: read(MOD, "wait"), act: read(MOD, "act"),
     before: (R?.PRESET ?? []).map(p => ({mod: p.mod, key: p.key, value: read(p.mod, p.key)})), auto: foundry.utils.deepClone(read(CHRON, "autoApprove") ?? {})};
