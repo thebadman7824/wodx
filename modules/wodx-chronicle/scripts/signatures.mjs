@@ -374,7 +374,8 @@ function onSocial(p) {
 function goodNamed(name) {
   if ( !name ) return null;
   const lib = actorsApi("wodx-library"), key = String(name).toLowerCase();
-  const g = lib?.rules?.GOODS?.find?.(x => String(x.name).toLowerCase() === key);
+  // B6203: the goods list is Library api.look.goods(); api.rules is Gear's rules and has none
+  const g = lib?.look?.goods?.()?.find?.(x => String(x.name).toLowerCase() === key);
   let substance = null;
   try { substance = g ? lib?.use?.rules?.substanceOf?.(g) ?? null : null; } catch (e) { substance = null; }
   return {name: String(name), kind: g?.kind ?? null, substance};

@@ -53,7 +53,11 @@ export async function run() {
         if ( !found.length ) misses.push(`${k.replace(/^modules\//, "").replace(" wodx-", ">")} ${paths.map(p => p.join(".")).join("|")}`);
         else if ( found.length < paths.length ) partial.push(`${k}: ${paths.filter(p => !holds(api, p)).map(p => p.join(".")).join(" | ")}`);
       }
-      G.ok("2. every api read finds its path", !misses.length, {misses, places: places.size, partialFallbacks: partial.length, partial: partial.slice(0, 40)});
+      // what Library's api holds, and why its look could be missing (B6203)
+      const lib = game.modules.get("wodx-library")?.api;
+      let lookStart = lib?.look ? "started" : null;
+      if ( !lookStart ) try { const Lk = await import("/modules/wodx-library/scripts/look.mjs"); await Lk.setupLook(); lookStart = `restartable: ${Object.keys(Lk.api()).length} keys`; } catch (e) { lookStart = `error: ${e?.message ?? e}`; }
+      G.ok("2. every api read finds its path", !misses.length, {misses, libraryKeys: Object.keys(lib ?? {}), lookStart, places: places.size, partialFallbacks: partial.length, partial: partial.slice(0, 40)});
     });
   } finally { return G.finish(); }
 }
