@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6060
+Next free block: B6140
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -331,6 +331,7 @@ Next free block: B6060
 | B6000-B6019 | Rituals and powers that really work: every effect read by a roll, soak, token or map system (used B6000-B6018) | Actions, Combat |
 | B6040-B6049 | Lone Chronicle step 4: the director, experience from the night's log, the recap (used B6040-B6049) | Solo |
 | B6050-B6059 | gate7b fresh arena each run (used B6050-B6051) | tools (gates) |
+| B6130-B6139 | The eight held-back world timeline readings after the book check (used B6130-B6132) | Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10145,3 +10146,18 @@ suggestion for that step. The runner's flight from a far foe has nowhere to go, 
 first, which walks it round the wall to the hero.
 
 Reverse: keep the arena between runs again, drop the scene's mode and take the first attack or flight.
+
+## B6130. The held readings go in, worded as the books back them (2026-11-15)
+WoDX Chronicle, tools/timeline/build-world-history.mjs. WAITING is empty. The book check (project files global-world/book-check-readings.md, finished in the cloud from the OCR text) settled each card. 1521: Wraith 20th (pdf 101, 512 to 517) breaks the Dark Kingdom of Obsidian through the heretics' Flaying and the storm after it, so the card names the Flaying, with the plague and siege dead as the background, and the survivors' Mictlan. 1692: Verbena Revised (pdf 43) keeps the Verbena out of the trials; no book has hunters and mages blaming each other, so that part is gone. 1791: Wraith 20th (pdf 521) has Les Invisibles fan the slave revolts and the Mirrorlands battered by storms and Baka; the lwa among the rebels "by both sides" had no book and is gone. 1885: Wraith 20th (pdf 517 to 518, the Bush of Ghosts behind a false Ivory Queen) and Kindred of the Ebony Kingdom (pdf 16, Laibon fighting the Portuguese around 1540) back a continent already held. 1890: the Wendigo tribebook (pdf 28, 50 to 51) backs Garou among the Ghost Dancers. 1994: Kindred of the Ebony Kingdom (pdf 168) keeps the genocide mortal with elders using the chaos, and A World of Rage (pdf 94 to 95) has the Wyrm feed on it; no book ties it to the lands of the dead, so the card no longer says so and is renamed The killing in Rwanda.
+
+Reverse: put the eight year|title keys back in WAITING and rebuild.
+
+## B6131. The Croatan card stays out: the book event tells it (2026-11-15)
+WoDX Chronicle. The 1589 card agrees with the books (Past Lives pdf 66 to 70 gives the year), but the book event croatan already fires on that date with the same story, so the card joins TOLD_BY_BOOK and nothing fires twice.
+
+Reverse: remove "1589|The Croatan" from TOLD_BY_BOOK.
+
+## B6132. The 1830 card is the Squattocracy, not the start of the War of Tears (2026-11-15)
+WoDX Chronicle. Rage Across Australia (pdf 20 to 21) has the Wyrm's agents hold much of the colony's economy by 1830 and form the Squatters' Council, while the Bunyip withdraw inland; its War of Tears (pdf 23 to 24) is a single year of killing, told later in the book, and Past Lives (pdf 70) sets the Bunyip's last stand in 1937. The card no longer starts the war in 1830. It tells the Squattocracy instead, and the war stays the book event war-of-tears at 1899 (W20, era advancement's lost-tribe year), whose date note now names Rage Across Australia and Past Lives so the Storyteller can move it to 1937.
+
+Reverse: restore the 1830 line "The War of Tears begins" in r3/age-of-reason.txt; move war-of-tears to 1937 in data/events.mjs to follow Past Lives.
