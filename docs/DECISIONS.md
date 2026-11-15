@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5840
+Next free block: B5850
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -310,6 +310,7 @@ Next free block: B5840
 | B5800-B5809 | NPC Aftercare Desk: what comes after each NPC action (used B5800-B5806) | NPC, Chronicle |
 | B5820-B5829 | Say or Do: systems that only posted text now act, second batch (used B5820-B5826) | Otherworlds, Senses, Chronicle, Storyteller, NPC |
 | B5830-B5839 | Gate failures on main, round two; run-gate names failed steps (used B5830-B5831) | tools (gates, lanes) |
+| B5840-B5849 | Gates traced by name: gate6b, gateconsensus, gatemounts (used B5840) | tools (gates) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9440,3 +9441,13 @@ compared the factions after Undo with a plain JSON.stringify, which fails when t
 Foundry 14 rule to pass a fresh options object to each document update.
 
 Reverse: put the old checks back.
+
+## B5840. gate6b, gateconsensus and gatemounts follow the features they test (2026-11-15)
+Gates. Now that run-gate names failed steps (B5830), three gates that failed on main were traced. gate6b's Delirium
+step relied on a token drawn a moment before taking a target, so the Kinfolk witness was sometimes missed; the
+witnesses are now passed in. gateconsensus pressed Done on the purify dialog, but B4992 made "begin now, clear it on
+the clock" the default; the step unticks it to test the at-once purify. In gatemounts a car tile starts facing
+right, so the step went on before the first move had finished and the move down was read as a diagonal; each move
+is now waited out.
+
+Reverse: drop the three set-ups.
