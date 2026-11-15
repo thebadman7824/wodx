@@ -52,6 +52,9 @@ export function cultDrift({step = 1, last = 0} = {}, now = 0, {mistreated = fals
 /* -- NPC keepers --------------------------------------------------- */
 /** The line words keepers use, from an actor type. */
 export const LINE_OF_TYPE = {Vampire: "vampire", Mage: "mage", Werewolf: "werewolf", Demon: "demon", Wraith: "wraith", Mummy: "mummy", Changeling: "changeling"};
+/** B6310: the KEEPERS row set for an all-lines key (lines-rules.mjs): "" for a line that keeps no servants of its own. */
+export const keeperLine = key => ({vampire: "vampire", "kuei-jin": "kuei-jin", werewolf: "werewolf", fera: "werewolf", mage: "mage", wraith: "wraith",
+  mummy: "mummy", demon: "demon", changeling: "changeling"})[key] ?? "";
 /** How many more of a row a master needs: the target count, less what it already keeps of that kind. */
 export const shortfall = (target, have) => Math.max(0, num(target) - num(have));
 /**

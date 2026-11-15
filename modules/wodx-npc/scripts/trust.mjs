@@ -71,9 +71,7 @@ export async function betray(byLike, ofLike, {kind = "other", what = ""} = {}) {
 /* ---- Boons ---- */
 export function debtWord(actorLike) {
   const a = actorOf(actorLike);
-  const t = String(a?.type ?? "").toLowerCase();
-  const line = t === "vampire" ? "vampire" : t === "werewolf" ? "werewolf" : t === "mage" ? "mage" : t.startsWith("changel") ? "changeling" : t === "wraith" ? "wraith"
-    : t === "hunter" ? "hunter" : t === "mummy" ? "mummy" : t === "demon" ? "demon" : /kuei|cathayan/.test(t) ? "kueijin" : "mortal";
+  const line = lineOfA(a); // B6310: the all-lines key, so a Kuei-jin owes face and a Fera honour
   return TRR.debtWordFor(line);
 }
 export async function tradeBoon(entryId, newHolderLike) {
@@ -140,8 +138,7 @@ export async function setSide(actorLike, side) {
 /** Who can find it out, and how: the powers of the viewer's line, with roll and difficulty, for the Storyteller. */
 export function howToFind(viewerLike) {
   const v = actorOf(viewerLike);
-  const t = String(v?.type ?? "mortal").toLowerCase();
-  return TRR.sensesFor(t.startsWith("changel") ? "changeling" : t);
+  return TRR.sensesFor(lineOfA(v)); // B6310: a Kuei-jin has no Auspex; a Fera reads as the Garou do
 }
 export async function foundSide(actorLike, finderLike) {
   const a = actorOf(actorLike), f = actorOf(finderLike);

@@ -14,6 +14,7 @@
  *             setting "Cards for loved ones", on by default
  */
 import * as H from "./hearts-rules.mjs";
+import * as LR from "./lines-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
 
 const MOD = "wodx-npc";
@@ -36,15 +37,13 @@ function ageCheck(...people) {
   return out;
 }
 
-/** The line a sheet belongs to. */
+/** The line a sheet belongs to (B6310: the all-lines key, so a Kuei-jin is not read as Kindred nor a Fera as a mortal). */
 export function lineOf(actorLike) {
-  const a = actorOf(actorLike);
-  const t = String(a?.type ?? "").toLowerCase();
-  if ( t === "mortal" ) return a?.flags?.["wodx-creation"]?.lineage?.kinfolk || a?.flags?.[MOD]?.kinfolk ? "kinfolk" : a?.flags?.["wodx-creation"]?.ghoul || a?.flags?.[MOD]?.ghoul ? "ghoul" : "mortal";
-  if ( t.startsWith("changel") ) return "changeling";
-  if ( /kuei|cathayan/.test(t) ) return "kueijin";
-  return ["vampire", "werewolf", "mage", "wraith", "hunter", "mummy", "demon"].includes(t) ? t : "mortal";
+  return LR.tableLine(LR.lineKey(actorOf(actorLike), linesApi()));
 }
+/** The all-lines key itself (lines-rules.mjs KEYS). */
+export const lineKeyOf = actorLike => LR.lineKey(actorOf(actorLike), linesApi());
+const linesApi = () => { try { return game.modules.get("wodx-creation")?.active ? game.modules.get("wodx-creation").api?.lines ?? null : null; } catch (e) { return null; } };
 const pathOf = a => { const c = String(a?.system?.advantages?.path?.custom ?? "").trim(); return c && !/humanit/i.test(c) ? c : ""; };
 const humanityOf = a => Number(a?.system?.advantages?.path?.permanent ?? a?.system?.advantages?.humanity?.permanent) || 0;
 const regionNow = () => { try { return chron()?.world?.homeland?.() || "moravia"; } catch (e) { return "moravia"; } };
@@ -60,7 +59,9 @@ const on = () => { try { return !!game.settings.get(MOD, "heartCards"); } catch 
 export const warmthOf = (lover, loved) => { const a = actorOf(lover), b = actorOf(loved); return H.normWarmth(a?.flags?.[MOD]?.warmth)[b?.id ?? loved]?.value ?? 0; };
 export function hindranceFor(lover, loved) {
   const a = actorOf(lover), b = actorOf(loved);
-  return H.hindrance({line: lineOf(b), path: pathOf(b), humanity: humanityOf(b), rage: Number(b?.system?.advantages?.rage?.permanent) || 0}, {line: lineOf(a)});
+  const lb = lineOf(b);
+  return H.hindrance({line: lb, path: pathOf(b), humanity: lb === "kueijin" ? Number(b?.system?.advantages?.dharma?.permanent) || 0 : humanityOf(b),
+    rage: Number(b?.system?.advantages?.rage?.permanent) || 0, torment: Number(b?.system?.advantages?.torment?.permanent ?? b?.system?.advantages?.torment?.temporary) || 0}, {line: lineOf(a)});
 }
 export async function court(lover, loved, event, {successes = 0, botch = false, why = ""} = {}) {
   const a = actorOf(lover), b = actorOf(loved);
@@ -212,7 +213,7 @@ export function upkeepOf(aLike, months = 1) {
   const m = money?.money?.();
   const wage = m && money.rules?.wageAt ? money.rules.wageAt(yearNow(), m.region) : 0;
   const cost = H.householdCost(householdOf(a), wage, months);
-  return {...cost, risk: H.masqueradeRisk(lineOf(a), householdOf(a)), text: m ? money.format(cost.total) : String(cost.total)};
+  return {...cost, risk: H.masqueradeRisk(lineOf(a), householdOf(a), {kinfolk: householdOf(a).filter(x => x.id && lineOf(x.id) === "kinfolk").map(x => x.id)}), line: lineOf(a), text: m ? money.format(cost.total) : String(cost.total)};
 }
 async function onMonth({months = {}} = {}) {
   if ( !isActiveGM() ) return;
@@ -223,7 +224,7 @@ async function onMonth({months = {}} = {}) {
     const u = upkeepOf(a, n);
     if ( !u.total ) continue;
     try { await st().upkeep.money.pay(a, u.total, {note: "Household"}); } catch (e) { continue; }
-    lines.push(`${a.name}: ${u.rows.length} under the roof, ${u.text}.${u.risk === 2 ? " Many mortals in a Kindred's haven: the Masquerade is at great risk." : u.risk ? " Mortals in a Kindred's haven: a risk to the Masquerade." : ""}`);
+    lines.push(`${a.name}: ${u.rows.length} under the roof, ${u.text}.${H.riskWords(u.line, u.risk)}`);
   }
   if ( lines.length ) await ChatMessage.create({whisper: gmIds(), speaker: {alias: "WoDX"}, flags: {[MOD]: {household: true}}, content: card("The month's household keep", lines)});
 }

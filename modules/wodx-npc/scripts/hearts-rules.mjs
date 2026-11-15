@@ -7,6 +7,7 @@
  *   household  flags["wodx-npc"].household [{id, name, role}]
  * The numbers are house rules (B2855, B2859, B2861); the laws are dated readings of history (B2857).
  */
+import {SECRET} from "./lines-rules.mjs";
 
 /* ------------------------------------------------------------------ */
 /*  Courtship and romance (h1)                                         */
@@ -64,6 +65,15 @@ export function hindrance(who = {}, partner = {}) {
   if ( who.line === "changeling" && mortal ) notes.push("The Mists cloud what a mortal lover remembers of the fae's true self.");
   if ( who.line === "wraith" ) { cap = Math.min(cap, 2); notes.push("Across the Shroud, love is a Passion, not an embrace."); }
   if ( who.line === "mage" && mortal ) notes.push("A mortal lover near open magick draws Paradox.");
+  // B6311: the other lines' own truths (Kindred of the East, Demon: the Fallen, Mummy: the Resurrection, Hunter: the Reckoning)
+  if ( who.line === "kueijin" ) {
+    if ( Number(who.humanity) > 0 && Number(who.humanity) <= 3 ) { cap = Math.min(cap, 2); notes.push("With Dharma this low the P'o shows through: no more than Fond."); }
+    notes.push("A Cathayan lover takes Chi from breath and blood, keeps to the night, and hides what they are.");
+  }
+  if ( who.line === "demon" && Number(who.torment) >= 7 ) { cap = Math.min(cap, 2); notes.push("High Torment turns love to possession: no more than Fond."); }
+  if ( who.line === "demon" && mortal ) notes.push("A mortal lover may become a thrall: a pact for Faith, whether or not either means it.");
+  if ( who.line === "mummy" && mortal ) notes.push("The mummy outlives every lover and comes back from death; the lover grows old alone.");
+  if ( who.line === "hunter" && mortal ) notes.push("The hunt comes first, and what hunts the hunter finds whoever stands close.");
   return {cap, halve, notes};
 }
 /** One event on the warmth one person feels for another. Returns the new map. */
@@ -246,10 +256,21 @@ export function householdCost(list = [], wage = 0, months = 1) {
   return {rows, total: rows.reduce((s, r) => s + r.cost, 0) * Math.max(0, Number(months) || 0)};
 }
 /** A Kindred keeping mortals under the roof: how much the Masquerade is at risk (0 none, 1 some, 2 great). */
-export function masqueradeRisk(line, list = []) {
-  if ( line !== "vampire" ) return 0;
-  const n = normHousehold(list).filter(x => ["spouse", "child", "kin", "servant", "ward"].includes(x.role)).length;
+export function masqueradeRisk(line, list = [], {kinfolk = []} = {}) {
+  const sec = SECRET_OF[line];
+  if ( !sec ) return 0;
+  // B6312: Kinfolk know the truth of the Garou they live with, so only the others count for a werewolf's home
+  const kin = new Set((kinfolk ?? []).map(String));
+  const n = normHousehold(list).filter(x => ["spouse", "child", "kin", "servant", "ward"].includes(x.role) && !(sec.kinfolkSafe && x.id && kin.has(x.id))).length;
   return n >= 3 ? 2 : n ? 1 : 0;
+}
+/** What each secret-keeping line risks, by the words hearts lineOf gives (lines-rules SECRET, B6312). */
+export const SECRET_OF = {vampire: SECRET.vampire, kueijin: SECRET["kuei-jin"], werewolf: SECRET.werewolf};
+/** The card's words for a risk: "" when there is none. */
+export function riskWords(line, risk) {
+  const s = SECRET_OF[line];
+  if ( !s || !risk ) return "";
+  return risk === 2 ? ` Many mortals in ${s.place}: ${s.what} is at great risk.` : ` Mortals in ${s.place}: a risk to ${s.what}.`;
 }
 
 /* ------------------------------------------------------------------ */
@@ -278,6 +299,10 @@ export function weakSpotChecks(line, kind, ev, {name = "them"} = {}) {
   if ( ev === "harm" || ev === "taken" ) {
     if ( line === "vampire" ) out.push({text: `Seeing ${name} ${ev === "taken" ? "taken" : "hurt"} may stir the Beast: a frenzy check (Self-Control or Instinct) at difficulty ${great ? 7 : 6}.`});
     else if ( line === "werewolf" ) out.push({text: `Rage at ${name} being ${ev === "taken" ? "taken" : "hurt"}: a frenzy check (Rage) at difficulty ${great ? 6 : 7}.`});
+    // B6313: the Kuei-jin's P'o (Kindred of the East pdf 82-84), the wraith's Shadow (Wraith 20th: Angst), the demon's Torment (Demon: the Fallen pdf 161-162)
+    else if ( line === "kueijin" ) out.push({text: `The P'o stirs at ${name} being ${ev === "taken" ? "taken" : "hurt"}: Hun at difficulty ${great ? 7 : 6} or the Shadow Soul rises.`});
+    else if ( line === "wraith" ) out.push({text: `The Shadow feeds on the fear for ${name}: Willpower at difficulty ${great ? 7 : 6}, or a point of temporary Angst.`});
+    else if ( line === "demon" ) out.push({text: `Anger for ${name}: Willpower at difficulty ${great ? 7 : 6}, or the demon lashes out in its Torment.`});
     else out.push({text: `Willpower at difficulty ${great ? 7 : 6} to keep a clear head while ${name} is ${ev === "taken" ? "held" : "in danger"}.`});
     if ( ev === "taken" ) out.push({text: "Whoever holds them has leverage: their demands go in the Ledger."});
   }
@@ -288,6 +313,9 @@ export function weakSpotChecks(line, kind, ev, {name = "them"} = {}) {
     if ( line === "werewolf" ) out.push({text: "Rage at the loss: a frenzy check at difficulty 6."});
     if ( line === "changeling" ) out.push({text: "Grief dims the Dreaming: Banality may rise by one (Storyteller)."});
     if ( line === "wraith" ) out.push({text: "A Passion tied to them may fade, and the Shadow speaks of it."});
+    if ( line === "kueijin" ) out.push({text: "If the Cathayan's own hand or neglect caused it, the Dharma is tested."});
+    if ( line === "demon" ) out.push({text: "If the demon's own hand caused it, a Virtue roll, or a point of temporary Torment (Demon: the Fallen pdf 162)."});
+    if ( line === "mummy" ) out.push({text: "A mummy outlives the living: a Willpower roll or the grief carries into the next death."});
   }
   return out;
 }

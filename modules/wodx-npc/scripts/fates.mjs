@@ -57,7 +57,7 @@ const isDead = a => a?.statuses?.has?.("dead") || num(a?.flags?.["wodx-creation"
 
 /** A sheet as the rules see it. */
 export function personOf(actor, year) {
-  const line = F.LINE_OF_TYPE[actor?.type];
+  const line = F.fatesLine(actor?.type, actor?.system?.settings?.variant);
   if ( !line ) return null;
   const s = actor.system ?? {}, c = actor.flags?.["wodx-creation"]?.chronology ?? {};
   const madeT = num(c.embraced) ?? num(c.awakened);

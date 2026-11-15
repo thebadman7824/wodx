@@ -13,6 +13,7 @@
  *   Flags: wodx-npc.mend {last}, kissed {until}, standoffs {otherId: at}, gone {why, at}, diedBy [ids], homeBefore.
  */
 import * as AC from "./aftercare-rules.mjs";
+import * as LM from "./line-mend.mjs";
 import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
 
 export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {
@@ -87,24 +88,18 @@ export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {
   }
 
   /* ---- n2: wounds ---- */
-  async function bloodMend(a) {
-    if ( String(a.type) !== "Vampire" ) return 0;
-    const pool = a.system?.advantages?.bloodpool;
-    const h = AC.bloodHeal(dmg(a), Number(pool?.temporary) || 0);
-    if ( !h.spent ) return 0;
-    if ( h.bashing ) await C()?.healDamage?.(a, "bashing", h.bashing);
-    if ( h.lethal ) await C()?.healDamage?.(a, "lethal", h.lethal);
-    await a.update({"system.advantages.bloodpool.temporary": (Number(pool.temporary) || 0) - h.spent});
-    return h.spent;
-  }
-  /** After a fight: each hurt NPC heals with blood (Kindred), then goes to be tended if laid up, and mends on the clock. */
+  /** Each line mends with its own power: blood, Chi, Pathos or Faith (line-mend.mjs, B6315). Returns what was spent. */
+  const lineMend = a => LM.mendOwn(a, {damage: dmg(a), heal: (x, type, n) => C()?.healDamage?.(x, type, n)});
+  const lineKey = a => LM.keyOf(a);
+  const floatOver = LM.floatOver;
+  /** After a fight: each hurt NPC heals with its line's own power (blood, Chi, Pathos, Faith), then goes to be tended if laid up, and mends on the clock. */
   async function afterFight(combat) {
     if ( !isActiveGM() ) return [];
     const out = [];
     for ( const c of combat?.combatants ?? [] ) {
       const a = c.actor;
       if ( !isNpc(a) || a.statuses?.has?.("dead") ) continue;
-      await bloodMend(a);
+      await lineMend(a);
       const d = dmg(a);
       if ( !AC.nextHeal(d) ) continue;
       await a.setFlag(MOD, "mend", {last: now()});
@@ -134,7 +129,15 @@ export function build({MOD, esc, gmIds, isActiveGM, chron, routines, C}) {
       const m = a?.flags?.[MOD]?.mend;
       if ( !m ) continue;
       let last = Number(m.last) || t, guard = 0;
-      await bloodMend(a);
+      await lineMend(a);
+      // B6316: a Garou or Fera regenerates (WoDX Actions healPlan: every bashing and lethal level within minutes), not at a mortal's pace
+      if ( ["werewolf", "fera"].includes(lineKey(a)) ) {
+        const plan = (() => { try { return game.modules.get("wodx-actions")?.active ? game.modules.get("wodx-actions").api?.healPlan?.(a, Math.max(0, t - last)) : null; } catch (e) { return null; } })();
+        if ( plan ) {
+          const got = Object.values(plan.healed ?? {}).reduce((x, v) => x + (Number(v) || 0), 0);
+          if ( got ) { await C()?.setDamage?.(a, plan.damage); floatOver(a, `+${got} ${got === 1 ? "wound" : "wounds"} (regenerates)`, "#7fbf5a"); n += got; last = t - (Number(plan.carry) || 0); }
+        }
+      }
       let nh = AC.nextHeal(dmg(a));
       while ( nh && t - last >= nh.seconds && guard++ < 12 ) { await C()?.healDamage?.(a, nh.type, 1); last += nh.seconds; n++; nh = AC.nextHeal(dmg(a)); }
       const d = dmg(a), w = base(a);
