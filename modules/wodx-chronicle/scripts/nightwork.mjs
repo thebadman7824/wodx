@@ -28,7 +28,9 @@ import {currentYear} from "./eras.mjs";
 const QUIET = {hand: 800, approved: 800, auto: 800, seat: 2500, clock: 4000};
 const MAX = {hand: 30000, approved: 30000, auto: 30000, seat: 30000, clock: 90000};
 const STALE = 60000;
-const MOVE = /^(x|y|elevation|rotation|sort|level|movementAction|_movement\w*|_movementHistory)(\.|$)/;
+// Foundry 14 sends a token's whole waypoint with a move (x, y, elevation, size, shape, level)
+const MOVE = /^(x|y|elevation|rotation|sort|level|width|height|depth|shape|movementAction|_movement\w*)(\.|$)/;
+const walk = paths => paths.some(p => p === "x" || p === "y") && paths.every(p => MOVE.test(p));
 
 let approvals = null;       // handed in at start: {history, undoById, markTakenBack}
 const open = [];            // the pieces of work going on now
@@ -160,7 +162,7 @@ function watch(type) {
     const paths = R.pathsOf(changes);
     if ( !paths.length ) return;
     // A token walked by hand in the seconds after the clock moved is the Storyteller's, not the Hand's
-    if ( w.kind === "clock" && type === "Token" && paths.every(p => MOVE.test(p)) ) return;
+    if ( w.kind === "clock" && type === "Token" && walk(paths) ) return;
     const {set, gone} = R.beforeOf(doc._source ?? {}, paths);
     pushTo(pending.upd, doc.uuid, {w, t: Date.now(), paths, set, gone});
   });
