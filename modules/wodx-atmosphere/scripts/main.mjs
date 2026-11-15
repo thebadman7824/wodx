@@ -1220,7 +1220,7 @@ function openingCard(scene) {
   try { reck = game.settings.get("wodx-chronicle", "rule.eraReckoning") !== false; } catch (e) { reck = true; }
   if ( reck ) {
     let church = null, eraId = "";
-    try { church = chron()?.church?.on?.(t) ?? null; } catch (e) { church = null; }
+    try { church = chron()?.church?.on?.(t, {scene}) ?? null; } catch (e) { church = null; } // B5870: the land of the scene opened
     try { eraId = chron()?.eras?.activeEra?.()?.profile?.id ?? ""; } catch (e) { eraId = ""; }
     told = reckon(t, {church, eraId, latitude: lat}); // B5870: church carries the faith and region of the scene
   }
