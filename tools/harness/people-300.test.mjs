@@ -30,3 +30,13 @@ test("raised peoples: every list in every age has names", () => {
     }
   }
 });
+
+test("raised peoples: lists kept in the core People tables (German in Bohemia before 1900) have 50 names too", async () => {
+  // B5640: the gate draws a people's names in every age, and the old German lists live in data/people.mjs
+  const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-creation/data/people.mjs"));
+  for ( const o of PW.RAISED ) for ( const x of PEOPLE_TABLES.filter(t => t.id === `names.male.${o}` || t.id === `names.female.${o}`) ) {
+    const texts = x.results.map(r => r.text);
+    assert.ok(texts.length >= 50, `${x.name}: ${texts.length}`);
+    assert.equal(new Set(texts).size, texts.length, `${x.name} repeats a name`);
+  }
+});
