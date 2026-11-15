@@ -44,6 +44,8 @@ class Spec:
     ref: str = ""                                # where the size comes from
     variants: dict = field(default_factory=dict) # var name -> dict of draw options; first is the default
     looks: tuple = ()                            # ((from year, to year, label, draw options), ...): how it looks in each age
+    axes: dict = field(default_factory=dict)     # variation axes the drawing honours (variants.py): material, colour, contents ...
+    nvar: int = 0                                # variations wanted in each era beyond the minimum of ten
 
     def look(self, year):
         """The draw options for a year: the look whose years hold it (the first look when no year is set)."""
@@ -71,6 +73,27 @@ CATALOGUE = {}
 def add(id, name, group, ft, draw, **kw):
     if id in CATALOGUE: raise ValueError(f"object {id} defined twice")
     CATALOGUE[id] = Spec(id, name, group, ft, draw, **kw); return CATALOGUE[id]
+
+
+def define(id, name=None, group=None, ft=None, draw=None, **kw):
+    """Define or redefine an object (the family modules, B6346). An object already in the catalogue keeps every field
+    not given; a new one takes its name, size and family from the census when they are not given (its usual size,
+    15 percent either way)."""
+    if id in CATALOGUE:
+        sp = CATALOGUE[id]
+        for k, v in dict(name=name, group=group, ft=ft, draw=draw, **kw).items():
+            if v is not None: setattr(sp, k, v)
+        return sp
+    from library.census import CENSUS
+    row = next((r for r in CENSUS if r.id == id), None)
+    if row is None and (name is None or ft is None): raise KeyError(f"{id} is not in the census (library/census.py): add it there first")
+    if ft is None:
+        a, b = (float(t) for t in row.size.split("x"))
+        ft = ((round(a * .85, 2), round(a * 1.15, 2)), (round(b * .85, 2), round(b * 1.15, 2)))
+    if row is not None:
+        kw.setdefault("mount", {"outdoor": "ground", "centre": "floor", "ceiling": "on"}.get(row.mount, row.mount))
+        ya, _, yb = row.years.partition("-"); kw.setdefault("eras", (int(ya) if ya else 1197, int(yb) if yb else YEAR_END))
+    return add(id, name or row.name, group or (row.family if row else "furniture"), ft, draw, **kw)
 
 
 def spec(oid):

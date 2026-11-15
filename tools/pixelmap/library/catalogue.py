@@ -288,3 +288,10 @@ add("garden", "kitchen garden", "plant", ((10, 40), (5, 12)), lambda tm, x, y, w
     low=True, mount="ground", tags=("yard", "garden"), ref="raised beds, one crop to a row")
 add("wattle", "wattle fence", "outdoor", ((5, 40), (.75, 1.25)), lambda tm, x, y, w, h, st, v: pr.wattle(tm, x, y + h / 2, x + w, y + h / 2),
     mount="ground", tags=("yard", "garden", "field"), ref="woven withies on stakes, about a hand thick, drawn a little wider so it reads")
+
+
+# ---------------------------------------------------------------- the family modules (B6346): each draws one or more census families in every era,
+# with ten or more variations, and defines or redefines its objects with library.core.define
+import importlib as _il, pkgutil as _pk, library as _lib  # noqa: E402
+for _m in sorted(m.name for m in _pk.iter_modules(_lib.__path__) if m.name.startswith("fam_")):
+    _il.import_module("library." + _m)

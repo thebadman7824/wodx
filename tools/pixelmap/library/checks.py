@@ -21,6 +21,11 @@ BARE_PER_SQ = 1 / 4.5            # and about one thing to every 4 1/2 square squ
 CELL = 6
 
 
+SEATS = {"chair", "stool", "bench", "barstool", "armchair", "sofa", "cushion", "lordchair", "officechair", "rocking", "settle", "priedieu", "candlestand", "mat"}
+SEATED_AT = {"table", "table-small", "table-round", "table-low", "dininglong", "desk", "counter", "bar", "cardtable", "coffeetable", "writingslope", "fireplace",
+             "altar", "workbench", "labbench", "dressingtable", "pooltable"}
+
+
 def _wall_raster(rec, shape):
     H, W = shape; ras = np.zeros(shape, bool)
     for (x0, y0, x1, y1), th in zip(rec.walls, rec.wall_th or [26] * len(rec.walls)):
@@ -155,6 +160,7 @@ def run(rec, bare=True):
             else:
                 for q in solid:
                     if q is p or q.on is p: continue
+                    if sp.id in SEATS and q.spec.id in SEATED_AT: continue          # a chair drawn up to its table faces it
                     n = _hits(z, *q.masks[q.spec.states[0]])
                     if n > max(30, z.sum() * .15): bad.append(f"facing: {_where(p)} has {q.name} in front of it"); break
         if sp.mount == "wall":
