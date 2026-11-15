@@ -67,6 +67,17 @@ older gates that still do are listed in `tools/harness/gate-rules-baseline.json`
 3. Check what the feature does, not a count of rows, an exact version or an old window's markup.
 4. Bring your own fixtures (a small map, a sample journal) in `tools/gate/fixtures/` (`G.fixture`, `G.fixtureScene`).
 
+Gotchas that have broken gates more than once:
+
+- Versions: compare with `foundry.utils.isNewerVersion` or the kit's helpers, never a regular expression. A pattern
+  such as `/^3\.([5-9]|\d\d)\./` stops matching once a module reaches 3.100.0.
+- State after an Undo: compare objects with their keys sorted. An Undo can give back the same state with its keys
+  in another order, so a plain `JSON.stringify` comparison fails.
+- Foundry 14: pass a fresh options object to each document update or create (`{...OPTS}`). Reusing one object makes
+  the second call fail with "Cannot redefine property".
+- Standing rules: the world's automation level may approve a kind of proposal on sight. A step that tests the
+  approval queue sets that kind's rule aside first (run-gate puts world settings back afterwards).
+
 A PR that changes a feature updates the gate that covers it in the same PR. `node tools/release/merge-stamp.mjs
 --check` warns when a branch changes a module's scripts and no gate covering that module.
 
