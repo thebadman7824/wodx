@@ -48,6 +48,7 @@ import * as CXD from "./c20.js";
 import * as DXD from "./demon.js";
 import * as DR from "./demon-rules.js";
 import * as KXD from "./kote.js";
+import * as FOM from "./fomor.js";
 import * as KER from "./kote-rules.js";
 import * as UXD from "./mummy.js";
 import * as UR from "./mummy-rules.js";
@@ -2833,6 +2834,12 @@ function qx() {
     return QXE ??= KXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, attr, findAbility, background, spendWillpower, healthTrack, setDamage, applyDamage, notify: m => ui.notifications.warn(m) });
 }
 
+let FME = null;
+/** B5162: fomor powers (Numbing). */
+function fmx() {
+    return FME ??= FOM.build({ post, rollPool, rollBlock, attr, findAbility, spendWillpower, notify: m => ui.notifications.warn(m) });
+}
+
 let GXE = null;
 /** The Werewolf and Fera engine (Phase 6b). */
 function gx() {
@@ -3185,7 +3192,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     demonDaily: () => dx().daily(), demonRules: DR, isDemon: a => DXD.isDemon(resolveActor(a)),
     kotFeed: withActor(a => qx().feed(a)), kotSpend: withActor(a => qx().spend(a)), kotNature: withActor(a => qx().nature(a)), kotDharma: withActor(a => qx().dharmaRoll(a)),
     kotDemon: withActor(a => qx().demon(a)), kotRise: withActor(a => qx().rise(a)), kotRiseAuto: a => qx().riseAuto(resolveActor(a) ?? a), kotSunAuto: (a, o) => qx().sunAuto(resolveActor(a) ?? a, o), kotSun: withActor(a => qx().sun(a)), kotHeal: withActor(a => qx().heal(a)),
-    kotSight: withActor(a => qx().sight(a)), kotSetup: withActor(a => qx().setup(a)), kotInfo: a => qx().info(resolveActor(a)), kotRules: KER, isKotE: a => KXD.isKotE(resolveActor(a)),
+    kotSight: withActor(a => qx().sight(a)), kotSetup: withActor(a => qx().setup(a)), kotInfo: a => qx().info(resolveActor(a)), kotStoke: (a, successes) => qx().stoke(resolveActor(a), successes), kotRules: KER, isKotE: a => KXD.isKotE(resolveActor(a)),
     mummyCast: withActor(a => ux().cast(a)), mummySekhem: withActor(a => ux().regain(a)), mummyBalance: withActor(a => ux().balance(a)), mummyOffense: withActor(a => ux().offense(a)),
     mummyResurrect: withActor(a => ux().resurrect(a)), mummyVeil: withActor(a => ux().veil(a)), mummySetup: withActor(a => ux().setup(a)), mummyInfo: a => ux().info(resolveActor(a)),
     mummyDaily: () => ux().daily(), mummyRules: UR, isMummy: a => UXD.isMummy(resolveActor(a)),
@@ -3239,7 +3246,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     innerVoice: withActor(a => vx().panel(a)), voices: () => vx().mine(), voiceRules: VR, voicePressure: a => vx().pressureOf(resolveActor(a)),
     voiceLive: a => vx().live(resolveActor(a)), voiceButton: b => vx().onChatButton(b), voiceSceneEnd: () => vx().onEndScene(), proposeVoice: (a, prop, note) => vx().propose(resolveActor(a), prop, note), imbue: withActor(a => rx().imbue(a)), reckoningRules: KRR,
     sinGod: withActor(a => hx().sin(a)), prayer: withActor(a => hx().prayer(a)), relic: withActor(a => hx().relic(a)), bankConviction: withActor(a => hx().cashIn(a)),
-    trueFaith: withActor(a => hx().trueFaith(a)), numina: withActor(a => hx().numina(a)), hedgeMagic: withActor(a => hx().hedgeMagic(a)), ghoulBlood: withActor(a => hx().ghoulBlood(a)), hunterLine: () => HX.lineNow(), hunterRules: HR };
+    trueFaith: withActor(a => hx().trueFaith(a)), numina: withActor(a => hx().numina(a)), hedgeMagic: withActor(a => hx().hedgeMagic(a)), fomorPower: withActor(a => fmx().power(a)), fomor: { numbing: withActor(a => fmx().numbing(a)), powersOf: a => FOM.fomorPowersOf(resolveActor(a)), condition: FOM.NUMBING }, ghoulBlood: withActor(a => hx().ghoulBlood(a)), hunterLine: () => HX.lineNow(), hunterRules: HR };
 
 Hooks.once("init", () => {
     registerSettings();
@@ -3303,7 +3310,7 @@ Hooks.once("ready", async () => {
         SUM.connect(chronicle() ?? game.modules.get("wodx-chronicle")?.api);
         // B4920-B4923: the one scene count, power use limits and Drained
         try { LIM.setup();
-        AFC.setup(); } catch (e) { console.error("WoDX | limits", e); }
+        FOM.setup(); AFC.setup(); } catch (e) { console.error("WoDX | limits", e); }
         // Lifted and planted items, and being caught at it (3.21.0)
         try { sox().registerHandlers(); } catch (e) { console.error("WoDX | social", e); }
     };

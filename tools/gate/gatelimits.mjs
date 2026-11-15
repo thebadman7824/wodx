@@ -15,6 +15,8 @@
  *   9. after-costs: Blinding Spittle's blindness ends and Blurred sight follows for the scene
  *  10. after-costs: Survivor wears off and its werewolf falls Asleep (the token dimmed)
  *  11. after-costs: Inspire left no lasting effect, so the scene's end takes the mortal's Willpower dot
+ *  12. Strengthening the Demon: Demon Chi rises two a success, and the stoked points fade when it ends (B5161)
+ *  13. a fomor's Numbing: three more health levels and no wound penalty; when it ends past Incapacitated, death (B5162)
  * Result: Data/wodx-gate/gatelimits-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -161,6 +163,49 @@ export async function run() {
       await waitFor(() => (Number(live(wt).system?.advantages?.willpower?.permanent) || 0) === before - 1, 6000);
       const after = Number(live(wt).system?.advantages?.willpower?.permanent) || 0;
       G.ok("11. Inspire with no lasting effect: the scene's end takes a Willpower dot", before > 0 && after === before - 1, {before, after});
+    });
+
+    await G.step("12. Strengthening the Demon: Demon Chi rises, then the stoked points fade", async () => {
+      const [kj] = await G.make(Actor, [{name: "Gate Limits Kuei-jin", type: "Vampire", system: {settings: {variant: "kindredeast"}}}]);
+      await kj.update({"system.advantages.demonchi.temporary": 3, "system.advantages.po.permanent": 4, "system.advantages.hun.permanent": 6});
+      const before = Number(kj.system?.advantages?.demonchi?.temporary) || 0;
+      const g = await L.gate(kj, {name: "Strengthening the Demon", level: 2}, {targets: []});
+      await A.kotStoke(kj, 2);
+      await g?.done({successes: 2});
+      const up = Number(kj.system?.advantages?.demonchi?.temporary) || 0;
+      const timed = kj.effects.some(e => /Strengthening the Demon/.test(e.name));
+      await wait(500);
+      const tagged = kj.effects.some(e => e.getFlag(MOD, "afterCost")?.key === "strengthening-the-demon");
+      await CH.timed.endFor(kj, {key: "wodx-kote-stoke"});
+      await waitFor(() => (Number(kj.system?.advantages?.demonchi?.temporary) || 0) === before, 5000);
+      const after = Number(kj.system?.advantages?.demonchi?.temporary) || 0;
+      const hunCard = await waitFor(() => game.messages.contents.slice(-6).some(m => /Hun/.test(m.content ?? "") && m.speaker?.actor === kj.id), 5000);
+      G.ok("12. Strengthening the Demon: Demon Chi rises, then the stoked points fade", up === before + 4 && timed && tagged && after === before && hunCard,
+        {before, up, timed, tagged, after, hunCard});
+    });
+
+    await G.step("13. a fomor's Numbing: more levels, no penalty, and death when it ends past Incapacitated", async () => {
+      const [fo] = await G.make(Actor, [{name: "Gate Limits Fomor", type: "Mortal", system: {attributes: {stamina: {value: 5}}, advantages: {willpower: {permanent: 9, temporary: 9}}},
+        items: [{name: "Numbing", type: "Power", system: {type: "wod.types.power", value: 1}}]}]);
+      const [ft] = await G.tokens(scene, [{actor: fo, x: 14, y: 8}]);
+      const body = () => live(ft);
+      const max0 = Number(body().system?.traits?.health?.totalhealthlevels?.max) || 7;
+      for ( let k = 0; k < 4 && !body().statuses?.has?.("wodx-numbing"); k++ ) {
+        await A.fomor.numbing(body());
+        await wait(400);
+        if ( !body().statuses?.has?.("wodx-numbing") ) await L.clear?.(body());
+      }
+      const numb = body().statuses?.has?.("wodx-numbing");
+      await waitFor(() => (Number(body().system?.traits?.health?.totalhealthlevels?.max) || 0) === max0 + 3, 5000);
+      const max1 = Number(body().system?.traits?.health?.totalhealthlevels?.max) || 0;
+      await body().update({"system.health.damage.lethal": max0 + 1});
+      await wait(400);
+      const pen = Number(body().system?.health?.damage?.woundpenalty) || 0;
+      await CH.timed.endFor(body(), {key: "wodx-fomor-numbing"});
+      await waitFor(() => body().statuses?.has?.("dead"), 6000);
+      const dead = !!body().statuses?.has?.("dead"), alpha = scene.tokens.get(ft.id)?.alpha;
+      G.ok("13. a fomor's Numbing: more levels, no penalty, and death when it ends past Incapacitated", numb && max1 === max0 + 3 && pen === 0 && dead && alpha === 0.25,
+        {numb, max0, max1, pen, dead, alpha});
     });
   } catch (e) {
     G.R.errors.push(String(e?.message ?? e));

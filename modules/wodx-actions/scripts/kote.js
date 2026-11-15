@@ -139,8 +139,8 @@ export function build(ctx) {
             const p = KA.powerById(sel.value), box = root.querySelector(".wodx-art-info");
             if (!p) { if (box) box.textContent = ""; return; }
             const c = KA.chiOf(p.cost), set = (k, v) => { const el = root.querySelector(`[name=${k}]`); if (el) el.value = v; };
-            set("kind", c.kind); set("k", Math.max(1, c.k)); set("dice", KA.poolOf(p.roll, trait)); set("diff", KA.diffOf(p, root.querySelector("[name=wall]")?.value));
-            if (box) box.textContent = `${p.fx} Cost: ${KA.costText(p.cost)}.${p.diff === "t" ? " Difficulty: the target's Willpower." : p.diff === "var" ? " The Storyteller sets the difficulty." : ""} ${REF} p. ${p.p}${p.chk ? " (check the page for the name)" : ""}.`;
+            set("kind", c.kind); set("k", p.stoke ? 0 : Math.max(1, c.k)); set("dice", KA.poolOf(p.roll, trait)); set("diff", KA.diffOf(p, root.querySelector("[name=wall]")?.value));
+            if (box) box.textContent = `${p.fx} Cost: ${KA.costText(p.cost)}.${p.diff === "t" ? " Difficulty: the target's Willpower." : p.diff === "var" ? " The Storyteller sets the difficulty." : ""} ${p.book ?? REF} p. ${p.p}${p.chk ? " (check the page for the name)" : ""}.`;
         };
         return dialog(`Spend Chi: ${actor.name}`, content, "Spend", async fd => {
             const it = arts.find(x => x.id === fd.art);
@@ -153,6 +153,8 @@ export function build(ctx) {
             // B4921: a power the book (or the house rule) says is used up is refused before Chi is spent
             const lim = pw ? await LIM.gate(actor, { name: pw.name, disc: it?.name ?? "", level: pw.l }) : { diff: 0, done: async () => {} };
             if (!lim) return null;
+            // B5161: Strengthening the Demon costs a Willpower, not Chi
+            if (pw?.stoke && !(await ctx.spendWillpower(actor, 1))) return null;
             await setChi(actor, { [kind]: i.chi[kind] - n(fd.k) });
             let body = `<div class="vta-sec">${it ? `<b>${esc(it.name)}</b>: ` : ""}${n(fd.k)} ${KIND[kind]} Chi.</div>`, rolls = [];
             if (def?.kind === "demon" || kind === "demon") {
@@ -178,18 +180,33 @@ export function build(ctx) {
             const note = after(actor);
             if (note) body += `<div class="vta-note">${esc(note)}</div>`;
             let fxItems = [];
+            if (pw?.stoke) body += await stoke(actor, got);
             if (pw) {
-                body += `<div class="vta-sec"><b>${esc(pw.name)}</b>: ${esc(pw.fx)}${pw.cost.wp ? ` (${pw.cost.wp} Willpower as well)` : ""}</div>`;
+                body += `<div class="vta-sec"><b>${esc(pw.name)}</b>: ${esc(pw.fx)}${pw.cost.wp && !pw.stoke ? ` (${pw.cost.wp} Willpower as well)` : ""}</div>`;
                 if (got > 0 && EF.isOn()) {
                     const pp = EF.planOf(actor, KA.artResults(pw.id, got, { source: `${REF} p. ${pw.p}` }), got, { name: pw.name, line: "Kuei-jin (KotE)" });
                     body += pp.html;
                     fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
                 }
             }
-            body += `<div class="wodx-quiet">${REF} ${pw ? `p. ${pw.p}; ` : ""}pp. 54, 90, 139–140</div>`;
+            body += `<div class="wodx-quiet">${pw?.book ? `${pw.book} p. ${pw.p}; ${REF} ` : `${REF} ${pw ? `p. ${pw.p}; ` : ""}`}pp. 54, 90, 139–140</div>`;
             await lim.done({ successes: got });
             return post(actor, `${actor.name}${pw ? `: ${pw.name}` : " spends Chi"}`, body, rolls.filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 520, render: root => { fill(root, true); root.querySelector("[name=art]")?.addEventListener("change", () => fill(root, true)); root.querySelector("[name=pw]")?.addEventListener("change", () => fill(root, false)); root.querySelector("[name=wall]")?.addEventListener("input", () => fill(root, false)); } });
+    }
+
+    /** B5161: Strengthening the Demon: Demon Chi rises by two a success for a turn a success, then fades. */
+    async function stoke(actor, got) {
+        const before = info(actor).chi.demon;
+        const plan = KA.stokePlan(before, got, K.CHI_CAP);
+        if (!plan.ok) return `<div class="vta-res bad">The P'o will not stoke: no Demon Chi gained.</div>`;
+        await setChi(actor, { demon: plan.chi });
+        const C = game.modules.get("wodx-chronicle")?.api;
+        await C?.timed?.applyTimed?.(actor, { name: "Strengthening the Demon", img: "icons/svg/fire.svg", duration: { kind: "rounds", rounds: plan.turns }, key: "wodx-kote-stoke",
+            revert: { key: "wodx-actions.stokeFade", data: { before } }, source: "Kindred of the East Companion p. 74",
+            description: `Demon Chi raised by ${plan.added} for ${plan.turns} turn${plan.turns === 1 ? "" : "s"}; what is left then fades.` })?.catch?.(e => console.warn("WoDX | stoke", e));
+        for (const t of actor.getActiveTokens?.() ?? []) t.ring?.flashColor?.(Color.from("#b3261e"));
+        return `<div class="vta-res bad">Demon Chi ${before} to ${plan.chi} for ${plan.turns} turn${plan.turns === 1 ? "" : "s"}. Unspent points fade then, and the Hun must hold against the P'o.</div>`;
     }
 
     /* -- the soul's states ------------------------------------------------ */
@@ -461,5 +478,5 @@ export function build(ctx) {
         });
     }
 
-    return { info, feed, spend, nature, dharmaRoll, demon, rise, riseAuto, sun, sunAuto, heal, sight, setup, isKotE, rules: K };
+    return { info, stoke, feed, spend, nature, dharmaRoll, demon, rise, riseAuto, sun, sunAuto, heal, sight, setup, isKotE, rules: K };
 }
