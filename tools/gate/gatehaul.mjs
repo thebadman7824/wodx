@@ -46,6 +46,9 @@ export async function run() {
   try {
     const hx = () => game.modules.get(IX)?.api?.haul, C = game.wodxCombat;
     const scene = await G.scene({background: {src: "icons/svg/mystery-man.svg"}, width: 2000, height: 1500});
+    // Foundry 14 keeps a scene's picture on its level
+    const lv = scene.levels?.contents?.[0] ?? null;
+    if ( lv && !lv.background?.src ) await lv.update({"background.src": "icons/svg/mystery-man.svg"}).catch(e => G.R.notes.push(`level picture: ${e?.message ?? e}`));
     const [ana, bruno, cira, dora, eli] = await G.make(Actor, [
       body("Gate Haul Ana", {str: 3, athletics: 2, melee: 2}), body("Gate Haul Bruno", {str: 2}), body("Gate Haul Cira", {str: 2, athletics: 1}),
       body("Gate Haul Dora", {str: 2}), body("Gate Haul Eli", {str: 4, athletics: 3})]);
@@ -102,9 +105,9 @@ export async function run() {
       const r = await hx().take(tc, td, "drag");
       await tc.update({x: 800, y: 1000});
       const trail = await waitFor(() => scene.drawings.some(d => d.flags?.[IX]?.trail?.kind === "blood"), 10000);
-      const clue = scene.tiles.some(t => t.flags?.[IX]?.clueKind === "trail");
+      const clue = await waitFor(() => scene.tiles.some(t => t.flags?.[IX]?.clueKind === "trail"), 6000);
       const behind = await waitFor(() => X(td) === 700 && Y(td) === 1000, 6000);
-      G.ok("5. dragged and bleeding", r?.ok && r.mode === "drag" && trail && clue && behind, {said: heard(), at: [X(td), Y(td)], cira: [X(tc), Y(tc)], trail, clue, probe: behind ? null : await probe(td, 600, 1000)});
+      G.ok("5. dragged and bleeding", r?.ok && r.mode === "drag" && trail && clue && behind, {behind, at: [X(td), Y(td)], cira: [X(tc), Y(tc)], trail, clue, said: heard().slice(-4), probe: behind ? null : await probe(td, 600, 1000)});
     });
 
     await G.step("6. knocked down, it drops", async () => {

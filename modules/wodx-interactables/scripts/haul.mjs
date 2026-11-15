@@ -280,7 +280,7 @@ async function cutPicture(scene, rect, name) {
     for ( const [k, v] of Object.entries(o) ) { const p = `${path}.${k}`; if ( typeof v === "string" && k === "src" && IMG.test(v) && /background/i.test(p) ) return v; const r = deep(v, p); if ( r ) return r; } return null; };
   const src = [scene?.initialLevel, ...lv].map(l => l?.background?.src ?? l?.textures?.background?.src).find(Boolean) || scene?._source?.background?.src
     || (() => { try { return deep(scene?.toObject?.() ?? {}); } catch (e) { return null; } })() || null;
-  trace("cut", scene?.name, src, lv.length);
+  trace("cut", src, lv.length, JSON.stringify(lv[0]?.toObject?.()?.background ?? lv[0]?.toObject?.() ?? {}).slice(0, 90));
   if ( !src ) return null;
   const img = await imageOf(src);
   const dim = scene.dimensions ?? canvas.dimensions;
