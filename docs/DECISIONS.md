@@ -304,6 +304,7 @@ Next free block: B5840
 | B5660-B5669 | Child proportions, drawn poses by routine, animal legs (used B5660-B5668) | Paperdoll |
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
+| B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
 | B5830-B5839 | Gate failures on main, round two; run-gate names failed steps (used B5830-B5831) | tools (gates, lanes) |
 <!-- decision-index:end -->
 
@@ -9148,6 +9149,55 @@ Reverse: drop the fifth element of each USES row and carryOut.
 WoDX Actions. Resources: money into the purse, a week of a month's allowance per success (house reading). Contacts: current rumours named, up to the successes. Influence: a boon owed by the institution in the Prestation journal. Retainers: servants named and their orders opened. Domain or Hunting Grounds with no success: a rival feeds there (the herd thins). A botch starts a rumour about the character.
 
 Reverse: remove downtimeDoes.
+
+## B5780. The Evocations desk built as picked (2026-11-15)
+WoDX Actions. Ben picked "Build this rule" for all eleven evocations on the Evocations desk and asked that every ritual have a tangible effect (2026-11-15 05:19Z). acts.js works the effects a keyword cannot: memory, vision, seize, mark, cleanse, remote and path. Each runs from the effects card on the active Storyteller's client and leaves an undo record. Evocation specs may now chain several keywords.
+
+Reverse: set the eleven specs in demon-evocations.js back to null and drop acts.js.
+
+## B5781. An NPC's ground effect lands under its target (2026-11-15)
+An NPC has no one to click a spot, so a ground area (a blaze, broken ground) from an NPC's power is placed at its target token's centre.
+
+## B5782. Alter Memory on an NPC forgets the demon (2026-11-15)
+WoDX NPC. Erasing a memory removes the NPC's memory notes and grudges of the demon (memory.forget); Undo restores them (memory.restore). An edit or a planted memory is written into the NPC's memory as a note. A player's character gets a private card to play the change.
+
+## B5783. NPC demons cover their tracks (2026-11-15)
+Ben's note on Alter Memory asked what an NPC demon would do with it. When a fight ends, an NPC demon who knows Alter Memory and has Faith left uses it on each mortal or hunter on the scene who does not already carry a changed memory.
+
+## B5784. Hand of Faith turns the next evocation back (2026-11-15)
+While a demon holds Hand of Faith, another demon's evocation on the scene with fewer successes than the seizing roll lands on its own user instead, and the hold is spent.
+
+## B5785. The Mark of the Celestials, read by NPCs (2026-11-15)
+The mark lasts a day for one success, a week for two, a month for three, a year for four or more. An NPC who meets the bearer reads it when its Wits are below the successes, or when it fails a hidden Willpower roll at 7; it warms (honour) or cools (shun) one step toward the bearer.
+
+## B5786. Touch from Afar and the words of a vision or a mark (2026-11-15)
+A player is asked for the words of a vision, a mark or a changed memory, and for whom Touch from Afar reaches (any token on any scene). An NPC demon reaches its current target.
+
+## B5787. A keyword may carry its flavour (2026-11-15)
+In a power's keyword list, "fortune:curse" or "boost:sap" passes the flavour to the keyword's outcome, so a ritual can chain a curse or a sapping with other keywords.
+
+## B5788. Sense lays a detection sense (2026-11-15)
+The Sense keyword puts a sense-all detection mode on the caster's token, 30 feet a step of duration, for the effect's duration, and whispers what the target's sheet and the scene show (hurt, Willpower, effects, darkness, hidden figures, worked ground). Undo or the end of the effect takes it off.
+
+## B5789. Know finds out a secret (2026-11-15)
+The Know keyword reveals the heaviest secret the target keeps that the caster has not found (WoDX NPC secrets, with its hook in the Ledger). With no secret left, what the sheet shows is pinned on the open case board as a clue and whispered, and the Storyteller may add an answer.
+
+## B5790. Beasts and ghosts need a power to talk (2026-11-15)
+WoDX NPC. The talk menu opens on an animal or a Wraith only for a character with a Speak effect running. Werewolves and other shapeshifters talk with beasts and the dead with the dead. The world setting "Beasts and ghosts need a power to talk" turns it off.
+
+## B5791. Hekau rituals do something (2026-11-15)
+The 36 Hekau rituals that only went to the Storyteller now give results: the weather magics set the weather, Tears of Isis gives Sekhem, the Chattels and Reflections make their things, the Bonds and Bindings bind, Name the Secret and Read the Tree of Life find out a secret and lay a curse or a blessing, Forgetting the Person dims the memories of those near, Rousing Apophis hurts everyone near. Two new spec kinds: K (any keyword's own outcome) and P (points into a pool).
+
+## B5792. The 63 book rituals that only told something chain world keywords (2026-11-15)
+Each of the 63 book rituals whose keywords were only Sense, Know or Speak gains the keyword its own effect names: Sight for the far-seeing rituals, Light, Hold, Fear, Summon, Manifest, Ward, Boost, Bind, Sway, Sideways, Fortune, Imbue or a charge. tools/powers/inventory.mjs now counts no ritual as a card only.
+
+## B5793. A binding holds the bound character's token (2026-11-15)
+The say-or-do audit (d19) found that a binding on a player character only posted a card. Now, while Hold or Possess binds a player's character, its player cannot move the token. Fear keeps the token from going nearer the one feared, who is remembered on the effect. A command or an oath (Sway, Bind) sends each move to the Storyteller, who allows or refuses it on a card. With no Storyteller on (a Lone Chronicle), a command's move stands, with a reminder. The world setting "Bindings hold the token" turns it off.
+
+Reverse: drop binds.js and its setup call in effects.js.
+
+## B5795. A pact gift does what it gives (2026-11-15)
+The say-or-do audit (d12) found that using a pact gift only said "it answers". Now a lesser evocation gift runs one of the giving demon's evocations, up to the gift's level and the demon's Lore, through the effects card as the thrall's own. An innate power lends dice to Social rolls for the scene, and an apocalyptic enhancement lends dice to Physical rolls, by the successes of the Willpower roll.
 
 ## B5830. run-gate names the failed steps of the older gates (2026-11-15)
 Lanes. The kit's gates put their failed steps in the summary line, but the older gates (gate6b, gate6d, gate7d,
