@@ -101,6 +101,10 @@
       "wodx-actions",
       "wodx-storyteller",
       "wodx-library"
+    ],
+    "gatetormentsheet": [
+      "wodx-actions",
+      "wodx-sheets"
     ]
   },
   "remove": {},
