@@ -243,6 +243,7 @@ Next free block: B5220
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5049) | Creation, Chronicle, NPC, Sheets, Actions, Combat |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 | B5180-B5189 | Names raised to 300, Thai (used B5180) | Creation |
+| B5190-B5199 | Names raised to 300, Malay (used B5190) | Creation |
 | B5210-B5219 | PC runner watchdog (used B5210-B5212) | tools (PC job queue) |
 <!-- decision-index:end -->
 
@@ -7957,6 +7958,11 @@ Reverse: drop the philippines entries in data/lifepath-local-asia.mjs, data/life
 WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Thai list grows from 24 names to 361: the kings, nobles and commoners of Sukhothai and Ayutthaya given alone before the surname act of 1913, modern given names after, and the family names chosen since. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: restore the thai entry in data/people-world.mjs and drop thai from RAISED.
+
+## B5190. Malay names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Malay list grows from 24 names to 306: the Malacca court, the Hikayat heroes and the village names of the old Malay world, then the names of modern Malaysia and Brunei, bin or binti the father throughout. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the malay entry in data/people-world.mjs and drop malay from RAISED.
 
 ## B5210. A watchdog on the PC starts the runner again when it dies (2026-11-15)
 PC job queue. The runner and its wrapper were ended three times on 14 and 15 November with nothing in the log, and
