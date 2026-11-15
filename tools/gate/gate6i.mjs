@@ -117,6 +117,8 @@ export async function run() {
             ok("Faith heals all bashing for a point", Number(dv.system.health.damage.bashing) === 0 && F(dv) === f0 - 1, { bashing: dv.system.health.damage.bashing, faith: F(dv) });
         });
         await step("the holy burns at Torment 4: lethal equal to the potential", async () => {
+            // The demon is a kept test actor: start the burn from a clear track, or earlier runs' wounds add up
+            await dv.update({ "system.health.damage.lethal": 0, "system.health.damage.aggravated": 0, "system.health.damage.bashing": 0 });
             const n0 = game.messages.size;
             answer(root => { set(root, "k", "o"); set(root, "p", 2); });
             A().demonHoly({ actor: dv });
