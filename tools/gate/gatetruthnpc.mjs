@@ -123,6 +123,11 @@ export async function run() {
       await pa().update({"system.advantages.vitality.permanent": 6, "system.advantages.vitality.temporary": 5, "system.advantages.spite.permanent": 2, "system.advantages.willpower.temporary": 5});
       await A()?.limits?.clear?.(pa());
       await sc.setFlag(MOD, "mode", "off");
+      // Helter Skelter is an obvious power, and an NPC holds an obvious power back while mortals outside the fight watch
+      // (B4927, witnessesOf in main.mjs: 30 yards). The gate's other mortals stand within that, so they step out of sight.
+      const onlookers = sc.tokens.filter(t => !t.hidden && ![tProj.id, tFoe.id].includes(t.id)).map(t => t.id);
+      await sc.updateEmbeddedDocuments("Token", onlookers.map(_id => ({_id, hidden: true})));
+      try {
       const [combat] = await G.make(Combat, [{scene: sc.id, active: true}]);
       await combat.createEmbeddedDocuments("Combatant", [{tokenId: tProj.id, sceneId: sc.id, actorId: projector.id}, {tokenId: tFoe.id, sceneId: sc.id, actorId: foe.id}]);
       await combat.startCombat();
@@ -141,9 +146,13 @@ export async function run() {
       const plan = [...game.messages].filter(m => (m.timestamp ?? 0) >= since && m.getFlag(MOD, "plan")?.token === tProj.uuid).at(-1)?.getFlag(MOD, "plan");
       const v1 = Number(pa().system?.advantages?.vitality?.temporary);
       G.ok("5. Auto: an NPC whose best option is a power uses it on its own turn", top?.action === "power" && card && !!plan?.done && v1 < v0,
-        {top: top?.action, card, done: plan?.done?.text ?? null, vitality: [v0, v1]});
+        {top: top?.action, card, done: plan?.done?.text ?? null, vitality: [v0, v1], picked: plan?.options?.[0]?.power ?? null,
+          why: plan?.options?.[0]?.why ?? null, onlookers: sc.tokens.filter(t => !t.hidden && ![tProj.id, tFoe.id].includes(t.id)).length});
       await sc.setFlag(MOD, "mode", "off");
       await combat.delete();
+      } finally {
+        await sc.updateEmbeddedDocuments("Token", onlookers.filter(id => sc.tokens.has(id)).map(_id => ({_id, hidden: false})));
+      }
     });
 
     await G.step("6. WoDX Voices speaks a real talk-sheet answer", async () => {

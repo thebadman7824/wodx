@@ -118,6 +118,11 @@ export async function run() {
       await A.limits?.clear?.(auto);
       const [ta, tf] = await G.tokens(scene, [{actor: auto, x: 12, y: 4, actorLink: true, disposition: -1}, {actor: foe, x: 13, y: 4, actorLink: true, disposition: 1}]);
       await scene.setFlag("wodx-npc", "mode", "off");
+      // Helter Skelter is obvious: an NPC holds it back while mortals outside the fight watch (B4927, 30 yards), and the
+      // victim of steps 10 and 11 stands within that, so everyone else steps out of sight for this fight
+      const onlookers = scene.tokens.filter(t => !t.hidden && ![ta.id, tf.id].includes(t.id)).map(t => t.id);
+      await scene.updateEmbeddedDocuments("Token", onlookers.map(_id => ({_id, hidden: true})));
+      try {
       const [combat] = await G.make(Combat, [{scene: scene.id, active: true}]);
       await combat.createEmbeddedDocuments("Combatant", [{tokenId: ta.id, sceneId: scene.id, actorId: auto.id}, {tokenId: tf.id, sceneId: scene.id, actorId: foe.id}]);
       await combat.startCombat();
@@ -136,9 +141,14 @@ export async function run() {
       const plan = plans().at(-1)?.getFlag("wodx-npc", "plan");
       const v1 = Number(auto.system?.advantages?.vitality?.temporary);
       G.ok("12. Auto: a projector uses its power on its own turn", top?.action === "power" && plan?.options?.[plan?.done?.k]?.power === "Helter Skelter" && v1 < v0,
-        {top: top?.action ?? null, picked: plan?.options?.[plan?.done?.k]?.power ?? null, done: plan?.done?.text ?? null, vitality: [v0, v1]});
+        {top: top?.action ?? null, picked: plan?.options?.[plan?.done?.k]?.power ?? null, done: plan?.done?.text ?? null, vitality: [v0, v1],
+          plans: plans().length, first: plan?.options?.[0] ? {power: plan.options[0].power ?? null, why: plan.options[0].why} : null,
+          onlookers: scene.tokens.filter(t => !t.hidden && ![ta.id, tf.id].includes(t.id)).length});
       await scene.unsetFlag("wodx-npc", "mode");
       await combat.delete();
+      } finally {
+        await scene.updateEmbeddedDocuments("Token", onlookers.filter(id => scene.tokens.has(id)).map(_id => ({_id, hidden: false})));
+      }
     });
   } catch (e) {
     G.R.errors.push(String(e?.message ?? e));
