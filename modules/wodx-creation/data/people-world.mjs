@@ -26,6 +26,7 @@ import {aboriginalTables} from "./people-aboriginal.mjs";
 import {centralAfricaTables} from "./people-central-africa.mjs";
 import {filipinoTables} from "./people-filipino.mjs";
 import {ARMENIAN} from "./people-armenian.mjs";
+import {PATTERNED} from "./people-patterned.mjs";
 
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
 const OLD = ["medieval", "early-modern"], NEW = ["industrial", "modern"], MOD = ["modern"], PRE = ["medieval", "early-modern", "industrial"];
@@ -468,6 +469,23 @@ for ( const id of Object.keys(WORLD_REGIONS) ) {
 // Peoples with hand-built tables of their own (clans, names staged by age): the Haudenosaunee (B3120), the Algonquian
 // coast (B3510), the Plains (B3820) and the Southwest (B3930)
 const BUILT = {haudenosaunee: haudenosauneeTables(), ...Object.groupBy([...algonquianTables(), ...plainsTables(), ...southwestTables(), ...missouriTables(), ...plainsNorthTables(), ...basinTables(), ...canadaTables(), ...inuitTables(), ...tainoTables(), ...aboriginalTables(), ...centralAfricaTables(), ...filipinoTables()], t => t.id.split(".").at(-1))};
+// Names made by pattern (B5600): each people's own Roll Table, drawn from its own-name tables a third as often as the
+// recorded names there, so the recorded ones stay apart and stay the most common
+for ( const [o, {male, female}] of Object.entries(PATTERNED) ) {
+  const extra = [];
+  for ( const [sex, list] of [["male", male], ["female", female]] ) {
+    if ( !list.length ) continue;
+    const id = `names.patterned.${sex}.${o}`;
+    extra.push(tbl(id, `Names: ${o}, ${sex}, made by pattern`, list));
+    for ( const t of BUILT[o] ?? [] ) {
+      if ( t.id !== `names.native.${sex}.${o}` && !(t.id === `names.${sex}.${o}` && t.era?.includes("medieval")) ) continue;
+      const own = t.results.filter(r => !r.text.includes("{") && !/^A (woman|man) of/.test(r.text)).reduce((n, r) => n + (r.weight ?? 1), 0);
+      if ( own ) t.results.push({text: `{${id}}`, weight: Math.max(1, Math.round(own / 2))});
+    }
+  }
+  if ( BUILT[o] ) BUILT[o].push(...extra);
+}
+
 export const WORLD_PEOPLE_TABLES = [...origins, ...names, ...Object.values(BUILT).flat()];
 /** Peoples who bear a given name alone in some or all ages. */
 export const GIVEN_ONLY = new Set(["new-england-algonquian", "powhatan", "lakota", "cheyenne", "comanche", "kiowa", "apache", "arikara", "pawnee", "mandan", "hidatsa", "blackfoot", "arapaho", "shoshone", "ute", "cree", "anishinaabe", "inuit", "taino", "aboriginal", "luba", "filipino", "moro", "banyarwanda", ...Object.entries(P).filter(([, p]) => !p.child && (!p.fam || (typeof p.fam !== "string" && !Object.keys(p.fam).some(k => k === "old" || k.includes("medieval"))))).map(([o]) => o)]);

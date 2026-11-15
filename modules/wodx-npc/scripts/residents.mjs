@@ -22,6 +22,7 @@ export function build({MOD, esc, chron, settle = () => null}) {
   const unset = path => { const Del = foundry.data?.operators?.ForcedDeletion; return Del ? {[path]: new Del()} : {[path.replace(/\.([^.]+)$/, ".-=$1")]: null}; };
   const regionsOf = scene => [...(scene?.regions ?? [])];
   const listOf = scene => RS.householdsOn(regionsOf(scene));
+  const beastsApi = () => game.modules.get("wodx-creation")?.active ? game.modules.get("wodx-creation").api?.animals : null;
   const residentsOn = scene => game.actors.filter(a => a.flags?.[MOD]?.resident?.scene === scene?.uuid);
 
   /** The region a scene stands in and the faith it keeps (WoDX Chronicle); Moravia's when Chronicle cannot say. */
@@ -73,17 +74,26 @@ export function build({MOD, esc, chron, settle = () => null}) {
           "prototypeToken.disposition": CONST.TOKEN_DISPOSITIONS.NEUTRAL, [`flags.${MOD}.behavior`]: f.behavior, [`flags.${MOD}.routine`]: f.routine, [`flags.${MOD}.resident`]: f.resident};
       });
       if ( ups.length ) await Actor.updateDocuments(ups);
+      // B5136 (WoDX Creation): a vampire's household keeps its beasts too, by clan, era and place
+      let beasts = [];
+      if ( pick.ghoulOf && beastsApi()?.householdBeasts ) {
+        try {
+          const vamp = game.actors.get(pick.ghoulOf);
+          beasts = vamp ? await beastsApi().householdBeasts(vamp, {region: h.region, folder: folder.id, rural: ["farm", "yard", "wilds", "castle"].includes(h.kind), seed: h.index + 1}) : [];
+          if ( beasts.length ) await Actor.updateDocuments(beasts.map(b => ({_id: b.id, [`flags.${MOD}.resident`]: {scene: scene.uuid, region: h.region, household: h.household.id, role: "beast", master: false}})));
+        } catch (e) { console.warn(`${MOD} | residents: the household's beasts were not made`, e); }
+      }
       const region = fromUuidSync(h.region);
       if ( region ) {
         // the head of a building's one household is its owner; a block of flats has no one owner
         const master = actors[0] && people[0]?.plan?.master && (h.shared ?? 1) === 1 ? people[0].name : "";
-        const up = {[`flags.${MOD}.residents`]: RS.residentRecord(region.flags?.[MOD]?.residents, h.household.id, actors.map(a => a.id), {ownerSet: !!(master && !h.owner), at: Date.now()})};
+        const up = {[`flags.${MOD}.residents`]: RS.residentRecord(region.flags?.[MOD]?.residents, h.household.id, [...actors, ...beasts].map(a => a.id), {ownerSet: !!(master && !h.owner), at: Date.now()})};
         if ( master && !h.owner && region.flags?.[MOD]?.place ) up[`flags.${MOD}.place.owner`] = master;
         await region.update(up);
       }
       try { await settle()?.afterSeed?.(scene, h, actors); }
       catch (e) { console.warn(`${MOD} | residents: the settlement's ties and hidden folk were not written`, e); }
-      made.push(...actors);
+      made.push(...actors, ...beasts);
     }
     return made;
   }

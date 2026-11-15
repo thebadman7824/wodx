@@ -2,6 +2,8 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.91.0 (Ghouled animals, step four (B5130, B5136))
+- 0.90.0 (Servants and bonds for every line, step one: one ledger, the blow held back, hard orders, opinion floors, acolytes and consors, Kinfolk, revenant families, guanxi and Dominate Conditioning (B5100-B5111))
 - 0.89.0 (A blackmailed NPC who strikes back by word also goes to the law (B5177))
 - 0.88.0 (Ghouled animals, step three (B5063): orders read the animal's training from WoDX Creation. An animal with no training on record counts as trained, so animal followers from before keep their orders)
 - 0.87.0 (Masters of Golconda keep out of the Jyhad (B5097, V20 pp. 299-300))

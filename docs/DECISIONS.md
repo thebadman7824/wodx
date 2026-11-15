@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5600
+Next free block: B5640
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -246,6 +246,8 @@ Next free block: B5600
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5064) | Creation, NPC, Actions |
 | B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
+| B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5111) | NPC, Combat |
+| B5130-B5139 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5130-B5137) | Creation, Actions, NPC |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 | B5170-B5179 | Storyteller's Hand round two: Martyr, Marauders, the winds, holy ground, Untamable, feeding flaws, Berserker, flight, blackmail, the stimulant crash (used B5170-B5179) | Actions, Chronicle, Interactables, Library, NPC, Storyteller |
 | B5180-B5189 | Names raised to 300, Thai (used B5180) | Creation |
@@ -290,6 +292,9 @@ Next free block: B5600
 | B5570-B5579 | Names raised to 300, Sephardi (used B5570) | Creation |
 | B5580-B5589 | Names raised to 300, Mizrahi (used B5580) | Creation |
 | B5590-B5599 | Recheck: gates not on main (used B5590) | tools (PC job queue) |
+| B5600-B5609 | Names made by pattern for the short lists (used B5600) | Creation |
+| B5620-B5629 | Gates failing on main: court hunts batch write, gate-interact steps (used B5620-B5621) | Actions, gates |
+| B5630-B5639 | Blood hunts: court Kindred turn in batches (used B5630) | Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8246,6 +8251,104 @@ WoDX Actions. For a vampire in Golconda the sun counts one step weaker on the la
 ## B5097. Masters of Golconda keep out of the Jyhad (2026-11-14)
 WoDX NPC. A vampire in Golconda is drawn into no rivalry or feud fight, and the werewolves leave them be (V20 pp. 299-300; V20 Dark Ages p. 359; go8).
 
+## B5100. One ledger for every bond (2026-11-15)
+WoDX NPC. Every bond a character can hold over another (blood bond, Vinculum, guanxi, Dominate Conditioning, Social Conditioning, demon pacts, changeling Enchantment, fomori, wraith Thralls, consors, cultists, revenant families, Kinfolk) is one kind of record in `servant-rules.mjs`, each with its book page, a step from 1 to 3, whether it holds back a blow and whether it obeys hard orders. The older stores (lineage bonds, Vaulderie scores, oaths) are read where they already live rather than copied, so the two can never disagree. New bonds made by hand are kept on the servant at `flags.wodx-npc.held`. Desk item x1.
+
+Reverse: drop servant-rules.mjs and servants.mjs; the older stores still work alone.
+
+## B5101. Everyone in the ledger is a follower (2026-11-15)
+WoDX NPC. The followers window lists every character the ledger binds to the master, with the ledger's word for the bond, and a "Bind someone…" button. The Storyteller binds at once; a player's request becomes an approval, and approving makes the bond. Orders read the ledger's masters as well as `serves`. Desk items x2, x3.
+
+Reverse: remove the ledger rows and the button from followers.mjs.
+
+## B5102. A bond holds back the hand (2026-11-15)
+WoDX NPC and WoDX Combat. Before a bound servant attacks its master, it rolls Willpower at difficulty 8, one less if the master is cruel to it and one more if kind (V20 Dark Ages, page 343 of the pdf). Won, it must also spend a point of Willpower to strike; otherwise the attack does not happen. One drink, an unchained Thrall and Enchantment never hold a hand. The setting "Bonds hold back a blow" turns it off. The old after-the-blow warning steps aside while it is on. Desk item x4 (step one).
+
+Reverse: turn the setting off.
+
+## B5103. Hard orders and opinion floors (2026-11-15)
+WoDX NPC. A three-step bond that obeys (Conditioning, Social Conditioning, a full pact) carries a hard order with no loyalty roll, except toward near-certain death. A two-step one makes refusing one harder. A three-step blood bond or Vinculum keeps the servant's opinion of the master at Welcome or better. Desk item x5.
+
+Reverse: drop the weight from loyaltyFor and the floor from attitude.of.
+
+## B5104. Dominate Conditioning (2026-11-15)
+WoDX NPC. Once a scene, a master with Dominate 4 rolls Charisma + Leadership at the subject's current Willpower. Successes add to a tally of 7 times Self-Control (5 if the subject yields, 10 if wilful) that only the Storyteller sees. Halfway, the master's Dominate is one easier; at full, others' Dominate is two harder and the subject obeys hard orders. It fades after six months less a week per Willpower dot spent apart (V20, pages 162 to 163 of the pdf). Desk item v1 (the rules; the sheet button is step two).
+
+Reverse: remove condition() and its approval type.
+
+## B5105. Revenant families serve their house (2026-11-15)
+WoDX NPC. A revenant family (Bratovitch, Grimaldi, Obertus, Zantosa and the rest) can be given a master in the bind window, and every member of the family is bound to that master at step 1. Desk item v3.
+
+Reverse: clear the revenantMasters setting.
+
+## B5106. Guanxi in a wu (2026-11-15)
+WoDX NPC. A Kuei-jin's guanxi toward each wu-mate is 5 plus the mate's Charisma less the higher of P'o or Yin, read as a Vaulderie score (Kindred of the East, page 69 of the pdf). Kuei-jin cannot make ghouls (page 11); they keep mortal servants through the other kinds. Desk items k1, k2 (k2's NPC keepers are step three).
+
+Reverse: drop guanxi from ctxFor.
+
+## B5107. A mage's acolytes and consors (2026-11-15)
+WoDX NPC. A mage's allies and followers are called acolytes in the followers window, and those with Numina or hedge magic are consors (M20, page 142 of the pdf). Desk item m2.
+
+Reverse: drop mageWord from withLedger.
+
+## B5108. Kinfolk serve their Garou kin (2026-11-15)
+WoDX NPC. A Kinfolk with a family tie to a Garou serves them at step 1, and a family line founded by a Garou or a Kinfolk carries the blood: everyone born into it is marked Kinfolk. Desk item w2.
+
+Reverse: drop kinOf from ctxFor and carriesBlood from kin.mjs.
+
+## B5109. The look of a bond on the map (2026-11-15)
+WoDX NPC. Each kind has its own colour. Binding draws a thread from servant to master on every screen; a bound token wears a faint ring that only its master's players and the Storyteller see. Both follow the effects level setting. Desk item x6 (the look).
+
+Reverse: unregister the token look.
+
+## B5110. Social Conditioning rules (2026-11-15)
+WoDX NPC. The ten stages of M20's Social Conditioning (pages 606 to 608 of the pdf), who may run it in each age (the Order of Reason from 1325, the Technocratic Union from 1900, Nephandi in any age), a roll for each day, two days or week, resisted at difficulty 6 with Enlightenment against permanent Willpower. A player character joins only with the player's consent. Desk item m1 (rules and roll; the programme window is step three).
+
+Reverse: remove socialRoll.
+
+## B5111. NPC masters keep servants by line and year (2026-11-15)
+WoDX NPC. The rules list what each kind of NPC master keeps in each era (ghouls for Kindred, revenants for Tzimisce, Social Conditioning for the Union and so on) so step three can stock them. Desk item x4 (the table).
+
+Reverse: drop KEEPERS.
+
+## B5130. The domitor's clan weakness in the beast (2026-11-14)
+WoDX Creation, WoDX NPC. With five or more points of its domitor's blood an animal ghoul shows the clan's weakness, only where it fits a beast (V20 Dark Ages p. 401): Nosferatu hideous, Lasombra no reflection, Followers of Set shun the sun, Brujah and Gangrel quick to rage (frenzy one harder), Malkavian odd ways, Ventrue picky, Toreador entranced. Shown as an effect on the token. Desk item 8.
+
+Reverse: registerAnimalBlood's updateActor hook.
+
+## B5131. The blood bar and red eyes (2026-11-14)
+WoDX Creation. An animal ghoul's tokens show its blood as the second bar and carry a faint red light that shows only in the dark. Desk item 26.
+
+Reverse: showBlood.
+
+## B5132. Animalism and one's own beasts (2026-11-14)
+WoDX Actions. One easier on one's own animal ghoul; Subsume the Spirit or the Twin Souls on it needs no roll and puts the player's view in the beast; the Beckoning brings one's own beasts on the scene first. Feral Whispers opens every order (B5063). Desk item 15.
+
+Reverse: beastLink in kindred.js.
+
+## B5133. The szlachta (2026-11-14)
+WoDX Creation with WoDX Storyteller. A long task for a vampire with Vicissitude 3 (Dexterity + Medicine, difficulty 7, 10 successes, house): a person takes the book's traits (V20 p. 502) and Monstrous; a beast gains a dot of Strength, Stamina, Perception and Brawl (house) and stands larger; both gain Fortitude 1 and can never go back among people. Desk item 22.
+
+Reverse: the fleshcraft wodxTaskDone hook.
+
+## B5134. The vozhd (2026-11-14)
+WoDX Creation, WoDX Actions. A long task for an elder with Vicissitude 5 and fifteen of their own ghouls (difficulty 8, 25 successes, house); the ghouls are marked dead and hidden, not deleted. The vozhd takes the book's traits (V20 pp. 502 to 503) and is immune to Animalism, Dominate and Presence; its making goes to the Masquerade ledger. Desk item 23.
+
+Reverse: makeVozhd and immune() in kindred.js.
+
+## B5135. Kennels (2026-11-14)
+WoDX Creation. The Storyteller marks a vampire as keeping a kennel of a kind; with two or more of its ghouls of that kind, one young a year in the kind's season (house months), born trained, filled by its first drink. Desk item 24.
+
+Reverse: kennelTick.
+
+## B5136. The beasts a household keeps (2026-11-14)
+WoDX Creation, WoDX NPC. Gangrel, Tzimisce, Nosferatu and any vampire with Animalism keep one to three animal ghouls: one, plus one in the Dark Ages, plus one in the countryside, the first by clan and the rest from the age's list. They come with a household seeded as that vampire's ghouls. Desk items 25 and 27.
+
+Reverse: householdBeasts in residents.mjs.
+
+## B5137. Ghoul mounts (2026-11-14)
+WoDX Combat. Mounts are still tiles with fixed traits; when the mounts work puts riders on Creature sheets, it reads the war-trained mark and the beast's Potence, Celerity and Fortitude. Desk item 21.
+
 ## B5150. The Philippines a region of its own (2026-11-15)
 WoDX Chronicle and Storyteller. Ben asked to build out the Philippines. The islands leave the Malay world and become the 45th world region, "The Philippines (Manila, the Visayas, Mindanao and Sulu)", with Manila as its city, the tropical wet climate and the Philippine money region. The world map gives it the squares north of 4.5 degrees and east of 119.5 (with Palawan) that were the Malay world's; the map builder cuts the country out by name on its next run. The region's letter comes last so no older square changes. Taken as recommended; logged in PENDING-REVIEW.
 
@@ -8551,3 +8654,30 @@ checks main for `tools/gate/<gate>.mjs` first and calls such a gate "NEW with th
 yet, so this change must fix it".
 
 Reverse: drop the notOnMain set in runner.mjs recheck().
+
+## B5600. Names made by pattern where the records show the rule (2026-11-15)
+WoDX Creation. Ben asked (15 November 2026) whether lists under 300 names could be filled with names made from how the names were formed, and approved the plan: recorded names first, made names only where the records show the rule. Ten peoples qualify: the Lakota, Cheyenne, Mandan, Hidatsa, Arikara, Pawnee, Crow, Blackfoot, Arapaho and Kiowa, whose recorded own names are two-part names in translation (a describing word and a thing, as Red Cloud; a number and things, as Two Crows; women's names often ending in Woman). New names join only parts that the same people's records hold, from a fixed list of English describing words and things, so a word in the people's own language, a nation's name or a title never becomes a part. Peoples with no recorded women's own names get no made women's names. The made names sit in Roll Tables of their own ("made by pattern", data/people-patterned.mjs, written by tools/names/pattern-names.mjs) and are drawn a third as often as the recorded own names. The other 26 short lists (Tuareg, Moro, Banyarwanda, Sami, Khmer, Amazigh, Maya, the Haudenosaunee, Algonquian, Southwest, Basin, Northwest Coast, Cree, Anishinaabe, Inuit, Taíno, Aboriginal, Kongo, Luba, Ganda, Filipino and the Comanche and Diné) are single names in the people's own language with no rule in the records that could make more without inventing words, so nothing is made for them. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: empty PATTERNED in data/people-patterned.mjs.
+
+## B5620. The court's hunt check writes once per faction turn (2026-11-15)
+WoDX Actions. autoHunts set the huntLooked flag on every Kindred one at a time. With hundreds of Kindred in the
+testbed world that took more than 30 seconds at each faction turn, and gatehandx step 5 timed out on main. The
+times now go in one Actor.updateDocuments call after the loop, and hunts are called after that.
+
+Reverse: put the setFlag back inside the loop.
+
+## B5621. gate-interact sets aside the breach standing rule and settles the watchman (2026-11-15)
+Gates. The automation level approves a wall breach on sight, so step 7, which tests the queue, found nothing
+queued; the step now removes that one standing rule for itself (run-gate puts world settings back). In step 21 the
+watchman could still be walking toward the noise from step 7, so the yard was empty; the step now stops and settles
+the watchman on the grid first.
+
+Reverse: drop the two set-ups.
+
+## B5630. A hunt changes the court's attitudes twenty at a time (2026-11-15)
+WoDX Actions. callHunt and endHunt set each court Kindred's attitude to the target one after another. Each is a
+separate actor update, so with a big court calling and lifting one hunt took more than 30 seconds (gatehandx step 5
+still timed out after B5620). They now run twenty at a time; each update is to a different actor.
+
+Reverse: go back to the plain for loops.

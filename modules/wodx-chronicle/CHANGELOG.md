@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.123.1 (The domitor's feeding (B4983) is offered again while the monthly need (B5050) runs by itself; a declined feeding waits for the next month)
 - 0.123.0 (The Storyteller's Hand, round two: the Martyr's Take the wound button, a Marauder's shifting aura, Infectious Bite, Conspicuous Consumption and Berserker that land by themselves, and blackmail as a law heat deed (B5171, B5172, B5175, B5177))
 - 0.122.0 (Ghouls fed by their domitor (B4983): the feeding waits for the Storyteller's approval and then happens by itself; Who may be granted Golconda (B5093))
 - 0.121.0 (A ghoul's monthly need, carried out by itself (B5050 to B5054), for human and animal ghouls alike, the Storyteller's as well as the players'. Before, the Clan features card only asked someone to take a blood point away; now the sheet changes, the craving is rolled (V20 Dark Ages p. 401: Self-Control at difficulty 7, Willpower for an animal) and a botch sends out the wodxGhoulCraving hook. New world setting "Ghouls need vitae each month", on by default; with it off the old card comes back. Animal ghouls on Creature sheets carry the ghoul row)

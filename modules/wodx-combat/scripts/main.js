@@ -760,6 +760,7 @@ export async function attack({ attacker: a, target: t, weaponId, noAim = false }
     const fd = r.data;
     const w = fd.weapon === "auto" ? { id: "auto" } : weapons.find(x => x.id === fd.weapon);
     try {
+        if (await bondHolds(attacker, target)) return null;
         if (!(await ambushFirst({ attacker, attackerTok, target, targetTok, fd }))) { openFight(attackerTok, targetTok); return null; }
         const res = await resolveAttack({ attacker, attackerTok, target, targetTok, weapon: w, fd }); openFight(attackerTok, targetTok); return res;
     }
@@ -798,6 +799,19 @@ async function ambushFirst({ attacker, attackerTok, target, targetTok, fd }) {
     if (GEN() < 12) md.type = CONST.CHAT_MESSAGE_TYPES.ROLL;
     await ChatMessage.create(md);
     return out.attack;
+}
+
+/**
+ * B5102: a servant bound to the one it strikes at (a blood bond at the second drink or past it, full Conditioning, a
+ * chained Thrall, a fomor's master) rolls first through WoDX NPC's bond ledger; a failed roll stops the blow. True
+ * when the blow is not struck.
+ */
+async function bondHolds(attacker, target) {
+    if (!attacker || !target) return false;
+    try {
+        const r = await game.modules.get("wodx-npc")?.api?.servants?.restrain?.(attacker, target);
+        return !!r?.stop;
+    } catch (e) { console.warn("WoDX Combat | bond restraint", e); return false; }
 }
 
 /** An attack made outside a fight starts one (3.9.0); never in the way of the attack itself. */
@@ -1890,7 +1904,7 @@ Hooks.once("init", () => {
     const vehicles = VH.setupVehicles({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall });
     FTime.setupFightTime();
     const api = { body, movement, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.36.1", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.37.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, followOn: R.followOn, markFollow, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -2356,6 +2370,7 @@ export async function quickAttack({ attacker: a = null, target: t = null, weapon
         try {
             // B4792: a named weapon (a ram) in place of the automatic choice
             const weapon = weaponId ? (weaponList(attacker).find(w => w.id === weaponId) ?? { id: "auto" }) : { id: "auto" };
+            if (await bondHolds(attacker, target)) continue;
             if (await ambushFirst({ attacker, attackerTok, target, targetTok, fd })) results.push(await resolveAttack({ attacker, attackerTok, target, targetTok, weapon, fd }));
             openFight(attackerTok, targetTok);
         }
