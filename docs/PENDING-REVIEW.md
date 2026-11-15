@@ -1433,7 +1433,8 @@ Ben picked the Power Limits Desk (https://claude.ai/artifact/PChWEUj4WJaKdihePVF
 | 2026-11-14 | Background experience for servants (B4929) | The current rating times three, at least three (V20 leaves it to the Storyteller) | backgroundCost in summon-rules.js |
 | 2026-11-14 | When an NPC is cornered (B4927) | Two foes within 2 yards and at least three wound levels taken | powerPick in wodx-npc main.mjs |
 | 2026-11-15 | Strengthening the Demon's level (B5161) | Chi'iu Muh 2, from its place on Kindred of the East Companion p. 74 (the scan drops the dots); no Hun harness roll | the chiiumuh entry in kote-arts.js |
-| 2026-11-15 | Which fomor powers play by themselves (B5162) | Numbing only, from a Power item named Numbing; the other fomor powers stay with the Storyteller | fomor.js |
+| 2026-11-15 | Which fomor powers play by themselves (B5162) | Numbing only, from a Power item named Numbing; the other fomor powers stay with the Storyteller (superseded by B5610: all of them play) | fomor.js |
+| 2026-11-15 | Fomor readings (B5610-B5619) | Extra Limbs' three grapple dice ride on Brawl; Molecular Weakening's doubled harm is two dice more to hit the target; Eyes of the Wyrm holds three turns (five less a typical Wits); Cause Insanity's phobia lasts ten turns; Echoes of Wrath, Noxious Miasma and Voice of the Wyrm use Charisma for Presence; Fungal Udder rolls Stamina + Survival; a Berserker's Rage returns a point a scene; Triatic Sense hides the fomor from WoDX's passive Sense Wyrm | fomor-powers.js |
 
 ## Waiting for review
 

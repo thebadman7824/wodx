@@ -10,6 +10,25 @@ export const slug = s => String(s ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-
 export const specKey = (line, name) => `${slug(line)}|${slug(String(name ?? "").replace(/^[•\s]+/, ""))}`;
 
 export const SPECS = {
+ "fomor|animal-control": {
+  "what": "animal",
+  "profile": "servant",
+  "count": {"by": "successes"},
+  "lasts": {"kind": "scene"},
+  "control": {"mode": "orders", "range": "120 yards", "orders": "simple"},
+  "page": "W20 p. 430",
+  "note": "B5615: Manipulation + Animal Ken 6 after a Willpower: one weak or sick animal a success within 120 yards; each follows an order of five words or fewer for the scene."
+ },
+ "fomor|slither-skin": {
+  "what": "double",
+  "profile": "servant",
+  "count": {"by": "fixed", "fixed": 1},
+  "lasts": {"kind": "scene"},
+  "control": {"mode": "direct"},
+  "stats": {"health": 1},
+  "page": "W20 p. 437",
+  "note": "B5615: the fomor's own skin walks off: one dot in each Physical Attribute, one health level, none of the fomor's powers. It must come back by the end of the scene or it falls apart."
+ },
  "mage-dark-ages|one-fights-as-many": {
   "extra": true,
   "what": "double",

@@ -58,7 +58,7 @@ export function clampDifficulty(d) {
  */
 export function soakPool({ profile, damageType, stamina, fortitude = 0, armor = 0, armorPiercing = 0,
                            bypassArmor = false, fireOrSun = false, fortitudeBlood = false, bane = false, bonus = 0, aggSoak = true,
-                           lethalSoak = false, baneSoak = false, formOn = false }) {
+                           lethalSoak = false, lethalWhy = "", baneSoak = false, formOn = false }) {
     const notes = [];
     let effArmor = armor;
     if (fireOrSun && effArmor) { effArmor = 0; notes.push("armor does not protect against fire or sunlight"); }
@@ -96,7 +96,7 @@ export function soakPool({ profile, damageType, stamina, fortitude = 0, armor = 
         default: // mortal, fae
             if (t === "bashing" || (lethalSoak && t === "lethal") || (baneSoak && bane)) sta = stamina;
             else notes.push(lethalSoak ? "aggravated damage can only be soaked by armor" : "lethal and aggravated damage can only be soaked by armor");
-            if (lethalSoak && t === "lethal") notes.push("in the fae mien: Stamina soaks lethal damage (DA:Fae p. 104)");
+            if (lethalSoak && t === "lethal") notes.push(lethalWhy ? `${lethalWhy}: Stamina soaks lethal damage` : "in the fae mien: Stamina soaks lethal damage (DA:Fae p. 104)");
             if (baneSoak && bane) notes.push("Dark Ages fae: cold iron is soaked with Stamina (DA:Fae p. 88)");
             break;
     }

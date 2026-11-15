@@ -303,7 +303,11 @@ export async function run() {
     });
     await G.step("28. no installed table is empty", async () => {
       // B5641: a Roll Table cut off midway through an update is refilled at start-up, so none stays empty
-      const empty = [...game.tables].filter(t => t.getFlag("wodx-chronicle", "table")?.id && !t.results.size).map(t => t.name);
+      // A table shipped empty on purpose (a people with no recorded women's own names, B5600) is left out
+      const {hash128} = await import("/modules/wodx-chronicle/scripts/gen-core.mjs");
+      const none = hash128(JSON.stringify([])).join("-");
+      const empty = [...game.tables].filter(t => { const f = t.getFlag("wodx-chronicle", "table");
+        return f?.id && !t.results.size && f.shipped !== none; }).map(t => t.name);
       G.ok("28. every WoDX Roll Table in the world has results", !empty.length, {empty: empty.slice(0, 8)});
     });
   } catch (e) {
