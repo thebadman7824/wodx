@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6230
+Next free block: B6260
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -339,6 +339,7 @@ Next free block: B6230
 | B6130-B6139 | The eight held-back world timeline readings after the book check (used B6130-B6132) | Chronicle |
 | B6210-B6219 | gatevehicles plays in a year with cars (used B6210) | tools (gates) |
 | B6220-B6229 | The night's work: one Undo for a night of the Storyteller's Hand (Ben's desk pick hd1, 15 November 2026) (used B6220-B6226) | Chronicle, Solo |
+| B6250-B6259 | Names follow each year's customs (Improvement Desk nm1) (used B6250-B6253) | Creation, NPC |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10483,3 +10484,23 @@ Reverse: call el.click() directly again in onMessage and onDialog.
 WoDX Solo. A sixth Storyteller tool, The night's work: the player's window asks the seat for the list (ask.st.night) and sends the ticked pieces back (ask.st.nightUndo); the seat carries out the Undo, logs it and tells the player what was done. The player's own changes since are warned of in the same way.
 
 Reverse: take the night entry out of ST_TOOLS in solo-rules.mjs.
+
+## B6250. Name customs by year, with sources, only where a source dates them (2026-11-15)
+WoDX Creation, data/name-customs.mjs. Each people has stages (given, byname, settling, family) by year, a noble year where the nobility bore inherited names earlier, and the source. Dated laws: the Habsburg patent for Jews (23 July 1787), Japan (edicts of 1870 and 1875), the Netherlands (decree of 18 August 1811), Sweden (Name Ordinance of 1901), Hawaii (Act to Regulate Names, 1860), the Philippines (Clavería decree, 1849), Thailand (Surname Act, 1913), Iran (civil registration, 1925), Turkey (Surname Law, 21 June 1934). Peoples with no dated source keep their tables as they are and are listed as open.
+
+Reverse: delete the people's entry in NAME_CUSTOMS.
+
+## B6251. The year shapes the generated name without changing the person's other draws (2026-11-15)
+WoDX Creation, people-rules withCustom. The custom draws from its own stream seeded by the name, so a re-rolled row keeps its trade, Nature and the rest. Where a family name is due but the era group's list holds only a "son of" pattern, a family name comes from the next age's list. A noble, knight, lord, samurai or steward bears an inherited name from the noble year.
+
+Reverse: drop the withCustom call in person().
+
+## B6252. Kin do not share a byname; children are named for the father where the list gives the form (2026-11-15)
+WoDX NPC, resident-rules nameHousehold. The father is the master, else the partner, when a man. Child names come only from a pattern in the people's list or from a father's-name pair the list holds, so no form is made up.
+
+Reverse: remove the `own` branch in nameHousehold.
+
+## B6253. The Storyteller's note says how the name is borne (2026-11-15)
+WoDX Creation, people-rules customLine, one quiet line on the generated sheet.
+
+Reverse: drop customLine from noteOf.
