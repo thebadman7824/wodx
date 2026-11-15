@@ -29,6 +29,8 @@ export const TORMENT_BY_HOUSE = {devils: 4, namaru: 4, scourges: 3, asharu: 3, m
 /** The Dark Ages tribes whose starting Willpower differs from W20 (B3005, book check 2026-11-13). */
 export const DARK_AGES_TRIBE_WILLPOWER = {"children of gaia": 3};
 /** C20: what each seeming adds at the start (B3006). The Wilder picks Glamour or Willpower. */
+/** B5024: whether the sheet's seeming is a wilder's. */
+export const isWilder = sys => field(sys ?? {}, "seeming").includes("wilder");
 export const SEEMING_BONUS = {childling: {glamour: 1}, wilder: {choice: true}, grump: {willpower: 1}};
 
 const lookup = (table, text, alias = {}) => {
@@ -63,7 +65,7 @@ function twoHighest(sys) {
  *   prelude     Willpower dots the prelude gave
  *   backgrounds {lowercase name: dots}
  */
-export function derivedTraits(lineId, sys = {}, {bought = {}, prelude = 0, backgrounds = {}} = {}) {
+export function derivedTraits(lineId, sys = {}, {bought = {}, prelude = 0, backgrounds = {}, wilder = "glamour"} = {}) {
   const L = TOTALS[lineId];
   if ( !L ) return {rows: [], notes: [], ref: ""};
   const rows = [], notes = [];
@@ -123,11 +125,13 @@ export function derivedTraits(lineId, sys = {}, {bought = {}, prelude = 0, backg
       break;
     case "c20": {
       const seem = Object.keys(SEEMING_BONUS).find(k => field(sys, "seeming").includes(k)), sb = SEEMING_BONUS[seem] ?? {};
-      const tag = what => seem && sb[what] ? `Starts at 4, plus ${sb[what]} as a ${seem}` : "Starts at 4";
-      wp(4 + n(sb.willpower), tag("willpower"));
-      add("glamour", "Glamour", "system.advantages.glamour", 4 + n(sb.glamour), tag("glamour"), {extra: "glamour"});
+      // B5024: a wilder's point goes where the wizard's pick says (Glamour unless Willpower is picked)
+      const own = sb.choice ? (wilder === "willpower" ? {willpower: 1} : {glamour: 1}) : sb;
+      const tag = what => seem && own[what] ? `Starts at 4, plus ${own[what]} as a ${seem}${sb.choice ? " (the player's pick)" : ""}` : "Starts at 4";
+      wp(4 + n(own.willpower), tag("willpower"));
+      add("glamour", "Glamour", "system.advantages.glamour", 4 + n(own.glamour), tag("glamour"), {extra: "glamour"});
       add("banality", "Banality", "system.advantages.banality", 3, "Starts at 3");
-      if ( sb.choice ) notes.push("A wilder adds 1 to Glamour or to Willpower, the player's pick: raise one of them by hand.");
+      if ( sb.choice ) notes.push(`A wilder adds 1 to Glamour or to Willpower: now ${wilder === "willpower" ? "Willpower" : "Glamour"}; change the pick below.`);
       else if ( !seem ) notes.push("Write the seeming on the sheet: a childling starts with 1 more Glamour, a grump with 1 more Willpower, and a wilder picks one.");
     }
       break;

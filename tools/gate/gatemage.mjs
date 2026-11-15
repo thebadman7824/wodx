@@ -40,9 +40,11 @@ export async function run() {
   const lastCard = () => cards().at(-1);
   const press = async msg => { const el = document.createElement("div"); el.innerHTML = msg.content; Hooks.callAll("renderChatMessageHTML", msg, el); el.querySelector("[data-wct-sig-act]")?.click(); };
   const mage = (name, sect, more = {}) => ({name, type: "Mage", system: {affiliation: "tradition", sect, advantages: {willpower: {permanent: 6, temporary: 3}}, ...more}});
-  let actors = [];
+  let actors = [], autoWas = null;
   try {
     await game.settings.set(C, "sigMage", true);
+    // These steps press the card buttons; with "Features give their points by themselves" on (B4874) the points come at once instead (gatefeatures checks that)
+    autoWas = game.settings.get(C, "sigAuto"); await game.settings.set(C, "sigAuto", false);
     actors = await Actor.create([mage("WoDX gate: Akashic", "wod.bio.mage.akashic"), mage("WoDX gate: Euthanatos", "wod.bio.mage.euthanatos"),
       mage("WoDX gate: Flambeau", "wod.bio.mage.hermes", {custom: {sect: "House Flambeau"}}), mage("WoDX gate: Verbena", "wod.bio.mage.verbena"),
       mage("WoDX gate: Sister", "wod.bio.mage.hippolyta"), mage("WoDX gate: Taftani", "wod.bio.mage.taftani"), mage("WoDX gate: Watcher", "wod.bio.mage.nwo"),
@@ -107,6 +109,7 @@ export async function run() {
       if ( msgs.length ) await ChatMessage.deleteDocuments(msgs.map(m => m.id));
       for ( const x of actors ) await game.actors.get(x?.id)?.delete();
       await game.settings.set(C, "sigMage", was);
+      if ( autoWas !== null ) await game.settings.set(C, "sigAuto", autoWas);
     } catch (e) { R.errors.push(`cleanup: ${e.message}`); }
   }
   return save(R, "gatemage-result.json");

@@ -96,7 +96,7 @@ export function cardsFor(ev = {}, edges = [], {stepOf = () => 0} = {}) {
       if ( e.kind === "dreamer" && ev.kind === "death" ) say(e.from, `Your Dreamer ${e.to.name} is dead: that well of Glamour is gone.`);
       if ( (e.kind === "packmate" || e.kind === "cellmate" || e.kind === "cabal" || e.kind === "wuOf") && ev.kind === "death" )
         say(e.from, `${e.to.name}, of your ${e.kind === "packmate" ? "pack" : e.kind === "cellmate" ? "cell" : e.kind === "cabal" ? "cabal" : "wu"}, has fallen.${e.kind === "cellmate" ? " A Willpower roll (difficulty 7) or lose a point of temporary Willpower (house rule)." : ""}`);
-      if ( e.kind === "familiar" && ev.kind === "death" ) say(e.from, `Your familiar ${e.to.name} is dead; the Storyteller rules on what the loss costs.`);
+      if ( e.kind === "familiar" && ev.kind === "death" ) say(e.from, `Your familiar ${e.to.name} is dead, and the loss is paid at once (M20 p. 407).`);
     }
   }
   return out;
@@ -133,4 +133,19 @@ export function fetterLinks(wraith, byName) {
     if ( target && target !== wraith.id ) out.push({wraithId: wraith.id, actorId: target, name: i.name, rating: Number(i.system?.value) || 0});
   }
   return out;
+}
+
+/**
+ * What a familiar's death costs its mage (M20 p. 407, the sidebar on a familiar's loss, in WoDX's own words): every
+ * benefit the familiar gave ends, a point of permanent Willpower goes, and two Quintessence per Familiar dot drain away;
+ * whatever Quintessence the mage does not have to give comes back as Paradox. dots: the Familiar Background.
+ * Returns {willpower: {permanent, temporary}, quintessence, paradox, short, lines}.
+ */
+export function familiarCost(dots = 0, {willPerm = 0, willTemp = 0, quint = 0, paradox = 0} = {}) {
+  const d = Math.max(1, Number(dots) || 0), need = 2 * d;
+  const q = Math.max(0, Number(quint) || 0), short = Math.max(0, need - q);
+  const wp = Math.max(0, (Number(willPerm) || 0) - 1), wt = Math.min(Math.max(0, Number(willTemp) || 0), wp);
+  const px = Math.min(20, (Number(paradox) || 0) + short);
+  return {willpower: {permanent: wp, temporary: wt}, quintessence: q - (need - short), paradox: px, short, need,
+    lines: [`A point of permanent Willpower goes with it (now ${wp}).`, `${need} Quintessence drains away${short ? `; ${short} the mage did not have come back as Paradox (now ${px})` : ""}.`, "Everything the familiar gave is gone."]};
 }

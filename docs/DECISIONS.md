@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5010
+Next free block: B5040
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -231,11 +231,15 @@ Next free block: B5010
 | B4790-B4799 | Vehicles in a fight: aircraft, armoured vehicles, Durability, ramming, NPC drivers (used B4790-B4797) | Interactables, Combat, NPC |
 | B4800-B4809 | Storyteller tools for the lone player: add experience (used B4800-B4806) | Solo |
 | B4810-B4819 | Rothenstein Rebuilt: Ways laid by the builder, old exits and doors to the places inside (used B4810-B4813) | Storyteller |
+| B4820-B4849 | Summoning rules and power effect bounds (used B4820-B4849) | Actions |
 | B4850-B4859 | Rothenstein Rebuilt: book one's twist web (six chains, locks, one twist a week) (used B4850-B4853) | Chronicle |
-| B4860-B4889 | The Storyteller's Hand: what is approved happens, the world acts on its own (Ben's desk picks, 14 November 2026) (used B4860-B4873) | Chronicle, Storyteller, NPC |
+| B4860-B4889 | The Storyteller's Hand, part two: clan, tribe, kith and creed features act by themselves (Ben's desk picks s1-s5, 14 November 2026) (used B4860-B4889) | Chronicle, Combat, Actions, Storyteller, NPC, Interactables |
 | B4900-B4909 | Sami names (used B4900-B4902) | Creation, Chronicle |
+| B4910-B4919 | Rothenstein Rebuilt: book one fronts, roles and clue carriers (spine part two) (used B4910-B4917) | Chronicle |
 | B4950-B4959 | Tuareg names (used B4950-B4952) | Creation, Chronicle |
 | B5000-B5009 | Moro names (used B5000-B5002) | Creation, Chronicle |
+| B5010-B5029 | The Storyteller's Hand, part three: fire, noticing, and the rest of the desk acts by itself (Ben's desk picks, 14 November 2026) (used B5010-B5024) | Interactables, Actions, Senses, Library, Chronicle, Storyteller, Otherworlds, Creation |
+| B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7415,6 +7419,121 @@ WoDX Storyteller. builder.layWays(recipe, made, {only}) and builder.takeBackWays
 
 Reverse: drop the two api entries; the step keeps working.
 
+## B4820. Summoned beings carry their books' rules (2026-11-14)
+WoDX Actions. Ben asked (20:39Z) for summoning built out properly: the summoner controls the creature, it lasts a set time, it joins combat and it can be dismissed, and for every power's effects to be bound by rules. Each summoning power has a spec in summon-specs.js read from its page; summon-rules.js resolves it against the casting. A summons by a player's character waits for the Storyteller's yes; an NPC's runs by itself (B4837). When no actor is named, a plain being of the book's kind answers with the book's numbers on its token.
+
+Reverse: drop the summonResult call in effects.js planOf and plan.
+
+## B4821. Control (2026-11-14)
+A servant is owned by the summoner's players and moved by them. A called being serves the summoner through WoDX NPC's orders, hard orders weighed by the Storyteller. A wild one is hostile and is given an attack order on the nearest living thing. A Bind keyword on the same Mage casting makes a called being a servant (M20: summoning alone does not bind). An NPC's summons serve that NPC and WoDX NPC plays them.
+
+Reverse: summon-rules.js resolve().
+
+## B4822. Lasting, fights and dismissal (2026-11-14)
+Each token gets a "Summoned" timed effect from WoDX Chronicle (rounds, scene, dawn or clock); when it runs out the being fades away in its look. A being with no timer lasts until dismissed, destroyed, its task done or its upkeep unpaid, and resolve() turns any spec with none of these into the scene. A started fight on the scene adds the tokens with an initiative roll. The Storyteller, the token's owners or the summoner's owners dismiss it from the token HUD or the card.
+
+Reverse: summons.js bring(), dismiss().
+
+## B4823. Keeping rolls (2026-11-14)
+Where a book asks for a roll to keep a summons in hand, WoDX rolls it: on arrival (with a ladder by successes, as V20's Summon Elemental), on each of the being's turns (a Demon's Torment rolls), or each turn it is more than 20 yards from the summoner (house rule for "away from them"). A failure makes it hostile, free or gone as the book says; a botch on a ladder turns it on the summoner.
+
+Reverse: summons.js onTurn(), keepingRoll().
+
+## B4824. Upkeep and familiars (2026-11-14)
+A lasting servant with upkeep (Mummy effigies' Sekhem a day, week or month) is fed from the master's pool when it falls due; unfed it falls still (a token HUD button wakes it once paid) or leaves. The M20 Familiar/Companion Background (pp. 315-317) costs its rating in Quintessence each week; unfed it leaves; its death costs the mage a permanent Willpower and two Quintessence a dot, the rest as Paradox.
+
+Reverse: summons.js sweepUpkeep(), onFamiliarDeath().
+
+## B4830. Lights end and made things fade (2026-11-14)
+The powers review found two effects with no end. A Light or Dark keyword now puts a timed effect on its bearer whose end puts the token's own light back. A thing made by a power now fades from its holder's things when the power's duration ends; a Mage creation with Prime in it stays (house reading, PENDING-REVIEW).
+
+Reverse: effects.js light and give cases, expireMade().
+
+## B4831. Resistance and break-free rolls (2026-11-14)
+Effect cards named a resistance roll that nobody rolled. Each applied item with a resistance now has a button for the target's owners and the Storyteller; any success throws the effect off (house reading, PENDING-REVIEW); a hold can be tried each turn. An NPC's roll goes to the Storyteller only.
+
+Reverse: effects.js addResistButtons(), resistItem().
+
+## B4832. Each-turn rules are worked (2026-11-14)
+Harm that lasts and the powers whose books act each turn (Silver Claws, Claws of the Glassblower, Heart Claw, Combat Healing, Lost in the Mists, the Demon's Scry, Animal Form) carry an everyTurn record on their timed effect; on the bearer's turn WoDX applies the damage, healing or pool point, or rolls the book's roll and does what a failure or win does. The others the bounds check finds go on the review desk.
+
+Reverse: turns.js, turn-rules.js.
+
+## B4835. The bounds check (2026-11-14)
+tools/powers/bounds.mjs lists, for every applying power, what ends each keyword's effect and who controls it; the harness holds unbound keywords and summonings with no spec at none, and each-turn text with nothing working it to a ceiling.
+
+Reverse: delete tools/powers/bounds.mjs and its test.
+
+## B4836. Powers tagged as summonings that call nothing (2026-11-14)
+The book read of all 105 summoning powers found 22 that call no being (Night Cry, Summon Talisman, Fetish Fetch, the Hunts and Great Hunts, Rousing Apophis, Call the Stars, Shivers, Infest, the Rites of Spirit Awakening and of the Totem, King of the Beasts, Command Animals, Mind of the Swarm and others). summon-specs.js NOT_SUMMON gives each the keywords it works through instead: a curse as a Bind written on the sheet, a thing fetched to hand as a Make, command of animals already present as a Sway (house reading, on the review desk).
+
+Reverse: drop the notSummon branch in effects.js planOf.
+
+## B4837. An NPC's summoning runs by itself (2026-11-14)
+A summoning by an NPC with no player owner goes on the card as automatic: a plain being of the book's kind comes one square beside the NPC with its spec's rules, joins the fight and serves the NPC. The Storyteller can dismiss it or Undo the card (house reading, on the review desk).
+
+Reverse: route "pick" for an NPC's summon in planOf.
+
+## B4838. Each-turn powers carry the casting's numbers (2026-11-14)
+WoDX Actions. Ben picked every item on the Powers Bounds Desk as recommended (22:17Z). The fourteen powers whose books act each turn are built. When a power is used, its each-turn record takes the successes, Faith, Torment and the caster, so a rule that counts successes or uses the caster's pool reads the real casting. A record with no roll, harm or strike does nothing on the turn. A self power with no result of its own gets a scene boost to carry the record; any other result (a thing made, a hold) gets a timed effect of its own.
+
+Reverse: turn-rules.js resolveRec and the planOf call in effects.js.
+
+## B4839. Clenched Jaw (2026-11-14)
+The bitten target takes aggravated harm each turn from the caster's Strength + 1, difficulty 3. Breaking free costs the target one lethal level that cannot be soaked.
+
+Reverse: drop the "clenched jaw" record and onBreak in resolveResist.
+
+## B4840. Scabwalker Curse (2026-11-14)
+The target loses one bashing level each turn. When the target touched nothing made by people that turn, the Storyteller presses Skip on the turn card and the level is healed back.
+
+Reverse: drop the record and the skip button in turns.js.
+
+## B4841. One Fights as Many (2026-11-14)
+DA Mage p. 109. Each copy costs one Quintessence, up to the successes; only paid copies come. At each round's end the mage takes the worst harm any one copy took, by type and unsoakable, and the copies are made whole.
+
+Reverse: drop the hand spec, payFor and shareWounds.
+
+## B4842. Bitter Fruit (2026-11-14)
+The poison does nothing when eaten. Each turn for the successes in turns the eater rolls Stamina at 7; a failure costs one lethal level that cannot be soaked. Healing ends it.
+
+Reverse: drop the record and the only flag in the damage case.
+
+## B4843. Tripping the Ire and Ride the Flames (2026-11-14)
+Both keep a counter on the card. Tripping the Ire starts at the successes and loses one each turn. Ride the Flames loses one on each failed Willpower roll at 6. Either ends at zero.
+
+Reverse: drop the counter step.
+
+## B4844. Command the Wind and Cyclone (2026-11-14)
+Command the Wind at its high level strikes every living being within Faith yards each turn for one bashing level that cannot be soaked; masked ones are spared. Cyclone hits everything within Faith yards for dice equal to its counter, which drops by one each turn.
+
+Reverse: drop the two records and the area step.
+
+## B4845. Earth Meld and Invoke the Storm (2026-11-14)
+Earth Meld needs a Strength + Athletics roll at 6 each turn to keep the hold; a failure is noted on the card. Invoke the Storm lasts Faith turns: each turn a die of 9 or more calls lightning on someone within Faith yards for Torment dice of lethal harm. High-Torment forms carry their own rules alone.
+
+Reverse: drop the records and the out.high mark.
+
+## B4846. Witch's Nimbus (2026-11-14)
+A burning sheath: anyone who lands a close blow on its bearer takes lethal harm equal to the nimbus level. Bolts thrown from it are an ordinary attack.
+
+Reverse: drop touchHarm and onBlow.
+
+## B4847. Naming the Body's Destruction (2026-11-14)
+Only the serious level acts each turn: the target rolls Stamina at 8, and a failure costs one lethal level. Healing ends it.
+
+Reverse: drop the record and levelsEq.
+
+## B4848. Summon the Simple Form (2026-11-14)
+V20. Keeping the form costs one Willpower each turn; it ends when Willpower runs out.
+
+Reverse: drop the record.
+
+## B4849. Blood Pump (2026-11-14)
+For its scene the Kindred may spend more blood a turn than Generation allows.
+
+Reverse: drop noBloodCap from blood() in main.js.
+
 ## B4850. The twist web keeps the shape, not the words (2026-11-14)
 WoDX Chronicle. data/twists-rothenstein.mjs holds the twenty-four twists by number with a short handle in our own words, the six chains with their twists and pay-off chapters, the pairs that cannot both stand as written, and the quick order. The twists' own words stay in the Storyteller's third volume, which is kept privately and never in the repo.
 
@@ -7505,6 +7624,86 @@ WoDX Actions and NPC. Pick x4. At each faction turn (WoDX NPC now calls wodxFact
 
 Reverse: turn off "The court calls Blood Hunts"; favourBoon returns null.
 
+## B4874. Features give their points at once (2026-11-14)
+WoDX Chronicle. Picks s1 and s2. The card buttons that gave a feature's Willpower, Rage, Glamour, Renown, Chi, a boon or a breach record now happen as soon as the card is made, with Undo for any trait it moved; with no Storyteller connected they wait in the approval queue (Hands off passes them). The Child of Gaia's truce and the Tremere's refusal stay as buttons, being choices. Setting sigAuto (on). Soak dice: the Ahroun in Crinos with a creature of the Wyrm in the fight, a troll with an oath that holds, a Defender beside someone a monster attacks, a die each (WoDX Combat asks soakFor). Casting: WoDX Actions' M20 roll now reads trait and feature effects for magick, each Sphere, and fire when Forces does harm, so House Flambeau's die and the Chorus's voices apply. House readings.
+
+Reverse: turn off "Features give their points by themselves"; soakFor returns no dice.
+
+## B4875. The rolls a feature calls for are made (2026-11-14)
+WoDX Chronicle. Pick s3. A ghoul within three squares of Kindred blood spilled (lethal or aggravated) rolls Self-Control at 7; a Garou on a scene a Bunyip spirit or relic comes onto rolls Willpower at 7; either losing costs a temporary Willpower. A Hakken whose lord (the leader of the faction they belong to, or a lord set on the sheet) thinks less of them loses a Willpower point. House readings.
+
+Reverse: drop the deleteCombat, wodxDamageApplied, createToken and wodxAttitude listeners in registerSignatureHooks.
+
+## B4876. Awards that wait on a trigger (2026-11-14)
+WoDX Chronicle. Pick s2. A Malkavian's glimpse that comes true gives a Willpower point; a Devil-Tiger in a fight with a servant of the Yama Kings (akuma, oni, demons) gains a point of Yang Chi when it ends; a Piskie who leaves something in a barter for nothing more gains a point of Glamour, once a day; a Black Fury hears of harm to the guarded place and gains the Rage point at once.
+
+Reverse: the cards carry the button again (sigAuto off).
+
+## B4877. Counts and verdicts (2026-11-14)
+WoDX Chronicle and Storyteller. Pick s4. Ajaba gain a die to attack for each other Ajaba beside them (three at most); the Chorus in a church with three voices or more (Chorus or the faithful on the scene) cast one easier; a Judge's verdict on a named monster is answered from what it is and whether it has a Masquerade record, a deed on the law's heat or a hunters' file; the Iron Legion's long tasks gain a success on each roll that is not a botch. A Martyr's harm, a Marauder's region, the Scourges' winds and holy ground for the faithful stay with the Storyteller for now. House readings.
+
+Reverse: countEffects returns nothing; the Judge's card no longer answers; tasks.mjs without ironLegion.
+
+## B4878. Cards that told the Storyteller now change the world (2026-11-14)
+WoDX Chronicle. Pick s5. A Tremere order is kept in the Ledger as an oath of obedience; a Ventrue's lost holding lowers their standing with the Ventrue faction by one; a Giovanni's called wraith stands beside them as an unseen token; a breach that reaches the Watchers or the Inquisition adds a point of hunter pressure in the region with a file on the culprit. House readings.
+
+Reverse: lostHolding, callWraith, order and onBreach post their cards only.
+
+## B4879. Merits and flaws that only made a card now bite (2026-11-14)
+WoDX Chronicle. Pick t1. When one of these traits comes into play (feeding, a social act, a fight, the night) and the approval queue passes it, it rolls and lands an effect (trait-bite-rules.mjs): Impatient, Guilt-Wracked, Failure, Curiosity, Obsession, PTSD, Stress Atavism, Indecisive and Anachronism put a difficulty on the rolls they touch for the scene; Absent-Minded and Chronic Depression take a die for the night; Eat Food weighs on physical rolls for the night; Victim of the Masquerade costs a Willpower point; Compulsion and Driving Goal spend one or bear the difficulty; Flashbacks and Deranged start a derangement bout; Hatred frenzies on four successes of Rage; Poetic Heart adds a point of Banality on a failure; Bizarre Quality makes stealth and guile harder; Feral Mind social rolls; Common Sense whispers a warning to the player. Infectious Bite, Conspicuous Consumption, Cursed, Dark Fate, Bedeviled, Ulterior Motive, Black and White, Rose-Colored Glasses, Gall, Berserker, Untamable, Prone to Quiet, the Sidhe's Curse and Oracular Ability keep the card. Difficulties and rolls are house readings.
+
+Reverse: empty BITES in trait-bite-rules.mjs.
+
+## B4880. Followers and their masters (2026-11-14)
+WoDX NPC. Picks n1 and n2. An order a follower might refuse rolls the follower's loyalty first (Willpower against the bond's difficulty); a refusal is told to the master, and a follower whose attitude to the master falls two steps below neutral leaves service. A master whose follower breaches the Masquerade loses a step with every faction they share with that follower. House readings.
+
+Reverse: the T_ORDER approval skips loyaltyRoll; drop the wodxAttitude listener in orders.mjs and the adjustPeople call in onBreach.
+
+## B4881. Births and losses pay their cost (2026-11-14)
+WoDX NPC. Picks n3 and n4. A hard birth puts two levels of bashing damage on the mother (WoDX Combat) and a timed "Lying in" for the months of rest. A familiar's death costs its mage a point of permanent Willpower and two Quintessence per Familiar dot, any shortfall coming back as Paradox, and the Familiar Background clears (M20 p. 407, in WoDX's words). A dead teacher's Mentor dots come off the sheet and wait on a card for the player to move to another Background, or to keep for a new teacher, whose tie takes them. A heartbreak (warmth of 2 or more broken by a betrayal, cruelty or a botched courting roll) rolls Willpower at 7, and a botch draws a derangement from those a loss leaves. House readings except the familiar's cost.
+
+Reverse: bonds.mjs onDeath without payFamiliar; legacy.mjs onDeath posts the old card; hearts.mjs court without heartbreak.
+
+## B4882. Letters to NPCs are answered (2026-11-14)
+WoDX Storyteller and NPC. Pick n5. When a letter reaches someone the Storyteller plays, they write back on their own: the Storyteller's "letter" line on their talk sheet if there is one, else their greeting, some news or a rumour and a farewell in the era's stock talk, in the tone they hold toward the sender (one who hates the sender may not answer). The answer goes back the same long way, and the Storyteller's card on it can lose it, put it back, have it read, or rewrite it. Setting "NPCs answer letters" (on). AI-made words follow standing rule 11: the Storyteller's lines win.
+
+Reverse: turn off "NPCs answer letters".
+
+## B4883. Calls reach someone, and help comes (2026-11-14)
+WoDX Interactables, NPC and Storyteller. Pick n6. A call to a tied place is picked up by someone the Storyteller plays standing in it, else the nearest within eight squares, and the caller's player gets the Talk window with them for as long as the line is open (quarter of an hour of real time); nobody near means it rings out. A call for help brings the watch (before 1600) or the police after a delay: ten minutes by telephone (from 1890) or radio (from 1930), twenty for a bell, horn or shout, half an hour by runner. They arrive by the caller, with the Storyteller's Send them away. House figures.
+
+Reverse: watchReport's call and help lines without answerer, openLine and callHelp.
+
+## B4884. A blackmailed NPC strikes back (2026-11-14)
+WoDX NPC. Pick n7. An NPC who answers blackmail by striking back acts on the next faction turn: a fighter (Brawl, Melee and Firearms 5 or more, or Retainers 2 or more) sends two bandits or street thugs at the blackmailer; a mortal who can tell the blackmailer is no mortal tips off the hunters (a point of pressure and a file); anyone else starts a rumour against them. The law's heat is not used, as blackmail is no deed on its scale. House reading.
+
+Reverse: drop the wodxFactionTurn listener in trust.mjs.
+
+## B4885. NPC tactics that did only words now act (2026-11-14)
+WoDX NPC and Combat. Pick f1. Search rolls the same notice as the reaction regions against everyone hidden within sight, and whoever is found stays found for the fight. Hostage seizes the nearest bystander or passer-by not in the fight with Dexterity + Brawl at 6: the hostage is Held, and while beside the taker every attack on the taker is 2 harder. Full defence keeps its words: WoDX Combat already meets every attack with the best defence the sheet allows, and the defender now makes no attack that turn. House readings.
+
+Reverse: the search and hostage cases go back to their lines; conditionMods without shieldOf.
+
+## B4886. A heavy blow cripples by itself (2026-11-14)
+WoDX Combat. Pick f2. A blow of 3 or more lethal or aggravated levels after soak to a limb or eye cripples it at once until those health levels heal (+2 difficulty on actions with it, VtDA20 p. 348), and the crippling comes off as before when the part heals. The card goes to the Storyteller and the wounded character's players; Lost for good stays the Storyteller's button, and Not crippled after all takes it back. A player's blow on someone they do not own asks the Storyteller's client to do it.
+
+Reverse: offerMaim posts the old two-button card.
+
+## B4887. Chases run and end by themselves (2026-11-14)
+WoDX Interactables and NPC. Pick f3. A running chase rolls a turn every six seconds on the active Storyteller's client; a catch opens a fight through WoDX Combat's fight starter (its own Auto or Suggest still applies), a quarry who gets away is gone, and in either case the hard feelings land on the NPCs' attitude tracks. An NPC whose tactic is to flee starts a chase with every foe within forty yards behind it. A player character who runs still needs the Storyteller's Chase window, as there is no flight action for players to hook. Setting "Chases run by themselves" (on). House readings.
+
+Reverse: turn off "Chases run by themselves".
+
+## B4888. Containers restock by their place (2026-11-14)
+WoDX Interactables. Pick w9. A container with a stock list and no restock set now restocks by its place: by its own name first (a shop, stall, counter or shelf every week; a larder, pantry or kitchen every month; a store, armoury, granary, warehouse or cellar every season), else by WoDX NPC's place kinds round it (market and workplace weekly, tavern and chantry monthly, castle, gate and docks each season); a home or a find never. "Never" is now its own choice. House figures.
+
+Reverse: restockAll reads f.restock alone.
+
+## B4889. A look from a watch point shows who is there (2026-11-14)
+WoDX Interactables. Pick o5. A window, spyhole or lookout with no tied area now looks over what the watcher can see from it (the tokens in sight of the point on the same scene), and the whisper names them as the roll allows. A botch shows nothing, without asking the Storyteller. House readings.
+
+Reverse: watchReport reads the tied area alone.
+
 ## B4900. Scandinavia holds the Sami beside the Norse (2026-11-14)
 WoDX Creation and Chronicle. Scandinavia was all Norse; the Sami of the north are now 6 in 100 in the medieval and early-modern mix, 4 in the industrial age and 3 today. The Kola Sami in the Russian mix wait. Taken as recommended; logged in PENDING-REVIEW.
 
@@ -7519,6 +7718,46 @@ Reverse: edit the sami entry in data/people-world.mjs.
 WoDX Creation. Family names (Somby, Hætta, Turi, Valkeapää) came with the Norwegian, Swedish and Finnish rolls in the 18th and 19th centuries; WoDX gives them from 1800.
 
 Reverse: give the sami entry an old family list.
+
+## B4910. Fronts step on their own pace, gated by chapter (2026-11-14)
+WoDX Chronicle. Spine desk f1-f6 and m1: the court and the cult step every week of game time, the council, the Church and the Husbandman every two weeks, Marta every three. A step never comes before the chapter its scene belongs to, so the plot keeps its order when the company is slow. A front's first step is due at once. After a long skip the steps come one a tick, each counting from when the last was due.
+
+Reverse: set each front's `every` in data/fronts-rothenstein.mjs.
+
+## B4911. Fronts keep out of a twist's week (2026-11-14)
+WoDX Chronicle. Desk m1: a front does not step within seven days of a revealed twist, unless the company pushed it (the window's Pushed button). A front gives way to one twist only; it is not held up again by the next twist before it has stepped.
+
+Reverse: drop the twist check in whyNot.
+
+## B4912. Holds and strikes (2026-11-14)
+WoDX Chronicle. Desk m2: a front the company holds (a bribe, a threat, an ally inside) waits until let go, and its pace counts from then. A front struck (a key person gone, a ledger taken) goes back one step, and its map marks go back to the step before. The Storyteller can hold any front.
+
+Reverse: none needed.
+
+## B4913. A step shows on the map first (2026-11-14)
+WoDX Chronicle. Desk m3 and Ben's show, don't tell rule: each step's sight is drawn on its scene (found by part of its name, a walkable map before a session's or trial copy) through WoDX Storyteller's town looks, one key per front so the last step's marks give way. Street talk goes on the signal board; the Storyteller's card names the step's people (roles filled in) and place, and the saga clocks it moved. A world without that map gets the card with a note to tell it at the table.
+
+Reverse: set townLooks off in WoDX Storyteller.
+
+## B4914. Roles pass down a line (2026-11-14)
+WoDX Chronicle. Desk r1-r8: each role has an order of succession; marking a name gone passes the role on. The ally who is not is whoever the company leaned on most (the window counts it). Lines ending in a thing or someone found when needed never run out. Twist 24's "killed" heart takes the clerk out of the inside man's role. The Storyteller can put anyone in a role by hand.
+
+Reverse: none needed.
+
+## B4915. The courier east (2026-11-14)
+WoDX Chronicle. Desk r8: when the courier is stopped, the next rider goes a week later, with a card and a rider on the mountain trail.
+
+Reverse: none needed.
+
+## B4916. Judgements set later chapters (2026-11-14)
+WoDX Chronicle. Desk f7 and f8: whether the company lied to Reinhold (kin on the bridge in chapter 7, or a debt to call in from chapter 8) and what Baba Yaroslava decided (the Words offered at the choosing, or not). The Storyteller marks it; the card comes once when its chapter begins.
+
+Reverse: none needed.
+
+## B4917. Three carriers to a fact (2026-11-14)
+WoDX Chronicle. Desk c1-c7: six facts of the plot, each with a person, a place and a thing that carry it. Each carrier found pins a card on the open case board with a hint; the third pins the whole fact. Found carriers can be taken back.
+
+Reverse: none needed.
 
 ## B4950. The Tuareg at the desert edge (2026-11-14)
 WoDX Creation and Chronicle. The Tuareg of the Aïr and the Niger bend are 3 or 4 in 100 in West Africa's mix in every age, and 2 in the Maghreb's (the Ahaggar) before the industrial age. Taken as recommended; logged in PENDING-REVIEW.
@@ -7549,3 +7788,93 @@ Reverse: edit the moro entry in data/people-world.mjs.
 WoDX Creation. From 1800 a Moro is bin or binti the father or carries a family name (Kiram, Alonto, Misuari).
 
 Reverse: change child or fam in the moro entry.
+
+## B5010. Fire calls up the Red Fear (2026-11-14)
+WoDX Interactables and Actions. Pick o6. A Kindred who comes within six yards of a lit fire rolls the Red Fear once a scene for that fire, at the difficulty of a torch, a bonfire or being trapped by flames as the fire's size gives on the Red Fear chart; one who is burned rolls at once. The roll is made with no dialog through WoDX Actions' frenzy roll (rotschreckAuto), and its outcome applies as a rolled frenzy does.
+
+Reverse: fearOfFire and the burned roll return nothing.
+
+## B5011. The unseen are noticed by themselves (2026-11-14)
+WoDX Senses. Pick o7. When a player's character comes within sight of a hidden or sneaking token (thirty squares), after either moves five squares, and at each turn of a fight, the noticing roll is made on its own, and a token found shows to the players whose characters found it. The HUD button still rolls it by hand. Setting "Noticing rolls itself" (on). House readings.
+
+Reverse: turn off "Noticing rolls itself".
+
+## B5012. Drink and drugs change the rolls (2026-11-14)
+WoDX Library, Chronicle, Actions and Storyteller. Picks i1 and i2. What a dose puts in the body now lands on the rolls as WoDX Chronicle timed roll effects: drink takes a die from Dexterity and Intelligence for every two drinks and gives one back each hour; an opiate 2 dice from Dexterity and Ability pools for the scene; a sedative 2 dice from every pool and a Stamina roll at 7 against sleep (the token is marked asleep on a failure); a hallucinogen 1 to 3 dice from every pool, rolled when it is taken; cannabis a die from Perception and Wits. Ben's weaker and stronger picks halve the dice and the time or add a die and double it. A medicine makes a sickness's next weekly Stamina roll 1 easier for a week and gives a wounded character a die back for the scene. An unknown drug is one of five kinds, kept on the item: Intelligence + Medicine or Occult at 7 tells the taker which, and it then works as that kind. A vampire who drinks a drugged vessel's blood takes the same on the rolls (V20 pp. 301-302), and an opiate in the blood makes frenzy 1 easier to resist. The sizes are house readings.
+
+Reverse: addBite and vesselBites return nothing; the cards keep their words.
+
+## B5013. Impure goods and botched makings are rolled (2026-11-14)
+WoDX Library. Pick i3. An impure dose rolls a d10 when it is taken: nothing (1-3), a weaker dose (4-6), a day of 1 die off every roll (7-9), or that and a level of bashing (10). A botched Wonder of a mage loses its materials, and on 5 or more on a d10 a Willpower point, and on 9 or more a point of Paradox as well (Book of Secrets pdf 152 leaves the cost open). A Black Spiral fetish made by atrocity deepens the maker's Wyrm taint a step when it is done (WoDX Otherworlds). House figures.
+
+Reverse: landDose skips the impure roll; the after steps go back to their lines.
+
+## B5014. A Treasure's components are found as stages (2026-11-14)
+WoDX Library and Storyteller. Pick i4. Crafting a Treasure first finds its components, one for each level of the Art, each a stage of the long task rolled at Perception + Kenning at 7 for 3 successes, and then the crafting itself. Long-task stages may now roll their own Attribute, Ability and difficulty. The chimera's and the servant's traits already come from their points; whether remains are holy stays the Storyteller's call. House figures.
+
+Reverse: the Treasure task without stages.
+
+## B5015. A talisman's keeping is drawn (2026-11-14)
+WoDX Library. Pick i4. Four in five talismans made by the Path of Enchantment need a keeping, drawn when the talisman is made: a drop of the bearer's blood each week, a night under the full moon or washing in running water each month, or the maker's words each season. Unkept, its powers stop with "it has faded"; the Keep it power renews it. House figures.
+
+Reverse: keepingOf returns null.
+
+## B5016. A botched look misleads (2026-11-14)
+WoDX Library and Interactables. Pick i5. A botched closer look at a thing shows the looker one false line as if it were a success: the wrong quality, a false doubt, or a false all-clear, turned from the thing's own notes. A botched look at a clue shows a deeper line from another clue on the same map, or one of four stock wrong turns. Either way the Storyteller is whispered which line is false. House readings.
+
+Reverse: the botch lines go back to "the Storyteller may tell something misleading".
+
+## B5017. Turning to spirit goes on by itself (2026-11-14)
+WoDX Otherworlds. Pick o1. Once the year and a day in the Umbra (W20 p. 319) or Disembodiment (M20 pdf 89-90) is approved, the change goes on by itself: a step for each lunar month more in the spirit world, up to five, holding while the traveller is back in the flesh. A shapechanger takes +1 difficulty to every roll in the physical world for each two steps and is a spirit at five; a mage takes a die off Strength, Dexterity and Stamina rolls a step and has lost the body at five. The token shows a pale cold aura that grows with the step, and the Storyteller and the player are told when it rises. The pace and the effects are house readings.
+
+Reverse: setupFading does nothing; the flags stay as marks.
+
+## B5018. The lost find their way out of the Pattern Web (2026-11-14)
+WoDX Otherworlds. Pick o2. A botched crossing that leaves a traveller lost in the Pattern Web rolls when they come out: after 2 to 11 days they come out in the Penumbra a few squares from where they were lost, with a card to the Storyteller and the player. Clear crossing still brings them back sooner. House figures.
+
+Reverse: the lost record carries no return time.
+
+## B5019. Time in the Far Dreaming is drawn (2026-11-14)
+WoDX Otherworlds. Pick o3. A journey through the Far Dreaming or Arcadia draws how time runs against the world's on a d10 (W20 pdf 331: at random): an hour here for each day there, half, the same, a week, a month, or a year for each day there, and the journey's time button lets that much pass. The Deep Umbra keeps the world's time. The Labyrinth stays the Storyteller's call (WR20 pdf 307). The table is a house reading.
+
+Reverse: the Far Dreaming and the Deep Umbra go back to "storyteller".
+
+## B5020. The dying who see the dead cross by themselves (2026-11-14)
+WoDX Otherworlds. Pick o4. A character who can see the dead (a wraith-to-be, the Medium, Deathsight or Deathwalker trait, or Necromancy) and becomes Incapacitated or dead slips into the Shadowlands on their own, on every token of theirs, with a card to the Storyteller and the player. Powers that cross go through their own rolls as before. House reading.
+
+Reverse: registerDyingCross does nothing.
+
+## B5021. The Great Maelstroms blow by themselves (2026-11-14)
+WoDX Actions. Pick e1. In the years of a Great Maelstrom, once its dated event has happened in the chronicle, the storm's force is set everywhere: the Second (1347-1351, force 4), the Third (1600-1601, 5), the Fourth (1916-1918, 5), the Fifth (1945, 4) and the Sixth (1999, 5, with its metaplot event on). A scene's own storm can still be stronger. Once a scene, on arriving and at each new scene, every wraith here outside shelter takes the storm's harm as the Maelstrom tool rolls it (Wraith: The Great War p. 87), indoors counting as a Haunt of 1, and the harm is aggravated as often as the force says. Years and forces are house readings of the events.
+
+Reverse: great returns null and autoStorm returns nothing.
+
+## B5022. The era notes act (2026-11-14)
+WoDX Creation. Pick e2. Across the years: a Fetter that names someone now dead is lost, and a Harrowing follows (Wraith 20th p. 308); a lost tribe's member becomes one of what the tribe became, or is marked the last of it; a Fallen's host who passes 85 dies, and the possession roll is made; a Road with no V20 Path goes to Humanity, or Honorable Accord at the tick. Each is a ticked change the Storyteller can untick. A Fetter that is a place stays a note. House readings.
+
+Reverse: the changes go back to notes.
+
+## B5023. A Fallen takes the body on a sheet (2026-11-14)
+WoDX Creation. Pick e3. The new host window names the person taken; on success the demon keeps its own traits, takes the body's Strength, Dexterity and Stamina (DtF pdf 260), and the person's tokens show the demon; the person's sheet is marked taken. With nobody on a sheet the card asks for the rebuild as before.
+
+Reverse: possess without a host.
+
+## B5024. The wizard stores Pillars, Dominions, edges and a wilder's point (2026-11-14)
+WoDX Creation. Pick e4. Dark Ages Pillars (a fellowship's four) and Dominions go on the WoDX Actions records its rolls read, edges go on the sheet as Powers, and each is counted in the totals, with a hunter's Virtues in the same pool as edges. A wilder's seeming point is a pick in the wizard, Glamour or Willpower, and the derived traits follow it.
+
+Reverse: the three go back to "count by hand" and the wilder to a note.
+
+## B5030. The Banyarwanda and Barundi in central Africa's mix (2026-11-14)
+WoDX Creation and Chronicle. The people of the kingdoms of Rwanda and Burundi are 10 in 100 in central Africa's mix in the medieval age, 9 in the early modern, 8 in the industrial and 9 in the modern, beside the Kongo, Luba and Baganda (B4690). Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: drop banyarwanda from the central-africa mixes in world-rules.mjs and the banyarwanda entry in people-world.mjs.
+
+## B5031. The names (2026-11-14)
+WoDX Creation. Before 1800, the royal names of the mwami king lists and the court histories with own Kinyarwanda and Kirundi names, given alone; from 1800, French church names. Fewer than 300 names.
+
+Reverse: edit the banyarwanda entry in data/people-world.mjs.
+
+## B5032. An own name in place of a family name (2026-11-14)
+WoDX Creation. From 1800 a Munyarwanda or Murundi carries a second, own Kinyarwanda or Kirundi name (Habimana, Uwimana, Nkurunziza) where other peoples carry a family name; it is the person's own and is not handed to the children.
+
+Reverse: drop fam from the banyarwanda entry.

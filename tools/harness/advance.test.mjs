@@ -120,7 +120,7 @@ test("lines out of their era, lost tribes and line notes", () => {
   assert.equal(R.lostTribe("Bunyip", 1800, 1950).goneBy, 1900);
   assert.equal(R.lostTribe("Get of Fenris", 1200, 2000), null);
   assert.equal(D.LOST_TRIBES.find(t => t.tribe === "White Howlers").goneBy, 100, "fell in the 1st century (W20 p. 39)");
-  assert.ok(R.propose({line: "wraith"}, ctx(1200, 1840, DA, VIC)).notes.some(n => /Fetters/.test(n)));
+  assert.ok(R.propose({line: "wraith"}, ctx(1200, 1840, DA, VIC)).notes.some(n => /Fetter/.test(n)));
   assert.ok(R.propose({line: "kuei-jin"}, ctx(1200, 1300, DA, DA)).notes.some(n => /Dharma/.test(n)));
   assert.equal(R.ordinal(8), "8th");
   assert.equal(R.ordinal(1), "1st");

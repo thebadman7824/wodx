@@ -31,7 +31,7 @@ export async function run() {
   if ( game.world.id !== "rothenstein-wodx" ) { ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"}); return save(R); }
   const msgStart = Date.now(), viewed = canvas.scene, t0 = game.time.worldTime;
   const NPC = game.modules.get("wodx-npc")?.api, ST = game.modules.get("wodx-storyteller")?.api, IA = game.modules.get("wodx-interactables")?.api;
-  const before = {orders: game.settings.get("wodx-npc", "followerOrders"), tasks: game.settings.get("wodx-storyteller", "longTasks")};
+  const before = {orders: game.settings.get("wodx-npc", "followerOrders"), tasks: game.settings.get("wodx-storyteller", "longTasks"), chase: (() => { try { return game.settings.get("wodx-interactables", "chaseAuto"); } catch (e) { return null; } })()};
   let scene = null;
   const actors = [];
   const cards = () => game.messages.contents.filter(m => m.timestamp >= msgStart);
@@ -41,6 +41,7 @@ export async function run() {
       {versions: ["wodx-npc", "wodx-storyteller", "wodx-interactables", "wodx-actions", "wodx-chronicle"].map(id => `${id} ${game.modules.get(id)?.version}`)});
     await game.settings.set("wodx-npc", "followerOrders", true);
     await game.settings.set("wodx-storyteller", "longTasks", true);
+    if ( before.chase !== null ) await game.settings.set("wodx-interactables", "chaseAuto", false); // the gate rolls no turns
 
     const pc = await Actor.create({name: "WoDX gate: the master", type: "Mortal", ownership: {default: 3}}); actors.push(pc);
     const fol = await Actor.create({name: "WoDX gate: the servant", type: "Mortal", ownership: {default: 0},
@@ -111,6 +112,7 @@ export async function run() {
   try {
     await game.settings.set("wodx-npc", "followerOrders", before.orders);
     await game.settings.set("wodx-storyteller", "longTasks", before.tasks);
+    if ( before.chase !== null ) await game.settings.set("wodx-interactables", "chaseAuto", before.chase);
     const mine = cards().filter(m => /WoDX gate/.test(m.content) || m.flags?.["wodx-npc"]?.order || m.flags?.["wodx-storyteller"]?.tasks).map(m => m.id);
     if ( mine.length ) await ChatMessage.deleteDocuments(mine);
     if ( viewed && viewed.id !== scene?.id ) await viewed.view();

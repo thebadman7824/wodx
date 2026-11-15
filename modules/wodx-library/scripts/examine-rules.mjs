@@ -164,6 +164,20 @@ export function findings(kind, successes = 0, flag = {}, owner = null, details =
   return out.sort((a, b) => a.need - b.need);
 }
 
+/**
+ * B5016: what a botched look wrongly reads into a thing, from the thing's own notes turned about: the wrong
+ * quality, a false doubt, a false all-clear, or a stranger's mark. rand picks one. House reading.
+ */
+export function falseNote(flag = {}, owner = null, rand = Math.random) {
+  const f = flag ?? {}, out = [];
+  const qs = Object.keys(QUALITY).filter(k => k !== f.quality);
+  out.push(`The work is ${QUALITY[qs[Math.floor(rand() * qs.length)]].toLowerCase()}.`);
+  if ( f.forged || f.stolen || owner?.stolen ) out.push("Nothing about it is false.");
+  else out.push(rand() < 0.5 ? "It is not genuine. Someone made it to pass as something it is not." : "There are signs it was stolen: a mark scratched off, a name cut away, or a fit made for someone else.");
+  out.push(f.worn ? "It is sound and will last for years." : "It is worn and will not last much longer.");
+  return out[Math.floor(rand() * out.length)];
+}
+
 /** "3: A line" per row, as the Storyteller writes extra lines, to [{need, text}]. */
 export function parseLines(text = "") {
   return String(text).split("\n").map(l => /^\s*(\d+)\s*[:.)]\s*(.+)$/.exec(l) ?? (l.trim() ? [null, "1", l.trim()] : null))
