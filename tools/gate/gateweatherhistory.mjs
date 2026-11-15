@@ -22,10 +22,9 @@ export async function run() {
     const api = game.modules.get(AT)?.api?.weather;
     const M = await import(`/modules/${CH}/scripts/calendar-math.mjs`);
     const night = (y, m, d) => M.gregorianToJDN(y, m, d);
-    const [plains, home, java] = await G.make(Scene, [
+    const [plains, home] = await G.make(Scene, [
       {name: "WoDX gate: the Plains", width: 1000, height: 1000, padding: 0, flags: {[CH]: {place: {region: "north-america-west"}}}},
-      {name: "WoDX gate: at home", width: 1000, height: 1000, padding: 0, flags: {[CH]: {place: {region: "moravia"}}}},
-      {name: "WoDX gate: Java", width: 1000, height: 1000, padding: 0, flags: {[CH]: {place: {region: "nusantara"}}}}]);
+      {name: "WoDX gate: at home", width: 1000, height: 1000, padding: 0, flags: {[CH]: {place: {region: "moravia"}}}}]);
 
     await G.step("1. the Little Ice Age, deep in Bohemia and faint in Java", async () => {
       const b = api.history(1690, 1, {region: "moravia", climate: "central-europe"}), j = api.history(1690, 1, {region: "nusantara", climate: "tropical-wet"});
@@ -51,8 +50,7 @@ export async function run() {
       G.ok("4. the weather card names the hard year", ok, {});
     });
     await G.step("5. the window names the age where the scene stands", async () => {
-      await java.activate();
-      await waitFor(() => game.scenes.active?.id === java.id && globalThis.canvas?.scene?.id === java.id, 8000);
+      const java = await G.scene({name: "WoDX gate: Java", activate: true, flags: {[CH]: {place: {region: "nusantara"}}}});
       const today = api.now(globalThis.canvas?.scene ?? java);
       game.modules.get(AT).api.open();
       const want = today?.eraHard || today?.eraAge || "";
