@@ -89,8 +89,8 @@ export function edgePoint(rect, p, size = 100) {
 }
 
 /** A prisoner's record (kept in the world setting wodx-npc.prisoners). */
-export function prisonerEntry({captive, name, captor = null, captorName = "", faction = null, factionName = "", place = null, placeName = "", pc = false, since = 0} = {}) {
-  return {captive, name: String(name ?? ""), captor, captorName: String(captorName ?? ""), faction, factionName: String(factionName ?? ""),
+export function prisonerEntry({captive, name, captor = null, captorName = "", faction = null, factionName = "", place = null, placeName = "", pc = false, since = 0, token = null} = {}) {
+  return {captive, token: token || null, name: String(name ?? ""), captor, captorName: String(captorName ?? ""), faction, factionName: String(factionName ?? ""),
     place, placeName: String(placeName ?? "somewhere off the map"), pc: !!pc, since: Number(since) || 0, freed: null};
 }
 /** The rumour players can hear of a prisoner. */

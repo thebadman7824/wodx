@@ -82,7 +82,7 @@ export function build({MOD, esc, gmIds, chron, routines, factions, HAUL, isActiv
     try { await chron()?.conditions?.setCondition?.(actor, "immobilized", true); } catch (e) { console.warn(`${MOD} | tie`, e); }
     const e = G.prisonerEntry({captive: baseOf(actor).id, name: target.name, captor: baseOf(by?.actor)?.id ?? null, captorName: by?.name ?? "",
       faction: goal.faction?.id ?? null, factionName: goal.faction?.name ?? "", place: goal.place?.id ?? null, placeName: goal.name, pc: !!actor.hasPlayerOwner,
-      since: game.time.worldTime});
+      since: game.time.worldTime, token: target.document.uuid});
     await game.settings.set(MOD, "prisoners", G.addPrisoner(game.settings.get(MOD, "prisoners") ?? [], e));
     await target.document.setFlag(MOD, "prisoner", {since: e.since, at: e.placeName, by: e.factionName || e.captorName});
     Hooks.callAll("wodxCaptive", {actor: e.captive, name: e.name, faction: e.faction, factionName: e.factionName, place: e.place, placeName: e.placeName, by: e.captor, text: G.prisonerRumour(e)});
@@ -158,6 +158,8 @@ export function build({MOD, esc, gmIds, chron, routines, factions, HAUL, isActiv
     const copy = (doc, dx) => { const o = doc.toObject(); delete o._id; return {...o, x: Math.round(c.x - g / 2 + dx), y: Math.round(c.y - g / 2), hidden: t.after === "burial" && doc === body,
       flags: {...(o.flags ?? {}), [MOD]: {...(o.flags?.[MOD] ?? {}), carriedOff: null, carryIntent: null, arrivedFrom: doc.parent?.name ?? ""}}}; };
     const made = await scene.createEmbeddedDocuments("Token", [copy(body, 0), ...(car ? [copy(car, g)] : [])], {wodxMove: false});
+    // a prisoner's record follows them to the copy that stands in the place (Aftercare keeps them there)
+    if ( made[0] && t.after === "prison" ) await game.settings.set(MOD, "prisoners", (game.settings.get(MOD, "prisoners") ?? []).map(x => (x.token === t.body && !x.freed ? {...x, token: made[0].uuid} : x)));
     await card(`${body.name} arrives`, esc(`${car?.name ?? "Their captor"} brings ${body.name} to ${t.name} on ${scene.name}.`));
     return {...t, arrived: true, made: made.map(m => m.uuid)};
   }

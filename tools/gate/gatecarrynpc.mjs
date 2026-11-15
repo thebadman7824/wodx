@@ -81,6 +81,8 @@ export async function run() {
       await gus.setFlag(NPC, "behavior", {fleeAt: 5});
       await hal.toggleStatusEffect("unconscious", {active: false});
       await ivo.toggleStatusEffect("unconscious", {active: true});
+      // Kai and Lea stand aside (hidden) so Gus is not outnumbered and running; they come back for step 6
+      await scene.updateEmbeddedDocuments("Token", [{_id: tk.id, hidden: true}, {_id: tl.id, hidden: true}]);
       await waitFor(() => hx().fallenOf(ti).down && !hx().fallenOf(th).down, 4000);
       const p = N().planTurn(tg.object, null);
       const cap = p.options.find(o => o.action === "carry");
@@ -96,12 +98,15 @@ export async function run() {
 
     await G.step("6. a companion carries", async () => {
       // Lea serves Kai; Kai goes down; Solo picks Lea, and WoDX NPC's orderCarry has Lea carry Kai
+      await scene.updateEmbeddedDocuments("Token", [{_id: tk.id, hidden: false}, {_id: tl.id, hidden: false}]);
       await lea.setFlag(NPC, "serves", [kai.id]);
       await kai.toggleStatusEffect("unconscious", {active: true});
       await waitFor(() => hx().fallenOf(tk).down, 4000);
       const pick = S()?.carry?.companionFor?.(tk, kai);
+      const from = {x: tk.x, y: tk.y};
       const r = await N().orderCarry(tl.object, tk.object);
-      const held = await waitFor(() => tl.flags?.[IX]?.hauling?.what === tk.uuid, 6000);
+      // held on the way, or (B5087) already set down where they were going, or carried off the map
+      const held = await waitFor(() => tl.flags?.[IX]?.hauling?.what === tk.uuid || tk.hidden || tk.x !== from.x || tk.y !== from.y, 6000);
       G.ok("6. a companion carries", pick?.id === tl.id && r?.ok && held && game.settings.get("wodx-solo", "carry") === true,
         {pick: pick?.name ?? null, r, held});
       await hx().release(tl, {quiet: true});
@@ -171,7 +176,10 @@ export async function run() {
       if ( entry ) await C.approvals.decide(entry.id, "approve");
       const tied = await waitFor(() => jo.statuses?.has?.("wodx-immobilized"), 6000);
       const listed = N().carryGoals.prisoners().some(p => p.captive === jo.id && p.pc);
-      G.ok("10. a player's character waits on the Storyteller", !!entry && notYet && tied && listed && inside(tj, watch), {r, entry: !!entry, notYet, tied, listed, jo: [tj.x, tj.y]});
+      // what the handler saw, when it did not take them (the flag it leaves, and the same call made by hand)
+      let asked = tj.flags?.[NPC]?.captureAsked ?? null, direct = null;
+      if ( !tied ) { try { await N().carryGoals.approveCapture(entry); direct = {tied: jo.statuses?.has?.("wodx-immobilized") ?? false, asked: tj.flags?.[NPC]?.captureAsked ?? null}; } catch (e) { direct = {error: e?.message ?? String(e)}; } }
+      G.ok("10. a player's character waits on the Storyteller", !!entry && notYet && tied && listed && inside(tj, watch), {r, entry: !!entry, notYet, tied, listed, asked, direct, jo: [tj.x, tj.y]});
       await N().carryGoals.freePrisoner(tj, "the gate");
     });
     await G.step("11. to another map", async () => {

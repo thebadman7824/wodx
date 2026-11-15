@@ -21,6 +21,7 @@ import * as SR from "./supernatural-rules.mjs";
 import {build as buildRoutines} from "./routines.mjs";
 import {build as buildFactions} from "./factions.mjs";
 import {build as buildCarryGoals} from "./carry-goals.mjs";
+import {build as buildAftercare} from "./aftercare.mjs";
 import * as CG from "./carry-goal-rules.mjs";
 import * as FactionLooks from "./faction-looks.mjs";
 import {build as buildFounding} from "./founding.mjs";
@@ -1198,6 +1199,10 @@ Hooks.on("wodxChronicleReady", () => { SERVANTS.registerHandler(); attitude.regi
 /* 0.30.0: relationships, the family and lineage tree, secrets and hooks, why an NPC feels as they do */
 const people = buildPeople({MOD, esc, chron, gmIds, isActiveGM, attitude, rivalry});
 people.hooks();
+/* aftercare: what NPCs do once they have carried someone home (B5710-B5721) */
+const aftercare = buildAftercare({MOD, esc, gmIds, chron, factions, routines, people, MEMORY, isActiveGM, carryGoals,
+  st: () => game.modules.get("wodx-storyteller")?.api ?? null});
+aftercare.hooks();
 /* 0.41.0: a description that spreads and fades; one window for all of a character's followers */
 const wanted = buildWanted({MOD, esc, gmIds, isActiveGM, chron, routines, profileFor, attitude: () => attitude, servesOf: a => orders.servesOf(a), isPasserby: doc => passersby.isPasserby(doc), isAnimal: AN.isAnimal});
 wanted.hooks();
@@ -1222,6 +1227,7 @@ Hooks.once("init", () => {
   MEMORY.registerSettings();
   factions.registerSettings();
   carryGoals.registerSettings();
+  aftercare.registerSettings();
   FactionLooks.registerFactionLookSettings();
   orders.registerSettings();
   Faces.registerFaceSettings();
@@ -1250,7 +1256,8 @@ Hooks.once("init", () => {
   LEGACY.registerSettings();
   LEGACY.listen();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
-  const api = {version: VERSION, factionLooks: FactionLooks.api(), rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, orderCarry, carryGoals: {goalOf: carryGoals.goalOf, pointOf: carryGoals.pointOf, arrive: carryGoals.arrive, approveCapture: carryGoals.approveCapture, freePrisoner: carryGoals.freePrisoner, prisoners: carryGoals.prisoners, trips: carryGoals.trips, onClock: carryGoals.onClock, rules: CG}, undo, snapshot,
+  const api = {version: VERSION, factionLooks: FactionLooks.api(), rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, orderCarry, carryGoals: {goalOf: carryGoals.goalOf, pointOf: carryGoals.pointOf, arrive: carryGoals.arrive, approveCapture: carryGoals.approveCapture, freePrisoner: carryGoals.freePrisoner, prisoners: carryGoals.prisoners, trips: carryGoals.trips, onClock: carryGoals.onClock, rules: CG},
+    aftercare: {wards: aftercare.wards, stores: aftercare.stores, tick: aftercare.onClock, day: aftercare.day, dispose: aftercare.dispose, factionTurn: aftercare.onFactionTurn, held: aftercare.heldChoice, fate: aftercare.doFate, taken: aftercare.onTaken, rules: aftercare.rules}, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
     faces: {open: Faces.openFaces, apply: Faces.applyName}, nameFor: Faces.nameFor, knowledgeOf: a => rivalry.knowledgeOf(a), orders, showTalk, householdAnswers, kinNear, talk, openTalk: talk.openTalk, attitude, rivalry, openRivalries: rivalry.editRows, passersby, openCrowd: passersby.openCrowd, overheard, openOverheard: overheard.open,
@@ -1295,6 +1302,7 @@ Hooks.once("setup", () => {
 Hooks.once("ready", () => {
   if ( !C() ) console.warn(`${MOD} | WoDX Combat is missing: NPCs cannot act.`);
   carryGoals.registerHandler();
+  aftercare.registerHandlers();
   if ( chron()?.registerApprovalHandler ) { factions.registerHandler(); attitude.registerHandler(); KIN.registerHandlers(); LEGACY.registerHandlers(); cults.registerHandler(); } // else on wodxChronicleReady
   ensureStyles();
   FactionLooks.setupFactionLooks(); // B4631: who holds a place, on its scene

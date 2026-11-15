@@ -165,7 +165,8 @@ export async function run() {
     await sleep(300);
     const top = npc().planTurn(T.fighter, combat).options[0];
     await C().setDamage(T.fighter.actor, zero);
-    ok("wounded past what it will bear, it runs (or the Beast takes it)", ["flee", "frenzy"].includes(top.action), {fleeAt: p.fleeAt, top: `${top.label}: ${top.why}`});
+    // B5077: a retreating NPC with an ally down beside it carries the ally off as it runs
+    ok("wounded past what it will bear, it runs (or the Beast takes it)", ["flee", "frenzy"].includes(top.action) || (top.action === "carry" && top.intent === "rescue"), {fleeAt: p.fleeAt, top: `${top.label}: ${top.why}`});
   });
   await step("fear: a Kindred NPC shies from a torch in the hero's hand", async () => {
     const k = roles.kindred && Object.values(T).find(t => t.actor?.id === roles.kindred.id);
