@@ -140,7 +140,7 @@ export function outcomesOf(spec, base, successes, text = "") {
       // effect) did only put a named marker on the sheet; now they do what their keyword does, for the spec's time
       if ( OWN_KIND.has(spec.kw) ) {
         const [r] = stOutcomes([spec.kw], {strength: s, step: 2, ctx: spec.ctx ?? {}});
-        if ( r?.out ) return [{key: spec.kw, who: spec.who, out: {...base, ...r.out, label: spec.name ?? base.label ?? r.out.label, source: base.source ?? r.out.source,
+        if ( r?.out ) return [{key: spec.kw, who: spec.who, out: {...base, ...r.out, name: spec.name ?? r.out.name, label: spec.name ?? base.label ?? r.out.label, source: base.source ?? r.out.source,
           ...(r.out.timed !== undefined || d.timed ? {timed: d.timed ?? r.out.timed, duration: d.label} : {}), text: `${s} success${s === 1 ? "" : "es"} for ${d.label}: ${text}`}}];
       }
       return [{key: spec.kw, who: spec.who, out: {...base, kind: "timed", name: spec.name, timed: d.timed, duration: d.label, successes: s, ...timedNumbers(spec, s),
