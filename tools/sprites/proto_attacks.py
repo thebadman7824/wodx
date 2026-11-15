@@ -260,6 +260,7 @@ def extras(walk,death='die'):
     out={k:react(walk,k) for k in REACTS}; out['die']=react(walk,death); out.update({g:gait(walk,g) for g in GAITS})
     out.update({k:pose(walk,k) for k in POSES}); out.update({k:way(walk,k) for k in WAYS}); return out
 DEATHS={'kindred-elder-1888':'ash'}
+LINE={'kindred-elder-1888':('frenzy','embrace','swoon','daysleep','earthsleep'),'garou-homid':('cup','dance','swoon')}
 if __name__=='__main__':
     out=sys.argv[1].rstrip('/')+'/'
     for name,(spec,acts) in PEOPLE.items():
@@ -272,6 +273,14 @@ if __name__=='__main__':
         Image.fromarray(np.concatenate([walk,own['stand']],1)).save(out+name+'.png',optimize=True)
     for name,kind in BEASTS.items():
         walk=np.array(Image.open(out+name+'.png').convert('RGBA')); Image.fromarray(lunge(walk,kind)).save(out+name+'.'+kind+'.png')
+    # the moves only one line has (B5810 to B5813)
+    import wolf as Wf
+    for name in PEOPLE:
+        d=Wr.fig(**PEOPLE[name][0])
+        for n in dict.fromkeys(('swoon',)+LINE.get(name,())):
+            sh=Wr.rest_in(d,'coffin') if n=='daysleep' else Wr.rest_in(d,'earth') if n=='earthsleep' else Wr.line_posed(d,n)
+            Image.fromarray(sh).save(out+name+'.'+n+'.png',optimize=True)
+    Image.fromarray(Wf.howl()).save(out+'garou-lupus.howl.png',optimize=True)
     for name in list(BEASTS):
         walk=np.array(Image.open(out+name+'.png').convert('RGBA'))[:,:8*S]
         for k,sh in extras(walk,DEATHS.get(name,'die')).items(): Image.fromarray(sh).save(out+name+'.'+k+'.png',optimize=True)
