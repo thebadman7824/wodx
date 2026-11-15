@@ -1865,8 +1865,13 @@ async function feedResolve(actor, { vesselType, take, vesselActor, cold = 0, rol
         if (!r.successes) { nightPenalty = true; html += `<div class="vta-warn">-2 dice on every roll for the rest of the night (${esc(rule.page)}).</div>`; }
     }
     if (nightPenalty && setting("applyChanges") && actor.isOwner) {
-        try { await chronicle()?.applyTimed?.(actor, { name: `${rule.label}: -2 dice tonight`, img: "icons/svg/downgrade.svg", key: "wodx-actions.feedPenalty",
-            description: "Fed against the blood's law: -2 dice on every roll until dawn.", duration: { kind: "night" }, source: rule.page }); } catch (e) { console.warn("WoDX | feed penalty", e); }
+        // B6024: a roll effect every roll reads (WoDX Chronicle traits), not only a mark: -2 dice until dawn
+        try {
+            const C = chronicle();
+            if (C?.traits?.addBite) await C.traits.addBite(actor, { key: "feed-law", name: `${rule.label}: -2 dice tonight`, tags: ["all"], dice: -2, duration: { kind: "night" }, source: rule.page });
+            else await C?.applyTimed?.(actor, { name: `${rule.label}: -2 dice tonight`, img: "icons/svg/downgrade.svg", key: "wodx-actions.feedPenalty",
+                description: "Fed against the blood's law: -2 dice on every roll until dawn.", duration: { kind: "night" }, source: rule.page });
+        } catch (e) { console.warn("WoDX | feed penalty", e); }
     }
     let gorge = false;
     if (isVampire(actor) && R.isHungry(b.value, v.selfcontrol.value) && !flag(actor, "golconda")) {
@@ -3374,6 +3379,11 @@ Hooks.once("init", () => {
     Hooks.on("renderChatMessageHTML", (m, el) => { if (m.flags?.[MOD]?.banalLife) blx().bind(m, el?.[0] ?? el); });
 });
 
+// B6025: a character who woke behind the age rolls its old Abilities at +1 difficulty until caught up (the card said so; now rolls do)
+Hooks.once("ready", () => {
+    try { game.modules.get("wodx-chronicle")?.api?.traits?.addSource?.((actor, ctx = {}) => ((ctx.channel ?? "roll") === "roll" ? DR_BEAST.behindEffects(actor?.getFlag?.(MOD, "longSleep"), ctx.tags ?? []) : [])); }
+    catch (e) { console.warn("WoDX Actions | behind the age", e); }
+});
 Hooks.once("ready", async () => {
     // WoDX Chronicle's API may come after this module's ready: Foundry does not wait for async ready hooks
     const withChronicle = () => {

@@ -29,6 +29,12 @@
       "wodx-npc",
       "wodx-actions",
       "wodx-chronicle"
+    ],
+    "gatestillmarks": [
+      "wodx-combat",
+      "wodx-chronicle",
+      "wodx-actions",
+      "wodx-storyteller"
     ]
   },
   "remove": {},

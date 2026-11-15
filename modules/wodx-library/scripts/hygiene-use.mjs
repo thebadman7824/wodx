@@ -23,9 +23,9 @@ export async function wash(actor, item) {
 export function setupHygiene() {
   try {
     registerCondition({id: "filthy", name: "Filthy", img: "icons/svg/degen.svg", source: "WoDX house rule (B3909)",
-      summary: "Mud, grime or worse on them: anyone of standing meets them a step colder until they wash.", mods: {}});
+      summary: "Mud, grime or worse on them: anyone of standing meets them a step colder until they wash (+1 difficulty on social rolls, B6029).", mods: {socialDiff: 1}});
     registerCondition({id: "bloody", name: "Bloody", img: "icons/svg/blood.svg", source: "WoDX house rule (B3909)",
-      summary: "Blood on them: a mortal meets them a step colder, and the town remembers it, until they wash.", mods: {}});
+      summary: "Blood on them: a mortal meets them a step colder, and the town remembers it, until they wash (+1 difficulty on social rolls, B6029).", mods: {socialDiff: 1}});
   } catch (e) { console.warn("WoDX Library | could not register Filthy and Bloody", e); }
   Hooks.on("preUpdateActor", (actor, change, opts) => {
     const d = change?.system?.health?.damage;
