@@ -85,7 +85,7 @@ export async function run() {
       const srcs = [...new Set(tilesOf(scene).flatMap(t => Object.values(fl(t).art ?? {})))];
       const bad = [];
       for ( const s of srcs ) { const r = await fetch(`/${s}`, {method: "HEAD"}); if ( !r.ok ) bad.push(s); }
-      G.ok("6. every picture loads", srcs.length === 52 && !bad.length, {pictures: srcs.length, missing: bad.slice(0, 5)});
+      G.ok("6. every picture loads", srcs.length === 52 && !bad.length, {pictures: srcs.length, missingCount: bad.length, missing: bad.slice(0, 5), background: scene.background?.src ?? null, level: scene.levels?.contents?.[0]?.background?.src ?? null});
     });
     await G.step("7. undo", async () => {
       await X.undo(scene);

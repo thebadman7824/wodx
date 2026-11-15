@@ -36,6 +36,13 @@ async function pickFile(scene) {
 }
 
 /** The faith a scene keeps (B3200): its own, else its region's in the chronicle's year; null without Chronicle. */
+/** The scene's map picture. Foundry 14 keeps it on the scene's levels; older scenes on scene.background or img. */
+function backgroundOf(scene) {
+  const lv = scene.initialLevel ?? scene.firstLevel ?? scene.levels?.contents?.[0] ?? [...(scene.levels ?? [])][0];
+  return scene.background?.src || lv?.background?.src || lv?.textures?.background?.src || scene._source?.background?.src
+    || scene._source?.levels?.[0]?.background?.src || scene.img || "";
+}
+
 export async function faithOf(scene) {
   try {
     const own = scene?.flags?.["wodx-chronicle"]?.place?.faith;
@@ -55,7 +62,7 @@ export async function planFor(scene, text) {
   if ( !parsed.ok ) throw new Error(parsed.errors.join(" "));
   const types = new Set(Object.keys(CONFIG.RegionBehavior?.dataModels ?? {}));
   const fr = A.frameOf(scene);
-  const p = A.plan(parsed.data, {walls: arr(scene.walls).map(plainOf), tiles: arr(scene.tiles).map(plainOf), lights: arr(scene.lights).map(plainOf), regions: arr(scene.regions).map(plainOf), artBase: A.artBase(scene.background?.src ?? scene.img), placeKind: scene.flags?.["wodx-npc"]?.place?.kind ?? null, faith: await faithOf(scene)}, fr, types);
+  const p = A.plan(parsed.data, {walls: arr(scene.walls).map(plainOf), tiles: arr(scene.tiles).map(plainOf), lights: arr(scene.lights).map(plainOf), regions: arr(scene.regions).map(plainOf), artBase: A.artBase(backgroundOf(scene)), placeKind: scene.flags?.["wodx-npc"]?.place?.kind ?? null, faith: await faithOf(scene)}, fr, types);
   return {sc: parsed.data, p, errors: parsed.errors};
 }
 
