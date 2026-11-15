@@ -67,6 +67,7 @@ function start() {
   animalStock.registerAnimalStock();
   animalBlood.registerAnimalBlood();
   animalKeepers.registerAnimalKeepers();
+  archive.setupAutoArchive();
   game.socket.on(`module.${MODULE_ID}`, async message => {
     if ( message?.type === "xp.request" ) await xp.onRequest(message.payload);
     if ( message?.type === "vitae.request" ) await feedVitae.onRequest(message.payload);
@@ -96,7 +97,7 @@ function start() {
     wizard: (actor, page = null) => WizardApp.openFor(actor, page), wizardLedger, wizardRules, derived: derivedFor, derivedRules,
     lifepath: actor => lifepath.LifepathApp.openFor(actor), lifepathOf: lifepath.lifepathOf, lifepathRules, makeLifepathPeople: lifepath.makePeople,
     lifepathThreads: actor => threadsOf(lifepath.lifepathOf(actor)),
-    archive: {open: () => archive.ArchiveApp.open(), candidates: archive.candidates, archive: archive.archive, restore: archive.restore, whereIs: archive.whereIs},
+    archive: {open: () => archive.ArchiveApp.open(), candidates: archive.candidates, archive: archive.archive, restore: archive.restore, whereIs: archive.whereIs, dueNow: archive.dueNow, autoTick: archive.autoTick},
     people: {open: () => people.PeopleApp.open(), generate: people.generate, create: people.createPeople}
   };
   game.modules.get(MODULE_ID).api = api;

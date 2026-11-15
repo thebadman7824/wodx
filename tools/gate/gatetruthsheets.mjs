@@ -3,7 +3,8 @@
  *   await (await import(`/wodx-gate/gatetruthsheets.mjs?${Date.now()}`)).run()
  * Each step goes through the path a player's click takes and checks the number that should change.
  * Makes its own scene, actors and tokens and removes them; puts back the one setting it touches
- * (wodx-sheets sheetRollMods) and the Storyteller's own assigned character. Never moves the clock.
+ * (wodx-sheets sheetRollMods, wodx-creation autoArchive) and the Storyteller's own assigned character. Step 8 moves the
+ * clock a day; the kit puts it back.
  *   1. modules: Sheets, Creation, Library, Actions, Combat and Chronicle answer
  *   2. a roll from the sheet counts WoDX: after two drinks of brandy, clicking Dexterity on the sheet and Roll in the
  *      system's window rolls one die fewer and the card names why; with the world setting off it rolls the full pool
@@ -13,9 +14,15 @@
  *   5. first aid: a medic treats a mortal Wounded with lethal damage; the success puts the patient under care, and
  *      WoDX Actions' healing plan then heals the lethal levels it would not heal before
  *   6. an item named in free text ("a battle-axe") comes from Gear by era, and WoDX Combat's attack plan reads its pool
+ *  6b. the same axe as masterwork (diffWhenUsed -1) is one easier to strike with in that plan
+ *  6c. two drinks of brandy take a die off that plan's pool, as they do off the sheet's Dexterity roll
  *   7. lineage links follow the archive: with the sire archived, the lineage journal links the archive's entry;
  *      brought back, the world actor again
- *   8. clean up (the kit)
+ *   8. the long dead go by themselves: with "Archive the long dead by itself" at ten years, someone dead eleven years
+ *      leaves the world when the clock moves a day (the kit puts the clock back), the compendium entry is there, and a
+ *      journal's link points at it; brought back, the link points at the world again
+ *   9. Show all wears the same frame, shade and text colour as the other WoDX buttons, on light and dark sheets
+ *  10. clean up (the kit)
  * Result: Data/wodx-gate/gatetruthsheets-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -170,6 +177,34 @@ export async function run() {
         {item: data ? {name: data.name, type: data.type} : null, want, got: p ? {valid: p.valid, dice: p.atkDice, diff: p.atkDiff, dmgBonus: p.w.dmgBonus, type: p.dmgType} : null});
     });
 
+    await G.step("6b. a well-made weapon in a fight", async () => {
+      // B6415: a masterwork Battle-Ax (WoDX Storyteller's diffWhenUsed -1) is one easier in WoDX Combat's attack plan
+      const [fighter, foe] = await G.make(Actor, [mortal("Gate TruthSheets Master Smith", {system: {attributes: {strength: {value: 4}}}}), mortal("Gate TruthSheets Second Foe")]);
+      const data = await lib.itemByName("a battle-axe");
+      if ( data ) { data.name = `${data.name} (masterwork)`; data.flags = {...(data.flags ?? {}), "wodx-storyteller": {quality: "master", diffWhenUsed: -1}}; }
+      const [ax] = data ? await fighter.createEmbeddedDocuments("Item", [data]) : [];
+      const p = C.bestAttack(fighter, foe, {}, {ignoreDistance: true}).plans.find(x => x.w?.name === ax?.name);
+      const want = num(ax?.system?.difficulty) - 1;
+      G.ok("6b. a well-made weapon in a fight", !!p?.valid && want >= 2 && p.atkDiff === want, {want, got: p ? {valid: p.valid, diff: p.atkDiff, wellMade: p.w?.wellMade} : null});
+    });
+
+    await G.step("6c. drink reaches the blow", async () => {
+      // B6416: two drinks of brandy take a die off Dexterity rolls, and WoDX Combat's attack plan rolls one die fewer
+      const [tippler, foe] = await G.make(Actor, [mortal("Gate TruthSheets Tippler", {system: {attributes: {strength: {value: 4}}}}), mortal("Gate TruthSheets Third Foe")]);
+      const data = await lib.itemByName("a battle-axe");
+      const [ax] = data ? await tippler.createEmbeddedDocuments("Item", [data]) : [];
+      const plan = () => C.bestAttack(tippler, foe, {}, {ignoreDistance: true}).plans.find(x => x.w?.name === ax?.name);
+      const sober = plan()?.atkDice;
+      const [b1, b2] = await tippler.createEmbeddedDocuments("Item", [{name: "a flask of brandy", type: "Item"}, {name: "a flask of brandy", type: "Item"}]);
+      await lib.use.run(b1, "drink", tippler);
+      await wait(500);
+      await lib.use.run(tippler.items.get(b2.id) ?? b2, "drink", tippler);
+      await waitFor(() => plan()?.atkDice === sober - 1, 6000);
+      const drunk = plan()?.atkDice;
+      const want = num(tippler.system.attributes.dexterity.total) + num(tippler.system.abilities.melee.value);
+      G.ok("6c. drink reaches the blow", sober === want && drunk === want - 1, {want, sober, drunk, intox: tippler.flags?.[LIB]?.intox ?? null});
+    });
+
     await G.step("7. lineage links follow the archive", async () => {
       const [sire, childe] = await G.make(Actor, [{name: "Gate TruthSheets Sire", type: "Vampire"}, {name: "Gate TruthSheets Childe", type: "Vampire"}]);
       await childe.setFlag(CR, "lineage", {sire: {id: sire.id, name: sire.name}});
@@ -183,6 +218,52 @@ export async function run() {
       G.ok("7. lineage links follow the archive", (r?.archived?.length ?? 0) === 1 && archived && back, {archived, back, gone: r?.archived?.length ?? 0, kept: r?.kept});
       await Actor.deleteDocuments([sid, childe.id].filter(id => game.actors.get(id)));
       await relineage();
+    });
+
+    await G.step("8. the long dead go to the archive by themselves", async () => {
+      // B6414: someone dead eleven years, a journal that links them; the clock moves a day and they go, the link with them
+      const {getEngine, describeTime} = await import("/modules/wodx-chronicle/scripts/calendar.mjs");
+      const nowYear = describeTime(game.time.worldTime).year;
+      const [old] = await G.make(Actor, [mortal("Gate TruthSheets Long Dead")]);
+      const id = old.id;
+      await old.setFlag(CR, "chronology", {died: getEngine().dateToTime({year: nowYear - 11, month: 3, day: 1, hour: 12}), cause: "old age"});
+      const [note] = await G.make(JournalEntry, [{name: "Gate TruthSheets Note", pages: [{name: "Note", type: "text", text: {content: `<p>Ask after @UUID[Actor.${id}]{the old man}.</p>`}}]}]);
+      let keepAuto;
+      try { keepAuto = game.settings.get(CR, "autoArchive"); } catch (e) { keepAuto = undefined; }
+      const text = () => game.journal.get(note.id)?.pages?.contents?.[0]?.text?.content ?? "";
+      let gone = false, inPack = false, linked = false, back = false, unlinked = false;
+      try {
+        await game.settings.set(CR, "autoArchive", 10);
+        await game.time.advance(86400);
+        gone = await waitFor(() => !game.actors.get(id), 10000);
+        inPack = !!(await game.packs.get("world.wodx-archive")?.getIndex())?.get(id);
+        linked = await waitFor(() => text().includes(`@UUID[Compendium.world.wodx-archive.Actor.${id}]`), 4000);
+        await cr.archive.restore([id]);
+        back = !!game.actors.get(id);
+        unlinked = await waitFor(() => text().includes(`@UUID[Actor.${id}]`), 4000);
+      } finally {
+        if ( keepAuto !== undefined ) await game.settings.set(CR, "autoArchive", keepAuto);
+        if ( game.actors.get(id) ) await game.actors.get(id).delete();
+      }
+      G.ok("8. the long dead go to the archive by themselves", gone && inPack && linked && back && unlinked, {gone, inPack, linked, back, unlinked, nowYear});
+    });
+
+    await G.step("9. Show all wears the WoDX button's frame and colours", async () => {
+      // B6413: the loaded styles, light and dark: the Show all button and a quick-roll button side by side
+      const look = dark => {
+        const host = document.createElement("div");
+        host.className = `wod20 wod-sheet${dark ? " wod-theme-dark" : ""}`;
+        host.style.cssText = "position:fixed;left:-2000px;top:0;";
+        host.innerHTML = `<div class="wodx-quickrolls"><button type="button">Roll</button></div><button type="button" class="wodx-showall">Show all</button>`;
+        document.body.append(host);
+        const pick = el => { const c = getComputedStyle(el); return {bg: c.backgroundColor, border: c.borderTopColor, width: c.borderTopWidth, radius: c.borderTopLeftRadius, color: c.color}; };
+        const out = {quick: pick(host.querySelector(".wodx-quickrolls button")), all: pick(host.querySelector(".wodx-showall"))};
+        host.remove();
+        return out;
+      };
+      const light = look(false), dark = look(true);
+      const same = o => ["bg", "border", "width", "radius", "color"].every(k => o.quick[k] === o.all[k]);
+      G.ok("9. Show all wears the WoDX button's frame and colours", same(light) && same(dark) && dark.all.bg !== "rgba(0, 0, 0, 0)", {light, dark});
     });
   } catch (e) {
     G.R.errors.push(e?.message ?? String(e));

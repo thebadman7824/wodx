@@ -69,6 +69,15 @@ export function resistMods(target, tags = [], actor = null) {
     } catch (e) { console.warn("WoDX Actions | trait effects", e); return NONE; }
 }
 
+/**
+ * B6411: the resist effects of the first targeted token's character on a power used by actor (a Gift, a cantrip, an
+ * evocation, an Arcanos): a carried ward, Magic Resistance. Nothing when no one else is targeted.
+ */
+export function targetResist(actor, tags = ["magic"]) {
+    const target = [...(game.user?.targets ?? [])][0]?.actor ?? null;
+    return target && target !== actor ? resistMods(target, tags, actor) : NONE;
+}
+
 /** Disciplines whose powers count as mind powers or magic for Iron Will and Magic Resistance (V20 p. 485, 493). */
 export function powerTags(discipline = "") {
     const d = String(discipline).toLowerCase();

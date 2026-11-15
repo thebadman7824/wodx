@@ -14,6 +14,7 @@
  * Built by main.js with its helpers (ctx). Pure rules: demon-rules.js.
  */
 import * as NPW from "./npc-power-rules.js";
+import * as TH from "./trait-hooks.js";
 import * as LIM from "./limits.js";
 import * as D from "./demon-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
@@ -230,7 +231,10 @@ export function build(ctx) {
             if (fromPool && !(await faith(actor, -fromPool))) return null;
             if (plan.cost > fromPool) plan.notes.push(`${plan.cost - fromPool} Faith drawn from the ravaged thralls`);
             const wp = !!fd.wp && await spendWillpower(actor, 1);
-            const r = await rollPool(plan.dice, plan.difficulty + lim.diff, { willpower: wp, autoSuccesses: plan.autoSuccesses });
+            // B6411: the target's ward or Magic Resistance makes an evocation on them harder
+            const rm = TH.targetResist(actor, ["magic"]);
+            plan.notes.push(...rm.parts);
+            const r = await rollPool(plan.dice, Math.min(10, plan.difficulty + lim.diff + (Number(rm.diff) || 0)), { willpower: wp, autoSuccesses: plan.autoSuccesses });
             if (lim.diff) plan.notes.push((lim.label || `Drained +${lim.diff}`));
             const out = D.evocationOutcome(r, { torment: i.torment.perm, chooseHigh: !!fd.dark, rule: i.rule });
             const notes = [];

@@ -7,6 +7,7 @@
  */
 import * as SUM from "./summons.js";
 import * as SR from "./summon-rules.js";
+import * as TH from "./trait-hooks.js";
 import * as LIM from "./limits.js";
 import { spendTime } from "./spend-time.js";
 import { floatOver } from "./daysleep.js";
@@ -539,10 +540,12 @@ export function build(ctx) {
             const code = g?.r ?? (it.system?.dice1 ? `${it.system.dice1}${it.system.dice2 ? `+${it.system.dice2}` : ""}` : null);
             if (code) {
                 const pool = poolOf(actor, code, i);
-                const rr = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), n(fd.diff) + lim.diff);
+                // B6411: the target's ward or Magic Resistance makes a Gift on them harder
+                const rm = TH.targetResist(actor, ["magic"]);
+                const rr = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), Math.min(10, n(fd.diff) + lim.diff + n(rm.diff)));
                 rolls.push(rr.roll);
                 successes = rr.botch ? 0 : rr.successes;
-                body += rollBlock(pool.label, rr, [n(fd.bonus) ? `bonus ${fd.bonus}` : "", lim.diff ? (lim.label || `Drained +${lim.diff}`) : ""].filter(Boolean));
+                body += rollBlock(pool.label, rr, [n(fd.bonus) ? `bonus ${fd.bonus}` : "", ...rm.parts, lim.diff ? (lim.label || `Drained +${lim.diff}`) : ""].filter(Boolean));
             }
             if (g) body += `<div class="vta-note">${esc(g.e)} <span class="wodx-quiet">(${giftRef(g)})</span></div>`;
             const dur = successes > 0 ? G.giftDuration(g?.t, successes) : null;

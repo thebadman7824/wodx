@@ -78,13 +78,22 @@
       "wodx-creation",
       "wodx-library",
       "wodx-actions",
-      "wodx-chronicle"
+      "wodx-chronicle",
+      "wodx-combat"
     ],
     "gatetruthchronicle": [
       "wodx-chronicle",
       "wodx-storyteller",
       "wodx-actions",
       "wodx-npc"
+    ],
+    "gatefaith": [
+      "wodx-library",
+      "wodx-actions"
+    ],
+    "gatewonders": [
+      "wodx-library",
+      "wodx-storyteller"
     ]
   },
   "remove": {},

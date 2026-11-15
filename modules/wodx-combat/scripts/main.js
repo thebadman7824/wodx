@@ -346,7 +346,9 @@ function weaponList(actor) {
             dmgAttr: s.damage?.attribute || "",
             dmgBonus: num(s.damage?.bonus),
             type: s.damage?.type || "lethal",
-            diff: num(s.difficulty) || 6,
+            // B6415: fine work or a masterwork (WoDX Storyteller's diffWhenUsed, -1) is easier to strike or shoot with
+            diff: Math.max(2, (num(s.difficulty) || 6) + num(i.flags?.["wodx-storyteller"]?.diffWhenUsed)),
+            wellMade: num(i.flags?.["wodx-storyteller"]?.diffWhenUsed),
             minStr: num(s.minstrength),
             piercing: num(s.piercing),
             range: num(s.range),
@@ -1272,7 +1274,11 @@ function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0, targ
     let at = { value: attr(attacker, attrKey), mount: false };
     if (!w.ranged) { try { at = MTD.strikeAttrOf(attacker, attrKey, at.value, { close: true }); } catch (e) { /* on foot */ } }
     // B6004: a Boost, Blessing or Curse from a power or ritual (WoDX Actions power-mods) reaches the blow
-    const pm = powerModsOf(attacker, { tags: ["physical", attrKey, w.ranged ? "ranged" : "melee"] });
+    const pm0 = powerModsOf(attacker, { tags: ["physical", attrKey, w.ranged ? "ranged" : "melee"] });
+    // B6416: the roll effects WoDX Chronicle keeps on the attacker (drink and drugs, merits and flaws, derangement
+    // bouts) for this Attribute and Ability, as WoDX Actions' rolls and the sheet's rolls count them
+    const tr = traitRollMods(attacker, attrKey, w.ability, target);
+    const pm = { ...pm0, dice: num(pm0.dice) + tr.dice, diff: num(pm0.diff) + tr.diff, parts: [...(pm0.parts ?? []), ...tr.parts] };
     const pool = R.attackPool({
         attribute: at.value, attributeLabel: `${cap(attrKey)}${at.mount ? " (the mount's)" : ""}`,
         ability: held.value, abilityLabel: held.label,
@@ -1289,9 +1295,24 @@ function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0, targ
         sheetDice, sheetDiff, shieldDiff: sh.attackDiff, fitDice: fp.fitDice, fitDiff: fp.fitDiff, wetString: fp.wetString
     });
     if (pm.parts.length) { pool.parts = [...(pool.parts ?? []), ...pm.parts]; pool.once = pm.once; }
+    if (w.wellMade) pool.parts = [...(pool.parts ?? []), `${w.name}: well made (${w.wellMade} difficulty)`];
     // B4792: a ram's pool is the driving pool, held to the vehicle's Maneuver
     if (w.vehicle) { try { const c = VH.capPool(attacker, w, pool.dice); if (c.note) { pool.dice = c.dice; pool.parts.push(c.note); } } catch (e) { /* no vehicle */ } }
     return pool;
+}
+
+/** B6416: WoDX Chronicle's roll effects on the attacker for this Attribute and Ability; none with the setting off. */
+function traitRollMods(actor, attrKey, abilityKey, target = null) {
+    const none = { dice: 0, diff: 0, parts: [] };
+    try {
+        const T = chronicle()?.traits;
+        if (!T?.effects || !T.rules?.sumEffects) return none;
+        try { if (game.settings.get("wodx-actions", "traitRolls") === false) return none; } catch (e) { /* Actions off: on */ }
+        const tags = T.rules.rollTags ? T.rules.rollTags(attrKey, abilityKey) : [attrKey, abilityKey].filter(Boolean);
+        if (!tags.length) return none;
+        const s = T.rules.sumEffects(T.effects(actor, { channel: "roll", tags, against: target ? T.kindOf?.(target) ?? null : null, moon: "" }));
+        return { dice: num(s.dice), diff: num(s.diff), parts: s.parts ?? [] };
+    } catch (e) { console.warn(`${MOD} | roll effects`, e); return none; }
 }
 
 /** B6004: what powers and rituals on a character do to this roll (WoDX Actions power-mods); nothing with Actions off. */

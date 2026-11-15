@@ -9,6 +9,8 @@
  *   4. divining with an astrolabe: a card to the Storyteller with Perception + Occult and how many questions it answers
  *   5. the ward on a real roll (B6177): a mage casts the same Mind Effect at the seeker, targeted on the map, with the
  *      ward down and up; the casting card's difficulty is one higher with the ward up (WoDX Actions' m20 cast)
+ *   6. the ward on a Gift (B6411): a Garou uses a Gift at the seeker the same way; difficulty 6, then 7 with the
+ *      ward named on the card (cantrips, evocations and Arcanoi read it the same way)
  * Result: Data/wodx-gate/gatefaith-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -104,6 +106,41 @@ export async function run() {
         await lib.faith.ward(a, a.items.get(charm.id));
       } finally { Hooks.off("renderDialogV2", hook); seen.object?.setTarget?.(false, {releaseOthers: true}); }
       G.ok("5. the ward on a magick roll", Number.isFinite(off) && on === Math.min(10, off + 1), {off, on});
+    });
+
+    await G.step("6. the ward on a Gift", async () => {
+      // B6411: a Garou uses a Gift on the seeker, targeted on the map, ward down and up; the card's difficulty is one higher
+      const scene = await G.scene();
+      const [wolf] = await G.make(Actor, [{name: "Gate Faith Garou", type: "Werewolf", system: {attributes: {wits: {value: 3, total: 3}}, abilities: {occult: {value: 2}}}}]);
+      await wolf.createEmbeddedDocuments("Item", [{name: "Gate Faith Gift", type: "Power", system: {type: "wod.types.gift", game: "werewolf", level: 1, dice1: "wits", dice2: "occult", difficulty: 6}}]);
+      const [, seen] = await G.tokens(scene, [{actor: wolf, x: 2, y: 4, actorLink: true}, {actor: a, x: 3, y: 4, actorLink: true}]);
+      await settle(() => !!seen?.object, 5000);
+      seen.object?.setTarget?.(true, {releaseOthers: true});
+      const hook = Hooks.on("renderDialogV2", async (app, el) => {
+        const root = el instanceof HTMLElement ? el : el?.[0];
+        if ( !root?.querySelector?.("form.wodx-gift") ) return;
+        await wait(200);
+        const d = root.querySelector('[name="diff"]'); if ( d ) { d.value = "6"; d.dispatchEvent(new Event("change", {bubbles: true})); }
+        root.querySelector('button[data-action="ok"]')?.click();
+      });
+      const diffOf = async () => {
+        const t0 = Date.now();
+        await game.wodxActions.useGift(wolf);
+        let m = null;
+        await settle(() => (m = [...game.messages].filter(x => (x.timestamp ?? 0) >= t0 && /Gate Faith Gift/.test(x.content ?? "") && /diff \d+/.test(x.content ?? "")).at(-1)), 8000);
+        const t = String(m?.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+        return {diff: Number(t.match(/\d+ dice, diff (\d+)/)?.[1] ?? NaN), named: /Ward/.test(t)};
+      };
+      let off, on;
+      try {
+        if ( a.items.get(charm.id)?.flags?.[LIB]?.ward?.on ) await lib.faith.ward(a, a.items.get(charm.id));
+        off = await diffOf();
+        await lib.faith.ward(a, a.items.get(charm.id));
+        await settle(() => !!a.items.get(charm.id)?.flags?.[LIB]?.ward?.on);
+        on = await diffOf();
+        await lib.faith.ward(a, a.items.get(charm.id));
+      } finally { Hooks.off("renderDialogV2", hook); seen.object?.setTarget?.(false, {releaseOthers: true}); }
+      G.ok("6. the ward on a Gift", off?.diff === 6 && on?.diff === 7 && on?.named && !off?.named, {off, on});
     });
   } finally { return G.finish(); }
 }
