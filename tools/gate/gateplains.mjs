@@ -301,6 +301,11 @@ export async function run() {
       G.ok("27. a Roll Table of Lakota names made by pattern, and some medieval men drawn from it",
         own.length === made.size && hits.length > 0 && hits.length < men.length / 2, {table: own.length, drawn: men.length, made: hits.slice(0, 4)});
     });
+    await G.step("28. no installed table is empty", async () => {
+      // B5641: a Roll Table cut off midway through an update is refilled at start-up, so none stays empty
+      const empty = [...game.tables].filter(t => t.getFlag("wodx-chronicle", "table")?.id && !t.results.size).map(t => t.name);
+      G.ok("28. every WoDX Roll Table in the world has results", !empty.length, {empty: empty.slice(0, 8)});
+    });
   } catch (e) {
     G.ok("error", false, {error: e.message});
   } finally {

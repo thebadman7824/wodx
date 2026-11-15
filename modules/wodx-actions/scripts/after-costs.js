@@ -133,7 +133,10 @@ export async function pay(actor, key, {successes = 1, id = null} = {}) {
     case "fomorEnd": {
       const dm = actor.system?.health?.damage ?? {};
       const total = n(dm.bashing) + n(dm.lethal) + n(dm.aggravated);
-      const max = n(actor.system?.traits?.health?.totalhealthlevels?.max) || 7;
+      // B5162: the track as it was before Numbing raised it (kept by fomor.js), else the track now less the levels
+      const kept = n(actor.getFlag(MOD, "numbTrack"));
+      const max = kept || Math.max(1, (n(actor.system?.traits?.health?.totalhealthlevels?.max) || 10) - (n(c.levels) || 0));
+      if ( kept ) await actor.unsetFlag(MOD, "numbTrack");
       const r = AC.fomorEnd(total, c.levels, max);
       if ( !r.dies ) return card(`<p>The extra levels go. ${total} levels of harm remain.</p>`);
       await actor.toggleStatusEffect?.("dead", {active: true, overlay: true}).catch(() => null);
@@ -163,6 +166,16 @@ export function setup() {
         key: "wodx-after-ravenous", source: data.page ?? "", description: AC.CONDITIONS.ravenous.summary});
       await ChatMessage.create({speaker: ChatMessage.getSpeaker({actor}), content: `<div class="wodx-card wodx-after"><p><b>${esc(actor.name)}</b> wakes ravenous and must eat (${esc(data.page ?? "")}).</p></div>`});
     }
+  });
+  // B5161: Strengthening the Demon fades: the stoked Demon Chi not spent is gone
+  C?.timed?.registerReverter?.("wodx-actions.stokeFade", async (actor, data) => {
+    const now = n(actor.system?.advantages?.demonchi?.temporary);
+    const to = Math.min(now, Math.max(0, n(data?.before)));
+    if ( to !== now ) await actor.update({"system.advantages.demonchi.temporary": to});
+  });
+  // B5162: a fomor's Numbing ends: Combat counts the health track again without the three levels
+  C?.timed?.registerReverter?.("wodx-actions.numbingEnd", async actor => {
+    await actor.setFlag(MOD, "bodyAt", Date.now());
   });
   C?.timed?.registerReverter?.("wodx-actions.afterNumbed", async actor => {
     const d = actor.system?.attributes?.dexterity;

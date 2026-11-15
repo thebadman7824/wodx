@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.93.0 (Ben's Power Limits Desk picks e1 and e2 (22:44Z, 14 November 2026). New power-pick-rules.mjs; world setting pickPowers and a per-NPC "I pick their powers" box in the Behaviour window)
 - 0.92.0 (NPCs no longer pick a mount they cannot ride: a chimerical steed is for the fae and a Stygian steed for the dead (B4961); NPCs ride beasts on their own tokens (B4966))
 - 0.91.0 (Ghouled animals, step four (B5130, B5136))
 - 0.90.0 (Servants and bonds for every line, step one: one ledger, the blow held back, hard orders, opinion floors, acolytes and consors, Kinfolk, revenant families, guanxi and Dominate Conditioning (B5100-B5111))

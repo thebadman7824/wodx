@@ -1432,6 +1432,8 @@ Ben picked the Power Limits Desk (https://claude.ai/artifact/PChWEUj4WJaKdihePVF
 | 2026-11-14 | Which lasting effect carries an after-cost (B4924) | The power's next timed effect on its payer within two minutes, or one named for what it does; otherwise the scene's end | tryTag in after-costs.js |
 | 2026-11-14 | Background experience for servants (B4929) | The current rating times three, at least three (V20 leaves it to the Storyteller) | backgroundCost in summon-rules.js |
 | 2026-11-14 | When an NPC is cornered (B4927) | Two foes within 2 yards and at least three wound levels taken | powerPick in wodx-npc main.mjs |
+| 2026-11-15 | Strengthening the Demon's level (B5161) | Chi'iu Muh 2, from its place on Kindred of the East Companion p. 74 (the scan drops the dots); no Hun harness roll | the chiiumuh entry in kote-arts.js |
+| 2026-11-15 | Which fomor powers play by themselves (B5162) | Numbing only, from a Power item named Numbing; the other fomor powers stay with the Storyteller | fomor.js |
 
 ## Waiting for review
 
@@ -1520,3 +1522,5 @@ Ben picked the Power Limits Desk (https://claude.ai/artifact/PChWEUj4WJaKdihePVF
 | 2026-11-15 | Sephardi names raised to 300 (B5570) | 388 recorded names: more names from the aljama and notarial records of Castile, Aragon and Portugal, then Ladino and Portuguese Nation names and family names; none generated | Restore the sephardi entry in data/people-world.mjs |
 | 2026-11-15 | Mizrahi names raised to 300 (B5580) | 424 recorded names: more names from the Cairo Geniza, Baghdad, Persia, Yemen and the Maghreb, with more town names before 1800 and family names after; the harness check for modern family names is drawn from 400 people instead of 100, as the longer list makes each name rarer; none generated | Restore the mizrahi entry in data/people-world.mjs |
 | 2026-11-15 | Names made by pattern (B5600) | Ten peoples whose recorded own names are two-part names in translation get made names from their own recorded parts, a third of draws, in tables of their own; the 26 other short lists have no rule the records show and get none | Empty PATTERNED in Creation data/people-patterned.mjs |
+| 2026-11-15 | German names before 1900 raised to 50 a list (B5640) | Six Bohemian German lists to 49-62 recorded names; none generated | Restore the six German lists in data/people.mjs |
+| 2026-11-15 | An emptied table is refilled (B5641) | A Roll Table with no results is refilled at start-up and stands aside until then | Drop the two empty-table checks in scripts/gen.mjs |

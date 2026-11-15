@@ -14,7 +14,7 @@ const sc = "scene";
 export const ART_LABEL = {
     equilibrium: "Equilibrium", tapestry: "Tapestry", yangprana: "Yang Prana", yinprana: "Yin Prana", blackwind: "Black Wind", demonshintai: "Demon Shintai",
     bloodshintai: "Blood Shintai", boneshintai: "Bone Shintai", jadeshintai: "Jade Shintai", fleshshintai: "Flesh Shintai", ghostflameshintai: "Ghost-Flame Shintai",
-    cultivation: "Cultivation", dragontear: "Dragon's Tear", hun: "Hun", obligation: "Obligation"
+    cultivation: "Cultivation", dragontear: "Dragon's Tear", hun: "Hun", obligation: "Obligation", chiiumuh: "Chi'iu Muh"
 };
 
 export const POWERS = [
@@ -81,7 +81,9 @@ export const POWERS = [
     P("obligation", 2, "Soul link", 125, "manipulation+empathy", 6, {}, "A psychic link: a Social die a success on the next roll against them, or one surface thought a success.", N("know"), { chk: true }),
     P("obligation", 3, "Authority", 125, "hun+etiquette", 5, { wp: 1 }, "Lesser souls obey as if to an emperor (difficulty 8 against shen).", T("sway", "Authority", sc, "one")),
     P("obligation", 4, "Thousand Hell Stare", 125, "hun+intimidation", 6, { wp: 1 }, "A stare that judges the soul: an extended contest; the victim falls to terror or despair.", T("fear", "Thousand Hell Stare", sc, "one")),
-    P("obligation", 5, "Soul Shackles", 126, "hun+empathy", "t", { wp: 1 }, "A bond of friendship like a Vinculum of 3, and more as the bond is fed.", T("bind", "Soul Shackles", { days: 30 }, "one"))
+    P("obligation", 5, "Soul Shackles", 126, "hun+empathy", "t", { wp: 1 }, "A bond of friendship like a Vinculum of 3, and more as the bond is fed.", T("bind", "Soul Shackles", { days: 30 }, "one")),
+    // B5161: Kindred of the East Companion p. 74; the level is a house reading from its place on the page
+    P("chiiumuh", 2, "Strengthening the Demon", 74, "po", 6, { wp: 1 }, "Three turns of focus and a Willpower: each success raises Demon Chi by two (at most 10) for a turn a success. What is not spent by then fades; then Hun against the P'o, or a Derangement.", null, { book: "Kindred of the East Companion", stoke: true })
 ].map(p => ({ ...p, id: `${p.art}-${p.l}-${p.name.toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}` }));
 
 export const powersOf = (art, rating) => POWERS.filter(p => p.art === art && p.l <= Number(rating || 0));
@@ -115,3 +117,13 @@ export function poolOf(roll, get) {
 export const diffOf = (p, wall = 6) => p.diff === "wall" ? Number(wall) || 6 : typeof p.diff === "number" ? p.diff : 6;
 /** The Chi kind and points a power's cost asks of the spend form ("" for either kind). */
 export const chiOf = c => c.yin ? { kind: "yin", k: c.yin } : c.yang ? { kind: "yang", k: c.yang } : c.demon ? { kind: "demon", k: c.demon } : c.chi ? { kind: "", k: c.chi } : { kind: "", k: 0 };
+
+/** B5161: Strengthening the Demon: the Demon Chi after the roll and how many turns it lasts. Pure. */
+export function stokePlan(demonChi, successes, cap = 10) {
+    const s = Math.max(0, Number(successes) || 0), d = Math.max(0, Number(demonChi) || 0);
+    if (!s) return { ok: false, chi: d, added: 0, turns: 0 };
+    const chi = Math.min(cap, d + 2 * s);
+    return { ok: true, chi, added: chi - d, turns: s };
+}
+/** B5161: Demon Chi once Strengthening the Demon fades: the stoked points not spent are gone. */
+export const stokeFade = (now, before) => Math.min(Math.max(0, Number(now) || 0), Math.max(0, Number(before) || 0));

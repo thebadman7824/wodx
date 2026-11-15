@@ -195,9 +195,17 @@ function toughness(actor) {
     try { t = chronicle()?.traits?.toughness?.(actor) ?? null; } catch (e) { t = null; }
     // B3802: a Pain Editor (WoDX Library cyberware) eases the wound penalty as High Pain Tolerance does
     const ease = num(cyber(actor)?.body?.ease);
-    if (!ease) return t;
-    const base = t ?? { bruised: 0, shift: 0, ease: 0, silver: false, names: [] };
-    return { ...base, ease: Math.max(num(base.ease), ease), names: [...(base.names ?? []), ...(cyber(actor)?.names ?? []).filter(n => /pain editor/i.test(n))] };
+    if (ease) {
+        const base = t ?? { bruised: 0, shift: 0, ease: 0, silver: false, names: [] };
+        t = { ...base, ease: Math.max(num(base.ease), ease), names: [...(base.names ?? []), ...(cyber(actor)?.names ?? []).filter(n => /pain editor/i.test(n))] };
+    }
+    // B5160: a condition that numbs the body (a fomor's Numbing) adds Bruised levels and eases wound penalties while it lasts
+    const cm = R.conditionBody(conditionsOf(actor));
+    return cm ? R.mergeBody(t, cm) : t;
+}
+
+function conditionsOf(actor) {
+    try { return chronicle()?.conditions?.conditionsOf?.(actor) ?? []; } catch (e) { return []; }
 }
 
 /** B3800: what installed cyberware gives the character (WoDX Library api.cyber.installedFx), or null. */
@@ -1907,7 +1915,7 @@ Hooks.once("init", () => {
     const vehicles = VH.setupVehicles({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall });
     FTime.setupFightTime();
     const api = { body, movement, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.38.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.39.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, followOn: R.followOn, markFollow, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;

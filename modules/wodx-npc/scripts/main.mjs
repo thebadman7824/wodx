@@ -13,6 +13,7 @@
  * Attacks go through WoDX Combat's quick attack (every automatic choice), so the dice and the rules are Combat's own.
  */
 import * as NR from "./npc-rules.mjs";
+import * as PP from "./power-pick-rules.mjs";
 import * as RR from "./routine-rules.mjs";
 import * as AN from "./animal-rules.mjs";
 import * as MR from "./mortal-rules.mjs";
@@ -54,7 +55,7 @@ import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.92.0";
+const VERSION = "0.93.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -80,6 +81,10 @@ function registerSettings() {
   game.settings.register(MOD, "householdReach", {
     name: "A household's call, in yards", hint: "How far a hurt NPC's cry reaches the rest of their household on the scene. Beyond it, an Alert zone carries the alarm.",
     scope: "world", config: true, type: Number, default: 40, range: {min: 5, max: 200, step: 5}
+  });
+  game.settings.register(MOD, "pickPowers", {
+    name: "NPCs choose their own powers", hint: "When an NPC uses a power, it picks one that fits the moment (heal when hurt, escape when losing, call help when outnumbered, else its strongest attack) and rolls it. Off: the actions menu opens for the Storyteller to pick. An NPC's Behaviour window can switch this off for that NPC alone.",
+    scope: "world", config: true, type: Boolean, default: true
   });
   game.settings.register(MOD, "options", {
     name: "Options on the card", hint: "How many of the NPC's options the Storyteller's card lists.",
@@ -634,6 +639,15 @@ async function execute(tok, opt) {
       // The target WoDX Targeting picked goes up first, so the power window's own panel starts on it
       const aim = target ?? canvas.tokens.get(rankPower(tok)?.pick?.id ?? "") ?? null;
       if ( aim ) game.modules.get("wodx-targeting")?.api?.setTargets?.([aim.id]);
+      // B4926: the NPC picks a power that fits the moment and rolls it, when WoDX Actions can fill that window
+      const pp = powerPick(tok, aim);
+      if ( pp && A()?.autoPower ) {
+        const self = ["heal", "boost", "guard", "escape", "call"].includes(pp.use);
+        if ( pp.use === "boost" ) await actor.setFlag?.(MOD, "boosted", game.combat?.id ?? "");
+        if ( pp.use === "call" ) await actor.setFlag?.(MOD, "called", game.combat?.id ?? "");
+        await A().autoPower(actor, pp.power, {target: self ? null : aim});
+        return {done: true, text: `${tok.name} uses ${pp.power.name}${!self && aim ? ` on ${aim.name}` : ""} (${pp.why}).`};
+      }
       await A()?.menu?.({actor});
       return {done: true, text: `The actions menu is open for ${tok.name}: choose the power${aim ? ` (aimed at ${aim.name}; the target panel can change it)` : ""}.`};
     }
@@ -711,6 +725,25 @@ const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
 /** Tell WoDX Combat's turn conductor (3.7) how this NPC's turn went. */
 const report = (combatId, combatantId, r) => { if ( combatId && combatantId ) Hooks.callAll("wodxNpcTurnDone", {combatId, combatantId, ...r}); };
 const phaseKey = combat => { const f = combat?.getFlag?.("wodx-combat", "conductor"); return f?.phase === "extra" && f?.round === combat.round ? "extra" : "main"; };
+/**
+ * B4926, B4927: the power this NPC would use now, by what the moment calls for; obvious powers wait while mortals
+ * watch, unless the NPC is frenzied, cornered or near death. Null: no fitting power (the menu opens as before).
+ */
+function powerPick(tok, aim = null) {
+  if ( !setting("pickPowers") || savedProfile(tok.actor)?.noAutoPower ) return null;
+  const list = A()?.npcPowers?.(tok.actor) ?? [];
+  if ( !list.length ) return null;
+  let st = null;
+  try { st = readFight(tok).state; } catch (e) { return null; }
+  const s = st.self, combatId = game.combat?.id ?? "";
+  const close = (st.enemies ?? []).filter(e => (e.distance ?? 99) <= 2).length;
+  return PP.pick(list, {
+    wounds: s.wounds, nearDeath: s.wounds >= 6, losing: s.wounds >= 5 || (st.sideDown ?? 0) >= 0.5,
+    outnumbered: (st.enemies?.length ?? 0) > (st.allies?.length ?? 0) + 1, frenzied: !!s.inFrenzy, cornered: close >= 2 && s.wounds >= 3,
+    mortalsSee: (st.witnesses ?? 0) > 0, hasTarget: !!aim || (st.enemies ?? []).some(e => e.visible),
+    boosted: tok.actor.getFlag?.(MOD, "boosted") === combatId, called: tok.actor.getFlag?.(MOD, "called") === combatId
+  });
+}
 /** WoDX Targeting's pick for a power plan, when that module is on and not switched off on this computer. */
 function rankPower(tok) {
   const TG = game.modules.get("wodx-targeting");
@@ -719,7 +752,13 @@ function rankPower(tok) {
 }
 async function postPlan(tok, combat, {profile, options}, mode) {
   let ranked;
-  const shown = options.slice(0, setting("options")).map(o => (o.action === "power" ? NR.aimPower(o, ranked ??= rankPower(tok)) : o));
+  const shown = options.slice(0, setting("options")).map(o => {
+    if ( o.action !== "power" ) return o;
+    const a = NR.aimPower(o, ranked ??= rankPower(tok));
+    // B4926: the card names the power the NPC would pick
+    const pp = powerPick(tok, canvas.tokens.get(ranked?.pick?.id ?? "") ?? null);
+    return pp ? {...a, power: pp.power.name, why: `${a.why}; ${pp.power.name}: ${pp.why}`} : a;
+  });
   const flags = {plan: {token: tok.document.uuid, combatId: combat?.id ?? null, round: combat?.round ?? 0, combatant: combat?.combatant?.id ?? null, options: shown, mode}};
   let result = null, chosen = null, waiting = null;
   if ( mode === "auto" ) {
@@ -859,6 +898,7 @@ export async function editBehavior(actor) {
     <fieldset><legend>Tactics and rivals</legend>
     <div class="wodx-field"><label>Tactics</label><input type="text" name="tactics" value="${esc((saved.tactics ?? []).join(", "))}" placeholder="${esc(p.tactics.join(", "))}"/></div>
     <p class="wodx-quiet">Blank keeps the template's. Any of: ${Object.keys(NR.TACTICS).join(", ")}.</p>
+    <label class="wnpc-check"><input type="checkbox" name="noAutoPower"${saved.noAutoPower ? " checked" : ""}/> I pick their powers: the actions menu opens instead of the NPC choosing</label>
     <div class="wodx-field"><label>Sides</label><input type="text" name="sides" value="${esc(saved.sides ?? "")}" placeholder="sect:sabbat, inquisition"/></div>
     <div class="wodx-field"><label>Worn openly</label><input type="text" name="openSides" value="${esc(saved.openSides ?? "")}" placeholder="kind:church"/></div>
     <textarea name="rivals" rows="2" style="width:100%" placeholder="clan:tremere -3">${esc(saved.rivals ?? "")}</textarea>
@@ -887,7 +927,7 @@ export async function editBehavior(actor) {
   if ( data === "reset" ) return actor.unsetFlag(MOD, "behavior");
   const out = {template: data.template || null, mode: data.mode || null, phases: String(data.phases ?? "").trim() || null,
     household: String(data.household ?? "").trim().slice(0, 60) || null, talk: String(data.talk ?? "").trim().slice(0, 8000) || null, talkAsk: data.talkAsk ? true : null, noStock: data.noStock ? true : null,
-    noBarks: data.noBarks ? true : null, voice: VOICES[data.voice] ? data.voice : null, mood: TALK_MOODS.includes(data.mood) ? data.mood : null,
+    noBarks: data.noBarks ? true : null, voice: VOICES[data.voice] ? data.voice : null, mood: TALK_MOODS.includes(data.mood) ? data.mood : null, noAutoPower: data.noAutoPower ? true : null,
     sides: String(data.sides ?? "").trim().toLowerCase().slice(0, 300) || null, openSides: String(data.openSides ?? "").trim().toLowerCase().slice(0, 200) || null,
     rivals: String(data.rivals ?? "").trim().slice(0, 2000) || null};
   const tacs = String(data.tactics ?? "").split(",").map(x => x.trim().toLowerCase()).filter(Boolean);

@@ -34,3 +34,18 @@ test("retired tables: an untouched table under a key no longer shipped gives way
 test("retired tables: a table the Storyteller edited is kept and drawn", () => {
   assert.deepEqual(origin("edited"), ["norse", "inuit"]);
 });
+
+test("emptied tables: a world table left with no results stands aside for the shipped one (B5641)", async () => {
+  const {hash128} = G;
+  const ship = [{text: "Tarō", weight: 1}, {text: "Jirō", weight: 1}];
+  const h = hash128(JSON.stringify(ship.map(r => [r.text, r.weight ?? 1]))).join("-");
+  globalThis.game.tables.push(table({id: "names.male.test-empty", era: ["medieval"], culture: null, source: "wodx-creation", shipped: h}, []));
+  gen.registerTables("wodx-creation", [{id: "names.male.test-empty", era: ["medieval"], results: ship}]);
+  assert.deepEqual(gen.lookup({era: "medieval", culture: "x"})("names.male.test-empty")?.results.map(r => r.text), ["Tarō", "Jirō"]);
+});
+
+test("emptied tables: the install refills an emptied table instead of keeping it as an edit", async () => {
+  const {readFileSync} = await import("node:fs");
+  const src = readFileSync(join(root, "modules/wodx-chronicle/scripts/gen.mjs"), "utf8");
+  assert.match(src, /now === f\.shipped \|\| \(!have\.results\.size && d\.results\.length\)/);
+});

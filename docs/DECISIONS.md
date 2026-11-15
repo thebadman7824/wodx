@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5640
+Next free block: B5650
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -250,6 +250,7 @@ Next free block: B5640
 | B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5111) | NPC, Combat |
 | B5130-B5139 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5130-B5137) | Creation, Actions, NPC |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
+| B5160-B5169 | Playable Strengthening the Demon and fomor Numbing (used B5160-B5162) | Combat, Actions |
 | B5170-B5179 | Storyteller's Hand round two: Martyr, Marauders, the winds, holy ground, Untamable, feeding flaws, Berserker, flight, blackmail, the stimulant crash (used B5170-B5179) | Actions, Chronicle, Interactables, Library, NPC, Storyteller |
 | B5180-B5189 | Names raised to 300, Thai (used B5180) | Creation |
 | B5190-B5199 | Names raised to 300, Malay (used B5190) | Creation |
@@ -296,6 +297,7 @@ Next free block: B5640
 | B5600-B5609 | Names made by pattern for the short lists (used B5600) | Creation |
 | B5620-B5629 | Gates failing on main: court hunts batch write, gate-interact steps (used B5620-B5621) | Actions, gates |
 | B5630-B5639 | Blood hunts: court Kindred turn in batches (used B5630) | Actions |
+| B5640-B5649 | German names before 1900, and refilling emptied tables (used B5640-B5641) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7887,6 +7889,16 @@ WoDX Actions. Pick b1 (VtDA p. 287). When the target wins its resistance roll ag
 
 Reverse: the lostTo call in effects.js resolveResist.
 
+## B4926. NPCs choose a fitting power by themselves (2026-11-14)
+WoDX NPC. Ben's Power Limits Desk pick e1 (22:44Z). When an NPC's plan is to use a power, it takes the power the moment calls for: mend when badly hurt, escape when losing, call help when outnumbered, then its strongest attack or hold on a foe, then a boost, then a guard. Each power's uses come from its effect keywords (WoDX Actions npc-power-rules.js). In Auto mode the power's own window fills itself and rolls; in Suggest mode the Storyteller's card names the power and why. A power its limits have used up is passed over. The world setting "NPCs choose their own powers" and a Behaviour window box per NPC switch it off, and the actions menu opens as before.
+
+Reverse: power-pick-rules.mjs and powerPick in main.mjs; Actions npcPowers and autoPower.
+
+## B4927. Obvious powers wait while mortals watch (2026-11-14)
+WoDX NPC. Pick e2. A power whose effect shows (harm, a changed shape, a summoning, fire, weather and the like) is held back while mortals watch, unless the NPC is frenzied, cornered (two foes in reach and hurt) or near death.
+
+Reverse: mayShow in power-pick-rules.mjs.
+
 ## B4928. Resisted rolls show in full (2026-11-14)
 WoDX Actions. Pick d1. A resistance roll's card names the pool's traits and their dots, shows each die marked hit, miss or one, the ones taken off, the net successes and the power's own successes. An NPC's resisting roll goes to the Storyteller only (standing rule 19); a player's character's goes to everyone. Social contests already showed both rolls this way.
 
@@ -8422,6 +8434,21 @@ WoDX Creation and Storyteller. The lifepath has the Philippines under Asia, with
 
 Reverse: drop the philippines entries in data/lifepath-local-asia.mjs, data/lifepath-events-asia.mjs and the r-philippines cards.
 
+## B5160. Conditions can change the body in a fight (2026-11-15)
+WoDX Combat. A Chronicle condition may carry mods.bodyBruised (extra Bruised levels) and mods.bodyEase (99 clears wound penalties). Combat's toughness adds them to the traits' and cyberware's body, so the health track and the wound penalty follow the condition while it lasts.
+
+Reverse: drop the conditionBody call in toughness() in modules/wodx-combat/scripts/main.js.
+
+## B5161. Strengthening the Demon is played from Spend Chi (2026-11-15)
+WoDX Actions. Chi'iu Muh joins the Kuei-jin Disciplines with one power, Strengthening the Demon (Kindred of the East Companion p. 74): a Willpower, P'o at 6, Demon Chi up two a success (at most 10) for a turn a success; unspent points fade, then the after-cost Hun roll against the P'o (B4924). Its level, 2, is a house reading from its place on the page, which the scan does not print. It is not a Demon Art harnessed by Hun, since the page asks for no such roll.
+
+Reverse: remove the chiiumuh entry from POWERS and ART_LABEL in kote-arts.js.
+
+## B5162. A fomor's Numbing is played from the launcher (2026-11-15)
+WoDX Actions. A mortal sheet with a Power named Numbing gets Fomor power in its launcher: a Willpower, Stamina + Medicine at 6 (W20 p. 436), the Numbing condition for the scene (three Bruised levels, no wound penalties, B5160). When it ends the levels go and, past Incapacitated, the fomor dies and melts (the after-cost, B4924). Other fomor powers stay with the Storyteller.
+
+Reverse: remove fomor.js and its api, menu and theme entries.
+
 ## B5170. Holy ground lifts Faith by one (2026-11-15)
 WoDX Actions and Interactables. A Mortal with the faithful feature, standing on a sacred tile that hallows its ground and is not desecrated, counts Faith one higher (at most 10) for rolls that read it. Faith lost still comes off the sheet value. House reading of the feature text.
 
@@ -8734,3 +8761,13 @@ separate actor update, so with a big court calling and lifting one hunt took mor
 still timed out after B5620). They now run twenty at a time; each update is to a different actor.
 
 Reverse: go back to the plain for loops.
+
+## B5640. German names before 1900 raised to 50 a list (2026-11-15)
+WoDX Creation. The testbed gate found the German lists for Bohemia before 1900 still short (12 to 28 names a list) after the modern German list was raised to 300 (B5540). Each list now holds 49 to 62 recorded German names of its age: Hohenstaufen and later medieval nobles, clergy and townsfolk; Reformation and Baroque church books; nineteenth century parish records. All recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the six German lists in data/people.mjs.
+
+## B5641. An emptied table is refilled (2026-11-15)
+WoDX Chronicle. A Roll Table whose update was cut off between clearing and refilling was left with no results, then kept for good as if the Storyteller had edited it, so every Japanese name draw on one testbed lane came up empty. Now a table with no results is refilled at start-up, and until then the shipped names are drawn in its place. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: drop the two empty-table checks in scripts/gen.mjs.
