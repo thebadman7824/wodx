@@ -5,6 +5,9 @@ import * as lineage from "./lineage.mjs";
 import * as change from "./change-of-state.mjs";
 import * as feedVitae from "./feed-vitae.mjs";
 import * as animalStock from "./animal-stock.mjs";
+import * as animalBlood from "./animal-blood.mjs";
+import * as animalKeepers from "./animal-keepers.mjs";
+import * as animalKeepersRules from "./animal-keepers-rules.mjs";
 import * as animalStockRules from "./animal-stock-rules.mjs";
 import * as animalGhouls from "./animal-ghoul-rules.mjs";
 import * as xp from "./xp.mjs";
@@ -62,6 +65,8 @@ function start() {
   firstNight.registerFirstNight();
   feedVitae.registerFeedVitae();
   animalStock.registerAnimalStock();
+  animalBlood.registerAnimalBlood();
+  animalKeepers.registerAnimalKeepers();
   game.socket.on(`module.${MODULE_ID}`, async message => {
     if ( message?.type === "xp.request" ) await xp.onRequest(message.payload);
     if ( message?.type === "vitae.request" ) await feedVitae.onRequest(message.payload);
@@ -76,7 +81,9 @@ function start() {
     spend: actor => SpendApp.openFor(actor),
     animals: {rules: animalGhouls, isAnimal: data.isAnimal, kindOf: data.animalKindOf, isGhoul: data.isAnimalGhoul, feed: feedVitae.requestFeed, canDrink: feedVitae.canDrink,
       stock: animalStockRules, training: a => data.animalKindOf(a) ? animalStockRules.trainingOf(a.getFlag(MODULE_ID, "animal")) : null,
-      train: animalStock.startTraining, applyTraining: data.applyTraining, makeBeast: animalStock.makeBeast, requestBeast: animalStock.requestBeast, dotsLeft: animalStock.dotsLeft},
+      train: animalStock.startTraining, applyTraining: data.applyTraining, makeBeast: animalStock.makeBeast, requestBeast: animalStock.requestBeast, dotsLeft: animalStock.dotsLeft,
+      syncMark: animalBlood.syncMark, keepers: animalKeepersRules, householdBeasts: animalKeepers.householdBeasts, craft: animalKeepers.startCraft,
+      makeSzlachta: animalKeepers.makeSzlachta, makeVozhd: animalKeepers.makeVozhd, setKennel: animalKeepers.setKennel, kennelTick: animalKeepers.kennelTick, ghoulsOf: animalKeepers.ghoulsOf, showBlood: animalBlood.showBlood, ownBeast: (domitor, beast) => !!beast && data.isAnimalGhoul(beast) && data.domitorOf(beast)?.id === domitor?.id},
     embrace: change.embrace, giveVitae: change.giveVitae, firstChange: firstChange.firstChange, firstChangeDialog: firstChange.firstChangeDialog, award: xp.award, awardDialog,
     writeLineageJournal: lineage.writeLineageJournal,
     groups,

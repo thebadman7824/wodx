@@ -10,11 +10,13 @@
  *   4. a fifth-level power: once a scene by the house rule, and its user is Drained (+1 difficulty) until the scene ends
  *   5. a power window greys out the used power and says why
  *   6. an NPC's powers carry uses (attack, hold, ...) and whether they show
- *   7. (added with the NPC choice: an obvious power waits while mortals watch, and is used when cornered)
+ *   7. the NPC's choice: an obvious power waits while mortals watch, and is used when the NPC is cornered
  *   8. the NPC rolls its chosen power by itself: a card in chat, no window left open
  *   9. after-costs: Blinding Spittle's blindness ends and Blurred sight follows for the scene
  *  10. after-costs: Survivor wears off and its werewolf falls Asleep (the token dimmed)
  *  11. after-costs: Inspire left no lasting effect, so the scene's end takes the mortal's Willpower dot
+ *  12. Strengthening the Demon: Demon Chi rises two a success, and the stoked points fade when it ends (B5161)
+ *  13. a fomor's Numbing: three more health levels and no wound penalty; when it ends past Incapacitated, death (B5162)
  * Result: Data/wodx-gate/gatelimits-result.json.
  */
 import {gate, waitFor} from "./kit.mjs";
@@ -102,8 +104,18 @@ export async function run() {
         {n: powers.length, sample: powers.slice(0, 6).map(p => ({name: p.name, uses: p.uses, obvious: p.obvious}))});
     });
 
+    await G.step("7. obvious powers wait while mortals watch, unless cornered", async () => {
+      const PP = await import(`/modules/wodx-npc/scripts/power-pick-rules.mjs?${Date.now()}`);
+      const st = {hasTarget: true, wounds: 0, boosted: true, mortalsSee: true};
+      const watched = PP.pick(powers, st), cornered = PP.pick(powers, {...st, cornered: true});
+      const anyObvious = powers.some(p => p.obvious && p.uses.some(u => ["attack", "hold"].includes(u)));
+      G.ok("7. obvious powers wait while mortals watch, unless cornered", !!watched && !watched.power.obvious && (!anyObvious || !!cornered),
+        {watched: watched?.power?.name, cornered: cornered?.power?.name, anyObvious});
+    });
+
     await G.step("8. the NPC rolls its chosen power by itself", async () => {
-      const pk = {power: powers.find(p => p.uses.includes("attack") || p.uses.includes("hold")) ?? powers[0], use: "attack"};
+      const PP = await import(`/modules/wodx-npc/scripts/power-pick-rules.mjs?${Date.now()}`);
+      const pk = PP.pick(powers, {hasTarget: true, wounds: 0, boosted: true});
       const since = Date.now();
       const open = () => Object.values(foundry.applications.instances ? Object.fromEntries(foundry.applications.instances) : {})
         .filter(a => a.element?.isConnected && /Discipline/i.test(a.title ?? a.options?.window?.title ?? ""));
@@ -120,8 +132,7 @@ export async function run() {
       const g = await L.gate(garou, spit, {targets: [victim]});
       await g?.done({successes: 2});
       await CH.timed.applyTimed(victim, {name: "Blinded", condition: "blinded", duration: {kind: "rounds", rounds: 1}, key: "wodx-effect-hold"});
-      await wait(600);
-      const tagged = victim.effects.some(e => e.getFlag(MOD, "afterCost")?.key === "blinding-spittle");
+      const tagged = !!(await waitFor(() => live(vt).effects.some(e => e.getFlag(MOD, "afterCost")?.key === "blinding-spittle"), 3000));
       await CH.timed.endFor(victim, {key: "wodx-effect-hold"});
       await waitFor(() => live(vt).statuses?.has?.("wodx-blurred-sight"), 5000);
       G.ok("9. Blinding Spittle ends, Blurred sight follows", tagged && live(vt).statuses.has("wodx-blurred-sight"), {tagged, statuses: [...(live(vt).statuses ?? [])]});
@@ -151,6 +162,54 @@ export async function run() {
       await waitFor(() => (Number(live(wt).system?.advantages?.willpower?.permanent) || 0) === before - 1, 6000);
       const after = Number(live(wt).system?.advantages?.willpower?.permanent) || 0;
       G.ok("11. Inspire with no lasting effect: the scene's end takes a Willpower dot", before > 0 && after === before - 1, {before, after});
+    });
+
+    await G.step("12. Strengthening the Demon: Demon Chi rises, then the stoked points fade", async () => {
+      const [kj] = await G.make(Actor, [{name: "Gate Limits Kuei-jin", type: "Vampire", system: {settings: {variant: "kindredeast"}}}]);
+      await kj.update({"system.advantages.demonchi.temporary": 3, "system.advantages.po.permanent": 4, "system.advantages.hun.permanent": 6});
+      const before = Number(kj.system?.advantages?.demonchi?.temporary) || 0;
+      const g = await L.gate(kj, {name: "Strengthening the Demon", level: 2}, {targets: []});
+      await A.kotStoke(kj, 2);
+      await g?.done({successes: 2});
+      const up = Number(kj.system?.advantages?.demonchi?.temporary) || 0;
+      const timed = kj.effects.some(e => /Strengthening the Demon/.test(e.name));
+      await wait(500);
+      const tagged = kj.effects.some(e => e.getFlag(MOD, "afterCost")?.key === "strengthening-the-demon");
+      await CH.timed.endFor(kj, {key: "wodx-kote-stoke"});
+      await waitFor(() => (Number(kj.system?.advantages?.demonchi?.temporary) || 0) === before, 5000);
+      const after = Number(kj.system?.advantages?.demonchi?.temporary) || 0;
+      const hunCard = await waitFor(() => game.messages.contents.slice(-6).some(m => /Hun/.test(m.content ?? "") && m.speaker?.actor === kj.id), 5000);
+      G.ok("12. Strengthening the Demon: Demon Chi rises, then the stoked points fade", up === before + 4 && timed && tagged && after === before && hunCard,
+        {before, up, timed, tagged, after, hunCard});
+    });
+
+    await G.step("13. a fomor's Numbing: more levels, no penalty, and death when it ends past Incapacitated", async () => {
+      const [fo] = await G.make(Actor, [{name: "Gate Limits Fomor", type: "Mortal", system: {attributes: {stamina: {value: 5}}, advantages: {willpower: {permanent: 9, temporary: 9}}},
+        items: [{name: "Numbing", type: "Power", system: {type: "wod.types.power", value: 1}}]}]);
+      // The system's sheet can prepare a new mortal to Willpower 0: set the traits after creation
+      await fo.update({"system.advantages.willpower.permanent": 9, "system.advantages.willpower.temporary": 9, "system.attributes.stamina.value": 5});
+      const [ft] = await G.tokens(scene, [{actor: fo, x: 14, y: 8}]);
+      const body = () => live(ft);
+      const max0 = Number(body().system?.traits?.health?.totalhealthlevels?.max) || 7;
+      const wp0 = Number(body().system?.advantages?.willpower?.temporary) || 0;
+      const cards = [];
+      for ( let k = 0; k < 4 && !body().statuses?.has?.("wodx-numbing"); k++ ) {
+        const m = await A.fomor.numbing({actor: body()});
+        cards.push(String(m?.content ?? "no card").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").slice(0, 120));
+        await waitFor(() => body().statuses?.has?.("wodx-numbing"), 1500);
+        if ( !body().statuses?.has?.("wodx-numbing") ) await L.clear?.(body());
+      }
+      const numb = body().statuses?.has?.("wodx-numbing");
+      await waitFor(() => (Number(body().system?.traits?.health?.totalhealthlevels?.max) || 0) === max0 + 3, 5000);
+      const max1 = Number(body().system?.traits?.health?.totalhealthlevels?.max) || 0;
+      await body().update({"system.health.damage.lethal": max0 + 1});
+      await wait(400);
+      const pen = Number(body().system?.health?.damage?.woundpenalty) || 0;
+      await CH.timed.endFor(body(), {key: "wodx-fomor-numbing"});
+      await waitFor(() => body().statuses?.has?.("dead") && scene.tokens.get(ft.id)?.alpha === 0.25, 6000);
+      const dead = !!body().statuses?.has?.("dead"), alpha = scene.tokens.get(ft.id)?.alpha;
+      G.ok("13. a fomor's Numbing: more levels, no penalty, and death when it ends past Incapacitated", numb && max1 === max0 + 3 && pen === 0 && dead && alpha === 0.25,
+        {numb, max0, max1, pen, dead, alpha, wp0, cards});
     });
   } catch (e) {
     G.R.errors.push(String(e?.message ?? e));

@@ -149,6 +149,30 @@ export function build(ctx) {
         return { dice, label: label.join(" + ") };
     }
 
+    /* B5132: Animalism and the master's own beasts; B5134 (WoDX Creation): the vozhd */
+    const SUBSUME = /subsume the spirit|twin souls/i;
+    const creationAnimals = () => game.modules.get("wodx-creation")?.active ? game.modules.get("wodx-creation").api?.animals : null;
+    const beastLink = (actor, tgt, p) => !!tgt && /^animalism$/i.test(p?.d ?? "") && !!creationAnimals()?.ownBeast?.(actor, tgt);
+    const immune = (tgt, p) => !!tgt?.flags?.["wodx-creation"]?.vozhd && /^(animalism|dominate|presence)$/i.test(p?.d ?? "");
+    async function shareSenses(beast) {
+        const tok = (canvas?.tokens?.placeables ?? []).find(t => t.actor?.id === beast.id);
+        if (!tok || !tok.isOwner) return;
+        tok.control({ releaseOthers: true });
+        await canvas.animatePan?.({ x: tok.center.x, y: tok.center.y, duration: 600 });
+    }
+    async function beckonOwn(actor) {
+        const me = (canvas?.tokens?.placeables ?? []).find(t => t.actor?.id === actor.id);
+        if (!me) return [];
+        const g = canvas.grid.size, came = [];
+        const mine = (canvas.tokens.placeables ?? []).filter(t => t !== me && t.isOwner && creationAnimals()?.ownBeast?.(actor, t.actor));
+        for (const [i, t] of mine.entries()) {
+            const dx = [1, -1, 0, 0, 1, -1, 1, -1][i % 8], dy = [0, 0, 1, -1, 1, 1, -1, -1][i % 8];
+            await t.document.update({ x: me.document.x + dx * g, y: me.document.y + dy * g });
+            came.push(t.name);
+        }
+        return came;
+    }
+
     async function useDiscipline(actor) {
         if (!DATA.disc) return ctx.notify("The Discipline library didn't load.");
         const sheet = sheetDisciplines(actor);
@@ -172,7 +196,10 @@ export function build(ctx) {
             const box = root.querySelector(".wodx-disc-info");
             if (!p) { box.textContent = ""; return; }
             const c = K.discCost(p.c);
-            const d = K.discDifficulty(p.diff, { t: targetTraits(tgt), own: { willpower: traitValue(actor, "willpower") } });
+            let d = K.discDifficulty(p.diff, { t: targetTraits(tgt), own: { willpower: traitValue(actor, "willpower") } });
+            // B5132: Animalism on one's own animal ghoul is one easier
+            const own = beastLink(actor, tgt, p);
+            if (own && d !== null) d = Math.max(2, d - 1);
             if (d !== null) root.querySelector("[name=diff]").value = d;
             root.querySelector("[name=blood]").value = c.optional ? 0 : c.blood;
             root.querySelector("[name=wp]").value = c.willpower;
@@ -181,7 +208,9 @@ export function build(ctx) {
             const roll = p.r ? `roll ${esc(poolOf(actor, p.r, root.querySelector("[name=attr]").value).label)}` : "no roll";
             box.innerHTML = `<b>${esc(p.n)}</b> (${esc(p.d)} ${p.l}) · cost ${esc(costTxt)} · ${roll} · ${esc(K.DURATION_TEXT[p.t] ?? p.t ?? "")} · ${p.book ?? "VtDA20"} p. ${p.p ?? "?"}<br>${esc(p.e)}`
                 + (d === null && p.diff && p.diff !== "var" ? `<br><i>Difficulty from the target (${esc(String(p.diff).replace("t:", ""))}): target a token or set it.</i>` : "")
-                + (p.diff === "var" ? "<br><i>The difficulty depends on the situation (see the page).</i>" : "");
+                + (p.diff === "var" ? "<br><i>The difficulty depends on the situation (see the page).</i>" : "")
+                + (own ? `<br><i>${esc(tgt.name)} is ${esc(actor.name)}'s own ghoul: one easier${SUBSUME.test(p.n) ? ", and no roll is needed to share its senses" : ""}.</i>` : "")
+                + (immune(tgt, p) ? `<br><i>${esc(tgt.name)} is a vozhd: Animalism, Dominate and Presence have no hold on it (V20 p. 502).</i>` : "");
         };
         return dialog(`Use a Discipline: ${actor.name}`, content, "Use", async fd => {
             const p = list.find(x => x.id === fd.power);
@@ -200,7 +229,17 @@ export function build(ctx) {
             let body = notes.length ? `<div class="vta-parts">${notes.map(esc).join(" · ")}</div>` : "";
             const rolls = [];
             let successes = 1;
-            if (p.r && !p.passive) {
+            const tgtNow = [...(game.user.targets ?? [])][0]?.actor ?? tgt;
+            const link = beastLink(actor, tgtNow, p);
+            if (immune(tgtNow, p)) {
+                body += `<div class="vta-warn">${esc(tgtNow.name)} is a vozhd: ${esc(p.d)} has no hold on it (V20 p. 502).</div>`;
+                return post(actor, `${actor.name}: ${esc(p.n)}`, body, rolls);
+            }
+            if (link && SUBSUME.test(p.n)) {
+                // B5132: one's own beast needs no roll beyond the cost, and the player sees through its eyes
+                body += `<div class="vta-note">${esc(tgtNow.name)} is ${esc(actor.name)}'s own ghoul: no roll is needed. The map now shows what it sees.</div>`;
+                await shareSenses(tgtNow);
+            } else if (p.r && !p.passive) {
                 const pool = poolOf(actor, p.r, fd.attr);
                 // The target's Iron Will or Magic Resistance makes a mind power or magic harder (V20 pp. 485, 493)
                 const target = [...(game.user.targets ?? [])][0]?.actor ?? null;
@@ -227,6 +266,8 @@ export function build(ctx) {
             }
             // B3565: Aura Perception shows the black veins of a diablerist (V20 p. 294)
             if (/aura perception/i.test(p.n) && tgt && successes > 0) body += ctx.api().debtsMarks?.()?.auraNote?.(tgt) ?? "";
+            // B5132: The Beckoning reaches one's own animal ghouls first: they come to the caller's side
+            if (/beckoning/i.test(p.n) && successes > 0) { const came = await beckonOwn(actor); if (came.length) body += `<div class="vta-note">First to come: ${came.map(esc).join(", ")}.</div>`; }
             // Any other Discipline: its keywords on the effects card (Traits With Teeth step 4)
             // A power with no roll counts one success (B3751)
             if (!fx && !p.passive && successes > 0 && EF.isOn()) {

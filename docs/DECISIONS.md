@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5640
+Next free block: B5650
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -239,6 +239,7 @@ Next free block: B5640
 | B4910-B4919 | Rothenstein Rebuilt: book one fronts, roles and clue carriers (spine part two) (used B4910-B4917) | Chronicle |
 | B4920-B4949 | Power limits after Princes of Darkness: one scene count, use limits, Drained, after-costs, NPC power choice (used B4920-B4929) | Actions, NPC |
 | B4950-B4959 | Tuareg names (used B4950-B4952) | Creation, Chronicle |
+| B4960-B4969 | Bicycles, supernatural mounts, mount and vehicle sprites with riders (used B4960-B4969) | Interactables, Combat, NPC |
 | B4970-B4979 | Mount and vehicle sprites with riders, by era, shape and colour (used B4970-B4976) | Paperdoll |
 | B4980-B4999 | The Automation Desk: player actions that follow the rules by themselves, every line (used B4980-B4999) | Actions, Chronicle |
 | B5000-B5009 | Moro names (used B5000-B5002) | Creation, Chronicle |
@@ -247,7 +248,9 @@ Next free block: B5640
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5064) | Creation, NPC, Actions |
 | B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
 | B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5111) | NPC, Combat |
+| B5130-B5139 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5130-B5137) | Creation, Actions, NPC |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
+| B5160-B5169 | Playable Strengthening the Demon and fomor Numbing (used B5160-B5162) | Combat, Actions |
 | B5170-B5179 | Storyteller's Hand round two: Martyr, Marauders, the winds, holy ground, Untamable, feeding flaws, Berserker, flight, blackmail, the stimulant crash (used B5170-B5179) | Actions, Chronicle, Interactables, Library, NPC, Storyteller |
 | B5180-B5189 | Names raised to 300, Thai (used B5180) | Creation |
 | B5190-B5199 | Names raised to 300, Malay (used B5190) | Creation |
@@ -294,6 +297,7 @@ Next free block: B5640
 | B5600-B5609 | Names made by pattern for the short lists (used B5600) | Creation |
 | B5620-B5629 | Gates failing on main: court hunts batch write, gate-interact steps (used B5620-B5621) | Actions, gates |
 | B5630-B5639 | Blood hunts: court Kindred turn in batches (used B5630) | Actions |
+| B5640-B5649 | German names before 1900, and refilling emptied tables (used B5640-B5641) | Creation, Chronicle |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7885,6 +7889,16 @@ WoDX Actions. Pick b1 (VtDA p. 287). When the target wins its resistance roll ag
 
 Reverse: the lostTo call in effects.js resolveResist.
 
+## B4926. NPCs choose a fitting power by themselves (2026-11-14)
+WoDX NPC. Ben's Power Limits Desk pick e1 (22:44Z). When an NPC's plan is to use a power, it takes the power the moment calls for: mend when badly hurt, escape when losing, call help when outnumbered, then its strongest attack or hold on a foe, then a boost, then a guard. Each power's uses come from its effect keywords (WoDX Actions npc-power-rules.js). In Auto mode the power's own window fills itself and rolls; in Suggest mode the Storyteller's card names the power and why. A power its limits have used up is passed over. The world setting "NPCs choose their own powers" and a Behaviour window box per NPC switch it off, and the actions menu opens as before.
+
+Reverse: power-pick-rules.mjs and powerPick in main.mjs; Actions npcPowers and autoPower.
+
+## B4927. Obvious powers wait while mortals watch (2026-11-14)
+WoDX NPC. Pick e2. A power whose effect shows (harm, a changed shape, a summoning, fire, weather and the like) is held back while mortals watch, unless the NPC is frenzied, cornered (two foes in reach and hurt) or near death.
+
+Reverse: mayShow in power-pick-rules.mjs.
+
 ## B4928. Resisted rolls show in full (2026-11-14)
 WoDX Actions. Pick d1. A resistance roll's card names the pool's traits and their dots, shows each die marked hit, miss or one, the ones taken off, the net successes and the power's own successes. An NPC's resisting roll goes to the Storyteller only (standing rule 19); a player's character's goes to everyone. Social contests already showed both rolls this way.
 
@@ -7909,6 +7923,58 @@ Reverse: edit the tuareg entry in data/people-world.mjs.
 WoDX Creation. A Tuareg is "ag" (son of) or "welet" (daughter of) the father's name, then and now; no family names.
 
 Reverse: give the tuareg entry a fam list.
+
+## B4960. The bicycle is a mount tile (2026-11-14)
+WoDX Interactables. A bicycle, from 1885, ridden with Dexterity + Athletics as the chase already had it, one seat, astride (it can throw its rider). Until now it was only a way to run in a chase.
+
+Reverse: remove bicycle from MOUNTS in interact-rules.mjs and the mount key from WAYS.bicycle in chase-rules.mjs.
+
+## B4961. Some mounts are for one kind of rider (2026-11-14)
+WoDX Interactables and NPC. A chimerical steed can be ridden only by the fae (Changeling 20th p. 280: chimerical horses; mortals cannot see them). A Stygian steed, one of Charon's horses of the dead, only by wraiths and spirits (Wraith 20th p. 31). Anyone else gets a greyed line saying why. A tile the Storyteller keeps out of its era is left to the Storyteller. NPCs never pick one they cannot ride.
+
+Reverse: drop the only lists in MOUNTS, or riderMay.
+
+## B4962. Speeds of the beasts out of the books (2026-11-14)
+WoDX Interactables, house figures in yards a turn: ghouled horse 60 (its Celerity), fleshcrafted steed 45, chimerical steed 55, Stygian steed 75 ("swift beyond telling"), gryphon 65 and flying. All of them are shut out indoors. Only the gryphon crosses water.
+
+Reverse: edit the speed lines in WAYS in chase-rules.mjs.
+
+## B4963. Their traits in a fight (2026-11-14)
+WoDX Combat. The rider uses the mount's Strength and Dexterity in blows, and the mount dodges for its rider, as with the horse (V20 Dark Ages p. 399). Ghouled horse: the large horse with Potence and Celerity (Strength 7, Dexterity 3; animal ghouls, V20 Dark Ages p. 401), and its Celerity takes away the +2 for dodging shots. Fleshcrafted steed: the book's szlachta (Strength 5, Dexterity 4, Stamina 5, Brawl 4). Chimerical steed, Stygian steed and gryphon: house figures.
+
+Reverse: edit MOUNT_TRAITS in mounted-rules.js.
+
+## B4964. Exotic mounts need Ride 3 (2026-11-14)
+WoDX Interactables. A fleshcrafted steed and a gryphon need Ride 3 or better to get on at all (Mage 20th p. 298: griffins and other dangerous or exotic mounts). With less, the line is greyed and gives the reason.
+
+Reverse: drop min from those MOUNTS rows.
+
+## B4966. Riding the animal itself (2026-11-14)
+WoDX Interactables, Combat and NPC. Ben's ask: a creature's own sheet can be ridden, as Cataclysm tags its mountable animals. The tag is flags.wodx-interactables.mountable on the actor or its token: a kind, "no", or blank, which means WoDX goes by the name. Horses, ponies, warhorses, mules, donkeys, camels, ghoul warhorses, gryphons and the named steeds count. A player's own character is never guessed by name. The rider mounts from the Interact window and the rider's token goes onto the beast's. Moving the rider moves the beast, and the beast's steps don't count as its own movement. In a fight the rider uses the beast's own Strength and Dexterity, and the beast dodges with its own Dexterity + Athletics and its own Celerity (V20 Dark Ages p. 399). Its wounds slow it. A ridden beast's NPC turn goes with its rider. Mount tiles stay for vehicles, and for old maps. Camels are added as a kind, 40 yards a turn.
+
+Reverse: make beastOf in Interactables main.mjs return null.
+
+## B4967. A ridden beast that goes down throws its riders (2026-11-14)
+WoDX Interactables. When a ridden beast reaches Incapacitated (seven levels marked), everyone on it is thrown a square aside and knocked prone, and takes two dice of bashing to soak (Changeling 20th p. 280, a fall from a trotting horse). The Storyteller sees a card saying so.
+
+Reverse: remove the updateActor hook calling beastDown.
+
+## B4968. A vehicle has its own sheet (2026-11-14)
+WoDX Interactables, Combat and the system fork. Ben's pick: a new kind of actor, "wodx-interactables.vehicle", declared by the module and not by the system (the system fork 7.3.2-wodx.11 skips module kinds when it prepares character data, as it already did for Group). The sheet holds:
+- the kind, and the year it was built (left blank, the chronicle's year);
+- the figures for that year from the tables the tiles use (Mage 20th pp. 458-463, house figures before);
+- a Structure track marked like health, plus burnt out, seats and notes;
+- who is aboard;
+- mounted guns and cargo, both items dropped on the sheet.
+
+Its token is got into and driven as a mount tile is. A blow at the vehicle itself, or one that a closed body takes for someone inside, comes off the Structure on the sheet. Mounted guns are on the attack menu of anyone aboard. Damage is kept for the whole vehicle, as Mage 20th keeps it, never by part. Tiles keep working.
+
+Reverse: remove documentTypes from module.json and setupVehicleSheet.
+
+## B4969. Paint, style and headlights (2026-11-14)
+WoDX Interactables. A vehicle sheet has paint and style, for the pictures (Ben: different colours, shapes and styles). With "Lights on", a motor vehicle from 1900 lights its token in a cone ahead (house figures: 18 yards dim and 8 bright, 24 and 10 for lorries and armour). Its token is tinted as it takes damage, as the tiles are.
+
+Reverse: drop headlights in vehicle-sheet-rules.mjs.
 
 ## B4970. Every mount and vehicle has drawn looks (2026-11-14)
 WoDX Paperdoll. Each of the 22 kinds of mount has looks drawn by the sprite rig (tools/sprites/mounts.py and its mount_*.py painters): the same five-tone ramps, dark outline, top light and scale as the people and the beasts, own art. A look is a sheet of its frames across by four facings down. It is painted in three key ramps (paint or coat, trim or mane, cloth or stripe) that the game replaces with one of the look's colour schemes on each computer, so one sheet serves every colour. The list (sprites/mounts/mounts.json) names every look's year, shape, schemes and seats. Other games with many vehicle shapes and colours were looked at for the idea only (a body, its era and its paint as separate choices); no outside art is used.
@@ -8310,6 +8376,44 @@ WoDX NPC. The rules list what each kind of NPC master keeps in each era (ghouls 
 
 Reverse: drop KEEPERS.
 
+## B5130. The domitor's clan weakness in the beast (2026-11-14)
+WoDX Creation, WoDX NPC. With five or more points of its domitor's blood an animal ghoul shows the clan's weakness, only where it fits a beast (V20 Dark Ages p. 401): Nosferatu hideous, Lasombra no reflection, Followers of Set shun the sun, Brujah and Gangrel quick to rage (frenzy one harder), Malkavian odd ways, Ventrue picky, Toreador entranced. Shown as an effect on the token. Desk item 8.
+
+Reverse: registerAnimalBlood's updateActor hook.
+
+## B5131. The blood bar and red eyes (2026-11-14)
+WoDX Creation. An animal ghoul's tokens show its blood as the second bar and carry a faint red light that shows only in the dark. Desk item 26.
+
+Reverse: showBlood.
+
+## B5132. Animalism and one's own beasts (2026-11-14)
+WoDX Actions. One easier on one's own animal ghoul; Subsume the Spirit or the Twin Souls on it needs no roll and puts the player's view in the beast; the Beckoning brings one's own beasts on the scene first. Feral Whispers opens every order (B5063). Desk item 15.
+
+Reverse: beastLink in kindred.js.
+
+## B5133. The szlachta (2026-11-14)
+WoDX Creation with WoDX Storyteller. A long task for a vampire with Vicissitude 3 (Dexterity + Medicine, difficulty 7, 10 successes, house): a person takes the book's traits (V20 p. 502) and Monstrous; a beast gains a dot of Strength, Stamina, Perception and Brawl (house) and stands larger; both gain Fortitude 1 and can never go back among people. Desk item 22.
+
+Reverse: the fleshcraft wodxTaskDone hook.
+
+## B5134. The vozhd (2026-11-14)
+WoDX Creation, WoDX Actions. A long task for an elder with Vicissitude 5 and fifteen of their own ghouls (difficulty 8, 25 successes, house); the ghouls are marked dead and hidden, not deleted. The vozhd takes the book's traits (V20 pp. 502 to 503) and is immune to Animalism, Dominate and Presence; its making goes to the Masquerade ledger. Desk item 23.
+
+Reverse: makeVozhd and immune() in kindred.js.
+
+## B5135. Kennels (2026-11-14)
+WoDX Creation. The Storyteller marks a vampire as keeping a kennel of a kind; with two or more of its ghouls of that kind, one young a year in the kind's season (house months), born trained, filled by its first drink. Desk item 24.
+
+Reverse: kennelTick.
+
+## B5136. The beasts a household keeps (2026-11-14)
+WoDX Creation, WoDX NPC. Gangrel, Tzimisce, Nosferatu and any vampire with Animalism keep one to three animal ghouls: one, plus one in the Dark Ages, plus one in the countryside, the first by clan and the rest from the age's list. They come with a household seeded as that vampire's ghouls. Desk items 25 and 27.
+
+Reverse: householdBeasts in residents.mjs.
+
+## B5137. Ghoul mounts (2026-11-14)
+WoDX Combat. Mounts are still tiles with fixed traits; when the mounts work puts riders on Creature sheets, it reads the war-trained mark and the beast's Potence, Celerity and Fortitude. Desk item 21.
+
 ## B5150. The Philippines a region of its own (2026-11-15)
 WoDX Chronicle and Storyteller. Ben asked to build out the Philippines. The islands leave the Malay world and become the 45th world region, "The Philippines (Manila, the Visayas, Mindanao and Sulu)", with Manila as its city, the tropical wet climate and the Philippine money region. The world map gives it the squares north of 4.5 degrees and east of 119.5 (with Palawan) that were the Malay world's; the map builder cuts the country out by name on its next run. The region's letter comes last so no older square changes. Taken as recommended; logged in PENDING-REVIEW.
 
@@ -8329,6 +8433,21 @@ Reverse: drop the philippines rows from each table.
 WoDX Creation and Storyteller. The lifepath has the Philippines under Asia, with its own origins and callings in each age, and dated origins and marks from Mactan (1521) to the typhoon at Tacloban (2013). Threads of Fate gets two cards: "The galleon is late" (its own hook) and "The datu's buried gold".
 
 Reverse: drop the philippines entries in data/lifepath-local-asia.mjs, data/lifepath-events-asia.mjs and the r-philippines cards.
+
+## B5160. Conditions can change the body in a fight (2026-11-15)
+WoDX Combat. A Chronicle condition may carry mods.bodyBruised (extra Bruised levels) and mods.bodyEase (99 clears wound penalties). Combat's toughness adds them to the traits' and cyberware's body, so the health track and the wound penalty follow the condition while it lasts.
+
+Reverse: drop the conditionBody call in toughness() in modules/wodx-combat/scripts/main.js.
+
+## B5161. Strengthening the Demon is played from Spend Chi (2026-11-15)
+WoDX Actions. Chi'iu Muh joins the Kuei-jin Disciplines with one power, Strengthening the Demon (Kindred of the East Companion p. 74): a Willpower, P'o at 6, Demon Chi up two a success (at most 10) for a turn a success; unspent points fade, then the after-cost Hun roll against the P'o (B4924). Its level, 2, is a house reading from its place on the page, which the scan does not print. It is not a Demon Art harnessed by Hun, since the page asks for no such roll.
+
+Reverse: remove the chiiumuh entry from POWERS and ART_LABEL in kote-arts.js.
+
+## B5162. A fomor's Numbing is played from the launcher (2026-11-15)
+WoDX Actions. A mortal sheet with a Power named Numbing gets Fomor power in its launcher: a Willpower, Stamina + Medicine at 6 (W20 p. 436), the Numbing condition for the scene (three Bruised levels, no wound penalties, B5160). When it ends the levels go and, past Incapacitated, the fomor dies and melts (the after-cost, B4924). Other fomor powers stay with the Storyteller.
+
+Reverse: remove fomor.js and its api, menu and theme entries.
 
 ## B5170. Holy ground lifts Faith by one (2026-11-15)
 WoDX Actions and Interactables. A Mortal with the faithful feature, standing on a sacred tile that hallows its ground and is not desecrated, counts Faith one higher (at most 10) for rolls that read it. Faith lost still comes off the sheet value. House reading of the feature text.
@@ -8642,3 +8761,13 @@ separate actor update, so with a big court calling and lifting one hunt took mor
 still timed out after B5620). They now run twenty at a time; each update is to a different actor.
 
 Reverse: go back to the plain for loops.
+
+## B5640. German names before 1900 raised to 50 a list (2026-11-15)
+WoDX Creation. The testbed gate found the German lists for Bohemia before 1900 still short (12 to 28 names a list) after the modern German list was raised to 300 (B5540). Each list now holds 49 to 62 recorded German names of its age: Hohenstaufen and later medieval nobles, clergy and townsfolk; Reformation and Baroque church books; nineteenth century parish records. All recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the six German lists in data/people.mjs.
+
+## B5641. An emptied table is refilled (2026-11-15)
+WoDX Chronicle. A Roll Table whose update was cut off between clearing and refilling was left with no results, then kept for good as if the Storyteller had edited it, so every Japanese name draw on one testbed lane came up empty. Now a table with no results is refilled at start-up, and until then the shipped names are drawn in its place. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: drop the two empty-table checks in scripts/gen.mjs.
