@@ -92,3 +92,13 @@ test("hooks written for the old sheets also reach the moved ones", () => {
   assert.match(read("../../modules/wodx-sheets/scripts/extras.mjs"), /getHeaderControlsActorSheetV2/);
   assert.match(read("../../modules/wodx-chronicle/scripts/player-guide.mjs"), /renderLegacyActorSheetV2/);
 });
+
+test("the line sheets call no old-engine method the bridge does not give", () => {
+  const bridge = read(T + "legacy-sheet-v2.js");
+  const V1_ONLY = ["_render", "_onSubmit", "_getSubmitData", "_updateObject", "_getHeaderButtons", "bringToTop", "_onChangeInput", "activateEditor", "_activateEditor", "saveEditor", "_createEditor", "getData", "_renderInner", "activateTab", "_onChangeTab"];
+  for (const file of Object.keys(LINES)) {
+    const src = read(`${T}${file}-actor-sheet.js`);
+    for (const m of V1_ONLY) if (new RegExp(`this\\.${m}\\(|super\\.${m}\\(`).test(src))
+      assert.match(bridge, new RegExp(`\\n\\t(async )?${m}\\(`), `${file} calls ${m}, which the bridge must give`);
+  }
+});

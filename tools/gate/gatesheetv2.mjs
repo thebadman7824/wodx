@@ -56,7 +56,8 @@ export async function run() {
         G.ok(`${pre} 2. every tab opens`, res.length > 2 && res.every(r => r.active), {tabs: res.filter(r => !r.active).map(r => r.tab), count: res.length});
       });
       await G.step(`${pre} 3. the lock opens and the sheet redraws`, async () => {
-        elOf(sheet).querySelector(".lock-btn")?.click();
+        // the lock answers a mouse click only (a keyboard click, detail 0, is ignored), so give it one
+        elOf(sheet).querySelector(".lock-btn")?.dispatchEvent(new MouseEvent("click", {bubbles: true, cancelable: true, detail: 1}));
         const opened = await waitFor(() => sheet.locked === false && !elOf(sheet).querySelector(".wod-legacy-form.locked"), 6000);
         G.ok(`${pre} 3. the lock opens and the sheet redraws`, opened, {locked: sheet.locked});
       });

@@ -191,6 +191,11 @@ export default class LegacyActorSheetV2 extends HandlebarsApplicationMixin(Actor
 		this._writeScroll(this._wodScroll);
 	}
 
+	/** The old engine's inner redraw (the lock button calls it) and its bring-to-top, on ApplicationV2. */
+	async _render(force = false, options = {}) { return this.render({ ...options, force }); }
+
+	bringToTop() { return this.bringToFront(); }
+
 	/** Bind the sheet's own listeners. The line sheets override this and call super first. */
 	activateListeners(_html) {}
 
