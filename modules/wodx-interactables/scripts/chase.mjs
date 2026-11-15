@@ -71,7 +71,7 @@ export function rideOf(tokDoc) {
     const reins = f.driver?.t === tokDoc.uuid;
     if ( !reins && !(Array.isArray(f.riders) ? f.riders : []).some(r => r?.t === tokDoc.uuid) ) continue;
     const o = deps.describeObj?.(t);
-    if ( isBeast && !o?.beast ) continue;
+    if ( isBeast && !o?.beast && !o?.vehicle ) continue;
     const kind = o?.kind ?? f.mountKind ?? "horse";
     const sf = scene.flags?.[MOD] ?? {};
     // B4968: a vehicle on its own sheet goes by the year it was built

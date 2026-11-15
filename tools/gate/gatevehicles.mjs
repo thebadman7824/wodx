@@ -165,7 +165,8 @@ export async function run() {
       await tr.update({x: ts.x + (scene.grid?.size ?? 100), y: ts.y});
       // the token slides there: wait until it has arrived on the canvas
       await waitFor(() => ts?.object && tr?.object && Math.abs(tr.object.center.x - (tr.x + (scene.grid?.size ?? 100) / 2)) < 2, 6000);
-      const listed = ix.interactablesFor(tr.object).some(x => x.doc?.id === ts.id);
+      const near = ix.interactablesFor(tr.object), listed = near.some(x => x.doc?.id === ts.id);
+      const seen = {near: near.map(x => [x.doc?.documentName, x.doc?.name, Math.round(x.distance)]), rider: tr.object?.center, beast: ts.object?.center, beastOf: ix.beastOf(ts)};
       await ix.attempt(tr.object, ts.id, "mount", {fd: {bonus: 0}});
       const on = await waitFor(() => scene.tokens.get(ts.id)?.flags?.[IX]?.driver?.t === tr.uuid, 10000);
       const g = scene.grid?.size ?? 100, x0 = scene.tokens.get(ts.id).x;
@@ -175,7 +176,7 @@ export async function run() {
       const own = ride?.beast?.dexterity === 4;
       await steed.update({"system.health.damage.lethal": 7});
       const thrown = await waitFor(() => !scene.tokens.get(ts.id)?.flags?.[IX]?.driver, 10000);
-      G.ok("12. riding the beast itself", listed && on && carried && own && thrown, {listed, on, carried, own, thrown, beast: ride?.beast ?? null});
+      G.ok("12. riding the beast itself", listed && on && carried && own && thrown, {listed, seen, on, carried, own, thrown, beast: ride?.beast ?? null});
     });
 
     await G.step("13. a vehicle sheet", async () => {
