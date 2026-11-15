@@ -42,6 +42,8 @@ export async function run() {
       {name: "Gate Servants4 Sworn", type: "Changeling", system: {advantages: {willpower: {permanent: 5, temporary: 5}}}},
       {name: "Gate Servants4 Friend", type: "Changeling"},
       {name: "Gate Servants4 Demon", type: "Demon"}]);
+    // B6447: the system's create step sets a mortal's Willpower to 0 over the create data; write it back
+    await mortal.update({"system.advantages.willpower.permanent": 2, "system.advantages.willpower.temporary": 1});
     await G.tokens(scene, [{actor: master, x: 2, y: 2}, {actor: mortal, x: 3, y: 2}, {actor: fae, x: 4, y: 2}, {actor: fae2, x: 5, y: 2}]);
 
     await G.step("2. a bond, approved on sight", async () => {
