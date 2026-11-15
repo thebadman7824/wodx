@@ -42,7 +42,7 @@ export async function run() {
   const said = [], keep = {error: console.error, warn: console.warn};
   for ( const k of ["error", "warn"] ) console[k] = (...a) => { try { const t = a.map(x => x?.stack ?? x?.message ?? (typeof x === "string" ? x : JSON.stringify(x))).join(" "); if ( /wodx-interactables|haul/i.test(t) && !/deprecated/i.test(t) ) said.push(`${k}: ${t}`.slice(0, 400)); } catch {} return keep[k](...a); };
   globalThis.wodxHaulTrace = [];
-  const heard = () => [...said.splice(0), ...globalThis.wodxHaulTrace.splice(0).slice(-25)];
+  const heard = () => [...said.splice(0), ...globalThis.wodxHaulTrace.splice(0).filter(l => !/^moved .* \{\}/.test(l)).slice(-14)];
   try {
     const hx = () => game.modules.get(IX)?.api?.haul, C = game.wodxCombat;
     const scene = await G.scene({background: {src: "icons/svg/mystery-man.svg"}, width: 2000, height: 1500});

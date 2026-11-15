@@ -206,7 +206,13 @@ function float(doc, text) {
 /** Put a token on a spot: a plain move first; past a wall, a displacement (as WoDX NPC's Undo does). */
 async function place(doc, pos) {
   trace("place", doc.name, [SX(doc), SY(doc)], "->", [Math.round(pos.x), Math.round(pos.y)]);
-  try { await doc.update({x: Math.round(pos.x), y: Math.round(pos.y)}, MOVE); } catch (e) { trace("place threw", e?.message); }
+  // Foundry 14 refuses to move a token that is still on its way somewhere: let that movement finish first
+  const settle = async () => { const a = doc.object?.movementAnimationPromise ?? doc.object?.animationContexts?.values?.()?.next?.()?.value?.promise; if ( a ) await Promise.race([a, new Promise(r => setTimeout(r, 1500))]).catch(() => null); };
+  await settle();
+  for ( let k = 0; k < 3; k++ ) {
+    try { await doc.update({x: Math.round(pos.x), y: Math.round(pos.y)}, MOVE); break; }
+    catch (e) { trace("place threw", String(e?.message ?? e).slice(0, 90)); await new Promise(r => setTimeout(r, 250)); await settle(); }
+  }
   trace("placed", doc.name, [SX(doc), SY(doc)], [doc.x, doc.y]);
   if ( (Math.round(SX(doc)) !== Math.round(pos.x) || Math.round(SY(doc)) !== Math.round(pos.y)) && typeof doc.move === "function" && CONFIG.Token?.movement?.actions?.displace ) {
     try { await doc.move([{x: Math.round(pos.x), y: Math.round(pos.y), action: "displace"}], {animate: false, ...MOVE}); } catch (e) { /* stays */ }
@@ -261,7 +267,8 @@ function imageOf(src) {
 async function cutPicture(scene, rect, name) {
   // Foundry 14 keeps the picture on the scene's levels; older scenes on the scene itself
   const lv = scene?.levels?.contents ?? [...(scene?.levels?.values?.() ?? [])];
-  const src = [scene?.initialLevel, ...lv].map(l => l?.background?.src).find(Boolean) || scene?._source?.background?.src || null;
+  const src = [scene?.initialLevel, ...lv].map(l => l?.background?.src ?? l?.textures?.background?.src).find(Boolean) || scene?._source?.background?.src || (() => { try { return scene?.background?.src; } catch (e) { return null; } })() || null;
+  trace("cut", scene?.name, src, lv.length);
   if ( !src ) return null;
   const img = await imageOf(src);
   const dim = scene.dimensions ?? canvas.dimensions;
@@ -276,6 +283,7 @@ async function cutPicture(scene, rect, name) {
   try { await FP.createDirectory("data", dir, {}); } catch (e) { /* there already */ }
   const file = new File([blob], `${name}.webp`, {type: "image/webp"});
   const r = await FP.upload("data", dir, file, {}, {notify: false});
+  trace("cut upload", r?.path ?? r?.status ?? typeof r);
   return r?.path ?? `${dir}/${name}.webp`;
 }
 /**
@@ -297,7 +305,7 @@ async function liftPicture(tile, to) {
     await tile.update({...(pic ? {"texture.src": pic} : {}), [`flags.${MOD}.haulHome`]: home});
     return !!pic;
   } catch (e) {
-    console.warn(`${MOD} | haul picture`, e);
+    console.warn(`${MOD} | haul picture`, e); trace("cut threw", String(e?.message ?? e).slice(0, 90));
     await tile.update({[`flags.${MOD}.haulHome`]: home}).catch(() => null);
     return false;
   }
