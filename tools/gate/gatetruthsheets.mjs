@@ -264,8 +264,10 @@ export async function run() {
       };
       const light = look(false), dark = look(true);
       // B6484: the Nature row on the system's own sheets wears the same look
-      const same = o => ["bg", "border", "width", "radius", "color"].every(k => o.quick[k] === o.all[k] && o.quick[k] === o.nature[k]);
-      G.ok("9. Show all wears the WoDX button's frame and colours", same(light) && same(dark) && dark.all.bg !== "rgba(0, 0, 0, 0)", {light, dark});
+      const same = (o, keys) => keys.every(k => o.quick[k] === o.all[k] && o.quick[k] === o.nature[k]);
+      // B6483: on a dark sheet Show all keeps the frame and ink with a clear ground, so its panel shows through
+      const darkOk = same(dark, ["border", "width", "radius", "color"]) && dark.quick.bg === dark.nature.bg && dark.all.bg === "rgba(0, 0, 0, 0)";
+      G.ok("9. Show all wears the WoDX button's frame and colours", same(light, ["bg", "border", "width", "radius", "color"]) && darkOk, {light, dark});
     });
   } catch (e) {
     G.R.errors.push(e?.message ?? String(e));

@@ -250,7 +250,8 @@ async function nextRound(combat) {
     const lost = combat.combatants.filter(c => heldFlag(c, combat));
     for (const c of lost) await c.unsetFlag(MOD, "held");
     if (lost.length) await whisperTo(lost, `${lost.map(c => esc(c.name)).join(", ")}: the held action is lost as the turn ends (VtDA20 p. 344).`);
-    return combat.nextRound();
+    // B6154: the pass has run (or there was none), so this goes past the wrapped Next round, which would start it again
+    return foundryNextRound ? foundryNextRound.call(combat) : combat.nextRound();
 }
 
 /** Hold the current character's action: they step in later in the round with "Act next". */

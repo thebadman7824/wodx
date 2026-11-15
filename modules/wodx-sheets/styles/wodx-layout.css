@@ -95,8 +95,13 @@
 .wod-theme-dark.wod20.wod-sheet .wodx-showall { color: var(--darkmode-textcolor-dark); }
 /* B6483: on a dark sheet the grey ground turns light over a section's panel, so Show all (which sits in the Abilities'
    panel), the quick rolls and the system sheet's Nature row take the ground of the sheet's own buttons there */
-.wod-theme-dark.wod20.wod-sheet :is(.wodx-showall, .wodx-quickrolls button, .wodx-system-row button) { background: var(--button-background-color, rgba(0,0,0,.25)); }
-.wod-theme-dark.wod20.wod-sheet :is(.wodx-showall, .wodx-quickrolls button, .wodx-system-row button):hover { background: rgba(127,127,127,.35); }
+.wod-theme-dark.wod20.wod-sheet :is(.wodx-quickrolls button, .wodx-system-row button) { background: var(--button-background-color, rgba(0,0,0,.25)); }
+.wod-theme-dark.wod20.wod-sheet :is(.wodx-quickrolls button, .wodx-system-row button):hover { background: rgba(127,127,127,.35); }
+/* B6483: Show all sits on the Abilities' panel, which each dark skin draws its own shade (lighter on the Demon and
+   Kindred skins, near black on the Mage skin), so any ground of its own reads lighter than the sheet's other buttons.
+   It keeps the WoDX frame and ink and lets the panel show through */
+.wod-theme-dark.wod20.wod-sheet .wodx-showall { background: transparent; }
+.wod-theme-dark.wod20.wod-sheet .wodx-showall:hover { background: rgba(127,127,127,.25); }
 .wod20.wod-sheet nav.sheet-tabs:not(.wodx-tabs-open) > .wodx-tucked { display: none; }
 
 /* Sheet tools (B2837): the one header button with words, and its list */
