@@ -196,7 +196,12 @@ async function detectAct(item, casterName, h, caster, a) {
 
 export async function detectBack(data = {}) {
   const tok = data.token ? fromUuidSync(data.token) : null;
-  if ( tok ) await tok.update({detectionModes: data.modes ?? []});
+  if ( !tok ) return;
+  const prev = data.modes ?? [];
+  if ( Array.isArray(tok.detectionModes) || Array.isArray(prev) ) return tok.update({detectionModes: Array.isArray(prev) ? prev : []});
+  // Foundry keeps detection modes as an object here: an update merges, so the sense is switched back by its own key
+  const was = prev?.senseAll ?? null;
+  return tok.update({"detectionModes.senseAll": was ? {...was} : {enabled: false, range: 0}});
 }
 
 async function questionAct(item, casterName, h, caster, a) {

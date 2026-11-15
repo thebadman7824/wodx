@@ -89,7 +89,7 @@ export async function run() {
       const on = await waitFor(modes, 4000);
       await undo(rec);
       const off = await waitFor(() => !modes(), 4000);
-      G.ok("6. Sense lays a detection sense on the caster's token; Undo takes it off", r.out.kind === "detect" && !!on && !!off, {rec: Object.keys(rec ?? {})});
+      G.ok("6. Sense lays a detection sense on the caster's token; Undo takes it off", r.out.kind === "detect" && !!on && !!off, {rec: Object.keys(rec ?? {}), on: !!on, off: !!off, modes: scene.tokens.get(dt.id)?.toObject?.().detectionModes});
     });
 
     await G.step("7. Know: a secret the target keeps is found out", async () => {
