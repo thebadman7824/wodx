@@ -326,6 +326,7 @@ Next free block: B6000
 | B5950-B5959 | Weather history by part of the world (used B5950-B5955) | Atmosphere |
 | B5960-B5969 | Cults that give what they promise (used B5960-B5964) | NPC |
 | B5970-B5979 | NPCs make their own wonders (used B5970-B5974) | Storyteller |
+| B5980-B5989 | Lone Chronicle step 3: the oracle, the Leads page and night encounters on the map (used B5980-B5985) | Solo |
 | B5990-B5999 | Say or Do: full sentences and grieving (Ben's picks on law sentences and heartbreak) (used B5990-B5992) | Chronicle, NPC, Actions |
 <!-- decision-index:end -->
 
@@ -9924,6 +9925,36 @@ Reverse: default false.
 api.wonders.npcMonth({force, rand, only}) runs the look now (force does not move the month's mark), for chosen actors.
 
 Reverse: drop the option.
+
+## B5980. The oracle answers a yes-or-no question with one d10 (2026-11-15)
+WoDX Solo world-rules.mjs ODDS and oracleAnswer. Five odds, each two faces of the die apart: Almost certain (yes on 2 or more), Likely (4), Even odds (6), Unlikely (8), Hardly (10). The face that just makes a yes is "Yes, but" and the face just short is "No, but"; at even odds or better a 10 is "Yes, and" and a 1 is "No, and". The seat rolls the die on a card whispered to the player and the Storyteller, so Dice So Nice shows it. A house rule: no World of Darkness book gives a solo oracle.
+
+Reverse: take "oracle" off solo-rules.mjs PANEL.
+
+## B5981. An "and" brings a lead (2026-11-15)
+"Yes, and" and "No, and" draw a foreshadowing for the character from WoDX Storyteller's story aids and send it through the approval queue, which the Lone Chronicle's standing approvals let through to the player as a card. The world has moved further than the player asked.
+
+Reverse: set lead false on ANSWERS.yesAnd and ANSWERS.noAnd.
+
+## B5982. The Leads page shows only what the character knows (2026-11-15)
+leadsFor. The ten newest signs and dreams WoDX Storyteller whispered to the player (dreams, visions, auguries, foreshadowings), the character's open oaths, debts and boons in the Ledger (by id, or by name where the entry was typed without one), open objectives with their next step, and the oracle's last five answers. A consequence stays the Storyteller's until it comes due, and kept, broken or cancelled entries are left off. Let it go takes a lead off the page for good.
+
+Reverse: take "leads" off solo-rules.mjs PANEL.
+
+## B5983. Each part of the night may bring one encounter (2026-11-15)
+encounterDue, CHANCE. While solo mode is on and the clock moves at night where the character is, each part of the night (early, the dead hours, before dawn) rolls once, a one in three chance, for the character's scene; a scene with a fight running is skipped. The roll is kept by night and part, so waiting longer does not roll again. World setting "Night encounters find the lone player" (on by default). A house figure: the books give no such chance.
+
+Reverse: turn the setting off, or CHANCE = 0.
+
+## B5984. The encounter's people come in sight, a few squares off (2026-11-15)
+arrivalSpot, RING. The people of the night's encounter line (WoDX Storyteller's placeEncounter and WoDX Creation's people generator) stand on the character's scene, in plain sight, on the first square four to eight squares away in one of eight directions that lies inside the map and that a wall does not cut off from the character. Being in plain sight, they stop a wait ("someone came near").
+
+Reverse: place them hidden.
+
+## B5985. Town or wilds, by the scene (2026-11-15)
+placeKind. A scene takes the wilds' encounters when its name says road, forest, field, moor, river, mountain, pass, camp and the like, else the town's; battle maps, test scenes and the other worlds take none. The scene flag wodx-solo.encounters (town, wilds or none) wins.
+
+Reverse: set the flag to none on a scene.
 
 ## B5990. Time served takes the character off the map (2026-11-15)
 WoDX Chronicle. Prison, hard labour and the other time sentences hide every token of the character on every scene and keep a lawAway flag with the year the time ends. When the clock reaches that year, or the sentence is pardoned, the tokens come back and the table is told. Replaces the Storyteller-only time served of B5823.

@@ -1512,7 +1512,9 @@ Rows dated 14 November that were still waiting at 06:00 UTC count as approved un
 | 2026-11-15 | (Ben picked this on the desk, 12:34 UTC) NPC Aftercare Desk n6: after a robbery (B5805) | The robber spends the night at the tavern; the victim can report it (theft heat and a rumour) | Drop spree() and the report button |
 | 2026-11-15 | (Ben picked this on the desk, 12:34 UTC) NPC Aftercare Desk n7: married NPCs share a home (B5806) | No home moves first; else the bride to the groom's; else the smaller household; PCs' sex plays no part; a divorce moves them back | Drop onMarried and onDivorced |
 
-## Waiting for review
+## Approved by Ben, 15 November 2026, 13:15 UTC (all waiting entries)
+
+Ben approved every entry that was waiting for review ("Approve on all pending review items") at 13:15 UTC on 15 November 2026 (104 rows). Each still lists how to reverse it.
 
 | Date | Question | Choice made | How to reverse it |
 |---|---|---|---|
@@ -1619,3 +1621,9 @@ Rows dated 14 November that were still waiting at 06:00 UTC count as approved un
 | 2026-11-15 | Full sentences and grieving (B5990-B5992), Ben's pick to build out law sentences and heartbreak | Time served hides the character's tokens until the year ends (clock or pardon brings them back), a brand is a Branded mark on the token until pardoned, a death sentence sends the law; heartbreak short of a botch is Grieving, one die fewer on social rolls for a week. The sprite is not redrawn for a brand: the token mark stands for it | Revert the full sentences PR; B5990-B5992 say what to drop |
 | 2026-11-15 | Solo arrival: what a lone player with no character can start as (B5142) | Seven lines on the first window, the recipe's lines for the valley (Vampire, Werewolf, Mage, Changeling, Wraith, Hunter, Mortal); the wizard picks the book for the era; ghouls and the rest come from the sheet as at a shared table | Edit ARRIVAL_LINES in modules/wodx-solo/scripts/solo-rules.mjs |
 | 2026-11-15 | Solo arrival: the landing scene (B5141) | A Rothenstein map with the market first; the landing is made active only when no scene with a map is; a world with no map gets a plain night scene | Edit LANDING_NAMES or pickLanding in solo-rules.mjs |
+| 2026-11-15 | The Lone Chronicle, step 3: the oracle, the Leads page and night encounters (B5980 to B5985) | The oracle: one d10, five odds two faces apart (yes on 2, 4, 6, 8 or 10 or more), "but" on the faces at the line, "and" on a 10 or a 1 at even odds or better, and an "and" sends a foreshadowing. The Leads page shows the newest ten signs, the character's open oaths, debts, boons and objectives (no consequences) and the last five answers. Each part of the night rolls once, one in three, to bring the people of one of the night's encounters onto the character's scene, four to eight squares off and in sight; a scene's name picks town or wilds. | Turn off "Night encounters find the lone player", set a scene's wodx-solo.encounters flag to none, or change ODDS, CHANCE and RING in WoDX Solo world-rules.mjs. |
+
+## Waiting for review
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
