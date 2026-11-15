@@ -21,6 +21,7 @@ import * as Hunters from "./hunters.mjs";
 import * as Herds from "./herds.mjs";
 
 export const T_BETWEEN = `${MOD}.between`;
+export const T_LAPSE = `${MOD}.tieLapse`;
 export const T_HEAT = `${MOD}.heat`;
 const ACT = "wodx-actions";
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
@@ -200,6 +201,14 @@ export async function checkTies({force = false} = {}) {
   await ChatMessage.create({content: `<div class="wodx-card wst-ties"><h3>Ties that need tending</h3><ul>${li}</ul><p class="wodx-quiet">How often each needs tending is a house rule; change it in the Ties window.</p></div>`,
     whisper: gmIds(), speaker: {alias: "Ties"}});
   for ( const {a, s} of rows ) await log({kind: "tie", actor: isPC(a) ? a.id : null, name: a.name, attention: "A tie needs tending", text: `${s.name} has gone untended.`});
+  // B6327: a lapse that costs something goes to the Storyteller to approve, and approving applies it
+  for ( const {a, s} of rows ) {
+    const how = U.lapseAction(s.kind), itemId = U.itemIdOfTie(s.key, s.kind);
+    if ( !how || !itemId || !a.items.get(itemId) ) continue;
+    await chron()?.approvals?.propose?.({type: T_LAPSE, key: `lapse:${a.id}:${s.key}:${day}`,
+      title: `${a.name}: ${s.name} untended`, detail: how === "neglect" ? `Roll the neglect check: the rating at 9; failure costs a dot, a botch two (Wraith 20th pdf ${s.kind === "fetter" ? 374 : 371}).` : `${s.name} loses a dot for going untended.`,
+      data: {actorId: a.id, key: s.key, kind: s.kind, itemId, how, name: s.name}});
+  }
   return rows.map(({a, s}) => ({actor: a.id, key: s.key}));
 }
 
@@ -356,11 +365,36 @@ export async function upkeepChooser() {
   if ( pick === "check" ) { const n = await checkTies({force: true}); if ( !n.length ) ui.notifications.info("No ties have come due."); }
 }
 
+/** B6327: an approved lapse: the neglect roll or the lost dot, on the sheet, and the tie's clock starts again. */
+async function approveLapse(entry) {
+  const d = entry?.data ?? {}, a = game.actors.get(d.actorId), it = a?.items?.get?.(d.itemId);
+  if ( !a || !it ) return {ok: false, why: "The character or the trait is gone."};
+  const before = num(it.system?.value);
+  let drop = 1, rolls = [], line = "";
+  if ( d.how === "neglect" ) {
+    const r = await new Roll(`${Math.max(1, before)}d10`).evaluate();
+    const faces = r.dice?.[0]?.results?.map(x => x.result) ?? [];
+    const hits = faces.filter(f => f >= 9).length, ones = faces.filter(f => f === 1).length;
+    drop = U.neglectDrop({successes: hits - ones, botch: hits === 0 && ones > 0});
+    rolls = [r];
+    line = `Neglect check, ${before} dice at 9: ${faces.join(", ")}. `;
+  }
+  const after = Math.max(0, before - drop);
+  if ( after !== before ) await it.update({"system.value": after});
+  await saveTie(a, d.key, {last: now(), warned: null});
+  const harrow = d.how === "neglect" && before > 0 && after === 0;
+  const owners = game.users.filter(u => a.testUserPermission?.(u, "OWNER")).map(u => u.id);
+  await ChatMessage.create({whisper: [...new Set([...owners, ...gmIds()])], speaker: {alias: a.name}, rolls,
+    content: `<div class="wodx-card wst-ties"><h3>${esc(d.name)} untended</h3><p>${esc(line)}${drop && after !== before ? `${esc(it.name)} ${before} to ${after}.` : "It holds."}${harrow ? " The last hold on it breaks: a Harrowing follows (Wraith 20th pdf 371, 374)." : ""}</p></div>`});
+  return {ok: true, before, after};
+}
+
 /* ---------------- Wiring ---------------- */
 
 export function registerUpkeepHandlers() {
   const ap = chron()?.approvals;
   ap?.registerHandler?.(T_BETWEEN, {label: "Between nights (blood and Willpower over a time skip)", approve: approveBetween});
+  ap?.registerHandler?.(T_LAPSE, {label: "A tie gone untended: the neglect roll or a lost dot", approve: approveLapse});
   ap?.registerHandler?.(T_HEAT, {label: "A hot hunting ground: the era's response", approve: approveHeat});
 }
 

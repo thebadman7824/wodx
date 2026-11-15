@@ -257,3 +257,19 @@ export function outbreakFor(year) {
   const y = num(year);
   return OUTBREAKS.find(o => y >= o.from && y <= o.to) ?? null;
 }
+
+/**
+ * B6327: what a tie that lapses does once the Storyteller approves, so the "needs tending" card is not only words.
+ * neglect  a Fetter or Passion: its rating rolled at 9; failure costs a dot, a botch two; at nothing the wraith falls
+ *          into a Harrowing (Wraith 20th pdf 371, 374: the Storyteller calls for the roll, hence the approval)
+ * dot      a Background that is people or a place: it loses a dot (the books leave a neglected Background to the
+ *          Storyteller; WoDX reading: one dot a lapse, on approval)
+ * The domitor's vitae (WoDX Actions ghoul withdrawal), a caern and custom ties keep their own handling.
+ */
+export const LAPSE_NEGLECT = new Set(["fetter", "passion"]);
+export const LAPSE_DOT = new Set(["herd", "domain", "people", "kinfolk", "mentor", "node", "chantry", "freehold", "dreamers", "haunt", "pacts", "cult", "nest"]);
+export const lapseAction = kind => LAPSE_NEGLECT.has(kind) ? "neglect" : LAPSE_DOT.has(kind) ? "dot" : null;
+/** The sheet item a derived tie came from (tieKey(kind, item id)), or null. */
+export const itemIdOfTie = (key, kind) => (String(key ?? "").startsWith(`${kind}-`) ? String(key).slice(kind.length + 1) : null);
+/** Dots a neglect roll takes: none on a success, one on a failure, two on a botch. */
+export const neglectDrop = ({successes = 0, botch = false} = {}) => (botch ? 2 : num(successes) > 0 ? 0 : 1);

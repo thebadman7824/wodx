@@ -1,6 +1,7 @@
 import "./win-paths.mjs";
 import assert from "node:assert/strict";
 import {test} from "node:test";
+import {readFileSync} from "node:fs";
 import {fileURLToPath, pathToFileURL} from "node:url";
 import {dirname, join} from "node:path";
 
@@ -69,4 +70,14 @@ test("a Kuei-jin's prelude is the Second Breath", () => {
   assert.equal(P.preludeFor("Changing Breed"), "werewolf");
   assert.ok(P.PRELUDES["kuei-jin"].turn.length >= 3);
   assert.ok(P.LINE_ORDER.includes("kuei-jin"));
+});
+
+test("B6327: an untended tie does something once the Storyteller approves", () => {
+  assert.equal(U.lapseAction("fetter"), "neglect"); assert.equal(U.lapseAction("passion"), "neglect");
+  for ( const k of ["dreamers", "haunt", "pacts", "cult", "nest", "herd", "people"] ) assert.equal(U.lapseAction(k), "dot", k);
+  assert.equal(U.lapseAction("vitae"), null, "the ghoul's withdrawal is WoDX Actions' own");
+  assert.equal(U.itemIdOfTie(U.tieKey("dreamers", "abc123"), "dreamers"), "abc123");
+  assert.equal(U.neglectDrop({successes: 1}), 0); assert.equal(U.neglectDrop({successes: 0}), 1); assert.equal(U.neglectDrop({botch: true}), 2);
+  const src = readFileSync(join(root, "modules/wodx-storyteller/scripts/upkeep.mjs"), "utf8");
+  assert.match(src, /registerHandler\?\.\(T_LAPSE/); assert.match(src, /it\.update\(\{"system\.value": after\}\)/);
 });

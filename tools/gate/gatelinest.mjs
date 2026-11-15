@@ -6,6 +6,7 @@
  *   1. the dashboard row of a Kuei-jin shows Yang and Yin Chi, not blood; a Garou's shows Rage and Gnosis
  *   2. between nights: approving the card takes a Chi a night from a Kuei-jin and leaves Rage to the moon
  *   3. ties: a changeling's Dreamers and a wraith's Haunt are ties to tend
+ *   4. B6327: an untended Dreamers tie, once the Storyteller approves, loses a dot and its clock starts again
  * Result: Data/wodx-gate/gatelinest-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -51,6 +52,18 @@ export async function run() {
       await wr.createEmbeddedDocuments("Item", [{name: "Haunt", type: "Feature", system: {type: "wod.types.background", value: 1}}]);
       const c = api().upkeep.tiesOf(ch).map(t => t.kind), w = api().upkeep.tiesOf(wr).map(t => t.kind);
       G.ok("3. ties", c.includes("dreamers") && w.includes("haunt"), {changeling: c, wraith: w});
+    });
+
+    await G.step("4. an untended tie costs a dot once approved", async () => {
+      const it = ch.items.find(i => i.name === "Dreamers");
+      const t = api().upkeep.tiesOf(ch).find(x => x.kind === "dreamers");
+      await ch.update({[`flags.${MOD}.ties.${t.key}`]: {last: game.time.worldTime - 60 * 86400, warned: null}});
+      await api().upkeep.check({force: true});
+      const entry = (AP()?.pending?.() ?? []).find(e => e.type === `${MOD}.tieLapse` && e.data?.actorId === ch.id && e.data?.key === t.key);
+      if ( entry ) await AP().decide(entry.id, "approve");
+      const after = Number(ch.items.get(it.id)?.system?.value);
+      const again = api().upkeep.tiesOf(ch).find(x => x.key === t.key);
+      G.ok("4. an untended tie costs a dot once approved", !!entry && after === 1 && again && !again.due, {queued: !!entry, after, due: again?.due});
     });
   } finally {
     try { await game.settings.set(MOD, "betweenNights", wasBetween); } catch (e) { /* as it was */ }
