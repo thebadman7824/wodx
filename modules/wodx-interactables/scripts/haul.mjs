@@ -37,7 +37,9 @@ const unset = path => {
   const Del = globalThis.foundry?.data?.operators?.ForcedDeletion;
   return Del ? {[path]: new Del()} : {[path.replace(/\.([^.]+)$/, ".-=$1")]: null};
 };
-const MOVE = {wodxMove: false, wodxHaul: true, wodxHeld: true};
+// Copied for every update ({...MOVE}): Foundry 14 writes into the options it is given, and a second update with the same
+// object fails with "Cannot redefine property"
+const MOVE = Object.freeze({wodxMove: false, wodxHaul: true, wodxHeld: true});
 
 let deps = {}; // {characterFor, describeTile, mapEvent, noiseAt, rules}
 
@@ -216,7 +218,7 @@ async function place(doc, pos) {
   // wait for it to finish, then try again
   await still(doc);
   for ( let k = 0; k < 5; k++ ) {
-    try { await doc.update({x: Math.round(pos.x), y: Math.round(pos.y)}, MOVE); break; }
+    try { await doc.update({x: Math.round(pos.x), y: Math.round(pos.y)}, {...MOVE}); break; }
     catch (e) { trace("place threw", String(e?.message ?? e).slice(0, 60)); await new Promise(r => setTimeout(r, 300)); await still(doc); }
   }
   trace("placed", doc.name, [SX(doc), SY(doc)], [doc.x, doc.y]);
@@ -407,7 +409,7 @@ async function takeNow(doc, target, want = "") {
       const r = t.flags?.[MOD]?.riders;
       if ( Array.isArray(r) && r.some(x => x.t === target.uuid) ) await t.update({[`flags.${MOD}.riders`]: r.filter(x => x.t !== target.uuid)});
     }
-    if ( target.flags?.[MOD]?.restsOn ) await target.update(unset(`flags.${MOD}.restsOn`), MOVE);
+    if ( target.flags?.[MOD]?.restsOn ) await target.update(unset(`flags.${MOD}.restsOn`), {...MOVE});
   }
   const prior = haulOf(target);
   const by = [...(prior?.by ?? []), {t: doc.uuid, n: doc.name, dx: SX(target) - SX(doc), dy: SY(target) - SY(doc)}];
@@ -441,11 +443,11 @@ async function lay(body, holder, mode, from) {
     at = d > 1 ? {x: hc.x + (bc.x - hc.x) / d * g, y: hc.y + (bc.y - hc.y) / d * g} : H.behind(hc, from ?? {x: hc.x, y: hc.y - g}, g);
   }
   const old = centreOf(body);
-  await body.update({rotation: look.rotation, alpha: look.alpha}, MOVE);
+  await body.update({rotation: look.rotation, alpha: look.alpha}, {...MOVE});
   await place(body, topLeft(body, at));
   if ( mode !== "carry" && Math.hypot(old.x - at.x, old.y - at.y) > 2 ) {
     const tr = await growTrail(body, old, at).catch(e => { console.warn(`${MOD} | trail`, e); return null; });
-    if ( tr ) await body.update({[`flags.${MOD}.haul.trail`]: tr.id, ...(tr.clue ? {[`flags.${MOD}.haul.clue`]: tr.clue} : {})}, MOVE);
+    if ( tr ) await body.update({[`flags.${MOD}.haul.trail`]: tr.id, ...(tr.clue ? {[`flags.${MOD}.haul.clue`]: tr.clue} : {})}, {...MOVE});
   }
   return h;
 }
@@ -478,7 +480,7 @@ async function releaseNow(doc, {onto = null, drop = false, quiet = false} = {}) 
     // the mark first, on its own (a deletion sent with other changes was kept on some bodies), then the look
     await target.update(unset(`flags.${MOD}.haul`));
     if ( haulOf(target) ) await target.update({[`flags.${MOD}.haul`]: null});
-    await target.update({alpha: before.alpha ?? 1, rotation: tile && !tf.mount ? 90 : num(before.rotation)}, MOVE);
+    await target.update({alpha: before.alpha ?? 1, rotation: tile && !tf.mount ? 90 : num(before.rotation)}, {...MOVE});
     if ( tile && tf.mount ) {
       // Aboard: a passenger who goes where the mount or vehicle goes (laid: nobody at the reins is kept from pushing it)
       const pos = {x: SX(tile) + num(tile.width) / 2, y: SY(tile) + num(tile.height) / 2};
@@ -489,7 +491,7 @@ async function releaseNow(doc, {onto = null, drop = false, quiet = false} = {}) 
       where = `aboard the ${(thingOf(tile)?.label ?? deps.rules?.MOUNTS?.[tf.mountKind]?.label ?? "vehicle").toLowerCase()}`;
     } else if ( tile ) {
       await place(target, topLeft(target, {x: SX(tile) + num(tile.width) / 2, y: SY(tile) + num(tile.height) / 2}));
-      await target.update({[`flags.${MOD}.restsOn`]: tile.id}, MOVE);
+      await target.update({[`flags.${MOD}.restsOn`]: tile.id}, {...MOVE});
       where = `on the ${thingOf(tile)?.label ?? "furniture"}`;
     } else if ( Math.hypot(SX(target) - SX(doc), SY(target) - SY(doc)) < 2 ) {
       // set down beside the carrier, not on their square
@@ -568,7 +570,7 @@ async function onMovedNow(doc, changes, options = {}, userId = null) {
       // only the first of a team leads the body; the others keep beside it
       if ( rec.by[0].t === doc.uuid ) await lay(target, doc, L.move.mode, from);
       const noise = H.noiseOf({kind: "body", mode: L.move.mode});
-      if ( rec.turn !== turnTag() ) { hear(doc, noise, target.name); await target.update({[`flags.${MOD}.haul.turn`]: turnTag()}, MOVE); }
+      if ( rec.turn !== turnTag() ) { hear(doc, noise, target.name); await target.update({[`flags.${MOD}.haul.turn`]: turnTag()}, {...MOVE}); }
       return;
     }
     // A thing: it goes where its holder goes, at the offset it was taken hold at
