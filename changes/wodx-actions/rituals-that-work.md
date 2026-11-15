@@ -4,3 +4,5 @@ effect: a Ward adds armour dice to soak (only against its kind of harm when it n
 visible: a warded token shimmers blue, a boosted one glows gold, a cursed one flickers purple, a calmed one glows pale; a manifest ghost shows pale on the map; an illusion's figure stands on the map; a door swings; a place rite brings a fog or calm look; the soak, attack and roll cards list the power that changed them
 ---
 Rituals and powers that really work (B6000-B6016): the effects a power or ritual leaves on a character are read by the dice (power-mods.js), the keywords that were only text change the world, and a guard test fails any power whose result nothing reads.
+
+- A mummy's Forbiddance now keeps the being off the mummy for real, and a Kuei-jin's shadow soul hands the body's moves to the Storyteller (B6018).

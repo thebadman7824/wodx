@@ -784,6 +784,7 @@ export async function attack({ attacker: a, target: t, weaponId, noAim = false }
     const w = fd.weapon === "auto" ? { id: "auto" } : weapons.find(x => x.id === fd.weapon);
     try {
         if (await bondHolds(attacker, target)) return null;
+        if (forbiddenFrom(attacker, target)) { ui.notifications.warn(`WoDX Combat: ${attacker.name} is Forbidden by ${target.name} and cannot attack them.`); return null; }
         if (!(await ambushFirst({ attacker, attackerTok, target, targetTok, fd }))) { openFight(attackerTok, targetTok); return null; }
         const res = await resolveAttack({ attacker, attackerTok, target, targetTok, weapon: w, fd }); openFight(attackerTok, targetTok); return res;
     }
@@ -829,6 +830,12 @@ async function ambushFirst({ attacker, attackerTok, target, targetTok, fd }) {
  * chained Thrall, a fomor's master) rolls first through WoDX NPC's bond ledger; a failed roll stops the blow. True
  * when the blow is not struck.
  */
+/** B6018: a mummy's Forbiddance: the being it holds cannot attack that mummy while it lasts. */
+export function forbiddenFrom(attacker, target) {
+    if (!attacker || !target?.id) return false;
+    return [...(attacker.effects ?? [])].some(e => !e.disabled && e.flags?.["wodx-actions"]?.forbiddenBy === target.id);
+}
+
 async function bondHolds(attacker, target) {
     if (!attacker || !target) return false;
     try {
@@ -2434,6 +2441,7 @@ export async function quickAttack({ attacker: a = null, target: t = null, weapon
             // B4792: a named weapon (a ram) in place of the automatic choice
             const weapon = weaponId ? (weaponList(attacker).find(w => w.id === weaponId) ?? { id: "auto" }) : { id: "auto" };
             if (await bondHolds(attacker, target)) continue;
+            if (forbiddenFrom(attacker, target)) continue;
             if (await ambushFirst({ attacker, attackerTok, target, targetTok, fd })) results.push(await resolveAttack({ attacker, attackerTok, target, targetTok, weapon, fd }));
             openFight(attackerTok, targetTok);
         }

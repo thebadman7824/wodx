@@ -4,3 +4,5 @@ effect: the attack pool adds a Boost's dice and a Blessing's or Curse's difficul
 visible: the attack and soak cards list the Ward, Boost or Curse by name with its dice; the hastened character gets a turn in the extra-actions pass
 ---
 Powers in fights (B6004, B6012): WoDX Combat reads the Wards, Boosts, Blessings, Curses and Hastes that WoDX Actions' powers and rituals put on a character.
+
+- A being under a mummy's Forbiddance cannot attack that mummy (B6018).

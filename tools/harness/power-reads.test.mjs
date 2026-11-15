@@ -115,3 +115,16 @@ test("the keywords that were text now change the world", () => {
   assert.equal(one("sway").kind, "timed");
   assert.equal(PW.moodDelta("bind", {}), 2, "a binding warms an NPC to the one who bound it");
 });
+
+test("a Forbiddance keeps the being off the mummy; shadow soul sends the body's moves to the Storyteller (B6018)", async () => {
+  const B = await imp("modules/wodx-actions/scripts/binds.js");
+  const shadow = {flags: {"wodx-chronicle": {timed: {key: "wodx-kote-soul"}}}, statuses: new Set(["wodx-shadow-soul"])};
+  const fire = {flags: {"wodx-chronicle": {timed: {key: "wodx-kote-soul"}}}, statuses: new Set(["wodx-frenzy"])};
+  assert.deepEqual(B.bindingsOn({effects: [shadow]}).map(b => b.rule), ["ask"]);
+  assert.deepEqual(B.bindingsOn({effects: [fire]}), []);
+  assert.equal(B.judgeMove(B.bindingsOn({effects: [shadow]}), {from: {x: 0, y: 0}, to: {x: 100, y: 0}}).ask, true);
+  const mummy = fs.readFileSync(path.join(root, "modules/wodx-actions/scripts/mummy.js"), "utf8");
+  assert.match(mummy, /"flags\.wodx-actions\.bindBy": actor\.id, "flags\.wodx-actions\.forbiddenBy": actor\.id/);
+  const combat = fs.readFileSync(path.join(root, "modules/wodx-combat/scripts/main.js"), "utf8");
+  assert.equal((combat.match(/if \(forbiddenFrom\(attacker, target\)\)/g) ?? []).length, 2, "both the player's and the NPC's attack check a Forbiddance");
+});
