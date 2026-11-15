@@ -564,6 +564,8 @@ function natureRow(app, html) {
   core.prepend(row);
 }
 Hooks.on("renderActorSheet", natureRow);
+// the line sheets that run on ApplicationV2 (the fork's LINES_V2) fire the V2 hook instead
+Hooks.on("renderActorSheetV2", natureRow);
 
 // B6114: on a line sheet that runs on ApplicationV2 the Sheet tools button opens the same named list as on the old
 // sheets: the icon buttons in the title bar, then every control of the window's own menu (the three dots), by name.
@@ -654,6 +656,6 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.23.1", extras: X, rules: SR, sheetFor, viewFor, skins: { loaded: SK.loaded, linesOf: SK.linesOf, load: SK.load, report: SK.report }, sheetRollMods: SROLL.modsFor,
+  game.modules.get(MOD).api = { version: "0.23.2", extras: X, rules: SR, sheetFor, viewFor, skins: { loaded: SK.loaded, linesOf: SK.linesOf, load: SK.load, report: SK.report }, sheetRollMods: SROLL.modsFor,
     anachronism: { check: AN.check, scan: AN.scan, report: AN.report, keep: AN.keep, scanMaps: AN.scanMaps, mapThings: AN.mapThings, keepThing: AN.keepThing, showThing: AN.showThing, everything: AN.everything, bringForward: AN.bringForward, undoForward: AN.undoForward } };
 });

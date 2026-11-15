@@ -22,6 +22,15 @@ function drawn(app) {
   return {perm: perm ? n(perm.dataset.value) : null, temp: temp ? n(temp.dataset.value) : null};
 }
 
+/** When the rows are not found: what the open sheet holds instead, so the cause shows in the result. */
+function look(app) {
+  const el = app?.element?.[0] ?? app?.element ?? null;
+  const names = [...(el?.querySelectorAll?.("[data-name]") ?? [])].map(e => e.dataset.name);
+  return {tag: el?.tagName ?? null, cls: String(el?.className ?? "").slice(0, 160), rendered: app?.rendered ?? null, v2: !!app?.constructor?.DEFAULT_OPTIONS,
+    named: names.length, torment: names.filter(x => /torment/i.test(x)).slice(0, 6),
+    tormentText: [...(el?.querySelectorAll?.("*") ?? [])].filter(e => !e.children.length && /torment/i.test(e.textContent ?? "")).slice(0, 4).map(e => e.outerHTML.slice(0, 160))};
+}
+
 export async function run() {
   if ( game.world.id !== "rothenstein-wodx" ) return {error: "Run this gate in rothenstein-wodx only"};
   const G = gate("gatetormentsheet");
@@ -43,7 +52,7 @@ export async function run() {
     await G.step("1. the open sheet draws the Torment the actor holds", async () => {
       const d = drawn(sheet), held = dv.system.advantages.torment;
       G.ok("1. the open sheet draws the Torment the actor holds", d.perm === 4 && d.temp === 0 && n(held.permanent) === 4,
-        {drawn: d, held: {permanent: held.permanent, temporary: held.temporary}, sheet: sheet.constructor?.name});
+        {drawn: d, held: {permanent: held.permanent, temporary: held.temporary}, sheet: sheet.constructor?.name, look: d.perm === null ? look(sheet) : null});
     });
 
     await G.step("2. a dark Evoke adds a temporary point, and the open sheet shows it", async () => {

@@ -60,6 +60,11 @@ export async function run() {
   let keepRollMods, keepChar = game.user.character?.id ?? null;
   try { keepRollMods = game.settings.get(SH, "sheetRollMods"); } catch (e) { keepRollMods = undefined; }
   try {
+    // a gate that runs first on a fresh lane can start before WoDX Creation has finished its ready work (it waits for
+    // WoDX Chronicle's era profiles), so the gate waits for the modules' API before it reads them
+    const readyWait = Date.now();
+    await waitFor(() => !!game.modules.get(CR)?.api && !!game.modules.get(LIB)?.api && !!game.modules.get(SH)?.api, 30000);
+    const readyMs = Date.now() - readyWait;
     const lib = game.modules.get(LIB)?.api, C = game.modules.get(CB)?.api ?? game.wodxCombat, cr = game.modules.get(CR)?.api;
     const scene = await G.scene();
     // the lineage journal, as the lane had it: written again without the gate's actors, or removed if the gate made it
@@ -72,7 +77,7 @@ export async function run() {
     await G.step("1. modules", async () => {
       const on = [SH, CR, LIB, ACT, CB, CH].map(id => [id, !!game.modules.get(id)?.active]);
       G.ok("1. modules", on.every(([, x]) => x) && !!lib?.itemByName && !!game.modules.get(SH)?.api?.sheetRollMods && !!cr?.embrace && keepRollMods !== undefined,
-        {on: Object.fromEntries(on), itemByName: !!lib?.itemByName, rollMods: keepRollMods});
+        {on: Object.fromEntries(on), itemByName: !!lib?.itemByName, rollMods: keepRollMods, creation: !!cr, embrace: !!cr?.embrace, sheetsApi: !!game.modules.get(SH)?.api, sheetRollMods: !!game.modules.get(SH)?.api?.sheetRollMods, readyMs});
     });
 
     await G.step("2. a sheet roll counts WoDX", async () => {
@@ -265,8 +270,8 @@ export async function run() {
       const light = look(false), dark = look(true);
       // B6484: the Nature row on the system's own sheets wears the same look
       const same = (o, keys) => keys.every(k => o.quick[k] === o.all[k] && o.quick[k] === o.nature[k]);
-      // B6483: on a dark sheet Show all keeps the frame and ink with a clear ground, so its panel shows through
-      const darkOk = same(dark, ["border", "width", "radius", "color"]) && dark.quick.bg === dark.nature.bg && dark.all.bg === "rgba(0, 0, 0, 0)";
+      // B6483: on a dark sheet Show all keeps the frame and ink on a 70% black ground, near the other buttons over any panel
+      const darkOk = same(dark, ["border", "width", "radius", "color"]) && dark.quick.bg === dark.nature.bg && dark.all.bg === "rgba(0, 0, 0, 0.7)";
       G.ok("9. Show all wears the WoDX button's frame and colours", same(light, ["bg", "border", "width", "radius", "color"]) && darkOk, {light, dark});
     });
   } catch (e) {

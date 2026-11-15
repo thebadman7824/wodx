@@ -99,8 +99,9 @@
 .wod-theme-dark.wod20.wod-sheet :is(.wodx-quickrolls button, .wodx-system-row button):hover { background: rgba(127,127,127,.35); }
 /* B6483: Show all sits on the Abilities' panel, which each dark skin draws its own shade (lighter on the Demon and
    Kindred skins, near black on the Mage skin), so any ground of its own reads lighter than the sheet's other buttons.
-   It keeps the WoDX frame and ink and lets the panel show through */
-.wod-theme-dark.wod20.wod-sheet .wodx-showall { background: transparent; }
+   A clear ground still read lighter (shade 50 against 13 to 16 for the sheet's other buttons on the Mage and Changeling
+   skins), so it takes a dark ground of its own: 70% black, which lands near the other buttons over any panel shade */
+.wod-theme-dark.wod20.wod-sheet .wodx-showall { background: rgba(0,0,0,.7); }
 .wod-theme-dark.wod20.wod-sheet .wodx-showall:hover { background: rgba(127,127,127,.25); }
 .wod20.wod-sheet nav.sheet-tabs:not(.wodx-tabs-open) > .wodx-tucked { display: none; }
 

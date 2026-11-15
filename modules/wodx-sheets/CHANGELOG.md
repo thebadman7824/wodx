@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.23.2 (Show all takes a 70% black ground on dark sheets (B6483); the Nature row on the system layout also draws on the line sheets that run on ApplicationV2 (B6178))
 - 0.23.1 (Every WoDX line sheet follows the system's line sheets onto ApplicationV2, one switch per line (B6112). On those sheets, Sheet tools lists the title bar buttons and the window menu controls by name, as on the old sheets (B6114))
 - 0.23.0 (Line skins by line: the 170 KB skins stylesheet is split into a small core sheet (fonts and the loading rule) and one file per line under styles/skins, which scripts/skins.mjs puts in place the first time a sheet of that line draws, on either sheet engine, in the same cascade order and layer the single file had. While the file loads the sheet's page waits blank rather than flashing the system's look. The Sheet look setting still switches the skins off, and then no line file loads at all. The API gains skins.loaded(), skins.linesOf() and skins.load() and skins.report() for gates (B6060-B6063))
 - 0.22.2 (Shared terms (B6180-B6199): time units, dice counts, health levels, distance, eras, lines and player characters come from WoDX Chronicle's shared terms instead of a copy of this module's own)
