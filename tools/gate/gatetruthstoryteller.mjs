@@ -16,7 +16,7 @@
  *   6. weather on the active outdoor scene: after the clock moves, the scene's weather is the night's effect
  *   7. the night's draw at dusk: with the setting on, the clock reaching night puts the night in the approval queue
  *   8. taken by the watch (lawCome, the warrant path): the culprit's token is hidden, not deleted; sentenced to prison,
- *      it is back on the map, shown, once the clock passes the term (B6165)
+ *      it is back on the map, shown, once the clock passes the term and a time skip ends with the world not held (B6165)
  *   9. taken by the watch, then found not guilty: the token is shown again where it stood (B6165)
  *  10. tired from no sleep (the needs flag hardship writes): a quick Persuade check rolls two dice fewer (B6169)
  * The world is held while the clock runs years for the law (nothing else reacts). It makes its own scenes, actors and
@@ -193,10 +193,18 @@ export async function run() {
       const taken = await waitFor(() => tok()?.hidden === true, 8000);
       const deeds = [{deed: "killing"}];
       const s = await sentenceByButton(cu, deeds, p => kindOf(p) === "time", timeRegion(deeds));
+      // the years pass while the world is held, and a held world lets nobody out (B6162); the hold off, a short time
+      // skip's end does, as at the table (the same path gatetruthchronicle step 2 takes)
       if ( s.mark?.until ) await game.time.advance(Math.max(1, s.mark.until - s.year) * YEAR);
-      const back = await waitFor(() => tok()?.hidden === false, 8000);
-      G.ok("8. taken by the watch, then served: back on the map", taken && s.mark?.kind === "time" && back,
-        {taken, kept: !!tok(), until: s.mark?.until, back, error: s.error, offered: s.offered});
+      const servedHeld = tok()?.hidden === true;
+      let back = false;
+      try {
+        await set(CH, "hold", false);
+        await C.timeSkip(game.time.worldTime + 60, {label: "gate", eraHandled: true});
+        back = await waitFor(() => tok()?.hidden === false && !game.actors.get(cu.id)?.getFlag(CH, "lawAway"), 30000);
+      } finally { await set(CH, "hold", true); }
+      G.ok("8. taken by the watch, then served: back on the map", taken && s.mark?.kind === "time" && servedHeld && back,
+        {taken, kept: !!tok(), until: s.mark?.until, servedHeld, back, away: game.actors.get(cu.id)?.getFlag(CH, "lawAway") ?? null, error: s.error, offered: s.offered});
     });
 
     await G.step("9. taken by the watch, then not guilty", async () => {
