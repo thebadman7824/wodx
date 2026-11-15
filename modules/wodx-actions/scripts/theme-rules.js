@@ -210,7 +210,7 @@ export const DESC = {
     "uses:conviction": "Spend or regain Conviction",
     "api:numina": "Psychic Numina: the roll for each power",
     "api:hedgeMagic": "Sorcery: a spell or a ritual on a path",
-    "api:fomorPower": "A fomor power: Numbing, no pain and three more health levels",
+    "api:fomorPower": "Fomor powers from the book: armored hides, claws, Numbing, the Wyrm's gaze and the rest",
     "api:relic": "Call on a holy relic",
     "api:sinGod": "A sin against God: the Piety roll",
     "api:healing": "Heal wounds with time, care or medicine",

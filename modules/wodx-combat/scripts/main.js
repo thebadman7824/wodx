@@ -416,6 +416,10 @@ function soakOpts(actor, profile) {
     if (profile === "demon") {
         try { return { formOn: !!game.wodxActions?.demonInfo?.(actor)?.formOn }; } catch (e) { return {}; }
     }
+    // B5619: a fomor's Armored Skin soaks lethal harm as bashing (W20 p. 430)
+    if (profile === "mortal") {
+        try { const f = game.wodxActions?.fomor?.soakOf?.(actor); return f?.lethalSoak ? { lethalSoak: true, lethalWhy: f.why } : {}; } catch (e) { return {}; }
+    }
     if (profile !== "fae") return {};
     try {
         const f = game.wodxActions?.faeSoak?.(actor);
@@ -1915,7 +1919,7 @@ Hooks.once("init", () => {
     const vehicles = VH.setupVehicles({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall });
     FTime.setupFightTime();
     const api = { body, movement, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.39.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.39.1", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, followOn: R.followOn, markFollow, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
