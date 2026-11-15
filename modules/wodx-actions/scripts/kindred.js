@@ -437,6 +437,51 @@ export function build(ctx) {
         return b ? Object.values(b.contributions ?? {}).reduce((s, v) => s + n(v), 0) : 0;
     }
 
+    /** B5758: what a week on a Background brings, beyond the roll. Returns html. */
+    async function downtimeDoes(actor, kind, total, dots, weeks, botched) {
+        const ST = game.modules.get("wodx-storyteller")?.api;
+        const out = [];
+        if (kind === "resources" && total) {
+            const M = ST?.upkeep?.money;
+            if (M?.receive && M?.rules?.allowance) {
+                const year = n(game.modules.get("wodx-chronicle")?.api?.eras?.currentYear?.());
+                let region = "moravian"; try { region = game.settings.get("wodx-storyteller", "moneyRegion") || region; } catch (e) { /* default */ }
+                // house reading: each success is a week of what the character's Resources bring in a month
+                const amount = Math.round(total * M.rules.allowance(dots, year, region) / 4);
+                const got = await M.receive(actor, amount, { note: "Drawn on resources (downtime)" });
+                if (got?.amount) out.push(`Into the purse: ${M.rules.formatMoney ? M.rules.formatMoney(got.amount, M.rules.moneyFor?.(year, region)) : got.amount}.`);
+            } else out.push("WoDX Storyteller's money is off: add it to the purse by hand.");
+        }
+        if (kind === "contacts" && total) {
+            const R = ST?.rumours;
+            const all = (R?.list?.() ?? []).filter(x => !x.ended && x.about !== actor.id);
+            const picked = all.sort(() => Math.random() - 0.5).slice(0, total);
+            if (picked.length) out.push(`The contacts bring word: ${picked.map(x => `“${x.text}”`).join("; ")}.`);
+            else out.push("The contacts hear nothing worth passing on this week.");
+        }
+        if (kind === "influence" && total) {
+            const list = BOONJ.entries(), when = (await clockNow()).dateLabel;
+            list.push({ date: when, from: "the institution", to: actor.name, kind: total >= 3 ? "major" : "minor", for: `${total} favour${total === 1 ? "" : "s"} through Influence`, status: "owed" });
+            await writeBoons(list);
+            out.push(`${total} favour${total === 1 ? "" : "s"} owed by the institution, in the Prestation journal.`);
+        }
+        if (kind === "retainers" && total) {
+            const L = game.modules.get("wodx-npc")?.api;
+            const servants = game.actors.filter(a => (a.flags?.["wodx-npc"]?.serves ?? []).includes?.(actor.id));
+            out.push(servants.length ? `The errand goes well for ${servants.map(a => a.name).join(", ")}: give them the errand in WoDX NPC's orders.` : "No retainers on the map serve this character yet.");
+            if (servants.length && L?.orders?.open) { try { await L.orders.open(servants[0]); } catch (e) { /* the window is optional */ } }
+        }
+        if ((kind === "domain" || kind === "huntinggrounds") && !total) {
+            const h = actor.getFlag(MOD, "haven"), scene = h?.sceneId ? game.scenes?.get?.(h.sceneId) : canvas?.scene;
+            const herds = ST?.herds;
+            if (herds?.feed && scene) { for (let w = 0; w < weeks; w++) await herds.feed({ scene, who: "a rival" }); out.push(`A rival hunts ${scene.name} while the domain slips: its herd thins.`); }
+        }
+        if (botched) {
+            try { await ST?.rumours?.start?.({ text: `Someone has been asking questions about ${actor.name}'s affairs`, about: actor.id, truth: "half" }); out.push("A botch: word of it gets around (a rumour starts)."); } catch (e) { /* no rumours */ }
+        }
+        return out.length ? `<div class="vta-res">${out.map(esc).join("<br>")}</div>` : "";
+    }
+
     async function downtime(actor) {
         const groups = groupsOf(actor);
         const rows = Object.entries(K.DOWNTIME).map(([k, d]) => {
@@ -477,6 +522,8 @@ export function build(ctx) {
                 const ch = await ctx.changeBlood(actor, total);
                 body += `<div class="vta-res good">Blood ${ch.before} → ${ch.after}</div>`;
             }
+            // B5758: the other Backgrounds do what their note says
+            try { body += await downtimeDoes(actor, r.k, total, dots, Math.max(1, n(fd.weeks)), body.includes("Botch")); } catch (e) { console.warn("WoDX | downtime", e); }
             if (fd.advance) body += await spendTime(actor, 7 * 86400 * Math.max(1, n(fd.weeks)), "downtime");
             await logEvent(actor, `Downtime: ${r.d.label.toLowerCase()}, ${total} success${total === 1 ? "" : "es"}.`, "downtime");
             return post(actor, `${actor.name}: ${esc(r.d.label)}`, body, rolls);
@@ -958,27 +1005,32 @@ export function build(ctx) {
      * Each acts on the map (falls still, flees, or attacks), and those who keep it go on the Masquerade record and now
      * know the kind. Returns {rows, kept}.
      */
-    async function witnessStep(actor, tokens, { secret = null, event = "" } = {}) {
-        if (!isActiveGM() || !actor || !tokens?.length) return null;
+    async function witnessStep(actor, tokens, { secret = null, event = "", given = null } = {}) {
+        // B5750: given {tokenId: {reaction, memory, reveal, willpower}} carries a roll already made (the Delirium check,
+        // a demon's Revelation), so those windows act on the map too; actor may then be null (no one on the map revealed)
+        if (!isActiveGM() || !(actor || (given && secret)) || !tokens?.length) return null;
         const sec = secret ?? WR.secretOf(P.detectProfile(actor));
         const rule = WR.lineRule(sec);
         const T = game.modules.get("wodx-chronicle")?.api;
-        const by = actor.getActiveTokens?.()[0] ?? null;
+        const by = actor?.getActiveTokens?.()[0] ?? null;
+        const who = actor?.name ?? "what they saw";
         const rows = [], kept = [], fighters = [], rolls = [];
-        const faith = n(actor.system?.advantages?.faith?.permanent ?? actor.system?.faith?.permanent) || 6;
+        const faith = n(actor?.system?.advantages?.faith?.permanent ?? actor?.system?.faith?.permanent) || 6;
         for (const tok of tokens) {
             const a = tok.actor;
             if (!a || P.worldFlag(a, "kinfolk")) continue;
             const w = n(a.system?.advantages?.willpower?.permanent) || 3;
             let reaction = "", memory = null, reveal = null;
-            if (rule === "delirium") { const d = G.delirium(w, GX.basis(), GX.data().garou?.delirium); reaction = d.reaction; memory = d.memory; }
+            const g = given?.[tok.document?.id ?? tok.id];
+            if (g) { reaction = g.reaction ?? ""; memory = g.memory ?? null; reveal = g.reveal ?? null; }
+            else if (rule === "delirium") { const d = G.delirium(w, GX.basis(), GX.data().garou?.delirium); reaction = d.reaction; memory = d.memory; }
             else if (rule === "veil") reaction = MR.veil(w);
             else if (rule === "revelation") { const r = await rollPool(w, Math.max(2, faith)); rolls.push(r.roll); const re = DR.mortalReaction(r); reveal = re.key; reaction = re.key; }
             const act = WR.witnessAct(reaction);
             const keep = WR.remembers(rule, { memory, willpower: w, reveal, banality: n(a.system?.banality?.permanent) || 6 });
             try {
-                if (act === "freeze" && T?.applyTimed) await T.applyTimed(a, { name: "Frozen with fear", description: `Frozen by what ${actor.name} is`, duration: { kind: "scene" }, condition: "immobilized", key: "wodx-witness-freeze", source: "WoDX witness step" });
-                if (act === "flee" && T?.applyTimed) await T.applyTimed(a, { name: "Afraid", description: `Afraid of ${actor.name}`, duration: { kind: "scene" }, key: "wodx-effect-fear", source: "WoDX witness step" });
+                if (act === "freeze" && T?.applyTimed) await T.applyTimed(a, { name: "Frozen with fear", description: `Frozen by what ${who} is`, duration: { kind: "scene" }, condition: "immobilized", key: "wodx-witness-freeze", source: "WoDX witness step" });
+                if (act === "flee" && T?.applyTimed) await T.applyTimed(a, { name: "Afraid", description: `Afraid of ${who}`, duration: { kind: "scene" }, key: "wodx-effect-fear", source: "WoDX witness step" });
             } catch (e) { console.warn(`${MOD} | witness`, e); }
             if (act === "fight") fighters.push(tok);
             if (keep) kept.push(a);
@@ -988,17 +1040,17 @@ export function build(ctx) {
         if (fighters.length && by) {
             const ids = [...fighters.map(t => t.document?.id ?? t.id), by.document?.id ?? by.id];
             const sides = Object.fromEntries([...fighters.map(t => [t.document?.id ?? t.id, "a"]), [by.document?.id ?? by.id, "b"]]);
-            try { await game.modules.get("wodx-combat")?.api?.fight?.start?.({ scene: by.document?.parent ?? canvas.scene, tokens: ids, source: "witness", why: `the sight of ${actor.name}`, sides }); } catch (e) { /* no Combat */ }
+            try { await game.modules.get("wodx-combat")?.api?.fight?.start?.({ scene: by.document?.parent ?? canvas.scene, tokens: ids, source: "witness", why: `the sight of ${who}`, sides }); } catch (e) { /* no Combat */ }
         }
         // the record first (it leaves out those who already know), then they know
-        if (kept.length) await recordBreach({ by: actor, event: event || "seen for what they are", witnesses: kept, secret: sec });
+        if (kept.length && actor) await recordBreach({ by: actor, event: event || "seen for what they are", witnesses: kept, secret: sec });
         // x2: whoever keeps it now knows the kind (an unlinked passer-by shares its actor and is left out)
         for (const a of kept) {
             if (a.isToken || !sec) continue;
             const cur = P.worldFlag(a, "knows"); if (cur === "*") continue;
             await P.setWorldFlag(a, "knows", [...new Set([...(Array.isArray(cur) ? cur : []), sec])]);
         }
-        if (rows.length) await ChatMessage.create({ content: `<div class="vta-card"><h3>Witnesses: ${esc(actor.name)}${event ? `, ${esc(event)}` : ""}</h3><ul>${rows.join("")}</ul>${rule ? "" : "<p>No line rule beyond the Masquerade: those who saw it remember.</p>"}</div>`,
+        if (rows.length) await ChatMessage.create({ content: `<div class="vta-card"><h3>Witnesses: ${esc(who)}${event ? `, ${esc(event)}` : ""}</h3><ul>${rows.join("")}</ul>${rule ? "" : "<p>No line rule beyond the Masquerade: those who saw it remember.</p>"}</div>`,
             whisper: gmIds(), speaker: { alias: "WoDX" }, rolls: rolls.filter(Boolean) });
         return { rows, kept };
     }

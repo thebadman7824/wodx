@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5680
+Next free block: B5780
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -301,6 +301,7 @@ Next free block: B5680
 | B5640-B5649 | German names before 1900, and refilling emptied tables (used B5640-B5641) | Creation, Chronicle |
 | B5650-B5659 | Spirit Charms: the W20 Charms play from a Charm window (used B5650-B5657) | Actions, Combat |
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
+| B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8968,3 +8969,48 @@ A Kuei-jin's Disciplines are no longer read as Kindred Disciplines for the NPC c
 
 ## B5677. Inquisitors: the book's Blessings on the sheet (2026-11-15)
 A Blessing on the sheet counts with or without the Virtue in brackets after its name.
+
+## B5750. Witness reactions given by a window act on the map (2026-11-15)
+WoDX Actions. The witness step takes results already rolled (the Delirium check, a demon's Revelation) and acts them out: a frozen witness is Immobilized for the scene, a fleeing one runs, a fighting one starts a fight; those who keep it go on the Masquerade record. With no revealed actor on the map, nothing is recorded against anyone.
+
+Reverse: drop the `given` option; the windows post their table again.
+
+## B5751. Revelation acts on the targeted mortals (2026-11-15)
+WoDX Actions. The Revelation window reads the targeted token's Willpower and hands its reaction to the witness step (B5750).
+
+Reverse: remove the witness call after the card.
+
+## B5752. A lost Harrowing costs what was at stake (2026-11-15)
+WoDX Actions. A Passion's Harrowing lost takes the quarry Passion to 0 and tests another Passion (rolled at 5, down 1 on failure); a Fetter's loses a dot; other kinds add a permanent Angst on a loss; a lost Destruction Harrowing offers the Storyteller a button to turn the wraith Spectre (hostile, darkened, logged). The wraith's token fades while the Harrowing runs and comes back after. House reading of Wraith 20th's Harrowing outcomes where the book leaves the amount to the Storyteller.
+
+Reverse: remove payHarrowing and harrowedLook.
+
+## B5753. Summoning a spirit brings one (2026-11-15)
+WoDX Actions. A Garou's spirit summons with Gnosis successes brings a spirit through the summons layer beside the summoner for the scene: a called one when the attitude roll holds, a wild one on 2 successes or less, a Bane on a botch.
+
+Reverse: drop the SUM.bring call.
+
+## B5754. The Curse takes dice off social rolls with mortals (2026-11-15)
+WoDX Actions. A Garou's social roll against a mortal, hunter or ghoul loses the Curse dice by permanent Rage (W20), shown as a part of the pool.
+
+Reverse: remove the curse part in social().
+
+## B5755. A lost Kuei-jin soul contest sets the state (2026-11-15)
+WoDX Actions. Lost to the fire soul: frenzy; to the wave soul: the Fear (rotschreck); to the shadow soul: a new "shadow soul" condition, each for the scene.
+
+Reverse: remove the timed condition after the contest.
+
+## B5756. A won Forbiddance makes the being afraid (2026-11-15)
+WoDX Actions. A won Forbiddance on a targeted being sets a "forbidden" condition and Afraid for the scene: an NPC runs from the mummy.
+
+Reverse: remove the timed effect.
+
+## B5757. The resource Uses window does the use (2026-11-15)
+WoDX Actions. Willpower's automatic success and ignored wounds wait on the character for the next roll; vitae heals bashing then lethal damage, or adds a held Physical die; Rage gives extra actions in a running fight, takes the Dazed mark off, or opens Change form; Glamour heals; stepping sideways opens the Otherworlds window.
+
+Reverse: drop the fifth element of each USES row and carryOut.
+
+## B5758. Kindred Background downtime brings what it says (2026-11-15)
+WoDX Actions. Resources: money into the purse, a week of a month's allowance per success (house reading). Contacts: current rumours named, up to the successes. Influence: a boon owed by the institution in the Prestation journal. Retainers: servants named and their orders opened. Domain or Hunting Grounds with no success: a rival feeds there (the herd thins). A botch starts a rumour about the character.
+
+Reverse: remove downtimeDoes.

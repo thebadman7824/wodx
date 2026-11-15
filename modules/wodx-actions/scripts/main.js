@@ -1018,9 +1018,24 @@ async function resolveAction(actor, target, fd) {
         const t = R.teamwork(typed, fd.helperLimit || Infinity);
         teamDice = t.dice; overflow = t.overflow;
     }
+    // B5757: what the resource Uses menu paid for ahead (an automatic success, wounds ignored, a Physical die a point)
+    // is taken by this roll and shown in its parts
+    const held = actor.getFlag?.(MOD, "held") ?? null, heldParts = [];
+    let prepaid = 0;
+    if (held) {
+        fd = { ...fd };
+        if (num(held.wp) > 0 && !fd.wp) { fd.wp = true; prepaid++; heldParts.push("Willpower paid ahead"); }
+        if (num(held.wounds) > 0 && !fd.ignoreWounds) { fd.ignoreWounds = true; prepaid++; heldParts.push("wounds ignored (paid ahead)"); }
+        if (num(held.physical) > 0 && ["strength", "dexterity", "stamina"].includes(fd.attr)) { fd.bonus = num(fd.bonus) + num(held.physical); heldParts.push(`+${num(held.physical)} blood in the ${fd.attr}`); }
+    }
     const built = buildPool(actor, target, fd, pool, { teamDice, overflow });
     if (built.blocked) { ui.notifications.warn(built.blocked); return post(actor, `${actor.name}: ${esc(fd.desc || preset.label || "Action")}`, `<div class="vta-warn">${built.blocked}</div>`); }
-    const wpCost = (fd.wp ? 1 : 0) + (fd.ignoreWounds ? 1 : 0);
+    if (heldParts.length) {
+        built.parts = [...(built.parts ?? []), ...heldParts];
+        const left = { ...held }; if (heldParts.some(p => p.startsWith("Willpower"))) delete left.wp; if (heldParts.some(p => p.startsWith("wounds"))) delete left.wounds; if (heldParts.some(p => p.startsWith("+"))) delete left.physical;
+        try { if (Object.keys(left).filter(k => k !== "at").length) await actor.setFlag(MOD, "held", left); else await actor.unsetFlag(MOD, "held"); } catch (e) { console.warn("WoDX | held", e); }
+    }
+    const wpCost = Math.max(0, (fd.wp ? 1 : 0) + (fd.ignoreWounds ? 1 : 0) - prepaid);
     if (wpCost && !(await spendWillpower(actor, wpCost))) return null;
     // Willpower ignores wound penalties for one turn (VtDA20 printed p. 339): this roll only, so no lasting state
 
@@ -2804,7 +2819,7 @@ function cx() {
 let DXE = null;
 /** The fallen (3.10.0, Phase 6i). */
 function dx() {
-    return DXE ??= DXD.build({ post, rollPool, rollBlock, dialog, setFlag, updateActor, attr, findAbility, spendWillpower, healthTrack, setDamage, applyDamage, notify: m => ui.notifications.warn(m),
+    return DXE ??= DXD.build({ api: () => API, post, rollPool, rollBlock, dialog, setFlag, updateActor, attr, findAbility, spendWillpower, healthTrack, setDamage, applyDamage, notify: m => ui.notifications.warn(m),
         nameDifficulty: (a, text, t) => svx().nameDifficulty(a, text, t),
         revealed: (a, o) => kx().revealed(a, o),
         traits: a => [...ATTRS.map(k => ({ key: k, label: game.i18n.localize(a.system?.attributes?.[k]?.label || k) || k, value: attr(a, k) })),
@@ -2873,7 +2888,7 @@ let GXE = null;
 /** The Werewolf and Fera engine (Phase 6b). */
 function gx() {
     return GXE ??= GX.build({ post, rollPool, rollBlock, dialog, updateActor, attr, findAbility, setting, spendWillpower,
-        notify: m => ui.notifications.warn(m) });
+        api: () => API, notify: m => ui.notifications.warn(m) });
 }
 /** Find the actor, and dress the dialogs it opens in its line's look (6e) while the action runs. */
 const withActor = f => async (o = {}) => {
@@ -3201,7 +3216,7 @@ async function gainDerangement(actor, cause, why) {
 }
 const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg => feedUndo(msg, msg?.flags?.[MOD] ?? {}), feedingRule, feedingRules: KF, checks: CK, withPerson: o => sox().withPerson(o), social: (actor, token, key, fd) => sox().social(actor, token, key, fd), lift: (actor, token, key, fd) => sox().lift(actor, token, key, fd), trade: (actor, token, key, fd) => sox().trade(actor, token, key, fd), tradeLists: { wares: (npc, shop = null) => sox().tradeX().wares(npc, shop), offers: (actor, shop = null) => sox().tradeX().offers(actor, shop) }, tradeRules: TRR, socialRules: SOR, hunt, feed, spendBlood, frenzy, rotschreck, rotschreckAuto, endFrenzy, sin, daytime, torpor, hazard, autoBeast, autoTorporRise,
     bloodOath, diablerie, seduction, newNight, endScene, applyDamage, rules: R, presets: PRESETS,
-    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.101.0", npcPowers, autoPower, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
+    getKind: P.detectProfile, setKind: P.setProfile, pickKind: P.pickProfile, profiles: P, version: "3.102.0", npcPowers, autoPower, limits: { state: LIM.stateOf, gate: LIM.gate, decorate: LIM.decorate, lostTo: LIM.lostTo, clear: LIM.clear, sceneNo: LIM.sceneNo, newScene: LIM.newScene, isDrained: LIM.isDrained, rules: LIM.rules, afterCosts: { pay: AFC.pay, filed: AFC.filed, rules: AFC.rules, socialDiff: AFC.socialDiff } }, summons: SUM.api(), turns: {attach: TURN.attach, onTurn: TURN.onTurn, onBlow: TURN.onBlow, onHealed: TURN.onHealed, noBloodCap: TURN.noBloodCap}, turnRules: TURN.rules, effects: { powerPlan: EFX.powerPlan, planOf: EFX.planOf, pickPoint: EFX.pickPoint, world: EFX.W, keywordsOf: PK.keywordsOf, keywordCounts: PK.keywordCounts, powersWith: PK.powersWith, lineSets: () => Object.keys(PK.LINE_KEYWORDS), bookRituals: BR.BOOK_RITUALS, bookRitual: BR.bookRitual, storyteller: EFX.storytellerEffect, rituals: EFX.ritualsOf, saveRitual: EFX.saveRitual, forgetRitual: EFX.forgetRitual, stItems: EFX.stItems, daPlan: EFX.daPlan, pathPlan: EFX.pathPlan, numinaPlan: EFX.numinaPlan, isOn: EFX.isOn, apply: EFX.applyItem, bindingCard: EFX.bindingCard, undo: EFX.undo, plan: EFX.plan, placeArea: EFX.placeArea, placeItem: EFX.placeItem, expireAreas: EFX.expireAreas, expireMade: EFX.expireMade, resistItem: EFX.resistItem, resolveResist: EFX.resolveResist, summonResult: EFX.summonResult, applyCounter: EFX.applyCounter, rotes: EFX.rotesOf, saveRote: EFX.saveRote, forgetRote: EFX.forgetRote, rules: EFX.E },
     uses: (o = {}) => { const a = o.actor ?? resolveActor(); if (a) LEDGER.delete(a.id); return pm().uses(a, o.resource ?? "willpower"); }, cantrip: (o = {}) => { const a = o.actor ?? resolveActor(); return a && FXD.isDA(a) ? fx().cast(a) : cx().cantrip(a); },
     cast: (o = {}) => { const a = o.actor ?? resolveActor(); return a && MXD.isDA(a) ? mx().cast(a) : a?.type === "Mage" || a?.system?.advantages?.arete ? zx().cast(a) : pm().cast(a); },
     m20Cast: withActor((a, o) => zx().cast(a, o)), m20CastRote: (actor, item) => { const a = resolveActor(actor); return a ? zx().castRote(a, item) : false; }, m20Backlash: withActor(a => zx().backlash(a)), m20Counter: withActor((a, o) => zx().counter(a, o)), m20Info: a => zx().info(resolveActor(a)), m20Shed: () => zx().shedAll(), m20Rules: ZR, m20Purify: withActor(a => zx().purify(a)), m20Draw: withActor(a => zx().drawDialog(a)), m20Place: () => zx().placeDialog(), m20Quiet: withActor(a => qtx().panel(a)), quiet: { state: a => qtx().state(resolveActor(a)), act: (a, fd) => qtx().act(resolveActor(a), fd), rules: QR, onRefreshToken: QX.onRefreshToken }, consensus: { age: () => zx().age(), suggest: (o = {}) => zx().suggest(o.actor ?? resolveActor(), o.scene), rules: CNR },
@@ -3256,7 +3271,7 @@ const API = { menu, action, quickCheck, readFace, faceRules: DPR, feedUndo: msg 
     debtsRules: DR_DEBTS, beastRules: DR_BEAST, debtsMarks: () => dm(),
     healing: withActor(a => kx().healing(a)), boons: (o = {}) => kx().boons(o.actor ? resolveActor(o.actor) : resolveActor()),
     masquerade: (o = {}) => kx().masquerade(o.actor ? resolveActor(o.actor) : resolveActor()), endStory,
-    recordBreach: o => kx().recordBreach(o), masqEntries: () => kx().masqEntries(), witnessStep: (o = {}) => kx().witnessStep(resolveActor(o.actor), o.tokens ?? [], o), autoHunts: () => dm().autoHunts(), liftHunt: id => dm().endHunt(id, "lifted"), setWitnessState: (a, st, note) => kx().setWitnessState(a, st, note), witnessesOf: (t, o) => kx().witnessesOf(t, o),
+    recordBreach: o => kx().recordBreach(o), masqEntries: () => kx().masqEntries(), witnessStep: (o = {}) => kx().witnessStep(o.actor === null ? null : resolveActor(o.actor), o.tokens ?? [], o), autoHunts: () => dm().autoHunts(), liftHunt: id => dm().endHunt(id, "lifted"), setWitnessState: (a, st, note) => kx().setWitnessState(a, st, note), witnessesOf: (t, o) => kx().witnessesOf(t, o),
     crowdNear: a => crowdNear(resolveActor(a)), crowdRules,
     observersOf: (t, o) => kx().observersOf(t, o), revealed: (a, o) => kx().revealed(resolveActor(a), o), placeOf: t => kx().placeOf(t), witnessRules: WRR,
     history: (a, text, kind) => kx().logEvent(a, text, kind), roadOf: a => KX.roadOf(a), healPlan: (a, seconds) => kx().healPlan(a, seconds),
