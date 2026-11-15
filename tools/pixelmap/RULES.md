@@ -63,6 +63,10 @@ must make sense"), and add a row for each new kind of thing.
 | Smith's forge | 8 by 6 ft | 1.6 by 1.2 |
 | Handcart | 4 by 6 ft, shafts beyond | 0.7 by 1.2 |
 
+## Furnishing
+- No room, yard or road is left bare: after a map's own furniture, dress it with dress.py for its trade (B5746).
+  Furniture along the walls first, then small things; walkways to every door stay clear.
+
 ## Point of view and colour
 
 - Everything is seen from straight above. Never a side or three-quarter view (no end-on log circles, no front
