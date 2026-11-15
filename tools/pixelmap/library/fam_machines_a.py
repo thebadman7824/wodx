@@ -1202,9 +1202,10 @@ CABWOOD = [ramp((110, 66, 40), 16), ramp((140, 60, 40), 16), ramp((190, 150, 100
 def television(tm, x, y, w, h, st, v, c):
     """A television from above, its screen toward the room. Mid-Century: a wooden console cabinet with the tube's
     rounded back standing out behind and rabbit-ear aerials on top, a plastic portable with its carrying handle, or a
-    wood-grain set on a trolley. Modern: a deep plastic box set with its tapered back on a cabinet, or a flat screen
-    standing on its foot on a low media unit with a player and the remote. Future Darkness: a hair-thin panel on a
-    wall bracket over a dark unit with a lit edge. On: the screen's blue light thrown on the floor in front;
+    wood-grain set on a trolley. Modern: a deep tube set, its back tapering away to the rear with its vents, the
+    curved screen face along its front with the remote by it, on a wooden cabinet, a glass stand or a trolley; the
+    big ones widescreen with speakers at the sides. Future Darkness: a slim panel seen edge-on as a thin bar, its lit
+    face along the front, on its foot, on a pole over a flat base plate or on a wall bracket, its cable trailing down to a low unit. On: the screen's blue light thrown on the floor in front;
     broken: the screen smashed, glass on the floor."""
     d = tm.d; X0, Y0, X1, Y1 = box_px(x, y, w, h, 0); W, H = X1 - X0, Y1 - Y0; p = c.per; m = mk(c, 5); L = c.liv
     lv = int(v.get("livery", 0)) % 6; on = c.on and not c.broken; cx = X0 + W / 2
@@ -1229,22 +1230,43 @@ def television(tm, x, y, w, h, st, v, c):
             case(d, bx0, Y0 + H * .3, bx1, Y1 - 2, L, r=4)
             d.rounded_rectangle([cx - 9, Y0 + H * .4, cx + 9, Y0 + H * .55], 2, outline=CHROME[3], width=2)
             d.line([bx1 - 6, Y0 + H * .4, bx1 + 6, Y0 + 2], fill=CHROME[3])
-    elif p == "N":
+    elif p == "N":                                                                                           # a deep tube set on its cabinet or stand
         Cw = [WOOD, ramp((40, 40, 44), 8), ramp((200, 196, 186), 10), DARKWOOD, ramp((150, 150, 150), 10)][m]
-        case(d, X0 + 1, Y0 + H * .3, X1 - 1, Y1 - 1, Cw)                                                       # the unit
-        if m < 2:                                                                                            # a deep box set
-            d.polygon([(cx - W * .18, Y0 + H * .5), (cx + W * .18, Y0 + H * .5), (cx + W * .1, Y0 + 1), (cx - W * .1, Y0 + 1)], fill=L[1], outline=OUT)
-            case(d, cx - W * .26, Y0 + H * .45, cx + W * .26, Y1 - 4, L, r=2)
-        else:                                                                                                # a flat screen on its foot
-            d.rectangle([cx - W * .44, Y0 + H * .42, cx + W * .44, Y0 + H * .52], fill=L[1] if lv != 1 else (30, 30, 34), outline=OUT)
-            d.rounded_rectangle([cx - 8, Y0 + H * .52, cx + 8, Y0 + H * .72], 2, fill=L[0], outline=OUT)
-        d.rectangle([X0 + 5, Y1 - 6, X0 + 18, Y1 - 3], fill=(36, 36, 40), outline=OUT); lamp(d, X0 + 16, Y1 - 4, (90, 220, 120), on, 1)
-        d.rectangle([X1 - 14, Y1 - 7, X1 - 10, Y1 - 2], fill=(30, 30, 34), outline=OUT)                    # the remote
-    else:
-        Cw = [L, c.alt, ramp((24, 24, 28), 8), L, c.alt][m]
-        case(d, X0 + 1, Y0 + H * .4, X1 - 1, Y1 - 1, Cw, r=3)
-        d.rectangle([X0 + 3, Y0 + 2, X1 - 3, Y0 + 5 + m], fill=(20, 22, 26), outline=OUT)                  # the panel on its bracket
-        d.line([X0 + 4, Y1 - 3, X1 - 4, Y1 - 3], fill=GLOW[2] if on else GLOW[0])
+        case(d, X0 + 1, Y0 + H * .3, X1 - 1, Y1 - 1, Cw)                                                       # the cabinet or stand
+        if m == 1:
+            d.line([X0 + 3, Y0 + H * .3 + 2, X1 - 3, Y0 + H * .3 + 2], fill=(120, 140, 150))                     # its glass shelf's edge
+        tw = W * (.5, .6, .66, .56, .74)[m]; tx0, tx1 = cx - tw / 2, cx + tw / 2
+        fy0, fy1 = Y0 + H * .42, Y1 - 3                                                                         # the front of the set
+        d.polygon([(tx0 + 3, fy0), (tx1 - 3, fy0), (cx + tw * .28, Y0 + 1), (cx - tw * .28, Y0 + 1)], fill=L[1], outline=OUT)   # the tube's back, tapering
+        for k in range(int(Y0 + 4), int(fy0) - 1, 3): d.line([cx - tw * .18, k, cx + tw * .18, k], fill=L[0])          # its vents
+        case(d, tx0, fy0, tx1, fy1, L, r=2)                                                                     # the bezel's top
+        sx0, sx1 = tx0 + 3 + (6 if m == 4 else 0), tx1 - 3 - (6 if m == 4 else 0)
+        if m == 4:
+            for q in (tx0 + 2, tx1 - 7):
+                for k in range(int(fy0) + 3, int(fy1) - 1, 2): d.line([q, k, q + 4, k], fill=L[0])            # side speakers
+        face = SCREEN_ON if on else SCREEN_OFF
+        d.rectangle([sx0, fy1 - 4, sx1, fy1], fill=face[1], outline=OUT)                                        # the screen's face, curved glass
+        if on: d.rectangle([sx0 + 2, fy1 - 3, sx1 - 2, fy1 - 2], fill=face[2]); d.rectangle([cx - 4, fy1 - 3, cx + 4, fy1 - 2], fill=face[3])
+        else: d.line([sx0 + 2, fy1 - 3, sx0 + (sx1 - sx0) / 3, fy1 - 3], fill=face[3])
+        lamp(d, tx1 - 4, fy0 + 3, (90, 220, 120) if on else (220, 60, 40), True, 1)
+        d.rectangle([X1 - 12, Y1 - 6, X1 - 8, Y1 - 1], fill=(30, 30, 34), outline=OUT)                          # the remote
+    else:                                                                                                    # a slim panel
+        bw = W * (.86, .9, .8, .84, .92)[m]; bx0, bx1 = cx - bw / 2, cx + bw / 2
+        py = Y0 + (H * .32 if m in (0, 4) else 5)
+        if m in (0, 1, 3): case(d, X0 + 1, Y0 + H * .5, X1 - 1, Y1 - 1, [L, c.alt, ramp((24, 24, 28), 8), L, c.alt][m], r=3)   # its low unit
+        if m in (1, 2):
+            for q in (cx - bw * .25, cx + bw * .25): d.rectangle([q - 2, Y0, q + 2, py], fill=STEEL[1], outline=OUT)     # the wall bracket's arms
+        if m == 0: d.ellipse([cx - 9, py + 1, cx + 9, py + 9], fill=ramp((40, 42, 50), 8)[2], outline=OUT)            # its foot
+        if m == 4:
+            d.rectangle([cx - 2, py + 2, cx + 2, py + 9], fill=STEEL[2], outline=OUT)                                     # its pole
+            d.rounded_rectangle([cx - 14, py + 9, cx + 14, py + 14], 2, fill=ramp((40, 42, 50), 8)[2], outline=OUT)        # and flat base plate
+        if m == 3: d.arc([bx0, py - 6, bx1, py + 6], 20, 160, fill=OUT, width=5); d.arc([bx0 + 1, py - 5, bx1 - 1, py + 5], 20, 160, fill=L[1], width=3)
+        else:
+            d.rectangle([bx0, py - 1, bx1, py + 2], fill=L[1] if lv != 4 else (24, 24, 28), outline=OUT)                   # the panel, a thin bar
+            face = GLOW[2] if on else (70, 84, 100)
+            d.line([bx0 + 1, py + 3, bx1 - 1, py + 3], fill=face)                                                       # its lit face's edge
+            if on: d.line([bx0 + 6, py + 4, bx1 - 6, py + 4], fill=GLOW[1])
+        cable(d, [(cx + bw * .3, py + 2), (cx + bw * .32, Y1 - 6 if m != 2 else Y1 - 2), (cx + bw * .4, Y1 - 3 if m != 2 else Y1 - 1)], (30, 30, 34), 1)
     if c.broken:
         for k in range(5): d.rectangle([cx - 14 + k * 7, Y1 - 3 + (k % 2) * 2, cx - 12 + k * 7, Y1 - 2 + (k % 2) * 2], fill=(200, 216, 226))
         d.line([cx - 10, Y1 - 2, cx + 6, Y0 + H * .5], fill=OUT)
