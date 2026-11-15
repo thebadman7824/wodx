@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5190
+Next free block: B5220
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -243,6 +243,7 @@ Next free block: B5190
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5049) | Creation, Chronicle, NPC, Sheets, Actions, Combat |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 | B5180-B5189 | Names raised to 300, Thai (used B5180) | Creation |
+| B5210-B5219 | PC runner watchdog (used B5210-B5212) | tools (PC job queue) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7956,3 +7957,25 @@ Reverse: drop the philippines entries in data/lifepath-local-asia.mjs, data/life
 WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Thai list grows from 24 names to 361: the kings, nobles and commoners of Sukhothai and Ayutthaya given alone before the surname act of 1913, modern given names after, and the family names chosen since. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: restore the thai entry in data/people-world.mjs and drop thai from RAISED.
+
+## B5210. A watchdog on the PC starts the runner again when it dies (2026-11-15)
+PC job queue. The runner and its wrapper were ended three times on 14 and 15 November with nothing in the log, and
+the pc-heartbeat schedule (B4700) did not notice: GitHub ran that schedule once in seven hours, so the queue sat
+still for 27 minutes until another thread asked. `tools/pcq/watchdog.ps1` checks every two minutes that
+`run-runner.ps1` is running and, if not, runs `start-runner.ps1`, which puts every running job back in the queue.
+
+Reverse: put a file named `watchdog-off` in `D:\WoDX\pcq`.
+
+## B5211. The watchdog lives apart from the runner (2026-11-15)
+PC job queue. `start-runner.ps1` starts the watchdog through WMI, so it is not in the runner's process tree and a kill
+of that tree leaves it running. The wrapper runs `start-runner.ps1` before each runner start, which starts the
+watchdog when it is missing, so each one brings the other back. `start-runner.ps1` copies itself and the watchdog
+from the runner's clone into `D:\WoDX\pcq`, so the copies there stay current.
+
+Reverse: remove the Start-Watchdog calls.
+
+## B5212. The heartbeat issue stays as a second check (2026-11-15)
+PC job queue. The pc-heartbeat workflow is kept: when GitHub does run it, it still opens an issue if the PC itself is
+off or asleep, which the watchdog cannot report.
+
+Reverse: delete .github/workflows/pc-heartbeat.yml.
