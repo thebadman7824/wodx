@@ -247,7 +247,7 @@ Next free block: B5650
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5064) | Creation, NPC, Actions |
 | B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
-| B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5119) | NPC, Combat, Actions |
+| B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5127) | NPC, Combat, Actions |
 | B5130-B5139 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5130-B5137) | Creation, Actions, NPC |
 | B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 | B5160-B5169 | Playable Strengthening the Demon and fomor Numbing (used B5160-B5162) | Combat, Actions |
@@ -8421,6 +8421,41 @@ Reverse: drop the wodxEffectApplied hook.
 WoDX Actions. Applying an effect now calls the `wodxEffectApplied` hook with the effect, its undo record and the caster's name, so other systems can follow what powers do.
 
 Reverse: remove the hook call.
+
+## B5120. Fomori powers and masters (2026-11-15)
+WoDX NPC. When the Storyteller approves a Bane riding someone (WoDX Otherworlds), the new fomor gets one to three powers from the list WoDX Actions plays (W20 pp. 430 to 439, B5610-B5619), put on the sheet as Power items named the way WoDX Actions reads them, so its Fomor power window and always-on effects (Rage for Berserker, lethal soak for Armored Skin) take them up. The fomor serves the nearest Black Spiral Dancer, else the founder of a Wyrm cult; Pentex only from 1900. The Storyteller gets a card. Desk item w1.
+
+Reverse: drop the updateActor listener in servant-world.mjs.
+
+## B5121. The Retinue starts enchanted (2026-11-15)
+WoDX NPC. When a changeling's Retinue background makes people real, each starts with a lasting Enchantment toward the changeling. Desk item c3.
+
+Reverse: drop the updateItem listener.
+
+## B5122. Mummy cults keep the vessel (2026-11-15)
+WoDX NPC. When a mummy dies, its cult (those bound to it as cultists, and the named members of cults it founded) are given the guard order beside the body where they stand on the scene, are marked as keeping the vessel, and the Storyteller gets a card. A cult left untended twelve weeks loses a step; a mistreated one turns (house readings). Desk item u1.
+
+Reverse: drop the wodxDamageApplied listener and cultDrift.
+
+## B5123. Social Conditioning programmes (2026-11-15)
+WoDX NPC. The followers window gains "Social Conditioning…" for the Storyteller. It starts a programme on the targeted subject, run by a group that exists in the year (the Order of Reason from 1325 at the weekly pace, the Union from 1900 daily, Nephandi every two days), and asks the player's yes for a player character. From then on, while the master is an NPC, each stage rolls by itself when its time comes. Desk item m1.
+
+Reverse: drop openSocial and the clock.
+
+## B5124. NPC masters keep servants by era (2026-11-15)
+WoDX NPC. Once a month of world time (setting "NPC masters keep servants"), up to 40 NPC masters each keep what their line keeps in that year: Kindred blood-bound ghouls, Dominate 4 elders conditioned retainers, Technocrats conditioned agents, Garou Kinfolk, demons thralls, Hierarchy wraiths Thralls, mummies and Kuei-jin courts cults, changelings enchanted mortals. Recruits are unbound mortal NPCs on the master's own scene (or, for a master with no token, mortals with none). The first month starts when the world first sees the clock move, so nobody is bound the moment the module arrives. The Storyteller gets one card with an Undo all button. Kuei-jin never make ghouls. Desk items x4 and k2.
+
+Reverse: turn the setting off.
+
+## B5125. Approvals that do the work, and lone play (2026-11-15)
+WoDX NPC and WoDX Actions. Every servant step that needs the Storyteller (a player's bond, a scene of Conditioning, the Parted Mists, an oath broken by an attack, a pact, a True Name call) waits on one approval card, and approving does all of it at once. With the Solo Storyteller tools on, the lone player's standing approval covers them all, and NPC results (keepers, programmes, cults, fomori) apply by themselves. Desk item x5.
+
+Reverse: none needed; each handler can be unregistered on its own.
+
+## B5127. Servants take the master's experience (2026-11-15)
+WoDX NPC. When a player character's bond takes hold of an NPC who is nobody's ally yet, the NPC becomes that character's ally in WoDX Creation, paid by the patron. The Experience window then raises the servant's traits at the servant's own line's costs, so a fomor cannot buy Disciplines. When the last bond to that master ends, the ally record WoDX made is taken away. Desk item x6.
+
+Reverse: drop the wodxBond listener.
 
 ## B5130. The domitor's clan weakness in the beast (2026-11-14)
 WoDX Creation, WoDX NPC. With five or more points of its domitor's blood an animal ghoul shows the clan's weakness, only where it fits a beast (V20 Dark Ages p. 401): Nosferatu hideous, Lasombra no reflection, Followers of Set shun the sun, Brujah and Gangrel quick to rage (frenzy one harder), Malkavian odd ways, Ventrue picky, Toreador entranced. Shown as an effect on the token. Desk item 8.

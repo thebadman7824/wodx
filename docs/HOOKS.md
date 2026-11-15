@@ -22,6 +22,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxGhoulCraving | chronicle | npc (a Storyteller ghoul that botches the monthly craving goes to the nearest living mortal and the Storyteller is told, B5051) |
 | wodxChronicleReady | chronicle | actions, creation, interactables, npc, otherworlds, storyteller |
 | wodxCrossing | otherworlds | storyteller |
+| wodxBond | npc | npc (a player character's new servant becomes their ally in WoDX Creation, so the master's experience can raise it, B5127) |
 | wodxEffectApplied | actions | actions (a Puppeteer's rides on one mortal make a consort, B5118) |
 | wodxAttackRolled | combat | actions (an attack on someone an oath binds you to asks to break the oath, B5114), paperdoll (a sprite token plays the move that fits the weapon, hit or miss; the one attacked blocks, parries or ducks as the defence says), senses (a gun fired near a character with Heightened Senses in use asks for Willpower) |
 | wodxMagickWorked | actions | senses (vulgar magick strains the place for Prime sight; every working leaves an echo for Time sight) |
@@ -77,7 +78,6 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
-| wodxBond | npc | a bond was made, deepened or ended on the one ledger: {servant, master, kind, record, was} or {servant, master, kind, record: null, ended} (B5100) |
 | wodxBondRestraint | npc | a bound servant rolled before striking its master: {attacker, target, kind, stop} (B5102) |
 | wodxScar | chronicle | lasting damage left on a scene: {scene, id, kind, severity, hit} (B3759) |
 | wodxWay | storyteller | a company went through a Way: {from, to, kind, actors, minutes} (B4780) |
