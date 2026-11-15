@@ -374,7 +374,7 @@ test("dated content: every region of the world has origins and marks of its own 
   const {LOCAL_EVENTS} = await import("../../modules/wodx-creation/data/lifepath-local-events.mjs");
   const {CONTINENTS} = await import("../../modules/wodx-creation/data/lifepath-drill.mjs");
   const ids = CONTINENTS.flatMap(c => c[1]).filter(id => !D.landOf(id)?.off);
-  assert.equal(ids.length, 44);
+  assert.equal(ids.length, 45);
   const words = /\b(he|she|him|her|his|hers|son|daughter|mother|father|wife|wives|husband|brother|sister|boy|girl|man|woman|men|women)\b/i;
   for ( const id of ids ) {
     const E = LOCAL_EVENTS[id];

@@ -24,14 +24,14 @@ export const CIRCLES = {
   europe: {label: "Europe", members: EUROPE, relay: null, knows: {
     ...each(NEAR, OLD), arctic: OLD,
     "west-africa": 1444, "central-africa": 1482, "southern-africa": 1488, caribbean: 1492, "north-america-east": 1497, canada: 1497, "east-africa": 1498, india: 1498,
-    brazil: 1500, "southeast-asia": 1509, nusantara: 1511, china: 1513, "southern-cone": 1516, mexico: 1517, "pacific-islands": 1521, andes: 1526, "north-america-west": 1540, japan: 1543, siberia: 1582,
+    brazil: 1500, "southeast-asia": 1509, nusantara: 1511, china: 1513, philippines: 1521, "southern-cone": 1516, mexico: 1517, "pacific-islands": 1521, andes: 1526, "north-america-west": 1540, japan: 1543, siberia: 1582,
     korea: 1593, "tibet-himalaya": 1624, australia: 1606, aotearoa: 1642, antarctica: 1820}},
   "near-east": {label: "North Africa, the Near East and Central Asia", members: NEAR, relay: 20, knows: {
     ...each(EUROPE, OLD), india: OLD, "east-africa": OLD, "west-africa": OLD, "southern-africa": OLD, china: OLD, "southeast-asia": OLD, nusantara: OLD, "tibet-himalaya": OLD,
-    korea: OLD, siberia: 1400, "central-africa": 1500, japan: 1550}},
+    korea: OLD, philippines: 1380, siberia: 1400, "central-africa": 1500, japan: 1550}},
   india: {label: "India", members: ["india"], relay: 30, knows: {
-    ...each(NEAR, OLD), ...each(EUROPE, 1498), "tibet-himalaya": OLD, china: OLD, "southeast-asia": OLD, nusantara: OLD, "east-africa": OLD}},
-  east: {label: "East Asia and the islands", members: ["china", "japan", "korea", "southeast-asia", "nusantara", "tibet-himalaya", "siberia"], relay: 70, knows: {
+    ...each(NEAR, OLD), ...each(EUROPE, 1498), "tibet-himalaya": OLD, china: OLD, "southeast-asia": OLD, nusantara: OLD, philippines: 1400, "east-africa": OLD}},
+  east: {label: "East Asia and the islands", members: ["china", "japan", "korea", "southeast-asia", "nusantara", "philippines", "tibet-himalaya", "siberia"], relay: 70, knows: {
     india: OLD, "central-asia": OLD, persia: OLD, arabia: OLD, levant: 1250, egypt: 1250, anatolia: 1250, maghreb: 1350, ...each(EUROPE, 1513), "east-africa": 1418,
     "pacific-islands": 1600, australia: 1700}},
   africa: {label: "Africa south of the desert", members: ["west-africa", "central-africa", "east-africa", "southern-africa"], relay: 30, knows: {
@@ -39,7 +39,7 @@ export const CIRCLES = {
   "north-america": {label: "North America and the far north", members: ["north-america-east", "north-america-west", "canada", "arctic"], relay: 30, knows: {
     mexico: OLD, caribbean: OLD, siberia: OLD, ...each(EUROPE, 1497)}},
   "middle-america": {label: "Mexico and the Caribbean", members: ["mexico", "caribbean"], relay: 30, knows: {
-    "north-america-east": OLD, "north-america-west": OLD, brazil: OLD, andes: 1520, ...each(EUROPE, 1492)}},
+    "north-america-east": OLD, "north-america-west": OLD, brazil: OLD, andes: 1520, philippines: 1565, ...each(EUROPE, 1492)}},
   "south-america": {label: "South America", members: ["andes", "brazil", "southern-cone"], relay: 30, knows: {
     caribbean: OLD, mexico: 1530, ...each(EUROPE, 1500)}},
   polynesia: {label: "The Pacific islands", members: ["pacific-islands", "aotearoa"], relay: 30, knows: {...each(EUROPE, 1767), australia: 1790}},

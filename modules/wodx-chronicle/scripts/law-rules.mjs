@@ -342,7 +342,7 @@ export const REGION_FAMILY = {
   "low-countries": "latin", scandinavia: "latin", "poland-baltic": "latin", "carpathians-balkans": "latin",
   russia: "orthodox", aegean: "orthodox", anatolia: "islamic", levant: "islamic", egypt: "islamic", arabia: "islamic",
   maghreb: "islamic", persia: "islamic", "central-asia": "steppe", siberia: "steppe", "tibet-himalaya": "south-asia",
-  india: "south-asia", china: "chinese", japan: "japanese", korea: "chinese", "southeast-asia": "chinese", nusantara: "islamic",
+  india: "south-asia", china: "chinese", japan: "japanese", korea: "chinese", "southeast-asia": "chinese", nusantara: "islamic", philippines: "pacific",
   "west-africa": "african", "east-africa": "african", "southern-africa": "african", "central-africa": "african",
   canada: "americas", "north-america-east": "americas", "north-america-west": "americas", mexico: "americas", caribbean: "americas",
   andes: "americas", brazil: "americas", "southern-cone": "americas", australia: "pacific", aotearoa: "pacific",
@@ -675,10 +675,27 @@ export const REGION_ROWS = {
       drop: {crimes: ["apostasy", "wine"], order: ["muhtasib"], warn: ["Wine is forbidden to Muslims; Christians and Jews may make it for their own", "Christians and Jews pay the poll tax, and in many towns may not bear arms or build new houses of worship", "The market inspector checks weights, prices and public conduct"]}},
     {from: 1400, note: "The sultanate of Malacca; Islam spreads through the ports", set: {rule: {form: "Sultanates of the ports and kingdoms inland", ruler: "The Sultan of Malacca, Aceh, Demak or Mataram"},
       courts: ["The qadi's court in the sultanates", "Village custom (adat) and its elders"]}, add: {crimes: ["apostasy"], order: ["shurta"]}},
-    {from: 1619, note: "The Dutch East India Company at Batavia; Spain in the Philippines (1565), Britain in Malaya (1824)", set: {rule: {form: "Colonies and their client sultans", ruler: "The Governor-General"}},
+    {from: 1619, note: "The Dutch East India Company at Batavia; Britain in Malaya (1824)", set: {rule: {form: "Colonies and their client sultans", ruler: "The Governor-General"}},
       add: {courts: ["Colonial courts for Europeans", "Custom courts for natives"], warn: ["Europeans and natives do not stand under the same law"]}},
-    {from: 1949, note: "Independent Indonesia (1945 to 1949), Malaysia (1957), the Philippines (1946)", set: {rule: {form: "Independent republics and a federation of sultans", ruler: "Each state's head"}},
+    {from: 1949, note: "Independent Indonesia (1945 to 1949) and Malaysia (1957)", set: {rule: {form: "Independent republics and a federation of sultans", ruler: "Each state's head"}},
       drop: {courts: ["Colonial courts for Europeans", "Custom courts for natives"], warn: ["Europeans and natives do not stand under the same law"]}}
+  ],
+  // The Philippines (B5150): the datus of the barangays, the sultans of Sulu and Maguindanao, Spain from 1565, the
+  // Americans from 1898, the republic from 1946
+  philippines: [
+    {from: 0, note: "The barangays under their datus; debt bondage and the custom of the elders", set: {rule: {form: "Barangays, each under its datu", ruler: "The datu of each barangay", council: "The datu and the elders"},
+      courts: ["The datu's judgment with the elders", "Village custom and its elders"], taxes: ["Shares of the harvest and labour to the datu"]}, drop: {warn: ["Breaking a sacred restriction (tapu) can bring death"]},
+      add: {warn: ["A debtor and the debtor's household can be bound to work for the creditor"]}},
+    {from: 1405, note: "The sultanate of Sulu, and of Maguindanao from 1520: the qadi beside the custom of the south", add: {courts: ["The sultan's qadi in the southern sultanates"]}},
+    {from: 1565, note: "Spanish rule from Cebu, then Manila (1571): the governor, the Royal Audiencia, the friars", set: {rule: {form: "A colony of the Spanish crown, ruled from Mexico until 1821", ruler: "The Governor-General", council: "The Royal Audiencia of Manila and the friars"}},
+      add: {courts: ["The Royal Audiencia of Manila", "The friar's word in the parish"], crimes: ["heresy", "wrong-faith"], order: ["bailiff"], punish: ["flogging", "galleys"], warn: ["The south's sultanates keep their own law and fight Spain"]},
+      drop: {order: ["clan-elders"], warn: ["A debtor and the debtor's household can be bound to work for the creditor"]}},
+    {from: 1868, note: "The Guardia Civil in the provinces", add: {order: ["gendarmerie"]}},
+    {from: 1898, note: "American rule after the revolution and the war (1899 to 1902)", set: {rule: {form: "An American territory, a commonwealth from 1935", ruler: "The American Governor-General", council: "The Philippine Commission, then the Philippine Assembly"}},
+      drop: {courts: ["The Royal Audiencia of Manila", "The friar's word in the parish"], crimes: ["heresy", "wrong-faith"], punish: ["galleys"]},
+      add: {courts: ["The Philippine Supreme Court and courts on American lines"], order: ["police"]}},
+    {from: 1946, note: "The independent republic", set: {rule: {form: "A presidential republic", ruler: "The President of the Philippines", council: "The Congress"}}, drop: {warn: ["The south's sultanates keep their own law and fight Spain"]}},
+    {from: 1972, to: 1981, note: "Martial law: arrests without trial", add: {warn: ["Under martial law the army can hold anyone without trial"], order: ["secret-police"]}}
   ],
   moravia: [
     {from: 0, note: "The Přemyslid crown: the duke, from 1198 king, with the margrave of Moravia below the crown",
