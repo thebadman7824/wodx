@@ -37,7 +37,8 @@ export async function run() {
       powers: Number(v.system?.settings?.powers?.defaultmaxvalue), strengthMax: Number(v.system?.attributes?.strength?.max)});
     await G.step("2. Traits to 10", async () => {
       await v.setFlag(MOD, "golconda", true);
-      await waitFor(() => caps().abilities === 10 && caps().strengthMax === 10, 8000);
+      // the system's derived data reads 10 at once; WoDX Actions' own write (settings.attributes) lands a round trip later
+      await waitFor(() => { const c = caps(); return c.attributes === 10 && c.abilities === 10 && c.powers === 10 && c.strengthMax === 10; }, 8000);
       const up = caps();
       await v.update({"system.attributes.strength.value": 6});
       await new Promise(r => setTimeout(r, 1500)); // the system's recompute writes back after the update

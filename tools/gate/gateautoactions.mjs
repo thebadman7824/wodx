@@ -18,6 +18,16 @@ const MOD = "wodx-actions";
 const KEYS = ["autoBeast", "autoTorporRise", "autoRiseRage", "autoMeditate", "autoSekhem", "autoQuintessence", "autoPurify",
   "autoChimerical", "autoCorpus", "autoFetter", "autoVitality"];
 
+/** Fix every d10 to one face. Foundry's mapping from randomUniform to a face has changed between versions (v12 on reads
+ * 1 - u, so 0.999 gives a 1 there), so both readings are tried and the one that gives the wanted face is kept. */
+async function fixDice(face) {
+  for ( const u of [(face - 0.5) / 10, 1 - (face - 0.5) / 10] ) {
+    CONFIG.Dice.randomUniform = () => u;
+    if ( (await new Roll("1d10").evaluate()).dice[0].results[0].result === face ) return;
+  }
+  throw new Error(`could not fix the dice to ${face}`);
+}
+
 export async function run() {
   const G = gate("gateautoactions");
   if ( game.world.id !== "rothenstein-wodx" ) { G.ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"}); return G.save(); }
@@ -45,7 +55,7 @@ export async function run() {
     const hurt = d => Number(d?.bashing ?? 0) + Number(d?.lethal ?? 0) + Number(d?.aggravated ?? 0);
     await G.step("2. rises on Rage", async () => {
       await wolf.update({"system.advantages.rage.permanent": 5, "system.advantages.rage.temporary": 5});
-      CONFIG.Dice.randomUniform = () => 0.999; // every die a 10: Rage 5 gives 5 successes
+      await fixDice(10); // every die a 10: Rage 5 gives 5 successes
       const since = Date.now();
       // past Incapacitated on the sheet (the trigger players and the Storyteller use); the rise rolls by itself
       await wolf.update({"system.health.damage.lethal": 7});
@@ -58,7 +68,7 @@ export async function run() {
 
     await G.step("3. frenzy check by itself, held off at once outside a fight", async () => {
       await vamp.update({"system.advantages.bloodpool.temporary": 5, "system.advantages.virtues.selfcontrol.permanent": 2, "system.advantages.path.permanent": 7});
-      CONFIG.Dice.randomUniform = () => 0.999; // 2 successes a roll: 2, 4, then 6 of 5 needed
+      await fixDice(10); // 2 successes a roll: 2, 4, then 6 of 5 needed
       const since = Date.now();
       await vamp.update({"system.health.damage.lethal": 4}); // a grievous wound on the sheet
       const re = /Frenzy check|Instinct check/;
@@ -99,7 +109,7 @@ export async function run() {
       const tok = scene.tokens.find(t => t.actorId === box.id);
       await tok.setFlag(MOD, "fetter", {actor: ghost.id, item: f.id});
       await ghost.update({"system.advantages.willpower.permanent": 8, "system.advantages.willpower.temporary": 1});
-      CONFIG.Dice.randomUniform = () => 0.999; // Fetter 4: four successes, Willpower 1 to 5
+      await fixDice(10); // Fetter 4: four successes, Willpower 1 to 5
       const since = Date.now();
       await game.modules.get("wodx-chronicle").api.endScene(); // the Storyteller ends the scene
       const card = await waitFor(() => newestMessage(since, m => /rolled by itself/.test(m.content ?? "") && (m.content ?? "").includes("music box")), 8000);

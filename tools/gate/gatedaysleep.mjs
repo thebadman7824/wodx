@@ -54,8 +54,10 @@ export async function run() {
 
     await G.step("2. asleep by day", async () => {
       const s = await toDay(); // the clock alone: no tick call
-      await waitFor(() => sleeping() && marker(), 10000);
-      const card = newestMessage(t0, m => /falls into the day's sleep/.test(m.content ?? "") && m.content.includes(vamp.name));
+      // the flag and the marker land first; the Dawn card follows once the clock's run has looked at everyone
+      const fell = m => /falls into the day's sleep/.test(m.content ?? "") && m.content.includes(vamp.name);
+      await waitFor(() => sleeping() && marker() && !!newestMessage(t0, fell), 10000);
+      const card = newestMessage(t0, fell);
       G.ok("2. asleep by day", sleeping() && marker() && !!card, {sun: s, flag: vamp.getFlag(MOD, "daySleep"), marker: marker()});
     });
 
@@ -73,7 +75,8 @@ export async function run() {
       const wakeAt = vamp.getFlag(MOD, "daySleep")?.wakeAt;
       const blood0 = vamp.system.advantages.bloodpool.temporary;
       if ( wakeAt ) await game.time.advance(wakeAt - game.time.worldTime + 60);
-      await waitFor(() => !sleeping() && !marker() && vamp.system.health.damage.lethal === 0, 12000);
+      // the wound heals first and the blood is paid after it: wait for both
+      await waitFor(() => !sleeping() && !marker() && vamp.system.health.damage.lethal === 0 && vamp.system.advantages.bloodpool.temporary < blood0, 12000);
       G.ok("4. rises at the hour, heals with blood", !!wakeAt && !sleeping() && !marker() && vamp.system.health.damage.lethal === 0 && vamp.system.advantages.bloodpool.temporary < blood0,
         {wakeAt, lethal: vamp.system.health.damage.lethal, blood: [blood0, vamp.system.advantages.bloodpool.temporary]});
     });
@@ -89,13 +92,16 @@ export async function run() {
     await G.step("6. burned in the sun, the marker shows", async () => {
       await game.settings.set(MOD, "sunDamage", "apply");
       if ( keep.sky !== undefined ) await game.settings.set(MOD, "sky", "clear");
+      // the Chronicle's day starts before sunrise; the sun only burns once it is up (above the horizon), so wait for it
+      let sun = await A.sunNow();
+      for ( let i = 0; i < 24 && sun.phase !== "day"; i++ ) { await game.time.advance(1800); await new Promise(r => setTimeout(r, 150)); sun = await A.sunNow(); }
       await scene.setFlag(MOD, "light", "outdoors");
       const a0 = Number(vamp.system.health.damage.aggravated) || 0;
       // a step into the open by day (the token move is the trigger), no applySun call
       await tok.update({x: tok.x + scene.grid.size});
       await waitFor(() => (Number(vamp.system.health.damage.aggravated) || 0) > a0, 10000);
       G.ok("6. burned in the sun, the marker shows", (Number(vamp.system.health.damage.aggravated) || 0) > a0 && vamp.statuses?.has?.("burning"),
-        {aggravated: [a0, vamp.system.health.damage.aggravated], statuses: [...(vamp.statuses ?? [])]});
+        {sun: {phase: sun.phase, altitude: sun.altitude, timeLabel: sun.timeLabel}, aggravated: [a0, vamp.system.health.damage.aggravated], statuses: [...(vamp.statuses ?? [])]});
       await scene.setFlag(MOD, "light", "indoors");
     });
 

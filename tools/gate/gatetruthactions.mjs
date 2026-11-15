@@ -27,6 +27,16 @@ const KEEP = ["applyChanges", "spendResources", "autoBeast", "golcondaRules", "d
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 
+/** Fix every d10 to one face. Foundry's mapping from randomUniform to a face has changed between versions (v12 on reads
+ * 1 - u, so 0.999 gives a 1 there), so both readings are tried and the one that gives the wanted face is kept. */
+async function fixDice(face) {
+  for ( const u of [(face - 0.5) / 10, 1 - (face - 0.5) / 10] ) {
+    CONFIG.Dice.randomUniform = () => u;
+    if ( (await new Roll("1d10").evaluate()).dice[0].results[0].result === face ) return;
+  }
+  throw new Error(`could not fix the dice to ${face}`);
+}
+
 export async function run() {
   const G = gate("gatetruthactions", {stepTimeout: 60000});
   if ( game.world.id !== "rothenstein-wodx" ) { G.ok("0. world", false, {error: "Run this gate in rothenstein-wodx only"}); return G.save(); }
@@ -67,13 +77,15 @@ export async function run() {
       const caps = () => ({attributes: num(saint.system?.settings?.attributes?.defaultmaxvalue), abilities: num(saint.system?.settings?.abilities?.defaultmaxvalue),
         powers: num(saint.system?.settings?.powers?.defaultmaxvalue), strengthMax: num(saint.system?.attributes?.strength?.max)});
       await saint.setFlag(MOD, "golconda", true);
-      await waitFor(() => caps().abilities === 10 && caps().strengthMax === 10, 8000);
+      // the system's derived data reads 10 at once; WoDX Actions' own write (attributes, the stray key gone) lands a round trip later
+      await waitFor(() => { const c = caps(); return c.attributes === 10 && c.abilities === 10 && c.powers === 10 && c.strengthMax === 10
+        && (saint.system?.abilities?.defaultmaxvalue ?? null) === null; }, 8000);
       const up = caps(), stray = saint.system?.abilities?.defaultmaxvalue ?? null;
       await saint.update({"system.attributes.strength.value": 6});
       await wait(1500); // the system's own recompute writes back after the update
       const kept = num(saint.system.attributes.strength.value);
       await saint.update({"system.advantages.path.permanent": 6});
-      const fell = await waitFor(() => !saint.getFlag(MOD, "golconda") && caps().strengthMax === 5, 8000);
+      const fell = await waitFor(() => !saint.getFlag(MOD, "golconda") && caps().strengthMax === 5 && caps().attributes === 5, 8000);
       await wait(1000);
       const down = caps(), after = num(saint.system.attributes.strength.value);
       G.ok("2. Golconda lifts the sheet's maximum and a bought dot stays", up.attributes === 10 && up.abilities === 10 && up.powers === 10 && up.strengthMax === 10
@@ -86,10 +98,13 @@ export async function run() {
       await waitFor(() => roller.statuses?.has?.("wodx-blurred-sight") && roller.statuses?.has?.("wodx-drained"), 4000);
       let since = Date.now();
       await A.quickCheck({actor: roller, check: "notice", direct: true});
-      const sight = await waitFor(() => cardOf(since, roller, /dice, diff/), 6000);
+      // waitFor answers true or false: the card itself is read after it
+      await waitFor(() => cardOf(since, roller, /dice, diff/), 6000);
+      const sight = cardOf(since, roller, /dice, diff/);
       since = Date.now();
       await A.quickCheck({actor: roller, check: "agility", direct: true});
-      const body = await waitFor(() => cardOf(since, roller, /dice, diff/), 6000);
+      await waitFor(() => cardOf(since, roller, /dice, diff/), 6000);
+      const body = cardOf(since, roller, /dice, diff/);
       G.ok("3. Blurred sight and Drained reach a Common check", diffOn(sight) === 9 && diffOn(body) === 7, {notice: diffOn(sight), balance: diffOn(body)});
       await C.conditions.setCondition(roller, "blurred-sight", false);
       await C.conditions.setCondition(roller, "drained", false);
@@ -136,7 +151,7 @@ export async function run() {
     });
 
     await G.step("6. a frenzy check in a fight is held turn by turn", async () => {
-      CONFIG.Dice.randomUniform = () => 0.999; // every die a 10: Self-Control 2 gives 2 successes a roll
+      await fixDice(10); // every die a 10: Self-Control 2 gives 2 successes a roll
       const [fight] = await G.make(Combat, [{scene: scene.id}]);
       await fight.createEmbeddedDocuments("Combatant", [{tokenId: tBeast.id, sceneId: scene.id, actorId: beast.id, initiative: 20},
         {tokenId: tOther.id, sceneId: scene.id, actorId: other.id, initiative: 5}]);
