@@ -117,6 +117,7 @@ def furnish(rec, box, place, room, wealth=2, region="moravia", rng=None, th=None
                     dw = b - a
                     taken.append({"n": (a - .1, iy0, b + .1, iy0 + dw + .2), "s": (a - .1, iy1 - dw - .2, b + .1, iy1),
                                   "w": (ix0, a - .1, ix0 + dw + .2, b + .1), "e": (ix1 - dw - .2, a - .1, ix1, b + .1)}[k])
+    walled = any(_has_wall(rec, ln) for ln in walls.values())
     wants = choose(place, room, year, wealth, style, area, rng) + list(extra)
     placed, record = [], []
     order = sorted(wants, key=lambda t: (CATALOGUE[t[0]].mount == "on", t[0] not in GROUPS, -_area(t[0])))
@@ -132,7 +133,7 @@ def furnish(rec, box, place, room, wealth=2, region="moravia", rng=None, th=None
                 got = _on_surface(rec, oid, v, placed, rng, name)
             elif sp.mount == "wall":
                 got = _along_wall(rec, oid, v, walls, opens, (ix0, iy0, ix1, iy1), taken, rng, name, box)
-            if got is None and sp.mount != "on":
+            if got is None and sp.mount != "on" and not (sp.mount == "wall" and walled):   # a wall piece with no room on the walls is left out
                 got = _in_floor(rec, oid, v, (ix0, iy0, ix1, iy1), taken, rng, name)
             if got is None: continue
             pool[oid] = pool.get(oid, 1) - 1
@@ -145,8 +146,9 @@ def furnish(rec, box, place, room, wealth=2, region="moravia", rng=None, th=None
     while usual and _cover(placed, area) < COVER and tries < 40:
         tries += 1; oid = usual[int(rng.integers(0, len(usual)))]; sp = spec(oid)
         v = V.pick(oid, era, wealth, style, rng); name = sp.name[0].upper() + sp.name[1:]
-        got = (_along_wall(rec, oid, v, walls, opens, (ix0, iy0, ix1, iy1), taken, rng, name, box) if sp.mount == "wall" else None) or \
-              _in_floor(rec, oid, v, (ix0, iy0, ix1, iy1), taken, rng, name)
+        if sp.mount == "wall": got = _along_wall(rec, oid, v, walls, opens, (ix0, iy0, ix1, iy1), taken, rng, name, box) if walled else None
+        else: got = None
+        if got is None and not (sp.mount == "wall" and walled): got = _in_floor(rec, oid, v, (ix0, iy0, ix1, iy1), taken, rng, name)
         if got is not None: placed.append(got); record.append((oid, V.label(v), (round(float(got.x), 2), round(float(got.y), 2))))
     return record
 

@@ -13,6 +13,10 @@ DIRECT = re.compile(r"\b(pr|props|tw|town|wl|wilds|dr|dress)\.(?!REC\b|OPEN\b)\w
 
 
 class Catalogue(unittest.TestCase):
+    def test_every_family_module_loads(self):
+        from library import catalogue
+        self.assertEqual(catalogue.FAILED, {}, f"family modules that failed to load: {catalogue.FAILED}")
+
     def test_every_object_is_described(self):
         for oid, sp in CATALOGUE.items():
             self.assertTrue(sp.ref, f"{oid} has no size reference"); self.assertTrue(sp.tags, f"{oid} has no rooms or trades")
