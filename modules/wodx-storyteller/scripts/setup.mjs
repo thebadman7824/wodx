@@ -123,7 +123,14 @@ export async function runSetup(opts = {}) {
     {name: "WoDX tools", html: S.TOOLS_PAGE}
   ], {ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE}});
   done.push("screen");
-  await upsertJournal("primer", `The world in ${active?.name ?? "this era"}`, [{name: "What everyone knows", html: S.playerPrimer(active)}],
+  // B5880: what everyone knows follows the homeland's way of life
+  let sphere = null, sphereLabel = "";
+  try {
+    const W = game.modules.get("wodx-chronicle")?.api?.world;
+    sphere = W?.rules?.sphereFor?.(W.homeland(), year) ?? null;
+    sphereLabel = W?.rules?.SPHERES?.[sphere] ?? "";
+  } catch (e) { sphere = null; }
+  await upsertJournal("primer", `The world in ${active?.name ?? "this era"}`, [{name: "What everyone knows", html: S.playerPrimer(active, {sphere, sphereLabel, year})}],
     {ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER}});
   done.push("primer");
   if ( !findDoc(game.actors, "group") ) {
@@ -229,3 +236,27 @@ export function maybeOpenSetup() {
   if ( (game.settings.get(MOD, "setup") ?? {}).done ) return;
   setTimeout(() => openSetup().catch(e => console.error(`${MOD} | setup`, e)), 1200);
 }
+
+/**
+ * B5881: the players' primer follows the chronicle. When an era is applied, or the homeland changes, the page "What
+ * everyone knows" is written again for the active era, the year and the homeland's way of life. Only a primer the setup
+ * made is touched; the Storyteller's own pages beside it stay.
+ */
+export async function refreshPrimer() {
+  if ( !game.user.isGM || game.users?.activeGM?.id !== game.user.id ) return false;
+  const j = findDoc(game.journal, "primer");
+  if ( !j ) return false;
+  const C = chron();
+  const year = Number(C?.eras?.currentYear?.()) || 1197;
+  const active = C?.eras?.activeEra?.()?.profile ?? null;
+  let sphere = null, sphereLabel = "";
+  try { const W = C?.world; sphere = W?.rules?.sphereFor?.(W.homeland(), year) ?? null; sphereLabel = W?.rules?.SPHERES?.[sphere] ?? ""; } catch (e) { sphere = null; }
+  const html = S.playerPrimer(active, {sphere, sphereLabel, year});
+  const page = j.pages.find(p => p.name === "What everyone knows");
+  if ( !page || page.text?.content === html ) return false;
+  await page.update({"text.content": html});
+  await j.update({name: `The world in ${active?.name ?? "this era"}`});
+  return true;
+}
+Hooks.on("wodxEraApplied", () => { refreshPrimer().catch(e => console.warn("wodx-storyteller | primer", e)); });
+Hooks.on("updateSetting", s => { if ( s?.key === "wodx-chronicle.homeland" ) refreshPrimer().catch(e => console.warn("wodx-storyteller | primer", e)); });
