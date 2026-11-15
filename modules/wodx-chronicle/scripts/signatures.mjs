@@ -710,8 +710,15 @@ export async function ghoulFed(actorOrId) {
 async function ghoulTick(a, t) {
   const row = rowOf(a);
   if ( !on() || row?.feature !== "ghoul" || row.revenant ) return;
-  // B5050: the monthly need now happens by itself (ghoul-need.mjs); this card only stands in when that is switched off
-  if ( ghoulNeedOn() ) return;
+  // B5050: the monthly need now happens by itself (ghoul-need.mjs); this card only stands in when that is switched off.
+  // The domitor's feeding (B4983) is offered either way.
+  if ( ghoulNeedOn() ) {
+    const g = sigOf(a).ghoul, fedAt = g?.fedAt ?? a.flags?.[MODULE_ID]?.ghoulNeed?.fedAt;
+    if ( fedAt === undefined || fedAt === null ) return;
+    const m = S.monthsUnfed(fedAt, t);
+    if ( m >= 1 ) await offerFeed(a, m);
+    return;
+  }
   const sig = sigOf(a), g = sig.ghoul ?? {fedAt: t, warned: 0};
   if ( !sig.ghoul ) { sig.ghoul = g; await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig}); return; }
   const m = S.monthsUnfed(g.fedAt, t);
@@ -721,11 +728,18 @@ async function ghoulTick(a, t) {
   await a.update({[`flags.${MODULE_ID}.${FLAG}`]: sig});
   Hooks.callAll("wodxGhoulFix", {actor: a, drank: false, months: m});
   await cardFor(a, "ghoul", `${a.name}: no vitae`, `<p>${m} month${m === 1 ? "" : "s"} without a drink from the domitor: take away ${m === 1 ? "a blood point" : "another blood point"}. With none left, the years held off begin to come back.</p>`, {whisper: ownerIds(a), undo: {uuid: a.uuid, path: FLAG, before}});
-  // B4983: the domitor is on the same scene: the Storyteller approves the feeding, and then it happens
+  await offerFeed(a, m);
+}
+/** B4983: the domitor is on the same scene: the Storyteller approves the feeding, and then it happens. */
+async function offerFeed(a, m) {
   const dom = domitorOf(a);
   const here = new Set((game.scenes?.active?.tokens ?? []).map(tk => tk.actorId));
-  if ( dom && here.has(a.id) && here.has(dom.id) && n(dom.system?.advantages?.bloodpool?.temporary) > 0 )
-    await propose({type: T_GHOULFEED, key: `ghoulfeed:${a.id}:${m}`, title: `${dom.name} feeds ${a.name}`, detail: `${a.name} has gone ${m} month${m === 1 ? "" : "s"} without vitae and ${dom.name} is here. Approve and a blood point passes from domitor to ghoul (V20 Dark Ages p. 397).`, data: {ghoul: a.id, domitor: dom.id}});
+  if ( !dom || !here.has(a.id) || !here.has(dom.id) || n(dom.system?.advantages?.bloodpool?.temporary) < 1 ) return;
+  // Once a month unfed: a declined feeding is not asked again until another month passes
+  const key = `ghoulfeed:${a.id}:${m}`;
+  if ( a.getFlag?.(MODULE_ID, "ghoulFeedAsked") === key ) return;
+  await a.setFlag?.(MODULE_ID, "ghoulFeedAsked", key);
+  await propose({type: T_GHOULFEED, key, title: `${dom.name} feeds ${a.name}`, detail: `${a.name} has gone ${m} month${m === 1 ? "" : "s"} without vitae and ${dom.name} is here. Approve and a blood point passes from domitor to ghoul (V20 Dark Ages p. 397).`, data: {ghoul: a.id, domitor: dom.id}});
 }
 /** The ghoul's domitor (WoDX Creation's lineage), as an actor, or null. */
 function domitorOf(a) {

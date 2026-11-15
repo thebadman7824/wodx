@@ -21,7 +21,7 @@ Install every WoDX module together, even ones left off in a world. Some modules 
 
 | Module | Version | What it does | Enable in |
 |---|---|---|---|
-| wodx-chronicle | 0.123.0 | The era clock, dated events, house rules, the crossover referee, the WoDX look and player buttons. [Changelog](../modules/wodx-chronicle/CHANGELOG.md) | rothenstein-wodx |
+| wodx-chronicle | 0.123.1 | The era clock, dated events, house rules, the crossover referee, the WoDX look and player buttons. [Changelog](../modules/wodx-chronicle/CHANGELOG.md) | rothenstein-wodx |
 | wodx-otherworlds | 0.32.0 | The Umbra, the Shadowlands and other realms: crossings, realm maps and the Gauntlet. [Changelog](../modules/wodx-otherworlds/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-creation | 0.75.0 | Character and NPC creation, era advancement, the archive of the dead and changes of state. [Changelog](../modules/wodx-creation/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-actions | 3.95.1 | Powers follow the books' use limits and after-costs, one scene count for every line, Drained after a great power, full resist rolls and servant caps (B4920-B4929) | rothenstein-wodx (needs wodx-chronicle) |
