@@ -45,6 +45,7 @@ class Recorder:
         self.m = Map(cells[0], cells[1], seed=seed)
         self.walls, self.things, self.lights, self.regions, self.key, self.ids = [], [], [], [], [], set()
         self.roofs = []
+        self.wall_th, self.placed, self.year, self.checks = [], [], None, True       # the object library's records (B6334)
         props.REC = self; props.SEGS = []; props.OPENS = []
 
     # ---- recording ----
@@ -55,7 +56,7 @@ class Recorder:
 
     def wall(self, x0, y0, x1, y1, th=26, kind="wood"):
         """A wall drawn and kept as a Foundry wall (squares, along its middle line)."""
-        self.m.wall(x0, y0, x1, y1, th=th, kind=kind); self.walls.append((x0, y0, x1, y1)); props.SEGS.append((x0, y0, x1, y1))
+        self.m.wall(x0, y0, x1, y1, th=th, kind=kind); self.walls.append((x0, y0, x1, y1)); self.wall_th.append(th); props.SEGS.append((x0, y0, x1, y1))
 
     def note(self, name, x, y):
         """A named object at a square: the key a player's eye and later game logic read."""
@@ -123,6 +124,10 @@ class Recorder:
         return [[{"x": round(p[0], 3), "y": round(p[1], 3)} for p in seg] for seg in out]
 
     def finish(self, outdir):
+        if self.checks and any(p.spec.mount != "opening" for p in self.placed):     # a map drawn from the object library is checked first (B6334)
+            from library.checks import run
+            bad = run(self)
+            if bad: raise SystemExit(f"{self.name}: {len(bad)} object problems\n  " + "\n  ".join(bad))
         props.REC = None
         name = os.path.basename(os.path.normpath(outdir)); art = os.path.join(outdir, "art"); os.makedirs(art, exist_ok=True)
         for f in os.listdir(art):
