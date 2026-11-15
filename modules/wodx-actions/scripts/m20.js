@@ -284,5 +284,12 @@ export function build(ctx) {
         return true;
     }
 
-    return { info, setParadox, cast, castRote, backlash: backlashRoll, counter, shedAll, purify, drawDialog, placeDialog, age, suggest, rules: M };
+    /** B5673: the saved rotes an NPC mage may cast by itself (main.js npcPowers): the window's own rote list, by place. */
+    function powersFor(actor) {
+        const i = info(actor);
+        return EF.rotesOf(actor).map((r, k) => ({ r, k })).filter(({ r }) => (r.keywords ?? []).length && Object.entries(r.spheres ?? {}).every(([s, v]) => n(i.spheres[s]) >= n(v)))
+            .map(({ r, k }) => ({ use: "useEffect", field: "kw-rote", value: String(k), name: r.name, level: Math.max(0, ...Object.values(r.spheres ?? {}).map(n)), set: "rote", id: `rote-${k}`, keywords: r.keywords }));
+    }
+
+    return { powersFor, info, setParadox, cast, castRote, backlash: backlashRoll, counter, shedAll, purify, drawDialog, placeDialog, age, suggest, rules: M };
 }

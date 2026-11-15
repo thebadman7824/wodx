@@ -21,3 +21,6 @@ export function tagsOf(keywords = []) {
   const uses = [...new Set(keywords.map(k => USE_OF[k]).filter(Boolean))];
   return {uses, obvious: keywords.some(k => OBVIOUS.has(k))};
 }
+
+/** B5670: the effect keywords a line's own results give (the effects card's keys), for the NPC power choice. */
+export const keysOf = (results = []) => [...new Set((results ?? []).map(r => r?.key).filter(k => k && k !== "world"))];
