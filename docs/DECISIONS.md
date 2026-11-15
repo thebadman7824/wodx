@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5390
+Next free block: B5430
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -263,6 +263,9 @@ Next free block: B5390
 | B5360-B5369 | Names raised to 300, Korean (used B5360) | Creation |
 | B5370-B5379 | Names raised to 300, Mande (used B5370) | Creation |
 | B5380-B5389 | Names raised to 300, Zulu (used B5380) | Creation |
+| B5400-B5409 | Names raised to 300, Hungarian (used B5400) | Creation |
+| B5410-B5419 | Names raised to 300, Persian (used B5410) | Creation |
+| B5420-B5429 | Names raised to 300, Yoruba (used B5420) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8093,3 +8096,18 @@ Reverse: restore the mande entry in data/people-world.mjs and drop mande from RA
 WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Zulu list grows from 48 names to 402: old names of the kings, royal women, councillors and captains of the Zulu kingdom and its neighbours, later names of KwaZulu-Natal, and over a hundred clan names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: restore the zulu entry in data/people-world.mjs and drop zulu from RAISED.
+
+## B5400. Hungarian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Hungarian list grows from 50 names to 411: old names of kings, chieftains, lords, captains and townsfolk from Árpád, Angevin, Hunyadi and Transylvanian records with the old noble and town family names, then names and family names of modern Hungary. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the hungarian entry in data/people-world.mjs and drop hungarian from RAISED.
+
+## B5410. Persian names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Persian list grows from 50 names to 444: old names of kings and heroes of the old tales and of Samanid, Seljuk, Safavid and Qajar rulers, ministers, poets and royal women, a town name as the family name until the surname law of 1925, then modern Iranian names and surnames. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the persian entry in data/people-world.mjs and drop persian from RAISED.
+
+## B5420. Yoruba names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Yoruba list grows from 51 names to 382: old names of the alaafin, obas, war chiefs and royal and market women of Oyo, Ife, Ibadan, Abeokuta and Lagos, then Yoruba, church and Muslim names since, with a longer list of family names. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the yoruba entry in data/people-world.mjs and drop yoruba from RAISED.
