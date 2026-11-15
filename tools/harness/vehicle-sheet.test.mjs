@@ -42,3 +42,10 @@ test("the module declares its vehicle kind and the system skips it", () => {
   const base = readFileSync(join(root, "system/worldofdarkness/module/actor/data/wod-actor-base.js"), "utf8");
   assert.ok((base.match(/String\(this\.type\)\.includes\("\."\)/g) ?? []).length >= 4);
 });
+
+test("a vehicle on its own sheet is got into whatever the chronicle's year", async () => {
+  const IR = await import(pathToFileURL(join(root, "modules/wodx-interactables/scripts/interact-rules.mjs")).href);
+  const o = {...IR.describeMount({mount: true, mountKind: "car"}), vehicle: true};
+  const opts = IR.optionsFor(o, {actorId: "a1", year: 1850, kind: "mortal", dexterity: 3, abilities: {drive: 3}});
+  assert.ok(opts.some(x => x.id === "mount"));
+});

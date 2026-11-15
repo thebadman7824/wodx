@@ -1286,7 +1286,8 @@ function targetOptions(o, ch) {
  */
 function mountOptions(o, ch) {
   const M = MOUNTS[o.kind], me = ch.actorId ?? "", year = Number(ch.year) || 0;
-  if ( M.from && !ch.kept && year && year < M.from ) return [{id: "eraNote", label: `No ${M.label.toLowerCase()} yet`, roll: null, disabled: true, note: `Not before about ${M.from}.`}];
+  // B4968: a vehicle on its own sheet was put there by the Storyteller, built when its sheet says: no era note
+  if ( M.from && !ch.kept && !o.vehicle && year && year < M.from ) return [{id: "eraNote", label: `No ${M.label.toLowerCase()} yet`, roll: null, disabled: true, note: `Not before about ${M.from}.`}];
   const sk = bestOf(ch.abilities ?? {}, [M.skill]), trained = sk.value >= minSkill(o.kind);
   const wrecked = hullState(o.hull, o.hull?.structure).state === "wrecked";
   const attrDots = Number(ch[M.attr]) || 0, attrLabel = cap(M.attr), skillLabel = cap(M.skill);

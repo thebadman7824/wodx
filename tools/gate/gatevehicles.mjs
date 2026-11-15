@@ -162,7 +162,7 @@ export async function run() {
       await scene.tiles.get(horse.id).update({[`flags.${IX}.driver`]: null});
       const [steed] = await G.make(Actor, [{...body("Gate Warhorse", {str: 6, dex: 4, sta: 5, athletics: 3}), type: "Mortal"}]);
       const [ts] = await G.tokens(scene, [{actor: steed, x: 14, y: 8, actorLink: true}]);
-      await tr.update({x: ts.x + (scene.grid?.size ?? 100), y: ts.y});
+      await tr.update({x: ts.x + (scene.grid?.size ?? 100), y: ts.y}, {animate: false, teleport: true});
       // the token slides there: wait until it has arrived on the canvas
       await waitFor(() => ts?.object && tr?.object && Math.abs(tr.object.center.x - (tr.x + (scene.grid?.size ?? 100) / 2)) < 2, 6000);
       const near = ix.interactablesFor(tr.object), listed = near.some(x => x.doc?.id === ts.id);
@@ -185,7 +185,7 @@ export async function run() {
       await van.createEmbeddedDocuments("Item", [{name: "Gate mounted gun", type: "Ranged Weapon", system: {isequipped: true, difficulty: 6, range: 100,
         damage: {attribute: "", bonus: 7, type: "lethal", isrollable: true}, attack: {attribute: "dexterity", ability: "firearms"}}}]);
       const [tv] = await G.tokens(scene, [{actor: van, x: 10, y: 12, actorLink: true}]);
-      await tn.update({x: tv.x, y: tv.y + (scene.grid?.size ?? 100)});
+      await tn.update({x: tv.x, y: tv.y + (scene.grid?.size ?? 100)}, {animate: false, teleport: true});
       await waitFor(() => tv?.object && tn?.object && Math.abs(tn.object.center.y - (tn.y + (scene.grid?.size ?? 100) / 2)) < 2, 6000);
       await van.sheet.render(true);
       const opened = await waitFor(() => !!van.sheet.element?.querySelector?.(".wvx-track .wvx-box"), 6000);
