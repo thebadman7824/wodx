@@ -115,6 +115,8 @@ export const PANEL = [
   {id: "leads", label: "Leads", icon: "fa-solid fa-route"},
   {id: "time", label: "Let time pass", icon: "fa-solid fa-hourglass-half"},
   {id: "travel", label: "Travel", icon: "fa-solid fa-person-walking-luggage"},
+  // B6040: towns with no map drawn, as card scenes
+  {id: "places", label: "Places with no map", icon: "fa-solid fa-map-location-dot"},
   {id: "pause", label: "Pause or go on", icon: "fa-solid fa-pause"},
   {id: "stuck", label: "I am stuck", icon: "fa-solid fa-life-ring"},
   {id: "curtain", label: "Lift the curtain", icon: "fa-solid fa-masks-theater"},
