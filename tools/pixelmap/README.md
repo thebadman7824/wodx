@@ -17,6 +17,7 @@ in this public repository and, later, be drawn inside Foundry.
 | `props.py` | Furniture and goods, each drawn to be named at a glance. Doors, windows, chests, casks, crates and sacks are *openables*. |
 | `scene.py` | The recorder: notes walls, openables, lights and regions while a map is drawn, then writes everything Foundry needs. |
 | `bits.py` | Distance fields and smooth lines for paths and streams. |
+| `roofs.py` | Roof pictures (shingle, thatch, slate) laid over a building as its roof tile; the recorder writes them to `roofs/` (B5743). |
 | `buildings.py` | Whole buildings laid out the same way each time: the log cottage and the timber chapel (B5737). |
 | `land.py` | Open ground: grass or a forest floor, roads, brooks, ploughed strips, a plank bridge, scattered trees. |
 | `wilds.py` | The wood's pieces: stumps, camp fires, tents, charcoal kilns, boulders, rock scarps, felled trunks, ladders, a lean-to (B5739); hearths, bones, a warning rope and bell, a pit trap, pelts, drying racks, a den, a thicket, a wallow, a bow (B5740). |

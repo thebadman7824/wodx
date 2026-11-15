@@ -72,6 +72,7 @@ for _ in range(80):                                                             
 note("curtain wall, broken", 12, 20); note("hall, roofless", 24, 11)
 
 # ---- Lady Adelheid's chamber: still whole, the bed made, fresh candles burning ----
+rec.roof("chamber-roof", "Roof (Lady Adelheid's chamber)", (21.29, 21.29, 11.4125, 9.4125), "slate")
 pr.door(m, 24.5, 22, 25.5, 22, 40, centre=(27, 26), swing=-1, hinge="a", exterior=True, name="Door (Lady Adelheid's chamber)")
 for c in ((28.4, 22, 29, 22), (22, 25.7, 22, 26.3), (32, 25.7, 32, 26.3), (25, 30, 25.6, 30), (28.4, 30, 29, 30)):
     pr.window(m, *c, th=40, centre=(27, 26), glass=False, name="Window (Lady Adelheid's chamber)")

@@ -28,6 +28,7 @@ denp = [(22.4, 29.6), (18.6, 25.6), (14.4, 20.0), (11.6, 14.6)]
 dt, db = land.ground(m, roads=[(main, 82), (lodge, 54), (west, 66), (reeve, 30), (denp, 34)], floor="forest")
 
 # ---- Egon's lodge, north: one room round an open hearth; a bell by the east window on the warning rope ----
+rec.roof("egons-lodge-roof", "Roof (Egon's lodge)", (19.47, 4.08, 9.0625, 7.0625), "shingle", smoke=(24.02, 7.62))
 fin = B.hut(rec, 20.0, 4.6, 8.0, 6.0, doors=[("s", 5.5)], windows=[("n", 2.4), ("n", 4.8), ("s", 2.4), ("e", 2.6), ("w", 2.6)], name="Egon's lodge")
 pr.bed(m, 20.35, 4.95, .95, 1.4, head="n", cloth="red"); note("bed", 20.8, 5.6)
 m.table(23.6, 5.0, 1.8, .9, things=False); pr.bench(m, 23.7, 6.0, 1.6, .34); note("table", 24.5, 5.45)
@@ -55,6 +56,7 @@ wl.bones(m, 9.0, 13.2, 7, .7); note("bones by the den", 9.0, 13.2)
 wl.boulder(m, 19.0, 15.3, 1.1, .9); note("boulder", 19.0, 15.3)
 
 # ---- the game-reeve's lodge, south-west: a living room and a sleeping room ----
+rec.roof("game-reeves-lodge-roof", "Roof (game-reeve's lodge)", (7.48, 37.08, 8.0625, 6.45), "slate", smoke=(10.07, 42.3))
 fin = B.hut(rec, 8.0, 37.6, 7.0, 5.4, doors=[("w", 1.81), ("e", 2.06)], floor="planks", name="Game-reeve's lodge")
 rec.wall(12.1, 37.6, 12.1, 39.8); rec.wall(12.1, 40.8, 12.1, 43.0)
 wl.hearth(m, 10.07, 42.3, rec=rec, label="Hearth (game-reeve's lodge)", r=.5)
