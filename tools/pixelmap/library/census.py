@@ -134,7 +134,7 @@ o("writingslope", "writing slope or scriptorium desk", F, "3 x 2.5", "clue:docum
 o("lectern", "lectern", F, "2 x 2", "clue:document", "-", "chancel 3, nave 1, library 2, scriptorium 2, prayerhall 2, study 1", "2-5")
 o("counter", "counter", F, "8 x 2.5", "cover:counter", "-", "shop 3, taproom 3, counting 2, reception 3, station 2, office 1", "1-5")
 o("bar", "bar with its shelves", F, "12 x 3", "cover:counter", "1800-", "taproom 3", "1-5")
-o("workbench", "workbench", F, "7 x 3", "cover:table", "-", "workshop 3, barn 1, store 1, lab 2, yard 1", "1-4", mount="wall")
+o("workbench", "workbench", F, "7 x 3", "cover:table", "-", "workshop 3, carpenter 3, garage 3, factory 2, smithy 2, studio 1, barn 1, store 1, lab 2, yard 1", "1-4", mount="wall")
 o("dressingtable", "dressing table with its mirror", F, "4 x 2", "watch:mirror", "1700-", "chamber 2, guestroom 1, solar 2", "3-5", mount="wall")
 o("washstand", "washstand with basin and ewer", F, "2.5 x 1.75", "break:fragile", "1700-1960", "chamber 2, guestroom 3, ward 1", "1-5", mount="wall")
 o("sideboard", "sideboard", F, "6 x 2", "container:cabinet", "1700-", "parlour 2, salon 2, hall 2, greathall 1", "3-5", mount="wall")
@@ -527,6 +527,109 @@ for vid, vname, vsize, vyears, vwhere, vw, vst in (
     o(vid, vname, F, vsize, "mount:" + vid, vyears, vwhere, vw, vst, "outdoor")
 
 
+
+# ================================================================ machines and works (B6349): the plant, appliances, services and big works of a
+# place, from the water-wheel to the scanner, filled out against the world furniture of Cataclysm: Dark Days Ahead (its ideas only; own names)
+F = "machines"
+for mid, mname, msize, mtag, myears, mwhere, mw, mst, mmount in (
+        # power and plant
+        ("generator", "petrol or diesel generator", "3 x 2", "hazard:shock", "1910-", "workshop 1, depot 2, camp 1, control 2, cellar 1, yard 1, garage 1", "1-5", "*", "floor"),
+        ("steamengine", "steam engine and its flywheel", "10 x 6", "hazard:fire", "1780-1960", "factory 3, mill 2, depot 2", "2-5", "*", "floor"),
+        ("boiler", "boiler", "5 x 4", "hazard:fire", "1840-", "cellar 2, factory 3, utility 2, depot 2, ward 1", "2-5", "*", "wall"),
+        ("coalfurnace", "coal furnace with its ducts", "4 x 4", "hazard:fire", "1880-1975", "cellar 2, utility 2", "2-5", "central,atlantic,northern,americas,oceania", "floor"),
+        ("waterheater", "water heater", "2 x 2", "", "1890-", "utility 3, bathroom 1, kitchen 1, scullery 1", "2-5", "*", "wall"),
+        ("fusebox", "fuse box or breaker panel", "1.5 x 0.5", "hazard:shock", "1890-", "utility 2, cellar 2, hall 1, office 1, servers 2, factory 2", "1-5", "*", "wall"),
+        ("transformer", "electrical transformer", "4 x 4", "hazard:shock", "1900-", "street 1, yard 1, depot 2, forecourt 1, factory 1", "1-5", "*", "outdoor"),
+        ("batterybank", "battery bank", "3 x 2", "hazard:shock", "1990-", "utility 1, control 2, servers 2, camp 1", "2-5", "*", "wall"),
+        ("solarpanel", "solar panels", "6 x 3", "", "1975-", "roof 2, yard 1, camp 1, field 1", "2-5", "*", "outdoor"),
+        ("aircon", "air-conditioning unit", "3 x 2", "", "1950-", "roof 2, office 1, servers 3, utility 1, chamber 1", "2-5", "*", "wall"),
+        ("ceilingfan", "ceiling fan", "4 x 4", "", "1890-", "hall 1, parlour 1, office 2, taproom 2, ward 1, guestroom 1", "2-5", "*", "ceiling"),
+        ("deskfan", "electric fan", "1.5 x 1.5", "", "1900-", "office 1, chamber 1, hall 1, counting 1", "1-5", "*", "on"),
+        ("antenna", "radio mast or aerial", "2 x 2", "", "1900-", "roof 2, control 1, quay 1", "1-5", "*", "outdoor"),
+        ("satellitedish", "satellite dish", "3 x 3", "", "1980-", "roof 2, control 2, yard 1", "2-5", "*", "outdoor"),
+        # the house
+        ("washingmachine", "washing machine", "2.5 x 2.5", "", "1910-", "utility 3, scullery 2, bathroom 1, laundry 3, kitchen 1", "2-5", "*", "wall"),
+        ("dryer", "clothes dryer", "2.5 x 2.5", "", "1940-", "utility 2, laundry 3, bathroom 1", "3-5", "*", "wall"),
+        ("mangle", "wringer mangle", "3 x 2", "", "1840-1965", "scullery 2, laundry 3, yard 1, utility 1", "1-4", "central,atlantic,northern,americas,oceania,mediterranean", "floor"),
+        ("dishwasher", "dishwasher", "2 x 2", "", "1950-", "kitchen 2", "3-5", "*", "wall"),
+        ("microwave", "microwave oven", "2 x 1.3", "", "1970-", "kitchen 2, office 1, taproom 1, ward 1", "2-5", "*", "on"),
+        ("toaster", "toaster or kettle", "1 x 0.7", "", "1920-", "kitchen 2, office 1", "2-5", "*", "on"),
+        ("television", "television", "3 x 1.5", "", "1938-", "parlour 3, hall 2, taproom 1, guestroom 2, reception 1, ward 1, chamber 1", "1-5", "*", "wall"),
+        ("wireless", "wireless set", "1.5 x 1", "watch:radio", "1922-", "parlour 2, kitchen 1, guardroom 2, taproom 1, control 1", "1-5", "*", "on"),
+        ("telephone", "telephone", "0.8 x 0.8", "watch:phone", "1880-", "hall 1, office 2, reception 2, counting 2, guardroom 1, ward 1", "2-5", "*", "on"),
+        ("printer", "printer", "2 x 1.5", "", "1985-", "office 2, study 1, reception 1", "2-5", "*", "on"),
+        ("switchboard", "telephone switchboard", "6 x 2.5", "watch:phone", "1880-1985", "office 1, station 1, control 1, reception 1", "2-5", "*", "wall"),
+        # streets and services
+        ("cashmachine", "cash machine", "2.5 x 1", "container:safe", "1970-", "street 2, station 2, forecourt 1, shop 1", "2-5", "*", "wall"),
+        ("payphone", "public telephone", "1.5 x 1", "watch:phone", "1890-2015", "street 2, station 3, taproom 1, hall 1, ward 1", "1-4", "*", "wall"),
+        ("newsbox", "newspaper box", "1.5 x 1.5", "", "1920-", "street 1, station 1, forecourt 1", "1-4", "atlantic,americas,oceania,central,northern", "outdoor"),
+        ("parkingmeter", "parking meter", "0.7 x 0.7", "", "1935-", "street 2", "2-5", "*", "outdoor"),
+        ("trafficlight", "traffic light", "1 x 1", "", "1920-", "street 2", "2-5", "*", "outdoor"),
+        ("firealarm", "fire alarm bell and pull", "0.7 x 0.3", "watch:bell", "1880-", "hall 1, ward 2, office 2, station 2, platform 1, factory 2, lab 1", "2-5", "*", "wall"),
+        ("extinguisher", "fire extinguisher", "0.7 x 0.7", "", "1905-", "kitchen 1, office 2, ward 2, depot 2, platform 1, lab 2, garage 2, factory 2", "2-5", "*", "wall"),
+        ("fuelpump", "petrol pump", "2 x 2", "hazard:fire", "1915-", "forecourt 3, depot 1, garage 1", "1-5", "*", "outdoor"),
+        ("turnstile", "turnstile", "3 x 1", "", "1890-", "platform 2, station 2, reception 1, gate 1", "2-5", "*", "floor"),
+        ("lift", "lift shaft and its doors", "6 x 6", "climb:ladder", "1880-", "hall 1, office 2, ward 2, reception 2, station 1, warehouse 1", "2-5", "*", "wall"),
+        ("escalator", "escalator", "4 x 12", "", "1900-", "station 2, shop 1, platform 1", "3-5", "*", "floor"),
+        ("securitycamera", "security camera", "1 x 0.7", "", "1970-", "reception 2, shop 2, counting 2, street 1, gate 2, control 1, servers 2, warehouse 1", "2-5", "*", "wall"),
+        # shops and stores
+        ("shoppingcart", "shopping trolley", "2 x 3", "", "1937-", "shop 2, street 1, alley 1, forecourt 1", "0-5", "*", "floor"),
+        ("cashregister", "cash register or till", "1.5 x 1.5", "container:box", "1880-", "shop 3, taproom 2, counting 1, reception 1", "1-5", "*", "on"),
+        ("checkout", "checkout counter", "6 x 3", "cover:counter", "1930-", "shop 3, forecourt 1", "2-5", "*", "floor"),
+        ("shelving", "steel shelving", "4 x 1.5", "container:cabinet", "1920-", "shop 3, store 2, warehouse 3, depot 2, archive 2, garage 2, utility 1", "1-5", "*", "wall"),
+        ("goodspallet", "pallet of goods", "4 x 3.3", "container:pile", "1930-", "warehouse 3, depot 2, quay 2, store 1, factory 2", "1-5", "*", "floor"),
+        ("forklift", "forklift", "4 x 8", "", "1920-", "warehouse 2, depot 2, quay 2, factory 1", "2-5", "*", "floor"),
+        # workshops and factories
+        ("drillpress", "drill press", "2 x 2", "", "1890-", "workshop 2, factory 2, garage 1", "1-5", "*", "floor"),
+        ("powerloom", "power loom", "8 x 5", "break:heavy", "1800-1990", "factory 3, weaver 1", "2-5", "*", "floor"),
+        ("conveyor", "conveyor belt", "3 x 12", "", "1900-", "factory 2, depot 2, warehouse 1", "2-5", "*", "floor"),
+        ("carlift", "car lift", "8 x 14", "", "1930-", "garage 2", "2-5", "*", "floor"),
+        ("toolchest", "rolling tool chest", "2.5 x 1.5", "container:drawers", "1920-", "garage 3, workshop 2, factory 1", "1-5", "*", "wall"),
+        ("welder", "welding set", "2 x 2", "hazard:fire", "1920-", "garage 1, workshop 1, factory 2", "1-5", "*", "floor"),
+        ("typecase", "printer's type case", "3 x 2", "", "1450-1980", "printer 3, workshop 1", "1-4", "*", "wall"),
+        # laboratories and medicine
+        ("centrifuge", "laboratory centrifuge", "2 x 2", "", "1900-", "lab 2, laboratory 1, surgery 1, morgue 1", "3-5", "*", "floor"),
+        ("fumehood", "fume cupboard", "5 x 2.5", "", "1920-", "lab 3, laboratory 1", "3-5", "*", "wall"),
+        ("microscope", "microscope", "1 x 1", "clue:object", "1650-", "lab 2, laboratory 2, study 1, surgery 1", "3-5", "*", "on"),
+        ("autoclave", "autoclave", "2 x 2", "", "1880-", "surgery 2, lab 2", "3-5", "*", "floor"),
+        ("incubator", "incubator", "2 x 1.5", "", "1890-", "ward 1, lab 2", "3-5", "*", "floor"),
+        ("operatingtable", "operating table", "3 x 7", "cover:table", "1846-", "surgery 3", "2-5", "*", "centre"),
+        ("examtable", "examination couch", "2.5 x 6", "", "1880-", "surgery 2, ward 1, office 1", "2-5", "*", "wall"),
+        ("xray", "X-ray machine", "6 x 8", "hazard:shock", "1896-", "surgery 1, ward 1", "3-5", "*", "floor"),
+        ("scanner", "body scanner", "7 x 14", "hazard:shock", "1980-", "surgery 1", "4-5", "*", "floor"),
+        ("ventilator", "ventilator and monitors", "2 x 2", "", "1950-", "ward 2, surgery 2", "3-5", "*", "floor"),
+        ("dentalchair", "dentist's chair", "3 x 6", "", "1870-", "surgery 1, office 1", "2-5", "*", "floor"),
+        ("embalming", "embalming table", "3 x 7", "", "1860-", "morgue 3", "2-5", "*", "centre"),
+        ("cremator", "cremation furnace", "8 x 10", "hazard:fire", "1874-", "morgue 1", "3-5", "*", "wall"),
+        # trades and pleasures of the town
+        ("barberchair", "barber's chair", "2.5 x 4", "", "1880-", "barber 3", "1-5", "*", "floor"),
+        ("arcade", "arcade cabinet", "2.5 x 3", "", "1971-", "taproom 1, club 3, shop 1", "1-4", "*", "wall"),
+        ("pinball", "pinball table", "2.5 x 5", "", "1931-", "taproom 2, club 2", "1-4", "*", "floor"),
+        ("slotmachine", "slot machine", "2 x 2", "", "1895-", "taproom 1, club 2", "1-5", "*", "wall"),
+        ("djbooth", "DJ booth and decks", "6 x 3", "cover:counter", "1975-", "club 3", "2-5", "*", "wall"),
+        ("speakers", "loudspeaker stack", "2 x 2", "", "1960-", "club 3, hall 1, square 1", "2-5", "*", "floor"),
+        ("treadmill", "treadmill", "3 x 6", "", "1990-", "gym 3, chamber 1", "2-5", "*", "floor"),
+        ("weightbench", "weight bench and bar", "4 x 6", "", "1950-", "gym 3, barracks 1, cellar 1", "1-5", "*", "floor"),
+        ("punchbag", "punching bag", "2 x 2", "target:dummy", "1880-", "gym 3, barracks 1, cellar 1, club 1", "1-5", "*", "ceiling"),
+        ("kennel", "dog kennel", "3 x 4", "", "-", "yard 1, farmyard 1, haven 1, gate 1", "1-5", "*", "outdoor"),
+        # security and war
+        ("vaultdoor", "vault door", "8 x 2", "container:safe", "1860-", "treasury 2, counting 2, cellar 1", "4-5", "*", "wall"),
+        ("razorwire", "coil of razor wire", "10 x 2", "trap:blade", "1935-", "yard 1, gate 2, street 1, field 1", "1-5", "*", "outdoor"),
+        ("chainlink", "chain-link fence", "10 x 0.3", "climb:wall", "1900-", "yard 2, depot 2, park 1, alley 1, gate 1", "1-5", "*", "outdoor"),
+        ("tanktrap", "concrete or steel tank trap", "4 x 4", "cover:barricade", "1914-", "street 1, field 1", "0-5", "*", "outdoor"),
+        ("searchlight", "searchlight", "3 x 3", "light:lamp", "1890-", "gate 2, yard 1, roof 1, quay 1", "2-5", "*", "outdoor"),
+        ("siren", "air-raid or warning siren", "2 x 2", "watch:bell", "1900-", "roof 2, gate 1, street 1", "2-5", "*", "outdoor"),
+        # the old works
+        ("waterwheel", "water-wheel", "6 x 14", "", "1197-1950", "mill 3, riverbank 1", "1-4", "*", "outdoor"),
+        ("smokerack", "smoking and drying rack", "4 x 3", "", "-", "camp 2, riverbank 1, yard 1, store 1, kitchen 1", "0-4", "*", "floor"),
+        ("limekiln", "lime kiln", "10 x 10", "hazard:fire", "1197-1950", "field 1, yard 1", "1-4", "*", "outdoor"),
+        ("tenter", "tenter frame with cloth", "20 x 4", "", "1197-1900", "weaver 1, field 1", "1-4", "central,atlantic,northern,mediterranean", "outdoor"),
+        ("tanpits", "tanning pits", "10 x 8", "trap:pit", "-1950", "tannery 3", "0-3", "*", "outdoor"),
+        ("brewcopper", "brewing copper", "5 x 5", "hazard:fire", "-", "brewhouse 3", "1-4", "*", "floor"),
+        ("glassfurnace", "glass furnace", "8 x 8", "hazard:fire", "-", "workshop 1, factory 1", "2-5", "*", "floor"),
+        ):
+    o(mid, mname, F, msize, mtag, myears, mwhere, mw, mst, mmount)
+
 def rows(family=None):
     return [r for r in CENSUS if family is None or r.family == family]
 
@@ -535,8 +638,7 @@ def check():
     """The census's own test: no duplicate ids, every room it names is a room of some place, every style known, every
     interactable tag of a known family, every year span readable."""
     bad, seen = [], set()
-    rooms = set(ALL_ROOMS) | set(ROOMS) | {"*", "bakehouse", "smithy", "pottery", "weaver", "carpenter", "butchery", "tannery", "dyer", "brewhouse", "press", "mill", "dairy",
-                              "printer", "tailor", "studio", "scullery", "bathroom", "refectory", "charnel", "roof"}
+    rooms = {r for v in ROOMS.values() for r in v} | set(ROOMS) | {"*"}
     fams = {"opening", "container", "hide", "light", "cover", "hazard", "sacred", "watch", "climb", "target", "trap", "clue", "mount", "break"}
     for r in CENSUS:
         if r.id in seen: bad.append(f"{r.id}: listed twice")
@@ -559,7 +661,10 @@ EXTRA_ROOMS = ["bakehouse", "smithy", "pottery", "weaver", "carpenter", "butcher
 ROOMS["workplace"] += ["bakehouse", "smithy", "pottery", "weaver", "carpenter", "butchery", "tannery", "dyer", "brewhouse", "press", "mill", "dairy", "printer", "tailor", "studio"]
 ROOMS["home"] += ["scullery", "bathroom"]
 ROOMS["church"] += ["refectory", "charnel"]
-ROOMS["street"] += ["roof"]
+ROOMS["street"] += ["roof", "forecourt"]
+ROOMS["workplace"] += ["factory", "garage", "laundry", "barber", "gym"]
+ROOMS["home"] += ["utility"]
+ROOMS["tavern"] += ["club"]
 ALL_ROOMS = sorted({r for v in ROOMS.values() for r in v})
 
 if __name__ == "__main__":
