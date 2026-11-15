@@ -14,8 +14,8 @@
    "applyRenown"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/signatures.mjs:1026",
-   "modules/wodx-chronicle/scripts/signatures.mjs:1027"
+   "modules/wodx-chronicle/scripts/signatures.mjs:1030",
+   "modules/wodx-chronicle/scripts/signatures.mjs:1031"
   ]
  },
  {
@@ -52,7 +52,7 @@
    "frenzy"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/signatures.mjs:273"
+   "modules/wodx-chronicle/scripts/signatures.mjs:275"
   ]
  },
  {
@@ -61,7 +61,7 @@
    "garouInfo"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/signatures.mjs:104"
+   "modules/wodx-chronicle/scripts/signatures.mjs:105"
   ]
  },
  {
@@ -118,7 +118,7 @@
    "masqEntries"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/signatures.mjs:1051"
+   "modules/wodx-chronicle/scripts/signatures.mjs:1055"
   ]
  },
  {
@@ -158,7 +158,7 @@
    "recordBreach"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/signatures.mjs:555"
+   "modules/wodx-chronicle/scripts/signatures.mjs:557"
   ]
  },
  {
@@ -318,8 +318,8 @@
   ],
   "uses": [
    "modules/wodx-actions/scripts/main.js:1706",
-   "modules/wodx-chronicle/scripts/signatures.mjs:1006",
-   "modules/wodx-chronicle/scripts/signatures.mjs:1126",
+   "modules/wodx-chronicle/scripts/signatures.mjs:1010",
+   "modules/wodx-chronicle/scripts/signatures.mjs:1130",
    "modules/wodx-combat/scripts/main.js:2454",
    "modules/wodx-interactables/scripts/living.mjs:30",
    "modules/wodx-senses/scripts/main.mjs:159",
@@ -2093,9 +2093,9 @@
   ],
   "uses": [
    "modules/wodx-chronicle/scripts/legends.mjs:51",
-   "modules/wodx-chronicle/scripts/pod.mjs:49",
-   "modules/wodx-chronicle/scripts/signatures.mjs:78",
-   "modules/wodx-chronicle/scripts/signatures.mjs:540",
+   "modules/wodx-chronicle/scripts/pod.mjs:50",
+   "modules/wodx-chronicle/scripts/signatures.mjs:79",
+   "modules/wodx-chronicle/scripts/signatures.mjs:542",
    "modules/wodx-chronicle/scripts/traits.mjs:26",
    "modules/wodx-chronicle/scripts/when.mjs:59",
    "modules/wodx-npc/scripts/carry-aftercare.mjs:34",
@@ -2183,7 +2183,7 @@
    "isAnimal"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/ghoul-need.mjs:44"
+   "modules/wodx-chronicle/scripts/ghoul-need.mjs:46"
   ]
  },
  {
@@ -2193,7 +2193,7 @@
    "kindOf"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/ghoul-need.mjs:45"
+   "modules/wodx-chronicle/scripts/ghoul-need.mjs:47"
   ]
  },
  {
@@ -2215,7 +2215,7 @@
    "lifespan"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/ghoul-need.mjs:144"
+   "modules/wodx-chronicle/scripts/ghoul-need.mjs:149"
   ]
  },
  {
@@ -2226,7 +2226,7 @@
    "monthlyNeed"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/ghoul-need.mjs:46"
+   "modules/wodx-chronicle/scripts/ghoul-need.mjs:48"
   ]
  },
  {
@@ -2257,7 +2257,7 @@
    "lifepathThreads"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/pod.mjs:463",
+   "modules/wodx-chronicle/scripts/pod.mjs:468",
    "modules/wodx-storyteller/scripts/threads.mjs:75"
   ]
  },
@@ -2732,7 +2732,7 @@
    "find"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/signatures.mjs:375"
+   "modules/wodx-chronicle/scripts/signatures.mjs:377"
   ]
  },
  {
@@ -2753,7 +2753,7 @@
    "substanceOf"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/signatures.mjs:377"
+   "modules/wodx-chronicle/scripts/signatures.mjs:379"
   ]
  },
  {
@@ -2955,7 +2955,7 @@
   ],
   "uses": [
    "modules/wodx-actions/scripts/social.js:316",
-   "modules/wodx-chronicle/scripts/signatures.mjs:629",
+   "modules/wodx-chronicle/scripts/signatures.mjs:631",
    "modules/wodx-chronicle/scripts/when.mjs:165",
    "modules/wodx-storyteller/scripts/owners.mjs:31"
   ]
@@ -3025,7 +3025,7 @@
   ],
   "uses": [
    "modules/wodx-actions/scripts/social.js:317",
-   "modules/wodx-chronicle/scripts/signatures.mjs:1443",
+   "modules/wodx-chronicle/scripts/signatures.mjs:1447",
    "modules/wodx-chronicle/scripts/when.mjs:66",
    "modules/wodx-creation/scripts/first-night.mjs:211",
    "modules/wodx-npc/scripts/bonds.mjs:26",
@@ -4182,7 +4182,7 @@
    "hunters"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/signatures.mjs:922"
+   "modules/wodx-chronicle/scripts/signatures.mjs:926"
   ]
  },
  {
@@ -4192,7 +4192,7 @@
    "filesOn"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/signatures.mjs:1053"
+   "modules/wodx-chronicle/scripts/signatures.mjs:1057"
   ]
  },
  {
@@ -4224,9 +4224,9 @@
   ],
   "uses": [
    "modules/wodx-actions/scripts/social.js:205",
-   "modules/wodx-chronicle/scripts/pod.mjs:175",
-   "modules/wodx-chronicle/scripts/signatures.mjs:574",
-   "modules/wodx-chronicle/scripts/signatures.mjs:593",
+   "modules/wodx-chronicle/scripts/pod.mjs:180",
+   "modules/wodx-chronicle/scripts/signatures.mjs:576",
+   "modules/wodx-chronicle/scripts/signatures.mjs:595",
    "modules/wodx-npc/scripts/hearts.mjs:305",
    "modules/wodx-npc/scripts/legacy.mjs:84",
    "modules/wodx-npc/scripts/legacy.mjs:213",
@@ -4378,7 +4378,7 @@
    "reach"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/law-punish.mjs:79"
+   "modules/wodx-chronicle/scripts/law-punish.mjs:80"
   ]
  },
  {
@@ -4473,7 +4473,7 @@
   "uses": [
    "modules/wodx-actions/scripts/debts-marks.js:118",
    "modules/wodx-actions/scripts/kindred.js:481",
-   "modules/wodx-chronicle/scripts/pod.mjs:116",
+   "modules/wodx-chronicle/scripts/pod.mjs:117",
    "modules/wodx-combat/scripts/aftermath.js:138",
    "modules/wodx-npc/scripts/aftercare.mjs:215",
    "modules/wodx-npc/scripts/cults.mjs:302",
@@ -4642,22 +4642,10 @@
  {
   "target": "wodx-storyteller",
   "path": [
-   "towns",
-   "lever"
+   "towns"
   ],
   "uses": [
-   "modules/wodx-chronicle/scripts/pod.mjs:171",
-   "modules/wodx-chronicle/scripts/pod.mjs:171"
-  ]
- },
- {
-  "target": "wodx-storyteller",
-  "path": [
-   "towns",
-   "ofScene"
-  ],
-  "uses": [
-   "modules/wodx-chronicle/scripts/pod.mjs:170"
+   "modules/wodx-chronicle/scripts/pod.mjs:174"
   ]
  },
  {
@@ -4764,9 +4752,9 @@
    "modules/wodx-actions/scripts/kindred.js:446",
    "modules/wodx-actions/scripts/social.js:266",
    "modules/wodx-actions/scripts/trade.js:14",
-   "modules/wodx-chronicle/scripts/law-punish.mjs:64",
+   "modules/wodx-chronicle/scripts/law-punish.mjs:65",
    "modules/wodx-chronicle/scripts/law-tax.mjs:47",
-   "modules/wodx-chronicle/scripts/pod.mjs:163",
+   "modules/wodx-chronicle/scripts/pod.mjs:166",
    "modules/wodx-library/scripts/examine.mjs:74",
    "modules/wodx-library/scripts/gamble-use.mjs:11",
    "modules/wodx-npc/scripts/hearts.mjs:211",
@@ -4873,6 +4861,16 @@
   "uses": [
    "modules/wodx-chronicle/scripts/fronts.mjs:80",
    "modules/wodx-npc/scripts/faction-looks.mjs:13"
+  ]
+ },
+ {
+  "target": "wodx-storyteller",
+  "path": [
+   "upkeep",
+   "towns"
+  ],
+  "uses": [
+   "modules/wodx-chronicle/scripts/pod.mjs:174"
   ]
  },
  {

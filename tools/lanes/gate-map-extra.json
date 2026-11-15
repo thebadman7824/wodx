@@ -78,6 +78,12 @@
       "wodx-library",
       "wodx-actions",
       "wodx-chronicle"
+    ],
+    "gatetruthchronicle": [
+      "wodx-chronicle",
+      "wodx-storyteller",
+      "wodx-actions",
+      "wodx-npc"
     ]
   },
   "remove": {},
