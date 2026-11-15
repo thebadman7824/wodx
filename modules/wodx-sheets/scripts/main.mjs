@@ -31,6 +31,7 @@ import * as CR from "../../wodx-actions/scripts/c20-rules.js";
 import * as SR from "./sheet-rules.mjs";
 import * as X from "./extras.mjs";
 import * as AN from "./anachronism.mjs";
+import * as SROLL from "./sheet-rolls.mjs";
 
 const MOD = "wodx-sheets", ACT = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -527,9 +528,36 @@ function sheetToolsButton(app, html) {
 }
 Hooks.on("renderActorSheet", sheetToolsButton);
 
+// B6178: the Nature button and the Derangements' Set off link on every sheet whose actor has a Nature, the system's own
+// layout too (a plain mortal, a Hunter outside the Reckoning, a Changing Breed, a Creature): the WoDX layouts carry
+// them in their buttons row and Derangements block already
+function natureRow(app, html) {
+  const el = html?.[0] ?? html ?? app?.element?.[0], actor = app?.actor ?? app?.document;
+  if (!actor || !el?.querySelector || !game.wodxActions?.nature) return;
+  if (!actor.system || !("nature" in actor.system)) return;
+  if (el.querySelector("[data-roll='nature']")) return;
+  const core = el.querySelector(".tab.core") ?? el.querySelector(".sheet-body");
+  if (!core) return;
+  const row = document.createElement("div");
+  row.className = "wodx-actions-row wodx-system-row";
+  const btn = (roll, icon, label, hint) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "wodx-roll"; b.dataset.roll = roll; b.dataset.tooltip = hint;
+    b.innerHTML = `<i class="fas ${icon}" aria-hidden="true"></i> `; b.append(document.createTextNode(label));
+    b.addEventListener("click", ev => { ev.preventDefault(); game.wodxActions?.[roll]?.({ actor }); });
+    return b;
+  };
+  row.append(btn("nature", BUTTONS.nature[0], BUTTONS.nature[1], "Acting to their Nature: a Willpower point back"));
+  if ("derangement" in actor.system && game.wodxActions?.derangement)
+    row.append(btn("derangement", "fa-brain", "Set off a derangement", "A derangement in the Derangements box is set off: roll Willpower to hold it"));
+  core.prepend(row);
+}
+Hooks.on("renderActorSheet", natureRow);
+
 Hooks.once("init", async () => {
   X.setup();
   AN.setup();
+  SROLL.setup();
   game.settings.register(MOD, "sheetTools", {
     name: "Sheet tools button", hint: "A labelled button in the sheet's title bar that lists the icon buttons there with their names.",
     scope: "client", config: true, type: String, default: "always",
@@ -552,6 +580,6 @@ Hooks.once("init", async () => {
   const page2 = await tpl.getTemplate(`modules/${MOD}/templates/page2.hbs`);
   Handlebars.registerPartial("wodxBlock", block);
   Handlebars.registerPartial("wodxPage2", page2);
-  game.modules.get(MOD).api = { version: "0.22.0", extras: X, rules: SR, sheetFor, viewFor,
+  game.modules.get(MOD).api = { version: "0.22.0", extras: X, rules: SR, sheetFor, viewFor, sheetRollMods: SROLL.modsFor,
     anachronism: { check: AN.check, scan: AN.scan, report: AN.report, keep: AN.keep, scanMaps: AN.scanMaps, mapThings: AN.mapThings, keepThing: AN.keepThing, showThing: AN.showThing, everything: AN.everything, bringForward: AN.bringForward, undoForward: AN.undoForward } };
 });
