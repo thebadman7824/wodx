@@ -16,7 +16,6 @@ import {gate} from "./kit.mjs";
 const C = "wodx-creation", ST = "wodx-storyteller";
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const settle = async (fn, ms = 6000) => { const t = Date.now(); while ( Date.now() - t < ms ) { if ( await fn() ) return true; await wait(150); } return !!(await fn()); };
-const WEEK = 7 * 86400;
 
 export async function run() {
   const G = gate("gatelearning");
@@ -58,9 +57,11 @@ export async function run() {
     await G.step("3. the study ends and the trait rises", async () => {
       if ( !rec ) return G.ok("3. the study ends and the trait rises", false, {error: "no study"});
       // Easy rolls so the gate does not wait on luck; the rule under test is what happens at the end
-      await learner.update({[`flags.${ST}.tasks.${rec.taskId}.diff`]: 2, [`flags.${ST}.tasks.${rec.taskId}.goal`]: 1});
+      // The roll is made due now, as gateowners does: moving the clock starts the hook's own tick, which holds the next
+      const due = () => learner.update({[`flags.${ST}.tasks.${rec.taskId}.next`]: game.time.worldTime});
+      await learner.update({[`flags.${ST}.tasks.${rec.taskId}.diff`]: 2, [`flags.${ST}.tasks.${rec.taskId}.goal`]: 1, [`flags.${ST}.tasks.${rec.taskId}.dice`]: 10});
       for ( let i = 0; i < 6 && learner.flags?.[ST]?.tasks?.[rec.taskId]?.status !== "done"; i++ ) {
-        await game.time.advance(WEEK);
+        await due();
         await S.tasks.tick({force: true});
       }
       await settle(() => Number(learner.system.abilities.occult.value) === 1 && !studying());

@@ -17,7 +17,8 @@ export const SOURCE_KINDS = {
   book: "A book",
   course: "A school or course",
   practice: "Practice on their own",
-  storyteller: "A teacher the Storyteller finds"
+  storyteller: "A teacher the Storyteller finds",
+  spirit: "A spirit who teaches it"
 };
 
 /** Normalise a trait name or key for matching ("Animal Ken" and "animalken" match; "crafts" and "craft" match). */
@@ -60,6 +61,43 @@ export function sourcesFor(p, {line = "mortal"} = {}) {
     case "newDiscipline":
       if ( isSorcery(p.label) ) return {allowed: ["teacher", "book"], why: "A first dot of blood sorcery comes from a master or their texts (V20 pdf 131)."};
       return {allowed: ["teacher"], why: "A new Discipline needs a teacher (V20 pdf 131, pdf 136)."};
+    // B6273: every line's own powers
+    case "stat": return statSources(p);
+    case "power": case "newPower": return powerSources(p);
+    default:
+      return {allowed: ["teacher", "practice"], why: ""};
+  }
+}
+
+/** Rage, Gnosis, Arete, Glamour, Faith, Balance and the Chi Virtues (B6273). */
+function statSources(p) {
+  switch ( norm(p?.key) ) {
+    case "gnosis": return {allowed: ["spirit", "teacher", "practice"], why: "Gnosis grows with the spirits' regard and time spent among them (W20 pdf 246)."};
+    case "arete": return {allowed: ["teacher", "practice"], why: "Arete rises with insight: a mentor's guidance or the mage's own seeking (M20 pdf 337 to 338)."};
+    case "faith": return {allowed: ["practice"], why: "Faith grows from the worship and the deeds of the Fallen themselves (Demon: The Fallen pdf 165)."};
+    default: return {allowed: ["teacher", "practice"], why: "Grows from what the character lives through, or faster with a guide."};
+  }
+}
+
+/** Spheres, Arts, Realms, Arcanoi, Lores, Hekau, Paths of sorcery and Gifts (B6273). */
+function powerSources(p) {
+  const first = p?.kind === "newPower" || !(Number(p?.current) > 0);
+  switch ( p?.cat ) {
+    case "gift":
+      return {allowed: ["spirit", "teacher"], why: "A Gift is taught by a spirit (summoned at a caern, a night's work) or by a Garou who knows it (a lunar month at least; W20 pdf 153 to 154)."};
+    case "sphere":
+      return {allowed: ["teacher", "book"], why: "A Sphere is taught by a mentor who knows it better, of the mage's own Tradition or sect; another sect's teacher takes far longer (M20 pdf 338)."};
+    case "art": case "realm":
+      return first ? {allowed: ["teacher"], why: "A first dot of an Art or Realm is taught by one of the fae who knows it (C20 pdf 177)."}
+        : {allowed: ["teacher", "practice"], why: "An Art or Realm grows with use, or faster with a fae teacher (C20 pdf 177)."};
+    case "arcanos":
+      return first ? {allowed: ["teacher"], why: "An Arcanos is taught by a wraith who knows it, most often of its Guild (Wraith 20th pdf 367)."}
+        : {allowed: ["teacher", "practice"], why: "An Arcanos grows with use, or faster with a Guild teacher (Wraith 20th pdf 367)."};
+    case "lore":
+      return {allowed: ["teacher", "practice"], why: "A Lore is remembered from before the Fall, alone or with another of the Fallen to wake the memory (Demon: The Fallen pdf 165)."};
+    case "hekau": case "numina":
+      return first ? {allowed: ["teacher", "book"], why: "A first dot of a path of magic comes from a master or the texts that hold it."}
+        : {allowed: ["teacher", "book", "practice"], why: "A path of magic grows with practice, a master or its texts."};
     default:
       return {allowed: ["teacher", "practice"], why: ""};
   }
@@ -150,7 +188,9 @@ export const bookTeaches = (b, p) => !!b && (b.traits.includes(norm(p?.label)) |
 /* -------------------------------------------------------------------- */
 
 /** Successes the study needs: twice the new rating, four times for the esoteric (B6232). */
-export const goalOf = p => Math.max(2, (Number(p?.next) || 1) * (isEsoteric(p) || p?.kind === "newDiscipline" || (p?.kind === "discipline" && p?.discipline === "other") ? 4 : 2));
+export const goalOf = p => Math.max(2, (Number(p?.next) || 1) * (isEsoteric(p) || p?.kind === "newDiscipline" || p?.kind === "newPower" || p?.kind === "power" || (p?.kind === "discipline" && p?.discipline === "other") ? 4 : 2));
+/** A Gift is bought whole: its level sets the study, not a next dot (B6273). */
+const giftGoal = p => Math.max(2, 2 * (Number(p?.level) || 1));
 
 /**
  * The plan for one source (B6232): {kind, name, id, interval, diff, dice, goal, ok, why}.
@@ -164,7 +204,9 @@ export function planFor(p, src = {}) {
     case "teacher": {
       const r = Number(src.rating) || 0;
       if ( r < next ) return {...base, ok: false, why: `${src.name ?? "The teacher"} has only ${r}; a teacher must know it to ${next} (V20 Dark Ages pdf 189)`, interval: "week", diff: 6, dice: 0};
-      return {...base, interval: "week", diff: r >= next + 2 ? 5 : 6, dice: Math.max(1, Math.min(3, r - current)), fine: r >= next + 2};
+      // B6273: a mentor of another sect takes far longer (M20 pdf 338): three times the successes
+      const g = p?.cat === "gift" ? Math.max(4, giftGoal(p) * 2) : (src.otherSect ? goal * 3 : goal);
+      return {...base, goal: g, interval: "week", diff: r >= next + 2 ? 5 : 6, dice: Math.max(1, Math.min(3, r - current)), fine: r >= next + 2, ...(src.otherSect ? {why: "Of another sect: three times as long"} : {})};
     }
     case "book": case "course": {
       const q = QUALITY[src.quality] ?? QUALITY.good;
@@ -174,6 +216,9 @@ export function planFor(p, src = {}) {
       return {...base, interval: "month", diff: 7, dice: 0};
     case "storyteller":
       return {...base, interval: "week", diff: 6, dice: 1, pending: true};
+    // B6273: a spirit teaches a Gift in a night (W20 pdf 153); a Garou teacher takes a lunar month at least
+    case "spirit":
+      return {...base, goal: p?.cat === "gift" ? giftGoal(p) : goal, interval: "day", diff: 6, dice: 1};
     default:
       return {...base, ok: false, why: "Name where it is learned", interval: "week", diff: 6, dice: 0};
   }
@@ -209,8 +254,8 @@ export const openLearning = rec => Object.entries(rec ?? {}).filter(([, r]) => r
 /** Is this trait being learned already? One study at a time for each trait. */
 export function learningFor(rec, kind, key, label = "") {
   const k = norm(label);
-  return openLearning(rec).find(r => (r.purchase?.kind === kind && r.purchase?.key === key) || (k && ["newAbility", "newDiscipline"].includes(kind) && norm(r.purchase?.label) === k)) ?? null;
+  return openLearning(rec).find(r => (r.purchase?.kind === kind && r.purchase?.key === key) || (k && ["newAbility", "newDiscipline", "newPower"].includes(kind) && norm(r.purchase?.label) === k)) ?? null;
 }
 
 /** The line for the spend's experience log entry. */
-export const logName = (p, src, done = false) => `${done ? "" : "Learning: "}${p.kind === "newDiscipline" || p.kind === "newAbility" ? `${p.label} (new)` : `${p.label} ${p.current} → ${p.next}`}${src?.name ? `, ${done ? "learned " : ""}from ${src.kind === "practice" ? "practice" : src.name}` : ""}`;
+export const logName = (p, src, done = false) => `${done ? "" : "Learning: "}${p.kind === "newDiscipline" || p.kind === "newAbility" || p.kind === "newPower" ? `${p.label} (new)` : `${p.label} ${p.current} → ${p.next}`}${src?.name ? `, ${done ? "learned " : ""}from ${src.kind === "practice" ? "practice" : src.name}` : ""}`;

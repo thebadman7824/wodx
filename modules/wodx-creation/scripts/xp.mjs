@@ -1,8 +1,11 @@
-import {MODULE_ID, esc, lineOf, xpTotals, recheck, applyPurchase, kindLabel, payerOf, canSpendFor} from "./actor-data.mjs";
+import {MODULE_ID, esc, spendLine, xpTotals, recheck, applyPurchase, kindLabel, payerOf, canSpendFor} from "./actor-data.mjs";
 import {byTheBook} from "./rules.mjs";
 import {dateLabel} from "./lineage.mjs";
 import * as Learn from "./learn.mjs";
 import {SOURCE_KINDS} from "./learn-rules.mjs";
+import {LINE_XP} from "./lines-xp-rules.mjs";
+import {XP} from "../data/vampire.mjs";
+import {labelOf} from "./lines.mjs";
 
 /**
  * The experience log. Awards and spends are upstream Experience items (so the sheet's totals stay right), each
@@ -15,7 +18,7 @@ const SOCKET = `module.${MODULE_ID}`;
 const chronicle = () => game.modules.get("wodx-chronicle")?.api;
 const isActiveGM = () => !!game.user?.isGM && game.users.activeGM?.id === game.user.id;
 
-const describe = p => (p.kind === "newDiscipline" || p.kind === "newAbility")
+const describe = p => (p.kind === "newDiscipline" || p.kind === "newAbility" || p.kind === "newPower")
   ? `${kindLabel(p.kind)}: ${p.label}` : `${p.label} ${p.current} → ${p.next}`;
 
 /** GM: give experience to characters. */
@@ -87,7 +90,10 @@ export async function requestSpend(actor, purchase) {
 }
 
 const slimSource = s => (s?.kind ? {kind: String(s.kind), id: String(s.id ?? ""), name: String(s.name ?? "").slice(0, 120), rating: Number(s.rating) || 0, quality: String(s.quality ?? ""), interval: String(s.interval ?? "")} : null);
-const slim = p => ({kind: p.kind, key: p.key, label: p.label, current: p.current, next: p.next, cost: p.cost, group: p.group, ...(p.source?.kind ? {source: slimSource(p.source)} : {})});
+const slimItem = it => (it && typeof it === "object" ? {name: String(it.name ?? "").slice(0, 120), type: String(it.type ?? "Power"), img: it.img ? String(it.img) : undefined,
+  system: foundry.utils.deepClone(it.system ?? {}), flags: foundry.utils.deepClone(it.flags ?? {})} : null);
+const slim = p => ({kind: p.kind, key: p.key, label: p.label, current: p.current, next: p.next, cost: p.cost, group: p.group,
+  ...(p.kind === "newPower" || p.kind === "power" ? {cat: p.cat, own: !!p.own, level: p.level, item: slimItem(p.item)} : {}), ...(p.source?.kind ? {source: slimSource(p.source)} : {})});
 
 /** Active GM: a player's request arrives. Check it, then queue it. */
 export async function onRequest(payload) {
@@ -116,9 +122,16 @@ export async function onRequest(payload) {
   await api.approvals.addToQueue({
     id: foundry.utils.randomID(), type: XP_TYPE, key: `xp:${actor.id}:${now.kind}:${now.key}`,
     title: `${actor.name}: ${describe(now)} for ${now.cost} experience`,
-    detail: `${kindLabel(now.kind)}. ${payerOf(actor) === actor ? actor.name : `Paid by ${payerOf(actor).name}, who`} has ${xpTotals(payerOf(actor)).available} experience to spend. Cost by ${lineOf(actor)} rules.${srcLine}`,
+    detail: `${kindLabel(now.kind)}. ${payerOf(actor) === actor ? actor.name : `Paid by ${payerOf(actor).name}, who`} has ${xpTotals(payerOf(actor)).available} experience to spend. Cost by ${chartName(actor)}.${srcLine}`,
     data: {actorId: actor.id, purchase: slim({...now, source: payload.purchase.source})}, from: user.id, createdAt: Date.now(), worldTime: game.time.worldTime
   });
+}
+
+/** Which chart priced it, for the Storyteller's queue (B6271). */
+function chartName(actor) {
+  const line = spendLine(actor);
+  const src = XP[line]?.source ?? LINE_XP[line]?.source ?? "";
+  return `${labelOf(line) || line} rules${src ? ` (${src})` : ""}`;
 }
 
 /** Approval handler: re-check and spend. A failed check is reported to the GM and the player. */

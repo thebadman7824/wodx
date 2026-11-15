@@ -13,6 +13,7 @@ import * as animalGhouls from "./animal-ghoul-rules.mjs";
 import * as xp from "./xp.mjs";
 import * as learn from "./learn.mjs";
 import * as learnRules from "./learn-rules.mjs";
+import * as lines from "./lines.mjs";
 import {CreationApp, SpendApp, awardDialog} from "./apps.mjs";
 import * as time from "./time.mjs";
 import {PassYearsApp} from "./pass-years.mjs";
@@ -80,6 +81,8 @@ function start() {
   const api = {
     rules, data, lineage, change, xp, time,
     // B6230: learning from a teacher, a book, a school or practice
+    // B6270: every line, one key each, for any WoDX module
+    lines: {of: lines.splatOf, info: lines.lineInfo, family: lines.familyOf, label: lines.labelOf, keys: lines.KEYS},
     learn: {rules: learnRules, choices: learn.choicesFor, resolve: learn.resolveSource, begin: learn.begin, records: learn.recordsOf, needsSource: learn.needsSource,
       waived: learn.waived, setWaived: learn.setWaived, rating: learn.ratingOf, reconcile: learn.reconcile, onTaskDone: learn.onTaskDone, choose: learn.chooseSource},
     passYears: () => PassYearsApp.open(),

@@ -7,7 +7,8 @@
  * The Storyteller can turn the rule off for the world (setting learning) or waive it for one character for a story
  * (flag learnWaived); then a spend raises the trait at once, as before.
  */
-import {MODULE_ID, esc, lineOf, payerOf, disciplinesOf, clanOf, vampireEra, applyPurchase, disciplineItem} from "./actor-data.mjs";
+import {MODULE_ID, esc, lineOf, payerOf, disciplinesOf, clanOf, vampireEra, applyPurchase, disciplineItem, powersOf} from "./actor-data.mjs";
+import {itemIsCat} from "./lines-xp-rules.mjs";
 import {clanDisciplines} from "./rules.mjs";
 import * as L from "./learn-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
@@ -70,6 +71,14 @@ export function ratingOf(a, p) {
     case "virtue": return num(sys.advantages?.virtues?.[p.key]?.permanent);
     case "road": return num(sys.advantages?.path?.permanent);
     case "willpower": return num(sys.advantages?.willpower?.permanent ?? sys.willpower?.permanent);
+    // B6273: every line's own ratings and powers
+    case "stat": return num(sys.advantages?.[p.key]?.permanent);
+    case "power": case "newPower": {
+      if ( p.cat === "gift" ) return [...(a?.items ?? [])].some(i => itemIsCat(i, "gift") && L.norm(i.name) === label) ? 1 : 0;
+      if ( p.cat === "sphere" && String(p.key).startsWith("sphere:") ) return num(sys.spheres?.[p.key.slice(7)]?.value);
+      const pw = powersOf(a, p.cat).find(x => L.norm(x.name) === label);
+      return pw ? num(pw.value) : 0;
+    }
     default: return 0;
   }
 }
@@ -85,6 +94,13 @@ const inClan = (actor, p) => {
   if ( lineOf(actor) !== "vampire" ) return true;
   const list = clanDisciplines(clanOf(actor), vampireEra()).map(d => L.norm(d));
   return clanOf(actor)?.id === "caitiff" || list.includes(L.norm(p.label));
+};
+
+/** A Sphere taught across sects takes far longer (M20 pdf 338). Both must name a Tradition, Convention or sect. */
+const otherSect = (learner, teacher, p) => {
+  if ( p?.cat !== "sphere" ) return false;
+  const of = a => L.norm(a?.system?.affiliation || a?.system?.custom?.affiliation || "");
+  return !!of(learner) && !!of(teacher) && of(learner) !== of(teacher);
 };
 
 /* -------------------------------------------- */
@@ -117,9 +133,10 @@ export function choicesFor(actor, p, {user = game.user} = {}) {
   };
   for ( const {a, rating} of teachersFor(actor, q, {user}) ) {
     const closed = L.needsBlood(q, {line}) && (a.type !== actor.type || num(a.system?.advantages?.bloodpool?.temporary) < 1) ? "A new out-of-clan Discipline needs a Kindred teacher with a blood point to feed (V20 pdf 136)" : "";
-    push({kind: "teacher", id: a.id, name: a.name, rating}, {closed});
+    push({kind: "teacher", id: a.id, name: a.name, rating, ...(otherSect(actor, a, q) ? {otherSect: true} : {})}, {closed});
   }
   if ( allowed.includes("teacher") ) push({kind: "storyteller", name: L.SOURCE_KINDS.storyteller});
+  if ( allowed.includes("spirit") ) push({kind: "spirit", name: q.cat === "gift" ? "A spirit summoned to teach the Gift" : "The spirits' regard"});
   for ( const it of actor.items ?? [] ) {
     const b = L.bookOf(it);
     if ( !b ) continue;
@@ -182,15 +199,16 @@ export function resolveSource(actor, p, src) {
   if ( src.kind === "storyteller" ) {
     const best = teachersFor(actor, q, {user: game.user, limit: 40}).find(({a}) => !L.needsBlood(q, {line}) || (a.type === actor.type && num(a.system?.advantages?.bloodpool?.temporary) >= 1));
     if ( !best ) return {ok: false, why: `No one in the chronicle knows ${p.label} to ${p.next}, so there is no teacher to find.`};
-    src = {kind: "teacher", id: best.a.id, name: best.a.name, rating: best.rating, found: true};
+    src = {kind: "teacher", id: best.a.id, name: best.a.name, rating: best.rating, found: true, ...(otherSect(actor, best.a, q) ? {otherSect: true} : {})};
   }
   if ( !allowed.includes(src.kind) ) return {ok: false, why};
   if ( src.kind === "teacher" ) {
     const a = game.actors.get(src.id);
     if ( !a ) return {ok: false, why: "That teacher is gone."};
-    src = {...src, name: a.name, rating: ratingOf(a, q)};
+    src = {...src, name: a.name, rating: ratingOf(a, q), otherSect: otherSect(actor, a, q)};
     if ( L.needsBlood(q, {line}) && (a.type !== actor.type || num(a.system?.advantages?.bloodpool?.temporary) < 1) ) return {ok: false, why: "The teacher must be Kindred with a blood point to feed (V20 pdf 136)."};
   }
+  if ( src.kind === "spirit" ) src = {...src, name: src.name || L.SOURCE_KINDS.spirit};
   if ( src.kind === "book" ) {
     const it = actor.items.get(src.id);
     const b = it ? L.bookOf(it) : null;
@@ -237,7 +255,8 @@ export async function begin(actor, purchase, source, {by = game.user.name, time 
     note: `Experience paid (${purchase.cost}). The trait rises when this is finished. ${L.SOURCE_KINDS[src.kind]}: ${src.name}.`, opts: {learn: id}});
   const [fx] = await actor.createEmbeddedDocuments("ActiveEffect", [{name: `Studying ${purchase.label}`, img: IMG, statuses: [STATUS],
     description: `<p>Learning ${esc(purchase.label)} ${purchase.next} from ${esc(src.name)}.</p>`, flags: {[MODULE_ID]: {learning: id}}}]);
-  await actor.update({[`flags.${MODULE_ID}.learning.${id}`]: {purchase: {kind: purchase.kind, key: purchase.key, label: purchase.label, current: purchase.current, next: purchase.next, cost: purchase.cost, group: purchase.group ?? ""},
+  await actor.update({[`flags.${MODULE_ID}.learning.${id}`]: {purchase: {kind: purchase.kind, key: purchase.key, label: purchase.label, current: purchase.current, next: purchase.next, cost: purchase.cost, group: purchase.group ?? "",
+      ...(purchase.cat ? {cat: purchase.cat, own: !!purchase.own, level: purchase.level ?? 1, item: purchase.item ?? null} : {})},
     source: {kind: src.kind, id: src.id ?? "", name: src.name, rating: src.rating ?? null, quality: src.quality ?? ""}, taskId: task?.id ?? "", xpItemId: xpItem?.id ?? "", payerId: payer.id,
     effectId: fx?.id ?? "", started: time, by, done: false}});
   float(actor, `Studying ${purchase.label}`);
@@ -246,7 +265,7 @@ export async function begin(actor, purchase, source, {by = game.user.name, time 
     content: `<div class="wodx-card wodx-learn"><h3>${esc(actor.name)} begins to learn ${esc(purchase.label)}</h3>
       <p>${esc(purchase.label)} ${purchase.current} → ${purchase.next}, from ${esc(src.kind === "practice" ? "practice alone" : src.name)}${src.found ? " (found by the Storyteller)" : ""}. ${purchase.cost} experience is spent now.</p>
       <p>A long task: ${pool} dice at difficulty ${plan.diff}, ${plan.goal} successes, one roll each ${plan.interval === "day" ? "night" : plan.interval}; ${esc(L.timeWords(plan, pool))}.</p>
-      <p class="wodx-quiet">V20 pdf 131; V20 Dark Ages pdf 189. Stop the task in Long tasks to give the experience back.</p></div>`});
+      <p class="wodx-quiet">${esc(L.sourcesFor(q, {line: lineOf(actor)}).why)} Stop the task in Long tasks to give the experience back.</p></div>`});
   return {ok: true, learning: id, source: src, plan};
 }
 
@@ -261,6 +280,7 @@ export async function onTaskDone({actor, task} = {}) {
   if ( now < p.next ) {
     if ( p.kind === "newDiscipline" && !disciplinesOf(actor).some(d => L.norm(d.name) === L.norm(p.label)) ) await actor.createEmbeddedDocuments("Item", [disciplineItem(p.label, 1)]);
     else if ( p.kind === "newAbility" && now === 0 ) await applyPurchase(actor, {...p, current: 0});
+    else if ( p.kind === "newPower" && now === 0 ) await applyPurchase(actor, {...p, current: 0});
     else if ( p.kind === "newDiscipline" ) { const d = disciplinesOf(actor).find(x => L.norm(x.name) === L.norm(p.label)); await actor.items.get(d.id)?.update({"system.value": p.next, "system.level": p.next}); }
     else await applyPurchase(actor, {...p, kind: p.kind, current: p.next - 1});
   }

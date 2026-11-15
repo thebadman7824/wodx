@@ -1,4 +1,4 @@
-import {MODULE_ID, esc, lineOf, xpTotals, purchaseOptions, newDisciplineOption, newAbilityOption, kindLabel, lineage, generationOf,
+import {MODULE_ID, esc, lineOf, spendLine, xpTotals, purchaseOptions, newDisciplineOption, newAbilityOption, newPowerOption, kindLabel, lineage, generationOf,
   clanNameOf, domitorOf, allyOf, patronOf, payerOf, canSpendFor, spendableFor} from "./actor-data.mjs";
 import {embraceDialog, vitaeDialog} from "./change-of-state.mjs";
 import {firstChangeDialog} from "./first-change.mjs";
@@ -10,6 +10,8 @@ import {needsSource, waived, setWaived, recordsOf, IMG} from "./learn.mjs";
 import {openLearning} from "./learn-rules.mjs";
 import {writeLineageJournal, ordinal} from "./lineage.mjs";
 import {XP} from "../data/vampire.mjs";
+import * as LX from "./lines-xp-rules.mjs";
+import {splatOf, labelOf} from "./lines.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
 import {PassYearsApp} from "./pass-years.mjs";
 import {PeopleApp} from "./people.mjs";
@@ -21,9 +23,12 @@ const byName = (a, b) => a.name.localeCompare(b.name);
 const isPC = a => !!a.hasPlayerOwner;
 
 function describeActor(a) {
-  if ( lineOf(a) === "vampire" ) return `${clanNameOf(a) || "Vampire"}, ${generationOf(a) ? ordinal(generationOf(a)) : "?"}`;
+  if ( lineOf(a) === "vampire" && splatOf(a) !== "kuei-jin" ) return `${clanNameOf(a) || "Vampire"}, ${generationOf(a) ? ordinal(generationOf(a)) : "?"}`;
   if ( lineOf(a) === "ghoul" ) return `Ghoul of ${domitorOf(a)?.name ?? lineage(a).domitor?.name ?? "?"}`;
-  return "Mortal";
+  // B6271: every other line by its name and what the sheet says of it
+  const key = splatOf(a), sys = a?.system ?? {};
+  const more = [sys.tribe, sys.auspice, sys.affiliation, sys.kith, sys.seeming, sys.house, sys.creed, sys.amenti, sys.changingbreed].map(x => String(x ?? "").trim()).filter(Boolean)[0];
+  return key && key !== "mortal" ? `${labelOf(key)}${more ? `, ${more}` : ""}` : "Mortal";
 }
 
 /* -------------------------------------------- */
@@ -96,7 +101,7 @@ export class CreationApp extends ApplicationV2 {
   showNPCs = false;
 
   roster() {
-    const all = game.actors.filter(a => lineOf(a) && !lineage(a).became && !a.flags?.["wodx-npc"]?.passerbyBase);
+    const all = game.actors.filter(a => spendLine(a) && !lineage(a).became && !a.flags?.["wodx-npc"]?.passerbyBase);
     const pcs = all.filter(isPC).sort(byName);
     const allies = all.filter(a => !isPC(a) && allyOf(a)).sort(byName);
     const others = this.showNPCs ? all.filter(a => !isPC(a) && !allyOf(a)).sort(byName) : [];
@@ -228,7 +233,7 @@ export async function setAlly(actor, {patron = null, payer = "self", observe = t
 export async function allyDialog(actor) {
   if ( !game.user.isGM ) return null;
   const {DialogV2} = foundry.applications.api;
-  const pcs = game.actors.filter(a => isPC(a) && a.id !== actor.id && lineOf(a) && !lineage(a).became).sort(byName);
+  const pcs = game.actors.filter(a => isPC(a) && a.id !== actor.id && spendLine(a) && !lineage(a).became).sort(byName);
   if ( !pcs.length ) return ui.notifications.warn("No player character to be this NPC's patron.");
   const current = allyOf(actor);
   // A ghoul of a player character's domitor is that character's by default
@@ -259,7 +264,7 @@ export async function allyDialog(actor) {
 /** Player: spend for the selected token's character, else pick from their characters and allies. */
 async function chooseAndSpend() {
   const selected = canvas?.tokens?.controlled?.[0]?.actor;
-  if ( selected && canSpendFor(selected) && lineOf(selected) ) return SpendApp.openFor(selected);
+  if ( selected && canSpendFor(selected) && spendLine(selected) ) return SpendApp.openFor(selected);
   const list = spendableFor(game.user);
   if ( !list.length ) return ui.notifications.warn("You have no character WoDX can spend experience for.");
   if ( list.length === 1 ) return SpendApp.openFor(list[0]);
@@ -289,6 +294,8 @@ export class SpendApp extends ApplicationV2 {
       buy: SpendApp.#onBuy,
       buyNewDiscipline: SpendApp.#onNewDiscipline,
       buyNewAbility: SpendApp.#onNewAbility,
+      buyNewPower: SpendApp.#onNewPower,
+      learnGift: SpendApp.#onGift,
       waive: SpendApp.#onWaive
     }
   };
@@ -298,7 +305,7 @@ export class SpendApp extends ApplicationV2 {
     actor ??= canvas?.tokens?.controlled?.[0]?.actor ?? game.user.character ?? null;
     if ( !actor ) return ui.notifications.warn("Select your character's token first.");
     if ( !canSpendFor(actor) ) return ui.notifications.warn("You can only spend experience for your own character or its allies.");
-    if ( !lineOf(actor) ) return ui.notifications.warn(`WoDX does not handle experience for a ${actor.type} yet; use the sheet.`);
+    if ( !spendLine(actor) ) return ui.notifications.warn(`WoDX does not handle experience for a ${actor.type} yet; use the sheet.`);
     const height = Math.max(360, Math.min(640, window.innerHeight - 120));
     const app = new SpendApp({id: `wodx-spend-${actor.id}`, actor, position: {height}});
     return app.render({force: true});
@@ -315,24 +322,42 @@ export class SpendApp extends ApplicationV2 {
 
   async _renderHTML() {
     const actor = this.actor;
-    const line = lineOf(actor);
+    const line = spendLine(actor);
+    const chart = XP[line] ?? LX.LINE_XP[line] ?? {};
     const payer = payerOf(actor);
     const t = xpTotals(payer);
     const verb = game.user.isGM ? "Buy" : "Ask";
     const opts = purchaseOptions(actor);
-    const groups = ["attribute", "ability", "discipline", "virtue", "road", "willpower"].map(kind => {
-      const list = opts.filter(o => o.kind === kind);
+    // B6271: each line's own ratings, then its powers by kind (Spheres, Arts, Realms, Arcanoi, Lores, Hekau, Paths)
+    const powerCats = Object.entries(chart.powers ?? {}).filter(([c]) => c !== "gift");
+    const sections = [...["attribute", "ability", "discipline", "virtue", "road", "willpower", "stat"].map(k => [k, o => o.kind === k,
+        k === "stat" ? Object.values(chart.stats ?? {}).map(v => v.label).join(", ") : kindLabel(k)]),
+      ...powerCats.map(([c, v]) => [`power:${c}`, o => o.kind === "power" && o.cat === c, `${v.label}s`])];
+    const groups = sections.map(([kind, pick, title]) => {
+      const list = opts.filter(pick);
       if ( !list.length ) return "";
-      return `<h3>${esc(kindLabel(kind))}</h3><table class="wodx-table wodx-traits"><tbody>${list.map(o => `
-        <tr class="${o.ok ? "" : "wodx-muted"}" data-search-text="${esc(o.label)}"><td>${esc(o.label)}${o.discipline === "clan" ? ' <span class="wodx-tag">clan</span>' : ""}</td>
+      return `<h3>${esc(title)}</h3><table class="wodx-table wodx-traits"><tbody>${list.map(o => `
+        <tr class="${o.ok ? "" : "wodx-muted"}" data-search-text="${esc(o.label)}"><td>${esc(o.label)}${o.discipline === "clan" ? ' <span class="wodx-tag">clan</span>' : ""}${o.kind === "power" && o.own ? ` <span class="wodx-tag">${esc(o.cat === "sphere" ? "affinity" : "own")}</span>` : ""}</td>
           <td>${o.current} → ${o.next}</td><td>${o.cost ?? "–"} xp</td>
           <td><button type="button" data-action="buy" data-kind="${o.kind}" data-key="${esc(o.key)}" ${o.ok ? "" : "disabled"} title="${esc(o.reason)}">${verb}</button></td></tr>`).join("")}
         </tbody></table>`;
     }).join("");
-    const discBlock = line === "mortal" ? "" : `
-      <div class="form-group"><label>New Discipline (${XP[line].newDiscipline} xp)</label>
+    const discBlock = !chart.newDiscipline ? "" : `
+      <div class="form-group"><label>New Discipline (${chart.newDiscipline} xp)</label>
         <input type="text" name="newDiscipline" placeholder="Name, e.g. Celerity">
         <button type="button" data-action="buyNewDiscipline">${verb}</button></div>`;
+    // B6271: a new rated power, with the own-or-other choice where the book prices them apart
+    const newCats = LX.newPowerCats(line).filter(([c]) => c !== "sphere");
+    const ownCats = newCats.filter(([c]) => LX.hasOwnPrice(line, c));
+    const powerBlock = !newCats.length ? "" : `
+      <div class="form-group"><label>New power</label>
+        <select name="newPowerCat" data-fixed>${newCats.map(([c, l]) => `<option value="${c}">${esc(l)} (${LX.lineCost({line, kind: "newPower", cat: c, own: true})}${LX.hasOwnPrice(line, c) ? ` or ${LX.lineCost({line, kind: "newPower", cat: c, own: false})}` : ""} xp)</option>`).join("")}</select>
+        <input type="text" name="newPower" placeholder="Name">
+        ${ownCats.length ? `<label><input type="checkbox" name="newPowerOwn" checked> ${esc(ownCats.map(([c]) => LX.ownWord(c)).join("; "))}</label>` : ""}
+        <button type="button" data-action="buyNewPower">${verb}</button></div>`;
+    const giftBlock = chart.powers?.gift && game.modules.get("wodx-actions")?.api?.learnGift ? `
+      <div class="form-group"><label>Gifts (${chart.powers.gift.newFlat ? `${chart.powers.gift.newFlat} xp, ${chart.powers.gift.newFlatOther} outside the breed or tribe` : `level × ${chart.powers.gift.newByLevel}, × ${chart.powers.gift.newByLevelOther} outside`})</label>
+        <button type="button" data-action="learnGift">Learn a Gift…</button></div>` : "";
     const pays = payer === actor ? "" : ` <em>Paid from ${esc(payer.name)}'s experience.</em>`;
     // B6230: what is being learned now, read from the long tasks
     const tasks = actor.flags?.["wodx-storyteller"]?.tasks ?? {};
@@ -349,15 +374,15 @@ export class SpendApp extends ApplicationV2 {
     div.className = "wodx-body";
     div.innerHTML = `
       <div class="wodx-top"><p><strong>${t.available}</strong> experience to spend (earned ${t.earned}, spent ${t.spent}).${pays}
-        Costs follow ${esc(XP[line].source)}.</p>
+        Costs follow ${esc(chart.source ?? "")}.</p>
         ${rule}${waiveBtn}
         ${searchBox("table.wodx-traits", "Search traits…", "Search traits")}</div>
       <div class="wodx-scroll">
         ${studying}
         ${groups}
         <h3>Something new</h3>
-        ${discBlock}
-        <div class="form-group"><label>New Ability (${XP[line].newAbility} xp)</label>
+        ${discBlock}${powerBlock}${giftBlock}
+        <div class="form-group"><label>New Ability (${chart.newAbility} xp)</label>
           <select name="newAbilityGroup" data-fixed><option value="talent">Talent</option><option value="skill" selected>Skill</option><option value="knowledge">Knowledge</option></select>
           <input type="text" name="newAbility" placeholder="Name, e.g. Ride">
           <button type="button" data-action="buyNewAbility">${verb}</button></div>
@@ -392,6 +417,21 @@ export class SpendApp extends ApplicationV2 {
     return this.#spend(option);
   }
 
+  static #onNewPower() {
+    const name = this.element.querySelector("input[name=newPower]")?.value;
+    const cat = this.element.querySelector("select[name=newPowerCat]")?.value;
+    const box = this.element.querySelector("input[name=newPowerOwn]");
+    const own = LX.hasOwnPrice(spendLine(this.actor), cat) ? !!box?.checked : true;
+    const option = newPowerOption(this.actor, cat, name, {own});
+    if ( !option ) return ui.notifications.warn("Type the power's name.");
+    return this.#spend(option);
+  }
+
+  static async #onGift() {
+    await game.modules.get("wodx-actions")?.api?.learnGift?.({actor: this.actor});
+    this.render();
+  }
+
   static #onNewAbility() {
     const name = this.element.querySelector("input[name=newAbility]")?.value;
     const group = this.element.querySelector("select[name=newAbilityGroup]")?.value ?? "skill";
@@ -408,7 +448,7 @@ export class SpendApp extends ApplicationV2 {
 export async function awardDialog() {
   if ( !game.user.isGM ) return null;
   const {DialogV2} = foundry.applications.api;
-  const actors = game.actors.filter(a => lineOf(a) && !lineage(a).became && !a.flags?.["wodx-npc"]?.passerbyBase).sort((a, b) =>
+  const actors = game.actors.filter(a => spendLine(a) && !lineage(a).became && !a.flags?.["wodx-npc"]?.passerbyBase).sort((a, b) =>
     (Number(isPC(b)) - Number(isPC(a))) || (Number(!!allyOf(b)) - Number(!!allyOf(a))) || a.name.localeCompare(b.name));
   if ( !actors.length ) return ui.notifications.warn("There is no character to award.");
   const note = a => isPC(a) ? "" : (allyOf(a) ? ` <span class="wodx-quiet">(ally of ${esc(allyOf(a).patron?.name ?? "?")})</span>` : ' <span class="wodx-quiet">(NPC)</span>');
