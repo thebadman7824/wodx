@@ -53,6 +53,12 @@ function cast() {
 }
 
 async function arena(roles) {
+  // B6050: a fresh arena every run. A kept one carried its tokens' wounds, frenzy and moves from run to run (and into
+  // the lane snapshots), so the plan steps passed on one lane and failed on another
+  for ( const old of game.scenes.filter(s => s.getFlag(MOD, "gateArena")) ) {
+    for ( const c of game.combats.filter(c => c.scene?.id === old.id) ) await c.delete();
+    if ( old.id !== canvas.scene?.id ) await old.delete();
+  }
   let sc = game.scenes.find(s => s.getFlag(MOD, "gateArena"));
   if ( !sc ) {
     sc = await Scene.create({name: ARENA, width: 2000, height: 1400, padding: 0, grid: {type: CONST.GRID_TYPES.SQUARE, size: 100, distance: 5, units: "ft"},
@@ -79,6 +85,10 @@ async function arena(roles) {
   await sleep(500);
   for ( const doc of Object.values(made) ) {
     await C().setDamage(doc.actor, zero);
+    // The token's own sheet starts out of frenzy, whatever the kept NPC's sheet says
+    if ( doc.actor?.system?.conditions?.isfrenzy ) await doc.actor.update({"system.conditions.isfrenzy": false});
+    const CH = game.modules.get("wodx-chronicle")?.api;
+    if ( CH?.conditions?.hasCondition?.(doc.actor, "frenzy") ) await CH.conditions.setCondition(doc.actor, "frenzy", false);
     if ( doc.actor.getFlag(MOD, "behavior") ) await doc.actor.unsetFlag(MOD, "behavior");
     await doc.unsetFlag("wodx-combat", "moved");
   }
@@ -137,6 +147,8 @@ export async function run() {
   });
   await step("an NPC's turn: a plan whispered to the Storyteller, best first, each with its reason", async () => {
     combat = await fight(sc, T);
+    // B6051: the world's own mode can be Auto (Balanced runs NPCs by themselves), so this scene suggests for the step
+    await sc.setFlag(MOD, "mode", "suggest");
     const t0 = Date.now();
     // A new round, so this round's turns have not been planned yet: the combat hook makes the card
     await combat.nextRound();
@@ -150,6 +162,7 @@ export async function run() {
       gmOnly && plan.mode === "suggest" && !plan.done && opts.length >= 1 && opts.every(o => o.why) && opts.every((o, k) => k === 0 || opts[k - 1].score >= o.score),
       {options: opts.map(o => `${o.label} (${o.score}): ${o.why}`), whisper: msg?.whisper?.length ?? 0});
     R.suggestCard = msg?.id ?? null;
+    await sc.unsetFlag(MOD, "mode");
   });
   await step("the plan follows the profile: unhurt and beside a foe, it fights (a bystander runs)", async () => {
     const p = npc().profileFor(T.fighter.actor), {options, fight: f} = npc().planTurn(T.fighter, combat);
@@ -247,7 +260,9 @@ export async function run() {
     let done = msg?.getFlag(MOD, "plan")?.done;
     // An option that needs the Storyteller came first: take the first one that moves, as the Storyteller would
     if ( msg && !done ) {
-      const k = msg.getFlag(MOD, "plan").options.findIndex(o => ["attack", "flee"].includes(o.action));
+      // B6051: the step is about the way round the wall, so an attack (it walks to the hero) before a flight
+      const opts = msg.getFlag(MOD, "plan").options, ka = opts.findIndex(o => o.action === "attack");
+      const k = ka >= 0 ? ka : opts.findIndex(o => o.action === "flee");
       R.notes.push(`The runner waited for the Storyteller (${msg.getFlag(MOD, "plan").options[0].label}); accepted option ${k}.`);
       if ( k >= 0 ) done = await npc().acceptCard(msg, k);
     }
@@ -290,5 +305,10 @@ export async function run() {
   });
   await sc?.unsetFlag(MOD, "mode");
   if ( startScene && startScene.id !== canvas.scene?.id ) await startScene.view();
+  // B6050: the arena and its fight go, so the next run starts fresh
+  try {
+    for ( const c of game.combats.filter(c => c.scene?.id === sc?.id) ) await c.delete();
+    if ( sc && sc.id !== canvas.scene?.id ) await sc.delete();
+  } catch (e) { R.errors.push(`arena not removed: ${e.message}`); }
   return save(R, "gate7b-result.json");
 }

@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6020
+Next free block: B6060
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -329,6 +329,8 @@ Next free block: B6020
 | B5980-B5989 | Lone Chronicle step 3: the oracle, the Leads page and night encounters on the map (used B5980-B5985) | Solo |
 | B5990-B5999 | Say or Do: full sentences and grieving (Ben's picks on law sentences and heartbreak) (used B5990-B5992) | Chronicle, NPC, Actions |
 | B6000-B6019 | Rituals and powers that really work: every effect read by a roll, soak, token or map system (used B6000-B6018) | Actions, Combat |
+| B6040-B6049 | Lone Chronicle step 3: card scenes for places with no map (used B6040-B6044) | Solo, Storyteller |
+| B6050-B6059 | gate7b fresh arena each run (used B6050-B6051) | tools (gates) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10076,3 +10078,40 @@ Reverse: the mage-dark-ages|utterance-of-the-72-names entry in summon-specs.js.
 A mummy's won Forbiddance marks the mummy as the one feared (a player's token cannot go nearer) and the one the being cannot strike: WoDX Combat refuses its attacks on that mummy, by hand or by the NPC. A Kuei-jin's shadow soul hands the body to the P'o: each move the player makes goes to the Storyteller to allow or refuse, as a command's does; in a Lone Chronicle the move stands with a reminder.
 
 Reverse: forbiddenFrom in wodx-combat main.js, the bindBy/forbiddenBy flags in mummy.js, the shadow soul line in binds.js bindingsOn.
+
+## B6040. Places with no map are the country map's towns (2026-11-15)
+WoDX Solo card-rules.mjs cardTowns. The panel's Places with no map lists the towns of WoDX Storyteller's country map (data/country.mjs) that stand in the character's own year and have no scene set at the town itself. A town that gains a map later is gone to on that map. The list has a search box.
+
+Reverse: take "places" off solo-rules.mjs PANEL.
+
+## B6041. A card scene is made once per town and kept (2026-11-15)
+The seat makes a plain scene for the town the first time a character goes there: a dark square of ground with a grid and light, flag wodx-solo.card (the town id) and wodx-solo.encounters town, set at the town on the country map so the trip there is the Travel window's own country-map trip, with its hours, fares, stops and road encounters. It is kept for the next visit and can be given a map later. Nothing is deleted.
+
+Reverse: delete the card scenes by hand; the next visit makes a new one.
+
+## B6042. The card says where the character is (2026-11-15)
+A locked drawing in the middle of the card scene, written again on every arrival and every look: the town, the year, day and hour on the character's own clock, the weather (WoDX Atmosphere), the land from the country map (its name and kind), the nearest river and which way it lies, how wooded the land is in that age, and the best road in. The same words go to the player as a card in the chat. The character's token stands below the card.
+
+Reverse: remove writeCard from card.mjs; the scene stays plain.
+
+## B6043. A card scene is always a travel place, never a marked one (2026-11-15)
+WoDX Storyteller travelPlaces. A card scene carries a travel flag for its country-map spot; it does not count as a scene the Storyteller marked, so a world with no marked scenes keeps listing every scene, and a world with marked scenes lists the card scenes too.
+
+Reverse: drop isCard from travelPlaces.
+
+## B6044. Look around costs half an hour and may bring people (2026-11-15)
+On a card scene, Places with no map offers Look around: half an hour on the character's own clock, then a town encounter is drawn as at night (no chance roll, by day or night) and its people stand on the card scene a few squares off, in plain sight. When none comes, the player is told nobody comes near. House rule: no book gives a solo look-about.
+
+Reverse: take the "look" choice out of showPlaces in card.mjs.
+
+## B6050. gate7b builds a fresh arena every run (2026-11-15)
+Gates. gate7b kept its arena scene and tokens between runs, so the tokens carried wounds, a frenzy and moves from one
+run into the next and into the lane snapshots; the plan steps passed on one lane and failed on another. The gate now
+removes any old arena and its fight, starts each token's sheet unhurt and out of frenzy, and removes the arena after.
+
+## B6051. gate7b asks for a suggestion on its plan step and walks the runner by its attack (2026-11-15)
+Gates. The world's NPC mode can be Auto, so the plan step's card was already played; the arena now asks for a
+suggestion for that step. The runner's flight from a far foe has nowhere to go, so the wall step takes its attack
+first, which walks it round the wall to the hero.
+
+Reverse: keep the arena between runs again, drop the scene's mode and take the first attack or flight.
