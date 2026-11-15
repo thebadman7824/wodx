@@ -146,11 +146,14 @@ export async function fightBeast(userId, {actorId = null, force = false} = {}) {
   return {ok: true, key};
 }
 
+/** The character behind a combatant: the world's actor, where the Beast's flag is kept, also for an unlinked token. */
+const worldActor = c => game.actors.get(c?.actorId) ?? c?.actor ?? null;
+
 /** A new round: a held turn is over, and the Beast has the character again. */
 async function onRound(combat, changes) {
   if ( !isActiveGM() || !("round" in (changes ?? {})) ) return;
   for ( const c of all(combat.combatants) ) {
-    const a = c.actor, b = a?.getFlag?.(MOD, "beast");
+    const a = worldActor(c), b = a?.getFlag?.(MOD, "beast");
     if ( !b?.held || b.held === F.roundKey(combat.id, combat.round) ) continue;
     await a.setFlag(MOD, "beast", {...b, held: null});
     if ( inFrenzy(a) && b.standIn ) await a.setFlag(ST, "standIn", true);
@@ -161,7 +164,7 @@ async function onRound(combat, changes) {
 async function onFightOver(combat) {
   if ( !isActiveGM() ) return;
   for ( const c of all(combat.combatants) ) {
-    const a = c.actor;
+    const a = worldActor(c);
     if ( !a?.getFlag?.(MOD, "beast") || !inFrenzy(a) || a.getFlag(ACT, "frenzyBotch") ) continue;
     const api = A();
     try { await (kindOf(a) === "lupine" ? api?.garouEndFrenzy?.({actor: a}) : api?.endFrenzy?.({actor: a})); }
@@ -178,7 +181,8 @@ let sleeping = null;
 async function runTo(to, {sleeper = null, torpor = false, label = "", only = null} = {}) {
   const now = game.time.worldTime;
   if ( !(to > now) ) return {seconds: 0, years: 0};
-  if ( to - now < F.YEAR || !game.modules.get(CRE)?.active ) {
+  // a calendar year can be a few hours short of 365.25 days, so "a year or more" is read loosely
+  if ( to - now < F.YEAR * 0.98 || !game.modules.get(CRE)?.active ) {
     await game.time.advance(to - now);
     return {seconds: to - now, years: 0};
   }
