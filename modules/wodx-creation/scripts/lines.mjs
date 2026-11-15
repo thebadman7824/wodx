@@ -55,9 +55,10 @@ export function splatOf(actor) {
   switch ( sheetOf(actor) ) {
     case "vampire": return variant === "kindredeast" ? "kuei-jin" : "vampire";
     case "mortal":
+      // The same marks WoDX NPC's copy reads (lines-rules.mjs), so the two always agree
+      if ( variant === "ghoul" || flag(actor, "ghoul") || actor.flags?.["wodx-npc"]?.ghoul ) return "ghoul";
       if ( variant === "revenant" || flag(actor, "revenant") ) return "revenant";
-      if ( variant === "ghoul" ) return "ghoul";
-      if ( variant === "kinfolk" ) return "kinfolk";
+      if ( variant === "kinfolk" || flag(actor, "lineage")?.kinfolk || actor.flags?.["wodx-npc"]?.kinfolk ) return "kinfolk";
       if ( variant === "sorcerer" ) return "sorcerer";
       if ( variant === "kinain" || flag(actor, "kinain") ) return "kinain";
       return "mortal";
