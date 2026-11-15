@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5070
+Next free block: B5160
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -241,6 +241,7 @@ Next free block: B5070
 | B5010-B5029 | The Storyteller's Hand, part three: fire, noticing, and the rest of the desk acts by itself (Ben's desk picks, 14 November 2026) (used B5010-B5024) | Interactables, Actions, Senses, Library, Chronicle, Storyteller, Otherworlds, Creation |
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5049) | Creation, Chronicle, NPC, Sheets, Actions, Combat |
+| B5150-B5159 | The Philippines as a world region (used B5150-B5153) | Chronicle, Creation, Storyteller, NPC, Library |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -7929,3 +7930,23 @@ Reverse: the setAlly call in makeGhoul.
 WoDX Creation. A vampire within a square and a half of a mortal, ghoul or animal can feed it a point. The Storyteller's feed is at once; a player's goes to the approval queue (type wodx-vitae) and happens by itself on approval or auto-approval. Red "Vitae" rises from the token. Desk item 2.
 
 Reverse: registerFeedVitae in main.mjs.
+
+## B5150. The Philippines a region of its own (2026-11-15)
+WoDX Chronicle and Storyteller. Ben asked to build out the Philippines. The islands leave the Malay world and become the 45th world region, "The Philippines (Manila, the Visayas, Mindanao and Sulu)", with Manila as its city, the tropical wet climate and the Philippine money region. The world map gives it the squares north of 4.5 degrees and east of 119.5 (with Palawan) that were the Malay world's; the map builder cuts the country out by name on its next run. The region's letter comes last so no older square changes. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: drop philippines from WORLD_REGIONS and the other region tables, and the letter s in Storyteller's data/world.mjs.
+
+## B5151. Who lives there (2026-11-15)
+WoDX Chronicle and Creation. Filipino 78, Moro 17 and Chinese 5 in the medieval age; Filipino 74, Moro 14, Chinese 8 and Spanish 4 in the early modern; Filipino 77, Moro 10, Chinese 8, Spanish 4 and English 1 (the Americans) in the industrial; Filipino 85, Moro 8, Chinese 6 and English 1 now. The Malay world keeps Moro 2 for the Tausug and Bajau of the Sabah coast and no Filipinos.
+
+Reverse: edit the philippines and nusantara mixes in world-rules.mjs.
+
+## B5152. How the islands live by age (2026-11-15)
+WoDX Chronicle, Storyteller, NPC and Library. Island ways (malay) until 1571, then Catholic ways; holy days of the land until 1571, then the church year. Law: the datus and elders with debt bondage, the qadi in the sultanates from 1405, Spain's Audiencia and the friars from 1565, the Guardia Civil from 1868, American rule from 1898, the republic from 1946, martial law 1972 to 1981. Print 1593, papers 1890, radio 1935, television 1965, the net 2008; rail 1892, tram 1888, expressway 1977; post 1767, telegraph 1873, telephone 1890. Cholera 1820, the flu of 1918 and the cholera of 1961 reach it; Kuei-jin courts, Hengeyokai and the Akashic monasteries hold the islands as in the Malay world; church goods from 1565.
+
+Reverse: drop the philippines rows from each table.
+
+## B5153. Lifepath and story hooks (2026-11-15)
+WoDX Creation and Storyteller. The lifepath has the Philippines under Asia, with its own origins and callings in each age, and dated origins and marks from Mactan (1521) to the typhoon at Tacloban (2013). Threads of Fate gets two cards: "The galleon is late" (its own hook) and "The datu's buried gold".
+
+Reverse: drop the philippines entries in data/lifepath-local-asia.mjs, data/lifepath-events-asia.mjs and the r-philippines cards.

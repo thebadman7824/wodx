@@ -30,7 +30,8 @@
  *  22. the Tuareg (B4950): the desert edge of West Africa and the Maghreb, ag and welet the father
  *  23. the Moro (B5000): Mindanao and Sulu in the Malay world's mix, sultanate names, then family names
  *  24. the Banyarwanda and Barundi (B5030): Rwanda and Burundi in central Africa, own names, then family names
- *  25. clean up
+ *  25. the Philippines (B5150): a region of its own with its map squares, money, law and mix; the Malay world keeps no Filipinos
+ *  26. clean up
  * Result: Data/wodx-gate/gateplains-result.json.
  */
 import {gate} from "./kit.mjs";
@@ -227,9 +228,9 @@ export async function run() {
         med.includes("khmer") && !bad.length, {medieval: med, bad: bad.slice(0, 6), sample: kh("medieval", 4).map(p => p.name)});
     });
     await G.step("20. Filipinos", async () => {
-      const med = results({era: "medieval", culture: "nusantara"}, "people.origin"), bad = [];
+      const med = results({era: "medieval", culture: "philippines"}, "people.origin"), bad = [];
       const fi = (era, n) => Array.from({length: n}, (_, i) => R.nameOf({rand: gen().random(`gateplains:fi:${era}`, i),
-        tables: gen().lookup({...gen().context(), era, culture: "nusantara"}), origin: "filipino", sex: i % 2 ? "female" : "male"}));
+        tables: gen().lookup({...gen().context(), era, culture: "philippines"}), origin: "filipino", sex: i % 2 ? "female" : "male"}));
       for ( const p of fi("medieval", 12) ) if ( p.family || p.name.includes("{") ) bad.push(`medieval: ${p.name}`);
       for ( const p of fi("modern", 8) ) if ( !p.family || p.name.includes("{") ) bad.push(`modern: ${p.name}`);
       G.ok("20. Filipinos in the islands; own names, then church and family names",
@@ -253,12 +254,12 @@ export async function run() {
         wa.includes("tuareg") && !bad.length, {medieval: wa, bad: bad.slice(0, 6), sample: tu("medieval", 4).map(p => p.name)});
     });
     await G.step("23. the Moro", async () => {
-      const med = results({era: "medieval", culture: "nusantara"}, "people.origin"), bad = [];
+      const med = results({era: "medieval", culture: "philippines"}, "people.origin"), bad = [];
       const mo = (era, n) => Array.from({length: n}, (_, i) => R.nameOf({rand: gen().random(`gateplains:mo:${era}`, i),
-        tables: gen().lookup({...gen().context(), era, culture: "nusantara"}), origin: "moro", sex: i % 2 ? "female" : "male"}));
+        tables: gen().lookup({...gen().context(), era, culture: "philippines"}), origin: "moro", sex: i % 2 ? "female" : "male"}));
       for ( const p of mo("medieval", 12) ) if ( p.family || p.name.includes("{") ) bad.push(`medieval: ${p.name}`);
       for ( const p of mo("modern", 8) ) if ( !p.family || p.name.includes("{") ) bad.push(`modern: ${p.name}`);
-      G.ok("23. the Moro in the Malay world; sultanate names, then family names",
+      G.ok("23. the Moro in the Philippines; sultanate names, then family names",
         med.includes("moro") && !bad.length, {medieval: med, bad: bad.slice(0, 6), sample: mo("medieval", 4).map(p => p.name)});
     });
     await G.step("24. the Banyarwanda and Barundi", async () => {
@@ -269,6 +270,14 @@ export async function run() {
       for ( const p of rw("modern", 8) ) if ( !p.family || p.name.includes("{") ) bad.push(`modern: ${p.name}`);
       G.ok("24. the Banyarwanda and Barundi in central Africa; own names, then family names",
         med.includes("banyarwanda") && !bad.length, {medieval: med, bad: bad.slice(0, 6), sample: rw("medieval", 4).map(p => p.name)});
+    });
+    await G.step("25. the Philippines", async () => {
+      const W = game.modules.get(CH).api.world, ph = W.regionOf?.("philippines");
+      const med = results({era: "medieval", culture: "philippines"}, "people.origin"), em = results({era: "early-modern", culture: "philippines"}, "people.origin");
+      const mw = results({era: "medieval", culture: "nusantara"}, "people.origin");
+      G.ok("25. the Philippines a region of its own: Filipinos and Moro, Spain after 1565; the Malay world keeps none of the Filipinos",
+        !!ph && ph.money === "philippine" && med.includes("filipino") && med.includes("moro") && !med.includes("spanish") && em.includes("spanish") && !mw.includes("filipino"),
+        {region: ph?.label, money: ph?.money, medieval: med, earlyModern: em, malayWorld: mw});
     });
   } catch (e) {
     G.ok("error", false, {error: e.message});

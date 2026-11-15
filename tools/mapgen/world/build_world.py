@@ -33,7 +33,7 @@ BY_COUNTRY = {
     "carpathians-balkans": "HUN ROU BGR SRB HRV BIH SVN MNE MKD ALB KOS", "russia": "RUS UKR MDA", "aegean": "GRC CYP", "anatolia": "TUR GEO ARM",
     "levant": "SYR LBN ISR JOR IRQ PSE", "egypt": "EGY SDN", "arabia": "SAU YEM OMN ARE QAT KWT BHR", "maghreb": "MAR DZA TUN LBY SAH",
     "persia": "IRN AZE", "central-asia": "KAZ KGZ TJK TKM UZB AFG MNG", "india": "IND PAK BGD LKA", "tibet-himalaya": "NPL BTN", "china": "CHN TWN", "japan": "JPN",
-    "korea": "KOR PRK", "southeast-asia": "MMR THA LAO KHM VNM", "nusantara": "MYS IDN BRN PHL TLS",
+    "korea": "KOR PRK", "southeast-asia": "MMR THA LAO KHM VNM", "nusantara": "MYS IDN BRN TLS",
     "west-africa": "SEN GMB GNB GIN SLE LBR CIV GHA TGO BEN NGA BFA MLI NER MRT", "central-africa": "TCD CMR CAF GNQ GAB COG COD AGO",
     "east-africa": "ETH ERI DJI SOM SOL KEN UGA TZA RWA BDI SDS MDG", "southern-africa": "ZAF NAM BWA ZWE ZMB MOZ MWI LSO SWZ",
     "north-america-east": "USA", "canada": "CAN", "mexico": "MEX GTM BLZ HND SLV NIC CRI PAN", "caribbean": "CUB HTI DOM PRI BHS TTO JAM",
@@ -41,7 +41,8 @@ BY_COUNTRY = {
     "pacific-islands": "FJI NCL SLB VUT PNG", "arctic": "GRL", "antarctica": "ATA ATF FLK",
 }
 REGION_OF = {c: r for r, cs in BY_COUNTRY.items() for c in cs.split()}
-REGIONS = list(BY_COUNTRY) + ["north-america-west", "siberia"]
+# the Philippines came last (B5150), so the letters of the older regions stay as they were
+REGIONS = list(BY_COUNTRY) + ["north-america-west", "siberia", "philippines"]
 
 
 def region_at(code, lon, lat):
@@ -58,6 +59,7 @@ def region_at(code, lon, lat):
     if code == "FRA" and lon < -30: return "brazil"
     if code == "NOR" and lat >= 74: return "arctic"
     if code == "CHL" and lat < -56: return "antarctica"
+    if code == "PHL": return "philippines"
     return REGION_OF.get(code, "")
 
 
