@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5540
+Next free block: B5570
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -284,6 +284,9 @@ Next free block: B5540
 | B5510-B5519 | Names raised to 300, Italian (used B5510) | Creation |
 | B5520-B5529 | Names raised to 300, Japanese (used B5520) | Creation |
 | B5530-B5539 | Names raised to 300, Russian (used B5530) | Creation |
+| B5540-B5549 | Names raised to 300, German (used B5540) | Creation |
+| B5550-B5559 | Names raised to 300, Norse (used B5550) | Creation |
+| B5560-B5569 | Names raised to 300, Maori (used B5560) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8511,3 +8514,18 @@ Reverse: restore the japanese entry in data/people-world.mjs and drop japanese f
 WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Russian list grows from 91 names to 499: old names of princes, boyars, monks, merchants and townsfolk of the Rus chronicles and the Muscovite records, then names of the Empire and since, with a woman's family name in its own form. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
 
 Reverse: restore the russian entry in data/people-world.mjs and drop russian from RAISED.
+
+## B5540. German names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The German list grows from 56 names to 313: names and family names of modern Germany; the older eras keep the German lists in data/people.mjs. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the german entry in data/people-world.mjs and drop german from RAISED.
+
+## B5550. Norse names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Norse list grows from 95 names to 533: old names of kings, jarls, bishops, farmers and townsfolk of the sagas, runestones, charters and tax rolls with a father's name as the family name, then names and family names of the modern Nordic lands. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the norse entry in data/people-world.mjs and drop norse from RAISED.
+
+## B5560. Maori names raised to 300 (2026-11-15)
+WoDX Creation. Ben asked for every list under 300 names to be filled out (15 November 2026). The Maori list grows from 64 names to 359: old names of ancestors, navigators and chiefs of the canoe and tribal traditions, then names of the 19th century chiefs and prophets, church names and modern names, with family names from the 19th century on. All are recorded names, none generated. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: restore the maori entry in data/people-world.mjs and drop maori from RAISED.
