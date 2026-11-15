@@ -53,6 +53,12 @@ function cast() {
 }
 
 async function arena(roles) {
+  // B6050: a fresh arena every run. A kept one carried its tokens' wounds, frenzy and moves from run to run (and into
+  // the lane snapshots), so the plan steps passed on one lane and failed on another
+  for ( const old of game.scenes.filter(s => s.getFlag(MOD, "gateArena")) ) {
+    for ( const c of game.combats.filter(c => c.scene?.id === old.id) ) await c.delete();
+    if ( old.id !== canvas.scene?.id ) await old.delete();
+  }
   let sc = game.scenes.find(s => s.getFlag(MOD, "gateArena"));
   if ( !sc ) {
     sc = await Scene.create({name: ARENA, width: 2000, height: 1400, padding: 0, grid: {type: CONST.GRID_TYPES.SQUARE, size: 100, distance: 5, units: "ft"},
@@ -79,6 +85,10 @@ async function arena(roles) {
   await sleep(500);
   for ( const doc of Object.values(made) ) {
     await C().setDamage(doc.actor, zero);
+    // The token's own sheet starts out of frenzy, whatever the kept NPC's sheet says
+    if ( doc.actor?.system?.conditions?.isfrenzy ) await doc.actor.update({"system.conditions.isfrenzy": false});
+    const CH = game.modules.get("wodx-chronicle")?.api;
+    if ( CH?.conditions?.hasCondition?.(doc.actor, "frenzy") ) await CH.conditions.setCondition(doc.actor, "frenzy", false);
     if ( doc.actor.getFlag(MOD, "behavior") ) await doc.actor.unsetFlag(MOD, "behavior");
     await doc.unsetFlag("wodx-combat", "moved");
   }
@@ -290,5 +300,10 @@ export async function run() {
   });
   await sc?.unsetFlag(MOD, "mode");
   if ( startScene && startScene.id !== canvas.scene?.id ) await startScene.view();
+  // B6050: the arena and its fight go, so the next run starts fresh
+  try {
+    for ( const c of game.combats.filter(c => c.scene?.id === sc?.id) ) await c.delete();
+    if ( sc && sc.id !== canvas.scene?.id ) await sc.delete();
+  } catch (e) { R.errors.push(`arena not removed: ${e.message}`); }
   return save(R, "gate7b-result.json");
 }
