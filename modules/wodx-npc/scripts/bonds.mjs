@@ -52,6 +52,8 @@ export async function onAttack(attacker, data = {}) {
   if ( !isActiveGM() || !on() ) return [];
   const by = actorOf(attacker), of = actorOf(data.target);
   if ( !by || !of ) return [];
+  // B5102: when the bond was already rolled before this blow (WoDX Combat asks first), no card after it
+  if ( Date.now() - (globalThis.__wodxRestrained?.get?.(`${by.id}>${of.id}`) ?? 0) < 60000 ) return [];
   return tell(BR.cardsFor({kind: "attack", by: by.id, of: of.id}, [], {stepOf: (a, b) => stepToward(a, b)}), `${by.name} strikes at ${of.name}`);
 }
 export async function onHarm(actor, data = {}) {

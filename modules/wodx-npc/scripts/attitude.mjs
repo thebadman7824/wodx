@@ -1,3 +1,4 @@
+import * as SV from "./servants.mjs";
 import * as AT from "./attitude-rules.mjs";
 
 /**
@@ -97,7 +98,9 @@ export function build({MOD, chron, savedProfile, factions, rivalry = null, profi
   function of(npcLike, charLike) {
     const npc = worldOf(npcLike), ch = worldOf(charLike);
     if ( !npc || !ch ) return null;
-    const now = AT.attitudeOf(npc.flags?.[MOD]?.attitude ?? {}, ch.id, seedFor(npc, ch.id));
+    let now = AT.attitudeOf(npc.flags?.[MOD]?.attitude ?? {}, ch.id, seedFor(npc, ch.id));
+    // B5104: a full blood oath, full Conditioning or Social Conditioning at Alliance keeps the servant at Welcome or above
+    try { if ( now.step < 2 && SV.warmFloor(npc, ch.id) ) now = {...now, step: 2, word: AT.word(2), floor: true}; } catch (e) { /* no ledger */ }
     if ( !now.met ) return now;
     // NPC 0.32.0: blood or wounds sour a later meeting for this scene only; nothing is stored
     const sc = lookFor(npc, ch, {later: true});

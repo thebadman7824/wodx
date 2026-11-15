@@ -133,11 +133,13 @@ export function fightShift(options = [], order = null) {
  * at Willpower difficulty 8. Anyone else refuses on any success of Willpower at 6, plus its attitude step toward
  * the leader and its bond stage, held to 4-9.
  */
-export function loyaltyCheck({bondStage = 0, step = 0, willpower = 3} = {}) {
+export function loyaltyCheck({bondStage = 0, step = 0, willpower = 3, weight = null} = {}) {
   const wp = Math.max(1, Math.trunc(Number(willpower) || 1));
   const b = Math.max(0, Math.min(3, Math.trunc(Number(bondStage) || 0)));
   if ( b >= 3 ) return {pool: wp, diff: 8, bound: true, text: `Blood bound: it obeys. Only if the order means near-certain death may it try to refuse: Willpower ${wp}, difficulty 8.`};
-  const diff = Math.max(4, Math.min(9, 6 + Math.round(Number(step) || 0) + b));
+  // B5104: other bonds in the ledger (full Conditioning, Social Conditioning at Alliance, a chained Thrall) carry the order too
+  if ( weight?.free ) return {pool: wp, diff: 8, bound: true, text: `${weight.why}: it obeys. Only if the order means near-certain death may it try to refuse: Willpower ${wp}, difficulty 8.`};
+  const diff = Math.max(4, Math.min(9, 6 + Math.round(Number(step) || 0) + b - Math.round(Number(weight?.shift) || 0)));
   return {pool: wp, diff, bound: false, text: `To refuse, it rolls Willpower ${wp} at difficulty ${diff}; any success and it balks.`};
 }
 
