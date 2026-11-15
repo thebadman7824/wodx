@@ -741,6 +741,7 @@ export function build(ctx) {
     const number = (name, v, max = 5) => `<input type="number" name="${name}" value="${v}" min="0" max="${max}">`;
     const actorOpts = list => list.map(a => `<option value="${a.id}"${a.id === f.leader ? " selected" : ""}>${esc(a.name)}</option>`).join("");
     const goals = [...f.goals, {move: ""}, {move: ""}].slice(0, Math.max(3, f.goals.length + 1));
+    try { await chron()?.events?.load?.(); } catch (e) { /* the book events alone (B6240) */ }
     const evs = (() => { try { return chron()?.events?.list?.() ?? []; } catch (e) { return []; } })();
     // NPC 0.25.0: the faction's politics
     const polKey = PO.polityFor(f, era.year), P = PO.POLITIES[polKey] ?? null, pol = f.politics ?? PO.normPolitics();

@@ -341,6 +341,7 @@ Next free block: B6500
 | B6180-B6199 | Shared terms: one meaning for time, dice, health, distance, eras and who is who across every module (used B6180-B6199) | Chronicle, Actions, Combat, Creation, Interactables, Library, NPC, Otherworlds, Paperdoll, Senses, Sheets, Solo, Storyteller, Targeting, Atmosphere |
 | B6210-B6219 | gatevehicles plays in a year with cars (used B6210) | tools (gates) |
 | B6220-B6229 | The night's work: one Undo for a night of the Storyteller's Hand (Ben's desk pick hd1, 15 November 2026) (used B6220-B6226) | Chronicle, Solo |
+| B6240-B6249 | Load less on players' machines, and the Monday decisions archive (stale design desk 2026-11-15 f1, f2) (used B6240-B6243) | Chronicle, Storyteller, Creation, NPC, Actions, tools |
 | B6250-B6259 | Names follow each year's customs (Improvement Desk nm1) (used B6250-B6253) | Creation, NPC |
 | B6260-B6269 | Real recorded cues: Freesound CC0/CC BY sounds for dawn, dusk, notice, birdsong, cock-crow and heartbeat, by era and faith (used B6260-B6263) | Atmosphere |
 | B6350-B6359 | gate kit yearAtLeast, gatearms and gateplayerextras (used B6350-B6353) | tools (gates) |
@@ -10609,6 +10610,26 @@ Reverse: call el.click() directly again in onMessage and onDialog.
 WoDX Solo. A sixth Storyteller tool, The night's work: the player's window asks the seat for the list (ask.st.night) and sends the ticked pieces back (ask.st.nightUndo); the seat carries out the Undo, logs it and tells the player what was done. The player's own changes since are warned of in the same way.
 
 Reverse: take the night entry out of ST_TOOLS in solo-rules.mjs.
+
+## B6240. The world timeline loads on the Storyteller's client only (2026-11-15)
+WoDX Chronicle. The world timeline (data/world-history.mjs), the future events and the future world (about 1.2 MB together) are no longer imported when the world starts. The Storyteller's client starts loading them at init and waits for them before WoDX Chronicle tells the other modules it is ready, so everything that runs there sees the whole list as before. A player's client reads has() and fired() from the fired list the Storyteller's client keeps in a world setting, and reads the Dated events page and the news cards the Storyteller's client writes, so it loses nothing it shows. The few things that can run on a player's client and read the list itself (a Malkavian's glimpse, a long torpor's wake report, a blood hunt's date, the first night forecast) await events.load() first, so on that client the timeline loads the first time one of them is used. Until it loads, list() holds the book events alone. Ben picked this on the stale design desk (2026-11-15 f1).
+
+Reverse: put the three static imports back at the top of scripts/events.mjs and drop load().
+
+## B6241. The Threads of Fate cards load on first use (2026-11-15)
+WoDX Storyteller. The hook cards (data/threads-cards.mjs, about 290 KB) load the first time the weave runs, a storyline opens or ends, or the Threads of Fate window opens. All of these run on the Storyteller's client only, so a player's client never fetches the cards. api.threads.cards reads the loaded deck; api.threads.loadCards() loads it.
+
+Reverse: import CARDS statically again in scripts/threads.mjs.
+
+## B6242. The People name lists load on first use (2026-11-15)
+WoDX Creation and WoDX NPC. The People tables (data/people.mjs, data/people-world.mjs and each people's own file, about 600 KB) and their rules load the first time a person is made. The Storyteller's client loads them once WoDX Chronicle is ready, so the shipped tables still bring the world's Roll Tables up to date; a player's client never makes people and never fetches them. Before they are registered, a client draws from the world's installed Roll Tables, which hold the same names. Who puts the family name first and the Haudenosaunee clan pattern move to the small data/people-order.mjs, which WoDX NPC reads without the lists; the feminine family names reach NPC households through api.people.feminine() once loaded, and the households window awaits api.people.load() first.
+
+Reverse: import the tables statically again in scripts/people.mjs and FEMININE in resident-rules.mjs.
+
+## B6243. Decision text more than a month old moves to docs/archive each Monday (2026-11-15)
+tools/docs/archive-decisions.mjs. Each Monday, with the build log, the decisions in docs/DECISIONS.md more than a month old (a "## B" heading and its lines, dated by its heading or the one above; or a dated row of the early table) move to docs/archive/decisions-<year>-<month>.md. A move, never a deletion: the archive file is written first, nothing is written twice, and a test checks every line is kept. The index of blocks stays at the top of DECISIONS.md, and each block whose text moved names its file ("text in decisions-2026-11", with "the rest in this file" when only part moved). The checks that look a decision up (the referee, rules clashes, fragments and index tests) read the archive files too. Nothing is due until 9 December 2026. Ben picked this on the stale design desk (2026-11-15 f2).
+
+Reverse: stop running the script on Mondays; to bring text back, move the sections from the archive file into DECISIONS.md and drop the "(text in ...)" notes.
 
 ## B6250. Name customs by year, with sources, only where a source dates them (2026-11-15)
 WoDX Creation, data/name-customs.mjs. Each people has stages (given, byname, settling, family) by year, a noble year where the nobility bore inherited names earlier, and the source. Dated laws: the Habsburg patent for Jews (23 July 1787), Japan (edicts of 1870 and 1875), the Netherlands (decree of 18 August 1811), Sweden (Name Ordinance of 1901), Hawaii (Act to Regulate Names, 1860), the Philippines (Clavería decree, 1849), Thailand (Surname Act, 1913), Iran (civil registration, 1925), Turkey (Surname Law, 21 June 1934). Peoples with no dated source keep their tables as they are and are listed as open.
