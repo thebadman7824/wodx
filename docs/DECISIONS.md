@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5600
+Next free block: B5610
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -290,6 +290,7 @@ Next free block: B5600
 | B5570-B5579 | Names raised to 300, Sephardi (used B5570) | Creation |
 | B5580-B5589 | Names raised to 300, Mizrahi (used B5580) | Creation |
 | B5590-B5599 | Recheck: gates not on main (used B5590) | tools (PC job queue) |
+| B5600-B5609 | Names made by pattern for the short lists (used B5600) | Creation |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -8551,3 +8552,8 @@ checks main for `tools/gate/<gate>.mjs` first and calls such a gate "NEW with th
 yet, so this change must fix it".
 
 Reverse: drop the notOnMain set in runner.mjs recheck().
+
+## B5600. Names made by pattern where the records show the rule (2026-11-15)
+WoDX Creation. Ben asked (15 November 2026) whether lists under 300 names could be filled with names made from how the names were formed, and approved the plan: recorded names first, made names only where the records show the rule. Ten peoples qualify: the Lakota, Cheyenne, Mandan, Hidatsa, Arikara, Pawnee, Crow, Blackfoot, Arapaho and Kiowa, whose recorded own names are two-part names in translation (a describing word and a thing, as Red Cloud; a number and things, as Two Crows; women's names often ending in Woman). New names join only parts that the same people's records hold, from a fixed list of English describing words and things, so a word in the people's own language, a nation's name or a title never becomes a part. Peoples with no recorded women's own names get no made women's names. The made names sit in Roll Tables of their own ("made by pattern", data/people-patterned.mjs, written by tools/names/pattern-names.mjs) and are drawn a third as often as the recorded own names. The other 26 short lists (Tuareg, Moro, Banyarwanda, Sami, Khmer, Amazigh, Maya, the Haudenosaunee, Algonquian, Southwest, Basin, Northwest Coast, Cree, Anishinaabe, Inuit, Taíno, Aboriginal, Kongo, Luba, Ganda, Filipino and the Comanche and Diné) are single names in the people's own language with no rule in the records that could make more without inventing words, so nothing is made for them. Taken as recommended; logged in PENDING-REVIEW.
+
+Reverse: empty PATTERNED in data/people-patterned.mjs.
