@@ -346,6 +346,6 @@ test("a book turn: a lost melee costs the attackers, a withdrawal ends it, an ar
 test("the Storyteller's window offers the book's units and the turn's action", () => {
   const src = readFileSync(join(root, "modules/wodx-storyteller/scripts/battles.mjs"), "utf8");
   assert.match(src, /B\.isBook\(b0\)/);
-  assert.match(src, /name="s\$\{i\}\.u\.\$\{k\}"/);
+  assert.match(src, /name="s\$\{i\}\.u\.\$\{t\.id\}"/);
   assert.match(src, /name="act\$\{i\}"/);
 });

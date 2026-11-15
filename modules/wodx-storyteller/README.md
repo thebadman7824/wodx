@@ -67,7 +67,7 @@ Procedural storylines woven from what has happened in the world (B3650-B3656). E
 
 ## Battles, sieges and ships
 
-- Files: `battles.mjs` and `battle-rules.mjs`, `battle-deeds.mjs`, `battle-aftermath.mjs` and `battle-extras.mjs` (deeds and what a field leaves behind), `siege-works.mjs` and `siege-works-rules.mjs` (the campaign around a siege), `naval.mjs` and `naval-rules.mjs` (ships at sea).
+- Files: `battles.mjs` and `battle-rules.mjs`, `battle-deeds.mjs`, `battle-aftermath.mjs` and `battle-extras.mjs` (deeds and what a field leaves behind), `siege-works.mjs` and `siege-works-rules.mjs` (the campaign around a siege), `naval.mjs` and `naval-rules.mjs` (ships at sea), `war-lands-rules.mjs` (the ages of war, troops, engines, walls, supply and ships of lands beyond Europe, B5900 to B5910).
 - API: `battles`, `siegeWorks`, `naval`.
 
 ## When to look again

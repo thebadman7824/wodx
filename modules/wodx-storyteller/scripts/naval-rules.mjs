@@ -29,6 +29,7 @@
  */
 
 import {ENGINES} from "./siege-works-rules.mjs";
+import * as WL from "./war-lands-rules.mjs";
 
 const n = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
@@ -91,13 +92,17 @@ export const SHIPS = {
   patrolBoat: {label: "Motor torpedo or patrol boat", speed: 8, maneuver: 4, crew: 15, arms: [["torpedo", 2], ["quickfirer", 1]], soak: 4, health: 5, fire: true, from: 1915, to: 9999, house: true},
   missileFrigate: {label: "Missile frigate", speed: 6, maneuver: 2, crew: 180, arms: [["missile", 4], ["quickfirer", 1], ["torpedo", 2]], soak: 12, health: 18, fire: true, from: 1970, to: 9999, house: true},
   smallBoat: {label: "Fishing boat, launch or yacht", speed: 3, maneuver: 2, crew: 4, arms: [], soak: 3, health: 4, from: 1197, to: 9999, house: true},
-  droneCorvette: {label: "Drone corvette", speed: 8, maneuver: 4, crew: 12, arms: [["missile", 4], ["railgun", 1]], soak: 14, health: 16, fire: true, from: 2030, to: 9999, branch: "future", house: true}
+  droneCorvette: {label: "Drone corvette", speed: 8, maneuver: 4, crew: 12, arms: [["missile", 4], ["railgun", 1]], soak: 14, health: 16, fire: true, from: 2030, to: 9999, branch: "future", house: true},
+  // B5909: ships of other seas (war-lands-rules.mjs)
+  ...WL.LAND_SHIPS
 };
 
+/** Words for the navigator of a sea whose own way of finding it counts (B5910), or "" where none does. */
+export const WL_NAV = land => WL.navAid(land, {wayfinder: true}) === 2 ? "A wayfinder of the islands, by stars, swell and birds: 2 easier" : WL.navAid(land, {wayfinder: true}) === 1 ? "A pilot of the Indian Ocean with the kamal: counts as a pilot's book" : "";
 /** The ships of a year (and branch). */
-export function shipsFor(year, branch = "classic") {
+export function shipsFor(year, branch = "classic", land = "") {
   const y = n(year) || 1197;
-  return Object.entries(SHIPS).filter(([, s]) => y >= s.from && y <= s.to && (!s.branch || s.branch === branch)).map(([id, s]) => ({id, ...s}));
+  return WL.forLand(Object.entries(SHIPS).filter(([, s]) => y >= s.from && y <= s.to && (!s.branch || s.branch === branch)).map(([id, s]) => ({id, ...s})), land);
 }
 /** What one of a ship's arms is: a book engine (shot with Dexterity + Archery) or a gun (Heavy Weaponry). */
 export function armOf(id) {
@@ -127,7 +132,7 @@ export function normFight(f = {}) {
   return {
     id: str(f.id, 40) || Math.random().toString(36).slice(2, 12),
     name: str(f.name) || "A fight at sea", place: str(f.place),
-    year: Math.round(n(f.year)) || null, branch: f.branch === "future" ? "future" : "classic",
+    year: Math.round(n(f.year)) || null, branch: f.branch === "future" ? "future" : "classic", land: str(f.land, 40),
     ships: [normShip(f.ships?.[0], "The first ship"), normShip(f.ships?.[1], "The second ship")],
     gap: int(f.gap, 0, 50000, 2000),
     initiative: f.initiative === 0 || f.initiative === 1 ? f.initiative : null, edge: int(f.edge, 0, 20, 0),
@@ -171,8 +176,10 @@ export function undo(fight) {
 }
 
 /** Navigation (Spoils of War p. 42): Intelligence + Seamanship, 6 in sight of land, 9 with nothing to steer by. */
-export function navigate(fight, i, {land = true, compass = false, pilot = false} = {}, draw) {
-  const s = fight.ships[i], diff = clamp((land ? 6 : 9) - (compass ? 1 : 0) - (pilot ? 1 : 0), 3, 10);
+export function navigate(fight, i, {land = true, compass = false, pilot = false, wayfinder = false} = {}, draw) {
+  // B5910: a wayfinder of the islands (2 easier in the Pacific) or a pilot of the Indian Ocean (as a pilot's book there)
+  const aid = WL.navAid(fight.land, {wayfinder}), book = pilot || aid === 1;
+  const s = fight.ships[i], diff = clamp((land ? 6 : 9) - (compass ? 1 : 0) - (book ? 1 : 0) - (aid === 2 ? 2 : 0), 3, 10);
   const r = roll(draw, s.seamanship, diff);
   const words = r.botch ? `${s.name} is badly off course.` : r.successes ? `${s.name} holds its course.` : `${s.name} has lost its bearings.`;
   return step(fight, fight, words, `${s.name}: navigation ${r.dice} dice at ${diff}, ${r.successes}${r.botch ? " (a botch)" : ""} [${r.faces.join(", ")}]`);

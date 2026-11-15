@@ -51,7 +51,7 @@ Where a finer place has no region of its own, use the one around it: Central Ame
 | Calendar (Chronicle) | Julian and Gregorian, with reform dates for a few lands; no Islamic, Hebrew, Chinese or other reckonings shown | Widened: the holy days of the great faiths by region (B2537), and the player's clock and opening card tell the date and hour in the count of the scene's land, with each land's civil date leading from the year it was adopted (B5870 to B5873). Persia's solar Hijra year from 1925 and a character's own count by its people or the player's pick (B5874 to B5875) |
 | Weather history (Atmosphere eraShift) | The Little Ice Age and 1816 as Europe and North America felt them, applied everywhere | Open, minor |
 | Encyclopaedia (Library) | Follows the books read so far; the Year of the Lotus, Ebony Kingdom and other world books are thin | Open: reading list on the review desk |
-| Markets, battles, sieges and ships (Storyteller) | Rules are placeless; the armies, ships and market goods named are European | Open: review desk |
+| Markets, battles, sieges and ships (Storyteller) | Rules are placeless; the armies, ships and market goods named are European | Widened for war: a fight stands in a land, which brings its own age of war, troops, engines, walls, supply and ships, built at the Armies and Ships Desk's recommended picks while it waits (B5900 to B5910). Open: market goods by region |
 | NPC look and sprites (Paperdoll) | On hold with Ben; body and dress should cover every region when it resumes | Noted for that thread |
 
 ## Open, not built yet

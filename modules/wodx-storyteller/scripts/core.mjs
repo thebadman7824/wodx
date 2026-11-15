@@ -260,6 +260,14 @@ export function moneyWords(amount, year) {
   try { return MoneyRules.formatMoney(amount, MoneyRules.moneyFor(year, region)); } catch (e) { return String(amount); }
 }
 
+/** The lands a battle or sea fight can stand in (WoDX Chronicle's world regions), {id: label}, for a select (B5900). */
+export function landChoices() {
+  try { return Object.fromEntries(Object.entries(chron()?.world?.regions ?? {}).map(([id, r]) => [id, r.label])); } catch (e) { return {}; }
+}
+/** The land of the scene being viewed, else the homeland (B5900). */
+export function landHere() {
+  try { return tripContext(0, canvas?.scene ?? game.scenes?.active ?? null).region || "moravia"; } catch (e) { return "moravia"; }
+}
 /** The year, the dark, the weather and the branch at a time, for a trip (WoDX Atmosphere's weather when it is on). */
 export function tripContext(t, scene = null) {
   let year = 0, night = false, weather = null, future = false, region = null;
