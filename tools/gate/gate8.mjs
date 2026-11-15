@@ -4,7 +4,8 @@
  *   await (await import(`/wodx-gate/gate8.mjs?${Date.now()}`)).run()
  * Back the world up first.
  *
- * It makes a scene of its own ("WoDX gate: Weather street", a street, out of doors, following the clock) and one actor,
+ * It makes a scene of its own ("WoDX gate: Weather street", a street, out of doors, the clock's light never ticked by
+ * hand: B6168 makes an outdoor scene follow the clock unless the Storyteller unticks it) and one actor,
  * sets tonight's weather by hand and puts it back, makes a handout and the Start a chronicle journals and deletes them,
  * and restores the sky, the weather settings and the scene that was on view. The clock never moves. Rothenstein's own
  * scenes, actors and journals are not touched.
@@ -13,7 +14,7 @@
  *   3. applying it sets WoDX Actions' sky to tonight's sky
  *   4. tonight set by hand to thick fog: the sky becomes storm and the outdoor scene shows Foundry's fog
  *   5. a scene the Storyteller gave its own weather keeps it
- *   6. light from the clock: the scene's darkness matches the sun, the moon and the clouds now
+ *   6. light from the clock: the scene's darkness matches the sun, the moon and the clouds now (on a scene nobody ticked)
  *   7. WoDX Senses hears of the fog: the answer carries the fog tag, and sight is harder out of doors
  *   8. the era kit: the kit for the era in force, and the map grade on the board
  *   9. the cues: the kit's notice cue is there and plays
@@ -82,7 +83,7 @@ export async function run() {
     });
     await step("4 fog by hand", async () => {
       scene = await Scene.create({name: "WoDX gate: Weather street", width: 1600, height: 1200, grid: {size: 100}, environment: {darknessLevel: 0.5},
-        flags: {"wodx-npc": {place: {kind: "street"}}, [MOD]: {outdoors: "on", followClock: true, night: 0.9}}});
+        flags: {"wodx-npc": {place: {kind: "street"}}, [MOD]: {outdoors: "on", night: 0.9}}});
       made.scene = scene;
       const [actor] = await Actor.createDocuments([{name: "WoDX gate: Walker", type: "Mortal", system: {attributes: {perception: {value: 3}}, abilities: {alertness: {value: 2}}}}]);
       made.actors.push(actor);

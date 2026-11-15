@@ -56,7 +56,7 @@ function registerSettings() {
     type: String, default: "auto", choices: {auto: "Make and apply it", off: "Off"}, onChange: () => { AtmosphereApp.refresh(); if ( isActiveGM() ) applyWeather({force: true}); }});
   world("sceneEffects", {name: "Rain, snow and fog on outdoor scenes", hint: "Uses Foundry's own weather effects. A scene the Storyteller gave its own weather is left alone.", type: Boolean, default: true});
   world("tellPlayers", {name: "Tell the players the weather each night", hint: "Post the night's weather in chat for everyone when the night turns.", type: Boolean, default: false});
-  world("lightFromClock", {name: "Light from the clock", hint: "Scenes marked \"Follow the clock\" in the Atmosphere window get their darkness from the sun, the moon and the clouds.", type: Boolean, default: true});
+  world("lightFromClock", {name: "Light from the clock", hint: "Out-of-doors scenes, and any scene ticked \"Follow the clock\" in the Atmosphere window, get their darkness from the sun, the moon and the clouds. Untick it on a scene to keep its own light.", type: Boolean, default: true});
   world("music", {name: "Era music", hint: "When the era changes, stop the old era's music and start the new era's calm playlist; play the combat playlist while a fight runs. Only playlists set in the Atmosphere window are touched.",
     type: Boolean, default: true});
   world("ambience", {name: "Ambience for each scene", hint: "When a scene is shown to the players, play the era kit's loop for its kind of place and, out of doors, for the weather.", type: Boolean, default: true});
@@ -195,13 +195,23 @@ async function applySceneEffect(scene, day) {
   await scene.update({weather: want, [`flags.${MOD}.effectSet`]: want});
 }
 
+/**
+ * B6168: does a scene's light follow the clock? The Storyteller's tick (or untick) in the window wins; a scene nobody
+ * ticked follows it when it is out of doors, so built, solo and setup scenes get dusk and dawn too.
+ */
+export function followsClock(scene) {
+  const f = scene?.flags?.[MOD]?.followClock;
+  if ( f === true || f === false ) return f;
+  return isOutdoor(scene);
+}
+
 async function applyLight(scene, day, time = game.time.worldTime) {
-  if ( !scene || !setting("lightFromClock") || !scene.flags?.[MOD]?.followClock ) return;
+  if ( !scene || !setting("lightFromClock") || !followsClock(scene) ) return;
   // The scene's own hour and latitude when it stands far from home
   const t = timeAt(time, scene);
   if ( !t ) return;
   const alt = W.sunAltitude(t.jdn, t.hour + t.minute / 60, Number.isFinite(Number(t.latitude)) ? Number(t.latitude) : latitude());
-  const night = Number(scene.flags[MOD].night);
+  const night = Number(scene.flags?.[MOD]?.night);
   const v = W.darknessFor({altitude: alt, moon: Number(t.moon?.illumination) || 0, sky: day?.sky ?? "clear", night: Number.isFinite(night) ? night : 0.9});
   const cur = Number(scene.environment?.darknessLevel ?? scene.darkness ?? 0);
   if ( Math.abs(cur - v) < 0.049 ) return;
@@ -1070,7 +1080,7 @@ export function AtmosphereClass() {
         <section><h3>This scene${sc ? `: ${esc(sc.navName || sc.name)}` : ""}</h3>
           ${sc ? `<div class="form-group"><label>Weather here</label><select name="outdoors" data-fixed>${opt({auto: `Decide for me (now ${isOutdoor(sc) ? "out of doors" : "indoors"})`, on: "Out of doors: weather shows", off: "Indoors: no weather"}, f.outdoors ?? "auto")}</select></div>
           <div class="form-group"><label>Opening card</label><select name="noCard" data-fixed>${opt({show: "Show the place's card to players", hide: "No card for this scene"}, f.noCard ? "hide" : "show")}</select></div>
-          <div class="form-group"><label>Follow the clock's light</label><input type="checkbox" name="followClock"${f.followClock ? " checked" : ""}></div>
+          <div class="form-group"><label>Follow the clock's light</label><input type="checkbox" name="followClock"${followsClock(sc) ? " checked" : ""}></div>
           <div class="form-group"><label>Darkness at night (0 to 1)</label><input type="number" name="night" min="0" max="1" step="0.05" value="${Number.isFinite(Number(f.night)) && f.night !== undefined ? f.night : 0.9}"></div>
           ${(() => { const all = [...(sc.sounds ?? [])]; const n = all.filter(x => K.isMuffled(x)).length;
             return `<div class="form-group"><label>Sounds through walls</label><span>${n} of ${all.length} placed sounds are stopped by walls and heard muffled through them.</span></div>
@@ -1169,7 +1179,7 @@ Hooks.once("init", () => {
 export async function prime() {
   try { CAL ??= await import("../../wodx-chronicle/scripts/calendar.mjs"); } catch (e) { console.warn(`${MOD} | no calendar`, e); }
   const api = {version: VERSION, open: () => AtmosphereApp.open(), mood: {ruleAt: Mood.ruleAt, rule: Mood.moodRule}, opening: {show: scene => { lastCard = null; openingCard(scene); }, rules: OR},
-    weather: {now, on: weatherOn, night: nightJdn, set: setNight, apply: applyWeather, modifiers: d => W.modifiers(d ?? now()), climate, isOutdoor,
+    weather: {now, on: weatherOn, night: nightJdn, set: setNight, apply: applyWeather, modifiers: d => W.modifiers(d ?? now()), climate, isOutdoor, followsClock,
       moonHidden: () => !!now()?.moonHidden, post: (d = now(), {gm = true} = {}) => d ? postWeather(d, {gm}) : null, history: W.eraShift},
     kit: {current: currentKit, play: playMood, stop: stopMusic, build: buildPlaylists, ambience: applyAmbience, cue: playCue, grade: applyGrade, frame: drawFrame, frames: redrawFrames, frameFor: () => K.frameFor(currentKit())},
     walls: {muffle: muffleScene, changes: K.muffleChanges},
