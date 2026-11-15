@@ -114,6 +114,54 @@ test("childNamesOf: patterns and listed pairs only", async () => {
   const lk = era => id => G.resolveTable(WORLD_PEOPLE_TABLES, id, {era, culture: null});
   const n = PR.childNamesOf(lk("early-modern"), "norse", "Erik");
   assert.deepEqual(n, {male: "Eriksson", female: "Eriksdotter"});
-  assert.deepEqual(PR.childNamesOf(lk("industrial"), "turkish", "Mehmed"), {male: "Mehmedoğlu", female: "Mehmedoğlu"});
+  assert.deepEqual(PR.childNamesOf(lk("industrial"), "turkish", "Mehmed"), {male: "Mehmedoğlu", female: "Mehmed kızı"});
   assert.equal(PR.childNamesOf(lk("early-modern"), "norse", "Zzz"), null, "no guessed form");
+});
+
+/* B6540 to B6545: more peoples dated from sources read on 15 November 2026 */
+test("customs B6540: the new dated laws fall where the sources put them", () => {
+  assert.equal(NC.customFor("khmer", 1909).form, "given");
+  assert.equal(NC.customFor("khmer", 1910).form, "family");
+  assert.equal(NC.customFor("serbian", 1850).form, "byname");
+  assert.equal(NC.customFor("serbian", 1851).form, "family");
+  assert.equal(NC.customFor("serbian", 1450, {noble: true}).form, "family", "nobles of the 1400s bore family names");
+  assert.equal(NC.customFor("sami", 1900).form, "byname");
+  assert.equal(NC.customFor("sami", 1923).form, "family");
+  assert.equal(NC.customFor("amazigh", 1881).form, "byname");
+  assert.equal(NC.customFor("amazigh", 1882).form, "family");
+  assert.equal(NC.customFor("amharic", 2020).form, "byname", "Ethiopia: no family name in any age");
+  assert.equal(NC.customFor("malay", 2020).form, "byname");
+  assert.equal(NC.customFor("zulu", 1300).form, "family");
+  assert.equal(NC.customFor("mande", 1250).form, "family");
+  assert.equal(NC.customFor("polish", 1250).form, "byname");
+  assert.equal(NC.customFor("polish", 1260, {noble: true}).form, "family");
+  assert.equal(NC.customFor("polish", 1850).form, "family");
+  const r = NC.customFor("russian", 1897);
+  assert.equal(r.form, "settling");
+  assert.ok(Math.abs(r.share - 0.25) < 0.01, "about one in four held a family name at the census of 1897");
+  assert.equal(NC.customFor("russian", 1935).form, "family");
+  assert.equal(NC.customFor("greek", 1700).form, "byname");
+  assert.equal(NC.customFor("greek", 1200, {noble: true}).form, "family", "the Byzantine great houses");
+  for ( const o of ["lakota", "dine", "comanche"] ) {
+    assert.equal(NC.customFor(o, 1889).form, "given", o);
+    assert.equal(NC.customFor(o, 1890).form, "settling", o);
+    assert.equal(NC.customFor(o, 1930).form, "family", o);
+  }
+  assert.ok(NC.customFor("mizrahi", 1300).share > 0.2, "family names known among Arabic-speaking Jews early");
+});
+
+test("people B6541: a Khmer of 1880 and a Lakota of 1880 bear one name; a Khmer of 1920 a family name", async () => {
+  const {WORLD_PEOPLE_TABLES} = await imp("modules/wodx-creation/data/people-world.mjs");
+  const lk = era => id => G.resolveTable(WORLD_PEOPLE_TABLES, id, {era, culture: null});
+  const mk = (origin, year, era, sex = "male", n = 20) => Array.from({length: n}, (_, i) =>
+    PR.person({rand: G.stream("b6541", `${origin}:${year}`, i), tables: lk(era), era, culture: null, sex, trade: "farmer", origin, year, later: lk("modern")}));
+  for ( const p of mk("khmer", 1880, "industrial") ) { assert.equal(p.family, null, p.name); assert.equal(p.name, p.given); }
+  for ( const p of mk("lakota", 1880, "industrial") ) assert.equal(p.family, null, p.name);
+  for ( const p of mk("khmer", 1920, "industrial") ) { assert.ok(p.family, p.name); assert.equal(p.nameCustom.hereditary, true); }
+  // An Ottoman woman of 1900 is her father's daughter (kızı), not his son (oğlu); after 1934 she bears the family name
+  for ( const p of mk("turkish", 1900, "industrial", "female") ) {
+    assert.doesNotMatch(p.name, /oğlu/, p.name);
+    assert.match(p.family, / kızı$/, p.name);
+  }
+  for ( const p of mk("turkish", 1940, "industrial", "female") ) assert.doesNotMatch(p.family, /kızı|oğlu/, p.name);
 });
