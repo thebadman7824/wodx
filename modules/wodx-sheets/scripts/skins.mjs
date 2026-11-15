@@ -122,9 +122,11 @@ export function dress(el) {
 export const dressAll = () => Promise.all([...document.querySelectorAll(".wod20.wod-sheet")].map(dress));
 
 const elOf = (app, html) => {
-  const h = html?.[0] ?? html;
+  // A V2 form is itself the element (its [0] is its first control, B6114); a V1 sheet hands over jQuery
+  if (html instanceof HTMLElement) return html;
+  const h = html?.[0];
   if (h instanceof HTMLElement) return h;
-  const e = app?.element?.[0] ?? app?.element;
+  const e = app?.element instanceof HTMLElement ? app.element : app?.element?.[0];
   return e instanceof HTMLElement ? e : null;
 };
 const onRender = (app, html) => { seen.hooks++; const el = elOf(app, html); if (el) dress(el); };
