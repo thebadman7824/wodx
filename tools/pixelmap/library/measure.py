@@ -9,7 +9,13 @@ from library.core import CATALOGUE, render, T
 def measure(sp, face="s", state=None, var=None):
     """(rendered, problems): problems lists anything drawn outside the footprint or far smaller than it."""
     wf, df = sp.size(); st = state or sp.states[0]
-    v = sp.look(None); v.update(next(iter(sp.variants.values())) if sp.variants else {}); v.update(var or {})
+    v = sp.look(None); v.update(next(iter(sp.variants.values())) if sp.variants else {})
+    try:  # a real variation of its first era, so era, wealth and style are set (global_from objects need them)
+        from library import variants as V
+        eras = V.eras_for(sp.id)
+        if eras: v.update(V.variations(sp.id, eras[-1] if sp.global_from else eras[0])[0])
+    except Exception: pass
+    v.update(var or {})
     r = render(sp, face, wf, df, st, v, 7)
     body = r["body"]; pad = r["pad"]; out = []
     ys, xs = np.nonzero(body)
