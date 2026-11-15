@@ -82,9 +82,10 @@ export async function pay(actor, key, {successes = 1, id = null} = {}) {
     case "sleep": {
       const toks = tokensOf(actor);
       const alpha = toks.map(t => ({uuid: t.uuid, alpha: t.alpha}));
+      // The token dims first, so it is already dim when the Asleep status shows
+      for ( const t of toks ) await t.update({alpha: 0.5});
       await T?.applyTimed?.(actor, {name: "Asleep", img: AC.CONDITIONS.asleep.img, condition: AC.CONDITIONS.asleep.id, duration: {kind: "time", seconds: c.seconds},
         key: "wodx-after-sleep", source: entry.page, description: entry.say, revert: {key: "wodx-actions.afterWake", data: {alpha, then: c.then ?? null, page: entry.page}}});
-      for ( const t of toks ) await t.update({alpha: 0.5});
       return card(`<p>Asleep for ${c.seconds >= 86400 ? `${Math.round(c.seconds / 86400)} days` : `${Math.round(c.seconds / 3600)} hours`} of game time: no actions until the clock passes it.</p>`);
     }
     case "bloodCap": {

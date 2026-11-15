@@ -43,6 +43,8 @@ export async function run() {
         items: [{name: "Dominate", type: "Power", system: {type: "wod.types.discipline", value: 2}},
           {name: "Protean", type: "Power", system: {type: "wod.types.discipline", value: 2}}]},
       {name: "Gate Limits Watcher", type: "Mortal", system: {advantages: {willpower: {permanent: 4, temporary: 4}}}}]);
+    // The system's sheet can prepare a new mortal to Willpower 0: set it after creation
+    await watcher.update({"system.advantages.willpower.permanent": 4, "system.advantages.willpower.temporary": 4});
     const [nt, vt, wt, gt] = await G.tokens(scene, [{actor: npc, x: 4, y: 4}, {actor: v1, x: 5, y: 4}, {actor: watcher, x: 9, y: 9}, {actor: garou, x: 12, y: 4}]);
     const live = t => scene.tokens.get(t.id)?.actor;
     const CH = game.modules.get("wodx-chronicle")?.api;
@@ -132,10 +134,10 @@ export async function run() {
       await CH.timed.applyTimed(wolf, {name: "Survivor", duration: {kind: "scene"}, key: "gate-survivor"});
       await wait(600);
       await CH.timed.endFor(wolf, {key: "gate-survivor"});
-      await waitFor(() => live(gt).statuses?.has?.("wodx-asleep"), 5000);
+      await waitFor(() => live(gt).statuses?.has?.("wodx-asleep") && scene.tokens.get(gt.id).alpha === 0.5, 5000);
       const asleep = live(gt).statuses.has("wodx-asleep"), dim = scene.tokens.get(gt.id).alpha;
       await CH.timed.endFor(live(gt), {key: "wodx-after-sleep"});
-      await wait(400);
+      await waitFor(() => scene.tokens.get(gt.id).alpha === 1, 5000);
       G.ok("10. Survivor wears off: Asleep, the token dimmed", asleep && dim === 0.5 && scene.tokens.get(gt.id).alpha === 1, {asleep, dim, after: scene.tokens.get(gt.id).alpha});
     });
 
