@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5950
+Next free block: B5960
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -322,6 +322,7 @@ Next free block: B5950
 | B5920-B5929 | The classic world timeline in the game (used B5920-B5926) | Chronicle, Storyteller |
 | B5930-B5939 | Market goods by region (the Market Goods Desk) (used B5930-B5936) | Storyteller |
 | B5940-B5949 | Primers for a scene far from home (used B5940-B5942) | Storyteller |
+| B5950-B5959 | Weather history by part of the world (used B5950-B5955) | Atmosphere |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9814,3 +9815,33 @@ Reverse: abroadPrimer returns an empty page.
 WoDX Storyteller. Each time the active scene moves into another way of life than the last, a "Far from home" card for everyone names the land and links the page. Moving between scenes in the same land posts nothing.
 
 Reverse: refreshAbroad({card: false}) everywhere.
+
+## B5950. The long ages weighed by climate (2026-11-15)
+WoDX Atmosphere, weather-rules.mjs eraShift(year, month, {climate, region}). The medieval warm spell, the Little Ice Age and its Maunder low keep their figures for central Europe and are weighed by the climate elsewhere (ERA_WEIGHT): full around the North Atlantic and the far north, about two thirds in the Mediterranean and East Asia, a quarter to a third in the tropics and the south. The warming since 1980 and the Future Darkness trend run faster near the poles. Rounded figures for play, a house reading.
+
+Reverse: eraShift ignores the place (every weight 1).
+
+## B5951. Hard years where they struck (2026-11-15)
+WoDX Atmosphere, EPISODES. Seventeen hard years from the climate's history, each with its years, months, the world regions (else climates) it touched, and how much colder or warmer, wetter or drier and stormier it ran: the dim years after the 1257 eruption, the great drought of the dry west (1276 to 1299), the great rains of 1315 to 1317, the drought of New Spain (1540 to 1581), the cold years after the eruption in Peru (1601 to 1602), the late Ming drought (1637 to 1643), the dry fog of 1783 and the hard winter after it, the year without a summer (1816) and the ash years nearer the eruption, the great drought of 1876 to 1878, Krakatoa (1884), the failed monsoons of 1896 to 1900, the dust years (1930s), the Sahel drought (1968 to 1985), the highland drought of 1983 to 1985 and the cool year after Pinatubo (1992). Eruptions felt the world over are weighed by the climate. The years are history; the sizes are a house reading.
+
+Reverse: EPISODES = [] (1816 then has no cold summer; keep the tambora row to keep the old behaviour).
+
+## B5952. Drought and rain change the wet days themselves (2026-11-15)
+WoDX Atmosphere. A hard year's wet factor scales each month's share of wet days in the rain chain, so a drought shows as fewer rain and snow nights on the map (and fewer Foundry rain effects) and a wet year as more. Storm factors scale the share of storms.
+
+Reverse: weatherFor's wet chain reads monthly(C.wet) alone.
+
+## B5953. The region comes from the scene (2026-11-15)
+WoDX Atmosphere, main.mjs. The weather passes the world region the scene stands in (WoDX Chronicle's world.here: its own, else the homeland) so a hard year is felt by region; with a hand-picked climate and no Chronicle, the climate alone decides. Left without a place, the figures are central Europe's as before.
+
+Reverse: weatherOn passes no region.
+
+## B5954. Named on the card and in the window (2026-11-15)
+WoDX Atmosphere. The weather card gives a hard year a line of its own (class watmo-era); the Weather and atmosphere window names the hard year, else the long age ("The Little Ice Age: hard winters and late springs"). The card leaves out the long age, so it does not repeat every night for centuries.
+
+Reverse: drop the watmo-era lines.
+
+## B5955. A post and a history call in the api (2026-11-15)
+WoDX Atmosphere api.weather.post(day, {gm}) posts a weather card for a day, and api.weather.history(year, month, place) gives eraShift, for gates and other modules.
+
+Reverse: drop the two calls.
