@@ -11,6 +11,9 @@ const G = await import(join(root, "modules/wodx-chronicle/scripts/gen-core.mjs")
 const W = await import(join(root, "modules/wodx-chronicle/scripts/world-rules.mjs"));
 const {PEOPLE_TABLES} = await import(join(root, "modules/wodx-creation/data/people.mjs"));
 const PR = await import(join(root, "modules/wodx-creation/scripts/people-rules.mjs"));
+// Names made by pattern from the same people's recorded parts (B5600) count as the people's own
+const {PATTERNED} = await import(join(root, "modules/wodx-creation/data/people-patterned.mjs"));
+const made = (o, sex) => PATTERNED[o]?.[sex] ?? [];
 const MI = await import(join(root, "modules/wodx-creation/data/people-missouri.mjs"));
 const split = s => s.split(",").map(x => x.trim()).filter(Boolean);
 const WEST = W.cultureOf("north-america-west");
@@ -31,9 +34,9 @@ test("missouri: own names before 1800 with no church names, women of a village, 
     for ( const era of ["medieval", "early-modern"] ) {
       const ps = people(era, o);
       assert.ok(ps.every(p => p.name.trim() && !p.name.includes("{") && !p.family), `${o} ${era}: ${ps.find(p => p.name.includes("{") || p.family)?.name}`);
-      assert.ok(ps.filter((p, i) => i % 2 === 0).every(p => split(men).includes(p.name)), `${o} ${era} men`);
+      assert.ok(ps.filter((p, i) => i % 2 === 0).every(p => (split(men).includes(p.name) || made(o, "male").includes(p.name))), `${o} ${era} men`);
       const byVillage = split(villages).map(v => `A woman of ${v}`);
-      assert.ok(ps.filter((p, i) => i % 2).every(p => split(women).includes(p.name) || byVillage.includes(p.name)), `${o} ${era} women`);
+      assert.ok(ps.filter((p, i) => i % 2).every(p => (split(women).includes(p.name) || made(o, "female").includes(p.name)) || byVillage.includes(p.name)), `${o} ${era} women`);
       assert.ok(ps.some(p => byVillage.includes(p.name)), `${o}: a woman of a village`);
     }
     assert.ok(people("modern", o, 60).every(p => split(family).includes(p.family) && !p.name.includes("{")), `${o} modern`);
