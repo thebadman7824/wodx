@@ -132,8 +132,7 @@ export async function run() {
       const g = await L.gate(garou, spit, {targets: [victim]});
       await g?.done({successes: 2});
       await CH.timed.applyTimed(victim, {name: "Blinded", condition: "blinded", duration: {kind: "rounds", rounds: 1}, key: "wodx-effect-hold"});
-      await wait(600);
-      const tagged = victim.effects.some(e => e.getFlag(MOD, "afterCost")?.key === "blinding-spittle");
+      const tagged = !!(await waitFor(() => live(vt).effects.some(e => e.getFlag(MOD, "afterCost")?.key === "blinding-spittle"), 3000));
       await CH.timed.endFor(victim, {key: "wodx-effect-hold"});
       await waitFor(() => live(vt).statuses?.has?.("wodx-blurred-sight"), 5000);
       G.ok("9. Blinding Spittle ends, Blurred sight follows", tagged && live(vt).statuses.has("wodx-blurred-sight"), {tagged, statuses: [...(live(vt).statuses ?? [])]});
@@ -192,9 +191,12 @@ export async function run() {
       const [ft] = await G.tokens(scene, [{actor: fo, x: 14, y: 8}]);
       const body = () => live(ft);
       const max0 = Number(body().system?.traits?.health?.totalhealthlevels?.max) || 7;
+      const wp0 = Number(body().system?.advantages?.willpower?.temporary) || 0;
+      const cards = [];
       for ( let k = 0; k < 4 && !body().statuses?.has?.("wodx-numbing"); k++ ) {
-        await A.fomor.numbing(body());
-        await wait(400);
+        const m = await A.fomor.numbing(body());
+        cards.push(String(m?.content ?? "no card").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").slice(0, 120));
+        await waitFor(() => body().statuses?.has?.("wodx-numbing"), 1500);
         if ( !body().statuses?.has?.("wodx-numbing") ) await L.clear?.(body());
       }
       const numb = body().statuses?.has?.("wodx-numbing");
@@ -207,7 +209,7 @@ export async function run() {
       await waitFor(() => body().statuses?.has?.("dead") && scene.tokens.get(ft.id)?.alpha === 0.25, 6000);
       const dead = !!body().statuses?.has?.("dead"), alpha = scene.tokens.get(ft.id)?.alpha;
       G.ok("13. a fomor's Numbing: more levels, no penalty, and death when it ends past Incapacitated", numb && max1 === max0 + 3 && pen === 0 && dead && alpha === 0.25,
-        {numb, max0, max1, pen, dead, alpha});
+        {numb, max0, max1, pen, dead, alpha, wp0, cards});
     });
   } catch (e) {
     G.R.errors.push(String(e?.message ?? e));
