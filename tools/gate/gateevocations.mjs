@@ -42,7 +42,7 @@ export async function run() {
     const [dt, wt, st, mt] = await G.tokens(scene, [{actor: demon, x: 3, y: 3}, {actor: witness, x: 4, y: 3}, {actor: sick, x: 5, y: 3}, {actor: marked, x: 6, y: 3}]);
     const evo = (lore, level, s = 4) => DE.evocationResults(lore, level, s, {faith: 4, name: `${lore} ${level}`, source: "gate"})[0];
     const item = (r, target, extra = {}) => ({key: r.key, target: target.uuid, by: demon.uuid, caster: demon.uuid, out: {...r.out, ...extra}});
-    const undo = async rec => { try { await A.effects.undo(rec); } catch (e) { /* the gate reads the state */ } };
+    const undo = async rec => { try { await A.effects.undo(rec ? [rec] : []); } catch (e) { /* the gate reads the state */ } };
 
     await G.step("2. Alter Memory on an NPC; Undo takes it off", async () => {
       const rec = await A.effects.apply(item(evo("humanity", 5), wt.actor ?? witness, {mode: "erase"}), "Gate Evo Demon");
