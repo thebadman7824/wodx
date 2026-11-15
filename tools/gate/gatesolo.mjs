@@ -175,7 +175,8 @@ async function setup() {
   await step("6. a request waits in the queue", async () => {
     const key = `wodx-gate-solo-${ids.since}`;
     await game.modules.get(CHRON).api.propose({type: "request", title: `${TAG}: may I?`, key});
-    await until(() => logged(ids.since, e => e.kind === "queue" && e.title.includes("may I")), WAIT);
+    // The seat logs it after its wait; with every module writing on the switch the setting write can lag, so allow longer
+    await until(() => logged(ids.since, e => e.kind === "queue" && e.title.includes("may I")), WAIT + 6000);
     const e = S().log.entries().find(x => x.at >= ids.since && x.kind === "queue" && x.title.includes("may I"));
     const p = Q().pending().find(x => x.key === key);
     ok("6. a request waits in the queue", !!e && !!p, {entry: e ?? null, pending: !!p});
