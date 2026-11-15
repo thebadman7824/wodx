@@ -1,6 +1,0 @@
----
-bump: minor
-effect: an NPC who reacts no longer stands still afterwards: a challenged intruder who stays meets the alarm or a fight ten minutes later, those who hear an alarm come running or get away, help sent for walks to the intruder, an informer walks off to the watch-house (and stopped, never arrives), one who runs makes for home and remembers who frightened them, a hostage is let go when the fight ends, and a guard on watch walks between the tagged places of its map
-visible: the NPC tokens move on the map: guards run to the trouble, bystanders and informers walk away, helpers cross to the intruder, a let-go hostage runs home and the watch walks its beat every quarter hour
----
-NPC Motives Desk, part one (B5680-B5686): what comes after an NPC's first reaction on the map. A challenge is kept on the scene and followed up; an alarm moves its hearers by temperament; help goes to the trouble; informers walk to a place tagged as a watch-house and their word is lost if they are stopped; those who run make for home, note a grudge and, if they are the kind who talk, tell someone; hostages are released when a fight ends; guards on a watch block walk a beat. New pure rules in follow-rules.mjs, harness npc-motives.test.mjs, gate gatefollow.

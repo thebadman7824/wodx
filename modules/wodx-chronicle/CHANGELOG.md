@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.124.1 (Mercy at a sentence now tells the other modules (hook wodxSentence with no mark), so an NPC shown mercy is let go and walks home (B5800))
 - 0.124.0 (Say or Do: sentences and raised buildings now act (B5823-B5824))
 - 0.123.3 (Ghouled animals follow-up: the monthly need skips the spans of time skips)
 - 0.123.2 (Emptied tables are refilled (B5641))
