@@ -6,6 +6,8 @@ import {deathDialog, awakenDialog, revenantDialog, chrysalisDialog, fallenDialog
 import {CreationCheckApp} from "./totals-check.mjs";
 import {LifepathApp} from "./lifepath.mjs";
 import {award, requestSpend, writeLogPage} from "./xp.mjs";
+import {needsSource, waived, setWaived, recordsOf, IMG} from "./learn.mjs";
+import {openLearning} from "./learn-rules.mjs";
 import {writeLineageJournal, ordinal} from "./lineage.mjs";
 import {XP} from "../data/vampire.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
@@ -286,7 +288,8 @@ export class SpendApp extends ApplicationV2 {
     actions: {
       buy: SpendApp.#onBuy,
       buyNewDiscipline: SpendApp.#onNewDiscipline,
-      buyNewAbility: SpendApp.#onNewAbility
+      buyNewAbility: SpendApp.#onNewAbility,
+      waive: SpendApp.#onWaive
     }
   };
 
@@ -331,13 +334,26 @@ export class SpendApp extends ApplicationV2 {
         <input type="text" name="newDiscipline" placeholder="Name, e.g. Celerity">
         <button type="button" data-action="buyNewDiscipline">${verb}</button></div>`;
     const pays = payer === actor ? "" : ` <em>Paid from ${esc(payer.name)}'s experience.</em>`;
+    // B6230: what is being learned now, read from the long tasks
+    const tasks = actor.flags?.["wodx-storyteller"]?.tasks ?? {};
+    const open = openLearning(recordsOf(actor));
+    const studying = open.length ? `<h3><img src="${IMG}" alt="" width="18" height="18"> Learning now</h3><table class="wodx-table wodx-learning" data-fixed><tbody>${open.map(r => {
+      const t = tasks[r.taskId];
+      return `<tr><td>${esc(r.purchase.label)} ${r.purchase.current} → ${r.purchase.next}</td><td>${esc(r.source.kind === "practice" ? "practice" : r.source.name)}</td>
+        <td>${t ? `${Number(t.total) || 0} of ${Number(t.goal) || 0}${t.status === "paused" ? ", paused" : ""}` : "–"}</td></tr>`;
+    }).join("")}</tbody></table>` : "";
+    const rule = needsSource(actor) ? `<p class="wodx-quiet">Each spend names where it is learned (a teacher, a book, a school or practice). The experience is spent at once; the trait rises when the study is done.</p>`
+      : waived(actor) ? `<p class="wodx-quiet"><b>Learning waived for this story:</b> traits rise at once.</p>` : "";
+    const waiveBtn = game.user.isGM ? `<button type="button" data-action="waive">${waived(actor) ? "Put the learning rule back" : "Waive learning for this story"}</button>` : "";
     const div = document.createElement("div");
     div.className = "wodx-body";
     div.innerHTML = `
       <div class="wodx-top"><p><strong>${t.available}</strong> experience to spend (earned ${t.earned}, spent ${t.spent}).${pays}
         Costs follow ${esc(XP[line].source)}.</p>
+        ${rule}${waiveBtn}
         ${searchBox("table.wodx-traits", "Search traits…", "Search traits")}</div>
       <div class="wodx-scroll">
+        ${studying}
         ${groups}
         <h3>Something new</h3>
         ${discBlock}
@@ -346,7 +362,7 @@ export class SpendApp extends ApplicationV2 {
           <input type="text" name="newAbility" placeholder="Name, e.g. Ride">
           <button type="button" data-action="buyNewAbility">${verb}</button></div>
       </div>
-      <footer class="wodx-footer"><p class="wodx-quiet">${game.user.isGM ? "Buying spends at once and records it in the experience log." : "Your request goes to the Storyteller, who approves it."}</p></footer>`;
+      <footer class="wodx-footer"><p class="wodx-quiet">${game.user.isGM ? "Buying spends at once and records it in the experience log." : "Your request goes to the Storyteller, who approves it."}${needsSource(actor) ? " The study then runs in Long tasks." : ""}</p></footer>`;
     return div;
   }
 
@@ -357,6 +373,11 @@ export class SpendApp extends ApplicationV2 {
   async #spend(option) {
     const r = await requestSpend(this.actor, option);
     if ( r?.ok ) this.render();
+  }
+
+  static async #onWaive() {
+    await setWaived(this.actor, !waived(this.actor));
+    this.render();
   }
 
   static #onBuy(event, target) {

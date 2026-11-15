@@ -2,6 +2,7 @@ import {findClan, clanDisciplines, generationRow, ghoulDisciplineCap, ghoulCanLe
 import {XP} from "../data/vampire.mjs";
 import * as AG from "./animal-ghoul-rules.mjs";
 import * as AS from "./animal-stock-rules.mjs";
+import {learningFor} from "./learn-rules.mjs";
 
 export const MODULE_ID = "wodx-creation";
 export const DISCIPLINE = "wod.types.discipline";
@@ -192,6 +193,7 @@ export function purchaseOptions(actor) {
   const caitiff = line === "vampire" && ownClan?.id === "caitiff";
   const {available} = xpTotals(payerOf(actor));
   const out = [];
+  const learning = actor?.flags?.[MODULE_ID]?.learning ?? {};
   const add = (kind, key, label, current, extra = {}) => {
     const max = traitMax({line, kind, generation: gen, domitorGeneration: domitorGen, golconda: !!actor?.flags?.["wodx-actions"]?.golconda});
     const cost = xpCost({line, kind, current, discipline: extra.discipline});
@@ -199,6 +201,8 @@ export function purchaseOptions(actor) {
     if ( cost === null ) reason = "Not available to this character";
     else if ( current >= max ) reason = `Already at the most this character can have (${max})`;
     else if ( extra.blocked ) reason = extra.blocked;
+    // B6230: one study at a time for each trait
+    else if ( learningFor(learning, kind, key) ) reason = "Being learned now: it rises when the study is done";
     else if ( cost > available ) reason = `Needs ${cost} experience; ${available} available`;
     out.push({kind, key, label, current, next: current + 1, cost, max, ok: !reason, reason, ...extra});
   };
@@ -271,6 +275,7 @@ export function newDisciplineOption(actor, name) {
   const cost = XP[line].newDiscipline;
   let reason = "";
   if ( disciplinesOf(actor).some(d => d.name.toLowerCase() === clean.toLowerCase()) ) reason = "Already known; raise it instead";
+  else if ( learningFor(actor?.flags?.[MODULE_ID]?.learning, "newDiscipline", `new:${clean}`, clean) ) reason = "Being learned now: it rises when the study is done";
   else if ( line === "ghoul" && isAnimal(actor) && !AG.animalCanLearn(clean) ) reason = "An animal can only learn Celerity, Fortitude and Potence";
   else if ( line === "ghoul" && !ghoulCanLearn(clean, domitorDisciplines) ) reason = "The domitor does not know this Discipline";
   else if ( cost > available ) reason = `Needs ${cost} experience; ${available} available`;
@@ -288,6 +293,7 @@ export function newAbilityOption(actor, name, group = "skill") {
   const exists = items(actor).some(i => i.type === "Trait" && i.name.toLowerCase() === clean.toLowerCase())
     || Object.values(actor.system?.abilities ?? {}).some(a => loc(a.altlabel || a.label)?.toLowerCase?.() === clean.toLowerCase());
   if ( exists ) reason = "Already on the sheet; raise it instead";
+  else if ( learningFor(actor?.flags?.[MODULE_ID]?.learning, "newAbility", `newab:${group}:${clean}`, clean) ) reason = "Being learned now: it rises when the study is done";
   else if ( cost > available ) reason = `Needs ${cost} experience; ${available} available`;
   return {kind: "newAbility", key: `newab:${group}:${clean}`, label: clean, current: 0, next: 1, cost, max: 1, ok: !reason, reason, group};
 }

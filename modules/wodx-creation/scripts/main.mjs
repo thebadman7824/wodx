@@ -11,6 +11,8 @@ import * as animalKeepersRules from "./animal-keepers-rules.mjs";
 import * as animalStockRules from "./animal-stock-rules.mjs";
 import * as animalGhouls from "./animal-ghoul-rules.mjs";
 import * as xp from "./xp.mjs";
+import * as learn from "./learn.mjs";
+import * as learnRules from "./learn-rules.mjs";
 import {CreationApp, SpendApp, awardDialog} from "./apps.mjs";
 import * as time from "./time.mjs";
 import {PassYearsApp} from "./pass-years.mjs";
@@ -44,6 +46,7 @@ Hooks.once("init", () => {
   active = true;
   installSearch();
   people.registerPeopleSettings();
+  learn.registerLearnSettings();
   archive.registerArchiveSettings();
   lifepath.registerSheetButton();
   firstNight.registerFirstNightSettings();
@@ -60,6 +63,7 @@ function start() {
   started = true;
   clearTimeout(waiting);
   xp.registerXPHandler();
+  learn.registerLearning();
   people.registerPeople();
   lifepath.registerLifepath();
   firstNight.registerFirstNight();
@@ -75,6 +79,9 @@ function start() {
   });
   const api = {
     rules, data, lineage, change, xp, time,
+    // B6230: learning from a teacher, a book, a school or practice
+    learn: {rules: learnRules, choices: learn.choicesFor, resolve: learn.resolveSource, begin: learn.begin, records: learn.recordsOf, needsSource: learn.needsSource,
+      waived: learn.waived, setWaived: learn.setWaived, rating: learn.ratingOf, reconcile: learn.reconcile, onTaskDone: learn.onTaskDone, choose: learn.chooseSource},
     passYears: () => PassYearsApp.open(),
     runSkipTest,
     open: () => CreationApp.open(),
