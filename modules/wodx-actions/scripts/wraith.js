@@ -15,6 +15,7 @@
  * Built by main.js with its helpers (ctx). Pure rules: wraith-rules.js.
  */
 
+import * as LIM from "./limits.js";
 import { spendTime } from "./spend-time.js";
 import { floatOver } from "./daysleep.js";
 import * as W from "./wraith-rules.js";
@@ -177,6 +178,9 @@ export function build(ctx) {
         return dialog(`Use an Arcanos: ${actor.name}`, content, "Use", async fd => {
             const a = list.find(x => x.id === fd.art);
             if (!a) return null;
+            // B4921: an art the books (or the house rule) say is used up is refused before anything is spent
+            const lim = await LIM.gate(actor, { name: a.n, disc: a.d, level: a.l }, { targets: fd.onSelf ? [] : null });
+            if (!lim) return null;
             const notes = [];
             for (const [id, k] of [["pathos", n(fd.pathos)], ["corpus", n(fd.corpus)]]) {
                 if (!k) continue;
@@ -192,9 +196,9 @@ export function build(ctx) {
             if (a.r) {
                 const [at, sec] = a.r.split("+");
                 const dice = Math.max(0, attr(actor, at) + second(a, sec) + n(fd.bonus));
-                const r = await rollPool(dice, fd.diff);
+                const r = await rollPool(dice, n(fd.diff) + lim.diff);
                 rolls.push(r.roll); faces = r.faces ?? []; successes = r.botch ? 0 : r.successes;
-                body += rollBlock(`${cap(at)} + ${sec && sec !== "arc" ? cap(sec) : a.d}`, r, n(fd.bonus) ? [`bonus ${fd.bonus}`] : []);
+                body += rollBlock(`${cap(at)} + ${sec && sec !== "arc" ? cap(sec) : a.d}`, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...(lim.diff ? [`Drained +${lim.diff}`] : [])]);
                 if (r.botch) body += `<div class="vta-warn">Botch: the art turns on the user (see the page); a gift to the Shadow.</div>`;
             }
             const angst = W.realmAngst(a.d, fd.realm, faces);
@@ -209,8 +213,9 @@ export function build(ctx) {
                 fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             }
             if (n(fd.wp)) await afterSpend(actor);
+            await lim.done({ successes });
             return post(actor, `${actor.name}: ${esc(a.n)}`, body, rolls, fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
-        }, { width: 560, render: root => { describe(root); for (const k of ["art", "realm", "onSelf"]) root.querySelector(`[name=${k}]`)?.addEventListener("change", () => describe(root));
+        }, { width: 560, render: root => { LIM.decorate(root, { actor, sel: "select[name=art]", powerOf: v => { const q = list.find(x => x.id === v); return q && { name: q.n, disc: q.d, level: q.l }; } }); describe(root); for (const k of ["art", "realm", "onSelf"]) root.querySelector(`[name=${k}]`)?.addEventListener("change", () => describe(root));
             const artNow = r => (r.querySelector("[name=onSelf]")?.checked ? null : list.find(x => x.id === r.querySelector("[name=art]")?.value));
             aim(root, { actor, lib: String(list[0]?.id ?? "").startsWith("gw-") ? "gw" : "w20", power: artNow, onPick: a => { tgt = a; describe(root); } }); } });
     }
@@ -218,7 +223,8 @@ export function build(ctx) {
     /* ---------------- Passions, Fetters, Memoriam ---------------- */
 
     /** A scene: the canvas scene plus the Storyteller's "New scene" counter (Passions once a scene, Hysteria). */
-    const sceneKey = () => `${canvas?.scene?.id ?? "none"}:${n(game.settings.get(MOD, "wraithScene"))}`;
+    // B4920: one scene count for everything that works once a scene (End the scene, or a new active map)
+    const sceneKey = () => `s${LIM.sceneNo()}`;
     const sessionKey = () => game.settings.get(MOD, "sessionId") || "";
 
     async function passion(actor) {
@@ -614,6 +620,8 @@ export function build(ctx) {
         if (canvas?.scene?.getFlag(MOD, "hysteria")) await canvas.scene.unsetFlag(MOD, "hysteria");
         await autoStorm().catch(e => console.error("WoDX | Maelstrom", e));
         if (quiet) return true;
+        // B4920: pressed by hand, it starts a new scene for every once-a-scene count, not only the wraith ones
+        await LIM.newScene("A new scene");
         return ChatMessage.create({ content: `<div class="vta-card"><h3>A new scene</h3><p>Passions can be tapped again; Hysteria ends.</p></div>`, whisper: gmIds(), speaker: { alias: "WoDX" } });
     }
     /** A new session (Memoriam and Eidolon are once a session). Set at a GM's first login after six hours away, or by hand. */
@@ -676,7 +684,14 @@ export function build(ctx) {
         return null;
     }
 
-    return { fetterScene, restAll, maelstrom, storm, great, autoStorm, info, useArcanos, corpusDamage, newScene, newSession, onReady, passion, fetter, memoriam, healCorpus, setCorpusDamage, shadowguide, whisper, shadow, harrowing, vsAngst, caul, hysteria, onCorpus, afterSpend, shroudAt, onChatButton, guideOf, targetTraits };
+    /** B4926: the Arcanoi an NPC may choose by itself. */
+    function powersFor(actor) {
+        const lib = library();
+        if (!lib) return [];
+        return W.artsFor(lib.arts, info(actor).arcanoi).filter(a => a.r).map(a => ({ use: "useArcanos", field: "art", value: a.id, name: a.n, disc: a.d, level: a.l,
+            set: String(a.id).startsWith("gw-") ? "greatwar" : "wraith", id: a.id }));
+    }
+    return { powersFor, fetterScene, restAll, maelstrom, storm, great, autoStorm, info, useArcanos, corpusDamage, newScene, newSession, onReady, passion, fetter, memoriam, healCorpus, setCorpusDamage, shadowguide, whisper, shadow, harrowing, vsAngst, caul, hysteria, onCorpus, afterSpend, shroudAt, onChatButton, guideOf, targetTraits };
 }
 
 export function registerSettings() {

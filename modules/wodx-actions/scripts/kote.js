@@ -13,6 +13,7 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: kote-rules.js.
  */
+import * as LIM from "./limits.js";
 import * as K from "./kote-rules.js";
 import * as KA from "./kote-arts.js";
 import * as EF from "./effects.js";
@@ -48,7 +49,8 @@ export function build(ctx) {
             hunger: K.hunger(chi.yin + chi.yang, perm === "yang"), perTurn: K.chiPerTurn(dharma.rating), stamina: ctx.attr(actor, "stamina"),
             direction: f.direction || "", archetype: f.archetype || "", aspect: f.aspect || "", demonOpen: f.demonScene === sceneKey() };
     }
-    const sceneKey = () => `${game.scenes?.viewed?.id ?? ""}:${Math.floor(game.time.worldTime / 3600)}`;
+    // B4920: one scene count for everything that works once a scene (End the scene, or a new active map)
+    const sceneKey = () => `s${LIM.sceneNo()}`;
     const state = i => `Yin ${i.v.yin} (${i.chi.yin} Chi), Yang ${i.v.yang} (${i.chi.yang} Chi), Hun ${i.v.hun}, P'o ${i.v.po} (${i.chi.demon} Demon Chi); Dharma ${i.dharma.rating}${i.dharma.name ? ` (${esc(i.dharma.name)})` : ""}`;
     const after = actor => { const i = info(actor); return `${i.hunger === "fed" ? "" : `${cap(i.hunger)}. `}${i.perm ? `Permanently imbalanced toward ${KIND[i.perm]}. ` : ""}${i.temp.length ? `Temporarily imbalanced (${i.temp.map(t => KIND[t]).join(", ")}).` : ""}`.trim(); };
     async function setChi(actor, upd) {
@@ -132,6 +134,8 @@ export function build(ctx) {
             const it = arts.find(x => x.id === root.querySelector("[name=art]")?.value), sel = root.querySelector("[name=pw]");
             if (!sel) return;
             if (pick) sel.innerHTML = `<option value="">(no named power)</option>` + powersFor(it).map(p => `<option value="${p.id}">${"•".repeat(p.l)} ${esc(p.name)}</option>`).join("");
+            // B4921: used-up powers are greyed with the reason
+            if (pick) LIM.decorate(root, { actor, sel: "select[name=pw]", powerOf: v => { const q = KA.powerById(v); return q && { name: q.name, disc: it?.name ?? "", level: q.l }; } });
             const p = KA.powerById(sel.value), box = root.querySelector(".wodx-art-info");
             if (!p) { if (box) box.textContent = ""; return; }
             const c = KA.chiOf(p.cost), set = (k, v) => { const el = root.querySelector(`[name=${k}]`); if (el) el.value = v; };
@@ -146,6 +150,9 @@ export function build(ctx) {
             const plan = K.spendPlan({ dharma: i.dharma.rating, yinChi: i.chi.yin, yangChi: i.chi.yang, demonChi: i.chi.demon, stamina: i.stamina }, kind, n(fd.k), { equilibrium: !!fd.eq });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
             if (kind === "yin" && flag(actor).inSun) { notify(`${actor.name} cannot spend Yin in sunlight.`); return null; }
+            // B4921: a power the book (or the house rule) says is used up is refused before Chi is spent
+            const lim = pw ? await LIM.gate(actor, { name: pw.name, disc: it?.name ?? "", level: pw.l }) : { diff: 0, done: async () => {} };
+            if (!lim) return null;
             await setChi(actor, { [kind]: i.chi[kind] - n(fd.k) });
             let body = `<div class="vta-sec">${it ? `<b>${esc(it.name)}</b>: ` : ""}${n(fd.k)} ${KIND[kind]} Chi.</div>`, rolls = [];
             if (def?.kind === "demon" || kind === "demon") {
@@ -154,8 +161,8 @@ export function build(ctx) {
             }
             let got = 1;
             if (n(fd.dice)) {
-                const r = await rollPool(n(fd.dice), n(fd.diff)); rolls.push(r.roll);
-                body += rollBlock(pw ? esc(pw.name) : it ? esc(it.name) : "The roll", r);
+                const r = await rollPool(n(fd.dice), n(fd.diff) + lim.diff); rolls.push(r.roll);
+                body += rollBlock(pw ? esc(pw.name) : it ? esc(it.name) : "The roll", r, lim.diff ? [`Drained +${lim.diff}`] : []);
                 got = r.botch ? 0 : r.successes;
                 if (r.botch && i.temp.length) {
                     const ex = K.chiExplosion({ yin: i.v.yin, yang: i.v.yang, yinChi: i.chi.yin - (kind === "yin" ? n(fd.k) : 0), yangChi: i.chi.yang - (kind === "yang" ? n(fd.k) : 0) });
@@ -180,6 +187,7 @@ export function build(ctx) {
                 }
             }
             body += `<div class="wodx-quiet">${REF} ${pw ? `p. ${pw.p}; ` : ""}pp. 54, 90, 139–140</div>`;
+            await lim.done({ successes: got });
             return post(actor, `${actor.name}${pw ? `: ${pw.name}` : " spends Chi"}`, body, rolls.filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
         }, { width: 520, render: root => { fill(root, true); root.querySelector("[name=art]")?.addEventListener("change", () => fill(root, true)); root.querySelector("[name=pw]")?.addEventListener("change", () => fill(root, false)); root.querySelector("[name=wall]")?.addEventListener("input", () => fill(root, false)); } });
     }

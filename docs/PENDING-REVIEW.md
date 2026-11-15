@@ -1415,6 +1415,19 @@ Ben picked the recommendation on all 29 desk items (https://claude.ai/artifact/A
 | 2026-11-14 | Powers tagged as summonings that call nothing (B4836) | 22 powers work through Bind, Make or Sway instead of a summoning | NOT_SUMMON in summon-specs.js |
 | 2026-11-14 | Unclear summoning pages (B4820) | Solomonic Summoning, The Giant's Dance, Slip the Shadow, Welcoming Waters, Summon the Pack and Blood that wakes the image built from the best reading of badly scanned or silent pages | their entries in summon-specs.js |
 
+## Approved by Ben, 14 November 2026, 22:44 and 22:59 UTC (Power Limits and After-Cost Desks)
+
+Ben picked the Power Limits Desk (https://claude.ai/artifact/PChWEUj4WJaKdihePVFvqC) and every After-Cost Desk item (https://claude.ai/artifact/YQ3c4ymvy9FWAyBdvfkEPd) as "Build it". Readings Claude made inside those picks:
+
+| Date | Question | Choice made | How to reverse it |
+|---|---|---|---|
+| 2026-11-14 | Which powers have a use limit (B4921) | The 20 powers whose own page sets one, by name or Discipline, with the page | LIMITS in limit-rules.js |
+| 2026-11-14 | The desk's unnamed Demon Chi power (B4924) | Strengthening the Demon, Kindred of the East Companion p. 74 (Chi'iu Muh) | its entry in after-cost-rules.js |
+| 2026-11-14 | Animal habits penalty (B4924) | +1 difficulty on every Social roll while the mark lasts (the desk's house reading of "nervous tics") | CONDITIONS.habits mods in after-cost-rules.js |
+| 2026-11-14 | Which lasting effect carries an after-cost (B4924) | The power's next timed effect on its payer within two minutes, or one named for what it does; otherwise the scene's end | tryTag in after-costs.js |
+| 2026-11-14 | Background experience for servants (B4929) | The current rating times three, at least three (V20 leaves it to the Storyteller) | backgroundCost in summon-rules.js |
+| 2026-11-14 | When an NPC is cornered (B4927) | Two foes within 2 yards and at least three wound levels taken | powerPick in wodx-npc main.mjs |
+
 ## Waiting for review
 
 | Date | Question | Choice made | How to reverse it |

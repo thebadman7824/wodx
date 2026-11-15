@@ -242,3 +242,30 @@ export function cardLines(r, {caster = "the summoner"} = {}) {
   if ( r.note ) lines.push(r.note);
   return lines;
 }
+
+/**
+ * B4928 (Ben's Power Limits Desk pick d1): a resisted or contested roll shown in full. parts: [{name, value}];
+ * faces: the dice; against: the power's own successes, when known. Returns {pool, faces: [{v, mark}], result}.
+ */
+export function breakdown({parts = [], dice = 0, diff = 6, faces = [], successes = 0, botch = false, against = null} = {}) {
+  const pool = `${parts.length ? parts.map(p => `${p.name} ${n(p.value)}`).join(" + ") + " = " : ""}${n(dice)} dice, difficulty ${n(diff)}`;
+  const marks = faces.map(v => ({v, mark: v === 1 ? "one" : v >= n(diff) ? "hit" : "miss"}));
+  const hits = marks.filter(f => f.mark === "hit").length, ones = marks.filter(f => f.mark === "one").length;
+  const got = botch ? "a botch" : `${n(successes)} success${n(successes) === 1 ? "" : "es"}`;
+  const vs = against === null || against === undefined ? "" : `; the power had ${n(against)}`;
+  return {pool, faces: marks, result: `${hits} at ${n(diff)} or more, ${ones} one${ones === 1 ? "" : "s"} taken off: ${got}${vs}.`};
+}
+
+/**
+ * B4929 (pick f1): lasting servants of a player's character count against a Background: Retainers for servants,
+ * Familiar for a familiar. NPC masters have no cap. Returns {over, cap, have, adding, bg}.
+ */
+export function servantCap({rating = 0, have = 0, adding = 1, familiar = false, npc = false} = {}) {
+  const bg = familiar ? "Familiar" : "Retainers";
+  if ( npc ) return {over: false, cap: Infinity, have: n(have), adding: n(adding), bg};
+  const cap = familiar ? Math.min(1, n(rating)) : n(rating);
+  return {over: n(have) + n(adding) > cap, cap, have: n(have), adding: n(adding), bg};
+}
+
+/** Experience for the next dot of a Background: the current rating times three (WoDX house cost; V20 leaves it to the Storyteller). */
+export const backgroundCost = current => Math.max(1, n(current)) * 3;

@@ -27,6 +27,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxAuraRead | otherworlds | senses (Aura Perception rings show what this Read the Soul showed) |
 | wodxDamageApplied | combat | interactables (a lethal or worse wound leaves blood and traces, B3368), actions, chronicle (harm to a Toreador's Muse, or to Kinfolk; a Golconda seeker's killing), npc, paperdoll (a sprite token plays its attack when no attack roll came just before) |
 | wodxPowerShown | actions (a power rolled from its window, with the actor, a target, the power's name, its group, its kind and the character's line) | paperdoll (a sprite token plays its casting move with the effect that fits the power) |
+| wodxNewScene | actions (a new scene by End the scene or a new active map, B4920) | actions (Drained ends, once-a-scene powers are free again, and after-costs with no lasting effect are paid, B4920, B4924) |
 | wodxEndScene | chronicle | actions, storyteller |
 | wodxEraApplied | chronicle | atmosphere, chronicle, otherworlds |
 | wodxEventFired | chronicle | chronicle (Malkavians who saw it coming), interactables, storyteller (market news; a great event darkens the sky over the town scenes, B4628) |

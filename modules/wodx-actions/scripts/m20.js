@@ -10,6 +10,7 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: m20-rules.js.
  */
+import * as LIM from "./limits.js";
 import * as M from "./m20-rules.js";
 import { floatOver } from "./daysleep.js";
 import { aim, castIntent } from "./aim.js";
@@ -90,13 +91,17 @@ export function build(ctx) {
             const kw = form.keywords.length || form.world ? EF.plan(actor, form, 0, { used, feat: n(fd.feat), age: sg.age.key }) : null;
             const plan = M.castPlan({ arete: i.arete, willpower: i.willpower.perm, used, known: i.spheres, kind: fd.kind, mods, quint: n(fd.q), avatar: i.avatar, need: kw ? kw.need : n(fd.feat), extra: n(fd.extra), freeMod: n(fd.free) });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
+            // B4921: an Effect of the fifth level or higher is once a scene (house rule), refused before Quintessence is spent
+            const lim = await LIM.gate(actor, { name: `Effect: ${used.map(x => `${x.sphere} ${x.level}`).join(", ")}`, level: Math.max(0, ...used.map(x => x.level)) });
+            if (!lim) return null;
             if (plan.quintUsed) { if (plan.quintUsed > i.quint) { notify(`${actor.name} has ${i.quint} Quintessence.`); return null; } await updateActor(actor, { "system.quintessence.temporary": i.quint - plan.quintUsed }); }
             const wp = !!fd.wp && await spendWillpower(actor, 1);
             // B4874: the caster's features on a casting (a House's fire, a choir's voices): magick, each Sphere, and fire for Forces that harms
             const tm = TH.traitMods(actor, ["magick", ...used.map(x => x.sphere), ...(fd.dmg && used.some(x => x.sphere === "forces") ? ["fire"] : [])]);
             plan.dice = Math.max(1, plan.dice + (tm.dice || 0));
             plan.difficulty = Math.max(3, Math.min(10, plan.difficulty + (tm.diff || 0)));
-            const r = await rollPool(plan.dice, plan.difficulty, { willpower: wp });
+            const r = await rollPool(plan.dice, plan.difficulty + lim.diff, { willpower: wp });
+            await lim.done({ successes: r.botch ? 0 : r.successes });
             const d = M.degree(r, plan.need);
             const px = M.paradoxGained(fd.kind, plan.highest, r.botch);
             const after = px ? await setParadox(actor, info(actor).paradox + px) : null;

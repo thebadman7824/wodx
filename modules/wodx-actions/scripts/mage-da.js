@@ -13,6 +13,7 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: mage-da-rules.js.
  */
+import * as LIM from "./limits.js";
 import * as M from "./mage-da-rules.js";
 import * as G from "./mage-da-grimoire.js";
 import * as P from "./profiles.js";
@@ -66,7 +67,8 @@ export function build(ctx) {
             specialty: { foundation: String(f.specialties?.foundation ?? ""), pillars: { ...(f.specialties?.pillars ?? {}) } } };
     }
     const save = (actor, patch) => setFlag(actor, "daMage", { ...(actor.getFlag(MOD, "daMage") ?? {}), ...patch });
-    const sceneKey = () => `${game.scenes?.viewed?.id ?? ""}:${game.combat?.id ?? ""}:${Math.floor(game.time.worldTime / 3600)}`;
+    // B4920: one scene count for everything that works once a scene (End the scene, or a new active map)
+    const sceneKey = () => `s${LIM.sceneNo()}`;
 
     /* -------------------------------------------------------------- */
     /*  Fellowship and Pillars                                         */
@@ -154,6 +156,10 @@ export function build(ctx) {
                 { quintessence: n(fd.q), freeFocus: !!fd.freeFocus, sanctum, failures: here.failures, botches: here.botches, blotDice: n(fd.blot),
                   season: season ? fd.season : null, sunday: sunday && !!fd.sunday, specialty: !!specF && !!fd.specF });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
+            // B4921: a spell of the fifth level or higher is once a scene (house rule), refused before Quintessence is spent
+            const plim = await LIM.gate(actor, { name: rote?.name ?? `Spell: ${Object.entries(levels).filter(([, v]) => n(v) > 0).map(([k, v]) => `${k} ${v}`).join(", ")}`, level: Math.max(0, ...Object.values(levels).map(n)) });
+            if (!plim) return null;
+            plan.difficulty += plim.diff;
             const qSpend = Math.min(3, n(fd.q)) + plan.steady;
             const lim = M.fountLimits(i.fount);
             if (qSpend > lim.perTurn) { notify(`${actor.name} can spend only ${lim.perTurn} Quintessence a turn (Fount ${i.fount}, pp. 86–87).`); return null; }
@@ -162,6 +168,7 @@ export function build(ctx) {
             const wp = !!fd.wp && await spendWillpower(actor, 1);
             if (n(fd.blot)) await game.wodxCombat?.applyDamage?.(actor, "lethal", n(fd.blot), { status: true });
             const r = await rollPool(plan.dice, plan.difficulty, { willpower: wp });
+            await plim.done({ successes: r.botch ? 0 : r.successes });
             // A Pillar specialty re-rolls 10s; the new dice only add successes (Grimoire p. 112)
             const specUsed = !!fd.specP && specP.some(p => n(levels[p.key]) > 0);
             const extraRolls = [];
