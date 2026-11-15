@@ -57,6 +57,7 @@ The custom hooks the WoDX modules send, who sends them and who listens. A module
 | wodxSkipStart | chronicle | chronicle (the Legends book is brought up to date before the clock moves) |
 | wodxSkipEnd | chronicle | actions, atmosphere, chronicle, interactables, npc, otherworlds, sheets, storyteller |
 | wodxSocial | actions | chronicle (flaws that bite on a social act; a Ravnos vice fed or called; a Nosferatu's true face; a Setite's won seduction, persuasion, deceit or bribe moves the victim's Corruption; a Golconda seeker's theft) |
+| wodxLookOver | actions | npc (a sense of the viewer's line is rolled for a hidden loyalty, B6452) |
 | wodxStockFilter | interactables | storyteller (markets thin or fill a trader's stock draw) |
 | wodxTradeDone | actions | storyteller (a week of player trade gluts or empties a market) |
 | wodxTrade | actions | chronicle (a Ravnos vice fed or called; a Nosferatu's page of secrets sold; a Setite's gift that feeds the victim's vice moves their Corruption) |
@@ -83,6 +84,7 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 
 | Hook | Sent by | Carries |
 |---|---|---|
+| wodxNightUndone | chronicle | pieces of the Hand's work taken back with the night's work: {ids, plan} (B6222) |
 | wodxBondRestraint | npc | a bound servant rolled before striking its master: {attacker, target, kind, stop} (B5102) |
 | wodxScar | chronicle | lasting damage left on a scene: {scene, id, kind, severity, hit} (B3759) |
 | wodxWay | storyteller | a company went through a Way: {from, to, kind, actors, minutes} (B4780) |
@@ -104,7 +106,6 @@ Kept on purpose, so a later module or a world macro can listen without changing 
 | wodxBirth | npc | a birth or a loss: {mother, other, record, outcome, child} (outcome is well, hard or loss) |
 | wodxGrownUp | npc | a child sheet grown by an approved card: {actor, plan} (plan.grown when they reach 18) |
 | wodxProposal | npc | a proposal of marriage answered: {a, b, record, answer} (answer is yes, no or blocked by a feud) |
-| wodxLookOver | actions | a character looked a stranger over or asked around about them: {actor, npc, kind (lookover or askabout), successes, botch} |
 | wodxSecretFound | npc | a character finds out a secret: {holder, finder, secret, entry} (entry: the Ledger hook's id) |
 | wodxSecretExposed | npc | a secret is laid bare at court: {holder, secret, by} |
 | wodxCaptive | npc | an NPC has taken someone prisoner: {actor, name, faction, factionName, place, placeName, by, text} (B5089); the Storyteller's signal board makes it a rumour |

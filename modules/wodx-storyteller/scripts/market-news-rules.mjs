@@ -8,6 +8,8 @@
  *                  week. Past a threshold the market is glutted or short, again as a card to apply.
  * All numbers here are house rules.
  */
+import {DAY, WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
+export {WEEK};
 
 /** Kinds of market news. index: price multipliers by goods kind; supply: the supply step; crowd: passers-by density. */
 export const PRESETS = {
@@ -70,7 +72,7 @@ export function worldNewsFor(ev = {}, {homePart = "MO", year = 0} = {}) {
   return null;
 }
 /** Is a world card of this kind too soon after the last one? last: world time of the last card of the kind. */
-export const tooSoon = (last, now) => Number.isFinite(last) && now - last >= 0 && now - last < WORLD_GAP_DAYS * 86400;
+export const tooSoon = (last, now) => Number.isFinite(last) && now - last >= 0 && now - last < WORLD_GAP_DAYS * DAY;
 
 /** The preset key for an event, or null. */
 export function newsFor(ev = {}) {
@@ -116,7 +118,6 @@ export function undoChange(change = {}) {
 
 /* ---- Player trade ---- */
 
-export const WEEK = 7 * 24 * 60 * 60;
 /** How many of one kind in a week before the market notices (house rule). */
 export const TRADE_THRESHOLD = 10;
 export const TRADE_STEP = {in: {supply: "plenty", index: 0.8, word: "glutted"}, out: {supply: "short", index: 1.25, word: "running short"}};

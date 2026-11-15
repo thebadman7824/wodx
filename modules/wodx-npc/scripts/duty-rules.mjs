@@ -10,9 +10,9 @@
  *   Demon: The Fallen's followers and thralls (pp. 155-161).
  * WoDX readings: the hours, the reasons for an Embrace, how many faithful are seen, and the rest.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
-const DAY = 86400;
 const hash = s => { let h = 2166136261; for ( const c of String(s) ) { h ^= c.codePointAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
 const B = (from, to, place, activity, more = {}) => ({from, to, place, activity, when: "any", days: null, feast: "any", label: "", ...more});
 
@@ -70,6 +70,8 @@ export const raidForce = year => (num(year) < 1700 ? "purge" : "patrol");
 export function servantDuty(kind, place, masterLine = "vampire") {
   if ( !place ) return null;
   if ( (kind === "blood" || kind === "retainer") && masterLine === "vampire" ) return B(0, 24, place, "attend", {when: "day", label: "Keeping the master's haven"});
+  // B6318: a Kuei-jin rests by day too (WoDX Actions day sleep), and its blood cult keeps the house while it does
+  if ( (kind === "cult" || kind === "retainer") && masterLine === "kuei-jin" ) return B(0, 24, place, "attend", {when: "day", label: "Keeping the master's house"});
   return B(18, 22, place, "attend", {label: "Attending the master"});
 }
 /** A servant attending its master brings a vessel on the master's hunting night: one more die. */

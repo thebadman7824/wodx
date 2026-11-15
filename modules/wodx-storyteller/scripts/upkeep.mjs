@@ -17,10 +17,12 @@ import * as W from "./world-rules.mjs";
 import {MOD, SOCKET, esc, isActiveGM, setting, isPC, chron, log} from "./core.mjs";
 import {describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 import * as Hunters from "./hunters.mjs";
 import * as Herds from "./herds.mjs";
 
 export const T_BETWEEN = `${MOD}.between`;
+export const T_LAPSE = `${MOD}.tieLapse`;
 export const T_HEAT = `${MOD}.heat`;
 const ACT = "wodx-actions";
 const gmIds = () => game.users.filter(u => u.isGM).map(u => u.id);
@@ -50,7 +52,11 @@ function charView(a) {
   const prof = profileOf(a);
   const s = a.system ?? {}, af = a.flags?.[ACT] ?? {};
   const d = s.health?.damage ?? {};
-  return {name: a.name, vampire: prof === "kindred" || /vampire/i.test(a.type), torpor: !!af.torpor, golconda: !!af.golconda,
+  const kueijin = /vampire/i.test(a.type) && String(s.settings?.variant ?? "").toLowerCase() === "kindredeast";
+  const shifter = /werewolf|changing breed/i.test(a.type) || prof === "lupine";
+  return {name: a.name, vampire: !kueijin && (prof === "kindred" || /vampire/i.test(a.type)), kueijin, shifter, torpor: !!af.torpor, golconda: !!af.golconda,
+    chi: {yang: num(s.advantages?.yangchi?.temporary), yin: num(s.advantages?.yinchi?.temporary)},
+    rage: {temp: num(s.advantages?.rage?.temporary), perm: num(s.advantages?.rage?.permanent)},
     blood: {value: num(s.advantages?.bloodpool?.temporary), max: num(s.advantages?.bloodpool?.max)},
     willpower: {temp: num(s.advantages?.willpower?.temporary), perm: num(s.advantages?.willpower?.permanent)},
     wounded: num(d.bashing) + num(d.lethal) + num(d.aggravated) > 0};
@@ -62,7 +68,8 @@ export async function onSkip(info) {
   if ( nights < 1 ) return null;
   // The nightfall card runs New Night itself when Dawn and dusk is automatic; then the last night is already settled
   const lastNightHandled = actSetting("dawnDusk", "prompt") === "auto";
-  const opts = {nights, willpowerMode: actSetting("willpowerRecovery", "night"), nightlyBlood: actSetting("nightlyBlood", true), lastNightHandled};
+  const opts = {nights, willpowerMode: actSetting("willpowerRecovery", "night"), nightlyBlood: actSetting("nightlyBlood", true), lastNightHandled,
+    riseChiPaid: actSetting("daySleep", true) !== false};
   const rows = [];
   const only = Array.isArray(info.actorIds) ? new Set(info.actorIds) : null;
   for ( const a of game.actors.filter(x => isPC(x) && (!only || only.has(x.id))) ) {
@@ -83,6 +90,13 @@ async function applyDelta(a, delta, sign = 1) {
     const b = num(s.bloodpool?.temporary), to = Math.max(0, Math.min(num(s.bloodpool?.max) || Infinity, b + sign * delta.blood));
     if ( to !== b ) { upd["system.advantages.bloodpool.temporary"] = to; done.blood = to - b; }
   }
+  // B6321: a Kuei-jin's Chi, as the Kindred's blood
+  for ( const [k, cap] of [["yangchi", "permanent"], ["yinchi", "permanent"]] ) {
+    if ( !delta[k] ) continue;
+    const v = num(s[k]?.temporary), top = num(s[k]?.[cap]) || num(s[k]?.max) || Infinity;
+    const to = Math.max(0, Math.min(top, v + sign * delta[k]));
+    if ( to !== v ) { upd[`system.advantages.${k}.temporary`] = to; done[k] = to - v; }
+  }
   if ( delta.willpower ) {
     const w = num(s.willpower?.temporary), to = Math.max(0, Math.min(num(s.willpower?.permanent), w + sign * delta.willpower));
     if ( to !== w ) { upd["system.advantages.willpower.temporary"] = to; done.willpower = to - w; }
@@ -102,11 +116,12 @@ async function approveBetween(entry) {
     const bits = [];
     if ( done.blood ) bits.push(`blood ${done.blood > 0 ? "+" : ""}${done.blood}`);
     if ( done.willpower ) bits.push(`Willpower ${done.willpower > 0 ? "+" : ""}${done.willpower}`);
+    for ( const [k, w] of [["yangchi", "Yang Chi"], ["yinchi", "Yin Chi"]] ) if ( done[k] ) bits.push(`${w} ${done[k] > 0 ? "+" : ""}${done[k]}`);
     lines.push(`<li><b>${esc(a.name)}</b>: ${bits.join(", ")}</li>`);
   }
   if ( !applied.length ) return;
   await ChatMessage.create({content: `<div class="wodx-card wst-between"><h3>Between nights</h3><ul>${lines.join("")}</ul>
-    <p class="wodx-quiet">Rising costs a blood a night (VtDA20 p. 340); Willpower one a night (VtDA20 p. 309).</p>
+    <p class="wodx-quiet">Rising costs a blood a night (VtDA20 p. 340), a Chi for a Kuei-jin (Kindred of the East pdf 127); Willpower one a night (VtDA20 p. 309).</p>
     <button type="button" data-action="wst-between-undo"><i class="fa-solid fa-rotate-left"></i> Undo</button></div>`,
     whisper: gmIds(), speaker: {alias: "Between nights"}, flags: {[MOD]: {betweenUndo: applied}}});
 }
@@ -187,6 +202,14 @@ export async function checkTies({force = false} = {}) {
   await ChatMessage.create({content: `<div class="wodx-card wst-ties"><h3>Ties that need tending</h3><ul>${li}</ul><p class="wodx-quiet">How often each needs tending is a house rule; change it in the Ties window.</p></div>`,
     whisper: gmIds(), speaker: {alias: "Ties"}});
   for ( const {a, s} of rows ) await log({kind: "tie", actor: isPC(a) ? a.id : null, name: a.name, attention: "A tie needs tending", text: `${s.name} has gone untended.`});
+  // B6327: a lapse that costs something goes to the Storyteller to approve, and approving applies it
+  for ( const {a, s} of rows ) {
+    const how = U.lapseAction(s.kind), itemId = U.itemIdOfTie(s.key, s.kind);
+    if ( !how || !itemId || !a.items.get(itemId) ) continue;
+    await chron()?.approvals?.propose?.({type: T_LAPSE, key: `lapse:${a.id}:${s.key}:${day}`,
+      title: `${a.name}: ${s.name} untended`, detail: how === "neglect" ? `Roll the neglect check: the rating at 9; failure costs a dot, a botch two (Wraith 20th pdf ${s.kind === "fetter" ? 374 : 371}).` : `${s.name} loses a dot for going untended.`,
+      data: {actorId: a.id, key: s.key, kind: s.kind, itemId, how, name: s.name}});
+  }
   return rows.map(({a, s}) => ({actor: a.id, key: s.key}));
 }
 
@@ -343,11 +366,36 @@ export async function upkeepChooser() {
   if ( pick === "check" ) { const n = await checkTies({force: true}); if ( !n.length ) ui.notifications.info("No ties have come due."); }
 }
 
+/** B6327: an approved lapse: the neglect roll or the lost dot, on the sheet, and the tie's clock starts again. */
+async function approveLapse(entry) {
+  const d = entry?.data ?? {}, a = game.actors.get(d.actorId), it = a?.items?.get?.(d.itemId);
+  if ( !a || !it ) return {ok: false, why: "The character or the trait is gone."};
+  const before = num(it.system?.value);
+  let drop = 1, rolls = [], line = "";
+  if ( d.how === "neglect" ) {
+    const r = await new Roll(`${Math.max(1, before)}d10`).evaluate();
+    const faces = r.dice?.[0]?.results?.map(x => x.result) ?? [];
+    const got = TERMS.successes(faces, 9);
+    drop = U.neglectDrop({successes: got.successes, botch: got.botch});
+    rolls = [r];
+    line = `Neglect check, ${before} dice at 9: ${faces.join(", ")}. `;
+  }
+  const after = Math.max(0, before - drop);
+  if ( after !== before ) await it.update({"system.value": after});
+  await saveTie(a, d.key, {last: now(), warned: null});
+  const harrow = d.how === "neglect" && before > 0 && after === 0;
+  const owners = game.users.filter(u => a.testUserPermission?.(u, "OWNER")).map(u => u.id);
+  await ChatMessage.create({whisper: [...new Set([...owners, ...gmIds()])], speaker: {alias: a.name}, rolls,
+    content: `<div class="wodx-card wst-ties"><h3>${esc(d.name)} untended</h3><p>${esc(line)}${drop && after !== before ? `${esc(it.name)} ${before} to ${after}.` : "It holds."}${harrow ? " The last hold on it breaks: a Harrowing follows (Wraith 20th pdf 371, 374)." : ""}</p></div>`});
+  return {ok: true, before, after};
+}
+
 /* ---------------- Wiring ---------------- */
 
 export function registerUpkeepHandlers() {
   const ap = chron()?.approvals;
   ap?.registerHandler?.(T_BETWEEN, {label: "Between nights (blood and Willpower over a time skip)", approve: approveBetween});
+  ap?.registerHandler?.(T_LAPSE, {label: "A tie gone untended: the neglect roll or a lost dot", approve: approveLapse});
   ap?.registerHandler?.(T_HEAT, {label: "A hot hunting ground: the era's response", approve: approveHeat});
 }
 

@@ -20,6 +20,7 @@
  * marked and logged in DECISIONS (B763).
  */
 import * as M from "./m20-rules.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const n = v => { const x = Number(v); return Number.isFinite(x) ? x : 0; };
 
@@ -181,9 +182,9 @@ export function durationFor(step) {
   const label = M.DURATION[s];
   if ( s === 1 ) return {label, timed: {kind: "rounds", rounds: 1}};
   if ( s === 2 ) return {label, timed: {kind: "scene"}};
-  if ( s === 3 ) return {label, timed: {kind: "time", seconds: 86400}};
-  if ( s === 4 ) return {label, timed: {kind: "time", seconds: 30 * 86400}}; // a story: a month of game time (house rule)
-  if ( s === 5 ) return {label, timed: {kind: "time", seconds: 182 * 86400}};
+  if ( s === 3 ) return {label, timed: {kind: "time", seconds: DAY}};
+  if ( s === 4 ) return {label, timed: {kind: "time", seconds: 30 * DAY}}; // a story: a month of game time (house rule)
+  if ( s === 5 ) return {label, timed: {kind: "time", seconds: 182 * DAY}};
   return {label, timed: null}; // the Storyteller's call
 }
 
@@ -314,9 +315,12 @@ export function outcome(key, got, ctx = {}) {
         return {...base, kind: "pool", pool: ctx.pool, points: ctx.drain ? -points : points, text: `${points} ${POOLS[ctx.pool].label} ${ctx.drain ? "drawn out" : "given"}`};
       return {...base, kind: "quint", points: ctx.drain ? -points : points, text: `${points} Quintessence ${ctx.drain ? "drawn out" : "given"}`};
     }
-    case "ward":
-      return {...base, kind: "timed", name: "Warded", dice: str, against: KINDS.includes(ctx.against) && ctx.against !== "any" ? ctx.against : null, reflect: !!ctx.reflect,
-        text: `${str} armour dice${KINDS.includes(ctx.against) && ctx.against !== "any" ? ` against ${ctx.against}` : ""}${ctx.reflect ? ", turning blows back on their source" : ""} for ${dur.label}`};
+    case "ward": {
+      // B6010: a ritual's flavour names the harm it stands against ("ward:fire", "ward:sunlight")
+      const ag = KINDS.includes(ctx.against) && ctx.against !== "any" ? ctx.against : KINDS.find(k => k !== "any" && ctx[k] === true) ?? null;
+      return {...base, kind: "timed", name: "Warded", dice: str, against: ag, reflect: !!ctx.reflect,
+        text: `${str} armour dice${ag ? ` against ${ag}` : ""}${ctx.reflect ? ", turning blows back on their source" : ""} for ${dur.label}`};
+    }
     case "fortune": {
       const shift = Math.min(3, str);
       return {...base, kind: "timed", name: ctx.curse ? "Cursed" : "Blessed", shift: ctx.curse ? shift : -shift,
@@ -340,8 +344,9 @@ export function outcome(key, got, ctx = {}) {
     case "hold":
       return {...base, kind: "condition", condition: "held", difficulty: clampDiff(6 + str), text: `held for ${dur.label}; Strength at ${clampDiff(6 + str)} breaks free`};
     case "fear":
-      if ( ctx.calm ) return {...base, kind: "timed", name: "Calmed", difficulty: clampDiff(6 + str), text: `the Beast or Rage calmed for ${dur.label}; frenzy rolls at +${Math.min(3, str)} difficulty`};
-      if ( ctx.frenzy ) return {...base, kind: "timed", name: "Roused", difficulty: clampDiff(6 + str), text: `a frenzy roll at ${clampDiff(6 + str)} now (Self-Control or Instinct, or Rage), roused for ${dur.label}`};
+      // B6003: the numbers reach the frenzy roll (power-mods.js): resisting is easier calmed, harder roused
+      if ( ctx.calm ) return {...base, kind: "timed", name: "Calmed", shift: -Math.min(3, str), text: `the Beast or Rage calmed for ${dur.label}: resisting frenzy is ${Math.min(3, str)} easier`};
+      if ( ctx.frenzy ) return {...base, kind: "timed", name: "Roused", shift: Math.min(3, str), difficulty: clampDiff(6 + str), text: `a frenzy roll at ${clampDiff(6 + str)} now (Self-Control or Instinct, or Rage), and resisting frenzy is ${Math.min(3, str)} harder for ${dur.label}`};
       return {...base, kind: "timed", name: "Afraid", text: `afraid of the caster for ${dur.label}`};
     case "sense":
       // B5788: Sense works: a detection sense on the caster's token, and what the sheet and scene show, whispered
@@ -351,9 +356,10 @@ export function outcome(key, got, ctx = {}) {
     case "sway":
       if ( ctx.awe ) return {...base, kind: "timed", name: "In awe", awe: true, difficulty: clampDiff(6 + str),
         text: `in awe for ${dur.label}: acting against the caster needs Courage (or Willpower) at ${clampDiff(6 + str)}`};
-      return {...base, kind: "note", text: `${K.does} (strength ${str}, ${dur.label})`};
+      // B6005: a planted impulse is a timed effect: an NPC warms to the caster, a player character's moves go to the Storyteller (binds.js)
+      return {...base, kind: "timed", name: "Swayed", text: `swayed toward what the caster wants for ${dur.label}; the Storyteller plays it out (strength ${str})`};
     case "boost": {
-      const dice = Math.min(5, str), on = BOOSTS[ctx.boost] ? ctx.boost : "physical";
+      const dice = Math.min(5, str), on = BOOSTS[ctx.boost] ? ctx.boost : Object.keys(BOOSTS).find(k => ctx[k] === true) ?? "physical";
       return {...base, kind: "timed", name: ctx.sap ? "Sapped" : "Boosted", dice: ctx.sap ? -dice : dice, on,
         text: `${ctx.sap ? "-" : "+"}${dice} ${dice === 1 ? "die" : "dice"} to ${BOOSTS[on]} for ${dur.label}`};
     }
@@ -385,6 +391,20 @@ export function outcome(key, got, ctx = {}) {
       return {...base, kind: "give", item: ctx.item ?? null, thing: String(ctx.thing ?? "").slice(0, 80), lasting,
         text: `${ctx.thing ? String(ctx.thing).slice(0, 80) : "a thing"} made, into the target's things${lasting ? ", real for good" : `, for ${dur.label}`}`};
     }
+    /* B6006-B6009: the keywords that were only a line of text now change the world */
+    case "banish":
+      return {...base, kind: "banish", push: Math.max(10, 10 * str), text: `powers on the target end; with none, it is driven ${Math.max(10, 10 * str)} feet off (or back across, if it came from beyond)`};
+    case "imbue":
+      return {...base, kind: "give", imbued: true, lasting: true, thing: String(ctx.thing ?? "").slice(0, 80),
+        text: `${ctx.thing ? String(ctx.thing).slice(0, 80) : "a charged object"} made and given its power, into the target's things`};
+    case "place": {
+      const track = ctx.shroud ? "shroud" : ctx.banality ? "banality" : "value";
+      const step = (ctx.thick ? 1 : -1) * (str >= 4 ? 2 : 1);
+      const what = {value: "the Gauntlet", shroud: "the Shroud", banality: "Banality"}[track];
+      return {...base, kind: "place", track, step, text: `${what} here ${step < 0 ? "thins" : "thickens"} by ${Math.abs(step)}`};
+    }
+    case "work":
+      return {...base, kind: "work", text: "the nearest door or lock to where the Storyteller clicks opens, shuts or breaks"};
     case "weather": {
       const w = WEATHER_SET[ctx.weather] ? ctx.weather : null;
       return {...base, kind: "weather", weather: w, text: `${w ? WEATHER_SET[w].label.toLowerCase() : "the weather changed"} tonight`};

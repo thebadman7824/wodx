@@ -6,6 +6,7 @@
 import * as D from "./drift-rules.mjs";
 import {MODULE_ID} from "./ratings.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const T_DRIFT = `${MODULE_ID}.drift`;
 const NOT_A_PLACE = /battle ?map|\bcombat\b|\btest\b|\(gate/i;
@@ -42,7 +43,7 @@ export async function onMapEvent(ev) {
   if ( !isActiveGM() || ev?.undone || !ev?.supernatural || !["desecrate", "fire"].includes(ev?.kind) ) return null;
   const scene = game.scenes.get(ev.scene);
   if ( !scene ) return null;
-  const day = Math.floor((Number(ev.at) || game.time.worldTime) / 86400);
+  const day = Math.floor((Number(ev.at) || game.time.worldTime) / DAY);
   return chron()?.approvals?.propose?.({type: T_DRIFT, key: `drift:${scene.id}:${day}`,
     title: `The Gauntlet thickens at ${scene.navName || scene.name}`,
     detail: `${ev.whoName ?? "Someone"} ${ev.kind === "fire" ? "set an uncanny fire" : "desecrated"} ${ev.objectName ?? "the place"}. Drift +1 (house rule).`,

@@ -6,11 +6,14 @@ import {test} from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import {fileURLToPath} from "node:url";
+import {fileURLToPath, pathToFileURL} from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const text = fs.readFileSync(path.join(ROOT, "docs/DECISIONS.md"), "utf8");
-const [before, after] = text.split("<!-- decision-index:end -->");
+// B6243: decisions more than a month old move to docs/archive/decisions-<month>.md; the index stays here
+const {decisionsBelowIndex} = await import(pathToFileURL(path.join(ROOT, "tools/docs/archive-decisions.mjs")).href);
+const [before] = text.split("<!-- decision-index:end -->");
+const after = decisionsBelowIndex(ROOT);
 const indexPart = before.split("<!-- decision-index:start -->")[1] ?? "";
 const rows = [...indexPart.matchAll(/^\| B(\d+)(?:-B(\d+))? \| ([^|]+) \| ([^|]+) \|$/gm)]
   .map(m => ({lo: +m[1], hi: +(m[2] ?? m[1]), label: m[0], what: m[3].trim(), mods: m[4].trim()}));

@@ -7,6 +7,7 @@ import * as S from "./sight-rules.mjs";
 import {detectProfile} from "../../wodx-actions/scripts/profiles.js";
 import * as O from "./otherworld-sight-rules.mjs";
 import * as OW from "./otherworld-sight.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-senses";
 const setting = k => { try { return game.settings.get(MOD, k); } catch (e) { return null; } };
@@ -150,7 +151,7 @@ async function overload(tokens, why) {
     if ( w ) {
       const r = await new Roll(`${w}d10cs>=${S.OVERLOAD.difficulty}`).evaluate();
       const faces = r.dice?.[0]?.results?.map(x => x.result) ?? [];
-      const succ = Math.max(0, faces.filter(x => x >= S.OVERLOAD.difficulty).length - faces.filter(x => x === 1).length);
+      const succ = TERMS.successes(faces, S.OVERLOAD.difficulty).net;
       ok = succ > 0; rolls.push(r);
       line = `Willpower ${w} at ${S.OVERLOAD.difficulty} (${faces.join(", ")}): ${succ} success${succ === 1 ? "" : "es"}.`;
     } else line = "No Willpower to roll.";

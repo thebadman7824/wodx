@@ -100,7 +100,7 @@ export function saddleDiff(damageSuccesses = 0) {
  * soakable, lethal on a botched saddle roll. The ground is WoDX Interactables' chase ground: soft fields 2, a road or
  * town streets 3, rough ground, rocks or a crowd 4 (house reading B4772). Into water: no dice.
  */
-export const FALL_DICE = {open: 2, road: 3, streets: 3, crowd: 4, rough: 4, indoors: 3, water: 0};
+export const FALL_DICE = {open: 2, road: 3, streets: 3, crowd: 4, rough: 4, indoors: 3, water: 0, snow: 1, rails: 4};
 export const fallDice = (ground = "streets") => FALL_DICE[ground] ?? 3;
 
 /**

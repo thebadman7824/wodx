@@ -9,6 +9,7 @@
  */
 import * as K from "./kin-rules.mjs";
 import {getEngine} from "../../wodx-chronicle/scripts/calendar.mjs";
+import {YEAR} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
 const chron = () => game.modules.get("wodx-chronicle")?.api;
@@ -19,7 +20,7 @@ export const T = {aged: `${MOD}.ties-aged`};
 
 const yearAt = t => getEngine().timeToDate(Number(t) || 0).year;
 const yearNow = () => yearAt(game.time.worldTime);
-const YEAR_SECONDS = 365.25 * 86400;
+const YEAR_SECONDS = YEAR;
 const homeland = () => { try { return chron()?.world?.homeland?.() ?? "moravia"; } catch (e) { return "moravia"; } };
 const sphereOf = (region, year) => { try { return chron()?.world?.rules?.sphereFor?.(region, year) ?? "latin"; } catch (e) { return "latin"; } };
 const chronology = a => a?.flags?.["wodx-creation"]?.chronology ?? {};

@@ -28,6 +28,7 @@ import {OVERHEARD} from "../data/grammar/overheard.mjs";
 import * as AR from "./alert-rules.mjs";
 import * as F from "./faces-rules.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export function build(ctx) {
   const {MOD, esc, isActiveGM, chron, savedProfile} = ctx;
@@ -226,7 +227,7 @@ export function build(ctx) {
     const key = `${npc?.id}|${pc?.id}|${kind}`;
     const n = asked.get(key) ?? 0;
     if ( kind !== "greet" ) asked.set(key, n + 1);
-    const day = Math.floor((game.time?.worldTime ?? 0) / 86400);
+    const day = Math.floor((game.time?.worldTime ?? 0) / DAY);
     return {era: TK.eraBand(year, branch), regard: TK.toneRegard(step, npc?.system?.demeanor), step, seed: TK.hashSeed(npc?.id, pc?.id, kind, day) + n, year, wc, voice: voiceOf(npc, year)};
   }
   /** The kind of person they speak as (the Storyteller's choice, else their factions and household), with its lines. */

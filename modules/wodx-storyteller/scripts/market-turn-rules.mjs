@@ -26,8 +26,9 @@
  * (trades) as the rest of its load. onWay(market id, kind) says a caravan already carries that kind there, so no more is sent.
  */
 import {SUPPLY, INDEX} from "./market-rules.mjs";
+import {WEEK} from "../../wodx-chronicle/scripts/terms.mjs";
+export {WEEK};
 
-export const WEEK = 7 * 24 * 60 * 60;
 export const TURN_CAP = 12;
 export const LEVELS = ["none", "short", "normal", "plenty"];
 /** The price a supply level calls for. */

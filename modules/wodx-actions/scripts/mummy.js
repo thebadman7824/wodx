@@ -19,6 +19,7 @@ import { aim } from "./aim.js";
 import * as MH from "./mummy-hekau.js";
 import * as EF from "./effects.js";
 import * as BR from "./book-rituals.js";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-actions";
 const n = v => { const x = parseInt(v); return Number.isFinite(x) ? x : 0; };
@@ -219,7 +220,10 @@ export function build(ctx) {
                     try {
                         C?.registerCondition?.({ id: "forbidden", name: "Forbidden", img: "icons/svg/cancel.svg", source: `${REF} pp. 141–142`,
                             summary: "Forbidden by a mummy's Balance: it cannot attack the mummy and must leave as soon as it can.", mods: {} });
-                        await C?.applyTimed?.(being, { name: "Afraid", description: `Forbidden by ${actor.name}: cannot attack and must leave.`, duration: { kind: "scene" }, key: "wodx-effect-fear", condition: "forbidden", source: `${REF} pp. 141–142` });
+                        const fx = await C?.applyTimed?.(being, { name: "Afraid", description: `Forbidden by ${actor.name}: cannot attack and must leave.`, duration: { kind: "scene" }, key: "wodx-effect-fear", condition: "forbidden", source: `${REF} pp. 141–142` });
+                        // B6018: the mummy is the one feared (binds.js keeps a player's token from going nearer) and the
+                        // one it cannot strike (WoDX Combat refuses the attack)
+                        await fx?.update?.({ "flags.wodx-actions.bindBy": actor.id, "flags.wodx-actions.forbiddenBy": actor.id });
                         res += ` ${being.name} turns to go.`;
                     } catch (e) { console.warn("WoDX | Forbiddance", e); }
                 } else if (!being && r.successes > o.successes) res += " (Target the being for it to act on the map.)";
@@ -245,7 +249,7 @@ export function build(ctx) {
     /* -- death and the resurrection --------------------------------------- */
     async function resurrect(actor) {
         const i = info(actor);
-        const year = Math.floor((game.time?.worldTime ?? 0) / (365 * 86400));
+        const year = Math.floor((game.time?.worldTime ?? 0) / (365 * DAY));
         const rolls0 = i.f.rezYear === year ? n(i.f.rezRolls) : 0;
         const B = M.BA[Math.max(0, Math.min(5, i.ba))];
         const content = `<form><p>${state(i)}. Ba ${i.ba}: at least ${B.rest} dead before trying${rolls0 ? `; ${rolls0} ${rolls0 === 1 ? "roll" : "rolls"} already this year (each more costs an Attribute dot)` : ""}.</p>
@@ -288,7 +292,7 @@ export function build(ctx) {
 
     /** Sunrise: the Gift of Ra, one Sekhem a day, unless in semektet. Called by the world-time hook (GM). */
     async function daily(actors = game.actors?.filter?.(isMummy) ?? []) {
-        const day = Math.floor(((game.time?.worldTime ?? 0) - 6 * 3600) / 86400);
+        const day = Math.floor(((game.time?.worldTime ?? 0) - 6 * 3600) / DAY);
         for (const a of actors) {
             const f = flag(a);
             if (f.raDay === day) continue;

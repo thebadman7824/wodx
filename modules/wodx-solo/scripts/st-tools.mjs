@@ -13,6 +13,7 @@
  *   Check the systems         WoDX parts running, the switch's settings, the approval queue, what was left waiting
  *                             and errors seen on the seat
  *   What is hidden here       hidden tokens on the player's scene
+ *   The night's work          what the Hand and the seat did by themselves, ticked and taken back in one Undo (B6226)
  *
  *   setting wodx-solo.st      {on, userId, at}  who has the tools; only the seat writes it
  *   setting wodx-solo.stOffer Boolean           the Storyteller may take the switch off the panel
@@ -24,6 +25,7 @@
 import * as R from "./solo-rules.mjs";
 import {addAsks, setStUi, ask, SOCKET, characterOf, placeOf, tell, SoloPanel} from "./panel.mjs";
 import {searchBox} from "../../wodx-chronicle/scripts/search.mjs";
+import {listHTML as nightHTML} from "../../wodx-chronicle/scripts/nightwork-rules.mjs";
 
 const MOD = "wodx-solo";
 const CHRON = "wodx-chronicle";
@@ -202,6 +204,28 @@ async function hidden({userId}) {
   reply(userId, "st.hidden", {scene: scene?.name ?? null, rows});
 }
 
+/** B6226: the night's work as the seat keeps it, for the lone player, and the Undo of what they tick. */
+const nightApi = () => game.modules.get(CHRON)?.api?.nightwork ?? null;
+async function night({userId, since = "session", time = null}) {
+  if ( !usable(userId) ) return reply(userId, "st.refused", {why: "the tools are off"});
+  const nw = nightApi();
+  if ( !nw ) return reply(userId, "st.refused", {why: "the night's work needs WoDX Chronicle"});
+  await nw.settle?.();
+  reply(userId, "st.night", {rows: nw.list({since: String(since), time: Number(time) || null, self: "the seat"})});
+}
+
+async function nightUndo({userId, ids = [], keep = true, since = "session", time = null}) {
+  if ( !usable(userId) ) return reply(userId, "st.refused", {why: "the tools are off"});
+  const nw = nightApi();
+  if ( !nw ) return reply(userId, "st.refused", {why: "the night's work needs WoDX Chronicle"});
+  const user = game.users.get(userId);
+  const r = await nw.undo((Array.isArray(ids) ? ids : []).map(String).slice(0, 300), {keep: keep !== false, by: user?.name ?? null});
+  await H.log({kind: "note", source: MOD, title: "The night's work taken back", note: r?.text ?? "nothing"});
+  if ( r ) await tell(userId, `<p>${esc(r.text)}.</p>`);
+  reply(userId, "st.night", {rows: nw.list({since: String(since), time: Number(time) || null, self: "the seat"}), done: r?.text ?? null});
+  return r;
+}
+
 /** The seat takes the tools away when a second player logs in or the mode goes off. */
 async function guard(why) {
   const s = state();
@@ -281,6 +305,55 @@ class StGive extends ApplicationV2 {
   static #onGive(ev, t) { ask("ask.st.give", {uuid: t.dataset.uuid}); }
 }
 
+class StNight extends ApplicationV2 {
+  static DEFAULT_OPTIONS = {
+    id: "wodx-solo-night", classes: ["wodx", "wsolo-dialog", "wodx-night"],
+    window: {title: "The night's work", icon: "fa-solid fa-clock-rotate-left", resizable: true},
+    position: {width: 540, height: 620},
+    actions: {undo: StNight.#onUndo, tickAll: StNight.#onTickAll}
+  };
+  static rows = null;
+  static since = "session";
+  static time = "";
+  static keep = true;
+  static open() { return (foundry.applications.instances?.get?.("wodx-solo-night") ?? new StNight()).render({force: true}); }
+  static ask() { ask("ask.st.night", {since: StNight.since, time: StNight.time ? new Date(StNight.time).getTime() : null}); }
+  async _renderHTML() {
+    const div = document.createElement("div");
+    div.innerHTML = StNight.rows === null ? "<p>Asking the seat…</p>"
+      : `<p class="wodx-quiet">What the Hand and the seat did by themselves for the absent Storyteller. Tick what to take back; Undo goes newest first.</p>
+        ${StNight.rows.length > 6 ? searchBox("ul.wodx-night-list", "Find a piece of work…", "Search the night's work") : ""}
+        ${nightHTML(StNight.rows, {since: StNight.since, time: StNight.time, keep: StNight.keep})}`;
+    return div;
+  }
+  _replaceHTML(result, content) { content.replaceChildren(result); }
+  _onRender() {
+    this.element.querySelector("select.wodx-night-sel")?.addEventListener("change", ev => { StNight.since = ev.target.value; StNight.ask(); });
+    this.element.querySelector("input.wodx-night-time")?.addEventListener("change", ev => { StNight.time = ev.target.value; StNight.ask(); });
+    this.element.querySelectorAll("input[name=keep]").forEach(r => r.addEventListener("change", ev => { StNight.keep = ev.target.value === "1"; }));
+  }
+  static show(rows) {
+    StNight.rows = Array.isArray(rows) ? rows : [];
+    const app = foundry.applications.instances?.get?.("wodx-solo-night");
+    if ( app?.rendered ) app.render();
+  }
+  static #onTickAll() {
+    const boxes = [...this.element.querySelectorAll("input.wodx-night-tick:not([disabled])")];
+    const on = !boxes.every(b => b.checked);
+    boxes.forEach(b => { b.checked = on; });
+  }
+  static async #onUndo() {
+    const ids = [...this.element.querySelectorAll("input.wodx-night-tick:checked")].map(b => b.dataset.id);
+    if ( !ids.length ) return ui.notifications.warn("Tick the work to take back first.");
+    const warn = (StNight.rows ?? []).filter(r => ids.includes(r.id)).reduce((n, r) => n + r.warn, 0);
+    const ok = await DialogV2.confirm({classes: ["wodx", "wodx-dialog"], window: {title: "Take back the night's work"}, rejectClose: false,
+      content: `<p>Take back ${ids.length} piece${ids.length === 1 ? "" : "s"} of the Hand's work, newest first?</p>${warn
+        ? `<p>${warn} change${warn === 1 ? " was" : "s were"} made since. ${StNight.keep ? "They will be kept as they are now." : "They will be put back as they were before the Hand."}</p>` : ""}`});
+    if ( !ok ) return;
+    ask("ask.st.nightUndo", {ids, keep: StNight.keep, since: StNight.since, time: StNight.time ? new Date(StNight.time).getTime() : null});
+  }
+}
+
 function table(title, head, rows, width = 560) {
   const body = rows.length ? `<table class="wsolo-curtain"><thead><tr>${head.map(h => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${
     rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table>` : "<p>Nothing to show.</p>";
@@ -294,6 +367,7 @@ const CLIENT = {
   "st.given": p => ui.notifications.info(`${p.name} is now on ${p.actor}'s sheet.`),
   "st.xp": p => ui.notifications.info(`${p.actor} has ${p.amount} more experience.`),
   "st.items": p => StGive.show(p.rows ?? [], p.query ?? null),
+  "st.night": p => { StNight.show(p.rows ?? []); if ( p.done ) ui.notifications.info(`${p.done}.`); },
   "st.eyes": p => {
     const incoming = p.cards ?? [];
     seenCards = p.replace ? incoming.slice(-R.EYES_CAP) : incoming.reduce((l, c) => R.addEyes(l, c), seenCards);
@@ -350,6 +424,7 @@ function openTool(id) {
   if ( id === "xp" ) return xpDialog();
   if ( id === "check" ) return ask("ask.st.check");
   if ( id === "hidden" ) return ask("ask.st.hidden");
+  if ( id === "night" ) { StNight.rows = null; StNight.open(); return StNight.ask(); }
 }
 
 /* ------------------------------------------------------------------ */
@@ -366,7 +441,7 @@ export function registerStSettings() {
 export function installStTools(helpers) {
   H = helpers;
   addAsks({"ask.st.toggle": toggle, "ask.st.eyes": eyes, "ask.st.press": press, "ask.st.items": items, "ask.st.give": give, "ask.st.xp": xp,
-    "ask.st.check": check, "ask.st.hidden": hidden}, CLIENT);
+    "ask.st.check": check, "ask.st.hidden": hidden, "ask.st.night": night, "ask.st.nightUndo": nightUndo}, CLIENT);
   setStUi({toggleHtml, toolsHtml, open: openTool, toggle: onToggle});
   // A world setting saved for the first time is created, not updated, so both hooks count
   const onSetting = s => {
@@ -384,5 +459,5 @@ export function installStTools(helpers) {
   setTimeout(() => guard("someone else is playing").catch(() => {}), 3500);
 }
 
-export const stApi = {state, usable, report, mayUse: R.mayUse, open: openTool, toggle, eyes, press, items, give, xp, check, hidden, guard,
+export const stApi = {state, usable, report, mayUse: R.mayUse, open: openTool, toggle, eyes, press, items, give, xp, check, hidden, guard, night, nightUndo,
   cards: () => [...seenCards]};

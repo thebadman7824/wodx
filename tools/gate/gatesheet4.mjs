@@ -32,8 +32,8 @@ async function check(label, a, id, { words, cls, dot = null, read = null, bio = 
     const sheet = a.sheet;
     sheet.locked = false;
     await sheet.render(true);
-    await until(() => sheet.rendered && sheet.element?.[0]?.querySelector(`.wodx-book[data-sheet='${id}']`));
-    const el = sheet.element[0];
+    await until(() => sheet.rendered && (sheet.element instanceof HTMLElement ? sheet.element : sheet.element?.[0])?.querySelector(`.wodx-book[data-sheet='${id}']`));
+    const el = (sheet.element instanceof HTMLElement ? sheet.element : sheet.element?.[0]);
     const core = el.querySelector(".tab.core");
     const t = core?.textContent.replace(/\s+/g, " ") ?? "";
     const pos = words.map(w => t.indexOf(w));

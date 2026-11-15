@@ -19,11 +19,13 @@
  *             as a world item, its line in the container), or into world setting wodx-npc.stores for a place off
  *             this map. Taking them back is the container's own Take.
  */
+import * as LM from "./line-mend.mjs";
 import * as A from "./carry-aftercare-rules.mjs";
 import * as SX from "./secrets-rules.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 const IX = "wodx-interactables", ACT = "wodx-actions";
 // WoDX Interactables' container kinds (interact-rules.mjs CONTAINERS), named here so NPC runs without it
-const CONTAINERS = {chest: {label: "Chest"}, box: {label: "Box or casket"}, cabinet: {label: "Cabinet or wardrobe"}, drawers: {label: "Desk or filing drawers"}, strongbox: {label: "Strongbox"}, safe: {label: "Safe"}};
+const CONTAINERS = {chest: {label: "Chest"}, box: {label: "Box or casket"}, cabinet: {label: "Cabinet or wardrobe"}, drawers: {label: "Desk or filing drawers"}, strongbox: {label: "Strongbox"}, safe: {label: "Safe"}, pile: {label: "Gear on the ground"}};
 const FATE = "npc-prisoner-fate", BLOOD = "npc-torpor-blood", TALK = "npc-prisoner-talk";
 
 export function build({MOD, esc, gmIds, chron, factions, routines, people, MEMORY, isActiveGM, carryGoals, st}) {
@@ -32,7 +34,8 @@ export function build({MOD, esc, gmIds, chron, factions, routines, people, MEMOR
   const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
   const baseOf = a => (a?.isToken ? (a.baseActor ?? a) : a);
   const kindOf = a => { try { return game.modules.get("wodx-combat")?.api?.getKind?.(a) ?? game.wodxCombat?.getKind?.(a) ?? null; } catch (e) { return null; } };
-  const kindred = a => a?.type === "Vampire" || kindOf(a) === "kindred";
+  // B6310: a Kuei-jin on a Vampire sheet is not Kindred here: no vitae from a vessel, no torpor wake with blood (it mends with Chi, line-mend.mjs)
+  const kindred = a => { const k = LM.keyOf(a); return k === "vampire" || (k !== "kuei-jin" && kindOf(a) === "kindred"); };
   const combat = () => game.wodxCombat ?? game.modules.get("wodx-combat")?.api ?? null;
   const acts = () => (game.modules.get(ACT)?.active ? game.modules.get(ACT).api : null);
   const ix = () => (game.modules.get(IX)?.active ? game.modules.get(IX).api : null);
@@ -43,7 +46,7 @@ export function build({MOD, esc, gmIds, chron, factions, routines, people, MEMOR
   const stat = (a, group, k) => num(a?.system?.[group]?.[k]?.value);
   const powerDots = (a, re) => Math.max(0, ...[...(a?.items ?? [])].filter(i => i.type === "Power" && re.test(i.name ?? "")).map(i => num(i.system?.value)));
   const damageOf = a => ({bashing: num(a?.system?.health?.damage?.bashing), lethal: num(a?.system?.health?.damage?.lethal), aggravated: num(a?.system?.health?.damage?.aggravated)});
-  const levels = a => { const h = a?.system?.health ?? {}; const t = ["bruised", "hurt", "injured", "wounded", "mauled", "crippled", "incapacitated"].reduce((s, k) => s + (Number(h[k]?.total ?? h[k]?.value) || 1), 0); return t || 7; };
+  const levels = a => { const h = a?.system?.health ?? {}; const t = TERMS.HEALTH_LEVELS.reduce((s, k) => s + (Number(h[k]?.total ?? h[k]?.value) || 1), 0); return t || 7; };
   const ownersOf = a => game.users.filter(u => !u.isGM && a?.testUserPermission?.(u, "OWNER")).map(u => u.id);
   const yearNow = () => { try { return Number(chron()?.eras?.currentYear?.()) || 1197; } catch (e) { return 1197; } };
   const tokenOf = (uuid, actorId) => {
@@ -89,6 +92,12 @@ export function build({MOD, esc, gmIds, chron, factions, routines, people, MEMOR
       await actor.update({"system.advantages.bloodpool.temporary": m.blood});
       if ( m.spent ) await combat()?.setDamage?.(actor, m.damage);
       return `${placeName}'s people bring ${actor.name} ${m.fed ? `${m.fed} blood from a vessel` : "blood"}; ${m.spent ? `${m.spent} of it mends their wounds` : "the wounds are past what blood mends tonight"}.`;
+    }
+    // B6315: a ghoul, Kuei-jin, wraith or demon first mends with its own blood, Chi, Pathos or Faith, as the Kindred do with blood
+    const own = await LM.mendOwn(actor, {damage: dmg, heal: (x, type, n) => combat()?.healDamage?.(x, type, n)});
+    if ( own.spent ) {
+      const d2 = damageOf(actor);
+      if ( !(d2.bashing + d2.lethal + d2.aggravated) ) return `${actor.name} is laid down at ${placeName} and mends with ${own.what}: whole again.`;
     }
     const healer = A.bestHealer(householdAt(place, [carrier]).map(a => ({id: a.id, name: a.name, int: stat(a, "attributes", "intelligence"), medicine: stat(a, "abilities", "medicine")})));
     if ( !healer ) return `${actor.name} is laid down at ${placeName}; no one there knows medicine, so the wounds mend slowly.`;
@@ -185,7 +194,7 @@ export function build({MOD, esc, gmIds, chron, factions, routines, people, MEMOR
     const sc = p?.scene ?? scene;
     const b = p?.region?.shapes?.[0];
     const inside = t => !b || (num(t.x) >= num(b.x) && num(t.x) <= num(b.x) + num(b.width) && num(t.y) >= num(b.y) && num(t.y) <= num(b.y) + num(b.height));
-    const box = [...(sc?.tiles ?? [])].filter(t => CONTAINERS[t.flags?.[IX]?.kind]).sort((a, c) => Number(inside(c)) - Number(inside(a)))[0] ?? null;
+    const box = [...(sc?.tiles ?? [])].filter(t => CONTAINERS[t.flags?.[IX]?.kind] && t.flags[IX].kind !== "pile").sort((a, c) => Number(inside(c)) - Number(inside(a)))[0] ?? null;
     if ( box ) {
       const was = String(box.flags?.[IX]?.items ?? "").split("\n").map(x => x.trim()).filter(Boolean);
       await box.update({[`flags.${IX}.items`]: [...was, ...lines].join("\n"), [`flags.${IX}.taken`]: false});
@@ -263,6 +272,7 @@ export function build({MOD, esc, gmIds, chron, factions, routines, people, MEMOR
           await a.update({"system.advantages.bloodpool.temporary": m.blood});
           if ( m.spent ) await combat()?.setDamage?.(a, m.damage);
         } else if ( !onScene.has(a.id) && !a.hasPlayerOwner ) {
+          await LM.mendOwn(a, {damage: damageOf(a), heal: (x, type, n) => combat()?.healDamage?.(x, type, n)});
           const plan = acts()?.healPlan?.(a, seconds);
           if ( plan ) { await combat()?.setDamage?.(a, plan.damage); await a.setFlag(ACT, "healCarry", plan.carry); }
         }

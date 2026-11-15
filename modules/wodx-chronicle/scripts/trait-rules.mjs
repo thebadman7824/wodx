@@ -12,6 +12,7 @@
  */
 import {BITES} from "./trait-bite-rules.mjs";
 import {BACKGROUND_HOOKS as BACKGROUND_HOOKS_TEXT, MERITS_FLAWS, BACKGROUNDS, PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED, TRIGGERS, PULLS, LEDGER, PROMPTS, BG_WORLD, BODY} from "../data/trait-effects.mjs";
+import {DAY} from "./terms.mjs";
 
 export {PATTERNS, BOOKS_DONE, SHOWS, SENSE_LOSS, SENSE_CHANNELS, ATTITUDE, HANDLED, TRIGGERS, PULLS, LEDGER, PROMPTS, BG_WORLD};
 
@@ -318,7 +319,7 @@ export function pullsOf(view, rand, charName = "", idx = index()) {
 }
 
 /** The Ledger entries a character's traits call for (P10), as WoDX Storyteller Ledger entries with a fixed id. */
-export function ledgerOf(view, {id = "", name = "", now = 0, day = 86400} = {}, idx = index()) {
+export function ledgerOf(view, {id = "", name = "", now = 0, day = DAY} = {}, idx = index()) {
   const out = [];
   for ( const m of working(view, idx) ) {
     const L = LEDGER[m.key];

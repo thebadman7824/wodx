@@ -30,5 +30,16 @@ export function veilFor(ratings = {}, {nature = "human", gm = false, sights = []
   };
 }
 
+/**
+ * B6307: sights a character has from WoDX Actions flags. A bodhisattva (Kindred of the East) is in communion with the
+ * spirit worlds and sees both; Ghostsight taken for the scene (flag yinSight {until}) sees across the Shroud.
+ */
+export function sightsOf(f = {}, now = 0) {
+  const out = [];
+  if ( f.bodhisattva ) out.push("shroud", "penumbra");
+  else if ( Number(f.yinSight?.until) > Number(now) ) out.push("shroud");
+  return out;
+}
+
 /** Can this viewer sense the Wyrm? nature, the names of their powers, and whether they are the Storyteller. */
 export const sensesWyrm = ({nature = "human", powers = [], gm = false} = {}) => gm || SEES_WYRM.has(nature) || powers.some(p => SENSE_WYRM.test(String(p)));

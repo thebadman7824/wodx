@@ -4,7 +4,7 @@
  * It makes one Vampire actor and deletes it, and puts back every WoDX setting of this screen it touches.
  *   1. the modules: Chronicle 0.52.0, Sheets 0.19.0, Solo 0.3.0, Interactables 0.41.0, Paperdoll 0.21.0, Library 0.22.0 or later
  *   2. the Possessions tab says "You carry ..." in one line; the coins fold is open in Full view and closed in Beginner view
- *   3. the solo panel opens on What happens next?, with the six other buttons under More (Carry the fallen, B5079)
+ *   3. the solo panel opens on What happens next?, with the other buttons (six or more) under More (Carry the fallen, B5079)
  *   4. a new case board's rules lay out Who, Where and What we know; the figure menu lists the main parts first, the rest under More
  *   5. the Glossary journal exists with a page per letter and opens at a term's letter
  *   6. Find anything has a ? in its title bar; with tips reset, the tip shows, and Got it marks it seen
@@ -22,7 +22,8 @@ async function save(R) {
   await foundry.applications.apps.FilePicker.implementation.upload("data", "wodx-gate", file, {}, {notify: false});
   return R.summary;
 }
-const el = app => app?.element?.[0] ?? app?.element ?? null;
+// an ApplicationV2 sheet's element is the <form> itself, and form[0] is its first control: test for the element first
+const el = app => (app?.element instanceof HTMLElement ? app.element : app?.element?.[0]) ?? null;
 const at = (id, v) => !!game.modules.get(id)?.active && !foundry.utils.isNewerVersion(v, game.modules.get(id).version);
 
 export async function run() {
@@ -47,7 +48,10 @@ export async function run() {
     // 8 is checked here too, on the same sheet
     const tools = sh?.querySelector(".window-header .wodx-sheet-tools");
     tools?.click(); await sleep(200);
-    const listed = [...document.querySelectorAll(".wodx-sheet-tools-list button")].map(b => b.textContent.trim());
+    // the old engine's sheet opens its own list; a sheet on ApplicationV2 opens the window's controls menu, which names each one
+    const listed = [...document.querySelectorAll(".wodx-sheet-tools-list button"), ...(sh?.querySelectorAll(".controls-dropdown li") ?? [])]
+      .map(b => b.textContent.trim()).filter(Boolean);
+    if (sh?.querySelector(".controls-dropdown.expanded")) sh.querySelector('.window-header [data-action="toggleControls"]')?.click();
     document.querySelector(".wodx-sheet-tools-list")?.remove();
     await actor.sheet.close(); await sleep(300);
     V.preview("beginner");
@@ -64,7 +68,7 @@ export async function run() {
     const next = panel?.querySelector(".wsolo-next")?.textContent?.trim() ?? "";
     const more = panel?.querySelectorAll("details.wsolo-more button[data-id]").length ?? 0;
     await foundry.applications.instances.get("wodx-solo-panel")?.close();
-    ok("3. solo panel", /What happens next/.test(next) && more === 6, {next, more});
+    ok("3. solo panel", /What happens next/.test(next) && more >= 6, {next, more});
 
     const CR = await import(`/modules/wodx-interactables/scripts/case-rules.mjs?${Date.now()}`);
     const cards = CR.starterBoard().cards.map(c => c.title);

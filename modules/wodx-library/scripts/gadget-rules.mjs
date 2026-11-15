@@ -9,8 +9,8 @@
  *     since it was last turned.
  */
 import {CROPS} from "../data/goods-crops.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
-const DAY = 86400;
 const bare = s => String(s ?? "").toLowerCase().replace(/\s*\(\d+\)\s*$/, "").trim();
 export const cropOf = name => CROPS[bare(name)] ?? null;
 

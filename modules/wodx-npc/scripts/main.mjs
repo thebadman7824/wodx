@@ -15,6 +15,9 @@
 import * as HN from "./hunt-npc-rules.mjs";
 import {build as buildProwl} from "./prowl.mjs";
 import {build as buildAftercare} from "./aftercare.mjs";
+import * as LM from "./line-mend.mjs";
+import * as REFILL from "./line-refill.mjs";
+import * as LR from "./lines-rules.mjs";
 import * as NR from "./npc-rules.mjs";
 import * as PP from "./power-pick-rules.mjs";
 import * as RR from "./routine-rules.mjs";
@@ -60,9 +63,10 @@ import * as LEGACY from "./legacy.mjs";
 import * as PO from "./politics-rules.mjs";
 import * as AR from "./alert-rules.mjs";
 import {registerCondition} from "../../wodx-chronicle/scripts/conditions.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-npc";
-const VERSION = "0.100.0";
+const VERSION = "0.102.0";
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -217,7 +221,7 @@ function sides(tok, combat, harm) {
   const ally = t => (RV.enemiesBySide(sideMap, tok.id, t.id) === false) || (RV.enemiesBySide(sideMap, tok.id, t.id) === null && t.document.disposition === me);
   return {enemies: fighters.filter(enemy), allies: fighters.filter(t => !enemy(t) && ally(t))};
 }
-const unitsPerYard = () => 1 / (C()?.auto?.toYards?.(1, canvas.scene?.grid?.units ?? "ft") ?? 1 / 3);
+const unitsPerYard = () => TERMS.unitsPerYard(canvas.scene?.grid?.units ?? "ft");
 const yardsBetween = (a, b) => {
   try { return canvas.grid.measurePath([a.center, b.center]).distance / unitsPerYard(); } catch (e) { return null; }
 };
@@ -612,7 +616,7 @@ async function animalFrenzy(tok) {
   const faces = roll.dice?.[0]?.results?.map(r => r.result) ?? [];
   // B5130: a Brujah or Gangrel domitor's blood makes the beast quick to rage
   const extra = num(actor.flags?.["wodx-creation"]?.clanMark?.frenzy) || 0, diff = Math.min(10, 6 + extra);
-  const net = faces.filter(f => f >= diff).length - faces.filter(f => f === 1).length;
+  const net = TERMS.margin(faces, diff);
   const holds = net > 0;
   if ( !holds ) { try { await chron()?.conditions?.setCondition?.(actor, "frenzy", true); } catch (e) { console.warn(`${MOD} | frenzy`, e); } }
   return {done: true, text: `${tok.name} fights the blood in it: Willpower ${dice} dice at ${diff}${extra ? " (its master's blood makes it quick to rage)" : ""} (${faces.join(", ")}). ${holds ? "It holds." : "It frenzies."}`};
@@ -1265,8 +1269,10 @@ Hooks.once("init", () => {
   cults.registerSettings();
   LEGACY.registerSettings();
   LEGACY.listen();
+  REFILL.registerSettings();
+  REFILL.listen();
   if ( !routines.registerBehavior() ) console.warn(`${MOD} | region behaviours are not available: WoDX: Reaction is off.`);
-  const api = {version: VERSION, prowl, aftercare, factionLooks: FactionLooks.api(), rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, orderCarry, carryGoals: {goalOf: carryGoals.goalOf, pointOf: carryGoals.pointOf, arrive: carryGoals.arrive, approveCapture: carryGoals.approveCapture, freePrisoner: carryGoals.freePrisoner, prisoners: carryGoals.prisoners, trips: carryGoals.trips, onClock: carryGoals.onClock, rules: CG},
+  const api = {version: VERSION, prowl, aftercare, lines: {of: LM.keyOf, family: k => LR.familyOf(k), keys: LR.KEYS, mendOwn: LM.mendOwn, refill: {night: REFILL.runNight, one: REFILL.refillOne, enroll: REFILL.enroll, sheet: REFILL.sheetOf}}, /* B6310, B6319 */ factionLooks: FactionLooks.api(), rules: NR, routineRules: RR, profileFor, infoOf, animals: AN.ANIMALS, modeFor, readFight, planTurn, takeTurn, editBehavior, openNpcPanel, execute, orderCarry, carryGoals: {goalOf: carryGoals.goalOf, pointOf: carryGoals.pointOf, arrive: carryGoals.arrive, approveCapture: carryGoals.approveCapture, freePrisoner: carryGoals.freePrisoner, prisoners: carryGoals.prisoners, trips: carryGoals.trips, onClock: carryGoals.onClock, rules: CG},
     carryAftercare: {wards: carryAftercare.wards, stores: carryAftercare.stores, tick: carryAftercare.onClock, day: carryAftercare.day, dispose: carryAftercare.dispose, factionTurn: carryAftercare.onFactionTurn, held: carryAftercare.heldChoice, fate: carryAftercare.doFate, taken: carryAftercare.onTaken, rules: carryAftercare.rules}, undo, snapshot,
     acceptCard, undoCard, approach, wallBetween, cellOf, postPlan, routines, editRoutine: routines.editRoutine, openPlaces: routines.openPlaces, tick: routines.tick,
     factions, founding, openFactions: factions.openFactions, runFactionTurns: factions.runTurns, endSession: factions.endSession, reportBreach: factions.reportBreach, huntingFor: factions.huntingFor,
@@ -1286,11 +1292,11 @@ Hooks.once("init", () => {
       fomorise: SWORLD.fomorise, openSocial: SWORLD.openSocial, keeperTurn: SWORLD.keeperTurn, undoKeepers: SWORLD.undoKeepers, world: SWORLD.api},
     memory: {remember: MEMORY.remember, forget: MEMORY.forget, restore: MEMORY.restore, balance: MEMORY.balanceOf, known: MEMORY.knownBy, turn: MEMORY.turn, open: MEMORY.rememberedDialog, fromTrust: MEMORY.fromTrust, act: MEMORY.act, harmCheck: MEMORY.harmCheck, rules: MEMORY.rules},
     trust: {of: TRUST.trustOf, move: TRUST.moveTrust, betray: TRUST.betray, debtWord: TRUST.debtWord, tradeBoon: TRUST.tradeBoon, blackmail: TRUST.blackmail,
-      answerBlackmail: TRUST.answerBlackmail, strikeBacks: TRUST.strikeBacks, sideOf: TRUST.sideOf, setSide: TRUST.setSide, howToFind: TRUST.howToFind, foundSide: TRUST.foundSide, rules: TRUST.rules},
+      answerBlackmail: TRUST.answerBlackmail, strikeBacks: TRUST.strikeBacks, sideOf: TRUST.sideOf, setSide: TRUST.setSide, howToFind: TRUST.howToFind, foundSide: TRUST.foundSide, seekSide: TRUST.seekSide, rules: TRUST.rules},
     family: {conceive: FAMILY.conceive, birth: FAMILY.birth, end: FAMILY.endPregnancy, expecting: FAMILY.expectingOf, check: FAMILY.checkBirths, lines: FAMILY.lines, askChild: FAMILY.askChild,
       makeChild: FAMILY.makeChild, childSheet: FAMILY.childSheetOf, ageOf: FAMILY.ageOf, growthPlan: FAMILY.growthPlan, grow: FAMILY.applyGrowth, planLines: FAMILY.planLines,
       propose: FAMILY.propose, answer: FAMILY.answer, checkWeddings: FAMILY.checkWeddings, rules: FAMILY.rules},
-    hearts: {warmth: HEARTS.warmthOf, court: HEARTS.court, adopt: HEARTS.adopt, adoptionLaw: HEARTS.adoptionLawHere, hindrance: HEARTS.hindranceFor, courtship: HEARTS.courtship, law: HEARTS.lawHere, marry: HEARTS.marry, divorce: HEARTS.divorce,
+    hearts: {warmth: HEARTS.warmthOf, tell: HEARTS.tellLoved, court: HEARTS.court, adopt: HEARTS.adopt, adoptionLaw: HEARTS.adoptionLawHere, hindrance: HEARTS.hindranceFor, courtship: HEARTS.courtship, law: HEARTS.lawHere, marry: HEARTS.marry, divorce: HEARTS.divorce,
       haveChild: HEARTS.haveChild, childAge: HEARTS.childAge, household: HEARTS.householdOf, setHousehold: HEARTS.setHousehold, upkeep: HEARTS.upkeepOf,
       takeHostage: HEARTS.takeHostage, release: HEARTS.release, lineOf: HEARTS.lineOf, rules: HEARTS.rules},
     standing: {deed: STANDING.deed, of: STANDING.standingOf, all: STANDING.standingAll, newsDelay: STANDING.newsDelay, rank: STANDING.rankOf, setRank: STANDING.setRank, moveRank: STANDING.moveRank,

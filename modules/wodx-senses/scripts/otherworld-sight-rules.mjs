@@ -15,6 +15,7 @@
  *   shroud         A wraith sees the living scene from the Shadowlands: worn and greyed, Fetters lit, other wraiths
  *                  plain to see (Wraith 20th pdf 84-85). In 1914 to 1918 the Great War's dead see it heavier.
  */
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 /** The sights this file adds, in the order the sight button steps through them. */
 export const OTHER = {
@@ -102,8 +103,8 @@ export function mageRoll(t = {}, sight, {castPlan = null} = {}) {
  * for one game minute so the player can take one look; a scene is an hour; a story is a week.
  */
 export const HOLD = {
-  m20: [0, 60, 3600, 86400, 7 * 86400, 182 * 86400],
-  da: [0, 60, 3600, 86400, 30 * 86400, 182 * 86400]
+  m20: [0, 60, 3600, DAY, 7 * DAY, 182 * DAY],
+  da: [0, 60, 3600, DAY, 30 * DAY, 182 * DAY]
 };
 export const HOLD_WORDS = {m20: ["none", "one turn", "one scene", "one day", "one story", "six months"], da: ["none", "one turn", "a scene", "a day", "a month", "six months"]};
 export function holdFor(successes, system = "m20") {
@@ -167,7 +168,7 @@ export function strainDays(kind, botch = false) {
 export function addStrain(list = [], m = {}, now = 0) {
   const days = strainDays(m.kind, m.botch);
   if ( !days ) return pruneStrain(list, now);
-  const mark = {x: Math.round(num(m.x)), y: Math.round(num(m.y)), at: num(m.at ?? now), until: num(m.at ?? now) + days * 86400, by: String(m.by ?? "").slice(0, 80), kind: m.kind, highest: clamp(Math.round(num(m.highest)), 1, 5)};
+  const mark = {x: Math.round(num(m.x)), y: Math.round(num(m.y)), at: num(m.at ?? now), until: num(m.at ?? now) + days * DAY, by: String(m.by ?? "").slice(0, 80), kind: m.kind, highest: clamp(Math.round(num(m.highest)), 1, 5)};
   return pruneStrain([...list, mark], now);
 }
 export const pruneStrain = (list = [], now = 0) => (Array.isArray(list) ? list : []).filter(m => num(m?.until) >= num(now)).slice(-40);
@@ -198,16 +199,16 @@ export function ago(seconds) {
   if ( s < 120 ) return "moments ago";
   if ( s < 7200 ) return `${Math.round(s / 60)} minutes ago`;
   if ( s < 172800 ) return `${Math.round(s / 3600)} hours ago`;
-  if ( s < 60 * 86400 ) return `${Math.round(s / 86400)} days ago`;
-  if ( s < 730 * 86400 ) return `${Math.round(s / (30 * 86400))} months ago`;
-  return `${Math.round(s / (365 * 86400))} years ago`;
+  if ( s < 60 * DAY ) return `${Math.round(s / DAY)} days ago`;
+  if ( s < 730 * DAY ) return `${Math.round(s / (30 * DAY))} months ago`;
+  return `${Math.round(s / (365 * DAY))} years ago`;
 }
 /**
  * The echoes Time shows. Time 1 senses the place's recent flow, read as the last day (house reading of Time Sense);
  * Time 2 or more looks back over all that is logged (Postcognition, M20 pdf 523-524). A Dark Ages mage sees as Time 1.
  */
 export function echoesSeen(list = [], now = 0, timeDots = 1) {
-  const reach = num(timeDots) >= 2 ? Infinity : 86400;
+  const reach = num(timeDots) >= 2 ? Infinity : DAY;
   return (Array.isArray(list) ? list : []).filter(e => num(now) - num(e.at) <= reach && num(e.at) <= num(now)).sort((a, b) => num(b.at) - num(a.at));
 }
 /** A map event (WoDX Interactables' wodxMapEvent) as an echo, or null for the ones too small to leave one. */
@@ -261,7 +262,7 @@ export function chimericalFilter({banality = 5, dressed = false} = {}) {
   return `${dressed ? CHIMERICAL_FILTER : "saturate(1.12)"}${g ? ` grayscale(${g.toFixed(2)})` : ""}`;
 }
 /** Enchantment lasts while the Glamour holds: one day for each point spent (C20 pdf 47; house reading of the duration). */
-export const ENCHANT_DAY = 86400;
+export const ENCHANT_DAY = DAY;
 export const enchantUntil = (points, now) => num(now) + Math.max(1, Math.round(num(points))) * ENCHANT_DAY;
 export const isEnchanted = (flag, now) => !!flag && (flag.kinain === true || num(flag.until) >= num(now));
 

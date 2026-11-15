@@ -14,10 +14,12 @@ import * as Road from "./road-rules.mjs";
 import * as Country from "./country-rules.mjs";
 import * as MoneyRules from "./money-rules.mjs";
 import {secondsToNextDawn, secondsToNextDusk, describeTime} from "../../wodx-chronicle/scripts/calendar.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
+import {DAY} from "../../wodx-chronicle/scripts/terms.mjs";
 
 export const MOD = "wodx-storyteller";
 export const SOCKET = `module.${MOD}`;
-export const VERSION = "0.109.0";
+export const VERSION = "0.111.0";
 export const T = {travel: `${MOD}.travel`, encounter: `${MOD}.encounter`, solo: `${MOD}.solo`, beat: `${MOD}.beat`};
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -109,7 +111,7 @@ export async function log(e) {
 /* ------------------------------------------------------------------ */
 
 /** Player characters: actors a player owns, groups left out. */
-export const isPC = a => !!a && a.hasPlayerOwner && !/group/i.test(String(a.type ?? ""));
+export const isPC = TERMS.isPC;
 export const pcs = () => all(game.actors).filter(isPC);
 /** The player who owns a character (the first non-GM owner). */
 export function ownerOf(actor) {
@@ -145,13 +147,13 @@ export const dawnAfter = t => t + secondsToNextDawn(t, latitude());
 export const duskAfter = t => t + secondsToNextDusk(t, latitude());
 /** The latest dawn at or before a time. */
 export function dawnBefore(t) {
-  const at = dawnAfter(t - 86400);
-  return at <= t ? at : at - 86400;
+  const at = dawnAfter(t - DAY);
+  return at <= t ? at : at - DAY;
 }
 /** The night a time belongs to: the dusk that began it. */
 export function nightOf(t) {
-  const at = (t - 86400) + secondsToNextDusk(t - 86400, latitude());
-  return at <= t ? at : at - 86400;
+  const at = (t - DAY) + secondsToNextDusk(t - DAY, latitude());
+  return at <= t ? at : at - DAY;
 }
 export const timeLabel = t => { try { const d = describeTime(t, latitude()); return `${d.timeLabel}, ${d.day} ${d.monthName}`; } catch (e) { return String(t); } };
 
@@ -215,8 +217,10 @@ export const travelOf = scene => W.normPlace(scene?.flags?.[MOD]?.travel ?? {});
  */
 export function travelPlaces() {
   const scenes = all(game.scenes);
-  const marked = scenes.filter(s => s.flags?.[MOD]?.travel);
-  const list = marked.length ? marked.filter(s => travelOf(s).on) : scenes.filter(s => !W.NOT_A_PLACE.test(s.name ?? ""));
+  // B6043: a Lone Chronicle card scene (a town with no map) is a place either way, and never counts as one marked
+  const isCard = s => !!s.flags?.["wodx-solo"]?.card;
+  const marked = scenes.filter(s => s.flags?.[MOD]?.travel && !isCard(s));
+  const list = marked.length ? scenes.filter(s => (isCard(s) || s.flags?.[MOD]?.travel) && travelOf(s).on) : scenes.filter(s => !W.NOT_A_PLACE.test(s.name ?? ""));
   return list.map(s => ({id: s.id, uuid: s.uuid, name: sceneName(s), travel: s.flags?.[MOD]?.travel ?? {}, scene: s}))
     .sort((a, b) => a.name.localeCompare(b.name));
 }

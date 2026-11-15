@@ -58,6 +58,7 @@ import {registerStateSettings, setupStates, publish} from "./states.mjs";
 import {setupLiving} from "./living.mjs";
 import {setupCarry} from "./carry.mjs";
 import {setupHaul} from "./haul.mjs";
+import {setupLoose, contentsKg, looseFor} from "./loose.mjs";
 import {setupAdopt} from "./adopt.mjs";
 import * as Fill from "./fill.mjs";
 import * as FillRules from "./fill-rules.mjs";
@@ -66,10 +67,11 @@ import {setupChase} from "./chase.mjs";
 import {setupVehicleSheet, setLights} from "./vehicle-sheet.mjs";
 import * as VS from "./vehicle-sheet-rules.mjs";
 import {setupCase, registerCaseSettings, pinClue} from "./case.mjs";
+import * as TERMS from "../../wodx-chronicle/scripts/terms.mjs";
 
 const MOD = "wodx-interactables";
 const SEARCH = "_search";
-const VERSION = "0.51.1";
+const VERSION = "0.53.1";
 const BREACH = `${MOD}.breach`;
 const num = v => Number(v) || 0;
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
@@ -177,7 +179,13 @@ export function describeTile(doc) {
   if ( doc?.documentName === "Token" ) return null;
   const f = doc?.flags?.[MOD] ?? {};
   if ( !doc || !(f.container || f.trap || f.clue || f.light || f.hide || f.hazard || f.sacred || f.watch || f.mount || f.climb || f.isTarget || f.cover) ) return null;
-  if ( f.container ) return R.describeContainer(f);
+  if ( f.container ) {
+    const o = R.describeContainer(f);
+    // B6086: a pile that has been picked up is gone; B6087: what is inside weighs what it weighs
+    if ( o.kind === "pile" && (o.taken || !o.items.length) ) return null;
+    if ( game.modules.get("wodx-library")?.api?.weight?.ready ) { try { o.kg = contentsKg(f); } catch (e) { /* no weight */ } }
+    return o;
+  }
   if ( f.trap ) return R.describeTrap(f);
   if ( f.clue ) return R.describeClue(f);
   if ( f.light ) { const lights = lightsOf(doc); return R.describeLight(f, {on: lights.some(l => !l.hidden), count: lights.length}); }
@@ -314,7 +322,7 @@ export function weaponsOf(actor) {
 export function yardsOn(scene, a, b) {
   const g = scene?.grid ?? canvas?.scene?.grid ?? {};
   const size = num(g.size) || 100, dist = num(g.distance) || 5, units = String(g.units ?? "ft");
-  const per = /m|meter|metre|yd|yard/i.test(units) ? dist : dist / 3;
+  const per = TERMS.toYards(dist, units);
   return Math.hypot(num(a?.x) - num(b?.x), num(a?.y) - num(b?.y)) / size * per;
 }
 const reachPx = scene => (num(scene?.grid?.size) || canvas?.grid?.size || 100) * (0.5 + (num(setting("reach")) || 1));
@@ -412,6 +420,10 @@ const NOISE_WORD = {silent: "silent", quiet: "quiet", loud: "loud"};
  * they are apart from the group (B1961). Returns {advanced (clock seconds), personal (for Undo), line}.
  */
 async function passTime(actor, seconds) {
+  // B6198: an attempt counted in turns (under a minute, whole turns of three seconds) takes the table's turn length
+  // (WoDX Combat's "Seconds a turn takes", through api.terms.turnSeconds)
+  const per = Number(game.modules.get("wodx-chronicle")?.api?.terms?.turnSeconds?.()) || TERMS.TURN_SECONDS;
+  if ( seconds > 0 && seconds < TERMS.MINUTE && seconds % TERMS.TURN_SECONDS === 0 ) seconds = (seconds / TERMS.TURN_SECONDS) * per;
   const time = game.modules.get("wodx-storyteller")?.active ? game.modules.get("wodx-storyteller")?.api?.time : null;
   if ( time?.spend && actor?.hasPlayerOwner ) {
     try {
@@ -582,9 +594,17 @@ function cardHtml({title, line = "", dice = "", body = "", verdict = ""}) {
 
 const listWords = a => (a.length <= 1 ? a.join("") : `${a.slice(0, -1).join(", ")} and ${a.at(-1)}`);
 /** Hand a container's items to a character: copies of each item named (a UUID, or a world item's name). */
-async function giveItems(actor, refs) {
+async function giveItems(actor, refs, loose = []) {
   const data = [], names = [], missing = [];
-  for ( const line of refs ) {
+  // B6086: a thing that was set down comes back as the item it was, with its own settings
+  const kept = looseFor({loose}, refs);
+  for ( const [k, line] of refs.entries() ) {
+    if ( kept[k]?.data ) {
+      const o = foundry.utils.deepClone(kept[k].data);
+      delete o._id;
+      data.push(o); names.push(o.name);
+      continue;
+    }
     // 0.23.0: "silver pennies (7)" from a stock list: the item, with the count kept in its name until sheets count things
     const cm = /^(.+?)\s+\((\d+)\)$/.exec(String(line));
     const ref = cm ? cm[1] : line, count = cm ? Number(cm[2]) : 1;
@@ -782,7 +802,7 @@ export async function applyAsk(msg) {
     // Taking what is inside a container: the items go to the character
     let given = [];
     if ( op.id === "take" && out.result === "done" ) {
-      const got = await giveItems(actor, o.items);
+      const got = await giveItems(actor, o.items, doc.flags?.[MOD]?.loose ?? []);
       given = got.ids;
       lines.push(got.names.length ? `${actor.name} takes ${listWords(got.names)}.` : "There is nothing there that WoDX could hand over: the Storyteller says what was inside.");
       if ( got.missing.length ) lines.push(`Not found, so not handed over: ${got.missing.join(", ")}.`);
@@ -877,7 +897,7 @@ const yardsBetween = (a, b) => {
   try {
     const units = canvas.scene?.grid?.units ?? "ft";
     const d = canvas.grid.measurePath([a, b]).distance;
-    return /m|meter|metre|yd|yard/i.test(units) ? d : d / 3;
+    return TERMS.toYards(d, units);
   } catch (e) { return Math.hypot(a.x - b.x, a.y - b.y) / (canvas.grid?.size ?? 100) * 1.67; }
 };
 const soundWalls = (a, b) => {
@@ -2089,6 +2109,8 @@ Hooks.once("init", () => {
   game.modules.get(MOD).api.carry = setupCarry();
   // B5070-B5086: carrying and dragging the fallen, and moving large things
   game.modules.get(MOD).api.haul = setupHaul({characterFor, describeTile, mapEvent, noiseAt, rules: R});
+  // B6083-B6089: what things weigh, and loose gear set down on the map
+  game.modules.get(MOD).api.loose = setupLoose({mapEvent});
   game.modules.get(MOD).api.adopt = setupAdopt();
   Stock.setupStock();
   game.modules.get(MOD).api.stock = {draw: Stock.drawStock, all: Stock.restockAll};

@@ -21,6 +21,52 @@ For each object, ask: would a player who has never seen our code know what this 
   it, a crate's lid on or off, a sack tied on its side or stood up and rolled open. The same goes for lit or out,
   full or empty, whole or broken, as those come.
 
+## True sizes
+
+A square is 5 ft. Check every new object against this table (Ben, 15 November 2026: "the proportions of world objects
+must make sense"), and add a row for each new kind of thing.
+
+| Thing | Real size | On the map |
+|---|---|---|
+| Bed for two (box bed) | 4 1/2 by 7 ft | 0.95 by 1.4 squares |
+| Narrow bed or cot | 4 by 6 1/2 ft | 0.8 by 1.35 |
+| Table for a household | 9 by 4 1/2 ft | 1.8 by 0.9 |
+| Bench | 8 by 1 3/4 ft | 1.6 by 0.34 |
+| Chest | 5 by 3 ft | 1.0 by 0.62 |
+| Bread oven | about 7 ft | 1.4 |
+| Cask | 2 to 2 1/2 ft across | 40 to 48 px |
+| Well head | about 4 ft | 80 px |
+| Farm cart bed, wheels | 8 by 4 1/2 ft, wheels 5 ft | 1.75 by 0.95, wheels 92 px |
+| Haystack (rick) | 10 to 12 ft across | radius 100 to 110 px |
+| Tree crown, field tree | 14 to 23 ft across | 2.8 to 4.6 squares |
+| Field strip | at least 8 ft wide on the map | 170 px rows |
+| Wayside cross base | about 3 ft | 60 px |
+| Ridge tent | 12 by 7 ft | 2.4 by 1.4 squares |
+| Charcoal kiln (earth mound) | 15 to 20 ft across | radius 150 to 190 px |
+| Lean-to | 15 by 9 ft | 3.0 by 1.8 |
+| Tree stump | about 2 ft | radius 18 to 20 px |
+| Boulder | 3 to 5 ft | 0.6 to 1.0 squares |
+| Ladder | 16 in between the rails | 26 px wide |
+| Wayside shrine (roofed) | about 4 1/2 ft | 0.9 squares |
+| Deer or wolf pelt laid flat | about 4 by 6 ft | 0.8 to 0.9 by 1.1 to 1.2 |
+| Open hearth on its slab | about 5 ft | 1.0 to 1.1 squares |
+| Boar wallow | 10 to 15 ft across | 3.0 by 2.0 |
+| Den boulders | 8 to 12 ft each | 1.6 to 2.4 squares |
+| Market stall | 13 by 6 ft | 2.7 by 1.2 squares |
+| Horse stall | 7 by 10 ft | 1.5 by 2.0 |
+| Lantern post | lantern 1 ft on a post | 0.2 across |
+| Hurdle fence | 4 ft high, a hand thick | drawn 0.15 wide so it reads |
+| Market cross steps | 9 ft square | 1.8 by 1.8 |
+| Floor loom | about 9 by 6 ft with its bench | 1.9 by 1.3 |
+| Dye vat in the yard | 8 ft across | 1.6 across |
+| Mash tun | 8 to 9 ft across | 1.7 across |
+| Smith's forge | 8 by 6 ft | 1.6 by 1.2 |
+| Handcart | 4 by 6 ft, shafts beyond | 0.7 by 1.2 |
+
+## Furnishing
+- No room, yard or road is left bare: after a map's own furniture, dress it with dress.py for its trade (B5746).
+  Furniture along the walls first, then small things; walkways to every door stay clear.
+
 ## Point of view and colour
 
 - Everything is seen from straight above. Never a side or three-quarter view (no end-on log circles, no front

@@ -48,7 +48,7 @@ function firstNightPart(actor) {
 export async function makePrelude({actorId = null, line = null, scene = false} = {}) {
   if ( !game.user.isGM ) return null;
   const actor = actorId ? game.actors.get(actorId) : null;
-  const key = line || P.lineFor(actor?.type, variantOf(actor));
+  const key = line || P.preludeFor(actor?.type, variantOf(actor));
   const p = P.composePrelude({line: key, name: actor?.name ?? "", year: yearNow(), futureBranch: futureOn()});
   const jf = await folder("JournalEntry");
   const journal = await JournalEntry.create({name: p.title, folder: jf?.id ?? null, ownership: {default: CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE},

@@ -95,6 +95,10 @@ function registerSettings() {
     s("turnMoves", "Moves out of turn",
         "In a fight, players move a character's token only on that character's turn (a character holding the action steps in first). The Storyteller can always move any token, for a dodge, a shove or a fall.",
         String, "off", { choices: CR.TURN_MOVES });
+    // B6020
+    s("conditionsHold", "Conditions hold the token",
+        "A player cannot move the token of a character who is Held, Completely immobilized, Staked, in Torpor, Incapacitated or Asleep, in a fight or out of one; Numbed moves at three-quarter pace. The Storyteller moves any token freely.",
+        Boolean, true);
 }
 const setting = k => game.settings.get(MOD, k);
 const countShots = () => { try { return !!game.settings.get(MOD, "countShots"); } catch (e) { return false; } };
@@ -713,7 +717,7 @@ function attackDialogHtml(attacker, target, weapons, selWeapon) {
     <div class="form-group"><label>Defender: defense # this turn (full defense)</label><select name="defIndex" data-fixed>
       <option value="auto" selected>Automatic: count this turn's defenses</option><option value="0">First (full pool)</option><option value="1">Second (-1 die)</option><option value="2">Third (-2)</option><option value="3">Fourth (-3)</option></select></div>
     <div class="form-group"><label>Defender extra dice / difficulty</label>
-       <input type="number" name="defDice" value="0" style="width:4em"/> <input type="number" name="defDiff" value="${target ? defenseDiffOf(target) : 0}" style="width:4em"/></div>
+       <input type="number" name="defDice" value="${target ? defenseDiceOf(target) : 0}" style="width:4em"/> <input type="number" name="defDiff" value="${target ? defenseDiffOf(target) : 0}" style="width:4em"/></div>
     ${tCel ? `<div class="form-group"><label><input type="checkbox" name="defCel" checked/> Defender Celerity ${tCel} (adds dice; dodge arrows normally)</label></div>` : ""}
     ${tFort ? `<div class="form-group"><label>Fortitude ${tFort}: spend 1 blood to soak automatically</label><select name="fortBlood" data-fixed>
        <option value="auto" selected>Automatic: ${esc(AU.SOAK_POLICIES[soakPolicy(target)])}</option><option value="yes">Spend</option><option value="no">Don't spend</option></select></div>` : ""}
@@ -784,6 +788,7 @@ export async function attack({ attacker: a, target: t, weaponId, noAim = false }
     const w = fd.weapon === "auto" ? { id: "auto" } : weapons.find(x => x.id === fd.weapon);
     try {
         if (await bondHolds(attacker, target)) return null;
+        if (forbiddenFrom(attacker, target)) { ui.notifications.warn(`WoDX Combat: ${attacker.name} is Forbidden by ${target.name} and cannot attack them.`); return null; }
         if (!(await ambushFirst({ attacker, attackerTok, target, targetTok, fd }))) { openFight(attackerTok, targetTok); return null; }
         const res = await resolveAttack({ attacker, attackerTok, target, targetTok, weapon: w, fd }); openFight(attackerTok, targetTok); return res;
     }
@@ -829,6 +834,12 @@ async function ambushFirst({ attacker, attackerTok, target, targetTok, fd }) {
  * chained Thrall, a fomor's master) rolls first through WoDX NPC's bond ledger; a failed roll stops the blow. True
  * when the blow is not struck.
  */
+/** B6018: a mummy's Forbiddance: the being it holds cannot attack that mummy while it lasts. */
+export function forbiddenFrom(attacker, target) {
+    if (!attacker || !target?.id) return false;
+    return [...(attacker.effects ?? [])].some(e => !e.disabled && e.flags?.["wodx-actions"]?.forbiddenBy === target.id);
+}
+
 async function bondHolds(attacker, target) {
     if (!attacker || !target) return false;
     try {
@@ -956,6 +967,8 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
 
     const atk = await rollPool(pool.dice, pool.difficulty, { specialty: fd.specialty, willpower: fd.willpower });
     if (atk.roll) rolls.push(atk.roll);
+    // B6004: the Blessing or Curse the blow used is spent
+    if (pool.once?.length) { try { await game.modules.get("wodx-actions")?.api?.powerMods?.spend?.(attacker, pool.once); } catch (e) { /* nothing spent */ } }
     if (perShot?.ok) { await spendRows([perShot.spend]); log.push(`${esc(perShot.spend.item.name)}: one is shot.`); }
     if (w?.ranged && w.shots?.counted && countShots()) {
         const left = await spendShot(attacker, w);
@@ -1070,7 +1083,13 @@ async function resolveAttack({ attacker, attackerTok, target, targetTok, weapon,
     if (autoAtkNote) log.unshift(esc(autoAtkNote));
     if (autoNotes.length) log.unshift(esc(`Automatic: ${autoNotes.join("; ")}.`));
     // What the maneuver leaves on the target, shown on its token (B3754)
-    const follow = target && setting("statusEffects") ? R.followOn(R.maneuverKey(maneuver), { hit: !!hit && !atk.botch, damageSuccesses: dmg?.successes ?? 0, profile }) : [];
+    // B6302: a Kuei-jin's Chi aspect decides what a stake does (wood for Yin, a long metal blade for Yang)
+    const kotE = target?.type === "Vampire" && target.system?.settings?.variant === "kindredeast";
+    const chi = kotE ? String(target.getFlag?.("wodx-actions", "kote")?.aspect ?? "") : null;
+    const metal = !w?.ranged && R.LONG_METAL.test(String(w?.name ?? ""));
+    const follow = target && setting("statusEffects") ? R.followOn(R.maneuverKey(maneuver), { hit: !!hit && !atk.botch, damageSuccesses: dmg?.successes ?? 0, profile, chi, metal }) : [];
+    if (kotE && chi && ["stake", "impale"].includes(R.maneuverKey(maneuver)) && hit && !atk.botch && (dmg?.successes ?? 0) >= 3 && !follow.some(f => f.condition === "staked"))
+        log.push(`${target.name} is a Kuei-jin aspected to ${chi === "yin" ? "Yin: only wood holds them" : chi === "yang" ? "Yang: only a long metal blade through the heart holds them" : "Balance: no stake holds them"} (Kindred of the East).`);
     for (const f of follow) log.push(`${f.name}: ${target.name} is marked on the token${f.lasts === "staked" ? " until the stake is pulled out" : " until their next action"} (V20 Dark Ages pp. 347–348).`);
     // B4772, B4773: the lance and keeping the saddle when struck
     let saddle = { lines: [], rolls: [], apply: async () => {} };
@@ -1200,24 +1219,33 @@ function attackPoolFor(attacker, w, fd, maneuver, targeting, boostDice = 0, targ
     // B4770: a blow from the saddle may use the mount's Strength or Dexterity (V20 Dark Ages p. 399)
     let at = { value: attr(attacker, attrKey), mount: false };
     if (!w.ranged) { try { at = MTD.strikeAttrOf(attacker, attrKey, at.value, { close: true }); } catch (e) { /* on foot */ } }
+    // B6004: a Boost, Blessing or Curse from a power or ritual (WoDX Actions power-mods) reaches the blow
+    const pm = powerModsOf(attacker, { tags: ["physical", attrKey, w.ranged ? "ranged" : "melee"] });
     const pool = R.attackPool({
         attribute: at.value, attributeLabel: `${cap(attrKey)}${at.mount ? " (the mount's)" : ""}`,
         ability: held.value, abilityLabel: held.label,
         accuracy: w.accuracy, maneuverDice: maneuver.dice || 0,
         celerityDice: (fd.celDice && attrKey === "dexterity") ? cel : 0,
-        flank: fd.flank, extraDice: (fd.extraDice || 0) + boostDice, woundPenalty: woundPenalty(attacker),
+        flank: fd.flank, extraDice: (fd.extraDice || 0) + boostDice + pm.dice, woundPenalty: woundPenalty(attacker),
         multiIndex: num(fd.multi), celerityIgnoresMulti: !!fd.celMulti,
         baseDifficulty: w.diff, maneuverDiff: maneuver.diff, targetingDiff: targeting.diff,
         rangeDiff: w.ranged ? (R.RANGE[fd.range]?.diff ?? 0) : 0, minStrDiff,
         crippledDiff: BodyRules.crippledAttackDiff(crippledParts(attacker), w),
         // Storyteller 0.64.0 (B2911): a night after bad dreams (the Nightmares Flaw) costs a die
         nightmareDice: Math.max(0, ...[...(attacker?.effects ?? [])].filter(e => !e.disabled).map(e => Number(e.flags?.["wodx-storyteller"]?.diceLess) || 0)),
-        bypassArmor: fd.bypass, opponents: fd.opponents, blind: fd.blind && !fp.blindCancelled, extraDiff: (fd.extraDiff || 0) + (w.ranged ? num(fd.coverDiff) + num(fd.mountShotDiff) : 0),
+        bypassArmor: fd.bypass, opponents: fd.opponents, blind: fd.blind && !fp.blindCancelled, extraDiff: (fd.extraDiff || 0) + pm.diff + (w.ranged ? num(fd.coverDiff) + num(fd.mountShotDiff) : 0),
         sheetDice, sheetDiff, shieldDiff: sh.attackDiff, fitDice: fp.fitDice, fitDiff: fp.fitDiff, wetString: fp.wetString
     });
+    if (pm.parts.length) { pool.parts = [...(pool.parts ?? []), ...pm.parts]; pool.once = pm.once; }
     // B4792: a ram's pool is the driving pool, held to the vehicle's Maneuver
     if (w.vehicle) { try { const c = VH.capPool(attacker, w, pool.dice); if (c.note) { pool.dice = c.dice; pool.parts.push(c.note); } } catch (e) { /* no vehicle */ } }
     return pool;
+}
+
+/** B6004: what powers and rituals on a character do to this roll (WoDX Actions power-mods); nothing with Actions off. */
+function powerModsOf(actor, ctx) {
+    try { return game.modules.get("wodx-actions")?.api?.powerMods?.of?.(actor, ctx) ?? { dice: 0, diff: 0, parts: [], once: [] }; }
+    catch (e) { return { dice: 0, diff: 0, parts: [], once: [] }; }
 }
 
 /** Damage type, bane and soak difficulty for this weapon against this target. */
@@ -1758,14 +1786,17 @@ export async function soakAndApply(tok, fd) {
     let type = type0, bane = !!fd.bane, soakDiff = Math.max(2, Math.min(10, Math.round(Number(fd.soakDiff) || 6)));
     if (sb) { bane = sb.bane && !sb.soak; if (sb.bane) { type = sb.type ?? type; soakDiff = sb.soakDiff ?? 6; } }
     fd = { ...fd, fortBlood: resolveFortitude(actor, fd.fortBlood, { dmgType: type }, fd) };
+    // B6004: a Ward (armour dice, or only against its kind of harm) and a soak Boost from a power or ritual
+    const soakPw = fd.soak ? powerModsOf(actor, { soak: true, harm: { type, of: fd.of ?? (fd.fireSun ? "fire" : ""), fireSun: !!fd.fireSun, bane } }) : { dice: 0, parts: [] };
     if (fd.soak) {
         const arm = armor(actor);
         sp = R.soakPool({ profile, damageType: type, stamina: attr(actor, "stamina"), fortitude: discipline(actor, "Fortitude"),
             armor: fd.noArmor ? 0 : (arm[type] ?? 0), fireOrSun: !!fd.fireSun, fortitudeBlood: !!fd.fortBlood, bane,
             // B5650: the sheet's soak rows count here too, as they do for a blow (B3800): Armor, Armored Hide
-            bonus: num(fd.soakBonus) + R.sheetBonus(actor?.items, "soak_buff", type),
+            bonus: num(fd.soakBonus) + R.sheetBonus(actor?.items, "soak_buff", type) + soakPw.dice,
             aggSoak: garouRules()?.isShifter?.(actor) ? garouRules().aggSoak(actor) : true, ...soakOpts(actor, profile) });
         if (sb) sp.notes.push(sb.note);
+        if (soakPw.parts.length) sp.notes.push(...soakPw.parts);
         if (fd.fortBlood && sp.autoSoak) await spend(actor, 0, 1);
         // A caller can ask that a botched soak turns the damage aggravated (electrocution of a vampire, V20 core printed p. 295, pdf 303)
         soak = await rollPool(sp.dice, soakDiff, { canBotch: !!fd.botchAggravated, autoSuccesses: sp.autoSoak });
@@ -1821,7 +1852,8 @@ export async function rollInitiative({ combat = game.combat, combatants = null, 
         // B3921: standing up from a knockdown last turn costs 2 Initiative this turn
         const stood = R.stoodPenalty(a.getFlag?.(MOD, "stoodUp"), combat);
         if (stood) await a.unsetFlag(MOD, "stoodUp");
-        const sheetInit = R.sheetBonus(a.items, "initiative_buff") + num(armsLib()?.atHand?.([...a.items], weaponList(a))?.init) - stood;
+        const sheetInit = R.sheetBonus(a.items, "initiative_buff") + num(armsLib()?.atHand?.([...a.items], weaponList(a))?.init) - stood
+            + powerModsOf(a, { initiative: true }).dice; // B6004: an Initiative Boost from a power
         const roll = new Roll(`1d10 + ${dex} + ${wits} + ${cel} + ${wp > -99 ? wp : 0} + ${sheetInit}`);
         if (GEN() < 12) await roll.evaluate({ async: true }); else await roll.evaluate();
         rolls.push(roll);
@@ -1951,8 +1983,8 @@ Hooks.once("init", () => {
     const mounted = MTD.setupMounted({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall, markFollow });
     const vehicles = VH.setupVehicles({ MOD, SOCKET, attr, ability: (a, k) => ability(a, k)?.value ?? 0, esc, rollPool, applyDamage, soakFall });
     FTime.setupFightTime();
-    const api = { body, movement, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
-        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.41.0", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
+    const api = { body, movement, holdOfActor, traitRoll, mounted, vehicles, aftermath, useRoom, shieldOf, conductor: CD.conductorApi, attack, soakDialog, soakAndApply, applyDamage, healDamage, setDamage, rollInitiative, standUp, getProfile, heavyFire: Object.assign(heavyFire, { dialog: heavyFireDialog }),
+        getKind, setKind, pickKind, profiles: P, attr, ability, discipline, armor, armorPenalty, rules: R, version: "3.45.1", reload, lightMatch, powder: PW, fight: ST.fightApi, fightEnd: FEnd.fightEndApi, movementFor, corpusTrack, corpusCondition,
         conditionMods, followOn: R.followOn, markFollow, dazedThreshold, bestDefense, bestAttack, quickAttack, setSoakPolicy, soakPolicy, attackHints: computeHints,
         defensesThisRound, attacksThisRound, auto: AU, _dialogs: { attackDialogHtml } };
     game.wodxCombat = api;
@@ -1984,8 +2016,37 @@ export function movementFor(actor) {
     const woundIndex = num(dmg.bashing) + num(dmg.lethal) + num(dmg.aggravated);
     // Protean's Shape of the Beast (wolf or rat) doubles the running speed (VtDA20 p. 241); the effect comes from Use a Discipline
     const doubleRun = [...(actor?.effects ?? [])].some(e => /^shape of the beast\b/i.test(e.name ?? ""));
-    return AU.movement({ dexterity: attr(actor, "dexterity"), celerity: discipline(actor, "Celerity"), woundIndex, doubleRun });
+    const hold = holdOfActor(actor);
+    return AU.movement({ dexterity: attr(actor, "dexterity"), celerity: discipline(actor, "Celerity"), woundIndex, doubleRun, still: hold.still, pace: hold.pace });
 }
+/** B6020-B6021: what the actor's WoDX conditions do to its movement: {still, pace}. */
+export function holdOfActor(actor) {
+    const list = conditionsOf(actor);
+    return AU.holdOf(list.map(c => c.id), Object.fromEntries(list.map(c => [c.id, c.name])));
+}
+// B6031: WoDX's Incapacitated status follows the health track (it was only ever set by hand): on when the track fills
+// for a body that falls unconscious rather than into torpor or death, off once it heals below the full track.
+Hooks.on("updateActor", (actor, change) => {
+    if (!isActiveGM() || !foundry.utils.hasProperty(change ?? {}, "system.health.damage") || corpusTrack(actor)) return;
+    const K = chronicle()?.conditions;
+    if (!K?.setCondition || !K.getCondition?.("incapacitated")) return;
+    try { if (!setting("statusEffects")) return; } catch (e) { return; }
+    const t = healthTrack(actor), c = R.condition(t.damage, t.max, getKind(actor));
+    const want = c.key === "unconscious", has = !!K.hasCondition(actor, "incapacitated"), mine = !!actor.getFlag(MOD, "incapAuto");
+    // Healing lifts only the mark this hook set; one the Storyteller or a power set stays
+    if (want && !has) K.setCondition(actor, "incapacitated", true).then(() => actor.setFlag(MOD, "incapAuto", true)).catch(e => console.warn(`${MOD} | incapacitated`, e));
+    else if (!want && has && mine) K.setCondition(actor, "incapacitated", false).then(() => actor.unsetFlag(MOD, "incapAuto")).catch(e => console.warn(`${MOD} | incapacitated`, e));
+});
+// B6020: a player's token held by a condition (held, staked, torpor, asleep...) does not move, in a fight or out of one.
+// The Storyteller moves any token freely. World setting "Conditions hold the token" turns it off.
+Hooks.on("preUpdateToken", (doc, changes, options) => {
+    if (game.user.isGM || !("x" in changes || "y" in changes) || options?.wodxMove === false || !doc.actor) return;
+    try { if (setting("conditionsHold") === false) return; } catch (e) { /* not registered yet */ }
+    const h = holdOfActor(doc.actor);
+    if (!h.still) return;
+    ui.notifications.warn(`${doc.name} cannot move: ${h.still}.`);
+    return false;
+});
 const roundTag = () => { const c = game.combat; return c?.started ? `${c.id}:${c.round}` : null; };
 /** {yards, limits} moved this turn by a token in the running fight, or null. */
 function movedThisRound(tok) {
@@ -2412,13 +2473,14 @@ export async function quickAttack({ attacker: a = null, target: t = null, weapon
         if (!target) { ui.notifications.warn("WoDX Combat: target someone for the quick attack."); return results; }
         const cm = conditionMods(attacker, target);
         const fd = { weapon: "auto", maneuver: "normal", targeting: "none", range: "short", flank: "auto", multi: "auto", opponents: 1, oppAuto: true,
-            extraDice: cm.attackerDice, extraDiff: cm.attackerDiff, extraDmg: 0, defense: "auto", defIndex: "auto", defDice: 0,
+            extraDice: cm.attackerDice, extraDiff: cm.attackerDiff, extraDmg: 0, defense: "auto", defIndex: "auto", defDice: defenseDiceOf(target),
             defDiff: defenseDiffOf(target), defCel: discipline(target, "Celerity") > 0,
             celDice: setting("celerityDice"), fortBlood: "auto", soakBonus: 0, atkKind: "auto", profile: "auto" };
         try {
             // B4792: a named weapon (a ram) in place of the automatic choice
             const weapon = weaponId ? (weaponList(attacker).find(w => w.id === weaponId) ?? { id: "auto" }) : { id: "auto" };
             if (await bondHolds(attacker, target)) continue;
+            if (forbiddenFrom(attacker, target)) continue;
             if (await ambushFirst({ attacker, attackerTok, target, targetTok, fd })) results.push(await resolveAttack({ attacker, attackerTok, target, targetTok, weapon, fd }));
             openFight(attackerTok, targetTok);
         }
@@ -2484,6 +2546,11 @@ export function conditionMods(attacker, target) {
         out.attackerDiff += mv.diff;
         out.notes = [...(out.notes ?? []), ...mv.notes.map(n => `${n} (house rule)`), ...(mv.blocked ? [`Cannot attack: ${mv.blocked}`] : [])];
     } catch (e) { /* movement off */ }
+    // B6022: the attacker's merits, flaws, fevers, drink and other roll effects (WoDX Chronicle traits) count on the attack
+    try {
+        const tm = traitRoll(attacker, ["attack", "combat"]);
+        if (tm.dice || tm.diff) { out.attackerDice += tm.dice; out.attackerDiff += tm.diff; out.notes = [...(out.notes ?? []), ...tm.parts.map(p => `${attacker.name}: ${p}`)]; }
+    } catch (e) { /* no traits */ }
     // B4885: someone held as a shield by a WoDX NPC hostage-taker makes every attack on them 2 harder (house rule)
     try {
         const sh = shieldOf(target);
@@ -2506,7 +2573,21 @@ export function shieldOf(actor) {
 function defenseDiffOf(target) {
     let d = chronicle()?.conditions?.defenseDifficulty?.(target) ?? 0;
     try { d += MVJ.defenseMods(target).diff; } catch (e) { /* movement off */ }
+    d += traitRoll(target, ["defense", "combat", "dodge"]).diff;
     return d;
+}
+/** B6022: the defender's roll effects in dice (a fever's -1 die, a night's -2 for feeding against the blood's law). */
+function defenseDiceOf(target) {
+    return target ? traitRoll(target, ["defense", "combat", "dodge"]).dice : 0;
+}
+/** B6022: an actor's roll effects for these tags from WoDX Chronicle traits: {dice, diff, parts}. */
+export function traitRoll(actor, tags) {
+    const T = chronicle()?.traits;
+    if (!T?.effects || !actor) return { dice: 0, diff: 0, parts: [] };
+    try {
+        const list = T.effects(actor, { channel: "roll", tags });
+        return T.rules?.sumEffects ? T.rules.sumEffects(list) : list.reduce((o, e) => ({ dice: o.dice + (Number(e.dice) || 0), diff: o.diff + (Number(e.diff) || 0), parts: [...o.parts, e.name] }), { dice: 0, diff: 0, parts: [] });
+    } catch (e) { return { dice: 0, diff: 0, parts: [] }; }
 }
 
 /** Dazed when one attack does more than Stamina after soak; Stamina + 2 for the supernatural (V20 Dark Ages p. 348). */
