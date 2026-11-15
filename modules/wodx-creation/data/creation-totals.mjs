@@ -7,6 +7,12 @@
  * {key, label, dots, count: "dots"|"items"}. freebies: points, flaws: the most extra points Flaws can give.
  * costs: freebie cost per dot (per item when count is "items"). start: fixed starting values, as text.
  * Mummy builds in two stages, so it also carries `rebirth`, applied on top of the mortal stage.
+ *
+ * Book check, 15 November 2026 (B6443), against the private text dumps: every total and cost below was read again on
+ * the pages cited for V20, V20 Dark Ages, W20, Werewolf: The Dark Ages, M20, Mage: The Dark Ages, Wraith 20, C20,
+ * Dark Ages: Fae, Hunter, Demon, Kindred of the East, Mummy and Orpheus, and all held. The check added the cost rows the
+ * table had left out (see the lines marked B6443). Ghouls and Revenants and Dark Ages: Inquisitor have no usable text
+ * dump, so their figures stand on the earlier research notes alone.
  */
 export const TOTALS = {
   v20: {
@@ -23,7 +29,8 @@ export const TOTALS = {
     attributes: [7, 5, 3], abilities: [13, 9, 5], abilityCap: 3, backgrounds: 5,
     powers: [{key: "discipline", label: "Disciplines", dots: 4, note: "Among the clan's three; others cost freebies only."}],
     virtues: 7, freebies: 15, flaws: 7,
-    costs: {attribute: 5, ability: 2, discipline: 7, background: 1, virtue: 2, road: 2, willpower: 1},
+    // Blood Sorcery path 4 per dot, ritual by its level (pdf 159 / printed 158; B6443)
+    costs: {attribute: 5, ability: 2, discipline: 7, bloodPath: 4, background: 1, virtue: 2, road: 2, willpower: 1},
     start: ["Road = the two Road Virtues added", "Willpower = Courage", "Blood pool: one die + Domain + Herd, to the Generation's limit"],
     costRef: "pdf 159 / printed 158"
   },
@@ -68,7 +75,8 @@ export const TOTALS = {
     attributes: [7, 5, 3], abilities: [13, 9, 5], abilityCap: 3, backgrounds: 7,
     powers: [{key: "sphere", label: "Spheres", dots: 6, note: "The first dot goes in the Affinity Sphere; no Sphere above Arete."}],
     freebies: 15, flaws: 7,
-    costs: {attribute: 5, ability: 2, background: 1, sphere: 7, arete: 4, willpower: 1},
+    // Quintessence: 1 freebie buys 4 points (pdf 254 / printed 253; B6443)
+    costs: {attribute: 5, ability: 2, background: 1, sphere: 7, arete: 4, willpower: 1, quintessence: 0.25},
     start: ["Arete 1 (3 at most with freebies)", "Willpower 5", "Quintessence = Avatar", "Paradox 0"],
     costRef: "pdf 254 / printed 253"
   },
@@ -138,7 +146,9 @@ export const TOTALS = {
     label: "Kindred of the East", short: "KotE", sheet: "Vampire", ref: "KotE pdf 70–86 / printed 78–94",
     attributes: [7, 5, 3], abilities: [13, 9, 5], abilityCap: 3, backgrounds: 5,
     powers: [{key: "discipline", label: "Disciplines", dots: 3, note: "One must be a Demon Art."}], freebies: 15, flaws: 7,
-    costs: {attribute: 5, ability: 2, discipline: 10, background: 1, chi: 3, hun: 3, po: 1, willpower: 1},
+    // Summary pdf 70 / printed 78; steps pdf 78 and 85-86 / printed 86 and 93-94. Chi Virtues: 4 dots on top of 1 each, not
+    // counted here as the sheet keeps no Yin and Yang. Martial Arts: 2 Skill dots or 3 freebies a dot (pdf 75 / printed 83; B6443)
+    costs: {attribute: 5, ability: 2, martialArts: 3, discipline: 10, background: 1, chi: 3, hun: 3, po: 1, willpower: 1},
     start: ["Yin and Yang 1 each, plus 4", "Hun 1, P'o 3", "Willpower = Hun, raised to 5 at least", "Dharma 1"],
     costRef: "pdf 71 / printed 79"
   },
@@ -148,7 +158,9 @@ export const TOTALS = {
     powers: [{key: "hekau", label: "Hekau", dots: 3, note: "Given at the Rebirth; one dot in the Amenti's primary path."}],
     freebies: 5, flaws: 7,
     rebirth: {attributes: 2, abilities: 5, backgrounds: 2, freebies: 10},
-    costs: {attribute: 5, ability: 2, hekau: 5, background: 1, balance: 4, sekhem: 1, willpower: 1},
+    // Stage one pdf 52 / printed 56; Rebirth pdf 56 / printed 60 (Hekau 3, 2 more Backgrounds, Balance 1, 10 more freebies).
+    // Extra spells and rituals 1 each (chart pdf 52 / printed 56; B6443)
+    costs: {attribute: 5, ability: 2, hekau: 5, background: 1, balance: 4, sekhem: 1, spell: 1, ritual: 1, willpower: 1},
     start: ["Balance 1 (3 at most)", "Willpower 5", "Sekhem = Balance"],
     costRef: "pdf 52 / printed 56"
   },
@@ -156,7 +168,10 @@ export const TOTALS = {
     label: "Orpheus", short: "Orpheus", sheet: "Mortal", ref: "Orpheus pdf 123–131 / printed 122–130",
     attributes: [6, 4, 3], abilities: [11, 7, 4], abilityCap: 3, backgrounds: 4,
     powers: [], freebies: 15, flaws: 7,
-    costs: {attribute: 5, ability: 2, background: 1, vitality: 5, willpower: 3},
+    // Summary pdf 123 / printed 122 (2 standard + 2 Orpheus Backgrounds, taken as 4 for a Group member; Spirits 5 more
+    // freebies); Stains 3, up to 2 more for 1 freebie each (pdf 130 / printed 129). Horrors: the Shade's own 7, another
+    // Shade's 10 (chart pdf 125 / printed 124; B6443)
+    costs: {attribute: 5, ability: 2, background: 1, horror: 7, otherHorror: 10, vitality: 5, willpower: 3},
     start: ["Backgrounds: 2, plus 2 Orpheus ones for Group members", "Vitality, Willpower and Spite by Shade and Nature", "Spirits get 5 more freebies"],
     costRef: "pdf 125 / printed 124"
   }
