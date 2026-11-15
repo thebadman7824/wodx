@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6140
+Next free block: B6220
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -333,6 +333,7 @@ Next free block: B6140
 | B6050-B6059 | gate7b fresh arena each run (used B6050-B6051) | tools (gates) |
 | B6070-B6079 | Snow vehicles, trains and trams (rules and sprites), and a quality pass on the vehicle sprites (used B6070-B6076) | Interactables, Paperdoll, Combat |
 | B6130-B6139 | The eight held-back world timeline readings after the book check (used B6130-B6132) | Chronicle |
+| B6210-B6219 | gatevehicles plays in a year with cars (used B6210) | tools (gates) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10226,3 +10227,10 @@ Reverse: remove "1589|The Croatan" from TOLD_BY_BOOK.
 WoDX Chronicle. Rage Across Australia (pdf 20 to 21) has the Wyrm's agents hold much of the colony's economy by 1830 and form the Squatters' Council, while the Bunyip withdraw inland; its War of Tears (pdf 23 to 24) is a single year of killing, told later in the book, and Past Lives (pdf 70) sets the Bunyip's last stand in 1937. The card no longer starts the war in 1830. It tells the Squattocracy instead, and the war stays the book event war-of-tears at 1899 (W20, era advancement's lost-tribe year), whose date note now names Rage Across Australia and Past Lives so the Storyteller can move it to 1937.
 
 Reverse: restore the 1830 line "The War of Tears begins" in r3/age-of-reason.txt; move war-of-tears to 1937 in data/events.mjs to follow Past Lives.
+
+## B6210. gatevehicles plays in a year that has cars (2026-11-15)
+Gates. gatevehicles read the year from the clock. After other gates the clock could stand before the motor car, so
+the aeroplane step read "No motor car yet" and the ram missed. When the year is before 1950 the run now moves the
+clock to 1995 and notes the move. The kit puts the clock back after.
+
+Reverse: drop the move and play in whatever year the clock shows.
