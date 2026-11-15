@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6360
+Next free block: B6500
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -342,6 +342,7 @@ Next free block: B6360
 | B6250-B6259 | Names follow each year's customs (Improvement Desk nm1) (used B6250-B6253) | Creation, NPC |
 | B6260-B6269 | Real recorded cues: Freesound CC0/CC BY sounds for dawn, dusk, notice, birdsong, cock-crow and heartbeat, by era and faith (used B6260-B6263) | Atmosphere |
 | B6350-B6359 | gate kit yearAtLeast, gatearms and gateplayerextras (used B6350-B6353) | tools (gates) |
+| B6490-B6499 | pc queue ageing (used B6490) | tools (pcq) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10557,3 +10558,11 @@ most drainMinutes (10, runner.json); after that the runner takes jobs again and 
 at the nightly lane reset.
 
 Reverse: drop drainMinutes and wait for every job again; --recycle 0 by default; drop yearAtLeast and go back to the hand-written move in gatevehicles; want exactly six again.
+
+## B6490. A waiting PC job gains a priority step each hour (2026-11-15)
+PC runner. The queue ran strictly by priority, so a p5 job (#1547, nine sheet gates) sat at the head of the queue for
+over three and a half hours while newer p1 and p3 jobs took every free lane. A job now gains one priority step for
+each full hour it has waited, never past 1; ties still go to the older issue. A p5 job reaches the top within four
+hours, and a p3 job within two.
+
+Reverse: sort by the priority given alone.
