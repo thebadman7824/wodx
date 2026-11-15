@@ -100,17 +100,21 @@ export async function run() {
       const card = game.messages.filter(m => m.timestamp >= since && /calls on a pact gift/.test(m.content ?? "")).at(-1);
       const items = card?.flags?.["wodx-actions"]?.items ?? [];
       for ( const it of items ) await A.effects?.apply?.(it, mortal.name).catch(e => G.R.notes.push(`apply: ${e?.message ?? e}`));
-      const boostOf = () => { const a = game.actors.get(mortal.id); return Math.max(Number(A.powerMods?.of?.(a, {tags: ["charisma", "social"]})?.dice) || 0, Number(A.powerMods?.of?.(a, {tags: ["strength", "physical"]})?.dice) || 0); };
+      // the boost lands on whoever the item names: the world actor, or the thrall's unlinked token on the map
+      const bodies = () => [game.actors.get(mortal.id), ...(canvas.scene?.tokens ?? []).filter(t => t.actorId === mortal.id).map(t => t.actor)].filter(Boolean);
+      const boostOne = a => Math.max(Number(A.powerMods?.of?.(a, {tags: ["charisma", "social"]})?.dice) || 0, Number(A.powerMods?.of?.(a, {tags: ["strength", "physical"]})?.dice) || 0);
+      const boostOf = () => Math.max(0, ...bodies().map(boostOne));
       await waitFor(() => boostOf() > 0, 6000).catch(() => null);
       const m = game.actors.get(mortal.id);
       const fx = [...(m?.effects ?? [])].map(e => ({name: e.name, key: e.flags?.["wodx-chronicle"]?.timed?.key ?? null, data: e.flags?.["wodx-chronicle"]?.timed?.data ?? null, disabled: !!e.disabled}));
-      const routes = items.map(it => it?.route ?? null);
-      const boost = Math.max(Number(A.powerMods?.of?.(m, {tags: ["charisma", "social"]})?.dice) || 0, Number(A.powerMods?.of?.(m, {tags: ["strength", "physical"]})?.dice) || 0);
+      const routes = items.map(it => it?.route ?? null), targets = items.map(it => String(it?.target ?? it?.targets ?? "").slice(0, 80));
+      const fxTok = bodies().slice(1).flatMap(a => [...(a.effects ?? [])].map(e => e.name));
+      const boost = boostOf();
       // B6447: the card's own words go in the details, so a failed roll ("nothing comes") is told from a card with no items
       const said = String(card?.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 240);
       const wpNow = m?.system?.advantages?.willpower ?? {};
       G.ok("6b. the pact gift answers", !!card && items.length >= 1 && boost > 0,
-        {card: !!card, items: items.length, boost, forced, willpower: [wpNow.temporary, wpNow.permanent], said, routes, fx});
+        {card: !!card, items: items.length, boost, forced, willpower: [wpNow.temporary, wpNow.permanent], said, routes, targets, fx, fxTok});
     });
     await G.step("7. a True Name brings the demon to the map", async () => {
       await C.propose({type: "wodx-actions.pressName", key: `gate4:press:${mortal.id}`, title: "gate", data: {caller: mortal.id, demon: demon.id, cmd: "kneel", scene: scene.id}});
