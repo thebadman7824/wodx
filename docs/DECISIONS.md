@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B6270
+Next free block: B6360
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -341,6 +341,7 @@ Next free block: B6270
 | B6220-B6229 | The night's work: one Undo for a night of the Storyteller's Hand (Ben's desk pick hd1, 15 November 2026) (used B6220-B6226) | Chronicle, Solo |
 | B6250-B6259 | Names follow each year's customs (Improvement Desk nm1) (used B6250-B6253) | Creation, NPC |
 | B6260-B6269 | Real recorded cues: Freesound CC0/CC BY sounds for dawn, dusk, notice, birdsong, cock-crow and heartbeat, by era and faith (used B6260-B6263) | Atmosphere |
+| B6350-B6359 | gate kit yearAtLeast, gatearms and gateplayerextras (used B6350-B6353) | tools (gates) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10533,3 +10534,26 @@ WoDX Atmosphere. common/sounds/heart.ogg holds one whole beat; it plays once per
 generated thump plays until the file is decoded and wherever there is none.
 
 Reverse: delete heart.ogg.
+
+## B6350. The gate kit moves an early clock to a year a gate needs (2026-11-15)
+Gates. The kit gains yearAtLeast(min): when the clock stands before the year given, the run moves it to 1995 and notes
+the move, and cleanup puts it back. gatevehicles now uses it (B6210 had done the same by hand). gatearms uses it with
+1880: after other gates its cartridge revolver went off the sheet during the reload step.
+
+## B6351. gateplayerextras counts six or more buttons under More (2026-11-15)
+Gates. The solo panel's More list has grown since the gate was written (eight or nine buttons now), so the step that
+wanted exactly six failed on main. It now wants six or more.
+
+## B6352. run-gate opens a new browser every 15 gates (2026-11-15)
+PC runner. A browser kept for a 50-minute touched run grew to 6.5 GB, and with four lanes busy the PC fell below the
+3 GB the runner wants free before it starts a job, so 16 jobs waited. run-gate now closes its browser and signs in a
+new one every 15 gates (--recycle N; 0 keeps one browser for the whole run). A fresh page also drops hooks and state
+that earlier gates left in memory.
+
+## B6353. A runner update waits at most 10 minutes for running jobs (2026-11-15)
+PC runner. When main changed the runner it stopped taking jobs until every running job ended. A 100-gate touched run
+then held 19 queued jobs, four of them top priority, for most of an hour with four lanes free. The drain now lasts at
+most drainMinutes (10, runner.json); after that the runner takes jobs again and updates the next time it is idle, or
+at the nightly lane reset.
+
+Reverse: drop drainMinutes and wait for every job again; --recycle 0 by default; drop yearAtLeast and go back to the hand-written move in gatevehicles; want exactly six again.
