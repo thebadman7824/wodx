@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.73.0 (German names raised to 300 (B5540); Maori names raised to 300 (B5560); Norse names raised to 300 (B5550))
 - 0.72.0 (English names raised to 300 (B5480); French names raised to 300 (B5490); Italian names raised to 300 (B5510); Japanese names raised to 300 (B5520); Russian names raised to 300 (B5530); Spanish names raised to 300 (B5500))
 - 0.71.0 (A Fetter that is a place is checked against the town over time when the era moves on (B5391))
 - 0.70.0 (Ghouled animals, step three (B5058 to B5064): traits for every animal kind from the V20 Dark Ages animals list (pp. 396 to 399), with house figures for the kinds it leaves out. Three steps of training: trained gives the traits the list puts in brackets, war-trained (horses, camels, elephants, guard dogs and hounds) adds a dot of Brawl and is the mark the mounts rules read to stop a horse shying. Training costs 5 experience, then 10, or runs as a long task (Manipulation + Animal Ken, difficulty 7, a roll a week). Breeds by year and land, from destriers and alaunts to Dobermanns and salukis. In the wizard's Backgrounds page a vampire picks the kind, land, breed and training for each Retainers dot; dots put together make one tougher beast with the Storyteller's leave)
