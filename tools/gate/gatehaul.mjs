@@ -20,7 +20,7 @@ import {gate, waitFor} from "./kit.mjs";
 
 const IX = "wodx-interactables";
 const body = (name, {str = 2, dex = 3, sta = 2, athletics = 0, melee = 0} = {}) => ({name, type: "Mortal",
-  system: {attributes: {strength: {value: str}, dexterity: {value: dex}, stamina: {value: sta}}, abilities: {athletics: {value: athletics}, melee: {value: melee}}}});
+  system: {attributes: {strength: {value: str, total: str}, dexterity: {value: dex, total: dex}, stamina: {value: sta, total: sta}}, abilities: {athletics: {value: athletics}, melee: {value: melee}}}});
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const text = html => String(html ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
 
@@ -139,7 +139,7 @@ export async function run() {
       await hx().take(te, scene.tiles.get(safe.id), "push");
       const one = hx().loadOf(scene.tiles.get(safe.id));
       await dora.update({"system.health.damage.lethal": 0}).catch(() => null);
-      await dora.update({"system.attributes.strength.value": 5});
+      await dora.update({"system.attributes.strength.value": 5, "system.attributes.strength.total": 5});
       await waitFor(() => !hx().fallenOf(td).down, 4000);
       await hx().take(td, scene.tiles.get(safe.id), "push");
       const two = hx().loadOf(scene.tiles.get(safe.id));
