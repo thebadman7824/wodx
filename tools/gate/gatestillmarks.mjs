@@ -77,6 +77,7 @@ export async function run() {
 
     await G.step("7. a good hiding roll sets Sneaking", async () => {
       let tries = 0, on = false;
+      const t0 = Date.now();
       const apply = (() => { try { return game.settings.get("wodx-actions", "applyChanges"); } catch (e) { return null; } })();
       while ( !on && tries < 3 ) {
         tries++;
@@ -84,7 +85,7 @@ export async function run() {
         await wait();
         on = !!a.statuses?.has?.("wodx-sneaking") && !!K.hasCondition(a, "sneaking");
       }
-      const card = [...game.messages].slice(-3).map(m => m.content ?? "").join(" ").includes("marked Sneaking");
+      const card = [...game.messages].filter(m => (m.timestamp ?? 0) >= t0).some(m => String(m.content ?? "").includes("marked Sneaking"));
       G.ok("7. a good hiding roll sets Sneaking", on && card, {on, card, tries, apply});
       for ( const e of [...a.effects].filter(e => e.statuses?.has?.("wodx-sneaking")) ) await e.delete();
     });
