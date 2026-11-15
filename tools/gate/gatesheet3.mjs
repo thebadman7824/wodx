@@ -15,10 +15,10 @@ async function open(actor, unlocked = true) {
   const sheet = actor.sheet;
   sheet.locked = !unlocked;
   await sheet.render(true);
-  await until(() => sheet.rendered && (sheet.element?.[0] ?? sheet.element)?.querySelector(".wodx-book"));
+  await until(() => sheet.rendered && (sheet.element instanceof HTMLElement ? sheet.element : sheet.element?.[0])?.querySelector(".wodx-book"));
   return sheet;
 }
-const el = sheet => (sheet.element?.[0] ?? sheet.element);
+const el = sheet => (sheet.element instanceof HTMLElement ? sheet.element : sheet.element?.[0]);
 
 export async function run() {
   const kin = game.actors.find(a => a.name === "Sheet test: a Tzimisce of the Carpathians");

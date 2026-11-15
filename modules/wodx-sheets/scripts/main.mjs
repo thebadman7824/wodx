@@ -449,9 +449,12 @@ const skinOn = v => document.body.classList.toggle("wodx-skin", v !== "system");
 
 // The title bar (layout pass): the buttons show as icons so the name always fits; each keeps its words as a tooltip
 /** Names for the title bar buttons that carry no words of their own. */
+/** The window's element from a render hook: jQuery on the old engine, the element itself on ApplicationV2. An
+ * ApplicationV2 sheet's element is a <form>, and form[0] is its first control, so "html[0] ?? html" picks the wrong one (B6114). */
+const rootOf = (html, app) => (html instanceof HTMLElement ? html : html?.[0]) ?? (app?.element instanceof HTMLElement ? app.element : app?.element?.[0]);
 const HEADER_NAMES = [["close", "Close"], ["minimize", "Minimize"], ["maximize", "Restore"], ["pin", "Pin"], ["alter-ego-config", "Alter ego"]];
 function nameHeaderButtons(app, html) {
-  const el = html?.[0] ?? html ?? app?.element?.[0];
+  const el = rootOf(html, app);
   const win = el?.closest?.(".window-app") ?? app?.element?.[0];
   if (!win?.classList?.contains("wod20")) return;
   for (const b of win.querySelectorAll(".window-header a.header-button, .window-header a.alter-ego-config")) {
@@ -466,7 +469,7 @@ Hooks.on("renderActorSheet", nameHeaderButtons);
 // Gender (B3501): an optional line under the name. For a player character it describes and changes nothing in play;
 // what is written is kept by WoDX Chronicle (api.gender), which every module reads.
 function genderField(app, html) {
-  const el = html?.[0] ?? html ?? app?.element?.[0], actor = app?.actor ?? app?.document;
+  const el = rootOf(html, app), actor = app?.actor ?? app?.document;
   const gen = game.modules.get("wodx-chronicle")?.api?.gender;
   if (!actor || !gen || !el?.querySelector) return;
   const nameBox = el.querySelector('.bioInformationArea input[name="name"], .bioInformationArea input.sheet-infoValues')?.closest(".bioInformationArea");
@@ -490,7 +493,7 @@ Hooks.on("renderItemSheet", nameHeaderButtons);
 
 // Sheet tools (B2837): one labelled button that lists the title bar's icon buttons with their names
 function sheetToolsButton(app, html) {
-  const el = html?.[0] ?? html ?? app?.element?.[0];
+  const el = rootOf(html, app);
   const win = el?.closest?.(".window-app") ?? app?.element?.[0];
   const header = win?.querySelector?.(".window-header");
   if (!win?.classList?.contains("wod20") || !header || header.querySelector(".wodx-sheet-tools")) return;

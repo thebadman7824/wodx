@@ -24,7 +24,7 @@ export async function run() {
   const sigWas = (() => { try { return game.settings.get(CH, "sigVampire"); } catch (e) { return null; } })();
   const player = game.users.find(u => !u.isGM);
   let lent = false, el;
-  const open = async () => { await a.sheet.render(true); await until(() => a.sheet.rendered && (a.sheet.element?.[0] ?? a.sheet.element)?.querySelector(".wodx-strip")); await sleep(300); el = (a.sheet.element?.[0] ?? a.sheet.element); };
+  const open = async () => { await a.sheet.render(true); await until(() => a.sheet.rendered && (a.sheet.element instanceof HTMLElement ? a.sheet.element : a.sheet.element?.[0])?.querySelector(".wodx-strip")); await sleep(300); el = (a.sheet.element instanceof HTMLElement ? a.sheet.element : a.sheet.element?.[0]); };
 
   try {
     await step("version and api", async () => ok("version and api", !foundry.utils.isNewerVersion("0.13.0", game.modules.get(MOD)?.version ?? "0") && !foundry.utils.isNewerVersion("0.43.0", game.modules.get(CH)?.version ?? "0")

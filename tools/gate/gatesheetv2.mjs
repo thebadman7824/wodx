@@ -11,7 +11,8 @@
 import {gate, waitFor} from "./kit.mjs";
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const elOf = s => s?.element?.[0] ?? s?.element ?? null;
+// An ApplicationV2 sheet's element is a <form>, and form[0] is its first control: test for the element first
+const elOf = s => (s?.element instanceof HTMLElement ? s.element : s?.element?.[0]) ?? null;
 const SYS = {"Mortal": {variant: "general"}, "Vampire": {variant: "general"}, "Changeling": {variant: "general"}, "Wraith": {variant: "general"},
   "Creature": {variant: "general"}, "Exalted": {variant: "general"}, "Changing Breed": {changingbreed: "Bastet"}};
 
@@ -100,7 +101,8 @@ export async function run() {
         const el = elOf(sheet);
         const gender = !!el.querySelector(".wodx-gender-field");
         const wodx = game.modules.get("wodx-sheets")?.active;
-        const controls = (sheet._getHeaderControls?.() ?? []).map(c => c.action);
+        // modules add their controls through the getHeaderControls hook, which also registers each one's action
+        const controls = Object.keys(sheet.options?.actions ?? {});
         const want = wodx && sheet.constructor.name.startsWith("Wodx") ? ["wodxPrint", "wodxHistory"] : [];
         G.ok(`${pre} 7. the Gender line and the Print and History controls are there`, (!wodx || gender) && want.every(w => controls.includes(w)),
           {gender, controls, sheet: sheet.constructor.name});

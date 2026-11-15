@@ -156,7 +156,7 @@ export async function openHistory(actor) {
 /* -------------------------------------------------------------- */
 
 export function printSheet(sheet) {
-  const el = sheet.element?.[0] ?? sheet.element;
+  const el = sheet.element instanceof HTMLElement ? sheet.element : sheet.element?.[0]; // a V2 form's [0] is its first control (B6114)
   if ( !el ) return;
   const w = window.open("", "_blank", "width=900,height=1100");
   if ( !w ) return ui.notifications.warn("The browser stopped the print window. Allow pop-ups for this page.");
