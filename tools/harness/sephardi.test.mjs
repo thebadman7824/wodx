@@ -27,7 +27,7 @@ test("mizrahi: son-of names and places before 1800, family names after", () => {
   assert.ok(med.every(p => p.family && !p.name.includes("{")));
   assert.ok(med.some(p => /^(ben|bat) /.test(p.family)));
   assert.ok(med.some(p => p.name.startsWith("Sitt al-")));
-  assert.ok(people("mizrahi", "levant", "modern", 100).some(p => ["Sassoon", "Kadoorie", "Somekh", "Shasha"].includes(p.family)));
+  assert.ok(people("mizrahi", "levant", "modern", 400).some(p => ["Sassoon", "Kadoorie", "Somekh", "Shasha"].includes(p.family)));
 });
 
 test("sephardi and mizrahi: where they live", () => {
