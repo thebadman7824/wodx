@@ -911,7 +911,7 @@ export async function editBehavior(actor) {
   if ( data === "reset" ) return actor.unsetFlag(MOD, "behavior");
   const out = {template: data.template || null, mode: data.mode || null, phases: String(data.phases ?? "").trim() || null,
     household: String(data.household ?? "").trim().slice(0, 60) || null, talk: String(data.talk ?? "").trim().slice(0, 8000) || null, talkAsk: data.talkAsk ? true : null, noStock: data.noStock ? true : null,
-    noBarks: data.noBarks ? true : null, noAutoPower: data.noAutoPower ? true : null, voice: VOICES[data.voice] ? data.voice : null, mood: TALK_MOODS.includes(data.mood) ? data.mood : null,
+    noBarks: data.noBarks ? true : null, voice: VOICES[data.voice] ? data.voice : null, mood: TALK_MOODS.includes(data.mood) ? data.mood : null, noAutoPower: data.noAutoPower ? true : null,
     sides: String(data.sides ?? "").trim().toLowerCase().slice(0, 300) || null, openSides: String(data.openSides ?? "").trim().toLowerCase().slice(0, 200) || null,
     rivals: String(data.rivals ?? "").trim().slice(0, 2000) || null};
   const tacs = String(data.tactics ?? "").split(",").map(x => x.trim().toLowerCase()).filter(Boolean);
