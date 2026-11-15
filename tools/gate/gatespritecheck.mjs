@@ -127,10 +127,14 @@ export async function run() {
       pics.push(await shot("3-working", {x: 4 * g, y: 4 * g}, 2));
       // the next hours: off to the tavern
       await smith.update({[`flags.${NPC}.routine.blocks`]: [day({place: inn.uuid, activity: "rest"})]});
+      await sleep(300);
+      const from = {x: tok.x, y: tok.y};
       const turned = [];
-      const watch = setInterval(() => { const f = facingShown(tok); if ( A.state(tok.id)?.moving && f && turned.at(-1) !== f ) turned.push(f); }, 60);
+      let movingSeen = 0, how = null;
+      const watch = setInterval(() => { const f = facingShown(tok); if ( A.state(tok.id)?.moving ) { movingSeen++; if ( f && turned.at(-1) !== f ) turned.push(f); } }, 40);
       try {
-        await R.tick("walk", {scene, post: true});
+        const r = await R.tick("walk", {scene, post: true});
+        how = {items: (r?.items ?? []).filter(i => i?.tokenId === tok.id).map(i => `${i.type}:${i.status}`), moved: tok.x !== from.x || tok.y !== from.y};
         await waitFor(() => tok.regions?.has?.(inn) || inn.testPoint?.({x: tok.x + g / 2, y: tok.y + g / 2, elevation: 0}), 30000).catch(() => null);
         await sleep(400);
         pics.push(await shot("3-walked", {x: tok.x + g / 2, y: tok.y + g / 2}, 1.2));
@@ -142,7 +146,7 @@ export async function run() {
       await waitFor(() => tok.texture?.src === SR.stillPath("townsman-1888"), 5000).catch(() => null);
       G.ok("3. the routine brings the token in wearing its sprite, at the sprite's size", placed && wears === "townsman-1888" && tok.texture?.scaleX === SR.TOKEN.scaleX, {placed, wears, scale: tok.texture?.scaleX});
       G.ok("3. at work its hands move", work && where1 === "work" && f1 !== f2, {where: where1, act: work, frames: [f1, f2]});
-      G.ok("3. it walks to the tavern facing the way it goes", turned.length >= 1 && turned.includes("right"), {turned});
+      G.ok("3. it walks to the tavern facing the way it goes", turned.length >= 1 && turned.includes("right"), {turned, movingSeen, from, to: {x: tok.x, y: tok.y}, how});
       G.ok("3. and sits down there", ["stool", "seat", "sit"].includes(sat), {sat, where: smith.flags?.[NPC]?.where?.activity});
       // B6145: a walk with autoRotate turns the token, but the figure stays upright (the stool under it, not beside it)
       const rot = {doc: tok?.rotation ?? null, drawn: tok?.object?.mesh?.rotation ?? null};
