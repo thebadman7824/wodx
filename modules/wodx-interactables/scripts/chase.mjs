@@ -100,9 +100,11 @@ const MOUNT_LABELS = {horse: "Riding horse", mule: "Mule", cart: "Cart", carriag
 function beastTraits(actor) {
   const ab = k => Number(actor?.system?.abilities?.[k]?.value) || 0;
   const disc = n => [...(actor?.items ?? [])].some(i => new RegExp(`^${n}\\b`, "i").test(i.name ?? "") && (Number(i.system?.value) || 1) > 0);
+  // a ghouled beast's Potence dots add to its Strength, (V20 Dark Ages: a ghouled beast is stronger by its Potence)
+  const discDots = n => Math.max(0, ...[...(actor?.items ?? [])].filter(i => i.type === "Power" && new RegExp(`^${n}\\b`, "i").test(i.name ?? "")).map(i => Number(i.system?.value) || 0));
   // the sheet's dots, or its total when a bonus raises it (the total can lag behind a fresh sheet)
   const dots = k => { const a = actor?.system?.attributes?.[k]; return a ? Math.max(num(a.value), num(a.total)) : 0; };
-  return {label: `the ${String(actor?.name ?? "mount").replace(/\s*\(.*\)\s*$/, "").toLowerCase()}`, strength: dots("strength"), dexterity: dots("dexterity"),
+  return {label: `the ${String(actor?.name ?? "mount").replace(/\s*\(.*\)\s*$/, "").toLowerCase()}`, strength: dots("strength") + discDots("Potence"), dexterity: dots("dexterity"),
     stamina: dots("stamina"), athletics: ab("athletics"), brawl: ab("brawl"), celerity: disc("Celerity"), ref: "its own sheet"};
 }
 /** The Garou form a sheet is in (the system's shapes), or "homid". */
