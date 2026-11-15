@@ -352,7 +352,7 @@ Next free block: B6530
 | B6490-B6499 | pc queue ageing (used B6490) | tools (pcq) |
 | B6500-B6509 | lanes ignore the dawn and dusk move and session id (used B6500) | tools (lanes) |
 | B6510-B6519 | Map generator licence label: the town layout port is GPL-3.0 (used B6510) | tools/mapgen |
-| B6520-B6529 | Graphics card heat watch in the PC runner (used B6520) | tools (pcq) |
+| B6520-B6529 | Graphics card heat watch in the PC runner; blind naming test on the PC (used B6520-B6521) | tools (pcq, vision) |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -10947,3 +10947,8 @@ Reverse: none needed; the label follows the source's licence. If the layout is e
 tools/pcq. The image model keeps the graphics card busy for hours, with no power cap. The runner reads nvidia-smi once a minute and writes one line to logs/gpu-YYYY-MM-DD.csv in its folder. That line holds the core heat, the memory heat where the card reports it, the power, the fan, the load and the memory in use. If the core stays above 83 C for 5 minutes, or the memory stays above 100 C, it opens a pc-alert issue so the Storyteller hears of it. The alert closes after 10 minutes under 78 C core and 95 C memory. The limits are in tools/pcq/gpu.mjs and covered by tools/harness/pcq.test.mjs.
 
 Reverse: remove the gpuCheck call from the runner loop.
+
+## B6521. The blind naming test runs on the PC (2026-11-15)
+tools/vision/blind.py. A local picture model (Ollama with qwen2.5vl 7B, on the graphics card) is shown each drawing with no name and asked what it is, how sure it is, and why. This is the same test the cloud checker runs for map objects. A picture passes when the model gives a true name and is sure 4 or 5. It is unsure on a true name at sure 3, and fails on anything else. A true name is matched on its naming part: "cauldron on a tripod" is named by "cauldron", and "beehive or skep" takes either word. A names file can list other accepted names. One picture takes about 1.5 seconds. Before each picture the script waits up to 30 seconds for a gap in the image model's queue; past that the two share the card. The model is unloaded at the end. Its "sure" is not reliable (it says 5 when wrong), so a PC pass is a first screen. Pictures it fails or is unsure of still go to the cloud checker before a desk. The first run judged the 160 trial drawings from the image model: 33 pass, 127 fail. A spot check by eye agreed with its fails. Most of the rest were other names for the right thing ("barrel" for cask, "bookshelf" for bookcase), which a names file fixes.
+
+Reverse: stop using tools/vision/blind.py; Ollama can be removed from the PC.
