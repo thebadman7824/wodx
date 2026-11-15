@@ -41,9 +41,18 @@ def _sig(r, size=24):
 def check(oid, eras=None):
     bad = []
     if oid not in CATALOGUE: return [f"{oid}: in the census but not drawn (no library definition)"]
+    prev = None
     for era in (eras or V.eras_for(oid)):
         vs = V.variations(oid, era)
         sigs = [_sig(_pic(oid, v)) for v in vs]
+        # each era its own: the same variation one era on must look different in most cases (Long Night is not Dark Ages)
+        if prev is not None and eras is None:
+            pe, pv, ps = prev; same = []
+            for v, sg in zip(vs, sigs):
+                twin = next((k for k, w in enumerate(pv) if {a: b for a, b in w.items() if a not in ("era", "age", "vid")} == {a: b for a, b in v.items() if a not in ("era", "age", "vid")}), None)
+                if twin is not None and np.abs(sg - ps[twin]).mean() <= DIFF / 2: same.append(v["vid"])
+            if len(same) > len(vs) // 2: bad.append(f"{oid} {era}: {len(same)} of {len(vs)} variations look the same as in {pe} (each era needs its own look), e.g. {same[0]}")
+        prev = (era, vs, sigs)
         distinct = []
         for k, s in enumerate(sigs):
             if all(np.abs(s - sigs[j]).mean() > DIFF for j in distinct): distinct.append(k)
