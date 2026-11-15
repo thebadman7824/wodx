@@ -80,6 +80,7 @@ export async function teach(teacherLike, studentLike, {what = "", dots = 1, mont
   map[s.id] = [...(map[s.id] ?? []), row];
   await t.setFlag(MOD, "taught", map);
   await handTie(s, t, "mentor");
+  await reuseMentor(s).catch(() => null);
   if ( owed ) { try { await st()?.ledger?.save?.({kind: "debt", what: `For teaching ${row.what}: ${owed}`, from: {id: s.id, name: s.name}, to: {id: t.id, name: t.name}}); } catch (e) { /* Ledger off */ } }
   return {...row, way: LR.teachingFor(yearNow()).text};
 }
@@ -87,11 +88,38 @@ export function teachingLine(aLike) {
   const a = actorOf(aLike);
   return a ? LR.teachingLine(api()?.ties?.edges?.() ?? [], a.id) : {up: [], down: []};
 }
+const isBg = i => /background/i.test(`${i.type ?? ""} ${i.system?.type ?? ""}`) || /^(allies|contacts|resources|retainers|influence|status|fame|herd|haven|generation|mentor|familiar|library|arcane|avatar|node|dream|kinfolk|pure breed|totem|rites|fetish|memoriam|artifact|eidolon|passion)/i.test(String(i.name ?? ""));
+/** A teacher is dead: the Mentor dots come off the sheet and wait, on a card, for the player to move them. */
 async function onDeath(a) {
   if ( !isActiveGM() || !a?.id ) return;
   const students = (api()?.ties?.edges?.() ?? []).filter(e => e.kind === "mentor" && e.to?.id === a.id).map(e => game.actors.get(e.from)).filter(Boolean);
-  for ( const s of students ) await ChatMessage.create({whisper: ownersOf(s), speaker: {alias: s.name}, flags: {[MOD]: {mentorGone: true}},
-    content: card(`${a.name}, ${s.name}'s teacher, is dead`, ["The Mentor Background built on them is gone; the Storyteller may let the points go to another Background or a new teacher.", ...(taughtBy(a)[s.id]?.length ? [`What was taught stays: ${taughtBy(a)[s.id].map(r => r.what).join(", ")}.`] : [])])});
+  for ( const s of students ) {
+    const item = [...(s.items ?? [])].find(i => /^mentor\b/i.test(String(i.name ?? "").trim()));
+    const dots = Number(item?.system?.value) || 0;
+    if ( item && dots ) { await item.update({"system.value": 0}); await s.setFlag(MOD, "freedMentor", {from: a.name, dots}); }
+    const others = [...(s.items ?? [])].filter(i => i.id !== item?.id && isBg(i));
+    const pick = dots ? `<p><select name="to">${others.map(i => `<option value="${esc(i.id)}">${esc(i.name)} (${Number(i.system?.value) || 0})</option>`).join("")}<option value="">Keep them for a new teacher</option></select>
+      <button type="button" data-wnpc-mentor="${esc(s.id)}">Move the ${dots} ${dots === 1 ? "point" : "points"}</button></p>` : "";
+    await ChatMessage.create({whisper: ownersOf(s), speaker: {alias: s.name}, flags: {[MOD]: {mentorGone: true}},
+      content: card(`${a.name}, ${s.name}'s teacher, is dead`, [dots ? `The Mentor Background built on them comes off the sheet: ${dots} ${dots === 1 ? "point waits" : "points wait"} to go to another Background, or to a new teacher.` : "The Mentor tie built on them is gone.",
+        ...(taughtBy(a)[s.id]?.length ? [`What was taught stays: ${taughtBy(a)[s.id].map(r => r.what).join(", ")}.`] : [])]).replace("</div></div>", `${pick}</div></div>`)});
+  }
+}
+/** The owner moves freed Mentor points onto another Background (or onto a new Mentor, kept for a new teacher). */
+export async function moveMentorPoints(sLike, toItemId = "") {
+  const s = actorOf(sLike), f = s?.getFlag?.(MOD, "freedMentor");
+  if ( !s?.isOwner || !f?.dots ) return null;
+  const to = toItemId ? s.items.get(toItemId) : null;
+  if ( to ) { await to.update({"system.value": (Number(to.system?.value) || 0) + f.dots}); await s.unsetFlag(MOD, "freedMentor"); }
+  await ChatMessage.create({whisper: ownersOf(s), speaker: {alias: s.name}, content: card(`${s.name}'s Mentor points`, [to ? `${f.dots} ${f.dots === 1 ? "point goes" : "points go"} to ${to.name} (now ${Number(to.system?.value) || 0}).` : `${f.dots} ${f.dots === 1 ? "point is" : "points are"} kept for a new teacher: the next Mentor tie made for ${s.name} takes them.`])});
+  return to ? to.id : "kept";
+}
+/** A new mentor tie takes kept Mentor points. */
+async function reuseMentor(s) {
+  const f = s?.getFlag?.(MOD, "freedMentor");
+  if ( !f?.dots ) return;
+  const item = [...(s.items ?? [])].find(i => /^mentor\b/i.test(String(i.name ?? "").trim()));
+  if ( item ) { await item.update({"system.value": (Number(item.system?.value) || 0) + f.dots}); await s.unsetFlag(MOD, "freedMentor"); }
 }
 
 /* ---- The web ---- */
@@ -191,6 +219,14 @@ export function registerHandlers() {
 export function listen() {
   Hooks.on("updateWorldTime", () => { weekly().catch(e => console.error(`${MOD} | scene ideas`, e)); });
   Hooks.on("updateActor", (a, change) => { const d = change?.flags?.["wodx-creation"]?.chronology?.died; if ( d !== undefined && d !== null ) onDeath(a).catch(e => console.error(`${MOD} | teaching`, e)); });
+  Hooks.on("renderChatMessageHTML", (msg, el) => {
+    const root = el?.[0] ?? el;
+    for ( const b of root?.querySelectorAll?.("[data-wnpc-mentor]") ?? [] ) b.addEventListener("click", ev => {
+      ev.preventDefault();
+      const to = b.closest("p")?.querySelector("select[name=to]")?.value ?? "";
+      moveMentorPoints(b.dataset.wnpcMentor, to).then(r => { if ( r ) b.disabled = true; }).catch(e => console.error(`${MOD} | mentor`, e));
+    });
+  });
 }
 export const rules = LR;
 export {T};

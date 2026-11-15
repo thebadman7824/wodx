@@ -27,6 +27,16 @@ export async function drawStock(tile, {now = game.time.worldTime} = {}) {
   return items;
 }
 
+/** WoDX NPC's place kinds where a tile sits: the regions round it, the smallest first, then the scene's. */
+function placeKinds(tile) {
+  const scene = tile?.parent, NPC = "wodx-npc";
+  const c = {x: (Number(tile?.x) || 0) + (Number(tile?.width) || 0) / 2, y: (Number(tile?.y) || 0) + (Number(tile?.height) || 0) / 2};
+  const el = r => { const e = r?.elevation?.bottom; return Number.isFinite(e) ? e : 0; };
+  const inside = r => { try { return !!r.testPoint({x: c.x, y: c.y, elevation: el(r)}, el(r)); } catch (e) { return false; } };
+  const area = r => (r?.shapes ?? []).reduce((n, sh) => n + (Number(sh.width) || Number(sh.radiusX) * 2 || 1) * (Number(sh.height) || Number(sh.radiusY) * 2 || 1), 0) || Infinity;
+  const regions = [...(scene?.regions?.contents ?? [])].filter(r => r.flags?.[NPC]?.place?.kind && inside(r)).sort((a, b) => area(a) - area(b));
+  return [...regions.map(r => r.flags[NPC].place.kind), scene?.flags?.[NPC]?.place?.kind].filter(Boolean);
+}
 /** Every container due a draw, on every scene. */
 export async function restockAll(now = game.time.worldTime) {
   if ( !isActiveGM() ) return 0;
@@ -35,8 +45,9 @@ export async function restockAll(now = game.time.worldTime) {
   for ( const scene of game.scenes ?? [] ) {
     for ( const tile of scene.tiles ?? [] ) {
       const f = tile.flags?.[MOD];
-      if ( !f?.container || !f.restock || !f.stock ) continue;
-      if ( !R.restockDue(f.restock, Number(f.stockedAt) || 0, now) ) continue;
+      if ( !f?.container || !f.stock ) continue;
+      const every = R.restockFor(f, {title: f.title ?? f.name ?? "", kinds: placeKinds(tile)});
+      if ( !every || !R.restockDue(every, Number(f.stockedAt) || 0, now) ) continue;
       try { if ( await drawStock(tile, {now}) ) n += 1; } catch (e) { console.error(`${MOD} | stock`, e); }
     }
   }

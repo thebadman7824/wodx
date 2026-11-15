@@ -374,3 +374,13 @@ export function canAdopt(law, {parentMinor = false, childMinor = false, parentBo
   if ( !childMinor && !law.adult ) why.push("The law here does not allow an adult to be adopted.");
   return {ok: !why.length, why, kind, kindInfo: ADOPTION_KINDS[kind] ?? ADOPTION_KINDS.fostering};
 }
+
+/**
+ * A heartbreak (house rule): warmth of 2 or more broken by a betrayal or cruelty, or a courting roll that botches.
+ * It calls for a Willpower roll at difficulty 7; a botch draws a derangement from those a loss leaves.
+ */
+export const HEARTBREAK_DIFF = 7;
+export function heartbreakDue(before = 0, after = 0, event = "", botch = false) {
+  if ( (Number(before) || 0) < 2 || (Number(after) || 0) >= (Number(before) || 0) ) return false;
+  return event === "betrayal" || event === "cruelty" || (event === "roll" && !!botch);
+}
