@@ -78,7 +78,7 @@ export async function run() {
     await G.step("4. capture planned", async () => {
       // Gus whole again; Ivo (an enemy to Gus) goes down beside Gus; Jo, the other enemy, stands far off
       await gus.update({"system.health.damage.lethal": 0}).catch(() => null);
-      await gus.setFlag(NPC, "behavior", {fleeAt: 5});
+      await gus.setFlag(NPC, "behavior", {template: "guard", fears: [], fleeAt: 5});
       await hal.toggleStatusEffect("unconscious", {active: false});
       await ivo.toggleStatusEffect("unconscious", {active: true});
       // Kai and Lea stand aside (hidden) so Gus is not outnumbered and running; they come back for step 6
@@ -90,10 +90,10 @@ export async function run() {
     });
 
     await G.step("5. the switch", async () => {
-      await gus.setFlag(NPC, "behavior", {fleeAt: 5, noCarry: true});
+      await gus.setFlag(NPC, "behavior", {template: "guard", fears: [], fleeAt: 5, noCarry: true});
       const p = N().planTurn(tg.object, null);
       G.ok("5. the switch", !p.options.some(o => o.action === "carry"), {options: p.options.map(o => o.label)});
-      await gus.setFlag(NPC, "behavior", {fleeAt: 5});
+      await gus.setFlag(NPC, "behavior", {template: "guard", fears: [], fleeAt: 5});
     });
 
     await G.step("6. a companion carries", async () => {
@@ -178,7 +178,7 @@ export async function run() {
       const listed = N().carryGoals.prisoners().some(p => p.captive === jo.id && p.pc);
       // what the handler saw, when it did not take them (the flag it leaves, and the same call made by hand)
       let asked = tj.flags?.[NPC]?.captureAsked ?? null, direct = null;
-      if ( !tied ) { try { await N().carryGoals.approveCapture(entry); direct = {tied: jo.statuses?.has?.("wodx-immobilized") ?? false, asked: tj.flags?.[NPC]?.captureAsked ?? null}; } catch (e) { direct = {error: e?.message ?? String(e)}; } }
+      if ( !tied ) { try { const out = await N().carryGoals.approveCapture(entry); direct = {out, tied: jo.statuses?.has?.("wodx-immobilized") ?? false, asked: tj.flags?.[NPC]?.captureAsked ?? null}; } catch (e) { direct = {error: e?.message ?? String(e)}; } }
       G.ok("10. a player's character waits on the Storyteller", !!entry && notYet && tied && listed && inside(tj, watch), {r, entry: !!entry, notYet, tied, listed, asked, direct, jo: [tj.x, tj.y]});
       await N().carryGoals.freePrisoner(tj, "the gate");
     });

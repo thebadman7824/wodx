@@ -200,14 +200,17 @@ export function build({MOD, esc, gmIds, chron, routines, factions, HAUL, isActiv
   }
   async function approveCapture(entry) {
     const by = fromUuidSync(entry.data?.by ?? ""), td = fromUuidSync(entry.data?.target ?? "");
-    if ( !by?.object || !td?.object ) return;
-    const goal = goalOf(by.object, td.object, "capture"), p = pointOf(goal, by.object);
+    if ( !by || !td ) return {ok: false, why: `gone: ${by ? "" : "captor"} ${td ? "" : "captive"}`.trim()};
+    // on a scene not in view there are no placeables: the scene's own documents stand in (center, actor, document)
+    const obj = d => d.object ?? {document: d, actor: d.actor, name: d.name, center: {x: Number(d.x) + (Number(d.width) || 1) * sizeOf(d.parent) / 2, y: Number(d.y) + (Number(d.height) || 1) * sizeOf(d.parent) / 2}};
+    const goal = goalOf(obj(by), obj(td), "capture"), p = pointOf(goal, obj(by));
     if ( p && !p.offstage && !p.here ) {
       const g = sizeOf(td.parent);
       await td.update({x: Math.round(p.x - g / 2), y: Math.round(p.y - g / 2)}, {wodxMove: false, animate: false});
     }
-    await arrive(by.object, td.object, goal, {offstage: !!p?.offstage});
+    await arrive(obj(by), obj(td), goal, {offstage: !!p?.offstage});
     await td.setFlag(MOD, "captureAsked", "approved");
+    return {ok: true, goal: goal.name};
   }
   function registerHandler() {
     const reg = () => chron()?.registerApprovalHandler?.(TYPE, {label: "An NPC takes a player's character captive",
