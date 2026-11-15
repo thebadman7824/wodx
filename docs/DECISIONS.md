@@ -334,6 +334,7 @@ Next free block: B6220
 | B6070-B6079 | Snow vehicles, trains and trams (rules and sprites), and a quality pass on the vehicle sprites (used B6070-B6076) | Interactables, Paperdoll, Combat |
 | B6080-B6099 | Weights for loose gear and container contents, and loose gear on the map (used B6080-B6089) | Library, Interactables, Combat |
 | B6100-B6109 | Wraith 20th named Artifacts (forge, Skin, Spectre) and souled relics on the crafting table, with real Use powers and looks (used B6100-B6104) | Library, Creation |
+| B6110-B6129 | Line sheets move to ApplicationV2 (the newer sheet engine), one line at a time (used B6110-B6114) | System fork, Sheets, Chronicle |
 | B6130-B6139 | The eight held-back world timeline readings after the book check (used B6130-B6132) | Chronicle |
 | B6210-B6219 | gatevehicles plays in a year with cars (used B6210) | tools (gates) |
 <!-- decision-index:end -->
@@ -10323,6 +10324,31 @@ years; the change list says so instead of losing them. A Fetter that names a per
 box keeps harm off a Fetter, it does not keep a mortal alive (house reading of p. 428).
 
 Reverse: drop the fetterguard line in advance.mjs and the check in advance-rules.mjs.
+
+## B6110. One code base per line sheet, on either engine (2026-11-15)
+System fork. Each line sheet's class (Mortal and the eleven lines over it) is now a mixin applied twice: over the old engine's ActorSheet (the class it always was) and over LegacyActorSheetV2. Both keep the same class name, so the sheet id (WoD.VampireActorSheet) and render hooks named after the class stay the same.
+
+Reverse: take the line out of LINES_V2 (B6112); the old-engine class is still there.
+
+## B6111. The bridge: LegacyActorSheetV2 (2026-11-15)
+System fork, module/actor/template/legacy-sheet-v2.js. HandlebarsApplicationMixin(ActorSheetV2) with one part, the line's own template. It gives the line code what the old engine gave: getData with the old context, _renderInner (WoDX Sheets wraps it), activateListeners(html) with jQuery after each render, the tabs from defaultOptions, options.editable, activateTab, and the document as "object". The template's form root becomes a div with the same classes (the window is the form now). {{editor}} boxes become always-open prose-mirror editors on the same field, saving on focus loss and on close; the profile image opens the file picker; a change saves the whole form minus active-effect overrides, as before; the open tab and scroll positions survive a redraw. The old window's 8 px inner spacing and scrolling are kept in wod.css.
+
+Reverse: remove the file and the V2 exports; nothing else depends on it while LINES_V2 is empty.
+
+## B6112. Which lines are moved: LINES_V2 (2026-11-15)
+System fork, module/actor/template/lines-v2.js, read by wod.js and WoDX Sheets. Lines move one at a time, each gated on the testbed (gatesheetv2 plus the sheet gates, fit-audit and gateuisnap) before the next. Mummy goes first: a small line that still has a WoDX book sheet over it, so both layers are tested.
+
+Reverse: remove a type from the set.
+
+## B6113. System hooks follow the moved sheets (2026-11-15)
+System fork, hooks.js. The language, line, font and dark-mode classes the old sheets got from renderActorSheet are applied from renderLegacyActorSheetV2 too, and the PC sheet's renderActorSheetV2 handler skips the moved line sheets so it does not strip their line class.
+
+Reverse: drop the two hook lines.
+
+## B6114. Modules follow the moved sheets (2026-11-15)
+WoDX Sheets builds its sheet over the V2 class for a moved line (same name), adds the Gender line and the Sheet tools button from renderLegacyActorSheetV2 (on V2 the button opens the title bar's own menu, which already names every control), and adds Print and History as V2 header controls. WoDX Chronicle's player guide counts opening a moved sheet. Header buttons from other modules already had V2 versions.
+
+Reverse: the hooks are additive; remove them with the line from LINES_V2.
 
 ## B6130. The held readings go in, worded as the books back them (2026-11-15)
 WoDX Chronicle, tools/timeline/build-world-history.mjs. WAITING is empty. The book check (project files global-world/book-check-readings.md, finished in the cloud from the OCR text) settled each card. 1521: Wraith 20th (pdf 101, 512 to 517) breaks the Dark Kingdom of Obsidian through the heretics' Flaying and the storm after it, so the card names the Flaying, with the plague and siege dead as the background, and the survivors' Mictlan. 1692: Verbena Revised (pdf 43) keeps the Verbena out of the trials; no book has hunters and mages blaming each other, so that part is gone. 1791: Wraith 20th (pdf 521) has Les Invisibles fan the slave revolts and the Mirrorlands battered by storms and Baka; the lwa among the rebels "by both sides" had no book and is gone. 1885: Wraith 20th (pdf 517 to 518, the Bush of Ghosts behind a false Ivory Queen) and Kindred of the Ebony Kingdom (pdf 16, Laibon fighting the Portuguese around 1540) back a continent already held. 1890: the Wendigo tribebook (pdf 28, 50 to 51) backs Garou among the Ghost Dancers. 1994: Kindred of the Ebony Kingdom (pdf 168) keeps the genocide mortal with elders using the chaos, and A World of Rage (pdf 94 to 95) has the Wyrm feed on it; no book ties it to the lands of the dead, so the card no longer says so and is renamed The killing in Rwanda.
