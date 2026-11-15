@@ -272,7 +272,10 @@ class Map:
     def shade(s, box, f=.66, kind="rect", pts=None):
         """A hard-edged shadow: darken and cool everything under the shape."""
         x0, y0, x1, y1 = (math.floor(v / Q) for v in box)
-        if pts: pts = [(px / Q, py / Q) for px, py in pts]
+        if pts:
+            pts = [(px / Q, py / Q) for px, py in pts]                               # work only over the shape itself
+            x0, y0 = max(x0, math.floor(min(p[0] for p in pts))), max(y0, math.floor(min(p[1] for p in pts)))
+            x1, y1 = min(x1, math.ceil(max(p[0] for p in pts)) + 1), min(y1, math.ceil(max(p[1] for p in pts)) + 1)
         x0, y0, x1, y1 = max(0, x0), max(0, y0), min(s.W // Q, x1), min(s.H // Q, y1)
         if x1 <= x0 or y1 <= y0: return
         m = Image.new("L", (x1 - x0, y1 - y0), 0); md = ImageDraw.Draw(m)

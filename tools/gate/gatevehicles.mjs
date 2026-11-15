@@ -38,6 +38,18 @@ export async function run() {
   try {
     const C = game.wodxCombat, V = () => C?.vehicles, ix = game.modules.get(IX)?.api, npc = game.modules.get("wodx-npc")?.api;
     const scene = await G.scene({flags: {[IX]: {ground: "road"}}});
+    // B6210: cars, aeroplanes and rams need a year that has them. A clock left early by an earlier gate (or a world
+    // that starts in 1197) gave "No motor car yet"; the run moves to 1995 when the year is before 1950, and the kit
+    // puts the clock back after
+    {
+      const CH = game.modules.get("wodx-chronicle")?.api, y = Number(CH?.eras?.currentYear?.()) || 0;
+      if ( y && y < 1950 ) {
+        const {getEngine} = await import("/modules/wodx-chronicle/scripts/calendar.mjs");
+        await game.time.advance(getEngine().dateToTime({year: 1995, month: 6, day: 15, hour: 21}) - game.time.worldTime);
+        await sleep(500);
+        G.R.notes.push(`the clock stood in ${y}; this run plays in ${CH.eras.currentYear()}`);
+      }
+    }
     const [driver, pass, foe, nopilot, runner] = await G.make(Actor, [
       body("Gate Vehicles Driver", {dex: 5, drive: 5, sta: 3}),
       body("Gate Vehicles Passenger", {dex: 3, athletics: 3}),

@@ -14,7 +14,8 @@ test("only extended rituals, journeys and judgements stay the Storyteller's call
   const wrath = DAE.outcomesOf(DAE.DA_EFFECTS.wrathapollo, {key: "harm", label: "Wrath of Apollo"}, 2);
   assert.equal(wrath[0].out.levels, 6); assert.equal(wrath[0].who, "all"); assert.equal(wrath[0].ask, true);
   const pack = DAE.outcomesOf(DAE.DA_EFFECTS["g-summonpack"], {key: "summon", label: "Summon the Pack"}, 3)[0];
-  assert.equal(pack.out.kind, "timed"); assert.equal(pack.who, "self");
+  // B6016: a summoning rote calls beings (it was a named marker before)
+  assert.equal(pack.out.kind, "summon"); assert.equal(pack.who, "self");
 });
 
 test("a cantrip line carries what it does, and a cantrip that takes puts it on the card (B3752)", () => {

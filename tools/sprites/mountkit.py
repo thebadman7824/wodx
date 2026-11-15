@@ -12,7 +12,8 @@ KC = [(40, 40, 0), (90, 90, 0), (140, 140, 0), (190, 190, 0), (240, 240, 0)]    
 def ramp(b):
     b = np.array(b, float)
     f = lambda k, sh=(0, 0, 0): tuple(int(v) for v in np.clip(b * k + np.array(sh), 0, 255))
-    return [f(.30, (-4, -4, 6)), f(.62), f(.86), f(1.0), f(1.16, (6, 6, 4))]
+    # B6076: the ramp shifts hue as it goes (pixel-art-rules): the shadows lean to cold blue, the lights to warm yellow
+    return [f(.30, (-6, -4, 10)), f(.62, (-3, -2, 5)), f(.86), f(1.0), f(1.16, (8, 6, -4))]
 
 
 TYRE = ramp((58, 56, 60)); STEEL = ramp((150, 154, 162)); IRON = ramp((92, 94, 102)); CHROME = ramp((196, 202, 210))

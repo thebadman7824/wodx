@@ -165,7 +165,16 @@ export async function unstick(userId, fix) {
     await tell(userId, `<p>${fights ? `${fights === 1 ? "The fight" : `${fights} fights`} ended.` : "No fight was running on your scene."} ${windows ? `${windows} waiting ${windows === 1 ? "window was" : "windows were"} closed.` : ""}</p>`);
     return {fights, windows};
   }
-  // A lead: a foreshadowing for the character, through the approval queue (the standing approvals let it through)
+  // B6046: a lead is the director's, one light thing from what is live for the character now
+  const director = game.modules.get(MOD)?.api?.director;
+  if ( actor && director?.direct ) {
+    const r = await director.direct({actorId: actor.id, force: true, count: 1, light: true}).catch(() => null);
+    if ( r?.brought?.length ) {
+      await H.log({kind: "note", source: MOD, title: "I am stuck: a lead was brought", note: r.brought.map(b => b.title).join("; ")});
+      return r.brought[0];
+    }
+  }
+  // else a foreshadowing for the character, through the approval queue (the standing approvals let it through)
   const night = game.modules.get(ST)?.api?.aid;
   const aid = actor && night?.draw ? await night.draw({kind: "foreshadow", actorId: actor.id, nonce: Date.now() % 997}).catch(() => null) : null;
   if ( !aid ) { await tell(userId, "<p>No lead could be found just now.</p>"); return null; }
@@ -310,7 +319,7 @@ export class SoloPanel extends ApplicationV2 {
     // One main button; the rest under More, open once the player has opened it (B2831)
     div.innerHTML = `${ARRIVE_UI.html?.() ?? ""}<button type="button" class="wsolo-next" data-action="act" data-id="${R.NEXT.id}" title="${esc(R.NEXT.hint)}"><i class="${R.NEXT.icon}"></i> ${esc(R.NEXT.label)}</button>
       <p class="wodx-quiet wsolo-next-hint">${esc(R.NEXT.hint)}</p>
-      <details class="wsolo-more"${SoloPanel.moreOpen ? " open" : ""}><summary>More: the oracle, leads, time, travel, pause, I am stuck, the curtain, carry the fallen</summary><div class="wsolo-buttons">${rest}${ST_UI.toggleHtml?.() ?? ""}</div></details>${ST_UI.toolsHtml?.() ?? ""}`;
+      <details class="wsolo-more"${SoloPanel.moreOpen ? " open" : ""}><summary>More: the oracle, leads, time, travel, places with no map, pause, I am stuck, the curtain, carry the fallen</summary><div class="wsolo-buttons">${rest}${ST_UI.toggleHtml?.() ?? ""}</div></details>${ST_UI.toolsHtml?.() ?? ""}`;
     div.querySelector("details.wsolo-more")?.addEventListener("toggle", ev => { SoloPanel.moreOpen = ev.target.open; });
     return div;
   }
