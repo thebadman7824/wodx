@@ -208,11 +208,12 @@ export async function run() {
       const C = game.modules.get("wodx-combat").api;
       if ( copies[0] ) await lim(C.soakAndApply(copies[0].object ?? copies[0], {mode: "levels", amount: 2, type: "lethal", soak: false}), 5000, "harm 1");
       if ( copies[1] ) await lim(C.soakAndApply(copies[1].object ?? copies[1], {mode: "levels", amount: 1, type: "lethal", soak: false}), 5000, "harm 2");
-      const before = dmg(mage);
+      const mA = () => scene.tokens.get(gt.id)?.actor ?? mage;
+      const before = dmg(mA());
       await lim(S.shareWounds(scene), 5000, "share");
       await wait(400);
-      G.ok("15. One Fights as Many: paid in Quintessence, the mage takes only the worst harm", copies.length === 2 && quint === 0 && dmg(mage) === before + 2 && copies.every(t => dmg(t.actor) === 0),
-        {copies: copies.length, quint, before, after: dmg(mage), stage});
+      G.ok("15. One Fights as Many: paid in Quintessence, the mage takes only the worst harm", copies.length === 2 && quint === 0 && dmg(mA()) === before + 2 && copies.every(t => dmg(t.actor) === 0),
+        {copies: copies.length, quint, before, after: dmg(mA()), stage});
       for ( const t of copies ) await lim(S.dismiss(t).catch(() => null), 3000, "dismiss");
     });
   } catch (e) {
