@@ -129,3 +129,31 @@ export function newsFor(events, codes, {date = null, skip = false} = {}) {
   }
   return {told: near, older: older.length, elsewhere};
 }
+
+/** How many events of the world timeline one card tells; the rest are counted (B5922). */
+export const TOLD_CAP = 12;
+/** Is this an event of the world timeline (data/world-history.mjs, B5920)? */
+export const isWorld = ev => typeof ev?.id === "string" && ev.id.startsWith("wh-");
+/**
+ * Keep a card short: every book event is told, and of the world timeline only the newest `cap` (B5922).
+ * Returns {told (in date order), more}: more is how many world events were left out.
+ */
+export function capTold(told, cap = TOLD_CAP) {
+  const world = told.filter(isWorld);
+  if ( world.length <= cap ) return {told, more: 0};
+  const keep = new Set(world.sort((a, b) => dateKey(b) - dateKey(a)).slice(0, cap).map(ev => ev.id));
+  return {told: told.filter(ev => !isWorld(ev) || keep.has(ev.id)), more: world.length - cap};
+}
+/** The era of the world timeline a year falls in ({id, name, from, to}), or the nearest one. */
+export function worldEraAt(eras = [], year = 0) {
+  if ( !eras.length ) return null;
+  return eras.find(e => year >= e.from && year <= e.to)
+    ?? eras.reduce((best, e) => Math.min(Math.abs(year - e.from), Math.abs(year - e.to)) < Math.min(Math.abs(year - best.from), Math.abs(year - best.to)) ? e : best);
+}
+/**
+ * The rows the Dated events window and the Chronicle Rules page show: every book event, and of the world timeline
+ * only the chosen era's (B5923). eraId "" shows no world events; "all" shows them all.
+ */
+export const shownIn = (ev, eraId) => !isWorld(ev) || eraId === "all" || ev.era === eraId;
+/** A world event the table hears of in Legends: only what happened in the homeland's own part, Moravia (B5924). */
+export const inLegends = ev => !ev?.hidden && (!isWorld(ev) || ev.region === "MO");

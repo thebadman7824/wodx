@@ -31,10 +31,10 @@
 1212-7|H|mor|EU|Las Navas de Tolosa|battle,crusade|Las Navas de Tolosa|Christian kings of Spain crush the Almohads; the reconquest of al-Andalus speeds up.
 1212|W|vam|EU|Cologne|crusade,faith|The children's crusade passes|Bands of children and the poor march toward the sea; few come home, and some Kindred along the road grow fat.
 1213-9|H|mor|EU|Muret|battle,heresy|Muret|Simon de Montfort kills Peter II of Aragon at Muret; the south loses its strongest protector.
-1214-7|H|mor|EU|Bouvines|battle,crown|Bouvines|Philip II beats Otto IV and his allies; John's hopes of retaking Normandy end, and Otto's empire collapses.
+1214-7|H|mor|EU|Bouvines|battle,crown|Bouvines|Philip II beats Otto IV and the allies of the Welf; John's hopes of retaking Normandy end, and Otto's empire collapses.
 1215-5|H|all|AS|Zhongdu|siege,massacre|Zhongdu falls|The Mongols take the Jin capital (Beijing) and burn it for a month.
 1215-11|H|mor,hun|EU|Rome|faith,law|The Fourth Lateran Council|The council requires yearly confession, defines transubstantiation and orders Jews and Muslims to wear distinct dress.
-1216-10|H|mor|EU|Newark|crown,death|King John dies|John dies during the barons' war; the boy Henry III is crowned and William Marshal rules for him.
+1216-10|H|mor|EU|Newark|crown,death|King John dies|John dies during the barons' war; the boy Henry III is crowned and William Marshal rules in the boy's name.
 1216|H|mor|EU|Rome|faith,founding|The Dominicans approved|Pope Honorius III confirms the Order of Preachers founded by Dominic.
 1217-5|H|mor|EU|Lincoln|battle|The Fair of Lincoln|William Marshal routs the French-backed rebels at Lincoln; Prince Louis gives up the English crown.
 1217|H|mor|ME|Acre|crusade|The Fifth Crusade sails|Crusaders gather at Acre, then turn on Egypt.
@@ -45,16 +45,16 @@
 1221-2|H|all|AS|Merv|massacre|The killing at Merv|Tolui's army takes Merv and kills nearly every inhabitant; chroniclers write of hundreds of thousands dead.
 1221-4|H|all|AS|Nishapur|massacre|Nishapur destroyed|After a Mongol prince dies in its siege, Nishapur is razed and even its animals killed.
 1221-8|H|mor|ME|Mansourah|crusade,flood|The Fifth Crusade ends|The crusaders, trapped by the Nile's flood, give up Damietta.
-1221|H|all|AS|Indus|battle|The Battle of the Indus|Jalal al-Din of Khwarazm escapes Genghis Khan by riding his horse into the river.
+1221|H|all|AS|Indus|battle|The Battle of the Indus|Jalal al-Din of Khwarazm escapes Genghis Khan by riding a horse into the river.
 1222|H|mor|EU|Hungary|law,crown|The Golden Bull of Hungary|Andrew II grants the Hungarian nobles their rights, including the right to resist an unjust king.
 1222|H|mor|EU|Padua|learning,founding|The university of Padua|Scholars leaving Bologna found a new school at Padua.
 1223-5|W|wer,vam|EU|Kalka River|battle|The Kalka|Mongol scouts under Subutai destroy the Rus princes on the Kalka; the Rus forget the warning, and the Shadow Lords do not.
 1223-7|H|mor|EU|Mantes|crown,death|Philip Augustus dies|Philip II of France dies after 43 years; Louis VIII takes the throne.
-1224|H|mor|EU|Naples|learning,founding|Frederick II founds Naples university|The emperor founds a school at Naples to train lawyers and officials for his kingdom.
+1224|H|mor|EU|Naples|learning,founding|Frederick II founds Naples university|The emperor founds a school at Naples to train lawyers and officials for the kingdom.
 1224|W|mag|EU|La Verna|faith,occult|The stigmata of Francis|Francis of Assisi is said to receive the wounds of Christ; the Messianic Voices count it a sign.
 1225|H|mor|EU|England|law|Magna Carta reissued|Henry III reissues Magna Carta in its lasting form in return for a tax.
 1226-10|H|mor|EU|Assisi|faith,death|Francis of Assisi dies|Francis dies at the Portiuncula; canonised two years later.
-1226-11|H|mor|EU|France|crown,death|Louis VIII dies|The king dies on his way back from the Albigensian campaign; Blanche of Castile rules for the boy Louis IX.
+1226-11|H|mor|EU|France|crown,death|Louis VIII dies|The king dies on the way back from the Albigensian campaign; Blanche of Castile rules for the boy Louis IX.
 1227-8|W|kue|AS|Xi Xia|crown,death|Genghis Khan dies|Genghis Khan dies during the war on the Xi Xia, who are destroyed; the courts of the East mark the death of the scourge.
 1227|H|mor|EU|Bornhoved|battle|Bornhoved|North German princes break Danish power in the Baltic.
 1228|H|mor|ME|Acre|crusade|The Sixth Crusade|Excommunicated, Frederick II sails for the Holy Land anyway.
@@ -65,15 +65,15 @@
 1230|H|mor|EU|Prussia|crusade|The Teutonic crusade in Prussia|The Teutonic Knights begin their war against the pagan Prussians from Kulm.
 1231|H|hun|EU|Rome|faith,law,persecution|Papal inquisitors|Gregory IX sends inquisitors answerable to the pope, most of them Dominicans.
 1231|H|mor|EU|Melfi|law|The Constitutions of Melfi|Frederick II issues a law code for the Kingdom of Sicily.
-1232|W|hun|EU|Germany|persecution,heresy|Conrad of Marburg's hunt|Conrad of Marburg burns suspects across Germany; the shadow Inquisition in the Empire takes note of his methods.
-1233-7|H|mor|EU|Marburg|death,persecution|Conrad of Marburg murdered|Knights kill the inquisitor on the road; his terror ends.
+1232|W|hun|EU|Germany|persecution,heresy|Conrad of Marburg's hunt|Conrad of Marburg burns suspects across Germany; the shadow Inquisition in the Empire takes note of the methods.
+1233-7|H|mor|EU|Marburg|death,persecution|Conrad of Marburg murdered|Knights kill the inquisitor on the road; the terror ends.
 1234|H|all|AS|Caizhou|siege,crown,death|The end of the Jin|The Mongols and the Song take the last Jin city; the last Jin emperor dies.
 1235|H|mor|AS|Karakorum|founding,building|Karakorum walled|Ogedei Khan builds walls and a palace at Karakorum, the Mongol capital.
 1236|H|mor|EU|Cordoba|crusade,faith|Cordoba taken|Ferdinand III takes Cordoba; the great mosque becomes a cathedral.
 1236|H|all|EU|Volga Bulgaria|war,massacre|The Mongols turn west|Batu and Subutai destroy Volga Bulgaria.
 1237-12|H|all|EU|Ryazan|siege,massacre|Ryazan burned|The first Rus city falls to Batu's host.
 1238-2|H|all|EU|Vladimir|siege,massacre|Vladimir falls|The Mongols take Vladimir and burn the grand prince's family in the cathedral.
-1238-3|H|mor|EU|Sit River|battle|The Sit River|Grand Prince Yuri II is killed and his army destroyed.
+1238-3|H|mor|EU|Sit River|battle|The Sit River|Grand Prince Yuri II is killed and the army of Vladimir destroyed.
 1238|H|mor|EU|Valencia|crusade,siege|Valencia taken|James I of Aragon takes Valencia.
 1239|H|mor|EU|Rome|faith,crown|Frederick II excommunicated again|Pope and emperor go to open war in Italy.
 1240-7|H|mor|EU|Neva River|battle|The Neva|Prince Alexander of Novgorod beats a Swedish force and is called Nevsky.
@@ -84,7 +84,7 @@
 1241-12|W|wer,vam|EU|Hungary|war,crown,death|Ogedei dies and the horde turns back|Word of the great khan's death reaches the army in Hungary; the Mongols withdraw, and the Tzimisce and the Garou of the plains count their dead.
 1241|H|mor|EU|Lubeck|trade,treaty|Lubeck and Hamburg ally|The two cities agree to guard the road between them, the seed of the Hanseatic League.
 1242-4|H|mor|EU|Lake Peipus|battle|The battle on the ice|Alexander Nevsky beats the Livonian Knights on frozen Lake Peipus.
-1242|H|mor|EU|Sarai|founding,empire|The Golden Horde|Batu sets his capital at Sarai on the Volga; the Rus princes must travel there for leave to rule.
+1242|H|mor|EU|Sarai|founding,empire|The Golden Horde|Batu sets the Golden Horde's capital at Sarai on the Volga; the Rus princes must travel there for leave to rule.
 1243|H|mor|ME|Kose Dag|battle|Kose Dag|The Mongols break the Seljuk sultanate of Rum.
 1244-3|W|hun|EU|Montsegur|siege,heresy,fire|The fall of Montsegur|More than two hundred Cathars are burned below the mountain fortress; the Inquisition calls it victory, and the Inquisition is wrong to call it the end.
 1244-7|H|all|ME|Jerusalem|massacre|Jerusalem sacked|Khwarazmian horsemen take and wreck Jerusalem.
@@ -94,7 +94,7 @@
 1246|H|mor|AS|Karakorum|crown|Guyuk enthroned|Guyuk becomes great khan with Carpini watching.
 1248|H|mor|EU|Seville|crusade,siege|Seville taken|Ferdinand III takes Seville after a long siege.
 1248|H|mor|EU|Cologne|building,faith|Cologne cathedral begun|The foundation stone of the new cathedral is laid; it will not be finished for six hundred years.
-1248|W|mag|EU|Paris|faith,building|The Sainte-Chapelle|Louis IX consecrates his glass chapel for the Crown of Thorns; the Celestial Chorus calls it a true house of the One.
+1248|W|mag|EU|Paris|faith,building|The Sainte-Chapelle|Louis IX consecrates the glass chapel for the Crown of Thorns; the Celestial Chorus calls it a true house of the One.
 1249-6|H|mor|ME|Damietta|crusade|The Seventh Crusade lands|Louis IX takes Damietta again.
 1250-2|H|mor|ME|Mansourah|battle,crusade|Mansourah|The crusaders break into Mansourah and are cut down in its streets by the Mamluks under Baibars.
 1250-4|H|mor|ME|Fariskur|crusade|Louis IX captured|The French king is taken prisoner and ransomed.
@@ -111,33 +111,33 @@
 1258-2|W|mag|ME|Baghdad|siege,massacre,learning|Baghdad sacked|The Mongols take Baghdad, kill the caliph and throw the libraries into the Tigris; Batini carry out what they can.
 1258|H|mor|EU|Oxford|law,crown|The Provisions of Oxford|English barons force Henry III to share power with a council.
 1258|H|mor|ME|Konya|faith,learning|Rumi's poems|Jalal ad-Din Rumi begins the Masnavi at Konya.
-1259|H|mor|EU|Paris|treaty|The Treaty of Paris|Henry III gives up his claims to Normandy and Anjou and keeps Gascony as Louis IX's vassal.
+1259|H|mor|EU|Paris|treaty|The Treaty of Paris|Henry III gives up the English claims to Normandy and Anjou and keeps Gascony as Louis IX's vassal.
 1260-3|H|all|ME|Aleppo|siege,massacre|Aleppo and Damascus fall|Hulegu takes Aleppo and Damascus; the Mamluks are next.
 1260-9|W|mum|ME|Ain Jalut|battle|Ain Jalut|The Mamluks under Qutuz and Baibars beat the Mongols in Galilee; the mummies of Egypt call it a reprieve for the river.
 1260-10|H|mor|ME|Cairo|crown,death|Baibars becomes sultan|Baibars murders Qutuz on the road home and takes the throne.
 1260|H|mor|EU|Kressenbrunn|battle|Kressenbrunn|Ottokar II of Bohemia beats the Hungarians and takes Styria.
 1260|W|hun|EU|Perugia|faith|The flagellants|Bands of penitents whip themselves through the towns of Italy; the Church is unsure whether to bless them or hunt them.
-1260|H|mor|AS|Shangdu|crown,war|Kublai and Ariq Boke|Kublai and his brother Ariq Boke are both proclaimed great khan; civil war splits the empire.
+1260|H|mor|AS|Shangdu|crown,war|Kublai and Ariq Boke|The brothers Kublai and Ariq Boke are both proclaimed great khan; civil war splits the empire.
 1261-7|W|vam|ME|Constantinople|crown|The Byzantines take back the city|Michael VIII Palaiologos's general walks into Constantinople almost without a fight; Latin rule ends, but the Dream does not return.
 1262|H|mor|EU|Iceland|crown,law|Iceland under Norway|The Icelandic chieftains accept the Norwegian king.
 1263|H|mor|EU|Largs|battle,sea|Largs|Scots and storms drive off a Norwegian fleet; the Hebrides pass to Scotland three years later.
-1264-5|H|mor|EU|Lewes|battle,crown|Lewes|Simon de Montfort captures Henry III and his son Edward.
+1264-5|H|mor|EU|Lewes|battle,crown|Lewes|Simon de Montfort captures Henry III and the heir, Edward.
 1264|H|mor|EU|Rome|faith|Corpus Christi|Urban IV makes the feast of Corpus Christi a feast of the whole Church.
 1265-1|H|mor|EU|London|law,crown|Montfort's parliament|Simon de Montfort calls knights and burgesses from towns to parliament.
 1265-8|H|mor|EU|Evesham|battle,death|Evesham|Prince Edward kills Simon de Montfort and cuts the body to pieces.
 1266-2|H|mor|EU|Benevento|battle,crown|Benevento|Charles of Anjou kills King Manfred and takes Sicily and Naples.
-1266|W|mag|EU|Oxford|science,learning|Roger Bacon writes for the pope|Roger Bacon sends Clement IV his great work on experiment and optics; the craftsmen of the future Order of Reason study it.
+1266|W|mag|EU|Oxford|science,learning|Roger Bacon writes for the pope|Roger Bacon sends Clement IV a great work on experiment and optics; the craftsmen of the future Order of Reason study it.
 1267|H|mor|EU|Florence|art|Giotto born|The painter Giotto di Bondone is born near Florence.
 1268-8|H|mor|EU|Tagliacozzo|battle,crown,death|The last Hohenstaufen|Charles of Anjou defeats Conradin, then beheads the sixteen-year-old in Naples.
 1268|H|mor|ME|Antioch|siege,massacre,crusade|Antioch destroyed|Baibars takes Antioch and kills or enslaves its people; the crusader principality ends.
 1270-8|H|mor|ME|Tunis|crusade,plague,death|Louis IX dies at Tunis|The Eighth Crusade ends when the French king dies of dysentery outside Tunis.
 1271|H|mor|AS|Khanbaliq|crown,founding|The Yuan dynasty|Kublai Khan proclaims the Great Yuan and builds a new capital at Khanbaliq (Beijing).
-1271|H|mor|AS|Venice|travel,trade|The Polos set out|Marco Polo leaves Venice with his father and uncle for the court of Kublai.
+1271|H|mor|AS|Venice|travel,trade|The Polos set out|Marco Polo leaves Venice with a father and an uncle for the court of Kublai.
 1271|H|mor|ME|Krak des Chevaliers|siege,crusade|Krak des Chevaliers falls|The Hospitallers give up their great castle to Baibars.
 1272|H|mor|EU|London|crown,death|Henry III dies|Edward I becomes king of England while still on crusade.
 1273|H|mor|EU|Aachen|crown|Rudolf of Habsburg elected|The German princes choose Rudolf of Habsburg as king, ending the interregnum.
-1273|H|mor|ME|Konya|faith,death|Rumi dies|The poet dies at Konya; the whirling dervishes of the Mevlevi order grow from his followers.
-1274-3|H|mor|EU|Fossanova|learning,death|Thomas Aquinas dies|Aquinas dies on the way to the Council of Lyon, his Summa unfinished.
+1273|H|mor|ME|Konya|faith,death|Rumi dies|The poet dies at Konya; the whirling dervishes of the Mevlevi order grow from the poet's followers.
+1274-3|H|mor|EU|Fossanova|learning,death|Thomas Aquinas dies|Aquinas dies on the way to the Council of Lyon, the Summa unfinished.
 1274-11|W|kue|AS|Hakata Bay|war,storm,sea|The first Mongol fleet against Japan|A Mongol and Korean fleet lands at Hakata and then sails off in a storm; the kami are said to have answered.
 1274|H|mor|EU|Lyon|faith|The Second Council of Lyon|The Greek envoys accept union with Rome; their church at home does not.
 1276|H|mor|AS|Lin'an|siege,crown|Hangzhou surrenders|The Song capital surrenders to the Mongol general Bayan.
@@ -161,15 +161,15 @@
 1291-5|W|vam|ME|Acre|siege,crusade,massacre|Acre falls|The Mamluks storm Acre and the crusader kingdom ends; Kindred of the Military Orders sail for Cyprus with the survivors.
 1291-8|H|mor|EU|Switzerland|treaty,founding|The Swiss oath|Uri, Schwyz and Unterwalden swear to defend each other, the start of the Swiss Confederation.
 1292|H|mor|AS|Java|war|The Mongols in Java|A Mongol fleet lands in Java; the Majapahit state rises from the fighting.
-1294-12|H|mor|EU|Rome|faith|Celestine V resigns|The hermit pope resigns after five months; Boniface VIII follows him.
-1294|H|mor|AS|Khanbaliq|crown,death|Kublai Khan dies|The great khan dies; his empire no longer obeys one ruler.
+1294-12|H|mor|EU|Rome|faith|Celestine V resigns|The hermit pope resigns after five months; Boniface VIII follows.
+1294|H|mor|AS|Khanbaliq|crown,death|Kublai Khan dies|The great khan dies; the empire no longer obeys one ruler.
 1295|H|mor|AS|Tabriz|faith,crown|Ghazan turns to Islam|The Ilkhan Ghazan becomes Muslim, and the Mongols of Persia follow.
 1295|H|mor|EU|Venice|travel|Marco Polo returns|The Polos come home to Venice after twenty-four years.
 1296|H|mor|EU|Berwick|massacre,war|Berwick sacked|Edward I takes Berwick and kills many of its people; Scotland is conquered.
 1297-9|H|mor|EU|Stirling Bridge|battle|Stirling Bridge|William Wallace and Andrew Moray destroy an English army.
 1298-7|H|mor|EU|Falkirk|battle|Falkirk|Edward I breaks Wallace's army.
-1298|H|mor|EU|Genoa|travel,learning|Marco Polo's book|A prisoner of Genoa, Marco Polo tells his travels to the writer Rustichello.
-1299|H|mor|ME|Anatolia|founding,empire|Osman's beylik|Osman's frontier state in Bithynia grows; the Ottomans take their name from him.
+1298|H|mor|EU|Genoa|travel,learning|Marco Polo's book|A prisoner of Genoa, Marco Polo tells of the travels to the writer Rustichello.
+1299|H|mor|ME|Anatolia|founding,empire|Osman's beylik|Osman's frontier state in Bithynia grows; the Ottomans take their name from Osman.
 1299-12|H|mor|ME|Wadi al-Khazandar|battle|Wadi al-Khazandar|Ghazan's Mongols beat the Mamluks near Homs and briefly take Damascus.
 1300|H|mor|EU|Rome|faith,travel|The first Jubilee|Boniface VIII proclaims a holy year; pilgrims crowd Rome for full pardon of sins.
 1300|H|mor|EU|Kutna Hora|money,trade|The Prague groschen|Wenceslas II reforms the Bohemian coinage on Kutna Hora silver.
@@ -177,7 +177,7 @@
 1302-5|H|mor|EU|Bruges|uprising,massacre|The Bruges Matins|Flemish townsmen kill the French garrison of Bruges at dawn.
 1302-7|H|mor|EU|Courtrai|battle|The Golden Spurs|Flemish militia destroy the French knights at Courtrai.
 1302-11|H|mor|EU|Rome|faith,crown,law|Unam Sanctam|Boniface VIII declares that every creature must be subject to the pope.
-1302|H|mor|ME|Bapheus|battle|Bapheus|Osman beats a Byzantine army, his first great victory.
+1302|H|mor|ME|Bapheus|battle|Bapheus|Osman beats a Byzantine army, the first great Ottoman victory.
 1303-9|H|mor|EU|Anagni|crown,faith|The outrage at Anagni|Philip the Fair's men seize Boniface VIII; the pope dies weeks later.
 1303|H|mor|ME|Shaqhab|battle|Marj al-Saffar|The Mamluks beat Ghazan's last invasion of Syria.
 1304|W|kue|AS|Changan|treaty|The courts make peace|In the year the Quincunx is signed, mortal China lies quiet under the Yuan; the courts take it as proof the treaty works.
@@ -186,7 +186,7 @@
 1306-7|H|mor,hun|EU|France|persecution,money|The Jews expelled from France|Philip IV expels the Jews from France and takes their goods.
 1306|H|mor|EU|Olomouc|crown,death|The last Premyslid|Wenceslas III is murdered at Olomouc; the Bohemian royal line ends.
 1307-10|W|hun,vam|EU|Paris|persecution,heresy|The Templars arrested|On Friday 13 October Philip IV has every Templar in France seized; some say Cainite counsellors or Batini with grudges guided the king.
-1307|H|mor|EU|Lanercost|crown,death|Edward I dies|Edward I dies on his way north to fight Bruce; Edward II takes the throne.
+1307|H|mor|EU|Lanercost|crown,death|Edward I dies|Edward I dies on the way north to fight Bruce; Edward II takes the throne.
 1308|H|mor|EU|Danzig|massacre,war|Danzig taken|The Teutonic Knights seize Danzig and kill many of its people.
 1309|H|mor,vam|EU|Avignon|faith|The popes at Avignon|Clement V settles in Avignon; the popes will stay for nearly seventy years, and the Kindred of Rome lose their nearest grip on the Church.
 1309|H|mor|EU|Marienburg|building,crusade|Marienburg|The Teutonic grand master moves to Marienburg, the largest brick castle in Europe.
@@ -206,10 +206,10 @@
 1320|W|hun|EU|France|persecution,uprising|The Shepherds' Crusade|Bands of young shepherds march south and massacre Jews; the authorities crush them.
 1321|H|hun|EU|France|persecution|The lepers' plot|Rumour claims lepers poisoned the wells for the Jews and the king of Granada; lepers are burned across France.
 1321-9|H|mor|EU|Ravenna|art,death|Dante dies|Dante dies in exile at Ravenna, the Comedy complete.
-1322|H|mor|EU|Muhldorf|battle,crown|Muhldorf|Louis of Bavaria captures his rival Frederick of Austria.
+1322|H|mor|EU|Muhldorf|battle,crown|Muhldorf|Louis of Bavaria captures the rival king, Frederick of Austria.
 1323|H|mor|EU|Flanders|uprising|The Flemish peasants rise|Coastal Flanders rises against taxes and lords for five years.
 1324|H|mor|ME|Cairo|travel,money|Mansa Musa in Cairo|Mansa Musa passes through Cairo with so much gold that its price falls for years.
-1324|W|mag|EU|Kilkenny|occult,persecution|Alice Kyteler tried|The first witch trial in Ireland; Alice Kyteler escapes to England and a servant is burned in her place. Verbena in Ireland grow careful.
+1324|W|mag|EU|Kilkenny|occult,persecution|Alice Kyteler tried|The first witch trial in Ireland; Alice Kyteler escapes to England and a servant is burned in the lady's place. Verbena in Ireland grow careful.
 1325|H|mor|ME|Tangier and Mecca|travel|Ibn Battuta sets out|Ibn Battuta leaves Tangier on pilgrimage and travels for nearly thirty years.
 1325|W|mag|EU|Europe|founding,occult|The Order of Reason founded|In the year the Convention of the White Tower meets, the Order of Reason takes its name.
 1326|H|mor|ME|Bursa|siege,founding|Bursa taken|Orhan takes Bursa and makes it the Ottoman capital.
@@ -239,7 +239,7 @@
 1341|H|mor|ME|Constantinople|war,crown|Byzantine civil war|A civil war between John Kantakouzenos and the regency of John V begins; both sides hire Turks.
 1341|H|mor|EU|Brittany|war|The Breton war of succession|England and France fight over Brittany through rival dukes.
 1342|H|mor|EU|Germany|flood,disaster|The Magdalene flood|The worst recorded flood in central Europe sweeps the Rhine, Main and Danube.
-1343|H|mor|EU|Florence|money,disaster|The Bardi and Peruzzi fall|The great Florentine banks begin to fail after Edward III defaults on his loans.
+1343|H|mor|EU|Florence|money,disaster|The Bardi and Peruzzi fall|The great Florentine banks begin to fail after Edward III defaults on the crown's loans.
 1343|H|mor|EU|Estonia|uprising,massacre|St. George's Night rising|Estonian peasants rise against German lords and are crushed.
 1344|H|mor|EU|Smyrna|crusade,siege|Smyrna taken|A crusader league takes the harbour of Smyrna from the Turks.
 1345|H|mor|EU|Florence|money,disaster|Florence bankrupt|The Bardi bank collapses, taking much of Florence's wealth with it.
@@ -248,15 +248,15 @@
 1346-10|H|mor|EU|Neville's Cross|battle,crown|Neville's Cross|The English capture David II of Scotland.
 1346|H|all|EU|Caffa|siege,plague|Plague at Caffa|The Mongol army besieging Caffa in the Crimea is struck by plague; Genoese ships will carry it west.
 1346|H|mor|EU|Calais|siege|Calais besieged|Edward III begins an eleven-month siege of Calais.
-1197|H|mor|EU|Bohemia|crown|Vladislaus gives way|Vladislaus Henry yields Bohemia to his brother Ottokar and takes Moravia as margrave.
-1199|H|mor|AS|Kamakura|crown,death|Minamoto no Yoritomo dies|The first Kamakura shogun dies after a fall from a horse; the Hojo family begin to rule for his heirs.
+1197|H|mor|EU|Bohemia|crown|Vladislaus gives way|Vladislaus Henry yields Bohemia to the elder brother, Ottokar, and takes Moravia as margrave.
+1199|H|mor|AS|Kamakura|crown,death|Minamoto no Yoritomo dies|The first Kamakura shogun dies after a fall from a horse; the Hojo family begin to rule for the shogun's heirs.
 1203|H|mor|AS|Kamakura|crown|The Hojo regency|Hojo Tokimasa becomes regent to the shogun, and the regents rule Japan in fact.
 1205|H|mor|EU|Constantinople|crown|Henry of Flanders|Henry of Flanders becomes Latin emperor and rules the conquered lands with skill.
-1206|H|mor|ME|Ghazni|crown,death|Muhammad of Ghor killed|The conqueror of northern India is murdered on the Indus; his generals divide the empire.
+1206|H|mor|ME|Ghazni|crown,death|Muhammad of Ghor killed|The conqueror of northern India is murdered on the Indus; the generals divide the empire.
 1209|H|mor|EU|Cambridge|learning,founding|Scholars at Cambridge|Scholars fleeing a riot at Oxford settle at Cambridge.
 1210|H|mor|AS|Delhi|crown|Iltutmish|Iltutmish takes the throne of Delhi and holds northern India against the Mongols.
-1213|H|mor|EU|Hungary|crown,death|Queen Gertrude murdered|Hungarian nobles kill Andrew II's queen for favouring her German kin.
-1216|W|vam|EU|Rome|faith,crown|Innocent III dies|The great pope dies at Perugia; Kindred who shaped the Curia through him must start again.
+1213|H|mor|EU|Hungary|crown,death|Queen Gertrude murdered|Hungarian nobles kill Andrew II's queen for favouring the German kin of the queen.
+1216|W|vam|EU|Rome|faith,crown|Innocent III dies|The great pope dies at Perugia; Kindred who shaped the Curia through Innocent must start again.
 1219|H|mor|EU|Estonia|crusade|The Danish flag|Danes conquering Estonia win at Lyndanisse; legend says the Danish flag fell from the sky.
 1220|H|mor|EU|Rome|crown|Frederick II crowned emperor|Pope Honorius III crowns Frederick II in Rome.
 1220|H|mor|EU|Salisbury|building,faith|Salisbury cathedral begun|Work begins on the new cathedral at Salisbury.
@@ -308,27 +308,27 @@
 1281|H|mor|ME|Homs|battle|The second battle of Homs|The Mamluks beat the Mongols and their Armenian and Georgian allies.
 1283|W|cha|EU|Germany|founding|The stolen children are not found|No one finds Hamelin's children; changelings in the German lands keep the tale close.
 1285|H|mor|ME|Acre|trade|Venice and Genoa fight at Acre|The Italian quarters of Acre are at war with each other.
-1286|H|mor|EU|Kinghorn|crown,death|Alexander III dies|The king of Scots falls from his horse in a storm; Scotland is left with a child queen in Norway.
+1286|H|mor|EU|Kinghorn|crown,death|Alexander III dies|The king of Scots falls from a horse in a storm; Scotland is left with a child queen in Norway.
 1287|H|mor|AS|Pagan|war,crown|Pagan falls|A Mongol army ends the kingdom of Pagan in Burma.
 1288|H|mor|AS|Bach Dang|battle,sea|Bach Dang|Tran Hung Dao destroys a Mongol fleet on staked river beds in Vietnam.
-1290|H|mor|EU|Norway|crown,death|The Maid of Norway dies|The child queen of Scotland dies on her way from Norway; Edward I is asked to judge between the claimants.
+1290|H|mor|EU|Norway|crown,death|The Maid of Norway dies|The child queen of Scotland dies on the way from Norway; Edward I is asked to judge between the claimants.
 1292|H|mor|EU|Scotland|crown|John Balliol|Edward I picks John Balliol as King of Scots.
 1293|H|mor|AS|Java|founding,empire|Majapahit founded|Raden Wijaya uses the Mongols to destroy a rival, then drives them out and founds Majapahit.
-1296|H|mor|AS|Delhi|crown|Alauddin Khalji|Alauddin Khalji murders his uncle and takes Delhi; he will beat back several Mongol invasions.
+1296|H|mor|AS|Delhi|crown|Alauddin Khalji|Alauddin Khalji murders the sultan, an uncle, and takes Delhi; the new sultan will beat back several Mongol invasions.
 1297|H|mor|EU|Monaco|founding|The Grimaldi take Monaco|Francesco Grimaldi, disguised as a monk, seizes the rock of Monaco.
 1299|W|vam|ME|Anatolia|founding,empire|A new frontier state|Osman's beylik grows on the Byzantine border; Kindred of the Bosporus do not yet think it worth watching.
 1301|H|mor|EU|Hungary|crown,death|The Arpad line ends|Andrew III dies; the Arpad kings of Hungary are gone.
 1303|H|mor|AS|Delhi|siege|Chittor|Alauddin Khalji takes the Rajput fortress of Chittor.
 1305|H|mor|EU|Avignon|faith|A Gascon pope|Bertrand de Got becomes Clement V and never goes to Rome.
-1308|H|mor|EU|Germany|crown,death|King Albert murdered|Albert of Habsburg is killed by his nephew.
+1308|H|mor|EU|Germany|crown,death|King Albert murdered|Albert of Habsburg is killed by a nephew, John the Parricide.
 1310|H|mor|EU|Bohemia|crown|John of Luxembourg in Bohemia|John of Luxembourg marries the Premyslid heiress and is chosen King of Bohemia.
 1312|H|mor|ME|Cairo|crown|Al-Nasir Muhammad|The Mamluk sultan's third reign begins; Cairo reaches its height.
 1314|H|mor|EU|Fontainebleau|crown,death|Philip the Fair dies|The king dies after a hunting fall, months after de Molay's death.
-1316|W|hun|EU|Avignon|persecution,occult|The pope fears sorcery|John XXII believes enemies tried to kill him with wax images; trials for sorcery follow.
+1316|W|hun|EU|Avignon|persecution,occult|The pope fears sorcery|John XXII believes enemies tried to kill the pope with wax images; trials for sorcery follow.
 1319|H|mor|EU|Sweden|crown|Sweden and Norway joined|Magnus Eriksson inherits both crowns as a child.
 1320|H|mor|EU|Krakow|crown|Wladyslaw the Elbow-High|Wladyslaw is crowned King of Poland at Krakow, reuniting the kingdom.
 1320|H|mor|AS|Delhi|crown|The Tughluqs|Ghiyath al-Din Tughluq takes Delhi.
-1323|H|mor|EU|Lithuania|founding|Vilnius|Grand Duke Gediminas invites merchants and craftsmen to Vilnius, his new capital.
+1323|H|mor|EU|Lithuania|founding|Vilnius|Grand Duke Gediminas invites merchants and craftsmen to Vilnius, the new capital.
 1326|W|hun|EU|Avignon|persecution,occult|Magic made heresy|John XXII declares that sorcery is heresy, giving inquisitors power over it.
 1327|H|mor|EU|Prague|crown|Bohemia takes Silesia|John of Luxembourg brings the Silesian dukes under the Bohemian crown.
 1328|H|mor|EU|Moscow|crown,faith|Moscow becomes the seat|Ivan Kalita becomes Grand Prince with the Horde's blessing, and the metropolitan moves to Moscow.
@@ -340,7 +340,7 @@
 1338|W|wer|AS|Issyk-Kul|plague,death|Plague in the steppe|Graves of Christian merchants near Lake Issyk-Kul record a pestilence; Garou far to the west smell something coming.
 1340|H|mor|EU|Poland|war|Casimir takes Galicia|Poland begins to take Galicia-Volhynia.
 1341|H|mor|AS|Delhi|travel|Ibn Battuta in Delhi|The traveller serves Muhammad bin Tughluq as a judge.
-1343|W|vam|EU|Prague|founding,building|Plans for a new capital|Charles of Luxembourg, already ruling Bohemia for his father, plans to make Prague a capital; the Ventrue of the Empire take interest.
+1343|W|vam|EU|Prague|founding,building|Plans for a new capital|Charles of Luxembourg, already ruling Bohemia for a blind father, plans to make Prague a capital; the Ventrue of the Empire take interest.
 1344|H|mor|EU|Prague|faith,building|St. Vitus begun|Work begins on the new cathedral of St. Vitus in Prague.
 1345|H|mor|EU|Ghent|uprising,death|Jacob van Artevelde killed|The leader of Ghent is murdered by a mob.
 1346|H|mor|EU|Germany|crown|Charles IV elected|Charles of Luxembourg is chosen King of the Romans against Louis of Bavaria.
