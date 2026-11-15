@@ -6,7 +6,7 @@ Decisions taken while building. The master plan's review table holds the design 
 
 Each block of numbers, what it covers and the modules it touches. Claim a block with tools/decisions/claim.mjs when work starts and write the decisions in a fragment under changes/decisions; tools/release/merge-stamp.mjs adds the row and the sections when the branch merges (docs/WORKFLOW.md, B3081, B3082); the harness (tools/harness/decisions-index.test.mjs) fails if a decision falls outside every row, rows overlap or the next free block is already used.
 
-Next free block: B5940
+Next free block: B5950
 
 <!-- decision-index:start -->
 | Block | Feature | Modules |
@@ -321,6 +321,7 @@ Next free block: B5940
 | B5900-B5919 | War beyond Europe: armies, sieges and ships by land (Armies and Ships Desk) (used B5900-B5910) | Storyteller |
 | B5920-B5929 | The classic world timeline in the game (used B5920-B5926) | Chronicle, Storyteller |
 | B5930-B5939 | Market goods by region (the Market Goods Desk) (used B5930-B5936) | Storyteller |
+| B5940-B5949 | Primers for a scene far from home (used B5940-B5942) | Storyteller |
 <!-- decision-index:end -->
 
 ## The decisions
@@ -9798,3 +9799,18 @@ Reverse: drop WHY_WORDS from priceSync.
 WoDX Storyteller. The world setting "Prices know where goods come from" (goodsByPlace, on by default) turns B5930 to B5935 off together.
 
 Reverse: set it off.
+
+## B5940. "Where you are now" (2026-11-15)
+WoDX Storyteller, setup-rules.mjs abroadPrimer. The players' primer journal gets a second page, "Where you are now". When the active scene stands in a region whose way of life (WoDX Chronicle sphereFor) differs from the homeland's, the page holds what everyone knows there (the world primers of B5880; Western Christendom reads as the era's own lines). It is rewritten when the active scene changes, when a scene's land is set, when the homeland changes and when an era is applied.
+
+Reverse: drop refreshAbroad's hooks in setup.mjs.
+
+## B5941. At home the page says so (2026-11-15)
+WoDX Storyteller. On a scene at home or with no land set, the page says the table is among its own people. The page is kept rather than deleted, so a link to it never breaks.
+
+Reverse: abroadPrimer returns an empty page.
+
+## B5942. A card when the table comes to another way of life (2026-11-15)
+WoDX Storyteller. Each time the active scene moves into another way of life than the last, a "Far from home" card for everyone names the land and links the page. Moving between scenes in the same land posts nothing.
+
+Reverse: refreshAbroad({card: false}) everywhere.
