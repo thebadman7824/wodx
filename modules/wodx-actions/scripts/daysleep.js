@@ -132,11 +132,12 @@ export function build(ctx) {
      * Bring every Cainite the clock covers to the state the sun asks for. Returns [{actor, text}] and posts the card.
      * edge: "dawn" or "dusk" when the sun just crossed, for the card's title.
      */
-    let busy = false;
-    async function tick(o = {}) {
-        if (busy) return [];
-        busy = true;
-        try { return await tickNow(o); } finally { busy = false; }
+    // One at a time; a call that comes while one runs is run again after it (once), so the last state of the clock is never dropped
+    let running = null, queued = null;
+    function tick(o = {}) {
+        if (!running) { running = tickNow(o).finally(() => { running = null; }); return running; }
+        queued ??= running.catch(() => []).then(() => { queued = null; return tick(o); });
+        return queued;
     }
     async function tickNow({ edge = null } = {}) {
         if (!on()) return [];
