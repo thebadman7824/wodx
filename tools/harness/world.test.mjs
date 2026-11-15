@@ -102,8 +102,7 @@ test("the world: names follow their people's own order and forms", () => {
   // A region's own people outrank the lands it borrows from
   assert.ok(tablesFor({era: "medieval", culture: "british-isles"})("people.origin").results.some(x => x.text === "english"));
   assert.ok(tablesFor({era: "medieval", culture: "bohemia"})("people.origin").results.some(x => x.text === "czech"));
-  // A woman of the household takes the feminine form (handed over with the name lists, B6242)
-  RR.useFeminine(PW.FEMININE);
+  // A woman of the household takes the feminine form
   assert.equal(RR.kinFamily({family: "Ivanov", origin: "russian"}, {sex: "female", origin: "russian", family: "Petrova"}), "Ivanova");
   assert.equal(RR.kinFamily({family: "ibn Yusuf", origin: "arabic", masterSex: "male", masterGiven: "Khalid"}, {sex: "female", origin: "arabic", family: "bint Ali"}), "bint Khalid");
   assert.equal(RR.kinFamily({family: "ben Moshe", origin: "jewish", masterSex: "male", masterGiven: "David"}, {sex: "male", origin: "jewish", family: "ben Asher"}), "ben David");

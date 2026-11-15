@@ -11,8 +11,6 @@
  */
 
 /** Men's own names, every age before family names. */
-import {CLAN} from "./people-order.mjs";
-
 export const HN_MEN = `
   Onoyeahnee, Konneatorteeooh, Tokenhyonhau, Oneshauee, Kanatsoyh, Sohhonteoquent, Ooduhtsait, Konoohqung,
   Tossonggaulolus, Skenendoa, Oneatorleeooh, Kussanwatau, Eyootenyootanook, Kohnyeaugong, Shaguiesa, Teeroos,
@@ -74,7 +72,7 @@ const plain = (list, weight = 1) => split(list).map(text => ({text, weight}));
 const O = "haudenosaunee";
 /** A clan as it stands in the family slot. */
 export const clanName = c => `of the ${c} clan`;
-export {CLAN};
+export const CLAN = /^of the (.+) clan$/;
 
 /**
  * The tables for a people named this way (B3122, and the Algonquian coast, B3510). Medieval: own names and the clan

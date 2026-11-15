@@ -11,9 +11,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const R = await import(pathToFileURL(join(root, "modules/wodx-chronicle/scripts/referee-rules.mjs")).href);
 const {default: T} = await import(pathToFileURL(join(root, "modules/wodx-chronicle/data/rules-clashes.mjs")).href);
 const NR = await import(pathToFileURL(join(root, "modules/wodx-npc/scripts/routine-rules.mjs")).href);
-// B6243: a decision more than a month old is in docs/archive/decisions-<month>.md
-const {allDecisionsText} = await import(pathToFileURL(join(root, "tools/docs/archive-decisions.mjs")).href);
-const decisions = allDecisionsText(root);
+const decisions = readFileSync(join(root, "docs/DECISIONS.md"), "utf8");
 const ERAS = JSON.parse(readFileSync(join(root, "modules/wodx-chronicle/data/eras.json"), "utf8"));
 
 test("every case is whole and rests on a clash row", () => {

@@ -12,14 +12,8 @@
  */
 import {PRESETS, originFaith} from "./routine-rules.mjs";
 import {faithFor} from "../../wodx-chronicle/scripts/faith-rules.mjs";
-import {FAMILY_FIRST} from "../../wodx-creation/data/people-order.mjs";
-/*
- * The feminine forms of family names come with WoDX Creation's name lists, which load on first use (B6242): residents.mjs
- * hands them over with useFeminine() before naming a household.
- */
-let FEMININE = {};
-export function useFeminine(forms) { FEMININE = forms && typeof forms === "object" ? forms : {}; }
-import {CLAN} from "../../wodx-creation/data/people-order.mjs";
+import {FEMININE, FAMILY_FIRST} from "../../wodx-creation/data/people-world.mjs";
+import {CLAN} from "../../wodx-creation/data/people-haudenosaunee.mjs";
 
 /** "Son of" and "daughter of" a father's name: Hebrew ben and bat, Arabic ibn and bint, Malay and Swahili bin and binti. */
 const CHILD = /^(ben|bat|ibn|bint|bin|binti) /;

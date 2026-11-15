@@ -33,7 +33,8 @@ const OLD = ["medieval", "early-modern"], NEW = ["industrial", "modern"], MOD = 
 const tbl = (id, name, list, era) => ({id, name, results: list.map(x => (typeof x === "string" ? {text: x} : x)), ...(era ? {era} : {})});
 const tag = era => era ? ` (${era[0]})` : "";
 
-export {FAMILY_FIRST} from "./people-order.mjs";
+/** Peoples whose family name comes before the given name. */
+export const FAMILY_FIRST = new Set(["chinese", "japanese", "korean", "vietnamese", "hungarian", "khmer"]);
 
 /**
  * Each people: m and f given names, fam family names ("male/female" where the form follows sex). A value is one list
