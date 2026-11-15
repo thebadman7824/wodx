@@ -128,13 +128,20 @@ export function build(ctx) {
         if (!isActiveGM() || setting("autoBloodHunt") === false) return [];
         const list = hunts(), out = [];
         const breaches = kx().masqEntries?.() ?? [];
+        // B5620: every Kindred's "looked at" time goes in one batched write, not one write per actor: a world with
+        // hundreds of Kindred took over 30 seconds at each faction turn.
+        const looked = [], now = game.time.worldTime;
+        const toCall = [];
         for (const a of game.actors ?? []) {
             if (P.detectProfile(a) !== "kindred" || list.some(h => h.active && h.targetId === a.id)) continue;
             const since = n(a.getFlag(MOD, "huntLooked"));
             const mine = breaches.filter(e => e.byUuid === a.uuid || (!e.byUuid && e.by === a.name));
             const due = D.huntDue({ marks: a.getFlag(MOD, "diablerieMarks") ?? [], breaches: mine, since });
-            await a.setFlag(MOD, "huntLooked", game.time.worldTime);
-            if (!due) continue;
+            if (since !== now) looked.push({ _id: a.id, [`flags.${MOD}.huntLooked`]: now });
+            if (due) toCall.push([a, due]);
+        }
+        if (looked.length) await Actor.implementation.updateDocuments(looked);
+        for (const [a, due] of toCall) {
             if (due.entry) { try { await kx().markHuntSeen?.(due.entry); } catch (e) { /* older records */ } }
             if (a.hasPlayerOwner) {
                 await api("wodx-chronicle")?.approvals?.propose?.({ type: T_HUNT, key: `bloodHunt:${a.id}`, title: `The court calls a hunt on ${a.name}`,
