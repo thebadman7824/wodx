@@ -246,7 +246,7 @@ Next free block: B5880
 | B5010-B5029 | The Storyteller's Hand, part three: fire, noticing, and the rest of the desk acts by itself (Ben's desk picks, 14 November 2026) (used B5010-B5024) | Interactables, Actions, Senses, Library, Chronicle, Storyteller, Otherworlds, Creation |
 | B5030-B5039 | Banyarwanda and Barundi names (used B5030-B5032) | Creation, Chronicle |
 | B5040-B5069 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5040-B5064) | Creation, NPC, Actions |
-| B5070-B5089 | Carrying the fallen and moving large things (Carry Bodies Desk) (used B5070-B5086) | Interactables, Combat, NPC, Solo |
+| B5070-B5089 | Carrying the fallen and moving large things (Carry Bodies Desk) (used B5070-B5089) | NPC, Solo, Interactables |
 | B5090-B5099 | Golconda Desk: losing it, trait caps, powers, the road, halo, aura, sun, elders (used B5090-B5097) | Actions, Chronicle, Creation, Senses, Otherworlds, NPC |
 | B5100-B5129 | Servants and bonds for every line (Servants and Bonds Desk) (used B5100-B5127) | NPC, Combat, Actions |
 | B5130-B5139 | Ghouled animals (Ben's picks on the Ghouled Animals Desk, 2026-11-14) (used B5130-B5137) | Creation, Actions, NPC |
@@ -304,6 +304,7 @@ Next free block: B5880
 | B5660-B5669 | Child proportions, drawn poses by routine, animal legs (used B5660-B5668) | Paperdoll |
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5680-B5709 | NPC Motives Desk: every NPC action has a reason and a follow-through (used B5680-B5703) | NPC, Storyteller |
+| B5710-B5729 | Aftercare of the carried (Aftercare Desk a1-a12) (used B5710-B5721) | NPC |
 | B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5736) | Interactables, tools |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 | B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
@@ -8349,7 +8350,7 @@ WoDX Interactables. Next to a mount or vehicle with a seat free, the body is lai
 Reverse: drop the onto branches in release (haul.mjs).
 
 ## B5077. NPCs rescue their own, hide bodies and take captives (2026-11-14)
-WoDX NPC. An NPC who is retreating with an ally down within reach carries or drags the ally away; a Kindred, a cultist or anyone hiding its nature with mortals about drags a body out of their sight; an NPC with no foe standing in reach takes an incapacitated rival, enemy or hostile player character captive and carries them off. Suggest mode names it on the Storyteller's card with Accept; Auto does it. "Leaves the fallen where they lie" in the Behaviour window switches it off for one NPC. Ben's pick (c8), with Ben's note: NPCs also capture incapacitated rivals, enemies and hostile player characters.
+WoDX NPC. An NPC who is retreating with an ally down within a run carries or drags the ally away (a loyal one with no foe in reach does it too, house reading); a Kindred, a cultist or anyone hiding its nature with mortals about drags a body out of their sight; an NPC with no foe standing in reach takes an incapacitated rival, enemy or hostile player character captive and carries them off. Suggest mode names it on the Storyteller's card with Accept; Auto does it; Undo lets go and puts both back. One holding a body goes on with it, and drops it (free) to fight a foe in reach unless it is rescuing. Animals do none of it. "Leaves the fallen where they lie" in the Behaviour window switches it off for one NPC. Ben's pick (c8), with Ben's note: NPCs also capture incapacitated rivals, enemies and hostile player characters.
 
 Reverse: have carryOption in npc-rules.mjs return null.
 
@@ -8359,7 +8360,7 @@ WoDX Interactables. A card to the owner: Struggle free (Strength + Athletics at 
 Reverse: drop movedWhileCarried and the wake card in haul.mjs.
 
 ## B5079. In a Lone Chronicle a companion carries the player (2026-11-14)
-WoDX Solo and NPC. When the lone player's character goes down, the nearest companion (an NPC who serves them, or a friendly NPC of their party) carries or drags them away from danger by itself; the panel's Carry the fallen asks a companion to carry another fallen one. Ben's pick (c10).
+WoDX Solo and NPC. When the lone player's character goes down, the nearest companion (an NPC who serves them, or a friendly NPC of their party) carries or drags them away from danger by itself; the panel's Carry the fallen asks a companion to carry another fallen one. Outside a fight the companion goes at once; in one, on its own turn. Ben's pick (c10).
 
 Reverse: turn off "Companions carry the fallen" in WoDX Solo's settings.
 
@@ -8397,6 +8398,21 @@ Reverse: drop settleBarricade in haul.mjs and the barricade line in coverOnShot 
 WoDX Interactables. Only bodies and large things use these rules; everyday gear stays as it is. Ben's pick (c17).
 
 Reverse: none needed; nothing was built for it.
+
+## B5087. Where the rescued and the dead are carried (2026-11-15)
+WoDX NPC. An NPC carrying a fallen ally takes them to its own haven or home (its routine's places; a Cainite's haven first): a region tagged as that place on this map, or the map itself when the whole scene is that place. A dead mortal ally is brought to their own household's home and buried (the token leaves the map; the actor keeps flags.wodx-npc.buried). A Cainite ally slain or in torpor is laid to rest in a haven. With no such place on this map, the carrier walks to the nearest edge and both leave the map, to their own people beyond it. When the place is on another map, the carrier and body leave by the nearest edge and arrive there once the clock has run the walk (Ben's pick 2026-11-15, "Travel time, then arrive"): an hour within the same region, three hours to another, doubled when dragging (house figures, as scenes keep no distances between them); copies of both tokens then stand in the place on that map, the ones left behind stay hidden, and turning the clock back before then hides the arrivals again. A player's character is never carried off the map this way: with no such place on this map they are carried away from the danger instead. Ben's choice, "Real destinations (all three)", 2026-11-15.
+
+Reverse: have carryTurn in main.mjs skip carryGoals and walk away from the danger only, as before.
+
+## B5088. A hidden body goes into a hiding spot (2026-11-15)
+WoDX NPC. A body dragged out of mortal sight goes into the nearest hiding spot on the map with room (a WoDX Interactables hiding tile: a wardrobe, a bed, a curtain, a crawlspace, a priest hole), as one of its occupants and out of sight, so a search of that spot finds it. With none, the NPC drags it away out of sight. Ben's choice, 2026-11-15.
+
+Reverse: return "away" for intent "hide" in goalFor (carry-goal-rules.mjs).
+
+## B5089. Captives are tied and kept as prisoners (2026-11-15)
+WoDX NPC. A captive is carried to the captor's faction's watch-house or barracks, else its keep, haven or cellars (a place on this map first), else the captor's own post or haven, else off the map. There they are tied (WoDX Chronicle's Completely immobilized: hit automatically), kept on the prisoners list (world setting wodx-npc.prisoners), and the news goes out as a rumour (hook wodxCaptive, read by WoDX Storyteller's signals). A player's character who steps next to a prisoner gets a card to untie them. A player's character is only taken captive once the Storyteller approves (approval "An NPC takes a player's character captive"): approval ties them and takes them to that place at once; rejection and the NPC leaves them. Ben's choice, 2026-11-15.
+
+Reverse: drop "prison" from AFTER in carry-goal-rules.mjs and have arrive in carry-goals.mjs only set the body down.
 
 ## B5090. Golconda ends when its purity fails (2026-11-14)
 WoDX Actions. A vampire in Golconda falls from it by itself when the Road drops below 7 or Conscience (or Conviction) below 4 (V20 Dark Ages p. 359; Ben's pick go1). A card goes to the player and the Storyteller, and "Golconda lost" floats over the token. Frenzy, Rötschreck and the nightly blood loss return. The long road can be walked again. Setting "Golconda's rules".
@@ -9229,6 +9245,66 @@ Reverse: drop the found() call in foundCard in factions.mjs.
 WoDX Storyteller (desk h5). When a body is first found, drained of blood or savaged, the region's hunters' pressure rises by one, or two before 1700 and from 1986 (the years when the finding itself names something unnatural: a curse or witchcraft, a file that reaches the wrong people). From 1840, the age of the police surgeon, the body is taken to the morgue (hidden on the map), and the hunters claim it on their next turn: each file in the region grows, and a supernatural's body counts as proof (B5699). A mortal townsperson can be the first to find a body, as a player's character can. House reading.
 
 Reverse: drop bodyFound() from found() and claimMorgue() from turn().
+
+## B5710. A hurt ally is tended, then mends on the clock (2026-11-15)
+WoDX NPC carry-aftercare.mjs. When an NPC lays a hurt ally down at its haven or home, the best healer there (the carrier and the NPCs whose routine names the place home, haven or post) rolls Intelligence + Medicine at 6, harder for deep wounds; success marks the wounds treated (WoDX Actions' flag), so they mend by the books' healing times. Off the map they mend each day by WoDX Actions' healing plan; on the map Actions' own clock heals them. A Cainite ally is fed by a vessel or ghoul and spends the blood on the wounds, and is fed again each day until whole. Ben's pick (a1).
+
+Reverse: turn off "Aftercare of the carried" in WoDX NPC's settings.
+
+## B5711. A Cainite in torpor is guarded and may be woken with blood (2026-11-15)
+WoDX NPC. A Cainite laid to rest still unliving goes into torpor (WoDX Actions' torpor, its length by Road) and stays hidden at the haven. Once a day, if a sire, childe, regnant or faction-mate Cainite has blood to spare, an approval card offers to feed them two points; approval sets the torpor's end to now and Actions' rise from torpor takes over. Ben's pick (a2).
+
+Reverse: reject the npc-torpor-blood approval, or turn off Aftercare.
+
+## B5712. A dead mortal ally gets a funeral by faith and era (2026-11-15)
+WoDX NPC. A dead mortal brought home is given the rite of the faith kept where they lie (WoDX Chronicle's faith of the scene and year): burial, cremation, sky burial or a barrow. A map pin marks the grave at the place, the actor keeps flags.wodx-npc.funeral, a rumour spreads, and every family member or loved one holds a grudge (WoDX NPC's memory, "killed someone dear to them") against whoever last hurt the dead (flags.wodx-npc.hurtBy, from wodxDamageApplied). Ben's pick (a3).
+
+Reverse: turn off Aftercare.
+
+## B5713. A Cainite's Final Death: the remains gathered, the news spread (2026-11-15)
+WoDX NPC. A Cainite brought to rest who has met Final Death is gathered up (the token leaves the map, flags.wodx-npc.finalDeath), a rumour spreads, their faction loses a dot of Status, and the sire hears of it. Ben's pick (a4).
+
+Reverse: turn off Aftercare.
+
+## B5714. A dead enemy is disposed of by kind (2026-11-15)
+WoDX NPC. A dead foe hidden is disposed of six hours later, one taken as proof a day later: mortals of the church, a lord or the folk hand the body to the law, other mortals bury it unmarked, Cainites and the like burn or sink it, Garou leave it to the wilds. The token leaves the map, its WoDX Storyteller body marks go, and the evidence the takers' side left on that scene around the death is cleared. Ben's pick (a5).
+
+Reverse: turn off Aftercare.
+
+## B5715. The fallen foe's and the captive's things go into the captors' stores (2026-11-15)
+WoDX NPC. Weapons, armour, gear and wonders (not powers or natural weapons) are taken from a dead foe or a new prisoner: each becomes a world item in the folder "WoDX: captors' stores" and a line in a container at the captors' place (or the nearest on that map), where its Take gives it back; with no container, the place's stores (world setting wodx-npc.stores) keep them. The actor keeps flags.wodx-npc.takenGoods. Ben's pick (a6).
+
+Reverse: turn off Aftercare.
+
+## B5716. Prisoners are guarded and fed, and may slip free (2026-11-15)
+WoDX NPC. Each day a mortal prisoner is fed and mends a day's worth; each night an NPC prisoner tries Dexterity + Larceny or Strength + Athletics at 7 against the bonds, the successes kept from night to night until three free them (a botch starts over). Freed, they are untied and leave the prisoners list. Ben's pick (a7).
+
+Reverse: turn off Aftercare.
+
+## B5717. Questioning each day, nothing graphic (2026-11-15)
+WoDX NPC. Once a day the captor (or the faction's leader) rolls Manipulation + Intimidation, or Dominate or Presence when better, against the prisoner's Willpower; each success gives up one of the prisoner's secrets (WoDX NPC's secrets, found by the captor, with its Ledger hook). The Storyteller's card names what was learned. Ben's pick (a8).
+
+Reverse: turn off Aftercare.
+
+## B5718. Cainite captors feed on mortal prisoners, carefully (2026-11-15)
+WoDX NPC. A Cainite captor feeds on a mortal prisoner every other night, one or two points, never past three health levels left: the captor gains the blood, the prisoner takes bashing damage, and wodxFed fires (evidence, memory). Ben's pick (a9).
+
+Reverse: turn off Aftercare.
+
+## B5719. After a week the faction decides (2026-11-15)
+WoDX NPC. After seven days the captors' faction picks by its kind's temper: ransom (a dot of Resources from the prisoner's faction to the captors'), trade for one of their own held by the prisoner's people, the law (WoDX Chronicle's trial card), or release. A killing, and any choice about a player's character, waits on the Storyteller (approval type npc-prisoner-fate); rejecting keeps them another week. Ben's pick (a10).
+
+Reverse: turn off Aftercare.
+
+## B5720. The prisoner's faction may come for them (2026-11-15)
+WoDX NPC. On each faction turn the prisoner's own faction tries a rescue: Wits 2 + Retainers or Herd against 6 + the captors' Security. Success frees the prisoner and both factions think worse of each other; a botch costs the rescuers a dot of Retainers. A player's character is left to the players (in a Lone Chronicle, see B5721). Ben's pick (a11).
+
+Reverse: turn off Aftercare.
+
+## B5721. A player's character held prisoner (2026-11-15)
+WoDX NPC. The player gets a card when taken and each day: where they are, who holds them, and buttons to try the bonds (the same roll, once a night), to talk (an approval card brings a captor to them) or to wait. Every choice the captors make about them waits on approval (B5719). In a Lone Chronicle (WoDX Solo on) one who serves them tries to get them out on each faction turn. Ben's pick (a12).
+
+Reverse: turn off Aftercare.
 
 ## B5730. The pixel map drawer lives in tools/pixelmap (2026-11-15)
 Tools. WoDX's own maps are drawn by code in our own pixel art (the Whole World desk, choices x1 and t1): 94 art pixels to a 5 ft square at one screen pixel each, the grain of the character sprites, in the World of Darkness palette, painted in daylight colours for the clock to darken. No pack pictures, so the art can ship in the public repository. The 47 pixel look picked first on the desk is kept behind PIXELMAP_COARSE=1; the finer grain is what Ben directed the samples toward.

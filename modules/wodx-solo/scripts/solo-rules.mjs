@@ -114,8 +114,24 @@ export const PANEL = [
   {id: "travel", label: "Travel", icon: "fa-solid fa-person-walking-luggage"},
   {id: "pause", label: "Pause or go on", icon: "fa-solid fa-pause"},
   {id: "stuck", label: "I am stuck", icon: "fa-solid fa-life-ring"},
-  {id: "curtain", label: "Lift the curtain", icon: "fa-solid fa-masks-theater"}
+  {id: "curtain", label: "Lift the curtain", icon: "fa-solid fa-masks-theater"},
+  // B5079: ask a companion to carry someone who is down
+  {id: "carry", label: "Carry the fallen", icon: "fa-solid fa-people-carry-box"}
 ];
+
+/**
+ * B5079 (Ben's Carry Bodies Desk, c10): the companion who carries a fallen one in a Lone Chronicle. list: the NPCs on the
+ * scene, [{id, name, distance (yards to the fallen one), serves (serves the player's character), friendly, down, holding,
+ * hands (any to take hold with), player (a player owns it)}]. One who serves the character goes first, then a friendly
+ * one; the nearest of them, within maxYards. -> the chosen entry, or null
+ */
+export const CARRY_YARDS = 40;
+export function companionFor(list = [], maxYards = CARRY_YARDS) {
+  const ok = (list ?? []).filter(c => c && !c.player && !c.down && !c.holding && c.hands !== false && (c.serves || c.friendly)
+    && Number.isFinite(Number(c.distance)) && Number(c.distance) <= maxYards);
+  ok.sort((a, b) => (Number(!!b.serves) - Number(!!a.serves)) || (Number(a.distance) - Number(b.distance)));
+  return ok[0] ?? null;
+}
 
 /**
  * Ways to let time pass. stops: what ends the wait early. A wait stops for a fight on the character's scene, a pause,
