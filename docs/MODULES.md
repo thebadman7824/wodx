@@ -21,7 +21,7 @@ Install every WoDX module together, even ones left off in a world. Some modules 
 
 | Module | Version | What it does | Enable in |
 |---|---|---|---|
-| wodx-chronicle | 0.125.0 | The era clock, dated events, house rules, the crossover referee, the WoDX look and player buttons. [Changelog](../modules/wodx-chronicle/CHANGELOG.md) | rothenstein-wodx |
+| wodx-chronicle | 0.125.1 | The era clock, dated events, house rules, the crossover referee, the WoDX look and player buttons. [Changelog](../modules/wodx-chronicle/CHANGELOG.md) | rothenstein-wodx |
 | wodx-otherworlds | 0.33.0 | The Umbra, the Shadowlands and other realms: crossings, realm maps and the Gauntlet. [Changelog](../modules/wodx-otherworlds/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-creation | 0.77.0 | Character and NPC creation, era advancement, the archive of the dead and changes of state. [Changelog](../modules/wodx-creation/CHANGELOG.md) | rothenstein-wodx (needs wodx-chronicle) |
 | wodx-actions | 3.103.0 | Fomor powers: all 73 from Werewolf 20th pp. 430-439. Always-on ones work from the sheet; the rest roll from the Fomor power window with effects on the map. NPC fomor pick their own. | rothenstein-wodx (needs wodx-chronicle) |

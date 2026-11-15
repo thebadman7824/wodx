@@ -311,6 +311,8 @@ Next free block: B5880
 | B5820-B5829 | Say or Do: systems that only posted text now act, second batch (used B5820-B5826) | Otherworlds, Senses, Chronicle, Storyteller, NPC |
 | B5830-B5839 | Gate failures on main, round two; run-gate names failed steps (used B5830-B5831) | tools (gates, lanes) |
 | B5840-B5849 | Gates traced by name: gate6b, gateconsensus, gatemounts (used B5840) | tools (gates) |
+| B5850-B5859 | gate6i clear track, gatepassing finds its card (used B5850) | tools (gates) |
+| B5860-B5869 | gates after other gates, approval queue one change at a time (used B5860-B5861) | tools (gates), wodx-chronicle |
 | B5870-B5879 | Dates as each land tells them: the player's clock by the local reckoning (used B5870-B5873) | Chronicle, Atmosphere |
 <!-- decision-index:end -->
 
@@ -9452,6 +9454,28 @@ right, so the step went on before the first move had finished and the move down 
 is now waited out.
 
 Reverse: drop the three set-ups.
+
+## B5850. gate6i starts the holy burn from a clear track; gatepassing finds the finding card by its flag (2026-11-15)
+Gates. gate6i keeps its demon between runs, so wounds from earlier runs added up and the burn read 7 lethal levels
+for a potential of 2; the step now clears the track first. gatepassing step 4 wanted exactly one new message and the
+newest one to be the finding card, but other cards can follow it now; it finds the card by its flag.
+
+Reverse: drop the clear and go back to the newest message.
+
+## B5860. gate-maps step 9 reads every card since the move; gatehuntpowder step 7 records its notices (2026-11-15)
+Gates. Both steps pass alone and fail after other gates. gate-maps step 9 looked for its trigger note in the newest six
+cards and read the region's "set off" mark half a second after the move; it now looks at every card since the move and
+waits up to five seconds for the mark. gatehuntpowder step 7 now keeps the notices the reload and the match gave, the
+answers of both calls and whether the gun is still on the sheet, so a failure after other gates names its cause.
+
+## B5861. The approval queue changes one at a time (2026-11-15)
+Chronicle. Every change to the queue read the whole setting, edited it and wrote it back, so two changes at once kept
+only the later one. gateautomation, run after other gates, lost its thirty-hour proposal that way while a clock hook
+queued its own. Queueing, deciding, releasing held proposals, Undo and editing a waiting proposal now wait for the
+change before them. The handlers' own work (moving the clock, a card) runs outside that wait, so a handler that
+proposes again does not wait on itself.
+
+Reverse: go back to the newest six cards and the plain step; drop the wait in approvals.mjs.
 
 ## B5870. The clock tells the date in the count of the scene's land (2026-11-15)
 WoDX Chronicle, reckoning-rules.mjs and the new local-reckoning-rules.mjs. The era reckoning house rule told every date "in the year of Our Lord", even in Cairo or Kyoto. reckon() now takes the year kept where the scene stands (church.on() gives its faith and region, by the same order as the holy days of B2537: the scene's pick, the scene's region, the chronicle's pick, the homeland) and tells the date in that count. The Western church year is unchanged. The Storyteller's Chronicle Clock shows a "Players hear" line with the player's words. The opening card of WoDX Atmosphere reads the same rule. The Master Plan and docs/GLOBAL.md listed calendars outside the Western reckoning as open.
