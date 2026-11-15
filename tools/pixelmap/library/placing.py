@@ -25,6 +25,7 @@ import numpy as np
 from library.census import CENSUS, ROOMS
 from library.core import CATALOGUE, put, by_wall, spec
 from library import variants as V
+from library import sacred
 
 SEATS = {"chair", "stool", "bench", "barstool", "armchair", "sofa", "cushion", "lordchair", "officechair", "rocking", "settle", "chaise"}
 SURFACES = {"table", "table-small", "table-round", "table-low", "dininglong", "desk", "counter", "bar", "workbench", "shelf", "dresser", "sideboard",
@@ -132,9 +133,9 @@ def furnish(rec, box, place, room, wealth=2, region="moravia", rng=None, th=None
             if sp.mount == "on":
                 got = _on_surface(rec, oid, v, placed, rng, name)
             elif sp.mount == "wall":
-                got = _along_wall(rec, oid, v, walls, opens, (ix0, iy0, ix1, iy1), taken, rng, name, box)
+                got = _along_wall(rec, oid, v, walls, opens, (ix0, iy0, ix1, iy1), taken, rng, name, box, region)
             if got is None and sp.mount != "on" and not (sp.mount == "wall" and walled):   # a wall piece with no room on the walls is left out
-                got = _in_floor(rec, oid, v, (ix0, iy0, ix1, iy1), taken, rng, name)
+                got = _in_floor(rec, oid, v, (ix0, iy0, ix1, iy1), taken, rng, name, region)
             if got is None: continue
             pool[oid] = pool.get(oid, 1) - 1
             placed.append(got); record.append((oid, V.label(v), (round(float(got.x), 2), round(float(got.y), 2))))
@@ -146,9 +147,9 @@ def furnish(rec, box, place, room, wealth=2, region="moravia", rng=None, th=None
     while usual and _cover(placed, area) < COVER and tries < 40:
         tries += 1; oid = usual[int(rng.integers(0, len(usual)))]; sp = spec(oid)
         v = V.pick(oid, era, wealth, style, rng); name = sp.name[0].upper() + sp.name[1:]
-        if sp.mount == "wall": got = _along_wall(rec, oid, v, walls, opens, (ix0, iy0, ix1, iy1), taken, rng, name, box) if walled else None
+        if sp.mount == "wall": got = _along_wall(rec, oid, v, walls, opens, (ix0, iy0, ix1, iy1), taken, rng, name, box, region) if walled else None
         else: got = None
-        if got is None and not (sp.mount == "wall" and walled): got = _in_floor(rec, oid, v, (ix0, iy0, ix1, iy1), taken, rng, name)
+        if got is None and not (sp.mount == "wall" and walled): got = _in_floor(rec, oid, v, (ix0, iy0, ix1, iy1), taken, rng, name, region)
         if got is not None: placed.append(got); record.append((oid, V.label(v), (round(float(got.x), 2), round(float(got.y), 2))))
     return record
 
@@ -248,9 +249,11 @@ def _on_line(p, ln):
     return abs(p.x - a) < .3 and b - 1e-6 <= p.y <= d + 1e-6 and p.w < .5
 
 
-def _along_wall(rec, oid, v, walls, opens, inner, taken, rng, name, box):
+def _along_wall(rec, oid, v, walls, opens, inner, taken, rng, name, box, region=None):
     sp = spec(oid); W, D = (s / 5.0 for s in sp.size()); ix0, iy0, ix1, iy1 = inner; cx, cy = (ix0 + ix1) / 2, (iy0 + iy1) / 2
     sides = list(walls); rng.shuffle(sides)
+    must = sacred.wall_for(oid, region)                                  # the qibla wall, the east end ...
+    if must: sides = [must]
     for k in sides:
         if not _has_wall(rec, walls[k]): continue
         lo, hi = (ix0, ix1) if k in "ns" else (iy0, iy1)
@@ -289,7 +292,7 @@ def _has_wall(rec, ln):
     return False
 
 
-def _in_floor(rec, oid, v, inner, taken, rng, name):
+def _in_floor(rec, oid, v, inner, taken, rng, name, region=None):
     sp = spec(oid); ix0, iy0, ix1, iy1 = inner; cx, cy = (ix0 + ix1) / 2, (iy0 + iy1) / 2
     wf, df = sp.size(); W, D = wf / 5.0, df / 5.0
     cands = []
@@ -313,6 +316,7 @@ def _in_floor(rec, oid, v, inner, taken, rng, name):
         dx, dy = tx - x, ty - y
         face = ("s" if dy > 0 else "n") if abs(dy) >= abs(dx) else ("e" if dx > 0 else "w")
         if not sp.front: face = "s"
+        if sacred.face_for(oid, region): face = sacred.face_for(oid, region)
         Wr, Dr = (W, D) if face in "ns" else (D, W)
         X, Y = x - Wr / 2, y - Dr / 2
         r = (X, Y, X + Wr, Y + Dr)

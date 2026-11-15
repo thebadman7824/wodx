@@ -74,4 +74,25 @@ class Checks(unittest.TestCase):
         self.assertTrue(any(b.startswith("bare") for b in run(rec)))
 
 
+
+class Sacred(unittest.TestCase):
+    def test_qibla_and_jerusalem_walls(self):
+        from library import sacred
+        self.assertEqual(sacred.toward("mecca", "india"), "w")          # Delhi prays west
+        self.assertEqual(sacred.toward("mecca", "british-isles"), "e")  # London prays south-east, nearer east
+        self.assertEqual(sacred.toward("jerusalem", "moravia"), "e")
+        self.assertEqual(sacred.wall_for("altar", "japan"), "e")
+
+    def test_an_altar_is_set_at_the_east_end(self):
+        import numpy as np
+        from library.placing import furnish
+        for seed in range(4):
+            rec = Recorder("t", (10, 8)); rec.year = 1400
+            for w in ((1, 1, 9, 1), (1, 7, 9, 7), (1, 1, 1, 7), (9, 1, 9, 7)): rec.wall(*w, th=26, kind="stone")
+            got = furnish(rec, (1, 1, 9, 7), "church", "chancel", 3, "moravia", rng=np.random.default_rng(seed))
+            alt = [p for p in rec.placed if p.spec.id == "altar"]
+            self.assertTrue(alt, f"seed {seed}: no altar in {got}")
+            self.assertGreater(alt[0].x, 6.5, "the altar stands at the east end"); self.assertEqual(alt[0].face, "w")
+
+
 if __name__ == "__main__": unittest.main()
