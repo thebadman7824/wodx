@@ -130,8 +130,9 @@ export function nightsBetween(from, to) {
  * @param {object} c  {name, vampire, torpor, golconda, blood: {value, max}, willpower: {temp, perm}, wounded}
  * @param {object} o  {nights, willpowerMode: "night"|"story"|"off", nightlyBlood, lastNightHandled}
  *   lastNightHandled: the nightfall card's New Night will settle the last night, so count one fewer
+ *   riseChiPaid: WoDX Actions' day sleep pays a Kuei-jin's Chi on rising, so the last night is already paid
  */
-export function betweenPlan(c = {}, {nights = 0, willpowerMode = "night", nightlyBlood = true, lastNightHandled = false} = {}) {
+export function betweenPlan(c = {}, {nights = 0, willpowerMode = "night", nightlyBlood = true, lastNightHandled = false, riseChiPaid = false} = {}) {
   const lines = [], delta = {};
   const n = Math.max(0, Math.floor(num(nights)) - (lastNightHandled ? 1 : 0));
   if ( n <= 0 ) return {nights: 0, lines, delta};
@@ -145,15 +146,17 @@ export function betweenPlan(c = {}, {nights = 0, willpowerMode = "night", nightl
     }
   }
   // B6321: a Kuei-jin spends a point of Chi to rise each night (Kindred of the East pdf 127), the larger pool first
-  if ( c.kueijin && !c.torpor && nightlyBlood ) {
-    const yang = num(c.chi?.yang), yin = num(c.chi?.yin), have = yang + yin, cost = Math.min(n, have);
-    if ( n > 0 ) {
+  // When WoDX Actions' day sleep is on, its rising (riseAuto) already pays the last night's Chi, so count one fewer
+  const nk = riseChiPaid && !lastNightHandled ? n - 1 : n;
+  if ( c.kueijin && !c.torpor && nightlyBlood && nk > 0 ) {
+    const yang = num(c.chi?.yang), yin = num(c.chi?.yin), have = yang + yin, cost = Math.min(nk, have);
+    {
       let left = cost, dy = 0, di = 0, y = yang, i = yin;
       while ( left > 0 ) { if ( y >= i && y > 0 ) { y--; dy--; } else if ( i > 0 ) { i--; di--; } else break; left--; }
       if ( dy ) delta.yangchi = dy;
       if ( di ) delta.yinchi = di;
-      lines.push({key: "chi", text: `Rising costs ${n} Chi over ${n} ${n === 1 ? "night" : "nights"}: Yang ${yang} to ${yang + dy}, Yin ${yin} to ${yin + di}.`,
-        warn: n > have ? "It would have cost more Chi than the pools hold: the Storyteller decides whether they fed." : (y + i <= 0 ? "No Chi left: hungry. Feed with the Hunt button." : null)});
+      lines.push({key: "chi", text: `Rising costs ${nk} Chi over ${nk} ${nk === 1 ? "night" : "nights"}: Yang ${yang} to ${yang + dy}, Yin ${yin} to ${yin + di}.`,
+        warn: nk > have ? "It would have cost more Chi than the pools hold: the Storyteller decides whether they fed." : (y + i <= 0 ? "No Chi left: hungry. Feed with the Hunt button." : null)});
     }
   }
   // B6322: a shapechanger's Rage is not added here: WoDX Actions' moonRise already gives moon Rage after every skip

@@ -66,7 +66,8 @@ export async function onSkip(info) {
   if ( nights < 1 ) return null;
   // The nightfall card runs New Night itself when Dawn and dusk is automatic; then the last night is already settled
   const lastNightHandled = actSetting("dawnDusk", "prompt") === "auto";
-  const opts = {nights, willpowerMode: actSetting("willpowerRecovery", "night"), nightlyBlood: actSetting("nightlyBlood", true), lastNightHandled};
+  const opts = {nights, willpowerMode: actSetting("willpowerRecovery", "night"), nightlyBlood: actSetting("nightlyBlood", true), lastNightHandled,
+    riseChiPaid: actSetting("daySleep", true) !== false};
   const rows = [];
   const only = Array.isArray(info.actorIds) ? new Set(info.actorIds) : null;
   for ( const a of game.actors.filter(x => isPC(x) && (!only || only.has(x.id))) ) {

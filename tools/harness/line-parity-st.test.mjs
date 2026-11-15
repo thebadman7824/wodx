@@ -36,6 +36,9 @@ test("between nights: a Kuei-jin pays Chi to rise; Rage stays with WoDX Actions'
   assert.ok(k.lines.some(l => l.key === "chi"));
   assert.ok(!k.lines.some(l => l.key === "blood"), "no blood for a Cathayan");
   assert.match(U.betweenPlan({kueijin: true, chi: {yang: 1, yin: 0}}, {nights: 3}).lines.find(l => l.key === "chi").warn, /more Chi/);
+  const paid = U.betweenPlan({kueijin: true, chi: {yang: 3, yin: 1}}, {nights: 3, riseChiPaid: true});
+  assert.equal((paid.delta.yangchi ?? 0) + (paid.delta.yinchi ?? 0), -2, "day sleep's rising already paid the last night");
+  assert.equal(U.betweenPlan({kueijin: true, chi: {yang: 3, yin: 1}}, {nights: 1, riseChiPaid: true}).delta.yangchi, undefined);
   const g = U.betweenPlan({shifter: true, rage: {temp: 1, perm: 5}}, {nights: 2});
   assert.equal(g.delta.rage, undefined, "B6322: moonRise in WoDX Actions already gives Rage after a skip, so it is not counted twice");
   const v = U.betweenPlan({vampire: true, blood: {value: 5, max: 10}}, {nights: 2});
