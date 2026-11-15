@@ -177,7 +177,7 @@ export async function run() {
         seen.open = await waitFor(() => tps().every(b => !b.disabled), 4000);
         const before = tps().map(b => [...(b.system?.destinations ?? [])].join());
         const w = await A.effects.apply(item(evo("paths", 5), demon), "Gate Evo Demon");
-        seen.warped = await waitFor(() => tps().some(b => (b.system?.destinations ?? []).includes?.(b.parent?.uuid)), 4000);
+        seen.warped = await waitFor(() => tps().some(b => [...(b.system?.destinations ?? [])].includes(b.parent?.uuid)), 4000);
         await undo(w);
         seen.back = await waitFor(() => tps().map(b => [...(b.system?.destinations ?? [])].join()).join("|") === before.join("|"), 4000);
       } finally { Hooks.off("renderDialogV2", pickHook); await undo(lay); }
@@ -209,23 +209,25 @@ export async function run() {
     const [t1, , tA, tFar] = await G.tokens(scene, [{actor: d1, x: 3, y: 6, actorLink: true}, {actor: d2, x: 5, y: 6, actorLink: true},
       {actor: aimed, x: 4, y: 7, actorLink: true}, {actor: far, x: 14, y: 12, actorLink: true}]);
     await waitFor(() => t1?.object && tA?.object && tFar?.object, 6000);
-    const agg = a => Number(a.system?.health?.damage?.aggravated) || 0;
+    // B6446: a mortal takes the Fire of Heaven as lethal (Combat: mortals treat aggravated damage as lethal), so the burn is
+    // read as lethal and aggravated together
+    const hurt = a => (Number(a.system?.health?.damage?.lethal) || 0) + (Number(a.system?.health?.damage?.aggravated) || 0);
 
     await G.step("13. Hand of Faith turns the Fire of Heaven back on its user", async () => {
       const hold = await A.effects.apply({key: "banish", target: d2.uuid, by: d2.uuid, caster: d2.uuid,
         out: {kind: "seize", label: "Hand of Faith", successes: 20, timed: {kind: "scene"}, source: "gate"}}, "Gate Evo Seizer");
       const ready = () => d2.effects.some(e => e.flags?.["wodx-chronicle"]?.timed?.key === "wodx-act-seize");
       await waitFor(ready, 4000);
-      const was = {self: agg(d1), aimed: agg(aimed)}, readied = ready();
+      const was = {self: hurt(d1), aimed: hurt(aimed)}, readied = ready();
       tA.object?.setTarget?.(true, {releaseOthers: true, groupSelection: false});
       await A.limits?.clear?.(d1);
       await tens();
       try {
         await evokeAs(d1, "celestials:4");
-        await waitFor(() => agg(d1) > was.self, 8000);
+        await waitFor(() => hurt(d1) > was.self, 8000);
       } finally { CONFIG.Dice.randomUniform = dice0; tA.object?.setTarget?.(false); }
-      G.ok("13. Hand of Faith turns the Fire of Heaven back on its user", readied && agg(d1) > was.self && agg(aimed) === was.aimed && !ready(),
-        {readied, self: [was.self, agg(d1)], aimed: [was.aimed, agg(aimed)], spent: !ready(), hold: Object.keys(hold ?? {})});
+      G.ok("13. Hand of Faith turns the Fire of Heaven back on its user", readied && hurt(d1) > was.self && hurt(aimed) === was.aimed && !ready(),
+        {readied, self: [was.self, hurt(d1)], aimed: [was.aimed, hurt(aimed)], spent: !ready(), hold: Object.keys(hold ?? {})});
     });
 
     await G.step("14. Touch from Afar: the next Fire of Heaven burns the one named", async () => {
@@ -233,16 +235,16 @@ export async function run() {
         out: {kind: "remote", label: "Touch from Afar", far: {uuid: tFar.uuid, name: far.name}, timed: {kind: "scene"}, source: "gate"}}, "Gate Evo Caster");
       const reach = () => !!d1.getFlag(MOD, "farTarget");
       await waitFor(reach, 4000);
-      const was = agg(far), set = reach();
+      const was = hurt(far), set = reach();
       for ( const t of [...game.user.targets] ) t.setTarget(false, {releaseOthers: false});
       await A.limits?.clear?.(d1);
       await d1.update({"system.advantages.faith.temporary": 6});
       await tens();
       try {
         await evokeAs(d1, "celestials:4");
-        await waitFor(() => agg(far) > was, 8000);
+        await waitFor(() => hurt(far) > was, 8000);
       } finally { CONFIG.Dice.randomUniform = dice0; }
-      G.ok("14. Touch from Afar: the next Fire of Heaven burns the one named", set && agg(far) > was && !reach(), {set, far: [was, agg(far)], spent: !reach()});
+      G.ok("14. Touch from Afar: the next Fire of Heaven burns the one named", set && hurt(far) > was && !reach(), {set, far: [was, hurt(far)], spent: !reach()});
     });
   } catch (e) {
     G.R.errors.push(String(e?.message ?? e));

@@ -126,3 +126,11 @@ test("B5795: a pact gift does what it gives", async () => {
   assert.match(src, /data = \{kind: "effects", caster: actor\.name, items\}/);
   assert.doesNotMatch(src, /"it answers" : "nothing comes"/);
 });
+
+test("B6445: a path's other end is found through a Set of destinations", () => {
+  const b = {system: {destinations: new Set(["Scene.s.Region.a"])}};
+  assert.deepEqual(ACT.destsOf(b), ["Scene.s.Region.a"]);
+  assert.equal(ACT.destsOf(b).includes("Scene.s.Region.a"), true);
+  assert.deepEqual(ACT.destsOf({system: {destinations: ["x"]}}), ["x"]);
+  assert.deepEqual(ACT.destsOf(null), []);
+});

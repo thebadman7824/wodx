@@ -237,6 +237,8 @@ async function questionAct(item, casterName, h, caster, a) {
 /* ---- Lore of Paths ---- */
 
 const pathRegions = scene => [...(scene?.regions ?? [])].filter(r => r.flags?.[MOD]?.[PATH_FLAG]);
+/** A teleport behaviour's destinations as an array (Foundry keeps them in a Set). */
+export const destsOf = b => [...(b?.system?.destinations ?? [])];
 
 async function pathAct(item, casterName, h, caster) {
   const o = item.out ?? {}, scene = canvas?.scene;
@@ -266,7 +268,8 @@ async function pathAct(item, casterName, h, caster) {
   if ( !all.length ) return {note: `${o.label}: no path on this scene to work on`};
   const pick = all.length === 1 ? all[0] : h.docOf(await h.choose(`Which path does ${casterName} ${o.op}?`, all.map(r => [r.uuid, r.name])));
   if ( !pick ) return {note: `${o.label}: no path chosen`};
-  const twin = all.find(r => r.id !== pick.id && r.behaviors?.some?.(b => (b.system?.destinations ?? []).includes?.(pick.uuid)));
+  // B6445: a teleport behaviour's destinations are a Set (no includes), so they are spread before the look-up
+  const twin = all.find(r => r.id !== pick.id && r.behaviors?.some?.(b => destsOf(b).includes(pick.uuid)));
   const both = [pick, twin].filter(Boolean);
   if ( o.op === "conceal" ) {
     const prev = both.map(r => ({uuid: r.uuid, visibility: r.visibility}));
@@ -286,7 +289,7 @@ async function pathAct(item, casterName, h, caster) {
     if ( !to ) return {note: `${o.label}: the path is left as it was`};
     const b = pick.behaviors.find(x => x.type === "teleportToken");
     if ( !b ) return {note: `${o.label}: that region carries no one`};
-    const prev = [{uuid: b.uuid, destinations: [...(b.system?.destinations ?? [])]}];
+    const prev = [{uuid: b.uuid, destinations: destsOf(b)}];
     await b.update({"system.destinations": [to === "loop" ? pick.uuid : to]});
     const eff = await ends({op: "warp", prev});
     return {pathPrev: prev, effect: eff?.uuid ?? null};

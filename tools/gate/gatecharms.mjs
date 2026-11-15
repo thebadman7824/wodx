@@ -231,7 +231,10 @@ export async function run() {
       aim2(true);
       await tens();
       try { await K.use(body(), "updraft"); } finally { CONFIG.Dice.randomUniform = dice0; }
-      await waitFor(() => (Number(v2()?.elevation) || 0) > e0, 6000);
+      // B6447: the lift is a fly move that Foundry animates, so the height is read once it has settled on a whole number of
+      // 5-foot steps, not at the first sign of rising
+      const rise = () => (Number(v2()?.elevation) || 0) - e0;
+      await waitFor(() => rise() >= 5 && rise() % 5 === 0, 8000);
       const e1 = Number(v2()?.elevation) || 0, flying = v2()?.movementAction;
       const risen = [...(v2()?.actor?.effects ?? [])].some(e => /Risen|Updraft/.test(e.name ?? ""));
       aim2(false);

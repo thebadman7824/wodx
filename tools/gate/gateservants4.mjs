@@ -78,7 +78,8 @@ export async function run() {
     await G.step("6b. the pact gift answers", async () => {
       const A = game.wodxActions;
       const dice0 = CONFIG.Dice.randomUniform;
-      for ( const u of [0.05, 0.95] ) { CONFIG.Dice.randomUniform = () => u; if ( (await new Roll("1d10").evaluate()).dice[0].results[0].result === 10 ) break; }
+      let forced = false;
+      for ( const u of [0.05, 0.95] ) { CONFIG.Dice.randomUniform = () => u; if ( (await new Roll("1d10").evaluate()).dice[0].results[0].result === 10 ) { forced = true; break; } }
       const since = Date.now();
       const ok = new Promise(resolve => {
         const id = Hooks.on("renderDialogV2", (app, el) => {
@@ -97,7 +98,11 @@ export async function run() {
       await wait(600);
       const m = game.actors.get(mortal.id);
       const boost = Math.max(Number(A.powerMods?.of?.(m, {tags: ["charisma", "social"]})?.dice) || 0, Number(A.powerMods?.of?.(m, {tags: ["strength", "physical"]})?.dice) || 0);
-      G.ok("6b. the pact gift answers", !!card && items.length >= 1 && boost > 0, {card: !!card, items: items.length, boost});
+      // B6447: the card's own words go in the details, so a failed roll ("nothing comes") is told from a card with no items
+      const said = String(card?.content ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 240);
+      const wpNow = m?.system?.advantages?.willpower ?? {};
+      G.ok("6b. the pact gift answers", !!card && items.length >= 1 && boost > 0,
+        {card: !!card, items: items.length, boost, forced, willpower: [wpNow.temporary, wpNow.permanent], said});
     });
     await G.step("7. a True Name brings the demon to the map", async () => {
       await C.propose({type: "wodx-actions.pressName", key: `gate4:press:${mortal.id}`, title: "gate", data: {caller: mortal.id, demon: demon.id, cmd: "kneel", scene: scene.id}});
