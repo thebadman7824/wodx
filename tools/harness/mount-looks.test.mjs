@@ -31,8 +31,11 @@ test("every look has its sheet, of its frames by four facings, and every kind a 
   }
 });
 
-test("a mount is drawn no wider than eight squares and to the people's scale", () => {
-  for ( const kind of MR.kinds() ) for ( const look of MR.looksOf(kind) ) assert.ok(look.w <= 8 * 56 && look.h <= 8 * 56, `${kind}/${look.id}`);
+test("a mount is drawn no wider than eight squares and to the people's scale; a train or a tram as long as it truly is (B6073)", () => {
+  const LONG = {train: 30, tram: 22};
+  for ( const kind of MR.kinds() ) for ( const look of MR.looksOf(kind) ) assert.ok(look.w <= (LONG[kind] ?? 8) * 56 && look.h <= 8 * 56, `${kind}/${look.id}`);
+  // a sheet stays within what every graphics card loads (4096 pixels a side)
+  for ( const kind of MR.kinds() ) for ( const look of MR.looksOf(kind) ) assert.ok(look.w * MR.kindOf(kind).frames <= 4096 && look.h * 4 <= 4096, `${kind}/${look.id} sheet`);
   assert.equal(MR.pixel(112), 2);
 });
 
@@ -145,4 +148,19 @@ test("a vehicle sheet's style narrows the shapes of its year, and worn takes rus
   const car = MR.lookFor("car", 1995, {style: "sedan"});
   assert.equal(MR.schemeFor(car, {finish: "worn", seed: "x"}).id, "rust");
   assert.equal(MR.schemeFor(car, {finish: "worn", colour: "red", seed: "x"}).id, "red");
+});
+
+test("snow and rail: sleds, snow machines, trains and trams have looks for their years (B6070 to B6075)", () => {
+  assert.deepEqual(MR.erasOf("sled"), [0, 1600, 1800, 1900, 1990]);
+  assert.deepEqual(MR.erasOf("snowmobile"), [1910, 1935, 1960, 1990, 2040]);
+  assert.deepEqual(MR.erasOf("train"), [1825, 1850, 1900, 1935, 1960, 1990, 2040]);
+  assert.deepEqual(MR.erasOf("tram"), [1860, 1895, 1930, 1960, 1990, 2040]);
+  assert.equal(MR.lookFor("sled", 1197, {style: "dogsled"}).id, "0-dogsled");
+  assert.equal(MR.lookFor("train", 1888, {style: "american"}).id, "1850-american");
+  assert.equal(MR.lookFor("train", 1940, {finish: "luxury", seed: "x"}).id, "1935-streamliner");
+  assert.equal(MR.lookFor("tram", 1999, {style: "lowfloor"}).id, "1990-lowfloor");
+  // a train is longer than the road's vehicles, and its drivers show in the cab
+  const ex = MR.lookFor("train", 1910, {style: "express"});
+  assert.ok(ex.w > 20 * 56 && MR.seatOf(ex, "right", 0).cut > 0);
+  assert.ok(ex.seats.right.length >= 6);
 });

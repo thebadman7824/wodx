@@ -67427,7 +67427,7 @@
 "occult"
 ],
 "title": "The dead of the conquest",
-"text": "The house reading has the plagues and the siege fill the lands of the dead beyond anything their keepers can bear; the wraiths' books tell of a Dark Kingdom of the Americas broken in these years.",
+"text": "The house reading has heretic wraiths fleeing the Stygian inquisitors cross the sea with the sailors and fall on the Dark Kingdom of Obsidian in the years of the conquest, while the plague and the siege dead swell the storm; the kingdom's few survivors withdraw to Mictlan, deep in the Tempest.",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "links": [
 {
@@ -75584,7 +75584,7 @@
 "occult"
 ],
 "title": "What was at Salem",
-"text": "The house reading has almost none of the accused hold any power; the hunters' and mages' books both treat Salem as a warning about fear, and each blames the other's kind.",
+"text": "The house reading has almost none of the accused hold any power; the Verbena take no part in the trials, and only later does Salem become a gathering place for their kind.",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "links": []
 },
@@ -76014,7 +76014,7 @@
 "revolution"
 ],
 "title": "The dead walk with the living",
-"text": "The house reading has the lwa and the dead of the plantations counted among the rebels by both sides; the island's Shadowlands stay restless for two centuries.",
+"text": "The house reading has the Caribbean dead, Les Invisibles, who kept the old rites alive among the enslaved, fan the revolt; the island's Shadowlands stay restless, battered by storms and by Baka, for two centuries.",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "links": []
 },
@@ -77422,11 +77422,10 @@
 "place": "Australia",
 "tags": [
 "occult",
-"war",
-"massacre"
+"empire"
 ],
-"title": "The War of Tears begins",
-"text": "The house reading puts in these decades the first killings of the Bunyip by Garou who came with the settlers, the war that the tribes later mourn.",
+"title": "The Squattocracy",
+"text": "The house reading has servants of the Wyrm among the richest graziers form a Squatters' Council to push into the interior; the Bunyip and the land's peoples withdraw before them, and the Garou who came with the settlers grow bitter at a tribe that will not speak to them.",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "links": [
 {
@@ -85761,7 +85760,8 @@
 "kind": "tied",
 "lines": [
 "Werewolf",
-"Vampire"
+"Vampire",
+"Wraith"
 ],
 "region": "Africa",
 "place": "Congo",
@@ -85770,7 +85770,7 @@
 "empire"
 ],
 "title": "The scramble",
-"text": "The house reading has every hidden power of Europe follow the flags into Africa and find the continent already held: by its own shapeshifters, its own undead and its own dead.",
+"text": "The house reading has every hidden power of Europe follow the flags into Africa and find the continent already held: by its own shapeshifters, by Laibon who fought the Portuguese centuries before, and by the dead of the Bush of Ghosts behind a false Ivory Queen.",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "links": [
 {
@@ -108910,6 +108910,8 @@
 "month": 4,
 "kind": "tied",
 "lines": [
+"Vampire",
+"Werewolf",
 "Wraith"
 ],
 "region": "Africa",
@@ -108918,8 +108920,8 @@
 "massacre",
 "occult"
 ],
-"title": "The Shadowlands of Rwanda",
-"text": "The house reading has the hundred days drown the African lands of the dead in new wraiths faster than any power there can gather them.",
+"title": "The killing in Rwanda",
+"text": "The house reading keeps the hundred days a mortal crime: no Laibon brought them about, though some elders use the chaos to strike at a weakened magaji, and the Wyrm feeds on the killing.",
 "ref": "Real history; the World of Darkness reading is a house rule",
 "branch": "classic",
 "links": []

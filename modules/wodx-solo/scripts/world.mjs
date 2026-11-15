@@ -170,7 +170,7 @@ let ticking = false;
  * One look at the night for the lone player's character. force (the gate): skip the switch and the chance, and roll
  * this part of the night again. -> {key, kind, text, tokens} when people came, else null
  */
-export async function nightTick({force = false, actorId = null, sceneId = null, kind: forceKind = null} = {}) {
+export async function nightTick({force = false, actorId = null, sceneId = null, kind: forceKind = null, title = "The night brought someone", salt = ""} = {}) {
   if ( ticking ) return null;
   if ( !force && (!H.isSeat() || H.get("encounters") === false) ) return null;
   if ( !game.user.isGM ) return null;
@@ -199,12 +199,12 @@ export async function nightTick({force = false, actorId = null, sceneId = null, 
     if ( !due.roll ) return null;
     if ( !force ) await game.settings.set(MOD, "rolled", W.markRolled(H.get("rolled"), key));
     if ( !due.comes ) return null;
-    const text = night.road({key: `solo:${key}:${scene.id}`, town: kind === "town"});
+    const text = night.road({key: `solo:${key}:${scene.id}${salt}`, town: kind === "town"});
     if ( !text ) return null;
     const spot = W.arrivalSpot({x: token.x, y: token.y, width: token.width}, {width: scene.width, height: scene.height, padding: scene.padding, grid: {size: scene.grid?.size}}, wallTest(scene, token));
     if ( !spot ) return null;
-    const tokens = await night.place(text, {key: `solo:${key}:${scene.id}`, scene, x: spot.x, y: spot.y, hidden: false});
-    await H.log({kind: "note", source: MOD, title: "The night brought someone", note: `${text} (${scene.navName || scene.name})`});
+    const tokens = await night.place(text, {key: `solo:${key}:${scene.id}${salt}`, scene, x: spot.x, y: spot.y, hidden: false});
+    await H.log({kind: "note", source: MOD, title, note: `${text} (${scene.navName || scene.name})`});
     return {key, kind, text, spot, tokens: (tokens ?? []).map(t => t.id)};
   } finally { ticking = false; }
 }

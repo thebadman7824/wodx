@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.100.1 (A captive's things are never put into a pile of loose gear on the ground (B6086); they still go into a chest, a cabinet or the stores)
 - 0.100.0 (Grieving: heartbreak takes a social die for a week (B5991))
 - 0.99.0 (Cults that give what they promise (B5960 to B5964))
 - 0.98.0 (Aftercare (Aftercare Desk a1-a12, B5710 to B5721, Ben's picks 2026-11-15). Rules in carry-aftercare-rules.mjs, the Foundry side in carry-aftercare.mjs; api.carryAftercare; Where NPCs take the fallen (B5087 to B5089, Ben's choice "Real destinations (all three)", 2026-11-15). Rules in carry-goal-rules.mjs, the Foundry side in carry-goals.mjs; api.carryGoals; NPCs and the fallen (B5077, Ben's Carry Bodies Desk c8): rescue, hide and capture through WoDX Interactables' carrying, with Ben's note that NPCs also capture incapacitated rivals, enemies and hostile player characters. An NPC with no hand free drops its load to fight (dropping is free). The api's orderCarry has an NPC carry someone at once outside a fight, or on its turn in one (B5079))

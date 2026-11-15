@@ -100,6 +100,9 @@ export function viewOf(actor) {
     forcedSheet: !!flagGet(actor, "wodx-sheets", "sheet"),
     // B5022: Fetters, and the people now dead whose names a Fetter may carry
     fetters: items.filter(i => i.type === "Trait" && i.system?.type === "wod.types.fetter").map(i => ({id: i.id, name: i.name, value: n(i.system?.value)})),
+    // B6104: a sealed Fetterguard (WoDX Library's soulforged box) keeps as many Fetters from harm as it holds likenesses
+    fetterguard: items.filter(i => { const w = i.flags?.["wodx-library"]?.wonder; return w?.key === "fetterguard" && !w.spent && n(w.used?.seal) > 0; })
+      .reduce((m, i) => Math.max(m, n(i.flags["wodx-library"].wonder.pool?.value)), 0),
     // B5391: the towns over time a place Fetter may name (WoDX Storyteller)
     towns: actor.type === "Wraith" ? townsForFetters() : [],
     deadNames: actor.type === "Wraith" ? (game.actors?.contents ?? []).filter(a => a.id !== actor.id && (a.statuses?.has?.("dead") || Number.isFinite(Number(a.flags?.["wodx-creation"]?.chronology?.died)))).map(a => a.name) : []
