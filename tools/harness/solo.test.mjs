@@ -194,9 +194,10 @@ test("main.mjs: the switch sets and restores, the seat presses Accept, a player 
 
 /* WoDX Solo 0.2.0: the player's panel (B2640 to B2644) */
 
-test("the panel holds step 2's buttons and nothing of the Storyteller's", () => {
-  assert.deepEqual(R.PANEL.map(b => b.id), ["time", "travel", "pause", "stuck", "curtain", "carry"]);
-  const src = readFileSync(join(root, "modules/wodx-solo/scripts/panel.mjs"), "utf8");
+test("the panel holds step 2's and step 3's buttons and nothing of the Storyteller's", () => {
+  assert.deepEqual(R.PANEL.map(b => b.id), ["oracle", "leads", "time", "travel", "pause", "stuck", "curtain", "carry"]);
+  // B5980, B5982: the oracle's and the Leads page's actions live in world.mjs
+  const src = ["panel.mjs", "world.mjs"].map(f => readFileSync(join(root, "modules/wodx-solo/scripts", f), "utf8")).join("\n");
   for ( const b of R.PANEL ) assert.ok(new RegExp(`\\b${b.id}\\(\\)`).test(src), `no action for ${b.id}`);
 });
 

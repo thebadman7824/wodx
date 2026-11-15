@@ -20,6 +20,7 @@
  *   the tools    Storyteller tools the lone player may switch on from the panel, answered by the seat (st-tools.mjs, B4800)
  *   the fallen   a companion carries the player's character when it goes down, and anyone else the panel names
  *                (companions.mjs, B5079)
+ *   the world    the oracle, the Leads page and night encounters on the map, step 3 (world.mjs, B5980 to B5985)
  *
  * It never acts in the Live world. Everything here runs on the active Storyteller's client, except the notice a
  * player gets when the seat is empty.
@@ -29,6 +30,7 @@ import {NEVER_AUTO} from "../../wodx-chronicle/scripts/approvals-rules.mjs";
 import {registerPanelSettings, installPanel, panelApi} from "./panel.mjs";
 import {registerStSettings, installStTools, stApi} from "./st-tools.mjs";
 import {registerCarrySettings, installCarry, carryApi} from "./companions.mjs";
+import {registerWorldSettings, installWorld, worldApi} from "./world.mjs";
 
 const MOD = "wodx-solo";
 const CHRON = "wodx-chronicle";
@@ -256,11 +258,12 @@ Hooks.once("init", () => {
   registerPanelSettings();
   registerStSettings();
   registerCarrySettings();
+  registerWorldSettings();
 });
 
 Hooks.once("ready", () => {
   const api = {
-    rules: R, isOn, isSeat, apply, restore, panel: panelApi, st: stApi, carry: carryApi,
+    rules: R, isOn, isSeat, apply, restore, panel: panelApi, st: stApi, carry: carryApi, world: worldApi,
     log: {entries: () => (game.user.isGM ? entries() : []), add: log,
       stalls: (since = 0) => (game.user.isGM ? R.stallReport(entries(), since) : R.stallReport([], since)),
       clear: () => (game.user.isGM ? game.settings.set(MOD, "log", R.blankLog()) : null)}
@@ -277,6 +280,7 @@ Hooks.once("ready", () => {
   Hooks.on("userConnected", (u, on) => { if ( on && !u.isGM ) setTimeout(() => { unpause(`${u.name} arrived`).catch(() => {}); follow(u); }, 1500); });
   installStTools({isOn, isSeat, blocked, log, entries, get, read, findButton});
   installCarry({isOn, isSeat, log, get});
+  installWorld({isOn, isSeat, log, get});
 
   if ( game.user.isGM ) watchPlayer();
   if ( !isOn() ) return;

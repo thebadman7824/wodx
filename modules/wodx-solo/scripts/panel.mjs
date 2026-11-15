@@ -198,6 +198,8 @@ const SEAT = {
 const CLIENT = {"curtain.rows": showCurtain};
 /** Other parts of the module add their asks and answers here (B4800). */
 export function addAsks(seat = {}, client = {}) { Object.assign(SEAT, seat); Object.assign(CLIENT, client); }
+/** ... and the panel buttons that open them (B5980): {id: () => ...} for a PANEL entry's id. */
+export function addActions(actions = {}) { Object.assign(ACTIONS, actions); }
 
 /**
  * Foundry hands a module's socket listener the sending user's id after the data. An ask whose payload names another
@@ -305,7 +307,7 @@ export class SoloPanel extends ApplicationV2 {
     // One main button; the rest under More, open once the player has opened it (B2831)
     div.innerHTML = `<button type="button" class="wsolo-next" data-action="act" data-id="${R.NEXT.id}" title="${esc(R.NEXT.hint)}"><i class="${R.NEXT.icon}"></i> ${esc(R.NEXT.label)}</button>
       <p class="wodx-quiet wsolo-next-hint">${esc(R.NEXT.hint)}</p>
-      <details class="wsolo-more"${SoloPanel.moreOpen ? " open" : ""}><summary>More: time, travel, pause, I am stuck, the curtain, carry the fallen</summary><div class="wsolo-buttons">${rest}${ST_UI.toggleHtml?.() ?? ""}</div></details>${ST_UI.toolsHtml?.() ?? ""}`;
+      <details class="wsolo-more"${SoloPanel.moreOpen ? " open" : ""}><summary>More: the oracle, leads, time, travel, pause, I am stuck, the curtain, carry the fallen</summary><div class="wsolo-buttons">${rest}${ST_UI.toggleHtml?.() ?? ""}</div></details>${ST_UI.toolsHtml?.() ?? ""}`;
     div.querySelector("details.wsolo-more")?.addEventListener("toggle", ev => { SoloPanel.moreOpen = ev.target.open; });
     return div;
   }
