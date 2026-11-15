@@ -5,6 +5,7 @@
  * chiminage. Rules basis by era (B41): Dark Ages: Werewolf in the Dark Ages profiles, W20 elsewhere.
  * Every card carries its page reference. Nothing here copies book text.
  */
+import * as LIM from "./limits.js";
 import { spendTime } from "./spend-time.js";
 import * as P from "./profiles.js";
 import * as G from "./garou-rules.js";
@@ -369,7 +370,7 @@ export function build(ctx) {
 
     async function remainActive(actor) {
         const i = info(actor), b = basis();
-        const scene = canvas?.scene?.id ?? "none";
+        const scene = `s${ctx.api?.()?.limits?.sceneNo?.() ?? 0}`; // B4920: the one scene count
         if (actor.getFlag?.(MOD, "remainedActive") === scene) return ctx.notify("Only once per scene.");
         const content = `<form><p><b>${esc(actor.name)}</b> is below Incapacitated. Rage roll (${i.rage.perm} dice) at 8; each success heals a level; once a scene.</p>
           <div class="form-group"><label>The worst damage is</label><select name="type" data-fixed><option value="aggravated">aggravated</option><option value="lethal">lethal</option><option value="bashing">bashing</option></select></div></form>`;
@@ -457,6 +458,9 @@ export function build(ctx) {
         return dialog(`Use a Gift: ${actor.name}`, content, "Use", async fd => {
             const it = actor.items.get(fd.gift); if (!it) return null;
             const g = giftData(it);
+            // B4921: a Gift the books (or the house rule) say is used up is refused before anything is spent
+            const lim = await LIM.gate(actor, { name: it.name, level: g?.l ?? 0 });
+            if (!lim) return null;
             const c = G.giftCost(g?.c);
             const notes = [];
             for (const [res, pts] of [["gnosis", c.gnosis + (c.variable || c.per ? n(fd.extra) : 0)], ["rage", c.rage], ["willpower", c.willpower]]) {
@@ -471,10 +475,10 @@ export function build(ctx) {
             const code = g?.r ?? (it.system?.dice1 ? `${it.system.dice1}${it.system.dice2 ? `+${it.system.dice2}` : ""}` : null);
             if (code) {
                 const pool = poolOf(actor, code, i);
-                const rr = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), fd.diff);
+                const rr = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), n(fd.diff) + lim.diff);
                 rolls.push(rr.roll);
                 successes = rr.botch ? 0 : rr.successes;
-                body += rollBlock(pool.label, rr, [n(fd.bonus) ? `bonus ${fd.bonus}` : ""].filter(Boolean));
+                body += rollBlock(pool.label, rr, [n(fd.bonus) ? `bonus ${fd.bonus}` : "", lim.diff ? `Drained +${lim.diff}` : ""].filter(Boolean));
             }
             if (g) body += `<div class="vta-note">${esc(g.e)} <span class="wodx-quiet">(${giftRef(g)})</span></div>`;
             const dur = successes > 0 ? G.giftDuration(g?.t, successes) : null;
@@ -495,8 +499,9 @@ export function build(ctx) {
                 body += pp.html;
                 fxItems = pp.items.filter(x => x.route !== "off" && x.route !== "st");
             }
+            await lim.done({ successes });
             return post(actor, `${actor.name}: ${esc(it.name)}`, body, rolls.filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
-        }, { render: root => { describe(root); root.querySelector("[name=gift]")?.addEventListener("change", () => describe(root));
+        }, { render: root => { LIM.decorate(root, { actor, sel: "select[name=gift]", powerOf: v => { const it = actor.items.get(v); return it ? { name: it.name, level: giftData(it)?.l ?? 0 } : null; } }); describe(root); root.querySelector("[name=gift]")?.addEventListener("change", () => describe(root));
             aim(root, { actor, lib: "gift", power: r => { const it = actor.items.get(r.querySelector("[name=gift]")?.value); return it ? (giftData(it) ?? { id: it.id, n: it.name }) : null; }, onPick: a => { tgt = a; describe(root); } }); } });
     }
 
@@ -893,7 +898,12 @@ export function build(ctx) {
         if (k === "scar") return battleScar(a);
     }
 
-    return { shift, rageRoll, enterFrenzy, endFrenzy, spendRage, remainActive, meditate, useGift, learnGift, performRite, summonSpirit, useFetish,
+    /** B4926: the Gifts an NPC may choose by itself. */
+    function powersFor(actor) {
+        return giftItems(actor).map(it => { const g = giftData(it); return { use: "useGift", field: "gift", value: it.id, name: it.name, level: g?.l ?? 0,
+            set: g?.book === "W20 CB" ? "fera" : g?.book === "W20" ? "w20" : "gift", id: g?.book === "W20" ? (g?.kw ?? "") : (g?.id ?? "") }; });
+    }
+    return { powersFor, shift, rageRoll, enterFrenzy, endFrenzy, spendRage, remainActive, meditate, useGift, learnGift, performRite, summonSpirit, useFetish,
         awardRenown, applyRenown, accomplishment, battleScar, deliriumCheck, curse, kinfolk, chiminage, moonRise, regenRound, embracePain, onChatButton, setForm, info };
 }
 

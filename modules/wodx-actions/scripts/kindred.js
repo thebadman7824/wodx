@@ -14,6 +14,7 @@
  * Built by main.js with its helpers (ctx), like the Garou engine. Pure rules: kindred-rules.js.
  */
 
+import * as LIM from "./limits.js";
 import { spendTime } from "./spend-time.js";
 import * as K from "./kindred-rules.js";
 import * as P from "./profiles.js";
@@ -180,6 +181,9 @@ export function build(ctx) {
         return dialog(`Use a Discipline: ${actor.name}`, content, "Use", async fd => {
             const p = list.find(x => x.id === fd.power);
             if (!p) return null;
+            // B4921: a power the books (or the house rule) say is used up is refused before anything is spent
+            const lim = await LIM.gate(actor, { name: p.n, disc: p.d, level: p.l });
+            if (!lim) return null;
             const spendB = Math.max(0, n(fd.blood)), spendW = Math.max(0, n(fd.wp));
             const bb = ctx.blood(actor);
             if (spendB > bb.value) return ctx.notify(`${actor.name} has only ${bb.value} blood.`);
@@ -196,10 +200,10 @@ export function build(ctx) {
                 // The target's Iron Will or Magic Resistance makes a mind power or magic harder (V20 pp. 485, 493)
                 const target = [...(game.user.targets ?? [])][0]?.actor ?? null;
                 const rm = target && target !== actor ? TH.resistMods(target, TH.powerTags(p.d), actor) : { diff: 0, parts: [] };
-                const r = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), Math.min(10, n(fd.diff) + rm.diff), { specialty: fd.specialty });
+                const r = await rollPool(Math.max(0, pool.dice + n(fd.bonus)), Math.min(10, n(fd.diff) + rm.diff + lim.diff), { specialty: fd.specialty });
                 rolls.push(r.roll);
                 successes = r.botch ? 0 : r.successes;
-                body += rollBlock(pool.label, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...rm.parts], fd.specialty);
+                body += rollBlock(pool.label, r, [...(n(fd.bonus) ? [`bonus ${fd.bonus}`] : []), ...rm.parts, ...(lim.diff ? [`Drained +${lim.diff}`] : [])], fd.specialty);
                 if (r.botch) body += `<div class="vta-warn">Botch: the power turns on its user or fails badly (see the page).</div>`;
             }
             body += `<div class="vta-note">${esc(p.e)} <span class="wodx-quiet">(${p.book ?? "VtDA20"} p. ${p.p ?? "?"})</span></div>`;
@@ -227,8 +231,9 @@ export function build(ctx) {
             const fxItems = (fx?.items ?? []).filter(x => x.route !== "off" && x.route !== "st");
             // Who could see it, if the power showed (3.42.0): the Storyteller judges whether it did
             if (!p.passive && setting("witnessAsk")) revealed(actor, { event: `used ${p.n}`, ask: true }).catch(e => console.error("WoDX |", e));
+            await lim.done({ successes });
             return post(actor, `${actor.name}: ${esc(p.n)}`, body, rolls, fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
-        }, { width: 540, render: root => { describe(root); root.querySelector("[name=power]")?.addEventListener("change", () => describe(root)); root.querySelector("[name=attr]")?.addEventListener("change", () => describe(root));
+        }, { width: 540, render: root => { LIM.decorate(root, { actor, powerOf: v => { const q = list.find(x => x.id === v); return q && { name: q.n, disc: q.d, level: q.l }; } }); describe(root); root.querySelector("[name=power]")?.addEventListener("change", () => describe(root)); root.querySelector("[name=attr]")?.addEventListener("change", () => describe(root));
             aim(root, { actor, lib: "disc", power: r => list.find(x => x.id === r.querySelector("[name=power]")?.value), onPick: a => { tgt = a; describe(root); } }); } });
     }
 
@@ -979,7 +984,15 @@ export function build(ctx) {
         });
     }
 
-    return { prestationJournal: () => BOONJ.ensure(), useDiscipline, castRitual, setRoad, roadOf, boons, downtime, masquerade, masqEntries: () => MASQJ.entries(), markHuntSeen: async id => { const l = MASQJ.entries(); const e = l.find(x => x.id === id); if (e) { e.huntSeen = true; await writeMasq(l); } }, recordBreach, setWitnessState, witnessStep, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt,
+    /** B4926: the Discipline powers an NPC may choose by itself (the window's own list, with its option values). */
+    function powersFor(actor) {
+        if (!DATA.disc) return [];
+        const era = (() => { try { return game.modules.get("wodx-chronicle")?.api?.eras?.activeEra?.()?.profile?.id ?? null; } catch (e) { return null; } })();
+        const lib = K.librarySet(DATA.disc.powers, DATA.v20?.powers, { darkAges: era === "dark-ages" || era === "long-night", v20Names: new Set(Object.keys(PK.LINE_KEYWORDS.v20 ?? {})) });
+        return K.powersFor(lib, sheetDisciplines(actor)).filter(p => !p.passive && p.r).map(p => ({ use: "useDiscipline", field: "power", value: p.id, name: p.n, disc: p.d, level: p.l,
+            set: p.book === "V20" ? "v20" : "disc", id: p.book === "V20" ? p.kw : p.id }));
+    }
+    return { powersFor, prestationJournal: () => BOONJ.ensure(), useDiscipline, castRitual, setRoad, roadOf, boons, downtime, masquerade, masqEntries: () => MASQJ.entries(), markHuntSeen: async id => { const l = MASQJ.entries(); const e = l.find(x => x.id === id); if (e) { e.huntSeen = true; await writeMasq(l); } }, recordBreach, setWitnessState, witnessStep, witnessesOf, observersOf, revealed, placeOf, logEvent, sinPrompt,
         enterTorpor, onDamage, onBlood, onClock, healAll, healPlan, healing, riseHeal, stayAwake, crinosSeen, marksSeen, sunlit, onChatButton, onSocket, targetTraits, poolOf, hierarchyTable };
 }
 

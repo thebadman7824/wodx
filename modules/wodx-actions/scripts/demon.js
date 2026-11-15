@@ -13,6 +13,7 @@
  *
  * Built by main.js with its helpers (ctx). Pure rules: demon-rules.js.
  */
+import * as LIM from "./limits.js";
 import * as D from "./demon-rules.js";
 import { searchBox } from "../../wodx-chronicle/scripts/search.mjs";
 import { aim } from "./aim.js";
@@ -61,7 +62,8 @@ export async function revertForm(actor, { attrs = {}, init = 0, lethalWas = null
 
 export function build(ctx) {
     const { post, rollPool, rollBlock, dialog, updateActor, spendWillpower, notify } = ctx;
-    const sceneKey = () => `${game.scenes?.viewed?.id ?? ""}:${Math.floor(game.time.worldTime / 3600)}`;
+    // B4920: one scene count for everything that works once a scene (End the scene, or a new active map)
+    const sceneKey = () => `s${LIM.sceneNo()}`;
     const flag = a => a.getFlag(MOD, "demon") ?? {};
     const dawnDay = () => Math.floor(((game.time?.worldTime ?? 0) - 6 * 3600) / 86400);
     const saveFlag = (a, patch) => ctx.setFlag(a, "demon", { ...flag(a), ...patch });
@@ -164,13 +166,17 @@ export function build(ctx) {
             const plan = D.evocationPlan({ attr: traitVal(actor, ak), ability: traitVal(actor, bk), level: e.level, loreRating: i.lores[lore], faithCost: e.faith, faithSpent: n(fd.fs),
                 ravage: thralls.length ? n(fd.rav) : 0, permFaith: i.faith.perm, faithPool: i.faith.temp, unbelievers: n(fd.unb), mod: n(fd.mod) });
             if (!plan.ok) { notify(`${actor.name}: ${plan.why}.`); return null; }
+            // B4921: an evocation the book (or the house rule) says is used up is refused before Faith is spent
+            const lim = await LIM.gate(actor, { name: e.name, disc: lore, level: e.level });
+            if (!lim) return null;
             if (fd.endOld && run.length) await saveFlag(actor, { running: live });
             // An empty pool: ravaged thralls stand in for the Faith the evocation needs (p. 169)
             const fromPool = plan.ravaged ? Math.min(plan.cost, i.faith.temp) : plan.cost;
             if (fromPool && !(await faith(actor, -fromPool))) return null;
             if (plan.cost > fromPool) plan.notes.push(`${plan.cost - fromPool} Faith drawn from the ravaged thralls`);
             const wp = !!fd.wp && await spendWillpower(actor, 1);
-            const r = await rollPool(plan.dice, plan.difficulty, { willpower: wp, autoSuccesses: plan.autoSuccesses });
+            const r = await rollPool(plan.dice, plan.difficulty + lim.diff, { willpower: wp, autoSuccesses: plan.autoSuccesses });
+            if (lim.diff) plan.notes.push(`Drained +${lim.diff}`);
             const out = D.evocationOutcome(r, { torment: i.torment.perm, chooseHigh: !!fd.dark, rule: i.rule });
             const notes = [];
             if (out.faithLoss) { await faith(actor, -1); notes.push("The botch costs a Faith point."); }
@@ -211,8 +217,9 @@ export function build(ctx) {
             for (const x of notes.filter(Boolean)) body += `<div class="vta-note">${esc(x)}</div>`;
             body += `<div class="vta-res">${esc(revealLine(info(actor).spent))}</div>`;
             body += `<div class="wodx-quiet">${REF} pp. 161, 169–171, ${D.LORES[lore].page}</div>`;
+            await lim.done({ successes: r.botch ? 0 : r.successes });
             return post(actor, `${actor.name} evokes ${e.name}`, body, [r.roll].filter(Boolean), fxItems.length ? { kind: "effects", caster: actor.name, items: fxItems } : undefined);
-        }, { width: 560, render: root => aim(root, { actor, lib: "evo", power: r => { const v = r.querySelector("[name=evo]")?.value; const e = known.find(x => opt(x) === v); return e ? { id: v, n: e.name } : null; } }) });
+        }, { width: 560, render: root => (LIM.decorate(root, { actor, sel: "select[name=evo]", powerOf: v => { const q = known.find(x => opt(x) === v); return q && { name: q.name, disc: q.lore, level: q.level }; } }), aim(root, { actor, lib: "evo", power: r => { const v = r.querySelector("[name=evo]")?.value; const e = known.find(x => opt(x) === v); return e ? { id: v, n: e.name } : null; } })) });
     }
 
     /* -- the apocalyptic form ---------------------------------------- */

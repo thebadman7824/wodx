@@ -17,6 +17,7 @@
  *   markDiablerie(...)     the black veins and the taint; auraNote(target) for Aura Perception; marks(actor) to see
  *                          and roll the taint; the victim's soul at nightfall when that setting is on.
  */
+import * as LIM from "./limits.js";
 import * as D from "./debts-rules.js";
 import * as B from "./beast-marks-rules.js";
 import * as C from "./c20-rules.js";
@@ -325,7 +326,8 @@ export function build(ctx) {
         const humanity = found ? found.key === "humanity" && !found.path : (!label || label.startsWith("wod.") || /humanity/i.test(label));
         return { rating: n(p.permanent ?? p.value), humanity };
     }
-    const sceneKey = () => `${game.scenes?.viewed?.id ?? ""}:${Math.floor(game.time.worldTime / 3600)}`;
+    // B4920: one scene count for everything that works once a scene (End the scene, or a new active map)
+    const sceneKey = () => `s${LIM.sceneNo()}`;
     /** Mods for a Social roll by a vampire on a mortal: the bearing when the roll did not already take it, and the blood to seem alive. */
     function bearingMods(actor, target, fd = {}, preset = {}) {
         if (!actor || !target || !preset?.aura || P.detectProfile(actor) !== "kindred" || P.detectProfile(target) !== "mortal") return null;
