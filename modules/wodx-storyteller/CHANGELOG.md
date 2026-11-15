@@ -2,6 +2,7 @@
 
 Newest first. Moved from the module table in docs/MODULES.md on 12 November 2026; add each new release at the top.
 
+- 0.110.0 (Closed shelves give their dice (B6026): the card promised two dice on research for a season but nothing read the flag. It is now a roll effect lasting 90 days)
 - 0.109.1 (WoDX Storyteller travelPlaces (B6043). Before, the first scene with a travel flag made only flagged scenes count as places; a card scene carries a travel flag so its trip runs over the country map, and would have hidden every unmarked scene from the Travel window)
 - 0.109.0 (NPCs make their own wonders (B5970 to B5974), behind the world setting "Wonders: NPCs make their own" (on), and only in lines whose crafting switch is on)
 - 0.108.0 (The primer for a scene far from home (B5940 to B5942): the players' primer follows the active scene's land as well as the homeland)
