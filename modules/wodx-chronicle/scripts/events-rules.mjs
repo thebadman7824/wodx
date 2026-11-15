@@ -36,7 +36,7 @@ export function inBranch(ev, futureBranch, cascade = "") {
 export function eventTable(events, {overrides = {}, futureBranch = false, cascade = ""} = {}) {
   return events.map(ev => effective(ev, overrides))
     .map(ev => ({...ev, live: ev.on && inBranch(ev, futureBranch, cascade), key: dateKey(ev)}))
-    .sort((a, b) => a.key - b.key || a.id.localeCompare(b.id));
+    .sort((a, b) => a.key - b.key || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
 }
 
 /** The ids of the live events whose date is on or before `date` ({year, month, day}). */

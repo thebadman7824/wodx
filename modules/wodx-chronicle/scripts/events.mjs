@@ -5,7 +5,7 @@ import EVENT_DATA from "../data/events.mjs";
 import FUTURE_DATA from "../data/future-events.mjs";
 import FUTURE_WORLD from "../data/future-world.mjs";
 import WORLD_HISTORY from "../data/world-history.mjs";
-import {eventTable, firedAt, diffFired, dateLabel, cleanOverride, newsCodes, heardIn, newsFor, NEWS_PARTS, capTold, isWorld, worldEraAt, shownIn} from "./events-rules.mjs";
+import {eventTable, dateKey, dateLabel, cleanOverride, newsCodes, heardIn, newsFor, NEWS_PARTS, capTold, isWorld, worldEraAt, shownIn} from "./events-rules.mjs";
 import * as place from "./place.mjs";
 
 /**
@@ -66,14 +66,30 @@ function today() {
   return {year: d.year, month: d.month, day: d.day};
 }
 
-/** Every event, as this chronicle has it. */
+/** Every event, as this chronicle has it. Kept until the overrides, the branch or the Cascade change: with the world timeline there are thousands. */
+let table = {key: null, rows: [], byId: new Map()};
+function current() {
+  const o = opts();
+  const key = `${JSON.stringify(o.overrides)}|${!!o.futureBranch}|${o.cascade}`;
+  if ( table.key !== key ) {
+    const rows = eventTable(EVENTS, o);
+    table = {key, rows, byId: new Map(rows.map(ev => [ev.id, ev]))};
+  }
+  return table;
+}
 export function list() {
-  return eventTable(EVENTS, opts());
+  return current().rows.slice();
+}
+
+/** The ids of the live events on or before today (firedAt in events-rules.mjs, from the kept table). */
+function firedNow() {
+  const k = dateKey(today());
+  return current().rows.filter(ev => ev.live && ev.key <= k).map(ev => ev.id);
 }
 
 /** The ids of the events that have fired. */
 export function fired() {
-  return setting("eventsFired") ?? firedAt(EVENTS, today(), opts());
+  return setting("eventsFired") ?? firedNow();
 }
 
 /** Has this event happened in this chronicle? */
@@ -81,7 +97,7 @@ export function has(id) {
   return fired().includes(id);
 }
 
-const byId = id => list().find(ev => ev.id === id);
+const byId = id => current().byId.get(id);
 
 let chain = Promise.resolve();
 
@@ -96,14 +112,16 @@ async function _checkEvents({label = "", force = false} = {}) {
   if ( !isActiveGM() ) return null;
   // `force` checks even while the world is held (the gate uses it, so nothing else in the world reacts)
   if ( setting("hold") && !force ) return {fired: [], undone: [], held: true};
-  const now = firedAt(EVENTS, today(), opts());
+  const now = firedNow();
   const before = setting("eventsFired");
   if ( before === null ) {
     await setSetting("eventsFired", now);
     log(`Dated events: ${now.length} already in the past`);
     return {fired: [], undone: [], first: true};
   }
-  const {fired: newly, undone} = diffFired(EVENTS, before, now, opts());
+  const was = new Set(before), is = new Set(now), order = current().rows.map(ev => ev.id);
+  const newly = order.filter(id => is.has(id) && !was.has(id));
+  const undone = order.filter(id => was.has(id) && !is.has(id)).reverse();
   if ( !newly.length && !undone.length ) return {fired: [], undone: []};
   await setSetting("eventsFired", now);
   for ( const id of newly ) Hooks.callAll("wodxEventFired", byId(id));
