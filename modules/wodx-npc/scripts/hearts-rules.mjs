@@ -7,6 +7,7 @@
  *   household  flags["wodx-npc"].household [{id, name, role}]
  * The numbers are house rules (B2855, B2859, B2861); the laws are dated readings of history (B2857).
  */
+import {SECRET} from "./lines-rules.mjs";
 
 /* ------------------------------------------------------------------ */
 /*  Courtship and romance (h1)                                         */
@@ -64,6 +65,15 @@ export function hindrance(who = {}, partner = {}) {
   if ( who.line === "changeling" && mortal ) notes.push("The Mists cloud what a mortal lover remembers of the fae's true self.");
   if ( who.line === "wraith" ) { cap = Math.min(cap, 2); notes.push("Across the Shroud, love is a Passion, not an embrace."); }
   if ( who.line === "mage" && mortal ) notes.push("A mortal lover near open magick draws Paradox.");
+  // B6311: the other lines' own truths (Kindred of the East, Demon: the Fallen, Mummy: the Resurrection, Hunter: the Reckoning)
+  if ( who.line === "kueijin" ) {
+    if ( Number(who.humanity) > 0 && Number(who.humanity) <= 3 ) { cap = Math.min(cap, 2); notes.push("With Dharma this low the P'o shows through: no more than Fond."); }
+    notes.push("A Cathayan lover takes Chi from breath and blood, keeps to the night, and hides what they are.");
+  }
+  if ( who.line === "demon" && Number(who.torment) >= 7 ) { cap = Math.min(cap, 2); notes.push("High Torment turns love to possession: no more than Fond."); }
+  if ( who.line === "demon" && mortal ) notes.push("A mortal lover may become a thrall: a pact for Faith, whether or not either means it.");
+  if ( who.line === "mummy" && mortal ) notes.push("The mummy outlives every lover and comes back from death; the lover grows old alone.");
+  if ( who.line === "hunter" && mortal ) notes.push("The hunt comes first, and what hunts the hunter finds whoever stands close.");
   return {cap, halve, notes};
 }
 /** One event on the warmth one person feels for another. Returns the new map. */
@@ -246,10 +256,27 @@ export function householdCost(list = [], wage = 0, months = 1) {
   return {rows, total: rows.reduce((s, r) => s + r.cost, 0) * Math.max(0, Number(months) || 0)};
 }
 /** A Kindred keeping mortals under the roof: how much the Masquerade is at risk (0 none, 1 some, 2 great). */
-export function masqueradeRisk(line, list = []) {
-  if ( line !== "vampire" ) return 0;
-  const n = normHousehold(list).filter(x => ["spouse", "child", "kin", "servant", "ward"].includes(x.role)).length;
+export function masqueradeRisk(line, list = [], {kinfolk = []} = {}) {
+  const sec = SECRET_OF[line];
+  if ( !sec ) return 0;
+  // B6312: Kinfolk know the truth of the Garou they live with, so only the others count for a werewolf's home
+  const kin = new Set((kinfolk ?? []).map(String));
+  const n = normHousehold(list).filter(x => ["spouse", "child", "kin", "servant", "ward"].includes(x.role) && !(sec.kinfolkSafe && x.id && kin.has(x.id))).length;
   return n >= 3 ? 2 : n ? 1 : 0;
+}
+/**
+ * B6451: a month with mortals under the roof: one die, and at or under the risk (1 or 2 on a d10) someone in the house
+ * talks, and a true rumour about the master starts (WoDX reading: the books leave a breach to the Storyteller).
+ */
+export const householdTalks = (risk, face) => Number(risk) > 0 && Number(face) >= 1 && Number(face) <= Number(risk);
+export const householdRumour = (name, line) => `${name || "Someone"}'s ${line === "werewolf" ? "people say odd things about the master's nights in the wild" : "household whispers that the master never eats, and is never seen by day"}`;
+/** What each secret-keeping line risks, by the words hearts lineOf gives (lines-rules SECRET, B6312). */
+export const SECRET_OF = {vampire: SECRET.vampire, kueijin: SECRET["kuei-jin"], werewolf: SECRET.werewolf};
+/** The card's words for a risk: "" when there is none. */
+export function riskWords(line, risk) {
+  const s = SECRET_OF[line];
+  if ( !s || !risk ) return "";
+  return risk === 2 ? ` Many mortals in ${s.place}: ${s.what} is at great risk.` : ` Mortals in ${s.place}: a risk to ${s.what}.`;
 }
 
 /* ------------------------------------------------------------------ */
@@ -272,25 +299,42 @@ export function griefResult({successes = 0, botch = false} = {}, great = false) 
   return {held: false, lose: 1, derange: !!(botch && great)};
 }
 
-export function weakSpotChecks(line, kind, ev, {name = "them"} = {}) {
+export function weakSpotChecks(line, kind, ev, {name = "them", po = 0} = {}) {
   const great = GREAT.includes(kind);
   const out = [];
+  // B6450: each check carries the roll that is made for it (hearts.mjs lovedRoll) and what failing it does
   if ( ev === "harm" || ev === "taken" ) {
-    if ( line === "vampire" ) out.push({text: `Seeing ${name} ${ev === "taken" ? "taken" : "hurt"} may stir the Beast: a frenzy check (Self-Control or Instinct) at difficulty ${great ? 7 : 6}.`});
-    else if ( line === "werewolf" ) out.push({text: `Rage at ${name} being ${ev === "taken" ? "taken" : "hurt"}: a frenzy check (Rage) at difficulty ${great ? 6 : 7}.`});
-    else out.push({text: `Willpower at difficulty ${great ? 7 : 6} to keep a clear head while ${name} is ${ev === "taken" ? "held" : "in danger"}.`});
+    const d = great ? 7 : 6, seen = ev === "taken" ? "taken" : "hurt";
+    if ( line === "vampire" ) out.push({text: `Seeing ${name} ${seen} may stir the Beast: a frenzy check, a loved one in danger (V20).`, roll: {via: "beast"}});
+    // B6453, read from the books: the Garou's Rage roll is permanent Rage at the moon's difficulty, four successes a
+    // frenzy and six the Thrall of the Wyrm (W20 pdf 263-264); the Kuei-jin's fire soul is Yin against the P'o at 6,
+    // extended up to five turns, two successes deciding (Kindred of the East pdf 138). Both roll through WoDX Actions' rules.
+    else if ( line === "werewolf" ) out.push({text: `Rage at ${name} being ${seen}: a Rage roll at the moon's difficulty; four successes and the Garou frenzies, six and it is the Thrall of the Wyrm (W20 p. 262).`, roll: {via: "rage", fail: "frenzy"}});
+    else if ( line === "kueijin" ) out.push({text: `The fire soul stirs at ${name} being ${seen}: Yin against the P'o at 6 for up to five turns; two successes to the P'o and the Kuei-jin lapses into fire soul (Kindred of the East).`, roll: {via: "fire", fail: "frenzy"}});
+    // Wraith 20th pdf 301 lists inner turmoil and helplessness among the sources of Angst and leaves the roll to the
+    // Storyteller: WoDX rolls Willpower for it. A demon's Torment comes only from sins against its Virtues (Demon pdf
+    // 162), so a demon's fear for a loved one is the plain Willpower check below.
+    else if ( line === "wraith" ) out.push({text: `The Shadow feeds on the fear for ${name}: Willpower at difficulty ${d}, or a point of temporary Angst.`, roll: {pool: "willpower", diff: d, fail: "angst"}});
+    else out.push({text: `Willpower at difficulty ${d} to keep a clear head while ${name} is ${ev === "taken" ? "held" : "in danger"}, or a point of temporary Willpower lost to worry.`, roll: {pool: "willpower", diff: d, fail: "willpower"}});
     if ( ev === "taken" ) out.push({text: "Whoever holds them has leverage: their demands go in the Ledger."});
   }
   if ( ev === "death" ) {
     out.push({text: `Grief for ${name}: Willpower at difficulty ${great ? 8 : 7}, or lose a point of temporary Willpower.`});
     if ( great ) out.push({text: "A botch leaves a Derangement from the loss, drawn from those grief leaves."});
     if ( line === "vampire" ) out.push({text: "If the Kindred's own hand or neglect caused it, a degeneration roll may follow."});
-    if ( line === "werewolf" ) out.push({text: "Rage at the loss: a frenzy check at difficulty 6."});
-    if ( line === "changeling" ) out.push({text: "Grief dims the Dreaming: Banality may rise by one (Storyteller)."});
-    if ( line === "wraith" ) out.push({text: "A Passion tied to them may fade, and the Shadow speaks of it."});
+    if ( line === "werewolf" ) out.push({text: "Rage at the loss: a Rage roll at the moon's difficulty; four successes and the Garou frenzies.", roll: {via: "rage", fail: "frenzy"}});
+    // No Banality for a changeling's grief: C20 pdf 268 counts sorrow and loss among the feelings that carry Glamour (B6453)
   }
   return out;
 }
+
+/** B6450: did a check's roll fail? A frenzy check fails at `need` successes or more; the others fail at none. */
+export function lovedFailed(roll, successes = 0) {
+  if ( !roll || roll.via ) return false;
+  return roll.need ? Number(successes) >= roll.need : Number(successes) <= 0;
+}
+/** The word over the token when a loved-one check fails. */
+export const LOVED_FAIL_WORD = {frenzy: "Frenzy", thrall: "Thrall of the Wyrm", fire: "Fire soul", angst: "+1 Angst", willpower: "-1 Willpower"};
 
 /* ------------------------------------------------------------------ */
 /*  Adoption of children and adults (B3213, Ben 2026-11-13)        */

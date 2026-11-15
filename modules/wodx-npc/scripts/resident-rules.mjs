@@ -336,3 +336,35 @@ export const countPeople = (list, {again = false} = {}) => list.filter(h => agai
 
 /** Above this many people at once the Storyteller is warned (each is a sheet in the Actors list). */
 export const LARGE = 60;
+
+/**
+ * B6317: whom a household can serve, by the master's line (lines-rules.mjs keys): the bond it is made with and the
+ * words of the choice. Kindred keep ghouls (V20 Dark Ages, through WoDX Creation); the other lines keep the people
+ * their books give them, as the servant rules do (servant-rules KEEPERS): Kinfolk for the Garou and Fera (W20 pdf
+ * 140), a blood cult for a Kuei-jin, who cannot make ghouls (Kindred of the East pdf 11), thralls by pact for the
+ * Fallen (Demon: the Fallen pdf 161), a cult for a mummy (Mummy: the Resurrection), the enchanted for a changeling
+ * (C20 pdf 461), and conditioned agents for a mage of the Technocracy (M20 pdf 606).
+ */
+export const HOUSEHOLD_SERVES = {
+  vampire: {kind: "ghoul", words: "Ghouls of"},
+  "kuei-jin": {kind: "cult", words: "Blood cult of"},
+  werewolf: {kind: "kinfolk", words: "Kinfolk of"},
+  fera: {kind: "kinfolk", words: "Kinfolk of"},
+  demon: {kind: "pact", words: "Thralls of"},
+  mummy: {kind: "cult", words: "Cult of"},
+  changeling: {kind: "enchant", words: "Enchanted by"},
+  mage: {kind: "social", words: "Conditioned agents of", group: /technocra|union|order of reason|daedal|nephand/i}
+};
+/** The choice for one master: {kind, words} or null when its line keeps no household. group: the mage's Tradition or Convention. */
+export function householdServes(line, group = "") {
+  const r = HOUSEHOLD_SERVES[line];
+  if ( !r || (r.group && !r.group.test(String(group ?? ""))) ) return null;
+  return {kind: r.kind, words: r.words};
+}
+/** The select's value for a master and its parse: "kind:actorId". */
+export const servesValue = (kind, id) => `${kind}:${id}`;
+export function parseServes(v) {
+  const m = /^([a-z-]+):(.+)$/.exec(String(v ?? ""));
+  if ( !m ) return v ? {kind: "ghoul", id: String(v)} : null;
+  return {kind: m[1], id: m[2]};
+}

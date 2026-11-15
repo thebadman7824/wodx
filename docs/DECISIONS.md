@@ -345,8 +345,10 @@ Next free block: B6520
 | B6250-B6259 | Names follow each year's customs (Improvement Desk nm1) (used B6250-B6253) | Creation, NPC |
 | B6260-B6269 | Real recorded cues: Freesound CC0/CC BY sounds for dawn, dusk, notice, birdsong, cock-crow and heartbeat, by era and faith (used B6260-B6263) | Atmosphere |
 | B6300-B6309 | Every line level with vampires in shared modules (Actions, Combat) (used B6300-B6308) | Actions, Combat |
+| B6310-B6319 | Every line equal in WoDX NPC (parity with the Kindred-only tools) (used B6310-B6319) | NPC |
 | B6320-B6329 | Every line equal in WoDX Storyteller (parity with the Kindred-only tools) (used B6320-B6328) | Storyteller |
 | B6350-B6359 | gate kit yearAtLeast, gatearms and gateplayerextras (used B6350-B6353) | tools (gates) |
+| B6450-B6459 | Every line equal in WoDX NPC: checks that only printed now roll and apply (used B6450-B6453) | NPC |
 | B6490-B6499 | pc queue ageing (used B6490) | tools (pcq) |
 | B6500-B6509 | lanes ignore the dawn and dusk move and session id (used B6500) | tools (lanes) |
 | B6510-B6519 | Map generator licence label: the town layout port is GPL-3.0 (used B6510) | tools/mapgen |
@@ -10733,6 +10735,77 @@ Demon: The Fallen p. 160: permanent Torment 0 lets the Storyteller approve redem
 
 Reverse: drop the redeemed checks in modules/wodx-actions/scripts/demon.js.
 
+## B6310. One key per line in WoDX NPC (2026-11-15)
+WoDX NPC lines-rules.mjs gives every sheet one key: vampire, kuei-jin (a Vampire sheet with the variant kindredeast), ghoul, revenant, werewolf, fera (Changing Breed), kinfolk, mage, sorcerer, changeling, kinain, wraith, hunter, mummy, demon, mortal, creature, exalted. The keys and families match WoDX Creation's all-lines helper (lines.mjs, B6270), which wins when it is loaded. Hearts, trust, legacy, servants, residents and the family tree read it, so a Kuei-jin is no longer taken for Kindred (no Auspex, no unknown sire, no ghouls) and a Fera no longer for a mortal. A wraith finds a hidden loyalty with Lifesight (Wraith 20th pdf p. 85).
+
+Reverse: hearts.mjs lineOf back to reading the sheet type alone.
+
+## B6311. Lovers of every line (2026-11-15)
+WoDX NPC hindrance: a Kuei-jin with Dharma 3 or less, or a demon with Torment 7 or more, holds a lover at no more than Fond. Mummies, demons and hunters add their own notes. WoDX reading of Kindred of the East, Demon: the Fallen, Mummy: the Resurrection and Hunter: the Reckoning.
+
+Reverse: drop the B6311 lines in hearts-rules hindrance.
+
+## B6312. Every secret-keeping line's household (2026-11-15)
+WoDX NPC masqueradeRisk counts the mortals in a Kuei-jin's house (their own secrecy) and in a Garou's or Fera's home (the Veil). Kinfolk know the truth, so they do not count (W20 pdf p. 140). The month's household card names the line's own secret. The Kindred's words are unchanged.
+
+Reverse: masqueradeRisk back to vampires only.
+
+## B6313. Harm to a loved one, by line (2026-11-15)
+WoDX NPC weakSpotChecks: a Kuei-jin's P'o stirs (Hun, or the Shadow Soul rises: Kindred of the East pdf 82-84). A wraith's Shadow feeds on the fear (a point of Angst). A demon lashes out in its Torment, and a death by its own hand asks a Virtue roll or a point of temporary Torment (Demon: the Fallen pdf 162). A mummy's grief carries into its next death. The difficulties match the Kindred's (house).
+
+Reverse: drop the B6313 rows.
+
+## B6314. Kuei-jin in Fates (2026-11-15)
+WoDX NPC Fates reads a Vampire sheet with the variant kindredeast as a Kuei-jin. It does not age, dies at the Kindred's rate, and is sent down to the hells of the Yama Kings. It is never Embraced, never commits diablerie on the Kindred and makes no brood. The Kuei-jin are sent back by the Yama Kings, not made by an Embrace (Kindred of the East).
+
+Reverse: fatesLine back to the type table.
+
+## B6315. Every line mends with its own power (2026-11-15)
+WoDX NPC aftercare and carry-aftercare (line-mend.mjs): after a fight and when tended at home, an NPC spends its own pool on its wounds.
+- A Kindred spends blood, a point a level, keeping two. A ghoul does the same keeping one (V20 pdf 129).
+- A Kuei-jin spends Chi, Yang before Yin: a point a level, five for an aggravated one, keeping two (Kindred of the East Companion pdf 32).
+- A wraith spends Pathos: one point mends two bashing or one lethal level, and nothing mends aggravated (Wraith 20th pdf 360).
+- A demon spends Faith: one point mends all bashing, then one a lethal level, and nothing mends aggravated (Demon: the Fallen pdf 172). It keeps one.
+
+The reserves are house rules. A floating word over the token shows the mend.
+
+Reverse: aftercare lineMend back to bloodMend (Kindred only).
+
+## B6316. Garou and Fera NPCs regenerate (2026-11-15)
+WoDX NPC mendTick heals a Garou or Fera NPC with WoDX Actions healPlan (regeneration) instead of at a mortal's pace. A floating word shows it.
+
+Reverse: drop the B6316 branch in mendTick.
+
+## B6317. Households serve masters of every line (2026-11-15)
+WoDX NPC residents: a household can serve any master, not only a Cainite.
+- A Kindred's household are ghouls, as before.
+- A Garou's or Fera's are Kinfolk (W20 pdf 140).
+- A Kuei-jin's are a blood cult (Kindred of the East pdf 11: no ghouls).
+- A demon's are thralls by pact (Demon: the Fallen pdf 157).
+- A mummy's are a cult.
+- A changeling's are enchanted (C20 pdf 461).
+- A Technocrat's are conditioned agents (M20 pdf 606).
+
+Each resident is bound with WoDX NPC servants, so the bond's ring and rules apply.
+
+Reverse: the residents window back to Cainites only.
+
+## B6318. A Kuei-jin's cult keeps the house by day (2026-11-15)
+WoDX NPC servantDuty: a Kuei-jin's cultist or retainer attends the master's house by day while it rests, as a Kindred's ghoul does.
+
+Reverse: drop the B6318 line in duty-rules.
+
+## B6319. NPCs of every line refill their own pools (2026-11-15)
+WoDX NPC line-refill.mjs, setting npcRefill (on): once a night, on the Storyteller's client.
+- Shapechangers, mages and mummies: WoDX Actions already rolls a daily refill (meditation for Gnosis, W20 p. 146; the day's draw of Quintessence, M20 p. 330; a day in the haven for Sekhem) for any character marked in its dialog. An NPC is marked once here (flag refillMarked), so a Storyteller who clears the mark is not overridden.
+- Changelings: Sanctuary, the freehold's rating in Glamour for a night there (C20 p. 259); without Holdings, Dreamers give one Reverie a week, Manipulation + Expression at 6 (C20 pp. 169, 259-264). WoDX reading: Expression stands for the art used to inspire.
+- Wraiths: the strongest Passion rolled at 6 once a night, as lived in the NPC's round (Wraith 20th pdf 370); Memoriam at 8 once a week, the book's once a session (pdf 180).
+- Demons with no thralls: reaping, Willpower at 7 against an ordinary mortal's Willpower 3 at 7, a Faith on a win (Demon p. 250). Thralls already offer Faith at dawn in WoDX Actions.
+- Kept: the Kindred and Kuei-jin (their hunt), hunters (Conviction back each story in WoDX Actions), mortals and ghouls.
+- Visible: the gain floats over the token in the pool's colour; one card a night whispered to the Storyteller.
+
+Reverse: turn off npcRefill; refillMarked NPCs keep the Actions marks until cleared in their dialogs.
+
 ## B6320. Every line's pools on the dashboard (2026-11-15)
 WoDX Storyteller dashboard-rules linePools: each party row lists the line's own pools, as the Kindred's blood was listed.
 - Kuei-jin: Yang Chi and Yin Chi, with no blood pool.
@@ -10813,6 +10886,40 @@ most drainMinutes (10, runner.json); after that the runner takes jobs again and 
 at the nightly lane reset.
 
 Reverse: drop drainMinutes and wait for every job again; --recycle 0 by default; drop yearAtLeast and go back to the hand-written move in gatevehicles; want exactly six again.
+
+The owner asked on 2026-11-15 whether the new systems do something rather than only say so. Four did not; three are in WoDX NPC (the fourth, ties, is B6327 in WoDX Storyteller).
+
+## B6450. A loved one hurt, taken or dead: the check is rolled and applied (2026-11-15)
+WoDX NPC hearts tellLoved: each check that names a roll is rolled for the one who loves them, and a failure lands on the sheet, with the roll on the card and a word over the token.
+- Kindred: WoDX Actions autoBeast with the provocation "loved one in danger" (V20).
+- Garou and Fera: permanent Rage at 7 (6 for a spouse, child or lover); four successes and the Garou frenzies (W20 p. 262). The same at 6 on a death.
+- Kuei-jin: Hun against the P'o rating; a failure and the Shadow Soul rises, marked as a frenzy (Kindred of the East pdf 82-84).
+- Wraith: Willpower at 6 or 7, or a point of temporary Angst. Demon: Willpower, or a point of temporary Torment. Others: Willpower, or a point of temporary Willpower.
+- Changeling, on a death: Willpower at 7, or a point of temporary Banality.
+- Dropped: the lines that only said something may happen (a mummy's grief carrying over, a wraith's Passion fading, the Kuei-jin's and demon's "if their own hand caused it"): nothing could tell the cause, and the grief roll already covers every line.
+
+Reverse: drop the roll fields in hearts-rules weakSpotChecks.
+
+## B6451. A household that talks starts a rumour (2026-11-15)
+WoDX NPC hearts onMonth: each month a secret-keeping master (Kindred, Kuei-jin, Garou) with mortals under the roof rolls one die; at or under the household's risk (1, or 2 with three or more) someone talks and a true rumour about the master starts through WoDX Storyteller's rumours. WoDX reading: the books leave a breach to the Storyteller; 1 or 2 in 10 a month is WoDX's figure (PENDING-REVIEW).
+
+Reverse: drop householdTalks from onMonth.
+
+## B6452. Looking someone over seeks a hidden loyalty (2026-11-15)
+WoDX NPC trust: when a character looks someone over (WoDX Actions' Look over, hook wodxLookOver) with any success, and the one looked at has a hidden loyalty, the best sense of the viewer's line is rolled on the viewer's own client: Auspex Telepathy, Truth of Gaia, Mind 1, Discern find the side on any success; Lifesight, Kenning, Aura Perception and Empathy show only a lie, and find the side on three or more successes (WoDX reading, PENDING-REVIEW), a hint on one or two. A find marks the loyalty found (foundSide, through the Storyteller's client by socket), so the hidden tie shows in the finder's Relationships tab.
+
+Reverse: drop the wodxLookOver listener in trust.mjs.
+
+## B6453. The refills and loved-one checks read against the books (2026-11-15)
+Each rule was checked on the page; three were wrong and are fixed, two are dropped.
+- Reverie (C20 pdf 170, 262-263): first Perception + Kenning at 8, each Dreamers dot an automatic success, sets the time with the Dreamer (one success a month, two a fortnight, three a week, four a day, five a few hours); then Manipulation + the best of Empathy, Performance, Leadership and Intimidation at 6 gives a Glamour a success. A failure means another week; a botch blocks the Dreamer for a month (WoDX reading) and the study starts over. It was one Manipulation + Expression roll a week.
+- A Garou's loved one (W20 pdf 263-264): the Rage roll is permanent Rage at the moon's difficulty (new 8 to full 4, one less for the auspice's moon or in Crinos, the rank's step), the rank's need for a frenzy and six successes the Thrall of the Wyrm, through WoDX Actions' own garou rules. It was a fixed 6 or 7.
+- A Kuei-jin's loved one (Kindred of the East pdf 138): fire soul is Yin against the P'o, both at 6, up to five turns, two successes deciding, through WoDX Actions' kote rules; a lapse is frenzy for the scene. It was Hun against the P'o, which is the shadow soul roll.
+- Dropped: a demon's Torment for fear over a loved one (Demon pdf 162: Torment comes from sins against a Virtue), now the plain Willpower check; a changeling's Banality from grief (C20 pdf 268 counts sorrow and loss among the feelings that carry Glamour; the Banality triggers on pdf 270 do not include it).
+- Confirmed as written: Sanctuary (C20 pdf 260), a Passion at 6 (Wraith 20th pdf 370), Memoriam at 8 (pdf 180), reaping at Willpower 7 against the mortal's (Demon pdf 251), Gnosis by meditation (W20 pdf 148), Pathos and Faith healing (Wraith 20th pdf 360, Demon pdf 172), Kuei-jin cannot make ghouls (Kindred of the East pdf 11). Page refs corrected: V20 healing pdf 276, Demon pacts pdf 161, M20 Quintessence at a Node p. 332, Lifesight Perception + Empathy at 5 (Wraith 20th pdf 191). A demon's reaping roll uses permanent Willpower (Demon pdf 163).
+- WoDX readings, not the books': Memoriam once a week (the book says once a session), reaping once a night for a demon with no thralls, a passion lived each night, the wraith's Willpower roll against Angst (pdf 301 names turmoil and helplessness as Angst sources but gives no roll), the Willpower worry for other lines.
+
+Reverse: the earlier refillSteps and weakSpotChecks rolls.
 
 ## B6490. A waiting PC job gains a priority step each hour (2026-11-15)
 PC runner. The queue ran strictly by priority, so a p5 job (#1547, nine sheet gates) sat at the head of the queue for
