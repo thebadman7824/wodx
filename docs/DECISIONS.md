@@ -306,7 +306,7 @@ Next free block: B6220
 | B5670-B5679 | NPC power choice for Hekau, rotes, cantrips, evocations, Kuei-jin arts, Horrors and Blessings (used B5670-B5677) | Actions |
 | B5680-B5709 | NPC Motives Desk: every NPC action has a reason and a follow-through (used B5680-B5703) | NPC, Storyteller |
 | B5710-B5729 | Aftercare of the carried (Aftercare Desk a1-a12) (used B5710-B5721) | NPC |
-| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5747) | tools |
+| B5730-B5749 | Pixel map drawer: our own pixel-art maps written straight to Foundry scenes, with open and shut pictures (used B5730-B5748) | tools |
 | B5750-B5779 | Say or Do: systems that only posted text now act (top-to-bottom review) (used B5750-B5758) | Actions |
 | B5780-B5799 | Demon evocations that work, rituals with world effects, Sense/Know/Speak (used B5780-B5795) | Actions, NPC |
 | B5800-B5809 | NPC Aftercare Desk: what comes after each NPC action (used B5800-B5806) | NPC, Chronicle |
@@ -329,11 +329,13 @@ Next free block: B6220
 | B5980-B5989 | Lone Chronicle step 3: the oracle, the Leads page and night encounters on the map (used B5980-B5985) | Solo |
 | B5990-B5999 | Say or Do: full sentences and grieving (Ben's picks on law sentences and heartbreak) (used B5990-B5992) | Chronicle, NPC, Actions |
 | B6000-B6019 | Rituals and powers that really work: every effect read by a roll, soak, token or map system (used B6000-B6018) | Actions, Combat |
+| B6020-B6039 | Re-audit of marks and flags that nothing reads (non-power systems) (used B6020-B6034) | Combat, Chronicle, Actions, Storyteller |
 | B6040-B6049 | Lone Chronicle step 4: the director, experience from the night's log, the recap (used B6040-B6049) | Solo |
 | B6050-B6059 | gate7b fresh arena each run (used B6050-B6051) | tools (gates) |
 | B6070-B6079 | Snow vehicles, trains and trams (rules and sprites), and a quality pass on the vehicle sprites (used B6070-B6076) | Interactables, Paperdoll, Combat |
 | B6080-B6099 | Weights for loose gear and container contents, and loose gear on the map (used B6080-B6089) | Library, Interactables, Combat |
 | B6100-B6109 | Wraith 20th named Artifacts (forge, Skin, Spectre) and souled relics on the crafting table, with real Use powers and looks (used B6100-B6104) | Library, Creation |
+| B6110-B6129 | Line sheets move to ApplicationV2 (the newer sheet engine), one line at a time (used B6110-B6114) | System fork, Sheets, Chronicle |
 | B6130-B6139 | The eight held-back world timeline readings after the book check (used B6130-B6132) | Chronicle |
 | B6210-B6219 | gatevehicles plays in a year with cars (used B6210) | tools (gates) |
 <!-- decision-index:end -->
@@ -9442,6 +9444,11 @@ Tools. Following review of the first furnishing pass, three fixes. First, every 
 
 Reverse: return dress.py and the three oven calls to B5746.
 
+## B5748. Window shutters stay outside the wall (2026-11-15)
+Tools. Following review, shutters no longer clip into the walls. Shut, the two leaves now lie against the outside face of the wall with their planks, hinges and iron bar, where before they were drawn halfway into the wall itself. Open, each leaf still lies flat along the outside face, but only where there is room. The drawer now knows the scene's walls, doors and windows, so a leaf stops short of the building's corner, of a wall that crosses the ground outside, of a doorway, and of the next window's leaf (two windows share the wall between them). Where a leaf has no room to lie flat, it stands open square to the wall instead. All eight maps were re-drawn, and a check of every shutter picture, open and shut, finds none on a wall: 120 windows, where before every shut shutter overlapped its wall.
+
+Reverse: return props.window and the recorder's line list to B5747.
+
 ## B5750. Witness reactions given by a window act on the map (2026-11-15)
 WoDX Actions. The witness step takes results already rolled (the Delirium check, a demon's Revelation) and acts them out: a frozen witness is Immobilized for the scene, a fleeing one runs, a fighting one starts a fight; those who keep it go on the Masquerade record. With no revealed actor on the map, nothing is recorded against anyone.
 
@@ -10129,6 +10136,81 @@ A mummy's won Forbiddance marks the mummy as the one feared (a player's token ca
 
 Reverse: forbiddenFrom in wodx-combat main.js, the bindBy/forbiddenBy flags in mummy.js, the shadow soul line in binds.js bindingsOn.
 
+## B6020. Conditions that hold a body stop its token (2026-11-15)
+WoDX Combat. Held, Completely immobilized, Staked, Torpor, Incapacitated and Asleep leave no movement (movementFor) and a player's drag of the token is refused in a fight or out of one; the Storyteller moves any token. Before this, only power bindings held a token; the core conditions only changed attack dice. World setting "Conditions hold the token", default on.
+
+Reverse: set "Conditions hold the token" off, or drop the preUpdateToken hook and the still/pace arguments in auto.js movement.
+
+## B6021. Numbed moves at three-quarter pace (2026-11-15)
+WoDX Combat. Numbed (VtDA p. 275) already took a Dexterity point; its three-quarter movement was only on the card.
+
+Reverse: remove numbed from SLOW_CONDITIONS in auto.js.
+
+## B6022. Combat reads the roll effects of WoDX Chronicle traits (2026-11-15)
+WoDX Combat. Attack pools read traits.effects with tags attack and combat, defence with defense, combat and dodge. Effects tagged "all" (fever, drink and drugs, the night's feeding penalty) and any trait tagged for combat now count; before, only Actions and social rolls read them.
+
+Reverse: remove the traitRoll calls in conditionMods, defenseDiffOf and defenseDiceOf.
+
+## B6023. Timed marks show on the token (2026-11-15)
+WoDX Chronicle. applyTimed sets showIcon ALWAYS, so a scene or night mark (no rounds, no seconds) draws on the token. A caller may pass showIcon: false.
+
+Reverse: drop the showIcon line in timed.mjs.
+
+## B6024. The night's feeding penalty is a roll effect (2026-11-15)
+WoDX Actions. Feeding against the blood's law (a vessel not beaten in a fight, Willpower failed) puts a bite of -2 dice on every roll until dawn through traits.addBite; before, it was a named mark no roll read.
+
+Reverse: go back to the plain applyTimed mark in main.js.
+
+## B6025. Behind the age is a roll effect (2026-11-15)
+WoDX Actions. After a long torpor, each Ability listed as behind rolls at +1 difficulty (BEHIND_DIFFICULTY) until the Storyteller presses "caught up", through a traits roll source reading the longSleep flag. Old tongues stay with the Storyteller.
+
+Reverse: remove the addSource call in main.js.
+
+## B6026. Closed shelves give two dice for the season (2026-11-15)
+WoDX Storyteller. The institution's "closed shelves are open" answer now adds a bite of +2 dice on Academics, Investigation, Occult, Science, Medicine and Linguistics for 90 days. It applies wherever the character studies, a simplification of "there".
+
+Reverse: remove the addBite call in reach.mjs.
+
+## B6027. Crippled limb counts in a fight (2026-11-15)
+WoDX Chronicle. The Crippled limb status had no rule behind it (maimed parts have their own). It now gives +2 difficulty on the bearer's attacks and defence, since a status on the token names no limb.
+
+Reverse: set mods back to {} on crippled in conditions.mjs.
+
+## B6028. Ravenous is harder to act through (2026-11-15)
+WoDX Actions. Ravenous (W20 p. 177) only said "must eat first". It now gives +1 difficulty in a fight and on social rolls for its day, a house reading.
+
+Reverse: set mods back to {} on ravenous in after-cost-rules.js.
+
+## B6029. Branded, Filthy and Bloody are a step colder in talk (2026-11-15)
+WoDX Chronicle and Library. "Meets them a step colder" and "anyone who sees it" had no reader. Each now gives +1 difficulty on social rolls (socialDiff, read by Actions' social rolls).
+
+Reverse: set mods back to {} on branded (law-punish.mjs), filthy and bloody (hygiene-use.mjs).
+
+## B6030. A good hide or sneak roll sets Sneaking (2026-11-15)
+WoDX Actions. Sneaking was read by Senses, Combat and targeting but never set by a roll. A successful "Find a hiding place" or "Hold still and stay hidden" check now gives the roller Sneaking for the scene.
+
+Reverse: remove the sneak applyTimed in resolveAction (wodx-actions main.js).
+
+## B6031. Incapacitated follows the health track (2026-11-15)
+WoDX Combat. Incapacitated was only ever set by hand. It now turns on when the health track reaches Incapacitated and off when healing lifts it, unless the status-effects setting is off.
+
+Reverse: remove the updateActor incapacitated hook in wodx-combat main.js.
+
+## B6032. A crippled limb shows on the token (2026-11-15)
+WoDX Combat. The maimed-part effect was hidden on the token. It now always shows its icon.
+
+Reverse: drop showIcon from crippleEffect in body.js.
+
+## B6033. Mud, rain and a week unwashed make a body Filthy (2026-11-15)
+WoDX Library. Filthy had no way in. Being knocked down outdoors in rain, sleet or snow now sets it, and so does going seven nights without washing (player characters who are alive; a house rule). Washing clears it as before and records the night.
+
+Reverse: remove the knockdown and night hooks in hygiene-use.mjs.
+
+## B6034. Obfuscate sets Obfuscated (2026-11-15)
+WoDX Actions. Senses, targeting and Combat read the Obfuscated condition, but Obfuscate powers only set the Veiled effect. An Obfuscate Discipline use with a duration, and an Obfuscate veil on the effects card, now also set Obfuscated while it lasts.
+
+Reverse: remove the condition line from kindred.js and the isObfuscate map in effects.js powerPlan.
+
 ## B6040. Places with no map are the country map's towns (2026-11-15)
 WoDX Solo card-rules.mjs cardTowns. The panel's Places with no map lists the towns of WoDX Storyteller's country map (data/country.mjs) that stand in the character's own year and have no scene set at the town itself. A town that gains a map later is gone to on that map. The list has a search box.
 
@@ -10318,6 +10400,31 @@ years; the change list says so instead of losing them. A Fetter that names a per
 box keeps harm off a Fetter, it does not keep a mortal alive (house reading of p. 428).
 
 Reverse: drop the fetterguard line in advance.mjs and the check in advance-rules.mjs.
+
+## B6110. One code base per line sheet, on either engine (2026-11-15)
+System fork. Each line sheet's class (Mortal and the eleven lines over it) is now a mixin applied twice: over the old engine's ActorSheet (the class it always was) and over LegacyActorSheetV2. Both keep the same class name, so the sheet id (WoD.VampireActorSheet) and render hooks named after the class stay the same.
+
+Reverse: take the line out of LINES_V2 (B6112); the old-engine class is still there.
+
+## B6111. The bridge: LegacyActorSheetV2 (2026-11-15)
+System fork, module/actor/template/legacy-sheet-v2.js. HandlebarsApplicationMixin(ActorSheetV2) with one part, the line's own template. It gives the line code what the old engine gave: getData with the old context, _renderInner (WoDX Sheets wraps it), activateListeners(html) with jQuery after each render, the tabs from defaultOptions, options.editable, activateTab, and the document as "object". The template's form root becomes a div with the same classes (the window is the form now). {{editor}} boxes become always-open prose-mirror editors on the same field, saving on focus loss and on close; the profile image opens the file picker; a change saves the whole form minus active-effect overrides, as before; the open tab and scroll positions survive a redraw. The old window's 8 px inner spacing and scrolling are kept in wod.css.
+
+Reverse: remove the file and the V2 exports; nothing else depends on it while LINES_V2 is empty.
+
+## B6112. Which lines are moved: LINES_V2 (2026-11-15)
+System fork, module/actor/template/lines-v2.js, read by wod.js and WoDX Sheets. Lines move one at a time, each gated on the testbed (gatesheetv2 plus the sheet gates, fit-audit and gateuisnap) before the next. Mummy goes first: a small line that still has a WoDX book sheet over it, so both layers are tested.
+
+Reverse: remove a type from the set.
+
+## B6113. System hooks follow the moved sheets (2026-11-15)
+System fork, hooks.js. The language, line, font and dark-mode classes the old sheets got from renderActorSheet are applied from renderLegacyActorSheetV2 too, and the PC sheet's renderActorSheetV2 handler skips the moved line sheets so it does not strip their line class.
+
+Reverse: drop the two hook lines.
+
+## B6114. Modules follow the moved sheets (2026-11-15)
+WoDX Sheets builds its sheet over the V2 class for a moved line (same name), adds the Gender line and the Sheet tools button from renderLegacyActorSheetV2 (on V2 the button opens the title bar's own menu, which already names every control), and adds Print and History as V2 header controls. WoDX Chronicle's player guide counts opening a moved sheet. Header buttons from other modules already had V2 versions.
+
+Reverse: the hooks are additive; remove them with the line from LINES_V2.
 
 ## B6130. The held readings go in, worded as the books back them (2026-11-15)
 WoDX Chronicle, tools/timeline/build-world-history.mjs. WAITING is empty. The book check (project files global-world/book-check-readings.md, finished in the cloud from the OCR text) settled each card. 1521: Wraith 20th (pdf 101, 512 to 517) breaks the Dark Kingdom of Obsidian through the heretics' Flaying and the storm after it, so the card names the Flaying, with the plague and siege dead as the background, and the survivors' Mictlan. 1692: Verbena Revised (pdf 43) keeps the Verbena out of the trials; no book has hunters and mages blaming each other, so that part is gone. 1791: Wraith 20th (pdf 521) has Les Invisibles fan the slave revolts and the Mirrorlands battered by storms and Baka; the lwa among the rebels "by both sides" had no book and is gone. 1885: Wraith 20th (pdf 517 to 518, the Bush of Ghosts behind a false Ivory Queen) and Kindred of the Ebony Kingdom (pdf 16, Laibon fighting the Portuguese around 1540) back a continent already held. 1890: the Wendigo tribebook (pdf 28, 50 to 51) backs Garou among the Ghost Dancers. 1994: Kindred of the Ebony Kingdom (pdf 168) keeps the genocide mortal with elders using the chaos, and A World of Rage (pdf 94 to 95) has the Wyrm feed on it; no book ties it to the lands of the dead, so the card no longer says so and is renamed The killing in Rwanda.
