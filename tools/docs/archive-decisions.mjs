@@ -151,15 +151,16 @@ export function decisionsBelowIndex(root) {
   return [main, ...files.map(f => readFileSync(join(arch, f), "utf8"))].join("\n\n");
 }
 
-function main() {
-  const args = process.argv.slice(2), dry = args.includes("--dry");
+/** The command line; archive-build-log.mjs runs it too, so the Monday archive moves both (B6243). */
+export function main(argv = process.argv.slice(2)) {
+  const args = argv, dry = args.includes("--dry");
   const today = args.includes("--today") && args[args.indexOf("--today") + 1] ? args[args.indexOf("--today") + 1] : new Date().toISOString().slice(0, 10);
   const docs = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "docs");
   const path = join(docs, "DECISIONS.md"), arch = join(docs, "archive");
   const text = readFileSync(path, "utf8");
   const existing = Object.fromEntries(readdirSync(arch).map(f => /^decisions-(\d{4}-\d{2})\.md$/.exec(f)).filter(Boolean).map(m => [m[1], readFileSync(join(arch, m[0]), "utf8")]));
   const r = plan(text, existing, today);
-  console.log(`Cutoff ${r.cutoff}: ${r.moved} decisions to move${r.moved ? ` (${Object.keys(r.archives).join(", ")})` : ""}.`);
+  console.log(`Decisions, cutoff ${r.cutoff}: ${r.moved} to move${r.moved ? ` (${Object.keys(r.archives).join(", ")})` : ""}.`);
   if ( dry || !r.moved ) return;
   // The archive first, so a decision is never only in memory
   for ( const [m, t] of Object.entries(r.archives) ) writeFileSync(join(arch, `decisions-${m}.md`), t);
