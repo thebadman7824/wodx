@@ -637,7 +637,7 @@ for mid, mname, msize, mtag, myears, mwhere, mw, mst, mmount in (
 o("aircompressor", "air compressor", "machines", "2 x 5", "", "1900-", "garage 3, workshop 2, factory 2", "1-5", "*", mount="floor")
 o("anaesthetic", "anaesthetic machine", "machines", "2 x 2.5", "", "1917-", "surgery 3", "3-5", "*", mount="floor")
 o("arcfurnace", "electric arc furnace", "machines", "12 x 12", "hazard:fire", "1900-", "factory 2", "3-5", "*", mount="floor")
-o("ashpile", "heap of ash", "decor", "3 x 3", "clue:object", "-", "alley 1, yard 1, camp 1, resting 1", "0-5", "*", mount="floor")
+o("ashpile", "heap of ash", "decor", "3 x 3", "clue:object", "-", "alley 1, yard 1, camp 1, kitchen 1, farmyard 1, smithy 1, resting 1", "0-5", "*", mount="floor")
 o("ballmachine", "ball-throwing machine", "machines", "2 x 2", "", "1950-", "gym 1, park 1", "2-5", "*", mount="floor")
 o("bandsaw", "band saw", "machines", "3 x 3", "", "1880-", "workshop 2, carpenter 2, factory 2, butchery 1", "1-5", "*", mount="floor")
 o("bathpod", "prefabricated bathroom pod", "water", "6 x 5", "", "1964-", "bathroom 2, guestroom 1, cell 1, barracks 1", "1-4", "*", mount="floor")
